@@ -1,0 +1,22 @@
+{
+ "runs_int_order": [
+  "returned",
+  null,
+  null
+ ],
+ "runs_int_chain": [
+  "returned",
+  "ATTEMPT_LEDGER_MISMATCH",
+  "attempt_2: 단계 요약 칸 꼴 — runs = int (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+ ],
+ "stop_str_order": [
+  "returned",
+  null,
+  null
+ ],
+ "stop_str_chain": [
+  "returned",
+  "ATTEMPT_LEDGER_MISMATCH",
+  "attempt_2: 단계 요약 칸 꼴 — stop = str (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · 결과 줄 없음 · ★ 11-06 PC10 P3-5)"
+ ]
+}

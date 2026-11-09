@@ -1,0 +1,1106 @@
+{
+ "chain": "<scratch>/fixc/basetree/scripts/rint_r_chain.py",
+ "test": "<scratch>/fixc/basetree/scripts/test_rint_r_chain.py",
+ "checks": {
+  "RR4D": {
+   "ok": false,
+   "info": {
+    "n": 3,
+    "n_bad": 1,
+    "bad": {
+     "F1_nosrc_writing": {
+      "got": [
+       0,
+       false,
+       [
+        "[원천]"
+       ],
+       false
+      ],
+      "want": [
+       3,
+       null,
+       [],
+       true
+      ]
+     }
+    },
+    "rows": {
+     "F1_nosrc_writing": [
+      0,
+      false,
+      [
+       "[원천]"
+      ],
+      false
+     ],
+     "F2_nosrc_recount": [
+      true,
+      [
+       "[원천]"
+      ]
+     ],
+     "F3_other_base_same_true": [
+      true,
+      [
+       "[ⓓ]"
+      ],
+      [
+       "[ⓓ]"
+      ]
+     ]
+    }
+   }
+  },
+  "RR5A": {
+   "ok": false,
+   "info": {
+    "n": 8,
+    "n_bad": 3,
+    "bad_names": [
+     "A1_forged_sigafter",
+     "A2_orphan_diff",
+     "A3_honest_sigafter_diff"
+    ],
+    "bad": {
+     "A1_forged_sigafter": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓓ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓓ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓓ]"
+        ]
+       ]
+      ]
+     },
+     "A2_orphan_diff": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓓ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓓ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓓ]"
+        ]
+       ]
+      ]
+     },
+     "A3_honest_sigafter_diff": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓓ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓓ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓓ]"
+        ]
+       ]
+      ]
+     }
+    },
+    "got": {
+     "A1_forged_sigafter": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "A2_orphan_diff": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "A3_honest_sigafter_diff": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "A4_honest_sigafter_same": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "A5_orphan_same": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "A6_rerun_rc1_not_done": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "A7_sigafter_no_folder": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "A8_gu_unconfirmed_diff": null
+    }
+   }
+  },
+  "RR5B": {
+   "ok": false,
+   "info": {
+    "n": 15,
+    "n_bad": 10,
+    "bad_names": [
+     "B12_run_number_order",
+     "B1_outdir_relabel_post",
+     "B2_rename",
+     "B3_outdir_relabel_stopped",
+     "B4_skip_rerun_record",
+     "B5_new_launch_missing",
+     "B6_prior_end_rc1",
+     "B6b_prior_folder_missing",
+     "B7_first_new_skip_forced",
+     "B9_stray_launch_name"
+    ],
+    "bad": {
+     "B12_run_number_order": {
+      "got": "exc AttributeError: module 'rint_r_chain' has no attribute 'resume_disk_rerun'",
+      "want": [
+       "L99_a",
+       null
+      ]
+     },
+     "B1_outdir_relabel_post": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [],
+       true,
+       false,
+       [
+        "RESUME_NOT_ALLOWED",
+        []
+       ],
+       null
+      ]
+     },
+     "B2_rename": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓒ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ]
+      ]
+     },
+     "B3_outdir_relabel_stopped": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓒ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ]
+      ]
+     },
+     "B4_skip_rerun_record": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓒ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ]
+      ]
+     },
+     "B5_new_launch_missing": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓒ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ]
+      ]
+     },
+     "B6_prior_end_rc1": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓒ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ]
+      ]
+     },
+     "B6b_prior_folder_missing": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓒ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓒ]"
+        ]
+       ]
+      ]
+     },
+     "B7_first_new_skip_forced": {
+      "got": [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓓ]"
+       ]
+      ],
+      "want": [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     },
+     "B9_stray_launch_name": {
+      "got": null,
+      "want": [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     }
+    },
+    "got": {
+     "B0a_three_runs_rc1": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B0b_three_runs_done": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B0c_src_no_launch": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B1_outdir_relabel_post": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B2_rename": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B3_outdir_relabel_stopped": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B4_skip_rerun_record": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B5_new_launch_missing": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B6_prior_end_rc1": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B6b_prior_folder_missing": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "B7_first_new_skip_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓓ]"
+      ]
+     ],
+     "B9_stray_launch_name": null,
+     "B10_post_no_rerun_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓓ]"
+      ]
+     ],
+     "B11_post_assumed_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓓ]"
+      ]
+     ],
+     "B12_run_number_order": "exc AttributeError: module 'rint_r_chain' has no attribute 'resume_disk_rerun'"
+    }
+   }
+  },
+  "RR5C": {
+   "ok": false,
+   "info": {
+    "n": 3,
+    "n_bad": 2,
+    "bad_names": [
+     "C1_moved_source_then_back",
+     "C2_close_no_source"
+    ],
+    "bad": {
+     "C1_moved_source_then_back": {
+      "got": [
+       [
+        0,
+        false,
+        false,
+        [
+         "ATTEMPT_LEDGER_MISMATCH"
+        ],
+        false
+       ],
+       [
+        0,
+        false,
+        false,
+        [
+         "ATTEMPT_LEDGER_MISMATCH"
+        ],
+        false
+       ]
+      ],
+      "want": [
+       [
+        3,
+        null,
+        true,
+        [
+         "ATTEMPT_LEDGER_MISMATCH"
+        ]
+       ],
+       [
+        0,
+        true,
+        false,
+        [
+         "ok",
+         2
+        ],
+        true
+       ]
+      ]
+     },
+     "C2_close_no_source": {
+      "got": [
+       null,
+       false,
+       false,
+       false,
+       [
+        "[원천]"
+       ]
+      ],
+      "want": [
+       3,
+       null,
+       true,
+       true,
+       []
+      ]
+     }
+    },
+    "got": {
+     "C1_moved_source_then_back": [
+      [
+       0,
+       false,
+       false,
+       [
+        "ATTEMPT_LEDGER_MISMATCH"
+       ],
+       false
+      ],
+      [
+       0,
+       false,
+       false,
+       [
+        "ATTEMPT_LEDGER_MISMATCH"
+       ],
+       false
+      ]
+     ],
+     "C2_close_no_source": [
+      null,
+      false,
+      false,
+      false,
+      [
+       "[원천]"
+      ]
+     ],
+     "C3_close_contradiction": [
+      null,
+      false,
+      false,
+      false,
+      [
+       "[ⓒ]"
+      ]
+     ]
+    }
+   }
+  },
+  "RR5D": {
+   "ok": false,
+   "info": {
+    "n": 2,
+    "n_bad": 2,
+    "bad_names": [
+     "D1_runs_int",
+     "D2_stop_str"
+    ],
+    "bad": {
+     "D1_runs_int": {
+      "got": [
+       "exc TypeError",
+       "exc TypeError"
+      ],
+      "want": [
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[꼴]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[꼴]"
+        ]
+       ]
+      ]
+     },
+     "D2_stop_str": {
+      "got": [
+       "exc AttributeError",
+       "exc AttributeError"
+      ],
+      "want": [
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[꼴]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[꼴]"
+        ]
+       ]
+      ]
+     }
+    },
+    "got": {
+     "D1_runs_int": [
+      "exc TypeError",
+      "exc TypeError"
+     ],
+     "D2_stop_str": [
+      "exc AttributeError",
+      "exc AttributeError"
+     ]
+    }
+   }
+  },
+  "RR5E": {
+   "ok": false,
+   "info": {
+    "n": 3,
+    "n_bad": 3,
+    "bad_names": [
+     "E1_resume_of_true",
+     "E2_resume_of_float",
+     "E3_found_attempts_true"
+    ],
+    "bad": {
+     "E1_resume_of_true": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓐ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓐ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓐ]"
+        ]
+       ]
+      ]
+     },
+     "E2_resume_of_float": {
+      "got": [
+       0,
+       true,
+       [],
+       true,
+       true,
+       null,
+       null
+      ],
+      "want": [
+       0,
+       false,
+       [
+        "[ⓐ]"
+       ],
+       true,
+       true,
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓐ]"
+        ]
+       ],
+       [
+        "RESUME_NOT_ALLOWED",
+        [
+         "[ⓐ]"
+        ]
+       ]
+      ]
+     },
+     "E3_found_attempts_true": {
+      "got": [
+       false
+      ],
+      "want": [
+       true
+      ]
+     }
+    },
+    "got": {
+     "E1_resume_of_true": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "E2_resume_of_float": [
+      0,
+      true,
+      [],
+      true,
+      true,
+      null,
+      null
+     ],
+     "E3_found_attempts_true": [
+      false
+     ]
+    }
+   }
+  },
+  "RR5F": {
+   "ok": false,
+   "info": {
+    "n": 21,
+    "n_bad": 2,
+    "bad_names": [
+     "F21_summaryless_no_chain_end",
+     "F5_src_changed_writer"
+    ],
+    "bad": {
+     "F21_summaryless_no_chain_end": {
+      "got": [],
+      "want": [
+       "[ⓑ]"
+      ]
+     },
+     "F5_src_changed_writer": {
+      "got": [
+       0,
+       false,
+       false
+      ],
+      "want": [
+       3,
+       null,
+       true
+      ]
+     }
+    },
+    "got": {
+     "F1_entry_machine": [
+      0,
+      false,
+      [
+       "[ⓐ]"
+      ],
+      true,
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓐ]"
+       ]
+      ]
+     ],
+     "F2_copy_end_bytes": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      true,
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "F3_copy_launch_bytes": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      true,
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "F4_copy_payload": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      true,
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "F5_src_changed_writer": [
+      0,
+      false,
+      false
+     ],
+     "F6_copy_not_done_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓒ]"
+      ]
+     ],
+     "F7_new_launch_copied": [
+      0,
+      false,
+      [
+       "[ⓒ]"
+      ],
+      true,
+      true,
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ],
+      [
+       "RESUME_NOT_ALLOWED",
+       [
+        "[ⓒ]"
+       ]
+      ]
+     ],
+     "F8_recount_sites": [
+      0,
+      false,
+      "ok",
+      "ok",
+      null
+     ],
+     "F9_attempt_json_broken": [
+      "[ⓐ]"
+     ],
+     "F10_no_entry": [
+      "[ⓐ]"
+     ],
+     "F11_new_attempt_resume_obj": [
+      "[ⓑ]"
+     ],
+     "F12_resume_null": [
+      "[ⓑ]"
+     ],
+     "F13_two_sources": [
+      "[원천]"
+     ],
+     "F14_src_attempt_target": [
+      "[원천]"
+     ],
+     "F15_copy_after_new_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓒ]"
+      ]
+     ],
+     "F16_copied_from_2_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓒ]"
+      ]
+     ],
+     "F17_copied_from_true_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓒ]"
+      ]
+     ],
+     "F18_srd_no_dir_forced": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[ⓒ]"
+      ]
+     ],
+     "F19_chain_end_changed": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[원천]"
+      ]
+     ],
+     "F20_no_start_record": [
+      "RESUME_NOT_ALLOWED",
+      [
+       "[원천]"
+      ]
+     ],
+     "F21_summaryless_no_chain_end": []
+    }
+   }
+  }
+ }
+}

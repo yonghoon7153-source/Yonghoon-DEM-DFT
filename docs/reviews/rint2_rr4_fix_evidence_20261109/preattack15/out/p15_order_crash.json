@@ -1,0 +1,18 @@
+{
+ "runs_int": [
+  "EXC",
+  "TypeError: 'int' object is not iterable"
+ ],
+ "runs_int_chain": [
+  "EXC",
+  "TypeError: 'int' object is not iterable"
+ ],
+ "stop_str": [
+  "EXC",
+  "AttributeError: 'str' object has no attribute 'get'"
+ ],
+ "stop_str_chain": [
+  "EXC",
+  "AttributeError: 'str' object has no attribute 'get'"
+ ]
+}

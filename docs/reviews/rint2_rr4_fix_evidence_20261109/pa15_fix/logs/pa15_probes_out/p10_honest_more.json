@@ -1,0 +1,127 @@
+{
+ "H6_src_run_folder_missing": {
+  "name": "H6_src_run_folder_missing",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "accepted_all_three": true,
+  "first_result": {
+   "status": "stopped",
+   "stop": {
+    "code": "RUNNER_RC",
+    "run": "L02_ceiling",
+    "reason": null
+   },
+   "side": "post",
+   "cause": "resource",
+   "resume_ok": true
+  },
+  "last_shape": {
+   "stop": {
+    "code": "RUNNER_RC",
+    "run": "L02_ceiling",
+    "reason": null
+   },
+   "resume": {
+    "from": 1,
+    "copied": [],
+    "rerun": "L01_floor",
+    "compared": [],
+    "determinism": "assumed"
+   },
+   "runs": [
+    [
+     "L01_floor",
+     null,
+     0
+    ],
+    [
+     "L02_ceiling",
+     null,
+     1
+    ]
+   ]
+  }
+ },
+ "H7_src_timeout": {
+  "name": "H7_src_timeout",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "accepted_all_three": true,
+  "first_result": {
+   "status": "stopped",
+   "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L02_ceiling",
+    "reason": null
+   },
+   "side": "post",
+   "cause": "timeout",
+   "resume_ok": true
+  },
+  "last_shape": {
+   "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L03_point",
+    "reason": null
+   },
+   "resume": {
+    "from": 1,
+    "copied": [
+     "L01_floor"
+    ],
+    "rerun": "L02_ceiling",
+    "compared": [
+     {
+      "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+      "same": true
+     }
+    ],
+    "determinism": "compared"
+   },
+   "runs": [
+    [
+     "L01_floor",
+     1,
+     0
+    ],
+    [
+     "L02_ceiling",
+     null,
+     0
+    ]
+   ]
+  }
+ }
+}

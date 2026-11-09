@@ -1,0 +1,11 @@
+== 바탕 (git show 69d714d09)
+d0e040173632d4a0ab4258cb507d694d7839f26aa00d6ee690c1f0b8800774d0  scripts/rint_r_chain.py
+92998cbc15e8da9b57833e1a26f3ce11e7ff985e9aafdd07d62aea33ba3f9dab  scripts/test_rint_r_chain.py
+== patch -p1 < code.diff
+rc=0
+== 적용 뒤 ↔ 작업 트리 (고친 판)
+986bbdb35f537bc933981640bab9def0a2bb163d854da3dfa49bfa129ae0f873  scripts/rint_r_chain.py
+98480e891631263fcebbeba6d30c5a0655678b58a6ec42878f32c3277da71e02  scripts/test_rint_r_chain.py
+986bbdb35f537bc933981640bab9def0a2bb163d854da3dfa49bfa129ae0f873  scripts/rint_r_chain.py
+98480e891631263fcebbeba6d30c5a0655678b58a6ec42878f32c3277da71e02  scripts/test_rint_r_chain.py
+바이트 같음 2/2

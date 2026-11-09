@@ -1,0 +1,20 @@
+{
+ "writer": "exc ResultHeld: ATTEMPT_LEDGER_MISMATCH: attempt_2: 결과 줄을 쓰지 않는다 — 원천 attempt_1 을 같은 바탕에 되돌린 뒤 recover (재개 출처 [원천] attempt_2: 원천 attempt_1 시도 폴더가 같은 바탕 에 0 개 (결과 줄 폴더 attempt_1 · 하나여야) (확인할 수 없는 원천 = 재개 허용 안 함 · fail-closed · ★ 11-09 Codex 회차 ④) · ★ 11-09 사전 공격 15 PC15-03)",
+ "order": [
+  "RESUME_NOT_ALLOWED",
+  [
+   "[원천]"
+  ],
+  "재개 출처 [원천] 재실행 사슬 시도 attempt_1: 시작 기록 자리의 시도 폴더가 없거나 원장 결과 줄과 다르다 (폴더 이름 · 요약 sha · fail-closed · ★ 11-09 Codex 회차 ④)"
+ ],
+ "chain": [
+  "RESUME_NOT_ALLOWED",
+  [],
+  "재실행 사슬 시도 attempt_1 ≠ 원장 결과 줄 (요약 sha · attempt.json)"
+ ],
+ "cli": [
+  3,
+  null,
+  []
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "forged_rename": {
+  "name": "P9_rename",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ]
+ },
+ "accepted_all_three": true,
+ "disk": {
+  "groups_L02_ceilingX": false,
+  "folder_L02_ceilingX": false,
+  "groups_L02_ceiling": true
+ }
+}

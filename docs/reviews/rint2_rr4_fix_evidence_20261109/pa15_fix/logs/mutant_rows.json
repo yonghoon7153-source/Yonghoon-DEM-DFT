@@ -1,0 +1,48 @@
+{
+ "entry_no_machine": [
+  "RR5F:F1_entry_machine"
+ ],
+ "c_bytes": [
+  "RR5F:F2_copy_end_bytes",
+  "RR5F:F3_copy_launch_bytes"
+ ],
+ "c_launch_only": [
+  "RR5F:F2_copy_end_bytes"
+ ],
+ "c_end_only": [
+  "RR5F:F3_copy_launch_bytes"
+ ],
+ "c_payload": [
+  "RR5F:F4_copy_payload"
+ ],
+ "loc_digest": [
+  "RR5F:F5_src_changed_writer"
+ ],
+ "c_copy_srcdone": [
+  "RR5F:F18_srd_no_dir_forced",
+  "RR5F:F6_copy_not_done_forced"
+ ],
+ "c_first_new_done": [
+  "RR5B:B7_first_new_skip_forced"
+ ],
+ "c_new_launch_same": [
+  "RR5F:F7_new_launch_copied"
+ ],
+ "chain_recount_nost": [
+  "RR5F:F8_recount_sites"
+ ],
+ "tlp_recount_nost": [
+  "RR5F:F8_recount_sites"
+ ],
+ "lic_recount_nost": [
+  "RR5F:F8_recount_sites"
+ ],
+ "close_old": [
+  "RR5C:C2_close_no_source",
+  "RR5C:C3_close_contradiction"
+ ],
+ "N_src_names_only": [
+  "RR5B:B0c_src_no_launch",
+  "RR5B:B9_stray_launch_name"
+ ]
+}

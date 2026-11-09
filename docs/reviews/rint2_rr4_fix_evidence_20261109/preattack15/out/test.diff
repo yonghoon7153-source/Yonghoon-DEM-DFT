@@ -1,0 +1,516 @@
+diff --git a/scripts/test_rint_r_chain.py b/scripts/test_rint_r_chain.py
+index 5f88fd5ea..b74eb6d51 100644
+--- a/scripts/test_rint_r_chain.py
++++ b/scripts/test_rint_r_chain.py
+@@ -16212,7 +16212,9 @@ def pa13_ledger(f2, s2):
+     s1 = json.loads((f1 / 'ladder_summary.json').read_text(encoding='utf-8'))
+     (f2 / 'ladder_summary.json').write_bytes(RR.canon_bytes(s2))
+     head = {'kind': 'header', 'schema': RR.LEDGER_SCHEMA, 'plan_sha256': 'b' * 64, 'utc': 'synthetic'}
+-    ent1 = {'kind': 'entry', 'n': 1, 'target': 'ladder:P0', 'machine': 'synthetic', 'resume_of': None, 'plan_sha256': 'b' * 64, 'code_key_sha256': 'c' * 64,
++    #  ★ 11-09 Codex 회차 ④ PC14-02 · 03 — 합성 원장 항목의 기계 = 고정물 attempt.json 의 기계 (실제 사슬 · `led_add` 기본 MACH · 생산자 = attempt.json 을 원장
++    #    항목에서 쓴다 `attempt_open`) · 옛 = 'synthetic' (attempt.json 과 다른 항목 = 다음 재개 허용의 공통 검증 ⓐ 가 원장 · 폴더 모순으로 읽는다 · 기대값 그대로)
++    ent1 = {'kind': 'entry', 'n': 1, 'target': 'ladder:P0', 'machine': MACH, 'resume_of': None, 'plan_sha256': 'b' * 64, 'code_key_sha256': 'c' * 64,
+             'env': {}, 'bed': {}, 'utc': 'synthetic'}
+     ent2 = dict(ent1, n=2, resume_of=1)
+ 
+@@ -16751,6 +16753,500 @@ def t_PA14D():
+     return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad_names': sorted(bad), 'bad': dict(sorted(bad.items())[:24]), 'rows': rows}
+ 
+ 
++# ═════════════════════════ ★ 11-09 Codex 회차 ④ PC14-02 · PC14-03 · RR4-01 (RR4 · 시험 먼저 · 1저자 11-09 "권고대로" = 수정 계획 Q1–Q3 (가)) ═════════════════════════
++#   판정문 `docs/reviews/codex_review_rint2_rr_round4_20261109.md` §3 · §4 · 수정 계획 `docs/reviews/rint2_rr4_fix_plan_20261109.md` §2 · §3 — 재개 자격을 정하는 길이
++#   디스크 · 원장과 모순인 요약을 그대로 믿었다: PC14-02 = 복사 / 새 런 경계 다시 적기 (R1 7 칸 · R2 6 칸 · 원천 남음) · PC14-03 = attempt.json resume_of null +
++#   요약 resume null · 3 시도 사슬에서 from 을 옛 시도로.  고침 = 공통 검증 (ⓐ attempt.json ↔ 원장 항목 · ⓑ resume.from ↔ 그 시점 유효 사슬 끝 · 원천 위치 ·
++#   ⓒ 복사 / 새 런 경계 ↔ 원천 launch / end · payload · ⓓ 실제 첫 새 런 payload 다시 대조) 을 결과 줄 쓰기 (사슬 끝 · recover) · 다음 재개 허용 (--add --resume ·
++#   풀기 전 사슬 다시 셈) · 결과 줄 다시 셈이 같은 함수로.  입력 = 탐침 resume_attack 의 scenario() 꼴 (원 시도 손 파일 · 재실행 = 실제 `ResumeRunner.run` (복사 =
++#   실제 `_copy` · read_run 만 가짜) · 새 런 = 가짜 `_execute`) + 반입 frozen_cases 바이트 그대로.  행 기대 = 정직 (생산자 꼴) = 그대로 · 모순 = 자격 False ·
++#   RESUME_NOT_ALLOWED + 사유 표지 ([ⓐ] · [ⓑ] · [ⓒ] · [ⓓ] · [원천]).  RR4-01 = 원천 자리 일반 파일 + 옆 거부 기록 (변이 M56 검출 행).
++RR4_FN = 'p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json'
++RR4_N1, RR4_N2, RR4_N3 = 'L01_floor', 'L02_ceiling', 'L03_point'
++RR4_ROLES = (('floor', 'inf'), ('ceiling', 0.0), ('point', 10000.0))     # 탐침 req(i) 그대로 (rj 꼴 = frozen_cases 요약과 같음)
++RR4_PLAN = {'exec_policy': {'max_attempts': 5}}
++RR4_W = '재개 출처'                                                       # 공통 검증 사유 낱말 (사슬 글)
++RR4_FROZEN = ROOT / 'docs' / 'reviews' / 'codex_rint2_rr_round4_evidence_20261109' / 'resume_attack' / 'frozen_cases'
++#: `ResumeRunner._src_done` 원천 sha256 (11-09 바탕 e48e5fa04 = 핀 1f9f3607e 같은 바이트) — 수정 계획 §2-4 = 그대로 (바꾸면 복사 · 재실행 동작이 바뀐다 · 한정)
++RR4_SRC_DONE_SHA = 'b530c2ad9afe9c0a45181627396d4b4da3d329702d9d537b699b1373c0059beb'
++
++
++def rr4_req(i):
++    role, rj = RR4_ROLES[i - 1]
++    return RR.run_request('L', i, SBE_KIT, role, 'P0', None, rj, 1, False, None)[1]
++
++
++def rr4_pub(raw):
++    """판독 완료 팔 기록 (생산자 꼴 = ct06_pub · sha256 = 그 payload 바이트)."""
++    return dict(ct06_pub(0), sha256=hashlib.sha256(raw).hexdigest())
++
++
++def rr4_files(f, i, text, rc=0, log='synthetic fixture\n'):
++    """런 i 의 파일 (payload = 합성 글 · 로그 · 그룹 시작 · 끝 기록 = 그 시도 폴더 경로에서 지은 표지 · 확인 True) → 런 기록 (생산자 꼴 · rc ≠ 0 = 팔 읽음 없음)."""
++    q = rr4_req(i)
++    nm, od = q['name'], RR.record_outdir(q)
++    (f / od).mkdir(parents=True, exist_ok=True)
++    (f / od / RR4_FN).write_bytes(RR.canon_bytes({'synthetic': text}))
++    raw = (f / od / RR4_FN).read_bytes()
++    (f / 'logs').mkdir(parents=True, exist_ok=True)
++    (f / 'logs' / f'{nm}.log').write_text(log, encoding='utf-8')
++    tok = hashlib.sha256(f'{f}|{i}'.encode('utf-8')).hexdigest()[:32]
++    (f / 'groups').mkdir(parents=True, exist_ok=True)
++    (f / 'groups' / f'{nm}.launch.json').write_bytes(RR.canon_bytes({'schema': RR.GROUP_SCHEMA, 'name': nm, 'token': tok}))
++    (f / 'groups' / f'{nm}.end.json').write_bytes(RR.canon_bytes({'schema': RR.GROUP_SCHEMA, 'name': nm, 'token': tok, 'by': 'chain', 'cause': None,
++                                                                  'rc': rc, 'confirmed': True}))
++    return dict(q, outdir=od, rc=rc, group_cause=None, seconds=0.0, machine=MACH, arms_read=[rr4_pub(raw)] if rc == 0 else [])
++
++
++def rr4_att(f, n, ro, commit='a' * 40, machine=MACH):
++    f = Path(f)
++    f.mkdir(parents=True, exist_ok=True)
++    (f / 'attempt.json').write_bytes(RR.canon_bytes({'schema': RR.ATTEMPT_SCHEMA, 'n': n, 'target': 'ladder:P0', 'machine': machine, 'resume_of': ro,
++                                                     'ledger_commit': commit}))
++    return f
++
++
++def rr4_att_set(f, **kw):
++    a = json.loads((Path(f) / 'attempt.json').read_text(encoding='utf-8'))
++    a.update(kw)
++    (Path(f) / 'attempt.json').write_bytes(RR.canon_bytes(a))
++
++
++def rr4_summ(code, run, runs, resume=None):
++    return {'status': 'STOPPED', 'stop': {'code': code, 'run': run, 'reason': None}, 'runs': runs, 'resume': resume}
++
++
++def rr4_put(f, s):
++    (Path(f) / 'ladder_summary.json').write_bytes(RR.canon_bytes(s))
++    return s
++
++
++def rr4_first(base):
++    """원 시도 attempt_1 — 바닥 런 끝남 · 천장 런 러너 rc 1 (메모리 부족 로그 · 남은 payload 'source-ceiling') = RUNNER_RC · resource · 재실행 자격."""
++    f1 = rr4_att(Path(base) / 'attempt_1', 1, None)
++    return f1, rr4_put(f1, rr4_summ('RUNNER_RC', RR4_N2, [rr4_files(f1, 1, 'floor'),
++                                                          rr4_files(f1, 2, 'source-ceiling', rc=1, log='MemoryError synthetic\n')]))
++
++
++def rr4_resume(src, dst, n, src_n, ceiling, rc=0, before=False):
++    """재실행 시도 dst (attempt_<n> · resume_of 1) ← 원천 src (attempt_<src_n> = 그 시점 사슬 끝) — 실제 `ResumeRunner.run` 차례 (`_src_done` · `_copy` · 첫 끝나지
++    않은 런 = 재실행 · 남은 payload 대조 · resume 칸): 복사 = 실제 `_copy` (read_run 만 가짜 = 그 payload 의 판독 완료 꼴) · 새 런 = 가짜 `_execute` (천장 = ceiling
++    글 · rc ≠ 0 = RUNNER_RC · before = 기록 전 시간 상한 TIME_LIMIT) · 천장 뒤 멈춤 없음 = 다음 런 L03 의 기록 전 TIME_LIMIT → (dst, 요약)."""
++    dst = rr4_att(Path(dst), n, 1)
++    rn = RR.ResumeRunner('UNUSED', src, dst, {}, None, 0, {}, parent_env={}, prefix='L', src=src, src_n=src_n, machine=MACH)
++    rn.env_delta = lambda *_a: {}
++
++    def fake_execute(name, q, od, delta):
++        if before:
++            raise RR.Stop('TIME_LIMIT', '시간 상한 (시험 · 런 기록 전)', name)
++        rec = rr4_files(dst, 2, ceiling, rc=rc, log='MemoryError synthetic\n' if rc else 'synthetic fixture\n')
++        rn.records.append(rec)
++        if rc:
++            raise RR.Stop('RUNNER_RC', f'rc {rc} (시험)', name)
++        return []
++
++    def fake_read(outdir, req, *_a, **_k):
++        return [dict(rr4_pub((Path(outdir) / RR4_FN).read_bytes()), sigma=1.0, dsigma_rel=0.0)]
++    rn._execute = fake_execute
++    code, run = 'TIME_LIMIT', RR4_N3
++    with rc_patch(read_run=fake_read), contextlib.redirect_stdout(io.StringIO()):
++        try:
++            for i in (1, 2):
++                role, rj = RR4_ROLES[i - 1]
++                rn.run(SBE_KIT, role, 'P0', None, rj, 1)
++        except RR.Stop as e:
++            code, run = e.code, e.run
++    return dst, rr4_put(dst, rr4_summ(code, run, copy.deepcopy(rn.records), copy.deepcopy(rn.resume)))
++
++
++def rr4_two(tag, ceiling, rc=0, before=False):
++    """2 시도 (원 시도 1 → 재실행 2 · 원천 = 1) → [(폴더, 요약)] · ceiling = 'source-ceiling' (대조 같음 · 자격) · 그 밖 글 (RESUME_MISMATCH)."""
++    base = Path(TD) / 'rr4' / tag
++    a1 = rr4_first(base)
++    return [a1, rr4_resume(a1[0], base / 'attempt_2', 2, 1, ceiling, rc=rc, before=before)]
++
++
++def rr4_three(tag, ceiling3):
++    """3 시도 사슬 — 시도 2 = 1 에서 재실행 · 천장 다시 rc 1 (남은 payload 'newer-different-ceiling' · 자격) · 시도 3 = 그 시점 사슬 끝 2 에서 재실행 · 천장 =
++    ceiling3 ('newer-different-ceiling' = 대조 같음 · 자격 / 'source-ceiling' = RESUME_MISMATCH)."""
++    base = Path(TD) / 'rr4' / tag
++    a1 = rr4_first(base)
++    a2 = rr4_resume(a1[0], base / 'attempt_2', 2, 1, 'newer-different-ceiling', rc=1)
++    return [a1, a2, rr4_resume(a2[0], base / 'attempt_3', 3, 2, ceiling3)]
++
++
++def rr4_edit(atts, *fns, att=None):
++    """끝 시도 요약을 고쳐 다시 씀 (att = 끝 시도 attempt.json 칸 바꿈) → 같은 목록 (끝 요약 = 고친 것)."""
++    f, s = atts[-1]
++    s = copy.deepcopy(s)
++    for fn in fns:
++        fn(s)
++    rr4_put(f, s)
++    if att:
++        rr4_att_set(f, **att)
++    return atts[:-1] + [(f, s)]
++
++
++def rr4_tl(s):
++    s['stop'].update(code='TIME_LIMIT', run=RR4_N3, reason=None)
++
++
++def rr4_r1(s):
++    """PC14-02 R1 (7 칸) — 멈춤 두 칸 · L02 copied_from 1 · copied [L01, L02] · rerun L03 · compared [] · determinism null."""
++    rr4_tl(s)
++    s['runs'][1]['copied_from'] = 1
++    s['resume'].update(copied=[RR4_N1, RR4_N2], rerun=RR4_N3, compared=[], determinism=None)
++
++
++def rr4_r2(s):
++    """PC14-02 R2 (6 칸) — 멈춤 두 칸 · L01 copied_from 지움 · copied [] · rerun L01 · compared.same True."""
++    rr4_tl(s)
++    s['runs'][0].pop('copied_from')
++    s['resume'].update(copied=[], rerun=RR4_N1, compared=[{'file': RR4_FN, 'same': True}])
++
++
++def rr4_null(s):
++    """PC14-03 attempt-null 의 요약 쪽 — 멈춤 두 칸 · resume null (attempt.json resume_of null 은 `rr4_edit(att=…)`)."""
++    rr4_tl(s)
++    s['resume'] = None
++
++
++def rr4_rebind(s):
++    """PC14-03 3 시도 from 다시 결속 (5 칸) — 멈춤 두 칸 · from 2 → 1 · L01 copied_from 2 → 1 · compared.same True."""
++    rr4_tl(s)
++    s['resume']['from'] = 1
++    s['runs'][0]['copied_from'] = 1
++    s['resume']['compared'][0]['same'] = True
++
++
++def rr4_same_true(s):
++    """PC13-01 같은 부류 (원천 남음) — 멈춤 두 칸 · compared.same True (ⓓ 행의 요약 편집)."""
++    rr4_tl(s)
++    s['resume']['compared'] = [dict(x, same=True) for x in s['resume']['compared']]
++
++
++def rr4_lines(atts, head_plan='b' * 64, last_result=True, machine=MACH):
++    """시도 [(폴더, 요약)] → 원장 줄 — 머리 · 항목 (1 = 새 시도 · 그 뒤 = resume_of 1) · 시작 기록 (그 폴더의 바탕 · 이 기계 신원 · 죽은 사슬 부모) · 결과 줄 (폴더
++    증거만 = `attempt_result_line` — 고치기 전 쓰기와 같은 값 · 원장만 믿는 소비자 시험) · last_result False = 끝 시도 결과 줄 없음 (recover 가 쓴다)."""
++    out = [{'kind': 'header', 'schema': RR.LEDGER_SCHEMA, 'plan_sha256': head_plan, 'utc': 'synthetic'}]
++    for k, (f, s) in enumerate(atts, 1):
++        out.append({'kind': 'entry', 'n': k, 'target': 'ladder:P0', 'machine': machine, 'resume_of': None if k == 1 else 1, 'plan_sha256': head_plan,
++                    'code_key_sha256': 'c' * 64, 'env': {}, 'bed': {}, 'utc': 'synthetic'})
++        out.append({'kind': 'start', 'n': k, 'base': str(Path(f).parent.resolve()), 'folder': Path(f).name, 'host': RR.host_ident(), 'chain_pid': DEAD_PID,
++                    'chain_start': None, 'utc': 'synthetic'})
++        if k < len(atts) or last_result:
++            out.append(RR.attempt_result_line(k, f, s, 'recover'))
++    return out
++
++
++def rr4_state(atts, machine=MACH):
++    return RR.ledger_parse(''.join(RR.ledger_line(x) for x in rr4_lines(atts, machine=machine)).encode('utf-8'))
++
++
++def rr4_next(st):
++    return dict(st['entries'][1], n=len(st['entries']) + 1, resume_of=1)
++
++
++def rr4_tag(prob):
++    """사유 글 → 공통 검증 표지 ([ⓐ] · [ⓑ] · [ⓒ] · [ⓓ] · [원천]) 목록 (없으면 [])."""
++    return [t for t in ('[ⓐ]', '[ⓑ]', '[ⓒ]', '[ⓓ]', '[원천]') if isinstance(prob, str) and t in prob]
++
++
++def rr4_places(atts, machine=MACH):
++    """자리 둘 (원장만) — 끝 시도 결과 줄 (폴더 증거 · 옛 쓰기) 를 믿는 다음 --resume 1 차례 (`attempt_order_problem`) · 풀기 전 사슬 다시 셈 (`resume_chain_problem`)
++    → [결과 줄 자격, 차례 [멈춤, 표지], 사슬 [멈춤, 표지]]."""
++    st = rr4_state(atts, machine=machine)
++    nx = rr4_next(st)
++    n = len(atts)
++    o = RR.attempt_order_problem(st, nx, RR4_PLAN)
++    c = RR.resume_chain_problem(st, nx, n + 1, Path(atts[-1][0]).parent)
++    return [st['results'][n]['resume_ok'], [o[0], rr4_tag(o[1])] if o else None, [c[0], rr4_tag(c[1])] if c else None]
++
++
++def rr4_cli(tag, atts, machine=MACH):
++    """실제 git 원장 (사슬 `--init` 머리 = 고정물 계획) + 손 줄 (항목 · 시작 기록 · 앞 시도 결과 줄 · attempt.json 시작 커밋 = 그 원장 커밋) → 끝 시도 폴더에
++    --stage recover --ledger (실제 CLI · `recover_ledger` 결과 줄 쓰기) → [rc, 결과 줄 자격, 끝 커밋 글 표지, 다시 셈 (같은 원장 · 같은 함수) 사유 | None]."""
++    d, _rc, _so = led_new(f'RR4_{tag}')
++    head = led_lines(d)[0]
++    c0 = git_(d, 'rev-parse', 'HEAD')
++    for f, _s in atts:
++        rr4_att_set(f, ledger_commit=c0)
++    for x in rr4_lines(atts, head_plan=head['plan_sha256'], last_result=False, machine=machine)[1:]:
++        led_hand(d, x)
++    rc, so = call(['--stage', 'recover', '--out', str(atts[-1][0]), '--ledger', str(d)])
++    n = len(atts)
++    r = led_result(d, n) or {}
++    msg = git_(d, 'log', '-1', '--format=%B')
++    st = RR.ledger_parse(led_raw(d))
++    try:
++        rec = RR.result_line_problem(n, atts[-1][0], r, st=st, found=RR._attempt_folders([Path(atts[-1][0]).parent]))
++    except TypeError as e:                                # 고치기 전 = 다시 셈이 원장 상태를 받지 않는다
++        rec = f'api_absent {e}'[:120]
++    return [rc, r.get('resume_ok'), rr4_tag(msg) if RR4_W in msg else [], rec]
++
++
++def rr4_frozen(label, tag, machine='synthetic'):
++    """반입 frozen_cases/<label> 바이트 그대로 → 시도 [(폴더, 요약)] (attempt_1 · 2 · (3))."""
++    dst = Path(TD) / 'rr4' / 'frozen' / tag
++    shutil.copytree(RR4_FROZEN / label, dst)
++    return [(dst / f'attempt_{k}', json.loads((dst / f'attempt_{k}' / 'ladder_summary.json').read_text(encoding='utf-8')))
++            for k in (1, 2, 3) if (dst / f'attempt_{k}').is_dir()]
++
++
++def rr4_neg_rows():
++    """(이름, 시도 [(폴더, 요약)] 만드는 함수, 기대 표지, 기계) — 음성 (고치기 전 = 자격 True · 차례 · 사슬 통과 → 고친 뒤 = 자격 False · RESUME_NOT_ALLOWED + 표지)."""
++    return [
++        ('N1_R1', lambda t: rr4_edit(rr4_two(t, 'changed-ceiling'), rr4_r1), '[ⓒ]', MACH),
++        ('N2_R2', lambda t: rr4_edit(rr4_two(t, 'changed-ceiling'), rr4_r2), '[ⓒ]', MACH),
++        ('N3_attempt_null', lambda t: rr4_edit(rr4_two(t, 'changed-ceiling'), rr4_null, att={'resume_of': None}), '[ⓐ]', MACH),
++        ('N3a_attempt_only', lambda t: rr4_edit(rr4_two(t, 'source-ceiling'), att={'resume_of': None}), '[ⓐ]', MACH),
++        ('N4_from_rebind', lambda t: rr4_edit(rr4_three(t, 'source-ceiling'), rr4_rebind), '[ⓑ]', MACH),
++        ('Z1_frozen_R1', lambda t: rr4_frozen('PC14_02_R1', t), '[ⓒ]', 'synthetic'),
++        ('Z2_frozen_R2', lambda t: rr4_frozen('PC14_02_R2', t), '[ⓒ]', 'synthetic'),
++        ('Z3_frozen_attempt_null', lambda t: rr4_frozen('PC14_03_attempt_null', t), '[ⓐ]', 'synthetic'),
++        ('Z4_frozen_from_rebind', lambda t: rr4_frozen('PC14_03_from_rebind_forged', t), '[ⓑ]', 'synthetic'),
++    ]
++
++
++def rr4_row_state(cli, places, want_tag):
++    """행 값 → 상태 이름 (accepted = 고치기 전 꼴 · rejected<표지> · other) — 변이 기록용."""
++    if cli[1] is True and places[1] is None and places[2] is None:
++        return 'accepted'
++    tags = sorted(set(cli[2]) | set((places[1] or [None, []])[1]) | set((places[2] or [None, []])[1]))
++    return 'rejected' + ''.join(tags) if tags else 'other'
++
++
++@check('RR4A', '★ 11-09 Codex 회차 ④ PC14-02 · PC14-03 (판정문 §3 반례 그대로 · 수정 계획 Q1 (가) · 시험 먼저) — 정직 RESUME_MISMATCH · 정직 재실행 요약에서 '
++               'R1 (7 칸: 멈춤 두 칸 · L02 copied_from 1 · copied [L01, L02] · rerun L03 · compared [] · null) · R2 (6 칸: L01 copied_from 지움 · copied [] · rerun '
++               'L01 · same True) · attempt-null (멈춤 두 칸 · resume null · attempt.json resume_of null) · attempt.json 만 (resume_of null) · 3 시도 from 다시 결속 '
++               '(5 칸: from 2 → 1 · L01 copied_from 1 · same True) + 반입 frozen_cases 넷 (바이트 그대로) → 세 자리 (실제 git 원장 recover --ledger 결과 줄 · 다음 '
++               '--resume 1 차례 `attempt_order_problem` · 풀기 전 사슬 다시 셈 `resume_chain_problem`) 에서 옛 = 자격 True · 통과 · 통과 → 공통 검증 (ⓐ attempt.json ↔ '
++               '원장 항목 · ⓑ resume.from ↔ 그 시점 유효 사슬 끝 · ⓒ 복사 / 새 런 경계 ↔ 원천 launch / end · payload) = 자격 False (사유 = 원장 커밋 글) · '
++               'RESUME_NOT_ALLOWED · 표지 (R1 · R2 = ⓒ · attempt-null · attempt.json 만 = ⓐ · from 다시 결속 = ⓑ) · 쓴 False 를 다시 셈이 같은 원장으로 재현 (None)')
++def t_RR4A():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    rows, bad = {}, {}
++    for nm, mk, tag, mach in rr4_neg_rows():
++        try:
++            places = rr4_places(mk(f'A_{nm}_p'), machine=mach)
++            cli = rr4_cli(nm, mk(f'A_{nm}_c'), machine=mach)
++        except Exception as e:                            # noqa: BLE001 — 판정 함수 예외 = 그 행 실패
++            rows[nm] = f'exc {type(e).__name__}: {e}'[:240]
++            bad[nm] = rows[nm]
++            continue
++        beh = (cli[0] == 0 and cli[1] is False and tag in cli[2] and places[0] is True
++               and places[1] is not None and places[1][0] == 'RESUME_NOT_ALLOWED' and tag in places[1][1]
++               and places[2] is not None and places[2][0] == 'RESUME_NOT_ALLOWED' and tag in places[2][1])
++        rows[nm] = {'cli': cli, 'places': places, 'state': rr4_row_state(cli, places, tag), 'behaviour_ok': beh, 'recount_ok': cli[3] is None}
++        if not (beh and cli[3] is None):
++            bad[nm] = {'got': rows[nm], 'want_tag': tag}
++    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad_names': sorted(bad), 'states': {k: (v['state'] if isinstance(v, dict) else v)
++                                                                                           for k, v in rows.items()},
++                     'bad': dict(sorted(bad.items())[:12]), 'rows': rows}
++
++
++def rr4_pos_rows():
++    """(이름, 시도 만드는 함수, 기대 [결과 줄 자격, 차례 멈춤 | None, 사슬 멈춤 | None]) — 정직 (생산자 꼴 · 고치기 전 · 뒤 같음)."""
++    return [
++        ('P1_new_attempt', lambda t: [rr4_first(Path(TD) / 'rr4' / t)], [True, None, None]),
++        ('P2_honest_mismatch', lambda t: rr4_two(t, 'changed-ceiling'), [False, 'RESUME_NOT_ALLOWED', None]),
++        ('P3_after_compare', lambda t: rr4_two(t, 'source-ceiling'), [True, None, None]),
++        ('P4_before_first_rerun', lambda t: rr4_two(t, None, before=True), [True, None, None]),
++        ('P5_partial_rerun_stop', lambda t: rr4_two(t, 'part-ceiling', rc=1), [True, None, None]),
++        ('P6_chain3', lambda t: rr4_three(t, 'newer-different-ceiling'), [True, None, None]),
++        ('P7_chain3_mismatch', lambda t: rr4_three(t, 'source-ceiling'), [False, 'RESUME_NOT_ALLOWED', None]),
++        ('P8_frozen_honest_mismatch', lambda t: rr4_frozen('honest_mismatch', t), [False, 'RESUME_NOT_ALLOWED', None]),
++        ('P9_frozen_PC13_01_two_fields', lambda t: rr4_frozen('PC13_01_two_fields', t), [False, 'RESUME_NOT_ALLOWED', None]),
++    ]
++
++
++@check('RR4B', '★ 11-09 Codex 회차 ④ PC14-02 · 03 양성 (고치기 전 · 뒤 같아야 · 판정문 §3 "원 반례 · 정직 3 시도 · 복사 / 새 런 양성 보존") — 새 시도 (resume_of null · '
++               'resume null) · 정직 RESUME_MISMATCH (False) · 정직 대조 뒤 멈춤 (True) · 정직 첫 재실행 전 멈춤 (True) · 정직 재실행 런 자체 멈춤 (True) · 정직 3 시도 '
++               '사슬 (from = 그 시점 사슬 끝 2 · True) · 정직 3 시도 RESUME_MISMATCH (False) · 반입 frozen 정직 RESUME_MISMATCH · PC13-01 두 칸 (False 그대로) → 세 자리 '
++               '그대로 · 결과 줄 사유 낱말 없음 · 다시 셈 (같은 원장 · 같은 함수) = None (ATTEMPT_LEDGER_MISMATCH 없음) · 정직 복사 = groups launch / end 바이트 = 원천 · '
++               '새 런 = 다름 · 실제 사슬 PA13 시나리오 (l3 · rr = 실제 ResumeRunner · 실제 git 원장) 의 다음 --resume 1 (원장 사본 · 실제 CLI --add) = rc 0 · 차례 · 사슬 '
++               '다시 셈 None')
++def t_RR4B():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    rows, bad = {}, {}
++    for nm, mk, want in rr4_pos_rows():
++        mach = 'synthetic' if 'frozen' in nm else MACH
++        try:
++            places = rr4_places(mk(f'B_{nm}_p'), machine=mach)
++            cli = rr4_cli(nm, mk(f'B_{nm}_c'), machine=mach)
++        except Exception as e:                            # noqa: BLE001
++            rows[nm] = f'exc {type(e).__name__}: {e}'[:240]
++            bad[nm] = rows[nm]
++            continue
++        got = [places[0], (places[1] or [None])[0], (places[2] or [None])[0]]
++        beh = got == want and cli[0] == 0 and cli[1] is want[0] and not cli[2]
++        rows[nm] = {'cli': cli, 'places': places, 'behaviour_ok': beh, 'recount_ok': cli[3] is None}
++        if not (beh and cli[3] is None):
++            bad[nm] = {'got': rows[nm], 'want': want}
++    #  정직 복사 · 새 런 — 디스크 (groups launch / end 바이트)
++    atts = rr4_two('B_disk', 'source-ceiling')
++    f1, f2 = atts[0][0], atts[1][0]
++
++    def gb(f, nm, ext):
++        return (Path(f) / 'groups' / f'{nm}.{ext}').read_bytes()
++    rows['disk'] = {'copy_launch_same': gb(f1, RR4_N1, 'launch.json') == gb(f2, RR4_N1, 'launch.json'),
++                    'copy_end_same': gb(f1, RR4_N1, 'end.json') == gb(f2, RR4_N1, 'end.json'),
++                    'new_launch_differs': gb(f1, RR4_N2, 'launch.json') != gb(f2, RR4_N2, 'launch.json')}
++    if not all(rows['disk'].values()):
++        bad['disk'] = rows['disk']
++    #  실제 사슬 (PA13 시나리오 = 실제 ResumeRunner · 실제 git 원장) — 원장 사본에서 다음 --resume 1
++    sc = scen('PA13', pa13_scen)
++    for k in ('l3', 'rr'):
++        try:
++            d0 = sc[k]['d']
++            st = RR.ledger_parse(led_raw(d0))
++            nx = dict(st['entries'][1], n=len(st['entries']) + 1, resume_of=1)
++            o = RR.attempt_order_problem(st, nx, {'exec_policy': {'max_attempts': 5}})
++            c = RR.resume_chain_problem(st, nx, nx['n'], Path(sc[k]['b']['out']).parent)
++            dc = Path(TD) / 'rr4' / f'led_{k}'
++            git_(Path(TD), 'clone', '-q', str(d0), str(dc))
++            rc_add, _n, so = led_add(dc, 'ladder:P0', resume=1)
++            rows[f'real_{k}'] = [o, c, rc_add]
++            if o is not None or c is not None or rc_add != 0:
++                bad[f'real_{k}'] = (rows[f'real_{k}'], so[-300:])
++        except Exception as e:                            # noqa: BLE001
++            rows[f'real_{k}'] = f'exc {type(e).__name__}: {e}'[:240]
++            bad[f'real_{k}'] = rows[f'real_{k}']
++    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad_names': sorted(bad), 'bad': dict(sorted(bad.items())[:12]), 'rows': rows}
++
++
++@check('RR4C', '★ 11-09 Codex 회차 ④ RR4-01 (P3 · 판정문 §4 · 수정 계획 Q2 (가)) — 원천 자리 = 일반 파일 attempt_1 + 옆 attempt_1.rejected.json · post-rerun 요약 '
++               '(from 1 · copied [] · rerun R · compared [] · assumed) → `resume_rerun_problem` = 원천이 옆 거부 기록이라는 사유 (지금 코드 = 거부 · 변이 M56 '
++               '`src.is_dir()` → `src.exists()` 는 이 행을 놓친다 = 구별 가능한 미검출 · 사전 공격 14 의 동치 분류 정정) · 대조 = 같은 요약 · 원천 자리 = 폴더 (거부 기록 사유 '
++               '없음 · None)')
++def t_RR4C():
++    root = Path(TD) / 'rr4' / 'm56'
++    root.mkdir(parents=True)
++    (root / 'attempt_1').write_text('not a directory\n', encoding='utf-8')
++    (root / 'attempt_1.rejected.json').write_text('{}\n', encoding='utf-8')
++    s = {'resume': {'from': 1, 'copied': [], 'rerun': 'R', 'compared': [], 'determinism': 'assumed'},
++         'runs': [{'name': 'R', 'outdir': 'R_arm1', 'arms': 1, 'arm_list': None}]}
++    why = RR.resume_rerun_problem(s, root / 'attempt_2', 'TIME_LIMIT', 'NEXT')
++    root2 = Path(TD) / 'rr4' / 'm56_dir'
++    (root2 / 'attempt_1').mkdir(parents=True)
++    why_dir = RR.resume_rerun_problem(s, root2 / 'attempt_2', 'TIME_LIMIT', 'NEXT')
++    ok = isinstance(why, str) and 'attempt_1' in why and '옆 거부 기록' in why and why_dir is None
++    return ok, {'file_and_side': why, 'dir': why_dir}
++
++
++def rr4_fail_closed_rows():
++    """원천을 찾을 수 없음 (fail-closed) · 다른 바탕의 원천 (판정 · 합치기 꼴) — (이름, 함수 → 값, 기대)."""
++    def nosrc_cli():
++        atts = rr4_two('D_nosrc_cli', 'source-ceiling')
++        d, _rc, _so = led_new('RR4_D_nosrc_cli')
++        head = led_lines(d)[0]
++        c0 = git_(d, 'rev-parse', 'HEAD')
++        for f, _s in atts:
++            rr4_att_set(f, ledger_commit=c0)
++        for x in rr4_lines(atts, head_plan=head['plan_sha256'], last_result=False)[1:]:
++            led_hand(d, x)
++        shutil.rmtree(atts[0][0])                          # 원천 attempt_1 을 바탕에서 치움 (결과 줄 1 은 원장에 있다)
++        rc, _so2 = call(['--stage', 'recover', '--out', str(atts[1][0]), '--ledger', str(d)])
++        msg = git_(d, 'log', '-1', '--format=%B')
++        return [rc, (led_result(d, 2) or {}).get('resume_ok'), rr4_tag(msg) if RR4_W in msg else []]
++
++    def nosrc_recount():
++        atts = rr4_two('D_nosrc_recount', 'source-ceiling')
++        st = rr4_state(atts)
++        r2 = st['results'][2]
++        try:
++            why = RR.result_line_problem(2, atts[1][0], r2, st=st, found={2: [atts[1][0]]})
++        except TypeError as e:
++            return f'api_absent {e}'[:120]
++        return [why is not None, rr4_tag(why)]
++
++    def other_base(fn_edit):
++        atts = rr4_two('D_other_' + fn_edit.__name__, 'changed-ceiling')
++        atts = rr4_edit(atts, fn_edit)
++        b2 = Path(TD) / 'rr4' / ('D_other_b_' + fn_edit.__name__)
++        b2.mkdir(parents=True)
++        f2b = b2 / 'attempt_2'
++        shutil.move(str(atts[1][0]), str(f2b))
++        atts = [atts[0], (f2b, atts[1][1])]
++        st = rr4_state(atts)
++        found = {1: [atts[0][0]], 2: [f2b]}
++        fn = getattr(RR, 'resume_provenance_problem', None)
++        if fn is None:
++            return 'api_absent resume_provenance_problem'
++        why = fn(st, 2, f2b, atts[1][1], found=found)
++        rec = RR.result_line_problem(2, f2b, st['results'][2], st=st, found=found)
++        return [st['results'][2]['resume_ok'], rr4_tag(why), rr4_tag(rec)]
++
++    return [
++        ('F1_nosrc_writing', nosrc_cli, [0, False, ['[원천]']]),
++        ('F2_nosrc_recount', nosrc_recount, [True, ['[원천]']]),
++        ('F3_other_base_same_true', lambda: other_base(rr4_same_true), [True, ['[ⓓ]'], ['[ⓓ]']]),
++    ]
++
++
++@check('RR4D', '★ 11-09 Codex 회차 ④ PC14-02 · 03 같은 부류 (수정 계획 §2 한정 "원천이 같은 바탕에 없는 시도" · 메인 결정 = fail-closed) — 원천을 찾을 수 없음: '
++               '정직 재실행 시도의 원천 attempt_1 을 바탕에서 치운 뒤 실제 recover --ledger = 결과 줄 자격 False · 사유 [원천] (옛 = 대조 안 함 · True) · 다시 셈 '
++               '(판정 · 합치기 꼴 · 찾은 시도 폴더에 원천 없음) = 사유 [원천] (조용한 통과 없음) · 원천이 다른 바탕 (찾은 폴더에 있음) 인데 compared same True 로 '
++               '고친 요약 = 공통 검증 ⓓ (실제 첫 새 런 payload ↔ 그 원천) = 사유 · 다시 셈 = 사유 [ⓓ] (폴더만의 대조 = 원천이 같은 바탕에 없어 안 함 · True)')
++def t_RR4D():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    rows, bad = {}, {}
++    for nm, fn, want in rr4_fail_closed_rows():
++        try:
++            rows[nm] = fn()
++        except Exception as e:                            # noqa: BLE001
++            rows[nm] = f'exc {type(e).__name__}: {e}'[:240]
++        if rows[nm] != want:
++            bad[nm] = {'got': rows[nm], 'want': want}
++    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad': bad, 'rows': rows}
++
++
++def rr4_callers(src, name):
++    """원천 글 → 이름 name 을 부르는 함수 (클래스.메서드 포함) 이름 집합."""
++    tree = ast.parse(src)
++    out = set()
++
++    def walk(node, prefix):
++        for ch in ast.iter_child_nodes(node):
++            if isinstance(ch, (ast.FunctionDef, ast.AsyncFunctionDef)):
++                if any(isinstance(n, ast.Call) and ((isinstance(n.func, ast.Name) and n.func.id == name)
++                                                    or (isinstance(n.func, ast.Attribute) and n.func.attr == name)) for n in ast.walk(ch)):
++                    out.add(prefix + ch.name)
++                walk(ch, prefix + ch.name + '.')
++            elif isinstance(ch, ast.ClassDef):
++                walk(ch, prefix + ch.name + '.')
++            else:
++                walk(ch, prefix)
++    walk(tree, '')
++    return out
++
++
++@check('RR4E', '★ 11-09 Codex 회차 ④ PC14-02 · 03 구조 (판정문 §3 ① · 수정 계획 Q1 (가) "같은 함수") — rint_r_chain.py 원천: 공통 검증 `resume_provenance_problem` 을 '
++               '결과 줄 쓰기 (`attempt_close` · `recover_ledger` 가 부르는 결과 줄 함수) · 다시 셈 (`result_recount` · `result_line_problem` 이 부르는 함수) · 다음 재개 '
++               '허용 (`attempt_order_problem` · `resume_chain_problem`) 이 부른다 · ⓐ 대조 = `found_attempts_problem` 과 같은 함수 (`attempt_entry_diff`) · '
++               '`ResumeRunner._src_done` 원천 = 바탕 그대로 (sha256 · 한정)')
++def t_RR4E():
++    src = Path(RR.__file__).read_text(encoding='utf-8')
++    have = callable(getattr(RR, 'resume_provenance_problem', None)) and callable(getattr(RR, 'attempt_entry_diff', None))
++    prov = rr4_callers(src, 'resume_provenance_problem') if have else set()
++    rf = rr4_callers(src, 'result_fields_ledger') if have else set()
++    write_fn = rr4_callers(src, 'attempt_result') if have else set()
++    diff = rr4_callers(src, 'attempt_entry_diff') if have else set()
++    import inspect
++    sd = hashlib.sha256(inspect.getsource(RR.ResumeRunner._src_done).encode('utf-8')).hexdigest()
++    got = {'have': have, 'prov_callers': sorted(prov), 'fields_ledger_callers': sorted(rf), 'write_callers': sorted(write_fn),
++           'entry_diff_callers': sorted(diff), 'src_done_sha': sd}
++    ok = (have and {'result_fields_ledger', 'resume_chain_provenance_problem', 'resume_chain_problem'} <= prov
++          and {'attempt_result', '_result_recount'} <= rf and {'attempt_close', 'recover_ledger'} <= write_fn
++          and 'attempt_order_problem' in rr4_callers(src, 'resume_chain_provenance_problem')
++          and 'result_line_problem' in rr4_callers(src, '_result_recount') and 'result_recount' in rr4_callers(src, '_result_recount')
++          and {'found_attempts_problem', 'resume_provenance_problem'} <= diff and sd == RR4_SRC_DONE_SHA)
++    return ok, got
++
++
+ # ═════════════════════════ 실행 ═════════════════════════
+ def main(argv=None):
+     global RR, TD

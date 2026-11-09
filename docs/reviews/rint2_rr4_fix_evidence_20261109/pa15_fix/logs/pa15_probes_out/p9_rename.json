@@ -1,0 +1,43 @@
+{
+ "forged_rename": {
+  "name": "P9_rename",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓒ]"
+    ],
+    "재개 출처 [ⓒ] attempt_2: resume.rerun 'L02_ceilingX' ≠ 디스크상 첫 미완료 런 L02_ceiling (원천 attempt_1 에서 처음 끝나지 않은 런 · `ResumeRunner._src_done` 같은 규칙 · ★ 11-09 사전 공격 15 PC15-02) (★ 11-09 Codex 회차 ④ PC14-02)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓒ]"
+   ],
+   null
+  ]
+ },
+ "accepted_all_three": false,
+ "disk": {
+  "groups_L02_ceilingX": false,
+  "folder_L02_ceilingX": false,
+  "groups_L02_ceiling": true
+ }
+}

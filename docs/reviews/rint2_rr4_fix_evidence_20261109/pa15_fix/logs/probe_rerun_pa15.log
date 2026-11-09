@@ -1,0 +1,28 @@
+=== p1_sigafter
+rc=0
+=== p2_orphan
+rc=0
+=== p3_moved_source
+rc=0
+=== p4_honest
+rc=0
+=== p5_variants
+rc=0
+=== p6_src_link
+rc=0
+=== p7_orphan_types
+rc=0
+=== p8_outdir
+rc=0
+=== p9_rename
+rc=0
+=== p10_honest_more
+rc=0
+=== p11_honest_pre
+rc=0
+=== p13_honest_sigafter
+rc=0
+=== p14_exceptions
+rc=0
+=== p15_order_crash
+rc=0

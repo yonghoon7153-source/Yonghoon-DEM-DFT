@@ -1,0 +1,48 @@
+attempt_order_problem 3556 3588
+resume_chain_problem 3793 3822
+resume_rerun_problem 4389 4479
+RESUME_PROV 4489 4489
+RUN_ORDER_RE 4492 4492
+resume_recompare 4495 4499
+run_dirs 4502 4508
+resume_recompare_run 4511 4518
+run_end_ok 4521 4525
+resume_disk_rerun 4528 4549
+_src_run_done 4594 4598
+resume_boundary_problem 4601 4673
+resume_first_new_problem 4676 4707
+resume_provenance_problem 4710 4764
+resume_chain_provenance_problem 4767 4787
+summary_shape_problem 4914 4933
+result_fields_ledger 4974 4986
+class ResultHeld 5004 5008
+resume_prov_unconfirmed 5011 5013
+attempt_result 5016 5027
+attempt_close 5158 5177
+ATTEMPT_ENTRY_FIELDS 5219 5219
+attempt_entry_diff 5222 5230
+found_attempts_problem 5233 5264
+ResumeRunner._src_done 5727 5733
+ResumeRunner.run 5735 5750
+ResumeRunner._copy 5752 5776
+recover_ledger 8342 8426
+'# ⓐ 지킴' [4731]
+'# ★ 11-09 사전 공격 15 PC15-05 — 꼴 지킴' [4736]
+'# ⓑ 지킴' [4740]
+'요약 없는 재실행 시도 = 원장의 그 시점 유효 사슬 끝' [4746]
+'# 원천 지킴' [4752]
+'# ⓒ 지킴' [4759]
+'# ⓓ 지킴' [4762]
+"if rerun is not None and R.get('rerun') != rerun:" [4618]
+'if not seen_new and nm != rerun:' [4649]
+'— 새 런 기록 ↔ 이 시도 groups 시작 · 끝 기록' [4654]
+'if any(d != od for d in dirs):' [4658]
+'if r is not last and not (run_end_ok(folder, nm) and od in dirs):' [4661]
+'last = runs[-1] if runs and runs[-1]' [4623]
+'런 이름 꼴 밖 시작 기록' [4532, 4544]
+'post = R is not None and' [4687]
+'done = rerun is not None and run_end_ok' [4689]
+'want = resume_recompare_run(src, folder, rerun)' [4473, 4690]
+'if resume_prov_unconfirmed(why):' [5022]
+'except ResultHeld as e:' [5169]
+'if not (type(a[f]) is type(e[f]) and a[f] == e[f])' [5227]

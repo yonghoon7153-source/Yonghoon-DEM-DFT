@@ -1,0 +1,53 @@
+$ python3 probe_rerun_type.py <작업 트리>  # ⑤ 다시 대조가 요약 resume.rerun 이름을 run_dirs 에 넘김 — 글 아닌 이름 · 요청 칸 없는 기록에서 traceback 없음 (앞 검사가 먼저 사유)
+{
+ "control": [
+  "ok",
+  true,
+  "post",
+  "timeout",
+  null
+ ],
+ "int5": [
+  "ok",
+  false,
+  "post",
+  "timeout",
+  "멈춤 TIME_LIMIT · resume 칸 rerun 5 런 기록 outdir 'L02_ceiling_arm1' ≠ '' (요청 칸이 정하는 출력 폴더 · ★ 11-09 사전 공격 13 P2-1)"
+ ],
+ "int5_noarms": [
+  "ok",
+  false,
+  "post",
+  "timeout",
+  "멈춤 TIME_LIMIT · 런 'L03_point' 앞의 런 기록 runs[1] (5) = 꼴 exit_ok · arms_read bad (요청 칸 (arms · arm_list) 없음 · 생산자 범위 밖 = 요청 팔을 모른다) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)"
+ ],
+ "list": [
+  "ok",
+  false,
+  "post",
+  "timeout",
+  "멈춤 TIME_LIMIT · 런 'L03_point' 앞의 런 기록 runs[1] (['L02_ceiling']) = 꼴 exit_ok · arms_read bad (요청 칸 (arms · arm_list) 없음 · 생산자 범위 밖 = 요청 팔을 모른다) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)"
+ ],
+ "none": [
+  "ok",
+  false,
+  "post",
+  "timeout",
+  "멈춤 TIME_LIMIT · 런 'L03_point' 앞의 런 기록 runs[1] (None) = 꼴 exit_ok · arms_read bad (요청 칸 (arms · arm_list) 없음 · 생산자 범위 밖 = 요청 팔을 모른다) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)"
+ ],
+ "float": [
+  "ok",
+  false,
+  "post",
+  "timeout",
+  "멈춤 TIME_LIMIT · 런 'L03_point' 앞의 런 기록 runs[1] (2.0) = 꼴 exit_ok · arms_read bad (요청 칸 (arms · arm_list) 없음 · 생산자 범위 밖 = 요청 팔을 모른다) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)"
+ ],
+ "str_other": [
+  "ok",
+  false,
+  "post",
+  "timeout",
+  "멈춤 TIME_LIMIT · 런 'L03_point' 앞의 런 기록 runs[1] ('L02_ceilingQ') = 꼴 exit_ok · arms_read bad (요청 칸 (arms · arm_list) 없음 · 생산자 범위 밖 = 요청 팔을 모른다) ≠ 끝난 런 (생산자 = 앞 런이 rc 0 · 팔을 판독한 뒤에만 다음 런 = arms_read 판독 완료 꼴 (`arms_read_record` · ARM_PUBLIC · 요청 팔 일대일) · 판독 실패 때 남긴 파일 신원 목록 (file_ids) = 끝난 런 아님 · 실패 런 = 그 자리 멈춤 · ★ 11-08 PC12-03 · RR3-01)"
+ ]
+}
+rc=0

@@ -1,0 +1,7 @@
+none {"V09_machine": "rejected", "V14_end_only": "rejected", "V14L_launch_only": "rejected", "V15_payload": "rejected", "SRC_changed_writer": "rejected [원천]"}
+entry_no_machine {"V09_machine": "ACCEPTED", "V14_end_only": "rejected", "V14L_launch_only": "rejected", "V15_payload": "rejected", "SRC_changed_writer": "rejected [원천]"}
+c_bytes {"V09_machine": "rejected", "V14_end_only": "ACCEPTED", "V14L_launch_only": "ACCEPTED", "V15_payload": "rejected", "SRC_changed_writer": "rejected [원천]"}
+c_launch_only {"V09_machine": "rejected", "V14_end_only": "ACCEPTED", "V14L_launch_only": "rejected", "V15_payload": "rejected", "SRC_changed_writer": "rejected [원천]"}
+c_end_only {"V09_machine": "rejected", "V14_end_only": "rejected", "V14L_launch_only": "ACCEPTED", "V15_payload": "rejected", "SRC_changed_writer": "rejected [원천]"}
+c_payload {"V09_machine": "rejected", "V14_end_only": "rejected", "V14L_launch_only": "rejected", "V15_payload": "ACCEPTED", "SRC_changed_writer": "rejected [원천]"}
+loc_digest {"V09_machine": "rejected", "V14_end_only": "rejected", "V14L_launch_only": "rejected", "V15_payload": "rejected", "SRC_changed_writer": "ACCEPTED"}

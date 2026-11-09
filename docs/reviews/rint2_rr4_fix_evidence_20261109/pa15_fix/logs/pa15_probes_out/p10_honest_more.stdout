@@ -1,0 +1,281 @@
+{
+ "H1_chain4": {
+  "acc": true,
+  "w": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "p": [
+   true,
+   null,
+   null
+  ],
+  "c": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "shape": {
+   "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L03_point",
+    "reason": null
+   },
+   "resume": {
+    "from": 3,
+    "copied": [
+     "L01_floor"
+    ],
+    "rerun": "L02_ceiling",
+    "compared": [
+     {
+      "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+      "same": true
+     }
+    ],
+    "determinism": "compared"
+   },
+   "runs": [
+    [
+     "L01_floor",
+     3,
+     0
+    ],
+    [
+     "L02_ceiling",
+     null,
+     0
+    ]
+   ]
+  }
+ },
+ "H2_src_no_launch": {
+  "acc": true,
+  "w": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "p": [
+   true,
+   null,
+   null
+  ],
+  "c": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "shape": {
+   "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L03_point",
+    "reason": null
+   },
+   "resume": {
+    "from": 1,
+    "copied": [
+     "L01_floor"
+    ],
+    "rerun": "L02_ceiling",
+    "compared": [],
+    "determinism": "assumed"
+   },
+   "runs": [
+    [
+     "L01_floor",
+     1,
+     0
+    ],
+    [
+     "L02_ceiling",
+     null,
+     0
+    ]
+   ]
+  }
+ },
+ "H3_three_runs": {
+  "acc": true,
+  "w": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "p": [
+   true,
+   null,
+   null
+  ],
+  "c": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "shape": {
+   "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L04_next",
+    "reason": null
+   },
+   "resume": {
+    "from": 2,
+    "copied": [
+     "L01_floor",
+     "L02_ceiling"
+    ],
+    "rerun": "L03_point",
+    "compared": [
+     {
+      "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+      "same": true
+     }
+    ],
+    "determinism": "compared"
+   },
+   "runs": [
+    [
+     "L01_floor",
+     2,
+     0
+    ],
+    [
+     "L02_ceiling",
+     2,
+     0
+    ],
+    [
+     "L03_point",
+     null,
+     0
+    ]
+   ]
+  }
+ },
+ "H4_chain3_after_compare": {
+  "acc": true,
+  "w": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "p": [
+   true,
+   null,
+   null
+  ],
+  "c": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "shape": {
+   "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L04_next",
+    "reason": null
+   },
+   "resume": {
+    "from": 2,
+    "copied": [
+     "L01_floor",
+     "L02_ceiling"
+    ],
+    "rerun": "L03_point",
+    "compared": [],
+    "determinism": "assumed"
+   },
+   "runs": [
+    [
+     "L01_floor",
+     2,
+     0
+    ],
+    [
+     "L02_ceiling",
+     2,
+     0
+    ],
+    [
+     "L03_point",
+     null,
+     0
+    ]
+   ]
+  }
+ },
+ "H5_rerun_self_stop": {
+  "acc": true,
+  "w": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "p": [
+   true,
+   null,
+   null
+  ],
+  "c": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "shape": {
+   "stop": {
+    "code": "TIME_LIMIT",
+    "run": "L04_next",
+    "reason": null
+   },
+   "resume": {
+    "from": 2,
+    "copied": [
+     "L01_floor"
+    ],
+    "rerun": "L02_ceiling",
+    "compared": [
+     {
+      "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+      "same": true
+     }
+    ],
+    "determinism": "compared"
+   },
+   "runs": [
+    [
+     "L01_floor",
+     2,
+     0
+    ],
+    [
+     "L02_ceiling",
+     null,
+     0
+    ],
+    [
+     "L03_point",
+     null,
+     0
+    ]
+   ]
+  }
+ }
+}
+H6_src_run_folder_missing ACCEPTED [True, ([], '')] [True, None, None] [0, True, [], None] | src True resource | last {'code': 'RUNNER_RC', 'run': 'L02_ceiling', 'reason': None} ([], 'L01_floor', 'assumed')
+H7_src_timeout ACCEPTED [True, ([], '')] [True, None, None] [0, True, [], None] | src True timeout | last {'code': 'TIME_LIMIT', 'run': 'L03_point', 'reason': None} (['L01_floor'], 'L02_ceiling', 'compared')

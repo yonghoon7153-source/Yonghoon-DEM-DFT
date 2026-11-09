@@ -1,0 +1,6 @@
+# 바탕 = 69d714d09 (= 회차 ④ 고침 e94f09905 + 기록 커밋 · scripts 같음 · 사전 공격 15 검토 판)
+d0e040173632d4a0ab4258cb507d694d7839f26aa00d6ee690c1f0b8800774d0  scripts/rint_r_chain.py  (바탕)
+92998cbc15e8da9b57833e1a26f3ce11e7ff985e9aafdd07d62aea33ba3f9dab  scripts/test_rint_r_chain.py  (바탕)
+# 고친 판 = 바탕 + code.diff = 이 커밋 · 시험 먼저 = 최종 시험을 바탕 사슬에 먼저 돌림 → 고침 → 같은 시험 · 변이 · 탐침 다시 = 이 바이트
+986bbdb35f537bc933981640bab9def0a2bb163d854da3dfa49bfa129ae0f873  scripts/rint_r_chain.py  (고친 판)
+98480e891631263fcebbeba6d30c5a0655678b58a6ec42878f32c3277da71e02  scripts/test_rint_r_chain.py  (고친 판)

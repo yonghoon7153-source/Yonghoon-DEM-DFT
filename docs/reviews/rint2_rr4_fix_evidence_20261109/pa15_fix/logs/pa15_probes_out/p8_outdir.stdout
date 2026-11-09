@@ -1,0 +1,2 @@
+accepted_all_three False | writer [False, ([], '')] | places [False, ['RESUME_NOT_ALLOWED', []], None] | cli [0, False, [], None]
+{"attempt2_has_L02_arm2": false, "attempt2_has_L02_arm1": true, "true_rerun_vs_source": [{"file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json", "same": false}]} next_src_done True

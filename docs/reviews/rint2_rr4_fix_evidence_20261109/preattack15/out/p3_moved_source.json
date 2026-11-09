@@ -1,0 +1,29 @@
+{
+ "control_not_moved": {
+  "recover_rc": 0,
+  "line_resume_ok": true,
+  "commit_msg_tags": [],
+  "recount_problem": null,
+  "target_ledger_problem": [
+   "ok",
+   [
+    1,
+    2
+   ],
+   2
+  ]
+ },
+ "moved_before_recover": {
+  "recover_rc": 0,
+  "line_resume_ok": false,
+  "commit_msg_tags": [
+   "[원천]"
+  ],
+  "recount_problem": "attempt_2: 결과 줄 2 의 resume_ok False ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (resume_ok True) — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 PC5-01)",
+  "target_ledger_problem": [
+   "Stop",
+   "ATTEMPT_LEDGER_MISMATCH",
+   "attempt_2: 결과 줄 2 의 resume_ok False ≠ 폴더 증거 (거부 기록 · 단계 요약 · 그룹 기록 · 런 로그 · .unchecked/) 에서 다시 센 값 (resume_ok True) — 끝 줄 바꿔치기 · 손 고침 · 다른 규칙 판의 결과 줄 (★ 10-28 밤 PC5-01)"
+  ]
+ }
+}

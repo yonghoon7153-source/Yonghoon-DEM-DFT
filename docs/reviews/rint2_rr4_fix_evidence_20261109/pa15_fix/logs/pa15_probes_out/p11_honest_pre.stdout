@@ -1,0 +1,1 @@
+accepted True [True, ([], '')] [True, None, None] [0, True, [], None] | a2 {'status': 'stopped', 'stop': {'code': 'RESUME_NOT_ALLOWED', 'run': 'L01_floor', 'reason': None}, 'side': 'pre', 'cause': 'gate', 'resume_ok': False} | adoption {'chain': [1, 3], 'effective': 3, 'problems': []}

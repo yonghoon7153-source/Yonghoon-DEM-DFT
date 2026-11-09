@@ -1,0 +1,38 @@
+{
+ "forged_outdir_relabel": {
+  "name": "P8_outdir",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ]
+ },
+ "accepted_all_three": false,
+ "disk": {
+  "attempt2_has_L02_arm2": false,
+  "attempt2_has_L02_arm1": true,
+  "true_rerun_vs_source": [
+   {
+    "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+    "same": false
+   }
+  ]
+ },
+ "next_resume_src_done_L02_true_outdir": true
+}

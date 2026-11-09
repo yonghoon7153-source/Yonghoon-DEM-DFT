@@ -1,0 +1,105 @@
+{
+ "resume_of_True": {
+  "name": "P7_resume_of_True",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "accepted_all_three": true
+ },
+ "resume_of_1.0": {
+  "name": "P7_resume_of_1_0",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "accepted_all_three": true
+ },
+ "resume_of_None": {
+  "name": "P7_resume_of_None",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓐ]"
+    ],
+    "재개 출처 [ⓐ] attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) (생산자 `attempt_open` = 항목 칸 그대로 · ★ 11-09 Codex 회차 ④ PC14-03)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓐ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "resume_of_1_honest": {
+  "name": "P7_resume_of_1_honest",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "accepted_all_three": true
+ },
+ "found_attempts_problem_True": null
+}

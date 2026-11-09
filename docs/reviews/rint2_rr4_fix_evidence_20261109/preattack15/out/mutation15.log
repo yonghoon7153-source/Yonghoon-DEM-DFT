@@ -1,0 +1,47 @@
+a_drop KILLED ['RR4A'] test_rint_r_chain: 18/19 PASS (11.0 s)   FAILED: ['RR4A']
+a_missing_ok SURVIVED [] test_rint_r_chain: 19/19 PASS (11.4 s)
+a_noentry_ok SURVIVED [] test_rint_r_chain: 19/19 PASS (12.0 s)
+entry_no_resume_of KILLED ['RR4A'] test_rint_r_chain: 18/19 PASS (12.8 s)   FAILED: ['RR4A']
+entry_no_machine SURVIVED [] test_rint_r_chain: 19/19 PASS (13.5 s)
+b_drop KILLED ['RR4A'] test_rint_r_chain: 18/19 PASS (13.0 s)   FAILED: ['RR4A']
+b_eq_only_type KILLED ['RR4A'] test_rint_r_chain: 18/19 PASS (12.9 s)   FAILED: ['RR4A']
+b_newattempt_R_ok SURVIVED [] test_rint_r_chain: 19/19 PASS (12.7 s)
+b_nondict_ok SURVIVED [] test_rint_r_chain: 19/19 PASS (13.3 s)
+src_failopen KILLED ['RR4D'] test_rint_r_chain: 18/19 PASS (12.9 s)   FAILED: ['RR4D']
+loc_count_ge1 SURVIVED [] test_rint_r_chain: 19/19 PASS (10.2 s)
+loc_symlink SURVIVED [] test_rint_r_chain: 19/19 PASS (10.9 s)
+loc_attempt SURVIVED [] test_rint_r_chain: 19/19 PASS (12.4 s)
+loc_digest SURVIVED [] test_rint_r_chain: 19/19 PASS (12.8 s)
+c_drop KILLED ['RR4A'] test_rint_r_chain: 18/19 PASS (12.8 s)   FAILED: ['RR4A']
+c_after_new SURVIVED [] test_rint_r_chain: 19/19 PASS (13.1 s)
+c_cf_eq SURVIVED [] test_rint_r_chain: 19/19 PASS (13.1 s)
+c_cf_type SURVIVED [] test_rint_r_chain: 19/19 PASS (12.4 s)
+c_copy_srcdone SURVIVED [] test_rint_r_chain: 19/19 PASS (13.0 s)
+c_bytes SURVIVED [] test_rint_r_chain: 19/19 PASS (13.0 s)
+c_launch_only SURVIVED [] test_rint_r_chain: 19/19 PASS (12.8 s)
+c_end_only SURVIVED [] test_rint_r_chain: 19/19 PASS (13.1 s)
+c_payload SURVIVED [] test_rint_r_chain: 19/19 PASS (13.8 s)
+c_first_new_done SURVIVED [] test_rint_r_chain: 19/19 PASS (13.5 s)
+c_new_launch_same SURVIVED [] test_rint_r_chain: 19/19 PASS (12.8 s)
+c_new_launch_missing_ok SURVIVED [] test_rint_r_chain: 19/19 PASS (12.9 s)
+srd_no_dir SURVIVED [] test_rint_r_chain: 19/19 PASS (12.0 s)
+srd_no_rc KILLED ['RR3P', 'PA13A', 'RR4A', 'RR4B', 'RR4D'] test_rint_r_chain: 14/19 PASS (11.5 s)   FAILED: ['RR3P', 'PA13A', 'RR4A', 'RR4B', 'RR4D']
+d_drop KILLED ['RR4D'] test_rint_r_chain: 18/19 PASS (12.4 s)   FAILED: ['RR4D']
+d_cmp KILLED ['RR4D'] test_rint_r_chain: 18/19 PASS (11.4 s)   FAILED: ['RR4D']
+d_name SURVIVED [] test_rint_r_chain: 19/19 PASS (11.6 s)
+new_attempt_no_early_return KILLED ['RR3D', 'RR3E', 'RR3P', 'PA13A', 'PA13D', 'PA14B', 'PA14D', 'RR4A', 'RR4B']  s)   FAILED: ['RR3D', 'RR3E', 'RR3P', 'PA13A', 'PA13D', 'PA14B', 'PA14D', 'RR4A', 'RR4B']
+fields_keep_true KILLED ['RR4A', 'RR4D'] test_rint_r_chain: 17/19 PASS (12.3 s)   FAILED: ['RR4A', 'RR4D']
+recount_ignore_st KILLED ['RR4A', 'RR4D'] test_rint_r_chain: 17/19 PASS (11.9 s)   FAILED: ['RR4A', 'RR4D']
+write_old KILLED ['RR4A', 'RR4D', 'RR4E'] test_rint_r_chain: 16/19 PASS (11.7 s)   FAILED: ['RR4A', 'RR4D', 'RR4E']
+recover_old KILLED ['RR4A', 'RR4D', 'RR4E'] test_rint_r_chain: 16/19 PASS (12.9 s)   FAILED: ['RR4A', 'RR4D', 'RR4E']
+close_old KILLED ['RR4E'] test_rint_r_chain: 18/19 PASS (12.3 s)   FAILED: ['RR4E']
+order_no_prov KILLED ['RR4A', 'RR4E'] test_rint_r_chain: 17/19 PASS (13.0 s)   FAILED: ['RR4A', 'RR4E']
+chainprov_noprov KILLED ['RR4A', 'RR4E'] test_rint_r_chain: 17/19 PASS (11.6 s)   FAILED: ['RR4A', 'RR4E']
+chainprov_nodigest SURVIVED [] test_rint_r_chain: 19/19 PASS (11.6 s)
+chainprov_nostart_skip SURVIVED [] test_rint_r_chain: 19/19 PASS (11.7 s)
+chain_noprov KILLED ['RR4A', 'RR4E'] test_rint_r_chain: 17/19 PASS (11.0 s)   FAILED: ['RR4A', 'RR4E']
+chain_recount_nost SURVIVED [] test_rint_r_chain: 19/19 PASS (12.6 s)
+tlp_recount_nost SURVIVED [] test_rint_r_chain: 19/19 PASS (12.8 s)
+lic_recount_nost SURVIVED [] test_rint_r_chain: 19/19 PASS (13.4 s)
+M56_exists KILLED ['RR4C'] test_rint_r_chain: 18/19 PASS (13.3 s)   FAILED: ['RR4C']
+total 46 killed 19 survived ['a_missing_ok', 'a_noentry_ok', 'entry_no_machine', 'b_newattempt_R_ok', 'b_nondict_ok', 'loc_count_ge1', 'loc_symlink', 'loc_attempt', 'loc_digest', 'c_after_new', 'c_cf_eq', 'c_cf_type', 'c_copy_srcdone', 'c_bytes', 'c_launch_only', 'c_end_only', 'c_payload', 'c_first_new_done', 'c_new_launch_same', 'c_new_launch_missing_ok', 'srd_no_dir', 'd_name', 'chainprov_nodigest', 'chainprov_nostart_skip', 'chain_recount_nost', 'tlp_recount_nost', 'lic_recount_nost']

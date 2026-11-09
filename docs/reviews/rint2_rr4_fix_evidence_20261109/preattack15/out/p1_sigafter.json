@@ -1,0 +1,67 @@
+{
+ "honest_mismatch": {
+  "name": "P1_honest",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ]
+ },
+ "forged_sigafter": {
+  "name": "P1_sigafter",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ]
+ },
+ "forged_accepted_all_three": true,
+ "disk_rerun_payload_differs_from_source": [
+  {
+   "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+   "same": false
+  }
+ ],
+ "folder_only_stop_record_problem": null,
+ "folder_only_fields": {
+  "status": "stopped",
+  "stop": {
+   "code": "RUNNER_RC",
+   "run": "L02_ceiling",
+   "reason": null
+  },
+  "side": "post",
+  "cause": "signal",
+  "resume_ok": true
+ },
+ "next_resume_src_done_L02": true
+}

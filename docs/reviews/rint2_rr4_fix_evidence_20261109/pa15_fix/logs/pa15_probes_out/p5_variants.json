@@ -1,0 +1,530 @@
+{
+ "V01_R1_codex": {
+  "name": "V01_R1_codex",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓒ]"
+    ],
+    "재개 출처 [ⓒ] attempt_2: resume.rerun 'L03_point' ≠ 디스크상 첫 미완료 런 L02_ceiling (원천 attempt_1 에서 처음 끝나지 않은 런 · `ResumeRunner._src_done` 같은 규칙 · ★ 11-09 사전 공격 15 PC15-02) (★ 11-09 Codex 회차 ④ PC14-02)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓒ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V02_R1_copied_from_True": {
+  "name": "V02_R1_copied_from_True",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V03_R1_det_assumed": {
+  "name": "V03_R1_det_assumed",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V04_R2_codex": {
+  "name": "V04_R2_codex",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓒ]"
+    ],
+    "재개 출처 [ⓒ] attempt_2: resume.rerun 'L01_floor' ≠ 디스크상 첫 미완료 런 L02_ceiling (원천 attempt_1 에서 처음 끝나지 않은 런 · `ResumeRunner._src_done` 같은 규칙 · ★ 11-09 사전 공격 15 PC15-02) (★ 11-09 Codex 회차 ④ PC14-02)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓒ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V05_R2_order_swap": {
+  "name": "V05_R2_order_swap",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V06_new_run_extra_copied_from": {
+  "name": "V06_new_run_extra_copied_from",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓒ]"
+    ],
+    "재개 출처 [ⓒ] attempt_2: resume.rerun 'L03_point' ≠ 디스크상 첫 미완료 런 L02_ceiling (원천 attempt_1 에서 처음 끝나지 않은 런 · `ResumeRunner._src_done` 같은 규칙 · ★ 11-09 사전 공격 15 PC15-02) (★ 11-09 Codex 회차 ④ PC14-02)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓒ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V07_dup_copy_record": {
+  "name": "V07_dup_copy_record",
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "accepted_all_three": true
+ },
+ "V08_attempt_resume_of_True": {
+  "name": "V08_attempt_resume_of_True",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V09_attempt_machine_other": {
+  "name": "V09_attempt_machine_other",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓐ]"
+    ],
+    "재개 출처 [ⓐ] attempt_2: attempt.json (machine 'gabia') ≠ 원장 항목 2 (machine 'kgy') (생산자 `attempt_open` = 항목 칸 그대로 · ★ 11-09 Codex 회차 ④ PC14-03)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓐ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V10_from_str": {
+  "name": "V10_from_str",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V11_from_float": {
+  "name": "V11_from_float",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V12_chain3_copied_from_1": {
+  "name": "V12_chain3_copied_from_1",
+  "writer": [
+   false,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   false,
+   [
+    "RESUME_NOT_ALLOWED",
+    []
+   ],
+   null
+  ],
+  "cli": [
+   0,
+   false,
+   [],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V13_chain3_rebind_codex": {
+  "name": "V13_chain3_rebind_codex",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓑ]"
+    ],
+    "재개 출처 [ⓑ] attempt_3: resume.from 1 ≠ 그 시점 유효 사슬 끝 attempt_2 (원장 `adoption` · 생산자 = 풀기 전 `resume_source` 의 원천) (★ 11-09 Codex 회차 ④ PC14-03)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓑ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓑ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓑ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V14_disk_end_only_differs": {
+  "name": "V14_disk_end_only_differs",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓒ]"
+    ],
+    "재개 출처 [ⓒ] attempt_2: 복사 기록 런 L01_floor 의 groups/L01_floor.end.json ≠ 원천 attempt_1 의 같은 파일 (이 시도 ok · 원천 ok · 생산자 `_copy` = 바이트 그대로 · 새로 돈 런을 복사로 적은 꼴) (★ 11-09 Codex 회차 ④ PC14-02)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓒ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V15_disk_copy_payload": {
+  "name": "V15_disk_copy_payload",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓒ]"
+    ],
+    "재개 출처 [ⓒ] attempt_2: 복사 기록 런 L01_floor 의 런 폴더 payload ≠ 원천 attempt_1/L01_floor_arm1 (생산자 `_copy` = copytree) (★ 11-09 Codex 회차 ④ PC14-02)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓒ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓒ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V16_src_symlink": {
+  "name": "V16_src_symlink",
+  "writer": "exc Stop: ATTEMPT_LEDGER_MISMATCH: <scratch>/fixc/pa15final/out/td/pa15_x7jqbn0k/rr4/V16_src_symlink_w/attempt_1 요약 sha 를 못 셈 (링크 · 특수 파일)",
+  "places": "exc Stop: ATTEMPT_LEDGER_MISMATCH: <scratch>/fixc/pa15final/out/td/pa15_x7jqbn0k/rr4/V16_src_symlink_p/attempt_1 요약 sha 를 못 셈 (링크 · 특수 파일)",
+  "cli": "exc Stop: ATTEMPT_LEDGER_MISMATCH: <scratch>/fixc/pa15final/out/td/pa15_x7jqbn0k/rr4/V16_src_symlink_c/attempt_1 요약 sha 를 못 셈 (링크 · 특수 파일)",
+  "accepted_all_three": false
+ },
+ "V17_attempt_null_codex": {
+  "name": "V17_attempt_null_codex",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓐ]"
+    ],
+    "재개 출처 [ⓐ] attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) (생산자 `attempt_open` = 항목 칸 그대로 · ★ 11-09 Codex 회차 ④ PC14-03)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓐ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ },
+ "V18_attempt_only_null": {
+  "name": "V18_attempt_only_null",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓐ]"
+    ],
+    "재개 출처 [ⓐ] attempt_2: attempt.json (resume_of None) ≠ 원장 항목 2 (resume_of 1) (생산자 `attempt_open` = 항목 칸 그대로 · ★ 11-09 Codex 회차 ④ PC14-03)"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓐ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓐ]"
+   ],
+   null
+  ],
+  "accepted_all_three": false
+ }
+}

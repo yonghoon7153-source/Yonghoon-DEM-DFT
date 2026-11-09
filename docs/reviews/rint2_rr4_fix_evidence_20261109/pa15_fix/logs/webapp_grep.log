@@ -1,0 +1,2 @@
+$ grep -rIc -E 'resume_ok|RESUME_NOT_ALLOWED|RESUME_MISMATCH|rint_r_chain|재실행 자격|재개 출처|resume_provenance|attempt_entry_diff|ResultHeld|resume_disk_rerun|resume_recompare_run|ATTEMPT_OPEN' webapp/ (0 아닌 파일만)
+0 아닌 파일 수 = 0

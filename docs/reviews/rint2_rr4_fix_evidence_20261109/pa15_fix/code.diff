@@ -1,0 +1,983 @@
+diff --git a/scripts/rint_r_chain.py b/scripts/rint_r_chain.py
+index 7e52c7fe2..5dc9ff346 100644
+--- a/scripts/rint_r_chain.py
++++ b/scripts/rint_r_chain.py
+@@ -4399,7 +4399,8 @@ def resume_rerun_problem(s, folder, code, run):
+          `RESUME_DETERMINISM` · compared = 목록 · 비지 않음 ⇔ compared · 원소 칸 = `RESUME_COMPARED_KEYS` · file 글) · 그 런 기록 outdir = 요청 칸이 정하는 출력 폴더
+          (`record_outdir` · RUN_DIR_RE)
+       ⑤ 원천 시도 폴더 (<바탕>/attempt_<from> = 같은 바탕 · `resume_source`) 가 있으면 그 런의 남은 payload (`resume_leftovers`) ↔ 이 시도 그 런 폴더 바이트를 다시
+-         대조 (생산자와 같은 식) = 기록 compared · determinism 그대로 (옛 = same 을 true 로 고친 세 칸 편집 = 자격) · 원천 자리 = 옆 거부 기록 = 모순 · 못 읽음 = 사유
++         대조 (생산자와 같은 식) = 기록 compared · determinism 그대로 (옛 = same 을 true 로 고친 세 칸 편집 = 자격) · 원천 자리 = 옆 거부 기록 = 모순 · 못 읽음 = 사유 ·
++         ★ 11-09 사전 공격 15 PC15-02 그 런 폴더 = 디스크에서 정한 그 런의 출력 폴더 (`resume_recompare_run` · 옛 = 요약 기록 outdir)
+     ⚠ 한정: 원천 시도 폴더가 같은 바탕에 없으면 (다른 곳에 둔 시도 · 판정 --attempt-dirs) ⑤ 바이트 대조 안 함 (①–④ 만 · 실제 재실행의 풀기 전 대조
+     `resume_chain_problem` = 원천을 같은 바탕에 요구 → 그 자리에서 다시 대조) · from = 원장 사슬 끝인지는 못 본다 (원장 없음 · 범위만) · attempt.json resume_of 까지
+     함께 고친 위조 = 원장 항목 대조 (`found_attempts_problem` · 판정 · 합치기) 몫 · 런 기록 완결성 (사전 공격 13 P3-1) = 그대로.  ★ 11-09 사전 공격 14 선언된 한정
+@@ -4467,12 +4468,14 @@ def resume_rerun_problem(s, folder, code, run):
+                     f'사전 공격 13 P2-1)')
+         return None                                       # ⚠ 한정 — 원천이 같은 바탕에 없음 (다른 곳에 둔 시도) = 바이트 대조 안 함
+     try:
+-        want = resume_recompare(src / od, folder / od)        # ★ 11-09 Codex 회차 ④ — 식 = 공통 검증 ⓓ 와 한 함수 (값 그대로)
++        #  ★ 11-09 Codex 회차 ④ — 식 = 공통 검증 ⓓ 와 한 함수 · ★ 11-09 사전 공격 15 PC15-02 — 폴더 = 디스크에서 정한 그 런의 출력 폴더 (`resume_recompare_run` ·
++        #    옛 = 요약 기록 outdir → 디스크에 없는 이름으로 고치면 없는 폴더끼리 대조 · 정직 = 같은 폴더 하나 = 값 그대로)
++        want = resume_recompare_run(src, folder, rerun)
+     except OSError as e:
+-        return f'멈춤 {code} · resume 칸 다시 대조를 못 한다 ({type(e).__name__} · 원천 attempt_{frm}/{od} · ★ 11-09 사전 공격 13 P2-1)'
++        return f'멈춤 {code} · resume 칸 다시 대조를 못 한다 ({type(e).__name__} · 원천 attempt_{frm} 의 {rerun} · ★ 11-09 사전 공격 13 P2-1)'
+     if cmp_ != want:                                      # (determinism = ④ 의 compared ⇔ 비지 않음 + 이 같음 → 남은 payload 유무와 같다)
+-        return (f'멈춤 {code} · resume 칸 compared {repr(cmp_)[:80]} · determinism {det!r} ≠ 원천 attempt_{frm}/{od} 남은 payload ↔ 이 시도 그 런 폴더 다시 대조 '
+-                f'{repr(want)[:80]} (생산자 = 같은 식 · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)')
++        return (f'멈춤 {code} · resume 칸 compared {repr(cmp_)[:80]} · determinism {det!r} ≠ 원천 attempt_{frm} 의 {rerun} 남은 payload ↔ 이 시도 그 런 디스크 출력 폴더 '
++                f'다시 대조 {repr(want)[:80]} (생산자 = 같은 식 · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1 · ★ 11-09 사전 공격 15 PC15-02)')
+     return None
+ 
+ 
+@@ -4480,8 +4483,13 @@ def resume_rerun_problem(s, folder, code, run):
+ #    docs/reviews/rint2_rr4_fix_plan_20261109.md Q1 (가)) 재개 출처 공통 검증 — 재개 자격을 정하는 길이 디스크 · 원장과 모순인 요약을 믿지 않는다 (결과 줄 쓰기 ·
+ #    다시 셈 · 다음 재개 허용이 같은 함수 `resume_provenance_problem`) ──
+ #: 공통 검증 사유 머리 (결과 줄 쓰기의 원장 커밋 글 · 다음 재개 허용 사유 · 다시 셈 사유가 같은 낱말) — 표지 [ⓐ] attempt.json ↔ 원장 항목 · [ⓑ] resume.from ↔ 그 시점
+-#:   유효 사슬 끝 · [원천] 원천 · 사슬 시도 폴더를 찾거나 확인할 수 없음 (fail-closed) · [ⓒ] 복사 / 새 런 경계 ↔ 원천 디스크 · [ⓓ] 실제 첫 새 런 다시 대조
++#:   유효 사슬 끝 · [원천] 원천 · 사슬 시도 폴더를 찾거나 확인할 수 없음 (fail-closed · ★ 11-09 사전 공격 15 PC15-03 = 결과 줄 쓰기는 이 사유로 줄을 쓰지 않는다
++#:   `ResultHeld`) · [ⓒ] 복사 / 새 런 경계 ↔ 원천 디스크 · [ⓓ] 디스크상 첫 미완료 런 다시 대조 · ★ 11-09 사전 공격 15 PC15-05 [꼴] 단계 요약 칸 꼴 (`summary_shape_problem` ·
++#:   옛 = 다음 재개 허용 자리에서 traceback)
+ RESUME_PROV = '재개 출처'
++#: ★ 11-09 사전 공격 15 PC15-01 · 02 — 런 이름 차례 (`run_request` 이름 = <앞자리><번호>_<역할> · 번호 = 요청 차례 · 재실행 러너 = 같은 요청을 같은 차례로 · 디스크상 첫
++#:   미완료 런 `resume_disk_rerun` 이 이 번호로 groups 시작 기록을 줄 세운다)
++RUN_ORDER_RE = re.compile(r'([A-Za-z]+)([0-9]+)_(.+)')
+ 
+ 
+ def resume_recompare(src_od, od):
+@@ -4491,6 +4499,56 @@ def resume_recompare(src_od, od):
+     return [{'file': nm, 'same': (od / nm).is_file() and (od / nm).read_bytes() == raw} for nm, raw in resume_leftovers(src_od)]
+ 
+ 
++def run_dirs(base, name):
++    """★ 11-09 사전 공격 15 PC15-02 — 시도 폴더 base 에서 런 name 이 디스크에 만든 출력 폴더 이름 (정렬) = <런> · <런>_arm… 꼴 (`stop_trace` · `run_traces` 와 같은 이름
++    규칙 · `Runner._prepare` 출력 폴더 꼴) 중 폴더 — 요약 기록의 outdir 이 아니라 디스크.  base 가 폴더가 아님 = [] · 목록을 못 읽음 = OSError 그대로 (부르는 쪽 = 사유)."""
++    base = Path(base)
++    if not base.is_dir():
++        return []
++    return sorted(nm for nm in os.listdir(str(base)) if (nm == name or nm.startswith(name + '_arm')) and (base / nm).is_dir())
++
++
++def resume_recompare_run(src, folder, name):
++    """★ 11-09 사전 공격 15 PC15-02 — 런 name 의 다시 대조 = 그 런의 디스크 출력 폴더 (`run_dirs` · 원천 ∪ 이 시도 · 정렬) 마다 `resume_recompare` 를 이은 목록 (요약 outdir
++    이 아니라 디스크 · 정직 = 폴더 하나 = 생산자 compared 와 같은 값) — 공통 검증 ⓓ (`resume_first_new_problem`) · `resume_rerun_problem` ⑤ 가 한 함수 (OSError 그대로).
++    옛 = 요약 런 기록 outdir 로 대조 → 기록 outdir 을 디스크에 없는 이름으로 고치면 없는 폴더끼리 대조 (사전 공격 15 P2-2 · P8)."""
++    out = []
++    for d in sorted(set(run_dirs(src, name)) | set(run_dirs(folder, name))):
++        out += resume_recompare(Path(src) / d, Path(folder) / d)
++    return out
++
++
++def run_end_ok(base, name):
++    """★ 11-09 사전 공격 15 PC15-01 · 02 — 시도 폴더 base 의 런 name 의 그룹 시작 · 끝 기록이 결합 (`group_pair`) · 끝 rc = `rc_success` · 끝 기록 확인 True 인가 (러너 쪽
++    으로 끝난 런 · 출력 폴더 있음은 부르는 쪽 = `run_dirs`)."""
++    _L, er, bound = group_pair(Path(base) / GROUPS_DIR / f'{name}.launch.json')
++    return bool(bound and rc_success(er.get('rc')) and er.get('confirmed') is True)
++
++
++def resume_disk_rerun(folder, src):
++    """★ 11-09 사전 공격 15 PC15-01 · 02 — 디스크상 첫 미완료 런 = 원천 src · 이 시도 folder 의 groups 시작 기록 이름 (`RUN_ORDER_RE` · 번호 차례) 중 원천에서 끝나지 않은
++    첫 런 (`_src_run_done` = `ResumeRunner._src_done` 같은 규칙 · 출력 폴더 = 원천 디스크 `run_dirs`) → (이름 | None, 사유 | None).  재실행 러너 = 원천에서 끝난 런만 차례로
++    복사하고 처음 끝나지 않은 런을 재실행 런으로 다시 돈다 (그 뒤는 다 새로) → 이 이름 = 생산자의 resume.rerun.  None = 원천에서 끝나지 않은 런이 디스크에 없다 (원천이
++    시작한 런이 다 끝났고 이 시도가 새 런을 띄우지 않았다 · 다음 런 이름 = 디스크 밖 · 남은 payload 없음).  런 이름 꼴 밖 시작 기록 = 사유 (생산자 = `run_request` 이름 ·
++    graph 원천 런 = 다른 폴더).  목록을 못 읽음 = OSError 그대로."""
++    names = set()
++    for base in (Path(src), Path(folder)):
++        g = base / GROUPS_DIR
++        if not g.is_dir():
++            continue
++        for fn in os.listdir(str(g)):
++            if not fn.endswith('.launch.json'):
++                continue
++            run = fn[:-len('.launch.json')]
++            if not (RUN_ORDER_RE.fullmatch(run) and RUN_DIR_RE.fullmatch(run)):
++                return None, f'{base.name}/{GROUPS_DIR}/{fn} = 런 이름 꼴 밖 시작 기록 (생산자 = `run_request` 이름 <앞자리><번호>_<역할>)'
++            names.add(run)
++    for run in sorted(names, key=lambda x: (int(RUN_ORDER_RE.fullmatch(x).group(2)), x)):
++        if not any(_src_run_done(src, run, od) for od in run_dirs(src, run)):
++            return run, None
++    return None, None
++
++
+ def resume_from_problem(st, n, e, s):
+     """공통 검증 ⓑ — 요약 resume 칸 ↔ 원장 (항목 n = e 의 resume_of · 그 시점 유효 사슬 끝 = `adoption` (st, 대상, upto=n) 의 effective = 풀기 전 `resume_source` 의
+     원천) → 사유 | None.  항목 resume_of null (새 시도) = resume 칸 null (생산자 `Runner` · attempt.json resume_of null 은 ⓐ) · 항목 resume_of 있음 = resume 칸 객체 ·
+@@ -4540,18 +4598,31 @@ def _src_run_done(src, name, od):
+     return bool(bound and rc_success(er.get('rc')) and (Path(src) / od).is_dir())
+ 
+ 
+-def resume_boundary_problem(folder, src, s, frm):
+-    """공통 검증 ⓒ — 요약 runs 의 복사 / 새 런 경계 ↔ 디스크 (원천 src = attempt_<frm>) → 사유 | None.  생산자 (`ResumeRunner.run`): 원천에서 끝난 런 (그룹 끝 rc 0 ·
+-    결합 · 런 폴더 있음) 만 `_copy` (런 폴더 copytree · logs · groups launch / end = 바이트 그대로 copy2 · copied_from = from) · 처음 끝나지 않은 런부터 다 새로
+-    (`_execute` · 새 그룹 표지 → launch 바이트가 원천과 다르다):
++def resume_boundary_problem(folder, src, s, frm, rerun):
++    """공통 검증 ⓒ — 요약 runs 의 복사 / 새 런 경계 ↔ 디스크 (원천 src = attempt_<frm> · rerun = 디스크상 첫 미완료 런 `resume_disk_rerun`) → 사유 | None.  생산자
++    (`ResumeRunner.run`): 원천에서 끝난 런 (그룹 끝 rc 0 · 결합 · 런 폴더 있음) 만 `_copy` (런 폴더 copytree · logs · groups launch / end = 바이트 그대로 copy2 ·
++    copied_from = from) · 처음 끝나지 않은 런부터 다 새로 (`_execute` · 새 그룹 표지 → launch 바이트가 원천과 다르다):
+       · 복사 기록 (copied_from 칸) = copied_from 정수 = from · 이름 · outdir = `RUN_DIR_RE` · 원천에서 끝난 런 · 이 시도 groups/<런>.launch.json · .end.json 바이트 =
+         원천의 같은 파일 · 런 폴더 payload (`resume_leftovers` = p2_*.json · .unchecked/ 이름 · 바이트) = 원천 · 새 런 뒤 복사 기록 없음
+-      · 첫 새 런 = 원천에서 끝난 런이 아님 (생산자는 복사했을 런) · 새 런마다 원천에 같은 이름 launch 가 있으면 이 시도 launch 가 있고 바이트가 다름 (복사 흔적 아님)
+-    옛 = 복사 목록 · 첫 새 런 = 요약 copied_from 자기 신고 (PC14-02 R1 · R2 = 디스크와 모순인 표기 그대로 재실행 자격)."""
++      · 새 런마다 원천에 같은 이름 launch 가 있으면 이 시도 launch 가 있고 바이트가 다름 (복사 흔적 아님)
++      · ★ 11-09 사전 공격 15 PC15-02 — resume.rerun = 디스크상 첫 미완료 런 (원천에서 처음 끝나지 않은 런 · 디스크에서 정해질 때) · 첫 새 런 기록 = 그 런 (옛 = 원천에서
++        끝나지 않은 런이면 받음 · 끝나지 않은 런을 건너뛴 기록도 받음) · 새 런 기록마다 이 시도 디스크와 묶음: groups 시작 · 끝 기록 결합 (생산자 = 러너를 띄운 런마다
++        시작 기록 → 끝 기록 · 결과 줄 전 그룹 확인 `attempt_groups_problem`) · 그 런의 디스크 출력 폴더 (`run_dirs`) ⊆ 기록 outdir (러너 = 그 폴더 하나 · 멈춘 런은 러너가
++        폴더를 만들기 전에 죽을 수 있다 = 없음 받음) · 멈춘 런 앞 새 런 = 이 시도에서 끝남 (`run_end_ok` · 기록 outdir 폴더 있음 · 생산자 = 앞 런이 끝나 팔을 읽은 뒤에만
++        다음 런 · 런 전 시간 상한 멈춤 = 멈춘 런 기록 없음 = 기록 전부 앞 런)
++    옛 = 복사 목록 · 첫 새 런 = 요약 copied_from 자기 신고 (PC14-02 R1 · R2 = 디스크와 모순인 표기 그대로 재실행 자격) · 새 런 기록의 이름 · outdir = 디스크와 묶지
++    않음 (사전 공격 15 P2-2 · P8 outdir 다른 이름 · P9 런 이름 바꿈 = 자격)."""
+     folder, src = Path(folder), Path(src)
+     gs, gd = folder / GROUPS_DIR, src / GROUPS_DIR
++    R = s.get('resume') if isinstance(s.get('resume'), dict) else {}
++    if rerun is not None and R.get('rerun') != rerun:              # ★ 11-09 사전 공격 15 PC15-02 — resume.rerun = 디스크상 첫 미완료 런
++        return (f'resume.rerun {R.get("rerun")!r} ≠ 디스크상 첫 미완료 런 {rerun} (원천 {src.name} 에서 처음 끝나지 않은 런 · `ResumeRunner._src_done` 같은 규칙 · '
++                f'★ 11-09 사전 공격 15 PC15-02)')
++    runs = [x for x in (s.get('runs') or []) if isinstance(x, dict)]
++    stop_run = (s.get('stop') or {}).get('run')
++    last = runs[-1] if runs and runs[-1].get('name') == stop_run else None    # 멈춘 런 기록 (런 전 시간 상한 = 없음 → 기록 전부 = 앞 런)
+     seen_new = False
+-    for r in [x for x in (s.get('runs') or []) if isinstance(x, dict)]:
++    for r in runs:
+         nm, od = r.get('name'), r.get('outdir')
+         if not (isinstance(nm, str) and RUN_DIR_RE.fullmatch(nm) and isinstance(od, str) and RUN_DIR_RE.fullmatch(od)):
+             return f'런 기록 이름 · outdir 꼴 ({nm!r} · {od!r})'
+@@ -4575,9 +4646,21 @@ def resume_boundary_problem(folder, src, s, frm):
+             if not same:
+                 return f'복사 기록 런 {nm} 의 런 폴더 payload ≠ 원천 {src.name}/{od} (생산자 `_copy` = copytree)'
+             continue
+-        if not seen_new and _src_run_done(src, nm, od):
+-            return f'첫 새 런 {nm} = 원천 {src.name} 에서 끝난 런 (생산자 = 복사했을 런 · 복사 런을 새 런으로 적은 꼴)'
++        if not seen_new and nm != rerun:                           # ★ 11-09 사전 공격 15 PC15-02 — 첫 새 런 = 디스크상 첫 미완료 런 (옛 = 원천에서 끝나지 않은 런이면 받음)
++            return (f'첫 새 런 {nm} ≠ 디스크상 첫 미완료 런 {rerun if rerun is not None else "(없음)"} (원천 {src.name} 에서 끝난 런을 새 런으로 적은 꼴 · 끝나지 않은 런을 '
++                    f'건너뛴 꼴 · 생산자 = 원천에서 끝난 런만 복사 · 처음 끝나지 않은 런을 재실행 · ★ 11-09 사전 공격 15 PC15-02)')
+         seen_new = True
++        _L, er, bound = group_pair(gs / f'{nm}.launch.json')
++        if not bound:                                              # ★ 11-09 사전 공격 15 PC15-02 — 새 런 기록 ↔ 이 시도 groups 시작 · 끝 기록
++            return (f'새 런 {nm} 의 groups 시작 · 끝 기록이 이 시도에 없거나 결합되지 않는다 (생산자 = 러너를 띄운 런마다 시작 · 끝 기록 · 결과 줄 전 그룹 확인 · '
++                    f'★ 11-09 사전 공격 15 PC15-02)')
++        dirs = run_dirs(folder, nm)
++        if any(d != od for d in dirs):                             # ★ 11-09 사전 공격 15 PC15-02 — 디스크 출력 폴더 ⊆ 기록 outdir
++            return (f'새 런 {nm} 의 디스크 출력 폴더 {dirs} ≠ 기록 outdir {od!r} (러너 = 요청 출력 폴더 하나 · `stop_trace` 이름 규칙 · ★ 11-09 사전 공격 15 '
++                    f'PC15-02)')
++        if r is not last and not (run_end_ok(folder, nm) and od in dirs):   # ★ 11-09 사전 공격 15 PC15-02 — 멈춘 런 앞 새 런 = 이 시도에서 끝남
++            return (f'멈춘 런 앞 새 런 {nm} 이 이 시도에서 끝나지 않았다 (끝 기록 rc {er.get("rc")!r} · 확인 {er.get("confirmed")!r} · 디스크 출력 폴더 {dirs} · 생산자 = '
++                    f'앞 런이 끝나 팔을 읽은 뒤에만 다음 런 · ★ 11-09 사전 공격 15 PC15-02)')
+         theirs, st_t = read_regular_file(gd / f'{nm}.launch.json')
+         if st_t == 'missing':
+             continue
+@@ -4590,27 +4673,37 @@ def resume_boundary_problem(folder, src, s, frm):
+     return None
+ 
+ 
+-def resume_first_new_problem(folder, src, s):
+-    """공통 검증 ⓓ — 실제 첫 새 런 (ⓒ 가 원천과 묶은 · 이름 = resume.rerun) 을 다 푼 뒤 멈춤이면 (멈춘 런 ≠ rerun) 원천 그 런 폴더의 남은 payload ↔ 이 시도 그 런
+-    폴더 다시 대조 (`resume_recompare`) = 요약 compared → 사유 | None.  멈춘 런 = rerun (대조 전 멈춤 · compared [] · null = `resume_rerun_problem` ④) = 대조 없음.
+-    원천 = 찾은 원천 (다른 바탕 포함 · 옛 = 같은 바탕에 있을 때만 대조 · `resume_rerun_problem` 한정)."""
+-    R = s.get('resume') if isinstance(s.get('resume'), dict) else {}
+-    rerun = R.get('rerun')
+-    if (s.get('stop') or {}).get('run') == rerun:
+-        return None
+-    new = [x for x in (s.get('runs') or []) if isinstance(x, dict) and 'copied_from' not in x]
+-    if not new:
+-        return f'멈춘 런 ≠ resume.rerun {rerun!r} 인데 새 런 기록이 없다 (생산자 = rerun 을 다 푼 뒤에만 다음 런)'
+-    od = new[0].get('outdir')
+-    if new[0].get('name') != rerun or not (isinstance(od, str) and RUN_DIR_RE.fullmatch(od)):
+-        return f'실제 첫 새 런 {new[0].get("name")!r} · outdir {od!r} ≠ resume.rerun {rerun!r}'
++def resume_first_new_problem(folder, src, s, rerun):
++    """공통 검증 ⓓ — ★ 11-09 사전 공격 15 PC15-01 디스크상 첫 미완료 런 rerun (`resume_disk_rerun` · 원천에서 처음 끝나지 않은 런) 이 이 시도에서 끝났으면 (그룹 시작 · 끝
++    결합 · 끝 rc 성공 · 확인 = `run_end_ok` · 디스크 출력 폴더 있음) 원천 그 런의 남은 payload ↔ 이 시도 그 런 폴더 다시 대조 (`resume_recompare_run` = 디스크 출력 폴더 ·
++    요약 outdir 아님) → 사유 | None — 요약의 멈춤 · 요약 유무와 무관:
++      · 요약이 rerun 을 다 풀고 대조했다 (멈춘 런 ≠ resume.rerun) = compared 가 다시 대조 값 (옛 규칙 그대로) · 요약이 대조했다는데 그 런이 이 시도에서 끝나지 않았다 = 사유
++      · 그 밖 (대조 전 멈춤 = 정리 중 신호 signal_after · 사슬 부모 사망 · 요약 없는 시도 · s = None) = 다시 대조가 모두 같아야 (정직 같은 payload = 그대로 · 다른 payload =
++        비결정 재실행 = 사유)
++    끝나지 않았으면 (rc 실패 · 죽인 런 · 미확인 · 런 전 멈춤) = 대조 없음 (생산자도 대조 전 멈춤 · 다음 재개 `_src_done` = 다시 돈다).  원천 = 찾은 원천 (다른 바탕 포함).
++    옛 = 멈춘 런 = rerun 이거나 요약 없으면 대조 안 함 → 정직 signal_after · 요약 지움 + 남은 payload 다름 = 자격 True · 다음 재개 `_src_done` 가 그 런을 대조 없이 복사
++    (사전 공격 15 P2-1)."""
++    R = s.get('resume') if isinstance(s, dict) and isinstance(s.get('resume'), dict) else None
++    post = R is not None and (s.get('stop') or {}).get('run') != R.get('rerun')
+     try:
+-        want = resume_recompare(Path(src) / od, Path(folder) / od)
++        done = rerun is not None and run_end_ok(folder, rerun) and bool(run_dirs(folder, rerun))
++        want = resume_recompare_run(src, folder, rerun) if done else None
+     except OSError as ex:
+-        return f'다시 대조를 못 한다 ({type(ex).__name__} · 원천 {Path(src).name}/{od})'
+-    if R.get('compared') != want:
+-        return (f'resume.compared {repr(R.get("compared"))[:80]} ≠ 원천 {Path(src).name}/{od} 남은 payload ↔ 이 시도 {od} 다시 대조 {repr(want)[:80]} (결정적 재실행이 '
+-                f'아니다)')
++        return f'디스크상 첫 미완료 런 {rerun} 다시 대조를 못 한다 ({type(ex).__name__} · 원천 {Path(src).name})'
++    if not done:
++        if post:
++            return (f'요약 = resume.rerun {R.get("rerun")!r} 을 다 풀고 대조함 (멈춘 런 {(s.get("stop") or {}).get("run")!r}) 인데 디스크상 첫 미완료 런 '
++                    f'{rerun if rerun is not None else "(없음)"} 이 이 시도에서 끝나지 않았다 (생산자 = 재실행 런이 끝나 대조한 뒤에만 다음 런 · ★ 11-09 사전 공격 15 PC15-01)')
++        return None
++    if post:
++        if R.get('compared') != want:
++            return (f'resume.compared {repr(R.get("compared"))[:80]} ≠ 원천 {Path(src).name} 의 {rerun} 남은 payload ↔ 이 시도 디스크 출력 폴더 다시 대조 '
++                    f'{repr(want)[:80]} (결정적 재실행이 아니다)')
++        return None
++    bad = [x['file'] for x in want if not x['same']]
++    if bad:
++        return (f'디스크상 첫 미완료 런 {rerun} 이 이 시도에서 끝났는데 (그룹 결합 · rc 0 · 확인 · 출력 폴더) 원천 {Path(src).name} 남은 payload ↔ 이 시도 다시 대조가 '
++                f'다르다 {bad[:3]} (요약 = 대조 전 멈춤 · 요약 없음 — 결정적 재실행이 아니다 · 다음 재개가 그 런을 대조 없이 복사한다 · ★ 11-09 사전 공격 15 PC15-01)')
+     return None
+ 
+ 
+@@ -4621,11 +4714,14 @@ def resume_provenance_problem(st, n, folder, s, found=None):
+          사유) — 옛 = 판정 · 합치기에서만 (PC14-03 attempt-null = 결과 줄 · 다음 순서 · 풀기 전 다시 셈 통과)
+       ⓑ resume.from ↔ 그 시점 유효 사슬 끝 (`resume_from_problem`) — 옛 = 범위만 (PC14-03 3 시도 from 다시 결속)
+       원천 = attempt_<from> (`resume_source_locate` · found 또는 같은 바탕 · 못 찾음 · 확인 못 함 = 사유 · fail-closed)
+-      ⓒ 복사 / 새 런 경계 ↔ 원천 디스크 (`resume_boundary_problem`) — 옛 = 요약 자기 신고 (PC14-02 R1 · R2) · 멈춘 런 = rerun 이어도 본다 (R1 = 대조 전 반환 우회)
+-      ⓓ 실제 첫 새 런 payload 다시 대조 (`resume_first_new_problem`)
+-    결과 줄 쓰기 · 다시 셈 (`result_fields_ledger`) · 다음 재개 허용 (`resume_chain_provenance_problem` · `resume_chain_problem`) 이 이 한 함수.  요약 없는 시도 = ⓐ 만
+-    (요약 쪽 주장 없음 · 한정) · 새 시도 (항목 resume_of null) = ⓐ · ⓑ (resume 칸 null) 만.  ⚠ 한정: 모든 사본 (launch / end · payload · 요약 · attempt.json) 을
+-    일관되게 고친 위조 = 이 계약 밖 (판정문 §3) · 재실행 러너의 복사 판단 (ResumeRunner._src_done) = 그대로 (다음 재개 허용 관문이 앞에서 막는다)."""
++      ⓒ 복사 / 새 런 경계 ↔ 원천 디스크 (`resume_boundary_problem`) — 옛 = 요약 자기 신고 (PC14-02 R1 · R2) · 멈춘 런 = rerun 이어도 본다 (R1 = 대조 전 반환 우회) ·
++         ★ 11-09 사전 공격 15 PC15-02 resume.rerun · 첫 새 런 = 디스크상 첫 미완료 런 (`resume_disk_rerun`) · 새 런 기록 ↔ 이 시도 groups 기록 · 디스크 출력 폴더
++      ⓓ 디스크상 첫 미완료 런 payload 다시 대조 (`resume_first_new_problem` · ★ 11-09 사전 공격 15 PC15-01 요약의 멈춤 · 요약 유무와 무관)
++    결과 줄 쓰기 · 다시 셈 (`result_fields_ledger`) · 다음 재개 허용 (`resume_chain_provenance_problem` · `resume_chain_problem`) 이 이 한 함수.  ★ 11-09 사전 공격 15
++    PC15-01 — 요약 없는 재실행 시도 = ⓐ + 원천 (원장 그 시점 유효 사슬 끝 · 찾기) + ⓓ (옛 = ⓐ 만 · 요약을 지우면 대조를 비켰다) · 새 시도 (항목 resume_of null) = ⓐ · ⓑ
++    (resume 칸 null) 만 · ★ PC15-05 단계 요약 칸 꼴 틀림 (`summary_shape_problem`) = [꼴] 사유 (옛 = 다음 재개 허용 자리 traceback).  ⚠ 한정: 모든 사본 (launch / end ·
++    payload · 요약 · attempt.json) 을 일관되게 고친 위조 = 이 계약 밖 (판정문 §3) · 재실행 러너의 복사 판단 (ResumeRunner._src_done) = 그대로 (다음 재개 허용 관문이 앞에서
++    막는다)."""
+     folder = Path(folder)
+     e = (st.get('entries') or {}).get(n) if isinstance(st, dict) else None
+     if not isinstance(e, dict):
+@@ -4635,21 +4731,34 @@ def resume_provenance_problem(st, n, folder, s, found=None):
+     if ent is not None:                                        # ⓐ 지킴
+         return (f'{RESUME_PROV} [ⓐ] {folder.name}: attempt.json ({ent[0]}) ≠ 원장 항목 {n} ({ent[1]}) (생산자 `attempt_open` = 항목 칸 그대로 · '
+                 f'★ 11-09 Codex 회차 ④ PC14-03)')
+-    if not isinstance(s, dict):
+-        return None                                            # 요약 없는 시도 = 요약 쪽 주장 없음 (한정 · ⓐ 만)
+-    bind = resume_from_problem(st, n, e, s)
+-    if bind is not None:                                       # ⓑ 지킴
+-        return f'{RESUME_PROV} [ⓑ] {folder.name}: {bind} (★ 11-09 Codex 회차 ④ PC14-03)'
++    if isinstance(s, dict):
++        shape = summary_shape_problem(s)
++        if shape is not None:                                  # ★ 11-09 사전 공격 15 PC15-05 — 꼴 지킴 (옛 = ⓒ · ⓓ 에서 TypeError · AttributeError)
++            return (f'{RESUME_PROV} [꼴] {folder.name}: 단계 요약 칸 꼴 — {shape} (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · ★ 11-09 사전 공격 15 '
++                    f'PC15-05)')
++        bind = resume_from_problem(st, n, e, s)
++        if bind is not None:                                   # ⓑ 지킴
++            return f'{RESUME_PROV} [ⓑ] {folder.name}: {bind} (★ 11-09 Codex 회차 ④ PC14-03)'
+     if e['resume_of'] is None:
+         return None
+-    R = s.get('resume') if isinstance(s.get('resume'), dict) else {}
+-    src, swhy = resume_source_locate(st, R.get('from'), folder, found)
++    if isinstance(s, dict):
++        frm = (s.get('resume') if isinstance(s.get('resume'), dict) else {}).get('from')   # ⓑ 뒤 = 객체 · from = 그 시점 유효 사슬 끝
++    else:                                                      # ★ 11-09 사전 공격 15 PC15-01 — 요약 없는 재실행 시도 = 원장의 그 시점 유효 사슬 끝
++        frm = adoption(st, e['target'], upto=n)['effective']
++        if frm is None:
++            return (f'{RESUME_PROV} [ⓑ] {folder.name}: 요약 없는 재실행 시도 (원장 항목 {n} resume_of {e["resume_of"]}) 의 그 시점 유효 사슬 끝이 없다 (재실행 원천 없음 · '
++                    f'★ 11-09 사전 공격 15 PC15-01)')
++    src, swhy = resume_source_locate(st, frm, folder, found)
+     if src is None:                                            # 원천 지킴 (fail-closed)
+         return f'{RESUME_PROV} [원천] {folder.name}: {swhy} (확인할 수 없는 원천 = 재개 허용 안 함 · fail-closed · ★ 11-09 Codex 회차 ④)'
+-    bnd = resume_boundary_problem(folder, src, s, R.get('from'))
++    try:
++        rerun, rwhy = resume_disk_rerun(folder, src)
++        bnd = rwhy if rwhy is not None else (resume_boundary_problem(folder, src, s, frm, rerun) if isinstance(s, dict) else None)
++    except OSError as ex:
++        bnd = f'groups · 런 폴더 목록을 못 읽는다 ({type(ex).__name__} · ★ 11-09 사전 공격 15 PC15-02)'
+     if bnd is not None:                                        # ⓒ 지킴
+         return f'{RESUME_PROV} [ⓒ] {folder.name}: {bnd} (★ 11-09 Codex 회차 ④ PC14-02)'
+-    rcmp = resume_first_new_problem(folder, src, s)
++    rcmp = resume_first_new_problem(folder, src, s, rerun)
+     if rcmp is not None:                                       # ⓓ 지킴
+         return f'{RESUME_PROV} [ⓓ] {folder.name}: {rcmp} (★ 11-09 Codex 회차 ④)'
+     return None
+@@ -4892,11 +5001,29 @@ def attempt_result_line(n, folder, s, by, unreadable=False):
+     return _result_line(n, folder, result_fields(folder, s, unreadable=unreadable), by)
+ 
+ 
++class ResultHeld(Stop):
++    """★ 11-09 사전 공격 15 PC15-03 (P2-3 · 보장 5 쓰기 ↔ 다시 셈 대칭) — 결과 줄을 쓰지 않는다: 재개 출처 공통 검증 사유가 [원천] (원천을 찾거나 확인할 수 없음 =
++    확인된 모순이 아니라 확인 못 함) → [원천] False 줄을 영구히 남기지 않는다 (옛 = 같은 바탕에 원천이 없으면 False 줄 · 판정이 다른 바탕에서 원천을 찾아 True 로 다시
++    셈 = ATTEMPT_LEDGER_MISMATCH · 원천을 되돌려도 줄은 False).  사슬 (`attempt_close`) = ATTEMPT_OPEN · rc 3 · recover (`recover_ledger`) = 못 쓴 수 · 화면 사유 = 원천을
++    같은 바탕에 되돌린 뒤 recover.  확인된 모순 ([ⓐ] · [ⓑ] · [ⓒ] · [ⓓ] · [꼴]) = 그대로 자격 False 줄."""
++
++
++def resume_prov_unconfirmed(why):
++    """★ 11-09 사전 공격 15 PC15-03 — 공통 검증 사유가 [원천] (원천을 찾거나 확인할 수 없음 · `resume_provenance_problem` 의 그 표지 머리) 인가."""
++    return isinstance(why, str) and why.startswith(f'{RESUME_PROV} [원천]')
++
++
+ def attempt_result(n, folder, s, by, st, unreadable=False):
+     """★ 11-09 Codex 회차 ④ PC14-02 · 03 (판정문 §3 ① "자격 결과 쓰기 전") — 결과 줄 쓰기 (사슬 끝 `attempt_close` · `recover_ledger`) = `attempt_result_line` 칸 + 재개
+-    출처 공통 검증 (`result_fields_ledger` · 원장 상태 st · 원천 = 같은 바탕) → (결과 줄, 공통 검증 사유 | None · 부르는 쪽 = 원장 커밋 글 · 화면)."""
++    출처 공통 검증 (`result_fields_ledger` · 원장 상태 st · 원천 = 같은 바탕) → (결과 줄, 공통 검증 사유 | None · 부르는 쪽 = 원장 커밋 글 · 화면).  ★ 11-09 사전 공격 15
++    PC15-03 — 사유 [원천] = 결과 줄을 쓰지 않는다 (`ResultHeld` · 원천 attempt_<from> = 원장 그 시점 유효 사슬 끝 · 다음 재개 허용 · 다시 셈 = 그대로 fail-closed)."""
+     folder = Path(folder)
+     f, why = result_fields_ledger(folder, s, st, n, unreadable=unreadable)
++    if resume_prov_unconfirmed(why):
++        e = (st.get('entries') or {}).get(n) or {}
++        eff = adoption(st, e['target'], upto=n)['effective'] if isinstance(e.get('target'), str) else None
++        raise ResultHeld('ATTEMPT_LEDGER_MISMATCH', f'{folder.name}: 결과 줄을 쓰지 않는다 — 원천 attempt_{eff} 을 같은 바탕에 되돌린 뒤 recover ({why} · ★ 11-09 사전 '
++                                                    f'공격 15 PC15-03)')
+     return _result_line(n, folder, f, by), why
+ 
+ 
+@@ -5030,7 +5157,8 @@ def result_line_problem(k, p, r, st=None, found=None):
+ 
+ def attempt_close(att, s):
+     """단계 끝 — 시도 폴더의 그룹이 다 확인됐으면 결과 줄 (사슬) + 커밋 → None (rc 그대로) | 3 (결과 줄을 못 씀 · 미확인 = recover).  ★ 11-09 Codex 회차 ④ PC14-02 · 03 —
+-    결과 줄 = `attempt_result` (시작 때 원장 상태 att.st · 재개 출처 공통 검증 · 사유 = 재실행 자격 False + 원장 커밋 글 · 화면)."""
++    결과 줄 = `attempt_result` (시작 때 원장 상태 att.st · 재개 출처 공통 검증 · 사유 = 재실행 자격 False + 원장 커밋 글 · 화면).  ★ 11-09 사전 공격 15 PC15-03 — 공통
++    검증 사유 [원천] (원천을 찾거나 확인할 수 없음 · `ResultHeld`) = 결과 줄을 쓰지 않는다 · ATTEMPT_OPEN (그룹 미확인과 같은 꼴) · rc 3."""
+     why = attempt_groups_problem(att.folder)
+     if why:
+         print(f'ATTEMPT_OPEN n={att.n} — 결과 줄을 쓰지 않았다 ({why}) — 사람이 보고 --stage recover --out {att.folder} --ledger {att.repo}')
+@@ -5038,6 +5166,9 @@ def attempt_close(att, s):
+     try:
+         res, pwhy = attempt_result(att.n, att.folder, s, 'chain', att.st)
+         ledger_append(att.repo, res, f'rint-r attempt {att.n} result {res["status"]}' + (f' · 재실행 자격 없음 — {pwhy}' if pwhy else ''))
++    except ResultHeld as e:                                # ★ 11-09 사전 공격 15 PC15-03 — [원천] = 결과 줄 없음 (미확인 · recover)
++        print(f'ATTEMPT_OPEN n={att.n} — 결과 줄을 쓰지 않았다 ({e.cause}) — 사람이 보고 --stage recover --out {att.folder} --ledger {att.repo}')
++        return 3
+     except Stop as e:
+         print_stop(e)
+         return 3
+@@ -5091,8 +5222,9 @@ ATTEMPT_ENTRY_FIELDS = ('target', 'machine', 'resume_of')
+ def attempt_entry_diff(a, k, e):
+     """★ 11-09 Codex 회차 ④ PC14-03 (판정문 §3 · 수정 계획 Q1 (가) ⓐ) — attempt.json (`read_attempt` dict a) ↔ 원장 항목 e (번호 k) → (attempt.json 쪽 글, 원장 쪽 글)
+     | None (같음).  옛 `found_attempts_problem` 안 식을 뗀 것 (판정 · 합치기 동작 · 사유 글 그대로) — 재개 출처 공통 검증 ⓐ (`resume_provenance_problem`) 가 같은
+-    함수 (옛 = 이 대조가 판정 · 합치기 자리에만 · 결과 줄 쓰기 · 다음 재개 허용에는 없었다 = PC14-03 attempt-null)."""
+-    diff = [f for f in ATTEMPT_ENTRY_FIELDS if a[f] != e[f]]
++    함수 (옛 = 이 대조가 판정 · 합치기 자리에만 · 결과 줄 쓰기 · 다음 재개 허용에는 없었다 = PC14-03 attempt-null).  ★ 11-09 사전 공격 15 PC15-04 — 같음 = 형까지 같음
++    (`type(a) is type(e)` 이고 값 같음 · 정수 · 글 · null · 옛 `!=` = resume_of true · 1.0 을 정수 1 과 같다고 봄 · 생산자 = 항목 칸을 그대로 JSON 으로 = 형 같음)."""
++    diff = [f for f in ATTEMPT_ENTRY_FIELDS if not (type(a[f]) is type(e[f]) and a[f] == e[f])]
+     if a['n'] != k or diff:
+         return (', '.join(f'{f} {a[f]!r}' for f in diff) or f'n {a["n"]}'), (', '.join(f'{f} {e[f]!r}' for f in diff) or f'n {k}')
+     return None
+@@ -8274,7 +8406,8 @@ def recover_ledger(root, repo, operator=None):
+                        'by': 'recover', 'utc': _utc()}
+             else:
+                 s, sst = stage_summary_read(f)                    # ★ 10-27 묶음 C2d 단위 · 넘침 점 차례 · ★ 11-05 A2b 있는데 못 읽음 = summary_unreadable
+-                #  ★ 11-09 Codex 회차 ④ PC14-02 · 03 — 결과 줄 = 이 원장 상태 st 의 재개 출처 공통 검증 (`attempt_result` · 사유 = 자격 False + 커밋 글)
++                #  ★ 11-09 Codex 회차 ④ PC14-02 · 03 — 결과 줄 = 이 원장 상태 st 의 재개 출처 공통 검증 (`attempt_result` · 사유 = 자격 False + 커밋 글) ·
++                #    ★ 11-09 사전 공격 15 PC15-03 — 사유 [원천] = 결과 줄 없음 (`ResultHeld` · 아래 except)
+                 res, pwhy = attempt_result(n, f, s, 'recover', st, unreadable=(sst == 'unreadable'))
+             msg = f'rint-r attempt {n} result {res["status"]} (recover)'
+             if op_used:                                       # ★ 11-04 PC8-05 — 운영자 확인 사유 = 원장 커밋 글 (그 결과 줄과 같은 커밋)
+@@ -8283,7 +8416,8 @@ def recover_ledger(root, repo, operator=None):
+                 msg += f' · 재실행 자격 없음 — {pwhy}'
+             ledger_append(repo, res, msg, expect=raw)
+             used += 1 if op_used else 0
+-        except (Stop, OSError, ValueError) as ex:
++        except (Stop, OSError, ValueError) as ex:             # ★ 11-09 사전 공격 15 PC15-03 — `ResultHeld` ([원천] · 결과 줄 없음) 도 여기 = 못 쓴 수 · 화면 사유
++            #    (원천 attempt_<from> 을 같은 바탕에 되돌린 뒤 recover)
+             print_stop(ex if isinstance(ex, Stop) else Stop('ATTEMPT_LEDGER_MISMATCH', f'{f.name}: {type(ex).__name__}: {ex}'))
+             bad += 1
+             continue
+diff --git a/scripts/test_rint_r_chain.py b/scripts/test_rint_r_chain.py
+index b74eb6d51..8ccd49db7 100644
+--- a/scripts/test_rint_r_chain.py
++++ b/scripts/test_rint_r_chain.py
+@@ -17148,9 +17148,10 @@ def rr4_fail_closed_rows():
+         for x in rr4_lines(atts, head_plan=head['plan_sha256'], last_result=False)[1:]:
+             led_hand(d, x)
+         shutil.rmtree(atts[0][0])                          # 원천 attempt_1 을 바탕에서 치움 (결과 줄 1 은 원장에 있다)
+-        rc, _so2 = call(['--stage', 'recover', '--out', str(atts[1][0]), '--ledger', str(d)])
++        rc, so2 = call(['--stage', 'recover', '--out', str(atts[1][0]), '--ledger', str(d)])
+         msg = git_(d, 'log', '-1', '--format=%B')
+-        return [rc, (led_result(d, 2) or {}).get('resume_ok'), rr4_tag(msg) if RR4_W in msg else []]
++        #  ★ 11-09 사전 공격 15 PC15-03 — [원천] = 결과 줄을 쓰지 않는다 (옛 기대 [0, False, ['[원천]']] = [원천] False 줄 · 기대 변경 = 이 처분)
++        return [rc, (led_result(d, 2) or {}).get('resume_ok'), rr4_tag(msg) if RR4_W in msg else [], RR5_HELD in so2]
+ 
+     def nosrc_recount():
+         atts = rr4_two('D_nosrc_recount', 'source-ceiling')
+@@ -17180,14 +17181,15 @@ def rr4_fail_closed_rows():
+         return [st['results'][2]['resume_ok'], rr4_tag(why), rr4_tag(rec)]
+ 
+     return [
+-        ('F1_nosrc_writing', nosrc_cli, [0, False, ['[원천]']]),
++        ('F1_nosrc_writing', nosrc_cli, [3, None, [], True]),
+         ('F2_nosrc_recount', nosrc_recount, [True, ['[원천]']]),
+         ('F3_other_base_same_true', lambda: other_base(rr4_same_true), [True, ['[ⓓ]'], ['[ⓓ]']]),
+     ]
+ 
+ 
+ @check('RR4D', '★ 11-09 Codex 회차 ④ PC14-02 · 03 같은 부류 (수정 계획 §2 한정 "원천이 같은 바탕에 없는 시도" · 메인 결정 = fail-closed) — 원천을 찾을 수 없음: '
+-               '정직 재실행 시도의 원천 attempt_1 을 바탕에서 치운 뒤 실제 recover --ledger = 결과 줄 자격 False · 사유 [원천] (옛 = 대조 안 함 · True) · 다시 셈 '
++               '정직 재실행 시도의 원천 attempt_1 을 바탕에서 치운 뒤 실제 recover --ledger = ★ 11-09 사전 공격 15 PC15-03 결과 줄 없음 · rc 3 · 화면 = 원천을 같은 '
++               '바탕에 되돌린 뒤 recover (회차 ④ 판 = 결과 줄 자격 False · 사유 [원천] · 옛 = 대조 안 함 · True) · 다시 셈 '
+                '(판정 · 합치기 꼴 · 찾은 시도 폴더에 원천 없음) = 사유 [원천] (조용한 통과 없음) · 원천이 다른 바탕 (찾은 폴더에 있음) 인데 compared same True 로 '
+                '고친 요약 = 공통 검증 ⓓ (실제 첫 새 런 payload ↔ 그 원천) = 사유 · 다시 셈 = 사유 [ⓓ] (폴더만의 대조 = 원천이 같은 바탕에 없어 안 함 · True)')
+ def t_RR4D():
+@@ -17247,6 +17249,575 @@ def t_RR4E():
+     return ok, got
+ 
+ 
++# ═════════════════════════ ★ 11-09 사전 공격 15 처분 (PC15-01 – 06 · 고침 C · 시험 먼저) ═════════════════════════
++#   보고 = docs/reviews/rint2_rr4_fix_evidence_20261109/preattack15/REPORT.md · 처분 = 수정 계획 docs/reviews/rint2_rr4_fix_plan_20261109.md §7 · 행 기대 = 고친 판
++#   (공통 검증 표지 · 결과 줄 쓰기의 [원천] 멈춤) — 바탕 69d714d09 사슬에 먼저 돌려 PC15-01 – 05 음성 행이 받음 · traceback 으로 실패함을 봤다 (증거 pa15_fix/logs).
++#   PC15-01 디스크상 첫 미완료 런 다시 대조 (요약의 멈춤 · 요약 유무와 무관) · PC15-02 새 런 기록 ↔ 이 시도 디스크 (groups 기록 · 디스크 출력 폴더 · resume.rerun) ·
++#   PC15-03 [원천] = 결과 줄을 쓰지 않는다 · PC15-04 ⓐ 형까지 같음 · PC15-05 [꼴] (traceback 없음) · PC15-06 생존 변이를 가르는 행 (가드 하나씩 · 회차 ④ 가드 포함).
++#   "손 고친 결과 줄" 행 (`rr5_order` force) = 다음 재개 허용 (`attempt_order_problem`) 이 결과 줄 자격을 믿지 않고 공통 검증만으로 막는가 (그 가드만 가르는 입력).
++RR5_HELD = '을 같은 바탕에 되돌린 뒤 recover'                        # PC15-03 화면 · 사슬 사유 낱말
++RR5_TAGS = ('[ⓐ]', '[ⓑ]', '[ⓒ]', '[ⓓ]', '[원천]', '[꼴]')
++RR5_NA = 'RESUME_NOT_ALLOWED'
++RR5_POS = [0, True, [], True, True, None, None]
++
++
++def rr5_tag(prob):
++    return [t for t in RR5_TAGS if isinstance(prob, str) and t in prob]
++
++
++def rr5_neg(tag):
++    """세 자리 모두 거부 — recover 결과 줄 자격 False + 커밋 글 표지 · 다시 셈 None · 폴더 증거 결과 줄 (True) 을 믿는 다음 --resume 차례 · 풀기 전 사슬 = RESUME_NOT_ALLOWED + 표지."""
++    return [0, False, [tag], True, True, [RR5_NA, [tag]], [RR5_NA, [tag]]]
++
++
++def rr5_three(mk, tag, machine=MACH):
++    """세 자리 → [recover rc · 결과 줄 자격 · 커밋 글 표지 · 다시 셈 (같은 원장 · 같은 함수) None · 폴더 증거 결과 줄 자격 · 차례 · 사슬] (`rr4_cli` · `rr4_places`)."""
++    c = rr4_cli(tag, mk(f'{tag}_c'), machine=machine)
++    p = rr4_places(mk(f'{tag}_p'), machine=machine)
++    return [c[0], c[1], c[2], c[3] is None, p[0], p[1], p[2]]
++
++
++def rr5_sigafter(s):
++    """사전 공격 15 P2-1 (a) (탐침 p1 그대로) — 정직 RESUME_MISMATCH 요약 여섯 칸: 멈춤 RUNNER_RC · run L02 · L02 기록 rc null · group_cause signal_after · arms_read [] ·
++    compared [] · determinism null (= 재실행 런이 끝난 뒤 정리 중 신호 · 대조 전 멈춤 이야기 · 디스크 = 끝 rc 0 · 확인 · 남은 payload ≠ 원천)."""
++    s['stop'].update(code='RUNNER_RC', run=RR4_N2, reason=None)
++    s['runs'][1].update(rc=None, group_cause='signal_after', arms_read=[])
++    s['resume'].update(compared=[], determinism=None)
++
++
++def rr5_sigafter_real(tag, ceiling, no_folder=False):
++    """정직 signal_after (탐침 p13 그대로) — 실제 `ResumeRunner.run` · 재실행 런 L02 의 가짜 `_execute` = `Runner._execute` signal_after 가지 (러너 끝 rc 0 · 디스크 끝
++    기록 원인 None · rc 0 · 확인 True · 런 기록 rc null · group_cause signal_after · Stop RUNNER_RC) → [(폴더, 요약)] 둘 · no_folder = 러너가 출력 폴더를 만들지 않음."""
++    base = Path(TD) / 'rr4' / tag
++    a1 = rr4_first(base)
++    dst = rr4_att(base / 'attempt_2', 2, 1)
++    rn = RR.ResumeRunner('UNUSED', a1[0], dst, {}, None, 0, {}, parent_env={}, prefix='L', src=a1[0], src_n=1, machine=MACH)
++    rn.env_delta = lambda *_a: {}
++
++    def fake_execute(name, q, od, delta):
++        rec = rr4_files(dst, 2, ceiling, rc=0)
++        if no_folder:
++            shutil.rmtree(dst / rec['outdir'])
++        rec.update(rc=None, group_cause='signal_after', arms_read=[])
++        rn.records.append(rec)
++        raise RR.Stop('RUNNER_RC', f'{name}: 사슬이 신호 SIGTERM 를 받았다 (러너가 끝난 뒤 정리 중 · 시험)', name)
++
++    def fake_read(outdir, req, *_a, **_k):
++        return [dict(rr4_pub((Path(outdir) / RR4_FN).read_bytes()), sigma=1.0, dsigma_rel=0.0)]
++    rn._execute = fake_execute
++    code, run = None, None
++    with rc_patch(read_run=fake_read), contextlib.redirect_stdout(io.StringIO()):
++        try:
++            for i in (1, 2):
++                role, rj = RR4_ROLES[i - 1]
++                rn.run(SBE_KIT, role, 'P0', None, rj, 1)
++        except RR.Stop as e:
++            code, run = e.code, e.run
++    return [a1, (dst, rr4_put(dst, rr4_summ(code, run, copy.deepcopy(rn.records), copy.deepcopy(rn.resume))))]
++
++
++def rr5_orphan(atts):
++    """끝 시도의 단계 요약 파일을 지움 (요약 없는 시도 = 사슬 부모 사망 꼴 · 탐침 p2) → 같은 목록 (끝 요약 = None)."""
++    f = Path(atts[-1][0])
++    (f / 'ladder_summary.json').unlink()
++    return atts[:-1] + [(f, None)]
++
++
++def rr5_resume3(src, dst, n, src_n, plan):
++    """재실행 시도 (런 1..3 차례 · 실제 `ResumeRunner.run` · 탐침 p4 resume3 그대로) — plan = {i: (글, rc)} 새로 도는 런 (rc ≠ 0 = RUNNER_RC 자원) · 셋 다 돌면 다음 런
++    L04_next 의 런 전 TIME_LIMIT 꼴 → (dst, 요약)."""
++    dst = rr4_att(Path(dst), n, 1)
++    rn = RR.ResumeRunner('UNUSED', src, dst, {}, None, 0, {}, parent_env={}, prefix='L', src=src, src_n=src_n, machine=MACH)
++    rn.env_delta = lambda *_a: {}
++    cur = {'i': None}
++
++    def fake_execute(name, q, od, delta):
++        text, rc = plan[cur['i']]
++        rec = rr4_files(dst, cur['i'], text, rc=rc, log='MemoryError synthetic\n' if rc else 'synthetic fixture\n')
++        rn.records.append(rec)
++        if rc:
++            raise RR.Stop('RUNNER_RC', f'rc {rc} (시험)', name)
++        return []
++
++    def fake_read(outdir, req, *_a, **_k):
++        return [dict(rr4_pub((Path(outdir) / RR4_FN).read_bytes()), sigma=1.0, dsigma_rel=0.0)]
++    rn._execute = fake_execute
++    code, run = 'TIME_LIMIT', 'L04_next'
++    with rc_patch(read_run=fake_read), contextlib.redirect_stdout(io.StringIO()):
++        try:
++            for i in (1, 2, 3):
++                cur['i'] = i
++                role, rj = RR4_ROLES[i - 1]
++                rn.run(SBE_KIT, role, 'P0', None, rj, 1)
++        except RR.Stop as e:
++            code, run = e.code, e.run
++    return dst, rr4_put(dst, rr4_summ(code, run, copy.deepcopy(rn.records), copy.deepcopy(rn.resume)))
++
++
++def rr5_two3(tag, l3):
++    """2 시도 · 재실행 시도 2 = L01 복사 · L02 재실행 (원천 남은 payload 와 같음) · L03 새 런 (l3 = (글, rc))."""
++    base = Path(TD) / 'rr4' / tag
++    a1 = rr4_first(base)
++    return [a1, rr5_resume3(a1[0], base / 'attempt_2', 2, 1, {2: ('source-ceiling', 0), 3: l3})]
++
++
++def rr5_g(f, run, ext):
++    return Path(f) / 'groups' / f'{run}.{ext}'
++
++
++def rr5_jset(p, **kw):
++    d = json.loads(Path(p).read_text(encoding='utf-8'))
++    d.update(kw)
++    Path(p).write_bytes(RR.canon_bytes(d))
++
++
++def rr5_disk(atts, fn):
++    """디스크 고침 fn(원 시도 폴더, 끝 시도 폴더) → 같은 목록 (요약 그대로)."""
++    fn(Path(atts[0][0]), Path(atts[-1][0]))
++    return atts
++
++
++def rr5_copy_group(f1, f2, run):
++    """원천의 그 런 그룹 시작 · 끝 기록을 끝 시도에 바이트 그대로 (복사 흔적)."""
++    for ext in ('launch.json', 'end.json'):
++        shutil.copy2(rr5_g(f1, run, ext), rr5_g(f2, run, ext))
++
++
++def rr5_order(atts, force=True, drop_start=None, after=None, machine=MACH):
++    """원장 = 폴더 증거 결과 줄 (`rr4_lines`) · force = 끝 시도 결과 줄 resume_ok True (손 고친 줄 · 요약 sha = 지금 폴더) · drop_start = 그 번호 시작 기록 뺌 · after =
++    원장을 만든 뒤 디스크 고침 → 다음 --resume 1 차례 (`attempt_order_problem`) → [멈춤, 표지] | None."""
++    lines = rr4_lines(atts, machine=machine)
++    if force:
++        [x for x in lines if x.get('kind') == 'result' and x['n'] == len(atts)][0]['resume_ok'] = True
++    if drop_start is not None:
++        lines = [x for x in lines if not (x.get('kind') == 'start' and x['n'] == drop_start)]
++    st = RR.ledger_parse(''.join(RR.ledger_line(x) for x in lines).encode('utf-8'))
++    if after is not None:
++        after(atts)
++    o = RR.attempt_order_problem(st, rr4_next(st), RR4_PLAN)
++    return [o[0], rr5_tag(o[1])] if o else None
++
++
++def rr5_prov(atts, st=None, n=None, found=None):
++    """공통 검증 직접 (`resume_provenance_problem` · 끝 시도) → 표지 목록 ([] = 통과)."""
++    st = st if st is not None else rr4_state(atts)
++    f, s = atts[-1]
++    return rr5_tag(RR.resume_provenance_problem(st, len(atts) if n is None else n, f, s, found=found))
++
++
++def rr5_ledger(tag, atts):
++    """실제 git 원장 (탐침 p3 꼴) — 시도마다 항목 커밋 → attempt.json 시작 커밋 = 그 커밋 → 시작 기록 → (끝 시도 아니면) 결과 줄 (폴더 증거 · 생산자 꼴) → 원장 폴더
++    (판정 `target_ledger_problem` · 예측 입력 `ledger_inputs_check` 의 시작 커밋 대조를 지나는 꼴)."""
++    d, _rc, _so = led_new(f'RR5_{tag}')
++    head = led_lines(d)[0]
++    lines = rr4_lines(atts, head_plan=head['plan_sha256'], last_result=False)[1:]
++    ents = {x['n']: x for x in lines if x['kind'] == 'entry'}
++    sts = {x['n']: x for x in lines if x['kind'] == 'start'}
++    for k, (f, s) in enumerate(atts, 1):
++        c = led_hand(d, ents[k])
++        rr4_att_set(f, ledger_commit=c)
++        led_hand(d, sts[k])
++        if k < len(atts):
++            led_hand(d, RR.attempt_result_line(k, f, s, 'recover'))
++    return d
++
++
++def rr5_cli_hook(tag, atts, hook):
++    """`rr4_cli` 꼴 원장 + 원장 줄을 쓴 뒤 recover 전에 디스크 고침 hook(atts) → [recover rc · 결과 줄 자격 · 화면에 PC15-03 사유]."""
++    d, _rc, _so = led_new(f'RR5_{tag}')
++    head = led_lines(d)[0]
++    c0 = git_(d, 'rev-parse', 'HEAD')
++    for f, _s in atts:
++        rr4_att_set(f, ledger_commit=c0)
++    for x in rr4_lines(atts, head_plan=head['plan_sha256'], last_result=False)[1:]:
++        led_hand(d, x)
++    hook(atts)
++    rc, so = call(['--stage', 'recover', '--out', str(atts[-1][0]), '--ledger', str(d)])
++    return [rc, (led_result(d, len(atts)) or {}).get('resume_ok'), RR5_HELD in so]
++
++
++def rr5_close(tag, atts, before=None):
++    """사슬 끝 결과 줄 쓰기 (`attempt_close` 직접 · 시작 때 원장 상태) — before = 그 전 디스크 고침 → [rc · 결과 줄 자격 · ATTEMPT_OPEN 화면 · PC15-03 사유 · 커밋 글 표지]."""
++    d = rr5_ledger(tag, atts)
++    st = RR.ledger_parse(led_raw(d))
++    n = len(atts)
++    f, s = atts[-1]
++    att = RR.Attempt(d, n, st['entries'][n], f, git_(d, 'rev-parse', 'HEAD'), st)
++    if before is not None:
++        before(atts)
++    buf = io.StringIO()
++    with contextlib.redirect_stdout(buf):
++        rc = RR.attempt_close(att, s)
++    out = buf.getvalue()
++    msg = git_(d, 'log', '-1', '--format=%B')
++    return [rc, (led_result(d, n) or {}).get('resume_ok'), 'ATTEMPT_OPEN' in out, RR5_HELD in out, rr4_tag(msg) if RR4_W in msg else []]
++
++
++def rr5_rows_run(rows):
++    """(이름, 값 함수, 기대) 행들 → (ok, 정보) — 값 = 기대와 정확히 같아야 · 예외 = 그 행 실패."""
++    got, bad = {}, {}
++    for nm, fn, want in rows:
++        try:
++            got[nm] = fn()
++        except Exception as e:                            # noqa: BLE001 — 판정 함수 예외 = 그 행 실패 (traceback = PC15-05 부류)
++            got[nm] = f'exc {type(e).__name__}: {e}'[:240]
++        if got[nm] != want:
++            bad[nm] = {'got': got[nm], 'want': want}
++    return not bad, {'n': len(rows), 'n_bad': len(bad), 'bad_names': sorted(bad), 'bad': dict(sorted(bad.items())[:12]), 'got': got}
++
++
++# ── PC15-01 (P2-1) ──
++def rr5_relabel_post(s):
++    """사전 공격 15 P2-2 P8 (탐침 p8 그대로) — 멈춤 L03 런 전 TIME_LIMIT · L02 기록 arms 2 · outdir L02_ceiling_arm2 (디스크에 없음) · 판독 완료 팔 둘 · compared [] · assumed."""
++    rr4_tl(s)
++    r = s['runs'][1]
++    a0 = r['arms_read'][0]
++    r.update(arms=2, outdir=RR4_N2 + '_arm2', arms_read=[a0, dict(a0, index=1, file=a0['file'].replace('_a0.json', '_a1.json'), sha256='e' * 64)])
++    s['resume'].update(compared=[], determinism='assumed')
++
++
++def rr5_rename(s):
++    """사전 공격 15 P2-2 P9 (탐침 p9 그대로) — L02 기록 이름 · outdir · resume.rerun = L02_ceilingX (디스크에 groups 기록 · 폴더 없음) · L03 런 전 TIME_LIMIT · [] · assumed."""
++    rr4_tl(s)
++    nx = RR4_N2 + 'X'
++    s['runs'][1].update(name=nx, outdir=nx + '_arm1')
++    s['resume'].update(rerun=nx, compared=[], determinism='assumed')
++
++
++def rr5_relabel_stopped(s):
++    """정직 재실행 런 자체 멈춤 (L02 rc 1) 의 멈춘 런 기록 요청 칸 · outdir 를 디스크에 없는 이름으로 (arms 2 · L02_ceiling_arm2 · 디스크 = _arm1)."""
++    s['runs'][1].update(arms=2, outdir=RR4_N2 + '_arm2')
++
++
++def rr5_skip_rerun(s):
++    """정직 대조 같음 뒤 멈춤 요약에서 재실행 런 L02 기록을 빼고 resume.rerun = L03 · compared [] · null (대조 전 멈춤 이야기 · 디스크 = L02 재실행 · L03 흔적 없음)."""
++    del s['runs'][1]
++    s['resume'].update(rerun=RR4_N3, compared=[], determinism=None)
++
++
++@check('RR5A', '★ 11-09 사전 공격 15 PC15-01 (P2-1 · 시험 먼저) — 재실행 시도 (원장 항목 resume_of 있음) 의 디스크상 첫 미완료 런 (원천에서 처음 끝나지 않은 런 · '
++               '`_src_done` 같은 규칙) 이 이 시도에서 끝났으면 (그룹 결합 · rc 0 · 확인 · 출력 폴더) 원천 남은 payload ↔ 그 런 폴더 다시 대조를 요약의 멈춤 · 요약 '
++               '유무와 무관하게: 위조 signal_after (요약 여섯 칸 · 탐침 p1) · 요약 지움 (탐침 p2) · 정직 signal_after + 다른 payload (탐침 p13) = 세 자리 [ⓓ] (옛 = '
++               '자격 True · 다음 재개가 그 런을 대조 없이 복사) · 정직 signal_after + 같은 payload · 요약 지움 + 같은 payload · 재실행 런 rc 1 (안 끝남) · 끝났는데 '
++               '출력 폴더 없음 · 그룹 미확인 (끝 기록 확인 False · 다음 순서) = 그대로 (거짓 거부 없음)')
++def t_RR5A():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    rows = [
++        ('A1_forged_sigafter', lambda: rr5_three(lambda t: rr4_edit(rr4_two(t, 'changed-ceiling'), rr5_sigafter), 'A1'), rr5_neg('[ⓓ]')),
++        ('A2_orphan_diff', lambda: rr5_three(lambda t: rr5_orphan(rr4_two(t, 'changed-ceiling')), 'A2'), rr5_neg('[ⓓ]')),
++        ('A3_honest_sigafter_diff', lambda: rr5_three(lambda t: rr5_sigafter_real(t, 'changed-ceiling'), 'A3'), rr5_neg('[ⓓ]')),
++        ('A4_honest_sigafter_same', lambda: rr5_three(lambda t: rr5_sigafter_real(t, 'source-ceiling'), 'A4'), RR5_POS),
++        ('A5_orphan_same', lambda: rr5_three(lambda t: rr5_orphan(rr4_two(t, 'source-ceiling')), 'A5'), RR5_POS),
++        ('A6_rerun_rc1_not_done', lambda: rr5_three(lambda t: rr4_two(t, 'part-ceiling', rc=1), 'A6'), RR5_POS),
++        ('A7_sigafter_no_folder', lambda: rr5_three(lambda t: rr5_sigafter_real(t, 'changed-ceiling', no_folder=True), 'A7'), RR5_POS),
++        ('A8_gu_unconfirmed_diff', lambda: rr5_order(rr5_gu_unconfirmed('A8'), force=False), None),
++    ]
++    return rr5_rows_run(rows)
++
++
++def rr5_gu_unconfirmed(tag):
++    """정직 그룹 미확인 꼴 — 재실행 런 L02 가 rc 0 으로 끝난 뒤 정리 중 신호 + 그룹 종료 미확인 (디스크 끝 기록 원인 None · rc 0 · 확인 False · 런 기록 rc null · group_cause
++    signal_after · 멈춤 GROUP_UNCONFIRMED · `Runner._execute` 차례) · 남은 payload ≠ 원천 → 끝나지 않은 런 (확인 False) = 다시 대조 없음 (recover 가 끝 기록을 다시
++    쓴다 = rc null · 다음 재개 = 다시 돈다)."""
++    atts = rr5_sigafter_real(tag, 'changed-ceiling')
++    f2, s2 = atts[1]
++    rr5_jset(rr5_g(f2, RR4_N2, 'end.json'), confirmed=False)
++    s2 = copy.deepcopy(s2)
++    s2['stop']['code'] = 'GROUP_UNCONFIRMED'
++    return [atts[0], (f2, rr4_put(f2, s2))]
++
++
++def rr5_src_no_launch(tag):
++    """정직 꼴 (탐침 p4 H2 그대로) — 원 시도 = L01 끝 · L02 런 전 시간 상한 (L02 groups 기록 · 폴더 없음) → 재실행 시도 2 = L01 복사 · L02 새로 (원천 남은 payload
++    없음 = assumed) · 디스크상 첫 미완료 런 L02 = 이 시도 groups 에만 이름이 있다 (원천 groups 에 없음 · 디스크 이름 = 두 groups 합집합)."""
++    base = Path(TD) / 'rr4' / tag
++    f1 = rr4_att(base / 'attempt_1', 1, None)
++    a1 = (f1, rr4_put(f1, rr4_summ('TIME_LIMIT', RR4_N2, [rr4_files(f1, 1, 'floor')])))
++    return [a1, rr4_resume(f1, base / 'attempt_2', 2, 1, 'any-ceiling')]
++
++
++@check('RR5B','★ 11-09 사전 공격 15 PC15-02 (P2-2 · 시험 먼저) — 새 런 기록 (copied_from 없음) 마다 이 시도 디스크와 묶음: groups 시작 · 끝 기록 결합 · 디스크 출력 '
++               '폴더 (`stop_trace` 이름 규칙) ⊆ 기록 outdir · 멈춘 런 앞 새 런 = 이 시도에서 끝남 · resume.rerun · 첫 새 런 = 디스크상 첫 미완료 런 · ⓓ · ⑤ 다시 대조 = '
++               '디스크 출력 폴더: 탐침 p8 (outdir 다른 이름 = 폴더 증거 ⑤ 가 디스크 폴더로 거부) · p9 (이름 바꿈) · 멈춘 런 outdir 다른 이름 · 재실행 런 기록 뺌 · 새 런 '
++               'groups 기록 없음 · 앞 새 런 끝 rc 1 · 앞 새 런 폴더 없음 = 거부 [ⓒ] · 손 고친 결과 줄 다음 순서 (첫 새 런 ≠ 디스크상 첫 미완료 런 = [ⓒ] · 대조했다는 요약인데 '
++               '재실행 런 안 끝남 · 대조했다는 요약인데 compared [] · assumed = [ⓓ] · 런 이름 꼴 밖 시작 기록 = [ⓒ]) · 런 번호 차례 (L99 < L100) · 정직 3 런 (L03 rc 1 · '
++               '다 끝남) · 원천이 재실행 런을 시작조차 안 함 (탐침 p4 H2 · 디스크 이름 = 두 groups 합집합) = 그대로')
++def t_RR5B():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    od3 = RR.record_outdir(rr4_req(3))
++
++    def rm_l03_groups(f1, f2):
++        for ext in ('launch.json', 'end.json'):
++            rr5_g(f2, RR4_N3, ext).unlink()
++
++    def stray(f1, f2):
++        shutil.copy2(rr5_g(f2, RR4_N1, 'launch.json'), Path(f2) / 'groups' / 'xyz.launch.json')
++
++    def tl_post(s):
++        s['stop'].update(run=RR4_N3)
++        s['resume'].update(determinism='assumed')
++    rows = [
++        ('B0a_three_runs_rc1', lambda: rr5_three(lambda t: rr5_two3(t, ('p3', 1)), 'B0a'), RR5_POS),
++        ('B0b_three_runs_done', lambda: rr5_three(lambda t: rr5_two3(t, ('p3', 0)), 'B0b'), RR5_POS),
++        ('B0c_src_no_launch', lambda: rr5_three(rr5_src_no_launch, 'B0c'), RR5_POS),
++        ('B1_outdir_relabel_post', lambda: rr5_three(lambda t: rr4_edit(rr4_two(t, 'changed-ceiling'), rr5_relabel_post), 'B1'),
++         [0, False, [], True, False, [RR5_NA, []], None]),
++        ('B2_rename', lambda: rr5_three(lambda t: rr4_edit(rr4_two(t, 'changed-ceiling'), rr5_rename), 'B2'), rr5_neg('[ⓒ]')),
++        ('B3_outdir_relabel_stopped', lambda: rr5_three(lambda t: rr4_edit(rr4_two(t, 'part-ceiling', rc=1), rr5_relabel_stopped), 'B3'), rr5_neg('[ⓒ]')),
++        ('B4_skip_rerun_record', lambda: rr5_three(lambda t: rr4_edit(rr4_two(t, 'source-ceiling'), rr5_skip_rerun), 'B4'), rr5_neg('[ⓒ]')),
++        ('B5_new_launch_missing', lambda: rr5_three(lambda t: rr5_disk(rr5_two3(t, ('p3', 1)), rm_l03_groups), 'B5'), rr5_neg('[ⓒ]')),
++        ('B6_prior_end_rc1', lambda: rr5_three(lambda t: rr5_disk(rr5_two3(t, ('p3', 0)), lambda f1, f2: rr5_jset(rr5_g(f2, RR4_N3, 'end.json'), rc=1)),
++                                               'B6'), rr5_neg('[ⓒ]')),
++        ('B6b_prior_folder_missing', lambda: rr5_three(lambda t: rr5_disk(rr5_two3(t, ('p3', 0)), lambda f1, f2: shutil.rmtree(f2 / od3)), 'B6b'),
++         rr5_neg('[ⓒ]')),
++        ('B7_first_new_skip_forced', lambda: rr5_order(rr4_edit(rr5_two3('B7', ('p3', 1)), lambda s: s['runs'].pop(1))), [RR5_NA, ['[ⓒ]']]),
++        ('B9_stray_launch_name', lambda: rr5_order(rr5_disk(rr4_two('B9', 'source-ceiling'), stray), force=False), [RR5_NA, ['[ⓒ]']]),
++        ('B10_post_no_rerun_forced', lambda: rr5_order(rr4_edit(rr4_two('B10', None, before=True), tl_post)), [RR5_NA, ['[ⓓ]']]),
++        ('B11_post_assumed_forced', lambda: rr5_order(rr4_edit(rr4_two('B11', 'source-ceiling'), lambda s: s['resume'].update(compared=[], determinism='assumed'))),
++         [RR5_NA, ['[ⓓ]']]),
++        ('B12_run_number_order', rr5_run_number_order, ['L99_a', None]),
++    ]
++    return rr5_rows_run(rows)
++
++
++def rr5_run_number_order():
++    """디스크상 첫 미완료 런 = 런 번호 차례 (문자열 차례 아님) — 원천 groups 에 L99_a · L100_b (둘 다 끝 rc 1) → L99_a (`resume_disk_rerun` 직접)."""
++    base = Path(TD) / 'rr4' / 'B12_order'
++    src, dst = base / 'attempt_1', base / 'attempt_2'
++    (src / 'groups').mkdir(parents=True)
++    dst.mkdir(parents=True)
++    for nm in ('L99_a', 'L100_b'):
++        tok = hashlib.sha256(nm.encode('utf-8')).hexdigest()[:32]
++        (src / 'groups' / f'{nm}.launch.json').write_bytes(RR.canon_bytes({'schema': RR.GROUP_SCHEMA, 'name': nm, 'token': tok}))
++        (src / 'groups' / f'{nm}.end.json').write_bytes(RR.canon_bytes({'schema': RR.GROUP_SCHEMA, 'name': nm, 'token': tok, 'by': 'chain', 'cause': None, 'rc': 1,
++                                                                         'confirmed': True}))
++        (src / f'{nm}_arm1').mkdir()
++    return list(RR.resume_disk_rerun(dst, src))
++
++
++def rr5_moved_source():
++    """탐침 p3 꼴 — 정직 대조 같음 뒤 멈춤 attempt_2 · 원천 attempt_1 을 recover 전에 다른 바탕으로 옮김 → recover = 결과 줄 없음 (rc 3 · 화면 사유) · 판정 대조 = 결과 줄
++    없음 멈춤 → 원천을 같은 바탕에 되돌림 → recover = 자격 True · 판정 대조 통과 · 다시 셈 None."""
++    atts = rr4_two('C1_moved', 'source-ceiling')
++    d = rr5_ledger('C1_moved', atts)
++    f1, f2 = Path(atts[0][0]), Path(atts[1][0])
++    b, b2 = f1.parent, Path(TD) / 'rr4' / 'C1_moved_archive'
++    b2.mkdir(parents=True)
++    shutil.move(str(f1), str(b2 / 'attempt_1'))
++    out = []
++    for back in (False, True):
++        if back:
++            shutil.move(str(b2 / 'attempt_1'), str(f1))
++        rc, so = call(['--stage', 'recover', '--out', str(f2), '--ledger', str(d)])
++        raw = led_raw(d)
++        st = RR.ledger_parse(raw)
++        found = RR._attempt_folders([b, b2])
++        try:
++            _ns, ad, _p = RR.target_ledger_problem(d, st, raw, git_(d, 'rev-parse', 'HEAD'), 'ladder:P0', found)
++            tl = ['ok', ad['effective']]
++        except RR.Stop as e:
++            tl = [e.code]
++        r = led_result(d, 2)
++        out.append([rc, (r or {}).get('resume_ok'), RR5_HELD in so, tl] + ([RR.result_line_problem(2, f2, r, st=st, found=found) is None] if r else []))
++    return out
++
++
++@check('RR5C', '★ 11-09 사전 공격 15 PC15-03 (P2-3 · 보장 5 쓰기 ↔ 다시 셈 대칭 · 시험 먼저) — 결과 줄 쓰기 (`recover_ledger` · `attempt_close` → `attempt_result`) 의 공통 '
++               '검증 사유 [원천] (원천을 찾거나 확인할 수 없음) = 결과 줄을 쓰지 않는다 (사슬 = ATTEMPT_OPEN · rc 3 · recover = 못 쓴 수 · 화면 = 원천을 같은 바탕에 '
++               '되돌린 뒤 recover): 원천을 다른 바탕으로 옮긴 뒤 recover (탐침 p3) = 결과 줄 없음 · 판정 대조 = 결과 줄 없음 멈춤 → 되돌린 뒤 recover = 자격 True · 판정 대조 '
++               '통과 (옛 = [원천] False 줄이 영구 · 판정 = ATTEMPT_LEDGER_MISMATCH) · 사슬 끝 원천 없음 = ATTEMPT_OPEN · 결과 줄 없음 · 확인된 모순 (R1) = 그대로 자격 False '
++               '줄 · 커밋 글 [ⓒ] (변이 close_old 를 가르는 행)')
++def t_RR5C():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    rows = [
++        ('C1_moved_source_then_back', rr5_moved_source, [[3, None, True, ['ATTEMPT_LEDGER_MISMATCH']], [0, True, False, ['ok', 2], True]]),
++        ('C2_close_no_source', lambda: rr5_close('C2_close', rr4_two('C2_close', 'source-ceiling'), before=lambda a: shutil.rmtree(a[0][0])),
++         [3, None, True, True, []]),
++        ('C3_close_contradiction', lambda: rr5_close('C3_close', rr4_edit(rr4_two('C3_close', 'changed-ceiling'), rr4_r1)), [None, False, False, False, ['[ⓒ]']]),
++    ]
++    return rr5_rows_run(rows)
++
++
++def rr5_shape(tag, fn):
++    """탐침 p15 꼴 — 정직 재실행 결과 줄 (자격 True) 을 손으로 고쳐 요약 sha = 꼴 틀린 요약 폴더 → 다음 재개 허용 (차례 · 풀기 전 사슬) → [[멈춤, 표지] | None | 'exc …'] 둘."""
++    atts = rr4_two(tag, 'source-ceiling')
++    lines = rr4_lines(atts)
++    f2 = Path(atts[1][0])
++    s = json.loads((f2 / 'ladder_summary.json').read_text(encoding='utf-8'))
++    fn(s)
++    (f2 / 'ladder_summary.json').write_bytes(RR.canon_bytes(s))
++    [x for x in lines if x.get('kind') == 'result' and x['n'] == 2][0]['folder_sha256'] = RR.folder_digest(f2)
++    st = RR.ledger_parse(''.join(RR.ledger_line(x) for x in lines).encode('utf-8'))
++    out = []
++    for call_ in (lambda: RR.attempt_order_problem(st, rr4_next(st), RR4_PLAN), lambda: RR.resume_chain_problem(st, rr4_next(st), 3, f2.parent)):
++        try:
++            o = call_()
++            out.append([o[0], rr5_tag(o[1])] if o else None)
++        except Exception as e:                            # noqa: BLE001 — traceback = 옛 결함 (PC15-05)
++            out.append(f'exc {type(e).__name__}')
++    return out
++
++
++@check('RR5D', '★ 11-09 사전 공격 15 PC15-05 (P3-2 · 실패 꼴 회귀 · 시험 먼저) — 손 고친 결과 줄 (자격 True · 요약 sha = 지금 폴더) + 꼴 틀린 단계 요약 (runs = 5 · stop = "x" · '
++               '탐침 p15) → 다음 재개 허용 두 자리 (`attempt_order_problem` · `resume_chain_problem`) = RESUME_NOT_ALLOWED · 사유 [꼴] (공통 검증 앞 `summary_shape_problem` · '
++               '옛 = TypeError · AttributeError traceback · 바탕 e48e5fa04 = 깔끔한 멈춤)')
++def t_RR5D():
++    rows = [
++        ('D1_runs_int', lambda: rr5_shape('D1_shape', lambda s: s.update(runs=5)), [[RR5_NA, ['[꼴]']], [RR5_NA, ['[꼴]']]]),
++        ('D2_stop_str', lambda: rr5_shape('D2_shape', lambda s: s.update(stop='x')), [[RR5_NA, ['[꼴]']], [RR5_NA, ['[꼴]']]]),
++    ]
++    return rr5_rows_run(rows)
++
++
++def rr5_found_true():
++    atts = rr5_orphan(rr4_edit(rr4_two('E3_found', 'source-ceiling'), att={'resume_of': True}))
++    st = rr4_state(atts)
++    return [RR.found_attempts_problem(st, RR._attempt_folders([Path(atts[0][0]).parent])) is not None]
++
++
++@check('RR5E', '★ 11-09 사전 공격 15 PC15-04 (P3-1 · 시험 먼저) — ⓐ `attempt_entry_diff` = 형까지 같음: 요약 없는 정직 재실행 시도의 attempt.json resume_of = true · 1.0 '
++               '(원장 1) = 세 자리 [ⓐ] (옛 `!=` = 1 과 같다고 봄 · 통과) · 판정 · 합치기 `found_attempts_problem` 도 사유 · resume_of 1 (정직) = 그대로 (A5)')
++def t_RR5E():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    rows = [
++        ('E1_resume_of_true', lambda: rr5_three(lambda t: rr5_orphan(rr4_edit(rr4_two(t, 'source-ceiling'), att={'resume_of': True})), 'E1'), rr5_neg('[ⓐ]')),
++        ('E2_resume_of_float', lambda: rr5_three(lambda t: rr5_orphan(rr4_edit(rr4_two(t, 'source-ceiling'), att={'resume_of': 1.0})), 'E2'), rr5_neg('[ⓐ]')),
++        ('E3_found_attempts_true', rr5_found_true, [True]),
++    ]
++    return rr5_rows_run(rows)
++
++
++def rr5_recount_sites():
++    """확인된 모순 (R1 · 쓰기 = 자격 False [ⓒ]) 의 결과 줄을 세 다시 셈 자리 (판정 `target_ledger_problem` · 예측 입력 `ledger_inputs_check` · 풀기 전 사슬
++    `resume_chain_problem`) 가 같은 원장 · 같은 셈으로 재현 → [recover rc · 결과 줄 자격 · 판정 · 예측 입력 · 풀기 전 사슬] (st · found 를 뺀 변이 = 폴더 증거만 True ≠ False)."""
++    atts = rr4_edit(rr4_two('F8_sites', 'changed-ceiling'), rr4_r1)
++    d = rr5_ledger('F8_sites', atts)
++    f2 = Path(atts[1][0])
++    rc, _so = call(['--stage', 'recover', '--out', str(f2), '--ledger', str(d)])
++    raw = led_raw(d)
++    st = RR.ledger_parse(raw)
++    head_c = git_(d, 'rev-parse', 'HEAD')
++    out = [rc, (led_result(d, 2) or {}).get('resume_ok')]
++    for fn in (lambda: RR.target_ledger_problem(d, st, raw, head_c, 'ladder:P0', RR._attempt_folders([f2.parent])),
++               lambda: RR.ledger_inputs_check([str(f2)], d, head_c, st, want_prefix='ladder:')):
++        try:
++            fn()
++            out.append('ok')
++        except RR.Stop as e:
++            out.append(e.code)
++    c = RR.resume_chain_problem(st, rr4_next(st), 3, f2.parent)
++    out.append(c[0] if c else None)
++    return out
++
++
++def rr5_new_attempt_with_resume():
++    """원장 항목 2 = 새 시도 (resume_of null) · attempt.json 도 null · 요약 resume 칸 = 객체 (재실행인 척) → 공통 검증 직접."""
++    atts = rr4_two('F_b_new', 'source-ceiling')
++    rr4_att_set(atts[1][0], resume_of=None)
++    lines = rr4_lines(atts)
++    [x for x in lines if x.get('kind') == 'entry' and x['n'] == 2][0]['resume_of'] = None
++    return rr5_prov(atts, st=RR.ledger_parse(''.join(RR.ledger_line(x) for x in lines).encode('utf-8')))
++
++
++def rr5_attempt_json_broken():
++    """원장 · 결과 줄 뒤 끝 시도 attempt.json 꼴 틀림 ({}) → 공통 검증 직접 ([ⓐ] · 변이 a_missing_ok 를 가르는 행)."""
++    atts = rr4_two('F_a_missing', 'source-ceiling')
++    st = rr4_state(atts)
++    (Path(atts[1][0]) / 'attempt.json').write_text('{}', encoding='utf-8')
++    return rr5_prov(atts, st=st)
++
++
++def rr5_two_sources():
++    atts = rr4_two('F_loc_two', 'source-ceiling')
++    st = rr4_state(atts)
++    b2 = Path(TD) / 'rr4' / 'F_loc_two_b2'
++    shutil.copytree(atts[0][0], b2 / 'attempt_1')
++    return rr5_prov(atts, st=st, found={1: [Path(atts[0][0]), b2 / 'attempt_1'], 2: [Path(atts[1][0])]})
++
++
++def rr5_src_attempt_other_target():
++    atts = rr4_two('F_loc_att', 'source-ceiling')
++    rr4_att_set(atts[0][0], target='ladder:P1')                # 원천 attempt.json 대상 ≠ 원장 항목 1 (결과 줄 요약 sha = 고친 뒤 폴더)
++    return rr5_prov(atts)
++
++
++def rr5_srd_no_dir(s):
++    """원천 끝난 런 L01 의 폴더 없음 · 이 시도 사본 폴더도 없음 (rr5_disk) + 요약 = [L01 복사] · rerun L01 · 멈춤 RUNNER_RC L01 · [] · null (손 고친 결과 줄)."""
++    s['stop'].update(code='RUNNER_RC', run=RR4_N1, reason=None)
++    s['runs'] = s['runs'][:1]
++    s['resume'].update(copied=[RR4_N1], rerun=RR4_N1, compared=[], determinism=None)
++
++
++def rr5_copy_not_done(s):
++    """원천에서 끝나지 않은 L02 (rc 1) 를 복사로 적음 (그룹 기록 = 원천 바이트 · payload = 같은 바이트) · 멈춤 RUNNER_RC L02 = rerun · [] · null."""
++    s['stop'].update(code='RUNNER_RC', run=RR4_N2, reason=None)
++    s['runs'][1]['copied_from'] = 1
++    s['resume'].update(copied=[RR4_N1, RR4_N2], rerun=RR4_N2, compared=[], determinism=None)
++
++
++@check('RR5F', '★ 11-09 사전 공격 15 PC15-06 (P3-3 · 시험 빈틈 · 가드 하나씩) — 가르는 입력이 있는데 생존한 회차 ④ 변이를 가르는 행: attempt.json 기계 (entry_no_machine) · '
++               '복사 런 end 만 · launch 만 다름 (c_bytes · c_launch_only · c_end_only) · 복사 런 payload (c_payload) · 원천 결과 줄 뒤 원천에 파일 하나 (loc_digest · 쓰기 = '
++               '결과 줄 없음) · 원천에서 안 끝난 런을 바이트 같게 복사로 (c_copy_srcdone) · 새 런 launch = 원천 바이트 (c_new_launch_same) · 세 다시 셈 자리 (st · found 뺀 '
++               '변이) · 사슬 끝 쓰기 (close_old = RR5C C3) · 공통 검증 직접 (attempt.json 꼴 틀림 · 원장 항목 없음 · 새 시도인데 resume 객체 · 재실행인데 resume null · '
++               '원천 둘 · 원천 attempt.json 대상 다름 · 요약 없는 재실행인데 그 시점 유효 사슬 끝 없음) · 손 고친 결과 줄 다음 순서 (새 런 뒤 복사 · copied_from 2 · true · '
++               '원천 폴더 없는 끝난 런 복사 · 사슬 끝 폴더 바뀜 · 시작 기록 없음)')
++def t_RR5F():
++    if not chain_c1b2():
++        return False, '사슬에 재실행 실행 (ResumeRunner) 이 없다'
++    ok2 = lambda t: rr4_two(t, 'source-ceiling')               # noqa: E731
++    od1 = RR.record_outdir(rr4_req(1))
++
++    def copy_l02(f1, f2):
++        rr5_copy_group(f1, f2, RR4_N2)
++
++    def no_l01_dirs(f1, f2):
++        shutil.rmtree(f1 / od1)
++        shutil.rmtree(f2 / od1)
++
++    def extra(f):
++        (Path(f) / 'extra_after_result.txt').write_text('x', encoding='utf-8')
++    rows = [
++        ('F1_entry_machine', lambda: rr5_three(lambda t: rr4_edit(ok2(t), att={'machine': 'gabia'}), 'F1'), rr5_neg('[ⓐ]')),
++        ('F2_copy_end_bytes', lambda: rr5_three(lambda t: rr5_disk(ok2(t), lambda f1, f2: rr5_jset(rr5_g(f2, RR4_N1, 'end.json'), killed=0)), 'F2'),
++         rr5_neg('[ⓒ]')),
++        ('F3_copy_launch_bytes', lambda: rr5_three(lambda t: rr5_disk(ok2(t), lambda f1, f2: rr5_jset(rr5_g(f2, RR4_N1, 'launch.json'), argv=['tampered'])),
++                                                   'F3'), rr5_neg('[ⓒ]')),
++        ('F4_copy_payload', lambda: rr5_three(lambda t: rr5_disk(ok2(t), lambda f1, f2: (f2 / od1 / RR4_FN).write_bytes(RR.canon_bytes({'synthetic': 'tampered'}))),
++                                              'F4'), rr5_neg('[ⓒ]')),
++        ('F5_src_changed_writer', lambda: rr5_cli_hook('F5', ok2('F5'), lambda a: extra(a[0][0])), [3, None, True]),
++        ('F6_copy_not_done_forced', lambda: rr5_order(rr4_edit(rr5_disk(ok2('F6'), copy_l02), rr5_copy_not_done)), [RR5_NA, ['[ⓒ]']]),
++        ('F7_new_launch_copied', lambda: rr5_three(lambda t: rr5_disk(rr4_two(t, 'part-ceiling', rc=1), copy_l02), 'F7'), rr5_neg('[ⓒ]')),
++        ('F8_recount_sites', rr5_recount_sites, [0, False, 'ok', 'ok', None]),
++        ('F9_attempt_json_broken', rr5_attempt_json_broken, ['[ⓐ]']),
++        ('F10_no_entry', lambda: rr5_prov(ok2('F10'), n=9), ['[ⓐ]']),
++        ('F11_new_attempt_resume_obj', rr5_new_attempt_with_resume, ['[ⓑ]']),
++        ('F12_resume_null', lambda: rr5_prov(rr4_edit(ok2('F12'), lambda s: s.update(resume=None))), ['[ⓑ]']),
++        ('F13_two_sources', rr5_two_sources, ['[원천]']),
++        ('F14_src_attempt_target', rr5_src_attempt_other_target, ['[원천]']),
++        ('F15_copy_after_new_forced', lambda: rr5_order(rr4_edit(ok2('F15'), lambda s: s.update(runs=[s['runs'][1], s['runs'][0]]))), [RR5_NA, ['[ⓒ]']]),
++        ('F16_copied_from_2_forced', lambda: rr5_order(rr4_edit(ok2('F16'), lambda s: s['runs'][0].update(copied_from=2))), [RR5_NA, ['[ⓒ]']]),
++        ('F17_copied_from_true_forced', lambda: rr5_order(rr4_edit(ok2('F17'), lambda s: s['runs'][0].update(copied_from=True))), [RR5_NA, ['[ⓒ]']]),
++        ('F18_srd_no_dir_forced', lambda: rr5_order(rr4_edit(rr5_disk(ok2('F18'), no_l01_dirs), rr5_srd_no_dir)), [RR5_NA, ['[ⓒ]']]),
++        ('F19_chain_end_changed', lambda: rr5_order(ok2('F19'), force=False, after=lambda a: extra(a[1][0])), [RR5_NA, ['[원천]']]),
++        ('F20_no_start_record', lambda: rr5_order(ok2('F20'), force=False, drop_start=2), [RR5_NA, ['[원천]']]),
++        ('F21_summaryless_no_chain_end', rr5_summaryless_no_eff, ['[ⓑ]']),
++    ]
++    return rr5_rows_run(rows)
++
++
++def rr5_summaryless_no_eff():
++    """요약 없는 재실행 시도 · 원장의 원 시도 결과 줄 = 결과 전 (채택 없음 = 그 시점 유효 사슬 끝 없음) → 공통 검증 직접 = [ⓑ] (원천 번호 없음 · 요약 없는 길)."""
++    atts = rr5_orphan(rr4_two('F21_noeff', 'source-ceiling'))
++    lines = rr4_lines(atts)
++    r1 = [x for x in lines if x.get('kind') == 'result' and x['n'] == 1][0]
++    r1.update(side='pre', resume_ok=False)
++    return rr5_prov(atts, st=RR.ledger_parse(''.join(RR.ledger_line(x) for x in lines).encode('utf-8')))
++
++
+ # ═════════════════════════ 실행 ═════════════════════════
+ def main(argv=None):
+     global RR, TD

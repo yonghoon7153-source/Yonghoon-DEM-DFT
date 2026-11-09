@@ -1,0 +1,49 @@
+{
+ "forged_summary_deleted": {
+  "name": "P2_orphan",
+  "writer": [
+   false,
+   [
+    [
+     "[ⓓ]"
+    ],
+    "재개 출처 [ⓓ] attempt_2: 디스크상 첫 미완료 런 L02_ceiling 이 이 시도에서 끝났는데 (그룹 결합 · rc 0 · 확인 · 출력 폴더) 원천 attempt_1 남은 payload ↔ 이 시도 다시 대조가 다르다 ['p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json'] (요약 = 대조 전 멈춤 · 요약 없음 — 결정적 재"
+   ]
+  ],
+  "places": [
+   true,
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓓ]"
+    ]
+   ],
+   [
+    "RESUME_NOT_ALLOWED",
+    [
+     "[ⓓ]"
+    ]
+   ]
+  ],
+  "cli": [
+   0,
+   false,
+   [
+    "[ⓓ]"
+   ],
+   null
+  ]
+ },
+ "accepted_all_three": false,
+ "orphan_cause": [
+  "parent_dead",
+  true
+ ],
+ "disk_rerun_payload_vs_source": [
+  {
+   "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+   "same": false
+  }
+ ],
+ "next_resume_src_done_L02": true
+}

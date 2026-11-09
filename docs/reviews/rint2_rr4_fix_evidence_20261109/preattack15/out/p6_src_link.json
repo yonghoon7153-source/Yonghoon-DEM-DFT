@@ -1,0 +1,27 @@
+{
+ "writer": [
+  false,
+  [
+   "[원천]"
+  ]
+ ],
+ "order": [
+  "RESUME_NOT_ALLOWED",
+  [
+   "[원천]"
+  ],
+  "재개 출처 [원천] 재실행 사슬 시도 attempt_1: 시작 기록 자리의 시도 폴더가 없거나 원장 결과 줄과 다르다 (폴더 이름 · 요약 sha · fail-closed · ★ 11-09 Codex 회차 ④)"
+ ],
+ "chain": [
+  "RESUME_NOT_ALLOWED",
+  [],
+  "재실행 사슬 시도 attempt_1 ≠ 원장 결과 줄 (요약 sha · attempt.json)"
+ ],
+ "cli": [
+  0,
+  false,
+  [
+   "[원천]"
+  ]
+ ]
+}

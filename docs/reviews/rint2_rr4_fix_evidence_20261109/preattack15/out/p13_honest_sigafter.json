@@ -1,0 +1,31 @@
+{
+ "honest_summary_equals_forged_except_seconds": true,
+ "honest_sigafter_three": {
+  "writer": [
+   true,
+   [
+    [],
+    ""
+   ]
+  ],
+  "places": [
+   true,
+   null,
+   null
+  ],
+  "cli": [
+   0,
+   true,
+   [],
+   null
+  ],
+  "accepted": true
+ },
+ "rerun_payload_vs_source": [
+  {
+   "file": "p2_SBE_vgcf100_sph_fa_cj0_c0_a0.json",
+   "same": false
+  }
+ ],
+ "next_resume_src_done_L02": true
+}

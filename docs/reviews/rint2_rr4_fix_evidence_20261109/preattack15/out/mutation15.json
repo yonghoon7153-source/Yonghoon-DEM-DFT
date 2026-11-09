@@ -1,0 +1,383 @@
+[
+ {
+  "id": "a_drop",
+  "status": "KILLED",
+  "fails": [
+   "RR4A"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (11.0 s)   FAILED: ['RR4A']",
+  "s": 11.3
+ },
+ {
+  "id": "a_missing_ok",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (11.4 s)",
+  "s": 11.7
+ },
+ {
+  "id": "a_noentry_ok",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.0 s)",
+  "s": 12.3
+ },
+ {
+  "id": "entry_no_resume_of",
+  "status": "KILLED",
+  "fails": [
+   "RR4A"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (12.8 s)   FAILED: ['RR4A']",
+  "s": 13.1
+ },
+ {
+  "id": "entry_no_machine",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.5 s)",
+  "s": 13.8
+ },
+ {
+  "id": "b_drop",
+  "status": "KILLED",
+  "fails": [
+   "RR4A"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (13.0 s)   FAILED: ['RR4A']",
+  "s": 13.3
+ },
+ {
+  "id": "b_eq_only_type",
+  "status": "KILLED",
+  "fails": [
+   "RR4A"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (12.9 s)   FAILED: ['RR4A']",
+  "s": 13.3
+ },
+ {
+  "id": "b_newattempt_R_ok",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.7 s)",
+  "s": 13.1
+ },
+ {
+  "id": "b_nondict_ok",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.3 s)",
+  "s": 13.6
+ },
+ {
+  "id": "src_failopen",
+  "status": "KILLED",
+  "fails": [
+   "RR4D"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (12.9 s)   FAILED: ['RR4D']",
+  "s": 13.2
+ },
+ {
+  "id": "loc_count_ge1",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (10.2 s)",
+  "s": 10.5
+ },
+ {
+  "id": "loc_symlink",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (10.9 s)",
+  "s": 11.2
+ },
+ {
+  "id": "loc_attempt",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.4 s)",
+  "s": 12.8
+ },
+ {
+  "id": "loc_digest",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.8 s)",
+  "s": 13.1
+ },
+ {
+  "id": "c_drop",
+  "status": "KILLED",
+  "fails": [
+   "RR4A"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (12.8 s)   FAILED: ['RR4A']",
+  "s": 13.1
+ },
+ {
+  "id": "c_after_new",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.1 s)",
+  "s": 13.4
+ },
+ {
+  "id": "c_cf_eq",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.1 s)",
+  "s": 13.4
+ },
+ {
+  "id": "c_cf_type",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.4 s)",
+  "s": 12.7
+ },
+ {
+  "id": "c_copy_srcdone",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.0 s)",
+  "s": 13.3
+ },
+ {
+  "id": "c_bytes",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.0 s)",
+  "s": 13.3
+ },
+ {
+  "id": "c_launch_only",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.8 s)",
+  "s": 13.1
+ },
+ {
+  "id": "c_end_only",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.1 s)",
+  "s": 13.4
+ },
+ {
+  "id": "c_payload",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.8 s)",
+  "s": 14.1
+ },
+ {
+  "id": "c_first_new_done",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.5 s)",
+  "s": 13.8
+ },
+ {
+  "id": "c_new_launch_same",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.8 s)",
+  "s": 13.1
+ },
+ {
+  "id": "c_new_launch_missing_ok",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.9 s)",
+  "s": 13.2
+ },
+ {
+  "id": "srd_no_dir",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.0 s)",
+  "s": 12.2
+ },
+ {
+  "id": "srd_no_rc",
+  "status": "KILLED",
+  "fails": [
+   "RR3P",
+   "PA13A",
+   "RR4A",
+   "RR4B",
+   "RR4D"
+  ],
+  "summary": "test_rint_r_chain: 14/19 PASS (11.5 s)   FAILED: ['RR3P', 'PA13A', 'RR4A', 'RR4B', 'RR4D']",
+  "s": 11.8
+ },
+ {
+  "id": "d_drop",
+  "status": "KILLED",
+  "fails": [
+   "RR4D"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (12.4 s)   FAILED: ['RR4D']",
+  "s": 12.7
+ },
+ {
+  "id": "d_cmp",
+  "status": "KILLED",
+  "fails": [
+   "RR4D"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (11.4 s)   FAILED: ['RR4D']",
+  "s": 11.7
+ },
+ {
+  "id": "d_name",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (11.6 s)",
+  "s": 11.9
+ },
+ {
+  "id": "new_attempt_no_early_return",
+  "status": "KILLED",
+  "fails": [
+   "RR3D",
+   "RR3E",
+   "RR3P",
+   "PA13A",
+   "PA13D",
+   "PA14B",
+   "PA14D",
+   "RR4A",
+   "RR4B"
+  ],
+  "summary": "test_rint_r_chain: 10/19 PASS (10.0 s)   FAILED: ['RR3D', 'RR3E', 'RR3P', 'PA13A', 'PA13D', 'PA14B', 'PA14D', 'RR4A', 'RR4B']",
+  "s": 10.3
+ },
+ {
+  "id": "fields_keep_true",
+  "status": "KILLED",
+  "fails": [
+   "RR4A",
+   "RR4D"
+  ],
+  "summary": "test_rint_r_chain: 17/19 PASS (12.3 s)   FAILED: ['RR4A', 'RR4D']",
+  "s": 12.6
+ },
+ {
+  "id": "recount_ignore_st",
+  "status": "KILLED",
+  "fails": [
+   "RR4A",
+   "RR4D"
+  ],
+  "summary": "test_rint_r_chain: 17/19 PASS (11.9 s)   FAILED: ['RR4A', 'RR4D']",
+  "s": 12.2
+ },
+ {
+  "id": "write_old",
+  "status": "KILLED",
+  "fails": [
+   "RR4A",
+   "RR4D",
+   "RR4E"
+  ],
+  "summary": "test_rint_r_chain: 16/19 PASS (11.7 s)   FAILED: ['RR4A', 'RR4D', 'RR4E']",
+  "s": 12.0
+ },
+ {
+  "id": "recover_old",
+  "status": "KILLED",
+  "fails": [
+   "RR4A",
+   "RR4D",
+   "RR4E"
+  ],
+  "summary": "test_rint_r_chain: 16/19 PASS (12.9 s)   FAILED: ['RR4A', 'RR4D', 'RR4E']",
+  "s": 13.2
+ },
+ {
+  "id": "close_old",
+  "status": "KILLED",
+  "fails": [
+   "RR4E"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (12.3 s)   FAILED: ['RR4E']",
+  "s": 12.7
+ },
+ {
+  "id": "order_no_prov",
+  "status": "KILLED",
+  "fails": [
+   "RR4A",
+   "RR4E"
+  ],
+  "summary": "test_rint_r_chain: 17/19 PASS (13.0 s)   FAILED: ['RR4A', 'RR4E']",
+  "s": 13.3
+ },
+ {
+  "id": "chainprov_noprov",
+  "status": "KILLED",
+  "fails": [
+   "RR4A",
+   "RR4E"
+  ],
+  "summary": "test_rint_r_chain: 17/19 PASS (11.6 s)   FAILED: ['RR4A', 'RR4E']",
+  "s": 11.9
+ },
+ {
+  "id": "chainprov_nodigest",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (11.6 s)",
+  "s": 11.9
+ },
+ {
+  "id": "chainprov_nostart_skip",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (11.7 s)",
+  "s": 12.0
+ },
+ {
+  "id": "chain_noprov",
+  "status": "KILLED",
+  "fails": [
+   "RR4A",
+   "RR4E"
+  ],
+  "summary": "test_rint_r_chain: 17/19 PASS (11.0 s)   FAILED: ['RR4A', 'RR4E']",
+  "s": 11.3
+ },
+ {
+  "id": "chain_recount_nost",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.6 s)",
+  "s": 12.9
+ },
+ {
+  "id": "tlp_recount_nost",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (12.8 s)",
+  "s": 13.1
+ },
+ {
+  "id": "lic_recount_nost",
+  "status": "SURVIVED",
+  "fails": [],
+  "summary": "test_rint_r_chain: 19/19 PASS (13.4 s)",
+  "s": 13.7
+ },
+ {
+  "id": "M56_exists",
+  "status": "KILLED",
+  "fails": [
+   "RR4C"
+  ],
+  "summary": "test_rint_r_chain: 18/19 PASS (13.3 s)   FAILED: ['RR4C']",
+  "s": 13.6
+ }
+]

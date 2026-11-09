@@ -1,0 +1,88 @@
+## p1_sigafter
+  honest_mismatch: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  forged_sigafter: 원 받음 → 새 거부 | 새 cli [0, false, ["[ⓓ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓓ]"]], ["RESUME_NOT_ALLOWED", ["[ⓓ]"]]]
+  forged_accepted_all_three: 원 true → 새 false
+## p2_orphan
+  forged_summary_deleted: 원 받음 → 새 거부 | 새 cli [0, false, ["[ⓓ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓓ]"]], ["RESUME_NOT_ALLOWED", ["[ⓓ]"]]]
+  accepted_all_three: 원 true → 새 false
+## p3_moved_source
+  control_not_moved: 원 {"recover_rc": 0, "line_resume_ok": true, "commit_msg_tags": [], "recount_problem": null, "target_ledger_problem": ["ok", [1, 2], 2]}
+                     새 {"recover_rc": 0, "line_resume_ok": true, "commit_msg_tags": [], "recount_problem": null, "target_ledger_problem": ["ok", [1, 2], 2]}
+  moved_before_recover: 원 {"recover_rc": 0, "line_resume_ok": false, "commit_msg_tags": ["[원천]"], "recount_problem": "attempt_2: 결과 줄 2 의 resume_ok False ≠ 폴더 증거 (거부 기록 · 단계 요약
+                        새 {"recover_rc": 3, "line_resume_ok": null, "commit_msg_tags": [], "recount_problem": "attempt_2: 결과 줄 2 의 status None, stop None, side None, cause None
+## p4_honest
+  H1_chain4: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+  H2_src_no_launch: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+  H3_three_runs: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+  H4_chain3_after_compare: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+  H5_rerun_self_stop: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+## p5_variants
+  V01_R1_codex: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓒ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓒ]"]], ["RESUME_NOT_ALLOWED", ["[ⓒ]"]]]
+  V02_R1_copied_from_True: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  V03_R1_det_assumed: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  V04_R2_codex: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓒ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓒ]"]], ["RESUME_NOT_ALLOWED", ["[ⓒ]"]]]
+  V05_R2_order_swap: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  V06_new_run_extra_copied_from: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓒ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓒ]"]], ["RESUME_NOT_ALLOWED", ["[ⓒ]"]]]
+  V07_dup_copy_record: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+  V08_attempt_resume_of_True: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  V09_attempt_machine_other: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓐ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓐ]"]], ["RESUME_NOT_ALLOWED", ["[ⓐ]"]]]
+  V10_from_str: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  V11_from_float: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  V12_chain3_copied_from_1: 원 거부 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  V13_chain3_rebind_codex: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓑ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓑ]"]], ["RESUME_NOT_ALLOWED", ["[ⓑ]"]]]
+  V14_disk_end_only_differs: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓒ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓒ]"]], ["RESUME_NOT_ALLOWED", ["[ⓒ]"]]]
+  V15_disk_copy_payload: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓒ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓒ]"]], ["RESUME_NOT_ALLOWED", ["[ⓒ]"]]]
+  V16_src_symlink: 원 거부 → 새 거부 | 새 cli "exc Stop: ATTEMPT_LEDGER_MISMATCH: <세션 임시>/-home-user · places "exc Stop: ATTEMPT_LEDGER_MISMATCH: <세션 임시>/-home-user-Yonghoon-DEM-DFT/d26d1e75-209
+  V17_attempt_null_codex: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓐ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓐ]"]], ["RESUME_NOT_ALLOWED", ["[ⓐ]"]]]
+  V18_attempt_only_null: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓐ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓐ]"]], ["RESUME_NOT_ALLOWED", ["[ⓐ]"]]]
+## p6_src_link
+  chain: 원 ["RESUME_NOT_ALLOWED", [], "재실행 사슬 시도 attempt_1 ≠ 원장 결과 줄 (요약 sha · attempt.json)"]
+         새 ["RESUME_NOT_ALLOWED", [], "재실행 사슬 시도 attempt_1 ≠ 원장 결과 줄 (요약 sha · attempt.json)"]
+  cli: 원 [0, false, ["[원천]"]]
+       새 [3, null, []]
+  order: 원 ["RESUME_NOT_ALLOWED", ["[원천]"], "재개 출처 [원천] 재실행 사슬 시도 attempt_1: 시작 기록 자리의 시도 폴더가 없거나 원장 결과 줄과 다르다 (폴더 이름 · 요약 sha · fail-closed · ★ 11-09 Codex 회차 ④
+         새 ["RESUME_NOT_ALLOWED", ["[원천]"], "재개 출처 [원천] 재실행 사슬 시도 attempt_1: 시작 기록 자리의 시도 폴더가 없거나 원장 결과 줄과 다르다 (폴더 이름 · 요약 sha · fail-closed · ★ 11-09 Codex 회차 ④
+  writer: 원 [false, ["[원천]"]]
+          새 "exc ResultHeld: ATTEMPT_LEDGER_MISMATCH: attempt_2: 결과 줄을 쓰지 않는다 — 원천 attempt_1 을 같은 바탕에 되돌린 뒤 recover (재개 출처 [원천] attempt_2: 원천 attempt_1 시도 폴더가 같은 
+## p7_orphan_types
+  resume_of_True: 원 받음 → 새 거부 | 새 cli [0, false, ["[ⓐ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓐ]"]], ["RESUME_NOT_ALLOWED", ["[ⓐ]"]]]
+  resume_of_1.0: 원 받음 → 새 거부 | 새 cli [0, false, ["[ⓐ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓐ]"]], ["RESUME_NOT_ALLOWED", ["[ⓐ]"]]]
+  resume_of_None: 원 거부 → 새 거부 | 새 cli [0, false, ["[ⓐ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓐ]"]], ["RESUME_NOT_ALLOWED", ["[ⓐ]"]]]
+  resume_of_1_honest: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+  found_attempts_problem_True: 원 null → 새 "attempt_2: attempt.json (resume_of True) ≠ 원장 항목 2 (resume_of 1) — 원장 항목 줄을 바꾼 
+## p8_outdir
+  forged_outdir_relabel: 원 받음 → 새 거부 | 새 cli [0, false, [], null] · places [false, ["RESUME_NOT_ALLOWED", []], null]
+  accepted_all_three: 원 true → 새 false
+## p9_rename
+  forged_rename: 원 받음 → 새 거부 | 새 cli [0, false, ["[ⓒ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓒ]"]], ["RESUME_NOT_ALLOWED", ["[ⓒ]"]]]
+  accepted_all_three: 원 true → 새 false
+## p10_honest_more
+  H6_src_run_folder_missing: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+  H7_src_timeout: 원 받음 → 새 받음 | 새 cli [0, true, [], null] · places [true, null, null]
+## p11_honest_pre
+  accepted_all_three: 원 true → 새 true
+## p13_honest_sigafter
+  honest_summary_equals_forged_except_seconds: 원 true → 새 true
+  honest_sigafter_three: 원 받음 → 새 거부 | 새 cli [0, false, ["[ⓓ]"], null] · places [true, ["RESUME_NOT_ALLOWED", ["[ⓓ]"]], ["RESUME_NOT_ALLOWED", ["[ⓓ]"]]]
+## p14_exceptions
+  copied_from_huge direct: 원 재개 출처 [ⓒ] attempt_2: 복사 기록 런 L01_floor 의 copied_from 1000000000000000000000000000000 ≠ from 1 (★ 11-09 Codex 회
+                           새 재개 출처 [ⓒ] attempt_2: 복사 기록 런 L01_floor 의 copied_from 1000000000000000000000000000000 ≠ from 1 (★ 11-09 Codex 회
+  copy_no_name direct: 원 재개 출처 [ⓒ] attempt_2: 런 기록 이름 · outdir 꼴 (None · 'L01_floor_arm1') (★ 11-09 Codex 회차 ④ PC14-02)
+                       새 재개 출처 [ⓒ] attempt_2: 런 기록 이름 · outdir 꼴 (None · 'L01_floor_arm1') (★ 11-09 Codex 회차 ④ PC14-02)
+  from_negative direct: 원 재개 출처 [ⓑ] attempt_2: resume.from -1 ≠ 그 시점 유효 사슬 끝 attempt_1 (원장 `adoption` · 생산자 = 풀기 전 `resume_source` 의 원천)
+                        새 재개 출처 [ⓑ] attempt_2: resume.from -1 ≠ 그 시점 유효 사슬 끝 attempt_1 (원장 `adoption` · 생산자 = 풀기 전 `resume_source` 의 원천)
+  resume_list direct: 원 재개 출처 [ⓑ] attempt_2: 원장 항목 2 = 재실행 (resume_of 1) 인데 요약 resume 칸 = list (생산자 = 객체) (★ 11-09 Codex 회차 ④ PC14-03)
+                      새 재개 출처 [ⓑ] attempt_2: 원장 항목 2 = 재실행 (resume_of 1) 인데 요약 resume 칸 = list (생산자 = 객체) (★ 11-09 Codex 회차 ④ PC14-03)
+  runs_int direct: 원 EXC TypeError: 'int' object is not iterable
+                   새 재개 출처 [꼴] attempt_2: 단계 요약 칸 꼴 — runs = int (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · ★ 11-09 사전 공격
+  stop_str direct: 원 EXC AttributeError: 'str' object has no attribute 'get'
+                   새 재개 출처 [꼴] attempt_2: 단계 요약 칸 꼴 — stop = str (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · ★ 11-09 사전 공격
+## p15_order_crash
+  runs_int: 원 ["EXC", "TypeError: 'int' object is not iterable"]
+            새 ["returned", "RESUME_NOT_ALLOWED", "재실행 사슬 시도 attempt_2: 재개 출처 [꼴] attempt_2: 단계 요약 칸 꼴 — runs = int (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 
+  runs_int_chain: 원 ["EXC", "TypeError: 'int' object is not iterable"]
+                  새 ["returned", "RESUME_NOT_ALLOWED"]
+  stop_str: 원 ["EXC", "AttributeError: 'str' object has no attribute 'get'"]
+            새 ["returned", "RESUME_NOT_ALLOWED", "재실행 사슬 시도 attempt_2: 재개 출처 [꼴] attempt_2: 단계 요약 칸 꼴 — stop = str (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 
+  stop_str_chain: 원 ["EXC", "AttributeError: 'str' object has no attribute 'get'"]
+                  새 ["returned", "RESUME_NOT_ALLOWED"]

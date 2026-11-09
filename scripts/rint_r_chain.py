@@ -4399,7 +4399,8 @@ def resume_rerun_problem(s, folder, code, run):
          `RESUME_DETERMINISM` · compared = 목록 · 비지 않음 ⇔ compared · 원소 칸 = `RESUME_COMPARED_KEYS` · file 글) · 그 런 기록 outdir = 요청 칸이 정하는 출력 폴더
          (`record_outdir` · RUN_DIR_RE)
       ⑤ 원천 시도 폴더 (<바탕>/attempt_<from> = 같은 바탕 · `resume_source`) 가 있으면 그 런의 남은 payload (`resume_leftovers`) ↔ 이 시도 그 런 폴더 바이트를 다시
-         대조 (생산자와 같은 식) = 기록 compared · determinism 그대로 (옛 = same 을 true 로 고친 세 칸 편집 = 자격) · 원천 자리 = 옆 거부 기록 = 모순 · 못 읽음 = 사유
+         대조 (생산자와 같은 식) = 기록 compared · determinism 그대로 (옛 = same 을 true 로 고친 세 칸 편집 = 자격) · 원천 자리 = 옆 거부 기록 = 모순 · 못 읽음 = 사유 ·
+         ★ 11-09 사전 공격 15 PC15-02 그 런 폴더 = 디스크에서 정한 그 런의 출력 폴더 (`resume_recompare_run` · 옛 = 요약 기록 outdir)
     ⚠ 한정: 원천 시도 폴더가 같은 바탕에 없으면 (다른 곳에 둔 시도 · 판정 --attempt-dirs) ⑤ 바이트 대조 안 함 (①–④ 만 · 실제 재실행의 풀기 전 대조
     `resume_chain_problem` = 원천을 같은 바탕에 요구 → 그 자리에서 다시 대조) · from = 원장 사슬 끝인지는 못 본다 (원장 없음 · 범위만) · attempt.json resume_of 까지
     함께 고친 위조 = 원장 항목 대조 (`found_attempts_problem` · 판정 · 합치기) 몫 · 런 기록 완결성 (사전 공격 13 P3-1) = 그대로.  ★ 11-09 사전 공격 14 선언된 한정
@@ -4467,12 +4468,14 @@ def resume_rerun_problem(s, folder, code, run):
                     f'사전 공격 13 P2-1)')
         return None                                       # ⚠ 한정 — 원천이 같은 바탕에 없음 (다른 곳에 둔 시도) = 바이트 대조 안 함
     try:
-        want = resume_recompare(src / od, folder / od)        # ★ 11-09 Codex 회차 ④ — 식 = 공통 검증 ⓓ 와 한 함수 (값 그대로)
+        #  ★ 11-09 Codex 회차 ④ — 식 = 공통 검증 ⓓ 와 한 함수 · ★ 11-09 사전 공격 15 PC15-02 — 폴더 = 디스크에서 정한 그 런의 출력 폴더 (`resume_recompare_run` ·
+        #    옛 = 요약 기록 outdir → 디스크에 없는 이름으로 고치면 없는 폴더끼리 대조 · 정직 = 같은 폴더 하나 = 값 그대로)
+        want = resume_recompare_run(src, folder, rerun)
     except OSError as e:
-        return f'멈춤 {code} · resume 칸 다시 대조를 못 한다 ({type(e).__name__} · 원천 attempt_{frm}/{od} · ★ 11-09 사전 공격 13 P2-1)'
+        return f'멈춤 {code} · resume 칸 다시 대조를 못 한다 ({type(e).__name__} · 원천 attempt_{frm} 의 {rerun} · ★ 11-09 사전 공격 13 P2-1)'
     if cmp_ != want:                                      # (determinism = ④ 의 compared ⇔ 비지 않음 + 이 같음 → 남은 payload 유무와 같다)
-        return (f'멈춤 {code} · resume 칸 compared {repr(cmp_)[:80]} · determinism {det!r} ≠ 원천 attempt_{frm}/{od} 남은 payload ↔ 이 시도 그 런 폴더 다시 대조 '
-                f'{repr(want)[:80]} (생산자 = 같은 식 · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1)')
+        return (f'멈춤 {code} · resume 칸 compared {repr(cmp_)[:80]} · determinism {det!r} ≠ 원천 attempt_{frm} 의 {rerun} 남은 payload ↔ 이 시도 그 런 디스크 출력 폴더 '
+                f'다시 대조 {repr(want)[:80]} (생산자 = 같은 식 · 결정적 재실행이 아니다 · ★ 11-09 사전 공격 13 P2-1 · ★ 11-09 사전 공격 15 PC15-02)')
     return None
 
 
@@ -4480,8 +4483,13 @@ def resume_rerun_problem(s, folder, code, run):
 #    docs/reviews/rint2_rr4_fix_plan_20261109.md Q1 (가)) 재개 출처 공통 검증 — 재개 자격을 정하는 길이 디스크 · 원장과 모순인 요약을 믿지 않는다 (결과 줄 쓰기 ·
 #    다시 셈 · 다음 재개 허용이 같은 함수 `resume_provenance_problem`) ──
 #: 공통 검증 사유 머리 (결과 줄 쓰기의 원장 커밋 글 · 다음 재개 허용 사유 · 다시 셈 사유가 같은 낱말) — 표지 [ⓐ] attempt.json ↔ 원장 항목 · [ⓑ] resume.from ↔ 그 시점
-#:   유효 사슬 끝 · [원천] 원천 · 사슬 시도 폴더를 찾거나 확인할 수 없음 (fail-closed) · [ⓒ] 복사 / 새 런 경계 ↔ 원천 디스크 · [ⓓ] 실제 첫 새 런 다시 대조
+#:   유효 사슬 끝 · [원천] 원천 · 사슬 시도 폴더를 찾거나 확인할 수 없음 (fail-closed · ★ 11-09 사전 공격 15 PC15-03 = 결과 줄 쓰기는 이 사유로 줄을 쓰지 않는다
+#:   `ResultHeld`) · [ⓒ] 복사 / 새 런 경계 ↔ 원천 디스크 · [ⓓ] 디스크상 첫 미완료 런 다시 대조 · ★ 11-09 사전 공격 15 PC15-05 [꼴] 단계 요약 칸 꼴 (`summary_shape_problem` ·
+#:   옛 = 다음 재개 허용 자리에서 traceback)
 RESUME_PROV = '재개 출처'
+#: ★ 11-09 사전 공격 15 PC15-01 · 02 — 런 이름 차례 (`run_request` 이름 = <앞자리><번호>_<역할> · 번호 = 요청 차례 · 재실행 러너 = 같은 요청을 같은 차례로 · 디스크상 첫
+#:   미완료 런 `resume_disk_rerun` 이 이 번호로 groups 시작 기록을 줄 세운다)
+RUN_ORDER_RE = re.compile(r'([A-Za-z]+)([0-9]+)_(.+)')
 
 
 def resume_recompare(src_od, od):
@@ -4489,6 +4497,56 @@ def resume_recompare(src_od, od):
     compared) 와 같은 식 · `resume_rerun_problem` ⑤ (원천 = 같은 바탕) · 공통 검증 ⓓ (`resume_first_new_problem` · 원천 = 찾은 원천) 가 한 함수 (OSError 그대로)."""
     od = Path(od)
     return [{'file': nm, 'same': (od / nm).is_file() and (od / nm).read_bytes() == raw} for nm, raw in resume_leftovers(src_od)]
+
+
+def run_dirs(base, name):
+    """★ 11-09 사전 공격 15 PC15-02 — 시도 폴더 base 에서 런 name 이 디스크에 만든 출력 폴더 이름 (정렬) = <런> · <런>_arm… 꼴 (`stop_trace` · `run_traces` 와 같은 이름
+    규칙 · `Runner._prepare` 출력 폴더 꼴) 중 폴더 — 요약 기록의 outdir 이 아니라 디스크.  base 가 폴더가 아님 = [] · 목록을 못 읽음 = OSError 그대로 (부르는 쪽 = 사유)."""
+    base = Path(base)
+    if not base.is_dir():
+        return []
+    return sorted(nm for nm in os.listdir(str(base)) if (nm == name or nm.startswith(name + '_arm')) and (base / nm).is_dir())
+
+
+def resume_recompare_run(src, folder, name):
+    """★ 11-09 사전 공격 15 PC15-02 — 런 name 의 다시 대조 = 그 런의 디스크 출력 폴더 (`run_dirs` · 원천 ∪ 이 시도 · 정렬) 마다 `resume_recompare` 를 이은 목록 (요약 outdir
+    이 아니라 디스크 · 정직 = 폴더 하나 = 생산자 compared 와 같은 값) — 공통 검증 ⓓ (`resume_first_new_problem`) · `resume_rerun_problem` ⑤ 가 한 함수 (OSError 그대로).
+    옛 = 요약 런 기록 outdir 로 대조 → 기록 outdir 을 디스크에 없는 이름으로 고치면 없는 폴더끼리 대조 (사전 공격 15 P2-2 · P8)."""
+    out = []
+    for d in sorted(set(run_dirs(src, name)) | set(run_dirs(folder, name))):
+        out += resume_recompare(Path(src) / d, Path(folder) / d)
+    return out
+
+
+def run_end_ok(base, name):
+    """★ 11-09 사전 공격 15 PC15-01 · 02 — 시도 폴더 base 의 런 name 의 그룹 시작 · 끝 기록이 결합 (`group_pair`) · 끝 rc = `rc_success` · 끝 기록 확인 True 인가 (러너 쪽
+    으로 끝난 런 · 출력 폴더 있음은 부르는 쪽 = `run_dirs`)."""
+    _L, er, bound = group_pair(Path(base) / GROUPS_DIR / f'{name}.launch.json')
+    return bool(bound and rc_success(er.get('rc')) and er.get('confirmed') is True)
+
+
+def resume_disk_rerun(folder, src):
+    """★ 11-09 사전 공격 15 PC15-01 · 02 — 디스크상 첫 미완료 런 = 원천 src · 이 시도 folder 의 groups 시작 기록 이름 (`RUN_ORDER_RE` · 번호 차례) 중 원천에서 끝나지 않은
+    첫 런 (`_src_run_done` = `ResumeRunner._src_done` 같은 규칙 · 출력 폴더 = 원천 디스크 `run_dirs`) → (이름 | None, 사유 | None).  재실행 러너 = 원천에서 끝난 런만 차례로
+    복사하고 처음 끝나지 않은 런을 재실행 런으로 다시 돈다 (그 뒤는 다 새로) → 이 이름 = 생산자의 resume.rerun.  None = 원천에서 끝나지 않은 런이 디스크에 없다 (원천이
+    시작한 런이 다 끝났고 이 시도가 새 런을 띄우지 않았다 · 다음 런 이름 = 디스크 밖 · 남은 payload 없음).  런 이름 꼴 밖 시작 기록 = 사유 (생산자 = `run_request` 이름 ·
+    graph 원천 런 = 다른 폴더).  목록을 못 읽음 = OSError 그대로."""
+    names = set()
+    for base in (Path(src), Path(folder)):
+        g = base / GROUPS_DIR
+        if not g.is_dir():
+            continue
+        for fn in os.listdir(str(g)):
+            if not fn.endswith('.launch.json'):
+                continue
+            run = fn[:-len('.launch.json')]
+            if not (RUN_ORDER_RE.fullmatch(run) and RUN_DIR_RE.fullmatch(run)):
+                return None, f'{base.name}/{GROUPS_DIR}/{fn} = 런 이름 꼴 밖 시작 기록 (생산자 = `run_request` 이름 <앞자리><번호>_<역할>)'
+            names.add(run)
+    for run in sorted(names, key=lambda x: (int(RUN_ORDER_RE.fullmatch(x).group(2)), x)):
+        if not any(_src_run_done(src, run, od) for od in run_dirs(src, run)):
+            return run, None
+    return None, None
 
 
 def resume_from_problem(st, n, e, s):
@@ -4540,18 +4598,31 @@ def _src_run_done(src, name, od):
     return bool(bound and rc_success(er.get('rc')) and (Path(src) / od).is_dir())
 
 
-def resume_boundary_problem(folder, src, s, frm):
-    """공통 검증 ⓒ — 요약 runs 의 복사 / 새 런 경계 ↔ 디스크 (원천 src = attempt_<frm>) → 사유 | None.  생산자 (`ResumeRunner.run`): 원천에서 끝난 런 (그룹 끝 rc 0 ·
-    결합 · 런 폴더 있음) 만 `_copy` (런 폴더 copytree · logs · groups launch / end = 바이트 그대로 copy2 · copied_from = from) · 처음 끝나지 않은 런부터 다 새로
-    (`_execute` · 새 그룹 표지 → launch 바이트가 원천과 다르다):
+def resume_boundary_problem(folder, src, s, frm, rerun):
+    """공통 검증 ⓒ — 요약 runs 의 복사 / 새 런 경계 ↔ 디스크 (원천 src = attempt_<frm> · rerun = 디스크상 첫 미완료 런 `resume_disk_rerun`) → 사유 | None.  생산자
+    (`ResumeRunner.run`): 원천에서 끝난 런 (그룹 끝 rc 0 · 결합 · 런 폴더 있음) 만 `_copy` (런 폴더 copytree · logs · groups launch / end = 바이트 그대로 copy2 ·
+    copied_from = from) · 처음 끝나지 않은 런부터 다 새로 (`_execute` · 새 그룹 표지 → launch 바이트가 원천과 다르다):
       · 복사 기록 (copied_from 칸) = copied_from 정수 = from · 이름 · outdir = `RUN_DIR_RE` · 원천에서 끝난 런 · 이 시도 groups/<런>.launch.json · .end.json 바이트 =
         원천의 같은 파일 · 런 폴더 payload (`resume_leftovers` = p2_*.json · .unchecked/ 이름 · 바이트) = 원천 · 새 런 뒤 복사 기록 없음
-      · 첫 새 런 = 원천에서 끝난 런이 아님 (생산자는 복사했을 런) · 새 런마다 원천에 같은 이름 launch 가 있으면 이 시도 launch 가 있고 바이트가 다름 (복사 흔적 아님)
-    옛 = 복사 목록 · 첫 새 런 = 요약 copied_from 자기 신고 (PC14-02 R1 · R2 = 디스크와 모순인 표기 그대로 재실행 자격)."""
+      · 새 런마다 원천에 같은 이름 launch 가 있으면 이 시도 launch 가 있고 바이트가 다름 (복사 흔적 아님)
+      · ★ 11-09 사전 공격 15 PC15-02 — resume.rerun = 디스크상 첫 미완료 런 (원천에서 처음 끝나지 않은 런 · 디스크에서 정해질 때) · 첫 새 런 기록 = 그 런 (옛 = 원천에서
+        끝나지 않은 런이면 받음 · 끝나지 않은 런을 건너뛴 기록도 받음) · 새 런 기록마다 이 시도 디스크와 묶음: groups 시작 · 끝 기록 결합 (생산자 = 러너를 띄운 런마다
+        시작 기록 → 끝 기록 · 결과 줄 전 그룹 확인 `attempt_groups_problem`) · 그 런의 디스크 출력 폴더 (`run_dirs`) ⊆ 기록 outdir (러너 = 그 폴더 하나 · 멈춘 런은 러너가
+        폴더를 만들기 전에 죽을 수 있다 = 없음 받음) · 멈춘 런 앞 새 런 = 이 시도에서 끝남 (`run_end_ok` · 기록 outdir 폴더 있음 · 생산자 = 앞 런이 끝나 팔을 읽은 뒤에만
+        다음 런 · 런 전 시간 상한 멈춤 = 멈춘 런 기록 없음 = 기록 전부 앞 런)
+    옛 = 복사 목록 · 첫 새 런 = 요약 copied_from 자기 신고 (PC14-02 R1 · R2 = 디스크와 모순인 표기 그대로 재실행 자격) · 새 런 기록의 이름 · outdir = 디스크와 묶지
+    않음 (사전 공격 15 P2-2 · P8 outdir 다른 이름 · P9 런 이름 바꿈 = 자격)."""
     folder, src = Path(folder), Path(src)
     gs, gd = folder / GROUPS_DIR, src / GROUPS_DIR
+    R = s.get('resume') if isinstance(s.get('resume'), dict) else {}
+    if rerun is not None and R.get('rerun') != rerun:              # ★ 11-09 사전 공격 15 PC15-02 — resume.rerun = 디스크상 첫 미완료 런
+        return (f'resume.rerun {R.get("rerun")!r} ≠ 디스크상 첫 미완료 런 {rerun} (원천 {src.name} 에서 처음 끝나지 않은 런 · `ResumeRunner._src_done` 같은 규칙 · '
+                f'★ 11-09 사전 공격 15 PC15-02)')
+    runs = [x for x in (s.get('runs') or []) if isinstance(x, dict)]
+    stop_run = (s.get('stop') or {}).get('run')
+    last = runs[-1] if runs and runs[-1].get('name') == stop_run else None    # 멈춘 런 기록 (런 전 시간 상한 = 없음 → 기록 전부 = 앞 런)
     seen_new = False
-    for r in [x for x in (s.get('runs') or []) if isinstance(x, dict)]:
+    for r in runs:
         nm, od = r.get('name'), r.get('outdir')
         if not (isinstance(nm, str) and RUN_DIR_RE.fullmatch(nm) and isinstance(od, str) and RUN_DIR_RE.fullmatch(od)):
             return f'런 기록 이름 · outdir 꼴 ({nm!r} · {od!r})'
@@ -4575,9 +4646,21 @@ def resume_boundary_problem(folder, src, s, frm):
             if not same:
                 return f'복사 기록 런 {nm} 의 런 폴더 payload ≠ 원천 {src.name}/{od} (생산자 `_copy` = copytree)'
             continue
-        if not seen_new and _src_run_done(src, nm, od):
-            return f'첫 새 런 {nm} = 원천 {src.name} 에서 끝난 런 (생산자 = 복사했을 런 · 복사 런을 새 런으로 적은 꼴)'
+        if not seen_new and nm != rerun:                           # ★ 11-09 사전 공격 15 PC15-02 — 첫 새 런 = 디스크상 첫 미완료 런 (옛 = 원천에서 끝나지 않은 런이면 받음)
+            return (f'첫 새 런 {nm} ≠ 디스크상 첫 미완료 런 {rerun if rerun is not None else "(없음)"} (원천 {src.name} 에서 끝난 런을 새 런으로 적은 꼴 · 끝나지 않은 런을 '
+                    f'건너뛴 꼴 · 생산자 = 원천에서 끝난 런만 복사 · 처음 끝나지 않은 런을 재실행 · ★ 11-09 사전 공격 15 PC15-02)')
         seen_new = True
+        _L, er, bound = group_pair(gs / f'{nm}.launch.json')
+        if not bound:                                              # ★ 11-09 사전 공격 15 PC15-02 — 새 런 기록 ↔ 이 시도 groups 시작 · 끝 기록
+            return (f'새 런 {nm} 의 groups 시작 · 끝 기록이 이 시도에 없거나 결합되지 않는다 (생산자 = 러너를 띄운 런마다 시작 · 끝 기록 · 결과 줄 전 그룹 확인 · '
+                    f'★ 11-09 사전 공격 15 PC15-02)')
+        dirs = run_dirs(folder, nm)
+        if any(d != od for d in dirs):                             # ★ 11-09 사전 공격 15 PC15-02 — 디스크 출력 폴더 ⊆ 기록 outdir
+            return (f'새 런 {nm} 의 디스크 출력 폴더 {dirs} ≠ 기록 outdir {od!r} (러너 = 요청 출력 폴더 하나 · `stop_trace` 이름 규칙 · ★ 11-09 사전 공격 15 '
+                    f'PC15-02)')
+        if r is not last and not (run_end_ok(folder, nm) and od in dirs):   # ★ 11-09 사전 공격 15 PC15-02 — 멈춘 런 앞 새 런 = 이 시도에서 끝남
+            return (f'멈춘 런 앞 새 런 {nm} 이 이 시도에서 끝나지 않았다 (끝 기록 rc {er.get("rc")!r} · 확인 {er.get("confirmed")!r} · 디스크 출력 폴더 {dirs} · 생산자 = '
+                    f'앞 런이 끝나 팔을 읽은 뒤에만 다음 런 · ★ 11-09 사전 공격 15 PC15-02)')
         theirs, st_t = read_regular_file(gd / f'{nm}.launch.json')
         if st_t == 'missing':
             continue
@@ -4590,27 +4673,37 @@ def resume_boundary_problem(folder, src, s, frm):
     return None
 
 
-def resume_first_new_problem(folder, src, s):
-    """공통 검증 ⓓ — 실제 첫 새 런 (ⓒ 가 원천과 묶은 · 이름 = resume.rerun) 을 다 푼 뒤 멈춤이면 (멈춘 런 ≠ rerun) 원천 그 런 폴더의 남은 payload ↔ 이 시도 그 런
-    폴더 다시 대조 (`resume_recompare`) = 요약 compared → 사유 | None.  멈춘 런 = rerun (대조 전 멈춤 · compared [] · null = `resume_rerun_problem` ④) = 대조 없음.
-    원천 = 찾은 원천 (다른 바탕 포함 · 옛 = 같은 바탕에 있을 때만 대조 · `resume_rerun_problem` 한정)."""
-    R = s.get('resume') if isinstance(s.get('resume'), dict) else {}
-    rerun = R.get('rerun')
-    if (s.get('stop') or {}).get('run') == rerun:
-        return None
-    new = [x for x in (s.get('runs') or []) if isinstance(x, dict) and 'copied_from' not in x]
-    if not new:
-        return f'멈춘 런 ≠ resume.rerun {rerun!r} 인데 새 런 기록이 없다 (생산자 = rerun 을 다 푼 뒤에만 다음 런)'
-    od = new[0].get('outdir')
-    if new[0].get('name') != rerun or not (isinstance(od, str) and RUN_DIR_RE.fullmatch(od)):
-        return f'실제 첫 새 런 {new[0].get("name")!r} · outdir {od!r} ≠ resume.rerun {rerun!r}'
+def resume_first_new_problem(folder, src, s, rerun):
+    """공통 검증 ⓓ — ★ 11-09 사전 공격 15 PC15-01 디스크상 첫 미완료 런 rerun (`resume_disk_rerun` · 원천에서 처음 끝나지 않은 런) 이 이 시도에서 끝났으면 (그룹 시작 · 끝
+    결합 · 끝 rc 성공 · 확인 = `run_end_ok` · 디스크 출력 폴더 있음) 원천 그 런의 남은 payload ↔ 이 시도 그 런 폴더 다시 대조 (`resume_recompare_run` = 디스크 출력 폴더 ·
+    요약 outdir 아님) → 사유 | None — 요약의 멈춤 · 요약 유무와 무관:
+      · 요약이 rerun 을 다 풀고 대조했다 (멈춘 런 ≠ resume.rerun) = compared 가 다시 대조 값 (옛 규칙 그대로) · 요약이 대조했다는데 그 런이 이 시도에서 끝나지 않았다 = 사유
+      · 그 밖 (대조 전 멈춤 = 정리 중 신호 signal_after · 사슬 부모 사망 · 요약 없는 시도 · s = None) = 다시 대조가 모두 같아야 (정직 같은 payload = 그대로 · 다른 payload =
+        비결정 재실행 = 사유)
+    끝나지 않았으면 (rc 실패 · 죽인 런 · 미확인 · 런 전 멈춤) = 대조 없음 (생산자도 대조 전 멈춤 · 다음 재개 `_src_done` = 다시 돈다).  원천 = 찾은 원천 (다른 바탕 포함).
+    옛 = 멈춘 런 = rerun 이거나 요약 없으면 대조 안 함 → 정직 signal_after · 요약 지움 + 남은 payload 다름 = 자격 True · 다음 재개 `_src_done` 가 그 런을 대조 없이 복사
+    (사전 공격 15 P2-1)."""
+    R = s.get('resume') if isinstance(s, dict) and isinstance(s.get('resume'), dict) else None
+    post = R is not None and (s.get('stop') or {}).get('run') != R.get('rerun')
     try:
-        want = resume_recompare(Path(src) / od, Path(folder) / od)
+        done = rerun is not None and run_end_ok(folder, rerun) and bool(run_dirs(folder, rerun))
+        want = resume_recompare_run(src, folder, rerun) if done else None
     except OSError as ex:
-        return f'다시 대조를 못 한다 ({type(ex).__name__} · 원천 {Path(src).name}/{od})'
-    if R.get('compared') != want:
-        return (f'resume.compared {repr(R.get("compared"))[:80]} ≠ 원천 {Path(src).name}/{od} 남은 payload ↔ 이 시도 {od} 다시 대조 {repr(want)[:80]} (결정적 재실행이 '
-                f'아니다)')
+        return f'디스크상 첫 미완료 런 {rerun} 다시 대조를 못 한다 ({type(ex).__name__} · 원천 {Path(src).name})'
+    if not done:
+        if post:
+            return (f'요약 = resume.rerun {R.get("rerun")!r} 을 다 풀고 대조함 (멈춘 런 {(s.get("stop") or {}).get("run")!r}) 인데 디스크상 첫 미완료 런 '
+                    f'{rerun if rerun is not None else "(없음)"} 이 이 시도에서 끝나지 않았다 (생산자 = 재실행 런이 끝나 대조한 뒤에만 다음 런 · ★ 11-09 사전 공격 15 PC15-01)')
+        return None
+    if post:
+        if R.get('compared') != want:
+            return (f'resume.compared {repr(R.get("compared"))[:80]} ≠ 원천 {Path(src).name} 의 {rerun} 남은 payload ↔ 이 시도 디스크 출력 폴더 다시 대조 '
+                    f'{repr(want)[:80]} (결정적 재실행이 아니다)')
+        return None
+    bad = [x['file'] for x in want if not x['same']]
+    if bad:
+        return (f'디스크상 첫 미완료 런 {rerun} 이 이 시도에서 끝났는데 (그룹 결합 · rc 0 · 확인 · 출력 폴더) 원천 {Path(src).name} 남은 payload ↔ 이 시도 다시 대조가 '
+                f'다르다 {bad[:3]} (요약 = 대조 전 멈춤 · 요약 없음 — 결정적 재실행이 아니다 · 다음 재개가 그 런을 대조 없이 복사한다 · ★ 11-09 사전 공격 15 PC15-01)')
     return None
 
 
@@ -4621,11 +4714,14 @@ def resume_provenance_problem(st, n, folder, s, found=None):
          사유) — 옛 = 판정 · 합치기에서만 (PC14-03 attempt-null = 결과 줄 · 다음 순서 · 풀기 전 다시 셈 통과)
       ⓑ resume.from ↔ 그 시점 유효 사슬 끝 (`resume_from_problem`) — 옛 = 범위만 (PC14-03 3 시도 from 다시 결속)
       원천 = attempt_<from> (`resume_source_locate` · found 또는 같은 바탕 · 못 찾음 · 확인 못 함 = 사유 · fail-closed)
-      ⓒ 복사 / 새 런 경계 ↔ 원천 디스크 (`resume_boundary_problem`) — 옛 = 요약 자기 신고 (PC14-02 R1 · R2) · 멈춘 런 = rerun 이어도 본다 (R1 = 대조 전 반환 우회)
-      ⓓ 실제 첫 새 런 payload 다시 대조 (`resume_first_new_problem`)
-    결과 줄 쓰기 · 다시 셈 (`result_fields_ledger`) · 다음 재개 허용 (`resume_chain_provenance_problem` · `resume_chain_problem`) 이 이 한 함수.  요약 없는 시도 = ⓐ 만
-    (요약 쪽 주장 없음 · 한정) · 새 시도 (항목 resume_of null) = ⓐ · ⓑ (resume 칸 null) 만.  ⚠ 한정: 모든 사본 (launch / end · payload · 요약 · attempt.json) 을
-    일관되게 고친 위조 = 이 계약 밖 (판정문 §3) · 재실행 러너의 복사 판단 (ResumeRunner._src_done) = 그대로 (다음 재개 허용 관문이 앞에서 막는다)."""
+      ⓒ 복사 / 새 런 경계 ↔ 원천 디스크 (`resume_boundary_problem`) — 옛 = 요약 자기 신고 (PC14-02 R1 · R2) · 멈춘 런 = rerun 이어도 본다 (R1 = 대조 전 반환 우회) ·
+         ★ 11-09 사전 공격 15 PC15-02 resume.rerun · 첫 새 런 = 디스크상 첫 미완료 런 (`resume_disk_rerun`) · 새 런 기록 ↔ 이 시도 groups 기록 · 디스크 출력 폴더
+      ⓓ 디스크상 첫 미완료 런 payload 다시 대조 (`resume_first_new_problem` · ★ 11-09 사전 공격 15 PC15-01 요약의 멈춤 · 요약 유무와 무관)
+    결과 줄 쓰기 · 다시 셈 (`result_fields_ledger`) · 다음 재개 허용 (`resume_chain_provenance_problem` · `resume_chain_problem`) 이 이 한 함수.  ★ 11-09 사전 공격 15
+    PC15-01 — 요약 없는 재실행 시도 = ⓐ + 원천 (원장 그 시점 유효 사슬 끝 · 찾기) + ⓓ (옛 = ⓐ 만 · 요약을 지우면 대조를 비켰다) · 새 시도 (항목 resume_of null) = ⓐ · ⓑ
+    (resume 칸 null) 만 · ★ PC15-05 단계 요약 칸 꼴 틀림 (`summary_shape_problem`) = [꼴] 사유 (옛 = 다음 재개 허용 자리 traceback).  ⚠ 한정: 모든 사본 (launch / end ·
+    payload · 요약 · attempt.json) 을 일관되게 고친 위조 = 이 계약 밖 (판정문 §3) · 재실행 러너의 복사 판단 (ResumeRunner._src_done) = 그대로 (다음 재개 허용 관문이 앞에서
+    막는다)."""
     folder = Path(folder)
     e = (st.get('entries') or {}).get(n) if isinstance(st, dict) else None
     if not isinstance(e, dict):
@@ -4635,21 +4731,34 @@ def resume_provenance_problem(st, n, folder, s, found=None):
     if ent is not None:                                        # ⓐ 지킴
         return (f'{RESUME_PROV} [ⓐ] {folder.name}: attempt.json ({ent[0]}) ≠ 원장 항목 {n} ({ent[1]}) (생산자 `attempt_open` = 항목 칸 그대로 · '
                 f'★ 11-09 Codex 회차 ④ PC14-03)')
-    if not isinstance(s, dict):
-        return None                                            # 요약 없는 시도 = 요약 쪽 주장 없음 (한정 · ⓐ 만)
-    bind = resume_from_problem(st, n, e, s)
-    if bind is not None:                                       # ⓑ 지킴
-        return f'{RESUME_PROV} [ⓑ] {folder.name}: {bind} (★ 11-09 Codex 회차 ④ PC14-03)'
+    if isinstance(s, dict):
+        shape = summary_shape_problem(s)
+        if shape is not None:                                  # ★ 11-09 사전 공격 15 PC15-05 — 꼴 지킴 (옛 = ⓒ · ⓓ 에서 TypeError · AttributeError)
+            return (f'{RESUME_PROV} [꼴] {folder.name}: 단계 요약 칸 꼴 — {shape} (생산자 = stop null · 객체 · runs 목록 · 원소 객체 · outdir 글 · ★ 11-09 사전 공격 15 '
+                    f'PC15-05)')
+        bind = resume_from_problem(st, n, e, s)
+        if bind is not None:                                   # ⓑ 지킴
+            return f'{RESUME_PROV} [ⓑ] {folder.name}: {bind} (★ 11-09 Codex 회차 ④ PC14-03)'
     if e['resume_of'] is None:
         return None
-    R = s.get('resume') if isinstance(s.get('resume'), dict) else {}
-    src, swhy = resume_source_locate(st, R.get('from'), folder, found)
+    if isinstance(s, dict):
+        frm = (s.get('resume') if isinstance(s.get('resume'), dict) else {}).get('from')   # ⓑ 뒤 = 객체 · from = 그 시점 유효 사슬 끝
+    else:                                                      # ★ 11-09 사전 공격 15 PC15-01 — 요약 없는 재실행 시도 = 원장의 그 시점 유효 사슬 끝
+        frm = adoption(st, e['target'], upto=n)['effective']
+        if frm is None:
+            return (f'{RESUME_PROV} [ⓑ] {folder.name}: 요약 없는 재실행 시도 (원장 항목 {n} resume_of {e["resume_of"]}) 의 그 시점 유효 사슬 끝이 없다 (재실행 원천 없음 · '
+                    f'★ 11-09 사전 공격 15 PC15-01)')
+    src, swhy = resume_source_locate(st, frm, folder, found)
     if src is None:                                            # 원천 지킴 (fail-closed)
         return f'{RESUME_PROV} [원천] {folder.name}: {swhy} (확인할 수 없는 원천 = 재개 허용 안 함 · fail-closed · ★ 11-09 Codex 회차 ④)'
-    bnd = resume_boundary_problem(folder, src, s, R.get('from'))
+    try:
+        rerun, rwhy = resume_disk_rerun(folder, src)
+        bnd = rwhy if rwhy is not None else (resume_boundary_problem(folder, src, s, frm, rerun) if isinstance(s, dict) else None)
+    except OSError as ex:
+        bnd = f'groups · 런 폴더 목록을 못 읽는다 ({type(ex).__name__} · ★ 11-09 사전 공격 15 PC15-02)'
     if bnd is not None:                                        # ⓒ 지킴
         return f'{RESUME_PROV} [ⓒ] {folder.name}: {bnd} (★ 11-09 Codex 회차 ④ PC14-02)'
-    rcmp = resume_first_new_problem(folder, src, s)
+    rcmp = resume_first_new_problem(folder, src, s, rerun)
     if rcmp is not None:                                       # ⓓ 지킴
         return f'{RESUME_PROV} [ⓓ] {folder.name}: {rcmp} (★ 11-09 Codex 회차 ④)'
     return None
@@ -4892,11 +5001,29 @@ def attempt_result_line(n, folder, s, by, unreadable=False):
     return _result_line(n, folder, result_fields(folder, s, unreadable=unreadable), by)
 
 
+class ResultHeld(Stop):
+    """★ 11-09 사전 공격 15 PC15-03 (P2-3 · 보장 5 쓰기 ↔ 다시 셈 대칭) — 결과 줄을 쓰지 않는다: 재개 출처 공통 검증 사유가 [원천] (원천을 찾거나 확인할 수 없음 =
+    확인된 모순이 아니라 확인 못 함) → [원천] False 줄을 영구히 남기지 않는다 (옛 = 같은 바탕에 원천이 없으면 False 줄 · 판정이 다른 바탕에서 원천을 찾아 True 로 다시
+    셈 = ATTEMPT_LEDGER_MISMATCH · 원천을 되돌려도 줄은 False).  사슬 (`attempt_close`) = ATTEMPT_OPEN · rc 3 · recover (`recover_ledger`) = 못 쓴 수 · 화면 사유 = 원천을
+    같은 바탕에 되돌린 뒤 recover.  확인된 모순 ([ⓐ] · [ⓑ] · [ⓒ] · [ⓓ] · [꼴]) = 그대로 자격 False 줄."""
+
+
+def resume_prov_unconfirmed(why):
+    """★ 11-09 사전 공격 15 PC15-03 — 공통 검증 사유가 [원천] (원천을 찾거나 확인할 수 없음 · `resume_provenance_problem` 의 그 표지 머리) 인가."""
+    return isinstance(why, str) and why.startswith(f'{RESUME_PROV} [원천]')
+
+
 def attempt_result(n, folder, s, by, st, unreadable=False):
     """★ 11-09 Codex 회차 ④ PC14-02 · 03 (판정문 §3 ① "자격 결과 쓰기 전") — 결과 줄 쓰기 (사슬 끝 `attempt_close` · `recover_ledger`) = `attempt_result_line` 칸 + 재개
-    출처 공통 검증 (`result_fields_ledger` · 원장 상태 st · 원천 = 같은 바탕) → (결과 줄, 공통 검증 사유 | None · 부르는 쪽 = 원장 커밋 글 · 화면)."""
+    출처 공통 검증 (`result_fields_ledger` · 원장 상태 st · 원천 = 같은 바탕) → (결과 줄, 공통 검증 사유 | None · 부르는 쪽 = 원장 커밋 글 · 화면).  ★ 11-09 사전 공격 15
+    PC15-03 — 사유 [원천] = 결과 줄을 쓰지 않는다 (`ResultHeld` · 원천 attempt_<from> = 원장 그 시점 유효 사슬 끝 · 다음 재개 허용 · 다시 셈 = 그대로 fail-closed)."""
     folder = Path(folder)
     f, why = result_fields_ledger(folder, s, st, n, unreadable=unreadable)
+    if resume_prov_unconfirmed(why):
+        e = (st.get('entries') or {}).get(n) or {}
+        eff = adoption(st, e['target'], upto=n)['effective'] if isinstance(e.get('target'), str) else None
+        raise ResultHeld('ATTEMPT_LEDGER_MISMATCH', f'{folder.name}: 결과 줄을 쓰지 않는다 — 원천 attempt_{eff} 을 같은 바탕에 되돌린 뒤 recover ({why} · ★ 11-09 사전 '
+                                                    f'공격 15 PC15-03)')
     return _result_line(n, folder, f, by), why
 
 
@@ -5030,7 +5157,8 @@ def result_line_problem(k, p, r, st=None, found=None):
 
 def attempt_close(att, s):
     """단계 끝 — 시도 폴더의 그룹이 다 확인됐으면 결과 줄 (사슬) + 커밋 → None (rc 그대로) | 3 (결과 줄을 못 씀 · 미확인 = recover).  ★ 11-09 Codex 회차 ④ PC14-02 · 03 —
-    결과 줄 = `attempt_result` (시작 때 원장 상태 att.st · 재개 출처 공통 검증 · 사유 = 재실행 자격 False + 원장 커밋 글 · 화면)."""
+    결과 줄 = `attempt_result` (시작 때 원장 상태 att.st · 재개 출처 공통 검증 · 사유 = 재실행 자격 False + 원장 커밋 글 · 화면).  ★ 11-09 사전 공격 15 PC15-03 — 공통
+    검증 사유 [원천] (원천을 찾거나 확인할 수 없음 · `ResultHeld`) = 결과 줄을 쓰지 않는다 · ATTEMPT_OPEN (그룹 미확인과 같은 꼴) · rc 3."""
     why = attempt_groups_problem(att.folder)
     if why:
         print(f'ATTEMPT_OPEN n={att.n} — 결과 줄을 쓰지 않았다 ({why}) — 사람이 보고 --stage recover --out {att.folder} --ledger {att.repo}')
@@ -5038,6 +5166,9 @@ def attempt_close(att, s):
     try:
         res, pwhy = attempt_result(att.n, att.folder, s, 'chain', att.st)
         ledger_append(att.repo, res, f'rint-r attempt {att.n} result {res["status"]}' + (f' · 재실행 자격 없음 — {pwhy}' if pwhy else ''))
+    except ResultHeld as e:                                # ★ 11-09 사전 공격 15 PC15-03 — [원천] = 결과 줄 없음 (미확인 · recover)
+        print(f'ATTEMPT_OPEN n={att.n} — 결과 줄을 쓰지 않았다 ({e.cause}) — 사람이 보고 --stage recover --out {att.folder} --ledger {att.repo}')
+        return 3
     except Stop as e:
         print_stop(e)
         return 3
@@ -5091,8 +5222,9 @@ ATTEMPT_ENTRY_FIELDS = ('target', 'machine', 'resume_of')
 def attempt_entry_diff(a, k, e):
     """★ 11-09 Codex 회차 ④ PC14-03 (판정문 §3 · 수정 계획 Q1 (가) ⓐ) — attempt.json (`read_attempt` dict a) ↔ 원장 항목 e (번호 k) → (attempt.json 쪽 글, 원장 쪽 글)
     | None (같음).  옛 `found_attempts_problem` 안 식을 뗀 것 (판정 · 합치기 동작 · 사유 글 그대로) — 재개 출처 공통 검증 ⓐ (`resume_provenance_problem`) 가 같은
-    함수 (옛 = 이 대조가 판정 · 합치기 자리에만 · 결과 줄 쓰기 · 다음 재개 허용에는 없었다 = PC14-03 attempt-null)."""
-    diff = [f for f in ATTEMPT_ENTRY_FIELDS if a[f] != e[f]]
+    함수 (옛 = 이 대조가 판정 · 합치기 자리에만 · 결과 줄 쓰기 · 다음 재개 허용에는 없었다 = PC14-03 attempt-null).  ★ 11-09 사전 공격 15 PC15-04 — 같음 = 형까지 같음
+    (`type(a) is type(e)` 이고 값 같음 · 정수 · 글 · null · 옛 `!=` = resume_of true · 1.0 을 정수 1 과 같다고 봄 · 생산자 = 항목 칸을 그대로 JSON 으로 = 형 같음)."""
+    diff = [f for f in ATTEMPT_ENTRY_FIELDS if not (type(a[f]) is type(e[f]) and a[f] == e[f])]
     if a['n'] != k or diff:
         return (', '.join(f'{f} {a[f]!r}' for f in diff) or f'n {a["n"]}'), (', '.join(f'{f} {e[f]!r}' for f in diff) or f'n {k}')
     return None
@@ -8274,7 +8406,8 @@ def recover_ledger(root, repo, operator=None):
                        'by': 'recover', 'utc': _utc()}
             else:
                 s, sst = stage_summary_read(f)                    # ★ 10-27 묶음 C2d 단위 · 넘침 점 차례 · ★ 11-05 A2b 있는데 못 읽음 = summary_unreadable
-                #  ★ 11-09 Codex 회차 ④ PC14-02 · 03 — 결과 줄 = 이 원장 상태 st 의 재개 출처 공통 검증 (`attempt_result` · 사유 = 자격 False + 커밋 글)
+                #  ★ 11-09 Codex 회차 ④ PC14-02 · 03 — 결과 줄 = 이 원장 상태 st 의 재개 출처 공통 검증 (`attempt_result` · 사유 = 자격 False + 커밋 글) ·
+                #    ★ 11-09 사전 공격 15 PC15-03 — 사유 [원천] = 결과 줄 없음 (`ResultHeld` · 아래 except)
                 res, pwhy = attempt_result(n, f, s, 'recover', st, unreadable=(sst == 'unreadable'))
             msg = f'rint-r attempt {n} result {res["status"]} (recover)'
             if op_used:                                       # ★ 11-04 PC8-05 — 운영자 확인 사유 = 원장 커밋 글 (그 결과 줄과 같은 커밋)
@@ -8283,7 +8416,8 @@ def recover_ledger(root, repo, operator=None):
                 msg += f' · 재실행 자격 없음 — {pwhy}'
             ledger_append(repo, res, msg, expect=raw)
             used += 1 if op_used else 0
-        except (Stop, OSError, ValueError) as ex:
+        except (Stop, OSError, ValueError) as ex:             # ★ 11-09 사전 공격 15 PC15-03 — `ResultHeld` ([원천] · 결과 줄 없음) 도 여기 = 못 쓴 수 · 화면 사유
+            #    (원천 attempt_<from> 을 같은 바탕에 되돌린 뒤 recover)
             print_stop(ex if isinstance(ex, Stop) else Stop('ATTEMPT_LEDGER_MISMATCH', f'{f.name}: {type(ex).__name__}: {ex}'))
             bad += 1
             continue
