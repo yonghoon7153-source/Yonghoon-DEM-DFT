@@ -11662,6 +11662,148 @@
     "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion 'b2o3 B·O 배치 UMA 재탐색 카드 (옛 챔피언과 같은 농도 0.2 · 20 f.u. · O 꼴 세 가족 × 바탕 배치 12 = 36 구조 · 가족 최저은 DFT 단일점 확인 · 2 단계 골격 게이트는 판독 뒤 발사) 를 어떻게 할까요?' 에 '비준 — 선행 작업부터 (Recommended)'",
     "decision_digest": "sha256:65c749944c508defe649b14e6534dd745783d2810f67bb4151ef8889430ccb20"
    }
+  },
+  {
+   "id": "D-2026-11-09-cell-construction-protocol-v1",
+   "schema_version": 2,
+   "kind": "method",
+   "scope": "argyrodite_doped.cell_construction.v1",
+   "slot": "cell_construction_protocol",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "cell_construction",
+     "configuration_selection",
+     "stability_check",
+     "post_processing"
+    ],
+    "methods": [
+     "formal-charge-ewald",
+     "uma-s-1p1-omat",
+     "qe-pbe"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "셀구축 v1 — 도핑 argyrodite 셀 만들기 · 고르기 (에너지만) · 안정성 (포논 · 유한 온도 골격 · hull) · 표준 후처리 (띠틈 · DOS · Bader · ELF · ICOHP · BVSE · 탄성 · 수송 MD) 를 한 절차로",
+   "statement": "db/properties/cell_construction_protocol_v1_2026_11_09.json. 0 앞선 기록 대조 → 1 바탕 셀 (수직폭 ≥ 11 Å) → 2 조성 (검사) → 3 할로겐 (기본 고정) → 4 도펀트 + 보상 Li (형식전하 Ewald · 서로 다른 상위 N_E) → 5 음이온 꼴 가족 (모든 바탕 배치에 짝 · 자리 모자라면 멈춤) → 6 UMA 이완 거름 → 7 어닐 (20 대 100 ps 탐침 규칙) → 8 UMA 순위 · 여유 → 9 DFT 확인 (단일점 → 가족 최저 고정셀 이온 이완 + 압력 어림 · EOS 조건부) → 10 고르기 (에너지만) → 11 안정성 (UMA 포논 Γ · 유한 온도 골격 게이트 300/600/800/1000 K + 같은 셀 대조 · hull 꼬리표) → 12 후처리 모듈 (기존 규칙 내장) → 13 기록 · 계보. 규칙마다 [기존] (출처) / [제안] (리뷰 대상) 꼬리표. b2o3 MD 시행착오 15 줄을 단계 규칙으로 옮겼다.",
+   "rationale": "b2o3 MD 가 배치 하나 · 바늘 셀 · 골격 게이트 없이 달려 닫혔고, 그 뒤의 진단 · 정정이 여러 문서에 흩어져 있다. 셀을 만드는 순간부터 후처리까지 그 교훈을 한 절차에 묶어 다음 적용이 같은 함정을 밟지 않게 한다.",
+   "decision_state": "proposed",
+   "record_kind": "policy",
+   "results_seen": false,
+   "exploratory": true,
+   "results_seen_note": "이 절차로 돌린 계산 0 건 · 교훈은 지난 결과에서 왔다 (출처 각 줄)",
+   "card": "db/properties/cell_construction_protocol_v1_2026_11_09.json",
+   "evidence": [
+    "db/properties/b2o3_eventrate_site_localization_2026_11_09.json",
+    "db/properties/b2o3_md_closed_retrospective_2026_08_25.json",
+    "db/properties/b2o3_cell_expansion_result_2026_09_10.json",
+    "db/properties/b2o3_vs_modelc_framework_fair_2026_09_10.json",
+    "db/properties/lpsocl_shape_compare_70ps_2026_08_27.json",
+    "kb/methodology/b2o3_doping_chemistry.md"
+   ],
+   "reopen_criteria": [
+    "Codex 리뷰 (DU) · 사용자 비준 전에는 이 절차로 돌리지 않는다",
+    "v1 을 바꾸면 v2 (적용 카드는 어느 판을 썼는지 적는다)"
+   ],
+   "enforcement": "⛔ 비준 전 실행 금지 · 적용 카드가 단계마다 값과 돌릴 모듈을 결과 전에 선언 · 선행 도구 고침 (생성기 · 실행기 · 판독기 · 집계) 을 selftest 음성 경로와 함께 끝낸 뒤",
+   "track": {
+    "name": "b2o3 UMA-MD / 우리 DFT 기준선 (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-09",
+     "session": "대피 세션 claude/evac-2026-11-08"
+    }
+   ],
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 2026-11-09: '셀 구축 관련해서 한번 전체적으로 쫙 읊어봐 · 1 2 3 4 이렇게 · 예전에 했던 파이프라인 참고해서' → 권고 여섯에 'ㅇㅇ 이 과정을 '셀구축' 이라고 정의해서 원장에 기록하고 이 파이프라인에 문제 없는지 한번 codex 리뷰 받아보자' + '셀구축 안에 여러 post-processing 들 (band gap, dos 같은것들) … 노하우들이 잘 녹아들어가서 … phonon 같은걸로 … 열적으로도 안정한지' — 정의 작성 · Codex DU 리뷰 대기"
+    }
+   ],
+   "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
+  },
+  {
+   "id": "D-2026-11-09-b2o3-bo-placement-amend1",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.uma_family_screen",
+   "slot": "b2o3_bo_placement_family",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family",
+     "framework_site_census",
+     "stability_check",
+     "post_processing"
+    ],
+    "methods": [
+     "uma-s-1p1-omat",
+     "qe-pbe",
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 카드 개정 1 — 셀구축 v1 적용 · 셀 근거 정정 (철회된 관찰 인용 제거) · 2 단계 온도 600/650/700 → 300/600/800/1000 K · 거름 → 어닐 · DFT 가족 최저 이완 · 포논 · 띠틈/DOS · 셀 대조 팔 1×2×5 (사용자 제안)",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json 의 '개정_1_셀구축_v1_2026_11_09' — 단계별 값 · 봉인 문장 · 비용 상한 (합계 어림 250–420 GPU-h · 1 단계와 2 단계 따로 승인). 셀 대조 팔: 1×2×5 (128 원자 · 옛 챔피언 조성 · B 배치 45 전수) 에서 같은 1 단계 — 두 셀의 가족 순서가 다르면 '셀 의존' 보고 · 고르지 않음. 결과 0 건.",
+   "rationale": "§1b 셀 근거가 철회된 관찰이었고 (자체 발견) · §8 온도가 표준을 이유 없이 벗어났다 (사용자 지적) · 사용자가 셀구축을 정의하고 후처리 · 포논 · 열적 안정을 넣으라 했다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "1 · 2 단계 결과 0 건",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "amends": [
+    "D-2026-11-09-b2o3-bo-placement-uma"
+   ],
+   "depends_on": [
+    "D-2026-11-09-cell-construction-protocol-v1"
+   ],
+   "reopen_criteria": [
+    "카드 4b 재개 규칙 그대로"
+   ],
+   "enforcement": "⛔ Codex DU 리뷰 + 사용자 비준 전 실행 금지 · 2 단계 (안정성 MD) 는 1 단계 판독 뒤 사용자 '발사' 로만",
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-09",
+     "session": "대피 세션 claude/evac-2026-11-08"
+    }
+   ],
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 2026-11-09: '셀 구축 관련해서 한번 전체적으로 쫙 읊어봐 · 1 2 3 4 이렇게 · 예전에 했던 파이프라인 참고해서' → 권고 여섯에 'ㅇㅇ 이 과정을 '셀구축' 이라고 정의해서 원장에 기록하고 이 파이프라인에 문제 없는지 한번 codex 리뷰 받아보자' + '셀구축 안에 여러 post-processing 들 (band gap, dos 같은것들) … 노하우들이 잘 녹아들어가서 … phonon 같은걸로 … 열적으로도 안정한지' — 개정 1 작성 · Codex DU 리뷰 대기"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '아니면 이번 1*1*10이 문제였으면 1*2*5 도 한번 고려해보고' → 셀 선택지 표 + 1×2×5 셀 대조 팔 추가 (카드 개정_1 · 1b · 1c)"
+    }
+   ],
+   "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
   }
  ]
 }
