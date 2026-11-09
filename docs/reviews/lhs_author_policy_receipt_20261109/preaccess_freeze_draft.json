@@ -1,0 +1,201 @@
+{
+  "schema": "lhs_preaccess_freeze_descriptive_draft/1",
+  "date": "2026-11-09",
+  "base_b": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "status": "DRAFT_NOT_FROZEN",
+  "purpose": "Concrete empty freeze draft using ratified document policy; not a reader, schema activation, access token, or completed preregistration",
+  "policy_receipt": "docs/reviews/lhs_author_policy_receipt_20261109/author_policy_receipt.json",
+  "document_policy_status": "RATIFIED",
+  "actual_freeze_status": "NOT_FROZEN",
+  "full_preregistration_complete": false,
+  "existing_questions_reused": [
+    "docs/reviews/lhs_post_inventory_author_questions_20261108/README.md",
+    "docs/reviews/lhs_n_preaccess_definition_draft_20261106/author_decisions.md"
+  ],
+  "inventory_basis": {
+    "scope": "WSL30",
+    "case_label_range": "lhs00_100..lhs00_129",
+    "inventory_count": 30,
+    "source": "docs/data/lhs_wsl30_inventory_20261108/lhs_wsl30_inventory_receipt_20261108.json",
+    "meaning": "Completed inventory labels only, not an eligible scientific cohort or frozen analysis roster",
+    "rerun_requested": false
+  },
+  "evidence_intake_plan": {
+    "status": "NO_ACTUAL_EVIDENCE_RECEIVED_IN_THIS_PREPARATION",
+    "evidence_owner": null,
+    "read_or_transfer_scope": null,
+    "approval_reference": null,
+    "required_non_outcome_evidence_categories": [
+      "run/segment identity and documented relationship to the completed inventory labels",
+      "execution-time input seal/receipt and separately identified current static file identities",
+      "ordered effective-input dependencies, variable binding provenance and restart producer/parent/child relations",
+      "non-outcome evidence binding both logs to actual execution and segment",
+      "exposure and prior-overlap/lineage records needed for the frozen cohort"
+    ],
+    "received_records": [],
+    "unknown_policy": "NOT_ESTABLISHED or UNRESOLVED with null evidence; no invented identity, deck eval, broad log read, or outcome inspection"
+  },
+  "roster_draft": {
+    "policy": "Exclusive cohorts and prespecified exact strata/pairing from the ratified definition",
+    "actual_rows": [],
+    "actual_frozen_pairs": [],
+    "actual_prior_six_identities": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "row_template": {
+      "case_id": null,
+      "run_id": null,
+      "segment_id": null,
+      "inventory_record_reference": null,
+      "prior_overlap": null,
+      "dependent_lineage": null,
+      "relevant_outcome_exposure": null,
+      "evidence_references": null,
+      "primary_cohort": null,
+      "physical_protocol_stratum": null,
+      "shared_replicate_matching_key": null,
+      "dependency_block": null,
+      "planned_contrast_axis": null,
+      "planned_scale": null,
+      "pair_id": null,
+      "exclusion_or_hold_reason": null
+    },
+    "count_policy": "Keep planned/evaluable/unevaluable/zero-N/direction IDs and denominators separately; no fabricated actual counts",
+    "actual_counts": null,
+    "freeze_approval_reference": null
+  },
+  "canonical_log_segment_draft": {
+    "policy": "log.liggghts is a conditional canonical candidate; log.txt is preserved comparison only when same execution/segment is established",
+    "conditional_preferred_route": "A",
+    "actual_selected_A_or_C": null,
+    "actual_canonical_log": null,
+    "actual_comparison_log": null,
+    "actual_segments": [],
+    "segment_template": {
+      "run_id": null,
+      "segment_id": null,
+      "log_identity_reference": null,
+      "log_role": null,
+      "execution_binding_evidence": null,
+      "segment_order": null,
+      "restart_parent_reference": null,
+      "boundary_or_overlap_evidence": null,
+      "refusal_or_unknown_reason": null
+    },
+    "selection_prohibitions": [
+      "filename/count/size/mtime alone",
+      "favorable pressure values",
+      "manual TSV merge",
+      "REFUSED deletion",
+      "unapproved log combination"
+    ],
+    "unsupported_identity_policy": "Keep both candidates and actual selection null; do not auto-select C",
+    "C_policy": "Only a separately scoped change/test/independent-review plan for justified duplicate or resume consumption that A cannot handle",
+    "existing_B7_REFUSED_preserved": true,
+    "freeze_approval_reference": null
+  },
+  "endpoint_draft": {
+    "ratified_policy": "P_Rend_MPa at exact planned PHASE4 end bound to harvest/atom/contact/mesh/plate-force event in the same run, segment and physical time",
+    "interpretation": "PROTOCOL_COMPLETE_NOT_EQUILIBRIUM_CERTIFIED when actual completion is later established",
+    "diagnostics_policy": "Last fifth of planned PHASE4 scheduled frames; reporting convention, no equilibrium threshold, no missing-frame substitution",
+    "actual_phase4_schedule": null,
+    "actual_endpoint_segment": null,
+    "actual_endpoint_step": null,
+    "actual_endpoint_time": null,
+    "actual_harvest_frame": null,
+    "actual_event_binding": null,
+    "actual_scheduled_diagnostic_frames": null,
+    "actual_protocol_completion": null,
+    "actual_pressure_units_area_mapping": null,
+    "physical_equilibrium_status": null,
+    "equilibrium_threshold": null,
+    "freeze_approval_reference": null
+  },
+  "field_draft": {
+    "logical_categories_from_ratified_policy": [
+      {
+        "category": "identity_and_event",
+        "draft_logical_items": [
+          "case/run/segment references",
+          "canonical input/log references",
+          "endpoint event/frame/units provenance"
+        ]
+      },
+      {
+        "category": "plate_pressure",
+        "draft_logical_items": [
+          "approved plate-force component and unit mapping",
+          "effective plate-area definition and unit mapping",
+          "P_Rend_MPa"
+        ]
+      },
+      {
+        "category": "actual_damping_group_N",
+        "draft_logical_items": [
+          "verified damping fix/group identity and membership provenance",
+          "unique exact integer-ID count at the same endpoint",
+          "per-group/type and whole-system distinction"
+        ]
+      },
+      {
+        "category": "same_event_diagnostics",
+        "draft_logical_items": [
+          "only specifically frozen diagnostics consistent with the approved endpoint/window"
+        ]
+      }
+    ],
+    "meaning": "Logical drafting categories only; not approved actual source columns or permission to collect particle/log values",
+    "actual_source_field_mapping": null,
+    "actual_permitted_field_list": null,
+    "actual_damping_fix_group": null,
+    "actual_membership_evidence": null,
+    "actual_collection_method": null,
+    "actual_field_approval_reference": null,
+    "multiple_damping_fixes_policy": "No arbitrary summation; keep per-group identities and unresolved scalar definition explicit",
+    "excluded_automatic_extensions": [
+      "porosity/tau re-reading",
+      "pressure rewriting",
+      "stage A",
+      "ibb184",
+      "whole214",
+      "unapproved raw field expansion"
+    ]
+  },
+  "operator_and_exposure_draft": {
+    "actual_access_operator": null,
+    "actual_purpose": null,
+    "actual_permitted_read_or_transfer_scope": null,
+    "actual_exposure_record": null,
+    "actual_retention_rule": null,
+    "actual_repository_safe_references": null,
+    "actual_approval_reference": null,
+    "value_access_go_reference": null
+  },
+  "freeze_completion_requirements": [
+    "Bound evidence owner and non-outcome read/transfer scope before actual evidence access",
+    "Execution-time input/segment evidence established or unresolved cases retained explicitly",
+    "Actual roster, cohort evidence, stratum/replicate/block keys, fixed pairs and exclusions settled without outcome selection",
+    "Canonical log/segment roles and actual A/C route approved from evidence",
+    "Actual endpoint/event identity, source field mapping, operator, purpose and exposure/retention records fixed",
+    "Author accepts the populated freeze record; separate specific value-access GO follows"
+  ],
+  "current_next_step": "Prepare this empty record for bounded evidence and assignment; document policy is already ratified and is not asked again",
+  "boundaries": {
+    "actual_rows_created": 0,
+    "actual_input_identity_established": false,
+    "actual_inputs_or_values_read": false,
+    "actual_evidence_access_authorized": false,
+    "value_access_authorized": false,
+    "research_execution_authorized": false,
+    "new_reader_provided": false,
+    "active_registration_changed": false,
+    "operational_seal_changed": false,
+    "shared_ledger_modified": false,
+    "whole_gate": "HOLD"
+  }
+}
