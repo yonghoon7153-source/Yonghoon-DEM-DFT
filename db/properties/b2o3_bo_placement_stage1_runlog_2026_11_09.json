@@ -9,7 +9,7 @@
  "decision": "D-2026-11-09-b2o3-bo-placement-amend1 (active · 개정 1 v1.3 · 사용자 비준 2026-11-09)",
  "protocol": "D-2026-11-09-cell-construction-protocol-v1 (active · v1.3)",
  "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json → 개정_1_셀구축_v1_2026_11_09",
- "status": "6 단계 진행 중 (gabia · 시작 2026-11-09 20:07:12 KST)",
+ "status": "6 단계 끝 (135 / 135 · 21:06 감시) → 거름 판정 블록 제공 · 완결이면 7a 파일럿 런",
  "고정_DY_확인_2": {
   "생성_명령": "python3 tools/doping/b2o3_enumerate.py --base db/structures/modelc_V0_k663.xyz --supercell 1 2 1 --n_B 2 --n_O 3 --fix_halogen --top 45 --o_motif_top all --out db/inputs/b2o3_bo_placement_2026_11_09/candidates",
   "생성_결과": "바탕 45 (B 2 개 × P 10 자리 전수 C(10,2)) × O 꼴 3 = 135 구조 · 128 원자 (Li58P8B2S41O3Cl16) · Li 후보 50 · Ewald 최저 −2256.634 · 최고 −2250.840 eV · 27.8 s · --verify 문제 0 · Codex DX · DY 가 쓴 생성 세트와 이름 · Ewald 값이 같다 (cfg0000_E-2256.634 …)",
@@ -54,6 +54,11 @@
  "6단계_발사": {
   "시작": "2026-11-09 20:07:12 KST — 로그 '시작 (입력 · 소스 해시 재대조 통과)' · tmux b2o3_s6 살아 있음 (사용자 감시 붙여넣기 20:07:18)",
   "20:07:18_감시": "끝난 구조 0 / 135 · GPU 1 MiB · 0 % (시작 6 초 뒤 — 모델 올리는 중으로 읽음 · 다음 감시에서 VRAM 확인)",
-  "판정_다음": "끝나면 판독기 screen (verdict · plan_dir) — 완결이어야 7 단계"
+  "판정_다음": "끝나면 판독기 screen (verdict · plan_dir) — 완결이어야 7 단계",
+  "끝": "2026-11-09 21:06:12 감시 — tmux b2o3_s6 없음 · 이완까지 끝난 구조 135 / 135 · 구조당 평균 1 분 미만 · GPU 1 MiB · 0 % · run_rc · check_rc 는 감시가 안 보여 줌 (감시 grep 이 옛 '끝 rc' 를 찾는데 큐는 '끝 run_rc=' 를 쓴다 — 표시만의 어긋남 · 1 단계 도는 동안 실행기 판을 안 바꾸려고 고치지 않고 로그에서 직접 읽는다)"
+ },
+ "GPU_시간_누계": {
+  "6단계": "≈ 1.0 GPU-h (20:07 → 21:06 이전 끝 · A6000)",
+  "상한": "1 단계 UMA 30 GPU-h"
  }
 }
