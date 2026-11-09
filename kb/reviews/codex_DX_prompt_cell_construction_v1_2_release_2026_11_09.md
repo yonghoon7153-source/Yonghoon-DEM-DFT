@@ -7,7 +7,7 @@ letter: DX
 track: b2o3
 channel: codex
 kind: prompt
-status: 발송 전 (사용자가 보낸다) · 기준 커밋 93937466 (브랜치 claude/evac-2026-11-08) · 앞 편지 DW (NO-GO)
+status: 발송 2026-11-09 (사용자) · 회신 대기 · 기준 커밋 93937466 (브랜치 claude/evac-2026-11-08 · 그 뒤 fbdf3e8d 는 이 프롬프트 · 8ef8d029 는 93937466 에 섞인 kgy 정리 기록 오독 줄 되돌림 — 둘 다 b2o3 도구 · 카드 변경 없음) · 앞 편지 DW (NO-GO)
 confidence: medium
 verificationStatus: unverified
 explored: false
