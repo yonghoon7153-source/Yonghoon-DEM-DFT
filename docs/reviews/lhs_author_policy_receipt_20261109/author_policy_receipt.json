@@ -1,0 +1,129 @@
+{
+  "schema": "lhs_author_document_policy_receipt/1",
+  "date": "2026-11-09",
+  "recorded_at_utc": "2026-11-09T04:10:24Z",
+  "base_b": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "record_role": "First-author document-policy ratification and freeze-draft preparation authorization only",
+  "source_capture": "Exact user question/answer and subsequent complete user message relayed within this task; text retained without paraphrase",
+  "authorization_events": [
+    {
+      "id": "LHS_POLICY_RESPONSE_1",
+      "kind": "user_question_and_answer",
+      "question_exact": "LHS 문서 정책은 기존 권고대로 비준할까요? 권고는 배타 코호트·E/Z/D 분류, P_Rend 프로토콜 종점의 기술 분석, 실제 감쇠 그룹 N·계보 블록 대비, WSL30 비결과 신원 확인과 조건부 정본·A 우선입니다. 실제 명부·정본·A/C 확정, 자료 접근 담당·범위 및 값 열람 GO는 별도로 남습니다.",
+      "answer_exact": "기존 문서 정책 권고 비준",
+      "user_message_timestamp_utc": null,
+      "applied_scope": "Ratification of the stated LHS document-policy recommendations; actual evidence and access remain separate"
+    },
+    {
+      "id": "LHS_INSTRUCTION_2",
+      "kind": "complete_user_instruction",
+      "message_exact": "[1저자 11-09 비준 · 권고대로] 최신 B (origin/claude/sdcp-dem-manuscript-si-pqwtv8 · e48e5fa04 이후 최신) 바탕 새 가지에서 아래 두 가지를 진행. 전체 HOLD 그대로 · ibb / kgy / gabia 실행 없음 · 실제 값 열람 없음 · 재봉인 없음 · 결과 0 건.\n\n1) DEM 세대 2 준비 (Q1) — 정본 = docs/reviews/dem_protocol_gen2_plan_draft_20261014.md §12 (10-23 에 너희가 반영한 비준판 그대로 이어서)\n   - 세대 2 생산기: 삽입 → 안정화 → 압축 → 서보 (300 MPa 유지) → 이완 → 언로딩 → 판 분리 덱 생성 · 코드 + 시험 먼저 · 실제 실행 없음\n   - 검증 시험 T5 (부피 · 접촉 계산 해석해 대조 · 수렴 · coverage 정의) · T11 (서보 제어 자격 · 비수렴 / 불안정 음성 · 가드) 의 결과 전 등록 초안\n   - DEMP-01 (P1 · 압축 단계 전역 감쇠가 판 반력의 큰 몫 — 50kg 실측 0.7 µm 93.4 % · 1 µm 65 %) 처리안 · DEMP-02 (P3 · 입자가 판 메시를 뚫음) 처리안\n   - 50kg 0.7 · 1 µm 다시 누르기는 세대 2 로 합침 (1저자 Q3) → 같은 정적 압력 상태 비교를 세대 2 요구 사항에 넣을 것\n2) LHS (Q2) — W30-Q1–Q4 = 문서 권고대로 비준 (docs/reviews/lhs_post_inventory_author_questions_20261108/README.md)\n   - 실행 신원 = 봉인 · 영수증 대조로만 · log.liggghts = 정본 후보 · log.txt = 대조 · A 우선 · 값 열람 = 명부 · 종점 · 필드 · 담당 · 노출 기록 동결 뒤 별도 GO\n   - 이번 범위 = 동결안 (명부 · 정본 구간 · 종점 · 필드) 초안까지 · 값 열람 없음\n- 믹서 first8 사전 조건 정리는 하던 대로 계속.\n- 건드리지 말 것: Rint 파일 (scripts/rint_r_chain.py · 그 시험 · docs/reviews/rint2_*) — Claude 쪽 고침 진행 중.\n- 끝나면: 커밋 + 인계 쪽지 (docs/collab/codex_to_claude/) · 반박 창 검토가 필요한 항목은 따로 표시.",
+      "user_message_timestamp_utc": null,
+      "applied_scope": "Section 2 LHS W30-Q1 through W30-Q4 document recommendations and preparation through a freeze draft; shared HOLD and protected-file constraints",
+      "other_track_instructions_recorded_verbatim_only_in_this_commit": true
+    }
+  ],
+  "references": [
+    {
+      "path": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/author_decisions.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "4bc36ed8d914e5babdca3e9e00b43f9d3d6ba91d"
+    },
+    {
+      "path": "docs/reviews/lhs_n_preaccess_definition_draft_20261106/definition.json",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "a4214ecdd527ed51cabf869f43e3c39e716974c3"
+    },
+    {
+      "path": "docs/reviews/lhs_post_inventory_author_questions_20261108/README.md",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "git_blob": "a007f476f3fa4b01519ef4fe708a114f45092b55"
+    },
+    {
+      "path": "docs/data/lhs_wsl30_inventory_20261108/lhs_wsl30_inventory_receipt_20261108.json",
+      "pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+      "sha256": "566a6323317257215a852b9b3cdd7d4bc370a0afb307ab3cdb79528027eac9c8"
+    }
+  ],
+  "document_policy_ratification": {
+    "status": "RATIFIED",
+    "evidence_event_ids": [
+      "LHS_POLICY_RESPONSE_1",
+      "LHS_INSTRUCTION_2"
+    ],
+    "scope": "Existing inactive LHS document recommendations; no changed scientific rule introduced by this receipt",
+    "accepted_rules": [
+      "Exclusive evidence/exposure cohorts; confirmed positive evidence first, otherwise unknown, otherwise all documented negatives; facts retained",
+      "Prespecified pairing and E/Z/D arithmetic classification with empty-D precedence, zero-N retention and separate denominators; no outcome rematching",
+      "P_Rend at the planned PHASE4 protocol endpoint; descriptive analysis, not equilibrium certification",
+      "Exact integer N in the verified actual damping group and descriptive dependency-lineage-block contrasts",
+      "WSL30 non-outcome execution-identity preparation; execution-time seal/receipt comparison, not current hashes alone",
+      "Conditionally log.liggghts as canonical candidate and log.txt as preserved comparison; A first where supported, justified unresolved duplicate/resume consumption requires a separate C plan",
+      "Freeze actual roster, canonical segments, endpoint, fields, responsible operator and exposure/retention rules before separate value-access GO"
+    ],
+    "covered_question_references": [
+      "LHS-N Q1",
+      "LHS-N Q2",
+      "LHS-N Q3",
+      "LHS-N Q4",
+      "LHS-N Q5",
+      "LHS Q7",
+      "LHS Q8",
+      "W30-Q1",
+      "W30-Q2",
+      "W30-Q3",
+      "W30-Q4"
+    ]
+  },
+  "current_preparation_authorized": {
+    "document_policy_receipt": true,
+    "freeze_draft_roster_segments_endpoint_fields": true,
+    "duplicate_questionnaire": false,
+    "live_input_evidence_access": false,
+    "raw_log_access": false,
+    "actual_value_access": false,
+    "operational_reader_implementation": false
+  },
+  "actual_decisions_not_established": {
+    "evidence_owner": null,
+    "permitted_read_or_transfer_scope": null,
+    "execution_input_identity": null,
+    "actual_canonical_log": null,
+    "actual_log_segments": null,
+    "actual_selected_A_or_C": null,
+    "actual_frozen_roster": null,
+    "actual_frozen_pairs": null,
+    "actual_endpoint_and_frames": null,
+    "actual_source_field_mapping": null,
+    "actual_access_operator": null,
+    "actual_exposure_retention_record": null,
+    "actual_freeze_approval_reference": null,
+    "value_access_go_reference": null
+  },
+  "distinction": {
+    "document_policy_ratified": true,
+    "actual_freeze_complete": false,
+    "full_preregistration_complete": false,
+    "actual_input_identity_established": false,
+    "actual_cohort_independence_established": false,
+    "canonical_historical_documents_modified": false,
+    "prior_receipts_or_decisions_rewritten": false,
+    "wsl30_inventory_go_or_completion_reopened": false,
+    "independent_document_review_repeated": false
+  },
+  "boundaries": {
+    "whole_gate": "HOLD",
+    "actual_research_results": 0,
+    "actual_rows_created": 0,
+    "actual_values_read": false,
+    "actual_host_access": false,
+    "actual_research_execution": false,
+    "actual_submission": false,
+    "actual_MPI": false,
+    "operational_seal_changed": false,
+    "shared_ledger_modified": false,
+    "active_registration_changed": false,
+    "protected_Rint_files_read_changed_or_executed": false,
+    "push_performed_by_this_record": false
+  }
+}
