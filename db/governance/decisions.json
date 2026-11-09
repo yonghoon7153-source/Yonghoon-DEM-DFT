@@ -11783,6 +11783,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "DX 고침 반영 v1.3 (2026-11-09 · 대피 세션) — P1-1 실행 목적 (run_anneal --purpose · 계획 manifest purpose → 실행기 → 정체성 · 판독기 대조 · 파일럿 런 기록의 8 단계 재사용 거부 · 같은 바이트 새 8 단계 런 통과) · P2-1 실행기가 계획 항목을 경로 기준으로 보존 · P2-2 EOS 입력 유효성 · [제안] 8 단계 base seed 하나 (DX Q3 운영 조건). Codex 편지 DY 재리뷰 대기 · 고친 판 카드는 사용자가 새로 비준해야 한다"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DY 회신 GO (kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md · 기준 12b8bdef) — DX 세 지적 닫힘 · 추가 차단 결함 없음 · '사용자가 v1.3 카드를 새로 비준하면 1 단계 시작'. GO 는 비준이 아니다 — 11-09 조건부 비준 ('go면 비준') 은 DW 에 걸렸던 것이라 쓰지 않고 사용자에게 새로 묻는다. DY Q2 운영 규칙 (SEED 는 발사 전에 정하고 재시도에서도 유지) 을 적용 카드에 넣음"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
@@ -11909,6 +11915,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "DX 고침 반영 v1.3 (2026-11-09 · 대피 세션) — P1-1 실행 목적 (run_anneal --purpose · 계획 manifest purpose → 실행기 → 정체성 · 판독기 대조 · 파일럿 런 기록의 8 단계 재사용 거부 · 같은 바이트 새 8 단계 런 통과) · P2-1 실행기가 계획 항목을 경로 기준으로 보존 · P2-2 EOS 입력 유효성 · [제안] 8 단계 base seed 하나 (DX Q3 운영 조건). Codex 편지 DY 재리뷰 대기 · 고친 판 카드는 사용자가 새로 비준해야 한다"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DY 회신 GO (kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md · 기준 12b8bdef) — DX 세 지적 닫힘 · 추가 차단 결함 없음 · '사용자가 v1.3 카드를 새로 비준하면 1 단계 시작'. GO 는 비준이 아니다 — 11-09 조건부 비준 ('go면 비준') 은 DW 에 걸렸던 것이라 쓰지 않고 사용자에게 새로 묻는다. DY Q2 운영 규칙 (SEED 는 발사 전에 정하고 재시도에서도 유지) 을 적용 카드에 넣음"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
@@ -11977,6 +11989,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "문구 정리 (Codex DW P3) — 95 % 식을 정확식 kT·ln(ν₀·t·n / (−ln 0.05)) 로 · /3 은 ≈ 근사로 병기 · 예시 값 (0.77446 · 0.67991 eV · 26.9 %) 은 그대로 (원래 정확식 값) · 바뀐 칸 title · statement · 비준 대기 그대로"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DX Q4 · DY 가 고친 문구 확인 (기대 사건 1 0.7744567 · 95 % 정확식 0.6799083 · /3 근사 0.6797856 eV · +0.10 eV 검출 26.9002 %) — 사용자 비준 대기"
     }
    ],
    "_note": "proposed — 사용자 비준 대기 (비준 시 도구 줄 · CLAUDE.md 문구 갱신)"
