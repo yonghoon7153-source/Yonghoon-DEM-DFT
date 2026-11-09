@@ -16803,12 +16803,17 @@
     {
       "id": "RR5-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 11-09 Rint ② 재확인 회차 ⑤ (리뷰 핀 abf0911eb · 실제 cjunc_registry · segment_cells 작은 기하 반례 · mock 없음)",
       "opened_in": "docs/reviews/codex_review_rint2_rr_round5_20261109.md",
       "title": "자기 후보 수 0 이면 s_min 후보 (가)–(다) 의 DBE 전체 분류가 같다는 등록 문장이 틀리다 — s_min 은 같은 조각 면 · SDCP–VGCF 무리 · 반사실 절단에도 걸린다",
-      "note": "판정문 §8-2 · 자리 = 등록 R §2-1b 11-09 줄 (105–106) · 회차 ⑤ 요청서 86 · 139 · 반례 = 10×10×4 격자 · vox 0.15 · 세 점 한 가닥: 자기 후보 0/0 인데 s_min 0 → 0.3 µm 에서 미등록 면 3 → 2 · 같은 조각 융합 면 0 → 1 · SDCP 두 셀 둔 판에서 SV bridging 성분 1 → 0 · 반사실 끊는 SV 면 행 2 → 0 (s_face 0.2277607596902182 · d_face 0.058948822334846995 µm) · 0 µm 선택 자체 · [0, D] 분류 동등 = 수용 · 실제 DBE σ 영향 크기 · 빈도 = 미계산 · 19.9 Ω = 축방향 경로가 살아 있고 이상 원통일 때만 · UNREG Rayleigh 상한 = 같은 그래프 부분 융합 한정.  최소 수정 = 판정문 §8-2 문안 (등록 R §2-1b ⑤′) · 1저자 11-09 Q2 권고대로 (문서만 · s_min 0 그대로 봉인 · 감도 팔 없음 = 범위 선택 · \"입증돼 불필요\" 근거 삭제) · docs/reviews/rint2_rr5_fix_plan_20261109.md §2."
+      "note": "판정문 §8-2 · 자리 = 등록 R §2-1b 11-09 줄 (105–106) · 회차 ⑤ 요청서 86 · 139 · 반례 = 10×10×4 격자 · vox 0.15 · 세 점 한 가닥: 자기 후보 0/0 인데 s_min 0 → 0.3 µm 에서 미등록 면 3 → 2 · 같은 조각 융합 면 0 → 1 · SDCP 두 셀 둔 판에서 SV bridging 성분 1 → 0 · 반사실 끊는 SV 면 행 2 → 0 (s_face 0.2277607596902182 · d_face 0.058948822334846995 µm) · 0 µm 선택 자체 · [0, D] 분류 동등 = 수용 · 실제 DBE σ 영향 크기 · 빈도 = 미계산 · 19.9 Ω = 축방향 경로가 살아 있고 이상 원통일 때만 · UNREG Rayleigh 상한 = 같은 그래프 부분 융합 한정.  최소 수정 = 판정문 §8-2 문안 (등록 R §2-1b ⑤′) · 1저자 11-09 Q2 권고대로 (문서만 · s_min 0 그대로 봉인 · 감도 팔 없음 = 범위 선택 · \"입증돼 불필요\" 근거 삭제) · docs/reviews/rint2_rr5_fix_plan_20261109.md §2. ★ 문면 고침 = f29535e9e (문서만 · s_min 0 µm 그대로 · 코드 · 계산 없음) · 독립 재확인 = Codex 다음 짧은 확인.",
+      "claimed_fixed_sha": "f29535e9ed4270bbc9e86dbdf114285d6c48c80d",
+      "evidence_tests": [
+        "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md (§2-1b 11-09 줄 ⑤′ = 판정문 §8-2 최소 문안 · 감도 줄 정정 · 기술 보고 줄 정정)",
+        "docs/reviews/codex_rint2_rr_round5_request_20261109.md (86 · 139 정정 표지)"
+      ]
     }
   ]
 }
