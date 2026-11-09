@@ -1,0 +1,27 @@
+A1 py3.11 real repo kgy-defaults: outer rc=1  [siteq] ---- summary: {"FAIL": 1, "INFO": 8, "PASS": 22, "WARN": 2}  (14.3 s)
+A2 py3.8 shim real repo: outer rc=0  [siteq] ---- summary: {"INFO": 8, "PASS": 23, "WARN": 2}  (13.6 s)
+A3 PIN mismatch: outer rc=2  entries in home after: 0  msg: [siteq] STOP: HEAD 7cdc78111cb8e77c1e38631d1f137f8be4b16c65 differs from PIN 0000000000000000000000000000000000000000 (nothing written)
+A4 folder exists: outer rc=2  home tree unchanged: yes  msg: [siteq] STOP: output folder already exists: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/siteq_prep/container_test/a4_home/rint_siteq_kgy_20261109 (move it away or set RUNTAG; nothing written)
+A5 placeholder PIN: outer rc=2  entries in home after: 0  msg: [siteq] STOP: PIN must be the full 40-character lowercase hex commit (nothing written)
+A6 damaged probe: outer rc=2  result json present: 0  msg: [siteq] STOP: probe text changed in transit (sha256 7b44b08e5ba72b7798c92f06d4b8f6bfaba93b577e10ed69ab03e0dae563a6f1, want a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588); probe not run
+A7 strace write audit: outer rc=1  [siteq] ---- summary: {"FAIL": 1, "INFO": 8, "PASS": 23, "WARN": 1}  (20.3 s)  audit: syscalls scanned 30119, mutating operations under /home/user/Yonghoon-DEM-DFT: 0
+A8 bash -i (history expansion on): outer rc=1  >         print('[siteq] ---- summary: %s  (%.1f s)' % (json.dumps(counts, sort_kkeys=True), time.time() - t0))
+[siteq] ---- summary: {"FAIL": 1, "INFO": 8, "PASS": 23, "WARN": 1}  (13.5 s)
+A9 dash outer shell: outer rc=2  entries in home after: 0  msg: [siteq] STOP: HEAD 7cdc78111cb8e77c1e38631d1f137f8be4b16c65 differs from PIN 0000000000000000000000000000000000000000 (nothing written)
+A10 dirty checkout: outer rc=2  entries in home after: 0  msg: [siteq] STOP: checkout is not clean: tracked edits or untracked files (nothing written)
+A11 no-capability uid 0 + py3.8 + synthetic checkout: outer rc=0  [siteq] ---- summary: {"INFO": 7, "PASS": 25, "WARN": 1}  (13.0 s)
+M1 mutant: outer rc=1  [siteq] ---- summary: {"FAIL": 4, "INFO": 8, "PASS": 20, "WARN": 2}  (13.2 s)  FAIL ids: C09 C10 C11 C12 
+   M1 processes still running with cwd under m_M1_home right after the run: 0
+M2 mutant: outer rc=1  [siteq] ---- summary: {"FAIL": 1, "INFO": 8, "PASS": 23, "WARN": 1}  (42.9 s)  FAIL ids: C16 
+   M2 processes still running with cwd under m_M2_home right after the run: 0
+M3 mutant: outer rc=1  [siteq] ---- summary: {"FAIL": 1, "INFO": 8, "PASS": 23, "WARN": 1}  (10.0 s)  FAIL ids: C13 
+   M3 processes still running with cwd under m_M3_home right after the run: 0
+A12 gabia block py3.8 shim: outer rc=2  
+A7b strace write audit py3.8: outer rc=2    audit: syscalls scanned 31, mutating operations under /home/user/Yonghoon-DEM-DFT: 0
+A13 plan dir on tmpfs: outer rc=2    C26: 
+leftover processes with cwd under the test folder: 0
+(rerun after the main session moved HEAD to abf0911eb; PIN re-read per test)
+A12 gabia block py3.8 shim (pin abf0911ebc994167ac50132c78207c6c8d4421f1): outer rc=0  [siteq] ---- summary: {"INFO": 8, "PASS": 24, "WARN": 1}  (13.3 s)
+A7b strace write audit py3.8 (pin abf0911ebc994167ac50132c78207c6c8d4421f1): outer rc=0  [siteq] ---- summary: {"INFO": 8, "PASS": 24, "WARN": 1}  (22.2 s)  audit: syscalls scanned 30907, mutating operations under /home/user/Yonghoon-DEM-DFT: 0
+A13 plan dir on tmpfs (pin abf0911ebc994167ac50132c78207c6c8d4421f1): outer rc=0  [siteq] ---- summary: {"INFO": 8, "PASS": 23, "WARN": 2}  (13.4 s)  C26: t4, home=ext4, plan_dir=tmpfs; plan dirs on another filesystem than the siteq folder: ['plan_dir:/dev/shm'] -> rerun with SITEQ_BASE on that filesystem; volatile filesystem (contents lost on reboot): ['plan_dir:/dev/shm']
+leftover processes with cwd under the test homes: 0

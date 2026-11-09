@@ -1,0 +1,15 @@
+base = abf0911ebc994167ac50132c78207c6c8d4421f1  X = 0a7f77f807d3334a76ad354ea3f8a5fce7157644 (probe sha a490b9adc3ee)  Z = 380c06f8cef19a2c2ecd202f421012511fd8cd8a (probe one byte changed)
+S1 kgy py3.8 PIN=X: outer rc=0  [siteq] ---- summary: {"INFO": 8, "PASS": 24, "WARN": 1}  (14.6 s)  last: [siteq] rc 0 (0 = no FAIL and no ERROR) - send back /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/siteq_short/t/s1/rint_siteq_kgy_20261109/siteq_result.json and the sha256 line
+   [siteq] WARN C28: GPUs [], cupy [] (R runs use EXPECT_BACKEND=gpu; the chain only records this)
+   wt status after: ''  head 0a7f77f80
+S3 rerun same day: outer rc=2  msg: [siteq] STOP: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/siteq_short/t/s1/dem-siteq-0a7f77f80 already exists (nothing written)  home before==after: yes
+S2 gabia py3.8 PIN=X: outer rc=0  [siteq] ---- summary: {"INFO": 8, "PASS": 24, "WARN": 1}  (13.1 s)  last: [siteq] rc 0 (0 = no FAIL and no ERROR) - send back /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/siteq_short/t/s2/rint_siteq_gabia_20261109/siteq_result.json and the sha256 line
+   [siteq] WARN C28: GPUs [], cupy [] (R runs use EXPECT_BACKEND=gpu; the chain only records this)
+S4 placeholder PIN: outer rc=2  msg: [siteq] STOP: PIN is not a 40-hex commit (nothing written)  home unchanged: yes
+S5 unknown commit: outer rc=2  msg: [siteq] STOP: git worktree add failed  home unchanged: yes
+S6 venv missing: outer rc=2  msg: [siteq] STOP: venv not found: /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/siteq_short/t/s6/dem-venv (nothing written)  home unchanged: yes
+S7 probe changed (Z): outer rc=2  msg: [siteq] STOP: probe sha256 differs (probe not run)  result json: 0  left: Yonghoon-DEM-DFT dem-ca1-89fc4 dem-siteq-380c06f8c dem-venv rint_siteq_kgy_20261109 sdcp 
+S8 py3.11 (not kgy unit): outer rc=1  [siteq] ---- summary: {"FAIL": 1, "INFO": 8, "PASS": 23, "WARN": 1}  (14.1 s)  FAIL ids: C02 
+S9 bash -i (paste-like): outer rc=0  [siteq] ---- summary: {"INFO": 8, "PASS": 24, "WARN": 1}  (13.6 s)
+leftover processes with cwd under /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/d26d1e75-209f-540f-83a8-c0e1957edc2f/scratchpad/siteq_short/t: 0
+main repo HEAD abf0911eb  status lines 0

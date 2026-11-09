@@ -1,0 +1,23 @@
+bash <<'SITEQ'
+set -u
+PIN=@@PIN@@
+MACHINE=@@MACHINE@@ BASE="@@BASE@@" VENV="$HOME/dem-venv" PLAN="@@PLAN@@"
+PROBE_SHA=a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588
+W="$HOME/dem-siteq-$(printf %.9s "$PIN")" OUT="$HOME/rint_siteq_${MACHINE}_$(date -u +%Y%m%d)"
+stop() { echo "[siteq] STOP: $*"; exit 2; }
+printf '%s' "$PIN" | grep -Eqx '[0-9a-f]{40}' || stop "PIN is not a 40-hex commit (nothing written)"
+for p in "$W" "$OUT"; do if [ -e "$p" ]; then stop "$p already exists (nothing written)"; fi; done
+[ -f "$VENV/bin/activate" ] || stop "venv not found: $VENV (nothing written)"
+git -C "$BASE" fetch -q origin claude/sdcp-dem-manuscript-si-pqwtv8 || stop "git fetch in $BASE failed (nothing written)"
+git -C "$BASE" worktree add -q --detach "$W" "$PIN" || stop "git worktree add failed"
+[ "$(git -C "$W" rev-parse HEAD)" = "$PIN" ] || stop "worktree HEAD differs from PIN"
+mkdir "$OUT" && cp "$W/docs/reviews/rint2_siteq_prep_20261109/tools/siteq_probe.py" "$OUT/" || stop "cannot create $OUT"
+echo "$PROBE_SHA  $OUT/siteq_probe.py" | sha256sum -c --quiet || stop "probe sha256 differs (probe not run)"
+set +u; . "$VENV/bin/activate"; set -u
+cd "$OUT" || stop "cannot enter $OUT"
+python3 -I -B -u siteq_probe.py --repo "$W" --pin "$PIN" --machine "$MACHINE" --out "$OUT" --expect-py 3.8 --expect-numpy 1.24.4 --expect-scipy 1.10.1 --plan-dirs "$PLAN" < /dev/null 2>&1 | tee siteq.log
+RC=${PIPESTATUS[0]}
+if [ -f siteq_result.json ]; then sha256sum siteq_result.json | tee siteq_result.json.sha256; fi
+echo "[siteq] rc $RC (0 = no FAIL and no ERROR) - send back $OUT/siteq_result.json and the sha256 line"
+exit "$RC"
+SITEQ
