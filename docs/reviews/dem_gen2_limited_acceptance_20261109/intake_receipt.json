@@ -1,0 +1,353 @@
+{
+  "schema": "dem_gen2_four_fixes_limited_acceptance_receipt/1",
+  "reviewed_candidate_pin": "6adf932499cd9a7e21685e249700bde81be44c9f",
+  "candidate_parent_pin": "08fb8b178eae3010aa6658b571c83a0bc8eef12d",
+  "original_preparation_pin": "9241933b983605e3210753369a7cae5d6fc43432",
+  "receipt_branch_base_b": "69d714d094c4d210e5bf931d5c520e64ca0a751d",
+  "artifact_roles": {
+    "incoming_independent_review_zip": {
+      "member": "codex_dem_gen2_four_fixes_6adf932499cd_independent_20261109.zip",
+      "bytes": 3595173,
+      "sha256": "ab75d708fe8afebc9205944954a783d1541e08852060147d5c26540ed9b278fa"
+    },
+    "original_request_zip_reviewed_by_independent_window": {
+      "member": "codex_dem_gen2_four_fixes_6adf932499cd_review_20261109.zip",
+      "bytes": 1718490,
+      "sha256": "7504b3d997669a24e49c35b8840d49bd346c72b06a7f35c58d0fdaba5c7b3b0a"
+    },
+    "prior_independent_zip_preserved_inside_request": {
+      "member": "codex_dem_gen2_preparation_9241933b9836_independent_20261109.zip",
+      "bytes": 1567229,
+      "sha256": "30eac8f7872502910a5db443b75c8f307104efb09dfd65278b915e917daa18a8"
+    },
+    "rule": "The request SHA7504 is not the SHAab75 of the newly received independent review ZIP"
+  },
+  "key_review_members": [
+    {
+      "member": "codex_review_dem_gen2_four_fixes_20261109.md",
+      "bytes": 17024,
+      "sha256": "658ff4000ac9977be486a666d41582ae8b08c925beb81957600d266173cc115c"
+    },
+    {
+      "member": "verdict.json",
+      "bytes": 977,
+      "sha256": "906c6861d6ff152c61dd0d2a6b2a3e4d53c43c67f11135f44f83a5f094be9359"
+    },
+    {
+      "member": "package_verification.json",
+      "bytes": 244,
+      "sha256": "224639ee59478bba5c08bb5a2d3f053b22a5d27db259321a36d9e4fa8930bd97"
+    },
+    {
+      "member": "preservation_audit.json",
+      "bytes": 14471,
+      "sha256": "37ea84a88fb611a802496da44db5ae46ce855ffbbe76cbe1e1c317de2a42cd82"
+    },
+    {
+      "member": "remote_git_evidence.json",
+      "bytes": 10619,
+      "sha256": "f60235027ee7cc5f51899a447786bb8b61638c9e1a798239cbe90c276af12536"
+    },
+    {
+      "member": "regression/receipts.json",
+      "bytes": 2564,
+      "sha256": "2e9442560878b5dd177c2e90c42c6423d086837da709baf934a715e05008723f"
+    },
+    {
+      "member": "independent_verified/summary.json",
+      "bytes": 918,
+      "sha256": "91bdc71e370dba9dcab6dc9901652bec2185f6f99a36c12b750ff938609a05f6"
+    },
+    {
+      "member": "independent_verified/force.json",
+      "bytes": 5768,
+      "sha256": "30518528660af64288d317d8a452d26bb508ef89ee6bb81ae360353398d82a50"
+    },
+    {
+      "member": "independent_verified/delay.json",
+      "bytes": 19962,
+      "sha256": "716b4f7dced0f2f2e1df31a0d89c891cd1efc04ed92883756dc0cf07065c8d64"
+    },
+    {
+      "member": "independent_verified/circle.json",
+      "bytes": 10403,
+      "sha256": "1f4adbb7da93c1fbf7ca2d8c473912fa6ba37e88705461e7cce1b40caf57c57a"
+    },
+    {
+      "member": "independent_verified/inventory.json",
+      "bytes": 124074,
+      "sha256": "51d924f0532ef093f0ff63b306a79f7f73d896bad9278e9b57962e93d7b2d6bd"
+    },
+    {
+      "member": "mutation_sensitivity/results.json",
+      "bytes": 2199,
+      "sha256": "44add7c74d99546b241c2ad155f928bde04757c2c908b3118ec1249e3abb9dc6"
+    },
+    {
+      "member": "probe_harness_first_attempt.md",
+      "bytes": 1570,
+      "sha256": "df6f0376e63f059d9145bc401ae5a9cf368c0be12b7ed5f0734afc6edd06d2c6"
+    }
+  ],
+  "byte_only_intake_validation": {
+    "status": "PASS",
+    "method": "Archive bytes and member sets; CRC; complete SHA256SUMS scopes; SHA256 and Git blob identities; no attached code execution",
+    "archive_occurrences_checked": 6,
+    "unique_archives": [
+      {
+        "filename": "original_input.zip",
+        "bytes": 246422,
+        "sha256": "7c2dec3bb75543570a63bcac4e5d8f5d4cd9e932ca6033adf817021f7d0dd502",
+        "files": 105,
+        "occurrences_audited": 2,
+        "crc": "PASS",
+        "path_duplicate_link_encryption_safety": "PASS"
+      },
+      {
+        "filename": "codex_dem_gen2_preparation_9241933b9836_independent_20261109.zip",
+        "bytes": 1567229,
+        "sha256": "30eac8f7872502910a5db443b75c8f307104efb09dfd65278b915e917daa18a8",
+        "files": 190,
+        "occurrences_audited": 2,
+        "crc": "PASS",
+        "path_duplicate_link_encryption_safety": "PASS"
+      },
+      {
+        "filename": "original_input.zip",
+        "bytes": 1718490,
+        "sha256": "7504b3d997669a24e49c35b8840d49bd346c72b06a7f35c58d0fdaba5c7b3b0a",
+        "files": 105,
+        "occurrences_audited": 1,
+        "crc": "PASS",
+        "path_duplicate_link_encryption_safety": "PASS"
+      },
+      {
+        "filename": "codex_dem_gen2_four_fixes_6adf932499cd_independent_20261109.zip",
+        "bytes": 3595173,
+        "sha256": "ab75d708fe8afebc9205944954a783d1541e08852060147d5c26540ed9b278fa",
+        "files": 253,
+        "occurrences_audited": 1,
+        "crc": "PASS",
+        "path_duplicate_link_encryption_safety": "PASS"
+      }
+    ],
+    "sha256sum_manifest_occurrences_checked": 9,
+    "sha256sum_coverage": [
+      {
+        "scope": "incoming/SHA256SUMS",
+        "entries": 252,
+        "occurrences": 1,
+        "full_scope_coverage": true,
+        "all_hashes_match": true
+      },
+      {
+        "scope": "incoming/package/SHA256SUMS",
+        "entries": 104,
+        "occurrences": 1,
+        "full_scope_coverage": true,
+        "all_hashes_match": true
+      },
+      {
+        "scope": "incoming/original_input.zip/SHA256SUMS",
+        "entries": 104,
+        "occurrences": 1,
+        "full_scope_coverage": true,
+        "all_hashes_match": true
+      },
+      {
+        "scope": "preserved prior independent ZIP/SHA256SUMS",
+        "entries": 189,
+        "occurrences": 2,
+        "full_scope_coverage": true,
+        "all_hashes_match": true
+      },
+      {
+        "scope": "preserved prior independent ZIP/package/SHA256SUMS",
+        "entries": 104,
+        "occurrences": 2,
+        "full_scope_coverage": true,
+        "all_hashes_match": true
+      },
+      {
+        "scope": "prior independent ZIP/original_input.zip/SHA256SUMS",
+        "entries": 104,
+        "occurrences": 2,
+        "full_scope_coverage": true,
+        "all_hashes_match": true
+      }
+    ],
+    "original_request_zip_byte_equality": true,
+    "expanded_request_package_members_equal": 105,
+    "preserved_prior_independent_zip_byte_equality": true,
+    "prior_nested_request_and_expanded_package_members_equal": 105,
+    "fixed_snapshot_files_bytes_sha_and_git_blob_verified": 27,
+    "fixed_pin_counts": {
+      "6adf932499cd9a7e21685e249700bde81be44c9f": 10,
+      "9241933b983605e3210753369a7cae5d6fc43432": 14,
+      "e48e5fa0498ab7ee8fd84163d9af024d07cbb135": 3
+    },
+    "current_candidate_parent_locally_verified": true,
+    "original_preparation_to_parent_copy_equal_blobs": 14,
+    "previous_fixed_source_and_policy_files_preserved": 17,
+    "raw_evidence_manifest_entries_verified": 70,
+    "diff_and_received_archive_manifest_entries_verified": 2,
+    "pasted_report_matches_zip_report_exact_bytes": true,
+    "independent_summary_source_hashes_match_packaged_before_after_sources": true,
+    "new_remote_queries_performed_by_intake_agent": false,
+    "verification_scope_note": "Local Git object metadata and fixed archive bytes were checked; reported remote evidence was read as review metadata, not freshly queried"
+  },
+  "received_independent_disposition": {
+    "source": "verdict.json and codex_review_dem_gen2_four_fixes_20261109.md in the identified incoming ZIP",
+    "findings": [
+      {
+        "id": "G2PREP-01",
+        "disposition": "CLOSABLE_SCOPED_OFFLINE",
+        "original_priority": "P2"
+      },
+      {
+        "id": "G2PREP-02",
+        "disposition": "CLOSABLE_SCOPED_OFFLINE",
+        "original_priority": "P2"
+      },
+      {
+        "id": "G2PREP-03",
+        "disposition": "CLOSABLE_SCOPED_OFFLINE",
+        "original_priority": "P3"
+      },
+      {
+        "id": "G2PREP-04",
+        "disposition": "CLOSABLE_SCOPED_OFFLINE",
+        "original_priority": "P3"
+      }
+    ],
+    "new_findings": {
+      "P1": 0,
+      "P2": 0,
+      "P3": 0
+    },
+    "scope": "Four offline corrective implementations only; generated strings, synthetic control, and geometry arithmetic",
+    "previous_document_null_and_inactive_boundaries_acceptance_preserved": true,
+    "additional_mandatory_fix_or_same_scope_recheck_requested": false,
+    "receipt_agent_issued_new_independent_verdict": false,
+    "shared_ledger_application": "NOT_APPLIED; Claude owns the proposed claimed_fixed and limited acceptance note"
+  },
+  "independent_runs_reported_not_rerun_at_intake": {
+    "environment": {
+      "platform": "win32",
+      "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+    },
+    "final_probe_evidence_directory": "independent_verified/",
+    "regression_runs": [
+      {
+        "label": "before",
+        "rc": 1,
+        "suites": [
+          {
+            "name": "test_make_dem_gen2_decks.py",
+            "tests": 18,
+            "failures": 11,
+            "errors": 0,
+            "skipped": 0,
+            "passed": false
+          },
+          {
+            "name": "test_dem_gen2_qualification.py",
+            "tests": 22,
+            "failures": 21,
+            "errors": 0,
+            "skipped": 0,
+            "passed": false
+          }
+        ]
+      },
+      {
+        "label": "after",
+        "rc": 0,
+        "suites": [
+          {
+            "name": "test_make_dem_gen2_decks.py",
+            "tests": 18,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "passed": true
+          },
+          {
+            "name": "test_dem_gen2_qualification.py",
+            "tests": 22,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0,
+            "passed": true
+          }
+        ]
+      }
+    ],
+    "probe_units": {
+      "force_table_rows": 16,
+      "delay_scenarios": 21,
+      "circle_scenarios": 26,
+      "inventory_scenarios": 303
+    },
+    "mutation_sensitivity_cases": 7,
+    "all_seven_mutations_reported_detected": true,
+    "generated_matches": [
+      {
+        "materials": 1,
+        "matched_files": 16
+      },
+      {
+        "materials": 2,
+        "matched_files": 16
+      },
+      {
+        "materials": 3,
+        "matched_files": 16
+      }
+    ],
+    "counting_rule": "Scenario units, variants, generated files, repeats and subtest failures are not added to regression method counts or prior observations",
+    "remote_metadata_reported": {
+      "current_or_baseline_blob_checks": 24,
+      "policy_files_compared_with_prior_evidence_not_new_remote_queries": 3
+    },
+    "first_attempt_and_formatting_note": "Initial reviewer environment recording was stopped by its socket audit hook during hostname lookup; no actual network connection was claimed. The environment field and later oracle display were corrected in review tooling. Final evidence is independent_verified; target source bytes were unchanged.",
+    "attached_programs_executed_by_intake_agent": false,
+    "project_modules_imported_by_intake_agent": false,
+    "substantive_findings_or_tests_reproduced_by_intake_agent": false
+  },
+  "remaining_boundaries": {
+    "G2PREP_01": "Generated finite synthetic force samples only; actual T0 polarity and engine syntax qualification remain unknown",
+    "G2PREP_02": "Declared synthetic budget only; not infinite-time or physical-bed stability certification",
+    "G2PREP_03": "Geometric intersection disk only; not physical force-law/electrical area, tolerance choice or contact-model validation",
+    "G2PREP_04": "Same retained input geometry only; cannot restore precision already lost before input or qualify STL/PBC/continuous trajectories",
+    "actual_T0_compression_sign": null,
+    "T0": "NOT_RUN",
+    "T5": "NOT_RUN",
+    "T11": "NOT_RUN",
+    "T12": "NOT_RUN",
+    "not_run_meaning": "Completed registered qualification is absent; not a claim that no unit tests were run",
+    "live_observer_and_boundary_adapter_qualified": false,
+    "P2_ULPR_serialization_qualified": false,
+    "physical_ready": false,
+    "execution_go": false,
+    "integration_or_deployment_authorized": false,
+    "physical_or_other_track_findings_closed_by_this_receipt": false
+  },
+  "storage_boundary": {
+    "external_location_strings_present_in_original_review_artifacts": true,
+    "matched_archive_member_pairs": 28,
+    "original_review_zip_preserved_outside_repository": true,
+    "raw_review_metadata_and_logs_imported_into_repository": false,
+    "repository_content": "Artifact identities and scoped summary only"
+  },
+  "original_artifacts_modified": false,
+  "research_values_read": false,
+  "actual_engine_calls": 0,
+  "actual_scheduler_calls": 0,
+  "actual_mpi_calls": 0,
+  "operational_reseal": false,
+  "shared_ledger_modified": false,
+  "research_results": 0,
+  "execution_authorized": false,
+  "whole_gate": "HOLD"
+}
