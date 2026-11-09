@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-09 · managed-files: 592
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-09 · managed-files: 593
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 383건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 384건)
 - 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
 - 2026-11-09 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
@@ -15,6 +15,7 @@
 - 2026-11-09 · `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
 - 2026-11-09 · `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건) · 발송 2026-11-09 (사용자) · 회신 대기 · 기준 커밋 83…
 - 2026-11-09 · `kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` — DW 회신 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1 해제조건 확인: NO-GO · DV 묶음 1–3 닫힘 · 묶음 4 (판독기) 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서) · P2 비유한 기하 · P3 관측창 근사 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
+- 2026-11-09 · `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건) · 발송 전 (사용자가 보낸다) · 기준 커밋 93937466 (브랜치 …
 - 2026-11-09 · `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안) · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-11-08 · `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계) · 진행
 - 2026-11-06 · `kb/reviews/codex_DR_prompt_li2s2_dq_fixes_2026_11_05.md` — DR 프롬프트 — li2s-2 DQ 고침 + DR 전 독립 리뷰 고침 (879cbc00): 판정이 읽는 것 전부를 지문에 · 앞 판정의 성격 (예외 · 입력 불일치) 으로만 자동 대체 · 정본 없는 미해결 기록 (현재 · 옮긴 폴더) · STOP 공통 검사 · 다른 판정 규칙의 기록 — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…
@@ -26,7 +27,6 @@
 - 2026-11-05 · `kb/reviews/codex_DP_prompt_li2s2_do_fixes_2026_11_04.md` — DP 프롬프트 — li2s-2 DO 고침 + DP 발송 전 독립 리뷰 둘 고침 (4a269bac): 복구 · 확인 · 재판정에서 본 과학적 결과를 장부에 · 모든 기록 엄격 판독 · 못 읽은 장부를 다시 쓰지 않음 · 남은 임시 파일 · 요약 fail-closed · 신호 — 첫 담금질 GO 여부 · answered — 회신 codex_DP_reply_li2s2_do_…
 - 2026-11-05 · `kb/reviews/codex_DP_reply_li2s2_do_fixes_2026_11_04.md` — DP 회신 — li2s-2 DO 고침 + DP 전 리뷰 고침 확인 (4a269bac): NO-GO · P0 1 (저장 성공 뒤 미룬 신호로 관측한 fail 을 되돌려 지움) · P1 2 (현재 시드 폴더의 미해결 기록 · 판정 임시 파일로 다음 시드 실행 / 러너가 거부하는 장부 상태를 독립 요약은 통과) · P2 2 (terminal STOP 이 신호로 interrupted 로 덮임 · 변이 제외 설명이 넓음) · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-05 · `kb/reviews/codex_DQ_prompt_li2s2_dp_fixes_2026_11_05.md` — DQ 프롬프트 — li2s-2 DP 고침 + DQ 전 독립 리뷰 고침 (a4a29216): 저장 경계의 신호 (바깥 구간 · 교체 뒤 실패) · 현재 폴더 미해결 기록 · 독립 요약 = 러너와 같은 규칙 (같은 실행 충돌 공통 함수 · STOP · 장부 지문 · 이력 꼴) · 판정 쓰기 구간 · 낡은 요약 — 첫 담금질 GO 여부 · 발송 완료 2026-11-05 · 회신 수령 2026-11-05 NO…
-- 2026-11-05 · `kb/reviews/codex_DQ_reply_li2s2_dp_fixes_2026_11_05.md` — DQ 회신 — li2s-2 DP 고침 + DQ 전 리뷰 6 차 확인 (a4a29216): NO-GO · P1 2 (판정이 읽는 md_init_raw.xyz 가 지문 밖이라 입력 복구를 '같은 입력의 일시 오류' 로 자동 대체 / 첫 정본 판정 저장 실패로 이력 · 임시 파일만 남은 폴더를 놓치고 다른 시드 실행) · P2 1 (모순된 STOP 을 요약 · 러너가 다르게 읽음) · 수령 2026-11-05 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (256)
+## reviews/ (257)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-09 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -379,6 +379,7 @@
 - `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
 - `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) · 회신 대기 · 기준 커밋 83…)
 - `kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` — DW 회신 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1 해제조건 확인: NO-GO · DV 묶음 1–3 닫힘 · 묶음 4 (판독기) 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서) · P2 비유한 기하 · P3 관측창 근사  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
+- `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 전 (사용자가 보낸다) · 기준 커밋 93937466 (브랜치 …)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
