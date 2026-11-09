@@ -1,0 +1,145 @@
+{
+ "slug": "cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-09",
+ "sources": [
+  "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. (a) Experimental setup. A bidimensional bidisperse granular system, composed of soft and rigid particles, lies on the top glass of a flatbed scanner. A uniaxial compression device stresses it stepwisely while it is imaged from below by the scanner. (b) Composite view of measured fields. Rigid particles are colored in blue. Raw image, in gray, is shown on the left; particle boundaries are in red. Von Mises strain field 𝒞 is shown on the right with a color scale going from dark red (low value) to yellow (high value). Contacts are shown in white. (c) Evolution of the measured global force f as a function of the global strain ε for different softness ratios κ.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.0,
+    70.5,
+    294.5,
+    229.0
+   ],
+   "w": 1033,
+   "h": 662,
+   "dpi": 300,
+   "src": "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.597,
+   "src_native": [
+    1015,
+    640
+   ],
+   "manual_crop": "clip = embedded raster rect padded ~2 pt (native 1015×640 px); caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "2D 피스톤 (270 × 202 mm²) 이 실리콘 (E0 0.45 MPa) + PVC (1.2 GPa) 이분산 원기둥 ~100 개를 일축으로 누르고 평판 스캐너 (10.6 µm/px) + 대변형 DIC 로 입자 내부 변형장과 접촉을 동시에 잰다 — 재설계 모델의 '입자 내부 변형 분포 · 접촉' 출력과 맞댈 수 있는 드문 실측 형식.  (c) 에서 κ = 0.2 는 작은 변형에서 힘이 가파르게 오르고 톱니 (급격한 재배열) 가 보인다: 강체 골격이 하중을 받는 체제로, AM 을 얼린 지금 MPM 은 이 재배열 톱니를 원리적으로 못 낸다 (강체가 움직이는 A · B · C · D0 필요).  일축이라 우리 다이 압축과 하중 축은 같지만 2D · kPa 대 · 초탄성이다."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "FIG. 2. (a) Evolution of the coordination Z relative to the coordination at jamming ZJ as a function of the distance to the jamming transition for the packing fraction φ − φJ. The dashed line corresponds to a power law with an exponent 0.5. (b) Evolution of the global stress applied to the system P as a function of φ − φJ. Plane line curves correspond to Eq. (1). In both panels, the different curves correspond to different softness ratios κ given in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.0,
+    70.0,
+    278.0,
+    308.0
+   ],
+   "w": 893,
+   "h": 993,
+   "dpi": 300,
+   "src": "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.87,
+   "src_native": [
+    875,
+    973
+   ],
+   "manual_crop": "clip = embedded raster rect padded ~2 pt (native 875×973 px); caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실험에서도 Z − ZJ 가 (φ − φJ)^0.5 로 κ 무관하게 접힌다 (k = 4.9 — 같은 그룹 시뮬 2020 의 ξ = 5.1 과 근접): 시뮬과 실험이 독립으로 같은 구조 법칙을 낸 frame[4] 형 교차검증 사례.  (b) 일축판 식 (1) 이 κ 0.2–1 의 φ − φJ (P) 를 따른다.  재설계 모델도 이 실험처럼 jamming 이하 느슨한 패킹에서 시작해 φJ 를 출력으로 얻어야 같은 축 비교가 된다 (Γ · φJ · Z0 값은 SM 에만 있어 [미확인]).  ※ (a) y 축 맨 아래 눈금이 '0.8' 로 인쇄 (0.0 의 오기로 보임)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "FIG. 3. (a) Linear evolution of the soft particle average asphericity ⟨a⟩ as a function of the global stress applied to the system P. Their slope is given in the inset as a function of the softness ratio κ. (b) Linear evolution of the average value of the relative contact length ⟨l⟩ as a function of the distance to the jamming transition for the packing fraction φ − φJ. In both panels, the different curves correspond to different κ, given in the legend in (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    327.0,
+    70.0,
+    541.0,
+    349.0
+   ],
+   "w": 893,
+   "h": 1164,
+   "dpi": 300,
+   "src": "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.798,
+   "src_native": [
+    875,
+    1142
+   ],
+   "manual_crop": "clip = embedded raster rect padded ~2 pt (native 875×1142 px); caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(b) 상대 접촉 길이 ⟨l⟩ 이 φ − φJ 에 선형이고 기울기가 κ 와 무관 — 우리 '피복 (coverage)' 과 같은 계열의 2D 관측량이 밀도 하나로 접힌다는 실측이다.  재설계 MPM 의 소성 피복 (DEM 골격 위 부분 독립량) 이 기공률에 대해 같은 선형 · 조성 무관성을 보이는지 시험할 수 있다.  (a) 무른 입자 평균 비구형도 ⟨a⟩ 가 P 에 선형 (기울기 ∝ κ, 삽도 ≈ 1.8 → 5.2 × 10⁻⁷, 판독) — SE 형상 출력으로 압력을 거꾸로 읽는 검증축 후보."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "FIG. 4. (a) and (b) Evolution of the global stress P and of the relative packing fraction φ − φJ as a function of the average value of the von Mises strain ⟨𝒞⟩ in soft particles for different κ values, given in the legend in (b) (for the three panels). In (a) and (b), straight black dashed lines show slopes of 2.2 kPa and 5.4, respectively, as a guide for the eyes. The vertical dashed line and the shaded area show the crossover strain 𝒞c = 0.991 ± 1.2 × 10^−3 and its error bar, respectively. It splits the space horizontally between small and large deformation levels. (c) Evolution of the standard deviation of the von Mises strain in soft particles as a function of the relative packing fraction φ − φJ. The straight dashed line with a slope of 4.0 × 10^−4 is a fit of the curves collapsed in their linear regime. These curves leave their linear regime at certain cutoff whose approximated values are given in the inset as a function of the softness ratio κ.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    70.5,
+    275.0,
+    440.0
+   ],
+   "w": 867,
+   "h": 1541,
+   "dpi": 300,
+   "src": "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.856,
+   "src_native": [
+    850,
+    1520
+   ],
+   "manual_crop": "clip = embedded raster rect padded ~2 pt (native 850×1520 px); caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "무른 입자 평균 von Mises 변형 ⟨𝒞⟩ 가 작은 변형에서는 밀도에, 큰 변형에서는 압력에 선형 — '이산 입자계 → 연속체 같은 계' 전이가 C_c = 0.991 ± 1.2 × 10⁻³ 에서 κ 무관하게 일어난다.  우리 MPM 은 출발부터 연속체라 이 전이의 앞쪽 (이산 구간) 을 못 담는다 → 느슨한 패킹에서 시작하는 재설계 (A′ · B) 가 전이점을 재현하는지가 시험 항목.  (c) 변형 분포 폭 σ_C 의 선형 구간이 κ 가 작을수록 일찍 끝난다 (cut-off ≈ 0.002 → 0.072, 판독) = 강체가 많으면 무른 입자에 변형이 몰린다 — SE 국부 응력 · 소성 변형 집중 (MPM 응력장 출력) 과 대조할 관측량.  ※ σ_C 축에 음수가 그려져 있다 (기준 이동으로 보이나 설명 없음)."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_uniaxial_compaction_law.png",
+   "caption": "Equation (1), p.2: P ≃ (E*/4Γ)(1 + μM)((φmax − φJ)/φJ)[Z0 + k(φ − φJ)^0.5]φ × ln((φmax − φ0)/(φmax − φ)), with E* = E0/[2κ(1 − ν²)] — uniaxial extension of the micromechanical compaction law.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    541.0,
+    558.0,
+    606.0
+   ],
+   "w": 1032,
+   "h": 271,
+   "dpi": 300,
+   "src": "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.958,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; viewed (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "일축 압밀 법칙: 2020 판의 단일 입자 상수 b 자리에 E*/(4Γ) · (1 + μM) · (φmax − φJ)/φJ 가 들어간다 (E* = E0/[2κ(1 − ν²)]).  식 안은 Z0 · φ0 인데 본문은 ZJ · φJ 로 정의 — 표기 혼용, Γ 값은 SM 에만 ([미확인]).  등방 단위 시험에서 일축 침대로 옮길 때 어떤 인자가 끼는지의 견본."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "all printed figures (Fig. 1, Fig. 2, Fig. 3, Fig. 4) cropped by hand at 300 dpi with PyMuPDF (no automatic extractor run — staged crops for the canonical drawer); key equations added as kind=equation because the PDF text layer garbles them; every PNG opened and checked; border-ink check 0 for all (2026-11-09, litdb-curator)"
+}

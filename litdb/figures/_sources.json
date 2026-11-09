@@ -141,6 +141,20 @@
    "11._Sup_Investigation_of_delamination-induced_performance_decay_at_the_cathodeLLZO_interface.pdf"
   ]
  },
+ "bardenhagen2000_mpm_granular_multibody_frictional_contact": {
+  "figures": 13,
+  "generated": "2026-11-09",
+  "pdfs": [
+   "666fc549-6._The_material-point_method_for_granular_materials.pdf"
+  ]
+ },
+ "bardenhagen2001_mpm_improved_contact_granular_stress_waves": {
+  "figures": 16,
+  "generated": "2026-11-09",
+  "pdfs": [
+   "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf"
+  ]
+ },
  "basu2026_multifidelity_bandit_dopant_screening_funnel": {
   "figures": 31,
   "generated": "2026-09-09",
@@ -253,6 +267,27 @@
   "pdfs": [
    "Cao 2026 - Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533).pdf",
    "Cao 2026 - Sup) Dual-binder 18 um sulfide electrolyte film (Adv Mater e74533) SI.pdf"
+  ]
+ },
+ "cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd": {
+  "figures": 21,
+  "generated": "2026-11-09",
+  "pdfs": [
+   "82450892-1._Compaction_of_mixtures_of_rigid_and_highly_deformable_particles_A_micromechanical_model.pdf"
+  ]
+ },
+ "cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings": {
+  "figures": 7,
+  "generated": "2026-11-09",
+  "pdfs": [
+   "d42d682a-3._A_micro-mechanical_compaction_model_for_granular_mix_of_soft_and_rigid_particles.pdf"
+  ]
+ },
+ "cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic": {
+  "figures": 5,
+  "generated": "2026-11-09",
+  "pdfs": [
+   "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf"
   ]
  },
  "carrete2023_deep_ensembles_vs_committees": {
@@ -2081,11 +2116,25 @@
    "9._Sup_Effect_of_the_3D_structure_and_grain_boundaries_on_lithium_transport_in_garnet_solid_electrolytes.pdf"
   ]
  },
+ "nezamabadi2022_mpm_cd_plastic_particle_compaction": {
+  "figures": 11,
+  "generated": "2026-11-09",
+  "pdfs": [
+   "5f9aa0aa-4._Modelling_the_compaction_of_plastic_particle_packings.pdf"
+  ]
+ },
  "ngandjong2021_dem_calendering_digital_twin": {
   "figures": 10,
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/15. Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model Towards a digital twin of Li-Ion battery manufacturing.pdf"
+  ]
+ },
+ "nguyen2017_mpm_bpm_deformable_particle_compaction": {
+  "figures": 6,
+  "generated": "2026-11-09",
+  "pdfs": [
+   "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf"
   ]
  },
  "nguyen2020_electrode_tortuosity_factor": {

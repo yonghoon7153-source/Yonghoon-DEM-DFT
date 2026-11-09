@@ -1,0 +1,157 @@
+{
+ "slug": "nguyen2017_mpm_bpm_deformable_particle_compaction",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-09",
+ "sources": [
+  "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Vertical stress as a function of cumulative axial strain for a single particle subjected to diametrical compression by means of BPM and MPM simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.0,
+    249.7,
+    547.3,
+    409.6
+   ],
+   "w": 1002,
+   "h": 667,
+   "dpi": 300,
+   "src": "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf",
+   "blank": 0.928,
+   "src_native": null,
+   "manual_crop": "vector figure (no embedded raster): clip = caption-free region of p.2 (right column, below the Δr/R line) → tight box of rendered ink + 4 pt pad; caption excluded; checked visually (2026-11-09, litdb-curator stage B)",
+   "viewed": true,
+   "mpm_note_ko": "MPM (탄성 E 10 MPa · ν 0.45) 은 작은 변형에서 2D Hertz 직선 (F = (π/4)E/(1−ν²)Rε, 그림 점선 기울기 4.92 MPa) 을 따르다 ε > 0.05 에서 벗어나고 ε > 0.15 에서 더 낮은 기울기로 간다; BPM (강체 1차입자 1750 개 응집체) 은 ε ≈ 2 % 뒤 σ ≈ 0.54 MPa (digitized, 문턱 정의 F0/⟨a0⟩ = 0.5 MPa) 의 평탄 소성이고 ε 0.1 · 0.3 에서 제하하면 회복 변형 ≈ 0.008–0.009 뿐 (digitized). 점접촉 법칙이 대변형에서 깨지는 범위를 보여 후보 C (MDR) 의 단일입자 대조 대상이고, 재설계 MPM 은 이런 단일입자 하중–제하 시험부터 검증해야 한다 (MPM 쪽 제하는 이 그림에 없다)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Vertical stress σ normalized by the consolidation stress as a function of cumulative vertical strain ε′ from the reference state σ0 for frictionless and frictional particle packings by BPM and MPM simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.5,
+    86.7,
+    268.4,
+    231.5
+   ],
+   "w": 846,
+   "h": 604,
+   "dpi": 300,
+   "src": "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf",
+   "blank": 0.931,
+   "src_native": null,
+   "manual_crop": "vector figure (no embedded raster): clip = caption-free region of p.3 (left column, below the running head) → tight box of rendered ink + 4 pt pad; caption excluded; legend kept as printed (⚠ legend contradicts Fig. 3, see card §5.2); checked visually (2026-11-09, litdb-curator stage B)",
+   "viewed": true,
+   "mpm_note_ko": "한 계열은 거의 직선 (ε′ 0.28 에서 ≈ 3.6–3.8 σ0), 다른 계열은 ε′ ≈ 0.25 에서 15–17 σ0 로 발산 (digitized). ⚠ 인쇄된 범례 (빨간 원 = MPM) 가 Fig 3 범례 (빨간 원 = BPM) 와 반대이고, 마찰 효과가 보이는 쪽 · Fig 3 문단의 기전 문장 · 2022 후속 논문의 탄성 MPM 발산 곡선은 모두 '발산 = MPM 탄성, 직선 = BPM 소성' 을 가리킨다 → 방법 귀속은 추정으로만 인용. 탄성 입자는 마지막 작은 공극을 채우려 응력이 폭증하고 소성 입자는 완만하다는 대비가 재설계 MPM 이 Φ → 1 근처에서 점검할 두 극한이다."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Mean coordination number Z (a) and packing fraction Φ (b) as a function of cumulative vertical strain ε for frictionless and frictional particle packings by BPM and MPM simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    87.0,
+    540.9,
+    387.0
+   ],
+   "w": 967,
+   "h": 1251,
+   "dpi": 300,
+   "src": "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf",
+   "blank": 0.931,
+   "src_native": null,
+   "manual_crop": "vector figure (no embedded raster): clip = caption-free region of p.3 (right column, both panels with their (a)/(b) labels) → tight box of rendered ink + 4 pt pad; caption excluded; checked visually (2026-11-09, litdb-curator stage B)",
+   "viewed": true,
+   "mpm_note_ko": "재밍 ε ≈ 0.08 (Z ≈ 3, Φ ≈ 0.75), Φ = 0.8 은 ε ≈ 0.157, 최종 Z ≈ 5.2–5.5 (digitized). MPM 은 마찰 없을 때 Z 가 0.2–0.3 높고 BPM 은 마찰 무관 (1차입자가 자유 회전해 마찰이 동원되지 않음); Φ(ε) 는 입자 부피 보존에서 오는 운동학적 곡선이라 방법 비교로는 약하다. 우리 단일 속도장 MPM 에는 Z 자체가 없으므로, A′ 에서 μ 를 바꿔 Z 를 보는 것이 접촉 처리의 첫 판별 시험이 된다."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Average coordination number Z as a function of packing fraction Φ. The line is a power-law fit (Φ − Φ0)^0.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    462.8,
+    297.0,
+    646.2
+   ],
+   "w": 997,
+   "h": 765,
+   "dpi": 300,
+   "src": "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf",
+   "blank": 0.919,
+   "src_native": null,
+   "manual_crop": "vector figure (no embedded raster): clip = caption-free region of p.4 (left column, below the Fig. 4 paragraph) → tight box of rendered ink + 4 pt pad (left edge clamped 0.8 pt before the y-axis label — label complete); caption excluded; checked visually (2026-11-09, litdb-curator stage B)",
+   "viewed": true,
+   "mpm_note_ko": "정규화 초과 배위수가 두 방법 · 마찰 유무에 걸쳐 대체로 (Φ−Φ0)^0.5 곡선에 모인다 (거품 · 에멀전과 같은 지수) — 다만 digitized 로는 마찰 있는 계열이 맞춤선보다 평균 0.06–0.08 아래. 재설계 MPM (A′) 과 DEM 이 같은 Z(Φ) 지수를 내는지가 교차검증 관측량이 되고, 우리 단일 속도장 MPM 은 이 관측량을 낼 수 없다."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_bpm_attraction.png",
+   "caption": "Equation (1), p.2: BPM long-range attraction between primary particles Fa = −F0 (1 + δ/a0)^−γ, a0 = a1 + a2 (curator description; equations have no caption).",
+   "rotated_deg": 0,
+   "bbox": [
+    125.9,
+    318.5,
+    290.3,
+    349.0
+   ],
+   "w": 686,
+   "h": 128,
+   "dpi": 300,
+   "src": "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf",
+   "blank": 0.961,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand (+3 pt pad, left column); checked visually (2026-11-09, litdb-curator stage B)",
+   "viewed": true,
+   "mpm_note_ko": "BPM 의 소성 문턱은 재료 σ_y 가 아니라 F0/⟨a0⟩ 로 정해지는 수치 매개변수다 — SE 에 쓰려면 σ_y 대신 F0 를 보정해야 하고, 입자당 1차입자 ≥ 200 개라 비용이 크다 (우리 SE 32,832 개면 ≥ 6.6 × 10⁶ 1차입자, derived)."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_hertz_disk.png",
+   "caption": "Equation (2), p.2: Hertz estimate for a disk under diametral compression F = (π/4) E/(1 − ν²) R ε (curator description).",
+   "rotated_deg": 0,
+   "bbox": [
+    385.9,
+    562.0,
+    541.4,
+    588.7
+   ],
+   "w": 649,
+   "h": 112,
+   "dpi": 300,
+   "src": "6c4da2a7-5._Compaction_of_granular_materials_composed_of_deformable_particles.pdf",
+   "blank": 0.959,
+   "src_native": null,
+   "manual_crop": "equation region rendered by hand (+3 pt pad, right column); checked visually (2026-11-09, litdb-curator stage B)",
+   "viewed": true,
+   "mpm_note_ko": "2D 원판은 힘이 변형에 선형 (3D 구는 지수 3/2). MPM 단일입자 곡선이 ε > 0.05 에서 이 직선을 벗어난다는 것이 '점접촉 법칙은 대변형에서 못 쓴다' 의 수치 근거 — 3D 로 직접 옮기지 않는다."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "Fig. 1–4 = all figures of the paper (no tables, no SI). All are vector graphics and were hand-cropped from a caption-free page region (tight box of rendered ink + 4 pt pad, caption excluded) and checked visually; the caption-anchored tool was not run. Equation crops eq1 · eq2 are optional extras. ⚠ Fig. 2's printed legend (red circles = MPM, black triangles = BPM) is the reverse of Fig. 3's legend (red circles = BPM, black triangles = MPM) — see the card §5.2 before attributing Fig. 2 curves to a method. (2026-11-09, litdb-curator stage B)"
+}

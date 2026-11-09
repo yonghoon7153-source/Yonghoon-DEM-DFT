@@ -1,0 +1,445 @@
+{
+ "slug": "bardenhagen2001_mpm_improved_contact_granular_stress_waves",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-09",
+ "sources": [
+  "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 : Simple example of a material point discretization of a disk.",
+   "rotated_deg": 0,
+   "bbox": [
+    345.7,
+    359.1,
+    531.2,
+    552.3
+   ],
+   "w": 774,
+   "h": 806,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.86,
+   "src_native": [
+    751,
+    783
+   ],
+   "manual_crop": "embedded 1-bit raster (751×783 px ≈ 300 dpi); crop = dark-pixel bounding box of the band between the body text and the caption, padded 2.5 pt; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "셀당 물질점 2 × 2, 지름 4 셀이라 표면이 계단.  이 해상도의 3D 판 (R/2) 에서 구가 '평평한 점' 으로 아예 구르지 못했다 (Fig 5).  우리 SE 1 µm 는 n_grid 384 · dx ≈ 0.141 µm 에서 ≈ 7 셀 — 이 그림보다 낫지만 논문이 구름을 확인한 8 셀 (R/4) 바로 아래 [우리 산술] → A′ 의 첫 해상도 조건"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2 : Schematic of the inclined plane problem and R/4 cell size MPM discretization.",
+   "rotated_deg": 0,
+   "bbox": [
+    316.5,
+    362.0,
+    559.3,
+    461.8
+   ],
+   "w": 1013,
+   "h": 417,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.704,
+   "src_native": [
+    609,
+    429
+   ],
+   "manual_crop": "two embedded rasters side by side — schematic 452×465 px + discretization 609×429 px; crop = dark-pixel bounding box of the band above the caption, padded 2.5 pt; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구 · 평판 둘 다 변형체 (셀당 물질점 8) — 물체 2 개 = 속도장 2 개의 가장 작은 3D 다물체 문제라 A′ 를 Taichi 에 넣으면 그대로 재현할 회귀 시험 (해석해 식 23 · 24) [우리 추론].  단일 속도장 (지금 MPM) 은 구–평판 접촉 노드에서 속도를 하나로 만들어 미끄럼을 막고 분리 판정이 없다"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3 : Sphere center of mass x–position as a function of time for both the slip and no slip cases. The rigid sphere analytical solutions are shown for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.0,
+    98.0,
+    296.0,
+    322.0
+   ],
+   "w": 926,
+   "h": 934,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.976,
+   "src_native": [
+    782,
+    835
+   ],
+   "manual_crop": "embedded 1-bit plot raster (782×835 px) + axis labels from the 150 dpi page image; auto bbox widened by hand on the left so the faint light-grey y-axis label 'x (m)' is fully inside; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "변형 구 (R/4) 는 두 경우 모두 강체보다 느리다 (t = 2 s: ≈ 13 vs 14.5 m · ≈ 7.5 vs 10.1 m, 판독).  체제 문턱 tanθ ≷ 3.5μ 를 사이에 둔 두 사례라 '마찰계수가 체제를 가른다' 를 시험하는 형식 [문턱 = 우리 산술] — 우리 MPM 에는 μ 가 없어 이 구분 자체가 없다"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4 : Sphere center of mass x–velocity as a function of time for both the slip and no slip cases. The rigid sphere analytical solutions are shown for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    330.0,
+    146.0,
+    553.0,
+    370.0
+   ],
+   "w": 930,
+   "h": 934,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.974,
+   "src_native": [
+    782,
+    835
+   ],
+   "manual_crop": "embedded 1-bit plot raster (782×835 px) + axis labels from the 150 dpi page image; left edge widened by hand for the faint y-axis label 'dx/dt (m/s)' (the automatic threshold cut it); caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구름 경우 속도에 계단 · 정체 구간 (t ≈ 0.4–0.7, 1.55–1.75 s, 판독) = 접촉 알고리즘이 걸릴 때의 갑작스런 속도 변화 (논문).  수천 접촉이 켜지고 꺼지는 압밀에서는 이 충격 잡음이 판 반력 (wallP) 판독에 섞일 수 있어, A′ 에서 판 반력을 읽을 땐 시간 평균 창과 재하율 대조가 필요 [우리 추론]"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5 : No slip case sphere center of mass position as a function of time for various spatial resolutions. The rigid sphere analytical solution is shown for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.0,
+    98.0,
+    296.0,
+    322.0
+   ],
+   "w": 926,
+   "h": 934,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.974,
+   "src_native": [
+    462,
+    467
+   ],
+   "manual_crop": "no embedded raster for this plot — it lives in the 150 dpi page image; bbox by hand (left edge widened for the faint y-axis label 'x (m)'); caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ R/2 (지름 4 셀) 는 '평평한 점' 때문에 아예 구르지 않는다 (x = 0) — 해상도 부족이 정성 실패로 나타남.  R/4 ≈ 7.4 · R/8 ≈ 9.7 → 강체 10.1 m (t = 2 s, 판독).  SE 1 µm 를 8 셀 이상으로 풀려면 dx ≤ 0.125 µm [우리 산술]"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6 : No slip case sphere center of mass velocity as a function of time for various spatial resolutions. The rigid sphere analytical solution is shown for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    330.0,
+    98.0,
+    553.0,
+    322.0
+   ],
+   "w": 930,
+   "h": 934,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.984,
+   "src_native": [
+    706,
+    783
+   ],
+   "manual_crop": "embedded 1-bit plot raster (706×783 px) + axis labels/legend from the 150 dpi page image; left edge widened by hand for the faint y-axis label; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "R/2 는 0 둘레 진동 (±0.1 m/s 급) 만, R/4 는 건너뜀으로 멈칫 (≈ 1.5–1.7 s), R/8 ≈ 강체 (판독).  접촉이 잠깐 떨어졌다 붙는 skip 은 해상도가 낮을수록 크다 — 압밀 중 SE 가 판 · AM 에 닿았다 떨어지는 과정도 같은 잡음을 낼 수 있다 [우리 추론]"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7 : Sphere center of mass position as a function of time for R/4 (labeled dx=.250) and R/8 (dx=.125) cell size MPM discretizations. The rigid sphere analytical solution is shown for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.0,
+    86.0,
+    293.0,
+    322.0
+   ],
+   "w": 913,
+   "h": 984,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.978,
+   "src_native": [
+    844,
+    835
+   ],
+   "manual_crop": "embedded 1-bit plot raster (844×835 px) + title 'Backspin = 5 rad/s' and axis labels from the page image; left edge widened by hand for the faint y-axis label; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "미끄럼 → 구름 전환 (t = 2/7 s) 시점까지 맞추는지 보는 시험 — dx 0.125 가 강체 해에 붙고 0.250 은 뒤처짐 (t = 3 s ≈ 3.95 · 3.5 vs 4.08 m, 판독).  A′ 마찰 구현의 두 번째 회귀 표적 [우리 추론]; 우리 MPM 엔 이 전환이 없다"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Figure 8 : Sphere center of mass velocity as a function of time for R/4 (labeled dx=.250) and R/8 (dx=.125) cell size MPM discretizations. The rigid sphere analytical solution is shown for comparison.",
+   "rotated_deg": 0,
+   "bbox": [
+    330.0,
+    86.0,
+    549.0,
+    322.0
+   ],
+   "w": 913,
+   "h": 984,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.976,
+   "src_native": [
+    844,
+    835
+   ],
+   "manual_crop": "embedded 1-bit plot raster (844×835 px) + title and axis labels from the page image; left edge widened by hand for the faint y-axis label; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "강체 해는 10/7 ≈ 1.43 m/s 로 일정, 변형 구는 그 둘레로 크게 진동 (무름 + 건너뜀, stick–slip 비슷 — 논문).  우리 SE 는 전단만 연화 (μ 0.51 GPa · ν 0.49 → K 25.5 GPa) 라 CFL 시간 간격은 SE 종파 탄성률 M = λ + 2µ ≈ 26.2 GPa 로 정해진다 (`scripts/mpm3d_compaction.py` 1912–1929 행) — 실물 쌍 (DFT B₀ 26.23 · μ 8.11 GPa) 으로 올려도 M ≈ 37 이라 시간 간격은 ≈ 1.2 배만 준다.  대신 전단 강성이 ≈ 16 배라 접촉의 붙음/미끄럼 · 건너뜀 양상이 달라질 수 있다 → A′ 회귀 시험은 두 물성으로 [우리 산술 · 추론]"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Figure 9 : Stress wave propagation through a collection of four disks with aligned centers. Matching frames are presented in pairs with the experimental data on top and simulation results below. Non–dimensional frame times are 2.6, 6.6, and 9.2 for the experimental data and 2.2, 5.5, and 7.7 for the simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.8,
+    421.5,
+    270.4,
+    651.1
+   ],
+   "w": 741,
+   "h": 957,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.521,
+   "src_native": [
+    533,
+    920
+   ],
+   "manual_crop": "embedded 8-bit photo strip (533×920 px ≈ 300 dpi) + the 'Experiment'/'Simulation' row labels from the page image (kept — part of the figure); dark-pixel bbox of the band, padded 2.5 pt; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "압축 · 대칭이라 접촉이 사실상 no slip — 단일 속도장도 같은 답을 낼 조건 (대조군).  지름당 80 셀 · 셀당 물질점 1.  무늬 재현은 정확, 시간은 시뮬 ≈ 0.84 × 실험 [우리 산술] — 원인은 Plexiglas 물성 (ν) 불확실 (논문)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Figure 10 : Stress wave propagation through a collection of five disks with zig–zagged centers. The simulation used a friction coefficient of 0.5. Matching frames are presented in pairs with the experimental data on top and simulation results below. Non–dimensional frame times are 5.3, 10.5, and 15.8 for the experimental data and 3.0, 6.0, and 9.0 for the simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.1,
+    239.2,
+    270.1,
+    593.4
+   ],
+   "w": 739,
+   "h": 1477,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.476,
+   "src_native": [
+    554,
+    1571
+   ],
+   "manual_crop": "embedded 8-bit photo strip (554×1571 px) + 'Experiment'/'Simulation' row labels from the page image (kept); dark-pixel bbox of the band, padded 2.5 pt; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 미끄러질 수 있으면 하중 경로가 먼저 '원판 접촉 ↔ 벽' 으로 생기고 다음 접촉이 붙은 뒤에야 다음 원판으로 간다 (전달이 늦음).  단일 속도장 MPM 이 원리상 못 내는 응답 — 우리 MPM 은 모든 접촉이 붙어 Fig 11 처럼만 행동.  시간비 ≈ 0.57 로 붙은 두 배치 (≈ 0.84–0.86) 보다 크게 벗어남 [우리 산술] — 미끄럼 접촉이 들어간 경우 오차가 가장 크다 (마찰 모형 또는 벽 조건 몫 후보 · 우리 추론)"
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 12,
+   "file": "fig_11.png",
+   "caption": "Figure 11 : Stress wave propagation through a collection of five disks with zig–zagged centers and sticking contact. Matching frames are presented in pairs with the experimental data on top and simulation results below. Non–dimensional frame times are 1.6, 4.2, and 6.8 for the experimental data and 1.4, 3.6, and 5.8 for the simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    93.1,
+    85.2,
+    270.4,
+    435.3
+   ],
+   "w": 740,
+   "h": 1459,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.494,
+   "src_native": [
+    553,
+    1527
+   ],
+   "manual_crop": "embedded 8-bit photo strip (553×1527 px) + 'Experiment'/'Simulation' row labels from the page image (kept); dark-pixel bbox of the band, padded 2.5 pt; caption excluded (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "미끄럼이 없으면 하중 경로가 즉시 원판 접촉점 사이로 생겨 전파가 훨씬 빠르다 (논문).  우리 SE–SE · SE–AM 접촉이 바로 이 '붙음' 체제 (게다가 분리 판정도 없음 — 시뮬의 μ = ∞ 는 분리는 허용) → 지금 MPM 의 하중 경로 · 응력장은 붙음 쪽으로 치우쳐 있을 수 있다 [우리 추론].  Fig 10 ↔ 11 대비 = A′ 의 정성 검증 형식"
+  },
+  {
+   "key": "e04_08",
+   "kind": "equation",
+   "label": "eq4-8",
+   "page": 3,
+   "file": "eq_04_08_com_velocity_contact_nodes.png",
+   "caption": "Equations (4)–(8), PDF p.3 (journal p.511): per-body grid velocity v^α = p^α/m^α, α = 1,…,N (4); centre-of-mass velocity v^cm = Σ_{α=1}^{N} p^α/M (5) with M = Σ_{α=1}^{N} m^α (6); interface (contact) nodes where v^cm − v^α ≠ 0 (7) — 'Resolution of the interface is commensurate with the computational grid cell size'; body surface normals n^α from spatial differentiation of the per-body grid masses m^α; a body approaches its neighbour(s) when (v^α − v^cm)·n^α > 0 (8).",
+   "rotated_deg": 0,
+   "bbox": [
+    312.0,
+    86.0,
+    568.0,
+    626.0
+   ],
+   "w": 1067,
+   "h": 2251,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.926,
+   "src_native": [
+    533,
+    1125
+   ],
+   "manual_crop": "equation region rendered by hand (ABBYY OCR scan, 150 dpi page image) — the OCR text layer garbles the equations, so the card's equations were transcribed from this render; connecting sentences kept (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "물체별 P2G (질량 m^α · 운동량 p^α) → 질량중심 속도 → 접촉 노드 = 둘 이상의 물체가 질량을 가진 노드 (식 7). 계면 해상도 = 셀 크기 (논문) — 실제 표면이 닿기 전에 같은 노드를 공유하는 순간 접촉이 걸린다. 우리 2차 B-spline (지지 3 셀) 이면 이 '이른 접촉' 거리가 1차 (지지 2 셀) 보다 길어 압밀 기공률에 계통 오차를 줄 수 있다 [우리 추론 — 두 논문 밖]."
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 4,
+   "file": "eq_09_traction_release_criterion.png",
+   "caption": "Equation (9), PDF p.4 (journal p.512): normal traction at contact nodes t_n^α = n^α·σ^α·n^α (interpolated from material points using the surface normals); with compressive stress negative, the traction is compressive when t_n^α < 0 (9). 'The essential modification to the contact algorithm logic is to apply frictional contact when the normal traction is compressive, allowing free separation otherwise.'",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    86.0,
+    310.0,
+    357.5
+   ],
+   "w": 1063,
+   "h": 1132,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.904,
+   "src_native": [
+    531,
+    566
+   ],
+   "manual_crop": "equation region rendered by hand (ABBYY OCR scan, 150 dpi page image) — the OCR text layer garbles the equations, so the card's equations were transcribed from this render; connecting sentences kept (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "2001 의 핵심 개정 — 분리를 '멀어지는가 (운동학)' 가 아니라 '수직 견인력이 아직 압축인가' 로 판정한다. 제하에서 계면이 응력 0 까지 풀린 뒤 떨어지게 하는 장치라 [DEM 우선 (수영)] 의 가압 → 제하에 필요하다. 구현에는 물체별 응력의 격자 보간 (노드당 성분 몇 개) 이 더 든다 [우리 추론]."
+  },
+  {
+   "key": "e10_11",
+   "kind": "equation",
+   "label": "eq10-11",
+   "page": 4,
+   "file": "eq_10_11_contact_velocity_update.png",
+   "caption": "Equations (10)–(11), PDF p.4 (journal p.512): contact velocity update ṽ^α = v^α − Δv_n^α(n^α + μ′t^α), μ′ = min(μ, Δv_t^α/Δv_n^α) (10), μ the interfacial friction coefficient and t^α the unit tangent in the direction of sliding (printed '(t = ω × n in Bardenhagen, Brackbill, and Sulsky (2000a))'); Δv^α = v^α − v^cm (11).",
+   "rotated_deg": 0,
+   "bbox": [
+    312.0,
+    612.0,
+    568.0,
+    742.0
+   ],
+   "w": 1067,
+   "h": 542,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.92,
+   "src_native": [
+    533,
+    271
+   ],
+   "manual_crop": "equation region rendered by hand (ABBYY OCR scan, 150 dpi page image) — the OCR text layer garbles the equations, so the card's equations were transcribed from this render; connecting sentences kept (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "2000 판 식 (23) 을 Δv_n · Δv_t 로 줄여 쓴 같은 갱신. ⚠ 괄호 't = ω × n' 은 2000 판 식 (22)(23) 의 n × ω̂ 와 곱 순서가 반대 — ω̂ 정의가 같다면 부호가 뒤집힌다 [우리 판독]; 구현은 본문 정의 '미끄럼 방향 단위 접선' (= 상대 접선 속도 방향) 을 따른다."
+  },
+  {
+   "key": "e12_16",
+   "kind": "equation",
+   "label": "eq12-16",
+   "page": 5,
+   "file": "eq_12_16_stick_slip_momentum.png",
+   "caption": "Equations (12)–(16), PDF p.5 (journal p.513): Δv_n^α = Δv^α·n^α (12), Δv_t^α = Δv^α·t^α (13); 'Resolution of the topology of contacting surfaces on the computational grid requires no more than two bodies be represented at a contact grid node … not all of the properties derived below hold for N > 2'; Σ_{α=1}^{2} m^α Δv^α = 0 (14) ⇒ both bodies stick or both slip; sticking contact conserves momentum exactly (15); slipping contact (16) conserves momentum only for n² = −n¹ and t² = −t¹.",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    86.0,
+    310.0,
+    652.0
+   ],
+   "w": 1063,
+   "h": 2359,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.93,
+   "src_native": [
+    531,
+    1179
+   ],
+   "manual_crop": "equation region rendered by hand (ABBYY OCR scan, 150 dpi page image) — the OCR text layer garbles the equations, so the card's equations were transcribed from this render; connecting sentences kept (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 논문 스스로의 위상 가정 = 접촉 노드당 물체 ≤ 2. 조밀 3D 압밀 (SE ≈ 7 셀 지름) 에서는 세 알갱이가 한 노드를 공유하는 삼중점이 흔할 것이라 그 노드에서 (14)–(16) 성질이 깨진다 [우리 추론]. real_14 SE 씨앗을 알갱이별로 P2G 해 '노드당 물체 수' 분포를 먼저 재 보면 (GPU 불요) A′ 의 이 위험을 숫자로 알 수 있다."
+  },
+  {
+   "key": "e17_22",
+   "kind": "equation",
+   "label": "eq17-22",
+   "page": 5,
+   "file": "eq_17_22_cell_collapse_scaling.png",
+   "caption": "Equations (17)–(22), PDF p.5 (journal p.513): contact-imposed grid strain rate ε̇_j^α = (ṽ_j^α − v_j^α)/Δx_j (17); cell-collapse condition ε̇_max^α Δt < 1 (18); ε̇_j² = −(m¹/m²)ε̇_j¹ = m¹/(M − m¹) ε̇_j¹ (19); ε̇_max = max_j(max(m^α/(M − m^α), 1)|ε̇_j^α|) (20); ε̇_max Δt < γ, 0 < γ ≤ 1 (21); scaled update ṽ^α_scaled = v^α − max(γ/(ε̇_max Δt), 1) Δv_n^α(n^α + μ′t^α) (22) — 'max' as printed.",
+   "rotated_deg": 0,
+   "bbox": [
+    312.0,
+    226.0,
+    568.0,
+    742.0
+   ],
+   "w": 1067,
+   "h": 2151,
+   "dpi": 300,
+   "src": "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf",
+   "blank": 0.918,
+   "src_native": [
+    533,
+    1075
+   ],
+   "manual_crop": "equation region rendered by hand (ABBYY OCR scan, 150 dpi page image) — the OCR text layer garbles the equations, so the card's equations were transcribed from this render; connecting sentences kept (2026-11-09, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "작은 격자 질량 (물질점이 처음 셀에 들어올 때) 에서 접촉 충격이 셀을 무너뜨리지 않게 줄이는 장치 (γ = 0.5 사용 · 0.5–1 둔감 · 0.5 미만은 침투). ⚠ 식 (22) 의 'max' 는 그대로면 보정을 키우기만 하므로 본문 ('필요할 때 줄인다' · 'γ < 0.5 에서 침투') 과 맞으려면 'min' 이어야 한다 [우리 판독]. 우리 2차 B-spline 은 1차보다 이 등록 (cell-crossing) 잡음이 작을 것이나 0 은 아니다 [우리 추론]."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "no automatic extraction tool was run — every figure and equation region was cropped by hand from text-layer coordinates + dark-pixel bounds and checked visually (2026-11-09, litdb-curator); all printed figure numbers present (11 figures, Figure 1–11); no tables in the paper"
+}

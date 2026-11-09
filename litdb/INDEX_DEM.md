@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 244편 · 생성 2026-11-06
+> digest 251편 · 생성 2026-11-09
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -35,19 +35,23 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (7편)
+## MPM · 연속체 (11편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
+| `bardenhagen2000_mpm_granular_multibody_frictional_contact` | MPM 다물체 마찰 접촉의 원전 — 알갱이별 격자 속도장 ↔ 질량중심 속도장 비교로 침투 금지 · 자유 분리 · Coulomb 미끄럼 (알갱이 수에 선형) · no slip (= 우리 단일 속도장) ↔ 마찰 전단 대비 ★★ 후보 A′ 기반 — Bardenhagen, Brackbill & Sulsky (CMAME 2000) | MPM (2D 명시적 FLIP-MPM · 다물체 마찰 접촉 — 알갱이별 격자 속도장 ↔ 질량중심 속도장 ·  | 2026-11-09 | 🖼 13 |
+| `bardenhagen2001_mpm_improved_contact_granular_stress_waves` | MPM 다물체 접촉 개정판 — 수직 견인력으로 분리 판정 (압축이면 접촉 유지) + 작은 격자 질량의 격자 붕괴 안정화 (γ) · 3D 구 해석해 · 원판 광탄성 대조 ★★ 제하 (unloading) 에 필요 — Bardenhagen, Guilkey 외 4 인 (CMES 2001) | MPM (명시적 MPM 다물체 접촉 개정 — 견인력 기반 분리 판정 + 격자 붕괴 안정화 스케일 γ · 3D | 2026-11-09 | 🖼 16 |
 | `choi2024_digital_twin_review_echem` | Choi 2024 (E.Chem 매거진 총설, Vol.16 No.1) — 디지털 트윈 모델링·시뮬레이션 ★ 우리 DEM+MPM의 top-down/bottom-up POSITIONING을 NAMING하는 framework 리뷰 | tool·digital-twin 총설 | 2026-07-28 | — |
 | `devaucorbeil2020_mpm_after_25_years_review` | MPM after 25 years: theory, implementation, applications (리뷰) — de Vaucorbeil, Nguyen, Sinaie, Wu (Adv. Appl. Mech. 2020) | MPM 리뷰(review) | 2026-06-26 | — |
 | `klar2016_dp_sand_animation` | 모래(sand) 애니메이션을 위한 Drucker-Prager 탄소성 — Klár (ACM TOG 2016, SIGGRAPH) | MPM | 2026-06-26 | 🖼 17 |
 | `lim2025_virtual_calendering_framework` | Lim 2025 (Small 21, 2410485) — Virtual Calendering Framework: 3D-재구성 양극으로 가상 캘린더링 검증 + 전극설계 최적화 ★★★ 우리 DEM+MPM 압축의 가장 직접적인 방법론적 형제 (reconstruct-then-compress vs 우리 predict-from-pow | FEM·calendering | 2026-07-28 | 🖼 6 |
 | `nam2026_dpe_microstructure_review` | Nam 2026 (Materials Horizons REVIEW, 13, 3149-3177) — 건식전극(DPE) 미세구조 엔지니어링 리뷰 ★ 우리 DEM+MPM 프로젝트의 FRAMEWORK/POSITIONING 논문 | DEM | 2026-07-28 | — |
+| `nezamabadi2022_mpm_cd_plastic_particle_compaction` | 입자마다 자기 배경격자를 둔 암시적 MPM + Contact Dynamics 로 소성 원판 300 개 압축 — 재밍 뒤 다공 연속체 압밀식 · Z−Zc ∝ √(Φ−Φc) ★★ 단일 속도장 MPM 에 없는 입자 간 접촉의 선례 (후보 A′) — Nezamabadi (Comput. Part. Mech. 2022) | MPM+CD (2D implicit MPM · multi-mesh contact dynamics · elas | 2026-11-09 | 🖼 11 |
+| `nguyen2017_mpm_bpm_deformable_particle_compaction` | 변형 입자 압밀을 두 방식으로 — 암시적 MPM+CD (탄성 연속체 입자) vs BPM (강체 1차입자 응집체 · 소성) · 2D 300 입자 · 마찰 0/0.5 · Z−Z0 ∝ (Φ−Φ0)^0.5 ★ Nezamabadi 2022 의 전신 — Nguyen (EPJ Web Conf. 2017) | MPM+CD vs BPM (2D; implicit MPM + contact dynamics vs bonded | 2026-11-09 | 🖼 6 |
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (48편)
+## 접촉역학 · 소성 (DEM 이론) (51편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -58,6 +62,9 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy — AFM 콜로이드 탐침 한 개를 "자기 물질" 결정면과 "상대 물질" 결정면에 번갈아 대어 떼는 힘의 비 (C | experiment (AFM colloid-probe pull-off forces on engineered  | 2026-10-13 | 🖼 13 |
 | `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics — Part I 의 AFM 응집 · 접착 비를 환산 혼합 계수 Λ₁₂ = F^ad₁₂ / F^co₁₁ ( | experiment (dry powder inhaler blends — cohesive-adhesive ba | 2026-10-13 | 🖼 15 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
+| `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` | 강체 + 매우 무른(초탄성) 입자 혼합물의 등방 압밀 — non-smooth contact dynamics (NSCD) + 입자별 FE 2D 시뮬레이션과 미시역학 압밀 법칙 P(φ, κ) · 최대 밀도 φmax(κ) — ★★ 우리 NCM(강체) + SE(무른) 복합 양극 가압의 가장 가까운 공개 유비 · 재설계 후보 B  | NSCD+FEM 2D 다입자 (LMGC90 — 강체 원판 + neo-Hookean 비압축 FE 원판 혼합,  | 2026-11-09 | 🖼 21 |
+| `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` | 무른 + 강체 입자 혼합물의 미시역학 압밀 모델 — 학회 단편 (Powders & Grains 2021) · PRE 2020 판의 요약 + 시작 상태 표 (φ0 · Z0) · NSCD contact dynamics + FE 2D — Cárdenas-Barrantes, Cantor, Barés, Renouf, Azéma ( | NSCD+FEM 2D 다입자 (LMGC90 — 강체 + neo-Hookean 비압축 FE 원판 혼합, 등방  | 2026-11-09 | 🖼 7 |
+| `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` | 무른(초탄성 실리콘) + 단단한(PVC) 2D 입자 혼합물의 일축 압밀 실험 — 대변형 DIC 로 입자 내부 변형장 · 배위수 · 접촉 길이 (contact length) 를 재고 미시역학 압밀 법칙을 일축으로 확장 · 검증 — Cárdenas-Barrantes, Barés, Renouf, Azéma (Phys. Rev. | experiment 2D (실리콘 초탄성 + PVC 강체 이분산 원기둥 혼합 · 일축 압축 · 평판 스캐너  | 2026-11-09 | 🖼 5 |
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
 | `deng2021_mechanical_surface_energy_tester_bond_number` | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester — 분말 단층 (≤ 20 mg) 을 ⌀40 mm 원판에 뿌려 떨어뜨리고, 멈출 때의 감속도와 그때 떨어져 나간 질량 분율을 잰다 · "Bond 수"  | experiment (drop-impact detachment "mechanical surface energ | 2026-10-13 | 🖼 22 |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
