@@ -1,0 +1,315 @@
+{
+  "schema": "mipr01_windows_path_fix_intake_receipt/1",
+  "reviewed_candidate_pin": "3ca47af5b0acd1b39c1d437949413ef3ac31b831",
+  "reviewed_candidate_parent": "2ac1a2482f0290566ac1d67d972f7c9544a9d291",
+  "original_inactive_preparation_pin": "73e659273fd2ed6406a4c90011fc6079c7adf95f",
+  "new_work_baseline": {
+    "base_b": "69d714d094c4d210e5bf931d5c520e64ca0a751d",
+    "preparation_copy": "be4388d0c1d3836bc44df0eada6793fbffdcd6e7",
+    "reviewed_path_fix_copy": "d310f741a636954b600c9e4f000bfccba2fee3ce",
+    "local_original_preparation_to_new_copy_equal_blobs": 61,
+    "local_reviewed_current_files_to_new_copy_equal_blobs": 68,
+    "new_remote_query_performed": false
+  },
+  "artifact_roles": {
+    "incoming_independent_review_zip": {
+      "member": "codex_mip01_path_fix_3ca47af5b0ac_independent_20261109.zip",
+      "bytes": 11681951,
+      "sha256": "6bcff75f0c1b95040a7f03482ccf00682949534b822ca19906449813571efe1d"
+    },
+    "reviewers_original_request_zip": {
+      "member": "codex_mip01_path_fix_3ca47af5b0ac_review_20261109.zip",
+      "bytes": 1740544,
+      "sha256": "12435e020cccec00a56db7e6340c7b65808d30eaf311662b021d59a6afc39a53"
+    },
+    "preserved_prior_independent_zip": {
+      "member": "codex_mixer_inactive_preparation_73e659273fd2_independent_20261109.zip",
+      "bytes": 1109698,
+      "sha256": "18d6945be87b88c044fd934d8254658f02ff8855109bb6bdf8f60aa39ea78b0c"
+    },
+    "hash_roles": "Request SHA12435 and received independent ZIP SHA6bcff identify different artifacts"
+  },
+  "key_members": [
+    {
+      "member": "codex_review_mip01_path_fix_20261109.md",
+      "bytes": 14717,
+      "sha256": "e37949ce4aefa3b19c6a4e69b1b7aecc36f9f2c52af93822ef3cb2d7f0f84406"
+    },
+    {
+      "member": "verdict.json",
+      "bytes": 657,
+      "sha256": "bd8cb562a657878daa71fb742e35fb993fbd67cc2d3a6362faa9894efdb06589"
+    },
+    {
+      "member": "package_verification.json",
+      "bytes": 510,
+      "sha256": "a9ce419782eda5eee340cf0a4c8138973306f3660c28e92f27316e08fbe4a780"
+    },
+    {
+      "member": "preservation_audit.json",
+      "bytes": 3786,
+      "sha256": "ab7b549993b243e1e013afc2b903edc3dc5db5cdb52ea39c70062ca5a79a61e5"
+    },
+    {
+      "member": "remote_git_evidence.json",
+      "bytes": 35950,
+      "sha256": "5b840fd3d4d6ed5c930212d323f38fcfd8f7079e6a2b2efada2aea98987be900"
+    },
+    {
+      "member": "windows_alias/results.json",
+      "bytes": 206129,
+      "sha256": "33b8153b3328d63760df0602483771c384020eb740a669977af29adc87135335"
+    },
+    {
+      "member": "independent_prewrite_remaining/results.json",
+      "bytes": 89608,
+      "sha256": "4dbb35c960cecd9e415f9e104dbe6f73dcf48881d7b99bb0e575ff985637a723"
+    },
+    {
+      "member": "regression/receipts.json",
+      "bytes": 2951,
+      "sha256": "1fb369e4fcc91bd16b937d37f5ae2a5947064f7415a47067a13916ba1ff000e8"
+    },
+    {
+      "member": "loader_regression/report.json",
+      "bytes": 735,
+      "sha256": "6685ee3582b8d98ac74863c7d9ee35d96443d4646d1fc2413f5df6b8e5e803c9"
+    },
+    {
+      "member": "prewrite_discovery_note.md",
+      "bytes": 1363,
+      "sha256": "5bce8c751f928e1cfc2e5110860ed4bf11fc1ae011d2ee74872c83a410195aaa"
+    }
+  ],
+  "byte_only_receipt_validation": {
+    "status": "PASS",
+    "incoming_files": 3925,
+    "archive_occurrences_checked": 4,
+    "sha256sum_manifest_occurrences_checked": 13,
+    "crc_path_duplicate_casefold_link_encryption_checks": "PASS for every archive occurrence",
+    "sha256sum_coverage": [
+      {
+        "scope": "incoming root",
+        "entries": 3924,
+        "occurrences": 1,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "incoming expanded package",
+        "entries": 357,
+        "occurrences": 1,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "incoming expanded dependency asset tree",
+        "entries": 40,
+        "occurrences": 1,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "incoming before and after regression asset trees",
+        "entries": 40,
+        "occurrences": 2,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "embedded original request root",
+        "entries": 357,
+        "occurrences": 1,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "embedded original request dependency asset tree",
+        "entries": 40,
+        "occurrences": 1,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "two preserved prior review roots",
+        "entries": 338,
+        "occurrences": 2,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "two preserved prior review expanded packages",
+        "entries": 184,
+        "occurrences": 2,
+        "full_scope_coverage": true
+      },
+      {
+        "scope": "two preserved prior review asset trees",
+        "entries": 40,
+        "occurrences": 2,
+        "full_scope_coverage": true
+      }
+    ],
+    "all_manifest_hashes_match": true,
+    "original_request_zip_bytes_equal": true,
+    "expanded_original_request_members_equal": 358,
+    "nested_prior_independent_zip_bytes_equal": true,
+    "fixed_git_files": 69,
+    "dependency_files": 86,
+    "fixed_and_dependency_bytes_sha_git_blob_checks": 155,
+    "raw_evidence_entries_verified": 195,
+    "diff_and_prior_archive_entries_verified": 2,
+    "original_preparation_to_reviewed_parent_equal_blobs": 61,
+    "old_nonverifier_files_preserved": 60,
+    "candidate43_and_dependency86_bytes_preserved": true,
+    "pasted_report_equals_zip_report_bytes": true,
+    "reviewer_alias_prewrite_and_loader_metadata_bind_to_reviewed_verifier_sha": true,
+    "new_remote_queries_performed": false,
+    "method": "Archive bytes and local Git object identities only; reported remote responses were not freshly queried",
+    "attached_programs_executed": false,
+    "project_modules_imported": false,
+    "substantive_tests_reexecuted": false,
+    "original_artifacts_modified": false
+  },
+  "received_independent_verdict": {
+    "original_finding": "MIP-01",
+    "disposition": "PARTIAL_REMAINS_OPEN",
+    "residual_counterexample": {
+      "id": "MIPR-01",
+      "priority": "P2",
+      "same_root_cause_as": "MIP-01"
+    },
+    "count_as_second_independent_root_finding": false,
+    "new_P1": 0,
+    "new_P3": 0,
+    "limited_acceptance_preserved": "Candidate43, dependency86, assets, metadata, policy and registered ordinary-path improvement",
+    "remaining_defect": "Windows extended-prefix path aliases can denote the same existing root while resolved Path anchors differ; internal evidence can then be written into the candidate",
+    "whole_gate": "HOLD",
+    "verified": false,
+    "closed": false
+  },
+  "reported_independent_evidence_not_reexecuted": {
+    "environment": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+      "platform": "win32",
+      "verifier_sha256": "4bbdadcd0c80d6c48078c46641632cd123f3b1d882c3c9f85e8e9d5e631dab16",
+      "actual_symlinks_created": false,
+      "scope": "Only local scratch copies; no simulator, scheduler, WSL or research input"
+    },
+    "original_registered_regression": [
+      {
+        "label": "before",
+        "rc": 1,
+        "report": {
+          "methods": 5,
+          "failures": 33,
+          "errors": 0,
+          "test_sha256": "a6f57d19a92e7c91975feac67cd8e76f07b0deff7568b8e8a9e5c62b0b27d9b3",
+          "verifier_sha256": "7209819faf466e14689a695f6ab75587c4885995b0c43bd693bdfb66ea96a453",
+          "allowed_local_python_cli_calls": 41,
+          "denied_unexpected_process_or_network": [],
+          "original_inputs_preserved": true
+        }
+      },
+      {
+        "label": "after",
+        "rc": 0,
+        "report": {
+          "methods": 5,
+          "failures": 0,
+          "errors": 0,
+          "test_sha256": "a6f57d19a92e7c91975feac67cd8e76f07b0deff7568b8e8a9e5c62b0b27d9b3",
+          "verifier_sha256": "4bbdadcd0c80d6c48078c46641632cd123f3b1d882c3c9f85e8e9d5e631dab16",
+          "allowed_local_python_cli_calls": 41,
+          "denied_unexpected_process_or_network": [],
+          "original_inputs_preserved": true
+        }
+      }
+    ],
+    "actual_local_alias_cli_calls": 12,
+    "alias_verify_rows": [
+      {
+        "label": "verify_evidence_extended",
+        "mode": "verify",
+        "rc": 0,
+        "same_existing_root": true,
+        "graph_unchanged": false,
+        "added_paths": [
+          "candidate/new_evidence",
+          "candidate/new_evidence/report.json"
+        ],
+        "evidence_exists": true,
+        "reference_candidate_unchanged": true,
+        "reference_snapshot_unchanged": true,
+        "recheck_rc": 1,
+        "recheck_exact_bundle_refusal": true,
+        "files_before": 43,
+        "files_after": 44
+      },
+      {
+        "label": "verify_candidate_extended",
+        "mode": "verify",
+        "rc": 0,
+        "same_existing_root": true,
+        "graph_unchanged": false,
+        "added_paths": [
+          "candidate/new_evidence",
+          "candidate/new_evidence/report.json"
+        ],
+        "evidence_exists": true,
+        "reference_candidate_unchanged": true,
+        "reference_snapshot_unchanged": true,
+        "recheck_rc": 1,
+        "recheck_exact_bundle_refusal": true,
+        "files_before": 43,
+        "files_after": 44
+      }
+    ],
+    "other_alias_mode_outcomes": {
+      "preparation_tests": "Both alias directions return rc0 and candidate43 becomes44",
+      "old": "Both alias directions return rc1 from expected metadata failure but candidate43 becomes44; rc1 is not proof of prewrite refusal",
+      "build": "Both alias directions return rc1 at a later filesystem audit mkdir boundary, with no observed mutation; not a success of the common prewrite guard"
+    },
+    "instrumented_other_path_conditions": 68,
+    "instrumented_pass_excludes_known_extended_prefix_defect": true,
+    "guard_removal_sensitivity_variants": 3,
+    "loader_regression": {
+      "methods": 5,
+      "failures": 0,
+      "errors": 0,
+      "unchecked_cache_marker_executed": []
+    },
+    "actual_symlinks_or_junctions_created": false,
+    "source_or_path_behavior_mocked_in_alias_cli": false,
+    "source_or_path_behavior_in_other_prewrite_checks": "Instrumented ordering checks and lexical link mock; not an actual OS link qualification",
+    "counting": "Methods, subtest failures, CLI repeats, instrumented conditions and mutation variants are different overlapping units; do not sum as unique tests"
+  },
+  "followup_candidate_policy": {
+    "same_finding": "MIP-01; residual reproducer MIPR-01",
+    "scope": "Explicit supported-path set for snapshot/candidate/evidence in every mode; raw unsupported Windows namespace/UNC spelling checks before any path filesystem query, with absolute/resolved rechecks before any writes",
+    "ordinary_paths": "Native ordinary local DOS absolute/relative paths, and native POSIX single-root absolute/relative paths",
+    "unsupported_paths": "Windows extended, device and UNC namespace forms; no prefix stripping as normalization",
+    "check_representations": [
+      "raw",
+      "absolute",
+      "resolved"
+    ],
+    "check_order": "All three raw arguments before any path filesystem query; absolute/resolved rechecks before writes; existing lexical ancestor link checks before resolve. Resolve itself may query the filesystem.",
+    "existing_lexical_link_and_snapshot_boundaries_preserved": true,
+    "candidate_pin_metadata": "SOURCE_PIN.txt in followup review ZIP",
+    "local_test_results": "Pending candidate evidence; no new counts asserted in this intake receipt",
+    "external_recheck": "PENDING",
+    "proposed_ledger_status": "claimed_fixed only after candidate evidence; proposal not applied",
+    "verified": false,
+    "closed": false
+  },
+  "storage_boundary": {
+    "original_review_contains_external_locations": true,
+    "matching_archive_member_pairs": 304,
+    "original_zip_and_full_member_hashes_kept_outside_repository": true,
+    "raw_review_source_logs_or_location_metadata_imported": false,
+    "repository_content": "Artifact identities and limited summary only"
+  },
+  "shared_ledger_modified": false,
+  "research_values_read": false,
+  "actual_engine_calls": 0,
+  "actual_scheduler_calls": 0,
+  "actual_mpi_calls": 0,
+  "research_results": 0,
+  "operational_reseal": false,
+  "execution_go": false,
+  "whole_gate": "HOLD"
+}
