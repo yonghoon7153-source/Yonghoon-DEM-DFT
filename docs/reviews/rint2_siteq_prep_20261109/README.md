@@ -146,6 +146,7 @@
 - 끝 줄 `[siteq] rc 0` = FAIL · ERROR 없음.  `rc 1` = 화면의 `[siteq] FAIL …` · `[siteq] ERROR …` 줄과 JSON 을 그대로 보낸다 (원인 판단 = Claude · 1저자 · FAIL · ERROR · WARN 마다 원인 한 줄).  `rc 2` = STOP (돌리기 전 멈춤 · 메시지 그대로).
 - 현장 기대 (추정): C02 = PASS (3.8 · 1.24.4 · 1.10.1 · §7) · C28 = INFO (GPU · cupy 있음) · gabia 는 root 라 C13b = INFO (권한 무시 · §6) · C26 = 로컬 FS 면 PASS.
 - 도구 메시지의 `SITEQ_BASE` (C26) = 긴 블록의 칸 이름이다 (도구 바이트를 바꾸지 않으려고 그대로 둠) — 짧은 블록에서는 결과 폴더 자리 (홈) 를 뜻한다 · 계획 폴더가 다른 FS 면 블록의 OUT 을 그 FS 로 바꿔 다시 돌린다.
+- 결과 (11-09 밤 반입) = `docs/data/rint2_siteq_20261109/` — kgy · gabia 둘 다 rc 0 · §3-3 세 줄 SAME · 위 현장 기대와 다른 칸 0.
 - 결과의 쓰임 (1저자 11-09 *"나머지는 권고대로"*): kgy · gabia 두 JSON + sha256 → `docs/reviews/rint2_rr3_fix_plan_20261108.md` §7 ④ "현장 자격" 칸의 근거 · Codex 짧은 확인 때 동봉.
 
 ### 3-3 두 기계 결과 나란히 보기 (어느 기계에서든 · 두 JSON 을 모은 뒤)
