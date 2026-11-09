@@ -289,7 +289,7 @@
    "blank": 0.973,
    "manual_crop": "tool excluded: p16 'almost blank (0.987)' — sparse vector plot (4 markers); clip = drawings/text extent above the caption + caption (300 dpi render) (2026-11-09, litdb-curator)",
    "viewed": false,
-   "viewed_how": "썸네일 몽타주로 크롭이 그림을 담았는지만 확인 — 내용 판독은 안 함"
+   "viewed_how": "썸네일 몽타주 (저해상) 로 크롭 확인 + 값 하나만 대강 판독 (digest §5.1 / §5.9 `figure-read ≈ (썸네일)`) — 정식 판독 아님"
   },
   {
    "key": "fS6",
@@ -569,7 +569,7 @@
    "blank": 0.893,
    "manual_crop": "tool excluded: p33 'no graphics (img0/draw2)' — 294 vector paths; caption block also carries a discussion paragraph; clip = drawings/text extent above the caption + caption (300 dpi render) (2026-11-09, litdb-curator)",
    "viewed": false,
-   "viewed_how": "썸네일 몽타주로 크롭이 그림을 담았는지만 확인 — 내용 판독은 안 함"
+   "viewed_how": "썸네일 몽타주 (저해상) 로 크롭 확인 + 값 하나만 대강 판독 (digest §5.1 / §5.9 `figure-read ≈ (썸네일)`) — 정식 판독 아님"
   },
   {
    "key": "fS19",
@@ -854,7 +854,8 @@
       398
      ]
     }
-   ]
+   ],
+   "viewed_how": "썸네일 몽타주로 이어붙임 (p10 캡션 + p11 본체) 확인 — 값은 PDF 텍스트로 복원 (digest §3a)"
   },
   {
    "key": "tS4",

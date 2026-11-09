@@ -460,3 +460,47 @@
 - ✅ "Chlorine enrichment of the cage-centre (4d) site has been reported from laboratory XRD Rietveld refinement for Li₅.₅PS₄.₅Cl₁.₅ (*Adv. Funct. Mater.*, 32, 2207978 (2022)), and AIMD studies associated it with more frequent inter-cage Li jumps (*Energy Storage Mater.*, 45, 484 (2022); *Adv. Funct. Mater.*, 32, 2207978 (2022))."
 - ⛔ 114 · 115 · 116 을 "local anionic charge density" 의 근거로 인용하지 않는다.
 - ⛔ 116 을 "4d substitution" 의 근거로 인용하지 않는다 (재지 않았고, Cl 일부가 격자 밖이라고 보고한다).
+
+---
+
+## ⏩ 2026-11-09 문장 24 [43,44] 근거 대조 (사용자 요청 · 117)
+
+> 사용자가 이 문장의 근거 [43] 을 먹였다 — 117 Park *eScience* 2026 (새 digest `park2026_oxygen_induced_li_intercage_conduction.md`). 이 절은 위의 기존 줄 (머리 계보 · §5.3 · §12-① 등) 을 고치지 않는다.
+> 문장: *"The only notable feature is a slight rise of the white-line intensity at ~2147 eV in LPSOC, attributed to the increase in unoccupied P states induced by the higher electronegativity of O [43,44]."* (위 72 · 202 줄의 P K-edge 서술 · `Fig. 2g`)
+
+### 참고문헌 번호 — [43] 확인 · [44] 미확보
+- 이 digest 머리 (계보 줄) 가 11-06 PDF 직독 때 적은 [43] = *Park eScience 6, 100502 (2026) "oxygen-induced lithium inter-cage conduction"* ↔ 117 PDF: *eScience* 6 (2026) 100502 · 제1저자 Yongsun Park · 같은 제목 · DOI 10.1016/j.esci.2025.100502 — **다섯 항목 일치 → 117 = [43]**. 단 이 digest 의 PDF 원본은 이 세션 기계에 없어 이 논문 참고문헌 쪽을 다시 펴 보지는 못했다 (11-06 기록에 의존).
+- [44] = Park *Carbon Energy* 7, e70058 (2025) "site-specific Nb doping" — 이 세션에 없다. **[44] 가 '전기음성 → P 비점유 상태' 를 말하는지는 확인 못 했다.**
+
+### [43] 이 P K-edge 에 대해 실제로 보인 것
+- 측정: NSLS-II 8-BM (TES) · Ar 글로브박스 Mylar 밀봉 — 이 이상 조건 없음 (검출 방식 · 에너지 보정 · 정규화 · 반복 미기재). 시료: **LiPSCl vs LSO-LiPSCl (3 mol% Li₂SO₄ · 정련 O 0.10/f.u.) 둘뿐** — O 함량 계열 측정 없음.
+- 그림 (`Fig. 5d` — 117 digest §5.7): 창 **2144–2148 eV** · 측정 간격 **0.30 eV** · y 축 눈금값 없음. 백색선 ≈2147.2 eV 에서 LSO 가 `figure-read ≈` **+19–21 %** (PDF 벡터 경로 판독) · 상승 가장자리는 겹침 (이동 없음) · 2148.1 eV 에서 다시 같아짐.
+- 해석 문장 (본문 그대로): *"LSO-LiPSCl shows a marked increase in peak intensity … This intensity enhancement is attributed to the formation of P–O bonds, which reduce the local symmetry of the PS₄ units and consequently increase transition probabilities."* — **인용 없음 · 계산 없음** ([43] 의 계산은 MTP-MD 뿐). 전기음성은 XAS 절 머리말 (*"oxygen, which is more electronegative than sulfur, significantly modifies the electron distribution"*) 과 **S K-edge** (S 주변 전자밀도↓) · **Cl K-edge** 해석에만 쓴다.
+- 이 digest `Fig. 2g` 를 픽셀로 다시 읽으면 LPSOC 백색선은 LPSC₁.₆ 대비 `figure-read ≈` **+18 %** (LPSC 곡선은 LPSC₁.₆ 밑에 가려 거의 같은 높이) · 창 2130–2160 eV. ⇒ **거의 같은 크기를 [43] 은 "marked", 이 논문은 "slight" 라 부른다.** 명목 O 는 10 배 다르다 (0.10 vs 1.0 /f.u.) — O 함량에 비례하는 구조 효과라는 읽기와 맞지 않는다.
+
+### 문장 24 사슬 × 근거
+| 고리 | 문장 24 | [43] 이 실제로 한 것 | 종류 | 우리 계산 (방향만 · PBE 바닥상태 · 코어홀 없음) |
+|---|---|---|---|---|
+| ⓪ 관측: ≈2147 eV 백색선↑ | "slight rise" (`Fig. 2g`) | `Fig. 5d` `figure-read ≈` +20 % · 두 시료 · 조건 미기재 | **측정** (양쪽 다) | — (우리는 XANES 를 계산하지 않았다) |
+| ① O 가 S 보다 전기음성 | 전제 | 머리말 · S/Cl edge 해석에 씀 · P 해석엔 안 씀 | **일반 화학 (인용 없음)** | — |
+| ② O 가 P 의 전자를 끈다 | 암묵 | P 에 대해서는 말하지 않음 | **가정** | ✓ Bader P 순전하가 O 결합 수를 따라 + 쪽 (LPSCl1.6 → LPSOCl → b2o3 · 같은 AE-PAW · `db/properties/lpsocl_bader_ae.json`) — **같은 방향** |
+| ③ 그래서 P 비점유 상태가 늘어난다 | 핵심 고리 | **없음** — 대신 "P–O 결합 → PS₄ 대칭↓ → 전이확률↑" | **[43] 에 없는 기전 (인용 불일치)** | ✗ O 쪽 빈 상태 (P–O σ*) 는 P–S σ* (CBM 바로 위) 보다 훨씬 위 · CB 바닥 조성 O 0 % · LPSOCl DOS 띠 가장자리에 O 상태 없음 (`kb/results/redox_orbital_control_PS4_vs_BS3_2026_07_08.md` · `db/properties/lpsocl_dos_gap.json` · `lpsocl_cohp_curves_origin.csv`) — **다른 말** |
+| ④ 그래서 ≈2147 eV 백색선↑ | 결론 | 결론은 같음 | **가정** (XANES 시뮬레이션 · PDOS 0) | ✗ 2147 eV 백색선 = P–S σ* 의 P-p 몫 — 늘어난 P 빈 상태가 있다면 더 높은 에너지 ([43] 창 2148 eV 밖) · PS₃O 자리의 P-p 투영 PDOS 는 안 쟀다 (유일하게 열린 경로) |
+| (크기) | — | — | — | PS₃O ≈10 % (3LSO · 16e O 0.025 무작위) 로 +20 % 를 내려면 PS₃O 하나가 같은 에너지에서 PS₄ 의 ≈3 배여야 한다 (*우리 산수*) · Kang LPSOC (O 10 배) 도 같은 크기 → 구조 효과로 크기가 안 맞는다 (정규화 · 자기흡수 · 시료 차 의심) |
+
+### 문장 조각별 결론
+- **"a slight rise of the white-line intensity at ~2147 eV in LPSOC"** → 이 digest 자체 측정 (`Fig. 2g`) 으로 선다. '조건 미기재 · 조성당 시료 하나' 는 [43] 과 같다.
+- **"attributed to the increase in unoccupied P states"** → **[43] 이 그렇게 말하지 않는다.** [43] 은 같은 현상을 *대칭 저하 → 전이확률* 로 돌린다 (그것도 근거 없이). [44] 는 미확인.
+- **"induced by the higher electronegativity of O"** → [43] 에서 전기음성은 P 가 아니라 S · Cl edge 해석 쪽에 있다. 우리 Bader 는 'O 가 P 의 전자를 끈다' 까지만 같은 방향이고, '그래서 2147 eV 에서 빈 상태가 늘어난다' 는 우리 COHP/DOS 와 다른 말이다.
+- ⇒ **문장 24 전체 판정: 관측은 서고, 기전 · 인용은 [43] 과 어긋난다.** [43] 에 맞춰 고치면 *"…attributed to P–O bond formation that lowers the local symmetry of PS₄ units [43]"* 가 되지만 그 기전도 인용 · 계산 근거가 없고 크기 산수와 맞지 않는다 — **가장 안전한 꼴은 기전을 빼고 관측만 쓰는 것**이다.
+
+### 이 digest 의 다른 절에 대한 함의
+- 72 · 202 줄의 "O 전기음성 → P 비점유 상태↑ 해석 (인용 [43,44] — 공동 교신 그룹 선행)" 은 **[43] 에 관해서는 인용 불일치** 로 읽는다.
+- 202–203 줄 Cl K-edge: [43] 의 Cl K 창은 2824–2830 eV 뿐이라 이 digest 의 2833–2838 eV 진동은 [43] 에 없고, [43] 의 Cl edge 근거 (`Table S8` 4d–S16e 4.0683 → 4.0677 Å) 는 격자상수 비례 축소 그대로 (분율좌표 동일 · O 좌표를 S 에 묶은 모델) 라 'PS₃O 형성 → 비대칭' 해석을 받쳐 주지 못한다.
+- 머리 계보 · §0-1 ① · 390 줄 (O 자리 정본 = [24] · [43] · [44]): [43] 의 O@16e 증거는 **Raman ≈415 cm⁻¹ 어깨 · P 2p ≈133 eV (P–O 결합 존재) + ND Rietveld (O 를 16e 에만 허용한 모델 · 4a/4d 대안 미시험) + ³¹P 불변** 이고 **DFT 자리 에너지는 결과 미보고** 다. ⇒ 이 논문의 "lab-XRD 로 16e" 보다 한 단계 강하지만 "4a/4d 에 O 가 없다" 는 [43] 도 보이지 않았다. 우리 허용 문장 "O 는 16e 를 4d 보다 선호 (UMA · Nd@Li 셀)" 와 **방향이 같다** (크기는 쓰지 않는다).
+- §12-① "세 편 모두 digest 없음" → **[43] 은 2026-11-09 digest 완료** · [24] · [44] 는 남음.
+
+### 인용 규율 (이 문장 기준)
+- ✅ "In O-substituted argyrodites, the P K-edge white line near 2147 eV is slightly higher than in the O-free material (*eScience*, 6, 100502 (2026))." — 관측만.
+- ⛔ 문장 24 의 기전 ("increase in unoccupied P states induced by the higher electronegativity of O") 을 [43] 으로 인용하지 않는다 — [43] 에 없다.
+- ⛔ 우리 Bader · COHP 를 이 기전의 계산 근거로 붙이지 않는다 — 우리 바닥상태 그림은 '2147 eV 에서 빈 상태↑' 와 다른 말이다 (`park2026_oxygen_induced_li_intercage_conduction.md` §7b).
