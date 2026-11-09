@@ -1,0 +1,67 @@
+{
+  "schema": "first8_inactive_current_source_copy/1",
+  "status": "INACTIVE_PENDING_EXTERNAL_REVIEW",
+  "validation_source_pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "metadata_generation_source_pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "original_asset_generation_pin": "527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996",
+  "previous_validation_source_pin": "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+  "original_launch_reference_pin": "e6000405b7625acf8c2c0a393571b116479e0e97",
+  "whole_gate": "HOLD",
+  "execution_authorized": false,
+  "operational_activation": false,
+  "registration_changed": false,
+  "research_results": 0,
+  "source_inventory_sha256": "e0edbae3bb1421a617a642a049e4c3f18f2b3d0037a7343f89a241a7a241bfac",
+  "asset_manifest_sha256": "9ba72a0951474873575f73a24ba565eb711650356d035d3c548579ca69bc57d3",
+  "case_bindings_sha256": "9e129a3a25333e7058f0991b35635f66f8fd7b401a58dc37dd11b5b834530860",
+  "files": [
+    {
+      "path": "scripts/mixer_precal_prepare.py",
+      "sha256": "6e2eb695b702f71c4bfb1bc32c6bf8643e7f0b0a93df59ec6f4310aeca5514c6"
+    },
+    {
+      "path": "scripts/mixer_precal_observe.py",
+      "sha256": "df22dcf03fcd628901ffb6ac7362579faee6e94285404a3163bed44d3666f013"
+    },
+    {
+      "path": "scripts/mixer_contact_reader.py",
+      "sha256": "6cba281e6c72ca8317117542a0e706d75ce8eea63ed9094e7e7292c2c1f6b6de"
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880"
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "sha256": "dc253bc8319077bc1e41635ae30ec588eb4a14c899db075e064192c4ef9cf6f7"
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "sha256": "791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a"
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3"
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Drum.stl",
+      "sha256": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Front.stl",
+      "sha256": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Back.stl",
+      "sha256": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5"
+    }
+  ]
+}

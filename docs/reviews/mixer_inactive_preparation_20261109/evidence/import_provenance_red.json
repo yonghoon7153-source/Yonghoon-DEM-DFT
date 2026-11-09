@@ -1,0 +1,23 @@
+{
+  "schema": "inactive_snapshot_provenance_fixture/1",
+  "methods": 5,
+  "failures": 4,
+  "errors": 0,
+  "rc": 1,
+  "verifier_sha256": "ea853e7449a4bad50ec07e2c902288d4c88f16e28c381cdb031fceebf91e740c",
+  "test_sha256": "96373840cb81495b16e5b40eb9eabd18f5cdd0264ecceaeb87f580221166530a",
+  "unchecked_cache_marker_executed": [
+    "test_verified_source_cannot_be_replaced_by_bytecode"
+  ],
+  "audit_synthetic_denial_probes": [
+    "subprocess.Popen",
+    "socket.connect"
+  ],
+  "actual_process_or_socket_calls": 0,
+  "scientific_modules_imported": false,
+  "actual_symlinks_created": false,
+  "link_fixture_scope": "Mocked ancestor link signal; not real OS junction qualification",
+  "actual_values_read": false,
+  "operational_activation": false,
+  "whole_gate": "HOLD"
+}
