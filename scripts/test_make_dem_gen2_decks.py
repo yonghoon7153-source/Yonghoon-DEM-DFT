@@ -2,6 +2,7 @@
 import copy
 import json
 import math
+import re
 from pathlib import Path
 import unittest
 import types
@@ -13,6 +14,63 @@ exec(compile(source_path.read_bytes(), str(source_path), 'exec'), d.__dict__)
 
 
 class Producer(unittest.TestCase):
+    def force_expression(self, files, raw):
+        """Arithmetic-only reading of generated scalars, not engine emulation."""
+        variables = {}
+        for line in files['stages/02_stabilization.in'].splitlines():
+            match = re.fullmatch(r'variable (\w+) equal (.+)', line)
+            if match:
+                variables[match[1]] = match[2]
+        def evaluate(name):
+            expression = variables[name].replace('f_top_mesh[3]', repr(raw))
+            expression = re.sub(r'v_(g2_\w+)', lambda m: repr(evaluate(m[1])), expression)
+            # Only trusted generated arithmetic with numeric leaves; no source eval.
+            if not re.fullmatch(r'[0-9eE+.*()/\- abs]+', expression):
+                raise AssertionError('unexpected generated arithmetic')
+            return eval(expression, {'__builtins__': {}, 'abs': abs}, {})
+        return evaluate('g2_force_live')
+
+    def test_signed_force_pair_does_not_collapse(self):
+        files = d.bundle(d.synthetic_config())
+        for force in (750., 600.):
+            with self.subTest(force=force):
+                self.assertEqual(self.force_expression(files, force), force)
+                self.assertEqual(self.force_expression(files, -force), -force)
+
+    def test_explicit_polarity_and_same_signed_sample(self):
+        for polarity in (-1, 1):
+            config = d.synthetic_config()
+            self.assertIn('compression_sign', config)
+            config['compression_sign'] = polarity
+            files = d.bundle(config)
+            for magnitude in (750., 600., 0.):
+                self.assertEqual(self.force_expression(files, polarity*magnitude), magnitude)
+                self.assertEqual(self.force_expression(files, -polarity*magnitude), -magnitude)
+            for key, text in files.items():
+                if not key.startswith('stages/') or key.endswith('01_insertion.in'):
+                    continue
+                lines = text.splitlines()
+                for index, line in enumerate(lines):
+                    if line.startswith('print "G2_CAPTURE'):
+                        self.assertEqual(lines[index-2], 'variable g2_reaction_sample equal ${g2_reaction_live}')
+                        self.assertEqual(lines[index-1], 'variable g2_force_sample equal ${g2_compression_sign}*${g2_reaction_sample}')
+                        self.assertIn('raw_reaction=${g2_reaction_sample}', line)
+                        self.assertIn('compression_sign=${g2_compression_sign}', line)
+                        self.assertEqual(lines[index+1], 'if "${g2_force_sample} < 0" then "print \'TECH_HOLD: force polarity mismatch\'" "quit 1"')
+            manifest = json.loads(files['manifest.json'])
+            self.assertIsNone(manifest['actual_T0_compression_sign'])
+            self.assertFalse(manifest['physical_ready'])
+
+    def test_polarity_required_and_exact_type(self):
+        for bad in (None, True, False, 0, 2, -2, 1., -1., '1', float('nan')):
+            with self.subTest(value=repr(bad)), self.assertRaises(ValueError):
+                d.bundle({**d.synthetic_config(), 'compression_sign': bad})
+        config = d.synthetic_config()
+        self.assertIn('compression_sign', config)
+        del config['compression_sign']
+        with self.assertRaises(ValueError):
+            d.bundle(config)
+
     def test_seven_stages_and_hold(self):
         files = d.bundle(d.synthetic_config())
         self.assertEqual(len([k for k in files if k.startswith('stages/')]), 7)
@@ -209,9 +267,10 @@ class Producer(unittest.TestCase):
                     live_force_available = True
                 if line.startswith('run ') and live_force_available:
                     with self.subTest(stage=name, run=line):
-                        self.assertEqual(lines[index + 1], 'variable g2_force_sample equal ${g2_force_live}')
-                        self.assertTrue(lines[index + 2].startswith('print "G2_CAPTURE '))
-                        self.assertIn('force=${g2_force_sample}', lines[index + 2])
+                        self.assertEqual(lines[index + 1], 'variable g2_reaction_sample equal ${g2_reaction_live}')
+                        self.assertEqual(lines[index + 2], 'variable g2_force_sample equal ${g2_compression_sign}*${g2_reaction_sample}')
+                        self.assertTrue(lines[index + 3].startswith('print "G2_CAPTURE '))
+                        self.assertIn('force=${g2_force_sample}', lines[index + 3])
 
 
 if __name__ == '__main__':

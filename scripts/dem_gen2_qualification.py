@@ -5,6 +5,7 @@ not a live DEM observer, and not a P2-to-ULPR adapter.
 """
 import math
 import random
+from fractions import Fraction
 
 
 def number(value, *, positive=False, nonnegative=False):
@@ -47,18 +48,26 @@ def sphere_lens(r, s, distance):
 def contact_area(r, s, distance):
     """Geometric intersection-circle area, NOT force-law or electrical area.
 
-Containment has no unique intersecting surface circle and is refused.
+Containment has no unique intersecting surface circle and is refused. The
+provided built-in numbers are treated exactly; no physical contact tolerance is
+introduced. A positive area outside finite, nonzero float range is refused.
 """
     r, s = number(r, positive=True), number(s, positive=True)
     d = number(distance, nonnegative=True)
-    scale = max(r, s, d)
-    r, s, d = r/scale, s/scale, d/scale
+    r, s, d = Fraction(r), Fraction(s), Fraction(d)
     if d >= r + s:
         return 0.
     if d <= abs(r - s):
         raise ValueError('contained/coincident surfaces have no contact circle')
-    x = (d*d+r*r-s*s)/(2*d)
-    return number(math.pi*max(0., r*r-x*x)*scale*scale, nonnegative=True)
+    # Symmetric Heron product: 4*triangle_area^2/d^2 is circle_radius^2.
+    # Exact products preserve small positive factors near either tangency and
+    # across large radius ratios; subtracting two rounded squared radii does not.
+    radius_squared = ((r+s+d)*(r+s-d)*(d+r-s)*(d-r+s))/(4*d*d)
+    try:
+        area = float(Fraction(math.pi)*radius_squared)
+    except OverflowError as exc:
+        raise ValueError('contact area outside representable float range') from exc
+    return number(area, positive=True)
 
 
 def sphere_below_plane(radius, plane_minus_center):
@@ -159,6 +168,10 @@ def servo_probe(a, *, delay=0, saturation=10., budget=100,
 
 Positive error -> downward command -> increasing compressive force.
 Initial error=1 is synthetic. No mapping to actual bed stiffness is inferred.
+The first tolerance-window hit is diagnostic only. Observe the whole declared
+budget unless its divergence bound is crossed. At budget end, both the final
+window and all errors awaiting delayed consumption must be within tolerance.
+This is finite-budget observation, not permanent/asymptotic stability proof.
 """
     number(a, positive=True)
     integer(delay)
@@ -169,18 +182,33 @@ Initial error=1 is synthetic. No mapping to actual bed stiffness is inferred.
     number(divergence, positive=True)
     if divergence <= 1 or tolerance >= 1:
         raise ValueError('synthetic bounds must surround initial error')
-    errors, stable = [1.], 0
+    errors, stable, first_window_hit = [1.], 0, None
+
+    def report(status):
+        observed_steps = len(errors)-1
+        pending = errors[max(0, observed_steps-delay):]
+        tail_stable = len(errors) >= consecutive and all(abs(e) <= tolerance for e in errors[-consecutive:])
+        return dict(status=status, errors=errors, first_window_hit=first_window_hit,
+                    declared_budget=budget, steps_observed=observed_steps,
+                    complete_budget=observed_steps == budget,
+                    delay_queue_within_tolerance=all(abs(e) <= tolerance for e in pending),
+                    tail_within_tolerance=tail_stable,
+                    stability_scope='DECLARED_SYNTHETIC_BUDGET_ONLY', physical_ready=False)
+
     for n in range(budget):
         observed = errors[max(0, n-delay)]
         action = max(-saturation, min(saturation, observed))
         error = errors[-1]-a*action
         errors.append(error)
         if not math.isfinite(error) or abs(error) > divergence:
-            return dict(status='UNSTABLE', errors=errors, physical_ready=False)
+            return report('UNSTABLE')
         stable = stable+1 if abs(error) <= tolerance else 0
-        if stable >= consecutive:
-            return dict(status='SYNTHETIC_CONVERGED', errors=errors, physical_ready=False)
-    return dict(status='NOT_CONVERGED', errors=errors, physical_ready=False)
+        if first_window_hit is None and stable >= consecutive:
+            first_window_hit = n+1
+    result = report('NOT_CONVERGED')
+    if result['tail_within_tolerance'] and result['delay_queue_within_tolerance']:
+        result['status'] = 'SYNTHETIC_CONVERGED'
+    return result
 
 
 def static_guard(rows, target, rules):
@@ -232,13 +260,17 @@ def inventory_guard(particles, expected, bottom, top, max_surface_penetration):
 
 The full expected ID/type/radius/mass map must be explicit. Center crossing is
 always refused; surface cuts are counted separately and require an explicit
-penetration bound (no default scientific threshold).
+penetration bound (no default scientific threshold). Relative clearances and
+penetration use the exact stored int/float values, with no origin-dependent
+epsilon. Precision already lost before the call cannot be reconstructed; this
+does not certify an intended physical geometry from rounded coordinates.
 """
     number(bottom)
     number(top)
     number(max_surface_penetration, nonnegative=True)
     if top <= bottom or type(expected) is not dict or not expected:
         raise ValueError('bounded plane geometry and fixed inventory required')
+    lower, upper, limit = Fraction(bottom), Fraction(top), Fraction(max_surface_penetration)
     for ident, identity in expected.items():
         integer(ident, 1)
         if type(identity) is not dict or set(identity) != {'type', 'radius', 'mass'}:
@@ -262,9 +294,10 @@ penetration bound (no default scientific threshold).
                 number(particle[axis])
             if any(particle[k] != v for k, v in expected[ident].items()):
                 raise ValueError('type/radius/mass identity mismatch')
-            z = particle['z']
-            penetration = max(bottom-(z-radius), z+radius-top, 0.)
-            if not bottom <= z <= top or penetration > max_surface_penetration:
+            z, exact_radius = Fraction(particle['z']), Fraction(radius)
+            lower_clearance, upper_clearance = z-lower, upper-z
+            penetration = max(exact_radius-lower_clearance, exact_radius-upper_clearance, 0)
+            if not lower <= z <= upper or penetration > limit:
                 raise ValueError('center crossing or excessive surface penetration')
             cuts += penetration > 0
         if seen != set(expected):

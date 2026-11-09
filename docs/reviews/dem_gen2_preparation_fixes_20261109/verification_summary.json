@@ -1,0 +1,211 @@
+{
+  "scope": "SYNTHETIC_PREPARATION_ONLY",
+  "research_results": 0,
+  "T5": "NOT_RUN",
+  "T11": "NOT_RUN",
+  "T12": "NOT_RUN",
+  "physical_ready": false,
+  "source_sha256": {
+    "make_dem_gen2_decks.py": "f778a145e693111c3d95f6c6469ac7acbac7bd16192b400b1bbd5bdd700ae5d9",
+    "dem_gen2_qualification.py": "582e60c058f9108900f340d34d356acf8126da5fe702090c1cdcf1ecf10997e9",
+    "test_make_dem_gen2_decks.py": "d6db105de33f22f8ad8d309152ab2eff4e5d494eec888a3f20bfcff72ad43860",
+    "test_dem_gen2_qualification.py": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0"
+  },
+  "suites": [
+    {
+      "name": "test_make_dem_gen2_decks.py",
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true
+    },
+    {
+      "name": "test_dem_gen2_qualification.py",
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": true
+    }
+  ],
+  "synthetic_candidates": [
+    {
+      "materials": 1,
+      "files": 16
+    },
+    {
+      "materials": 2,
+      "files": 16
+    },
+    {
+      "materials": 3,
+      "files": 16
+    }
+  ],
+  "external_process_or_network_attempts": [],
+  "original_sources_unchanged": true,
+  "passed": true,
+  "base_b": "69d714d094c4d210e5bf931d5c520e64ca0a751d",
+  "original_review_pin": "9241933b983605e3210753369a7cae5d6fc43432",
+  "prior_candidate_copy": "08fb8b178eae3010aa6658b571c83a0bc8eef12d",
+  "tests_first": {
+    "generator": {
+      "before": {
+        "tests": 18,
+        "failures": 11,
+        "errors": 0,
+        "skipped": 0,
+        "passed": false,
+        "source_sha256": {
+          "make_dem_gen2_decks.py": "41a59b338f44a746a08c87444f3334c31455f4a49b325e8dddd0f4ad228dac1c",
+          "test_make_dem_gen2_decks.py": "d6db105de33f22f8ad8d309152ab2eff4e5d494eec888a3f20bfcff72ad43860"
+        },
+        "sources_unchanged": true,
+        "external_calls": [],
+        "scientific_results": 0,
+        "whole_gate": "HOLD"
+      },
+      "after": {
+        "tests": 18,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true,
+        "source_sha256": {
+          "make_dem_gen2_decks.py": "f778a145e693111c3d95f6c6469ac7acbac7bd16192b400b1bbd5bdd700ae5d9",
+          "test_make_dem_gen2_decks.py": "d6db105de33f22f8ad8d309152ab2eff4e5d494eec888a3f20bfcff72ad43860"
+        },
+        "sources_unchanged": true,
+        "external_calls": [],
+        "scientific_results": 0,
+        "whole_gate": "HOLD"
+      }
+    },
+    "qualification": {
+      "before": {
+        "methods": 22,
+        "failures": 21,
+        "errors": 0,
+        "rc": 1,
+        "source_sha256": "5929c1cb1d6b45d267073b91d73dc2df27ae1c99f9504adac35d26b84c0a8e38",
+        "tests_sha256": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0",
+        "process_or_network_attempts": [],
+        "simulator_calls": 0,
+        "research_results": 0,
+        "physical_ready": false,
+        "whole_gate": "HOLD"
+      },
+      "after": {
+        "methods": 22,
+        "failures": 0,
+        "errors": 0,
+        "rc": 0,
+        "source_sha256": "582e60c058f9108900f340d34d356acf8126da5fe702090c1cdcf1ecf10997e9",
+        "tests_sha256": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0",
+        "process_or_network_attempts": [],
+        "simulator_calls": 0,
+        "research_results": 0,
+        "physical_ready": false,
+        "whole_gate": "HOLD"
+      }
+    }
+  },
+  "prior_test_body_preservation": [
+    {
+      "file": "test_make_dem_gen2_decks.py",
+      "prior_methods": 15,
+      "unchanged": 14,
+      "changed": [
+        "test_control_reads_frozen_force_after_restart"
+      ]
+    },
+    {
+      "file": "test_dem_gen2_qualification.py",
+      "prior_methods": 15,
+      "unchanged": 15,
+      "changed": []
+    }
+  ],
+  "changed_prior_test_reason": "The renderer frozen-force test now asserts raw snapshot then normalization of that same snapshot; other prior method bodies are unchanged.",
+  "deck_byte_preservation": [
+    {
+      "materials": 1,
+      "files": 16,
+      "unchanged": [
+        "gates/compression.in",
+        "gates/insertion.in",
+        "gates/relaxation.in",
+        "gates/separation.in",
+        "gates/servo.in",
+        "gates/stabilization.in",
+        "gates/unloading.in",
+        "main.in",
+        "stages/01_insertion.in"
+      ],
+      "changed": [
+        "manifest.json",
+        "stages/02_stabilization.in",
+        "stages/03_compression.in",
+        "stages/04_servo.in",
+        "stages/05_relaxation.in",
+        "stages/06_unloading.in",
+        "stages/07_separation.in"
+      ]
+    },
+    {
+      "materials": 2,
+      "files": 16,
+      "unchanged": [
+        "gates/compression.in",
+        "gates/insertion.in",
+        "gates/relaxation.in",
+        "gates/separation.in",
+        "gates/servo.in",
+        "gates/stabilization.in",
+        "gates/unloading.in",
+        "main.in",
+        "stages/01_insertion.in"
+      ],
+      "changed": [
+        "manifest.json",
+        "stages/02_stabilization.in",
+        "stages/03_compression.in",
+        "stages/04_servo.in",
+        "stages/05_relaxation.in",
+        "stages/06_unloading.in",
+        "stages/07_separation.in"
+      ]
+    },
+    {
+      "materials": 3,
+      "files": 16,
+      "unchanged": [
+        "gates/compression.in",
+        "gates/insertion.in",
+        "gates/relaxation.in",
+        "gates/separation.in",
+        "gates/servo.in",
+        "gates/stabilization.in",
+        "gates/unloading.in",
+        "main.in",
+        "stages/01_insertion.in"
+      ],
+      "changed": [
+        "manifest.json",
+        "stages/02_stabilization.in",
+        "stages/03_compression.in",
+        "stages/04_servo.in",
+        "stages/05_relaxation.in",
+        "stages/06_unloading.in",
+        "stages/07_separation.in"
+      ]
+    }
+  ],
+  "T0": "NOT_RUN",
+  "actual_T0_compression_sign": null,
+  "independent_recheck": "PENDING",
+  "shared_ledger_modified": false,
+  "whole_gate": "HOLD",
+  "counting_rule": "Final suites 18 and 22; subtests, red/green repeats, variants and byte-preservation rows are not extra unique test methods."
+}

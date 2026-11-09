@@ -1,0 +1,62 @@
+{
+  "schema": "dem_gen2_preparation_finding_followup_proposal/1",
+  "proposal_only": true,
+  "application_owner": "Claude",
+  "shared_ledger_modified": false,
+  "apply_now": false,
+  "review_pin": "9241933b983605e3210753369a7cae5d6fc43432",
+  "review_archive_sha256": "30eac8f7872502910a5db443b75c8f307104efb09dfd65278b915e917daa18a8",
+  "review_disposition": "DOCUMENTS_ACCEPTED_LIMITED_CODE_CHANGES_REQUIRED",
+  "new_P1": 0,
+  "application_condition": "After the final candidate commit and local regression receipt are fixed, Claude may record claimed_fixed with the bounded candidate note; independent recheck and closure remain pending",
+  "items": [
+    {
+      "id": "G2PREP-01",
+      "priority": "P2",
+      "proposed_status": "claimed_fixed",
+      "current_independent_disposition": "OPEN_RECHECK_REQUIRED",
+      "scope": "Preserve raw signed force, apply explicit synthetic compression polarity and reject wrong sign before control",
+      "evidence_to_bind": ["fixed candidate renderer and tests", "verification_summary.json", "original independent review identity"],
+      "closed": false,
+      "verified": false
+    },
+    {
+      "id": "G2PREP-02",
+      "priority": "P2",
+      "proposed_status": "claimed_fixed",
+      "current_independent_disposition": "OPEN_RECHECK_REQUIRED",
+      "scope": "Separate first window hit; observe declared budget and require final window plus pending delay queue; no asymptotic stability claim",
+      "evidence_to_bind": ["fixed candidate qualification function and tests", "verification_summary.json", "original delayed counterexample identity"],
+      "closed": false,
+      "verified": false
+    },
+    {
+      "id": "G2PREP-03",
+      "priority": "P3",
+      "proposed_status": "claimed_fixed",
+      "current_independent_disposition": "OPEN_RECHECK_REQUIRED",
+      "scope": "Symmetric exact-input intersection-circle arithmetic and explicit unsupported float-result rejection",
+      "evidence_to_bind": ["fixed candidate contact-area function and tests", "verification_summary.json", "original extreme-radius counterexample identity"],
+      "closed": false,
+      "verified": false
+    },
+    {
+      "id": "G2PREP-04",
+      "priority": "P3",
+      "proposed_status": "claimed_fixed",
+      "current_independent_disposition": "OPEN_RECHECK_REQUIRED",
+      "scope": "Relative plate clearance with exact received-input arithmetic; preserve tolerance and translation controls",
+      "evidence_to_bind": ["fixed candidate inventory function and tests", "verification_summary.json", "original large-coordinate counterexample identity"],
+      "closed": false,
+      "verified": false
+    }
+  ],
+  "prior_document_acceptance_preserved": true,
+  "DEMP_or_MV_physical_findings_closed_by_this_proposal": false,
+  "actual_research_failure_or_HOLD_bypass_claimed": false,
+  "scientific_registration": {"T5": "NOT_RUN", "T11": "NOT_RUN", "T12": "NOT_RUN", "physical_ready": false},
+  "operational_reseal": false,
+  "execution_go": false,
+  "research_results": 0,
+  "whole_gate": "HOLD"
+}

@@ -1,0 +1,192 @@
+{
+  "schema": "dem_gen2_preparation_independent_intake_receipt/1",
+  "date": "2026-11-09",
+  "workflow_base_b": "69d714d094c4d210e5bf931d5c520e64ca0a751d",
+  "original_review_pin": "9241933b983605e3210753369a7cae5d6fc43432",
+  "original_review_comparison_pin": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "prior_candidate_cherry_pick_copy": "08fb8b178eae3010aa6658b571c83a0bc8eef12d",
+  "received_review_archive": {
+    "member": "codex_dem_gen2_preparation_9241933b9836_independent_20261109.zip",
+    "bytes": 1567229,
+    "sha256": "30eac8f7872502910a5db443b75c8f307104efb09dfd65278b915e917daa18a8"
+  },
+  "original_request_archive": {
+    "member": "codex_dem_gen2_preparation_9241933b9836_review_20261109.zip",
+    "bytes": 246422,
+    "sha256": "7c2dec3bb75543570a63bcac4e5d8f5d4cd9e932ca6033adf817021f7d0dd502"
+  },
+  "reviewer_report": {
+    "member": "codex_review_dem_gen2_preparation_20261109.md",
+    "bytes": 16551,
+    "sha256": "8c867a6fd940a991828531800279945967a783bfaa80b130733edd8c0f8e4153"
+  },
+  "evidence_metadata": [
+    {
+      "member": "package_verification.json",
+      "bytes": 28647,
+      "sha256": "94a208186548a30aa63f3bc41434a5f32b322531b97609a7a57b058bd3efdb0d"
+    },
+    {
+      "member": "remote_identity_and_rendering.json",
+      "bytes": 9811,
+      "sha256": "c8072f308780038e18cf92cb8bead1f5684bf485228e15aa44aa77c30ce339c9"
+    },
+    {
+      "member": "review_environment.json",
+      "bytes": 14014,
+      "sha256": "8785bd5195e86366a1413f6dc694c44b99d6d369b59847653b322023fc42d6b6"
+    },
+    {
+      "member": "baseline/verification.json",
+      "bytes": 1218,
+      "sha256": "1673c4bc19f64772e816625234864c7b959cd811a047179f48172668cd07532d"
+    },
+    {
+      "member": "generator_evidence/probe_results.json",
+      "bytes": 5319,
+      "sha256": "6b3915856d859ba7a03ee938899f5422a8e42178fa27c4309c2b16711dae2e21"
+    },
+    {
+      "member": "generator_evidence/root_replay.json",
+      "bytes": 5319,
+      "sha256": "6b3915856d859ba7a03ee938899f5422a8e42178fa27c4309c2b16711dae2e21"
+    },
+    {
+      "member": "qualification_evidence/results.json",
+      "bytes": 14270,
+      "sha256": "674abff32eb83eadc3324e0c0e12e40aeedca8584a5533c19b5ff170f2f7e7e2"
+    },
+    {
+      "member": "qualification_evidence/root_replay_final/results.json",
+      "bytes": 14270,
+      "sha256": "674abff32eb83eadc3324e0c0e12e40aeedca8584a5533c19b5ff170f2f7e7e2"
+    },
+    {
+      "member": "final_review_checks.md",
+      "bytes": 839,
+      "sha256": "ed4339ecda5a19772920c9dbeaa007334475deda9db369e1cd816f8346083fa9"
+    }
+  ],
+  "receipt_byte_audit": {
+    "status": "PASS",
+    "outer_members": 190,
+    "crc_and_member_safety": "PASS",
+    "all_sha256sums": [
+      {
+        "archive": "codex_dem_gen2_preparation_9241933b9836_independent_20261109.zip!original_input.zip",
+        "member": "SHA256SUMS",
+        "checked": 104,
+        "full_scope_coverage": true
+      },
+      {
+        "archive": "codex_dem_gen2_preparation_9241933b9836_independent_20261109.zip",
+        "member": "package/SHA256SUMS",
+        "checked": 104,
+        "full_scope_coverage": true
+      },
+      {
+        "archive": "codex_dem_gen2_preparation_9241933b9836_independent_20261109.zip",
+        "member": "SHA256SUMS",
+        "checked": 189,
+        "full_scope_coverage": true
+      }
+    ],
+    "full_scope_coverage": true,
+    "nested_original_input_zip_equal": true,
+    "expanded_original_package_members_equal": 105,
+    "fixed_snapshot_hash_and_blob_count": 17,
+    "fixed_snapshot_pins": {
+      "9241933b983605e3210753369a7cae5d6fc43432": 14,
+      "e48e5fa0498ab7ee8fd84163d9af024d07cbb135": 3
+    },
+    "reviewed_candidate14_match_local_cherry_pick_copy": true,
+    "additional_manifest_members": 83,
+    "pasted_report_exact_bytes_equal": true
+  },
+  "independent_reviewer_disposition": {
+    "document_null_and_inactive_boundary": "ACCEPTED_LIMITED",
+    "overall_offline_code": "CHANGES_REQUIRED",
+    "new_findings": {
+      "P1": 0,
+      "P2": 2,
+      "P3": 2
+    },
+    "reported_prior_baseline_suites": [
+      {
+        "name": "test_make_dem_gen2_decks.py",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      },
+      {
+        "name": "test_dem_gen2_qualification.py",
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": true
+      }
+    ],
+    "reported_additional_negative_observations": 106,
+    "counts_not_summed": true,
+    "source": "Received report; byte intake did not replay attached tests"
+  },
+  "findings": [
+    {
+      "id": "G2PREP-01",
+      "priority": "P2",
+      "title": "Raw force sign lost before control",
+      "status": "OPEN_RECHECK_REQUIRED"
+    },
+    {
+      "id": "G2PREP-02",
+      "priority": "P2",
+      "title": "Delayed transient window hit returned as convergence",
+      "status": "OPEN_RECHECK_REQUIRED"
+    },
+    {
+      "id": "G2PREP-03",
+      "priority": "P3",
+      "title": "Geometric contact area cancellation at large radius ratio",
+      "status": "OPEN_RECHECK_REQUIRED"
+    },
+    {
+      "id": "G2PREP-04",
+      "priority": "P3",
+      "title": "Large absolute coordinates cancel surface penetration",
+      "status": "OPEN_RECHECK_REQUIRED"
+    }
+  ],
+  "external_evidence_preservation": {
+    "original_zip_unchanged": true,
+    "repository_import": false,
+    "external_location_strings_present": true,
+    "affected_archive_members": 11,
+    "policy": "Preserve full original review ZIP only as external handoff evidence; repository contains identity and bounded summary"
+  },
+  "receipt_agent_actions": {
+    "attached_scripts_executed": false,
+    "project_modules_imported": false,
+    "substantive_counterexamples_reexecuted": false,
+    "raw_research_values_read": false,
+    "independent_verdict_reissued": false,
+    "shared_ledger_modified": false
+  },
+  "supersession": {
+    "old_candidate_documents_preserved": true,
+    "meaning": "New follow-up records code changes required and candidate corrections; prior author policy and limited document acceptance remain"
+  },
+  "scientific_registration": {
+    "T5": "NOT_RUN",
+    "T11": "NOT_RUN",
+    "T12": "NOT_RUN",
+    "physical_ready": false,
+    "meaning": "Complete preregistered qualification has not been performed; not a claim of zero unit tests or a host-only requirement"
+  },
+  "research_results": 0,
+  "operational_reseal": false,
+  "execution_go": false,
+  "whole_gate": "HOLD"
+}

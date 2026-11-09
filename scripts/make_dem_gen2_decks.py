@@ -32,6 +32,7 @@ def synthetic_config(material_count=1):
                       ('AM_SC', .0007, 3e6, .3)), fractions)]
     return dict(purpose='SYNTHETIC_PREPARATION', case='synthetic_se' if material_count == 1 else 'synthetic_%dphase' % material_count, np=1,
                 dt=1e-6, seed=78049, target_mpa=300, width=.05, depth=.05,
+                compression_sign=1,
                 materials=materials,
                 settle_time=.01, stabilization_time=.01, control_period=.005,
                 compression_budget=.05, servo_budget=.05, relaxation_time=.01,
@@ -92,7 +93,10 @@ def validate(config):
         raise ValueError('production registration and adapter not implemented')
     if type(config['case']) is not str or not re.fullmatch('[a-z][a-z0-9_]{0,39}', config['case']):
         raise ValueError('safe case token required')
-    for key in set(config)-{'purpose', 'case', 'materials'}:
+    # A synthetic sign convention is required. This is NOT actual T0 evidence.
+    if type(config['compression_sign']) is not int or config['compression_sign'] not in (-1, 1):
+        raise ValueError('compression_sign must be exact integer -1 or +1')
+    for key in set(config)-{'purpose', 'case', 'materials', 'compression_sign'}:
         positive_finite(config[key], key)
     for key in ('np', 'seed', 'unload_budget', 'post_windows'):
         if type(config[key]) is not int:
@@ -178,10 +182,14 @@ def bundle(config):
     def capture_line(stage, wall=True):
         # Evaluate from the last real run BEFORE restart; the print is a scalar
         # diagnostic only, not a complete qualified boundary record.
-        obs = (' force=${g2_force_sample} rotation_energy=${g2_rot_live}'
+        obs = (' raw_reaction=${g2_reaction_sample} compression_sign=${g2_compression_sign}'
+               ' force=${g2_force_sample} rotation_energy=${g2_rot_live}'
                ' kinetic_energy=${g2_ke_live} zmax=${g2_zmax_live}') if wall else ''
-        freeze = 'variable g2_force_sample equal ${g2_force_live}\n' if wall else ''
-        return freeze + f'print "G2_CAPTURE phase={stage} step=${{g2_step}} time=${{g2_time}} atoms=${{g2_atoms}}{obs}"'
+        # Normalize the SAME frozen signed reaction, never a second live read.
+        freeze = ('variable g2_reaction_sample equal ${g2_reaction_live}\n'
+                  'variable g2_force_sample equal ${g2_compression_sign}*${g2_reaction_sample}\n') if wall else ''
+        guard = ('\nif "${g2_force_sample} < 0" then "print \'TECH_HOLD: force polarity mismatch\'" "quit 1"') if wall else ''
+        return freeze + f'print "G2_CAPTURE phase={stage} step=${{g2_step}} time=${{g2_time}} atoms=${{g2_atoms}}{obs}"' + guard
 
     def capture(stage, wall=True):
         return [capture_line(stage, wall),
@@ -237,8 +245,10 @@ def bundle(config):
         f'fix zwall_top all wall/gran {contact} mesh n_meshes 1 meshes top_mesh',
         'compute g2pair all pair/gran/local pos id force force_normal force_tangential torque contactArea delta contactPoint',
         'compute g2wall all wall/gran/local id force_normal', 'compute g2stress all stress/atom',
-        'variable g2_force_live equal abs(f_top_mesh[3])',
-        'thermo_style custom step atoms ke c_g2rot c_g2z v_g2_force_live',
+        f'variable g2_compression_sign equal {c["compression_sign"]}',
+        'variable g2_reaction_live equal f_top_mesh[3]',
+        'variable g2_force_live equal v_g2_compression_sign*v_g2_reaction_live',
+        'thermo_style custom step atoms ke c_g2rot c_g2z v_g2_reaction_live v_g2_force_live',
         f'dump g2atoms all custom {period} atom_*.liggghts id type x y z radius mass vx vy vz omegax omegay omegaz fx fy fz c_g2stress[1] c_g2stress[2] c_g2stress[3] c_g2stress[4] c_g2stress[5] c_g2stress[6]',
         f'dump g2pairs all local {period} pair_*.liggghts '+' '.join(f'c_g2pair[{i}]' for i in range(1, 27)),
         f'dump g2walls all local {period} wall_*.liggghts '+' '.join(f'c_g2wall[{i}]' for i in range(1, 7)),
@@ -291,7 +301,9 @@ def bundle(config):
         files[f'stages/{i:02d}_{STAGES[i-1]}.in'] = '\n'.join(lines)+'\n'
     manifest = dict(schema='dem-gen2-inactive-candidate-v1', purpose=c['purpose'],
                     config=c, stages=list(STAGES), physical_ready=False, execution_go=False,
-                    research_results=0, T5='NOT_RUN', T11='NOT_RUN', T12='NOT_RUN',
+                    research_results=0, T0='NOT_RUN', T5='NOT_RUN', T11='NOT_RUN', T12='NOT_RUN',
+                    synthetic_compression_sign=c['compression_sign'], actual_T0_compression_sign=None,
+                    reaction_contract='Raw signed sample retained; polarity-normalized negative force stops before control',
                     live_adapter='UNIMPLEMENTED', composite_recipe='SYNTHETIC_RENDERER_ONLY',
                     distribution_fraction_basis='mass', synthetic_recipe_fractions=recipe_fractions(materials),
                     material_order=[m['name'] for m in materials], wall_material_type=1,
