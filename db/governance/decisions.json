@@ -11753,6 +11753,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DV 회신 NO-GO (codex_DV_reply_cell_construction_v1_1_2026_11_09.md · 기준 ad4f41b8) — DU P1 1·2·3·8 해제 · 4·7·9 부분 · 5·6 설계상 해제 · 새 P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · 1 단계 해제조건 네 묶음 (큐 실패 전파 · 실물 결속 · 생성 짝 검증 · 판독기 + 음성시험 → 유효 개정 비준) · 포논 · B 결합은 각 후속 단계 전 조건"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "사용자",
+     "note": "조건부 비준 — 사용자 2026-11-09 *'go면 비준이야'*: Codex DW 회신 (kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md · 범위 ad4f41b8..837cc6e8) 이 GO 면 비준으로 본다. DW 발송 전이라 아직 proposed. GO 가 오면 agent 가 decision_state 를 active 로 바꾸고 ratified_by 에 '사용자 (조건부 비준 11-09 · DW GO 충족)' 를 적은 뒤 1 단계 블록을 낸다. 조건부 GO 나 NO-GO 면 비준으로 보지 않는다 — 조건 · 지적을 사용자에게 보이고 다시 묻는다."
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
@@ -11849,6 +11855,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex DV 회신 NO-GO (codex_DV_reply_cell_construction_v1_1_2026_11_09.md · 기준 ad4f41b8) — DU P1 1·2·3·8 해제 · 4·7·9 부분 · 5·6 설계상 해제 · 새 P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · 1 단계 해제조건 네 묶음 (큐 실패 전파 · 실물 결속 · 생성 짝 검증 · 판독기 + 음성시험 → 유효 개정 비준) · 포논 · B 결합은 각 후속 단계 전 조건"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "사용자",
+     "note": "조건부 비준 — 사용자 2026-11-09 *'go면 비준이야'*: Codex DW 회신 (kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md · 범위 ad4f41b8..837cc6e8) 이 GO 면 비준으로 본다. DW 발송 전이라 아직 proposed. GO 가 오면 agent 가 decision_state 를 active 로 바꾸고 ratified_by 에 '사용자 (조건부 비준 11-09 · DW GO 충족)' 를 적은 뒤 1 단계 블록을 낸다. 조건부 GO 나 NO-GO 면 비준으로 보지 않는다 — 조건 · 지적을 사용자에게 보이고 다시 묻는다."
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
