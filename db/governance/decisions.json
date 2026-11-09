@@ -11735,6 +11735,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "1 단계 규칙을 '≥ 11 Å 최소 요구' 에서 '바람직 + 작게 가면 선언 · 같은 셀 대조' 로 — 첫 적용이 1×2×5 (사용자 결정)"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DU 회신 NO-GO (codex_DU_reply_cell_construction_v1_2026_11_09.md · 기준 af6b9464) — 1 단계 실행 보류 · 선행 도구 고침 진행 가능 · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · 고친 판으로 재리뷰"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
@@ -11813,6 +11819,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "사용자 11-09 '2*2*5는 너무 커져서 안되 그럼 취소' (그 앞 '아니면 이번 1*1*10이 문제였으면 1*2*5 도 한번 고려해보고') → 본 셀 1×2×5 · 2×2×5 와 셀 대조 팔 없앰 · DFT k 3×2×1 (탐침 4×2×1) · 띠틈 nscf 7×4×2"
+    },
+    {
+     "at": "2026-11-09",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex DU 회신 NO-GO (codex_DU_reply_cell_construction_v1_2026_11_09.md · 기준 af6b9464) — 1 단계 실행 보류 · 선행 도구 고침 진행 가능 · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · 고친 판으로 재리뷰"
     }
    ],
    "_note": "proposed — Codex DU 리뷰 + 사용자 비준 대기"
