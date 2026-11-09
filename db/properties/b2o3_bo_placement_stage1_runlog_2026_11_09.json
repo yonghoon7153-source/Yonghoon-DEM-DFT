@@ -9,7 +9,7 @@
  "decision": "D-2026-11-09-b2o3-bo-placement-amend1 (active · 개정 1 v1.3 · 사용자 비준 2026-11-09)",
  "protocol": "D-2026-11-09-cell-construction-protocol-v1 (active · v1.3)",
  "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json → 개정_1_셀구축_v1_2026_11_09",
- "status": "6 단계 발사 블록 제공 (11-09 · gabia) — 사용자 실행 · 출력 회수 대기",
+ "status": "6 단계 진행 중 (gabia · 시작 2026-11-09 20:07:12 KST)",
  "고정_DY_확인_2": {
   "생성_명령": "python3 tools/doping/b2o3_enumerate.py --base db/structures/modelc_V0_k663.xyz --supercell 1 2 1 --n_B 2 --n_O 3 --fix_halogen --top 45 --o_motif_top all --out db/inputs/b2o3_bo_placement_2026_11_09/candidates",
   "생성_결과": "바탕 45 (B 2 개 × P 10 자리 전수 C(10,2)) × O 꼴 3 = 135 구조 · 128 원자 (Li58P8B2S41O3Cl16) · Li 후보 50 · Ewald 최저 −2256.634 · 최고 −2250.840 eV · 27.8 s · --verify 문제 0 · Codex DX · DY 가 쓴 생성 세트와 이름 · Ewald 값이 같다 (cfg0000_E-2256.634 …)",
@@ -50,5 +50,10 @@
   }
  },
  "⚠": "1 단계 (UMA) 만 — DFT (9 단계) 는 EOS 입력 결속 (DY 확인 4) 뒤 · 2 단계 (안정성 MD) 는 1 단계 판독 + 사용자 '2 단계 발사' 뒤",
- "by": "agent · 2026-11-09 · 대피 세션 claude/evac-2026-11-08"
+ "by": "agent · 2026-11-09 · 대피 세션 claude/evac-2026-11-08",
+ "6단계_발사": {
+  "시작": "2026-11-09 20:07:12 KST — 로그 '시작 (입력 · 소스 해시 재대조 통과)' · tmux b2o3_s6 살아 있음 (사용자 감시 붙여넣기 20:07:18)",
+  "20:07:18_감시": "끝난 구조 0 / 135 · GPU 1 MiB · 0 % (시작 6 초 뒤 — 모델 올리는 중으로 읽음 · 다음 감시에서 VRAM 확인)",
+  "판정_다음": "끝나면 판독기 screen (verdict · plan_dir) — 완결이어야 7 단계"
+ }
 }
