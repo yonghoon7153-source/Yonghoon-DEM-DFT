@@ -1,0 +1,3 @@
+# Preserve fixed candidate assets and received evidence bytes, including CRLF.
+candidate/** -text
+evidence/*.json -text

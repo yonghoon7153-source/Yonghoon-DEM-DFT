@@ -1,0 +1,13 @@
+{
+  "schema": "ledger_note_proposal/1",
+  "apply_now": false,
+  "owner_of_application": "Claude after receipt and scoped review",
+  "scope": "New inactive current-source first8 copy preparation only",
+  "new_findings": [],
+  "existing_finding_status_changes": [],
+  "proposed_note": "Author adopted NP20, initial E0 one arm, conditional later maximum two and stated sequence; current B source/metadata inactive copy prepared and locally checked. External limited confirmation pending. Existing defect dispositions remain unchanged; no automatic verified status, operating reseal or execution GO.",
+  "whole_gate": "HOLD",
+  "operational_activation": false,
+  "execution_authorized": false,
+  "research_results": 0
+}

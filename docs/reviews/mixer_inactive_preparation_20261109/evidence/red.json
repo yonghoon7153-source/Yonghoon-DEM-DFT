@@ -1,0 +1,29 @@
+{
+  "mode": "old",
+  "base_b": "e48e5fa0498ab7ee8fd84163d9af024d07cbb135",
+  "python": "3.12.14",
+  "python_executable_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+  "source_dependencies_verified": 12,
+  "launch_files_verified": 73,
+  "original_assets_verified": 40,
+  "actual_child_process_calls": 0,
+  "actual_socket_calls": 0,
+  "scheduler_calls": 0,
+  "mpi_calls": 0,
+  "execution_authorized": false,
+  "operational_activation": false,
+  "research_results": 0,
+  "whole_gate": "HOLD",
+  "methods": 1,
+  "failures": 8,
+  "errors": 0,
+  "audit_synthetic_denial_probes": [
+    "subprocess.Popen",
+    "socket.connect"
+  ],
+  "real_process_or_socket_attempts": 0,
+  "driver_boundary_method": "Static source inspection only; driver not imported or invoked",
+  "driver_still_reads_original_sibling_seal": true,
+  "old_source_seal_unchanged": true,
+  "rc": 1
+}

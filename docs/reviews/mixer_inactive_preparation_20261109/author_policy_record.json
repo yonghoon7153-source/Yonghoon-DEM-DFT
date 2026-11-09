@@ -1,0 +1,30 @@
+{
+  "schema": "first8_author_policy_and_inactive_preparation_record/1",
+  "date": "2026-11-09",
+  "source": "Direct author response in the implementation chat",
+  "question_verbatim": "믹서는 팔당 NP20, 초기 E0 1팔, 자격 확인·별도 wave 승인 뒤 최대 2팔, E0→N0→B1 U/C→B2 U/C→B3 U/C 순서를 정책으로 채택하고, 새 복사본에서 비활성 후보·메타데이터 결속과 모의 검증 준비를 진행할까요? 운영 봉인 교체·현장 접근·실제 제출/실행은 포함하지 않습니다.",
+  "answer_verbatim": "정책 채택·비활성 준비 진행",
+  "continued_boundaries_verbatim": [
+    "전체 HOLD 그대로 · ibb / kgy / gabia 실행 없음 · 실제 값 열람 없음 · 재봉인 없음 · 결과 0 건.",
+    "- 믹서 first8 사전 조건 정리는 하던 대로 계속.",
+    "- 건드리지 말 것: Rint 파일 (scripts/rint_r_chain.py · 그 시험 · docs/reviews/rint2_*) — Claude 쪽 고침 진행 중."
+  ],
+  "adopted_policy": {
+    "np_per_arm": 20,
+    "initial_E0_concurrent_arms": 1,
+    "later_max_concurrent_arms": 2,
+    "later_conditions": "Qualification accepted and separate wave approval; reviewed reservation release and policy transition remain required",
+    "order": ["E0 alone", "review", "N0 alone", "review", "B1 U/C", "B2 U/C", "B3 U/C"]
+  },
+  "inactive_copy_preparation_authorized": true,
+  "synthetic_metadata_and_boundary_checks_only": true,
+  "operating_policy_file_changed": false,
+  "operating_source_seal_replacement_authorized": false,
+  "field_access_authorized": false,
+  "execution_authorized": false,
+  "operational_activation": false,
+  "value_access_authorized": false,
+  "research_results": 0,
+  "whole_gate": "HOLD",
+  "not_a_machine_approval_artifact": true
+}
