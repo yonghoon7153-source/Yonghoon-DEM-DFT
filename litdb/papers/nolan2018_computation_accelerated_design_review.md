@@ -152,7 +152,7 @@
 | `Li₃PS₄` + **`Li₀.₅CoO₂`**(탈리튬) | **−0.56** |
 | `Li₃PS₄` **@ 5 V** (개방계) | **−1.27** |
 
-🔑 **탈리튬(−0.41 → −0.56, 1.37×)보다 전압 인가(−0.41 → −1.27, 3.1×)가 훨씬 세다.** 우리 `interface_reactivity` 는
+🔑 **탈리튬(−0.41 → −0.56, 1.37×)보다 전압 인가(−0.41 → −1.27, 3.1×)가 훨씬 세다.** 우리 `interface_reactivity` 는 ⚠ **2026-11-10 정정** — 이 '3.1 배' 는 잣대가 다른 두 수를 나눈 값이다 (−0.41 = mutual · 원자당 / −1.27 = total · 비-Li 원자당). 같은 잣대로는 mutual 1.3 배 · total 2.2 배다 (원전 `zhu2016_first_principles_interface_stability_assb` §20-2 — 정규화 판독은 그 digest 의 근거 수준).
 현재 **닫힌계(OCV)** 만 돌린다 — 개방계 확장의 정량적 동기가 여기 있다 (§8-①).
 
 ### 3d. μ_S / μ_O 안정범위 (`Fig. 9D`, **figure-read**, 2× 확대) — ★ "왜 황화물\|산화물이 원리적으로 안 맞는가"
@@ -269,7 +269,7 @@
    이 편의 표현: *"If the phase equilibria contain phases other than the two original materials, these two materials are not in equilibrium"* — 즉 `ΔH_D = 0` ⇔ **type 1 계면**. `Fig. 9B` 의 LLZO 곡선이 그 실례다(전 구간 ≈ 0).
    ⚠ 끝점이 준안정이면(`E_hull > 0`) 그만큼이 `ΔH_D` 에 섞여 들어온다 — **#4/#5 가 "끝점 준안정성 제거" 를 넣은 이유**이고, 이 편에는 그 처리가 **적혀 있지 않다.**
 2. **`|E_D^open| ≥ |ΔH_D|`** — Li 저수지를 열면 반응 경로가 늘어나므로 구동력은 커지기만 한다.
-   이 편의 수치 실례: `Li₃PS₄|LiCoO₂` **닫힌계 −0.41 → 5 V 개방계 −1.27 eV/atom** (p. 2035). **3.1배.**
+   이 편의 수치 실례: `Li₃PS₄|LiCoO₂` **닫힌계 −0.41 → 5 V 개방계 −1.27 eV/atom** (p. 2035). **3.1배.** ⚠ **2026-11-10 정정** — 이 '3.1 배' 는 잣대가 다른 두 수를 나눈 값이다 (−0.41 = mutual · 원자당 / −1.27 = total · 비-Li 원자당). 같은 잣대로는 mutual 1.3 배 · total 2.2 배다 (원전 `zhu2016_first_principles_interface_stability_assb` §20-2 — 정규화 판독은 그 digest 의 근거 수준).
    본문 설명: *"The reactions for delithiated cathodes at high voltage are more favorable because **lower Li chemical potential drives the delithiation and oxidation of SEs**."*
 3. **ESW 한계 = ③ 을 한 물질(상대 없음)에 대해 φ 축으로 훑었을 때 상평형이 자기 자신을 벗어나는 경계.**
    `Fig. 6A` 가 이 관계를 **그림으로** 보여 주는 유일한 자리다 — 왼쪽 staircase(전압–용량)와 오른쪽 상평형 띠가 짝을 이루고,
@@ -402,7 +402,7 @@
 
 **① ★ 개방계 `interface_reactivity` 확장 — 이 편이 준 가장 실행 가능한 숫자**
 우리는 지금 `interface_reactivity_results.json` 을 **닫힌계(OCV)** 로만 돌린다(−0.3227). 이 편이 같은 계에서
-**닫힌 −0.41 → 5 V 개방 −1.27 eV/atom (3.1×)** 를 인쇄한다. 즉 **우리가 보고 있는 −0.32 는 충전 상태의 계면 구동력을
+**닫힌 −0.41 → 5 V 개방 −1.27 eV/atom (3.1×)** 를 인쇄한다. 즉 **우리가 보고 있는 −0.32 는 충전 상태의 계면 구동력을 ⚠ **2026-11-10 정정** — 이 '3.1 배' 는 잣대가 다른 두 수를 나눈 값이다 (−0.41 = mutual · 원자당 / −1.27 = total · 비-Li 원자당). 같은 잣대로는 mutual 1.3 배 · total 2.2 배다 (원전 `zhu2016_first_principles_interface_stability_assb` §20-2 — 정규화 판독은 그 digest 의 근거 수준).
 크게 과소평가한 값일 가능성이 높다.** pymatgen `InterfacialReactivity` 에는 이미 grand-potential 모드가 있으므로
 **추가 계산 비용 거의 0 으로 `μ_Li` 를 LCO 전위(≈ 3.9 V)에 고정한 판을 만들 수 있다.** → 보고량 카드 대상.
 ⚠ 단 **먼저 `kb/templates/estimand_card.md` §1–3**: "어떤 φ 에서 재는가"(OCV / 3.9 V / 4.3 V)가 **선택 규칙**이고,
@@ -571,7 +571,7 @@ nitrogen-rich materials as electrolyte additives"* (ref 101 [Zhu17], ref 154 lit
 | **ESW 의 정의** | *"the gap between the reduction and oxidation potentials based on the Gibbs free energy difference"* + *"different from the band gap or HOMO–LUMO gap; HOMO–LUMO is an **upper bound**"* (p. 2022, ref 65–67) | `window_V` 0.898 V (2.14−1.242) · gap 2.066/2.099 eV | ✅ **우리 "gap 과 ESW 를 섞지 말라" 규율의 문헌 근거**. gap(2.07–2.10 eV) ≫ 창(0.90–1.01 V)인 것은 결함이 아니라 정의상 당연 |
 | **계면 `ΔH_D`(= `E_d`) 의 양** | `Fig. 2C`·`Fig. 9B`: 두 상 pseudo-binary 를 혼합분율로 최소화한 **eV/atom**, 음수 = 반응성 | `interface_reactivity_results.json` `min_reaction_energy_eV_per_atom` | ✅ **같은 양** (단위·부호·구성 동일) |
 | **소환 대조값** (⛔ 우리 값 옆에 나란히 쓰지 말 것 — 계·hull 세대가 다르다) | `Li₃PS₄`\|`LiCoO₂` **−0.41** → \|`Li₀.₅CoO₂` **−0.56** → **@5 V −1.27** eV/atom (p. 2035, 원출처 ref 70 [Zhu16]) · 산물 `Li₃PO₄+Li₂SO₄+Li₂S+Co₉S₈` | comp1\|`LiCoO₂` **−0.3227** · modelc **−0.3308** · nd **−0.3285** · 산물 `Co₉S₈+Li₂SO₄+Li₃PO₄+Li₂S+LiCl` | 🟢 **산물 4종 완전 일치**(우리 쪽에 `LiCl` 추가 = Cl 이 있어서) ⚠ 값 비교 금지 |
-| ★ **개방계 확장의 정량 동기** | **닫힌 −0.41 → 5 V 개방 −1.27 = 3.1×** | 우리는 **닫힌계(OCV)만** 돌린다 | 🔴 **공백**. pymatgen 에 grand-potential 모드가 이미 있으므로 비용 ≈ 0 → **보고량 카드 대상**(φ 선택 규칙을 먼저 선언해야 함, 회신 N) |
+| ★ **개방계 확장의 정량 동기** | **닫힌 −0.41 → 5 V 개방 −1.27 = 3.1×** | 우리는 **닫힌계(OCV)만** 돌린다 | 🔴 **공백**. pymatgen 에 grand-potential 모드가 이미 있으므로 비용 ≈ 0 → **보고량 카드 대상**(φ 선택 규칙을 먼저 선언해야 함, 회신 N) ⚠ **2026-11-10 정정** — 이 '3.1 배' 는 잣대가 다른 두 수를 나눈 값이다 (−0.41 = mutual · 원자당 / −1.27 = total · 비-Li 원자당). 같은 잣대로는 mutual 1.3 배 · total 2.2 배다 (원전 `zhu2016_first_principles_interface_stability_assb` §20-2 — 정규화 판독은 그 digest 의 근거 수준). |
 | ⛔ **`1.717 V` 함정** | `Fig. 6A` 의 **1.72 V = LGPS 의 환원한계**(첫 리튬화 plateau, P⁵⁺ 환원) | 우리 **1.717 V = `Li₆PS₅Cl` 의 중성 자기분해 OCV** (`→ Li₃PS₄+Li₂S+LiCl`) | 🔴 **숫자만 같고 다른 양·다른 물질.** 나란히 쓰면 **잘못된 문헌 지지**. 우리 환원한계 1.242 V 와 비교할 소환값은 **1.7 V**(argyrodite, p. 2031) — 0.46 V 차, [Rich16] 의 `Li₄P₂S₆` roster 문제와 같은 구조 |
 | **AIMD/MD 통계 규율** | *"the error bound of extrapolated RT ionic conductivity can be as large as **two orders of magnitude**"* + *"…significantly larger if **fewer data points** are used to fit the Arrhenius plot"* + *"should consider… the **Haven ratio**"* (p. 2020, 원출처 ref 39) | σ 절대값 인용 금지 · Arrhenius **3점**(600/800/1000 K) · Haven = 1 | ✅ **금지 규율의 문헌 정당화 확보** ⚠ **동시에 우리를 겨눈다** — `Fig. 5C` 의 AIMD 는 **8점(500–1250 K)** 이다. 3점을 쓴 이유(400/500 K 제외 판정)를 원고에 명시할 것 |
 | **NEB 단독 주장 금지** | *"knowledge of the energy barriers alone is **inadequate to support claims** about high ionic conductivity"* (p. 2019) | 우리 BVSE·NEB 단독 서술 | ✅ 그대로 인용 가능 |
