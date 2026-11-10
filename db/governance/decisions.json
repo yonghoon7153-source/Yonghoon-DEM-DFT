@@ -12489,7 +12489,8 @@
    "supersedes": [],
    "evidence": [
     "kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md (원문 · 기준 b018b14d)",
-    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_4_EA_회신_2026_11_10)"
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_4_EA_회신_2026_11_10)",
+    "kb/reviews/internal_EC_reply_b2o3_amend4_diag_v2_2026_11_10.md (내부 반박 리뷰 · 조건부 GO · 문장 A–F)"
    ],
    "reopen_criteria": [
     "8 단계 · 50 ps 결과를 연 뒤에는 이 규칙을 바꾸지 않는다"
@@ -12511,9 +12512,15 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex EA 회신 (사용자 붙여넣기 2026-11-10) 을 결과 전에 반영 — 사용자 비준 대기 (b2o3 1저자 = 사용자)"
+    },
+    {
+     "at": "2026-11-10",
+     "state": "proposed",
+     "by": "agent",
+     "note": "내부 반박 리뷰 EC (조건부 GO · P1 2 · P2 5) 를 결과 전에 반영 — 카드 문장 A–F · 런로그 블록 v3 (② 정확한 비준 커밋 → ⓪ 비준 · 지문 확인 → ① …) · 도구 v3 는 리뷰 에이전트가 worktree 에서 · v3 커밋 뒤 사용자 비준"
     }
    ],
-   "_note": "proposed — 회신 EA 반영 · 사용자 비준 대기 · 비준 전에는 8 단계 판독을 열지 않는다"
+   "_note": "proposed — EA · EC 반영 · v3 도구 커밋 뒤 사용자 비준 · 비준 전에는 8 단계 판독을 열지 않는다"
   },
   {
    "id": "D-2026-11-10-cascade-axes-bundle2",
