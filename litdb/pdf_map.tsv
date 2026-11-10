@@ -371,3 +371,6 @@ var2026_sulfide_se_mechanical_properties_local_indentation_pellet	the mechanical
 # ── 무른 원판 2D 압밀 식의 원전 (Cantor 외 2020 · PRL 124, 208003) — litdb 2026-11-10 · 11-09 stage A 묶음 (Cárdenas-Barrantes 계열) 의 2D 원전 · 밑줄 · 공백 두 변형 ──
 cantor2020_compaction_model_highly_deformable_particles	compaction_model_for_highly_deformable_particle_assemblies
 cantor2020_compaction_model_highly_deformable_particles	compaction model for highly deformable particle assemblies
+# ── 무기 SE 다섯 시편의 글러브박스 온도 가변 나노압입 (Papakyriakou 외 2021 · J. Power Sources 516, 230672) — litdb 2026-11-10 · 카드 제목이 한국어라 자동 매칭이 못 붙임 · 밑줄 · 공백 두 변형 (SI 없음) ──
+papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation	mechanical_behavior_of_inorganic_lithium-conducting_solid_electrolytes
+papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation	mechanical behavior of inorganic lithium-conducting solid electrolytes

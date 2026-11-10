@@ -1,0 +1,991 @@
+figure,series,x_name,x,y_name,y,note
+fig1,LPSCl pellet pattern,quantity,peak 1,two_theta_deg,15.29,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 20.1 pt; axis: 2theta 10..60 deg = x 63.29..210.09 pt (ticks every 10 deg); intensity is arbitrary
+fig1,LPSCl pellet pattern,quantity,peak 2,two_theta_deg,17.87,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 13.6 pt
+fig1,LPSCl pellet pattern,quantity,peak 3,two_theta_deg,21.87,"local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 7.9 pt; top of the broad background hump (the text attributes the broad background to the Kapton cover), not a sharp reflection"
+fig1,LPSCl pellet pattern,quantity,peak 4,two_theta_deg,25.5,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 23.8 pt
+fig1,LPSCl pellet pattern,quantity,peak 5,two_theta_deg,30.09,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 26.1 pt
+fig1,LPSCl pellet pattern,quantity,peak 6,two_theta_deg,31.42,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 17.6 pt
+fig1,LPSCl pellet pattern,quantity,peak 7,two_theta_deg,39.72,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 2.8 pt
+fig1,LPSCl pellet pattern,quantity,peak 8,two_theta_deg,44.87,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 7.9 pt
+fig1,LPSCl pellet pattern,quantity,peak 9,two_theta_deg,47.65,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 6.5 pt
+fig1,LPSCl pellet pattern,quantity,peak 10,two_theta_deg,51.93,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 8.8 pt
+fig1,LPSCl pellet pattern,quantity,peak 11,two_theta_deg,54.41,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 2.3 pt
+fig1,LPSCl pellet pattern,quantity,peak 12,two_theta_deg,58.23,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 2.6 pt
+fig1,LSPS pellet pattern,quantity,peak 1,two_theta_deg,12.24,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 12.7 pt; axis: 2theta 10..60 deg = x 63.29..210.09 pt (ticks every 10 deg); intensity is arbitrary
+fig1,LSPS pellet pattern,quantity,peak 2,two_theta_deg,14.34,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 23.5 pt
+fig1,LSPS pellet pattern,quantity,peak 3,two_theta_deg,17.21,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 19.8 pt
+fig1,LSPS pellet pattern,quantity,peak 4,two_theta_deg,20.06,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 23.8 pt
+fig1,LSPS pellet pattern,quantity,peak 5,two_theta_deg,21.59,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 17.0 pt
+fig1,LSPS pellet pattern,quantity,peak 6,two_theta_deg,21.97,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 17.0 pt
+fig1,LSPS pellet pattern,quantity,peak 7,two_theta_deg,23.79,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 14.2 pt
+fig1,LSPS pellet pattern,quantity,peak 8,two_theta_deg,26.74,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 13.6 pt
+fig1,LSPS pellet pattern,quantity,peak 9,two_theta_deg,29.31,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 12.4 pt
+fig1,LSPS pellet pattern,quantity,peak 10,two_theta_deg,33.23,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 3.4 pt
+fig1,LSPS pellet pattern,quantity,peak 11,two_theta_deg,36.29,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 4.2 pt
+fig1,LSPS pellet pattern,quantity,peak 12,two_theta_deg,37.43,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 2.8 pt
+fig1,LSPS pellet pattern,quantity,peak 13,two_theta_deg,41.34,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 5.1 pt
+fig1,LSPS pellet pattern,quantity,peak 14,two_theta_deg,47.06,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 4.5 pt
+fig1,LSPS pellet pattern,quantity,peak 15,two_theta_deg,48.68,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 1.4 pt
+fig1,LSPS pellet pattern,quantity,peak 16,two_theta_deg,51.46,local maximum of the vector pattern (higher than both sides by > 1 pt within +-12 vertices); height above the pattern minimum 1.4 pt
+fig2c,quasi-static load function (polyline vertices),t_s,0.0,P_over_Pmax,0.0,"vector vertex 1 of 5; axes: t 0..1.25 s = x 142.70..279.24 pt, P/Pmax 0..1.0 = y 379.71..293.31 pt"
+fig2c,quasi-static load function (polyline vertices),t_s,0.5,P_over_Pmax,1.0,"vector vertex 2 of 5; axes: t 0..1.25 s = x 142.70..279.24 pt, P/Pmax 0..1.0 = y 379.71..293.31 pt"
+fig2c,quasi-static load function (polyline vertices),t_s,0.8,P_over_Pmax,0.25,"vector vertex 3 of 5; axes: t 0..1.25 s = x 142.70..279.24 pt, P/Pmax 0..1.0 = y 379.71..293.31 pt"
+fig2c,quasi-static load function (polyline vertices),t_s,1.0,P_over_Pmax,0.25,"vector vertex 4 of 5; axes: t 0..1.25 s = x 142.70..279.24 pt, P/Pmax 0..1.0 = y 379.71..293.31 pt"
+fig2c,quasi-static load function (polyline vertices),t_s,1.25,P_over_Pmax,0.0,"vector vertex 5 of 5; axes: t 0..1.25 s = x 142.70..279.24 pt, P/Pmax 0..1.0 = y 379.71..293.31 pt"
+fig2d,NanoDMA load function as drawn (schematic),t_s,2.0,P_over_Pmean,1.0,end of the initial ramp (first vertex after the origin)
+fig2d,NanoDMA load function as drawn (schematic),t_s,62.1,P_over_Pmean,1.0,end of the oscillating hold
+fig2d,NanoDMA load function as drawn (schematic),t_s,64.0,P_over_Pmean,0.0,end of unloading
+fig2d,NanoDMA load function as drawn (schematic),quantity,oscillation minimum,P_over_Pmean,0.98,over the hold; 12003 line segments
+fig2d,NanoDMA load function as drawn (schematic),quantity,oscillation maximum,P_over_Pmean,1.02,over the hold
+fig2d,NanoDMA load function as drawn (schematic),quantity,number of load maxima during the hold,count,608,derived: 608 maxima / 60.1 s = 10.1 Hz (the drawing; the text gives 1-100 Hz sweep for VE and 210 Hz for creep)
+fig2d,inset (t = 32..33 s),quantity,load maxima in 1 s,count,10,inset min/max P/Pmean = 0.980 / 1.020
+fig4a,FQ — loading (25 C representative curve),P_uN,250,h_nm,27.8,"nearest vertex to the stated load (actual 253 uN); axes: h 0..300 nm = x 92.54..255.23 pt, P 0..3000 uN = y 186.15..63.91 pt"
+fig4a,FQ — loading (25 C representative curve),P_uN,500,h_nm,42.4,nearest vertex to the stated load (actual 499 uN); vector polyline vertex
+fig4a,FQ — loading (25 C representative curve),P_uN,750,h_nm,56.1,nearest vertex to the stated load (actual 753 uN); vector polyline vertex
+fig4a,FQ — loading (25 C representative curve),P_uN,1000,h_nm,67.1,nearest vertex to the stated load (actual 999 uN); vector polyline vertex
+fig4a,FQ — loading (25 C representative curve),P_uN,1250,h_nm,76.5,nearest vertex to the stated load (actual 1253 uN); vector polyline vertex
+fig4a,FQ — loading (25 C representative curve),P_uN,1500,h_nm,85.3,nearest vertex to the stated load (actual 1499 uN); vector polyline vertex
+fig4a,FQ — loading (25 C representative curve),P_uN,1750,h_nm,94.3,nearest vertex to the stated load (actual 1752 uN); vector polyline vertex
+fig4a,FQ — peak,P_uN,1965.0,h_nm,100.5,maximum load vertex and maximum depth of the curve
+fig4a,"FQ — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1750,h_nm,95.3,first unloading vertex at or below the stated load (actual 1745 uN)
+fig4a,"FQ — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1500,h_nm,88.0,first unloading vertex at or below the stated load (actual 1499 uN)
+fig4a,"FQ — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1250,h_nm,80.1,first unloading vertex at or below the stated load (actual 1246 uN)
+fig4a,"FQ — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1000,h_nm,72.3,first unloading vertex at or below the stated load (actual 999 uN)
+fig4a,"FQ — unloading (first segment, before the 0.25 Pmax hold)",P_uN,750,h_nm,63.9,first unloading vertex at or below the stated load (actual 738 uN)
+fig4a,FQ — 0.25 Pmax hold,quantity,depth at start of the hold,h_nm,56.1,first vertex within +-2 % Pmax of 0.25 Pmax (n = 10 vertices in the hold)
+fig4a,FQ — 0.25 Pmax hold,quantity,depth at end of the hold,h_nm,53.5,last vertex of the hold; change during the 0.2 s hold = -2.7 nm
+fig4a,FQ — residual depth,quantity,first unloading vertex with P < 1 % Pmax,h_nm,29.3,the curve then runs back along P ~ 0 to h = 24.1 nm (tip withdrawal)
+fig4a,FQ — unloading slope,quantity,linear fit of unloading vertices with P >= 0.70 Pmax,S_uN_per_nm,35.9,"derived: least-squares line through 82 vertices (card arithmetic, not a value given in the paper)"
+fig4a,FQ — work ratio,quantity,unloading work / loading work,ratio,0.793,"derived: trapezoid integrals of the two branches down to P < 1 % Pmax (W_load = 75125, W_unload = 59550 uN nm)"
+fig4a,FQ — depth ratio,quantity,residual depth / maximum depth,ratio,0.292,derived: 29.3 / 100.5
+fig4a,LSPS — loading (25 C representative curve),P_uN,250,h_nm,64.9,"nearest vertex to the stated load (actual 253 uN); axes: h 0..300 nm = x 92.54..255.23 pt, P 0..3000 uN = y 186.15..63.91 pt"
+fig4a,LSPS — loading (25 C representative curve),P_uN,500,h_nm,111.6,nearest vertex to the stated load (actual 499 uN); vector polyline vertex
+fig4a,LSPS — loading (25 C representative curve),P_uN,750,h_nm,148.7,nearest vertex to the stated load (actual 753 uN); vector polyline vertex
+fig4a,LSPS — loading (25 C representative curve),P_uN,1000,h_nm,178.0,nearest vertex to the stated load (actual 999 uN); vector polyline vertex
+fig4a,LSPS — loading (25 C representative curve),P_uN,1250,h_nm,201.6,nearest vertex to the stated load (actual 1253 uN); vector polyline vertex
+fig4a,LSPS — loading (25 C representative curve),P_uN,1500,h_nm,220.9,nearest vertex to the stated load (actual 1499 uN); vector polyline vertex
+fig4a,LSPS — loading (25 C representative curve),P_uN,1750,h_nm,240.3,nearest vertex to the stated load (actual 1745 uN); vector polyline vertex
+fig4a,LSPS — peak,P_uN,1915.0,h_nm,252.9,maximum load vertex and maximum depth of the curve
+fig4a,"LSPS — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1750,h_nm,250.3,first unloading vertex at or below the stated load (actual 1745 uN)
+fig4a,"LSPS — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1500,h_nm,244.0,first unloading vertex at or below the stated load (actual 1499 uN)
+fig4a,"LSPS — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1250,h_nm,235.6,first unloading vertex at or below the stated load (actual 1246 uN)
+fig4a,"LSPS — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1000,h_nm,227.2,first unloading vertex at or below the stated load (actual 993 uN)
+fig4a,"LSPS — unloading (first segment, before the 0.25 Pmax hold)",P_uN,750,h_nm,217.3,first unloading vertex at or below the stated load (actual 745 uN)
+fig4a,LSPS — 0.25 Pmax hold,quantity,depth at start of the hold,h_nm,206.3,first vertex within +-2 % Pmax of 0.25 Pmax (n = 11 vertices in the hold)
+fig4a,LSPS — 0.25 Pmax hold,quantity,depth at end of the hold,h_nm,203.2,last vertex of the hold; change during the 0.2 s hold = -3.1 nm
+fig4a,LSPS — residual depth,quantity,first unloading vertex with P < 1 % Pmax,h_nm,158.1,the curve then runs back along P ~ 0 to h = 29.9 nm (tip withdrawal)
+fig4a,LSPS — unloading slope,quantity,linear fit of unloading vertices with P >= 0.70 Pmax,S_uN_per_nm,37.4,"derived: least-squares line through 77 vertices (card arithmetic, not a value given in the paper)"
+fig4a,LSPS — work ratio,quantity,unloading work / loading work,ratio,0.332,"derived: trapezoid integrals of the two branches down to P < 1 % Pmax (W_load = 180279, W_unload = 59807 uN nm)"
+fig4a,LSPS — depth ratio,quantity,residual depth / maximum depth,ratio,0.625,derived: 158.1 / 252.9
+fig4a,LPSCl — loading (25 C representative curve),P_uN,250,h_nm,40.4,"nearest vertex to the stated load (actual 253 uN); axes: h 0..300 nm = x 92.54..255.23 pt, P 0..3000 uN = y 186.15..63.91 pt"
+fig4a,LPSCl — loading (25 C representative curve),P_uN,500,h_nm,69.7,nearest vertex to the stated load (actual 499 uN); vector polyline vertex
+fig4a,LPSCl — loading (25 C representative curve),P_uN,750,h_nm,96.9,nearest vertex to the stated load (actual 753 uN); vector polyline vertex
+fig4a,LPSCl — loading (25 C representative curve),P_uN,1000,h_nm,125.2,nearest vertex to the stated load (actual 1020 uN); vector polyline vertex
+fig4a,LPSCl — loading (25 C representative curve),P_uN,1250,h_nm,147.2,nearest vertex to the stated load (actual 1253 uN); vector polyline vertex
+fig4a,LPSCl — loading (25 C representative curve),P_uN,1500,h_nm,168.1,nearest vertex to the stated load (actual 1499 uN); vector polyline vertex
+fig4a,LPSCl — loading (25 C representative curve),P_uN,1750,h_nm,185.9,nearest vertex to the stated load (actual 1752 uN); vector polyline vertex
+fig4a,LPSCl — peak,P_uN,1936.0,h_nm,198.9,maximum load vertex and maximum depth of the curve
+fig4a,"LPSCl — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1750,h_nm,195.9,first unloading vertex at or below the stated load (actual 1738 uN)
+fig4a,"LPSCl — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1500,h_nm,189.1,first unloading vertex at or below the stated load (actual 1499 uN)
+fig4a,"LPSCl — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1250,h_nm,182.8,first unloading vertex at or below the stated load (actual 1246 uN)
+fig4a,"LPSCl — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1000,h_nm,174.9,first unloading vertex at or below the stated load (actual 993 uN)
+fig4a,"LPSCl — unloading (first segment, before the 0.25 Pmax hold)",P_uN,750,h_nm,166.0,first unloading vertex at or below the stated load (actual 731 uN)
+fig4a,LPSCl — 0.25 Pmax hold,quantity,depth at start of the hold,h_nm,157.6,first vertex within +-2 % Pmax of 0.25 Pmax (n = 14 vertices in the hold)
+fig4a,LPSCl — 0.25 Pmax hold,quantity,depth at end of the hold,h_nm,155.1,last vertex of the hold; change during the 0.2 s hold = -2.6 nm
+fig4a,LPSCl — residual depth,quantity,first unloading vertex with P < 1 % Pmax,h_nm,127.7,the curve then runs back along P ~ 0 to h = 18.4 nm (tip withdrawal)
+fig4a,LPSCl — unloading slope,quantity,linear fit of unloading vertices with P >= 0.70 Pmax,S_uN_per_nm,41.0,"derived: least-squares line through 73 vertices (card arithmetic, not a value given in the paper)"
+fig4a,LPSCl — work ratio,quantity,unloading work / loading work,ratio,0.328,"derived: trapezoid integrals of the two branches down to P < 1 % Pmax (W_load = 164419, W_unload = 53926 uN nm)"
+fig4a,LPSCl — depth ratio,quantity,residual depth / maximum depth,ratio,0.642,derived: 127.7 / 198.9
+fig4a,HP-LLZTO — loading (25 C representative curve),P_uN,250,h_nm,15.2,"nearest vertex to the stated load (actual 253 uN); axes: h 0..300 nm = x 92.54..255.23 pt, P 0..3000 uN = y 186.15..63.91 pt"
+fig4a,HP-LLZTO — loading (25 C representative curve),P_uN,500,h_nm,26.8,nearest vertex to the stated load (actual 499 uN); vector polyline vertex
+fig4a,HP-LLZTO — loading (25 C representative curve),P_uN,750,h_nm,37.7,nearest vertex to the stated load (actual 745 uN); vector polyline vertex
+fig4a,HP-LLZTO — loading (25 C representative curve),P_uN,1000,h_nm,49.3,nearest vertex to the stated load (actual 999 uN); vector polyline vertex
+fig4a,HP-LLZTO — loading (25 C representative curve),P_uN,1250,h_nm,58.1,nearest vertex to the stated load (actual 1253 uN); vector polyline vertex
+fig4a,HP-LLZTO — loading (25 C representative curve),P_uN,1500,h_nm,67.1,nearest vertex to the stated load (actual 1499 uN); vector polyline vertex
+fig4a,HP-LLZTO — loading (25 C representative curve),P_uN,1750,h_nm,76.5,nearest vertex to the stated load (actual 1752 uN); vector polyline vertex
+fig4a,HP-LLZTO — peak,P_uN,1972.0,h_nm,83.9,maximum load vertex and maximum depth of the curve
+fig4a,"HP-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1750,h_nm,81.2,first unloading vertex at or below the stated load (actual 1745 uN)
+fig4a,"HP-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1500,h_nm,77.1,first unloading vertex at or below the stated load (actual 1499 uN)
+fig4a,"HP-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1250,h_nm,72.8,first unloading vertex at or below the stated load (actual 1246 uN)
+fig4a,"HP-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1000,h_nm,67.6,first unloading vertex at or below the stated load (actual 999 uN)
+fig4a,"HP-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,750,h_nm,61.9,first unloading vertex at or below the stated load (actual 745 uN)
+fig4a,HP-LLZTO — 0.25 Pmax hold,quantity,depth at start of the hold,h_nm,56.1,first vertex within +-2 % Pmax of 0.25 Pmax (n = 13 vertices in the hold)
+fig4a,HP-LLZTO — 0.25 Pmax hold,quantity,depth at end of the hold,h_nm,54.0,last vertex of the hold; change during the 0.2 s hold = -2.1 nm
+fig4a,HP-LLZTO — residual depth,quantity,first unloading vertex with P < 1 % Pmax,h_nm,32.5,the curve then runs back along P ~ 0 to h = 28.8 nm (tip withdrawal)
+fig4a,HP-LLZTO — unloading slope,quantity,linear fit of unloading vertices with P >= 0.70 Pmax,S_uN_per_nm,65.5,"derived: least-squares line through 89 vertices (card arithmetic, not a value given in the paper)"
+fig4a,HP-LLZTO — work ratio,quantity,unloading work / loading work,ratio,0.493,"derived: trapezoid integrals of the two branches down to P < 1 % Pmax (W_load = 73229, W_unload = 36084 uN nm)"
+fig4a,HP-LLZTO — depth ratio,quantity,residual depth / maximum depth,ratio,0.388,derived: 32.5 / 83.9
+fig4a,CPSS-LLZTO — loading (25 C representative curve),P_uN,250,h_nm,27.8,"nearest vertex to the stated load (actual 232 uN); axes: h 0..300 nm = x 92.54..255.23 pt, P 0..3000 uN = y 186.15..63.91 pt"
+fig4a,CPSS-LLZTO — loading (25 C representative curve),P_uN,500,h_nm,46.7,nearest vertex to the stated load (actual 485 uN); vector polyline vertex
+fig4a,CPSS-LLZTO — loading (25 C representative curve),P_uN,750,h_nm,64.4,nearest vertex to the stated load (actual 753 uN); vector polyline vertex
+fig4a,CPSS-LLZTO — loading (25 C representative curve),P_uN,1000,h_nm,77.1,nearest vertex to the stated load (actual 999 uN); vector polyline vertex
+fig4a,CPSS-LLZTO — loading (25 C representative curve),P_uN,1250,h_nm,88.0,nearest vertex to the stated load (actual 1246 uN); vector polyline vertex
+fig4a,CPSS-LLZTO — loading (25 C representative curve),P_uN,1500,h_nm,97.5,nearest vertex to the stated load (actual 1499 uN); vector polyline vertex
+fig4a,CPSS-LLZTO — loading (25 C representative curve),P_uN,1750,h_nm,107.3,nearest vertex to the stated load (actual 1752 uN); vector polyline vertex
+fig4a,CPSS-LLZTO — peak,P_uN,1958.0,h_nm,114.7,maximum load vertex and maximum depth of the curve
+fig4a,"CPSS-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1750,h_nm,113.1,first unloading vertex at or below the stated load (actual 1745 uN)
+fig4a,"CPSS-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1500,h_nm,109.5,first unloading vertex at or below the stated load (actual 1499 uN)
+fig4a,"CPSS-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1250,h_nm,105.3,first unloading vertex at or below the stated load (actual 1246 uN)
+fig4a,"CPSS-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1000,h_nm,100.5,first unloading vertex at or below the stated load (actual 999 uN)
+fig4a,"CPSS-LLZTO — unloading (first segment, before the 0.25 Pmax hold)",P_uN,750,h_nm,95.3,first unloading vertex at or below the stated load (actual 745 uN)
+fig4a,CPSS-LLZTO — 0.25 Pmax hold,quantity,depth at start of the hold,h_nm,88.0,first vertex within +-2 % Pmax of 0.25 Pmax (n = 13 vertices in the hold)
+fig4a,CPSS-LLZTO — 0.25 Pmax hold,quantity,depth at end of the hold,h_nm,84.8,last vertex of the hold; change during the 0.2 s hold = -3.2 nm
+fig4a,CPSS-LLZTO — residual depth,quantity,first unloading vertex with P < 1 % Pmax,h_nm,42.9,the curve then runs back along P ~ 0 to h = 32.0 nm (tip withdrawal)
+fig4a,CPSS-LLZTO — unloading slope,quantity,linear fit of unloading vertices with P >= 0.70 Pmax,S_uN_per_nm,80.2,"derived: least-squares line through 84 vertices (card arithmetic, not a value given in the paper)"
+fig4a,CPSS-LLZTO — work ratio,quantity,unloading work / loading work,ratio,0.428,"derived: trapezoid integrals of the two branches down to P < 1 % Pmax (W_load = 86300, W_unload = 36902 uN nm)"
+fig4a,CPSS-LLZTO — depth ratio,quantity,residual depth / maximum depth,ratio,0.374,derived: 42.9 / 114.7
+fig4a,LAGP — loading (25 C representative curve),P_uN,250,h_nm,17.9,"nearest vertex to the stated load (actual 253 uN); axes: h 0..300 nm = x 92.54..255.23 pt, P 0..3000 uN = y 186.15..63.91 pt"
+fig4a,LAGP — loading (25 C representative curve),P_uN,500,h_nm,30.4,nearest vertex to the stated load (actual 492 uN); vector polyline vertex
+fig4a,LAGP — loading (25 C representative curve),P_uN,750,h_nm,40.9,nearest vertex to the stated load (actual 753 uN); vector polyline vertex
+fig4a,LAGP — loading (25 C representative curve),P_uN,1000,h_nm,48.8,nearest vertex to the stated load (actual 999 uN); vector polyline vertex
+fig4a,LAGP — loading (25 C representative curve),P_uN,1250,h_nm,57.1,nearest vertex to the stated load (actual 1253 uN); vector polyline vertex
+fig4a,LAGP — loading (25 C representative curve),P_uN,1500,h_nm,64.4,nearest vertex to the stated load (actual 1492 uN); vector polyline vertex
+fig4a,LAGP — loading (25 C representative curve),P_uN,1750,h_nm,70.7,nearest vertex to the stated load (actual 1745 uN); vector polyline vertex
+fig4a,LAGP — peak,P_uN,1972.0,h_nm,78.0,maximum load vertex and maximum depth of the curve
+fig4a,"LAGP — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1750,h_nm,74.9,first unloading vertex at or below the stated load (actual 1745 uN)
+fig4a,"LAGP — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1500,h_nm,70.3,first unloading vertex at or below the stated load (actual 1499 uN)
+fig4a,"LAGP — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1250,h_nm,66.5,first unloading vertex at or below the stated load (actual 1246 uN)
+fig4a,"LAGP — unloading (first segment, before the 0.25 Pmax hold)",P_uN,1000,h_nm,61.3,first unloading vertex at or below the stated load (actual 993 uN)
+fig4a,"LAGP — unloading (first segment, before the 0.25 Pmax hold)",P_uN,750,h_nm,57.1,first unloading vertex at or below the stated load (actual 745 uN)
+fig4a,LAGP — 0.25 Pmax hold,quantity,depth at start of the hold,h_nm,51.9,first vertex within +-2 % Pmax of 0.25 Pmax (n = 13 vertices in the hold)
+fig4a,LAGP — 0.25 Pmax hold,quantity,depth at end of the hold,h_nm,49.7,last vertex of the hold; change during the 0.2 s hold = -2.1 nm
+fig4a,LAGP — residual depth,quantity,first unloading vertex with P < 1 % Pmax,h_nm,33.6,the curve then runs back along P ~ 0 to h = 29.9 nm (tip withdrawal)
+fig4a,LAGP — unloading slope,quantity,linear fit of unloading vertices with P >= 0.70 Pmax,S_uN_per_nm,62.5,"derived: least-squares line through 90 vertices (card arithmetic, not a value given in the paper)"
+fig4a,LAGP — work ratio,quantity,unloading work / loading work,ratio,0.56,"derived: trapezoid integrals of the two branches down to P < 1 % Pmax (W_load = 62200, W_unload = 34863 uN nm)"
+fig4a,LAGP — depth ratio,quantity,residual depth / maximum depth,ratio,0.431,derived: 33.6 / 78.0
+fig4b,FQ,T_C,-40,Er_GPa,73.66,"bar_lo=72.57; bar_hi=74.73; marker centre=73.49; value = junction of the two error-bar stems; axes: T -100..400 C = x 92.08..254.89 pt, Er 0..200 GPa = y 366.59..259.86 pt"
+fig4b,FQ,T_C,0,Er_GPa,69.33,bar_lo=68.25; bar_hi=69.87; marker centre=68.69
+fig4b,FQ,T_C,25,Er_GPa,70.42,bar_lo=69.33; bar_hi=71.49; marker centre=70.31
+fig4b,FQ,T_C,60,Er_GPa,72.03,bar_lo=70.41; bar_hi=73.11; marker centre=71.87
+fig4b,FQ,T_C,100,Er_GPa,73.12,bar_lo=71.49; bar_hi=74.19; marker centre=72.95
+fig4b,FQ,T_C,200,Er_GPa,73.12,bar_lo=70.95; bar_hi=74.73; marker centre=72.41
+fig4b,FQ,T_C,300,Er_GPa,76.36,bar_lo=73.65; bar_hi=79.05; marker centre=76.19
+fig4b,LSPS,T_C,-40,Er_GPa,32.72,bar_lo=26.35; bar_hi=38.77; marker centre=32.62
+fig4b,LSPS,T_C,0,Er_GPa,36.5,bar_lo=31.75; bar_hi=41.47; marker centre=36.39
+fig4b,LSPS,T_C,25,Er_GPa,34.35,bar_lo=29.05; bar_hi=39.85; marker centre=34.24
+fig4b,LSPS,T_C,60,Er_GPa,34.35,bar_lo=28.51; bar_hi=39.85; marker centre=34.24
+fig4b,LSPS,T_C,100,Er_GPa,23.65,bar_lo=21.49; bar_hi=26.35; marker centre=23.54
+fig4b,LSPS,T_C,200,Er_GPa,21.49,bar_lo=19.44; bar_hi=23.11; marker centre=21.38
+fig4b,LSPS,T_C,300,Er_GPa,20.41,bar_lo=16.2; bar_hi=24.73; marker centre=20.3
+fig4b,LPSCl,T_C,-40,Er_GPa,42.44,bar_lo=35.53; bar_hi=48.38; marker centre=41.79
+fig4b,LPSCl,T_C,0,Er_GPa,38.11,bar_lo=33.37; bar_hi=43.09; marker centre=38.01
+fig4b,LPSCl,T_C,25,Er_GPa,33.8,bar_lo=28.51; bar_hi=39.85; marker centre=33.7
+fig4b,LPSCl,T_C,60,Er_GPa,35.96,bar_lo=30.13; bar_hi=41.47; marker centre=35.32
+fig4b,LPSCl,T_C,100,Er_GPa,29.05,bar_lo=26.35; bar_hi=31.21; marker centre=28.89
+fig4b,LPSCl,T_C,200,Er_GPa,30.68,bar_lo=29.05; bar_hi=32.29; marker centre=30.51
+fig4b,LPSCl,T_C,300,Er_GPa,29.59,bar_lo=25.27; bar_hi=33.91; marker centre=29.43
+fig4b,HP-LLZTO,T_C,-40,Er_GPa,135.4,bar_lo=127.4; bar_hi=144.1; marker centre=135.3
+fig4b,HP-LLZTO,T_C,0,Er_GPa,117.2,bar_lo=109.2; bar_hi=125.3; marker centre=117.0
+fig4b,HP-LLZTO,T_C,25,Er_GPa,124.1,bar_lo=107.0; bar_hi=141.4; marker centre=124.0
+fig4b,HP-LLZTO,T_C,60,Er_GPa,131.6,bar_lo=119.3; bar_hi=144.1; marker centre=131.5
+fig4b,HP-LLZTO,T_C,100,Er_GPa,127.9,bar_lo=115.0; bar_hi=140.8; marker centre=127.8
+fig4b,HP-LLZTO,T_C,200,Er_GPa,144.6,bar_lo=134.3; bar_hi=154.3; marker centre=144.4
+fig4b,HP-LLZTO,T_C,300,Er_GPa,144.1,bar_lo=132.8; bar_hi=155.4; marker centre=143.9
+fig4b,CPSS-LLZTO,T_C,-40,Er_GPa,90.83,bar_lo=60.26; bar_hi=121.5; marker centre=90.72
+fig4b,CPSS-LLZTO,T_C,0,Er_GPa,83.26,bar_lo=60.26; bar_hi=107.0; marker centre=83.16
+fig4b,CPSS-LLZTO,T_C,25,Er_GPa,94.61,bar_lo=64.58; bar_hi=124.2; marker centre=94.44
+fig4b,CPSS-LLZTO,T_C,60,Er_GPa,88.67,bar_lo=75.81; bar_hi=102.2; marker centre=88.56
+fig4b,CPSS-LLZTO,T_C,100,Er_GPa,105.8,bar_lo=89.74; bar_hi=122.6; marker centre=105.7
+fig4b,CPSS-LLZTO,T_C,200,Er_GPa,106.9,bar_lo=87.69; bar_hi=126.4; marker centre=106.8
+fig4b,CPSS-LLZTO,T_C,300,Er_GPa,84.34,bar_lo=67.17; bar_hi=102.2; marker centre=84.24
+fig4b,LAGP,T_C,-40,Er_GPa,136.5,bar_lo=128.5; bar_hi=145.1; marker centre=136.7
+fig4b,LAGP,T_C,0,Er_GPa,143.0,bar_lo=123.1; bar_hi=162.9; marker centre=143.1
+fig4b,LAGP,T_C,25,Er_GPa,140.3,bar_lo=133.3; bar_hi=147.3; marker centre=140.4
+fig4b,LAGP,T_C,60,Er_GPa,125.7,bar_lo=118.8; bar_hi=133.3; marker centre=125.9
+fig4b,LAGP,T_C,100,Er_GPa,129.5,bar_lo=122.6; bar_hi=137.0; marker centre=129.6
+fig4b,LAGP,T_C,200,Er_GPa,120.4,bar_lo=113.9; bar_hi=126.9; marker centre=120.0
+fig4b,LAGP,T_C,300,Er_GPa,119.9,bar_lo=104.3; bar_hi=134.9; marker centre=119.4
+fig4c,FQ,T_C,-40,H_GPa,10.54,"bar_lo=10.16; bar_hi=10.92; marker centre=10.54; value = junction of the two error-bar stems; axes: T -100..400 C = x 92.14..254.83 pt, H 0..20 GPa = y 542.42..419.84 pt"
+fig4c,FQ,T_C,0,H_GPa,9.318,bar_lo=9.139; bar_hi=9.553; marker centre=9.323
+fig4c,FQ,T_C,25,H_GPa,9.365,bar_lo=9.092; bar_hi=9.647; marker centre=9.37
+fig4c,FQ,T_C,60,H_GPa,9.553,bar_lo=9.234; bar_hi=9.882; marker centre=9.558
+fig4c,FQ,T_C,100,H_GPa,10.16,bar_lo=9.788; bar_hi=10.54; marker centre=10.16
+fig4c,FQ,T_C,200,H_GPa,8.988,bar_lo=8.434; bar_hi=9.6; marker centre=8.998
+fig4c,FQ,T_C,300,H_GPa,9.742,bar_lo=9.14; bar_hi=10.4; marker centre=9.741
+fig4c,LSPS,T_C,-40,H_GPa,1.447,bar_lo=1.269; bar_hi=1.645; marker centre=1.457
+fig4c,LSPS,T_C,0,H_GPa,2.436,bar_lo=1.692; bar_hi=3.14; marker centre=2.435
+fig4c,LSPS,T_C,25,H_GPa,1.871,bar_lo=1.269; bar_hi=2.435; marker centre=1.829
+fig4c,LSPS,T_C,60,H_GPa,2.106,bar_lo=1.316; bar_hi=2.858; marker centre=2.111
+fig4c,LSPS,T_C,100,H_GPa,1.589,bar_lo=1.269; bar_hi=1.88; marker centre=1.598
+fig4c,LSPS,T_C,200,H_GPa,1.495,bar_lo=1.175; bar_hi=1.786; marker centre=1.504
+fig4c,LSPS,T_C,300,H_GPa,1.495,bar_lo=1.175; bar_hi=1.786; marker centre=1.504
+fig4c,LPSCl,T_C,-40,H_GPa,2.389,bar_lo=2.106; bar_hi=2.623; marker centre=2.388
+fig4c,LPSCl,T_C,0,H_GPa,2.482,bar_lo=2.153; bar_hi=2.764; marker centre=2.482
+fig4c,LPSCl,T_C,25,H_GPa,1.871,bar_lo=1.504; bar_hi=2.247; marker centre=1.876
+fig4c,LPSCl,T_C,60,H_GPa,2.154,bar_lo=1.504; bar_hi=2.811; marker centre=2.158
+fig4c,LPSCl,T_C,100,H_GPa,2.012,bar_lo=1.598; bar_hi=2.388; marker centre=1.97
+fig4c,LPSCl,T_C,200,H_GPa,1.919,bar_lo=1.692; bar_hi=2.106; marker centre=1.923
+fig4c,LPSCl,T_C,300,H_GPa,1.212,bar_lo=1.081; bar_hi=1.363; marker centre=1.222
+fig4c,HP-LLZTO,T_C,-40,H_GPa,12.88,bar_lo=11.06; bar_hi=14.75; marker centre=12.88
+fig4c,HP-LLZTO,T_C,0,H_GPa,10.82,bar_lo=9.788; bar_hi=11.86; marker centre=10.82
+fig4c,HP-LLZTO,T_C,25,H_GPa,9.178,bar_lo=7.071; bar_hi=11.25; marker centre=9.182
+fig4c,HP-LLZTO,T_C,60,H_GPa,10.82,bar_lo=9.647; bar_hi=11.99; marker centre=10.82
+fig4c,HP-LLZTO,T_C,100,H_GPa,8.988,bar_lo=7.917; bar_hi=10.07; marker centre=8.998
+fig4c,HP-LLZTO,T_C,200,H_GPa,8.988,bar_lo=7.635; bar_hi=10.35; marker centre=8.998
+fig4c,HP-LLZTO,T_C,300,H_GPa,7.447,bar_lo=6.751; bar_hi=8.199; marker centre=7.447
+fig4c,CPSS-LLZTO,T_C,-40,H_GPa,3.188,bar_lo=2.106; bar_hi=4.269; marker centre=3.187
+fig4c,CPSS-LLZTO,T_C,0,H_GPa,2.576,bar_lo=1.457; bar_hi=3.705; marker centre=2.576
+fig4c,CPSS-LLZTO,T_C,25,H_GPa,3.789,bar_lo=2.529; bar_hi=5.059; marker centre=3.799
+fig4c,CPSS-LLZTO,T_C,60,H_GPa,3.046,bar_lo=2.388; bar_hi=3.752; marker centre=3.046
+fig4c,CPSS-LLZTO,T_C,100,H_GPa,4.071,bar_lo=2.905; bar_hi=5.2; marker centre=4.081
+fig4c,CPSS-LLZTO,T_C,200,H_GPa,2.999,bar_lo=2.388; bar_hi=3.564; marker centre=2.999
+fig4c,CPSS-LLZTO,T_C,300,H_GPa,2.389,bar_lo=1.645; bar_hi=3.14; marker centre=2.388
+fig4c,LAGP,T_C,-40,H_GPa,11.38,bar_lo=10.59; bar_hi=12.18; marker centre=11.41
+fig4c,LAGP,T_C,0,H_GPa,12.55,bar_lo=9.788; bar_hi=15.27; marker centre=12.53
+fig4c,LAGP,T_C,25,H_GPa,11.57,bar_lo=10.21; bar_hi=12.93; marker centre=11.55
+fig4c,LAGP,T_C,60,H_GPa,10.07,bar_lo=9.139; bar_hi=11.06; marker centre=10.09
+fig4c,LAGP,T_C,100,H_GPa,10.07,bar_lo=9.6; bar_hi=10.54; marker centre=10.09
+fig4c,LAGP,T_C,200,H_GPa,8.801,bar_lo=8.011; bar_hi=9.553; marker centre=8.787
+fig4c,LAGP,T_C,300,H_GPa,7.119,bar_lo=5.388; bar_hi=8.857; marker centre=7.099
+fig5a,FQ @ -40 C,f_Hz,1.0,storage_modulus_GPa,72.04,"axes: f 1..100 Hz (log) = x 133.00..284.28 pt, storage_modulus_GPa 0..150 = y 166.80..64.07 pt; panel temperature -40 C; bar_lo=71.41; bar_hi=72.92"
+fig5a,FQ @ -40 C,f_Hz,1.67,storage_modulus_GPa,72.04,bar_lo=71.79; bar_hi=72.92
+fig5a,FQ @ -40 C,f_Hz,2.77,storage_modulus_GPa,72.04,bar_lo=72.16; bar_hi=72.54
+fig5a,FQ @ -40 C,f_Hz,4.64,storage_modulus_GPa,72.42,bar_lo=72.17; bar_hi=72.92
+fig5a,FQ @ -40 C,f_Hz,7.76,storage_modulus_GPa,72.8,bar_lo=72.54; bar_hi=73.3
+fig5a,FQ @ -40 C,f_Hz,12.9,storage_modulus_GPa,72.8,bar_lo=72.54; bar_hi=73.3
+fig5a,FQ @ -40 C,f_Hz,21.5,storage_modulus_GPa,73.18,bar_lo=72.92; bar_hi=73.67
+fig5a,FQ @ -40 C,f_Hz,36.0,storage_modulus_GPa,73.55,bar_lo=72.54; bar_hi=75.19
+fig5a,FQ @ -40 C,f_Hz,58.4,storage_modulus_GPa,73.93,bar_lo=72.54; bar_hi=75.56
+fig5a,FQ @ -40 C,f_Hz,100.0,storage_modulus_GPa,73.55,bar_lo=73.3; bar_hi=74.06
+fig5a,LSPS @ -40 C,f_Hz,1.0,storage_modulus_GPa,41.44,bar_lo=40.43; bar_hi=43.07
+fig5a,LSPS @ -40 C,f_Hz,1.67,storage_modulus_GPa,40.3,bar_lo=39.29; bar_hi=41.56
+fig5a,LSPS @ -40 C,f_Hz,2.77,storage_modulus_GPa,40.68,bar_lo=40.43; bar_hi=41.56
+fig5a,LSPS @ -40 C,f_Hz,4.64,storage_modulus_GPa,41.06,bar_lo=40.81; bar_hi=41.56
+fig5a,LSPS @ -40 C,f_Hz,7.76,storage_modulus_GPa,41.44,bar_lo=40.81; bar_hi=41.94
+fig5a,LSPS @ -40 C,f_Hz,12.9,storage_modulus_GPa,41.44,bar_lo=41.18; bar_hi=41.94
+fig5a,LSPS @ -40 C,f_Hz,21.5,storage_modulus_GPa,41.81,bar_lo=41.56; bar_hi=42.32
+fig5a,LSPS @ -40 C,f_Hz,36.0,storage_modulus_GPa,41.81,bar_lo=40.05; bar_hi=43.83
+fig5a,LSPS @ -40 C,f_Hz,58.4,storage_modulus_GPa,41.81,bar_lo=41.18; bar_hi=43.07
+fig5a,LSPS @ -40 C,f_Hz,100.0,storage_modulus_GPa,41.44,bar_lo=41.18; bar_hi=41.94
+fig5a,LPSCl @ -40 C,f_Hz,1.0,storage_modulus_GPa,31.99,bar_lo=31.36; bar_hi=32.49
+fig5a,LPSCl @ -40 C,f_Hz,1.67,storage_modulus_GPa,31.61,bar_lo=31.36; bar_hi=32.11
+fig5a,LPSCl @ -40 C,f_Hz,2.77,storage_modulus_GPa,31.61,bar_lo=31.72; bar_hi=32.11
+fig5a,LPSCl @ -40 C,f_Hz,4.64,storage_modulus_GPa,31.99,bar_lo=31.74; bar_hi=32.1
+fig5a,LPSCl @ -40 C,f_Hz,7.76,storage_modulus_GPa,31.99,bar_lo=31.74; bar_hi=32.49
+fig5a,LPSCl @ -40 C,f_Hz,12.9,storage_modulus_GPa,31.99,bar_lo=32.1; bar_hi=32.49
+fig5a,LPSCl @ -40 C,f_Hz,21.5,storage_modulus_GPa,32.37,bar_lo=32.11; bar_hi=32.48
+fig5a,LPSCl @ -40 C,f_Hz,36.0,storage_modulus_GPa,32.37,bar_lo=31.74; bar_hi=33.63
+fig5a,LPSCl @ -40 C,f_Hz,58.4,storage_modulus_GPa,32.37,bar_lo=31.36; bar_hi=33.63
+fig5a,LPSCl @ -40 C,f_Hz,100.0,storage_modulus_GPa,32.37,bar_lo=32.11; bar_hi=32.48
+fig5a,HP-LLZTO @ -40 C,f_Hz,1.0,storage_modulus_GPa,136.3,bar_lo=135.3; bar_hi=137.5
+fig5a,HP-LLZTO @ -40 C,f_Hz,1.67,storage_modulus_GPa,135.1,bar_lo=131.9; bar_hi=138.7
+fig5a,HP-LLZTO @ -40 C,f_Hz,2.77,storage_modulus_GPa,136.3,bar_lo=136.0; bar_hi=137.2
+fig5a,HP-LLZTO @ -40 C,f_Hz,4.64,storage_modulus_GPa,136.7,bar_lo=136.0; bar_hi=137.5
+fig5a,HP-LLZTO @ -40 C,f_Hz,7.76,storage_modulus_GPa,137.4,bar_lo=136.8; bar_hi=138.3
+fig5a,HP-LLZTO @ -40 C,f_Hz,12.9,storage_modulus_GPa,137.4,bar_lo=136.8; bar_hi=138.7
+fig5a,HP-LLZTO @ -40 C,f_Hz,21.5,storage_modulus_GPa,138.5,bar_lo=137.9; bar_hi=139.4
+fig5a,HP-LLZTO @ -40 C,f_Hz,36.0,storage_modulus_GPa,139.7,bar_lo=138.3; bar_hi=141.3
+fig5a,HP-LLZTO @ -40 C,f_Hz,58.4,storage_modulus_GPa,138.5,bar_lo=137.5; bar_hi=139.8
+fig5a,HP-LLZTO @ -40 C,f_Hz,100.0,storage_modulus_GPa,138.5,bar_lo=138.3; bar_hi=139.0
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,1.0,storage_modulus_GPa,89.05,bar_lo=86.52; bar_hi=91.81
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,1.67,storage_modulus_GPa,89.05,bar_lo=87.28; bar_hi=91.06
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,2.77,storage_modulus_GPa,89.42,bar_lo=88.41; bar_hi=90.68
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,4.64,storage_modulus_GPa,89.8,bar_lo=89.17; bar_hi=90.68
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,7.76,storage_modulus_GPa,90.18,bar_lo=89.54; bar_hi=91.06
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,12.9,storage_modulus_GPa,90.56,bar_lo=89.54; bar_hi=91.43
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,21.5,storage_modulus_GPa,90.56,bar_lo=89.92; bar_hi=91.43
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,36.0,storage_modulus_GPa,90.56,bar_lo=88.04; bar_hi=93.7
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,58.4,storage_modulus_GPa,90.93,bar_lo=89.54; bar_hi=92.57
+fig5a,CPSS-LLZTO @ -40 C,f_Hz,100.0,storage_modulus_GPa,90.18,bar_lo=89.54; bar_hi=90.68
+fig5a,LAGP @ -40 C,f_Hz,1.0,storage_modulus_GPa,136.7,bar_lo=133.4; bar_hi=139.8
+fig5a,LAGP @ -40 C,f_Hz,1.67,storage_modulus_GPa,135.5,bar_lo=134.1; bar_hi=137.2
+fig5a,LAGP @ -40 C,f_Hz,2.77,storage_modulus_GPa,135.5,bar_lo=134.5; bar_hi=136.8
+fig5a,LAGP @ -40 C,f_Hz,4.64,storage_modulus_GPa,135.5,bar_lo=134.9; bar_hi=136.8
+fig5a,LAGP @ -40 C,f_Hz,7.76,storage_modulus_GPa,135.9,bar_lo=135.3; bar_hi=137.2
+fig5a,LAGP @ -40 C,f_Hz,12.9,storage_modulus_GPa,135.9,bar_lo=135.3; bar_hi=137.2
+fig5a,LAGP @ -40 C,f_Hz,21.5,storage_modulus_GPa,136.3,bar_lo=135.6; bar_hi=137.2
+fig5a,LAGP @ -40 C,f_Hz,36.0,storage_modulus_GPa,136.7,bar_lo=133.4; bar_hi=140.2
+fig5a,LAGP @ -40 C,f_Hz,58.4,storage_modulus_GPa,137.0,bar_lo=134.9; bar_hi=139.0
+fig5a,LAGP @ -40 C,f_Hz,100.0,storage_modulus_GPa,135.9,bar_lo=134.9; bar_hi=136.8
+fig5b,FQ @ -40 C,f_Hz,0.998,tan_delta,0.0219,"axes: f 1..100 Hz (log) = x 348.36..500.29 pt, tan_delta 0..0.1 = y 166.60..64.41 pt; panel temperature -40 C; bar_lo=0.0195; bar_hi=0.0248"
+fig5b,FQ @ -40 C,f_Hz,1.67,tan_delta,0.0217,bar_lo=0.019; bar_hi=0.0243
+fig5b,FQ @ -40 C,f_Hz,2.78,tan_delta,0.0199,bar_lo=0.0185; bar_hi=0.0213
+fig5b,FQ @ -40 C,f_Hz,4.65,tan_delta,0.0197,bar_lo=0.018; bar_hi=0.0215
+fig5b,FQ @ -40 C,f_Hz,7.76,tan_delta,0.0181,bar_lo=0.017; bar_hi=0.0197
+fig5b,FQ @ -40 C,f_Hz,12.8,tan_delta,0.0189,bar_lo=0.0165; bar_hi=0.0213
+fig5b,FQ @ -40 C,f_Hz,21.5,tan_delta,0.0176,bar_lo=0.0154; bar_hi=0.02
+fig5b,FQ @ -40 C,f_Hz,35.8,tan_delta,0.0169,bar_lo=0.0106; bar_hi=0.0233
+fig5b,FQ @ -40 C,f_Hz,58.4,tan_delta,0.0149,bar_lo=0.00937; bar_hi=0.0203
+fig5b,FQ @ -40 C,f_Hz,99.8,tan_delta,0.0159,bar_lo=0.0144; bar_hi=0.0172
+fig5b,LSPS @ -40 C,f_Hz,0.998,tan_delta,0.0285,bar_lo=0.0195; bar_hi=0.038
+fig5b,LSPS @ -40 C,f_Hz,1.67,tan_delta,0.0189,bar_lo=0.0122; bar_hi=0.0258
+fig5b,LSPS @ -40 C,f_Hz,2.78,tan_delta,0.0141,bar_lo=0.00886; bar_hi=0.0192
+fig5b,LSPS @ -40 C,f_Hz,4.65,tan_delta,0.0131,bar_lo=0.00836; bar_hi=0.0177
+fig5b,LSPS @ -40 C,f_Hz,7.76,tan_delta,0.0113,bar_lo=0.00836; bar_hi=0.0144
+fig5b,LSPS @ -40 C,f_Hz,12.9,tan_delta,0.0111,bar_lo=0.0076; bar_hi=0.0147
+fig5b,LSPS @ -40 C,f_Hz,21.5,tan_delta,0.00929,bar_lo=0.00481; bar_hi=0.0142
+fig5b,LSPS @ -40 C,f_Hz,35.8,tan_delta,0.00979,bar_lo=0.00177; bar_hi=0.0182
+fig5b,LSPS @ -40 C,f_Hz,58.4,tan_delta,0.00827,bar_lo=0.000761; bar_hi=0.0162
+fig5b,LSPS @ -40 C,f_Hz,99.8,tan_delta,0.00473,bar_lo=0.00253; bar_hi=0.00709
+fig5b,LPSCl @ -40 C,f_Hz,0.998,tan_delta,0.0749,bar_lo=0.0613; bar_hi=0.0889
+fig5b,LPSCl @ -40 C,f_Hz,1.67,tan_delta,0.0561,bar_lo=0.0413; bar_hi=0.0711
+fig5b,LPSCl @ -40 C,f_Hz,2.78,tan_delta,0.044,bar_lo=0.0311; bar_hi=0.0572
+fig5b,LPSCl @ -40 C,f_Hz,4.65,tan_delta,0.0369,bar_lo=0.0246; bar_hi=0.0494
+fig5b,LPSCl @ -40 C,f_Hz,7.76,tan_delta,0.0308,bar_lo=0.0197; bar_hi=0.0418
+fig5b,LPSCl @ -40 C,f_Hz,12.8,tan_delta,0.0293,bar_lo=0.0218; bar_hi=0.037
+fig5b,LPSCl @ -40 C,f_Hz,21.5,tan_delta,0.0255,bar_lo=0.017; bar_hi=0.0339
+fig5b,LPSCl @ -40 C,f_Hz,35.8,tan_delta,0.0189,bar_lo=0.00608; bar_hi=0.0319
+fig5b,LPSCl @ -40 C,f_Hz,58.4,tan_delta,0.0181,bar_lo=0.0109; bar_hi=0.0258
+fig5b,LPSCl @ -40 C,f_Hz,99.8,tan_delta,0.0164,bar_lo=0.0119; bar_hi=0.0213
+fig5b,HP-LLZTO @ -40 C,f_Hz,1.0,tan_delta,0.0168,bar_lo=0.0114; bar_hi=0.0223
+fig5b,HP-LLZTO @ -40 C,f_Hz,1.67,tan_delta,0.0107,bar_lo=0.00354; bar_hi=0.018
+fig5b,HP-LLZTO @ -40 C,f_Hz,2.77,tan_delta,0.0114,bar_lo=0.00431; bar_hi=0.0185
+fig5b,HP-LLZTO @ -40 C,f_Hz,4.63,tan_delta,0.0122,bar_lo=0.00557; bar_hi=0.019
+fig5b,HP-LLZTO @ -40 C,f_Hz,7.73,tan_delta,0.00891,bar_lo=0.00101; bar_hi=0.017
+fig5b,HP-LLZTO @ -40 C,f_Hz,12.9,tan_delta,0.00967,bar_lo=0.00127; bar_hi=0.0182
+fig5b,HP-LLZTO @ -40 C,f_Hz,21.5,tan_delta,0.00992,bar_lo=0.00329; bar_hi=0.0167
+fig5b,HP-LLZTO @ -40 C,f_Hz,36.0,tan_delta,0.00612,bar_lo=-0.000252; bar_hi=0.0129 (lower end clipped at the axis)
+fig5b,HP-LLZTO @ -40 C,f_Hz,58.2,tan_delta,0.00638,bar_lo=-0.000759; bar_hi=0.0137
+fig5b,HP-LLZTO @ -40 C,f_Hz,99.5,tan_delta,0.00638,bar_lo=0.00304; bar_hi=0.0101
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,0.998,tan_delta,0.0184,bar_lo=0.0106; bar_hi=0.0263
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,1.67,tan_delta,0.0128,bar_lo=0.00709; bar_hi=0.0185
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,2.78,tan_delta,0.0103,bar_lo=0.00684; bar_hi=0.0137
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,4.65,tan_delta,0.0111,bar_lo=0.00785; bar_hi=0.0142
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,7.76,tan_delta,0.00802,bar_lo=0.00532; bar_hi=0.0111
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,12.8,tan_delta,0.00903,bar_lo=0.00709; bar_hi=0.0114
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,21.5,tan_delta,0.00752,bar_lo=0.00633; bar_hi=0.00886
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,35.8,tan_delta,0.0161,bar_lo=0.00658; bar_hi=0.0258
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,58.4,tan_delta,0.00979,bar_lo=0.00203; bar_hi=0.0177
+fig5b,CPSS-LLZTO @ -40 C,f_Hz,99.8,tan_delta,0.00473,bar_lo=0.00228; bar_hi=0.00734
+fig5b,LAGP @ -40 C,f_Hz,0.998,tan_delta,0.0106,bar_lo=0.00633; bar_hi=0.0149
+fig5b,LAGP @ -40 C,f_Hz,1.67,tan_delta,0.0065,bar_lo=0.00101; bar_hi=0.0124
+fig5b,LAGP @ -40 C,f_Hz,2.78,tan_delta,0.00701,bar_lo=0.00481; bar_hi=0.00962
+fig5b,LAGP @ -40 C,f_Hz,4.65,tan_delta,0.00676,bar_lo=0.00506; bar_hi=0.00861
+fig5b,LAGP @ -40 C,f_Hz,7.76,tan_delta,0.00701,bar_lo=0.00506; bar_hi=0.00911
+fig5b,LAGP @ -40 C,f_Hz,12.8,tan_delta,0.00574,bar_lo=0.0038; bar_hi=0.0081
+fig5b,LAGP @ -40 C,f_Hz,21.5,tan_delta,0.00448,bar_lo=0.00304; bar_hi=0.00608
+fig5b,LAGP @ -40 C,f_Hz,35.8,tan_delta,0.00625,bar_lo=0.00228; bar_hi=0.0106
+fig5b,LAGP @ -40 C,f_Hz,58.4,tan_delta,0.00422,bar_lo=0.000507; bar_hi=0.00835
+fig5b,LAGP @ -40 C,f_Hz,99.8,tan_delta,0.00296,bar_lo=0.000507; bar_hi=0.00532
+fig5c,FQ @ 25 C,f_Hz,1.0,storage_modulus_GPa,68.77,"axes: f 1..100 Hz (log) = x 133.50..285.75 pt, storage_modulus_GPa 0..150 = y 303.88..201.83 pt; panel temperature 25 C; bar_lo=68.53; bar_hi=69.29"
+fig5c,FQ @ 25 C,f_Hz,1.67,storage_modulus_GPa,68.77,bar_lo=68.53; bar_hi=68.92
+fig5c,FQ @ 25 C,f_Hz,2.79,storage_modulus_GPa,68.77,bar_lo=68.89; bar_hi=69.29
+fig5c,FQ @ 25 C,f_Hz,4.66,storage_modulus_GPa,69.15,bar_lo=69.29; bar_hi=69.68
+fig5c,FQ @ 25 C,f_Hz,7.77,storage_modulus_GPa,69.53,bar_lo=69.29; bar_hi=70.05
+fig5c,FQ @ 25 C,f_Hz,13.0,storage_modulus_GPa,69.91,bar_lo=69.67; bar_hi=70.43
+fig5c,FQ @ 25 C,f_Hz,21.6,storage_modulus_GPa,70.29,bar_lo=70.05; bar_hi=70.82
+fig5c,FQ @ 25 C,f_Hz,36.1,storage_modulus_GPa,70.67,bar_lo=69.29; bar_hi=72.34
+fig5c,FQ @ 25 C,f_Hz,58.8,storage_modulus_GPa,71.05,bar_lo=70.43; bar_hi=71.96
+fig5c,FQ @ 25 C,f_Hz,100.0,storage_modulus_GPa,70.67,bar_lo=70.79; bar_hi=71.19
+fig5c,LSPS @ 25 C,f_Hz,1.0,storage_modulus_GPa,33.74,bar_lo=33.86; bar_hi=34.27
+fig5c,LSPS @ 25 C,f_Hz,1.67,storage_modulus_GPa,33.74,bar_lo=33.51; bar_hi=33.89
+fig5c,LSPS @ 25 C,f_Hz,2.79,storage_modulus_GPa,33.74,bar_lo=33.86; bar_hi=33.89
+fig5c,LSPS @ 25 C,f_Hz,4.66,storage_modulus_GPa,33.74,bar_lo=33.86; bar_hi=34.27
+fig5c,LSPS @ 25 C,f_Hz,7.77,storage_modulus_GPa,34.12,bar_lo=33.89; bar_hi=34.27
+fig5c,LSPS @ 25 C,f_Hz,13.0,storage_modulus_GPa,34.12,bar_lo=34.24; bar_hi=34.27
+fig5c,LSPS @ 25 C,f_Hz,21.6,storage_modulus_GPa,34.12,bar_lo=34.24; bar_hi=34.27
+fig5c,LSPS @ 25 C,f_Hz,36.1,storage_modulus_GPa,34.12,bar_lo=33.89; bar_hi=34.65
+fig5c,LSPS @ 25 C,f_Hz,58.8,storage_modulus_GPa,34.5,bar_lo=34.27; bar_hi=34.65
+fig5c,LSPS @ 25 C,f_Hz,100.0,storage_modulus_GPa,34.12,bar_lo=34.24; bar_hi=34.65
+fig5c,LPSCl @ 25 C,f_Hz,1.0,storage_modulus_GPa,33.36,bar_lo=33.12; bar_hi=33.51
+fig5c,LPSCl @ 25 C,f_Hz,1.67,storage_modulus_GPa,32.98,bar_lo=33.1; bar_hi=33.5
+fig5c,LPSCl @ 25 C,f_Hz,2.79,storage_modulus_GPa,33.36,bar_lo=33.12; bar_hi=33.51
+fig5c,LPSCl @ 25 C,f_Hz,4.66,storage_modulus_GPa,33.36,bar_lo=33.48; bar_hi=33.51
+fig5c,LPSCl @ 25 C,f_Hz,7.77,storage_modulus_GPa,33.74,bar_lo=33.51; bar_hi=33.89
+fig5c,LPSCl @ 25 C,f_Hz,13.0,storage_modulus_GPa,33.74,bar_lo=33.86; bar_hi=33.89
+fig5c,LPSCl @ 25 C,f_Hz,21.6,storage_modulus_GPa,33.74,bar_lo=33.86; bar_hi=33.89
+fig5c,LPSCl @ 25 C,f_Hz,36.1,storage_modulus_GPa,34.12,bar_lo=33.5; bar_hi=34.65
+fig5c,LPSCl @ 25 C,f_Hz,58.8,storage_modulus_GPa,34.12,bar_lo=33.89; bar_hi=34.27
+fig5c,LPSCl @ 25 C,f_Hz,100.0,storage_modulus_GPa,34.12,bar_lo=33.89; bar_hi=34.27
+fig5c,HP-LLZTO @ 25 C,f_Hz,1.0,storage_modulus_GPa,126.1,bar_lo=125.6; bar_hi=126.8
+fig5c,HP-LLZTO @ 25 C,f_Hz,1.67,storage_modulus_GPa,127.6,bar_lo=127.2; bar_hi=128.3
+fig5c,HP-LLZTO @ 25 C,f_Hz,2.78,storage_modulus_GPa,129.9,bar_lo=129.4; bar_hi=130.6
+fig5c,HP-LLZTO @ 25 C,f_Hz,4.64,storage_modulus_GPa,132.2,bar_lo=131.7; bar_hi=132.9
+fig5c,HP-LLZTO @ 25 C,f_Hz,7.74,storage_modulus_GPa,134.8,bar_lo=134.4; bar_hi=135.2
+fig5c,HP-LLZTO @ 25 C,f_Hz,12.9,storage_modulus_GPa,136.7,bar_lo=136.7; bar_hi=137.4
+fig5c,HP-LLZTO @ 25 C,f_Hz,21.5,storage_modulus_GPa,139.0,bar_lo=138.6; bar_hi=139.3
+fig5c,HP-LLZTO @ 25 C,f_Hz,35.9,storage_modulus_GPa,140.9,bar_lo=140.1; bar_hi=141.6
+fig5c,HP-LLZTO @ 25 C,f_Hz,58.5,storage_modulus_GPa,141.7,bar_lo=140.5; bar_hi=143.2
+fig5c,HP-LLZTO @ 25 C,f_Hz,100.0,storage_modulus_GPa,142.1,bar_lo=141.6; bar_hi=142.8
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,1.0,storage_modulus_GPa,89.71,bar_lo=89.47; bar_hi=90.61
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,1.67,storage_modulus_GPa,90.09,bar_lo=89.86; bar_hi=90.99
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,2.79,storage_modulus_GPa,91.23,bar_lo=90.61; bar_hi=91.76
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,4.66,storage_modulus_GPa,91.99,bar_lo=91.76; bar_hi=92.9
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,7.77,storage_modulus_GPa,92.75,bar_lo=92.13; bar_hi=93.66
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,13.0,storage_modulus_GPa,93.89,bar_lo=92.9; bar_hi=94.8
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,21.6,storage_modulus_GPa,94.28,bar_lo=94.04; bar_hi=95.18
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,36.1,storage_modulus_GPa,95.42,bar_lo=92.52; bar_hi=98.61
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,58.8,storage_modulus_GPa,95.8,bar_lo=94.04; bar_hi=97.85
+fig5c,CPSS-LLZTO @ 25 C,f_Hz,100.0,storage_modulus_GPa,95.42,bar_lo=95.18; bar_hi=96.32
+fig5c,LAGP @ 25 C,f_Hz,1.0,storage_modulus_GPa,140.0,bar_lo=139.0; bar_hi=140.9
+fig5c,LAGP @ 25 C,f_Hz,1.67,storage_modulus_GPa,139.2,bar_lo=138.6; bar_hi=140.1
+fig5c,LAGP @ 25 C,f_Hz,2.79,storage_modulus_GPa,139.2,bar_lo=138.6; bar_hi=140.1
+fig5c,LAGP @ 25 C,f_Hz,4.66,storage_modulus_GPa,139.6,bar_lo=138.6; bar_hi=140.9
+fig5c,LAGP @ 25 C,f_Hz,7.77,storage_modulus_GPa,140.0,bar_lo=139.0; bar_hi=140.9
+fig5c,LAGP @ 25 C,f_Hz,13.0,storage_modulus_GPa,140.0,bar_lo=139.3; bar_hi=141.2
+fig5c,LAGP @ 25 C,f_Hz,21.6,storage_modulus_GPa,140.3,bar_lo=139.7; bar_hi=141.2
+fig5c,LAGP @ 25 C,f_Hz,36.1,storage_modulus_GPa,140.7,bar_lo=136.7; bar_hi=144.7
+fig5c,LAGP @ 25 C,f_Hz,58.8,storage_modulus_GPa,140.3,bar_lo=137.8; bar_hi=143.2
+fig5c,LAGP @ 25 C,f_Hz,100.0,storage_modulus_GPa,139.6,bar_lo=139.0; bar_hi=140.9
+fig5d,FQ @ 25 C,f_Hz,1.0,tan_delta,0.0247,"axes: f 1..100 Hz (log) = x 348.32..500.52 pt, tan_delta 0..0.06 = y 304.29..201.90 pt; panel temperature 25 C; bar_lo=0.0238; bar_hi=0.0257"
+fig5d,FQ @ 25 C,f_Hz,1.67,tan_delta,0.0246,bar_lo=0.0235; bar_hi=0.0258
+fig5d,FQ @ 25 C,f_Hz,2.79,tan_delta,0.0247,bar_lo=0.0237; bar_hi=0.026
+fig5d,FQ @ 25 C,f_Hz,4.66,tan_delta,0.0253,bar_lo=0.0238; bar_hi=0.0269
+fig5d,FQ @ 25 C,f_Hz,7.77,tan_delta,0.0243,bar_lo=0.0229; bar_hi=0.0258
+fig5d,FQ @ 25 C,f_Hz,13.0,tan_delta,0.0249,bar_lo=0.0237; bar_hi=0.0263
+fig5d,FQ @ 25 C,f_Hz,21.6,tan_delta,0.024,bar_lo=0.0223; bar_hi=0.0255
+fig5d,FQ @ 25 C,f_Hz,36.1,tan_delta,0.0205,bar_lo=0.0158; bar_hi=0.0254
+fig5d,FQ @ 25 C,f_Hz,58.8,tan_delta,0.024,bar_lo=0.0149; bar_hi=0.0333
+fig5d,FQ @ 25 C,f_Hz,100.0,tan_delta,0.0188,bar_lo=0.0175; bar_hi=0.0202
+fig5d,LSPS @ 25 C,f_Hz,1.0,tan_delta,0.0152,bar_lo=0.0144; bar_hi=0.0161
+fig5d,LSPS @ 25 C,f_Hz,1.67,tan_delta,0.0118,bar_lo=0.0106; bar_hi=0.0131
+fig5d,LSPS @ 25 C,f_Hz,2.79,tan_delta,0.0112,bar_lo=0.0102; bar_hi=0.0125
+fig5d,LSPS @ 25 C,f_Hz,4.66,tan_delta,0.0105,bar_lo=0.00957; bar_hi=0.0115
+fig5d,LSPS @ 25 C,f_Hz,7.77,tan_delta,0.0102,bar_lo=0.00896; bar_hi=0.0114
+fig5d,LSPS @ 25 C,f_Hz,13.0,tan_delta,0.00894,bar_lo=0.0079; bar_hi=0.0102
+fig5d,LSPS @ 25 C,f_Hz,21.6,tan_delta,0.00894,bar_lo=0.0079; bar_hi=0.00987
+fig5d,LSPS @ 25 C,f_Hz,36.1,tan_delta,0.00772,bar_lo=0.0044; bar_hi=0.0111
+fig5d,LSPS @ 25 C,f_Hz,58.8,tan_delta,0.00453,bar_lo=0.000149; bar_hi=0.00911 (lower end clipped at the axis)
+fig5d,LSPS @ 25 C,f_Hz,100.0,tan_delta,0.00636,bar_lo=0.00562; bar_hi=0.00729
+fig5d,LPSCl @ 25 C,f_Hz,1.0,tan_delta,0.0258,bar_lo=0.0235; bar_hi=0.028
+fig5d,LPSCl @ 25 C,f_Hz,1.67,tan_delta,0.0206,bar_lo=0.0188; bar_hi=0.0223
+fig5d,LPSCl @ 25 C,f_Hz,2.79,tan_delta,0.0182,bar_lo=0.0166; bar_hi=0.0199
+fig5d,LPSCl @ 25 C,f_Hz,4.66,tan_delta,0.0164,bar_lo=0.0149; bar_hi=0.0181
+fig5d,LPSCl @ 25 C,f_Hz,7.77,tan_delta,0.0144,bar_lo=0.0125; bar_hi=0.0163
+fig5d,LPSCl @ 25 C,f_Hz,13.0,tan_delta,0.0127,bar_lo=0.0103; bar_hi=0.0152
+fig5d,LPSCl @ 25 C,f_Hz,21.6,tan_delta,0.0111,bar_lo=0.00896; bar_hi=0.0134
+fig5d,LPSCl @ 25 C,f_Hz,36.1,tan_delta,0.00818,bar_lo=0.00304; bar_hi=0.0134
+fig5d,LPSCl @ 25 C,f_Hz,58.8,tan_delta,0.00864,bar_lo=0.00668; bar_hi=0.0105
+fig5d,LPSCl @ 25 C,f_Hz,100.0,tan_delta,0.00712,bar_lo=0.00577; bar_hi=0.00866
+fig5d,HP-LLZTO @ 25 C,f_Hz,0.999,tan_delta,0.0476,bar_lo=0.0441; bar_hi=0.051
+fig5d,HP-LLZTO @ 25 C,f_Hz,1.67,tan_delta,0.0484,bar_lo=0.045; bar_hi=0.0519
+fig5d,HP-LLZTO @ 25 C,f_Hz,2.78,tan_delta,0.0465,bar_lo=0.0442; bar_hi=0.0489
+fig5d,HP-LLZTO @ 25 C,f_Hz,4.64,tan_delta,0.0458,bar_lo=0.0413; bar_hi=0.0503
+fig5d,HP-LLZTO @ 25 C,f_Hz,7.74,tan_delta,0.0421,bar_lo=0.0387; bar_hi=0.0457
+fig5d,HP-LLZTO @ 25 C,f_Hz,12.9,tan_delta,0.0385,bar_lo=0.0354; bar_hi=0.0415
+fig5d,HP-LLZTO @ 25 C,f_Hz,21.5,tan_delta,0.0359,bar_lo=0.033; bar_hi=0.039
+fig5d,HP-LLZTO @ 25 C,f_Hz,35.9,tan_delta,0.0342,bar_lo=0.0252; bar_hi=0.0433
+fig5d,HP-LLZTO @ 25 C,f_Hz,58.5,tan_delta,0.0285,bar_lo=0.0231; bar_hi=0.034
+fig5d,HP-LLZTO @ 25 C,f_Hz,99.9,tan_delta,0.0247,bar_lo=0.0228; bar_hi=0.0266
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,1.0,tan_delta,0.0311,bar_lo=0.0266; bar_hi=0.0357
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,1.67,tan_delta,0.0293,bar_lo=0.0255; bar_hi=0.0333
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,2.79,tan_delta,0.0281,bar_lo=0.0234; bar_hi=0.033
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,4.66,tan_delta,0.0256,bar_lo=0.0226; bar_hi=0.0289
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,7.77,tan_delta,0.0252,bar_lo=0.0197; bar_hi=0.0308
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,13.0,tan_delta,0.0237,bar_lo=0.0185; bar_hi=0.0289
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,21.6,tan_delta,0.0211,bar_lo=0.0172; bar_hi=0.0251
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,36.1,tan_delta,0.0228,bar_lo=0.0126; bar_hi=0.033
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,58.8,tan_delta,0.0162,bar_lo=0.0085; bar_hi=0.0238
+fig5d,CPSS-LLZTO @ 25 C,f_Hz,100.0,tan_delta,0.0141,bar_lo=0.00987; bar_hi=0.0184
+fig5d,LAGP @ 25 C,f_Hz,1.0,tan_delta,0.00909,bar_lo=0.00699; bar_hi=0.0114
+fig5d,LAGP @ 25 C,f_Hz,1.67,tan_delta,0.00727,bar_lo=0.00501; bar_hi=0.00957
+fig5d,LAGP @ 25 C,f_Hz,2.79,tan_delta,0.00636,bar_lo=0.00455; bar_hi=0.00835
+fig5d,LAGP @ 25 C,f_Hz,4.66,tan_delta,0.0056,bar_lo=0.0041; bar_hi=0.00714
+fig5d,LAGP @ 25 C,f_Hz,7.77,tan_delta,0.00636,bar_lo=0.00395; bar_hi=0.00866
+fig5d,LAGP @ 25 C,f_Hz,13.0,tan_delta,0.0062,bar_lo=0.00349; bar_hi=0.00896
+fig5d,LAGP @ 25 C,f_Hz,21.6,tan_delta,0.00423,bar_lo=0.00243; bar_hi=0.00592
+fig5d,LAGP @ 25 C,f_Hz,36.1,tan_delta,0.00605,bar_lo=0.00395; bar_hi=0.0082
+fig5d,LAGP @ 25 C,f_Hz,59.9,tan_delta,,marker NOT drawn inside the axes and no error bar
+fig5d,LAGP @ 25 C,f_Hz,100.0,tan_delta,0.00271,no error bar drawn (smaller than the marker)
+fig5e,FQ @ 100 C,f_Hz,1.0,storage_modulus_GPa,72.04,"axes: f 1..100 Hz (log) = x 133.00..285.05 pt, storage_modulus_GPa 0..150 = y 438.63..336.49 pt; panel temperature 100 C; bar_lo=71.39; bar_hi=72.92"
+fig5e,FQ @ 100 C,f_Hz,1.67,storage_modulus_GPa,72.04,bar_lo=71.78; bar_hi=72.15
+fig5e,FQ @ 100 C,f_Hz,2.78,storage_modulus_GPa,72.04,bar_lo=71.78; bar_hi=72.53
+fig5e,FQ @ 100 C,f_Hz,4.64,storage_modulus_GPa,72.43,bar_lo=72.15; bar_hi=72.92
+fig5e,FQ @ 100 C,f_Hz,7.75,storage_modulus_GPa,72.43,bar_lo=72.15; bar_hi=72.92
+fig5e,FQ @ 100 C,f_Hz,12.9,storage_modulus_GPa,72.81,bar_lo=72.53; bar_hi=72.92
+fig5e,FQ @ 100 C,f_Hz,21.6,storage_modulus_GPa,72.81,bar_lo=72.53; bar_hi=73.29
+fig5e,FQ @ 100 C,f_Hz,36.0,storage_modulus_GPa,72.81,bar_lo=72.53; bar_hi=73.29
+fig5e,FQ @ 100 C,f_Hz,58.1,storage_modulus_GPa,73.18,bar_lo=72.53; bar_hi=74.43
+fig5e,FQ @ 100 C,f_Hz,100.0,storage_modulus_GPa,72.81,bar_lo=72.15; bar_hi=73.67
+fig5e,LSPS @ 100 C,f_Hz,1.0,storage_modulus_GPa,23.44,bar_lo=23.17; bar_hi=23.55
+fig5e,LSPS @ 100 C,f_Hz,1.67,storage_modulus_GPa,23.06,bar_lo=23.12; bar_hi=23.17
+fig5e,LSPS @ 100 C,f_Hz,2.78,storage_modulus_GPa,23.44,bar_lo=23.17; bar_hi=23.55
+fig5e,LSPS @ 100 C,f_Hz,4.64,storage_modulus_GPa,23.44,bar_lo=23.17; bar_hi=23.55
+fig5e,LSPS @ 100 C,f_Hz,7.75,storage_modulus_GPa,23.44,bar_lo=23.5; bar_hi=23.55
+fig5e,LSPS @ 100 C,f_Hz,12.9,storage_modulus_GPa,23.44,bar_lo=23.5; bar_hi=23.55
+fig5e,LSPS @ 100 C,f_Hz,21.6,storage_modulus_GPa,23.44,bar_lo=23.5; bar_hi=23.55
+fig5e,LSPS @ 100 C,f_Hz,36.0,storage_modulus_GPa,23.44,bar_lo=23.55; bar_hi=23.93
+fig5e,LSPS @ 100 C,f_Hz,58.1,storage_modulus_GPa,23.82,bar_lo=21.54; bar_hi=25.72
+fig5e,LSPS @ 100 C,f_Hz,100.0,storage_modulus_GPa,23.82,bar_lo=21.54; bar_hi=25.72
+fig5e,LPSCl @ 100 C,f_Hz,1.0,storage_modulus_GPa,28.38,bar_lo=28.44; bar_hi=28.48
+fig5e,LPSCl @ 100 C,f_Hz,1.67,storage_modulus_GPa,28.38,bar_lo=28.44; bar_hi=28.48
+fig5e,LPSCl @ 100 C,f_Hz,2.78,storage_modulus_GPa,28.38,bar_lo=28.44; bar_hi=28.48
+fig5e,LPSCl @ 100 C,f_Hz,4.64,storage_modulus_GPa,28.38,bar_lo=28.44; bar_hi=28.86
+fig5e,LPSCl @ 100 C,f_Hz,7.75,storage_modulus_GPa,28.76,bar_lo=28.48; bar_hi=28.86
+fig5e,LPSCl @ 100 C,f_Hz,12.9,storage_modulus_GPa,28.76,bar_lo=28.82; bar_hi=28.86
+fig5e,LPSCl @ 100 C,f_Hz,21.6,storage_modulus_GPa,28.76,bar_lo=28.82; bar_hi=28.86
+fig5e,LPSCl @ 100 C,f_Hz,36.0,storage_modulus_GPa,28.76,bar_lo=28.48; bar_hi=29.25
+fig5e,LPSCl @ 100 C,f_Hz,58.1,storage_modulus_GPa,28.76,bar_lo=28.86; bar_hi=29.24
+fig5e,LPSCl @ 100 C,f_Hz,100.0,storage_modulus_GPa,28.76,bar_lo=28.82; bar_hi=29.25
+fig5e,HP-LLZTO @ 100 C,f_Hz,1.0,storage_modulus_GPa,137.6,bar_lo=137.1; bar_hi=138.6
+fig5e,HP-LLZTO @ 100 C,f_Hz,1.68,storage_modulus_GPa,137.2,bar_lo=136.7; bar_hi=137.8
+fig5e,HP-LLZTO @ 100 C,f_Hz,2.79,storage_modulus_GPa,137.2,bar_lo=136.7; bar_hi=137.5
+fig5e,HP-LLZTO @ 100 C,f_Hz,4.66,storage_modulus_GPa,137.6,bar_lo=137.1; bar_hi=138.2
+fig5e,HP-LLZTO @ 100 C,f_Hz,7.72,storage_modulus_GPa,137.9,bar_lo=137.5; bar_hi=138.2
+fig5e,HP-LLZTO @ 100 C,f_Hz,12.9,storage_modulus_GPa,137.9,bar_lo=137.5; bar_hi=138.2
+fig5e,HP-LLZTO @ 100 C,f_Hz,21.5,storage_modulus_GPa,138.3,bar_lo=137.8; bar_hi=139.0
+fig5e,HP-LLZTO @ 100 C,f_Hz,35.8,storage_modulus_GPa,139.4,bar_lo=138.2; bar_hi=140.5
+fig5e,HP-LLZTO @ 100 C,f_Hz,58.4,storage_modulus_GPa,139.4,bar_lo=138.2; bar_hi=140.9
+fig5e,HP-LLZTO @ 100 C,f_Hz,99.6,storage_modulus_GPa,138.7,bar_lo=138.2; bar_hi=139.4
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,1.0,storage_modulus_GPa,104.7,bar_lo=102.1; bar_hi=107.5
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,1.67,storage_modulus_GPa,104.7,bar_lo=104.0; bar_hi=105.6
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,2.78,storage_modulus_GPa,105.1,bar_lo=104.0; bar_hi=105.9
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,4.64,storage_modulus_GPa,105.1,bar_lo=104.0; bar_hi=106.7
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,7.75,storage_modulus_GPa,105.5,bar_lo=104.8; bar_hi=106.7
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,12.9,storage_modulus_GPa,105.8,bar_lo=104.8; bar_hi=107.1
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,21.6,storage_modulus_GPa,105.8,bar_lo=105.6; bar_hi=106.7
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,36.0,storage_modulus_GPa,106.2,bar_lo=104.8; bar_hi=107.9
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,58.1,storage_modulus_GPa,105.8,bar_lo=99.49; bar_hi=112.8
+fig5e,CPSS-LLZTO @ 100 C,f_Hz,100.0,storage_modulus_GPa,105.8,bar_lo=104.8; bar_hi=106.7
+fig5e,LAGP @ 100 C,f_Hz,1.0,storage_modulus_GPa,129.8,bar_lo=126.5; bar_hi=132.9
+fig5e,LAGP @ 100 C,f_Hz,1.67,storage_modulus_GPa,129.0,bar_lo=128.4; bar_hi=129.9
+fig5e,LAGP @ 100 C,f_Hz,2.78,storage_modulus_GPa,129.0,bar_lo=128.4; bar_hi=129.9
+fig5e,LAGP @ 100 C,f_Hz,4.64,storage_modulus_GPa,129.0,bar_lo=128.4; bar_hi=130.3
+fig5e,LAGP @ 100 C,f_Hz,7.75,storage_modulus_GPa,129.4,bar_lo=128.7; bar_hi=130.3
+fig5e,LAGP @ 100 C,f_Hz,12.9,storage_modulus_GPa,129.8,bar_lo=128.7; bar_hi=130.6
+fig5e,LAGP @ 100 C,f_Hz,21.6,storage_modulus_GPa,129.8,bar_lo=129.1; bar_hi=130.3
+fig5e,LAGP @ 100 C,f_Hz,36.0,storage_modulus_GPa,130.1,bar_lo=129.1; bar_hi=131.0
+fig5e,LAGP @ 100 C,f_Hz,58.1,storage_modulus_GPa,130.5,bar_lo=124.6; bar_hi=136.7
+fig5e,LAGP @ 100 C,f_Hz,100.0,storage_modulus_GPa,129.0,bar_lo=127.2; bar_hi=131.0
+fig5f,FQ @ 100 C,f_Hz,0.997,tan_delta,0.019,"axes: f 1..100 Hz (log) = x 348.08..500.78 pt, tan_delta 0..0.025 = y 437.87..335.91 pt; panel temperature 100 C; bar_lo=0.00666; bar_hi=0.019"
+fig5f,FQ @ 100 C,f_Hz,1.66,tan_delta,0.00646,bar_lo=0.00527; bar_hi=0.00768
+fig5f,FQ @ 100 C,f_Hz,2.76,tan_delta,0.00627,bar_lo=0.00495; bar_hi=0.00761
+fig5f,FQ @ 100 C,f_Hz,4.64,tan_delta,0.00735,bar_lo=0.00489; bar_hi=0.0099
+fig5f,FQ @ 100 C,f_Hz,7.73,tan_delta,0.0062,bar_lo=0.00501; bar_hi=0.00742
+fig5f,FQ @ 100 C,f_Hz,12.9,tan_delta,0.00658,bar_lo=0.0052; bar_hi=0.00806
+fig5f,FQ @ 100 C,f_Hz,21.4,tan_delta,0.00639,bar_lo=0.00533; bar_hi=0.00742
+fig5f,FQ @ 100 C,f_Hz,35.7,tan_delta,0.00557,bar_lo=0.00362; bar_hi=0.00749
+fig5f,FQ @ 100 C,f_Hz,59.9,tan_delta,,marker NOT drawn inside the axes and no error bar
+fig5f,FQ @ 100 C,f_Hz,99.7,tan_delta,0.0057,bar_lo=0.00203; bar_hi=0.00939
+fig5f,LSPS @ 100 C,f_Hz,0.997,tan_delta,0.0139,bar_lo=0.0118; bar_hi=0.0161
+fig5f,LSPS @ 100 C,f_Hz,1.66,tan_delta,0.0118,bar_lo=0.00964; bar_hi=0.0139
+fig5f,LSPS @ 100 C,f_Hz,2.76,tan_delta,0.0121,bar_lo=0.0102; bar_hi=0.014
+fig5f,LSPS @ 100 C,f_Hz,4.64,tan_delta,0.0113,bar_lo=0.00939; bar_hi=0.0133
+fig5f,LSPS @ 100 C,f_Hz,7.73,tan_delta,0.0103,bar_lo=0.00793; bar_hi=0.0128
+fig5f,LSPS @ 100 C,f_Hz,12.9,tan_delta,0.0101,bar_lo=0.00831; bar_hi=0.012
+fig5f,LSPS @ 100 C,f_Hz,21.4,tan_delta,0.0105,bar_lo=0.00831; bar_hi=0.0126
+fig5f,LSPS @ 100 C,f_Hz,35.7,tan_delta,0.00931,bar_lo=0.00539; bar_hi=0.0133
+fig5f,LSPS @ 100 C,f_Hz,58.0,tan_delta,0.0076,bar_lo=0.00254; bar_hi=0.0127
+fig5f,LSPS @ 100 C,f_Hz,99.7,tan_delta,0.00773,bar_lo=0.00622; bar_hi=0.00933
+fig5f,LPSCl @ 100 C,f_Hz,0.997,tan_delta,0.0117,bar_lo=0.00958; bar_hi=0.0139
+fig5f,LPSCl @ 100 C,f_Hz,1.66,tan_delta,0.0115,bar_lo=0.00983; bar_hi=0.0133
+fig5f,LPSCl @ 100 C,f_Hz,2.76,tan_delta,0.0112,bar_lo=0.00958; bar_hi=0.0129
+fig5f,LPSCl @ 100 C,f_Hz,4.64,tan_delta,0.0108,bar_lo=0.0092; bar_hi=0.0124
+fig5f,LPSCl @ 100 C,f_Hz,7.73,tan_delta,0.0101,bar_lo=0.00825; bar_hi=0.0119
+fig5f,LPSCl @ 100 C,f_Hz,12.9,tan_delta,0.0103,bar_lo=0.00793; bar_hi=0.0127
+fig5f,LPSCl @ 100 C,f_Hz,21.4,tan_delta,0.0106,bar_lo=0.0085; bar_hi=0.0128
+fig5f,LPSCl @ 100 C,f_Hz,35.7,tan_delta,0.00792,bar_lo=0.00273; bar_hi=0.0131
+fig5f,LPSCl @ 100 C,f_Hz,58.0,tan_delta,0.00684,bar_lo=0.00501; bar_hi=0.00869
+fig5f,LPSCl @ 100 C,f_Hz,99.7,tan_delta,0.00474,bar_lo=0.0033; bar_hi=0.00622
+fig5f,HP-LLZTO @ 100 C,f_Hz,0.993,tan_delta,0.00852,bar_lo=0.00381; bar_hi=0.0133
+fig5f,HP-LLZTO @ 100 C,f_Hz,1.67,tan_delta,0.00617,bar_lo=0.00368; bar_hi=0.00869
+fig5f,HP-LLZTO @ 100 C,f_Hz,2.78,tan_delta,0.00509,bar_lo=0.0033; bar_hi=0.00692
+fig5f,HP-LLZTO @ 100 C,f_Hz,4.62,tan_delta,0.00541,bar_lo=0.00292; bar_hi=0.00793
+fig5f,HP-LLZTO @ 100 C,f_Hz,7.7,tan_delta,0.00744,bar_lo=0.00355; bar_hi=0.0114
+fig5f,HP-LLZTO @ 100 C,f_Hz,12.8,tan_delta,0.00592,bar_lo=0.00247; bar_hi=0.00939
+fig5f,HP-LLZTO @ 100 C,f_Hz,21.5,tan_delta,0.00681,bar_lo=0.00419; bar_hi=0.00939
+fig5f,HP-LLZTO @ 100 C,f_Hz,35.8,tan_delta,0.00725,bar_lo=-0.000127; bar_hi=0.0147
+fig5f,HP-LLZTO @ 100 C,f_Hz,58.3,tan_delta,0.00706,bar_lo=0.000318; bar_hi=0.0138
+fig5f,HP-LLZTO @ 100 C,f_Hz,99.3,tan_delta,0.00693,bar_lo=0.00438; bar_hi=0.00952
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,0.997,tan_delta,0.00963,no error bar drawn (smaller than the marker)
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,1.66,tan_delta,0.00868,bar_lo=0.00527; bar_hi=0.0121
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,2.76,tan_delta,0.00747,bar_lo=0.00349; bar_hi=0.0115
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,4.64,tan_delta,0.00754,bar_lo=0.00279; bar_hi=0.0122
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,7.73,tan_delta,0.00665,bar_lo=0.00387; bar_hi=0.00939
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,12.9,tan_delta,0.00658,bar_lo=0.00431; bar_hi=0.00895
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,21.4,tan_delta,0.00671,bar_lo=0.00406; bar_hi=0.00933
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,35.7,tan_delta,0.00684,bar_lo=0.00235; bar_hi=0.0114
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,59.9,tan_delta,,marker NOT drawn inside the axes and no error bar
+fig5f,CPSS-LLZTO @ 100 C,f_Hz,99.7,tan_delta,0.0069,bar_lo=0.00368; bar_hi=0.0101
+fig5f,LAGP @ 100 C,f_Hz,0.997,tan_delta,0.0095,no error bar drawn (smaller than the marker)
+fig5f,LAGP @ 100 C,f_Hz,1.66,tan_delta,0.0057,bar_lo=0.00324; bar_hi=0.00825
+fig5f,LAGP @ 100 C,f_Hz,2.76,tan_delta,0.00455,bar_lo=0.00273; bar_hi=0.00647
+fig5f,LAGP @ 100 C,f_Hz,4.64,tan_delta,0.00493,bar_lo=0.00317; bar_hi=0.00666
+fig5f,LAGP @ 100 C,f_Hz,7.73,tan_delta,0.00462,bar_lo=0.00311; bar_hi=0.00615
+fig5f,LAGP @ 100 C,f_Hz,12.9,tan_delta,0.00405,bar_lo=0.00222; bar_hi=0.0059
+fig5f,LAGP @ 100 C,f_Hz,21.4,tan_delta,0.00538,bar_lo=0.00305; bar_hi=0.00774
+fig5f,LAGP @ 100 C,f_Hz,35.7,tan_delta,0.00487,bar_lo=0.00273; bar_hi=0.00704
+fig5f,LAGP @ 100 C,f_Hz,59.9,tan_delta,,marker NOT drawn inside the axes and no error bar
+fig5f,LAGP @ 100 C,f_Hz,99.7,tan_delta,0.00512,bar_lo=0.00286; bar_hi=0.00749
+fig5g,FQ @ 300 C,f_Hz,1.0,storage_modulus_GPa,76.39,"axes: f 1..100 Hz (log) = x 133.05..285.03 pt, storage_modulus_GPa 0..150 = y 572.47..469.90 pt; panel temperature 300 C; bar_lo=76.14; bar_hi=77.27"
+fig5g,FQ @ 300 C,f_Hz,1.68,storage_modulus_GPa,76.01,bar_lo=75.76; bar_hi=76.51
+fig5g,FQ @ 300 C,f_Hz,2.8,storage_modulus_GPa,76.01,bar_lo=76.14; bar_hi=76.51
+fig5g,FQ @ 300 C,f_Hz,4.67,storage_modulus_GPa,76.01,bar_lo=75.76; bar_hi=76.51
+fig5g,FQ @ 300 C,f_Hz,7.74,storage_modulus_GPa,76.01,bar_lo=76.14; bar_hi=76.51
+fig5g,FQ @ 300 C,f_Hz,12.9,storage_modulus_GPa,76.39,bar_lo=76.14; bar_hi=76.89
+fig5g,FQ @ 300 C,f_Hz,21.6,storage_modulus_GPa,76.39,bar_lo=76.14; bar_hi=76.89
+fig5g,FQ @ 300 C,f_Hz,36.0,storage_modulus_GPa,76.39,bar_lo=75.76; bar_hi=76.89
+fig5g,FQ @ 300 C,f_Hz,58.7,storage_modulus_GPa,76.39,bar_lo=75.76; bar_hi=77.65
+fig5g,FQ @ 300 C,f_Hz,100.0,storage_modulus_GPa,75.64,bar_lo=75.0; bar_hi=76.51
+fig5g,LSPS @ 300 C,f_Hz,1.0,storage_modulus_GPa,19.95,bar_lo=20.07; bar_hi=20.45
+fig5g,LSPS @ 300 C,f_Hz,1.68,storage_modulus_GPa,19.95,bar_lo=20.01; bar_hi=20.07
+fig5g,LSPS @ 300 C,f_Hz,2.8,storage_modulus_GPa,19.95,bar_lo=20.07; bar_hi=20.45
+fig5g,LSPS @ 300 C,f_Hz,4.67,storage_modulus_GPa,20.33,bar_lo=20.07; bar_hi=20.45
+fig5g,LSPS @ 300 C,f_Hz,7.74,storage_modulus_GPa,20.33,bar_lo=20.07; bar_hi=20.45
+fig5g,LSPS @ 300 C,f_Hz,12.9,storage_modulus_GPa,20.33,bar_lo=20.39; bar_hi=20.45
+fig5g,LSPS @ 300 C,f_Hz,21.6,storage_modulus_GPa,20.33,bar_lo=20.39; bar_hi=20.45
+fig5g,LSPS @ 300 C,f_Hz,36.0,storage_modulus_GPa,20.33,bar_lo=20.07; bar_hi=20.45
+fig5g,LSPS @ 300 C,f_Hz,58.7,storage_modulus_GPa,20.33,bar_lo=18.06; bar_hi=22.23
+fig5g,LSPS @ 300 C,f_Hz,100.0,storage_modulus_GPa,20.33,bar_lo=18.06; bar_hi=22.23
+fig5g,LPSCl @ 300 C,f_Hz,1.0,storage_modulus_GPa,28.66,bar_lo=28.73; bar_hi=29.17
+fig5g,LPSCl @ 300 C,f_Hz,1.68,storage_modulus_GPa,28.66,bar_lo=28.73; bar_hi=28.79
+fig5g,LPSCl @ 300 C,f_Hz,2.8,storage_modulus_GPa,28.66,bar_lo=28.73; bar_hi=29.17
+fig5g,LPSCl @ 300 C,f_Hz,4.67,storage_modulus_GPa,29.04,bar_lo=28.79; bar_hi=29.17
+fig5g,LPSCl @ 300 C,f_Hz,7.74,storage_modulus_GPa,29.04,bar_lo=29.1; bar_hi=29.17
+fig5g,LPSCl @ 300 C,f_Hz,12.9,storage_modulus_GPa,29.04,bar_lo=29.17; bar_hi=29.54
+fig5g,LPSCl @ 300 C,f_Hz,21.6,storage_modulus_GPa,29.42,bar_lo=29.17; bar_hi=29.54
+fig5g,LPSCl @ 300 C,f_Hz,36.0,storage_modulus_GPa,29.42,bar_lo=29.17; bar_hi=29.92
+fig5g,LPSCl @ 300 C,f_Hz,58.7,storage_modulus_GPa,29.42,bar_lo=29.17; bar_hi=29.92
+fig5g,LPSCl @ 300 C,f_Hz,100.0,storage_modulus_GPa,29.42,bar_lo=29.48; bar_hi=29.92
+fig5g,HP-LLZTO @ 300 C,f_Hz,1.01,storage_modulus_GPa,136.8,bar_lo=136.7; bar_hi=137.5
+fig5g,HP-LLZTO @ 300 C,f_Hz,1.67,storage_modulus_GPa,136.4,bar_lo=135.6; bar_hi=137.1
+fig5g,HP-LLZTO @ 300 C,f_Hz,2.79,storage_modulus_GPa,136.8,bar_lo=136.0; bar_hi=137.5
+fig5g,HP-LLZTO @ 300 C,f_Hz,4.65,storage_modulus_GPa,137.2,bar_lo=136.4; bar_hi=137.9
+fig5g,HP-LLZTO @ 300 C,f_Hz,7.77,storage_modulus_GPa,137.6,bar_lo=136.7; bar_hi=138.6
+fig5g,HP-LLZTO @ 300 C,f_Hz,13.0,storage_modulus_GPa,137.9,bar_lo=137.5; bar_hi=139.0
+fig5g,HP-LLZTO @ 300 C,f_Hz,21.6,storage_modulus_GPa,138.3,bar_lo=137.9; bar_hi=139.0
+fig5g,HP-LLZTO @ 300 C,f_Hz,36.1,storage_modulus_GPa,139.1,bar_lo=137.5; bar_hi=140.9
+fig5g,HP-LLZTO @ 300 C,f_Hz,58.5,storage_modulus_GPa,139.1,bar_lo=137.1; bar_hi=141.3
+fig5g,HP-LLZTO @ 300 C,f_Hz,100.0,storage_modulus_GPa,138.3,bar_lo=137.9; bar_hi=139.4
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,1.0,storage_modulus_GPa,83.97,bar_lo=82.57; bar_hi=85.99
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,1.68,storage_modulus_GPa,83.21,bar_lo=82.57; bar_hi=84.1
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,2.8,storage_modulus_GPa,83.59,bar_lo=82.96; bar_hi=84.47
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,4.67,storage_modulus_GPa,83.97,bar_lo=82.96; bar_hi=85.22
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,7.74,storage_modulus_GPa,83.97,bar_lo=83.33; bar_hi=84.85
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,12.9,storage_modulus_GPa,84.34,bar_lo=83.33; bar_hi=85.22
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,21.6,storage_modulus_GPa,84.73,bar_lo=84.09; bar_hi=85.22
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,36.0,storage_modulus_GPa,84.73,bar_lo=83.71; bar_hi=85.99
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,58.7,storage_modulus_GPa,80.18,bar_lo=77.65; bar_hi=83.33
+fig5g,CPSS-LLZTO @ 300 C,f_Hz,100.0,storage_modulus_GPa,83.97,bar_lo=83.33; bar_hi=85.22
+fig5g,LAGP @ 300 C,f_Hz,1.0,storage_modulus_GPa,119.6,bar_lo=118.6; bar_hi=121.2
+fig5g,LAGP @ 300 C,f_Hz,1.68,storage_modulus_GPa,118.4,bar_lo=117.8; bar_hi=119.3
+fig5g,LAGP @ 300 C,f_Hz,2.8,storage_modulus_GPa,118.8,bar_lo=118.2; bar_hi=119.7
+fig5g,LAGP @ 300 C,f_Hz,4.67,storage_modulus_GPa,118.8,bar_lo=118.2; bar_hi=120.1
+fig5g,LAGP @ 300 C,f_Hz,7.74,storage_modulus_GPa,119.2,bar_lo=118.6; bar_hi=120.5
+fig5g,LAGP @ 300 C,f_Hz,12.9,storage_modulus_GPa,119.6,bar_lo=118.6; bar_hi=120.5
+fig5g,LAGP @ 300 C,f_Hz,21.6,storage_modulus_GPa,119.6,bar_lo=118.9; bar_hi=120.5
+fig5g,LAGP @ 300 C,f_Hz,36.0,storage_modulus_GPa,120.0,bar_lo=118.9; bar_hi=121.2
+fig5g,LAGP @ 300 C,f_Hz,58.7,storage_modulus_GPa,119.2,bar_lo=115.1; bar_hi=123.9
+fig5g,LAGP @ 300 C,f_Hz,100.0,storage_modulus_GPa,118.8,bar_lo=116.7; bar_hi=121.2
+fig5h,FQ @ 300 C,f_Hz,1.0,tan_delta,0.00441,"axes: f 1..100 Hz (log) = x 348.35..500.25 pt, tan_delta 0..0.03 = y 572.53..469.61 pt; panel temperature 300 C; bar_lo=0.00098; bar_hi=0.00776"
+fig5h,FQ @ 300 C,f_Hz,1.67,tan_delta,0.002,bar_lo=0.000528; bar_hi=0.00332
+fig5h,FQ @ 300 C,f_Hz,2.79,tan_delta,0.00245,bar_lo=0.000754; bar_hi=0.004
+fig5h,FQ @ 300 C,f_Hz,4.66,tan_delta,0.0026,bar_lo=0.00143; bar_hi=0.00362
+fig5h,FQ @ 300 C,f_Hz,7.78,tan_delta,0.00124,bar_lo=7.58e-05; bar_hi=0.00234 (lower end clipped at the axis)
+fig5h,FQ @ 300 C,f_Hz,13.0,tan_delta,0.00222,bar_lo=0.00098; bar_hi=0.00347
+fig5h,FQ @ 300 C,f_Hz,21.7,tan_delta,0.00184,bar_lo=0.000453; bar_hi=0.00324
+fig5h,FQ @ 300 C,f_Hz,36.2,tan_delta,0.00275,bar_lo=0.000302; bar_hi=0.0052
+fig5h,FQ @ 300 C,f_Hz,58.6,tan_delta,0.00614,bar_lo=-0.000527; bar_hi=0.0128
+fig5h,FQ @ 300 C,f_Hz,100.0,tan_delta,0.00222,bar_lo=-0.000225; bar_hi=0.00452
+fig5h,LSPS @ 300 C,f_Hz,1.0,tan_delta,0.00968,bar_lo=0.00829; bar_hi=0.011
+fig5h,LSPS @ 300 C,f_Hz,1.67,tan_delta,0.0084,bar_lo=0.00731; bar_hi=0.0095
+fig5h,LSPS @ 300 C,f_Hz,2.79,tan_delta,0.00757,bar_lo=0.00611; bar_hi=0.00897
+fig5h,LSPS @ 300 C,f_Hz,4.66,tan_delta,0.00765,bar_lo=0.00648; bar_hi=0.00874
+fig5h,LSPS @ 300 C,f_Hz,7.78,tan_delta,0.00682,bar_lo=0.00588; bar_hi=0.00776
+fig5h,LSPS @ 300 C,f_Hz,13.0,tan_delta,0.00644,bar_lo=0.00535; bar_hi=0.00746
+fig5h,LSPS @ 300 C,f_Hz,21.7,tan_delta,0.00607,bar_lo=0.00505; bar_hi=0.00701
+fig5h,LSPS @ 300 C,f_Hz,36.2,tan_delta,0.00682,bar_lo=0.00377; bar_hi=0.00972
+fig5h,LSPS @ 300 C,f_Hz,58.6,tan_delta,0.00471,bar_lo=0.00188; bar_hi=0.00746
+fig5h,LSPS @ 300 C,f_Hz,100.0,tan_delta,0.00426,bar_lo=0.00317; bar_hi=0.00528
+fig5h,LPSCl @ 300 C,f_Hz,1.0,tan_delta,0.0204,bar_lo=0.0182; bar_hi=0.0226
+fig5h,LPSCl @ 300 C,f_Hz,1.67,tan_delta,0.0177,bar_lo=0.0151; bar_hi=0.0204
+fig5h,LPSCl @ 300 C,f_Hz,2.79,tan_delta,0.0156,bar_lo=0.0139; bar_hi=0.0174
+fig5h,LPSCl @ 300 C,f_Hz,4.66,tan_delta,0.0156,bar_lo=0.013; bar_hi=0.0181
+fig5h,LPSCl @ 300 C,f_Hz,7.78,tan_delta,0.0147,bar_lo=0.0122; bar_hi=0.0172
+fig5h,LPSCl @ 300 C,f_Hz,13.0,tan_delta,0.015,bar_lo=0.0125; bar_hi=0.0173
+fig5h,LPSCl @ 300 C,f_Hz,21.7,tan_delta,0.0135,bar_lo=0.0112; bar_hi=0.0157
+fig5h,LPSCl @ 300 C,f_Hz,36.2,tan_delta,0.0131,bar_lo=0.00761; bar_hi=0.0184
+fig5h,LPSCl @ 300 C,f_Hz,58.6,tan_delta,0.0118,bar_lo=0.0055; bar_hi=0.0181
+fig5h,LPSCl @ 300 C,f_Hz,100.0,tan_delta,0.0104,bar_lo=0.00814; bar_hi=0.0127
+fig5h,HP-LLZTO @ 300 C,f_Hz,0.998,tan_delta,0.013,bar_lo=0.0098; bar_hi=0.0161
+fig5h,HP-LLZTO @ 300 C,f_Hz,1.67,tan_delta,0.0102,bar_lo=0.00754; bar_hi=0.0129
+fig5h,HP-LLZTO @ 300 C,f_Hz,2.78,tan_delta,0.00867,bar_lo=0.00573; bar_hi=0.0116
+fig5h,HP-LLZTO @ 300 C,f_Hz,4.64,tan_delta,0.00867,bar_lo=0.00565; bar_hi=0.0117
+fig5h,HP-LLZTO @ 300 C,f_Hz,7.75,tan_delta,0.00701,bar_lo=0.00241; bar_hi=0.0115
+fig5h,HP-LLZTO @ 300 C,f_Hz,12.9,tan_delta,0.0098,bar_lo=0.00354; bar_hi=0.016
+fig5h,HP-LLZTO @ 300 C,f_Hz,21.6,tan_delta,0.00776,bar_lo=0.00264; bar_hi=0.0127
+fig5h,HP-LLZTO @ 300 C,f_Hz,36.1,tan_delta,0.00686,bar_lo=0.00685; bar_hi=0.0215
+fig5h,HP-LLZTO @ 300 C,f_Hz,58.8,tan_delta,0.00678,bar_lo=0.0067; bar_hi=0.0179
+fig5h,HP-LLZTO @ 300 C,f_Hz,101.0,tan_delta,0.00754,bar_lo=0.00535; bar_hi=0.00965
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,1.0,tan_delta,0.0183,bar_lo=0.00784; bar_hi=0.0286
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,1.67,tan_delta,0.0145,bar_lo=0.0109; bar_hi=0.0181
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,2.79,tan_delta,0.0111,bar_lo=0.00731; bar_hi=0.0148
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,4.66,tan_delta,0.00953,bar_lo=0.00565; bar_hi=0.0134
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,7.78,tan_delta,0.00946,bar_lo=0.00671; bar_hi=0.0121
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,13.0,tan_delta,0.00803,bar_lo=0.00543; bar_hi=0.0106
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,21.7,tan_delta,0.00787,bar_lo=0.0055; bar_hi=0.0103
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,36.2,tan_delta,0.00584,bar_lo=0.00286; bar_hi=0.00867
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,59.9,tan_delta,,marker NOT drawn inside the axes and no error bar
+fig5h,CPSS-LLZTO @ 300 C,f_Hz,100.0,tan_delta,0.00494,no error bar drawn (smaller than the marker)
+fig5h,LAGP @ 300 C,f_Hz,1.0,tan_delta,0.00727,bar_lo=0.00106; bar_hi=0.0134
+fig5h,LAGP @ 300 C,f_Hz,1.67,tan_delta,0.00742,bar_lo=0.00445; bar_hi=0.0103
+fig5h,LAGP @ 300 C,f_Hz,2.79,tan_delta,0.0075,bar_lo=0.00437; bar_hi=0.0105
+fig5h,LAGP @ 300 C,f_Hz,4.66,tan_delta,0.00659,bar_lo=0.00339; bar_hi=0.00972
+fig5h,LAGP @ 300 C,f_Hz,7.78,tan_delta,0.00501,bar_lo=0.00204; bar_hi=0.00784
+fig5h,LAGP @ 300 C,f_Hz,13.0,tan_delta,0.00509,bar_lo=0.00279; bar_hi=0.00731
+fig5h,LAGP @ 300 C,f_Hz,21.7,tan_delta,0.00531,bar_lo=0.00286; bar_hi=0.00761
+fig5h,LAGP @ 300 C,f_Hz,36.2,tan_delta,0.00448,bar_lo=0.00121; bar_hi=0.00776
+fig5h,LAGP @ 300 C,f_Hz,59.9,tan_delta,,marker NOT drawn inside the axes and no error bar
+fig5h,LAGP @ 300 C,f_Hz,100.0,tan_delta,0.00373,no error bar drawn (smaller than the marker)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,2,creep_displacement_nm,0.04,"nearest vertex (t = 1.5 s); axes: t 0..160 s = x 104.41..269.60 pt, 0..20 nm = y 189.00..65.07 pt"
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,5,creep_displacement_nm,0.28,nearest vertex (t = 5.1 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,10,creep_displacement_nm,0.52,nearest vertex (t = 10.2 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,20,creep_displacement_nm,0.66,nearest vertex (t = 20.2 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,30,creep_displacement_nm,0.75,nearest vertex (t = 30.0 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,40,creep_displacement_nm,0.85,nearest vertex (t = 40.1 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,60,creep_displacement_nm,1.04,nearest vertex (t = 59.1 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,80,creep_displacement_nm,1.08,nearest vertex (t = 80.1 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,100,creep_displacement_nm,1.18,nearest vertex (t = 100.2 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,120,creep_displacement_nm,1.22,nearest vertex (t = 120.7 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,140,creep_displacement_nm,1.28,nearest vertex (t = 140.3 s)
+fig6a,"FQ (25 C, 2000 uN hold)",t_s,150.2,creep_displacement_nm,1.46,last vertex of the curve
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,2,creep_displacement_nm,0.33,nearest vertex (t = 2.0 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,5,creep_displacement_nm,1.04,nearest vertex (t = 5.1 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,10,creep_displacement_nm,1.89,nearest vertex (t = 10.2 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,20,creep_displacement_nm,2.69,nearest vertex (t = 20.2 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,30,creep_displacement_nm,3.31,nearest vertex (t = 30.0 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,40,creep_displacement_nm,3.68,nearest vertex (t = 41.2 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,60,creep_displacement_nm,4.43,nearest vertex (t = 59.7 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,80,creep_displacement_nm,4.86,nearest vertex (t = 79.5 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,100,creep_displacement_nm,4.86,nearest vertex (t = 100.2 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,120,creep_displacement_nm,5.33,nearest vertex (t = 120.1 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,140,creep_displacement_nm,5.52,nearest vertex (t = 140.8 s)
+fig6a,"LSPS (25 C, 2000 uN hold)",t_s,150.2,creep_displacement_nm,5.66,last vertex of the curve
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,2,creep_displacement_nm,0.75,nearest vertex (t = 2.0 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,5,creep_displacement_nm,2.54,nearest vertex (t = 5.1 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,10,creep_displacement_nm,4.76,nearest vertex (t = 10.2 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,20,creep_displacement_nm,6.99,nearest vertex (t = 20.2 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,30,creep_displacement_nm,7.97,nearest vertex (t = 30.0 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,40,creep_displacement_nm,9.39,nearest vertex (t = 40.1 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,60,creep_displacement_nm,10.47,nearest vertex (t = 60.2 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,80,creep_displacement_nm,11.51,nearest vertex (t = 80.1 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,100,creep_displacement_nm,12.36,nearest vertex (t = 100.2 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,120,creep_displacement_nm,13.31,nearest vertex (t = 120.1 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,140,creep_displacement_nm,13.58,nearest vertex (t = 140.3 s)
+fig6a,"LPSCl (25 C, 2000 uN hold)",t_s,150.2,creep_displacement_nm,13.92,last vertex of the curve
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,2,creep_displacement_nm,0.28,nearest vertex (t = 1.5 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,5,creep_displacement_nm,0.61,nearest vertex (t = 5.1 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,10,creep_displacement_nm,0.99,nearest vertex (t = 10.2 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,20,creep_displacement_nm,1.18,nearest vertex (t = 19.7 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,30,creep_displacement_nm,1.65,nearest vertex (t = 29.7 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,40,creep_displacement_nm,1.6,nearest vertex (t = 40.1 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,60,creep_displacement_nm,1.99,nearest vertex (t = 60.2 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,80,creep_displacement_nm,1.84,nearest vertex (t = 80.1 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,100,creep_displacement_nm,2.22,nearest vertex (t = 100.2 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,120,creep_displacement_nm,2.4,nearest vertex (t = 120.1 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,140,creep_displacement_nm,2.74,nearest vertex (t = 138.8 s)
+fig6a,"HP-LLZTO (25 C, 2000 uN hold)",t_s,149.1,creep_displacement_nm,2.36,last vertex of the curve
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,2,creep_displacement_nm,0.28,nearest vertex (t = 2.0 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,5,creep_displacement_nm,1.46,nearest vertex (t = 5.1 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,10,creep_displacement_nm,2.97,nearest vertex (t = 10.2 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,20,creep_displacement_nm,4.72,nearest vertex (t = 20.2 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,30,creep_displacement_nm,5.1,nearest vertex (t = 29.7 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,40,creep_displacement_nm,6.22,nearest vertex (t = 40.1 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,60,creep_displacement_nm,6.84,nearest vertex (t = 60.2 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,80,creep_displacement_nm,7.74,nearest vertex (t = 80.1 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,100,creep_displacement_nm,8.11,nearest vertex (t = 100.2 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,120,creep_displacement_nm,8.25,nearest vertex (t = 120.1 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,140,creep_displacement_nm,8.21,nearest vertex (t = 140.3 s)
+fig6a,"CPSS-LLZTO (25 C, 2000 uN hold)",t_s,150.2,creep_displacement_nm,8.82,last vertex of the curve
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,2,creep_displacement_nm,0.14,nearest vertex (t = 2.0 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,5,creep_displacement_nm,0.47,nearest vertex (t = 5.1 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,10,creep_displacement_nm,0.71,nearest vertex (t = 10.2 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,20,creep_displacement_nm,0.89,nearest vertex (t = 20.2 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,30,creep_displacement_nm,1.13,nearest vertex (t = 29.2 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,40,creep_displacement_nm,1.18,nearest vertex (t = 39.3 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,60,creep_displacement_nm,1.32,nearest vertex (t = 60.5 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,80,creep_displacement_nm,1.51,nearest vertex (t = 80.1 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,100,creep_displacement_nm,1.65,nearest vertex (t = 100.8 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,120,creep_displacement_nm,1.79,nearest vertex (t = 119.2 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,140,creep_displacement_nm,1.93,nearest vertex (t = 140.3 s)
+fig6a,"LAGP (25 C, 2000 uN hold)",t_s,150.2,creep_displacement_nm,1.84,last vertex of the curve
+fig6b,FQ (25 C),sigma_eff_over_sigma0,1.0,strain_rate_per_s,0.0002206,"first vertex (start of the hold); axes (both log): 0.88..1.0 = x 116.99..270.54 pt, 1e-5..1e-2 = y 366.07..242.90 pt"
+fig6b,FQ (25 C),sigma_eff_over_sigma0,0.99,strain_rate_per_s,7.955e-05,nearest vertex (0.9899)
+fig6b,FQ (25 C),sigma_eff_over_sigma0,0.98,strain_rate_per_s,2.887e-05,nearest vertex (0.9799)
+fig6b,FQ (25 C),sigma_eff_over_sigma0,0.9717,strain_rate_per_s,2.194e-05,last vertex (end of the hold)
+fig6b,FQ (25 C),quantity,log-log slope of the plotted curve,n,79.2,derived: least squares over all 228 vertices; strain rate at sigma/sigma0 = 1 from the same line = 0.000173 /s
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.9999,strain_rate_per_s,0.0006287,first vertex (start of the hold)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.99,strain_rate_per_s,0.0004592,nearest vertex (0.9894)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.98,strain_rate_per_s,0.0003589,nearest vertex (0.9814)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.97,strain_rate_per_s,0.000272,nearest vertex (0.9704)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.96,strain_rate_per_s,0.0001833,nearest vertex (0.9602)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.95,strain_rate_per_s,0.0001482,nearest vertex (0.9498)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.94,strain_rate_per_s,8.779e-05,nearest vertex (0.9400)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.93,strain_rate_per_s,6.531e-05,nearest vertex (0.9299)
+fig6b,LSPS (25 C),sigma_eff_over_sigma0,0.9252,strain_rate_per_s,5.057e-05,last vertex (end of the hold)
+fig6b,LSPS (25 C),quantity,log-log slope of the plotted curve,n,33.0,derived: least squares over all 219 vertices; strain rate at sigma/sigma0 = 1 from the same line = 0.000701 /s
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.9999,strain_rate_per_s,0.001289,first vertex (start of the hold)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.99,strain_rate_per_s,0.001091,nearest vertex (0.9906)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.98,strain_rate_per_s,0.0008961,nearest vertex (0.9797)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.97,strain_rate_per_s,0.0007873,nearest vertex (0.9708)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.96,strain_rate_per_s,0.000549,nearest vertex (0.9599)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.95,strain_rate_per_s,0.0004824,nearest vertex (0.9500)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.94,strain_rate_per_s,0.0004022,nearest vertex (0.9402)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.93,strain_rate_per_s,0.0002992,nearest vertex (0.9297)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.92,strain_rate_per_s,0.0002502,nearest vertex (0.9199)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.91,strain_rate_per_s,0.0001862,nearest vertex (0.9100)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.9,strain_rate_per_s,0.0001533,nearest vertex (0.8990)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.89,strain_rate_per_s,0.0001217,nearest vertex (0.8899)
+fig6b,LPSCl (25 C),sigma_eff_over_sigma0,0.8884,strain_rate_per_s,0.0001184,last vertex (end of the hold)
+fig6b,LPSCl (25 C),quantity,log-log slope of the plotted curve,n,20.8,derived: least squares over all 225 vertices; strain rate at sigma/sigma0 = 1 from the same line = 0.00137 /s
+fig6b,HP-LLZTO (25 C),sigma_eff_over_sigma0,1.0016,strain_rate_per_s,0.00036,first vertex (start of the hold)
+fig6b,HP-LLZTO (25 C),sigma_eff_over_sigma0,0.99,strain_rate_per_s,0.0001833,nearest vertex (0.9899)
+fig6b,HP-LLZTO (25 C),sigma_eff_over_sigma0,0.98,strain_rate_per_s,0.000146,nearest vertex (0.9799)
+fig6b,HP-LLZTO (25 C),sigma_eff_over_sigma0,0.97,strain_rate_per_s,7.456e-05,nearest vertex (0.9701)
+fig6b,HP-LLZTO (25 C),sigma_eff_over_sigma0,0.96,strain_rate_per_s,8.779e-05,nearest vertex (0.9602)
+fig6b,HP-LLZTO (25 C),sigma_eff_over_sigma0,0.9671,strain_rate_per_s,5.668e-05,last vertex (end of the hold)
+fig6b,HP-LLZTO (25 C),quantity,log-log slope of the plotted curve,n,39.4,derived: least squares over all 216 vertices; strain rate at sigma/sigma0 = 1 from the same line = 0.000292 /s
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.9999,strain_rate_per_s,0.00119,first vertex (start of the hold)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.99,strain_rate_per_s,0.0008689,nearest vertex (0.9899)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.98,strain_rate_per_s,0.0006896,nearest vertex (0.9802)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.97,strain_rate_per_s,0.0004592,nearest vertex (0.9706)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.96,strain_rate_per_s,0.0003888,nearest vertex (0.9602)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.95,strain_rate_per_s,0.0002542,nearest vertex (0.9496)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.94,strain_rate_per_s,0.0002158,nearest vertex (0.9400)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.93,strain_rate_per_s,0.0001533,nearest vertex (0.9299)
+fig6b,CPSS-LLZTO (25 C),sigma_eff_over_sigma0,0.9241,strain_rate_per_s,0.0001073,last vertex (end of the hold)
+fig6b,CPSS-LLZTO (25 C),quantity,log-log slope of the plotted curve,n,30.0,derived: least squares over all 239 vertices; strain rate at sigma/sigma0 = 1 from the same line = 0.00119 /s
+fig6b,LAGP (25 C),sigma_eff_over_sigma0,1.0,strain_rate_per_s,0.0003782,first vertex (start of the hold)
+fig6b,LAGP (25 C),sigma_eff_over_sigma0,0.99,strain_rate_per_s,0.0002055,nearest vertex (0.9899)
+fig6b,LAGP (25 C),sigma_eff_over_sigma0,0.98,strain_rate_per_s,0.0001505,nearest vertex (0.9799)
+fig6b,LAGP (25 C),sigma_eff_over_sigma0,0.97,strain_rate_per_s,9.365e-05,nearest vertex (0.9692)
+fig6b,LAGP (25 C),sigma_eff_over_sigma0,0.96,strain_rate_per_s,7.456e-05,nearest vertex (0.9597)
+fig6b,LAGP (25 C),sigma_eff_over_sigma0,0.95,strain_rate_per_s,6.756e-05,nearest vertex (0.9498)
+fig6b,LAGP (25 C),sigma_eff_over_sigma0,0.9562,strain_rate_per_s,6.674e-05,last vertex (end of the hold)
+fig6b,LAGP (25 C),quantity,log-log slope of the plotted curve,n,30.8,derived: least squares over all 197 vertices; strain rate at sigma/sigma0 = 1 from the same line = 0.000277 /s
+fig7a,FQ,T_C,-40,B_per_s,0.000171,"bar_lo=0.000128; bar_hi=0.000213; marker centre=0.000171; value = junction of the two error-bar stems; axes: T -100..400 C = x 377.12..535.84 pt, B 5e-5..5e-3 /s (log) = y 181.42..62.87 pt"
+fig7a,FQ,T_C,0,B_per_s,0.000217,bar_lo=0.000177; bar_hi=0.000256; marker centre=0.000217
+fig7a,FQ,T_C,25,B_per_s,0.00014,bar_lo=9.76e-05; bar_hi=0.000181; marker centre=0.00014
+fig7a,FQ,T_C,60,B_per_s,0.000237,bar_lo=0.000206; bar_hi=0.000267; marker centre=0.000237
+fig7a,FQ,T_C,100,B_per_s,0.000164,bar_lo=0.000124; bar_hi=0.000204; marker centre=0.000164
+fig7a,FQ,T_C,200,B_per_s,0.000545,bar_lo=0.000473; bar_hi=0.00062; marker centre=0.000544
+fig7a,FQ,T_C,300,B_per_s,0.000522,bar_lo=0.000464; bar_hi=0.000582; marker centre=0.000522
+fig7a,LSPS,T_C,-40,B_per_s,0.00159,bar_lo=0.00128; bar_hi=0.00189; marker centre=0.00159
+fig7a,LSPS,T_C,0,B_per_s,0.000539,bar_lo=0.000394; bar_hi=0.000683; marker centre=0.000539
+fig7a,LSPS,T_C,25,B_per_s,0.000722,bar_lo=0.000439; bar_hi=0.00101; marker centre=0.000722
+fig7a,LSPS,T_C,60,B_per_s,0.000594,bar_lo=0.000435; bar_hi=0.000753; marker centre=0.000594
+fig7a,LSPS,T_C,100,B_per_s,0.000822,bar_lo=0.000634; bar_hi=0.00101; marker centre=0.000822
+fig7a,LSPS,T_C,200,B_per_s,0.000626,bar_lo=0.000551; bar_hi=0.000699; marker centre=0.000627
+fig7a,LSPS,T_C,300,B_per_s,0.000473,bar_lo=0.000361; bar_hi=0.000588; marker centre=0.000473
+fig7a,LPSCl,T_C,-40,B_per_s,0.00157,bar_lo=0.00124; bar_hi=0.00191; marker centre=0.00157
+fig7a,LPSCl,T_C,0,B_per_s,0.000934,bar_lo=0.000738; bar_hi=0.00114; marker centre=0.000936
+fig7a,LPSCl,T_C,25,B_per_s,0.000997,bar_lo=0.000714; bar_hi=0.00129; marker centre=0.000999
+fig7a,LPSCl,T_C,60,B_per_s,0.00111,bar_lo=0.000906; bar_hi=0.00131; marker centre=0.0011
+fig7a,LPSCl,T_C,100,B_per_s,0.000839,bar_lo=0.000699; bar_hi=0.000988; marker centre=0.000839
+fig7a,LPSCl,T_C,200,B_per_s,0.000722,bar_lo=0.000516; bar_hi=0.000926; marker centre=0.000722
+fig7a,LPSCl,T_C,300,B_per_s,0.000965,bar_lo=0.00064; bar_hi=0.00129; marker centre=0.000967
+fig7a,HP-LLZTO,T_C,-40,B_per_s,0.000346,bar_lo=0.000215; bar_hi=0.000479; marker centre=0.000346
+fig7a,HP-LLZTO,T_C,0,B_per_s,0.000275,bar_lo=0.000199; bar_hi=0.00035; marker centre=0.000276
+fig7a,HP-LLZTO,T_C,25,B_per_s,0.000361,bar_lo=0.000232; bar_hi=0.000489; marker centre=0.000361
+fig7a,HP-LLZTO,T_C,60,B_per_s,0.000429,bar_lo=0.00024; bar_hi=0.00062; marker centre=0.000429
+fig7a,HP-LLZTO,T_C,100,B_per_s,0.000473,bar_lo=0.000365; bar_hi=0.000582; marker centre=0.000473
+fig7a,HP-LLZTO,T_C,200,B_per_s,0.000458,bar_lo=0.000331; bar_hi=0.000582; marker centre=0.000454
+fig7a,HP-LLZTO,T_C,300,B_per_s,0.0012,bar_lo=0.000557; bar_hi=0.00185; marker centre=0.0012
+fig7a,CPSS-LLZTO,T_C,-40,B_per_s,0.000877,bar_lo=0.000714; bar_hi=0.00104; marker centre=0.000877
+fig7a,CPSS-LLZTO,T_C,0,B_per_s,0.000934,bar_lo=0.000594; bar_hi=0.00127; marker centre=0.000924
+fig7a,CPSS-LLZTO,T_C,25,B_per_s,0.000934,bar_lo=0.000729; bar_hi=0.00115; marker centre=0.000936
+fig7a,CPSS-LLZTO,T_C,60,B_per_s,0.000987,bar_lo=0.000683; bar_hi=0.00128; marker centre=0.000986
+fig7a,CPSS-LLZTO,T_C,100,B_per_s,0.000676,bar_lo=0.000164; bar_hi=0.00119; marker centre=0.000676
+fig7a,CPSS-LLZTO,T_C,200,B_per_s,0.00161,bar_lo=0.00123; bar_hi=0.00197; marker centre=0.00159
+fig7a,CPSS-LLZTO,T_C,300,B_per_s,0.00232,bar_lo=0.00168; bar_hi=0.00294; marker centre=0.00232
+fig7a,LAGP,T_C,-40,B_per_s,0.000448,bar_lo=0.000328; bar_hi=0.000569; marker centre=0.000448
+fig7a,LAGP,T_C,0,B_per_s,0.000438,bar_lo=0.000267; bar_hi=0.000607; marker centre=0.000439
+fig7a,LAGP,T_C,25,B_per_s,0.000342,bar_lo=0.000227; bar_hi=0.000458; marker centre=0.000342
+fig7a,LAGP,T_C,60,B_per_s,0.000499,bar_lo=0.000377; bar_hi=0.00062; marker centre=0.0005
+fig7a,LAGP,T_C,100,B_per_s,0.000297,bar_lo=0.000211; bar_hi=0.000382; marker centre=0.000297
+fig7a,LAGP,T_C,200,B_per_s,0.000434,bar_lo=0.000218; bar_hi=0.000648; marker centre=0.000434
+fig7a,LAGP,T_C,300,B_per_s,0.000668,bar_lo=0.000416; bar_hi=0.000915; marker centre=0.00067
+fig7b,FQ,T_C,-40,n,82.8,"bar_lo=66.4; bar_hi=99.6; marker centre=82.9; value = junction of the two error-bar stems; axes: T -100..400 C = x 378.32..536.41 pt, n 0..120 = y 347.82..229.94 pt"
+fig7b,FQ,T_C,0,n,76.0,bar_lo=61.0; bar_hi=91.1; marker centre=76.1
+fig7b,FQ,T_C,25,n,66.9,bar_lo=58.2; bar_hi=75.4; marker centre=67.1
+fig7b,FQ,T_C,60,n,66.1,bar_lo=57.1; bar_hi=74.9; marker centre=66.2
+fig7b,FQ,T_C,100,n,62.7,bar_lo=51.6; bar_hi=73.5; marker centre=62.8
+fig7b,FQ,T_C,200,n,38.6,bar_lo=34.6; bar_hi=42.3; marker centre=38.7
+fig7b,FQ,T_C,300,n,33.8,bar_lo=29.0; bar_hi=38.6; marker centre=33.9
+fig7b,LSPS,T_C,-40,n,17.9,bar_lo=15.6; bar_hi=20.2; marker centre=18.0
+fig7b,LSPS,T_C,0,n,32.1,bar_lo=29.8; bar_hi=34.3; marker centre=32.2
+fig7b,LSPS,T_C,25,n,28.1,bar_lo=23.9; bar_hi=32.4; marker centre=28.2
+fig7b,LSPS,T_C,60,n,24.7,bar_lo=19.3; bar_hi=29.8; marker centre=24.8
+fig7b,LSPS,T_C,100,n,27.2,bar_lo=22.7; bar_hi=31.2; marker centre=27.1
+fig7b,LSPS,T_C,200,n,35.2,bar_lo=30.7; bar_hi=40.0; marker centre=35.3
+fig7b,LSPS,T_C,300,n,49.6,bar_lo=38.3; bar_hi=61.0; marker centre=49.8
+fig7b,LPSCl,T_C,-40,n,18.1,bar_lo=14.2; bar_hi=21.9; marker centre=18.3
+fig7b,LPSCl,T_C,0,n,27.0,bar_lo=22.7; bar_hi=31.2; marker centre=27.1
+fig7b,LPSCl,T_C,25,n,21.3,bar_lo=17.6; bar_hi=25.0; marker centre=21.4
+fig7b,LPSCl,T_C,60,n,20.4,bar_lo=15.9; bar_hi=24.7; marker centre=20.3
+fig7b,LPSCl,T_C,100,n,24.9,bar_lo=17.3; bar_hi=32.4; marker centre=24.8
+fig7b,LPSCl,T_C,200,n,32.6,bar_lo=26.7; bar_hi=38.6; marker centre=32.8
+fig7b,LPSCl,T_C,300,n,30.6,bar_lo=18.7; bar_hi=42.6; marker centre=30.8
+fig7b,HP-LLZTO,T_C,-40,n,55.0,bar_lo=46.0; bar_hi=63.9; marker centre=55.0
+fig7b,HP-LLZTO,T_C,0,n,49.6,bar_lo=30.9; bar_hi=68.1; marker centre=49.6
+fig7b,HP-LLZTO,T_C,25,n,45.9,bar_lo=30.7; bar_hi=61.3; marker centre=46.2
+fig7b,HP-LLZTO,T_C,60,n,35.5,bar_lo=25.8; bar_hi=44.8; marker centre=35.5
+fig7b,HP-LLZTO,T_C,100,n,31.7,bar_lo=21.6; bar_hi=42.0; marker centre=31.7
+fig7b,HP-LLZTO,T_C,200,n,24.7,bar_lo=9.68; bar_hi=40.0; marker centre=24.9
+fig7b,HP-LLZTO,T_C,300,n,19.0,bar_lo=9.1; bar_hi=29.0; marker centre=19.3
+fig7b,CPSS-LLZTO,T_C,-40,n,42.3,bar_lo=28.4; bar_hi=56.2; marker centre=42.4
+fig7b,CPSS-LLZTO,T_C,0,n,36.3,bar_lo=26.7; bar_hi=46.0; marker centre=36.4
+fig7b,CPSS-LLZTO,T_C,25,n,35.7,bar_lo=28.7; bar_hi=42.6; marker centre=35.9
+fig7b,CPSS-LLZTO,T_C,60,n,32.1,bar_lo=25.0; bar_hi=39.2; marker centre=32.2
+fig7b,CPSS-LLZTO,T_C,100,n,25.8,bar_lo=21.0; bar_hi=30.9; marker centre=25.9
+fig7b,CPSS-LLZTO,T_C,200,n,19.0,bar_lo=15.1; bar_hi=23.3; marker centre=19.1
+fig7b,CPSS-LLZTO,T_C,300,n,14.7,bar_lo=9.95; bar_hi=19.6; marker centre=14.9
+fig7b,LAGP,T_C,-40,n,49.6,bar_lo=37.5; bar_hi=61.6; marker centre=49.5
+fig7b,LAGP,T_C,0,n,52.2,bar_lo=30.9; bar_hi=73.2; marker centre=52.1
+fig7b,LAGP,T_C,25,n,47.4,bar_lo=29.8; bar_hi=64.7; marker centre=47.5
+fig7b,LAGP,T_C,60,n,47.9,bar_lo=36.1; bar_hi=59.6; marker centre=47.8
+fig7b,LAGP,T_C,100,n,43.4,bar_lo=30.9; bar_hi=55.6; marker centre=43.5
+fig7b,LAGP,T_C,200,n,40.0,bar_lo=33.2; bar_hi=47.1; marker centre=40.1
+fig7b,LAGP,T_C,300,n,35.7,bar_lo=26.7; bar_hi=45.1; marker centre=35.9
+fig8a,FQ,T_C,-40,n,82.7,"bar_lo=66.3; bar_hi=99.4; marker centre=82.6; value = junction of the two error-bar stems; axes: 1/T 0.001..0.005 /K = x 108.00..268.70 pt, n 0..125 = y 215.90..95.52 pt; x_name is the nominal temperature, plotted at 1/T"
+fig8a,FQ,T_C,0,n,75.8,bar_lo=60.7; bar_hi=90.7; marker centre=75.8
+fig8a,FQ,T_C,25,n,66.6,bar_lo=58.0; bar_hi=75.3; marker centre=66.6
+fig8a,FQ,T_C,60,n,65.7,bar_lo=56.8; bar_hi=74.7; marker centre=65.6
+fig8a,FQ,T_C,100,n,62.5,bar_lo=51.5; bar_hi=73.5; marker centre=62.4
+fig8a,FQ,T_C,200,n,38.3,bar_lo=34.5; bar_hi=42.3; marker centre=38.3
+fig8a,FQ,T_C,300,n,33.6,bar_lo=28.8; bar_hi=38.4; marker centre=33.5
+fig8a,HP-LLZTO,T_C,-40,n,54.7,bar_lo=45.8; bar_hi=63.7; marker centre=54.7
+fig8a,HP-LLZTO,T_C,0,n,49.3,bar_lo=30.7; bar_hi=68.2; marker centre=49.3
+fig8a,HP-LLZTO,T_C,25,n,45.8,bar_lo=30.7; bar_hi=61.3; marker centre=45.7
+fig8a,HP-LLZTO,T_C,60,n,35.3,bar_lo=25.9; bar_hi=44.9; marker centre=35.3
+fig8a,HP-LLZTO,T_C,100,n,31.5,bar_lo=21.4; bar_hi=41.6; marker centre=31.4
+fig8a,HP-LLZTO,T_C,200,n,24.6,bar_lo=9.5; bar_hi=39.9; marker centre=24.6
+fig8a,HP-LLZTO,T_C,300,n,19.0,bar_lo=8.89; bar_hi=28.8; marker centre=18.9
+fig8a,CPSS-LLZTO,T_C,-40,n,42.2,bar_lo=28.3; bar_hi=56.0; marker centre=42.1
+fig8a,CPSS-LLZTO,T_C,0,n,36.2,bar_lo=26.5; bar_hi=45.8; marker centre=36.2
+fig8a,CPSS-LLZTO,T_C,25,n,35.7,bar_lo=28.6; bar_hi=42.5; marker centre=35.3
+fig8a,CPSS-LLZTO,T_C,60,n,31.8,bar_lo=24.7; bar_hi=39.0; marker centre=31.7
+fig8a,CPSS-LLZTO,T_C,100,n,25.8,bar_lo=20.8; bar_hi=30.7; marker centre=25.8
+fig8a,CPSS-LLZTO,T_C,200,n,19.0,bar_lo=14.9; bar_hi=23.2; marker centre=18.9
+fig8a,CPSS-LLZTO,T_C,300,n,14.8,bar_lo=9.83; bar_hi=19.6; marker centre=14.8
+fig8a,LAGP,T_C,-40,n,49.3,bar_lo=37.5; bar_hi=61.3; marker centre=49.3
+fig8a,LAGP,T_C,0,n,52.0,bar_lo=30.9; bar_hi=72.9; marker centre=52.0
+fig8a,LAGP,T_C,25,n,47.3,bar_lo=29.4; bar_hi=64.6; marker centre=46.9
+fig8a,LAGP,T_C,60,n,47.6,bar_lo=36.0; bar_hi=59.5; marker centre=47.5
+fig8a,LAGP,T_C,100,n,43.1,bar_lo=30.9; bar_hi=55.6; marker centre=43.1
+fig8a,LAGP,T_C,200,n,39.8,bar_lo=33.0; bar_hi=47.0; marker centre=39.8
+fig8a,LAGP,T_C,300,n,35.7,bar_lo=26.5; bar_hi=44.9; marker centre=35.6
+fig8a,FQ — dashed fit line,invT_per_K,0.001748,n,36.01,line end (T = 298.9 C)
+fig8a,FQ — dashed fit line,invT_per_K,0.004288,n,87.21,line end (T = -39.9 C)
+fig8a,FQ — dashed fit line,quantity,slope dn/d(1/T),K,20160.0,derived from the two line ends; intercept at 1/T = 0: 0.76
+fig8a,HP-LLZTO — dashed fit line,invT_per_K,0.001748,n,19.05,line end (T = 298.9 C)
+fig8a,HP-LLZTO — dashed fit line,invT_per_K,0.004288,n,56.83,line end (T = -39.9 C)
+fig8a,HP-LLZTO — dashed fit line,quantity,slope dn/d(1/T),K,14880.0,derived from the two line ends; intercept at 1/T = 0: -6.95
+fig8a,CPSS-LLZTO — dashed fit line,invT_per_K,0.001748,n,15.74,line end (T = 298.9 C)
+fig8a,CPSS-LLZTO — dashed fit line,invT_per_K,0.004288,n,43.74,line end (T = -39.9 C)
+fig8a,CPSS-LLZTO — dashed fit line,quantity,slope dn/d(1/T),K,11030.0,derived from the two line ends; intercept at 1/T = 0: -3.54
+fig8a,LAGP — dashed fit line,invT_per_K,0.001748,n,37.78,line end (T = 298.9 C)
+fig8a,LAGP — dashed fit line,invT_per_K,0.004288,n,52.69,line end (T = -39.9 C)
+fig8a,LAGP — dashed fit line,quantity,slope dn/d(1/T),K,5873.0,derived from the two line ends; intercept at 1/T = 0: 27.51
+fig8b,LSPS,T_C,-40,n,17.9,"bar_lo=15.6; bar_hi=20.2; marker centre=17.9; value = junction of the two error-bar stems; axes: 1/T 0.001..0.005 /K = x 107.78..269.18 pt, n 0..75 = y 414.27..292.82 pt; x_name is the nominal temperature, plotted at 1/T"
+fig8b,LSPS,T_C,0,n,32.2,bar_lo=29.9; bar_hi=34.5; marker centre=32.1
+fig8b,LSPS,T_C,25,n,28.1,bar_lo=23.8; bar_hi=32.5; marker centre=28.1
+fig8b,LSPS,T_C,60,n,24.7,bar_lo=19.5; bar_hi=29.9; marker centre=24.7
+fig8b,LSPS,T_C,100,n,27.1,bar_lo=22.9; bar_hi=31.4; marker centre=27.1
+fig8b,LSPS,T_C,200,n,35.3,bar_lo=30.6; bar_hi=40.0; marker centre=35.3
+fig8b,LSPS,T_C,300,n,49.5,bar_lo=38.2; bar_hi=60.9; marker centre=49.5
+fig8b,LPSCl,T_C,-40,n,18.1,bar_lo=14.3; bar_hi=21.8; marker centre=18.1
+fig8b,LPSCl,T_C,0,n,27.0,bar_lo=22.7; bar_hi=31.3; marker centre=27.0
+fig8b,LPSCl,T_C,25,n,21.2,bar_lo=17.6; bar_hi=24.9; marker centre=21.2
+fig8b,LPSCl,T_C,60,n,20.3,bar_lo=16.0; bar_hi=24.6; marker centre=20.3
+fig8b,LPSCl,T_C,100,n,24.9,bar_lo=17.3; bar_hi=32.4; marker centre=24.9
+fig8b,LPSCl,T_C,200,n,32.6,bar_lo=26.6; bar_hi=38.6; marker centre=32.6
+fig8b,LPSCl,T_C,300,n,30.6,bar_lo=18.8; bar_hi=42.5; marker centre=30.6
+fig8b,LSPS — dashed fit line,invT_per_K,0.003007,n,26.08,line end (T = 59.4 C)
+fig8b,LSPS — dashed fit line,invT_per_K,0.003675,n,32.82,line end (T = -1.0 C)
+fig8b,LSPS — dashed fit line,quantity,slope dn/d(1/T),K,10080.0,derived from the two line ends; intercept at 1/T = 0: -4.21
+fig8b,LPSCl — dashed fit line,invT_per_K,0.003011,n,20.2,line end (T = 59.0 C)
+fig8b,LPSCl — dashed fit line,invT_per_K,0.003703,n,27.17,line end (T = -3.1 C)
+fig8b,LPSCl — dashed fit line,quantity,slope dn/d(1/T),K,10060.0,derived from the two line ends; intercept at 1/T = 0: -10.09
+fig8b,regime boundary (vertical dashed line),invT_per_K,0.002818,T_C,81.7,derived: T = 1/x - 273.15
+fig8b,regime boundary (vertical dashed line),invT_per_K,0.003778,T_C,-8.5,derived: T = 1/x - 273.15
