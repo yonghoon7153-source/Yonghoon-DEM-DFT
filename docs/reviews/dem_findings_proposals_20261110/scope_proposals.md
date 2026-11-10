@@ -201,5 +201,5 @@
 - 새 LIVE/S0/P2의 전수 재고·경계·byte 결속을 역사 B 결과 종결로 옮기지 않는다. generator의 UNIMPLEMENTED/gate-stop 표시는 실제 engine adapter 미연결을 뜻하며, 새 합성 계약이 없다는 뜻으로 다시 쓰지 않는다.
 - 봉인 관련 네 항목(MV-03, MV-07, GEN2-02, GEN2-04)은 제안만. 이번에 해당 sealed source 내용·원자료·docs/data·JSON·로그를 읽지 않았다. 원장 명세에 들어 있는 역사 수치 인용은 원자료 접근/재산술과 구분한다.
 - MV-09는 지정 판정문 해당 부분만 직접 읽고 별도 정정 초안을 작성했다. 정정 때문에 새 런/새 연구값 열람이 필요하다고 주장하지 않는다.
-- 17개 unsealed source/test의 고정 SHA·Git blob OID는 d5_scope.json에 있다. 소스 텍스트를 읽었고 실행하거나 import하지 않았다. 신규 구현/시험 코드0·프로젝트 실행0·repo/원장/봉인 변경0·host0.
+- 17개 unsealed source/test의 고정 SHA·Git blob OID는 scope_provenance.json에 있다. 소스 텍스트를 읽었고 실행하거나 import하지 않았다. 신규 구현/시험 코드0·프로젝트 실행0·repo/원장/봉인 변경0·host0.
 - 이 보고서는 제한된 범위의 구현 큐 진단이다. 전수 보안/수학/물리 감사나 새 독립 반박 판정, 모든 정적 결함 부재 주장은 아니다.
