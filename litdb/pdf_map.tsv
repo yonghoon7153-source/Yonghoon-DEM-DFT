@@ -391,3 +391,6 @@ kato2016_high_power_assb_lsipscl_superionic	high-power all-solid-state batteries
 #   [!] '--slug deiseroth2008_li6ps5x_argyrodite_high_li_mobility --clean' 은 가드가 막는다 (자동 bbox 는 fig_2 에 Fig. 3b + 캡션 · fig_5 에 저널 로고를 끌고 온다). 다시 뽑으면 위 clip 을 그대로 쓴다.
 deiseroth2008_li6ps5x_argyrodite_high_li_mobility	a_class_of_crystalline_li
 deiseroth2008_li6ps5x_argyrodite_high_li_mobility	a class of crystalline li
+# ── 전고체전지 전망 Comment (Janek · Zeier 2016 · Nat. Energy 1, 16141 · 사용자 목록 128 번) — litdb 2026-11-10 · 제목이 짧고 'solid' · 'battery development' 가 흔한 낱말이라 뒤에 들어올 digest 와 겹치지 않게 수동 지정 · 본문만 (SI 없음) · 밑줄 · 공백 두 변형 ──
+janek2016_solid_future_battery_development	a_solid_future_for_battery_development
+janek2016_solid_future_battery_development	a solid future for battery development

@@ -1,0 +1,80 @@
+{
+ "slug": "janek2016_solid_future_battery_development",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "128._A_solid_future_for_battery_development.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1 | Energy densities of lithium-ion batteries and ionic conductivities of lithium electrolytes. a, Energy densities of the standard cylindrical 18650 LIB cells (with a volume of approximately 16 cm3 and a mass of 48 g) over the past 25 years are shown. The data until the year 2012 are taken from ref. 19, where an extrapolation (represented by the dashed curves) was made for the energy density values after the year 2004. The extrapolated data in the year 2012 was confirmed by cell producers20 and is shown as solid symbols. The data in year 2016 also comes from cell producers21. Specifically, the latest 18650 cell delivers a 3.5 Ah charge at a mean voltage of 3.65 V, corresponding to a volumetric (gravimetric) energy density wvol (wgrav) of roughly 770 Wh l−1 (270 Wh kg−1). The energy density of commercial LIB cells has consistently increased to this level by almost a factor of four",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    62.8,
+    567.2,
+    264.8
+   ],
+   "w": 2239,
+   "h": 843,
+   "dpi": 300,
+   "src": "128._A_solid_future_for_battery_development.pdf",
+   "blank": 0.958,
+   "viewed": true,
+   "readout_note": "2026-11-10 litdb-curator: vector figure (86 drawing paths on p.2) read from PDF coordinates by tools/litdb/janek2016_readout.py -> digitized.csv; auto crop complete (panel letters a/b, both axes, all 10 labels in b) - no recrop"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2 | Typical battery architectures for the conventional lithium-ion and solid-state batteries. The volumetric and gravimetric energy densities are represented by wvol and wgrav, respectively. Conventional lithium-ion batteries (LIB, middle) contain a porous anode (negative electrode typically made of graphite, grey circles) and a porous cathode (positive electrode typically made of a layered transition metal oxide, violet circles) as ‘active’ storage components, coated on thin copper (negative electrode) and aluminum (positive electrode) foils, serving as current collectors. A thin separator (grey band, about 10 μm thick) is placed between the much thicker electrodes (each about 100 μm thick). A liquid electrolyte infiltrates the porous electrode and separator assembly, providing fast ion transfer between the electrodes and preventing electronic short-circuiting. In a lithium ion s",
+   "rotated_deg": 0,
+   "bbox": [
+    208.4,
+    66.3,
+    566.2,
+    178.0
+   ],
+   "w": 1492,
+   "h": 466,
+   "dpi": 300,
+   "src": "128._A_solid_future_for_battery_development.pdf",
+   "blank": 0.523,
+   "viewed": true,
+   "readout_note": "2026-11-10 litdb-curator: schematic (hundreds of small raster tiles); only text labels carry numbers (+70 % / +40 % / +0 % / -10 %); auto crop complete - no recrop"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3 | Major challenges in developing solid-state batteries. Owing to its high specific capacity, the use of a lithium metal anode can significantly increase the cell energy density. However, a resistive SEI may form between the lithium anode and the SE, represented by RSE/SEI. In addition, the grains and grain boundaries of the SE also contribute resistance, represented by RSE and RSE,gb. Dendrite formation due to highly inhomogeneous lithium metal deposition causes serious risk of short-circuiting. Most SEs react with cathode active materials and need to be protected by coating the active material. Potential Li depletion at the cathode (space charge with rectifying effect) could also be avoided by employing a coating. The red curve indicates schematically the drop of the electric potential φ across the space charge. The blue arrows indicate that mechanical pressure is required both",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    46.4,
+    380.3,
+    198.4
+   ],
+   "w": 1460,
+   "h": 634,
+   "dpi": 300,
+   "src": "128._A_solid_future_for_battery_development.pdf",
+   "blank": 0.761,
+   "viewed": true,
+   "readout_note": "2026-11-10 litdb-curator: schematic (raster tiles + vector arrows/lines); auto crop complete incl. all three insets; zoom of the right inset rendered at 600 dpi to check the red phi line and the coating rings - no recrop"
+  }
+ ],
+ "missing_labels": [],
+ "figures_viewed": "3/3 (2026-11-10 litdb-curator)",
+ "vector_readout": "tools/litdb/janek2016_readout.py (selftest with negative paths; 5 deliberate breaks all red) -> digitized.csv (Fig. 1a markers/curves/limit bar · Fig. 1b 10 lines + grey RT bar · solid-minus-liquid pairs · LGPS line vs kamaya2011 digitized.csv · text/caption arithmetic)"
+}
