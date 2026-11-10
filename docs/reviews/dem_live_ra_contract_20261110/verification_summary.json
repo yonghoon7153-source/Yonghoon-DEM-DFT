@@ -1,0 +1,196 @@
+{
+  "schema": "dem_gen2_live_ra_offline_verification/1",
+  "assumptions": [
+    "Q-LIVE-1",
+    "Q-LIVE-2"
+  ],
+  "whole_status": "HOLD",
+  "chronology": {
+    "implementation_draft_existed_before_any_red": true,
+    "original_draft_preserved": true,
+    "strict_preimplementation_tdd": false,
+    "exact_order": [
+      "unexecuted_implementation_draft",
+      "fixed_suite_written",
+      "new_feature_fail_closed_stub_red",
+      "preserved_draft_first_execution_failure",
+      "minimal_candidate_missing_balance_classification_change",
+      "same_suite_green",
+      "guard_removal_contrasts",
+      "module_docstring_fact_correction",
+      "same_25_method_final_green_repetition",
+      "static_ast_and_byte_comparison",
+      "new_final_raw_manifest_without_overwriting_original_manifest"
+    ]
+  },
+  "source_sha256": {
+    "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+    "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+    "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+    "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+    "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a"
+  },
+  "original_draft_sha256": "70118a4cff0f1c703e89e19bc2e3d939e4be2a9bc8a8408bf0378458c7691b65",
+  "test_sha256_unchanged_in_all_invocations": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+  "initial_red": {
+    "report": "red/report.json",
+    "methods": 25,
+    "assertion_or_subtest_failures": 67,
+    "errors": 0,
+    "rc": 1
+  },
+  "original_draft_observation": {
+    "report": "draft_observation/report.json",
+    "methods": 25,
+    "assertion_or_subtest_failures": 1,
+    "errors": 0,
+    "rc": 1,
+    "observed_failure": "Missing balance component was REJECTED instead of NOT_COMPUTED"
+  },
+  "guard_removal_contrasts": [
+    {
+      "name": "same_frame",
+      "report": "contrasts/same_frame/report.json",
+      "methods": 25,
+      "assertion_or_subtest_failures": 7,
+      "errors": 0,
+      "rc": 1,
+      "tested_source_sha256": "86c15f9ce5cc7c0219ff6498df507480831b5f7d8cd4c4f0409b5f79b7cdf575"
+    },
+    {
+      "name": "source_identity",
+      "report": "contrasts/source_identity/report.json",
+      "methods": 25,
+      "assertion_or_subtest_failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "tested_source_sha256": "c686b43e9e026d21d3728693189ec18bbc3e624df9f17f31e273862aa0f314ad"
+    },
+    {
+      "name": "full_inventory",
+      "report": "contrasts/full_inventory/report.json",
+      "methods": 25,
+      "assertion_or_subtest_failures": 6,
+      "errors": 0,
+      "rc": 1,
+      "tested_source_sha256": "af0ba0a31df7a709ee9840f91cde609dad4baa3329af8d0af73aef74f11e7bba"
+    },
+    {
+      "name": "fixed_ra_plate",
+      "report": "contrasts/fixed_ra_plate/report.json",
+      "methods": 25,
+      "assertion_or_subtest_failures": 2,
+      "errors": 0,
+      "rc": 1,
+      "tested_source_sha256": "c08e0a96763cd4f5fb354f693569786088af710ddc5139d0231201214cd66520"
+    },
+    {
+      "name": "ra_budget",
+      "report": "contrasts/ra_budget/report.json",
+      "methods": 25,
+      "assertion_or_subtest_failures": 4,
+      "errors": 0,
+      "rc": 1,
+      "tested_source_sha256": "875277be15edffb522e85af8118d8513498a27558ed71995fd9304fd8bad028e"
+    },
+    {
+      "name": "extra_channels",
+      "report": "contrasts/extra_channels/report.json",
+      "methods": 25,
+      "assertion_or_subtest_failures": 9,
+      "errors": 0,
+      "rc": 1,
+      "tested_source_sha256": "f870d2084dbd93909da82cffcde10754655ab1b9795976d93f1ac98018bf1a1f"
+    },
+    {
+      "name": "exact_flag_type",
+      "report": "contrasts/exact_flag_type/report.json",
+      "methods": 25,
+      "assertion_or_subtest_failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "tested_source_sha256": "c77d99b04ce76d4a4981a60bf73df9e5df0739f566c458c352e32866ba7cd6bf"
+    }
+  ],
+  "counting": "25 methods, internal subtests, seven contrasts and repeated invocations are not additive.",
+  "process_network_attempts": [],
+  "actual_engine_calls": 0,
+  "actual_raw_data_or_log_reads": 0,
+  "actual_T0": "NOT_RUN",
+  "actual_T11": "NOT_RUN",
+  "actual_T12": "NOT_RUN",
+  "whole_gate": "NOT_RUN",
+  "t11_dependency_pin": "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+  "t11_dependency_binding": "Parent Git blob, tested bytes and current worktree bytes all equal",
+  "base_commit": "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+  "parent_dependency_comparison": [
+    {
+      "path": "scripts/dem_gen2_qualification.py",
+      "git_blob": "ebf53e68675c0bc52ee4eb06a6eb2290f6a52e4a",
+      "tested_sha256": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+      "parent_blob_equals_tested_bytes": true,
+      "worktree_equals_parent_blob": true
+    },
+    {
+      "path": "scripts/dem_gen2_t0_contract.py",
+      "git_blob": "0543277d2903806ae85d2c68d0935a34142c7c0b",
+      "tested_sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+      "parent_blob_equals_tested_bytes": true,
+      "worktree_equals_parent_blob": true
+    },
+    {
+      "path": "scripts/dem_gen2_t11_contract.py",
+      "git_blob": "94ce7f82ca74b8b82f7d86b01b15784f6cc8cbe9",
+      "tested_sha256": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+      "parent_blob_equals_tested_bytes": true,
+      "worktree_equals_parent_blob": true
+    }
+  ],
+  "copied_to_new_branch_without_source_or_test_edits": true,
+  "tests_reexecuted_after_branch_copy": false,
+  "preserved_final_scratch_manifest": {
+    "file_count_excluding_manifest_itself": 153,
+    "sha256": "423bf6f7fd6c4328d0182b6b59e89bd3b0f895bcffef927b28fe017ab05bdd18"
+  },
+  "source_authenticated": false,
+  "registration_complete": false,
+  "physical_ready": false,
+  "execution_go": false,
+  "transition_authorized": false,
+  "operational_seal_modified": false,
+  "gate_write": false,
+  "research_results": 0,
+  "previous_green": {
+    "report": "green/report.json",
+    "methods": 25,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0
+  },
+  "green": {
+    "report": "final_green/report.json",
+    "methods": 25,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0,
+    "same_methods_repeated": true,
+    "additional_unique_methods": 0
+  },
+  "guard_removal_base_source_sha256": "def0667439711ad24738e1009c08514ab81f2329f07896a8b6de08bf1a00a164",
+  "final_module_docstring_correction": {
+    "previous_sha256": "def0667439711ad24738e1009c08514ab81f2329f07896a8b6de08bf1a00a164",
+    "final_sha256": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+    "only_first_docstring_text_changed": true,
+    "ast_ignoring_module_docstring_identical": true,
+    "ast_sha256": "2f08508a2b27d3e16c43f823381c74e09ec4cc69a325c2f4b288d581769ea775",
+    "contrast_results_apply_to_previous_exact_bytes": true,
+    "contrasts_not_repeated_after_nonsemantic_docstring_correction": true
+  },
+  "suite_invocations_including_seven_contrasts_and_final_repetition": 11,
+  "limits": [
+    "Input-declared residual/gravity/damping/inertia channels only; no physical balance recomputation from particles.",
+    "Existing scalar thresholds remain synthetic. Extra-channel limits are explicit toy assumptions.",
+    "Boundary hashes and declarations are not authenticated live provenance or hidden-history qualification.",
+    "Original staging and fixed test header preserve their initial unexecuted-at-authoring wording."
+  ]
+}
