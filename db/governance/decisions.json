@@ -12646,7 +12646,7 @@
    "title": "li2s-3 카드 개정 EB — 판독 도구 고침 (생산 프레임 수 = prod/save · 실행 기록 결속 · 실제 추론 모드 · 궤적 ↔ 입력 · 검증 실패 = 판정 보류 · 허가 문 · 압력 계산기) · 새 기계 값 여섯 · 판독 허가 키 꼴",
    "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 개정_EB_2026_11_10 이 정의다: 기계_판독_값.stage2 에 n_atoms 120 · save_fs 100 · dt_fs 2 · bind_PS_median_disp_max_A 1.0 · continuity_max_A {Li 4.0 · P 2.5 · S 2.5 · Cl 2.5} · mean_T_tol_frac 0.02 · 생산 프레임 수 = prod/save · 프레임 k ↔ t = (k+1)·save · invalid · incomplete 런이 하나라도 있거나 큐 끝 줄이 없으면 W · 갈래 · cond550 을 내지 않고 판정 보류 (검증 실패는 수송 게이트 미통과가 아니다 · 그 런은 큐 v2 로 같은 카드 값 재실행) · 실행된 러너 · 드라이버 · 추론 모드는 kgy 로그 · run_meta · ensemble_results 로 결속 · 판독은 고친 도구 → 대조 잡 same = True (같은 sha16) → 허가 커밋 순서로 한 번 · 카드 문장 EB 1–6.",
    "rationale": "내부 반박 리뷰 EB (NO-GO): 도구가 생산 프레임 수를 prod/save + 1 로 기대해 올바른 16 런이 전부 invalid → '닫는다' 가 될 뻔했다 (selftest 픽스처가 같은 잘못된 가정). 실행된 코드 · 모드 · 궤적 결속이 비어 있었고 검증 실패가 물리 판정으로 넘어갔다. 결과 전에 고친다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "2 단계 결과 0 건 · 대조 잡 아직 안 돔 · 16 런 진행 신호만",
@@ -12674,15 +12674,31 @@
     "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
    },
    "proposed_by": "claude-session-2026-11-10 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-10",
      "state": "proposed",
      "by": "agent",
      "note": "내부 반박 리뷰 EB (NO-GO) 반영 — 결과 전 · 위임 10-30 이라 다음 커밋에서 '사용자 (위임 10-30)' 로 활성"
+    },
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "카드 커밋 7378ced3 · 사용자 2026-11-10 (이 세션): 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐' — 내부 반박 리뷰 EB (NO-GO) 를 결과 전에 반영 · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)')"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T12:00:55Z",
+    "commit": "7378ced3800ad38ddb7f13785fc483a96f6bcacb",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-10 (이 세션): 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐' — 내부 반박 리뷰 EB (NO-GO) 를 결과 전에 반영 · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)')",
+    "decision_digest": "sha256:81b0b55c9d6ff4511e73303cf72ee43eabdd867ceacbadddf017eb2e29aceb2e"
+   }
   }
  ]
 }
