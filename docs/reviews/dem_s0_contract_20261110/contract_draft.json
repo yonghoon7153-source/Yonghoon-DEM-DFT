@@ -1,0 +1,114 @@
+{
+  "schema": "dem_s0_contract_document_draft/1",
+  "status": "SYNTHETIC_CHECKED_UNREGISTERED_DOCUMENT_NOT_AN_API_PACKET",
+  "process_notice": "Pre-red implementation draft disclosed and preserved; fixed suite/stub red then first draft observation. No strict test-first authorship claim.",
+  "assumptions": [
+    "Q-S0-1",
+    "Q-S0-2"
+  ],
+  "live_dependency": {
+    "api": "dem_gen2_live_contract.diagnose_live_ra(plan, servo_frames, ra_frames)",
+    "fixed_pin": "63a513560c2770990920065be94ef966a8be018b",
+    "status": "FIXED_PARENT_BYTE_IDENTITY_CHECKED",
+    "candidate_status": "SYNTHETIC_RA_END_CANDIDATE",
+    "candidate_schema": "SYNTHETIC_RA_BOUNDARY_CANDIDATE_V1",
+    "candidate_stage": "relaxation",
+    "candidate_boundary_id": "RA_END",
+    "original_inputs_must_be_revalidated": true,
+    "source_sha256": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+    "fixture_sha256": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a"
+  },
+  "contract_template": {
+    "schema": "SYNTHETIC_S0_CONTRACT_V1",
+    "purpose": "SYNTHETIC_PREPARATION",
+    "s0_id": "synthetic_s0",
+    "assumptions": [
+      "Q-S0-1",
+      "Q-S0-2"
+    ],
+    "boundary_sha256": null,
+    "pair_reference": null,
+    "wall_reference": null
+  },
+  "required_objects_in_order": [
+    "atom",
+    "pair",
+    "wall",
+    "mesh",
+    "restart",
+    "state"
+  ],
+  "atom_columns": [
+    "id",
+    "type",
+    "x",
+    "y",
+    "z",
+    "radius",
+    "mass",
+    "vx",
+    "vy",
+    "vz",
+    "omegax",
+    "omegay",
+    "omegaz",
+    "fx",
+    "fy",
+    "fz"
+  ],
+  "pair_columns": "Exact ordered c_cpl[1] through c_cpl[26]",
+  "pair_23_semantics": "CURRENT_OVERLAP_ONLY",
+  "wall_u_columns": [
+    "mesh",
+    "tri",
+    "id",
+    "fnx",
+    "fny",
+    "fnz"
+  ],
+  "wall_r_synthetic_additional_columns": [
+    "delta_max",
+    "shear_x",
+    "shear_y",
+    "shear_z"
+  ],
+  "mapping_notice": "Unit and semantic references must be explicit. Their declared byte consistency does not authenticate a P2 physical mapping or hidden history.",
+  "canonical_bytes": "json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')",
+  "outer_wrapper_fields": [
+    "schema",
+    "body",
+    "body_bytes",
+    "body_sha256"
+  ],
+  "synthetic_size_limits": {
+    "payload_bytes": 65536,
+    "archive_bytes": 1048576,
+    "atom_rows": 256,
+    "contact_rows": 1024,
+    "actual_engine_capacity_qualification": false
+  },
+  "actual": {
+    "S0": null,
+    "T0": "NOT_RUN",
+    "T11": "NOT_RUN",
+    "T12": "NOT_RUN",
+    "receipt": null
+  },
+  "registration_complete": false,
+  "source_authenticated": false,
+  "hidden_history_qualified": false,
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "operational_seal_modified": false,
+  "research_results": 0,
+  "whole_status": "HOLD",
+  "synthetic_checks": {
+    "methods": 22,
+    "failures": 0,
+    "errors": 0,
+    "detected_guard_contrasts": 8,
+    "independent_review": "NOT_RECEIVED",
+    "actual_physical_qualification": false
+  }
+}
