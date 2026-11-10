@@ -1,12 +1,18 @@
 #!/bin/bash
 # =============================================================================
-# run_stage2_kgy_v2.sh — li2s-3 2 단계 고친 큐 v2 (리뷰 DZ 최소 조건 · 내부 리뷰 EB · 결과 전)
+# run_stage2_kgy_v2.sh — li2s-3 2 단계 고친 큐 v2 (리뷰 DZ 최소 조건 · 내부 리뷰 EB · EE · 결과 전)
 #   카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json (기계_판독_값 · 개정_DZ_회신 · 개정_EB)
 #   두 갈래 (사람이 PHASE 를 준다 — 큐가 스스로 정하지 않는다)
-#     PHASE=cond550  조건부 550 K · 800 ps · A · B × 11 · 12 (카드 stage2.conditional) — 고정 판독 기록
-#                    (READOUT_RECORD + READOUT_SHA256) 이 '두 계 모두 600 K 측정 가능' 을 보일 때만 (카드 cond550_Q6)
-#     PHASE=rerun    판정 보류 기록 (HOLD_RECORD + HOLD_SHA256) 에 invalid · incomplete 로 적힌 런만 (RERUN='A:11:600 …') ·
-#                    같은 카드 값 · 옛 런 폴더는 지우지 않고 '<T>.superseded_<UTC>' 로 옮겨 남긴다
+#     PHASE=cond550  조건부 550 K · 800 ps · A · B × 11 · 12 (카드 stage2.conditional) — 사다리 판독 고정 기록
+#                    (<BASE>/readout_stage2/readout_stage2.json 만 · READOUT_RECORD + READOUT_SHA256) 이 '두 계 모두 600 K
+#                    측정 가능' 을 보일 때만 (카드 cond550_Q6) · 빈 폴더만 돈다 — 완료 아닌 폴더는 건너뛰고 (판정 보류 → rerun)
+#                    나머지를 계속 돈 뒤 종료 17 · 완료된 v2 런 (같은 블록 · 어느 PHASE 든 · 큐 · 드라이버 판 = 카드) 은 건너뛴다
+#     PHASE=rerun    판정 보류 기록 (HOLD_RECORD + HOLD_SHA256) 에 invalid · incomplete 로 적혔고 그 기록 뒤 폴더가 안 바뀐 런만
+#                    (보류 기록의 런별 지문 = 지금 지문 · RERUN='A:11:600 …') · 같은 카드 값 · 옛 폴더는 '<T>.superseded_<UTC>' 로
+#                    옮겨 남긴다. 사다리 판독 고정 기록이 있으면 사다리 온도 런 · cond550 판독 고정 기록이 있으면 모든 런을 거부 ·
+#                    한 번도 안 띄운 550 K 런은 받지 않는다 (PHASE=cond550 만 띄운다 — 리뷰 EE P1-3 선택 B)
+#   카드 · 결정 원장은 저장소의 그 파일 (HEAD 와 같음) 로만 — 다른 카드 · 원장은 V2_TEST=1 (시작 기록 test: true ·
+#   판독 도구가 받지 않는다). 큐 · 드라이버도 HEAD 와 같아야 시작한다 (리뷰 EE P1-2).
 #   v1 큐 (run_stage2_kgy.sh) 는 그대로다 — 같은 잠금 ($BASE/.stage2.lock) 을 v1 이 (또는 v1 의 드라이버가) 쥐고 있으면
 #   시작하지 않는다. v2 는 옛 러너 (glass_kgy_q_v2.sh — 드라이버 종료 코드를 삼킨다 · 리뷰 DZ P1-1) 를 거치지 않고
 #   드라이버를 직접 부른다 — 러너 사본이 따로 없다 (이 파일이 실행 경로다 · 카드 stage2.queue_v2.sha16 이 이 파일을 고정한다).
@@ -32,20 +38,25 @@
 #   DRY_RUN=1 PHASE=cond550 READOUT_RECORD=… READOUT_SHA256=… bash …/run_stage2_kgy_v2.sh  # 검사 · 계획만 (아무것도 안 쓴다)
 #   PHASE=cond550 READOUT_RECORD=… READOUT_SHA256=… bash …/run_stage2_kgy_v2.sh
 #   PHASE=rerun RERUN='A:11:600' HOLD_RECORD=… HOLD_SHA256=… bash …/run_stage2_kgy_v2.sh
-#   멈춘 뒤 이어서:  ACK_STOP=<멈춤 id> ACK_BY=<누가> ACK_REASON=<왜> + 같은 명령
-#   비용 미확정 흔적:  COST_CHARGE='A/seed11/T600=5.2' COST_BY=<누가> COST_REASON=<근거> + 같은 명령 (장부에 'charge' 행)
-#   그 밖 환경변수: BASE · SRC · CARD · DECISIONS · PY · POLL · GPU_WAIT · META_WAIT (과학 값은 카드에서만)
+#   멈춘 뒤 이어서:  ACK_STOP=<멈춤 id> ACK_BY=<누가> ACK_REASON=<왜> + 같은 명령 (by · reason 없는 풂 줄은 풂이 아니다)
+#   비용 미확정 흔적:  COST_CHARGE='<열쇠>=5.2' COST_BY=<누가> COST_REASON=<근거> + 같은 명령 (장부에 'charge' 행 · 0 보다 커야) —
+#                      열쇠 = v2 흔적은 실행 기록 run_id (폴더를 옮겨도 따라간다) · v1 흔적은 '<계>:<시드>:<온도>:v1' (거부 문구가 알려 준다)
+#   그 밖 환경변수: BASE · SRC · PY · POLL · GPU_WAIT · META_WAIT (과학 값은 카드에서만) · 시험만: V2_TEST=1 + CARD · DECISIONS
 #
-# 종료 코드: 0 끝 · 2 사용법 · 4 런 실패 (멈춤) · 6 카드 · 결정 · 7 큐 · 드라이버 sha · 8 입력 (없음 · 바뀜 — 실행 직전 다시 해시 ·
-#   멈춤) · 9 실행 설정이 카드와 다르다 (드라이버를 세운다 · 멈춤) · 10 잠금 (v1 · 다른 큐) · 12 GPU 대기 초과 (멈춤) ·
-#   13 PHASE · RERUN 꼴 · 14 풀리지 않은 멈춤 · 15 비용 미확정 · 16 결속 기록 (판독 · 보류) 이 조건을 못 채운다 ·
-#   17 이미 있는 런 폴더를 이 갈래가 받을 수 없다 · 21 첫 런 한도 (멈춤) · 22 상한 (멈춤) · 23 기록 · 장부를 못 썼다 (멈춤)
+# 종료 코드: 0 끝 · 2 사용법 · 4 런 실패 (멈춤) · 6 카드 · 결정 (저장소 밖 · HEAD 와 다름 · active 아님) · 7 큐 · 드라이버 sha
+#   (카드 고정 값 · HEAD 와 다름) · 8 입력 · 카드 · 원장 · 큐 · 드라이버 · 옛 폴더가 바뀜 (실행 직전 다시 해시 · 멈춤) · 9 실행 설정이
+#   카드와 다르다 (드라이버를 세운다 · 멈춤) · 10 잠금 (v1 · 다른 큐) · 12 GPU 대기 초과 (멈춤) · 13 PHASE · RERUN 꼴 ·
+#   14 풀리지 않은 멈춤 · 15 비용 미확정 · 16 결속 기록 (판독 · 보류 · 고정 경로 · 지문 · 재실행 범위) 이 조건을 못 채운다 ·
+#   17 이미 있는 런 폴더를 이 갈래가 받을 수 없다 (cond550 은 나머지를 다 돈 뒤) · 21 첫 런 한도 (블록마다 · 멈춤) · 22 상한 (멈춤) ·
+#   23 기록 · 장부를 못 썼다 (멈춤)
 #
 # ⛔ 이 파일이 못 하는 것
 #   · 결과를 판정하지 않는다 (C1 · C2 · 골격 · W) — 판독은 tools/ionic/li2s3_stage2_readout.py (카드 판독 허가 뒤).
 #   · 해시 검사와 드라이버가 파일을 읽는 순간 사이 (초 단위) 는 시작 뒤 config.xyz = init 대조로만 메운다 · 패키지 판 변경은
 #     시작 때 판 줄로만 남긴다 · 프로세스별 GPU 점유는 못 잰다 (합계 문턱 · 벽시계 비용 — GPU 대기가 섞이면 넉넉하게 센다).
 #   · 첫 런 한도는 400 ps 당 first_run_max_h 로 센다 (800 ps 첫 런은 2 배) — 길이를 안 보면 cond550 첫 런이 늘 걸린다.
+#     블록 (사다리 · cond550) 마다 첫 v2 런 (어느 PHASE 든 · 옮긴 폴더 포함 · 끝 기록이 없으면 사람이 정한 시간) 으로 판정한다.
+#   · 160 GPU-h 상한은 띄우기 전 예상비용 검사다 — 진행 중 강제 종료는 없어 한 런만큼 넘을 수 있다.
 #   · 큐가 죽으면 (kill · 정전) 끝 기록 · 장부 행이 없다 — 드라이버는 잠금을 쥔 채 끝까지 돌 수 있고 (그동안 다시 띄우면 10),
 #     그 뒤 시작은 비용 미확정 (15) 이다. 그 런의 시간 · 처리 (COST_CHARGE · 판정 보류 → PHASE=rerun) 는 사람이 정한다.
 #   · 멈춤 · 풂 · 비용 정함은 기록만 남긴다 — 그 사람 결정이 옳은지는 보지 않는다 (판독 도구는 풀리지 않은 멈춤이 있으면 보류).
@@ -79,8 +90,12 @@ REPO = SELF.parents[3]
 E = os.environ
 PY = sys.executable
 CARD_REPO = REPO / "db" / "properties" / "lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json"
+DEC_REPO = REPO / "db" / "governance" / "decisions.json"
 DRV = REPO / "tools" / "modelc_v3" / "disorder_ensemble_diffusion.py"
 START, END, PIDF = "exec_v2_start.json", "exec_v2_end.json", "exec_v2_pid.json"
+FIXED_LADDER_REL = "readout_stage2/readout_stage2.json"             # 사다리 판독 고정 기록 (판독 도구가 한 번만 쓴다)
+FIXED_COND_REL = "readout_stage2/readout_stage2_cond550.json"       # cond550 판독 고정 기록
+TEST = False
 LEDGER_HEADER = ["system", "T_K", "seed", "prod_ps", "start", "end", "hours", "rc"]
 NEED = ("systems", "seeds", "temperatures_K", "prod_ps", "equilib_ps", "vseed_offset", "n_atoms", "save_fs", "dt_fs",
         "conditional", "cap_gpu_h", "first_run_max_h", "gpu_start_max_mib", "cost_estimate_h_per_ps", "queue_v2")
@@ -114,6 +129,42 @@ def load_json(p):
         return json.loads(pathlib.Path(p).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
+
+
+def fp_rels(T):
+    """런 지문의 파일 — 산출물 7 (outputs_sha) + 시작 · 끝 기록. 판독 도구 run_fingerprint 와 같은 정의 (보류 기록 지문)."""
+    return ["run_meta.json", "ensemble_results.json", "d0.00_cfg0/config.xyz"] + [
+        f"d0.00_cfg0/T{T}/{x}" for x in ("traj.xyz", "msd.json", "aimd_results.json", "md.log")] + [START, END]
+
+
+def run_fingerprint(rd, T):
+    rd = pathlib.Path(rd)
+    return {r: (sha256(rd / r) if (rd / r).is_file() else None) for r in fp_rels(T)}
+
+
+def git_out(*args, binary=False):
+    try:
+        r = subprocess.run(["git", "-C", str(REPO), *args], capture_output=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if r.returncode != 0:
+        return None
+    return r.stdout if binary else r.stdout.decode("utf-8", "replace").strip()
+
+
+def repo_state(files):
+    """저장소 HEAD 와 파일별 'HEAD 의 blob = 지금 파일' — 추적 안 됨 · 고침 · 스테이지만 한 것은 모두 '다르다' (못 읽음 = 다르다)."""
+    head = git_out("rev-parse", "HEAD")
+    clean = {}
+    for name, p in files.items():
+        try:
+            rel = pathlib.Path(p).resolve().relative_to(REPO.resolve()).as_posix()
+        except ValueError:
+            clean[name] = False
+            continue
+        blob = git_out("show", f"{head}:{rel}", binary=True) if head else None
+        clean[name] = bool(blob is not None and pathlib.Path(p).is_file() and hashlib.sha256(blob).hexdigest() == sha256(p))
+    return head, clean
 
 
 def same(gv, w):
@@ -256,19 +307,25 @@ def read_jsonl(p):
     return out
 
 
+def is_ack(r):
+    """풂 기록 — by · reason 이 있어야 풂이다 (손으로 적은 줄도 같다 · 리뷰 EE P2-2)."""
+    return (isinstance(r, dict) and r.get("type") == "ack" and str(r.get("by") or "").strip() != ""
+            and str(r.get("reason") or "").strip() != "")
+
+
 def unacked():
     recs = read_jsonl(STOPS)
-    acked = {r.get("id") for r in recs if r.get("type") == "ack"}
+    acked = {r.get("id") for r in recs if is_ack(r)}
     return [r for r in recs if r.get("type") == "stop" and r.get("id") not in acked], acked
 
 
-def stop(code, reason, run=None, dry=False):
+def stop(code, reason, run=None, dry=False, block=None):
     if dry:
         die(code, f"⛔ (DRY_RUN — 멈춤 기록 안 씀) {reason}")
     sid = uuid.uuid4().hex[:12]
     try:
         append_line(STOPS, json.dumps({"type": "stop", "id": sid, "utc": now_utc(), "local": now_local(), "phase": PHASE, "code": code,
-                                       "reason": reason, "run": run, "queue_v2_sha16": SELF_SHA[:16]}, ensure_ascii=False))
+                                       "reason": reason, "run": run, "block": block, "queue_v2_sha16": SELF_SHA[:16]}, ensure_ascii=False))
     except OSError as e:
         log(f"⛔ 멈춤 기록을 못 썼다 ({type(e).__name__}: {e}) — 다음 시작은 실행 흔적으로 판단한다")
     die(code, f"⛔ 멈춤 {sid} (종료 {code}) — {reason} · 이어서 돌리려면 ACK_STOP={sid} ACK_BY=<누가> ACK_REASON=<왜> (사람 결정 · 기록된다)")
@@ -316,6 +373,16 @@ def traces(cv):
     return out
 
 
+def trace_key(t):
+    """비용 정함의 열쇠 — v2 흔적은 실행 기록 run_id (폴더를 옮겨도 따라간다) · v1 흔적은 '<계>:<시드>:<온도>:v1' (리뷰 EE P2-3).
+    시작 기록을 못 읽는 v2 흔적만 경로로 묶는다 (그 런은 run_id 가 없다)."""
+    if t["kind"] == "v1":
+        return f"{t['system']}:{t['seed']}:{t['T']}:v1"
+    s0 = load_json(t["path"] / START)
+    rid = s0.get("run_id") if isinstance(s0, dict) else None
+    return str(rid) if rid else f"{t['system']}:{t['seed']}:{t['T']}:v2?{t['rel']}"
+
+
 def cost_state(rows, tr):
     rows = rows or []
     used, und, charged = set(), [], {}
@@ -328,16 +395,16 @@ def cost_state(rows, tr):
             continue
         en = load_json(t["path"] / END)
         if en is None:
-            if t["rel"] not in charged:
+            if trace_key(t) not in charged:
                 und.append((t, "v2 실행 기록 끝이 없다 (끊긴 런)"))
             continue
         hit = [i for i, r in enumerate(rows) if i not in used and r["raw"] == en.get("ledger_row")]
         if hit:
             used.add(hit[0])
-        elif t["rel"] not in charged:
+        elif trace_key(t) not in charged:
             und.append((t, "v2 실행 기록은 끝났는데 장부 행이 없다"))
     for t in sorted((x for x in tr if x["kind"] == "v1"), key=lambda x: x["rel"]):
-        if t["rel"] in charged:
+        if trace_key(t) in charged:
             continue
         cand = [i for i, r in enumerate(rows) if i not in used and r["rc"] != "charge"
                 and (r["system"], r["T"], r["seed"]) == (t["system"], str(t["T"]), str(t["seed"]))]
@@ -345,7 +412,7 @@ def cost_state(rows, tr):
             used.add(cand[0])
         else:
             und.append((t, "v1 런 흔적에 장부 행이 없다"))
-    return sum(r["hours"] for r in rows), und
+    return sum(r["hours"] for r in rows), und, charged
 
 
 def estimate(cv, rows, prod):
@@ -355,7 +422,7 @@ def estimate(cv, rows, prod):
             p = float(r["prod"])
         except ValueError:
             continue
-        if r["rc"] == "0" and p > 0:
+        if r["rc"] in ("0", "charge") and p > 0:             # 사람이 정한 시간도 관측으로 센다 (리뷰 EE P2-3)
             rates.append(r["hours"] / p)
     rate = max([cv["rate"]] + rates)
     return rate * float(prod), rate
@@ -363,6 +430,34 @@ def estimate(cv, rows, prod):
 
 def first_limit_h(cv, prod):
     return cv["first_max"] * float(prod) / cv["prod"]
+
+
+def block_firsts(cv, tr, charged):
+    """길이 블록 (ladder · cond550) 마다 첫 v2 런 — 어느 PHASE 로 돌았든 · 옮긴 폴더 포함 · 시작 시각이 가장 이른 것 (리뷰 EE P1-3).
+    → {블록: {key, rel, hours, src, limit}} · 끝 기록이 없고 사람이 정한 런은 정한 시간 · 둘 다 없으면 hours None (비용 미확정 쪽이 막는다)."""
+    first = {}
+    for t in tr:
+        if t["kind"] != "v2":
+            continue
+        s0 = load_json(t["path"] / START)
+        u = parse_utc(s0.get("start_utc")) if isinstance(s0, dict) else None
+        if u is None:
+            continue
+        blk = (s0.get("card_values") or {}).get("block") or block_of(cv, t["T"])
+        if blk not in first or u < first[blk][0]:
+            first[blk] = (u, t, s0)
+    out = {}
+    for blk, (u, t, s0) in first.items():
+        e0 = load_json(t["path"] / END)
+        prod = (s0.get("card_values") or {}).get("prod_ps", prod_of(cv, t["T"]))
+        if isinstance(e0, dict) and e0.get("run_id") == s0.get("run_id") and e0.get("wall_h_total") is not None:
+            h, src = float(e0["wall_h_total"]), "끝 기록 벽시계"
+        elif trace_key(t) in charged:
+            h, src = float(charged[trace_key(t)]["hours"]), "사람이 정한 시간"
+        else:
+            h, src = None, "끝 기록 · 정함 없음"
+        out[blk] = {"key": key(t["system"], t["seed"], t["T"]), "rel": t["rel"], "hours": h, "src": src, "limit": first_limit_h(cv, prod)}
+    return out
 
 
 # ───────────────────────── 결속 기록 (판독 · 보류) ─────────────────────────
@@ -399,6 +494,10 @@ def rel_to_base(f):
 
 def check_readout_link(cv):
     f, h, d = linked_record("READOUT_RECORD", "READOUT_SHA256")
+    fixed = (BASE / FIXED_LADDER_REL).resolve()
+    if f != fixed:
+        die(16, f"⛔ READOUT_RECORD 는 사다리 판독 고정 기록 {fixed} 만 받는다 (받은 것 {f}) — 다른 경로 · 손으로 쓴 기록은 결속이 아니다 "
+                "(리뷰 EE P2-1 · 카드 순서 '사다리 판독 → cond550')")
     lo, probs = min(cv["temps"]), []
     if d.get("kind") != "li2s3_stage2_readout/v2" or d.get("status") != "판독":
         probs.append("kind · status 가 판독 기록 (li2s3_stage2_readout/v2 · 판독) 이 아니다")
@@ -446,9 +545,13 @@ def check_hold_link(cv, items):
         st = (runs.get(key(s, sd, T)) or {}).get("status")
         if st not in ("invalid", "incomplete"):
             probs.append(f"{key(s, sd, T)}: 보류 기록의 상태 {st!r} (invalid · incomplete 만 다시 돈다)")
+        fp = (runs.get(key(s, sd, T)) or {}).get("fingerprint")
+        if not isinstance(fp, dict) or sorted(fp) != sorted(fp_rels(T)):
+            probs.append(f"{key(s, sd, T)}: 보류 기록에 런 지문이 없다 (고친 판독 도구로 보류 기록을 다시 만든다 · 리뷰 EE P1-1)")
     if probs:
         die(16, "⛔ 재실행 결속 보류 기록이 조건을 못 채운다 — " + " · ".join(probs))
-    return {"kind": "hold", "path": str(f), "rel_to_base": rel_to_base(f), "sha256": h, "record_utc": (d.get("provenance") or {}).get("utc")}
+    return {"kind": "hold", "path": str(f), "rel_to_base": rel_to_base(f), "sha256": h,
+            "record_utc": (d.get("provenance") or {}).get("utc")}, runs
 
 
 # ───────────────────────── 런 하나 — 검사 ─────────────────────────
@@ -661,16 +764,17 @@ def versions():
 
 # ───────────────────────── 본 실행 ─────────────────────────
 def main():
-    global BASE, LOGF, STOPS, LEDGER, PHASE, SELF_SHA
+    global BASE, LOGF, STOPS, LEDGER, PHASE, SELF_SHA, TEST
     if "--selftest" in ARGV:
         return selftest()
     PHASE = E.get("PHASE", "").strip()
     dry = E.get("DRY_RUN", "0") == "1"
+    TEST = E.get("V2_TEST", "") == "1"
     poll, gpu_wait, meta_wait = float(E.get("POLL", "60")), float(E.get("GPU_WAIT", "3600")), float(E.get("META_WAIT", "900"))
     BASE = pathlib.Path(E.get("BASE", "~/work/runs/li2s3_stage2_2026_11_10")).expanduser()
     SRC = pathlib.Path(E.get("SRC", "~/work/runs/li2s2_dense_1103")).expanduser()
     CARD = pathlib.Path(E.get("CARD", str(CARD_REPO))).expanduser()
-    DEC = pathlib.Path(E.get("DECISIONS", str(REPO / "db" / "governance" / "decisions.json"))).expanduser()
+    DEC = pathlib.Path(E.get("DECISIONS", str(DEC_REPO))).expanduser()
     if PHASE not in ("cond550", "rerun"):
         die(13, f"⛔ PHASE={PHASE!r} — cond550 · rerun 만 안다 (사다리 16 런은 v1 큐 몫 · 시작하지 않는다)")
     if not BASE.is_dir():
@@ -679,9 +783,16 @@ def main():
     if not dry:
         LOGF = BASE / "stage2_kgy_v2.log"
     SELF_SHA = sha256(SELF)
-    log(f"▶ li2s-3 2 단계 큐 v2 · PHASE {PHASE}{' · DRY_RUN' if dry else ''} · 큐 sha16 {SELF_SHA[:16]} · BASE {BASE} · 카드 {CARD}")
+    log(f"▶ li2s-3 2 단계 큐 v2 · PHASE {PHASE}{' · DRY_RUN' if dry else ''}{' · V2_TEST (시험 런)' if TEST else ''} · 큐 sha16 "
+        f"{SELF_SHA[:16]} · BASE {BASE} · 카드 {CARD} · 원장 {DEC}")
+    # 카드 · 원장 출처 (리뷰 EE P1-2) — 시험 (V2_TEST=1) 이 아니면 저장소의 그 파일만
+    card_repo, dec_repo = CARD.resolve() == CARD_REPO.resolve(), DEC.resolve() == DEC_REPO.resolve()
+    if not TEST and not (card_repo and dec_repo):
+        die(6, f"⛔ CARD · DECISIONS 는 저장소의 그 파일이어야 한다 (카드 {CARD} · 원장 {DEC}) — 다른 카드 · 원장은 시험 런만 "
+               "(V2_TEST=1 · 시작 기록 test: true · 판독 도구가 받지 않는다 · 리뷰 EE P1-2)")
     # 카드 · 결정 · 코드 지문
     card_sha = sha256(CARD)
+    dec_sha = sha256(DEC) if DEC.is_file() else None
     cv = card_values(CARD)
     st = {cv["decision"]: decision_state(DEC, cv["decision"]), cv["q2_decision"]: decision_state(DEC, cv["q2_decision"])}
     if any(v != "active" for v in st.values()):
@@ -691,7 +802,21 @@ def main():
     drv_sha = sha256(DRV) if DRV.is_file() else ""
     if drv_sha[:16] != cv["drv16"]:
         die(7, f"⛔ 드라이버 sha16 {drv_sha[:16] or '없음'} ≠ 카드 {cv['drv16']} ({DRV})")
-    log(f"카드 sha256 {card_sha[:16]}… · 결정 {st} · 드라이버 sha16 {drv_sha[:16]} ✅ · 큐 sha16 = 카드 ✅")
+    head, clean = repo_state({"카드": CARD, "결정 원장": DEC, "큐 파일": SELF, "드라이버": DRV})
+    repo_clean = bool(head) and all(clean.values())
+    if not TEST:
+        if not head:
+            die(7, f"⛔ 저장소 {REPO} 의 HEAD 를 못 읽는다 — 커밋된 판으로만 돈다")
+        bad6, bad7 = [n for n in ("카드", "결정 원장") if not clean[n]], [n for n in ("큐 파일", "드라이버") if not clean[n]]
+        if bad6:
+            die(6, f"⛔ {bad6} 가 HEAD {head[:9]} 와 다르다 (커밋 안 한 고침 · 추적 안 됨) — 커밋된 카드 · 원장으로만 돈다 (리뷰 EE P1-2)")
+        if bad7:
+            die(7, f"⛔ {bad7} 가 HEAD {head[:9]} 와 다르다 (커밋 안 한 고침 · 추적 안 됨) — 커밋된 큐 · 드라이버로만 돈다 (리뷰 EE P1-2)")
+    else:
+        log(f"⚠ V2_TEST=1 — 시험 런 (시작 기록 test: true · 판독 도구가 받지 않는다) · 카드 저장소 {card_repo} · 원장 저장소 {dec_repo} · "
+            f"HEAD 와 같음 {clean}")
+    log(f"카드 sha256 {card_sha[:16]}… · 결정 {st} · 드라이버 sha16 {drv_sha[:16]} ✅ · 큐 sha16 = 카드 ✅ · repo {(head or '?')[:9]} · "
+        f"HEAD 와 같음 {repo_clean}")
     ignored = [k for k in ("TEMPS", "PROD", "SEEDS", "SYSTEMS", "VSEED_OFFSET", "CAP_H", "FIRST_RUN_MAX_H", "GPU_START_MAX", "DRV", "RUNNER")
                if k in E]
     if ignored:
@@ -725,14 +850,25 @@ def main():
         ua, acked = unacked()
     if ua:
         die(14, f"⛔ 풀리지 않은 멈춤 {len(ua)} 개 — " + " · ".join(f"{s_['id']} (종료 {s_['code']}: {s_['reason'][:90]})" for s_ in ua)
-            + " · 다시 띄우는 것은 사람 결정의 대체물이 아니다 (ACK_STOP · ACK_BY · ACK_REASON)")
+            + " · 다시 띄우는 것은 사람 결정의 대체물이 아니다 (ACK_STOP · ACK_BY · ACK_REASON · by · reason 없는 풂 줄은 풂이 아니다)")
     # 계획 · 결속 기록
+    hold_runs = {}
     if PHASE == "cond550":
         link = check_readout_link(cv)
         plan = [(s, sd, cv["condT"]) for sd in cv["seeds"] for s in cv["systems"]]
     else:
         plan = parse_rerun(cv)
-        link = check_hold_link(cv, plan)
+        if (BASE / FIXED_COND_REL).exists():
+            die(16, f"⛔ cond550 판독 고정 기록 {BASE / FIXED_COND_REL} 이 있다 — 어떤 런도 다시 돌리지 않는다 (카드 재실행 범위 · 리뷰 EE P1-1)")
+        lad = [key(*x) for x in plan if x[2] in cv["temps"]]
+        if lad and (BASE / FIXED_LADDER_REL).exists():
+            die(16, f"⛔ 사다리 판독 고정 기록 {BASE / FIXED_LADDER_REL} 이 있다 — 사다리 온도 런 {lad} 을 다시 돌리지 않는다 (그때 사다리 런은 "
+                    "모두 valid 였다 · 다시 돌리면 결과를 본 뒤 표본을 고르는 것 · 리뷰 EE P1-1)")
+        never = [key(*x) for x in plan if x[2] == cv["condT"] and not rdir(*x).exists()]
+        if never:
+            die(16, f"⛔ 한 번도 안 띄운 550 K 런 {never} 은 PHASE=rerun 이 받지 않는다 — PHASE=cond550 만 띄운다 (조건부 블록의 결속 · "
+                    "첫 런 한도 · 리뷰 EE P1-3 선택 B)")
+        link, hold_runs = check_hold_link(cv, plan)
     log(f"결속 기록 {link['kind']} {link['path']} · sha256 {link['sha256'][:16]}… ✅")
     # 입력 (init 사본) — 카드 sha256 · 없으면 SRC 에서 (SRC 도 카드 sha256)
     for s, sd in sorted({(s, sd) for s, sd, _ in plan}):
@@ -751,95 +887,114 @@ def main():
     # 흔적 · 비용 (장부를 이어 쓴다)
     rows = ledger_rows()
     tr = traces(cv)
-    total, und = cost_state(rows, tr)
+    total, und, charged = cost_state(rows, tr)
     charges = [x for x in re.split(r"[;\s]+", E.get("COST_CHARGE", "").strip()) if x]
     if charges and not dry and und:
         by, why = E.get("COST_BY", "").strip(), E.get("COST_REASON", "").strip()
         if not by or not why:
             die(15, "⛔ COST_CHARGE 에는 COST_BY · COST_REASON 이 같이 있어야 한다 (사람 결정 기록)")
-        want_rel = {t["rel"]: t for t, _ in und}
-        for c in charges:
+        want_key = {trace_key(t): t for t, _ in und}
+        parsed = []
+        for c in charges:                                    # 다 검사한 뒤에 쓴다 (하나라도 틀리면 아무것도 안 쓴다)
             m = re.fullmatch(r"([^=]+)=([0-9.]+)", c)
-            if not m or m.group(1) not in want_rel or not math.isfinite(float(m.group(2))):
-                die(15, f"⛔ COST_CHARGE 항목 {c!r} — 비용 미확정 흔적 {sorted(want_rel)} 중 하나 = 시간 (h) 이어야 한다")
-            t = want_rel[m.group(1)]
-            if rows is None:
-                append_line(LEDGER, "\t".join(LEDGER_HEADER))
-                rows = []
-            append_line(LEDGER, f"{t['system']}\t{t['T']}\t{t['seed']}\t{g(prod_of(cv, t['T']))}\tcharge:{t['rel']}\t{now_utc()}\t"
-                                f"{float(m.group(2)):.4f}\tcharge")
-            append_line(BASE / "cost_charges_v2.jsonl", json.dumps({"utc": now_utc(), "trace": t["rel"], "hours": float(m.group(2)),
+            if not m or m.group(1) not in want_key:
+                die(15, f"⛔ COST_CHARGE 항목 {c!r} — 비용 미확정 흔적의 열쇠 {sorted(want_key)} 중 하나 = 시간 (h) 이어야 한다")
+            try:
+                hrs = float(m.group(2))
+            except ValueError:
+                die(15, f"⛔ COST_CHARGE 항목 {c!r} — 시간을 못 읽었다")
+            if not (math.isfinite(hrs) and hrs > 0):
+                die(15, f"⛔ COST_CHARGE 항목 {c!r} — 정한 시간은 0 보다 커야 한다 (모름 = 0 이 아니다 · 리뷰 EE P2-3)")
+            parsed.append((m.group(1), want_key[m.group(1)], hrs))
+        if rows is None:
+            append_line(LEDGER, "\t".join(LEDGER_HEADER))
+            rows = []
+        over = []
+        for kk, t, hrs in parsed:
+            append_line(LEDGER, f"{t['system']}\t{t['T']}\t{t['seed']}\t{g(prod_of(cv, t['T']))}\tcharge:{kk}\t{now_utc()}\t{hrs:.4f}\tcharge")
+            append_line(BASE / "cost_charges_v2.jsonl", json.dumps({"utc": now_utc(), "key": kk, "trace": t["rel"], "hours": hrs,
                                                                      "by": by, "reason": why}, ensure_ascii=False))
-            log(f"비용 미확정 흔적 {t['rel']} 에 {float(m.group(2)):g} h (사람 결정 · {by}: {why}) — 장부에 charge 행")
+            log(f"비용 미확정 흔적 {t['rel']} (열쇠 {kk}) 에 {hrs:g} h (사람 결정 · {by}: {why}) — 장부에 charge 행")
+            lim = first_limit_h(cv, prod_of(cv, t["T"]))
+            if hrs > lim:
+                over.append((t, hrs, lim))
         rows = ledger_rows()
-        total, und = cost_state(rows, tr)
+        total, und, charged = cost_state(rows, tr)
+        if over:
+            t, hrs, lim = over[0]
+            stop(21, f"사람이 정한 시간 {hrs:g} h ({t['rel']}) > 그 블록 ({block_of(cv, t['T'])}) 첫 런 한도 {lim:g} h — 멈추고 보고한다 "
+                     "(리뷰 EE P2-3)", key(t["system"], t["seed"], t["T"]), block=block_of(cv, t["T"]))
     elif charges and not und:
         log("⚠ COST_CHARGE 를 쓰지 않았다 — 비용 미확정 흔적이 없다")
     if und:
-        die(15, "⛔ 비용 미확정 흔적 — " + " · ".join(f"{t['rel']} ({why})" for t, why in und)
-            + " — 0 으로 세지 않는다 · COST_CHARGE='<흔적>=<h>' COST_BY · COST_REASON 으로 사람이 정해 기록하기 전에는 시작하지 않는다")
+        die(15, "⛔ 비용 미확정 흔적 — " + " · ".join(f"{t['rel']} (열쇠 {trace_key(t)} · {why})" for t, why in und)
+            + " — 0 으로 세지 않는다 · COST_CHARGE='<열쇠>=<h>' COST_BY · COST_REASON 으로 사람이 정해 기록하기 전에는 시작하지 않는다")
     if rows is None and not dry:
         append_line(LEDGER, "\t".join(LEDGER_HEADER))
         rows = []
     log(f"장부 누적 {total:.4f} h / 상한 {cv['cap']:g} h · 흔적 {len(tr)} 개 모두 비용 확인")
-    # 첫 런 한도 — 기록에서 다시 판정 (이 갈래의 첫 v2 런)
-    def phase_first():
-        cands = []
-        for t in traces(cv):
-            if t["kind"] == "v2":
-                s0, e0 = load_json(t["path"] / START), load_json(t["path"] / END)
-                if isinstance(s0, dict) and isinstance(e0, dict) and s0.get("phase") == PHASE:
-                    cands.append((s0.get("start_utc", ""), s0, e0))
-        return min(cands, key=lambda x: x[0]) if cands else None
-    fr = phase_first()
-    if fr:
-        s0, e0 = fr[1], fr[2]
-        lim = first_limit_h(cv, (s0.get("card_values") or {}).get("prod_ps", cv["prod"]))
-        k0 = key(s0["system"], s0["seed"], s0["T_K"])
-        if float(e0.get("wall_h_total", 0.0)) > lim:
-            recs = read_jsonl(STOPS)
+    # 첫 런 한도 — 블록 (사다리 · cond550) 마다 기록에서 다시 판정 (어느 PHASE 든 · 옮긴 폴더 포함 · 리뷰 EE P1-3)
+    firsts = block_firsts(cv, traces(cv), charged)
+    recs = read_jsonl(STOPS)
+    for blk, f0 in sorted(firsts.items()):
+        k0 = f0["key"]
+        if f0["hours"] is not None and f0["hours"] > f0["limit"]:
             ack_ok = any(r.get("type") == "stop" and r.get("code") == 21 and r.get("run") == k0 and r.get("id") in acked for r in recs)
             if not ack_ok:
-                stop(21, f"이 갈래의 첫 런 {k0} 벽시계 {float(e0['wall_h_total']):.3f} h > 한도 {lim:g} h (기록에서 다시 판정)", k0, dry)
+                stop(21, f"블록 {blk} 의 첫 런 {k0} ({f0['rel']} · {f0['src']}) {f0['hours']:.3f} h > 한도 {f0['limit']:g} h "
+                         "(기록에서 다시 판정)", k0, dry, block=blk)
     # 이미 있는 폴더
-    todo = []
+    todo, skipped = [], []
     for s, sd, T in plan:
         rd = rdir(s, sd, T)
+        k_ = key(s, sd, T)
+        hfp = (hold_runs.get(k_) or {}).get("fingerprint") if PHASE == "rerun" else None
         if not rd.exists():
+            if PHASE == "rerun" and any(v is not None for v in (hfp or {}).values()):
+                die(16, f"⛔ {k_} 폴더가 보류 기록 뒤 없어졌다 (기록 때는 있었다) — 새 판독 보류 기록이 필요하다")
             todo.append((s, sd, T, None))
             continue
         s0, e0 = load_json(rd / START), load_json(rd / END)
         t_rec, t_run = parse_utc(link.get("record_utc")), parse_utc((s0 or {}).get("start_utc")) if isinstance(s0, dict) else None
         later = bool(t_rec and t_run and t_run > t_rec)
         done = (isinstance(s0, dict) and isinstance(e0, dict) and e0.get("status") == "complete" and e0.get("run_id") == s0.get("run_id")
-                and s0.get("phase") == PHASE
+                and s0.get("queue_v2_sha16") == cv["q2_sha16"] and s0.get("driver_sha16") == cv["drv16"]
                 and {k: (s0.get("card_values") or {}).get(k) for k in run_values(cv, T)} == run_values(cv, T))
         if PHASE == "cond550":
             if done:
-                log(f"건너뜀 — {key(s, sd, T)} 는 이 카드 값으로 이미 끝났다 (v2 실행 기록)")
+                log(f"건너뜀 — {k_} 는 이 카드 값 · 판으로 이미 끝났다 (같은 블록 v2 실행 기록 · PHASE {s0.get('phase')})")
                 continue
-            die(17, f"⛔ {rd} 가 있는데 완료된 v2 실행 기록이 아니다 — cond550 은 빈 폴더에서만 돈다 (판정 보류 기록 + PHASE=rerun 으로만 다시)")
+            skipped.append(k_)
+            log(f"⚠ 건너뜀 — {rd} 는 이 카드 값 · 판의 완료된 v2 실행 기록이 아니다 — 판정 보류 기록 + PHASE=rerun 으로만 다시 "
+                "(빈 폴더는 계속 돈다 · 리뷰 EE P1-3)")
+            continue
         if later and done:
-            log(f"건너뜀 — {key(s, sd, T)} 는 이 보류 기록 뒤에 이미 다시 돌아 끝났다")
+            log(f"건너뜀 — {k_} 는 이 보류 기록 뒤에 이미 다시 돌아 끝났다")
             continue
         if later:
             die(17, f"⛔ {rd} 는 이 보류 기록 뒤에 시작한 런인데 끝나지 않았다 — 새 판독 보류 기록이 필요하다")
+        cur = run_fingerprint(rd, T)
+        if cur != hfp:
+            changed = sorted(r for r in fp_rels(T) if cur.get(r) != (hfp or {}).get(r))
+            die(16, f"⛔ {k_} 는 그 보류 기록 뒤 바뀐 런이다 (지문이 다른 파일 {changed}) — 새 판독 보류 기록이 필요하다 (리뷰 EE P1-1)")
         todo.append((s, sd, T, rd))
-    log("계획 — " + (" · ".join(f"{key(s, sd, T)}{' (옛 폴더 옮김)' if old else ''}" for s, sd, T, old in todo) or "없음 (다 끝났다)"))
+    log("계획 — " + (" · ".join(f"{key(s, sd, T)}{' (옛 폴더 옮김)' if old else ''}" for s, sd, T, old in todo) or "없음")
+        + (f" · 건너뛴 완료 아닌 폴더 {skipped}" if skipped else ""))
     for s, sd, T, _ in todo:
         log("   " + " ".join(argv_for(cv, s, sd, T)[2:]))
     if dry:
         log("DRY_RUN 끝 — 아무것도 쓰지 않았다")
         return 0
     VERS = versions()
-    log(f"판 — {VERS} · python {sys.version.split()[0]} · repo {(subprocess.run(['git', '-C', str(REPO), 'rev-parse', '--short=9', 'HEAD'], capture_output=True, text=True).stdout.strip() or '?')}")
-    first_done = fr is not None
+    log(f"판 — {VERS} · python {sys.version.split()[0]} · repo {(head or '?')[:9]}")
+    first_blocks = set(firsts)
     for s, sd, T, old in todo:
         k = key(s, sd, T)
         prod = prod_of(cv, T)
+        blk = block_of(cv, T)
         t0, s0l, s0u = time.time(), now_local(), now_utc()
         rows = ledger_rows() or []
-        total, und = cost_state(rows, traces(cv))
+        total, und, _charged = cost_state(rows, traces(cv))
         if und:
             stop(15, f"비용 미확정 흔적이 생겼다 {[t['rel'] for t, _ in und]}", k)
         est, rate = estimate(cv, rows, prod)
@@ -858,12 +1013,14 @@ def main():
             log(f"대기 · GPU {gm} MiB > {cv['gpu_max']}")
             time.sleep(poll)
         waited = time.time() - w0
-        # 실행 직전 — 다시 해시 (GPU 대기 뒤 · 리뷰 DZ P1-5): 카드 · 큐 파일 · 드라이버 (큐 시작 때 값) · 입력 (카드 값) — 한 경로로
+        # 실행 직전 — 다시 해시 (GPU 대기 뒤 · 리뷰 DZ P1-5): 카드 · 원장 · 큐 파일 · 드라이버 (큐 시작 때 값) · 입력 (카드 값) — 한 경로로
         ini = init_of(s, sd)
-        pins = (("카드", CARD, card_sha), ("큐 파일", SELF, SELF_SHA), ("드라이버", DRV, drv_sha),
+        pins = (("카드", CARD, card_sha), ("결정 원장", DEC, dec_sha), ("큐 파일", SELF, SELF_SHA), ("드라이버", DRV, drv_sha),
                 (f"입력 {ini.name}", ini, cv["inputs"].get(f"{s}{sd}")))
         now_sha = {lab: (sha256(p) if p.is_file() else None) for lab, p, _ in pins}
         probs = [f"{lab} sha256 ≠ 고정 값 (큐 시작 · 카드) — GPU 대기 중 바뀌었다" for lab, _, want in pins if now_sha[lab] != want]
+        if old is not None and run_fingerprint(old, T) != (hold_runs.get(k) or {}).get("fingerprint"):
+            probs.append(f"옛 폴더 {old.name} 지문 ≠ 보류 기록 (계획 뒤 바뀌었다)")
         if probs:
             stop(8, f"{k} 실행 직전 다시 해시 — " + " · ".join(probs), k)
         in_sha = now_sha[f"입력 {ini.name}"]
@@ -871,7 +1028,8 @@ def main():
         if old is not None:
             dst = old.with_name(f"{old.name}.superseded_{_dt.datetime.now(_dt.timezone.utc).strftime('%Y%m%dT%H%M%SZ')}")
             old.rename(dst)
-            superseded = {"path": str(dst), "rel": str(dst.relative_to(BASE)), "had_v2_record": (dst / START).exists()}
+            superseded = {"path": str(dst), "rel": str(dst.relative_to(BASE)), "had_v2_record": (dst / START).exists(),
+                          "fingerprint": (hold_runs.get(k) or {}).get("fingerprint")}
             log(f"  옛 폴더를 옮겨 남김 → {dst.name}")
         rd = rdir(s, sd, T)
         rd.mkdir(parents=True, exist_ok=False)
@@ -879,9 +1037,11 @@ def main():
         argv = argv_for(cv, s, sd, T)
         src = SRC / s / f"seed{sd}" / "final.xyz"
         start = {"kind": "li2s3_stage2_exec_start/v2", "run_id": rid, "phase": PHASE, "system": s, "seed": int(sd), "T_K": int(T),
+                 "test": TEST, "repo": str(REPO), "repo_head": head, "repo_clean": repo_clean, "repo_files_clean": clean,
                  "queue_v2_path": str(SELF), "queue_v2_sha256": SELF_SHA, "queue_v2_sha16": SELF_SHA[:16],
                  "driver_path": str(DRV), "driver_sha256": drv_sha, "driver_sha16": drv_sha[:16],
-                 "card_path": str(CARD), "card_sha256": card_sha, "card_is_repo_card": CARD.resolve() == CARD_REPO.resolve(),
+                 "card_path": str(CARD), "card_sha256": card_sha, "card_is_repo_card": card_repo,
+                 "decisions_path": str(DEC), "decisions_sha256": dec_sha, "decisions_is_repo": dec_repo,
                  "card_values": card_public(cv, T), "decisions": st,
                  "input_path": str(ini), "input_sha256": in_sha, "src_path": str(src), "src_sha256": sha256(src) if src.is_file() else None,
                  "python": PY, "python_version": sys.version.split()[0], "versions": VERS, "host": socket.gethostname(), "base": str(BASE),
@@ -919,14 +1079,15 @@ def main():
             + (f" — {'; '.join(reasons)[:200]}" if reasons else ""))
         if status != "complete":
             stop(9 if mon else 4, f"{k} {'실행 설정이 카드와 달라 세웠다' if mon else '런 실패'} — {'; '.join(reasons)[:300]}", k)
-        if not first_done:
-            first_done = True
+        if blk not in first_blocks:                         # 이 블록의 첫 v2 런 (기록에 없었다) — 끝난 뒤 한도
+            first_blocks.add(blk)
             lim = first_limit_h(cv, prod)
             if h > lim:
-                stop(21, f"이 갈래의 첫 런 {k} 벽시계 {h:.3f} h > 한도 {lim:g} h ({cv['first_max']:g} h / {g(cv['prod'])} ps × {g(prod)} ps) "
-                         "— 멈추고 보고한다 (카드 멈춤 규칙)", k)
-    log(f"■ v2 큐 끝 · PHASE {PHASE} · 누적 {sum(r['hours'] for r in (ledger_rows() or [])):.4f} h")
-    return 0
+                stop(21, f"블록 {blk} 의 첫 런 {k} 벽시계 {h:.3f} h > 한도 {lim:g} h ({cv['first_max']:g} h / {g(cv['prod'])} ps × "
+                         f"{g(prod)} ps) — 멈추고 보고한다 (카드 멈춤 규칙)", k, block=blk)
+    log(f"■ v2 큐 끝 · PHASE {PHASE} · 누적 {sum(r['hours'] for r in (ledger_rows() or [])):.4f} h"
+        + (f" · ⚠ 건너뛴 완료 아닌 폴더 {skipped} — 판정 보류 → PHASE=rerun (종료 17)" if skipped else ""))
+    return 17 if skipped else 0
 
 
 # ───────────────────────── selftest ─────────────────────────
@@ -979,7 +1140,7 @@ class FAIRChemCalculator(Calculator):
 
 
 def selftest():
-    global BASE
+    global BASE, LEDGER
     import tempfile
     sys.path.insert(0, str(REPO / "tools" / "ionic"))
     import melt_quench_uma as mq
@@ -1050,29 +1211,38 @@ def selftest():
                 (b / rel / "run_meta.json").write_text("{}")
             return b
 
-        def readout_rec(b, **over):
+        def readout_rec(b, path=None, **over):
+            """사다리 판독 기록 (큐가 보는 꼴만) — 기본은 고정 경로 <BASE>/readout_stage2/readout_stage2.json (리뷰 EE P2-1)."""
             d = {"kind": "li2s3_stage2_readout/v2", "status": "판독", "phase": "ladder", "cond550_eligible": True,
                  "measurable": {"A_T600": True, "B_T600": True, "A_T650": False, "B_T650": True}, "base_original": str(b),
                  "base_now": str(b.resolve()), "provenance": {"utc": "2026-11-14T00:00:00Z"}}
             d.update(over)
-            p = b / "readout_stage2" / f"readout_{uuid.uuid4().hex[:6]}.json"
+            p = path or (b / FIXED_LADDER_REL)
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(json.dumps(d, ensure_ascii=False))
             return p
 
-        def hold_rec(b, runs, **over):
+        def hold_rec(b, runs, fp=True, **over):
+            """판정 보류 기록 — fp 면 런마다 지금 폴더의 지문을 싣는다 (판독 도구가 보류 기록을 쓰는 순간과 같다)."""
+            for k_, v_ in runs.items():
+                m_ = re.fullmatch(r"([A-Za-z]+)(\d+)_T(\d+)", k_)
+                if fp and "fingerprint" not in v_:
+                    v_["fingerprint"] = run_fingerprint(b / m_.group(1) / f"seed{m_.group(2)}" / f"T{m_.group(3)}", int(m_.group(3)))
             d = {"kind": "li2s3_stage2_readout_hold/v2", "status": "판정 보류", "runs": runs, "base_original": str(b),
                  "base_now": str(b.resolve()), "provenance": {"utc": now_utc()}}
             d.update(over)
             p = b / "readout_stage2" / f"hold_{uuid.uuid4().hex[:6]}.json"
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(json.dumps(d, ensure_ascii=False))
+            time.sleep(0.01)                                      # 보류 기록 시각 < 그 뒤 시작한 런 (마이크로초 해상도)
             return p
 
-        def run(b, phase, card_p=CARD0, wait=True, script=None, **env):
+        def run(b, phase, card_p=CARD0, wait=True, script=None, test=True, dec_p=None, **env):
             e = {"HOME": E.get("HOME", str(td)), "PATH": f"{td / 'bin'}:{E.get('PATH', '/usr/bin:/bin')}", "PYTHONPATH": str(td / "stub"),
                  "PYTHONIOENCODING": "utf-8", "PY": PY, "BASE": str(b), "SRC": str(td / "src"), "CARD": str(card_p),
-                 "DECISIONS": str(dec), "PHASE": phase, "POLL": "0.2", "GPU_WAIT": "20", "META_WAIT": "60"}
+                 "DECISIONS": str(dec_p or dec), "PHASE": phase, "POLL": "0.2", "GPU_WAIT": "20", "META_WAIT": "60"}
+            if test:                                              # 시험 카드 · 원장 — 시험 런 표지 (판독 도구가 받지 않는다)
+                e["V2_TEST"] = "1"
             e.update({k: str(v) for k, v in env.items()})
             p = subprocess.Popen(["bash", str(script or SELF)], env=e, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
             if not wait:
@@ -1092,6 +1262,11 @@ def selftest():
 
         def ledger_n(b):
             return len([x for x in (b / "cost_ledger.tsv").read_text().splitlines()[1:] if x.strip()])
+
+        def edit_start(b, rel, **over):
+            d_ = load_json(b / rel / START)
+            d_.update(over)
+            (b / rel / START).write_text(json.dumps(d_, ensure_ascii=False))
         cond_runs = ["A/seed11/T550", "B/seed11/T550", "A/seed12/T550", "B/seed12/T550"]
         # ── 양성: cond550 (고정 판독 기록 결속) ──
         b1 = mkbase(rows=[("A", 600, 11, 2.5, "2026-11-11 00:00:00", "2026-11-11 05:00:00", "5.1000", "0")], v1=("A/seed11/T600",))
@@ -1134,11 +1309,16 @@ def selftest():
             "⛔음성: 보류 기록을 cond550 결속으로 주면 거부")
         chk(run(b3, "cond550", **link_env(readout_rec(b3, base_original="/elsewhere", base_now="/elsewhere")))[0] == 16,
             "⛔음성: 다른 BASE 의 판독 기록 → 거부")
+        chk(run(b3, "cond550", **link_env(readout_rec(b3, phase="cond550")))[0] == 16,
+            "⛔음성 (리뷰 EE QM6): 고정 경로의 기록이 cond550 갈래 판독 (사다리 판독이 아니다) → 거부")
+        rc, out = run(b3, "cond550", **link_env(readout_rec(b3, path=b3 / "readout_stage2" / "my_readout.json")))
+        chk(rc == 16 and "고정 기록" in out, "⛔음성 (리뷰 EE P2-1): 고정 경로가 아닌 판독 기록 (내용은 조건을 채운다) → 거부")
         chk(not any((b3 / r).exists() for r in cond_runs), "⛔음성: 결속이 안 서면 런 폴더를 만들지 않는다")
         # ── 양성 · 음성: rerun (보류 기록 결속) ──
         b4 = mkbase(rows=[("A", 600, 11, 2.5, "2026-11-11 00:00:00", "2026-11-11 05:00:00", "5.1000", "0")], v1=("A/seed11/T600",))
         (b4 / "A/seed11/T600/msd.json").write_text("{broken")
         hr = hold_rec(b4, {"A11_T600": {"status": "invalid", "reasons": ["드라이버 종료 코드 7"]}, "B11_T600": {"status": "valid"}})
+        hr_fp = json.loads(hr.read_text())["runs"]["A11_T600"]["fingerprint"]
         chk(run(b4, "rerun", **hold_env(hr, "B:11:600"))[0] == 16, "⛔음성: 보류 기록에 valid 로 적힌 런은 다시 안 돈다")
         chk(run(b4, "rerun", **hold_env(hr, "A:12:600"))[0] == 16, "⛔음성: 보류 기록에 없는 런은 다시 안 돈다")
         chk(run(b4, "rerun", HOLD_RECORD=hr, HOLD_SHA256="1" * 64, RERUN="A:11:600")[0] == 16, "⛔음성: HOLD_SHA256 ≠ 파일 → 거부")
@@ -1149,31 +1329,130 @@ def selftest():
         sup = sorted((b4 / "A" / "seed11").glob("T600.superseded_*"))
         a4, z4 = load_json(b4 / "A/seed11/T600" / START), load_json(b4 / "A/seed11/T600" / END)
         chk(rc == 0 and len(sup) == 1 and (sup[0] / "msd.json").read_text() == "{broken" and isinstance(z4, dict) and z4["status"] == "complete"
-            and a4["link"]["kind"] == "hold" and a4["superseded"]["rel"] == str(sup[0].relative_to(b4)) and ledger_n(b4) == 2,
-            f"[양성] PHASE=rerun — 보류 기록의 invalid 런만 · 옛 폴더는 지우지 않고 옮겨 남김 · 같은 카드 값 · 장부 한 행 더 (종료 {rc})")
-        # ── 음성: 실행 기록 없는 폴더는 건너뛰지 않는다 (리뷰 DZ P1-1) ──
+            and a4["link"]["kind"] == "hold" and a4["superseded"]["rel"] == str(sup[0].relative_to(b4)) and ledger_n(b4) == 2
+            and a4.get("test") is True and a4["superseded"].get("fingerprint") == hr_fp,
+            f"[양성] PHASE=rerun — 보류 기록의 invalid 런만 (지문 = 보류 기록) · 옛 폴더는 지우지 않고 옮겨 남김 · 같은 카드 값 · 장부 한 행 더 "
+            f"(종료 {rc})")
+        rc, out = run(b4, "rerun", **hold_env(hr, "A:11:600"))
+        chk(rc == 0 and "이미 다시 돌아 끝났다" in out and len(list((b4 / "A" / "seed11").glob("T600.superseded_*"))) == 1 and ledger_n(b4) == 2,
+            f"[양성] (리뷰 EE QM2) 같은 보류 기록으로 다시 띄우면 그 기록 뒤 끝난 재실행 런은 건너뛴다 (또 옮기지 않는다 · 종료 {rc})")
+        chk(run(b4, "rerun", **hold_env(hr, "A:11:600 A:11:600"))[0] == 13, "⛔음성 (리뷰 EE QM16): RERUN 에 같은 런이 두 번 → 13")
+        # ── 음성 (리뷰 EE P1-1): 낡은 보류 기록 · 재실행 범위 (p1 · p8 꼴) ──
+        bE = mkbase(rows=[("A", 600, 11, 2.5, "x", "y", "0.0010", "0")], v1=("A/seed11/T600",))
+        hE = hold_rec(bE, {"A11_T600": {"status": "incomplete", "reasons": ["러너 끝 줄 없음 (도는 중)"]}})
+        (bE / "A/seed11/T600/d0.00_cfg0/T600").mkdir(parents=True)
+        (bE / "A/seed11/T600/d0.00_cfg0/T600/msd.json").write_text("{}")   # 보류 기록 뒤 v1 런이 끝났다 (산출물이 생김)
+        rc, out = run(bE, "rerun", **hold_env(hE, "A:11:600"))
+        chk(rc == 16 and "바뀐 런" in out and not list((bE / "A" / "seed11").glob("T600.superseded_*")),
+            f"⛔음성 (리뷰 EE p1): 낡은 보류 기록 — 그 기록 뒤 끝난 v1 런을 다시 굴리지 않는다 (지문 ≠ · 종료 {rc})")
+        b8x = td / "base8x"
+        shutil.copytree(b1, b8x)
+        e8 = b8x / cond_runs[0] / END
+        e8.rename(b8x / "end.tmp")                                       # 큐가 도는 중 — 끝 기록이 아직 없을 때 쓴 보류 기록
+        h8 = hold_rec(b8x, {"A11_T550": {"status": "incomplete", "reasons": ["v2 끝 기록이 없다"]}})
+        (b8x / "end.tmp").rename(e8)
+        rc, out = run(b8x, "rerun", **hold_env(h8, "A:11:550"))
+        chk(rc == 16 and "바뀐 런" in out and not list((b8x / "A" / "seed11").glob("T550.superseded_*")),
+            f"⛔음성 (리뷰 EE p8): 도는 중에 쓴 보류 기록으로 그 뒤 끝난 v2 런을 다시 굴리지 않는다 (종료 {rc})")
+        hN = hold_rec(bE, {"A11_T600": {"status": "invalid"}}, fp=False)
+        chk(run(bE, "rerun", **hold_env(hN, "A:11:600"))[0] == 16, "⛔음성: 런 지문이 없는 (옛 꼴) 보류 기록 → 거부")
+        hN2 = hold_rec(bE, {"B11_T600": {"status": "incomplete", "reasons": ["런 폴더가 없다 (시작 안 함)"]}}, fp=False)
+        rc, out = run(bE, "rerun", **hold_env(hN2, "B:11:600"))
+        chk(rc == 16 and "런 지문이 없다" in out and not (bE / "B/seed11/T600").exists(),
+            f"⛔음성: 런 지문이 없는 (옛 꼴) 보류 기록은 안 띄운 런에도 쓰지 않는다 (종료 {rc})")
+        hO = hold_rec(bE, {"A11_T600": {"status": "invalid"}}, base_original="/elsewhere", base_now="/elsewhere")
+        rc, out = run(bE, "rerun", **hold_env(hO, "A:11:600"))
+        chk(rc == 16 and "다른 BASE" in out, f"⛔음성 (리뷰 EE QM5): 다른 BASE 의 보류 기록 → 거부 (종료 {rc})")
+        bL = mkbase(rows=[("A", 600, 11, 2.5, "x", "y", "0.0010", "0")], v1=("A/seed11/T600",))
+        hL = hold_rec(bL, {"A11_T600": {"status": "invalid", "reasons": ["전역 사유"]}})
+        readout_rec(bL)                                                  # 사다리 판독이 났다 (고정 기록)
+        rc, out = run(bL, "rerun", **hold_env(hL, "A:11:600"))
+        chk(rc == 16 and "사다리 판독 고정 기록" in out and not list((bL / "A" / "seed11").glob("T600.superseded_*")),
+            f"⛔음성 (리뷰 EE P1-1): 사다리 판독 고정 기록이 있으면 사다리 온도 런은 다시 돌리지 않는다 (종료 {rc})")
+        (bL / FIXED_COND_REL).write_text("{}")
+        rc, out = run(bL, "rerun", **hold_env(hL, "A:11:600"))
+        chk(rc == 16 and "cond550 판독 고정 기록" in out, f"⛔음성 (리뷰 EE P1-1): cond550 판독 고정 기록이 있으면 어떤 런도 다시 안 돈다 (종료 {rc})")
+        bVa = mkbase(rows=[("A", 600, 11, 2.5, "x", "y", "0.0010", "0")], v1=("A/seed11/T600",))
+        hVa = hold_rec(bVa, {"A11_T600": {"status": "invalid", "reasons": ["전역 사유"]}})
+        shutil.rmtree(bVa / "A/seed11/T600")
+        rc, out = run(bVa, "rerun", **hold_env(hVa, "A:11:600"))
+        chk(rc == 16 and "없어졌다" in out, f"⛔음성: 보류 기록 때 있던 폴더가 그 뒤 없어졌으면 다시 돌리지 않는다 (지문 ≠ · 종료 {rc})")
+        bB = mkbase()
+        hB = hold_rec(bB, {"A11_T550": {"status": "incomplete", "reasons": ["런 폴더가 없다 (시작 안 함)"]}})
+        rc, out = run(bB, "rerun", **hold_env(hB, "A:11:550"))
+        chk(rc == 16 and "한 번도 안 띄운 550 K" in out and not (bB / cond_runs[0]).exists(),
+            f"⛔음성 (리뷰 EE P1-3 선택 B): 한 번도 안 띄운 550 K 런은 PHASE=rerun 이 받지 않는다 — cond550 만 (종료 {rc})")
+        # ── 음성 → 양성: cond550 은 완료 아닌 폴더를 건너뛰고 빈 폴더를 계속 돈다 (리뷰 DZ P1-1 · EE P1-3) ──
         b5 = mkbase()
         (b5 / "A/seed11/T550/d0.00_cfg0/T550").mkdir(parents=True)
         (b5 / "A/seed11/T550/d0.00_cfg0/T550/msd.json").write_text("{broken")
         (b5 / "cost_ledger.tsv").write_text("\t".join(LEDGER_HEADER) + "\nA\t550\t11\t3\tx\ty\t0.0010\t0\n")
         rc, out = run(b5, "cond550", **link_env(readout_rec(b5)))
-        chk(rc == 17 and not (b5 / "B/seed11/T550").exists(),
-            f"⛔음성: 깨진 msd.json 만 있는 폴더 (실행 기록 없음) 를 끝난 것으로 건너뛰지 않는다 (종료 {rc})")
+        chk(rc == 17 and (b5 / "A/seed11/T550/d0.00_cfg0/T550/msd.json").read_text() == "{broken" and not (b5 / cond_runs[0] / START).exists()
+            and all(((load_json(b5 / r / END) or {}).get("status") == "complete") for r in cond_runs[1:]),
+            f"⛔음성: 깨진 msd.json 만 있는 폴더 (실행 기록 없음) 를 끝난 것으로 건너뛰지 않는다 — 그 폴더는 그대로 두고 빈 세 폴더를 돈 뒤 "
+            f"종료 17 (블록 전체를 세우지 않는다 · 종료 {rc})")
+        bD = td / "baseD"
+        shutil.copytree(b1, bD)
+
+        def redo(edit, label, want_rc):
+            b_ = td / f"baseD_{uuid.uuid4().hex[:6]}"
+            shutil.copytree(bD, b_)
+            edit(b_)
+            n0 = ledger_n(b_)
+            rc_, out_ = run(b_, "cond550", **link_env(readout_rec(b_)))
+            chk(rc_ == want_rc and ledger_n(b_) == n0 and out_.count("이미 끝났다") == (4 if want_rc == 0 else 3),
+                f"{'[양성]' if want_rc == 0 else '⛔음성'} '이미 끝났다' — {label} (종료 {rc_})")
+        redo(lambda b_: edit_start(b_, cond_runs[0], phase="rerun"), "PHASE=rerun 으로 돈 같은 블록 완료 런도 끝난 런 (리뷰 EE P1-3)", 0)
+        redo(lambda b_: edit_start(b_, cond_runs[0], queue_v2_sha16="0" * 16), "큐 판 ≠ 카드면 끝난 런이 아니다 (리뷰 EE P2-4)", 17)
+        redo(lambda b_: edit_start(b_, cond_runs[0], driver_sha16="1" * 16), "드라이버 판 ≠ 카드면 끝난 런이 아니다 (리뷰 EE P2-4)", 17)
+        redo(lambda b_: edit_start(b_, cond_runs[0], card_values=dict(load_json(b_ / cond_runs[0] / START)["card_values"], prod_ps=2.5)),
+             "런 값 (길이) ≠ 카드면 끝난 런이 아니다 (리뷰 EE QM4)", 17)
         # ── 음성: 비용 (리뷰 DZ P1-3) ──
         b6 = mkbase(v1=("A/seed11/T600",), ledger=False)
         chk(run(b6, "cond550", **link_env(readout_rec(b6)))[0] == 15, "⛔음성: 흔적이 있는데 장부가 없으면 비용 미확정 — 시작하지 않는다 (0 아님)")
         b7 = mkbase(v1=("A/seed11/T600", "B/seed11/T600"), rows=[("A", 600, 11, 2.5, "x", "y", "5.0", "0")])
         rc, out = run(b7, "cond550", **link_env(readout_rec(b7)))
-        chk(rc == 15 and "B/seed11/T600" in out, "⛔음성: 장부 행이 없는 흔적 (B11 600) → 비용 미확정 · 그 흔적을 이름으로 알린다")
+        chk(rc == 15 and "B/seed11/T600" in out and "B:11:600:v1" in out,
+            "⛔음성: 장부 행이 없는 흔적 (B11 600) → 비용 미확정 · 그 흔적과 정함 열쇠를 알린다")
         b8 = mkbase(v1=("A/seed11/T600",))
         (b8 / "cost_ledger.tsv").write_text("\t".join(LEDGER_HEADER) + "\nA\t600\t11\t2.5\tx\ty\tNaN\t0\n")
         chk(run(b8, "cond550", **link_env(readout_rec(b8)))[0] == 15, "⛔음성: 장부 시간이 NaN → 비용 미확정")
-        rc, out = run(b7, "cond550", COST_CHARGE="B/seed11/T600=4.5", **link_env(readout_rec(b7)))
+        rc, out = run(b7, "cond550", COST_CHARGE="B:11:600:v1=4.5", **link_env(readout_rec(b7)))
         chk(rc == 15, "⛔음성: COST_CHARGE 에 COST_BY · COST_REASON 이 없으면 거부")
-        rc, out = run(b7, "cond550", COST_CHARGE="B/seed11/T600=4.5", COST_BY="selftest", COST_REASON="정전 런 · 사람이 정함",
+        rc, out = run(b7, "cond550", COST_CHARGE="B/seed11/T600=4.5", COST_BY="selftest", COST_REASON="경로 열쇠", **link_env(readout_rec(b7)))
+        chk(rc == 15 and "charge:" not in (b7 / "cost_ledger.tsv").read_text(),
+            "⛔음성 (리뷰 EE P2-3): 폴더 경로로 정함 → 거부 (열쇠는 v2 run_id · v1 '<계>:<시드>:<온도>:v1')")
+        rc, out = run(b7, "cond550", COST_CHARGE="B:11:600:v1=0", COST_BY="selftest", COST_REASON="모름", **link_env(readout_rec(b7)))
+        chk(rc == 15 and "0 보다" in out and "charge:" not in (b7 / "cost_ledger.tsv").read_text(),
+            "⛔음성 (리뷰 EE P2-3 · p7): 0 h 정함 → 거부 (모름 = 0 이 아니다)")
+        rc, out = run(b7, "cond550", COST_CHARGE="B:11:600:v1=4.5", COST_BY="selftest", COST_REASON="정전 런 · 사람이 정함",
                       **link_env(readout_rec(b7)))
-        chk(rc == 0 and "charge:B/seed11/T600" in (b7 / "cost_ledger.tsv").read_text(),
+        chk(rc == 0 and "charge:B:11:600:v1" in (b7 / "cost_ledger.tsv").read_text(),
             f"[양성] 사람이 정한 비용 (COST_CHARGE · 장부 charge 행 · 근거 기록) 뒤에는 시작한다 (종료 {rc})")
+        bC2 = mkbase(v1=("A/seed11/T600",))
+        rc, out = run(bC2, "cond550", COST_CHARGE="A:11:600:v1=9.5", COST_BY="selftest", COST_REASON="긴 정전 런", **link_env(readout_rec(bC2)))
+        sC2 = stops_of(bC2)
+        chk(rc == 21 and len(sC2) == 1 and sC2[0]["code"] == 21 and sC2[0]["run"] == "A11_T600" and sC2[0].get("block") == "ladder"
+            and "charge:A:11:600:v1" in (bC2 / "cost_ledger.tsv").read_text() and not (bC2 / cond_runs[0]).exists(),
+            f"⛔음성 (리뷰 EE P2-3): 정한 시간 9.5 h > 그 블록 첫 런 한도 8 h → 21 (정함은 기록 · 런은 안 띄움 · 종료 {rc})")
+        # 정함 열쇠는 폴더를 옮겨도 따라간다 (단위 시험 — 같은 cost_state)
+        bS1 = mkbase()
+        sup_ = bS1 / "A/seed11/T550.superseded_20261110T000000Z"
+        sup_.mkdir(parents=True)
+        (sup_ / START).write_text(json.dumps({"kind": "li2s3_stage2_exec_start/v2", "run_id": "oldrun01", "phase": "cond550",
+                                              "start_utc": "2026-11-10T00:00:00.000000Z", "card_values": {"block": "cond550", "prod_ps": 3.0}}))
+        rc, out = run(bS1, "cond550", DRY_RUN="1", **link_env(readout_rec(bS1)))
+        chk(rc == 15 and "oldrun01" in out and "superseded" in out,
+            f"⛔음성 (리뷰 EE QM1): 옮긴 폴더 (superseded) 의 끊긴 v2 런도 비용 흔적이다 → 15 · 열쇠 = run_id (종료 {rc})")
+        BASE, LEDGER = bS1, bS1 / "cost_ledger.tsv"
+        cvS = card_values(CARD0)
+        LEDGER.write_text("\t".join(LEDGER_HEADER) + "\nA\t550\t11\t3\tcharge:oldrun01\tx\t0.5000\tcharge\n")
+        und_run = cost_state(ledger_rows(), traces(cvS))[1]
+        LEDGER.write_text("\t".join(LEDGER_HEADER) + "\nA\t550\t11\t3\tcharge:A/seed11/T550\tx\t0.5000\tcharge\n")
+        und_path = cost_state(ledger_rows(), traces(cvS))[1]
+        chk(und_run == [] and len(und_path) == 1, "[양성] (리뷰 EE P2-3 · p3) 정함은 run_id 로 묶인다 — 폴더를 옮긴 뒤에도 따라가고, 옛 경로 열쇠는 안 맞는다")
+        BASE = b1
         rows157 = [("A", 600, 11, 2.5, f"r{i}", "e", "11.0714", "0") for i in range(14)] + [("A", 650, 11, 2.5, "last", "e", "2.0000", "0")]
         b9 = mkbase(rows=rows157)
         rc, out = run(b9, "cond550", **link_env(readout_rec(b9)))
@@ -1185,8 +1464,21 @@ def selftest():
         chk(run(b9, "cond550", ACK_STOP=st9[0]["id"], **link_env(readout_rec(b9)))[0] == 14, "⛔음성: ACK_STOP 에 ACK_BY · ACK_REASON 이 없으면 거부")
         chk(run(b9, "cond550", ACK_STOP="deadbeef0000", ACK_BY="x", ACK_REASON="y", **link_env(readout_rec(b9)))[0] == 14,
             "⛔음성: 없는 멈춤 id 를 풀 수 없다")
+        append_line(b9 / "queue_v2_stops.jsonl", json.dumps({"type": "ack", "id": st9[0]["id"]}))      # 손으로 적은 풂 줄 (by · reason 없음)
+        rc, out = run(b9, "cond550", **link_env(readout_rec(b9)))
+        chk(rc == 14, f"⛔음성 (리뷰 EE P2-2): 손으로 적은 풂 줄 (by · reason 없음) 은 풂이 아니다 → 14 (종료 {rc})")
         rc, out = run(b9, "cond550", ACK_STOP=st9[0]["id"], ACK_BY="selftest", ACK_REASON="상한 확인", **link_env(readout_rec(b9)))
-        chk(rc == 22 and len(stops_of(b9)) == 3, f"⛔음성: 풀어도 상한은 카드 값이라 다시 멈춘다 (새 멈춤 기록 · 종료 {rc})")
+        chk(rc == 22 and len(stops_of(b9)) == 4, f"⛔음성: 풀어도 상한은 카드 값이라 다시 멈춘다 (새 멈춤 기록 · 종료 {rc})")
+        rows140 = [("A", 600, 11, 50.0, f"r{i}", "e", "10.0000", "0") for i in range(14)]     # 누적 140 h · 관측 0.2 h/ps
+        b9b = mkbase(rows=rows140)
+        rc, out = run(b9b, "cond550", card_p=card("cardR.json", cost_estimate_h_per_ps=10.0), **link_env(readout_rec(b9b)))
+        chk(rc == 22 and not any((b9b / r).exists() for r in cond_runs),
+            f"⛔음성 (리뷰 EE QM9): 카드 견적 (10 h/ps) 이 관측 (0.2 h/ps) 보다 크면 카드 값으로 어림 → 140 + 30 h > 160 h → 22 (종료 {rc})")
+        rows131 = [("A", 600, 11, 50.0, f"r{i}", "e", "10.0000", "0") for i in range(12)] + [("A", 650, 11, 1.0, "charge:k1", "e", "11.0000", "charge")]
+        b9c = mkbase(rows=rows131)
+        rc, out = run(b9c, "cond550", **link_env(readout_rec(b9c)))
+        chk(rc == 22 and not any((b9c / r).exists() for r in cond_runs),
+            f"⛔음성 (리뷰 EE P2-3): 사람이 정한 행 (11 h / 1 ps) 도 관측 h/ps 최대에 든다 → 131 + 33 h > 160 h → 22 (종료 {rc})")
         # ── 음성: 첫 런 한도 · 다시 띄우기 (리뷰 DZ P1-2) ──
         cF = card("cardF.json", first_run_max_h=1e-7)
         b10 = mkbase()
@@ -1208,7 +1500,51 @@ def selftest():
         rc, out = run(b10, "cond550", card_p=cF, ACK_STOP=s10[0]["id"], ACK_BY="selftest", ACK_REASON="느린 기계 확인 · 계속",
                       **link_env(readout_rec(b10)))
         chk(rc == 0 and all((b10 / r / END).exists() for r in cond_runs),
-            f"[양성] 사람이 멈춤을 풀면 (ACK) 남은 런을 돈다 · 첫 런 한도는 갈래의 첫 런만 (종료 {rc})")
+            f"[양성] 사람이 멈춤을 풀면 (ACK) 남은 런을 돈다 · 첫 런 한도는 블록의 첫 런만 (종료 {rc})")
+        # ── 음성 (리뷰 EE P1-3 · p4 · QM7): 첫 런 한도는 블록마다 — 사다리 블록의 풂이 cond550 블록의 한도를 풀지 않는다 ──
+        b7q = mkbase(rows=[("A", 600, 11, 2.5, "x", "y", "0.0010", "0")], v1=("A/seed11/T600",))
+        h7q = hold_rec(b7q, {"A11_T600": {"status": "invalid", "reasons": ["드라이버 종료 코드 7"]}})
+        rc, out = run(b7q, "rerun", card_p=cF, **hold_env(h7q, "A:11:600"))
+        s7q = stops_of(b7q)
+        ok_a = rc == 21 and len(s7q) == 1 and s7q[0].get("block") == "ladder"
+        rc, out = run(b7q, "rerun", card_p=cF, ACK_STOP=(s7q[0]["id"] if s7q else "x"), ACK_BY="selftest", ACK_REASON="사다리 첫 런 확인",
+                      **hold_env(h7q, "A:11:600"))
+        ok_b = rc == 0 and "이미 다시 돌아 끝났다" in out
+        rc, out = run(b7q, "cond550", card_p=cF, **link_env(readout_rec(b7q)))
+        s7q2 = stops_of(b7q)
+        ok_c = rc == 21 and s7q2 and s7q2[-1].get("block") == "cond550" and not (b7q / cond_runs[1]).exists()
+        lines_ = (b7q / "queue_v2_stops.jsonl").read_text().splitlines()
+        (b7q / "queue_v2_stops.jsonl").write_text("\n".join(lines_[:-1]) + "\n")    # cond550 첫 런의 21 멈춤 기록이 없어졌다 (큐가 죽음)
+        rc, out = run(b7q, "cond550", card_p=cF, **link_env(readout_rec(b7q)))
+        chk(ok_a and ok_b and ok_c and rc == 21 and "블록 cond550" in out and not (b7q / cond_runs[1]).exists(),
+            f"⛔음성 (리뷰 EE P1-3 · QM7): 사다리 블록 첫 런 21 → 풂 → cond550 블록 첫 런 21 · 그 멈춤 기록이 없어져도 사다리 풂이 cond550 한도를 "
+            f"풀지 않는다 (기록에서 다시 판정 · 종료 {rc})")
+        bSu = td / "baseSu"
+        shutil.copytree(b1, bSu)
+        sup2 = bSu / "A/seed11/T550.superseded_20261101T000000Z"
+        shutil.copytree(bSu / cond_runs[0], sup2)
+        edit_start(bSu, sup2.relative_to(bSu), start_utc="2026-11-01T00:00:00.000000Z", run_id="suprun01")
+        row99 = "A\t550\t11\t3\tsup\tsup\t99.0000\t0"
+        e_ = load_json(sup2 / END)
+        e_.update(run_id="suprun01", wall_h_total=99.0, ledger_row=row99)
+        (sup2 / END).write_text(json.dumps(e_, ensure_ascii=False))
+        append_line(bSu / "cost_ledger.tsv", row99)
+        rc, out = run(bSu, "cond550", DRY_RUN="1", **link_env(readout_rec(bSu)))
+        chk(rc == 21 and "superseded" in out and "블록 cond550" in out,
+            f"⛔음성 (리뷰 EE P1-3): 블록 첫 런은 옮긴 폴더 (superseded) 도 센다 — 옮긴 첫 런 99 h > 한도 (멈춤 기록 없음) → 21 (종료 {rc})")
+        bCh = mkbase()
+        (bCh / cond_runs[0]).mkdir(parents=True)
+        (bCh / cond_runs[0] / START).write_text(json.dumps({"kind": "li2s3_stage2_exec_start/v2", "run_id": "deadrun02", "phase": "cond550",
+                                                            "system": "A", "seed": 11, "T_K": 550, "start_utc": "2026-11-10T00:00:00.000000Z",
+                                                            "card_values": {"block": "cond550", "prod_ps": 3.0}}))
+        rc, out = run(bCh, "cond550", COST_CHARGE="deadrun02=12", COST_BY="selftest", COST_REASON="정전 — 12 h 돌았다", **link_env(readout_rec(bCh)))
+        sCh = stops_of(bCh)
+        ok_1 = rc == 21 and len(sCh) == 1 and sCh[0].get("run") == "A11_T550"
+        (bCh / "queue_v2_stops.jsonl").unlink()
+        rc, out = run(bCh, "cond550", DRY_RUN="1", **link_env(readout_rec(bCh)))
+        chk(ok_1 and rc == 21 and "사람이 정한 시간" in out,
+            f"⛔음성 (리뷰 EE P1-3 · p7): 끝 기록 없는 블록 첫 런은 사람이 정한 시간 (12 h > 9.6 h) 으로 판정한다 — 정할 때 21 · 멈춤 기록이 없어져도 "
+            f"다시 21 (종료 {rc})")
         # ── 음성: 두 런 사이에 입력이 바뀐다 (GPU 대기 중 · 리뷰 DZ P1-5) ──
         b11 = mkbase()
         p = run(b11, "cond550", wait=False, **link_env(readout_rec(b11)))
@@ -1308,9 +1644,11 @@ def selftest():
                     (root / f_.relative_to(REPO)).parent.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(f_, root / f_.relative_to(REPO))
             cT = card(f"cardT_{uuid.uuid4().hex[:6]}.json")
+            dT = td / f"decT_{uuid.uuid4().hex[:6]}.json"
+            dT.write_text(dec.read_text())
             bT = mkbase()
             script = (root / SELF.relative_to(REPO)) if root else None
-            pT = run(bT, "cond550", card_p=cT, wait=False, script=script, **link_env(readout_rec(bT)))
+            pT = run(bT, "cond550", card_p=cT, dec_p=dT, wait=False, script=script, **link_env(readout_rec(bT)))
             t0_ = time.time()
             while not (bT / cond_runs[0] / START).exists() and time.time() - t0_ < 120:
                 time.sleep(0.05)
@@ -1318,16 +1656,34 @@ def selftest():
             while not (bT / cond_runs[0] / END).exists() and time.time() - t0_ < 300:
                 time.sleep(0.05)
             time.sleep(0.5)
-            f_ = path_of(cT, root)
+            f_ = path_of(cT, root, dT)
             f_.write_bytes(f_.read_bytes() + b"\n#")                   # 바이트만 바꾼다 (동작은 같다) — 지문이 바뀐다
             (td / "gpu").write_text("3000\n")
             pT.communicate(timeout=600)
             sT = stops_of(bT)
             chk(pT.returncode == 8 and not (bT / cond_runs[1]).exists() and len(sT) == 1 and kw in sT[0]["reason"],
                 f"⛔음성: GPU 대기 중 바뀐 {label} → 실행 직전 다시 해시에서 둘째 런 전에 멈춘다 (종료 {pT.returncode})")
-        tamper_between("카드 파일", lambda c_, r_: c_, "카드 sha256")
-        tamper_between("드라이버", lambda c_, r_: r_ / DRV.relative_to(REPO), "드라이버 sha256", rooted=True)
-        tamper_between("큐 파일 (이 파일)", lambda c_, r_: r_ / SELF.relative_to(REPO), "큐 파일 sha256", rooted=True)
+        tamper_between("카드 파일", lambda c_, r_, d_: c_, "카드 sha256")
+        tamper_between("결정 원장", lambda c_, r_, d_: d_, "결정 원장 sha256")
+        tamper_between("드라이버", lambda c_, r_, d_: r_ / DRV.relative_to(REPO), "드라이버 sha256", rooted=True)
+        tamper_between("큐 파일 (이 파일)", lambda c_, r_, d_: r_ / SELF.relative_to(REPO), "큐 파일 sha256", rooted=True)
+        bOF = mkbase(rows=[("A", 600, 11, 2.5, "x", "y", "0.0010", "0"), ("B", 600, 11, 2.5, "x", "y", "0.0010", "0")],
+                     v1=("A/seed11/T600", "B/seed11/T600"))
+        hOF = hold_rec(bOF, {"A11_T600": {"status": "invalid"}, "B11_T600": {"status": "invalid"}})
+        pO = run(bOF, "rerun", wait=False, **hold_env(hOF, "A:11:600 B:11:600"))
+        t0_ = time.time()
+        while not (bOF / "A/seed11/T600" / START).exists() and time.time() - t0_ < 120:
+            time.sleep(0.05)
+        (td / "gpu").write_text("9000\n")
+        while not (bOF / "A/seed11/T600" / END).exists() and time.time() - t0_ < 300:
+            time.sleep(0.05)
+        time.sleep(0.5)
+        (bOF / "B/seed11/T600/run_meta.json").write_text('{"changed": 1}')       # GPU 대기 중 둘째 런의 옛 폴더가 바뀐다
+        (td / "gpu").write_text("3000\n")
+        pO.communicate(timeout=600)
+        sO = stops_of(bOF)
+        chk(pO.returncode == 8 and len(sO) == 1 and "옛 폴더" in sO[0]["reason"] and not list((bOF / "B/seed11").glob("T600.superseded_*")),
+            f"⛔음성 (리뷰 EE P1-1): GPU 대기 중 바뀐 옛 폴더 (보류 기록 지문 ≠) → 옮기기 전에 멈춘다 (종료 {pO.returncode})")
         # ── 음성: 끊긴 v2 런 ──
         b15 = mkbase()
         (b15 / cond_runs[0]).mkdir(parents=True)
@@ -1350,6 +1706,64 @@ def selftest():
         chk(rc == 0 and "--temperatures 550" in out and "--prod_ps 3 " in out and "--seed 3011" in out and "900" not in out.split("계획")[-1]
             and not (b16 / "queue_v2_stops.jsonl").exists() and not any((b16 / r).exists() for r in cond_runs),
             f"⛔음성: TEMPS=900 PROD=7 VSEED_OFFSET=9000 은 무시 — 계획은 카드 값 (550 K · 3 ps · --seed 3011) · DRY_RUN 은 아무것도 안 쓴다 (종료 {rc})")
+        # ── 카드 · 원장 출처 (리뷰 EE P1-2 · p2) — 임시 git 저장소 (이 파일 · 드라이버 · 카드 · 원장을 저장소 경로에 커밋) ──
+        def git_root(card_d, dec_d):
+            root = td / f"groot_{uuid.uuid4().hex[:6]}"
+            for f_ in (SELF, DRV):
+                (root / f_.relative_to(REPO)).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(f_, root / f_.relative_to(REPO))
+            gc_, gd_ = root / CARD_REPO.relative_to(REPO), root / DEC_REPO.relative_to(REPO)
+            for p_, d_ in ((gc_, card_d), (gd_, dec_d)):
+                p_.parent.mkdir(parents=True, exist_ok=True)
+                p_.write_text(json.dumps(d_, ensure_ascii=False))
+            G = ["git", "-C", str(root), "-c", "user.name=selftest", "-c", "user.email=selftest@example.invalid", "-c", "commit.gpgsign=false",
+                 "-c", "core.hooksPath=/dev/null"]
+            subprocess.run(["git", "-C", str(root), "init", "-q"], check=True, capture_output=True)
+            subprocess.run(G + ["add", "-A"], check=True, capture_output=True)
+            subprocess.run(G + ["commit", "-q", "-m", "selftest"], check=True, capture_output=True)
+            return root, root / SELF.relative_to(REPO), gc_, gd_, G
+        card0_d, dec_d0 = json.loads(CARD0.read_text()), json.loads(dec.read_text())
+        gr, gq, gcard, gdec, G = git_root(card0_d, dec_d0)
+        bP = mkbase()
+        rc, out = run(bP, "cond550", card_p=gcard, dec_p=gdec, script=gq, test=False, **link_env(readout_rec(bP)))
+        aP = load_json(bP / cond_runs[0] / START) or {}
+        headP = subprocess.run(["git", "-C", str(gr), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+        chk(rc == 0 and aP.get("test") is False and aP.get("repo_head") == headP and aP.get("repo_clean") is True
+            and aP.get("card_is_repo_card") is True and aP.get("decisions_is_repo") is True and aP.get("decisions_sha256") == sha256(gdec)
+            and aP.get("card_sha256") == sha256(gcard),
+            f"[양성] (리뷰 EE P1-2) 저장소의 카드 · 원장 (HEAD 와 같음) · HEAD 와 같은 큐 · 드라이버 → 돈다 · 시작 기록 test false · repo HEAD · "
+            f"깨끗함 · 원장 sha256 (종료 {rc})")
+        bP2 = mkbase()
+        rc, out = run(bP2, "cond550", card_p=CARD0, dec_p=gdec, script=gq, test=False, DRY_RUN="1", **link_env(readout_rec(bP2)))
+        chk(rc == 6 and "저장소의 그 파일" in out, f"⛔음성 (리뷰 EE p2): 시험 표지 없이 저장소 밖 카드 (환경변수) → 6 (종료 {rc})")
+        rc, out = run(bP2, "cond550", card_p=gcard, dec_p=dec, script=gq, test=False, DRY_RUN="1", **link_env(readout_rec(bP2)))
+        chk(rc == 6 and "저장소의 그 파일" in out, f"⛔음성 (리뷰 EE p2): 시험 표지 없이 저장소 밖 결정 원장 → 6 (종료 {rc})")
+        t_card = gcard.read_text()
+        gcard.write_text(t_card + " ")
+        rc, out = run(bP2, "cond550", card_p=gcard, dec_p=gdec, script=gq, test=False, DRY_RUN="1", **link_env(readout_rec(bP2)))
+        gcard.write_text(t_card)
+        chk(rc == 6 and "HEAD" in out, f"⛔음성 (리뷰 EE P1-2): 저장소 카드가 HEAD 와 다르다 (커밋 안 한 고침) → 6 (종료 {rc})")
+        t_dec = gdec.read_text()
+        gdec.write_text(t_dec + " ")
+        rc, out = run(bP2, "cond550", card_p=gcard, dec_p=gdec, script=gq, test=False, DRY_RUN="1", **link_env(readout_rec(bP2)))
+        gdec.write_text(t_dec)
+        chk(rc == 6 and "HEAD" in out, f"⛔음성 (리뷰 EE P1-2): 저장소 결정 원장이 HEAD 와 다르다 → 6 (종료 {rc})")
+        rc, out = run(bP2, "cond550", card_p=CARD0, dec_p=dec, script=gq, test=True, DRY_RUN="1", **link_env(readout_rec(bP2)))
+        chk(rc == 0 and "V2_TEST=1 — 시험 런" in out, f"[양성] V2_TEST=1 이면 시험 카드 · 원장으로 돈다 (시험 런 표지 · 판독이 안 받는다 · 종료 {rc})")
+        for what, fsrc in (("큐 파일", SELF), ("드라이버", DRV)):
+            gr2, gq2, gcard2, gdec2, G2 = git_root(card0_d, dec_d0)
+            f2 = gr2 / fsrc.relative_to(REPO)
+            f2.write_bytes(f2.read_bytes() + b"\n#")                     # 커밋 안 한 고침 — 카드는 그 고친 판을 고정하고 커밋 (판 검사는 통과)
+            c2 = json.loads(gcard2.read_text())
+            if what == "큐 파일":
+                c2["기계_판독_값"]["stage2"]["queue_v2"]["sha16"] = sha256(f2)[:16]
+            else:
+                c2["기계_판독_값"]["md_driver_sha16"] = sha256(f2)[:16]
+            gcard2.write_text(json.dumps(c2, ensure_ascii=False))
+            subprocess.run(G2 + ["add", str(gcard2.relative_to(gr2))], check=True, capture_output=True)
+            subprocess.run(G2 + ["commit", "-q", "-m", "pin"], check=True, capture_output=True)
+            rc, out = run(bP2, "cond550", card_p=gcard2, dec_p=gdec2, script=gq2, test=False, DRY_RUN="1", **link_env(readout_rec(bP2)))
+            chk(rc == 7 and "HEAD" in out, f"⛔음성 (리뷰 EE P1-2): {what} 가 HEAD 와 다르다 (카드 판 고정은 맞음) → 7 (종료 {rc})")
     print(f"selftest {'PASS' if not fails else 'FAIL'} — {n_ok}/{n_ok + len(fails)} ({time.time() - t_all:.0f} s)")
     return 0 if not fails else 1
 

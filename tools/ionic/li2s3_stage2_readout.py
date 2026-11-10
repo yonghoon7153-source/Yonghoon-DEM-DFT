@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """li2s-3 2 단계 판독 — v1 런 사후 검증 · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 측정 가능 온도 창 W
-(카드 개정 DZ · 내부 반박 리뷰 EB 의 P0 · P1 · P2 고침 · 결과 전 커밋 · 2026-11-10).
+(카드 개정 DZ · 내부 반박 리뷰 EB · EE 의 P0 · P1 · P2 고침 · 결과 전 커밋 · 2026-11-10).
 
 카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble (+ -amend1)
-리뷰 kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md · kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md
+리뷰 kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md · kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md ·
+     kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md
 
 하위 명령 — 종료 코드: 0 끝 · 2 거부 (문지기) · 3 판정 보류 (검증이 다 안 끝났거나 실패) · control 은 기록과 다르면 1
   verify   런마다 사후 검증 ①–⑦ (수송 · 골격 값은 안 읽는다 — 판독 허가 전에도 돌려도 된다) · --out 에 쓴다 (덮지 않는다)
   readout  결정 둘 active · 판독 허가 (아래) · 도구 작업 트리 깨끗함 · 큐와 계획 런이 모두 끝 · 모두 valid 일 때만
            → W · 갈래 · cond550 자격 · 시드별 기술표 · 세 층 · 기록 ⓐ–ⓒ (D 값 없음). 하나라도 아니면 W · 갈래 · cond550 을
-           내지 않고 판정 보류 기록 <BASE>/readout_stage2/hold_*.json 만 남긴다 (종료 3). 판독은 한 번 —
-           <BASE>/readout_stage2/readout_stage2.json (있으면 거부)
+           내지 않고 판정 보류 기록 <BASE>/readout_stage2/hold_*.json 만 남긴다 (종료 3 · 런마다 그때 본 지문을 싣는다 —
+           PHASE=rerun 은 지금 지문 = 이 지문일 때만). 큐 잠금이 쥐어져 있으면 보류 기록을 쓰지 않고 거부한다 (상태 보기는 verify).
+           판독은 한 번 — <BASE>/readout_stage2/readout_stage2.json (있으면 거부 · 행마다 런 지문 · 기계_판독_값 해시 · 장부 합계)
   pressure readout 과 같은 문지기 · 같은 보류 → 런마다 생산 프레임 k = j·10 − 1 (t = (k+1)·save = 1, 2, …, prod ps) 의
            UMA turbo 단일점 virial + N k_B T_set / V · 계마다 새 turbo 계산기 (조성 고정 모델) · 런마다
            <BASE>/readout_stage2/pressure_runs/ 에 점진 저장 (같은 궤적 · 같은 도구 판 · 같은 카드면 다시 쓴다) ·
@@ -25,7 +27,8 @@
      '✅ T<T> seed<S> 끝 (rc 0)' · '■ 큐 끝 · T:S:prod'. 끝 줄 '✅ …' 이 없으면 incomplete.
      큐 로그 <BASE>/stage2_kgy.log — PHASE ladder 시작 줄이 정확히 하나 (온도 · 시드 · 계 · prod = 카드) ·
      '문지기 ✓ — 카드 <결정> (active) · 러너 sha16 <카드>' · '판 — … · repo … · BASE <원래 BASE> · PHASE ladder' ·
-     '■ 큐 끝 · PHASE ladder'. 큐 줄이 어긋나면 그 큐의 런이 모두 invalid · 큐 끝 줄이 없으면 판정 보류.
+     '■ 큐 끝 · PHASE ladder' — 사다리 블록 (첫 시작 줄 ~ 첫 끝 줄) 안에서만 본다. 큐 줄이 어긋나면 그 큐의 런이 모두 invalid ·
+     큐 끝 줄이 없으면 판정 보류 · 블록 밖의 v1 호출 (뒤에 다시 띄움 · PHASE cond550) 은 런을 무효로 만들지 않고 따로 보류 사유.
   ② 설정 — run_meta = 카드 (T · prod · equilib · seed · 원자 수 · supercell · 창 · save_traj · 모델 · 요청 모드 ·
      **실제 모드 turbo** · 라벨 · v0_xyz = <원래 BASE>/<계>/init/seed<S>_final.xyz — 원래 BASE 기준이라 옮긴 사본에서도 읽는다) ·
      ensemble_results.json 끝 요약 (실제 모드 turbo · task omat · 모델 · 온도 · prod · equilib · 원자 수 · 라벨)
@@ -54,7 +57,12 @@ v2 런 (고친 큐 run_stage2_kgy_v2.sh — cond550 · rerun) — 런 폴더에 
   ②–⑤ 는 v1 과 같은 검사 (prod = 그 온도의 카드 값 · 원래 BASE = 실행 기록의 base). 대응표는 VERIFY_MAP (출력에도 싣는다).
   판독 갈래 --phase: ladder (사다리 · 기본 · readout_stage2.json) · cond550 (conditional.T_K + 사다리 · '끝난 뒤 한 번 더' ·
   사다리 판독 고정 기록이 cond550 자격 True 일 때만 · readout_stage2_cond550.json · pressure_stage2_cond550.json · 갈래 확정).
-  v2 런이 하나라도 있으면 v1 큐 끝 줄 대신 큐 잠금이 비어 있고 풀리지 않은 v2 멈춤이 없어야 한다 · 지금 queue_v2 결정 active.
+  cond550 판독은 동결된다: 사다리 판독 고정 기록의 행 지문 = 지금 사다리 런 지문 · 판독 도구 sha16 · 카드 기계_판독_값 해시가 같을 때만
+  (하나라도 다르면 거부 · 리뷰 EE P1-1) · 550 K 런의 결속은 그 고정 기록 (경로 · sha256 = 지금 고정 기록 · P2-1).
+  v2 런이 하나라도 있으면 v1 큐 끝 줄 대신 큐 잠금이 비어 있고 풀리지 않은 v2 멈춤 (by · reason 있는 풂만 셈) 이 없어야 한다 ·
+  지금 queue_v2 결정 active. v2 런의 출처 (리뷰 EE P1-2): 시작 기록 test false (시험 런은 판독 selftest 만 받는다 — ALLOW_TEST_RUNS) ·
+  card_is_repo_card · decisions_is_repo · repo_clean 참 · 그 커밋 (V2_REPO 에서 git show <repo_head>:<카드 · 원장>) 의 sha256 =
+  시작 기록 · 그 커밋 원장에서 카드 결정 · queue_v2 결정 active (커밋을 못 찾으면 invalid).
   카드 기계 값 (v2 런을 읽을 때만): stage2.conditional.{T_K · prod_ps} · stage2.queue_v2.{sha16 · decision} (없으면 v2 런은 invalid).
 
 ⛔ 이 도구가 못 하는 것
@@ -68,10 +76,13 @@ v2 런 (고친 큐 run_stage2_kgy_v2.sh — cond550 · rerun) — 런 폴더에 
   · v2 큐 판은 카드 queue_v2.sha16 하나로만 받는다 — 큐를 고쳐 카드가 새 sha16 을 고정하면 옛 판으로 돈 v2 런은 invalid 다 (카드 결정).
   · v2 런의 옮겨 남긴 옛 폴더 (T<T>.superseded_*) 는 읽지 않는다 (기록만) · 멈춤 · 비용 정함 기록은 출력에 싣고 풀리지 않은 멈춤만
     보류 사유로 쓴다 (그 사람 결정이 옳았는지는 보지 않는다).
+  · cond550 판독의 동결은 사다리 판독 뒤에 바뀐 것을 거부할 뿐 — 사다리 판독 전에 고른 표본 (결과를 안 본 재실행) 은 못 가린다.
+  · v2 런의 커밋 결속은 판독 도구가 도는 저장소 (V2_REPO) 에 그 커밋이 있어야 한다 (없으면 invalid · 같은 저장소의 worktree 에서 읽는다).
 
 --selftest — 양성 픽스처는 실제 생산자에서 만든다: 임시 폴더에서 실제 v1 큐 (run_stage2_kgy.sh) → 실제 v2 러너 → 실제 MD 드라이버를
   돌리고, 그 사본에 실제 v2 큐 (run_stage2_kgy_v2.sh · PHASE=rerun → 섞인 사다리 판독 → PHASE=cond550 → cond550 판독) 를 돌린다
-  (fairchem 스텁 · 가짜 nvidia-smi · GPU 안 씀 · 저장소 파일은 안 바꾼다). bash · flock · coreutils 가 있어야 한다 (≈ 1.5 분).
+  (fairchem 스텁 · 가짜 nvidia-smi · GPU 안 씀 · 저장소 파일은 안 바꾼다 · 시험 카드라 V2_TEST=1 — 이 동안만 시험 런을 받는다 ·
+  생산 경로는 임시 git 저장소의 v2 큐 사본으로 따로 시험). bash · flock · coreutils · git 이 있어야 한다 (≈ 2 분).
   스텁의 Li 는 힘 없는 브라운 입자라 시험 카드의 Li 이동 상한만 6 Å 로 둔다 (실제 카드 값은 카드가 정한다).
 """
 from __future__ import annotations
@@ -114,6 +125,12 @@ OUT_DIRNAME, READOUT_NAME, PRESSURE_NAME, PRESSURE_RUNS = "readout_stage2", "rea
 #: 판독 갈래별 고정 출력 (한 번만) — ladder 는 v1 판 그대로 · cond550 은 '끝난 뒤 한 번 더'
 OUT_NAMES = {"ladder": (READOUT_NAME, PRESSURE_NAME), "cond550": ("readout_stage2_cond550.json", "pressure_stage2_cond550.json")}
 V2_START, V2_END = "exec_v2_start.json", "exec_v2_end.json"
+CARD_REL = "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json"
+DECISIONS_REL = "db/governance/decisions.json"
+#: v2 런의 커밋 결속 (git show <repo_head>:<카드 · 원장>) 을 볼 저장소 — 판독 도구가 도는 저장소 (selftest 만 임시 저장소로 바꾼다)
+V2_REPO = REPO
+#: 시험 런 (V2_TEST=1 · 시작 기록 test: true) 을 받을까 — 판독 도구 selftest 만 True (명령줄 · 환경변수로는 못 켠다 · 리뷰 EE P1-2)
+ALLOW_TEST_RUNS = False
 CONTROL_KIND = "li2s3_stage2_control/v2"
 #: v1 · v2 런을 한 판독에 넣는 검증 대응표 (카드 개정 EB 문장 6 · 결과 전) — 어느 검사를 어느 증거로 결속하나
 VERIFY_MAP = [
@@ -125,7 +142,11 @@ VERIFY_MAP = [
      "v2": "시작 기록 card_values (런을 정하는 값) = 지금 카드 · argv[2:] = 카드에서 만든 v2 명령 틀 (온도 · 길이 · 시드 · save · dt · friction · 창 · turbo)"},
     {"검사": "① 원래 BASE (v0_xyz 대조)", "v1": "큐 로그 '판 — … · BASE <경로>' 줄", "v2": "시작 기록 base"},
     {"검사": "① 결속 기록", "v1": "없음 (사다리 16 런)",
-     "v2": "cond550 = 판독 기록 (경로 · sha256 · 두 계 600 K 측정 가능) · rerun = 보류 기록 (경로 · sha256 · 그 런이 invalid · incomplete) — 판독 시점에 다시 본다"},
+     "v2": "cond550 = 사다리 판독 고정 기록 (그 경로만 · sha256 = 지금 고정 기록 · 두 계 600 K 측정 가능) · rerun = 보류 기록 (경로 · sha256 · "
+           "그 런이 invalid · incomplete · 런 지문) — 판독 시점에 다시 본다"},
+    {"검사": "① 출처 (카드 · 원장 · 저장소)", "v1": "큐 로그 '판 —' 줄의 repo HEAD (기록만)",
+     "v2": "시작 기록 test false · card_is_repo_card · decisions_is_repo · repo_clean 참 · 그 커밋 (git show <repo_head>:<카드 · 원장>) 의 sha256 = "
+           "시작 기록 · 그 커밋 원장에서 카드 · queue_v2 결정 active (못 찾음 = invalid · 리뷰 EE P1-2)"},
     {"검사": "② 설정 (run_meta · ensemble_results 끝 요약)", "v1": "카드 값 (prod = 사다리)", "v2": "같은 검사 (prod = 그 온도의 카드 값 — 550 K 는 conditional.prod_ps)"},
     {"검사": "③ 입력 결속", "v1": "init sha256 = 카드 · config.xyz = init · 첫 프레임 셀 · P/S 변위 중앙값",
      "v2": "같은 검사 + 시작 기록 input_sha256 (실행 직전 다시 해시한 값) = 카드"},
@@ -134,8 +155,12 @@ VERIFY_MAP = [
     {"검사": "⑦ 보조 (판독 시점 worktree)", "v1": "드라이버 · 러너 sha16 = 카드 · 큐 파일 sha256 기록", "v2": "드라이버 sha16 = 카드 · v2 큐 파일 sha16 = 카드 queue_v2.sha16"},
     {"검사": "판정 보류 (한 판독)", "v1": "v1 런만이면 그대로 — v1 큐 로그 valid · 큐 끝 줄 · 계획 런 모두 valid",
      "v2": "v2 런이 하나라도 있으면 — 계획 런 모두 valid (각자 자기 증거로) · v1 런이 있으면 v1 큐 로그에 문제가 없을 것 · 큐 잠금이 비어 있을 것 · "
-           "풀리지 않은 v2 멈춤 (queue_v2_stops.jsonl) 이 없을 것 · 지금 카드 queue_v2 결정 active "
+           "풀리지 않은 v2 멈춤 (queue_v2_stops.jsonl · by · reason 있는 풂만 셈) 이 없을 것 · 지금 카드 queue_v2 결정 active "
            "(v1 큐 끝 줄은 요구하지 않는다 — v1 이 멈춘 뒤 남은 런을 v2 가 돌린 경우)"},
+    {"검사": "판정 보류 · 공통 (리뷰 EE)", "v1": "사다리 블록 밖의 v1 호출 → 따로 보류 사유 (런은 그대로) · 잠금이 쥐어져 있으면 보류 기록을 안 쓰고 거부",
+     "v2": "같다 · 보류 기록은 런마다 지문 (산출물 7 + 시작 · 끝 기록)"},
+    {"검사": "cond550 판독 동결 (리뷰 EE P1-1)", "v1": "사다리 판독 고정 기록의 행 지문 (러너 블록 시작 · 파일 sha256) = 지금",
+     "v2": "행 지문 (run_id · 파일 sha256) = 지금 · 판독 도구 sha16 · 카드 기계_판독_값 해시 = 사다리 판독 때 (하나라도 다르면 거부)"},
 ]
 PRESSURE_EVERY_PS = 1.0           # li2s-2 카드 §2 MD_압력 (li2s-3 승계): 1 ps 간격 · t = 1 … prod ps (400 ps 런당 400 프레임)
 PRESSURE_WARN_GPA = 1.0           # li2s-2 카드 §1b · §3: 같은 온도 두 계 ⟨P⟩ 차 > 1 GPa 면 경고 하나 더 (보호 기준 아님)
@@ -197,6 +222,44 @@ def _ts(s):
     return _dt.datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
 
 
+def fp_rels(T):
+    """런 지문의 파일 — 산출물 7 (v2 큐 outputs_sha) + v2 시작 · 끝 기록. v2 큐 run_fingerprint 와 같은 정의 (보류 기록 · 판독 행)."""
+    return ["run_meta.json", "ensemble_results.json", "d0.00_cfg0/config.xyz"] + [
+        f"d0.00_cfg0/T{int(T)}/{x}" for x in ("traj.xyz", "msd.json", "aimd_results.json", "md.log")] + [V2_START, V2_END]
+
+
+def run_fingerprint(rd, T) -> dict:
+    """런 폴더 지문 {파일: sha256 · 없으면 None} — 보류 기록 · 사다리 판독 행에 싣는다 (리뷰 EE P1-1)."""
+    rd = pathlib.Path(rd)
+    return {r: (_sha(rd / r) if (rd / r).is_file() else None) for r in fp_rels(T)}
+
+
+def rules_sha256(card_obj) -> str:
+    """카드 기계_판독_값 해시 (정렬 키 JSON) — 사다리 판독 · cond550 판독이 같은 규칙 값인지 (리뷰 EE P1-1)."""
+    return hashlib.sha256(json.dumps(card_obj.get("기계_판독_값"), sort_keys=True, ensure_ascii=False,
+                                     separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def ledger_total(base):
+    """장부 (cost_ledger.tsv) 전체 합 — 옮긴 런 · 정한 비용 포함 (캠페인 비용은 이것으로만 적는다 · 리뷰 EE P2-5). 못 읽으면 None."""
+    try:
+        lines = (pathlib.Path(base) / "cost_ledger.tsv").read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return None
+    tot = 0.0
+    for ln in lines[1:]:
+        if not ln.strip():
+            continue
+        try:
+            h = float(ln.split("\t")[6])
+        except (IndexError, ValueError):
+            return None
+        if not (math.isfinite(h) and h >= 0):
+            return None
+        tot += h
+    return round(tot, 6)
+
+
 def card_values(card_path=CARD) -> dict:
     """카드 기계 값 → 판독에 쓰는 값. 도구는 값을 따로 갖지 않는다 — 모자라면 거부 (종료 2)."""
     import quench_ss_event as Q
@@ -229,6 +292,7 @@ def card_values(card_path=CARD) -> dict:
             "decision": mv["decision"], "md_driver_sha16": mv["md_driver_sha16"], "md_runner_sha16": mv["md_runner_sha16"],
             "inputs_sha256": dict(mv["inputs_sha256"]), "inclusion_min_pair": float(mv["inclusion"]["min_pair_excl_PS_A_gt"]),
             "defects": defects, "read_permit": c.get(READ_PERMIT_KEY), "card_sha256": _sha(p), "card_path": str(p),
+            "rules_sha256": rules_sha256(c),
             # v2 런을 읽을 때만 쓴다 (없으면 None — v1 판독은 이 값을 안 본다)
             "cond": ({"T_K": int(s2["conditional"]["T_K"]), "prod_ps": float(s2["conditional"]["prod_ps"])}
                      if isinstance(s2.get("conditional"), dict) and {"T_K", "prod_ps"} <= set(s2["conditional"]) else None),
@@ -280,9 +344,11 @@ def _mic_disp(a, b, cell):
 
 # ───────────────────────── ① 실행 기록 (큐 로그 · 러너 로그) ─────────────────────────
 def queue_record(base, cv) -> dict:
-    """<BASE>/stage2_kgy.log (v1 큐 tee) — PHASE ladder 시작 줄 하나 · 그 뒤 문지기 줄 하나 · 판 줄 하나 · 큐 끝 줄."""
+    """<BASE>/stage2_kgy.log (v1 큐 tee) — 사다리 블록 (첫 PHASE ladder 시작 줄 ~ 첫 '■ 큐 끝 · PHASE ladder') 안에서만 읽는다:
+    시작 줄 하나 · 문지기 줄 하나 · 판 줄 하나 · 큐 끝 줄. 블록 밖의 v1 호출 (뒤에 다시 띄움 · PHASE cond550 등) 은 런을 무효로 만들지
+    않고 따로 보류 사유로 적는다 (other_invocations · 리뷰 EE P2-6)."""
     p = pathlib.Path(base) / "stage2_kgy.log"
-    rec = {"log": str(p), "problems": [], "complete": False, "base_original": None}
+    rec = {"log": str(p), "problems": [], "complete": False, "base_original": None, "other_invocations": []}
     try:
         lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
     except OSError:
@@ -290,11 +356,20 @@ def queue_record(base, cv) -> dict:
         rec["status"] = "invalid"
         return rec
     starts = [i for i, ln in enumerate(lines) if "▶ li2s-3 2 단계 큐 시작 · PHASE ladder · " in ln]
-    if len(starts) != 1:
-        rec["problems"].append(f"PHASE ladder 큐 시작 줄이 {len(starts)} 개 (하나여야 — 둘 이상이면 다시 띄운 것 · v1 운영 규칙 위반)")
+    if not starts:
+        rec["problems"].append("PHASE ladder 큐 시작 줄이 0 개 (하나여야)")
         rec["status"] = "invalid"
         return rec
-    tail = lines[starts[0]:]
+    s0 = starts[0]
+    e0 = next((i for i in range(s0, len(lines)) if "■ 큐 끝 · PHASE ladder" in lines[i]), None)
+    stop_at = len(lines) if e0 is None else e0 + 1
+    inner = [i for i in starts if i < stop_at]
+    if len(inner) != 1:
+        rec["problems"].append(f"PHASE ladder 큐 시작 줄이 사다리 블록 안에 {len(inner)} 개 (하나여야 — 끝나기 전에 다시 띄운 것 · v1 운영 규칙 위반)")
+        rec["status"] = "invalid"
+        return rec
+    rec["other_invocations"] = [ln for i, ln in enumerate(lines) if (i < s0 or i >= stop_at) and "▶ li2s-3 2 단계 큐 시작 · PHASE " in ln][:10]
+    tail = lines[s0:stop_at]
     m = re.search(r"PHASE ladder · 온도 ([0-9 ]+?) · 시드 ([0-9 ]+?) · 계 ([A-Za-z ]+?) · prod ([0-9.]+) ps", tail[0])
     if not m:
         rec["problems"].append("큐 시작 줄의 꼴을 못 읽었다")
@@ -323,10 +398,7 @@ def queue_record(base, cv) -> dict:
         rec.update(versions=pv[0].group(1).strip(), repo_head=pv[0].group(2), base_original=pv[0].group(3).strip())
         if pv[0].group(4) != "ladder":
             rec["problems"].append(f"큐 '판 —' 줄의 PHASE {pv[0].group(4)} ≠ ladder")
-    ends = [ln for ln in tail if "■ 큐 끝 · PHASE ladder" in ln]
-    if len(ends) > 1:
-        rec["problems"].append(f"큐 끝 줄이 {len(ends)} 개")
-    rec["complete"] = len(ends) == 1
+    rec["complete"] = e0 is not None
     rec["status"] = "invalid" if rec["problems"] else ("valid" if rec["complete"] else "incomplete")
     return rec
 
@@ -766,6 +838,11 @@ def _v2_link_problems(link, want_kind, base, rb, cv, sys_, seed, T):
             probs.append("결속 판독 기록이 사다리 판독 (li2s3_stage2_readout/v2 · 판독) 이 아니다")
         if d.get("cond550_eligible") is not True or not all((d.get("measurable") or {}).get(f"{s}_T{lo}") is True for s in cv["systems"]):
             probs.append(f"결속 판독 기록이 두 계 모두 {lo} K 측정 가능을 보이지 않는다")
+        fixed = pathlib.Path(base) / OUT_DIRNAME / READOUT_NAME
+        if link.get("rel_to_base") != f"{OUT_DIRNAME}/{READOUT_NAME}":
+            probs.append(f"결속 판독 기록이 사다리 판독 고정 기록 ({OUT_DIRNAME}/{READOUT_NAME}) 이 아니다 (리뷰 EE P2-1)")
+        elif not fixed.is_file() or _sha(fixed) != link["sha256"]:
+            probs.append("결속 판독 기록 sha256 ≠ 지금 사다리 판독 고정 기록 (리뷰 EE P2-1)")
         return probs
     st = ((d.get("runs") or {}).get(f"{sys_}{seed}_T{T}") or {}).get("status")
     if d.get("kind") != "li2s3_stage2_readout_hold/v2" or d.get("status") != "판정 보류" or st not in ("invalid", "incomplete"):
@@ -837,6 +914,42 @@ def _payload_checks(base, sys_, seed, T, cv, rd, tdir, prod, v0_want, label, inc
         inv.extend(check_msd(tdir, T, int(round(prod * 1000.0 / cv["save_fs"])), cv["save_fs"]))
 
 
+def _git_blob(repo, rev, rel):
+    try:
+        r = subprocess.run(["git", "-C", str(repo), "show", f"{rev}:{rel}"], capture_output=True, timeout=60)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
+def _v2_origin_problems(st, cv) -> list:
+    """v2 런의 카드 · 원장 출처 (리뷰 EE P1-2) — 시작 기록이 저장소 카드 · 원장 · HEAD 와 같은 판이라고 적었고, 그 커밋 (V2_REPO 에서
+    git show <repo_head>:<경로>) 의 카드 · 원장 sha256 = 시작 기록 · 그 커밋 원장에서 카드 결정 · queue_v2 결정 active. 못 찾음 = invalid."""
+    probs = [f"v2 시작 기록 {k} 가 참이 아니다 ({what} · 리뷰 EE P1-2)" for k, what in (
+        ("card_is_repo_card", "카드가 저장소의 그 파일이 아니었다"), ("decisions_is_repo", "결정 원장이 저장소의 그 파일이 아니었다"),
+        ("repo_clean", "카드 · 원장 · 큐 · 드라이버가 HEAD 와 같지 않았다")) if st.get(k) is not True]
+    head = str(st.get("repo_head") or "")
+    if not re.fullmatch(r"[0-9a-f]{40}([0-9a-f]{24})?", head):
+        return probs + ["v2 시작 기록에 repo HEAD (커밋) 가 없다"]
+    cb, db_ = _git_blob(V2_REPO, head, CARD_REL), _git_blob(V2_REPO, head, DECISIONS_REL)
+    if cb is None or db_ is None:
+        return probs + [f"커밋 {head[:12]} 의 카드 · 원장을 저장소 {V2_REPO} 에서 못 찾는다 — '못 찾음' 은 '맞음' 이 아니다"]
+    if hashlib.sha256(cb).hexdigest() != st.get("card_sha256"):
+        probs.append(f"커밋 {head[:12]} 의 카드 sha256 ≠ 시작 기록 card_sha256 (그 커밋의 카드로 돈 런이 아니다)")
+    if hashlib.sha256(db_).hexdigest() != st.get("decisions_sha256"):
+        probs.append(f"커밋 {head[:12]} 의 결정 원장 sha256 ≠ 시작 기록 decisions_sha256")
+    try:
+        D = json.loads(db_.decode("utf-8"))
+        L = D["decisions"] if isinstance(D, dict) else D
+    except (ValueError, KeyError, UnicodeDecodeError):
+        return probs + [f"커밋 {head[:12]} 의 결정 원장을 못 읽었다"]
+    for did in (cv["decision"], cv.get("queue_v2_decision")):
+        stt = next((e.get("decision_state") for e in L if isinstance(e, dict) and e.get("id") == did), None) if did else None
+        if stt != "active":
+            probs.append(f"커밋 {head[:12]} 의 원장에서 결정 {did} 가 active 가 아니다 ({stt!r})")
+    return probs
+
+
 def verify_run_v2(base, sys_, seed, T, cv, worktree, keep_PS=False) -> dict:
     """v2 큐 런 하나 — 실행 기록 (exec_v2_start · exec_v2_end) 으로 ① · ⑥ · ⑦ 을 결속하고 ②–⑤ 는 v1 과 같은 검사 (VERIFY_MAP)."""
     base = pathlib.Path(base)
@@ -871,6 +984,11 @@ def verify_run_v2(base, sys_, seed, T, cv, worktree, keep_PS=False) -> dict:
     dz = st.get("decisions") if isinstance(st.get("decisions"), dict) else {}
     if dz.get(cv["decision"]) != "active" or not cv.get("queue_v2_decision") or dz.get(cv["queue_v2_decision"]) != "active":
         inv.append(f"v2 시작 기록의 결정 상태 {dz} — 카드 결정 · queue_v2 결정이 실행 때 active 가 아니었다")
+    if st.get("test") is True:                            # 시험 런 (V2_TEST=1 · 환경변수 카드 · 원장) — 판독에 안 쓴다 (리뷰 EE P1-2)
+        if not ALLOW_TEST_RUNS:
+            inv.append("시험 런 (V2_TEST=1 · 시작 기록 test: true) — 판독에 안 쓴다 (저장소 카드 · 원장으로 돈 런만)")
+    else:
+        inv.extend(_v2_origin_problems(st, cv))
     rv = v2_run_values(cv, T)
     got = {k: (st.get("card_values") or {}).get(k) for k in rv}
     if not all(_same(got[k], rv[k]) for k in rv):
@@ -930,7 +1048,8 @@ def verify_run_v2(base, sys_, seed, T, cv, worktree, keep_PS=False) -> dict:
         inv.append(f"{QUEUE_V2_REL} sha16 {got_q} ≠ 카드 queue_v2.sha16 {q16} (판독 시점 worktree)")
     out["worktree_code"] = wc
     out.update(phase_v2=phase, link=st.get("link"), superseded=st.get("superseded"), run_id=st.get("run_id"),
-               start_card_sha256=st.get("card_sha256"), start_utc=st.get("start_utc"), end_utc=(en or {}).get("end_utc"))
+               start_card_sha256=st.get("card_sha256"), start_utc=st.get("start_utc"), end_utc=(en or {}).get("end_utc"),
+               test_run=st.get("test"), repo_head=st.get("repo_head"))
     out["status"] = "incomplete" if inc else ("invalid" if inv else "valid")
     out["reasons"] = inc + inv
     return out
@@ -979,19 +1098,27 @@ def v2_queue_records(base) -> dict:
                 out[r["type"] + "s"].append(r)
             else:
                 out["problems"].append(f"{name} {i} 번째 줄이 멈춤 · 풂 기록이 아니다")
-    acked = {a.get("id") for a in out["acks"]}
+    real = [a for a in out["acks"] if str(a.get("by") or "").strip() and str(a.get("reason") or "").strip()]
+    acked = {a.get("id") for a in real}                 # by · reason 없는 풂 줄은 풂이 아니다 (리뷰 EE P2-2)
+    out["acks_without_by_reason"] = [a.get("id") for a in out["acks"] if a not in real]
     out["unacked"] = [s.get("id") for s in out["stops"] if s.get("id") not in acked]
     return out
 
 
 def ready_state(base, qrec, runs):
     """판정 보류인가 — v1 런만이면 v1 판 그대로 (큐 로그 valid · 큐 끝 줄 · 모두 valid) · v2 런이 있으면 VERIFY_MAP 마지막 줄
-    (모두 valid · v1 큐 로그에 문제 없음 · 큐 잠금 비어 있음 · 풀리지 않은 v2 멈춤 없음 — 멈추고 보고한 것을 사람이 풀기 전에는 읽지 않는다)."""
+    (모두 valid · v1 큐 로그에 문제 없음 · 큐 잠금 비어 있음 · 풀리지 않은 v2 멈춤 없음 — 멈추고 보고한 것을 사람이 풀기 전에는 읽지 않는다).
+    둘 다: 사다리 블록 밖의 v1 호출이 있으면 보류 (리뷰 EE P2-6 — 런을 무효로 만들지 않고 따로 적는다)."""
     v2 = [k for k, v in runs.items() if v.get("queue_version") == "v2"]
     bad = [f"{s}{sd}_T{T}" for (s, sd, T), v in runs.items() if v["status"] != "valid"]
+    other = qrec.get("other_invocations") or []
+    other_why = [f"v1 큐 로그에 사다리 블록 밖의 v1 호출 {len(other)} 개 — 따로 보류 사유 (사람이 본다 · 리뷰 EE P2-6): {other[0][:120]}"] if other else []
     if not v2:
-        return (qrec["status"] == "valid" and not bad), {"mixed": False, "not_valid": bad, "queue_status": qrec["status"]}
-    why = []
+        info = {"mixed": False, "not_valid": bad, "queue_status": qrec["status"]}
+        if other_why:
+            info["why"] = other_why
+        return (qrec["status"] == "valid" and not bad and not other), info
+    why = list(other_why)
     if len(v2) < len(runs) and qrec.get("problems"):
         why.append("v1 큐 로그에 문제가 있다")
     if bad:
@@ -1235,19 +1362,50 @@ def _cond550_gate(od):
     if not isinstance(d, dict) or d.get("kind") != "li2s3_stage2_readout/v2" or d.get("status") != "판독" \
             or d.get("phase", "ladder") != "ladder" or d.get("cond550_eligible") is not True:
         raise Refused(f"⛔ cond550 판독은 사다리 판독 고정 기록 {p} 이 판독 · cond550 자격 True 일 때만 — 없거나 자격이 없다")
-    return {"path": str(p), "sha256": _sha(p), "W": d.get("W"), "utc": (d.get("provenance") or {}).get("utc")}
+    return {"path": str(p), "sha256": _sha(p), "W": d.get("W"), "utc": (d.get("provenance") or {}).get("utc"), "_record": d}
+
+
+def _cond550_freeze(lad, base, cv, prov):
+    """cond550 판독의 동결 (리뷰 EE P1-1) — 사다리 판독 고정 기록과 같은 사다리 런 (런별 지문) · 같은 판독 도구 sha16 · 같은 카드
+    기계_판독_값 일 때만. 하나라도 다르면 거부 (새 개정 · 사용자 결정) — 사다리 판독 뒤에 바뀐 런 · 규칙 · 도구는 cond550 갈래에 안 들어간다."""
+    probs = []
+    if (lad.get("provenance") or {}).get("tool_sha16") != prov.get("tool_sha16"):
+        probs.append("판독 도구 sha16 ≠ 사다리 판독 때")
+    if lad.get("rules_sha256") != cv["rules_sha256"]:
+        probs.append("카드 기계_판독_값 해시 ≠ 사다리 판독 때 (기록에 없으면 고친 도구로 낸 사다리 판독이 아니다)")
+    want = {f"{r.get('system')}{r.get('seed')}_T{r.get('T_K')}": ((r.get("fingerprint") or {}).get("files"), r.get("T_K"))
+            for r in (lad.get("rows") or [])}
+    keys = {f"{s}{sd}_T{T}" for s in cv["systems"] for sd in cv["seeds"] for T in cv["temperatures"]}
+    if set(want) != keys:
+        probs.append(f"사다리 판독 행의 런 {sorted(want)} ≠ 카드 사다리 런 {sorted(keys)}")
+    changed = []
+    for k in sorted(keys & set(want)):
+        fp, T = want[k]
+        m = re.fullmatch(r"([A-Za-z]+)(\d+)_T(\d+)", k)
+        if not isinstance(fp, dict) or run_fingerprint(pathlib.Path(base) / m.group(1) / f"seed{m.group(2)}" / f"T{m.group(3)}", T) != fp:
+            changed.append(k)
+    if changed:
+        probs.append(f"사다리 런 지문이 사다리 판독 때와 다르다 {changed[:8]} (다시 굴렸거나 바뀐 런)")
+    if probs:
+        raise Refused("⛔ cond550 판독을 하지 않는다 — " + " · ".join(probs) + " (카드: cond550 판독은 사다리 판독과 같은 런 · 도구 · 규칙으로만 · "
+                      "새 개정 · 사용자 결정)")
 
 
 def _common(base, cv, prov, st, qrec, worktree, phase="ladder", ready=None):
-    return {"card_sha256": cv["card_sha256"], "card": cv["card_path"], "decisions": st, "provenance": prov,
-            "base_now": str(pathlib.Path(base).resolve()), "base_original": qrec.get("base_original"),
-            "queue": {k: qrec.get(k) for k in ("status", "complete", "start", "gatekeep", "versions", "repo_head", "problems")},
+    return {"card_sha256": cv["card_sha256"], "card": cv["card_path"], "rules_sha256": cv["rules_sha256"], "decisions": st,
+            "provenance": prov, "base_now": str(pathlib.Path(base).resolve()), "base_original": qrec.get("base_original"),
+            "queue": {k: qrec.get(k) for k in ("status", "complete", "start", "gatekeep", "versions", "repo_head", "problems",
+                                               "other_invocations")},
             "worktree_code": worktree_code(worktree), "phase": phase, "ready": ready, "verify_map": VERIFY_MAP}
 
 
 def _hold(kind, od, common, qrec, runs):
+    """판정 보류 기록 — 런마다 그때 본 지문 (산출물 7 + v2 시작 · 끝 기록 · 없으면 null) 을 싣는다: PHASE=rerun 은 지금 지문 = 이 지문일 때만
+    그 런을 다시 돈다 (리뷰 EE P1-1)."""
     hold = {"kind": kind, "status": "판정 보류", **common, "queue_status": qrec.get("status"), "queue_problems": qrec.get("problems"),
-            "runs": {f"{s}{sd}_T{T}": {"status": v["status"], "reasons": v["reasons"]} for (s, sd, T), v in runs.items()},
+            "hold_reasons": ((common.get("ready") or {}).get("why") or []),
+            "runs": {f"{s}{sd}_T{T}": {"status": v["status"], "reasons": v["reasons"], "fingerprint": run_fingerprint(v["run_dir"], T)}
+                     for (s, sd, T), v in runs.items()},
             "n_runs_not_valid": sum(1 for v in runs.values() if v["status"] != "valid"),
             "⚠": "W · 갈래 · cond550 · 압력을 내지 않는다 — 검증 실패 · 미완은 수송 게이트 미통과가 아니다 (판정 보류 · 처리는 카드 · 사용자 결정)"}
     stamp = common["provenance"]["utc"].replace(":", "").replace("-", "")
@@ -1268,7 +1426,10 @@ def readout(base, worktree, card=CARD, decisions=DECISIONS, n_boot=N_BOOT, read_
     base = pathlib.Path(base)
     phase = _phase_of(phase)
     cv, prov, st, od, outp = _gate(base, card, decisions, require_permit, prov, OUT_NAMES[phase][0], permit_repo)
+    phase_temps(cv, phase)                                   # cond550 인데 카드에 conditional 이 없으면 먼저 거부
     ladder_ref = _cond550_gate(od) if phase == "cond550" else None
+    if ladder_ref:
+        _cond550_freeze(ladder_ref.pop("_record"), base, cv, prov)
     qrec, runs = verify_all(base, cv, worktree, keep_PS=True, phase=phase)
     q2st = q2_decision_gate(cv, decisions, runs)
     ok, rinfo = ready_state(base, qrec, runs)
@@ -1278,6 +1439,8 @@ def readout(base, worktree, card=CARD, decisions=DECISIONS, n_boot=N_BOOT, read_
     if q2st:
         common["decisions_queue_v2"] = q2st
     if not ok:
+        if not queue_lock_free(base):
+            raise Refused("⛔ 큐 잠금이 쥐어져 있다 (큐 · 드라이버가 돈다) — 판정 보류 기록을 쓰지 않는다 · 상태 보기는 verify 로만 (리뷰 EE P1-1)")
         return _hold("li2s3_stage2_readout_hold/v2", od, common, qrec, runs)
     rr = read_run or G.read_run
     mq = Q._load_mq(str(HERE))
@@ -1287,7 +1450,9 @@ def readout(base, worktree, card=CARD, decisions=DECISIONS, n_boot=N_BOOT, read_
         rec = rr(msd, n_boot=n_boot, framework=True, mq=mq)
         rec.pop("_D_slope", None)
         row = {"system": s, "seed": sd, "T_K": T,
-               "verify": {k: v.get(k) for k in ("status", "reasons", "runner_rc", "cost_h", "cost_source", "trajectory", "queue_version")}}
+               "verify": {k: v.get(k) for k in ("status", "reasons", "runner_rc", "cost_h", "cost_source", "trajectory", "queue_version")},
+               "fingerprint": {"queue_version": v.get("queue_version"), "run_id": v.get("run_id"),
+                               "runner_start": (v.get("runner") or {}).get("start_ts"), "files": run_fingerprint(v["run_dir"], T)}}
         row.update(_row(G, rec))
         row["measurable"] = bool(row["in_R_set"])
         row["exclusion"] = _exclusion(row)
@@ -1319,8 +1484,10 @@ def readout(base, worktree, card=CARD, decisions=DECISIONS, n_boot=N_BOOT, read_
            "measurable": {f"{s}_T{T}": meas[(s, T)] for (s, T) in meas}, "W": W, "branch": branch, "branch_provisional": provisional,
            "cond550_eligible": cond550, "seed_table": table, "layers": layers(cv, rows, temps),
            "cost_h_total": (sum(cost) if all(c is not None for c in cost) else None),
+           "ledger_total_h": ledger_total(base),
            "cost_sources": sorted({r["verify"]["cost_source"] for r in rows}),
-           "cost_note": "None = 비용 미확정 (런 하나라도 장부 · 러너 로그 시각 · v2 끝 기록 gpu_h 가 없다 — 0 으로 세지 않는다)",
+           "cost_note": "cost_h_total = 읽은 런만 (None = 비용 미확정 — 0 으로 세지 않는다) · 캠페인 비용은 ledger_total_h (장부 전체 · 옮긴 런 · "
+                        "정한 비용 포함) 로만 적는다 (리뷰 EE P2-5)",
            "⚠": "D · σ 값 없음 · 기록 ⓐ–ⓒ 는 판정에 안 씀 · 골격은 생산 첫 프레임 대비 (카드 개정 DZ) · 사다리 판독에서 cond550 자격이면 "
                 "갈래는 잠정 (cond550 판독이 확정)"}
     _write_new(outp, out)
@@ -1374,7 +1541,10 @@ def pressure(base, worktree, card=CARD, decisions=DECISIONS, calc_factory=None, 
     base = pathlib.Path(base)
     phase = _phase_of(phase)
     cv, prov, st, od, outp = _gate(base, card, decisions, require_permit, prov, OUT_NAMES[phase][1], permit_repo)
+    phase_temps(cv, phase)
     ladder_ref = _cond550_gate(od) if phase == "cond550" else None
+    if ladder_ref:
+        _cond550_freeze(ladder_ref.pop("_record"), base, cv, prov)
     qrec, runs = verify_all(base, cv, worktree, phase=phase)
     q2st = q2_decision_gate(cv, decisions, runs)
     ok, rinfo = ready_state(base, qrec, runs)
@@ -1384,6 +1554,8 @@ def pressure(base, worktree, card=CARD, decisions=DECISIONS, calc_factory=None, 
     if q2st:
         common["decisions_queue_v2"] = q2st
     if not ok:
+        if not queue_lock_free(base):
+            raise Refused("⛔ 큐 잠금이 쥐어져 있다 (큐 · 드라이버가 돈다) — 판정 보류 기록을 쓰지 않는다 · 상태 보기는 verify 로만 (리뷰 EE P1-1)")
         return _hold("li2s3_stage2_pressure_hold/v2", od, common, qrec, runs)
     mq = Q._load_mq(str(HERE))
     if calc_factory is None:
@@ -1631,17 +1803,43 @@ def _st_launch(td, base, rec, sha, temps, prod, systems, seeds, decisions):
     return subprocess.Popen(["bash", str(REPO / WT_FILES["queue_v1"])], env=env, stdout=log, stderr=subprocess.STDOUT), log
 
 
-def _st_q2(td, base, card, decisions, phase, **extra):
-    """실제 v2 큐 (run_stage2_kgy_v2.sh) → 실제 MD 드라이버 (fairchem 스텁) — 최소 환경으로 끝까지 돌린다 → (종료 코드, 출력)."""
+def _st_q2(td, base, card, decisions, phase, test=True, script=None, **extra):
+    """실제 v2 큐 (run_stage2_kgy_v2.sh) → 실제 MD 드라이버 (fairchem 스텁) — 최소 환경으로 끝까지 돌린다 → (종료 코드, 출력).
+    test 면 V2_TEST=1 (시험 카드 · 원장 — 시작 기록 test: true) · 아니면 script (임시 git 저장소의 큐 사본) 의 저장소 카드 · 원장으로."""
     env = {"HOME": os.environ.get("HOME", str(td)), "PATH": f"{td / 'bin'}:{os.environ.get('PATH', '/usr/bin:/bin')}",
            "PYTHONPATH": str(td / "stub"), "PYTHONIOENCODING": "utf-8", "LANG": os.environ.get("LANG", "C.UTF-8"),
            "PY": sys.executable, "BASE": str(base), "SRC": str(td / "src"), "CARD": str(card), "DECISIONS": str(decisions),
-           "PHASE": phase, "POLL": "1", "GPU_WAIT": "5", "META_WAIT": "180", **extra}
-    r = subprocess.run(["bash", str(REPO / QUEUE_V2_REL)], env=env, capture_output=True, text=True, timeout=1800)
+           "PHASE": phase, "POLL": "1", "GPU_WAIT": "5", "META_WAIT": "180", **({"V2_TEST": "1"} if test else {}), **extra}
+    r = subprocess.run(["bash", str(script or (REPO / QUEUE_V2_REL))], env=env, capture_output=True, text=True, timeout=1800)
     return r.returncode, r.stdout + r.stderr
 
 
+def _st_git_root(td, files, name="groot"):
+    """시험용 git 저장소 — {저장소 경로: 원본 파일 또는 bytes} 를 넣고 커밋 → (루트, git 명령 머리). 저장소 파일은 안 바꾼다."""
+    root = pathlib.Path(td) / name
+    for rel, src in files.items():
+        (root / rel).parent.mkdir(parents=True, exist_ok=True)
+        (root / rel).write_bytes(src if isinstance(src, bytes) else pathlib.Path(src).read_bytes())
+    G = ["git", "-C", str(root), "-c", "user.name=selftest", "-c", "user.email=selftest@example.invalid", "-c", "commit.gpgsign=false",
+         "-c", "core.hooksPath=/dev/null"]
+    subprocess.run(["git", "-C", str(root), "init", "-q"], check=True, capture_output=True)
+    subprocess.run(G + ["add", "-A"], check=True, capture_output=True)
+    subprocess.run(G + ["commit", "-q", "-m", "selftest"], check=True, capture_output=True)
+    return root, G
+
+
 def _selftest():
+    """판독 selftest — 시험 런 (V2_TEST=1) 은 이 동안만 받는다 (ALLOW_TEST_RUNS) · 커밋 결속 저장소 (V2_REPO) 도 끝나면 되돌린다."""
+    mod = sys.modules[__name__]
+    saved = (mod.ALLOW_TEST_RUNS, mod.V2_REPO)
+    mod.ALLOW_TEST_RUNS = True
+    try:
+        return _selftest_body()
+    finally:
+        mod.ALLOW_TEST_RUNS, mod.V2_REPO = saved
+
+
+def _selftest_body():
     import tempfile
     import time
     import glass_v2_readout as G
@@ -1813,8 +2011,23 @@ def _selftest():
             lambda t: t.replace(f"러너 sha16 {cv8['md_runner_sha16']}", "러너 sha16 6be496dc715551d7")), "다른 러너")
         neg("큐 시작 줄의 온도 ≠ 카드 (TEMPS 바꿔 띄움)", lambda b: edit_text(b / "stage2_kgy.log",
             lambda t: t.replace("· 온도 600 650 ·", "· 온도 600 900 ·")), "temperatures")
-        neg("큐 시작 줄이 둘 (다시 띄움)", lambda b: edit_text(b / "stage2_kgy.log",
-            lambda t: t + next(ln for ln in t.splitlines() if "큐 시작 · PHASE ladder" in ln) + "\n"), "시작 줄이 2 개")
+        def dup_start_inside(t):
+            first = next(ln for ln in t.splitlines() if "큐 시작 · PHASE ladder" in ln)
+            return t.replace(first, first + "\n" + first, 1)
+        neg("사다리 블록 안에 큐 시작 줄이 둘 (끝나기 전에 다시 띄움)", lambda b: edit_text(b / "stage2_kgy.log", dup_start_inside),
+            "블록 안에 2 개")
+        LATE = "[2026-11-14 01:00:00] ▶ li2s-3 2 단계 큐 시작 · PHASE cond550 · 온도 550 · 시드 11 12 · 계 A B · prod 800 ps\n"
+        bLt = clone(b8, "B", 11, 600)
+        edit_text(bLt / "stage2_kgy.log", lambda t: t + LATE)
+        vLt, qLt = verify_run(bLt, "B", 11, 600, cv8, WT), queue_record(bLt, cv8)
+        chk(vLt["status"] == "valid" and qLt["status"] == "valid" and len(qLt["other_invocations"]) == 1,
+            "[양성] (리뷰 EE P2-6) 사다리 블록 뒤의 v1 호출 (PHASE cond550) 은 사다리 런을 무효로 만들지 않는다 — 따로 적는다 (other_invocations)")
+        LATE_L = "[2026-11-14 02:00:00] ▶ li2s-3 2 단계 큐 시작 · PHASE ladder · 온도 600 650 · 시드 11 12 · 계 A B · prod 3 ps\n"
+        bLt2 = clone(b8, "B", 11, 600)
+        edit_text(bLt2 / "stage2_kgy.log", lambda t: t + LATE_L)
+        vLt2, qLt2 = verify_run(bLt2, "B", 11, 600, cv8, WT), queue_record(bLt2, cv8)
+        chk(vLt2["status"] == "valid" and qLt2["status"] == "valid" and len(qLt2["other_invocations"]) == 1,
+            "[양성] (리뷰 EE P2-6) 사다리 블록이 끝난 뒤 다시 띄운 사다리 큐도 블록 밖 호출이다 (런 무효 아님 · 따로 보류 사유)")
         neg("run_meta 실제 모드 default (turbo 못 켬)", lambda b: edit_json(b / "B" / "seed11" / "T600" / "run_meta.json",
             lambda d: d.__setitem__("uma_inference_mode", "default")), "uma_inference_mode")
         neg("ensemble_results task oc20", lambda b: edit_json(b / "B" / "seed11" / "T600" / "ensemble_results.json",
@@ -2073,6 +2286,28 @@ def _selftest():
         hold_case("B11 650 K msd.json 없음 (끝나지 않은 런)", lambda b: (
             (tdir_of(b, "B", 11, 650) / "msd.json").unlink(),
             edit_text(b / "B" / "queue_kgy.log", lambda t: "\n".join(ln for ln in t.splitlines() if "✅ T650 seed11 끝" not in ln)))[0])
+        hold_case("사다리 블록 뒤의 v1 호출 (리뷰 EE P2-6 — 런은 valid · 따로 보류 사유)", lambda b: edit_text(b / "stage2_kgy.log", lambda t: t + LATE))
+        bHf = clone(b8)
+        (tdir_of(bHf, "A", 12, 650) / "msd.json").unlink()
+        edit_text(bHf / "A" / "queue_kgy.log", lambda t: "\n".join(ln for ln in t.splitlines() if "✅ T650 seed12 끝" not in ln))
+        oHf = rd_ok(bHf, allpass)
+        hfA = (oHf.get("runs") or {}).get("A12_T650", {})
+        chk(oHf["status"] == "판정 보류" and hfA.get("fingerprint") == run_fingerprint(bHf / "A" / "seed12" / "T650", 650)
+            and hfA["fingerprint"]["d0.00_cfg0/T650/msd.json"] is None and len(oHf["runs"]) == 8
+            and all(set(v["fingerprint"]) == set(fp_rels(int(k.split("_T")[1]))) for k, v in oHf["runs"].items()),
+            "[양성] (리뷰 EE P1-1) 보류 기록은 런마다 그때 본 지문 (산출물 7 + v2 시작 · 끝 기록 · 없으면 null) 을 싣는다 — 재실행은 지금 지문 = 이 지문일 때만")
+        bHl = clone(bHf)
+        import fcntl
+        fdh = os.open(str(bHl / ".stage2.lock"), os.O_RDWR | os.O_CREAT, 0o644)
+        fcntl.flock(fdh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        try:
+            n_hold0 = len(list((bHl / OUT_DIRNAME).glob("hold_*.json")))
+            refused_lock = refuses("잠금", rd_ok, bHl, allpass)
+        finally:
+            fcntl.flock(fdh, fcntl.LOCK_UN)
+            os.close(fdh)
+        chk(refused_lock and len(list((bHl / OUT_DIRNAME).glob("hold_*.json"))) == n_hold0,
+            "⛔음성 (리뷰 EE P1-1 · p8): 큐 잠금이 쥐어져 있으면 (v1 이 도는 중) 판독은 보류 기록을 쓰지 않고 거부한다 — 상태 보기는 verify")
 
         # ── 실제 read_run 한 번 (100 ps 실제 체인 런 · 판정 함수 무변경 경로) ──
         oR = readout(bR, WT, card=cardRp, decisions=dec, prov=prov_ok, permit_repo=prepo, n_boot=40)
@@ -2153,6 +2388,17 @@ def _selftest():
         ph = pressure(bH, WT, card=card8p, decisions=dec, calc_factory=fac, prov=prov_ok, permit_repo=prepo)
         chk(ph["status"] == "판정 보류" and made == [] and not (bH / OUT_DIRNAME / PRESSURE_RUNS).exists(),
             "⛔음성: 끝나지 않은 런이 하나라도 있으면 압력을 내지 않는다 (판정 보류 · 계산기도 안 만든다)")
+        bHp = clone(bH)
+        fdp = os.open(str(bHp / ".stage2.lock"), os.O_RDWR | os.O_CREAT, 0o644)
+        fcntl.flock(fdp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        try:
+            nHp0 = len(list((bHp / OUT_DIRNAME).glob("hold_*.json")))
+            refusedP = refuses("잠금", pressure, bHp, WT, card=card8p, decisions=dec, calc_factory=fac, prov=prov_ok, permit_repo=prepo)
+        finally:
+            fcntl.flock(fdp, fcntl.LOCK_UN)
+            os.close(fdp)
+        chk(refusedP and len(list((bHp / OUT_DIRNAME).glob("hold_*.json"))) == nHp0 and made == [],
+            "⛔음성 (리뷰 EE P1-1): 큐 잠금이 쥐어져 있으면 압력도 보류 기록을 쓰지 않고 거부한다")
         chk(abs(run_pressure(tdir_of(b8, "A", 12, 600), 600, 120, 3.0, 100.0, StrictCalc(p0=float("nan")), mq.EV_A3_TO_GPA)["n"] - 3) == 0
             and run_pressure(tdir_of(b8, "A", 12, 600), 600, 120, 3.0, 100.0, StrictCalc(p0=float("nan")), mq.EV_A3_TO_GPA)["status"].startswith("압력 못 냄"),
             "⛔음성: 비유한 응력 → '압력 못 냄' (0 이 아니다)")
@@ -2170,7 +2416,7 @@ def _selftest():
         decv = td / "decv.json"
         decv.write_text(json.dumps({"decisions": [{"id": i, "decision_state": "active"} for i in NEED_ACTIVE + (QD,)]}))
         rd_v = lambda b, rr, **k: readout(b, WT, card=k.pop("card", card8v), decisions=k.pop("decisions", decv), read_run=rr,
-                                          prov=prov_ok, permit_repo=prepo, **k)
+                                          prov=k.pop("prov", prov_ok), permit_repo=prepo, **k)
         o1v = readout(clone(b8), WT, card=card8v, decisions=dec, read_run=allpass, prov=prov_ok, permit_repo=prepo)
         chk(o1v["status"] == "판독" and o1v["ready"]["mixed"] is False and "decisions_queue_v2" not in o1v,
             "[양성] v1 런만이면 v2 기계 값 · queue_v2 결정을 안 본다 (v1 판 그대로 · 결정 파일에 queue_v2 결정이 없어도)")
@@ -2179,8 +2425,9 @@ def _selftest():
         ohW = rd_v(bW, allpass)
         hp = pathlib.Path(ohW.get("hold_path") or (td / "없음"))
         chk(ohW["status"] == "판정 보류" and ohW["runs"]["A11_T600"]["status"] == "invalid" and ohW["phase"] == "ladder"
-            and ohW["ready"]["mixed"] is False and hp.is_file(),
-            "[v2 준비] v1 런 하나 (A11 600 K) 가 rc 7 → 사다리 판독 보류 기록 (v1 판 그대로 · phase ladder)")
+            and ohW["ready"]["mixed"] is False and hp.is_file()
+            and ohW["runs"]["A11_T600"]["fingerprint"] == run_fingerprint(bW / "A" / "seed11" / "T600", 600),
+            "[v2 준비] v1 런 하나 (A11 600 K) 가 rc 7 → 사다리 판독 보류 기록 (v1 판 그대로 · phase ladder · 런 지문)")
         rcq, lgq = _st_q2(td, bW, card8v, decv, "rerun", RERUN="A:11:600", HOLD_RECORD=str(hp),
                           HOLD_SHA256=_sha(hp) if hp.is_file() else "")
         sup = sorted((bW / "A" / "seed11").glob("T600.superseded_*"))
@@ -2192,13 +2439,27 @@ def _selftest():
             f"gpu_h · 장부 행 일치) — 종료 {rcq} · {vW['status']} {'; '.join(vW['reasons'])[:160]}")
         if rcq != 0:
             print(lgq[-2500:])
+        mod_ = sys.modules[__name__]
+        mod_.ALLOW_TEST_RUNS = False
+        vWt = verify_run(bW, "A", 11, 600, cv8v, WT)
+        mod_.ALLOW_TEST_RUNS = True
+        chk(vWt["status"] == "invalid" and any("시험 런" in q for q in vWt["reasons"]) and vW.get("test_run") is True,
+            "⛔음성 (리뷰 EE P1-2): 시험 런 (V2_TEST=1 · 시험 카드 · 원장) 은 판독이 받지 않는다 (판독 selftest 밖에서는 invalid)")
         oW = rd_v(bW, allpass)
         rW = next((r for r in oW.get("rows", []) if (r["system"], r["seed"], r["T_K"]) == ("A", 11, 600)), {})
+        led_sum = round(sum(float(ln.split("\t")[6]) for ln in (bW / "cost_ledger.tsv").read_text().splitlines()[1:] if ln.strip()), 6)
         chk(oW["status"] == "판독" and oW["W"] == [600, 650] and oW["cond550_eligible"] and oW["branch_provisional"]
             and oW["ready"]["mixed"] is True and oW["ready"]["lock_free"] is True and oW["ready"]["v2_runs"] == ["A11_T600"]
             and oW["phase"] == "ladder" and oW["verify_map"] == VERIFY_MAP and rW.get("verify", {}).get("queue_version") == "v2"
             and oW["decisions_queue_v2"] == {QD: "active"},
             "[양성 v2] 섞인 사다리 판독 (v1 7 · v2 1) — 대응표 · 잠금 비어 있음 · queue_v2 결정 active · W [600, 650] · cond550 자격 (갈래 잠정)")
+        chk(oW.get("rules_sha256") == cv8v["rules_sha256"] and rW.get("fingerprint", {}).get("run_id") == vW.get("run_id")
+            and all(r["fingerprint"]["files"] == run_fingerprint(bW / r["system"] / f"seed{r['seed']}" / f"T{r['T_K']}", r["T_K"]) for r in oW["rows"])
+            and all(r["fingerprint"]["runner_start"] for r in oW["rows"] if r["fingerprint"]["queue_version"] == "v1")
+            and oW.get("ledger_total_h") == led_sum and oW["cost_h_total"] is not None,
+            f"[양성] (리뷰 EE P1-1 · P2-5) 사다리 판독 행에 런 지문 (v2 run_id · v1 러너 블록 시작 · 파일 sha256) · 출력에 카드 기계_판독_값 해시 · "
+            f"장부 합계 {oW.get('ledger_total_h')} h (= 장부 {led_sum})")
+        bWpre = clone(bW)                                   # cond550 전 사본 — 저장소 카드 · 원장으로 도는 생산 경로 시험용
         rcc, lgc = _st_q2(td, bW, card8v, decv, "cond550", READOUT_RECORD=str(oW.get("out_path", "")),
                           READOUT_SHA256=_sha(oW["out_path"]) if oW.get("out_path") else "")
         if rcc != 0:
@@ -2239,6 +2500,87 @@ def _selftest():
             and not (bW / OUT_DIRNAME / PRESSURE_RUNS).exists(),
             f"[양성 v2] cond550 압력: 550 K 런은 conditional.prod (6 ps → k = 9 … 59) · 런별 기록 pressure_runs_cond550/ (사다리와 "
             f"안 섞임) · 고정 경로 {errC or ''}")
+
+        # ── cond550 판독의 동결 (리뷰 EE P1-1 · RM1) — 사다리 판독 고정 기록과 같은 런 지문 · 도구 sha16 · 기계_판독_값 일 때만 ──
+        def lad_edit(b, fn):
+            p_ = b / OUT_DIRNAME / READOUT_NAME
+            d_ = json.loads(p_.read_text(encoding="utf-8"))
+            fn(d_)
+            p_.write_text(json.dumps(d_, ensure_ascii=False), encoding="utf-8")
+        bF1 = clone(bW0)
+        aj = tdir_of(bF1, "B", 12, 650) / "aimd_results.json"
+        aj.write_text(aj.read_text() + "\n")                          # 값은 같고 바이트만 — 그 런은 여전히 valid · 지문은 바뀐다
+        chk(verify_run(bF1, "B", 12, 650, cv8v, WT)["status"] == "valid" and refuses("지문", rd_v, bF1, allpass, phase="cond550"),
+            "⛔음성 (리뷰 EE P1-1 · p1): 사다리 판독 뒤 사다리 런이 바뀌면 (그 런은 valid 라도) cond550 판독을 하지 않는다 (런 지문 ≠)")
+        bF2 = clone(bW0)
+        lad_edit(bF2, lambda d: d["provenance"].__setitem__("tool_sha16", {**d["provenance"]["tool_sha16"], TOOL_FILES[0]: "0" * 16}))
+        chk(refuses("판독 도구 sha16", rd_v, bF2, allpass, phase="cond550"),
+            "⛔음성 (리뷰 EE P1-1): 사다리 판독을 낸 도구 sha16 ≠ 지금 → cond550 판독을 하지 않는다")
+        cardRule = td / "card8v_rule.json"
+        cr_ = json.loads(card8v.read_text(encoding="utf-8"))
+        cr_["기계_판독_값"]["stage2"]["mean_T_tol_frac"] = 0.06
+        cardRule.write_text(json.dumps(cr_, ensure_ascii=False), encoding="utf-8")
+        chk(refuses("기계_판독_값", rd_v, clone(bW0), allpass, phase="cond550", card=cardRule),
+            "⛔음성 (리뷰 EE P1-1): 사다리 판독 뒤 카드 판독 규칙 값 (기계_판독_값) 이 바뀌면 cond550 판독을 하지 않는다")
+        bF4 = clone(bW0)
+        lad_edit(bF4, lambda d: d.__setitem__("cond550_eligible", False))
+        chk(refuses("자격", rd_v, bF4, allpass, phase="cond550"), "⛔음성 (리뷰 EE RM1): 사다리 판독이 cond550 자격 없음 → cond550 판독 거부")
+        bF5 = clone(bW0)
+        lad_edit(bF5, lambda d: [r.pop("fingerprint", None) for r in d["rows"]])
+        chk(refuses("지문", rd_v, bF5, allpass, phase="cond550"), "⛔음성: 런 지문이 없는 (옛 도구) 사다리 판독 → cond550 판독 거부")
+        bF6 = clone(bW0)
+        aj6 = tdir_of(bF6, "A", 12, 600) / "aimd_results.json"
+        aj6.write_text(aj6.read_text() + "\n")
+        made.clear()
+        chk(refuses("지문", pressure, bF6, WT, card=card8v, decisions=decv, calc_factory=fac, prov=prov_ok, permit_repo=prepo, phase="cond550")
+            and made == [], "⛔음성 (리뷰 EE P1-1): cond550 압력도 사다리 판독에 동결된다 — 사다리 런이 바뀌면 거부 (계산기도 안 만든다)")
+        # ── 저장소 카드 · 원장으로 돈 v2 런 (생산 경로 · 리뷰 EE P1-2) — 임시 git 저장소의 v2 큐 사본 · 그 커밋으로 결속 ──
+        groot, Gg = _st_git_root(td, {QUEUE_V2_REL: REPO / QUEUE_V2_REL, WT_FILES["md_driver"]: REPO / WT_FILES["md_driver"],
+                                      CARD_REL: card8v, DECISIONS_REL: decv})
+        bPr = clone(bWpre)
+        fixed_pr = bPr / OUT_DIRNAME / READOUT_NAME
+        fixed_pr.unlink()                                             # 사본의 사다리 판독은 그 BASE 의 것으로 다시 낸다 (결속 기록은 BASE 마다)
+        oLp = rd_v(bPr, allpass)
+        rcP, lgP = _st_q2(td, bPr, groot / CARD_REL, groot / DECISIONS_REL, "cond550", test=False, script=groot / QUEUE_V2_REL,
+                          READOUT_RECORD=str(fixed_pr), READOUT_SHA256=_sha(fixed_pr) if fixed_pr.is_file() else "")
+        if rcP != 0:
+            print(lgP[-2500:])
+        headG = subprocess.run(["git", "-C", str(groot), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+        mod_.V2_REPO = groot
+        vP = [verify_run(bPr, s_, sd, 550, cv8v, WT) for sd in (11, 12) for s_ in ("A", "B")]
+        chk(oLp["status"] == "판독" and rcP == 0 and all(v["status"] == "valid" and v.get("test_run") is False and v.get("repo_head") == headG
+                                                     for v in vP),
+            f"[양성] (리뷰 EE P1-2) 저장소 카드 · 원장 (그 커밋) 으로 돈 v2 런 — 시작 기록 test false · repo HEAD · 그 커밋의 카드 · 원장 sha256 · "
+            f"결정 active → valid (종료 {rcP} · {[v['status'] for v in vP]} {'; '.join(r for v in vP for r in v['reasons'])[:200]})")
+        oPr = rd_v(bPr, allpass, phase="cond550")
+        chk(oPr["status"] == "판독" and oPr["W"] == [550, 600, 650], "[양성] 생산 경로 v2 런으로 cond550 판독 (사다리 판독 동결 통과)")
+
+        def negP(label, edit, kw, repo=None):
+            b_ = clone(bPr)
+            p_ = b_ / "A" / "seed11" / "T550" / V2_START
+            d_ = json.loads(p_.read_text(encoding="utf-8"))
+            edit(d_)
+            p_.write_text(json.dumps(d_, ensure_ascii=False), encoding="utf-8")
+            mod_.V2_REPO = repo or groot
+            v_ = verify_run(b_, "A", 11, 550, cv8v, WT)
+            mod_.V2_REPO = groot
+            chk(v_["status"] == "invalid" and any(kw in q for q in v_["reasons"]),
+                f"⛔음성 (리뷰 EE P1-2): {label} → invalid ({'; '.join(v_['reasons'])[:120]})")
+            shutil.rmtree(b_, ignore_errors=True)
+        negP("그 커밋을 판독 저장소에서 못 찾는다", lambda d: None, "못 찾는다", repo=td / "no_such_repo")
+        negP("시작 기록 repo HEAD 없음", lambda d: d.__setitem__("repo_head", None), "repo HEAD")
+        negP("시작 기록 card_sha256 ≠ 그 커밋의 카드", lambda d: d.__setitem__("card_sha256", "0" * 64), "카드 sha256")
+        negP("시작 기록 card_is_repo_card false (환경변수 카드)", lambda d: d.__setitem__("card_is_repo_card", False), "card_is_repo_card")
+        negP("시작 기록 repo_clean false (HEAD 와 다른 파일)", lambda d: d.__setitem__("repo_clean", False), "repo_clean")
+        dprop = json.loads(decv.read_text())
+        dprop["decisions"] = [dict(e, decision_state="proposed") if e["id"] == QD else e for e in dprop["decisions"]]
+        (groot / DECISIONS_REL).write_text(json.dumps(dprop))
+        subprocess.run(Gg + ["commit", "-q", "-am", "queue_v2 결정 proposed"], check=True, capture_output=True)
+        headG2 = subprocess.run(["git", "-C", str(groot), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+        negP("그 커밋 원장에서 queue_v2 결정이 proposed", lambda d: d.update(repo_head=headG2, decisions_sha256=_sha(groot / DECISIONS_REL)),
+             "active 가 아니다")
+        mod_.ALLOW_TEST_RUNS = True
+        mod_.V2_REPO = REPO
 
         def rdir_of(b, s_, sd, T):
             return b / s_ / f"seed{sd}" / f"T{T}"
@@ -2309,6 +2651,14 @@ def _selftest():
              "측정 가능을 보이지 않는다")
         neg2("결속 판독 기록이 cond550 갈래 판독 (사다리 판독이 아니다)", lambda b: altered_link(b, phase="cond550"), "사다리 판독")
 
+        def copy_link(b):
+            p_ = b / OUT_DIRNAME / "copy_of_ladder.json"
+            p_.write_bytes((b / OUT_DIRNAME / READOUT_NAME).read_bytes())
+            edit_json(S0(b), lambda x: x.__setitem__("link", dict(x["link"], path=str(p_), rel_to_base=f"{OUT_DIRNAME}/copy_of_ladder.json")))
+        neg2("결속 판독 기록이 같은 내용 · 다른 경로의 사본 (리뷰 EE P2-1)", copy_link, "고정 기록")
+        neg2("사본 BASE 의 사다리 판독 고정 기록이 결속 뒤 바뀜 (원래 BASE 의 기록은 그대로 · 리뷰 EE P2-1)",
+             lambda b: edit_text(b / OUT_DIRNAME / READOUT_NAME, lambda t: t + " "), "지금 사다리 판독 고정 기록")
+
         def hold_valid_link(b):
             d = json.loads(hp.read_text(encoding="utf-8"))
             d["runs"]["A11_T600"]["status"] = "valid"
@@ -2348,24 +2698,30 @@ def _selftest():
         bLk = clone(bW0)
         fdl = os.open(str(bLk / ".stage2.lock"), os.O_RDWR | os.O_CREAT, 0o644)
         fcntl.flock(fdl, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        nLk0 = len(list((bLk / OUT_DIRNAME).glob("hold_*.json")))
         try:
-            oLk = rd_v(bLk, allpass, phase="cond550")
+            refusedLk = refuses("잠금", rd_v, bLk, allpass, phase="cond550")
         finally:
             fcntl.flock(fdl, fcntl.LOCK_UN)
             os.close(fdl)
-        chk(oLk["status"] == "판정 보류" and oLk["ready"]["lock_free"] is False and "W" not in oLk
-            and any("잠금" in w for w in oLk["ready"]["why"]) and not (bLk / OUT_DIRNAME / OUT_NAMES["cond550"][0]).exists(),
-            "⛔음성: 섞인 판독인데 큐 잠금이 쥐어져 있다 (큐 · 드라이버가 돈다) → 판정 보류")
+        chk(refusedLk and len(list((bLk / OUT_DIRNAME).glob("hold_*.json"))) == nLk0 and not (bLk / OUT_DIRNAME / OUT_NAMES["cond550"][0]).exists(),
+            "⛔음성 (리뷰 EE P1-1 · p8): 섞인 판독인데 큐 잠금이 쥐어져 있다 (큐 · 드라이버가 돈다) → 거부 · 판정 보류 기록도 안 쓴다")
         bNE = clone(bW0)
         edit_text(bNE / "stage2_kgy.log", lambda t: "\n".join(ln for ln in t.splitlines() if "■ 큐 끝 · PHASE ladder" not in ln))
         oNE = rd_v(bNE, allpass, phase="cond550")
         chk(oNE["status"] == "판독" and oNE["ready"]["queue_status"] == "incomplete" and oNE["W"] == [550, 600, 650],
             "[양성] 섞인 판독은 v1 큐 끝 줄을 요구하지 않는다 (v1 이 멈춘 뒤 v2 가 남은 런을 돈 경우 — 잠금 비어 있음 · 대응표 마지막 줄)")
         bQP = clone(bW0)
-        edit_text(bQP / "stage2_kgy.log", lambda t: t + next(ln for ln in t.splitlines() if "큐 시작 · PHASE ladder" in ln) + "\n")
+        edit_text(bQP / "stage2_kgy.log", dup_start_inside)
         oQP = rd_v(bQP, allpass, phase="cond550")
-        chk(oQP["status"] == "판정 보류" and any("v1 큐 로그" in w for w in oQP["ready"]["why"]),
-            "⛔음성: 섞인 판독 · v1 큐 로그에 문제 (시작 줄 둘) → 판정 보류")
+        chk(oQP["status"] == "판정 보류" and any("v1 큐 로그에 문제" in w for w in oQP["ready"]["why"]),
+            "⛔음성: 섞인 판독 · v1 큐 로그에 문제 (사다리 블록 안 시작 줄 둘) → 판정 보류")
+        bLI = clone(bW0)
+        edit_text(bLI / "stage2_kgy.log", lambda t: t + LATE)
+        oLI = rd_v(bLI, allpass, phase="cond550")
+        chk(oLI["status"] == "판정 보류" and any("사다리 블록 밖" in w for w in oLI["ready"]["why"])
+            and all(v["status"] == "valid" for v in oLI["runs"].values()) and any("사다리 블록 밖" in w for w in oLI["hold_reasons"]),
+            "⛔음성 (리뷰 EE P2-6): 섞인 판독 · 사다리 블록 뒤의 v1 호출 → 런은 모두 valid 인 채 따로 보류 사유 (보류 기록 hold_reasons)")
         bSt = clone(bW0)                                    # 멈춤 기록 꼴 = v2 큐가 쓰는 꼴 (큐 selftest 가 실제 멈춤 · 풂을 시험한다)
         stop_ln = json.dumps({"type": "stop", "id": "st0000000001", "code": 21, "phase": "cond550", "run": "B12_T550",
                               "reason": "이 갈래의 첫 런 … > 한도 (시험)"}, ensure_ascii=False)
@@ -2373,6 +2729,11 @@ def _selftest():
         oSt = rd_v(bSt, allpass, phase="cond550")
         chk(oSt["status"] == "판정 보류" and any("풀리지 않은 v2 멈춤" in w for w in oSt["ready"]["why"]) and "W" not in oSt,
             "⛔음성: 런은 모두 valid 인데 풀리지 않은 v2 멈춤 (첫 런 한도) → 판정 보류 (멈추고 보고 · 사람이 풀기 전에는 읽지 않는다)")
+        (bSt / "queue_v2_stops.jsonl").write_text(stop_ln + "\n" + json.dumps({"type": "ack", "id": "st0000000001"}) + "\n", encoding="utf-8")
+        oSh = rd_v(bSt, allpass, phase="cond550")
+        chk(oSh["status"] == "판정 보류" and any("풀리지 않은 v2 멈춤" in w for w in oSh["ready"]["why"])
+            and oSh["ready"]["v2_queue_records"]["acks_without_by_reason"] == ["st0000000001"],
+            "⛔음성 (리뷰 EE P2-2): 손으로 적은 풂 줄 (by · reason 없음) 은 풂이 아니다 → 판정 보류")
         (bSt / "queue_v2_stops.jsonl").write_text(stop_ln + "\n" + json.dumps({"type": "ack", "id": "st0000000001", "by": "selftest",
                                                                                 "reason": "시험"}) + "\n", encoding="utf-8")
         oSa = rd_v(bSt, allpass, phase="cond550")
@@ -2460,7 +2821,8 @@ def main(argv=None):
                 print(f"{s}{sd} T{T} ({v.get('queue_version')}): {v['status']}" + (f" — {'; '.join(v['reasons'])[:160]}" if v["reasons"] else ""))
             ready, rinfo = ready_state(A.base, qrec, runs)
             out = {"kind": "li2s3_stage2_verify/v2", "card_sha256": cv["card_sha256"], "provenance": prov, "phase": A.phase,
-                   "queue": {k: qrec.get(k) for k in ("status", "complete", "start", "gatekeep", "versions", "repo_head", "base_original", "problems")},
+                   "queue": {k: qrec.get(k) for k in ("status", "complete", "start", "gatekeep", "versions", "repo_head", "base_original", "problems",
+                                                      "other_invocations")},
                    "worktree_code": worktree_code(A.worktree), "runs": [_public(v) for v in runs.values()], "판독_가능_상태": ready,
                    "ready": rinfo, "verify_map": VERIFY_MAP,
                    "⚠": "사후 검증만 — 수송 · 골격 값은 안 읽었다 · 판독 가능 상태 = 계획 런이 모두 끝 · 모두 valid · "
