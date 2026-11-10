@@ -2,13 +2,13 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 254편 · 생성 2026-11-10
+> digest 255편 · 생성 2026-11-10
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
 (open_items #7). 축을 나누고 생성으로 바꿔 그 구멍을 닫는다.
 
-## SE 입도 효과 · size effect (19편)
+## SE 입도 효과 · size effect (20편)
 
 > 묶음 경계 = `tools/litdb/build_index.py` 의 `SIZE_EFFECT_SLUGS` (명시 slug 집합 — 낱말로 묶지 않는다). 이 표는 DEM 축만 싣는다.
 > 같은 집합의 **SE 축** 카드 5편은 `INDEX.md` § "SE 입도 효과 (size effect)" 에 있다.
@@ -32,6 +32,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `shi2019_high_am_loading_particle_size_assb` | 입자 크기비 λ=D_CAM/D_SE 로 고-CAM 로딩(>50 vol%) 달성 — 우리와 같은 LIGGGHTS DEM + Hertz 로 "작은 SE + 큰 CAM"을 모델+실험 동시 증명 — Shi (Ceder 그룹, Adv. Energy Mater. 2019/2020) | mixed (DEM-LIGGGHTS modeling + experiment) | 2026-06-26 | 🖼 12 |
 | `stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity` | 후막 (≈110 µm) 무탄소 NMC111–Li₆PS₅Cl 복합양극의 두께 방향 리튬화 기울기 — operando 에너지분산 X 선 회절 (EDXRD) 20 µm 층 깊이 분석 · 차단셀 EIS-TLM 유효 전도도 · tortuosity factor (τ²) · COMSOL 맞춤: CAM 70 ↔ 80 wt% 사이에서 반 | exp + continuum model (operando EDXRD depth profiling 20 µm  | 2026-10-30 | 🖼 28 |
 | `tailored_cathode_microstructure_low_pressure_assb` | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for ASSBs — Zhou et al. (ACS Energy Lett. 2025) |  | 2026-06-26 | 🖼 5 |
+| `var2026_sulfide_se_mechanical_properties_local_indentation_pellet` | 오일로 덮어 대기 중에서 찍는 고속 나노압입 (XPM · 1 mN · 400 점 / 8 분 + k-means) 으로 잰 Li₆PS₅Cl 입자의 경도 · 환산 탄성률과 냉간 펠릿의 압력별 상대밀도 — ~10 µm 분말 100 / 220 / 400 MPa: 상대밀도 0.68 / 0.73 / 0.78 (진밀도 1.87 g/cm | experiment (oil-protected fast nanoindentation XPM mapping + | 2026-11-10 | 🖼 24 |
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 

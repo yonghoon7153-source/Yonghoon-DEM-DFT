@@ -365,3 +365,6 @@ fitzhugh2021_sei_design_constrained_ensemble	electrolyte-interphase_design_in_co
 # ── LSPS 코팅 고처리량 탐색 (Fitzhugh–Wu–Ye–Deng–Qi–Li 2019 · Adv. Energy Mater. · 사용자 목록 122 번) — litdb 2026-11-10 · 옛 inbox 번호 122 가 이미 세 편 (jung2026_sio2_cosubstitution… · xu2026_xlsdft… · ziemke2026_li3ocl… 의 파일명) 에 쓰였고 같은 1 저자의 fitzhugh2021_sei_design… 과도 갈라야 해서 수동 지정 · 본문 + SI ──
 fitzhugh2019_ht_functionally_stable_interfaces_sulfide	a high throughput search for functionally stable interfaces
 fitzhugh2019_ht_functionally_stable_interfaces_sulfide	a_high_throughput_search_for_functionally_stable_interfaces
+# ── LPSCl 입자 고속 나노압입 + 압력별 펠릿 밀도 (Var 외 2026 · J. Power Sources 668, 239292) — litdb 2026-11-10 · 밑줄 · 공백 두 변형 (본문 · Sup 둘 다 이 제목 조각을 갖는다) ──
+var2026_sulfide_se_mechanical_properties_local_indentation_pellet	the_mechanical_properties_of_solid_sulfur_electrolytes
+var2026_sulfide_se_mechanical_properties_local_indentation_pellet	the mechanical properties of solid sulfur electrolytes

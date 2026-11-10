@@ -83,6 +83,8 @@ SIZE_EFFECT_SLUGS = frozenset({
     "lee2025_heckel_argyrodite_powder_densification_nanoindentation",
     "schneider2023_particle_size_pressure_transport",
     "ou2026_microstructural_multiscale_fast_ion_transport",
+    # 2026-11-10 — LPSCl 입경별 (10 µm · 1 µm · < 1 µm) 입자 압입 + ~10 µm 펠릿 압력별 밀도 (lee2025_heckel 의 이웃)
+    "var2026_sulfide_se_mechanical_properties_local_indentation_pellet",
 })
 
 # 주제 묶음 — slug/제목에 이 낱말이 있으면 그 절로. 위에서부터 먼저 맞는 것.

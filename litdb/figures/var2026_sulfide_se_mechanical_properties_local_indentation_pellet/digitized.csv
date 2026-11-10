@@ -1,0 +1,154 @@
+figure,series,x_name,x,y_name,y,note
+fig3a,"mean Er (large square), ~10 um Li6PS5Cl",pressing_P_MPa,100,Er_GPa,15.36,"square centre; text states 15.3 +- 0.5; main p.5 raster (xref 70, 1835x1265 px); ticks: H 0..1400 MPa = y 579.5..89.5 px (0.35 px/MPa), E 0..35 GPa same span (14 px/GPa), P 0..400 MPa = x 173..677 px (1.26 px/MPa)"
+fig3a,"mean Er (large square), ~10 um Li6PS5Cl",pressing_P_MPa,200,Er_GPa,19.71,square centre; marker centre x = 425.0 px -> 200 MPa (text states 19.7 +- 0.2 at '220 MPa')
+fig3a,"mean Er (large square), ~10 um Li6PS5Cl",pressing_P_MPa,400,Er_GPa,24.0,"taken from the same data point in fig3b ('10 um' square, 24.00); in fig3a the square is hidden by crosses; text states 24.0 +- 1.0"
+fig3a,"mean H (large ring), ~10 um Li6PS5Cl",pressing_P_MPa,100,H_MPa,546,ring centre (row of widest extent); text states 545
+fig3a,"mean H (large ring), ~10 um Li6PS5Cl",pressing_P_MPa,200,H_MPa,530,ring centre; NOT stated in the text (text gives only 545 at 100 MPa and 665 at 400 MPa); +-5 MPa
+fig3a,"mean H (large ring), ~10 um Li6PS5Cl",pressing_P_MPa,400,H_MPa,666,ring centre; text states 665 (and 670 in the particle-size sentence)
+fig3a,"individual H (small circles), 100 MPa (6 samples in text)",pressing_P_MPa,100,H_MPa,800,"red-channel strip read, +-15 MPa; two partly hidden by blue markers (683, 596); mean of six = 550"
+fig3a,"individual H (small circles), 100 MPa (6 samples in text)",pressing_P_MPa,100,H_MPa,683,"red-channel strip read, +-15 MPa; two partly hidden by blue markers (683, 596); mean of six = 550"
+fig3a,"individual H (small circles), 100 MPa (6 samples in text)",pressing_P_MPa,100,H_MPa,596,"red-channel strip read, +-15 MPa; two partly hidden by blue markers (683, 596); mean of six = 550"
+fig3a,"individual H (small circles), 100 MPa (6 samples in text)",pressing_P_MPa,100,H_MPa,447,"red-channel strip read, +-15 MPa; two partly hidden by blue markers (683, 596); mean of six = 550"
+fig3a,"individual H (small circles), 100 MPa (6 samples in text)",pressing_P_MPa,100,H_MPa,398,"red-channel strip read, +-15 MPa; two partly hidden by blue markers (683, 596); mean of six = 550"
+fig3a,"individual H (small circles), 100 MPa (6 samples in text)",pressing_P_MPa,100,H_MPa,373,"red-channel strip read, +-15 MPa; two partly hidden by blue markers (683, 596); mean of six = 550"
+fig3a,"individual H (small circles), 200 MPa (2 samples in text)",pressing_P_MPa,200,H_MPa,546,"two overlapping circles inside the mean ring, +-15 MPa"
+fig3a,"individual H (small circles), 200 MPa (2 samples in text)",pressing_P_MPa,200,H_MPa,512,"two overlapping circles inside the mean ring, +-15 MPa"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,398,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,425,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,490,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,538,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,603,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,780,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,840,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,880,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual H (small circles), 400 MPa (15 samples in text)",pressing_P_MPa,400,H_MPa,935,"separable markers only, +-15 MPa (780, 840, 935 partly hidden); ~6 more overlap between ~650 and ~740 MPa and are not separable"
+fig3a,"individual Er (crosses), 100 MPa",pressing_P_MPa,100,Er_GPa_min,13.7,"range of crosses, +-0.4 GPa; individual crosses overlap"
+fig3a,"individual Er (crosses), 100 MPa",pressing_P_MPa,100,Er_GPa_max,17.8,"range of crosses, +-0.4 GPa"
+fig3a,"individual Er (crosses), 400 MPa",pressing_P_MPa,400,Er_GPa_min,18.7,"range of crosses, +-0.4 GPa; individual crosses overlap"
+fig3a,"individual Er (crosses), 400 MPa",pressing_P_MPa,400,Er_GPa_max,29.6,"range of crosses, +-0.4 GPa"
+fig3a,"Baranowski et al. [29] Li3PS4 (open circles, dashed line)",pressure_MPa,75,E_GPa,4.57,ring-template centre; plotted against the E axis (marker colour = modulus colour); what the x value means for that data set is not explained in the paper
+fig3a,"Baranowski et al. [29] Li3PS4 (open circles, dashed line)",pressure_MPa,150,E_GPa,8.79,ring-template centre; plotted against the E axis (marker colour = modulus colour); what the x value means for that data set is not explained in the paper
+fig3a,"Baranowski et al. [29] Li3PS4 (open circles, dashed line)",pressure_MPa,300,E_GPa,12.07,ring-template centre; plotted against the E axis (marker colour = modulus colour); what the x value means for that data set is not explained in the paper
+fig3b,mean Er (large square),particle_size,10 um,Er_GPa,24.0,"square centre; text states 24.0 +- 1.0; ticks: H 0..1400 MPa = y 573.0..78.0 px (0.3536 px/MPa), E 0..35 GPa same span; categories at x 1120 / 1309.5 / 1499 px"
+fig3b,mean H (large ring),particle_size,10 um,H_MPa,666,ring centre; text states 670
+fig3b,mean Er (large square),particle_size,1 um,Er_GPa,25.6,"square centre; text states 25.6 +- 0.4; ticks: H 0..1400 MPa = y 573.0..78.0 px (0.3536 px/MPa), E 0..35 GPa same span; categories at x 1120 / 1309.5 / 1499 px"
+fig3b,mean H (large ring),particle_size,1 um,H_MPa,781,ring centre; text states 780
+fig3b,mean Er (large square),particle_size,1 um (cryo.),Er_GPa,28.6,"square centre; text states 28.6 +- 1.4; ticks: H 0..1400 MPa = y 573.0..78.0 px (0.3536 px/MPa), E 0..35 GPa same span; categories at x 1120 / 1309.5 / 1499 px"
+fig3b,mean H (large ring),particle_size,1 um (cryo.),H_MPa,865,ring centre; text states 870 (text calls this sample '<1 um')
+fig3b,individual H (small circles),particle_size,1 um,H_MPa,945,+-15 MPa; 760-790 overlap inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um,H_MPa,790,+-15 MPa; 760-790 overlap inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um,H_MPa,775,+-15 MPa; 760-790 overlap inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um,H_MPa,760,+-15 MPa; 760-790 overlap inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um,H_MPa,722,+-15 MPa; 760-790 overlap inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um (cryo.),H_MPa,1235,+-15 MPa; 1235 partly hidden by a cross; a further marker may be hidden inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um (cryo.),H_MPa,940,+-15 MPa; 1235 partly hidden by a cross; a further marker may be hidden inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um (cryo.),H_MPa,810,+-15 MPa; 1235 partly hidden by a cross; a further marker may be hidden inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um (cryo.),H_MPa,628,+-15 MPa; 1235 partly hidden by a cross; a further marker may be hidden inside the mean ring
+fig3b,individual H (small circles),particle_size,1 um (cryo.),H_MPa,495,+-15 MPa; 1235 partly hidden by a cross; a further marker may be hidden inside the mean ring
+fig3b,individual Er (crosses),particle_size,1 um (cryo.),Er_GPa_min,22.9,"range of crosses, +-0.4 GPa"
+fig3b,individual Er (crosses),particle_size,1 um (cryo.),Er_GPa_max,34.6,"range of crosses, +-0.4 GPa"
+fig3b,individual Er (crosses),particle_size,1 um,Er_GPa_min,23.9,"range of crosses, +-0.4 GPa"
+fig3b,individual Er (crosses),particle_size,1 um,Er_GPa_max,27.7,"range of crosses, +-0.4 GPa"
+fig3e,"Li6PS5Cl (1 um, 400 MPa) bar",quantity,Er,GPa,25.7,bar top; error-bar top +0.5; text 25.6 +- 0.4; panel e: left ticks Er 0..25 GPa = y 560..232 px (13.12 px/GPa); right ticks H 100..700 MPa = y 515..253.5 px (0.4358 px/MPa)
+fig3e,"Li6PS5Cl (1 um, 400 MPa) bar",quantity,H,MPa,784,bar top; error-bar top +34 MPa (the text gives no +- for 780 MPa)
+fig3e,Li3YBr2Cl4 (400 MPa) bar,quantity,Er,GPa,24.0,bar top; error-bar top +0.5; text 24.0 +- 0.4
+fig3e,Li3YBr2Cl4 (400 MPa) bar,quantity,H,MPa,687,bar top; error-bar top +55 MPa; text 700 +- 52
+fig4a,"30 s hold (blue), 2 mN",event,t_force_reaches_1950uN_s,value,16.0,"start of hold (force >= 1950 uN); main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,depth_at_hold_start_nm,value,301,"depth still rising steeply while the load settles; ~350 nm about 3 s later; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,depth_hold+5s_nm,value,363,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,depth_hold+10s_nm,value,380,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,depth_hold+20s_nm,value,402,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,t_hold_end_s,value,45.3,"hold = 29.3 s; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,depth_at_hold_end_nm,value,415,"= maximum depth; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,t_curve_end_s,value,51.0,"unloading end; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"30 s hold (blue), 2 mN",event,depth_at_curve_end_nm,value,330,"residual depth; recovered on unloading 85 nm; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,t_force_reaches_1950uN_s,value,18.5,"start of hold; the orange trace is hidden behind the blue one until t = 46 s, hold-start depth not separable (~330-355 nm at t = 19-21.5 s); main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_t46.4s_nm,value,423,"first point where the orange trace is visible alone (~28 s into the hold); main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_t51.4s_nm,value,430,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_t56.4s_nm,value,435,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_t66.4s_nm,value,445,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_t76.4s_nm,value,451,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_t106.4s_nm,value,469,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_t136.4s_nm,value,481,"main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,t_hold_end_s,value,137.4,"hold ~119 s; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_hold_end_nm,value,482,"= maximum depth; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,t_curve_end_s,value,143.1,"unloading end; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4a,"120 s hold (orange), 2 mN",event,depth_at_curve_end_nm,value,407,"residual depth; recovered on unloading 75 nm; main p.5 raster (xref 72, 1658x799 px); t = (x-192.5)/4.908 s; depth = (y-417.2)/0.548 nm; force = (323.0-y)/0.136 uN; colour-mask trace, column mean; +-5 nm, +-0.5 s"
+fig4b,data (red squares),relative_density_d,0.6798,P_over_H,0.1671,"-> P = 100.3 MPa for H = 600 MPa (the middle point is 200 MPa, not the 220 MPa of the text); main p.5 raster (xref 72); ticks: P/H 0..0.8 = y 693.5..133.5 px (700 px per unit), d 0.65..0.80 = x 1157.5..1554.5 px (2646.7 px per unit); red-marker bbox centre"
+fig4b,data (red squares),relative_density_d,0.7301,P_over_H,0.3343,"-> P = 200.6 MPa for H = 600 MPa (the middle point is 200 MPa, not the 220 MPa of the text); main p.5 raster (xref 72); ticks: P/H 0..0.8 = y 693.5..133.5 px (700 px per unit), d 0.65..0.80 = x 1157.5..1554.5 px (2646.7 px per unit); red-marker bbox centre"
+fig4b,data (red squares),relative_density_d,0.7802,P_over_H,0.6671,"-> P = 400.3 MPa for H = 600 MPa (the middle point is 200 MPa, not the 220 MPa of the text); main p.5 raster (xref 72); ticks: P/H 0..0.8 = y 693.5..133.5 px (700 px per unit), d 0.65..0.80 = x 1157.5..1554.5 px (2646.7 px per unit); red-marker bbox centre"
+fig4b,model 'pm/H = 1 (Baumard)' (long dashes),relative_density_d,0.74,P_over_H,0.152,equals Eq. (1) f(d) = d^2 (d-0.64)/0.36 within 0.002
+fig4b,model 'pm/H = 1 (Baumard)' (long dashes),relative_density_d,0.76,P_over_H,0.193,equals Eq. (1) f(d) = d^2 (d-0.64)/0.36 within 0.002
+fig4b,model 'pm/H = 1 (Baumard)' (long dashes),relative_density_d,0.8,P_over_H,0.285,equals Eq. (1) f(d) = d^2 (d-0.64)/0.36 within 0.002
+fig4b,model 'pm/H = 1 (Baumard)' (long dashes),relative_density_d,0.82,P_over_H,0.334,equals Eq. (1) f(d) = d^2 (d-0.64)/0.36 within 0.002
+fig4b,model 'pm/H = 1/3' (dotted),relative_density_d,0.72,P_over_H,0.346,equals 3.0 x f(d) within 0.005
+fig4b,model 'pm/H = 1/3' (dotted),relative_density_d,0.74,P_over_H,0.455,equals 3.0 x f(d) within 0.005
+fig4b,model 'pm/H = 1/3' (dotted),relative_density_d,0.76,P_over_H,0.578,equals 3.0 x f(d) within 0.005
+fig4b,model 'pm/H = 1/3' (dotted),relative_density_d,0.78,P_over_H,0.709,equals 3.0 x f(d) within 0.005
+fig4b,model 'pm/H = 1/3' (dotted),relative_density_d,0.8,P_over_H,0.852,equals 3.0 x f(d) within 0.005
+fig4b,model 'pm/H = 1/3' (dotted),relative_density_d,0.81,P_over_H,0.925,equals 3.0 x f(d) within 0.005
+fig4b,model 'pm/H = 2/3' (short dashes),relative_density_d,0.72,P_over_H,0.229,"equals 2.0 x f(d) (ratio 1.98-2.01), not 1.5 x f(d)"
+fig4b,model 'pm/H = 2/3' (short dashes),relative_density_d,0.74,P_over_H,0.301,"equals 2.0 x f(d) (ratio 1.98-2.01), not 1.5 x f(d)"
+fig4b,model 'pm/H = 2/3' (short dashes),relative_density_d,0.78,P_over_H,0.476,"equals 2.0 x f(d) (ratio 1.98-2.01), not 1.5 x f(d)"
+fig4b,model 'pm/H = 2/3' (short dashes),relative_density_d,0.81,P_over_H,0.621,"equals 2.0 x f(d) (ratio 1.98-2.01), not 1.5 x f(d)"
+fig4b,model 'pm/H = 2/3' (short dashes),relative_density_d,0.82,P_over_H,0.666,"equals 2.0 x f(d) (ratio 1.98-2.01), not 1.5 x f(d)"
+figS3,10 mN indent with displacement jumps (Appendix 3),event,t_load_start_s,value,7,small pre-load step ~0.22 mN between 8 and 10 s; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,t_force_reaches_10mN_s,value,40.1,exponential loading; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,t_hold_end_s,value,60.1,20 s hold; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,t_unload_end_s,value,65.1,5 s unloading; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,depth_at_10mN_reached_nm,value,3662,SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,depth_at_hold_end_nm,value,4038,creep during the 20 s hold = 376 nm; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,residual_depth_nm,value,2900,recovered on unloading 1138 nm; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,jump1_depth_nm,value,1598,"red circle centre, force 4350 uN; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s"
+figS3,10 mN indent with displacement jumps (Appendix 3),event,jump2_depth_nm,value,1889,"red circle centre, force 4891 uN; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s"
+figS3,10 mN indent with displacement jumps (Appendix 3),event,jump3_depth_nm,value,2955,"red circle centre, force 7522 uN; SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s"
+figS3,10 mN indent with displacement jumps (Appendix 3),event,loading_depth_at_2mN_nm,value,823,SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS3,10 mN indent with displacement jumps (Appendix 3),event,loading_depth_at_5mN_nm,value,1981,SI p.4 vector paths (exact); depth = (x-352.15)/44.25*1000 nm; force = (289.15-y)/13.76*1000 uN; t = (x-118.9)/2.694 s
+figS7,operating pressure 150 MPa (25 C),pelletizing_P_MPa,180,sigma_mS_per_cm,1.36,"markers of the 150 and 100 MPa series overlap here; SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 150 MPa (25 C),pelletizing_P_MPa,360,sigma_mS_per_cm,1.43,"markers of the 150 and 100 MPa series overlap here; SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 150 MPa (25 C),pelletizing_P_MPa,540,sigma_mS_per_cm,1.54,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 150 MPa (25 C),pelletizing_P_MPa,720,sigma_mS_per_cm,1.56,"markers of the 150 and 100 MPa series overlap here; SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 150 MPa (25 C),pelletizing_P_MPa,900,sigma_mS_per_cm,1.63,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 100 MPa (25 C),pelletizing_P_MPa,180,sigma_mS_per_cm,1.36,"markers of the 150 and 100 MPa series overlap here; SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 100 MPa (25 C),pelletizing_P_MPa,360,sigma_mS_per_cm,1.4,"markers of the 150 and 100 MPa series overlap here; SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 100 MPa (25 C),pelletizing_P_MPa,540,sigma_mS_per_cm,1.44,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 100 MPa (25 C),pelletizing_P_MPa,720,sigma_mS_per_cm,1.53,"markers of the 150 and 100 MPa series overlap here; SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 100 MPa (25 C),pelletizing_P_MPa,900,sigma_mS_per_cm,1.57,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 75 MPa (25 C),pelletizing_P_MPa,180,sigma_mS_per_cm,1.33,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 75 MPa (25 C),pelletizing_P_MPa,360,sigma_mS_per_cm,1.36,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 75 MPa (25 C),pelletizing_P_MPa,540,sigma_mS_per_cm,1.37,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 75 MPa (25 C),pelletizing_P_MPa,720,sigma_mS_per_cm,1.41,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 75 MPa (25 C),pelletizing_P_MPa,900,sigma_mS_per_cm,1.52,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 50 MPa (25 C),pelletizing_P_MPa,180,sigma_mS_per_cm,1.23,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 50 MPa (25 C),pelletizing_P_MPa,360,sigma_mS_per_cm,1.2,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 50 MPa (25 C),pelletizing_P_MPa,540,sigma_mS_per_cm,1.17,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 50 MPa (25 C),pelletizing_P_MPa,720,sigma_mS_per_cm,1.23,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 50 MPa (25 C),pelletizing_P_MPa,900,sigma_mS_per_cm,1.34,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 25 MPa (25 C),pelletizing_P_MPa,180,sigma_mS_per_cm,0.91,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 25 MPa (25 C),pelletizing_P_MPa,360,sigma_mS_per_cm,0.83,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 25 MPa (25 C),pelletizing_P_MPa,540,sigma_mS_per_cm,0.78,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 25 MPa (25 C),pelletizing_P_MPa,720,sigma_mS_per_cm,0.85,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 25 MPa (25 C),pelletizing_P_MPa,900,sigma_mS_per_cm,0.76,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 10 MPa (25 C),pelletizing_P_MPa,180,sigma_mS_per_cm,0.49,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 10 MPa (25 C),pelletizing_P_MPa,360,sigma_mS_per_cm,0.46,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 10 MPa (25 C),pelletizing_P_MPa,540,sigma_mS_per_cm,0.51,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 10 MPa (25 C),pelletizing_P_MPa,720,sigma_mS_per_cm,0.44,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+figS7,operating pressure 10 MPa (25 C),pelletizing_P_MPa,900,sigma_mS_per_cm,0.45,"SI p.7 raster (xref 94, 504x379 px); plot frame = axis limits: x 0..1000 MPa = 58.0..485.3 px, y 0..1.8 mS/cm = 330.7..22.3 px; marker run centre in the column; +-0.01 mS/cm"
+fig2d,"k-means k = 2, Li6PS5Cl 400 MPa",cluster,Green (low Er/H),N_indents,213,printed in the figure table
+fig2d,"k-means k = 2, Li6PS5Cl 400 MPa",cluster,Red (high Er/H = asperity tops),N_indents,172,printed in the figure table; 213 + 172 = 385 of the 400 indents
+figS5d,"k-means k = 2, Li6PS5Cl 100 MPa",cluster,Green,N_indents,264,printed in the figure table; 264 + 125 = 389
+figS5d,"k-means k = 2, Li6PS5Cl 100 MPa",cluster,Red,N_indents,125,printed in the figure table
+figS5c,"coloured indent dots counted in panel (c), 100 MPa",colour,green,count,115,connected-component count in the native raster (dots under the zone outlines are lost) - opposite assignment to the printed table
+figS5c,"coloured indent dots counted in panel (c), 100 MPa",colour,red,count,222,connected-component count in the native raster
+figGA,k-means k = 3 (graphical abstract; sample not identified),cluster,Vert,N_indents,91,printed in the figure table; sum 382
+figGA,k-means k = 3 (graphical abstract; sample not identified),cluster,Rouge,N_indents,210,printed in the figure table; sum 382
+figGA,k-means k = 3 (graphical abstract; sample not identified),cluster,Bleu,N_indents,81,printed in the figure table; sum 382
+fig2c,SPM height colour-bar labels,label,top,height_nm,800.2,printed next to the colour bar
+fig2c,SPM height colour-bar labels,label,middle,height_nm,88.8,printed next to the colour bar
+fig2c,SPM height colour-bar labels,label,bottom,height_nm,-622.6,printed next to the colour bar
+fig3c,SPM height colour-bar labels,label,top,height_nm,547.1,printed next to the colour bar
+fig3c,SPM height colour-bar labels,label,middle,height_nm,-71.1,printed next to the colour bar
+fig3c,SPM height colour-bar labels,label,bottom,height_nm,-689.2,printed next to the colour bar
+figS5c,SPM height colour-bar labels,label,top,height_nm,698.0,printed next to the colour bar
+figS5c,SPM height colour-bar labels,label,middle,height_nm,29.0,printed next to the colour bar
+figS5c,SPM height colour-bar labels,label,bottom,height_nm,-639.9,printed next to the colour bar
