@@ -1,17 +1,18 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 602
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 603
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 393건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 394건)
 - 2026-11-10 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…
 - 2026-11-10 · `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` — DZ 회신 — li2s-3 구조군 정의 · 본 시드 재사용 · 골격 게이트 · 2 단계 큐: NO-GO (P0 0 · P1 6 · P2 3) — 구조군 정의와 여섯 시드 재사용은 조건부 찬성 · 실행 · 재개 경로 결함과 보고량 조건이 남음 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
 - 2026-11-10 · `kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 프롬프트 — b2o3 B·O 배치: 파일럿 이완 에너지가 100 ps 까지 계속 내려간다 → 8 단계 (54 런 × 100 ps) 판독 전에 박은 어닐 시간 진단 (50 ps 프레임 이완 · 두 시점 가족 판독) 과 잠정 규칙이 충분한가 · 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종…
 - 2026-11-10 · `kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 회신 — b2o3 어닐 시간 진단 (개정 3): 개정 3 문구 · 비교 규칙 그대로의 최종 판정은 보류 (P0 0 · P1 2 · P2 2) — D1 · D2 진단은 찬성 · 54 런은 계속 · 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
+- 2026-11-10 · `kb/reviews/codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` — EB 프롬프트 — li2s-3 회신 DZ 고침: 사후 검증 (v1 런) · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 판독 허가 문 · 압력 도구 · 대조 잡 — v1 런을 사후 검증으로 받아도 되는가 · 고친 큐 v2 를 추가 런 전으로 미뤄도 되는가 · 초안 (2026-11-10) — 사용자 검토 · 발송 대기 · 기준 …
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_model_switch.md` — 모델 전환 인계 (2026-11-10 저녁) — 같은 세션 · 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 기한 있는 도구 둘 · 사용자 결정 대기 셋 · 진행
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 - 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
@@ -26,7 +27,6 @@
 - 2026-11-09 · `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건) · 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 …
 - 2026-11-09 · `kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` — DY 회신 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3 확인: GO (사용자 새 비준 조건) · DX P1-1 · P2-1 · P2-2 닫힘 · base seed 규칙 찬성 (SEED 는 실행 전에 정하고 재시도에서도 유지하는 운영 규칙 같이) · EOS 결과 파일 결속은 DFT 전 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — GO (1 …
 - 2026-11-09 · `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안) · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…
-- 2026-11-08 · `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계) · 진행
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (264)
+## reviews/ (265)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-10 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -388,6 +388,7 @@
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 프롬프트 — b2o3 B·O 배치: 파일럿 이완 에너지가 100 ps 까지 계속 내려간다 → 8 단계 (54 런 × 100 ps) 판독 전에 박은 어닐 시간 진단 (50 ps 프레임 이완 · 두 시점 가족 판독) 과 잠정 규칙이 충분한가  (2026-11-10 · 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종…)
 - `kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 회신 — b2o3 어닐 시간 진단 (개정 3): 개정 3 문구 · 비교 규칙 그대로의 최종 판정은 보류 (P0 0 · P1 2 · P2 2) — D1 · D2 진단은 찬성 · 54 런은 계속 · 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로)  (2026-11-10 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …)
+- `kb/reviews/codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` — EB 프롬프트 — li2s-3 회신 DZ 고침: 사후 검증 (v1 런) · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 판독 허가 문 · 압력 도구 · 대조 잡 — v1 런을 사후 검증으로 받아도 되는가 · 고친 큐 v2 를 추가 런 전으로 미뤄도 되는가  (2026-11-10 · 초안 (2026-11-10) — 사용자 검토 · 발송 대기 · 기준 …)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
 - `kb/reviews/codex_G_reply_to_F_2026_08_27.md` — 교차리뷰 G — 회신 F 수용 보고 + 후속 질문 (R3 설계·D_inc 오차·N_eff)  (2026-08-27 · 회신수령-반영완료 (→ codex_H_reply_to_G_2026_0…)
@@ -665,4 +666,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 500개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 501개 (정본 목록: litdb/INDEX.md)
