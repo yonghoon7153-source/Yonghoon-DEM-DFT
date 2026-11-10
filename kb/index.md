@@ -1,13 +1,14 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 596
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 597
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 387건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 388건)
 - 2026-11-10 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-11-10 · `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 - 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
 - 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
@@ -26,7 +27,6 @@
 - 2026-11-06 · `kb/reviews/codex_DS_prompt_li2s2_dr_fixes_2026_11_06.md` — DS 프롬프트 — li2s-2 DR 고침 + DS 전 독립 리뷰 고침 (6b124717): 기준 앞 면제는 실제 진행 중 incomplete 만 (입력 불일치는 앞뒤 없이 보류) · 경로 상태 (부재 / 정상 파일 / 링크 / 그 밖) · 생성 예외는 부재 → 정상 파일만 · seed_gate 가 비정상 경로를 입력 불일치로 · Q5 문구 — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…
 - 2026-11-06 · `kb/reviews/codex_DS_reply_li2s2_dr_fixes_2026_11_06.md` — DS 회신 — li2s-2 DR 고침 + DS 전 리뷰 3 차 확인 (6b124717): NO-GO · P1 1 (완료 여부 미확인을 md_complete_seen=False 로 기록해 완료 뒤 입력 변경을 '진행 중' 으로 면제) · P2 1 (판독기가 거부하는 판정 링크를 직접 수동 판정은 읽고 정상 파일로 바꿈) · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-06 · `kb/reviews/codex_DT_prompt_li2s2_ds_fixes_2026_11_06.md` — DT 프롬프트 — li2s-2 DS 고침 + DT 전 독립 리뷰 고침 (63331be6): 진행 판정 셋 (완료 · 진행 중 확인 · 확인 불가) · '진행 중' 지름길은 진행 중 확인 + 뒤 산출물 없음 + 같은 plan · 실행 전 기록 + 완료 기록 시각 앞 · 직접 판정 경로 검사 · quench_ps 카드 대조 · 첫 시드 녹음 판정 못 씀 → invalid — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 조건부 GO (`code…
-- 2026-11-06 · `kb/reviews/codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` — DT 회신 — li2s-2 DS 고침 + DT 전 리뷰 3 차 확인 (63331be6): 조건부 GO · 새 P0 · P1 없음 · P2 1 (시계 차이가 늘 보수적 보류로만 실패한다는 설명이 틀림 — 같은 신뢰 시계 범위로 명문화하고 그 안에서 실행 · 판정 · 재개) · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -488,7 +488,7 @@
 - `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안)  (2026-11-01 · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안)  (2026-11-09 · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…)
 
-## projects/ (56)
+## projects/ (57)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -513,6 +513,7 @@
 - `kb/projects/handoff_2026_10_22_evacuation.md` — 대피 인계 — 2026-10-22 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · W_ad 외주 2차 CZ 고침 설계 포함)  (2026-10-22 · 진행)
 - `kb/projects/handoff_2026_10_26_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-10-22 (82 커밋) 를 friendly 로 · fast-forward (2026-10-26)  (2026-10-26 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …)
 - `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계)  (2026-11-08 · 진행)
+- `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달  (2026-11-10 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
 - `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` — li2s_glass_bmeas_650k_letter_DA_send_2026_10_19
@@ -659,4 +660,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 479개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 486개 (정본 목록: litdb/INDEX.md)
