@@ -1,0 +1,416 @@
+{
+  "schema": "dem_t0_contract_author_verification/1",
+  "base_B": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+  "parent": "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+  "design_assumptions": [
+    "권고안 전제(Q-T0-1)",
+    "권고안 전제(Q-T0-2)"
+  ],
+  "new_feature_red": "Initial fail-closed stub rejects every packet. Five positive assertion/subtest failures in20 methods, errors0. Not an old producer defect or missing-import error.",
+  "author_reports": {
+    "red": {
+      "report_sha256": "359caac980632d1414001791633dcacbd5b2bdb8473f1e063a9e7e35291ee71d",
+      "receipt": {
+        "schema": "dem_t0_synthetic_contract_test_receipt/1",
+        "started_utc": "2026-11-10T00:59:34.483802+00:00",
+        "finished_utc": "2026-11-10T00:59:34.512801+00:00",
+        "methods": 20,
+        "failures": 5,
+        "errors": 0,
+        "rc": 1,
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+          "dem_gen2_t0_contract.py": "8587d89185098f3d94dee01e74e38258bf03ddeb6ad5398be677579664d8fcbd",
+          "test_dem_gen2_t0_contract.py": "e99b8fadb0ca8448c3e781464320c681e79f333fb70255cb9f4e0e9b3f918499"
+        },
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "bytecode_writes_disabled": true,
+        "source_load": "Exact copied bytes via compile/exec",
+        "process_network_attempts": [],
+        "actual_engine_calls": 0,
+        "actual_T0": "NOT_RUN",
+        "actual_value_reads": 0,
+        "physical_ready": false,
+        "execution_go": false,
+        "gate_write": false,
+        "research_results": 0,
+        "whole_status": "HOLD",
+        "counting": "Methods and assertion/subtest failures are separate units, not summed.",
+        "baseline_kind": "Record source snapshot; initial red is a new-feature fail-closed stub, not an old producer defect."
+      }
+    },
+    "green": {
+      "report_sha256": "6dd0de83b3417f82b0a5e99215d803e132dba0370048b6a2ed081dfea7d9021a",
+      "receipt": {
+        "schema": "dem_t0_synthetic_contract_test_receipt/1",
+        "started_utc": "2026-11-10T01:00:44.803698+00:00",
+        "finished_utc": "2026-11-10T01:00:44.835074+00:00",
+        "methods": 20,
+        "failures": 0,
+        "errors": 0,
+        "rc": 0,
+        "tested_source_sha256": {
+          "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+          "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+          "test_dem_gen2_t0_contract.py": "e99b8fadb0ca8448c3e781464320c681e79f333fb70255cb9f4e0e9b3f918499"
+        },
+        "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+        "bytecode_writes_disabled": true,
+        "source_load": "Exact copied bytes via compile/exec",
+        "process_network_attempts": [],
+        "actual_engine_calls": 0,
+        "actual_T0": "NOT_RUN",
+        "actual_value_reads": 0,
+        "physical_ready": false,
+        "execution_go": false,
+        "gate_write": false,
+        "research_results": 0,
+        "whole_status": "HOLD",
+        "counting": "Methods and assertion/subtest failures are separate units, not summed.",
+        "baseline_kind": "Record source snapshot; initial red is a new-feature fail-closed stub, not an old producer defect."
+      }
+    },
+    "contrasts": {
+      "report_sha256": "9fb260f40e4d4a64342df1d15689040d539be58cff7a415c125db71b8fcfaa01",
+      "receipt": {
+        "schema": "dem_t0_contract_guard_contrasts/1",
+        "started_utc": "2026-11-10T01:01:23.838599+00:00",
+        "finished_utc": "2026-11-10T01:01:23.881047+00:00",
+        "planned": 4,
+        "detected": 4,
+        "source_sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "test_sha256": "e99b8fadb0ca8448c3e781464320c681e79f333fb70255cb9f4e0e9b3f918499",
+        "contrasts": [
+          {
+            "name": "identity",
+            "source_sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+            "mutant_sha256": "eaf9fca331a5bd741d603dd294c6a90bfda155dcf69f882f85aec03b287d805c",
+            "original": {
+              "status": "REJECTED",
+              "reason": "INVALID_SYNTHETIC_CONTROLS",
+              "observations": [],
+              "target_force_deck": null,
+              "checked_cases": 0,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "guard_removed": {
+              "status": "SYNTHETIC_T0_CONTRACT_CONSISTENT",
+              "reason": "DIAGNOSTIC_ONLY",
+              "observations": [
+                {
+                  "sample_id": 11,
+                  "kind": "compression_positive",
+                  "raw_reaction": 3.0,
+                  "normalized_force": 3.0,
+                  "classification": "COMPRESSION_POSITIVE"
+                },
+                {
+                  "sample_id": 13,
+                  "kind": "opposite_polarity_negative",
+                  "raw_reaction": -3.0,
+                  "normalized_force": -3.0,
+                  "classification": "OPPOSITE_SIGN_DETECTED"
+                },
+                {
+                  "sample_id": 15,
+                  "kind": "zero_control",
+                  "raw_reaction": 0.0,
+                  "normalized_force": 0.0,
+                  "classification": "ZERO_NONDETERMINING"
+                }
+              ],
+              "target_force_deck": 2.0,
+              "checked_cases": 3,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "detected": true
+          },
+          {
+            "name": "units",
+            "source_sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+            "mutant_sha256": "3e7005deeca49bbb193f21cbd3bb3ee9776f6c5fe6921249af8144e169d959c8",
+            "original": {
+              "status": "REJECTED",
+              "reason": "INVALID_SYNTHETIC_PLAN",
+              "observations": [],
+              "target_force_deck": null,
+              "checked_cases": 0,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "guard_removed": {
+              "status": "SYNTHETIC_T0_CONTRACT_CONSISTENT",
+              "reason": "DIAGNOSTIC_ONLY",
+              "observations": [
+                {
+                  "sample_id": 11,
+                  "kind": "compression_positive",
+                  "raw_reaction": 3.0,
+                  "normalized_force": 3.0,
+                  "classification": "COMPRESSION_POSITIVE"
+                },
+                {
+                  "sample_id": 13,
+                  "kind": "opposite_polarity_negative",
+                  "raw_reaction": -3.0,
+                  "normalized_force": -3.0,
+                  "classification": "OPPOSITE_SIGN_DETECTED"
+                },
+                {
+                  "sample_id": 15,
+                  "kind": "zero_control",
+                  "raw_reaction": 0.0,
+                  "normalized_force": 0.0,
+                  "classification": "ZERO_NONDETERMINING"
+                }
+              ],
+              "target_force_deck": 2.0,
+              "checked_cases": 3,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "detected": true
+          },
+          {
+            "name": "sample",
+            "source_sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+            "mutant_sha256": "472433e7a49fb9384c8bf5f38db497d3826a744b188589eb851db01aaab1830d",
+            "original": {
+              "status": "REJECTED",
+              "reason": "INVALID_SYNTHETIC_CONTROLS",
+              "observations": [],
+              "target_force_deck": null,
+              "checked_cases": 0,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "guard_removed": {
+              "status": "SYNTHETIC_T0_CONTRACT_CONSISTENT",
+              "reason": "DIAGNOSTIC_ONLY",
+              "observations": [
+                {
+                  "sample_id": 11,
+                  "kind": "compression_positive",
+                  "raw_reaction": 3.0,
+                  "normalized_force": 3.0,
+                  "classification": "COMPRESSION_POSITIVE"
+                },
+                {
+                  "sample_id": 11,
+                  "kind": "opposite_polarity_negative",
+                  "raw_reaction": -3.0,
+                  "normalized_force": -3.0,
+                  "classification": "OPPOSITE_SIGN_DETECTED"
+                },
+                {
+                  "sample_id": 15,
+                  "kind": "zero_control",
+                  "raw_reaction": 0.0,
+                  "normalized_force": 0.0,
+                  "classification": "ZERO_NONDETERMINING"
+                }
+              ],
+              "target_force_deck": 2.0,
+              "checked_cases": 3,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "detected": true
+          },
+          {
+            "name": "type",
+            "source_sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+            "mutant_sha256": "5536444fae8e179aa1e14ad610a709c50f0981c70ee0f4dc96455f09380e72e5",
+            "original": {
+              "status": "REJECTED",
+              "reason": "INVALID_SYNTHETIC_PLAN",
+              "observations": [],
+              "target_force_deck": null,
+              "checked_cases": 0,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "guard_removed": {
+              "status": "SYNTHETIC_T0_CONTRACT_CONSISTENT",
+              "reason": "DIAGNOSTIC_ONLY",
+              "observations": [
+                {
+                  "sample_id": 11,
+                  "kind": "compression_positive",
+                  "raw_reaction": 3.0,
+                  "normalized_force": 3.0,
+                  "classification": "COMPRESSION_POSITIVE"
+                },
+                {
+                  "sample_id": 13,
+                  "kind": "opposite_polarity_negative",
+                  "raw_reaction": -3.0,
+                  "normalized_force": -3.0,
+                  "classification": "OPPOSITE_SIGN_DETECTED"
+                },
+                {
+                  "sample_id": 15,
+                  "kind": "zero_control",
+                  "raw_reaction": 0.0,
+                  "normalized_force": 0.0,
+                  "classification": "ZERO_NONDETERMINING"
+                }
+              ],
+              "target_force_deck": 2.0,
+              "checked_cases": 3,
+              "actual_T0": "NOT_RUN",
+              "actual_build_identity": null,
+              "actual_compression_sign": null,
+              "binary_syntax": "NOT_RUN",
+              "physical_ready": false,
+              "execution_go": false,
+              "gate_write": false,
+              "operational_seal_modified": false,
+              "research_results": 0,
+              "assumptions": [
+                "Q-T0-1",
+                "Q-T0-2"
+              ],
+              "evidence_kind": "SYNTHETIC_ONLY"
+            },
+            "detected": true
+          }
+        ],
+        "process_network_attempts": [],
+        "actual_engine_calls": 0,
+        "actual_T0": "NOT_RUN",
+        "actual_value_reads": 0,
+        "physical_ready": false,
+        "execution_go": false,
+        "gate_write": false,
+        "research_results": 0,
+        "whole_status": "HOLD",
+        "counting": "Four targeted fixture contrasts, not four additional unique unit-test methods."
+      }
+    }
+  },
+  "preserved_files": {
+    "scripts/dem_gen2_qualification.py": {
+      "sha256": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+      "git_blob": "ebf53e68675c0bc52ee4eb06a6eb2290f6a52e4a",
+      "unchanged": true,
+      "executed_this_task": "Only number/integer/target_force via new synthetic packet tests; existing22 suite not rerun."
+    },
+    "scripts/make_dem_gen2_decks.py": {
+      "sha256": "f778a145e693111c3d95f6c6469ac7acbac7bd16192b400b1bbd5bdd700ae5d9",
+      "git_blob": "7a24b8070c33e6c924773ea18fc49a855b651b54",
+      "unchanged": true,
+      "executed_this_task": false
+    },
+    "scripts/test_dem_gen2_qualification.py": {
+      "sha256": "5be255b439890832a6d765b9c4f732985376b07da65d9b4401c00f8947fe26f0",
+      "git_blob": "1cb91245fad531f91cd127a87725cc968fee9bc1",
+      "unchanged": true,
+      "executed_this_task": false
+    },
+    "scripts/test_make_dem_gen2_decks.py": {
+      "sha256": "d6db105de33f22f8ad8d309152ab2eff4e5d494eec888a3f20bfcff72ad43860",
+      "git_blob": "a7c99ab643f799eb99f5361be6cebb34fb10c2c7",
+      "unchanged": true,
+      "executed_this_task": false
+    }
+  },
+  "count_boundary": "20 methods,5 red assertions/subtests and4 mutation contrasts are different non-additive units.",
+  "independent_review": "PENDING",
+  "whole_gate": "NOT_RUN",
+  "actual_T0": "NOT_RUN",
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "operational_seal_modified": false,
+  "research_results": 0,
+  "whole_status": "HOLD"
+}
