@@ -25,7 +25,9 @@
    "h": 864,
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.602
+   "blank": 0.602,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (auto crop)"
   },
   {
    "key": "f2",
@@ -45,7 +47,9 @@
    "h": 975,
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.922
+   "blank": 0.922,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (auto crop) + pixel readout of the embedded raster (axes frame 2-4.5 V / 0-25 uAh cm-2; marker and line positions)"
   },
   {
    "key": "f3",
@@ -65,7 +69,9 @@
    "h": 1581,
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.458
+   "blank": 0.458,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (auto crop) + 2x re-render of the colour-bar unit labels from the embedded raster"
   },
   {
    "key": "f4",
@@ -85,7 +91,9 @@
    "h": 1396,
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.794
+   "blank": 0.794,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (auto crop)"
   },
   {
    "key": "f5",
@@ -105,7 +113,9 @@
    "h": 1572,
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.792
+   "blank": 0.792,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (auto crop) + 2x re-render of the 50 nm free-side panel (grid lines at 2 and 4 um used for the geometry readout)"
   },
   {
    "key": "f6",
@@ -125,7 +135,9 @@
    "h": 876,
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.897
+   "blank": 0.897,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (auto crop) + pixel readout of the embedded raster (lower panel 68.25 px/GPa, 2.79 px/s; check: green decomposition markers centred at 3.49 GPa = mean of Table II 3.64 and 3.34)"
   },
   {
    "key": "t1",
@@ -146,7 +158,9 @@
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
    "blank": 0.924,
-   "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 65) to the last reaction row (y 184.6) + margin, above the two-column body text (y 211)"
+   "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 65) to the last reaction row (y 184.6) + margin, above the two-column body text (y 211)",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read once to confirm the manual crop is complete; values transcribed from the PDF text layer"
   },
   {
    "key": "t2",
@@ -167,7 +181,9 @@
    "dpi": 300,
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
    "blank": 0.951,
-   "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 628.7) to the last row (y 745) + margin, below the body text ending at y 610.6"
+   "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 628.7) to the last row (y 745) + margin, below the body text ending at y 610.6",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read once to confirm the manual crop is complete; values transcribed from the PDF text layer"
   },
   {
    "key": "t3",
@@ -189,7 +205,9 @@
    "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
    "blank": 0.926,
    "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 65) to the last row 'A  Cross-section area of the Si electrode' (y 433.5) + margin, above Eq. A.2 (y 451)",
-   "key_note": "appendix table 'Table A.I' keyed t3 (the paper has Table I, Table II, Table A.I only) so that 'Table 3' in the digest links; label keeps the printed numbering"
+   "key_note": "appendix table 'Table A.I' keyed t3 (the paper has Table I, Table II, Table A.I only) so that 'Table 3' in the digest links; label keeps the printed numbering",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read once to confirm the manual crop is complete; values transcribed from the PDF text layer"
   }
  ],
  "missing_labels": []

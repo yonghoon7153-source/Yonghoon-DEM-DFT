@@ -26,7 +26,9 @@
    "h": 1476,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.875
+   "blank": 0.875,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + bar edges (panel a) and curve end points (panel b) read from the embedded raster after tick calibration (check: 8 bars vs Table 2 within 0.01 V; 15 end points vs Table 2 within 0.02 eV/atom). Note: panel b y-axis label says meV/atom but the values are eV/atom"
   },
   {
    "key": "f2",
@@ -46,7 +48,9 @@
    "h": 629,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.793
+   "blank": 0.793,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + bar ends of the three panels read from the embedded raster (check: 7 values given in Table 3 reproduced within 0.02 eV)"
   },
   {
    "key": "f3",
@@ -66,7 +70,9 @@
    "h": 675,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.917
+   "blank": 0.917,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (minima positions and depths compared with Table 4 / Table S2 - consistent)"
   },
   {
    "key": "f4",
@@ -86,7 +92,9 @@
    "h": 747,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.888
+   "blank": 0.888,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + sulfide curves traced on the embedded raster (values fall inside the ranges of Table 5 / Table S3); LLTO dashed curve does not match the Table S3 ranges"
   },
   {
    "key": "f5",
@@ -106,7 +114,9 @@
    "h": 1641,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.82
+   "blank": 0.82,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + all 18 bars of panel a and the end points of panel b read from the embedded raster (check: 5 coatings vs the 2015 SI staircase within 0.01 V). Note: panel b y-axis label says meV/atom but the values are eV/atom"
   },
   {
    "key": "fS1",
@@ -127,7 +137,9 @@
    "dpi": 300,
    "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
    "blank": 0.934,
-   "manual_crop": "2026-11-10 litdb-curator: extractor did not see this figure and did not list it in missing_labels - on SI p.7 the caption line 'Figure S1. ...' sits ABOVE the two raster panels and PyMuPDF merges it into the Table S4 text block (72,200,519,329), so no block starts with 'Figure S1'; S1 is the only SI figure, so there is no number gap either. clip = union of the two embedded rasters (191.7,328.8,429.2,513.8) + (192.0,517.4,429.5,702.4) and their 'a)'/'b)' labels + margin"
+   "manual_crop": "2026-11-10 litdb-curator: extractor did not see this figure and did not list it in missing_labels - on SI p.7 the caption line 'Figure S1. ...' sits ABOVE the two raster panels and PyMuPDF merges it into the Table S4 text block (72,200,519,329), so no block starts with 'Figure S1'; S1 is the only SI figure, so there is no number gap either. clip = union of the two embedded rasters (191.7,328.8,429.2,513.8) + (192.0,517.4,429.5,702.4) and their 'a)'/'b)' labels + margin",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (manual crop) + LLZO-LiNbO3 curve traced (minimum at x about 0.49, Table S4 lists x_m 0.62)"
   },
   {
    "key": "t1",
@@ -147,7 +159,9 @@
    "h": 621,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.929
+   "blank": 0.929,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "t2",
@@ -167,7 +181,9 @@
    "h": 1580,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.952
+   "blank": 0.952,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "t3",
@@ -187,7 +203,9 @@
    "h": 864,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.925
+   "blank": 0.925,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "t4",
@@ -207,7 +225,9 @@
    "h": 823,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.941
+   "blank": 0.941,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "t5",
@@ -227,7 +247,9 @@
    "h": 1031,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.931
+   "blank": 0.931,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "t6",
@@ -247,7 +269,9 @@
    "h": 992,
    "dpi": 300,
    "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.945
+   "blank": 0.945,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "tS1",
@@ -267,7 +291,9 @@
    "h": 2640,
    "dpi": 300,
    "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.921
+   "blank": 0.921,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "tS2",
@@ -287,7 +313,9 @@
    "h": 1996,
    "dpi": 300,
    "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.896
+   "blank": 0.896,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "tS3",
@@ -307,7 +335,9 @@
    "h": 2715,
    "dpi": 300,
    "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.871
+   "blank": 0.871,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   },
   {
    "key": "tS4",
@@ -327,7 +357,9 @@
    "h": 1110,
    "dpi": 300,
    "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
-   "blank": 0.9
+   "blank": 0.9,
+   "viewed": false,
+   "viewed_how": "not read as an image - table transcribed from the PDF text layer / page render (convention: tables from text)"
   }
  ],
  "missing_labels": [
