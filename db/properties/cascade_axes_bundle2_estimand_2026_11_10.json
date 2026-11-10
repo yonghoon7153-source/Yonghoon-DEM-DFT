@@ -5,7 +5,7 @@
  "date": "2026-11-10",
  "results_seen": "부분 — §0 '이미_본_것' 그대로 (축 ①②③ 판독 · 묶음 1 선택 · +U 민감도 · 내부 리뷰 ED 가 묶음 1 원자료로 낸 kink 간격 · 동률 묶음은 봤다 · 새 축 ④ ⑤ ⑥ 의 값은 0 건 — 계산하지 않았다)",
  "citable": false,
- "status": "proposed",
+ "status": "active",
  "system": "cascade (트랙 cascade · 1저자 = 사용자)",
  "관점": "**도핑 격자의 조성** — 축 ① · ③ 과 같은 91 종 · 같은 조성 (1 단계 계면 표 db/properties/cascade_interface_90.jsonl) · 같은 최소 kink 반응식. MP 에는 도핑 LPSCl 상이 없어서 그 조성은 hull 위 평형 상 혼합으로 들어간다 (use_hull_energy — 구동력은 하한 쪽 · 축 ① · ③ 과 같다). ⛔ '전구체 화합물 (별도 상)' 관점이 아니다 (8 월 T9 · T10 · 회신 BJ).",
  "제목": "cascade 스크리닝 묶음 2 — 91 전구체 설계를 같은 최소 kink 반응식의 새 두 열 (⑤ 분해 부피 변화 · ⑥ Li 쪽 산물 품질) 과 ④ 우리 셀 작동창 (2.5–4.25 V vs Li) 의 도펀트 행방으로 더 보고, 축 ① · ③ 과 합쳐 **가중치 없는 전체 순위** (약점 순위 · Pareto 층) 를 낸다",
@@ -327,6 +327,12 @@
    "state": "proposed",
    "by": "agent",
    "note": "내부 반박 리뷰 ED (조건부 GO) 를 결과 전에 반영 — 문장 1–19 · 고친 앞 판은 '_⛔_ED_전_판' 으로 남김 · 사용자 비준 대기"
+  },
+  {
+   "at": "2026-11-10",
+   "state": "active",
+   "by": "사용자 (cascade 1저자)",
+   "note": "사용자 2026-11-10 (이 세션 · AskUserQuestion): cascade 묶음 2 카드 (커밋 9337cbba · 내부 리뷰 ED 반영본) '비준 — 진행 (Recommended)' · 결정 D-2026-11-10-cascade-axes-bundle2 active (비준 커밋 = 카드 커밋 9337cbba)"
   }
  ],
  "ED_반영_2026_11_10": {
