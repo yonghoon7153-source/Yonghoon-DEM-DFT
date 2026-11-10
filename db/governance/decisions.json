@@ -12618,6 +12618,71 @@
     "근거_발화": "사용자 2026-11-10 (이 세션 · AskUserQuestion): cascade 묶음 2 카드 (커밋 9337cbba · 내부 리뷰 ED 반영본) '비준 — 진행 (Recommended)'",
     "decision_digest": "sha256:83e85004147d9e1b0e1aa489418f2d06f362c1185dfcda47add8d80f53b404e0"
    }
+  },
+  {
+   "id": "D-2026-11-10-li2s3-dense-protocol-ensemble-amend2",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "li2s.glass.transport.dense",
+   "slot": "li2s3_dense_glass_protocol_ensemble_amend2_eb",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ],
+    "tasks": [
+     "md_diffusion_window",
+     "diffusion_ratio",
+     "activation_energy_difference"
+    ],
+    "methods": [
+     "uma-s-1p1-omat-turbo",
+     "langevin_nvt"
+    ],
+    "use_cases": [
+     "manuscript_relative_only"
+    ]
+   },
+   "title": "li2s-3 카드 개정 EB — 판독 도구 고침 (생산 프레임 수 = prod/save · 실행 기록 결속 · 실제 추론 모드 · 궤적 ↔ 입력 · 검증 실패 = 판정 보류 · 허가 문 · 압력 계산기) · 새 기계 값 여섯 · 판독 허가 키 꼴",
+   "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 개정_EB_2026_11_10 이 정의다: 기계_판독_값.stage2 에 n_atoms 120 · save_fs 100 · dt_fs 2 · bind_PS_median_disp_max_A 1.0 · continuity_max_A {Li 4.0 · P 2.5 · S 2.5 · Cl 2.5} · mean_T_tol_frac 0.02 · 생산 프레임 수 = prod/save · 프레임 k ↔ t = (k+1)·save · invalid · incomplete 런이 하나라도 있거나 큐 끝 줄이 없으면 W · 갈래 · cond550 을 내지 않고 판정 보류 (검증 실패는 수송 게이트 미통과가 아니다 · 그 런은 큐 v2 로 같은 카드 값 재실행) · 실행된 러너 · 드라이버 · 추론 모드는 kgy 로그 · run_meta · ensemble_results 로 결속 · 판독은 고친 도구 → 대조 잡 same = True (같은 sha16) → 허가 커밋 순서로 한 번 · 카드 문장 EB 1–6.",
+   "rationale": "내부 반박 리뷰 EB (NO-GO): 도구가 생산 프레임 수를 prod/save + 1 로 기대해 올바른 16 런이 전부 invalid → '닫는다' 가 될 뻔했다 (selftest 픽스처가 같은 잘못된 가정). 실행된 코드 · 모드 · 궤적 결속이 비어 있었고 검증 실패가 물리 판정으로 넘어갔다. 결과 전에 고친다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "2 단계 결과 0 건 · 대조 잡 아직 안 돔 · 16 런 진행 신호만",
+   "card": "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json",
+   "record": "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json",
+   "amends": "D-2026-11-10-li2s3-dense-protocol-ensemble-amend1",
+   "depends_on": [
+    "D-2026-11-10-li2s3-dense-protocol-ensemble",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend1"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md (내부 반박 리뷰 · NO-GO · 원문)",
+    "tools/ionic/li2s3_stage2_readout.py sha16 0697c527c325bb09 (selftest 83/83 · 깨기 49/49)"
+   ],
+   "reopen_criteria": [
+    "2 단계 결과를 연 뒤에는 이 규칙을 바꾸지 않는다"
+   ],
+   "enforcement": "판독 도구가 카드 기계 값 여섯이 없으면 네 하위 명령 모두 거부 (종료 2) · 검증 실패 · 미완 · 큐 끝 줄 없음이면 판정 보류 (종료 3 · 보류 기록만) · 허가 키 · 대조 잡 출력 (kind · same · 깨끗한 트리 · 같은 sha16) 이 없으면 readout · pressure 거부 · 고정 출력 경로 덮어쓰기 거부",
+   "cost_cap": {
+    "GPU_h": "0 (판독 도구만 · 2 단계 상한 160 그대로)"
+   },
+   "track": {
+    "name": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송)",
+    "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
+   },
+   "proposed_by": "claude-session-2026-11-10 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-10",
+     "state": "proposed",
+     "by": "agent",
+     "note": "내부 반박 리뷰 EB (NO-GO) 반영 — 결과 전 · 위임 10-30 이라 다음 커밋에서 '사용자 (위임 10-30)' 로 활성"
+    }
+   ]
   }
  ]
 }
