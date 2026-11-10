@@ -13,7 +13,8 @@ numbers, failure lines are kept with every number replaced by one '#'.
 
 exit code  0 PROBE_OK             one accepted arm, every required key present, converged, runner rc 0
            3 PROBE_NOT_CONVERGED  keys present but not a clean positive converged solve (iterations are still reported)
-           4 PROBE_INCOMPLETE     something required is missing or has an unexpected shape (shown as NONE + reason)
+           4 PROBE_INCOMPLETE     something required is missing or has an unexpected shape (shown as NONE + reason),
+                                  an identity / registered-value check has no evidence, or the report could not be written
            5 PROBE_REJECTED       rejection marker, non-SBE arm, or the seal is broken in the runner log
            2 usage
 Rules: docs/reviews/rint2_dev_probe_ledger_20261026.md section 2.  Standard library only.  Python 3.8.  ASCII source.
@@ -26,7 +27,7 @@ import os
 import re
 import sys
 
-SCHEMA = 'rint2-probe6-report-v1'
+SCHEMA = 'rint2-probe6-report-v2'
 RC_OK, RC_USAGE, RC_NOT_CONVERGED, RC_INCOMPLETE, RC_REJECTED = 0, 2, 3, 4, 5
 VERDICT = {RC_OK: 'PROBE_OK', RC_NOT_CONVERGED: 'PROBE_NOT_CONVERGED', RC_INCOMPLETE: 'PROBE_INCOMPLETE',
            RC_REJECTED: 'PROBE_REJECTED'}
@@ -108,7 +109,12 @@ META_FIELDS = (
     ('tool_sha256_wrapper', r'[0-9a-f]{64}', 'str'), ('tool_sha256_reader', r'[0-9a-f]{64}', 'str'),
     ('runner_sha256', r'[0-9a-f]{64}', 'str'), ('runner_log_sha256', r'[0-9a-f]{64}', 'str'),
     ('s0_plan_sha256', r'[0-9a-f]{64}', 'str'), ('kit_run_before', r'[0-9]{1,4}', 'int'), ('kit_run_new', r'[0-9]{1,4}', 'int'),
-)
+    ('attempt', r'[12]', 'int'), ('expect_rtol', r'[0-9][0-9.eE+-]{0,11}', 'str'), ('expect_backend', r'gpu|cpu', 'str'),
+    ('solve_started', r'[01]', 'int'), ('orphans', r'[0-9]{1,6}', 'int'), ('orphans_left', r'[0-9]{1,6}', 'int'),
+    ('pregate', r'[01]', 'int'), ('gpu_used_start_mib', r'[0-9]{1,7}|NA', 'str'), ('disk_free_gb_kit', r'[0-9]{1,9}|NA', 'str'),
+    ('disk_free_gb_log', r'[0-9]{1,9}|NA', 'str'),
+) + tuple(('env_' + n, r'unset|empty|set|value:[A-Za-z0-9][A-Za-z0-9,._-]{0,31}', 'str') for n in (
+    'CUDA_VISIBLE_DEVICES', 'OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'OPENBLAS_CORETYPE', 'PYTHONUNBUFFERED', 'BASH_ENV'))
 #: watcher environment fingerprint (key=value) - versions only
 ENV_KEYS = ('python', 'python_impl', 'numpy', 'scipy', 'cupy', 'cupy_cuda_runtime', 'numpy_blas', 'blas_core', 'gpu_name',
             'gpu_driver', 'gpu_mem_total_mib', 'cuda_version', 'kernel', 'os', 'cpu_model', 'nproc', 'mem_total_kb',
@@ -119,6 +125,7 @@ SAMPLE_COLS = ('epoch', 'elapsed_s', 'log_lines', 'rss_sum_kb', 'rss_proc_kb', '
 # --- runner / payload log lines (non-ASCII text as escapes; sources: scripts/mpm_webapp_payload.py,
 #     scripts/step3_sigma.py, scripts/sdcp_gain_vox015_8arm.sh) ---
 SEAL_PREFIX = '[\ubd09\uc778'                                  # the payload's seal token starts with this
+RESULT_WORD = '\u03c3_e_eff'                                    # the payload's result word (sigma_e_eff)
 _NUM = r'[0-9.eE+-]+|nan|inf'
 LOG_SOLVE = re.compile(r'^\s*STEP3 solve: ([0-9,]+) dof, plate contacts ([0-9,]+)/([0-9,]+) \u2014 CG running \((GPU|CPU),')
 LOG_DONE = re.compile(r'^\s*STEP3 \u03c3_e_eff = (.*?) S/cm\s+\(vox ([0-9.]+)[\u00b5\u03bc]m, ([0-9,]+) dof, '
@@ -141,9 +148,11 @@ LOG_GATES = (('gate_receipt', re.compile(r'^\[p2\] \ub7f0 \uc601\uc218\uc99d \u2
              ('gate_undefined', re.compile(r'^\[p2\] \ubbf8\uc815\uc758 \uc774\ub984 \uc5c6\uc74c')))
 FAIL_MARK = re.compile(r'ABORT|FAILED|Traceback|Error|error|Killed|REFUSED|not converged|UNRELIABLE|CUDA|OutOfMemory|'
                        r'[A-Z][A-Z0-9_]{2,}\||^ {5}\S|\u26a0|\u2717|\u26d4|\uc2e4\ud328')
-#: one '#' per NUMBER (not per digit): the digit count of a fixed-notation value would give away its magnitude
-_MASK_RE = re.compile(r'[0-9]+(?:[.,][0-9]+)*(?:[eE][+-]?[0-9]+)?')
-MAX_MASKED = 60
+#: one '#' per NUMBER (not per digit): the digit count of a fixed-notation value would give away its magnitude.
+#: Also hex floats, any Unicode decimal digit (\\d: full-width ...) and super / subscript digits.
+_SUPSUB = '\u2070\u00b9\u00b2\u00b3\u2074-\u2079\u2080-\u2089'
+_MASK_RE = re.compile(r'[-+]?0[xX][0-9a-fA-F]*\.?[0-9a-fA-F]*(?:[pP][-+]?[0-9]+)?|\d+(?:[.,]\d+)*(?:[eE][-+\u2212]?\d+)?|[' + _SUPSUB + r']+')
+MASK_KEEP = 30                                                  # masked failure lines kept: the first 30 and the last 30
 
 
 def sha256_file(path):
@@ -324,7 +333,7 @@ def parse_log(path):
         return None, [], {}, ['runner.log unreadable'], False
     lines = text.split('\n')
     log['n_lines'] = len(lines) - 1 if text.endswith('\n') else len(lines)
-    masked = []
+    masked, tail, n_masked = [], [], 0
     for no, line in enumerate(lines, 1):
         m = LOG_ARM.match(line)
         if m:
@@ -413,6 +422,11 @@ def parse_log(path):
                 log['sealed'] = False
                 flt.append('collector_line SEAL_BROKEN (value not copied)')
             continue
+        if (RESULT_WORD in line or 'STEP3 collector' in line) and 'S/cm' in line and SEAL_PREFIX not in line:
+            seal_broken = True                                      # a result line in a shape the two patterns above do not know
+            log['sealed'] = False
+            flt.append('result_line SEAL_BROKEN (value not copied)')
+            continue
         m = LOG_PEAK.match(line)
         if m:
             log['runner_peak_tag'] = m.group(1) if re.fullmatch(r'p2_[A-Za-z0-9_]+', m.group(1)) else None
@@ -424,11 +438,19 @@ def parse_log(path):
             marks.setdefault('saved', no)
             flt.append('payload_saved=1')
             continue
-        if FAIL_MARK.search(line) and len(masked) < MAX_MASKED:
-            masked.append(mask_line(line.strip())[:240])
-    log['masked_lines'] = masked
-    for ln in masked:
+        if FAIL_MARK.search(line):
+            n_masked += 1
+            ml = mask_line(line.strip())[:240]
+            if len(masked) < MASK_KEEP:
+                masked.append(ml)
+            else:
+                tail = (tail + [ml])[-MASK_KEEP:]
+    log['masked_lines'] = masked + tail
+    log['masked_lines_dropped'] = n_masked - len(masked) - len(tail)
+    for ln in log['masked_lines']:
         flt.append('masked: ' + ln)
+    if log['masked_lines_dropped']:
+        flt.append('masked_dropped=%d' % log['masked_lines_dropped'])
     if seal_broken:
         probs.append('SEAL_BROKEN_IN_LOG: the runner log has a result line without the seal token')
     return log, flt, marks, probs, seal_broken
@@ -549,14 +571,25 @@ def first_time(rows, line_no):
     return None
 
 
+DERIVED_FIELDS = ('backend_fallback', 'origin_shift_zero')
+
+
+def no_arm_fields(why):
+    """The closed field table with every key present (missing + reason) - the same keys whether or not an arm was read."""
+    f = {row[0]: missing(why) for row in ARM_FIELDS}
+    for k in DERIVED_FIELDS:
+        f[k] = missing(why)
+    return f
+
+
 def read_arm(path):
     """-> (fields, sealed number set, problems).  Only ARM_FIELDS plus four derived identity checks."""
     doc, why = load_json(path)
     if doc is None:
-        return {row[0]: missing('arm JSON ' + why) for row in ARM_FIELDS}, set(), ['arm JSON ' + why]
+        return no_arm_fields('arm JSON ' + why), set(), ['arm JSON ' + why]
     found, s3 = pick(doc, ('mpm_metrics', 'step3'))
     if not found or not isinstance(s3, dict):
-        return {row[0]: missing('no step3 block') for row in ARM_FIELDS}, set(), ['arm JSON has no mpm_metrics.step3 block']
+        return no_arm_fields('no step3 block'), set(), ['arm JSON has no mpm_metrics.step3 block']
     f = read_table(s3, ARM_FIELDS)
     fnd, fb = pick(s3, ('manifest', 'backend_last_solve', 'fallback_reason'))
     f['backend_fallback'] = (fb is not None) if fnd else missing('absent')
@@ -677,6 +710,7 @@ def run(args):
         if seal_broken:
             rejected = True
     rep['meta'] = meta if meta is not None else ({} if not args.logdir else missing('meta.txt unreadable'))
+    rep['attempt'] = (meta or {}).get('attempt', missing('absent')) if args.logdir else missing('not requested')
     rep['env'] = env if env is not None else ({} if not args.logdir else missing('env.txt unreadable'))
     start = (meta or {}).get('start_epoch')
     # ---- which arm file ----
@@ -734,7 +768,7 @@ def run(args):
     rep['kit_run_before_files'] = before
     rep['source'] = source
     # ---- arm fields (closed table) ----
-    fields, sealed = {row[0]: missing('no arm file') for row in ARM_FIELDS}, set()
+    fields, sealed = no_arm_fields('no arm file'), set()
     if arm_path is not None:
         fields, sealed, ap = read_arm(arm_path)
         probs += ap
@@ -785,6 +819,13 @@ def run(args):
         timing['pre_step3_s'] = (tmark['voxelize'] - start) if (tmark.get('voxelize') is not None and start) else missing('absent')
         timing['raster_prep_s'] = span('voxelize', 'solve')
         timing['cg_cert_s'] = span('solve', 'done')
+        end = (meta or {}).get('end_epoch')
+        if tmark.get('done') is not None:
+            timing['solve_to_end_s'] = missing('result line present')
+        elif tmark.get('solve') is not None and isinstance(end, int):
+            timing['solve_to_end_s'] = end - tmark['solve']        # the run ended (or was stopped) before the result line
+        else:
+            timing['solve_to_end_s'] = missing('absent')
         timing['resolution_s'] = (meta or {}).get('sample_s', missing('absent'))
         ci, ri = fields.get('cg_iters'), fields.get('cert_resolve_iters')
         if isinstance(timing['cg_cert_s'], int) and isinstance(ci, int) and isinstance(ri, int) and (ci + ri) > 0:
@@ -830,9 +871,15 @@ def run(args):
     else:
         miss = [k for k in REQUIRED if is_missing(f.get(k))]
         st = f.get('cert_status')
+        said_unconverged = (f.get('unconverged') is True or f.get('cert_ok') is False
+                            or f.get('electronic_status') == 'unconverged'
+                            or (isinstance(f.get('cg_info'), int) and f.get('cg_info') != 0))
         if isinstance(st, str) and st != 'POSITIVE_SOLVED':
             rc = RC_NOT_CONVERGED
             probs.append('certificate status is not POSITIVE_SOLVED (no clean positive solve)')
+        elif miss and said_unconverged:
+            rc = RC_NOT_CONVERGED
+            probs.append('not converged (the arm says so); required key(s) missing as well: ' + ' '.join(miss))
         elif miss:
             rc = RC_INCOMPLETE
             probs.append('required key(s) missing: ' + ' '.join(miss))
@@ -861,18 +908,24 @@ def run(args):
             if f.get('origin_shift_zero') is not True:
                 incomplete = True
                 probs.append('arm origin shift is not zero (not arm 0)')
-            if f.get('bed_inputs_match_s0') is False:
+            # identity: with a log folder and an S0 plan the three checks must be True (no evidence = not OK)
+            idreq = bool(args.logdir and args.s0_plan and arm_path is not None)
+            if f.get('bed_inputs_match_s0') is False or (idreq and f.get('bed_inputs_match_s0') is not True):
                 incomplete = True
-                probs.append('arm input digests differ from the S0 stage-1 plan (not the same bed)')
-            if f.get('tol_ff_matches_s0') is False:
+                probs.append('arm input digests are not shown to match the S0 stage-1 plan (not the same bed, or no evidence)')
+            if f.get('tol_ff_matches_s0') is False or (idreq and f.get('tol_ff_matches_s0') is not True):
                 incomplete = True
-                probs.append('receipt tol_ff differs from the S0 stage-1 plan')
-            if f.get('code_matches_pin') is False:
+                probs.append('receipt tol_ff is not shown to match the S0 stage-1 plan')
+            if f.get('code_matches_pin') is False or (idreq and f.get('code_matches_pin') is not True):
                 incomplete = True
-                probs.append('arm code sha is not the pin (or the tree was dirty)')
+                probs.append('arm code sha is not shown to be the pin (other commit, dirty tree, or no evidence)')
             if source != 'outdir':
                 incomplete = True
                 probs.append('the arm was not accepted by the runner (leftover in the kit run folder)')
+            eb, rb = f.get('electronic_backend_used'), receipt.get('receipt_expect_backend')
+            if isinstance(rb, str) and eb != rb:
+                incomplete = True
+                probs.append('solve backend differs from the receipt expectation')
             if args.logdir:
                 rc_run = (meta or {}).get('runner_rc')
                 if rc_run is None:
@@ -888,10 +941,24 @@ def run(args):
                     if key not in log:
                         incomplete = True
                         probs.append('runner log has no STEP3 result line (time unknown)')
-                eb, rb = f.get('electronic_backend_used'), receipt.get('receipt_expect_backend')
-                if isinstance(rb, str) and eb != rb:
+                # registered values (the watcher writes what it set into meta) and a clean watcher record
+                m_ = meta or {}
+                if not isinstance(m_.get('maxiter'), int) or log.get('cg_maxiter') != m_.get('maxiter'):
                     incomplete = True
-                    probs.append('solve backend differs from the receipt expectation')
+                    probs.append('runner log CG maxiter differs from the meta maxiter (or one is missing)')
+                xr = _num(m_['expect_rtol']) if isinstance(m_.get('expect_rtol'), str) else None
+                if xr is None or receipt.get('receipt_step3_rtol') != xr or f.get('cert_rtol_used') != xr:
+                    incomplete = True
+                    probs.append('receipt / certificate rtol differs from the meta expect_rtol (or one is missing)')
+                xb = m_.get('expect_backend')
+                if not isinstance(xb, str) or rb != xb or eb != xb or f.get('backend_used') != xb:
+                    incomplete = True
+                    probs.append('solve backend differs from the meta expect_backend (or one is missing)')
+                for key, want in (('aborted', 0), ('cap_term', 0), ('git_lines_after', 0), ('orphans', 0),
+                                  ('kit_run_matches_s0', 1), ('solve_started', 1)):
+                    if m_.get(key) != want:
+                        incomplete = True
+                        probs.append('meta %s is not %d (or missing)' % (key, want))
             if incomplete:
                 rc = RC_INCOMPLETE
     rep['verdict'], rep['rc'], rep['problems'], rep['notes'] = VERDICT[rc], rc, probs, notes
@@ -900,7 +967,8 @@ def run(args):
 
 def screen(rep):
     L = []
-    L.append('[probe6] verdict %s (rc %d)   source %s   scope %s' % (rep['verdict'], rep['rc'], rep['source'], rep['scope']))
+    L.append('[probe6] verdict %s (rc %d)   source %s   scope %s   attempt %s'
+             % (rep['verdict'], rep['rc'], rep['source'], rep['scope'], fmt(rep.get('attempt', missing('absent')))))
     arm = rep.get('arm') or {}
     if arm:
         L.append('[probe6] arm %s  size %d  sha256 %s' % (arm.get('file'), arm.get('size'), arm.get('sha256')))
@@ -917,10 +985,11 @@ def screen(rep):
                   'not_converged_resid', 'cert_fail_status', 'cert_fail_imbalance', 'skip_cached', 'saved', 'n_lines'):
             if k in lg:
                 L.append('[probe6] %-26s = %s' % (k, fmt(lg[k])))
-        L.append('[probe6] %-26s = %d (digits masked; see the report)' % ('masked_failure_lines', len(lg.get('masked_lines') or [])))
+        L.append('[probe6] %-26s = %d (%d dropped from the middle; digits masked; see the report)'
+                 % ('masked_failure_lines', len(lg.get('masked_lines') or []), lg.get('masked_lines_dropped') or 0))
         L.append('[probe6] --- time (s) ---')
         for k in ('wall_s', 'runner_rc', 'pre_step3_s', 'raster_prep_s', 'cg_cert_s', 'resolution_s', 'cg_cert_s_per_iter',
-                  'step3_stage_s', 'face_alpha_prep_s', 'cjunc_prep_s'):
+                  'solve_to_end_s', 'step3_stage_s', 'face_alpha_prep_s', 'cjunc_prep_s'):
             L.append('[probe6] %-26s = %s' % (k, fmt(rep['timing'].get(k, missing('absent')))))
         L.append('[probe6] --- memory ---')
         for k in sorted(rep['resources']):
@@ -968,15 +1037,21 @@ def main(argv=None):
             tb = tb.tb_next
         print('[probe6] READER_CRASH %s at line %s (no value printed)' % (type(e).__name__, tb.tb_lineno if tb else '?'))
         return RC_INCOMPLETE
-    text = json.dumps(rep, indent=1, sort_keys=True, ensure_ascii=True, allow_nan=False)
-    with open(report, 'w', encoding='ascii') as f:
-        f.write(text + '\n')
-    if filtered:
-        with open(filtered, 'w', encoding='utf-8') as f:
-            f.write(''.join(ln + '\n' for ln in flt))
+    rc, why = rep['rc'], None
+    try:
+        text = json.dumps(rep, indent=1, sort_keys=True, ensure_ascii=True, allow_nan=False)
+        with open(report, 'w', encoding='ascii') as f:
+            f.write(text + '\n')
+        if filtered:
+            with open(filtered, 'w', encoding='utf-8') as f:
+                f.write(''.join(ln + '\n' for ln in flt))
+    except (OSError, ValueError) as e:                         # full disk, read-only folder ... : never a traceback
+        why, rc = type(e).__name__, RC_INCOMPLETE
     for ln in screen(rep):
         print(ln.encode('ascii', 'replace').decode('ascii'))
-    return rep['rc']
+    if why:
+        print('[probe6] READER_CRASH %s while writing the report or the filtered log (no value printed) - rc 4' % why)
+    return rc
 
 
 if __name__ == '__main__':

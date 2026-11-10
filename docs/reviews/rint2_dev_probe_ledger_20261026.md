@@ -25,22 +25,29 @@
 
 | 번호 | 시작 (KST) | 명령 줄 | 핀 | 기계 · 환경 | 결과 (반복 · 잔차 · 판 전류 불균형 · 시간 · 메모리) | 폴더 sha256 |
 |---|---|---|---|---|---|---|
-| 1 | ⬜ (발사 뒤 · 묶음 meta 의 start_kst) | 아래 "시도 1 의 명령 줄" (감시 셸 한 줄 + 감시 셸이 내는 러너 명령 한 줄) | 이 줄을 넣은 커밋 (stoic 가지 · 발사 블록의 PIN 이 그 40 자리다 · 감시 셸이 작업 트리 HEAD = PIN 을 확인하고 묶음 meta 에 적는다 · 40 자리는 발사 뒤 이 칸에 옮긴다 · 아래 글) | kgy · Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1 · cupy-cuda12x 12.3.0 · RTX 3090 24 GB · OpenBLAS SkylakeX (11-09 기계 조사) · GPU 드라이버 · CUDA 판 = ⬜ (발사 뒤 · 묶음 env) | (결과 0 건) | (결과 0 건) |
+| 1 | ⬜ (발사 뒤 · 묶음 meta 의 start_kst) | 아래 "시도 1 · 2 의 명령 줄" 의 시도 1 (감시 셸 한 줄 + 감시 셸이 내는 러너 명령 한 줄 · 한도 30000 · 짧은 확인) | 이 줄을 넣은 커밋 (stoic 가지 · 발사 블록의 PIN 이 그 40 자리다 · 감시 셸이 작업 트리 HEAD = PIN 을 확인하고 묶음 meta 에 적는다 · 40 자리는 발사 뒤 이 칸에 옮긴다 · 아래 글) | kgy · Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1 · cupy-cuda12x 12.3.0 · RTX 3090 24 GB · OpenBLAS SkylakeX (11-09 기계 조사) · GPU 드라이버 · CUDA 판 = ⬜ (발사 뒤 · 묶음 env) | (결과 0 건) | (결과 0 건) |
+| 2 | ⬜ (시도 1 의 DONE 뒤 · 묶음 meta 의 start_kst) | 아래 "시도 1 · 2 의 명령 줄" 의 시도 2 (한도 1500000) | 시도 2 발사 직전의 stoic 끝 (시도 1 의 핀이거나 그 뒤 커밋 · 블록이 시도 1 의 DONE 폴더 meta 의 핀이 그 앞인지 본다 · 40 자리는 발사 뒤 이 칸에) | 시도 1 과 같은 기계 (kgy) · ⬜ (발사 뒤 · 묶음 env) | (결과 0 건) | (결과 0 건) |
 
-### 시도 1 의 명령 줄 (11-10 등록 · 결과 0 건 · 시작 전 커밋)
+### 시도 1 · 2 의 명령 줄 (11-10 등록 · 결과 0 건 · 시작 전 커밋)
 
-감시 셸 (블록이 nohup 으로 띄운다 · `<W>` = 핀 작업 트리 · `<O>` = 출력 폴더 · `<L>` = 로그 폴더 · 블록 = `docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md`):
+시도 1 (블록 `ATTEMPT=1` · 한도 30000 · 한도에 닿아 끝나는 것이 정상):
+
+    bash <W>/docs/reviews/rint2_probe6_prep_20261110/tools/run_probe6.sh <W> <O> <L> <PIN> 30000
+
+    env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 30000" OUTDIR=<O> PYTHONUNBUFFERED=1 bash <W>/scripts/sdcp_gain_vox015_8arm.sh
+
+시도 2 (블록 `ATTEMPT=2` · 한도 1500000 · 시도 1 의 DONE 뒤):
 
     bash <W>/docs/reviews/rint2_probe6_prep_20261110/tools/run_probe6.sh <W> <O> <L> <PIN> 1500000
 
-감시 셸이 킷 뿌리에서 내는 러너 명령 (등록 R §10-1 (2) 의 꼴 · 실제로 돈 글자는 묶음의 command.txt 에 남는다):
+    env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 1500000" OUTDIR=<O> PYTHONUNBUFFERED=1 bash <W>/scripts/sdcp_gain_vox015_8arm.sh
 
-    env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 1500000" OUTDIR=<O> bash <W>/scripts/sdcp_gain_vox015_8arm.sh
-
-- 러너 env 에 `SIGMA_VGCF_OVERRIDE` 는 없다.  `--show-results` 없음 (값 봉인).  자리표 값의 근거와 maxiter 1500000 의 까닭 = `docs/reviews/rint2_probe6_prep_20261110/LEDGER_LINE.md` 끝 표 · `docs/reviews/rint2_probe6_prep_20261110/README.md` §6.
-- **핀 칸** — 줄이 자기가 든 커밋의 번호를 미리 담을 수 없어 "이 줄을 넣은 커밋" 으로 적는다.  발사 전에 이 줄이나 준비물을 고치는 커밋이 더 생기면 (내부 반박 리뷰의 고침 등) 핀 = 발사 직전의 stoic 끝이고, 그 사실을 이 줄에 적은 뒤 발사한다.  어느 쪽이든 발사 블록의 PIN (40 자리) 과 묶음 meta 의 pin 이 같아야 하고, 발사 뒤 이 칸에 40 자리를 옮긴다.
-- **띄우기 전 STOP** — 블록이나 감시 셸이 러너를 시작하기 전에 STOP 으로 끝나면 (풀이 0 · 화면에 `runner not started`) 새 시도로 세지 않고 이 줄의 결과 칸에 STOP 사유를 적는다.  러너가 한 번이라도 시작됐으면 그 시도는 끝난 것이고 (멈춤 · 실패 포함 · 폴더 그대로) 다음은 2 번 줄이다.
-- 검토 = 내부 반박 리뷰 (독립 조수 · Codex 아님) 를 발사 전에 거친다 (1저자 11-10 · Codex 회차는 봉인 전 묶음 한 번).
+- 러너 env 에 `SIGMA_VGCF_OVERRIDE` 는 없다.  `--show-results` 없음 (값 봉인).  `PYTHONUNBUFFERED=1` 은 물리 축이 아니다 (감시 셸이 러너에 준다 · 일찍 멈출 때 payload 의 한도 줄이 버퍼에 갇히지 않게).  자리표 값의 근거와 두 한도의 까닭 = `docs/reviews/rint2_probe6_prep_20261110/LEDGER_LINE.md` 끝 표 · `docs/reviews/rint2_probe6_prep_20261110/README.md` §6.
+- 시도 2 의 한도 1500000 은 시도 1 의 결과를 보기 전에 정한 값이다.  시도 1 을 본 뒤 바꾸지 않는다 (바꾸려면 새 줄을 먼저 커밋한다).
+- **핀 칸**: 줄이 자기가 든 커밋의 번호를 미리 담을 수 없어 1 번 줄은 "이 줄을 넣은 커밋" 으로 적는다.  발사 전에 줄이나 준비물을 고치는 커밋이 더 생기면 핀 = 발사 직전의 stoic 끝이고 (블록이 fetch 뒤 PIN = 가지 끝인지 본다), 그 사실을 줄에 적은 뒤 발사한다.  2 번 줄의 핀 = 시도 2 발사 직전의 stoic 끝이다.  어느 쪽이든 발사 블록의 PIN (40 자리) 과 묶음 meta 의 pin 이 같아야 하고, 발사 뒤 그 칸에 40 자리를 옮긴다.
+- **띄우기 전 STOP · 풀이 0**: 풀이가 시작되기 전에 끝난 경우 (블록의 멈춤 · 감시 셸의 발사 전 확인 실패 · 러너 시작 전 신호 · 러너가 자기 런 전 관문에서 멈춤 · 풀이 0) 는 새 시도로 세지 않고 그 줄의 결과 칸에 사유를 적는다 (다음 발사도 같은 번호).  판별 = 로그 폴더의 `STOPPED` 표지 (감시 셸이 러너를 띄우지 않았다 · `runner_started=0` · 화면 · status.log 에 `STOP: … (runner not started)`) 또는 meta 의 `solve_started=0` (러너는 돌았지만 풀이 시작 줄이 없다).  블록 자신의 멈춤 (`[p6] STOP:` · 로그 폴더를 만들기 전) 은 폴더가 없다.  meta `solve_started=1` 이면 그 시도는 끝난 것이고 (일찍 멈춤 · 실패 · 한도 포함 · 폴더 그대로) 다음은 다음 번호 줄이다.  `WATCHER_FAILED` 표지 (러너 시작 뒤 감시 셸 자신의 실패 · meta 가 없을 수 있다) 는 본 세션이 그 폴더의 status.log 를 보고 정한다.
+  → 본 세션 정함 (11-10 · README §9 의 정할 것 6 · 7): 시도 2 의 핀 = 시도 1 의 핀이거나 그 뒤 커밋 (블록의 merge-base 조건 그대로 · 두 시도 사이에 시도 1 결과 줄을 커밋하므로) · `WATCHER_FAILED` 는 status.log 에 러너 시작 줄이 있으면 끝난 시도로 센다 (다음 = 다음 번호 · 폴더 그대로) · 러너 시작 줄이 없으면 위 STOP 과 같다 (새 시도로 세지 않음) · 남은 잠금 (`~/.probe6.lock`) 은 1저자가 같은 계정에 감시 셸 · 러너 · payload 프로세스가 없음을 본 뒤에만 지운다 · 붙잡아 둔 상대 칸 넷은 그대로 닫아 둔다 · 메모리 상한 규칙 · BASE 그대로.
+- 검토 = 내부 반박 리뷰 (독립 조수 · Codex 아님) 를 발사 전에 거친다 (1저자 11-10 · Codex 회차는 봉인 전 묶음 한 번).  → 1 회차 (11-10 · 보고 = 본 세션 scratch · 원장 P6R-01–12) = P1 0 · P2 5 · P3 7 (σ 새는 길 없음 · 킷 원 입력 해시 대조를 깨지 않음) → 고침 = 이 줄을 넣은 커밋 (두 시도 · 시험 먼저) → 고친 곳만 짧은 재리뷰 (독립 조수) 뒤 시도 1 발사 GO 요청.
 
 ## 4. 한정
 

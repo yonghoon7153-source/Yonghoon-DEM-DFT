@@ -358,7 +358,7 @@ run 'kg50_d3_cell_verdict   --selftest' python3 scripts/kg50_d3_cell_verdict.py 
 run 'kg50_q5_branches      --selftest' python3 scripts/kg50_q5_branches.py --selftest
 run 'kg50_q5_verdict       --selftest' python3 scripts/kg50_q5_verdict.py --selftest
 #  ★ 2026-10-24 (`SELF-132` · `SELF-133` · 1저자 Q2 (가)) — kgy 실행 환경 판 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 = kgy `~/dem-venv`) 에서
-#    R 경로 11 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 증서).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세 번째) 을 막는다.
+#    R 경로 12 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 증서 · ⑥ 탐침 판독기 · 감시 셸 · 블록 = 11-10 P6R-10).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세 번째) 을 막는다.
 #    인터프리터 없음 · 판 다름 = 실패 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh` (컨테이너 재시작 뒤 한 번) · 실측 ≈ 6–7 분.
 run 'kgy 판 R 경로 시험 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 · SELF-132)' bash scripts/check_kgy_py38.sh
 #  ★ 2026-10-04 (τ 결정 16 ② · 1저자 비준 *"권고대로"*) — 안 A: 망 솔버 띠 선택을 `boundary_sets` 로 추출 (추출 전 기준값과 비트 동일)
