@@ -1,13 +1,14 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 597
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 598
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 388건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 389건)
 - 2026-11-10 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
+- 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 초안 (2026-11-10) — 사용자 검토 · 발송 대기 (보낼지는…
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 - 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
 - 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
@@ -26,7 +27,6 @@
 - 2026-11-06 · `kb/reviews/codex_DR_reply_li2s2_dq_fixes_2026_11_05.md` — DR 회신 — li2s-2 DQ 고침 + DR 전 리뷰 9 차 확인 (879cbc00): NO-GO · 새 P1 2 (장부 기준 앞의 완료된 입력 불일치 판정을 무시하고 자동 대체 / 경로가 있지만 파일이 아닌 md_init_raw.xyz 를 '없음' 으로 기록해 입력 복구를 최초 생성으로 승인) · P2 1 (Q5 요약문이 구현보다 좁음) · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…
 - 2026-11-06 · `kb/reviews/codex_DS_prompt_li2s2_dr_fixes_2026_11_06.md` — DS 프롬프트 — li2s-2 DR 고침 + DS 전 독립 리뷰 고침 (6b124717): 기준 앞 면제는 실제 진행 중 incomplete 만 (입력 불일치는 앞뒤 없이 보류) · 경로 상태 (부재 / 정상 파일 / 링크 / 그 밖) · 생성 예외는 부재 → 정상 파일만 · seed_gate 가 비정상 경로를 입력 불일치로 · Q5 문구 — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 NO-GO (`codex…
 - 2026-11-06 · `kb/reviews/codex_DS_reply_li2s2_dr_fixes_2026_11_06.md` — DS 회신 — li2s-2 DR 고침 + DS 전 리뷰 3 차 확인 (6b124717): NO-GO · P1 1 (완료 여부 미확인을 md_complete_seen=False 로 기록해 완료 뒤 입력 변경을 '진행 중' 으로 면제) · P2 1 (판독기가 거부하는 판정 링크를 직접 수동 판정은 읽고 정상 파일로 바꿈) · 수령 2026-11-06 (사용자 붙여넣기 · 원문 보존 · 마크다운…
-- 2026-11-06 · `kb/reviews/codex_DT_prompt_li2s2_ds_fixes_2026_11_06.md` — DT 프롬프트 — li2s-2 DS 고침 + DT 전 독립 리뷰 고침 (63331be6): 진행 판정 셋 (완료 · 진행 중 확인 · 확인 불가) · '진행 중' 지름길은 진행 중 확인 + 뒤 산출물 없음 + 같은 plan · 실행 전 기록 + 완료 기록 시각 앞 · 직접 판정 경로 검사 · quench_ps 카드 대조 · 첫 시드 녹음 판정 못 씀 → invalid — 첫 담금질 GO 여부 · 발송 완료 · 회신 수령 2026-11-06 조건부 GO (`code…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (260)
+## reviews/ (261)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-10 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -383,6 +383,7 @@
 - `kb/reviews/codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md` — DX 회신 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2 확인: NO-GO · DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1 1 (파일럿 결과를 8 단계 결과로 재사용 — 실행 목적 미구분) · P2 2 (실행기 내용 기준 중복 제거 · EOS 입력 유효성)  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
 - `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 …)
 - `kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` — DY 회신 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3 확인: GO (사용자 새 비준 조건) · DX P1-1 · P2-1 · P2-2 닫힘 · base seed 규칙 찬성 (SEED 는 실행 전에 정하고 재시도에서도 유지하는 운영 규칙 같이) · EOS 결과 파일 결속은 DFT 전  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — GO (1 …)
+- `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐  (2026-11-10 · 초안 (2026-11-10) — 사용자 검토 · 발송 대기 (보낼지는…)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
@@ -660,4 +661,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 486개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 498개 (정본 목록: litdb/INDEX.md)

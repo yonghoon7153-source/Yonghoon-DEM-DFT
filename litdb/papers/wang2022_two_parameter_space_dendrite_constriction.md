@@ -22,7 +22,7 @@
 > 자금: MassCEC Catalyst Award · Harvard Climate Change Solutions Fund · Harvard Data Science Initiative Fund · Harvard Physical Sciences and Engineering Accelerator Award · CNS (NSF) · XSEDE.
 > **자료 공개 없음** — 124,497 물질의 K\* · E_hull 표 · 학습 모델 · 코드 어느 것도 SI 에 없다 (SI 는 PDF 한 편: 그림 15 + 표 1 + ML 설명 1 쪽).
 > 🎤 **관련 발표**: 해당 없음 — `litdb/talks/lee2026_skku_mlip_materials_design.md` §99-10 인입 대기열을 확인했고 이 논문은 그 표에 없다.
-> 계보: 같은 그룹의 `gilgonzalez2022_synergistic_cl_constricted_esw` (이 논문 ref 12 · 우리 약칭 [GG]) 와 한 줄기다. 그 편이 전압 창 (구속 ESW), 이 편이 Li 금속 0 V 계면. 리뷰 `wang2025_ai_ecosystems_electrolyte_interface_ssb` 의 `Fig. 8E–G` 원본이 이 논문이다 (그 digest §14b '구해야 할 논문' 2 번 · §12-③ 미결 → 이 문서 §11.3 에서 답함).
+> 계보: Xin Li 그룹 구속 앙상블 연작의 **Li 금속 쪽 판**이다. 양극 전압 쪽 K_crit = ref 9 → `fitzhugh2021_sei_design_constrained_ensemble` (목록 121) · pseudo-binary 고처리량의 전편 = ref 16 → `fitzhugh2019_ht_functionally_stable_interfaces_sulfide` (목록 122) — 둘 다 **같은 날 병행 작성**됐다. 이 digest 의 판독 · 판정은 그 둘을 보기 전에 끝냈고, 끝에 대조해 맞물리는 곳에만 가리킴을 달았다 (§11.3). 전압 창 (구속 ESW) 판 = ref 12 → `gilgonzalez2022_synergistic_cl_constricted_esw` (우리 약칭 [GG]). 리뷰 `wang2025_ai_ecosystems_electrolyte_interface_ssb` 의 `Fig. 8E–G` 원본이 이 논문이다 (그 digest §14b '구해야 할 논문' 2 번 · §12-③ 미결 → 이 문서 §11.3 에서 답함).
 
 ---
 
@@ -85,7 +85,7 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 | 2a | E_hull 의 정의 · 식 | pseudo-phase A_xB_{1−x} (물질 + Li 금속) 의 hull 에너지 Hull(x, 0 GPa) = G_RXN(x, 0 GPa) 의 **최대 크기**. **식 (2)**: E_hull = −min_x Hull(x, K_eff) = max_x \|Hull(x, K_eff)\| · K_eff = 0 에서의 값을 2 매개변수의 한 축으로 쓴다. 단위 eV/atom = **혼합물 (물질 + Li) 원자당** | p. 886 · p. 888–889 식 (2) · p. 890 |
 | 2b | 구속 분해 에너지 | **식 (1)**: Hull(x, K_eff) = Hull(x, 0 GPa) + K_eff·V(x)·ε(x) (G_RXN < 0 일 때) · 아니면 0. 변형에 **선형**인 항이다 | p. 888 식 (1) |
 | 2c | 임계 탄성률 K\* | **식 (3)**: K\* = max_x { −Hull(x, 0 GPa) / (V(x)·ε(x)) }. ε(x) ≤ 0 이면 ε := 0 으로 두고 **K\* = ∞**. Li 에 본래 안정하면 E_hull = K\* = 0 | p. 889 식 (3) · p. 890 |
-| 2d | reaction strain 의 정의 | **이 논문에 식이 없다.** *"both the volume (V) of the pseudo phase and the reaction strain (ε) are different [at different x]"* 한 문장과 *"following the procedure from our previous works"* (refs 9, 16) 뿐 | p. 888 |
+| 2d | reaction strain 의 정의 | **이 논문에 식이 없다.** *"both the volume (V) of the pseudo phase and the reaction strain (ε) are different [at different x]"* 한 문장과 *"following the procedure from our previous works"* (refs 9, 16) 뿐. 그런데 같은 날 digest 된 두 편을 보면 ref 16 (`fitzhugh2019_…`) 은 부피를 아예 무시하고 (ΔG ≈ ΔE) ref 9 (`fitzhugh2021_…`) 는 V⁰ 를 *"reference volume"* 한 마디로만 적는다 — 식의 원전은 그 앞 연작 (이 논문 refs 10 · 11 · 13) 이고 litdb 에 없다 | p. 888 |
 | 2e | Li 저장소 처리 | **에너지**: Li 금속이 pseudo-binary 의 한 끝점이다 ('0 V' = 상대가 Li 금속). 혼합 분율 x 를 훑어 가장 나쁜 x 를 쓴다 — μ_Li 를 고정한 열린계 (grand-potential) 표현이 아니라 **닫힌 혼합의 최솟값**이다. **부피**: 명시 없음. ✎ `Fig. S1a` 를 역산하면 V·ε 가 전 구간 양수 (1.0–6.5 Å³/atom) 인데, 소모된 Li 금속 부피를 반응물에 넣으면 음수가 될 수밖에 없다 → **[추정 · 근거 강함] Li 금속 부피는 기준 부피에 들어가지 않는다 (전해질 부피 기준의 팽창)** | p. 888–889 · `Fig. 1A` · `Fig. S1` · §5.3 |
 | 2f | 부피 정규화 | 에너지 · K_eff·V·ε 모두 **pseudo-phase 원자당** (`Fig. S1` 세로축 eV/atom · 가로축 "x Li + (1−x) P₂⸝₉S₇⸝₉" = 물질 화학식을 원자 1 개로 정규화). V(x) 의 분모가 무엇인지는 미기재 | `Fig. S1` · 식 (1) |
 | 3 | 분해 부피 변화 (ΔV/V · reaction strain) 가 조성별 숫자로 보고되나 | **아니다.** ε · V 는 식 (1) · (3) 의 기호로만 나오고, 본문 · SI 어디에도 어느 조성의 ε · ΔV/V 숫자 · 그림 · 표가 없다. 부피 변화를 되찾을 수 있는 곳은 예시 `Fig. S1a` (P₂S₇∣Li) 하나뿐이고 그것도 우리가 K_eff 의존성에서 역산해야 한다 (§5.3). K\* 에 ε 가 접혀 들어가 있지만 어느 x 에서의 값인지 몰라 풀 수 없다 | p. 888–890 전체 · SI 전체 |
@@ -107,7 +107,7 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 | 47 행 | "Xin Li 계열은 V_SE 로 정규화한다 … Li 저장소를 부피 수지에 넣는지가 적혀 있지 않다" | 이 논문에도 **적혀 있지 않다.** `Fig. S1a` 역산으로는 Li 금속 부피가 빠져 있다 ([추정]) — 우리 `tools/oxidation/constrained_esw.py` 가 쓰는 규약 (소모 · 방출 Li 는 저장소 · 구속 고체 부피에 안 센다) 과 같은 쪽 | 🟡 한 칸 채움 (추정) |
 | 55 행 | "Xin Li 계열에서 양의 reaction strain 은 이롭다" | 맞다 (ε ≤ 0 이면 K\* = ∞ · p. 889). **추가**: 이 논문은 한 걸음 더 간다 — 분해 자체를 균열 충전재로 **환영한다** | ⭕ + 보탤 것 |
 | 59 행 | "탄성률을 … 상평형을 옮기는 자유에너지 페널티로만 썼고 균열 · 공극 핵생성 예측에는 쓰지 않았다" | 맞다. 이 논문의 균열 논의는 전부 정성 서술이다 (응력 · 파괴 기준 계산 0) | ⭕ |
-| 207 행 | Fitzhugh 2021 (*EES*) 은 안 읽음 | 이 논문 p. 887 의 요약으로는 그 편이 **양극 전압 쪽** 계면상의 K_crit 이다 (무기 화합물 × 전해질의 사전 형성 계면상 · 고정 x₀). 보고서가 "구속 계열과 목적이 겹치지 않는다" 고 본 양극 쪽에 구속 계열 선행이 있다는 뜻 → **그 편의 우선순위가 올라간다** (원문 확인 전) | 🟡 다음 읽을 것 |
+| 207 행 | Fitzhugh 2021 (*EES*) 은 안 읽음 | 이 논문 p. 887 의 요약으로는 그 편이 **양극 전압 쪽** 계면상의 K_crit 이다 (무기 화합물 × 전해질의 사전 형성 계면상 · 고정 x₀). 보고서가 "구속 계열과 목적이 겹치지 않는다" 고 본 양극 쪽에 구속 계열 선행이 있다는 뜻이다. 같은 날 목록 121 로 digest 됐다 → 판정은 `fitzhugh2021_sei_design_constrained_ensemble` §7 에서 | 🟡 그 digest 로 넘김 |
 
 ### 4.3 판정 — 갭은 서지만 문구를 좁혀야 한다
 
@@ -140,7 +140,7 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 - **식 (2)** — E_hull = −min_{0≤x≤1} Hull(x, K_eff) = max_{0≤x≤1} |Hull(x, K_eff)|. 2 매개변수 공간의 축은 K_eff = 0 에서의 값 |Hull(x₀, 0 GPa)| 이다 (p. 886 · p. 890).
 - **식 (3)** — K\* = max_x { −Hull(x, 0 GPa) / (V(x)·ε(x)) }. *"If ε(x) ≤ 0, ε(x) will be defined to be 0 and K\* will become infinite. For the situation where the material is intrinsically stable with Li, both E_hull and K\* are zero by definition."*
 - *"although in general K\* increases when E_hull increases, there is not a simple analytical relationship between K\* and E_hull"* — |Hull| 이 최대인 x 와 V·ε 이 최소인 x 가 다를 수 있어서다 (p. 890).
-- [봄] 식 (1) 의 페널티는 **변형에 선형**이다 (½Kε² 꼴이 아니다). 식에서 K_eff 가 하는 일은 반응 팽창 ΔV = V·ε 에 곱해지는 유효 압력이다. 그래서 **K\* 는 차원으로나 꼴로나 |ΔE_rxn| / ΔV_rxn** — 반응을 p·ΔV 일로 상쇄하는 임계 압력과 같다 (유도는 refs 9 · 16 · 이 논문에 없음).
+- [봄] 식 (1) 의 페널티는 **변형에 선형**이다 (½Kε² 꼴이 아니다). 식에서 K_eff 가 하는 일은 반응 팽창 ΔV = V·ε 에 곱해지는 유효 압력이다. 그래서 **K\* 는 차원으로나 꼴로나 |ΔE_rxn| / ΔV_rxn** — 반응을 p·ΔV 일로 상쇄하는 임계 압력과 같다 (유도는 이 논문에 없다 · 같은 그룹 2021 편이 p = K_eff·ε_RXN 과 추가 항 K_eff·ε_RXN·V⁰ 를 적는다 — `fitzhugh2021_sei_design_constrained_ensemble` §4.2).
 
 ### 5.3 ✎ `Fig. S1a` 역산 — 식 검산 + 부피 회계의 단서
 
@@ -160,7 +160,7 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 
 - V·ε = [Hull(x, K) − Hull(x, 0)] / K 로 냈다 (1 eV/Å³ = 160.218 GPa). 20 · 30 · 36 GPa 세 곡선이 같은 V·ε 를 준다 (x = 0.4 에서 셋 다 3.57) → **식 (1) 의 선형성이 그림에서 확인된다.**
 - 마지막 열의 최댓값이 x = 0.4 의 **39.7 GPa** — 그림 범례의 *"39.7 GPa = K\*"* 와 일치한다. E_hull 을 주는 조성은 x₀ = 0.6 (1.16 eV/atom) 인데 **K\* 를 정하는 조성은 x = 0.4** 다. 식 (3) 이 '가장 큰 |Hull|' 이 아니라 '모든 x' 를 요구한다는 것의 실례다.
-- **부피 회계** — V·ε 는 전 구간 양수이고 x = 0.7 (P₂S₇ 의 완전 환원 P₂S₇ + 20 Li → 7 Li₂S + 2 Li₃P 는 x = 20/29 = 0.69) 근처에서 최대다. Li 금속 (≈ 20–22 Å³/atom) 은 생성물 속 Li 보다 부피가 크므로, 소모된 Li 금속의 부피를 반응물에 넣으면 이 반응의 부피 변화는 음수가 된다 (생성물 7 Li₂S + 2 Li₃P ≈ 445 Å³ ↔ Li 20 개만으로 ≈ 410–430 Å³ — 교과서 결정 부피를 쓴 우리 어림 · 논문에 없는 값). 그림은 양수다 → **[추정] 기준 부피는 전해질 (물질) 쪽만이고 Li 는 밖에서 들어오는 것으로 센다.** 같은 그룹의 [GG] (ε_RXN = (V_products − V_SE)/V_SE) · 우리 `constrained_esw.py` 와 같은 규약이다.
+- **부피 회계** — V·ε 는 전 구간 양수이고 x = 0.7 (P₂S₇ 의 완전 환원 P₂S₇ + 20 Li → 7 Li₂S + 2 Li₃P 는 x = 20/29 = 0.69) 근처에서 최대다. Li 금속 (≈ 20–22 Å³/atom) 은 생성물 속 Li 보다 부피가 크므로, 소모된 Li 금속의 부피를 반응물에 넣으면 이 반응의 부피 변화는 음수가 된다 (생성물 7 Li₂S + 2 Li₃P ≈ 445 Å³ ↔ Li 20 개만으로 ≈ 410–430 Å³ — 교과서 결정 부피를 쓴 우리 어림 · 논문에 없는 값). 그림은 양수다 → **[추정] 기준 부피는 전해질 (물질) 쪽만이고 Li 는 밖에서 들어오는 것으로 센다.** 같은 그룹의 [GG] (ε_RXN = (V_products − V_SE)/V_SE) · 2021 편의 `Fig. 1d` (부피 행에 고체 상만 · Li 는 조성 행에만 — `fitzhugh2021_…` §4.4) · 우리 `constrained_esw.py` 와 같은 규약이다.
 - 이 표가 **이 논문에서 반응 부피를 숫자로 되찾을 수 있는 유일한 자리**이고, 대상은 전해질이 아니라 예시 물질 P₂S₇ 다.
 
 ### 5.4 ✎ K\* 크기의 물리적 검산 (LPSCl)
@@ -403,6 +403,8 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 
 | digest | 이 논문과의 관계 |
 |---|---|
+| `fitzhugh2021_sei_design_constrained_ensemble` (이 논문 ref 9 · 목록 121 · 같은 날 digest) | **K\* 의 전신 K_crit.** 그 편은 **양극 전압 (2–4 V)** 에서 코팅 물질 2 만여 종 × 고정 SE 4 종의 계면상을 보고, 이 편은 **0 V (Li 금속)** 에서 MP 전 물질을 본다. 둘 다 조성만 보는 트리 대리모형으로 조성을 '최적화' 한다. '분해가 빈틈 · 균열을 메워 스스로 멈춘다' 는 서사는 그 편의 Broader context 에 이미 있다 — 이 편이 보탠 것은 **E_hull 의 하한** (너무 낮으면 못 메운다) 이다. 그 digest §6.6 은 대리모형이 K_crit ≤ 25 GPa 자료로만 학습됐다고 추론한다 — 이 편의 K\* parity 축도 25 GPa 에서 끝난다 (§14-4) |
+| `fitzhugh2019_ht_functionally_stable_interfaces_sulfide` (이 논문 ref 16 · 목록 122 · 같은 날 digest) | pseudo-binary 고처리량 (67,062 물질 × LSPS) 의 전편. 이 논문은 구속 hull 의 계산 절차를 refs 9 · 16 에 맡기는데, 그 digest 에 따르면 2019 편은 **부피 · 엔트로피를 무시한다** (ΔG ≈ ΔE) → V(x) · ε(x) 의 식은 거기에도 없다 |
 | `gilgonzalez2022_synergistic_cl_constricted_esw` ([GG] · 이 논문 ref 12) | **직계 형제.** [GG] 는 전압 창 (K_eff = 0 / 10 / 20 GPa) · ε_RXN = (V_products − V_SE)/V_SE 를 쓰고 'LPSCl1.0 의 적당한 불안정이 덴드라이트에 유리' 를 정성으로 말했다. 이 편이 그것을 (K\*, E_hull) 좌표로 옮기고 *"Li₆PS₅Cl 쉘의 경계선 E_hull"* 로 다시 설명한다 (값은 안 준다). [GG] 가 든 '분해 계면상은 전부 전자 절연' 이 이 편에서 전자 부동태를 변수에서 빼는 근거다 |
 | `wang2025_ai_ecosystems_electrolyte_interface_ssb` ([WangZeierYou25]) | 그 리뷰 `Fig. 8E–G` 의 원본. **§12-③ 미결 ("moderate E_hull 인데 그림은 가장 낮은 E_hull 을 가리킨다 — 원전 확인 필요") 의 답**: 원전에서 목표는 가운데 영역 (LPSCl-X-min · LGPS-min · 10–150 meV/atom) 이고, 맨 아래 초록 점 (LPSCl-min) 은 '너무 낮아 실패하는' **반례**다. 리뷰 문장의 'moderate' 가 맞고 그림을 최적점으로 읽은 쪽이 오독이다. 리뷰 재현 그림의 판독값 (core ≈ 27–28 GPa · LPSCl-min ≈ 2–3 meV/atom) 은 원본 판독 (24.8 GPa · 0.36 meV/atom · 본문 25.1) 과 다르다 — 원본이 정본 |
 | `zeng2022_cl_rich_licl_nanoshell_li_interface` ([Zeng22Cl]) | **같은 해 · 같은 조성대 (x = 1.3–1.6) 의 독립 실험.** 서냉한 Cl-rich 아지로다이트 입자 표면에 LiCl 나노껍질이 생긴다고 본다 (급랭하면 없다). 이 논문의 합성도 **1 °C/min 서냉**이고 표면이 Cl · Li 과잉 / S · P 결핍이다 → 같은 현상일 공산이 크다 ([추정]). 두 편은 같은 관측 (Cl-rich 는 Li 에 화학적으로 더 안정하지만 덴드라이트에는 약하다) 에 다른 기전을 댄다 — 저쪽은 두꺼운 LiCl 껍질이 핵을 고립, 이쪽은 E_hull 이 낮아 분해가 부족 |
@@ -425,7 +427,7 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 - ② **분해 부피 축을 새 카드로 열 때 목적을 셋 중에서 고른다** — 보고서는 둘 (|ΔV/V| 를 줄여 접촉 유지 / ε 를 키워 구속 안정화) 을 들었다. 이 논문이 **셋째 (분해를 '적당히' 남겨 균열을 메운다)** 를 보탠다. 셋은 같은 숫자에 서로 다른 '좋은 방향' 을 준다. 결과 전에 하나를 선언해야 한다.
 - ③ **K\*(x) 는 우리가 hull 로 직접 낼 수 있다** — 축 ③ 이 이미 남긴 kink 반응식에 MP 몰부피를 붙이면 설계마다 |ΔE(x)| / ΔV(x) 프로파일 (`Fig. S1` 꼴) 이 나온다. 이 논문이 ML 로 근사한 것을 구조가 있는 값으로 내는 셈이고, 그것이 '도펀트 해상도의 숫자 표' 의 가장 싼 꼴이다. ⚠ 한계도 같이 적는다: MP 에 도핑 상이 없어 도핑 조성은 평형 상 혼합으로 들어가므로 도펀트 효과가 **구성 상들의 선형 결합 (희석)** 으로만 나온다 — 이 논문의 '조성만 보는 ML' 과 뿌리가 같은 한계다.
 - ④ **이름 주의** — 이 논문을 인용할 때 'E_hull' 을 그대로 쓰면 우리 문서의 hull 위 에너지와 섞인다. *"Li 금속과의 pseudo-binary 최대 반응에너지 (저자 표기 E_hull)"* 로 풀어 쓴다.
-- ⑤ **다음에 읽을 것** — Fitzhugh 2021 *EES* (ref 9 · 양극 전압 쪽 K_crit) 와 Fitzhugh 2019 *AEM* (ref 16 · V(x) · ε(x) 의 정의가 있는 곳). 회계 행렬의 'Xin Li 계열' 칸은 그 두 편을 봐야 [추정] 을 뗄 수 있다.
+- ⑤ **다음에 읽을 것** — 회계 행렬의 'Xin Li 계열' 칸에서 [추정] 을 떼려면 ε_RXN · 기준 부피의 식이 실제로 적힌 원전이 필요하다. ref 9 · ref 16 은 같은 날 digest 됐지만 둘 다 그 식을 주지 않는다 (§4.1-2d). 남은 후보는 이 논문 refs 10 · 11 · 13 (Fitzhugh *Small* 2019 · Fitzhugh *J. Mater. Chem. A* 2019 · Wu *Nat. Commun.* 2018) 이다 — litdb 에 없다.
 
 **이미 하고 있는 것**
 - 닫힌계 pseudo-binary 의 최소 kink 로 Li 금속 쪽 구동력을 본다 (축 ③) — 이 논문의 E_hull 과 같은 종류의 양을 hull 로 직접.
@@ -457,7 +459,7 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 1. **[봄] E_hull 의 영점을 0.915 eV 통째로 옮겼다.** LiCl 에 가까운 조성의 ML 예측이 0.915 eV (참값 ≈ 0) 라서 전 값을 그만큼 내렸다. 이 이동량은 검증 오차 (0.063) 의 15 배이고 목표 창 (10–150 meV/atom) 의 6–90 배다. ✎ 완전 환원 반응의 hull 기반 크기를 문헌 전위로 어림하면 혼합물 원자당 ≈ 0.5–0.6 eV 인데 (§5.4) 논문의 LPSCl 값은 237 meV/atom 이다 — [추정] `Fig. 2` 의 E_hull 축은 DFT 에너지가 아니라 **ML 의 상대 지표**로 읽어야 한다.
 2. **[봄 + 추정] 학습 자료가 목표 창을 비켜 간다.** `Fig. S15a,b` 의 점 구름이 참값 ≈ −0.1 eV/atom 에서 수평으로 잘려 있다. 저자도 *"the zero hull energy data are insufficient in the training set"* 이라고 쓴다. [추정] |E| < 0.1 eV/atom 자료가 학습에 없었다면 '10–150 meV/atom' 창의 대부분은 외삽이다.
 3. **[봄] 분해 에너지가 음수로 내려간다** (`Fig. S7c`: 제약 50 % 에서 ≈ −0.01 · 100 % 에서 ≈ −0.16 eV/atom). 정의상 E_hull ≥ 0 이다. 영점 보정이 조성마다 다르게 틀린다는 뜻이다 (모델의 원래 예측이 'LiCl 근처' 보다 낮은 조성이 있다).
-4. **[추정 · ✎] (K\*, E_hull) 쌍이 식 (3) 과 양립하지 않는다.** LPSCl-min 은 E_hull ≈ 0.36 meV/atom 인데 K\* = 8.5 GPa 다. 식 (3) 대로면 V·ε ≲ 0.007 Å³/atom (변형 0.03 % 수준) 이어야 한다 — Li 삽입 반응으로는 있을 수 없는 크기다. 논문 스스로 *"stable with Li 이면 E_hull 과 K\* 가 모두 0"* 이라고 정의했다. 두 양을 **따로 회귀**했기 때문으로 보인다 (K\* parity 의 축이 5–25 GPa 이고 예측된 K\* 는 전부 4.6–25.2 GPa 안에 있다).
+4. **[추정 · ✎] (K\*, E_hull) 쌍이 식 (3) 과 양립하지 않는다.** LPSCl-min 은 E_hull ≈ 0.36 meV/atom 인데 K\* = 8.5 GPa 다. 식 (3) 대로면 V·ε ≲ 0.007 Å³/atom (변형 0.03 % 수준) 이어야 한다 — Li 삽입 반응으로는 있을 수 없는 크기다. 논문 스스로 *"stable with Li 이면 E_hull 과 K\* 가 모두 0"* 이라고 정의했다. 두 양을 **따로 회귀**했기 때문으로 보인다 (K\* parity 의 축이 5–25 GPa 이고 예측된 K\* 는 전부 4.6–25.2 GPa 안에 있다). 덧붙여 — 명목 조성 다섯 (LPSCl · LGPS · LPSCl-X 셋) 의 K\* 가 전부 ≈ 25 GPa 한 점이고 LGPS 도 제약 5 % 에서 24.0 이다. 같은 그룹 2021 편의 대리모형이 K_crit ≤ 25 GPa 자료로만 학습된 흔적이 있다 (`fitzhugh2021_…` §6.6 의 추론). 여기서도 그렇다면 'core K\* ≈ 25' 는 학습 상한에 붙은 값일 수 있다 ([추정] · 확인할 자료 없음 · §5.4 의 어림 21–27 GPa 와는 어긋나지 않는다).
 5. **[봄 · ✎] 'K\* 최소화 조성' 은 제약 상자의 모서리다.** LPSCl 에서 P −50 % · Cl +49 % · S −47 % (허용 ±50 %), LGPS 50 % 에서 S · P · Ge 전부 −50 %. 최적점이 내부에 있지 않으므로 '최적 조성' 은 저자가 고른 제약 폭이 정한다. 그 폭은 *"largely consistent with our XPS and EDS"* 가 되게 골랐다 (p. 891).
 6. **[추정] 방향 자체가 거의 자명하다.** 최소화가 가는 쪽은 'P · S 를 줄이고 Li (· Cl) 을 늘린다' = **이미 환원된 · LiCl 로 희석된 조성**이다 (✎ y = 0 조성의 P 형식 전하 ≈ −0.8). Li 금속과의 남은 반응에너지가 줄어드는 것은 pseudo-binary 열역학의 당연한 귀결이고 모델의 발견이라 하기 어렵다.
 7. **[봄] 트리 모델로 연속 최적화를 한다.** 트리 앙상블의 예측은 조각 상수다. F 계열 E_hull 이 54 → (없음) → 17 → 49 → 78 로 튀고 I 계열도 단조가 아니다 (`Fig. S2`). 가로축 라벨 (Li₅.₅PS₄.₅Cl₁.₅₋ᵧXᵧ) 과 실제 최적화 조성 (Cl ≈ 2 또는 ≈ 0.7) 도 다르다.
@@ -503,9 +505,9 @@ Li 금속과 닿은 전해질을 **두 숫자** — 구속이 없을 때의 계�
 
 ## 16. 따라가 볼 참고문헌 · 못 본 것
 
-- **ref 9** — Fitzhugh, Chen, Wang, Ye, Li, *Energy Environ. Sci.* **14**, 4574 (2021): K_crit · 양극 전압 쪽 계면상. 갭 보고서 (가) 묶음의 둘째 편. **안 읽음.**
-- **ref 16** — Fitzhugh, Wu, Ye, Deng, Qi, Li, *Adv. Energy Mater.* **9**, 1900807 (2019): constrained Hull · V(x) · ε(x) 계산 절차의 출처. **안 읽음** — §5.3 의 [추정] 을 떼려면 여기.
-- **ref 10** — Fitzhugh, Wu, Ye, Su, Li, *Small* **15**, 1901470 (2019) · **ref 13** — Wu, Fitzhugh, Ye, Ning, Li, *Nat. Commun.* **9**, 4037 (2018): K_eff ≈ 20 GPa 의 근거 · core–shell 구조 설계. **안 읽음.**
+- **ref 9** — Fitzhugh, Chen, Wang, Ye, Li, *Energy Environ. Sci.* **14**, 4574 (2021): K_crit · 양극 전압 쪽 계면상. 갭 보고서 (가) 묶음의 둘째 편. → 같은 날 digest `fitzhugh2021_sei_design_constrained_ensemble` (이 digest 작성자는 원문을 읽지 않았다).
+- **ref 16** — Fitzhugh, Wu, Ye, Deng, Qi, Li, *Adv. Energy Mater.* **9**, 1900807 (2019): 이 논문이 구속 hull 의 '절차' 출처로 든 편. → 같은 날 digest `fitzhugh2019_ht_functionally_stable_interfaces_sulfide` — 그 digest 에 따르면 부피를 무시한 편이라 V(x) · ε(x) 의 식은 없다 (원문은 읽지 않았다).
+- **ref 10** — Fitzhugh, Wu, Ye, Su, Li, *Small* **15**, 1901470 (2019) · **ref 11** — Fitzhugh, Ye, Li, *J. Mater. Chem. A* **7**, 23604 (2019) · **ref 13** — Wu, Fitzhugh, Ye, Ning, Li, *Nat. Commun.* **9**, 4037 (2018): K_eff ≈ 20 GPa 의 근거 · core–shell 구조 설계 · **ε_RXN 과 기준 부피의 식이 있을 원전**. **안 읽음** — §5.3 의 [추정] 을 떼려면 여기.
 - **ref 4** — Ye & Li, *Nature* **593**, 218 (2021): dynamic stability · 다층 구성 · LGPS 중앙층 10,000 사이클. **안 읽음.**
 - 이 논문에서 **확인 못 한 것**: MP 판 · 준안정 상 처리 · 기체 상 처리 · K\* 학습 자료의 범위 (5–25 GPa 가 축 범위인지 자료 범위인지) · 오차 지표의 종류 · V(x) · ε(x) 의 식 · 셀 면적 기준 · 표지의 라이선스 문구.
 
