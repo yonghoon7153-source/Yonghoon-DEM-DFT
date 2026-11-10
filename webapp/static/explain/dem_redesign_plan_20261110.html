@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="ko">
+<!-- 생성물: 손으로 고치지 않는다.  원문 docs/reviews/dem_redesign_direction_20261109/briefing_ko.md (sha256 68b3c6cef9acf9bb) 을 scripts/build_dem_redesign_plan.py 가 옮겼다.  고치려면 원문을 고친 뒤 --write.  시험 webapp/test_dem_redesign_plan_page.py -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEM 재설계 (수영) 계획서</title>
+<style>
+:root{--bg:#eef2f6;--paper:#ffffff;--ink:#1f2933;--mut:#5b6770;--acc:#1f4e79;--line:#b8c4ce;--hair:#dce3ea;--th:#e6edf3;--box:#eaf2fa;--code:#eef2f6;--ok:#2a6a3a;--ok-bg:#e5f3e8;--warn:#85570a;--warn-bg:#fff5dc;--warn-line:#d6a548;--bad:#a1342b;--bad-bg:#fcefed;--bad-line:#dba29a;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11161b;--paper:#1a2028;--ink:#e4e9ee;--mut:#a0acb8;--acc:#8fb8e3;--line:#3d4956;--hair:#2b343f;--th:#242f3b;--box:#1b2b3d;--code:#252e38;--ok:#86c795;--ok-bg:#18281d;--warn:#e3b055;--warn-bg:#2c2414;--warn-line:#7d6126;--bad:#e58d83;--bad-bg:#2e1c1a;--bad-line:#7f4640;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11161b;--paper:#1a2028;--ink:#e4e9ee;--mut:#a0acb8;--acc:#8fb8e3;--line:#3d4956;--hair:#2b343f;--th:#242f3b;--box:#1b2b3d;--code:#252e38;--ok:#86c795;--ok-bg:#18281d;--warn:#e3b055;--warn-bg:#2c2414;--warn-line:#7d6126;--bad:#e58d83;--bad-bg:#2e1c1a;--bad-line:#7f4640;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.75 "Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--acc)}
+a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+.top{max-width:880px;margin:0 auto;padding:16px 8px 0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 20px;font-size:.875rem}
+.top a{text-decoration:none}
+.top a:hover{text-decoration:underline}
+.top .sib::after{content:" \2192"}
+.sheet{max-width:880px;margin:12px auto 0;padding:56px 64px 60px;background:var(--paper);border:1px solid var(--hair);border-radius:10px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 32px rgba(15,23,42,.06)}
+.foot{max-width:880px;margin:0 auto;padding:14px 8px 44px;color:var(--mut);font-size:.78125rem;line-height:1.7}
+.foot p{margin:0}
+h1{margin:0;font-size:2.0625rem;line-height:1.25;letter-spacing:-.01em;color:var(--acc);text-wrap:balance}
+.subtitle{margin:8px 0 0;font-size:1.125rem;line-height:1.5;font-weight:600}
+.status{margin:16px 0 0;font-size:.8125rem;line-height:1.75;color:var(--mut)}
+.oneline{margin:16px 0 0;padding:13px 18px;border-left:5px solid var(--acc);border-radius:0 6px 6px 0;background:var(--box);font-size:1.03125rem;line-height:1.7}
+h2{margin:44px 0 12px;font-size:1.3125rem;line-height:1.4;color:var(--acc);text-wrap:balance}
+h2 .no{font-variant-numeric:tabular-nums}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:1.35em}
+ol{padding-left:1.6em}
+li{margin:5px 0}
+li>ul{margin:5px 0 7px;padding-left:1.25em;list-style:none}
+li>ul>li{position:relative}
+li>ul>li::before{content:"\2013";position:absolute;left:-1.15em;color:var(--mut)}
+strong,b{font-weight:700}
+em{font-style:normal;color:var(--acc)}
+code{font-family:Consolas,"D2Coding",monospace;font-size:.86em;padding:1px 5px;border-radius:4px;background:var(--code);white-space:nowrap}
+code.path{white-space:normal;overflow-wrap:anywhere}
+.cite{text-decoration:none;font-variant-numeric:tabular-nums}
+.cite:hover{text-decoration:underline}
+.wrap{overflow-x:auto;margin:12px 0 16px}
+table{width:100%;border-collapse:collapse;font-size:.875rem;line-height:1.6}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left}
+th{background:var(--th);font-weight:700}
+:target{scroll-margin-top:16px}
+tr:target>td,.refs li:target{background:var(--box)}
+.eyebrow{margin:0 0 8px;font-size:.8125rem;font-weight:700;letter-spacing:.06em;color:var(--mut)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 0;padding:0 0 16px;border-bottom:2px solid var(--acc)}
+.date{margin-right:6px;font-size:.84375rem;color:var(--mut);font-variant-numeric:tabular-nums}
+.badge{display:inline-block;padding:2px 11px;border:1px solid var(--line);border-radius:999px;font-size:.78125rem;line-height:1.6;color:var(--ink)}
+.badge.hold{border-color:var(--warn-line);background:var(--warn-bg);color:var(--warn);font-weight:700}
+.toc{margin:22px 0 0;padding:14px 20px 12px;border:1px solid var(--hair);border-radius:8px}
+.toc b{display:block;margin:0 0 4px;font-size:.78125rem;letter-spacing:.08em;color:var(--mut)}
+.toc ol{margin:0;padding:0;list-style:none;columns:2;column-gap:32px;font-size:.875rem}
+.toc li{margin:0;padding:2px 0;break-inside:avoid}
+.toc a{display:grid;grid-template-columns:1.9em minmax(0,1fr);color:var(--ink);text-decoration:none}
+.toc a:hover{color:var(--acc);text-decoration:underline}
+.toc .no{color:var(--acc);font-weight:700}
+h2{padding-bottom:8px;border-bottom:1px solid var(--hair)}
+.sub{margin:28px 0 8px;font-size:1.03125rem;line-height:1.5}
+.road{margin:16px 0 0;padding:0;list-style:none}
+.step{position:relative;display:grid;grid-template-columns:76px minmax(0,1fr);gap:0 14px;margin:0;padding:0 0 12px}
+.step::before{content:"";position:absolute;left:37px;top:30px;bottom:0;width:2px;background:var(--hair)}
+.step:last-child::before{display:none}
+.node{position:relative;align-self:start;margin-top:10px;padding:2px 0;border-radius:999px;background:var(--acc);color:var(--paper);font-size:.78125rem;line-height:1.7;text-align:center;font-variant-numeric:tabular-nums}
+.node b{font-size:.875rem}
+.card{min-width:0;padding:11px 16px 12px;border:1px solid var(--line);border-radius:8px;background:var(--paper)}
+.step.key .card{border:2px solid var(--acc);padding:10px 15px 11px}
+.shead{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.shead h3{margin:0 4px 0 0;font-size:1.03125rem;line-height:1.5}
+.chip{display:inline-block;padding:1px 9px;border-radius:999px;background:var(--th);color:var(--mut);font-size:.78125rem;font-weight:700;line-height:1.6;white-space:nowrap}
+.chip.key{background:var(--acc);color:var(--paper)}
+.card p{margin:6px 0 0;font-size:.9375rem}
+.gate{padding:7px 12px;border-left:3px solid var(--acc);border-radius:0 6px 6px 0;background:var(--box)}
+.gk{display:inline-block;margin-right:8px;padding:0 7px;border-radius:4px;background:var(--acc);color:var(--paper);font-size:.75rem;font-weight:700;line-height:1.7}
+.sched{margin:4px 0 0 90px;padding:9px 14px;border:1px dashed var(--line);border-radius:8px;font-size:.90625rem}
+.sched b{margin-right:6px}
+.tag{margin-right:8px;color:var(--mut);font-size:.8125rem}
+.fork td:first-child{width:27%;font-weight:700}
+.fork .chip{margin-right:6px}
+.k-ga{background:var(--ok-bg);color:var(--ok)}
+.k-na{background:var(--box);color:var(--acc)}
+.k-ma{background:var(--warn-bg);color:var(--warn)}
+.k-ra{background:var(--bad-bg);color:var(--bad)}
+.k-da{background:var(--th);color:var(--mut)}
+.papers td:first-child{width:17%;font-weight:700}
+.papers td:nth-child(2){width:32%}
+.papers td:nth-child(3){width:31%}
+.box{margin:14px 0 4px;padding:14px 20px 12px;border-radius:8px}
+.box>:first-child{margin-top:0}
+.box>:last-child{margin-bottom:0}
+.box.emph{border-left:5px solid var(--acc);background:var(--box)}
+.box.warn{border-left:5px solid var(--warn-line);background:var(--warn-bg)}
+.box.dont{border:2px solid var(--bad-line);padding:12px 20px 10px}
+.box.dont ul{padding-left:0;list-style:none}
+.box.dont li{position:relative;padding-left:1.7em}
+.box.dont li::before{content:"\00d7";position:absolute;left:.25em;color:var(--bad);font-weight:700}
+.qa td.q{width:42%}
+.qa td.rec{width:25%}
+.qa td.ans{font-weight:700}
+.qn{margin-right:4px;color:var(--acc)}
+.vsrc{font-size:.84375rem;color:var(--mut)}
+.verdict{margin:14px 0 4px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.vline{margin:0;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--box);font-size:1rem;line-height:1.7}
+.vk{display:inline-block;margin-right:10px;padding:0 9px;border-radius:4px;background:var(--acc);color:var(--paper);font-size:.8125rem;font-weight:700;line-height:1.75}
+.vbody{padding:4px 20px 12px}
+.vh{margin:14px 0 6px;font-size:.96875rem;line-height:1.5}
+.findings{display:grid;gap:10px;margin:8px 0 4px}
+.finding{padding:10px 16px 11px;border:1px solid var(--bad-line);border-left:5px solid var(--bad);border-radius:8px;background:var(--bad-bg)}
+.finding p{margin:5px 0 0;font-size:.9375rem}
+.finding .fhead{margin:0;font-size:.875rem}
+.ptag{display:inline-block;margin-right:6px;padding:0 7px;border-radius:4px;background:var(--bad);color:var(--paper);font-size:.75rem;font-weight:700;line-height:1.7}
+.fhead code{background:none;padding:0;font-size:.875rem;font-weight:700;color:var(--bad)}
+.finding .fix{margin-top:8px;padding-top:8px;border-top:1px dashed var(--bad-line)}
+.fix b{color:var(--ok)}
+.vbody ul{font-size:.9375rem}
+.refs{margin:12px 0 0;padding:0;list-style:none;font-size:.90625rem;line-height:1.65}
+.refs li{display:grid;grid-template-columns:2.6em minmax(0,1fr);gap:0 8px;margin:0;padding:9px 6px;border-top:1px solid var(--hair)}
+.refs li:first-child{border-top:0}
+.rn{color:var(--acc);font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.slugline{display:block;margin-top:2px;font-size:.75rem;color:var(--mut)}
+.slug{padding:0;background:none;font-family:Consolas,"D2Coding",monospace;font-size:.75rem;color:var(--mut);white-space:normal;overflow-wrap:anywhere}
+@media (max-width:640px){
+body{font-size:.9375rem}
+.top{padding:12px 16px 0}
+.sheet{margin:10px 0 0;padding:28px 16px 34px;border-left:0;border-right:0;border-radius:0;box-shadow:none}
+.foot{padding:12px 16px 36px}
+h1{font-size:1.625rem}
+.subtitle{font-size:1rem}
+.oneline{padding:11px 14px;font-size:.96875rem}
+h2{margin-top:34px;font-size:1.1875rem}
+table{font-size:.84375rem}
+table.c3{min-width:520px}
+table.c4{min-width:640px}
+.toc ol{columns:1}
+.step{grid-template-columns:minmax(0,1fr);padding-bottom:14px}
+.step::before{display:none}
+.node{justify-self:start;margin:0 0 6px;padding:1px 12px}
+.sched{margin-left:0}
+.fork td:first-child{width:32%}
+.fork .chip{display:block;width:max-content;margin:0 0 3px}
+.box{padding:12px 14px 10px}
+.box.dont{padding:10px 14px 8px}
+.vline{padding:12px 14px}
+.vbody{padding:2px 14px 10px}
+.finding{padding:9px 12px 10px}
+table.stack{min-width:0}
+.stack thead{display:none}
+.stack,.stack tbody,.stack tr,.stack td{display:block;width:auto}
+.stack tr{margin:0 0 10px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stack td{width:auto !important;border:0;border-top:1px solid var(--hair);padding:8px 12px}
+.stack td:first-child{border-top:0;background:var(--th)}
+.stack td[data-k]::before{content:attr(data-k);display:block;font-size:.75rem;font-weight:700;color:var(--mut)}
+}
+@media print{
+:root:root{--bg:#fff;--paper:#fff;--ink:#1f2933;--mut:#5b6770;--acc:#1f4e79;--line:#b8c4ce;--hair:#dce3ea;--th:#e6edf3;--box:#eaf2fa;--code:#eef2f6;--ok:#2a6a3a;--ok-bg:#e5f3e8;--warn:#85570a;--warn-bg:#fff5dc;--warn-line:#d6a548;--bad:#a1342b;--bad-bg:#fcefed;--bad-line:#dba29a;color-scheme:light}
+@page{size:A4;margin:20mm 18mm 18mm;@bottom-center{content:"DEM 재설계 (수영) 계획서  ·  " counter(page) " / " counter(pages);font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:8pt;color:#5b6770}}
+html{font-size:10.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{line-height:1.62}
+.top,.foot{display:none}
+.sheet{max-width:none;margin:0;padding:0;border:0;border-radius:0;box-shadow:none}
+a{color:inherit;text-decoration:none}
+.refs{line-height:1.5}
+.refs li{padding:6px 4px}
+h2{margin-top:20pt;break-after:avoid}
+.sub,.vh,.leadin,.shead,.vsrc{break-after:avoid}
+.wrap,.verdict{overflow:visible}
+.pb{break-before:page}
+.pb>h2:first-child{margin-top:0}
+tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="이동"><a class="home" href="/">← DEM/MPM Analyzer 처음으로</a><a class="sib" href="/static/explain/dem_redesign_plan_newcomer_20261110.html">처음 보는 분을 위한 설명</a></nav>
+<main class="sheet">
+<header class="cover">
+<p class="eyebrow">[DEM 우선 (수영)]</p>
+<h1>DEM 재설계 (수영) 계획서</h1>
+<p class="subtitle">재설계 계획 브리핑 (쉬운 말 · 논문 기준)</p>
+<div class="meta"><span class="date">2026-11-10</span> <span class="badge">결과 0 건</span> <span class="badge">실행 GO 요청 아님</span> <span class="badge hold">Codex 판정 = 방향 지지 · 규칙 수정 필요 (HOLD)</span></div>
+</header>
+<p class="status"><strong>지위</strong>: 1저자용 브리핑 · 방향 메모 3.1 판 (<code class="path">docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md</code>) 을 쉬운 말로 옮긴 것 · 결과 0 건 · 새 계산 0 건 · 실행 GO 요청 아님.  정본은 메모이고, 이 문서와 메모가 다르면 메모가 이긴다.  Codex 반박 리뷰 요청 = <code class="path">docs/reviews/codex_dem_redesign_direction_request_20261109.md</code> (리뷰 핀 <code>13eb293cd</code> · 1저자 11-10 발송 · 판정 11-10 = 방향 지지 · 규칙 수정 필요 (HOLD) · 아래 §9).</p>
+<div class="oneline"><strong>한 줄로</strong>: 3D 를 새로 짜기 전에 값싼 2D 시험으로 하나를 먼저 가른다.  우리 MPM 에서 알갱이가 닿으면 붙어 버리는 것, 곧 속도장이 하나뿐인 것이 문제의 뿌리인가.  그 답으로 3D 를 어떻게 짤지 정한다.</div>
+<nav class="toc" aria-label="차례"><b>차례</b><ol><li><a href="#s1"><span class="no">1.</span> 왜 이 질문부터인가</a></li><li><a href="#s2"><span class="no">2.</span> 논문 일곱 편이 계획의 어디에 들어갔나</a></li><li><a href="#s3"><span class="no">3.</span> 단계</a></li><li><a href="#s4"><span class="no">4.</span> 진밀도 1.64 에서 기공률 10–13 %</a></li><li><a href="#s5"><span class="no">5.</span> 브리핑하다 찾은 빈 곳</a></li><li><a href="#s6"><span class="no">6.</span> 하지 않는 말</a></li><li><a href="#s7"><span class="no">7.</span> 더 먹여 주면 좋은 문헌 (계획에 바로 쓰이는 순)</a></li><li><a href="#s8"><span class="no">8.</span> 1저자 결정 (11-10)</a></li><li><a href="#s9"><span class="no">9.</span> Codex 반박 판정 (11-10) 과 고칠 것</a></li><li><a href="#refs"><span class="no"></span> 참고문헌</a></li></ol></nav>
+<section id="s1">
+<h2><span class="no">1.</span> 왜 이 질문부터인가</h2>
+<ul>
+<li>1저자가 정한 조건 셋 (느슨한 상태 출발 · 질량 보존 심기 · MPM 기공률이 주 출력) 은 순수 SE 만이면 지금 코드도 대체로 지킨다.</li>
+<li>막히는 곳은 AM 이 섞인 복합과 탈압이다.  코드를 읽으면 이유가 하나로 모인다 (<code class="path">scripts/mpm3d_compaction.py</code> · 메모 §2).
+<ul>
+<li>얼린 AM 칸은 속도가 0 이라 SE 가 AM 에 모든 방향으로 붙는다.</li>
+<li>판은 위아래로 붙어 있어서 하중을 빼도 침대가 판에서 떨어지지 못한다.</li>
+<li>SE 알갱이끼리는 속도장이 하나라 닿는 순간 한 덩어리가 된다.  미끄럼도 떨어짐도 없다.</li>
+</ul>
+</li>
+<li>가설: 이 붙음 때문에 강성을 15–18 배 낮추는 연화가 필요했고, 느슨한 출발에서 재배열도 막혔다.  아직 시험 전이라 먼저 가른다.</li>
+</ul>
+</section>
+<section id="s2">
+<h2><span class="no">2.</span> 논문 일곱 편이 계획의 어디에 들어갔나</h2>
+<div class="wrap">
+<table class="papers stack c4">
+<thead><tr><th scope="col">논문</th><th scope="col">보여 준 것</th><th scope="col">계획에 들어간 자리</th><th scope="col">한계</th></tr></thead>
+<tbody>
+<tr><td><a class="cite" href="#ref-1">[1]</a> Bardenhagen 2000</td><td data-k="보여 준 것">알갱이마다 속도장을 따로 두면 겹치지 않고 미끄러지고 떨어진다.  속도장 하나 (우리 코드) 는 그 논문의 미끄럼 없음 대조군과 같다</td><td data-k="계획에 들어간 자리">후보 A′ (입자별 장) 의 알고리즘.  장을 통째로 두면 우리 규모에서 약 30 TB 라 색칠 · 희소 슬롯이 필요하다 (단계 1 의 셈).  지름당 8 셀 이상 필요하고 4 셀이면 못 구른다</td><td data-k="한계">2D · 탄성</td></tr>
+<tr><td><a class="cite" href="#ref-2">[2]</a> Bardenhagen 2001</td><td data-k="보여 준 것">떨어짐 판정을 수직 견인력으로 고쳤다 · 작은 질량 안정화 γ 0.5 · 3D 구 검증</td><td data-k="계획에 들어간 자리">탈압용 부품 A′-0 (AM · 판 · 벽에만 마찰과 분리 규칙).  탈압 단위 시험 U3 · U4.  인쇄된 식 (22) 의 max 는 min 으로 구현</td><td data-k="한계">저자 스스로 다른 재료 · 소성 계면에서는 안 맞는다고 적었다.  그래서 시험 통과 전에는 탈압 값을 내지 않는다</td></tr>
+<tr><td><a class="cite" href="#ref-3">[3]</a> Nezamabadi 2022</td><td data-k="보여 준 것">입자마다 격자를 둔 MPM 과 접촉 풀이로 소성 원판을 연화 없이 충전율 0.99 까지 눌렀다</td><td data-k="계획에 들어간 자리">&quot;접촉을 풀면 연화가 필요 없을 수 있다&quot; 는 가설의 근거.  2D 시험 3a 의 대조 띠 (응력이 논문 곡선의 0.7–1.4 배 안)</td><td data-k="한계">2D · 재료가 항복에 비해 무르다 (E/σ_y 25 · LPSCl 약 60–74)</td></tr>
+<tr><td><a class="cite" href="#ref-4">[4]</a> Nguyen 2017</td><td data-k="보여 준 것">기공률 곡선은 방법이 달라도 비슷하게 나온다 · 마찰 0 과 0.5 비교</td><td data-k="계획에 들어간 자리">판정을 기공률이 아니라 같은 충전율의 판 응력 비로 한다.  마찰 팔 둘과 마찰 경보</td><td data-k="한계">학회 4 쪽 · MPM 쪽은 탄성뿐</td></tr>
+<tr><td><a class="cite" href="#ref-5">[5]</a> Cárdenas-Barrantes 2020</td><td data-k="보여 준 것">단단한 입자와 무른 입자 혼합에서 기공 바닥은 단단한 입자가 움직이고 서로 닿아 하중을 받을 때 생긴다 · 입자 하나 상자 법칙</td><td data-k="계획에 들어간 자리">조건 R1 (AM 이 움직이고 하중 몫 f 를 계산).  2D 시험 3b (느슨한 출발 혼합).  단위 시험 U1.  후보 B (입자별 FE) 의 실례와 비용</td><td data-k="한계">2D · 초탄성 · 하중 쪽만</td></tr>
+<tr><td><a class="cite" href="#ref-6">[6]</a> Cárdenas-Barrantes 2021</td><td data-k="보여 준 것">출발 상태 표 (φ0 · Z0)</td><td data-k="계획에 들어간 자리">출발 충전을 결과 전에 고정하고 기록하는 규칙</td><td data-k="한계">학회 단편</td></tr>
+<tr><td><a class="cite" href="#ref-7">[7]</a> Cárdenas-Barrantes 2022</td><td data-k="보여 준 것">2D 실험 (DIC) 으로 느슨하게 시작해 재밍을 관측하며 압밀 법칙을 검증했다</td><td data-k="계획에 들어간 자리">1저자 결정 (느슨한 출발) 과 같은 절차.  3b 대조 띠.  배위수 · 접촉 길이 같은 공통 관측량</td><td data-k="한계">kPa · 2D · 초탄성</td></tr>
+</tbody>
+</table>
+</div>
+<p>다섯 편이 같은 곳 (붙음) 을 가리키지만 모두 2D 라 가설의 근거이지 증거가 아니다.  그래서 2D 숫자는 3D 로 옮기지 않고, &quot;접촉 표현이 원인인가&quot; 판정에만 쓴다.</p>
+</section>
+<section id="s3" class="pb">
+<h2><span class="no">3.</span> 단계</h2>
+<ol class="road">
+<li class="step" id="step-0">
+<span class="node"><span>단계</span> <b>0</b></span>
+<div class="card">
+<div class="shead"><h3>등록</h3><span class="chip">런 0</span></div>
+<p>기공 세는 식 · 관측량 · 충전 수 · 문턱 · 갈림 표를 결과 전에 적어 둔다.</p>
+</div>
+</li>
+<li class="step" id="step-1">
+<span class="node"><span>단계</span> <b>1</b></span>
+<div class="card">
+<div class="shead"><h3>셈</h3><span class="chip">CPU 며칠</span></div>
+<p>입자별 장을 3D 에 넣을 때 장이 몇 개, 메모리가 얼마인지 real_14 의 수 · 반경으로 센다.</p>
+</div>
+</li>
+<li class="step" id="step-2">
+<span class="node"><span>단계</span> <b>2</b></span>
+<div class="card">
+<div class="shead"><h3>준비</h3><span class="chip">CPU 3–4 주</span></div>
+<p>2D 코드 하나에 S (지금처럼 속도장 하나) 와 F (입자별 장) 를 같이 넣는다.</p>
+<p class="gate"><span class="gk">문</span> 단위 시험 U0 (색 하나면 S 와 비트까지 같음) · U1 (입자 하나 상자) · U2 (Bardenhagen 재현) · U5 (원판 충돌 · 세 원판 모서리) · U6 (이른 접촉 격자 사다리) 통과가 다음 단계의 문이다.</p>
+</div>
+</li>
+<li class="step key" id="step-3">
+<span class="node"><span>단계</span> <b>3</b></span>
+<div class="card">
+<div class="shead"><h3>2D 벤치마크</h3><span class="chip">CPU 1–2 주</span> <span class="chip key">핵심</span></div>
+<p>같은 코드 · 같은 출발 충전 셋 · 같은 재료 · 같은 판 속도에서 접촉 표현만 바꾼다.  같은 충전율에서 S 의 판 응력이 F (마찰 0.5) 의 몇 배인가로 가른다.  점은 셋 (재밍 근처 하나 · 치밀 둘) 이고, &quot;다름&quot; 은 평균 1.3 배 이상인 점이 둘 이상일 때만이다.</p>
+</div>
+</li>
+<li class="step" id="step-4">
+<span class="node"><span>단계</span> <b>4</b></span>
+<div class="card">
+<div class="shead"><h3>3D 순수 SE</h3><span class="chip">Rint ② R 런 뒤</span> <span class="chip">48 GB 카드</span></div>
+<p>느슨하게 붓고 질량을 다 심는다.  연화 팔 (E 1.53 · ν 0.49) 과 실제 팔 (E 22.06 · ν 0.36) 을 같이 돌리고 손잡이는 σ_y 하나다.  0.03–0.60 GPa 를 훑어 기공 11.5 % 가 되는 σ_y* 를 찾는다.  최종값은 50 × 50 × 30 µm 상자 · 충전 셋 평균이다.  결과는 넷 중 하나다 (실제 강성으로도 닿음 · 연화가 필요 · 둘 다 못 닿음 · 보류).</p>
+</div>
+</li>
+<li class="step" id="step-5">
+<span class="node"><span>단계</span> <b>5</b></span>
+<div class="card">
+<div class="shead"><h3>3D 복합</h3></div>
+<p>줄인 입경비 상자 다음 real_14 의 수 · 반경 (위치는 새로 붓기).</p>
+</div>
+</li>
+<li class="step" id="step-6">
+<span class="node"><span>단계</span> <b>6</b></span>
+<div class="card">
+<div class="shead"><h3>탈압</h3></div>
+<p>U3 · U4 통과 뒤 · 보고만.</p>
+</div>
+</li>
+<li class="step" id="step-7">
+<span class="node"><span>단계</span> <b>7</b></span>
+<div class="card">
+<div class="shead"><h3>구조 · 수송</h3></div>
+</div>
+</li>
+</ol>
+<div class="sched"><b>일정</b> <span class="tag">[추정]</span> 2D 4–6 주를 CPU 로 (Rint 일정 그대로) · 단계 3 결과 12 월 중순–말 · 3D 는 R 런 뒤.</div>
+<h3 class="sub">갈림 (결과 전에 정함)</h3>
+<div class="wrap">
+<table class="fork">
+<thead><tr><th scope="col">2D 결과</th><th scope="col">3D 길</th></tr></thead>
+<tbody>
+<tr><td><span class="chip k-ga">(가)</span> 같음</td><td>붙음은 주원인 아님.  3D = A (AM 을 움직이는 강체로 + 부품 A′-0)</td></tr>
+<tr><td><span class="chip k-na">(나)</span> 다름</td><td>붙음이 주원인.  3D = A′ (입자별 장)</td></tr>
+<tr><td><span class="chip k-ma">(마)</span> 못 가름</td><td>A 로 가되 A′ 는 보류.  단계 4 에서 다시 열 수 있다</td></tr>
+<tr><td><span class="chip k-ra">(라)</span> 이상 신호</td><td>마찰 없는 F 가 논문 띠 밖 · S 가 더 무름 · 마찰을 넣었는데 더 무름 · 기술 실패.  구현부터 의심하고 한 번 다시, 그래도면 멈추고 보고</td></tr>
+<tr><td><span class="chip k-da">(다)</span> MPM 길 멈춤</td><td>입자별 FE (B) 또는 두 재료 항복캡 DEM (C′).  단계 3 에서는 나오지 않는다</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="s4">
+<h2><span class="no">4.</span> 진밀도 1.64 에서 기공률 10–13 %</h2>
+<div class="box emph">
+<p>1저자 11-10: <em>&quot;이것도 진밀도 1.64에 porosity가 저 범위에 있어야돼&quot;</em>.  메모에 이미 들어 있다.</p>
+<ul>
+<li>MPM 기공률 = 1 − (처음 심은 고체 부피 합) ÷ (바닥 넓이 × 판 높이).  코드 안 밀도가 1 이라 그 고체 부피가 곧 &quot;질량 ÷ 진밀도&quot; 다.  랩의 질량 기준 · 진밀도 1.64 기공률과 같은 정의다 (메모 단계 0).</li>
+<li>단계 4 가 바로 그 맞춤이다.  σ_y 하나로 10–13 % (가운데 11.5 %) 에 넣고 그 값을 뒤 단계에 그대로 쓴다.</li>
+<li>1.64 는 고정이고 손잡이가 아니다.  계산에 직접 들어가는 곳은 복합의 wt% 를 부피로 바꿀 때 (SE 1.64 · AM 4.85) 다.</li>
+<li>비교 상태는 [DEM 우선] 의 D9′ 와 같은 &quot;300 MPa 가압 뒤 판 고정 이완 끝&quot; 이다.</li>
+<li>결과 문장은 &quot;진밀도 1.64 로 정의한 랩 기준과 맞는다&quot; 까지다.</li>
+<li>복합은 지금 설계에서 10–13 % 를 맞추지 않고 예측으로 낸다.  기준이 순수 SE 이고 손잡이가 σ_y 하나라, 복합까지 맞추면 맞춘 값이 둘이 된다 (아래 Q5).</li>
+</ul>
+</div>
+</section>
+<section id="s5">
+<h2><span class="no">5.</span> 브리핑하다 찾은 빈 곳</h2>
+<div class="box warn">
+<p>메모가 litdb 정본에 이미 있는 LPSCl 카드를 쓰지 않았고, 사전 공격 세 번도 놓쳤다 (원장 <code>SELF-161</code>).</p>
+<ul>
+<li><a class="cite" href="#ref-8">[8]</a> Lee 2025: 상용 Li6PS5Cl 을 다이 안에서 연속으로 누르며 압력별 기공 곡선 전체를 냈다.  진밀도를 1.64 로 둔 논문이다.  300 MPa 누른 채 약 15 % [카드 판독] · Heckel 항복압 약 0.29–0.34 GPa [카드 산술] · 나노압입 E 27.6 GPa · 경도 1.41 GPa · 약 900 MPa 에서 뺐을 때 높이 약 4.7 % 회복.</li>
+<li><a class="cite" href="#ref-9">[9]</a> Miß 2026: 300 MPa 에서 뺐을 때 SE 두께 회복 1.6 % [카드 재계산].</li>
+<li><a class="cite" href="#ref-10">[10]</a> Thompson 2026: 3.8 GPa 까지 가압 · 격자로 본 체적 탄성률 약 22.9 GPa [카드 산술] (우리 DFT 26.23 과 비슷).</li>
+<li>왜 중요한가: 메모는 &quot;σ_y* 를 견줄 LPSCl 항복 · 경도 카드가 없다&quot;, &quot;외부 기준은 점 하나&quot; 라고 적었다.  둘 다 틀렸다.  보정은 그대로 랩 기준 하나로 하고, 이 카드들은 결과 전에 등록하는 대조 항목 (σ_y* 비교 · 압력별 곡선 모양 · 탈압 크기) 으로 넣으면 된다.</li>
+<li>처분: 1저자 11-10 메모 3.1 을 그대로 Codex 반박 창에 보냈다.  3.2 는 판정을 받은 뒤 이 대조 항목 · 참고문헌 목록과 판정 지적을 함께 반영한다.  기준 · 손잡이 · 갈림 표는 그대로다 (Q4).</li>
+</ul>
+</div>
+</section>
+<section id="s6">
+<h2><span class="no">6.</span> 하지 않는 말</h2>
+<div class="box dont">
+<ul>
+<li>기공률이 창에 들었다는 것만으로 모델이 맞다고 하지 않는다.  손잡이 하나로 점 하나는 늘 맞는다.</li>
+<li>2D 숫자를 3D 로 옮기지 않는다.</li>
+<li>&quot;연화는 피할 수 없다&quot; 는 한 속도장 MPM 의 구성식 탐색 결론으로만 쓴다.</li>
+<li>탈압 값은 U3 · U4 통과 전에 내지 않는다.  15.6 % 는 DEM 값이다.</li>
+<li>2D 에서 같음이 나와도 3D 에서 붙음이 원인이 아니라고 하지 않는다 (Codex <code>DRD-02</code>).</li>
+<li>우리 σ_y 를 문헌 항복과 그대로 견주지 않는다.  σ_y 0.30 이면 연화 재료의 일축 항복은 압축 0.318 · 인장 0.454 GPa 다 (<code>SELF-160</code>).</li>
+</ul>
+</div>
+</section>
+<section id="s7">
+<h2><span class="no">7.</span> 더 먹여 주면 좋은 문헌 (계획에 바로 쓰이는 순)</h2>
+<ol>
+<li><strong>NCM + LPSCl 복합 펠릿의 압력별 기공 (질량 기준)</strong> 이 있는 논문이나 랩 자료.  단계 5 에 외부 기준이 생겨 판정을 하나 더할 수 있다.  가장 값지다.</li>
+<li><strong>카드가 직접 확보 후보로 적은 것</strong> (서지 = 카드에 인쇄된 참고문헌): Cantor et al., PRL 124, 208003 (2020) · 같은 그룹 3D 판 Soft Matter 18, 312 (2022) (후보 B 의 3D 비용을 알려 줄 1 순위) · PRE 103, 062902 (2021) · Barés et al., EPJ Web Conf. 249, 05004 (2021) · Vu and Barés, PRE 100, 042907 (2019) · Cárdenas-Barrantes 2022 보충 자료.</li>
+<li><strong>우리 코드 계보 (MLS-MPM) 의 강체 양방향 결합 · 접촉</strong>: 검색 낱말 &quot;moving least squares material point method two-way rigid body coupling&quot; · &quot;material point method frictional contact multi-material&quot;.  후보 A 의 강체 결합과 노드당 셋 이상 처리에 바로 쓰인다.</li>
+<li><strong>LPSCl 소성 · 크리프 · 나노압입</strong>: 검색 낱말 &quot;Li6PS5Cl nanoindentation hardness creep&quot; · &quot;argyrodite micropillar compression&quot;.</li>
+<li><strong>냉간 가압 복합 양극 단면 형상 정량</strong> (SE 형상 비교): 검색 낱말 &quot;FIB-SEM cold-pressed composite cathode Li6PS5Cl morphology&quot;.</li>
+</ol>
+<p>3–5 번의 저자 · 서지는 원문을 받기 전까지 확정하지 않는다.</p>
+</section>
+<section id="s8">
+<h2><span class="no">8.</span> 1저자 결정 (11-10)</h2>
+<div class="wrap">
+<table class="qa stack">
+<thead><tr><th scope="col">질문</th><th scope="col">권고</th><th scope="col">1저자 답</th></tr></thead>
+<tbody>
+<tr id="q1"><td class="q"><b class="qn">Q1.</b> 단계 0–3 을 GPU 없이 시작하고 3D 는 Rint ② R 런 뒤로 둘까요?</td><td class="rec" data-k="권고">예.</td><td class="ans" data-k="1저자 답">권고대로 (예).</td></tr>
+<tr id="q2"><td class="q"><b class="qn">Q2.</b> SE 입자 형태 변형은 필수인가요?</td><td class="rec" data-k="권고">필수.</td><td class="ans" data-k="1저자 답">권고대로 (필수).</td></tr>
+<tr id="q3"><td class="q"><b class="qn">Q3.</b> <code>SELF-160</code> (σ_y 환산 오기) 은 문구만 고칠까요 (재실행 없음)?</td><td class="rec" data-k="권고">예.</td><td class="ans" data-k="1저자 답">권고대로 (문구만 · 재실행 없음).</td></tr>
+<tr id="q4"><td class="q"><b class="qn">Q4.</b> Codex 에 보내기 전에 메모를 3.2 로 고칠까요 (§5 의 카드를 대조 항목으로 등록 · 참고문헌 목록)?</td><td class="rec" data-k="권고">고친 뒤 보낸다.</td><td class="ans" data-k="1저자 답">3.1 그대로 보냄 (11-10) · 3.2 는 판정 뒤.</td></tr>
+<tr id="q5"><td class="q"><b class="qn">Q5.</b> 복합 기공도 10–13 % 에 맞춰야 하나요?</td><td class="rec" data-k="권고">아니오.  복합은 예측으로 내고 D0 와 같은 식으로 비교한다.</td><td class="ans" data-k="1저자 답">아니오.  기준은 순수 SE 만이고 복합 등 다른 것은 다른 값이 나와도 된다 (1저자 <em>&quot;순수 SE만 기준이고 다른것들은 다른값 나와도 되지 당연히&quot;</em>).</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="s9" class="pb">
+<h2><span class="no">9.</span> Codex 반박 판정 (11-10) 과 고칠 것</h2>
+<p class="vsrc">판정문 = <code class="path">docs/reviews/codex_review_dem_redesign_direction_20261110.md</code> · 처분 = <code class="path">docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md</code>.</p>
+<div class="verdict">
+<p class="vline"><span class="vk">판정</span> 방향은 지지한다.  다만 지금 적힌 판정 규칙 (단계 3 · 4) 은 고쳐야 해서 등록 · 봉인은 HOLD 다.  실행 GO 는 요청하지도 받지도 않았다.</p>
+<div class="vbody">
+<h3 class="vh">큰 지적 둘 (P1)</h3>
+<div class="findings">
+<div class="finding" id="drd-01">
+<p class="fhead"><span class="ptag">P1</span> <code>DRD-01</code></p>
+<p>격자를 두 번 (지름당 12 · 16 셀) 돌려 등급이 같으면 확정한다는 규칙으로는 부족하다.  격자를 더 조이면 등급이 바뀌는 경우를 못 막는다 (합성 예: 12 셀 1.38 · 16 셀 1.31 로 둘 다 &quot;다름&quot; 인데 극한은 1.10 &quot;같음&quot;).</p>
+<p class="fix"><b>고침</b>: 응력 비의 수치 오차를 추정해 등급 경계와 견주고, 경계를 넘나들면 중간 · 보류로 둔다.</p>
+</div>
+<div class="finding" id="drd-02">
+<p class="fhead"><span class="ptag">P1</span> <code>DRD-02</code></p>
+<p>2D 에서 &quot;같음&quot; 이 나와도 3D 에서 붙음이 원인이 아니라고 할 수 없다.  재료식과 접촉은 서로 영향을 주기 때문이다.</p>
+<p class="fix"><b>고침</b>: 결론을 &quot;등록한 2D 조건에서 접촉 표현을 바꾸면 응답이 이만큼 달라진다&quot; 로 좁히고, 3D 에서 실제 강성이 창에 못 닿으면 입자별 장 대조를 열지 정한다.</p>
+</div>
+</div>
+<h3 class="vh">그 밖 (P2 열 · P3 하나)</h3>
+<ul>
+<li>논문 곡선과 견줄 때 충전율 정의를 하나로 고정한다 (<code>DRD-03</code>).</li>
+<li>단계 4 의 빈틈 셋을 메운다: 탐색이 전부 실패한 경우 · 자격에 쓸 충전 번호 · 다시 연 팔의 보류 조건 (<code>DRD-04</code> – <code>DRD-06</code>).</li>
+<li>누르는 중에도 접촉은 국소적으로 풀린다.  분리 · 마찰 검산 일부를 2D 벤치마크 앞으로 당긴다 (<code>DRD-07</code> · <code>DRD-08</code>).</li>
+<li>입자별 장의 색칠 안전 조건 · 후보별 맞춘 값 세기 · &quot;얼린 AM 은 하중 0&quot; 문장 · 작은 상자 자격의 범위를 고친다 (<code>DRD-09</code> – <code>DRD-12</code>).  Zunker 논문은 정식 출판본이 있다고 적는다 (<code>DRD-13</code>).</li>
+</ul>
+<ul>
+<li><strong>확인된 것</strong>: 일축 항복 환산 네 값 · 2D 런 수 96 (넓히면 114) · 갈림 표 (상위 표 수준) · 새로 붓기와 질량 기준 연산자.</li>
+<li><strong>다음</strong>: 메모 3.2 에서 위를 고치고 §5 의 대조 항목을 더한다.  고친 문서와 작은 결정 함수 · 합성 반례로 짧게 재확인받는다.  이 지적을 닫으려고 DEM · MPM 을 먼저 돌릴 필요는 없다 (판정문 §7).</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="refs" class="pb">
+<h2>참고문헌</h2>
+<p>서지는 litdb 정본 가지 (<code class="path">claude/friendly-meitner-lldvar</code>) 의 카드에서 옮겼다.  <a class="cite" href="#ref-1">[1]</a>–<a class="cite" href="#ref-7">[7]</a> = 1저자가 11-09 에 준 PDF · <a class="cite" href="#ref-8">[8]</a>–<a class="cite" href="#ref-10">[10]</a> = 이미 정본에 있던 카드.</p>
+<ol class="refs">
+<li id="ref-1"><span class="rn">[1]</span> <span class="rc">S.G. Bardenhagen, J.U. Brackbill, D. Sulsky, The material-point method for granular materials, Comput. Methods Appl. Mech. Engrg. 187 (2000) 529–541.  DOI 미인쇄 <span class="slugline">litdb 카드 (slug) <code class="slug">bardenhagen2000_mpm_granular_multibody_frictional_contact</code></span></span></li>
+<li id="ref-2"><span class="rn">[2]</span> <span class="rc">S.G. Bardenhagen, J.E. Guilkey, K.M. Roessig, J.U. Brackbill, W.M. Witzel, J.C. Foster, An improved contact algorithm for the material point method and application to stress propagation in granular material, CMES 2(4) (2001) 509–522.  DOI 미인쇄 <span class="slugline">litdb 카드 (slug) <code class="slug">bardenhagen2001_mpm_improved_contact_granular_stress_waves</code></span></span></li>
+<li id="ref-3"><span class="rn">[3]</span> <span class="rc">S. Nezamabadi, M. Ghadiri, J.-Y. Delenne, F. Radjai, Modelling the compaction of plastic particle packings, Comput. Part. Mech. 9(1) (2022) 45–52.  doi:10.1007/s40571-021-00391-4 <span class="slugline">litdb 카드 (slug) <code class="slug">nezamabadi2022_mpm_cd_plastic_particle_compaction</code></span></span></li>
+<li id="ref-4"><span class="rn">[4]</span> <span class="rc">T.H. Nguyen, S. Nezamabadi, J.-Y. Delenne, F. Radjai, Compaction of granular materials composed of deformable particles, EPJ Web Conf. 140 (2017) 05013.  doi:10.1051/epjconf/201714005013 <span class="slugline">litdb 카드 (slug) <code class="slug">nguyen2017_mpm_bpm_deformable_particle_compaction</code></span></span></li>
+<li id="ref-5"><span class="rn">[5]</span> <span class="rc">M. Cárdenas-Barrantes, D. Cantor, J. Barés, M. Renouf, E. Azéma, Compaction of mixtures of rigid and highly deformable particles: A micromechanical model, Phys. Rev. E 102 (2020) 032904.  doi:10.1103/PhysRevE.102.032904 <span class="slugline">litdb 카드 (slug) <code class="slug">cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd</code></span></span></li>
+<li id="ref-6"><span class="rn">[6]</span> <span class="rc">M. Cárdenas-Barrantes, D. Cantor, J. Barés, M. Renouf, E. Azéma, A micro-mechanical compaction model for granular mix of soft and rigid particles, EPJ Web Conf. 249 (2021) 02008.  doi:10.1051/epjconf/202124902008 <span class="slugline">litdb 카드 (slug) <code class="slug">cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings</code></span></span></li>
+<li id="ref-7"><span class="rn">[7]</span> <span class="rc">M. Cárdenas-Barrantes, J. Barés, M. Renouf, É. Azéma, Experimental validation of a micromechanically based compaction law for mixtures of soft and hard grains, Phys. Rev. E 106 (2022) L022901.  doi:10.1103/PhysRevE.106.L022901 <span class="slugline">litdb 카드 (slug) <code class="slug">cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic</code></span></span></li>
+<li id="ref-8"><span class="rn">[8]</span> <span class="rc">S.-Y. Lee, J.-H. Han, H.-W. Gong, J.-P. Ahn, K.-W. Yi, Y.W. Cho, Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries, J. Mater. Chem. A 13 (2025) 6342–6346.  doi:10.1039/d4ta08604j <span class="slugline">litdb 카드 (slug) <code class="slug">lee2025_heckel_argyrodite_powder_densification_nanoindentation</code></span></span></li>
+<li id="ref-9"><span class="rn">[9]</span> <span class="rc">V. Miß, F. Lange, S. Staubitz, B. Roling, Experimental setup for in situ determination of conductivity-porosity-pressure relationships, ACS Appl. Mater. Interfaces 18 (2026) 32830–32836.  doi:10.1021/acsami.6c03789 <span class="slugline">litdb 카드 (slug) <code class="slug">miss2026_insitu_conductivity_porosity_pressure_compaction</code></span></span></li>
+<li id="ref-10"><span class="rn">[10]</span> <span class="rc">O. Thompson, O. Korjus 외, High pressure densification investigation of Li3PS4 and Li6PS5Cl solid electrolytes using combined X-ray diffraction, X-ray absorption tomography and ionic measurement, Adv. Funct. Mater. 36 (2026) e75195 <span class="slugline">litdb 카드 (slug) <code class="slug">thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography</code></span></span></li>
+</ol>
+</section>
+</main>
+<footer class="foot">
+<p>원문 <code class="path">docs/reviews/dem_redesign_direction_20261109/briefing_ko.md</code> 을 생성기 <code class="path">scripts/build_dem_redesign_plan.py</code> 가 옮긴 페이지입니다.  글을 고치려면 원문을 고친 뒤 다시 만듭니다.</p>
+</footer>
+</body>
+</html>

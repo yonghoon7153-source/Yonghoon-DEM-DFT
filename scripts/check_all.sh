@@ -290,6 +290,7 @@ run 'webapp: gen2_stamp_record' python3 webapp/test_gen2_stamp_record.py  # 10-0
 run 'webapp: hetero_transcript'   python3 webapp/test_hetero_transcript_page.py   # 10-05 이종기술 회의록 — 회의 둘 (09-18 · 10-02) 고르기 · 회의 종합 · 등록부 밖 키 404 · /hetero 논지 정본 비준 블록 (docs/hetero_thesis.md 에서 읽음 · fail-closed)
 run 'webapp: emod'                python3 webapp/test_emod_page.py   # 11-06 유효 영률 · 응력 페이지 — 정본 docs/effective_modulus_stress.md 에서 읽음 · 갱신 표지 하나 · fail-closed · 템플릿에 베끼지 않기
 run 'webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)'   python3 webapp/test_rint_explainer_page.py
+run 'webapp: dem_redesign_plan (DEM 재설계 계획서 정적 페이지 둘 · 생성기 --check 바이트 같음 · 낯선 구성 rc 2 · docx 정본 sha256 · 원문 줄 전수 포함 · 수식 · 그림 고정물 (MathML · OMML · data URI) · 사이드바 · 라우트 없이 정적 (app.py 는 봉인) · 11-10)'   python3 webapp/test_dem_redesign_plan_page.py
 run 'webapp: dem_method_figs (2D DEM 방법 그림 정적 페이지 · 사이드바 · 내려받기 = docs 원본 바이트 · ../ 404 · 봉인 app.py 무변경 · 11-02)'   python3 webapp/test_dem_method_figs_page.py
 run 'sync_dem_method_figs_to_webapp --check (웹앱 그림 사본 = docs/50kg/report_y4/figs/p0_dem_method 바이트 같음)'   python3 scripts/sync_dem_method_figs_to_webapp.py --check
 run 'webapp: mpm_lab_cmp_absent_phase (MPM lab 비교표 · 없는 상 = — · 참 0 유지 · 10-21)'   python3 webapp/test_mpm_lab_cmp_absent_phase.py

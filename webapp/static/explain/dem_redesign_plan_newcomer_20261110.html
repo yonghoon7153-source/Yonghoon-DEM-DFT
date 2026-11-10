@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ko">
+<!-- 생성물: 손으로 고치지 않는다.  원문 docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md (sha256 3b5b9a86b8d9299a) 을 scripts/build_dem_redesign_plan.py 가 옮겼다.  고치려면 원문을 고친 뒤 --write.  시험 webapp/test_dem_redesign_plan_page.py -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DEM 재설계 (수영) 계획서 · 처음 보는 분을 위한 설명</title>
+<style>
+:root{--bg:#eef2f6;--paper:#ffffff;--ink:#1f2933;--mut:#5b6770;--acc:#1f4e79;--line:#b8c4ce;--hair:#dce3ea;--th:#e6edf3;--box:#eaf2fa;--code:#eef2f6;--ok:#2a6a3a;--ok-bg:#e5f3e8;--warn:#85570a;--warn-bg:#fff5dc;--warn-line:#d6a548;--bad:#a1342b;--bad-bg:#fcefed;--bad-line:#dba29a;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11161b;--paper:#1a2028;--ink:#e4e9ee;--mut:#a0acb8;--acc:#8fb8e3;--line:#3d4956;--hair:#2b343f;--th:#242f3b;--box:#1b2b3d;--code:#252e38;--ok:#86c795;--ok-bg:#18281d;--warn:#e3b055;--warn-bg:#2c2414;--warn-line:#7d6126;--bad:#e58d83;--bad-bg:#2e1c1a;--bad-line:#7f4640;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11161b;--paper:#1a2028;--ink:#e4e9ee;--mut:#a0acb8;--acc:#8fb8e3;--line:#3d4956;--hair:#2b343f;--th:#242f3b;--box:#1b2b3d;--code:#252e38;--ok:#86c795;--ok-bg:#18281d;--warn:#e3b055;--warn-bg:#2c2414;--warn-line:#7d6126;--bad:#e58d83;--bad-bg:#2e1c1a;--bad-line:#7f4640;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.75 "Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--acc)}
+a:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+.top{max-width:880px;margin:0 auto;padding:16px 8px 0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 20px;font-size:.875rem}
+.top a{text-decoration:none}
+.top a:hover{text-decoration:underline}
+.top .sib::after{content:" \2192"}
+.sheet{max-width:880px;margin:12px auto 0;padding:56px 64px 60px;background:var(--paper);border:1px solid var(--hair);border-radius:10px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 32px rgba(15,23,42,.06)}
+.foot{max-width:880px;margin:0 auto;padding:14px 8px 44px;color:var(--mut);font-size:.78125rem;line-height:1.7}
+.foot p{margin:0}
+h1{margin:0;font-size:2.0625rem;line-height:1.25;letter-spacing:-.01em;color:var(--acc);text-wrap:balance}
+.subtitle{margin:8px 0 0;font-size:1.125rem;line-height:1.5;font-weight:600}
+.status{margin:16px 0 0;font-size:.8125rem;line-height:1.75;color:var(--mut)}
+.oneline{margin:16px 0 0;padding:13px 18px;border-left:5px solid var(--acc);border-radius:0 6px 6px 0;background:var(--box);font-size:1.03125rem;line-height:1.7}
+h2{margin:44px 0 12px;font-size:1.3125rem;line-height:1.4;color:var(--acc);text-wrap:balance}
+h2 .no{font-variant-numeric:tabular-nums}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:1.35em}
+ol{padding-left:1.6em}
+li{margin:5px 0}
+li>ul{margin:5px 0 7px;padding-left:1.25em;list-style:none}
+li>ul>li{position:relative}
+li>ul>li::before{content:"\2013";position:absolute;left:-1.15em;color:var(--mut)}
+strong,b{font-weight:700}
+em{font-style:normal;color:var(--acc)}
+code{font-family:Consolas,"D2Coding",monospace;font-size:.86em;padding:1px 5px;border-radius:4px;background:var(--code);white-space:nowrap}
+code.path{white-space:normal;overflow-wrap:anywhere}
+.cite{text-decoration:none;font-variant-numeric:tabular-nums}
+.cite:hover{text-decoration:underline}
+.wrap{overflow-x:auto;margin:12px 0 16px}
+table{width:100%;border-collapse:collapse;font-size:.875rem;line-height:1.6}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left}
+th{background:var(--th);font-weight:700}
+:target{scroll-margin-top:16px}
+tr:target>td,.refs li:target{background:var(--box)}
+h1{font-size:1.9375rem}
+.subtitle{margin:6px 0 0;font-weight:400}
+.audience{margin:4px 0 0;font-size:.875rem;color:var(--mut)}
+.statusline{margin:6px 0 0;padding:0 0 12px;border-bottom:2px solid var(--acc);font-size:.8125rem;color:var(--mut)}
+.leadin{margin:22px 0 8px}
+math{font-family:"Cambria Math","STIX Two Math","Latin Modern Math",math;font-size:1.06em}
+.eq{margin:14px 0;padding:2px 0;overflow-x:auto;text-align:center}
+.fig{margin:20px 0;text-align:center}
+.fig img{max-width:100%;height:auto;border-radius:4px;background:#fff}
+.fig figcaption{margin-top:6px;font-size:.8125rem;line-height:1.6;color:var(--mut)}
+@media (max-width:640px){
+body{font-size:.9375rem}
+.top{padding:12px 16px 0}
+.sheet{margin:10px 0 0;padding:28px 16px 34px;border-left:0;border-right:0;border-radius:0;box-shadow:none}
+.foot{padding:12px 16px 36px}
+h1{font-size:1.625rem}
+.subtitle{font-size:1rem}
+.oneline{padding:11px 14px;font-size:.96875rem}
+h2{margin-top:34px;font-size:1.1875rem}
+table{font-size:.84375rem}
+table.c3{min-width:520px}
+table.c4{min-width:640px}
+.toc ol{columns:1}
+.step{grid-template-columns:minmax(0,1fr);padding-bottom:14px}
+.step::before{display:none}
+.node{justify-self:start;margin:0 0 6px;padding:1px 12px}
+.sched{margin-left:0}
+.fork td:first-child{width:32%}
+.fork .chip{display:block;width:max-content;margin:0 0 3px}
+.box{padding:12px 14px 10px}
+.box.dont{padding:10px 14px 8px}
+.vline{padding:12px 14px}
+.vbody{padding:2px 14px 10px}
+.finding{padding:9px 12px 10px}
+table.stack{min-width:0}
+.stack thead{display:none}
+.stack,.stack tbody,.stack tr,.stack td{display:block;width:auto}
+.stack tr{margin:0 0 10px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.stack td{width:auto !important;border:0;border-top:1px solid var(--hair);padding:8px 12px}
+.stack td:first-child{border-top:0;background:var(--th)}
+.stack td[data-k]::before{content:attr(data-k);display:block;font-size:.75rem;font-weight:700;color:var(--mut)}
+}
+@media print{
+:root:root{--bg:#fff;--paper:#fff;--ink:#1f2933;--mut:#5b6770;--acc:#1f4e79;--line:#b8c4ce;--hair:#dce3ea;--th:#e6edf3;--box:#eaf2fa;--code:#eef2f6;--ok:#2a6a3a;--ok-bg:#e5f3e8;--warn:#85570a;--warn-bg:#fff5dc;--warn-line:#d6a548;--bad:#a1342b;--bad-bg:#fcefed;--bad-line:#dba29a;color-scheme:light}
+@page{size:A4;margin:20mm 18mm 18mm;@bottom-center{content:"DEM 재설계 (수영) 계획서  ·  " counter(page) " / " counter(pages);font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;font-size:8pt;color:#5b6770}}
+html{font-size:10.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{line-height:1.62}
+.top,.foot{display:none}
+.sheet{max-width:none;margin:0;padding:0;border:0;border-radius:0;box-shadow:none}
+a{color:inherit;text-decoration:none}
+.refs{line-height:1.5}
+.refs li{padding:6px 4px}
+h2{margin-top:20pt;break-after:avoid}
+.sub,.vh,.leadin,.shead,.vsrc{break-after:avoid}
+.wrap,.verdict{overflow:visible}
+.pb{break-before:page}
+.pb>h2:first-child{margin-top:0}
+tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="이동"><a class="home" href="/">← DEM/MPM Analyzer 처음으로</a><a class="sib" href="/static/explain/dem_redesign_plan_20261110.html">자세한 계획서</a></nav>
+<main class="sheet">
+<header class="doc-head">
+<h1>DEM 재설계 (수영) 계획서</h1>
+<p class="subtitle">가압부터 탈압까지 한 모델로 계산하기</p>
+<p class="audience">처음 보는 분을 위한 설명</p>
+<p class="statusline">2026-11-10  ·  계획 문서  ·  계산 결과는 아직 없음  ·  외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중</p>
+</header>
+<p class="status"><strong>지위</strong>: 계획 문서입니다.  아직 계산 결과는 없습니다.  실행 승인을 구하는 글이 아니라, 무엇을 어떤 순서로 확인할지를 미리 정해 두는 글입니다.  처음 보는 분이 읽을 수 있게 쉬운 말로 풀어 썼습니다.  자세한 근거와 숫자는 방향 메모 3.1 판에 있고, 두 글이 다르면 메모가 기준입니다.</p>
+<div class="oneline"><strong>한 줄로</strong>: 전극을 누르는 과정을 처음부터 끝까지 한 모델로 계산하려고 합니다.  큰 3D 계산을 새로 짜기 전에, 값싼 2D 시험으로 &quot;우리 계산에서 알갱이가 닿으면 서로 붙어 버리는 것이 문제의 뿌리인가&quot; 를 먼저 확인합니다.</div>
+<section id="s1">
+<h2><span class="no">1.</span> 무엇을 계산하려는가</h2>
+<ul>
+<li>전고체전지의 복합 양극은 두 가지 가루를 섞어 세게 눌러서 만듭니다.
+<ul>
+<li>활물질 (AM): 리튬을 저장하는 단단한 알갱이입니다.  여기서는 NCM 입니다.</li>
+<li>고체전해질 (SE): 리튬 이온이 지나가는 길이 되는 무른 알갱이입니다.  여기서는 LPSCl 입니다.</li>
+</ul>
+</li>
+<li>누르는 압력은 약 300 MPa 입니다.  누르면 무른 SE 가 찌그러지면서 단단한 AM 사이의 빈틈을 메웁니다.</li>
+<li>눌린 뒤에 남는 빈틈의 비율을 기공률이라고 합니다.  기공률과 알갱이들이 맞닿은 모양이 이온과 전자가 얼마나 잘 흐르는지를 정합니다.</li>
+<li>그래서 &quot;어떤 조성과 입자 크기로 누르면 어떤 구조가 되는가&quot; 를 계산으로 미리 알고 싶습니다.</li>
+</ul>
+</section>
+<section id="s2">
+<h2><span class="no">2.</span> 지금까지는 어떻게 계산했는가</h2>
+<p>두 가지 계산 방법을 이어서 썼습니다.</p>
+<div class="wrap">
+<table class="keep c4">
+<colgroup><col style="width:19.39%"><col style="width:24.93%"><col style="width:28.81%"><col style="width:26.88%"></colgroup>
+<thead><tr><th scope="col">방법</th><th scope="col">알갱이를 어떻게 보는가</th><th scope="col">잘하는 것</th><th scope="col">못하는 것</th></tr></thead>
+<tbody>
+<tr><td>DEM (이산요소법)</td><td>모양이 변하지 않는 단단한 공</td><td>알갱이가 쌓이고 자리를 잡는 것 · 서로 닿은 연결망</td><td>알갱이가 찌그러지는 것</td></tr>
+<tr><td>MPM (물질점법)</td><td>찌그러질 수 있는 덩어리</td><td>무른 알갱이가 변형해 빈틈을 메우는 것</td><td>알갱이끼리 미끄러지고 떨어지는 것 (지금 우리 코드 기준)</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>순서는 이렇습니다.  DEM 으로 가루를 붓고 300 MPa 까지 누릅니다.  그 끝 상태의 AM 자리를 그대로 가져와 MPM 에 넣고, SE 만 다시 눌러 찌그러진 모양을 계산합니다.</li>
+<li>DEM 이 먼저 답을 내고 MPM 은 그 답 위에서 마무리만 합니다.  한쪽 방향으로만 넘기는 방식입니다.</li>
+</ul>
+</section>
+<section id="s3">
+<h2><span class="no">3.</span> 무엇이 문제인가</h2>
+<p>2026-11-09 주간보고에서 받은 지적은 두 가지입니다.</p>
+<ol>
+<li>지금 DEM 에서 MPM 으로 넘기는 것은 두 모델의 결합이 아니라 후처리에 가깝습니다.</li>
+<li>누르기 시작할 때부터 압력을 뺄 때까지 한 모델이 AM 과 SE 를 다 계산해야 합니다.</li>
+</ol>
+<p>기록을 다시 보면 이 지적이 맞습니다.</p>
+<ul>
+<li>MPM 은 이미 다 눌린 DEM 결과에서 출발합니다.  MPM 에 심는 재료의 양이 DEM 결과로 이미 정해져 있어서, MPM 이 새로 정하는 것은 판이 멈추는 높이 하나뿐입니다.  그래서 MPM 이 내는 기공률은 독립된 결과라고 하기 어렵습니다.</li>
+<li>MPM 안에서 AM 은 움직이지 않게 얼려 둡니다.  AM 이 하중을 얼마나 나눠 지는지를 MPM 이 스스로 계산하지 못하고 DEM 값을 빌려 옵니다.</li>
+<li>압력을 뺀 뒤 전극이 얼마나 되돌아오는지는 지금 MPM 으로 계산할 수 없습니다.  판과 재료가 붙어 있어서 떨어지지 못하기 때문입니다.</li>
+<li>두 모델 모두 SE 를 실제보다 15–18 배 무르게 두어야 실험과 비슷하게 눌렸습니다.  이 값은 재료의 실제 성질이 아니라 모델의 빈 곳을 메우려고 맞춘 값입니다.</li>
+</ul>
+</section>
+<section id="s4">
+<h2><span class="no">4.</span> 원인에 대한 가설: 알갱이가 닿으면 붙는다</h2>
+<ul>
+<li>우리 MPM 은 격자 한 칸에 속도를 하나만 둡니다.  그래서 두 알갱이가 같은 칸에 들어오면 그 순간부터 한 덩어리처럼 움직입니다.  미끄러지지도 떨어지지도 못합니다.</li>
+<li>실제 가루는 누르는 동안 알갱이끼리 미끄러지고 자리를 바꾸면서 빈틈을 메웁니다.  붙어 버린 가루는 그렇게 하지 못해 너무 뻣뻣해집니다.</li>
+<li>가설은 이렇습니다.  이 붙음 때문에 SE 를 실제보다 훨씬 무르게 두어야 했고, AM 을 얼려야 했고, 탈압도 계산하지 못했다.</li>
+<li>아직 가설입니다.  그래서 큰 계산을 새로 짜기 전에 이것부터 확인합니다.</li>
+</ul>
+</section>
+<section id="s5">
+<h2><span class="no">5.</span> 문헌은 무엇을 말하는가</h2>
+<p>연구 책임자 (1저자) 가 고른 논문 일곱 편을 읽고 계획에 넣었습니다.</p>
+<div class="wrap">
+<table class="c3">
+<colgroup><col style="width:22.71%"><col style="width:42.65%"><col style="width:34.63%"></colgroup>
+<thead><tr><th scope="col">논문</th><th scope="col">보여 준 것</th><th scope="col">우리 계획에 쓰는 곳</th></tr></thead>
+<tbody>
+<tr><td><a class="cite" href="#ref-1">[1]</a> Bardenhagen 2000</td><td>MPM 에서 알갱이마다 속도를 따로 두면 겹치지 않으면서 미끄러지고 떨어질 수 있다</td><td>붙음을 없애는 방법의 바탕</td></tr>
+<tr><td><a class="cite" href="#ref-2">[2]</a> Bardenhagen 2001</td><td>떨어지는 조건을 더 정확히 고친 판 · 3D 로 검증</td><td>압력을 뺄 때 판과 알갱이가 떨어지는 계산</td></tr>
+<tr><td><a class="cite" href="#ref-3">[3]</a> Nezamabadi 2022</td><td>알갱이 사이 접촉을 따로 푼 MPM 은 재료를 무르게 바꾸지 않고도 거의 빈틈 없이 눌렀다</td><td>&quot;접촉을 풀면 무르게 맞출 필요가 없을 수 있다&quot; 는 근거 · 2D 시험의 비교 대상</td></tr>
+<tr><td><a class="cite" href="#ref-4">[4]</a> Nguyen 2017</td><td>기공률 곡선은 계산 방법이 달라도 비슷하게 나온다</td><td>방법의 차이는 기공률이 아니라 누르는 힘으로 가려야 한다</td></tr>
+<tr><td><a class="cite" href="#ref-5">[5]</a> Cárdenas-Barrantes 2020</td><td>단단한 알갱이와 무른 알갱이를 섞으면, 단단한 알갱이가 움직이고 서로 닿아 하중을 받을 때 기공률의 바닥이 생긴다</td><td>AM 을 얼리지 않고 움직이게 해야 하는 이유</td></tr>
+<tr><td><a class="cite" href="#ref-6">[6]</a> Cárdenas-Barrantes 2021</td><td>출발 상태를 표로 정리</td><td>출발 상태를 미리 정하고 기록하는 규칙</td></tr>
+<tr><td><a class="cite" href="#ref-7">[7]</a> Cárdenas-Barrantes 2022</td><td>느슨하게 쌓은 상태에서 시작한 2D 실험으로 위 이론을 확인</td><td>느슨한 상태에서 출발하는 절차</td></tr>
+</tbody>
+</table>
+</div>
+<p>이 논문들은 모두 2D 계산이거나 우리와 다른 재료입니다.  그래서 가설을 세우는 근거로만 쓰고, 논문의 숫자를 우리 전극에 그대로 옮기지 않습니다.</p>
+</section>
+<section id="s6">
+<h2><span class="no">6.</span> 계획: 싼 시험부터 차례로</h2>
+<div class="wrap">
+<table class="c3">
+<colgroup><col style="width:8.42%"><col style="width:61.38%"><col style="width:30.20%"></colgroup>
+<thead><tr><th scope="col">단계</th><th scope="col">하는 일</th><th scope="col">필요한 것</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>기공률을 세는 방법, 볼 값, 합격선, 결과별 다음 길을 결과를 보기 전에 적어 둡니다</td><td>계산 없음</td></tr>
+<tr><td>1</td><td>알갱이마다 속도를 따로 두면 3D 에서 메모리가 얼마나 드는지 셉니다</td><td>일반 컴퓨터 · 며칠</td></tr>
+<tr><td>2</td><td>2D 코드 하나에 두 방식을 같이 넣습니다.  지금 방식 (붙음) 과 새 방식 (알갱이마다 속도) 입니다.  작은 시험으로 코드가 맞는지 먼저 확인합니다</td><td>일반 컴퓨터 · 3–4 주</td></tr>
+<tr><td>3</td><td>2D 에서 같은 가루, 같은 재료, 같은 속도로 누르면서 방식만 바꿉니다.  같은 정도로 눌렸을 때 드는 힘이 얼마나 다른지 봅니다</td><td>일반 컴퓨터 · 1–2 주</td></tr>
+<tr><td>4</td><td>3D 에서 순수 SE 만 느슨하게 붓고 눌러, 재료 값 하나를 실험 기준에 맞춥니다</td><td>GPU · 다른 급한 계산이 끝난 뒤</td></tr>
+<tr><td>5</td><td>3D 에서 AM 과 SE 를 섞어 누릅니다</td><td>GPU</td></tr>
+<tr><td>6</td><td>압력을 빼고 되돌아오는 양을 봅니다</td><td>GPU</td></tr>
+<tr><td>7</td><td>눌린 구조에서 이온과 전자가 흐르는 정도를 계산합니다</td><td>GPU</td></tr>
+</tbody>
+</table>
+</div>
+<p class="leadin"><strong>단계 3 의 결과에 따라 3D 를 다르게 짭니다.</strong></p>
+<div class="wrap">
+<table class="keep c3">
+<colgroup><col style="width:27.70%"><col style="width:28.81%"><col style="width:43.50%"></colgroup>
+<thead><tr><th scope="col">2D 결과</th><th scope="col">뜻</th><th scope="col">3D 에서 하는 일</th></tr></thead>
+<tbody>
+<tr><td>두 방식의 힘이 뚜렷이 다르다</td><td>붙음이 결과를 크게 바꾼다</td><td>알갱이마다 속도를 두는 방식으로 짭니다</td></tr>
+<tr><td>두 방식의 힘이 비슷하다</td><td>이 조건에서는 붙음의 영향이 작다</td><td>AM 만 움직이는 단단한 물체로 바꾸는 더 간단한 방식으로 짭니다</td></tr>
+<tr><td>가르지 못했다</td><td>판단할 근거가 모자란다</td><td>간단한 방식으로 가되, 3D 에서 다시 확인합니다</td></tr>
+<tr><td>이상한 결과가 나왔다</td><td>코드가 틀렸을 수 있다</td><td>코드부터 점검하고 한 번 다시 합니다.  그래도 같으면 멈추고 보고합니다</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>지금 초안의 기준은 세 군데를 재서 두 군데 이상에서 힘이 1.3 배 넘게 다르면 &quot;다르다&quot; 로 보는 것입니다.  이 기준은 외부 검토 지적에 따라 계산 오차까지 따지도록 고치는 중입니다 (8 절).</li>
+<li>MPM 으로는 안 되겠다는 판단이 서면 다른 방법으로 갑니다.  알갱이마다 유한요소로 푸는 방법이나 접촉 법칙을 바꾼 DEM 입니다.  이 판단은 2D 시험에서는 나오지 않고 3D 단계에서 합니다.</li>
+<li>2D 시험은 4–6 주로 어림합니다.  결과는 12 월 중순에서 말 사이로 봅니다.  둘 다 어림입니다.</li>
+<li>2D 는 GPU 를 쓰지 않습니다.  GPU 는 기한이 있는 다른 계산 (전극 계면 저항 계산) 에 먼저 씁니다.</li>
+</ul>
+</section>
+<section id="s7">
+<h2><span class="no">7.</span> 무엇에 맞추는가</h2>
+<ul>
+<li>기준은 하나입니다.  순수 SE 가루만 300 MPa 로 눌렀을 때 기공률이 10–13 % 라는 연구실 기준입니다.</li>
+<li>이 기공률은 질량으로 셉니다.  펠릿의 질량을 부피로 나눈 밀도를, 빈틈이 전혀 없을 때의 밀도 (진밀도 1.64 g/cm³) 와 견줍니다.  계산에서도 같은 방법으로 셉니다.</li>
+<li>견주는 상태도 정해 둡니다.  300 MPa 로 누른 뒤 판을 고정하고 재료가 가라앉기를 기다린 상태입니다.</li>
+<li>맞추는 손잡이도 하나입니다.  SE 가 눌려 찌그러지기 시작하는 세기 (항복 세기) 입니다.  이 값을 바꿔 가며 기공률이 10–13 % 의 가운데인 11.5 % 가 되는 값을 찾습니다.</li>
+<li>AM 과 SE 를 섞은 전극의 기공률은 맞추지 않습니다.  위에서 정한 값으로 계산해 나오는 대로 봅니다.  다른 값이 나와도 됩니다.</li>
+<li>같은 재료를 다룬 실험 논문이 있습니다.  SE 가루를 누르며 기공률을 잰 논문 <a class="cite" href="#ref-8">[8]</a>, 압력을 뺄 때 되돌아오는 양을 잰 논문 <a class="cite" href="#ref-9">[9]</a>, 높은 압력까지 누른 논문 <a class="cite" href="#ref-10">[10]</a> 입니다.  이 자료에는 맞추지 않고, 결과가 나온 뒤 견주기만 합니다.  무엇을 견줄지는 결과를 보기 전에 적어 둡니다.</li>
+<li>DEM 과 MPM 을 서로 맞추지 않습니다.  각각 실험 기준에 따로 맞춘 뒤 견줍니다.  둘이 같게 나오면 서로를 뒷받침하고, 다르게 나오면 그 차이가 모델의 한계를 알려 줍니다.</li>
+</ul>
+</section>
+<section id="s8">
+<h2><span class="no">8.</span> 외부 검토 결과 (2026-11-10)</h2>
+<p>이 계획은 별도의 검토자에게 보내 틀린 곳을 찾게 했습니다.  우리는 이 검토를 Codex 반박 리뷰라고 부릅니다.</p>
+<ul>
+<li>결론: 방향은 맞다.  다만 판정 규칙 몇 개는 고쳐야 한다.  그 전에는 규칙을 확정하지 않는다.</li>
+<li>큰 지적 두 가지
+<ul>
+<li>2D 시험을 격자 크기 두 가지로만 돌려서는 결과가 굳었다고 할 수 없습니다.  격자를 더 촘촘히 하면 판정이 바뀔 수 있습니다.  계산 오차를 따로 추정해 합격선과 견주도록 고칩니다.</li>
+<li>2D 에서 &quot;붙음의 영향이 작다&quot; 고 나와도 3D 에서도 그렇다고 할 수 없습니다.  결론을 &quot;이 2D 조건에서는 이만큼 달랐다&quot; 로 좁히고, 3D 에서 필요하면 다시 확인합니다.</li>
+</ul>
+</li>
+<li>그 밖에 작은 지적 열한 가지가 있습니다.  대부분 규칙의 빈틈을 메우는 내용입니다.</li>
+<li>확인된 것: 메모의 산술과 큰 흐름은 검토자가 다시 계산해도 같았습니다.</li>
+<li>다음 할 일: 지적을 반영해 메모를 고치고 (3.2 판), 고친 부분만 다시 검토받습니다.</li>
+</ul>
+</section>
+<section id="s9">
+<h2><span class="no">9.</span> 지금 정해진 것</h2>
+<ul>
+<li>이 일은 [DEM 우선 (수영)] 이라는 이름으로 따로 진행합니다.  기존 DEM 계산은 그대로 계속합니다.</li>
+<li>단계 0–3 은 GPU 없이 먼저 시작합니다.  3D 는 다른 급한 계산이 끝난 뒤에 합니다.</li>
+<li>SE 알갱이가 찌그러지는 모양을 계산하는 것은 꼭 필요한 조건으로 둡니다.</li>
+<li>맞추는 기준은 순수 SE 의 10–13 % 하나입니다.</li>
+<li>상용 유한요소 프로그램은 쓰지 않습니다.</li>
+</ul>
+</section>
+<section id="s10">
+<h2><span class="no">10.</span> 하지 않는 말</h2>
+<ul>
+<li>기공률이 기준에 맞았다는 것만으로 모델이 옳다고 하지 않습니다.  손잡이 하나로 값 하나는 늘 맞출 수 있기 때문입니다.</li>
+<li>2D 에서 나온 숫자를 3D 전극의 숫자로 옮기지 않습니다.</li>
+<li>2D 에서 영향이 작게 나와도 3D 에서 붙음이 원인이 아니라고 하지 않습니다.</li>
+<li>압력을 뺀 뒤의 값은, 떨어지는 계산이 맞는지 작은 시험으로 확인하기 전에는 내지 않습니다.</li>
+<li>우리 계산의 항복 세기 값을 논문의 항복 응력과 그대로 견주지 않습니다.  정의가 달라서 환산이 필요합니다.</li>
+</ul>
+</section>
+<section id="s11">
+<h2><span class="no">11.</span> 용어 풀이</h2>
+<div class="wrap">
+<table class="keep c2">
+<colgroup><col style="width:23.27%"><col style="width:76.73%"></colgroup>
+<thead><tr><th scope="col">용어</th><th scope="col">뜻</th></tr></thead>
+<tbody>
+<tr><td>복합 양극</td><td>활물질과 고체전해질 가루를 섞어 눌러 만든 전극</td></tr>
+<tr><td>AM (활물질)</td><td>리튬을 저장하는 알갱이.  여기서는 NCM 이고 단단합니다</td></tr>
+<tr><td>SE (고체전해질)</td><td>리튬 이온이 지나가는 알갱이.  여기서는 LPSCl 이고 무릅니다</td></tr>
+<tr><td>기공률</td><td>눌린 전극 안에 남은 빈틈의 부피 비율</td></tr>
+<tr><td>진밀도</td><td>빈틈이 전혀 없을 때의 재료 밀도.  SE 는 1.64 g/cm³ 로 둡니다</td></tr>
+<tr><td>DEM (이산요소법)</td><td>알갱이를 단단한 공으로 보고 서로 미는 힘을 계산하는 방법</td></tr>
+<tr><td>MPM (물질점법)</td><td>재료를 작은 점들로 나누고 격자 위에서 변형을 계산하는 방법</td></tr>
+<tr><td>붙음</td><td>두 알갱이가 격자의 같은 칸에 들어오면 한 덩어리처럼 움직이는 것</td></tr>
+<tr><td>연화</td><td>재료를 실제보다 무르게 두는 것.  모델의 빈 곳을 메우려고 맞춘 값입니다</td></tr>
+<tr><td>항복 세기</td><td>재료가 되돌아오지 않게 찌그러지기 시작하는 세기</td></tr>
+<tr><td>충전율</td><td>공간 가운데 재료가 차지한 비율.  1 에서 기공률을 뺀 값입니다</td></tr>
+<tr><td>탈압</td><td>누르던 압력을 빼는 것.  이때 전극이 조금 되돌아옵니다</td></tr>
+<tr><td>사전 등록</td><td>결과를 보기 전에 판정 기준을 적어 두는 것.  결과를 본 뒤 기준을 옮기지 않기 위해서입니다</td></tr>
+<tr><td>Codex 반박 리뷰</td><td>계획과 코드의 틀린 곳을 찾도록 따로 두는 검토</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="refs" class="pb">
+<h2>참고문헌</h2>
+<div class="wrap">
+<table class="c3">
+<colgroup><col style="width:5.32%"><col style="width:66.98%"><col style="width:27.70%"></colgroup>
+<thead><tr><th scope="col">#</th><th scope="col">서지</th><th scope="col">비고</th></tr></thead>
+<tbody>
+<tr id="ref-1"><td>1</td><td>S.G. Bardenhagen, J.U. Brackbill, D. Sulsky, The material-point method for granular materials, Comput. Methods Appl. Mech. Engrg. 187 (2000) 529–541</td><td>1저자가 고른 논문</td></tr>
+<tr id="ref-2"><td>2</td><td>S.G. Bardenhagen, J.E. Guilkey, K.M. Roessig, J.U. Brackbill, W.M. Witzel, J.C. Foster, An improved contact algorithm for the material point method and application to stress propagation in granular material, CMES 2(4) (2001) 509–522</td><td>1저자가 고른 논문</td></tr>
+<tr id="ref-3"><td>3</td><td>S. Nezamabadi, M. Ghadiri, J.-Y. Delenne, F. Radjai, Modelling the compaction of plastic particle packings, Comput. Part. Mech. 9(1) (2022) 45–52.  doi:10.1007/s40571-021-00391-4</td><td>1저자가 고른 논문</td></tr>
+<tr id="ref-4"><td>4</td><td>T.H. Nguyen, S. Nezamabadi, J.-Y. Delenne, F. Radjai, Compaction of granular materials composed of deformable particles, EPJ Web Conf. 140 (2017) 05013.  doi:10.1051/epjconf/201714005013</td><td>1저자가 고른 논문</td></tr>
+<tr id="ref-5"><td>5</td><td>M. Cárdenas-Barrantes, D. Cantor, J. Barés, M. Renouf, E. Azéma, Compaction of mixtures of rigid and highly deformable particles: A micromechanical model, Phys. Rev. E 102 (2020) 032904.  doi:10.1103/PhysRevE.102.032904</td><td>1저자가 고른 논문</td></tr>
+<tr id="ref-6"><td>6</td><td>M. Cárdenas-Barrantes, D. Cantor, J. Barés, M. Renouf, E. Azéma, A micro-mechanical compaction model for granular mix of soft and rigid particles, EPJ Web Conf. 249 (2021) 02008.  doi:10.1051/epjconf/202124902008</td><td>1저자가 고른 논문</td></tr>
+<tr id="ref-7"><td>7</td><td>M. Cárdenas-Barrantes, J. Barés, M. Renouf, É. Azéma, Experimental validation of a micromechanically based compaction law for mixtures of soft and hard grains, Phys. Rev. E 106 (2022) L022901.  doi:10.1103/PhysRevE.106.L022901</td><td>1저자가 고른 논문</td></tr>
+<tr id="ref-8"><td>8</td><td>S.-Y. Lee, J.-H. Han, H.-W. Gong, J.-P. Ahn, K.-W. Yi, Y.W. Cho, Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries, J. Mater. Chem. A 13 (2025) 6342–6346.  doi:10.1039/d4ta08604j</td><td>SE 가루를 누르며 기공률을 잰 실험</td></tr>
+<tr id="ref-9"><td>9</td><td>V. Miß, F. Lange, S. Staubitz, B. Roling, Experimental setup for in situ determination of conductivity-porosity-pressure relationships, ACS Appl. Mater. Interfaces 18 (2026) 32830–32836.  doi:10.1021/acsami.6c03789</td><td>압력을 뺄 때 되돌아오는 양을 잰 실험</td></tr>
+<tr id="ref-10"><td>10</td><td>O. Thompson, O. Korjus 외, High pressure densification investigation of Li3PS4 and Li6PS5Cl solid electrolytes using combined X-ray diffraction, X-ray absorption tomography and ionic measurement, Adv. Funct. Mater. 36 (2026) e75195</td><td>SE 를 높은 압력까지 누른 실험</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<footer class="foot">
+<p>원고 <code class="path">docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md</code> 를 생성기 <code class="path">scripts/build_dem_redesign_plan.py</code> 가 옮긴 페이지입니다.  같은 글의 Word 문서는 <code class="path">docs/reviews/dem_redesign_direction_20261109/DEM_redesign_plan_for_newcomers_20261110.docx</code> 입니다.</p>
+</footer>
+</body>
+</html>
