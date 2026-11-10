@@ -516,7 +516,7 @@ Materials Project 의 67,062 개 물질을 LSPS 와 짝지어 화학 (닫힌계)
 - "In that screening, a coating is termed functionally stable when its own electrochemical decomposition energy and the additional interfacial reaction energy are each below 50 meV per atom, while the intrinsic instability of the sulfide electrolyte is assumed to be suppressed by strain or kinetic effects."
 - "The interfacial contribution to the decomposition energy vanishes at 0 V and is largest between 1.5 and 3.5 V vs Li/Li⁺."
 - "Sulfur-, selenium-, and iodine-containing compounds dominate the cathode-range candidates, whereas oxygen- and fluorine-containing compounds are on average the most reactive toward Li₁₀SiP₂S₁₂."
-- ⚠ 쓰지 말 것: "over 2,000 coatings stable with both the sulfide electrolyte and LiCoO₂" (LCO 와도 안정한 것은 일부) · "LSPS 25 mS/cm" (다른 조성 값) · LCO–LSPS 반응 에너지 한 값만 (본문 200 ↔ 그림 ≈ 390 meV/atom).
+- ⛔ **인용 금지**: "LSPS 와 LiCoO₂ 양쪽에 안정한 코팅 2,000 개 이상" (LCO 와도 안정한 것은 일부 · ✎ 449 항목) · '기능적 안정' 을 "안정한 계면" 으로 줄여 쓰기 (SE 자신의 분해는 판정 밖) · "LSPS 25 mS/cm" (다른 조성 값) · LCO–LSPS 반응 에너지를 한 값으로 (본문 200 ↔ 그림 ≈ 390 meV/atom) · 원소 상관 지도를 도펀트 순위로 · 이 digest 의 ✎ 집계 수를 논문 값으로.
 
 ---
 
