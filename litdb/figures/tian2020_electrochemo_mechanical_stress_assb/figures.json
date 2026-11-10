@@ -1,0 +1,196 @@
+{
+ "slug": "tian2020_electrochemo_mechanical_stress_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Focused ion beam cut cross-section of a hexagonally patterned 2.5D ASSLB; (b) its axially symmetric geometric simpliﬁcation and computational mesh with boundary conditions for mechanical constraints, with “circle + triangle” symbols representing boundaries that are allowed to displace laterally but not normally to the boundaries; (c) reactions considered in the chemo-mechanical simulations that cause chemical strain due to Li transport and (d) due to interphase formation as a result of SE decomposition (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    61.0,
+    558.0,
+    268.3
+   ],
+   "w": 2201,
+   "h": 864,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.602
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Simulated charging results for different charging rates (3.7, 14, 28 μA cm−2 , which equals to 0.16 C, 0.6 C, and 1.2 C based on the projected electrode area according to the previous experimental study28) in comparison to experimental results.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    500.4,
+    558.0,
+    734.2
+   ],
+   "w": 2201,
+   "h": 975,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Li concentration proﬁle at different times during charging at 28 μA cm−2 (1.2 C). The middle picture refers to the concentration proﬁle at 240 s, and the zoom-in sections show the change of Li concentration at different charging time. The arrows in the LiPON electrolyte represent the transport direction of Li- ions during charging.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    440.1
+   ],
+   "w": 2201,
+   "h": 1581,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.458
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. The ﬁrst principal stress induced by the concentration change (see Fig. 3) during the charging process. De-lithiation of LCO results in thin tensile (red) layer while lithiation of Si causes compressive (blue) stress for the two different situations, ﬁxed side and free side (with voids) considered. out. At the voltage above 3.63 V, the most signiﬁcant volume change is −8% at the Li2PO2N/Li0.5CoO2 interfaces, as listed in Table I. the corresponding molar volume change based on the DFT computed data collected in the Materials Project database, following the procedure listed in the Section of Volume change induced by the decomposition of the solid electrolyte. Note that these are full reactions from the oxidation/reduction of the electrodes and electro- lyte. These DFT predicted thermodynamically favored reactions may occur during the formation of the interface, during the cycling",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    395.7
+   ],
+   "w": 2202,
+   "h": 1396,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.794
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. First principal stress induced from the decomposition of LiPON electrolyte for different boundary conditions and interphase thicknesses at t = 0 s (red: tension). Mesh representation is for this simulation that includes two interphase layers (pink).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.0,
+    438.0
+   ],
+   "w": 2200,
+   "h": 1572,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.792
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Comparison of maximum ﬁrst principal stress from different sources and in different domains at different times during charging process at 28 μA cm−2(1.2 C). The data of 50 nm interphase layer is used in this plot. Decomposition-induced stress occurs before charging the battery. The lines refer to the induced-stress during charging process, and the circle markers represent the stress from the decomposition of LiPON electrolyte. Discussion induced-stress in a 2.5D ASSLB: volume change from the decom- position of LiPON electrolyte and electrode expansion/contraction due to Li insertion/extraction. The decomposition of LiPON and the formation of 50 nm interphase layers caused −27% and −8% reduction in volume at the Si electrode and LCO electrode interfaces, respectively, and generated tensile stress higher than 3 GPa in most of the regions in the ASSLB. However, if voids exist on t",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    558.1,
+    270.8
+   ],
+   "w": 2202,
+   "h": 876,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.897
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "I",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table I. Grand potential equilibrium phases of Li2PO2N.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    62.0,
+    554.0,
+    190.0
+   ],
+   "w": 2168,
+   "h": 534,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.924,
+   "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 65) to the last reaction row (y 184.6) + margin, above the two-column body text (y 211)"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "II",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table II. The maximum first principal stress in different domains and boundary conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    626.0,
+    554.0,
+    750.0
+   ],
+   "w": 2168,
+   "h": 517,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 628.7) to the last row (y 745) + margin, below the body text ending at y 610.6"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "A·I",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "Table A·I. Parameters used in this simulation. Most of the values were obtained either by fitting to experiments28 or by DFT predictions.3",
+   "rotated_deg": 0,
+   "bbox": [
+    34.0,
+    62.0,
+    554.0,
+    438.0
+   ],
+   "w": 2168,
+   "h": 1567,
+   "dpi": 300,
+   "src": "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.926,
+   "manual_crop": "2026-11-10 litdb-curator: extractor produced no table at all - JES Roman-numeral captions ('Table I.' / 'Table II.' / 'Table A.I.') are not parsed as captions and were not listed as a number gap either; clip = top rule (y 65) to the last row 'A  Cross-section area of the Si electrode' (y 433.5) + margin, above Eq. A.2 (y 451)",
+   "key_note": "appendix table 'Table A.I' keyed t3 (the paper has Table I, Table II, Table A.I only) so that 'Table 3' in the digest links; label keeps the printed numbering"
+  }
+ ],
+ "missing_labels": []
+}

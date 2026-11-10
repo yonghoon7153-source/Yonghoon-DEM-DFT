@@ -1,0 +1,273 @@
+{
+ "slug": "fitzhugh2019_ht_functionally_stable_interfaces_sulfide",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+  "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. A) Flowchart describing computational evaluation of materials for LSPS coating. B) The number of hulls required to evaluate the stability of the 67 k materials considered if the evaluation schema is material iteration (red) or elemental set iteration (blue). C) An illustration of the pseudo-binary approach to interfacial stability between LSPS and an arbitrary material A. The x-axis variable (x) represents the fraction of A consumed in an arbitrary reaction and, hence, fixes the composition. Ghull(x) is the energy of the decay products. ΔGRXN(x) is the change in energy of a reaction that consumes xA and (1 − x) LSPS. ( ), ( ) RXN 0 RXN G x G x ∆ ∆′ are the fractions of ΔGRXN that are due to intrinsic materials-level instabilities and interfacial-instabilities, respectively. The most kinetically driven reaction (maximum ΔGRXN) occurs when x = xm . DA and DLSPS are the decomposed",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    65.0,
+    552.3,
+    620.7
+   ],
+   "w": 2127,
+   "h": 2316,
+   "dpi": 300,
+   "src": "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.545
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. A) Hull energy versus voltage relative to lithium metal for LSPS. Blue [red] shading highlights where the decomposition is oxidative [reductive]. Green shading represents the region where LSPS decays to without consuming or producing lithium (e.g., lithium neutral). The oxidation [reduction] region is characterized by a hull energy that increases [decreases] with increasing voltage. B,C) Hull energies at the boundary voltages for the anode and cathode ranges, respectively, in terms of anionic species (e.g., oxygen containing compounds versus sulfur containing compounds, etc.). Data points above [below] the neutral decay line are net oxidative [reductive] in the anode/cathode ranges. Those compounds on the neutral decay line are decaying without reacting with the lithium ion reservoir. D) Average hull energy for material-level electrochemical decompositions versus voltage.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    169.9,
+    555.1,
+    659.9
+   ],
+   "w": 2127,
+   "h": 2042,
+   "dpi": 300,
+   "src": "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.516
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Comparison of average LSPS interfacial stability of compounds sorted by anionic species. A) The average total maximum kinetic driving energy (Ghull(xm)) and the contribution due to the interface ( ( ) hull m G x ′ ) for chemical reactions between LSPS and each of the considered anionic classes. B) The total electrochemical instability (Ghull(xm)) of each anionic class at a given voltage. C) The average contribution of the interface ( ( ) hull m G x ′ ) to the electrochemical instability of each anionic class at a given voltage.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    224.6,
+    555.1,
+    678.5
+   ],
+   "w": 2127,
+   "h": 1893,
+   "dpi": 300,
+   "src": "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.516
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Functionally stable results for compounds sorted by anionic species. A,B) The total number (line) and percentage (bar) of each anionic class that was determined to be functionally stable. The bottom bar (red) represents the percentage of materials that are functionally stable and the top bar (blue) represents the percentage of materials that are potentially functionally stable depending on the reversibility of lithiation/delithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.3,
+    262.0
+   ],
+   "w": 2127,
+   "h": 822,
+   "dpi": 300,
+   "src": "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.562
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. A–C) Comparison of XRD patterns to demonstrate increasingly severe structural decay of LCO, SnO2, and LTO at the solid-electrolyte material interface (with no applied voltage). In (A) ▴, ✶, •, ◾, ▾, ✶ stand for LCO, LSPS, SiO2, Li3PO4, Cubic Co4S3, and monoclinic Co4S3, respectively. In (B) ▴, ✶, •, ◾, ✶ stand for SnO2, LSPS, SiO2, P2S5, and Li2S, respectively. In (C) ▴, ✶, •, stand for LTO, LSPS, and Li1.95Ti2.05S4, respectively. D–F) Comparison of XRD patterns for materials predicted to be chemically stable versus LSPS. One representative is provided from each class of oxides, fluorides, and sulfides. In (D) ▴, ✶ stand for SiO2 and LSPS, respectively. In (E) ◾, ✶ stand for MgF2 and LSPS, respectively. In (F) +, ✶ stand for ZnS and LSPS, respectively. The shaded regions in (A)–(C) highlight where significant phase change happened after heating to 500°C. The interfacial chemica",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    64.9,
+    552.5,
+    580.6
+   ],
+   "w": 2128,
+   "h": 2150,
+   "dpi": 300,
+   "src": "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1: (A) The pseudo-binary construction for ( ) where is evaluated both linearly and using a binary search. The binary search is shown to quickly converge to . (B) Complexity scaling of the linear and binary evaluation methods for determining .",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.6,
+    306.6
+   ],
+   "w": 2011,
+   "h": 1003,
+   "dpi": 300,
+   "src": "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.471
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2: (A-C) Correlation of elemental species fraction with the added electrochemical interfacial instability ( ( )) at 0, 2 and 4 V, respectively. Negative (red) values are those species such that increasing concentration decreases and improves interfacial stability. Conversely, positive (blue) values are those species that tend to increase and worsen interfacial stability. Elements that are only present in less than 50 crystal structures are grayed out due to lack of high- volume data.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.6,
+    549.0
+   ],
+   "w": 2011,
+   "h": 2013,
+   "dpi": 300,
+   "src": "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.709
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3: Anode stability plots by anionic class. (A) oxygen-only, (B) sulfur-only, (C) selenium-only, (D) fluorine-only, (E) phosphorous-only, (F) nitrogen-only, (G) iodine-only, (H) oxygen plus phosphorous, (I) oxygen plus nitrogen, (J) oxygen plus sulfur.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    545.7,
+    658.4
+   ],
+   "w": 1999,
+   "h": 2469,
+   "dpi": 300,
+   "src": "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.565
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4: Cathode stability plots by anionic class. (A) oxygen-only, (B) sulfur-only, (C) selenium-only, (D) fluorine-only, (E) phosphorous-only, (F) nitrogen-only, (G) iodine-only, (H) oxygen plus phosphorous, (I) oxygen plus nitrogen, (J) oxygen plus sulfur.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    545.7,
+    658.4
+   ],
+   "w": 1999,
+   "h": 2469,
+   "dpi": 300,
+   "src": "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.569
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5: Comparison of XRD patterns for each individual phase (i.e. LiCoO2, LSPS, Li4Ti5O12, SnO2 and SiO2) at room temperature and 500°C. No significant change between room temperature and 500°C can be observed for each phase.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.6,
+    276.3
+   ],
+   "w": 2011,
+   "h": 877,
+   "dpi": 300,
+   "src": "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6: Comparison of XRD patterns for mixture powders (i.e. LiCoO2+LSPS, SnO2+LSPS, Li4Ti5O12+LSPS and SiO2+LSPS) at various temperatures (room temperature, 300°C, 400°C and 500°C). The onset reaction temperature is observed to be 500°C, 400°C and 500°C for LiCoO2+LSPS, SnO2+LSPS and Li4Ti5O12+LSPS, respectively. No reaction is observed to happen for SiO2+LSPS up to 500°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    324.8,
+    548.6,
+    574.8
+   ],
+   "w": 2011,
+   "h": 1043,
+   "dpi": 300,
+   "src": "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.894
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Sizes of monoanionic and oxyanionic datasets and the percentage of each that is electrochemically stable in the anode range (0–1.5 V) and the cathode range (2–4 V). For example, F represents all compounds that contain F in the chemical formula, while O+N represents all compounds that contain both O and N in the chemical formula. Anion(s) F I N O O+N O+P O+S P S Se Number of entries 2902 911 1808 24 241 1171 7469 1220 982 3150 1726 Anode stable [%] 0.6% 1.1% 0.3% 0.01% 4.1% 0.5% 0.3% 9.3% 4.0% 5.7% Cathode stable [%] 17.3% 13.4% 12.5% 5.7% 83.9% 64.8% 13.3% 35.7% 73.9% 55.8%",
+   "rotated_deg": 0,
+   "bbox": [
+    43.2,
+    619.0,
+    551.3,
+    718.3
+   ],
+   "w": 2119,
+   "h": 414,
+   "dpi": 300,
+   "src": "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.91
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2. Representative materials found to be functionally stable in the cathode voltage range. The six anionic classes that have the largest success rate (Figure 4B) are represented.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.3,
+    625.6,
+    551.3,
+    718.2
+   ],
+   "w": 1055,
+   "h": 387,
+   "dpi": 300,
+   "src": "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "blank": 0.899
+  }
+ ],
+ "missing_labels": []
+}

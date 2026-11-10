@@ -1,0 +1,342 @@
+{
+ "slug": "zhu2016_first_principles_interface_stability_assb",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+  "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Electrochemical window (a) and the decomposition energy DEopen D (b) of the SE materials. The dashed line in (a) marks the highest equilibrium potential to fully delithiate the material and to form the phase equilibria in Table 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    44.6,
+    558.8,
+    398.6
+   ],
+   "w": 1091,
+   "h": 1476,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 The stable window of the SE and LCO electrode with respect to the chemical potential of (a) O, (b) S, and (c) Co.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    564.3,
+    481.7,
+    715.1
+   ],
+   "w": 1856,
+   "h": 629,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Calculated mutual reaction energy DED,mutual of SE–LCO (solid lines) and SE–L0.5CO (dashed lines) interfaces. The mutual reaction energies of LLZO–LCO, LLTO–LCO, LLTO–L0.5CO, and LATP–L0.5CO have zero or near-zero values (minimum values provided in Table 4), which overlap at DED,mutual ¼ 0.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    206.3
+   ],
+   "w": 1090,
+   "h": 675,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 The mutual reaction energy DEopen D,min,mutual (solid lines) and the total reaction energy DEopen D,min,total (dashed lines) at the SE–LCO inter- faces under applied potential f in a 2–5V range.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.0,
+    223.7
+   ],
+   "w": 1090,
+   "h": 747,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Electrochemical window (a) and the decomposition energy DEopen D (b) of the proposed and previously demonstrated coating layer materials applied between SEs and cathode materials. The dashed line in (a) marks the equilibrium voltage to fully delithiate the materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    293.1,
+    298.0,
+    686.8
+   ],
+   "w": 1090,
+   "h": 1641,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.82
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 7,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Calculated ΔE_D,mutual of a) Li3PS4-coating layer interfaces and b) LLZO-coating layer interfaces",
+   "rotated_deg": 0,
+   "bbox": [
+    176.0,
+    325.0,
+    436.0,
+    708.0
+   ],
+   "w": 1084,
+   "h": 1596,
+   "dpi": 300,
+   "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.934,
+   "manual_crop": "2026-11-10 litdb-curator: extractor did not see this figure and did not list it in missing_labels - on SI p.7 the caption line 'Figure S1. ...' sits ABOVE the two raster panels and PyMuPDF merges it into the Table S4 text block (72,200,519,329), so no block starts with 'Figure S1'; S1 is the only SI figure, so there is no number gap either. clip = union of the two embedded rasters (191.7,328.8,429.2,513.8) + (192.0,517.4,429.5,702.4) and their 'a)'/'b)' labels + margin"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of the SE and electrode materials investigated in this studya Experimental ionic conductivity at room temperature (mS cm\u00031) Crystal structure",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    42.4,
+    557.7,
+    191.2
+   ],
+   "w": 2168,
+   "h": 621,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Electrochemical window and phase equilibria at diﬀerent potentials f of the SE materials. The decomposition energy DEopen D is normalized to the number of atoms in the original composition DEopen D (eV per atom) Voltage f (V)/\u0003mLi (eV) Corresponding environment Phase equilibria at f Li2S 0 Li metal Li2S (stable) 0 2.01 Oxidation onset S 0 5 Charged at 5 V S \u00031.99 LGPS 0 Li metal Li15Ge4, Li3P, Li2S \u00031.25 1.71 Reduction onset P, Li4GeS4, Li2S \u00030.02 2.15 Oxidation onset Li3PS4, GeS2, S \u00030.02 5 Charged at 5 V GeS2, P2S5, S \u00031.12 Li3PS4 0 Li metal Li3P, Li2S \u00031.42 1.71 Reduction onset P, Li2S 0 2.31 Oxidation onset S, P2S5 0 5 Charged at 5 V S, P2S5 \u00031.01 LiPON0.14 0 Li metal Li3P, Li3N, Li2O \u00030.68 0.69 Reduction onset Li3P, Li2PO2N, Li2O 0 1.07 Oxidation onset Li2PO2N, Li3PO4, LiN3 0 5 Charged at 5 V N2O5, P2O5, O2 \u00030.31 LiPON0.46 0 Li metal Li3P, Li3N, Li2O \u00030.62 0.69 Reduction ons",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    42.2,
+    557.8,
+    421.1
+   ],
+   "w": 2169,
+   "h": 1580,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3 Phase equilibria of the SE and LCO materials at diﬀerent chemical potentials of O and S, respectively Open element mM (eV) Corresponding environment Phase equilibria at mM DEopen",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    522.0,
+    557.8,
+    729.2
+   ],
+   "w": 2169,
+   "h": 864,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4.png",
+   "caption": "Table 4 The phase equilibria and decomposition energies of the SE–LCO and SE–L0.5CO interfaces",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    43.7,
+    557.8,
+    241.0
+   ],
+   "w": 2169,
+   "h": 823,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 10,
+   "file": "tab_5.png",
+   "caption": "Table 5 Phase equilibria and decomposition energies of SE–LCO interfaces under applied potential f",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    485.0,
+    557.8,
+    732.2
+   ],
+   "w": 2169,
+   "h": 1031,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 11,
+   "file": "tab_6.png",
+   "caption": "Table 6 The mutual reaction energy DED,min,mutual (in meV per atom) of the coating layer materials with the SE or LCO materials Li3PS4 LLZO LCO L0.5CO Li4TiO4 \u0003125 0 0 \u000330 Li2TiO3 \u000375 \u00035 0 0 Li4Ti5O12 \u000380 \u000375 \u00031 0 Li8Nb2O9 \u0003147 0 0 \u000320 Li3NbO4 \u0003132 \u00034 0 0 LiNbO3 \u0003155 \u000376 0 0 LiNb3O8 \u0003173 \u0003115 \u000316 0 Li8SiO6 \u0003177 0 \u00033 \u000350 Li4SiO4 \u000381 \u00031 0 \u000312 Li2SiO3 \u000319 \u000329 0 0 Li2Si2O5 \u000310 \u000369 \u00034 0 Li5TaO5 \u0003117 0 0 \u000332 Li3TaO4 \u000364 \u00033 0 0 LiTaO3 \u000349 \u000368 0 0 LiTa3O8 \u000364 \u0003105 \u000322 0 Li3PO4 0 0 0 0 Li4P2O7 \u00039 \u0003101 \u000344 \u00033 LiPO3 \u000332 \u0003201 \u000376 \u000319",
+   "rotated_deg": 0,
+   "bbox": [
+    298.3,
+    495.0,
+    557.8,
+    732.9
+   ],
+   "w": 1083,
+   "h": 992,
+   "dpi": 300,
+   "src": "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.945
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Calculated phase equilibiria for the LiPON solid electrolyte materials at applied potential. (a) Li2.88PO3.73N0.14 Potential 𝜙 ref 𝜇!\" ref to Li ∆𝑛!\" per formula Phase equilibria to Li/Li+(V) metal (eV) 0.01 -0.01 8 Li3N, Li2O, Li3P 0.61 -0.61 7.72 Li7PN4, Li2O, Li3P 0.68 -0.68 7.44 LiPN2, Li2O, Li3P 0.69 -0.69 6.88 Li2PO2N, Li2O, Li3P 0 Li2.88PO3.73N0.14 1.07 -1.07 -0.01 Li2PO2N, LiN3, Li3PO4 1.67 -1.67 -0.01 Li2PO2N, N2, Li3PO4 2.60 -2.60 -0.42 N2, Li4P2O7, Li3PO4 3.58 -3.58 -0.80 N2, Li4P2O7, LiNO3 3.66 -3.66 -0.88 N2, Li4P2O7, NO2 3.71 -3.71 -0.98 Li4P2O7, LiPO3, NO2 3.77 -3.77 -1.12 Li4P2O7, LiPO3, LiNO3 4.33 -4.33 -1.74 LiPO3, O2, LiNO3 4.82 -4.82 -1.88 LiPO3, O2, N2O5 4.99 -4.99 -2.88 P2O5, O2, N2O5 (b) Li2.98PO3.3N0.46 Potential 𝜙 ref 𝜇!\" ref to Li ∆𝑛!\" per formula Phase equilibria to Li/Li+(V) metal (eV) 0.01 -0.01 8 Li3N, Li2O, Li3P 0.61 -0.61 7.08 Li7PN4, Li2O, Li3P ",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    81.0,
+    532.5,
+    714.4
+   ],
+   "w": 1940,
+   "h": 2640,
+   "dpi": 300,
+   "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Phase equilibria and decomposition energies of the SE-LCO and SE-L0.5CO interfaces. a) LGPS 𝐶!\"#$%&'(# x Phase equilibria Δ𝐸!,!\"#\"$% (meV/atom)",
+   "rotated_deg": 0,
+   "bbox": [
+    61.5,
+    67.3,
+    550.5,
+    546.2
+   ],
+   "w": 2038,
+   "h": 1996,
+   "dpi": 300,
+   "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Phase equilibria and decomposition energies for the SE-LCO interfaces under applied potential. Applied voltage ϕ !\"#$ (meV/atom) !\"#$ (meV/atom) Δ𝐸!,!\"#,!\"#\"$% Δ𝐸!,!\"#,!\"!#$ Phase equilibria under ϕ Interface and at x = xm(ϕ) (V) 2.00 – 2.14 Co9S8, Li2SO4, Li3PO4, Li2GeO3 [-540, -519] [-546, -525] 2.14 – 2.45 Co3S4, Li2SO4, Li3PO4, Li2GeO3, [-556, -543] [-604, -551] 2.45 – 2.62 Co3S4, Li2SO4, Li3PO4, Li2Ge7O15 [-547, -542] [-645, -611] 2.62 – 2.90 Co9S8, Li2SO4, Li3PO4, GeO2 [-542, -536] [-683, -632] 2.90 – 3.00 Co9S8, Li2SO4, LiCoPO4, GeO2 [-541, -536] [-696, -675] 3.00 – 3.14 Co3S4, Li2SO4, LiCoPO4, GeO2 [-551, -542] [-764, -728] 3.14 – 3.20 Co3S4, Li2SO4, Co3(PO4)2, GeO2 [-557, -552] [-773, -759] 3.20 – 3.32 Co3S4, CoSO4, Co3(PO4)2, GeO2 [-583, -559] [-787, -744] 3.32 – 5.00 Co9S8, CoSO4, Co3(PO4)2, GeO2 [-696, -588] [-1269, -767] LGPS- LCO 2.00 – 2.58 Li2TiO3, La2TiO5, CoO ",
+   "rotated_deg": 0,
+   "bbox": [
+    61.5,
+    67.3,
+    550.5,
+    718.8
+   ],
+   "w": 2038,
+   "h": 2715,
+   "dpi": 300,
+   "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 7,
+   "file": "tab_S4.png",
+   "caption": "Table S4. The phase equilibria and decomposition energies of the coating layer interfaces with Li3PS4 or LLZO. 𝐶!\" 𝐶!\"#$%&' xm Phase equilibria at minimum interfacial reaction energy Δ𝐸!,!\"#,!\"!#$ (meV/atom) Li3PS4 Li4Ti5O12 0.53 TiS2, Li3PO4, Li4TiS4 -80 -80 LiNbO3 0.54 S, Li2S, Li3PO4, Li5/7NbS2 -155 -155 LiTaO3 0.54 S, Li2S, Li3PO4, Li4/3Ta2S4 -49 -49 Li2SiO3 0.25 Li2S, Li3PO4, SiO2 -19 -19 Li3PO4 / Li3PS4, Li3PO4 0 0 LLZO Δ𝐸!,!\"#,!\"#\"$ (meV/atom) Li4Ti5O12 0.46 La2Zr2O7, La2TiO5, Li2TiO3 -75 -78 LiNbO3 0.62 LaNbO4, La2Zr2O7, Li3NbO4 -76 -79 LiTaO3 0.54 La3NbO7, La2Zr2O7, Li3TaO4 -68 -72 Li2SiO3 0.53 La2Zr2O7, La2O3, Li4SiO4 -29 -32 Li3PO4 / LLZO, Li3PO4 0 - Figure S1. Calculated Δ𝐸!,!\"#\"$% of a) Li3PS4-coating layer interfaces and b) LLZO-coating layer interfaces",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.3,
+    538.9,
+    333.5
+   ],
+   "w": 1967,
+   "h": 1110,
+   "dpi": 300,
+   "src": "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "blank": 0.9
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS1",
+   "why": "tool did not report it (caption merged into the Table S4 text block; only SI figure so no number gap) - found by reading SI p.7",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S1.png (2026-11-10, litdb-curator) - see figures[fS1].manual_crop"
+  }
+ ]
+}

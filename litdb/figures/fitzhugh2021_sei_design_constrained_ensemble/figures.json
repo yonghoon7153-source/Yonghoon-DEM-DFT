@@ -1,0 +1,273 @@
+{
+ "slug": "fitzhugh2021_sei_design_constrained_ensemble",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "121. Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+  "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Understanding the critical eﬀective modulus Kcrit within the constrained ensemble description. (a) Convex hull illustration for pseudo-phase models of the solid SEI. The yellow star represents the interphase composition (x-axis) and energy (y-axis) of the two reactive phases represented by green dots. The dark blue dots represent phases that are thermodynamically favorable and the black line represents a linear combination of these phases (i.e. the convex hull). The phase labels D1 and D2 and the lengths d2 and d1 represent the well-known ‘‘lever rule’’ for interpreting phase diagrams. The height of the interphase (yellow star) over the convex hull, Ghull, measures the magnitude of the decomposition energy. For a more detailed understanding of convex-hull pseudo-phase methods, the reader is directed to ref. 9 and 10. (b) An illustration of how a weak mechanical constriction (Keﬀo ",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    259.5,
+    558.7,
+    556.9
+   ],
+   "w": 2177,
+   "h": 1240,
+   "dpi": 300,
+   "src": "121. Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.821
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Overview of computational approach. High throughput computation is performed to obtain datapoints on how Kcrit varies with composition. These datapoints are then leveraged to train an ensemble of 50 decision trees to predict Kcrit based on composition. Finally, using known glassy compounds with good lithium-ion conductivity, the decision tree is used to make minimal compositional changes to lower Kcrit. The resulting compounds should have significantly improved response to mechanical constriction. These represent ideal interfaces for SSEs as they are both ionically conductive and mechanically metastable.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    471.2,
+    558.8,
+    666.5
+   ],
+   "w": 2177,
+   "h": 815,
+   "dpi": 300,
+   "src": "121. Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.758
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Statistical behavior of interface Kcrit at 4 V. (a) The distribution of Kcrit for binary pseudo-phases where one of the interfacing materials is LPS. (b) The correlation of elemental composition and Kcrit for all pseudo-phases considered (LPS, LGPS, LSPS, NPS). Red elements are those that lower Kcrit [ideal], whereas those elements that are blue raise Kcrit.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    180.9
+   ],
+   "w": 2177,
+   "h": 572,
+   "dpi": 300,
+   "src": "121. Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.688
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Decision tree method and results for composition design. (a) Illustration of the structure and mechanism of decision trees. The input composition is parsed through a hierarchy of criteria on the composition and generates output (see Fig. S3 for larger illustration, ESI†). (b) Comparison of the predicted Kcrit by the decision tree and the calculated Kcrit at the interface to LSPS at 4 V from our constrained ensemble ab initio platform, with a root-mean-square error (RMSE) of 2.59 GPa. (c) Optimization from (top to bottom) parent glassy material to child A (5% compositional change) to child B (10% compositional change) to child C (unlimited compositional change). The individual influence of each element is calculated by the SHAP model. Three intermediate states during the optimization process illustrate how the O, F, and Cl elements are introduced into the optimized Child A material",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    43.8,
+    558.8,
+    474.8
+   ],
+   "w": 2177,
+   "h": 1797,
+   "dpi": 300,
+   "src": "121. Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Material modification and experimental validation based on parent glass Li0.364P0.11S0.388I0.138 (Table S2, ESI†). (a) Predicted interface decom- position energy at 4 V for the parent (0%) and modified glass coatings (1.25, 2.5, 4, 5, 6%) to LGPS electrolyte at diﬀerent Keﬀ. The x% composition modification suggested by our SHAP model means the stoichiometry of each element is allowed to change up to a number of x/100, regardless of the initial amount of this element. (b) Predicted Kcrit of coating materials at the interface to LGPS electrolyte (blue) and the self-decomposition energy of coating materials at Keﬀ= 0 GPa (orange) vs. composition modification level. (c) CV test of the synthesized parent glass and five modified child glasses, labelled as Cx, where x corresponds to the modification level in (a). HL and HR mark the peak height for the decomposition current at around 3 V ",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    369.5,
+    558.8,
+    646.6
+   ],
+   "w": 2177,
+   "h": 1156,
+   "dpi": 300,
+   "src": "121. Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.937
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. Statistical behavior of interface at 4V. (a-c) The distribution of for 𝐾𝑐𝑟𝑖𝑡 𝐾𝑐𝑟𝑖𝑡 binary pseudo-phases where one of the interfacing materials is LGPS, LSPS, NPS, respectively. (d) Statistical figures of merit for each four SSE distributions.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.3,
+    153.4,
+    568.6,
+    465.5
+   ],
+   "w": 2177,
+   "h": 1301,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.604
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. Oscillatory nature of . Four one dimensional slices of the vs 𝐾𝑐𝑟𝑖𝑡 𝐾𝑐𝑟𝑖𝑡 composition manifold show the oscillatory nature of . In practice, optimizing the composition to 𝐾𝑐𝑟𝑖𝑡 minimize is non-trivial as this oscillatory nature is compounded in the 117 degree of freedom 𝐾𝑐𝑟𝑖𝑡 (number of elements minus one) composition space.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    32.5,
+    593.7,
+    254.0
+   ],
+   "w": 2199,
+   "h": 924,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. Structure and mechanism of decision trees. The figure shows one of the 50 members of the decision tree ensemble. The decision tree is formed by a hierarchy of nodes, with the composition as input features and Kcrit as output. Each node has a criterion to determine how the information flows through the tree. An example of information flow is illustrated with red arrows and if the specific flow is with a Kcrit increase (Kcrit↑) or decrease (Kcrit↓). Apart from the decision criteria, other information that helps to balance the tree and regularize training are also shown in each node. At the beginning, criteria are randomly initialized. Both the feature and threshold of each criterion will be updated during training to minimize errors. Those nodes with darker [lighter] node background correspond to features with higher [lower] predicted value of Kcrit for the given in",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.5,
+    301.5
+   ],
+   "w": 2011,
+   "h": 982,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.741
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. Interface decomposition energy and Kcrit at 2V and 3V with composition modification. (a, b) Predicted Kcrit of coating materials at the interface to LGPS electrolyte at 2V (a) and 3V (b) versus the parent (0%) and modified glass coatings (1.25, 2.5, 4, 5, 6%). (c, d) Predicted interface decomposition energy to LGPS at 2V (c) and 3V (d) versus the parent (0%) and modified glass coatings (1.25, 2.5, 4, 5, 6%) at different Keff.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    85.9,
+    548.5,
+    432.2
+   ],
+   "w": 2011,
+   "h": 1444,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. CV test for the parent glass (left) and modified child glass C6 (right) for the first 5 cycles. The charge curve lies above the discharge curve for each cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    548.5,
+    262.8
+   ],
+   "w": 2011,
+   "h": 820,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6. Predicted Kcrit for self-decomposition energy (left) and predicted self- decomposition energy at different Keff (right) at 3.5V for the parent glass and 5 modified child glasses.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    341.6,
+    549.8,
+    521.9
+   ],
+   "w": 2016,
+   "h": 752,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 6,
+   "file": "tab_S1.png",
+   "caption": "Table 1. Results from decision tree optimization of known sulfide glass SSE’s. Each child allows various levels of composition change from the parent compound as indicated by the constraint. A 95% constraint allows for up to 5% change in each element’s fractional composition. All compositions are normalized to 1 atom per formula unit. The constraint is in some cases approximate, as changing the composition of one element will affect the composition of other elements, resulting in, for example, the final amount of changes slightly exceeding 5% (10%) in the 95% (90%) constraint group. The predicted Kcrit is at the 4V interface to LSPS sulfide electrolyte. Parent Glass Child A (C 5) (95% Constraint) Child B (C 10) (90% Constraint) Child C (C 100) (0% Constraint) Formula Conductivity/ Kcrit /GPa Formula Kcrit/ GPa Formula Kcrit/ GPa Formula Kcrit/ mS cm-1 (ref) GPa 88I0.138 1.7 1 16.07 Li0.3",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    90.4,
+    547.5,
+    604.9
+   ],
+   "w": 2003,
+   "h": 2145,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.504
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 7,
+   "file": "tab_S2.png",
+   "caption": "Table 2. Results of the predicted Kcrit at the 4V interface to LGPS sulfide electrolyte. The Kcrit shows a similar decreasing trend from parent to child A, to B and to C. Parent Glass Child A (C 5) (95% Constraint) Child B (C 10) (90% Constraint) Child C (C 100) (0% Constraint) Formula Conductivity/ Kcrit /GPa Formula Kcrit/ GPa Formula Kcrit/ GPa Formula Kcrit/ mS cm-1 (ref) GPa 88I0.138 1.7 1 13.31 Li0.280O0.021F0.042 P0.085S0.417Cl0.048I0.1 S0.387Cl0.099K0.018I0.040 3.88 Li0.128C0.011N0.115F0.5 Li0.364P0.110S0.3 06 7.60 Li0.319O0.021F0.105P0.010 08P0.022S0.137K0.030I0.0 49 1.36 51I0.143 0.2 2 12.62 Li0.345B0.119O0.008 Li0.338B0.169S0.3 9.23 Li0.316B0.177N0.008F0.092 S0.274I0.133 6.89 Li0.100B0.050O0.199F0.4 F0.037 P0.037 66S0.104Ni0.038I0.042 2.83 S0.308I0.146 Li0.431Si0.092S0. 323I0.154 0.04 3 12.77 Li0.417O0.013F0.029Si0 .120S0.272I0.149 7.75 Li0.337N0.035O0.080F0.079 P0.080S0.252I0",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    90.4,
+    547.5,
+    537.8
+   ],
+   "w": 2003,
+   "h": 1865,
+   "dpi": 300,
+   "src": "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "blank": 0.458
+  }
+ ],
+ "missing_labels": []
+}

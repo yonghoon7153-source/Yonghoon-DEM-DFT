@@ -637,6 +637,22 @@
    "7. Sup) FirstPrinciples_prediction_ESW_SI.pdf"
   ]
  },
+ "fitzhugh2019_ht_functionally_stable_interfaces_sulfide": {
+  "figures": 13,
+  "generated": "2026-11-10",
+  "pdfs": [
+   "122. A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf",
+   "122. Sup) A high throughput search for functionally stable interfaces in sulfide solid state lithium ion conductors.pdf"
+  ]
+ },
+ "fitzhugh2021_sei_design_constrained_ensemble": {
+  "figures": 13,
+  "generated": "2026-11-10",
+  "pdfs": [
+   "121. Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf",
+   "121. Sup) Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries.pdf"
+  ]
+ },
  "fowkes1964_attractive_forces_interfaces_dispersion": {
   "figures": 24,
   "generated": "2026-10-13",
@@ -2844,6 +2860,13 @@
    "DEM 논문/05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf"
   ]
  },
+ "tian2020_electrochemo_mechanical_stress_assb": {
+  "figures": 6,
+  "generated": "2026-11-10",
+  "pdfs": [
+   "123. Evaluation of the electrochemo-mechanically induced stress in all-solid-state Li-ion batteries.pdf"
+  ]
+ },
  "tjaden2018_tortuosity_review_calculation_approaches": {
   "figures": 15,
   "generated": "2026-10-02",
@@ -2976,6 +2999,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/29. InfoMat - 2022 - Wang - Improving thermal stability of sulfide solid electrolytes  An intrinsic theoretical paradigm.pdf"
+  ]
+ },
+ "wang2022_two_parameter_space_dendrite_constriction": {
+  "figures": 21,
+  "generated": "2026-11-10",
+  "pdfs": [
+   "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf"
   ]
  },
  "wang2024_hot_pressed_lpscl_pressure_invariant_conductivity": {
@@ -3391,6 +3422,14 @@
   "pdfs": [
    "DFT 먹인 논문/38. Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf",
    "DFT 먹인 논문/38. Sup) Origin of Outstanding Stability in the Lithium Solid Electrolyte Materials Insights from Thermodynamic Analyses Based on First-Principles Calculations.pdf"
+  ]
+ },
+ "zhu2016_first_principles_interface_stability_assb": {
+  "figures": 16,
+  "generated": "2026-11-10",
+  "pdfs": [
+   "124. First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf",
+   "124. Sup) First principles study on electrochemical and chemical stability of solid electrolyte electrode interfaces in all-solid-state Li-ion batteries.pdf"
   ]
  },
  "zhu2020_air_stable_se_design_principles": {

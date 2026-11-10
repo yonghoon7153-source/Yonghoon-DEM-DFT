@@ -350,3 +350,18 @@ cardenasbarrantes2022_soft_spheres_3d_compaction_nscd	three-dimensional_compacti
 cardenasbarrantes2022_soft_spheres_3d_compaction_nscd	three-dimensional compaction of soft granular packings
 # ── MPM 기울기 분할 접촉 · 파괴 (Homel & Herbold 2017 · IJNME 109(7)) — litdb 2026-11-10 · 원본 = 출판사 웹 전문 페이지 캡처 두 장을 감싼 PDF (글자 층 없음 · 파일명에 제목 조각 없음) 라 자동 매칭 불가 → 수동 지정 · 그림은 전부 손 크롭 (도구 재추출 대상 아님) ──
 homel2017_mpm_field_gradient_partitioning_fracture_self_contact	17._upload_0c6f3c50
+# ── Li 덴드라이트 구속의 두 매개변수 공간 (Wang–Ye–Chen–Li 2022 · JACS Au · 사용자 목록 120 번) — litdb 2026-11-10 · 같은 해 · 같은 성의 wang2022_resistive… · wang2022_sulfide… 와 다른 논문이고 옛 inbox 번호 120 (2026-09-15 · kim2026_moisture… 의 파일명) 과도 겹쳐 수동 지정 ──
+wang2022_two_parameter_space_dendrite_constriction	a two-parameter space to tune solid electrolytes
+wang2022_two_parameter_space_dendrite_constriction	a_two-parameter_space_to_tune_solid_electrolytes
+# ── SE–전극 계면 열역학 (Zhu–He–Mo 2016 · J. Mater. Chem. A · 사용자 목록 124 번) — litdb 2026-11-10 · 같은 저자 · 같은 방법의 zhu2015_esw_grand_potential_origin (inbox 38) 과 제목 토큰 (solid electrolyte · stability · first principles) 이 겹쳐 수동 지정 ──
+zhu2016_first_principles_interface_stability_assb	first principles study on electrochemical and chemical stability of solid
+zhu2016_first_principles_interface_stability_assb	first_principles_study_on_electrochemical_and_chemical_stability_of_solid
+# ── SE 분해 부피 → 응력 FEM (Tian–Chakraborty–Talin–Eisenlohr–Qi 2020 · J. Electrochem. Soc. · 사용자 목록 123 번) — litdb 2026-11-10 · 옛 inbox 번호 123 (2026-09-22 · jeong2025_tough_adhesive_binder_shield_ncm811 의 파일명) 과 번호가 겹쳐 수동 지정 · SI 미입수 ──
+tian2020_electrochemo_mechanical_stress_assb	evaluation of the electrochemo-mechanically induced stress
+tian2020_electrochemo_mechanical_stress_assb	evaluation_of_the_electrochemo-mechanically_induced_stress
+# ── 구속 앙상블 SEI 설계 · K_crit (Fitzhugh–Chen–Wang–Ye–Li 2021 · Energy Environ. Sci. · 사용자 목록 121 번) — litdb 2026-11-10 · 옛 inbox 번호 121 (hyun_han_argyrodite_moisture_degradation_design_principles 의 파일명) 과 번호가 겹쳐 수동 지정 · 본문 + ESI ──
+fitzhugh2021_sei_design_constrained_ensemble	electrolyte-interphase design in constrained ensemble
+fitzhugh2021_sei_design_constrained_ensemble	electrolyte-interphase_design_in_constrained_ensemble
+# ── LSPS 코팅 고처리량 탐색 (Fitzhugh–Wu–Ye–Deng–Qi–Li 2019 · Adv. Energy Mater. · 사용자 목록 122 번) — litdb 2026-11-10 · 옛 inbox 번호 122 가 이미 세 편 (jung2026_sio2_cosubstitution… · xu2026_xlsdft… · ziemke2026_li3ocl… 의 파일명) 에 쓰였고 같은 1 저자의 fitzhugh2021_sei_design… 과도 갈라야 해서 수동 지정 · 본문 + SI ──
+fitzhugh2019_ht_functionally_stable_interfaces_sulfide	a high throughput search for functionally stable interfaces
+fitzhugh2019_ht_functionally_stable_interfaces_sulfide	a_high_throughput_search_for_functionally_stable_interfaces

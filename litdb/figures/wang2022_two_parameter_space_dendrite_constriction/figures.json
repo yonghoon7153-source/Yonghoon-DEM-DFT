@@ -1,0 +1,442 @@
+{
+ "slug": "wang2022_two_parameter_space_dendrite_constriction",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+  "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. The electrolyte dynamic stability design procedure and results. (A) Schematic illustration of the deﬁnition of (0 V) Ehull and K* in the reaction between a material and the Li metal. Note that Ehull will be discussed in terms of magnitude, i.e., referring to the absolute value. (B) Schematic ﬂowchart of computational procedure. (C) Optimized compositions, decomposition energies Ehull, and critical moduli K* at various ﬁxed Br compositions for LPSCl-Br with minimized K* (right panel). The left panel is for the values of the original LPSCl without doping or the minimization of K*. Through doping and minimization, a trend toward Li- and Cl- rich and S- and P-deﬁcient compositions occurs. Our input features consist of 103 dimensional composition vectors for the ﬁrst 103 elements in the Periodic Table up to lawrencium (Lr). The composition vector is normalized with the sum equals to",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    368.8
+   ],
+   "w": 2151,
+   "h": 1311,
+   "dpi": 300,
+   "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.863
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The distribution of a few representative electrolyte compositions in theK*−Ehull space. The central region in the space around LPSCl-X-min and LGPS-min should be targeted in the design and synthesis of the electrolyte. LPSCl-core and LGPS-core were predicted by machine learning from the nominal precursor compositions, i.e., the original composition of Li5.5PS4.5Cl1.5 and Li10GeP2S12, respectively, without minimizing K*. LPSCl-X-core includes the original compositions of Li5.5PS4.5Cl1.1F0.4, Li5.5PS4.5Cl1.35Br0.15, and Li5.5PS4.5Cl1.35I0.15. LPSCl-min(K*)-shell was predicted from the machine learning minimization of K*, with the LPSCl-core composition of Li5.5PS4.5Cl1.5 as the initial input and the Li7.4P0.5S2.3Cl2.2 composition as the output. LGPS-min(K*)-shell was minimized from the LGPS-core original composition to give the modiﬁed composition of Li14.2Ge0.9P1.8S8. The region",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    87.9,
+    297.5,
+    212.9
+   ],
+   "w": 1051,
+   "h": 522,
+   "dpi": 300,
+   "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Composition characterizations of the core−shell structure in LPSCl-Br particles. (A) SEM-EDS intensity ratio proﬁle. The inset shows the line proﬁle scanned from the cross section of a particle milled from FIB. (B) XPS depth proﬁle quantiﬁcation of elemental compositions at diﬀerent times of the in situ ion-milling. JACS Au 2022, 2, 886−897 891 https://doi.org/10.1021/jacsau.2c00009",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    557.8,
+    561.5,
+    714.4
+   ],
+   "w": 2151,
+   "h": 654,
+   "dpi": 300,
+   "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Stable cycling of SSBs using composition-modiﬁed LPSCl-X with a reduced-shell critical modulusK*. The charge−discharge voltage curves and cycling performance, respectively, of SSBs designed using (A and B) LPSCl-F or (C and D) LPSCl-Br as the central electrolyte layer in the multilayer conﬁguration. All batteries were cycled at 55 °C with LPSCl-X as the central layer sandwiched by LPSCl layers on both sides and using a LiNbO3-coated NMC811 (LNO@811) cathode paired with a Li−graphite composite anode (Li-G). Battery conﬁgurations are shown in panels B and D. The cycling of the battery without the LPSCl-X central layer (green), whose electrolyte layer was the same thickness as that in the multilayer conﬁguration for a fair comparison, is shown as a control. ﬁndings4,12 that LPSCl is more suitable than Li6PS5Cl to serve as the bottom layer in a direct contact with the Li− graphite ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    281.0
+   ],
+   "w": 2151,
+   "h": 945,
+   "dpi": 300,
+   "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. High-capacity and high-rate capability of LPSCl-I|LGPS-based multilayer batteries. (A) Charge−discharge voltage curves measured at diﬀerent rates for the LPSCl-I|LGPS|811 battery with the conﬁguration described at the bottom of the panel. (B) Cycling performance at diﬀerent C-rates from 0.5 to 20 C (8.6 mA/cm2) and that of a diﬀerent battery for long-cycling at 10 mA/cm2. (C) The charge−discharge voltage curves at extremely high current densities up to 43 mA/cm2. (D) High-current-density long cycling performance at 20 and 30 mA/cm2. (E) The battery cycling history before the 20 mA/cm2 long cycling in panel D. (F) The battery cycling history before the long cycling at 30 mA/cm2 in panel D. shell composition makes the doping-induced core−shell LPSCl-X show suﬃcient decomposition despite being less stable with the Li metal, similar to LGPS.4 However, the decomposition of LPSCl-X a",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    431.7
+   ],
+   "w": 2151,
+   "h": 1573,
+   "dpi": 300,
+   "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. XPS depth proﬁle measurement of the cross sections of cycled battery pellets by in situ ion milling. For cycled LPSCl in the Li-G|LPSCl| 811 battery ran at 8.6 mA/cm2: (A) Li 1s XPS at diﬀerent milling times, (B) Li 1s XPS reﬁnement of the sample milled for 430 s,; and (C) XPS quantiﬁcation of elemental compositions at diﬀerent ion-milling times. For cycled LPSCl-I in the Li-G|LPSCl|LPSCl-I|LGPS|811 battery run at 30 mA/cm2: (D) Li 1s XPS at diﬀerent milling times, (E) Li 1s XPS reﬁnement of the sample milled for 430 s, (F) XPS quantiﬁcation of elemental compositions at diﬀerent ion-milling times, and (G) S 2p XPS reﬁnement of the sample milled for 430 s. capacities near 200 mAh/g for ﬁve cycles before the rate was increased. Figure 5B also shows the cycling performance of another battery directly ramped up to 23 C-rate (10 mA/cm2). Figure S11 shows the low-rate cycling perform",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    247.3
+   ],
+   "w": 2151,
+   "h": 805,
+   "dpi": 300,
+   "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Two examples to illustrate the calculation of K*. a, The unstable P2S7/Li interface; b, The stable LiCl/Li interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    177.1,
+    527.9,
+    429.7
+   ],
+   "w": 1850,
+   "h": 1053,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Optimized composition, decomposition energy Ehull and critical modulus K* at fixed dopant requirements for a LPSCl-I, and b LPSCl-F with minimized K* (right panel). The left panel is for the values of original LPSCl without doping and minimization of K*. LPSCl-I is optimized to be S, P deficient and Cl, Li rich. LPSCl-F is optimized to be S, P deficient and Li rich. At F deficient range, Cl can be either rich or deficient. Both K* are low at around 10 GPa and decomposition energy can be increased up to a few tens of meV/atom.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.9,
+    514.1,
+    446.3
+   ],
+   "w": 1792,
+   "h": 1569,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. XPS quantification of a LPSCl-F and b LPSCl-I.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.1,
+    526.8,
+    259.1
+   ],
+   "w": 1846,
+   "h": 789,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. XRD and optical photos of LPSCl and LPSCl-X (X = F, Br, I) powder. LPSCl and LPSCl-Br sample had a pure phase with F-43m space group, whose XRD reflections are marked by dashed line, while LPSCl-F and LPSCl-I have impurities.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    287.5,
+    514.0,
+    493.1
+   ],
+   "w": 1792,
+   "h": 857,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. SEM of a LPSCl, b LPSCl-F, c LPSCl-Br and d LPSCl-I. The particles have similar size of a few to ~30 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.4,
+    508.5,
+    461.9
+   ],
+   "w": 1769,
+   "h": 1632,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.331
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Core shell structure of LPSCl characterized by SEM-FIB-EDS and XPS. a, Intensity ratio of Li, P, S and Cl and the inset shows the SEM image of the milled and line scanned particle. Index larger than 24 corresponds to points at the edge, where there is S deficiency and Cl richness. The same S deficiency and Cl richness observed in the point index range from 16 to 23 is also located at the edges of the particle cracks. b, XPS quantifications with milling show a S-deficient and Cl-rich shell.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.6,
+    514.1,
+    227.9
+   ],
+   "w": 1792,
+   "h": 673,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. a, XPS quantification at different depth of LGPS particles shows a Li rich, S, Ge, P deficient surface; b, machine learning optimized compositions with different allowed compositional change percentage for each element itself (composition change constraint), aiming for lower K*. The zero point in x axis corresponds to the original LGPS. With larger allowed compositional changes, LGPS is optimized to be Li rich, S, Ge, P deficient, which is the same trend observed in the XPS quantification. c, Optimized K* and the predicted decomposition energy with the same optimized composition. The 0.915 eV is the Li0.49Cl0.49P0.01S0.01 reference for zero DFT 0V decomposition energy. A relative small change in composition such as 30% can decrease the K* to below 20 GPa along with a relatively large decomposition energy of 147 meV/atom.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    338.7,
+    514.1,
+    491.7
+   ],
+   "w": 1792,
+   "h": 638,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. XPS analysis and optical photos of the Li deposited a, LPSCl, b, LPSCl-F, c, LPSCl- Br, d, LPSCl-I and e, LGPS. XPS analysis shows that the decomposition is the weakest for the Li deposited LPSCl with least S reduction and limited P reduction, while the reduction of S becomes stronger for LPSCl-X and LGPS, and LPSCl-F and LPSCl-Br have stronger P reduction. Therefore, the gray and silver color of a3 Li deposited LPSCl should be largely from Li metal, while the larger area of dark gray color of b3 to d3 Li deposited LPSCl-X and the black color of e3 Li-deposited LGPS should be from decompositions.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.2,
+    514.2,
+    368.2
+   ],
+   "w": 1793,
+   "h": 1235,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.702
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 7,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9 Two other Li-G|LPSCl|LNO@811 batteries that failed during intial charging with sudden voltage drop followed by noisy voltage curve, indicating shorting cuased by Li dendrite pennetration.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    520.1,
+    493.9,
+    688.9
+   ],
+   "w": 1709,
+   "h": 704,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.976
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 8,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. 20 C-rate cycling Coulombic inefficiency of (a and b) Li-G|LPSCl|LPSCl- F|LPSCl|LNO@811 at large scale (a) and small scale (b), and of (c and d) Li-G|LPSCl|LPSCl- Br|LPSCl|LNO@811 at large scale (c) and small scale (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.3,
+    512.6,
+    368.3
+   ],
+   "w": 1786,
+   "h": 1259,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 9,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12 Coulombic inefficiency of Li-G|LPSCl|LPSCl-I|LGPS|811 at a, 20 mA/cm2, and b, 30 mA/cm2.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.1,
+    527.5,
+    259.1
+   ],
+   "w": 1849,
+   "h": 784,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 10,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13 SEM image of cycled battery pellet cross section. The cathodes are on the top and the anodes are on the bottom. (a1-a4) The cross sections of 8.6 mA/cm2 cycled Li- G|LPSCl|LNO@811 battery (green data in Figure 4B and D) and magnified views of LPSCl layer showing that there are macro pores and microcracks network in the LPSCl layer after cycling; (b1) The cross section of 8.6 mA/cm2 cycled Li-G|LPSCl|LPSCl-Br|LPSCl|LNO@811 battery (Figure 4C and blue data in 4D), and magnified views of (b2) LPSCl-Br layer and (b3) anode side LPSCl layer, showing that LPSCl-Br layer is compact without large pores and cracks, while the LPSCl layer morphology is more similar to that in (a); (c1) The cross section of 30 mA/cm2 cycled Li-G|LPSCl|LPSCl-Br|LPSCl|LNO@811 battery (darker blue in Figure 5D), and magnified views of (c2) LPSCl-I layer and (c3) anode side LPSCl layer. Though there are 10",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.2,
+    516.8,
+    602.3
+   ],
+   "w": 1804,
+   "h": 2235,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.389
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 11,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14 XPS of the cross section of cycled battery pellet with ion-milling. (a-c) Cl 2p, S 2p and P 2p XPS evolution during ion-milling for cycled LPSCl; Cl 2p and S 2p peaks barely change over the milling duration, which are consistent with the unchanged composition during milling in Figure 6, and P 2p has almost no intensity due to low composition. (d-g) I 3d, S 2p, P 2p and Cl 2p XPS evolution during ion-milling for cycled LPSCl-I. The intensity increase is consistent with the composition change in Figure 6.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    112.9,
+    521.8,
+    321.5
+   ],
+   "w": 1825,
+   "h": 870,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 11,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15 Training and validation error for modelling (a,b) decomposition energy and (c,d) K* . 11",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    425.5,
+    514.0,
+    742.7
+   ],
+   "w": 1792,
+   "h": 1322,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 5,
+   "file": "tab_S1.png",
+   "caption": "Table S1. XPS of LPSCl and LPSCl-X with vacuum transfer sample holder. X-axis is energy (eV) and Y-axis is intensity.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    119.7,
+    517.6,
+    554.2
+   ],
+   "w": 1807,
+   "h": 1812,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.901
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS11",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p8 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  }
+ ]
+}
