@@ -12451,6 +12451,69 @@
     "근거_발화": "사용자 2026-11-10 (이 세션): Codex DZ 회신 붙여넣기 (NO-GO) — 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 앞선 '이어서해' · '권고대로해'",
     "decision_digest": "sha256:6f25f3b578fe3c2378153cb629fb11fcf52c5f5e2455a618f264dc9e79bb5246"
    }
+  },
+  {
+   "id": "D-2026-11-10-b2o3-bo-placement-amend4-ea",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.uma_family_screen.anneal_time_diagnostic",
+   "slot": "b2o3_bo_placement_anneal_time_diagnostic_amend4",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 카드 개정 4 (회신 EA · 결과 전) — 본 판독 (100 ps) 보존 · 가족별 성공 집합이 두 시점에서 같을 때만 시간 비교 · 판정 사유 다섯 갈래 · 기록 보강 · md.log 구간 진단 · 도구는 100 ps 결과 공개 전에 고정",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_4_EA_회신_2026_11_10' 이 개정 3 의 잠정 규칙 · 기록 · 도구 고정 시점 · 문장을 대체한다. 100 ps 본 판독은 그대로 보존하고 50 ps 진단은 올리지 않는다. 가족별 성공 런 이름 집합이 두 시점에서 같고 두 판독이 기존 게이트를 통과할 때만 두 시점 일치를 판정하며, 다르면 시간 비교 보류. 사유는 ① 같은 선택 ② 다른 승자 ③ 50 ps 여유 부족 ④ 판독 보류 (집합 · 게이트) ⑤ 본 판독 승자 없음으로 가르고 회신 EA 의 문장을 쓴다 (③ · ④ 를 '순서가 바뀌었다' 고 쓰지 않는다). 런별 Δ · 시점별 상태 · 가족별 Δ 중앙 · IQR · 최솟값 · 최댓값 · max|Δ| · 두 시점 최저 런 ID · 끝 꼴 · 최저 간 차와 그 변화 · 같은 바탕 짝 변화 δ_FG,i · 분포와 짝 판정을 기록한다. md.log 구간 [40,50] · [90,100] ps 의 Epot · T 는 기록만. 개정 규칙 · 진단 도구 · 음성 시험은 50 ps · 100 ps 본 결과를 열기 전에 커밋한다 (8 단계 본 판독도 그 뒤에만).",
+   "rationale": "회신 EA: 개정 3 은 여유 부족 · 판독 보류를 순서 역전으로, 승자 일치를 순서 일치로 썼고 (P1-1), 시점마다 성공 런 집합이 다르면 시간 효과와 비교 대상 변경이 섞였다 (P1-2 — 에너지가 안 변해도 일치 · 역전이 만들어지는 반례). Δ 요약이 최저를 움직인 큰 하강을 놓칠 수 있고 (P2-1), 도구가 100 ps 결과 공개 뒤에 정해질 여지가 있었다 (P2-2). 8 단계 · 50 ps 결과를 하나도 열기 전에 고친다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "8 단계 결과 · 50 ps 진단 결과 0 건 (진행 신호만) · 파일럿 영수증만 봤다",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "record": "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json",
+   "amends": "D-2026-11-10-b2o3-bo-placement-anneal-time-diagnostic",
+   "depends_on": [
+    "D-2026-11-10-b2o3-bo-placement-anneal-time-diagnostic",
+    "D-2026-11-10-b2o3-bo-placement-stage1-cap"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md (원문 · 기준 b018b14d)",
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_4_EA_회신_2026_11_10)"
+   ],
+   "reopen_criteria": [
+    "8 단계 · 50 ps 결과를 연 뒤에는 이 규칙을 바꾸지 않는다"
+   ],
+   "enforcement": "고친 진단 도구 (tools/doping/b2o3_bo_anneal_diag.py) 가 사유 다섯 갈래 · 집합 규칙 · 기록 · 결속 (부모 런 · 프레임 다시 읽기 · 이완 정체성 · 유한 E_post_relax) 을 건다 · 음성 시험 (회신 Q6 목록 + 반례) · 실제 판독기 정상 경로 · 판 고정 판독기 그대로 · 8 단계 본 판독은 도구 커밋 뒤에만",
+   "cost_cap": {
+    "anneal_diag_GPU_h": "어림 1–3 (1 단계 UMA 상한 85 안 · 개정 3 그대로)",
+    "machine": "gabia · 8 단계 뒤"
+   },
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": "claude-session-2026-11-10 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-10",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EA 회신 (사용자 붙여넣기 2026-11-10) 을 결과 전에 반영 — 사용자 비준 대기 (b2o3 1저자 = 사용자)"
+    }
+   ],
+   "_note": "proposed — 회신 EA 반영 · 사용자 비준 대기 · 비준 전에는 8 단계 판독을 열지 않는다"
   }
  ]
 }
