@@ -155,6 +155,7 @@ evidenceScope: multi-source-primary
 | EA | 2026-11-10 | `codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` | `codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` | 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종 판정 보류 · P1 2 · P2 2 · D1 · D2 찬성 · `codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md`) → 카드 개정 4 · 도구 고침 · 기준 커밋 b018b14d (Codex 가 본 판) | 같은 라벨 · 주제 토큰 일치 ['anneal', 'b2o3', 'diagnostic', 'time']; 판정 인용 2회 |
 | EB | 2026-11-10 | `codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` | `internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` | Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리뷰 (독립 에이전트) 로 발송 2026-11-10 · ✅ 회신 수령 2026-11-10 — NO-GO (P0 1 · P1 6 · P2 7 · 접근은 조건부 찬성) · `internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` · 고칠 때까지 2 단계 결과를 열지 않는다 (대조 잡도 보류 — 같은 P0 로 same = False 가 난다) | 같은 라벨 · 주제 토큰 일치 ['dz', 'fixes', 'li2s3'] |
 | EC | 2026-11-10 | `internal_EC_prompt_b2o3_amend4_diag_v2_2026_11_10.md` | `internal_EC_reply_b2o3_amend4_diag_v2_2026_11_10.md` | 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · 사용자 'codex 토큰 없어서 당분간 못해 · 반박 리뷰를 에이전트 사용해서') · ✅ 회신 수령 2026-11-10 — 조건부 GO (P0 0 · P1 2 · P2 5) · `internal_EC_reply_b2o3_amend4_diag_v2_2026_11_10.md` · 고칠 때까지 8 단계 본 판독 · 50 ps 진단을 열지 않는다 | 같은 라벨 · 주제 토큰 일치 ['amend4', 'b2o3', 'diag', 'v2'] |
+| ED | 2026-11-10 | `internal_ED_prompt_cascade_bundle2_card_2026_11_10.md` | — | 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · Codex 토큰 없음 · 사용자 '반박 리뷰를 에이전트 사용해서') · 회신은 `internal_ED_reply_cascade_bundle2_card_2026_11_10.md` | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
