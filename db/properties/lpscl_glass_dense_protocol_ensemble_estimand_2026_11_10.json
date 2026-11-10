@@ -228,7 +228,12 @@
     "S": 2.5,
     "Cl": 2.5
    },
-   "mean_T_tol_frac": 0.02
+   "mean_T_tol_frac": 0.02,
+   "queue_v2": {
+    "sha16": "15e787a166cbaf5e",
+    "decision": "D-2026-11-10-li2s3-dense-protocol-ensemble-amend3"
+   },
+   "cost_estimate_h_per_ps": 0.013
   },
   "framework_gate_reading": "vs_first_frame",
   "md_driver_sha16": "c3e2d358ee53cefa",
@@ -368,5 +373,35 @@
   "by": "agent · 2026-11-10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend2 (위임 10-30 — 원장 '사용자 (위임 10-30)')",
   "✅_활성": "2026-11-10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend2 active (사용자 (위임 10-30) · 카드 커밋 7378ced3)"
  },
- "⏩_개정_EB": "2026-11-10 밤 — 내부 반박 리뷰 EB (NO-GO) 를 결과 전에 반영 · 새 기계 값 여섯 · 판정 보류 뜻 · 도구 0697c527 (개정_EB_2026_11_10)"
+ "⏩_개정_EB": "2026-11-10 밤 — 내부 반박 리뷰 EB (NO-GO) 를 결과 전에 반영 · 새 기계 값 여섯 · 판정 보류 뜻 · 도구 0697c527 (개정_EB_2026_11_10)",
+ "개정_3_큐_v2_2026_11_10": {
+  "결과_전": "2 단계 결과 0 건 열람 (16 런 중 1 런 끝 · verify 만 — A11 600 K valid · 수송값 안 읽음)",
+  "도구": {
+   "큐_v2": "db/inputs/li2s3_dense_ensemble_2026_11_10/run_stage2_kgy_v2.sh sha16 15e787a166cbaf5e (새 파일 · v1 run_stage2_kgy.sh d930f9b209d68097 그대로)",
+   "판독": "tools/ionic/li2s3_stage2_readout.py 0697c527 → 180e43f5906fa04e (v2 런을 실행 기록으로 읽는 경로 · --phase ladder|cond550 · VERIFY_MAP · v1 시험 83 그대로)",
+   "출처": "에이전트 worktree 커밋 a83219a9 (EB 리뷰 에이전트가 작성 — 같은 에이전트가 쓴 코드라 독립 리뷰 EE 를 받는다)",
+   "시험": "메인 트리에서 다시 돌림: 판독 136/136 · 큐 v2 57/57 · 깨기 96/96 (에이전트 · 큐 46 · 판독 v2 39 · v1 이웃 11) · 끝-끝 16/16 (실제 v1 큐 → 실제 v2 큐 → 실제 드라이버 · fairchem 스텁)"
+  },
+  "카드_문장 (에이전트 보고 · 결과 전)": {
+   "1_결속": "stage2.queue_v2 = {sha16 15e787a166cbaf5e · decision D-2026-11-10-li2s3-dense-protocol-ensemble-amend3} — 없으면 큐가 시작을 거부 (종료 7 / 6) 하고 판독이 v2 런을 invalid 로 센다",
+   "2_비용_어림": "stage2.cost_estimate_h_per_ps = 0.013 (§4c 상한 5.2 h / 400 ps) — 다음 런 어림 = max(이 값, 관측 최대 h/ps) × 그 런 길이 · 첫 런 실측 5.1131 h / 400 ps = 0.0128",
+   "3_첫_런_한도": "400 ps 당 8 h (800 ps 첫 런은 16 h) · PHASE 마다 실행 기록에서 판정 · 다시 띄운 뒤에도",
+   "4_러너_사본": "'실행용 러너 사본' → '러너 사본 없음 — v2 가 드라이버를 직접 부른다 (v2 파일 = 실행 경로)'",
+   "5_정지_비용": "정지는 <BASE>/queue_v2_stops.jsonl 에 남는다 · ACK_STOP + ACK_BY + ACK_REASON 전에는 다시 띄우기 거부 (종료 14 · ack 는 카드 한도를 풀지 않는다) · 비용 없는 흔적 (장부 행 없음 · 끝 기록 없는 시작 기록) 은 COST_CHARGE + COST_BY + COST_REASON 전에는 거부 (종료 15)",
+   "6_섞인_판독 (EB 문장 6)": "v2 런이 하나라도 있으면 v1 끝 줄을 요구하지 않는 대신: 모든 런 valid · v1 로그 문제 없음 · 잠금 풀림 · ack 안 된 정지 없음 · queue_v2 결정이 지금 active · 순수 v1 판독은 옛 규칙 그대로",
+   "7_cond550_판독": "'끝난 뒤 한 번 더' = readout --phase cond550 — 550 K + 사다리를 읽고 고정된 사다리 판독 (cond550 자격 참) 이 있어야 한다 · readout_stage2_cond550.json · pressure_stage2_cond550.json · 그 갈래가 최종 (사다리 판독의 갈래는 잠정으로 남는다)",
+   "8_재실행": "판정 보류 기록 (sha256 같이) 이 invalid · incomplete 로 적은 런만 다시 돈다 · 옛 폴더는 T<T>.superseded_<UTC> 로 남긴다",
+   "9_카드_결속": "v2 런은 카드 sha 가 아니라 런을 정하는 값 (온도 · 길이 · 평형 · 시드 오프셋 · 저장 · dt · 원자 수) 으로 카드에 묶인다 — 그 값을 안 건드리는 개정은 v2 런을 무효로 만들지 않는다 · 큐 파일은 sha16 하나로 고정 (v2 를 나중에 고치면 옛 판으로 돈 런은 invalid)",
+   "10_판독_허가": "판독 도구 sha16 이 바뀌었으므로 (180e43f5) 대조 잡은 그 판으로 다시 돌리고 판독_허가_2단계 의 대조_잡_출력 · 대조_잡_sha256 을 그 출력으로 바꾼 뒤에만 판독한다 (옛 대조 잡 ccfe245c… 는 0697c527 판 — 허가에 못 쓴다)"
+  },
+  "기타": [
+   "v1 머리글은 아직 PHASE=cond550 을 광고한다 — 카드가 이미 금지하고 판독이 그런 런을 invalid 로 센다 · v1 은 안 고친다 (돌고 있다)",
+   "리뷰 에이전트가 잘못된 리다이렉트로 /ro_st4.log (12 KB · 저장소 밖) 를 남겼다 — 그 에이전트의 rm 이 안전 검사에 막혀 나에게 지워 달라고 했지만 대신 지우지 않았다 (사용자에게 알림)"
+  ],
+  "다음": [
+   "독립 리뷰 EE (큐 v2 · 판독 v2 경로 — 쓴 에이전트와 다른 에이전트) · 16 런 판독 전",
+   "리뷰 반영 → 이 개정 활성 (위임 10-30) → kgy 대조 잡 다시 (최종 도구 sha16) → 판독 허가 키 → 16 런 끝나면 readout · pressure 한 번"
+  ],
+  "by": "agent · 2026-11-10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend3 (proposed · 독립 리뷰 EE 뒤 활성 · 위임 10-30)"
+ }
 }
