@@ -1,0 +1,105 @@
+{
+  "schema": "dem_t0_contract_document_draft/1",
+  "design_status": [
+    "권고안 전제(Q-T0-1)",
+    "권고안 전제(Q-T0-2)"
+  ],
+  "actual": {
+    "selected_build_identity": null,
+    "actual_compression_sign": null,
+    "T0": "NOT_RUN",
+    "binary_syntax": "NOT_RUN",
+    "receipt": null
+  },
+  "unit_policy": "Existing target_force arithmetic, not an actual unit qualification or a new numerical registration.",
+  "synthetic_plan": {
+    "schema": "DEM_GEN2_T0_SYNTHETIC_CONTRACT_V1",
+    "purpose": "SYNTHETIC_PREPARATION",
+    "protocol": "P2",
+    "identity": {
+      "build_alias": "synthetic_build",
+      "producer_pin": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "qualification_pin": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "deck_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "fixture_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "unit_mapping_id": "GEN2_MPA_DECK_STRESS_0P001_V1",
+      "run_id": "synthetic_run",
+      "attempt_id": "synthetic_attempt",
+      "mesh_id": "top_mesh",
+      "reaction_component": "z"
+    },
+    "fixture": {
+      "particle_count": 20,
+      "compression_sign": 1,
+      "pressure_mpa": 2.0,
+      "area_deck_m2": 0.001,
+      "declared_target_force_deck": 2.0
+    },
+    "first_sample_id": 11,
+    "sample_stride": 2
+  },
+  "synthetic_controls": [
+    {
+      "identity": {
+        "build_alias": "synthetic_build",
+        "producer_pin": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "qualification_pin": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "deck_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "fixture_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "unit_mapping_id": "GEN2_MPA_DECK_STRESS_0P001_V1",
+        "run_id": "synthetic_run",
+        "attempt_id": "synthetic_attempt",
+        "mesh_id": "top_mesh",
+        "reaction_component": "z"
+      },
+      "kind": "compression_positive",
+      "sample_id": 11,
+      "raw_reaction": 3.0,
+      "normalized_force": 3.0
+    },
+    {
+      "identity": {
+        "build_alias": "synthetic_build",
+        "producer_pin": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "qualification_pin": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "deck_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "fixture_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "unit_mapping_id": "GEN2_MPA_DECK_STRESS_0P001_V1",
+        "run_id": "synthetic_run",
+        "attempt_id": "synthetic_attempt",
+        "mesh_id": "top_mesh",
+        "reaction_component": "z"
+      },
+      "kind": "opposite_polarity_negative",
+      "sample_id": 13,
+      "raw_reaction": -3.0,
+      "normalized_force": -3.0
+    },
+    {
+      "identity": {
+        "build_alias": "synthetic_build",
+        "producer_pin": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "qualification_pin": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "deck_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "fixture_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "unit_mapping_id": "GEN2_MPA_DECK_STRESS_0P001_V1",
+        "run_id": "synthetic_run",
+        "attempt_id": "synthetic_attempt",
+        "mesh_id": "top_mesh",
+        "reaction_component": "z"
+      },
+      "kind": "zero_control",
+      "sample_id": 15,
+      "raw_reaction": 0.0,
+      "normalized_force": 0.0
+    }
+  ],
+  "synthetic_identity_notice": "Repeated a/b/c/d digest tokens are fake fixture labels, not actual source or executed-input identities.",
+  "approved_physical_policy_notice": "Toy pressure2 is not the operating target. Existing approved300MPa policy remains unchanged.",
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "operational_seal_modified": false,
+  "research_results": 0,
+  "whole_status": "HOLD"
+}
