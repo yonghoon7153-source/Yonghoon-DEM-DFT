@@ -335,3 +335,6 @@ bardenhagen2000_mpm_granular_multibody_frictional_contact	the_material-point_met
 bardenhagen2000_mpm_granular_multibody_frictional_contact	the material-point method for granular materials
 bardenhagen2001_mpm_improved_contact_granular_stress_waves	an_improved_contact_algorithm_for_the_material_point_method
 bardenhagen2001_mpm_improved_contact_granular_stress_waves	an improved contact algorithm for the material point method
+# ── 초박형 복합 전해질 리뷰 (Alharbi 2026 · Preprints.org · 사용자 목록 119 번) — litdb 2026-11-10 ──
+alharbi2026_coupled_design_ultrathin_composite_se_review	coupled design principles for ultrathin composite solid electrolytes
+alharbi2026_coupled_design_ultrathin_composite_se_review	coupled_design_principles_for_ultrathin_composite_solid_electrolytes

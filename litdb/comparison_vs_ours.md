@@ -12,6 +12,7 @@
 ## 📑 Reference key (출처 약칭)
 | 약칭 | 논문 (저자·년·저널) | digest/status | 유형 |
 |---|---|---|---|
+| **[Alharbi26UCSE]** 🔧🔴 **리뷰 판정 (프리프린트 인용 감사 사례)** · ⛔ **미심사 프리프린트 (Preprints.org) · 자체 계산 0 · 자체 실험 0 · 고분자–산화물 복합막 (황화물 본문 7회) — A–D 물성 4축 진입 금지** | **Sami M. Alharbi\*** (Qassim Univ. 화학과 · 단독) 2026 **Preprints.org** (DOI 10.20944/preprints202611.0702.v1 · 게시 2026-11-06 · v1 · 34 쪽 · 참고문헌 116 = 고유 108 · 그림 8 · 표 1 · **SI 없음**) — "**Coupled Design Principles for Ultrathin Composite Solid Electrolytes: Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries**". 다섯 설계 원리의 상호 제약 · 덴드라이트 3 단계 (핵생성 → 전파 → 손상 누적) · 계면 병목 순서 (접촉 → 화학 → 기계 내구 → 공간전하). 🔑 상충을 정량으로 보인 그림 · 표 · 식 0 · 인용 번호 어긋남 다수 | ✅ `papers/alharbi2026_coupled_design_ultrathin_composite_se_review.md` (2026-11-10 · 그림 8장 전부 실독 · 인용 ↔ 목록 전수 대조) — 리뷰 판정 **§J-68** | 리뷰 (외부 · 미심사) · 자체 계산 0 · 2차 인용 |
 | **[Liu26CCTO]** ⚠ exp + 계산 보조 · ⛔ 바인더 아님 (양극 위 이온겔 중간층) · ⛔ IL 하이브리드 셀 · ⛔ σ · 창 · D · 결합에너지 수치는 우리 값 옆에 두지 않는다 | **Liequan Liu**/Z. Wu/D. Xu/Y. Qu/J. Cai/**Ze Zhang\***/**Ke Li\***/**Lingfeng Zhu\*** (南昌大 · 江西师范大 · RMIT) 2027 *J. Colloid Interface Sci.* **729**, 141891 (DOI 10.1016/j.jcis.2026.141891 · 온라인 2026-11-02) — "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li₆PS₅Cl solid-state batteries" | `papers/liu2026_ccto_colossal_dielectric_interlayer_dry_lpscl.md` ✅ (2026-11-06 · 그림 25/65 실독 · 재판독 `tools/litdb/liu2026_ccto_readout.py`) | exp (건식 LPSC-PTFE 막 + PAN/LiTFSI/IL/CCTO 중간층 · EIS · DC σ_e · LSV · 부유 · Raman · XPS · 셀) + DFT (ORCA B3LYP-D3 · CP2K PBE/PBE+U) · AIMD 600 K · 고전 MD |
 | **[Schmitt26Dry]** ⛔ 계산 0 · ⛔ 복합체 σ 는 소자 수준 (A–D 물성 4 축 금지) · 카드 트랙 = DEM (건식 공정) — 이 문서에는 §B② 산물 클래스 한 행만 | **Maik Schmitt**/P. Dippell/P. Henkel/R. Zhang/P. Räke/J. Janek/M. Rohnke/A. Kondrakov/**Torsten Brezesinski\***/**Florian Strauss\*** 2026 *Energy Storage Mater.* **89**, 105231 (DOI 10.1016/j.ensm.2026.105231 · KIT BELLA + JLU Giessen + BASF, **외부**) — "**Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries**". 건식 PTFE (0.5 wt%) 시트 vs 냉간압축 펠릿 · LiNbO₃-NCM85 + Li₆PS₅Cl · ToF-SIMS · DEMS | ✅ `papers/schmitt2026_chemomech_stability_dry_cathode_separator_sheets.md` | exp |
 | **[Bong23LNO]** ⛔⛔ **계산 0회 · 전위 눈금 0 → A–D 물성 4축 진입 금지** · ⭐⭐⭐ **코팅 5각형의 "균일도" 꼭짓점** · 🔴 **우리 §2b 보호율 *지표 타당성* 반례** | **Willy Shun Kai Bong\***/A. Shiota/T. Miwa/**Y. Morino**/**S. Kanada**/K. Kawamoto (**LIBTEC**, Ikeda, Osaka — 단일기관 6인) 2023 ***J. Power Sources* 577, 233259** (DOI 10.1016/j.jpowsour.2023.233259; refs 48 · **SI 없음** · NEDO SOLiD-EV JPNP18003; *"Data available on request"*) — "**Effect of thickness and uniformity of LiNbO₃-coated layer on LiNi₀.₅Co₀.₂Mn₀.₃O₂ cathode material on enhancement of cycle performance of full-cell sulfide-based all-solid-state batteries**". 흑연‖**argyrodite Li₍₇₋ₓ₎PS₍₆₋ₓ₎Clₓ (x≈1 = Li₆PS₅Cl, Mitsui 상용, σ≈2 mS/cm ⚠벤더스펙)**‖**LiNbO₃-코팅 NCM523** 풀셀(4 cm², 20.3 mg cm⁻², 3.0–4.35 V, 1 C · 60 °C · 300 cyc). 습식 졸-겔 유동층 분무, 시료 3종 **Nb-1 1–3 / Nb-2 5–6 / Nb-3 9–18 nm**(⚠ 두께·균일도가 "코팅 횟수" 하나로 **교락**). 300 cyc 유지율 **26.5 / 67.8 / 79.6 / 85.1 %** · `Table 1` σ_e **4.9 / 1.7 / 1.1 / 0.5 ×10⁻⁵ S cm⁻¹**(CAM:SE 50:50 vol, **VGCF 없음**) · `Fig. 5e` R3 증가비 **15.7 / 3.5 / 2.4 / 2.1**. 🔴 **핵심 = 지표 타당성 반례**: 부분피복 Nb-1 의 SE 분해산물이 무피복보다 *많은데*(S 2p 51 % vs 45 %) 유지율은 2.6배. ⛔ **계산 0회** | ✅ `papers/bong2023_linbo3_thickness_uniformity_ncm523.md` — 물성 판정은 **§H 2행**, 방법·판정은 **§J-28** | 실험 전용 (계산 0) |
@@ -6896,6 +6897,22 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 | 작동 상태 (§4.3–4.4) | 초기 구조 ≠ 작동 구조 · 전해질이 첫 사이클에 바뀐다 · 끝점 용량은 분리막 지표가 아니다 | 보고량 카드 규율과 같은 말 | 🔵 외부 인용 가능 (단 리뷰 자신은 스핀 · 계산 조건 0 줄) |
 
 ⛔ 인용 금지 — 리뷰의 흡착 · 장벽 수치 (전량 2차 인용 · 계산 조건 0 줄) · Li₂S 벌크 값 (gap 3.398 eV · ε₀ 7.80 · Z*_S 1.91 · B₀ ≈ 40 GPa figure-read) 은 li2s 트랙 방향잡기용 — 원전 확인 전 우리 db 옆에 두지 않는다. 후속: `Fig. 9c` 원전 Cui *Nat. Energy* 9, 1084 (2024) (ASSB 양극 균질화 · litdb 미보유).
+
+---
+
+### J-68. 🔧🔴 **리뷰 판정 — [Alharbi26UCSE] 초박형 고분자–세라믹 복합 전해질 '결합 설계 원리' 리뷰 (Preprints.org 2026 · 미심사): 두께 다리 · 덴드라이트 3 단계 · 계면 병목 순서 — 그리고 인용 번호 감사** (2026-11-10 신설)
+
+> 📎 출처: `papers/alharbi2026_coupled_design_ultrathin_composite_se_review.md` (그림 8/8 실독 · 본문 인용 ↔ 참고문헌 목록 전수 대조). ⛔ 미심사 프리프린트 · 자체 계산 · 실험 0 · 재료는 고분자–산화물 복합막 (황화물 본문 7 회 · Li₆PS₅Cl 0 회) — A–D 물성 4축에 행을 만들지 않는다.
+
+| 서술 | 리뷰의 내용 | 우리 규율로 다시 읽으면 | 판정 |
+|---|---|---|---|
+| 두께 ↔ 저항 몫 | "벌크 저항은 두께에 비례 · 계면 저항은 아니다" → 얇을수록 계면이 지배 (면저항 식 · 값은 리뷰에 없음) | R·A = t/σ — 전도도 0.5 mS cm⁻¹ 이상 · 두께 20 µm 이하이면 벌크 면저항은 수 Ω cm² 아래 (우리 산술 · 카드 §3-2). 우리 수송 우위 (comp1 ↔ modelc 상대 차이) 는 κ 축 진술이고 막 · 셀 분극 진술이 아니다 (`[Oh26-Pol]` 다리와 같은 결론) | 🔵 논리만 (식은 인용 없이 직접 쓴다) |
+| 막 유효 전도도 | σ_eff = σ_bulk·(ε/τ) · "연속 골격이 상한 · 화학은 2차" · "전도도가 mS cm⁻¹ 급을 넘으면 도핑은 수확 체감" (근거 인용 없음) | 우리 MD 값은 σ_bulk 한 인자 (입계 · 기공 없는 벌크) 에만 대응한다. '수확 체감' 은 전도도 목적 도핑 이야기 — 산물 · 분해 화학 목적 도핑 (cascade) 은 그 논지의 범위 밖. τ 의 이름 (factor) 과 정의 (경로 길이 비) 가 섞여 있다 | 🟡 근거 없는 문턱 — 외부 근거로 쓰지 않는다 |
+| 덴드라이트 판정 | Monroe–Newman 은 전파 단계만 다룬다 · 3 단계 (핵생성 → 전파 → 손상 누적) · "전단 탄성률을 단독 표적에서 내리고 풀셀 CCD 를 1차 서술자로" | 우리 G_VRH (0 K · 단결정 · relaxed-ion) 를 덴드라이트 판정에 직접 쓰지 않는 규율과 부합. 리뷰의 문턱 값 · LLZO 전단 탄성률 · 입계 연화 귀속은 값 · 출처 의심 (원문 미대조 · 카드 §10b) | 🔵 틀만 · ⛔ 리뷰의 탄성률 값을 우리 G 옆에 두지 않는다 |
+| 계면 병목 | 접촉 → 화학 → 기계 내구 → 공간전하 순 · "서로 대체 불가한 별개 문제" | 우리 그룹 리뷰 `[Kang]` 의 되먹임 (분해 ↔ 파괴 · 분리 불가) 과 **결합의 종류가 다르다**. 분해 산물 부피 · 계면층 응력 서술 0 문장 (부피 변화는 Li 도금 / 박리로만 · 카드 §11-2) | 🟡 황화물에 그대로 옮기지 않는다 · cascade 갭 B 의 약한 음성 근거 |
+| 인용 감사 | Li₂ZrCl₆ 전도도 값의 인용이 [9] · [32] · [32,33] (목록상 맞는 것은 [35] · 본문 미인용) · 참고문헌 중복 8 · 미인용 10 · 그림 출처 2 건이 목록에 없음 | 리뷰를 거쳐 값을 옮기지 않는다는 규율의 사례 | 🔴 프리프린트 인용 감사 사례 |
+
+⛔ 인용 금지 — 이 리뷰의 수치 · 귀속 전부 (2차 인용 · 번호 어긋남 · 미심사). 필요한 내용은 원전에서: 개시 / 전파 구분 = Ning *Nature* 618, 287 (2023) (Li₆PS₅Cl · litdb 미보유) · 조립 편차 = *Nat. Energy* 9, 1310 (2024) (미보유) · 건식 sub-20 µm 막 = Yoon *Small* (2024) (미보유).
 
 ---
 

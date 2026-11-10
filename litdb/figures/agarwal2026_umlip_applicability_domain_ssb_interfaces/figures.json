@@ -32,7 +32,9 @@
     546.1,
     513.2
    ],
-   "recrop": "2026-11-10 litdb-curator: auto crop kept only the lower third (bbox y 383.5-513.2) - in-figure text labels were taken as the upper crop boundary; clip = union of vector drawings (92,87,539,512) + embedded structure rasters + figure text (top labels at y 75) + margin, above caption (y 515)"
+   "recrop": "2026-11-10 litdb-curator: auto crop kept only the lower third (bbox y 383.5-513.2) - in-figure text labels were taken as the upper crop boundary; clip = union of vector drawings (92,87,539,512) + embedded structure rasters + figure text (top labels at y 75) + margin, above caption (y 515)",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (recropped full figure)"
   },
   {
    "key": "f2",
@@ -52,7 +54,9 @@
    "h": 1689,
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
-   "blank": 0.876
+   "blank": 0.876,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + marker centres read from PDF vector paths (check: recomputed 6-chemistry mean = plotted Mean marker)"
   },
   {
    "key": "f3",
@@ -72,7 +76,9 @@
    "h": 1654,
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
-   "blank": 0.883
+   "blank": 0.883,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + marker centres read from PDF vector paths (check: the six printed pairwise-order accuracies reproduced)"
   },
   {
    "key": "f4",
@@ -92,7 +98,9 @@
    "h": 1449,
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
-   "blank": 0.941
+   "blank": 0.941,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + marker centres read from PDF vector paths (check: Arrhenius refit of panel a points = panel b Ea within 0.001 eV)"
   },
   {
    "key": "f5",
@@ -119,7 +127,9 @@
     546.1,
     542.8
    ],
-   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 268.2-542.8) cut off the marker legend row at y 256-266 (which Miller index each marker is); clip extended upward to the end of the preceding body paragraph (y 240) + margin; caption starts at y 545"
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 268.2-542.8) cut off the marker legend row at y 256-266 (which Miller index each marker is); clip extended upward to the end of the preceding body paragraph (y 240) + margin; caption starts at y 545",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (recropped with legend row) + marker centres read from PDF vector paths (check: text deltas and means reproduced)"
   },
   {
    "key": "f6",
@@ -140,7 +150,9 @@
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
    "blank": 0.958,
-   "manual_crop": "2026-11-10 litdb-curator: tool reported f6 as a number gap ('p12 그래픽 없음(img0/draw0)') - Fig. 6 is a vector-only scatter plot (single form XObject) on p.12 between the body paragraph ending at y 276 and its caption (y 554); clip = union of vector drawings (186,294,443,551) + axis/label text spans (193..434, 319..545) + margin"
+   "manual_crop": "2026-11-10 litdb-curator: tool reported f6 as a number gap ('p12 그래픽 없음(img0/draw0)') - Fig. 6 is a vector-only scatter plot (single form XObject) on p.12 between the body paragraph ending at y 276 and its caption (y 554); clip = union of vector drawings (186,294,443,551) + axis/label text spans (193..434, 319..545) + margin",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (manual crop) + marker centres read from PDF vector paths"
   },
   {
    "key": "f7",
@@ -167,7 +179,9 @@
     529.0,
     438.1
    ],
-   "recrop": "2026-11-10 litdb-curator: auto crop kept only panels c-d (bbox y 268.5-438.1) - the mid-figure legend row (y 259-267) was taken as the upper boundary so panels a-b were lost; clip = union of vector drawings (72,72,523,437) + margin, above caption (y 440)"
+   "recrop": "2026-11-10 litdb-curator: auto crop kept only panels c-d (bbox y 268.5-438.1) - the mid-figure legend row (y 259-267) was taken as the upper boundary so panels a-b were lost; clip = union of vector drawings (72,72,523,437) + margin, above caption (y 440)",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (recropped, panels a-d) + marker centres and line vertices read from PDF vector paths (check: Pearson r 0.762 of panel c reproduced)"
   },
   {
    "key": "t1",
@@ -187,7 +201,9 @@
    "h": 1643,
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
-   "blank": 0.925
+   "blank": 0.925,
+   "viewed": false,
+   "viewed_how": "not read as an image - Table 1 transcribed from the PDF text layer / page render (convention: tables from text)"
   }
  ],
  "missing_labels": [
