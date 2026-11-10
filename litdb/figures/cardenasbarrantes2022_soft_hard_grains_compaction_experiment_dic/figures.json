@@ -2,9 +2,10 @@
  "slug": "cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-11-09",
+ "generated": "2026-11-10",
  "sources": [
-  "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf"
+  "e92d2b5c-2._Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+  "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf"
  ],
  "figures": [
   {
@@ -59,7 +60,7 @@
    ],
    "manual_crop": "clip = embedded raster rect padded ~2 pt (native 875×973 px); caption excluded; border-ink check 0; viewed (2026-11-09, litdb-curator)",
    "viewed": true,
-   "mpm_note_ko": "실험에서도 Z − ZJ 가 (φ − φJ)^0.5 로 κ 무관하게 접힌다 (k = 4.9 — 같은 그룹 시뮬 2020 의 ξ = 5.1 과 근접): 시뮬과 실험이 독립으로 같은 구조 법칙을 낸 frame[4] 형 교차검증 사례.  (b) 일축판 식 (1) 이 κ 0.2–1 의 φ − φJ (P) 를 따른다.  재설계 모델도 이 실험처럼 jamming 이하 느슨한 패킹에서 시작해 φJ 를 출력으로 얻어야 같은 축 비교가 된다 (Γ · φJ · Z0 값은 SM 에만 있어 [미확인]).  ※ (a) y 축 맨 아래 눈금이 '0.8' 로 인쇄 (0.0 의 오기로 보임)."
+   "mpm_note_ko": "실험에서도 Z − ZJ 가 (φ − φJ)^0.5 로 κ 무관하게 접힌다 (k = 4.9 — 같은 그룹 시뮬 2020 의 ξ = 5.1 과 근접): 시뮬과 실험이 독립으로 같은 구조 법칙을 낸 frame[4] 형 교차검증 사례.  (b) 일축판 식 (1) 이 κ 0.2–1 의 φ − φJ (P) 를 따른다.  재설계 모델도 이 실험처럼 jamming 이하 느슨한 패킹에서 시작해 φJ 를 출력으로 얻어야 같은 축 비교가 된다 (Γ · φJ · ZJ · φmax · E* 값 = SM 표 I · II · 11-10 확인: 그 값으로 식 (1) 을 계산하면 실선과 모양은 같고 압력은 3–18 % 높다 [카드 산술 + 판독]).  파선은 4.50·x^0.50 으로 읽힌다 (본문 k = 4.9 · native raster 추적).  ※ (a) y 축 맨 아래 눈금이 '0.8' 로 인쇄 (0.0 의 오기로 보임)."
   },
   {
    "key": "f3",
@@ -116,6 +117,129 @@
    "mpm_note_ko": "무른 입자 평균 von Mises 변형 ⟨𝒞⟩ 가 작은 변형에서는 밀도에, 큰 변형에서는 압력에 선형 — '이산 입자계 → 연속체 같은 계' 전이가 C_c = 0.991 ± 1.2 × 10⁻³ 에서 κ 무관하게 일어난다.  우리 MPM 은 출발부터 연속체라 이 전이의 앞쪽 (이산 구간) 을 못 담는다 → 느슨한 패킹에서 시작하는 재설계 (A′ · B) 가 전이점을 재현하는지가 시험 항목.  (c) 변형 분포 폭 σ_C 의 선형 구간이 κ 가 작을수록 일찍 끝난다 (cut-off ≈ 0.002 → 0.072, 판독) = 강체가 많으면 무른 입자에 변형이 몰린다 — SE 국부 응력 · 소성 변형 집중 (MPM 응력장 출력) 과 대조할 관측량.  ※ σ_C 축에 음수가 그려져 있다 (기준 이동으로 보이나 설명 없음)."
   },
   {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "FIG. 1 (Supplemental Material). Evolutions of (a) mean pressure P as a function of the mean strain ϵ, (b) mean packing fraction φ as a function of the mean strain ϵ and (c) mean coordination Z as a function of the mean strain ϵ all for κ = 0.5 (as an example). Vertical and horizontal red dot lines are plotted on each curve to define the jammed state (see the text for more details).",
+   "rotated_deg": 0,
+   "bbox": [
+    88.2,
+    49.2,
+    527.4,
+    290.4
+   ],
+   "w": 2440,
+   "h": 1341,
+   "dpi": 400,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.978,
+   "src_native": null,
+   "manual_crop": "vector figure the tool skipped ('영역 없음' — axis/tick text blocks leave no caption-free band); clip = union of the three panels' canvas rects, axis text and the (a)(b)(c) tags, padded ~2–3 pt, rendered at 400 dpi; caption excluded; border-ink check 0; viewed (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SM 그림 1 — κ = 0.5 의 평균 P · φ · Z 대 전역 변형 ε (점 20 개 · 가로 · 세로 오차막대).  재밍 판정의 실물: 압력이 0 근처에 머물다 오르기 시작하는 ε 를 ε_J 로 잡고 (빨간 세로 점선 ε0 = 0.049 · 가로 점선 P0 ≈ 0.92 kPa [벡터 판독]) 그 ε 에서 φ_J (0.831) · Z_J (점선 3.55 · 표 I 은 3.50 ± 0.07) 를 읽는다.  그림 이름표는 첨자 0, 본문 · 표는 첨자 J — 같은 값이라 식 (1) 의 Z0 · φ0 = ZJ · φJ 임이 확인된다.  재설계 모델의 '느슨한 출발 → φJ 를 출력으로' 에 그대로 쓸 수 있는 절차 견본 (판 힘이 오르기 시작하는 변형에서 충전율 · 배위수를 읽는다 · 문턱값은 결과 전에 적는다).  φ 점이 Δφ ≈ 0.0054 등간격 = φ 구간별 평균으로 보인다 (카드 추정).  φ(ε) 가 2D 면적 보존 관계보다 낮다 (끝에서 0.905 vs 0.985 · 카드 산술) — 비압축 원기둥이 높이 방향으로 부푸는 평면 응력 조건의 흔적으로 읽힌다."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "FIG. 2 (Supplemental Material). Evolution of the probability density function of the von Mises strain in the soft particles along the compression as a function of the packing fraction. Data comes from an experiment with a softness ratio of 0.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    204.4,
+    483.9,
+    411.7,
+    601.7
+   ],
+   "w": 1297,
+   "h": 737,
+   "dpi": 450,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.762,
+   "src_native": [
+    1399,
+    783
+   ],
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox [48.0, 446.8, 568.2, 605.7], 2168×663 px) pulled in the section heading 'VON MISES STRAIN PROBABILITY DENSITY FUNCTIONS' and full-page-width blank margins; clip = embedded raster rect (206.4, 485.9, 409.6, 599.7; native 1399×783 px, alpha-masked) padded 2 pt, rendered at 450 dpi (≈ native); caption excluded; border-ink check 0; viewed",
+   "viewed": true,
+   "mpm_note_ko": "SM 그림 2 — κ = 0.5 한 실험의 무른 입자 von Mises 변형 𝒞 확률밀도 (세로 로그 10⁻³–10³ · 색 = 충전율 0.75 → 0.90).  느슨할 때는 𝒞 = 1 의 뾰족한 봉우리 (≈ 1.4 × 10²), 조밀해질수록 봉우리가 낮아지고 (≈ 10) 꼬리가 0.7–1.5 로 퍼지며 오른쪽 (𝒞 > 1) 꼬리가 더 무겁다 [판독].  입자 '안' 의 변형이 고르지 않고 분포를 가진다는 직접 증거 — 재설계 MPM 의 SE 누적 변형장 히스토그램과 모양 (봉우리 + 지수 꼴 꼬리 · 비대칭) 을 견줄 관측량.  ※ 이 pdf 의 폭 (판독 어림 표준편차 ≈ 0.007 → 0.09) 은 본문 그림 4c 의 σ_𝒞 눈금 (×10⁻⁴) 과 자릿수가 다르다 — 본문의 ⟨𝒞⟩ · σ_𝒞 통계 정의는 SM 에도 없다."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "FIG. 3 (Supplemental Material). Macroscopic volumetric strain ϵ as a function of the local strain ϵl at the small deformation domain for all κ values.",
+   "rotated_deg": 0,
+   "bbox": [
+    203.0,
+    149.4,
+    412.0,
+    272.6
+   ],
+   "w": 1162,
+   "h": 685,
+   "dpi": 400,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.935,
+   "src_native": null,
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox [51.3, 145.4, 564.8, 276.2], 2141×546 px) spanned the full page width — about two thirds blank; clip = figure canvas rect (206.4, 151.4, 409.7, 266.7) + axis-label text, padded ~2–3 pt, rendered at 400 dpi; caption excluded; border-ink check 0; viewed",
+   "viewed": true,
+   "mpm_note_ko": "SM 그림 3 — 국소 변형 (ε_l − ε_l0) 대 전역 변형 (ε − ε0), κ 0.2 · 0.5 · 0.8 · 1.0 + 직선 맞춤.  식 (1) 의 Γ 가 여기서 나온다: 전역 ÷ 국소 변형의 비례 계수 (표 II: 5 · 4 · 3.4 · 3.05).  강체가 많을수록 (κ ↓) Γ 가 크다 = 같은 전역 변형을 접촉 변형이 아닌 재배열이 더 많이 맡는다.  벡터 판독: 표식의 원점 통과 맞춤은 5.19 · 3.86 · 3.28 · 3.03 으로 표 II 와 ±4 % 안이지만, 그려진 직선의 기울기 역수는 4.39 · 3.57 · 3.55 · 3.06 (κ 0.2 · 0.5 에서 표와 11–12 % 차이 · 맞춘 구간 미기재).  우리 DEM 압축 궤적에서 ⟨δ/d⟩ 대 판 변형으로 같은 비를 새 런 없이 잴 수 있다 (D0) — 3D 판 Γ 4.4 · 2D 시뮬 4 와 나란히 놓을 값.  ※ 캡션은 '전역 대 국소' 라 쓰지만 축은 세로 = 국소, 가로 = 전역."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "TABLE I (Supplemental Material). Averaged values of φJ, ZJ and εJ at the jammed state for the different samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    214.9,
+    340.7,
+    401.2,
+    411.8
+   ],
+   "w": 1036,
+   "h": 396,
+   "dpi": 400,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.878,
+   "src_native": null,
+   "manual_crop": "table the tool cannot label (roman-numeral caption 'TABLE I.' — the tool handles arabic labels only; filed as S1); table region rendered by hand at 400 dpi incl. top/bottom rules; caption (below the table) excluded; border-ink check 0; viewed (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SM 표 I — 재밍 상태의 평균값: κ 0.2 · 0.5 · 0.8 · 1.0 에서 Z_J 3.31 ± 0.19 · 3.50 ± 0.07 · 3.25 ± 0.04 · 3.30 ± 0.04, φ_J 0.834 ± 0.007 · 0.831 ± 0.002 · 0.810 ± 0.005 · 0.780 ± 0.008, ε_J 0.017 ± 0.016 · 0.049 ± 0.002 · 0.021 ± 0.011 · 0.021 ± 0.011.  φ_J 가 무른 분율과 함께 내려간다 (0.834 → 0.780) — 느슨한 출발의 재밍 충전율 자체가 조성의 출력.  재설계 모델이 출발 패킹의 φ_J · Z_J 를 조성별로 기록해야 하는 이유 (같은 축 비교).  ※ ± 의 정의 (표준편차인지 표준오차인지) 없음 · κ 0.8 과 1.0 의 ε_J 칸이 글자까지 같다 · SM 글은 Z_J 가 '4 에 더 가깝다' 고 쓰지만 표의 값은 3.25–3.50."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "TABLE II (Supplemental Material). Parameters used in Eq. 1 (main paper) for the different mixture ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    251.2,
+    49.3,
+    364.9,
+    120.3
+   ],
+   "w": 633,
+   "h": 396,
+   "dpi": 400,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.898,
+   "src_native": null,
+   "manual_crop": "table the tool cannot label (roman-numeral caption 'TABLE II.' — filed as S2); table region rendered by hand at 400 dpi incl. top/bottom rules; caption (below the table) excluded; border-ink check 0; viewed (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SM 표 II — 본문 식 (1) 에 넣은 값: κ 0.2 · 0.5 · 0.8 · 1.0 에서 φmax 0.88 · 0.94 · 0.98 · 0.99, E* 2.67 · 1.00 · 0.62 · 0.50 MPa, Γ 5 · 4 · 3.4 · 3.05.  이 값과 표 I (φ_J · Z_J) · k = 4.9 · μM = 0.25 를 넣으면 그림 2b 실선이 모양은 그대로, 압력은 3–18 % 높게 재현된다 (카드 산술 + 판독).  ※ 본문과 어긋나는 곳 둘: φmax(κ = 1) 은 본문 0.97 ↔ 표 0.99 · E* 는 본문 정의 E0/[2κ(1 − ν²)] 에 E0 0.45 MPa · ν 0.5 를 넣은 값 (0.30/κ MPa) 의 1.65–1.78 배 (E ≈ 0.75 MPa 를 넣은 것과 같다).  압밀 식 하나를 닫는 데 조성마다 잰 값 다섯 (φ_J · Z_J · φmax · E* · Γ) 이 든다는 목록 — 후보 모델의 맞춤 값 수 (조건 R5) 를 셀 때의 대조."
+  },
+  {
    "key": "e1",
    "kind": "equation",
    "label": "eq1",
@@ -137,9 +261,105 @@
    "src_native": null,
    "manual_crop": "equation region rendered by hand — the PDF text layer splits fractions and sub/superscripts, so the equation is unreadable as text; clip = equation line(s) incl. number, body text excluded; viewed (2026-11-09, litdb-curator)",
    "viewed": true,
-   "mpm_note_ko": "일축 압밀 법칙: 2020 판의 단일 입자 상수 b 자리에 E*/(4Γ) · (1 + μM) · (φmax − φJ)/φJ 가 들어간다 (E* = E0/[2κ(1 − ν²)]).  식 안은 Z0 · φ0 인데 본문은 ZJ · φJ 로 정의 — 표기 혼용, Γ 값은 SM 에만 ([미확인]).  등방 단위 시험에서 일축 침대로 옮길 때 어떤 인자가 끼는지의 견본."
+   "mpm_note_ko": "일축 압밀 법칙: 2020 판의 단일 입자 상수 b 자리에 E*/(4Γ) · (1 + μM) · (φmax − φJ)/φJ 가 들어간다 (E* = E0/[2κ(1 − ν²)]).  식 안은 Z0 · φ0 인데 본문은 ZJ · φJ 로 정의 — 표기 혼용이고 같은 값이다 (SM 그림 1 의 이름표 ε0 · P0 · φ0 · Z0 = 본문 · 표 I 의 ε_J · φ_J · Z_J · 11-10 확인).  Γ = 전역 ÷ 국소 변형비, 값은 SM 표 II (5 · 4 · 3.4 · 3.05).  등방 단위 시험에서 일축 침대로 옮길 때 어떤 인자가 끼는지의 견본."
+  },
+  {
+   "key": "eS1",
+   "kind": "equation",
+   "label": "eqS-tensor",
+   "page": 1,
+   "file": "eq_S01_04_tensor_computation.png",
+   "caption": "Supplemental Material p.1, section TENSOR COMPUTATION — Eqs. (1)–(4): F = ∇u + I (deformation gradient from the displacement field u); C = FᵀF (right Cauchy-Green strain tensor); E = 1/2(C − I) (Green-Lagrangian strain tensor; the small-deformation strain ε); 𝒞 = √(C : C) (von Mises measure of C).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    163.4,
+    565.0,
+    453.6
+   ],
+   "w": 2143,
+   "h": 1210,
+   "dpi": 300,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.964,
+   "src_native": null,
+   "manual_crop": "text block with equations rendered by hand at 300 dpi (the PDF text layer scatters the tensor arrows and the square-root sign); clip = section heading to Eq. (4), full text width padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SM 식 (1)–(4) — 변위장 u 에서 변형 기울기 F = ∇u + I → 오른쪽 Cauchy–Green 텐서 C = FᵀF → Green–Lagrange E = ½(C − I) → 'von Mises 척도' 𝒞 = √(C : C).  인쇄된 식 그대로면 무변형 (C = I) 에서 2D 는 √2 인데 그림들은 1 에서 출발한다 → 차원수로 나누는 정규화가 빠져 있다 (카드 산술 · 같은 장치의 선행 논문 ref [12] 도 같은 꼴).  이름은 von Mises 지만 편차 성분이 아니라 C 전체의 이중 축약이라 면적 변화도 담는다.  MPM 은 입자마다 F 를 들고 있어 같은 척도를 그대로 낼 수 있다 — 견줄 때 정규화와 2D/3D 를 맞출 것."
+  },
+  {
+   "key": "eS2",
+   "kind": "equation",
+   "label": "eqS-jamming",
+   "page": 1,
+   "file": "eq_S04b_jamming_criterion_text.png",
+   "caption": "Supplemental Material p.1, section CRITERION FOR THE JAMMING TRANSITION (text): all quantities averaged over three initial states; the jamming transition is identified from the averaged pressure P versus averaged deformation ε — P stays close to 0, then increases from a given deformation εJ, which is chosen as the jamming transition; φJ and ZJ are read by intersecting the vertical line at εJ with the φ–ε and Z–ε data; Table I summarizes φJ, ZJ, εJ for each κ; ZJ found between 3 and 4.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    463.4,
+    565.0,
+    648.8
+   ],
+   "w": 2143,
+   "h": 774,
+   "dpi": 300,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.875,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand at 300 dpi (inline symbols are split in the PDF text layer); clip = section heading to the end of its second paragraph, full text width padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SM 문단 — 재밍 판정 기준: 세 초기 상태로 평균한 P–ε 곡선에서 압력이 0 근처에 머물다 오르기 시작하는 변형 ε_J 를 재밍으로 잡고, 그 ε 에서 φ–ε · Z–ε 자료를 읽어 φ_J · Z_J 를 정한다.  수치 문턱은 적지 않았다 (그림의 P0 선 ≈ 0.92 kPa 는 카드의 벡터 판독).  우리 재설계의 'φJ 판정 규칙을 결과 전에 적는다' 에 그대로 쓸 수 있는 절차 — 단 문턱 (판 압력 몇 % 에서 '오른다' 고 볼지) 을 우리가 정해 적어야 한다."
+  },
+  {
+   "key": "eS3",
+   "kind": "equation",
+   "label": "eqS-contact-length",
+   "page": 3,
+   "file": "eq_S05_11_contact_length_linearity.png",
+   "caption": "Supplemental Material p.3, section LINEARITY FOR <l> VS. φ − φJ — Eqs. (5)–(11): L/2 = √(Rδ) (Hertz); l = L/(2πR) (relative contact length of one contact); <l> = ZL/(2πR); Z = k√(φ − φJ); ε = (φ − φJ)/φJ; ε = 4δ/H0 (square network); <l> ∼ √δ√δ = δ ∼ φ − φJ.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    51.4,
+    565.0,
+    551.8
+   ],
+   "w": 2143,
+   "h": 2086,
+   "dpi": 300,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.971,
+   "src_native": null,
+   "manual_crop": "text block with equations rendered by hand at 300 dpi (fractions and roots are split in the PDF text layer); clip = section heading to Eq. (11), full text width padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SM 식 (5)–(11) — 상대 접촉 길이의 정의와 선형 척도 유도: 접촉 하나의 l = L/(2πR) (접촉 길이 ÷ 입자 둘레), 입자 평균은 배위수를 곱한 ⟨l⟩ = ZL/(2πR) = 둘레 중 접촉한 몫 (2D 판 피복).  Hertz L/2 = √(Rδ) · δ ∼ φ − φJ · Z ∼ √δ 를 이어 ⟨l⟩ ∼ δ ∼ φ − φJ.  ⚠ 식 (8) 이 Z = k√(φ − φJ) 로 Z_J 를 뺀 꼴이다 — 본문의 Z − Z_J = k(φ − φJ)^0.5 를 넣으면 ⟨l⟩ ∼ Z_J(φ − φJ)^0.5 + k(φ − φJ) 이고 실험 범위 전체에서 앞 항이 크다 (카드 산술) → 이 유도는 선형을 '예측' 하지 못한다.  같은 그룹 2021 학회판 (ref [33]) 은 이 선형이 2D Hertz 법칙과 맞지 않는다고 적었다.  ⇒ 선형 · 조성 무관은 실측 사실로만 가져오고, 점접촉 척도 논리로 뒷받침된 것으로 쓰지 않는다."
+  },
+  {
+   "key": "eS4",
+   "kind": "equation",
+   "label": "eqS-uniaxial",
+   "page": 3,
+   "file": "eq_S12_13_uniaxial_compaction_model.png",
+   "caption": "Supplemental Material p.3–4, section UNIAXIAL COMPACTION MODEL FOR MIXED GRANULAR SYSTEMS — Eqs. (12)–(13): P ≃ α_a (Zφ/π) σ_l with σ_l = ⟨ℓ⟩⟨f_n⟩/(Ld²) (uniaxial, plane-stress; P = σ_yy; cylinder volume πLd²/4); α_a ≃ 1 + μM (μM ≈ 0.25 for frictional disks, assimilated for cylinders); σ_l ≃ (π/4) E* ε_l (Hertz); E* ≈ E/(2κ(1 − ν²)); Γ = coefficient of proportionality between global ε and local ε_l (Fig. 3, Table II).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    561.4,
+    565.0,
+    726.4
+   ],
+   "w": 2143,
+   "h": 1293,
+   "dpi": 300,
+   "src": "0fbee5ed-2._Sup_Experimental_validation_of_a_micromechanically_based_compaction_law_for_mixtures_of_soft_and_hard_grains.pdf",
+   "blank": 0.906,
+   "src_native": null,
+   "manual_crop": "text block with equations rendered by hand at 300 dpi; the section runs over two pages with Table II and Fig. 3 floated in between — PNG = vertical stitch of SM p.3 [51.0, 561.4, 565.0, 726.4] + p.4 [51.0, 311.8, 565.0, 456.8]; bbox/page describe the first part only; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SM 식 (12)–(13) — 일축 확장의 실제 내용: 평면 응력 일축에서 P = σ_yy, P ≃ α_a(Zφ/π)σ_l (σ_l = ⟨ℓ⟩⟨f_n⟩/(Ld²)), 접촉 · 힘 망의 이방성 상수 α_a 는 재기 어려워 거시 마찰로 바꿔 α_a ≃ 1 + μM (원판 집합의 0.25 를 원기둥에 빌림), Hertz 로 σ_l ≃ (π/4)E*ε_l, 혼합은 '고르게 섞임 + 두 종류의 평균 접촉 수가 같음' 가정으로 E* ≈ E/(2κ(1 − ν²)), 국소 ↔ 전역 변형은 ε = Γε_l.  이으면 P ≃ (E*/4Γ)(1 + μM)Zφε 이고 ε 를 큰 변형 꼴 ((φmax − φJ)/φJ)·ln[(φmax − φJ)/(φmax − φ)] 로 바꾼 것이 본문 식 (1) — 그 로그 꼴의 유도는 SM 에도 없고 2020 판 (ref [6, 7]) 에 맡긴다 (작은 변형 극한에서 두 식이 같아지는 것은 카드 검산).  등방 단위 시험에서 일축 침대로 옮길 때 끼는 인자의 목록: 이방성 (1 + μM) · 국소/전역 변형비 Γ · 혼합 유효 영률 — 전부 탄성 · Hertz 가정 위."
   }
  ],
  "missing_labels": [],
- "missing_labels_resolved": "all printed figures (Fig. 1, Fig. 2, Fig. 3, Fig. 4) cropped by hand at 300 dpi with PyMuPDF (no automatic extractor run — staged crops for the canonical drawer); key equations added as kind=equation because the PDF text layer garbles them; every PNG opened and checked; border-ink check 0 for all (2026-11-09, litdb-curator)"
+ "missing_labels_resolved": "all printed figures (Fig. 1, Fig. 2, Fig. 3, Fig. 4) cropped by hand at 300 dpi with PyMuPDF (no automatic extractor run — staged crops for the canonical drawer); key equations added as kind=equation because the PDF text layer garbles them; every PNG opened and checked; border-ink check 0 for all (2026-11-09, litdb-curator) | 2026-11-10 Supplemental Material added (litdb-curator): SM Fig. 1 by hand (tool: '영역 없음'), SM Fig. 2 · 3 = tool crops re-cropped (recrop: neighbouring section heading / page-wide blank margins), SM Table I · II by hand (roman-numeral captions are outside the tool's label rule; filed as tab_S1 · tab_S2), 4 SM equation/text blocks as kind=equation (the uniaxial-model block is a vertical stitch of SM p.3 + p.4); main-text crops (fig_1–4 · eq_01) untouched — only the two notes that assumed the SM was missing were updated; every new PNG opened and checked; border-ink check 0 for all; SM equation-block labels carry no digits (the SM equation numbers are in the file names and captions) so that the tool's --audit gap check, which reads label digits, does not raise a false 'number gap'"
 }

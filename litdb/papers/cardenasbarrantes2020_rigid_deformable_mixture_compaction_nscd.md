@@ -9,12 +9,13 @@
 > ⇒ **절대값 전이 0 건.  형식 (식 6 → 11 → 12) · 관측량 목록 · 추세 (φmax 가 κ 와 함께 오른다 · 마찰이 내린다)
 > 만 가져온다.**
 >
-> **같은 그룹 3 편 묶음** (모두 LMGC Montpellier · 1저자 Cárdenas-Barrantes):
+> **같은 그룹 묶음 (4 편 — 3D 판 2026-11-10 추가)** (모두 LMGC Montpellier · 1저자 Cárdenas-Barrantes):
 > 이 카드 = **모체** (PRE 2020, 10 쪽) ·
 > `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` = 같은 계산의 **학회 단편** (Powders & Grains 2021)
 > — 이 카드에 없는 **시작 상태 표 (φ0 · Z0)** 가 거기에만 있다 ·
 > `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` = 같은 법칙의 **2D 실험 검증 · 일축 확장**
-> (PRE Letter 2022) — 그 논문의 ref [22] 가 바로 이 논문이다.
+> (PRE Letter 2022) — 그 논문의 ref [22] 가 바로 이 논문이다 (보충자료까지 반영 · 11-10) ·
+> `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` = **3D 판** (무른 구만 · Soft Matter 2022 · 구 50 · 100 개).
 
 ---
 
@@ -434,7 +435,7 @@ is φmax(κ), a bulk-modulus equation (Eq. 13), and a demixed-phase estimate φm
 | φ0 ≈ 0.81 (2D) vs 우리 3D 구 jammed 충전 | **차원 인공물** | 2D 원판의 jammed 충전률은 3D 구보다 훨씬 높다 — 어떤 φ 값도 옮기지 않는다 |
 | 초탄성 vs J2 소성 | **구성식 차이 (실제)** | 이 논문 무른 입자는 가역 탄성이라 소성 잔류가 없다 (탈압 시 마찰 고착 몫 말고는 되돌아올 것이라는 것은 **추론** — 논문은 탈압을 안 했다) — 우리 SE 는 기공을 유지 |
 | P/E 척도 vs 300 MPa | **척도 부재** | 초탄성 · 비압축이라 P/E 하나로 척도화되고 E 절대값은 미기재 |
-| 등방 vs 일축 | **경계조건** | 일축 확장은 2022 실험판 (`cardenasbarrantes2022_…`) 이 (1 + μM) · Γ 로 다룸 |
+| 등방 vs 일축 | **경계조건** | 일축 확장은 2022 실험판 (`cardenasbarrantes2022_…`) 이 (1 + μM) · Γ 로 다룸 — 그 보충자료 (11-10 반영): 이방성 상수 α_a ≃ 1 + μM · Γ = 전역 ÷ 국소 변형비 (κ 0.2 → 1 에서 5 → 3.05) · 실험은 **평면 응력** 이라 이 논문 (평면 변형률) 과 φ 의 뜻도 다르다 |
 | 크기비 없음 | **범위 밖** | 우리 SE 는 AM 보다 4–9 배 작아 AM 틈을 채운다 — 상분리 식 (15) 의 가정과 정반대 |
 | 점착 · 융합 없음 | **우리 MPM 인공물** | 우리 단일 속도장은 닿은 SE 를 융합 (사실상 무한 마찰 + 점착) — 이 논문은 μ 0–0.8 의 미끄럼을 푼다 |
 
@@ -537,6 +538,9 @@ is φmax(κ), a bulk-modulus equation (Eq. 13), and a demixed-phase estimate φm
 6. **[문헌] 확보 후보 (litdb 미보유)**: 순수 변형 입자 원판 **Cantor et al. PRL 124, 208003 (2020)** (이 논문 ref [62]) · 3D 판
    **Soft Matter 18, 312 (2022)** · 오각형 판 **PRE 103, 062902 (2021)** (둘 다 2022 실험판 refs [24] · [23]) · 실험 학회판
    **Barés et al. EPJ Web Conf. 249, 05004 (2021)** (2022 판 ref [33]).  ★ 3D 판이 후보 B 의 3D 비용 · 입자 수를 알려 줄 1순위.
+   **(갱신 2026-11-10)** 3D 판은 카드가 들어왔다 — `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` (답: 구 50 · 100 개 × 입자당
+   사면체 808 개 · 계산 시간 미기재) · 2022 실험판 카드 (`cardenasbarrantes2022_soft_hard_grains_…`) 에는 그 논문의 보충자료가
+   반영됐다.  남은 미보유 = Cantor PRL · 오각형 판 · 실험 학회판 (셋 다 11-10 현재 inbox 에 PDF · 카드는 따로 들어온다).
 7. **⛔ 하지 말 것**: 식 (15) 를 보정 목표로 쓰기 (상분리 · 같은 크기 가정) · 2D φ 값 · b · ξ 를 우리 수치로 옮기기 · "탈압"
    근거로 인용하기.
 
@@ -619,7 +623,8 @@ rattler 처리 · Vp 의 갱신 여부 (변형 후 부피 vs 초기 부피) · �
 ## 14. 관련 카드 (중복 서술 금지 — 겹치면 넘김)
 
 - **같은 그룹**: `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` (이 논문의 학회 단편 + φ0 · Z0 표 · 영상 링크) ·
-  `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` (2D 실험 검증 · 일축 확장 · k = 4.9).
+  `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` (2D 실험 검증 · 일축 확장 · k = 4.9 · 보충자료 반영 11-10) ·
+  `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` (3D 판 — 무른 구만 · 11-10 추가).
 - **경/연 혼합 압밀 선배**: `bouvard2000_hard_soft_powder_densification` (실험 리뷰, 경입자 percolation · 크기비) ·
   `martinbouvard2003_dem_composite_cold_compaction` (DEM, Storåkers 소성 접촉, 경–경 하중 분담).
 - **후보 B (MPFEM) 형제**: `demirtas2021_mpfem_hollow_sphere_die_compaction` · `pycompact2025_dem_mpfem_workflow` (DEM 패킹 → P ≈ 0

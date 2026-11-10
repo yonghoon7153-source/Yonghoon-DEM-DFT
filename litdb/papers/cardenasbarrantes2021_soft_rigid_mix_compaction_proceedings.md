@@ -10,8 +10,8 @@
 >
 > ⚠⚠ 전이 금지 (모체와 같음): **2D 원판 · 평면변형률 · 초탄성 (가역) · P/E 무차원** — 절대값 0 건 전이.
 >
-> **같은 그룹 3 편 묶음**: 모체 PRE 2020 (위) · **이 카드** (학회 단편) · `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic`
-> (2D 실험 검증 · 일축 확장).  ⚠ 이 판의 참고문헌에는 **모체 PRE 2020 이 없다** — "previous work [17]" 는 순수 변형 입자 원판의
+> **같은 그룹 묶음 (4 편 — 3D 판 2026-11-10 추가)**: 모체 PRE 2020 (위) · **이 카드** (학회 단편) · `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic`
+> (2D 실험 검증 · 일축 확장 · 보충자료 반영 11-10) · `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` (3D 판 — 무른 구만).  ⚠ 이 판의 참고문헌에는 **모체 PRE 2020 이 없다** — "previous work [17]" 는 순수 변형 입자 원판의
 > Cantor et al. PRL 124, 208003 (2020) 을 가리킨다.
 
 ---
@@ -237,7 +237,8 @@ Secondi · Zhang 식 대조 · Table I (P0(κ)/E) · **φmax vs κ 그림과 상
 ## 14. 관련 카드
 
 - **모체 (정본)**: `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd`.
-- **실험 검증**: `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic`.
+- **실험 검증**: `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` (보충자료 반영 11-10 — 실험의 jamming 상태 φJ 0.780–0.834 · ZJ 3.25–3.50 이 이 판 Table 1 의 시뮬 시작 상태 φ0 0.805–0.815 · Z0 3.3–3.7 과 같은 자리.  단 실험 φJ 는 κ 에 따라 0.054 움직이고 이 판의 φ0 는 0.008 뿐이다).
+- **3D 판**: `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` (11-10 추가 — 이 판 결론의 "다음 길 = 3D 계" 에 해당).
 - **경/연 혼합 압밀**: `bouvard2000_hard_soft_powder_densification` · `martinbouvard2003_dem_composite_cold_compaction`.
 - **후보 B 형제 (MPFEM)**: `demirtas2021_mpfem_hollow_sphere_die_compaction` · `pycompact2025_dem_mpfem_workflow`.
 - **후보 C**: `zunker2024_bulk_elastic_partII` (벌크탄성 구간 — 식 (3) 의 "단일 입자 벌크 응답" 과 같은 방향).
