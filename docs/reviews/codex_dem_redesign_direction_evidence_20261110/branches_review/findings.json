@@ -1,0 +1,56 @@
+{
+  "review_id": "dem_redesign_13eb_branch_review_20261110",
+  "pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+  "scope": ["Q7", "Q8", "Q10"],
+  "gate_status": "HOLD",
+  "execution_go": false,
+  "scientific_runs": 0,
+  "new_registration_approved": false,
+  "abstract_tables_total_and_single_valued": true,
+  "raw_input_pipeline_closed": false,
+  "counts": {"P1": 0, "P2": 3, "P3": 0},
+  "findings": [
+    {
+      "id": "BR-01",
+      "priority": "P2",
+      "kind": "missing_case",
+      "title": "탐색 전점 실패 뒤 출발점과 보류 상태가 없음",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "line": 390,
+      "related_lines": [392, 395, 398],
+      "counterexample": "0.03,0.05,0.08,0.12,0.18,0.27,0.40,0.60 GPa 탐색 8점 모두 첫 실행과 재시도 실패. 후보 0개, 판정상자 실행 0개. argmin(empty) 미정의이며 판정상자 실패 보류 조건도 아직 성립하지 않음.",
+      "broken_claim": "원자료부터 모든 결과가 단계4 네 갈림 중 정확히 하나로 간다는 주장",
+      "surviving_claim": "유효한 팔 상태가 이미 주어지면 단계4 16칸 표는 완전하고 유일함",
+      "minimal_fix": "재시도 뒤 유효 탐색점이 하나도 없으면 해당 팔 보류라고 명시",
+      "repro_key": "counterexamples.BR-01_exploration_all_failed"
+    },
+    {
+      "id": "BR-02",
+      "priority": "P2",
+      "kind": "underspecified_selector",
+      "title": "자격용 충전 ID가 미고정이라 통과와 보류를 선택할 수 있음",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "line": 404,
+      "related_lines": [247, 391, 405, 409],
+      "counterexample": "sigma=0.18 GPa에서 고정 3충전 판정 기공=11.4,11.5,11.6%, 평균11.5%. 자격 해상도 차 seed1=0.9%p, seed2=1.1%p, seed3=0.9%p. 어느 충전을 고르느냐에 따라 실제 팔 가로지름 또는 보류, 최종4-i 또는 보류.",
+      "broken_claim": "현재 절차가 결과 뒤 선택의 여지를 제거했다는 주장",
+      "surviving_claim": "고정3충전 평균 판정, 기존 자격 문턱과 한 충전 시험이라는 비용 방침",
+      "minimal_fix": "단계0에서 자격 충전 ID 또는 결정적 번호 규칙을 등록하고 비교 팔에서 같은 ID 사용",
+      "repro_key": "counterexamples.BR-02_qualification_seed_choice"
+    },
+    {
+      "id": "BR-03",
+      "priority": "P2",
+      "kind": "contradiction",
+      "title": "재개 F 경로의 가로지름 조건이 보류값 생산사용 금지와 충돌",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "line": 400,
+      "related_lines": [393, 395, 399, 405, 409],
+      "counterexample": "(마) 후 S-실제=모두위,S-연화=가로지름이라4-ii. 재개F-실제는 0.18GPa=11%,0.27GPa=12%로 가로지름,sigma*=0.2204540769GPa. 하지만 자격 해상도차1.2%p>1%p로 보류. l400은 F-실제 생산 선택,l409는 그 값 사용금지.",
+      "broken_claim": "재개 F를 포함한 유일 판정 및 자격 실패 값 사용금지",
+      "surviving_claim": "가로지름 보간과 S의4-ii, 유효하지 않은 F 대신 S-연화 유지라는 기존 의도",
+      "minimal_fix": "F-실제 생산선택 조건에 자격통과·보류아님을 넣고 재개F 쌍에 다른 팔 보류·강성순서 보류를 적용하는 범위 명시",
+      "repro_key": "counterexamples.BR-03_reopened_F_held_production"
+    }
+  ]
+}

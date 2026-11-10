@@ -1,0 +1,1 @@
+{"all_packaged_checks_pass": false, "nested_data_manifest": 4, "nested_prep_manifest": 5, "outer_subset": 12, "counts": {"kgy": {"INFO": 8, "PASS": 25}, "gabia": {"INFO": 9, "PASS": 24}}}

@@ -123,6 +123,7 @@
 | ⑤ | 보조 관측 (하위 보고 · 결함 아님) — 그룹 기록 판독 (`_read_group_json`) = 일반 json.loads · PC12-04 엄격 JSON = 단계 요약 한정 | 한정 문구 (요청서 · 봉인 기록) | 한정 |
 
 - ④ 현장 자격 (11-09 밤 반입): kgy · gabia 짧은 블록 결과 = `docs/data/rint2_siteq_20261109/` (도구 핀 `db86ce9b9` · 두 기계 rc 0 · 대조 세 줄 SAME) — ④ 칸의 근거로 쓸지 · 그 범위 = Codex 회차 ⑥ Q4 판단 대기 (`docs/reviews/codex_rint2_rr_round6_request_20261109.md`) · 위 표의 상태 칸은 그대로.
+- ④ 11-10 Codex 회차 ⑥ Q4 = **부분 수용** (판정문 `docs/reviews/codex_review_rint2_rr_round6_20261110.md` §3-3 권고 문장 그대로): db86ce9b9의 짧은 블록을 kgy UID1003 및 gabia UID0의 기록된 셸·local ext4 scratch에서 관측한 증거를 수용한다.  제공된 호스트별 33개 기능 기록의 상태·로그·핀·환경 단위·기대 코드키를 독립 대조했다.  실제 계획 경로, 최종 실행 문맥·권한 정책·원장 공유 방식, 봉인 핀 결속과 준비 문서 §5의 미검증 영역은 남는다.  §7④ 전체 완료 또는 등록 R 실행 GO를 뜻하지 않는다.  (남은 운영 조건 = kgy umask 002 → 봉인 전 정책 · gabia UID 0 → 실행 정책에 UID · 비열람 절차 · gabia 실제 계획 경로 C26 미점검 · 최종 HEAD 코드키 새 결속 · C02b 는 RR6-01 고친 도구로 · 1저자 질문 = `docs/reviews/rint2_rr6_fix_plan_20261110.md` §2 · 위 표의 상태 칸은 그대로 ⬜.)
 
 ## 8. kgy S0 단계 1 재실행 채택 조건 (Q6 (가) · 확정 · 명령 그대로)
 

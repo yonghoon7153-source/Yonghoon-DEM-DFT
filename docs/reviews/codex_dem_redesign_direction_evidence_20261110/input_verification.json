@@ -1,0 +1,288 @@
+{
+  "archive": "C:\\Users\\Administrator\\Downloads\\codex_dem_redesign_direction_13eb293cd9ac.zip",
+  "bytes": 2360081,
+  "sha256": "9680133bb1b50f3d611284c6f969e2d18e681ec6862ea92a58de11bd0df0e40d",
+  "files": 48,
+  "hash_rows": 47,
+  "pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f claude/sdcp-dem-manuscript-si-pqwtv8\n0991161693d2d8f36975f2c9454472b54bb11c2c claude/friendly-meitner-lldvar (litdb/)\n",
+  "files_verified": [
+    {
+      "path": "litdb/papers/bardenhagen2000_mpm_granular_multibody_frictional_contact.md",
+      "bytes": 50262,
+      "sha256": "183888876ef32faee793291260fc6f2d7dbe97205b6402c39cb9ef2b516c09c2",
+      "git_blob": "8d1ffd8aa1faa521c656da89eff3830e09a4db03"
+    },
+    {
+      "path": "litdb/papers/bardenhagen2001_mpm_improved_contact_granular_stress_waves.md",
+      "bytes": 51482,
+      "sha256": "2be34b11a0c32bb8ef700db8d6a6165925cf2e3b046e829d93c33197a27d4c8c",
+      "git_blob": "1079e12983d1c2987f73063ebe49dcd6066027ba"
+    },
+    {
+      "path": "litdb/papers/cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd.md",
+      "bytes": 65692,
+      "sha256": "390604d98f80d9993f03696a39c76154e624e7d2279288f792b5ad2cdd2f4b3e",
+      "git_blob": "ca14f0c25297c1780ca89e01b7235ea90b9f8f51"
+    },
+    {
+      "path": "litdb/papers/cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings.md",
+      "bytes": 20484,
+      "sha256": "d0a301e9becdea026a2d1e9067c276daf0af0a4eb2933cd79a9805ddaa87e2ba",
+      "git_blob": "6a409fec71aa012854e8ab6f6b5a42314a4a6588"
+    },
+    {
+      "path": "litdb/papers/cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic.md",
+      "bytes": 39290,
+      "sha256": "2fd0dc12888e811904a0170ffbcc2f4dcbb64cc7c3fa7d715311a23fd8b2a3ee",
+      "git_blob": "37f29b1c6fa8fa917a61948d9ac9cb9bee32b34b"
+    },
+    {
+      "path": "litdb/papers/demirtas2021_mpfem_hollow_sphere_die_compaction.md",
+      "bytes": 84508,
+      "sha256": "dd102e16eeac99915ea0c494da85c6e738da41b8c3dd344253e1a3134f056698",
+      "git_blob": "ed3b03fdcdc6b16ace8bc7e991e9b3b07d7d025a"
+    },
+    {
+      "path": "litdb/papers/devaucorbeil2020_mpm_after_25_years_review.md",
+      "bytes": 8668,
+      "sha256": "c5377adf6fa2600d651608fa63cc32e0c3f089f9c7c64668790e15ae5409505b",
+      "git_blob": "b741f16af7c4c073907a9a9679acd8c39a2425ab"
+    },
+    {
+      "path": "litdb/papers/giannis2021_stress_based_multicontact_dem.md",
+      "bytes": 51770,
+      "sha256": "9d2618cafd7087912c45d630e728fd230caa2287b7cb80c668c3df3165c79f6e",
+      "git_blob": "33392674a5083269ecaa53ccd985f6634c096e8a"
+    },
+    {
+      "path": "litdb/papers/martinbouvard2003_dem_composite_cold_compaction.md",
+      "bytes": 19095,
+      "sha256": "32588bf078df06c9648f964d0064aaf94a7e79b984138eb329a3ab3c96fbd53a",
+      "git_blob": "f62b354b898ee36f811fef4e1d04c74e853014dd"
+    },
+    {
+      "path": "litdb/papers/nezamabadi2022_mpm_cd_plastic_particle_compaction.md",
+      "bytes": 54103,
+      "sha256": "1ee455db5da4555fd01bd0462b61b23ff3d91c0ea8d9f08c1691908761c03720",
+      "git_blob": "5e9fd5a363ac2550de0ad5807a608d8a8161171e"
+    },
+    {
+      "path": "litdb/papers/nguyen2017_mpm_bpm_deformable_particle_compaction.md",
+      "bytes": 37781,
+      "sha256": "3e847ba9fba212eed33f73919ac5707fcb1b3ba2c25aecbfabbaad7f24a2d2b3",
+      "git_blob": "d2e2da4d797805339cd69127558841ae980a8764"
+    },
+    {
+      "path": "litdb/papers/pycompact2025_dem_mpfem_workflow.md",
+      "bytes": 62070,
+      "sha256": "3257b836affaf8cb091beb703be27aa6188b7e3b1c3c7947628e2ee50fe3c583",
+      "git_blob": "722945845545d4116bc1aa3ee8a65a4d44e8b3bf"
+    },
+    {
+      "path": "litdb/papers/so2021_dem_mold_pressure_assb_coldpress.md",
+      "bytes": 19923,
+      "sha256": "aa75871b99f8882950a485acbc3a22b61ad878b964c5853482579cf614f0a8f4",
+      "git_blob": "c06ab2ca34407185de69c5874e9c7b35a3b841d2"
+    },
+    {
+      "path": "litdb/papers/so2022_dem_contact_model_assb_compaction_sintering.md",
+      "bytes": 36074,
+      "sha256": "ea1e32d0970c8632f88d9f7369be1dcf767c2e0f9133c60ced07c0b071a296bc",
+      "git_blob": "4a1bacf012a36eae14539126c1289c4c82fb151c"
+    },
+    {
+      "path": "litdb/papers/varkey2026_multicontact_elastoplastic_dem.md",
+      "bytes": 8676,
+      "sha256": "250538f9e11c12f6848c3b6258a500d7d15269a6fc91848fc741e2868413ef3a",
+      "git_blob": "39a80858d6ea9b929bc932404837ca43e44f4441"
+    },
+    {
+      "path": "litdb/papers/zunker2025_dem_large_deformation_compaction.md",
+      "bytes": 47801,
+      "sha256": "58fb77cb98e7db8eadc46972b02c5660b648aeca4a7088113d9f5dfbf1b61a05",
+      "git_blob": "4225456b0d9f55ffe57488f2736aa7c9166b11b9"
+    },
+    {
+      "path": "repo/CLAUDE.md",
+      "bytes": 393407,
+      "sha256": "53d9125ff09230b8226dc28b1e019d6a30bf9fb5effffea309b6a95ecff59379",
+      "git_blob": "1f7309281911b918c85affc44acdd18331b54ab8"
+    },
+    {
+      "path": "repo/docs/data/real14_am_scaffold.csv",
+      "bytes": 17475,
+      "sha256": "281ad86e0465a13b6ed96dbcf30c76acf4f372ff9d7c4a7e36fe55ecd44413fd",
+      "git_blob": "09c480dcbbb1c6b23a678a85aae9ede57b0222e3"
+    },
+    {
+      "path": "repo/docs/data/real14_se_scaffold.csv",
+      "bytes": 1247852,
+      "sha256": "159f4ac05973197e71019e9f541b6cb1517ef7a75c0790f935d1ccfb4c526640",
+      "git_blob": "50a1b0d0e12e1c3c672cbb3558c2274c834acfb5"
+    },
+    {
+      "path": "repo/docs/data/se_pellet_eis_20261026/README.md",
+      "bytes": 10805,
+      "sha256": "2e8ba58d125378bf13744067f1c1ac03a3446ac6e2054ceae24880603125714d",
+      "git_blob": "ec8a728d30778d1f5a3f24483678bbd764957fa8"
+    },
+    {
+      "path": "repo/docs/mpm3d_calibration.md",
+      "bytes": 20453,
+      "sha256": "95e478b6afedc89582a02b877411bc94e4425022199b5f34a34fadcb21b4b369",
+      "git_blob": "87d51afbed84e77b3095f892b1511c1b6ae9e2eb"
+    },
+    {
+      "path": "repo/docs/mpm_dpc_cap_crosscheck.md",
+      "bytes": 6370,
+      "sha256": "bc68318c52cc5dfe56a9ed9fc4458e786703e61b4d2280213ae29c229d6dbe2d",
+      "git_blob": "47cd266a3aefc10616a6e92684d6aec4350a4b59"
+    },
+    {
+      "path": "repo/docs/reviews/codex_dem_redesign_direction_request_20261109.md",
+      "bytes": 6713,
+      "sha256": "c53623a0fc01889215717fef85488941a7beee1ef6f2cfbf7ddedfb36cb5ccf8",
+      "git_blob": "14987a1e9d4f4428282a8352f3711d5ba4e50144"
+    },
+    {
+      "path": "repo/docs/reviews/dem_mpm_one_way_sequential_definition_20261109.md",
+      "bytes": 8633,
+      "sha256": "51275c7fd3a33da1d1d20a9b85e966e4d84107eee78dba240334ef6af1a6037c",
+      "git_blob": "bf23f2191281a2e49ea2496e0d6461e8f7bfbdd9"
+    },
+    {
+      "path": "repo/docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+      "bytes": 99386,
+      "sha256": "0eaf7bb009e0813120fdab854b38f6c5489f7ddf5961f7c42fd9cc66366091ae",
+      "git_blob": "edae89251d9bbff1a512f9dc41240008e88d61e8"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/changelog_v2.md",
+      "bytes": 9935,
+      "sha256": "d094397662993d88b8cb605250be42a0df9f8a825dff536bcf76ae0037cbcd19",
+      "git_blob": "ca0d20e33dab7dd0edb7d891c717a546f1ee3a38"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/changelog_v3.md",
+      "bytes": 18684,
+      "sha256": "320e5030c1c8679454ad3f835a66110e107bec1afee023d2d3e731c7fe4b2b32",
+      "git_blob": "b81ce49bc39165f16e405074a3e7be6ec3416374"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/changelog_v3_1.md",
+      "bytes": 15608,
+      "sha256": "b5ba006e7b440c63a54f8232834bc7531f29b8e236a5b4f04a0ac040fbd19c01",
+      "git_blob": "ef0e6a85a264b491469d8ee0b88acd0e45be89b7"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v1.md",
+      "bytes": 13569,
+      "sha256": "78eecdcec87b808f8098568f7f6a37c37237bc2a497fb53ca8cd768c199d690d",
+      "git_blob": "e618315161a862856b51fce694511766ed787b37"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v2.md",
+      "bytes": 58967,
+      "sha256": "9fe3b8044bfe7922361c3f0396f8b4ac7ecca85e3c17ab5307818364048ac678",
+      "git_blob": "1d53fa8143af7d3b3e95a0c855e9e973fbdfd629"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v3.md",
+      "bytes": 91701,
+      "sha256": "00cbe7bf494de4453012d6d3a78a44f0b10c48dc46011a1d198ce78b31acb782",
+      "git_blob": "6d81e26f83e56c29e66c81ee7f75a24e2df4b329"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "bytes": 114603,
+      "sha256": "0dd491ec325d3a18bc0b43c975804b9e909385eda2817c8fcfdf623991923b8a",
+      "git_blob": "3ddf429f5e4095e89d6dd372cbb0a5a938c9cc4a"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/pa3/fork_enum.py",
+      "bytes": 3367,
+      "sha256": "837867d5f52de0936ca29b603c2a1cc48807f1287fa89fc2c95b477fca881e4d",
+      "git_blob": "7955ef75fd11bd1d23dc072009d82121d7759dbf"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/pa3/s4_enum.py",
+      "bytes": 1525,
+      "sha256": "e6d46676103164e65c9c54df709913a9dbdb1f1d29fbdb85980b6aeae1821bfd",
+      "git_blob": "7034073858e48b09d9f79c4994a25800baf28845"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/pa3/yield.py",
+      "bytes": 1421,
+      "sha256": "9bda813e23d38f2211b7ff0fa25a05bab9daa3a2e8a6e14ab64f84f1146cf545",
+      "git_blob": "3320670e464a5d92955f7f2d58a25f41caed566d"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/preattack1_on_v1.md",
+      "bytes": 43009,
+      "sha256": "72ed6c9dd9840718e9b280e71b058a67e68a7a4e319a3e028ff9fa04b66fc589",
+      "git_blob": "0f98201932f34af4b7dc6bef3728d8d87259d66d"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/preattack2_on_v2.md",
+      "bytes": 33318,
+      "sha256": "36c935c25b02a044f2e7570c6aabf861b435343616d212ca825c8af55e15ac7c",
+      "git_blob": "c9cb43fb9a60677d6b9572df05bb00971d3224be"
+    },
+    {
+      "path": "repo/docs/reviews/dem_redesign_direction_20261109/preattack3_on_v3.md",
+      "bytes": 25316,
+      "sha256": "c6b88ca1355e95cee98cc288f44079d8a9d932da9517ea7a247f809718ad8755",
+      "git_blob": "75bf6982008e956f432ddbe843218b186641e41b"
+    },
+    {
+      "path": "repo/docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+      "bytes": 132757,
+      "sha256": "677f1418aaf2ebc98d3134033f872ef66132f7f039e0537b22de22380e0696e1",
+      "git_blob": "0e3b651a81a0bf171cadcad6ef0cc89cca4b8e4a"
+    },
+    {
+      "path": "repo/docs/reviews/fam_platen_prereg_20260812.md",
+      "bytes": 126499,
+      "sha256": "6b606f2c7858de7b3f46c6bdaf87bc8f1279536a42177f7c6fac712e8039b028",
+      "git_blob": "6b6e85d9d150a170b92abcdc9f5d2211f7b0c75c"
+    },
+    {
+      "path": "repo/docs/reviews/findings.json",
+      "bytes": 2820507,
+      "sha256": "713258aacdc6d39c414f462fbd4a803c23d8912d13da43fc4eb99efe2845e1df",
+      "git_blob": "876d93b4be5aa7d6acc69590523470575a144aa6"
+    },
+    {
+      "path": "repo/docs/reviews/mpm_coverage_interface_design_memo_20261103.md",
+      "bytes": 26900,
+      "sha256": "c261925b99eb7a34d02bcd43638ee3d230c0a17478893652ace1a4e8c9e25dfd",
+      "git_blob": "56d65071169bc67b17fbb17890413ecd87de5788"
+    },
+    {
+      "path": "repo/docs/session_20260923_progress.md",
+      "bytes": 733749,
+      "sha256": "e69c4f2169fbfbd764b87ca4e55b251ce28889b512961da6d7d75ee337ff6999",
+      "git_blob": "d6ad3b32dd3c20d3da9414c3a0b0d00db47aec2b"
+    },
+    {
+      "path": "repo/scripts/dem3d_plastic.py",
+      "bytes": 41676,
+      "sha256": "66969f2b0d5f26865e78e62e261bc48786323209cfd94940701dca367e99b1d1",
+      "git_blob": "760c0c8953572e64f3a36e81fe0d7d7ea668baf2"
+    },
+    {
+      "path": "repo/scripts/mpm3d_compaction.py",
+      "bytes": 335832,
+      "sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+      "git_blob": "fb1bf65535135ecdb7acb87833b7acdb389e54db"
+    },
+    {
+      "path": "repo/scripts/mpm_dem_match.py",
+      "bytes": 41291,
+      "sha256": "a5445721479e846056dc05ea74b273b9308a80812ae11de8af6e2d8785b1df4d",
+      "git_blob": "0353cc7c77a11fa15bbe1bbfeb637fb3fddd35f3"
+    }
+  ],
+  "crc": "PASS",
+  "manifest": "PASS"
+}

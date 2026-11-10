@@ -297,6 +297,8 @@ run 'webapp: mpm_lab_cmp_absent_phase (MPM lab 비교표 · 없는 상 = — · 
 #    `solve_sigma_z(..., rint=)` 호출 넷을 AST 로 찾아 하나씩 `rint=` 를 지우면 게시가 거부돼야 한다 (주 솔브만 보던
 #    옛 사후 단언은 wetted/bare 배선 삭제를 초록으로 냈다) · CLI 모순 요청 · check_arm 영수증 변조 · 레지스트리 전수 분류.
 run 'rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)' python3 scripts/test_rint_receipts.py
+#  ★ 2026-11-10 (Codex Rint ② 회차 ⑥ RR6-01) — 현장 자격 도구 C02b 가 PATH python3 자식의 rc 를 본다 (같은 단위 JSON + rc 1 = FAIL) · AST 메모리 가짜 · 실제 자식 0 회.
+run 'siteq C02b 자식 rc (RR6-01 · 11-10)' python3 -I -B docs/reviews/rint2_siteq_prep_20261109/tools/test_siteq_c02b.py
 #  ★ 2026-10-07 (Rint G2 ①′ AM–AM · 계약 v3.1 · Codex v3 "계약 정정 둘 뒤 구현 GO · 정량 채택 HOLD") — 반례 먼저:
 #    ε 동률 집합 규칙 (3 청구자 6 순열) · 동심 비동일 · 정확 중복 거부 · raw raster 순열 진단 (3170 ↔ 3171) · 동결 마스크 순열 불변 ·
 #    OFF 비트 같음 (막 0 + 예외 융합 · 순서마다) · 단위 (같은 리드 · 1e−8·A/r) · 탄소 가림 (막 소자만) · E4′ 부류 FD · 원장 무결성.

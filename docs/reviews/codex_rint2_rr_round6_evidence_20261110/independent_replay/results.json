@@ -1,0 +1,85 @@
+[
+  {
+    "name": "remote_blobs",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\venv\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\verify_remote_blobs.py"
+    ],
+    "rc": 0,
+    "expected_rc": 0,
+    "matched": true
+  },
+  {
+    "name": "codekey_sources",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\venv\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\verify_codekey_sources.py"
+    ],
+    "rc": 0,
+    "expected_rc": 0,
+    "matched": true
+  },
+  {
+    "name": "document_compare",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\venv\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\rr6_document_closure\\document_compare.py",
+      "--repo",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\package\\repo",
+      "--prior-verdict",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\package\\repo\\docs\\reviews\\codex_review_rint2_rr_round5_20261109.md",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\independent_replay\\document_comparison.json"
+    ],
+    "rc": 0,
+    "expected_rc": 0,
+    "matched": true
+  },
+  {
+    "name": "siteq_predicates",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\venv\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\rr6_siteq_semantics\\probe_siteq_predicates.py",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\package\\repo"
+    ],
+    "rc": 0,
+    "expected_rc": 0,
+    "matched": true
+  },
+  {
+    "name": "siteq_evidence",
+    "argv": [
+      "C:\\Users\\Administrator\\Documents\\Codex\\lhs28\\venv\\Scripts\\python.exe",
+      "-I",
+      "-X",
+      "utf8",
+      "-B",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\rr6_siteq_evidence\\audit_siteq_evidence.py",
+      "--package",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\package",
+      "--code-scripts",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\codekey_sources\\scripts",
+      "--out",
+      "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\independent_replay\\siteq_evidence.json"
+    ],
+    "rc": 1,
+    "expected_rc": 1,
+    "matched": true
+  }
+]

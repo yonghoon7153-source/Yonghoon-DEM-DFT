@@ -1,0 +1,14 @@
+── C02b 자식 종료 코드 (RR6-01)
+  PASS ① 같은 단위 + rc 0 → PASS
+  FAIL ① data 에 자식 rc 0 이 남는다 (path_python3_rc)
+  FAIL ① detail 에 rc 가 보인다
+  PASS ① 자식은 한 번 · python3 -I
+  FAIL ② 같은 단위 + rc 1 → FAIL (고치기 전 = PASS)
+  FAIL ② data 에 자식 rc 1 이 남는다
+  PASS ③ 다른 단위 + rc 0 → FAIL
+  PASS ④ JSON 깨짐 + rc 0 → FAIL
+  PASS ⑤ PATH 에 python3 없음 → FAIL · 자식 안 띄움
+  FAIL ⑥ rc 가 정수 아님 (None) → FAIL
+
+== test_siteq_c02b: 5/10 PASS
+   실패: ① data 에 자식 rc 0 이 남는다 (path_python3_rc) · ① detail 에 rc 가 보인다 · ② 같은 단위 + rc 1 → FAIL (고치기 전 = PASS) · ② data 에 자식 rc 1 이 남는다 · ⑥ rc 가 정수 아님 (None) → FAIL

@@ -376,11 +376,18 @@ def c02b():
     except ValueError:
         u = None
     data['path_python3_unit'] = u
+    # RR6-01 (Codex 회차 ⑥ · 11-10): 자식 종료 코드도 본다 — 단위 JSON 을 찍고 rc 1 로 끝난 자식은 PASS 가 아니다.
+    rc = r.returncode
+    data['path_python3_rc'] = rc
+    err = (r.stderr or b'').decode('utf-8', 'replace').strip()
+    data['path_python3_stderr_tail'] = err[-200:] if err else ''
     mine = RR.env_record().get('unit')
     same = isinstance(u, dict) and all(u.get(k) == (mine or {}).get(k) for k in ('python_minor', 'numpy', 'scipy'))
     data['same_path_as_sys_executable'] = os.path.abspath(which) == os.path.abspath(sys.executable)
-    return ('PASS' if same else 'FAIL', 'PATH python3 env unit %s (probe %s)' % (json.dumps(u, sort_keys=True),
-                                                                              json.dumps(mine, sort_keys=True)), data)
+    ok = same and isinstance(rc, int) and rc == 0
+    return ('PASS' if ok else 'FAIL', 'PATH python3 env unit %s (probe %s) rc %s' % (json.dumps(u, sort_keys=True),
+                                                                                    json.dumps(mine, sort_keys=True), rc),
+            data)
 
 
 def c03():

@@ -1,0 +1,192 @@
+{
+  "yield_3d": {
+    "soft": {
+      "compression": {
+        "axial_stretch": 0.7862608864820034,
+        "lateral_stretch": 1.1245140584636089,
+        "J": 0.9942519472686261,
+        "tau_GPa": -0.31634291715203133,
+        "cauchy_GPa": -0.31817178535186924,
+        "lateral_residual_GPa": -8.01190304285448e-15,
+        "yield_norm": 0.29215686274509794,
+        "mu_GPa": 0.5134228187919463,
+        "lambda_GPa": 25.157718120805345,
+        "epsilon_1e_9_delta_GPa": 9.715663273901498e-10
+      },
+      "tension": {
+        "axial_stretch": 1.2710993925930845,
+        "lateral_stretch": 0.8887534377226439,
+        "J": 1.0040193859512203,
+        "tau_GPa": 0.4553701396052569,
+        "cauchy_GPa": 0.4535471585280534,
+        "lateral_residual_GPa": -2.0069879306021283e-14,
+        "yield_norm": 0.2921568627450981,
+        "mu_GPa": 0.5134228187919463,
+        "lambda_GPa": 25.157718120805345,
+        "epsilon_1e_9_delta_GPa": -1.925243076073002e-09
+      }
+    },
+    "stiff": {
+      "compression": {
+        "axial_stretch": 0.9834627188605661,
+        "lateral_stretch": 1.0059940172398976,
+        "J": 0.9952878379310819,
+        "tau_GPa": -0.36161765712992,
+        "cauchy_GPa": -0.3633297256817881,
+        "lateral_residual_GPa": 2.3146196389638984e-15,
+        "yield_norm": 0.01849501359927467,
+        "mu_GPa": 8.11029411764706,
+        "lambda_GPa": 20.85504201680672,
+        "epsilon_1e_9_delta_GPa": 1.9427025710339052e-08
+      },
+      "tension": {
+        "axial_stretch": 1.0167752187196966,
+        "lateral_stretch": 0.9940024532309528,
+        "J": 1.0046154788453174,
+        "tau_GPa": 0.3733687909073997,
+        "cauchy_GPa": 0.37165343235258674,
+        "lateral_residual_GPa": -1.9477781520457e-15,
+        "yield_norm": 0.01849501359927473,
+        "mu_GPa": 8.11029411764706,
+        "lambda_GPa": 20.85504201680672,
+        "epsilon_1e_9_delta_GPa": -2.0327235505934738e-08
+      }
+    }
+  },
+  "scaffold": {
+    "AM": {
+      "count": 457,
+      "groups": [
+        {
+          "type": 1,
+          "radius_um": 6.0,
+          "count": 36
+        },
+        {
+          "type": 2,
+          "radius_um": 2.0,
+          "count": 421
+        }
+      ],
+      "volume_um3": 46679.87804213955
+    },
+    "SE": {
+      "count": 32832,
+      "groups": [
+        {
+          "type": 3,
+          "radius_um": 0.5,
+          "count": 32832
+        }
+      ],
+      "volume_um3": 17190.79500044335
+    },
+    "kappa_SE": 0.2691500524658972,
+    "solid_fraction_at_50x50x30_3": 0.8431772018822825,
+    "heights_from_exact_mass_um": {
+      "0.6": 42.58044869505527,
+      "0.35": 72.99505490580903
+    }
+  },
+  "memory": {
+    "cap48_GB": 43.797970944,
+    "cap24_GB": 21.904333209599997,
+    "grid_side_um": 54.347826086956516,
+    "rows": [
+      {
+        "ng": 384,
+        "height_factor": 1,
+        "points_per_SE": 1419,
+        "particle_GB": 5.776987392,
+        "base_GB": 1.358954496,
+        "field_GB": 2.038431744,
+        "K48": 17,
+        "K24": 7
+      },
+      {
+        "ng": 384,
+        "height_factor": 1.42,
+        "points_per_SE": 1419,
+        "particle_GB": 5.776987392,
+        "base_GB": 1.9297153843199997,
+        "field_GB": 2.8945730764799995,
+        "K48": 12,
+        "K24": 4
+      },
+      {
+        "ng": 435,
+        "height_factor": 1,
+        "points_per_SE": 2109,
+        "particle_GB": 8.586093312,
+        "base_GB": 1.975509,
+        "field_GB": 2.9632635,
+        "K48": 11,
+        "K24": 3
+      },
+      {
+        "ng": 435,
+        "height_factor": 1.42,
+        "points_per_SE": 2109,
+        "particle_GB": 8.586093312,
+        "base_GB": 2.80522278,
+        "field_GB": 4.20783417,
+        "K48": 7,
+        "K24": 2
+      },
+      {
+        "ng": 512,
+        "height_factor": 1,
+        "points_per_SE": 3431,
+        "particle_GB": 13.968177408,
+        "base_GB": 3.221225472,
+        "field_GB": 4.831838208,
+        "K48": 5,
+        "K24": 0
+      },
+      {
+        "ng": 512,
+        "height_factor": 1.42,
+        "points_per_SE": 3431,
+        "particle_GB": 13.968177408,
+        "base_GB": 4.57414017024,
+        "field_GB": 6.86121025536,
+        "K48": 3,
+        "K24": 0
+      }
+    ],
+    "height_reconstruction": {
+      "memo_rounded": {
+        "bed_height_um": 76,
+        "continuous_nz_factor_scaffold_convention": 1.5184000000000002,
+        "ng435_nz": 661,
+        "K48_by_ng": {
+          "384": 11,
+          "435": 7,
+          "512": 3
+        }
+      },
+      "mass_exact": {
+        "bed_height_um": 72.99505490580903,
+        "continuous_nz_factor_scaffold_convention": 1.4631090102668864,
+        "ng435_nz": 637,
+        "K48_by_ng": {
+          "384": 12,
+          "435": 7,
+          "512": 3
+        }
+      }
+    },
+    "dense_one_body_fields_TB": 29.744796008448
+  },
+  "run_count": {
+    "3a": 27,
+    "3b_k1": 27,
+    "3b_k02_core": 27,
+    "3b_k02_report_A_mu0": 3,
+    "3c": 12,
+    "base_total": 96,
+    "two_eligible_benchmarks_extend24_add": 18,
+    "all_eligible_extend24_total": 114,
+    "note": "Memo line 348 permits 24-cell extension for 3a and 3b kappa=1 only. A(mu0) omission subtracts 3."
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "output": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\dem_redesign_13eb_review_20261110\\branches_review\\independent_results.json",
+  "checks": {
+    "ratio_grade_samples": 1000,
+    "raw_point_samples": 15625,
+    "test_point_grade_combinations": 125,
+    "resolution_grade_combinations": 64,
+    "A_grade_samples": 729,
+    "upper_stage3_combinations": 512,
+    "upper_stage3_route_counts": {
+      "가": 1,
+      "나": 19,
+      "라": 485,
+      "마": 7
+    },
+    "upper_stage4_combinations": 16,
+    "upper_stage4_table": [
+      {
+        "actual": "below",
+        "softened": "below",
+        "route": "4-iii"
+      },
+      {
+        "actual": "below",
+        "softened": "cross",
+        "route": "hold"
+      },
+      {
+        "actual": "below",
+        "softened": "above",
+        "route": "hold"
+      },
+      {
+        "actual": "below",
+        "softened": "hold",
+        "route": "hold"
+      },
+      {
+        "actual": "cross",
+        "softened": "below",
+        "route": "4-i"
+      },
+      {
+        "actual": "cross",
+        "softened": "cross",
+        "route": "4-i"
+      },
+      {
+        "actual": "cross",
+        "softened": "above",
+        "route": "hold"
+      },
+      {
+        "actual": "cross",
+        "softened": "hold",
+        "route": "hold"
+      },
+      {
+        "actual": "above",
+        "softened": "below",
+        "route": "4-iii"
+      },
+      {
+        "actual": "above",
+        "softened": "cross",
+        "route": "4-ii"
+      },
+      {
+        "actual": "above",
+        "softened": "above",
+        "route": "4-iii"
+      },
+      {
+        "actual": "above",
+        "softened": "hold",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "below",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "cross",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "above",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "hold",
+        "route": "hold"
+      }
+    ],
+    "claim": "The abstract upper tables are total and single-valued for supplied valid statuses."
+  },
+  "counterexamples": [
+    "BR-01_exploration_all_failed",
+    "BR-02_qualification_seed_choice",
+    "BR-03_reopened_F_held_production"
+  ]
+}

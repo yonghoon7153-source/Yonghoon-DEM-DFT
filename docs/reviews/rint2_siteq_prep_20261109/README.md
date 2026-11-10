@@ -349,4 +349,5 @@ pip 22 개 (두 기계 같음): astunparse 1.6.3 · colorama 0.4.6 · cupy-cuda1
 - `docs/reviews/rint2_siteq_prep_20261109/container_test/summary.txt` — 긴 블록 컨테이너 시험 요약 원문 (§4-2 · §4-3)
 - `docs/reviews/rint2_siteq_prep_20261109/container_test/summary_short.txt` — 짧은 블록 컨테이너 시험 요약 원문 (§4-5)
 - `docs/reviews/rint2_siteq_prep_20261109/SHA256SUMS` — 위 파일들 (자기 빼고)
+- 11-10 (Codex Rint ② 회차 ⑥ `RR6-01` · `RR6-02`): `SHA256SUMS` 를 지금 바이트로 다시 썼다 — `tools/siteq_probe.py` = RR6-01 고침 (C02b 가 자식 rc 0 을 요구 · `path_python3_rc` 기록) · `tools/test_siteq_c02b.py` 추가 (고치기 전 5/10 → 뒤 10/10 · 게이트 단계) · 이 README = 이 줄과 결과 안내가 더해진 판.  두 현장 기록 (kgy · gabia 11-09 · `docs/data/rint2_siteq_20261109/`) 이 쓴 판은 역사로 남긴다: 도구 `a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588` · README `6401d4f9a2850946588e4929326c13ff319827720f47f55165f69c748f7859f2` (db86ce9b9).  그 두 기록의 C02b 는 자식 rc 를 기록하지 않은 판의 결과라 PATH python3 자식의 정상 종료 증서가 아니다 (판정문 `docs/reviews/codex_review_rint2_rr_round6_20261110.md` §4).
 - 리포 밖 (스크래치 · 커밋 안 함): 긴 블록 둘 · 블록 생성기 · 시험 도구 · strace 원 로그 · 시나리오 출력 · 결과 JSON · 줄 번호 기준 사본

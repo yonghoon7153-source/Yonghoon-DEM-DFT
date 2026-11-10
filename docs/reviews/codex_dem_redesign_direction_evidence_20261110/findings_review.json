@@ -1,0 +1,224 @@
+{
+  "review_pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+  "verdict": "DIRECTION_SUPPORTED_RULES_REQUIRE_REVISION_HOLD",
+  "scope": "direction, document logic, pinned source and bounded synthetic arithmetic",
+  "counts": {
+    "P1": 2,
+    "P2": 10,
+    "P3": 1
+  },
+  "findings": [
+    {
+      "id": "DRD-01",
+      "priority": "P1",
+      "title": "등급 일치가 응력비 수렴을 보장하지 않음",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        348,
+        274,
+        284,
+        372
+      ],
+      "aliases": [
+        "PH-01"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-02",
+      "priority": "P1",
+      "title": "구성식 상쇄 단정과 2D 음성의 3D 전이",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        295,
+        306,
+        371,
+        400
+      ],
+      "aliases": [
+        "PH-02"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-03",
+      "priority": "P2",
+      "title": "부피 정의 점별 OR의 정합 통과",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        299,
+        312,
+        352
+      ],
+      "aliases": [
+        "PH-03"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-04",
+      "priority": "P2",
+      "title": "탐색 전점 실패의 보류 누락",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        390,
+        395,
+        398
+      ],
+      "aliases": [
+        "BR-01"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-05",
+      "priority": "P2",
+      "title": "자격용 충전 선택자 미정",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        404,
+        405,
+        409
+      ],
+      "aliases": [
+        "BR-02"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-06",
+      "priority": "P2",
+      "title": "재개 F의 자격 실패 우회",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        393,
+        395,
+        400,
+        409
+      ],
+      "aliases": [
+        "BR-03"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-07",
+      "priority": "P2",
+      "title": "가압 중 국소 이탈 및 판 경계 차이",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        170,
+        278,
+        286
+      ],
+      "aliases": [
+        "PH-04",
+        "CA-P2-02"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-08",
+      "priority": "P2",
+      "title": "다물체 마찰 법칙 검사 부족",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        172,
+        270,
+        273
+      ],
+      "aliases": [
+        "PH-05"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-09",
+      "priority": "P2",
+      "title": "안전 색칠 상대 이동·점유 상한 미정",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        252,
+        253,
+        254,
+        255
+      ],
+      "aliases": [
+        "CA-P2-03",
+        "CA-P2-04"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-10",
+      "priority": "P2",
+      "title": "F 마찰 및 C′ 법칙 선택 회계 누락",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        160,
+        172,
+        175,
+        291,
+        400
+      ],
+      "aliases": [
+        "PH-08",
+        "CA-P2-05"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-11",
+      "priority": "P2",
+      "title": "고정 AM 구속 반력의 하중 0 오해",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        118,
+        125
+      ],
+      "aliases": [
+        "CA-P2-01"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-12",
+      "priority": "P2",
+      "title": "작은 상자 자격의 전이·축소 상자 교락",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        400,
+        403,
+        404,
+        405,
+        407,
+        409
+      ],
+      "aliases": [
+        "PH-06"
+      ],
+      "status": "review_finding_no_ledger_write"
+    },
+    {
+      "id": "DRD-13",
+      "priority": "P3",
+      "title": "제공본과 정식 출판 지위 혼동",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "lines": [
+        174
+      ],
+      "aliases": [
+        "PH-09"
+      ],
+      "status": "review_finding_no_ledger_write"
+    }
+  ],
+  "followup_warning": {
+    "local_id": "PH-07",
+    "topic": "AM-only jamming scalar does not prove composite load path",
+    "not_a_current_stage5_verdict": true
+  },
+  "physical_go": false,
+  "registration_approval": false,
+  "actual_model_runs": 0
+}

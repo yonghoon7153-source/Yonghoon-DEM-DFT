@@ -1,0 +1,35 @@
+{
+ "status": "PASS",
+ "input_files": 48,
+ "input_hash_rows": 47,
+ "pinned_source_blobs": 46,
+ "checks": [
+  {
+   "script": "branches_review/independent_enumeration.py",
+   "returncode": 0,
+   "expected_json_matches": true,
+   "generated_sha256": "46f277a9949dd744f94600cc4834e58f08529cbf1b64ce46b82cc98c4b6f5f88"
+  },
+  {
+   "script": "physics_review/counterexamples.py",
+   "returncode": 0,
+   "expected_json_matches": true,
+   "generated_sha256": "efc4880d10f57e0841b9705656883774eabf27c27c9a367c27e1ec6e3e8de0a6"
+  },
+  {
+   "script": "code_arithmetic_review/reproduce.py",
+   "returncode": 0,
+   "expected_json_matches": true,
+   "generated_sha256": "9d8b2910127c4c8e3d3383fe56ebea3493493f0b5dabfc821a418a715019d814"
+  }
+ ],
+ "python": "3.11.17 (main, Oct  1 2026, 15:41:07) [GCC 13.3.0]",
+ "platform": "Linux-6.18.44-fc-v310-x86_64-with-glibc2.39",
+ "numpy": "2.4.6",
+ "scipy": "1.17.1",
+ "numeric_compare_rtol": 1e-10,
+ "numeric_compare_atol": 1e-11,
+ "research_model_runs": 0,
+ "remote_host_access": false,
+ "scope": "input bytes, saved Git blob metadata, bounded independent arithmetic only"
+}

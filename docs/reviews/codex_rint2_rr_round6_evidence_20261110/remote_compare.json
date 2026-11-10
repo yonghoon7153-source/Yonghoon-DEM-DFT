@@ -1,0 +1,1534 @@
+{
+  "repository_full_name": "yonghoon7153-source/Yonghoon-DEM-DFT",
+  "base": "abf0911ebc994167ac50132c78207c6c8d4421f1",
+  "head": "aec8ca2f6cbc24d43e2ed447c61ce6b62dd19f1e",
+  "status": "ahead",
+  "ahead_by": 13,
+  "behind_by": 0,
+  "total_commits": 13,
+  "too_large": null,
+  "base_commit": {
+    "sha": "abf0911ebc994167ac50132c78207c6c8d4421f1",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/abf0911ebc994167ac50132c78207c6c8d4421f1",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/abf0911ebc994167ac50132c78207c6c8d4421f1"
+  },
+  "merge_base_commit": {
+    "sha": "abf0911ebc994167ac50132c78207c6c8d4421f1",
+    "url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/abf0911ebc994167ac50132c78207c6c8d4421f1",
+    "html_url": "https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/commit/abf0911ebc994167ac50132c78207c6c8d4421f1"
+  },
+  "files": [
+    {
+      "filename": "CLAUDE.md",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 2,
+      "changes": 5,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/collab/claude_to_codex/20261109-1815_nonrint-next-decisions-sha-map.md",
+      "status": "added",
+      "additions": 24,
+      "deletions": 0,
+      "changes": 24,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/collab/claude_to_codex/20261109-1900_nonrint-approved-forms-sha-map.md",
+      "status": "added",
+      "additions": 68,
+      "deletions": 0,
+      "changes": 68,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/collab/codex_to_claude/20261109-0850_nonrint-next-decisions.md",
+      "status": "added",
+      "additions": 9,
+      "deletions": 0,
+      "changes": 9,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/collab/codex_to_claude/20261109-0944_nonrint-approved-forms-final.md",
+      "status": "added",
+      "additions": 33,
+      "deletions": 0,
+      "changes": 33,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/collab/codex_to_claude/20261109-1028_lhs-q1-remaining-options.md",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0,
+      "changes": 23,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/data/rint2_siteq_20261109/README.md",
+      "status": "added",
+      "additions": 83,
+      "deletions": 0,
+      "changes": 83,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/data/rint2_siteq_20261109/SHA256SUMS",
+      "status": "added",
+      "additions": 4,
+      "deletions": 0,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/data/rint2_siteq_20261109/gabia/siteq.log",
+      "status": "added",
+      "additions": 35,
+      "deletions": 0,
+      "changes": 35,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/data/rint2_siteq_20261109/gabia/siteq_result.json",
+      "status": "added",
+      "additions": 850,
+      "deletions": 0,
+      "changes": 850,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/data/rint2_siteq_20261109/kgy/siteq.log",
+      "status": "added",
+      "additions": 35,
+      "deletions": 0,
+      "changes": 35,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/data/rint2_siteq_20261109/kgy/siteq_result.json",
+      "status": "added",
+      "additions": 891,
+      "deletions": 0,
+      "changes": 891,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_review_rint2_rr_round5_20261109.md",
+      "status": "added",
+      "additions": 245,
+      "deletions": 0,
+      "changes": 245,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/IMPORT_SHA256SUMS",
+      "status": "added",
+      "additions": 152,
+      "deletions": 0,
+      "changes": 152,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/README_REPRODUCE.md",
+      "status": "added",
+      "additions": 86,
+      "deletions": 0,
+      "changes": 86,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/README_import.md",
+      "status": "added",
+      "additions": 86,
+      "deletions": 0,
+      "changes": 86,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/SHA256SUMS",
+      "status": "added",
+      "additions": 207,
+      "deletions": 0,
+      "changes": 207,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/_repro_ours_20261109/REPRO.md",
+      "status": "added",
+      "additions": 70,
+      "deletions": 0,
+      "changes": 70,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/_repro_ours_20261109/pin/PIN.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/_repro_ours_20261109/runs/summaryless/digest_rebuild.txt",
+      "status": "added",
+      "additions": 4,
+      "deletions": 0,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/_repro_ours_20261109/tools/deepcmp.py",
+      "status": "added",
+      "additions": 26,
+      "deletions": 0,
+      "changes": 26,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/audit_root.py",
+      "status": "added",
+      "additions": 71,
+      "deletions": 0,
+      "changes": 71,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/baseline/PIN.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/codex_review_rint2_rr_round5_20261109.md",
+      "status": "added",
+      "additions": 245,
+      "deletions": 0,
+      "changes": 245,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/input_verification.json",
+      "status": "added",
+      "additions": 4859,
+      "deletions": 0,
+      "changes": 4859,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/RESUME_REVIEW.md",
+      "status": "added",
+      "additions": 92,
+      "deletions": 0,
+      "changes": 92,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/expectation_adjusted/cli_PC13_two_fields.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/expectation_adjusted/cli_PC14_02_R1.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/expectation_adjusted/cli_PC14_03_attempt_null.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/expectation_adjusted/cli_honest_mismatch.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/expectation_adjusted/run.log",
+      "status": "added",
+      "additions": 112,
+      "deletions": 0,
+      "changes": 112,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/expectation_only.diff",
+      "status": "added",
+      "additions": 29,
+      "deletions": 0,
+      "changes": 29,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/original_probe_provenance.json",
+      "status": "added",
+      "additions": 7,
+      "deletions": 0,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/probe_focus.log",
+      "status": "added",
+      "additions": 26,
+      "deletions": 0,
+      "changes": 26,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/probe_resume_focus.py",
+      "status": "added",
+      "additions": 84,
+      "deletions": 0,
+      "changes": 84,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/resume_agent/probe_summaryless_copy.py",
+      "status": "added",
+      "additions": 36,
+      "deletions": 0,
+      "changes": 36,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/root_audit/audit_stdout.log",
+      "status": "added",
+      "additions": 92,
+      "deletions": 0,
+      "changes": 92,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/root_audit/m56_result.json",
+      "status": "added",
+      "additions": 6,
+      "deletions": 0,
+      "changes": 6,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/root_audit/rr4c_direct.json",
+      "status": "added",
+      "additions": 18,
+      "deletions": 0,
+      "changes": 18,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/root_audit/static_audit.json",
+      "status": "added",
+      "additions": 1005,
+      "deletions": 0,
+      "changes": 1005,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/SHA256SUMS",
+      "status": "added",
+      "additions": 250,
+      "deletions": 0,
+      "changes": 250,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/audit_initial_note.txt",
+      "status": "added",
+      "additions": 7,
+      "deletions": 0,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/in.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/MANIFEST.tsv",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/NPZ_SHA256.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/README.md",
+      "status": "added",
+      "additions": 30,
+      "deletions": 0,
+      "changes": 30,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/files/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/files/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/files/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/files/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/out/files/run/rss.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/unpack/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/unpack/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/unpack/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/unpack/output/s0_instances_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/unpack/output/s0_junctions_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/unpack/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/absent/unpack/run/rss.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/in.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/MANIFEST.tsv",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/NPZ_SHA256.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/README.md",
+      "status": "added",
+      "additions": 32,
+      "deletions": 0,
+      "changes": 32,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/files/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/files/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/files/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/files/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/out/files/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/unpack/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/unpack/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/unpack/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/unpack/output/s0_instances_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/unpack/output/s0_junctions_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/unpack/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/cap/unpack/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/in.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/MANIFEST.tsv",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/NPZ_SHA256.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/README.md",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0,
+      "changes": 31,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/files/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/files/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/files/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/files/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/out/files/run/rss.log",
+      "status": "added",
+      "additions": 4,
+      "deletions": 0,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/unpack/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/unpack/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/unpack/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/unpack/output/s0_instances_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/unpack/output/s0_junctions_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/unpack/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/good/unpack/run/rss.log",
+      "status": "added",
+      "additions": 4,
+      "deletions": 0,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/in.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/MANIFEST.tsv",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/NPZ_SHA256.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/README.md",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0,
+      "changes": 31,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/files/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/files/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/files/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/files/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/out/files/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/unpack/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/unpack/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/unpack/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/unpack/output/s0_instances_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/unpack/output/s0_junctions_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/unpack/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/nonterminal/unpack/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/in.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/MANIFEST.tsv",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/NPZ_SHA256.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/README.md",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0,
+      "changes": 31,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/files/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/files/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/files/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/files/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/out/files/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/unpack/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/unpack/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/unpack/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/unpack/output/s0_instances_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/unpack/output/s0_junctions_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/unpack/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/rc1/unpack/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/in.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/MANIFEST.tsv",
+      "status": "added",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/NPZ_SHA256.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/README.md",
+      "status": "added",
+      "additions": 32,
+      "deletions": 0,
+      "changes": 32,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/files/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/files/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/files/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/files/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/out/files/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/unpack/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/unpack/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/unpack/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/unpack/output/s0_instances_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/unpack/output/s0_junctions_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/unpack/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/two0/unpack/run/rss.log",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/in.tgz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/MANIFEST.tsv",
+      "status": "added",
+      "additions": 9,
+      "deletions": 0,
+      "changes": 9,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/NPZ_SHA256.txt",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/README.md",
+      "status": "added",
+      "additions": 32,
+      "deletions": 0,
+      "changes": 32,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/files/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/files/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/files/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/files/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/files/run/old_rss.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/out/files/run/rss.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/output/cjunc_plan.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/output/cjunc_plan.sha256",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/output/payload_capture_kit_SBE_vgcf100.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/output/s0_instances_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/output/s0_junctions_kit_SBE_vgcf100.npz",
+      "status": "added",
+      "additions": 0,
+      "deletions": 0,
+      "changes": 0,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/output/s0_stage1_kit_SBE_vgcf100.json",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/run/old_rss.log",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/parser_cases/wrongfile/unpack/run/rss.log",
+      "status": "added",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/probe_import_rc.py",
+      "status": "added",
+      "additions": 50,
+      "deletions": 0,
+      "changes": 50,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/s0_agent/reproduction_note.txt",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/smin_agent/REVIEW_Q7.md",
+      "status": "added",
+      "additions": 96,
+      "deletions": 0,
+      "changes": 96,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/smin_agent/fixed_counterexample.json",
+      "status": "added",
+      "additions": 275,
+      "deletions": 0,
+      "changes": 275,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/smin_agent/fixed_counterexample.log",
+      "status": "added",
+      "additions": 275,
+      "deletions": 0,
+      "changes": 275,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/smin_agent/probe_smin.json",
+      "status": "added",
+      "additions": 756,
+      "deletions": 0,
+      "changes": 756,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/smin_agent/probe_smin.log",
+      "status": "added",
+      "additions": 617,
+      "deletions": 0,
+      "changes": 617,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/smin_agent/probe_smin.py",
+      "status": "added",
+      "additions": 102,
+      "deletions": 0,
+      "changes": 102,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/smin_agent/reproduce_smin_counterexample.py",
+      "status": "added",
+      "additions": 61,
+      "deletions": 0,
+      "changes": 61,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_evidence_20261109/verify_input.py",
+      "status": "added",
+      "additions": 32,
+      "deletions": 0,
+      "changes": 32,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round5_request_20261109.md",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2,
+      "changes": 4,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/codex_rint2_rr_round6_request_20261109.md",
+      "status": "added",
+      "additions": 57,
+      "deletions": 0,
+      "changes": 57,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/dem_mpm_one_way_sequential_definition_20261109.md",
+      "status": "added",
+      "additions": 58,
+      "deletions": 0,
+      "changes": 58,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/doc_refs_allowlist.tsv",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/findings.json",
+      "status": "modified",
+      "additions": 81,
+      "deletions": 22,
+      "changes": 103,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/lhs_q1_remaining_options_20261109.md",
+      "status": "added",
+      "additions": 49,
+      "deletions": 0,
+      "changes": 49,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/nonrint_approved_preparation_20261109/README.md",
+      "status": "added",
+      "additions": 49,
+      "deletions": 0,
+      "changes": 49,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/nonrint_approved_preparation_20261109/dem_nonresult_intake_form.md",
+      "status": "added",
+      "additions": 81,
+      "deletions": 0,
+      "changes": 81,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/nonrint_approved_preparation_20261109/dem_quantitative_choices_and_t12_contract.md",
+      "status": "added",
+      "additions": 100,
+      "deletions": 0,
+      "changes": 100,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/nonrint_approved_preparation_20261109/lhs_nonresult_intake_form.md",
+      "status": "added",
+      "additions": 84,
+      "deletions": 0,
+      "changes": 84,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/nonrint_approved_preparation_20261109/lhs_wsl_readonly_command_draft.md",
+      "status": "added",
+      "additions": 143,
+      "deletions": 0,
+      "changes": 143,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/nonrint_approved_preparation_20261109/mixer_ibb_qualification_receipt_plan.md",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0,
+      "changes": 76,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/nonrint_next_decisions_20261109.md",
+      "status": "added",
+      "additions": 148,
+      "deletions": 0,
+      "changes": 148,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_rr3_fix_plan_20261108.md",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0,
+      "changes": 2,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_rr5_fix_plan_20261109.md",
+      "status": "added",
+      "additions": 53,
+      "deletions": 0,
+      "changes": 53,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_siteq_prep_20261109/README.md",
+      "status": "added",
+      "additions": 352,
+      "deletions": 0,
+      "changes": 352,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_siteq_prep_20261109/SHA256SUMS",
+      "status": "added",
+      "additions": 5,
+      "deletions": 0,
+      "changes": 5,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_siteq_prep_20261109/container_test/short_block.tmpl",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0,
+      "changes": 23,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_siteq_prep_20261109/container_test/summary.txt",
+      "status": "added",
+      "additions": 27,
+      "deletions": 0,
+      "changes": 27,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_siteq_prep_20261109/container_test/summary_short.txt",
+      "status": "added",
+      "additions": 15,
+      "deletions": 0,
+      "changes": 15,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint2_siteq_prep_20261109/tools/siteq_probe.py",
+      "status": "added",
+      "additions": 1147,
+      "deletions": 0,
+      "changes": 1147,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 3,
+      "changes": 7,
+      "previous_filename": null
+    },
+    {
+      "filename": "docs/session_20260923_progress.md",
+      "status": "modified",
+      "additions": 12,
+      "deletions": 0,
+      "changes": 12,
+      "previous_filename": null
+    }
+  ]
+}

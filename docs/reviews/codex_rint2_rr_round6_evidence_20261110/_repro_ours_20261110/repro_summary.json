@@ -1,0 +1,71 @@
+{
+ "pin_tree": "HEAD 13eb293cd (git archive) · 고친 트리 = 같은 archive + 작업 트리 siteq_probe.py",
+ "rr6_01_original_tree_c02b": [
+  [
+   "matching_unit_rc0",
+   "PASS",
+   false
+  ],
+  [
+   "matching_unit_rc1",
+   "PASS",
+   false
+  ],
+  [
+   "mismatched_unit_rc0",
+   "FAIL",
+   false
+  ],
+  [
+   "invalid_json_rc0",
+   "FAIL",
+   false
+  ]
+ ],
+ "rr6_01_fixed_tree_unmodified_probe": "AssertionError at line 61 (expects buggy PASS,PASS,FAIL,FAIL) = expected failure",
+ "rr6_01_fixed_tree_expectation_updated_probe": [
+  [
+   "matching_unit_rc0",
+   "PASS",
+   0
+  ],
+  [
+   "matching_unit_rc1",
+   "FAIL",
+   1
+  ],
+  [
+   "mismatched_unit_rc0",
+   "FAIL",
+   0
+  ],
+  [
+   "invalid_json_rc0",
+   "FAIL",
+   0
+  ]
+ ],
+ "c26_both_trees": [
+  "PASS",
+  "PASS",
+  "WARN"
+ ],
+ "rr6_02_manifests": {
+  "data": [],
+  "prep": [
+   {
+    "file": "README.md",
+    "bytes": 56403,
+    "expected": "6401d4f9a2850946588e4929326c13ff319827720f47f55165f69c748f7859f2",
+    "actual": "c9a11392c24343b1130ef27257873f8c807752b3f0e772d7a200392d6e184f53",
+    "ok": false,
+    "line": 1
+   }
+  ],
+  "outer_subset": []
+ },
+ "same_as_codex_json_minus_paths": {
+  "probe": true,
+  "audit": true
+ }
+}

@@ -1,0 +1,1 @@
+Synthetic arithmetic assertions passed; zero solver runs.

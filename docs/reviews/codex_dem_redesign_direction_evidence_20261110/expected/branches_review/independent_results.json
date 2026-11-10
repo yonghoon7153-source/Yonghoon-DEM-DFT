@@ -1,0 +1,232 @@
+{
+  "scope": "Independent document algebra and synthetic arithmetic only; no scientific runs.",
+  "source": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+  "derived_before_reading_author_self_tests": true,
+  "checks": {
+    "ratio_grade_samples": 1000,
+    "raw_point_samples": 15625,
+    "test_point_grade_combinations": 125,
+    "resolution_grade_combinations": 64,
+    "A_grade_samples": 729,
+    "upper_stage3_combinations": 512,
+    "upper_stage3_route_counts": {
+      "가": 1,
+      "나": 19,
+      "라": 485,
+      "마": 7
+    },
+    "upper_stage4_combinations": 16,
+    "upper_stage4_table": [
+      {
+        "actual": "below",
+        "softened": "below",
+        "route": "4-iii"
+      },
+      {
+        "actual": "below",
+        "softened": "cross",
+        "route": "hold"
+      },
+      {
+        "actual": "below",
+        "softened": "above",
+        "route": "hold"
+      },
+      {
+        "actual": "below",
+        "softened": "hold",
+        "route": "hold"
+      },
+      {
+        "actual": "cross",
+        "softened": "below",
+        "route": "4-i"
+      },
+      {
+        "actual": "cross",
+        "softened": "cross",
+        "route": "4-i"
+      },
+      {
+        "actual": "cross",
+        "softened": "above",
+        "route": "hold"
+      },
+      {
+        "actual": "cross",
+        "softened": "hold",
+        "route": "hold"
+      },
+      {
+        "actual": "above",
+        "softened": "below",
+        "route": "4-iii"
+      },
+      {
+        "actual": "above",
+        "softened": "cross",
+        "route": "4-ii"
+      },
+      {
+        "actual": "above",
+        "softened": "above",
+        "route": "4-iii"
+      },
+      {
+        "actual": "above",
+        "softened": "hold",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "below",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "cross",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "above",
+        "route": "hold"
+      },
+      {
+        "actual": "hold",
+        "softened": "hold",
+        "route": "hold"
+      }
+    ],
+    "claim": "The abstract upper tables are total and single-valued for supplied valid statuses."
+  },
+  "counterexamples": {
+    "BR-01_exploration_all_failed": {
+      "grid_GPa": [
+        0.03,
+        0.05,
+        0.08,
+        0.12,
+        0.18,
+        0.27,
+        0.4,
+        0.6
+      ],
+      "first_attempt": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "retry": [
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed",
+        "failed"
+      ],
+      "surviving_start_candidates": [],
+      "final_box_attempts": 0,
+      "missing_operation": "argmin over an empty candidate set",
+      "assigned_arm_status_by_memo": null
+    },
+    "BR-02_qualification_seed_choice": {
+      "walk_sigma_GPa": 0.18,
+      "final_box_seed_porosity_percent": [
+        11.4,
+        11.5,
+        11.6
+      ],
+      "mean_percent": 11.5,
+      "qualified_softened_arm": "cross",
+      "qualification_observations": [
+        {
+          "fixed_seed": 1,
+          "eight_cell_percent": 11.0,
+          "twelve_cell_percent": 11.9,
+          "difference_pp": 0.9,
+          "qualified": true
+        },
+        {
+          "fixed_seed": 2,
+          "eight_cell_percent": 11.0,
+          "twelve_cell_percent": 12.1,
+          "difference_pp": 1.1,
+          "qualified": false
+        },
+        {
+          "fixed_seed": 3,
+          "eight_cell_percent": 11.0,
+          "twelve_cell_percent": 11.9,
+          "difference_pp": 0.9,
+          "qualified": true
+        }
+      ],
+      "outcomes_by_chosen_seed": [
+        "4-i",
+        "hold",
+        "4-i"
+      ]
+    },
+    "BR-03_reopened_F_held_production": {
+      "stage3_route": "마",
+      "S_actual": "above",
+      "S_softened": "cross",
+      "initial_stage4_route": "4-ii",
+      "F_actual_walk": {
+        "seen": [
+          0.18,
+          0.27
+        ],
+        "cross": true,
+        "sigma_star": [
+          0.220454076850486
+        ]
+      },
+      "F_actual_resolution_difference_pp": 1.2,
+      "resolution_threshold_pp": 1.0,
+      "F_actual_qualification": "hold",
+      "F_softened_status": "cross",
+      "line_400_literal_choice": "F-actual production",
+      "line_409_prohibition": "Do not use values from the held arm",
+      "main_table_result_if_applied": "hold"
+    }
+  },
+  "non_findings_and_limitations": {
+    "resolution_opposite_masking": {
+      "grades_12_16_24": [
+        "same",
+        "different",
+        "opposite"
+      ],
+      "resolved_grade": "intermediate",
+      "decision_resolution": 24,
+      "other_test_grade": "same",
+      "F_band": "in",
+      "A_grade": "sufficient",
+      "final_route": "마",
+      "status": "Defined by the explicit resolution rule; limitation, not a missing branch."
+    },
+    "endpoint_plateau": {
+      "seen": [
+        0.08,
+        0.05,
+        0.03
+      ],
+      "cross": true,
+      "sigma_star": [
+        0.08,
+        0.05,
+        0.03
+      ],
+      "status": "Potential tie wording; line 394 first-encountered language may settle it, so not separately filed."
+    }
+  }
+}

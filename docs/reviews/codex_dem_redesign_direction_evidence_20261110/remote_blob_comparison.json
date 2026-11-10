@@ -1,0 +1,416 @@
+[
+  {
+    "path": "litdb/papers/bardenhagen2000_mpm_granular_multibody_frictional_contact.md",
+    "local": "8d1ffd8aa1faa521c656da89eff3830e09a4db03",
+    "remote": {
+      "sha": "8d1ffd8aa1faa521c656da89eff3830e09a4db03",
+      "size": 50262
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/bardenhagen2001_mpm_improved_contact_granular_stress_waves.md",
+    "local": "1079e12983d1c2987f73063ebe49dcd6066027ba",
+    "remote": {
+      "sha": "1079e12983d1c2987f73063ebe49dcd6066027ba",
+      "size": 51482
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd.md",
+    "local": "ca14f0c25297c1780ca89e01b7235ea90b9f8f51",
+    "remote": {
+      "sha": "ca14f0c25297c1780ca89e01b7235ea90b9f8f51",
+      "size": 65692
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings.md",
+    "local": "6a409fec71aa012854e8ab6f6b5a42314a4a6588",
+    "remote": {
+      "sha": "6a409fec71aa012854e8ab6f6b5a42314a4a6588",
+      "size": 20484
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic.md",
+    "local": "37f29b1c6fa8fa917a61948d9ac9cb9bee32b34b",
+    "remote": {
+      "sha": "37f29b1c6fa8fa917a61948d9ac9cb9bee32b34b",
+      "size": 39290
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/demirtas2021_mpfem_hollow_sphere_die_compaction.md",
+    "local": "ed3b03fdcdc6b16ace8bc7e991e9b3b07d7d025a",
+    "remote": {
+      "sha": "ed3b03fdcdc6b16ace8bc7e991e9b3b07d7d025a",
+      "size": 84508
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/devaucorbeil2020_mpm_after_25_years_review.md",
+    "local": "b741f16af7c4c073907a9a9679acd8c39a2425ab",
+    "remote": {
+      "sha": "b741f16af7c4c073907a9a9679acd8c39a2425ab",
+      "size": 8668
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/giannis2021_stress_based_multicontact_dem.md",
+    "local": "33392674a5083269ecaa53ccd985f6634c096e8a",
+    "remote": {
+      "sha": "33392674a5083269ecaa53ccd985f6634c096e8a",
+      "size": 51770
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/martinbouvard2003_dem_composite_cold_compaction.md",
+    "local": "f62b354b898ee36f811fef4e1d04c74e853014dd",
+    "remote": {
+      "sha": "f62b354b898ee36f811fef4e1d04c74e853014dd",
+      "size": 19095
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/nezamabadi2022_mpm_cd_plastic_particle_compaction.md",
+    "local": "5e9fd5a363ac2550de0ad5807a608d8a8161171e",
+    "remote": {
+      "sha": "5e9fd5a363ac2550de0ad5807a608d8a8161171e",
+      "size": 54103
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/nguyen2017_mpm_bpm_deformable_particle_compaction.md",
+    "local": "d2e2da4d797805339cd69127558841ae980a8764",
+    "remote": {
+      "sha": "d2e2da4d797805339cd69127558841ae980a8764",
+      "size": 37781
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/pycompact2025_dem_mpfem_workflow.md",
+    "local": "722945845545d4116bc1aa3ee8a65a4d44e8b3bf",
+    "remote": {
+      "sha": "722945845545d4116bc1aa3ee8a65a4d44e8b3bf",
+      "size": 62070
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/so2021_dem_mold_pressure_assb_coldpress.md",
+    "local": "c06ab2ca34407185de69c5874e9c7b35a3b841d2",
+    "remote": {
+      "sha": "c06ab2ca34407185de69c5874e9c7b35a3b841d2",
+      "size": 19923
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/so2022_dem_contact_model_assb_compaction_sintering.md",
+    "local": "4a1bacf012a36eae14539126c1289c4c82fb151c",
+    "remote": {
+      "sha": "4a1bacf012a36eae14539126c1289c4c82fb151c",
+      "size": 36074
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/varkey2026_multicontact_elastoplastic_dem.md",
+    "local": "39a80858d6ea9b929bc932404837ca43e44f4441",
+    "remote": {
+      "sha": "39a80858d6ea9b929bc932404837ca43e44f4441",
+      "size": 8676
+    },
+    "match": true
+  },
+  {
+    "path": "litdb/papers/zunker2025_dem_large_deformation_compaction.md",
+    "local": "4225456b0d9f55ffe57488f2736aa7c9166b11b9",
+    "remote": {
+      "sha": "4225456b0d9f55ffe57488f2736aa7c9166b11b9",
+      "size": 47801
+    },
+    "match": true
+  },
+  {
+    "path": "repo/CLAUDE.md",
+    "local": "1f7309281911b918c85affc44acdd18331b54ab8",
+    "remote": {
+      "sha": "1f7309281911b918c85affc44acdd18331b54ab8",
+      "size": 393407
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/data/real14_am_scaffold.csv",
+    "local": "09c480dcbbb1c6b23a678a85aae9ede57b0222e3",
+    "remote": {
+      "sha": "09c480dcbbb1c6b23a678a85aae9ede57b0222e3",
+      "size": 17475
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/data/real14_se_scaffold.csv",
+    "local": "50a1b0d0e12e1c3c672cbb3558c2274c834acfb5",
+    "remote": {
+      "sha": "50a1b0d0e12e1c3c672cbb3558c2274c834acfb5",
+      "size": 1247852
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/data/se_pellet_eis_20261026/README.md",
+    "local": "ec8a728d30778d1f5a3f24483678bbd764957fa8",
+    "remote": {
+      "sha": "ec8a728d30778d1f5a3f24483678bbd764957fa8",
+      "size": 10805
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/mpm3d_calibration.md",
+    "local": "87d51afbed84e77b3095f892b1511c1b6ae9e2eb",
+    "remote": {
+      "sha": "87d51afbed84e77b3095f892b1511c1b6ae9e2eb",
+      "size": 20453
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/mpm_dpc_cap_crosscheck.md",
+    "local": "47cd266a3aefc10616a6e92684d6aec4350a4b59",
+    "remote": {
+      "sha": "47cd266a3aefc10616a6e92684d6aec4350a4b59",
+      "size": 6370
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/codex_dem_redesign_direction_request_20261109.md",
+    "local": "14987a1e9d4f4428282a8352f3711d5ba4e50144",
+    "remote": {
+      "sha": "14987a1e9d4f4428282a8352f3711d5ba4e50144",
+      "size": 6713
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_mpm_one_way_sequential_definition_20261109.md",
+    "local": "bf23f2191281a2e49ea2496e0d6461e8f7bfbdd9",
+    "remote": {
+      "sha": "bf23f2191281a2e49ea2496e0d6461e8f7bfbdd9",
+      "size": 8633
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_protocol_gen2_plan_draft_20261014.md",
+    "local": "edae89251d9bbff1a512f9dc41240008e88d61e8",
+    "remote": {
+      "sha": "edae89251d9bbff1a512f9dc41240008e88d61e8",
+      "size": 99386
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/changelog_v2.md",
+    "local": "ca0d20e33dab7dd0edb7d891c717a546f1ee3a38",
+    "remote": {
+      "sha": "ca0d20e33dab7dd0edb7d891c717a546f1ee3a38",
+      "size": 9935
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/changelog_v3.md",
+    "local": "b81ce49bc39165f16e405074a3e7be6ec3416374",
+    "remote": {
+      "sha": "b81ce49bc39165f16e405074a3e7be6ec3416374",
+      "size": 18684
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/changelog_v3_1.md",
+    "local": "ef0e6a85a264b491469d8ee0b88acd0e45be89b7",
+    "remote": {
+      "sha": "ef0e6a85a264b491469d8ee0b88acd0e45be89b7",
+      "size": 15608
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v1.md",
+    "local": "e618315161a862856b51fce694511766ed787b37",
+    "remote": {
+      "sha": "e618315161a862856b51fce694511766ed787b37",
+      "size": 13569
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v2.md",
+    "local": "1d53fa8143af7d3b3e95a0c855e9e973fbdfd629",
+    "remote": {
+      "sha": "1d53fa8143af7d3b3e95a0c855e9e973fbdfd629",
+      "size": 58967
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v3.md",
+    "local": "6d81e26f83e56c29e66c81ee7f75a24e2df4b329",
+    "remote": {
+      "sha": "6d81e26f83e56c29e66c81ee7f75a24e2df4b329",
+      "size": 91701
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+    "local": "3ddf429f5e4095e89d6dd372cbb0a5a938c9cc4a",
+    "remote": {
+      "sha": "3ddf429f5e4095e89d6dd372cbb0a5a938c9cc4a",
+      "size": 114603
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/pa3/fork_enum.py",
+    "local": "7955ef75fd11bd1d23dc072009d82121d7759dbf",
+    "remote": {
+      "sha": "7955ef75fd11bd1d23dc072009d82121d7759dbf",
+      "size": 3367
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/pa3/s4_enum.py",
+    "local": "7034073858e48b09d9f79c4994a25800baf28845",
+    "remote": {
+      "sha": "7034073858e48b09d9f79c4994a25800baf28845",
+      "size": 1525
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/pa3/yield.py",
+    "local": "3320670e464a5d92955f7f2d58a25f41caed566d",
+    "remote": {
+      "sha": "3320670e464a5d92955f7f2d58a25f41caed566d",
+      "size": 1421
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/preattack1_on_v1.md",
+    "local": "0f98201932f34af4b7dc6bef3728d8d87259d66d",
+    "remote": {
+      "sha": "0f98201932f34af4b7dc6bef3728d8d87259d66d",
+      "size": 43009
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/preattack2_on_v2.md",
+    "local": "c9cb43fb9a60677d6b9572df05bb00971d3224be",
+    "remote": {
+      "sha": "c9cb43fb9a60677d6b9572df05bb00971d3224be",
+      "size": 33318
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_redesign_direction_20261109/preattack3_on_v3.md",
+    "local": "75bf6982008e956f432ddbe843218b186641e41b",
+    "remote": {
+      "sha": "75bf6982008e956f432ddbe843218b186641e41b",
+      "size": 25316
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+    "local": "0e3b651a81a0bf171cadcad6ef0cc89cca4b8e4a",
+    "remote": {
+      "sha": "0e3b651a81a0bf171cadcad6ef0cc89cca4b8e4a",
+      "size": 132757
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/fam_platen_prereg_20260812.md",
+    "local": "6b6e85d9d150a170b92abcdc9f5d2211f7b0c75c",
+    "remote": {
+      "sha": "6b6e85d9d150a170b92abcdc9f5d2211f7b0c75c",
+      "size": 126499
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/findings.json",
+    "local": "876d93b4be5aa7d6acc69590523470575a144aa6",
+    "remote": {
+      "sha": "876d93b4be5aa7d6acc69590523470575a144aa6",
+      "size": 2820507
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/reviews/mpm_coverage_interface_design_memo_20261103.md",
+    "local": "56d65071169bc67b17fbb17890413ecd87de5788",
+    "remote": {
+      "sha": "56d65071169bc67b17fbb17890413ecd87de5788",
+      "size": 26900
+    },
+    "match": true
+  },
+  {
+    "path": "repo/docs/session_20260923_progress.md",
+    "local": "d6ad3b32dd3c20d3da9414c3a0b0d00db47aec2b",
+    "remote": {
+      "sha": "d6ad3b32dd3c20d3da9414c3a0b0d00db47aec2b",
+      "size": 733749
+    },
+    "match": true
+  },
+  {
+    "path": "repo/scripts/dem3d_plastic.py",
+    "local": "760c0c8953572e64f3a36e81fe0d7d7ea668baf2",
+    "remote": {
+      "sha": "760c0c8953572e64f3a36e81fe0d7d7ea668baf2",
+      "size": 41676
+    },
+    "match": true
+  },
+  {
+    "path": "repo/scripts/mpm3d_compaction.py",
+    "local": "fb1bf65535135ecdb7acb87833b7acdb389e54db",
+    "remote": {
+      "sha": "fb1bf65535135ecdb7acb87833b7acdb389e54db",
+      "size": 335832
+    },
+    "match": true
+  },
+  {
+    "path": "repo/scripts/mpm_dem_match.py",
+    "local": "0353cc7c77a11fa15bbe1bbfeb637fb3fddd35f3",
+    "remote": {
+      "sha": "0353cc7c77a11fa15bbe1bbfeb637fb3fddd35f3",
+      "size": 41291
+    },
+    "match": true
+  }
+]

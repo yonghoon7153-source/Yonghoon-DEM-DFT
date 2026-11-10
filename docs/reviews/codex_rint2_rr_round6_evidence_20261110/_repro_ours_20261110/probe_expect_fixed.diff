@@ -1,0 +1,4 @@
+61c61
+< assert [r['status'] for r in out['c02b']] == ['PASS', 'PASS', 'FAIL', 'FAIL']
+---
+> assert [r['status'] for r in out['c02b']] == ['PASS', 'FAIL', 'FAIL', 'FAIL']

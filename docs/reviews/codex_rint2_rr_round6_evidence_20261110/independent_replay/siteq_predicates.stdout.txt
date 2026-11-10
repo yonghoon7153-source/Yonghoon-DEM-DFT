@@ -1,0 +1,355 @@
+{
+  "source_sha256": "a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588",
+  "executed_ast_functions": {
+    "is_netfs": [
+      334,
+      336
+    ],
+    "c02b": [
+      367,
+      383
+    ],
+    "c26": [
+      932,
+      960
+    ]
+  },
+  "actual_subprocess_calls": 0,
+  "actual_host_or_proc_access": false,
+  "c02b": [
+    {
+      "case": "matching_unit_rc0",
+      "supplied_child_rc": 0,
+      "status": "PASS",
+      "child_rc_preserved": false,
+      "detail": "PATH python3 env unit {\"executable\": \"/synthetic/python3\", \"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"} (probe {\"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"})",
+      "data": {
+        "path_python3": "/synthetic/python3",
+        "sys_executable": "/synthetic/python3",
+        "path_python3_unit": {
+          "python_minor": "3.8",
+          "numpy": "1.24.4",
+          "scipy": "1.10.1",
+          "executable": "/synthetic/python3"
+        },
+        "same_path_as_sys_executable": true
+      }
+    },
+    {
+      "case": "matching_unit_rc1",
+      "supplied_child_rc": 1,
+      "status": "PASS",
+      "child_rc_preserved": false,
+      "detail": "PATH python3 env unit {\"executable\": \"/synthetic/python3\", \"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"} (probe {\"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"})",
+      "data": {
+        "path_python3": "/synthetic/python3",
+        "sys_executable": "/synthetic/python3",
+        "path_python3_unit": {
+          "python_minor": "3.8",
+          "numpy": "1.24.4",
+          "scipy": "1.10.1",
+          "executable": "/synthetic/python3"
+        },
+        "same_path_as_sys_executable": true
+      }
+    },
+    {
+      "case": "mismatched_unit_rc0",
+      "supplied_child_rc": 0,
+      "status": "FAIL",
+      "child_rc_preserved": false,
+      "detail": "PATH python3 env unit {\"numpy\": \"bad\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"} (probe {\"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"})",
+      "data": {
+        "path_python3": "/synthetic/python3",
+        "sys_executable": "/synthetic/python3",
+        "path_python3_unit": {
+          "python_minor": "3.8",
+          "numpy": "bad",
+          "scipy": "1.10.1"
+        },
+        "same_path_as_sys_executable": true
+      }
+    },
+    {
+      "case": "invalid_json_rc0",
+      "supplied_child_rc": 0,
+      "status": "FAIL",
+      "child_rc_preserved": false,
+      "detail": "PATH python3 env unit null (probe {\"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"})",
+      "data": {
+        "path_python3": "/synthetic/python3",
+        "sys_executable": "/synthetic/python3",
+        "path_python3_unit": null,
+        "same_path_as_sys_executable": true
+      }
+    }
+  ],
+  "c26": [
+    {
+      "plan_dirs": "",
+      "status": "PASS",
+      "detail": "out=ext4, repo=ext4, home=ext4",
+      "summary_rc_if_this_was_the_only_record": 0
+    },
+    {
+      "plan_dirs": "/synthetic/missing_plan",
+      "status": "PASS",
+      "detail": "out=ext4, repo=ext4, home=ext4, plan_dir=None; plan dirs missing (not created yet?): ['plan_dir:/synthetic/missing_plan']",
+      "summary_rc_if_this_was_the_only_record": 0
+    },
+    {
+      "plan_dirs": "/synthetic/otherfs_plan",
+      "status": "WARN",
+      "detail": "out=ext4, repo=ext4, home=ext4, plan_dir=ext4; plan dirs on another filesystem than the siteq folder: ['plan_dir:/synthetic/otherfs_plan'] -> rerun with SITEQ_BASE on that filesystem",
+      "summary_rc_if_this_was_the_only_record": 0
+    }
+  ],
+  "provided_records": {
+    "kgy": {
+      "sha256": "9643b7a9a66071d64b8c9c4fa483c522e5a45f137fb431cf402ac3b43ecdfb69",
+      "counts": {
+        "PASS": 25,
+        "INFO": 8
+      },
+      "n_unique_checks": 33,
+      "probe_sha256": "a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588",
+      "probe_sha256_matches_read_source": true,
+      "pin": "db86ce9b955c2aa13430680f79a431e8a580ed83",
+      "uid": 1003,
+      "euid": 1003,
+      "plan_dirs": "<HOME>/sdcp",
+      "utc_start": "2026-11-09T09:54:38Z",
+      "utc_end": "2026-11-09T09:54:53Z",
+      "seconds": 14.7,
+      "summary_rc_recomputed_from_statuses": 0,
+      "C02_unit": {
+        "numpy": "1.24.4",
+        "python_minor": "3.8",
+        "scipy": "1.10.1"
+      },
+      "C02b": {
+        "path_python3": "<HOME>/dem-venv/bin/python3",
+        "path_python3_unit": {
+          "executable": "<HOME>/dem-venv/bin/python3",
+          "numpy": "1.24.4",
+          "python_minor": "3.8",
+          "scipy": "1.10.1"
+        },
+        "same_path_as_sys_executable": true,
+        "sys_executable": "<HOME>/dem-venv/bin/python3"
+      },
+      "C04_key": "095af7ab8bcced0ca2489fe09b7cb9b48da0727ba37c9ea1eb8a8e98c987d21d",
+      "C13b": {
+        "data": {
+          "can_write": false,
+          "ex": "stop:ATTEMPT_LEDGER_MISMATCH",
+          "sh": "acquired"
+        },
+        "detail": "exclusive=stop:ATTEMPT_LEDGER_MISMATCH shared=acquired (expected stop / acquired-without-lock)",
+        "id": "C13b",
+        "seconds": 0.005,
+        "status": "PASS",
+        "title": "ledger_lock on a read-only ledger .git"
+      },
+      "C16_mode000": [
+        "unreadable",
+        null
+      ],
+      "C17": {
+        "mode": "600"
+      },
+      "C18": {
+        "new_file_mode": "664",
+        "umask": "002"
+      },
+      "C26": {
+        "data": {
+          "home:<HOME>": {
+            "dev_match": true,
+            "exists": true,
+            "free_bytes": 340050706432,
+            "fstype": "ext4",
+            "inodes_free": 59871279,
+            "inodes_total": 61022208,
+            "mount_opts": "rw,relatime",
+            "mount_point": "/",
+            "path": "<HOME>",
+            "realpath": "<HOME>",
+            "st_dev": "259:2",
+            "super_opts": "rw",
+            "total_bytes": 982820896768,
+            "writable": true
+          },
+          "out:<HOME>/rint_siteq_kgy_20261109": {
+            "dev_match": true,
+            "exists": true,
+            "free_bytes": 340050706432,
+            "fstype": "ext4",
+            "inodes_free": 59871279,
+            "inodes_total": 61022208,
+            "mount_opts": "rw,relatime",
+            "mount_point": "/",
+            "path": "<HOME>/rint_siteq_kgy_20261109",
+            "realpath": "<HOME>/rint_siteq_kgy_20261109",
+            "st_dev": "259:2",
+            "super_opts": "rw",
+            "total_bytes": 982820896768,
+            "writable": true
+          },
+          "plan_dir:<HOME>/sdcp": {
+            "dev_match": true,
+            "exists": true,
+            "free_bytes": 340050706432,
+            "fstype": "ext4",
+            "inodes_free": 59871279,
+            "inodes_total": 61022208,
+            "mount_opts": "rw,relatime",
+            "mount_point": "/",
+            "path": "<HOME>/sdcp",
+            "realpath": "<HOME>/sdcp",
+            "st_dev": "259:2",
+            "super_opts": "rw",
+            "total_bytes": 982820896768,
+            "writable": true
+          },
+          "repo:<HOME>/dem-siteq-db86ce9b9": {
+            "dev_match": true,
+            "exists": true,
+            "free_bytes": 340050706432,
+            "fstype": "ext4",
+            "inodes_free": 59871279,
+            "inodes_total": 61022208,
+            "mount_opts": "rw,relatime",
+            "mount_point": "/",
+            "path": "<HOME>/dem-siteq-db86ce9b9",
+            "realpath": "<HOME>/dem-siteq-db86ce9b9",
+            "st_dev": "259:2",
+            "super_opts": "rw",
+            "total_bytes": 982820896768,
+            "writable": true
+          }
+        },
+        "detail": "out=ext4, repo=ext4, home=ext4, plan_dir=ext4",
+        "id": "C26",
+        "seconds": 0.001,
+        "status": "PASS",
+        "title": "filesystem type, free space, inodes, writability (siteq, repo, home, plan dirs)"
+      }
+    },
+    "gabia": {
+      "sha256": "163c829f428dd61a51640c14aaddfa253ae5bc45a57f4188c60c69cfda4178b1",
+      "counts": {
+        "PASS": 24,
+        "INFO": 9
+      },
+      "n_unique_checks": 33,
+      "probe_sha256": "a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588",
+      "probe_sha256_matches_read_source": true,
+      "pin": "db86ce9b955c2aa13430680f79a431e8a580ed83",
+      "uid": 0,
+      "euid": 0,
+      "plan_dirs": "",
+      "utc_start": "2026-11-09T09:54:47Z",
+      "utc_end": "2026-11-09T09:55:05Z",
+      "seconds": 17.5,
+      "summary_rc_recomputed_from_statuses": 0,
+      "C02_unit": {
+        "numpy": "1.24.4",
+        "python_minor": "3.8",
+        "scipy": "1.10.1"
+      },
+      "C02b": {
+        "path_python3": "<HOME>/dem-venv/bin/python3",
+        "path_python3_unit": {
+          "executable": "<HOME>/dem-venv/bin/python3",
+          "numpy": "1.24.4",
+          "python_minor": "3.8",
+          "scipy": "1.10.1"
+        },
+        "same_path_as_sys_executable": true,
+        "sys_executable": "<HOME>/dem-venv/bin/python3"
+      },
+      "C04_key": "095af7ab8bcced0ca2489fe09b7cb9b48da0727ba37c9ea1eb8a8e98c987d21d",
+      "C13b": {
+        "data": {
+          "can_write": true,
+          "ex": "acquired",
+          "sh": "acquired"
+        },
+        "detail": "read-only .git is still writable for this user (root or FS ignores modes): ex=acquired sh=acquired",
+        "id": "C13b",
+        "seconds": 0.012,
+        "status": "INFO",
+        "title": "ledger_lock on a read-only ledger .git"
+      },
+      "C16_mode000": [
+        "ok",
+        3
+      ],
+      "C17": {
+        "mode": "600"
+      },
+      "C18": {
+        "new_file_mode": "644",
+        "umask": "022"
+      },
+      "C26": {
+        "data": {
+          "home:<HOME>": {
+            "dev_match": true,
+            "exists": true,
+            "free_bytes": 211530719232,
+            "fstype": "ext4",
+            "inodes_free": 27553166,
+            "inodes_total": 28131328,
+            "mount_opts": "rw,relatime",
+            "mount_point": "/",
+            "path": "<HOME>",
+            "realpath": "<HOME>",
+            "st_dev": "8:4",
+            "super_opts": "rw",
+            "total_bytes": 452390608896,
+            "writable": true
+          },
+          "out:<HOME>/rint_siteq_gabia_20261109": {
+            "dev_match": true,
+            "exists": true,
+            "free_bytes": 211530719232,
+            "fstype": "ext4",
+            "inodes_free": 27553166,
+            "inodes_total": 28131328,
+            "mount_opts": "rw,relatime",
+            "mount_point": "/",
+            "path": "<HOME>/rint_siteq_gabia_20261109",
+            "realpath": "<HOME>/rint_siteq_gabia_20261109",
+            "st_dev": "8:4",
+            "super_opts": "rw",
+            "total_bytes": 452390608896,
+            "writable": true
+          },
+          "repo:<HOME>/dem-siteq-db86ce9b9": {
+            "dev_match": true,
+            "exists": true,
+            "free_bytes": 211530719232,
+            "fstype": "ext4",
+            "inodes_free": 27553166,
+            "inodes_total": 28131328,
+            "mount_opts": "rw,relatime",
+            "mount_point": "/",
+            "path": "<HOME>/dem-siteq-db86ce9b9",
+            "realpath": "<HOME>/dem-siteq-db86ce9b9",
+            "st_dev": "8:4",
+            "super_opts": "rw",
+            "total_bytes": 452390608896,
+            "writable": true
+          }
+        },
+        "detail": "out=ext4, repo=ext4, home=ext4",
+        "id": "C26",
+        "seconds": 0.002,
+        "status": "PASS",
+        "title": "filesystem type, free space, inodes, writability (siteq, repo, home, plan dirs)"
+      }
+    }
+  }
+}

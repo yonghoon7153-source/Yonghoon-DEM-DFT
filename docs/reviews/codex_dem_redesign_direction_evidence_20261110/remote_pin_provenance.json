@@ -1,0 +1,13 @@
+{
+  "review_pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+  "review_tree": "cf4291a761924946645c94ab01dca095c14b215d",
+  "literature_pin": "0991161693d2d8f36975f2c9454472b54bb11c2c",
+  "literature_tree": "abb88946555859acbb280dfca35ede59d384bb54",
+  "verified_on": "2026-11-10",
+  "method": "GitHub connector GET commit/tree entries; locally recomputed Git SHA1 of each supplied file",
+  "review_commit_url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+  "literature_commit_url": "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/commits/0991161693d2d8f36975f2c9454472b54bb11c2c",
+  "input_blobs_verified": 46,
+  "extra_readonly_source_blobs_verified": 4,
+  "git_mutations": 0
+}

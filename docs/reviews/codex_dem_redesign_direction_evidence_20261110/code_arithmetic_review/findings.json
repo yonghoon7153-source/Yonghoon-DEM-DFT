@@ -1,0 +1,69 @@
+{
+  "pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+  "scope": ["memo section 7 Q2", "Q3", "Q13", "Q16", "appendix arithmetic"],
+  "execution_status": "HOLD_UNCHANGED",
+  "findings": [
+    {
+      "id": "CA-P2-01",
+      "priority": 2,
+      "title": "Frozen AM constraint reactions are not zero load support",
+      "target": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md:125",
+      "evidence": ["scripts/mpm3d_compaction.py:2983", "scripts/mpm3d_compaction.py:2990", "docs/reviews/fam_platen_prereg_20260812.md:234"],
+      "counterexample": "Unit grid mass with vz=-1 clamped to zero receives +1 impulse; the fixed AM reaction is -1.",
+      "minimum_fix": "Distinguish nonzero constraint reaction from missing AM-AM load transfer, rigid-body dynamics and identifiable phase load sharing; leave W4 cause unseparated.",
+      "results_key": "synthetic.frozen_AM",
+      "limits": "No new measurement of actual W4 load magnitude or causal fraction."
+    },
+    {
+      "id": "CA-P2-02",
+      "priority": 2,
+      "title": "Bilateral and unilateral platen conditions differ even during descent",
+      "target": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md:286",
+      "evidence": ["scripts/mpm3d_compaction.py:2996", "scripts/mpm_dem_match.py:196"],
+      "counterexample": "Descending platen velocity=-1 and bed velocity=-2: 3D clamps to -1 with negative wall impulse; 2D leaves -2 and adds no impulse.",
+      "minimum_fix": "Withdraw compression-only equivalence; scope S/F inference to their common unilateral boundary and specify a relative-separation boundary test.",
+      "results_key": "synthetic.platen_downward",
+      "limits": "Does not establish frequency or size of this effect in the future benchmark."
+    },
+    {
+      "id": "CA-P2-03",
+      "priority": 2,
+      "title": "K_safe lacks a relative support-displacement bound",
+      "target": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md:253",
+      "evidence": ["docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md:254", "scripts/mpm3d_compaction.py:2952", "scripts/mpm3d_compaction.py:3017"],
+      "counterexample": "Support gap 1.5 cells and each body's one-cell displacement bound allow two-cell relative closure; a graph padded by only one cell misses the pair.",
+      "minimum_fix": "Define support-set movement bounds, pairwise summed or explicitly relative dilation, periodic/deformation handling, and recolour/fallback before a violating P2G.",
+      "results_key": "synthetic.relative_displacement",
+      "limits": "No actual K_safe, colouring or collision frequency was measured."
+    },
+    {
+      "id": "CA-P2-04",
+      "priority": 2,
+      "title": "Nearest reassignment is not a conservative multibody occupancy bound",
+      "target": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md:252",
+      "evidence": ["docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md:253", "scripts/mpm3d_compaction.py:2324", "scripts/mpm3d_compaction.py:2351"],
+      "counterexample": "Three coincident equal sphere supports require a 3-clique, but union raster plus deterministic nearest-ID tie assignment retains only one body.",
+      "minimum_fix": "Preserve seed parent IDs and separately count all original support regions in compressed-geometry stress tests; label union/Voronoi results as observed reconstruction, not a worst-case upper bound.",
+      "results_key": "synthetic.nearest_reassignment",
+      "limits": "Logical synthetic counterexample only; it does not claim coincident grains exist in real_14 or measure its undercount."
+    },
+    {
+      "id": "CA-P2-05",
+      "priority": 2,
+      "title": "Existing C-prime code has unlisted lock parameters",
+      "target": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md:175",
+      "evidence": ["scripts/dem3d_plastic.py:86", "scripts/dem3d_plastic.py:91", "scripts/dem3d_plastic.py:131", "scripts/dem3d_plastic.py:290"],
+      "counterexample": "At fixed sigma_y=.15, R*=.25, E*=13.186813, delta=.05 and klock=8, beta=.06 vs .30 changes scalar contact force by 51.72066 times.",
+      "minimum_fix": "Declare C_H, beta_lock and klock with provenance and whether retained, removed or fixed independently; count unsourced choices under existing section 3-2 rules.",
+      "results_key": "dem_lock_counterexample",
+      "limits": "Future C-prime may remove the lock branch; no alternative parameters are selected and no full DEM outcome is inferred."
+    }
+  ],
+  "conditional_checks_not_escalated_to_findings": [
+    "Memory and seed rounding near integer lattice shell; new exact geometry not registered.",
+    "real_14 count mass implies phi=.843177 at 50x50x30.3, not the appendix's .88 height assumption.",
+    "Colour field bytes and cap produce theoretical upper bounds, not allocation certification.",
+    "CPU weeks have no measured throughput; base run count 96 and eligible 24-cell extension to114 are correct.",
+    "Historical files mpm2d_real9.py, mpm_dem_wallP_crossvalidation.md, dem3d_composite_overshielding.md absent from package."
+  ]
+}

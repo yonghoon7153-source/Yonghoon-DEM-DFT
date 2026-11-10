@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "input_files": 48,
+  "input_hash_rows": 47,
+  "pinned_source_blobs": 46,
+  "checks": [
+    {
+      "script": "branches_review/independent_enumeration.py",
+      "returncode": 0,
+      "expected_json_matches": true,
+      "generated_sha256": "b92ef68c86ccbc104bdcc1a33bcc5401fcc6e6052dcb56996e1b3dab58ae04e7"
+    },
+    {
+      "script": "physics_review/counterexamples.py",
+      "returncode": 0,
+      "expected_json_matches": true,
+      "generated_sha256": "32992ae5be325043f88cc7d4bf94730b5702e76348befacb2a09bddc79c13137"
+    },
+    {
+      "script": "code_arithmetic_review/reproduce.py",
+      "returncode": 0,
+      "expected_json_matches": true,
+      "generated_sha256": "78807d97741bbb9a0d7af0ad2269b4a602242d5612094724324623b35dab3fe1"
+    }
+  ],
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "numpy": "2.5.3",
+  "scipy": "1.16.3",
+  "numeric_compare_rtol": 1e-10,
+  "numeric_compare_atol": 1e-11,
+  "research_model_runs": 0,
+  "remote_host_access": false,
+  "scope": "input bytes, saved Git blob metadata, bounded independent arithmetic only"
+}

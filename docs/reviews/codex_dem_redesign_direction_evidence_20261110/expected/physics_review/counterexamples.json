@@ -1,0 +1,77 @@
+{
+  "scope": "synthetic arithmetic, zero solver runs",
+  "mesh_grade_counterexample": [
+    {
+      "cells_per_diameter": 8,
+      "S_over_F": 1.52,
+      "grade": "different",
+      "F_phi_m": 0.94
+    },
+    {
+      "cells_per_diameter": 12,
+      "S_over_F": 1.3800000000000001,
+      "grade": "different",
+      "F_phi_m": 0.94
+    },
+    {
+      "cells_per_diameter": 16,
+      "S_over_F": 1.31,
+      "grade": "different",
+      "F_phi_m": 0.94
+    },
+    {
+      "cells_per_diameter": 24,
+      "S_over_F": 1.24,
+      "grade": "intermediate",
+      "F_phi_m": 0.94
+    },
+    {
+      "cells_per_diameter": 48,
+      "S_over_F": 1.1700000000000002,
+      "grade": "intermediate",
+      "F_phi_m": 0.94
+    },
+    {
+      "cells_per_diameter": 1000000000,
+      "S_over_F": 1.1000000033600001,
+      "grade": "same",
+      "F_phi_m": 0.94
+    }
+  ],
+  "definition_OR_counterexample": [
+    {
+      "phi": 0.9,
+      "paper_pressure_MPa": 0.68,
+      "mass_ratio": 0.6,
+      "deformed_ratio": 1.0,
+      "mass_pressure_MPa": 0.40800000000000003,
+      "deformed_pressure_MPa": 0.68,
+      "pointwise_or_pass": true
+    },
+    {
+      "phi": 0.95,
+      "paper_pressure_MPa": 1.11,
+      "mass_ratio": 1.0,
+      "deformed_ratio": 1.5,
+      "mass_pressure_MPa": 1.11,
+      "deformed_pressure_MPa": 1.665,
+      "pointwise_or_pass": true
+    }
+  ],
+  "global_mass_definition_pass": false,
+  "global_deformed_definition_pass": false,
+  "momentum_not_dissipativity": {
+    "momentum_before": 0.0,
+    "momentum_after": 0.0,
+    "kinetic_before": 1.0,
+    "kinetic_after": 1.2100000000000002,
+    "interpretation": "Necessary extra energy/Coulomb check; not a full U5 solver run"
+  },
+  "effect_modification": {
+    "R_at_2D_test": 1.1,
+    "grade_at_2D_test": "same",
+    "R_at_unobserved_3D_target": 1.5,
+    "grade_at_3D_target": "different",
+    "interpretation": "Logical potential-response example; no predicted or measured 3D values"
+  }
+}

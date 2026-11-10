@@ -17,7 +17,7 @@ composite result + its honest limit.  Anchors used here are OURS (Minnmann pure-
 |---|---|---|
 | E_SE | 1.53 GPa | softened Young's (shear-softening proxy) |
 | **ν_SE** | **0.49** | → **K_SE = 25.5 GPa ≈ real LPSC bulk (24)**; μ_SE = 0.51 GPa (soft shear) |
-| σ_y (SE) | 0.30 GPa | von Mises yield (top of LPSC lit range 0.05–0.30) |
+| σ_y (SE) | 0.30 GPa | von Mises yield (top of LPSC lit range 0.05–0.30) · ⚠ 11-10 `SELF-160`: 그 범위는 [미확인 · 카드 없음] · 우리 σ_y = Hencky 편차 변형 문턱이라 일축 환산은 강성 · 하중 부호에 따라 다르다 (σ_y 0.30 → 연화 재료 압축 0.318 · 인장 0.454 GPa) · `scripts/mpm3d_compaction.py` 의 `--sigma-y` 도움말은 FAM 봉인 (md5) 이 풀린 뒤 |
 | E_AM / ν_AM | 140 / 0.30 | AM ~rigid (no yield) |
 | target | 0.30 GPa | servo platen axial stress (= 300 MPa) |
 | readout | wallP | platen reaction stress (default) |

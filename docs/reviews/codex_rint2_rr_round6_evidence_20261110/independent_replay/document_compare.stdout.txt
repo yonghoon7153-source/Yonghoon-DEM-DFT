@@ -1,0 +1,13 @@
+{
+  "checks": {
+    "packet_prior_verdict_bytes_equal_independently_saved_round5": true,
+    "narrow_acceptance_quote_literal_equal": true,
+    "minimal_smin_quote_literal_equal": false,
+    "minimal_smin_quote_equal_ignoring_whitespace": true,
+    "19_9_conditions_present": true,
+    "unreg_conditions_present": true,
+    "old_bad_technical_report_in_strikethrough": true,
+    "s0_manual_source_finalrc_scope_present": true
+  },
+  "out": "C:\\Users\\Administrator\\Documents\\Codex\\outputs\\rint2_rr6_review_20261110\\independent_replay\\document_comparison.json"
+}
