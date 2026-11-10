@@ -1,0 +1,6 @@
+조성 1 개 · 격자 전압 8 점 · 구간 규칙 — 격자 전압 V 의 산물 = get_element_profi…
+Retrieving ThermoDoc documents:   0%|          | 0/107 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 107/107 [00:00<00:00, 2439078.96it/s]
+[mp_api] 107 entries in Cl-Li-P-S (GGA_GGA+U hull)
+[1/1] HOST       ok  (7s)
+
+→ /data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_10/host_win.jsonl

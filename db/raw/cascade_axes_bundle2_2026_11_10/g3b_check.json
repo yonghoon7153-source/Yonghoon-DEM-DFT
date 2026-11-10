@@ -1,0 +1,31 @@
+{
+ "ok": true,
+ "n_keys": 276,
+ "n_pass": 276,
+ "n_fail": 0,
+ "n_string_equal": 276,
+ "failures": [],
+ "labels": [
+  "LNO_half",
+  "LNO_full",
+  "Li"
+ ],
+ "tolerances": {
+  "x": 1e-06,
+  "dE_eV_per_atom": 1e-05,
+  "coef_rtol": 0.001
+ },
+ "rule": "카드 §4 G3b — (종, 상대) 마다 x* · dE · 최소 kink 반응식 계수 사전 (pymatgen Composition) 이 원자료와 같다",
+ "inputs": {
+  "new": [
+   "/data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_10/designs_vol.jsonl",
+   "/data/work/wt_cascade_b2/db/raw/cascade_axes_bundle2_2026_11_10/host_vol.jsonl"
+  ],
+  "ref": [
+   "db/raw/cascade_axis_ncm_v2_2026_11_04/designs_lno.jsonl",
+   "db/raw/cascade_axis_ncm_v2_2026_11_04/host.jsonl",
+   "db/raw/cascade_axis_li_2026_11_04/designs_li.jsonl",
+   "db/raw/cascade_axis_li_2026_11_04/host_li.jsonl"
+  ]
+ }
+}
