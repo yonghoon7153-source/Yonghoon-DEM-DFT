@@ -242,7 +242,7 @@ ref 10 = Wenzel, Leichtweiss, Krüger, Sann, Janek, *Solid State Ionics* 278, 98
 | **Li₃PS₄ + LCO** | **2.91** | Li₄P₂O₇ → LiCoPO₄ → Co₃(PO₄)₂ | `Table 5` |
 | **LGPS + LCO** | **2.90** | LiCoPO₄ → Co₃(PO₄)₂ | `Table S3` |
 
-  황화물이 곁에 있으면 Li₃PO₄ 가 사라지는 전압이 Li₃PO₄ 단독보다 1.3 V 낮다 — S 가 황산염 · Co 황화물로 가면서 Li 와 O 를 가져가기 때문이다 (우리 읽기). N 도 같은 방향으로 작용한다 (N 이 많을수록 낮아진다).
+  황화물이 곁에 있으면 Li₃PO₄ 가 사라지는 전압이 Li₃PO₄ 단독보다 1.3 V 낮다. 우리 읽기 (논문 서술 아님): Li₃PO₄ 가 Li₄P₂O₇ 로 응축하려면 Li 와 함께 O 를 내놓아야 한다 (2 Li₃PO₄ → Li₄P₂O₇ + 2 Li + ½ O₂). 단독일 때는 그 O 가 O₂ 로 나가야 해서 4.2 V 까지 버티고, 곁에 O 를 받아 줄 산화 가능한 종 (S → 황산염 · N → 질산염) 이 있으면 O₂ 방출 없이 낮은 전위에서 일어난다. N 이 많을수록 낮아지는 것 (LiPON₀.₁₄ → LiPON₀.₄₆) 도 같은 방향이다.
 
 **(다) 코팅 — 2.5–4.25 V 를 자기 창으로 다 덮는 것은 18 종 중 둘뿐이다** (`Fig. 5a` figure-read ≈ · ±0.02 V).
 - 덮는다: Li₄P₂O₇ (2.31–4.33 V) · LiPO₃ (2.48–5.00 V).
