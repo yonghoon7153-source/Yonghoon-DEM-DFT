@@ -386,3 +386,8 @@ kamaya2011_lgps_lithium_superionic_conductor	a_lithium_superionic_conductor.pdf
 # ── LGPS 형 신 SE (LSiPSCl · Li9.6P3S12) 고출력 전고체 셀 (Kato 외 2016 · Nat. Energy 1, 16030 · 사용자 목록 126 번) — litdb 2026-11-10 · 자동 매칭은 붙지만 (제목 100 %) 'all-solid-state batteries' · 'superionic conductors' 가 흔한 토큰이라 뒤에 들어올 digest 와 겹치지 않게 고정 · 본문 · Sup 공통 조각 · 밑줄 · 공백 두 변형 ──
 kato2016_high_power_assb_lsipscl_superionic	high-power_all-solid-state_batteries_using_sulfide
 kato2016_high_power_assb_lsipscl_superionic	high-power all-solid-state batteries using sulfide
+# ── 아지로다이트 원전 (Deiseroth 외 2008 · Angew. Chem. Int. Ed. 47, 755 · 사용자 목록 127 번) — litdb 2026-11-10 · 업로드 파일명에서 아래첨자가 빠져 ('Li_PS_X') slug 의 'li6ps5x' 와 토큰이 안 겹친다 · 제목 조각 'a class of crystalline li' 로 지정 ('Li-Rich' 의 하이픈 · 밑줄 변형 앞에서 끊음) · 밑줄 · 공백 두 변형 · SI 없음 (본문에 SI 언급 자체가 없다) ──
+#   가드: fig_2 · fig_5 는 **손 재크롭**이다 (figures.json `recrop` 사유) — fig_2 = page 2(0-based 1) clip (47.5, 504.0, 298.5, 714.8) · fig_5 = page 3(0-based 2) clip (306.0, 50.0, 541.0, 347.0) @300 dpi.
+#   [!] '--slug deiseroth2008_li6ps5x_argyrodite_high_li_mobility --clean' 은 가드가 막는다 (자동 bbox 는 fig_2 에 Fig. 3b + 캡션 · fig_5 에 저널 로고를 끌고 온다). 다시 뽑으면 위 clip 을 그대로 쓴다.
+deiseroth2008_li6ps5x_argyrodite_high_li_mobility	a_class_of_crystalline_li
+deiseroth2008_li6ps5x_argyrodite_high_li_mobility	a class of crystalline li
