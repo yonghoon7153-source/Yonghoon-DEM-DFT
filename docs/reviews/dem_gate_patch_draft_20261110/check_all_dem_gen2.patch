@@ -1,0 +1,23 @@
+--- a/scripts/check_all.sh
++++ b/scripts/check_all.sh
+@@ -501,6 +501,20 @@
+ run 'selftest_inventory     (분류·레인·CI 의존)' python3 scripts/check_selftest_inventory.py --quiet
+ run 'fast 자기검사 전수     (등재 기반 드라이버)' python3 scripts/check_selftest_inventory.py --run-fast
+ 
++echo "── DEM gen2 synthetic preparation (physical qualification NOT_RUN) ──"
++# Draft additions use existing run() timing/range logic without changing it.
++run 'make_dem_gen2_decks (synthetic only)' python3 scripts/test_make_dem_gen2_decks.py
++run 'dem_gen2_qualification (synthetic only)' python3 scripts/test_dem_gen2_qualification.py
++run 'dem_gen2_observation_bridge (synthetic only)' python3 scripts/test_dem_gen2_observation_bridge.py
++run 'dem_gen2_t0_contract (synthetic only)' python3 scripts/test_dem_gen2_t0_contract.py
++run 'dem_gen2_t5_contract (synthetic only)' python3 scripts/test_dem_gen2_t5_contract.py
++run 'dem_gen2_t11_contract (synthetic only)' python3 scripts/test_dem_gen2_t11_contract.py
++run 'dem_gen2_live_contract (synthetic only)' python3 scripts/test_dem_gen2_live_contract.py
++run 'dem_gen2_s0_contract (synthetic only)' python3 scripts/test_dem_gen2_s0_contract.py
++run 'dem_gen2_p2_contract (synthetic only)' python3 scripts/test_dem_gen2_p2_contract.py
++run 'dem_gen2_qualification_matrix (synthetic only)' python3 scripts/test_dem_gen2_qualification_matrix.py
++run 'dem_gen2_demp_contract (synthetic only)' python3 scripts/test_dem_gen2_demp_contract.py
++
+ echo
+ if [ -n "${CHECK_ALL_LIST:-}" ]; then
+   exit 0
