@@ -40,6 +40,8 @@
   "selftest": "31/31",
   "깨기": "25/25 빨강 (러너 rc · ensemble · run_meta · v0 · init sha · 시작 구조 · NaN · 원소 · 셀 · 프레임 수 · 2 개 미만 · md.log 끝 · msd · 장부 0 · 드라이버 sha · 허가 · 결정 · 미완 · 시드 any · 계 any · cond550 any · ⓐ 마지막 · ⓑ 전이 · D 남김 · invalid 측정 가능)",
   "⚠": "도는 큐의 worktree ~/wt_li2s3 는 올리지 않는다 (bash 가 도는 스크립트를 다시 읽는다) — 대조 잡 · verify 는 새 worktree 에서 · --worktree ~/wt_li2s3 로 판독 시점 지문만 본다",
-  "by": "agent (위임 10-30) · 2026-11-10"
- }
+  "by": "agent (위임 10-30) · 2026-11-10",
+  "⏩_압력": "pressure 하위 명령 추가 — selftest 36/36 · 깨기 5/5 · 판독 허가 뒤 kgy GPU 에서"
+ },
+ "대조_잡_블록_2026_11_10": "git -C ~/lldvar fetch origin claude/friendly-meitner-lldvar && git -C ~/lldvar worktree add --detach ~/wt_li2s3_tools FETCH_HEAD && tmux new -d -s li2s3ctl 'cd ~/wt_li2s3_tools && <uma python> tools/ionic/li2s3_stage2_readout.py control --root_a ~/work/runs/lpscl_glass_md_v2_2026_09_30 --root_b ~/work/runs/lpscl_glass_control_li3ps4_600K_2026_10_13 --seeds 1 3 --out ~/li2s3_control_job.json > ~/li2s3_control_job.log 2>&1' (사용자에게 전달 11-10 · 결과 대기)"
 }

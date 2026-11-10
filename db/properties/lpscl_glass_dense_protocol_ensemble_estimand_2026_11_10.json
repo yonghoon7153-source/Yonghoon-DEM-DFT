@@ -301,11 +301,11 @@
   "by": "agent (위임 10-30) · 2026-11-10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend1",
   "⏩_도구_소비자_2026_11_10": "tools/ionic/li2s3_stage2_readout.py (verify · readout · control) — 결과를 읽기 전에 커밋 · selftest 31/31 · 깨기 25/25 빨강 · verify = 사후 검증 ①–⑦ 만 (판독 허가 전에도 돌려도 된다 · 수송 · 골격 안 읽음) · readout = 카드의 '판독_허가_2단계' (근거 · by) 가 있을 때만 · 결정 둘 active · 끝나지 않은 런이 있으면 거부 · 유효한 런만 glass_v2_readout.read_run (고치지 않은 판) · D 값 출력 없음 · 기록 ⓐ–ⓒ · control = 10-14 대조 계 판독 기록의 kgy 시드 (A v2 600 K · B 600 K · 1 · 3) 재현 (kgy 에서 돌린다 · 남은 일)",
   "⏩_남은_도구": [
-   "대조 잡 실행 (kgy · 읽기 · CPU 분석 · 별도 worktree — 도는 큐의 ~/wt_li2s3 는 건드리지 않는다)",
-   "MD 압력 스냅숏 재계산 도구",
+   "대조 잡 실행 (kgy · 읽기 · CPU 분석 · 별도 worktree ~/wt_li2s3_tools)",
    "고친 큐 v2 (cond550 · 재실행용)",
    "편지 EB"
-  ]
+  ],
+  "⏩_도구_압력_2026_11_10": "li2s3_stage2_readout.py pressure — 카드 판독 허가가 있을 때만 · 유효한 런마다 생산 궤적의 t = 1, 2, …, 400 ps 프레임 (1 ps 간격 · 400 프레임 · 결과 전 고정) · UMA turbo 단일점 (melt_quench_uma.make_calc · omat · 모드가 turbo 가 아니면 멈춤) · P = −tr σ / 3 + N k_B T_set / V · 런마다 평균 · 표준편차 · 온도별 두 계 ⟨P⟩ 차 · |차| > 1 GPa 경고 (보호 기준 아님 · 판정에 안 씀) · selftest 36/36 (압력 5) · 깨기 5/5 (운동 항 · 간격 · 허가 · 프레임 수 · 비유한) · kgy GPU 에서 돌린다 (16 런 × 400 단일점)"
  },
  "⏩_다음_할_일_DZ_뒤": [
   "① 고친 큐 v2 · 사후 검증기 · 판독 소비자 · 압력 도구 (+ 대조 잡 · 음성 · 깨기) — 결과를 읽기 전에 커밋",

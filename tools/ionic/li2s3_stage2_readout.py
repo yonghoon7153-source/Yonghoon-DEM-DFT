@@ -18,11 +18,12 @@
             W = 두 계 공통 · 갈래 (|W| ≥ 3 · 1–2 · 0) · cond550 자격 · 시드별 기술표 (결함 표지 = 담금질 입력 기준) · 세 층 수 ·
             기록 ⓐ 첫 프레임 S–S 쌍 유지 · 소멸 · 재형성 ⓑ P 배위 전이 (3→4 · 4→3) ⓒ 담금질 입력 대 생산 첫 프레임 (기록만 · 판정에 안 씀).
             D 값은 출력하지 않는다.
+  pressure — 카드의 판독 허가가 있을 때만: 유효한 런마다 1 ps 간격 프레임의 UMA turbo 단일점 virial 압력 + N k_B T_set / V (판정에 안 씀 · 두 계 ⟨P⟩ 차 > 1 GPa 경고)
   control — 대조 잡: 같은 읽기 경로 (궤적 유효성 → read_run → skeleton_gate) 로 10-14 대조 계 판독 기록 (A v2 600 K · B 600 K) 의
             kgy 시드 행을 재현하는가 (C1 · C1 값 · β_MTO 1e-9 · 최종 C2 · σ 거리 · 끝 두 b · N · R 집합 · 골격 네 값).
 
 ⛔ 이 도구가 못 하는 것
-  · 압력을 내지 않는다 (별도 도구) · R(T) · ΔEa 를 내지 않는다 (3 단계) · 판정 규칙을 새로 만들지 않는다 (glass_v2_readout 그대로).
+  · R(T) · ΔEa 를 내지 않는다 (3 단계) · 판정 규칙을 새로 만들지 않는다 (glass_v2_readout 그대로).
   · 사후 검증은 '실행 직전 결속' 의 대체 증거다 — 충분한지는 회신 EB 가 정한다 (카드 개정 DZ).
   · 골격 판정은 생산 첫 프레임 대비다 — 담금질 결함이 준비 구간 · 생산 구간 전체에서 보존됐다고 말하지 않는다 (ⓐ–ⓒ 는 기록만).
 """
@@ -379,6 +380,72 @@ def readout(base, worktree, card=CARD, decisions=DECISIONS, n_boot=N_BOOT, read_
             "⚠": "D · σ 값 없음 · 기록 ⓐ–ⓒ 는 판정에 안 씀 · 골격은 생산 첫 프레임 대비 (카드 개정 DZ)"}
 
 
+PRESSURE_EVERY_PS = 1.0            # 카드 (li2s-2 §2 MD_압력 · li2s-3 승계): 1 ps 간격 · t = 1 … prod ps (400 ps 런당 400 프레임)
+KB_EV = 8.617333262e-5
+
+
+def run_pressure(tdir, T_set, n_atoms, prod_ps, calc, ev_a3_to_gpa):
+    """생산 궤적에서 1 ps 간격 프레임의 UMA 단일점 virial 압력 + 운동 항 N k_B T_set / V (이상기체 · 목표 온도) → 런 기록."""
+    from ase.io import iread
+    tdir = pathlib.Path(tdir)
+    step = int(round(PRESSURE_EVERY_PS * 1000.0 / SAVE_FS))
+    n_exp = int(round(prod_ps * 1000.0 / SAVE_FS)) + 1
+    want = set(range(step, n_exp, step))
+    P, n = [], 0
+    for k, a in enumerate(iread(str(tdir / "traj.xyz"), index=":", format="extxyz")):
+        n += 1
+        if k not in want:
+            continue
+        a = a.copy(); a.calc = calc
+        sig = np.asarray(a.get_stress(voigt=False), float)
+        V = float(a.get_volume())
+        pv = float(-np.trace(sig) / 3.0 * ev_a3_to_gpa)
+        pk = float(n_atoms * KB_EV * float(T_set) / V * ev_a3_to_gpa)
+        P.append({"t_ps": k * SAVE_FS / 1000.0, "P_virial_GPa": pv, "P_kin_GPa": pk, "P_GPa": pv + pk})
+    if n != n_exp:
+        raise SystemExit(f"⛔ {tdir}: 궤적 프레임 {n} ≠ 계획 {n_exp} — 압력을 내지 않는다")
+    vals = [x["P_GPa"] for x in P]
+    if len(vals) != len(want) or not all(math.isfinite(v) for v in vals):
+        return {"status": "압력 못 냄 (프레임 수 · 비유한)", "n": len(vals)}
+    return {"status": "ok", "n": len(vals), "mean_GPa": float(np.mean(vals)), "sd_GPa": float(np.std(vals, ddof=1)),
+            "P_kin_GPa": P[0]["P_kin_GPa"], "every_ps": PRESSURE_EVERY_PS, "frames": P}
+
+
+def pressure(base, worktree, card=CARD, decisions=DECISIONS, calc=None, device="cuda", require_permit=True):
+    """2 단계 런마다 MD 압력 (스냅숏 재계산 · 판정에 안 씀 · 두 계 ⟨P⟩ 차 > 1 GPa 는 경고 하나 더 — li2s-2 카드 §1b · §3)."""
+    import quench_ss_event as Q
+    st = decision_states(decisions)
+    if any(v != "active" for v in st.values()):
+        raise SystemExit(f"⛔ 결정이 active 가 아니다 {st} — 압력을 내지 않는다")
+    cv = card_values(card)
+    if require_permit and not (isinstance(cv["read_permit"], dict) and cv["read_permit"].get("근거") and cv["read_permit"].get("by")):
+        raise SystemExit(f"⛔ 카드에 '{READ_PERMIT_KEY}' 가 없다 — 2 단계 결과 (압력 포함) 는 아직 열지 않는다")
+    mq = Q._load_mq(str(HERE))
+    if calc is None:
+        calc = mq.make_calc(device, turbo=True)
+        if getattr(calc, "_mq_mode", "default") != "turbo":
+            raise SystemExit("⛔ turbo 를 못 켰다 — MD 와 같은 추론 모드가 아니다 (압력을 내지 않는다)")
+    runs = {}
+    for s_ in cv["systems"]:
+        for sd in cv["seeds"]:
+            for T in cv["temperatures"]:
+                v = verify_run(base, s_, sd, T, cv, worktree)
+                if v["status"] != "valid":
+                    runs[f"{s_}{sd}_T{T}"] = {"status": f"사후 검증 {v['status']} — 압력 안 냄", "reasons": v["reasons"][:3]}
+                    continue
+                tdir = pathlib.Path(v["run_dir"]) / "d0.00_cfg0" / f"T{int(T)}"
+                runs[f"{s_}{sd}_T{T}"] = run_pressure(tdir, T, cv["n_atoms"], cv["prod_ps"], calc, mq.EV_A3_TO_GPA)
+    per = {}
+    for T in cv["temperatures"]:
+        m = {s_: [runs[f"{s_}{sd}_T{T}"].get("mean_GPa") for sd in cv["seeds"]] for s_ in cv["systems"]}
+        ok = all(x is not None for v in m.values() for x in v)
+        mean = {s_: (float(np.mean(v)) if ok else None) for s_, v in m.items()}
+        d = (mean[cv["systems"][0]] - mean[cv["systems"][1]]) if ok else None
+        per[str(T)] = {"mean_by_system_GPa": mean, "A_minus_B_GPa": d, "warn_gt_1GPa": (abs(d) > 1.0) if d is not None else None}
+    return {"kind": "li2s3_stage2_pressure/v1", "card_sha256": cv["card_sha256"], "runs": runs, "per_T": per,
+            "rule": "P = P_virial (UMA turbo 단일점 · -tr σ /3) + N k_B T_set / V · 1 ps 간격 · 판정에 안 씀 · 두 계 ⟨P⟩ 차 > 1 GPa 면 경고 하나 더 (보호 기준 아님)"}
+
+
 def control(root_a, root_b, seeds=(1, 3), record=None, n_boot=N_BOOT, read_run=None):
     """대조 잡 — 10-14 대조 계 판독 기록 행을 같은 읽기 경로로 재현하는가 (kgy 시드)."""
     import glass_v2_readout as G
@@ -456,6 +523,21 @@ def _selftest():
 
     mq = Q._load_mq(str(HERE))
     L = 12.0
+    class FakeCalc:
+        implemented_properties = ["stress", "energy", "forces"]
+
+        def __init__(self, bad=False):
+            self.bad = bad
+
+        def get_stress(self, atoms=None, voigt=False):
+            p0 = 0.01 if not self.bad else float("nan")
+            return -p0 * np.eye(3)
+
+        def get_property(self, name, atoms=None, allow_calculation=True):
+            return self.get_stress(atoms)
+
+        def get_potential_energy(self, atoms=None, force_consistent=False):
+            return 0.0
     tet = np.array([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]], float) / math.sqrt(3) * 2.05
 
     def structure(seed_shift=0.0, ss_pair=False, three_coord=False):
@@ -660,11 +742,17 @@ def _selftest():
             write_card(False)
             chk(refuses("판독 보류", SELF.readout, base, wt, card=card, decisions=dec, read_run=fake_rr(lambda *a: True)),
                 "⛔음성: 카드에 판독 허가가 없으면 판독하지 않는다 (회신 EB 전)")
+            chk(refuses("아직 열지 않는다", SELF.pressure, base, wt, card=card, decisions=dec, calc=object()),
+                "⛔음성: 카드에 판독 허가가 없으면 압력도 내지 않는다")
             write_card(True)
             dec2 = td / "dec2.json"
             dec2.write_text(json.dumps({"decisions": [{"id": NEED_ACTIVE[0], "decision_state": "active"}]}))
             chk(refuses("active", SELF.readout, base, wt, card=card, decisions=dec2, read_run=fake_rr(lambda *a: True)),
                 "⛔음성: 개정 결정이 active 가 아니면 판독하지 않는다")
+            pz_ = SELF.pressure(base, wt, card=card, decisions=dec, calc=FakeCalc())
+            chk(pz_["per_T"]["600"]["A_minus_B_GPa"] == 0.0 and pz_["per_T"]["600"]["warn_gt_1GPa"] is False
+                and all(v.get("status") == "ok" for v in pz_["runs"].values()),
+                "[양성] 압력: 런마다 · 온도별 두 계 ⟨P⟩ 차 · 1 GPa 경고 (가짜 계산기)")
             o = SELF.readout(base, wt, card=card, decisions=dec, read_run=fake_rr(lambda *a: True))
             chk(o["W"] == [600, 650] and o["cond550_eligible"] and "Ea 차 없음" in o["branch"]
                 and "_D_slope" not in json.dumps(o) and all(r.get("records", {}).get("ⓐ_first_frame_SS_pairs") is not None for r in o["rows"]),
@@ -691,6 +779,16 @@ def _selftest():
                 "⛔음성: 사후 검증 invalid 런은 측정 가능이 아니다 (그 온도는 W 밖 · 사유 기록)")
         finally:
             SELF.card_values = SELF_cv
+        # 압력 — 가짜 계산기 (σ = −p₀·I · p₀ 는 셀 부피로) : 공식 · 프레임 선택 · 허가 · 프레임 수
+        rp_ = run_pressure(base / "A/seed12/T600/d0.00_cfg0/T600", 600, len(a_ok), 20.0, FakeCalc(), 160.21766208)
+        pk = len(a_ok) * KB_EV * 600 / (L ** 3) * 160.21766208
+        chk(rp_["status"] == "ok" and rp_["n"] == 20 and abs(rp_["mean_GPa"] - (0.01 * 160.21766208 + pk)) < 1e-9
+            and rp_["frames"][0]["t_ps"] == 1.0 and rp_["frames"][-1]["t_ps"] == 20.0,
+            "[양성] 압력: P = −tr σ/3 + N k_B T/V · 1 ps 간격 (t = 1 … 20 ps · 20 프레임)")
+        chk(run_pressure(base / "A/seed12/T600/d0.00_cfg0/T600", 600, len(a_ok), 20.0, FakeCalc(bad=True), 160.21766208)["status"].startswith("압력 못 냄"),
+            "⛔음성: 비유한 응력 → '압력 못 냄' (0 이 아니다)")
+        chk(refuses("궤적 프레임", run_pressure, base / "A/seed12/T600/d0.00_cfg0/T600", 600, len(a_ok), 30.0, FakeCalc(), 160.21766208),
+            "⛔음성: 궤적 프레임 수 ≠ 계획 → 압력 안 냄")
         # 실제 read_run 한 번 (합성 브라운 · 판정 함수 무변경 경로가 터지지 않는다)
         import msd_diffusive_check as M
         bR = td / "b_rr"
@@ -713,6 +811,9 @@ def main(argv=None):
     for name in ("verify", "readout"):
         p = sub.add_parser(name)
         p.add_argument("--base", required=True); p.add_argument("--worktree", required=True); p.add_argument("--out", required=True)
+    pz = sub.add_parser("pressure")
+    pz.add_argument("--base", required=True); pz.add_argument("--worktree", required=True); pz.add_argument("--out", required=True)
+    pz.add_argument("--device", default="cuda")
     c = sub.add_parser("control")
     c.add_argument("--root_a", required=True); c.add_argument("--root_b", required=True)
     c.add_argument("--seeds", type=int, nargs="+", default=[1, 3]); c.add_argument("--out", required=True)
@@ -730,6 +831,10 @@ def main(argv=None):
                     print(f"{s}{sd} T{T}: {v['status']}" + (f" — {'; '.join(v['reasons'])[:160]}" if v["reasons"] else ""))
         out = {"kind": "li2s3_stage2_verify/v1", "card_sha256": cv["card_sha256"], "runs": res,
                "⚠": "사후 검증만 — 수송 · 골격 · 기록은 안 읽었다"}
+    elif A.cmd == "pressure":
+        out = pressure(A.base, A.worktree, device=A.device)
+        for T, v in out["per_T"].items():
+            print(f"T{T}: ⟨P⟩ {v['mean_by_system_GPa']} · A − B {v['A_minus_B_GPa']} · 경고 {v['warn_gt_1GPa']}")
     elif A.cmd == "readout":
         out = readout(A.base, A.worktree)
         print(f"W = {out['W']} · {out['branch']} · cond550 자격 {out['cond550_eligible']}")
