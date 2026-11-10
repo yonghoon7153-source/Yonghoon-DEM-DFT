@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 609
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 610
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 400건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 401건)
 - 2026-11-10 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…
 - 2026-11-10 · `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` — DZ 회신 — li2s-3 구조군 정의 · 본 시드 재사용 · 골격 게이트 · 2 단계 큐: NO-GO (P0 0 · P1 6 · P2 3) — 구조군 정의와 여섯 시드 재사용은 조건부 찬성 · 실행 · 재개 경로 결함과 보고량 조건이 남음 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
@@ -19,6 +19,7 @@
 - 2026-11-10 · `kb/reviews/internal_ED_prompt_cascade_bundle2_card_2026_11_10.md` — ED 프롬프트 (내부 반박 리뷰) — cascade 묶음 2 카드: 새 축 ④ 작동창 도펀트 행방 · ⑤ 분해 ΔV/V · ⑥ Li 쪽 산물 품질과 가중치 없는 전체 순위 (약점 순위 · 순위 벡터 Pareto 층) 가 결과 전에 잘 정의됐는가 · 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · Codex…
 - 2026-11-10 · `kb/reviews/internal_ED_reply_cascade_bundle2_card_2026_11_10.md` — ED 회신 (내부 반박 리뷰) — cascade 묶음 2 카드: 조건부 GO (P0 0 · P1 6 · P2 5) — ⑤ 반응물 회계가 스펙테이터 염 부피를 산물 쪽에만 넣는다 · 순위 기계 (R9 문장 · 축마다 다른 기준 집합 · 동률 폭 = 숨은 무게) · 표시 모름이 무리 A 를 덮는다 · ④ 전압 → 산물 대응 · 휘발 산물 · 규칙을 바꾸면서 '지킨다' · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…
 - 2026-11-10 · `kb/reviews/internal_EE_prompt_li2s3_queue_v2_2026_11_10.md` — EE 프롬프트 (내부 반박 리뷰) — li2s-3 큐 v2 (재실행 · cond550) 와 판독 v2 경로: DZ 의 v1 반례를 막는가 · 섞인 판독 · cond550 연결 · 비용 · 정지가 결과 전에 잘 정의됐는가 · 발송 2026-11-10 — 내부 반박 리뷰 (큐 v2 를 쓴 에이전…
+- 2026-11-10 · `kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md` — EE 회신 (내부 반박 리뷰) — li2s-3 큐 v2 · 판독 v2 경로: 조건부 GO (P0 0 · P1 3 · P2 6) — DZ 반례는 막는다 · 결과를 본 뒤 사다리 런을 다시 굴려 최종 갈래를 바꾸는 길 · 환경변수 카드 · 원장 · PHASE 로 첫 런 한도를 피하는 길이 남음 · 회신 원문 (독립 리뷰 에이전트 · 2026-11-10) — 저장소 …
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_model_switch.md` — 모델 전환 인계 (2026-11-10 저녁) — 같은 세션 · 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 기한 있는 도구 둘 · 사용자 결정 대기 셋 · 진행
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 - 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
@@ -26,7 +27,6 @@
 - 2026-11-09 · `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
 - 2026-11-09 · `kb/reviews/codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` — DV 프롬프트 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1 재리뷰 (DU NO-GO 고침 · 도구 6 · 설계 · 과거 영향 · 계산 0 건) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
-- 2026-11-09 · `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건) · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (271)
+## reviews/ (272)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-10 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -440,6 +440,7 @@
 - `kb/reviews/internal_ED_prompt_cascade_bundle2_card_2026_11_10.md` — ED 프롬프트 (내부 반박 리뷰) — cascade 묶음 2 카드: 새 축 ④ 작동창 도펀트 행방 · ⑤ 분해 ΔV/V · ⑥ Li 쪽 산물 품질과 가중치 없는 전체 순위 (약점 순위 · 순위 벡터 Pareto 층) 가 결과 전에 잘 정의됐는가  (2026-11-10 · 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · Codex…)
 - `kb/reviews/internal_ED_reply_cascade_bundle2_card_2026_11_10.md` — ED 회신 (내부 반박 리뷰) — cascade 묶음 2 카드: 조건부 GO (P0 0 · P1 6 · P2 5) — ⑤ 반응물 회계가 스펙테이터 염 부피를 산물 쪽에만 넣는다 · 순위 기계 (R9 문장 · 축마다 다른 기준 집합 · 동률 폭 = 숨은 무게) · 표시 모름이 무리 A 를 덮는다 · ④ 전압 → 산물 대응 · 휘발 산물 · 규칙을 바꾸면서 '지킨다'  (2026-11-10 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…)
 - `kb/reviews/internal_EE_prompt_li2s3_queue_v2_2026_11_10.md` — EE 프롬프트 (내부 반박 리뷰) — li2s-3 큐 v2 (재실행 · cond550) 와 판독 v2 경로: DZ 의 v1 반례를 막는가 · 섞인 판독 · cond550 연결 · 비용 · 정지가 결과 전에 잘 정의됐는가  (2026-11-10 · 발송 2026-11-10 — 내부 반박 리뷰 (큐 v2 를 쓴 에이전…)
+- `kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md` — EE 회신 (내부 반박 리뷰) — li2s-3 큐 v2 · 판독 v2 경로: 조건부 GO (P0 0 · P1 3 · P2 6) — DZ 반례는 막는다 · 결과를 본 뒤 사다리 런을 다시 굴려 최종 갈래를 바꾸는 길 · 환경변수 카드 · 원장 · PHASE 로 첫 런 한도를 피하는 길이 남음  (2026-11-10 · 회신 원문 (독립 리뷰 에이전트 · 2026-11-10) — 저장소 …)
 - `kb/reviews/internal_Z2_reply_polaron_S0_2026_09_03.md` — 회신 Z-2 — 폴라론 S0 내부 적대적 리뷰 2차 (NO-GO · P0 2 · P1 9)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_Z3_reply_polaron_S0_2026_09_03.md` — 회신 Z-3 — 폴라론 S0 내부 적대적 리뷰 3차 (NO-GO · P0 1 · P1 7)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)  (2026-09-03 · 회신반영)
@@ -672,4 +673,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 504개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 506개 (정본 목록: litdb/INDEX.md)
