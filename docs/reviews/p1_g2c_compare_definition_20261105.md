@@ -1,11 +1,103 @@
 # P1 언로딩 G2c 복원 대조 — 비교 정의 메모 (등록 · 2026-11-05 · "같은 방식 재계산끼리")
 
 > **상태** — 결과 0 건 · 등록 (정의 §2 · 판정 §3 · 예측 §4 = 이 문서의 첫 커밋으로 고정 · 바꾸면 결과 전에 날짜를 붙인 개정으로만) · 1저자 11-05 §7 Q1–Q7 *"권고대로"* · 다음 = Q6 Codex 짧은 확인 → 등록 도구 (§5-1 · 시험 먼저) → 샌드박스 (§5-2) · 실행한 것 없음 — LIGGGHTS · ibb · RJ 323957 재실행 · 남은 네 침대 RJ · 허용폭 · 판정 규칙 · 키트 파일 변경 없음.
+> **11-10 개정 (결과 전 · Codex Q6 답 반영 · 1저자 비준 전)** — 아래 **§0** 이 §3 history 행 · §4 다 근거의 *"setup 은 이력을 (거의) 안 바꾼다"* 전제 (Q6-4) 와 §4 예측 다 · 라 · 바 (Q6-1 · 2 · 3) · 거기 걸린 마 · 사 를 고치고 예측마다 맞음 / 틀림 숫자 기준을 붙인다 · §1–§7 원문은 지우지 않는다 (등록 원문 보존 · §0 이 대신하는 자리를 적는다) · 아래 11-06 보류 표지는 1저자가 §0 을 비준하면 풀린다 · 그 전에는 샌드박스를 돌리지 않는다 · 결과 0 건 · 준비물 (§5-1) = 같은 커밋 (§0-4) · 실행 없음 (이 컨테이너에 LIGGGHTS 실행 파일 없음 · 11-10 확인).
 > **⚠ 11-06 Codex Q6 답 (`docs/reviews/codex_review_p1_g2c_q6_20261106.md`)** — 예측 다 · 라 = 조건부 (값 동일성과 원시 덤프 바이트 동일성을 나눠 예측 · CW/CR 왕복과 기존 C 재현을 나눠 비교) · 예측 바 = 연쇄등식 틀림 (덤프 force_normal · force_tangential = 전체 힘의 사영과 그 잔여 → 사영식) · Q6-4 *"setup · 덤프는 이력을 안 바꾼다"* = 틀림 (예외 = deltaMax 갱신 · 이웃 재구성 이력 0 · 바닥 벽 이력 초기화) ⇒ §4 다 · 라 · 바 는 날짜를 붙인 개정 (예측 고정 · Claude · Rint ② 다음 · 결과 전) 전까지 **보류** · 이 표지는 예측을 바꾸지 않는다 · 샌드박스 자동 시작 없음 (Codex 실무 창 11-06).
 > **결정** — 1저자 11-05 *"권고대로"*: Q1 = 노트 §2 ④ · ⑤ 를 통째로 거두지 않는다 (확인 부분 = 주기 restart 가 한 step 전 접촉 이력을 담는다 · 유지 / 빗나간 예측 둘 = 정정 · 아래 §1 ㉡ · ㉢) · Q3 = 비교 정의 메모를 먼저 등록 (이 문서).
 > **Codex 실무 창 11-05 (PRE8 인계에 담긴 문구 그대로 · 그 인계 = 진행 기록 11-05 [믹서] 줄 · 리포 반입 전)** — *"체크포인트 정정은 문구 전달 수용이며 P1 수치 인증이 아닙니다. write_restart 비트 동일성 미보장, 같은 방식 재계산 비교 선행, force_normal 전체 쌍 힘 사영 한정을 유지합니다."* — 이 메모는 그 넷을 그대로 따른다.
 > **근거** — 노트 `docs/reviews/p1_g2c_source_check_20261104.md` (§2 · §6-1 · §7) · 샌드박스 `docs/reviews/p1_g2c_sandbox_20261104/README.md` · `docs/reviews/p1_g2c_sandbox_20261104/run_40000/compare.json` · `docs/reviews/p1_g2c_sandbox_20261104/run_40000/diag_out.txt` · 실제 런 분해 `docs/reviews/codex_p1_g2c_diagnosis_20261027/real_run_20261027/README.md` · 11-02 원인 보고 `docs/reviews/dem_unloading_rj_g2c_cause_20261102/REPORT.md` (§4 v2 초안) · 그 결과 `docs/reviews/dem_unloading_rj_g2c_cause_20261102/RESULT_20261102.md` · 등록 `docs/reviews/dem_unloading_ps45_prereg_20261009.md` (§3-2 G2c 행 · §12-1 · §14-10 · §14-12) · 키트 `docs/data/ps45_unload_20261009/ul_gates.py` (`g2c_compare`).
 > **자리** — 노트 §7 끝 "다음 (제안)" 첫 항목을 등록 꼴로 쓴 것 · 11-02 보고 §4 (A 복원 경로 = 판정 · B 원 런 연속성 = 보고) 를 11-04 샌드박스 결과로 좁힌 것.
+
+## 0. 11-10 개정 (결과 전 · Codex Q6 답 반영 · 1저자 비준 전)
+
+> **범위** — 고치는 것 = §3 history 행 · §4 다 근거 · 요청서 s1 의 이력 전제 (Q6-4) · §4 예측 다 · 라 · 바 (Q6-1 · 2 · 3) 와 그에 걸린 가 · 나 · 마 · 사 · 아 행의 맞음 / 틀림 숫자 기준.  **고치지 않는 것** = §2 정의 · §3 판정 규칙 · 허용폭 (1e-5 × max(\|D1 값\|, 열 \|D1 값\| 중앙값) · 이력 4 열에도 같은 식 = Q2) · §4 "틀리면" 규칙 (아래 표에 그대로 옮김) · 키트 (`docs/data/ps45_unload_20261009/`) · 봉인 · RJ 323957 기록 (`VALUE_MISMATCH`).
+> **근거** — Codex 답 원문 `docs/reviews/codex_review_p1_g2c_q6_20261106.md` + 이 개정에서 우리가 다시 읽은 LIGGGHTS-PUBLIC 3d5c00f src/ 줄 (읽기만 · 실행 확인 아님).  리포 사본 = `docs/reviews/codex_kg50_decks_review_20261026/evidence/kg50_design/sources/source_manifest.json` 의 파일 (pair_gran · fix_contact_history · neigh_gran · neighbor · comm · domain · normal_model_hooke_hysteresis — 11-10 git hash-object = 그 목록 blob 과 같음) · `docs/reviews/codex_kg50_decks_review_20261026/evidence/kg50_restart/upstream_sources.json` 의 파일 (write_restart · read_restart · output · 같음) · `docs/data/liggghts_3d5c00f_dem_eq_source_20261009/README.md` 폴더 (tangential_model_history · rolling_model_cdt · surface_model_default · pair_gran_base · global_properties · SHA256SUMS 통과).  리포에 없던 넷 (verlet.cpp · compute_pair_gran_local.cpp · fix_wall_gran.cpp · lammps.cpp) = 공개 저장소 그 커밋의 원문을 이 세션에서 받아 읽기만 했다 (리포에 넣지 않음 · git blob 1e4310f8 · ac22cbe7 · bc7f1374 · 1c347ad3 — GitHub API 대조는 응답 없음 · 커밋 고정 주소라 같은 판으로 봄).
+
+### 0-1. 전제 정정 (Q6-4) — setup · 덤프 재계산이 이력을 바꾸는 길
+
+- 옛 전제: *"setup · 덤프는 이력을 안 바꾼다"* (요청서 s1 · 노트 §2 ⑥ ⑦) · §4 다 근거 *"setup = shear 적분 없음 · deltaMax 올림 · 분리 소거 = 한 번 뒤 멱등 (추정)"*.
+- 고친 전제: setup (`run 0`) 과 compute pair/gran/local 재계산은 **접촉 중 접선 이력의 적분 · 회전 · 미끄럼 뒤 저장**만 막는다 (tangential_model_history.h 143–159 · 195–199 · pair_gran.cpp 665–667 · 699–707).  두 계산 모두 이웃 목록의 이력 배열을 그 자리에서 쓴다 (pair_gran_base.h 320).  아래 길은 막지 않는다:
+
+| # | 길 (소스 줄) | 바뀌는 열 | 어느 쌍 · 어느 팔 | 따로 세나 |
+|---|---|---|---|---|
+| ① | deltaMax = max(deltaMax, δ) — **조건 없음** · setup 과 덤프 재계산 모두 (normal_model_hooke_hysteresis.h 156–159) · cohesion 갈래의 낮춤만 가드 (176–177 · 191–192) | 이력 1 열 (deltaMax) | 주기 파일을 읽는 setup (B · B2 · BW): 파일값 (= A(N−1) 덤프 deltaMax · 노트 §2 ④) < 지금 겹침 δ(N) 인 쌍 → δ(N) 으로 · 명령 파일 (C · CW) · 왕복 둘째 (BR · CR) = 0 쌍 (파일이 이미 올린 값) · 원 런 스텝 끝 덤프 = 0 쌍 (그 step 힘 계산이 이미 올림 · 위치 같음) | 예 — "올림 쌍" · A(N) 의 cohesion 가드 쌍 (A(N) deltaMax ≠ max(A(N−1), δ)) |
+| ② | 이웃 재구성 (setup 의 neighbor build): 닿았는데 파일 partner 목록에 없는 쌍 = 이력 0 · 안 닿은 쌍 = 0 (neigh_gran.cpp 587–615) | 이력 4 열 | 덤프로 보이는 것 = A(N−1) 덤프에 없던 setup 덤프 쌍 ("새 쌍" — shear 0 = 새 접촉 · shear ≠ 0 = 파일에 남은 옛 이력이 복원된 쌍 [추정: contact_distance_factor 기본 1 (neighbor.cpp 122) 이라 떨어진 쌍을 지우는 surfacesClose 가 구 입자에서 불리지 않고 (pair_gran_base.h 356 · 414) 그 쌍이 다음 재구성까지 flag · 이력을 지닌다 · fix_contact_history.cpp 343–416 — 덤프로 직접 못 가름]) · 안 닿은 쌍 = 덤프 밖 ("사라진 쌍" 수만) | 예 — "새 쌍 (shear 0 · 0 아님)" · "사라진 쌍" |
+| ③ | 바닥 primitive 벽: setup 에서도 계산하고 (fix_wall_gran.cpp 681–688 · 736–745) 닿지 않은 이웃 원자의 벽 이력을 0 으로 (1062–1066 · 1145–1150) · 벽 이력 = 원자별 저장 | 쌍 30 열 · 원자 12 열 어디에도 없음 (원자 힘 f 는 덤프 안 함) | 바닥 근처 원자 | 규모만 (닿음 z − r ≤ 0 · 근처 ≤ skin 0.0005) — **이 대조가 보지 않는다** · 덤프 일치 = 벽 이력 인증 아님 (Codex) |
+| (④) | surfacesClose 가 deltaMax · shear 를 0 으로 (가드 없음 · normal_model_hooke_hysteresis.h 257–262 · tangential_model_history.h 358–369) | — | 이 덱 (contact_distance_factor 기본 1) 의 구 입자에서는 불리지 않는다 (pair_gran_base.h 224 · 356 · 414) | 아니오 — 꺼진 길로 적음 (우리 소스 읽기 · Codex 답 밖) |
+
+- 첫 setup 에서 ① · ② 가 끝나면 둘째 setup (BR · CR) 에서는 그대로일 수 있다 (Codex) — 그래서 [왕복] 주장은 D2 = D1 이다 (§3 그대로 · D1 = 파일 원값이 아님).  이 예외만으로 다 · 라 의 불일치를 단정하지 않는다.
+- 명령 `write_restart` 는 init → setup_pre_exchange (pair 계산 뒤면 이웃 목록 이력 → 원자 배열) → pbc · exchange · borders 뒤 쓴다 (write_restart.cpp 171–185 · fix_contact_history.cpp 290–298 · pair_gran.cpp 665 · 706–707 — 첫 setup 의 pair 계산이 computeflag 를 1 로 둔다).
+
+### 0-2. "같음" 의 두 뜻 (Q6-1 · 2 — 결과 전 고정)
+
+- **값 같음** = 무순서 쌍 키 (작은 id, 큰 id) · 방향 바뀐 행 (id1 > id2) 은 pos 두 묶음 맞바꾸고 force · force_normal · force_tangential 9 열 · shear 3 열 부호 반전 · 주기 표지 · deltaMax 그대로 · torque 는 같은 방향 행만 · `%.17g` 글자에서 읽은 float 가 정확히 같음 (−0 = 0 · 비유한 = 읽기 문제) · 원자 = id 별 11 값 (type 포함) 같음 · 쌍 · id 집합 같음 · TIMESTEP · 상자 같음 · 중복 키 0.
+- **바이트 같음** = 덤프 파일 (쌍 · 원자 각각) sha256 같음 — 행 순서 · 방향 · 글자 꼴까지.  값 같음과 **따로** 예측하고 따로 맞음 / 틀림을 적는다 (Codex: 원시 덤프 바이트 동일성은 행 순서까지 포함한 별도 검증 가설).
+- 등록 판정 (§3) 은 둘 다 아니다 — 허용폭 판정 그대로 (PASS · FAIL · NOT_COMPUTED).
+
+### 0-3. 고친 예측 (비준 뒤 §4 표의 가 – 아 를 대신한다)
+
+| # | 비교 | 예측 = 맞음 기준 (숫자 · 결과 전) | 틀리면 (결과 전 규칙) | 근거 · 표지 |
+|---|---|---|---|---|
+| 가 | 11-04 다섯 팔 (A · A2 · B · B2 · C) 다시 | `docs/reviews/p1_g2c_sandbox_20261104/run_40000/outputs.md5` 15 줄 = 새 출력 md5 (15/15) · **판정 조건** = 실행 파일 md5 = 11-04 (inputs.md5 첫 줄 f4ba3ec0…) ∧ 11-04 덱 일곱 md5 같음 ∧ N = 40,000 · 조건이 안 서면 **해당 없음** (같은 파일 수만 관찰로 적음) | 직렬 재현 미확인으로 적고 나머지는 판독 (§4 그대로) | 11-04 실행 파일은 리포 밖 · 이 컨테이너에 없음 (11-10) — 다시 빌드한 파일 md5 가 같을지 모름 |
+| 나 | [재생] B ↔ BW (같은 F · BW = R 덱 `include` + `write_restart` · 덤프는 그 앞) | 쌍 · 원자 덤프 **바이트** 같음 (2/2) · 보조 (판정 아님) = A · A2 주기 파일 바이트 · B ↔ B2 바이트 | 비트 예측 전부 거둠 · 멈춤 → 1저자 · Codex (§4 그대로) | 11-04 B ↔ B2 (관찰) |
+| 다-값 | [왕복] 주기 파일: BW (D1) → F′ → BR (D2 · R 덱 그대로) | §0-2 **값** 같음 — 값 다른 쌍 0 · 값 다른 원자 0 · 쌍 · 원자 집합 같음 · TIMESTEP · 상자 같음 · 중복 키 0 | 판정 PASS 면 값 예측만 거둠 (정의 유지 = 1저자 · Codex) · 다른 열 · 쌍 수를 적음 | 첫 setup 뒤 상태를 F′ 가 담는다 (§0-1 끝 줄) — 시험할 가설 (Codex Q6-1) |
+| 다-바이트 | 같음 | 쌍 · 원자 덤프 **바이트** 같음 (2/2) | 값이 맞고 바이트만 틀리면 바이트 가설만 거둠 (판정 · 값 예측 영향 없음) · 꼴 (행 순서 · 방향 · 글자) 적음 | 직렬 · sort 0 · pbc 뒤라 exchange 가 원자 배열 순서를 안 바꿀 것 (comm.cpp 956–964 · domain.cpp pbc 553–570 — 추정 · pbc 의 x < lo 갈래는 hi 쪽 가드가 없어 끝자리에서 hi 에 닿으면 옮길 수 있다) |
+| 다-판정 | 같음 | (예측 아님) 등록 §3 판정 | FAIL = G2c′ 를 이대로 못 씀 · 멈춤 (§4 그대로) · NOT_COMPUTED = UNCONFIRMED | — |
+| 라-값 · 라-바이트 · 라-판정 | [왕복] 명령 파일: CW (BW 덱 · 입력 = A2 의 restart_cmd.bin) → F′ → CR | 다 와 같은 기준 | 다 와 같음 | Q6-2 |
+| 라-재현 (가) | 새 C ↔ 새 CW | 쌍 · 원자 덤프 **바이트** 같음 (2/2) — 같은 실행 · 같은 명령 파일 바이트 · R 덱 `include` (include · 물성 · fix ID · dump 줄 · 형식 같음) | "CW = C" 거둠 (왕복 판정과 무관) | Codex Q6-2 조건 |
+| 라-재현 (나) | 새 C · CW ↔ 11-04 C | 쌍 덤프 md5 = 11-04 C (3ca3e608…) · 원자 md5 = 11-04 (9ce7f31a…) · **판정 조건** = 실행 파일 md5 = 11-04 ∧ 새 A2 restart_cmd.bin md5 = 11-04 (5bb05d12…) ∧ 덱 일곱 같음 ∧ N 40,000 · 아니면 해당 없음 | 기존 C 재현 미확인으로 적음 | *"같은 실행 파일이므로 CW = 11-04 C"* 를 근거로 쓰지 않는다 (Codex) · 왕복 동일 ≠ 주기 · 명령 첫 차이 소멸 · ≠ 원 런 상태 복구 |
+| 마-1 | [내용] B ↔ C (둘 다 setup · 같은 x · v · ω) | pos 6 · 주기 표지 · delta · contactArea · contactPoint 3 · deltaMax 값 다른 쌍 0 (deltaMax 는 ① 의 cohesion 가드 쌍을 빼고 · 그 수 따로) · 원자 값 다른 원자 0 · 쌍 집합 같음 | "주기 ↔ 명령 차이 = 저장 shear 뿐" 서술 거둠 · 다시 봄 (§4 그대로) | B 의 deltaMax = setup 이 올린 값 = A(N) (①) · 11-04 관찰 |
+| 마-2 | 같음 | A(N−1) · A(N) 에도 있는 쌍마다 B shear = A(N−1) shear · C shear = A(N) shear (정확) · B ≠ C 인 쌍 집합 = A(N−1) ≠ A(N) 인 쌍 집합 (같은 집합) · 새 쌍 (②) 은 이 집합에서 빼고 따로 | 같음 | 11-04 이력 열 3,111/3,111 (관찰) |
+| 마-3 | C ↔ A(N) | 주기 표지 0 쌍: 30 열 (torque = 같은 방향 행) 값 다른 쌍 0 → B − C = B − A · 표지 1 쌍: 힘 · 토크 밖 열 다른 쌍 0 · 힘 · 토크 차이 수 = 보고 | 같음 | 11-04 C ↔ A 334 = 표지 쌍 전부 (관찰) · 까닭 후보 = 스텝 끝 덤프의 고스트 v · ω 는 initial_integrate 뒤 통신 값 (verlet.cpp 293 · 299–330 · final_integrate 373 = 소유 원자만 · fix_nve_sphere.cpp 219–231) · setup 은 borders 로 복원 값 (verlet.cpp 161) — 소스 줄 · 실행 확인 전 · 추정 지위 그대로 |
+| 바 | [내용] B ↔ C 힘 열 (Q6-3 사영식) | §0-3-1 — 양쪽 고착 쌍 전부 바-1 · 2 · 3 이 E 안 → 맞음 · 하나라도 밖 → 틀림 · 양쪽 고착 쌍 0 → 해당 없음 | 사영식 서술 거둠 → 다시 봄 (§4 그대로) | Codex Q6-3 · tangential_model_history.h 161–217 · compute_pair_gran_local.cpp 481–510 |
+| 사 | [이력] C · CW 이력 4 열 ↔ A(N) | 값 다른 쌍 0 · 쌍 집합 같음 (둘 다) | 이력 서술 거둠 · 다시 봄 | 11-04 C ↔ A 3,111/3,111 (관찰) · 명령 파일 = 동기한 H(N) |
+| 예외① | 올림 (§0-1 ①) | (a) setup 덤프 일곱 (B · B2 · C · BW · BR · CW · CR) 의 모든 쌍 deltaMax ≥ delta (4 ulp 여유) · (b) B · B2 · BW: A(N−1) 덤프에도 있는 쌍마다 deltaMax = max(A(N−1) deltaMax, 그 쌍 delta) (4 ulp) · (c) C · CW ↔ A(N) · BR ↔ BW · CR ↔ CW deltaMax 다른 쌍 0 · 함께 적음 = 올림 쌍 수 · cohesion 가드 쌍 수 · 4 ulp 밖이 아닌 끝자리 차이 수 | "setup 이 deltaMax 만 올린다" 서술 거둠 · 다시 봄 | normal_model_hooke_hysteresis.h 156–159 · 덤프 delta 열 (compute_pair_gran_local.cpp 562–575) 과 deltan (surface_model_default.h 167 · pair_gran_base.h 279–282 · 311) 은 같은 차분 · 같은 합 — 정확 일치 예상 (추정 · vectorMag3D 본문은 안 읽음) · 4 ulp = 그 여유 |
+| 예외② | 재구성 (§0-1 ②) | 새 쌍 (B 에 있고 A(N−1) 덤프에 없는 쌍) 중 shear 0 인 쌍: deltaMax = delta (4 ulp · 0 에서 올림) · 새 쌍 왕복 (BW ↔ BR · CW ↔ CR) 값 다른 쌍 0 · 사라진 쌍 수 (A(N−1) 에 있고 N 에 없음) A = B · 함께 적음 = 새 쌍 (shear 0 · 0 아님) · 사라진 쌍 수 | ② 서술 거둠 · 다시 봄 | neigh_gran.cpp 587–615 · 11-04 = 새 쌍 0 · 사라진 쌍 0 (실행 파일이 바뀌면 침대가 달라질 수 있다) |
+| 예외③ | 바닥 벽 (§0-1 ③) | 예측 · 판정 없음 — 규모만 (BW 원자 덤프 · 닿음 · 근처 수) | — | fix_wall_gran.cpp 1145–1150 |
+| 아 | 보고 (그대로) | Δs = A(N) shear − A(N−1) shear ↔ v_tr(N)·dt (A 원자 덤프 v · ω · 회전 사영) 기울기 · R² · 중앙 상대차 — 값 미리 안 정함 | — | A 의 in-run 증분은 반 step 속도로 계산 (verlet.cpp 293 · 343) — 이 모형은 v(N) |
+
+- [연속] (A(N) ↔ B · C · 키트 26 열 옛 식) = 보고만 (§2 그대로 · 같다고 주장하지 않는다).
+
+#### 0-3-1. 바 (Q6-3) — 식 · 분류 · 허용 (결과 전 고정)
+
+- 쌍마다 작은 id 쪽으로 정규화 · en = (x_작은 − x_큰)/r (덤프 pos · x y 최소상) · 덤프 사영 방향 n = ±en (compute_pair_gran_local.cpp 486–487 · 사영은 부호 무관).
+- kt = kn = (16/15)·√R*·Y*·(15·m*·v_c²/(16·√R*·Y*))^0.2 (normal_model_hooke_hysteresis.h 139–146 · SI 라 nktv2p = 1) · Y* = 1/((1−ν_i²)/E_i + (1−ν_j²)/E_j) (global_properties.cpp 432) · R* = r_i r_j/(r_i + r_j) (normal_model_hooke_hysteresis.h 117) · m* = m_i m_j/(m_i + m_j) (pair_gran_base.h 384) · m = ρ·4πr³/3 · 물성 = 덱 mat.inc · fresh.inc 에서 읽음 (E 1.4e8 · 1.4e8 · 0.135e7 · ν 0.25 · 0.25 · 0.30 · ρ 4800 · 4800 · 2000 · v_c 2.0 · μ 0.5) · kt 는 덤프에 없어 **다시 계산한다** (Q9).
+- Fn = F_C·en — C 의 shear 는 A 의 in-run 회전으로 ⊥ en (tangential_model_history.h 155–158) · v_tr ⊥ en (surface_model_default.h 150–194) 이라 법선 모델 힘 (끝자리 안).
+- 분류 (Codex: 스프링 힘 크기로 · tangential_model_history.h 174–178) — **고착** = kt\|s\| ≤ (1 − 1e-9)·μ\|Fn\| (B · C 둘 다) · **미끄럼** = 어느 쪽이든 kt\|s\| > (1 + 1e-9)·μ\|Fn\| · 그 사이 = **경계** · deltaMax 가 B ≠ C 인 쌍 (① cohesion 가드) = Fn 이 달라 식 밖 — 셋 다 수만 적음.
+- **바-1** \|ΔF + kt·Δs\| ≤ E · **바-2** \|ΔF_n,dump + kt·(n·Δs)·n\| ≤ E · **바-3** \|ΔF_t,dump + kt·[Δs − (n·Δs)·n]\| ≤ E (ΔX = X_B − X_C · 방향 맞춘 값 · ΔF = 전체 힘 force 열).
+- **E** = 1e-9·kt\|Δs\| + 64ε·(\|F_B\| + \|F_C\| + kt\|s_B\| + kt\|s_C\|) · ε = 2^−52 — 앞 몫 = kt 를 다시 계산한 끝자리 차이 · 뒤 몫 = 덤프 값 끝자리 (Codex: `%.17g` 는 출력 정밀도일 뿐 · 차분 · 곱셈 · 사영의 끝자리 일치 보장 아님).
+- **판별력** (함께 적음 · 판정 아님) = 옛 연쇄등식 \|ΔF_t,dump − ΔF\| > E 인 고착 쌍 수 (n·Δs ≠ 0 이 보이는 쌍) — 0 이면 "가르지 못함" 으로 적고 바 상태는 그대로.  11-04 비주기 \|s_B·n\|/\|s_B\| 최대 2.9e-4 · 중앙 1.5e-7 (관찰) → 0 아닌 수를 예상 (값은 미리 안 정함).
+- 함께 적음 = κ/kt (κ = −ΔF·Δs/\|Δs\|² · 고착 쌍 · 최소 · 중앙 · 최대 — kt 식 진단) · 양쪽 미끄럼 쌍 중 \|F − Fn·en\| = μ\|Fn\| (상대 1e-9) 인 쌍 수 · 주기 표지 0 · 1 별 고착 · 실패 수.
+- torque · CDT = 판정 밖 — CDT 는 delta_torque 만 바꾼다 (rolling_model_cdt.h 160–166 · 덤프 힘 열에 안 들어감 · Codex).
+
+### 0-4. 준비물 (§5-1 · 이 커밋 · 결과 0 건 · 실행 없음)
+
+| 파일 (샌드박스 폴더 · 새 파일만 · 11-04 파일 · `run_40000/` · `dry/` 그대로) | 하는 일 |
+|---|---|
+| `docs/reviews/p1_g2c_sandbox_20261104/BW.liggghts` | 팔 BW · CW 덱 = `include R.liggghts` + `write_restart ${RST}/restart_rt.bin` (R 덱 바이트 그대로) |
+| `docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh` | 실행기 — A · A2 · B · B2 · C (11-04 와 같은 인자) · BW · BR · CW · CR 차례 · 직렬 · `nice -n 19` · 시간 한도 · 실행 전 멈춤 rc 3 (LMP · `-h` 배너 · N · OUT · 11-04 덱 md5 · BW 꼴 · git 더러움) · 실행 중 멈춤 rc 4 (rc · ERROR · Loop time · 출력) |
+| `docs/reviews/p1_g2c_sandbox_20261104/compare_g2cp.py` | 대조기 — §0-3 예측마다 맞음 / 틀림 / 해당 없음 / 계산 못 함 + §3 판정 (30 열 · 키트 `g2c_compare` 와 같은 식 — 26 열 사영에서 상태 · n_mismatch 같음을 시험) |
+| `docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py` | 시험 — 합성 침대 (§0-1 · §0-3-1 의 소스 줄을 옮긴 작은 모형 · 대조기 코드를 안 씀) · 가짜 lmp · 27 함수 · LIGGGHTS · MPI · 네트워크 없음 · 신호 시험 = `unshare -pf --mount-proc --kill-child` 안 (못 쓰면 건너뜀) |
+| `docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md` | 사용법 · 멈춤 표 |
+
+- 시험 먼저: 구현 없이 **0 / 27** (fail 27 · 마지막 시험 파일로 다시 확인) → 구현 뒤 **27 / 27** (11-10 · 이 컨테이너 · 약 6 s · 건너뜀 0 — unshare 됨) · 변이 시험 (리포 밖 하네스 · 대조기 37 · 실행기 14 결함을 하나씩 넣고 시험이 실패하는지) = **51 중 49 잡음** — 놓친 2 = 동등 변이 (정수 아닌 ID 자르기 = 뒤의 Decimal 검사가 다시 잡음 · 마-2 집합 비교 빼기 = 두 정확 등식에서 따라 나옴) · 1 회차 (38 중 33) 에서 놓친 곳 (감음 + 실제 차이 · 경계 쌍 · 미끄럼 갈래 셋 · 예외① (a) · (c) · 값 비교의 중복 · 원자 NaN · 사라진 쌍 대조) 은 시험을 보강했다 (구현은 바꾸지 않음).
+- 게이트 제안 (`scripts/check_all.sh` 는 고치지 않았다): `run 'G2c′ 샌드박스 대조기 · 실행기 (합성 침대 · 가짜 lmp · 시험 먼저)' python3 -I docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py`.
+- LIGGGHTS 실행 파일 = 이 컨테이너에 없음 (11-10 · `lmp*` · `mpirun` · `mpic++` 없음 · g++ 13.3 · make 있음) → §5-1 의 건식 (N = 200 · 접촉 0 = 문법만) 은 못 했다 — 실행 파일이 생긴 뒤 (결과 0 건).  빌드 = `docs/dem1/dem1_kit/test/build_liggghts.sh` 꼴 (그 스크립트는 mpic++ 필요 → 직렬 STUBS 판은 Makefile 사본이 따로 필요 · 머리 줄 어림 ~10 분).
+
+### 0-5. 이 개정이 §6 (주장하지 않는 것) 에 보태는 것
+
+- [왕복] 같음 = 주기 · 명령 파일의 첫 차이가 사라졌다 · 원 런 상태가 복구됐다는 뜻이 아니다 (Codex Q6-2).
+- 쌍 30 열 · 원자 12 열 일치 = 별도 벽 이력 인증이 아니다 (Codex Q6-4 · §0-1 ③).
+- §0 의 소스 줄은 모두 읽기다 — 실행 확인이 아니다 · ② 의 "옛 이력 복원" 갈래 · 다-바이트 근거 · 마-3 까닭 = 추정.
+- 바 의 kt = 덱에서 다시 계산한 값 — LIGGGHTS 가 쓴 값을 덤프로 본 것이 아니다.
+
+### 0-6. 정할 것 (11-10)
+
+- [Ⓐ 언로딩] **Q8** — §0 (전제 정정 · 같음 두 뜻 · 고친 예측 · 숫자 기준) 을 결과 전 등록 예측으로 비준할지.  권고: 예 (비준 전에는 샌드박스를 돌리지 않는다 · 11-06 보류 표지는 비준 때 풂).
+- **Q9** — 바 의 kt 를 덱 물성 · hooke 식으로 다시 계산해 쓸지 (kt 는 덤프에 없다).  권고: 예 (식이 틀리면 바 ✗ 로 나오고 κ/kt 진단이 함께 나온다).
+- **Q10** — 직렬 실행 파일 (이 컨테이너 STUBS 빌드 · Makefile 사본) → 건식 (N = 200) → 샌드박스 (N = 40,000) 순서.  권고: Q8 비준 뒤 · 게이트가 안 도는 때 · 1저자 GO (자동 시작 없음).
+- **Q11** — §0-4 시험 한 줄을 게이트에 넣을지.  권고: 예 (약 6 s · LIGGGHTS 없음).
+- **Q12** — 벽 이력 (③) 관측 덤프를 더할지.  권고: 아니오 (이번 범위 밖 · §5-3 키트 적용 등록 때 따로).
 
 ## 1. 지금 G2c 가 비트로 이어질 수 없는 까닭
 
