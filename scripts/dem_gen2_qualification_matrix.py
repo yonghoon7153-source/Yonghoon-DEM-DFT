@@ -252,6 +252,27 @@ def _packet(packet, case, attempt, source):
     expected = (observed['status'] == case['expected_status'] and observed['reason'] == case['expected_reason'])
     if case['role'] == 'EXPECTED_NEGATIVE' and not expected:
         raise ValueError('EXPECTED_NEGATIVE_MISMATCH')
+    negative_scope = None
+    missing_post_windows = None
+    if case['role'] == 'EXPECTED_NEGATIVE':
+        # A broad INCOMPLETE reason alone is not evidence of the registered
+        # post-budget control. Revalidated separation, clear and POST must exist.
+        second_zero = observed['second_zero_window_end']
+        clear = observed['plate_clear_event']
+        checked_post = observed['checked_post_windows']
+        post_budget = p2_plan['params']['post_windows']
+        window_steps = compiled['selected_window_steps']
+        if (second_zero is None or clear is None or observed['post_end'] is not None
+                or not 1 <= checked_post < post_budget):
+            raise ValueError('EXPECTED_POST_SHORTAGE_NOT_WITNESSED')
+        if clear['step'] + post_budget * window_steps != attempt['planned_end_step']:
+            raise ValueError('EXPECTED_POST_BUDGET_MISMATCH')
+        if (windows[-1]['phase'] != 'POST'
+                or windows[-1]['end_step'] != clear['step'] + checked_post * window_steps
+                or windows[-1]['end_step'] >= attempt['planned_end_step']):
+            raise ValueError('EXPECTED_POST_PREFIX_END_MISMATCH')
+        negative_scope = 'POST_SHORTAGE_AFTER_SEPARATION_AND_CLEAR'
+        missing_post_windows = post_budget - checked_post
     # A complete P2 toy diagnostic does not erase a declared failed attempt.
     complete = (observed['status'] == 'SYNTHETIC_POST_DIAGNOSTIC_CANDIDATE'
                 and attempt['terminal_state'] == 'DECLARED_COMPLETE')
@@ -259,7 +280,9 @@ def _packet(packet, case, attempt, source):
                          else attempt['terminal_state'] == 'DECLARED_PARTIAL')
     row = dict(case_id=case['case_id'], role=case['role'], observed_status=observed['status'],
         observed_reason=observed['reason'], meets_expectation=meets,
-        attempt_terminal_state=attempt['terminal_state'], synthetic_case_complete=complete)
+        attempt_terminal_state=attempt['terminal_state'], synthetic_case_complete=complete,
+        negative_scope=negative_scope, checked_post_windows=observed['checked_post_windows'],
+        missing_post_windows=missing_post_windows)
     return row, dict(objects=objects, boundary=boundary, p2_plan=p2_plan, compiled=compiled)
 
 

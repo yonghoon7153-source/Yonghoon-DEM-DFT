@@ -45,10 +45,25 @@ def _int(value, minimum=0, maximum=1000000000):
 def _number(value, nonnegative=False):
     if type(value) not in (int, float):
         raise ValueError('built-in finite number required')
-    result = float(value)
-    if not math.isfinite(result) or (nonnegative and result < 0):
+    # Preserve integer identity and the exact binary value of a supplied float.
+    if ((type(value) is float and not math.isfinite(value))
+            or (nonnegative and value < 0)):
         raise ValueError('invalid finite number')
+    return value
+
+
+def _diagnostic_number(value):
+    """JSON number display only; never use rounded diagnostics for decisions."""
+    if value.denominator == 1:
+        return value.numerator
+    result = _number(float(value))
+    if value and result == 0:
+        raise ValueError('nonzero diagnostic is below float display range')
     return result
+
+
+def _exact_pair(value):
+    return [value.numerator, value.denominator]
 
 
 def _token(value):
@@ -266,22 +281,31 @@ def audit_t5_coverage(plan, rows):
                 else:
                     valid += 1
                     covered += record[2] <= truth <= record[3]
-                    deviations.append(_number(record[1] - truth))
+                    deviations.append(Fraction(record[1]) - Fraction(truth))
             planned = len(normalized['seeds'])
-            mean_bias = _number(math.fsum(deviations) / valid) if valid else None
-            max_abs = max(abs(d) for d in deviations) if valid else None
-            rmse = _number(math.hypot(*deviations) / math.sqrt(valid)) if valid else None
-            budget = normalized['error_budget']
+            exact_mean = sum(deviations, Fraction(0)) / valid if valid else None
+            exact_max = max(abs(d) for d in deviations) if valid else None
+            mean_bias = _diagnostic_number(exact_mean) if valid else None
+            max_abs = _diagnostic_number(exact_max) if valid else None
+            # RMSE remains a finite float diagnostic, not an acceptance test.
+            rmse = _number(math.hypot(*(float(d) for d in deviations))
+                           / math.sqrt(valid)) if valid else None
+            if valid and exact_max and rmse == 0:
+                raise ValueError('nonzero RMSE is below float display range')
+            budget = Fraction(normalized['error_budget'])
             if normalized['error_mode'] == 'REL':
-                budget = _number(budget * abs(truth), nonnegative=True)
+                budget *= abs(Fraction(truth))
             cells.append(dict(case_id=case, estimand_id=estimand, n=n,
                 oracle=truth, output_unit=normalized['output_unit'], planned=planned,
                 valid=valid, missing=missing, failed=failed, covered=covered,
                 conservative_coverage=covered / planned,
                 eligible_coverage_diagnostic=covered / valid if valid else None,
                 mean_bias=mean_bias, max_abs_error=max_abs, rmse=rmse,
+                mean_bias_exact_ratio=_exact_pair(exact_mean) if valid else None,
+                max_abs_error_exact_ratio=_exact_pair(exact_max) if valid else None,
+                effective_bias_budget_exact_ratio=_exact_pair(budget),
                 declared_toy_coverage_target_met=Fraction(covered, planned) >= normalized['coverage_target'],
-                declared_toy_bias_budget_met=abs(mean_bias) <= budget if valid else None))
+                declared_toy_bias_budget_met=abs(exact_mean) <= budget if valid else None))
         incomplete = any(c['missing'] or c['failed'] for c in cells)
     except (TypeError, ValueError, OverflowError):
         return _report('REJECTED', 'INVALID_SYNTHETIC_PLAN_OR_ROWS')
