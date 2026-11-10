@@ -1,0 +1,26 @@
+{
+  "schema": "dem_q3_document_prefill/1",
+  "base_commit": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+  "scope": "Repository documentary metadata and protocol statements only; no raw data, logs, results or field queries",
+  "rows": 9,
+  "questions": ["Q-D2-01", "Q-D2-02"],
+  "actual_build_identity": "UNKNOWN",
+  "physical_qualification": "NOT_ESTABLISHED",
+  "source_records": [
+    {"id": "S1", "path": "docs/50kg/dem_plan_20261026.md", "git_blob_oid": "4a6bc8b8150e3e4d1bec8744fdc602e81ba757fd", "sections": ["title and introduction", "0", "3 PSD limitation", "4-1", "4-2"]},
+    {"id": "S2", "path": "docs/50kg/codex_kg50_decks_request_20261026.md", "git_blob_oid": "c144c53007f51c16ba04ba2038df434b8d38dde4", "sections": ["1", "2", "3"]},
+    {"id": "S3", "path": "docs/reviews/dem_protocol_gen2_plan_draft_20261014.md", "git_blob_oid": "edae89251d9bbff1a512f9dc41240008e88d61e8", "sections": ["0-1 D9-prime", "2-0", "2-5 through 2-7", "4-4", "4-5", "12 A2 through A5"]},
+    {"id": "S4", "path": "docs/collab/claude_to_codex/20261109-2230_nonrint-first-link-sha-map.md", "git_blob_oid": "eeef06a9c0e8ada2c849b916c270002fb8e5e7a3", "sections": ["1", "2"]},
+    {"id": "S5", "path": "docs/reviews/dem_gen2_preparation_20261109/README.md", "git_blob_oid": "9040667aab92a33db8aa816b11a7a219e72b0747", "sections": ["producer boundary", "same static pressure size comparison", "missing facts"]},
+    {"id": "S6", "path": "docs/reviews/dem_gen2_limited_acceptance_20261109/README.md", "git_blob_oid": "7bbf48148982142271f423997ceb50cfbafa1603", "sections": ["identity and intake", "limited reception scope", "remaining boundary"]},
+    {"id": "S7", "path": "docs/reviews/dem_gen2_t12_consumer_contract_20261024.md", "git_blob_oid": "cf705651cdc05dde65f95009c5035ed205fcab73", "sections": ["introduction", "1", "2", "3"]},
+    {"id": "S8", "path": "docs/reviews/nonrint_approved_preparation_20261109/dem_nonresult_intake_form.md", "git_blob_oid": "5495f705eff78f88f861fff9513d5dd52c5361a8", "sections": ["1 through 5"]}
+  ],
+  "field_queries": 0,
+  "raw_values_or_logs_read": 0,
+  "tests_run": 0,
+  "research_results": 0,
+  "physical_ready": false,
+  "execution_go": false,
+  "whole_status": "HOLD"
+}
