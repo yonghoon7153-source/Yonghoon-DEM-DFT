@@ -1,0 +1,297 @@
+{
+  "schema": "dem_t11_author_verification_summary/1",
+  "parent_pin": "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+  "t0_contract_pin": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+  "created_utc": "2026-11-10T01:31:10.835171+00:00",
+  "strict_preimplementation_TDD": false,
+  "implementation_draft_existed_before_red": true,
+  "chronology": "preserved prior staging draft; repository stub red; candidate application and green; six contrasts",
+  "is_existing_defect_reproduction": false,
+  "source_sha256": {
+    "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+    "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+    "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+    "test_dem_gen2_t11_contract.py": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22"
+  },
+  "baseline_source_sha256": "d54b98183c4204dd2b31e65110fba026c3fc01ae9b89dbbf41ce34bc5c7b3b43",
+  "preserved_staging_files": {
+    "docs/reviews/dem_t11_contract_20261110/contract_draft.json": {
+      "bytes": 3099,
+      "sha256": "19793ed6a293e1e8fce31a1827f685f5bf5539a54e7e1cee7af61d1e28de81aa",
+      "observed_source_mtime_utc": "2026-11-10T01:18:54.277382+00:00"
+    },
+    "docs/reviews/dem_t11_contract_20261110/README.md": {
+      "bytes": 10516,
+      "sha256": "7151a65a216d8b6f3c54a126420f6146b3a4783fd86989542b9e4d93411198ff",
+      "observed_source_mtime_utc": "2026-11-10T01:18:54.097414+00:00"
+    },
+    "scripts/dem_gen2_t11_contract.py": {
+      "bytes": 13299,
+      "sha256": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+      "observed_source_mtime_utc": "2026-11-10T01:14:33.017868+00:00"
+    },
+    "scripts/test_dem_gen2_t11_contract.py": {
+      "bytes": 21688,
+      "sha256": "219b4205993395c4669796022e3e10c1573736f94c93561d8637a07cd6ea5eb7",
+      "observed_source_mtime_utc": "2026-11-10T01:19:19.230878+00:00"
+    }
+  },
+  "staged_test_to_red_green_header_change": {
+    "before": "Unexecuted staging: exact synthetic T11 plans and tiny existing-oracle probes.",
+    "after": "Exact synthetic T11 plans and tiny existing-oracle probes.",
+    "preserved_staging_sha256": "219b4205993395c4669796022e3e10c1573736f94c93561d8637a07cd6ea5eb7",
+    "fixed_red_green_sha256": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22",
+    "only_difference": "first module docstring line; executable test bodies unchanged"
+  },
+  "receipt_preparation_stops": 1,
+  "receipt_preparation_test_runs": 0,
+  "red": {
+    "started_utc": "2026-11-10T01:25:24.101688+00:00",
+    "finished_utc": "2026-11-10T01:25:24.143033+00:00",
+    "methods": 24,
+    "failures": 19,
+    "errors": 0,
+    "rc": 1,
+    "baseline_kind": "staged_design_existed_before_stub_red_not_strict_preimplementation_TDD"
+  },
+  "green": {
+    "started_utc": "2026-11-10T01:25:31.486653+00:00",
+    "finished_utc": "2026-11-10T01:25:31.545605+00:00",
+    "methods": 24,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0,
+    "baseline_kind": "candidate_from_preserved_pre_red_staging_draft"
+  },
+  "mutations": [
+    {
+      "name": "external_plan_digest",
+      "started_utc": "2026-11-10T01:26:51.027308+00:00",
+      "finished_utc": "2026-11-10T01:26:51.081099+00:00",
+      "methods": 24,
+      "failures": 6,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "error_count": 0,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if plan_digest != expected_plan:",
+          "after": "if False:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "0b35b652c1cd6430f5879febee53f9d68a6d822a155846d40bcc032f4863722d",
+        "test_dem_gen2_t11_contract.py": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22"
+      },
+      "chronology": "implementation staging draft existed before baseline red; contrast after candidate green"
+    },
+    {
+      "name": "exact_dt_half_pair",
+      "started_utc": "2026-11-10T01:26:51.082100+00:00",
+      "finished_utc": "2026-11-10T01:26:51.128883+00:00",
+      "methods": 24,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "error_count": 0,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if dt_half * 2 != dt:",
+          "after": "if False:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "e387e989fea1b58214f25495db993fc7962a887d056aab7f54ead0659c188dc0",
+        "test_dem_gen2_t11_contract.py": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22"
+      },
+      "chronology": "implementation staging draft existed before baseline red; contrast after candidate green"
+    },
+    {
+      "name": "actuator_error_clip",
+      "started_utc": "2026-11-10T01:26:51.128883+00:00",
+      "finished_utc": "2026-11-10T01:26:51.177280+00:00",
+      "methods": 24,
+      "failures": 3,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "error_count": 0,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "saturation = limit / gain",
+          "after": "saturation = limit"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "e03415950f53385e70ca2d840704e0fb4aac171edb8e8104a7fed5841768b3ff",
+        "test_dem_gen2_t11_contract.py": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22"
+      },
+      "chronology": "implementation staging draft existed before baseline red; contrast after candidate green"
+    },
+    {
+      "name": "physical_time_scale",
+      "started_utc": "2026-11-10T01:26:51.178280+00:00",
+      "finished_utc": "2026-11-10T01:26:51.225568+00:00",
+      "methods": 24,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "error_count": 0,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "dt = _rational(times['dt_deck']) * scale",
+          "after": "dt = _rational(times['dt_deck'])"
+        },
+        {
+          "before": "dt_half = _rational(times['dt_half_deck']) * scale",
+          "after": "dt_half = _rational(times['dt_half_deck'])"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "d79af885606fc0a152e96cc40b2bf982f7fda06fe93b79a6de15c5ec1b365ecd",
+        "test_dem_gen2_t11_contract.py": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22"
+      },
+      "chronology": "implementation staging draft existed before baseline red; contrast after candidate green"
+    },
+    {
+      "name": "t0_packet_revalidation",
+      "started_utc": "2026-11-10T01:26:51.225568+00:00",
+      "finished_utc": "2026-11-10T01:26:51.272484+00:00",
+      "methods": 24,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "error_count": 0,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if t0_result['status'] != 'SYNTHETIC_T0_CONTRACT_CONSISTENT':",
+          "after": "if False:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "a0cc79200f23f62667934c8b2135d998d18c0f6b02b68fe212bcaa6b4a5faabe",
+        "test_dem_gen2_t11_contract.py": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22"
+      },
+      "chronology": "implementation staging draft existed before baseline red; contrast after candidate green"
+    },
+    {
+      "name": "integer_grid",
+      "started_utc": "2026-11-10T01:26:51.272484+00:00",
+      "finished_utc": "2026-11-10T01:26:51.320252+00:00",
+      "methods": 24,
+      "failures": 2,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "error_count": 0,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if value.denominator != 1 or value.numerator < minimum:",
+          "after": "if value.numerator < minimum:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "d54dd47ce9f1a98e593ad3927d81b9011d608e43e72d6abbc13337804f7e4426",
+        "test_dem_gen2_t11_contract.py": "58324ef5b949372915d1b750cd84917074455a49c39f3f8b9a6bf8790a4cea22"
+      },
+      "chronology": "implementation staging draft existed before baseline red; contrast after candidate green"
+    }
+  ],
+  "mutants_detected_without_errors": 6,
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+  "platform": "Windows",
+  "flags": [
+    "-I",
+    "-B"
+  ],
+  "same_test_bytes_red_green_mutants": true,
+  "original_source_and_test_unchanged": true,
+  "original_staging_unchanged": true,
+  "existing_q_T0_changed": false,
+  "audit_installed_before_project_code": true,
+  "audit_scope": "each recorded test invocation only, not all parent-turn documentary reading",
+  "process_network_attempts": [],
+  "invocation_actual_engine_calls": 0,
+  "invocation_actual_raw_data_or_log_reads": 0,
+  "whole_gate": "NOT_RUN",
+  "CI": "NOT_RUN",
+  "other_platform_qualification": "NOT_RUN",
+  "counting_rule": "24 methods; six contrasts; subtest failures, dependency controls and repeated runs are not additive unique tests",
+  "independent_review": "PENDING",
+  "actual_T0": "NOT_RUN",
+  "actual_T11": "NOT_RUN",
+  "actual_build_identity": null,
+  "actual_compression_sign": null,
+  "registration_complete": false,
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "operational_seal_modified": false,
+  "research_results": 0,
+  "whole_status": "HOLD",
+  "evidence_relative_to_author_evidence_root": {
+    "red/report.json": {
+      "bytes": 1432,
+      "sha256": "2eef97698414c5c9f5b6479b092d97a6d9b603060d3b37103a2d5d6eb4908243"
+    },
+    "red/test.log": {
+      "bytes": 27656,
+      "sha256": "8601dee15e5cabd178ec3635ea67f1dcf6337d9cc3949eb7abd4e216f15fc1b0"
+    },
+    "green/report.json": {
+      "bytes": 1407,
+      "sha256": "df0b3430d21662599b393b0c7034f5f703ed38c852ad4b8b01f0a4ed9f3ee156"
+    },
+    "green/test.log": {
+      "bytes": 4057,
+      "sha256": "56e9832cb79a23cf1623bb931b9ab5d8174ce8ed467030bd7fe52a0b7e53798d"
+    },
+    "mutants/summary.json": {
+      "bytes": 7999,
+      "sha256": "e66931fa92ee95804b414666b4e9150e63512b309d5519bb61308ee11fdcda32"
+    },
+    "staging_preservation.json": {
+      "bytes": 2005,
+      "sha256": "171e757ce62baa77c28bb49a746f1dd65c397a19db6db4eceea7771504426edc"
+    },
+    "receipt_preparation_note.json": {
+      "bytes": 942,
+      "sha256": "3c4f1ae0ec993eb8ebe4c3a866702b22dcd8f5a1169b6b2d38673dfea87cf883"
+    },
+    "CHRONOLOGY.md": {
+      "bytes": 1289,
+      "sha256": "fcff26acff399f4580b6d7396c90430582c164038e5443654d3cfa91481f57a5"
+    },
+    "run_synthetic_suite.py": {
+      "bytes": 3421,
+      "sha256": "09dd45f5100f66831ca77ffcba52b2a66933d83f43fd54850287692f8bc58878"
+    },
+    "run_mutants.py": {
+      "bytes": 4827,
+      "sha256": "d0620d41b35d0aa311fe21f070504c8c3c7ea6592277d3c93a3b218e554c7e9b"
+    }
+  }
+}
