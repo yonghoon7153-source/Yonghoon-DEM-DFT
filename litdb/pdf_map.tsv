@@ -380,3 +380,6 @@ cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd	micromechani
 # ── 단결정 NMC/LPSCl 복합 양극 500 MPa 압밀 (Doerrer 외 2021 · ACS Appl. Mater. Interfaces 13, 37809) — litdb 2026-11-10 · 카드 제목이 한국어라 자동 매칭이 못 붙임 · 밑줄 · 공백 두 변형 (본문 · SI 공통 조각) ──
 doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density	high_energy_density_single-crystal_nmcli6ps5cl_cathodes
 doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density	high energy density single-crystal nmc
+# ── LGPS 원전 · '넓은 창 (>5 V)' 주장의 원전 (Kamaya 외 2011 · Nat. Mater. 10, 682 · 사용자 목록 125 번) — litdb 2026-11-10 · 제목 'A lithium superionic conductor' 가 짧고 흔한 낱말뿐이라 (xu2026_ndo… · fujimura2013… 등 'superionic conductor' 제목과 토큰이 겹친다) 수동 지정 · 본문 · Sup 공통 조각 · '.pdf' 까지 넣어 다른 제목의 앞부분과 안 겹치게 · 밑줄 · 공백 두 변형 ──
+kamaya2011_lgps_lithium_superionic_conductor	a lithium superionic conductor.pdf
+kamaya2011_lgps_lithium_superionic_conductor	a_lithium_superionic_conductor.pdf

@@ -3,6 +3,7 @@
 > slug `ong2013_lgps_family_substitution` · DOI `10.1039/c2ee23355j` · type `DFT+AIMD (순수 계산, 실험 0)` · PDF **본문 `litdb/inbox/43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 …pdf`(9 pp = 148–156)** · **ESI 미보유**(논문이 참조하는 ESI는 별도 파일 — 안정상 전체 목록·이완 구조 상세·σ 환산식은 n/a) · (inbox #43) · **사용자 분류 폴더 `DFT`** · digested `2026-07-28` · **본문 실물 독립 검증 `2026-08-03`(§18 — 전문 텍스트 추출 + Fig 1–5·Eq 1–2 이미지 판독, Fig 2 DOS 3패널 픽셀 디지타이즈; 교정 5건·신규 적발 9건·미결 3건)** · status ✅ **(본문 실물 대조 완료 — ESI만 미보유)**
 > **저자**: Shyue Ping Ong, Yifei Mo, William Davidson Richards (MIT DMSE) · Lincoln Miara, Hyo Sug Lee (Samsung SAIT, Cambridge MA) · **Gerbrand Ceder*** (MIT) · Energy Environ. Sci. 2013, **6**, 148–156 · Received 2012-06-15 / Accepted 2012-10-01 / Published online 2012-10-02
 > 자금: Samsung SAIT + TeraGrid(PSC)·NERSC(DOE DE-AC02-05CH11231)
+> 🔗 **원전 실험 (2026-11-10 교차 참조)**: LGPS 발견 · 이 논문이 Ewald 30 배열로 질서화한 정련 구조의 출처 = [`kamaya2011_lgps_lithium_superionic_conductor`](kamaya2011_lgps_lithium_superionic_conductor.md) — σ 12 mS cm⁻¹ 은 500 °C 소결 펠렛의 total σ (27 °C 반복 4 점 11.1–12.6 · `figure-read ≈`) · '1D 전도' 는 중성자 열인자 추론 · Li/LGPS/Au CV '>5 V' 는 겉보기 창.
 
 
 > elements: Al Ge Li O P S Se Si Sn
