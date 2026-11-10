@@ -1,0 +1,186 @@
+{
+  "schema": "dem_p2_native_contract_document_draft/1",
+  "status": "SYNTHETIC_CANDIDATE_CHECKED_ACTUAL_UNREGISTERED",
+  "implementation_body_exists": true,
+  "test_methods_drafted": 29,
+  "s0_dependency_pin": "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+  "source_tree_read": "63a513560c2770990920065be94ef966a8be018b",
+  "assumptions": [
+    {
+      "id": "Q-P2-1",
+      "label": "권고안 전제(Q-P2-1)",
+      "recommendation": "Native P2 header/params; revalidate S0 bytes and original S0/LIVE inputs; explicit h0, A/B ratio, gravity, time and unit declarations."
+    },
+    {
+      "id": "Q-P2-2",
+      "label": "권고안 전제(Q-P2-2)",
+      "recommendation": "Two consecutive complete zero-contact windows, then MOVE_CLEAR event, then exactly four complete post windows; primary selection remains unresolved."
+    }
+  ],
+  "apis": [
+    "validate_p2_contract(plan, s0_bytes, context)",
+    "diagnose_p2_separation(plan, s0_bytes, context, trace)"
+  ],
+  "s0_decoder_contract": "decode_s0(data, contract, live_plan, servo_frames, ra_frames)",
+  "authority": {
+    "actual_T0": "NOT_RUN",
+    "actual_T11": "NOT_RUN",
+    "actual_T12": "NOT_RUN",
+    "actual_S0": null,
+    "actual_unload_case": null,
+    "registration_complete": false,
+    "physical_ready": false,
+    "execution_go": false,
+    "transition_authorized": false,
+    "gate_write": false,
+    "operational_seal_modified": false,
+    "source_authenticated": false,
+    "hidden_history_qualified": false,
+    "research_results": 0,
+    "whole_status": "HOLD"
+  },
+  "actual_unselected": {
+    "h0_and_bottom": null,
+    "unload_A_or_B": null,
+    "h0_ratios_and_cap": null,
+    "unit_mapping": null,
+    "gravity_variant_and_vector": null,
+    "dt_window_budget": null,
+    "pressure_endpoint_selection": null,
+    "energy_surface_thresholds": null,
+    "source_semantic_mapping": null,
+    "registration_approval": null,
+    "physical_qualification_receipt": null
+  },
+  "toy_arithmetic_expectations_not_results": {
+    "h0": [
+      10,
+      1
+    ],
+    "increment_ratio_A": [
+      1,
+      10
+    ],
+    "increment_ratio_B": [
+      1,
+      40
+    ],
+    "lift_cap_ratio": [
+      1,
+      5
+    ],
+    "A_increment": [
+      1,
+      1
+    ],
+    "B_increment": [
+      1,
+      4
+    ],
+    "maximum_lift": [
+      2,
+      1
+    ],
+    "dt_seconds": [
+      1,
+      8
+    ],
+    "dt_half_seconds": [
+      1,
+      16
+    ],
+    "window_seconds": [
+      2,
+      1
+    ],
+    "window_steps": 16,
+    "half_window_steps": 32,
+    "zero_windows": 2,
+    "post_windows": 4,
+    "coarse_boundary_step": 96,
+    "coarse_second_zero_end": 144,
+    "coarse_first_crossing_step": 113,
+    "coarse_post_end": 208,
+    "half_boundary_step": 192,
+    "half_second_zero_end": 288,
+    "half_post_end": 416,
+    "primary_status": "SELECTION_UNRESOLVED",
+    "clear_action": "MOVE_CLEAR"
+  },
+  "limitations": [
+    "No actual P1 consumer, engine, filesystem writer, gate or operating reseal.",
+    "Hashes and code pins are declared consistency, not source authenticity.",
+    "Replacing context and all sources coherently is not prevented by an external trust anchor.",
+    "S0 fixture semantic slots are dummy declarations, not approved P2 physical mapping.",
+    "S0 does not infer actual pair ID semantics, equate LIVE contact counts with payload rows, or recompute LIVE force/velocity/omega from atom payloads; six-object byte binding is not simultaneous physical-state certification.",
+    "MOVE_CLEAR diagnostic only; actual mesh deletion is not supported.",
+    "First pressure crossing is a sample event, not P1 primary selection or interpolation.",
+    "Native contract and post diagnostic do not constitute T12 or physical qualification.",
+    "ULPRI/T12R closed scopes remain unchanged."
+  ],
+  "parent_pin": "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+  "final_test_methods": 29,
+  "final_test_passed": 29,
+  "author_independent_verdict": false,
+  "recorded_suite_invocations": {
+    "initial_and_scope_sequence": 5,
+    "isolated_guard_contrasts": 7,
+    "counting_note": "Invocations are repeated synthetic suites, not distinct new tests."
+  },
+  "primary_crossing_scope": "Valid UNLOADING windows only; POST-only crossing does not select primary.",
+  "chronology": {
+    "schema": "p2_native_author_chronology/1",
+    "initial_order": "design and 28-test fixture, then fail-closed stub; no implementation body before red2",
+    "preparation_to_red": "replace single S0 pin placeholder with fixed parent pin",
+    "first_red": {
+      "methods": 28,
+      "failures": 15,
+      "errors": 1,
+      "error": "test_17 assigned a tuple slot when shortening trace; test setup error"
+    },
+    "test_setup_correction": {
+      "before": "args=fixture();args[3]=args[3][:3]",
+      "after": "args=list(fixture());args[3]=args[3][:3]",
+      "implementation_existed": false
+    },
+    "corrected_red2": {
+      "methods": 28,
+      "failures": 16,
+      "errors": 0
+    },
+    "first_implementation": "written only after preserved error-free red2; same 28 tests green",
+    "scope_counterexample": "add method 29 while keeping initial green implementation; POST-only pressure crossing must not become UNLOADING crossing",
+    "scope_red": {
+      "methods": 29,
+      "failures": 1,
+      "errors": 0
+    },
+    "minimal_scope_fix": "Add phase=='UNLOADING' to crossing collection condition.",
+    "final_green": {
+      "methods": 29,
+      "failures": 0,
+      "errors": 0
+    },
+    "mutants": "seven isolated guard weakenings against unchanged final 29-method suite",
+    "existing_closed_defects_reopened": false,
+    "count_scope": "Method counts, assertion/subtest failures, seven mutations and repeated runs are not additive unique tests.",
+    "audit_scope": "Recorded synthetic invocations only, not every documentary read in the parent turn."
+  },
+  "source_sha256": {
+    "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+    "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+    "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+    "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+    "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+    "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+    "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+    "dem_gen2_p2_contract.py": "cb5b3b66bbb89c39d2faf843c68f1b04853e28d9bcddc69de458f4aa2c194899",
+    "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3"
+  },
+  "remaining": [
+    "fixed-pin independent review",
+    "actual quantitative/identity registration",
+    "real P2/T12 and hidden-history qualification",
+    "author operating approval"
+  ]
+}
