@@ -1,0 +1,237 @@
+{
+ "slug": "bares2021_soft_rigid_mix_experiment_dic_proceedings",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Experimental set-up. Top: 3D drawing of the com- pression device and particle packing laying on a photographic ﬂatbed scanner [15]. Bottom-left: squeezed soft silicone particle [13, 16]. The top shiny aspect is due to a layer of thin metallic glitter [17]. Bottom-right: rigid PVC particle. The top shiny as- pect is due to silver paint. During experiments particles are used with their shiny part in contact with the scanner.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    73.4,
+    293.7,
+    342.8
+   ],
+   "w": 1013,
+   "h": 1124,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.42,
+   "src_native": [
+    1145,
+    1289
+   ],
+   "viewed": true,
+   "mpm_note_ko": "2D 피스톤 (처음 270 × 202 mm² · 스테퍼 모터 25 µm/단계 · 움직이는 변에 힘 센서 둘 · 100 Hz) 이 평판 스캐너 위의 원기둥 96 개 (지름 20 · 30 mm · 높이 15 mm · 무른 = 초탄성 실리콘 E 0.45 MPa · 단단한 = PVC 1.2 GPa) 를 0.5 mm 씩 (2 mm/min) 누르고 1 분 쉰 뒤 아래에서 2400 dpi (10.6 µm/px) 로 찍는다 — 2022 Letter 와 같은 장치 · 같은 재료의 앞 판.  그림의 압축 화살표가 장치의 긴 쪽을 따라간다 (원문은 어느 변이 움직이는지 적지 않음).  무른 입자 = 반짝이 · 단단한 입자 = 은색 칠로 DIC 무늬.  재설계 모델이 '입자 경계 · 접촉 · 입자 안 변형장' 을 내면 한 실험에서 대조할 수 있는 형식 (2D · kPa · 모델 재료 — 값 전이 없음)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Global observables. Variation of the global stress (σ), coordination (Z), speciﬁc contact length (l), average value of the von Mises of the right Cauchy-Green strain tensor (|C|) of soft particles, particle asphericity (a) and void area (A) as a function of the packing fraction (φ) for a compression experiment made with 50% of rigid particles (κ = 0.5).",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    73.4,
+    293.7,
+    313.5
+   ],
+   "w": 1013,
+   "h": 1002,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.917,
+   "src_native": [
+    1215,
+    1212
+   ],
+   "viewed": true,
+   "mpm_note_ko": "κ 0.5 한 실험의 전역 관측량 6 개 vs 충전율 φ (0.796–0.912 [판독]): 응력 σ (축 글자 'MPa' — 같은 장치 2022 평균 (kPa) 과 같은 φ 에서 1.1–1.8 배라 kPa 의 오기로 보인다 [판독 + 카드 산술] · 끝 ≈ 70) · 배위수 Z 2.48 → 3.0 (φ ≈ 0.822) → 3.61 (φj 0.84) → 4.2 · 특정 접촉 길이 l 0.13 (σ ≈ 0 · Z ≈ 2.5 인 출발에서 이미 13 %) → 0.19 (φj) → 0.32 · |C| 1.000 → 0.991 (φ ≈ 0.868) → 0.966 · 비구형도 a 1.007 → 1.013 (0.88) → 1.055 · 빈틈 넓이 A 1 → 14 → 27 cm² (φ 0.880 봉우리) → 13.  ⚠ 본문 'φj 0.84 · Z slightly above 3' 은 그려진 Z (0.84 에서 3.6) 와 안 맞는다.  ⚠ A 는 상자 전체의 빈 넓이일 수 없다 (그것은 φ 가 오르면 줄기만 한다 · 카드 산술) — 가장자리에 닿지 않은 빈틈 섬의 합 (vu2019 정의) 으로 읽으면 꼴이 설명된다 (추정).  출발 l 13 % = 근접 0.5 mm 만으로 생기는 기하 기준선 (카드 산술 ≈ 16 % · 13–25 %) 과 같은 자리 — 우리 MPM 피복 (근접 띠만) 의 '하중 없는 근접' 문제의 실측 사례."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Local observables. Field of the ﬁrst invariant of the right Cauchy-Green strain tensor (C) for soft particles and of the inﬁnitesimal strain tensor (ε) for rigid particles. These ﬁelds are computed for a compression experiment made with 50% of rigid particles at a packing fraction φ = 0.89 far above the jamming point.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.7,
+    498.1,
+    293.7,
+    713.1
+   ],
+   "w": 1013,
+   "h": 897,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.405,
+   "src_native": [
+    871,
+    773
+   ],
+   "viewed": true,
+   "mpm_note_ko": "φ 0.89 의 입자별 변형 첫째 불변량: 무른 입자 = tr C (무변형 2 · 색 1.83–2.11) · 단단한 입자 = tr ε (무변형 0 · 색 −0.016 … +0.011).  카드 화상 분석: 입자 96 개 = 작은 64 (무른 32 + 단단한 32) + 큰 32 (16 + 16) · 흰 빈틈 몫 ≈ 0.10–0.12 (φ 0.89 와 맞음) · 시야 세로 ÷ 가로 ≈ 1.25.  무른 입자 안쪽 tr C ≈ 1.90–1.95 → 바닥면 넓이가 국부적으로 ≥ 2.5–5 % 줄었다 (J ≤ tr C/2 · 카드 산술 — 위가 자유인 평면 응력 쪽 조건의 흔적) · 접촉점 근처 밝은 자리 (≈ 2.05–2.10) 는 넓이 증가가 아니라 찌그러짐 (전단) 일 수 있다.  단단한 입자의 줄무늬 = 스캐너 속도 불균일 (저자) — PVC 의 기대 변형 (σ/E ≈ 6 × 10⁻⁵) 은 색 범위의 ~1/200 이라 단단한 입자가 지는 하중은 이 장치로 읽을 수 없다 (카드 산술).  MPM 은 입자마다 F 를 들고 있어 같은 장을 낼 수 있지만, 우리 AM (강체 얼린 장애물) 쪽 응력은 MPM 에서도 0 이다."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Statistical observation. Main panel: Evolution of the PDF of the value of the von Mises of the right Cauchy-Green strain tensor (C) measured in soft particles as a function of the packing fraction for a compression experiment made with 50% of rigid particles. Scale is semi-log. Inset: Evolution of standard deviation of C for diﬀerent particle mixes (κ) as function of the distance to the jamming point.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.6,
+    278.5,
+    544.6,
+    475.4
+   ],
+   "w": 1014,
+   "h": 821,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.749,
+   "src_native": [
+    1056,
+    854
+   ],
+   "viewed": true,
+   "mpm_note_ko": "κ 0.5 한 실험의 무른 입자 |C| 확률밀도 (세로 로그 · 색 = φ 0.797–0.912 — 그림 2 와 같은 실험 [판독]): 느슨할 때 |C| = 1.000 의 뾰족한 봉우리 (≈ 150 · Gauss 환산 폭 0.0027) → 가장 조밀할 때 봉우리 ≈ 11 @ 0.998 · 오른쪽 꼬리가 지수 꼴 (감쇠 ≈ 6.5–9 / 단위 |C|) [판독 + 카드 산술].  ⚠ 가장 조밀한 곡선을 적분하면 ∫P ≈ 0.99 · 평균 ≈ 1.03 · 표준편차 ≈ 0.09 — 그림 2 의 평균 |C| (0.966) 와 방향이 반대이고, 삽도 std(|C|) (≤ 0.18 × 10⁻³) 와 2–3 자릿수 다르다 → 삽도의 'std' 는 이 분포의 표준편차가 아니다 (정의 미기재 · 2022 Letter 그림 4c 와 같은 자릿수).  삽도: κ 0.2 가 먼저 (φ − φJ ≈ 0.045–0.05) 가파르게 오르고 κ 0.5 (≈ 0.075–0.08) · κ 0.8 (0.105 까지 완만) 순 [판독] = 강체가 많으면 무른 입자에 변형이 몰린다.  ⚠ 삽도 κ 0.5 는 0.119 까지 가는데 그림 2 의 φ 끝 − φj 0.84 = 0.072 → 같은 실험이면 삽도의 기준점은 출발 φ (≈ 0.79) 다 (카드 산술).  MPM SE 누적 변형 히스토그램과 꼴 (봉우리 + 지수 꼬리 · 오른쪽이 무거움) 을 견줄 관측량."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq-setup",
+   "page": 1,
+   "file": "eq_02a_setup_particles_friction.png",
+   "caption": "Text blocks, pp. 1-2 (section 2, Experimental method): bidimensional piston of initial dimension 270 x 202 mm2, stepper motor and screw (25 um per motor step), two force sensors on the moving edge recording the global stress at 100 Hz, 0.5 mm steps at 2 mm/min then 1 min rest, flatbed imaging at 2400 dpi (10.6 um/px); soft hyperelastic silicone (0.45 MPa) and rigid PVC (1.2 GPa) bidisperse cylinders (20 and 30 mm, height 15 mm); 96 particles, 1/2 soft, 2/3 small, equally spread; kappa = n_soft/n_total varied from 0.2 to 0.8; oil-coated scanner glass, measured friction coefficient 0.05 +/- 0.02; glitter / silver paint random pattern (~25 um, correlation length ~50 um); about 100 pictures per experiment, compressing the system over 15%; particle detection and tracking.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.6,
+    541.6,
+    541.6,
+    800.5
+   ],
+   "w": 989,
+   "h": 2519,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.842,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand at 300 dpi with PyMuPDF (sub/superscripts and inline math are split in the PDF text layer); PNG = vertical stitch of p.1 [304.6, 541.6, 541.6, 800.5] + p.2 [53.7, 457.4, 290.7, 799.5]; bbox/page describe the first part only; each part cut inside the blank gap between text lines (no text line crosses a cut edge), column padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실험 조건의 원문 (1–2 쪽): 피스톤 · 스테퍼 모터 25 µm/단계 · 힘 센서 둘 100 Hz · 0.5 mm 단계 (2 mm/min) + 1 분 이완 · 2400 dpi · 실리콘 0.45 MPa / PVC 1.2 GPa · 지름 20 · 30 mm · 높이 15 mm · ★ 96 개 · 무른 1/2 · 작은 2/3 (무른 · 단단한에 같은 비로) · κ 0.2–0.8 · 기름 · 마찰 0.05 ± 0.02 · 사진 ≈ 100 장 · 'over 15 %'.  2022 Letter 가 '약 100 개' · '마찰 < 0.1' 로만 적은 값의 원문 (그 카드 §3-1b 가 이 자리를 옮겨 적었다 — 11-10 원문 대조 같음).  2D 단위 시험 (단계 2–3) 에 그대로 넣을 수 있는 기하 · 재료 명세 — 단 ν 는 없다."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq-dic",
+   "page": 2,
+   "file": "eq_02b_dic_strain_tensors_contact_detection.png",
+   "caption": "Text block and Eqs. (1)-(2), p. 2: rigid-motion-corrected subsets; large-deformation DIC for soft particles [18] and classical small-deformation DIC (all images correlated with the initial one) for rigid particles; correlation cell size self-adjusted to pattern inhomogeneities [13]; F = grad u + I (1), C = F^T F (2) for soft particles; infinitesimal strain for rigid particles; exact particle boundaries from u; contacts detected by boundary proximity and then a von Mises strain threshold around each close point, as detailed in [13].",
+   "rotated_deg": 0,
+   "bbox": [
+    304.6,
+    77.6,
+    541.6,
+    482.6
+   ],
+   "w": 988,
+   "h": 1688,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.862,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand at 300 dpi with PyMuPDF (sub/superscripts and inline math are split in the PDF text layer); clip p.2 [304.6, 77.6, 541.6, 482.6]; each part cut inside the blank gap between text lines (no text line crosses a cut edge), column padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 접촉 판정의 이 글 판: '경계 점이 이웃 경계에 가까우면 (문턱 1) → 그 점 주변 von Mises 변형이 문턱 2 보다 크면 진짜 접촉' — 문턱 둘의 값은 없고 [13] (= vu2019: 0.5 mm · 1.5 mm 띠 · |𝒞 − 1| > 0.01) 로 넘긴다.  vu2019 는 '평균에서 벗어남 (양쪽)' 인데 이 글은 'above a certain threshold' (한쪽) 로 적었다.  ⚠ 단단한 입자는 변형이 잡음 아래 (그림 3) 인데 단단한–단단한 접촉을 변형 문턱으로 어떻게 정했는지 없다 [미확인].  무른 = 대변형 DIC · 단단한 = 처음 영상과 상관하는 작은 변형 DIC (혼합에서 새로 생긴 부분).  ⚠ '상관 칸 크기 자동 조절 [13]' — vu2019 원문은 40 px 고정 칸으로 적는다 (낱말 검색).  우리 MPM 피복은 근접 띠만 쓴다 (원장 MPMC-02) — 하중 조건을 붙이는 규칙의 견본."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq-results",
+   "page": 2,
+   "file": "eq_02c_jamming_contact_length_hertz_strain_shape.png",
+   "caption": "Text blocks, pp. 2-3 (section 3): kappa = 0.5 compressed from phi = 0.795 to 0.915; global stress close to 0 MPa then increasing from the jamming point, phi_j = 0.84, coordination slightly above 3; specific contact length l = <l_contact/perimeter> (contacts with particles or system boundaries) increases linearly with phi, not in agreement with the Hertz contact law in 2D, not surprising since soft particles are far from the small deformation assumption; mean von Mises strain of soft particles decreases parabolically; asphericity gently increases then sharply rises after phi = 0.88 (defined as a ratio between actual area and area deduced from the perimeter); phi = 0.88 is also the maximum of the total void area.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.6,
+    497.1,
+    541.6,
+    799.5
+   ],
+   "w": 989,
+   "h": 1589,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.842,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand at 300 dpi with PyMuPDF (sub/superscripts and inline math are split in the PDF text layer); PNG = vertical stitch of p.2 [304.6, 497.1, 541.6, 799.5] + p.3 [53.7, 416.4, 290.7, 492.2]; bbox/page describe the first part only; each part cut inside the blank gap between text lines (no text line crosses a cut edge), column padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이 글의 '점접촉 (Hertz) 한계' 문장 (p. 2): 접촉 길이가 φ 에 선형 = '2D Hertz 접촉 법칙과 맞지 않는다 · 무른 입자가 작은 변형 가정에서 멀어서 놀랍지 않다' — 같은 그룹 2022 SM 은 같은 선형을 Hertz 척도로 '예측된다' 고 써서 두 글이 갈린다.  재밍 φj 0.84 · 'Z slightly above 3' (그려진 Z 는 0.84 에서 3.6 [판독]) · |C| 'parabolically' (2022 는 두 직선 체제) · 비구형도 정의 문장은 비가 거꾸로 (그대로면 ≤ 1 인데 그림은 1.007 → 1.055) · 응력 '0 MPa' (kPa 로 보임).  인용할 때 원문 그대로 + 이 어긋남을 함께."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq-fields",
+   "page": 3,
+   "file": "eq_03a_strain_fields_pdf_std_discussion.png",
+   "caption": "Text blocks, pp. 3-4: first invariant of the strain fields at phi = 0.89 (C for soft, infinitesimal strain for rigid); high strain chains with clear areas near contact points in soft particles; rigid-particle patterns show that the imaging method is not accurate enough (stiffness ratio covers several orders of magnitude; deformation almost exclusively carried by soft particles; lines = speed inhomogeneities of the imaging); PDF of |C| in soft particles: Gaussian around 1 when gently squeezed, broader and slightly shifted to the left when loaded, exponential tail with a coefficient decreasing with phi when dense, reminiscent of force PDFs of rigid granular systems [25] and unchanged from purely soft systems [13]; standard deviation of C rises rapidly right after jamming for kappa = 0.2 and less rapidly for kappa = 0.8.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.6,
+    77.6,
+    541.6,
+    273.5
+   ],
+   "w": 989,
+   "h": 2174,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.839,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand at 300 dpi with PyMuPDF (sub/superscripts and inline math are split in the PDF text layer); PNG = vertical stitch of p.3 [304.6, 77.6, 541.6, 273.5] + p.3 [304.6, 580.2, 541.6, 799.5] + p.4 [53.7, 77.6, 290.7, 177.8]; bbox/page describe the first part only; each part cut inside the blank gap between text lines (no text line crosses a cut edge), column padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "국소 장 · 통계의 저자 서술: 무른 입자에 '높은 변형 사슬' (힘 사슬의 변형 판) · 단단한 입자 변형은 측정 정확도 밖 ('deformation is almost exclusively carried by soft particles') · |C| PDF 의 지수 꼬리 = 강체 입자 힘 PDF (Radjai 1996) 와 닮음 · 순수 무른 계 (vu2019) 와 같음 · κ 0.2 는 재밍 직후 표준편차가 빨리 오른다 (변형이 적은 무른 입자에 몰림).  ⚠ '평균이 조금 왼쪽으로' 는 봉우리 (1.000 → 0.998) 에 맞고, 분포의 1 차 모멘트는 오른쪽 꼬리 때문에 ≈ 1.03 으로 간다 [판독 + 카드 산술].  MPM SE 응력 · 변형 분포의 꼴 (지수 꼬리) 을 견줄 실험 쪽 서술."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq-conclusion",
+   "page": 4,
+   "file": "eq_04a_conclusion_load_balance_outlook.png",
+   "caption": "Text blocks, p. 4 (section 4, Conclusion): measurement of all mechanical and geometrical observables from the displacement field at the particle scale for bidimensional systems under uniaxial compression; jamming at a packing fraction and coordination close to purely rigid systems; average von Mises strain in soft particles decreases with the exact same tendency as the global stress increases; since rigid particle deformation is negligible this suggests that rigid particles do not carry more load than the soft ones, the loading seems to be balanced; stress vs packing fraction similar to a recent numerical study [14]; exponential tail; standard deviation rises faster with more rigid particles; outlook to breakable and polydisperse (size, shape, material) particles under different loading geometries.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.7,
+    187.8,
+    290.7,
+    735.0
+   ],
+   "w": 989,
+   "h": 2281,
+   "dpi": 300,
+   "src": "7ef00d7c-11._Highly_strained_mixtures_of_bidimensional_soft_and_rigid_grains_an_experimental_approach_from_the_local_scale.pdf",
+   "blank": 0.838,
+   "src_native": null,
+   "manual_crop": "text block rendered by hand at 300 dpi with PyMuPDF (sub/superscripts and inline math are split in the PDF text layer); clip p.4 [53.7, 187.8, 290.7, 735.0]; each part cut inside the blank gap between text lines (no text line crosses a cut edge), column padded 3 pt; border-ink check 0; opened and checked (2026-11-10, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 하중 분담 문장 (p. 4): '무른 입자 평균 변형이 전역 응력과 똑같은 경향으로 변하고 단단한 입자 변형은 무시할 만하니 단단한 입자가 더 많은 하중을 지지 않는 것으로 보인다 · 하중이 균형인 듯' — 단단한 입자의 응력은 재지 못했다 (그림 3) · 근거는 무른 입자 변형 하나 · 낱말도 'suggests · seems'.  카드 산술: (1 − |C|)/σ 는 φ 0.84 → 0.90 에서 2.4 배 줄고 φ ≥ 0.90 에서만 일정 — '똑같은 경향' 은 조밀한 끝의 말.  κ 0.5 (넓이 분율도 0.5) 2D 에서는 단단한 입자만의 골격이 계를 가로지르지 못할 수 있다 (카드 해석) — AM 이 많은 우리 전극 (AM 골격이 하중을 가림 · DEM 실측 AM–AM 몫 0.52–0.68) 에 옮기지 않는다.  '수치 연구 [14] 와 비슷' = 겹친 그림 · 무차원화 없음.  'sub-micro scale' 은 해상도 (10.6 µm/px) 가 아니라 입자 아래 척도의 뜻으로 읽힌다."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "all printed figures (Fig. 1-4) cropped by the tool at 300 dpi; every PNG opened and checked; none re-cropped (no clipped axis, no caption or neighbouring paragraph inside, each embedded raster lies inside its crop); the paper has no tables; no Supplemental Material is cited (only a conference video link, doi:10.48448/gmgt-4952, not received); 5 text/equation crops added as kind=equation (hand-rendered, digit-free labels so the --audit gap check does not raise a false number gap); figure readings (native-raster pixel readings, TREND only) are in digitized.csv (2026-11-10 litdb-curator)"
+}
