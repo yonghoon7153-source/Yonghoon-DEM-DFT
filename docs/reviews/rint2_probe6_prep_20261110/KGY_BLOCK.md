@@ -2,7 +2,9 @@
 
 - 붙이는 자리: kgy 의 bash 프롬프트 (R 런을 돌릴 그 계정). 블록은 통째로 붙인다.
 - 시도는 둘이다 (1저자 11-10). **시도 1** = 짧은 확인: `ATTEMPT=1` · 반복 한도 30000. 한도에 닿아 끝나는 것이 정상이다 (반복당 초와 한도에서의 잔차를 얻고 kgy 에서 전 과정을 한 번 확인한다). **시도 2** = 본 한도: `ATTEMPT=2` · 반복 한도 1500000. 블록의 `ATTEMPT=1` 줄을 `ATTEMPT=2` 로 바꾸는 것 말고는 같은 블록이다. 한도는 블록 안의 표가 시도 번호로 정한다 (손으로 넣지 않는다).
-- 시도 2 는 시도 1 의 로그 폴더 (`~/p6log_a1_<시각>`) 에 `DONE` 이 있어야 띄운다 (블록이 본다 · 그 폴더 meta 의 핀이 이번 `<PIN>` 이거나 그 앞 커밋이어야 한다). 시도 1 이 한도에 닿아 끝난 것 (러너 rc 1 · 판독 rc 3) 도 정상 끝이고 `DONE` 이 생긴다. 시도 1 이 `STOPPED` 로 끝났으면 (러너를 띄우기 전 멈춤 · 풀이 0) 사유를 고친 뒤 시도 1 블록을 그대로 다시 붙인다.
+- 시도 2 는 풀이를 시작한 시도 1 (`solve_started=1`) 의 DONE 뒤에만 띄운다: 시도 1 의 로그 폴더 (`~/p6log_a1_<시각>`) 가운데 `DONE` 이 있고 그 meta 에 `solve_started=1` 인 것이 정확히 하나여야 한다 (블록 · 감시 셸이 둘 다 본다 · 그 폴더 meta 의 핀이 이번 `<PIN>` 이거나 그 앞 커밋이어야 한다). 시도 1 이 한도에 닿아 끝난 것 (러너 rc 1 · 판독 rc 3) 도 정상 끝이고 `DONE` 이 생긴다. 시도 1 이 `STOPPED` 로 끝났거나 (러너를 띄우기 전 멈춤) `DONE` 이어도 meta 에 `solve_started=0` 이면 (풀이 시작 줄 없이 끝남 · GPU 메모리 · cupy 오류 꼴) 풀이 0 이므로 사유를 고친 뒤 시도 1 블록을 그대로 다시 붙인다 (같은 번호 · 원장 §3).
+- 끝난 시도 번호는 다시 띄우지 않는다: `~/p6log_a<N>_*` 가운데 `DONE` + meta `solve_started=1` 이거나 `WATCHER_FAILED` + status.log 의 러너 시작 줄 (`runner started - maxiter …`) 이 있는 것이 하나라도 있으면 그 번호 (블록의 `ATTEMPT`) 는 멈춘다. 시도 1 은 끝난 시도 2 폴더 (`~/p6log_a2_*` · 같은 셈) 가 하나라도 있으면 멈춘다. `STOPPED` 와 `DONE` + `solve_started=0` 은 세지 않는다 (같은 번호를 다시 띄울 수 있다 · 원장 §3). 블록을 한 번 더 붙여도 (화면 다시 실행 · "still checking" 뒤 다시) 원장 밖 풀이가 생기지 않는다.
+- 두 시도의 핀 사이에 풀이 코드가 바뀌면 시도 2 는 멈춘다 (1저자 11-10 Q2 (가)): 블록 머리의 `CODE=` 줄 (러너 · payload 가 읽거나 import 하는 리포 파일 · 탐침 도구 폴더 · S0 단계 1 자료 · README §9 목록) 을 `git diff --quiet <시도 1 의 핀> <PIN>` 으로 보고, 다르면 바뀐 파일 앞 다섯 개를 찍고 멈춘다. 감시 셸도 시도 1 폴더에서 그 핀을 찾아 다시 보고 meta 에 `attempt1_pin` · `code_same_as_attempt1=1` 을 적는다. 원장 · 진행 기록 같은 문서는 목록 밖이다 (두 시도 사이에 본 세션이 시도 1 결과 줄을 커밋한다).
 - `<PIN>` 은 본 세션이 커밋 · push 뒤 40 자리 커밋 번호로 채운다 (그 전에는 블록이 "PIN is not a 40-hex commit" 으로 멈춘다). 블록은 fetch 한 뒤 `<PIN>` 이 가지 끝과 같은지 본다 (다르면 멈춘다). 두 시도 사이에 원장 줄을 커밋하면 가지 끝이 바뀌므로 시도 2 의 `<PIN>` 은 그 새 끝이다.
 - `BASE` 는 등록 R §10-1 (0) 의 기준 체크아웃 자리다. 같은 저장소의 작업 트리면 어느 것이든 된다 (11-09 현장 자격 블록은 10-24 에 만든 작업 트리를 기준으로 썼다 · `docs/reviews/rint2_siteq_prep_20261109/README.md` §3). 본 세션이 `<PIN>` 과 함께 확인해 채운다. 자리가 다르면 블록이 "BASE is not a git checkout" 으로 멈추고 아무것도 만들지 않는다.
 - 블록은 작업 트리 · 로그 폴더를 새로 만들고 감시 셸을 nohup 으로 띄운 뒤, 감시 셸의 첫 판단 (`runner started` 줄 또는 `STOP` 줄) 을 최대 180 초 기다려 그 줄을 찍고 돌아온다. 그 뒤에는 접속을 끊어도 된다.
@@ -15,7 +17,13 @@ PIN='<PIN>'
 ATTEMPT=1
 BASE="$HOME/dem-mt"
 BR=claude/stoic-knuth-NObVQ
+CODE="scripts/ docs/reviews/rint2_probe6_prep_20261110/tools/ docs/data/rint2_s0_sbe_20261108/ docs/data/rint_eis_anchors.csv docs/reviews/sdcp_gain_prereg_v2_20260816.md"
 stop() { echo "[p6] STOP: $* (runner not started)"; exit 2; }
+finished() {
+  if [ -f "$1/DONE" ] && grep -qx 'solve_started=1' "$1/meta.txt" 2>/dev/null; then return 0; fi
+  if [ -f "$1/WATCHER_FAILED" ] && grep -q ' runner started - maxiter ' "$1/status.log" 2>/dev/null; then return 0; fi
+  return 1
+}
 case "$ATTEMPT" in
   1) MAXITER=30000;;
   2) MAXITER=1500000;;
@@ -36,17 +44,36 @@ for d in "$HOME"/p6log_*; do
   if [ -e "$d/DONE" ] || [ -e "$d/STOPPED" ] || [ -e "$d/WATCHER_FAILED" ]; then continue; fi
   stop "earlier log folder $d has no end marker (DONE / STOPPED / WATCHER_FAILED): a watcher still runs there or died - look at its status.log (nothing written)"
 done
+for d in "$HOME"/p6log_a"$ATTEMPT"_*; do
+  [ -d "$d" ] || continue
+  if finished "$d"; then stop "attempt $ATTEMPT already ran to the end in $d (one ledger line per attempt) (nothing written)"; fi
+done
+if [ "$ATTEMPT" = 1 ]; then
+  for d in "$HOME"/p6log_a2_*; do
+    if [ -d "$d" ] && finished "$d"; then stop "attempt 2 already ran to the end in $d - attempt 1 does not run after attempt 2 (nothing written)"; fi
+  done
+fi
 git -C "$BASE" fetch -q origin "$BR" || stop "git fetch failed (nothing written)"
 TIP="$(git -C "$BASE" rev-parse FETCH_HEAD)"
 [ "$TIP" = "$PIN" ] || stop "PIN is not the tip of $BR after the fetch (tip $TIP) - use the tip or fix the PIN line (only git fetch ran)"
 if [ "$ATTEMPT" = 2 ]; then
-  OK1=0
+  N1=0
+  P1=""
   for d in "$HOME"/p6log_a1_*; do
-    [ -f "$d/DONE" ] && [ -f "$d/meta.txt" ] || continue
-    P1="$(sed -n 's/^pin=//p' "$d/meta.txt")"
-    if [ "$P1" = "$PIN" ] || git -C "$BASE" merge-base --is-ancestor "$P1" "$PIN" 2>/dev/null; then OK1=1; fi
+    [ -d "$d" ] || continue
+    if [ -f "$d/DONE" ] && grep -qx 'solve_started=1' "$d/meta.txt" 2>/dev/null; then
+      N1=$((N1 + 1))
+      P1="$(sed -n 's/^pin=//p' "$d/meta.txt" | head -n 1)"
+    fi
   done
-  [ "$OK1" = 1 ] || stop "attempt 2 needs an attempt-1 log folder with DONE whose pin is this PIN or an earlier commit of it (only git fetch ran)"
+  [ "$N1" = 1 ] || stop "attempt 2 needs exactly one attempt-1 log folder with DONE and solve_started=1 (found $N1) (only git fetch ran)"
+  { [ "$P1" = "$PIN" ] || git -C "$BASE" merge-base --is-ancestor "$P1" "$PIN" 2>/dev/null; } || stop "the attempt-1 pin $P1 is not this PIN or an earlier commit of it (only git fetch ran)"
+  git -C "$BASE" diff --quiet "$P1" "$PIN" -- $CODE
+  case $? in
+    0) ;;
+    1) stop "the solve code changed between the attempt-1 pin and this PIN: $(git -C "$BASE" diff --name-only "$P1" "$PIN" -- $CODE | head -n 5 | tr '\n' ' ')- attempt 2 runs the code of attempt 1 (only git fetch ran)";;
+    *) stop "cannot compare the solve code of the attempt-1 pin and this PIN (only git fetch ran)";;
+  esac
 fi
 if [ -e "$W" ]; then echo "[p6] reusing worktree $W"; else
   git -C "$BASE" worktree add -q --detach "$W" "$PIN" || stop "git worktree add failed"
@@ -71,22 +98,22 @@ if [ -z "$M" ]; then
 else
   echo "$M"
 fi
+case "$M" in *STOP:*) exit 2;; esac
 echo "[p6] progress:  tail -n 3 $L/status.log"
 echo "[p6] stop early: kill -TERM \$(cat $L/watcher.pid)"
 echo "[p6] when done: the file $L/DONE appears - send back $L/probe6_bundle.tgz and the last 3 lines of $L/status.log"
-case "$M" in *STOP:*) exit 2;; esac
 P6
 ```
 
 ## 블록이 멈추는 조건 (`[p6] STOP: ... (runner not started)` · 종료 코드 2 · 러너는 돌지 않았다)
 
-- fetch 전 (`nothing written`): ATTEMPT 가 1 · 2 가 아님 · PIN 이 40 자리 hex 가 아님 (`<PIN>` 을 안 채운 것 포함) · 출력 폴더나 로그 폴더가 이미 있음 · venv · 킷 없음 · BASE 가 git 저장소가 아님 · 앞 로그 폴더 (`~/p6log_*`) 가운데 끝 표지 (DONE · STOPPED · WATCHER_FAILED) 가 없는 것이 있음 (감시 셸이 아직 돌거나 죽었다 · 그 폴더의 status.log 를 먼저 본다) · fetch 실패.
-- fetch 뒤 (`only git fetch ran`): PIN 이 가지 끝이 아님 · 시도 2 인데 시도 1 의 DONE 폴더 (핀 = 이번 PIN 이거나 그 앞 커밋) 가 없음. 그 뒤 작업 트리 단계의 멈춤 (worktree add 실패 · HEAD 다름 · 감시 셸 없음) 은 작업 트리를 만들었을 수 있다.
-- 감시 셸이 띄워진 뒤의 멈춤은 블록이 감시 셸의 STOP 줄을 그대로 찍어 준다 (아래).
+- fetch 전 (`nothing written`): ATTEMPT 가 1 · 2 가 아님 · PIN 이 40 자리 hex 가 아님 (`<PIN>` 을 안 채운 것 포함) · 출력 폴더나 로그 폴더가 이미 있음 · venv · 킷 없음 · BASE 가 git 저장소가 아님 · 앞 로그 폴더 (`~/p6log_*`) 가운데 끝 표지 (DONE · STOPPED · WATCHER_FAILED) 가 없는 것이 있음 (감시 셸이 아직 돌거나 죽었다 · 그 폴더의 status.log 를 먼저 본다) · 이 시도 번호가 이미 끝남 (`attempt N already ran to the end`) · 시도 1 인데 끝난 시도 2 폴더가 있음 · fetch 실패.
+- fetch 뒤 (`only git fetch ran`): PIN 이 가지 끝이 아님 · 시도 2 인데 풀이를 시작한 시도 1 의 DONE 폴더 (`solve_started=1`) 가 정확히 하나가 아님 · 그 핀이 이번 PIN 이거나 그 앞 커밋이 아님 · 두 핀 사이에 풀이 코드 (`CODE`) 가 바뀜 (바뀐 파일 앞 다섯 개를 찍는다). 그 뒤 작업 트리 단계의 멈춤 (worktree add 실패 · HEAD 다름 · 감시 셸 없음) 은 작업 트리를 만들었을 수 있다.
+- 감시 셸이 띄워진 뒤의 멈춤은 블록이 감시 셸의 STOP 줄을 그대로 찍어 준다 (아래). STOP 줄을 찍은 블록은 진행 · 일찍 멈추는 명령 · "DONE appears" 안내를 찍지 않는다 (러너가 돌지 않았다).
 
 ## 화면에 나오는 것
 
-- 블록: `[p6] watcher launched - attempt <N>, maxiter <M>, log folder <L>` → 감시 셸의 발사 전 줄 (`pre-launch: attempt N, GPU memory in use ... MiB of ... MiB, disk free ... GB (kit root) and ... GB (log folder)` · 멈춤 기준은 없다) → 감시 셸의 `runner started - maxiter ...` 줄 또는 `STOP: <사유> (runner not started)` 줄 → 진행 보는 명령 · 일찍 멈추는 명령 · 끝난 뒤 보낼 것. 180 초 안에 둘 다 안 나오면 "still checking" 줄과 다시 보는 명령을 찍는다 (감시 셸이 러너의 규율 검사를 미리 한 번 돌린다 · 그 검사 = 게이트 기계에서 약 90 초 · kgy 실측 없음).
+- 블록: `[p6] watcher launched - attempt <N>, maxiter <M>, log folder <L>` → 감시 셸의 발사 전 줄 (`pre-launch: attempt N, GPU memory in use ... MiB of ... MiB, disk free ... GB (kit root) and ... GB (log folder)` · 멈춤 기준은 없다) → 감시 셸의 `runner started - maxiter ...` 줄 또는 `STOP: <사유> (runner not started)` 줄 → (STOP 이 아니면) 진행 보는 명령 · 일찍 멈추는 명령 · 끝난 뒤 보낼 것. 180 초 안에 둘 다 안 나오면 "still checking" 줄과 다시 보는 명령을 찍는다 (감시 셸이 러너의 규율 검사를 미리 한 번 돌린다 · 그 검사 = 게이트 기계에서 약 90 초 · 이 컨테이너 약 74 초 (11-10 내부 반박 리뷰 실측) · kgy 실측 없음).
 - 감시 셸 (`nohup.out` · `status.log`): `[probe6]` 로 시작하는 줄만. 시작 · 발사 전 · 진행 줄 (시작 직후 한 번 + 10 분마다 · 경과 초 · 단계 · 로그 줄 수 · 호스트 메모리 · GPU 메모리) · 러너 종료 코드 · 판독 결과 표 · 묶음 자리와 sha256 · `DONE`. 발사 전 줄의 GPU 메모리가 이미 크면 다른 작업이 GPU 를 쓰고 있다는 뜻이다.
 - 판독 결과 표: 반복 수 (주 풀이 · 이어 풀기) · 잔차 · 판 전류 불균형 · 수렴 여부 (증서 ⓐⓑⓒⓓ 통과 표지 · 상태 이름) · 백엔드 · 미지수 수 · 시간 · 메모리 · 환경 지문 (판) · 파일 sha256 · 시도 번호.
 - 감시 셸이 러너를 띄우기 전에 멈추면 `STOP: <사유> (runner not started)` 한 줄이 화면 (블록이 찍어 준다) · nohup.out · status.log 에 남고, 로그 폴더에 `STOPPED` 표지 (사유 · `runner_started=0`) 가 생긴다. 그 줄을 그대로 보내 주면 된다. 감시 셸이 로그 폴더를 받기 전의 멈춤 (경로 글자 · 로그 폴더가 새것이 아님 · 인자 수) 만은 표지 없이 nohup.out 의 줄로 남는다. 그때는 다음 블록이 "has no end marker" 로 멈추므로, 그 줄을 본 세션에 보낸 뒤 그 폴더에 `STOPPED` 파일을 손으로 만든다 (`echo 'reason=see nohup.out' > <L>/STOPPED` · 폴더는 지우지 않는다).
@@ -102,11 +129,12 @@ P6
 
 - 로그 폴더의 `probe6_bundle.tgz` 한 파일과 `status.log` 끝 세 줄. 묶음은 수십 KB 부터다 (표본 파일이 10 초에 한 줄이라 30 시간 런이면 약 1 만 줄 · 압축 전 약 0.6 MB · 산술).
 - 러너가 실패했거나 한도에 닿았어도 묶음은 만들어지고 `DONE` 이 생긴다. 출력 폴더 · 로그 폴더 · 킷 런 폴더에 남은 파일은 지우지 않는다.
-- 로그 폴더의 끝 표지: `DONE` = 러너가 돌았고 기록이 끝났다 (러너 실패 · 한도 · 일찍 멈춤 포함). `STOPPED` = 러너를 띄우기 전에 멈췄다 (풀이 0). `WATCHER_FAILED` = 러너를 띄운 뒤 감시 셸 자신이 뜻밖에 끝났다 (러너 그룹은 끝냈다 · 기록 불완전 · 잠금 `~/.probe6.lock` 이 남는다 · 본 세션에 알린다). 표지가 없으면 아직 도는 중이거나 감시 셸이 죽었다 (status.log 를 먼저 본다).
+- 로그 폴더의 끝 표지: `DONE` = 러너가 돌았고 기록이 끝났다 (러너 실패 · 한도 · 일찍 멈춤 포함 · 풀이가 시작됐는지는 meta 의 `solve_started`). `STOPPED` = 러너를 띄우기 전에 멈췄다 (풀이 0). `WATCHER_FAILED` = 러너를 띄운 뒤 감시 셸 자신이 뜻밖에 끝났거나 러너가 자기 세션의 우두머리가 아니었다 (작업 제어가 켜진 셸 꼴 · 사유는 그 파일의 `reason=` 줄 · 러너 그룹은 끝냈다 · 기록 불완전 · 잠금 `~/.probe6.lock` 이 남는다 · 같은 계정에 러너 · payload 가 남았는지 ps 로 본다 · 본 세션에 알린다). 표지가 없으면 아직 도는 중이거나 감시 셸이 죽었다 (status.log 를 먼저 본다).
 
 ## 중간에 멈추려면
 
 - 블록이 찍어 준 `stop early` 줄을 그대로 친다 (로그 폴더의 watcher.pid 에 적힌 감시 셸에 TERM). 감시 셸이 러너의 프로세스 그룹 전체에 TERM 을 보내고 10 초 뒤 남은 것에 KILL 을 보낸 다음 기록 · 묶음 · `DONE` 을 남긴다. 러너만 직접 죽이지 않는다.
+- 러너를 띄우기 전, 감시 셸이 러너의 런 전 관문 (규율 검사 · 이 컨테이너 약 74 초) 을 미리 돌리는 동안 친 stop early 는 관문이 끝난 뒤 처리된다 (그때 `STOPPED` · 러너는 띄우지 않는다).
 - 일찍 멈추면 남는 것: 전체 초 · 메모리 · GPU 표본 · 풀이 시작 줄부터 멈출 때까지의 초 (보고의 `solve_to_end_s`). 남지 않는 것: 반복 수 · 잔차 · 판 전류 불균형 (그 값은 풀이가 끝나야 팔 JSON 에 쓰인다). 다만 주 풀이가 이미 한도에 닿은 뒤 (이어 풀기 중) 에 멈췄으면 payload 가 찍어 둔 "CG not converged" 줄의 info (= 한도) 와 상대 잔차는 남는다 (감시 셸이 러너에 `PYTHONUNBUFFERED=1` 을 줘서 그 줄이 버퍼에 갇히지 않는다).
 - 일찍 멈춘 시도도 끝난 시도다 (풀이가 시작됐으면 · meta `solve_started=1`). 다음은 원장의 다음 번호 줄이다.
 - `kill -TERM` 을 두 번 쳐도 된다. 끝 기록 중에 온 신호는 미뤄져 보고 · 묶음 · `DONE` 이 남는다 (status.log 에 "held until the record was complete" 줄). `DONE` 뒤에는 watcher.pid 가 지워져 그 줄은 파일이 없다는 말로 끝난다 (다른 프로세스를 겨누지 않는다).

@@ -17012,32 +17012,44 @@
     {
       "id": "P6R-01",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "시험의 \"σ 누출 없음\" 검사가 5 자리 표식 문자열만 본다 — 4 자리 이하 · 단위 바꿈 · 지수 3 자리 · 1/σ · `%.17g` 가 통과하고, 실물 묶음 (R) 은 step3 블록 통째 덤프도 19 PASS (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F7 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F7 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 (남는 꼴 = P6R2-08) — 1 회차 판독기 변이 33 → 생존 0 · step3 통째 덤프 → T · R 둘 다 잡음",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-02",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "일찍 멈춤 (TERM · 메모리 상한) 이면 풀이 수치가 하나도 안 남는다 (cg_iters · 잔차 · 불균형 = NONE) — 시간 상한 없음 + README §6 이 권하는 \"stop early\" 의 실제 결과 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F4 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F4 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 — PYTHONUNBUFFERED=1 · solve_to_end_s · 문서 · 시도 1 = 한도 30000 짧은 확인 · 시험 F13",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-03",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "러너 맨 위 프로세스만 죽으면 payload (GPU) 가 고아로 계속 돌고 감시 셸은 DONE 을 쓴다 — 그룹 kill · 끝 쓸기 없음 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F1 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F1 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 — 러너 bash 만 TERM → 그룹에 남은 2 개를 세어 끝냄 · meta orphans=2 · payload 대역 죽음",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-04",
@@ -17047,17 +17059,22 @@
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "동시 실행 가드가 없다 — 블록을 두 번 붙이면 같은 킷 · 같은 GPU 에서 두 풀이가 겹친다 (규칙 \"한 팔\" 을 엄격히 읽으면 P1 · 판단은 본 세션) (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F2 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F2 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경",
+      "partial_note": "2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 부분 — 동시 실행 = 닫힘 (잠금 · 같은 계정 ps · 끝 표지 없는 앞 폴더) · 끝난 시도를 같은 번호로 다시 띄움 = 안 닫힘 → P6R2-02 (고침 = P6R2 를 올린 커밋)"
     },
     {
       "id": "P6R-05",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "블록은 5 초 뒤 \"[p6] started\" 를 찍고 끝난다 — 그 뒤의 STOP 은 화면에 안 나오고 DONE 도 안 생긴다 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F3 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F3 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 (문구 → P6R2-07) — 블록이 감시 셸의 늦은 STOP 줄을 기다려 찍음 (14.1 초) · STOPPED 표지",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-06",
@@ -17067,67 +17084,192 @@
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "판독기의 신원 대조 (같은 침대 · 핀 · tol_ff) 가 \"False 일 때만\" 막는다 — 증거가 없으면 PROBE_OK (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F6 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F6 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경",
+      "partial_note": "2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 부분 — PROBE_OK 경로 18 꼴 중 15 막힘 · 남은 셋 (영수증 arms 없음 · 등록점 밖 R_j 팔 · pythonpath_set) + 시도 1 의 정상 끝 rc 3 은 대조 밖 → P6R2-05 (고침 = P6R2 를 올린 커밋)"
     },
     {
       "id": "P6R-07",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "발사 전 확인에 빠진 것: 킷 줄의 `--show-results` · 러너 자신의 런 전 관문 · GPU 사용 중 · 디스크 · PIN = 가지 끝 · 킷 역할 파일 지문 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F5 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F5 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 — --show-results 등 런 전 STOP · 러너 런 전 관문 미리 · GPU · 디스크 기록 · PIN = 가지 끝",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-08",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "묶음의 time_v.txt 에 홈 절대 경로 (계정 이름) · SHA256SUMS 의 status.log 는 묶은 뒤 줄이 더 붙는다 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F8 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F8 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 — 묶음 time -v = 세 줄 · status.log = 묶기 직전 사본 · SHA256SUMS = 사본 (F01e · F01f · F18 · R2c)",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-09",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "TERM 흐름의 구멍: 둘째 TERM 이 끝 기록 단계에 오면 보고 · 묶음 · DONE 없음 · watcher.pid 는 끝난 뒤에도 남는다 · ps / nvidia-smi 가 막히면 멈춤이 안 된다 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F9 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F9 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 — 끝 기록 중 신호 미룸 (F15) · watcher.pid 지움 · /proc 로 그룹 셈 (F16) · nvidia-smi timeout",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-10",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "감시 셸 시험의 빈 곳: 내가 더한 변이 13 개 중 11 개 생존 · 시험 env = PYTHONUNBUFFERED=1 · kgy 판 게이트에 이 시험 없음 · 원장 파일을 읽는 시험 없음 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F10 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F10 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 — W 변이 6 개 다시 = 6/6 · kgy 판 게이트 · 원장 읽기 시험 · 시험 env",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-11",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "문서 전칭 · 원장 글과 실제 동작이 어긋나는 곳 (8 군데) (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F11 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F11 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 (새 문구 → P6R2-07) — 1 회차 8 군데 고침 확인 · 새로 넣은 행 인용 14 곳 맞음",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R-12",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 (리뷰 핀 512656ebf · 가짜 러너 · 합성 입력 · 변이 시험)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "판독 세부: 가린 줄 = 앞 60 줄만 · 결과 줄 꼴이 달라지면 봉인 깨짐을 못 알아봄 · null 값이면 미수렴 대신 INCOMPLETE · 보고를 못 쓰면 rc 1 (docs/reviews/rint2_probe6_prep_20261110/)",
-      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F12 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경"
+      "note": "11-10 내부 반박 리뷰 (보고 = 본 세션 scratch · 1저자 운영 결정 = 반박 리뷰 자리는 내부 독립 조수) · 고침 지시 F12 → 고침 = 이 항목을 올린 커밋 (준비물 · 시험 먼저 · 고치기 전 도구 152 PASS · 102 FAIL → 270/270 · kgy 판 Python 3.8 같은 시험 · 감시 셸 변이 W 50/50 · 리뷰어 판독기 변이 생존 0/33) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤 · RR6 와 같은 꼴) · 닫힘 = 고친 곳만 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 2 회차 재리뷰 (11-10 · 내부 반박 · 독립 조수 · Codex 아님 · 리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 보고 = 본 세션 scratch) = 닫힘 — 결과 줄 꼴 바뀜 = rc 5 · 전각 · 위첨자 · hex float · 유니코드 마이너스 가림 · 보고 못 씀 = rc 4",
+      "claimed_fixed_sha": "b0f118e17145dd22cdd2c303887b6c50c42444f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
+    },
+    {
+      "id": "P6R2-01",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "풀이 0 으로 끝난 시도 1 (DONE · solve_started=0) 뒤에도 블록이 시도 2 (한도 1500000) 를 띄운다 — 원장 §3 \"풀이 0 = 새 시도로 세지 않음 · 같은 번호 다시\" 와 어긋남 (docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md)",
+      "note": "11-10 2 회차 재리뷰 (보고 = 본 세션 scratch) · 1저자 11-10 *\"권고대로해\"* (Q1 고침 · Q2 (가) · Q3) · 고침 = 이 항목을 올린 커밋 (시험 먼저) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤) · 닫힘 = 고친 곳만 3 회차 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 시험 B13 · B02 · F08 s27 · F19a (고치기 전 실패 → 뒤 통과) · 전체 = 새 시험 · 옛 코드 196 PASS · 112 FAIL → 330/330 (3.11.18 · kgy 판 3.8.20 · PID 이름공간) · 감시 셸 변이 W 65/65"
+    },
+    {
+      "id": "P6R2-02",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "끝난 시도 (DONE · solve_started=1) 의 블록을 다시 붙이면 같은 번호로 또 돈다 — 1 → 1 → 2 → 2 → 1 = 러너 호출 5 · 원장 줄 둘 (docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md · tools/run_probe6.sh)",
+      "note": "11-10 2 회차 재리뷰 (보고 = 본 세션 scratch) · 1저자 11-10 *\"권고대로해\"* (Q1 고침 · Q2 (가) · Q3) · 고침 = 이 항목을 올린 커밋 (시험 먼저) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤) · 닫힘 = 고친 곳만 3 회차 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 시험 B11 · B12 · B02 · F19a (9 꼴) · F08 s26 · 끝난 번호 = DONE + solve_started=1 또는 WATCHER_FAILED + 러너 시작 줄 · 블록 · 감시 셸 둘 다 · 전체 330/330 (3.11 · 3.8)"
+    },
+    {
+      "id": "P6R2-03",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "시도 2 의 핀 규칙 (시도 1 핀의 후손) 이 두 시도 사이의 풀이 코드 바뀜을 보지도 적지도 않는다 — 러너 · 판독기를 바꾼 커밋도 PROBE_OK (docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md)",
+      "note": "11-10 2 회차 재리뷰 (보고 = 본 세션 scratch) · 1저자 11-10 *\"권고대로해\"* (Q1 고침 · Q2 (가) · Q3) · 고침 = 이 항목을 올린 커밋 (시험 먼저) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤) · 닫힘 = 고친 곳만 3 회차 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 1저자 Q2 (가) · 시험 B02 · B14 · F20a/b · F09e · T27 · S03i · S04g · 풀이 코드 목록 = scripts/ · 탐침 도구 · S0 단계 1 자료 · rint_eis_anchors.csv · sdcp_gain_prereg_v2 (strace 로 셈) · 블록 CODE · 감시 셸 CODE_PATHS · 원장 · README 일치 = 시험 · meta attempt1_pin · code_same_as_attempt1 · 판독기 rc 4 · 전체 330/330"
+    },
+    {
+      "id": "P6R2-04",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "감시 셸 · 판독기가 시도 번호 ↔ 한도 짝 (1 → 30000 · 2 → 1500000) 을 보지 않는다 — 블록 밖에서 a2 + 30000 = PROBE_OK (docs/reviews/rint2_probe6_prep_20261110/tools/)",
+      "note": "11-10 2 회차 재리뷰 (보고 = 본 세션 scratch) · 1저자 11-10 *\"권고대로해\"* (Q1 고침 · Q2 (가) · Q3) · 고침 = 이 항목을 올린 커밋 (시험 먼저) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤) · 닫힘 = 고친 곳만 3 회차 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 시험 F08 s24/s25 · T26 · 감시 셸 STOP + 판독기 rc 4 · 전체 330/330"
+    },
+    {
+      "id": "P6R2-05",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "신원 · 등록 값 대조가 PROBE_OK 에만 걸린다 — 시도 1 의 정상 끝 rc 3 은 다른 침대 · 더러운 코드 · 한도 불일치 · aborted 여도 rc 3 · PROBE_OK 쪽도 영수증 arms 없음 · 등록점 밖 R_j 팔 · PYTHONPATH 가 통과 (docs/reviews/rint2_probe6_prep_20261110/tools/probe6_read.py)",
+      "note": "11-10 2 회차 재리뷰 (보고 = 본 세션 scratch) · 1저자 11-10 *\"권고대로해\"* (Q1 고침 · Q2 (가) · Q3) · 고침 = 이 항목을 올린 커밋 (시험 먼저) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤) · 닫힘 = 고친 곳만 3 회차 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 시험 T25b · T28 (13) · T29 (5) · F02f · F04a · rc 3 경로에도 같은 대조 · 영수증 arms == 1 · rj_matches_registered · PYTHONPATH = 감시 셸이 걷어냄 + 판독기 pythonpath_set=0 요구 · 전체 330/330"
+    },
+    {
+      "id": "P6R2-06",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "감시 셸이 작업 제어 (SHELLOPTS monitor · BASH_ENV 의 set -m) 로 뜨면 setsid 가 fork 해 RPID ≠ 러너 그룹 → 0.6 초 만에 DONE · 잠금 풂 · 러너는 계속 돈다 (보통 env 에서는 안 생김 · docs/reviews/rint2_probe6_prep_20261110/tools/run_probe6.sh)",
+      "note": "11-10 2 회차 재리뷰 (보고 = 본 세션 scratch) · 1저자 11-10 *\"권고대로해\"* (Q1 고침 · Q2 (가) · Q3) · 고침 = 이 항목을 올린 커밋 (시험 먼저) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤) · 닫힘 = 고친 곳만 3 회차 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 1저자 Q3 · 시험 F21a/b/c · F02f · F05 · S03h · set +m · 러너 명령 줄 env -u BASH_ENV -u SHELLOPTS (원장 · LEDGER_LINE · README 셋 다) · 세션 확인 실패 = WATCHER_FAILED · 잠금 남김 · 전체 330/330"
+    },
+    {
+      "id": "P6R2-07",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "문구 — README §7 시험 수 낡음 · README §9 의 정한 것을 열린 질문으로 · \"시도 2 = DONE 뒤\" 에 solve_started 없음 · STOP 뒤에도 \"DONE appears\" 안내 · 런 전 관문 중 stop early 가 관문 끝까지 늦음 (docs/reviews/rint2_probe6_prep_20261110/)",
+      "note": "11-10 2 회차 재리뷰 (보고 = 본 세션 scratch) · 1저자 11-10 *\"권고대로해\"* (Q1 고침 · Q2 (가) · Q3) · 고침 = 이 항목을 올린 커밋 (시험 먼저) · claimed_fixed = 다음 커밋 (이 커밋 sha 가 stoic 에 push 된 뒤) · 닫힘 = 고친 곳만 3 회차 짧은 재리뷰 (독립 조수) · 발사 · σ 비열람 규칙 무변경 · 시험 B01 · S04h · S13 · S14 · 전체 330/330"
+    },
+    {
+      "id": "P6R2-08",
+      "severity": "P3",
+      "status": "wontfix",
+      "owner": "claude",
+      "found_by": "내부 반박 리뷰 2 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 b0f118e17 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
+      "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
+      "title": "누출 검사가 값 출처 · 값 단언이 없는 허용 칸에 일부러 계산한 꼴 (0.37σ · √σ · σ² · L/σ · 정수 꼴) 을 넣으면 통과한다 — 새 변이 82 중 15 생존 (docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py)",
+      "decision_note": "1저자 11-10 Q3 *\"권고대로해\"* = 한정만 (코드 고침 없음) — 일부러 계산해야 생기는 꼴 · 정직한 흐름 (원값 복사 · 반올림 · 단위 · 지수 · 새 칸) 은 잡힘 · README §7 한계에 적음 (이 항목을 올린 커밋)"
+    },
+    {
+      "id": "SELF-163",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "1저자 11-10 (용훈 포메이션 Q1 답 *\"금시초문이야\"*)",
+      "opened_in": "CLAUDE.md",
+      "title": "11-10 용훈 포메이션에서 DEM 언로딩 키트 재확인 2 요청 (10-15 줄) 을 지금 발송을 기다리는 일처럼 1저자에게 물었다 — 그 요청서 머리에 이미 '10-23 후속 요청서로 대체' 표지가 있었고 (10-21 사전 리뷰 ULPR-01–04 → 고친 뒤 발송 · Codex ULPRI 종결 10-26) 지난 일이었다 (낡은 줄을 현재형으로 읽음 · 규율 ④ 부류)",
+      "note": "1저자 11-10 *\"이건 우리 자체 리뷰로 다시 해\"* · 고침 = 이 항목을 올린 커밋 (CLAUDE.md 10-14 언로딩 줄 끝에 대체 표지 · 지금 막힌 곳 = G2c′ 11-04 오후 줄) · claimed_fixed = 다음 커밋"
+    },
+    {
+      "id": "SELF-164",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "자기 점검 (11-10 11:5x–12:17 UTC 컨테이너 재시작 4 회 · 게이트 4 회 끊김)",
+      "opened_in": "docs/session_20260923_progress.md",
+      "title": "내부 반박 리뷰 조수에게 신호 실험의 안전 규칙을 주지 않았다 — 조수 시험 스크립트가 pid 파일이 없으면 -1 을 os.kill 에 넘길 수 있었다 (kill(-1) = 이 계정의 모든 프로세스) · 이미 죽은 pid 를 늦게 KILL 하는 꼴도 있었다 (재사용되면 남의 프로세스) — 같은 시간대 컨테이너 재시작 4 회 (인과 미확인)",
+      "note": "조수 보고 = 재시작 넷 가운데 셋은 직전 몇 분에 pid 를 읽어 kill 하는 실험이 없었다 · 하나는 읽은 pid > 1 → 인과 미확인 · 막음 (11-10 12:20 UTC · 스크래치 스크립트) = kill 가드 (pid ≤ 1 · 자기 · 부모 건너뜀) + 신호 실험은 PID 이름공간 (`unshare -pf --mount-proc`) 안에서만 (그 안의 kill(-1) = 안쪽만 죽음 · 12:20 확인) · 그 뒤 재시작 없음 · 탐침 도구 · 시험에는 같은 꼴 없음 (조수 확인) · 고침 = 이 항목을 올린 커밋 (CLAUDE.md 컨테이너 재시작 대비 줄에 신호 실험 규칙) · claimed_fixed = 다음 커밋"
     }
   ]
 }

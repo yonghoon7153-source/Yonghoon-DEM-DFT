@@ -4,20 +4,28 @@
 # usage: bash run_probe6.sh <W> <O> <L> <PIN> <MAXITER> [ROOT]
 #   W        pinned worktree (git HEAD must equal PIN; tree clean, untracked files included)
 #   O        runner output folder: must not exist or be empty; name ca1_probe6_a<N>_<...>_arm1
-#   L        log folder: must exist and hold nothing but nohup.out; name p6log_a<N>_<...> (N = attempt, 1 or 2, same as O)
+#   L        log folder: must exist and hold nothing but nohup.out; directly in $HOME; name p6log_a<N>_<...> (N = attempt,
+#            1 or 2, same as O)
 #   PIN      expected commit (40 hex)
-#   MAXITER  CG iteration limit (digits) -> P2_EXTRA="--step3-maxiter MAXITER"
+#   MAXITER  CG iteration limit (digits) -> P2_EXTRA="--step3-maxiter MAXITER"; the registered pair: attempt 1 -> 30000,
+#            attempt 2 -> 1500000 (any other pair is a STOP)
 #   ROOT     kit root (default $HOME/sdcp) - the runner is started there
 #
-# Rules: docs/reviews/rint2_dev_probe_ledger_20261026.md section 2 (seven boxes); command = registration R
-#   docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md section 10-1 (2).
+# Rules: docs/reviews/rint2_dev_probe_ledger_20261026.md section 2 (seven boxes) and section 3 (attempt lines); command =
+#   registration R docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md section 10-1 (2).
 # What it does:
-#   umask 022 -> checks (nothing is written outside L and the lock, and the runner is not started, unless all pass):
-#   arguments, folders, attempt number, one-watcher lock ($HOME/.probe6.lock), no runner or payload of this account
+#   umask 022, job control off -> checks (nothing is written outside L and the lock, and the runner is not started, unless
+#   all pass): arguments, folders, attempt number and its limit, one-watcher lock ($HOME/.probe6.lock), earlier attempts
+#   in $HOME/p6log_* (every one has an end marker; this attempt number has not run to the end yet; attempt 1 does not
+#   run after an attempt 2 that ran to the end; attempt 2 needs exactly one attempt-1 folder with DONE and
+#   solve_started=1, whose pin is this pin or an earlier commit of it, and the same solve code CODE_PATHS; "ran to the
+#   end" = DONE with solve_started=1, or WATCHER_FAILED after the runner-start line), no runner or payload of this account
 #   already running, pin, clean tree, venv, kit, S0 plan, kit payload line, GPU, cupy, the runner's own pre-run gates
 #   -> environment fingerprint (versions only, no host name)
-#   -> removes every runner-axis variable from the environment and sets exactly the registered ones (+ PYTHONUNBUFFERED=1)
-#   -> starts the runner in its own session / process group with ALL of its output going to L/runner.log
+#   -> removes PYTHONPATH and every runner-axis variable from the environment and sets exactly the registered ones
+#      (+ PYTHONUNBUFFERED=1); the runner gets no BASH_ENV and no SHELLOPTS (env -u)
+#   -> starts the runner in its own session / process group with ALL of its output going to L/runner.log and checks that
+#      the runner leads that session (WATCHER_FAILED when it does not)
 #   -> samples host RSS, GPU memory and the log line count while it runs
 #   -> after the runner ends: stops whatever is left in its process group, records, probe6_read.py (closed allowlist),
 #      bundle of the allowlisted report, fingerprint and numeric diagnostics.
@@ -34,6 +42,7 @@
 #   PROBE6_CAP_GB = host RSS cap in GB (default min(46, MemAvailable - 6)).
 set -u
 umask 022
+set +m   # job control off (SHELLOPTS / BASH_ENV may turn it on): with it on, setsid forks and the runner leaves the watched group
 
 KIT=kit_SBE_vgcf100
 TOL_FF=0.07381254285530132
@@ -41,6 +50,12 @@ RUNNER_REL=scripts/sdcp_gain_vox015_8arm.sh
 TOOLS_REL=docs/reviews/rint2_probe6_prep_20261110/tools
 S0PLAN_REL=docs/data/rint2_s0_sbe_20261108/files/sdcp/ca1_s0_sbe_20261106_memfix/cjunc_plan.json
 LOCK="$HOME/.probe6.lock"
+# solve code: the repository paths the runner and the payload read or import (traced with strace on the real runner and
+# payload, 2026-11-10; outside scripts/ = the prereg file the runner checks and the EIS anchor table the payload reads),
+# this tool folder and the S0 stage-1 data.  Attempt 2 runs only when these are the same at attempt 1's pin and this pin.
+CODE_PATHS=(scripts/ docs/reviews/rint2_probe6_prep_20261110/tools/ docs/data/rint2_s0_sbe_20261108/ docs/data/rint_eis_anchors.csv docs/reviews/sdcp_gain_prereg_v2_20260816.md)
+# the runner and the pre-run gates run without BASH_ENV (a startup file of every non-interactive bash) and SHELLOPTS
+RENV=(env -u BASH_ENV -u SHELLOPTS)
 # Registered axes (registration R section 10-1 (2)).  Values that the registration writes as <plan ...>:
 #   CJUNC_LEN_LAW = scripts/carbon_junction.py CJUNC_LEN_LAW, CJUNC_S_MIN_UM = 0 (author 2026-11-09, section 2-1b),
 #   CJUNC_TOL_FF_UM = S0 stage-1 plan values_um.tol_ff, STEP3_RTOL = scripts/step3_conv_cert.py CERT_RTOL_MAX.
@@ -51,14 +66,14 @@ AXES=(
   "CJUNC_TOL_FF_UM=$TOL_FF" CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12
   EXPECT_BACKEND=gpu "KITS=$KIT" ARMS=1 LEAN=2
 )
-EXP_RTOL=""; EXP_BACKEND=""
+EXP_RTOL=""; EXP_BACKEND=""; EXP_RJ=""
 for a in "${AXES[@]}"; do
-  case "$a" in STEP3_RTOL=*) EXP_RTOL="${a#*=}";; EXPECT_BACKEND=*) EXP_BACKEND="${a#*=}";; esac
+  case "$a" in STEP3_RTOL=*) EXP_RTOL="${a#*=}";; EXPECT_BACKEND=*) EXP_BACKEND="${a#*=}";; CJUNC_RJ=*) EXP_RJ="${a#*=}";; esac
 done
 # names of the environment that change how the runner and payload run (recorded as unset / empty / set / short value)
 ENV_NAMES="CUDA_VISIBLE_DEVICES OMP_NUM_THREADS OPENBLAS_NUM_THREADS OPENBLAS_CORETYPE PYTHONUNBUFFERED BASH_ENV"
 
-LOGF=""; L=""; LOCKED=0; FINISHED=0; RUNNER_STARTED=0; RPID=""; ABORTED=0; CAPTERM=0; LATE_SIG=0
+LOGF=""; L=""; LOCKED=0; FINISHED=0; RUNNER_STARTED=0; RPID=""; ABORTED=0; CAPTERM=0; LATE_SIG=0; WF_REASON=""; P1=""; PPR=0
 say() {
   local m
   m="[probe6] $(date -u +%Y-%m-%dT%H:%M:%SZ) $*"
@@ -129,6 +144,25 @@ group_pids() {   # live processes whose process group is RPID (read from /proc -
   return 0
 }
 group_count() { local p; p="$(group_pids)"; set -- $p; echo "$#"; }
+runner_leads_session() {   # 0 = the runner (RPID) leads its own session (setsid did not fork), 1 = it does not or it is gone
+  local i=0 s rest
+  while [ "$i" -lt 300 ]; do
+    s=""
+    read -r s < "/proc/$RPID/stat" 2>/dev/null || return 1
+    rest="${s##*) }"
+    set -- $rest
+    [ "${4:-}" = "$RPID" ] && return 0
+    [ "${1:-}" = Z ] && return 1
+    if [ "$i" -ge 50 ]; then sleep 0.01; fi
+    i=$((i + 1))
+  done
+  return 1
+}
+finished() {   # $1 = an earlier log folder: 0 when that attempt counts as run to the end (ledger section 3)
+  if [ -f "$1/DONE" ] && grep -qx 'solve_started=1' "$1/meta.txt" 2>/dev/null; then return 0; fi
+  if [ -f "$1/WATCHER_FAILED" ] && grep -q ' runner started - maxiter ' "$1/status.log" 2>/dev/null; then return 0; fi
+  return 1
+}
 group_stop() {   # TERM to the whole runner process group, wait up to 10 s, then KILL whatever is left
   local i=0
   [ -n "$RPID" ] || return 0
@@ -158,7 +192,7 @@ on_exit() {   # a watcher that ends any other way than STOP / DONE
   if [ "$RUNNER_STARTED" = 1 ]; then
     say "WATCHER FAILED (rc $rc) after the runner started - stopping the runner group; the record is incomplete; the lock $(homerel "$LOCK") is kept"
     group_stop
-    printf 'rc=%s\nrunner_started=1\n' "$rc" > "$L/WATCHER_FAILED"
+    { printf 'rc=%s\nrunner_started=1\n' "$rc"; [ -z "$WF_REASON" ] || printf 'reason=%s\n' "$WF_REASON"; } > "$L/WATCHER_FAILED"
   else
     release_lock
     printf 'reason=the watcher ended unexpectedly (rc %s)\nrunner_started=0\n' "$rc" > "$L/STOPPED"
@@ -194,6 +228,10 @@ say "start - watcher for probe 6 (runner output goes to the log folder only)"
 for p in "$W" "$O" "$ROOT"; do
   okpath "$p" || stop "path must be absolute and use only A-Za-z0-9._/+- : $(homerel "$p")"
 done
+# the earlier attempts are read from $HOME/p6log_* - a log folder elsewhere would not see them
+LP="$(cd "$(dirname "$L")" 2>/dev/null && pwd -P)" || LP=""
+HP="$(cd "$HOME" 2>/dev/null && pwd -P)" || HP=""
+[ -n "$LP" ] && [ "$LP" = "$HP" ] || stop "log folder must be directly in the home folder (~/p6log_a<N>_<...>) so that the earlier attempts are seen"
 case "$(basename "$L")" in
   p6log_a1_*) ATTEMPT=1;;
   p6log_a2_*) ATTEMPT=2;;
@@ -205,11 +243,45 @@ case "$(basename "$O")" in
 esac
 ( LC_ALL=C; case "$PIN" in ""|*[!0-9a-f]*) exit 1;; esac; [ "${#PIN}" -eq 40 ] ) || stop "PIN is not a 40-hex commit"
 digits "$MAXITER" 9 && [ "$MAXITER" -ge 1 ] || stop "MAXITER must be a positive integer (digits only)"
+# the registered pair of attempt number and iteration limit (ledger section 3)
+case "$ATTEMPT" in
+  1) WANT_MAX=30000;;
+  2) WANT_MAX=1500000;;
+esac
+[ "$MAXITER" = "$WANT_MAX" ] || stop "attempt $ATTEMPT runs with maxiter $WANT_MAX (registered pair 1 -> 30000, 2 -> 1500000), not $MAXITER"
 if mkdir "$LOCK" 2>/dev/null; then
   LOCKED=1
   printf 'pid=%s\nlogdir=%s\n' "$$" "$(homerel "$L")" > "$LOCK/owner"
 else
   stop "another probe 6 watcher holds the lock $(homerel "$LOCK") (or one that died left it) - look at $(homerel "$LOCK")/owner; if no watcher runs, remove that folder by hand"
+fi
+# ---- earlier attempts (one ledger line per attempt; ledger section 3) ----
+for d in "$HOME"/p6log_*; do
+  [ -d "$d" ] && [ "$(basename "$d")" != "$(basename "$L")" ] || continue
+  if [ -e "$d/DONE" ] || [ -e "$d/STOPPED" ] || [ -e "$d/WATCHER_FAILED" ]; then continue; fi
+  stop "earlier log folder $(homerel "$d") has no end marker (DONE / STOPPED / WATCHER_FAILED): a watcher still runs there or died - look at its status.log"
+done
+for d in "$HOME"/p6log_a"$ATTEMPT"_*; do
+  [ -d "$d" ] && [ "$(basename "$d")" != "$(basename "$L")" ] || continue
+  if finished "$d"; then
+    stop "attempt $ATTEMPT already ran to the end in $(homerel "$d") (DONE with solve_started=1, or WATCHER_FAILED after the runner-start line) - one ledger line per attempt"
+  fi
+done
+if [ "$ATTEMPT" = 1 ]; then
+  for d in "$HOME"/p6log_a2_*; do
+    if [ -d "$d" ] && finished "$d"; then stop "attempt 2 already ran to the end in $(homerel "$d") - attempt 1 does not run after attempt 2"; fi
+  done
+else
+  N1=0
+  for d in "$HOME"/p6log_a1_*; do
+    [ -d "$d" ] || continue
+    if [ -f "$d/DONE" ] && grep -qx 'solve_started=1' "$d/meta.txt" 2>/dev/null; then
+      N1=$((N1 + 1))
+      P1="$(sed -n 's/^pin=//p' "$d/meta.txt" | head -n 1)"
+    fi
+  done
+  [ "$N1" = 1 ] || stop "attempt 2 needs exactly one attempt-1 log folder with DONE and solve_started=1 (found $N1)"
+  ( LC_ALL=C; case "$P1" in ""|*[!0-9a-f]*) exit 1;; esac; [ "${#P1}" -eq 40 ] ) || stop "the attempt-1 meta pin is not a 40-hex commit"
 fi
 PSL="$(ps -u "$(id -u)" -o pid=,args= 2>/dev/null)" || stop "cannot list the processes of this account (ps failed)"
 BUSY="$(printf '%s\n' "$PSL" | awk -v me="$$" '$1 != me && (index($0, "sdcp_gain_vox015_8arm.sh") || index($0, "mpm_webapp_payload.py")) { n++ } END { print n + 0 }')"
@@ -229,11 +301,25 @@ HEAD_NOW="$(git -C "$W" rev-parse HEAD 2>/dev/null)" || stop "git rev-parse fail
 DIRTY="$(git -C "$W" status --porcelain --untracked-files=all 2>/dev/null)" || stop "git status failed in the pinned worktree"
 GIT_BEFORE="$(printf '%s' "$DIRTY" | grep -c .)"
 [ -z "$DIRTY" ] || stop "pinned worktree is not clean ($GIT_BEFORE line(s) in git status)"
+# attempt 2 runs the solve code of attempt 1 (author 2026-11-10 Q2 (a)): same branch, and CODE_PATHS equal at both pins
+if [ "$ATTEMPT" = 2 ]; then
+  { [ "$P1" = "$PIN" ] || git -C "$W" merge-base --is-ancestor "$P1" "$PIN" 2>/dev/null; } \
+    || stop "the attempt-1 pin is not this PIN or an earlier commit of it"
+  git -C "$W" diff --quiet "$P1" "$PIN" -- "${CODE_PATHS[@]}" 2>/dev/null
+  case $? in
+    0) ;;
+    1) stop "the solve code changed between the attempt-1 pin and this PIN: $(git -C "$W" diff --name-only "$P1" "$PIN" -- "${CODE_PATHS[@]}" 2>/dev/null | head -n 5 | tr '\n' ' ')- attempt 2 runs the code of attempt 1";;
+    *) stop "cannot compare the solve code of the attempt-1 pin and this PIN (git diff failed)";;
+  esac
+fi
 VENV="$HOME/dem-venv"
 [ -f "$VENV/bin/activate" ] || stop "venv not found: $(homerel "$VENV")"
 set +u
 . "$VENV/bin/activate"
 set -u
+# PYTHONPATH would put other modules in front of the pinned code: removed before any python of the watcher, the gates,
+# the runner and the payload runs (recorded as pythonpath_removed; pythonpath_set = still there at the runner start)
+if [ -n "${PYTHONPATH+x}" ]; then PPR=1; unset PYTHONPATH; fi
 command -v python3 >/dev/null 2>&1 || stop "python3 not found after activating the venv"
 command -v setsid >/dev/null 2>&1 || stop "setsid not found (the runner gets its own process group)"
 K="$ROOT/$KIT"
@@ -352,7 +438,7 @@ for n in $(compgen -e); do
 done
 SCRUBBED="${SCRUBBED# }"
 PP=0
-if [ -n "${PYTHONPATH:-}" ]; then PP=1; fi
+if [ -n "${PYTHONPATH+x}" ]; then PP=1; fi
 # PYTHONUNBUFFERED=1 is not a physics axis: the payload prints "CG not converged" without a flush, and a buffered
 # line is lost when the run is stopped early (README section 4)
 CMD=("${AXES[@]}" "P2_EXTRA=--step3-maxiter $MAXITER" "OUTDIR=$O" PYTHONUNBUFFERED=1)
@@ -375,9 +461,9 @@ case "$GATES" in
 esac
 UFILES=()
 for f in ${GATES#OK }; do UFILES+=("$W/scripts/$f"); done
-env "${CMD[@]}" PYTHONUTF8=1 python3 "$W/scripts/check_method_discipline.py" > "$L/pregate_discipline.log" 2>&1 < /dev/null \
+"${RENV[@]}" "${CMD[@]}" PYTHONUTF8=1 python3 "$W/scripts/check_method_discipline.py" > "$L/pregate_discipline.log" 2>&1 < /dev/null \
   || stop "the runner's own pre-run gate fails: discipline check (log $(homerel "$L")/pregate_discipline.log)"
-env "${CMD[@]}" PYTHONUTF8=1 python3 "$W/scripts/check_undefined_names.py" "${UFILES[@]}" > "$L/pregate_undefined.log" 2>&1 < /dev/null \
+"${RENV[@]}" "${CMD[@]}" PYTHONUTF8=1 python3 "$W/scripts/check_undefined_names.py" "${UFILES[@]}" > "$L/pregate_undefined.log" 2>&1 < /dev/null \
   || stop "the runner's own pre-run gate fails: undefined-name check (log $(homerel "$L")/pregate_undefined.log)"
 
 # earlier probe files in the kit run folder (same names would be overwritten by this attempt) -> byte copies
@@ -390,7 +476,7 @@ for f in "$RUNP"/p2_SBE_vgcf100_*.json "$RUNP"/p2_SBE_vgcf100_*.json.failed "$RU
 done
 {
   echo "# cwd: $(homerel "$ROOT")"
-  printf 'env'
+  printf '%s' "${RENV[*]}"
   for a in "${CMD[@]}"; do
     case "$a" in
       OUTDIR=*) printf ' OUTDIR=%s' "$(homerel "${a#*=}")";;
@@ -418,9 +504,15 @@ if [ -x /usr/bin/time ]; then
   TIMEV=(/usr/bin/time -v -o "$L/time_v.txt")
 fi
 RUNNER_STARTED=1
-setsid ${TIMEV[@]+"${TIMEV[@]}"} env "${CMD[@]}" bash "$RUNNER" > "$L/runner.log" 2>&1 < /dev/null &
+setsid ${TIMEV[@]+"${TIMEV[@]}"} "${RENV[@]}" "${CMD[@]}" bash "$RUNNER" > "$L/runner.log" 2>&1 < /dev/null &
 RPID=$!
 say "runner started - maxiter $MAXITER, host RSS cap $CAP GB, sampling every $SAMPLE_S s"
+# the runner must lead its own session: otherwise setsid forked (job control on) and the watched group is not the runner's
+if ! runner_leads_session; then
+  WF_REASON="the runner (pid $RPID) does not lead its own session - setsid forked (job control on?); its processes may run outside the watched group - look at ps"
+  say "$WF_REASON"
+  exit 1
+fi
 
 stage() {
   if grep -q '^saved ' "$L/runner.log" 2>/dev/null; then echo saved
@@ -498,9 +590,14 @@ sha() { sha256sum "$1" 2>/dev/null | awk '{print $1}'; }
   echo "probe6_meta_version=2"
   echo "attempt=$ATTEMPT"
   echo "pin=$PIN"
+  if [ "$ATTEMPT" = 2 ]; then
+    echo "attempt1_pin=$P1"
+    echo "code_same_as_attempt1=1"
+  fi
   echo "maxiter=$MAXITER"
   echo "expect_rtol=$EXP_RTOL"
   echo "expect_backend=$EXP_BACKEND"
+  echo "expect_rj=$EXP_RJ"
   echo "kit=$KIT"
   echo "kit_run=$(basename "$RUNP")"
   echo "kit_run_matches_s0=1"
@@ -527,6 +624,7 @@ sha() { sha256sum "$1" 2>/dev/null | awk '{print $1}'; }
   echo "pregate=1"
   echo "scrubbed=$SCRUBBED"
   echo "pythonpath_set=$PP"
+  echo "pythonpath_removed=$PPR"
   printf '%s\n' "$ENVREC"
   echo "gpu_used_start_mib=$GU0"
   echo "disk_free_gb_kit=$DFK"

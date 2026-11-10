@@ -5,6 +5,7 @@
 - 넣을 자리: `docs/reviews/rint2_dev_probe_ledger_20261026.md` §3 시도 표 (1 번 줄을 아래 1 번 줄로 바꾸고 2 번 줄을 더한다) 와 그 아래 명령 줄 절.
 - 원장 §2 "시도" 칸: 시작 전에 줄을 커밋한다. 두 줄을 시도 1 전에 한 커밋으로 넣는다. 시도 2 의 한도 1500000 은 시도 1 의 결과를 보기 전에 정한 값이고, 시도 1 을 본 뒤 바꾸려면 새 줄을 먼저 커밋한다 (README §6).
 - 러너 명령 줄 끝에 `PYTHONUNBUFFERED=1` 한 낱말이 더해졌다. 등록 R §10-1 (2) 와 지금 원장 §3 의 러너 명령 줄에 없는 env 다 (물리 축 아님 · 감시 셸이 러너에 준다 · 까닭 = README §4 · §6). 원장 §3 의 러너 명령 줄에 이 낱말을 더해야 한다. 실제로 돈 글자는 묶음의 command.txt 에 남는다.
+- (2 회차 고침 · 11-10) 러너 명령 줄 머리에 `-u BASH_ENV -u SHELLOPTS` 가 더해졌다 (감시 셸이 러너를 `env -u BASH_ENV -u SHELLOPTS …` 로 띄운다 · 러너 bash 가 시작 파일 · 셸 선택 (작업 제어) 을 물려받지 않게 · P6R2-06 · 물리 축 아님). 원장 §3 · 이 파일 · README §9 의 러너 줄 둘이 같이 바뀌었다 (감시 셸 줄 둘은 그대로). command.txt 둘째 줄도 이 꼴이다.
 - 시작 시각 · 환경의 GPU 드라이버 · CUDA 판 · 결과 · 폴더 sha256 은 발사 뒤 묶음 (meta · env · 보고 JSON) 에서 옮긴다. 손으로 고르지 않는다.
 - 아래 줄의 기계 · 환경 값은 11-09 기계 조사 표 (`docs/reviews/rint2_siteq_prep_20261109/README.md` §7) 에서 옮긴 것이다. 발사 뒤 묶음 env.txt 의 값과 다르면 묶음 값이 맞다.
 
@@ -13,7 +14,7 @@
 | 번호 | 시작 (KST) | 명령 줄 | 핀 | 기계 · 환경 | 결과 (반복 · 잔차 · 판 전류 불균형 · 시간 · 메모리) | 폴더 sha256 |
 |---|---|---|---|---|---|---|
 | 1 | ⬜ (발사 뒤 · 묶음 meta 의 start_kst) | 아래 "시도 1 의 명령 줄" (감시 셸 한 줄 + 감시 셸이 내는 러너 명령 한 줄 · 한도 30000 · 짧은 확인) | `<PIN>` (시도 1 블록의 PIN · 감시 셸이 작업 트리 HEAD = PIN 을 확인하고 묶음 meta 에 적는다) | kgy · Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1 · cupy-cuda12x 12.3.0 · RTX 3090 24 GB · OpenBLAS SkylakeX (11-09 기계 조사) · GPU 드라이버 · CUDA 판 = ⬜ (발사 뒤 · 묶음 env) | (결과 0 건) | (결과 0 건) |
-| 2 | ⬜ (시도 1 의 DONE 뒤 · 묶음 meta 의 start_kst) | 아래 "시도 2 의 명령 줄" (한도 1500000) | `<PIN>` (시도 2 블록의 PIN = 발사 직전의 가지 끝 · 시도 1 의 핀이거나 그 뒤 커밋 · 블록이 본다) | 시도 1 과 같은 기계 (kgy) · ⬜ (발사 뒤 · 묶음 env) | (결과 0 건) | (결과 0 건) |
+| 2 | ⬜ (풀이를 시작한 시도 1 (`solve_started=1`) 의 DONE 뒤 · 묶음 meta 의 start_kst) | 아래 "시도 2 의 명령 줄" (한도 1500000) | `<PIN>` (시도 2 블록의 PIN = 발사 직전의 가지 끝 · 시도 1 의 핀이거나 그 뒤 커밋 · 두 핀 사이에 풀이 코드 (README §9 목록) 가 같아야 한다 · 블록 · 감시 셸이 본다) | 시도 1 과 같은 기계 (kgy) · ⬜ (발사 뒤 · 묶음 env) | (결과 0 건) | (결과 0 건) |
 
 ## 명령 줄 전체
 
@@ -23,17 +24,17 @@
 
     bash <W>/docs/reviews/rint2_probe6_prep_20261110/tools/run_probe6.sh <W> <O> <L> <PIN> 30000
 
-감시 셸이 킷 뿌리 (홈의 sdcp) 에서 내는 러너 명령 (등록 R §10-1 (2) 의 꼴 + `PYTHONUNBUFFERED=1` · 값 = 아래 표의 근거):
+감시 셸이 킷 뿌리 (홈의 sdcp) 에서 내는 러너 명령 (등록 R §10-1 (2) 의 꼴 + 머리의 `-u BASH_ENV -u SHELLOPTS` + `PYTHONUNBUFFERED=1` · 값 = 아래 표의 근거):
 
-    env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 30000" OUTDIR=<O> PYTHONUNBUFFERED=1 bash <W>/scripts/sdcp_gain_vox015_8arm.sh
+    env -u BASH_ENV -u SHELLOPTS VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 30000" OUTDIR=<O> PYTHONUNBUFFERED=1 bash <W>/scripts/sdcp_gain_vox015_8arm.sh
 
-시도 2 의 명령 줄 (블록 `ATTEMPT=2` · 한도 1500000 · 시도 1 의 DONE 뒤):
+시도 2 의 명령 줄 (블록 `ATTEMPT=2` · 한도 1500000 · 풀이를 시작한 시도 1 (`solve_started=1`) 의 DONE 뒤):
 
     bash <W>/docs/reviews/rint2_probe6_prep_20261110/tools/run_probe6.sh <W> <O> <L> <PIN> 1500000
 
-    env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 1500000" OUTDIR=<O> PYTHONUNBUFFERED=1 bash <W>/scripts/sdcp_gain_vox015_8arm.sh
+    env -u BASH_ENV -u SHELLOPTS VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 1500000" OUTDIR=<O> PYTHONUNBUFFERED=1 bash <W>/scripts/sdcp_gain_vox015_8arm.sh
 
-- 러너 env 에 `SIGMA_VGCF_OVERRIDE` 는 없다 (감시 셸이 러너 축 이름꼴의 env 를 전부 걷어낸 뒤 위 값만 넣는다).
+- 러너 env 에 `SIGMA_VGCF_OVERRIDE` 는 없다 (감시 셸이 러너 축 이름꼴의 env 를 전부 걷어낸 뒤 위 값만 넣는다). PYTHONPATH · BASH_ENV · SHELLOPTS 도 없다 (감시 셸이 PYTHONPATH 를 걷고 `env -u` 로 띄운다).
 - `--show-results` 없음 (값 봉인 · 킷 payload 줄에 있으면 감시 셸이 러너를 띄우지 않고 멈춘다).
 - 러너 앞에 감시 셸이 러너의 런 전 관문 둘 (규율 검사 · 미정의 이름 검사) 을 같은 env · 같은 자리에서 한 번 미리 돌린다 (실패하면 러너를 띄우지 않는다 · 로그 폴더의 pregate_*.log). 러너 명령 줄은 바뀌지 않는다.
 

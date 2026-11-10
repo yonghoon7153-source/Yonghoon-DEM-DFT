@@ -12,9 +12,11 @@ numbers, failure lines are kept with every number replaced by one '#'.
   python3 -I -B probe6_read.py --outdir O --report R.json            (output folder only)
 
 exit code  0 PROBE_OK             one accepted arm, every required key present, converged, runner rc 0
-           3 PROBE_NOT_CONVERGED  keys present but not a clean positive converged solve (iterations are still reported)
+           3 PROBE_NOT_CONVERGED  keys present but not a clean positive converged solve (iterations are still reported);
+                                  the identity / registered-value / record checks hold as for 0 (attempt 1's normal end)
            4 PROBE_INCOMPLETE     something required is missing or has an unexpected shape (shown as NONE + reason),
-                                  an identity / registered-value check has no evidence, or the report could not be written
+                                  an identity / registered-value check has no evidence or differs (also on the not-converged
+                                  path), or the report could not be written
            5 PROBE_REJECTED       rejection marker, non-SBE arm, or the seal is broken in the runner log
            2 usage
 Rules: docs/reviews/rint2_dev_probe_ledger_20261026.md section 2.  Standard library only.  Python 3.8.  ASCII source.
@@ -33,6 +35,8 @@ VERDICT = {RC_OK: 'PROBE_OK', RC_NOT_CONVERGED: 'PROBE_NOT_CONVERGED', RC_INCOMP
            RC_REJECTED: 'PROBE_REJECTED'}
 KIT_ARM_PREFIX = 'p2_SBE_vgcf100_'
 ARM_RE = r'p2_[A-Za-z0-9_]+_a([0-7])\.json'
+#: the registered pair of attempt number and CG iteration limit (ledger section 3; the watcher stops on any other pair)
+ATTEMPT_MAXITER = {1: 30000, 2: 1500000}
 
 # ---------------------------------------------------------------------------------------------------------------
 # THE closed allowlist.  (output key, path below mpm_metrics.step3, kind, required for PROBE_OK)
@@ -112,7 +116,8 @@ META_FIELDS = (
     ('attempt', r'[12]', 'int'), ('expect_rtol', r'[0-9][0-9.eE+-]{0,11}', 'str'), ('expect_backend', r'gpu|cpu', 'str'),
     ('solve_started', r'[01]', 'int'), ('orphans', r'[0-9]{1,6}', 'int'), ('orphans_left', r'[0-9]{1,6}', 'int'),
     ('pregate', r'[01]', 'int'), ('gpu_used_start_mib', r'[0-9]{1,7}|NA', 'str'), ('disk_free_gb_kit', r'[0-9]{1,9}|NA', 'str'),
-    ('disk_free_gb_log', r'[0-9]{1,9}|NA', 'str'),
+    ('disk_free_gb_log', r'[0-9]{1,9}|NA', 'str'), ('attempt1_pin', r'[0-9a-f]{40}', 'str'), ('code_same_as_attempt1', r'[01]', 'int'),
+    ('expect_rj', r'[0-9][0-9.eE+-]{0,11}', 'str'), ('pythonpath_removed', r'[01]', 'int'),
 ) + tuple(('env_' + n, r'unset|empty|set|value:[A-Za-z0-9][A-Za-z0-9,._-]{0,31}', 'str') for n in (
     'CUDA_VISIBLE_DEVICES', 'OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'OPENBLAS_CORETYPE', 'PYTHONUNBUFFERED', 'BASH_ENV'))
 #: watcher environment fingerprint (key=value) - versions only
@@ -681,9 +686,9 @@ def run(args):
     else:
         probs.append('run_receipt.json missing')
         incomplete = True
-    if receipt.get('receipt_arms') not in (1,) and not is_missing(receipt.get('receipt_arms')):
+    if receipt.get('receipt_arms') != 1:
         incomplete = True
-        probs.append('receipt arms is not 1 (the probe is one arm)')
+        probs.append('receipt arms is not 1 or missing (the probe is one arm)')
     if receipt.get('receipt_has_arm_list'):
         incomplete = True
         probs.append('receipt has an arm list (the probe is arm 0 only)')
@@ -799,6 +804,17 @@ def run(args):
         fields['code_matches_pin'] = ('+' not in cs) and pin.startswith(cs)
     else:
         fields['code_matches_pin'] = missing('not requested' if not args.logdir else 'absent')
+    # registered junction resistance (identity only): receipt R_j = meta expect_rj and the arm name carries _cj<R_j>_
+    xj = _num(meta['expect_rj']) if isinstance((meta or {}).get('expect_rj'), str) else None
+    fnd, rj = pick(rdoc or {}, ('ca_ext_request', 'cjunc', 'R_j_ohm'))
+    if not args.logdir:
+        fields['rj_matches_registered'] = missing('not requested')
+    elif arm_path is None:
+        fields['rj_matches_registered'] = missing('no arm file')
+    elif xj is None or xj <= 0 or xj != int(xj) or not fnd or isinstance(rj, bool) or not isinstance(rj, (int, float)):
+        fields['rj_matches_registered'] = missing('absent')
+    else:
+        fields['rj_matches_registered'] = (float(rj) == xj) and ('_cj%d_' % int(xj)) in os.path.basename(arm_path)
     rep['fields'] = fields
     # ---- log / timing / resources ----
     timing, res = {}, {}
@@ -897,6 +913,58 @@ def run(args):
             if not conv:
                 rc = RC_NOT_CONVERGED
                 probs.append('not converged (unconverged / cg_info / certificate flags / component status)')
+        eb, rb = f.get('electronic_backend_used'), receipt.get('receipt_expect_backend')
+        m_ = meta or {}
+        if rc in (RC_OK, RC_NOT_CONVERGED):
+            # identity, registered values and a clean watcher record: the clean positive end (rc 0) AND the not-converged
+            # end (rc 3 = attempt 1's normal end at the iteration limit) - a different bed / code / limit / record is rc 4 on both
+            # identity: with a log folder and an S0 plan the checks must be True (no evidence = not OK)
+            idreq = bool(args.logdir and args.s0_plan and arm_path is not None)
+            if f.get('bed_inputs_match_s0') is False or (idreq and f.get('bed_inputs_match_s0') is not True):
+                incomplete = True
+                probs.append('arm input digests are not shown to match the S0 stage-1 plan (not the same bed, or no evidence)')
+            if f.get('tol_ff_matches_s0') is False or (idreq and f.get('tol_ff_matches_s0') is not True):
+                incomplete = True
+                probs.append('receipt tol_ff is not shown to match the S0 stage-1 plan')
+            if f.get('code_matches_pin') is False or (idreq and f.get('code_matches_pin') is not True):
+                incomplete = True
+                probs.append('arm code sha is not shown to be the pin (other commit, dirty tree, or no evidence)')
+            if args.logdir and arm_path is not None and f.get('rj_matches_registered') is not True:
+                incomplete = True
+                probs.append('the junction resistance is not shown to be the registered one (receipt R_j, arm name, meta expect_rj)')
+            if args.logdir:
+                # registered values (the watcher writes what it set into meta) and a clean watcher record
+                if not isinstance(m_.get('maxiter'), int) or log.get('cg_maxiter') != m_.get('maxiter'):
+                    incomplete = True
+                    probs.append('runner log CG maxiter differs from the meta maxiter (or one is missing)')
+                att = m_.get('attempt')
+                if att not in ATTEMPT_MAXITER or m_.get('maxiter') != ATTEMPT_MAXITER[att]:
+                    incomplete = True
+                    probs.append('meta attempt and maxiter are not the registered pair (1 -> 30000, 2 -> 1500000)')
+                if att == 2 and not (isinstance(m_.get('attempt1_pin'), str) and m_.get('code_same_as_attempt1') == 1):
+                    incomplete = True
+                    probs.append('attempt 2 meta does not show the attempt-1 pin and the same solve code (attempt1_pin, code_same_as_attempt1)')
+                if att == 1 and ('attempt1_pin' in m_ or 'code_same_as_attempt1' in m_):
+                    incomplete = True
+                    probs.append('attempt 1 meta carries attempt-2 keys (contradiction)')
+                xr = _num(m_['expect_rtol']) if isinstance(m_.get('expect_rtol'), str) else None
+                if xr is None or receipt.get('receipt_step3_rtol') != xr:
+                    incomplete = True
+                    probs.append('receipt rtol differs from the meta expect_rtol (or one is missing)')
+                cr = f.get('cert_rtol_used')
+                if (rc == RC_OK and cr != xr) or (isinstance(cr, float) and cr != xr):
+                    incomplete = True
+                    probs.append('certificate rtol differs from the meta expect_rtol (or it is missing)')
+                xb = m_.get('expect_backend')
+                bu = f.get('backend_used')
+                if not isinstance(xb, str) or rb != xb or (rc == RC_OK and (eb != xb or bu != xb)) or (isinstance(bu, str) and bu != xb):
+                    incomplete = True
+                    probs.append('solve backend differs from the meta expect_backend (or one is missing)')
+                for key, want in (('aborted', 0), ('cap_term', 0), ('git_lines_after', 0), ('orphans', 0),
+                                  ('kit_run_matches_s0', 1), ('solve_started', 1), ('pythonpath_set', 0)):
+                    if m_.get(key) != want:
+                        incomplete = True
+                        probs.append('meta %s is not %d (or missing)' % (key, want))
         if rc == RC_OK:
             miss_ok = [k for k in REQUIRED_OK if is_missing(f.get(k))]
             if miss_ok:
@@ -908,26 +976,14 @@ def run(args):
             if f.get('origin_shift_zero') is not True:
                 incomplete = True
                 probs.append('arm origin shift is not zero (not arm 0)')
-            # identity: with a log folder and an S0 plan the three checks must be True (no evidence = not OK)
-            idreq = bool(args.logdir and args.s0_plan and arm_path is not None)
-            if f.get('bed_inputs_match_s0') is False or (idreq and f.get('bed_inputs_match_s0') is not True):
-                incomplete = True
-                probs.append('arm input digests are not shown to match the S0 stage-1 plan (not the same bed, or no evidence)')
-            if f.get('tol_ff_matches_s0') is False or (idreq and f.get('tol_ff_matches_s0') is not True):
-                incomplete = True
-                probs.append('receipt tol_ff is not shown to match the S0 stage-1 plan')
-            if f.get('code_matches_pin') is False or (idreq and f.get('code_matches_pin') is not True):
-                incomplete = True
-                probs.append('arm code sha is not shown to be the pin (other commit, dirty tree, or no evidence)')
             if source != 'outdir':
                 incomplete = True
                 probs.append('the arm was not accepted by the runner (leftover in the kit run folder)')
-            eb, rb = f.get('electronic_backend_used'), receipt.get('receipt_expect_backend')
             if isinstance(rb, str) and eb != rb:
                 incomplete = True
                 probs.append('solve backend differs from the receipt expectation')
             if args.logdir:
-                rc_run = (meta or {}).get('runner_rc')
+                rc_run = m_.get('runner_rc')
                 if rc_run is None:
                     incomplete = True
                     probs.append('runner rc unknown')
@@ -941,26 +997,8 @@ def run(args):
                     if key not in log:
                         incomplete = True
                         probs.append('runner log has no STEP3 result line (time unknown)')
-                # registered values (the watcher writes what it set into meta) and a clean watcher record
-                m_ = meta or {}
-                if not isinstance(m_.get('maxiter'), int) or log.get('cg_maxiter') != m_.get('maxiter'):
-                    incomplete = True
-                    probs.append('runner log CG maxiter differs from the meta maxiter (or one is missing)')
-                xr = _num(m_['expect_rtol']) if isinstance(m_.get('expect_rtol'), str) else None
-                if xr is None or receipt.get('receipt_step3_rtol') != xr or f.get('cert_rtol_used') != xr:
-                    incomplete = True
-                    probs.append('receipt / certificate rtol differs from the meta expect_rtol (or one is missing)')
-                xb = m_.get('expect_backend')
-                if not isinstance(xb, str) or rb != xb or eb != xb or f.get('backend_used') != xb:
-                    incomplete = True
-                    probs.append('solve backend differs from the meta expect_backend (or one is missing)')
-                for key, want in (('aborted', 0), ('cap_term', 0), ('git_lines_after', 0), ('orphans', 0),
-                                  ('kit_run_matches_s0', 1), ('solve_started', 1)):
-                    if m_.get(key) != want:
-                        incomplete = True
-                        probs.append('meta %s is not %d (or missing)' % (key, want))
-            if incomplete:
-                rc = RC_INCOMPLETE
+        if incomplete and rc in (RC_OK, RC_NOT_CONVERGED):
+            rc = RC_INCOMPLETE
     rep['verdict'], rep['rc'], rep['problems'], rep['notes'] = VERDICT[rc], rc, probs, notes
     return rep, flt
 
@@ -975,7 +1013,7 @@ def screen(rep):
     L.append('[probe6] --- solver (arm JSON, closed allowlist) ---')
     for row in ARM_FIELDS:
         L.append('[probe6] %-26s = %s' % (row[0], fmt(rep['fields'].get(row[0]))))
-    for k in ('backend_fallback', 'origin_shift_zero', 'bed_inputs_match_s0', 'tol_ff_matches_s0', 'code_matches_pin'):
+    for k in ('backend_fallback', 'origin_shift_zero', 'bed_inputs_match_s0', 'tol_ff_matches_s0', 'code_matches_pin', 'rj_matches_registered'):
         L.append('[probe6] %-26s = %s' % (k, fmt(rep['fields'].get(k))))
     if rep['scope'] == 'outdir_and_logdir':
         lg = rep.get('log') if isinstance(rep.get('log'), dict) and not is_missing(rep.get('log')) else {}

@@ -78,9 +78,18 @@ AXES = {
 }
 #: 두 시도 (1저자 11-10): 시도 1 = 짧은 확인 (한도에 닿아 끝나는 것이 정상) · 시도 2 = 본 한도
 ATTEMPT_MAXITER = {1: '30000', 2: '1500000'}
-MAXITER = '400000'                                          # 합성 · 가짜 러너 시험의 한도 (등록 값과 다르게 둬 한 자리에서 새는지 본다)
+A1, A2 = ATTEMPT_MAXITER[1], ATTEMPT_MAXITER[2]
+#: 합성 기본 = 시도 2 꼴 (감시 셸 · 판독기가 시도 번호 ↔ 한도 짝을 본다 · P6R2-04 · 그래서 정직한 꼴의 한도는 등록 값뿐이다)
+MAXITER = A2
+#: R3 (실물 · 시도 1 꼴 · 한도에 닿음) 만 쓰는 사본 고침 (시험 전용): 짝 표의 시도 1 한도 → 2 (픽스처 침대는 한도 30000 안에서 모인다)
+PAIR_PATCH_W = ('  1) WANT_MAX=30000;;\n', '  1) WANT_MAX=2;;\n')
+PAIR_PATCH_R = ('ATTEMPT_MAXITER = {1: 30000, 2: 1500000}', 'ATTEMPT_MAXITER = {1: 2, 2: 1500000}')
 PIN_FIX = 'e93efb6be' + '0' * 31                             # 합성 핀 (팔의 code_sha 가 그 앞자리)
 S0_RUN = 'run_VGCF3_PTFE1_20261023_210442_2904445'
+#: 풀이 코드 (P6R2-03 · 시험의 독립 표): 두 시도의 핀 사이에 이 경로가 바뀌면 시도 2 를 띄우지 않는다.  러너 · payload 가 여는 리포 파일을
+#: 실물 러너 + payload (픽스처 침대) 를 strace 로 돌려 셌다 (11-10): scripts/ 밖 = 사전등록 (러너 · 있는지만) · EIS 앵커 표 (payload).
+SOLVE_CODE = ('scripts/', 'docs/reviews/rint2_probe6_prep_20261110/tools/', 'docs/data/rint2_s0_sbe_20261108/',
+              'docs/data/rint_eis_anchors.csv', 'docs/reviews/sdcp_gain_prereg_v2_20260816.md')
 
 ARGS = None
 TD = None
@@ -139,8 +148,8 @@ def write_text(p, s, mode=None):
 # ═════════════ 누출 검사 (P6R-01 · F7) ①: 수 찾기: σ 와 흔한 변형 (단위 · 1/σ · 2σ · log σ · 자릿수 · 지수 · 자리 띄움 · float.hex) ═════════════
 #: 보고에 실린 해시 · 지문 값 (σ 가 숨을 수 없는 꼴) 은 **값으로** 지운다 (꼴로 지우면 긴 숫자열의 σ 도 같이 지워진다 · P6R-01).
 SAFE_HEX_KEYS = frozenset(('sha256', 'listing_sha256', 'sha256sum_style', 'receipt_digest', 'receipt_code_sha', 'code_sha',
-                           'input_digest', 'protocol_id', 'pin', 'tool_sha256_wrapper', 'tool_sha256_reader', 'runner_sha256',
-                           'runner_log_sha256', 's0_plan_sha256', 'receipt_sha256'))
+                           'input_digest', 'protocol_id', 'pin', 'attempt1_pin', 'tool_sha256_wrapper', 'tool_sha256_reader',
+                           'runner_sha256', 'runner_log_sha256', 's0_plan_sha256', 'receipt_sha256'))
 #: 수 낱말: 앞 글자가 글자 · 숫자 · _ · . 이면 낱말 시작이 아니다 (경로 · 이름 속 숫자는 수가 아니다) · 뒤 글자는 무엇이든 (0.007133S/cm)
 _TOK = re.compile(r'(?<![A-Za-z0-9_.])[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][-+]?[0-9]+)?')
 #: (이름, 변환, 찾는 유효숫자 하한): σ 그 자체 (어느 단위 · ×10^k) 는 3 자리부터, 1/σ · 2σ 는 4 자리, 로그는 5 자리부터
@@ -262,7 +271,7 @@ FIELD_SCHEMA = {
     'manifest_status': ('enum', ('complete', 'partial', 'failed')), 'protocol_id': ('re', r'p[0-9a-z]{1,8}-[0-9a-f]{8,64}'),
     'code_sha': ('re', r'[0-9a-f]{7,40}(\+dirty)?'), 'input_digest': ('re', r'[0-9a-f]{16}'),
     'backend_fallback': 'bool', 'origin_shift_zero': 'bool', 'bed_inputs_match_s0': 'bool', 'tol_ff_matches_s0': 'bool',
-    'code_matches_pin': 'bool'}
+    'code_matches_pin': 'bool', 'rj_matches_registered': 'bool'}
 #: 팔 칸의 출처 (mpm_metrics.step3 아래 경로 · 시험의 독립 표): 값이 있으면 팔의 그 자리 값과 같아야 한다
 FIELD_PATHS = {
     'n_dof': ('n_dof',), 'cg_iters': ('cg_iters',), 'cg_info': ('cg_info',), 'cg_resid': ('cg_resid',), 'unconverged': ('unconverged',),
@@ -289,7 +298,9 @@ ENV_NAMES_T = ('CUDA_VISIBLE_DEVICES', 'OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS'
 #: 감시 셸 meta.txt 의 키 (시험의 독립 표): (int | str, 값 꼴)
 META_SCHEMA = dict([
     ('probe6_meta_version', ('int', r'[0-9]{1,3}')), ('attempt', ('int', r'[12]')), ('pin', ('str', r'[0-9a-f]{40}')),
+    ('attempt1_pin', ('str', r'[0-9a-f]{40}')), ('code_same_as_attempt1', ('int', r'[01]')),
     ('maxiter', ('int', r'[0-9]{1,9}')), ('expect_rtol', ('str', r'[0-9][0-9.eE+-]{0,11}')), ('expect_backend', ('str', r'gpu|cpu')),
+    ('expect_rj', ('str', r'[0-9][0-9.eE+-]{0,11}')), ('pythonpath_removed', ('int', r'[01]')),
     ('kit', ('str', r'kit_SBE_vgcf100')), ('kit_run', ('str', r'[A-Za-z0-9._+-]{1,120}')), ('kit_run_matches_s0', ('int', r'[01]')),
     ('outdir', ('str', r'~?[A-Za-z0-9._/+-]{1,300}')), ('logdir', ('str', r'~?[A-Za-z0-9._/+-]{1,300}')),
     ('start_epoch', ('int', r'[0-9]{9,11}')), ('start_kst', ('str', r'[0-9T:+-]{19,25}')), ('end_epoch', ('int', r'[0-9]{9,11}')),
@@ -880,13 +891,15 @@ def samples_text(log, t_raster=600, t_solve=2000, t_done=11876, t_end=11900, ste
 
 
 def meta_text(**over):
-    m = [('probe6_meta_version', '2'), ('attempt', '1'), ('pin', PIN_FIX), ('maxiter', MAXITER), ('expect_rtol', '1e-12'),
-         ('expect_backend', 'gpu'), ('kit', KIT), ('kit_run', S0_RUN), ('kit_run_matches_s0', '1'), ('outdir', '~/sdcp/ca1_probe6_a1_x_arm1'),
-         ('logdir', '~/p6log_a1_x'), ('start_epoch', str(T0)), ('start_kst', '2026-11-10T15:00:00+0900'), ('end_epoch', str(T0 + 11900)),
+    """감시 셸 meta.txt 꼴 (기본 = 시도 2 · 한도 1500000 · 시도 1 의 핀 · 풀이 코드 같음).  값 None = 그 줄을 뺀다."""
+    m = [('probe6_meta_version', '2'), ('attempt', '2'), ('pin', PIN_FIX), ('attempt1_pin', PIN_FIX), ('code_same_as_attempt1', '1'),
+         ('maxiter', MAXITER), ('expect_rtol', '1e-12'), ('expect_backend', 'gpu'), ('expect_rj', '1e6'),
+         ('kit', KIT), ('kit_run', S0_RUN), ('kit_run_matches_s0', '1'), ('outdir', '~/sdcp/ca1_probe6_a2_x_arm1'),
+         ('logdir', '~/p6log_a2_x'), ('start_epoch', str(T0)), ('start_kst', '2026-11-10T15:00:00+0900'), ('end_epoch', str(T0 + 11900)),
          ('end_kst', '2026-11-10T18:18:20+0900'), ('wall_s', '11900'), ('runner_rc', '0'), ('solve_started', '1'), ('orphans', '0'),
          ('orphans_left', '0'), ('cap_gb', '46'), ('cap_term', '0'), ('aborted', '0'), ('sample_s', '10'), ('time_v', '1'),
          ('umask', '0022'), ('mode_bad', '0'), ('git_lines_before', '0'), ('git_lines_after', '0'), ('pregate', '1'),
-         ('scrubbed', 'SIGMA_VGCF_OVERRIDE'), ('pythonpath_set', '0')] + \
+         ('scrubbed', 'SIGMA_VGCF_OVERRIDE'), ('pythonpath_set', '0'), ('pythonpath_removed', '0')] + \
         [('env_' + n, 'value:1' if n == 'PYTHONUNBUFFERED' else 'unset') for n in ENV_NAMES_T] + \
         [('gpu_used_start_mib', '1234'), ('disk_free_gb_kit', '100'), ('disk_free_gb_log', '50'),
          ('tool_sha256_wrapper', 'b' * 64), ('tool_sha256_reader', 'c' * 64), ('runner_sha256', 'd' * 64), ('runner_log_sha256', 'e' * 64),
@@ -902,6 +915,25 @@ def meta_text(**over):
                 order.append(k)
             d[k] = str(v)
     return ''.join('%s=%s\n' % (k, d[k]) for k in order if k in d)
+
+
+def meta_a1(**over):
+    """시도 1 꼴 meta (한도 30000 · 시도 2 칸 없음)."""
+    base = dict(attempt=1, maxiter=A1, logdir='~/p6log_a1_x', outdir='~/sdcp/ca1_probe6_a1_x_arm1', attempt1_pin=None,
+                code_same_as_attempt1=None)
+    base.update(over)
+    return meta_text(**base)
+
+
+def failed_arm(limit):
+    """한도에 닿은 팔 (payload 가 .failed 로 남기는 꼴): 반복 수 = 한도 · 미수렴 표지 · 성분 상태 unconverged."""
+    af = arm_doc()
+    for path, val in ((S3 + 'unconverged', True), (S3 + 'cg_info', limit), (S3 + 'cg_iters', limit), (S3 + 'conv_cert.iters', limit),
+                      (S3 + 'conv_cert.info', limit), (S3 + 'conv_cert.ok', False), (S3 + 'conv_cert.pass_a', False),
+                      (S3 + 'conv_cert.resolve_iters', limit), (S3 + 'conv_cert.resolve_info', limit),
+                      (S3 + 'manifest.components', {'electronic': {'status': 'unconverged'}})):
+        dset(af, path, val)
+    return af
 
 
 ENV_TEXT = '''python=3.8.10
@@ -1107,12 +1139,12 @@ def suite_T(mod, rec):
             'cert_resolve_info': 0, 'cert_rtol_used': 1e-12, 'backend_used': 'gpu', 'backend_precond': 'jacobi',
             'backend_rtol': 1e-12, 'electronic_status': 'complete', 'electronic_backend_used': 'gpu'}
     got = {k: fld(r, k) for k in want}
-    rec('T01a 정상 폴더: rc 0 · PROBE_OK · 시도 번호 1 (meta)', r.rc == 0 and (r.rep or {}).get('verdict') == 'PROBE_OK'
-        and (r.rep or {}).get('attempt') == 1, (r.rc, r.out[-400:], r.err[-300:], (r.rep or {}).get('problems')))
+    rec('T01a 정상 폴더 (시도 2 꼴): rc 0 · PROBE_OK · 시도 번호 2 (meta)', r.rc == 0 and (r.rep or {}).get('verdict') == 'PROBE_OK'
+        and (r.rep or {}).get('attempt') == 2, (r.rc, r.out[-400:], r.err[-300:], (r.rep or {}).get('problems')))
     rec('T01b 허용 칸 값 (반복 수 · 잔차 · 판 전류 불균형 · 수렴 여부 · 백엔드 · 미지수 수)', got == want,
         {k: (got[k], want[k]) for k in want if got[k] != want[k]})
     rec('T01c 화면에 허용 칸이 보인다 (cg_iters · resolve_iters · imbalance · 시도)',
-        all(s in r.out for s in ('cg_iters', '48211', 'cert_resolve_iters', '913', 'cert_imbalance', '5.85345e-08', 'attempt 1')),
+        all(s in r.out for s in ('cg_iters', '48211', 'cert_resolve_iters', '913', 'cert_imbalance', '5.85345e-08', 'attempt 2')),
         r.out[:600])
     # T02 σ 누출 없음 (구조 + 수 찾기) · 붙잡아 둔 칸
     lk = no_leak(r)
@@ -1130,7 +1162,7 @@ def suite_T(mod, rec):
     rec('T03a 로그 진단: dof · 잔차 · STEP3 초 · maxiter · rtol · 준비 초 · 봉인 표지',
         (lg_.get('solve_n_dof'), lg_.get('done_resid'), lg_.get('done_step3_s'), lg_.get('cg_maxiter'), lg_.get('cg_rtol'),
          lg_.get('face_alpha_prep_s'), lg_.get('cjunc_prep_s'), lg_.get('sealed'), lg_.get('solve_backend'))
-        == (20885118, 3.3e-13, 9876, 400000, 1e-12, 41, 1312, True, 'GPU'), lg_)
+        == (20885118, 3.3e-13, 9876, int(A2), 1e-12, 41, 1312, True, 'GPU'), lg_)
     rec('T03b 시간: 전체 초 · 러너 rc · CG + 증서 구간 (표본 줄 수로) · 반복당 초 (위 한계) · 결과 줄이 있으면 풀이→끝 초는 없음',
         tm.get('wall_s') == 11900 and tm.get('cg_cert_s') == 9880 and tm.get('raster_prep_s') == 1400
         and abs((tm.get('cg_cert_s_per_iter') or 0) - 9880.0 / (48211 + 913)) < 1e-12 and is_missing(tm.get('solve_to_end_s')), tm)
@@ -1195,8 +1227,8 @@ def suite_T(mod, rec):
     rec('T06t 잘린 JSON = rc 4 (추정하지 않는다)', rr.rc == 4 and (rr.rep or {}).get('source') in ('none', 'outdir'), (rr.rc, rr.out[-200:]))
     # T07 미수렴
     for tag, edits in (('unconverged True', [(S3 + 'unconverged', True)]),
-                       ('cg_info = maxiter', [(S3 + 'cg_info', 400000), (S3 + 'conv_cert.info', 400000),
-                                              (S3 + 'cg_iters', 400000), (S3 + 'conv_cert.iters', 400000)]),
+                       ('cg_info = maxiter', [(S3 + 'cg_info', int(A2)), (S3 + 'conv_cert.info', int(A2)),
+                                              (S3 + 'cg_iters', int(A2)), (S3 + 'conv_cert.iters', int(A2))]),
                        ('증서 ok False (ⓒ)', [(S3 + 'conv_cert.ok', False), (S3 + 'conv_cert.pass_c', False)]),
                        ('상태 NOT_CERTIFIABLE', [(S3 + 'conv_cert.status', 'NOT_CERTIFIABLE'), (S3 + 'conv_cert.ok', False)]),
                        ('미수렴 + 잔차 · 불균형 null (payload 가 비유한을 null 로)', [(S3 + 'unconverged', True), (S3 + 'cg_resid', None),
@@ -1255,22 +1287,18 @@ def suite_T(mod, rec):
         rr = run_reader(mod, o, l_, k)
         rec('T11 로그에 봉인 안 된 σ 줄 (%s): rc 5 · 그 값은 어디에도 옮기지 않는다' % tag,
             rr.rc == 5 and (rr.rep or {}).get('verdict') == 'PROBE_REJECTED' and no_leak(rr) == [], (rr.rc, no_leak(rr)[:3]))
-    # T12 실패 남은 파일 (payload 가 .failed 로 남긴 진단본 · 러너 rc 1)
-    af = arm_doc()
-    for path, val in ((S3 + 'unconverged', True), (S3 + 'cg_info', 400000), (S3 + 'cg_iters', 400000), (S3 + 'conv_cert.iters', 400000),
-                      (S3 + 'conv_cert.info', 400000), (S3 + 'conv_cert.ok', False), (S3 + 'conv_cert.pass_a', False),
-                      (S3 + 'conv_cert.resolve_iters', 400000), (S3 + 'conv_cert.resolve_info', 400000),
-                      (S3 + 'manifest.components', {'electronic': {'status': 'unconverged'}})):
-        dset(af, path, val)
-    o, l_, k = make_case('t12_%d' % len(os.listdir(TD)), arm=None, log=runner_log(ok=False), meta=meta_text(runner_rc=1),
+    # T12 실패 남은 파일 (payload 가 .failed 로 남긴 진단본 · 러너 rc 1 · 시도 1 이 한도 30000 에 닿은 꼴)
+    af = failed_arm(int(A1))
+    o, l_, k = make_case('t12_%d' % len(os.listdir(TD)), arm=None, log=runner_log(ok=False, maxiter=int(A1)), meta=meta_a1(runner_rc=1),
                          failed={ARM + '.json.failed': af})
     rr = run_reader(mod, o, l_, k)
-    rec('T12a 실패 남은 파일: rc 3 · 출처 = 킷 런 폴더 (.failed) · 반복 수 = maxiter · 누출 없음',
-        rr.rc == 3 and (rr.rep or {}).get('source') == 'kit_run_failed' and fld(rr, 'cg_iters') == 400000
-        and fld(rr, 'cert_resolve_iters') == 400000 and no_leak(rr) == [], (rr.rc, (rr.rep or {}).get('source'), no_leak(rr)[:3]))
+    rec('T12a 실패 남은 파일 (시도 1 · 한도 30000): rc 3 · 출처 = 킷 런 폴더 (.failed) · 반복 수 = maxiter · 누출 없음',
+        rr.rc == 3 and (rr.rep or {}).get('source') == 'kit_run_failed' and fld(rr, 'cg_iters') == int(A1)
+        and fld(rr, 'cert_resolve_iters') == int(A1) and no_leak(rr) == [], (rr.rc, (rr.rep or {}).get('source'), no_leak(rr)[:3],
+                                                                            (rr.rep or {}).get('problems')))
     lg12 = (rr.rep or {}).get('log') or {}
     rec('T12b 미수렴 줄 · 증서 실패 줄 = 다시 적은 꼴 (info · 잔차 · ⓐⓑⓒⓓ · 불균형) · Δσ 값은 옮기지 않는다',
-        lg12.get('not_converged_info') == 400000 and lg12.get('not_converged_resid') == 2.3e-09
+        lg12.get('not_converged_info') == int(A1) and lg12.get('not_converged_resid') == 2.3e-09
         and lg12.get('cert_fail_pass') == [False, True, False, False] and lg12.get('cert_fail_imbalance') == 1.23e-05
         and scan_hits([json.dumps(lg12, ensure_ascii=False)], T_SEALED) == [], lg12)
     masked = lg12.get('masked_lines') or []
@@ -1390,8 +1418,11 @@ def suite_T(mod, rec):
         ('code_sha null (핀 증거 없음)', lambda a, r_: dset(a, S3 + 'manifest.code_sha', None), None, None),
         ('code_sha = <sha>+dirty-unknown', lambda a, r_: dset(a, S3 + 'manifest.code_sha', 'e93efb6be+dirty-unknown'), None, None),
         ('영수증에 ca_ext_request 없음 (tol 증거 없음)', lambda a, r_: r_.pop('ca_ext_request'), None, None),
+        ('영수증 cjunc 에 tol_ff_um 만 없음 (tol 증거 없음 · R_j 는 있음)', lambda a, r_: r_['ca_ext_request']['cjunc'].pop('tol_ff_um'), None, None),
+        ('영수증 step3_rtol 만 1e-8 (증서 rtol 은 1e-12)', lambda a, r_: r_.__setitem__('step3_rtol', 1e-8), None, None),
+        ('증서 rtol_used 만 1e-8 (영수증 rtol 은 1e-12)', lambda a, r_: dset(a, S3 + 'conv_cert.rtol_used', 1e-8), None, None),
         ('meta 에 pin 없음', None, meta_text(pin=None), None),
-        ('meta maxiter 1500000 · 로그 CG maxiter 30,000 (P2_EXTRA 가 안 먹음)', None, meta_text(maxiter=1500000), runner_log(maxiter=30000)),
+        ('meta maxiter 1500000 · 로그 CG maxiter 30,000 (P2_EXTRA 가 안 먹음)', None, None, runner_log(maxiter=30000)),
         ('영수증 · 증서 rtol 1e-8 (등록 1e-12 아님)', lambda a, r_: (dset(a, S3 + 'conv_cert.rtol_used', 1e-8), dset(a, S3 + 'manifest.backend_last_solve.rtol', 1e-8),
                                                          r_.__setitem__('step3_rtol', 1e-8)), None, None),
         ('meta aborted=1 · cap_term=1', None, meta_text(aborted=1, cap_term=1), None),
@@ -1429,7 +1460,7 @@ def suite_T(mod, rec):
         [x for x in m23 if has_digit(x)][:3])
     # T24 끝 표지 (결과 줄) 없이 멈춘 시도: 풀이 시작 줄 → 끝 시각 초를 따로 낸다 (반복 수 · 잔차는 한도 줄에서 · P6R-02)
     stopped = LOG_HEAD.format(arm=ARM, maxiter='30,000') + '  ⚠ STEP3 CG not converged (info=30000, resid=4.4e-07) — σ UNRELIABLE\n'
-    o, l_, k = make_case('t24_%d' % len(os.listdir(TD)), arm=None, log=stopped, meta=meta_text(runner_rc=143, aborted=1, maxiter=30000))
+    o, l_, k = make_case('t24_%d' % len(os.listdir(TD)), arm=None, log=stopped, meta=meta_a1(runner_rc=143, aborted=1))
     write_text(os.path.join(l_, 'samples.tsv'), '#epoch\telapsed_s\tlog_lines\trss_sum_kb\trss_max_kb\tgpu_used_mib\tgpu_ours_mib\tgpu_util\n'
                '%d\t0\t3\t1000\t900\t1234\t0\t3\n%d\t2000\t%d\t1000\t900\t1234\t0\t3\n' % (T0, T0 + 2000, len(stopped.split('\n')) - 1))
     for d, _ds, fs in os.walk(os.path.dirname(l_)):
@@ -1446,6 +1477,86 @@ def suite_T(mod, rec):
     rec('T25 보고를 못 씀 (없는 폴더): rc 4 · traceback 없음 · 화면 표 + READER_CRASH 줄',
         rr.rc == 4 and 'READER_CRASH' in rr.out and 'verdict' in rr.out and 'Traceback' not in rr.err + rr.out
         and scan_hits([rr.out, rr.err], T_SEALED) == [], (rr.rc, rr.out[-300:], rr.err[-300:]))
+    rec('T25b 정상 폴더 (T01): R_j 대조 = True (팔 이름 cj1000000 · 영수증 R_j_ohm = meta expect_rj 1e6)',
+        fld(r, 'rj_matches_registered') is True, fld(r, 'rj_matches_registered'))
+
+    def run_case(tag, arm=None, receipt=None, meta=None, log=None, arm_name=ARM, failed=None, extra=None):
+        o_, l2, k2 = make_case('%s_%d' % (tag, len(os.listdir(TD))), arm=arm, receipt=receipt, meta=meta, log=log, arm_name=arm_name,
+                               failed=failed, extra=extra)
+        return run_reader(mod, o_, l2, k2)
+
+    def conv_arm(iters):
+        a_ = arm_doc()
+        for path_, v_ in ((S3 + 'cg_iters', iters), (S3 + 'conv_cert.iters', iters)):
+            dset(a_, path_, v_)
+        return a_
+    # T26 시도 번호 ↔ 한도 짝 (P6R2-04 · 1 → 30000 · 2 → 1500000): 어긋나면 rc 4 (PROBE_OK 경로 · 미수렴 경로 둘 다)
+    for tag, kw, want_rc in (
+            ('시도 2 + 한도 30000 (블록 밖에서 a2 폴더 + 30000)', dict(arm=conv_arm(21234), meta=meta_text(maxiter=A1), log=runner_log(maxiter=int(A1))), 4),
+            ('시도 1 + 한도 1500000 (a1 폴더 + 본 한도)', dict(arm=arm_doc(), meta=meta_a1(maxiter=A2), log=runner_log(maxiter=int(A2))), 4),
+            ('시도 1 + 한도 400000 · 미수렴 남은 파일 (rc 3 경로)', dict(meta=meta_a1(maxiter=400000, runner_rc=1),
+                                                         log=runner_log(ok=False, maxiter=400000),
+                                                         failed={ARM + '.json.failed': failed_arm(400000)}), 4),
+            ('(대조) 시도 1 + 한도 30000 + 모인 팔 = PROBE_OK', dict(arm=conv_arm(21234), meta=meta_a1(), log=runner_log(maxiter=int(A1))), 0)):
+        rr = run_case('t26', **kw)
+        rec('T26 짝 (%s): rc %d · 누출 없음' % (tag, want_rc), rr.rc == want_rc and no_leak(rr) == [],
+            (rr.rc, (rr.rep or {}).get('problems'), no_leak(rr)[:3]))
+    # T27 시도 2 = 시도 1 과 같은 풀이 코드 (P6R2-03): meta 의 attempt1_pin · code_same_as_attempt1 이 없거나 다르면 rc 4 · 시도 1 에 그 칸이 있으면 모순 = rc 4
+    for tag, kw, want_rc in (
+            ('시도 2 meta 에 attempt1_pin 없음', dict(arm=arm_doc(), meta=meta_text(attempt1_pin=None)), 4),
+            ('시도 2 meta 에 code_same_as_attempt1 없음', dict(arm=arm_doc(), meta=meta_text(code_same_as_attempt1=None)), 4),
+            ('시도 2 meta code_same_as_attempt1=0', dict(arm=arm_doc(), meta=meta_text(code_same_as_attempt1=0)), 4),
+            ('시도 1 meta 에 attempt1_pin (시도 2 칸 · 모순)', dict(arm=conv_arm(21234), meta=meta_a1(attempt1_pin=PIN_FIX),
+                                                         log=runner_log(maxiter=int(A1))), 4),
+            ('시도 2 미수렴 (rc 3 경로) · attempt1_pin 없음', dict(meta=meta_text(attempt1_pin=None, runner_rc=1), log=runner_log(ok=False),
+                                                        failed={ARM + '.json.failed': failed_arm(int(A2))}), 4),
+            ('(대조) 시도 2 미수렴 · 시도 2 칸 있음 = rc 3', dict(meta=meta_text(runner_rc=1), log=runner_log(ok=False),
+                                                      failed={ARM + '.json.failed': failed_arm(int(A2))}), 3)):
+        rr = run_case('t27', **kw)
+        rec('T27 시도 1 과 같은 코드 칸 (%s): rc %d · 누출 없음' % (tag, want_rc), rr.rc == want_rc and no_leak(rr) == [],
+            (rr.rc, (rr.rep or {}).get('problems'), no_leak(rr)[:3]))
+    # T28 시도 1 의 정상 끝 (rc 3) 에도 신원 · 등록 값 · 기록 대조 (P6R2-05 · 리뷰어 a1identity 꼴): 어긋나면 rc 4
+    rcp_noarms = receipt_doc()
+    rcp_noarms.pop('arms')
+    rcp_rj = receipt_doc()
+    rcp_rj['ca_ext_request']['cjunc']['R_j_ohm'] = 100000.0
+    rcp_tol = receipt_doc()
+    rcp_tol['ca_ext_request']['cjunc']['tol_ff_um'] = 0.05
+
+    def a1case(arm_edit=None, receipt=None, meta_over=None, log_maxiter=int(A1), extra=None, arm_name=ARM):
+        a_ = failed_arm(int(A1))
+        if arm_edit:
+            arm_edit(a_)
+        mo = dict(runner_rc=1)
+        mo.update(meta_over or {})
+        return dict(meta=meta_a1(**mo), log=runner_log(ok=False, maxiter=log_maxiter), receipt=receipt, extra=extra,
+                    failed={arm_name + '.json.failed': a_})
+    for tag, kw, want_rc in (
+            ('(대조) 정직한 시도 1 · 한도에 닿음', a1case(), 3),
+            ('다른 침대 (입력 지문 다름)', a1case(arm_edit=lambda a_: dset(a_, S3 + 'manifest.input_files.se', '0' * 16)), 4),
+            ('깨끗하지 않은 코드 (+dirty)', a1case(arm_edit=lambda a_: dset(a_, S3 + 'manifest.code_sha', 'e93efb6be+dirty')), 4),
+            ('다른 핀 (meta pin)', a1case(meta_over=dict(pin='a' * 40)), 4),
+            ('로그 maxiter 400000 ↔ meta 30000', a1case(log_maxiter=400000), 4),
+            ('meta aborted=1 · cap_term=1 · orphans=2', a1case(meta_over=dict(aborted=1, cap_term=1, orphans=2)), 4),
+            ('meta git_lines_after=5 · solve_started=0', a1case(meta_over=dict(git_lines_after=5, solve_started=0)), 4),
+            ('meta pythonpath_set=1', a1case(meta_over=dict(pythonpath_set=1)), 4),
+            ('meta kit_run_matches_s0=0', a1case(meta_over=dict(kit_run_matches_s0=0)), 4),
+            ('영수증 arms 없음', a1case(receipt=rcp_noarms), 4),
+            ('영수증 R_j_ohm 1e5 (등록 1e6 아님)', a1case(receipt=rcp_rj), 4),
+            ('영수증 tol_ff ≠ S0 계획', a1case(receipt=rcp_tol), 4),
+            ('출력 폴더에 모르는 파일 (기록 불완전)', a1case(extra={'notes.dat': 'x'}), 4)):
+        rr = run_case('t28', **kw)
+        rec('T28 시도 1 의 정상 끝에도 대조 (%s): rc %d · 누출 없음' % (tag, want_rc), rr.rc == want_rc and no_leak(rr) == [],
+            (rr.rc, (rr.rep or {}).get('problems'), no_leak(rr)[:3]))
+    # T29 PROBE_OK 경로의 남은 셋 (P6R2-05 · 리뷰어 failopen 남은 꼴): 영수증 arms 없음 · 등록점 밖 R_j · PYTHONPATH 가 남은 러너 → rc 4
+    for tag, kw in (('영수증 arms 없음', dict(arm=arm_doc(), receipt=rcp_noarms)),
+                    ('등록점 밖 R_j 팔 이름 (cj100000)', dict(arm=arm_doc(), arm_name=ARM.replace('cj1000000', 'cj100000'))),
+                    ('영수증 R_j_ohm 1e5', dict(arm=arm_doc(), receipt=rcp_rj)),
+                    ('meta pythonpath_set=1 (러너에 PYTHONPATH 가 남음)', dict(arm=arm_doc(), meta=meta_text(pythonpath_set=1))),
+                    ('meta 에 expect_rj 없음', dict(arm=arm_doc(), meta=meta_text(expect_rj=None)))):
+        rr = run_case('t29', **kw)
+        rec('T29 PROBE_OK 경로 (%s): rc 4 (PROBE_OK 아님) · 누출 없음' % tag, rr.rc == 4 and no_leak(rr) == [],
+            (rr.rc, (rr.rep or {}).get('problems'), no_leak(rr)[:3]))
 
 
 @case('T 판독기 (합성 폴더)')
@@ -1496,7 +1607,7 @@ MUTANTS = (
     ('거부 표지를 안 봄', [("if nm.startswith('.rejected_'):", "if nm.startswith('.rejected__never'):")]),
     ('두 팔을 받음', [("if len(arms) > 1:", "if len(arms) > 99:")]),
     ('팔 번호를 안 봄', [("elif m.group(1) != '0':", "elif False:")]),
-    ('영수증 팔 수를 안 봄', [("if receipt.get('receipt_arms') not in (1,) and not is_missing(receipt.get('receipt_arms')):", "if False:")]),
+    ('영수증 팔 수를 안 봄', [("if receipt.get('receipt_arms') != 1:", "if False:")]),
     ('모르는 파일을 안 봄', [("    if unknown:", "    if False:")]),
     ('미수렴을 안 봄', [("if f.get('unconverged') is not False:", "if False:")]),
     ('상태를 안 봄', [("if isinstance(st, str) and st != 'POSITIVE_SOLVED':", "if False:")]),
@@ -1524,8 +1635,10 @@ MUTANTS = (
     ('핀 증거 없음을 받음', [("if f.get('code_matches_pin') is False or (idreq and f.get('code_matches_pin') is not True):",
                             "if f.get('code_matches_pin') is False:")]),
     ('maxiter 대조를 안 봄', [("if not isinstance(m_.get('maxiter'), int) or log.get('cg_maxiter') != m_.get('maxiter'):", "if False:")]),
-    ('rtol 대조를 안 봄', [("if xr is None or receipt.get('receipt_step3_rtol') != xr or f.get('cert_rtol_used') != xr:", "if False:")]),
-    ('meta 기대 백엔드를 안 봄', [("if not isinstance(xb, str) or rb != xb or eb != xb or f.get('backend_used') != xb:", "if False:")]),
+    ('rtol 대조를 안 봄 (영수증)', [("if xr is None or receipt.get('receipt_step3_rtol') != xr:", "if False:")]),
+    ('rtol 대조를 안 봄 (증서)', [("if (rc == RC_OK and cr != xr) or (isinstance(cr, float) and cr != xr):", "if False:")]),
+    ('meta 기대 백엔드를 안 봄', [("if not isinstance(xb, str) or rb != xb or (rc == RC_OK and (eb != xb or bu != xb)) or (isinstance(bu, str) and bu != xb):",
+                                  "if False:")]),
     ('meta 깨끗함 (aborted · orphans · git …) 을 안 봄', [("                    if m_.get(key) != want:", "                    if False:")]),
     ('null 이면 미완 (미수렴 순서를 되돌림)', [("        elif miss and said_unconverged:", "        elif False:")]),
     ('가린 줄 뒤쪽을 버림 (앞 60 줄만)', [("                tail = (tail + [ml])[-MASK_KEEP:]", "                pass")]),
@@ -1534,6 +1647,16 @@ MUTANTS = (
     ('보고를 못 쓰면 예외 (rc 1)', [("    except (OSError, ValueError) as e:", "    except ZeroDivisionError as e:")]),
     ('유니코드 숫자를 안 가림', [(r"|\d+(?:[.,]\d+)*(?:[eE][-+" + _BSU + r"]?\d+)?|", r"|[0-9]+(?:[.,][0-9]+)*(?:[eE][-+]?[0-9]+)?|")]),
     ('풀이 시작 → 끝 초를 안 냄', [("            timing['solve_to_end_s'] = end - tmark['solve']", "            timing['solve_to_end_s'] = missing('absent')")]),
+    # ── 2 회차 고침의 새 검사 (P6R2-03 · 04 · 05) 가 시험에 묶였는가
+    ('짝 (시도 ↔ 한도) 을 안 봄', [("if att not in ATTEMPT_MAXITER or m_.get('maxiter') != ATTEMPT_MAXITER[att]:", "if False:")]),
+    ('시도 2 의 attempt1 칸을 안 봄', [("if att == 2 and not (isinstance(m_.get('attempt1_pin'), str) and m_.get('code_same_as_attempt1') == 1):", "if False:")]),
+    ('시도 1 의 시도 2 칸 모순을 안 봄', [("if att == 1 and ('attempt1_pin' in m_ or 'code_same_as_attempt1' in m_):", "if False:")]),
+    ('rc 3 경로의 대조를 끔 (rc 0 만)', [("        if rc in (RC_OK, RC_NOT_CONVERGED):\n            # identity", "        if rc == RC_OK:\n            # identity")]),
+    ('rc 3 에서 기록 문제를 무시 (rc 0 만 4 로)', [("        if incomplete and rc in (RC_OK, RC_NOT_CONVERGED):", "        if incomplete and rc == RC_OK:")]),
+    ('R_j 대조를 안 봄', [("if args.logdir and arm_path is not None and f.get('rj_matches_registered') is not True:", "if False:")]),
+    ('R_j 팔 이름을 안 봄', [("(float(rj) == xj) and ('_cj%d_' % int(xj)) in os.path.basename(arm_path)", "(float(rj) == xj)")]),
+    ('pythonpath_set 을 안 봄', [("('kit_run_matches_s0', 1), ('solve_started', 1), ('pythonpath_set', 0)):", "('kit_run_matches_s0', 1), ('solve_started', 1)):")]),
+    ('영수증 arms 없음을 받음', [("if receipt.get('receipt_arms') != 1:", "if receipt.get('receipt_arms') not in (1,) and not is_missing(receipt.get('receipt_arms')):")]),
     # ── 리뷰어 변이 33 (mut_reader.py · 11-10): 같은 꼴 · 같은 자리
     ('리뷰 R01 보고: σ %.17g', _note("'%.17g' % _sg")), ('리뷰 R02 보고: σ %.6g', _note("'%.6g' % _sg")),
     ('리뷰 R03 보고: σ %.5g', _note("'%.5g' % _sg")), ('리뷰 R04 보고: σ %.4g', _note("'%.4g' % _sg")),
@@ -1613,9 +1736,11 @@ def wrapper_axes():
 
 
 def runner_cmd_line(maxiter, outdir='<O>', w='<W>'):
-    """감시 셸이 내는 러너 명령의 글 (command.txt 의 둘째 줄 꼴 · 시험의 독립 구성: 등록 축 차례 + P2_EXTRA + OUTDIR + PYTHONUNBUFFERED)."""
+    """감시 셸이 내는 러너 명령의 글 (command.txt 의 둘째 줄 꼴 · 시험의 독립 구성: BASH_ENV · SHELLOPTS 를 뺀 env (P6R2-06) + 등록 축 차례 +
+    P2_EXTRA + OUTDIR + PYTHONUNBUFFERED)."""
     axes = ' '.join('%s=%s' % (k, v) for k, v in wrapper_axes_ordered())
-    return 'env %s P2_EXTRA="--step3-maxiter %s" OUTDIR=%s PYTHONUNBUFFERED=1 bash %s/%s' % (axes, maxiter, outdir, w, RUNNER_REL)
+    return 'env -u BASH_ENV -u SHELLOPTS %s P2_EXTRA="--step3-maxiter %s" OUTDIR=%s PYTHONUNBUFFERED=1 bash %s/%s' % (
+        axes, maxiter, outdir, w, RUNNER_REL)
 
 
 def watcher_cmd_line(maxiter):
@@ -1702,10 +1827,21 @@ def t_S():
     chk('S03e s_min = 0 µm 의 근거 줄이 등록 R §2-1b 에 있다 (1저자 11-09) · S0 계획 run_dir_name = 시험 상수',
         bool(re.search(r's_min 개발 단계 선택 = 0 .m \(바닥만\)', read_text(REG_DOC))) and float(wa.get('CJUNC_S_MIN_UM')) == 0.0
         and plan['source']['run_dir_name'] == S0_RUN, plan['source'].get('run_dir_name'))
-    cmdl = re.search(r'^CMD=\((.*)\)$', read_text(WRAPPER), re.M)
+    wtxt = read_text(WRAPPER)
+    cmdl = re.search(r'^CMD=\((.*)\)$', wtxt, re.M)
     chk('S03f 감시 셸이 러너에 주는 env = 등록 축 + P2_EXTRA + OUTDIR + PYTHONUNBUFFERED=1 (SIGMA_VGCF_OVERRIDE · --show-results 없음)',
         'SIGMA_VGCF_OVERRIDE' not in wa and cmdl is not None
         and cmdl.group(1) == '"${AXES[@]}" "P2_EXTRA=--step3-maxiter $MAXITER" "OUTDIR=$O" PYTHONUNBUFFERED=1', cmdl and cmdl.group(1))
+    launch = [ln for ln in wtxt.split('\n') if ln.startswith('setsid ') and '$RUNNER' in ln]
+    gates = [ln for ln in wtxt.split('\n') if 'PYTHONUTF8=1 python3 "$W/scripts/check_' in ln]
+    chk('S03h 러너 · 미리 돌리는 런 전 관문 = env -u BASH_ENV -u SHELLOPTS (RENV) + CMD · 감시 셸 머리에 set +m (작업 제어 끔 · P6R2-06)',
+        re.search(r'^RENV=\(env -u BASH_ENV -u SHELLOPTS\)$', wtxt, re.M) is not None and len(launch) == 1
+        and '"${RENV[@]}" "${CMD[@]}" bash "$RUNNER"' in launch[0] and len(gates) == 2
+        and all(g.startswith('"${RENV[@]}" "${CMD[@]}" PYTHONUTF8=1 python3') for g in gates)
+        and re.search(r'^set -u\numask 022\nset \+m', wtxt, re.M) is not None, (launch, gates))
+    code_w = re.search(r'^CODE_PATHS=\((.*)\)$', wtxt, re.M)
+    chk('S03i 감시 셸의 풀이 코드 목록 (CODE_PATHS) = 시험의 독립 표 (P6R2-03)', code_w is not None and tuple(code_w.group(1).split()) == SOLVE_CODE,
+        code_w and code_w.group(1))
     psha = sha256_file(os.path.join(ROOT, S0PLAN_REL))
     chk('S03g 원장 줄 초안이 적은 S0 계획 sha256 (앞 8 · 뒤 6 자리) = 리포의 계획 파일 · 감시 셸의 계획 경로 = 시험 상수',
         ('%s…%s' % (psha[:8], psha[-6:])) in read_text(LEDGER_MD) and ('S0PLAN_REL=%s\n' % S0PLAN_REL) in read_text(WRAPPER), psha)
@@ -1729,6 +1865,13 @@ def t_S():
     chk('S04f 블록이 감시 셸을 띄우는 줄 = 인자 꼴 <W> <O> <L> <PIN> <MAXITER> · 출력 · 로그 폴더 이름에 시도 번호',
         'setsid nohup bash "$T/run_probe6.sh" "$W" "$O" "$L" "$PIN" "$MAXITER" > "$L/nohup.out" 2>&1 < /dev/null &' in blk
         and 'O="$HOME/sdcp/ca1_probe6_a${ATTEMPT}_${STAMP}_arm1"' in blk and 'L="$HOME/p6log_a${ATTEMPT}_${STAMP}"' in blk, '')
+    code_b = re.search(r'^CODE="([^"]*)"$', blk, re.M)
+    chk('S04g 블록의 풀이 코드 목록 (CODE) = 시험의 독립 표 = 감시 셸 목록 (P6R2-03) · 블록이 git diff --quiet 로 그 목록만 본다',
+        code_b is not None and tuple(code_b.group(1).split()) == SOLVE_CODE and 'diff --quiet "$P1" "$PIN" -- $CODE' in blk,
+        code_b and code_b.group(1))
+    ig = blk.find('case "$M" in *STOP:*) exit 2;; esac')
+    chk('S04h 블록은 STOP 줄을 찍은 뒤 진행 · 멈춤 · "DONE appears" 안내를 찍지 않는다 (STOP 판정이 안내 줄보다 앞 · P6R2-07)',
+        ig >= 0 and blk.find('[p6] when done:') > ig and blk.find('[p6] progress:') > ig, ig)
     # 원장 줄 초안
     chk('S05a 원장 줄 초안의 명령 줄 넷 = 감시 셸 두 줄 (30000 · 1500000) + 러너 두 줄 (등록 축 차례 + P2_EXTRA + OUTDIR + PYTHONUNBUFFERED=1)',
         sorted(lcmd) == sorted([watcher_cmd_line(v) for v in ATTEMPT_MAXITER.values()] + [runner_cmd_line(v) for v in ATTEMPT_MAXITER.values()]),
@@ -1793,9 +1936,57 @@ def t_S():
     i4, i5 = rd.find('## 4.'), rd.find('## 5.')
     s4 = rd[i4:i5] if 0 <= i4 < i5 else ''
     newnums = ('not_converged_info', 'not_converged_resid', 'solve_to_end_s', 'masked_lines_dropped', 'gpu_used_start_mib',
-               'disk_free_gb_kit', 'orphans', 'env_')
+               'disk_free_gb_kit', 'orphans', 'env_', 'attempt1_pin', 'code_same_as_attempt1', 'expect_rj', 'pythonpath_removed',
+               'rj_matches_registered')
     chk('S13 README §4 에 새로 내는 수마다 "σ 를 되짚을 수 없다" 까닭 줄 (이름이 §4 에 있다)', all(n in s4 for n in newnums),
         [n for n in newnums if n not in s4])
+    # S14 문서 (P6R2-01 · 03 · 07 · 08): 시도 2 = 풀이를 시작한 시도 1 (solve_started=1) 의 DONE 뒤 (원장 §3 2 번 줄 · 블록 머리 · README §3) ·
+    #     README §9 의 정한 것 = 정함 (11-10) · 풀이 코드 목록 (README §9 · 원장 §3) · 블록 "중간에 멈추려면" 의 런 전 관문 줄 · README §7 한계 · 시험 수
+    ledt = read_text(lf) if os.path.exists(lf) else ''
+    l3 = ledger_section3(ledt)
+    row2 = [ln for ln in l3.split('\n') if ln.startswith('| 2 |')]
+    bhead = bmd[:bmd.find('```')]
+    i3, i4b = rd.find('## 3.'), rd.find('## 4.')
+    r3 = [ln for ln in rd[i3:i4b].split('\n') if ln.startswith('| 시도')]
+    i7, i8, i9 = rd.find('## 7.'), rd.find('## 8.'), rd.find('## 9.')
+    s7, s9 = rd[i7:i8], rd[i9:]
+    stopsec = bmd[bmd.find('## 중간에 멈추려면'):]
+    probs14 = [n for n, c in (
+        ('원장 §3 2 번 줄 solve_started=1', len(row2) == 1 and 'solve_started=1' in row2[0]),
+        ('블록 머리 solve_started=1', 'solve_started=1' in bhead),
+        ('README §3 시도 칸 solve_started=1', len(r3) == 1 and 'solve_started=1' in r3[0]),
+        ('README §9 정함 (11-10)', '정함 (11-10)' in s9 and '본 세션이 정할 것:' not in s9),
+        ('README §9 · 원장 §3 풀이 코드 목록', all(('`%s`' % p_) in s9 and ('`%s`' % p_) in l3 for p_ in SOLVE_CODE)),
+        ('원장 §3 code_same_as_attempt1 · 끝난 시도 번호 규칙', '`code_same_as_attempt1=1`' in l3 and 'WATCHER_FAILED' in l3
+         and '끝난 시도 번호' in l3),
+        ('원장 §3 검토 글 2 회차', '2 회차' in l3 and 'P6R2-01–08' in l3),
+        ('블록 "중간에 멈추려면" 의 런 전 관문 줄', '런 전 관문' in stopsec and '관문이 끝난 뒤' in stopsec),
+        ('README §7 한계 (P6R2-08)', '0.37σ' in s7 and '일부러 계산' in s7),
+        ('README §7 옛 시험 수 (269 PASS · 1 FAIL) 없음', '269 PASS · 1 FAIL' not in s7),
+        ('README §9 의 명령 줄 넷 = 원장 §3 글자 그대로', all(x in set(ln[4:] for ln in s9.split('\n') if ln.startswith('    ')) for x in need))) if not c]
+    chk('S14 문서 (시도 2 앞 조건 solve_started=1 세 곳 · README §9 정함 · 풀이 코드 목록 · 블록 멈춤 안내 · README §7 한계 · 시험 수)', probs14 == [],
+        probs14)
+    # S15 변이 사본은 문법이 성립한다 (W = bash -n · M = compile): 문법이 깨진 사본은 F · T 묶음이 엉뚱한 까닭 (구문 오류) 으로 "잡는다"
+    #     (2 회차 고침 중 W 변이 하나가 빈 then 절이라 구문 오류였고 F01a 가 그 까닭으로 잡았다 · 그 꼴을 막는다)
+    wsrc15, rsrc15 = read_text(WRAPPER), read_text(READER)
+    broken15 = []
+    for kind15, base15, muts15 in (('W', wsrc15, WRAPPER_MUTANTS), ('M', rsrc15, MUTANTS)):
+        for name15, pairs15 in muts15:
+            m15 = base15
+            for old15, new15 in pairs15:
+                m15 = m15.replace(old15, new15)
+            if kind15 == 'W':
+                ok15 = subprocess.run(['bash', '-n'], input=m15, capture_output=True, text=True).returncode == 0
+            else:
+                try:
+                    compile(m15, 'mutant.py', 'exec')
+                    ok15 = True
+                except SyntaxError:
+                    ok15 = False
+            if not ok15:
+                broken15.append('%s: %s' % (kind15, name15))
+    chk('S15 변이 사본 (W %d · M %d) 은 모두 문법이 성립한다 (W = bash -n · M = compile · 깨진 사본은 엉뚱한 까닭으로 잡힌다)'
+        % (len(WRAPPER_MUTANTS), len(MUTANTS)), broken15 == [], broken15)
 
 
 # ═════════════════════════ F · B · R 공용: 가짜 홈 · 핀 저장소 · 가짜 nvidia-smi · 가짜 ps ═════════════════════════
@@ -1822,6 +2013,11 @@ mkdir -p "$OUTDIR"
 cp "$D/receipt.json" "$OUTDIR/run_receipt.json"
 M="${P2_EXTRA##* }"
 MF="$(python3 -c 'import sys; print("{:,}".format(int(sys.argv[1])))' "$M" 2>/dev/null)"
+if [ "${PROBE6_FAKE_MODE:-ok}" = nosolve ]; then    # the payload stops before the solve line (GPU memory, cupy ...): no STEP3 solve line
+  echo "  STEP3: voxelizing conductive+SE grid (stand-in)"
+  echo "  STEP3 ABORT - the payload stopped before the solve line (stand-in)"
+  exit 1
+fi
 sed -e "s/@MAXITER_FMT@/$MF/" "$D/log_head.txt"
 echo "fake runner stderr line PROBE6_STDERR_MARK" >&2
 case "${PROBE6_FAKE_MODE:-ok}" in
@@ -1927,11 +2123,17 @@ PY_SHIM = '#!/usr/bin/env bash\ncase "$*" in *probe6_read.py*) if [ -n "${PROBE6
 
 
 def make_home(name, shim_text=None, np_cupy=False):
-    """가짜 홈: dem-venv (activate = PATH 앞에 가짜 python3 · nvidia-smi · ps) · sdcp/kit (S0 계획의 런 폴더 이름) · 가짜 cupy."""
+    """가짜 홈: dem-venv (activate = PATH 앞에 가짜 python3 · nvidia-smi · ps) · sdcp/kit (S0 계획의 런 폴더 이름) · 가짜 cupy.
+    가짜 cupy 는 venv 의 python3 가 스스로 찾는다 (진짜 venv 의 site-packages 꼴 · 감시 셸은 PYTHONPATH 를 걷어낸다 · P6R2-05) ·
+    PROBE6_NO_FAKEMODS=1 이면 못 찾는다 (cupy 를 못 불러오는 기계 꼴)."""
     home = os.path.join(TD, name)
     bind = os.path.join(home, 'dem-venv', 'bin')
     os.makedirs(bind)
-    write_text(os.path.join(bind, 'python3'), shim_text if shim_text is not None else PY_SHIM % os.path.abspath(sys.executable), 0o755)
+    shim = shim_text if shim_text is not None else PY_SHIM % os.path.abspath(sys.executable)
+    assert shim.startswith('#!/usr/bin/env bash\n'), shim[:40]
+    shim = shim.replace('#!/usr/bin/env bash\n', '#!/usr/bin/env bash\nif [ -z "${PROBE6_NO_FAKEMODS:-}" ]; then export PYTHONPATH="%s"; fi\n'
+                        % os.path.join(home, 'fakemods'), 1)
+    write_text(os.path.join(bind, 'python3'), shim, 0o755)
     write_text(os.path.join(bind, 'nvidia-smi'), FAKE_SMI, 0o755)
     write_text(os.path.join(bind, 'ps'), FAKE_PS.replace('@REAL_PS@', REAL_PS).replace('@TAG@', TAG), 0o755)
     write_text(os.path.join(bind, 'activate'), 'export VIRTUAL_ENV="%s/dem-venv"\nexport PATH="%s:$PATH"\n' % (home, bind))
@@ -1947,9 +2149,10 @@ def make_home(name, shim_text=None, np_cupy=False):
     return home
 
 
-def make_pin_repo(name, real_scripts=False, plan_inputs=None, plan_tol=None, runner_text=None, wrapper_patch=None):
+def make_pin_repo(name, real_scripts=False, plan_inputs=None, plan_tol=None, runner_text=None, wrapper_patch=None, reader_patch=None):
     """핀 저장소 (git 고정물): 감시 셸 · 판독기 사본 · S0 계획 · 러너 (가짜 또는 이 리포 scripts/ 사본) → (저장소, 핀 40-hex).
-    plan_inputs · plan_tol = S0 계획의 입력 지문 · tol_ff 만 바꾼다 · wrapper_patch = (옛 글, 새 글) 감시 셸 사본 고침 (시험 전용)."""
+    plan_inputs · plan_tol = S0 계획의 입력 지문 · tol_ff 만 바꾼다 · wrapper_patch · reader_patch = (옛 글, 새 글) 감시 셸 · 판독기 사본 고침
+    (시험 전용)."""
     repo = os.path.join(TD, name)
     os.makedirs(os.path.join(repo, TOOLS_REL))
     wsrc = read_text(WRAPPER_SRC or WRAPPER)
@@ -1957,7 +2160,11 @@ def make_pin_repo(name, real_scripts=False, plan_inputs=None, plan_tol=None, run
         assert wsrc.count(wrapper_patch[0]) == 1, wrapper_patch[0]
         wsrc = wsrc.replace(wrapper_patch[0], wrapper_patch[1])
     write_text(os.path.join(repo, TOOLS_REL, 'run_probe6.sh'), wsrc)
-    shutil.copy(READER, os.path.join(repo, TOOLS_REL, 'probe6_read.py'))
+    rsrc = read_text(READER)
+    if reader_patch:
+        assert rsrc.count(reader_patch[0]) == 1, reader_patch[0]
+        rsrc = rsrc.replace(reader_patch[0], reader_patch[1])
+    write_text(os.path.join(repo, TOOLS_REL, 'probe6_read.py'), rsrc)
     os.makedirs(os.path.dirname(os.path.join(repo, S0PLAN_REL)))
     shutil.copy(os.path.join(ROOT, S0PLAN_REL), os.path.join(repo, S0PLAN_REL))
     if plan_inputs is not None or plan_tol is not None:
@@ -1990,11 +2197,8 @@ def fake_dir(name, pin, arm_name=ARM):
     dset(a, S3 + 'manifest.code_sha', pin[:9])
     with open(os.path.join(d, 'arm.json'), 'w', encoding='utf-8') as f:
         json.dump(a, f)
-    af = arm_doc()
-    for path, val in ((S3 + 'unconverged', True), (S3 + 'cg_info', 400000), (S3 + 'cg_iters', 400000), (S3 + 'conv_cert.iters', 400000),
-                      (S3 + 'conv_cert.info', 400000), (S3 + 'conv_cert.ok', False), (S3 + 'conv_cert.pass_a', False),
-                      (S3 + 'manifest.components', {'electronic': {'status': 'unconverged'}}), (S3 + 'manifest.code_sha', pin[:9])):
-        dset(af, path, val)
+    af = failed_arm(int(A1))                                      # 시도 1 이 한도 30000 에 닿은 꼴
+    dset(af, S3 + 'manifest.code_sha', pin[:9])
     with open(os.path.join(d, 'arm_failed.json'), 'w', encoding='utf-8') as f:
         json.dump(af, f)
     rc_ = receipt_doc()
@@ -2013,19 +2217,22 @@ _ENV_DROP = ('LEAN', 'VOX', 'ARMS', 'ARM_LIST', 'KITS', 'FIBRE_STAMP', 'BRIDGE_U
 
 
 def wrapper_env(home, fake=None, **over):
-    """감시 셸을 부르는 env: PYTHONUNBUFFERED 를 일부러 뺀다 (감시 셸이 러너에 준다 · F4) · 이 시험의 표지 (PROBE6_TEST_TAG)."""
+    """감시 셸을 부르는 env: PYTHONUNBUFFERED · PYTHONPATH 를 일부러 뺀다 (감시 셸이 러너에 PYTHONUNBUFFERED 를 주고 PYTHONPATH 는 걷는다 ·
+    가짜 cupy 는 venv 의 python3 가 찾는다) · 이 시험의 표지 (PROBE6_TEST_TAG)."""
     e = {k: v for k, v in os.environ.items() if not k.startswith(('SIGMA_', 'SDCP_', 'PTFE_', 'CJUNC', 'STEP3_', 'MPM_', 'P2_', 'PROBE6_'))
-         and k not in _ENV_DROP}
+         and k not in _ENV_DROP and k not in ('SHELLOPTS', 'BASHOPTS')}
     e.update(HOME=home, PATH=os.path.join(home, 'dem-venv', 'bin') + os.pathsep + os.environ.get('PATH', '/usr/bin:/bin'),
-             PYTHONPATH=os.path.join(home, 'fakemods'), PYTHONDONTWRITEBYTECODE='1', PROBE6_SAMPLE_S='1', PROBE6_TEST_TAG=TAG)
+             PYTHONDONTWRITEBYTECODE='1', PROBE6_SAMPLE_S='1', PROBE6_TEST_TAG=TAG)
     if fake:
         e.update(PROBE6_FAKE_DIR=fake, PROBE6_FAKE_ARM=ARM)
     e.update({k: str(v) for k, v in over.items()})
     return e
 
 
-def run_wrapper(repo, pin, home, tag, env, maxiter=MAXITER, out=None, lg=None, mk_log=True, timeout=180, wrapper=None, umask=None,
+def run_wrapper(repo, pin, home, tag, env, maxiter=None, out=None, lg=None, mk_log=True, timeout=180, wrapper=None, umask=None,
                 attempt=1):
+    """maxiter 기본 = 그 시도 번호의 등록 한도 (1 → 30000 · 2 → 1500000)."""
+    maxiter = ATTEMPT_MAXITER[attempt] if maxiter is None else maxiter
     out = out or os.path.join(home, 'sdcp', 'ca1_probe6_a%d_%s_arm1' % (attempt, tag))
     lg = lg or os.path.join(home, 'p6log_a%d_%s' % (attempt, tag))
     if mk_log and not os.path.isdir(lg):
@@ -2148,25 +2355,65 @@ def stop_line(r):
     return line[-1] if line else ''
 
 
+def safe_kill(pid):
+    """이 시험이 띄운 프로세스만 끝낸다: 번호 > 1 · 자기 / 부모 아님 · 살아 있음 · env 에 이 시험의 표지 (PROBE6_TEST_TAG) → SIGKILL."""
+    if not isinstance(pid, int) or pid <= 1 or pid in (os.getpid(), os.getppid()) or not proc_alive(pid):
+        return False
+    try:
+        with open('/proc/%d/environ' % pid, 'rb') as f:
+            if ('PROBE6_TEST_TAG=%s' % TAG).encode() not in f.read().split(b'\0'):
+                return False
+        os.kill(pid, signal.SIGKILL)
+    except OSError:
+        return False
+    return True
+
+
+#: 합성 로그 폴더 (시도 번호 검사 · P6R2-01 · 02): 감시 셸 · 블록이 보는 표지 · meta · status.log 의 꼴만
+START_LINE = '[probe6] 2026-11-10T00:00:00Z runner started - maxiter 30000, host RSS cap 40 GB, sampling every 10 s\n'
+WF_LINE = '[probe6] 2026-11-10T00:00:00Z WATCHER FAILED (rc 1) after the runner started - stopping the runner group\n'
+
+
+def lf_done(attempt, pin, solve=1):
+    return {'DONE': 'runner_rc=1 report_rc=3 attempt=%d orphans=0\n' % attempt,
+            'meta.txt': 'probe6_meta_version=2\nattempt=%d\npin=%s\nsolve_started=%d\n' % (attempt, pin, solve)}
+
+
+LF_WF_START = {'WATCHER_FAILED': 'rc=1\nrunner_started=1\n', 'status.log': START_LINE + WF_LINE}
+LF_WF_NOSTART = {'WATCHER_FAILED': 'rc=1\nrunner_started=1\n', 'status.log': WF_LINE}
+LF_STOPPED = {'STOPPED': 'reason=stand-in\nrunner_started=0\n', 'nohup.out': ''}
+
+
+def log_folder(home, name, files):
+    d = os.path.join(home, name)
+    os.makedirs(d)
+    for nm, body in files.items():
+        write_text(os.path.join(d, nm), body)
+    return d
+
+
 @case('F 감시 셸 (가짜 러너)')
 def t_F(pre='f'):
     repo, pin = make_pin_repo(pre + '_pin')
-    home = make_home(pre + '_home')
+    home = make_home(pre + '_home')            # 멈춤 조건 (F08) → 시도 1 (F09) → 시도 2 (F09d) 의 홈
     fd = fake_dir(pre + '_fake', pin)
-    lock = os.path.join(home, '.probe6.lock')
     bash_env = os.path.join(TD, pre + '_bashenv.sh')
     write_text(bash_env, '# BASH_ENV of the test (sourced by every non-interactive bash; does nothing)\n')
-    # F01 성공 경로 (부모 셸에 축 env · 걷어내기 목록의 이름꼴 · PYTHONVERBOSE · umask 002 를 일부러 둔다)
-    env = wrapper_env(home, fd, SIGMA_VGCF_OVERRIDE='7854', LEAN='4', VOX='0.4', P2_EXTRA='--show-results', CJUNC_SV_CF='1',
+    # F01 성공 경로 (시도 1 · 한도 30000 · 따로 홈: 끝난 시도 1 은 같은 홈의 다음 시도 1 을 막는다 · P6R2-02)
+    #     부모 셸에 축 env · 걷어내기 목록의 이름꼴 · PYTHONVERBOSE · PYTHONPATH (가짜) · BASH_ENV · umask 002 를 일부러 둔다
+    h1 = make_home(pre + '_home_ok')
+    lock1 = os.path.join(h1, '.probe6.lock')
+    env = wrapper_env(h1, fd, SIGMA_VGCF_OVERRIDE='7854', LEAN='4', VOX='0.4', P2_EXTRA='--show-results', CJUNC_SV_CF='1',
                       MPM_PERIODIC_SIGMA='1', KITS='kit_DBE_sdcp1um_vgcf100', OUTDIR='/nonexistent/x', ARM_LIST='1,2', P2_ATTEMPT='1',
                       FIBRE_STAMP='point', SDCP_YIELD_VGCF='1', PTFE_BLOCK_UM='0.1', EXPECT_PROTOCOL='p9', STEP3_X='1',
-                      PYTHONVERBOSE='1', CUDA_VISIBLE_DEVICES='0', OPENBLAS_CORETYPE='SkylakeX', BASH_ENV=bash_env)
-    r = run_wrapper(repo, pin, home, 'ok', env, umask=0o002)
+                      PYTHONVERBOSE='1', CUDA_VISIBLE_DEVICES='0', OPENBLAS_CORETYPE='SkylakeX', BASH_ENV=bash_env,
+                      PYTHONPATH=os.path.join(h1, 'decoy_pythonpath'))
+    r = run_wrapper(repo, pin, h1, 'ok', env, umask=0o002)
     chk('F01a 성공 경로: 감시 셸 rc 0 · 러너 rc 0 · 판독 rc 0 (PROBE_OK) · DONE · STOPPED / WATCHER_FAILED 없음 · watcher.pid 지움 · 잠금 풂',
         r.rc == 0 and r.meta.get('runner_rc') == '0' and (r.rep or {}).get('verdict') == 'PROBE_OK'
         and os.path.exists(os.path.join(r.lg, 'DONE')) and not os.path.exists(os.path.join(r.lg, 'STOPPED'))
         and not os.path.exists(os.path.join(r.lg, 'WATCHER_FAILED')) and not os.path.exists(os.path.join(r.lg, 'watcher.pid'))
-        and not os.path.exists(lock), (r.rc, r.so[-900:], r.se[-300:], (r.rep or {}).get('problems')))
+        and not os.path.exists(lock1), (r.rc, r.so[-900:], r.se[-300:], (r.rep or {}).get('problems')))
     f01b = [n for n, c in (('prefix', all(ln.startswith('[probe6] ') for ln in r.so.splitlines())), ('stderr', r.se == ''),
                            ('no STEP3 line', re.search(r'STEP3[ :]', r.so) is None), ('no [p2]', '[p2]' not in r.so),
                            ('cg_iters', 'cg_iters' in r.so and '48211' in r.so),
@@ -2179,7 +2426,7 @@ def t_F(pre='f'):
     chk('F01c 러너 원문 (stdout · stderr) 은 로그 폴더의 runner.log 에만 (감시 셸 화면 · watcher.err 에 없다)',
         '7133.31' in raw and 'STEP3 solve:' in raw and 'PROBE6_STDERR_MARK' in raw and 'PROBE6_STDERR_MARK' not in wer + r.so + r.se,
         (raw[:200], wer[-200:]))
-    bp = bundle_problems(r.lg, T_SEALED, home)
+    bp = bundle_problems(r.lg, T_SEALED, h1)
     names, members = bundle_members(r.lg)
     chk('F01d 묶음: 허용된 이름만 · 파일마다 닫힌 꼴 · SHA256SUMS = 실제 · σ 류 수 · 홈 경로 없음', bp == [], bp[:6])
     st_now = read_text(os.path.join(r.lg, 'status.log'))
@@ -2194,7 +2441,7 @@ def t_F(pre='f'):
         os.path.exists(os.path.join(r.lg, 'probe6_reader.err')) and read_text(os.path.join(r.lg, 'probe6_reader.err')) == '', '')
     # F02 러너가 받은 env · cwd · umask · 런 전 관문
     renv = dict(ln.split('=', 1) for ln in read_text(os.path.join(fd, 'runner_env.txt')).splitlines() if '=' in ln)
-    want = dict(AXES, P2_EXTRA='--step3-maxiter ' + MAXITER, OUTDIR=r.out)
+    want = dict(AXES, P2_EXTRA='--step3-maxiter ' + A1, OUTDIR=r.out)
     axis_like = {k: v for k, v in renv.items() if k.startswith(('SIGMA_', 'SDCP_', 'PTFE_', 'CJUNC', 'STEP3_', 'MPM_', 'P2_'))
                  or k in ('LEAN', 'VOX', 'ARMS', 'ARM_LIST', 'KITS', 'FIBRE_STAMP', 'BRIDGE_UM', 'OUTDIR', 'EXPECT_PROTOCOL', 'EXPECT_BACKEND')}
     chk('F02a 러너가 받은 축 env = 등록 축 + P2_EXTRA + OUTDIR 뿐 (부모 셸의 SIGMA_VGCF_OVERRIDE · LEAN=4 · FIBRE_STAMP · SDCP_YIELD_VGCF · '
@@ -2206,13 +2453,18 @@ def t_F(pre='f'):
         set(r.meta.get('scrubbed', '').split()) >= {'SIGMA_VGCF_OVERRIDE', 'LEAN', 'VOX', 'P2_EXTRA', 'ARM_LIST', 'FIBRE_STAMP',
                                                     'SDCP_YIELD_VGCF', 'PTFE_BLOCK_UM', 'EXPECT_PROTOCOL', 'STEP3_X'}, r.meta.get('scrubbed'))
     chk('F02d 러너 cwd = 킷 뿌리 (~/sdcp) · umask 0022',
-        read_text(os.path.join(fd, 'runner_cwd.txt')).strip() == os.path.realpath(os.path.join(home, 'sdcp'))
+        read_text(os.path.join(fd, 'runner_cwd.txt')).strip() == os.path.realpath(os.path.join(h1, 'sdcp'))
         and read_text(os.path.join(fd, 'runner_umask.txt')).strip() == '0022', read_text(os.path.join(fd, 'runner_cwd.txt')))
     ua = read_text(os.path.join(fd, 'gate_check_undefined_names_argv.txt')).split() if os.path.exists(
         os.path.join(fd, 'gate_check_undefined_names_argv.txt')) else []
     chk('F02e 러너의 런 전 관문 둘을 러너 시작 전에 같은 꼴로 돌렸다 (미정의 이름 검사의 파일 = 러너 글에 적힌 파일) · meta pregate 1',
         ua == [os.path.join(repo, 'scripts', 'mpm_webapp_payload.py'), os.path.join(repo, 'scripts', 'step3_sigma.py')]
         and os.path.exists(os.path.join(fd, 'gate_check_method_discipline_argv.txt')) and r.meta.get('pregate') == '1', ua)
+    chk('F02f 러너 env 에 PYTHONPATH · BASH_ENV · SHELLOPTS 가 없다 (부모 셸에 PYTHONPATH · BASH_ENV 가 있었다 · 감시 셸이 PYTHONPATH 를 걷고 '
+        'env -u BASH_ENV -u SHELLOPTS 로 띄운다 · P6R2-05 · 06) · meta pythonpath_removed 1 · pythonpath_set 0 · env_BASH_ENV = set (부모 셸 기록)',
+        not [k for k in ('PYTHONPATH', 'BASH_ENV', 'SHELLOPTS') if k in renv] and r.meta.get('pythonpath_removed') == '1'
+        and r.meta.get('pythonpath_set') == '0' and r.meta.get('env_BASH_ENV') == 'set',
+        ([k for k in ('PYTHONPATH', 'BASH_ENV', 'SHELLOPTS') if k in renv], r.meta.get('pythonpath_removed'), r.meta.get('pythonpath_set')))
     # F03 실제 파일 · 폴더 모드 (부모 umask 002 였다)
     bad = []
     for base in (r.out, r.lg):
@@ -2222,13 +2474,16 @@ def t_F(pre='f'):
                     bad.append(nm)
     chk('F03 만든 파일 · 폴더에 그룹 · 기타 쓰기 비트 없음 (umask 022) · 메타 mode_bad 0', bad == [] and r.meta.get('mode_bad') == '0'
         and r.meta.get('umask') == '0022', bad[:5])
-    chk('F04a 메타: 판 2 · 시도 1 · 핀 · maxiter · 기대 rtol · 백엔드 · 시작 · 끝 · 전체 초 · 도구 sha256 · 킷 런 = S0 계획의 런 폴더 · 풀이 시작 1 · 고아 0',
+    chk('F04a 메타: 판 2 · 시도 1 · 핀 · maxiter (시도 1 = 30000) · 기대 rtol · 백엔드 · R_j · 시작 · 끝 · 전체 초 · 도구 sha256 · 킷 런 = S0 계획의 런 폴더 · '
+        '풀이 시작 1 · 고아 0 · 시도 2 칸 없음',
         r.meta.get('probe6_meta_version') == '2' and r.meta.get('attempt') == '1' and r.meta.get('pin') == pin
-        and r.meta.get('maxiter') == MAXITER and r.meta.get('expect_rtol') == '1e-12' and r.meta.get('expect_backend') == 'gpu'
+        and r.meta.get('maxiter') == A1 and r.meta.get('expect_rtol') == '1e-12' and r.meta.get('expect_backend') == 'gpu'
+        and r.meta.get('expect_rj') == '1e6'
         and int(r.meta.get('wall_s', -1)) >= 2 and r.meta.get('tool_sha256_reader') == sha256_file(READER)
         and r.meta.get('tool_sha256_wrapper') == sha256_file(os.path.join(repo, TOOLS_REL, 'run_probe6.sh'))
         and r.meta.get('kit_run') == S0_RUN and r.meta.get('kit_run_matches_s0') == '1' and r.meta.get('solve_started') == '1'
-        and r.meta.get('orphans') == '0' and r.meta.get('orphans_left') == '0' and (r.rep or {}).get('attempt') == 1, r.meta)
+        and r.meta.get('orphans') == '0' and r.meta.get('orphans_left') == '0' and (r.rep or {}).get('attempt') == 1
+        and 'attempt1_pin' not in r.meta and 'code_same_as_attempt1' not in r.meta, r.meta)
     chk('F04b 메타의 폴더 = 홈을 ~ 로 접은 꼴 · env 이름 여섯 = 있음 / 없음 / 짧은 값 (값 전체는 짧은 이름 · 숫자일 때만) · GPU · 디스크',
         r.meta.get('outdir') == '~/sdcp/ca1_probe6_a1_ok_arm1' and r.meta.get('logdir') == '~/p6log_a1_ok'
         and r.meta.get('env_CUDA_VISIBLE_DEVICES') == 'value:0' and r.meta.get('env_OPENBLAS_CORETYPE') == 'value:SkylakeX'
@@ -2237,7 +2492,7 @@ def t_F(pre='f'):
         and re.fullmatch(r'[0-9]+', r.meta.get('disk_free_gb_kit', '')) and re.fullmatch(r'[0-9]+', r.meta.get('disk_free_gb_log', '')),
         dict((k, r.meta.get(k)) for k in ('outdir', 'logdir', 'env_CUDA_VISIBLE_DEVICES', 'env_BASH_ENV', 'gpu_used_start_mib', 'disk_free_gb_kit')))
     cmdt = read_text(os.path.join(r.lg, 'command.txt')).splitlines()
-    want_cmd = runner_cmd_line(MAXITER, outdir='~/sdcp/ca1_probe6_a1_ok_arm1', w=repo)
+    want_cmd = runner_cmd_line(A1, outdir='~/sdcp/ca1_probe6_a1_ok_arm1', w=repo)
     chk('F05 command.txt = 실제로 돈 명령 = 원장 줄 초안의 러너 줄 꼴 (<O> · <W> · maxiter 자리만 채움) · cwd 줄',
         len(cmdt) == 2 and cmdt[0] == '# cwd: ~/sdcp' and cmdt[1] == want_cmd, (cmdt, want_cmd))
     envt = read_text(os.path.join(r.lg, 'env.txt'))
@@ -2255,6 +2510,7 @@ def t_F(pre='f'):
     # F08 멈춤 조건: 러너를 부르지 않는다 · 로그 폴더를 받은 뒤의 멈춤은 STOPPED 표지
     calls0 = len(read_text(os.path.join(fd, 'calls.txt')).splitlines())
     env2 = wrapper_env(home, fd)
+    lock = os.path.join(home, '.probe6.lock')
     stops = []
 
     def stop_case(label, needle, r2, marker=True):
@@ -2294,9 +2550,7 @@ def t_F(pre='f'):
     os.remove(os.path.join(home, 'sdcp', KIT, 'latest_run'))
     os.rename(os.path.join(home, 'sdcp', KIT, 'latest_run_x'), os.path.join(home, 'sdcp', KIT, 'latest_run'))
     shutil.rmtree(os.path.join(home, 'sdcp', KIT, 'run_other'))
-    e3 = dict(env2)
-    e3['PYTHONPATH'] = ''
-    stop_case('cupy 를 못 불러옴 (GPU 기대)', 'cupy cannot be imported', run_wrapper(repo, pin, home, 's11', e3))
+    stop_case('cupy 를 못 불러옴 (GPU 기대)', 'cupy cannot be imported', run_wrapper(repo, pin, home, 's11', dict(env2, PROBE6_NO_FAKEMODS='1')))
     kit_sh = os.path.join(home, 'sdcp', KIT, 'run_mpm.sh')
     write_text(kit_sh, FAKE_KIT_SH.replace(' --step3-gpu', ''))
     stop_case('킷 payload 줄에 --step3-gpu 없음 (CPU 로 풀고 러너가 팔을 받지 않는다)', 'no --step3-gpu', run_wrapper(repo, pin, home, 's12', env2))
@@ -2336,7 +2590,7 @@ def t_F(pre='f'):
     lg22 = os.path.join(home, 'p6log_a1_s22')
     os.makedirs(lg22)
     p = subprocess.Popen(['bash', os.path.join(repo, TOOLS_REL, 'run_probe6.sh'), repo, os.path.join(home, 'sdcp', 'ca1_probe6_a1_s22_arm1'),
-                          lg22, pin, MAXITER], env=dict(env2, PROBE6_FAKE_GATE='sleep'), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                          lg22, pin, A1], env=dict(env2, PROBE6_FAKE_GATE='sleep'), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                          stdin=subprocess.DEVNULL, text=True)
     for _ in range(100):
         if os.path.exists(os.path.join(lg22, 'pregate_discipline.log')):
@@ -2357,20 +2611,125 @@ def t_F(pre='f'):
     stops.append(('감시 셸이 러너 시작 전에 뜻밖에 끝남', 2 if r23.rc != 0 else 0,
                   'the watcher ended unexpectedly' in stp and 'runner_started=0' in stp and not os.path.exists(lock)
                   and 'runner not started' in stop_line(r23), stop_line(r23)[-170:]))
+    # 이번 고침의 멈춤 (P6R2-04 짝 · 로그 폴더 자리 · P6R2-01 시도 2 앞 조건): 이 홈에는 멈춘 시도 1 폴더뿐이다
+    stop_case('시도 1 · 한도 1500000 (짝이 아님 · P6R2-04)', 'attempt 1 runs with maxiter 30000', run_wrapper(repo, pin, home, 's24', env2, maxiter=A2))
+    stop_case('시도 2 · 한도 30000 (짝이 아님 · P6R2-04)', 'attempt 2 runs with maxiter 1500000',
+              run_wrapper(repo, pin, home, 's25', env2, maxiter=A1, attempt=2))
+    stop_case('로그 폴더가 홈 바로 밑이 아님 (앞 시도를 못 본다)', 'log folder must be directly in the home folder',
+              run_wrapper(repo, pin, home, 's26', env2, lg=os.path.join(home, 'sub', 'p6log_a1_s26')))
+    stop_case('시도 2 인데 끝난 시도 1 이 없음 (멈춘 시도 1 폴더뿐 · P6R2-01)', 'attempt 2 needs exactly one',
+              run_wrapper(repo, pin, home, 's27', env2, attempt=2))
     calls1 = len(read_text(os.path.join(fd, 'calls.txt')).splitlines())
     n_calls_t = sum(len(read_text(os.path.join(x, 'calls.txt')).splitlines()) for x in (fd_t, fd_g, fd_u) if os.path.exists(os.path.join(x, 'calls.txt')))
     chk('F08a 멈춤 조건 %d 가지: 전부 rc 2 · 화면의 STOP 줄 = 그 사유 · "runner not started" · 로그 폴더를 받은 뒤면 STOPPED (사유 · runner_started=0)'
-        % len(stops), len(stops) == 27 and all(rc == 2 and hit for _n, rc, hit, _l in stops), [s for s in stops if not (s[1] == 2 and s[2])])
+        % len(stops), len(stops) == 31 and all(rc == 2 and hit for _n, rc, hit, _l in stops), [s for s in stops if not (s[1] == 2 and s[2])])
     chk('F08b 멈춤 = 러너를 부르지 않았다 (호출 수 그대로) · 앞 시도의 로그 폴더는 그대로 · 잠금은 남이 쥔 것이면 그대로 둔다',
         calls1 == calls0 and n_calls_t == 0 and sorted(os.listdir(r.lg)) == f01_files and lock_kept
         and not os.path.exists(os.path.join(home, 'sdcp', 'ca1_probe6_a1_s3_arm1')), (calls0, calls1, n_calls_t, lock_kept))
+    # F19 끝난 시도 번호 · 시도 2 앞 조건 (P6R2-01 · 02 · 원장의 감시 셸 줄을 손으로 부른 꼴): 합성 로그 폴더 (홈마다 따로)
+    stops19 = []
+    cases19 = (
+        ('시도 1 이 끝남 (DONE · solve_started=1) → 시도 1 다시', [('p6log_a1_20991231T000001Z', lf_done(1, pin))], 1, 'attempt 1 already ran to the end'),
+        ('시도 1 = WATCHER_FAILED · 러너 시작 줄 있음 → 시도 1 다시', [('p6log_a1_20991231T000001Z', LF_WF_START)], 1, 'attempt 1 already ran to the end'),
+        ('시도 2 가 끝남 (DONE · solve_started=1) → 시도 1', [('p6log_a2_20991231T000001Z', lf_done(2, pin))], 1, 'attempt 1 does not run after attempt 2'),
+        ('시도 2 가 끝남 → 시도 2 다시', [('p6log_a1_20991231T000001Z', lf_done(1, pin)), ('p6log_a2_20991231T000002Z', lf_done(2, pin))], 2,
+         'attempt 2 already ran to the end'),
+        ('시도 2 = WATCHER_FAILED · 러너 시작 줄 있음 → 시도 2 다시', [('p6log_a1_20991231T000001Z', lf_done(1, pin)),
+                                                         ('p6log_a2_20991231T000002Z', LF_WF_START)], 2, 'attempt 2 already ran to the end'),
+        ('시도 1 = DONE · solve_started=0 뿐 → 시도 2', [('p6log_a1_20991231T000001Z', lf_done(1, pin, solve=0))], 2, 'attempt 2 needs exactly one'),
+        ('시도 1 = WATCHER_FAILED 뿐 (끝난 시도지만 DONE 아님) → 시도 2', [('p6log_a1_20991231T000001Z', LF_WF_START)], 2, 'attempt 2 needs exactly one'),
+        ('끝난 시도 1 이 둘 → 시도 2', [('p6log_a1_20991231T000001Z', lf_done(1, pin)), ('p6log_a1_20991231T000002Z', lf_done(1, pin))], 2,
+         'attempt 2 needs exactly one'),
+        ('끝 표지 없는 앞 로그 폴더 (감시 셸이 아직 돌거나 죽음)', [('p6log_a1_20991231T000001Z', {'nohup.out': ''})], 1, 'has no end marker'))
+    for i, (label, folders, att, needle) in enumerate(cases19):
+        h = make_home('%s_h19_%d' % (pre, i))
+        for nm, files in folders:
+            log_folder(h, nm, files)
+        r19 = run_wrapper(repo, pin, h, 'f19', wrapper_env(h, fd), attempt=att)
+        line = stop_line(r19)
+        mk = read_text(os.path.join(r19.lg, 'STOPPED')) if os.path.exists(os.path.join(r19.lg, 'STOPPED')) else ''
+        stops19.append((label, r19.rc == 2 and needle in line and 'runner not started' in line and needle in mk
+                        and not os.path.exists(os.path.join(h, '.probe6.lock')), line[-200:] or r19.so[-200:]))
+    calls2 = len(read_text(os.path.join(fd, 'calls.txt')).splitlines())
+    chk('F19a 앞 시도 %d 꼴: 끝난 번호 (DONE · solve_started=1 · WATCHER_FAILED + 러너 시작 줄) 다시 · a2 뒤 시도 1 · 시도 2 앞 조건 (끝난 시도 1 '
+        '= DONE · solve_started=1 하나) · 끝 표지 없음 = 감시 셸 STOP (STOPPED · 잠금 풂) · 러너 호출 0' % len(stops19),
+        len(stops19) == 9 and all(ok for _l, ok, _w in stops19) and calls2 == calls1, [s for s in stops19 if not s[1]])
+    h = make_home(pre + '_h19ok')
+    for nm, files in (('p6log_a1_20991231T000001Z', LF_STOPPED), ('p6log_a1_20991231T000002Z', lf_done(1, pin, solve=0)),
+                      ('p6log_a1_20991231T000003Z', LF_WF_NOSTART), ('p6log_a2_20991231T000004Z', LF_STOPPED)):
+        log_folder(h, nm, files)
+    r = run_wrapper(repo, pin, h, 'f19ok', wrapper_env(h, fd, PROBE6_FAKE_SLEEP='1'))
+    chk('F19b 세지 않는 앞 폴더 (STOPPED · DONE 의 solve_started=0 · 러너 시작 줄 없는 WATCHER_FAILED · 멈춘 a2) 만 있으면 시도 1 이 돈다 (DONE · 원장 §3)',
+        r.rc == 0 and os.path.exists(os.path.join(r.lg, 'DONE')) and (r.rep or {}).get('verdict') == 'PROBE_OK', (r.rc, stop_line(r), r.so[-300:]))
+    # F20 시도 2 의 풀이 코드 = 시도 1 의 것 (P6R2-03): 고정물 저장소에 커밋 셋 (풀이 코드 바뀜 · 원장 글만 바뀜 · 남남 커밋)
+    repo2, pa = make_pin_repo(pre + '_pin2')
+
+    def commit_on(base, relpath, text, msg):
+        git(repo2, 'checkout', '-q', '--detach', base)
+        write_text(os.path.join(repo2, relpath), text, 0o755 if relpath.endswith('.sh') else None)
+        git(repo2, 'add', '-A')
+        git(repo2, 'commit', '-q', '-m', msg)
+        return git(repo2, 'rev-parse', 'HEAD')
+    pb = commit_on(pa, RUNNER_REL, read_text(os.path.join(repo2, RUNNER_REL)) + '# changed solve code\n', 'runner change')
+    pc = commit_on(pa, 'docs/reviews/rint2_dev_probe_ledger_20261026.md', '# attempt 1 result line (ledger only)\n', 'ledger line')
+    po = git(repo2, 'commit-tree', '-m', 'unrelated history', pa + '^{tree}')
+    res20 = []
+    for label, p1, p2, needle in (('러너 (scripts/) 가 바뀐 핀', pa, pb, 'the solve code changed'),
+                                  ('시도 1 의 핀이 이 핀의 앞 커밋이 아님 (남남 · 트리는 같음)', po, pa, 'not this PIN or an earlier commit')):
+        git(repo2, 'checkout', '-q', '--detach', p2)
+        h = make_home('%s_h20_%d' % (pre, len(res20)))
+        log_folder(h, 'p6log_a1_20991231T000001Z', lf_done(1, p1))
+        r20 = run_wrapper(repo2, p2, h, 'f20', wrapper_env(h, fake_dir('%s_fake20_%d' % (pre, len(res20)), p2)), attempt=2)
+        line = stop_line(r20)
+        res20.append((label, r20.rc == 2 and needle in line and 'runner not started' in line
+                      and (needle != 'the solve code changed' or RUNNER_REL in line), line[-220:] or r20.so[-200:]))
+    chk('F20a 시도 2 의 핀과 시도 1 의 핀 사이에 풀이 코드가 바뀜 → STOP (바뀐 파일 이름을 찍음) · 시도 1 의 핀이 앞 커밋이 아님 → STOP',
+        all(ok for _l, ok, _w in res20), res20)
+    git(repo2, 'checkout', '-q', '--detach', pc)
+    h = make_home(pre + '_h20ok')
+    log_folder(h, 'p6log_a1_20991231T000001Z', lf_done(1, pa))
+    r = run_wrapper(repo2, pc, h, 'f20ok', wrapper_env(h, fake_dir(pre + '_fake20ok', pc), PROBE6_FAKE_SLEEP='1'), attempt=2)
+    chk('F20b 원장 글만 바뀐 뒤 커밋 (풀이 코드 같음) → 시도 2 가 돈다 · meta attempt1_pin = 시도 1 의 핀 · code_same_as_attempt1=1 · 한도 1500000 · PROBE_OK',
+        r.rc == 0 and os.path.exists(os.path.join(r.lg, 'DONE')) and r.meta.get('attempt1_pin') == pa and r.meta.get('code_same_as_attempt1') == '1'
+        and r.meta.get('maxiter') == A2 and r.meta.get('attempt') == '2' and (r.rep or {}).get('verdict') == 'PROBE_OK',
+        (r.rc, stop_line(r), dict((k, r.meta.get(k)) for k in ('attempt1_pin', 'code_same_as_attempt1', 'maxiter')), (r.rep or {}).get('problems')))
+    # F21 작업 제어가 켜진 채 뜬 감시 셸 (P6R2-06): SHELLOPTS 의 monitor · BASH_ENV 의 set -m → set +m · 러너는 자기 세션의 우두머리 · 러너가 끝난 뒤 DONE
+    bash_env_m = os.path.join(TD, pre + '_bashenv_m.sh')
+    write_text(bash_env_m, 'set -m\n')
+    for i, (label, extra) in enumerate((('SHELLOPTS 에 monitor', {'SHELLOPTS': 'braceexpand:hashall:interactive-comments:monitor'}),
+                                        ('BASH_ENV 에 set -m', {'BASH_ENV': bash_env_m}))):
+        h = make_home('%s_h21_%d' % (pre, i))
+        fdj = fake_dir('%s_fake21_%d' % (pre, i), pin)
+        r = run_wrapper(repo, pin, h, 'f21', wrapper_env(h, fdj, PROBE6_FAKE_SLEEP='4', **extra))
+        rp = read_pid(os.path.join(fdj, 'runner.pid'))
+        alive_after = proc_alive(rp) if rp > 1 else None
+        renv_j = dict(ln.split('=', 1) for ln in read_text(os.path.join(fdj, 'runner_env.txt')).splitlines() if '=' in ln) \
+            if os.path.exists(os.path.join(fdj, 'runner_env.txt')) else {}
+        chk('F21%s 작업 제어가 켜진 채 뜬 감시 셸 (%s): 러너가 끝난 뒤 DONE (wall ≥ 4 s) · PROBE_OK · DONE 뒤 러너 없음 · 러너 env 에 SHELLOPTS · BASH_ENV 없음'
+            % ('ab'[i], label),
+            r.rc == 0 and os.path.exists(os.path.join(r.lg, 'DONE')) and int(r.meta.get('wall_s', -1)) >= 4
+            and (r.rep or {}).get('verdict') == 'PROBE_OK' and alive_after is False and 'SHELLOPTS' not in renv_j and 'BASH_ENV' not in renv_j,
+            (r.rc, r.meta.get('wall_s'), (r.rep or {}).get('verdict'), alive_after, r.so[-300:]))
+        safe_kill(rp)
+    repo_m, pin_m = make_pin_repo(pre + '_pin_jobctl', wrapper_patch=('RUNNER_STARTED=1\nsetsid ', 'RUNNER_STARTED=1\nset -m\nsetsid '))
+    fdm = fake_dir(pre + '_fake_jobctl', pin_m)
+    h = make_home(pre + '_h21m')
+    r = run_wrapper(repo_m, pin_m, h, 'f21m', wrapper_env(h, fdm, PROBE6_FAKE_SLEEP='4'))
+    wf = read_text(os.path.join(r.lg, 'WATCHER_FAILED')) if os.path.exists(os.path.join(r.lg, 'WATCHER_FAILED')) else ''
+    st21 = read_text(os.path.join(r.lg, 'status.log')) if os.path.exists(os.path.join(r.lg, 'status.log')) else ''
+    chk('F21c (둘째 겹) 띄우기 바로 앞에서 작업 제어를 켠 사본 (시험 전용): 러너가 자기 세션의 우두머리가 아님 → WATCHER_FAILED (사유 · runner_started=1) · '
+        'DONE 없음 · 잠금 남김 · 러너 시작 줄은 있다 (끝난 시도로 센다)',
+        'runner_started=1' in wf and 'session' in wf and not os.path.exists(os.path.join(r.lg, 'DONE'))
+        and os.path.isdir(os.path.join(h, '.probe6.lock')) and ' runner started - maxiter ' in st21, (r.rc, wf, st21[-500:]))
+    safe_kill(read_pid(os.path.join(fdm, 'runner.pid')))
     # F09 실패 경로 (러너 rc 1 · 팔 없음 · .failed 남음 = 시도 1 이 한도에 닿은 꼴)
     r = run_wrapper(repo, pin, home, 'fail', wrapper_env(home, fd, PROBE6_FAKE_MODE='fail'))
     left = os.path.join(home, 'sdcp', KIT, S0_RUN, ARM + '.json.failed')
     bp = bundle_problems(r.lg, T_SEALED, home)
-    chk('F09a 실패 경로 (한도에 닿음): 감시 셸 rc 1 · 러너 rc 1 · 판독 rc 3 (미수렴) · 정상 끝 = DONE · 묶음 꼴 · 누출 없음',
+    chk('F09a 실패 경로 (시도 1 이 한도에 닿음): 감시 셸 rc 1 · 러너 rc 1 · 판독 rc 3 (미수렴) · 정상 끝 = DONE · 묶음 꼴 · 누출 없음',
         r.rc == 1 and r.meta.get('runner_rc') == '1' and (r.rep or {}).get('rc') == 3 and bp == []
-        and 'runner_rc=1 report_rc=3 attempt=1' in read_text(os.path.join(r.lg, 'DONE')), (r.rc, r.meta.get('runner_rc'), (r.rep or {}).get('rc'), bp[:4]))
+        and 'runner_rc=1 report_rc=3 attempt=1' in read_text(os.path.join(r.lg, 'DONE')),
+        (r.rc, r.meta.get('runner_rc'), (r.rep or {}).get('rc'), bp[:4], (r.rep or {}).get('problems')))
     chk('F09b 실패 보존: 남은 파일 · 출력 폴더 · 원문 로그 그대로 · 화면에 σ 류 수 없음',
         os.path.exists(left) and os.path.isdir(r.out) and os.path.exists(os.path.join(r.lg, 'runner.log'))
         and scan_hits([r.so, r.se], T_SEALED, sd_min=4, floats_only=True) == [], '')
@@ -2389,35 +2748,43 @@ def t_F(pre='f'):
     shutil.copy(os.path.join(fd, 'arm.json'), unmoved)                  # 앞 시도가 옮기지 못한 팔 (같은 이름 · 다음 시도가 덮을 자리)
     os.utime(unmoved, (time.time() - 30, time.time() - 30))
     um_sha = sha256_file(unmoved)
-    r = run_wrapper(repo, pin, home, 'again', wrapper_env(home, fd, PROBE6_FAKE_MODE='fail', PROBE6_FAKE_SLEEP='1'))
+    # F09d 다음 시도 = 시도 2 (같은 홈 · 시도 1 = 위 F09 · 한도 1500000 · 시도 1 의 핀 = 이 핀)
+    r = run_wrapper(repo, pin, home, 'again', wrapper_env(home, fd, PROBE6_FAKE_MODE='fail', PROBE6_FAKE_SLEEP='1'), attempt=2)
     bl = dict((x.get('name'), x.get('sha256')) for x in (r.rep or {}).get('kit_run_before_files') or [])
     bef = os.path.join(r.lg, 'kit_run_before')
-    chk('F09d 다음 시도: 러너가 같은 이름으로 덮어쓰기 전에 앞 시도의 남은 파일 (.failed · 옮겨지지 않은 .json) 을 사본으로 (kit_run_before · sha256 = 앞 것)',
+    renv2 = dict(ln.split('=', 1) for ln in read_text(os.path.join(fd, 'runner_env.txt')).splitlines() if '=' in ln)
+    chk('F09d 시도 2: 러너가 같은 이름으로 덮어쓰기 전에 앞 시도의 남은 파일 (.failed · 옮겨지지 않은 .json) 을 사본으로 (kit_run_before · sha256 = 앞 것)',
         os.path.exists(os.path.join(bef, ARM + '.json.failed')) and sha256_file(os.path.join(bef, ARM + '.json.failed')) == old_sha
         and os.path.exists(os.path.join(bef, ARM + '.json')) and sha256_file(os.path.join(bef, ARM + '.json')) == um_sha
         and bl.get(ARM + '.json.failed') == old_sha and r.meta.get('kit_run_before') == '2', (sorted(bl), r.meta.get('kit_run_before')))
-    chk('F09e 다음 시도의 판독기는 앞 시도의 팔을 읽지 않는다 (출처 = 이 시도의 .failed · 옮겨지지 않은 옛 .json 은 새 파일 아님)',
-        (r.rep or {}).get('source') == 'kit_run_failed' and ARM + '.json' not in [x.get('name') for x in (r.rep or {}).get('kit_run_new_files') or []],
-        ((r.rep or {}).get('source'), (r.rep or {}).get('kit_run_new_files')))
+    chk('F09e 시도 2 의 판독기는 앞 시도의 팔을 읽지 않는다 (출처 = 이 시도의 .failed · 옮겨지지 않은 옛 .json 은 새 파일 아님) · 판독 rc 3 · '
+        'meta attempt 2 · maxiter 1500000 (러너 P2_EXTRA 도) · attempt1_pin = 시도 1 의 핀 · code_same_as_attempt1=1',
+        (r.rep or {}).get('source') == 'kit_run_failed' and ARM + '.json' not in [x.get('name') for x in (r.rep or {}).get('kit_run_new_files') or []]
+        and (r.rep or {}).get('rc') == 3 and r.meta.get('attempt') == '2' and r.meta.get('maxiter') == A2
+        and renv2.get('P2_EXTRA') == '--step3-maxiter ' + A2 and r.meta.get('attempt1_pin') == pin and r.meta.get('code_same_as_attempt1') == '1',
+        ((r.rep or {}).get('source'), (r.rep or {}).get('rc'), (r.rep or {}).get('problems'), stop_line(r),
+         dict((k, r.meta.get(k)) for k in ('attempt', 'maxiter', 'attempt1_pin', 'code_same_as_attempt1'))))
     os.remove(left)
     os.remove(unmoved)
-    # F10 상한 (PROBE6_CAP_GB=0 → 첫 표본에서 끝낸다)
+    # F10 상한 (PROBE6_CAP_GB=0 → 첫 표본에서 끝낸다) · 시도 1 마다 따로 홈 (끝난 시도 1 이 같은 홈의 다음 시도 1 을 막는다)
+    hc = make_home(pre + '_home_cap')
     t0 = time.time()
-    r = run_wrapper(repo, pin, home, 'cap', wrapper_env(home, fd, PROBE6_FAKE_MODE='big', PROBE6_CAP_GB='0'))
+    r = run_wrapper(repo, pin, hc, 'cap', wrapper_env(hc, fd, PROBE6_FAKE_MODE='big', PROBE6_CAP_GB='0'))
     chk('F10 메모리 상한: 러너 그룹을 끝내고 기록 (cap_term 1 · 러너 rc ≠ 0) · 30 초 안 · 감시 셸 rc 1 · 판독 rc 4 · 묶음 · DONE',
         r.rc == 1 and r.meta.get('cap_term') == '1' and r.meta.get('runner_rc') not in ('0', None) and time.time() - t0 < 30
         and (r.rep or {}).get('rc') == 4 and bundle_members(r.lg)[0] is not None and os.path.exists(os.path.join(r.lg, 'DONE')),
         (r.rc, r.meta.get('cap_term'), time.time() - t0, r.so[-400:]))
 
     def term_run(tag, mode, extra=None, wait_line=None, second=False):
-        out = os.path.join(home, 'sdcp', 'ca1_probe6_a1_%s_arm1' % tag)
-        lg = os.path.join(home, 'p6log_a1_%s' % tag)
+        hh = make_home('%s_home_%s' % (pre, tag))
+        out = os.path.join(hh, 'sdcp', 'ca1_probe6_a1_%s_arm1' % tag)
+        lg = os.path.join(hh, 'p6log_a1_%s' % tag)
         os.makedirs(lg)
         for nm in ('child.pid', 'runner.pid'):
             if os.path.exists(os.path.join(fd, nm)):
                 os.remove(os.path.join(fd, nm))
-        p = subprocess.Popen(['bash', os.path.join(repo, TOOLS_REL, 'run_probe6.sh'), repo, out, lg, pin, MAXITER],
-                             env=wrapper_env(home, fd, PROBE6_FAKE_MODE=mode, **(extra or {})), stdout=subprocess.PIPE,
+        p = subprocess.Popen(['bash', os.path.join(repo, TOOLS_REL, 'run_probe6.sh'), repo, out, lg, pin, A1],
+                             env=wrapper_env(hh, fd, PROBE6_FAKE_MODE=mode, **(extra or {})), stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, text=True)
         for _ in range(300):
             st = read_text(os.path.join(lg, 'status.log')) if os.path.exists(os.path.join(lg, 'status.log')) else ''
@@ -2449,7 +2816,7 @@ def t_F(pre='f'):
             p.kill()
             so, _se = p.communicate()
         r2 = Res()
-        r2.rc, r2.so, r2.lg, r2.out = p.returncode, so or '', lg, out
+        r2.rc, r2.so, r2.lg, r2.out, r2.home = p.returncode, so or '', lg, out, hh
         r2.meta = read_meta(lg)
         rp = os.path.join(lg, 'probe6_report.json')
         r2.rep = json.loads(read_text(rp)) if os.path.exists(rp) else None
@@ -2462,19 +2829,19 @@ def t_F(pre='f'):
     chk('F11 감시 셸에 TERM: TERM 을 무시하는 자식까지 그룹째 끝낸다 (KILL) · aborted 1 · 고아 0 · rc 1 · DONE · watcher.pid 지움 · 잠금 풂 · 판독 rc 4',
         r.child > 0 and not proc_alive(r.child) and r.meta.get('aborted') == '1' and r.meta.get('orphans') == '0'
         and r.meta.get('orphans_left') == '0' and r.rc == 1 and os.path.exists(os.path.join(r.lg, 'DONE'))
-        and not os.path.exists(os.path.join(r.lg, 'watcher.pid')) and not os.path.exists(lock) and (r.rep or {}).get('rc') == 4,
+        and not os.path.exists(os.path.join(r.lg, 'watcher.pid')) and not os.path.exists(os.path.join(r.home, '.probe6.lock'))
+        and (r.rep or {}).get('rc') == 4,
         (r.child, proc_alive(r.child) if r.child > 0 else None, r.meta.get('aborted'), r.meta.get('orphans'), r.rc, r.so[-300:]))
-    if r.child > 0 and proc_alive(r.child):
-        os.kill(r.child, signal.SIGKILL)
+    safe_kill(r.child)
     # F12 러너 맨 위만 끝나고 그룹에 남은 자식 (러너가 정상 끝인데 자식이 남음 = 고아)
-    r = run_wrapper(repo, pin, home, 'tree', wrapper_env(home, fd, PROBE6_FAKE_MODE='tree'))
+    ht = make_home(pre + '_home_tree')
+    r = run_wrapper(repo, pin, ht, 'tree', wrapper_env(ht, fd, PROBE6_FAKE_MODE='tree'))
     child = read_pid(os.path.join(fd, 'child.pid'))
     dn = read_text(os.path.join(r.lg, 'DONE')) if os.path.exists(os.path.join(r.lg, 'DONE')) else ''
     chk('F12 러너가 끝난 뒤 그룹에 남은 자식: 세어 (orphans 1) 끝내고 (남은 것 0) · DONE 은 그 뒤 (orphans=1) · 판독 rc 4 (PROBE_OK 아님)',
         child > 0 and not proc_alive(child) and r.meta.get('orphans') == '1' and r.meta.get('orphans_left') == '0'
         and 'orphans=1' in dn and (r.rep or {}).get('rc') == 4, (child, r.meta.get('orphans'), r.meta.get('orphans_left'), dn, (r.rep or {}).get('rc')))
-    if child > 0 and proc_alive(child):
-        os.kill(child, signal.SIGKILL)
+    safe_kill(child)
     # F13 일찍 멈춤: 러너가 flush 없이 찍은 한도 줄이 runner.log 에 남는다 (PYTHONUNBUFFERED=1) → 판독기가 info · 잔차 · 풀이 시작 → 끝 초를 낸다
     r = term_run('unbuf', 'unbuf', wait_line='runner started')
     raw = read_text(os.path.join(r.lg, 'runner.log')) if os.path.exists(os.path.join(r.lg, 'runner.log')) else ''
@@ -2485,7 +2852,8 @@ def t_F(pre='f'):
         and isinstance(tm.get('solve_to_end_s'), int) and tm.get('solve_to_end_s') >= 0 and (r.rep or {}).get('rc') == 4
         and is_missing(((r.rep or {}).get('fields') or {}).get('cg_iters')), (raw[-200:], lg_.get('not_converged_info'), tm.get('solve_to_end_s')))
     # F14 러너가 핀 작업 트리를 더럽힘 → git_lines_after ≥ 1 · PROBE_OK 아님
-    r = run_wrapper(repo, pin, home, 'dirty', wrapper_env(home, fd, PROBE6_FAKE_MODE='dirty'))
+    hd = make_home(pre + '_home_dirty')
+    r = run_wrapper(repo, pin, hd, 'dirty', wrapper_env(hd, fd, PROBE6_FAKE_MODE='dirty'))
     chk('F14 런 뒤 핀 작업 트리가 더러움: meta git_lines_after ≥ 1 · 판독 rc 4 (meta git_lines_after 문제)',
         r.meta.get('git_lines_after') not in (None, '0') and (r.rep or {}).get('rc') == 4
         and any('git_lines_after' in x for x in (r.rep or {}).get('problems') or []), (r.meta.get('git_lines_after'), (r.rep or {}).get('problems')))
@@ -2507,22 +2875,19 @@ def t_F(pre='f'):
     chk('F16 표본의 ps · nvidia-smi 가 실패해도: TERM 으로 러너 그룹을 끝낸다 · DONE · GPU 칸 = NA',
         r.child > 0 and not proc_alive(r.child) and os.path.exists(os.path.join(r.lg, 'DONE')) and r.meta.get('aborted') == '1'
         and '\tNA\tNA\tNA' in read_text(os.path.join(r.lg, 'samples.tsv')), (r.child, r.rc, r.so[-300:]))
-    if r.child > 0 and proc_alive(r.child):
-        os.kill(r.child, signal.SIGKILL)
+    safe_kill(r.child)
     # F17 감시 셸이 러너 시작 뒤에 뜻밖에 끝남 (고친 사본 · 시험 전용) → 러너 그룹을 끝내고 WATCHER_FAILED · 잠금은 남긴다
     repo_x, pin_x = make_pin_repo(pre + '_pin_fail', wrapper_patch=('RPID=$!\n', 'RPID=$!\nsleep 2\n: "$PROBE6_UNDEFINED_FOR_TEST"\n'))
     fd_x = fake_dir(pre + '_fake_fail', pin_x)
-    rx = run_wrapper(repo_x, pin_x, home, 'wfail', wrapper_env(home, fd_x, PROBE6_FAKE_MODE='hang'), timeout=120)
+    hx = make_home(pre + '_home_wfail')
+    rx = run_wrapper(repo_x, pin_x, hx, 'wfail', wrapper_env(hx, fd_x, PROBE6_FAKE_MODE='hang'), timeout=120)
     ch = read_pid(os.path.join(fd_x, 'child.pid'))
     time.sleep(0.3)
     chk('F17 러너 시작 뒤 감시 셸이 뜻밖에 끝남: 러너 그룹 끝 · WATCHER_FAILED (runner_started=1) · DONE · STOPPED 없음 · 잠금 남음 (사람이 본다)',
         os.path.exists(os.path.join(rx.lg, 'WATCHER_FAILED')) and 'runner_started=1' in read_text(os.path.join(rx.lg, 'WATCHER_FAILED'))
         and not os.path.exists(os.path.join(rx.lg, 'DONE')) and not os.path.exists(os.path.join(rx.lg, 'STOPPED'))
-        and os.path.isdir(lock) and ch > 0 and not proc_alive(ch) and 'WATCHER FAILED' in rx.so, (rx.rc, ch, rx.so[-300:]))
-    if ch > 0 and proc_alive(ch):
-        os.kill(ch, signal.SIGKILL)
-    if os.path.isdir(lock):
-        shutil.rmtree(lock)
+        and os.path.isdir(os.path.join(hx, '.probe6.lock')) and ch > 0 and not proc_alive(ch) and 'WATCHER FAILED' in rx.so, (rx.rc, ch, rx.so[-300:]))
+    safe_kill(ch)
     # F18 time -v 기록 (이 컨테이너에 /usr/bin/time 이 없어 가짜 time 을 쓰는 사본 · 시험 전용): 명령 줄 · 홈 경로는 묶음에 가지 않는다 (P6R-08)
     ftime = os.path.join(TD, pre + '_faketime.sh')
     write_text(ftime, FAKE_TIME, 0o755)
@@ -2530,12 +2895,13 @@ def t_F(pre='f'):
         'if [ -x /usr/bin/time ]; then\n  TV=1\n  TIMEV=(/usr/bin/time -v -o "$L/time_v.txt")',
         'if [ -x "${PROBE6_FAKE_TIME:-/nonexistent}" ]; then\n  TV=1\n  TIMEV=("$PROBE6_FAKE_TIME" -v -o "$L/time_v.txt")'))
     fd_v = fake_dir(pre + '_fake_timev', pin_v)
-    rv = run_wrapper(repo_v, pin_v, home, 'timev', wrapper_env(home, fd_v, PROBE6_FAKE_TIME=ftime))
+    hv = make_home(pre + '_home_timev')
+    rv = run_wrapper(repo_v, pin_v, hv, 'timev', wrapper_env(hv, fd_v, PROBE6_FAKE_TIME=ftime))
     raw_tv = read_text(os.path.join(rv.lg, 'time_v.txt')) if os.path.exists(os.path.join(rv.lg, 'time_v.txt')) else ''
     _n, mem_v = bundle_members(rv.lg)
-    bpv = bundle_problems(rv.lg, T_SEALED, home)
+    bpv = bundle_problems(rv.lg, T_SEALED, hv)
     chk('F18 time -v 기록: 로그 폴더의 원본은 명령 줄 (홈 경로 포함) 그대로 · 묶음의 time_v.txt = 세 줄 (최대 RSS · 경과 · 종료 코드) · 묶음 꼴 통과 · 판독 rc 0',
-        home in raw_tv and 'Command being timed' in raw_tv and len(mem_v.get('time_v.txt', '').splitlines()) == 3
+        hv in raw_tv and 'Command being timed' in raw_tv and len(mem_v.get('time_v.txt', '').splitlines()) == 3
         and 'Command' not in mem_v.get('time_v.txt', '') and bpv == [] and rv.meta.get('time_v') == '1' and (rv.rep or {}).get('rc') == 0
         and ((rv.rep or {}).get('resources') or {}).get('time_v_max_rss_kb') == 12345, (rv.rc, bpv[:4], mem_v.get('time_v.txt', '')[:300]))
 
@@ -2547,7 +2913,7 @@ _SCRUB = 'SIGMA_*|SDCP_*|PTFE_*|CJUNC*|STEP3_*|MPM_*|P2_*|LEAN|VOX|ARMS|ARM_LIST
 WRAPPER_MUTANTS = (
     ('부모 셸의 축 env 를 걷지 않음', [('      unset "$n"\n', '      :\n')]),
     ('등록 축 값 하나를 바꿈 (R_j)', [('CJUNC=1 CJUNC_RJ=1e6 ', 'CJUNC=1 CJUNC_RJ=1e5 ')]),
-    ('maxiter 인자를 러너에 넘기지 않음', [('"P2_EXTRA=--step3-maxiter $MAXITER"', '"P2_EXTRA=--step3-maxiter 30000"')]),
+    ('maxiter 인자를 러너에 넘기지 않음', [('"P2_EXTRA=--step3-maxiter $MAXITER"', '"P2_EXTRA=--step3-maxiter 400000"')]),
     ('러너 원문 로그를 묶음에 넣음', [('for f in probe6_report.json probe6_screen.txt runner_filtered.log',
                                         'for f in runner.log probe6_report.json probe6_screen.txt runner_filtered.log')]),
     ('러너 원문 로그를 화면에 냄', [('say "runner ended - rc $RC, wall $((END - START)) s"',
@@ -2588,12 +2954,12 @@ WRAPPER_MUTANTS = (
     ('리뷰 런 뒤 git 상태를 안 봄 (늘 0)', [('GIT_AFTER="$(git -C "$W" status --porcelain --untracked-files=all 2>/dev/null | grep -c .)"', 'GIT_AFTER=0')]),
     ('리뷰 meta 폴더를 절대 경로로', [('  echo "outdir=$(homerel "$O")"', '  echo "outdir=$O"')]),
     # 이번 고침의 새 검사
-    ('러너를 자기 세션 · 그룹으로 띄우지 않음', [('setsid ${TIMEV[@]+"${TIMEV[@]}"} env', '${TIMEV[@]+"${TIMEV[@]}"} env')]),
+    ('러너를 자기 세션 · 그룹으로 띄우지 않음', [('setsid ${TIMEV[@]+"${TIMEV[@]}"} "${RENV[@]}"', '${TIMEV[@]+"${TIMEV[@]}"} "${RENV[@]}"')]),
     ('러너가 끝난 뒤 그룹에 남은 것을 세지 않음', [('ORPH="$(group_count)"', 'ORPH=0')]),
     ('잠금을 잡지 않음', [('if mkdir "$LOCK" 2>/dev/null; then', 'if true; then')]),
     ('잠금을 풀지 않음', [('    rmdir "$LOCK" 2>/dev/null\n', '    :\n')]),
     ('동시 실행 가드를 뺌', [('[ "$BUSY" = 0 ] || stop', 'true || stop')]),
-    ('러너의 런 전 관문을 미리 돌리지 않음', [('env "${CMD[@]}" PYTHONUTF8=1 python3 "$W/scripts/check_method_discipline.py"', 'true')]),
+    ('러너의 런 전 관문을 미리 돌리지 않음', [('"${RENV[@]}" "${CMD[@]}" PYTHONUTF8=1 python3 "$W/scripts/check_method_discipline.py"', 'true')]),
     ('PYTHONUNBUFFERED 를 러너에 주지 않음', [('"OUTDIR=$O" PYTHONUNBUFFERED=1)', '"OUTDIR=$O")')]),
     ('STOPPED 표지를 쓰지 않음', [("    printf 'reason=%s\\nrunner_started=0\\n' \"$*\" > \"$L/STOPPED\"\n", '    :\n')]),
     ('끝나도 watcher.pid 를 두고 감', [('rm -f "$L/watcher.pid"\nFINISHED=1\n', 'FINISHED=1\n')]),
@@ -2611,6 +2977,24 @@ WRAPPER_MUTANTS = (
         ('  for f in probe6_report.json probe6_screen.txt runner_filtered.log env.txt meta.txt command.txt samples.tsv status.log probe6_reader.err; do',
          '  ln -s "$L/status.log" "$STG/status.log"; MEMBERS="$MEMBERS status.log"\n'
          '  for f in probe6_report.json probe6_screen.txt runner_filtered.log env.txt meta.txt command.txt samples.tsv probe6_reader.err; do')]),
+    # 2 회차 고침의 새 검사 (P6R2-01 · 02 · 03 · 04 · 05 · 06)
+    ('set +m 을 뺌 (작업 제어 켠 채)', [('set +m   # job control off', '#et +m   # job control off')]),
+    ('러너 env 의 BASH_ENV · SHELLOPTS 를 걷지 않음', [('RENV=(env -u BASH_ENV -u SHELLOPTS)', 'RENV=(env)')]),
+    ('러너가 세션 우두머리인지 안 봄', [('if ! runner_leads_session; then', 'if false; then')]),
+    ('PYTHONPATH 를 걷지 않음', [('if [ -n "${PYTHONPATH+x}" ]; then PPR=1; unset PYTHONPATH; fi', 'if [ -n "${PYTHONPATH+x}" ]; then PPR=1; fi')]),
+    ('시도 번호 ↔ 한도 짝을 안 봄', [('[ "$MAXITER" = "$WANT_MAX" ] || stop', '[ -n "$WANT_MAX" ] || stop')]),
+    ('로그 폴더 자리 (홈 바로 밑) 를 안 봄', [('[ -n "$LP" ] && [ "$LP" = "$HP" ] || stop', '[ -n "$LP" ] || stop')]),
+    ('끝 표지 없는 앞 폴더를 안 봄', [('  stop "earlier log folder $(homerel "$d") has no end marker', '  : "earlier log folder $(homerel "$d") has no end marker')]),
+    ('끝난 시도 번호를 안 봄', [('  if finished "$d"; then\n    stop "attempt $ATTEMPT already ran', '  if false; then\n    stop "attempt $ATTEMPT already ran')]),
+    ('시도 1 의 끝난 a2 폴더를 안 봄', [('    if [ -d "$d" ] && finished "$d"; then stop "attempt 2 already ran to the end in $(homerel "$d") - attempt 1',
+                                       '    if [ -d "$d" ] && false; then stop "attempt 2 already ran to the end in $(homerel "$d") - attempt 1')]),
+    ('시도 2 앞 조건 (끝난 시도 1 하나) 을 안 봄', [('[ "$N1" = 1 ] || stop', '[ -n "$N1" ] || stop')]),
+    ('시도 2 앞 조건에서 solve_started=1 을 안 봄', [("    if [ -f \"$d/DONE\" ] && grep -qx 'solve_started=1' \"$d/meta.txt\" 2>/dev/null; then\n      N1=",
+                                                   "    if [ -f \"$d/DONE\" ]; then\n      N1=")]),
+    ('풀이 코드 대조를 안 함', [('  git -C "$W" diff --quiet "$P1" "$PIN" -- "${CODE_PATHS[@]}" 2>/dev/null\n', '  true\n')]),
+    ('시도 1 핀이 앞 커밋인지 안 봄', [('git -C "$W" merge-base --is-ancestor "$P1" "$PIN" 2>/dev/null; }', 'true; }')]),
+    ('meta 에 attempt1 칸을 안 적음', [('    echo "attempt1_pin=$P1"\n    echo "code_same_as_attempt1=1"\n', '    :\n')]),
+    ('meta 에 expect_rj 를 안 적음', [('  echo "expect_rj=$EXP_RJ"\n', '')]),
 )
 
 
@@ -2683,7 +3067,7 @@ def t_B():
     def bstop(label, needle, p, nl, nw):
         line = [ln for ln in p.stdout.splitlines() if 'STOP:' in ln]
         bstops.append((label, p.returncode == 2 and bool(line) and needle in line[-1] and 'syntax error' not in p.stderr
-                       and n_lg() == nl and n_wt() == nw, (p.returncode, (line or [p.stdout[-200:]])[-1][-150:], p.stderr[-150:])))
+                       and n_lg() == nl and n_wt() == nw, (p.returncode, (line or [p.stdout[-200:]])[-1][-170:], p.stderr[-150:])))
     bstop('PIN 이 40 자리 hex 아님', 'PIN is not a 40-hex commit', run_block(home, env, blk1.replace(pin, 'zz')), 0, 0)
     bstop('<PIN> 을 안 채움 (bash 문법 오류가 아니다)', 'PIN is not a 40-hex commit', run_block(home, env, blk0), 0, 0)
     bstop('ATTEMPT 가 1 · 2 가 아님', 'ATTEMPT must be 1 or 2', run_block(home, env, blk1.replace('\nATTEMPT=1\n', '\nATTEMPT=3\n')), 0, 0)
@@ -2693,24 +3077,58 @@ def t_B():
     git(bare, 'branch', '-f', 'claude/stoic-knuth-NObVQ', git(bare, 'commit-tree', '-p', pin, '-m', 'later', pin + '^{tree}'))
     bstop('PIN 이 가지 끝 (fetch 뒤 FETCH_HEAD) 이 아님', 'is not the tip of', run_block(home, env, blk1), 0, 0)
     git(bare, 'branch', '-f', 'claude/stoic-knuth-NObVQ', pin)
-    bstop('시도 2 인데 시도 1 의 DONE 폴더가 없음', 'attempt 2 needs an attempt-1 log folder with DONE', run_block(home, env, blk2), 0, 0)
-    # 감시 셸이 띄운 뒤 멈춤 (킷 payload 줄에 --show-results) → 블록이 그 STOP 줄을 보여 준다 · 같은 블록을 다시 붙일 수 있다
+    bstop('시도 2 인데 시도 1 의 DONE 폴더가 없음', 'attempt 2 needs exactly one', run_block(home, env, blk2), 0, 0)
+    # 감시 셸이 띄운 뒤 멈춤 (킷 payload 줄에 --show-results) → 블록이 그 STOP 줄을 보여 준다 · 안내 줄은 찍지 않는다 · 같은 블록을 다시 붙일 수 있다
     kit_sh = os.path.join(home, 'sdcp', KIT, 'run_mpm.sh')
     write_text(kit_sh, FAKE_KIT_SH.replace(' --out', ' --show-results --out'))
     p = run_block(home, env, blk1)
     lgs = glob.glob(os.path.join(home, 'p6log_a1_*'))
     ok_s = (p.returncode == 2 and 'watcher launched' in p.stdout.splitlines()[0] if p.stdout else False)
-    chk('B01 감시 셸이 띄운 뒤 STOP: 블록 첫 줄 "watcher launched" · 블록이 그 STOP 줄을 찍는다 · rc 2 · 로그 폴더에 STOPPED · 러너 호출 0',
+    chk('B01 감시 셸이 띄운 뒤 STOP: 블록 첫 줄 "watcher launched" · 블록이 그 STOP 줄을 찍는다 · rc 2 · 로그 폴더에 STOPPED · 러너 호출 0 · '
+        'STOP 뒤 진행 · 멈춤 · "DONE appears" 안내 없음 (P6R2-07)',
         ok_s and any('STOP:' in ln and '--show-results' in ln and 'runner not started' in ln for ln in p.stdout.splitlines())
-        and len(lgs) == 1 and os.path.exists(os.path.join(lgs[0], 'STOPPED')) and not os.path.exists(os.path.join(fd, 'calls.txt')),
+        and len(lgs) == 1 and os.path.exists(os.path.join(lgs[0], 'STOPPED')) and not os.path.exists(os.path.join(fd, 'calls.txt'))
+        and 'DONE appears' not in p.stdout and 'stop early' not in p.stdout and 'progress:' not in p.stdout,
         (p.returncode, p.stdout[-600:], p.stderr[-200:]))
     write_text(kit_sh, FAKE_KIT_SH)
     os.makedirs(os.path.join(home, 'p6log_a1_19990101T000000Z'))
     write_text(os.path.join(home, 'p6log_a1_19990101T000000Z', 'nohup.out'), '')
     bstop('앞 로그 폴더에 끝 표지 (DONE · STOPPED · WATCHER_FAILED) 가 없음', 'has no end marker', run_block(home, env, blk1), 2, 1)
     shutil.rmtree(os.path.join(home, 'p6log_a1_19990101T000000Z'))
+    # 끝난 시도 번호 · 시도 2 앞 조건 · 풀이 코드 (P6R2-01 · 02 · 03): 합성 로그 폴더 (멈춤 뒤 지운다 · 시험 전용)
+    for label, folders, blk, needle in (
+            ('시도 1 이 끝남 (DONE · solve_started=1) → 시도 1 블록 다시', [('p6log_a1_20991231T000001Z', lf_done(1, pin))], blk1,
+             'attempt 1 already ran to the end'),
+            ('시도 1 = WATCHER_FAILED · 러너 시작 줄 있음 → 시도 1 블록', [('p6log_a1_20991231T000001Z', LF_WF_START)], blk1, 'attempt 1 already ran to the end'),
+            ('시도 2 가 끝남 → 시도 1 블록', [('p6log_a2_20991231T000001Z', lf_done(2, pin))], blk1, 'attempt 1 does not run after attempt 2'),
+            ('시도 2 가 끝남 → 시도 2 블록 다시', [('p6log_a1_20991231T000001Z', lf_done(1, pin)), ('p6log_a2_20991231T000002Z', lf_done(2, pin))], blk2,
+             'attempt 2 already ran to the end'),
+            ('시도 1 = DONE · solve_started=0 뿐 (풀이 0) → 시도 2 블록', [('p6log_a1_20991231T000001Z', lf_done(1, pin, solve=0))], blk2,
+             'attempt 2 needs exactly one'),
+            ('끝난 시도 1 이 둘 → 시도 2 블록', [('p6log_a1_20991231T000001Z', lf_done(1, pin)), ('p6log_a1_20991231T000002Z', lf_done(1, pin))], blk2,
+             'attempt 2 needs exactly one'),
+            ('시도 1 의 핀이 이 PIN 의 앞 커밋이 아님', [('p6log_a1_20991231T000001Z', lf_done(1, 'f' * 40))], blk2, 'not this PIN or an earlier commit')):
+        made = [log_folder(home, nm, files) for nm, files in folders]
+        nl, nw = n_lg(), n_wt()
+        bstop(label, needle, run_block(home, env, blk), nl, nw)
+        for d in made:
+            shutil.rmtree(d)
+    # 풀이 코드가 바뀐 PIN (P6R2-03): 가지 끝 = 러너를 고친 뒤 커밋 · 시도 1 의 핀 = 그 앞 커밋 → 시도 2 블록이 멈추고 바뀐 파일을 찍는다
+    git(repo, 'checkout', '-q', '--detach', pin)
+    write_text(os.path.join(repo, RUNNER_REL), read_text(os.path.join(repo, RUNNER_REL)) + '# changed solve code\n', 0o755)
+    git(repo, 'commit', '-q', '-am', 'runner change')
+    pin_b = git(repo, 'rev-parse', 'HEAD')
+    git(repo, 'push', '-q', '-f', bare, 'HEAD:refs/heads/claude/stoic-knuth-NObVQ')
+    made = log_folder(home, 'p6log_a1_20991231T000001Z', lf_done(1, pin))
+    nl, nw = n_lg(), n_wt()
+    pb = run_block(home, env, blk0.replace('<PIN>', pin_b).replace('\nATTEMPT=1\n', '\nATTEMPT=2\n'))
+    bstop('시도 1 핀 ↔ 이 PIN 사이에 풀이 코드 (scripts/) 가 바뀜 → 시도 2 블록', 'the solve code changed', pb, nl, nw)
+    bstops[-1] = bstops[-1][:1] + (bstops[-1][1] and RUNNER_REL in pb.stdout,) + bstops[-1][2:]
+    shutil.rmtree(made)
+    git(bare, 'branch', '-f', 'claude/stoic-knuth-NObVQ', pin)
+    git(repo, 'checkout', '-q', '--detach', pin)
     chk('B02 블록 멈춤 %d 가지: rc 2 · 그 사유 · 폴더 · 작업 트리를 더 만들지 않는다 · bash 문법 오류 없음' % len(bstops),
-        len(bstops) == 7 and all(ok for _l, ok, _w in bstops), [b for b in bstops if not b[1]])
+        len(bstops) == 15 and all(ok for _l, ok, _w in bstops), [b for b in bstops if not b[1]])
     # 시도 1 (한도에 닿음 = 러너 rc 1 · 판독 rc 3 · 정상 끝)
     p = run_block(home, wrapper_env(home, fd, PROBE6_FAKE_MODE='fail', PROBE6_FAKE_SLEEP='2'), blk1)
     lg1 = sorted(set(glob.glob(os.path.join(home, 'p6log_a1_*'))) - set(lgs))
@@ -2737,16 +3155,25 @@ def t_B():
     lg1_files = sorted(os.listdir(lg1)) if lg1 else []
     if os.path.exists(left):
         os.utime(left, (time.time() - 30, time.time() - 30))         # kgy 에서 두 시도 사이는 분 단위 (판독기의 "이 시도의 새 파일" 2 초 여유)
-    # 시도 2 (ATTEMPT=2 · 한도 1500000 · 앞 시도의 DONE 이 있어야 띄운다)
+    # 끝난 시도 1 의 블록을 다시 붙임 (화면 다시 실행 · P6R2-02) → 멈춤 · 아무것도 쓰지 않는다
+    nl, nw = n_lg(), n_wt()
+    p11 = run_block(home, env, blk1)
+    l11 = [ln for ln in p11.stdout.splitlines() if 'STOP:' in ln]
+    chk('B11 끝난 시도 1 의 블록을 다시 붙임: rc 2 · "attempt 1 already ran to the end" · 로그 폴더 · 작업 트리를 더 만들지 않는다 · 러너 호출 그대로',
+        p11.returncode == 2 and bool(l11) and 'attempt 1 already ran to the end' in l11[-1] and n_lg() == nl and n_wt() == nw,
+        (p11.returncode, p11.stdout[-300:]))
+    # 시도 2 (ATTEMPT=2 · 한도 1500000 · 풀이를 시작한 시도 1 의 DONE 뒤)
     p2 = run_block(home, wrapper_env(home, fd, PROBE6_FAKE_SLEEP='2'), blk2)
     lg2 = glob.glob(os.path.join(home, 'p6log_a2_*'))
     lg2 = lg2[0] if len(lg2) == 1 else ''
     done2 = wait_marker(lg2) if lg2 else False
     m2 = read_meta(lg2) if lg2 else {}
     rep2 = json.loads(read_text(os.path.join(lg2, 'probe6_report.json'))) if lg2 and os.path.exists(os.path.join(lg2, 'probe6_report.json')) else {}
-    chk('B06 시도 2: 블록 rc 0 · DONE = runner_rc=0 report_rc=0 attempt=2 · meta attempt 2 · maxiter 1500000 · 출처 = 시도 2 출력 폴더의 팔',
+    chk('B06 시도 2: 블록 rc 0 · DONE = runner_rc=0 report_rc=0 attempt=2 · meta attempt 2 · maxiter 1500000 · attempt1_pin = 시도 1 의 핀 · '
+        'code_same_as_attempt1=1 · 출처 = 시도 2 출력 폴더의 팔',
         p2.returncode == 0 and done2 and read_text(os.path.join(lg2, 'DONE')).startswith('runner_rc=0 report_rc=0 attempt=2')
         and m2.get('attempt') == '2' and m2.get('maxiter') == '1500000' and rep2.get('source') == 'outdir' and rep2.get('verdict') == 'PROBE_OK'
+        and m2.get('attempt1_pin') == pin and m2.get('code_same_as_attempt1') == '1'
         and re.fullmatch(r'~/sdcp/ca1_probe6_a2_[0-9]{8}T[0-9]{6}Z_arm1', m2.get('outdir', '')) is not None,
         (p2.returncode, p2.stdout[-500:], m2.get('attempt'), m2.get('maxiter'), rep2.get('problems')))
     bf = [x for x in rep2.get('kit_run_before_files') or [] if x.get('name') == ARM + '.json.failed']
@@ -2764,6 +3191,56 @@ def t_B():
     chk('B10 블록이 만든 작업 트리 = 핀 · 깨끗함 (두 시도 뒤에도) · 잠금 없음',
         len(wt) == 1 and git(wt[0], 'rev-parse', 'HEAD') == pin and git(wt[0], 'status', '--porcelain', '--untracked-files=all') == ''
         and not os.path.exists(os.path.join(home, '.probe6.lock')), wt)
+    # 끝난 시도 2 · 1 의 블록을 다시 붙임 (P6R2-02) → 둘 다 멈춤
+    nl, nw = n_lg(), n_wt()
+    p12a, p12b = run_block(home, env, blk2), run_block(home, env, blk1)
+    l12 = [[ln for ln in q.stdout.splitlines() if 'STOP:' in ln] for q in (p12a, p12b)]
+    chk('B12 시도 2 뒤 시도 2 · 시도 1 블록을 다시 붙임: 둘 다 rc 2 (attempt 2 already ran · 시도 1 = 끝남 또는 a2 폴더) · 더 만든 것 없음',
+        p12a.returncode == 2 and p12b.returncode == 2 and all(l12) and 'attempt 2 already ran to the end' in l12[0][-1]
+        and ('attempt 1 already ran to the end' in l12[1][-1] or 'attempt 1 does not run after attempt 2' in l12[1][-1]) and n_lg() == nl and n_wt() == nw,
+        (p12a.stdout[-200:], p12b.stdout[-200:]))
+    # 풀이 0 인 시도 1 (P6R2-01): DONE · solve_started=0 뒤 시도 2 블록 = 멈춤 · 같은 번호 (시도 1) 는 다시 된다 · 원장 글만 바뀐 PIN 의 시도 2 는 돈다 (P6R2-03)
+    h2 = make_home('b2_home')
+    fd2 = fake_dir('b2_fake', pin)
+    bare2 = os.path.join(TD, 'b2_origin.git')
+    subprocess.run(['git', 'clone', '-q', '--bare', repo, bare2], check=True, capture_output=True)
+    git(bare2, 'branch', '-f', 'claude/stoic-knuth-NObVQ', pin)
+    subprocess.run(['git', 'clone', '-q', bare2, os.path.join(h2, 'dem-mt')], check=True, capture_output=True)
+    q1 = run_block(h2, wrapper_env(h2, fd2, PROBE6_FAKE_MODE='nosolve'), blk1)
+    la = glob.glob(os.path.join(h2, 'p6log_a1_*'))
+    da = wait_marker(la[0]) if len(la) == 1 else False
+    ma = read_meta(la[0]) if len(la) == 1 else {}
+    q2 = run_block(h2, wrapper_env(h2, fd2), blk2)
+    lq2 = [ln for ln in q2.stdout.splitlines() if 'STOP:' in ln]
+    time.sleep(1.1)                                                  # 새 블록 = 새 시각 이름 (초 단위)
+    q3 = run_block(h2, wrapper_env(h2, fd2, PROBE6_FAKE_MODE='fail', PROBE6_FAKE_SLEEP='1'), blk1)
+    lb = sorted(set(glob.glob(os.path.join(h2, 'p6log_a1_*'))) - set(la))
+    db = wait_marker(lb[0]) if len(lb) == 1 else False
+    chk('B13 풀이 0 인 시도 1 (payload 가 풀이 줄 전에 멈춤): DONE · solve_started=0 → 시도 2 블록 = rc 2 (attempt 2 needs exactly one) · '
+        '시도 1 블록을 다시 붙이면 돈다 (같은 번호 · 원장 §3)',
+        q1.returncode == 0 and da and ma.get('solve_started') == '0' and q2.returncode == 2 and bool(lq2) and 'attempt 2 needs exactly one' in lq2[-1]
+        and q3.returncode == 0 and db and read_meta(lb[0]).get('solve_started') == '1' if len(lb) == 1 else False,
+        (q1.returncode, ma.get('solve_started'), q2.returncode, lq2[-1:], q3.returncode, q3.stdout[-300:]))
+    git(repo, 'checkout', '-q', '--detach', pin)
+    write_text(os.path.join(repo, 'docs', 'reviews', 'rint2_dev_probe_ledger_20261026.md'), '# attempt 1 result line (ledger only)\n')
+    git(repo, 'add', '-A')
+    git(repo, 'commit', '-q', '-m', 'ledger line of attempt 1')
+    pin_c = git(repo, 'rev-parse', 'HEAD')
+    git(repo, 'push', '-q', '-f', bare2, 'HEAD:refs/heads/claude/stoic-knuth-NObVQ')
+    git(repo, 'checkout', '-q', '--detach', pin)
+    if os.path.exists(os.path.join(h2, 'sdcp', KIT, S0_RUN, ARM + '.json.failed')):
+        os.utime(os.path.join(h2, 'sdcp', KIT, S0_RUN, ARM + '.json.failed'), (time.time() - 30, time.time() - 30))
+    q4 = run_block(h2, wrapper_env(h2, fake_dir('b2_fake_c', pin_c), PROBE6_FAKE_SLEEP='1'),
+                   blk0.replace('<PIN>', pin_c).replace('\nATTEMPT=1\n', '\nATTEMPT=2\n'))
+    lc = glob.glob(os.path.join(h2, 'p6log_a2_*'))
+    dc = wait_marker(lc[0]) if len(lc) == 1 else False
+    mc = read_meta(lc[0]) if len(lc) == 1 else {}
+    repc = json.loads(read_text(os.path.join(lc[0], 'probe6_report.json'))) if dc and os.path.exists(os.path.join(lc[0], 'probe6_report.json')) else {}
+    chk('B14 시도 1 뒤 원장 글만 바뀐 커밋 (풀이 코드 같음) 을 PIN 으로 시도 2: 블록 rc 0 · DONE · meta pin = 새 PIN · attempt1_pin = 시도 1 의 핀 · '
+        'code_same_as_attempt1=1 · PROBE_OK',
+        q4.returncode == 0 and dc and mc.get('pin') == pin_c and mc.get('attempt1_pin') == pin and mc.get('code_same_as_attempt1') == '1'
+        and repc.get('verdict') == 'PROBE_OK', (q4.returncode, q4.stdout[-400:], dict((k, mc.get(k)) for k in ('pin', 'attempt1_pin', 'code_same_as_attempt1')),
+                                               repc.get('problems')))
 
 
 # ═════════════════════════ R: 실제 러너 · 실제 payload (픽스처 킷 · CPU) ═════════════════════════
@@ -2934,7 +3411,20 @@ def t_R():
         r.meta.get('git_lines_after') == '0' and r.meta.get('mode_bad') == '0' and not glob.glob(os.path.join(run2, 'p2_*.json*')),
         (r.meta.get('git_lines_after'), r.meta.get('mode_bad'), glob.glob(os.path.join(run2, 'p2_*.json*'))))
     it_ok = f.get('cg_iters') if isinstance(f.get('cg_iters'), int) else 0
-    # R3 시도 1 꼴: 같은 홈 · 같은 핀 · maxiter 2 (모이기 전에 한도) = 미수렴 실물: payload 가 .failed 로 남기고 러너가 받지 않는다
+    repo_r2, pin_r2, run_r2 = repo, pin, run2                  # R2e · R4 = 정직한 사본 (짝 표를 고치지 않은 것)
+    # R3 시도 1 꼴 (한도에 닿음): 픽스처 침대는 한도 30000 안에서 모인다 → 감시 셸 · 판독기의 짝 표만 "시도 1 → 2" 로 고친 사본 (시험 전용) ·
+    #    새 홈 (R2 의 시도 1 이 끝나 같은 홈의 시도 1 은 멈춘다 · P6R2-02) · 같은 침대 (픽스처 침대는 결정적이다) = 미수렴 실물: payload 가 .failed 로
+    #    남기고 러너가 받지 않는다
+    home = make_home('r3_home', shim_text=shim, np_cupy=True)
+    run2 = os.path.join(home, 'sdcp', KIT, S0_RUN)
+    os.remove(os.path.join(run2, 'se_dump.npy'))
+    E2E.make_bed(run2)
+    write_text(os.path.join(home, 'sdcp', KIT, 'run_mpm.sh'), kit_gpu)
+    rec3 = S0.kit_input_record(os.path.join(home, 'sdcp', KIT))
+    repo, pin = make_pin_repo('r3_pin', real_scripts=True, plan_inputs=dict((k, v['sha256']) for k, v in rec3['files'].items()),
+                              wrapper_patch=PAIR_PATCH_W, reader_patch=PAIR_PATCH_R)
+    os.makedirs(os.path.join(home, '_shim'))
+    wenv = wrapper_env(home, None, SHIM_LOG=os.path.join(home, '_shim'), PYTHONUTF8='1', PYTHONIOENCODING='utf-8')
     r3 = run_wrapper(repo, pin, home, 'r3', wenv, maxiter='2', timeout=900)
     left = os.path.join(run2, ARM + '.json.failed')
     f3 = (r3.rep or {}).get('fields') or {}
@@ -2969,20 +3459,23 @@ def t_R():
             os.path.exists(cpy) and sha256_file(cpy) == s3sha and os.path.isdir(r3.out) and r3.meta.get('git_lines_after') == '0',
             (os.path.exists(cpy), r3.meta.get('git_lines_after')))
         os.utime(left, (time.time() - 30, time.time() - 30))         # kgy 에서 두 시도 사이는 분 단위 (판독기의 "이 시도의 새 파일" 2 초 여유)
-    # R5 시도 2 꼴: 시도 1 꼴 (R3) 의 남은 파일이 킷 런 폴더에 있는 채 같은 홈 · 같은 침대에서 다음 시도 (새 출력 · 로그 폴더 · 본 한도)
+    # R5 시도 2 꼴: 시도 1 꼴 (R3) 의 남은 파일이 킷 런 폴더에 있는 채 같은 홈 · 같은 침대 · 같은 사본에서 다음 시도 (새 출력 · 로그 폴더 · 본 한도 ·
+    #    시도 1 의 핀 = 이 핀 · 풀이 코드 같음)
     r5 = run_wrapper(repo, pin, home, 'r5', wenv, timeout=900, attempt=2)
     f5 = (r5.rep or {}).get('fields') or {}
     raw5 = read_text(os.path.join(r5.lg, 'runner.log')) if os.path.exists(os.path.join(r5.lg, 'runner.log')) else ''
     bf5 = dict((x.get('name'), x.get('sha256')) for x in (r5.rep or {}).get('kit_run_before_files') or [])
-    chk('R5a 시도 2 꼴 (시도 1 의 .failed 가 남은 채): SKIP · 멈춤 없이 새로 푼다 (러너 rc 0 · STEP3 solve 줄 · SKIP 줄 없음) · 판독 rc 0 · 출처 = 시도 2 출력 폴더',
+    chk('R5a 시도 2 꼴 (시도 1 의 .failed 가 남은 채): SKIP · 멈춤 없이 새로 푼다 (러너 rc 0 · STEP3 solve 줄 · SKIP 줄 없음) · 판독 rc 0 · 출처 = 시도 2 출력 폴더 · '
+        '반복 수 = R2 와 같음 (같은 침대) · meta attempt1_pin = 이 핀 · code_same_as_attempt1=1',
         r5.rc == 0 and r5.meta.get('runner_rc') == '0' and 'STEP3 solve:' in raw5 and '[p2] SKIP' not in raw5 and (r5.rep or {}).get('rc') == 0
-        and (r5.rep or {}).get('source') == 'outdir' and f5.get('cg_iters') == it_ok and r5.meta.get('attempt') == '2', (r5.rc, (r5.rep or {}).get('problems'), raw5[-400:]))
+        and (r5.rep or {}).get('source') == 'outdir' and f5.get('cg_iters') == it_ok and r5.meta.get('attempt') == '2'
+        and r5.meta.get('attempt1_pin') == pin and r5.meta.get('code_same_as_attempt1') == '1', (r5.rc, (r5.rep or {}).get('problems'), raw5[-400:]))
     chk('R5b 시도 1 의 남은 .failed: 시도 2 가 시작 전에 바이트 사본 (kit_run_before · sha256 = 시도 1 로그 폴더의 사본) · 시도 2 판독기는 그것을 새 파일로 읽지 않는다',
         s3sha is not None and bf5.get(ARM + '.json.failed') == s3sha and ARM + '.json.failed' not in [
             x.get('name') for x in (r5.rep or {}).get('kit_run_new_files') or []], (s3sha, bf5))
     # R2e (대조) 같은 실물 팔을 실제 S0 계획 (kgy 침대의 입력 지문) 으로 읽으면 다른 침대로 잡는다
     mod = load_reader(READER)
-    rr = run_reader(mod, r.out, r.lg, run2, s0=True)
+    rr = run_reader(mod, r.out, r.lg, run_r2, s0=True)
     chk('R2e (대조) 같은 팔 + 실제 S0 계획 = 다른 침대: rc 4 · bed_inputs_match_s0 False',
         rr.rc == 4 and fld(rr, 'bed_inputs_match_s0') is False, (rr.rc, (rr.rep or {}).get('problems')))
     # R4 GPU 를 못 쓰는 기계 (cupy 는 불러와지지만 풀이 모듈이 없다) + 등록 축: payload 가 CPU 로 내려가지 않고 멈춘다 (--step3-require-gpu)
@@ -2992,7 +3485,7 @@ def t_R():
     E2E.make_bed(run4)
     write_text(os.path.join(home4, 'sdcp', KIT, 'run_mpm.sh'), kit_gpu)
     os.makedirs(os.path.join(home4, '_shim'))
-    r4 = run_wrapper(repo, pin, home4, 'r4', wrapper_env(home4, None, SHIM_LOG=os.path.join(home4, '_shim'), PYTHONUTF8='1',
+    r4 = run_wrapper(repo_r2, pin_r2, home4, 'r4', wrapper_env(home4, None, SHIM_LOG=os.path.join(home4, '_shim'), PYTHONUTF8='1',
                                                         PYTHONIOENCODING='utf-8'), timeout=900)
     raw4 = read_text(os.path.join(r4.lg, 'runner.log')) if os.path.exists(os.path.join(r4.lg, 'runner.log')) else ''
     masked4 = ((r4.rep or {}).get('log') or {}).get('masked_lines') or []
