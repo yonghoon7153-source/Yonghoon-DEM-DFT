@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 255편 · 생성 2026-11-10
+> digest 256편 · 생성 2026-11-10
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -54,7 +54,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (52편)
+## 접촉역학 · 소성 (DEM 이론) (53편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -65,6 +65,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy — AFM 콜로이드 탐침 한 개를 "자기 물질" 결정면과 "상대 물질" 결정면에 번갈아 대어 떼는 힘의 비 (C | experiment (AFM colloid-probe pull-off forces on engineered  | 2026-10-13 | 🖼 13 |
 | `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics — Part I 의 AFM 응집 · 접착 비를 환산 혼합 계수 Λ₁₂ = F^ad₁₂ / F^co₁₁ ( | experiment (dry powder inhaler blends — cohesive-adhesive ba | 2026-10-13 | 🖼 15 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
+| `cantor2020_compaction_model_highly_deformable_particles` | 매우 무른 (초탄성) 원판 집합의 2D 등방 압밀과 미시역학 압밀 식의 원전 — non-smooth contact dynamics (NSCD) + 입자별 FE (원판 1500 개 × 삼각형 92 개, LMGC90) · 입자 간 마찰 0–0.8 · 압밀 식 P(φ) = (Zφ/2π) × 단일 입자 상자 법칙 · 체적탄성률  | NSCD+FEM 2D 다입자 (LMGC90 — neo-Hookean 비압축 FE 원판 1500 개 × 삼각형 | 2026-11-10 | 🖼 20 |
 | `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` | 강체 + 매우 무른(초탄성) 입자 혼합물의 등방 압밀 — non-smooth contact dynamics (NSCD) + 입자별 FE 2D 시뮬레이션과 미시역학 압밀 법칙 P(φ, κ) · 최대 밀도 φmax(κ) — ★★ 우리 NCM(강체) + SE(무른) 복합 양극 가압의 가장 가까운 공개 유비 · 재설계 후보 B  | NSCD+FEM 2D 다입자 (LMGC90 — 강체 원판 + neo-Hookean 비압축 FE 원판 혼합,  | 2026-11-09 | 🖼 21 |
 | `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` | 무른 + 강체 입자 혼합물의 미시역학 압밀 모델 — 학회 단편 (Powders & Grains 2021) · PRE 2020 판의 요약 + 시작 상태 표 (φ0 · Z0) · NSCD contact dynamics + FE 2D — Cárdenas-Barrantes, Cantor, Barés, Renouf, Azéma ( | NSCD+FEM 2D 다입자 (LMGC90 — 강체 + neo-Hookean 비압축 FE 원판 혼합, 등방  | 2026-11-09 | 🖼 7 |
 | `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` | 무른(초탄성 실리콘) + 단단한(PVC) 2D 입자 혼합물의 일축 압밀 실험 — 대변형 DIC 로 입자 내부 변형장 · 배위수 · 접촉 길이 (contact length) 를 재고 미시역학 압밀 법칙을 일축으로 확장 · 검증 — Cárdenas-Barrantes, Barés, Renouf, Azéma (Phys. Rev. | experiment 2D (실리콘 초탄성 + PVC 강체 이분산 원기둥 혼합 · 일축 압축 · 평판 스캐너  | 2026-11-09 | 🖼 14 |

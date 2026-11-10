@@ -368,3 +368,6 @@ fitzhugh2019_ht_functionally_stable_interfaces_sulfide	a_high_throughput_search_
 # ── LPSCl 입자 고속 나노압입 + 압력별 펠릿 밀도 (Var 외 2026 · J. Power Sources 668, 239292) — litdb 2026-11-10 · 밑줄 · 공백 두 변형 (본문 · Sup 둘 다 이 제목 조각을 갖는다) ──
 var2026_sulfide_se_mechanical_properties_local_indentation_pellet	the_mechanical_properties_of_solid_sulfur_electrolytes
 var2026_sulfide_se_mechanical_properties_local_indentation_pellet	the mechanical properties of solid sulfur electrolytes
+# ── 무른 원판 2D 압밀 식의 원전 (Cantor 외 2020 · PRL 124, 208003) — litdb 2026-11-10 · 11-09 stage A 묶음 (Cárdenas-Barrantes 계열) 의 2D 원전 · 밑줄 · 공백 두 변형 ──
+cantor2020_compaction_model_highly_deformable_particles	compaction_model_for_highly_deformable_particle_assemblies
+cantor2020_compaction_model_highly_deformable_particles	compaction model for highly deformable particle assemblies
