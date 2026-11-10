@@ -287,6 +287,7 @@
   "도구": "새 도구 (예: tools/doping/b2o3_bo_anneal_diag.py — 프레임 떼기 · 결속 · 판독기 anneal_judge 호출 · selftest 음성 포함) 를 진단 결과를 읽기 전에 커밋한다 · 판독기 (b2o3_bo_readout.py) 와 실행 중인 $R/src 판은 건드리지 않는다 (판 고정)",
   "안_바뀌는_것": "판독 계약 (anneal · 여유 0.20 · G1–G3 · 짝 규칙) · 기계 판독 값 · 계획 54 런 · t_a 100 ps · 9 단계 뒤 DFT 절차 · 상한 85",
   "Codex": "편지 EA (초안 kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md) — 두 시점 일치 규칙이 충분한가 · 더 필요한 진단 · 승자 문장의 한계",
-  "by": "agent · 2026-11-10 · 사용자 '권고대로해'"
+  "by": "agent · 2026-11-10 · 사용자 '권고대로해'",
+  "⏩_도구_2026_11_10": "tools/doping/b2o3_bo_anneal_diag.py (extract · judge) — 진단 결과를 읽기 전에 커밋 · selftest 34/34 (음성 23) · 깨기 14/14 빨강 (규칙 유지 · 올림 · 궤적 sha · 결속 · 이름 키 · 본 판독 대조 · 프레임 어긋남 · 프레임 sha · 집합 · 실패 런 포함 · Δ 부호 · 섞인 기록 · t_a · 덮어쓰기) · 판독기는 안 고침 (--readout_tool = 판 고정 $R/src 의 b2o3_bo_readout.py · sha256 872d91f7…) · 실패한 8 단계 런은 진단에서도 실패 · 진단 이완은 실행 목적 b2o3_bo/anneal_diag_t050 으로 묶는다"
  }
 }
