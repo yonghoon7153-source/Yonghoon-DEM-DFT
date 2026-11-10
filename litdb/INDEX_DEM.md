@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 259편 · 생성 2026-11-10
+> digest 260편 · 생성 2026-11-10
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -54,7 +54,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (55편)
+## 접촉역학 · 소성 (DEM 이론) (56편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -108,6 +108,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` | 냉간분무(cold spray) 양극 복합분말 증착을 탄소성(elastoplastic) 결합구 DEM 으로 — NMC622 단일입자 충돌: 기판 항복응력이 지배 · 사선 충돌은 증착을 죽인다 · PVDF 최소량 문턱 · 입자만 한 크레이터만 돕는다 — Tovar et al. (Surf. Coat. Technol. 2026, | DEM (elastoplastic bonded-sphere, single-particle impact) +  | 2026-11-02 | 🖼 36 |
 | `vanlew2015_modifying_youngs_modulus_distribution` | 단일 pebble 압쇄실험의 E 분포로 DEM 입자별 Young률을 수정 (Hertz 접촉) — Van Lew (Fusion Eng. Des. 2015) | DEM (Hertz 접촉 + 단일입자 압쇄실험 → 입자별 E) | 2026-08-25 | 🖼 5 |
 | `varkey2026_multicontact_elastoplastic_dem` | 응력기반 multi-contact 탄소성 모델로 SE separator·양극 압밀 DEM — Varkey (Adv. Powder Tech. 2026) | DEM | 2026-06-23 | — |
+| `vu2019_soft_grain_compression_beyond_jamming_dic` | 무른 입자 (초탄성 실리콘 · 탄소성 한천 하이드로겔) 의 2D 일축 단계 압축 실험 — 재밍점을 지나 공칭 충전율 (packing fraction) 1.34 까지, 대변형 DIC 로 입자 내부 오른쪽 Cauchy–Green 변형장 · 접촉 판정 (경계 0.5 mm 근접 + 변형 1 % · contact criterion | experiment 2D (초탄성 실리콘 원기둥 · 탄소성 (elastoplastic) 한천 1 % 하이드로 | 2026-11-10 | 🖼 28 |
 | `wang2024_hot_pressed_lpscl_pressure_invariant_conductivity` | 열간 가압 (hot pressing) 한 Li₆PS₅Cl 단독 펠릿 — 가압 온도 20–200 °C · 압력 150–450 MPa · 분말 질량 스윕의 겉보기 밀도 (densification · porosity) 와 이온전도도, 측정 스택압 0–8 MPa 에서 σ ≈2.7 mS/cm 불변 ↔ 냉간 펠릿 ≈20 배 변동 — | experiment (hot-press powder compaction · densification · po | 2026-10-14 | 🖼 27 |
 | `xu2017_nmc532_nanoindentation_modulus_hardness_toughness` | NMC532 이차입자의 E · H · 계면 K_c 를 SOC · 사이클의 함수로 — 글러브박스 나노압입 (Berkovich Oliver–Pharr + cube-corner pop-in), 소결 펠릿 · 제일원리 E 대비 — Xu, Sun, de Vasconcelos, Zhao (J. Electrochem. Soc. 201 | exp (instrumented nanoindentation in Ar glovebox — Berkovich | 2026-09-25 | 🖼 9 |
 | `zunker2024_bulk_elastic_partII` | 벌크탄성 구간 — 점착 탄소성 입자의 접촉모델 Part II (A mechanically-derived contact model for adhesive elastic-perfectly plastic particles, Part II: Contact under high compaction—modeling a bulk ela | contact-mechanics theory (bulk-elastic 추가) + FEM(Abaqus 3D)  | 2026-08-25 | — |
