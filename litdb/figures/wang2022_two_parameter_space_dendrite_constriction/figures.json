@@ -28,7 +28,7 @@
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
    "blank": 0.863,
    "viewed": true,
-   "viewed_how": "2026-11-10 litdb-curator: Read + bar tops and marker centroids read from the embedded raster (checks: K* bars 25.19 / 8.44 vs text 25.1 / 8.4 GPa; Br-series E_hull 31-76 vs text 30-75 meV/atom; original-composition markers = Li 5.5, P 1.0, S 4.5, Cl 1.5)"
+   "viewed_how": "2026-11-10 litdb-curator: Read + bar tops and marker centroids read from the embedded raster (checks: K* bars 25.19 / 8.44 vs text 25.1 / 8.4 GPa; Br-series E_hull 31-76 vs text 30-75 meV/atom; original-composition markers = Li 5.5, P 1.0, S 4.5, Cl 1.5) | reproducible with tools/litdb/wang2022_two_parameter_readout.py -> digitized.csv"
   },
   {
    "key": "f2",
@@ -50,7 +50,7 @@
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
    "blank": 0.942,
    "viewed": true,
-   "viewed_how": "2026-11-10 litdb-curator: Read + disc centroids read from the embedded raster (check: core point 24.8 GPa / 241 meV/atom vs text 25.1 GPa / 237 meV/atom)"
+   "viewed_how": "2026-11-10 litdb-curator: Read + disc centroids read from the embedded raster (check: core point 24.8 GPa / 241 meV/atom vs text 25.1 GPa / 237 meV/atom) | reproducible with tools/litdb/wang2022_two_parameter_readout.py -> digitized.csv"
   },
   {
    "key": "f3",
@@ -167,7 +167,7 @@
    ],
    "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 177.1-429.7) started above the figure and pulled in the title-page author lines ('Equal Contribution' / 'Corresponding author', y 183-211); clip = embedded raster image bbox (90.0,250.7,521.9,423.7) + 6 pt margin, above caption (y 432.7)",
    "viewed": true,
-   "viewed_how": "2026-11-10 litdb-curator: Read (before and after recrop) + marker centroids read from the embedded raster (checks: the 20 / 30 / 36 GPa curves give one V*eps per x; max over x of |Hull|/(V*eps) = 39.7 GPa at x = 0.4, as printed in the legend)"
+   "viewed_how": "2026-11-10 litdb-curator: Read (before and after recrop) + marker centroids read from the embedded raster (checks: the 20 / 30 / 36 GPa curves give one V*eps per x; max over x of |Hull|/(V*eps) = 39.7 GPa at x = 0.4, as printed in the legend) | reproducible with tools/litdb/wang2022_two_parameter_readout.py -> digitized.csv"
   },
   {
    "key": "fS2",
@@ -189,7 +189,7 @@
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
    "blank": 0.875,
    "viewed": true,
-   "viewed_how": "2026-11-10 litdb-curator: Read + zoom + bar tops and marker centroids read from the embedded raster (same calibration checks as Fig. 1C: original bar 25.1 GPa, y = 0 bars 8.5 GPa)"
+   "viewed_how": "2026-11-10 litdb-curator: Read + zoom + bar tops and marker centroids read from the embedded raster (same calibration checks as Fig. 1C: original bar 25.1 GPa, y = 0 bars 8.5 GPa) | reproducible with tools/litdb/wang2022_two_parameter_readout.py -> digitized.csv"
   },
   {
    "key": "fS3",
