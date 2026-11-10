@@ -1,0 +1,3 @@
+3.10.20
+Linux-4.18.0-553.40.1.el8_10.x86_64-x86_64-with-glibc2.28
+<HOME>/.conda/envs/myenv/bin/python3

@@ -1,0 +1,2 @@
+Filesystem                                     Inodes     IUsed     IFree IUse% Mounted on
+<REMOTE>:/lustre 755667898 196186622 559481276   26% /lustre

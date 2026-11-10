@@ -1,0 +1,5 @@
+Disk quotas for usr <USER> (uid <UID>):
+     Filesystem  kbytes   quota   limit   grace   files   quota   limit   grace
+        /lustre 2228675672       0       0       -  543500       0       0       -
+uid <UID> is using default block quota setting
+uid <UID> is using default file quota setting

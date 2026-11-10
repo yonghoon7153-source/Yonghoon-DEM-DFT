@@ -1,0 +1,1 @@
+/lustre lustre rw,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,encrypt <REMOTE>:/lustre

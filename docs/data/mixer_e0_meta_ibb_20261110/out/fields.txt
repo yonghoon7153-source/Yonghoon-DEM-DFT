@@ -1,0 +1,579 @@
+format=mixer_e0_meta/1
+block_id=mixer_e0_meta_block draft 2026-11-10
+target_alias=ibb
+folder=~/mixer_e0_meta_20261110T144956Z
+captured_start_utc=2026-11-10T14:49:56Z
+home_real_relation=prefix:/lustre
+bash_version=4.4.20(1)-release
+timeout_kill_after=-k 5
+budget_seconds=900
+switch.MIX_BIN_HELP=1
+switch.MIX_SLURM=1
+redaction_tokens=4
+script_md5=4e01c25f8f3a1cebc9daee51e2999cc4
+script_sha256=4d9e11f4ea216e71d506e9225160e92e5bd89bd52461c929ce72e8f4691a0553
+script_bytes=32816
+tool.stat=present
+tool.readlink=present
+tool.find=present
+tool.sha256sum=present
+tool.md5sum=present
+tool.awk=present
+tool.grep=present
+tool.head=present
+tool.wc=present
+tool.tr=present
+tool.cut=present
+tool.tar=present
+tool.gzip=present
+tool.du=present
+tool.df=present
+tool.file=present
+tool.ldd=present
+tool.git=present
+tool.python3=present
+tool.findmnt=present
+tool.getfacl=present
+tool.quota=present
+tool.lfs=present
+tool.sinfo=present
+tool.squeue=present
+tool.sacctmgr=present
+tool.hostname=present
+tool.id=present
+tool.date=present
+tool.uname=present
+tool.printenv=present
+inside_slurm_allocation=no
+env.mpi_slurm_var_names=
+env.PATH=<HOME>/LIGGGHTS-PUBLIC/src:<HOME>/qe-7.4.1/bin:<HOME>/.conda/envs/myenv/bin:/opt/ohpc/pub/apps/anaconda3/bin:/opt/ohpc/pub/apps/anaconda3/condabin:<HOME>/.local/bin:<HOME>/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/var/lib/snapd/snap/bin:/opt/dell/srvadmin/bin
+env.LD_LIBRARY_PATH=UNSET
+env.CONDA_DEFAULT_ENV=base
+env.CONDA_PREFIX=/opt/ohpc/pub/apps/anaconda3
+env.CONDA_EXE=/opt/ohpc/pub/apps/anaconda3/bin/conda
+env.OMP_NUM_THREADS=UNSET
+env.MKL_NUM_THREADS=UNSET
+env.OPENBLAS_NUM_THREADS=UNSET
+env.LOADEDMODULES=UNSET
+env.MODULEPATH=/opt/ohpc/pub/modulefiles
+env.LMOD_VERSION=8.7.6
+env.MODULESHOME=/opt/ohpc/admin/lmod/lmod
+env.SHELL=/bin/bash
+env.LMP=UNSET
+repo1.path=<HOME_REAL>/Yonghoon-DEM-DFT
+repo2.path=<HOME_REAL>/unload_src_f9edcc41
+repo3.path=<HOME_REAL>/unload_src_799459c8
+repo4.path=<HOME_REAL>/unload_src_68431600
+repo5.path=<HOME_REAL>/unload_src_adbd6124
+repo6.path=<HOME_REAL>/unload_src_a30fe150
+repo7.path=<HOME_REAL>/unload_src_44a03453
+repo8.path=<HOME_REAL>/unload_src_dfd89b96
+repo9.path=<HOME_REAL>/unload_src_4c29705fa1c4
+repo10.path=<HOME_REAL>/ps73_branch_src_3a75391f
+n_repos=10
+mix1.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs
+mix1.realpath=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs
+mix1.stat=directory|775|self|self|gw=yes|ow=no
+mix1_run1.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs/LH_s32452843
+mix1_run1.dir.restart.entries=3
+mix1_run1.dir.data.entries=0
+mix1_run1.log.liggghts.bytes=17863
+mix1_run1.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix1_run1.log.lmp.bytes=23643
+mix1_run1.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix1_run1.dir.logs.entries=1
+mix1_run1.dir.post.entries=11
+mix1.other_file.LH_s49979687.gen.log.bytes=742
+mix1_run2.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs/LH_s67867967
+mix1_run2.dir.restart.entries=3
+mix1_run2.dir.data.entries=0
+mix1_run2.log.liggghts.bytes=17864
+mix1_run2.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix1_run2.log.lmp.bytes=23490
+mix1_run2.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix1_run2.dir.logs.entries=1
+mix1_run2.dir.post.entries=10
+mix1.other_file.LH_s32452843.gen.log.bytes=742
+mix1_run3.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs/LC_s49979687
+mix1_run4.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs/LH_s49979687
+mix1_run4.dir.restart.entries=3
+mix1_run4.dir.data.entries=0
+mix1_run4.log.liggghts.bytes=17858
+mix1_run4.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix1_run4.log.lmp.bytes=23462
+mix1_run4.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix1_run4.dir.logs.entries=1
+mix1_run4.dir.post.entries=11
+mix1_run5.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs/LC_s32452843
+mix1.other_file.LH_s67867967.gen.log.bytes=742
+mix1_run6.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs/E0_s32452843
+mix1_run6.dir.post.entries=1
+mix1_run7.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs/LC_s67867967
+mix1.n_subdirs=7
+mixdir.absent1=<HOME_REAL>/unload_src_f9edcc41/dem_scripts/mixer_20260921/runs
+mixdir.absent2=<HOME_REAL>/unload_src_799459c8/dem_scripts/mixer_20260921/runs
+mixdir.absent3=<HOME_REAL>/unload_src_68431600/dem_scripts/mixer_20260921/runs
+mixdir.absent4=<HOME_REAL>/unload_src_adbd6124/dem_scripts/mixer_20260921/runs
+mixdir.absent5=<HOME_REAL>/unload_src_a30fe150/dem_scripts/mixer_20260921/runs
+mixdir.absent6=<HOME_REAL>/unload_src_44a03453/dem_scripts/mixer_20260921/runs
+mixdir.absent7=<HOME_REAL>/unload_src_dfd89b96/dem_scripts/mixer_20260921/runs
+mixdir.absent8=<HOME_REAL>/unload_src_4c29705fa1c4/dem_scripts/mixer_20260921/runs
+mixdir.absent9=<HOME_REAL>/ps73_branch_src_3a75391f/dem_scripts/mixer_20260921/runs
+mix2.path=<HOME>/mixer_dev7_20260930
+mix2.realpath=<HOME_REAL>/mixer_dev7_20260930
+mix2.stat=directory|775|self|self|gw=yes|ow=no
+mix2_run1.path=<HOME_REAL>/mixer_dev7_20260930/E0_ref_s32452843
+mix2_run1.log.liggghts.bytes=26780
+mix2_run1.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run1.dir.restart.entries=3
+mix2_run1.dir.post.entries=867
+mix2_run1.log.lmp.bytes=23191
+mix2_run1.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run1.dir.logs.entries=1
+mix2_run2.path=<HOME_REAL>/mixer_dev7_20260930/E0_ref_s49979687
+mix2_run2.dir.restart.entries=3
+mix2_run2.log.liggghts.bytes=26777
+mix2_run2.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run2.log.lmp.bytes=23134
+mix2_run2.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run2.dir.logs.entries=1
+mix2_run2.dir.post.entries=867
+mix2_run3.path=<HOME_REAL>/mixer_dev7_20260930/E0_ref_s67867967
+mix2_run3.log.liggghts.bytes=26786
+mix2_run3.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run3.dir.restart.entries=3
+mix2_run3.dir.post.entries=867
+mix2_run3.log.lmp.bytes=23170
+mix2_run3.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run3.dir.logs.entries=1
+mix2_run4.path=<HOME_REAL>/mixer_dev7_20260930/E0_ref_dthalf_s32452843
+mix2_run4.log.liggghts.bytes=38141
+mix2_run4.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run4.dir.restart.entries=3
+mix2_run4.dir.post.entries=867
+mix2_run4.log.lmp.bytes=34329
+mix2_run4.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run4.dir.logs.entries=1
+mix2_run5.path=<HOME_REAL>/mixer_dev7_20260930/npprobe20_E0_ref_s32452843
+mix2_run5.log.liggghts.bytes=12018
+mix2_run5.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run5.dir.restart.entries=2
+mix2_run5.dir.post.entries=314
+mix2_run5.log.lmp.bytes=13750
+mix2_run5.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run5.dir.logs.entries=1
+mix2.hidden..e0_diag.entries=2
+mix2_run6.path=<HOME_REAL>/mixer_dev7_20260930/npprobe5_E0_ref_s32452843
+mix2_run6.log.liggghts.bytes=12013
+mix2_run6.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run6.dir.restart.entries=2
+mix2_run6.dir.post.entries=135
+mix2_run6.log.lmp.bytes=7133
+mix2_run6.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run6.dir.logs.entries=1
+mix2_run7.path=<HOME_REAL>/mixer_dev7_20260930/E0_ref2_s32452843
+mix2_run7.dir.restart.entries=3
+mix2_run7.log.liggghts.bytes=31390
+mix2_run7.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run7.log.lmp.bytes=27801
+mix2_run7.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run7.dir.logs.entries=1
+mix2_run7.dir.post.entries=1227
+mix2_run8.path=<HOME_REAL>/mixer_dev7_20260930/npprobe10_E0_ref_s32452843
+mix2_run8.dir.restart.entries=2
+mix2_run8.log.liggghts.bytes=12019
+mix2_run8.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run8.log.lmp.bytes=9529
+mix2_run8.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix2_run8.dir.logs.entries=1
+mix2_run8.dir.post.entries=211
+mix2.n_subdirs=8
+mix3.path=<HOME>/mixer_dev7_20260930_v26
+mix3.realpath=<HOME_REAL>/mixer_dev7_20260930_v26
+mix3.stat=directory|775|self|self|gw=yes|ow=no
+mix3_run1.path=<HOME_REAL>/mixer_dev7_20260930_v26/E0_ref2_s32452843
+mix3_run1.dir.restart.entries=3
+mix3_run1.log.liggghts.bytes=34449
+mix3_run1.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run1.log.lmp.bytes=30866
+mix3_run1.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run1.dir.logs.entries=1
+mix3_run1.dir.post.entries=1467
+mix3_run2.path=<HOME_REAL>/mixer_dev7_20260930_v26/exact_LU637_settled
+mix3_run2.log.liggghts.bytes=16432
+mix3_run2.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run2.symlink.Drum.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Drum.stl
+mix3_run2.dir.exact.entries=2
+mix3_run2.symlink.Front.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Front.stl
+mix3_run2.symlink.Back.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Back.stl
+mix3.hidden..e0_diag.entries=6
+mix3_run3.path=<HOME_REAL>/mixer_dev7_20260930_v26/exact_LU212_a
+mix3_run3.log.liggghts.bytes=16604
+mix3_run3.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run3.symlink.Drum.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Drum.stl
+mix3_run3.dir.exact.entries=2
+mix3_run3.symlink.Front.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Front.stl
+mix3_run3.symlink.Back.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Back.stl
+mix3_run4.path=<HOME_REAL>/mixer_dev7_20260930_v26/npprobe20_E0_ref_s32452843
+mix3_run4.log.liggghts.bytes=12011
+mix3_run4.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run4.dir.restart.entries=2
+mix3_run4.dir.post.entries=307
+mix3_run4.log.lmp.bytes=13687
+mix3_run4.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run4.dir.logs.entries=1
+mix3_run5.path=<HOME_REAL>/mixer_dev7_20260930_v26/exact_LU212_settled
+mix3_run5.symlink.Drum.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Drum.stl
+mix3_run5.dir.exact.entries=2
+mix3_run5.symlink.Back.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Back.stl
+mix3_run5.log.liggghts.bytes=16414
+mix3_run5.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run5.symlink.Front.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Front.stl
+mix3_run6.path=<HOME_REAL>/mixer_dev7_20260930_v26/LC_ref_r2_s32452843
+mix3_run6.dir.restart.entries=3
+mix3_run6.log.liggghts.bytes=108187
+mix3_run6.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run6.log.lmp.bytes=108951
+mix3_run6.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run6.dir.logs.entries=1
+mix3_run6.dir.post.entries=234
+mix3_run7.path=<HOME_REAL>/mixer_dev7_20260930_v26/dev_u_M_prelim
+mix3_run8.path=<HOME_REAL>/mixer_dev7_20260930_v26/exact_LU212_b
+mix3_run8.log.liggghts.bytes=16604
+mix3_run8.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run8.symlink.Drum.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Drum.stl
+mix3_run8.dir.exact.entries=2
+mix3_run8.symlink.Front.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Front.stl
+mix3_run8.symlink.Back.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843/Back.stl
+mix3_run9.path=<HOME_REAL>/mixer_dev7_20260930_v26/E0_ref_s67867967
+mix3_run9.log.liggghts.bytes=28947
+mix3_run9.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run9.dir.restart.entries=3
+mix3_run9.dir.post.entries=1037
+mix3_run9.log.lmp.bytes=25339
+mix3_run9.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run9.dir.logs.entries=1
+mix3_run10.path=<HOME_REAL>/mixer_dev7_20260930_v26/exact_LU637_b
+mix3_run10.log.liggghts.bytes=16624
+mix3_run10.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run10.symlink.Drum.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Drum.stl
+mix3_run10.dir.exact.entries=2
+mix3_run10.symlink.Front.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Front.stl
+mix3_run10.symlink.Back.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Back.stl
+mix3_run11.path=<HOME_REAL>/mixer_dev7_20260930_v26/LHx10_ref_r2_s32452843
+mix3_run11.log.liggghts.bytes=108253
+mix3_run11.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run11.dir.restart.entries=3
+mix3_run11.dir.post.entries=234
+mix3_run11.log.lmp.bytes=108981
+mix3_run11.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run11.dir.logs.entries=1
+mix3_run12.path=<HOME_REAL>/mixer_dev7_20260930_v26/LU212_ref_r2_s32452843
+mix3_run12.dir.restart.entries=3
+mix3_run12.log.liggghts.bytes=108246
+mix3_run12.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run12.log.lmp.bytes=108945
+mix3_run12.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run12.dir.logs.entries=1
+mix3_run12.dir.post.entries=234
+mix3_run13.path=<HOME_REAL>/mixer_dev7_20260930_v26/npprobe10_E0_ref_s32452843
+mix3_run13.dir.restart.entries=2
+mix3_run13.log.liggghts.bytes=12013
+mix3_run13.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run13.log.lmp.bytes=10235
+mix3_run13.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run13.dir.logs.entries=1
+mix3_run13.dir.post.entries=267
+mix3_run14.path=<HOME_REAL>/mixer_dev7_20260930_v26/E0_ref_dthalf_s32452843
+mix3_run14.log.liggghts.bytes=42420
+mix3_run14.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run14.dir.restart.entries=3
+mix3_run14.dir.post.entries=1037
+mix3_run14.log.lmp.bytes=38615
+mix3_run14.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run14.dir.logs.entries=1
+mix3_run15.path=<HOME_REAL>/mixer_dev7_20260930_v26/LH_ref_r2_s32452843
+mix3_run15.log.liggghts.bytes=108221
+mix3_run15.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run15.dir.restart.entries=3
+mix3_run15.dir.post.entries=234
+mix3_run15.log.lmp.bytes=108957
+mix3_run15.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run15.dir.logs.entries=1
+mix3_run16.path=<HOME_REAL>/mixer_dev7_20260930_v26/LHx30_ref_r2_s32452843
+mix3_run16.dir.restart.entries=3
+mix3_run16.log.liggghts.bytes=108251
+mix3_run16.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run16.log.lmp.bytes=108925
+mix3_run16.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run16.dir.logs.entries=1
+mix3_run16.dir.post.entries=234
+mix3_run17.path=<HOME_REAL>/mixer_dev7_20260930_v26/npprobe5_E0_ref_s32452843
+mix3_run17.log.liggghts.bytes=12008
+mix3_run17.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run17.dir.restart.entries=2
+mix3_run17.dir.post.entries=170
+mix3_run17.log.lmp.bytes=7584
+mix3_run17.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run17.dir.logs.entries=1
+mix3_run18.path=<HOME_REAL>/mixer_dev7_20260930_v26/dev_rot_M_prelim
+mix3_run19.path=<HOME_REAL>/mixer_dev7_20260930_v26/dev_bo_M_prelim
+mix3_run20.path=<HOME_REAL>/mixer_dev7_20260930_v26/exact_LU637_a
+mix3_run20.log.liggghts.bytes=16622
+mix3_run20.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run20.symlink.Drum.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Drum.stl
+mix3_run20.dir.exact.entries=2
+mix3_run20.symlink.Front.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Front.stl
+mix3_run20.symlink.Back.stl=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843/Back.stl
+mix3_run21.path=<HOME_REAL>/mixer_dev7_20260930_v26/LU637_ref_r2_s32452843
+mix3_run21.log.liggghts.bytes=108261
+mix3_run21.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run21.dir.restart.entries=3
+mix3_run21.dir.post.entries=234
+mix3_run21.log.lmp.bytes=108942
+mix3_run21.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run21.dir.logs.entries=1
+mix3_run22.path=<HOME_REAL>/mixer_dev7_20260930_v26/E0_ref_s49979687
+mix3_run22.dir.restart.entries=3
+mix3_run22.log.liggghts.bytes=28951
+mix3_run22.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run22.log.lmp.bytes=25316
+mix3_run22.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run22.dir.logs.entries=1
+mix3_run22.dir.post.entries=1037
+mix3_run23.path=<HOME_REAL>/mixer_dev7_20260930_v26/E0_ref_s32452843
+mix3_run23.log.liggghts.bytes=28950
+mix3_run23.log.liggghts.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run23.dir.restart.entries=3
+mix3_run23.dir.post.entries=1037
+mix3_run23.log.lmp.bytes=25369
+mix3_run23.log.lmp.banner=LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+mix3_run23.dir.logs.entries=1
+mix3.n_subdirs=23
+mixdir.absent10=<HOME>/mixer_precal_first8_20261106
+n_mixdirs=3
+first8.e0_deck_vs_static=absent
+n_seal_files=50
+n_diag_files=6
+lmp.candidate1=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate2=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate3=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate4=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate5=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate6=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate7=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate8=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate9=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate10=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate11=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate12=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate13=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate14=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate15=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate16=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate17=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate18=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate19=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate20=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate21=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate22=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate23=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate24=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate25=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate26=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate27=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate28=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate29=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate30=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate31=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate32=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate33=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate34=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate35=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate36=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate37=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate38=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate39=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate40=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate41=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate42=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate43=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate44=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate45=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate46=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate47=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate48=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate49=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate50=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate51=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate52=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate53=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate54=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate55=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate56=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate57=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate58=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate59=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate60=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate61=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate62=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate63=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate64=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate65=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate66=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate67=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate68=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate69=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate70=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate71=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate72=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate73=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate74=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate75=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate76=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate77=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate78=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate79=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate80=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate81=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate82=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate83=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate84=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate85=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate86=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate87=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate88=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate89=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate90=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate91=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate92=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate93=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate94=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate95=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate96=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate97=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate98=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate99=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate100=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate101=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate102=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate103=<HOME>/.conda/envs/myenv/bin/lmp_mpi => UNRESOLVED
+lmp.candidate104=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate105=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate106=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate107=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate108=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate109=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate110=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate111=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate112=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate113=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate114=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate115=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate116=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate117=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate118=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate119=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate120=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate121=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate122=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.candidate123=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi => <HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp.n_candidates=123
+lmp.n_unique_found=1
+lmp1.realpath=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp1.first_candidate=<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi
+lmp1.stat=regular file|775|self|self|9180024|1774503499|1774503499|743766374|162129832740773505
+lmp1.sha256=ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f
+lmp1.vs_receipt_v2_ibb_20260928=same
+lmp1.n_libs_hashed=30
+work.files_after_help=tmp tmp/ompi.<HOST>.9248 tmp/ompi.<HOST>.9248/jf.0 tmp/ompi.<HOST>.9248/jf.0/1114112000 
+mpi.candidate1=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate2=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate3=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate4=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate5=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate6=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate7=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate8=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate9=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate10=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate11=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate12=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate13=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate14=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate15=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate16=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate17=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate18=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate19=<HOME>/LIGGGHTS-PUBLIC/src/mpirun => UNRESOLVED
+mpi.candidate20=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate21=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate22=<HOME>/.conda/envs/myenv/bin/mpiexec => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate23=<HOME>/.conda/envs/myenv/bin/mpirun => <HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi.candidate24=<HOME>/miniconda3/envs/myenv/bin/mpirun => UNRESOLVED
+mpi.candidate25=<HOME>/anaconda3/envs/myenv/bin/mpirun => UNRESOLVED
+mpi.candidate26=/opt/ohpc/pub/apps/anaconda3/bin/mpirun => UNRESOLVED
+mpi.n_candidates=26
+mpi.n_unique_found=1
+mpi1.realpath=<HOME_REAL>/.conda/envs/myenv/bin/mpirun
+mpi1.first_candidate=<HOME>/.conda/envs/myenv/bin/mpirun
+mpi1.stat=regular file|755|self|self|190592|1774502927|1774502932|743766374|162129832740772351
+mpi1.sha256=407990f94f9d3863be273b44e6e8fc96b9a015a3b14763ae0aab60857d1ee72d
+py.candidate1=<HOME>/.conda/envs/myenv/bin/python3 => <HOME_REAL>/.conda/envs/myenv/bin/python3.10
+py.candidate2=<HOME>/.conda/envs/myenv/bin/python3 => <HOME_REAL>/.conda/envs/myenv/bin/python3.10
+py.candidate3=<HOME>/miniconda3/envs/myenv/bin/python3 => UNRESOLVED
+py.candidate4=<HOME>/anaconda3/envs/myenv/bin/python3 => UNRESOLVED
+py.candidate5=/opt/ohpc/pub/apps/anaconda3/bin/python3 => /opt/ohpc/pub/apps/anaconda3/bin/python3.9
+py1.realpath=<HOME_REAL>/.conda/envs/myenv/bin/python3.10
+py1.first_candidate=<HOME>/.conda/envs/myenv/bin/python3
+py1.sha256=561c350efec08f1712162c4d649f4b668bacceb68388e973efec964f0073cd92
+py2.realpath=/opt/ohpc/pub/apps/anaconda3/bin/python3.9
+py2.first_candidate=/opt/ohpc/pub/apps/anaconda3/bin/python3
+py2.sha256=e8cd6aea4793c192bb74ffcfc1c670afa4629eca2a3ea998c5e15c1c876a3917
+conda1.path=<HOME>/.conda/envs/myenv
+conda.absent=<HOME>/miniconda3/envs/myenv
+conda.absent=<HOME>/anaconda3/envs/myenv
+conda2.path=/opt/ohpc/pub/apps/anaconda3
+slurm.squeue_rc=0
+slurm.my_jobs_summary=jobs=0
+disk.home.mount=/lustre
+disk.home.fstype=lustre
+disk.mix1.mount=/lustre
+disk.mix1.fstype=lustre
+disk.mix2.mount=/lustre
+disk.mix2.fstype=lustre
+disk.mix3.mount=/lustre
+disk.mix3.fstype=lustre
+acl1.path=<HOME>
+acl1.named_entries=0
+acl2.path=<HOME_REAL>/LIGGGHTS-PUBLIC/src/lmp_mpi
+acl2.named_entries=0
+acl3.path=<HOME_REAL>/Yonghoon-DEM-DFT/dem_scripts/mixer_20260921/runs
+acl3.named_entries=0
+acl4.path=<HOME_REAL>/mixer_dev7_20260930
+acl4.named_entries=0
+acl5.path=<HOME_REAL>/mixer_dev7_20260930_v26
+acl5.named_entries=0
+acl6.path=<HOME_REAL>/Yonghoon-DEM-DFT
+acl6.named_entries=0
+acl7.path=<HOME_REAL>/unload_src_f9edcc41
+acl7.named_entries=0
+acl8.path=<HOME_REAL>/unload_src_799459c8
+acl8.named_entries=0
+acl9.path=<HOME_REAL>/unload_src_68431600
+acl9.named_entries=0
+acl10.path=<HOME_REAL>/unload_src_adbd6124
+acl10.named_entries=0
+acl11.path=<HOME_REAL>/unload_src_a30fe150
+acl11.named_entries=0
+acl12.path=<HOME_REAL>/unload_src_44a03453
+acl12.named_entries=0
+acl13.path=<HOME_REAL>/unload_src_dfd89b96
+acl13.named_entries=0
+acl14.path=<HOME_REAL>/unload_src_4c29705fa1c4
+acl14.named_entries=0
+acl15.path=<HOME_REAL>/ps73_branch_src_3a75391f
+acl15.named_entries=0
+captured_end_utc=2026-11-10T14:53:02Z
+elapsed_seconds=186
+probe_status_counts=OK=127 FAIL=13 

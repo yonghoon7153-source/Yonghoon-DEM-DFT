@@ -1,0 +1,109 @@
+LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <BUILD_USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)
+
+Command line options:
+
+-echo none/screen/log/both  : echoing of input script (-e)
+-in filename                : read input from file, not stdin (-i)
+-help                       : print this help message (-h)
+-log none/filename          : where to send log output (-l)
+-nocite                     : disable writing log.cite file (-nc)
+-partition size1 size2 ...  : assign partition sizes (-p)
+-plog basename              : basename for partition logs (-pl)
+-pscreen basename           : basename for partition screens (-ps)
+-reorder topology-specs     : processor reordering (-r)
+-screen none/filename       : where to send screen output (-sc)
+-var varname value          : set index style variable (-v)
+
+Style options compiled with this executable
+
+* Atom styles:
+
+atomic                          charge                          ellipsoid                       full                            hybrid                          
+line                            molecular                       sph                             sph/var                         sphere                          
+granular                        tri                             
+
+* Integrate styles:
+
+respa                           verlet                          
+
+* Pair styles:
+
+gran                            bubble                          gran_bubble                     hybrid                          hybrid/overlay                  
+line/lj                         soft                            sph/artVisc/tensCorr            sph/morris/tensCorr             
+
+* Normal models for pair gran:
+
+edinburgh                       edinburgh/stiffness             hertz                           hertz/stiffness                 hooke                           
+hooke/hysteresis                hooke/stiffness                 luding                          thornton_ning                   
+
+* Tangential models for pair gran:
+
+history                         tan_luding                      no_history                      
+
+* Cohesion models for pair gran:
+
+easo/capillary/viscous          sjkr                            sjkr2                           washino/capillary/viscous       
+
+* Rolling models for pair gran:
+
+cdt                             epsd                            epsd2                           epsd3                           luding                          
+
+* Surface models for pair gran:
+
+default                         multicontact                    superquadric                    
+
+* Fix styles
+
+adapt                           addforce                        ave/atom                        ave/correlate                   ave/euler                       
+ave/euler/stress                ave/histo                       ave/spatial                     ave/time                        aveforce                        
+box/relax                       buoyancy                        couple/cfd                      couple/cfd/convection           couple/cfd/radiation            
+couple/cfd/convectiveImpl       couple/cfd/speciesConvection    couple/cfd/force                couple/cfd/dragforce            couple/cfd/force/implicit       
+check/timestep/gran             check/timestep/sph              contacthistory                  contacthistory/mesh             contactproperty/atom            
+contactproperty/atom/wall       continuum/weighted              deform                          deform/check                    diam/max                        
+drag                            dt/reset                        efield                          enforce2d                       external                        
+fiber/spring/simple             freeze                          gravity                         heat/gran/conduction            heat/gran                       
+insert/pack                     insert/rate/region              insert/stream                   lineforce                       massflow/mesh                   
+massflow/mesh/sieve             mesh/surface                    mesh/surface/planar             momentum                        move                            
+move/mesh                       move/mesh/gran                  move/mesh/file                  multicontact/halfspace          multisphere                     
+multisphere/nointegration       concave                         multisphere/break               neighlist/mesh                  nve                             
+nve/asphere                     nve/asphere/noforce             nve/limit                       nve/line                        nve/noforce                     
+nve/sph                         nve/sph/stationary              nve/sphere                      particledistribution/discrete   
+particledistribution/discrete/numberbased                       particledistribution/discrete/massbased                         planeforce                      
+print                           property/atom                   property/atom/timetracer        property/atom/regiontracer/time property/atom/tracer            
+property/atom/tracer/stream     property/global                 custom_property/global          property/atomtype               property/atomtypepair           
+region/variable                 rigid                           transportequation/scalar        setforce                        sph/density/continuity          
+sph/density/corr                sph/density/drift/corr          sph/density/summation           sph/integrity                   sph/mixidx                      
+sph/pressure                    sph/velgrad                     spring                          spring/rg                       spring/self                     
+store/force                     store/state                     particletemplate/multiplespheres                                particletemplate/multisphere    
+particletemplate/sphere         viscous                         wall/gran                       wall/region                     wall/region/sph                 
+wall/sph                        wall/sph/general                wall/sph/general/gap            
+
+* Compute styles:
+
+atom/molecule                   bond/local                      centro/atom                     cluster/atom                    cna/atom                        
+com                             com/molecule                    contact/atom                    contact/atom/gran               coord/atom                      
+displace/atom                   erotate                         erotate/asphere                 erotate/multisphere             erotate/sphere                  
+erotate/sphere/atom             group/group                     gyration                        gyration/molecule               inertia/molecule                
+ke                              ke/atom                         ke/multisphere                  msd                             msd/molecule                    
+nparticles/tracer/region        pair/gran/local                 wall/gran/local                 pe                              pe/atom                         
+pressure                        property/atom                   property/local                  property/molecule               rdf                             
+reduce                          reduce/sph                      reduce/region                   rigid                           multisphere                     
+multisphere/single              slice                           stress/atom                     temp                            
+
+* Region styles:
+
+block                           cone                            cylinder                        intersect                       mesh/tet                        
+plane                           prism                           sphere                          union                           wedge                           
+
+* Dump styles:
+
+custom                          decomposition/vtk               euler/vtk                       image                           local                           
+mesh/stl                        stl                             movie                           xyz                             
+
+* Command styles
+
+change_box                      create_atoms                    create_box                      delete_atoms                    delete_bonds                    
+displace_atoms                  info                            minimize                        neigh_modify                    read_data                       
+read_dump                       read_restart                    replicate                       rotate                          run                             
+run_time                        set                             velocity                        write_data                      write_dump                      
+write_restart                   

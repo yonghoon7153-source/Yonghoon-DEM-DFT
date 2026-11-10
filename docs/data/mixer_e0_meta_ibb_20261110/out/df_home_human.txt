@@ -1,0 +1,2 @@
+Filesystem                                   Size  Used Avail Use% Mounted on
+<REMOTE>:/lustre  678T  515T  130T  80% /lustre

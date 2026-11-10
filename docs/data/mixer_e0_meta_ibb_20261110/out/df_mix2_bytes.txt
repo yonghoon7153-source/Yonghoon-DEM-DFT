@@ -1,0 +1,2 @@
+Filesystem                                         1-blocks            Used       Available Capacity Mounted on
+<REMOTE>:/lustre 745348133519360 565160840167424 142604135108608      80% /lustre
