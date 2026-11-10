@@ -1,0 +1,161 @@
+{
+ "slug": "agarwal2026_umlip_applicability_domain_ssb_interfaces",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Fig. 1: Schematic workflow of the computational methodology. The process begins with the structural relaxation of the bulk electrode and electrolyte materials using both DFT and uMLIPs. These relaxed bulk structures are cleaved to form stable slabs, which are subsequently stacked using the Zur and McGill lattice matching algorithm [44] to create interfaces. Finally, the thermodynamic, mechanical, and kinetic properties of the relaxed interface structures are evaluated.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    383.5,
+    546.1,
+    513.2
+   ],
+   "w": 1931,
+   "h": 542,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.627
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2: Interface energy and force error comparison for the evaluated uMLIPs. a Interface energy (Einterface) mean absolute error (MAE) of each uMLIP for each interface chemistry, taken over its four rattled interfaces. b Per-atom net force error of MACE for the rattled Li2O(110)/Li(210) interface, rendered with OVITO and viewed along x (left; color scale capped at 200 meV/˚A) and its profile along z (right; average weighted by a Gaussian of standard deviation 0.5 ˚A). The dashed line marks the Li|electrolyte boundary (the edge of the O sublattice facing the Li metal). c Force MAE of the x and y (in-plane) and z (normal to the interface) components and of the net error |∆F| = |FMLIP −FDFT|, averaged over all atoms of each chemistry; the in-plane and the z/net rows have different y ranges. In a and c the marker identifies the interface, and the white diamonds joined by a dotted line are e",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    66.0,
+    546.1,
+    471.0
+   ],
+   "w": 1931,
+   "h": 1689,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3: Evaluating the thermodynamic and mechanical properties of uMLIPs. a Interface formation energy (Ef) MAE of each uMLIP for each interface (markers; MAE over the four Miller- index combinations of that interface). White diamonds joined by a dotted line give each model’s mean over the six interfaces. b Work of adhesion (Wadh) MAE for each interface (markers) and each model’s Wadh RMSE over all 24 interfaces (grey bars, value written at the base of each bar), both in J/m2. c Comparison of Wadh of the most stable Miller indices predicted by DFT (Table S2), with the DFT values (grey dashed line) sorted from highest to lowest. For each model, the accuracy is the fraction of interface pairs whose Wadh order agrees with DFT, so a value of 1 means the model reproduces the DFT order. The accuracy next to the model name compares all the interface chemistries, while Binary and Polyanion only ",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    529.0,
+    462.6
+   ],
+   "w": 1930,
+   "h": 1654,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4: Comparison of lithium-ion kinetics across six solid-solid battery interfaces using various uMLIPs. a Arrhenius plots of the total Li-ion diffusivity, log10 D, against 1000/T, predicted by Allegro, MACE, NequIP, PET, Orb and UMA at 600, 700, 800 and 900 K; lines are least-squares fits for each model. The models were evaluated on the most stable Miller index configurations for each of the interfaces: Li2O/Li, Li2S/Li, LiCl/Li, β-Li3PO4/Li, γ-Li3PO4/Li, and LiPON/Li. b Activation energy (Ea) from the slope of each fit in a, for each interface and model. The PET (PET-OAM-XL checkpoint) results for Li2O/Li, Li2S/Li and LiPON/Li (open symbols, dotted fits) come from simulations with Li– Li collapse or energy drift (Figures S52 and S53) and should be read with caution.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    83.6,
+    529.0,
+    431.1
+   ],
+   "w": 1930,
+   "h": 1449,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5: Effect of the fine-tuning dataset on model performance compared to the pre-trained model. To systematically analyze the influence of training data, we fine-tuned MACE-MP-0a(medium) models on three different datasets: exclusively on slabs, exclusively on interfaces, and on all interface and slab configurations of the LiPON(100)/Li(210) interface (large crosses). The pre-trained and fine-tuned models are compared with DFT through a the Einterface error (logarithmic axis), b the force MAE of the interface structures, and the signed errors (MLIP −DFT) in c Ef and d Wadh. The octagons, thin diamonds and hexagons are the three Li Miller indices (100), (111) and (221) not included in the fine- tuning data. As this figure shows a single model and a single chemistry, its markers are tints and shades of the LiPON/Li color.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    268.2,
+    546.1,
+    542.8
+   ],
+   "w": 1931,
+   "h": 1145,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.483
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "Fig. 7: Position of the interface environments relative to the pre-training data, and com- mittee disagreement for reliability. a Force error of every atom in the interfaces, averaged over the six uMLIPs, against its differential entropy (δH) with respect to the Li–O–P–S–Cl–N subset of the OMat24 dataset, computed with QUESTS [62]. The color of each hexagonal bin is the number of atoms it contains (logarithmic scale), and the orange line is the mean force error in windows of 1 nat between δH = −4 and 20 nats (shown for windows containing at least 20 atoms). The dashed vertical line marks δH = 0; atoms with δH > 0 lie outside the domain of the reference data. b Mean force error of the atoms inside (δH ≤0, open diamonds) and outside (δH > 0, closed diamonds) the domain, for all chemistries. The standard deviation (SD) against the mean error with respect to DFT across all the models for c t",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    268.5,
+    529.0,
+    438.1
+   ],
+   "w": 1930,
+   "h": 708,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1: Summary of uMLIPs evaluated in this study, detailing their architectures, no. of parameters, structure feature representations, and training or fine-tuning datasets. All evaluated models were chosen such that they are trained on the OMat24 [25] dataset, ensuring a consistent and equitable evaluation, sharing the same reference DFT baseline. In the Datasets column, the training and fine-tuning datasets are represented as: {Training datasets}; {Fine-tuning datasets}. Architecture Model Parameters Features Datasets Allegro [38] Allegro-OAM-L 9.7M Strictly local E(3)-equivariant GNN OMat24 [25]; sAlex [25], MPtrj [47] MACE [39] MACE-MH-0 (omat head) 9.07M Higher-order E(3)-equivariant GNN OMat24; MPtrj, SPICE-1 [48], OC20 [27], OMol-1% [26], RGD1 [49], MatPES r2SCAN [50], OMat24 replay NequIP [40] NequIP-OAM-L 9.6M E(3)-equivariant message passing OMat24; sAlex, MPtrj PET [41] PET-O",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    73.6,
+    528.1,
+    467.6
+   ],
+   "w": 1922,
+   "h": 1643,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.925
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f6",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p12 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  }
+ ]
+}
