@@ -976,6 +976,7 @@ Li₆PS₅Cl 이 **7 종 황화물 중 산화물 양극에 가장 온건**(−33
 4. **Fitzhugh, Chen, Wang, Ye, Li**, *"Solid–Electrolyte-Interphase Design in Constrained Ensemble"*,
    *EES* **14**, 4574 (2021) (Park ref 25) — **"constrained ensemble"** = 기계적 구속을 넣은 계면 열역학.
    우리 §B 의 구속 축과 직접 관련.
+   → ✅ **확보 · digest 완료 (2026-11-10)**: `papers/fitzhugh2021_sei_design_constrained_ensemble.md` (DOI `10.1039/D1EE00754H` 확인 · 제목 끝은 "… for solid-state batteries") — 스크린 대상은 코팅 (유리) 조성 · argyrodite 계산 0 · 판정은 `comparison_vs_ours.md` **§J-71**.
 5. **Jung, Sun, Kim, Shin, Min**, *"Scalable AI-Accelerated Design of Dual-Doped LGPS Electrolytes"*,
    *eTransportation* **28**, 100570 (2026) (Park ref 37) — ✅ **확보·판정 완료 (2026-09-22)**
    → `papers/jung2026_scalable_ai_dual_doped_lgps.md` · **판정 🟡 인접(선점 아님)**.

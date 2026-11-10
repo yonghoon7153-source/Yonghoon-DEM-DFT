@@ -111,7 +111,7 @@ G_hull (분해 에너지 크기) 을 최대로 하는 x_β 를 **x_m** 이라 �
 | Li 저장소 (사이클) | 열린계 — 초기 SEI 의 grand potential 상도에서 분해 에너지와 반응 변형률을 얻는다 | `Fig. 1d` · Methods p. 4582 | 양극 전압에서는 Li 가 빠져나가는데 그림은 '+ N_Li' 로만 적는다 |
 | 부피 수지 | `Fig. 1d` 부피 행은 고체 상만 센다 (Σ dᵢV_Dᵢ → Σ fᵢV_Fᵢ) — N_Li 는 조성 행에만 있다 | `Fig. 1d` (실독) | **ε_RXN 의 식 자체** · Li 를 부피에 세는지 밝힌 문장 · 기체/휘발 산물 처리 — 전부 refs 11–13 에 맡겼다 |
 | 정규화 | 에너지 eV/atom (`Fig. 5a` 축) · 추가 항 K_eff·ε_RXN·V⁰ | p. 4576 | V⁰ 가 무엇의 부피인지 · 'atom' 에 SE 쪽 원자가 드는지 |
-| ε_RXN ≤ 0 인 쌍 | — | — | 수축 분해면 어떤 구속도 못 막아 K_crit 가 정의되지 않는다. 그런 쌍을 뺐는지 · 0 으로 뒀는지 없다. 분포 그림은 0–80 GPa 만 보인다 |
+| ε_RXN ≤ 0 인 쌍 | — | — | 수축 분해면 어떤 구속도 못 막아 K_crit 가 정의되지 않는다. 그런 쌍을 뺐는지 · 0 으로 뒀는지 없다. 분포 그림은 0–80 GPa 만 보인다. (같은 그룹의 후속 편은 ε ≤ 0 이면 임계값을 ∞ 로 둔다고 적는다 — `wang2022_two_parameter_space_dendrite_constriction` digest 기준. 이 편에는 그 문장이 없다) |
 | 압력 아래 산물 재선택 | 식 (2) 는 산물이 가압 상태라고만 한다 | p. 4576 | K_eff 를 올릴 때 산물 조합을 다시 고르는지 — 판독으로는 **다시 고르지 않는다** (§6.1) |
 
 > 정리: 이 논문은 '구속 아래 계면' 의 **판정식**은 주지만 **부피 회계** (Li 저장소 · 기체 · 정규화) 는 선언하지 않는다. 우리 문헌 갭 보고서가 B 의 둘째 빈칸으로 꼽은 바로 그 회계다 — 이 편으로는 채워지지 않고 원전 (refs 11–13) 을 봐야 한다.
@@ -423,7 +423,7 @@ K_crit 비 = (G₀ 비) ÷ (ΔV 비).
 - 보고서의 질문 *"구속 아래에서 조성 · SEI 산물을 스크린했나"* → **조성 (코팅 조성) 은 K_crit 로 스크린했다 · SEI 산물은 스크린 · 점수화하지 않았다.**
 - 보고서 226 행의 접는 조건 *"도핑 아지로다이트의 구속 분해나 SEI 산물을 스크린했다면"* → **해당하지 않는다.** 갭 ('한 아지로다이트 호스트에서 도펀트별로 매긴 숫자 표' · 'SE 도펀트를 산물 물성으로 순위') 은 이 편으로는 깨지지 않는다.
 - 다만 고칠 문장이 둘 있다.
-  ① *"최근 HT/ML 계면 스크린은 부피를 아예 다루지 않는다"* (보고서 29 행) — 이 논문은 ε_RXN 이 들어간 K_crit 를 8 만 점의 **스크린 목표값**으로 썼다. '부피 · 구속을 축으로 쓴 HT 는 Fitzhugh 2021 이 있다 — 다만 ΔV/V 수치 0 · 코팅 조성 · 양극 전압만 · 손상 지표가 아니라 안정화 문턱' 으로 고치는 것이 맞다.
+  ① *"최근 HT/ML 계면 스크린은 부피를 아예 다루지 않는다"* (보고서 29 행) 와 표 '가' 의 *'부피를 스크린 축으로 쓴 HT 없음'* (208 행) — 이 논문은 ε_RXN 이 들어간 K_crit 를 8 만 점의 **스크린 목표값**으로 썼다 (같은 묶음의 2019 년 편 `fitzhugh2019_ht_functionally_stable_interfaces_sulfide` 은 부피를 쓰지 않았다 — 그 digest 기준). '부피 · 구속을 축으로 쓴 HT 는 Fitzhugh 2021 이 있다 — 다만 ΔV/V 수치 0 · 코팅 조성 · 양극 전압만 · 손상 지표가 아니라 안정화 문턱' 으로 고치는 것이 맞다. (Li 금속 쪽의 같은 종류 = `wang2022_two_parameter_space_dendrite_constriction` 의 K\* — 판정은 그 digest 에서.)
   ② A 의 **'SEI 설계' 문구는 이 논문 제목이 선점**했다 (뜻은 다르다 — 산물 물성이 아니라 기계적 준안정). 쓰려면 뜻을 갈라 쓰거나 다른 말을 쓴다.
 - 새로 드러난 것: **'분해가 공극 · 균열을 메워 스스로 멈춘다'** 는 화학–기계 되먹임 서사가 여기 있다 (Broader context · p. 4581). B 의 '양의 변형률은 이롭다' 쪽 선행이고 정량은 없다. 수축 (접촉 손실) 쪽은 이 논문에 한 마디도 없다 — 보고서가 '가장 단단한 자리' 로 꼽은 양극 쪽 수축은 그대로 비어 있다.
 
@@ -440,7 +440,7 @@ K_crit 비 = (G₀ 비) ÷ (ΔV 비).
 - **상도**: pymatgen (ref 22) · 유사 이원계는 binary-search 알고리즘 (ref 9) · 전기화학 안정성은 grand potential 상도.
 - **구속**: *"performed on the computational platform we developed following the perturbation or Lagrangian optimization methods"* (refs 11–13). 판독으로는 선형 섭동 꼴이다 (§6.1).
 - **전압**: 2 · 3 · 4 V (계면) · 3.5 V (유리 자기분해) vs Li.
-- **ML**: Extremely Randomized Trees (ref 24) · 나무 수 50 (본문 · 캡션) 또는 30 (Methods) · 특징 = 원소 분율 (118 원소) · 목표 = K_crit · 시험 10,000 점 · RMSE 2.59 GPa (LSPS · 4 V 모형 하나만 보고) · SHAP (ref 17) · 탐욕적 조성 최적화. 학습 자료 수 · 분할 · 하이퍼파라미터 · 교차검증 미기재.
+- **ML**: Extremely Randomized Trees (ref 24) · 나무 수 50 (본문 · 캡션) 또는 30 (Methods — 같은 그룹 후속 편의 SI 도 30 이다 · 그 digest 기준) · 특징 = 원소 분율 (118 원소) · 목표 = K_crit · 시험 10,000 점 · RMSE 2.59 GPa (LSPS · 4 V 모형 하나만 보고) · SHAP (ref 17) · 탐욕적 조성 최적화. 학습 자료 수 · 분할 · 하이퍼파라미터 · 교차검증 미기재.
 - **실험**: 볼밀 350 rpm · 20 h (Li₂S · P₂S₅ · LiI · LiF · Li₂O) / 양극 = LGPS : 유리 : 탄소 45 : 45 : 10 · 1 mg · PTFE 5 % · 0.49 cm² / 전해질층 LGPS 120 mg / Li₅.₅PS₄.₅Cl₁.₅ 층 / 음극 Li/graphite (용량비 2.5 : 1) / 467 MPa 초기 · 250 MPa 작동 / CV 0.1 mV/s · 개방회로 전압 → 8.5 V. XRD · XPS · 조성 분석 · 전도도 측정 **없음**.
 
 ---
@@ -522,7 +522,7 @@ K_crit 비 = (G₀ 비) ÷ (ΔV 비).
 | `wang2022_two_parameter_space_dendrite_constriction` (목록 120) | 같은 그룹의 Li 금속 쪽 판 (E_hull, K\*). 이 편의 K_crit 가 그쪽 K\* 의 전신으로 보인다 — 정의 대조는 그 digest 에서 |
 | `fitzhugh2019_ht_functionally_stable_interfaces_sulfide` (목록 122) | 이 논문 ref 9. 유사상 binary-search 를 거기서 가져왔다 |
 | `tian2020_electrochemo_mechanical_stress_assb` (목록 123) | 분해 부피 → **응력** (손상 쪽). 이 편은 같은 부피를 **안정화 문턱**으로 쓴다 — 같은 양의 정반대 읽기 (보고서 B 의 셋째 빈칸) |
-| `zhu2016_first_principles_interface_stability_assb` (목록 124) · `richards2016_interface_stability_pseudobinary` · `nolan2018_computation_accelerated_design_review` | 이 논문 refs 10 · 16 계열 — 유사 이원 계면 열역학의 원전. 이 편은 그 위에 압력 항 하나를 얹었다 |
+| `zhu2016_first_principles_interface_stability_assb` (목록 124 · 이 논문 ref 10) · `nolan2018_computation_accelerated_design_review` (ref 16) · `richards2016_interface_stability_pseudobinary` (인용되지는 않았다) | 유사 이원 계면 열역학의 원전들. 이 편은 그 위에 압력 항 하나를 얹었다 |
 | `wang2026_interface_stability_kinetics_sulfide_assb` | 계면 ΔV/V 를 지도화했지만 구속 항은 없다. 이 편은 구속 항이 있지만 ΔV/V 를 안 보인다 — 서로의 빈칸 |
 | `park2026_ml_framework_stable_interfaces_assb` | ref 25 로 인용. 그 논문이 못 잡는다고 적은 *"strain and volume-change effects"* 를 다루는 편이 이것이다 |
 | `wang2025_ai_ecosystems_electrolyte_interface_ssb` | 리뷰가 이 논문을 ref 136 으로 요약 — 그 digest §10f 의 '랜덤포레스트' 는 원전에서는 Extremely Randomized Trees 이고 나무 수는 50 과 30 이 섞여 있다 |
@@ -546,7 +546,7 @@ K_crit 비 = (G₀ 비) ÷ (ΔV 비).
 
 - "Fitzhugh *et al.* defined a critical effective modulus, *K*<sub>crit</sub>, above which the interphase between a sulfide electrolyte and a coating no longer decomposes at a given voltage, and screened it over more than 80 000 pseudo-binary interfaces." — *Energy Environ. Sci.*, 14, 4574 (2021).
 - "That screen varied the coating composition against four fixed thiophosphate electrolytes and evaluated the cathode-side voltage only; it reported neither reaction strains nor decomposition products, and it did not include argyrodites." — 같은 출처 (우리 판독 · §7).
-- "The same authors noted that oxygen-, fluorine-, and chlorine-rich interphases have a lower *K*<sub>crit</sub> because they are less prone to delithiation in the voltage range considered." — 같은 출처 p. 4578.
+- "The same authors attributed the lower *K*<sub>crit</sub> of oxygen-, fluorine-, and chlorine-rich interphases to their lower tendency to delithiate in the voltage range considered." — 같은 출처 p. 4578 (원문은 *"likely attributed"* — 단정이 아니다).
 
 **쓰면 안 되는 것 (⛔ 인용 금지 목록)**
 
@@ -563,7 +563,7 @@ K_crit 비 = (G₀ 비) ÷ (ΔV 비).
 
 1. **우리 계가 아니다.** 아지로다이트 계산 0 · SE 는 네 종으로 고정 · 바꾼 것은 코팅 (유리) 조성 · 전압은 양극 쪽만. '황화물 SE 의 SEI 설계' 라는 제목에서 기대하는 것보다 범위가 좁다.
 2. **설계값은 전부 대리모형 값이고 직접 계산으로 되짚지 않았다.** parent 의 K_crit (16.07 등) 조차 *"from our prediction"* 이다. 유리 조성은 hull 로 바로 계산할 수 있는데도 child 의 K_crit 를 구속 앙상블로 확인한 값이 하나도 없다. 모형 정확도도 LSPS · 4 V 한 경우만 보고했다 — LGPS · 2 V · 3 V · 자기분해 3.5 V 모형의 오차는 모른다.
-3. **대리모형 자체가 불투명하다.** (가) 25 GPa 아래로 잘린 자료로 학습한 것으로 보이는데 본문에 없다 (§6.6) (나) 나무 수 50 ↔ 30 (다) 학습 · 시험 분할 불명 — 10,000 + 10,000 이 그 범위의 자료 수를 넘는다 (라) `Fig. 4b` 의 대각선 위 가는 선은, 조성만 특징으로 쓰는 모형에서 **같은 조성 (다형체) 이 학습과 시험에 나뉘어 들어갔을 때** 나오는 모양이다 (우리 추론) — 그렇다면 처음 보는 조성에 대한 오차는 2.59 GPa 보다 크다 (마) 입력이 무엇인지 문장과 그림이 어긋난다: 본문은 자료 한 점이 *"the initial SEI composition"* 이라 하는데, `Fig. S3` 에는 Li ≤ 0.001 로 992 / 269 가 갈리는 분기가 있다 — Li 가 40 at% 인 SE 가 섞인 유사상 조성이라면 나오기 어렵다. 입력은 **코팅 물질의 조성**으로 읽는 편이 그림과 맞는다.
+3. **대리모형 자체가 불투명하다.** (가) 25 GPa 아래로 잘린 자료로 학습한 것으로 보이는데 본문에 없다 (§6.6) (나) 나무 수 50 ↔ 30 (다) 학습 · 시험 분할 불명 — 10,000 + 10,000 이 그 범위의 자료 수를 넘는다 (라) `Fig. 4b` 의 대각선 위 가는 선은, 조성만 특징으로 쓰는 모형에서 **같은 조성이 학습과 시험 양쪽에 있을 때** (다형체가 나뉘어 들어갔거나 학습 표본이 시험에 섞였을 때) 나오는 모양이다 (우리 추론) — 그렇다면 처음 보는 조성에 대한 오차는 2.59 GPa 보다 크다 (마) 입력이 무엇인지 문장과 그림이 어긋난다: 본문은 자료 한 점이 *"the initial SEI composition"* 이라 하는데, `Fig. S3` 에는 Li ≤ 0.001 로 992 / 269 가 갈리는 분기가 있다 — Li 가 40 at% 인 SE 가 섞인 유사상 조성이라면 나오기 어렵다. 입력은 **코팅 물질의 조성**으로 읽는 편이 그림과 맞는다.
 4. **child 의 큰 하락은 나무의 계단에서 온 것으로 보인다.** Child B 는 F 를 0.07–0.105 로 올리는데 그것이 뿌리 분기 문턱 (F ≤ 0.096 · 왼쪽 평균 15.2 · 오른쪽 8.7 GPa) 에 걸친다. 10 % 제약의 상한이 문턱과 겹친 결과다. Child C 의 2 GPa 안팎은 'Li 가 든 불화물' 가지의 노드 평균 (2.2–4.1 GPa) 수준이다 (공개된 나무 한 그루 기준 · 우리 추론). Pb · Sb · Bi · K · Zn · Ti · Ni · H · C · N 같은 미량 첨가도 같은 종류의 산물이다.
 5. **실험이 예측을 시험하지 못한다.** (가) 합성 조성이 예측 조성과 같을 수 없다 (§6.7) 그리고 실제 조성이 없다 (나) 셀 하나씩 · 오차막대 없음 — parent 의 넓은 봉우리가 `Fig. 5d` 에서 28.8 µA, `Fig. S5` 에서 22.9 µA 다. 두 그림이 같은 조건이라면 (`Fig. S5` 의 주사 속도는 적혀 있지 않다) 셀 간 편차가 20 % 로, C4 · C5 · C6 사이의 차와 같은 크기다 (다) 비교 대상이 열역학 구동력 (eV/atom) 과 봉우리 전류 (µA) 다 — 둘을 잇는 모형이 없다 (라) **'유리 + 탄소 (LGPS 없음)' 대조가 없다.** 프리피크를 유리/LGPS 계면에 돌린 근거는 소거법뿐이다. LiI 가 든 유리이므로 요오드화물 산화 같은 유리 자체의 반응일 가능성을 배제하지 않았다 (우리 의견 · 논문 밖 일반 지식에 기댄 가설 · 미검증) (마) LGPS + C 대조는 탄소가 절반 (0.05 mg ↔ 0.10 mg) 이고 배경 (약 8 µA) 을 빼지 않았다 (바) 저자도 인정하듯 강한 구속 (250 MPa) 에서만 쟀다 — 설계가 이득을 내야 할 약한 구속 조건의 자료가 없다.
 6. **'첫 충전 뒤 K_eff 가 K_crit 을 넘었다' 는 유일한 설명이 아니다.** 탄소 복합체에서 황화물 SE 의 분해 전류가 첫 사이클 뒤 사라지는 것은, 탄소와 닿은 SE 가 소진되거나 절연성 산물이 전자 경로를 막아도 일어난다. 둘을 가르는 실험 (압력을 바꾼 계열 등) 이 없다.

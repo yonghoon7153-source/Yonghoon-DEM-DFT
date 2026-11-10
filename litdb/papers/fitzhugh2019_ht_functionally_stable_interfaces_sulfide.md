@@ -6,7 +6,7 @@
            표 2 장은 관례대로 PDF 텍스트로 옮겼다 (tab_*.png 를 이미지로 읽지 않았다).
      'figure-read ≈' 값은 PDF 에 박힌 원본 래스터 (본문 JPEG · SI PNG) 의 픽셀을 축 눈금선으로 보정해 읽은 것이다 — 논문이 표로 준 값이 아니다.
        검산 4 건: (가) Fig. 1B 막대 합 ≈ 66,700 / 11,700 ↔ 본문 67,062 / 11,935
-                  (나) Fig. 4 막대 × Table 1 항목 수 = SI 카탈로그를 논문의 음이온 분류 규칙으로 다시 센 개수 (열 클래스 × 양쪽 20 칸 전부 ±3 안)
+                  (나) Fig. 4 막대 × Table 1 항목 수 = SI 카탈로그를 논문의 음이온 분류 규칙으로 다시 센 개수 (열 클래스 × 양쪽 20 칸 · 최대 편차 ≈ 3 항목 — 가장 큰 칸은 1,103 대 1,100)
                   (다) Fig. 2A 산화 구간 기울기 0.667 eV/V = Li 10 개 / 비-Li 원자 15 개 (완전 탈리튬)
                   (라) Fig. S1A 의 LSPS–LCO 최솟값 ≈ −0.39 ↔ ref [22] (Zhu 2016) 의 LGPS–LCO −0.34 / −0.35 eV/atom
      SI 카탈로그 (29 쪽 · 항목 약 4,000 개) 는 텍스트 층을 스크립트로 파싱해 집계했다 — '✎ 우리 집계' 로 표시한 수는 논문이 준 수가 아니다.
@@ -372,7 +372,8 @@ Materials Project 의 67,062 개 물질을 LSPS 와 짝지어 화학 (닫힌계)
 | 6 | 저자 표기 *"Fitzhugh, W.; Wu, F.; Ye, L.; …; Li, X."* (208 행) | 줄인 자리는 Deng, W.; Qi, P. (저자 6 명 · Fitzhugh 와 Wu 가 공동 1 저자) | 전체 목록으로 |
 
 - 보고서 3 행 · 17–19 행의 큰 그림 (Xin Li 그룹이 2018 년부터 reaction strain 을 구속 열역학에 넣었다) 은 이 논문과 **충돌하지 않는다** — 다만 그 계열 안에서 **2019 년 HT 편은 부피를 쓰지 않았다**는 단서가 붙는다.
-- ⚠ 갭의 최종 판정은 같은 묶음의 `fitzhugh2021_sei_design_constrained_ensemble` (목록 121) · `wang2022_two_parameter_space_dendrite_constriction` (목록 120) digest 를 같이 본 뒤에 한다 — 이 편은 그 둘의 판정을 대신하지 못한다.
+- ⚠ 갭의 최종 판정은 같은 묶음의 다른 편과 같이 본다 — 이 편은 그 판정을 대신하지 못한다. 같은 날 digest 된 `fitzhugh2021_sei_design_constrained_ensemble` (목록 121 · 비교표 §J-71) 은 2021 년 편이 ε_RXN 이 든 K_crit 를 유사상 계면 8 만여 점의 목표값으로 썼다고 판정했다. 즉 "부피를 스크린 축으로 쓴 HT 없음" 문장을 건드리는 것은 **2021 년 편이지 이 2019 년 편이 아니다.**
+- 후속 `wang2022_two_parameter_space_dendrite_constriction` (목록 120 · §J-70) 은 구속 hull 의 계산 '절차' 를 이 편 (그 논문 ref 16) 에 맡긴다. **이 편에는 V(x) · ε(x) · 구속 항의 식이 없다** — 있는 것은 pseudo-binary 탐색 절차 (식 1–8) 뿐이다. reaction strain 과 기준 부피의 식을 찾으려면 이 논문 ref [31] (Wu 2018 *Nat. Commun.*) 쪽을 봐야 한다 (litdb 미보유 · 안 읽음).
 
 ---
 
@@ -477,6 +478,9 @@ Materials Project 의 67,062 개 물질을 LSPS 와 짝지어 화학 (닫힌계)
 - **`zhu2016_first_principles_interface_stability_assb`** (ref [22]) — mutual / total 의 원 정의 (식 8–10) 와 LGPS–LCO −340 / −349 meV/atom. 이 논문 `Fig. S1A` 의 LSPS–LCO ≈ −0.39 와 같은 자릿수이고, 본문의 "200 meV/atom" 과는 안 맞는다.
 - **`richards2016_interface_stability_pseudobinary`** (ref [21]) — 고정 μ_Li 의 no-mixing / mixing 분해. 이 논문은 그것을 0–5 V 격자 전체로 편다.
 - **`gilgonzalez2022_synergistic_cl_constricted_esw`** — 같은 그룹이 뒤에 `∂G′ = (G_D − G_SE) + V·ε_RXN·K_eff` 로 부피 항을 넣는다. 이 편이 '전제' 로 둔 것이 거기서는 계산된다.
+- **`fitzhugh2021_sei_design_constrained_ensemble`** (같은 1 저자 · 2 년 뒤) — 코팅 후보를 MP 전자 절연체 (> 20,000) 로 좁히고 목표값을 K_crit 로 바꾼 판이다. 이 편에 없던 두 가지 (전자 절연 사전 필터 · 부피 항) 가 거기서 들어간다. 두 편을 "Fitzhugh 의 HT 스크린" 으로 뭉쳐 부르지 않는다.
+- **`wang2022_two_parameter_space_dendrite_constriction`** — 이 편을 ref 16 으로 인용하며 구속 hull 의 '절차' 출처로 든다. 이 편이 주는 것은 pseudo-binary 탐색 절차뿐이고 부피 · 변형률의 식은 없다 (§6-6).
+- **`tian2020_electrochemo_mechanical_stress_assb`** — 분해 부피를 응력으로 환산한 연속체 편. 이 편과는 접점이 없다 (이 편은 부피를 버렸다).
 - **`sundar2025_oxide_coating_screening_lpscl`** · **`honrao2021_interpretable_ml_sse_anode_coatings`** · **`aykol2016_ht_cathode_coating_design`** — 코팅 HT 계보. 이 편은 그 번호 붙은 계보 밖의 병렬 편 (Harvard) 이다.
 
 ---
@@ -484,7 +488,7 @@ Materials Project 의 67,062 개 물질을 LSPS 와 짝지어 화학 (닫힌계)
 ## 12. 적용 인사이트 — 바꿔야 할 것 / 이미 하고 있는 것 / 해당 없음
 
 **갭 판정에 쓰는 것**
-- ① 보고서의 "부피를 스크린 축으로 쓴 HT 없음" 은 이 논문으로 깨지지 않는다. 오히려 근거 문장이 생긴다 — *Xin Li 그룹 자신의 2019 년 HT 도 부피를 버렸다 (ΔG ≈ ΔE)*.
+- ① 보고서의 "부피를 스크린 축으로 쓴 HT 없음" 은 이 논문으로 깨지지 않는다. 연대기가 한 줄 생긴다 — *Xin Li 그룹의 2019 년 HT 는 부피를 버렸고 (ΔG ≈ ΔE), 2021 년 편에서 K_crit 로 들어간다* (그 문장을 실제로 고치는 것은 `fitzhugh2021_…` 쪽 판정이다 · §6-6).
 - ② 이 논문의 '기능적 안정' 은 **SE 고유 분해가 구속 · 동역학으로 눌려 있다는 가정** 위에 서 있다. 후보 주제 B 는 바로 그 가정의 부피 항을 도펀트별로 재려는 것이므로, 이 논문은 B 의 **동기 문장**으로 인용할 수 있다 ("전제로만 쓰이고 계산되지 않았다").
 
 **이미 하고 있는 것 (확인)**

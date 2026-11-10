@@ -12,7 +12,10 @@
 ## 📑 Reference key (출처 약칭)
 | 약칭 | 논문 (저자·년·저널) | digest/status | 유형 |
 |---|---|---|---|
+| **[WangLi22TP]** 🔧🔴 **방법 원전 + 선점 판정 — Li 금속 쪽 (E_hull, K\*) 2 매개변수 공간 · cascade 문헌 갭 (분해 부피 × 도펀트) 판정 대상** · ⛔ **조성별 값은 조성만 보는 ML 예측 (E_hull 은 0.915 eV 이동값) — A–D 물성 4축에 값으로 넣지 않는다** (§J-70 · §E 정성 한 행) · ⚠ 'LPSCl' = Li₅.₅PS₄.₅Cl₁.₅ · 'E_hull' ≠ hull 위 에너지 · ⚠ `[Wang22]` (열안정 서술자) · `[Wang22Res]` 와 다른 논문 | **Yichao Wang**†/**Luhan Ye**†/Xi Chen/**Xin Li\*** (Harvard SEAS, **외부** · [GG] 와 같은 그룹) 2022 *JACS Au* 2, 886–897 (DOI 10.1021/jacsau.2c00009) — "A Two-Parameter Space to Tune Solid Electrolytes for Lithium Dendrite Constriction" | ✅ `papers/wang2022_two_parameter_space_dendrite_constriction.md` — 판정은 **§J-70** | HT 열역학 (MP 124,497 물질 × Li 금속 pseudo-binary · 구속 앙상블) + 조성 ML + 합성 · XPS · 다층 셀 |
 | **[Tian20]** 🔧 **방법 원전 — 'SE 분해 부피 → 응력' 연속체 환산의 실례** · ⛔ **LiPON 박막 셀 (Si / Li₂PO₂N / LiCoO₂) — 황화물 0 · 도펀트 0** — A–D 물성 4축에 행을 만들지 않는다 (§J-73 에만) | **Hong-Kang Tian**/A. Chakraborty/**A. Alec Talin**/P. Eisenlohr/**Yue Qi\*** (Michigan State Univ. + Sandia, **외부**) 2020 ***J. Electrochem. Soc.* 167, 090541** (DOI 10.1149/1945-7111/ab8f5b · OA CC BY 4.0) — "Evaluation of the Electrochemo-Mechanically Induced Stress in All-Solid-State Li-Ion Batteries" | ✅ `papers/tian2020_electrochemo_mechanical_stress_assb.md` — 판정은 **§J-73** | 연속체 FEM (COMSOL 5.4 · 축대칭 · 선형 탄성) + Materials Project 반응 · 부피 입력 (자체 DFT 0 · 자체 실험 0 · SI 미입수) |
+| **[Fitz21]** 🔧 **방법 원전 — 구속 앙상블의 계면판 · K_crit (임계 유효 탄성률) 의 정의** · ⛔ **유리 코팅 / LGPS · LSPS · Li₇P₃S₁₁ · Na₇P₃S₁₁ 계면 — argyrodite 계산 0 · 도펀트 계열 0 · ε_RXN 수치 0** — A–D 물성 4축에 행을 만들지 않는다 (§J-71 에만) | **William Fitzhugh**‡/**Xi Chen**‡/Yichao Wang/Luhan Ye/**Xin Li\*** (Harvard SEAS, **외부**) 2021 *Energy Environ. Sci.* 14, 4574–4583 (DOI 10.1039/D1EE00754H · PDF 로 확인) — "Solid–electrolyte-interphase design in constrained ensemble for solid-state batteries" | ✅ `papers/fitzhugh2021_sei_design_constrained_ensemble.md` — 판정은 **§J-71** | HT 열역학 (MP 상 자료 · 유사상 계면 > 80,000 · 4 V) + 결정트리 앙상블 · SHAP 조성 설계 + 유리 합성 · CV (DFT 조건 미기재 · 설계값은 대리모형 예측) |
+| **[Fitz19HT]** 🔧 **방법 원전 + 갭 판정 — LSPS 코팅 HT 탐색 · '기능적 안정' (SE 고유 분해를 뺀 계면 몫) 의 정의** · ⛔ **Li₁₀SiP₂S₁₂ 한 조성 × 코팅 후보 — argyrodite 0 · 도핑 조성 0 · reaction strain / 부피 축 0 (ΔG ≈ ΔE)** — A–D 물성 4축에 행을 만들지 않는다 (§J-72 에만) · ⚠ `[Fitz21]` (구속 앙상블 · K_crit) 과 다른 논문 | **William Fitzhugh**†/**Fan Wu**†/Luhan Ye/Wenye Deng/Pengfei Qi/**Xin Li\*** (Harvard SEAS, **외부** · [GG] · [Fitz21] · [WangLi22TP] 와 같은 그룹) 2019 *Adv. Energy Mater.* 9, 1900807 (DOI 10.1002/aenm.201900807) — "A High-Throughput Search for Functionally Stable Interfaces in Sulfide Solid-State Lithium Ion Conductors" | ✅ `papers/fitzhugh2019_ht_functionally_stable_interfaces_sulfide.md` — 판정은 **§J-72** | HT 열역학 (MP 기존 에너지 67,062 물질 × LSPS · 화학 + Li 열린계 0–5 V pseudo-binary · 새 DFT 0) + 분말 혼합 XRD (500 °C) + 코팅 단독 액체 셀 CV |
 | **[Agarwal26AD]** 🔧🔴 **uMLIP 계면 벤치마크 — 우리 엔진 (UMA-s-1p1 `omat`) 이 피고에 포함** · ⛔ **미심사 프리프린트 (ChemRxiv)** · ⛔ Li 금속 / 이원·인산염 결정 계면 전용 · argyrodite 0 — A–D 물성 4축에 행을 만들지 않는다 (§J-69 에만) | **Umang Agarwal**†/**Mengke Li**†/G. Sai Gautam/**Zeyu Deng\*** (NUS MSE + IISc, **외부**) 2026 *ChemRxiv* (DOI 10.26434/chemrxiv.15011777/v1 · 게시 2026-11-05) — "Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces" | ✅ `papers/agarwal2026_umlip_applicability_domain_ssb_interfaces.md` — 판정은 **§J-69** | MLIP 벤치마크 (uMLIP 6종 zero-shot · PBE 기준 · MLIP-MD · MACE 미세조정 1건 · 실험 0 · SI 미확보) |
 | **[Alharbi26UCSE]** 🔧🔴 **리뷰 판정 (프리프린트 인용 감사 사례)** · ⛔ **미심사 프리프린트 (Preprints.org) · 자체 계산 0 · 자체 실험 0 · 고분자–산화물 복합막 (황화물 본문 7회) — A–D 물성 4축 진입 금지** | **Sami M. Alharbi\*** (Qassim Univ. 화학과 · 단독) 2026 **Preprints.org** (DOI 10.20944/preprints202611.0702.v1 · 게시 2026-11-06 · v1 · 34 쪽 · 참고문헌 116 = 고유 108 · 그림 8 · 표 1 · **SI 없음**) — "**Coupled Design Principles for Ultrathin Composite Solid Electrolytes: Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries**". 다섯 설계 원리의 상호 제약 · 덴드라이트 3 단계 (핵생성 → 전파 → 손상 누적) · 계면 병목 순서 (접촉 → 화학 → 기계 내구 → 공간전하). 🔑 상충을 정량으로 보인 그림 · 표 · 식 0 · 인용 번호 어긋남 다수 | ✅ `papers/alharbi2026_coupled_design_ultrathin_composite_se_review.md` (2026-11-10 · 그림 8장 전부 실독 · 인용 ↔ 목록 전수 대조) — 리뷰 판정 **§J-68** | 리뷰 (외부 · 미심사) · 자체 계산 0 · 2차 인용 |
 | **[Liu26CCTO]** ⚠ exp + 계산 보조 · ⛔ 바인더 아님 (양극 위 이온겔 중간층) · ⛔ IL 하이브리드 셀 · ⛔ σ · 창 · D · 결합에너지 수치는 우리 값 옆에 두지 않는다 | **Liequan Liu**/Z. Wu/D. Xu/Y. Qu/J. Cai/**Ze Zhang\***/**Ke Li\***/**Lingfeng Zhu\*** (南昌大 · 江西师范大 · RMIT) 2027 *J. Colloid Interface Sci.* **729**, 141891 (DOI 10.1016/j.jcis.2026.141891 · 온라인 2026-11-02) — "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li₆PS₅Cl solid-state batteries" | `papers/liu2026_ccto_colossal_dielectric_interlayer_dry_lpscl.md` ✅ (2026-11-06 · 그림 25/65 실독 · 재판독 `tools/litdb/liu2026_ccto_readout.py`) | exp (건식 LPSC-PTFE 막 + PAN/LiTFSI/IL/CCTO 중간층 · EIS · DC σ_e · LSV · 부유 · Raman · XPS · 셀) + DFT (ORCA B3LYP-D3 · CP2K PBE/PBE+U) · AIMD 600 K · 고전 MD |
@@ -1022,6 +1025,7 @@
 ## E. 환원 / 음극(Li 금속) 계면 — **⚠ Cl-rich 유불리 문헌 충돌 (자리 점유가 변수)**
 | 주장 | 출처 | 우리 | 일치 |
 |---|---|---|---|
+| **🆕 (2026-11-10) Cl-rich (Li₅.₅PS₄.₅Cl₁.₅) 는 Li 와의 화학 안정은 좋아 음극 접촉층으로는 맞지만 덴드라이트를 가두는 중앙층으로는 실패한다 — 저자 논리: '분해가 0 에 가까우면 균열을 못 메운다'** · 대조 단층 셀은 8.6 mA/cm² 에서 1,000 사이클 안에 80 % (figure-read ≈ 300–400 사이클) · 사이클 뒤 단면 XPS 의 Li ≈ 90 % (figure-read) · F / Br / I 치환체를 중앙층에 넣으면 1.7–2.5 만 사이클 · Li 증착 뒤 환원된 S 는 LPSCl 9 % vs 치환체 13–17 % · LGPS 17 % | **[WangLi22TP]** `Fig. 4` · `Fig. 6` · `Fig. S8` · `Fig. S13` (셀 2 mg/cm² · 250 MPa · 55 °C · 조건당 1 개) | 덴드라이트 · 균열 계산 없음 (§H). Li 금속 쪽은 닫힌계 pseudo-binary 구동력과 산물 종류까지다 (cascade 축 ③ — 상대값만 · `cascade_axes_bundle_closed_2026_11_05.json`) | ✅ **[GG] · [Zeng22Cl] · [Kang26Site] 와 같은 방향** — 화학 안정과 덴드라이트 내성은 다른 축이다. ⚠ [GG] 와 같은 그룹이라 독립 근거 둘로 세지 않는다 · 기전은 편마다 다르다 (이 편: 분해 구동력이 낮아 충전 부족 ↔ [Zeng22Cl]: 두꺼운 LiCl 껍질이 핵을 고립). ⚠ 이 편의 E_hull · K\* 는 ML 예측이라 값으로 옮기지 않는다 → §J-70 |
 | **🆕 (2026-11-09) Cl 함량에 대해 Li 와의 *화학 안정성* 은 단조, *덴드라이트 내성 (CCD)* 은 비단조 — x = 1.3 최대 1.04 · x = 1.6 최저 **0.56 ± 0.028 mA cm⁻²** (3 배치) · σ 최고 (8.8) 인 Cl-16 이 CCD 최저** · 휴지 600 h R_int Cl-06 209 → 9093 Ω vs Cl-16 19 → 256 Ω · 저자 기전: 서냉 LiCl 나노껍질 (≈20 / 50 nm) → Cl 이동 → 'LiCl 지배' 계면층 · 두꺼운 껍질 (x = 1.6) 이 argyrodite 핵을 고립 | **[Zeng22Cl]** `Fig. 3a` (Source Data) · `Table S2`/`S3` · `Fig. 9` · `Fig. S13` | 덴드라이트 · 계면 미세구조 계산 없음 (§H). 0 V 산물 Li₂S + Li₃P + LiCl (grand-potential) 은 그들 XPS 주산물과 같다 · Li₂Sₙ · P₂S₅ (Cl-06) 는 0 V 평형 산물이 아님 | ✅ **[GG] (LPSCl1.0 '적당한 불안정') · [Kang26Site] (LPSC₁.₆ CCD ≈ LPSC) 와 같은 방향** — "Cl-rich 가 음극에 좋다/나쁘다" 는 축 (화학 안정 vs 덴드라이트) 을 안 가르면 틀린다. 기전 설명은 셋이 다 다르다. ⚠ '55 µm LiCl 층' 은 EDS (Li 못 봄) 이름 · 질량 수지 불일치 (*우리 산수*) |
 | **🔴 🆕 (2026-11-06) "O 치환 SE 가 Li 금속에서 Li₃PO₄ (7.4 eV) SEI 를 만들어 덴드라이트를 막는다" — 관측은 소성분 (Raman ≈940–950 cm⁻¹ · P 2p 134.3 eV 가 포락선의 몇 %) 이고 우리 열역학은 0 V 에서 Li₃PO₄ 를 환원한다** · 같은 논문: 혼합 중간층 (LPSC₁.₆ : LPSOC = 4 : 1) 45 °C CCD 3.5 vs LPSC 1.7 · LPSOC 단독 3.1 · LPSC₁.₆ 1.8 → **CCD 를 가르는 것은 LPSOC 유무** · Cl-rich LPSC₁.₆ 의 Li 계면 호 폭이 가장 크다 (`figure-read ≈`40 vs LPSC 24 Ω cm²) · 같은 설계 풀셀 1C 500 cyc 단락 없음 · **2C 는 ≈350 cyc 단락** | **[Kang26Site]** `Fig. 5` · `Fig. 7c` · `Fig. S13` · `Fig. S14` · `Fig. S17` | O 단독 대조 (Li₅.₄PS₄.₁O₀.₃Cl₁.₆, `cei_esw_Li_controls_2026_09_16.json`): **0 V 산물 = 0.3 Li₂O + Li₃P + 4.1 Li₂S + 1.6 LiCl** · Li₃PO₄ 는 **0.687 V profile 단계 위에서만** 남는다 (= [Zhu15] 0.69 V · `reduction_limit_V` 필드 아님) · 그 환원 산물 Li₃P 는 `sei_products.json` 에서 `conductor-LEAK` (MP PBE 0.70 eV) · Li₃PO₄ 띠틈 MP PBE 5.818 eV (정정본 · role insulator — 7.4 와 숫자로 나란히 두지 않는다) · Li₂S · Li₃Nd NEB 는 이 논문에 대응 양이 없다 (`HZ-sei-neb-li2s-cc-cellconv` · `HZ-li3nd-neb-si-conditional`) | 🔴 **Li 쪽 O 산물이 어긋난다** (관측 Li₃PO₄ vs 열역학 Li₂O) — 동역학 준안정 · 접촉면에서 떨어진 자리 · 잔류 전구체 중 무엇인지 못 가른다 · Cl-rich 의 Li 계면 불리는 기존 행 "Cl 함량은 음극측 계면 수송을 거의 안 바꾼다" 와 어긋나지 않음 · ⚠ CCD 는 단일 셀 · CCD 셀 분극이 옴 하한 아래 (*우리 산수*) |
 | **⚠ 🆕 리뷰는 Cl-rich 음극 계면을 "LiCl 자기제한 SEI 우위" 한쪽으로만 서술 — §E 머리의 문헌 충돌([GG] moderate instability vs [Lu])을 다루지 않는다 · "할라이드가 VBM 을 내려 Li → SE 전자이동을 막는다"(p.15)는 물리 오류(환원은 CBM 문제)** (2026-10-03) | **[Nosrati26Rev]** §4.3.2 · `Fig. 6`(Cl15 단독 · LiCl 미정량) · `Fig. 7c,d`(조성·사이클 동시 변화) · [Lu] 대칭셀을 "1500 h @0.5" 로 인용 ↔ 원전 800 h @0.5 · 2000 h @0.2 | 환원 가장자리 1.717 V (comp1 = modelc) · 산물 Li₂S/Li₃P/LiCl | ⭕ 불안정·산물 일치 / ⚠ Cl 효과는 구동력이 아니라 산물 분율·형태 축의 문제다 |
@@ -1361,6 +1365,9 @@
 | **[WangG26uMLFF]** 🔧 | `wang2026_umlff_review_softening_forgetting_longrange` — **uMLFF 리뷰 + 자체 frozen-checkpoint 힘 대조** (*Phys. Scr.* 2026 AM, DOI 10.1088/1402-4896/aeb836). ⚠ 물성값 0 · **UMA 는 자체 대조에 없다** → J-1 에만 (같은 식 · 다른 시험셋). ⛔ [Wang26uMLP](Feng Wang 전해질)와 다른 편. |
 | **[Zhu16]** 🔧 | `zhu2016_first_principles_interface_stability_assb` — **SE–LiCoO₂ 계면 열역학: mutual 반응 에너지 · 전위 아래 pseudo-binary · 계면 3 유형 (정성)** (*J. Mater. Chem. A* 4, 3253 (2016), DOI 10.1039/C5TA08574H). MLIP 아님 — 방법 원전으로 이 축에 둔다. ⚠ Li₆PS₅Cl · Li₇P₃S₁₁ · NCM · 도펀트 계열 0 · 우리 계 물성값 0 → 아래 **J-74** 에만 등장, A–D 축 금지 |
 | **[Agarwal26AD]** 🔧 | `agarwal2026_umlip_applicability_domain_ssb_interfaces` — **uMLIP 6종 (UMA-s-1p1 `omat` 포함) 의 Li 금속/고체 계면 24개 벤치마크** (*ChemRxiv* 2026, DOI 10.26434/chemrxiv.15011777/v1 · **미심사**). ⚠ argyrodite · PS₄ 0 · 물성값 0 (우리 계) → 아래 **J-69** 에만 등장, A–D 축 금지 |
+| **[WangLi22TP]** 🔧 | `wang2022_two_parameter_space_dendrite_constriction` — **Li 금속 쪽 (E_hull, K\*) 2 매개변수 공간: MP 124,497 물질 × Li pseudo-binary + 조성 ML + 할로겐 치환 Li₅.₅PS₄.₅Cl₁.₅ 다층 셀** (*JACS Au* 2, 886 (2022), DOI 10.1021/jacsau.2c00009). ⚠ 값은 ML 예측 (E_hull 은 0.915 eV 이동값) · reaction strain 숫자 0 → 아래 **J-70** 에만 등장 (+ §E 정성 한 행), A–D 축 금지 |
+| **[Fitz21]** 🔧 | `fitzhugh2021_sei_design_constrained_ensemble` — **구속 앙상블의 계면판: K_crit 정의 + 코팅 조성 HT 스크린 (유사상 > 80,000 · 4 V) + 결정트리 · SHAP 조성 설계** (*Energy Environ. Sci.* 14, 4574 (2021), DOI 10.1039/D1EE00754H). ⚠ 계 = 유리 코팅 / LGPS · LSPS · Li₇P₃S₁₁ · Na₇P₃S₁₁ · **argyrodite · 도펀트 계열 · 산물 물성 · ε_RXN 수치 0 · 양극 전압만** → 아래 **J-71** 에만 등장, A–D 축 금지. 같은 틀의 Cl 계열판은 [GG] |
+| **[Fitz19HT]** 🔧 | `fitzhugh2019_ht_functionally_stable_interfaces_sulfide` — **LSPS × MP 67,062 물질의 코팅 HT 탐색: '기능적 안정' = 코팅 자신의 분해 + 계면이 더한 몫 ΔG′ 가 각각 50 meV/atom 미만 (SE 고유 분해는 판정 밖)** (*Adv. Energy Mater.* 9, 1900807 (2019), DOI 10.1002/aenm.201900807). ⚠ 계 = Li₁₀SiP₂S₁₂ 한 조성 · **argyrodite · 도핑 조성 · 부피/구속 축 · 산물 물성 · 새 DFT 0** → 아래 **J-72** 에만 등장, A–D 축 금지. MLIP 편은 아니고 cascade 트랙의 '계면 몫 / 고유 몫 분리' 정의 원전이자 갭 판정 대상이다. 2 년 뒤 구속을 넣은 판이 [Fitz21] |
 | **[Tian20]** 🔧 | `tian2020_electrochemo_mechanical_stress_assb` — **SE 분해 부피 → 응력의 연속체 환산 (DFT 자료 → FEM)** (*J. Electrochem. Soc.* 167, 090541 (2020), DOI 10.1149/1945-7111/ab8f5b). ⚠ 계 = Si / LiPON (Li₂PO₂N) / LiCoO₂ 박막 셀 · **황화물 0 · 도펀트 0 · 자체 DFT 0** · 물성값 0 (우리 계) → 아래 **J-73** 에만 등장, A–D 축 금지. MLIP 편은 아니고 cascade 트랙의 '분해 부피 회계 · 응력 환산' 방법 원전이다 |
 
 ### J-0b. ★★ [UMA] 우리 계산기의 사양서 — 원논문 대조 (2026-08-25 신설)
@@ -6973,6 +6980,189 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 - 이 편의 UMA 오차 수치를 우리 계 (argyrodite · 유리 · SE/탄소) 의 오차로 옮기기 · 우리 힘 대조값과 한 표에 놓기.
 - "미세조정하면 계면이 맞는다" — 기반 모델이 다르고 W_adh · 총에너지는 안 고쳐졌다.
 - 이 편을 'UMA 가 LPSCl 에서 검증됐다' 또는 'Li₃N 에 써도 된다' 의 근거로.
+
+---
+
+### J-70. 🔧🔴 **방법 원전 + 선점 판정 — [WangLi22TP] Li 금속 쪽 (E_hull, K\*) 2 매개변수 공간 (*JACS Au* 2, 886 (2022)): 식 셋 · 할로겐 3 종의 K\* 는 ML 막대 그림으로 있다 · 분해 부피 (ε) 숫자는 0 · cascade 문헌 갭은 문구를 좁히면 선다** (2026-11-10 신설)
+
+> 📎 출처: `papers/wang2022_two_parameter_space_dendrite_constriction.md` (논문 에이전트 2026-11-10 · 사용자 목록 120 번 · 본문 12 pp + SI 13 pp · 크롭 22장 중 17장 실독 · 래스터 픽셀 판독 + 본문 수치 검산). ⛔ 조성별 값은 전부 조성만 보는 ML 예측이고 E_hull 축은 0.915 eV 를 뺀 값이다 → A–D 물성 4축에 값으로 넣지 않는다. ⚠ 이 논문의 'LPSCl' = Li₅.₅PS₄.₅Cl₁.₅ (우리 modelc 명목 쪽 · comp1 아님) · 'E_hull' = Li 금속과의 pseudo-binary 최대 반응에너지 (hull 위 에너지 아님).
+> 트랙: **cascade (사용자 = 1저자)** — 문헌 갭 보고서 `reports/황화물 분해 부피 도펀트 문헌 갭.md` 의 (가) 묶음 첫 편. 같은 묶음의 다른 편은 J-71 · J-73 · J-74 와 형제 digest `fitzhugh2019_ht_functionally_stable_interfaces_sulfide`. 우리 쪽은 값 없이 원장 경로만 적는다 (cascade 는 마감 파일 허용 문장 범위).
+
+**J-70-a. 논문이 한 것 (요약)**
+
+| 축 | [WangLi22TP] | 판독 |
+|---|---|---|
+| 정의 | 식 (1) Hull(x, K_eff) = Hull(x, 0) + K_eff·V(x)·ε(x) · 식 (2) E_hull = 물질 + Li 금속 pseudo-binary 반응에너지의 최대 크기 · 식 (3) K\* = max_x [−Hull(x, 0) / (V·ε)] · ε ≤ 0 이면 K\* = ∞ | 페널티가 변형에 선형 — K\* 는 반응에너지 ÷ 반응 팽창 꼴의 임계 압력이다. `Fig. S1a` (P₂S₇ ∣ Li) 에서 세 K_eff 곡선이 한 V·ε 로 맞고 K\* 39.7 GPa 가 x = 0.4 에서 재현된다 (figure-read · 우리 산술) |
+| Li 저장소 · 부피 | Li 금속이 pseudo-binary 의 끝점 (혼합 분율 x 를 0.1 간격으로 · 가장 나쁜 x) · 에너지는 혼합물 원자당 · V(x) · ε(x) 의 식은 없다 (선행 연구로 위임) | ✎ `Fig. S1a` 역산 V·ε = 1.0–6.5 Å³/atom 전부 양수 → Li 금속 부피는 부피 수지 밖 (추정 · 우리 `tools/oxidation/constrained_esw.py` 규약과 같은 쪽) |
+| 규모 | MP **124,497** 물질 × Li 금속 ('> 120,000 interfaces' 의 뜻) · 목록 · 표 · 자료 없음 | parity 그림 (`Fig. S15`) 뿐 |
+| ML | 조성 벡터 (원소 103) → Extremely Randomized Trees (트리 30) · 검증 오차 0.063 eV/atom · 0.91 GPa · ±50 % 제약 격자 탐색 · E_hull 영점을 0.915 eV 이동 | 이동량 = 검증 오차의 15 배 · parity 점 구름이 −0.1 eV/atom 에서 잘림 · LGPS 계열은 음수까지 (`Fig. S7c`) |
+| 조성 | Li₅.₅PS₄.₅Cl₁.₅: K\* 25.1 → 8.4 GPa (최소화 조성 Li₇.₄P₀.₅S₂.₃Cl₂.₂) · E_hull 237 → ≈ 0 meV/atom / F · Br · I × y 0–1.25: figure-read K\* 6–12 GPa · E_hull 14–78 meV/atom / LGPS-min 17.7 GPa · 104 meV/atom (figure-read) | 최소화 조성 = ±50 % 상자의 모서리 (P −50 % · Cl +49 %) · 전하 중성을 넘은 환원 조성 · 가로축 라벨 (Cl₁.₅₋ᵧXᵧ) 과 실제 조성 (Cl ≈ 2) 이 다르다 · 명목 도핑 조성은 `Fig. 2` 에서 무도핑 · LGPS 와 한 점 |
+| 목표 창 | K\* < 20 GPa (K_eff^max ≈ 20 GPa 가정) · 10 < E_hull < 150 meV/atom | 네 점 + 셀 성능으로 사후에 정함 · 실패 ↔ 성공의 K\* 는 같다 (8.5 ↔ 8.7 GPa) — 데이터가 가르는 것은 E_hull 한 축 |
+| 실험 | 표면 조성 기울기 (XPS 환산 ≈ 240 nm · Li · Cl↑ / S · P↓) · LPSCl-X 중앙층 다층 셀 8.6–30 mA/cm² 1.7–2.5 만 사이클 vs 대조 < 1,000 (2 mg/cm² · 250 MPa · 55 °C) | F 의 Cl · I 의 Li 는 예측과 어긋남 · O 1s 없음 · 20 C ↔ 8.6 mA/cm² 1.43 배 불일치 · 서냉 LiCl 석출 ([Zeng22Cl]) 대안 미배제 |
+| 없는 것 | — | ⛔ ε · ΔV/V 숫자 0 · 표 0 · 할로겐 밖 도펀트 0 · 양극 쪽 0 · 산물 화학 0 · 응력 · 파괴 환산 0 |
+
+**J-70-b. cascade 문헌 갭 판정 (digest §4)**
+
+| 보고서의 물음 | 답 | 근거 |
+|---|---|---|
+| 도핑 아지로다이트가 HT + ML 세트에 있나 | 있다 — 할로겐 3 종 (F · Br · I) 만 · 호스트 하나 | p. 888 · `Fig. 1C` · `Fig. S2` |
+| 도펀트별 값이 표 · 그림으로 나오나 | 표 0 · ML 막대 그림 3 패널 (K\* 최소화 뒤 조성의 값) | 같은 그림 |
+| ΔV/V (reaction strain) 가 조성별 숫자로 나오나 | 아니다 — 0 건 | 본문 · SI 전체 |
+| '> 120,000 계면' 이 이 논문에 있나 | 있다 (124,497 = MP 물질 × Li 금속) | p. 888–890 · SI p. 12 |
+| 양극 쪽도 다루나 | 아니다 (0 V 계면만) | p. 887 · p. 894 |
+| ⇒ 판정 | **갭은 서지만 문구를 좁혀야 한다** — "도펀트별로 매긴 숫자" → "도펀트별로 매긴 ΔV/V 숫자 표 (회계 선언 · 할로겐 밖 · 두 전위 · hull 기반)". 보고서 19 · 21 · 47 · 206 · 226 행에 단서를 단다. 결정은 사용자 몫 | digest §4.2 · §4.3 |
+
+**J-70-c. 우리 트랙별 판정**
+
+| 우리 판정 · 트랙 | 관계 | 한 줄 근거 |
+|---|---|---|
+| cascade 축 ③ (Li 금속 닫힌계 · `cascade_axis_li_anode_estimand_2026_11_04.json`) · 묶음 마감 (`cascade_axes_bundle_closed_2026_11_05.json`) | 🟡 같은 종류의 양 · '좋은 방향' 해석이 다르다 — 마감은 그대로 | 둘 다 물질 + Li 금속 pseudo-binary 의 최솟값이다. 우리는 hull 직접 · 산물 추적 · 상대값만 / 그들은 조성 ML · 구속 항 · 산물 없음. 논문은 '너무 덜 발열이면 덴드라이트를 못 가둔다' 고 주장하는데 우리 마감은 '덴드라이트를 막는다' 를 애초에 말하지 않는다. ⛔ 재개 사유 아님 |
+| 호스트 조성 reaction strain (`tools/oxidation/constrained_esw.py` · `constrained_esw_*.json`) | 🟢 같은 부피 회계로 보인다 (추정) | Li 는 저장소 · 고체 부피만 센다. 도펀트별 값은 양쪽 다 없다 |
+| 기계 (B₀ · E_VRH) | ⚪ 다른 양 | K_eff · K\* 는 탄성 상수가 아니다. 논문이 쓴 K_eff^max ≈ 20 GPa 는 재지 않은 가정 |
+| §E 'Cl-rich 유불리' | 🟢 같은 방향 (세 번째 편 · [GG] 와 같은 그룹) | §E 새 행 |
+| 산화 쪽 ESW · CEI · b2o3 · li2s · W_ad · MLIP-MD 규약 | ⚪ 무관 | 논문에 대응 양 없음 |
+
+**J-70-d. 가져올 것 (제안 — 원장 · 보고서는 고치지 않았다)**
+- K\*(x) = 반응에너지 ÷ 반응 팽창의 x 프로파일 (`Fig. S1` 꼴) — 축 ③ 이 남긴 kink 반응식 + MP 몰부피로 hull 에서 직접 낼 수 있다. '도펀트 해상도의 숫자 표' 의 가장 싼 꼴. 한계: 도핑 조성이 평형 상 혼합으로 들어가 도펀트 효과가 희석으로만 나온다.
+- 분해 부피 축의 목적 선택지가 셋이다 (ΔV/V 크기 줄이기 · ε 키우기 · **분해를 적당히 남기기**) — 결과 전에 하나를 선언한다.
+- 조성 대리모형 감사 항목 셋: 영점 보정의 크기 · 학습 범위와 목표 창의 겹침 · 최적점이 제약 상자의 모서리인가.
+- 인용할 때 'E_hull' 을 풀어 쓴다 (Li 금속과의 pseudo-binary 최대 반응에너지).
+
+**J-70-e. ⛔ 인용 금지**
+- 이 편의 K\* · E_hull 을 **도핑 아지로다이트의 물성값**으로 — K\* 최소화 뒤 (Li 과잉 · S 결핍) 조성의 ML 예측이고 명목 도핑 조성의 값이 아니다.
+- E_hull 237 · 38 · 104 meV/atom 을 hull 기반 반응에너지 (우리 축 ③ · [Rich16] 류) 옆에 — 0.915 eV 를 뺀 ML 값이다.
+- K\* · K_eff 를 우리 B₀ · E_VRH 옆에 같은 양으로.
+- "분해 부피 변화를 도펀트별로 계산했다" 로 이 편을 인용 — ε 숫자는 한 건도 없다.
+- "코어–쉘 구조가 확인됐다" — 표면 조성 기울기 (큰 변화는 스퍼터 전 0 s 점) 이고 O 1s 가 없다.
+- 사이클 수 (1.7–2.5 만) 를 우리 셀 조건으로 — 2 mg/cm² · 250 MPa · 55 °C · 사이클당 ≈ 0.14–0.24 mAh/cm² (우리 산술).
+- digest 의 figure-read 값 · 우리 산술 (V·ε · 전하 수지 · K\* 어림) 을 논문 값처럼.
+
+---
+
+### J-71. 🔧 **방법 원전 — [Fitz21] 구속 앙상블의 계면판 (*Energy Environ. Sci.* 14, 4574 (2021)): K_crit 정의 · 코팅 조성 8 만 점 스크린 · argyrodite 0 · 도펀트별 숫자 표 0 · ε_RXN 수치 0 — cascade 갭 판정과 우리 구속 ESW 와의 관계** (2026-11-10 신설)
+
+> 📎 출처: `papers/fitzhugh2021_sei_design_constrained_ensemble.md` (논문 에이전트 2026-11-10 · 그림 11/11 실독 · 표 2장은 PDF 텍스트 · 내장 래스터 픽셀 판독 + 검산 4건 = `tools/litdb/fitzhugh2021_digitize.py`). ⛔ 유리 코팅 / LGPS · LSPS · Li₇P₃S₁₁ · Na₇P₃S₁₁ 계면 유사상 전용 · **Li₆PS₅Cl 계산 0 · 도펀트 계열 0 · 산물 물성 0 · 음극 쪽 0** → A–D 물성 4축에 행을 만들지 않는다. 수치는 전부 소환값이고 설계값은 대리모형 예측값이다 — 우리 `db/properties/` 값 옆에 놓지 않는다.
+> 트랙: **cascade (1저자 = 사용자)** — 문헌 갭 보고서 `reports/황화물 분해 부피 도펀트 문헌 갭.md` 의 표 '가' 줄 (본문 확인 다섯 편) 중 하나. 아래 '우리' 쪽은 값 없이 원장 경로만 적는다.
+
+**J-71-a. 논문이 한 것 (요약)**
+
+| 축 | [Fitz21] | 판독 |
+|---|---|---|
+| 정의 | 식 (3) `ΔG⁰_RXN + K_crit·ε_RXN·V⁰ = 0` — K_eff > K_crit 이면 계면상이 그 전압에서 더 분해하지 않는다 (p = K_eff·ε_RXN) | 구속 앙상블 (Xin Li 그룹) 을 계면 유사상에 처음 적용 |
+| 스크린 | MP 전자 절연체 > 20,000 (**코팅 후보**) × 고정 SE 4종 = 유사상 계면 > 80,000 · 4 V | 전해질 조성 · SEI 산물은 스크린 대상이 아니다 |
+| 분포 | Li₇P₃S₁₁ 계면 K_crit 평균 / 중앙 / 표준편차 18.5 / 14.8 / 13.0 GPa · LGPS 19.0 / 15.6 / 12.0 · LSPS 19.4 / 16.2 / 12.2 · Na₇P₃S₁₁ 13.7 / 10.9 / 9.7 (뒤 셋 figure-read) | 그림은 0–80 GPa 만 · 최빈 칸이 SE 자기 값 근처에 뾰족하다 |
+| 원소 | F · O · Cl 이 K_crit 를 낮춘다 (색 지도 · 숫자 없음) — figure-read F −0.58 · O −0.13 · Cl −0.13 | 저자 해석이 '탈리튬화가 덜 된다' = 화학 항 |
+| ML | 조성 → K_crit 결정트리 앙상블 (50 또는 30 그루) · RMSE 2.59 GPa (LSPS · 4 V) · SHAP 로 조성 최적화 | 25 GPa 아래 자료로만 학습된 것으로 보인다 (digest §6.6) · 직접 계산 대조 0 |
+| 설계 | 황화물 유리 10종 → child A / B / C (원소별 변화 ≤ 0.05 / ≤ 0.10 / 무제한): LSPS 계면 평균 16.0 → 11.4 → 7.6 → 2.0 GPa | child 다수가 전하합 ≠ 0 — 적힌 전구체로 못 만든다 (digest §6.7) |
+| 전압 의존 | parent 유리/LGPS 계면 K_crit 4.6 / 7.5 / 13.3 GPa (2 / 3 / 4 V · figure-read · 4 V 는 표 13.31) | 전압과 함께 커진다. 4 V 넘는 값 없음 |
+| 실험 | Li₂S–P₂S₅–LiI 유리 + 변형 5종 · LGPS + 탄소 복합 양극 CV (0.1 mV/s · 250 MPa · 활물질 없음): 프리피크 17.0 → 6.1 µA 단조 감소 (figure-read) | 셀 하나씩 · 합성 조성 미기재 · '유리 + 탄소' 대조 없음 · 강한 구속에서만 |
+
+**J-71-b. 갭 질문 판정 (digest §7 — 쪽 · 그림 번호는 거기)**
+
+| 질문 | 판정 |
+|---|---|
+| 무엇을 스크린했나 | 코팅 물질 (MP 전자 절연체) · 설계 단계는 유리 조성. SE 는 4종 고정 |
+| 기계적 구속이 스크린 축인가 | 예 — 목표 변수가 K_crit. 다만 ε_RXN 의 식 · Li 부피 · 기체 · V⁰ 의 정의는 없다 (선행 3편에 위임) |
+| 도핑 아지로다이트 · 한 호스트 도펀트 계열 | 아지로다이트 0. 유리 하나의 '수정 수준' 계열 (0–6 %) 과 누적 세 단계 (O → F → Cl) 가 전부 — 도펀트별 숫자 표 없음 |
+| 산물을 물성으로 순위 | 아니오 — 점수는 K_crit 하나. 산물 이름도 없다 |
+| 음극 / 양극 | 양극 쪽만 (2 / 3 / 3.5 / 4 V) |
+| 황화물 구체 숫자 | LGPS 의 +2 % · > 30 % 는 선행 인용. 이 논문 계의 반응 변형률 수치는 0 |
+| '설계' 의 변수 | 코팅 (유리) 의 원소 조성. 구속 압력 · 중간층 구조 · SE 도펀트가 아니다 |
+
+→ **갭 ('한 아지로다이트 호스트의 도펀트별 숫자 표' · 'SE 도펀트를 산물 물성으로 순위') 은 이 편으로 깨지지 않는다.** 고칠 것 둘: ① 보고서의 '최근 HT 계면 스크린은 부피를 다루지 않는다' — 이 편이 ε_RXN 이 든 K_crit 를 8 만 점의 목표값으로 썼다 (ΔV/V 수치는 안 보인다) ② 'SEI 설계' 문구는 이 논문 제목이 선점 (뜻은 '기계적 준안정' 으로 다르다). '분해가 공극 · 균열을 메워 스스로 멈춘다' 는 서사도 여기 있다 (정량 없음) — 수축 (접촉 손실) 쪽은 한 마디도 없다.
+
+**J-71-c. 우리 쪽과의 관계 (방법 · 정의 수준)**
+
+| 우리 항목 · 트랙 | 관계 | 한 줄 근거 |
+|---|---|---|
+| 구속 ESW (`tools/oxidation/constrained_esw.py` · `db/properties/constrained_esw_results.json` · `constrained_esw_cl_scan*.json`) — ESW · 1저자 = 사용자 | 같은 틀의 다른 읽기 | 우리는 φ_ox(K_eff) (가장자리 · V), 논문은 K_crit(φ) (GPa) — 같은 선형 관계의 역함수. 계가 달라 (호스트 자기분해 ↔ 계면 유사상) 수치는 나란히 놓지 않는다 |
+| 부피 회계 (우리 도구는 'Li 는 저장소 · 고체 부피에 안 센다' 를 선언) | 논문 쪽이 덜 명시적 | `Fig. 1d` 부피 행에 Li 가 없다는 것까지만 읽힌다. 원전과 같은지는 미확인 |
+| cascade 산화 안정성 축 후보 ④ '기계적으로 묶인 안정창' (`kb/open_items.md`) | 정의 제공 | K_crit(φ) = \|ΔΩ(φ)\| / ΔV 는 그 축의 보고량 후보. ΔG · ΔV 를 따로 싣고 ε_RXN ≤ 0 규칙을 결과 전에 정해야 한다 |
+| B₀ · E_VRH 정본 (`canonical_registry.json`) | ⛔ 같은 양 아님 | K_eff 는 미세구조 · 접촉 · 공극이 정하는 국소 유효값이고 B₀ 는 무결함 벌크다 |
+| Nd 계면 (CEI · 1저자 = 실험 쪽) · B₂O₃ | 무관 | 원소 상관 지도의 Nd · B · O 값은 코팅 2 만 종 전체의 상관이다 — 도핑 아지로다이트의 근거로도 반박으로도 쓰지 않는다 |
+| 작동창 2.5–4.25 V 규칙 | 범위 밖 주의 | 논문은 2 · 3 · 4 V 세 점 — 4.25 V 로 외삽하지 않는다 |
+| [GG] (Cl 함량 계열의 구속 창) | 계보 | 같은 그룹 · 같은 틀의 후속. '치환체로 분해 부피를 해상한 계열은 Cl 축 하나' 는 이 편을 읽은 뒤에도 그대로다 |
+| [Tian20] (§J-73) | 같은 양의 정반대 읽기 | 분해 부피를 [Tian20] 은 응력 (손상) 으로, 이 편은 안정화 문턱으로 쓴다 |
+
+**J-71-d. 가져올 것 (제안 — 원장 · 보고서는 고치지 않았다)**
+- 도펀트 표에 **ΔG · ΔV · K_crit 세 열을 따로** — 이 논문의 child 는 K_crit 하락의 61–86 % (4 V · 우리 산술) 가 화학 항이었다.
+- **ε_RXN ≤ 0 인 칸의 규칙을 결과 전에** — K_crit 가 정의되지 않는 칸이 곧 '접촉 손실 쪽' 이다.
+- 조성 설계는 **전구체 혼합으로 닿는 조성 안에서** (우리 cascade 는 이미 그렇다).
+- 대리모형에 대고 최적화했으면 **직접 계산으로 되짚는다** (나무 모형의 계단 · 미량 원소 산물).
+- 부피 회계의 원전은 이 논문 refs 11–13 (Fitzhugh *J. Mater. Chem. A* 7, 23604 (2019) · Wu *Nat. Commun.* 9, 4037 (2018) · Fitzhugh *Small* 15, 1901470 (2019)) — litdb 미보유.
+
+**J-71-e. ⛔ 인용 금지**
+- 원소 상관 지도의 부호 (F · O · Cl 음 · Nd · B · Sb · Cu 양) 를 아지로다이트 도펀트의 순위로.
+- child 조성을 '실험으로 검증된 조성' 으로 — 합성 조성이 적혀 있지 않고 표의 조성 다수는 적힌 전구체로 만들 수 없다.
+- 'K_eff ≈ 4.6–4.9 GPa' 를 측정값으로 — 대리모형 예측 두 묶음 사이의 틈이고 폭이 모형 RMSE 의 1/9 이다.
+- 유리 전도도와 그 출처 번호 (ESI 표) — 번호가 조성과 어긋난다.
+- digest §6 의 역산값 (ε_RXN·V⁰ · 기여 분해 · 순위 상관) 을 논문 값으로 — 우리 산술이다.
+- K_eff 와 우리 B₀ 를 같은 양으로.
+
+---
+
+### J-72. 🔧 **방법 원전 + 갭 판정 — [Fitz19HT] LSPS 코팅 고처리량 탐색 (*Adv. Energy Mater.* 9, 1900807 (2019)): '기능적 안정' = SE 고유 분해를 뺀 계면 몫 · 부피는 명시적으로 무시 (ΔG ≈ ΔE) · 구속은 계산 없는 전제 · argyrodite 0 · 도핑 조성 0 — cascade 갭 판정과 우리 계면 축 정의와의 관계** (2026-11-10 신설)
+
+> 📎 출처: `papers/fitzhugh2019_ht_functionally_stable_interfaces_sulfide.md` (논문 에이전트 2026-11-10 · 본문 12 pp + SI 36 pp · 그림 11/11 실독 · 표 2장은 PDF 텍스트 · 원본 래스터 픽셀 판독 + 검산 4건 · SI 카탈로그 약 4,000 항목은 스크립트 집계 = ✎). ⛔ Li₁₀SiP₂S₁₂ 한 조성과 코팅 후보의 계면 전용 · **Li₆PS₅Cl · LGPS 계산 0 · 도핑/치환 조성 0 · 부피 · 구속 · 산물 물성 0 · 새 DFT 0** → A–D 물성 4축에 행을 만들지 않는다. 수치는 전부 0 K MP hull 소환값이다 — 우리 `db/properties/` 값 옆에 놓지 않는다.
+> 트랙: **cascade (1저자 = 사용자)** — 문헌 갭 보고서 `reports/황화물 분해 부피 도펀트 문헌 갭.md` 의 표 '가' 줄 (본문 확인 다섯 편) 중 하나 (21 행 · 208 행). 아래 '우리' 쪽은 값 없이 원장 경로만 적는다.
+
+**J-72-a. 논문이 한 것 (요약)**
+
+| 축 | [Fitz19HT] | 판독 |
+|---|---|---|
+| 자료 | MP 기존 DFT 에너지 · 69,640 구조 중 LSPS 와의 hull 이 8 차원 이하인 **67,062** · 새 DFT 0 | 코팅 후보 = 임의의 MP 항목 (Li 함유 · 전자 절연 요구 없음) |
+| 계산 | 물질당 24 회 = {단독 · LSPS 계면} × {화학 + 0–5 V 11 점} · hull 67,062 → 11,935 (원소 집합 재사용) · x_m 이진 탐색 14 회 | `[Rich16]` · `[Zhu16]` 의 pseudo-binary 를 규모만 키운 것 |
+| 정의 | ΔG = ΔG⁰ (각자 분해 = 고유 몫) + ΔG′ (계면 몫). **기능적 안정 = 코팅의 ΔG(x = 1, V) < 50 그리고 ΔG′(x_m, V) < 50 meV/atom** — LSPS 고유 분해는 판정 밖 (*"can be stabilized via strain induced methods, kinetic metastability, etc."*) | ΔG′ = `[Zhu16]` 의 mutual · 문턱 50 의 근거 없음 (`[Xiao19]` 는 100) |
+| 버린 항 | *"Changes in the volume and entropy were neglected (ΔG ≈ ΔE)"* (p. 11) | 부피가 축이 아닌 정도가 아니라 **명시적으로 제외** |
+| LSPS 단독 | 안정 구간 figure-read ≈ 1.70–2.04 V · hull energy 0 V ≈ 1.97 · 4 V ≈ 1.19 · 5 V ≈ 1.85 eV (Li 제외 원자당 — 기울기 0.667 eV/V = Li 10/15 로 확인) | LSPS 는 4 V 에서 스스로 1 eV 넘게 불안정 — '기능적 안정' 은 그 위에 얹은 조건 |
+| 결과 | 음극 범위 (0–1.5 V) > 1,000 · 양극 범위 (2–4 V) > 2,000 항목 (✎ SI 집계 1,053 / 2,668 · 고유 조성 978 / 1,994). 양극 통과율 S 35 % · Se 27 % · I 12 % · O 1.3 % / 음극 I 4.5 % · N 2.3 % · P 2.0 % | 양극 목록의 Li 함유 31 · SiO₂ 다형 165 · ZnS 다형 89 / 음극 목록의 70 % 가 음이온 형성 원소 없는 금속 · 금속간화합물류 (✎) |
+| 계면 몫의 전압 의존 | 0 V 에서 전 클래스 0 · 2–2.5 V 최대 (O 0.43 · N 0.31 · S 0.04 eV/atom · figure-read) · 고전압은 '완전 산화 산물끼리의 화학 반응' 으로 수렴 | 음극 쪽 판정은 사실상 코팅 자신의 Li 안정성 |
+| LCO | 양극 목록에 LiCoO₂ · Li₀.₅CoO₂ 화학 안정 표시 (`&`) — ✎ 449 항목 (고유 조성 204 · 산화물 327 · 불화물 58 · S·Se 0) | '양쪽에 안정 > 2,000' 이 아니다 |
+| 실험 | 분말 혼합 500 °C · 6 h XRD: LCO (200) > SnO₂ (97) > LTO (75 meV/atom) 반응 · SiO₂ · MgF₂ · ZnS 무변화 / 코팅 단독 액체 셀 CV (Li₂S · SnO₂) | 전압 아래 계면 · 전지 사이클은 실험 0 · Li₂S 산화 개시 figure-read ≈ 3.3 V |
+
+**J-72-b. 갭 질문 판정 (digest §6 — 쪽 · 그림 번호는 거기)**
+
+| 질문 | 판정 |
+|---|---|
+| 스크린 기준에 reaction strain · 부피 · 구속이 있나 | **아니오** — 기준은 반응 에너지 두 개. 부피는 무시한다고 명시 (p. 11) · 변형률은 SE 고유 분해를 빼는 명분으로 한 번 (p. 5) |
+| 무엇을 스크린했나 | 코팅 후보 67,062 (MP). 전해질은 LSPS 한 조성 고정 — 전해질 조성 · 도핑 조성은 스크린하지 않는다 |
+| '기능적 안정' | 코팅 자신의 분해 + 계면이 더한 몫이 각각 < 50 meV/atom. SE 자신의 분해는 뺀다 → "코팅이 문제를 더하지 않는다" 는 뜻 |
+| 산물 물성 기준 | 없다 (띠틈 · 전자 전도 · 부동태라는 말이 본문에 0 회). 통과 목록에 금속 · 비활성 기체까지 있다 |
+| 황화물 구체 숫자 · 실험 | LSPS 뿐 (위 표). LGPS · Li₆PS₅Cl 0 회 |
+| 보고서 초록 수준 서술과의 차이 | ① '> 2,000 / > 1,000' 은 LSPS 하나에 대한 수 (LCO 와도 안정한 것은 일부) ② 계산+실험 편이다 ③ reaction strain 은 들어가지 않았다 ④ 수는 MP 항목 수 (다형 중복) ⑤ 줄인 저자 = Deng · Qi |
+
+→ **보고서의 '부피를 스크린 축으로 쓴 HT 없음' 은 이 편으로는 깨지지 않는다** (208 행의 '결과가 바꾸는 것' 미발동). 같은 그룹이 2 년 뒤에 낸 [Fitz21] (§J-71) 이 K_crit 를 목표값으로 쓴 것과 견주면, 이 편은 그 직전 단계 — **구속을 가정으로만 두고 에너지만 센 HT** — 다.
+
+**J-72-c. 우리 쪽과의 관계 (방법 · 정의 수준)**
+
+| 우리 항목 · 트랙 | 관계 | 한 줄 근거 |
+|---|---|---|
+| cascade 축 ① · ③ 의 dE_rxt (`tools/oxidation/interface_reactivity_v2.py:min_rxn_closed` · `use_hull_energy=True` · `db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json`) — cascade · 1저자 = 사용자 | 같은 부류의 양 | 반응물을 hull 에너지로 재는 우리 최소 kink 는 이 논문의 화학 ΔG′ (= `[Zhu16]` mutual) 와 같은 부류다. 차이: 논문 식은 **총 ΔG 최대점 x_m 에서** ΔG′ 를 읽고 절대 문턱 50 meV/atom 을 쓴다 · 우리는 ΔG′ 자체의 최소와 호스트 대비 상대차 δ |
+| 열린계 끝점 깃발 (`endpoint_meaning()` · 2026-09-16) | 같은 문제 · 다른 처리 | 열린계에서 끝점 값은 순수상의 자체 분해다. 논문은 ΔG⁰ 로 빼고 우리는 '계면량이 아니다' 깃발을 단다 |
+| ESW 창 정의 (`constrained_esw.py:esw_window_edges()` · `our_dft_baseline.md`) — ESW · 1저자 = 사용자 | 정의 일치 · 값 비교 불가 | 창 = Li 교환 0 구간 (`Fig. 2A` 음영) 은 같다. 물질 (LSPS ↔ LPSCl) 과 MP 보정 세대가 달라 산화 한 변을 나란히 놓지 않는다 (`HZ-esw-reduction-limit-label`) |
+| 구속 창 (B② · `constrained_esw.py`) | 계산 없음 | 이 편은 구속을 이름만 댄다 (ref [31]). 계산은 [GG] · [Fitz21] |
+| cascade 첫 묶음 마감 (`cascade_axes_bundle_closed_2026_11_05.json`) | ⚪ 무관 — 지지로 쓰지 않는다 | SiO₂ 가 이 편 양극 목록의 최다 항목 (165 다형) 이고 LCO 와도 통과하지만, 코팅 상 ↔ 도핑 전구체 설계 · LSPS ↔ LPSCl 이고 SiO₂ 는 LSPS 의 Si 가 만드는 종착 산물이다 — 마감 파일의 허용 문장 밖으로 넓히지 않는다 |
+| 후보 주제 A (산물 물성 순위) | 갭 유지 | 산물 물성 기준 0 |
+| Nd 계면 (CEI · 1저자 = 실험 쪽) · B₂O₃ 원고 (1저자 아님) | 조회만 | digest §16: B₂O₃ (mp-306) 는 양극 목록에 `*` (LCO 표시 없음) · Nd 는 NdPS₄ · Nd₂S₃ 등 황화물 · 셀레늄화물이 양극 목록 · Nd₂O₃ · NdOCl · NdPO₄ 는 어느 목록에도 없다 — 전부 LSPS 기준이라 우리 판정에 넣지 않는다 |
+| 작동창 2.5–4.25 V 규칙 | 범위 밖 주의 | 격자가 0.5 V 이고 카탈로그 판정은 4 V 한 점 — 4.25 V 로 외삽하지 않는다 |
+| `[Xiao19]` (같은 해) | 결론 반전 | 폴리음이온 산화물 우세 ↔ 이 편은 인산염류가 재료 수준 양극 안정 4,840 중 11 통과. 게이트 (Li 함유 · 전자 절연 · 문턱 100 ↔ 50) 와 SE (LPS ↔ Si 든 LSPS) 가 다르다 |
+| [WangLi22TP] (§J-70) 가 이 편을 구속 hull '절차' 의 출처 (그 논문 ref 16) 로 든다 | 확인 — 그 식은 여기 없다 | 이 편에 있는 것은 pseudo-binary 탐색 절차 (식 1–8) 뿐이다. V(x) · ε(x) · 구속 항은 없다 — reaction strain · 기준 부피 식의 원전은 이 편 ref [31] (Wu 2018 *Nat. Commun.*) 쪽 (litdb 미보유 · 안 읽음) |
+| [Fitz21] (§J-71 · 같은 1 저자의 2 년 뒤 편) | 전편 ↔ 후속 | 후속은 코팅 후보를 MP 전자 절연체로 좁히고 목표값을 K_crit 로 바꿨다. 이 편에는 둘 다 없다 — 두 편을 한 덩이로 인용하지 않는다 |
+
+**J-72-d. 가져올 것 (제안 — 원장 · 보고서는 고치지 않았다)**
+- 보고서 21 행 정정 (digest §6-6 의 1–3 · 5–6 번) · 208 행은 '확인 — 미발동' 으로.
+- 주제 B 의 동기 문장: *'기능적 안정' 틀은 SE 고유 분해가 구속으로 눌린다고 **가정**했고 그 부피 항을 계산하지 않았다.*
+- 결과 표시 양식: 고유 몫 / 계면 몫 누적 막대 (`Fig. 3A`) · 두 끝 전압 산점도와 neutral decay 대각선 (`Fig. 2B,C`) · 기울기 = Li 수 검산 (`Fig. 2A`).
+- 원소 집합 단위 hull 재사용 (67,062 → 11,935) — MP 조회 묶음의 비용 절감.
+
+**J-72-e. ⛔ 인용 금지**
+- "LSPS 와 LiCoO₂ 양쪽에 안정한 코팅 2,000 개 이상" — LCO 표시는 ✎ 449 항목이다.
+- '기능적으로 안정' 을 "안정한 계면" 으로 — SE 자신은 4 V 에서 1 eV 넘게 불안정하다는 계산이 같은 논문에 있다.
+- LCO–LSPS 반응 에너지 한 값 — 본문 200 meV/atom 과 `Fig. S1A` ≈ −0.39 가 2 배 어긋난다.
+- 원소 상관 지도 (`Fig. 1D` · `Fig. S2`: Cl −0.32 · B −0.26 · O +0.03 · Nd +0.31 등) 를 아지로다이트 도펀트의 순위로.
+- 클래스 평균 (산화물 0.46 eV/atom) 을 특정 코팅 · Li₆PS₅Cl 에 — MP 전체 평균이고 LSPS 의 Si–O 구동력이 섞여 있을 수 있다.
+- "LSPS 25 mS/cm" — Cl 함유 다른 조성의 값이다.
+- SI 카탈로그 집계 수 (1,053 · 2,668 · 449 등) 를 논문 값으로 — 우리 집계다.
 
 ---
 
