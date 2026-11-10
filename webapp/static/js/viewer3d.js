@@ -2473,8 +2473,9 @@ function applyViewMode(state, mode) {
      * always wins — no additive Venn-diagram artefacts. */
     function buildCap(r, centerData, dir, stageName, halfAngleRad) {
       const segs = 28;
+      const capRadius = r * 1.005;
       const geo = new THREE.SphereGeometry(
-        r * 1.005, segs, Math.max(8, segs >> 1),
+        capRadius, segs, Math.max(8, segs >> 1),
         0, Math.PI * 2, 0, halfAngleRad,
       );
       const stage = new THREE.Color(STAGE_COL[stageName]);
@@ -2482,7 +2483,7 @@ function applyViewMode(state, mode) {
       const pos = geo.attributes.position;
       const colors = new Float32Array(pos.count * 4);   // RGBA
       for (let i = 0; i < pos.count; i++) {
-        const y = pos.array[i * 3 + 1];                  // cap pole = +Y
+        const y = pos.array[i * 3 + 1] / capRadius;      // normalized cap pole = +Y
         const t = Math.max(0, Math.min(1, (y - yMin) / (1 - yMin)));
         const fade = t * t;
         colors[i * 4 + 0] = stage.r;
@@ -6727,7 +6728,7 @@ function renderAmOnlyContactCaps(state, cl, lo, hi, lin) {
   const geo = new THREE.SphereGeometry(R0, 16, 6, 0, Math.PI * 2, 0, ha);
   const yMin = Math.cos(ha), P = geo.attributes.position, rgba = new Float32Array(P.count * 4);
   for (let i = 0; i < P.count; i++) {
-    // 꼭지 (+Y = 접촉 쪽) 1 → 테두리 0 · 반경으로 나눠 입자 크기와 무관한 결 (Brittle 은 나누지 않아 r > 1 µm 에서 사실상 불투명)
+    // 꼭지 (+Y = 접촉 쪽) 1 → 테두리 0 · 반경으로 나눠 입자 크기와 무관한 결 (구본 Brittle 은 나누지 않아 r > 1 µm 에서 사실상 불투명)
     const t = Math.max(0, Math.min(1, (P.array[i * 3 + 1] / R0 - yMin) / (1 - yMin)));
     rgba[i * 4] = 1; rgba[i * 4 + 1] = 1; rgba[i * 4 + 2] = 1;   // 흰색 × 인스턴스 색 (jet)
     rgba[i * 4 + 3] = 0.3 + 0.7 * t;
