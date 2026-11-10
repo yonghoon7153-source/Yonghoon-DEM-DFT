@@ -1,0 +1,41 @@
+{
+  "schema": "dem_gate_unapplied_patch_draft/1",
+  "source_pin": "fa073370edd483bc425c58311d010fd1ac211c04",
+  "source_path": "scripts/check_all.sh",
+  "source_git_blob": "c7ad8ac01e50dcd0982c91461d954e3ba03f75fb",
+  "source_sha256": "ff4a7bbc21bea8d952829afea6d6d5536c493dbcc2666a377b554d9863b8b741",
+  "proposed_sha256": "3765bf99dd45aa29292fccbc1b0cdbeab10221783cda948f9e714ae83f16e814",
+  "existing_run_function_unchanged": true,
+  "existing_run_call_text_and_order_unchanged": true,
+  "static_run_calls_before": 176,
+  "static_run_calls_after": 187,
+  "new_test_paths": [
+    "scripts/test_make_dem_gen2_decks.py",
+    "scripts/test_dem_gen2_qualification.py",
+    "scripts/test_dem_gen2_observation_bridge.py",
+    "scripts/test_dem_gen2_t0_contract.py",
+    "scripts/test_dem_gen2_t5_contract.py",
+    "scripts/test_dem_gen2_t11_contract.py",
+    "scripts/test_dem_gen2_live_contract.py",
+    "scripts/test_dem_gen2_s0_contract.py",
+    "scripts/test_dem_gen2_p2_contract.py",
+    "scripts/test_dem_gen2_qualification_matrix.py",
+    "scripts/test_dem_gen2_demp_contract.py"
+  ],
+  "patch_applied": false,
+  "test_execution_count": 0,
+  "gate_execution_count": 0,
+  "CI_execution_count": 0,
+  "gate_list_mode_execution_count": 0,
+  "actual_stage_count": "NOT_OBSERVED",
+  "timing_records": "NOT_COLLECTED",
+  "timing_fields": [
+    "stage",
+    "seconds",
+    "ok_or_fail",
+    "name"
+  ],
+  "application_owner": "CLAUDE",
+  "CI_and_rule_K_alignment": "REQUIRED_AT_APPLICATION",
+  "whole_status": "HOLD"
+}
