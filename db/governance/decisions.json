@@ -12751,7 +12751,7 @@
    "title": "cascade 묶음 2 개정 1 — 결정 문장 정정 (⑤ 주 판 = hull 혼합 회계) · 도구 (82855b0c) 의 구현 판단 열둘 (정확한 계수 · G3b 허용 · 막는 범위 · 모름 범위 · R10/R12/R13 해석 · 더한 출력)",
    "statement": "카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json 의 개정_1_구현_정리_2026_11_10 이 정의다. ⑤ 의 반응물 SE 부피는 hull 평형 상 혼합 회계가 주 판이다 (원자 부피 판은 기록만 · D-2026-11-10-cascade-axes-bundle2 statement 앞부분의 'SE 는 호스트 아지로다이트 원자 부피 × 원자 수' 는 ED 전 문구로 이 결정이 대체한다). ⑤ · ⑥ · G1c 는 Reaction 의 정확한 계수로 · G3b 는 Composition 계수 사전 (상대 1e-3) · x* 1e-6 · dE 1e-5 · 막는 게이트 (결정 · 묶음 1 재현 · G1 · G1b · G1c · G2 · G3 · G3b · G5) 중 하나라도 불통과면 판독 전체를 안 낸다 · 모름에 판독 오류 포함 · 호스트 거의 겹친 kink 면 그 축은 전부 모름 · R10 · R12 · R13 해석은 카드 그대로.",
    "rationale": "도구 작성 중 (결과 전) 드러난 해석 빈칸을 결과 전에 원장에 박는다 — 비준된 결정의 문장에 ED 전 문구가 남아 원장끼리 엇갈린다 (원장이 이긴다는 규칙 때문에 바로잡아야 한다).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "새 축 값 0 건 · MP 조회 0 건",
@@ -12780,15 +12780,31 @@
     "first_author": "사용자"
    },
    "proposed_by": "claude-session-2026-11-10 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-10",
      "state": "proposed",
      "by": "agent",
      "note": "도구 82855b0c 의 구현 판단 · 결정 문장 정정 — 결과 전 · 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자 (cascade 1저자)",
+     "note": "사용자 2026-11-10 (이 세션 · AskUserQuestion): cascade 묶음 2 개정 1 (커밋 59526f93 · 구현 판단 열둘 + 결정 문장 정정) '비준 — gabia 블록 준비 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T13:06:41Z",
+    "commit": "59526f93f31c4698aab55eb6fb87db3979c156ef",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-10 (이 세션 · AskUserQuestion): cascade 묶음 2 개정 1 (커밋 59526f93 · 구현 판단 열둘 + 결정 문장 정정) '비준 — gabia 블록 준비 (Recommended)'",
+    "decision_digest": "sha256:ae8f77cfbaf67a5595029917d1d4f511ef99587fe538d8e1a9e3ed01bf376d6c"
+   }
   }
  ]
 }

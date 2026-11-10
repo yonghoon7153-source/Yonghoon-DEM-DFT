@@ -387,7 +387,15 @@
    "12_안_한_것": "같은 entry_id 가 행마다 같은 부피인지 보는 교차 검사 · 러너 셸 자체 selftest (가상 mp_api · git 으로 vol → win → 판독기 끝까지 돈 오프라인 통합 시험으로 대신: 273+3 줄 · 창 91+1 줄 · 교차 불일치 0 · G3b 276/276 · 출력 있으면 rc 14 · MP 판 바뀌면 rc 4)"
   },
   "비용_어림_고침": "gabia CPU ≈ 1–1.5 h (vol 273 줄을 한 프로세스에서 차례로 · 창은 조성마다 GPPD 8 번) — 카드 §8 의 30–60 분보다 길 수 있다 · GPU 0",
-  "결정": "D-2026-11-10-cascade-axes-bundle2-amend1 (proposed · 사용자 비준 대기)",
-  "by": "agent · 2026-11-10"
+  "결정": "D-2026-11-10-cascade-axes-bundle2-amend1 (✅ active · 사용자 비준 2026-11-10 · 카드 커밋 59526f93)",
+  "by": "agent · 2026-11-10",
+  "gabia_블록": {
+   "무엇": "CPU 파이썬 + MP 조회 (QE 아님 · GPU 0 · b2o3 UMA 런 옆 허용) · vol → win 차례로 (manifest.json 을 같이 쓴다)",
+   "블록": "W=/data/work/wt_cascade_b2; D=$(date +%Y_%m_%d); OUT=$W/db/raw/cascade_axes_bundle2_$D; git -C /data/work/repo fetch origin claude/friendly-meitner-lldvar && git -C /data/work/repo worktree add --detach $W FETCH_HEAD && git -C $W log -1 --format=%h && sha256sum $W/tools/cascade/run_axis_ncm_gabia.sh $W/tools/cascade/analyze_cathode_reactivity.py | cut -c1-16 && cd $W && OUT=$OUT AXIS=vol DRY=1 bash tools/cascade/run_axis_ncm_gabia.sh && tmux new -d -s cascade_b2 -e MP_API_KEY=\"$MP_API_KEY\" \"cd $W && OUT=$OUT AXIS=vol bash tools/cascade/run_axis_ncm_gabia.sh > /data/work/cascade_b2_vol_$D.out 2>&1; echo vol rc=\\$? >> /data/work/cascade_b2_vol_$D.out; OUT=$OUT AXIS=win bash tools/cascade/run_axis_ncm_gabia.sh > /data/work/cascade_b2_win_$D.out 2>&1; echo win rc=\\$? >> /data/work/cascade_b2_win_$D.out\" && echo \"tmux cascade_b2 시작 · OUT=$OUT\"",
+   "감시": "watch -n 30 \"tail -n 4 $OUT/run.log; tail -n 1 /data/work/cascade_b2_*_$D.out\" (같은 창 · OUT · D 가 정해진 셸에서)",
+   "기대": "sha16 29ffd34db528d2e0 (러너) · c14120c63fb50d9f (판독기) · DRY 통과 · vol rc=0 (run.log 'G3b 재현 대조: 통과 · 쌍 276/276') · win rc=0 · ≈ 1–1.5 h",
+   "회수": "끝나면 db/raw/cascade_axes_bundle2_<날짜>/ 를 커밋 · push (자격 증명 줄은 블록 맨 끝) → 여기서 --bundle2 판독 (pymatgen 2026.3.23 환경)",
+   "by": "agent · 2026-11-10"
+  }
  }
 }
