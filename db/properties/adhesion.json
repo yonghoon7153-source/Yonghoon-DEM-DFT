@@ -973,7 +973,8 @@
           "ionic_conductivity_300K_S_per_cm": 0.003,
           "intracage_Ea_eV": 0.12,
           "intercage_Ea_eV": 0.2,
-          "ref": "Deiseroth 2006, Yu/Wagemaker 2016, Hanghofer 2019"
+          "ref": "Yu/Wagemaker 2016, Hanghofer 2019 (σ · Ea — 원문 대조 전) · Deiseroth 2008 (구조 원전 · σ 수치 없음)",
+          "⚠_정정_ref": "2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기') — 옛 'Deiseroth 2006' 은 서지 오류이고 그 논문 (실물 2008) 에는 3 mS/cm 이 없다"
         },
         "Li5.4_family (comp3-5, modelC)": {
           "formula": "Li5.4PS4.4(Cl,Br)1.6",

@@ -20,7 +20,7 @@ Argyrodite solid electrolytes (Li₆PS₅X) are promising candidates for all-sol
 
 ## 1. Introduction
 
-All-solid-state batteries (ASSBs) employing sulfide solid electrolytes offer the promise of high energy density and improved safety over conventional liquid-electrolyte systems [Deiseroth2006, Kraft2018]. Among sulfide electrolytes, the argyrodite family Li₆PS₅X (X = Cl, Br, I) has attracted particular attention owing to its high ionic conductivity (>1 mS/cm), favorable electrochemical stability, and synthetic accessibility [Adeli2019]. Recent advances in halogen-rich compositions Li₆₋ₓPS₅₋ₓCl₁₊ₓ have further enhanced conductivity through the introduction of compositional Li vacancies [Adeli2019].
+All-solid-state batteries (ASSBs) employing sulfide solid electrolytes offer the promise of high energy density and improved safety over conventional liquid-electrolyte systems [Deiseroth2008, Kraft2018]. Among sulfide electrolytes, the argyrodite family Li₆PS₅X (X = Cl, Br, I) has attracted particular attention owing to its high ionic conductivity (>1 mS/cm), favorable electrochemical stability, and synthetic accessibility [Adeli2019]. Recent advances in halogen-rich compositions Li₆₋ₓPS₅₋ₓCl₁₊ₓ have further enhanced conductivity through the introduction of compositional Li vacancies [Adeli2019].
 
 While extensive research has focused on the electrochemical and transport properties of argyrodites, their mechanical behavior—specifically how halogen substitution affects elastic properties and interfacial adhesion—has received comparatively less attention. This gap is critical because mechanical failure at the SE/cathode interface is a primary degradation mechanism in ASSBs: volume changes in cathode active materials during cycling generate interfacial stresses that can cause delamination if adhesion is insufficient or the SE is too rigid [Sakuda2013, McGrogan2017, Ketter2025].
 
@@ -161,7 +161,7 @@ We have presented a systematic computational study of halogen-substitution effec
 
 ## References
 
-[Deiseroth2006] Deiseroth et al., Angew. Chem. Int. Ed. 45, 5305 (2006).
+[Deiseroth2008] Deiseroth et al., Angew. Chem. Int. Ed. 47, 755 (2008).
 [Kraft2018] Kraft et al., J. Am. Chem. Soc. 140, 16330 (2018).
 [Adeli2019] Adeli et al., Angew. Chem. Int. Ed. 58, 8681 (2019).
 [Deng2016] Deng et al., J. Electrochem. Soc. 163, A67 (2016).

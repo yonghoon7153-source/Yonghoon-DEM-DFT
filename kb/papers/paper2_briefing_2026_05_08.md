@@ -187,7 +187,7 @@ Argyrodite Li6PS5Cl는:
 - **Wyckoff Li site 24g, 48h가 ~50% 부분 점유** (Rao 2020 neutron PDF)
 - **Anion sublattice S²⁻/Cl⁻ 혼합 (4a, 4d position)** (Hanghofer 2019)
 - 가능한 ordering 약 **10¹³ 개** (D'Amore 2022)
-- **Bulk superionic conductor (~3 mS/cm at 300 K)** (Deiseroth 2006)
+- **Bulk superionic conductor (~3 mS/cm at 300 K)** (⛔ 2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기'): Deiseroth 2008 (구조 원전) 에는 이 숫자가 없다 — 실측 출처로 (Yu/Wagemaker 2016 등 · 원문 대조 전))
 - Intracage Ea 0.12 eV, intercage 0.20 eV (Yu/Wagemaker 2016)
 
 Li5.4PS4.4Cl1.6:
@@ -361,7 +361,7 @@ modelC = Li5.4 + Cl-only. Cl_surface=38% (Li6 family 수준). 즉:
 
 | Ref | 제공하는 사실 |
 |---|---|
-| **Deiseroth 2006** (Angew Chem) | Li6PS5X 합성 + 결정구조 + 초이온성 (~mS/cm) |
+| **Deiseroth 2008** (Angew. Chem. Int. Ed. 47, 755 · 2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기')) | Li6PS5X 합성 + 결정구조 + 정적 ⁷Li NMR 이동도 (σ 는 예비 한 줄뿐) |
 | **Adeli 2019** (Angew Chem) | 할로겐 치환 → Li5.5PS4.5Cl1.5 conductivity 9.4 mS/cm, mechanism: Li-anion 약화 + extra vacancy + 사이트 disorder |
 | **Yu/Wagemaker 2016** (JACS) | Li6PS5Cl intracage Ea 0.12-0.14 eV, intercage 0.17-0.20 eV, NMR + DFT-MD |
 | **Hanghofer 2019** (PCCP) | 7Li NMR Ea 0.17–0.32 eV, 음이온 sublattice disorder Cl > Br > I |

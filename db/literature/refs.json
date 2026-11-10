@@ -2,19 +2,21 @@
   "references": [
     {
       "id": "deiseroth2006",
-      "authors": "Deiseroth, H.-J. et al.",
-      "title": "Li6PS5X (X=Cl, Br, I): synthesis, crystal structure, ionic conductivity",
+      "authors": "Deiseroth, H.-J.; Kong, S.-T.; Eckert, H.; Vannahme, J.; Reiner, C.; Zaiß, T.; Schlosser, M.",
+      "title": "Li6PS5X: A Class of Crystalline Li-Rich Solids With an Unusually High Li+ Mobility",
       "journal": "Angew. Chem. Int. Ed.",
-      "volume": 45,
-      "pages": "5305",
-      "year": 2006,
-      "key_content": "First synthesis of argyrodite Li6PS5X. F-43m space group. 4a/4c site S/halogen disorder. Li-X bond lengths.",
+      "volume": 47,
+      "pages": "755–758",
+      "year": 2008,
+      "key_content": "First synthesis of argyrodite Li6PS5X (X = Cl, Br, I). F-43m. Li on 48h/24g (partial). S/halogen site disorder for Cl, Br; I ordered. Static 7Li NMR line narrowing (mobility). Conductivity only a one-line preliminary 1e-2–1e-3 S/cm (no data, composition or method) — do not cite a sigma value from this paper.",
       "tags": [
         "argyrodite",
         "synthesis",
         "structure",
         "disorder"
-      ]
+      ],
+      "doi": "10.1002/anie.200703900",
+      "⚠_정정": "2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기') — 옛 서지 'Angew. 45, 5305 (2006)' 는 틀렸다 (실물 2007 투고 · 2008 · 47 권 755 쪽). id 'deiseroth2006' 은 조성 기록 (comp1 · comp2 · modelc_nd_doped) 이 참조해서 그대로 둔다."
     },
     {
       "id": "kraft2018",

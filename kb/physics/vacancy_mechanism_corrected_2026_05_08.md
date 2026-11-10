@@ -137,7 +137,7 @@ Cl-O contact density가 높을수록 paper exp Wad 낮음 (R=-0.91, p=0.03).
 
 ## 참고 문헌 (db/literature/refs.json에 추가됨)
 
-- **Deiseroth 2006**: Li6PS5X synthesis, structure, conductivity
+- **Deiseroth 2008** (Angew. Chem. Int. Ed. 47, 755 · 2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기')): Li6PS5X synthesis, structure, ⁷Li NMR mobility (σ 는 예비 한 줄뿐)
 - **Adeli 2019**: Halide substitution → Li5.5PS4.5Cl1.5 conductivity 9.4 mS/cm
 - **Yu/Wagemaker 2016**: Li6PS5Cl bulk vs interface diffusion, NMR + DFT-MD
 - **Hanghofer 2019**: Substitutional disorder, NMR Ea = 0.17–0.32 eV (Cl)

@@ -24,7 +24,7 @@
 |---|---|
 | **Adeli et al. 2019** | Li5.4PS4.4Cl1.6 reported (= modelC) |
 | **Kraft et al. 2018** | σ vs halogen content systematic |
-| **Deiseroth 2006** | Li6PS5Cl 결정구조 결정 |
+| **Deiseroth 2008** (Angew. Chem. Int. Ed. 47, 755 · 옛 표기 2006 은 서지 오류 · 2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기')) | Li6PS5Cl 결정구조 결정 |
 | **Deng 2016** | Li6PS5Cl 탄성계수 측정 (우리 v2 0K **78.8 GPa** vs Deng **22.1 GPa** — 우리가 4× 큼, DFT 0K vs MD 단단함) |
 
 ---

@@ -917,7 +917,7 @@ Section "Limitations" — paper에 honest limitations를 적는 게 reviewer 신
 
 | Ref | 제공하는 사실 |
 |---|---|
-| **Deiseroth 2006** (Angew Chem) | Li6PS5X 합성 + 결정구조 + ~mS/cm 초이온성 |
+| **Deiseroth 2008** (Angew. Chem. Int. Ed. 47, 755 · 2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기')) | Li6PS5X 합성 + 결정구조 + 정적 ⁷Li NMR 이동도 (σ 는 예비 한 줄뿐) |
 | **Adeli 2019** (Angew Chem) | 할로겐 치환 Li5.5PS4.5Cl1.5 → 9.4 mS/cm, Li-anion 약화 + extra vacancy + 사이트 disorder |
 | **Yu/Wagemaker 2016** (JACS) | Li6PS5Cl intracage Ea 0.12-0.14 eV, intercage 0.17-0.20 eV |
 | **Hanghofer 2019** (PCCP) | 7Li NMR Ea 0.17-0.32 eV, anion sublattice disorder Cl > Br > I |
@@ -932,7 +932,7 @@ Section "Limitations" — paper에 honest limitations를 적는 게 reviewer 신
 
 | 우리 claim | Backing ref | 검증된 사실 |
 |---|---|---|
-| Li6PS5Cl도 superionic | Deiseroth 2006, Yu 2016 | ~3 mS/cm 측정 |
+| Li6PS5Cl도 superionic | Yu 2016 (Deiseroth 2008 은 구조 원전 · σ 수치 없음 — 2026-11-10 정정 (litdb deiseroth2008 digest · 사용자 승인 '둘 다 고치기')) | ~3 mS/cm 측정 |
 | Wyckoff 부분 점유 | Rao 2020 | neutron PDF 직접 |
 | Adeli 2019 Adv mechanism | Adeli 2019 | Li-anion 약화 + vacancy 강화 |
 | Configurational frustration 1162 meV | D'Amore 2022 | 10¹³ ordering DFT |
