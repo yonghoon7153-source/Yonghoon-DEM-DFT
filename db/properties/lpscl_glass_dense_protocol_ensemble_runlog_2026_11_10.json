@@ -34,5 +34,12 @@
   "처리": "카드 개정 DZ (결과 전) · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend1 · 2 단계 런은 계속 (v1 큐 · 사후 검증으로만 받는다 · EB 에서 충분한지 묻는다) · v1 큐가 멈추면 다시 띄우지 않는다",
   "열람": "수송 결과 0 건 (진행 신호만)",
   "by": "agent (위임 10-30) · 2026-11-10"
+ },
+ "도구_소비자_2026_11_10": {
+  "파일": "tools/ionic/li2s3_stage2_readout.py",
+  "selftest": "31/31",
+  "깨기": "25/25 빨강 (러너 rc · ensemble · run_meta · v0 · init sha · 시작 구조 · NaN · 원소 · 셀 · 프레임 수 · 2 개 미만 · md.log 끝 · msd · 장부 0 · 드라이버 sha · 허가 · 결정 · 미완 · 시드 any · 계 any · cond550 any · ⓐ 마지막 · ⓑ 전이 · D 남김 · invalid 측정 가능)",
+  "⚠": "도는 큐의 worktree ~/wt_li2s3 는 올리지 않는다 (bash 가 도는 스크립트를 다시 읽는다) — 대조 잡 · verify 는 새 worktree 에서 · --worktree ~/wt_li2s3 로 판독 시점 지문만 본다",
+  "by": "agent (위임 10-30) · 2026-11-10"
  }
 }
