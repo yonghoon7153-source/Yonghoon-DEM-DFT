@@ -16832,30 +16832,32 @@
     {
       "id": "RR6-01",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 11-10 Rint ② 재확인 회차 ⑥ (리뷰 핀 aec8ca2f6 · c02b AST 메모리 반례 · Codex 세부 표기 Q4-CX01 = 같은 발견)",
       "opened_in": "docs/reviews/codex_review_rint2_rr_round6_20261110.md",
       "title": "siteq_probe.py C02b 가 PATH python3 자식의 종료 코드를 보지 않는다 — 같은 단위 JSON + rc 1 = PASS · 결과에 rc 없음 (docs/reviews/rint2_siteq_prep_20261109/tools/siteq_probe.py c02b)",
-      "note": "판정문 §4 · Codex 최소 수정 그대로 = PASS 에 rc 0 요구 · path_python3_rc · stderr 끝 200 자 · 음성 rc1 시험 (docs/reviews/rint2_siteq_prep_20261109/tools/test_siteq_c02b.py 고치기 전 5/10 → 뒤 10/10 · 게이트 단계) · 우리 트리 재현 = Codex JSON 과 같음 (경로 칸 제외) · 고친 트리에 무수정 탐침 = 61 행 AssertionError (기대된 실패) · 기대만 바꾼 사본 rc 0 · 두 현장 기록 (도구 a490b9ad…) 의 C02b = 자식 rc 미기록 한정 그대로 (정상 종료 증서 아님 · 재실행 자동 요구 없음) · 고침 = 반입과 같은 커밋 · claimed_fixed = 다음 커밋 (본 세션 · sha 필요)",
+      "note": "판정문 §4 · Codex 최소 수정 그대로 = PASS 에 rc 0 요구 · path_python3_rc · stderr 끝 200 자 · 음성 rc1 시험 (docs/reviews/rint2_siteq_prep_20261109/tools/test_siteq_c02b.py 고치기 전 5/10 → 뒤 10/10 · 게이트 단계) · 우리 트리 재현 = Codex JSON 과 같음 (경로 칸 제외) · 고친 트리에 무수정 탐침 = 61 행 AssertionError (기대된 실패) · 기대만 바꾼 사본 rc 0 · 두 현장 기록 (도구 a490b9ad…) 의 C02b = 자식 rc 미기록 한정 그대로 (정상 종료 증서 아님 · 재실행 자동 요구 없음) · 고침 = 반입과 같은 커밋 · claimed_fixed = 다음 커밋 (본 세션 · sha 필요) · 11-10 본 세션 = claimed_fixed (고침이 든 반입 커밋 e93efb6be 가 stoic 에 push 된 뒤 · Codex 확인 = 봉인 전 묶음 회차 · 1저자 rr6 계획 Q4)",
       "evidence_tests": [
         "docs/reviews/rint2_siteq_prep_20261109/tools/test_siteq_c02b.py",
         "docs/reviews/codex_rint2_rr_round6_evidence_20261110/_repro_ours_20261110/repro_summary.json"
-      ]
+      ],
+      "claimed_fixed_sha": "e93efb6be93dec9c734976fd52b9a1116c63c0e3"
     },
     {
       "id": "RR6-02",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "codex 11-10 Rint ② 재확인 회차 ⑥ (리뷰 핀 aec8ca2f6 · 증거 감사 · Codex 세부 표기 RR6-EV-01 = 같은 발견)",
       "opened_in": "docs/reviews/codex_review_rint2_rr_round6_20261110.md",
       "title": "docs/reviews/rint2_siteq_prep_20261109/SHA256SUMS 1 행의 README 해시가 db86 판 (6401d4f9…) — 현재 README (c9a11392… · 56,403 B) 와 다르다",
-      "note": "판정문 §4 · 우리 트리 재현 = 같음 · 고침 = SHA256SUMS 를 지금 바이트로 다시 씀 (README · RR6-01 로 바뀐 도구 · 새 시험 · 6 행) + README 에 역사 해시 줄 (두 현장 기록이 쓴 판 = 도구 a490b9ad… · README 6401d4f9…) · ZIP 최상위 봉인 · 원격 blob · 결과 묶음 4 행은 무관 · 고침 = 반입과 같은 커밋 · claimed_fixed = 다음 커밋 (본 세션)",
+      "note": "판정문 §4 · 우리 트리 재현 = 같음 · 고침 = SHA256SUMS 를 지금 바이트로 다시 씀 (README · RR6-01 로 바뀐 도구 · 새 시험 · 6 행) + README 에 역사 해시 줄 (두 현장 기록이 쓴 판 = 도구 a490b9ad… · README 6401d4f9…) · ZIP 최상위 봉인 · 원격 blob · 결과 묶음 4 행은 무관 · 고침 = 반입과 같은 커밋 · claimed_fixed = 다음 커밋 (본 세션) · 11-10 본 세션 = claimed_fixed (고침이 든 반입 커밋 e93efb6be 가 stoic 에 push 된 뒤 · Codex 확인 = 봉인 전 묶음 회차 · 1저자 rr6 계획 Q4)",
       "evidence_tests": [
         "docs/reviews/rint2_siteq_prep_20261109/SHA256SUMS",
         "docs/reviews/codex_rint2_rr_round6_evidence_20261110/_repro_ours_20261110/repro_summary.json"
-      ]
+      ],
+      "claimed_fixed_sha": "e93efb6be93dec9c734976fd52b9a1116c63c0e3"
     },
     {
       "id": "SELF-161",
@@ -16866,6 +16868,16 @@
       "opened_in": "docs/reviews/dem_redesign_direction_20261109/briefing_ko.md",
       "title": "[DEM 우선 (수영)] 방향 메모 3.1 판이 litdb 정본의 LPSCl 압밀 · 경도 카드 (lee2025_heckel_argyrodite_powder_densification_nanoindentation · miss2026_insitu_conductivity_porosity_pressure_compaction · thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography 등) 를 보지 않고 \"LPSCl 항복 · 경도 카드 없음\" · \"외부 기준은 점 하나\" 라고 적었다 · 사전 공격 세 번도 놓침",
       "note": "메모 3.1 = 1저자가 11-10 그대로 Codex 반박 창에 발송 (리뷰 핀 13eb293cd · 판정 = 본 세션에서 받음) · 처분 = 판정 뒤 3.2 판에서 대조 항목 (σ_y* 비교 · 압력별 곡선 모양 · 탈압 크기 · 결과 전 등록) + 참고문헌 목록 · 기준 (순수 SE 10–13 % · 진밀도 1.64) · 손잡이 · 갈림 표 불변 · 교훈 = 사전 공격 지시서에 \"litdb papers/ 전수 검색 (INDEX 아님)\" 을 넣는다 (CLAUDE.md litdb 규칙과 같은 사고) · 11-10 Codex 판정 (DRD-01–13 · HOLD · 방향 지지) 반입 → 3.2 에서 DRD 최소 수정과 함께"
+    },
+    {
+      "id": "SELF-162",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "자기 점검 (11-10 복귀 게이트 122–179 조각의 130 단계 실패 1 회 · 같은 트리 재실행 통과)",
+      "opened_in": "scripts/test_rint_r_chain.py",
+      "title": "Rint ② R 사슬 끝-끝 시험의 E7 값 봉인 검사 (scripts/test_rint_r_chain.py leaks · scripts/test_rint_r_chain_e2e.py E7) 가 불안정하다 — 유효숫자 4 자리 토큰 하나가 픽스처 팔 σ × 1e3 과 상대 5e-5 안으로 우연히 맞으면 누출로 판정해 게이트가 깨진다",
+      "note": "11-10 게이트 (HEAD e93efb6be · 130 단계 = kgy 판 Python 3.8) 에서 50 PASS · 1 FAIL — 실패 줄의 근거 칸 = 대조한 σ 값 78 개 · 토큰 '2.131' 여섯 번 · 픽스처 팔 σ 하나 = 0.002131037 S/cm (× 1e3 = 2.131037 · 토큰 2.131 과 상대 차 1.7e-5) · 같은 조각의 122 단계 (Python 3.11 의 같은 시험) 는 통과 · 같은 트리를 Python 3.8 로 따로 다시 = 51 PASS · 0 FAIL · 조각 재실행 = 58 단계 통과 → 런마다 바뀌는 숫자와의 우연 일치로 본다 (추정 = 걸린 시간 같은 로그 숫자 · 실패 런의 작업 폴더가 지워져 그 토큰이 어느 파일 어느 줄이었는지는 미확인) · leaks 는 토큰 하나가 값 여럿과 맞으면 그 수만큼 넣는다 (같은 σ 를 가진 팔이 여섯이면 여섯 번 · 토큰이 하나였는지 여럿이었는지도 미확인) · 초록을 잘못 내는 결함이 아니라 빨강을 잘못 내는 오탐이다 (false-green 아님) · 고치는 안 (미정 · 시험 먼저 · 내부 반박 리뷰 뒤) = 대조 토큰의 최소 유효숫자를 올리거나 단위가 붙은 시간 토큰을 뺀다 — 보호 검사를 약하게 하는 변경이라 실제 누출 꼴 (σ 를 자릿수 줄여 찍는 것 포함) 이 여전히 잡히는지 변이 시험과 함께 · 그때까지 = 실패하면 로그의 토큰을 확인한 뒤 그 조각을 다시 돌린다"
     },
     {
       "id": "DRD-01",

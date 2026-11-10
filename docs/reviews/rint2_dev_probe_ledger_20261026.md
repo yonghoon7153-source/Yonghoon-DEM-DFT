@@ -15,7 +15,7 @@
 |---|---|
 | 허용 입력 | SBE 새 침대 (VGCF E 100 GPa 재압밀 · 10-23 · `docs/data/rint2_recompaction_vgcf100_20261023/README.md`) 만.  **DBE 입력 금지** (DBE 결과 사용 금지). |
 | 핀 | 시도마다 코드 커밋 sha 를 원장에 적는다 · 최종 핀과 다르면 그 시도는 개발 자료 (반복 수 · 시간만 참고) · R 용 숫자는 최종 핀에서 다시 잰다. |
-| 기계 / 환경 | 시도마다 기계 이름과 전체 환경 지문 (Python · numpy · scipy 판 · GPU · CUDA · BLAS) 을 적는다 · 첫 기계 = kgy (Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1) ⬜ 확정. |
+| 기계 / 환경 | 시도마다 기계 이름과 전체 환경 지문 (Python · numpy · scipy 판 · GPU · CUDA · BLAS) 을 적는다 · 첫 기계 = kgy (Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1) ✅ 확정 (11-10 · 1저자 현장 사실 확인에서 같은 판 · §3 시도 1). |
 | 시도 | 시도 하나 = 원장 한 줄 (번호 · 시작 시각 · 명령 줄 전체 · 핀 · 기계 · 환경 · 결과 칸) · 번호는 이 원장에서 온다 · 시작 전에 줄을 커밋 · "가장 좋은 시도" 를 고르지 않는다 (모든 시도를 보고). |
 | 실패 보존 | 멈춘 시도 · 실패한 시도의 폴더를 바이트 그대로 두고 폴더 요약 sha256 을 적는다 · 지우거나 덮어쓰지 않는다. |
 | σ 비열람 | σ 값은 봉인 파일에만 쓰고 화면 · 로그 · 보고에 내지 않는다 · 읽는 것 = 반복 수 · 잔차 · 판 전류 불균형 · 시간 · 메모리뿐 (등록 R §11). |
@@ -25,7 +25,22 @@
 
 | 번호 | 시작 (KST) | 명령 줄 | 핀 | 기계 · 환경 | 결과 (반복 · 잔차 · 판 전류 불균형 · 시간 · 메모리) | 폴더 sha256 |
 |---|---|---|---|---|---|---|
-| — | ⬜ | ⬜ (등록 R §10-1 의 명령 · 값 봉인 출력) | ⬜ | ⬜ | — (결과 0 건) | — |
+| 1 | ⬜ (발사 뒤 · 묶음 meta 의 start_kst) | 아래 "시도 1 의 명령 줄" (감시 셸 한 줄 + 감시 셸이 내는 러너 명령 한 줄) | 이 줄을 넣은 커밋 (stoic 가지 · 발사 블록의 PIN 이 그 40 자리다 · 감시 셸이 작업 트리 HEAD = PIN 을 확인하고 묶음 meta 에 적는다 · 40 자리는 발사 뒤 이 칸에 옮긴다 · 아래 글) | kgy · Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1 · cupy-cuda12x 12.3.0 · RTX 3090 24 GB · OpenBLAS SkylakeX (11-09 기계 조사) · GPU 드라이버 · CUDA 판 = ⬜ (발사 뒤 · 묶음 env) | (결과 0 건) | (결과 0 건) |
+
+### 시도 1 의 명령 줄 (11-10 등록 · 결과 0 건 · 시작 전 커밋)
+
+감시 셸 (블록이 nohup 으로 띄운다 · `<W>` = 핀 작업 트리 · `<O>` = 출력 폴더 · `<L>` = 로그 폴더 · 블록 = `docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md`):
+
+    bash <W>/docs/reviews/rint2_probe6_prep_20261110/tools/run_probe6.sh <W> <O> <L> <PIN> 1500000
+
+감시 셸이 킷 뿌리에서 내는 러너 명령 (등록 R §10-1 (2) 의 꼴 · 실제로 돈 글자는 묶음의 command.txt 에 남는다):
+
+    env VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=face_alpha BRIDGE_UM=0.48 SIGMA_AM_S_OVERRIDE=0.0041 SIGMA_SDCP_OVERRIDE=256.6 SIGMA_FIBRE_BULK=1e4 CJUNC=1 CJUNC_RJ=1e6 CJUNC_LEN_LAW=len_scaled_v0 CJUNC_UNREG_LAW=cut CJUNC_S_MIN_UM=0.0 CJUNC_TOL_FF_UM=0.07381254285530132 CJUNC_PTFE_JLAW=P0 SDCP_MOD_C=0 STEP3_RTOL=1e-12 EXPECT_BACKEND=gpu KITS=kit_SBE_vgcf100 ARMS=1 LEAN=2 P2_EXTRA="--step3-maxiter 1500000" OUTDIR=<O> bash <W>/scripts/sdcp_gain_vox015_8arm.sh
+
+- 러너 env 에 `SIGMA_VGCF_OVERRIDE` 는 없다.  `--show-results` 없음 (값 봉인).  자리표 값의 근거와 maxiter 1500000 의 까닭 = `docs/reviews/rint2_probe6_prep_20261110/LEDGER_LINE.md` 끝 표 · `docs/reviews/rint2_probe6_prep_20261110/README.md` §6.
+- **핀 칸** — 줄이 자기가 든 커밋의 번호를 미리 담을 수 없어 "이 줄을 넣은 커밋" 으로 적는다.  발사 전에 이 줄이나 준비물을 고치는 커밋이 더 생기면 (내부 반박 리뷰의 고침 등) 핀 = 발사 직전의 stoic 끝이고, 그 사실을 이 줄에 적은 뒤 발사한다.  어느 쪽이든 발사 블록의 PIN (40 자리) 과 묶음 meta 의 pin 이 같아야 하고, 발사 뒤 이 칸에 40 자리를 옮긴다.
+- **띄우기 전 STOP** — 블록이나 감시 셸이 러너를 시작하기 전에 STOP 으로 끝나면 (풀이 0 · 화면에 `runner not started`) 새 시도로 세지 않고 이 줄의 결과 칸에 STOP 사유를 적는다.  러너가 한 번이라도 시작됐으면 그 시도는 끝난 것이고 (멈춤 · 실패 포함 · 폴더 그대로) 다음은 2 번 줄이다.
+- 검토 = 내부 반박 리뷰 (독립 조수 · Codex 아님) 를 발사 전에 거친다 (1저자 11-10 · Codex 회차는 봉인 전 묶음 한 번).
 
 ## 4. 한정
 

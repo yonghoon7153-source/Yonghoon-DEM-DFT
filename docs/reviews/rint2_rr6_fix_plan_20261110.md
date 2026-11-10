@@ -36,3 +36,9 @@
 2. 등록된 ⑥ SBE 수치 탐침 (σ 봉인 · 사슬 밖) 을 돌리고 기하 · 실측 반복 수 검토 회신과 비용 결정점을 거친다 (실행 = 1저자 GO).
 3. 숫자 · 실행 정책 · s_min · S0/R 계획 해시를 단일 개정 커밋으로 최종 봉인한다.
 4. 핀 · 의존 지문 · 동일 코드 조건을 확인한 뒤 S0 단계 2 (DBE) 진입을 따로 판단한다.
+
+## 4. 진행 (11-10 본 세션)
+
+- §3 의 1 번 = `docs/reviews/rint2_siteq_remaining_plan_20261110.md` (남은 조건 24 · 1저자 Q1–Q9 권고대로 · 현장 사실 확인 반영).
+- §3 의 2 번 준비 = `docs/reviews/rint2_probe6_prep_20261110/README.md` · 개발 탐침 원장 `docs/reviews/rint2_dev_probe_ledger_20261026.md` §3 시도 1 줄 (결과 0 건 · 시작 전 커밋) → 1저자 GO 대기.
+- 원장 RR6-01 · RR6-02 = claimed_fixed (고침이 든 커밋 `e93efb6be` · Codex 확인 = 봉인 전 묶음 · §2 Q4).

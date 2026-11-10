@@ -299,6 +299,9 @@ run 'webapp: mpm_lab_cmp_absent_phase (MPM lab 비교표 · 없는 상 = — · 
 run 'rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)' python3 scripts/test_rint_receipts.py
 #  ★ 2026-11-10 (Codex Rint ② 회차 ⑥ RR6-01) — 현장 자격 도구 C02b 가 PATH python3 자식의 rc 를 본다 (같은 단위 JSON + rc 1 = FAIL) · AST 메모리 가짜 · 실제 자식 0 회.
 run 'siteq C02b 자식 rc (RR6-01 · 11-10)' python3 -I -B docs/reviews/rint2_siteq_prep_20261109/tools/test_siteq_c02b.py
+#  ★ 2026-11-10 (Rint ② 개발 탐침 ⑥ 준비 · 원장 `docs/reviews/rint2_dev_probe_ledger_20261026.md` §2 σ 비열람) — 판독기 (닫힌 허용 칸) · kgy 감시 셸 · 블록.
+#    합성 폴더의 σ 표식이 판독기 출력 · 묶음 어디에도 없다 · 판독기 변이 30 · 가짜 러너 · 블록 끝까지 · 실제 러너 (픽스처 킷 · CPU · GPU 풀이 없음).
+run 'rint probe6 reader (σ 비열람 판독기 · 시험 먼저)' python3 docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py
 #  ★ 2026-10-07 (Rint G2 ①′ AM–AM · 계약 v3.1 · Codex v3 "계약 정정 둘 뒤 구현 GO · 정량 채택 HOLD") — 반례 먼저:
 #    ε 동률 집합 규칙 (3 청구자 6 순열) · 동심 비동일 · 정확 중복 거부 · raw raster 순열 진단 (3170 ↔ 3171) · 동결 마스크 순열 불변 ·
 #    OFF 비트 같음 (막 0 + 예외 융합 · 순서마다) · 단위 (같은 리드 · 1e−8·A/r) · 탄소 가림 (막 소자만) · E4′ 부류 FD · 원장 무결성.
