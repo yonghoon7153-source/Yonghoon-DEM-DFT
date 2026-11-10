@@ -1,0 +1,163 @@
+{
+  "schema": "dem_demp_contract_document_draft/1",
+  "status": "SYNTHETIC_DECLARATION_CONTRACT_READY_FOR_LIMITED_REVIEW",
+  "implementation_body_exists": true,
+  "test_methods_drafted": 25,
+  "project_test_invocations": 19,
+  "qualification_matrix_pin": "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+  "fixture_pin_placeholder": null,
+  "api": "validate_demp_contract(plan, packets, context)",
+  "assumptions": [
+    {
+      "id": "Q-DEMP-1",
+      "label": "권고안 전제(Q-DEMP-1)",
+      "recommendation": "Explicit stage global/contact damping and signed force/torque/energy channel identity; no physical force recalculation. CASE_GLOBAL_DECLARATION only: PRESENT stage windows must be ordered and nonoverlapping; actual engine step mapping is unselected."
+    },
+    {
+      "id": "Q-DEMP-2",
+      "label": "권고안 전제(Q-DEMP-2)",
+      "recommendation": "Keep center-outside and sphere-cut declared labels separate; compare full declared roster; actual continuity remains unconfirmed."
+    },
+    {
+      "id": "Q-DEMP-3",
+      "label": "권고안 전제(Q-DEMP-3)",
+      "recommendation": "Treat 50kg/batch as project label; bind both nominal-diameter cases to one complete RA_END state protocol; equal N is not required."
+    }
+  ],
+  "historical_label": {
+    "label": "50kg/batch",
+    "meaning": "PROJECT_LABEL_ONLY",
+    "exact_batch_meaning": "UNKNOWN",
+    "compression_load_conversion": "NOT_ESTABLISHED"
+  },
+  "d9_prime": {
+    "source_pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+    "source_path": "docs/collab/claude_to_codex/20261109-2230_nonrint-first-link-sha-map.md",
+    "source_section": "2",
+    "scope": "PURE_SE_300MPA_PLUS_RELAXATION_END",
+    "calibration_estimand": "MASS_BASED_EPSILON_SPHERE",
+    "declared_TD": [
+      164,
+      100
+    ],
+    "external_target_percent": [
+      10,
+      13
+    ],
+    "epsilon_union": "RECORD_ONLY",
+    "reapproval_requested": false,
+    "is_new_physical_observation": false
+  },
+  "toy_manifest_expectations_not_results": {
+    "case_count": 2,
+    "nominal_diameter_um": [
+      [
+        7,
+        10
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "experimental_PSD": "UNKNOWN",
+    "declared_inventory_counts": [
+      2,
+      3
+    ],
+    "stages": [
+      "INSERTION",
+      "STABILIZATION",
+      "COMPRESSION",
+      "SERVO",
+      "RA_END",
+      "UNLOADING",
+      "POST_SEPARATION"
+    ],
+    "planned_packets": 14,
+    "metadata_frames_per_packet": 3,
+    "uncut_fixture_center_outside_labels": 0,
+    "surface_cut_fixture_sphere_cut_labels": 42,
+    "meaning": "Counts of invented labels, not physical measurements or defect events.",
+    "step_scope": "CASE_GLOBAL_DECLARATION",
+    "global_windows": [
+      [
+        0,
+        2
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        9,
+        11
+      ],
+      [
+        12,
+        14
+      ],
+      [
+        15,
+        17
+      ],
+      [
+        18,
+        20
+      ]
+    ],
+    "initial_24_method_fixture_step_scope": "STAGE_LOCAL_0_TO_2_BEFORE_ORDER_GUARD",
+    "classification_count_unit": "Provided classification rows, not per-particle geometry or trajectory recalculation."
+  },
+  "actual_unselected": {
+    "gamma": null,
+    "force_balance_model_and_budget": null,
+    "geometry_tolerance": null,
+    "mesh_PBC": null,
+    "continuous_trajectory": null,
+    "static_pressure_area": null,
+    "comparison_roster_pairing_uncertainty": null,
+    "registration_approval": null,
+    "qualification_receipt": null,
+    "engine_to_case_global_step_mapping": null
+  },
+  "authority": {
+    "actual_qualification": "NOT_RUN",
+    "continuity": "CONTINUITY_UNCONFIRMED",
+    "demp01_closed": false,
+    "demp02_closed": false,
+    "actual_state_comparable": false,
+    "registration_complete": false,
+    "source_authenticated": false,
+    "physical_ready": false,
+    "execution_go": false,
+    "gate_write": false,
+    "research_results": 0,
+    "whole_status": "HOLD"
+  },
+  "limitations": [
+    "No raw force, pressure, position, mesh, log or result payload is read.",
+    "No force-balance, damping-force, geometry-intersection or continuous-trajectory calculator is implemented.",
+    "Classification label consistency is not actual source authentication or physical defect closure.",
+    "Counts and hashes alone never certify a physical state or equal-pressure comparison.",
+    "A coherent replacement of plan, context and metadata is not blocked by an external trust anchor.",
+    "Fixed qualification-matrix pin is a declared source reference; it does not import actual qualification or execution authority.",
+    "Existing closed ULPRI/T12R scopes remain unchanged.",
+    "CASE_GLOBAL_DECLARATION is the documented supported synthetic profile, not a new plan field or engine timestep converter.",
+    "Stage-local/reset_timestep may be valid engine data; mapping to this synthetic profile has not been qualified.",
+    "Classification rows are not physically associated with each declared particle by this contract.",
+    "The original preparation interruption stderr is present only in the tool transcript, not as a preserved raw stderr file.",
+    "Actual-value access flags describe this DEMP subtask/invocations only, not every message in the parent conversation."
+  ],
+  "next": [
+    "Limited independent review of this fixed declaration contract.",
+    "Keep real force/geometry/state-comparison and registration qualifications unperformed until separately instructed."
+  ],
+  "project_invocations_count_scope": "4 ordinary suite invocations plus 7 first-source and 8 final-source mutation invocations; repetitions are not unique tests.",
+  "final_source_sha256": "7490b921d8015d237c52f18461cddb97bd8d373637f95107056309d309a18639",
+  "final_test_sha256": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+}
