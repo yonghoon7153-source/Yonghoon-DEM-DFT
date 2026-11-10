@@ -377,3 +377,6 @@ papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindenta
 # ── 무른 오각형 2D 압밀 — 입자 모양 · 마찰 · 재배열 (Cárdenas-Barrantes 외 2021 · PRE 103, 062902) — litdb 2026-11-10 · 11-09 stage A 묶음 (Cárdenas-Barrantes 계열) 의 입자 모양판 · 밑줄 · 공백 두 변형 ──
 cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd	micromechanical_description_of_the_compaction_of_soft_pentagon_assemblies
 cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd	micromechanical description of the compaction of soft pentagon assemblies
+# ── 단결정 NMC/LPSCl 복합 양극 500 MPa 압밀 (Doerrer 외 2021 · ACS Appl. Mater. Interfaces 13, 37809) — litdb 2026-11-10 · 카드 제목이 한국어라 자동 매칭이 못 붙임 · 밑줄 · 공백 두 변형 (본문 · SI 공통 조각) ──
+doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density	high_energy_density_single-crystal_nmcli6ps5cl_cathodes
+doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density	high energy density single-crystal nmc
