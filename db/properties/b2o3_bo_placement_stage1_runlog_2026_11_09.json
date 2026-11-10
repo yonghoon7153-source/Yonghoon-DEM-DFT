@@ -210,7 +210,7 @@
   "⑤_판독": "$PY $R/diag_src/tools/doping/b2o3_bo_anneal_diag.py judge --readout_tool $R/src/tools/doping/b2o3_bo_readout.py --frames $R/s8b_frames/diag_frames.json --relax $R/s8b_relax/anneal_results.json --readout $R/s8_readout.json --out $R/s8b_diag.json",
   "⚠": "Codex EA 회신이 규칙을 바꾸면 ⑤ 전에 카드 개정 4 + 도구 고침 · 승자 문장은 ⑤ 의 최종 (잠정 규칙) 뒤에만",
   "by": "agent · 2026-11-10",
-  "⛔_순서_개정_4": "개정 4 · 고친 도구 · 음성 시험을 커밋한 뒤에만 ① 본 판독을 연다 (P2-2) · ③ extract · ⑤ judge 는 고친 도구로 · ⑤ 출력에 사유 다섯 갈래"
+  "⛔_순서_개정_4": "① 본 판독은 개정 4 사용자 비준 + 고친 도구 (v2) 커밋 뒤에만 연다 (P2-2) · ③ extract · ⑤ judge 는 v2 로 · ⑤ 출력 = 본 판독 보존 + 사유 다섯 갈래 + 기록 · worktree $R/diag_src 는 v2 가 든 커밋 이상 (fetch 뒤 git -C $R/diag_src log -1 로 확인)"
  },
  "회신_EA_2026_11_10": {
   "출처": "사용자 붙여넣기 2026-11-10 (원문 kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md · 기준 b018b14d)",
