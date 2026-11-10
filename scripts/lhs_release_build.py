@@ -948,7 +948,7 @@ def v13_blank_reason(row, col):
 
 def v13_blank_problems(rows, cols):
     """빈칸 일관성 (양방향) — 문제 목록 ([] = 통과): 규칙에 없는 빈칸 · 빈칸이어야 할 칸의 값 · 상태 ↔ f 모순 (NOT_PERCOLATING 이면 f = 0 ·
-    OK · MBCB 이면 f > 0)."""
+    OK · MBCB 이면 f · tau2 · tau 각각 유한 양수)."""
     probs = []
     for r in rows:
         case = r.get(KEY, '?')
@@ -967,13 +967,14 @@ def v13_blank_problems(rows, cols):
                 probs.append(f'{case} · {c}: 값 {v!r} 이 있는데 빈칸 ({want}) 이어야 한다')
         for c in cols:
             m = _V13_TAU_VALUE_RE.fullmatch(c)
-            if not m or m.group(1) != 'f_ion' or r.get(c, '') == '':
+            if not m or r.get(c, '') == '':
                 continue
             st, fv = r.get(f'ion_net_status_{m.group(2)}', ''), _v13_num(r.get(c))
-            if st == 'NOT_PERCOLATING' and fv != 0.0:
+            label = 'f' if m.group(1) == 'f_ion' else m.group(1)
+            if st == 'NOT_PERCOLATING' and m.group(1) == 'f_ion' and fv != 0.0:
                 probs.append(f'{case} · {c}: 상태 NOT_PERCOLATING 인데 f = {r.get(c)!r} (0.0 이어야 — 물리적 0)')
             elif st in _V13_VALUE_STATUSES and not (fv is not None and fv > 0.0):
-                probs.append(f'{case} · {c}: 상태 {st} 인데 f = {r.get(c)!r} (유한 양수여야)')
+                probs.append(f'{case} · {c}: 상태 {st} 인데 {label} = {r.get(c)!r} (유한 양수여야)')
     return probs
 
 

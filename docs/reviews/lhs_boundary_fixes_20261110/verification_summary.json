@@ -1,0 +1,254 @@
+{
+  "schema": "LHS_BOUNDARY_AUTHOR_VERIFICATION_V1",
+  "parent_pin": "6add88f264d2c651b467f3906e755824ed6e40ad",
+  "old_source_equals_c571_and_f464": true,
+  "source_sha256": {
+    "scripts/test_lhs_reread_receipt_boundary.py": "1f7ddc709cbb01e6044530915e3d77ec2276ff6d18b19d9a64f5cad64785c508",
+    "scripts/test_lhs_tau_blank_boundary.py": "5cc141a758f851ad9bd319560ff00c8dc87dca25367dfcf3373311de4e85951e",
+    "scripts/test_single_header_numeric_boundary.py": "915d57513dab4f10839f49f461c51348fa525c461719336bca216c22a0365b04",
+    "scripts/g2_network_reread.py": "71ecd9b27fa4bdd31ed8a15c3c46ce94012a928216f2cf5e2c27ca195ff0a5c8",
+    "scripts/lhs_release_build.py": "ebdefded1d8e01461e22aae131867eb49ab083cf6169d252878132750ea6fe96",
+    "webapp/templates/single.html": "4503537706521dbd6e3c051ede5d38981a30741795b7de55eda9a51261c51c8a"
+  },
+  "methods": 24,
+  "green": {
+    "methods": 24,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0,
+    "receipt": "green/report.json"
+  },
+  "sequence": {
+    "red": {
+      "methods": 24,
+      "failures": 166,
+      "errors": 66,
+      "rc": 1,
+      "started_utc": "2026-11-10T02:26:53.196107+00:00",
+      "finished_utc": "2026-11-10T02:26:53.927426+00:00",
+      "source_sha256": {
+        "scripts/test_lhs_reread_receipt_boundary.py": "1f7ddc709cbb01e6044530915e3d77ec2276ff6d18b19d9a64f5cad64785c508",
+        "scripts/test_lhs_tau_blank_boundary.py": "5cc141a758f851ad9bd319560ff00c8dc87dca25367dfcf3373311de4e85951e",
+        "scripts/test_single_header_numeric_boundary.py": "bcfe8853535bfcf31c00a9057c08aad64afa591508d6e9c5288319c5944e6e67",
+        "scripts/g2_network_reread.py": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+        "scripts/lhs_release_build.py": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+        "webapp/templates/single.html": "751a248c68ccef4f8d64947b2032b1c7ca9197d74e6782cda7ac5f3f4dda1a72"
+      },
+      "source_unchanged": true,
+      "audit_attempts": []
+    },
+    "red2": {
+      "methods": 24,
+      "failures": 164,
+      "errors": 66,
+      "rc": 1,
+      "started_utc": "2026-11-10T02:27:58.957704+00:00",
+      "finished_utc": "2026-11-10T02:27:59.517721+00:00",
+      "source_sha256": {
+        "scripts/test_lhs_reread_receipt_boundary.py": "1f7ddc709cbb01e6044530915e3d77ec2276ff6d18b19d9a64f5cad64785c508",
+        "scripts/test_lhs_tau_blank_boundary.py": "5cc141a758f851ad9bd319560ff00c8dc87dca25367dfcf3373311de4e85951e",
+        "scripts/test_single_header_numeric_boundary.py": "cb37a066953481ca0b101197be0daae436ff3e9a1d564e988dab30a52ea04166",
+        "scripts/g2_network_reread.py": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+        "scripts/lhs_release_build.py": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+        "webapp/templates/single.html": "751a248c68ccef4f8d64947b2032b1c7ca9197d74e6782cda7ac5f3f4dda1a72"
+      },
+      "source_unchanged": true,
+      "audit_attempts": []
+    },
+    "red3": {
+      "methods": 24,
+      "failures": 165,
+      "errors": 65,
+      "rc": 1,
+      "started_utc": "2026-11-10T02:28:30.142006+00:00",
+      "finished_utc": "2026-11-10T02:28:30.702914+00:00",
+      "source_sha256": {
+        "scripts/test_lhs_reread_receipt_boundary.py": "1f7ddc709cbb01e6044530915e3d77ec2276ff6d18b19d9a64f5cad64785c508",
+        "scripts/test_lhs_tau_blank_boundary.py": "5cc141a758f851ad9bd319560ff00c8dc87dca25367dfcf3373311de4e85951e",
+        "scripts/test_single_header_numeric_boundary.py": "915d57513dab4f10839f49f461c51348fa525c461719336bca216c22a0365b04",
+        "scripts/g2_network_reread.py": "0e2ec7ef37571268b85b0d17b71f7a2858aa2a7e6bcfadf4be1c6b5416dd5cd8",
+        "scripts/lhs_release_build.py": "3096e33fd0f1953363bcde251a77368366a0568c923447111a48a873ad4a1383",
+        "webapp/templates/single.html": "751a248c68ccef4f8d64947b2032b1c7ca9197d74e6782cda7ac5f3f4dda1a72"
+      },
+      "source_unchanged": true,
+      "audit_attempts": []
+    },
+    "green": {
+      "methods": 24,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "started_utc": "2026-11-10T02:29:55.981184+00:00",
+      "finished_utc": "2026-11-10T02:29:56.515009+00:00",
+      "source_sha256": {
+        "scripts/test_lhs_reread_receipt_boundary.py": "1f7ddc709cbb01e6044530915e3d77ec2276ff6d18b19d9a64f5cad64785c508",
+        "scripts/test_lhs_tau_blank_boundary.py": "5cc141a758f851ad9bd319560ff00c8dc87dca25367dfcf3373311de4e85951e",
+        "scripts/test_single_header_numeric_boundary.py": "915d57513dab4f10839f49f461c51348fa525c461719336bca216c22a0365b04",
+        "scripts/g2_network_reread.py": "71ecd9b27fa4bdd31ed8a15c3c46ce94012a928216f2cf5e2c27ca195ff0a5c8",
+        "scripts/lhs_release_build.py": "ebdefded1d8e01461e22aae131867eb49ab083cf6169d252878132750ea6fe96",
+        "webapp/templates/single.html": "4503537706521dbd6e3c051ede5d38981a30741795b7de55eda9a51261c51c8a"
+      },
+      "source_unchanged": true,
+      "audit_attempts": []
+    }
+  },
+  "chronology": {
+    "implementation_existed_before_red3": false,
+    "staging_methods": 22,
+    "pre_red_added_methods": 2,
+    "red1": "24 methods;166 assertion/subtest failures;66 errors, including two wrong E_SE full-label expectations and one missing-badge test IndexError.",
+    "red2": "Fix two E_SE expectations to preserve existing suffix; make overflow fixture scale explicit1e6. Old source24/164/66.",
+    "red3": "Replace test indexing of absent porosity badge with explicit length assertion. Old source24/165/65. Normal controls pass; remaining errors are intended old-source consumer/display exceptions.",
+    "final_old_error_classes": {
+      "ValueError": 2,
+      "OverflowError": 5,
+      "RuntimeError": 7,
+      "TypeError": 47,
+      "jinja2.exceptions.UndefinedError": 4
+    },
+    "implementation": "Written only after preserved red3 and root notification; exact same24 tests green.",
+    "invalid_contrast": "First positive-infinity weakening used literal1e999; Jinja compiled an undefined inf name (48 errors). Preserved and excluded. V2 uses arithmetic predicate,15 assertion failures0errors.",
+    "metadata_only_print_interruption": "One ad hoc post-red console summary hit cp949 UnicodeEncodeError; raw report already complete. No project execution during that print. Tool stderr only; not a candidate/test outcome."
+  },
+  "guard_contrasts": [
+    {
+      "name": "k5_failed_marker",
+      "source_path": "scripts/g2_network_reread.py",
+      "source_sha256": "b102664099693d6b4c29782c703b922b7640e4df8d22e806f55ac26f5dd828a1",
+      "methods": 24,
+      "failures": 6,
+      "errors": 0,
+      "rc": 1,
+      "usable_semantic_contrast": true,
+      "reason": "Asserted boundary violation detected",
+      "audit_attempts": []
+    },
+    {
+      "name": "k5_current_run_identity",
+      "source_path": "scripts/g2_network_reread.py",
+      "source_sha256": "9d0cd9d6550499b1e2b9e02925aee6755cff3d67cef486a8b82c283d02d2d85d",
+      "methods": 24,
+      "failures": 6,
+      "errors": 0,
+      "rc": 1,
+      "usable_semantic_contrast": true,
+      "reason": "Asserted boundary violation detected",
+      "audit_attempts": []
+    },
+    {
+      "name": "tau_independent_guard",
+      "source_path": "scripts/lhs_release_build.py",
+      "source_sha256": "215c3223f8329c6b75aaed506fbd6b3aed88ec0ef254fa1f96ca53c2b5cb436a",
+      "methods": 24,
+      "failures": 72,
+      "errors": 0,
+      "rc": 1,
+      "usable_semantic_contrast": true,
+      "reason": "Asserted boundary violation detected",
+      "audit_attempts": []
+    },
+    {
+      "name": "header_bool_guard",
+      "source_path": "webapp/templates/single.html",
+      "source_sha256": "0e31542e4f24abf2473bd275bf5e99699c97a4d22271e5878c46d97d26125fb3",
+      "methods": 24,
+      "failures": 30,
+      "errors": 0,
+      "rc": 1,
+      "usable_semantic_contrast": true,
+      "reason": "Asserted boundary violation detected",
+      "audit_attempts": []
+    },
+    {
+      "name": "header_positive_infinity",
+      "source_path": "webapp/templates/single.html",
+      "source_sha256": "e24001cf16bb696d5251499fcbd4770fc840730b56feb9394fd610faa00e5fe3",
+      "methods": 24,
+      "failures": 0,
+      "errors": 48,
+      "rc": 1,
+      "usable_semantic_contrast": false,
+      "reason": "Invalid Jinja infinity literal compilation; not a semantic detection",
+      "audit_attempts": []
+    },
+    {
+      "name": "rve_product_guard",
+      "source_path": "webapp/templates/single.html",
+      "source_sha256": "40a6a4506b303f71d047d05c253fa2e2c4977482810a6b0101d095954c1ead75",
+      "methods": 24,
+      "failures": 2,
+      "errors": 0,
+      "rc": 1,
+      "usable_semantic_contrast": true,
+      "reason": "Asserted boundary violation detected",
+      "audit_attempts": []
+    },
+    {
+      "name": "header_positive_infinity_v2",
+      "source_path": "webapp/templates/single.html",
+      "source_sha256": "011dcaa03807bdbe1b33298d8cd7e5949f86828b39bc82c9608b4872e0de8b8b",
+      "methods": 24,
+      "failures": 15,
+      "errors": 0,
+      "rc": 1,
+      "usable_semantic_contrast": true,
+      "reason": "Asserted boundary violation detected",
+      "audit_attempts": []
+    }
+  ],
+  "usable_contrasts_detected": 6,
+  "invalid_contrast_attempts": 1,
+  "recorded_suite_invocations": 11,
+  "raw_manifest": {
+    "path": "raw_manifest.json",
+    "files": 117,
+    "sha256": "2fb945e3f40c68212dc21db8457e6d7c0097ea0e4f18e7ca9fa8710359da1444"
+  },
+  "isolation": {
+    "exact_ast_functions": [
+      "reread_case",
+      "run_smoke_or_dirs",
+      "_cells_match",
+      "main",
+      "_v13_num",
+      "v13_blank_reason",
+      "v13_blank_problems"
+    ],
+    "sealed_modules_imported": false,
+    "header_scope": "Exact first paragraph inside page-header; real Jinja; no app/loader/base/ledger/browser",
+    "runtime_wheels": [
+      {
+        "filename": "jinja2-3.1.6-py3-none-any.whl",
+        "bytes": 134899,
+        "sha256": "85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67",
+        "record_entries_verified": 30
+      },
+      {
+        "filename": "markupsafe-3.0.3-cp312-cp312-win_amd64.whl",
+        "bytes": 15105,
+        "sha256": "26a5784ded40c9e318cfc2bdb30fe164bdb8665ded9cd64d500a34fb42067b1c",
+        "record_entries_verified": 10
+      }
+    ],
+    "audit_installed_before_project_exec": true,
+    "audit_denied_attempts": 0,
+    "actual_data_or_log_reads": 0,
+    "actual_engine_calls": 0
+  },
+  "scope": [
+    "K05 case_row/row_generation_problems ordinary exceptions only; not all CLI/filesystem exceptions or crash durability",
+    "K08 CSV cell strings; existing fresh-build source reread remains separate",
+    "S05 JSON basic input types only; binary64 display representability, no scientific cutoff; not arbitrary Python Number/Decimal objects",
+    "K07 text proposal separate; no phrase-mirroring new test"
+  ],
+  "root_owned_change": "Separate preceding-D5 documentation link correction is root-owned; excluded from these8owned files.",
+  "whole_gate": "NOT_RUN",
+  "independent_review": "NOT_RECEIVED",
+  "ledger_changed": false,
+  "execution_go": false,
+  "physical_ready": false,
+  "operational_seal_modified": false,
+  "research_results": 0,
+  "whole_status": "HOLD",
+  "count_scope": "24methods, subtest/assertion failures, source exceptions, contrasts and repeated invocations are not additive unique tests"
+}

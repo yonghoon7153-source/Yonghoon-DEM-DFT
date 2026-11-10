@@ -501,8 +501,13 @@ def reread_case(cd, expected, ps, tf):
     except Exception as e:                                       # noqa: BLE001 — 판정을 못 내면 통과로 치지 않는다
         ok4, why4 = False, f'{type(e).__name__}: {e}'
     ck('K4 망 정지 계약 다시 (①–⑨ · legacy_ok False)', ok4, why4)
-    row = tf.case_row(str(cd))
-    rg, rprob = tf.row_generation_problems(row)
+    try:
+        row = tf.case_row(str(cd))
+        rg, rprob = tf.row_generation_problems(row)
+    except Exception as e:  # consumer failure must yield a current failed receipt, not leave an old success
+        ck('K5 열 역할 — 소비자/행 세대 판정 실패', False, f'{type(e).__name__}: {e}')
+        return dict(case=cd.name, folder=str(cd), run_id=rid, checks=checks,
+                    generation=gen, statuses={}, table={}, row_cells={})
     ck(f'K5 열 역할 — ion_net_generation {expected!r} · 행 세대 계약 문제 0 (모드별 협착 · ψ · 면적 · 전극 · bulk 칸)',
        row.get(tf.ROW_GENERATION_COL) == expected and rg == expected and not rprob,
        f'칸 {row.get(tf.ROW_GENERATION_COL)!r} · 행 판정 {rg!r} · {rprob[:3]}')
