@@ -138,15 +138,22 @@
    "rotated_deg": 0,
    "bbox": [
     84.0,
-    177.1,
+    244.7,
     527.9,
     429.7
    ],
    "w": 1850,
-   "h": 1053,
+   "h": 772,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.954
+   "blank": 0.948,
+   "auto_bbox": [
+    84.0,
+    177.1,
+    527.9,
+    429.7
+   ],
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 177.1-429.7) started above the figure and pulled in the title-page author lines ('Equal Contribution' / 'Corresponding author', y 183-211); clip = embedded raster image bbox (90.0,250.7,521.9,423.7) + 6 pt margin, above caption (y 432.7)"
   },
   {
    "key": "fS2",
@@ -329,6 +336,27 @@
    "blank": 0.912
   },
   {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 8,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. Cycling performance at different low rates of Li-G|LPSCl|LPSCl-I|LGPS|811.",
+   "rotated_deg": 0,
+   "bbox": [
+    182.0,
+    439.0,
+    392.0,
+    616.0
+   ],
+   "w": 876,
+   "h": 738,
+   "dpi": 300,
+   "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
+   "blank": 0.952,
+   "manual_crop": "2026-11-10 litdb-curator: tool reported fS11 as a number gap ('p8 그래픽 없음(img0/draw0)') - Fig. S11 is a small vector-only plot on SI p.8 between the Fig. S10 caption (ends y 413.7) and its own caption (y 635.5); clip = union of vector drawings (220.5,451.0,381.7,588.5) + tick/axis text (x 188-384, y 445-610) + margin"
+  },
+  {
    "key": "fS12",
    "kind": "figure",
    "label": "S12",
@@ -436,7 +464,8 @@
    "skipped": [
     "p8 그래픽 없음(img0/draw0)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S11.png (2026-11-10, litdb-curator) - see figures[fS11].manual_crop"
   }
  ]
 }
