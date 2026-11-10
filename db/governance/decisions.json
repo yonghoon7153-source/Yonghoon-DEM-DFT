@@ -12124,6 +12124,94 @@
     "근거_발화": "사용자 2026-11-10 (대피 세션): kgy stage1.log 붙여넣기 (B13 fail · stop_track) 와 함께 *'이거 수용하고 이제 원래 브랜치로 돌아가야되니까 …'* (위임 10-30 · 원장 '사용자 (위임 10-30)')",
     "decision_digest": "sha256:21b55936adcbf81866f2ef8cfe150556ebd80c0190eb781f2a9cc491a22677ff"
    }
+  },
+  {
+   "id": "D-2026-11-10-b2o3-bo-placement-stage1-cap",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.uma_family_screen.stage1_cost_cap",
+   "slot": "b2o3_bo_placement_stage1_uma_cost_cap",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 카드 개정 2 — 1 단계 UMA 비용 상한 30 → 85 GPU-h (파일럿이 t_a = 100 ps 를 고름 · 계획 54 런 그대로 · gabia 단독)",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json 의 '개정_2_1단계_UMA_상한_2026_11_10' — 1 단계 UMA (이완 ≤ 135 + 파일럿 + 어닐 ≤ 54) 의 비용 상한을 30 에서 85 GPU-h 로 올린다. 8 단계는 영수증의 t_a (100 ps) 로 계획 54 런을 그대로 gabia 혼자 돌린다. 누계가 85 를 넘을 것 같거나 8 단계 첫 런이 2 h 를 넘으면 멈추고 사용자에게 보고한다. 보고량 · 게이트 · 판독 계약 (기계_판독_값) · 단계 설정 · SEED · 도구 판은 개정 1 v1.3 그대로다.",
+   "rationale": "7 단계 파일럿 영수증이 카드 규칙대로 t_a = 100 ps 를 골라 8 단계 어림이 ≈ 73 GPU-h (1 단계 합계 ≈ 76) 로 상한 30 을 넘었다. 카드는 이 경우 멈추고 사용자가 정하게 했다. 계획을 줄이면 6 단계 결과를 본 뒤 계획을 바꾸는 꼴이라 상한만 올린다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "8 단계 결과 0 건 — 본 것은 6 단계 거름 판정과 파일럿 영수증의 t_a (카드 규칙이 정한 입력) 뿐 · 상한 숫자만 바뀐다",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "record": "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json",
+   "amends": [
+    "D-2026-11-09-b2o3-bo-placement-amend1"
+   ],
+   "depends_on": [
+    "D-2026-11-09-b2o3-bo-placement-amend1"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json (7a_파일럿_런 · 7b_영수증_2026_11_10 · 상한_개정_2026_11_10)",
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_1 비용_상한_개정 1단계_UMA · 개정_2_1단계_UMA_상한_2026_11_10)"
+   ],
+   "reopen_criteria": [
+    "누계가 85 GPU-h 를 넘을 것 같으면 멈추고 사용자 결정 (새 결정)",
+    "kgy 를 더하거나 계획 · 어닐 방법을 바꾸려면 새 결정 (그때 Codex 에 묻는다)"
+   ],
+   "enforcement": "사람이 지키는 상한 — 도구 · 기계_판독_값에 묶여 있지 않다 · 누계는 런로그 GPU_시간_누계 에 적는다 · 넘을 것 같으면 8 단계 큐를 멈추고 보고",
+   "cost_cap": {
+    "stage1_UMA_GPU_h": 85,
+    "machine": "gabia A6000 단독"
+   },
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-10",
+     "session": "friendly (복귀 뒤)"
+    }
+   ],
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-10",
+     "state": "proposed",
+     "by": "agent",
+     "note": "파일럿 영수증 t_a = 100 ps → 8 단계 어림 ≈ 73 GPU-h > 상한 30 → 카드대로 멈추고 선택지 넷을 보고 (상한 올림 · + kgy · 계획 줄임 · 다시 설계)"
+    },
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자",
+     "note": "사용자 2026-11-10 (이 세션): '상한 올려도돼' — 선택지 1 (상한을 올리고 gabia 혼자 계획 그대로) · 상한 값 85 는 에이전트 제안 (어림 ≈ 73 + 여유) · Codex 는 묻지 않음"
+    }
+   ],
+   "_note": "active — 사용자 비준 2026-11-10 · 8 단계 결과 전 · 상한 숫자만",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T00:56:39Z",
+    "commit": "e917b9e2fd28473af9ff9e051699ed8d5ff5666a",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-10 (이 세션): '상한 올려도돼' — b2o3 1 단계 UMA 상한 30 → 85 GPU-h · 계획 54 런 × t_a 100 ps 그대로 · gabia 단독",
+    "decision_digest": "sha256:c39f3458e486dd14651cc2e25b44a5b075f930b214b16e213bb930071e8b6e9a"
+   }
   }
  ]
 }
