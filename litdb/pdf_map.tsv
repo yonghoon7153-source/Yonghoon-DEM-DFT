@@ -345,3 +345,6 @@ agarwal2026_umlip_applicability_domain_ssb_interfaces	applicability_domain_of_un
 hu2018_mls_mpm_cpic_two_way_rigid_coupling	a_moving_least_squares_material_point_method_with_displacement_discontinuity
 hu2018_mls_mpm_cpic_two_way_rigid_coupling	a moving least squares material point method with displacement discontinuity
 hu2018_mls_mpm_cpic_two_way_rigid_coupling	mlsmpm-supp
+# ── 무른 구 3D 압밀 (Cárdenas-Barrantes 외 2022 · Soft Matter 18, 312) — litdb 2026-11-10 · 11-09 stage A 묶음의 3D 판 · 밑줄 · 공백 두 변형 ──
+cardenasbarrantes2022_soft_spheres_3d_compaction_nscd	three-dimensional_compaction_of_soft_granular_packings
+cardenasbarrantes2022_soft_spheres_3d_compaction_nscd	three-dimensional compaction of soft granular packings
