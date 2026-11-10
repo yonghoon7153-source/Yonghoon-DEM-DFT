@@ -333,6 +333,12 @@
    "state": "active",
    "by": "사용자 (cascade 1저자)",
    "note": "사용자 2026-11-10 (이 세션 · AskUserQuestion): cascade 묶음 2 카드 (커밋 9337cbba · 내부 리뷰 ED 반영본) '비준 — 진행 (Recommended)' · 결정 D-2026-11-10-cascade-axes-bundle2 active (비준 커밋 = 카드 커밋 9337cbba)"
+  },
+  {
+   "at": "2026-11-10",
+   "state": "active",
+   "by": "agent",
+   "note": "도구 커밋 82855b0c (결과 전) · 구현 판단 · 결정 문장 정정은 개정 1 (proposed)"
   }
  ],
  "ED_반영_2026_11_10": {
@@ -351,5 +357,37 @@
    "P2-5": "R13 층 1 크기"
   },
   "내가_더한_것": "휘발 목록 끝 넷 (SO2Cl2 · PSCl3 · VOCl3 · CrO2Cl2) · Composition 대조 문장 · 휘발 몫이 설계 등급 ('넓은 갭 ≥ 90 %' 셈) 에 들어가는 방식 · ⑥ 의 φ_vol — 리뷰가 안 본 문장이다"
+ },
+ "개정_1_구현_정리_2026_11_10": {
+  "결과_전": "새 축 값 0 건 · MP 조회 0 건 (도구 작성 · 시험은 가상 상도와 묶음 1 원자료만)",
+  "도구": {
+   "커밋": "82855b0c (에이전트 worktree 커밋 41e2e3ce 를 cherry-pick)",
+   "sha16": {
+    "tools/oxidation/interface_reactivity_v2.py": "e7e261191e6db9da",
+    "tools/oxidation/esw_grand_potential.py": "343a1f2f337b259b",
+    "tools/cascade/run_axis_ncm_gabia.sh": "29ffd34db528d2e0",
+    "tools/cascade/analyze_cathode_reactivity.py": "c14120c63fb50d9f"
+   },
+   "시험": "pymatgen 2026.3.23 (gabia 실행 판과 같다) · interface_reactivity_v2 selftest PASS (174) · esw_grand_potential 53/53 · 판독기 축 ① 15 · ② 11 · ③ 16 · +U 10 · 묶음 2 29 (메인 트리에서 다시 돌림) · 깨기 70/70 빨강 (에이전트) · 묶음 1 재현 --bundle1_repro 다른 곳 0 · 선택 V2O5 · +U 민감도 Sb2O5 · SiO2 (다시 돌림) · convention_check 0 위반",
+   "⚠_전제": "pymatgen 이 없는 환경에서는 세 도구 selftest 가 '[전제]' 한 줄로 불통과한다 (안 돈 시험을 통과로 세지 않는다)"
+  },
+  "결정_문장_정정": "결정 D-2026-11-10-cascade-axes-bundle2 의 statement 앞부분 'SE 는 호스트 아지로다이트 원자 부피 × 원자 수' 는 ED 반영 전 문구다 — ⑤ 의 주 판은 **hull 평형 상 혼합 회계** (원자 부피 판은 기록만) 이고 이 개정의 결정이 그 정정을 원장에 박는다 (비준된 결정은 다이제스트 때문에 고치지 않는다)",
+  "구현_판단 (에이전트 보고 · 결과 전)": {
+   "1_정확한_계수": "⑤ · ⑥ 회계와 G1c 는 인쇄 문자열이 아니라 같은 Reaction 객체의 정확한 계수 (volumes.kink_terms) 로 한다 — 인쇄 문자열과는 반올림 폭 안에서 맞는지 검사 (묶음 1 원자료에서 Li2S 설계와 호스트는 같은 반응인데 정규화가 달라 4 유효숫자로는 ΔV/V 가 ≈ 1e-3 %p 갈린다)",
+   "2_더한_출력": "product_gaps_vol.json · kink_products_vol.jsonl (⑥ 의 거의 겹친 kink · 10 meV kink 판정용 Li 쪽 모든 kink 산물 갭) · g3b_check.json · selftest 로그 · vol · win 갈래 로그 이름 run.log (옛 축은 runner.log)",
+   "3_G3b_허용": "반응물 · 산물 → Composition 열쇠 계수 사전 비교 · 계수 상대 1e-3 (인쇄 반올림 폭) · |Δx| ≤ 1e-6 · |ΔdE| ≤ 1e-5 eV/atom · 문자열까지 같은 쌍의 수를 따로 적는다",
+   "4_막는_범위": "결정 · B1 (묶음 1 재현) · G1 · G1b · G1c · G2 · G3 · G3b · G5 중 하나라도 불통과면 판독 전체를 안 낸다 (갈래만 따로 내는 부분 판독 없음 · §9 '멈춘다' 와 같다) · 상대 혼합 기체 규칙은 세 상대 모두 (기록만인 만충 LiNiO₂ 포함)",
+   "5_모름_범위": "표시 모름 · f_ins 모름에 ⓓ 미판정 뿐 아니라 판독 오류 (fate_error) 도 넣는다 · 호스트 자체가 거의 겹친 kink 로 모름이면 그 ⑤ · ⑥ 축은 모든 설계에서 모름 (s_V · δφ 가 호스트 값을 뺀다)",
+   "6_R10_R13_해석": "무리 A · B 를 각각 줄 세우고 B 번호는 A 줄 뒤에 이어 붙인다 · 표시 모름 설계는 낙관 끝을 A 줄에, 비관 끝을 B 줄에 끼워 넣는다 (그 줄의 모름 축 r = 1 + 그 줄의 설계 수) · 상위 10 = A 줄 leximin 번호 ≤ 10 인 조성 (동률이면 10 을 넘을 수 있다)",
+   "7_R12_판": "판마다 순위 축 집합은 주 판 그대로 두고 G4 · G7 · G8 을 다시 걸지 않는다 (축 하나씩 빼는 판만 줄을 다시 정한다) · 부호 있는 ⑤ 판의 방향 = 클수록 좋음 (Xin Li 해석 · 카드 §2 ⑤) · +U 판은 묶음 1 원자료를 같은 스위치로 다시 읽고 ④ · ⑥ 등급도 다시 매긴다",
+   "8_분자_결정_기록": "목록 밖 분자 결정 '기록만' 표시는 카드가 이름을 든 넷 (PCl5 · AlCl3 · NbCl5 · I2) 에만 붙인다 (봉인 목록이 아니라 순위에 안 닿는다)",
+   "9_G2_갭": "Li 를 뺀 모든 창 산물이 product_gaps_win.json 에 열쇠로 있다 (값이든 조회 오류 항목이든 = 조회가 돌았다)",
+   "10_판독기_sha": "러너가 vol · win 실행마다 판독기 sha16 을 manifest 에 적는다 · 판독기는 그 값으로 막지 않는다 (§9 재개 조건 ④ '고친 판독기로 재현' 경로)",
+   "11_고친_동작": "esw_grand_potential main() 의 종료 코드가 밖으로 나간다 (전에는 selftest 실패에도 rc 0) · 옛 ncm · hyd · li 갈래 러너 동작은 그대로",
+   "12_안_한_것": "같은 entry_id 가 행마다 같은 부피인지 보는 교차 검사 · 러너 셸 자체 selftest (가상 mp_api · git 으로 vol → win → 판독기 끝까지 돈 오프라인 통합 시험으로 대신: 273+3 줄 · 창 91+1 줄 · 교차 불일치 0 · G3b 276/276 · 출력 있으면 rc 14 · MP 판 바뀌면 rc 4)"
+  },
+  "비용_어림_고침": "gabia CPU ≈ 1–1.5 h (vol 273 줄을 한 프로세스에서 차례로 · 창은 조성마다 GPPD 8 번) — 카드 §8 의 30–60 분보다 길 수 있다 · GPU 0",
+  "결정": "D-2026-11-10-cascade-axes-bundle2-amend1 (proposed · 사용자 비준 대기)",
+  "by": "agent · 2026-11-10"
  }
 }
