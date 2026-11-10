@@ -55,6 +55,12 @@ Usage (run where MP_API_KEY is set, e.g. gabia/kserver116-27):
     python3 esw_grand_potential.py --elements Li P S Cl Nd O \
         --formation --reaction "P2S7,Nd2O3 > NdPO4,S" \
         --out cei_formation_2026_09_16.json
+
+    # cascade 묶음 2 창 갈래 (2026-11-10 · 조성마다 자기 chemsys · 격자 전압 · jsonl)
+    python3 esw_grand_potential.py --batch_from db/properties/cascade_interface_90.jsonl \
+        --at_voltages 2.50 2.75 3.00 3.25 3.50 3.75 4.00 4.25 --out designs_win.jsonl
+    ⛔ 이 갈래가 못 하는 것: 등급 · f_ins · 순위를 내지 않는다 (판독기 몫) · '가장 가까운 줄' 로 읽지 않는다 (구간 규칙 ·
+       window_row 주석) · O 열기 · --exclude_phases · --target 과 같이 돌지 않는다 (거절) · pymatgen 없이는 안 돈다.
 """
 import argparse
 import json
@@ -412,6 +418,170 @@ def limits_from_steps(steps, open_symbol):
     }
 
 
+# ── 묶음 2 창 갈래 (2026-11-10 · cascade 축 ④ · 카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json §2 축 ④ · §3b) ──
+#   --batch_from <대상 표 jsonl | LABEL:FORMULA …> --at_voltages V … : 조성마다 **자기 chemsys** (GGA_GGA+U) 의 Li 열린계 profile →
+#   격자 전압마다 평형 산물 (구간 규칙) · 내놓는 Li 수 · GrandPotentialPhaseDiagram 교차 산물 · release onset. jsonl 한 줄 = 조성 하나.
+#   ⛔ 이 갈래가 못 하는 것:
+#     · 등급 · f_ins · F_win · 순위를 내지 않는다 — 산물 · 반응식 · Li 수만 (판독 = analyze_cathode_reactivity.py --bundle2 · 결과 전 규칙).
+#     · '가장 가까운 줄' (analyze 의 reaction_at) 로 읽지 않는다 — 줄 k 의 산물은 V_k ≤ V < V_{k+1} (ED P1-4).
+#     · 양극 O · 계면을 안 본다 (SE 단독 · Li 저장고) — CEI 가 아니다 · 운동학 · 핵생성 · 기체 압력 없음 (0 K MP hull).
+#     · 교차 경로가 다르면 고치지 않고 적는다 (gp_same False — 판독기가 멈춘다).
+#     · --exclude_phases · O 열기와 같이 돌지 않는다 (거절한다).
+WINDOW_BOUNDARY_V = 1e-3
+WINDOW_MODE = "grand_potential_window"
+WINDOW_RULE = ("구간 규칙 — 격자 전압 V 의 산물 = get_element_profile 줄 k 의 entries, V_k ≤ V < V_{k+1} (V_k = μ_Li(금속) − chempot_k) · "
+               "V 가 어느 경계와 1 mV 안이면 V − 0.001 V 를 읽는다 (V_read · shifted_1mV) · 교차 = GrandPotentialPhaseDiagram"
+               "(entries, {Li: μ_Li(금속) − V_read}).get_decomposition(비-Li 조성)")
+
+
+def _fmt_coef(c):
+    """계수 문자열 — pymatgen 과 같은 4 유효숫자 · 작은 수도 **고정 소수점** ('1e-05' 를 sei_product_gaps.products_of 가 못 읽는다)."""
+    s = f"{c:.4g}"
+    if "e" in s or "E" in s:
+        s = f"{c:.12f}".rstrip("0").rstrip(".")
+    return s
+
+
+def rxn_str_fixed(reaction):
+    """Reaction → 'A -> b B + c Li' — pymatgen str 과 같은 꼴 (reduced formula · 계수 4 유효숫자 · 1 은 생략) 이되 과학 표기가 없다.
+    ⛔ 못 하는 것: 계수를 다시 맞추지 않는다 (Reaction 이 준 계수 그대로) · Reaction 이 아니면 rxn_to_str 로 물러난다."""
+    try:
+        comps, coeffs = list(reaction.all_comp), [float(c) for c in reaction.coeffs]
+    except Exception:
+        return rxn_to_str(reaction)
+    L, R = [], []
+    for comp, a in zip(comps, coeffs):
+        f, fac = comp.get_reduced_formula_and_factor()
+        amt = a * fac
+        if abs(amt) < 1e-12:
+            continue
+        term = f if abs(abs(amt) - 1.0) < 1e-6 else f"{_fmt_coef(abs(amt))} {f}"
+        (L if amt < 0 else R).append(term)
+    return " + ".join(L) + " -> " + " + ".join(R)
+
+
+def interval_index(vks, V, tol=WINDOW_BOUNDARY_V):
+    """구간 규칙 (카드 §2 축 ④ 산물_대응) — (k, V_read, shifted). 줄 k 의 산물은 V_k ≤ V < V_{k+1} 이므로
+    k = V_k ≤ V_read 인 줄 중 V_k 가 가장 큰 줄 (같으면 뒤 줄 — 폭 0 구간은 비어 있다). V 가 어느 V_k 와 tol 안이면 V_read = V − tol.
+    ⛔ '가장 가까운 줄' 이 아니다 · 못 찾으면 k = None (0 으로 지어내지 않는다)."""
+    shifted = any(abs(V - b) <= tol + 1e-12 for b in vks)
+    vr = V - tol if shifted else V
+    best = None
+    for i, b in enumerate(vks):
+        if b <= vr and (best is None or b >= vks[best]):
+            best = i
+    return best, vr, shifted
+
+
+def window_row(entries, comp, species, formula, voltages, open_symbol="Li"):
+    """조성 하나 · 격자 전압들 → jsonl 한 줄 (카드 §2 축 ④ · §3b). entries = 그 조성의 chemsys 엔트리 (MP 조회는 부르는 쪽).
+    by_voltage['2.50'] = {V_grid, V_read, shifted_1mV, row_index, interval_V, products, gp_products, gp_same, reaction (sei_product_gaps
+    --from_reactions 가 읽는 꼴), evolution_Li, li_released_per_fu} · release_onset_V = limits_from_steps 의 release onset (max μ | 내보냄)."""
+    from pymatgen.core import Composition, Element
+    from pymatgen.analysis.phase_diagram import PhaseDiagram, GrandPotentialPhaseDiagram
+    X = Element(open_symbol)
+    pd = PhaseDiagram(entries)
+    mu_ref = pd.el_refs[X].energy_per_atom
+    prof = pd.get_element_profile(X, comp)
+    vks = [mu_ref - float(p["chempot"]) for p in prof]
+    steps = steps_from_profile(prof, open_symbol, mu_ref, rxn=rxn_str_fixed)
+    for s, p, v in zip(steps, prof, vks):
+        s["V_vs_Li_exact"] = v
+        s["entries"] = [{"phase": e.composition.reduced_formula, "entry_id": _entry_id_str(e)} for e in p["entries"]]
+    lim = limits_from_steps(steps, open_symbol)
+    non_open = Composition({el: amt for el, amt in comp.items() if el != X})
+    by = {}
+    for V in voltages:
+        key = f"{V:.2f}"
+        k, vr, sh = interval_index(vks, V)
+        if k is None:
+            by[key] = {"V_grid": V, "V_read": vr, "shifted_1mV": sh, "error": "구간을 못 찾는다 (V < 첫 줄)"}
+            continue
+        p = prof[k]
+        prods = sorted({e.composition.reduced_formula for e in p["entries"]} - {open_symbol})
+        gpd = GrandPotentialPhaseDiagram(entries, {X: mu_ref - vr})
+        gp = sorted({e.original_entry.composition.reduced_formula for e in gpd.get_decomposition(non_open)} - {open_symbol})
+        evo = float(p["evolution"])
+        by[key] = {"V_grid": V, "V_read": vr, "shifted_1mV": sh, "row_index": k,
+                   "interval_V": [vks[k], vks[k + 1] if k + 1 < len(vks) else None],
+                   "products": prods, "product_entry_ids": sorted(_entry_id_str(e) for e in p["entries"]
+                                                                  if e.composition.reduced_formula != open_symbol),
+                   "gp_products": gp, "gp_same": prods == gp, "reaction": rxn_str_fixed(p["reaction"]),
+                   "evolution_Li": evo, "li_released_per_fu": -evo}
+    rel = lim["release_onset_mu_eV"]
+    upt = lim["uptake_onset_mu_eV"]
+    return {"species": species, "formula": formula, "cathode": "WIN", "mode": WINDOW_MODE,
+            "chemsys": sorted(el.symbol for el in pd.elements), "n_entries": len(entries), "mu_Li_metal_eV": mu_ref,
+            "n_atoms_fu": float(comp.num_atoms), "voltages_V": list(voltages), "rule": WINDOW_RULE,
+            "profile": steps, "by_voltage": by,
+            "release_onset_V": None if rel is None else round(round(mu_ref, 4) - rel, 4),
+            "uptake_onset_V": None if upt is None else round(round(mu_ref, 4) - upt, 4),
+            "n_gp_differ": sum(1 for v in by.values() if v.get("gp_same") is False)}
+
+
+def batch_roster(srcs):
+    """--batch_from 인자 → {라벨: 조성}. 인자마다 ① 파일 = 1 단계 계면 표 jsonl (양극 LCO · LNO · LMO 행의 'formula' · 종마다 하나 —
+    축 ① · ③ 러너 · 판독기 ax_roster 와 같은 선택) ② 'LABEL:FORMULA'. 같은 라벨에 조성이 둘이면 ValueError (조용히 하나를 고르지 않는다)."""
+    out = {}
+    for s in srcs:
+        if os.path.isfile(s):
+            for ln in Path(s).read_text(encoding="utf-8").splitlines():
+                if not ln.strip():
+                    continue
+                r = json.loads(ln)
+                if r.get("cathode") in ("LCO", "LNO", "LMO") and r.get("formula"):
+                    if out.setdefault(r["species"], r["formula"]) != r["formula"]:
+                        raise ValueError(f"{r['species']}: 양극마다 조성이 다르다")
+        elif ":" in s:
+            lab, _, f = s.partition(":")
+            if not lab or not f:
+                raise ValueError(f"--batch_from {s!r}: 'LABEL:FORMULA' 꼴이 아니다")
+            if out.setdefault(lab, f) != f:
+                raise ValueError(f"{lab}: 조성이 둘이다")
+        else:
+            raise ValueError(f"--batch_from {s!r}: 파일도 'LABEL:FORMULA' 도 아니다")
+    return out
+
+
+def run_window_batch(args):
+    """--batch_from × --at_voltages — 조성마다 자기 chemsys 로 MP 를 부르고 window_row 한 줄씩 jsonl 에 붙인다 (이어달리기 가능).
+    ⚠ --resume 은 오류 행도 '끝남' 으로 센다 (interface_reactivity_v2 와 같다) — 오류 행은 지우고 다시 돈다."""
+    import time
+    from pymatgen.core import Composition
+    forms = batch_roster(args.batch_from)
+    out = Path(args.out)
+    if out.suffix != ".jsonl":
+        raise SystemExit("⛔ --batch_from 의 --out 은 .jsonl 이어야 한다 (한 줄 = 조성 하나)")
+    done = set()
+    if args.resume and out.exists():
+        for ln in out.read_text(encoding="utf-8").splitlines():
+            try:
+                done.add(json.loads(ln)["species"])
+            except (ValueError, KeyError, TypeError):
+                pass
+        print(f"[resume] 이미 있는 조성 {len(done)} 개는 건너뛴다")
+    todo = sorted(forms)
+    print(f"조성 {len(todo)} 개 · 격자 전압 {len(args.at_voltages)} 점 · {WINDOW_RULE[:40]}…")
+    for i, sp in enumerate(todo, 1):
+        if sp in done:
+            continue
+        t0 = time.time()
+        try:
+            comp = Composition(forms[sp])
+            els = sorted({el.symbol for el in comp.elements} | {"Li"})
+            row = window_row(get_chemsys_entries(els), comp, sp, forms[sp], args.at_voltages)
+        except Exception as ex:
+            row = {"species": sp, "formula": forms[sp], "cathode": "WIN", "error": f"{type(ex).__name__}: {ex}"}
+        row["seconds"] = round(time.time() - t0, 1)
+        with out.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+        st = ("ERR " + row["error"][:60]) if "error" in row else (
+            "ok" + (f" · ⛔ 교차 불일치 {row['n_gp_differ']} 점" if row.get("n_gp_differ") else ""))
+        print(f"[{i}/{len(todo)}] {sp:10s} {st}  ({row['seconds']:.0f}s)")
+    print(f"\n→ {out}")
+    return 0
+
+
 def analyze(pd, comp, mu_ref, label, comp_str, open_symbol="Li"):
     """Run get_element_profile for the opened element and extract the limits."""
     from pymatgen.core import Element
@@ -519,10 +689,25 @@ def main():
                     help="생성에너지·반응에너지를 **이 원소 하나당**으로도 환산한다 (기본 P).")
     ap.add_argument("--selftest", action="store_true",
                     help="MP·pymatgen 없이 판정 논리만 시험 (음성 경로 포함)")
+    ap.add_argument("--batch_from", nargs="+", metavar="SRC",
+                    help="cascade 묶음 2 창 갈래 — 1 단계 계면 표 jsonl (축 ① · ③ 과 같은 91 대표 조성) 또는 'LABEL:FORMULA' · "
+                         "조성마다 **자기 chemsys** 로 MP 를 부른다 (--at_voltages 와 같이 · 출력 jsonl)")
+    ap.add_argument("--at_voltages", nargs="+", type=float, metavar="V",
+                    help="--batch_from 과 같이: 격자 전압 (vs Li/Li⁺) 마다 평형 산물 (구간 규칙 V_k ≤ V < V_{k+1} · 경계 1 mV 안이면 "
+                         "V − 0.001) · 내놓는 Li 수 · GrandPotentialPhaseDiagram 교차")
+    ap.add_argument("--resume", action="store_true", help="--batch_from: jsonl 에 이미 있는 조성은 건너뛴다 (오류 행도)")
     args = ap.parse_args()
 
     if args.selftest:
         return selftest()
+    if args.batch_from or args.at_voltages:
+        if not (args.batch_from and args.at_voltages):
+            ap.error("⛔ --batch_from 과 --at_voltages 는 같이 준다 — 조성마다 자기 chemsys · 격자 전압 (cascade 묶음 2 카드 §3b)")
+        if (args.target or args.formation is not None or args.reaction is not None or args.exclude_phases
+                or args.open_element != "Li" or args.elements != ["Li", "P", "S", "Cl"]):
+            ap.error("⛔ --batch_from 은 --target · --elements · --formation · --reaction · --exclude_phases · --open_element 와 "
+                     "같이 돌지 않는다 (조용히 무시하지 않는다 — 조성마다 자기 chemsys · Li 열기만)")
+        return run_window_batch(args)
     # --formation/--reaction 만으로도 돌 수 있다 (열린 원소 프로파일은 건너뛴다)
     if not args.target and args.formation is None and args.reaction is None:
         ap.error("--target 이 필요하다 "
@@ -848,9 +1033,135 @@ def selftest():
         _, w5 = landmark_mu(ents, "Li2O", "Li2O", "O")
         chk(w5 is not None, "⛔음성: O 개수가 안 변하면 산화반응이 아니라고 말한다")
 
+    _selftest_window(chk)
     print(f"  selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
 
+def _selftest_window(chk):
+    """묶음 2 창 갈래 (2026-11-10) — 구간 규칙 · 1 mV 경계 · 교차 경로 · 고정 소수점 반응식 · 대상 표 · 배선 (양성 · 음성).
+    ⛔ pymatgen 이 없으면 window_row 부분은 **안 돈 것** — 통과로 세지 않는다."""
+    import subprocess
+    import sys
+    import tempfile
+    # ── 구간 규칙 (순수) ─────────────────────────────────────────────────────────────────
+    vk = [0.0, 1.025, 2.45]
+    got = [interval_index(vk, V)[0] for V in (1.0, 1.4, 2.0, 2.5)]
+    chk(got == [0, 1, 1, 2],
+        f"구간 규칙: 줄 k 는 V_k ≤ V < V_{{k+1}} — 1.0 → 0 · 2.0 → 1 ('가장 가까운 줄' 이면 1 · 2 가 나온다) ({got})")
+    k1, vr1, s1 = interval_index(vk, 1.0255)
+    k2, vr2, s2 = interval_index(vk, 1.0265)
+    chk((k1, round(vr1, 6), s1) == (0, 1.0245, True) and (k2, s2) == (1, False),
+        "⛔음성 1 mV 경계: 경계 0.5 mV 위 → V − 0.001 을 읽어 아래 줄 (shifted) · 1.5 mV 위 → 그대로")
+    chk(interval_index(vk, -0.5)[0] is None and interval_index([0.0, 1.0, 1.0, 2.0], 1.5)[0] == 2,
+        "⛔음성: 첫 줄 아래는 None (지어내지 않는다) · 폭 0 구간 (V_k = V_{k+1}) 은 비었다 → 뒤 줄")
+    chk(_fmt_coef(1.234e-05) == "0.00001234" and _fmt_coef(0.11111) == "0.1111" and "e" not in _fmt_coef(3e-9),
+        "계수 문자열: 4 유효숫자 · 작은 수는 고정 소수점 (과학 표기 없음)")
+    od = os.path.dirname(os.path.abspath(__file__))
+    if od not in sys.path:
+        sys.path.insert(0, od)
+    from sei_product_gaps import products_of
+    chk(products_of("A -> 0.00001234 X2 + 2 Y + 3 Li") == ["X2", "Y"] and products_of("A -> 1.234e-05 X2 + 2 Y") == ["Y"],
+        "⛔음성: sei_product_gaps.products_of 는 '1.234e-05 X2' 를 산물로 못 읽는다 — 그래서 고정 소수점으로 쓴다")
+    # ── 대상 표 ──────────────────────────────────────────────────────────────────────────
+    root = os.path.dirname(os.path.dirname(od))
+    src = os.path.join(root, "db", "properties", "cascade_interface_90.jsonl")
+    try:
+        ro = batch_roster([src])
+        sys.path.insert(0, os.path.join(root, "tools", "cascade"))
+        from analyze_cathode_reactivity import ax_roster
+        same = ro == ax_roster(src)
+    except Exception as ex:
+        ro, same = {}, f"{type(ex).__name__}: {ex}"
+    chk(len(ro) == 91 and same is True and ro.get("As2S3") == "As2Cl4Li28P2S20" and batch_roster(["HOST:Li6PS5Cl"]) == {"HOST": "Li6PS5Cl"},
+        f"대상 표 = 1 단계 계면 표의 91 대표 조성 (판독기 ax_roster 와 같다 · {len(ro)} 종) · 'LABEL:FORMULA' 도 받는다")
+    bad = []
+    for arg in (["HOST:Li6PS5Cl", "HOST:Li6PS5Br"], ["no_such_file_or_spec"], [":Li6PS5Cl"]):
+        try:
+            batch_roster(arg)
+            bad.append(arg)
+        except ValueError:
+            pass
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, "r.jsonl")
+        Path(p).write_text(json.dumps({"species": "X", "cathode": "LNO", "formula": "A"}) + "\n"
+                           + json.dumps({"species": "X", "cathode": "LCO", "formula": "B"}) + "\n", encoding="utf-8")
+        try:
+            batch_roster([p])
+            bad.append("양극마다 다른 조성")
+        except ValueError:
+            pass
+    chk(not bad, f"⛔음성 대상 표: 같은 라벨 두 조성 · 파일도 꼴도 아닌 인자 · 빈 라벨 · 양극마다 다른 조성 → 거절 ({bad})")
+    # ── CLI 거절 ────────────────────────────────────────────────────────────────────────
+    me = os.path.abspath(__file__)
+    r_a = subprocess.run([sys.executable, me, "--at_voltages", "2.5"], capture_output=True, text=True, timeout=60)
+    r_b = subprocess.run([sys.executable, me, "--batch_from", "HOST:Li6PS5Cl", "--at_voltages", "2.5", "--exclude_phases", "LiS4"],
+                         capture_output=True, text=True, timeout=60)
+    r_c = subprocess.run([sys.executable, me, "--batch_from", "HOST:Li6PS5Cl", "--at_voltages", "2.5", "--open_element", "O",
+                          "--elements", "Li", "O"], capture_output=True, text=True, timeout=60)
+    h_ = subprocess.run([sys.executable, me, "--help"], capture_output=True, text=True, timeout=60).stdout
+    chk(r_a.returncode == 2 and r_b.returncode == 2 and r_c.returncode == 2 and "--at_voltages" in h_ and "--batch_from" in h_,
+        "⛔음성 CLI: --at_voltages 만 · --exclude_phases 와 같이 · O 열기와 같이 → 시작을 거절한다 (조용히 무시하지 않는다)")
+    # ── window_row (가상 Li–S–Cl 상도 · 리뷰 ED toy_gp_profile 과 같은 꼴) ─────────────────
+    try:
+        from pymatgen.core import Composition
+        from pymatgen.analysis.phase_diagram import PDEntry
+    except ImportError:
+        chk(False, "[전제] window_row 시험은 pymatgen 이 있어야 돈다 — 안 돈 것은 통과가 아니다 (gabia uma env 에서 다시)")
+        return
+
+    def E(f, ef):
+        c = Composition(f)
+        return PDEntry(c, ef * c.num_atoms, name=f)
+    toy = [E("Li", 0), E("S", 0), E("Cl", 0), E("Li2S", -1.00), E("LiCl", -0.80), E("SCl", -0.05), E("LiSCl", -0.85)]
+    Vs = (0.5, 1.0, 1.4, 1.6, 1.8, 2.0, 2.5, 1.0255)
+    w = window_row(toy, Composition("Li3SCl"), "T", "Li3SCl", Vs)
+    by = w["by_voltage"]
+    want = {"0.50": ["Li2S", "LiCl"], "1.00": ["Li2S", "LiCl"], "1.40": ["LiSCl"], "1.60": ["LiSCl"], "1.80": ["LiSCl"],
+            "2.00": ["LiSCl"], "2.50": ["SCl"], "1.03": ["Li2S", "LiCl"]}
+    gotp = {k: v.get("products") for k, v in by.items()}
+    chk(gotp == want and all(v["gp_same"] for v in by.values()) and w["n_gp_differ"] == 0,
+        f"window_row: 구간 규칙 산물 = GrandPotentialPhaseDiagram 교차 산물 (8 점 · 1.0 · 1.8 · 2.0 V 는 '가장 가까운 줄' 이면 틀린다) ({gotp})")
+    chk(by["1.03"]["shifted_1mV"] is True and abs(by["1.03"]["V_read"] - 1.0245) < 1e-12
+        and abs(by["2.50"]["li_released_per_fu"] - 3.0) < 1e-9 and abs(by["1.40"]["li_released_per_fu"] - 2.0) < 1e-9 and abs(w["release_onset_V"] - 1.025) < 1e-3 and w["n_atoms_fu"] == 5.0,
+        "window_row: 경계 1 mV 안 → V − 0.001 을 읽고 적는다 · 내놓는 Li (화학식당 2 · 3) · release onset = max μ | 내보냄 (1.025 V)")
+    chk(all(products_of(v["reaction"]) and sorted(products_of(v["reaction"])) == v["products"] for v in by.values())
+        and all("e-" not in v["reaction"] for v in by.values()),
+        "window_row: 전압별 반응식을 sei_product_gaps.products_of 가 그대로 읽는다 (산물 = 구간 줄 산물 · Li 는 저장고)")
+    w2 = window_row(toy, Composition("Li3SCl"), "T", "Li3SCl", (1.0,))
+    import copy as _copy
+    bad_toy = _copy.deepcopy(w2)
+    bad_toy["by_voltage"]["1.00"]["products"] = ["LiSCl"]
+    chk(w2["by_voltage"]["1.00"]["row_index"] == 0 and bad_toy["by_voltage"]["1.00"]["products"] != bad_toy["by_voltage"]["1.00"]["gp_products"],
+        "⛔음성 교차: 산물을 한 칸 민 기록은 교차 산물과 다르다 (판독기 G1b_④ 가 그 차이로 멈춘다)")
+    # ── 배선: run_window_batch (MP 대신 가상 상도) · resume · 오류 행 ──────────────────────
+    import types
+    g = globals()
+    real = g["get_chemsys_entries"]
+    try:
+        g["get_chemsys_entries"] = lambda els: list(toy)
+        with tempfile.TemporaryDirectory() as td:
+            o = os.path.join(td, "w.jsonl")
+            ns = types.SimpleNamespace(batch_from=["A:Li3SCl", "B:Li3SCl", "Z:Xx2"], at_voltages=[1.0, 2.5], out=o, resume=False)
+            _so = sys.stdout
+            sys.stdout = open(os.devnull, "w")
+            try:
+                run_window_batch(ns)
+                ns.resume = True
+                run_window_batch(ns)
+            finally:
+                sys.stdout.close()
+                sys.stdout = _so
+            rows = [json.loads(ln) for ln in open(o, encoding="utf-8")]
+    finally:
+        g["get_chemsys_entries"] = real
+    rb = {r["species"]: r for r in rows}
+    chk(len(rows) == 3 and "error" in rb["Z"] and rb["A"]["mode"] == WINDOW_MODE and rb["A"]["by_voltage"]["2.50"]["products"] == ["SCl"]
+        and rb["A"]["by_voltage"] == rb["B"]["by_voltage"],
+        "배선: 조성마다 한 줄 · 못 읽는 조성은 오류 행 (조용히 빠지지 않는다) · --resume 은 다시 돌지 않는다 (3 줄)")
+
+
 if __name__ == "__main__":
-    main()
+    # ⚠ 2026-11-10 — 종전엔 `main()` 만 불러서 selftest 실패 (return 1) 가 **종료코드로 안 나갔다** (늘 0 · 러너가 성공으로 읽는다).
+    #   보통 경로는 None → 0 이라 바뀌지 않는다 (interface_reactivity_v2 의 2026-09-29 고침과 같다).
+    raise SystemExit(main())

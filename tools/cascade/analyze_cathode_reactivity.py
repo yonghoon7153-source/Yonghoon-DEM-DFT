@@ -24,6 +24,10 @@ cathode_reactivity.py 가 만든 94쌍 CSV 를 읽어 세 가지를 낸다.
 4) ⭐ **축 ① NCM 계면 분해 판독** (2026-11-04 · 카드 cascade_axis_ncm_interface_estimand_2026_11_04.json) —
    `--axis_ncm <run_dir>` 로 gabia 출력 (run_axis_ncm_gabia.sh) 을 읽어 게이트 G1–G6 · 호스트 대비 δ (R1) · 도펀트 행방 등급 (R2) ·
    양극 의존 (R4) · 산소/황 짝 (R5) 을 낸다. `--selftest` 는 이 판독기의 양성 · 음성 경로를 본다.
+
+5) ⭐ **묶음 2 판독** (2026-11-10 · 카드 cascade_axes_bundle2_estimand_2026_11_10.json · 결정 D-2026-11-10-cascade-axes-bundle2) —
+   `--bundle2 <run_dir>` (AXIS=vol · win 출력) → 축 ④ ⑤ ⑥ · G1–G8 · R7–R13 (약점 순위 · Pareto 층 · 선택 · R12 기록) ·
+   `--bundle1_repro` → 묶음 1 판독 · 합치기 (V2O5) · +U 민감도 (Sb2O5 · SiO2) 재현만. 못 하는 것은 그 절 머리 주석 (pymatgen 필요).
 """
 import csv
 import datetime
@@ -407,9 +411,11 @@ def ax_product_class(f, gaps):
     return "wide", f"MP 갭 {gap:g}"
 
 
-def ax_design_class(row, tracked, gaps, classify=None):
+def ax_design_class(row, tracked, gaps, classify=None, extra_classes=()):
     """한 행 (설계 × 양극 상태) → (등급, 세부). 우선순위 ⓑ 금속성 > ⓐ 넓은 갭 > ⓓ 미판정 > ⓒ 중간 · ⓔ 끝점 · ㉧ 추적 원소 없음.
-    classify = 산물 등급 함수 (기본 ax_product_class · 축 ③ 은 li_product_class — 음이온 없는 금속간 = 금속성)."""
+    classify = 산물 등급 함수 (기본 ax_product_class · 축 ③ 은 li_product_class — 음이온 없는 금속간 = 금속성).
+    extra_classes = 산물 등급 이름을 더한다 (묶음 2 '휘발' — 그 몫은 넓은 갭 · 금속성 · 미판정 어디에도 안 들어가 우선순위 셈에서 빠진다).
+    기본 () 이면 몫 사전 · 판정이 묶음 1 판과 같다 (봉인 판독 재현이 본다)."""
     if not tracked:
         return "na", {}
     ep = row.get("min_kink_at_endpoint")
@@ -420,7 +426,7 @@ def ax_design_class(row, tracked, gaps, classify=None):
         return "fate_error", {"why": why}
     det, raw = {}, []
     for E, parts in fate.items():
-        sh = {"wide": 0.0, "narrow": 0.0, "metallic": 0.0, "undetermined": 0.0}
+        sh = {"wide": 0.0, "narrow": 0.0, "metallic": 0.0, "undetermined": 0.0, **{k: 0.0 for k in extra_classes}}
         prods = []
         for f, x in parts:
             c, w = (classify or ax_product_class)(f, gaps)
@@ -1881,9 +1887,1623 @@ def sens_selftest():
     return 0 if ok_all else 1
 
 
+# ══════════════════════════════════════════════════════════════════════════════════════════════════
+# 묶음 2 판독 — 카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json (결정 D-2026-11-10-cascade-axes-bundle2 · active)
+#   실행:  python3 tools/cascade/analyze_cathode_reactivity.py --bundle2 <run_dir> [--out <json>]
+#          python3 tools/cascade/analyze_cathode_reactivity.py --bundle1_repro   (묶음 1 판독 · 합치기 V2O5 · +U 민감도 재현만 · 상시 절차)
+#   축 ④ 작동창 도펀트 행방 · ⑤ 분해 부피 변화 · ⑥ Li 쪽 산물 품질 (새 원자료) + 축 ① · ③ · 표시 ② (묶음 1 봉인 판독을 sha 로 결속 ·
+#   다시 계산 · 다시 판정하지 않는다) → 게이트 G1 · G1b · G1c · G2 · G3 · G3b · G4 · G5 · G7 · G8 → R7–R13 (약점 순위 · Pareto 층 · 선택).
+#   ⛔ 이 판독기가 못 하는 것:
+#     · 계산 · MP 조회를 하지 않는다 — run_dir 의 designs_vol · host_vol · designs_win · host_win · product_gaps_vol · product_gaps_win ·
+#       manifest 와 묶음 1 봉인 판독 · 원자료만 읽는다.
+#     · pymatgen 없이 돌지 않는다 — 반응식 · 휘발 목록 · 기체 목록을 Composition 으로 대조한다 (카드 §2 · G1c · 문자열로 세지 않는다).
+#     · ⑤ ⑥ 의 부피 회계는 부피 기록의 정확한 계수 (kink_terms · 같은 Reaction 객체) 로 한다 — 기록 문자열 (4 유효숫자) 은 반응 확인 ·
+#       G3b · ④ 등급 (축 ① · ③ 과 같은 ax_fate 몫) 에만 쓴다. 정확한 계수가 없거나 문자열과 반올림 폭 밖이면 그 값은 내지 않는다.
+#       G1c 원자 보존 = 문자열 1e-3 상대 (반올림) · 정확한 계수 1e-8 상대.
+#     · ΔV/V 를 응력 · 균열 · 공극으로, φ_wide 를 부동태로, MP 갭 등급을 전자 전도도로, 순위를 '좋은 도펀트' 로 바꾸지 않는다 (카드 §5b).
+#     · 동률 폭 · 방향 · 휘발 · 기체 목록 · 문턱은 카드에 봉인된 것만 쓴다 (G5 가 카드 본문 · 방향 표 · 목록과 대조) — 새 숫자 없음.
+#     · 목록 밖 분자 결정 산물은 카드가 예로 든 넷 (PCl5 · AlCl3 · NbCl5 · I2) 만 '기록만' 표시 (판정에 안 쓴다 · 목록이 아니다).
+#     · 모름 설계 · 표시 모름 설계는 순위 셈에 넣지 않고 끼워 넣은 구간만 적는다 (남의 순위를 밀지 않는다 · R10).
+#     · R12 판은 주 판의 순위 축 집합을 그대로 두고 그 판이 바꾸는 것 하나만 바꾼다 (판마다 G4 · G7 · G8 을 다시 걸지 않는다 · 기록만).
+# ══════════════════════════════════════════════════════════════════════════════════════════════════
+B2_CARD = PROP / "cascade_axes_bundle2_estimand_2026_11_10.json"
+B2_DECISION = "D-2026-11-10-cascade-axes-bundle2"
+B2_CLOSURE = PROP / "cascade_axes_bundle_closed_2026_11_05.json"
+#: 묶음 1 봉인 판독 — 마감 기록 (cascade_axes_bundle_closed_2026_11_05.json) 이 적은 sha16 으로 결속한다
+B2_SEALED = {"ncm": (PROP / "cascade_axis_ncm_readout_2026_11_04.json", "6b84dbb3dbb55c39"),
+             "hyd": (PROP / "cascade_axis_hyd_readout_2026_11_04.json", "510e00e6a8cfaa5a"),
+             "li": (PROP / "cascade_axis_li_readout_2026_11_05.json", "c330f604eed85bdd"),
+             "sens": (SENS_OUT, "c5bce8851f854e7b")}
+B2_B1_RAW = {"ncm": ROOT / "db" / "raw" / "cascade_axis_ncm_v2_2026_11_04", "li": ROOT / "db" / "raw" / "cascade_axis_li_2026_11_04"}
+B2_B1_REF = (("ncm", "designs_lno.jsonl"), ("ncm", "host.jsonl"), ("li", "designs_li.jsonl"), ("li", "host_li.jsonl"))
+B2_V = (2.50, 2.75, 3.00, 3.25, 3.50, 3.75, 4.00, 4.25)
+B2_PARTNERS = {"LNO_half": "Li0.5NiO2", "LNO_full": "LiNiO2", "Li": "Li"}
+#: G7 순서 (카드 §4 G7: ① → ③ → ⑤ NCM → ⑤ Li → ⑥ Li → ④)
+B2_AXES = ("d_ncm", "d_li", "sv_ncm", "sv_li", "dphi_li", "f_ins")
+B2_NEW = ("sv_ncm", "sv_li", "dphi_li", "f_ins")
+B2_W = {"d_ncm": 10.0, "d_li": 10.0, "sv_ncm": 1.0, "sv_li": 1.0, "dphi_li": 0.01, "f_ins": 0.125}
+#: ⭐ 방향 표 — 하나만 두고 R9 · R11 · G7 · G8 이 이것만 읽는다 (카드 합치는_규칙_묶음_2 방향_표 · G5 가 카드와 대조).
+#:   *_signed 두 줄은 R12 '부호 있는 판' (Xin Li 해석 — 양의 분해 변형률이 낫다) 전용 · 카드 여섯 축이 아니다.
+B2_DIR = {"d_ncm": "larger", "d_li": "larger", "sv_ncm": "smaller", "sv_li": "smaller", "dphi_li": "larger", "f_ins": "larger",
+          "sv_ncm_signed": "larger", "sv_li_signed": "larger"}
+B2_DIR_CARD = {"d_ncm": "축_①_δ_NCM", "d_li": "축_③_δ_Li", "sv_ncm": "축_⑤_s_V_NCM", "sv_li": "축_⑤_s_V_Li",
+               "dphi_li": "축_⑥_δφ_wide_Li", "f_ins": "축_④_f_ins"}
+B2_DIR_WORD = {"larger": "클수록", "smaller": "작을수록"}
+#: 휘발 · 분자 산물 목록 (카드 §2 축 ④ 휘발_분자_산물_ED_P1_5 '목록 (결과 전 봉인)' 그대로 · G5 가 순서까지 대조) — Composition 으로 대조
+B2_VOLATILE = ("O2", "N2", "Cl2", "Br2", "BrCl", "SO2", "SO3", "H2S", "PH3", "PF5", "PCl3", "POCl3", "SF4", "SF6", "S2Cl2", "SCl2",
+               "SOCl2", "BF3", "BCl3", "SiF4", "SiCl4", "GeF4", "GeCl4", "SnCl4", "TiCl4", "VCl4", "AsCl3", "SbCl5", "MoF6", "WF6",
+               "SO2Cl2", "PSCl3", "VOCl3", "CrO2Cl2")
+#: ⑤ 기체 판 (카드 §2 축 ⑤ 회계 (iii)) — 반응식에 있으면 표시 · 그 부피 0 판은 기록만 · 상대 혼합에 끼면 부피 갈래를 읽지 않는다
+B2_GAS = ("O2", "SO2", "SO3", "Cl2", "N2", "H2S", "PH3")
+#: 목록 밖 분자 결정 (카드가 예로 든 넷 · '기록만' 표시 — 목록이 아니다 · 판정에 안 쓴다)
+B2_MOLECULAR = ("PCl5", "AlCl3", "NbCl5", "I2")
+B2_T = {"x": 1e-6, "dE_eV": 1e-5, "tie_dE_eV": 1e-5, "near_kink_eV": 0.010, "g1c": 1e-9, "phi_und": 0.01,
+        "anchor_lo_pct": -30.0, "anchor_hi_pct": -10.0, "rho": 0.8, "top_n": 10}
+B2_PHYS_TOOLS = ("tools/oxidation/interface_reactivity_v2.py", "tools/oxidation/esw_grand_potential.py", "tools/oxidation/sei_product_gaps.py")
+B2_LANES = ("designs_vol", "host_vol", "designs_win", "host_win")
+B2_FLAGS = ("축①F1_금속성", "축①F2_반응증가", "축②F1_가수분해증가", "축②F2_H2S증가", "축③F1_Li금속성", "축③F2_Li반응증가",
+            "축④F_win_금속성")
+#: G5 — 판독기 상수가 카드 본문과 같은지 (이 조각이 카드 문자열에 다 있어야 한다 · 방향 표 · 휘발 목록은 따로 구조로 대조)
+B2_CARD_TEXT = ("w_④ = 1/8", "w_⑤ = 1 %p", "w_⑥ = 0.01", "w = 10 meV/atom (축 ① 카드의 '다르다' 문턱)",
+                "w = 10 meV/atom (축 ③ 카드의 '다르다' 문턱)", "V = 2.50 · 2.75 · 3.00 · 3.25 · 3.50 · 3.75 · 4.00 · 4.25 V",
+                "1 mV 안이면 V − 0.001 V 를 읽고 기록한다", "V_k ≤ V < V_{k+1}", "−30 % ~ −10 %", "φ_und > 0.01",
+                "|Δx| ≤ 1e-6 · |ΔdE| ≤ 1e-5 eV/atom", "|ΔdE| ≤ 1e-5 eV/atom 인 kink", "10 meV/atom 안 kink",
+                "statistics.quantiles(n=4, method='inclusive')", "ρ ≥ 0.8 만 겹침", "ρ ≤ −0.8 은 '상충'", "≥ 0.8 (G7 과 같은 수)",
+                "|Δ| ≤ 1e-9", "{O2 · SO2 · SO3 · Cl2 · N2 · H2S · PH3}", "휘발 몫이 10 % 를 넘으면 그 점은 ⓐ 가 될 수 없다",
+                "① → ③ → ⑤ NCM → ⑤ Li → ⑥ Li → ④", "비관 끝 = 모름 축 r = 1 + (줄의 설계 수)",
+                "낙관 끝 = 모름 축 r = 1 · 표시 모름이면 무리 A", "표시 모름이면 무리 B", "한 축 이상에서 값이 그 축 동률 폭을 넘게 낫다",
+                "문턱 2.0 eV · 0.1 eV · 1 % · 90 % · 10 %", "release onset (max μ | evolution < 0)", "IQR ≥ 그 축의 동률 폭",
+                "새 연속 축이 하나도 순위에 못 들어가면 (G4 · G7 · G8) R10 · R11 을 내지 않는다", "같은 조성은 한 줄",
+                "CaCl2 ≡ CaS · MgCl2 ≡ MgS", "reduced formula Li6PS5Cl 인 에너지 최저 엔트리",
+                "f_ins = 8 점 중 설계 등급이 ⓐ 넓은 갭인 점의 비율", "R6c")
+
+
+def _b2_mod(name):
+    """tools/oxidation 의 물리 도구 모듈 (반응식 파서 · G3b 대조기 · 구간 규칙 — 판독기가 따로 다시 쓰지 않는다)."""
+    od = str(ROOT / "tools" / "oxidation")
+    if od not in sys.path:
+        sys.path.insert(0, od)
+    import importlib
+    return importlib.import_module(name)
+
+
+def _b2_has_pm():
+    try:
+        import pymatgen.core  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
+def _b2_key(f):
+    """화학식 → 조성 열쇠 (pymatgen Composition 원자 분율 · interface_reactivity_v2.comp_key_pm)."""
+    from pymatgen.core import Composition
+    return _b2_mod("interface_reactivity_v2").comp_key_pm(Composition(f))
+
+
+_B2_KS = {}
+
+
+def b2_in_list(f, lst):
+    """f 의 조성이 목록 lst (화학식들) 의 어느 조성과 같은가 — reduced Composition 대조 (S2Cl2 ≡ MP 'SCl' · 문자열 대조 아님)."""
+    k = tuple(lst)
+    if k not in _B2_KS:
+        _B2_KS[k] = {_b2_key(x) for x in lst}
+    try:
+        return _b2_key(f) in _B2_KS[k]
+    except Exception:
+        return False
+
+
+def b2_product_class(f, gaps):
+    """묶음 2 산물 등급 (축 ④ · ⑥) — 휘발 목록이면 'volatile' (넓은 갭 몫에 안 넣는다) · 아니면 축 ③ 규칙 li_product_class 그대로."""
+    if b2_in_list(f, B2_VOLATILE):
+        return "volatile", "휘발 · 분자 산물 (상온 기체 · 액체 · 카드 목록)"
+    return li_product_class(f, gaps)
+
+
+def _b2_sides(row, rxn):
+    """반응식 rxn 의 (좌변, 우변) [(계수, 화학식, Composition)] — 부피 기록의 **정확한 계수** (kink_terms · 같은 실행의 같은 Reaction 객체)
+    를 기록 문자열과 대조해서 (interface_reactivity_v2.rxn_exact_sides). 4 유효숫자 문자열 계수로 회계하지 않는다 — 같은 반응도
+    정규화가 다르면 반올림이 달라 Li2S ≡ 호스트 (G1c · |Δ| ≤ 1e-9) 가 깨진다. 기록이 없거나 문자열과 다르면 ValueError."""
+    kt = (((row.get("volumes") or {}).get("kink_terms") or {}).get(rxn)) if isinstance(row, dict) else None
+    if not isinstance(kt, dict) or not isinstance(kt.get("terms"), list):
+        raise ValueError("이 반응식의 정확한 계수 기록 (volumes.kink_terms) 이 없다")
+    return _b2_mod("interface_reactivity_v2").rxn_exact_sides(rxn, kt["terms"])
+
+
+def b2_dv(row, rxn=None, acc="hull"):
+    """⑤ ΔV/V [%] = [V(산물) − V(반응물)] / V(반응물) — 그 반응식의 정확한 계수 (닫힌계 · 국소 x*). (값, 세부) | (None, 사유).
+    acc 'hull' (주: 반응물 SE · 상대 = 같은 hull 의 평형 상 혼합 원자 부피) · 'atom' (기록만: SE = 아지로다이트 원자 부피) ·
+    'gas0' (기록만: 기체 목록 산물 부피 0). 산물 부피 = 같은 hull 안정 엔트리 원자 부피 × 계수 × 원자 수."""
+    vol = row.get("volumes") if isinstance(row, dict) else None
+    if not (isinstance(vol, dict) and vol.get("ok") is True):
+        return None, "부피 기록이 없거나 거부됐다"
+    ir = _b2_mod("interface_reactivity_v2")
+    rxn = row.get("reaction") if rxn is None else rxn
+    try:
+        L, R = _b2_sides(row, rxn)
+        k1, k2 = _b2_key(row["formula"]), _b2_key(row["cathode_formula"])
+        rc = vol["reactants"]
+        v1 = float(vol["argyrodite_Li6PS5Cl"]["volume_per_atom_A3"] if acc == "atom" else rc["c1"]["mixture_volume_per_atom_A3"])
+        v2 = float(rc["c2"]["mixture_volume_per_atom_A3"])
+    except (ValueError, KeyError, TypeError) as ex:
+        return None, f"반응식 · 반응물 부피를 못 읽는다 ({type(ex).__name__}: {ex})"
+    VR = VSE = 0.0
+    for c, f, comp in L:
+        k, n = ir.comp_key_pm(comp), c * float(comp.num_atoms)
+        if k == k1:
+            VR, VSE = VR + n * v1, VSE + n * v1
+        elif k == k2:
+            VR += n * v2
+        else:
+            return None, f"좌변 {f} 가 반응물 (SE · 상대) 이 아니다"
+    pv, VP, gas = vol.get("products") or {}, 0.0, []
+    for c, f, comp in R:
+        p = pv.get(comp.reduced_formula) or pv.get(f)
+        if not isinstance(p, dict) or not isinstance(p.get("volume_per_atom_A3"), (int, float)):
+            return None, f"산물 {f} 의 부피가 없다"
+        g = b2_in_list(f, B2_GAS)
+        if g:
+            gas.append(f)
+        VP += c * float(comp.num_atoms) * (0.0 if (acc == "gas0" and g) else float(p["volume_per_atom_A3"]))
+    if not VR > 0:
+        return None, "반응물 부피가 0 이다"
+    return 100.0 * (VP - VR) / VR, {"V_reactants_A3": VR, "V_products_A3": VP, "gas_products": gas,
+                                     "dV_per_SE_pct_기록만": (100.0 * (VP - VR) / VSE) if VSE > 0 else None}
+
+
+def b2_phi(row, rxn=None, gaps=None):
+    """⑥ Li 쪽 산물 부피 분율 (카드 §2 축 ⑥ R6a · R6b · R6c) — 산물마다 등급 (b2_product_class · 추적 원소와 상관없이 모든 산물) ·
+    부피 = 계수 × 원자 수 × 같은 hull 안정 엔트리 원자 부피. 휘발 산물은 분모에만 (φ_volatile). (사전, None) | (None, 사유)."""
+    vol = row.get("volumes") if isinstance(row, dict) else None
+    if not (isinstance(vol, dict) and vol.get("ok") is True):
+        return None, "부피 기록이 없거나 거부됐다"
+    try:
+        _, R = _b2_sides(row, row.get("reaction") if rxn is None else rxn)
+    except ValueError as ex:
+        return None, f"반응식 · 정확한 계수를 못 읽는다 ({ex})"
+    pv = vol.get("products") or {}
+    V = {"wide": 0.0, "narrow": 0.0, "metallic": 0.0, "undetermined": 0.0, "volatile": 0.0}
+    wh = wt = 0.0
+    prods = []
+    for c, f, comp in R:
+        p = pv.get(comp.reduced_formula) or pv.get(f)
+        if not isinstance(p, dict) or not isinstance(p.get("volume_per_atom_A3"), (int, float)):
+            return None, f"산물 {f} 의 부피가 없다"
+        v = c * float(comp.num_atoms) * float(p["volume_per_atom_A3"])
+        cls, why = b2_product_class(f, gaps or {})
+        V[cls] += v
+        host_el = {e.symbol for e in comp.elements} <= AX_HOST_ELEMS
+        if cls == "wide":
+            if host_el:
+                wh += v
+            else:
+                wt += v
+        prods.append({"product": f, "class": cls, "basis": why, "volume_A3": v, "host_elements_only": host_el,
+                      "material_id_hull": p.get("material_id"), "material_id_gap": ((gaps or {}).get(f) or {}).get("material_id")})
+    tot = sum(V.values())
+    if not tot > 0:
+        return None, "산물 부피가 0 이다"
+    out = {f"phi_{k}": V[k] / tot for k in V}
+    out.update({"phi_wide_host_el": wh / tot, "phi_wide_tracked": wt / tot, "V_products_A3": tot, "products": prods})
+    return out, None
+
+
+def b2_kinks(row, q):
+    """최소 kink 와 거의 겹치는 kink (|ΔdE| ≤ 1e-5 eV/atom · 카드 §2 축 ⑤ 거의_겹치는_kink) · 10 meV/atom 안 kink (R12) 에서 q(반응식) 값.
+    ({min_index, tie: [(i, 값)], near: [(i, 값)]}, None) | (None, 사유). 최소 kink 는 (x · 반응식) 이 같은 kink 하나여야 한다."""
+    ks = row.get("kinks") if isinstance(row, dict) else None
+    if not isinstance(ks, list) or not ks:
+        return None, "kink 기록이 없다"
+    x0, d0, r0 = row.get("mixing_x"), row.get("dE_eV_per_atom"), row.get("reaction")
+    try:
+        hit = [i for i, k in enumerate(ks) if k.get("reaction") == r0 and abs(float(k["x"]) - float(x0)) <= B2_T["x"]]
+    except (TypeError, ValueError, KeyError, AttributeError):
+        return None, "kink 기록을 못 읽는다"
+    if len(hit) != 1:
+        return None, f"최소 kink 가 kink 목록에 {len(hit)} 번 있다 (하나여야 한다)"
+    tie, near = [], []
+    for i, k in enumerate(ks):
+        dd = abs(float(k["dE_eV_per_atom"]) - float(d0))
+        if dd <= B2_T["near_kink_eV"] + 1e-12:
+            near.append((i, q(k["reaction"])))
+        if i != hit[0] and dd <= B2_T["tie_dE_eV"] + 1e-12:
+            tie.append((i, q(k["reaction"])))
+    return {"min_index": hit[0], "tie": tie, "near": near}, None
+
+
+def b2_row5(row, acc="hull"):
+    """한 행 (설계 · 호스트 × 상대) 의 ⑤ — {dv, abs, value (= |ΔV/V| · 모름이면 None), why, n_tie, tie_spread, near_spread}.
+    거의 겹치는 kink 의 |ΔV/V| 가 최소 kink 와 w_⑤ 를 넘게 다르면 그 행의 값은 모름 (카드 §2 · ED P2-1)."""
+    dv, info = b2_dv(row, None, acc)
+    if dv is None:
+        return {"dv": None, "abs": None, "value": None, "why": info}
+    kk, why = b2_kinks(row, lambda rx: b2_dv(row, rx, acc)[0])
+    if kk is None:
+        return {"dv": dv, "abs": abs(dv), "value": None, "why": why, **info}
+    ta = [None if v is None else abs(v) for _, v in kk["tie"]]
+    na = [abs(v) for _, v in kk["near"] if v is not None]
+    out = {"dv": dv, "abs": abs(dv), "n_tie": len(ta), "n_near": len(kk["near"]),
+           "tie_spread": max((abs(v - abs(dv)) for v in ta if v is not None), default=None),
+           "near_spread_기록만": (max(na) - min(na)) if na else None, "n_near_unreadable": sum(1 for _, v in kk["near"] if v is None), **info}
+    if any(v is None for v in ta):
+        out.update(value=None, why="거의 겹치는 kink 의 ΔV/V 를 못 낸다")
+    elif out["tie_spread"] is not None and out["tie_spread"] > B2_W["sv_ncm"]:
+        out.update(value=None, why=f"거의 겹치는 kink (|ΔdE| ≤ 1e-5) 와 |ΔV/V| 차 {out['tie_spread']:.3f} %p > w_⑤")
+    else:
+        out.update(value=abs(dv), why=None)
+    return out
+
+
+def b2_row6(row, gaps):
+    """한 행 (설계 · 호스트 × Li) 의 ⑥ — φ 들 + value (= φ_wide · 모름이면 None). φ_und > 0.01 이면 모름 (≤ 0.01 이면 미판정 산물은
+    '넓은 갭 아님') · 거의 겹치는 kink 의 φ_wide 가 w_⑥ 를 넘게 다르거나 그 kink 의 φ_und > 0.01 이면 모름."""
+    ph, why = b2_phi(row, None, gaps)
+    if ph is None:
+        return {"value": None, "why": why}
+    out = dict(ph)
+    if ph["phi_undetermined"] > B2_T["phi_und"]:
+        out.update(value=None, why=f"미판정 산물 부피 분율 {ph['phi_undetermined']:.4f} > 0.01")
+        return out
+    kk, why = b2_kinks(row, lambda rx: b2_phi(row, rx, gaps)[0])
+    if kk is None:
+        out.update(value=None, why=why)
+        return out
+    tv = [v for _, v in kk["tie"]]
+    nv = [v["phi_wide"] for _, v in kk["near"] if v is not None]
+    out.update(n_tie=len(tv), near_spread_기록만=(max(nv) - min(nv)) if nv else None)
+    if any(v is None or v["phi_undetermined"] > B2_T["phi_und"] for v in tv):
+        out.update(value=None, why="거의 겹치는 kink 의 φ 를 정할 수 없다 (못 읽음 · 미판정 > 0.01)")
+    elif tv and max(abs(v["phi_wide"] - ph["phi_wide"]) for v in tv) > B2_W["dphi_li"]:
+        out.update(value=None, why="거의 겹치는 kink 와 φ_wide 차 > w_⑥")
+    else:
+        out.update(value=ph["phi_wide"], why=None)
+    return out
+
+
+def b2_win(row, formula, gaps):
+    """④ 격자 전압 8 점 (카드 §2 축 ④ R4a–R4d) — ({'2.50': 점, …}, 요약). 점 = ax_design_class (축 ③ 산물 규칙 · 휘발 목록 ·
+    같은 우선순위) · f_ins = ⓐ 점 비율 (한 점이라도 ⓓ · ㉧ · 판독 오류면 모름) · F_win = 어느 점이든 ⓑ (없고 ⓓ · 오류가 있으면 모름)."""
+    trk = ax_tracked(formula, "WIN")
+    pts = {}
+    for V in B2_V:
+        key = f"{V:.2f}"
+        p = (row.get("by_voltage") or {}).get(key) or {}
+        cls, det = ax_design_class({"reaction": p.get("reaction"), "min_kink_at_endpoint": False}, trk, gaps,
+                                   classify=b2_product_class, extra_classes=("volatile",))
+        lam = None
+        if isinstance(p.get("li_released_per_fu"), (int, float)) and isinstance(row.get("n_atoms_fu"), (int, float)) and row["n_atoms_fu"] > 0:
+            lam = p["li_released_per_fu"] / row["n_atoms_fu"]
+        pts[key] = {"class": cls, "letter": AX_LETTER.get(cls), "fate": det,
+                    "volatile_share": {E: d["shares"].get("volatile", 0.0) for E, d in det.items() if isinstance(d, dict) and "shares" in d},
+                    "molecular_crystal_기록만": [f for f in (p.get("products") or []) if b2_in_list(f, B2_MOLECULAR)],
+                    "lambda_Li_per_atom": lam, "products": p.get("products"), "V_read": p.get("V_read"), "shifted_1mV": p.get("shifted_1mV")}
+    cl = [v["class"] for v in pts.values()]
+    f_ins = None if any(c in ("undetermined", "na", "fate_error") for c in cl) else sum(c == "wide" for c in cl) / len(B2_V)
+    F = True if "metallic" in cl else (None if any(c in ("undetermined", "fate_error") for c in cl) else False)
+    return pts, {"tracked": trk, "f_ins": f_ins, "F_win": F, "n_wide": sum(c == "wide" for c in cl), "classes": cl,
+                 "f_ins_why": None if f_ins is not None else "한 점 이상 ⓓ 미판정 · ㉧ 해당 없음 · 판독 오류 (R2 — 모름)",
+                 "release_onset_V_기록만": row.get("release_onset_V")}
+
+
+def b2_win_check(row):
+    """④ 한 행의 교차 검사 (G1b_④) — 다른 곳 목록. ① 도구가 고른 줄을 profile 에서 구간 규칙 (esw interval_index) 으로 다시 고른다
+    ② 그 줄 산물 = 기록 산물 ③ 기록 산물 = GrandPotentialPhaseDiagram 교차 산물 (Composition 열쇠) ④ 반응식 산물 = 기록 산물."""
+    esw, ir = _b2_mod("esw_grand_potential"), _b2_mod("interface_reactivity_v2")
+    prob = []
+    prof = row.get("profile") or []
+    try:
+        vks = [float(s["V_vs_Li_exact"]) for s in prof]
+    except (KeyError, TypeError, ValueError):
+        return ["profile 에 V_vs_Li_exact 가 없다"]
+    for V in B2_V:
+        key = f"{V:.2f}"
+        p = (row.get("by_voltage") or {}).get(key)
+        if not isinstance(p, dict) or "error" in p:
+            prob.append(f"{key} V 점이 없다 · 오류")
+            continue
+        k, vr, sh = esw.interval_index(vks, V)
+        if k is None or k != p.get("row_index") or abs(vr - float(p.get("V_read", -1))) > 1e-9 or bool(sh) != bool(p.get("shifted_1mV")):
+            prob.append(f"{key} V: 구간 규칙 줄 {k} ≠ 기록 {p.get('row_index')} (V_read · 1 mV 이동 포함)")
+            continue
+        try:
+            ks = lambda fs: sorted(_b2_key(f) for f in fs if f != "Li")
+            mine = ks(e["phase"] for e in prof[k].get("entries") or [])
+            rec, gp = ks(p.get("products") or []), ks(p.get("gp_products") or [])
+            _, R = ir.rxn_sides_pm(p.get("reaction"))
+            rx = sorted(ir.comp_key_pm(c) for _, f, c in R if f != "Li")
+        except Exception as ex:
+            prob.append(f"{key} V: 산물 · 반응식을 못 읽는다 ({type(ex).__name__})")
+            continue
+        if mine != rec:
+            prob.append(f"{key} V: 구간 줄 산물 ≠ 기록 산물")
+        if rec != gp:
+            prob.append(f"{key} V: 기록 산물 ≠ GrandPotentialPhaseDiagram 교차 산물")
+        if rx != rec:
+            prob.append(f"{key} V: 반응식 산물 ≠ 기록 산물")
+    return prob
+
+
+def _b2_jsonl(p, problems, tag):
+    rows = []
+    if not p.is_file():
+        return None
+    for i, ln in enumerate(p.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
+        if not ln.strip():
+            continue
+        try:
+            r = json.loads(ln)
+            if not isinstance(r, dict):
+                raise ValueError("행이 객체가 아니다")
+            rows.append(r)
+        except ValueError as e:
+            problems.append(f"{tag} {i} 번째 줄을 못 읽는다 ({type(e).__name__})")
+    return rows
+
+
+def b2_load(run_dir):
+    """묶음 2 출력 폴더 → 네 갈래 행 · 산물 갭 둘 · manifest · problems (조용히 버리지 않는다)."""
+    d, L = Path(run_dir), {"problems": []}
+    for k in B2_LANES:
+        L[k] = _b2_jsonl(d / f"{k}.jsonl", L["problems"], f"{k}.jsonl")
+    for k, nm in (("gaps_win", "product_gaps_win.json"), ("gaps_vol", "product_gaps_vol.json"), ("manifest", "manifest.json")):
+        p = d / nm
+        try:
+            L[k] = json.loads(p.read_text(encoding="utf-8")) if p.is_file() else None
+        except ValueError as e:
+            L[k] = None
+            L["problems"].append(f"{nm} 를 못 읽는다 ({type(e).__name__})")
+    return L
+
+
+def b2_sealed(spec=None):
+    """묶음 1 봉인 판독 넷 — sha16 결속 (마감 기록이 적은 값 · 그 기록 본문에도 같은 sha16 이 있어야 한다). ({이름: dict}, 문제 목록)."""
+    spec = spec or B2_SEALED
+    out, prob = {}, []
+    clo = B2_CLOSURE.read_text(encoding="utf-8") if B2_CLOSURE.is_file() else ""
+    for k, (p, sha) in spec.items():
+        p = Path(p)
+        if not p.is_file():
+            prob.append(f"{k}: {p.name} 없음")
+            continue
+        got = hashlib.sha256(p.read_bytes()).hexdigest()[:16]
+        if got != sha:
+            prob.append(f"{k}: {p.name} sha16 {got} ≠ 봉인 {sha}")
+        if spec is B2_SEALED and sha not in clo:
+            prob.append(f"{k}: 봉인 sha16 {sha} 가 마감 기록에 없다")
+        out[k] = json.loads(p.read_text(encoding="utf-8"))
+    return out, prob
+
+
+def b2_b1_ref():
+    """G3b 원자료 (묶음 1 닫힌계 jsonl 넷) · G3 MP 판 (묶음 1 manifest 둘) — {rows, versions, problems}."""
+    prob, rows, vers = [], [], set()
+    for k, nm in B2_B1_REF:
+        got = _b2_jsonl(B2_B1_RAW[k] / nm, prob, nm)
+        if got is None:
+            prob.append(f"{nm} 없음")
+        rows += got or []
+    for k, d in B2_B1_RAW.items():
+        try:
+            m = json.loads((d / "manifest.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            prob.append(f"{k} manifest 를 못 읽는다")
+            continue
+        for x in (m.get("invocations") or [m]):
+            vers |= {x.get("mp_db_version_before"), x.get("mp_db_version_after")}
+    return {"rows": rows, "versions": sorted(v for v in vers if v is not None), "has_none": None in vers, "problems": prob}
+
+
+def _b2_strip(d, path=()):
+    if isinstance(d, dict):
+        return {k: _b2_strip(v, path + (k,)) for k, v in d.items()
+                if not (k == "run_dir" or (path[-2:] == ("gates", "G5") and k == "card_sha256"))}
+    if isinstance(d, list):
+        return [_b2_strip(x, path) for x in d]
+    return d
+
+
+def _b2_diff(a, b, p="", out=None):
+    out = [] if out is None else out
+    if isinstance(a, dict) and isinstance(b, dict):
+        for k in sorted(set(a) | set(b), key=str):
+            if k not in a or k not in b:
+                out.append(f"{p}/{k}: 한쪽에만")
+            else:
+                _b2_diff(a[k], b[k], f"{p}/{k}", out)
+    elif isinstance(a, list) and isinstance(b, list):
+        if len(a) != len(b):
+            out.append(f"{p}: 길이 {len(a)} ≠ {len(b)}")
+        for i, (x, y) in enumerate(zip(a, b)):
+            _b2_diff(x, y, f"{p}[{i}]", out)
+    elif a != b:
+        out.append(f"{p}: 봉인 {a!r} ≠ 지금 {b!r}")
+    return out
+
+
+def b2_b1_repro(sealed):
+    """묶음 1 재현 (CLAUDE.md 상시 절차 · 카드 §3b 판독기) — 지금 도구로 축 ① · ② · ③ 판독 · 합치기 · +U 사후 민감도를 원자료에서 다시 내서
+    봉인 파일과 통째로 비교 (run_dir · G5 카드 sha 만 뺀다 — 카드 본문에 판독 기록이 뒤에 붙었다). {problems, selection, selection_sensitivity}."""
+    rt = lambda x: json.loads(json.dumps(x, ensure_ascii=False))
+    prob = []
+    n = rt(ax_readout(ROOT / sealed["ncm"]["run_dir"]))
+    h = hy_readout(ROOT / sealed["hyd"]["run_dir"], ncm=sealed["ncm"])
+    h["combination"] = ax_combine(sealed["ncm"], h)
+    l_ = li_readout(ROOT / sealed["li"]["run_dir"], ncm=sealed["ncm"], hyd=sealed["hyd"])
+    l_["combination"] = ax_combine(sealed["ncm"], sealed["hyd"], l_)
+    s_ = sens_plusU(ROOT / sealed["ncm"]["run_dir"], ROOT / sealed["li"]["run_dir"], sealed["hyd"], sealed["ncm"], sealed["li"])
+    s_ = {"kind": "post_hoc_sensitivity", "tool": "tools/cascade/analyze_cathode_reactivity.py --sens_plusU_gap",
+          "sealed_readouts": {k: "db/properties/" + p.name for k, p in SENS_SEALED.items()}, **s_}
+    for tag, a, b in (("축 ①", sealed["ncm"], n), ("축 ②", sealed["hyd"], rt(h)), ("축 ③", sealed["li"], rt(l_)), ("+U 민감도", sealed["sens"], rt(s_))):
+        d = _b2_diff(_b2_strip(a), _b2_strip(b))
+        prob += [f"{tag} {x}" for x in d[:10]] + ([f"{tag}: 다른 곳 {len(d)}"] if len(d) > 10 else [])
+    return {"problems": prob, "selection": rt(l_)["combination"].get("selection"), "selection_sensitivity": rt(s_).get("selection_sensitivity")}
+
+
+def b2_b1_plusU(sealed):
+    """R12 '+U 산물을 MP 갭으로 등급한 판' 의 축 ① · ③ 쪽 — 묶음 1 원자료를 같은 스위치로 다시 판독 (sens_plusU 와 같은 바꿈 · 스위치는 꼭 끈다)."""
+    AX_SENS["plusU_by_gap"] = True
+    try:
+        n = ax_readout(ROOT / sealed["ncm"]["run_dir"])
+        l_ = li_readout(ROOT / sealed["li"]["run_dir"], ncm=n, hyd=sealed["hyd"])
+    finally:
+        AX_SENS["plusU_by_gap"] = False
+    return n, l_
+
+
+def b2_flags(nr, hr, lr, F_win):
+    """R8 — (확정 표시, 모름 표시). 묶음 1 여섯 (봉인 판독 그대로) + 축 ④ F_win. 모름 = ⓓ 미판정 · 판독 오류 때문에 정할 수 없는 표시
+    (축 ① R2 · 축 ③ R2 · 축 ② H₂S 모름 · 축 ④ 의 점) · ㉧ 해당 없음은 F1 이 정의상 거짓 (모름 아님 · ED P1-3)."""
+    fl, unk = [], []
+    def put(name, v):
+        (fl if v is True else unk if v is None else []).append(name)
+    cn, cl = nr.get("class_LNO_half"), lr.get("class")
+    put(B2_FLAGS[0], True if cn == "metallic" else (None if cn in ("undetermined", "fate_error") else False))
+    put(B2_FLAGS[1], nr["delta_LNO_half_meV"] <= -AX["delta_meV"])
+    put(B2_FLAGS[2], bool(hr.get("F1_hyd")))
+    put(B2_FLAGS[3], True if hr.get("F2_H2S") else (None if hr.get("unknown") else False))
+    put(B2_FLAGS[4], True if cl == "metallic" else (None if cl in ("undetermined", "fate_error") else False))
+    put(B2_FLAGS[5], bool(lr.get("F2_Li")))
+    put(B2_FLAGS[6], F_win)
+    return fl, unk
+
+
+# ── 순위 기계 (합치는_규칙_묶음_2 R9 · R10 · R11 · R13) — 방향 표 B2_DIR 하나만 읽는다 ─────────────────────────────────────
+def b2_better(a, x, y, w):
+    """축 a 에서 x 가 y 보다 동률 폭 w 를 **넘게** 낫다 (방향 = B2_DIR · R9 · R11 · G7 · G8 이 이 함수만 쓴다)."""
+    return (x - y) > w if B2_DIR[a] == "larger" else (y - x) > w
+
+
+def b2_aligned(a, v):
+    """좋은 방향으로 맞춘 값 (클수록 좋게) — G7 · G8 의 Spearman ρ 는 이 값으로 낸다."""
+    return v if B2_DIR[a] == "larger" else -v
+
+
+def b2_ranks(line, axes, W):
+    """R9 — 줄 안에서 r_a(i) = 1 + #{j : 축 a 에서 j 가 i 보다 w_a 를 넘게 낫다}. line = [(열쇠, {축: 값})]."""
+    return {k: {a: 1 + sum(1 for _, v2 in line if b2_better(a, v2[a], v[a], W[a])) for a in axes} for k, v in line}
+
+
+def b2_lex(rv):
+    """leximin 비교 열쇠 — 순위 벡터를 나쁜 것 (큰 r) 부터 정렬 (작은 쪽이 앞)."""
+    return tuple(sorted(rv.values(), reverse=True))
+
+
+def b2_positions(lex):
+    """동률은 같은 번호 · 다음 번호는 건너뛴다 (1, 2, 2, 4)."""
+    return {k: 1 + sum(1 for l2 in lex.values() if l2 < l) for k, l in lex.items()}
+
+
+def b2_dominates(rj, ri, vj, vi, axes, W):
+    """R11 지배 — 모든 순위 축에서 r 이 크지 않고 · 한 축 이상에서 **값** 이 그 축 동률 폭을 넘게 낫다 (순위 벡터만 · ε-지배 아님)."""
+    return all(rj[a] <= ri[a] for a in axes) and any(b2_better(a, vj[a], vi[a], W[a]) for a in axes)
+
+
+def b2_layers(line, ranks, axes, W):
+    """R11 비지배 정렬 — {열쇠: 층}. 순환이 생기면 (일어나면 안 된다 · 카드 증명) RuntimeError."""
+    vals, left, layer, n = dict(line), [k for k, _ in line], {}, 0
+    while left:
+        n += 1
+        front = [i for i in left if not any(b2_dominates(ranks[j], ranks[i], vals[j], vals[i], axes, W) for j in left if j != i)]
+        if not front:
+            raise RuntimeError("R11 지배에 순환이 있다 — 일어나면 안 된다 (판독기 결함)")
+        for i in front:
+            layer[i] = n
+        left = [i for i in left if i not in front]
+    return layer
+
+
+def b2_weakest(rv):
+    m = max(rv.values())
+    return sorted(a for a, r in rv.items() if r == m)
+
+
+def b2_insert(uv, line, ranks, layers, axes, W, mode):
+    """모름 설계 u 를 줄 L 에 끼워 넣은 자리 (R10 · R11 구간 끝 · u 는 남의 r 을 세지 않는다).
+    모름 축: 낙관 'opt' → r = 1 · 그 축에서 누구도 u 보다 낫지 않다 / 비관 'pess' → r = 1 + |L| · 누구나 u 보다 넘게 낫다."""
+    n = len(line)
+    ru = {a: ((1 if mode == "opt" else 1 + n) if uv.get(a) is None else
+              1 + sum(1 for _, v in line if b2_better(a, v[a], uv[a], W[a]))) for a in axes}
+    lu = b2_lex(ru)
+    def bj(a, vj):
+        return (mode == "pess") if uv.get(a) is None else b2_better(a, vj[a], uv[a], W[a])
+    dom = [k for k, v in line if all(ranks[k][a] <= ru[a] for a in axes) and any(bj(a, v) for a in axes)]
+    return {"r": ru, "weakest_axes": b2_weakest(ru), "position": 1 + sum(1 for k, _ in line if b2_lex(ranks[k]) < lu),
+            "layer": 1 + max((layers[k] for k in dom), default=0)}
+
+
+def b2_rank(rows, axes, W=None, vkey="values", top_n=None):
+    """R10 약점 순위 · R11 Pareto 층 · R13 선택 — rows = 설계 기록 (comp_key · group 'A'|'B'|'?' · vkey 값 사전).
+    줄 = 모든 순위 축에 값이 있고 표시가 확정된 설계 · 같은 조성은 한 줄 · 무리 A 줄 먼저 · 무리 B 줄은 같은 규칙으로 따로 (번호는 A 뒤).
+    모름 설계 (축 모름 · 표시 모름 '?') 는 셈에 안 넣고 구간 (낙관 끝 · 비관 끝) 만 · 표시 모름 = 낙관 무리 A · 비관 무리 B."""
+    W, top_n = dict(W or B2_W), top_n or B2_T["top_n"]
+    units = {}
+    for r in rows:
+        u = units.setdefault(r["comp_key"], {"key": r["comp_key"], "species": [], "group": r["group"], "vals": {a: r[vkey].get(a) for a in axes}})
+        u["species"].append(r["species"])
+        if u["group"] != r["group"] or any(u["vals"][a] != r[vkey].get(a) for a in axes):
+            raise ValueError(f"같은 조성 {u['species']} 의 무리 · 값이 다르다 (G1c 가 먼저 막아야 한다)")
+    known = lambda u: all(u["vals"][a] is not None for a in axes)
+    lines = {}
+    for g in ("A", "B"):
+        L = [(u["key"], u["vals"]) for u in units.values() if u["group"] == g and known(u)]
+        rk = b2_ranks(L, axes, W)
+        lines[g] = {"line": L, "ranks": rk, "pos": b2_positions({k: b2_lex(rk[k]) for k, _ in L}), "layers": b2_layers(L, rk, axes, W)}
+    nA = len(lines["A"]["line"])
+    per = {}
+    for u in units.values():
+        k = u["key"]
+        if u["group"] in ("A", "B") and known(u):
+            t = lines[u["group"]]
+            per[k] = {"species": sorted(u["species"]), "group": u["group"], "in_line": True, "ranks": t["ranks"][k],
+                      "weakest_axes": b2_weakest(t["ranks"][k]), "position_in_group": t["pos"][k],
+                      "position": t["pos"][k] + (nA if u["group"] == "B" else 0), "pareto_layer": t["layers"][k]}
+            continue
+        go, gp = ("A" if u["group"] in ("A", "?") else "B"), ("B" if u["group"] in ("B", "?") else "A")
+        io = b2_insert(u["vals"], lines[go]["line"], lines[go]["ranks"], lines[go]["layers"], axes, W, "opt")
+        ip = b2_insert(u["vals"], lines[gp]["line"], lines[gp]["ranks"], lines[gp]["layers"], axes, W, "pess")
+        per[k] = {"species": sorted(u["species"]), "group": u["group"], "in_line": False,
+                  "unknown_axes": [a for a in axes if u["vals"][a] is None],
+                  "interval": {"optimistic": {"group": go, "position": io["position"] + (nA if go == "B" else 0), "layer": io["layer"],
+                                              "r": io["r"], "weakest_axes": io["weakest_axes"]},
+                               "pessimistic": {"group": gp, "position": ip["position"] + (nA if gp == "B" else 0), "layer": ip["layer"],
+                                               "r": ip["r"], "weakest_axes": ip["weakest_axes"]}}}
+    A = lines["A"]
+    sel = sorted(s for k, _ in A["line"] for s in per[k]["species"] if A["layers"][k] == 1)
+    top = [k for k, _ in A["line"] if A["pos"][k] <= top_n]
+    return {"axes": list(axes), "widths": {a: W[a] for a in axes}, "line_A_length": nA, "line_B_length": len(lines["B"]["line"]),
+            "per": per, "selection": sel, "layer1_keys": sorted((k for k, _ in A["line"] if A["layers"][k] == 1), key=str),
+            "top_keys": sorted(top, key=lambda k: (A["pos"][k], str(k))),
+            "top": sorted((s for k in top for s in per[k]["species"]), key=lambda s: s),
+            "top_share_of_line_pct": (100.0 * len(top) / nA) if nA else None,
+            "dft_resolve_candidates": sorted(({"species": per[u["key"]]["species"], "interval": per[u["key"]]["interval"]}
+                                              for u in units.values() if u["group"] == "?"), key=lambda d: d["species"])}
+
+
+def b2_iqr(vals):
+    if len(vals) < 4:
+        return None
+    q1, _, q3 = statistics.quantiles(vals, n=4, method="inclusive")
+    return q3 - q1
+
+
+def b2_g4(recs, a):
+    """G4 — 91 설계 (값 있는 설계) 의 IQR ≥ 동률 폭이면 '갈린다' · 무리 A 안 IQR · 값마다 설계 수 (분포) 기록 (ED P1-2 라)."""
+    v = [r["values"][a] for r in recs if r["values"][a] is not None]
+    vA = [r["values"][a] for r in recs if r["values"][a] is not None and r["group"] == "A"]
+    iqr, iqrA = b2_iqr(v), b2_iqr(vA)
+    cnt = {}
+    for x in v:
+        cnt[round(x, 6)] = cnt.get(round(x, 6), 0) + 1
+    return {"n": len(v), "iqr": iqr, "w": B2_W[a], "discriminates": iqr is not None and iqr >= B2_W[a],
+            "iqr_group_A_기록만": iqrA, "n_group_A": len(vA), "distribution": [[x, c] for x, c in sorted(cnt.items())],
+            "method": "statistics.quantiles(n=4, method='inclusive')"}
+
+
+def b2_rho(recs, a, b, vkey_b="values", group=None):
+    """좋은 방향으로 맞춘 Spearman ρ (G7 · G8) — 두 값이 다 있는 설계 · group 'A' 면 무리 A 안."""
+    pr = [(b2_aligned(a, r["values"][a]), b2_aligned(b if vkey_b == "values" else a, r[vkey_b][b]))
+          for r in recs if r["values"][a] is not None and r[vkey_b].get(b) is not None and (group is None or r["group"] == group)]
+    rho = _spearman([x for x, _ in pr], [y for _, y in pr])
+    return rho, len(pr)
+
+
+def b2_g8(recs, a):
+    """G8 (⑤ 회계 강건) — 91 설계에서 주 판 (hull 혼합) · 원자 부피 판 s_V 의 Spearman ρ (좋은 방향) ≥ 0.8 이면 통과 ·
+    두 판에서 ⑤ r 이 달라지는 무리 A 설계 수 (같은 조성은 한 줄 · w_⑤)."""
+    rho, n = b2_rho(recs, a, a, vkey_b="values_atom")
+    A, seen = [], set()
+    for r in recs:
+        if r["group"] == "A" and r["values"][a] is not None and r["values_atom"].get(a) is not None and r["comp_key"] not in seen:
+            seen.add(r["comp_key"])
+            A.append(r)
+    r1 = b2_ranks([(r["comp_key"], {a: r["values"][a]}) for r in A], (a,), B2_W)
+    r2 = b2_ranks([(r["comp_key"], {a: r["values_atom"][a]}) for r in A], (a,), B2_W)
+    return {"rho": rho, "n": n, "passes": rho is not None and rho >= B2_T["rho"],
+            "n_group_A_rank_differs": sum(1 for r in A if r1[r["comp_key"]][a] != r2[r["comp_key"]][a]), "n_group_A": len(A)}
+
+
+def _b2_decision():
+    d = json.loads((ROOT / "db" / "governance" / "decisions.json").read_text(encoding="utf-8"))
+    x = [y for y in d["decisions"] if y.get("id") == B2_DECISION]
+    return (x[0].get("decision_state"), x[0].get("card")) if x else (None, None)
+
+
+def b2_card_check(card_text):
+    """G5 — 카드 본문 조각 · 방향 표 · 휘발 목록이 판독기 상수와 같은가 (결과를 보고 바꾸면 여기서 걸린다)."""
+    miss = [t for t in B2_CARD_TEXT if t not in (card_text or "")]
+    try:
+        c = json.loads(card_text or "")
+        dt = c["합치는_규칙_묶음_2"]["방향_표"]
+        vl = c["2_그것을_재는_양"]["축_④_작동창_도펀트_행방"]["휘발_분자_산물_ED_P1_5"]["목록 (결과 전 봉인)"]
+    except (ValueError, KeyError, TypeError):
+        return {"ok": False, "missing_in_card": miss, "why": "카드 JSON 의 방향 표 · 휘발 목록을 못 읽는다"}
+    bad_dir = [a for a, k in B2_DIR_CARD.items() if dt.get(k) != B2_DIR_WORD[B2_DIR[a]]]
+    bad_vol = list(vl) != list(B2_VOLATILE)
+    return {"ok": not miss and not bad_dir and not bad_vol, "missing_in_card": miss, "direction_mismatch": bad_dir,
+            "volatile_list_mismatch": bad_vol, "card_sha256": hashlib.sha256((card_text or "").encode("utf-8")).hexdigest()}
+
+
+def b2_gates_static(L, expected, card_text, decision, sealed, bind_prob, b1_ref, b1_repro):
+    """값을 안 보는 게이트 — 결정 · B1 (봉인 결속 · 묶음 1 재현 · 표시 일치) · G1 · G2 · G3 · G3b · G5."""
+    G = {"decision": {"ok": decision[0] == "active" and decision[1] == "db/properties/" + B2_CARD.name,
+                      "state": decision[0], "card": decision[1]}}
+    # B1 — 묶음 1 봉인 판독을 sha 로 결속 · 지금 판독기로 재현 · 봉인 합치기 표시 = 여기서 다시 읽은 표시
+    fc = []
+    try:
+        nd, hd, ld = ({x["species"]: x for x in sealed[k]["rows"]} for k in ("ncm", "hyd", "li"))
+        for c in (sealed["li"].get("combination") or {}).get("rows") or []:
+            s_ = c["species"]
+            fl, _ = b2_flags(nd[s_], hd[s_], ld[s_], False)
+            if fl != list(c.get("flags") or []):
+                fc.append(f"{s_}: 봉인 합치기 표시 {c.get('flags')} ≠ 다시 읽은 표시 {fl}")
+        miss1 = sorted(set(expected) - (set(nd) & set(hd) & set(ld)))
+        if miss1:
+            fc.append(f"봉인 판독에 없는 설계 {miss1[:5]}")
+        for k, g in (("ncm", "G4"), ("li", "G4")):
+            if not sealed[k]["gates"].get(g, {}).get("discriminates"):
+                fc.append(f"봉인 판독 {k} {g} 가 '갈린다' 가 아니다 (축 ① · ③ 이 순위 축이 될 수 없다)")
+        if sealed["li"]["gates"].get("G7", {}).get("overlap") is not False:
+            fc.append("봉인 축 ③ G7 이 '안 겹침' 이 아니다")
+    except (KeyError, TypeError) as ex:
+        fc.append(f"봉인 판독을 못 읽는다 ({type(ex).__name__}: {ex})")
+    G["B1"] = {"ok": not bind_prob and not b1_repro["problems"] and not fc, "binding_problems": bind_prob,
+               "reproduction_problems": b1_repro["problems"][:20], "flag_consistency_problems": fc[:20],
+               "selection_bundle1": b1_repro.get("selection"), "selection_bundle1_plusU_sensitivity": b1_repro.get("selection_sensitivity")}
+    # G1 — manifest · 실행 사이 물리 도구 sha 같음 · 두 갈래 (vol · win) 실행
+    man = L.get("manifest") if isinstance(L.get("manifest"), dict) else {}
+    miss = [k for k in AX_MANIFEST_KEYS if man.get(k) in (None, "", [], {})]
+    invs = man.get("invocations") if isinstance(man.get("invocations"), list) and man.get("invocations") else []
+    if not invs:
+        miss.append("invocations")
+    for t in B2_PHYS_TOOLS:
+        v = {(x.get("tools_sha16") or {}).get(t) for x in invs if isinstance(x, dict)}
+        if len(v) != 1 or None in v:
+            miss.append(f"물리 도구 sha 가 실행마다 다르거나 없다 ({t})")
+    axes_run = {x.get("axis") for x in invs if isinstance(x, dict)}
+    if not {"vol", "win"} <= axes_run:
+        miss.append(f"실행 기록에 vol · win 두 갈래가 다 없다 ({sorted(a for a in axes_run if a)})")
+    lanes = man.get("lanes") if isinstance(man.get("lanes"), dict) else {}
+    bad_l = [k for k in B2_LANES if not isinstance(lanes.get(k), dict) or lanes[k].get("rc") != 0]
+    if bad_l:
+        miss.append(f"갈래 rc ≠ 0 또는 없음 {bad_l}")
+    G["G1"] = {"ok": not miss and not L["problems"], "missing": miss, "load_problems": L["problems"][:10], "n_invocations": len(invs)}
+    # G3 — 모든 실행의 MP 판 = 묶음 1 원자료 판
+    vs = {x.get(k) for x in invs if isinstance(x, dict) for k in ("mp_db_version_before", "mp_db_version_after")}
+    ref = set(b1_ref["versions"])
+    G["G3"] = {"ok": bool(vs) and None not in vs and len(ref) == 1 and not b1_ref["has_none"] and vs == ref
+                     and man.get("same_mp_version") is True,
+               "new_versions": sorted(v for v in vs if v), "bundle1_versions": sorted(ref)}
+    # G2 — 완결성 (91 + 호스트 × 두 갈래 · 조성 · 부피 · 갭 열쇠)
+    exp = dict(expected)
+    exp["HOST"] = "Li6PS5Cl"
+    prob = [f"{k}.jsonl 없음" for k in B2_LANES if L.get(k) is None]
+    ixv = ax_index((L.get("designs_vol") or []) + (L.get("host_vol") or []))
+    ixw = ax_index((L.get("designs_win") or []) + (L.get("host_win") or []))
+    gv = (L.get("gaps_vol") or {}).get("gaps") if isinstance(L.get("gaps_vol"), dict) else None
+    gw = (L.get("gaps_win") or {}).get("gaps") if isinstance(L.get("gaps_win"), dict) else None
+    if not isinstance(gv, dict):
+        prob.append("product_gaps_vol.json 이 없거나 꼴이 아니다 (Li 쪽 kink 산물 갭 조회가 안 돌았다)")
+    if not isinstance(gw, dict):
+        prob.append("product_gaps_win.json 이 없거나 꼴이 아니다 (창 산물 갭 조회가 안 돌았다)")
+    ir = _b2_mod("interface_reactivity_v2")
+    for sp, f in sorted(exp.items()):
+        for cat, cf in B2_PARTNERS.items():
+            rs = ixv.get((sp, cat)) or []
+            if len(rs) != 1 or not _ax_ok(rs[0]):
+                prob.append(f"{sp} × {cat}: 행 {len(rs)} 개 · 정상 {sum(1 for r in rs if _ax_ok(r))}")
+                continue
+            r = rs[0]
+            if r.get("formula") != f or r.get("cathode_formula") != cf:
+                prob.append(f"{sp} × {cat}: 조성 {r.get('formula')} · 상대 {r.get('cathode_formula')} ≠ 대상 {f} · {cf}")
+            vol = r.get("volumes")
+            if not (isinstance(vol, dict) and vol.get("ok") is True):
+                prob.append(f"{sp} × {cat}: 부피 기록이 없거나 거부 ({(vol or {}).get('refused', ['없음'])[:2] if isinstance(vol, dict) else '없음'})")
+                continue
+            if not isinstance(r.get("kinks"), list) or not r["kinks"]:
+                prob.append(f"{sp} × {cat}: kink 목록이 없다")
+                continue
+            try:
+                ps = {c.reduced_formula for k in r["kinks"] for _, _, c in ir.rxn_sides_pm(k["reaction"])[1]}
+                ps |= {c.reduced_formula for _, _, c in ir.rxn_sides_pm(r["reaction"])[1]}
+                rk = {_b2_key(f), _b2_key(cf)}
+                odd = sorted({ff for rx in [r["reaction"]] + [k["reaction"] for k in r["kinks"]]
+                              for _, ff, c in ir.rxn_sides_pm(rx)[0] if ir.comp_key_pm(c) not in rk})
+            except (ValueError, KeyError, TypeError):
+                prob.append(f"{sp} × {cat}: kink 반응식을 못 읽는다")
+                continue
+            if odd:
+                prob.append(f"{sp} × {cat}: 좌변에 반응물 (SE · 상대) 이 아닌 항 {odd[:3]}")
+            nov = sorted(p for p in ps if p not in (vol.get("products") or {}))
+            if nov:
+                prob.append(f"{sp} × {cat}: 산물 구조 부피 없음 {nov[:4]}")
+            kt = vol.get("kink_terms") if isinstance(vol.get("kink_terms"), dict) else {}
+            not_t = [k.get("reaction") for k in r["kinks"] if k.get("reaction") not in kt] + ([] if r["reaction"] in kt else ["(최소 kink)"])
+            if not_t:
+                prob.append(f"{sp} × {cat}: 정확한 계수 기록 (kink_terms) 없는 반응식 {len(not_t)}")
+            for t in ("c1", "c2"):
+                if not isinstance(((vol.get("reactants") or {}).get(t) or {}).get("mixture_volume_per_atom_A3"), (int, float)):
+                    prob.append(f"{sp} × {cat}: 반응물 {t} 부피 없음")
+            if not isinstance((vol.get("argyrodite_Li6PS5Cl") or {}).get("volume_per_atom_A3"), (int, float)):
+                prob.append(f"{sp} × {cat}: 아지로다이트 원자 부피 없음")
+            if cat == "Li" and isinstance(gv, dict):
+                nog = sorted(p for p in ps if p != "Li" and p not in gv)
+                if nog:
+                    prob.append(f"{sp} × Li: Li 쪽 산물 갭 조회 없음 {nog[:4]}")
+        rs = ixw.get((sp, "WIN")) or []
+        if len(rs) != 1 or "error" in rs[0] or rs[0].get("mode") != "grand_potential_window":
+            prob.append(f"{sp} × 창: 정상 행 하나가 아니다 ({len(rs)})")
+            continue
+        r = rs[0]
+        if r.get("formula") != f:
+            prob.append(f"{sp} × 창: 조성 {r.get('formula')} ≠ 대상 {f}")
+        bv = r.get("by_voltage") or {}
+        for V in B2_V:
+            p = bv.get(f"{V:.2f}")
+            if not isinstance(p, dict) or "error" in p or not isinstance(p.get("reaction"), str):
+                prob.append(f"{sp} × 창 {V:.2f} V: 점이 없다 · 오류")
+                continue
+            if isinstance(gw, dict):
+                nog = sorted(x for x in (p.get("products") or []) if x != "Li" and x not in gw)
+                if nog:
+                    prob.append(f"{sp} × 창 {V:.2f} V: 산물 갭 조회 없음 {nog[:4]}")
+    extra = sorted({k[0] for k in list(ixv) + list(ixw)} - set(exp))
+    if extra:
+        prob.append(f"카드에 없는 종 {extra[:5]}")
+    G["G2"] = {"ok": not prob, "n_problems": len(prob), "problems": prob[:30], "n_expected": len(exp)}
+    # G3b — 부피 갈래 최소 kink 반응식 · x* · dE = 묶음 1 원자료 (interface_reactivity_v2.closed_repro_compare)
+    keys = [(sp, cat) for sp in exp for cat in B2_PARTNERS]
+    g3b = ir.closed_repro_compare((L.get("designs_vol") or []) + (L.get("host_vol") or []), b1_ref["rows"],
+                                  labels=tuple(B2_PARTNERS), expected=keys)
+    G["G3b"] = {**g3b, "ok": bool(g3b["ok"]) and not b1_ref["problems"] and g3b["n_keys"] == len(exp) * len(B2_PARTNERS),
+                "ref_problems": b1_ref["problems"][:5]}
+    G["G5"] = b2_card_check(card_text)
+    return G
+
+
+def b2_design_values(L, expected, sealed, gaps_vol, gaps_win):
+    """설계 · 호스트 기록 — ④ ⑤ ⑥ 값 (주 · 기록만 판) · 축 ① · ③ 봉인 값 · 표시 · 무리. G2 를 지난 뒤에만 부른다."""
+    ixv = ax_index((L["designs_vol"] or []) + (L["host_vol"] or []))
+    ixw = ax_index((L["designs_win"] or []) + (L["host_win"] or []))
+    def five(sp):
+        return {cat: {acc: b2_row5(ixv[(sp, cat)][0], acc) for acc in ("hull", "atom", "gas0")} for cat in B2_PARTNERS}
+    host = {"w5": five("HOST"), "w6": b2_row6(ixv[("HOST", "Li")][0], gaps_vol)}
+    hp, hs = b2_win(ixw[("HOST", "WIN")][0], "Li6PS5Cl", gaps_win)
+    host.update(w4_points=hp, w4=hs, win_row=ixw[("HOST", "WIN")][0])
+    nd, hd, ld = ({x["species"]: x for x in sealed[k]["rows"]} for k in ("ncm", "hyd", "li"))
+    recs = []
+    for sp in sorted(expected):
+        f = expected[sp]
+        w5 = five(sp)
+        w6 = b2_row6(ixv[(sp, "Li")][0], gaps_vol)
+        pts, w4 = b2_win(ixw[(sp, "WIN")][0], f, gaps_win)
+        def sv(cat, acc, signed=False):
+            a, b = w5[cat][acc], host["w5"][cat][acc]
+            if a.get("value") is None or b.get("value") is None:
+                return None
+            return (a["dv"] - b["dv"]) if signed else (a["value"] - b["value"])
+        dphi = None if (w6.get("value") is None or host["w6"].get("value") is None) else w6["value"] - host["w6"]["value"]
+        fl, unk = b2_flags(nd[sp], hd[sp], ld[sp], w4["F_win"])
+        wr = ixw[(sp, "WIN")][0]
+        hr_ = host["win_row"]
+        dl = {}
+        for V in B2_V:
+            a, b = pts[f"{V:.2f}"]["lambda_Li_per_atom"], hp[f"{V:.2f}"]["lambda_Li_per_atom"]
+            dl[f"{V:.2f}"] = None if (a is None or b is None) else a - b
+        on, onh = wr.get("release_onset_V"), hr_.get("release_onset_V")
+        recs.append({
+            "species": sp, "formula": f, "comp_key": _b2_key(f), "flags": fl, "flags_unknown": unk,
+            "group": "B" if fl else ("?" if unk else "A"),
+            "class_ncm_bundle1": nd[sp].get("class_LNO_half"), "class_li_bundle1": ld[sp].get("class"),
+            "values": {"d_ncm": nd[sp]["delta_LNO_half_meV"], "d_li": ld[sp]["delta_Li_meV"], "sv_ncm": sv("LNO_half", "hull"),
+                       "sv_li": sv("Li", "hull"), "dphi_li": dphi, "f_ins": w4["f_ins"],
+                       "sv_ncm_signed": sv("LNO_half", "hull", True), "sv_li_signed": sv("Li", "hull", True)},
+            "values_atom": {"sv_ncm": sv("LNO_half", "atom"), "sv_li": sv("Li", "atom")},
+            "values_gas0": {"sv_ncm": sv("LNO_half", "gas0"), "sv_li": sv("Li", "gas0")},
+            "record_only": {"sv_ncm_LNO_full_pp": sv("LNO_full", "hull"), "dphi_met_Li": (None if w6.get("phi_metallic") is None or
+                            host["w6"].get("phi_metallic") is None else w6["phi_metallic"] - host["w6"]["phi_metallic"]),
+                            "dphi_wide_host_el_Li": (None if dphi is None else w6["phi_wide_host_el"] - host["w6"]["phi_wide_host_el"]),
+                            "dphi_wide_tracked_Li": (None if dphi is None else w6["phi_wide_tracked"] - host["w6"]["phi_wide_tracked"]),
+                            "d_lambda_by_V": dl, "release_onset_shift_V": None if (on is None or onh is None) else on - onh,
+                            "sv_near_spread_LNO_half_pp": w5["LNO_half"]["hull"].get("near_spread_기록만"),
+                            "sv_near_spread_Li_pp": w5["Li"]["hull"].get("near_spread_기록만"),
+                            "phi_near_spread_Li": w6.get("near_spread_기록만")},
+            "w5": w5, "w6": w6, "w4": w4, "w4_points": pts})
+    return host, recs
+
+
+def b2_gates_values(L, expected, host, recs, sealed):
+    """값을 쓰는 막는 게이트 — G1b (⑤ 앵커 · 상대 혼합 기체 · ④ 앵커 · 교차 · 구간 재현) · G1c (Li2S ≡ 호스트 · 같은 조성 · 원자 보존)."""
+    ir = _b2_mod("interface_reactivity_v2")
+    G = {}
+    a5 = host["w5"]["Li"]["hull"]
+    gas_p = []
+    for r in (L["designs_vol"] or []) + (L["host_vol"] or []):
+        dec = ((((r.get("volumes") or {}).get("reactants") or {}).get("c2") or {}).get("decomposition") or [])
+        g = [d.get("phase") for d in dec if b2_in_list(d.get("phase", ""), B2_GAS)]
+        if g:
+            gas_p.append(f"{r.get('species')} × {r.get('cathode')}: {g}")
+    ok5 = a5.get("dv") is not None and a5["dv"] < 0 and B2_T["anchor_lo_pct"] <= a5["dv"] <= B2_T["anchor_hi_pct"]
+    hw, hp = host["win_row"], host["w4_points"]
+    rel_all = all(isinstance(((hw.get("by_voltage") or {}).get(f"{V:.2f}") or {}).get("li_released_per_fu"), (int, float))
+                  and hw["by_voltage"][f"{V:.2f}"]["li_released_per_fu"] > 1e-9 for V in B2_V)
+    onset = hw.get("release_onset_V")
+    licl = any(_b2_key(f) == _b2_key("LiCl") for f in (hp["2.50"]["products"] or []))
+    xc = []
+    for r in (L["designs_win"] or []) + (L["host_win"] or []):
+        xc += [f"{r.get('species')}: {x}" for x in b2_win_check(r)]
+    ok4 = rel_all and isinstance(onset, (int, float)) and onset < B2_V[0] and licl and not xc
+    h425 = hp["4.25"]["products"] or []
+    G["G1b"] = {"ok": bool(ok5 and not gas_p and ok4),
+                "⑤_host_Li_dV_pct": a5.get("dv"), "⑤_anchor_window_pct": [B2_T["anchor_lo_pct"], B2_T["anchor_hi_pct"]], "⑤_ok": bool(ok5),
+                "⑤_partner_mixture_gas": gas_p[:10],
+                "④_host_releases_Li_all_8": rel_all, "④_host_release_onset_V": onset, "④_host_LiCl_at_2.50": licl,
+                "④_crosscheck_problems": xc[:20], "④_n_crosscheck_problems": len(xc), "④_ok": bool(ok4),
+                "기록만_host_4.25V_products": h425,
+                "기록만_host_4.25V_has_Li_phase": any(any(e == "Li" for e, _ in _b2_key(f)) for f in h425),
+                "기록만_host_LNO_half_dV_pct": host["w5"]["LNO_half"]["hull"].get("dv")}
+    # G1c
+    prob = []
+    hk = _b2_key("Li6PS5Cl")
+    same_h = [r for r in recs if r["comp_key"] == hk]
+    if "Li2S" in expected and not any(r["species"] == "Li2S" for r in same_h):
+        prob.append("Li2S 설계의 조성이 호스트 (Cl4Li24P4S20 ≡ Li6PS5Cl) 와 다르다")
+    def num_eq(a, b):
+        if a is None or b is None:
+            return a is None and b is None
+        return abs(a - b) <= B2_T["g1c"]
+    for r in same_h:
+        for cat in B2_PARTNERS:
+            for acc in ("hull", "atom", "gas0"):
+                if not num_eq(r["w5"][cat][acc].get("dv"), host["w5"][cat][acc].get("dv")):
+                    prob.append(f"{r['species']} ≢ 호스트: ⑤ {cat} {acc}")
+        for k in ("phi_wide", "phi_metallic", "phi_undetermined", "phi_volatile"):
+            if not num_eq(r["w6"].get(k), host["w6"].get(k)):
+                prob.append(f"{r['species']} ≢ 호스트: ⑥ {k}")
+        for V in B2_V:
+            a, b = r["w4_points"][f"{V:.2f}"], host["w4_points"][f"{V:.2f}"]
+            if a["class"] != b["class"] or not num_eq(a["lambda_Li_per_atom"], b["lambda_Li_per_atom"]) \
+                    or sorted(map(_b2_key, a["products"] or [])) != sorted(map(_b2_key, b["products"] or [])):
+                prob.append(f"{r['species']} ≢ 호스트: ④ {V:.2f} V")
+        if r["w4"]["f_ins"] != host["w4"]["f_ins"] or r["w4"]["F_win"] != host["w4"]["F_win"] \
+                or not num_eq(r["w4"]["release_onset_V_기록만"], host["w4"]["release_onset_V_기록만"]):
+            prob.append(f"{r['species']} ≢ 호스트: ④ f_ins · F_win · 개시")
+    groups = {}
+    for r in recs:
+        groups.setdefault(r["comp_key"], []).append(r)
+    nd, hd, ld = ({x["species"]: x for x in sealed[k]["rows"]} for k in ("ncm", "hyd", "li"))
+    dup = []
+    for ck, rs in groups.items():
+        if len(rs) < 2:
+            continue
+        dup.append(sorted(r["species"] for r in rs))
+        a = rs[0]
+        for b in rs[1:]:
+            for k in a["values"]:
+                if not num_eq(a["values"][k], b["values"][k]):
+                    prob.append(f"{a['species']} ≢ {b['species']}: {k}")
+            for vk in ("values_atom", "values_gas0", "record_only"):
+                if json.dumps(a[vk], sort_keys=True, default=str) != json.dumps(b[vk], sort_keys=True, default=str):
+                    prob.append(f"{a['species']} ≢ {b['species']}: {vk}")
+            if (a["flags"], a["flags_unknown"]) != (b["flags"], b["flags_unknown"]):
+                prob.append(f"{a['species']} ≢ {b['species']}: 표시")
+            if a["w4"]["classes"] != b["w4"]["classes"]:
+                prob.append(f"{a['species']} ≢ {b['species']}: ④ 등급")
+            for k_, dd in (("delta_LNO_half_meV", nd), ("delta_hyd_meV", hd), ("delta_Li_meV", ld)):
+                if dd[a["species"]].get(k_) != dd[b["species"]].get(k_):
+                    prob.append(f"{a['species']} ≢ {b['species']}: 묶음 1 {k_}")
+    nb, worst, worst_x = 0, 0.0, 0.0
+    for r in (L["designs_vol"] or []) + (L["host_vol"] or []):
+        for rx in [r.get("reaction")] + [k.get("reaction") for k in r.get("kinks") or []]:
+            ok_, w_, why = ir.rxn_balance_pm(rx)
+            nb += 1
+            worst = max(worst, w_ or 0.0)
+            if not ok_:
+                prob.append(f"{r.get('species')} × {r.get('cathode')}: 원자 보존 ({why})")
+            try:
+                Lx, Rx = _b2_sides(r, rx)
+                el = {}
+                for sgn, side in ((1.0, Lx), (-1.0, Rx)):
+                    for c, _, comp in side:
+                        for e, n_ in comp.items():
+                            el.setdefault(e.symbol, [0.0, 0.0])[0 if sgn > 0 else 1] += c * float(n_)
+                wx = max((abs(a - b) / max(abs(a), abs(b)) for a, b in el.values() if max(abs(a), abs(b)) > 0), default=0.0)
+                worst_x = max(worst_x, wx)
+                if wx > 1e-8:
+                    prob.append(f"{r.get('species')} × {r.get('cathode')}: 정확한 계수 원자 보존 {wx:.2e} > 1e-8")
+            except ValueError as ex:
+                prob.append(f"{r.get('species')} × {r.get('cathode')}: 정확한 계수를 못 읽는다 ({ex})")
+    for r in (L["designs_win"] or []) + (L["host_win"] or []):
+        rxs = [v.get("reaction") for v in (r.get("by_voltage") or {}).values()] + [s.get("reaction") for s in r.get("profile") or []]
+        for rx in rxs:
+            ok_, w_, why = ir.rxn_balance_pm(rx)
+            nb += 1
+            worst = max(worst, w_ or 0.0)
+            if not ok_:
+                prob.append(f"{r.get('species')} × 창: 원자 보존 ({why})")
+    G["G1c"] = {"ok": not prob, "problems": prob[:30], "n_problems": len(prob), "same_as_host": [r["species"] for r in same_h],
+                "same_composition_groups": sorted(dup), "n_reactions_checked": nb, "worst_relative_imbalance_string": worst,
+                "worst_relative_imbalance_exact": worst_x,
+                "rule": "Li2S ≡ 호스트 · 같은 조성 설계 ≡ (모든 축) · 반응식 원자 보존 (pymatgen Composition · 문자열 1e-3 · 정확한 계수 1e-8 상대)"}
+    return G
+
+
+def b2_admission(recs, sealed):
+    """R7 · G4 · G8 · G7 — 순서 (① → ③ → ⑤NCM → ⑤Li → ⑥Li → ④) 대로 새 축을 넣는다. (순위 축, 게이트 기록)."""
+    adm = [a for a, k in (("d_ncm", "ncm"), ("d_li", "li")) if sealed[k]["gates"].get("G4", {}).get("discriminates")]
+    G4, G7, G8 = {}, {"d_li_vs_d_ncm_bundle1": sealed["li"]["gates"].get("G7")}, {}
+    for a in B2_NEW:
+        G4[a] = b2_g4(recs, a)
+        if a in ("sv_ncm", "sv_li"):
+            G8[a] = b2_g8(recs, a)
+        rh = {}
+        for b in adm:
+            rho, n = b2_rho(recs, a, b)
+            rA, nA = b2_rho(recs, a, b, group="A")
+            rh[b] = {"rho_aligned": rho, "n": n, "rho_aligned_group_A_기록만": rA, "n_group_A": nA,
+                     "overlap": None if rho is None else rho >= B2_T["rho"], "conflict": None if rho is None else rho <= -B2_T["rho"]}
+        ok = (G4[a]["discriminates"] and (a not in G8 or G8[a]["passes"]) and all(v["rho_aligned"] is not None for v in rh.values())
+              and not any(v["overlap"] for v in rh.values()))
+        G7[a] = {"vs_admitted": rh, "admitted": bool(ok), "conflicts": [b for b, v in rh.items() if v["conflict"]],
+                 "why_not": None if ok else ("G4 — 못 가른다" if not G4[a]["discriminates"] else
+                                             "G8 — 두 회계 판 순위가 다르다" if a in G8 and not G8[a]["passes"] else
+                                             "G7 — 이미 들어간 축과 겹친다 (ρ ≥ 0.8)" if any(v["overlap"] for v in rh.values()) else "G7 — ρ 를 못 낸다")}
+        if ok:
+            adm.append(a)
+    return adm, {"G4": G4, "G7": G7, "G8": G8}
+
+
+def b2_r12(recs, axes, main, plus_u=None):
+    """R12 강건성 (기록만) — 판마다 무리 A 상위 10 겹침 · 선택. 판은 순위 축 집합을 그대로 두고 그 판이 바꾸는 것 하나만 바꾼다."""
+    top0 = set(main["top_keys"])
+    def summ(r):
+        return {"axes": r["axes"], "widths": r["widths"], "line_A_length": r["line_A_length"], "top": r["top"],
+                "overlap_top_with_main": len(top0 & set(r["top_keys"])), "selection": r["selection"]}
+    out = {"leave_one_axis_out": {a: summ(b2_rank(recs, [x for x in axes if x != a])) for a in axes},
+           "all_widths_x0.5": summ(b2_rank(recs, axes, {a: B2_W[a] * 0.5 for a in axes})),
+           "all_widths_x2": summ(b2_rank(recs, axes, {a: B2_W[a] * 2.0 for a in axes})),
+           "one_width_at_a_time": {f"{a}_x{f}": summ(b2_rank(recs, axes, {**B2_W, a: B2_W[a] * f}))
+                                   for a in axes if a in B2_NEW for f in (0.5, 2.0)},
+           "pareto_layer1_vs_top": {"layer1": main["selection"], "top": main["top"],
+                                    "overlap": len(set(main["layer1_keys"]) & top0)}}
+    sv = [a for a in axes if a in ("sv_ncm", "sv_li")]
+    if sv:
+        sg_axes = [a + "_signed" if a in sv else a for a in axes]
+        out["signed_dV_Xin_Li_기록만"] = summ(b2_rank(recs, sg_axes, {**B2_W, **{a + "_signed": B2_W[a] for a in sv}}))
+        out["gas0"] = summ(b2_rank([{**r, "values": {**r["values"], **{a: r["values_gas0"][a] for a in sv}}} for r in recs], axes))
+        out["atom_volume"] = summ(b2_rank([{**r, "values": {**r["values"], **{a: r["values_atom"][a] for a in sv}}} for r in recs], axes))
+    else:
+        out["signed_dV_Xin_Li_기록만"] = out["gas0"] = out["atom_volume"] = {"why": "⑤ 가 순위 축이 아니다"}
+    if plus_u is not None:
+        out["plusU_by_gap"] = summ(b2_rank(plus_u, axes))
+    return out
+
+
+def b2_readout(run_dir, expected=None, card_text=None, decision=None, sealed=None, b1_ref=None, b1_repro=None, plus_u_b1=None):
+    """카드 §2 · §4 · 합치는_규칙_묶음_2 대로 판독 — 막는 게이트 (결정 · B1 · G1 · G1b · G1c · G2 · G3 · G3b · G5) 하나라도 불통과면
+    표를 내지 않는다 · 새 연속 축이 하나도 순위에 못 들면 (G4 · G7 · G8) R10 · R11 · R12 · R13 을 내지 않는다 (§9).
+    expected · card_text · decision · sealed · b1_ref · b1_repro · plus_u_b1 는 selftest 용 (기본 = 저장소의 진짜 파일)."""
+    res = {"card": "db/properties/" + B2_CARD.name, "decision": B2_DECISION, "run_dir": str(run_dir),
+           "constants": {"widths": B2_W, "directions": {a: B2_DIR[a] for a in B2_AXES}, "voltages_V": list(B2_V),
+                         "volatile_list": list(B2_VOLATILE), "gas_list": list(B2_GAS), "thresholds": B2_T},
+           "⛔": "상대값 · 등급 · 순위 (줄 안 상대 위치) 만 — 순위는 DFT 확인 후보 목록이지 결론이 아니다 (R13) · MP 갭 · 부피는 외부 PBE 값"}
+    if not _b2_has_pm():
+        res.update(blocking=["pymatgen"], **{"⛔_표_없음": "pymatgen 이 없다 — Composition 대조 없이 판독하지 않는다"})
+        return res
+    L = b2_load(run_dir)
+    expected = ax_roster() if expected is None else expected
+    card_text = B2_CARD.read_text(encoding="utf-8") if card_text is None else card_text
+    decision = _b2_decision() if decision is None else decision
+    bind = []
+    if sealed is None:
+        sealed, bind = b2_sealed()
+    b1_ref = b2_b1_ref() if b1_ref is None else b1_ref
+    b1_repro = b2_b1_repro(sealed) if b1_repro is None else b1_repro
+    G = b2_gates_static(L, expected, card_text, decision, sealed, bind, b1_ref, b1_repro)
+    recs = host = None
+    if G["G2"]["ok"]:
+        gv, gw = L["gaps_vol"]["gaps"], L["gaps_win"]["gaps"]
+        host, recs = b2_design_values(L, expected, sealed, gv, gw)
+        G.update(b2_gates_values(L, expected, host, recs, sealed))
+    else:
+        G["G1b"] = G["G1c"] = {"ok": False, "why": "G2 불통과 — 값을 내지 않는다 (부분 판독 금지)"}
+    res["gates"] = G
+    res["blocking"] = [k for k in ("decision", "B1", "G1", "G1b", "G1c", "G2", "G3", "G3b", "G5") if not G[k]["ok"]]
+    if res["blocking"]:
+        res["⛔_표_없음"] = f"막는 게이트 불통과 {res['blocking']} — 판독하지 않는다 (멈춘다 · 닫는 것이 아니다 · 카드 §9)"
+        return res
+    adm, gg = b2_admission(recs, sealed)
+    G.update(gg)
+    new_in = [a for a in adm if a in B2_NEW]
+    res["axes_ranking"] = adm
+    res["host"] = {"w5": host["w5"], "w6": {k: v for k, v in host["w6"].items() if k != "products"}, "w4": host["w4"]}
+    cnt = {"A": 0, "B": 0, "?": 0}
+    for r in recs:
+        cnt[r["group"]] += 1
+    res["summary"] = {"n_designs": len(recs), "groups": cnt, "n_F_win": sum(1 for r in recs if B2_FLAGS[6] in r["flags"]),
+                      "n_F_win_unknown": sum(1 for r in recs if B2_FLAGS[6] in r["flags_unknown"]), "new_axes_in_ranking": new_in}
+    if not new_in:
+        res["ranking"] = None
+        res["⛔_순위_없음"] = "새 연속 축이 하나도 순위에 못 들었다 (G4 · G7 · G8) — R10 · R11 을 내지 않는다 (카드 §9 · 축 ① · ③ 만의 순위는 묶음 1 마감의 '⛔ 순위를 매겨 보려는 것')"
+        res["rows"] = [{k: r[k] for k in ("species", "formula", "group", "flags", "flags_unknown", "values", "record_only")} for r in recs]
+        return res
+    main_ = b2_rank(recs, adm)
+    pu = b2_plus_u_rows(L, sealed, recs, plus_u_b1)
+    res["ranking"] = {k: v for k, v in main_.items() if k != "per"}
+    res["R12"] = b2_r12(recs, adm, main_, pu)
+    per = main_["per"]
+    res["rows"] = []
+    for r in recs:
+        p = per[r["comp_key"]]
+        res["rows"].append({**{k: r[k] for k in ("species", "formula", "group", "flags", "flags_unknown", "values", "values_atom",
+                                                 "values_gas0", "record_only", "class_ncm_bundle1", "class_li_bundle1")},
+                            "unknown_why": {a: w for a, w in (("sv_ncm", r["w5"]["LNO_half"]["hull"].get("why")), ("sv_li", r["w5"]["Li"]["hull"].get("why")),
+                                                              ("dphi_li", r["w6"].get("why")), ("f_ins", r["w4"].get("f_ins_why"))) if w},
+                            "same_composition_as": [s for s in p["species"] if s != r["species"]],
+                            **{k: p.get(k) for k in ("in_line", "ranks", "weakest_axes", "position", "position_in_group", "pareto_layer",
+                                                     "interval", "unknown_axes")},
+                            "selected": r["species"] in main_["selection"], "top": r["species"] in main_["top"],
+                            "w4": {k: v for k, v in r["w4"].items()}, "w4_points": {V: {k: v for k, v in pt.items() if k != "fate"}
+                                                                                   for V, pt in r["w4_points"].items()},
+                            "w5": r["w5"], "w6": {k: v for k, v in r["w6"].items()}})
+    return res
+
+
+def b2_plus_u_rows(L, sealed, recs, plus_u_b1=None):
+    """R12 +U 판의 설계 기록 — 축 ① · ③ 표시 · 등급은 같은 스위치로 다시 읽은 묶음 1 (plus_u_b1 = (축 ① 판독, 축 ③ 판독)) ·
+    ④ ⑥ 는 같은 스위치로 다시 등급 · 값 (⑤ · 축 ① · ③ δ 는 그대로). 스위치는 꼭 끈다."""
+    if plus_u_b1 is None:
+        plus_u_b1 = b2_b1_plusU(sealed)
+    nU, lU = ({x["species"]: x for x in plus_u_b1[i]["rows"]} for i in (0, 1))
+    hd = {x["species"]: x for x in sealed["hyd"]["rows"]}
+    gv, gw = L["gaps_vol"]["gaps"], L["gaps_win"]["gaps"]
+    ixv = ax_index((L["designs_vol"] or []) + (L["host_vol"] or []))
+    ixw = ax_index((L["designs_win"] or []) + (L["host_win"] or []))
+    AX_SENS["plusU_by_gap"] = True
+    try:
+        h6 = b2_row6(ixv[("HOST", "Li")][0], gv)
+        out = []
+        for r in recs:
+            sp = r["species"]
+            w6 = b2_row6(ixv[(sp, "Li")][0], gv)
+            _, w4 = b2_win(ixw[(sp, "WIN")][0], r["formula"], gw)
+            fl, unk = b2_flags(nU[sp], hd[sp], lU[sp], w4["F_win"])
+            v = dict(r["values"])
+            v["f_ins"] = w4["f_ins"]
+            v["dphi_li"] = None if (w6.get("value") is None or h6.get("value") is None) else w6["value"] - h6["value"]
+            out.append({"species": sp, "comp_key": r["comp_key"], "group": "B" if fl else ("?" if unk else "A"), "values": v})
+    finally:
+        AX_SENS["plusU_by_gap"] = False
+    return out
+
+
+def b2_write_csv(res, path):
+    """Origin 용 CSV — 열 이름 명시 (상대값 · 등급 · 순위). 막는 게이트를 지난 판독에서만 부른다."""
+    adm = res.get("axes_ranking") or []
+    cols = ["species", "formula", "group", "flags", "flags_unknown", "delta_NCM_LNO_half_meV", "delta_Li_meV", "sV_NCM_LNO_half_pp",
+            "sV_Li_pp", "dphi_wide_Li", "f_ins_window", "sV_NCM_LNO_full_pp_record", "dV_signed_NCM_LNO_half_pp_record",
+            "dV_signed_Li_pp_record", "sV_NCM_atomvol_pp_record", "sV_Li_atomvol_pp_record", "dphi_met_Li_record",
+            "dphi_wide_host_elements_Li_record", "dphi_wide_tracked_Li_record", "release_onset_shift_V_record",
+            *[f"r_{a}" for a in adm], "weakest_axes", "leximin_position", "position_optimistic", "position_pessimistic",
+            "pareto_layer", "layer_optimistic", "layer_pessimistic", "selected_layer1", "top10"]
+    def g(r, c):
+        v, ro, iv = r.get("values") or {}, r.get("record_only") or {}, (r.get("interval") or {})
+        m = {"species": r["species"], "formula": r["formula"], "group": r["group"], "flags": "/".join(r["flags"]),
+             "flags_unknown": "/".join(r["flags_unknown"]), "delta_NCM_LNO_half_meV": v.get("d_ncm"), "delta_Li_meV": v.get("d_li"),
+             "sV_NCM_LNO_half_pp": v.get("sv_ncm"), "sV_Li_pp": v.get("sv_li"), "dphi_wide_Li": v.get("dphi_li"), "f_ins_window": v.get("f_ins"),
+             "sV_NCM_LNO_full_pp_record": ro.get("sv_ncm_LNO_full_pp"), "dV_signed_NCM_LNO_half_pp_record": v.get("sv_ncm_signed"),
+             "dV_signed_Li_pp_record": v.get("sv_li_signed"), "sV_NCM_atomvol_pp_record": (r.get("values_atom") or {}).get("sv_ncm"),
+             "sV_Li_atomvol_pp_record": (r.get("values_atom") or {}).get("sv_li"), "dphi_met_Li_record": ro.get("dphi_met_Li"),
+             "dphi_wide_host_elements_Li_record": ro.get("dphi_wide_host_el_Li"), "dphi_wide_tracked_Li_record": ro.get("dphi_wide_tracked_Li"),
+             "release_onset_shift_V_record": ro.get("release_onset_shift_V"), "weakest_axes": "/".join(r.get("weakest_axes") or []),
+             "leximin_position": r.get("position"), "position_optimistic": (iv.get("optimistic") or {}).get("position"),
+             "position_pessimistic": (iv.get("pessimistic") or {}).get("position"), "pareto_layer": r.get("pareto_layer"),
+             "layer_optimistic": (iv.get("optimistic") or {}).get("layer"), "layer_pessimistic": (iv.get("pessimistic") or {}).get("layer"),
+             "selected_layer1": r.get("selected"), "top10": r.get("top")}
+        for a in adm:
+            m[f"r_{a}"] = (r.get("ranks") or {}).get(a)
+        x = m.get(c)
+        return "" if x is None else x
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        fh.write("# cascade 묶음 2 (카드 " + res["card"] + ") — 상대값 · 등급 · 순위 (줄 안 상대 위치 · 결론 아님) · "
+                 "delta = 설계 − 호스트 · sV = |ΔV/V| 설계 − 호스트 [%p] · dphi = φ_wide 설계 − 호스트 · f_ins = 창 8 점 중 ⓐ 비율 · "
+                 "순위 축 " + "/".join(adm) + " · 무리 A 줄 먼저\n")
+        w = csv.writer(fh)
+        w.writerow(cols)
+        for r in res["rows"]:
+            w.writerow([g(r, c) for c in cols])
+
+
+def _b2_out_refused(out):
+    """묶음 1 봉인 판독 · 민감도 파일에는 쓰지 않는다."""
+    o = Path(out).resolve()
+    return o in {p.resolve() for p, _ in B2_SEALED.values()} or "bundle2" not in Path(out).name
+
+
+def b2_main(argv):
+    i = argv.index("--bundle2")
+    run_dir = argv[i + 1] if i + 1 < len(argv) and not argv[i + 1].startswith("--") else None
+    if not run_dir:
+        print("⛔ --bundle2 <run_dir>")
+        return 2
+    out = Path(argv[argv.index("--out") + 1]) if "--out" in argv else \
+        PROP / f"cascade_axes_bundle2_readout_{datetime.date.today().strftime('%Y_%m_%d')}.json"
+    if _b2_out_refused(out):
+        print(f"⛔ --out {out} — 묶음 1 봉인 파일 · 'bundle2' 가 없는 이름에는 쓰지 않는다")
+        return 2
+    res = b2_readout(run_dir)
+    out.write_text(json.dumps(res, ensure_ascii=False, indent=1, default=str) + "\n", encoding="utf-8")
+    for k in ("decision", "B1", "G1", "G1b", "G1c", "G2", "G3", "G3b", "G5"):
+        g = (res.get("gates") or {}).get(k)
+        if g is not None:
+            print(f"  {k:8s} {'⭕' if g.get('ok') else '⛔'}  " + json.dumps(
+                {x: y for x, y in g.items() if x not in ("problems", "load_problems", "failures", "④_crosscheck_problems")},
+                ensure_ascii=False, default=str)[:160])
+    if res.get("blocking"):
+        print(f"⛔ 막는 게이트 불통과 {res['blocking']} — 표 없음 → {out}")
+        return 2
+    b2_write_csv(res, out.with_name(out.stem + "_designs.csv"))
+    sm = res["summary"]
+    rk = res.get("ranking")
+    print(f"설계 {sm['n_designs']} · 무리 {sm['groups']} · F_win {sm['n_F_win']} (모름 {sm['n_F_win_unknown']}) · 순위 축 {res['axes_ranking']}")
+    print("순위: " + ("없음 — 새 연속 축 0 개 (§9)" if rk is None else
+                     f"줄 A {rk['line_A_length']} · 선택 (층 1) {len(rk['selection'])} · 상위 {len(rk['top'])} ({rk['top_share_of_line_pct']:.0f} % of 줄)"))
+    print(f"→ {out} · {out.with_name(out.stem + '_designs.csv')}")
+    return 0
+
+
+#: selftest 용 가상 묶음 2 세계 (지어낸 수 · MP 아님) — 종: (조성, Li 쪽 도펀트 산물, LNO 쪽 도펀트 산물, 창 세 띠의 도펀트 산물)
+_B2S_D = {
+    "Li2S": ("Cl4Li24P4S20", [], [], ([], [], [])),
+    "CaCl2": ("Cl4Li22P4S20Ca1", ["CaS"], ["CaSO4"], (["CaS"], ["CaCl2"], ["CaCl2"])),
+    "CaS": ("Cl4Li22P4S20Ca1", ["CaS"], ["CaSO4"], (["CaS"], ["CaCl2"], ["CaCl2"])),
+    "MgO": ("Li22MgP4S19Cl4O", ["MgS"], ["MgSO4"], (["MgS"], ["MgCl2"], ["MgCl2"])),
+    "Al2O3": ("Li21AlP4S19Cl4O", ["LiAl"], ["LiAlO2"], (["LiAlS2"], ["AlCl3"], ["AlCl3"])),
+    "SiO2": ("Li20SiP4S18Cl4O2", ["Li15Si4"], ["SiO2"], (["SiS2"], ["SiS2"], ["SiCl4"])),
+    "LiF": ("Li24P4S20Cl3F", ["LiF"], ["LiF"], (["LiF"], ["LiF"], ["PF5"])),
+    "BaO": ("Li22BaP4S19Cl4O", ["BaS"], ["BaSO4"], (["BaS"], ["BaCl2"], ["BaCl2"])),
+    "ZnO": ("Li22ZnP4S19Cl4O", ["LiZn"], ["ZnS"], (["ZnS"], ["ZnS"], ["ZnCl2"])),
+    "V2O5": ("Li19VP4S19Cl4O2", ["V"], ["LiVO2"], (["VS4"], ["VS4"], ["VS4"])),
+    "Ag2O": ("Li22Ag2P4S19Cl4O", ["Ag"], ["Ag2S"], (["Ag"], ["Ag2S"], ["AgCl"])),
+    "SnO2": ("Li22SnP4S19Cl4O2", ["Li17Sn4"], ["SnO2"], (["SnS2"], ["SnS2"], ["SnCl4"])),
+    "GeS2": ("Li20GeP4S20Cl4", ["Li15Ge4"], ["GeO2"], (["GeS2"], ["GeS2"], ["GeS2"])),
+    "NaCl": ("Cl4Li22Na2P4S20", ["Na2S"], ["Na2SO4"], (["NaCl"], ["NaCl"], ["NaCl"]))}
+_B2S_B1 = {"Li2S": (0.0, "na", 0.0, "na"), "CaCl2": (-2.66, "wide", -6.82, "wide"), "CaS": (-2.66, "wide", -6.82, "wide"),
+           "MgO": (5.0, "wide", 12.0, "wide"), "Al2O3": (2.1, "wide", 8.0, "wide"), "SiO2": (30.0, "wide", 40.0, "intermediate"),
+           "LiF": (0.5, "wide", 3.0, "wide"), "BaO": (15.0, "wide", 20.0, "wide"), "ZnO": (-5.0, "wide", -8.0, "metallic"),
+           "V2O5": (100.0, "undetermined", 150.0, "undetermined"), "Ag2O": (12.0, "metallic", -15.0, "metallic"),
+           "SnO2": (25.0, "intermediate", 18.0, "metallic"), "GeS2": (20.0, "wide", 22.0, "intermediate"), "NaCl": (1.0, "wide", 4.0, "wide")}
+_B2S_VPA = {"Li": 20.3, "Li3P": 15.0, "Li2S": 15.8, "LiCl": 17.0, "Li2O": 12.4, "Li3PS4": 22.0, "S": 26.0, "P2S7": 24.0, "SCl": 30.0,
+            "Li3PO4": 12.8, "Ni3S2": 13.0, "Li2SO4": 13.5, "Ni": 10.9, "CaS": 21.0, "CaSO4": 13.0, "CaCl2": 25.0, "MgS": 16.0,
+            "MgSO4": 11.5, "MgCl2": 22.0, "LiAl": 16.0, "LiAlO2": 9.5, "LiAlS2": 18.0, "AlCl3": 25.0, "Li15Si4": 17.0, "SiO2": 15.0,
+            "SiS2": 20.0, "SiCl4": 35.0, "LiF": 8.2, "PF5": 20.0, "BaS": 30.0, "BaSO4": 15.0, "BaCl2": 28.0, "LiZn": 15.0, "ZnS": 20.0,
+            "ZnCl2": 22.0, "V": 13.5, "LiVO2": 11.0, "VS4": 18.0, "Ag": 17.8, "Ag2S": 19.0, "AgCl": 22.0, "Li17Sn4": 19.0, "SnO2": 12.0,
+            "SnS2": 23.0, "SnCl4": 30.0, "Li15Ge4": 17.0, "GeO2": 11.0, "GeS2": 22.0, "Na2S": 23.0, "Na2SO4": 13.5, "NaCl": 22.5}
+_B2S_GAP = {"Li3P": 0.7, "Li2S": 3.4, "LiCl": 6.3, "Li2O": 5.0, "Li3PS4": 2.5, "S": 2.2, "P2S7": 2.1, "SCl": 2.4, "Li3PO4": 5.9,
+            "Li2SO4": 5.5, "Ni3S2": 0.0, "CaS": 3.5, "CaSO4": 6.0, "CaCl2": 5.8, "MgS": 3.0, "MgSO4": 6.0, "MgCl2": 6.0, "LiAlO2": 5.0,
+            "LiAlS2": 4.0, "AlCl3": 5.2, "Li15Si4": 0.3, "SiO2": 5.5, "SiS2": 2.6, "SiCl4": 6.5, "LiF": 8.7, "PF5": 7.0, "BaS": 3.0,
+            "BaSO4": 6.0, "BaCl2": 6.0, "ZnS": 2.5, "ZnCl2": 4.5, "LiVO2": 2.0, "VS4": 1.0, "Ag2S": 0.9, "AgCl": 3.0, "SnO2": 2.6,
+            "SnS2": 1.2, "SnCl4": 4.0, "Li15Ge4": 0.0, "GeO2": 4.0, "GeS2": 2.6, "Na2S": 2.4, "Na2SO4": 5.5, "NaCl": 5.0, "LiAl": 0.0,
+            "LiZn": 0.0, "Ag": 0.0, "V": 0.0, "Li17Sn4": 0.0, "Ni": 0.0}
+_B2S_SEV = {"Li2S": 0.0, "CaCl2": 0.3, "CaS": 0.3, "MgO": -0.2, "Al2O3": -0.4, "SiO2": 0.2, "LiF": -0.1, "BaO": 0.6, "ZnO": 0.1,
+            "V2O5": -0.3, "Ag2O": 0.4, "SnO2": 0.5, "GeS2": 0.25, "NaCl": 0.45}
+_B2S_PART = {"LNO_half": ("Li0.5NiO2", 11.0, ["Li3PO4", "Ni3S2", "LiCl", "Li2SO4", "Ni"]),
+             "LNO_full": ("LiNiO2", 10.6, ["Li2S", "Li3PO4", "Ni3S2", "LiCl", "Li2SO4"]), "Li": ("Li", 20.3, ["Li3P", "Li2S", "LiCl"])}
+_B2S_BANDS = ((2.0, ["Li3PS4", "LiCl", "S"]), (3.4, ["P2S7", "LiCl", "S"]), (3.9, ["P2S7", "SCl", "S"]))
+_B2S_WOV = {"SiO2": {2: ["P2S7", "S"]}, "SnO2": {2: ["P2S7", "S"]}, "V2O5": {2: ["P2S7", "LiCl", "S"]}, "GeS2": {2: ["P2S7", "SCl"]}}
+
+
+def _b2_synth(td, mut=None):
+    """가상 묶음 2 출력 폴더 + 봉인 판독 + G3b 원자료 — (폴더, sealed, b1_ref, expected). 반응식은 pymatgen Reaction 이 균형을 잡는다
+    (원자 보존 · 정확한 계수 = kink_terms). mut(W) 로 쓰기 전에 고친다 (W = rows · gaps · man · ref · sealed)."""
+    from pymatgen.core import Composition
+    from pymatgen.analysis.reaction_calculator import Reaction
+    ir, esw = _b2_mod("interface_reactivity_v2"), _b2_mod("esw_grand_potential")
+    mix = (8 * 22.0 + 3 * 15.8 + 2 * 17.0) / 13
+    def rx(lhs, rhs, norm, val):
+        r = Reaction([Composition(x) for x in lhs], [Composition(x) for x in rhs])
+        r.normalize_to(Composition(norm), val)
+        return r
+    def vol_row(sp, f, cat):
+        pf, pv, base = _B2S_PART[cat]
+        o = "O" in Composition(f).as_dict()
+        dop = [] if sp == "HOST" else (_B2S_D[sp][1] if cat == "Li" else _B2S_D[sp][2])
+        prods = list(base) + (["Li2O"] if (cat == "Li" and o) else []) + list(dop)
+        r = rx([f, pf], prods, f, 0.1)
+        s = str(r)
+        x, dE = {"Li": (0.6, -0.5), "LNO_half": (0.35, -0.62), "LNO_full": (0.48, -0.42)}[cat]
+        vol = {"schema": "closed_volumes/v1", "ok": True,
+               "products": {Composition(p).reduced_formula: {"phase": Composition(p).reduced_formula, "entry_id": f"syn-{p}",
+                                                             "material_id": f"syn-{p}", "volume_per_atom_A3": _B2S_VPA[p], "nsites": 4}
+                            for p in prods},
+               "reactants": {"c1": {"formula_given": f, "basis": "hull_mixture", "decomposition": [{"phase": "Li3PS4", "amount_atom_frac": 1.0}],
+                                    "mixture_volume_per_atom_A3": mix + (_B2S_SEV.get(sp, 0.0) if sp != "HOST" else 0.0)},
+                             "c2": {"formula_given": pf, "basis": "stable_entry",
+                                    "decomposition": [{"phase": Composition(pf).reduced_formula, "amount_atom_frac": 1.0}],
+                                    "mixture_volume_per_atom_A3": pv}},
+               "argyrodite_Li6PS5Cl": {"phase": "Li6PS5Cl", "volume_per_atom_A3": 18.4, "e_above_hull_eV_per_atom": 0.01},
+               "kink_terms": {s: {"x": x, "terms": ir.reaction_terms_exact(r)}}}
+        return {"species": sp, "formula": f, "cathode": cat, "cathode_formula": pf, "mode": "closed_0V", "dE_eV_per_atom": dE,
+                "reaction": s, "mixing_x": x, "min_kink_at_endpoint": False, "kinks": [{"x": x, "dE_eV_per_atom": dE, "reaction": s}],
+                "volumes": vol}
+    def win_row(sp, f):
+        o = "O" in Composition(f).as_dict()
+        red = rx([f, "Li"], ["Li3P", "Li2S", "LiCl"] + (["Li2O"] if o else []) + ([] if sp == "HOST" else _B2S_D[sp][1]), f, 1.0)
+        prof = [(0.0, red, [c.reduced_formula for c in red.products])]
+        for i, (vk, base) in enumerate(_B2S_BANDS):
+            prods = list(_B2S_WOV.get(sp, {}).get(i, base)) + (["Li3PO4"] if o else []) + ([] if sp == "HOST" else _B2S_D[sp][3][i])
+            prof.append((vk, rx([f], prods + ["Li"], f, 1.0), [Composition(p).reduced_formula for p in prods]))
+        steps, evo = [], []
+        for vk, r, ps in prof:
+            e = -float(r.get_coeff(Composition("Li"))) if Composition("Li") in r.all_comp else 0.0
+            evo.append(e)
+            steps.append({"evolution_Li": round(e, 4), "reaction": esw.rxn_str_fixed(r), "V_vs_Li": vk, "V_vs_Li_exact": vk,
+                          "entries": [{"phase": p, "entry_id": f"syn-{p}"} for p in ps]})
+        vks = [s["V_vs_Li_exact"] for s in steps]
+        by = {}
+        for V in B2_V:
+            k, vr, sh = esw.interval_index(vks, V)
+            ps = sorted(e["phase"] for e in steps[k]["entries"])
+            by[f"{V:.2f}"] = {"V_grid": V, "V_read": vr, "shifted_1mV": sh, "row_index": k, "products": ps, "gp_products": list(ps),
+                              "gp_same": True, "reaction": steps[k]["reaction"], "evolution_Li": evo[k], "li_released_per_fu": -evo[k]}
+        return {"species": sp, "formula": f, "cathode": "WIN", "mode": "grand_potential_window", "n_atoms_fu": float(Composition(f).num_atoms),
+                "profile": steps, "by_voltage": by, "release_onset_V": 2.0}
+    Wd = {"rows": {"designs_vol": [vol_row(s, d_[0], c) for s, d_ in _B2S_D.items() for c in _B2S_PART],
+                   "host_vol": [vol_row("HOST", "Li6PS5Cl", c) for c in _B2S_PART],
+                   "designs_win": [win_row(s, d_[0]) for s, d_ in _B2S_D.items()], "host_win": [win_row("HOST", "Li6PS5Cl")]},
+          "gaps": {k: {"band_gap_MP_eV": v, "material_id": f"syn-{k}"} for k, v in _B2S_GAP.items()}}
+    inv = lambda ax: {"axis": ax, "tools_sha16": {t: "1" * 16 for t in B2_PHYS_TOOLS}, "mp_db_version_before": "2026.09.28",
+                      "mp_db_version_after": "2026.09.28"}
+    Wd["man"] = {"mp_db_version_before": "2026.09.28", "mp_db_version_after": "2026.09.28", "same_mp_version": True, "pymatgen": "x",
+                 "mp_api": "y", "thermo_types": ["GGA_GGA+U"], "correction_names_sample_Li-Ni-O": ["c"], "tools_sha16": {"a": "1", "b": "2", "c": "3"},
+                 "repo_head": "f" * 40, "lanes": {k: {"rc": 0} for k in B2_LANES}, "invocations": [inv("vol"), inv("win")]}
+    Wd["ref"] = [{k: r[k] for k in ("species", "formula", "cathode", "cathode_formula", "mode", "dE_eV_per_atom", "reaction", "mixing_x")}
+                 for r in Wd["rows"]["designs_vol"] + Wd["rows"]["host_vol"]]
+    B = _B2S_B1
+    ncm = {"blocking": [], "gates": {"G4": {"discriminates": True}},
+           "rows": [{"species": s, "formula": _B2S_D[s][0], "delta_LNO_half_meV": B[s][0], "class_LNO_half": B[s][1]} for s in _B2S_D]}
+    hyd = {"blocking": [], "gates": {"G4": {"discriminates": False}, "G7": {"overlap": False}},
+           "rows": [{"species": s, "delta_hyd_meV": 0.0, "F1_hyd": False, "F2_H2S": False, "unknown": False} for s in _B2S_D]}
+    li = {"blocking": [], "gates": {"G4": {"discriminates": True}, "G7": {"overlap": False, "rho_spearman": 0.5}},
+          "rows": [{"species": s, "formula": _B2S_D[s][0], "delta_Li_meV": B[s][2], "class": B[s][3], "F1_Li": B[s][3] == "metallic",
+                    "F2_Li": B[s][2] <= -10, "unknown": B[s][3] in ("undetermined", "na", "fate_error")} for s in _B2S_D]}
+    li["combination"] = ax_combine(ncm, hyd, li)
+    Wd["sealed"] = {"ncm": ncm, "hyd": hyd, "li": li, "sens": {}}
+    if mut:
+        mut(Wd)
+    d = Path(td)
+    for k, v in Wd["rows"].items():
+        (d / f"{k}.jsonl").write_text("".join(json.dumps(r) + "\n" for r in v), encoding="utf-8")
+    for nm in ("product_gaps_vol.json", "product_gaps_win.json"):
+        (d / nm).write_text(json.dumps({"gaps": Wd["gaps"]}), encoding="utf-8")
+    (d / "manifest.json").write_text(json.dumps(Wd["man"]), encoding="utf-8")
+    return d, Wd["sealed"], {"rows": Wd["ref"], "versions": ["2026.09.28"], "has_none": False, "problems": []}, \
+        {s: _B2S_D[s][0] for s in _B2S_D}
+
+
+def _b2_leftodd(r):
+    """selftest — 좌변에 반응물이 아닌 항 (0.001 Ni) 을 넣되 정확한 계수 · kink 목록은 그 문자열에 맞춘다 (G2 좌변 검사만 걸리게)."""
+    old = r["reaction"]
+    lhs, rhs = old.split(" -> ")
+    new = lhs + " + 0.001 Ni -> " + rhs
+    terms = [list(t) for t in r["volumes"]["kink_terms"][old]["terms"]] + [["Ni", -0.001]]
+    r["reaction"] = new
+    r["kinks"] = [{**k, "reaction": new} if k["reaction"] == old else k for k in r["kinks"]]
+    r["volumes"]["kink_terms"] = {new: {"x": r["mixing_x"], "terms": terms}}
+
+
+def b2_selftest():
+    """묶음 2 판독기 — 순위 기계 (R9 · R10 · R11 · 구간 · 방향 표) · 게이트 (G4 분위수 · G5 · G7 맞춘 ρ · 휘발 · 기체 · 거의 겹친 kink ·
+    φ_und) 단위 시험 + 가상 원자료 끝까지 (양성 · 막는 게이트마다 음성 · '새 축 0 개면 순위 없음') + 묶음 1 재현.
+    ⛔ pymatgen 이 없으면 안 돈 것 — 통과로 세지 않는다."""
+    import copy
+    import tempfile
+    ok_all, n = True, [0, 0]
+    def chk(c, msg):
+        nonlocal ok_all
+        n[0 if c else 1] += 1
+        ok_all &= bool(c)
+        print(("  ⭕ " if c else "  ⛔ ") + msg)
+    if not _b2_has_pm():
+        chk(False, "[전제] 묶음 2 판독기 시험은 pymatgen 이 있어야 돈다 — 안 돈 것은 통과가 아니다")
+        print(f"bundle2 selftest: ⭕ {n[0]} · ⛔ {n[1]}")
+        return 1
+    W1 = {a: 1.0 for a in B2_AXES}
+    # ── R9 · R10 · R11 순위 기계 (카드 · ED 예) ────────────────────────────────────────────────
+    L3 = [("a", {"d_ncm": 0.0}), ("b", {"d_ncm": 0.001}), ("c", {"d_ncm": 1.0005})]
+    rk = b2_ranks(L3, ("d_ncm",), W1)
+    rk_s = b2_ranks([(k, {"sv_li": v["d_ncm"]}) for k, v in L3], ("sv_li",), W1)
+    chk([rk[k]["d_ncm"] for k in "abc"] == [2, 1, 1] and [rk_s[k]["sv_li"] for k in "abc"] == [1, 1, 2],
+        "R9: r = 1 + #(w 를 넘게 나은 설계) — w = 1 · 값 0 · 0.001 · 1.0005 → 2 · 1 · 1 (w 안 차이도 제3 설계로 갈린다) · '작을수록' 축은 반대")
+    rf = b2_ranks([(k, {"f_ins": v}) for k, v in (("x", 1.0), ("y", 0.875), ("z", 0.75))], ("f_ins",), B2_W)
+    chk([rf[k]["f_ins"] for k in "xyz"] == [1, 1, 2],
+        "R9 · w_④ = 1/8: 한 점 차이 (0.125) 는 '넘게 낫다' 가 아니다 — 두 점 이상만 순위를 가른다 (1 · 0.875 · 0.75 → 1 · 1 · 2)")
+    P5 = [(i, {"d_ncm": float(5 - i), "d_li": float(1 + i)}) for i in range(5)]
+    r5 = b2_ranks(P5, ("d_ncm", "d_li"), W1)
+    chk(set(b2_layers(P5, r5, ("d_ncm", "d_li"), W1).values()) == {1},
+        "R11 지배 = 순위 벡터 + 한 축 이상 값이 w 를 넘게 나음 — (5,1) · (4,2) · (3,3) · (2,4) · (1,5) · w = 1 은 한 층 (순위 벡터만이면 이웃이 밀린다)")
+    E3 = [("A", {"d_ncm": 0.0, "d_li": 0.0, "f_ins": 0.0}), ("B", {"d_ncm": -1.5, "d_li": 0.9, "f_ins": 0.9}),
+          ("C", {"d_ncm": -0.6, "d_li": 1.5, "f_ins": -0.5})]
+    ax3 = ("d_ncm", "d_li", "f_ins")
+    eps = lambda x, y: all(x[a] >= y[a] - 1.0 for a in ax3) and any(x[a] > y[a] + 1.0 for a in ax3)
+    V3 = dict(E3)
+    try:
+        lay3 = b2_layers(E3, b2_ranks(E3, ax3, W1), ax3, W1)
+    except RuntimeError:
+        lay3 = None
+    chk(eps(V3["A"], V3["B"]) and eps(V3["B"], V3["C"]) and eps(V3["C"], V3["A"]) and lay3 == {"A": 1, "B": 1, "C": 1},
+        "R11: 카드의 ε-지배 순환 (A ≻ B ≻ C ≻ A · w = 1) 이 우리 지배에서는 순환 없이 한 층")
+    X5 = [(i, {"d_ncm": float(10 - i), "d_li": float(6 + i)}) for i in range(5)]
+    def pos(W):
+        r_ = b2_ranks(X5, ("d_ncm", "d_li"), W)
+        return [b2_positions({k: b2_lex(r_[k]) for k, _ in X5})[i] for i in range(5)]
+    p11, p25, p2x = pos(W1), pos({**W1, "d_ncm": 2.5}), pos({a: 2.0 for a in B2_AXES})
+    chk(p11 == [4, 2, 1, 2, 4] and p25 == [5, 3, 1, 1, 3] and [i for i in sorted(range(5), key=lambda i: p2x[i])][0] == 2,
+        f"R10 leximin (나쁜 r 부터 사전식 · 동률 같은 번호 · 다음 건너뜀) · 동률 폭이 무게처럼 작동 (축 ① 폭만 2.5 → 순서 바뀜) {p11} · {p25}")
+    L4 = [(i, {"d_ncm": v}) for i, v in enumerate((0.0, 0.2, 0.4, 0.6))]
+    r4 = b2_ranks(L4, ("d_ncm",), W1)
+    lay4 = b2_layers(L4, r4, ("d_ncm",), W1)
+    io = b2_insert({"d_ncm": None}, L4, r4, lay4, ("d_ncm",), W1, "opt")
+    ip = b2_insert({"d_ncm": None}, L4, r4, lay4, ("d_ncm",), W1, "pess")
+    chk(set(x["d_ncm"] for x in r4.values()) == {1} and io["r"]["d_ncm"] == 1 and ip["r"]["d_ncm"] == 5 and io["position"] == 1
+        and ip["position"] == 5 and ip["layer"] == 2 and io["layer"] == 1,
+        "R10 모름 구간: 값 있는 넷이 다 w 안 (r 1 · 1 · 1 · 1) — 낙관 끝 r = 1 · 비관 끝 r = 1 + 줄 길이 = 5 (그 무리 최댓값 + 1 이 아니다)")
+    def recs_of(spec):
+        return [{"species": s, "comp_key": ck, "group": g, "values": v} for s, ck, g, v in spec]
+    V6 = [("p0", "k0", "A", {"d_ncm": 5.0, "d_li": 1.0}), ("p1", "k1", "A", {"d_ncm": 4.0, "d_li": 2.0}), ("p2", "k2", "A", {"d_ncm": 3.0, "d_li": 3.0}),
+          ("p3", "k3", "A", {"d_ncm": 2.0, "d_li": 4.0}), ("p4", "k4", "A", {"d_ncm": 1.0, "d_li": 5.0}),
+          ("u", "ku", "?", {"d_ncm": 100.0, "d_li": 150.0}), ("p2b", "k2", "A", {"d_ncm": 3.0, "d_li": 3.0})]
+    rr = b2_rank(recs_of(V6), ("d_ncm", "d_li"), W1)
+    pu = rr["per"]["ku"]["interval"]
+    chk(rr["line_A_length"] == 5 and rr["selection"] == ["p0", "p1", "p2", "p2b", "p3", "p4"] and "u" not in rr["selection"]
+        and pu["optimistic"] == {**pu["optimistic"], "group": "A", "position": 1, "layer": 1} and pu["pessimistic"]["group"] == "B"
+        and pu["pessimistic"]["position"] == 6 and rr["dft_resolve_candidates"][0]["species"] == ["u"]
+        and rr["per"]["k2"]["species"] == ["p2", "p2b"],
+        "R8 · R10 · R13: 표시 모름 (모든 축에서 제일 나은 설계) 은 무리 A 셈에서 빠져 남의 층을 안 덮는다 · 구간 = 낙관 무리 A 1 등 · 비관 무리 B · "
+        "선택에서 빼고 'DFT 로 모름을 풀 후보' · 같은 조성은 한 줄 (줄 길이 5)")
+    H0 = {"F1_hyd": False, "F2_H2S": False, "unknown": False}
+    f_u = b2_flags({"class_LNO_half": "undetermined", "delta_LNO_half_meV": 5.0}, H0, {"class": "wide", "F2_Li": False}, False)
+    f_na = b2_flags({"class_LNO_half": "na", "delta_LNO_half_meV": 0.0}, H0, {"class": "na", "F2_Li": False}, False)
+    f_m = b2_flags({"class_LNO_half": "metallic", "delta_LNO_half_meV": -12.0}, {**H0, "unknown": True},
+                   {"class": "undetermined", "F2_Li": True}, None)
+    chk(f_u == ([], ["축①F1_금속성"]) and f_na == ([], [])
+        and f_m == (["축①F1_금속성", "축①F2_반응증가", "축③F2_Li반응증가"], ["축②F2_H2S증가", "축③F1_Li금속성", "축④F_win_금속성"]),
+        "R8 표시: ⓓ 미판정 → 그 표시는 모름 (무리 A 아님) · ㉧ 해당 없음 → 정의상 거짓 (무리 A) · H₂S 모름 · F_win 모름 · 확정 표시는 따로")
+    ML = recs_of([("a", "ka", "A", {"d_ncm": 5.0, "d_li": 5.0}), ("b", "kb", "A", {"d_ncm": 1.0, "d_li": 1.0}),
+                  ("c", "kc", "A", {"d_ncm": 5.0, "d_li": 1.0}), ("d", "kd", "B", {"d_ncm": 9.0, "d_li": 9.0}),
+                  ("e", "ke", "B", {"d_ncm": 0.0, "d_li": 0.0})])
+    rml = b2_rank(ML, ("d_ncm", "d_li"), W1)
+    pm = rml["per"]
+    chk(rml["selection"] == ["a"] and [pm[k]["pareto_layer"] for k in ("ka", "kc", "kb")] == [1, 2, 3]
+        and (pm["kd"]["position"], pm["ke"]["position"], pm["kd"]["position_in_group"]) == (4, 5, 1) and "d" not in rml["selection"]
+        and rml["line_A_length"] == 3 and rml["line_B_length"] == 2,
+        "R11 · R13: 층 1 · 2 · 3 이 갈리는 줄에서 선택 = 무리 A 층 1 만 · 무리 B 줄은 같은 규칙으로 따로 (번호는 A 줄 뒤 4 · 5) · B 는 선택 밖")
+    sv5 = recs_of([(f"s{i}", f"k{i}", "A", {"d_ncm": float(i), "sv_li": float(4 - i) * 3}) for i in range(5)])
+    base_pos = [b2_rank(sv5, ("d_ncm", "sv_li"))["per"][f"k{i}"]["position"] for i in range(5)]
+    B2_DIR["sv_li"] = "larger"
+    try:
+        flip_pos = [b2_rank(sv5, ("d_ncm", "sv_li"))["per"][f"k{i}"]["position"] for i in range(5)]
+        rho_flip = b2_rho([{**r, "values": {**r["values"]}} for r in sv5], "sv_li", "d_ncm")[0]
+    finally:
+        B2_DIR["sv_li"] = "smaller"
+    rho_ok = b2_rho(sv5, "sv_li", "d_ncm")[0]
+    chk(base_pos == [5, 4, 3, 2, 1] and flip_pos == [1, 2, 3, 4, 5] and abs(rho_ok - 1.0) < 1e-12 and abs(rho_flip + 1.0) < 1e-12,
+        f"⛔음성 방향 표: '작을수록' 축 하나를 뒤집으면 순위 ({base_pos} → {flip_pos}) 와 맞춘 ρ (+1 → −1) 가 바뀐다 — R9 · R11 · G7 이 표 하나를 읽는다")
+    # ── G4 분위수 · G7 맞춘 ρ ────────────────────────────────────────────────────────────────
+    pl = lambda k6: [{"species": f"q{i}", "comp_key": f"q{i}", "group": "A", "values": {"f_ins": 0.75 if i < k6 else 1.0}} for i in range(25)]
+    g7_, g6_ = b2_g4(pl(7), "f_ins"), b2_g4(pl(6), "f_ins")
+    chk(g7_["discriminates"] is True and g6_["discriminates"] is False and g6_["iqr"] == 0.0 and g6_["distribution"] == [[0.75, 6], [1.0, 19]],
+        "G4: statistics.quantiles(n=4, inclusive) — 25 중 7 이 0.75 면 IQR 0.25 ≥ 1/8 (갈린다) · 6 이면 IQR 0 (안 갈린다 · exclusive 면 0.125 로 갈린다) · 값마다 설계 수 기록")
+    up = recs_of([(f"t{i}", f"t{i}", "A", {"d_ncm": float(i), "sv_li": float(i)}) for i in range(6)])
+    rho_c = b2_rho(up, "sv_li", "d_ncm")[0]
+    chk(abs(rho_c + 1.0) < 1e-12, "G7: ρ 는 좋은 방향으로 맞춘 값 — 원값이 같이 오르는 '작을수록' 축과 '클수록' 축은 ρ = −1 (상충 · 겹침 아님)")
+    def adm_recs(fv):
+        out = []
+        for i in range(8):
+            v = {"d_ncm": 10.0 * i, "d_li": float((i * 5) % 8) * 10.0, "sv_ncm": None, "sv_li": None, "dphi_li": None, "f_ins": fv(i)}
+            out.append({"species": f"a{i}", "comp_key": f"a{i}", "group": "A", "values": v, "values_atom": {"sv_ncm": None, "sv_li": None}})
+        return out
+    SEALED_OK = {"ncm": {"gates": {"G4": {"discriminates": True}}}, "li": {"gates": {"G4": {"discriminates": True}, "G7": {"overlap": False}}}}
+    a_con, g_con = b2_admission(adm_recs(lambda i: (7 - i) / 7.0), SEALED_OK)
+    a_ovl, g_ovl = b2_admission(adm_recs(lambda i: i / 7.0), SEALED_OK)
+    chk("f_ins" in a_con and g_con["G7"]["f_ins"]["conflicts"] == ["d_ncm"] and "f_ins" not in a_ovl
+        and g_ovl["G7"]["f_ins"]["why_not"].startswith("G7") and a_con[:2] == ["d_ncm", "d_li"],
+        "G7 (순서 ① → ③ → … → ④): 맞춘 ρ ≤ −0.8 (상충) 은 순위에 넣고 적는다 · ρ ≥ 0.8 (겹침) 은 기록만 · 축 ① · ③ 이 먼저 들어 있다")
+    a_pl, g_pl = b2_admission(adm_recs(lambda i: 0.5 if i == 7 else 1.0), SEALED_OK)
+    a_b1, _ = b2_admission(adm_recs(lambda i: (7 - i) / 7.0),
+                           {"ncm": SEALED_OK["ncm"], "li": {"gates": {"G4": {"discriminates": False}, "G7": {"overlap": False}}}})
+    chk("f_ins" not in a_pl and g_pl["G7"]["f_ins"]["why_not"].startswith("G4") and g_pl["G4"]["f_ins"]["iqr"] == 0.0
+        and abs(g_pl["G7"]["f_ins"]["vs_admitted"]["d_ncm"]["rho_aligned"]) < 0.8 and "d_li" not in a_b1 and a_b1[0] == "d_ncm",
+        "⛔음성 R7: 한 값에 몰린 축 (8 중 7 같음 · IQR 0) 은 ρ 가 낮아도 G4 로 기록만 · 축 ③ 은 묶음 1 G4 가 '갈린다' 일 때만 순위 축")
+    # ── G5 카드 대조 ────────────────────────────────────────────────────────────────────────
+    card = B2_CARD.read_text(encoding="utf-8")
+    cj = json.loads(card)
+    cj_dir = copy.deepcopy(cj)
+    cj_dir["합치는_규칙_묶음_2"]["방향_표"]["축_⑤_s_V_Li"] = "클수록"
+    cj_vol = copy.deepcopy(cj)
+    cj_vol["2_그것을_재는_양"]["축_④_작동창_도펀트_행방"]["휘발_분자_산물_ED_P1_5"]["목록 (결과 전 봉인)"].remove("SiCl4")
+    g5 = [b2_card_check(card)["ok"], b2_card_check(card.replace("w_⑤ = 1 %p", "w_⑤ = 2 %p"))["ok"],
+          b2_card_check(json.dumps(cj_dir, ensure_ascii=False))["ok"], b2_card_check(json.dumps(cj_vol, ensure_ascii=False))["ok"]]
+    chk(g5 == [True, False, False, False],
+        f"G5: 진짜 카드 통과 · ⛔음성 동률 폭 바꿈 · 방향 표 한 줄 뒤집음 · 휘발 목록 한 줄 뺌 → 불통과 ({g5})")
+    # ── 휘발 · 기체 · 분자 결정 (Composition 대조) · 휘발 몫과 설계 등급 ────────────────────────────
+    chk(b2_in_list("SCl", B2_VOLATILE) and b2_in_list("S2Cl2", B2_VOLATILE) and b2_in_list("SCl2", B2_VOLATILE)
+        and not b2_in_list("PCl5", B2_VOLATILE) and b2_in_list("PCl5", B2_MOLECULAR) and b2_in_list("Cl2", B2_GAS)
+        and not b2_in_list("Li2S", B2_GAS) and b2_product_class("SCl", {"SCl": {"band_gap_MP_eV": 2.4}})[0] == "volatile",
+        "휘발 목록: MP 'SCl' ≡ S2Cl2 (reduced Composition · 문자열 대조 아님) · SCl2 따로 · PCl5 는 목록 밖 분자 결정 (기록만) · 기체 목록 Cl2")
+    gx = {"SiS2": {"band_gap_MP_eV": 2.6}, "SiCl4": {"band_gap_MP_eV": 6.5}}
+    c15 = ax_design_class({"reaction": "Li20SiP4S18Cl4O2 -> 0.85 SiS2 + 0.15 SiCl4 + 10 Li", "min_kink_at_endpoint": False}, ["Si"], gx,
+                          classify=b2_product_class, extra_classes=("volatile",))
+    c05 = ax_design_class({"reaction": "Li20SiP4S18Cl4O2 -> 0.95 SiS2 + 0.05 SiCl4 + 10 Li", "min_kink_at_endpoint": False}, ["Si"], gx,
+                          classify=b2_product_class, extra_classes=("volatile",))
+    c00 = ax_design_class({"reaction": "Li20SiP4S18Cl4O2 -> 0.95 SiS2 + 0.05 SiCl4 + 10 Li", "min_kink_at_endpoint": False}, ["Si"], gx)
+    chk(c15[0] == "intermediate" and abs(c15[1]["Si"]["shares"]["volatile"] - 0.15) < 1e-9 and c05[0] == "wide"
+        and "volatile" not in c00[1]["Si"]["shares"] and c00[0] == "wide",
+        "휘발 몫 15 % → ⓐ 될 수 없다 (ⓒ) · 5 % → ⓐ · extra_classes 없이 부르면 몫 사전이 묶음 1 판과 같다 (휘발 열쇠 없음)")
+    # ── 가상 원자료 끝까지 ─────────────────────────────────────────────────────────────────────
+    DEC = ("active", "db/properties/" + B2_CARD.name)
+    def run(mut=None, card_text=card, decision=DEC, b1_repro=None):
+        with tempfile.TemporaryDirectory() as td:
+            d, sealed, ref, exp = _b2_synth(td, mut)
+            return b2_readout(d, expected=exp, card_text=card_text, decision=decision, sealed=sealed, b1_ref=ref,
+                              b1_repro=b1_repro or {"problems": []}, plus_u_b1=(sealed["ncm"], sealed["li"]))
+    r0 = run()
+    by = {r["species"]: r for r in r0.get("rows", [])}
+    rk0 = r0.get("ranking") or {}
+    h5 = (r0.get("host") or {}).get("w5", {}).get("Li", {}).get("hull", {}).get("dv")
+    want_h5 = 100.0 * (331.0 - (257.4 + 162.4)) / (257.4 + 162.4)
+    chk(not r0["blocking"] and h5 is not None and abs(h5 - want_h5) < 1e-9 and r0["gates"]["G1c"]["same_as_host"] == ["Li2S"]
+        and r0["gates"]["G1c"]["same_composition_groups"] == [["CaCl2", "CaS"]] and r0["gates"]["G3b"]["n_keys"] == 45,
+        f"양성 (가상 원자료): 막는 게이트 통과 · 호스트 + Li ΔV/V = 손 계산 (Li6PS5Cl + 8 Li → Li3P + 5 Li2S + LiCl · {want_h5:.4f} %) · "
+        f"Li2S ≡ 호스트 (문자열 정규화가 달라도 정확한 계수로 |Δ| ≤ 1e-9) · CaCl2 ≡ CaS · G3b 15 × 3 쌍 ({r0['blocking']})")
+    chk(by and by["SiO2"]["values"]["f_ins"] == 0.75 and by["LiF"]["values"]["f_ins"] == 0.75 and by["SnO2"]["values"]["f_ins"] == 0.0
+        and by["Ag2O"]["group"] == "B" and "축④F_win_금속성" in by["Ag2O"]["flags"] and by["V2O5"]["group"] == "?"
+        and "축④F_win_금속성" in by["V2O5"]["flags_unknown"] and by["Li2S"]["values"]["f_ins"] is None and by["Li2S"]["group"] == "A"
+        and by["Li2S"]["flags_unknown"] == []
+        and abs(by["SiO2"]["w4_points"]["4.25"]["volatile_share"]["Si"] - 1.0) < 1e-9 and by["SiO2"]["w4_points"]["4.25"]["class"] == "intermediate",
+        "④: SiCl4 · PF5 (휘발) 점은 ⓐ 아님 → f_ins 0.75 · Ag 금속 점 → F_win (무리 B) · VS4 (+U · ⓓ) → F_win 모름 (표시 모름 '?') · Li2S ㉧ → f_ins 모름")
+    chk(rk0 and set(rk0["selection"]) <= {s for s, r in by.items() if r["group"] == "A" and r.get("in_line")} and "V2O5" not in rk0["selection"]
+        and [c["species"] for c in rk0["dft_resolve_candidates"]] == [["V2O5"]] and by["CaCl2"]["position"] == by["CaS"]["position"]
+        and by["CaCl2"]["pareto_layer"] == by["CaS"]["pareto_layer"] and by["Li2S"]["in_line"] is False and by["Li2S"]["interval"]
+        and set(r0["R12"]) >= {"leave_one_axis_out", "all_widths_x0.5", "all_widths_x2", "one_width_at_a_time", "plusU_by_gap",
+                               "signed_dV_Xin_Li_기록만", "gas0", "atom_volume", "pareto_layer1_vs_top"},
+        f"R10–R13: 선택 = 무리 A 줄의 층 1 ({rk0.get('selection')}) · 표시 모름 V2O5 는 'DFT 로 모름을 풀 후보' · CaCl2 ≡ CaS 같은 자리 · "
+        f"Li2S (④ 모름) 는 구간 · R12 판 다 있음 · 순위 축 {r0.get('axes_ranking')}")
+    chk(r0["gates"]["G8"]["sv_ncm"]["passes"] is False and "sv_ncm" not in r0["axes_ranking"]
+        and r0["gates"]["G7"]["sv_ncm"]["why_not"].startswith("G8") and set(r0["axes_ranking"]) >= {"d_ncm", "d_li"},
+        f"G8: 두 회계 판 (hull 혼합 · 원자 부피) ρ < 0.8 이면 ⑤ 축은 순위에 안 든다 (ρ {r0['gates']['G8']['sv_ncm']['rho']:.3f}) · 축 ① · ③ 은 묶음 1 G4 그대로")
+    with tempfile.TemporaryDirectory() as td:
+        pth = Path(td) / "x_bundle2_designs.csv"
+        b2_write_csv(r0, pth)
+        hdr = pth.read_text(encoding="utf-8").splitlines()
+    chk(len(hdr) == 2 + len(by) and "sV_Li_pp" in hdr[1] and "r_f_ins" in hdr[1] and "leximin_position" in hdr[1],
+        "Origin 용 CSV: 머리줄 · 열 이름 명시 · 설계마다 한 줄")
+    # 음성 — 막는 게이트마다
+    def rows_of(W, lane, sp, cat=None):
+        return [r for r in W["rows"][lane] if r["species"] == sp and (cat is None or r["cathode"] == cat)]
+    def m_vol(sp, cat, fn):
+        return lambda W: [fn(r) for r in rows_of(W, "designs_vol" if sp != "HOST" else "host_vol", sp, cat)]
+    def m_win(sp, fn):
+        return lambda W: [fn(r) for r in rows_of(W, "designs_win" if sp != "HOST" else "host_win", sp)]
+    def setp(r, V, **kw):
+        r["by_voltage"][V].update(kw)
+    neg = {
+        "결정 proposed": (run(decision=("proposed", DEC[1])), "decision"),
+        "카드 문턱 바꿈": (run(card_text=card.replace("φ_und > 0.01", "φ_und > 0.02")), "G5"),
+        "묶음 1 재현 실패": (run(b1_repro={"problems": ["축 ① x"]}), "B1"),
+        "봉인 합치기 표시 불일치": (run(lambda W: W["sealed"]["li"]["combination"]["rows"][0].update(flags=["축①F1_금속성"])), "B1"),
+        "manifest repo_head 없음": (run(lambda W: W["man"].pop("repo_head")), "G1"),
+        "vol · win 물리 도구 sha 다름": (run(lambda W: W["man"]["invocations"][1]["tools_sha16"].update({B2_PHYS_TOOLS[1]: "2" * 16})), "G1"),
+        "win 실행 기록 없음": (run(lambda W: W["man"]["invocations"].pop(1)), "G1"),
+        "MP 판 다름": (run(lambda W: W["man"]["invocations"][1].update(mp_db_version_after="2026.11.01")), "G3"),
+        "G3b 산물 바꿈 (원자료)": (run(lambda W: W["ref"][0].update(reaction=W["ref"][0]["reaction"].replace("LiCl", "LiClO4"))), "G3b"),
+        "G3b x + 2e-6": (run(lambda W: W["ref"][1].update(mixing_x=W["ref"][1]["mixing_x"] + 2e-6)), "G3b"),
+        "G3b dE + 2e-5": (run(lambda W: W["ref"][2].update(dE_eV_per_atom=W["ref"][2]["dE_eV_per_atom"] + 2e-5)), "G3b"),
+        "창 행 빠짐": (run(lambda W: W["rows"]["designs_win"].pop(3)), "G2"),
+        "부피 기록 거부": (run(m_vol("MgO", "Li", lambda r: r.update(volumes={"ok": False, "refused": ["x"]}))), "G2"),
+        "창 산물 갭 조회 없음": (run(lambda W: W["gaps"].pop("SiCl4")), "G2"),
+        "정확한 계수 없음": (run(m_vol("BaO", "LNO_half", lambda r: r["volumes"].update(kink_terms={}))), "G2"),
+        "좌변에 반응물 아닌 항": (run(m_vol("NaCl", "Li", lambda r: _b2_leftodd(r))), "G2"),
+        "⑤ 앵커 밖 (호스트 + Li)": (run(m_vol("HOST", "Li", lambda r: r["volumes"]["reactants"]["c2"].update(mixture_volume_per_atom_A3=9.0))), "G1b"),
+        "상대 혼합에 O2": (run(m_vol("ZnO", "LNO_half", lambda r: r["volumes"]["reactants"]["c2"]["decomposition"].append({"phase": "O2", "amount_atom_frac": 0.0}))), "G1b"),
+        "④ 호스트 4.25 V Li 안 내놓음": (run(m_win("HOST", lambda r: setp(r, "4.25", li_released_per_fu=0.0))), "G1b"),
+        "④ 호스트 개시 ≥ 2.50": (run(m_win("HOST", lambda r: r.update(release_onset_V=2.6))), "G1b"),
+        "④ 교차 경로 다름": (run(m_win("MgO", lambda r: setp(r, "3.50", gp_products=["MgS", "P2S7"]))), "G1b"),
+        "④ 가장 가까운 줄로 읽음": (run(m_win("BaO", lambda r: setp(r, "3.75", row_index=3))), "G1b"),
+        "G1c Li2S ≢ 호스트": (run(m_vol("Li2S", "Li", lambda r: r["volumes"]["products"]["Li3P"].update(volume_per_atom_A3=15.2))), "G1c"),
+        "G1c CaCl2 ≢ CaS": (run(m_vol("CaS", "LNO_full", lambda r: r["volumes"]["reactants"]["c1"].update(mixture_volume_per_atom_A3=19.0))), "G1c"),
+        "G1c 원자 보존 (창 반응식)": (run(m_win("LiF", lambda r: setp(r, "2.50", reaction=r["by_voltage"]["2.50"]["reaction"].replace(" + ", " + 2 ", 1)))), "G1c"),
+    }
+    bad = {k: v[0]["blocking"] for k, v in neg.items() if v[1] not in v[0]["blocking"] or "rows" in v[0]}
+    chk(not bad, f"⛔음성: 막는 게이트마다 깨면 표를 안 낸다 — 결정 · G5 · B1 (재현 · 표시) · G1 (manifest · 도구 sha · 실행) · G3 · "
+                 f"G3b (산물 · x 2e-6 · dE 2e-5) · G2 (행 · 부피 · 갭 · 정확한 계수 · 좌변) · G1b (⑤ 앵커 · O2 · ④ Li · 개시 · 교차 · 가장 가까운 줄) · "
+                 f"G1c (Li2S · CaS · 원자 보존) ({bad})")
+    # 비-막는 판정 — 거의 겹친 kink · φ_und · 새 축 0 개면 순위 없음
+    from pymatgen.core import Composition as _C
+    from pymatgen.analysis.reaction_calculator import Reaction as _R
+    def tie(W):
+        r = rows_of(W, "designs_vol", "BaO", "Li")[0]
+        r2 = _R([_C(r["formula"]), _C("Li")], [_C(p) for p in ("LiP", "Li2S", "LiCl", "Li2O", "BaS")])
+        r2.normalize_to(_C(r["formula"]), 0.1)
+        s2 = str(r2)
+        r["kinks"].append({"x": r["mixing_x"] + 0.01, "dE_eV_per_atom": r["dE_eV_per_atom"] + 5e-6, "reaction": s2})
+        r["volumes"]["kink_terms"][s2] = {"x": r["mixing_x"] + 0.01, "terms": _b2_mod("interface_reactivity_v2").reaction_terms_exact(r2)}
+        r["volumes"]["products"]["LiP"] = {"phase": "LiP", "volume_per_atom_A3": 18.0}
+        W["gaps"]["LiP"] = {"band_gap_MP_eV": 0.5}
+    r_t = run(tie)
+    bt = {x["species"]: x for x in r_t.get("rows", [])}
+    chk(not r_t["blocking"] and bt["BaO"]["values"]["sv_li"] is None and "거의 겹치는 kink" in bt["BaO"]["unknown_why"].get("sv_li", "")
+        and bt["BaO"]["w5"]["Li"]["hull"]["n_tie"] == 1,
+        "거의 겹친 kink (|ΔdE| ≤ 1e-5) 의 ΔV/V 를 못 내거나 w_⑤ 를 넘게 다르면 그 설계 ⑤ Li 는 모름 (구간 · 순위 셈 밖)")
+    r_u = run(lambda W: W["gaps"].update({"BaS": {"error": "no MP entry"}}))
+    bu = {x["species"]: x for x in r_u.get("rows", [])}
+    chk(not r_u["blocking"] and bu["BaO"]["values"]["dphi_li"] is None and "미판정" in bu["BaO"]["unknown_why"].get("dphi_li", ""),
+        "⑥: 갭을 못 찾은 산물 (미판정) 부피 분율 > 0.01 → δφ_wide 모름")
+    real_adm = globals()["b2_admission"]
+    try:
+        globals()["b2_admission"] = lambda recs, sealed: (["d_ncm", "d_li"], {"G4": {}, "G7": {}, "G8": {}})
+        r_n = run()
+    finally:
+        globals()["b2_admission"] = real_adm
+    chk(not r_n["blocking"] and r_n.get("ranking") is None and "R12" not in r_n and "⛔_순위_없음" in r_n
+        and all("position" not in x and "pareto_layer" not in x for x in r_n["rows"]) and r_n["summary"]["groups"]["B"] == 3,
+        "⛔음성 §9: 새 연속 축이 하나도 못 들면 R10 · R11 · R12 · R13 을 내지 않는다 (축 ① · ③ 만의 순위 금지) — 게이트 · 표시 · 무리만")
+    chk(_b2_out_refused(SENS_SEALED["li"]) and _b2_out_refused(PROP / "x_readout.json") and not _b2_out_refused(PROP / "cascade_axes_bundle2_readout_x.json"),
+        "⛔음성: 묶음 1 봉인 판독 · 'bundle2' 없는 이름에는 쓰지 않는다")
+    # ── 묶음 1 재현 (상시 절차 — 고친 판독기로 과거 마감부터) ───────────────────────────────────
+    sealed_r, bind = b2_sealed()
+    rep = b2_b1_repro(sealed_r)
+    chk(not bind and not rep["problems"] and rep["selection"] == ["V2O5"] and rep["selection_sensitivity"] == ["Sb2O5", "SiO2"],
+        f"묶음 1 재현: 봉인 sha16 결속 · 축 ① · ② · ③ 판독 · 합치기 (선택 {rep['selection']}) · +U 민감도 (선택 {rep['selection_sensitivity']}) "
+        f"를 지금 판독기로 그대로 ({len(rep['problems'])} 곳 다름)")
+    with tempfile.TemporaryDirectory() as td:
+        q = Path(td) / "ncm.json"
+        q.write_text(B2_SEALED["ncm"][0].read_text(encoding="utf-8").replace('"G4"', '"G4" ', 1), encoding="utf-8")
+        _, bind2 = b2_sealed({**B2_SEALED, "ncm": (q, B2_SEALED["ncm"][1])})
+    chk(any("sha16" in x for x in bind2), "⛔음성 결속: 봉인 판독 파일이 한 글자라도 바뀌면 sha16 결속이 깨진다")
+    print(f"bundle2 selftest: ⭕ {n[0]} · ⛔ {n[1]}")
+    return 0 if ok_all else 1
+
+
+def b1_repro_main(argv):
+    """--bundle1_repro — 묶음 1 판독 (축 ① · ② · ③) · 합치기 (선택 V2O5) · +U 민감도 (Sb2O5 · SiO2) 를 지금 판독기로 재현해 보인다."""
+    sealed, bind = b2_sealed()
+    r = b2_b1_repro(sealed)
+    print(f"봉인 결속 (sha16): {'⭕' if not bind else '⛔ ' + '; '.join(bind)}")
+    print(f"재현: {'⭕ 다른 곳 0' if not r['problems'] else '⛔ ' + str(len(r['problems']))} · 선택 {r['selection']} · +U 민감도 선택 {r['selection_sensitivity']}")
+    for x in r["problems"][:20]:
+        print("   ", x)
+    return 0 if not bind and not r["problems"] and r["selection"] == ["V2O5"] and r["selection_sensitivity"] == ["Sb2O5", "SiO2"] else 1
+
+
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
-        raise SystemExit(max(ax_selftest(), hy_selftest(), li_selftest(), sens_selftest()))
+        raise SystemExit(max(ax_selftest(), hy_selftest(), li_selftest(), sens_selftest(), b2_selftest()))
+    if "--bundle2" in sys.argv:
+        raise SystemExit(b2_main(sys.argv))
+    if "--bundle1_repro" in sys.argv:
+        raise SystemExit(b1_repro_main(sys.argv))
     if "--sens_plusU_gap" in sys.argv:
         raise SystemExit(sens_main(sys.argv))
     if "--axis_ncm" in sys.argv:

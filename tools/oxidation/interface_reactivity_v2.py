@@ -25,6 +25,13 @@ Run on gabia/kserver116-27 (MP_API_KEY set, MP reachable, pymatgen+mp_api):
     --cathodes LiCoO2 LiNiO2 "LiNi0.8Co0.1Mn0.1O2:NMC811" \
     --voltages 2.5 3.0 3.5 4.0 4.3 \
     --out interface_reactivity_v2.json
+
+cascade 묶음 2 (2026-11-10 · 카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json §3b)
+  --closed --record_kinks --record_volumes : 행마다 'volumes' (모든 kink 산물의 같은 hull 안정 엔트리 구조 부피 ·
+      반응물 hull 분해 · 아지로다이트 Li6PS5Cl 엔트리) — 같은 실행 · 같은 PhaseDiagram. 다른 모드 · 끈 기록은 그대로다.
+  --closed_repro NEW.jsonl … --closed_repro_ref OLD.jsonl … : G3b 대조기 (최소 kink 반응식 · x* · dE · Composition 계수 사전).
+  ⛔ 이 둘이 못 하는 것: ΔV/V · 등급 · 순위를 내지 않는다 (판독기 몫) · 구조 없는 엔트리의 부피를 추측하지 않는다 ·
+     kink 목록 · 부피는 G3b 대상이 아니다 (최소 kink 만) · pymatgen 없이는 둘 다 안 돈다 (selftest 도 그 부분은 불통과로 센다).
 """
 import argparse, json, os, re, sys
 from pathlib import Path
@@ -203,6 +210,335 @@ def closed_kinks(c1, c2, pd):
     return kinks_table(InterfacialReactivity(c1, c2, pd, use_hull_energy=True).get_kinks())
 
 
+# ── 묶음 2 부피 갈래 (2026-11-10 · cascade 축 ⑤ ⑥ · 카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json §2 축 ⑤ · §3b) ──
+#   `--closed --record_kinks --record_volumes` 가 행마다 'volumes' 를 남긴다 — **같은 실행 · 같은 PhaseDiagram** 의 엔트리 구조 부피.
+#   ⛔ 이 기록이 못 하는 것:
+#     · ΔV/V 를 내지 않는다 — 부피 · hull 분해 · id 만 적는다 (판독은 analyze_cathode_reactivity.py --bundle2 · 결과 전 규칙).
+#     · 부피를 추측하지 않는다 — 필요한 엔트리 하나라도 구조가 없으면 그 행의 기록 전체를 거부한다 (ok False · 사유 · 숫자 없음).
+#     · MP PBE 구조 부피를 실험 · 도핑 격자 부피로 고치지 않는다 (MP 에 도핑 상이 없다 · 카드 §1c).
+#     · 공간군은 기록용 (symprec 0.1 · 못 내면 None) — 판정에 안 쓴다.
+#   G3b 대조기 (closed_repro_compare) 는 반응식을 pymatgen Composition 으로 읽어 계수 사전으로 비교한다 (문자열 · 원자를 손으로 세지 않는다).
+VOLUMES_SCHEMA = "closed_volumes/v1"
+#: 원자 부피 판 (기록만 · 카드 §2 축 ⑤ 기록만_판) 의 호스트 아지로다이트 — 같은 hull 에서 reduced formula 가 이것인 에너지 최저 엔트리.
+ARGYRODITE_RF = "Li6PS5Cl"
+#: G3b 허용 (카드 §4 G3b) — x · dE 는 카드 문턱 · 계수는 4 유효숫자 기록값의 반올림 폭 (항마다 ≤ 5e-4 상대) 의 두 배.
+REPRO_X_TOL, REPRO_DE_TOL, REPRO_COEF_RTOL = 1e-6, 1e-5, 1e-3
+#: 반응식 한 항 — '계수 화학식' 또는 '화학식' (계수 1 생략 · pymatgen Reaction 꼴 · 과학 표기 계수도 읽는다).
+_PM_TERM = re.compile(r"^(?:((?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?)\s+)?([A-Z][A-Za-z0-9().]*)$")
+
+
+def _entry_id(e):
+    """엔트리 id 문자열 — esw_grand_potential._entry_id_str 를 그대로 쓴다 (mp_api 판마다 dict · 객체 · 문자열)."""
+    od = os.path.dirname(os.path.abspath(__file__))
+    if od not in sys.path:
+        sys.path.insert(0, od)
+    from esw_grand_potential import _entry_id_str
+    return _entry_id_str(e)
+
+
+def entry_volume_record(e, sg_cache=None):
+    """엔트리 하나 → ({phase, entry_id, material_id, volume_per_atom_A3, nsites, spacegroup, energy_per_atom_eV}, None) ·
+    구조가 없거나 못 읽으면 (None, 사유). **부피를 추측하지 않는다** (구조 없는 ComputedEntry 는 거부)."""
+    rf = e.composition.reduced_formula
+    eid = _entry_id(e)
+    st = getattr(e, "structure", None)
+    if st is None:
+        return None, f"{rf} ({eid or 'id 없음'}): 엔트리에 구조가 없다 — 부피를 추측하지 않는다"
+    try:
+        n, vol = int(st.num_sites), float(st.volume)
+        same = st.composition.reduced_composition.almost_equals(e.composition.reduced_composition)
+    except Exception as ex:
+        return None, f"{rf} ({eid}): 구조를 못 읽는다 ({type(ex).__name__})"
+    if n <= 0 or not (vol > 0) or vol != vol:
+        return None, f"{rf} ({eid}): 구조 부피 · 원자 수가 이상하다"
+    if not same:
+        return None, f"{rf} ({eid}): 구조 조성이 엔트리 조성과 다르다"
+    key = (eid, n, round(vol, 6))
+    if sg_cache is not None and key in sg_cache:
+        sg = sg_cache[key]
+    else:
+        try:
+            from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+            sg = SpacegroupAnalyzer(st, symprec=0.1).get_space_group_symbol()
+        except Exception:
+            sg = None                                   # 기록용 — 못 내면 None (판정에 안 쓴다)
+        if sg_cache is not None:
+            sg_cache[key] = sg
+    mid = (getattr(e, "data", None) or {}).get("material_id")
+    return {"phase": rf, "entry_id": eid, "material_id": None if mid in (None, "") else str(mid),
+            "volume_per_atom_A3": vol / n, "nsites": n, "spacegroup": sg,
+            "energy_per_atom_eV": round(float(e.energy_per_atom), 6)}, None
+
+
+def reactant_volume_record(pd, comp, role, given=None, sg_cache=None):
+    """반응물 하나 (설계 · 호스트 SE 또는 상대) 의 hull 분해 — 상 · 양 (원자 분율) · 부피 · id 와 혼합 원자 부피.
+    (기록, []) · 문제면 (None, [사유…]). 조성이 hull 위 안정상 하나면 basis 'stable_entry' · 아니면 'hull_mixture'."""
+    try:
+        dec = pd.get_decomposition(comp)
+    except Exception as ex:
+        return None, [f"{role} {comp.reduced_formula}: hull 분해를 못 낸다 ({type(ex).__name__}: {ex})"]
+    phases, why, mix, tot = [], [], 0.0, 0.0
+    for e, amt in sorted(dec.items(), key=lambda t: (-float(t[1]), t[0].composition.reduced_formula)):
+        v, w = entry_volume_record(e, sg_cache)
+        if w:
+            why.append(f"{role}: {w}")
+            continue
+        v["amount_atom_frac"] = float(amt)
+        mix += float(amt) * v["volume_per_atom_A3"]
+        tot += float(amt)
+        phases.append(v)
+    if why:
+        return None, why
+    if not phases or abs(tot - 1.0) > 1e-6:
+        return None, [f"{role} {comp.reduced_formula}: 분해 양의 합이 1 이 아니다 ({tot:.8f})"]
+    from pymatgen.core import Composition
+    single = len(phases) == 1 and Composition(phases[0]["phase"]).reduced_composition.almost_equals(comp.reduced_composition)
+    return {"formula_given": given if given is not None else comp.formula.replace(" ", ""),
+            "reduced_formula": comp.reduced_formula, "role": role,
+            "basis": "stable_entry" if single else "hull_mixture", "decomposition": phases,
+            "mixture_volume_per_atom_A3": mix}, []
+
+
+def reaction_terms_exact(reaction):
+    """Reaction → [[인쇄 화학식, 부호 있는 정확한 계수], …] — pymatgen str 과 **같은 항** (reduced formula · 계수 × factor ·
+    |계수| ≤ TOLERANCE 인 항은 str 처럼 뺀다) 을 반올림 없이. 반응물 = 음수. (str 은 4 유효숫자라 같은 반응도 정규화가 다르면 반올림이
+    달라진다 — 카드 G1c 의 |Δ| ≤ 1e-9 를 지키려면 부피 회계는 이 계수로 한다 · 2026-11-10)."""
+    tol = getattr(type(reaction), "TOLERANCE", 1e-6)
+    out = []
+    for comp, a in zip(reaction.all_comp, reaction.coeffs):
+        f, fac = comp.get_reduced_formula_and_factor()
+        amt = float(a) * float(fac)
+        if abs(amt) > tol:
+            out.append([f, amt])
+    return out
+
+
+def rxn_exact_sides(rxn, terms, rtol=5e-4):
+    """기록 문자열 rxn 과 그 정확한 계수 terms (reaction_terms_exact) → (좌변, 우변) [(계수, 화학식, Composition)] — 정확한 계수로.
+    문자열의 항 (화학식 · 변) 이 terms 와 같고 계수가 인쇄 반올림 폭 (4 유효숫자 · ≤ 5e-4 상대) 안이어야 한다 — 아니면 ValueError
+    (다른 반응의 계수를 쓰지 않는다)."""
+    from pymatgen.core import Composition
+    Ls, Rs = rxn_sides_pm(rxn)
+    L = [(-float(a), f, Composition(f)) for f, a in terms if a < 0]
+    R = [(float(a), f, Composition(f)) for f, a in terms if a > 0]
+    for tag, ex, pr in (("좌변", L, Ls), ("우변", R, Rs)):
+        if sorted(f for _, f, _ in ex) != sorted(f for _, f, _ in pr):
+            raise ValueError(f"{tag} 항이 문자열과 다르다")
+        d = {}
+        for c, f, _ in ex:
+            d.setdefault(f, []).append(c)
+        for c, f, _ in pr:
+            if not any(abs(x - c) <= rtol * abs(x) + 1e-12 for x in d[f]):
+                raise ValueError(f"{tag} {f} 계수가 문자열 ({c}) 과 반올림 폭 밖이다")
+    return L, R
+
+
+def closed_volume_record(pd, c1, c2, min_rxn, f1=None, f2=None, sg_cache=None):
+    """`--record_volumes` 기록 (카드 §2 축 ⑤ 부피_출처 · §3b) — `min_rxn_closed` 와 **같은 PhaseDiagram** 에서:
+      · products: 모든 kink (최소 kink 포함) 반응식의 산물마다 같은 hull 의 안정 엔트리 (reduced formula 같음) 의 구조 부피 ÷ 원자 수
+      · reactants: c1 (설계 · 호스트 SE) · c2 (상대) 마다 hull 분해 (상 · 양 · 부피 · mp-id) 와 혼합 원자 부피 (에너지와 같은 회계)
+      · argyrodite_Li6PS5Cl: 같은 hull 에서 reduced formula Li6PS5Cl 인 에너지 최저 엔트리 (원자 부피 판 · 기록만)
+    필요한 엔트리 하나라도 구조가 없거나 · 산물의 안정 엔트리가 하나가 아니거나 · 최소 kink 가 kink 목록에 없으면
+    {ok: False, refused: [사유]} (부피 숫자 없음).
+    ⛔ 못 하는 것: 최소 kink 를 다시 고르지 않는다 (min_rxn 은 호출부가 준 문자열) · ΔV/V 를 내지 않는다."""
+    from pymatgen.analysis.interface_reactions import InterfacialReactivity
+    problems = []
+    ks = list(InterfacialReactivity(c1, c2, pd, use_hull_energy=True).get_kinks())
+    if min_rxn not in {str(k[3]) for k in ks}:
+        problems.append("최소 kink 반응식이 kink 목록에 없다 (같은 설정의 InterfacialReactivity 인데 다르다)")
+    prods = sorted({c.reduced_formula for k in ks for c in k[3].products})
+    stable = {}
+    for e in pd.stable_entries:
+        stable.setdefault(e.composition.reduced_formula, []).append(e)
+    pv = {}
+    for rf in prods:
+        cand = stable.get(rf, [])
+        if len(cand) != 1:
+            problems.append(f"산물 {rf}: 같은 hull 의 안정 엔트리가 {len(cand)} 개 (하나여야 한다)")
+            continue
+        v, w = entry_volume_record(cand[0], sg_cache)
+        if w:
+            problems.append(f"산물 {w}")
+        else:
+            pv[rf] = v
+    reac = {}
+    for tag, c, f, role in (("c1", c1, f1, "SE"), ("c2", c2, f2, "partner")):
+        r, w = reactant_volume_record(pd, c, role, given=f, sg_cache=sg_cache)
+        problems += w
+        if r:
+            reac[tag] = r
+    argy = None
+    cand = [e for e in pd.all_entries if e.composition.reduced_formula == ARGYRODITE_RF]
+    if not cand:
+        problems.append(f"{ARGYRODITE_RF} 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)")
+    else:
+        e = min(cand, key=lambda x: x.energy_per_atom)
+        v, w = entry_volume_record(e, sg_cache)
+        if w:
+            problems.append(f"아지로다이트 {w}")
+        else:
+            v.update({"e_above_hull_eV_per_atom": round(float(pd.get_e_above_hull(e)), 6), "n_candidates": len(cand)})
+            argy = v
+    kt = {}
+    for k in ks:
+        s = str(k[3])
+        try:
+            terms = reaction_terms_exact(k[3])
+            rxn_exact_sides(s, terms)                  # 인쇄 문자열과 같은 반응인지 (항 · 반올림 폭)
+        except Exception as ex:
+            problems.append(f"kink {s[:40]}…: 정확한 계수를 못 낸다 ({type(ex).__name__}: {ex})")
+            continue
+        kt[s] = {"x": round(float(k[1]), 6), "terms": terms}
+    if problems:
+        return {"schema": VOLUMES_SCHEMA, "ok": False, "refused": problems}
+    return {"schema": VOLUMES_SCHEMA, "ok": True,
+            "basis": "같은 실행 · 같은 PhaseDiagram — 산물 = pd.stable_entries (reduced formula 같음) · 반응물 = pd.get_decomposition · "
+                     "아지로다이트 = pd.all_entries 중 Li6PS5Cl 에너지 최저 · 부피 = entry.structure.volume / num_sites (Å³/atom) · "
+                     "kink_terms = 같은 Reaction 객체의 정확한 계수 (반응식 문자열 → 항 · 반올림 없음)",
+            "n_kinks": len(ks), "products": pv, "reactants": reac, "argyrodite_Li6PS5Cl": argy, "kink_terms": kt}
+
+
+def rxn_terms_pm(side):
+    """반응식 한 변 → [(계수, 화학식, Composition)] — 원자 수는 **pymatgen Composition** 이 센다 (괄호 화학식
+    'NaLi11P2(S5Cl)2' 포함 · 화학식 문자열을 직접 세지 않는다). 못 읽으면 ValueError."""
+    from pymatgen.core import Composition
+    out = []
+    for raw in str(side).split("+"):
+        t = raw.strip()
+        m = _PM_TERM.match(t)
+        if not m:
+            raise ValueError(f"항을 못 읽는다: {t!r}")
+        c = float(m.group(1)) if m.group(1) else 1.0
+        comp = Composition(m.group(2))
+        if not (c > 0) or comp.num_atoms <= 0:
+            raise ValueError(f"계수 · 조성이 이상하다: {t!r}")
+        out.append((c, m.group(2), comp))
+    return out
+
+
+def rxn_sides_pm(rxn):
+    """'a A + b B -> c C' → (좌변 항, 우변 항) — rxn_terms_pm 꼴. 화살표가 하나가 아니면 ValueError."""
+    if not isinstance(rxn, str) or rxn.count("->") != 1:
+        raise ValueError("반응식 화살표가 하나가 아니다")
+    lhs, rhs = rxn.split("->")
+    return rxn_terms_pm(lhs), rxn_terms_pm(rhs)
+
+
+def comp_key_pm(comp):
+    """조성 열쇠 — 원자 분율 (원소 · 9 자리) 묶음. 화학식 단위 · 표기 ('Li0.5Ni1O2' · 'LiNi2O4') 와 무관하게 같은 조성은 같은 열쇠."""
+    return tuple(sorted((el.symbol, round(float(x), 9)) for el, x in comp.fractional_composition.items() if float(x) > 1e-12))
+
+
+def rxn_atoms_pm(rxn):
+    """반응식 → (좌변 {조성 열쇠: 원자 수}, 우변 {…}) — 원자 수 = 계수 × Composition.num_atoms (화학식 단위와 무관한 계수 사전)."""
+    out = []
+    for side in rxn_sides_pm(rxn):
+        d = {}
+        for c, _f, comp in side:
+            k = comp_key_pm(comp)
+            d[k] = d.get(k, 0.0) + c * float(comp.num_atoms)
+        out.append(d)
+    return out[0], out[1]
+
+
+def rxn_balance_pm(rxn, rtol=REPRO_COEF_RTOL):
+    """원소별 원자 수 보존 (pymatgen Composition) — (ok, 최악 상대 차, 사유 | None). 계수가 4 유효숫자 기록값이라
+    원소마다 |좌 − 우| ≤ rtol × max(좌, 우) (항마다 반올림 ≤ 5e-4 상대 → 합 ≤ 1e-3). 못 읽으면 (False, None, 사유)."""
+    try:
+        L, R = rxn_sides_pm(rxn)
+    except ValueError as ex:
+        return False, None, f"반응식을 못 읽는다 ({ex})"
+    def el(side):
+        d = {}
+        for c, _f, comp in side:
+            for e, n in comp.items():
+                d[e.symbol] = d.get(e.symbol, 0.0) + c * float(n)
+        return d
+    a, b = el(L), el(R)
+    worst, bad = 0.0, []
+    for e in sorted(set(a) | set(b)):
+        x, y = a.get(e, 0.0), b.get(e, 0.0)
+        m = max(abs(x), abs(y))
+        worst = max(worst, abs(x - y) / m if m > 0 else 0.0)
+        if abs(x - y) > rtol * m + 1e-9:
+            bad.append(e)
+    return (not bad), worst, (f"원자 수가 안 맞는 원소 {bad}" if bad else None)
+
+
+def _repro_rows(paths):
+    """jsonl 여럿 → 행 목록 (못 읽는 줄은 ValueError — 조용히 버리지 않는다)."""
+    rows = []
+    for p in paths:
+        for i, ln in enumerate(Path(p).read_text(encoding="utf-8").splitlines(), 1):
+            if ln.strip():
+                try:
+                    rows.append(json.loads(ln))
+                except ValueError as ex:
+                    raise ValueError(f"{p} {i} 번째 줄을 못 읽는다 ({type(ex).__name__})") from ex
+    return rows
+
+
+def closed_repro_compare(new_rows, ref_rows, labels=("LNO_half", "LNO_full", "Li"), expected=None,
+                         tol_x=REPRO_X_TOL, tol_de=REPRO_DE_TOL, coef_rtol=REPRO_COEF_RTOL):
+    """G3b 대조기 (카드 §4 G3b · ED P2-4) — 닫힌계 jsonl 의 (종, 상대) 마다 새 실행 대 원자료:
+      ① 둘 다 정상 행 하나 (오류 · 건너뜀 없음) · formula 같음
+      ② |Δx*| ≤ tol_x · |ΔdE| ≤ tol_de (eV/atom)
+      ③ 최소 kink 반응식의 좌 · 우변 계수 사전 (pymatgen Composition 조성 열쇠 → 원자 수) 의 열쇠가 같고 값이 coef_rtol 안
+    expected = 볼 (종, 상대) 목록 (없으면 두 쪽 합집합 — 한쪽에만 있으면 불통과). 반환 {ok, n_keys, n_pass, failures, …}.
+    ⛔ 못 하는 것: 반응을 다시 계산하지 않는다 · kink 목록 · 부피는 안 본다 (최소 kink 만 · 카드 G3b) · 옛 열린계
+      'results → by_voltage' 꼴 (reproduce_check 몫) 을 읽지 않는다."""
+    def ix(rows):
+        d = {}
+        for r in rows or []:
+            if isinstance(r, dict) and r.get("cathode") in labels:
+                d.setdefault((r.get("species"), r.get("cathode")), []).append(r)
+        return d
+    N, O = ix(new_rows), ix(ref_rows)
+    keys = sorted(set(N) | set(O), key=str) if expected is None else sorted({tuple(k) for k in expected}, key=str)
+    fails, n_pass, n_str = [], 0, 0
+    for k in keys:
+        a_, b_ = N.get(k) or [], O.get(k) or []
+        why = []
+        if len(a_) != 1:
+            why.append(f"새 행 {len(a_)} 개")
+        if len(b_) != 1:
+            why.append(f"원자료 행 {len(b_)} 개")
+        if not why:
+            a, b = a_[0], b_[0]
+            for tag, r in (("새", a), ("원자료", b)):
+                if "error" in r or "skipped" in r or not isinstance(r.get("dE_eV_per_atom"), (int, float)) \
+                        or not isinstance(r.get("reaction"), str):
+                    why.append(f"{tag} 행이 정상 닫힌계 행이 아니다")
+            if not why:
+                if a.get("formula") != b.get("formula"):
+                    why.append("formula 가 다르다")
+                xa, xb = a.get("mixing_x"), b.get("mixing_x")
+                if not (isinstance(xa, (int, float)) and isinstance(xb, (int, float))) or abs(xa - xb) > tol_x + 1e-12:
+                    why.append(f"x* 차 > {tol_x}")
+                if abs(a["dE_eV_per_atom"] - b["dE_eV_per_atom"]) > tol_de + 1e-12:
+                    why.append(f"dE 차 > {tol_de} eV/atom")
+                try:
+                    sa, sb = rxn_atoms_pm(a["reaction"]), rxn_atoms_pm(b["reaction"])
+                except ValueError as ex:
+                    why.append(f"반응식을 못 읽는다 ({ex})")
+                else:
+                    for side, da, db in (("좌변", sa[0], sb[0]), ("우변", sa[1], sb[1])):
+                        if set(da) != set(db):
+                            why.append(f"{side} 조성이 다르다")
+                            continue
+                        if any(abs(da[q] - db[q]) > coef_rtol * max(abs(da[q]), abs(db[q])) + 1e-9 for q in da):
+                            why.append(f"{side} 계수가 다르다 (> {coef_rtol} 상대)")
+                n_str += a["reaction"] == b["reaction"]
+        if why:
+            fails.append({"species": k[0], "cathode": k[1], "why": why})
+        else:
+            n_pass += 1
+    return {"ok": bool(keys) and not fails, "n_keys": len(keys), "n_pass": n_pass, "n_fail": len(fails),
+            "n_string_equal": n_str, "failures": fails[:50], "labels": list(labels),
+            "tolerances": {"x": tol_x, "dE_eV_per_atom": tol_de, "coef_rtol": coef_rtol},
+            "rule": "카드 §4 G3b — (종, 상대) 마다 x* · dE · 최소 kink 반응식 계수 사전 (pymatgen Composition) 이 원자료와 같다"}
+
+
 def why_skip(e_formula, c_formula, open_elements=("Li",), closed=False):
     """이 (전해질, 상대) 쌍을 **돌리기 전에** 막아야 하는 이유. 없으면 None.
 
@@ -290,6 +626,7 @@ def run_batch(a):
         print(f"[resume] 이미 끝난 (종,상대) 쌍 {len(done)}개는 건너뛴다")
 
     todo = sorted(forms)[: a.limit] if a.limit else sorted(forms)
+    _sgc = {}                       # --record_volumes 공간군 캐시 (엔트리 id · 원자 수 · 부피 열쇠 — 기록용)
     print(f"종 {len(todo)}개 x 상대 {len(a.cathodes)}개 = {len(todo) * len(a.cathodes)} 쌍")
     for i, sp in enumerate(todo, 1):
         for cat in a.cathodes:
@@ -328,6 +665,9 @@ def run_batch(a):
                         rec["endpoint_meaning"] = endpoint_meaning(True)
                     if getattr(a, "record_kinks", False):     # 2026-11-04 cascade 축 ③ R3 (완전 환원 끝점 산물 · 기록만)
                         rec["kinks"] = closed_kinks(Composition(forms[sp]), Composition(cstr), pd)
+                    if getattr(a, "record_volumes", False):   # 2026-11-10 cascade 묶음 2 축 ⑤ ⑥ (같은 실행 · 같은 PhaseDiagram)
+                        rec["volumes"] = closed_volume_record(pd, Composition(forms[sp]), Composition(cstr), rxn,
+                                                              f1=forms[sp], f2=cstr, sg_cache=_sgc)
                 else:
                     rec["by_voltage"] = {}
                     for V in a.voltages:
@@ -355,6 +695,8 @@ def run_batch(a):
                 bad = "%+.4f (0 V)%s" % (rec["dE_eV_per_atom"],
                                          "  [끝점 = 반응없음]"
                                          if rec.get("min_kink_at_endpoint") else "")
+                if isinstance(rec.get("volumes"), dict) and not rec["volumes"].get("ok"):
+                    bad += f"  ⛔부피 기록 거부 ({len(rec['volumes'].get('refused') or [])} 사유)"
             else:
                 bad = "%+.4f" % min(v["dE_eV_per_atom"] for v in rec["by_voltage"].values())
                 # 열린계 끝점 = **계면을 안 쟀다** → 시끄럽게
@@ -1153,9 +1495,214 @@ def _selftest():
                                        "tol_eV_per_atom": 0.002})
     chk(_vga["G0_reproduce"]["tol"] == 0.002 and _vga["tol"] == 0.0010,
         "[양성] GA — G0 허용폭은 reproduce_check 에서 읽고 · GA 문턱은 x002 G2 문턱 0.0010 이다")
+    _selftest_bundle2(chk)
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
+
+
+def _toy_lpscl_entries(nostruct=(), drop=(), extra=None):
+    """selftest 용 가상 Li–P–S–Cl 상도 (MP 아님 · 값은 지어낸 것) — ComputedStructureEntry (입방 격자 · 원자 부피 고정).
+    nostruct 에 든 화학식은 구조 없는 ComputedEntry 로 · drop 은 뺀다 · extra = {화학식: (생성에너지 eV/atom, 원자 부피)}."""
+    import itertools
+    import warnings
+    from pymatgen.core import Composition, Structure, Lattice
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        try:
+            from pymatgen.core.entries import ComputedEntry, ComputedStructureEntry
+        except ImportError:
+            from pymatgen.entries.computed_entries import ComputedEntry, ComputedStructureEntry
+    T = {"Li": (0.0, 20.3), "P": (0.0, 20.0), "S": (0.0, 26.0), "Cl": (0.0, 35.0), "Li2S": (-1.40, 15.8), "LiCl": (-1.80, 17.0),
+         "Li3P": (-0.60, 15.0), "Li3PS4": (-1.10, 22.0), "LiP": (-0.45, 18.0),
+         "Li6PS5Cl": ((8 * -1.10 + 3 * -1.40 + 2 * -1.80) / 13 + 0.010, 18.4)}       # 아지로다이트는 hull 위 10 meV/atom
+    T.update(extra or {})
+    E0 = {"Li": -1.9, "P": -5.4, "S": -4.1, "Cl": -1.8, "Na": -1.3, "Br": -1.6}
+    out = []
+    for f, (ef, vpa) in T.items():
+        if f in drop:
+            continue
+        c = Composition(f)
+        e = ef * c.num_atoms + sum(E0[el.symbol] * n for el, n in c.items())
+        if f in nostruct:
+            out.append(ComputedEntry(c, e, entry_id=f"toy-{f}"))
+            continue
+        sp = [el.symbol for el, n in c.items() for _ in range(int(round(n)))]
+        m = 1
+        while m ** 3 < len(sp):
+            m += 1
+        pts = [((i + .5) / m, (j + .5) / m, (k + .5) / m) for i, j, k in itertools.product(range(m), repeat=3)][:len(sp)]
+        st = Structure(Lattice.cubic((vpa * len(sp)) ** (1 / 3)), sp, pts)
+        out.append(ComputedStructureEntry(st, e, entry_id=f"toy-{f}", data={"material_id": f"toy-{f}"}))
+    return out
+
+
+def _selftest_bundle2(chk):
+    """묶음 2 (2026-11-10) — --record_volumes · G3b 대조기 (closed_repro_compare) · 계수 사전 · 원자 보존 (양성 · 음성).
+    ⛔ pymatgen 이 없으면 **안 돈 것** 이다 — 통과로 세지 않는다 (카드가 Composition 기반 대조를 요구한다)."""
+    import copy
+    import subprocess as _sp
+    import tempfile
+    try:
+        from pymatgen.core import Composition
+        from pymatgen.analysis.phase_diagram import PhaseDiagram
+    except ImportError:
+        chk(False, "[전제] 묶음 2 시험은 pymatgen 이 있어야 돈다 — 안 돈 것은 통과가 아니다 (gabia uma env 에서 다시)")
+        return
+    # ── 계수 사전 · 원자 보존 (pymatgen Composition) ────────────────────────────────────────
+    H = "0.1111 Li6PS5Cl + 0.8889 Li -> 0.1111 Li3P + 0.5556 Li2S + 0.1111 LiCl"       # 묶음 1 호스트 × Li 최소 kink 꼴
+    NA = "NaLi11P2(S5Cl)2 + 17 Li -> 2 Li3P + 10 Li2S + 2 LiCl + Na"                    # 괄호 화학식 — S10 Cl2 로 펴야 맞는다
+    chk(rxn_balance_pm(H)[0] and rxn_balance_pm(NA)[0],
+        "[양성] 원자 보존: 4 유효숫자 기록 반응식 · 괄호 화학식 NaLi11P2(S5Cl)2 를 Composition 으로 편 반응식 둘 다 맞다")
+    chk(not rxn_balance_pm(NA.replace("17 Li", "16 Li"))[0] and not rxn_balance_pm(H.replace("0.5556 Li2S", "0.5656 Li2S"))[0]
+        and rxn_balance_pm("A + -> B")[0] is False,
+        "[⛔음성] 원자 보존: Li 하나 · 계수 1 % 를 틀리면 잡는다 · 못 읽는 반응식은 거짓 (통과 아님)")
+    L1, R1 = rxn_atoms_pm("NaLi11P2(S5Cl)2 + 0.5 Li0.5Ni1O2 -> Na + Li")
+    L2, R2 = rxn_atoms_pm("Li11NaP2S10Cl2 + 0.5 Li0.5NiO2 -> Na + Li")
+    chk(L1 == L2 and R1 == R2 and len(L1) == 2,
+        "[양성] 계수 사전 열쇠 = Composition 원자 분율 — 'NaLi11P2(S5Cl)2' ≡ 'Li11NaP2S10Cl2' · 'Li0.5Ni1O2' ≡ 'Li0.5NiO2' (문자열이 달라도 같다)")
+    # ── G3b 대조기 ──────────────────────────────────────────────────────────────────────────
+    REF = [{"species": "HOST", "formula": "Li6PS5Cl", "cathode": "Li", "cathode_formula": "Li", "mode": "closed_0V",
+            "dE_eV_per_atom": -0.54149, "reaction": H, "mixing_x": 0.619048},
+           {"species": "NaI", "formula": "NaLi11P2S10Cl2", "cathode": "Li", "cathode_formula": "Li", "mode": "closed_0V",
+            "dE_eV_per_atom": -0.5, "reaction": NA, "mixing_x": 0.3},
+           {"species": "HOST", "formula": "Li6PS5Cl", "cathode": "LNO_half", "cathode_formula": "Li0.5NiO2", "mode": "closed_0V",
+            "dE_eV_per_atom": -0.6, "reaction": "0.9 Li0.5Ni1O2 + 0.1 Li6PS5Cl -> 0.45 LiNiO2 + 0.1 Li6PS5Cl",   # 꼴만 (계수 사전 비교용)
+            "mixing_x": 0.4},
+           {"species": "HOST", "formula": "Li6PS5Cl", "cathode": "LCO_half", "cathode_formula": "Li0.5CoO2", "mode": "closed_0V",
+            "dE_eV_per_atom": -0.7, "reaction": "a -> b", "mixing_x": 0.5}]
+
+    def cmp_(mut=None, **kw):
+        new = copy.deepcopy(REF)
+        if mut:
+            mut(new)
+        return closed_repro_compare(new, REF, **kw)
+    r0 = cmp_()
+    chk(r0["ok"] and r0["n_keys"] == 3 and r0["n_pass"] == 3,
+        f"[양성] G3b: 같은 원자료 → 통과 (상대 라벨 LNO_half · LNO_full · Li 만 — LCO_half 는 안 본다 · 쌍 {r0['n_pass']}/{r0['n_keys']})")
+    r1 = cmp_(lambda n: n[1].update(reaction=NA.replace("NaLi11P2(S5Cl)2", "Li11NaP2S10Cl2")))
+    chk(r1["ok"] and r1["n_string_equal"] == 2,
+        "[양성] G3b: 괄호를 편 같은 화학식 (문자열은 다름) 은 같은 반응식 — 계수 사전 (Composition) 으로 비교한다")
+    neg = {"산물 하나 바꿈 (Li3P → LiP)": cmp_(lambda n: n[0].update(reaction=H.replace("Li3P", "LiP"))),
+           "x* + 2e-6": cmp_(lambda n: n[0].update(mixing_x=0.619048 + 2e-6)),
+           "dE + 2e-5": cmp_(lambda n: n[0].update(dE_eV_per_atom=-0.54149 + 2e-5)),
+           "계수 1 %": cmp_(lambda n: n[0].update(reaction=H.replace("0.5556 Li2S", "0.5612 Li2S"))),
+           "새 행 빠짐": cmp_(lambda n: n.pop(1)),
+           "새 행 중복": cmp_(lambda n: n.append(dict(n[0]))),
+           "새 행 오류": cmp_(lambda n: n[0].update(error="X")),
+           "formula 다름": cmp_(lambda n: n[1].update(formula="NaLi11P2S10Cl3")),
+           "x 없음": cmp_(lambda n: n[0].update(mixing_x=None)),
+           "반응식 못 읽음": cmp_(lambda n: n[0].update(reaction="0.1 li6ps5cl -> x"))}
+    bad = [k for k, v in neg.items() if v["ok"] or v["n_fail"] < 1]
+    chk(not bad, f"[⛔음성] G3b: 산물 바꿈 · x 2e-6 · dE 2e-5 · 계수 1 % · 행 빠짐 · 중복 · 오류 · formula · x 없음 · 못 읽음 → 불통과 ({bad})")
+    edge = [cmp_(lambda n: n[0].update(mixing_x=0.619048 + 9e-7))["ok"], cmp_(lambda n: n[0].update(dE_eV_per_atom=-0.54149 + 9e-6))["ok"]]
+    chk(all(edge), f"[경계] G3b: x 9e-7 · dE 9e-6 차는 허용 안 (카드 1e-6 · 1e-5) — {edge}")
+    chk(closed_repro_compare(REF, REF, expected=[("HOST", "Li"), ("ZrO2", "Li")])["ok"] is False,
+        "[⛔음성] G3b: 기대 쌍 (expected) 이 두 쪽 다에 없으면 불통과 (빠진 설계를 통과로 세지 않는다)")
+    # ── 부피 기록 (가상 상도 · ComputedStructureEntry) ──────────────────────────────────────
+    ents = _toy_lpscl_entries()
+    pd = PhaseDiagram(ents)
+    host, li = Composition("Li6PS5Cl"), Composition("Li")
+    e, rxn, x = min_rxn_closed(host, li, pd)
+    vr = closed_volume_record(pd, host, li, rxn, f1="Li6PS5Cl", f2="Li")
+    mix = (8 * 22.0 + 3 * 15.8 + 2 * 17.0) / 13
+    c1 = (vr.get("reactants") or {}).get("c1") or {}
+    chk(rxn == H and vr["ok"] and set(vr["products"]) >= {"Li3P", "Li2S", "LiCl", "LiP", "Li3PS4"}
+        and abs(vr["products"]["Li2S"]["volume_per_atom_A3"] - 15.8) < 1e-9 and vr["products"]["Li2S"]["nsites"] == 3
+        and vr["products"]["Li2S"]["material_id"] == "toy-Li2S" and c1.get("basis") == "hull_mixture"
+        and abs(c1.get("mixture_volume_per_atom_A3", 0) - mix) < 1e-9
+        and sorted(p["phase"] for p in c1.get("decomposition", [])) == ["Li2S", "Li3PS4", "LiCl"]
+        and vr["reactants"]["c2"]["basis"] == "stable_entry"
+        and abs(vr["argyrodite_Li6PS5Cl"]["volume_per_atom_A3"] - 18.4) < 1e-9
+        and abs(vr["argyrodite_Li6PS5Cl"]["e_above_hull_eV_per_atom"] - 0.010) < 1e-6,
+        "[양성] --record_volumes: 모든 kink 산물 (Li3P · LiP · Li3PS4 …) 의 같은 hull 안정 엔트리 부피 · 반응물 hull 분해 "
+        "(호스트 = Li3PS4 + Li2S + LiCl 혼합 · Li = 안정 엔트리) · 아지로다이트 엔트리 (hull 위 10 meV)")
+    pd2 = PhaseDiagram(_toy_lpscl_entries(extra={"Li12P2S10Cl2": ((8 * -1.10 + 3 * -1.40 + 2 * -1.80) / 13 + 0.030, 19.9)}))
+    va = closed_volume_record(pd2, host, li, min_rxn_closed(host, li, pd2)[1])
+    chk(va["ok"] and va["argyrodite_Li6PS5Cl"]["n_candidates"] == 2 and abs(va["argyrodite_Li6PS5Cl"]["volume_per_atom_A3"] - 18.4) < 1e-9,
+        "[양성] 아지로다이트 엔트리: reduced formula Li6PS5Cl 인 엔트리 둘 (hull 위 10 · 30 meV) 중 **에너지 최저** (원자 부피 18.4 — 19.9 가 아니다)")
+    vb = closed_volume_record(PhaseDiagram(_toy_lpscl_entries(nostruct=("LiCl",))), host, li, rxn)
+    vc = closed_volume_record(pd, host, li, rxn.replace("0.1111 LiCl", "0.2 LiCl"))
+    vd = closed_volume_record(PhaseDiagram(_toy_lpscl_entries(drop=("Li6PS5Cl",))), host, li, rxn)
+    chk(vb["ok"] is False and "products" not in vb and any("LiCl" in w and "구조가 없다" in w for w in vb["refused"])
+        and vc["ok"] is False and any("kink 목록" in w for w in vc["refused"])
+        and vd["ok"] is False and any("Li6PS5Cl" in w for w in vd["refused"]),
+        "[⛔음성] --record_volumes: 구조 없는 엔트리 (LiCl) · kink 목록에 없는 최소 kink · 아지로다이트 없음 → 기록 거부 (부피 숫자 없음 · 추측 안 함)")
+    # ── 배선: run_batch (MP 대신 가상 상도) — 켜면 'volumes' · 끄면 행 꼴이 전과 같다 ─────────────────
+    import types
+    g = globals()
+    real = g["get_entries"]
+    try:
+        g["get_entries"] = lambda els: _toy_lpscl_entries()
+        rows = {}
+        with tempfile.TemporaryDirectory() as td:
+            for tag, rv in (("on", True), ("off", False)):
+                o = os.path.join(td, f"{tag}.jsonl")
+                ns = types.SimpleNamespace(batch_from=True, only=["HOST:Li6PS5Cl", "Li2S:Cl4Li24P4S20"], out=o, resume=False,
+                                           limit=None, closed=True, record_kinks=True, record_volumes=rv, cathodes=["Li:Li"],
+                                           voltages=[2.5])
+                _so = sys.stdout
+                sys.stdout = open(os.devnull, "w")
+                try:
+                    run_batch(ns)
+                finally:
+                    sys.stdout.close()
+                    sys.stdout = _so
+                rows[tag] = [json.loads(ln) for ln in open(o, encoding="utf-8")]
+    finally:
+        g["get_entries"] = real
+    on, off = {r["species"]: r for r in rows["on"]}, {r["species"]: r for r in rows["off"]}
+    keys_old = {"species", "formula", "cathode", "cathode_formula", "chemsys", "mode", "mu_Li_metal_eV", "dE_eV_per_atom",
+                "reaction", "mixing_x", "min_kink_at_endpoint", "endpoint_basis", "kinks", "seconds"}
+    chk(set(off["HOST"]) == keys_old and set(on["HOST"]) == keys_old | {"volumes"} and on["HOST"]["volumes"]["ok"]
+        and on["HOST"]["reaction"] == off["HOST"]["reaction"] == H and on["Li2S"]["volumes"]["ok"]
+        and on["Li2S"]["volumes"]["products"] == on["HOST"]["volumes"]["products"],
+        "[양성] run_batch 배선: --record_volumes 를 켜면 'volumes' 하나만 더한다 · 끄면 행 열쇠가 축 ③ 판과 같다 · Li2S 설계 (= 호스트 조성) 의 산물 부피가 호스트와 같다")
+    # ── 정확한 계수 (kink_terms) — 같은 반응도 정규화가 다르면 4 유효숫자 문자열의 반올림이 다르다 ───────────
+    kh, kl = on["HOST"]["volumes"]["kink_terms"], on["Li2S"]["volumes"]["kink_terms"]
+    th, tl = kh.get(on["HOST"]["reaction"], {}).get("terms"), kl.get(on["Li2S"]["reaction"], {}).get("terms")
+    def ratio(t):
+        d = dict((f, a) for f, a in t)
+        return {f: a / d["Li"] for f, a in d.items()}
+    rh_, rl_ = ratio(th or [["Li", 1.0]]), ratio(tl or [["Li", 1.0]])
+    try:
+        Lx, Rx = rxn_exact_sides(on["HOST"]["reaction"], th)
+        ok_ex = abs(sum(c * comp["Li"] for c, _, comp in Lx) - sum(c * comp["Li"] for c, _, comp in Rx)) < 1e-9
+    except Exception:
+        ok_ex = False
+    chk(th and tl and on["Li2S"]["reaction"] != on["HOST"]["reaction"] and set(rh_) == set(rl_)
+        and all(abs(rh_[f] - rl_[f]) < 1e-12 for f in rh_) and len(kh) == len(on["HOST"]["kinks"]) and ok_ex,
+        "[양성] kink_terms: Li2S 설계와 호스트는 문자열 정규화가 달라도 (0.1212 · 0.1111) 정확한 계수 비가 1e-12 안에서 같다 · "
+        "정확한 계수는 원자를 정확히 보존한다 · kink 마다 하나")
+    bad_ex = []
+    for t_mut in ([[f, a * (1.01 if f == "Li2S" else 1.0)] for f, a in th or []], [[("LiP" if f == "Li3P" else f), a] for f, a in th or []],
+                  [x for x in (th or []) if x[0] != "LiCl"]):
+        try:
+            rxn_exact_sides(on["HOST"]["reaction"], t_mut)
+            bad_ex.append(t_mut)
+        except ValueError:
+            pass
+    chk(not bad_ex, "[⛔음성] rxn_exact_sides: 계수 1 % · 산물 바꿈 · 항 빠짐이면 문자열과 다른 반응이라 거절 (다른 반응의 계수를 쓰지 않는다)")
+    try:
+        h_ = _sp.run([sys.executable, __file__, "--help"], capture_output=True, text=True, timeout=60).stdout
+    except Exception:
+        h_ = ""
+    r_a = _sp.run([sys.executable, __file__, "--closed", "--record_volumes", "--only", "H:Li6PS5Cl", "--cathodes", "Li"],
+                  capture_output=True, text=True, timeout=60)
+    r_b = _sp.run([sys.executable, __file__, "--record_volumes", "--record_kinks", "--only", "H:Li6PS5Cl", "--cathodes", "LiCoO2"],
+                  capture_output=True, text=True, timeout=60)
+    r_c = _sp.run([sys.executable, __file__, "--closed_repro", "x.jsonl"], capture_output=True, text=True, timeout=60)
+    chk("--record_volumes" in h_ and "--closed_repro" in h_ and r_a.returncode != 0 and "--record_kinks" in r_a.stderr
+        and r_b.returncode != 0 and "--closed" in r_b.stderr and r_c.returncode != 0,
+        "[⛔음성] CLI: --record_volumes 는 --closed --record_kinks 없이 시작을 거절한다 · --closed_repro 는 --closed_repro_ref 없이 거절")
+    with tempfile.TemporaryDirectory() as td:
+        pn, po = os.path.join(td, "n.jsonl"), os.path.join(td, "o.jsonl")
+        open(po, "w").write("".join(json.dumps(r) + "\n" for r in REF))
+        open(pn, "w").write("".join(json.dumps(r) + "\n" for r in REF[:1] + [dict(REF[1], mixing_x=0.31)] + REF[2:]))
+        r_d = _sp.run([sys.executable, __file__, "--closed_repro", pn, "--closed_repro_ref", po], capture_output=True, text=True, timeout=120)
+        r_e = _sp.run([sys.executable, __file__, "--closed_repro", po, "--closed_repro_ref", po], capture_output=True, text=True, timeout=120)
+    chk(r_d.returncode == 1 and "불통과" in r_d.stdout and "0.31" not in r_d.stdout and r_e.returncode == 0 and "통과" in r_e.stdout,
+        "[⛔음성] CLI --closed_repro: 불통과면 rc 1 · 화면에는 판정 · 쌍 이름만 (값 없음) · 같으면 rc 0")
 
 
 
@@ -2690,6 +3237,16 @@ def main():
                     help="닫힌계 0 V (Li 저장고 안 엶) — **Li 음극 쪽은 이걸 써야 한다**")
     ap.add_argument("--record_kinks", action="store_true",
                     help="--closed 에서 kink 전부를 행에 'kinks' 로 남긴다 (기록용 · 최소 kink 판정은 그대로 · cascade 축 ③ R3)")
+    ap.add_argument("--record_volumes", action="store_true",
+                    help="--closed --record_kinks 와 같이: 같은 PhaseDiagram 의 엔트리 구조 부피를 행에 'volumes' 로 남긴다 "
+                         "(모든 kink 산물 · 반응물 hull 분해 · 아지로다이트 Li6PS5Cl · cascade 묶음 2 축 ⑤ ⑥). 구조가 없으면 거부 (추측 안 함)")
+    ap.add_argument("--closed_repro", nargs="+", metavar="NEW_JSONL",
+                    help="G3b 대조기 — 새 닫힌계 jsonl 의 최소 kink 반응식 · x* · dE 를 --closed_repro_ref 원자료와 대조 "
+                         "(pymatgen Composition 계수 사전 · MP 불필요 · 화면에는 값 없이 판정 · 수만)")
+    ap.add_argument("--closed_repro_ref", nargs="+", metavar="OLD_JSONL", help="--closed_repro 의 원자료 jsonl")
+    ap.add_argument("--closed_repro_labels", nargs="+", default=["LNO_half", "LNO_full", "Li"],
+                    help="--closed_repro 가 볼 상대 라벨 (기본 LNO_half LNO_full Li — 카드 §4 G3b)")
+    ap.add_argument("--closed_repro_out", metavar="JSON", help="--closed_repro 결과 JSON (사유 · 값 포함 — 회수 대상)")
     ap.add_argument("--cathodes", nargs="+", default=["LiCoO2", "LiNiO2"],
                     help='comp[:label] cathodes')
     ap.add_argument("--voltages", nargs="+", type=float,
@@ -2745,6 +3302,25 @@ def main():
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.closed_repro or a.closed_repro_ref:
+        if not (a.closed_repro and a.closed_repro_ref):
+            ap.error("⛔ --closed_repro 와 --closed_repro_ref 는 같이 준다")
+        try:
+            out = closed_repro_compare(_repro_rows(a.closed_repro), _repro_rows(a.closed_repro_ref),
+                                       labels=tuple(a.closed_repro_labels))
+        except (ValueError, OSError) as ex:
+            print(f"⛔ G3b 재현 대조: 입력을 못 읽는다 — {type(ex).__name__}: {ex}")
+            return 2
+        out["inputs"] = {"new": a.closed_repro, "ref": a.closed_repro_ref}
+        if a.closed_repro_out:
+            Path(a.closed_repro_out).write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        bad = ", ".join(f"{f['species']}×{f['cathode']}" for f in out["failures"][:8])
+        print(f"G3b 재현 대조: {'통과' if out['ok'] else '⛔ 불통과'} · 쌍 {out['n_pass']}/{out['n_keys']}"
+              + (f" · 불통과 {out['n_fail']} ({bad})" if out["n_fail"] else ""))
+        return 0 if out["ok"] else 1
+    if a.record_volumes and not (a.closed and a.record_kinks):
+        ap.error("⛔ --record_volumes 는 --closed --record_kinks 와 같이만 — 모든 kink 산물의 부피를 같은 실행에서 적는다 "
+                 "(카드 cascade_axes_bundle2 §3b · 열린계 · kink 없는 기록은 구현돼 있지 않다)")
     if a.x002_ga:
         _D = json.loads(Path(a.x002_ga).read_text(encoding="utf-8"))
         out = ga_verdicts(_D["results"], repro=_D.get("reproduce_check"))
