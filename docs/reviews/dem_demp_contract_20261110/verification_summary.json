@@ -1,0 +1,540 @@
+{
+  "schema": "dem_demp_contract_author_verification/1",
+  "parent_pin": "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+  "reviewed_candidate_commit": null,
+  "status": "AUTHOR_SYNTHETIC_CHECKS_ONLY_NOT_INDEPENDENT_VERDICT",
+  "methodology": {
+    "tests_written_before_stub": true,
+    "implementation_written_after_error_free_stub_red": true,
+    "stub_red_is_new_feature_baseline_not_old_operational_bug": true,
+    "initial_fixture_stage_scope": "STAGE_LOCAL_0_TO_2",
+    "final_fixture_stage_scope": "CASE_GLOBAL_DECLARATION",
+    "followup_test_change": "Normalize valid fixture windows and add one self-consistent backward/overlap counterexample method before minimal source change.",
+    "actual_engine_step_mapping": null
+  },
+  "preparation_interruption": {
+    "schema": "demp_preparation_interruption/1",
+    "stage": "BEFORE_ERROR_FREE_STUB_RED",
+    "issue": "Sparse new worktree had no scripts directory; copy and harness source read failed.",
+    "project_methods": 0,
+    "implementation_body_existed": false,
+    "source_state": "FAIL_CLOSED_STUB_ONLY",
+    "original_stderr_preserved_as_file": false,
+    "original_stderr_location": "TOOL_TRANSCRIPT_ONLY",
+    "note": "This retrospective receipt is not a reconstructed stderr log or assertion-red record. Empty red/source directory remains.",
+    "subsequent_action": "Created the missing directory, copied fixed test/stub, ran red2.",
+    "actual_engine_calls": 0,
+    "actual_raw_data_or_log_reads": 0
+  },
+  "phases": [
+    {
+      "directory": "red2",
+      "schema": "nonrint_synthetic_suite_receipt/1",
+      "started_utc": "2026-11-10T02:07:01.591308+00:00",
+      "finished_utc": "2026-11-10T02:07:01.722329+00:00",
+      "methods": 24,
+      "failures": 14,
+      "errors": 0,
+      "rc": 1,
+      "source_sha256": {
+        "dem_gen2_demp_contract.py": "5df3fc772a8934b210f42cbfde0a1b5aea66245bf3940b35c2b72005ce9ffd4d",
+        "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+      },
+      "baseline_kind": "tests_and_fail_closed_stub_written_before_any_implementation",
+      "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+      "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+      "source_loading": "Exact copied bytes compile/exec; explicitly listed suite only",
+      "bytecode_writes_disabled": true,
+      "source_unchanged": true,
+      "process_network_attempts": [],
+      "actual_engine_calls": 0,
+      "actual_raw_data_or_log_reads": 0,
+      "whole_gate": "NOT_RUN",
+      "research_results": 0,
+      "physical_ready": false,
+      "execution_go": false,
+      "gate_write": false,
+      "whole_status": "HOLD",
+      "count_scope": "This invocation only. Methods, assertion/subtest failures and repetitions are not additive."
+    },
+    {
+      "directory": "green",
+      "schema": "nonrint_synthetic_suite_receipt/1",
+      "started_utc": "2026-11-10T02:09:48.365183+00:00",
+      "finished_utc": "2026-11-10T02:09:48.545669+00:00",
+      "methods": 24,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "source_sha256": {
+        "dem_gen2_demp_contract.py": "a80d9c2b245831ff432f19235bee5d971963c9ab35d267342d4b46ae57a10cc6",
+        "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+      },
+      "baseline_kind": "implementation_written_only_after_error_free_stub_red2",
+      "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+      "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+      "source_loading": "Exact copied bytes compile/exec; explicitly listed suite only",
+      "bytecode_writes_disabled": true,
+      "source_unchanged": true,
+      "process_network_attempts": [],
+      "actual_engine_calls": 0,
+      "actual_raw_data_or_log_reads": 0,
+      "whole_gate": "NOT_RUN",
+      "research_results": 0,
+      "physical_ready": false,
+      "execution_go": false,
+      "gate_write": false,
+      "whole_status": "HOLD",
+      "count_scope": "This invocation only. Methods, assertion/subtest failures and repetitions are not additive."
+    },
+    {
+      "directory": "stage_order_red",
+      "schema": "nonrint_synthetic_suite_receipt/1",
+      "started_utc": "2026-11-10T02:12:02.596002+00:00",
+      "finished_utc": "2026-11-10T02:12:02.793783+00:00",
+      "methods": 25,
+      "failures": 2,
+      "errors": 0,
+      "rc": 1,
+      "source_sha256": {
+        "dem_gen2_demp_contract.py": "a80d9c2b245831ff432f19235bee5d971963c9ab35d267342d4b46ae57a10cc6",
+        "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+      },
+      "baseline_kind": "new_global_stage_order_counterexample_against_first_24_method_green",
+      "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+      "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+      "source_loading": "Exact copied bytes compile/exec; explicitly listed suite only",
+      "bytecode_writes_disabled": true,
+      "source_unchanged": true,
+      "process_network_attempts": [],
+      "actual_engine_calls": 0,
+      "actual_raw_data_or_log_reads": 0,
+      "whole_gate": "NOT_RUN",
+      "research_results": 0,
+      "physical_ready": false,
+      "execution_go": false,
+      "gate_write": false,
+      "whole_status": "HOLD",
+      "count_scope": "This invocation only. Methods, assertion/subtest failures and repetitions are not additive."
+    },
+    {
+      "directory": "final_green",
+      "schema": "nonrint_synthetic_suite_receipt/1",
+      "started_utc": "2026-11-10T02:14:48.815293+00:00",
+      "finished_utc": "2026-11-10T02:14:49.013924+00:00",
+      "methods": 25,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "source_sha256": {
+        "dem_gen2_demp_contract.py": "7490b921d8015d237c52f18461cddb97bd8d373637f95107056309d309a18639",
+        "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+      },
+      "baseline_kind": "minimal_CASE_GLOBAL_DECLARATION_order_guard_after_stage_order_red",
+      "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+      "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+      "source_loading": "Exact copied bytes compile/exec; explicitly listed suite only",
+      "bytecode_writes_disabled": true,
+      "source_unchanged": true,
+      "process_network_attempts": [],
+      "actual_engine_calls": 0,
+      "actual_raw_data_or_log_reads": 0,
+      "whole_gate": "NOT_RUN",
+      "research_results": 0,
+      "physical_ready": false,
+      "execution_go": false,
+      "gate_write": false,
+      "whole_status": "HOLD",
+      "count_scope": "This invocation only. Methods, assertion/subtest failures and repetitions are not additive."
+    }
+  ],
+  "initial_mutation_contrasts": {
+    "schema": "demp_author_mutation_receipt/1",
+    "base_source_sha256": {
+      "dem_gen2_demp_contract.py": "a80d9c2b245831ff432f19235bee5d971963c9ab35d267342d4b46ae57a10cc6",
+      "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+    },
+    "mutants": [
+      {
+        "name": "planned_denominator",
+        "started_utc": "2026-11-10T02:11:11.388632+00:00",
+        "finished_utc": "2026-11-10T02:11:11.573575+00:00",
+        "methods": 24,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "        complete=sum(value=='PRESENT' for value in received.values())",
+            "after": "        prepared['planned']=set(received)\n        complete=sum(value=='PRESENT' for value in received.values())"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "98219c7e0c471bcc4b29e2de5df4f480fadb54bf1d454a303d92f36b0220e9e4",
+          "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+        }
+      },
+      {
+        "name": "explicit_stage_damping",
+        "started_utc": "2026-11-10T02:11:11.573575+00:00",
+        "finished_utc": "2026-11-10T02:11:11.753903+00:00",
+        "methods": 24,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "_one(declaration['policy'],('EXPLICIT_STAGE',))",
+            "after": "None"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "d7356f3e2c2993a108a868e6ddfff4afd6c54c6fcfb893d725336ab476c619c5",
+          "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+        }
+      },
+      {
+        "name": "signed_channel_representation",
+        "started_utc": "2026-11-10T02:11:11.753903+00:00",
+        "finished_utc": "2026-11-10T02:11:11.936066+00:00",
+        "methods": 24,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "_one(channel['representation'],('SIGNED_VECTOR_COMPONENTS' if role in VECTOR_ROLES else 'SCALAR_DEFINITION',))",
+            "after": "None"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "caad122248431b35158e8a5b92659abb27043fa24327ea3f8862c3af36fa3da5",
+          "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+        }
+      },
+      {
+        "name": "full_declared_roster",
+        "started_utc": "2026-11-10T02:11:11.936066+00:00",
+        "finished_utc": "2026-11-10T02:11:12.125086+00:00",
+        "methods": 24,
+        "failures": 6,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if _roster(payload['declared_inventory'])!=case['roster']:",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "4cb546fa568e44bb6b6069f161c0606d93fd5f642eb75aed5e082c0752a67418",
+          "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+        }
+      },
+      {
+        "name": "classification_claim",
+        "started_utc": "2026-11-10T02:11:12.125086+00:00",
+        "finished_utc": "2026-11-10T02:11:12.303710+00:00",
+        "methods": 24,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if geometry[field]!=('SAMPLE_RECORDED' if count else 'NONE_RECORDED'):",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "8b252c6609c05cade9a28f5bed890381f3a1988946c65ef0d1a3911c5c3f0eba",
+          "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+        }
+      },
+      {
+        "name": "same_static_state",
+        "started_utc": "2026-11-10T02:11:12.304710+00:00",
+        "finished_utc": "2026-11-10T02:11:12.498672+00:00",
+        "methods": 24,
+        "failures": 8,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if state!=target_state:",
+            "after": "if False:"
+          },
+          {
+            "before": "if _state(payload['static_state_contract'])!=case['state']:",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "73b5a0cdbfc5704cd8024bc38148c166b4caf8fdb6e2ee3ed19bd6074c3586de",
+          "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+        }
+      },
+      {
+        "name": "external_plan_digest",
+        "started_utc": "2026-11-10T02:11:12.498672+00:00",
+        "finished_utc": "2026-11-10T02:11:12.671245+00:00",
+        "methods": 24,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if hashlib.sha256(_canonical(plan)).hexdigest()!=expected:",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "993a4e0f30854c68d46ab77bc39b88476d06db995f22af67b18ab7b009e84dd9",
+          "test_dem_gen2_demp_contract.py": "74adf86a5ce714602e0b0a702a04797db8c5337caa992653eb3f213a1dd4de4e"
+        }
+      }
+    ],
+    "detected_without_errors": 7,
+    "process_network_attempts": [],
+    "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "bytecode_writes_disabled": true,
+    "invocation_actual_engine_calls": 0,
+    "invocation_actual_raw_data_or_log_reads": 0,
+    "physical_ready": false,
+    "execution_go": false,
+    "gate_write": false,
+    "whole_status": "HOLD",
+    "research_results": 0,
+    "count_scope": "Same 24 methods per contrast; seven mutation groups, subtests and repetitions are not additive unique tests"
+  },
+  "final_mutation_contrasts": {
+    "schema": "demp_author_mutation_receipt/1",
+    "base_source_sha256": {
+      "dem_gen2_demp_contract.py": "7490b921d8015d237c52f18461cddb97bd8d373637f95107056309d309a18639",
+      "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+    },
+    "mutants": [
+      {
+        "name": "planned_denominator",
+        "started_utc": "2026-11-10T02:14:59.706018+00:00",
+        "finished_utc": "2026-11-10T02:14:59.900223+00:00",
+        "methods": 25,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "        complete=sum(value=='PRESENT' for value in received.values())",
+            "after": "        prepared['planned']=set(received)\n        complete=sum(value=='PRESENT' for value in received.values())"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "e1c71efcadc920fd0e103a5812921f9c35e53f365027b7d0d5d509a3a993259f",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      },
+      {
+        "name": "explicit_stage_damping",
+        "started_utc": "2026-11-10T02:14:59.900223+00:00",
+        "finished_utc": "2026-11-10T02:15:00.090727+00:00",
+        "methods": 25,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "_one(declaration['policy'],('EXPLICIT_STAGE',))",
+            "after": "None"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "8439913464853d5ac4ea91ff3f0b7d9c896cbb089e879fe606a27f4184b2894c",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      },
+      {
+        "name": "signed_channel_representation",
+        "started_utc": "2026-11-10T02:15:00.091727+00:00",
+        "finished_utc": "2026-11-10T02:15:00.282250+00:00",
+        "methods": 25,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "_one(channel['representation'],('SIGNED_VECTOR_COMPONENTS' if role in VECTOR_ROLES else 'SCALAR_DEFINITION',))",
+            "after": "None"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "c9d0ef7ccd6b7de815a6170fe9cbebbe66fc9138ce394467ef02ebc8e1a44f0d",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      },
+      {
+        "name": "full_declared_roster",
+        "started_utc": "2026-11-10T02:15:00.283250+00:00",
+        "finished_utc": "2026-11-10T02:15:00.479296+00:00",
+        "methods": 25,
+        "failures": 6,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if _roster(payload['declared_inventory'])!=case['roster']:",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "610739420b37e0f531bb897401562dae25207be536f1d7a127c25c0e22538f1c",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      },
+      {
+        "name": "classification_claim",
+        "started_utc": "2026-11-10T02:15:00.479296+00:00",
+        "finished_utc": "2026-11-10T02:15:00.664843+00:00",
+        "methods": 25,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if geometry[field]!=('SAMPLE_RECORDED' if count else 'NONE_RECORDED'):",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "87d16b64e6bac18f0e304b1869600aaa8fcfcf1b929173551af6687e1926279d",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      },
+      {
+        "name": "same_static_state",
+        "started_utc": "2026-11-10T02:15:00.664843+00:00",
+        "finished_utc": "2026-11-10T02:15:00.864277+00:00",
+        "methods": 25,
+        "failures": 8,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if state!=target_state:",
+            "after": "if False:"
+          },
+          {
+            "before": "if _state(payload['static_state_contract'])!=case['state']:",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "c9ea5e18e50cacad6284d8953cb9f174d6a01888e3aa5dc4aec7b4a6e07f0a41",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      },
+      {
+        "name": "external_plan_digest",
+        "started_utc": "2026-11-10T02:15:00.865278+00:00",
+        "finished_utc": "2026-11-10T02:15:01.044465+00:00",
+        "methods": 25,
+        "failures": 1,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if hashlib.sha256(_canonical(plan)).hexdigest()!=expected:",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "5ea98217953a61b33cac6f20d22e039c3e5ca8c20ef3f790aa844789d2ad088f",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      },
+      {
+        "name": "global_stage_order",
+        "started_utc": "2026-11-10T02:15:01.045466+00:00",
+        "finished_utc": "2026-11-10T02:15:01.233250+00:00",
+        "methods": 25,
+        "failures": 2,
+        "errors": 0,
+        "rc": 1,
+        "detected_without_errors": true,
+        "replacements": [
+          {
+            "before": "if previous_end is not None and start<=previous_end:",
+            "after": "if False:"
+          }
+        ],
+        "source_sha256": {
+          "dem_gen2_demp_contract.py": "8b75c2aa033ed4dc4466462f71414957b159e152444f703e2d5bea9563464c3a",
+          "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+        }
+      }
+    ],
+    "detected_without_errors": 8,
+    "process_network_attempts": [],
+    "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "bytecode_writes_disabled": true,
+    "invocation_actual_engine_calls": 0,
+    "invocation_actual_raw_data_or_log_reads": 0,
+    "physical_ready": false,
+    "execution_go": false,
+    "gate_write": false,
+    "whole_status": "HOLD",
+    "research_results": 0,
+    "count_scope": "Same 25 methods per contrast; eight mutation groups, subtests and repetitions are not additive unique tests"
+  },
+  "final_source_sha256": {
+    "dem_gen2_demp_contract.py": "7490b921d8015d237c52f18461cddb97bd8d373637f95107056309d309a18639",
+    "test_dem_gen2_demp_contract.py": "e399ac13ab6c5fd9f3e6eb56a61725adad38d391feace7c9446d5d5483a5fd12"
+  },
+  "declared_support_limits": {
+    "cases": 2,
+    "stages": 7,
+    "planned_packets": 14,
+    "particles_per_case": [
+      1,
+      256
+    ],
+    "frames_per_packet": [
+      1,
+      32
+    ],
+    "token_length": [
+      1,
+      128
+    ],
+    "integer_maximum": 1000000000
+  },
+  "count_scope": "4 suite invocations and 15 mutation invocations are repeated observations; 25 final methods, assertion/subtest failures and 8 final guard groups are not additive unique tests.",
+  "raw_manifest": "raw_manifest.json in the separate raw evidence root; not a repository path.",
+  "actual_access_scope": "This DEMP preparation and the listed synthetic invocations only. Parent-thread documentary exposure is not certified absent.",
+  "actual_engine_calls": 0,
+  "actual_raw_data_or_log_reads": 0,
+  "research_results": 0,
+  "whole_gate": "NOT_RUN",
+  "actual_qualification": "NOT_RUN",
+  "source_authenticated": false,
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "registration_complete": false,
+  "demp01_closed": false,
+  "demp02_closed": false,
+  "actual_state_comparable": false,
+  "whole_status": "HOLD"
+}
