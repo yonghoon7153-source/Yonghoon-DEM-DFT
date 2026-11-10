@@ -1,0 +1,192 @@
+{
+ "slug": "alharbi2026_coupled_design_ultrathin_composite_se_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-10",
+ "sources": [
+  "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Integrated design framework for ultrathin composite solid electrolytes (UCSEs) in all-solid-state lithium batteries. UCSE performance arises from the coupled optimization of electrolyte thickness, lithium-ion transport architecture, mechanical integrity, interfacial stability, dendrite resistance, and scalable manufacturability. The synergy among these design principles enables high ionic conductivity, enhanced safety, long-term cycling durability, a wide electrochemical stability window, and practical high-energy-density solid- state batteries. The figure is formed by using powerpoint.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    48.7,
+    595.2,
+    617.5
+   ],
+   "w": 2481,
+   "h": 2372,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.648
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 9,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Representative lithium-ion transport pathways in polymer–ceramic composite solid electrolytes, illustrating the evolution of ion-conduction mechanisms with increasing ceramic content and diﬀerent composite architectures. Adapted with permission from Zheng et al., Advanced Science, 2020, 7, 1903088. Copyright © 2020 Wiley-VCH GmbH.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    48.7,
+    595.2,
+    242.6
+   ],
+   "w": 2481,
+   "h": 809,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Schematic illustration of the lithium-ion conduction mechanism in poly(ethylene oxide) (PEO)-based polymer electrolytes, showing the coordination and successive hopping of Li⁺ ions between ether oxygen atoms",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    621.7,
+    595.2,
+    771.0
+   ],
+   "w": 2481,
+   "h": 623,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Divalent anion-driven framework regulation in Zr-based halide solid electrolytes. Oxygen and sulfur incorporation into the halide framework regulate lithium-ion transport through distinct structural pathways.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    468.7,
+    595.2,
+    764.6
+   ],
+   "w": 2481,
+   "h": 1234,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.502
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Representative aligned ceramic architectures for polymer–ceramic composite solid electrolytes illustrating continuous Li⁺ transport pathways and reduced tortuosity. Adapted from Dai et al. (2019).",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    366.7,
+    595.2,
+    711.6
+   ],
+   "w": 2481,
+   "h": 1439,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.79
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Mechanism of lithium dendrite propagation and mechanical failure in solid electrolytes. Non-uniform lithium deposition generates localized stress that promotes dendrite nucleation, crack initiation, and crack- assisted dendrite propagation through the electrolyte, ultimately leading to internal short circuits. The lower panel illustrates the origins of mechanical failure, including volume expansion, stress concentration at structural defects, and crack growth, together with the mitigating effect of mechanically reinforced electrolyte frameworks that redistribute stress and suppress dendrite penetration.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    321.1,
+    595.2,
+    519.3
+   ],
+   "w": 2481,
+   "h": 827,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.659
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 15,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Electrode–electrolyte interfaces and artificial interlayers in all-solid-state lithium batteries. Direct contact between solid electrolytes and electrodes promotes interfacial decomposition, impedance growth, and dendrite formation, whereas artificial interlayers stabilize both anode–electrolyte and cathode–electrolyte interfaces by suppressing side reactions, reducing interfacial resistance, and improving lithium-ion transport and long-term electrochemical stability.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    142.7,
+    595.2,
+    308.3
+   ],
+   "w": 2481,
+   "h": 691,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.712
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 29,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Mechanism-guided roadmap for translating ultrathin composite solid electrolytes from laboratory research to commercial all-solid-state lithium batteries.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    48.7,
+    595.2,
+    682.7
+   ],
+   "w": 2481,
+   "h": 2643,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.511
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Coupled Design Principles for UCSEs.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.4,
+    278.6,
+    520.7,
+    669.5
+   ],
+   "w": 1861,
+   "h": 1630,
+   "dpi": 300,
+   "src": "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf",
+   "blank": 0.92
+  }
+ ],
+ "missing_labels": []
+}

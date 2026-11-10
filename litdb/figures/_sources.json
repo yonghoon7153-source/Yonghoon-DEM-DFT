@@ -38,6 +38,13 @@
    "592ec934-92._Comparing_finetuning_strategies_for_machine_learning_force_fields_in_lithiumion_diffusion.pdf"
   ]
  },
+ "alharbi2026_coupled_design_ultrathin_composite_se_review": {
+  "figures": 9,
+  "generated": "2026-11-10",
+  "pdfs": [
+   "119. Coupled Design Principles for Ultrathin Composite Solid Electrolytes Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries.pdf"
+  ]
+ },
  "alizadeh2018_dem_adhesion_calibration_segregation_heap": {
   "figures": 23,
   "generated": "2026-10-13",
@@ -2344,7 +2351,7 @@
   ]
  },
  "park2026_oxygen_induced_li_intercage_conduction": {
-  "figures": 36,
+  "figures": 43,
   "generated": "2026-11-09",
   "pdfs": [
    "6a52c417-117._Oxygen-induced_lithium_inter-cage_conduction_for_enhanced_performance_in_all-solid-state_batteries.pdf",

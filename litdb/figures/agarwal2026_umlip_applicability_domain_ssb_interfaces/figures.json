@@ -17,15 +17,22 @@
    "rotated_deg": 0,
    "bbox": [
     83.0,
-    383.5,
+    68.0,
     546.1,
     513.2
    ],
    "w": 1931,
-   "h": 542,
+   "h": 1856,
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
-   "blank": 0.627
+   "blank": 0.697,
+   "auto_bbox": [
+    83.0,
+    383.5,
+    546.1,
+    513.2
+   ],
+   "recrop": "2026-11-10 litdb-curator: auto crop kept only the lower third (bbox y 383.5-513.2) - in-figure text labels were taken as the upper crop boundary; clip = union of vector drawings (92,87,539,512) + embedded structure rasters + figure text (top labels at y 75) + margin, above caption (y 515)"
   },
   {
    "key": "f2",
@@ -97,15 +104,43 @@
    "rotated_deg": 0,
    "bbox": [
     83.0,
-    268.2,
+    250.0,
     546.1,
     542.8
    ],
    "w": 1931,
-   "h": 1145,
+   "h": 1221,
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
-   "blank": 0.483
+   "blank": 0.51,
+   "auto_bbox": [
+    83.0,
+    268.2,
+    546.1,
+    542.8
+   ],
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 268.2-542.8) cut off the marker legend row at y 256-266 (which Miller index each marker is); clip extended upward to the end of the preceding body paragraph (y 240) + margin; caption starts at y 545"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "Fig. 6: Overall model accuracy as a function of model size. εinterface is the geometric mean of the normalized errors in Einterface, F, Ef, σf and Wadh (see Methods); lower is better. Note that UMA has a mixture of linear experts design so only a fraction of parameters (6M, filled star) is activated.",
+   "rotated_deg": 0,
+   "bbox": [
+    180.0,
+    284.0,
+    450.0,
+    552.5
+   ],
+   "w": 1125,
+   "h": 1120,
+   "dpi": 300,
+   "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-10 litdb-curator: tool reported f6 as a number gap ('p12 그래픽 없음(img0/draw0)') - Fig. 6 is a vector-only scatter plot (single form XObject) on p.12 between the body paragraph ending at y 276 and its caption (y 554); clip = union of vector drawings (186,294,443,551) + axis/label text spans (193..434, 319..545) + margin"
   },
   {
    "key": "f7",
@@ -117,15 +152,22 @@
    "rotated_deg": 0,
    "bbox": [
     66.0,
-    268.5,
+    66.0,
     529.0,
     438.1
    ],
    "w": 1930,
-   "h": 708,
+   "h": 1551,
    "dpi": 300,
    "src": "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf",
-   "blank": 0.926
+   "blank": 0.89,
+   "auto_bbox": [
+    66.0,
+    268.5,
+    529.0,
+    438.1
+   ],
+   "recrop": "2026-11-10 litdb-curator: auto crop kept only panels c-d (bbox y 268.5-438.1) - the mid-figure legend row (y 259-267) was taken as the upper boundary so panels a-b were lost; clip = union of vector drawings (72,72,523,437) + margin, above caption (y 440)"
   },
   {
    "key": "t1",
@@ -155,7 +197,8 @@
    "skipped": [
     "p12 그래픽 없음(img0/draw0)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_6.png (2026-11-10, litdb-curator) - see figures[f6].manual_crop"
   }
  ]
 }
