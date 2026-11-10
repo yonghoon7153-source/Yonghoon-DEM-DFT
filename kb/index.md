@@ -1,19 +1,21 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 604
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 606
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 395건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 397건)
 - 2026-11-10 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…
 - 2026-11-10 · `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` — DZ 회신 — li2s-3 구조군 정의 · 본 시드 재사용 · 골격 게이트 · 2 단계 큐: NO-GO (P0 0 · P1 6 · P2 3) — 구조군 정의와 여섯 시드 재사용은 조건부 찬성 · 실행 · 재개 경로 결함과 보고량 조건이 남음 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
 - 2026-11-10 · `kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 프롬프트 — b2o3 B·O 배치: 파일럿 이완 에너지가 100 ps 까지 계속 내려간다 → 8 단계 (54 런 × 100 ps) 판독 전에 박은 어닐 시간 진단 (50 ps 프레임 이완 · 두 시점 가족 판독) 과 잠정 규칙이 충분한가 · 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종…
 - 2026-11-10 · `kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 회신 — b2o3 어닐 시간 진단 (개정 3): 개정 3 문구 · 비교 규칙 그대로의 최종 판정은 보류 (P0 0 · P1 2 · P2 2) — D1 · D2 진단은 찬성 · 54 런은 계속 · 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
 - 2026-11-10 · `kb/reviews/codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` — EB 프롬프트 — li2s-3 회신 DZ 고침: 사후 검증 (v1 런) · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 판독 허가 문 · 압력 도구 · 대조 잡 — v1 런을 사후 검증으로 받아도 되는가 · 고친 큐 v2 를 추가 런 전으로 미뤄도 되는가 · Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리…
+- 2026-11-10 · `kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` — EB 회신 (내부 반박 리뷰) — li2s-3 판독 도구 · 카드 개정 DZ: NO-GO (P0 1 · P1 6 · P2 7) — 생산 프레임 수 기대값이 실제 드라이버보다 하나 많다 (4001 대 4000) · 접근 (v1 런 사후 검증) 은 조건부 찬성 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…
 - 2026-11-10 · `kb/reviews/internal_EC_prompt_b2o3_amend4_diag_v2_2026_11_10.md` — EC 프롬프트 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 회신 EA 의 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) 이 채워졌는가 · 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · 사용자 '…
+- 2026-11-10 · `kb/reviews/internal_EC_reply_b2o3_amend4_diag_v2_2026_11_10.md` — EC 회신 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 조건부 GO (P0 0 · P1 2 · P2 5) — gabia 블록이 결과 공개 전 도구 고정을 기계로 안 지킨다 · 끝 구조만 걸린 100 ps 이완 실패가 성공 집합 규칙을 비켜 간다 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_model_switch.md` — 모델 전환 인계 (2026-11-10 저녁) — 같은 세션 · 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 기한 있는 도구 둘 · 사용자 결정 대기 셋 · 진행
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
 - 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
@@ -25,8 +27,6 @@
 - 2026-11-09 · `kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` — DW 회신 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1 해제조건 확인: NO-GO · DV 묶음 1–3 닫힘 · 묶음 4 (판독기) 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서) · P2 비유한 기하 · P3 관측창 근사 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
 - 2026-11-09 · `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건) · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …
 - 2026-11-09 · `kb/reviews/codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md` — DX 회신 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2 확인: NO-GO · DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1 1 (파일럿 결과를 8 단계 결과로 재사용 — 실행 목적 미구분) · P2 2 (실행기 내용 기준 중복 제거 · EOS 입력 유효성) · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
-- 2026-11-09 · `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건) · 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 …
-- 2026-11-09 · `kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` — DY 회신 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3 확인: GO (사용자 새 비준 조건) · DX P1-1 · P2-1 · P2-2 닫힘 · base seed 규칙 찬성 (SEED 는 실행 전에 정하고 재시도에서도 유지하는 운영 규칙 같이) · EOS 결과 파일 결속은 DFT 전 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — GO (1 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (266)
+## reviews/ (268)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-10 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -434,7 +434,9 @@
 - `kb/reviews/decisions_pending_first_author_2026_09_09.md` — 1저자 결정 대기 — 2026-09-09 (Codex BI NO-GO + v3 재편 + cascade 재설계)  (2026-09-09 · 대기)
 - `kb/reviews/internal_BG_reply_c12_2026_09_03.md` — 회신 BG — C-12 내부 적대적 리뷰 (NO-GO · P0 1 · P1 8)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_BH_reply_c12_v32_2026_09_03.md` — 회신 BH — C-12 v32 내부 다중 감사 (7렌즈 · 3인 반박 · NO-GO · P0 1 · P1 6)  (2026-09-03 · 회신반영)
+- `kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` — EB 회신 (내부 반박 리뷰) — li2s-3 판독 도구 · 카드 개정 DZ: NO-GO (P0 1 · P1 6 · P2 7) — 생산 프레임 수 기대값이 실제 드라이버보다 하나 많다 (4001 대 4000) · 접근 (v1 런 사후 검증) 은 조건부 찬성  (2026-11-10 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…)
 - `kb/reviews/internal_EC_prompt_b2o3_amend4_diag_v2_2026_11_10.md` — EC 프롬프트 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 회신 EA 의 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) 이 채워졌는가  (2026-11-10 · 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · 사용자 '…)
+- `kb/reviews/internal_EC_reply_b2o3_amend4_diag_v2_2026_11_10.md` — EC 회신 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 조건부 GO (P0 0 · P1 2 · P2 5) — gabia 블록이 결과 공개 전 도구 고정을 기계로 안 지킨다 · 끝 구조만 걸린 100 ps 이완 실패가 성공 집합 규칙을 비켜 간다  (2026-11-10 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…)
 - `kb/reviews/internal_Z2_reply_polaron_S0_2026_09_03.md` — 회신 Z-2 — 폴라론 S0 내부 적대적 리뷰 2차 (NO-GO · P0 2 · P1 9)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_Z3_reply_polaron_S0_2026_09_03.md` — 회신 Z-3 — 폴라론 S0 내부 적대적 리뷰 3차 (NO-GO · P0 1 · P1 7)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)  (2026-09-03 · 회신반영)
