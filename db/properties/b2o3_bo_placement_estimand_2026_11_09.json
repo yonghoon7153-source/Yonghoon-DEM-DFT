@@ -350,7 +350,7 @@
    "② 성공 집합 불일치 처리 고정",
    "③ 결과 공개 전 진단 도구의 결속 · 정상 / 음성 경로 검증"
   ],
-  "by": "agent · 2026-11-10 · 결정 D-2026-11-10-b2o3-bo-placement-amend4-ea (proposed · EA · EC 반영 · v3 도구 들임 · 사용자 비준 대기)",
+  "by": "agent · 2026-11-10 · 결정 D-2026-11-10-b2o3-bo-placement-amend4-ea (✅ active · 사용자 비준 2026-11-10)",
   "⏩_도구_2026_11_10": "tools/doping/b2o3_bo_anneal_diag.py v2 (개정 4 규칙) — 8 단계 · 50 ps 결과를 열기 전에 커밋 · selftest 49/49 (사유 다섯 갈래 단위 시험 6 · 실제 판독기 사슬: 생성 manifest → 거름 → 파일럿 → 영수증 → 8 단계 md_traj → extract → 진단 이완 → judge 정상 경로 ① + ② · ③ · ⑤ · ④ (시점마다 다른 런 실패 · 한 시점만 실패 · 비유한 E_50) · 부모 상태 (실패 · 검증 실패 · 100 ps 이완 실패 런도 프레임) · 저장 간격 250 → 프레임 100 · 음성: 다른 런 프레임 · 49 ps · 스냅숏 교체 · 부모 상태 · 초기 가족 · 프레임 뺌 · 파일 변조 · 섞인 · 누락 · 이완 정체성 여섯 (목적 · 단계 · time_ps · fmax · 셀 고정 · 시작 sha) · 8 단계 폴더 · 묶인 입력 · t_a 20 · 덮어쓰기) · 깨기 22/22 빨강 · 판독기는 판 고정 그대로 불러 씀",
   "실패_처리_Q6_⛔_EC_전_판": "시점별로 가른다 — 시작 없음 (6 단계 실패) · 부모 기록 검증 실패 (상태가 converged · unconverged 가 아님 · 출력 검증 실패 · md_traj 없음 → 프레임 없음) · 100 ps 끝 이완 실패 (unconverged · 출력 · 궤적은 검증됨 → 50 ps 프레임은 떼어 이완한다) · 50 ps 이완 실패 · 가능한 50 ps 결과를 버리지 않는다",
   "진단_이완_실패_EC_P2_3": "진단 이완의 failed (예외) 는 누락처럼 다룬다 — 같은 출력 폴더 · 같은 설정으로 다시 돌려 check_rc 0 이 된 뒤 판독한다 · 미수렴만 50 ps 실패로 센다 · 100 ps 미수렴 런 하나로도 ④ 가 될 수 있다 (시간 효과가 아니다) · 수렴 표시인데 결과 파일 · 에너지 검사에 걸리는 진단 이완 기록도 거부한다 (손상 — 다시 돌린다)",
@@ -371,6 +371,7 @@
    "도구": "tools/doping/b2o3_bo_anneal_diag.py v3 — sha256 86b359f958e2aa97eea8ec726826be6d46f9d8518b2a8b3b523882452312639f · 리뷰 에이전트가 자기 worktree 에서 고침 (커밋 5ab102a6 → 이 커밋으로 들임) · selftest 87/87 (메인 트리에서 다시 돌림) · 깨기 51/51 빨강 (EC 25 개를 v3 글로 + 새 경로 26) · 합성 시나리오 18/18 기대대로 (relax100_nan → ④ · 일시 failed 이완 · FixAtoms 입력 → 거부 · md.log 두 시도 → 궤적 구간 평균) · convention_check 위반 0 · 판독기 872d91f7… 그대로",
    "출력_키 (v3)": "judge 구간 평균 키 md_log → md_window (+ 런마다 md_log_crosscheck) · 새 키 beside_minimum_not_gates · diag_tool / readout_tool / extract_tools · diag_frames.json 의 parent_detail · kind …frames/v3 · …/v3"
   },
-  "⏩_도구_v3_2026_11_10": "v3 (sha256 86b359f958e2aa97…) 가 v2 (2dc493aa…) 를 대체 — EC P1-1 · P1-2 · P2-1–P2-5 반영 · 판독기는 판 고정 그대로 불러 씀"
+  "⏩_도구_v3_2026_11_10": "v3 (sha256 86b359f958e2aa97…) 가 v2 (2dc493aa…) 를 대체 — EC P1-1 · P1-2 · P2-1–P2-5 반영 · 판독기는 판 고정 그대로 불러 씀",
+  "✅_비준": "2026-11-10 · 사용자 (b2o3 1저자) · AskUserQuestion '비준 (Recommended)' · 카드 커밋 1dcc5407 · 결정 D-2026-11-10-b2o3-bo-placement-amend4-ea active"
  }
 }

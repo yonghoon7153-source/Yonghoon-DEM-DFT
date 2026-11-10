@@ -12475,7 +12475,7 @@
    "title": "b2o3 B·O 배치 카드 개정 4 (회신 EA · 결과 전) — 본 판독 (100 ps) 보존 · 가족별 성공 집합이 두 시점에서 같을 때만 시간 비교 · 판정 사유 다섯 갈래 · 기록 보강 · md.log 구간 진단 · 도구는 100 ps 결과 공개 전에 고정",
    "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_4_EA_회신_2026_11_10' 이 개정 3 의 잠정 규칙 · 기록 · 도구 고정 시점 · 문장을 대체한다. 100 ps 본 판독은 그대로 보존하고 50 ps 진단은 올리지 않는다. 가족별 성공 런 이름 집합이 두 시점에서 같고 두 판독이 기존 게이트를 통과할 때만 두 시점 일치를 판정하며, 다르면 시간 비교 보류. 사유는 ① 같은 선택 ② 다른 승자 ③ 50 ps 여유 부족 ④ 판독 보류 (집합 · 게이트) ⑤ 본 판독 승자 없음으로 가르고 회신 EA 의 문장을 쓴다 (③ · ④ 를 '순서가 바뀌었다' 고 쓰지 않는다). 런별 Δ · 시점별 상태 · 가족별 Δ 중앙 · IQR · 최솟값 · 최댓값 · max|Δ| · 두 시점 최저 런 ID · 끝 꼴 · 최저 간 차와 그 변화 · 같은 바탕 짝 변화 δ_FG,i · 분포와 짝 판정을 기록한다. md.log 구간 [40,50] · [90,100] ps 의 Epot · T 는 기록만. 개정 규칙 · 진단 도구 · 음성 시험은 50 ps · 100 ps 본 결과를 열기 전에 커밋한다 (8 단계 본 판독도 그 뒤에만).",
    "rationale": "회신 EA: 개정 3 은 여유 부족 · 판독 보류를 순서 역전으로, 승자 일치를 순서 일치로 썼고 (P1-1), 시점마다 성공 런 집합이 다르면 시간 효과와 비교 대상 변경이 섞였다 (P1-2 — 에너지가 안 변해도 일치 · 역전이 만들어지는 반례). Δ 요약이 최저를 움직인 큰 하강을 놓칠 수 있고 (P2-1), 도구가 100 ps 결과 공개 뒤에 정해질 여지가 있었다 (P2-2). 8 단계 · 50 ps 결과를 하나도 열기 전에 고친다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "8 단계 결과 · 50 ps 진단 결과 0 건 (진행 신호만) · 파일럿 영수증만 봤다",
@@ -12506,7 +12506,7 @@
     "first_author": "사용자"
    },
    "proposed_by": "claude-session-2026-11-10 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-10",
@@ -12525,9 +12525,24 @@
      "state": "proposed",
      "by": "agent",
      "note": "v3 진단 도구 들임 (EC 고침) · 카드 문장 · 출력 키 반영 — 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자 (b2o3 1저자)",
+     "note": "사용자 2026-11-10 (이 세션 · AskUserQuestion): b2o3 B·O 배치 카드 개정 4 (커밋 1dcc5407 · Codex EA + 내부 리뷰 EC 반영 · 진단 도구 v3) '비준 (Recommended)'"
     }
    ],
-   "_note": "proposed — EA · EC 반영 · v3 도구 커밋 뒤 사용자 비준 · 비준 전에는 8 단계 판독을 열지 않는다"
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T12:36:28Z",
+    "commit": "1dcc5407e88c1fb2aa5cb0dedb04b87883360c24",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-10 (이 세션 · AskUserQuestion): b2o3 B·O 배치 카드 개정 4 (커밋 1dcc5407 · Codex EA + 내부 리뷰 EC 반영 · 진단 도구 v3) '비준 (Recommended)'",
+    "decision_digest": "sha256:4e75fc3cad01188055469776dfbdb6d3e191ef2f9fbd8e3a6d48312d12321519"
+   }
   },
   {
    "id": "D-2026-11-10-cascade-axes-bundle2",

@@ -232,7 +232,8 @@
   "감시": "watch -n 30 'bash $HOME/w_b2o3_s8.sh | sed -E \"s/· 이완 .*/· 이완 중 (값 숨김)/\"' — 이완 중 relax.log 끝 줄 (FIRE 에너지) 을 가린다 (EC P2-5 라)",
   "⛔_순서": "② → ⓪ → ⓪b → ① → ③ → ④ → ④b → ⑤ · 비준 커밋 해시는 비준 때 채운다 · 진단 도구 sha256 = 86b359f958e2aa97… (v3) · 붙여넣기 블록은 비준 뒤에 낸다",
   "by": "agent · 2026-11-10 (EC P1-1 · P2-3 · P2-5)",
-  "⓪b_궤적_에너지_있음 (읽기만 · 값 안 찍음)": "$PY -c \"import glob; from ase.io import read; p=sorted(glob.glob('$R/s8_anneal/*/md.traj'))[0]; a=read(p, index=50); print('energy', a.calc is not None and 'energy' in a.calc.results, 'momenta', a.has('momenta'))\" — 둘 다 True 여야 ③ (아니면 extract 가 멈춘다 · 에너지 값은 화면에 안 낸다)"
+  "⓪b_궤적_에너지_있음 (읽기만 · 값 안 찍음)": "$PY -c \"import glob; from ase.io import read; p=sorted(glob.glob('$R/s8_anneal/*/md.traj'))[0]; a=read(p, index=50); print('energy', a.calc is not None and 'energy' in a.calc.results, 'momenta', a.has('momenta'))\" — 둘 다 True 여야 ③ (아니면 extract 가 멈춘다 · 에너지 값은 화면에 안 낸다)",
+  "비준": "✅ 2026-11-10 사용자 비준 (카드 커밋 1dcc5407) — ② 의 <비준 커밋 해시> = 이 비준 기록이 든 커밋 (다음 push 뒤 런로그에 적는다)"
  },
  "8단계_진행_2026_11_10_2027": {
   "관측": "2026-11-10 20:27:48 KST (gabia · 사용자 붙여넣기 · 감시 = 새 필터 watch -n 30 'bash $HOME/w_b2o3_s8.sh | sed …' — 이완 줄을 가림)",
