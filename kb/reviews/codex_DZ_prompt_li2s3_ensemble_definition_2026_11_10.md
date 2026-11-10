@@ -7,7 +7,7 @@ letter: DZ
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-10) — 사용자 검토 · 발송 대기 (보낼지는 사용자 · 위임 10-30) · 기준 커밋 f744ce6b
+status: 발송 대기 — 사용자 2026-11-10 '권고대로해' (보내기로 · 보내는 글 전달) · 회신 전에는 2 단계 결과를 읽지 않는다 · 기준 커밋 f744ce6b
 confidence: medium
 verificationStatus: unverified
 explored: false

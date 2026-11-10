@@ -12297,6 +12297,81 @@
     "근거_발화": "사용자 2026-11-10 (이 세션): 'li2s는 그럼 끝인거야?' · '이어서해' · 'li2s-2 이게 여기서 끝이라고?' → 설계 설명 뒤 kgy 입력 확인 블록 출력 붙여넣기 (16:47:29) — 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)')",
     "decision_digest": "sha256:d9f62cd022d2494c8cb6813d1a1bf0c1f6ca630bd107b194982ca362c4c5c26b"
    }
+  },
+  {
+   "id": "D-2026-11-10-b2o3-bo-placement-anneal-time-diagnostic",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.uma_family_screen.anneal_time_diagnostic",
+   "slot": "b2o3_bo_placement_anneal_time_diagnostic",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 카드 개정 3 — 어닐 시간 진단을 8 단계 판독 전에 박는다 (런마다 50 ps 프레임 이완 · 50 ps 시점 가족 판독 · 잠정 기본 규칙은 낮추기만)",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_3_어닐_시간_진단_2026_11_10': 8 단계가 끝난 뒤 계획 54 런 각각의 md.traj 50 ps 프레임을 같은 설정으로 이완해 E_50 을 내고, 같은 가족 판독 (anneal_judge · 여유 0.20 · G1–G3) 을 50 ps 시점으로 한 번 더 낸다. 잠정 기본 규칙: 본 판독 (100 ps) 이 '승자 F' 일 때 50 ps 판독도 같은 F 가 승자여야 승자 문장을 쓰고, 아니면 'UMA 100 ps 어닐로는 못 가른다 (순서가 어닐 시간에 따라 바뀐다)' 로 내린다 (낮추기만). Codex 회신 (편지 EA) 으로 규칙이 바뀌면 판독 전에 다시 개정한다. 판독 계약 · 기계 판독 값 · 계획 · t_a · 상한 85 는 그대로다.",
+   "rationale": "파일럿 영수증에서 이완 에너지가 100 ps 까지 계속 내려갔다 (마지막 50 ps 에 0.358 eV — 승자 문턱 0.20 의 1.8 배 · 끝 꼴은 같음). t_a 는 운영 규칙이지 수렴 증거가 아니라고 카드가 이미 적었다. 가족 순서가 어닐 시간에 따라 바뀌는 중이면 100 ps 한 시점의 승자를 그대로 쓰는 것은 과하다 — 8 단계 결과를 하나도 읽기 전에 확인 방법을 정한다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "8 단계 결과 0 건 (도는 중 · 진행 신호만 봄) · 파일럿 영수증은 봤다",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "record": "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json",
+   "amends": "D-2026-11-09-b2o3-bo-placement-amend1",
+   "depends_on": [
+    "D-2026-11-09-b2o3-bo-placement-amend1",
+    "D-2026-11-10-b2o3-bo-placement-stage1-cap"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_3_어닐_시간_진단_2026_11_10 · 커밋 ed24b57d)",
+    "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json (7b_영수증_2026_11_10 · 영수증_내용 · 읽기_2026_11_10)",
+    "사용자 gabia 붙여넣기 2026-11-10 (s7_receipt.json)"
+   ],
+   "reopen_criteria": [
+    "Codex 회신 (편지 EA) 이 규칙을 바꾸면 판독 전에 개정 4",
+    "8 단계 판독 뒤에는 규칙을 바꾸지 않는다"
+   ],
+   "enforcement": "진단 도구 (프레임 떼기 · 결속 · 판독기 anneal_judge 호출 · selftest 음성 포함) 를 진단 결과를 읽기 전에 커밋한다 · 판독기와 실행 중인 판은 건드리지 않는다 · 8 단계 본 판독 문장은 이 규칙을 거친 뒤에만 쓴다",
+   "cost_cap": {
+    "anneal_diag_GPU_h": "어림 1–3 (1 단계 UMA 상한 85 안)",
+    "machine": "gabia · 8 단계와 본 판독 뒤"
+   },
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": "claude-session-2026-11-10 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자",
+     "note": "사용자 2026-11-10 '권고대로해' — 권고 = 진단 하나 (런마다 50 ps 프레임 이완) 를 판독 전에 미리 정하고 그 쓰임을 Codex 에 묻는다 · 8 단계는 세우지 않는다. 잠정 기본 규칙 (두 시점 같은 승자 · 낮추기만) 은 에이전트 제안으로 같이 적었다 — Codex 회신 · 사용자 말로 바뀌면 판독 전에 다시 개정"
+    }
+   ],
+   "_note": "active — 카드 개정 3 (어닐 시간 진단 · 판독 전) · 사용자 2026-11-10 '권고대로해' · 잠정 기본 규칙은 Codex 회신 (EA) 으로 바뀔 수 있다 (판독 전 개정)",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T08:53:41Z",
+    "commit": "ed24b57d921a04230a4dacd5b25be167e15ffbb4",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-10 (이 세션): '권고대로해' — 직전 보고의 [b2o3] 권고 (판독 전 진단 · Codex 질문 · 런은 안 세움) 에 대한 답 (b2o3 1저자 = 사용자)",
+    "decision_digest": "sha256:ac4b1c59a7860b219cf27a46a543b7a537f83e3cb939ff0e7aa55223172b3140"
+   }
   }
  ]
 }
