@@ -1,0 +1,292 @@
+{
+  "schema": "MIXER_M1_SCOPE_PROVENANCE_DRAFT_V1",
+  "scope": "document-only source/test-text and limited-receipt reconciliation; no new defect verdict",
+  "fixed_source_pin": "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+  "prior_diagnosis": {
+    "pin": "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+    "filename": "queue_diagnosis.json",
+    "sha256": "dc25d8403b16c2b0b21cb9fbe711aa77f60cf744c7326b19eb6eb775a33302c2",
+    "ledger_sha256": "713258aacdc6d39c414f462fbd4a803c23d8912d13da43fc4eb99efe2845e1df",
+    "current_ledger_mutated": false,
+    "status_not_promoted_or_reopened": true
+  },
+  "sources": [
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "bytes": 229640,
+      "sha256": "dc253bc8319077bc1e41635ae30ec588eb4a14c899db075e064192c4ef9cf6f7",
+      "git_blob_oid": "82439cf3523342e16645eb27b51acf51936405f6",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false,
+      "matches_prior_scope_source_identity": true
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "bytes": 127980,
+      "sha256": "791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a",
+      "git_blob_oid": "d2e0e796cd7750652fa3d3278275d1905e304e3a",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false,
+      "matches_prior_scope_source_identity": true
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "bytes": 135987,
+      "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+      "git_blob_oid": "0cbc372dbbdc1c66e81db39c0ea13055a848511e",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false,
+      "matches_prior_scope_source_identity": true
+    },
+    {
+      "path": "scripts/mixer_smoke_blind.py",
+      "bytes": 125163,
+      "sha256": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+      "git_blob_oid": "83b78f1b595b61933f8855e6896ed6d532e927b2",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false,
+      "matches_prior_scope_source_identity": true
+    },
+    {
+      "path": "scripts/test_mixer_d2_consumers.py",
+      "bytes": 64920,
+      "sha256": "96a6f41c54755dacd15236dab5984514e6530244d3d858c87a0966b708370075",
+      "git_blob_oid": "5f44bc2e26c942b14ce64d56dfb16d81d912e82d",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false
+    },
+    {
+      "path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "bytes": 28064,
+      "sha256": "b2decfae1567465131b3391acb428646ffa2992448bbc08c862cb2b1efd9195d",
+      "git_blob_oid": "939fa72fbe65592d282729125a893e31626c9db7",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false,
+      "matches_prior_scope_source_identity": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_d2_fix_request_20261023.md",
+      "bytes": 13621,
+      "sha256": "dc1cf24c4c1e72ec310a949567a90f3f3f89c527828fcc7632433f8d128bb082",
+      "git_blob_oid": "e4d988767babd2568eaa11388a60cc8b0d7222eb",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false,
+      "matches_prior_scope_source_identity": true
+    },
+    {
+      "path": "docs/reviews/codex_mixer_d3_design_v2_request_20261023.md",
+      "bytes": 10463,
+      "sha256": "26453ca240cde954ebead3bf702bf54a6a7c8160086db446bd3ae1ea6a2ea9ab",
+      "git_blob_oid": "b6277227927c203b00fdba4c4a5438b7bdb3a30b",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false,
+      "matches_prior_scope_source_identity": true
+    },
+    {
+      "path": "docs/reviews/mxd2r_r01_acceptance_20261106/README.md",
+      "bytes": 5243,
+      "sha256": "3020429d7f2268274111ba871c5d2f9ae259f78c12e49166c4edc8b7c2474fc1",
+      "git_blob_oid": "bd5039640474eba124b5bc8116581c2850dc9a36",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false
+    },
+    {
+      "path": "docs/reviews/nonrint_limited_acceptance_consolidation_20261109/README.md",
+      "bytes": 4138,
+      "sha256": "7fa883b82f80735a19b24011cc727ef7512e3c163af637791c8d6d76cdad368b",
+      "git_blob_oid": "9ad22ddfde99637ed3f5cc68b9faf09b85fe5908",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false
+    },
+    {
+      "path": "docs/collab/claude_to_codex/20261109-0003_nonrint-consolidation-sha-map.md",
+      "bytes": 3803,
+      "sha256": "2c3eb927193af085bb178dd1587b5f664839f32ae2eb7cde8a54c17274d7ff8a",
+      "git_blob_oid": "14bc935ef4d92a6be7a0d3c9880c6431bc6e9d5e",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false
+    },
+    {
+      "path": "docs/collab/claude_to_codex/20261109-1600_mixer-path-limited-acceptance-sha-map.md",
+      "bytes": 2655,
+      "sha256": "061015f1cbfc3da80afec60b2a6c03d55aa52cd869e7c1fd3f3259ff472cd09b",
+      "git_blob_oid": "a136013327330e9c8d933ca72578c2e6d46722b2",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false
+    },
+    {
+      "path": "docs/reviews/nonrint_first_link_20261109/mixer_ibb_fixed_qualification_plan.md",
+      "bytes": 10909,
+      "sha256": "70e7b463555df9575fdf807ed13312baee51cc3174362bc0835869eb039c0cf6",
+      "git_blob_oid": "7f3bc56b597c8dfcde2a92225819ba503e47a5f6",
+      "source_executed": false,
+      "source_body_copied_to_this_package": false
+    }
+  ],
+  "source_count": 13,
+  "prior_sources_rechecked": 7,
+  "items": [
+    {
+      "id": "MXD2-01",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P2",
+      "prior_triage": "3_PARTLY_IMPLEMENTED_POLICY_REMAINS",
+      "source_path": "scripts/mixer_deck_readback.py",
+      "line_references": [
+        1472,
+        1475,
+        1478,
+        1484,
+        1493,
+        1503,
+        1511
+      ],
+      "in_CODE_FILES_32": false
+    },
+    {
+      "id": "MXD2-02",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P2",
+      "prior_triage": "0_ALREADY_IMPLEMENTED",
+      "source_path": "scripts/make_mixer_deck.py",
+      "line_references": [
+        588,
+        591,
+        603,
+        1104,
+        1107,
+        2821,
+        2839,
+        2852,
+        2856,
+        2870
+      ],
+      "in_CODE_FILES_32": false
+    },
+    {
+      "id": "MXD2-03",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P3",
+      "prior_triage": "0_ALREADY_IMPLEMENTED",
+      "source_path": "scripts/make_mixer_deck.py",
+      "line_references": [
+        575,
+        578,
+        581,
+        583,
+        584,
+        624,
+        2872,
+        2877
+      ],
+      "in_CODE_FILES_32": false
+    },
+    {
+      "id": "MXD2-04",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P3",
+      "prior_triage": "0_ALREADY_IMPLEMENTED",
+      "source_path": "scripts/make_mixer_deck.py",
+      "line_references": [
+        504,
+        507,
+        512,
+        514,
+        538,
+        554,
+        618,
+        619,
+        620,
+        2879,
+        2887,
+        2888,
+        2894,
+        2910
+      ],
+      "in_CODE_FILES_32": false
+    },
+    {
+      "id": "MXD2-05",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P3",
+      "prior_triage": "0_ALREADY_IMPLEMENTED",
+      "source_path": "scripts/make_mixer_deck.py",
+      "line_references": [
+        541,
+        542,
+        545,
+        546,
+        1111,
+        1113,
+        1115,
+        2912,
+        2922,
+        2924
+      ],
+      "in_CODE_FILES_32": false
+    },
+    {
+      "id": "MXD2-06",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P3",
+      "prior_triage": "0_ALREADY_IMPLEMENTED",
+      "source_path": "scripts/make_mixer_deck.py",
+      "line_references": [
+        1074,
+        1175,
+        1177,
+        1178,
+        1183,
+        2927,
+        2929,
+        2931,
+        2933,
+        3072,
+        3085
+      ],
+      "in_CODE_FILES_32": false
+    },
+    {
+      "id": "MXD2-07",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P3",
+      "prior_triage": "0_DOCUMENT_CORRECTION_EXISTS",
+      "source_path": "docs/reviews/mixer_d3_se_flowability_anchor_design_v2_20261023.md",
+      "line_references": [
+        7,
+        9,
+        90,
+        151,
+        155,
+        156,
+        161
+      ],
+      "in_CODE_FILES_32": false
+    },
+    {
+      "id": "MIX-11",
+      "ledger_status_at_prior_pin": "open",
+      "severity_at_prior_pin": "P2",
+      "prior_triage": "3_CAUSE_UNKNOWN",
+      "source_path": "scripts/mixer_smoke_blind.py",
+      "line_references": [
+        149,
+        163,
+        166,
+        168,
+        1064,
+        1066
+      ],
+      "in_CODE_FILES_32": false
+    }
+  ],
+  "source_and_test_execution_count": 0,
+  "new_implementation_count": 0,
+  "new_test_code_count": 0,
+  "raw_research_data_or_logs_read_count": 0,
+  "host_access_count": 0,
+  "operational_seal_changes": 0,
+  "actual_go": false,
+  "whole_status": "HOLD",
+  "exposure_note": "Instruction-file prefix and broad matched lines contained unrelated historical numerical statements. These were not used; no raw research data/logs were read. No claim of zero incidental numerical exposure."
+}

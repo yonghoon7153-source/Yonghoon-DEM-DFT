@@ -1,0 +1,106 @@
+{
+  "schema": "MIX11_SYNTHETIC_DIAGNOSTIC_RECEIPT_DRAFT_V1",
+  "kind": "TEMPLATE_NOT_A_RECEIPT",
+  "recommendation_assumption": "Q-M1-4",
+  "whole_status": "HOLD",
+  "historical_first_cause": "UNKNOWN",
+  "historical_gate_failure_reproduced": false,
+  "execution_status": "NOT_RUN",
+  "planned_source_pin": "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+  "planned_wrapper": {
+    "path": "scripts/mixer_smoke_blind.py",
+    "sha256": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24"
+  },
+  "attempt": {
+    "attempt_id": null,
+    "parent_attempt_id": null,
+    "case_alias": null,
+    "scratch_alias": null,
+    "virtual_vault_alias": null,
+    "wrapper_source_sha256_used": null,
+    "reader_source_sha256_used": null,
+    "harness_source_sha256_used": null,
+    "synthetic_input_sha256": null,
+    "fake_reader_fixture_id": null,
+    "fake_clock_fixture_id": null,
+    "exclusive_creation_model_id": null,
+    "invocation_manifest_sha256": null,
+    "runtime_metadata_reference": null,
+    "started_at_utc": null,
+    "ended_at_utc": null,
+    "elapsed_monotonic_seconds": null,
+    "observed_rc": null,
+    "expected_outcome": null,
+    "observed_outcome": "NOT_RUN",
+    "exception_kind": null,
+    "exception_evidence_reference": null,
+    "timed_out": null,
+    "interrupted": null,
+    "first_failure_evidence_reference": null,
+    "stdout": {
+      "evidence_alias": null,
+      "bytes": null,
+      "sha256": null,
+      "capture_complete": false,
+      "truncated": null
+    },
+    "stderr": {
+      "evidence_alias": null,
+      "bytes": null,
+      "sha256": null,
+      "capture_complete": false,
+      "truncated": null
+    },
+    "created_artifact_manifest_sha256": null,
+    "prior_artifact_manifest_sha256": null,
+    "existing_bytes_preserved": null,
+    "distinct_attempt_receipts": null,
+    "partial_or_failed_attempt_is_success": false,
+    "automatic_retry_performed": false
+  },
+  "planned_cases": [
+    {
+      "case_alias": "C1_FIXED_CLOCK_TWO_CALLS_ONE_VIRTUAL_VAULT",
+      "status": "NOT_RUN",
+      "acceptance_description": "Distinct attempts and exclusive names; preserve the first artifact; no overwrite."
+    },
+    {
+      "case_alias": "C2_FIXED_CLOCK_TWO_INDEPENDENT_SCRATCHES",
+      "status": "NOT_RUN",
+      "acceptance_description": "Distinct scratch and attempt identity even if local basenames are equal."
+    },
+    {
+      "case_alias": "C3_FAKE_READER_ONE_SUCCESS_ONE_EXCEPTION",
+      "status": "NOT_RUN",
+      "acceptance_description": "Preserve each full stdout/stderr, current rc and source identity; no old-success substitution."
+    },
+    {
+      "case_alias": "C4_VIRTUAL_EXCLUSIVE_NAME_BUDGET_EXHAUSTED",
+      "status": "NOT_RUN",
+      "acceptance_description": "Controlled failure at the existing bound; no overwrite, fabricated success or retry."
+    }
+  ],
+  "scope": {
+    "synthetic_only": true,
+    "actual_reader_invocation_allowed": false,
+    "actual_engine_invocation_allowed": false,
+    "actual_data_or_raw_log_access_allowed": false,
+    "host_access_allowed": false,
+    "os_or_shared_filesystem_concurrency_certified": false,
+    "historical_cause_certified": false,
+    "source_identity_is_source_authentication": false,
+    "actual_registration_completed": false,
+    "operational_reseal_allowed": false,
+    "reservation_change_allowed": false,
+    "submission_allowed": false,
+    "execution_authorized": false,
+    "ledger_change_allowed": false,
+    "independent_review_received": false
+  },
+  "unknowns": [
+    "Historical MIX-11 first failure cause and first stderr",
+    "Future synthetic fixture and harness identity",
+    "Observed attempt IDs, rc, duration and complete output",
+    "Actual host, filesystem concurrency and operational qualification"
+  ]
+}
