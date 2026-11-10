@@ -61,10 +61,10 @@ def _int(value,minimum=0,maximum=1000000000):
 def _number(value,nonnegative=False):
     if type(value) not in (int,float):
         raise ValueError('FINITE_BUILTIN_NUMBER_REQUIRED')
-    result=float(value)
-    if not math.isfinite(result) or (nonnegative and result<0):
+    if (type(value) is float and not math.isfinite(value)) or (nonnegative and value<0):
         raise ValueError('FINITE_BUILTIN_NUMBER_REQUIRED')
-    return result
+    # Fraction below must receive the original integer or actual binary float.
+    return value
 
 
 def _rat(value,signed=False,zero=False):

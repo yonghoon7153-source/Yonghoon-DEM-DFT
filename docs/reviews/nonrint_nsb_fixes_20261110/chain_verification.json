@@ -1,0 +1,344 @@
+{
+  "schema": "NSB_CHAIN_FIX_VERIFICATION_V1",
+  "parent_pin": "a69095c7f1cc4908a14b93912d97cb93cc33eb64",
+  "finding_ids": [
+    "NSB-C01",
+    "NSB-C02"
+  ],
+  "whole_status": "HOLD",
+  "candidate_sources": [
+    {
+      "path": "scripts/dem_gen2_p2_contract.py",
+      "before_sha256": "cb5b3b66bbb89c39d2faf843c68f1b04853e28d9bcddc69de458f4aa2c194899",
+      "after_sha256": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d"
+    },
+    {
+      "path": "scripts/dem_gen2_qualification_matrix.py",
+      "before_sha256": "b407782264018f0bf2ff704169ff6ef3f9da7c05a865278679daa16d4f950d77",
+      "after_sha256": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755"
+    }
+  ],
+  "new_test": {
+    "path": "scripts/test_dem_gen2_nsb_chain_regression.py",
+    "sha256": "3a243579bff25958909b7392658a4554187fc64739f3a9a8c1993f81351b48cd",
+    "methods": 11,
+    "same_in_old_red_and_green": true,
+    "includes_received_expected_correct_assertions": 3
+  },
+  "received_review_script": {
+    "name": "review/chain/independent_regression_tests.py",
+    "sha256": "8ef842355869cb629f84de08219abc840c5dc9409c3ae1a67d6bf137760c4e4e",
+    "top_level_script_executed": false,
+    "adaptation": "Three expected-correct assertions adapted to fixed repo synthetic fixture loader; authority and source-input immutability checks added."
+  },
+  "test_first": {
+    "implementation_written_after_actual_old_red": true,
+    "old_red_methods": 11,
+    "old_red_failures": 13,
+    "old_red_errors": 0,
+    "green_methods": 11,
+    "green_failures": 0,
+    "green_errors": 0,
+    "historical_other_unit_authoring_order_not_rewritten": true
+  },
+  "contract_clarification": {
+    "number_int": "Exact built-in integer preserved before Fraction conversion.",
+    "number_float": "Original finite built-in binary float preserved; no decimal-string rationalization.",
+    "subclasses_and_bool": "Rejected without conversion hooks.",
+    "negative_role": "EXPECTED_NEGATIVE with existing broad status/reason is matched only with fresh separation and clear witnesses, 1..3 complete POST windows, no post_end, exact last POST end and clear+registered4*selected_window_steps==planned_end_step.",
+    "range_status": "Disclosed synthetic negative-role clarification under Q-QUAL-A/B, not actual quantitative qualification or author approval.",
+    "v1_plan_and_broad_p2_reason_preserved": true,
+    "original_three_post_fixture_unchanged": true,
+    "additional_row_fields": [
+      "negative_scope",
+      "checked_post_windows",
+      "missing_post_windows"
+    ],
+    "historical_pin_declarations_are_not_current_source_authentication": true
+  },
+  "runs": [
+    {
+      "evidence_name": "old_red",
+      "report_sha256": "ec404c6aed7bf2f24efcb5eada88063a59543760ed137e37e093d5ad57a6f4bd",
+      "methods": 11,
+      "failures": 13,
+      "errors": 0,
+      "rc": 1,
+      "started": "2026-11-10T05:07:05.391608+00:00",
+      "finished": "2026-11-10T05:07:06.740245+00:00",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "cb5b3b66bbb89c39d2faf843c68f1b04853e28d9bcddc69de458f4aa2c194899",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "dem_gen2_qualification_matrix.py": "b407782264018f0bf2ff704169ff6ef3f9da7c05a865278679daa16d4f950d77",
+        "test_dem_gen2_qualification_matrix.py": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e",
+        "test_dem_gen2_nsb_chain_regression.py": "3a243579bff25958909b7392658a4554187fc64739f3a9a8c1993f81351b48cd"
+      },
+      "source_unchanged_during_call": true,
+      "process_network_attempts": []
+    },
+    {
+      "evidence_name": "green",
+      "report_sha256": "ecd9aad6cce674499682ec4bc77a10ff338cde128285feb78130d5b30f66c429",
+      "methods": 11,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "started": "2026-11-10T05:08:28.764616+00:00",
+      "finished": "2026-11-10T05:08:30.036403+00:00",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "dem_gen2_qualification_matrix.py": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755",
+        "test_dem_gen2_qualification_matrix.py": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e",
+        "test_dem_gen2_nsb_chain_regression.py": "3a243579bff25958909b7392658a4554187fc64739f3a9a8c1993f81351b48cd"
+      },
+      "source_unchanged_during_call": true,
+      "process_network_attempts": []
+    },
+    {
+      "evidence_name": "existing_p2",
+      "report_sha256": "1d117ff8ef5df42bb9ba1b1de5f8305b86976f491f3d73dde9735cb724c5c1c8",
+      "methods": 29,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "started": "2026-11-10T05:08:28.764616+00:00",
+      "finished": "2026-11-10T05:08:29.756817+00:00",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d",
+        "dem_gen2_qualification_matrix.py": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755",
+        "test_dem_gen2_qualification_matrix.py": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3"
+      },
+      "source_unchanged_during_call": true,
+      "process_network_attempts": []
+    },
+    {
+      "evidence_name": "existing_matrix",
+      "report_sha256": "1a0c8ea4d61b60d382b49a02f10d5bf300a5f84dc8d2cebdc1a54d3bddaba31d",
+      "methods": 25,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "started": "2026-11-10T05:08:28.764616+00:00",
+      "finished": "2026-11-10T05:08:31.344892+00:00",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "dem_gen2_qualification_matrix.py": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755",
+        "test_dem_gen2_qualification_matrix.py": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e"
+      },
+      "source_unchanged_during_call": true,
+      "process_network_attempts": []
+    },
+    {
+      "evidence_name": "contrasts/int_float_restore/run",
+      "report_sha256": "121248731da7c54ed9af99fef3d3ae1d2f6d8ac8888b7e53174c1da0b248d7d0",
+      "methods": 11,
+      "failures": 4,
+      "errors": 0,
+      "rc": 1,
+      "started": "2026-11-10T05:09:47.853474+00:00",
+      "finished": "2026-11-10T05:09:49.158555+00:00",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "998be33d295a3dc84af04e9abc17b6925bf0c3ca5688e7716e2e1a587fe921df",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "dem_gen2_qualification_matrix.py": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755",
+        "test_dem_gen2_qualification_matrix.py": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e",
+        "test_dem_gen2_nsb_chain_regression.py": "3a243579bff25958909b7392658a4554187fc64739f3a9a8c1993f81351b48cd"
+      },
+      "source_unchanged_during_call": true,
+      "process_network_attempts": []
+    },
+    {
+      "evidence_name": "contrasts/expected_label_only/run",
+      "report_sha256": "efe03717ed6c7c1bb6ac5f672e63121f07256e0331c05f5ee9fc0eb12a32121c",
+      "methods": 11,
+      "failures": 6,
+      "errors": 0,
+      "rc": 1,
+      "started": "2026-11-10T05:09:47.853474+00:00",
+      "finished": "2026-11-10T05:09:49.114049+00:00",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "dem_gen2_qualification_matrix.py": "6da418e6fc7da7b71afb67f5f442061c0b2c28f3464fa8b401e0b4cb5608821a",
+        "test_dem_gen2_qualification_matrix.py": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e",
+        "test_dem_gen2_nsb_chain_regression.py": "3a243579bff25958909b7392658a4554187fc64739f3a9a8c1993f81351b48cd"
+      },
+      "source_unchanged_during_call": true,
+      "process_network_attempts": []
+    },
+    {
+      "evidence_name": "contrasts/post_budget_removed/run",
+      "report_sha256": "056b6e37567579b3c5ec9d4d00175ccee24e808cf280dee3b42e5888afc0584e",
+      "methods": 11,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "started": "2026-11-10T05:09:47.853474+00:00",
+      "finished": "2026-11-10T05:09:49.097048+00:00",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "dem_gen2_qualification_matrix.py": "828dc7a1190eb8d45c1373e13ac97a6eb382e4b5ebd2b61dff0880093b87ad45",
+        "test_dem_gen2_qualification_matrix.py": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e",
+        "test_dem_gen2_nsb_chain_regression.py": "3a243579bff25958909b7392658a4554187fc64739f3a9a8c1993f81351b48cd"
+      },
+      "source_unchanged_during_call": true,
+      "process_network_attempts": []
+    }
+  ],
+  "guard_contrasts": [
+    {
+      "name": "int_float_restore",
+      "mutated_file": "dem_gen2_p2_contract.py",
+      "candidate_sha256": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d",
+      "mutant_sha256": "998be33d295a3dc84af04e9abc17b6925bf0c3ca5688e7716e2e1a587fe921df",
+      "change": "restore float conversion after exact validation",
+      "project_source_changed": false
+    },
+    {
+      "name": "expected_label_only",
+      "mutated_file": "dem_gen2_qualification_matrix.py",
+      "candidate_sha256": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755",
+      "mutant_sha256": "6da418e6fc7da7b71afb67f5f442061c0b2c28f3464fa8b401e0b4cb5608821a",
+      "change": "remove post-stage and budget witness checks but retain diagnostic output labels/counts",
+      "project_source_changed": false
+    },
+    {
+      "name": "post_budget_removed",
+      "mutated_file": "dem_gen2_qualification_matrix.py",
+      "candidate_sha256": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755",
+      "mutant_sha256": "828dc7a1190eb8d45c1373e13ac97a6eb382e4b5ebd2b61dff0880093b87ad45",
+      "change": "remove only planned end == clear + four selected windows",
+      "project_source_changed": false
+    }
+  ],
+  "preparation_error": {
+    "prior_preparation_error": "metadata-only builder unpacked four tuple fields into three variables; corrected before any mutant source write or project execution",
+    "prior_project_runs": 0,
+    "parent_candidate_mutated": false
+  },
+  "unchanged_dependency_and_existing_test_bytes": [
+    {
+      "path": "scripts/dem_gen2_qualification.py",
+      "sha256": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c"
+    },
+    {
+      "path": "scripts/dem_gen2_t0_contract.py",
+      "sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd"
+    },
+    {
+      "path": "scripts/dem_gen2_t11_contract.py",
+      "sha256": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59"
+    },
+    {
+      "path": "scripts/dem_gen2_live_contract.py",
+      "sha256": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c"
+    },
+    {
+      "path": "scripts/test_dem_gen2_live_contract.py",
+      "sha256": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a"
+    },
+    {
+      "path": "scripts/dem_gen2_s0_contract.py",
+      "sha256": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d"
+    },
+    {
+      "path": "scripts/test_dem_gen2_s0_contract.py",
+      "sha256": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+    },
+    {
+      "path": "scripts/test_dem_gen2_p2_contract.py",
+      "sha256": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3"
+    },
+    {
+      "path": "scripts/test_dem_gen2_qualification_matrix.py",
+      "sha256": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e"
+    }
+  ],
+  "unchanged_count": 9,
+  "runtime": {
+    "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+    "flags": [
+      "-I",
+      "-B"
+    ],
+    "system": "Windows",
+    "different_os_or_version_qualification": false
+  },
+  "audit_scope": "Python audit installed before any project source execution; listed process/network events only, not a full OS security audit.",
+  "raw_evidence": {
+    "manifest_filename": "final_raw_manifest.json",
+    "manifest_sha256": "a98e8a2d69a2e5d9047316bbed5339d14bd5f3cb381efe9a3f36861bd2300017",
+    "files_excluding_manifest": 152,
+    "files_including_manifest": 153,
+    "exact_set_and_hashes_checked": true,
+    "local_paths_kept_outside_repository": true
+  },
+  "author_internal_static_review": {
+    "scope": "C01/C02 source diff and new test; no additional concrete missing guard found",
+    "separate_execution_count": 0,
+    "not_external_verdict": true
+  },
+  "independent_candidate_review": "NOT_RECEIVED",
+  "whole_gate": "NOT_RUN",
+  "actual_engine_calls": 0,
+  "actual_raw_data_or_log_reads": 0,
+  "host_accesses": 0,
+  "ledger_changed": false,
+  "operational_seal_modified": false,
+  "execution_go": false,
+  "count_scope": "New 11 methods, received assertions, old suites, subtest failures and repeated contrasts are overlapping units; do not sum as new unique tests."
+}
