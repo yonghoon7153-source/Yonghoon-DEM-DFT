@@ -223,15 +223,16 @@
  "8b_진단_블록_v3_2026_11_10": {
   "언제": "8 단계가 끝난 뒤 (tmux b2o3_s8 없음 · s8_anneal.log 의 run_rc=0 · check_rc=0) · 개정 4 비준 커밋이 push 된 뒤",
   "②_진단_도구_worktree (먼저)": "git -C /data/work/repo fetch origin claude/friendly-meitner-lldvar && git -C /data/work/repo worktree add --detach $R/diag_src <비준 커밋 해시> (⛔ FETCH_HEAD · '이상' 금지 — 정확한 해시 · ⛔ $R/src 는 안 올린다 — 판 고정)",
-  "⓪_비준_지문_확인": "결정 D-2026-11-10-b2o3-bo-placement-amend4-ea 의 decision_state == active ($R/diag_src/db/governance/decisions.json) · sha256sum $R/diag_src/tools/doping/b2o3_bo_anneal_diag.py = <v3 sha256> · sha256sum $R/src/tools/doping/b2o3_bo_readout.py = 872d91f7… — 하나라도 아니면 멈춤 · 출력 줄을 런로그에 적는다",
+  "⓪_비준_지문_확인": "결정 D-2026-11-10-b2o3-bo-placement-amend4-ea 의 decision_state == active ($R/diag_src/db/governance/decisions.json) · sha256sum $R/diag_src/tools/doping/b2o3_bo_anneal_diag.py = 86b359f958e2aa97eea8ec726826be6d46f9d8518b2a8b3b523882452312639f · sha256sum $R/src/tools/doping/b2o3_bo_readout.py = 872d91f7… — 하나라도 아니면 멈춤 · 출력 줄을 런로그에 적는다",
   "①_본_판독": "cd $R/src && $PY tools/doping/b2o3_bo_readout.py anneal --verdict $R/s6_verdict.json --receipt $R/s7_receipt.json --results $R/s8_anneal/anneal_results.json --out $R/s8_readout.json",
   "③_프레임": "$PY $R/diag_src/tools/doping/b2o3_bo_anneal_diag.py extract --readout_tool $R/src/tools/doping/b2o3_bo_readout.py --verdict $R/s6_verdict.json --receipt $R/s7_receipt.json --results $R/s8_anneal/anneal_results.json --out_dir $R/s8b_frames (출력의 N_EXPECT 를 ④ 에)",
   "④_이완만": "[ ! -e $R/s8b_relax ] || { echo '⛔ s8b_relax 가 이미 있다'; exit 1; } && R=$R SRC=$R/src PY=$PY CAND=$R/s8b_frames N_EXPECT=<③> SESSION=b2o3_s8b OUTNAME=s8b_relax TIME_PS=0 TEMP=500 SEED=20261109 RELAX_FMAX=0.05 bash $R/src/db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh (⛔ OUTNAME 은 s8b_relax — s8_anneal 이면 8 단계 결과를 덮는다 · EC P2-5 다)",
   "④b_끝_확인": "s8b 큐 로그의 run_rc=0 · check_rc=0 일 때만 ⑤ (failed 기록이 있으면 같은 폴더 · 같은 설정으로 다시 · 문장 C)",
   "⑤_판독": "$PY $R/diag_src/tools/doping/b2o3_bo_anneal_diag.py judge --readout_tool $R/src/tools/doping/b2o3_bo_readout.py --frames $R/s8b_frames/diag_frames.json --relax $R/s8b_relax/anneal_results.json --readout $R/s8_readout.json --out $R/s8b_diag.json (--readout 필수 · 진단 도구 · 판독기 sha 를 extract 때와 대조)",
   "감시": "watch -n 30 'bash $HOME/w_b2o3_s8.sh | sed -E \"s/· 이완 .*/· 이완 중 (값 숨김)/\"' — 이완 중 relax.log 끝 줄 (FIRE 에너지) 을 가린다 (EC P2-5 라)",
-  "⛔_순서": "② → ⓪ → ① → ③ → ④ → ④b → ⑤ · 해시 · sha256 은 비준 때 채운다 · 붙여넣기 블록은 비준 뒤에 낸다",
-  "by": "agent · 2026-11-10 (EC P1-1 · P2-3 · P2-5)"
+  "⛔_순서": "② → ⓪ → ⓪b → ① → ③ → ④ → ④b → ⑤ · 비준 커밋 해시는 비준 때 채운다 · 진단 도구 sha256 = 86b359f958e2aa97… (v3) · 붙여넣기 블록은 비준 뒤에 낸다",
+  "by": "agent · 2026-11-10 (EC P1-1 · P2-3 · P2-5)",
+  "⓪b_궤적_에너지_있음 (읽기만 · 값 안 찍음)": "$PY -c \"import glob; from ase.io import read; p=sorted(glob.glob('$R/s8_anneal/*/md.traj'))[0]; a=read(p, index=50); print('energy', a.calc is not None and 'energy' in a.calc.results, 'momenta', a.has('momenta'))\" — 둘 다 True 여야 ③ (아니면 extract 가 멈춘다 · 에너지 값은 화면에 안 낸다)"
  },
  "8단계_진행_2026_11_10_2027": {
   "관측": "2026-11-10 20:27:48 KST (gabia · 사용자 붙여넣기 · 감시 = 새 필터 watch -n 30 'bash $HOME/w_b2o3_s8.sh | sed …' — 이완 줄을 가림)",
