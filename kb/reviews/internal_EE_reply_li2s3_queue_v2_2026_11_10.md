@@ -337,3 +337,83 @@ evidenceScope: multi-source-primary
 - W · 갈래는 시험용 read_run 으로만 냈다. 게이트 · 결속 경로를 본 것이지 수송 판정을 본 것이 아니다.
 - 하네스의 출처 기록은 깨끗함을 강제로 참으로 두었다 (판독 selftest 와 같다). 첫 런 한도 시험은 아주 작은 한도 (1e-7 h) 로 했다.
 - P2-6 은 코드만 읽었다 (재현 안 함).
+
+---
+
+> ⏩ **재확인 회신 (2 차 · 2026-11-10 · 같은 리뷰 에이전트 · 고친 판 29741433)** — 아래는 원문 그대로다.
+
+# EE 재확인 — 고친 판 29741433 (큐 v2 62580ea1744fef5c · 판독 60a7ef3ce31d0bb2)
+
+- 희소 worktree 를 29741433 에 다시 만들어 돌리고 지웠다. 저장소 파일 · 커밋 · 푸시 없음 (`git status` 깨끗).
+- selftest 재현: 큐 95/95 (97 s) · 판독 162/162 (104 s).
+- 하네스: 모든 재현을 **생산 경로**로 돌렸다.
+  - 임시 git 저장소에 큐 사본 · 드라이버 · 시험 카드 · 원장을 저장소 경로로 커밋했다.
+  - V2_TEST 없음 · CARD/DECISIONS 환경변수 없음 · ALLOW_TEST_RUNS=False · V2_REPO=그 저장소.
+  - v1 바탕 8 런은 1 차의 실제 v1 큐 → 러너 → 드라이버 런을 다시 썼다.
+- 저자가 말한 하네스 조정 판단:
+  - V2_TEST=1 + ALLOW_TEST_RUNS=True 를 전체에 쓰면 출처 검사 (`_v2_origin_problems`) 가 통째로 건너뛰어진다 (`verify_run_v2` 의 test 분기). p2 를 못 잰다. 그래서 안 썼다.
+  - 나머지 넷 (고정 경로 · 새 판독의 보류 · run_id 열쇠 · 종료 17) 은 그대로 따랐다. 시험을 약하게 하지 않는다.
+
+## 재현 결과
+
+| 재현 | 옛 결과 (36d906ef) | 새 결과 (29741433) | 닫힘 |
+|---|---|---|---|
+| p1 낡은 보류 → 사다리 판독 뒤 재실행 | 종료 0 · 끝난 valid v1 런을 옮김 · 최종 W [550, 600, 650] '3 단계 후보' (사다리 W [600]) · 알림 없음 | v1 이 도는 중 (잠금) 판독 → 거부 · 보류 0 / 잠금 없이 낸 보류 → 런이 끝난 뒤 재실행 → 16 (지문) / 사다리 판독 뒤 사다리 재실행 → 16 / 사다리 런 · 카드 규칙 · 판독 도구가 바뀌면 cond550 판독 거부 · 그대로면 W [550, 600] '축소 3 단계' (사다리와 같은 갈래) | 닫힘 |
+| p2 CARD · DECISIONS 덮기 | 종료 0 · GPU 9000 MiB 에서 시작 · 판독 valid | 저장소 밖 → 6 / V2_TEST=1 → 돌지만 판독 invalid ('시험 런') · 보류 / 커밋 안 한 원장 · 카드 고침 → 6 / 정상 경로 (커밋된 카드 · 원장) → 시작 기록 repo 칸 다 참 · cond550 판독 판독 | 닫힘 (남은 것 새 P2-1) |
+| p3 비용 정함 경로 열쇠 | 옮긴 뒤 다음 런 앞에서 15 · 두 번 정함 | run_id 열쇠 · 옮긴 뒤에도 따라감 · rc 0 · 정함 행 1 / 0 h → 15 / 옛 경로 열쇠 → 15 / 9 h (한도 8 h) → 21 | 닫힘 |
+| p4 550 K 블록을 PHASE=rerun 으로 | 종료 0 · 네 런 한도 검사 없음 | 안 띄운 550 K 를 rerun → 16 / PHASE=cond550 → 첫 550 K 런 뒤 21 (사다리 블록 풂이 안 덮는다) / 풂 → 나머지 셋 rc 0 | 닫힘 |
+| p5 / p6 결속 기록 · 손 풂 줄 | 아무 경로 6 키 JSON → 0 · 뒤에 판독이 받음 / 손 풂 줄 → 0 · 판독 판독 | 고정 경로 밖 → 16 / 손 풂 줄 → 큐 14 · 판독 보류 (acks_without_by_reason 에 그 줄) / **고정 경로에 손으로 쓴 6 키 JSON → 0 · 550 K 네 런** (새 P2-2) | p6 닫힘 · p5 는 판독만 닫힘 |
+| p7 cond550 실패 뒤 · 0 h 정함 | 17 · 안 띄운 셋이 빈 채 / 0 h 받음 | 빈 셋 돌고 17 · 보류 → rerun A11 → cond550 판독 W [550, 600, 650] / 0 h → 15 | 닫힘 |
+| p8 상태 보기 보류 → 끝난 v2 런 옮김 | 종료 0 · 끝난 v2 런 (complete · rc 0) 옮김 | 큐 도는 중 판독 → 거부 · 보류 0 / 끝 기록 없을 때 낸 보류 → 끝난 뒤 재실행 → 16 (exec_v2_end 지문) | 닫힘 |
+
+## 깨기 — 새 판
+
+| 깨기 | 1 차 | 새 판 큐 | 새 판 판독 | 결과 |
+|---|---|---|---|---|
+| QM1 옮긴 폴더를 흔적에서 뺌 | 초록 | 92/95 | 162/162 | 빨강 |
+| QM2 재실행 `later` 늘 거짓 | 초록 | 93/95 | 162/162 | 빨강 |
+| QM3 '이미 끝났다' 가 큐 · 드라이버 판을 안 봄 (PHASE 조건은 설계로 빠져 이것으로 바꿈) | 초록 | 93/95 | 162/162 | 빨강 |
+| QM4 '이미 끝났다' 가 런 값을 안 봄 | 초록 | 94/95 | 162/162 | 빨강 |
+| QM5 보류 기록 BASE 검사 뺌 | 초록 | 94/95 | 162/162 | 빨강 |
+| QM6 결속 기록 phase 검사 뺌 | 초록 | 93/95 | 162/162 | 빨강 |
+| QM7 첫 런 풂 = 아무 21 의 풂 | 초록 | 94/95 | 162/162 | 빨강 |
+| QM9 견적에서 카드 값 뺌 | 초록 | 94/95 | 162/162 | 빨강 |
+| QM16 RERUN 중복 허용 | 초록 | 94/95 | 162/162 | 빨강 |
+| RM1 `_cond550_gate` 가 자격을 안 봄 | 초록 | 95/95 | 161/162 | 빨강 |
+
+- 고침을 되돌리는 깨기 14 개도 다 빨강이다: 지문 · 사다리 판독 뒤 재실행 · 안 띄운 550 K · 저장소 밖 카드 · 경로 열쇠 · 0 h · 정한 시간 · 손 풂 (큐 · 판독) · 동결 · 출처 · 고정 경로 · 블록 밖 v1 호출 · 잠금 중 보류.
+  - F5 (경로 열쇠) 만 깔끔한 ✘ 가 아니라 selftest 가 중간에 터져서 잡혔다. 뒤의 시험이 안 돈다 (작은 것).
+- 대조 (바꾸지 않음): 95/95 · 162/162 초록.
+
+## 판정
+
+**GO** — 큐 v2 로 재실행 · cond550 을 돌리고 판독 v2 경로로 읽어도 된다. P0 · P1 은 남지 않았다. 아래 P2 셋은 판독을 조용히 틀리게 하지 않는다.
+
+## 새로 본 것 (P2)
+
+- **P2-1 병합 안 된 로컬 커밋으로 띄운 런을 받는다** (`r2_p2.py` (d)).
+  - 원장 proposed 커밋 위에 로컬 곁가지 커밋 (원장만 active) → 거기서 PHASE=cond550 → 0.
+  - 원래 줄로 돌아가 나중에 진짜 활성 커밋 → 그 곁 커밋은 HEAD 의 조상이 아닌데 verify valid · cond550 판독 판독.
+  - '활성 전 발사' 가 일부러 만든 커밋 하나로 다시 열린다.
+  - 고침: `_v2_origin_problems` 에 `git merge-base --is-ancestor <repo_head> HEAD` (V2_REPO).
+- **P2-2 고정 경로에 손으로 쓴 판독 기록으로 cond550 이 뜬다** (`r2_p3_p7.py` p5b).
+  - 사다리 판독 전에 `<BASE>/readout_stage2/readout_stage2.json` 에 6 키 JSON → PHASE=cond550 0 · 550 K 네 런 (실제 800 ps 면 ≈ 40 GPU-h).
+  - 그 뒤 진짜 사다리 판독은 '이미 있다' 로 막힌다. cond550 판독은 동결이 거부한다 (도구 sha16 · 규칙 해시 없음). 판독은 지켜지지만 계산 · 순서가 샌다.
+  - 고침: 큐도 띄우기 전에 동결과 같은 것을 본다 — provenance.tool_sha16 = 저장소 판독 도구 · rules_sha256 = 지금 카드 · 행 지문 = 지금 사다리 폴더.
+- **P2-3 v1 큐를 끝난 뒤 한 번 더 치면 사다리 판독이 영영 보류다** (`r2_v1again.py`).
+  - 실제 v1 큐를 다시 침 → 8 런 다 건너뜀 · 러너 호출 0 → 판독 '판정 보류' (블록 밖 v1 호출 1 개) · invalid 0.
+  - 다시 쳐도 보류 기록만 는다 (2 개). 이 사유를 푸는 길이 코드에 없다 (`ready_state` 가 `not other` 를 요구).
+  - 옛 판 (16 런 다 invalid) 보다는 낫다. 다만 막힌 채로 남는다.
+  - 고침: 러너 호출이 없는 블록 밖 v1 호출은 기록만 하거나, by · reason 있는 사람 풂 기록으로 풀게 한다.
+
+## 스크래치 파일
+
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/h2_lib.py — 생산 경로 하네스 (임시 git 저장소)
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/r2_p2.py · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/r2_p2.log — p2 · 정상 경로 대조 · P2-1
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/r2_p1_p8.py · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/r2_p1_p8.log — p1 · p8 · 동결
+  - p1-4c 는 그 스크립트 안의 `git revert -q` 가 안 먹어 규칙 해시도 같이 걸렸다. 카드를 되돌린 뒤 도구만 바꿔 따로 다시 돌렸다 (도구 sha16 만으로 거부 · 대조는 판독).
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/r2_p3_p7.py · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/r2_p3_p7.log — p3 · p4 · p5/p6 · p7 · P2-2
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/r2_v1again.py — P2-3
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/mut2_ee.py · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/mut2_ee.log · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/mut2 — 깨기 25 (1997 s)
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/q2_selftest_v2fix.log · /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/ro_selftest_v2fix.log — selftest 재현
+- /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/ae97ed2c-08ef-5fe9-8fcd-7033671673cd/scratchpad/review_EE/h2 — 임시 저장소 · 런 트리
