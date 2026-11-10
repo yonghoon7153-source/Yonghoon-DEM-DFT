@@ -1,23 +1,23 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-09 · managed-files: 596
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 596
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 387건)
+- 2026-11-10 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
-- 2026-11-09 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
 - 2026-11-09 · `kb/reviews/codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` — DV 프롬프트 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1 재리뷰 (DU NO-GO 고침 · 도구 6 · 설계 · 과거 영향 · 계산 0 건) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
-- 2026-11-09 · `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건) · 발송 2026-11-09 (사용자) · 회신 대기 · 기준 커밋 83…
+- 2026-11-09 · `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건) · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …
 - 2026-11-09 · `kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` — DW 회신 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1 해제조건 확인: NO-GO · DV 묶음 1–3 닫힘 · 묶음 4 (판독기) 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서) · P2 비유한 기하 · P3 관측창 근사 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
-- 2026-11-09 · `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건) · 발송 2026-11-09 (사용자) · 회신 대기 · 기준 커밋 93…
+- 2026-11-09 · `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건) · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …
 - 2026-11-09 · `kb/reviews/codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md` — DX 회신 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2 확인: NO-GO · DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1 1 (파일럿 결과를 8 단계 결과로 재사용 — 실행 목적 미구분) · P2 2 (실행기 내용 기준 중복 제거 · EOS 입력 유효성) · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
-- 2026-11-09 · `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건) · 발송 2026-11-09 (사용자) · 회신 GO (codex_DY_…
+- 2026-11-09 · `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건) · 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 …
 - 2026-11-09 · `kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` — DY 회신 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3 확인: GO (사용자 새 비준 조건) · DX P1-1 · P2-1 · P2-2 닫힘 · base seed 규칙 찬성 (SEED 는 실행 전에 정하고 재시도에서도 유지하는 운영 규칙 같이) · EOS 결과 파일 결속은 DFT 전 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — GO (1 …
 - 2026-11-09 · `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안) · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…
 - 2026-11-08 · `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계) · 진행
@@ -216,7 +216,7 @@
 
 ## reviews/ (260)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-09 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-10 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -377,11 +377,11 @@
 - `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
 - `kb/reviews/codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` — DV 프롬프트 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1 재리뷰 (DU NO-GO 고침 · 도구 6 · 설계 · 과거 영향 · 계산 0 건)  (2026-11-09 · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…)
 - `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
-- `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) · 회신 대기 · 기준 커밋 83…)
+- `kb/reviews/codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` — DW 프롬프트 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1: DV 1 단계 해제조건 네 묶음 + 후속 단계 조건 확인 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …)
 - `kb/reviews/codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` — DW 회신 — 셀구축 v1.1 · b2o3 B·O 배치 카드 개정 1 v1.1 해제조건 확인: NO-GO · DV 묶음 1–3 닫힘 · 묶음 4 (판독기) 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서) · P2 비유한 기하 · P3 관측창 근사  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
-- `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) · 회신 대기 · 기준 커밋 93…)
+- `kb/reviews/codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` — DX 프롬프트 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2: DW 고침 확인 (단계 결속 · 파일럿 시간축 · 비유한 기하 · EOS 기준 순서 · 관측창 문구) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 …)
 - `kb/reviews/codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md` — DX 회신 — 셀구축 v1.2 · b2o3 B·O 배치 카드 개정 1 v1.2 확인: NO-GO · DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1 1 (파일럿 결과를 8 단계 결과로 재사용 — 실행 목적 미구분) · P2 2 (실행기 내용 기준 중복 제거 · EOS 입력 유효성)  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …)
-- `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) · 회신 GO (codex_DY_…)
+- `kb/reviews/codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` — DY 프롬프트 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3: DX 고침 확인 (실행 목적 · 계획 항목 보존 · EOS 입력 유효성) · 1 단계 GO 여부 (계산 0 건)  (2026-11-09 · 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 …)
 - `kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` — DY 회신 — 셀구축 v1.3 · b2o3 B·O 배치 카드 개정 1 v1.3 확인: GO (사용자 새 비준 조건) · DX P1-1 · P2-1 · P2-2 닫힘 · base seed 규칙 찬성 (SEED 는 실행 전에 정하고 재시도에서도 유지하는 운영 규칙 같이) · EOS 결과 파일 결속은 DFT 전  (2026-11-09 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — GO (1 …)
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서)  (2026-08-25 · 리뷰완료-HOLD)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))

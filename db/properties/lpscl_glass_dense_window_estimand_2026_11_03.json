@@ -162,6 +162,12 @@
    "state": "proposed",
    "by": "agent",
    "note": "Codex DF NO-GO 반영 개정 (결과 전) — 판독량 · 소비자 · 시드 규칙 · 압력 절차 · 문구 · 비용 (§개정_DF_2026_11_03)"
+  },
+  {
+   "at": "2026-11-10",
+   "state": "closed",
+   "by": "사용자 (위임 10-30)",
+   "note": "S1 stop_track (B 계 1/5 · 03:23:39 KST) — 카드 7 닫는 조건대로 트랙 마감 · db/properties/lpscl_glass_dense_window_closed_2026_11_10.json · D-2026-11-10-li2s2-dense-window-closed"
   }
  ],
  "기계_판독_값": {
@@ -552,5 +558,6 @@
   "발사_운영값": "--start_max_mib 6000 (사용자 11-04 'esp 앱은 우리꺼 아니야 · 놔둬야돼' · 운영 값 · 카드 개정 아님 · 발사 기록에 남긴다 — runlog 발사_전_점검_kgy_2026_11_04)",
   "도구_커밋": "도구는 63331be6 (회신 DT 가 재현한 판) 그대로 — 드라이버 sha16 1ca75960fa21f4e8 · 러너 sha16 00e08de0f75a7869 · 러너 고정값 1ca75960fa21f4e8 · 카드 값 지문 086de59c484f9c32",
   "by": "agent · 사용자 (위임 10-30) · 2026-11-06"
- }
+ },
+ "✅_마감_2026_11_10": "db/properties/lpscl_glass_dense_window_closed_2026_11_10.json (결정 D-2026-11-10-li2s2-dense-window-closed)"
 }

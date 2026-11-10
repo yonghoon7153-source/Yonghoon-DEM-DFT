@@ -12060,6 +12060,70 @@
     "근거_발화": "사용자 2026-11-09 (대피 세션): AskUserQuestion '관측창 문구 개정 1 도 같이 비준할까요? 짧은 MD 에서 '반응 없음'을 쓸 때 붙이는 한 줄을 고치는 거예요 — kT·ln(ν₀·t·n) 은 '기대 사건 1 개 (검출 63 %)' 지점이고, 95 % 검출은 정확식 kT·ln(ν₀·t·n/(−ln 0.05)) 로 쓴다. Codex DX · DY 가 문구와 숫자를 확인했어요. 비준하면 collect_neb.py 의 관측창 출력 줄과 CLAUDE.md 문구를 같이 고쳐요.' 에 '비준 (Recommended)'",
     "decision_digest": "sha256:e8a85d32d00a88b85595fb2175c909c5dbbdb01c3a2bf05709298567db967e29"
    }
+  },
+  {
+   "id": "D-2026-11-10-li2s2-dense-window-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "li2s2_dense_glass_window_closure",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ]
+   },
+   "title": "li2s-2 (LPSCl@Li₂S 계면상 유리 수송 · 두 유리 비교) — 1 단계 S1 멈춤으로 닫는다: B (a-Li₃PS₄) 1/5 · 시드 게이트 (PS₄ 보존율) 탈락 둘 · 재개 조건 없음 (사용자 수용 · 위임 10-30)",
+   "statement": "마감 기록 db/properties/lpscl_glass_dense_window_closed_2026_11_10.json — 카드 7 의 닫는 조건 (S1 에서 한쪽 계라도 통과 < 4/5) 이 2026-11-10 03:23:39 KST 러너 stop_track 으로 채워졌다: B 는 B11 통과 · B12 (PS₄ 14/15) · B13 (13/15) 시드 게이트 탈락 → 남은 둘을 다 통과해도 3/5 · A 는 pending (2 통과 · 1 탈락). 허용 문장은 카드 1a S1_멈춤 문구 ([계] = B · [n] = 1) 와 탈락 이유 문장뿐 · D · R(T) · Ea 값 없음 · 재개 조건 없음 (새 질문은 새 카드). 비용 77.9 / 230 GPU-h.",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/lpscl_glass_dense_window_closed_2026_11_10.json",
+   "record": "db/properties/lpscl_glass_dense_window_closed_2026_11_10.json",
+   "depends_on": [
+    "D-2026-11-03-li2s2-dense-window",
+    "D-2026-10-30-li2s-first-author-confirmation-waived"
+   ],
+   "evidence": [
+    "db/properties/lpscl_glass_dense_window_closed_2026_11_10.json",
+    "db/properties/lpscl_glass_dense_window_runlog_2026_11_03.json"
+   ],
+   "reopen_criteria": [
+    "⛔ 재개 조건 없음 — 셀 키움 · 더 긴 런 · D3 · 다른 온도 · 다른 밀도 · 다른 시드 게이트는 새 보고량 카드 + 사용자 결정 (GPU)"
+   ],
+   "enforcement": "마감 기록의 허용 · 금지 서술 밖으로 쓰지 않는다 · D · σ · R · Ea 어떤 값도 없음 · 옛 li2s 트랙 마감의 금지 서술은 그대로",
+   "track": {
+    "name": "li2s-2 (LPSCl@Li₂S 계면상 유리 수송)",
+    "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-10",
+     "session": "대피 세션 claude/evac-2026-11-08"
+    }
+   ],
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "수용 — 사용자 2026-11-10 (대피 세션): kgy stage1.log 붙여넣기 (B13 fail · stop_track) 와 함께 *'이거 수용하고 이제 원래 브랜치로 돌아가야되니까 …'* · 카드 7 닫는 조건 (결과 전 규칙) 이 채워져 마감"
+    }
+   ],
+   "_note": "active — 트랙 마감 (S1 stop_track) · 사용자 수용 2026-11-10 · 위임 10-30",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T00:15:05Z",
+    "commit": "8e9a1816af7397cd5d1675dda511ede48eae686e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-10 (대피 세션): kgy stage1.log 붙여넣기 (B13 fail · stop_track) 와 함께 *'이거 수용하고 이제 원래 브랜치로 돌아가야되니까 …'* (위임 10-30 · 원장 '사용자 (위임 10-30)')",
+    "decision_digest": "sha256:21b55936adcbf81866f2ef8cfe150556ebd80c0190eb781f2a9cc491a22677ff"
+   }
   }
  ]
 }

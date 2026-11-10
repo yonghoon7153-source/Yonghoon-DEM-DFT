@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-09
-updated: 2026-11-09
+date: 2026-11-10
+updated: 2026-11-10
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-09
+verifiedAt: 2026-11-10
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -131,7 +131,7 @@ evidenceScope: multi-source-primary
 | DC | 2026-10-22 | `codex_DC_prompt_wad_outsourcing_round2_v3_2026_10_22.md` | `codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 3e70329cb · 묶음 v3 MANIFEST bf7b2ac9…) → 회신 수령 NO-GO (P1 2 — codex_DC_reply_wad_outsourcing_round2_v3_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v3', 'wad'] |
 | DD | 2026-10-22 | `codex_DD_prompt_wad_outsourcing_round2_v4_2026_10_22.md` | `codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 1e4d113d2 · 묶음 v4 MANIFEST 39522906…) → 회신 수령 NO-GO (P1 2 — codex_DD_reply_wad_outsourcing_round2_v4_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v4', 'wad'] |
 | DE | 2026-10-22 | `codex_DE_prompt_wad_outsourcing_round2_v5_2026_10_22.md` | `codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md` | 발송 2026-10-22 (사용자 · 기준 커밋 9ddfbe448 · 묶음 v5 MANIFEST 714324cc…) → 회신 수령 GO · 발송 동의 (P2 1 — codex_DE_reply_wad_outsourcing_round2_v5_2026_10_22.md) | 같은 라벨 · 주제 토큰 일치 ['outsourcing', 'round2', 'v5', 'wad'] |
-| DF | 2026-11-03 | `codex_DF_prompt_li2s2_dense_window_card_2026_11_03.md` | `codex_DF_reply_li2s2_dense_window_card_2026_11_03.md` | 발송 2026-11-03 (사용자 · 기준 커밋 ff795d669) → 회신 수령 NO-GO (P0 1 · P1 5 · P2 4 — codex_DF_reply_li2s2_dense_window_card_2026_11_03.md) · 고정 밀도 NVT 방향은 조건부 찬성 | 같은 라벨 · 주제 토큰 일치 ['card', 'dense', 'li2s2', 'window']; 판정 인용 12회 |
+| DF | 2026-11-03 | `codex_DF_prompt_li2s2_dense_window_card_2026_11_03.md` | `codex_DF_reply_li2s2_dense_window_card_2026_11_03.md` | 발송 2026-11-03 (사용자 · 기준 커밋 ff795d669) → 회신 수령 NO-GO (P0 1 · P1 5 · P2 4 — codex_DF_reply_li2s2_dense_window_card_2026_11_03.md) · 고정 밀도 NVT 방향은 조건부 찬성 | 같은 라벨 · 주제 토큰 일치 ['card', 'dense', 'li2s2', 'window']; 판정 인용 13회 |
 | DG | 2026-11-03 | `codex_DG_prompt_li2s2_df_fixes_2026_11_03.md` | `codex_DG_reply_li2s2_df_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_DG_reply_li2s2_df_fixes_2026_11_03.md`) · 기준 커밋 947e83ba0 | 같은 라벨 · 주제 토큰 일치 ['df', 'fixes', 'li2s2']; 판정 인용 5회 |
 | DH | 2026-11-03 | `codex_DH_prompt_li2s2_dg_fixes_2026_11_03.md` | `codex_DH_reply_li2s2_dg_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (NO-GO · `codex_DH_reply_li2s2_dg_fixes_2026_11_03.md`) · 기준 커밋 7abe7929 | 같은 라벨 · 주제 토큰 일치 ['dg', 'fixes', 'li2s2'] |
 | DI | 2026-11-03 | `codex_DI_prompt_li2s2_dh_fixes_2026_11_03.md` | `codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` | 발송 · 회신 수령 2026-11-03 (고침 묶음 · `codex_DI_reply_li2s2_dh_fixes_2026_11_03.md` · 패치 적용 b7d11f81) · 기준 커밋 dad10ecf | 같은 라벨 · 주제 토큰 일치 ['dh', 'fixes', 'li2s2'] |
@@ -148,9 +148,9 @@ evidenceScope: multi-source-primary
 | DT | 2026-11-06 | `codex_DT_prompt_li2s2_ds_fixes_2026_11_06.md` | `codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` | 발송 완료 · 회신 수령 2026-11-06 조건부 GO (`codex_DT_reply_li2s2_ds_fixes_2026_11_06.md` · 새 P0 · P1 없음 · P2 1 시계 설명) → 카드 v14 · 결정 활성 · kgy 1 단계 발사 · 기준 커밋 63331be6 | 같은 라벨 · 주제 토큰 일치 ['ds', 'fixes', 'li2s2'] |
 | DU | 2026-11-09 | `codex_DU_prompt_cell_construction_v1_2026_11_09.md` | `codex_DU_reply_cell_construction_v1_2026_11_09.md` | 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`codex_DU_reply_cell_construction_v1_2026_11_09.md` · P1 9 · P2 4 · 1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · 기준 커밋 af6b9464 | 같은 라벨 · 주제 토큰 일치 ['cell', 'construction', 'v1'] |
 | DV | 2026-11-09 | `codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` | `codex_DV_reply_cell_construction_v1_1_2026_11_09.md` | 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`codex_DV_reply_cell_construction_v1_1_2026_11_09.md` · P1 4 · P2 6 · P3 2 · 1 단계 해제조건 네 묶음 — 큐 실패 전파 · 실물 결속 · 생성 짝 검증 · 판독기) · 기준 커밋 ad4f41b8 | 같은 라벨 · 주제 토큰 일치 ['1', 'cell', 'construction', 'v1'] |
-| DW | 2026-11-09 | `codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` | `codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` | **NO-GO** (11-09) · DV 묶음 1–3 닫힘 · 묶음 4 판독기 단계 연결 미해제 · P1 3 (단계 결속 · 파일럿 시간축 · EOS 기준 순서 = DFT 전) · P2 비유한 기하 · P3 관측창 근사 · 조건부 비준 미충족 | — |
-| DX | 2026-11-09 | `codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` | `codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md` | **NO-GO** (11-09) · DW P1-1 · P1-2 · P2 · P1-3 · P3 닫힘 · 새 P1 파일럿 결과를 8 단계 결과로 재사용 (실행 목적 미구분) · P2 실행기 내용 기준 중복 제거 · EOS 입력 유효성 (DFT 전) · 고친 판 카드는 사용자 새 비준 필요 | — |
-| DY | 2026-11-09 | `codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` | `codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` | **GO** (11-09 · 기준 12b8bdef) · DX 세 지적 닫힘 · base seed 규칙 찬성 + SEED 운영 규칙 · EOS 결과 파일 결속은 DFT 전 · **사용자 새 비준 뒤 1 단계** | — |
+| DW | 2026-11-09 | `codex_DW_prompt_cell_construction_v1_1_release_2026_11_09.md` | `codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md` | 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 3 · P2 1 · P3 1 — codex_DW_reply_cell_construction_v1_1_release_2026_11_09.md · 조건부 비준 미충족) · 기준 커밋 837cc6e8 (브랜치 claude/evac-2026-11-08 · 그 뒤 커밋은 litdb · 운영 기록 · 웹앱 개념 카드뿐 — b2o3 도구 · 카드 변경 없음) · 앞 편지 DV (NO-GO) | 같은 라벨 · 주제 토큰 일치 ['1', 'cell', 'construction', 'release', 'v1'] |
+| DX | 2026-11-09 | `codex_DX_prompt_cell_construction_v1_2_release_2026_11_09.md` | `codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md` | 발송 2026-11-09 (사용자) → 회신 수령 NO-GO (P1 1 · P2 2 — codex_DX_reply_cell_construction_v1_2_release_2026_11_09.md) · 기준 커밋 93937466 (브랜치 claude/evac-2026-11-08 · 그 뒤 fbdf3e8d 는 이 프롬프트 · 8ef8d029 는 93937466 에 섞인 kgy 정리 기록 오독 줄 되돌림 — 둘 다 b2o3 도구 · 카드 변경 없음) · 앞 편지 DW (NO-GO) | 같은 라벨 · 주제 토큰 일치 ['2', 'cell', 'construction', 'release', 'v1'] |
+| DY | 2026-11-09 | `codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` | `codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` | 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 비준 조건 — codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md) → 사용자 비준 11-09 · 기준 커밋 12b8bdef (브랜치 claude/evac-2026-11-08) · 앞 편지 DX (NO-GO) | 같은 라벨 · 주제 토큰 일치 ['3', 'cell', 'construction', 'release', 'v1'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
