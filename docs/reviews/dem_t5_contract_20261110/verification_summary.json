@@ -1,0 +1,164 @@
+{
+  "schema": "DEM_GEN2_T5_AUTHOR_VERIFICATION_SUMMARY_V1",
+  "created_utc": "2026-11-10T01:23:39.695330+00:00",
+  "parent_pin": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+  "scope": "author-side synthetic contract only; not independent verdict",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows",
+  "flags": [
+    "-I",
+    "-B"
+  ],
+  "baseline_kind": "NEW_FEATURE_FAIL_CLOSED_STUB_NOT_EXISTING_DEFECT",
+  "same_test_bytes_red_green_mutants": true,
+  "source_sha256": {
+    "dem_gen2_t5_contract.py": "82ac11cc3a4264565e3d08d744d3d9c1ff8dd6ed47deee4d675bf3cb6d75161f",
+    "test_dem_gen2_t5_contract.py": "38c3cda7d2ba24b2c22c5bd2f88e5169837c61b9df73cac825b1725ed0baa520"
+  },
+  "baseline_source_sha256": "30128cdeb1818f808ba5ae93b296f756b86db0cb281eae6270a78ee89db2fdd2",
+  "red": {
+    "started_utc": "2026-11-10T01:11:48.015830+00:00",
+    "finished_utc": "2026-11-10T01:11:48.132324+00:00",
+    "methods": 23,
+    "failures": 12,
+    "errors": 0,
+    "rc": 1
+  },
+  "green": {
+    "started_utc": "2026-11-10T01:18:51.530205+00:00",
+    "finished_utc": "2026-11-10T01:18:51.679925+00:00",
+    "methods": 23,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0
+  },
+  "mutants_detected": 5,
+  "mutants": [
+    {
+      "name": "planned_denominator",
+      "started_utc": "2026-11-10T01:19:31.269175+00:00",
+      "finished_utc": "2026-11-10T01:19:31.406685+00:00",
+      "methods": 23,
+      "failures": 2,
+      "errors": 0,
+      "rc": 1,
+      "detected": true,
+      "removed_guard": "planned = len(normalized['seeds'])",
+      "replacement": "planned = max(valid, 1)",
+      "source_sha256": "079a6028244116b8e6772206571865bcf478cc74ea3fe903e0614488b06945c9",
+      "unchanged_test_sha256": "38c3cda7d2ba24b2c22c5bd2f88e5169837c61b9df73cac825b1725ed0baa520"
+    },
+    {
+      "name": "duplicate_manifest",
+      "started_utc": "2026-11-10T01:19:31.406685+00:00",
+      "finished_utc": "2026-11-10T01:19:31.538771+00:00",
+      "methods": 23,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "detected": true,
+      "removed_guard": "if key in received:",
+      "replacement": "if False:",
+      "source_sha256": "a97e0d4784956667765267233ee2808367b40953bb3771ab84b5dbb7c961957a",
+      "unchanged_test_sha256": "38c3cda7d2ba24b2c22c5bd2f88e5169837c61b9df73cac825b1725ed0baa520"
+    },
+    {
+      "name": "identity_pin",
+      "started_utc": "2026-11-10T01:19:31.539773+00:00",
+      "finished_utc": "2026-11-10T01:19:31.693751+00:00",
+      "methods": 23,
+      "failures": 8,
+      "errors": 0,
+      "rc": 1,
+      "detected": true,
+      "removed_guard": "if row_identity != normalized['identity']:",
+      "replacement": "if False:",
+      "source_sha256": "5dddc51190e4c54524244846b68781626cdab7c792df5692a45f7cd434d20a1f",
+      "unchanged_test_sha256": "38c3cda7d2ba24b2c22c5bd2f88e5169837c61b9df73cac825b1725ed0baa520"
+    },
+    {
+      "name": "missing_failure_hold",
+      "started_utc": "2026-11-10T01:19:31.694751+00:00",
+      "finished_utc": "2026-11-10T01:19:31.828375+00:00",
+      "methods": 23,
+      "failures": 3,
+      "errors": 0,
+      "rc": 1,
+      "detected": true,
+      "removed_guard": "incomplete = any(c['missing'] or c['failed'] for c in cells)",
+      "replacement": "incomplete = False",
+      "source_sha256": "403d82f0c6138a9e44d2011df72b9d41ee93f3c69e0bb44c3413dbf2c7947a1a",
+      "unchanged_test_sha256": "38c3cda7d2ba24b2c22c5bd2f88e5169837c61b9df73cac825b1725ed0baa520"
+    },
+    {
+      "name": "family_budget",
+      "started_utc": "2026-11-10T01:19:31.828375+00:00",
+      "finished_utc": "2026-11-10T01:19:31.961058+00:00",
+      "methods": 23,
+      "failures": 3,
+      "errors": 0,
+      "rc": 1,
+      "detected": true,
+      "removed_guard": "if family_keys != expected_cells or alpha_total > family_alpha:",
+      "replacement": "if False:",
+      "source_sha256": "d3b4d36ac298e61c528d48db6bcff27cbaf68e9878b8f6435d85e67f94cfdc2d",
+      "unchanged_test_sha256": "38c3cda7d2ba24b2c22c5bd2f88e5169837c61b9df73cac825b1725ed0baa520"
+    }
+  ],
+  "counting_rule": "23 methods; 5 mutants; subtest failures and repeated runs are not additive unique tests",
+  "no_input_source_mutation": true,
+  "audit_scope": "these recorded test invocations only, not all documentary reading in the parent turn",
+  "denied_process_network_events": [],
+  "invocation_actual_engine_calls": 0,
+  "invocation_actual_values_read": false,
+  "external_preregistration_verification": "NOT_PERFORMED",
+  "interval_generation_qualification": "NOT_QUALIFIED",
+  "true_coverage_inference": "NOT_QUALIFIED",
+  "pbc_qualification": "NOT_QUALIFIED",
+  "actual_registration": "DRAFT_UNREGISTERED",
+  "qualification": "NOT_RUN",
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "research_results": 0,
+  "whole_status": "HOLD",
+  "full_gate_runs": 0,
+  "ci_runs": 0,
+  "other_platform_validation_runs": 0,
+  "evidence_relative_to_author_evidence_root": {
+    "red/report.json": {
+      "bytes": 828,
+      "sha256": "c3db9d205134afc9be7e771ff559e4da320fa0a4e198d3569ec04de35c8ab261"
+    },
+    "red/test.log": {
+      "bytes": 11349,
+      "sha256": "d44b0e48890251f198d9ef357ee82747d6952134a74b0eca24b6e94a2e568ceb"
+    },
+    "green/report.json": {
+      "bytes": 827,
+      "sha256": "47061ad2d303913bd1fb6516cc47c7e0cae47560f6e9d0c151d3af49d00a9187"
+    },
+    "green/test.log": {
+      "bytes": 3175,
+      "sha256": "5116549993c8a5cf162a49aafe40935da49a3dc159ed34b27a0bdb51c91a4f39"
+    },
+    "mutants/summary.json": {
+      "bytes": 3456,
+      "sha256": "9d0f671377ed4e0268884b97611714677bcb30dbc78ce2b49236f3115a9d835e"
+    },
+    "run_contract_checks.py": {
+      "bytes": 2311,
+      "sha256": "2abf5edac28298f70ebc2104d9253afca477aa6fdbc6b2bc04001af8c4c03a96"
+    },
+    "run_mutants.py": {
+      "bytes": 3429,
+      "sha256": "c503156bf8b876ec3d8dc1cc1f8ce3e5d9c9fd909740f90b0174e61aa3aa2049"
+    }
+  },
+  "remaining": [
+    "independent fixed-pin review",
+    "actual quantitative registration",
+    "geometry and statistical model qualification",
+    "host/operational approval"
+  ]
+}
