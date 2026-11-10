@@ -1,0 +1,472 @@
+{
+  "schema": "p2_native_author_verification_summary/1",
+  "parent_pin": "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+  "created_utc": "2026-11-10T01:50:53.988362+00:00",
+  "chronology": {
+    "schema": "p2_native_author_chronology/1",
+    "initial_order": "design and 28-test fixture, then fail-closed stub; no implementation body before red2",
+    "preparation_to_red": "replace single S0 pin placeholder with fixed parent pin",
+    "first_red": {
+      "methods": 28,
+      "failures": 15,
+      "errors": 1,
+      "error": "test_17 assigned a tuple slot when shortening trace; test setup error"
+    },
+    "test_setup_correction": {
+      "before": "args=fixture();args[3]=args[3][:3]",
+      "after": "args=list(fixture());args[3]=args[3][:3]",
+      "implementation_existed": false
+    },
+    "corrected_red2": {
+      "methods": 28,
+      "failures": 16,
+      "errors": 0
+    },
+    "first_implementation": "written only after preserved error-free red2; same 28 tests green",
+    "scope_counterexample": "add method 29 while keeping initial green implementation; POST-only pressure crossing must not become UNLOADING crossing",
+    "scope_red": {
+      "methods": 29,
+      "failures": 1,
+      "errors": 0
+    },
+    "minimal_scope_fix": "Add phase=='UNLOADING' to crossing collection condition.",
+    "final_green": {
+      "methods": 29,
+      "failures": 0,
+      "errors": 0
+    },
+    "mutants": "seven isolated guard weakenings against unchanged final 29-method suite",
+    "existing_closed_defects_reopened": false,
+    "count_scope": "Method counts, assertion/subtest failures, seven mutations and repeated runs are not additive unique tests.",
+    "audit_scope": "Recorded synthetic invocations only, not every documentary read in the parent turn."
+  },
+  "source_sha256": {
+    "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+    "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+    "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+    "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+    "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+    "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+    "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+    "dem_gen2_p2_contract.py": "cb5b3b66bbb89c39d2faf843c68f1b04853e28d9bcddc69de458f4aa2c194899",
+    "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3"
+  },
+  "preserved_preimplementation_files": {
+    "docs/reviews/dem_p2_native_contract_20261110/contract_draft.json": {
+      "bytes": 3926,
+      "sha256": "937299c3ec07b1647a9edbb1991d46699f2d200b40678768cbd942533c7e3d83"
+    },
+    "docs/reviews/dem_p2_native_contract_20261110/README.md": {
+      "bytes": 13274,
+      "sha256": "a14e44973776722d6939d72320e66820c86e4e3731f93ea87b93e2aacee6e5ed"
+    },
+    "PREPARATION_MANIFEST.json": {
+      "bytes": 1126,
+      "sha256": "0d1e53fb86d4536dc57c5f804d9720a4439ebec05cbff648ed555266d3ac739b"
+    },
+    "scripts/dem_gen2_p2_contract.py": {
+      "bytes": 1050,
+      "sha256": "f6aff18a81b795d5db7465c3442e33782abcaba5408bcc02acc1b3dcf52e2ca3"
+    },
+    "scripts/test_dem_gen2_p2_contract.py": {
+      "bytes": 21168,
+      "sha256": "d8ed40a4c9d172d969fe317f414e7dd50f0da88c475fb82b6759aaa7ca54581e"
+    }
+  },
+  "sequence": {
+    "red": {
+      "started_utc": "2026-11-10T01:42:29.182433+00:00",
+      "finished_utc": "2026-11-10T01:42:29.769208+00:00",
+      "methods": 28,
+      "failures": 15,
+      "errors": 1,
+      "rc": 1,
+      "baseline_kind": "tests_written_before_stub_and_implementation_not_existing_defect",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "f6aff18a81b795d5db7465c3442e33782abcaba5408bcc02acc1b3dcf52e2ca3",
+        "test_dem_gen2_p2_contract.py": "fa386fd36768b8814477c9011cb09b1c5bba4646f6a10d2f7c6b4d3bd15feebc"
+      }
+    },
+    "red2": {
+      "started_utc": "2026-11-10T01:42:45.839528+00:00",
+      "finished_utc": "2026-11-10T01:42:46.430954+00:00",
+      "methods": 28,
+      "failures": 16,
+      "errors": 0,
+      "rc": 1,
+      "baseline_kind": "corrected_test_tuple_setup_before_implementation_not_existing_defect",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "f6aff18a81b795d5db7465c3442e33782abcaba5408bcc02acc1b3dcf52e2ca3",
+        "test_dem_gen2_p2_contract.py": "c5ad5285a807be8fd340d140c917e57e7ec3f35dec9ec3751aaa71d65b00c675"
+      }
+    },
+    "green": {
+      "started_utc": "2026-11-10T01:45:54.467342+00:00",
+      "finished_utc": "2026-11-10T01:45:55.454062+00:00",
+      "methods": 28,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "baseline_kind": "implementation_written_after_preserved_error_free_stub_red2",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "a9e3b3afd44a0c07e5047e205691b965c3ca0d459f26086f308a67c0d1cf2b86",
+        "test_dem_gen2_p2_contract.py": "c5ad5285a807be8fd340d140c917e57e7ec3f35dec9ec3751aaa71d65b00c675"
+      }
+    },
+    "crossing_red": {
+      "started_utc": "2026-11-10T01:47:52.829885+00:00",
+      "finished_utc": "2026-11-10T01:47:53.838938+00:00",
+      "methods": 29,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "baseline_kind": "new_unloading_only_counterexample_against_initial_28_method_green_implementation",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "a9e3b3afd44a0c07e5047e205691b965c3ca0d459f26086f308a67c0d1cf2b86",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3"
+      }
+    },
+    "final_green": {
+      "started_utc": "2026-11-10T01:48:03.208411+00:00",
+      "finished_utc": "2026-11-10T01:48:04.215364+00:00",
+      "methods": 29,
+      "failures": 0,
+      "errors": 0,
+      "rc": 0,
+      "baseline_kind": "one_line_unloading_scope_fix_after_specific_counterexample_red",
+      "source_sha256": {
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+        "dem_gen2_p2_contract.py": "cb5b3b66bbb89c39d2faf843c68f1b04853e28d9bcddc69de458f4aa2c194899",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3"
+      }
+    }
+  },
+  "mutants": [
+    {
+      "name": "s0_original_revalidation",
+      "started_utc": "2026-11-10T01:48:46.559515+00:00",
+      "finished_utc": "2026-11-10T01:48:47.203907+00:00",
+      "methods": 29,
+      "failures": 4,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "envelope=decode_s0(s0_bytes,context['s0_contract'],context['live_plan'],\n                       context['servo_frames'],context['ra_frames'])",
+          "after": "envelope=json.loads(s0_bytes)['body']"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_p2_contract.py": "5f425725cf880c9b6fcae69f762959b439be8f61897eff527eef4b6b09a5866d",
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+      }
+    },
+    {
+      "name": "external_plan_digest",
+      "started_utc": "2026-11-10T01:48:47.203907+00:00",
+      "finished_utc": "2026-11-10T01:48:48.173684+00:00",
+      "methods": 29,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if plan_hash!=expected_plan:",
+          "after": "if False:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_p2_contract.py": "29d55ce16b22e9db303a6304eb331302742174f472541b945a42e92b443d06bd",
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+      }
+    },
+    {
+      "name": "physical_window_pair",
+      "started_utc": "2026-11-10T01:48:48.173684+00:00",
+      "finished_utc": "2026-11-10T01:48:49.178876+00:00",
+      "methods": 29,
+      "failures": 3,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if half_dt*2!=dt or half_steps!=2*steps or dt*steps!=window or half_dt*half_steps!=window:",
+          "after": "if False:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_p2_contract.py": "9827eb4d81e493dd5ea1a73edf61926f1a286b2180166801c5573a1efd3c14c9",
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+      }
+    },
+    {
+      "name": "all_step_contact_counts",
+      "started_utc": "2026-11-10T01:48:49.178876+00:00",
+      "finished_utc": "2026-11-10T01:48:50.203164+00:00",
+      "methods": 29,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "all_zero=all_zero and count==0",
+          "after": "all_zero=all_zero and (count==0 or offset!=0)"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_p2_contract.py": "e6e3560e5fc7b3aa6512ad310fd83509c192799092aad2c0b43bb5dfe6e543e6",
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+      }
+    },
+    {
+      "name": "same_s0_inventory",
+      "started_utc": "2026-11-10T01:48:50.204162+00:00",
+      "finished_utc": "2026-11-10T01:48:51.211532+00:00",
+      "methods": 29,
+      "failures": 3,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if _inventory(sample['particles'])!=prepared['inventory']:",
+          "after": "if False:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_p2_contract.py": "288e933b125a4286360ae71c70eff8e9e1e0e7b3fdcc3d4c49cea4e1570d59fa",
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+      }
+    },
+    {
+      "name": "four_post_windows",
+      "started_utc": "2026-11-10T01:48:51.211532+00:00",
+      "finished_utc": "2026-11-10T01:48:52.235125+00:00",
+      "methods": 29,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "if events['checked_post_windows']==4:",
+          "after": "if events['checked_post_windows']>=3:"
+        },
+        {
+          "before": "if clear_z is None or events['checked_post_windows']!=4:",
+          "after": "if clear_z is None or events['checked_post_windows']<3:"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_p2_contract.py": "0df9b5977a83ea2c17a2bc6251059336168f7b54d4753edf63be189c59c4a565",
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+      }
+    },
+    {
+      "name": "native_profile",
+      "started_utc": "2026-11-10T01:48:52.235125+00:00",
+      "finished_utc": "2026-11-10T01:48:53.229009+00:00",
+      "methods": 29,
+      "failures": 1,
+      "errors": 0,
+      "rc": 1,
+      "assertion_detected": true,
+      "detected_without_errors": true,
+      "replacements": [
+        {
+          "before": "_one(header['profile'],('P2_NATIVE_ULPR_V1',))",
+          "after": "None"
+        }
+      ],
+      "source_sha256": {
+        "dem_gen2_live_contract.py": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+        "dem_gen2_p2_contract.py": "898e737bc6106279f1bfe27d45d0614daf43888335f2ca6388af7ea85d4fc51d",
+        "dem_gen2_qualification.py": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+        "dem_gen2_s0_contract.py": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+        "dem_gen2_t0_contract.py": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+        "dem_gen2_t11_contract.py": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+        "test_dem_gen2_live_contract.py": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+        "test_dem_gen2_p2_contract.py": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+        "test_dem_gen2_s0_contract.py": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17"
+      }
+    }
+  ],
+  "mutants_detected_without_errors": 7,
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "python_sha256": "b8ad68cef7709b8d8178136e891942f8db37adf8f6a5538f0e5c442136bf8eea",
+  "platform": "Windows",
+  "flags": [
+    "-I",
+    "-B"
+  ],
+  "source_and_test_unchanged_during_each_invocation": true,
+  "existing_dependencies_changed": false,
+  "audit_installed_before_project_code": true,
+  "audit_scope": "These recorded synthetic invocations only, not all parent-turn documentary reads.",
+  "process_network_attempts": [],
+  "invocation_actual_engine_calls": 0,
+  "invocation_actual_raw_data_or_log_reads": 0,
+  "existing_whole_suites_run": 0,
+  "whole_gate": "NOT_RUN",
+  "CI": "NOT_RUN",
+  "independent_review": "PENDING",
+  "actual_T0": "NOT_RUN",
+  "actual_T11": "NOT_RUN",
+  "actual_T12": "NOT_RUN",
+  "actual_S0": null,
+  "actual_unload_case": null,
+  "registration_complete": false,
+  "physical_ready": false,
+  "execution_go": false,
+  "transition_authorized": false,
+  "gate_write": false,
+  "operational_seal_modified": false,
+  "source_authenticated": false,
+  "hidden_history_qualified": false,
+  "research_results": 0,
+  "whole_status": "HOLD",
+  "evidence_relative_to_author_evidence_root": {
+    "red/report.json": {
+      "bytes": 1934,
+      "sha256": "30954ceedcd49e7ee43a8e15abe039172a2623d99ea57a57e0f331565433a661"
+    },
+    "red2/report.json": {
+      "bytes": 1938,
+      "sha256": "98f27c4a3f1882f1abbbf5e5445064d1db453753721303e3c6919ce893c7806d"
+    },
+    "green/report.json": {
+      "bytes": 1928,
+      "sha256": "490cf6c19d66d4665b1ddd2ed3f26941a888f9a59e337d9f33591279af365e7d"
+    },
+    "crossing_red/report.json": {
+      "bytes": 1949,
+      "sha256": "34b2be74167c0083c61c448fe8e1fec907870d07a8e33e7aa5e65c7e2e0568fa"
+    },
+    "final_green/report.json": {
+      "bytes": 1931,
+      "sha256": "715de1c58c83e16f980f65a324e075c1f9fe2332e7b5d5e256f0bda37ea95040"
+    },
+    "red/test.log": {
+      "bytes": 33957,
+      "sha256": "926e3db5d45d2f7e27a403d620d003d7407149f56195749425a1cd045d001c24"
+    },
+    "red2/test.log": {
+      "bytes": 34976,
+      "sha256": "c1603a1e5acd2567ff825250a51c52be46393df9e9f70a497afab7668f3dee5b"
+    },
+    "green/test.log": {
+      "bytes": 4867,
+      "sha256": "59c1b8858d4def408bd900c85c984394ec10c92838559f8f48bd90bc2161613f"
+    },
+    "crossing_red/test.log": {
+      "bytes": 5757,
+      "sha256": "64664e1d0c74d544a15fcf06150b6a0a5d8affe2a0139d2a84503aabc3e30e84"
+    },
+    "final_green/test.log": {
+      "bytes": 5038,
+      "sha256": "586955c300f7c44418f229649c9f932705ae6bbfd28db7c37e64b5647b910962"
+    },
+    "mutants/summary.json": {
+      "bytes": 12296,
+      "sha256": "0e7ccfb16be00f3d3fc1fb6fa5ea07c46a4e868614d6e1c7c3f1029e2263545f"
+    },
+    "CHRONOLOGY.json": {
+      "bytes": 1548,
+      "sha256": "635436a2841635a8ccb39780ff50db627b65da9229804ce89d8bde07f00d4d26"
+    },
+    "run_synthetic_suite.py": {
+      "bytes": 3421,
+      "sha256": "09dd45f5100f66831ca77ffcba52b2a66933d83f43fd54850287692f8bc58878"
+    },
+    "run_mutants.py": {
+      "bytes": 4388,
+      "sha256": "b33d770def85c31014caf0644ee0037771f57950e26708262980e2d181751c2a"
+    }
+  }
+}
