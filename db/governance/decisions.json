@@ -12833,7 +12833,7 @@
    "title": "li2s-3 카드 개정 3 — 큐 v2 (재실행 · cond550 · 드라이버 직접 호출 · 런마다 실행 기록 · 런 직전 재해시 · 정지 · 비용 ack) 와 판독 v2 경로 (--phase ladder|cond550 · VERIFY_MAP)",
    "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 개정_3_큐_v2_2026_11_10 이 정의다: stage2.queue_v2 = {sha16 62580ea1744fef5c · 이 결정} · cost_estimate_h_per_ps 0.013 · 첫 런 한도 400 ps 당 8 h · 정지 · 비용 흔적은 사람 ack 전에는 다시 띄우지 않는다 · v2 런은 런을 정하는 카드 값으로 묶인다 · 섞인 판독은 모든 런 valid · 잠금 풀림 · ack 안 된 정지 없음 · 이 결정 active 일 때만 · cond550 판독은 고정된 사다리 판독 (cond550 자격 참) 에 묶인다 · 재실행은 판정 보류 기록 (sha256) 이 적은 런만 · 판독 도구 180e43f5 로 대조 잡을 다시 돈 뒤에만 판독 허가. 내부 리뷰 EE 반영 (카드_문장_EE 1–8): 재실행은 보류 기록 지문 = 지금 폴더일 때만 · 사다리 판독 뒤 사다리 재실행 금지 · cond550 판독은 사다리 행 지문 · 도구 sha16 · 규칙 해시가 같을 때만 · 카드 · 원장은 저장소 파일 · HEAD 결속 · 첫 런 한도는 길이 블록마다 · 풂은 by · reason · 비용 정함은 > 0 · run_id 열쇠. EE 재확인 GO (29741433) · 남은 P2 셋은 운영 규칙으로: v2 는 push 된 커밋의 worktree 에서만 · <BASE>/readout_stage2/ 는 판독 도구만 쓴다 · v1 큐는 끝난 뒤에도 다시 치지 않는다.",
    "rationale": "EB 문장 6 (카드): 남은 런 · 재실행 · cond550 은 리뷰를 통과한 큐 v2 로만, v2 리뷰는 16 런 판독 전에 끝낸다 — v1 큐의 DZ P1 반례 (완료 · 실패 · 건너뛰기 · 재개 · 비용 장부 우회 · 첫 런 한도 우회) 를 v2 가 막는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "2 단계 결과 0 건 · 첫 런 verify valid 만 (수송값 안 읽음)",
@@ -12864,7 +12864,7 @@
     "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
    },
    "proposed_by": "claude-session-2026-11-10 (friendly)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-10",
@@ -12883,8 +12883,24 @@
      "state": "proposed",
      "by": "agent",
      "note": "EE 재확인 GO — P2 셋을 운영 규칙 · 한계로 카드에 적음 · 다음 커밋에서 활성 (위임 10-30)"
+    },
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "카드 커밋 40cde57e · 내부 반박 리뷰 EE (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 사용자 2026-11-10 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T18:59:50Z",
+    "commit": "40cde57eabe9db4330204597dcd09c772e5a0ef4",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "내부 반박 리뷰 EE (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 사용자 2026-11-10 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐'",
+    "decision_digest": "sha256:c980af13a487943e4e831c5593e2b0d0b12250514af3512810973b04f152ca49"
+   }
   }
  ]
 }
