@@ -4,6 +4,7 @@
 > **저자**: Shyue Ping Ong, Yifei Mo, William Davidson Richards (MIT DMSE) · Lincoln Miara, Hyo Sug Lee (Samsung SAIT, Cambridge MA) · **Gerbrand Ceder*** (MIT) · Energy Environ. Sci. 2013, **6**, 148–156 · Received 2012-06-15 / Accepted 2012-10-01 / Published online 2012-10-02
 > 자금: Samsung SAIT + TeraGrid(PSC)·NERSC(DOE DE-AC02-05CH11231)
 > 🔗 **원전 실험 (2026-11-10 교차 참조)**: LGPS 발견 · 이 논문이 Ewald 30 배열로 질서화한 정련 구조의 출처 = [`kamaya2011_lgps_lithium_superionic_conductor`](kamaya2011_lgps_lithium_superionic_conductor.md) — σ 12 mS cm⁻¹ 은 500 °C 소결 펠렛의 total σ (27 °C 반복 4 점 11.1–12.6 · `figure-read ≈`) · '1D 전도' 는 중성자 열인자 추론 · Li/LGPS/Au CV '>5 V' 는 겉보기 창.
+> 🔗 **Si 계 실험 쪽 (2026-11-10 교차 참조)**: 이 논문의 Li₁₀SiP₂S₁₂ (AIMD σ300 23 mS cm⁻¹ · 0 V 산물 Li₂₁Si₅ + Li₂S + Li₃P) 에 Cl 을 더한 실험 = [`kato2016_high_power_assb_lsipscl_superionic`](kato2016_high_power_assb_lsipscl_superionic.md) — LSiPSCl 25.3 mS cm⁻¹ (90 % 가열 펠렛 total · 아지로다이트 19 wt% 2 상) · Li 쪽 첫 효율 39 % (LGPS 61 · P 만의 Li₉.₆P₃S₁₂ 90 %) = 이 논문 0 V 산물 (Li–Si 합금) 과 같은 방향 (겉보기 지표 · 증명 아님).
 
 
 > elements: Al Ge Li O P S Se Si Sn

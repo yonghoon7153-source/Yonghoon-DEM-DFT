@@ -383,3 +383,6 @@ doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density	high energy den
 # ── LGPS 원전 · '넓은 창 (>5 V)' 주장의 원전 (Kamaya 외 2011 · Nat. Mater. 10, 682 · 사용자 목록 125 번) — litdb 2026-11-10 · 제목 'A lithium superionic conductor' 가 짧고 흔한 낱말뿐이라 (xu2026_ndo… · fujimura2013… 등 'superionic conductor' 제목과 토큰이 겹친다) 수동 지정 · 본문 · Sup 공통 조각 · '.pdf' 까지 넣어 다른 제목의 앞부분과 안 겹치게 · 밑줄 · 공백 두 변형 ──
 kamaya2011_lgps_lithium_superionic_conductor	a lithium superionic conductor.pdf
 kamaya2011_lgps_lithium_superionic_conductor	a_lithium_superionic_conductor.pdf
+# ── LGPS 형 신 SE (LSiPSCl · Li9.6P3S12) 고출력 전고체 셀 (Kato 외 2016 · Nat. Energy 1, 16030 · 사용자 목록 126 번) — litdb 2026-11-10 · 자동 매칭은 붙지만 (제목 100 %) 'all-solid-state batteries' · 'superionic conductors' 가 흔한 토큰이라 뒤에 들어올 digest 와 겹치지 않게 고정 · 본문 · Sup 공통 조각 · 밑줄 · 공백 두 변형 ──
+kato2016_high_power_assb_lsipscl_superionic	high-power_all-solid-state_batteries_using_sulfide
+kato2016_high_power_assb_lsipscl_superionic	high-power all-solid-state batteries using sulfide

@@ -6,6 +6,7 @@
 > ⚠ 서지 교정: 과제 메모의 DOI `10.1021/acsami.5b01004`는 오기 — PDF 실물 각 페이지 풋터가 **`10.1021/acsami.5b07517`** (본문·SI 모두 확인).
 > 🔗 **후속편 (2026-11-10 교차 참조)**: 같은 세 저자의 *J. Mater. Chem. A* 4, 3253 (2016) = [`zhu2016_first_principles_interface_stability_assb`](zhu2016_first_principles_interface_stability_assb.md) — 이 편의 SE 단독 창에 전극 (LiCoO₂) 을 붙인 편 (닫힌 · 전위 아래 pseudo-binary · 계면 3 유형). §15 의 *"전극-SE pseudo-binary 는 2016 후속"* 이 가리키는 논문이다. LATP 산화 개시는 그 편에서 4.31 V 로 일관된다 (§15 미판정 건의 정황).
 > 🔗 **'겉보기 0–5 V' 의 원문 (2026-11-10 교차 참조)**: [`kamaya2011_lgps_lithium_superionic_conductor`](kamaya2011_lgps_lithium_superionic_conductor.md) `Fig. 1b` — Li/LGPS/Au CV (1 mV s⁻¹ · 평판 Au · mA 눈금) 가 '분해 >5 V' 의 출처다. 벡터로 다시 읽으면 정방향 1–5 V 에 +33–43 µA 가 흐르고 (2.14→5 V 적분 0.099 C) 음극 전하의 2.7 % 만 Li 탈리로 돌아온다 (`figure-read ≈` · 우리 산수) — 이 논문의 '과전압 + 부동태화 · 환원 쪽 Li–Ge MCI' 해석과 정합 (증명 아님).
+> 🔗 **'∼0 V vs Li 안정' 의 원문 (2026-11-10 교차 참조)**: [`kato2016_high_power_assb_lsipscl_superionic`](kato2016_high_power_assb_lsipscl_superionic.md) `Fig. 3` — Li₉.₆P₃S₁₂ 의 "∼0 V 안정" 은 LiCoO₂/SE/Li 첫 효율 90 % 하나에서 나왔다 (LGPS 61 · LSiPSCl 39 % · 벡터 판독 89.0 / 59.6 / 38.5) — 겉보기 지표다. 순서 (P 만 > Ge > Si + Cl) 는 이 논문 설계원리 ① (환원되기 쉬운 Ge · Si 회피 · Li₃PS₄ 산물 Li₂S + Li₃P 의 부동태) 과 같은 방향 (증명 아님). 그 논문의 셀은 양극을 ≈ 2.5–4.25 V vs Li 에서 LiNbO₃ 코팅으로 돌렸다.
 
 
 > elements: Al Cl Co F Ge I La Li N Nb O P S Si Ta Ti Zn Zr

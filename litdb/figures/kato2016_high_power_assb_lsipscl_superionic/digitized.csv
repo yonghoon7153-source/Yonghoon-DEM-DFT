@@ -1,0 +1,614 @@
+# Kato 2016 Nat. Energy 1 16030 - vector-path readout. FIGURE VALUES ARE DIGITIZED (not printed); rows marked OUR ARITHMETIC are derived by us (densities in loading rows are our assumptions). tools/litdb/kato2016_readout.py
+figure,series,x,x_unit,y,y_unit,note
+fig2a,LSiPSCl (overdrawn sub-marker),3.35422,1000/T K^-1,-1.588667,log10 S/cm,T = 25.0 C · 4 paths at this spot
+fig2a,LSiPSCl (overdrawn sub-marker),3.35422,1000/T K^-1,-1.598217,log10 S/cm,T = 25.0 C · 4 paths at this spot
+fig2a,LSiPSCl (overdrawn sub-marker),3.66308,1000/T K^-1,-1.942042,log10 S/cm,T = -0.2 C · 4 paths at this spot
+fig2a,LSiPSCl (overdrawn sub-marker),3.66308,1000/T K^-1,-1.956558,log10 S/cm,T = -0.2 C · 4 paths at this spot
+fig2a,LSiPSCl (overdrawn sub-marker),3.95303,1000/T K^-1,-2.285881,log10 S/cm,T = -20.2 C · 4 paths at this spot
+fig2a,LSiPSCl (overdrawn sub-marker),3.95303,1000/T K^-1,-2.309581,log10 S/cm,T = -20.2 C · 4 paths at this spot
+fig2a,LSiPSCl,3.35422,1000/T K^-1,-1.593442,log10 S/cm,T = 25.0 C · paths 8
+fig2a,LSiPSCl,3.53398,1000/T K^-1,-1.80376,log10 S/cm,T = 9.8 C · paths 4
+fig2a,LSiPSCl,3.66308,1000/T K^-1,-1.9493,log10 S/cm,T = -0.2 C · paths 8
+fig2a,LSiPSCl,3.80175,1000/T K^-1,-2.128478,log10 S/cm,T = -10.1 C · paths 4
+fig2a,LSiPSCl,3.95303,1000/T K^-1,-2.297731,log10 S/cm,T = -20.2 C · paths 8
+fig2a,LSiPSCl,4.11389,1000/T K^-1,-2.495992,log10 S/cm,T = -30.1 C · paths 4
+fig2a,OUR ARITHMETIC Ea refit LSiPSCl,0,-,22.752815,kJ/mol,sigma form · 6 points · 25 to -30 C
+fig2a,Li9.6P3S12,2.67977,1000/T K^-1,-2.198784,log10 S/cm,T = 100.0 C · paths 1
+fig2a,Li9.6P3S12,2.87201,1000/T K^-1,-2.394367,log10 S/cm,T = 75.0 C · paths 1
+fig2a,Li9.6P3S12,3.0958,1000/T K^-1,-2.623622,log10 S/cm,T = 49.9 C · paths 1
+fig2a,Li9.6P3S12,3.35422,1000/T K^-1,-2.900581,log10 S/cm,T = 25.0 C · paths 1
+fig2a,Li9.6P3S12,3.65992,1000/T K^-1,-3.402159,log10 S/cm,T = 0.1 C · paths 1
+fig2a,Li9.6P3S12,3.94989,1000/T K^-1,-3.807906,log10 S/cm,T = -20.0 C · paths 1
+fig2a,Li9.6P3S12,4.29026,1000/T K^-1,-4.433657,log10 S/cm,T = -40.1 C · paths 1
+fig2a,Li9.6P3S12,4.69052,1000/T K^-1,-5.111749,log10 S/cm,T = -60.0 C · paths 1
+fig2a,OUR ARITHMETIC Ea refit Li9.6P3S12,0,-,27.889375,kJ/mol,sigma form · 8 points · 100 to -60 C
+fig2a,LGPS,1.4852,1000/T K^-1,-0.371132,log10 S/cm,T = 400.2 C · paths 1
+fig2a,LGPS,1.7595,1000/T K^-1,-0.538072,log10 S/cm,T = 295.2 C · paths 1
+fig2a,LGPS,2.09987,1000/T K^-1,-0.781422,log10 S/cm,T = 203.1 C · paths 1
+fig2a,LGPS,2.6798,1000/T K^-1,-1.158879,log10 S/cm,T = 100.0 C · paths 1
+fig2a,LGPS,3.1054,1000/T K^-1,-1.631838,log10 S/cm,T = 48.9 C · paths 1
+fig2a,LGPS,3.31972,1000/T K^-1,-1.903847,log10 S/cm,T = 28.1 C · paths 1
+fig2a,LGPS,3.67571,1000/T K^-1,-2.410061,log10 S/cm,T = -1.1 C · paths 1
+fig2a,LGPS,3.95004,1000/T K^-1,-2.825291,log10 S/cm,T = -20.0 C · paths 1
+fig2a,LGPS,4.2904,1000/T K^-1,-3.302848,log10 S/cm,T = -40.1 C · paths 1
+fig2a,LGPS,4.64945,1000/T K^-1,-3.871306,log10 S/cm,T = -58.1 C · paths 1
+fig2a,LGPS,5.17892,1000/T K^-1,-4.625823,log10 S/cm,T = -80.1 C · paths 1
+fig2a,OUR ARITHMETIC Ea refit LGPS,0,-,22.18506,kJ/mol,sigma form · 11 points · 400 to -80 C
+fig2a,Li10.35Si1.35P1.65S12,1.48519,1000/T K^-1,-1.010661,log10 S/cm,T = 400.2 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,1.74387,1000/T K^-1,-1.139784,log10 S/cm,T = 300.3 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,2.11247,1000/T K^-1,-1.311683,log10 S/cm,T = 200.2 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,2.67977,1000/T K^-1,-1.555433,log10 S/cm,T = 100.0 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,2.8719,1000/T K^-1,-1.70327,log10 S/cm,T = 75.1 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,3.0958,1000/T K^-1,-1.913391,log10 S/cm,T = 49.9 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,3.35422,1000/T K^-1,-2.171281,log10 S/cm,T = 25.0 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,3.66006,1000/T K^-1,-2.543756,log10 S/cm,T = 0.1 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,3.95001,1000/T K^-1,-2.988063,log10 S/cm,T = -20.0 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,4.11389,1000/T K^-1,-3.15499,log10 S/cm,T = -30.1 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,4.6905,1000/T K^-1,-3.94773,log10 S/cm,T = -60.0 C · paths 1
+fig2a,Li10.35Si1.35P1.65S12,5.1789,1000/T K^-1,-4.683115,log10 S/cm,T = -80.1 C · paths 1
+fig2a,OUR ARITHMETIC Ea refit Li10.35Si1.35P1.65S12,0,-,18.821633,kJ/mol,sigma form · 12 points · 400 to -80 C
+fig3,Li9.6P3S12,0.00214,mAh,3.023106,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.00214,mAh,3.350281,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.00267,mAh,4.195886,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.00641,mAh,4.045156,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.03578,mAh,4.037811,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.06942,mAh,4.045156,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.09933,mAh,4.052486,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.13297,mAh,4.063526,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.16662,mAh,4.070901,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.19652,mAh,4.078246,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.23016,mAh,4.089271,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.25954,mAh,4.096631,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.29318,mAh,4.107626,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.32309,mAh,4.115001,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.35673,mAh,4.126041,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.38611,mAh,4.137066,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.4171,mAh,4.151771,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.44967,mAh,4.170156,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.47904,mAh,4.188511,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.50841,mAh,4.210576,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.53832,mAh,4.225281,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.56769,mAh,4.243681,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.59706,mAh,4.262051,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.61041,mAh,4.133386,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.58692,mAh,4.059846,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.56129,mAh,4.015731,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.53618,mAh,3.982641,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.50841,mAh,3.953216,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.48119,mAh,3.923821,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.4518,mAh,3.894396,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.42617,mAh,3.872346,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.3968,mAh,3.842921,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.36741,mAh,3.813541,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.34178,mAh,3.784116,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.31668,mAh,3.751056,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.28731,mAh,3.714271,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.26167,mAh,3.677531,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.23657,mAh,3.633401,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.21361,mAh,3.592936,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.19011,mAh,3.545171,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.16876,mAh,3.493681,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.14793,mAh,3.431181,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.1271,mAh,3.353991,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.11161,mAh,3.273121,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.09719,mAh,3.173821,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.08705,mAh,3.070901,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.0785,mAh,2.953246,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.07156,mAh,2.817236,V,vector marker centre (drawing order)
+fig3,Li9.6P3S12,0.06729,mAh,2.692251,V,vector marker centre (drawing order)
+fig3,OUR ARITHMETIC CE Li9.6P3S12,0.61041,mAh,88.976521,%,(Q_ch − x_dis_end)/Q_ch
+fig3,LGPS,0.00213,mAh,3.897352,V,vector marker centre (drawing order)
+fig3,LGPS,0.00534,mAh,4.011172,V,vector marker centre (drawing order)
+fig3,LGPS,0.03311,mAh,4.003825,V,vector marker centre (drawing order)
+fig3,LGPS,0.06408,mAh,4.01499,V,vector marker centre (drawing order)
+fig3,LGPS,0.09557,mAh,4.025878,V,vector marker centre (drawing order)
+fig3,LGPS,0.12231,mAh,4.036767,V,vector marker centre (drawing order)
+fig3,LGPS,0.1538,mAh,4.044412,V,vector marker centre (drawing order)
+fig3,LGPS,0.18101,mAh,4.055288,V,vector marker centre (drawing order)
+fig3,LGPS,0.21202,mAh,4.062632,V,vector marker centre (drawing order)
+fig3,LGPS,0.23924,mAh,4.073807,V,vector marker centre (drawing order)
+fig3,LGPS,0.27021,mAh,4.084712,V,vector marker centre (drawing order)
+fig3,LGPS,0.29747,mAh,4.095573,V,vector marker centre (drawing order)
+fig3,LGPS,0.32626,mAh,4.110278,V,vector marker centre (drawing order)
+fig3,LGPS,0.35565,mAh,4.124996,V,vector marker centre (drawing order)
+fig3,LGPS,0.38291,mAh,4.139686,V,vector marker centre (drawing order)
+fig3,LGPS,0.41015,mAh,4.158224,V,vector marker centre (drawing order)
+fig3,LGPS,0.43736,mAh,4.172927,V,vector marker centre (drawing order)
+fig3,LGPS,0.46837,mAh,4.187619,V,vector marker centre (drawing order)
+fig3,LGPS,0.49559,mAh,4.206166,V,vector marker centre (drawing order)
+fig3,LGPS,0.5228,mAh,4.224404,V,vector marker centre (drawing order)
+fig3,LGPS,0.55006,mAh,4.246467,V,vector marker centre (drawing order)
+fig3,LGPS,0.55168,mAh,4.022031,V,vector marker centre (drawing order)
+fig3,LGPS,0.53562,mAh,3.956185,V,vector marker centre (drawing order)
+fig3,LGPS,0.51482,mAh,3.900894,V,vector marker centre (drawing order)
+fig3,LGPS,0.49239,mAh,3.86031,V,vector marker centre (drawing order)
+fig3,LGPS,0.46675,mAh,3.820026,V,vector marker centre (drawing order)
+fig3,LGPS,0.44219,mAh,3.783271,V,vector marker centre (drawing order)
+fig3,LGPS,0.41924,mAh,3.746486,V,vector marker centre (drawing order)
+fig3,LGPS,0.39574,mAh,3.706187,V,vector marker centre (drawing order)
+fig3,LGPS,0.37275,mAh,3.665616,V,vector marker centre (drawing order)
+fig3,LGPS,0.35138,mAh,3.621501,V,vector marker centre (drawing order)
+fig3,LGPS,0.33003,mAh,3.570026,V,vector marker centre (drawing order)
+fig3,LGPS,0.31028,mAh,3.518551,V,vector marker centre (drawing order)
+fig3,LGPS,0.29106,mAh,3.452356,V,vector marker centre (drawing order)
+fig3,LGPS,0.27555,mAh,3.378831,V,vector marker centre (drawing order)
+fig3,LGPS,0.26004,mAh,3.279727,V,vector marker centre (drawing order)
+fig3,LGPS,0.24885,mAh,3.180321,V,vector marker centre (drawing order)
+fig3,LGPS,0.2403,mAh,3.077371,V,vector marker centre (drawing order)
+fig3,LGPS,0.23282,mAh,2.941497,V,vector marker centre (drawing order)
+fig3,LGPS,0.22748,mAh,2.820012,V,vector marker centre (drawing order)
+fig3,LGPS,0.2227,mAh,2.680337,V,vector marker centre (drawing order)
+fig3,OUR ARITHMETIC CE LGPS,0.55168,mAh,59.632754,%,(Q_ch − x_dis_end)/Q_ch
+fig3,LSiPSCl,0.00213,mAh,3.249994,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.00213,mAh,3.500015,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.00267,mAh,3.761039,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.01495,mAh,3.886042,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.04432,mAh,3.900744,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.07796,mAh,3.904417,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.11161,mAh,3.908089,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.14098,mAh,3.911777,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.17462,mAh,3.915446,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.20827,mAh,3.919141,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.24192,mAh,3.922814,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.27503,mAh,3.926483,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.30493,mAh,3.933828,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.33804,mAh,3.941185,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.36795,mAh,3.948541,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.40108,mAh,3.95957,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.43098,mAh,3.970603,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.46409,mAh,3.98532,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.494,mAh,3.996341,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.52337,mAh,4.011054,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.55381,mAh,4.029444,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.58639,mAh,4.047806,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.61576,mAh,4.062519,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.64513,mAh,4.080904,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.6745,mAh,4.106623,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.6996,mAh,4.136049,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.7247,mAh,4.16914,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.75461,mAh,4.191206,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.78398,mAh,4.216914,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.81335,mAh,4.250027,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.80641,mAh,4.132377,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.78558,mAh,4.080904,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.76155,mAh,4.022083,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.73912,mAh,3.981628,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.71028,mAh,3.941185,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.68465,mAh,3.908091,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.65955,mAh,3.871327,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.63445,mAh,3.834564,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.60882,mAh,3.797797,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.58371,mAh,3.750023,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.56289,mAh,3.698539,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.54206,mAh,3.625028,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.52765,mAh,3.544141,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.51643,mAh,3.422804,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.51056,mAh,3.301477,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.50629,mAh,3.161765,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.50361,mAh,3.018399,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.50148,mAh,2.852954,V,vector marker centre (drawing order)
+fig3,LSiPSCl,0.49988,mAh,2.687492,V,vector marker centre (drawing order)
+fig3,OUR ARITHMETIC CE LSiPSCl,0.81335,mAh,38.540594,%,(Q_ch − x_dis_end)/Q_ch
+fig4a,large-current type end capacity 100C 1500C,56.02464,mAh/g,1.0,V,vector; rate label from figure
+fig4a,large-current type end capacity 100C 900C,84.08961,mAh/g,1.0,V,vector; rate label from figure
+fig4a,large-current type end capacity 100C 150C,118.66256,mAh/g,1.0,V,vector; rate label from figure
+fig4a,high-voltage type end capacity 100C 900C,30.60764,mAh/g,2.480044,V,vector; rate label from figure
+fig4a,high-voltage type end capacity 100C 150C,87.42304,mAh/g,2.499868,V,vector; rate label from figure
+fig4a,large-current type end capacity 25C 60C,85.32065,mAh/g,1.0,V,vector; rate label from figure
+fig4a,large-current type end capacity 25C 1.8C,126.52847,mAh/g,1.0,V,vector; rate label from figure
+fig4a,high-voltage type end capacity 25C 60C,38.23434,mAh/g,2.498975,V,vector; rate label from figure
+fig4a,high-voltage type end capacity 25C 1.8C,106.18475,mAh/g,2.498033,V,vector; rate label from figure
+fig4e,OUR ARITHMETIC retention vs first discharge marker,4.68789,cycle,100.0,%,nearest marker; markers are every ~20 (e) / ~10 (f) cycles
+fig4e,OUR ARITHMETIC retention vs first discharge marker,103.19393,cycle,83.669607,%,nearest marker; markers are every ~20 (e) / ~10 (f) cycles
+fig4e,OUR ARITHMETIC retention vs first discharge marker,501.17583,cycle,80.474125,%,nearest marker; markers are every ~20 (e) / ~10 (f) cycles
+fig4e,OUR ARITHMETIC retention vs first discharge marker,998.63044,cycle,76.866896,%,nearest marker; markers are every ~20 (e) / ~10 (f) cycles
+fig4e,discharge capacity,4.68789,cycle,126.029099,mAh/g,vector marker centre
+fig4e,discharge capacity,23.59689,cycle,120.693669,mAh/g,vector marker centre
+fig4e,discharge capacity,43.49033,cycle,116.686625,mAh/g,vector marker centre
+fig4e,discharge capacity,63.39714,cycle,112.872645,mAh/g,vector marker centre
+fig4e,discharge capacity,83.29262,cycle,109.067122,mAh/g,vector marker centre
+fig4e,discharge capacity,103.19393,cycle,105.448052,mAh/g,vector marker centre
+fig4e,discharge capacity,123.09284,cycle,104.112849,mAh/g,vector marker centre
+fig4e,discharge capacity,142.99005,cycle,102.781131,mAh/g,vector marker centre
+fig4e,discharge capacity,162.89413,cycle,102.361279,mAh/g,vector marker centre
+fig4e,discharge capacity,182.79519,cycle,102.74423,mAh/g,vector marker centre
+fig4e,discharge capacity,202.69106,cycle,102.552755,mAh/g,vector marker centre
+fig4e,discharge capacity,222.58824,cycle,102.361279,mAh/g,vector marker centre
+fig4e,discharge capacity,242.49238,cycle,102.73234,mAh/g,vector marker centre
+fig4e,discharge capacity,262.39406,cycle,101.981711,mAh/g,vector marker centre
+fig4e,discharge capacity,282.29543,cycle,102.169804,mAh/g,vector marker centre
+fig4e,discharge capacity,302.18958,cycle,102.74423,mAh/g,vector marker centre
+fig4e,discharge capacity,322.08367,cycle,100.685254,mAh/g,vector marker centre
+fig4e,discharge capacity,341.98849,cycle,101.068205,mAh/g,vector marker centre
+fig4e,discharge capacity,361.89388,cycle,100.878421,mAh/g,vector marker centre
+fig4e,discharge capacity,381.78218,cycle,100.878421,mAh/g,vector marker centre
+fig4e,discharge capacity,401.67972,cycle,100.878421,mAh/g,vector marker centre
+fig4e,discharge capacity,421.58109,cycle,100.305686,mAh/g,vector marker centre
+fig4e,discharge capacity,441.4801,cycle,100.112519,mAh/g,vector marker centre
+fig4e,discharge capacity,461.38246,cycle,100.305686,mAh/g,vector marker centre
+fig4e,discharge capacity,481.27588,cycle,101.639146,mAh/g,vector marker centre
+fig4e,discharge capacity,501.17583,cycle,101.420815,mAh/g,vector marker centre
+fig4e,discharge capacity,521.0772,cycle,99.353382,mAh/g,vector marker centre
+fig4e,discharge capacity,540.97166,cycle,99.544858,mAh/g,vector marker centre
+fig4e,discharge capacity,560.87297,cycle,99.541475,mAh/g,vector marker centre
+fig4e,discharge capacity,580.77434,cycle,99.161907,mAh/g,vector marker centre
+fig4e,discharge capacity,600.66875,cycle,100.305583,mAh/g,vector marker centre
+fig4e,discharge capacity,620.56672,cycle,99.161907,mAh/g,vector marker centre
+fig4e,discharge capacity,640.47148,cycle,99.348309,mAh/g,vector marker centre
+fig4e,discharge capacity,660.36945,cycle,98.39949,mAh/g,vector marker centre
+fig4e,discharge capacity,680.26041,cycle,98.970432,mAh/g,vector marker centre
+fig4e,discharge capacity,700.16178,cycle,98.585892,mAh/g,vector marker centre
+fig4e,discharge capacity,720.06314,cycle,98.014848,mAh/g,vector marker centre
+fig4e,discharge capacity,739.96111,cycle,98.208015,mAh/g,vector marker centre
+fig4e,discharge capacity,759.85902,cycle,98.967151,mAh/g,vector marker centre
+fig4e,discharge capacity,779.75694,cycle,97.825167,mAh/g,vector marker centre
+fig4e,discharge capacity,799.6548,cycle,97.448981,mAh/g,vector marker centre
+fig4e,discharge capacity,819.55616,cycle,98.208015,mAh/g,vector marker centre
+fig4e,discharge capacity,839.45753,cycle,97.448981,mAh/g,vector marker centre
+fig4e,discharge capacity,859.3486,cycle,97.816813,mAh/g,vector marker centre
+fig4e,discharge capacity,879.23956,cycle,97.067824,mAh/g,vector marker centre
+fig4e,discharge capacity,899.13062,cycle,96.874657,mAh/g,vector marker centre
+fig4e,discharge capacity,919.03533,cycle,97.067824,mAh/g,vector marker centre
+fig4e,discharge capacity,938.93325,cycle,97.442318,mAh/g,vector marker centre
+fig4e,discharge capacity,958.82771,cycle,96.869583,mAh/g,vector marker centre
+fig4e,discharge capacity,978.72908,cycle,96.11552,mAh/g,vector marker centre
+fig4e,discharge capacity,998.63044,cycle,96.874657,mAh/g,vector marker centre
+fig4e,charge capacity,3.31348,cycle,135.833503,mAh/g,vector marker centre
+fig4e,charge capacity,22.27249,cycle,121.493038,mAh/g,vector marker centre
+fig4e,charge capacity,42.22523,cycle,117.274377,mAh/g,vector marker centre
+fig4e,charge capacity,62.16763,cycle,114.21446,mAh/g,vector marker centre
+fig4e,charge capacity,82.12037,cycle,109.819442,mAh/g,vector marker centre
+fig4e,charge capacity,102.0834,cycle,105.993726,mAh/g,vector marker centre
+fig4e,charge capacity,122.02584,cycle,104.082611,mAh/g,vector marker centre
+fig4e,charge capacity,141.9683,cycle,102.93222,mAh/g,vector marker centre
+fig4e,charge capacity,161.91416,cycle,102.515751,mAh/g,vector marker centre
+fig4e,charge capacity,181.86347,cycle,102.897011,mAh/g,vector marker centre
+fig4e,charge capacity,201.80933,cycle,102.324276,mAh/g,vector marker centre
+fig4e,charge capacity,221.75859,cycle,102.134491,mAh/g,vector marker centre
+fig4e,charge capacity,241.71475,cycle,102.515751,mAh/g,vector marker centre
+fig4e,charge capacity,261.66406,cycle,101.751643,mAh/g,vector marker centre
+fig4e,charge capacity,281.61332,cycle,101.939736,mAh/g,vector marker centre
+fig4e,charge capacity,301.55573,cycle,102.515751,mAh/g,vector marker centre
+fig4e,charge capacity,321.50499,cycle,100.45001,mAh/g,vector marker centre
+fig4e,charge capacity,341.4543,cycle,101.215809,mAh/g,vector marker centre
+fig4e,charge capacity,361.40706,cycle,100.832858,mAh/g,vector marker centre
+fig4e,charge capacity,381.34602,cycle,101.026025,mAh/g,vector marker centre
+fig4e,charge capacity,401.30212,cycle,101.215809,mAh/g,vector marker centre
+fig4e,charge capacity,421.24458,cycle,100.06875,mAh/g,vector marker centre
+fig4e,charge capacity,441.20409,cycle,100.644765,mAh/g,vector marker centre
+fig4e,charge capacity,461.14655,cycle,100.06875,mAh/g,vector marker centre
+fig4e,charge capacity,481.09931,cycle,101.979917,mAh/g,vector marker centre
+fig4e,charge capacity,501.04512,cycle,100.45001,mAh/g,vector marker centre
+fig4e,charge capacity,520.98763,cycle,99.877377,mAh/g,vector marker centre
+fig4e,charge capacity,540.94714,cycle,99.873995,mAh/g,vector marker centre
+fig4e,charge capacity,560.89305,cycle,99.299671,mAh/g,vector marker centre
+fig4e,charge capacity,580.85261,cycle,99.873995,mAh/g,vector marker centre
+fig4e,charge capacity,600.79157,cycle,99.685902,mAh/g,vector marker centre
+fig4e,charge capacity,620.75113,cycle,99.685902,mAh/g,vector marker centre
+fig4e,charge capacity,640.68669,cycle,98.91836,mAh/g,vector marker centre
+fig4e,charge capacity,660.64279,cycle,98.728627,mAh/g,vector marker centre
+fig4e,charge capacity,680.58865,cycle,99.304642,mAh/g,vector marker centre
+fig4e,charge capacity,700.53446,cycle,98.726936,mAh/g,vector marker centre
+fig4e,charge capacity,720.49742,cycle,98.726936,mAh/g,vector marker centre
+fig4e,charge capacity,740.43983,cycle,98.157583,mAh/g,vector marker centre
+fig4e,charge capacity,760.40284,cycle,98.728627,mAh/g,vector marker centre
+fig4e,charge capacity,780.3453,cycle,97.962828,mAh/g,vector marker centre
+fig4e,charge capacity,800.30141,cycle,97.393476,mAh/g,vector marker centre
+fig4e,charge capacity,820.24047,cycle,97.964519,mAh/g,vector marker centre
+fig4e,charge capacity,840.18633,cycle,97.58326,mAh/g,vector marker centre
+fig4e,charge capacity,860.14249,cycle,97.58326,mAh/g,vector marker centre
+fig4e,charge capacity,880.0849,cycle,97.58326,mAh/g,vector marker centre
+fig4e,charge capacity,900.041,cycle,97.776426,mAh/g,vector marker centre
+fig4e,charge capacity,919.99031,cycle,97.007193,mAh/g,vector marker centre
+fig4e,charge capacity,939.93617,cycle,97.393476,mAh/g,vector marker centre
+fig4e,charge capacity,959.88888,cycle,96.624242,mAh/g,vector marker centre
+fig4e,charge capacity,979.82784,cycle,96.81746,mAh/g,vector marker centre
+fig4e,charge capacity,999.79085,cycle,97.007193,mAh/g,vector marker centre
+fig4e,coulombic efficiency,1.08283,cycle,92.974332,%,vector marker centre
+fig4e,coulombic efficiency,20.07956,cycle,99.526549,%,vector marker centre
+fig4e,coulombic efficiency,40.07682,cycle,99.671846,%,vector marker centre
+fig4e,coulombic efficiency,60.07407,cycle,98.99584,%,vector marker centre
+fig4e,coulombic efficiency,80.06105,cycle,99.476168,%,vector marker centre
+fig4e,coulombic efficiency,100.05489,cycle,99.637405,%,vector marker centre
+fig4e,coulombic efficiency,120.04187,cycle,100.182388,%,vector marker centre
+fig4e,coulombic efficiency,140.0289,cycle,99.999318,%,vector marker centre
+fig4e,coulombic efficiency,160.03306,cycle,99.999318,%,vector marker centre
+fig4e,coulombic efficiency,180.02352,cycle,99.999318,%,vector marker centre
+fig4e,coulombic efficiency,200.01047,cycle,100.372992,%,vector marker centre
+fig4e,coulombic efficiency,220.00773,cycle,100.372992,%,vector marker centre
+fig4e,coulombic efficiency,239.99479,cycle,100.362075,%,vector marker centre
+fig4e,coulombic efficiency,259.99204,cycle,100.373838,%,vector marker centre
+fig4e,coulombic efficiency,279.9756,cycle,100.372992,%,vector marker centre
+fig4e,coulombic efficiency,299.97286,cycle,100.370455,%,vector marker centre
+fig4e,coulombic efficiency,319.95981,cycle,100.37804,%,vector marker centre
+fig4e,coulombic efficiency,339.95372,cycle,99.999318,%,vector marker centre
+fig4e,coulombic efficiency,359.96128,cycle,100.188256,%,vector marker centre
+fig4e,coulombic efficiency,379.96204,cycle,99.999318,%,vector marker centre
+fig4e,coulombic efficiency,399.96619,cycle,99.81043,%,vector marker centre
+fig4e,coulombic efficiency,419.97715,cycle,100.378911,%,vector marker centre
+fig4e,coulombic efficiency,439.9847,cycle,99.619826,%,vector marker centre
+fig4e,coulombic efficiency,459.98886,cycle,100.380603,%,vector marker centre
+fig4e,coulombic efficiency,479.99982,cycle,99.812122,%,vector marker centre
+fig4e,coulombic efficiency,500.00737,cycle,101.110321,%,vector marker centre
+fig4e,coulombic efficiency,520.01838,cycle,99.618109,%,vector marker centre
+fig4e,coulombic efficiency,540.02933,cycle,99.808739,%,vector marker centre
+fig4e,coulombic efficiency,560.03684,cycle,100.383934,%,vector marker centre
+fig4e,coulombic efficiency,580.04094,cycle,99.427505,%,vector marker centre
+fig4e,coulombic efficiency,600.05875,cycle,100.764322,%,vector marker centre
+fig4e,coulombic efficiency,620.05945,cycle,99.619006,%,vector marker centre
+fig4e,coulombic efficiency,640.04641,cycle,100.577101,%,vector marker centre
+fig4e,coulombic efficiency,660.04032,cycle,99.805408,%,vector marker centre
+fig4e,coulombic efficiency,680.03417,cycle,99.806253,%,vector marker centre
+fig4e,coulombic efficiency,700.02463,cycle,99.996832,%,vector marker centre
+fig4e,coulombic efficiency,720.01499,cycle,99.419151,%,vector marker centre
+fig4e,coulombic efficiency,740.0089,cycle,100.19333,%,vector marker centre
+fig4e,coulombic efficiency,759.99935,cycle,100.386497,%,vector marker centre
+fig4e,coulombic efficiency,779.98976,cycle,99.999369,%,vector marker centre
+fig4e,coulombic efficiency,799.97672,cycle,100.195073,%,vector marker centre
+fig4e,coulombic efficiency,819.97397,cycle,100.387368,%,vector marker centre
+fig4e,coulombic efficiency,839.96438,cycle,99.99942,%,vector marker centre
+fig4e,coulombic efficiency,859.95829,cycle,100.380654,%,vector marker centre
+fig4e,coulombic efficiency,879.94185,cycle,99.608141,%,vector marker centre
+fig4e,coulombic efficiency,899.9323,cycle,99.220219,%,vector marker centre
+fig4e,coulombic efficiency,919.92276,cycle,100.195944,%,vector marker centre
+fig4e,coulombic efficiency,939.91317,cycle,100.18841,%,vector marker centre
+fig4e,coulombic efficiency,959.91382,cycle,100.387419,%,vector marker centre
+fig4e,coulombic efficiency,979.90088,cycle,99.409131,%,vector marker centre
+fig4e,coulombic efficiency,999.89129,cycle,99.999471,%,vector marker centre
+fig4f,OUR ARITHMETIC retention vs first discharge marker,0.98166,cycle,100.0,%,nearest marker; markers are every ~20 (e) / ~10 (f) cycles
+fig4f,OUR ARITHMETIC retention vs first discharge marker,100.9977,cycle,77.208878,%,nearest marker; markers are every ~20 (e) / ~10 (f) cycles
+fig4f,OUR ARITHMETIC retention vs first discharge marker,499.99896,cycle,71.332477,%,nearest marker; markers are every ~20 (e) / ~10 (f) cycles
+fig4f,discharge capacity,0.98166,cycle,114.331784,mAh/g,vector marker centre
+fig4f,discharge capacity,10.98809,cycle,107.88981,mAh/g,vector marker centre
+fig4f,discharge capacity,20.98967,cycle,103.497469,mAh/g,vector marker centre
+fig4f,discharge capacity,30.99626,cycle,100.185289,mAh/g,vector marker centre
+fig4f,discharge capacity,40.99597,cycle,97.635001,mAh/g,vector marker centre
+fig4f,discharge capacity,50.99739,cycle,95.570292,mAh/g,vector marker centre
+fig4f,discharge capacity,60.99882,cycle,93.678056,mAh/g,vector marker centre
+fig4f,discharge capacity,71.00019,cycle,92.135823,mAh/g,vector marker centre
+fig4f,discharge capacity,81.00011,cycle,90.702388,mAh/g,vector marker centre
+fig4f,discharge capacity,90.99961,cycle,89.416334,mAh/g,vector marker centre
+fig4f,discharge capacity,100.9977,cycle,88.274287,mAh/g,vector marker centre
+fig4f,discharge capacity,110.99746,cycle,87.246098,mAh/g,vector marker centre
+fig4f,discharge capacity,120.99717,cycle,86.288226,mAh/g,vector marker centre
+fig4f,discharge capacity,130.99854,cycle,85.330354,mAh/g,vector marker centre
+fig4f,discharge capacity,140.99658,cycle,84.48634,mAh/g,vector marker centre
+fig4f,discharge capacity,151.00144,cycle,83.841677,mAh/g,vector marker centre
+fig4f,discharge capacity,160.99954,cycle,83.250571,mAh/g,vector marker centre
+fig4f,discharge capacity,170.99945,cycle,82.764991,mAh/g,vector marker centre
+fig4f,discharge capacity,180.99906,cycle,82.371448,mAh/g,vector marker centre
+fig4f,discharge capacity,190.99876,cycle,82.08006,mAh/g,vector marker centre
+fig4f,discharge capacity,200.99852,cycle,81.924349,mAh/g,vector marker centre
+fig4f,discharge capacity,210.99828,cycle,81.855718,mAh/g,vector marker centre
+fig4f,discharge capacity,220.99799,cycle,81.817238,mAh/g,vector marker centre
+fig4f,discharge capacity,230.99936,cycle,81.751877,mAh/g,vector marker centre
+fig4f,discharge capacity,240.9974,cycle,81.776969,mAh/g,vector marker centre
+fig4f,discharge capacity,250.99711,cycle,81.726684,mAh/g,vector marker centre
+fig4f,discharge capacity,261.00026,cycle,81.740073,mAh/g,vector marker centre
+fig4f,discharge capacity,270.99663,cycle,81.686517,mAh/g,vector marker centre
+fig4f,discharge capacity,280.99977,cycle,81.711608,mAh/g,vector marker centre
+fig4f,discharge capacity,291.00115,cycle,81.699906,mAh/g,vector marker centre
+fig4f,discharge capacity,300.99924,cycle,81.683144,mAh/g,vector marker centre
+fig4f,discharge capacity,310.99723,cycle,81.711608,mAh/g,vector marker centre
+fig4f,discharge capacity,320.99694,cycle,81.686517,mAh/g,vector marker centre
+fig4f,discharge capacity,330.99664,cycle,81.726684,mAh/g,vector marker centre
+fig4f,discharge capacity,340.99812,cycle,81.780239,mAh/g,vector marker centre
+fig4f,discharge capacity,350.99783,cycle,81.740073,mAh/g,vector marker centre
+fig4f,discharge capacity,360.9942,cycle,81.751775,mAh/g,vector marker centre
+fig4f,discharge capacity,370.99907,cycle,81.686517,mAh/g,vector marker centre
+fig4f,discharge capacity,380.99883,cycle,81.776969,mAh/g,vector marker centre
+fig4f,discharge capacity,390.99853,cycle,81.726684,mAh/g,vector marker centre
+fig4f,discharge capacity,401.00001,cycle,81.765164,mAh/g,vector marker centre
+fig4f,discharge capacity,410.99805,cycle,81.751775,mAh/g,vector marker centre
+fig4f,discharge capacity,420.99614,cycle,81.817136,mAh/g,vector marker centre
+fig4f,discharge capacity,430.99934,cycle,81.711608,mAh/g,vector marker centre
+fig4f,discharge capacity,440.99738,cycle,81.776867,mAh/g,vector marker centre
+fig4f,discharge capacity,450.99886,cycle,81.817033,mAh/g,vector marker centre
+fig4f,discharge capacity,460.99523,cycle,81.870589,mAh/g,vector marker centre
+fig4f,discharge capacity,470.99494,cycle,81.924145,mAh/g,vector marker centre
+fig4f,discharge capacity,480.99809,cycle,81.527229,mAh/g,vector marker centre
+fig4f,discharge capacity,490.99613,cycle,81.552321,mAh/g,vector marker centre
+fig4f,discharge capacity,499.99896,cycle,81.555693,mAh/g,vector marker centre
+fig4f,charge capacity,1.49714,cycle,117.747805,mAh/g,vector marker centre
+fig4f,charge capacity,11.50023,cycle,106.679132,mAh/g,vector marker centre
+fig4f,charge capacity,21.50338,cycle,102.532954,mAh/g,vector marker centre
+fig4f,charge capacity,31.50657,cycle,99.461877,mAh/g,vector marker centre
+fig4f,charge capacity,41.50628,cycle,96.996982,mAh/g,vector marker centre
+fig4f,charge capacity,51.50771,cycle,95.099789,mAh/g,vector marker centre
+fig4f,charge capacity,61.50741,cycle,93.346501,mAh/g,vector marker centre
+fig4f,charge capacity,71.50712,cycle,91.921498,mAh/g,vector marker centre
+fig4f,charge capacity,81.50521,cycle,90.615309,mAh/g,vector marker centre
+fig4f,charge capacity,91.50675,cycle,89.468203,mAh/g,vector marker centre
+fig4f,charge capacity,101.50473,cycle,88.408279,mAh/g,vector marker centre
+fig4f,charge capacity,111.50444,cycle,87.413613,mAh/g,vector marker centre
+fig4f,charge capacity,121.50936,cycle,86.542821,mAh/g,vector marker centre
+fig4f,charge capacity,131.50735,cycle,85.677087,mAh/g,vector marker centre
+fig4f,charge capacity,141.50539,cycle,84.896747,mAh/g,vector marker centre
+fig4f,charge capacity,151.50853,cycle,84.295624,mAh/g,vector marker centre
+fig4f,charge capacity,161.50824,cycle,83.748057,mAh/g,vector marker centre
+fig4f,charge capacity,171.50623,cycle,83.255732,mAh/g,vector marker centre
+fig4f,charge capacity,181.50765,cycle,82.92249,mAh/g,vector marker centre
+fig4f,charge capacity,191.50574,cycle,82.634475,mAh/g,vector marker centre
+fig4f,charge capacity,201.50373,cycle,82.465375,mAh/g,vector marker centre
+fig4f,charge capacity,211.50688,cycle,82.40676,mAh/g,vector marker centre
+fig4f,charge capacity,221.50487,cycle,82.379982,mAh/g,vector marker centre
+fig4f,charge capacity,231.50629,cycle,82.334756,mAh/g,vector marker centre
+fig4f,charge capacity,241.506,cycle,82.334756,mAh/g,vector marker centre
+fig4f,charge capacity,251.50571,cycle,82.299649,mAh/g,vector marker centre
+fig4f,charge capacity,261.50713,cycle,82.334756,mAh/g,vector marker centre
+fig4f,charge capacity,271.50512,cycle,82.311351,mAh/g,vector marker centre
+fig4f,charge capacity,281.50827,cycle,82.272871,mAh/g,vector marker centre
+fig4f,charge capacity,291.50626,cycle,82.272871,mAh/g,vector marker centre
+fig4f,charge capacity,301.50424,cycle,82.282887,mAh/g,vector marker centre
+fig4f,charge capacity,311.50567,cycle,82.292903,mAh/g,vector marker centre
+fig4f,charge capacity,321.50366,cycle,82.282887,mAh/g,vector marker centre
+fig4f,charge capacity,331.50347,cycle,82.32474,mAh/g,vector marker centre
+fig4f,charge capacity,341.50839,cycle,82.334756,mAh/g,vector marker centre
+fig4f,charge capacity,351.50471,cycle,82.344773,mAh/g,vector marker centre
+fig4f,charge capacity,361.5027,cycle,82.324638,mAh/g,vector marker centre
+fig4f,charge capacity,371.50584,cycle,82.272769,mAh/g,vector marker centre
+fig4f,charge capacity,381.50737,cycle,82.334756,mAh/g,vector marker centre
+fig4f,charge capacity,391.50536,cycle,82.28953,mAh/g,vector marker centre
+fig4f,charge capacity,401.50507,cycle,82.324638,mAh/g,vector marker centre
+fig4f,charge capacity,411.50488,cycle,82.324638,mAh/g,vector marker centre
+fig4f,charge capacity,421.50459,cycle,82.334654,mAh/g,vector marker centre
+fig4f,charge capacity,431.50429,cycle,82.324638,mAh/g,vector marker centre
+fig4f,charge capacity,441.50238,cycle,82.368178,mAh/g,vector marker centre
+fig4f,charge capacity,451.50553,cycle,82.389999,mAh/g,vector marker centre
+fig4f,charge capacity,461.50352,cycle,82.420149,mAh/g,vector marker centre
+fig4f,charge capacity,471.50505,cycle,82.475391,mAh/g,vector marker centre
+fig4f,charge capacity,481.50648,cycle,82.152268,mAh/g,vector marker centre
+fig4f,charge capacity,491.50629,cycle,82.152268,mAh/g,vector marker centre
+fig4f,charge capacity,500.50396,cycle,82.175673,mAh/g,vector marker centre
+fig4f,coulombic efficiency,0.79897,cycle,96.979714,%,vector marker centre
+fig4f,coulombic efficiency,10.80212,cycle,100.997752,%,vector marker centre
+fig4f,coulombic efficiency,20.80354,cycle,100.800138,%,vector marker centre
+fig4f,coulombic efficiency,30.80841,cycle,100.579067,%,vector marker centre
+fig4f,coulombic efficiency,40.80983,cycle,100.511279,%,vector marker centre
+fig4f,coulombic efficiency,50.80793,cycle,100.341285,%,vector marker centre
+fig4f,coulombic efficiency,60.81107,cycle,100.194799,%,vector marker centre
+fig4f,coulombic efficiency,70.81078,cycle,100.075883,%,vector marker centre
+fig4f,coulombic efficiency,80.81054,cycle,99.934404,%,vector marker centre
+fig4f,coulombic efficiency,90.8103,cycle,99.784545,%,vector marker centre
+fig4f,coulombic efficiency,100.81,cycle,99.679861,%,vector marker centre
+fig4f,coulombic efficiency,110.80976,cycle,99.643016,%,vector marker centre
+fig4f,coulombic efficiency,120.80952,cycle,99.540861,%,vector marker centre
+fig4f,coulombic efficiency,130.80923,cycle,99.421945,%,vector marker centre
+fig4f,coulombic efficiency,140.80727,cycle,99.343247,%,vector marker centre
+fig4f,coulombic efficiency,150.81042,cycle,99.286318,%,vector marker centre
+fig4f,coulombic efficiency,160.81189,cycle,99.232711,%,vector marker centre
+fig4f,coulombic efficiency,170.8116,cycle,99.235241,%,vector marker centre
+fig4f,coulombic efficiency,180.81136,cycle,99.162394,%,vector marker centre
+fig4f,coulombic efficiency,190.80935,cycle,99.156542,%,vector marker centre
+fig4f,coulombic efficiency,200.80906,cycle,99.167402,%,vector marker centre
+fig4f,coulombic efficiency,210.80876,cycle,99.159021,%,vector marker centre
+fig4f,coulombic efficiency,220.80847,cycle,99.138886,%,vector marker centre
+fig4f,coulombic efficiency,230.80995,cycle,99.117116,%,vector marker centre
+fig4f,coulombic efficiency,240.80799,cycle,99.15064,%,vector marker centre
+fig4f,coulombic efficiency,250.80947,cycle,99.1314,%,vector marker centre
+fig4f,coulombic efficiency,260.80917,cycle,99.102935,%,vector marker centre
+fig4f,coulombic efficiency,270.81055,cycle,99.06862,%,vector marker centre
+fig4f,coulombic efficiency,280.81026,cycle,99.142259,%,vector marker centre
+fig4f,coulombic efficiency,290.80996,cycle,99.125548,%,vector marker centre
+fig4f,coulombic efficiency,300.80967,cycle,99.094555,%,vector marker centre
+fig4f,coulombic efficiency,310.80938,cycle,99.114689,%,vector marker centre
+fig4f,coulombic efficiency,320.80908,cycle,99.097084,%,vector marker centre
+fig4f,coulombic efficiency,330.80718,cycle,99.100406,%,vector marker centre
+fig4f,coulombic efficiency,340.80694,cycle,99.15064,%,vector marker centre
+fig4f,coulombic efficiency,350.80664,cycle,99.088703,%,vector marker centre
+fig4f,coulombic efficiency,360.80979,cycle,99.133929,%,vector marker centre
+fig4f,coulombic efficiency,370.81116,cycle,99.111316,%,vector marker centre
+fig4f,coulombic efficiency,380.8092,cycle,99.15064,%,vector marker centre
+fig4f,coulombic efficiency,390.80891,cycle,99.142259,%,vector marker centre
+fig4f,coulombic efficiency,400.80867,cycle,99.147267,%,vector marker centre
+fig4f,coulombic efficiency,410.80843,cycle,99.131349,%,vector marker centre
+fig4f,coulombic efficiency,420.80814,cycle,99.199188,%,vector marker centre
+fig4f,coulombic efficiency,430.8079,cycle,99.085331,%,vector marker centre
+fig4f,coulombic efficiency,440.80766,cycle,99.105414,%,vector marker centre
+fig4f,coulombic efficiency,450.80736,cycle,99.125497,%,vector marker centre
+fig4f,coulombic efficiency,460.80874,cycle,99.162343,%,vector marker centre
+fig4f,coulombic efficiency,470.80678,cycle,99.153962,%,vector marker centre
+fig4f,coulombic efficiency,480.80992,cycle,99.06351,%,vector marker centre
+fig4f,coulombic efficiency,490.80963,cycle,99.094503,%,vector marker centre
+fig4f,coulombic efficiency,499.80736,cycle,99.066039,%,vector marker centre
+fig5b,all-solid-state cell,0.01843,V (step),-2.957272,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.04906,V (step),-2.407689,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.09938,V (step),-2.117187,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.19919,V (step),-1.81264,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.2994,V (step),-1.6515,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.39943,V (step),-1.533622,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.49935,V (step),-1.444514,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.59951,V (step),-1.377693,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.69926,V (step),-1.315428,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.79962,V (step),-1.261256,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.8997,V (step),-1.215367,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,0.99944,V (step),-1.176554,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.09966,V (step),-1.143208,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.19968,V (step),-1.115179,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.2996,V (step),-1.089692,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.39957,V (step),-1.066345,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.49968,V (step),-1.046557,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.59974,V (step),-1.02874,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.69999,V (step),-1.012787,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.79998,V (step),-0.999207,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.89999,V (step),-0.987004,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,1.99999,V (step),-0.977788,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,2.09997,V (step),-0.970606,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,2.19999,V (step),-0.963276,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,2.29999,V (step),-0.959992,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,2.39999,V (step),-0.956072,log10 A/cm2,vector marker centre
+fig5b,all-solid-state cell,2.49999,V (step),-0.948467,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.01842,V (step),-3.150091,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.04908,V (step),-2.731458,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.09938,V (step),-2.402528,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.1992,V (step),-2.106021,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.29939,V (step),-1.930866,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.39943,V (step),-1.816886,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.49935,V (step),-1.737665,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.5995,V (step),-1.687218,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.69927,V (step),-1.659998,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.79961,V (step),-1.645439,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.8997,V (step),-1.646787,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,0.99944,V (step),-1.652058,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.09966,V (step),-1.655085,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.19968,V (step),-1.656235,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.2996,V (step),-1.656988,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.3996,V (step),-1.656988,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.49965,V (step),-1.656955,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.59973,V (step),-1.656492,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.69998,V (step),-1.654464,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.79998,V (step),-1.654464,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.9,V (step),-1.652719,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,1.99999,V (step),-1.652017,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,2.09999,V (step),-1.653099,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,2.19998,V (step),-1.655354,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,2.3,V (step),-1.653246,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,2.39999,V (step),-1.653176,log10 A/cm2,vector marker centre
+fig5b,lithium-ion cell,2.49997,V (step),-1.653769,log10 A/cm2,vector marker centre
+fig5b,OUR ARITHMETIC Li-ion plateau (>=0.8 V),0.8,V,22.176265,mA/cm2,mean of 17
+tables,OUR ARITHMETIC S1 Li per cell (refined),0,-,22.836,-,16h·0.5 + 4d·1 + 8f·0.972 + 4c·0.765
+tables,"OUR ARITHMETIC S1 Li per cell (nominal, Z=2)",0,-,19.08,-,2 × 9.54
+tables,OUR ARITHMETIC S1 Li excess vs nominal (%),0,-,19.685535,-,refined / nominal − 1
+tables,OUR ARITHMETIC S1 Si per f.u. (refined),0,-,1.784,-,4d (1−0.108) · 2b 0
+tables,OUR ARITHMETIC S1 P per f.u. (refined),0,-,1.216,-,4d 0.108 + 2b 1
+tables,OUR ARITHMETIC S1 tetrahedral cations per f.u. (nominal Si+P),0,-,3.18,-,LGPS-type has 3 M sites per 12 anions
+tables,OUR ARITHMETIC S1 Cl per f.u. (refined),0,-,0.3064,-,Σ 8·(1−g(S))
+tables,OUR ARITHMETIC S1 Cl share on Cl(1) (%),0,-,53.524804,-,paper: 'mainly located in Cl(1)'
+tables,OUR ARITHMETIC S1 Cl share on Cl(2)+Cl(3) (%),0,-,46.475196,-,paper: 'insubstantial'
+tables,OUR ARITHMETIC S1 charge balance per cell (e),0,-,1.8808,-,Li+ + 4 Si + 5 P − 2 S − Cl (refined occupancies)
+tables,OUR ARITHMETIC S1 nominal charge balance per f.u. (e),0,-,0.0,-,Li9.54Si1.74P1.44S11.7Cl0.3
+tables,OUR ARITHMETIC S1 V = a^2 c (A^3),0,-,953.464989,-,a 8.709652 · c 12.56907
+tables,OUR ARITHMETIC S1 c/a,0,-,1.44312,-,
+tables,OUR ARITHMETIC S1 S = Rwp/Re,0,-,2.247475,-,printed 2.25
+tables,OUR ARITHMETIC S1 Li(3) 8f site symmetry ok,0,-,1.0,-,"(x, x, 0)"
+tables,OUR ARITHMETIC S2 Li per cell if Li(3) is 8f,0,-,16.32,-,as printed
+tables,OUR ARITHMETIC S2 Li per cell if Li(3) is 16-fold general,0,-,19.12,-,"coordinates (0.276, 0.269, 0.128) are general"
+tables,"OUR ARITHMETIC S2 Li per cell (nominal, Z=2)",0,-,19.2,-,2 × 9.6
+tables,OUR ARITHMETIC S2 Li(3) 8f site symmetry ok,0,-,0.0,-,"(x, x, 0) required"
+tables,OUR ARITHMETIC S2 nominal charge balance per f.u. if all P5+ (e),0,-,0.6,-,Li9.6P3S12
+tables,OUR ARITHMETIC S2 mean P valence for neutrality,0,-,4.8,-,(24 − 9.6)/3
+tables,OUR ARITHMETIC S2 synthesis P (elemental) per f.u.,0,-,0.12,-,x Li2S + y P2S5 + z P
+tables,OUR ARITHMETIC S2 V = a^2 c (A^3),0,-,946.806705,-,a 8.7144 · c 12.4677
+tables,OUR ARITHMETIC S2 Re = Rwp/S,0,-,1.190083,-,
+tables,OUR ARITHMETIC cell theoretical capacity at 137 mAh/g (mAh),0,-,0.666779,-,paper 0.667 mAh · m_LCO 4.867 mg
+tables,OUR ARITHMETIC cell 18C current (mA/cm2),0,-,12.006,-,paper 12 mA/cm2
+tables,OUR ARITHMETIC cell 1500C current (mA/cm2),0,-,1000.5,-,paper 1000 mA/cm2
+tables,OUR ARITHMETIC cell mass implied (large) (mg/cm2),0,-,88.380295,-,m_LCO × E_LCO / E_cell (Table S4)
+tables,OUR ARITHMETIC cell mass implied (high_voltage) (mg/cm2),0,-,63.938729,-,m_LCO × E_LCO / E_cell (Table S4)
+tables,OUR ARITHMETIC cell mass implied (normal) (mg/cm2),0,-,88.347921,-,m_LCO × E_LCO / E_cell (Table S4)
+tables,OUR ARITHMETIC cell mass implied (LIB) (mg/cm2),0,-,20.106295,-,m_LCO × E_LCO / E_cell (Table S4)
+tables,"OUR ARITHMETIC separator effective sigma from R0, normal type 25 C (mS/cm)",0,-,6.521739,-,240 um / R0 3.68 Ohm cm2 — upper bound on separator resistance
+tables,OUR ARITHMETIC two-point Ea R0 ASSB (kJ/mol),0,-,26.419003,-,25 C Table S5 · −30 C Fig. S11 caption · printed None
+tables,OUR ARITHMETIC two-point Ea R0 LIB (kJ/mol),0,-,28.256511,-,25 C Table S5 · −30 C Fig. S11 caption · printed None
+tables,OUR ARITHMETIC two-point Ea R1 ASSB (kJ/mol),0,-,21.814966,-,25 C Table S5 · −30 C Fig. S11 caption · printed 21.9
+tables,OUR ARITHMETIC two-point Ea R1 LIB (kJ/mol),0,-,46.304823,-,25 C Table S5 · −30 C Fig. S11 caption · printed 46.4
+tables,OUR ARITHMETIC two-point Ea R2 ASSB (kJ/mol),0,-,45.709899,-,25 C Table S5 · −30 C Fig. S11 caption · printed 45.6
+tables,OUR ARITHMETIC two-point Ea R2 LIB (kJ/mol),0,-,56.303047,-,25 C Table S5 · −30 C Fig. S11 caption · printed 56.4
+tables,OUR ARITHMETIC Li concentration LGPS Kamaya neutron (mol/dm3),0,-,34.87249,-,"total Li, not carrier"
+tables,OUR ARITHMETIC Li concentration LSiPSCl nominal (mol/dm3),0,-,33.229417,-,"total Li, not carrier"
+tables,OUR ARITHMETIC Table S6/a LCO loading (mg/cm2),0,-,6.788321,-,1C / 137 mAh/g
+tables,OUR ARITHMETIC Table S6/a composite relative density (%),0,-,110.677245,-,apparent 3.88 / solid 3.50 g/cm3 (assumed densities)
+tables,OUR ARITHMETIC Table S6/b LCO loading (mg/cm2),0,-,58.394161,-,1C / 137 mAh/g
+tables,OUR ARITHMETIC Table S6/b composite relative density (%),0,-,96.785442,-,apparent 3.11 / solid 3.21 g/cm3 (assumed densities)
+tables,OUR ARITHMETIC Table S6/main LCO loading (mg/cm2),0,-,4.867,-,Methods
+tables,OUR ARITHMETIC Table S6/main composite relative density (%),0,-,91.159356,-,apparent 2.90 / solid 3.18 g/cm3 (assumed densities)
