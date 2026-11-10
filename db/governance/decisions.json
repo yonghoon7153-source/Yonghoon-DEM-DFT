@@ -12372,6 +12372,85 @@
     "근거_발화": "사용자 2026-11-10 (이 세션): '권고대로해' — 직전 보고의 [b2o3] 권고 (판독 전 진단 · Codex 질문 · 런은 안 세움) 에 대한 답 (b2o3 1저자 = 사용자)",
     "decision_digest": "sha256:ac4b1c59a7860b219cf27a46a543b7a537f83e3cb939ff0e7aa55223172b3140"
    }
+  },
+  {
+   "id": "D-2026-11-10-li2s3-dense-protocol-ensemble-amend1",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "li2s.glass.transport.dense",
+   "slot": "li2s3_dense_glass_protocol_ensemble_amend1_dz",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ],
+    "tasks": [
+     "md_diffusion_window",
+     "diffusion_ratio",
+     "activation_energy_difference"
+    ],
+    "methods": [
+     "uma-s-1p1-omat-turbo",
+     "langevin_nvt"
+    ],
+    "use_cases": [
+     "manuscript_relative_only"
+    ]
+   },
+   "title": "li2s-3 개정 1 (회신 DZ NO-GO 반영 · 결과 전) — 2 단계 판독 보류 · 세 층 구조군 · 골격 기록 ⓐ–ⓒ 기록만 · PS₄-only 평가 불가 · v1 런은 사후 검증으로만 · v1 큐 재시작 금지 · 고친 큐 v2",
+   "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 '개정_DZ_회신_2026_11_10' 이 정한다. 2 단계 결과는 판독 승인 최소 조건 네 묶음 (회신 DZ 원문) 을 채우고 편지 EB 회신을 받을 때까지 열지 않는다. 돌고 있는 16 런 (v1 큐) 은 세우지 않고, 런마다 사후 검증 ①–⑦ (종료 코드 · 설정 = 카드 · 입력 결속 · 궤적 유효성 · 산출물 · 비용 · 코드 지문) 을 통과해야만 판독에 넣는다 — 이 대체가 충분한지 EB 에서 묻고 아니면 고친 큐 v2 로 재실행한다. v1 큐가 멈추면 다시 띄우지 않는다 · cond550 · 3 단계는 v2 로만. 골격은 유효성을 먼저 보고, 기존 S–S 쌍 · P 배위 전이 · 준비 구간 변화 (ⓐ–ⓒ) 는 기록만 하며 허용 문장은 '정의한 P–S 소속 및 신규 S–S 지표를 충족했다' 까지다. 구조군은 생성 후보군 · 포함 가능군 · 최종 R 집합 세 층으로 쓰고 회신 DZ 의 카드 문구를 그대로 쓴다. PS₄-only R 은 평가 불가 · 시드별 기술표 (담금질 입력 기준 결함 표지). ⛔ D-2026-11-10-li2s3-dense-protocol-ensemble 의 rationale 문장 '게이트가 가른 것은 측정 가능성이 아니라 12–15 개 P 가 하나도 안 벗어날 우연이다' 는 철회한다 (회신 DZ P2-3 · Q7) — 대체 문장은 카드 '사후_어림_허용_문장'.",
+   "rationale": "회신 DZ 는 구조군 정의와 여섯 시드 재사용에 조건부 찬성하고, 실행 · 재개 경로 결함 (P1 6) 과 보고량 조건 (P2 3) 때문에 판독을 막았다. 결과 (수송) 를 하나도 열지 않은 지금 고친다. 런은 같은 계산이라 세우지 않고, 사후 검증으로 받을 수 있는지를 다음 리뷰에서 묻는다 — kgy 는 다른 잡이 없어 계속 돌리는 비용이 작고, 거절되면 v2 로 다시 돌린다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "수송 결과 0 건 (2 단계 진행 신호만) · 1 단계 시드 판정 · 결함 꼴은 원 결정 때부터 봤다",
+   "card": "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json",
+   "record": "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json",
+   "depends_on": [
+    "D-2026-11-10-li2s3-dense-protocol-ensemble",
+    "D-2026-10-30-li2s-first-author-confirmation-waived"
+   ],
+   "supersedes": [],
+   "amends": "D-2026-11-10-li2s3-dense-protocol-ensemble",
+   "evidence": [
+    "kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md (원문 · NO-GO)",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json (개정_DZ_회신_2026_11_10 · 커밋 ae32a001)"
+   ],
+   "reopen_criteria": [
+    "편지 EB 회신이 규칙을 바꾸면 판독 전에 개정 2",
+    "판독 뒤에는 이 개정의 규칙을 바꾸지 않는다"
+   ],
+   "enforcement": "판독 소비자가 사후 검증 ①–⑦ 과 궤적 유효성을 런마다 건다 (실패 = invalid · incomplete) · 고친 큐 v2 가 카드 기계 값 대조 · 실행 직전 재해시 · 중단 상태 영구 기록 · 시작 / 끝 장부 · 비용 미확정 · 길이 반영 견적 · cond550 판독 기록 연결을 건다 · 도구는 결과를 읽기 전에 커밋하고 과거 마감 재현 · 음성 시험 · 깨기를 통과한다",
+   "cost_cap": {
+    "stage2_GPU_h": 160,
+    "machine": "kgy 단독 (gabia 는 b2o3)",
+    "stage1b_stage3": "2 단계 뒤 사용자 결정에 적는다"
+   },
+   "track": {
+    "name": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송)",
+    "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
+   },
+   "proposed_by": "claude-session-2026-11-10 (friendly)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-10",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "Codex DZ 회신 (사용자 붙여넣기 2026-11-10 · NO-GO) 을 결과 전에 반영 — 위임 10-30 으로 활성 · 카드 커밋 ae32a001"
+    }
+   ],
+   "_note": "active — 회신 DZ 반영 · 판독 보류 · 다음 편지 EB",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-10T09:24:19Z",
+    "commit": "ae32a0015293de4abc1c6dd4d0e113e5f6229ff2",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-10 (이 세션): Codex DZ 회신 붙여넣기 (NO-GO) — 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 앞선 '이어서해' · '권고대로해'",
+    "decision_digest": "sha256:6f25f3b578fe3c2378153cb629fb11fcf52c5f5e2455a618f264dc9e79bb5246"
+   }
   }
  ]
 }
