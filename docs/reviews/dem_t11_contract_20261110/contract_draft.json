@@ -1,0 +1,232 @@
+{
+  "schema": "dem_t11_contract_document_draft/1",
+  "status": "DOCUMENT_DRAFT_SYNTHETIC_CONTRACT_CHECKED_NOT_A_FROZEN_API_PACKET",
+  "assumptions": [
+    "Q-T11-01",
+    "Q-T11-02",
+    "Q-T11-03",
+    "Q-T11-04"
+  ],
+  "t0_contract_pin": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+  "t0_source_contract": "docs/reviews/dem_t0_contract_20261110/contract_draft.json",
+  "t0_packet_fields_to_bind": [
+    "synthetic_plan",
+    "synthetic_controls"
+  ],
+  "t0_packet_notice": "Revalidate the exact original plan and all three controls through validate_t0_contract; a status receipt is insufficient.",
+  "canonical_bytes": "json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(',', ':'), allow_nan=False).encode('ascii')",
+  "synthetic_plan_template": {
+    "schema": "DEM_GEN2_T11_SYNTHETIC_PLAN_V1",
+    "purpose": "SYNTHETIC_PREPARATION",
+    "protocol": "P2",
+    "plan_id": "toy_t11_A1",
+    "revision": 1,
+    "assumptions": [
+      "Q-T11-01",
+      "Q-T11-02",
+      "Q-T11-03",
+      "Q-T11-04"
+    ],
+    "range_claim": "EXPLICIT_CASE_LIST_ONLY",
+    "identity": {
+      "run_id": "synthetic_run",
+      "bed_id": "synthetic_bed",
+      "arm_id": "synthetic_arm",
+      "attempt_id": "synthetic_attempt",
+      "definition_id": "synthetic_definition",
+      "unit_mapping_id": "GEN2_MPA_DECK_STRESS_0P001_V1"
+    },
+    "t0_binding": {
+      "contract_pin": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+      "packet_sha256": null,
+      "compression_sign": 1,
+      "reaction_component": "z",
+      "compression_velocity_sign": -1
+    },
+    "units": {
+      "force_id": "GEN2_DECK_FORCE",
+      "length_id": "GEN2_DECK_LENGTH",
+      "physical_time_id": "s",
+      "deck_time_id": "GEN2_DECK_TIME",
+      "physical_seconds_per_deck_time": [
+        1,
+        1
+      ]
+    },
+    "time": {
+      "dt_deck": [
+        1,
+        8
+      ],
+      "dt_half_deck": [
+        1,
+        16
+      ],
+      "control_period_seconds": [
+        1,
+        1
+      ],
+      "window_seconds": [
+        2,
+        1
+      ],
+      "budget_seconds": [
+        8,
+        1
+      ]
+    },
+    "cases": [
+      {
+        "case_id": "toy_stable",
+        "K_force_per_length": [
+          1,
+          2
+        ],
+        "kp": [
+          1,
+          1
+        ],
+        "vmax_length_per_second": [
+          1,
+          1
+        ],
+        "target_force": [
+          1,
+          1
+        ],
+        "u_limit": [
+          1,
+          1
+        ],
+        "delay_seconds": [
+          0,
+          1
+        ],
+        "oracle_tolerance": [
+          1,
+          16
+        ],
+        "oracle_divergence": [
+          10,
+          1
+        ]
+      }
+    ]
+  },
+  "frozen_context_template": {
+    "schema": "DEM_GEN2_T11_FROZEN_SYNTHETIC_CONTEXT_V1",
+    "expected_plan_sha256": null,
+    "expected_t0_packet_sha256": null,
+    "t0_contract_pin": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+    "t0_plan": null,
+    "t0_controls": null,
+    "freeze_ordinal": 10,
+    "first_observation_ordinal": 11
+  },
+  "arithmetic_expectations_not_execution_results": {
+    "coarse_control_steps": 8,
+    "coarse_end_step": 64,
+    "half_control_steps": 16,
+    "half_end_step": 128,
+    "both_window_ticks": 2,
+    "both_budget_ticks": 8,
+    "both_physical_end_seconds": [
+      8,
+      1
+    ],
+    "exact_a": [
+      1,
+      2
+    ],
+    "exact_error_clip": [
+      1,
+      1
+    ]
+  },
+  "actual": {
+    "T0": "NOT_RUN",
+    "T11": "NOT_RUN",
+    "selected_build_identity": null,
+    "compression_sign": null,
+    "registration": null,
+    "receipt": null,
+    "quantitative_parameters": null,
+    "selected_time_mapping": null,
+    "actual_range_and_budget": null,
+    "external_authorized_freeze_receipt": null,
+    "field_access": null,
+    "build_history_restart_dt_half_qualification": null
+  },
+  "registration_complete": false,
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "operational_seal_modified": false,
+  "research_results": 0,
+  "whole_status": "HOLD",
+  "parent_pin": "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+  "chronology": {
+    "strict_preimplementation_TDD": false,
+    "implementation_draft_existed_before_red": true,
+    "actual_order": "prior staging implementation draft; repository stub red; candidate application; candidate green; six guard-removal contrasts",
+    "old_staging_document_preserved": true
+  },
+  "assumption_recommendations": [
+    {
+      "id": "Q-T11-01",
+      "label": "권고안 전제(Q-T11-01)",
+      "recommendation": "Exact rational physical time and exact integer grids; no rounding or automatic extension"
+    },
+    {
+      "id": "Q-T11-02",
+      "label": "권고안 전제(Q-T11-02)",
+      "recommendation": "Explicit finite case list; preserve nonconvergent and unstable negative plans; no continuous-range guarantee"
+    },
+    {
+      "id": "Q-T11-03",
+      "label": "권고안 전제(Q-T11-03)",
+      "recommendation": "Separate actuator limit from error clip; error_clip=u_limit/kp"
+    },
+    {
+      "id": "Q-T11-04",
+      "label": "권고안 전제(Q-T11-04)",
+      "recommendation": "Compare declared plan and T0 packet bytes to separate caller-supplied expected hashes and declared order; no authenticity claim"
+    }
+  ],
+  "settled_D9_prime": {
+    "source_pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+    "source_path": "docs/collab/claude_to_codex/20261109-2230_nonrint-first-link-sha-map.md",
+    "source_section": "2",
+    "scope": "pure SE; 300 MPa compression and relaxation end",
+    "calibration_estimand": "mass based epsilon_sphere",
+    "TD": 1.64,
+    "external_target_percent": [
+      10,
+      13
+    ],
+    "epsilon_union": "RECORD_ONLY",
+    "is_toy_t11_force_gain_or_tolerance": false
+  },
+  "author_synthetic_check": {
+    "methods": 24,
+    "passed": 24,
+    "failures": 0,
+    "errors": 0,
+    "guard_removal_contrasts": 6,
+    "contrasts_detected_without_errors": 6,
+    "is_independent_verdict": false,
+    "is_actual_T11_qualification": false
+  },
+  "limitations": [
+    "expected hashes and ordinals are caller-supplied; jointly replacing context and plan is not prevented",
+    "declared order is not a wall-clock or authenticated registration receipt",
+    "hash is exact canonical JSON representation, not mathematical normalization or original file bytes",
+    "T0 packet synthetic revalidation is not actual T0 polarity or build qualification",
+    "validator compiles oracle arguments and grids only; it never executes servo_probe",
+    "listed negative cases are retained; completeness of all physical negative cases is not certified",
+    "scalar linear delayed clipped toy cases do not qualify a real bed or continuous parameter range",
+    "same-physical-time dt/2 grid is not actual DEM endpoint convergence",
+    "no fixed case-count or rational-size resource limit; trusted tiny synthetic inputs only",
+    "actual quantitative registration, real observations, boundary, T12 and operating GO remain unapproved"
+  ]
+}
