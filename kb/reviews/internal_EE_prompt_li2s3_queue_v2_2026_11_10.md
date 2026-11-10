@@ -30,7 +30,7 @@ evidenceScope: multi-source-primary
 - 큐 v2 `db/inputs/li2s3_dense_ensemble_2026_11_10/run_stage2_kgy_v2.sh` (sha16 15e787a166cbaf5e · 새 파일)
 - 판독 도구 `tools/ionic/li2s3_stage2_readout.py` (180e43f5906fa04e · 0697c527 에서 v2 경로를 더한 판)
 - v1 큐 `run_stage2_kgy.sh` (d930f9b2 · 돌고 있다 · 안 바뀌었다)
-- MD 드라이버 `tools/ionic/disorder_ensemble_diffusion.py` · 러너 `glass_kgy_q_v2.sh`
+- MD 드라이버 `tools/modelc_v3/disorder_ensemble_diffusion.py` · v1 러너 `db/raw/lpscl_glass_md_v2_2026_09_30/glass_kgy_q_v2.sh` (v2 큐는 러너 없이 드라이버를 직접 부른다)
 - 카드 `db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json` (`기계_판독_값.stage2` · `개정_DZ_회신_2026_11_10` · `개정_EB_2026_11_10` · **`개정_3_큐_v2_2026_11_10`**)
 - 결정 `D-2026-11-10-li2s3-dense-protocol-ensemble-amend3` (proposed)
 - 회신 원문 `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` (v1 큐의 P1 반례) · `internal_EB_reply_li2s3_dz_fixes_2026_11_10.md`
