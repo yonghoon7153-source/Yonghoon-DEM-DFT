@@ -12549,7 +12549,7 @@
     ]
    },
    "title": "cascade 스크리닝 묶음 2 — 91 설계 × 새 축 ④ 작동창 (2.5–4.25 V) 도펀트 행방 · ⑤ 분해 부피 변화 ΔV/V (반충 LiNiO₂ · Li) · ⑥ Li 쪽 산물 품질 (넓은 갭 부피 분율) + 축 ① · ③ 과 합친 가중치 없는 전체 순위 (약점 순위 leximin · 순위 벡터 Pareto 층)",
-   "statement": "카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json 이 보고량 · 게이트 · 순위 규칙 · 금지 문장 · 닫는 조건이다: 대상 = 축 ① · ③ 의 91 종 조성 · 호스트 Li6PS5Cl · ⑤ ⑥ 은 축 ① · ③ 원자료의 최소 kink 반응식 그대로 (새 실행은 반응식을 재현해야만 부피를 쓴다 · G3b) · 부피 = 같은 hull 안정 엔트리 · SE 는 호스트 아지로다이트 원자 부피 × 원자 수 · 회계 (닫힌계 · 반응물 부피 분모 · MP 고체 부피 · 국소 x*) · ④ = SE 단독 Li 열린계 8 전압 (2.50–4.25 V · 0.25 V) 의 추적 원소 등급 (축 ① · ③ R2 규칙) · F_win 표시 · f_ins · 동률 폭 ① ③ 10 meV/atom · ⑤ 1 %p · ⑥ 0.01 · ④ 1/8 · G4 IQR ≥ 동률 폭 · G7 |ρ| < 0.8 (순서 ① → ③ → ⑤NCM → ⑤Li → ⑥Li → ④) · 순위 = 무리 A (표시 없음) 먼저 · 축별 순위 r = 1 + (동률 폭을 넘게 나은 설계 수) · leximin 약점 순위 · 순위 벡터 위 보통 지배 Pareto 층 · 모름은 구간 · 선택 집합 = 무리 A · Pareto 층 1 (DFT 확인 후보 · 결론 아님). 묶음 1 의 선택 · 서술은 고치지 않는다.",
+   "statement": "카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json 이 보고량 · 게이트 · 순위 규칙 · 금지 문장 · 닫는 조건이다: 대상 = 축 ① · ③ 의 91 종 조성 · 호스트 Li6PS5Cl · ⑤ ⑥ 은 축 ① · ③ 원자료의 최소 kink 반응식 그대로 (새 실행은 반응식을 재현해야만 부피를 쓴다 · G3b) · 부피 = 같은 hull 안정 엔트리 · SE 는 호스트 아지로다이트 원자 부피 × 원자 수 · 회계 (닫힌계 · 반응물 부피 분모 · MP 고체 부피 · 국소 x*) · ④ = SE 단독 Li 열린계 8 전압 (2.50–4.25 V · 0.25 V) 의 추적 원소 등급 (축 ① · ③ R2 규칙) · F_win 표시 · f_ins · 동률 폭 ① ③ 10 meV/atom · ⑤ 1 %p · ⑥ 0.01 · ④ 1/8 · G4 IQR ≥ 동률 폭 · G7 |ρ| < 0.8 (순서 ① → ③ → ⑤NCM → ⑤Li → ⑥Li → ④) · 순위 = 무리 A (표시 없음) 먼저 · 축별 순위 r = 1 + (동률 폭을 넘게 나은 설계 수) · leximin 약점 순위 · 순위 벡터 위 보통 지배 Pareto 층 · 모름은 구간 · 선택 집합 = 무리 A · Pareto 층 1 (DFT 확인 후보 · 결론 아님). 묶음 1 의 선택 · 서술은 고치지 않는다. 이 결정은 합치는 규칙 (D-2026-11-04-cascade-axes-combination-rule) 을 묶음 2 에만 고친다 — R0 의 '순위 점수를 만들지 않는다' 와 R3 '집합 안에서 순위를 매기지 않는다' · R4 를 R7–R13 으로 바꾼다 (가중치 · 새 문턱은 만들지 않는다 · 묶음 1 에 소급하지 않는다). 내부 반박 리뷰 ED 반영: ⑤ 주 판 = hull 혼합 회계 (원자 부피 판은 기록만 · G8 두 판 순위 ρ ≥ 0.8) · G1c 설계 경로 대조 · ④ 구간 규칙 + GrandPotentialPhaseDiagram 교차 · 휘발 · 분자 산물 목록 · R10 줄 셈 (표시 확정 · 모름 없음 · 같은 조성 한 줄) · R11 지배 = 순위 벡터 + 한 축 이상 값이 동률 폭을 넘게 나음 · 표시 모름은 구간 (선택 제외) · 새 연속 축이 0 개면 R10 · R11 을 내지 않는다.",
    "rationale": "사용자 2026-11-10 '전체 다른 축으로 랭킹' · 'al2s3 al2o3 에 매몰' — GPU 는 Al₂O₃/Al₂S₃ 한 쌍 수송 (v6 242.10 · v7 513.10 GPU-h) 에 들어갔고 91 개 전체는 MP 축 셋만 봤다. 묶음 1 마감 재개 조건 ② (새 축 카드 → 새 묶음) 로 연다. 문헌 갭 A · B (분해 부피 · 산물 품질 도펀트별 표 0 편) 가 같은 반응식의 두 열이고 GPU 0 · CPU MP 조회만이다. 순위는 8 월 가중합 교훈대로 가중치 없이 낸다.",
    "decision_state": "proposed",
    "record_kind": "estimand",
@@ -12566,11 +12566,14 @@
     "D-2026-10-15-cascade-screening-axes-plan"
    ],
    "supersedes": [],
-   "amends": null,
+   "amends": [
+    "D-2026-11-04-cascade-axes-combination-rule"
+   ],
    "evidence": [
     "db/properties/cascade_axes_bundle_closed_2026_11_05.json (재개 조건 ②)",
     "reports/황화물 분해 부피 도펀트 문헌 갭.md (남은 자리 A · B · 회계 넷)",
-    "db/properties/cascade_pareto_a3_2026_08_28.json (가중합 · 다축 Pareto 교훈)"
+    "db/properties/cascade_pareto_a3_2026_08_28.json (가중합 · 다축 Pareto 교훈)",
+    "kb/reviews/internal_ED_reply_cascade_bundle2_card_2026_11_10.md (내부 반박 리뷰 · 조건부 GO · 문장 1–19)"
    ],
    "reopen_criteria": [
     "카드 9_닫는_조건_결과_전 의 재개 조건만 (묶음 3 새 축 카드 · 선택 후보 DFT 확인 카드 · MP 판 변경 · 판독기 결함 뒤 재현)"
@@ -12591,9 +12594,15 @@
      "state": "proposed",
      "by": "agent",
      "note": "사용자 AskUserQuestion '권고안으로 카드 쓰기' — 결과 전 초안 · 내부 반박 리뷰 뒤 사용자 비준 대기"
+    },
+    {
+     "at": "2026-11-10",
+     "state": "proposed",
+     "by": "agent",
+     "note": "내부 반박 리뷰 ED (조건부 GO · P1 6 · P2 5) 반영 · amends 합치는 규칙 (범위 = 묶음 2) · 사용자 비준 대기"
     }
    ],
-   "_note": "proposed — 내부 반박 리뷰 (ED) 뒤 사용자 비준 · 비준 전에는 도구를 돌리지 않는다"
+   "_note": "proposed — ED 반영 · 사용자 비준 대기 · 비준 전에는 도구를 돌리지 않는다"
   }
  ]
 }
