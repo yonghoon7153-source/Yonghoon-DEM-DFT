@@ -1,0 +1,175 @@
+{
+  "schema": "DEM_GEN2_T5_PREREGISTRATION_DOCUMENT_DRAFT_V1",
+  "document_only_not_api_input": true,
+  "parent_pin": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+  "registration_status": "DRAFT_UNREGISTERED",
+  "qualification": "NOT_RUN",
+  "physical_ready": false,
+  "execution_go": false,
+  "gate_write": false,
+  "research_results": 0,
+  "whole_status": "HOLD",
+  "settled_D9_prime": {
+    "source_pin": "13eb293cd9ac44502517c81e8f5e9b7ae02d817f",
+    "source_path": "docs/collab/claude_to_codex/20261109-2230_nonrint-first-link-sha-map.md",
+    "source_section": "2",
+    "scope": "pure SE; 300 MPa compression plus end of relaxation",
+    "calibration_estimand": "mass based epsilon_sphere",
+    "TD": 1.64,
+    "external_target_percent": [
+      10,
+      13
+    ],
+    "epsilon_union": "RECORD_ONLY",
+    "is_T5_operator_tolerance_or_coverage_target": false,
+    "reapproval_requested": false
+  },
+  "actual_registration": {
+    "status": "UNSELECTED",
+    "author_approval": null,
+    "external_frozen_plan_digest": null,
+    "registration_revision": null,
+    "registration_time": null,
+    "frame_and_inventory": null,
+    "producer_operator_oracle_interval_pins": null,
+    "geometry_roi_denominator_units_pbc": null,
+    "primary_auxiliary_estimand_mapping": null,
+    "analytic_case_definitions_and_domains": null,
+    "rng_algorithm_version_seed_manifest": null,
+    "sample_ladder_repetitions_dependence_order": null,
+    "interval_formula_model_nominal_level": null,
+    "coverage_evaluation_uncertainty_target": null,
+    "casewise_abs_rel_budget_zero_and_near_zero_rules": null,
+    "convergence_decision_rule": null,
+    "family_scope_cell_alpha_joint_justification": null,
+    "failure_missing_retry_contract": null,
+    "qualification_receipt": null
+  },
+  "synthetic_recommendation_assumptions": [
+    {
+      "id": "Q-T5-01",
+      "label": "권고안 전제(Q-T5-01)",
+      "selection": "sphere/union x full/interior; same-region declarations agree",
+      "actual_physical_validation": false
+    },
+    {
+      "id": "Q-T5-02",
+      "label": "권고안 전제(Q-T5-02)",
+      "cases": [
+        "two_separate",
+        "two_tangent",
+        "two_overlap",
+        "three_coincident",
+        "wall_half"
+      ],
+      "sample_sizes": [
+        16,
+        64
+      ],
+      "repetitions": 4,
+      "seeds": [
+        11,
+        17,
+        23,
+        29
+      ],
+      "dependence": "INDEPENDENT_WITHIN_CELL_SHARED_ACROSS_CELLS",
+      "independence_verified": false
+    },
+    {
+      "id": "Q-T5-03",
+      "label": "권고안 전제(Q-T5-03)",
+      "nominal_level": [
+        19,
+        20
+      ],
+      "coverage_target": [
+        3,
+        4
+      ],
+      "denominator": "planned repetitions; missing and failed retained",
+      "interval_generation": "NOT_QUALIFIED",
+      "true_coverage_inference": "NOT_QUALIFIED"
+    },
+    {
+      "id": "Q-T5-04",
+      "label": "권고안 전제(Q-T5-04)",
+      "family_cells": 40,
+      "alpha_per_cell": [
+        1,
+        4000
+      ],
+      "sum_cell_alpha": [
+        1,
+        100
+      ],
+      "alpha_family": [
+        1,
+        20
+      ],
+      "check": "exact family set and rational sum <= family alpha only",
+      "actual_simultaneous_coverage_guarantee": false,
+      "missing_policy": "COUNT_IN_PLANNED_AND_HOLD",
+      "retry_policy": "NONE"
+    },
+    {
+      "id": "Q-T5-05",
+      "label": "권고안 전제(Q-T5-05)",
+      "error_mode": "ABS",
+      "toy_budget": 0.1,
+      "supported_REL": "reject exact zero oracle; near-zero switching not implemented",
+      "reported": [
+        "mean_bias",
+        "max_abs_error",
+        "rmse"
+      ],
+      "convergence_qualification": "NOT_IMPLEMENTED"
+    }
+  ],
+  "synthetic_reference_formulae": [
+    {
+      "case": "two_separate",
+      "domain": "two unit spheres; center distance > 2; no PBC",
+      "sphere": "8*pi/3",
+      "union": "8*pi/3"
+    },
+    {
+      "case": "two_tangent",
+      "domain": "two unit spheres; center distance = 2; no PBC",
+      "sphere": "8*pi/3",
+      "union": "8*pi/3"
+    },
+    {
+      "case": "two_overlap",
+      "domain": "two unit spheres; center distance = 1; no PBC",
+      "sphere": "8*pi/3",
+      "lens": "5*pi/12",
+      "union": "9*pi/4"
+    },
+    {
+      "case": "three_coincident",
+      "domain": "three coincident unit spheres; no PBC",
+      "sphere": "4*pi",
+      "union": "4*pi/3",
+      "pair_only_subtraction": "0; incorrect union"
+    },
+    {
+      "case": "wall_half",
+      "domain": "unit sphere; half-space plane through center; no PBC",
+      "sphere_clipped": "2*pi/3",
+      "union_clipped": "2*pi/3"
+    }
+  ],
+  "limitations": [
+    "caller-supplied plan internal consistency only; jointly edited plan and rows can remain consistent",
+    "no external frozen-plan authenticity or result-before-registration proof",
+    "declared oracle values and ROI geometry are not recomputed",
+    "no new MC estimator, random sampling, CI construction, physical operator qualification or convergence decision",
+    "PBC remains NOT_QUALIFIED including XY_PERIODIC declarations",
+    "volume intervals are not probability-clipped; signed porosity is preserved",
+    "negative toy porosity is arithmetic testing, not a physically qualified union example",
+    "global ABS/REL toy budget is not actual casewise mixed policy",
+    "positive probability ratios only; nominal in (0,1), coverage/alpha in (0,1]",
+    "16,384-trial capacity is a synthetic resource limit, not scientific registration"
+  ]
+}
