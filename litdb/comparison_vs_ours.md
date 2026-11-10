@@ -12,6 +12,7 @@
 ## 📑 Reference key (출처 약칭)
 | 약칭 | 논문 (저자·년·저널) | digest/status | 유형 |
 |---|---|---|---|
+| **[Agarwal26AD]** 🔧🔴 **uMLIP 계면 벤치마크 — 우리 엔진 (UMA-s-1p1 `omat`) 이 피고에 포함** · ⛔ **미심사 프리프린트 (ChemRxiv)** · ⛔ Li 금속 / 이원·인산염 결정 계면 전용 · argyrodite 0 — A–D 물성 4축에 행을 만들지 않는다 (§J-69 에만) | **Umang Agarwal**†/**Mengke Li**†/G. Sai Gautam/**Zeyu Deng\*** (NUS MSE + IISc, **외부**) 2026 *ChemRxiv* (DOI 10.26434/chemrxiv.15011777/v1 · 게시 2026-11-05) — "Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces" | ✅ `papers/agarwal2026_umlip_applicability_domain_ssb_interfaces.md` — 판정은 **§J-69** | MLIP 벤치마크 (uMLIP 6종 zero-shot · PBE 기준 · MLIP-MD · MACE 미세조정 1건 · 실험 0 · SI 미확보) |
 | **[Alharbi26UCSE]** 🔧🔴 **리뷰 판정 (프리프린트 인용 감사 사례)** · ⛔ **미심사 프리프린트 (Preprints.org) · 자체 계산 0 · 자체 실험 0 · 고분자–산화물 복합막 (황화물 본문 7회) — A–D 물성 4축 진입 금지** | **Sami M. Alharbi\*** (Qassim Univ. 화학과 · 단독) 2026 **Preprints.org** (DOI 10.20944/preprints202611.0702.v1 · 게시 2026-11-06 · v1 · 34 쪽 · 참고문헌 116 = 고유 108 · 그림 8 · 표 1 · **SI 없음**) — "**Coupled Design Principles for Ultrathin Composite Solid Electrolytes: Reconciling Transport, Mechanics, and Interfacial Chemistry in All-Solid-State Lithium Batteries**". 다섯 설계 원리의 상호 제약 · 덴드라이트 3 단계 (핵생성 → 전파 → 손상 누적) · 계면 병목 순서 (접촉 → 화학 → 기계 내구 → 공간전하). 🔑 상충을 정량으로 보인 그림 · 표 · 식 0 · 인용 번호 어긋남 다수 | ✅ `papers/alharbi2026_coupled_design_ultrathin_composite_se_review.md` (2026-11-10 · 그림 8장 전부 실독 · 인용 ↔ 목록 전수 대조) — 리뷰 판정 **§J-68** | 리뷰 (외부 · 미심사) · 자체 계산 0 · 2차 인용 |
 | **[Liu26CCTO]** ⚠ exp + 계산 보조 · ⛔ 바인더 아님 (양극 위 이온겔 중간층) · ⛔ IL 하이브리드 셀 · ⛔ σ · 창 · D · 결합에너지 수치는 우리 값 옆에 두지 않는다 | **Liequan Liu**/Z. Wu/D. Xu/Y. Qu/J. Cai/**Ze Zhang\***/**Ke Li\***/**Lingfeng Zhu\*** (南昌大 · 江西师范大 · RMIT) 2027 *J. Colloid Interface Sci.* **729**, 141891 (DOI 10.1016/j.jcis.2026.141891 · 온라인 2026-11-02) — "Colossal-dielectric cathode interface engineering enables interfacial stability in dry-processed Li₆PS₅Cl solid-state batteries" | `papers/liu2026_ccto_colossal_dielectric_interlayer_dry_lpscl.md` ✅ (2026-11-06 · 그림 25/65 실독 · 재판독 `tools/litdb/liu2026_ccto_readout.py`) | exp (건식 LPSC-PTFE 막 + PAN/LiTFSI/IL/CCTO 중간층 · EIS · DC σ_e · LSV · 부유 · Raman · XPS · 셀) + DFT (ORCA B3LYP-D3 · CP2K PBE/PBE+U) · AIMD 600 K · 고전 MD |
 | **[Schmitt26Dry]** ⛔ 계산 0 · ⛔ 복합체 σ 는 소자 수준 (A–D 물성 4 축 금지) · 카드 트랙 = DEM (건식 공정) — 이 문서에는 §B② 산물 클래스 한 행만 | **Maik Schmitt**/P. Dippell/P. Henkel/R. Zhang/P. Räke/J. Janek/M. Rohnke/A. Kondrakov/**Torsten Brezesinski\***/**Florian Strauss\*** 2026 *Energy Storage Mater.* **89**, 105231 (DOI 10.1016/j.ensm.2026.105231 · KIT BELLA + JLU Giessen + BASF, **외부**) — "**Chemomechanical Stability Determines the Performance of Dry-Processed Cathode and Separator Sheets in Thiophosphate-Based Solid-State Batteries**". 건식 PTFE (0.5 wt%) 시트 vs 냉간압축 펠릿 · LiNbO₃-NCM85 + Li₆PS₅Cl · ToF-SIMS · DEMS | ✅ `papers/schmitt2026_chemomech_stability_dry_cathode_separator_sheets.md` | exp |
@@ -1356,6 +1357,7 @@
 | **[Wu26MLIF]** 🔧 | `wu2026_ml_driven_electrolyte_interface_design_review` — **ML×(전해질+계면) 리뷰** (Wu/Wang 외, 샤먼대, ***Adv. Funct. Mater.* 2026, 0:e78357**, DOI `10.1002/adfm.78357`; 34 pp · Fig 16 · Table 5 · refs 148 · SI 없음). ⚠ **자체 계산 0 · 자체 실험 0 — 전량 2차 인용** → 아래 **J-20** 에만 등장, **A–D 물성축 금지**. 🔴 이 편의 값은 수치가 아니라 **우리 hull 방법에 대한 두 개의 비판**과 **§4.6 계면 설계규칙 번역표**다 |
 | **[WangZeierYou25]** 🔧 ⭐⭐⭐ **CEI 요구 4칸의 원전** ( = `[Wu26MLIF]` `Fig. 10` 의 출처 ) | `wang2025_ai_ecosystems_electrolyte_interface_ssb` — **Zhilong Wang**/**Wolfgang G. Zeier**/**Fengqi You\*** (Cornell AI for Science Inst. + 공대 + CAISI · Münster 무기분석화학 · Helmholtz-Institute Münster/FZ Jülich IMD-4), "**Toward AI Ecosystems for Electrolyte and Interface Engineering in Solid-State Batteries**", ***Sci. Adv.* 11(48), eaea0638 (2025)**, DOI `10.1126/sciadv.aea0638` (투고 2025-06-24 / 수락 2025-10-29 / 게재 2025-11-26; 본문 **27 pp** · Fig 1–10 · 본문 표 **0장** · refs **196** · SI = Tables S1–S5 **우리 미확보**; CC BY 4.0). ⚠⚠ **자체 계산 0 · 자체 실험 0 · 물성 수치 0** → 아래 **J-23** 에만 등장, **A–D 물성축 금지**(값이 없어 행을 만들 수 없다). ⛔ **"Zeier 그룹 논문" 아님** — 저자기여상 **Zeier 는 `Writing—review and editing` 뿐**, 나머지 전부 Z.W.+F.Y., 교신 Cornell. ⛔ **우리 축 B 의 방법 근거로도 금지** — [Rich16]·[Zhu15]·[Xiao20Rev]·[Nolan18Rev] 을 **하나도 인용하지 않는다**. 🔑 이 편의 값은 ① `Fig. 1` **CEI 요구 4칸의 정본** ② hull 비판의 **편향 방향**(불안정 쪽 오분류, `Fig. 7D` 그림 증명) ③ **`dual compatibility` 용어 선취** ④ 인용 문턱 3개(ΔE_rxt ≥ −0.1 · K,G < 30 GPa · σ 2–3배) 다. ⚠ 자매편 `[Jain26ML]`(같은 Z.Wang·F.You)와 **독립 근거 2건으로 세지 말 것** |
 | **[WangG26uMLFF]** 🔧 | `wang2026_umlff_review_softening_forgetting_longrange` — **uMLFF 리뷰 + 자체 frozen-checkpoint 힘 대조** (*Phys. Scr.* 2026 AM, DOI 10.1088/1402-4896/aeb836). ⚠ 물성값 0 · **UMA 는 자체 대조에 없다** → J-1 에만 (같은 식 · 다른 시험셋). ⛔ [Wang26uMLP](Feng Wang 전해질)와 다른 편. |
+| **[Agarwal26AD]** 🔧 | `agarwal2026_umlip_applicability_domain_ssb_interfaces` — **uMLIP 6종 (UMA-s-1p1 `omat` 포함) 의 Li 금속/고체 계면 24개 벤치마크** (*ChemRxiv* 2026, DOI 10.26434/chemrxiv.15011777/v1 · **미심사**). ⚠ argyrodite · PS₄ 0 · 물성값 0 (우리 계) → 아래 **J-69** 에만 등장, A–D 축 금지 |
 
 ### J-0b. ★★ [UMA] 우리 계산기의 사양서 — 원논문 대조 (2026-08-25 신설)
 
@@ -6913,6 +6915,60 @@ A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
 | 인용 감사 | Li₂ZrCl₆ 전도도 값의 인용이 [9] · [32] · [32,33] (목록상 맞는 것은 [35] · 본문 미인용) · 참고문헌 중복 8 · 미인용 10 · 그림 출처 2 건이 목록에 없음 | 리뷰를 거쳐 값을 옮기지 않는다는 규율의 사례 | 🔴 프리프린트 인용 감사 사례 |
 
 ⛔ 인용 금지 — 이 리뷰의 수치 · 귀속 전부 (2차 인용 · 번호 어긋남 · 미심사). 필요한 내용은 원전에서: 개시 / 전파 구분 = Ning *Nature* 618, 287 (2023) (전해질 Li₆PS₅Cl 로 보임 — `song2025_porous_argyrodite_modulus_fracture_toughness` 카드 경유 · 원전은 litdb 미보유) · 조립 편차 = *Nat. Energy* 9, 1310 (2024) (미보유) · 건식 sub-20 µm 막 = Yoon *Small* (2024) (미보유).
+
+---
+
+### J-69. 🔧🔴 **방법 원전 — [Agarwal26AD] 범용 MLIP 6종 (UMA-s-1p1 `omat` 포함) 의 Li 금속/고체 계면 적용 영역 (*ChemRxiv* 2026 · 미심사): 힘 오차는 계면 수직 성분에 몰린다 · W_adh RMSE 0.38–0.60 J/m² · 미세조정은 계면 교차 자료가 있어야만 · 트랙별 지지/무관 판정** (2026-11-10 신설)
+
+> 📎 출처: `papers/agarwal2026_umlip_applicability_domain_ssb_interfaces.md` (논문 에이전트 2026-11-10 · 그림 7/7 실독 · 벡터 좌표 판독 + 검산 4건 · SI 미확보). ⛔ 미심사 프리프린트 · Li 금속 / {Li₂O · Li₂S · LiCl · β/γ-Li₃PO₄ · 결정 LiPON} 계면 전용 · **argyrodite · PS₄ · 양극 쪽 · 반응 분석 0** → A–D 물성 4축에 행을 만들지 않는다 (§E 에도 값으로 넣지 않는다). 수치는 전부 0 K PBE 대비 소환값 — 우리 `db/properties/` 값 옆에 놓지 않는다.
+> 트랙: 우리 UMA 사용 전반. 아래 '우리' 쪽은 값 없이 원장 경로만 적는다 (수송값 · W 값 · UMA 금지 계의 값은 원장 규율대로 비게재).
+
+**J-69-a. 논문이 잰 것 (요약)**
+
+| 축 | [Agarwal26AD] | 판독 |
+|---|---|---|
+| 피고 | Allegro-OAM-L · MACE-MH-0 · NequIP-OAM-L · PET-OAM-XL · Orb-v3-conservative-inf-omat · **UMA-s-1p1 `omat`** — 전부 OMat24 사전학습 · 미세조정 없음 | 우리와 같은 체크포인트 · task |
+| 기준 | VASP 6.5.1 · PBE · MPRelaxSet · 520 eV · **분산 없음** / 동역학 기준 (AIMD · 실험) **없음** | PBE 재현 시험 |
+| 총에너지 (rattled 계면) | 모델 평균 MAE < 15 meV/atom · UMA 화학별 1.3–8.2 (figure-read) | 다중음이온에서 더 크지 않다 — 최악은 Li₂O/Li (세 모델 21–25) |
+| 힘 | 계면 원자 · 계면 수직 성분에 집중 · UMA 순 힘 MAE 36–92 meV/Å (figure-read) · 수직 ÷ 면내 ≈ 5 | 다중음이온 ÷ 이원계 1.5–2.1배 (전 모델) |
+| E_f · W_adh | E_f 평균 0.32 J/m² 과소 · **W_adh RMSE 0.38 (UMA) – 0.60 J/m²** · DFT 값 자체가 0.02–0.89 J/m² (figure-read) | 부호가 화학 따라 뒤집힘 (LiCl/Li 는 다섯 모델 과소) |
+| 순서 | 쌍별 일치율 UMA 0.73 (이원 1.00 · 다중음이온 0.67) — 다 맞힌 모델 없음 | 3 쌍짜리 지표 · UMA 가 틀린 쌍의 DFT 차 0.07 J/m² |
+| 동역학 | 600–900 K · 500 ps · **전체 Li** 의 D · Ea 가 모델 간 비슷 (LiPON/Li 의 Ea 는 0.10–0.25 eV 로 갈림 · figure-read) | 기준 없음 · Li 녹는점 위 · PET-OAM-XL 은 Li–Li < 1 Å 붕괴 |
+| 적용 영역 | QUESTS δH (OMat24 의 Li–O–P–S–Cl–N 부분집합 40,173 구조 대비 · 문턱 δH > 0) · 밖 114 / 안 54 meV/Å · 여섯 모델 위원회 r 0.76 (E) · 0.81 (F) · 유도량 0.30–0.41 | δH = 0 은 보정된 경계 아님 · 위원회 표준편차 ≈ 오차의 0.4–0.55배 |
+| 미세조정 | MACE-MP-0a · LiPON(100)/Li(210) 753 구성 · multi-head + MPtrj replay — 계면 + 슬랩만 유효 (힘 265 → 101 meV/Å) · 슬랩만은 악화 · W_adh 미해결 | 기반 모델이 피고 여섯 밖 · 비용 수치 없음 |
+
+**J-69-b. 우리 트랙별 판정 (digest §11.2 — 방법 · 정의 수준)**
+
+| 우리 판정 · 트랙 | 관계 | 한 줄 근거 |
+|---|---|---|
+| σ · D · Ea 절대값 비인용 · 상대차만 | 🟢 지지 (간접) | 저자 결론이 '정성 스크리닝까지' · 동역학은 '모델 선택에 둔감' 까지만 주장 |
+| 'LPSCl 계열 MD 에는 UMA 가 검증된 표준' | ⚪ 무관 | argyrodite · 벌크 수송 · AIMD 0 — 넘어오는 것은 모델 선택 수준의 정황 (여섯 중 계면 정확도 1 위 · MD 붕괴 없음) 뿐 |
+| 'UMA 는 Li₃N 에 사용 금지' (`HZ-uma-li3n-banned`) | ⚪ 무관 · 방향은 같은 쪽 | Li₃N 미시험 · 오차가 표면/계면 수직에 몰린다는 같은 부류의 실패. ⛔ '단일 음이온 이원계는 스크리닝 가능' 을 Li₃N 으로 넓히지 않는다 |
+| 계면 산물상 DFT 스팟체크 · Li₃P 미사용 | 🟢 지지 (간접) | Li₂O · Li₂S · LiCl 은 가장 쉬운 축이었지만 W_adh 부호가 뒤집히고 장벽은 미시험 · Li₃P 미시험 |
+| li2s 마감 · li2s-2 밀도 창 마감 (`lpscl_smallcell_glass_track_closed_2026_10_30.json` · `lpscl_glass_dense_window_closed_2026_11_10.json`) | ⚪ 무관 | 결정 Li₂S/Li 계면 ≠ 황화인산염 유리 벌크 · PS₄ 미시험 — 시드 게이트 탈락을 이 논문으로 설명하지 않는다 · 모델 검증 문장을 넓혀 주지 않는다 |
+| 소셀 UMA↔QE 힘 대조의 원소별 분해 (`lpscl_smallcell_closed_2026_09_18.json` ③) | 🟢 같은 그림 (정성) | 논문의 둘째 가설 '큰 힘 오차는 Li 아닌 원자에 몰린다' 와 같은 모양 · ⛔ 두 계의 수치를 한 표에 놓지 않는다 |
+| b2o3 B·O 배치 카드 (`b2o3_bo_placement_estimand_2026_11_09.json` · `D-2026-11-09-b2o3-bo-placement-amend1`) | 🟢 지지 (설계 규칙) | 순서는 DFT 차가 모델 오차보다 작으면 틀린다 · 유도 에너지 차에는 위원회가 약하다 → DFT 단일점 부호 확인이 맞는 설계. B–O/B–S 화학은 미시험 |
+| W_ad UMA+D3 (`wad_p2small_vasp_card_2026_10_15.json` — 값 비게재) | 🟢 지지 ('예측 · 미검증' 라벨 · 같은 기하 DFT 대조) | 우리 엔진의 접착일 오차가 외부에서 처음 재졌다. 단 계 부류 (분산 없음 · Li/이온성 고체) · 정의 (각자 이완 ↔ 같은 기하) 가 달라 수치 이식 불가 |
+| cascade D_rel 마감 (`cascade_d_rel_closed_2026_10_01.json`) | ⚪ 무관 | 논문은 확산 영역 판정을 하지 않는다 — 모델 간 D 일치를 UMA D 의 근거로 쓰지 않는다 |
+| 위원회 기준선 (`mlip_committee_baseline.json`) | 🟢 지지 + 외부 실측 | 불일치 ↔ 오차 상관은 있으나 (r 0.76–0.81) 크기는 과소 · 한 진영 위원회의 한계 |
+
+**J-69-c. 관측창 · 홉 수 (우리 규율 적용 · `tools/sei/collect_neb.py` · ν₀ 10¹³ s⁻¹ 가정)**
+- 생산 MD 600 K · 500 ps: 기대 사건 1 ≈ 0.44 eV (검출 63 %) · 95 % 검출 ≈ 0.38 eV / 900 K · 500 ps: 0.66 · 0.58 eV. 미세조정 자료 MD 400 K · 15 ps: 0.17 · 0.13 eV. 논문은 Li 금속에 열역학적으로 불안정한 Li₃PO₄/Li · LiPON/Li 궤적에서 반응 여부를 보지 않았다.
+- Ea 0.144 eV (UMA · Li₂O/Li · 600 K): Γ ≈ 6.2 × 10¹¹ s⁻¹ · 평균 대기 ≈ 1.6 ps · 250 ps 창 N ≈ 150 / Ea 0.389 eV (Allegro · γ-Li₃PO₄/Li · 600 K): 평균 대기 ≈ 185 ps · N ≈ 1.4 — 그 점은 표본이 얇다. (Ea 는 전체 Li 의 D 아레니우스 기울기 · figure-read.)
+
+**J-69-d. 가져올 것 (제안 — 원장은 고치지 않았다)**
+- 계면 · 슬랩 검증은 전체 평균이 아니라 **z 프로파일 + 면내/수직 분해** (`Fig. 2b`·`Fig. 2c` 꼴) 로.
+- δH 는 문턱 0 의 이진 판정이 아니라 연속값으로 · 쓰려면 우리 계의 UMA↔DFT 대조로 보정.
+- 공개 자료 (Zenodo `10.5281/zenodo.23984013`) 로 대조 잡 1 회 — 우리 설치의 UMA 가 논문의 UMA 열을 재현하는지 · 같은 자료에 D3 를 얹으면 W_adh 가 어느 쪽으로 가는지.
+- 쌍별 순서 일치율 = 순위 주장의 채점법 (차이가 모델 오차보다 작은 쌍은 따로 표시).
+
+**J-69-e. ⛔ 인용 금지**
+- "uMLIP 의 Li 동역학은 믿을 수 있다" — 기준 없는 모델 간 일치이고 전체 Li (금속 포함) 다.
+- "uMLIP 은 접착일을 0.26 J/m² 과대 평가한다" 를 보정 상수로 — 부호가 화학에 따라 뒤집힌다.
+- "δH > 0 이면 못 믿고 ≤ 0 이면 믿는다" — `Fig. 7a` 평균선은 0 에서 평탄하다.
+- 이 편의 UMA 오차 수치를 우리 계 (argyrodite · 유리 · SE/탄소) 의 오차로 옮기기 · 우리 힘 대조값과 한 표에 놓기.
+- "미세조정하면 계면이 맞는다" — 기반 모델이 다르고 W_adh · 총에너지는 안 고쳐졌다.
+- 이 편을 'UMA 가 LPSCl 에서 검증됐다' 또는 'Li₃N 에 써도 된다' 의 근거로.
 
 ---
 

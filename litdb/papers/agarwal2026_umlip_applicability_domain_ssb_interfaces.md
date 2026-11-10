@@ -84,7 +84,7 @@ OMat24 로 사전학습한 범용 MLIP 6 종 (Allegro · MACE · NequIP · PET �
 
 - 파라미터 수는 Matbench Discovery 값 (UMA 만 원논문 값 · 활성/전체).
 - 선정 기준 (캡션): *"All evaluated models were chosen such that they are trained on the OMat24 dataset, ensuring a consistent and equitable evaluation, sharing the same reference DFT baseline."*
-- ⭐ **UMA 가 들어 있다 — 그것도 우리와 같은 체크포인트 · 같은 task** (`UMA-s-1p1` · `omat`). litdb 에서 우리 엔진을 계면에서 직접 잰 첫 편이다 (`chang2026_…` 은 UMA 없음 · `kalikadien2026_…` 은 `omol` task · 단일점 에너지만).
+- ⭐ **UMA 가 들어 있다 — 그것도 우리와 같은 체크포인트 · 같은 task** (`UMA-s-1p1` · `omat`). litdb 에서 (확인한 범위로는) 우리 엔진을 고체–고체 계면에서 직접 잰 첫 편이다 (`chang2026_…` 은 UMA 없음 · `kalikadien2026_…` 은 `omol` task · 단일점 에너지만 · `wang2026_umlff_review_…` 의 자체 대조에도 UMA 없음).
 - 동역학 시험에서만 추가로 등장: **PET-MAD v1.5.0** (PET-OAM-XL 의 MD 붕괴가 아키텍처 탓인지 가르는 대조 — §5.3).
 - 미세조정 시험의 기반 모델은 위 여섯 중 하나가 **아니다**: **MACE-MP-0a (medium)** (§7 · §14-7).
 
@@ -505,7 +505,7 @@ OMat24 로 사전학습한 범용 MLIP 6 종 (Allegro · MACE · NequIP · PET �
 |---|---|---|---|
 | 모델 | UMA-s-1p1 (`omat`) 포함 6 종 · 미세조정 없음 | UMA-s-1p1 (`omat`) 하나 · 미세조정 없음 (CLAUDE.md §데이터 규율) | **같은 체크포인트 · 같은 task** — 이 논문의 UMA 열은 우리 엔진의 외부 채점이다. 단 계가 다르다 |
 | 계 | Li 금속 / 이원 · 인산염 결정의 **정합 계면** | 벌크 argyrodite (comp1 · modelc 등) · 벌크 유리 (li2s) · 도핑 셀 (cascade · b2o3) · SE/탄소 · Ag/탄소 점착 | ⛔ 겹치는 계 0 — 벌크 수송 검증으로 옮길 수 없다 |
-| 기준 DFT | VASP · PBE · MPRelaxSet · 520 eV · 분산 없음 | QE · PBE · USPP (소셀 힘 대조) / PBE+D3(BJ) (점착) / VASP 외주 대조 (W_ad 카드) | 범함수 계열은 같다 (PBE). 코드 · 의사퍼텐셜 · 분산이 다르다 → 오차 수치를 서로 옮기지 않는다 |
+| 기준 DFT | VASP · PBE · MPRelaxSet · 520 eV · 분산 없음 | QE · PBE · USPP (소셀 힘 대조) / PBE+D3(BJ) (점착) / VASP PBE 대조 (W_ad 카드) | 범함수 계열은 같다 (PBE). 코드 · 의사퍼텐셜 · 분산이 다르다 → 오차 수치를 서로 옮기지 않는다 |
 | 에너지 지표 | 원자당 **총에너지** MAE (정렬 여부 미기재) | **상대 에너지** MAE — 일정 편향을 뺀 뒤 (원장 `lpscl_smallcell_closed_2026_09_18.json` §1) | 다른 양. 총에너지 오차에는 기준 (의사퍼텐셜 · 설정) 어긋남이 섞일 수 있다 (§14-15) |
 | 힘 지표 | 성분 MAE + 오차 벡터 크기 MAE · **z 프로파일** | RMSE · MAE · 상대 오차 · softening 기울기 · **원소별 분해** (같은 원장) | 분해 축이 다르다 — 논문은 공간 (계면 ↔ 안쪽 · 면내 ↔ 수직) · 우리는 원소. 둘 다 '평균 하나' 로 덮지 않는다는 점은 같다 |
 | 시험 구성 | 0 K 이완 구조의 rattle (σ 0.025–0.1 Å) · 계면당 1 개 | MD 경로에서 뽑은 봉인 프레임 (융체 · 담금질 · 유리) | 우리 쪽이 MD 가 실제로 지나가는 구성이다 — 논문 저자가 스스로 꼽은 다음 단계 (MD 궤적 프레임의 힘 오차) 를 우리는 벌크에서 이미 했다 |
@@ -526,7 +526,7 @@ OMat24 로 사전학습한 범용 MLIP 6 종 (Allegro · MACE · NequIP · PET �
 | MSD 창 2–50 ps · Langevin · 온도 3 점 등 규약 세부 | ⚪ **무관** | 창 · 온도조 규약을 시험하지 않았다 |
 | **'LPSCl 계열 MD 에는 UMA 가 검증된 표준'** | ⚪ **무관 — 직접 증거 없음** | argyrodite · PS₄ 0 · 벌크 전해질 수송 검증 0 · AIMD 0. 넘어오는 것은 **모델 선택 수준의 정황 하나**뿐: 같은 체크포인트가 여섯 중 계면 정확도 1 위이고 600–900 K · 500 ps MD 에서 붕괴가 없었다. ⛔ 이것을 'LPSCl 에서 검증됐다' 의 근거로 쓰지 않는다 |
 | **'UMA 는 Li₃N 에 사용 금지'** (`db/interphases/li3n.json` · `HZ-uma-li3n-banned` · 2026-06 결정론적 편향 판정) | ⚪ **무관 — 지지도 반박도 아니다** · 방향은 같은 쪽 | Li₃N 미시험. N 은 LiPON 의 P–N 다면체로만 나오고 그 계가 최악군이다. 우리 금지의 실패 양식 (슬랩 · 표면 기하에서의 계통 오답) 은 이 논문이 보인 '오차가 표면 · 계면 수직 방향에 몰린다' 와 같은 부류다. ⚠ **역방향 오독 주의**: 논문의 '단일 음이온 이원계는 정성 스크리닝 가능' 을 Li₃N (이원 · 단일 음이온) 에 넓히면 안 된다 — 논문은 Li₃N 을 재지 않았고 장벽도 재지 않았다. 우리 금지는 우리 직접 증거에 선다 |
-| Li₃P · 계면 산물상 스팟체크 필수 (`kb/projects/mlip_next_campaigns_2026_07.md` 공통 규율 · `kb/projects/sei_products_2026_08_06.md`) | 🟢 **지지 (간접)** | Li₂O · Li₂S · LiCl 은 실제로 가장 쉬운 축이었지만 그래도 W_adh 부호가 뒤집히고 (LiCl/Li) 수직 힘 오차가 남는다. Li₃P 는 미시험 → '산물상마다 DFT 대조' 규율을 풀 근거가 없다 |
+| Li₃P 미사용 · 계면 산물상 DFT 스팟체크 필수 (`kb/projects/sei_products_2026_08_06.md` · `kb/projects/mlip_next_campaigns_2026_07.md` 의 계면 캠페인 리스크 절) | 🟢 **지지 (간접)** | 그 절이 'UMA 검증 범위 밖' 으로 꼽은 산물 가운데 Li₂O · Li₂S · LiCl 을 이 논문이 Li 계면에서 처음 쟀다 — 가장 쉬운 축이었지만 그래도 W_adh 부호가 뒤집히고 (LiCl/Li) 수직 힘 오차가 남는다. 정적 평형 근방만 쟀고 장벽은 없다. Li₃P 는 미시험 → '산물상마다 DFT 대조' 규율을 풀 근거가 없다 |
 | **li2s 트랙 마감** (`lpscl_smallcell_glass_track_closed_2026_10_30.json` · 모델 검증 p1) | ⚪ **무관 (계가 다르다)** — 실천은 같은 방향 | 논문의 Li₂S 는 **결정 Li₂S / Li 금속 계면**이고 우리 트랙은 **황화인산염 유리 벌크** (a-Li₄PS₄Cl · a-Li₃PS₄) 다. 우리 검증이 잰 양은 같은 구조에서 UMA 와 PBE 의 압력 차로 추정한 평형 부피 차이지 계면 힘 오차가 아니다 (정의가 다르다 · 결과 문장은 원장 `2_허용_서술_이대로만.모델_검증_Q-DA-4` 에서만). 이 논문이 그 문장을 넓혀 주지 않는다 — 원장 금지 *"'UMA 는 정확하다' 를 이 구조 · 0 K 부피 · 우리 QE PBE 밖으로 넓히기"* 그대로. 수송값은 여전히 비인용 |
 | **li2s-2 밀도 창 마감** (`lpscl_glass_dense_window_closed_2026_11_10.json` · 시드 게이트 탈락) | ⚪ **무관** | 논문의 '다중음이온 환경에서 힘 오차가 크다' 는 Li 금속 계면의 PO₄ · PON 에서 잰 것이다. PS₄ 는 재지 않았다. ⛔ 우리 시드 게이트 탈락의 원인을 이 논문으로 설명하지 않는다 (원장 금지: 120 원자 · 그 담금질 일정 · UMA 조건의 결과를 일반화하지 않는다) |
 | 소셀 UMA↔QE 힘 대조 (`lpscl_smallcell_closed_2026_09_18.json`) | 🟢 **같은 그림 (정성)** | 우리 원장 허용 문장 ③ 은 오차가 원소마다 균일하지 않고 골격 (S · P) 쪽이 Li · Cl 보다 크다고 적는다 (보고이지 게이트 아님 · 영구 단서 동반 · 수치는 원장에서). 논문이 '동역학이 힘 오차에 둔감한 이유' 로 든 둘째 가설 — *큰 힘 오차는 Li 가 아닌 원자에 몰린다* (`Fig. S6` · SI · 안 봄) — 와 같은 모양이다. ⛔ 두 계의 수치를 한 표에 놓지 않는다 (원장 금지 — 다른 계 · 다른 DFT 설정) |
@@ -553,7 +553,7 @@ OMat24 로 사전학습한 범용 MLIP 6 종 (Allegro · MACE · NequIP · PET �
 | `phuthi2026_mlip_ssb_perspective` (J-59) | Perspective 의 주장 "파운데이션 모델은 계면을 학습하지 않았다 → 검증된 custom/fine-tuned 로" 의 **정량 실증편**. Perspective 에 없던 숫자 (계면 힘 오차 · W_adh RMSE · 순서 일치율) 가 여기 있다 |
 | `liu2026_ai_ready_finetuning_solid_solid_interfaces` (ref [37]) | 그 편의 약점은 "검증이 전부 벌크 물성 — 계면 물성 0" 이었다. 이 편은 **계면 물성으로 미세조정을 채점**했고 답은 "힘 · E_f 는 좋아지고 W_adh 는 안 좋아진다". replay (그 편의 핵심 부품) 는 여기서도 썼다 (MPtrj 10,000) |
 | `chang2026_performance_based_mlip_selection_sse` | 둘 다 "정적 지표 순위 ≠ MD 거동". Chang 은 비보존 모델의 에너지 표류, 이 편은 **PET-OAM-XL 의 Li–Li 붕괴** (정적 지표는 중위권). Chang 에는 UMA 가 없었다 — 이 편이 그 빈칸을 계면 쪽에서 채운다 (argyrodite 는 여전히 빈칸) |
-| `uma2026_family_of_universal_models_for_atoms` | 원논문은 확산 · 전도도 · 계면을 검증하지 않았다 (INDEX 🤖 절 머리말). 이 편이 계면에서의 첫 제3자 채점. ⚠ 원논문은 OMat24 와 Materials Project 의 의사퍼텐셜 판이 다르다고 적는다 (그 digest `omat` 행) — 이 편의 '같은 DFT 기준' 문장과 맞물리는 단서 (§14-15) |
+| `uma2026_family_of_universal_models_for_atoms` | 원논문은 확산계수 · 이온전도도를 검증하지 않았다 (INDEX 🤖 절 머리말). 이 편은 같은 체크포인트를 고체–고체 계면에서 채점한 제3자 자료다. ⚠ 원논문은 OMat24 와 Materials Project 의 의사퍼텐셜 판이 다르다고 적는다 (그 digest `omat` 행) — 이 편의 '같은 DFT 기준' 문장과 맞물리는 단서 (§14-15) |
 | `petmad2026_lightweight_universal_interatomic_potential_mad` (ref [59]) | 이 편에서 PET-MAD 는 채점 대상이 아니라 **대조군**이다 (PET-OAM-XL 붕괴가 체크포인트 탓임을 보이는 용도) |
 | `lai2025_haml_li_metal_lpscl_interface_doping_seFO` | **우리 계 (Li/Li₆PS₅Cl) 의 반응 계면**은 저쪽이 한 것이고 방식이 반대다: 능동학습으로 계 전용 MTP 를 키움 · 산물 Li₃P · Li₂S · LiCl. 이 편의 결론 ('다중음이온 · 반응성 계면은 계면 전용 자료') 은 Lai 노선을 지지한다 |
 | `lomeli2024_predicting_reactivity_passivation_ssb_interfaces` | AIMD 로 Li 계면의 반응 · 부동태화를 직접 본 편. 이 편에는 그 축 (반응 여부 판정) 이 통째로 없다 |
@@ -619,7 +619,7 @@ OMat24 로 사전학습한 범용 MLIP 6 종 (Allegro · MACE · NequIP · PET �
 6. **[봄 + 추정] 동역학 절의 보고량이 물리적으로 무엇인지 불분명하다.**
    - [봄] D 는 **전체 Li** (금속 + 전해질) 이고 Li(금속)/Li(전해질) 분리는 본문에 없다. NE 전도도와 Haven 비도 "all Li" 에 적용했다 — 금속 Li 원자의 자기확산을 이온 전도도로 바꾼 셈이다.
    - [봄] 온도 600–900 K · NVT · 0 K 이완 셀 고정.
-   - [추정] **Li 금속의 녹는점은 453.7 K** 다 (일반 물성). 600–900 K 에서 Li 슬랩은 액체이거나 액체에 가까울 것이고, 보고된 크기 (2–6 × 10⁻⁵ cm²/s) 와 Ea 0.10–0.15 eV 는 액체 Li 자기확산의 차수다. 그렇다면 "여섯 모델의 Li 동역학이 일치한다" 는 **뜨거운 금속 Li 의 확산을 여섯 모델이 비슷하게 낸다** 에 가깝고, 전해질 안 · 계면을 가로지르는 Li⁺ 수송에 대해서는 말해 주는 것이 적다. z 방향이 2–19 배 느린 것도 층상 기하 (전해질 사이에 낀 Li 층) 와 맞는다. RDF (`Fig. S45`–`S52`) 를 못 봐서 **확인 불가**.
+   - [추정] **Li 금속의 녹는점은 453.7 K** 다 (일반 물성 — 논문에는 녹음 · 액체에 대한 언급이 한 번도 없다). 600–900 K 에서 Li 슬랩은 액체이거나 액체에 가까울 것이고, 보고된 크기 (2–6 × 10⁻⁵ cm²/s) 와 Ea 0.10–0.15 eV 는 액체 Li 자기확산의 차수다 (문헌 기억에 기댄 눈금 · 원전 확인 전). 그렇다면 "여섯 모델의 Li 동역학이 일치한다" 는 **뜨거운 금속 Li 의 확산을 여섯 모델이 비슷하게 낸다** 에 가깝고, 전해질 안 · 계면을 가로지르는 Li⁺ 수송에 대해서는 말해 주는 것이 적다. z 방향이 2–19 배 느린 것도 층상 기하 (전해질 사이에 낀 Li 층) 와 맞는다. RDF (`Fig. S45`–`S52`) 를 못 봐서 **확인 불가**.
    - [봄] 기준 (AIMD · 실험) 없음 · 궤적 하나씩 · 오차막대 없음 · 확산 영역 판정 없음. 여섯 모델이 사전학습 자료를 공유하므로 일치는 독립 검증이 못 된다 (같은 논문의 `Fig. 7d` 가 공통 오차의 존재를 보인다).
 7. **[봄 + 추정] 미세조정 절은 '벤치마크한 모델이 미세조정으로 좋아진다' 를 보이지 않는다.** 기반이 MACE-MP-0a (medium · MPtrj 계열) 로 여섯에 없다. 미세조정 (계면 + 슬랩) 후 힘 MAE 100.7 meV/Å 는 `Fig. 2c` 의 사전학습 UMA · Orb · PET 의 LiPON/Li 값 (figure-read ≈ 92 · 95 · 101) 과 비슷하다 — [추정] 두 그림의 힘 지표가 같은 정의라면, 보인 것은 "옛 모델을 753 구성으로 최신 사전학습 모델 수준까지 끌어올렸다" 이다. E_interface (못 본 면) 와 W_adh 는 개선되지 않았다. 비용 수치 없음.
    - [봄] 덤: MACE-MP-0a 사전학습의 LiPON/Li 총에너지 MAE (평균 3.75 meV/atom) 는 MACE-MH-0 `omat` head (≈ 20.4) 보다 훨씬 작은데 힘은 2 배 가까이 나쁘다 — **총에너지 MAE 는 PES 품질의 지표로 약하다.**
