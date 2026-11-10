@@ -7,7 +7,7 @@ letter: EB
 track: li2s
 channel: codex
 kind: prompt
-status: 초안 (2026-11-10) — 사용자 검토 · 발송 대기 · 기준 커밋은 이 편지가 들어간 커밋
+status: Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리뷰 (독립 에이전트) 로 발송 2026-11-10 · 회신은 `internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` · 회신 전에는 2 단계 결과를 열지 않는다
 confidence: medium
 verificationStatus: unverified
 explored: false

@@ -153,7 +153,8 @@ evidenceScope: multi-source-primary
 | DY | 2026-11-09 | `codex_DY_prompt_cell_construction_v1_3_release_2026_11_09.md` | `codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md` | 발송 2026-11-09 (사용자) → 회신 수령 GO (사용자 새 비준 조건 — codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md) → 사용자 비준 11-09 · 기준 커밋 12b8bdef (브랜치 claude/evac-2026-11-08) · 앞 편지 DX (NO-GO) | 같은 라벨 · 주제 토큰 일치 ['3', 'cell', 'construction', 'release', 'v1'] |
 | DZ | 2026-11-10 | `codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` | `codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` | 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` · P1 6 · P2 3 · 구조군 정의 · 여섯 시드 재사용 조건부 찬성) → 카드 개정 DZ · 판독 보류 · 다음 편지 EB · 기준 커밋 17c9b210 (Codex 가 본 판) | 같은 라벨 · 주제 토큰 일치 ['definition', 'ensemble', 'li2s3']; 판정 인용 3회 |
 | EA | 2026-11-10 | `codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` | `codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` | 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종 판정 보류 · P1 2 · P2 2 · D1 · D2 찬성 · `codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md`) → 카드 개정 4 · 도구 고침 · 기준 커밋 b018b14d (Codex 가 본 판) | 같은 라벨 · 주제 토큰 일치 ['anneal', 'b2o3', 'diagnostic', 'time']; 판정 인용 1회 |
-| EB | 2026-11-10 | `codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` | — | 초안 (2026-11-10) — 사용자 검토 · 발송 대기 · 기준 커밋은 이 편지가 들어간 커밋 | — |
+| EB | 2026-11-10 | `codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` | — | Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리뷰 (독립 에이전트) 로 발송 2026-11-10 · 회신은 `internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` · 회신 전에는 2 단계 결과를 열지 않는다 | — |
+| EC | 2026-11-10 | `internal_EC_prompt_b2o3_amend4_diag_v2_2026_11_10.md` | — | 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · 사용자 'codex 토큰 없어서 당분간 못해 · 반박 리뷰를 에이전트 사용해서') | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
