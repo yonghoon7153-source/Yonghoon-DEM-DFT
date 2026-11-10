@@ -1,0 +1,136 @@
+{
+  "schema": "C1_SCOPE_PROVENANCE_V1",
+  "historical_scope_pin": "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+  "historical_scope_metadata_sha256": "dc25d8403b16c2b0b21cb9fbe711aa77f60cf744c7326b19eb6eb775a33302c2",
+  "baseline_pin": "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+  "source": {
+    "path": "webapp/static/js/viewer3d.js",
+    "bytes": 775004,
+    "sha256": "015677ba072ab15d5b22c2f4b33767fe54dbd32ca00ab1ba590c2692e89e040e",
+    "git_blob_oid": "cf80a22c629b35502b217d4651b155ce87c849f5",
+    "in_CODE_FILES_32": false
+  },
+  "baseline_and_historical_scope_source_identical": true,
+  "c1_parent_pin": "0c56deba6f2fb824996d770163a19c8e7dbd8abe",
+  "c1_parent_source_identity_check": "MATCHED_GIT_BLOB_AND_MATERIALIZED_BYTES_BEFORE_EDIT",
+  "original_test_draft_sha256": "8751a28a4e06441919e38ee72759896176fede16594d01230148d2452264d53d",
+  "prepared_test_path": "scripts/test_viewer_cap_radius.mjs",
+  "prepared_test_sha256": "17964bb9fb675b26005fdf8a3cfb7db011eb4092c27c20aa6c2b70940b3f2d45",
+  "test_change_before_first_red": "Only the first comment changed from Unexecuted test-first draft to Test-first regression; original draft preserved.",
+  "target": "WEB-07 radius-independent cap alpha only",
+  "preserved_existing_scope": [
+    "WEB-02 particle grouping/color choice",
+    "AM-only cap normalized linear-floor policy"
+  ],
+  "deferred_boundary_index": [
+    {
+      "id": "WEB-04",
+      "status_at_prior_pin": "open",
+      "paths": [
+        {
+          "path": "scripts/analyze_contacts.py",
+          "in_CODE_FILES_32": true,
+          "present_in_tree": true
+        },
+        {
+          "path": "scripts/dem_analysis_core.py",
+          "in_CODE_FILES_32": true,
+          "present_in_tree": true
+        }
+      ],
+      "modification_authorized": false,
+      "source_execution_count": 0
+    },
+    {
+      "id": "WEB-05",
+      "status_at_prior_pin": "open",
+      "paths": [
+        {
+          "path": "webapp/app.py",
+          "in_CODE_FILES_32": true,
+          "present_in_tree": true
+        }
+      ],
+      "modification_authorized": false,
+      "source_execution_count": 0
+    },
+    {
+      "id": "WEB-08",
+      "status_at_prior_pin": "open",
+      "paths": [
+        {
+          "path": "webapp/app.py",
+          "in_CODE_FILES_32": true,
+          "present_in_tree": true
+        },
+        {
+          "path": "webapp/pipeline_service.py",
+          "in_CODE_FILES_32": true,
+          "present_in_tree": true
+        }
+      ],
+      "modification_authorized": false,
+      "source_execution_count": 0
+    },
+    {
+      "id": "WEB-10",
+      "status_at_prior_pin": "open",
+      "paths": [
+        {
+          "path": "webapp/app.py",
+          "in_CODE_FILES_32": true,
+          "present_in_tree": true
+        },
+        {
+          "path": "webapp/templates/mpm_lab.html",
+          "in_CODE_FILES_32": false,
+          "present_in_tree": true
+        },
+        {
+          "path": "scripts/mpm_webapp_payload.py",
+          "in_CODE_FILES_32": false,
+          "present_in_tree": true
+        },
+        {
+          "path": "scripts/mpm3d_compaction.py",
+          "in_CODE_FILES_32": false,
+          "present_in_tree": true
+        }
+      ],
+      "modification_authorized": false,
+      "source_execution_count": 0
+    },
+    {
+      "id": "PRED-01",
+      "status_at_prior_pin": "open",
+      "paths": [
+        {
+          "path": "webapp/predictor_engine.py",
+          "in_CODE_FILES_32": true,
+          "present_in_tree": true
+        }
+      ],
+      "modification_authorized": false,
+      "source_execution_count": 0
+    }
+  ],
+  "implementation_written": true,
+  "project_code_execution_count": 6,
+  "node_execution_count": 6,
+  "whole_status": "HOLD",
+  "c1_parent_source_git_blob_oid": "cf80a22c629b35502b217d4651b155ce87c849f5",
+  "final_test_path": "scripts/test_viewer_cap_radius.mjs",
+  "final_test_sha256": "ffc592cb6584a6f8fd526c5b7454ddf41357119dc0845dcbb1fa18754c68f488",
+  "final_test_change": "Known AM-only comparison-comment exception only; fixed old source still gives five assertion failures and zero errors. No broad comment stripping.",
+  "candidate_source": {
+    "path": "webapp/static/js/viewer3d.js",
+    "bytes": 775057,
+    "sha256": "97fe9cf8c36dcef68d421309f77a9b4372da7347c933313c06bc1acd4a91eee1",
+    "git_blob_oid": "abd4462dbf40ad73433f8bd4916ed95ee3592d94"
+  },
+  "first_preflight_node_execution_count": 0,
+  "observed_scope": "Six explicit synthetic suite invocations evaluating the same three extracted source blocks; no whole viewer/browser/app/engine import or run.",
+  "independent_review": "NOT_RECEIVED",
+  "operational_go": false,
+  "first_comment_neutralization_preserved_test_body": true
+}
