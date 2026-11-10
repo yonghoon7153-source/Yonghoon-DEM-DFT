@@ -72,7 +72,7 @@ MP hull 위에서 ① SE 단독의 전기화학 창 ② O · S · Co 화학퍼�
 | # | 질문 | 답 | 근거 위치 |
 |---|---|---|---|
 | 1 | 산물 물성을 **점수 · 순위**로 쓰나 | **아니오 — 정성 3 유형 분류다.** 산물의 전자 · 이온 전도성은 계산하지 않고 문헌 인용으로 붙인다. 수로 줄 세운 것은 반응 에너지와 전기화학 창뿐 | §4 Discussion pp. 3263–3264 · `Table 4` · `Table 6` |
-| 2 | 다룬 계 | SE 7 + Li₂S × {LCO · L₀.₅CO} 닫힌계 14 쌍 · 전위 아래 SE–LCO 7 쌍 · Li 금속은 0 V 한계로 · 코팅 18 종 × 4 상대 = 72 값. **황화물은 Li₃PS₄ · LGPS 둘뿐 — Li₆PS₅Cl · Li₇P₃S₁₁ 없음** | `Table 1` (p. 3255) · `Table 4` (p. 3260) · `Table 5` (p. 3261) · `Table 6` (p. 3262) · `Table S2`–`S4` |
+| 2 | 다룬 계 | SE 7 종 (+ 기준 Li₂S) · 닫힌계 SE–{LCO · L₀.₅CO} 14 쌍 · 전위 아래 SE–LCO 7 쌍 · Li 금속은 0 V 한계로 · 코팅 18 종 × 4 상대 = 72 값. **황화물은 Li₃PS₄ · LGPS 둘뿐 — Li₆PS₅Cl · Li₇P₃S₁₁ 없음** | `Table 1` (p. 3255) · `Table 4` (p. 3260) · `Table 5` (p. 3261) · `Table 6` (p. 3262) · `Table S2`–`S4` |
 | 3 | 방법 | MP hull (pymatgen) · grand potential (식 2–4) · 닫힌 pseudo-binary 와 mutual 반응 에너지 (식 5–10) · Li 열린 pseudo-binary 를 φ = 2–5 V 로 훑음 (식 11–14) · MP 보정 그대로 | §2 Methods pp. 3254–3256 |
 | 4 | 도펀트 / 조성 변화 분석 | **황화물 호스트에 원소를 바꿔 넣은 비교는 없다.** 있는 것: LiPON 의 N 함량 2 점 · 코팅의 Li 함량 계열 · LGPS ↔ Li₃PS₄ (Ge 유무) · 설계 문장 (계산 없음: Ti · Ge 회피 / 음이온 혼합 · 할라이드 도핑 · 옥시황화물 기대) | §3.3 p. 3260 · §3.5 pp. 3262–3263 · §4 p. 3264 |
 | 5 | 분해 **부피 변화** | **계산 없음.** 언급은 한 문장 (*"a repetitive volume change and the failure of the mechanical contact"*) — 인용 [12] 에 기댄 정성 서술 | §4 p. 3264 |
@@ -141,7 +141,7 @@ ref 10 = Wenzel, Leichtweiss, Krüger, Sann, Janek, *Solid State Ionics* 278, 98
 | μ_O 창의 위 끝 (O 흡수 개시) | −3.66 eV → Li₃PO₄, S | −3.66 eV → Li₄GeS₄, S, Li₃PO₄ | figure-read ≈ −3.08 eV | `Table 3` · `Fig. 2a` |
 | LCO 의 O-poor 한계 (μ_O = −2.64 eV) 에서 | Li₃PO₄, S · −0.51 eV/atom | Li₃PO₄, S, GeS₂, Li₂SO₄ · −0.46 eV/atom | — | `Table 3` |
 | L₀.₅CO 의 O-poor 한계 (μ_O = −0.73 eV) 에서 | LiPO₃, SO₃, Li₂SO₄ · −3.73 eV/atom | GeP₂O₇, SO₃, Li₂SO₄ · −3.68 eV/atom | — | `Table 3` |
-| μ_S 창 | 0 … −0.59 eV | 0 … −0.59 eV (*"S-poor limit of LGPS"*) | 0 … figure-read ≈ −4.00 eV | `Table 3` · `Fig. 2b` |
+| μ_S 창 | 0 … figure-read ≈ −0.57 eV (LGPS 와 같은 막대 높이) | 0 … −0.59 eV (*"S-poor limit of LGPS"*) | 0 … figure-read ≈ −4.00 eV | `Table 3` · `Fig. 2b` |
 | μ_Co 창의 위 끝 | figure-read ≈ −0.60 eV | figure-read ≈ −0.60 eV | (그림에 없음) | `Fig. 2c` |
 | 닫힌계 × LCO — x_m · 산물 · mutual / total | 0.41 · Co₉S₈, Li₂S, Li₂SO₄, Li₃PO₄ · **−405 / −405** meV/atom | 0.42 · Co₉S₈, Li₂S, Li₂SO₄, Li₃PO₄, Li₄GeO₄ · **−340 / −349** meV/atom | — | `Table 4` |
 | 닫힌계 × L₀.₅CO | 0.39 · 같은 산물 · **−564 / −584** | 0.40 · 같은 산물 · **−499 / −527** | — | `Table 4` |
@@ -245,13 +245,13 @@ ref 10 = Wenzel, Leichtweiss, Krüger, Sann, Janek, *Solid State Ionics* 278, 98
   황화물이 곁에 있으면 Li₃PO₄ 가 사라지는 전압이 Li₃PO₄ 단독보다 1.3 V 낮다. 우리 읽기 (논문 서술 아님): Li₃PO₄ 가 Li₄P₂O₇ 로 응축하려면 Li 와 함께 O 를 내놓아야 한다 (2 Li₃PO₄ → Li₄P₂O₇ + 2 Li + ½ O₂). 단독일 때는 그 O 가 O₂ 로 나가야 해서 4.2 V 까지 버티고, 곁에 O 를 받아 줄 산화 가능한 종 (S → 황산염 · N → 질산염) 이 있으면 O₂ 방출 없이 낮은 전위에서 일어난다. N 이 많을수록 낮아지는 것 (LiPON₀.₁₄ → LiPON₀.₄₆) 도 같은 방향이다.
 
 **(다) 코팅 — 2.5–4.25 V 를 자기 창으로 다 덮는 것은 18 종 중 둘뿐이다** (`Fig. 5a` figure-read ≈ · ±0.02 V).
-- 덮는다: Li₄P₂O₇ (2.31–4.33 V) · LiPO₃ (2.48–5.00 V).
+- 덮는다: Li₄P₂O₇ (2.31–4.33 V) · LiPO₃ (2.48–5.00 V — 아래 끝은 판독 오차 ±0.02 V 안에서 2.5 V 와 같다).
 - 위 끝이 0.04 V 모자란다: **Li₃PO₄ (0.69–4.21 V)**.
 - 산화 한계가 4.25 V 아래: LiTa₃O₈ 4.04 · LiTaO₃ 3.95 · LiNb₃O₈ 3.92 · LiNbO₃ 3.87 · Li₂Si₂O₅ 3.79 · Li₂SiO₃ 3.74 · Li₄Ti₅O₁₂ · Li₂TiO₃ 3.71 · 나머지는 더 낮다 (§10 표).
 - 저자는 이 산화가 O₂ 방출이라 과전압으로 버틴다고 본다 (열역학 안정이 아니라 동역학). 4.25 V 까지 '열역학적으로' 안정한 코팅은 이 논문 숫자로는 응축 인산염뿐이다.
 
 **(라) 우리 값 (원장 · 따로 적는다 — 조성 · hull 세대가 달라 위 표와 한 줄에 놓지 않는다)**
-- 우리 SE (comp1 · modelc) 의 grand-potential 산화 개시는 `litdb/our_dft_baseline.md` 에 있다 (Li-rich facet 규약 값 2.14 V · 다음 breakpoint 2.36 V · `HZ-esw-reduction-limit-facet-convention`). 2.5 V 아래라는 결론 — *"창 전체가 열역학적 산화 구간"* — 은 이 논문의 Li₃PS₄ · LGPS 와 같은 방향이다.
+- 우리 SE (comp1 · modelc) 의 grand-potential 산화 개시는 `litdb/our_dft_baseline.md` 에 있다 (Li-rich facet 규약 값 2.14 V · 다음 breakpoint 2.36 V · LiS₄ 등을 뺀 상 집합으로는 2.256 V · `HZ-esw-reduction-limit-facet-convention`). 2.5 V 아래라는 결론 — *"창 전체가 열역학적 산화 구간"* — 은 이 논문의 Li₃PS₄ · LGPS 와 같은 방향이다.
 - 우리 O 단독 대조 조성에서 Li₃PO₄ 가 평형인 것은 창 맨 아래 2.50–2.70 V 뿐이고 그 위는 Li₄P₂O₇ → LiPO₃ → P₂O₅ 다 (kb 카드 4 장 ④ · `db/properties/cei_esw_Li_controls_2026_09_16.json`). 이 논문의 Li₃PS₄–LCO (Li₃PO₄ ≤ 2.91 V → Li₄P₂O₇ → Co 인산염) 와 **모양이 같다** — 계가 달라 (우리는 SE 자신의 O 만 · 양극 없음) 경계 전압을 맞대지는 않는다.
 - 우리에게 **없는 것**: 전위를 건 pseudo-binary (식 11–14). 우리 계면 반응 계산은 닫힌계다 (cascade 축 ① 카드 5b: *"'전압 V 에서' — 리튬화 상태 대리이지 전압이 아니다"*).
 
@@ -303,6 +303,7 @@ ref 10 = Wenzel, Leichtweiss, Krüger, Sann, Janek, *Solid State Ionics* 278, 98
 
 - 표 머리와 본문은 셋 다 *"per atom"* 이라고만 쓴다. 차이는 §2.5 의 한 문장에만 있다.
 - 크기 확인 (우리 산술): Li₃PS₄–LCO 닫힌계 −405 meV/atom 은 x_m = 0.41 에서 비-Li 원자 분율이 0.699 이므로 **≈ −580 meV per non-Li atom** 이다. `Table 5` 의 2.0 V 값 (두 끝점이 모두 안정한 전위) 이 −596 이라 서로 맞는다. LGPS 도 −340 → ≈ −495 ↔ 2.0 V 의 −519.
+- 검산 하나 더 (우리 산술 · 표가 정말 비-Li 원자당인지): `Table 5` 의 2.91 V 경계에서 total − mutual = −737 − (−596) = **−141 meV**. 이 전위에서 LCO 는 아직 안정하므로 차이는 SE 자신의 탈리튬 몫뿐이다 — Li₃PS₄ 한 식당 −3 × (2.91 − 2.31) = −1.80 eV. 그 구간의 산물 (Co₃S₄ + Li₂SO₄ + Li₃PO₄) 이 정하는 섞음 비는 Li₃PS₄ : LiCoO₂ = 1 : 2.73 (x ≈ 0.42) 이고 그 혼합물의 비-Li 원자는 Li₃PS₄ 한 식당 13.2 개다 → −1.80 / 13.2 = **−137 meV** (비-Li 원자당 ✓). 전체 원자 (18.9 개) 로 나누면 −95 meV 라 안 맞는다.
 - ⇒ *"닫힌계 −0.41 → 5 V −1.27 eV/atom"* 을 배수로 읽으면 (3.1 배) 정규화 차이 (×1.43) 와 SE 자신의 탈리튬 몫이 섞인다. 같은 잣대로는 **mutual −580 → −737 (1.3 배) · total −580 → −1273 (2.2 배)** 다 (§20-2).
 
 ---
@@ -778,7 +779,7 @@ figure-read ≈ (meV per non-Li atom)
 | Table 1 | 재료 9 종 — 조성 · 실험 전도도 · 구조 출처 · hull 위 높이 · 조성 평형상. **텍스트 전사** | LiPON 이 hull 혼합물이라는 사실 · L₀.₅CO 가 층상 대리 |
 | Table 2 | SE 8 종의 0 V · 환원 개시 · 산화 개시 · 5 V 평형상과 분해 에너지. **텍스트 전사** | 황화물 창 · Li 금속 쪽 산물 |
 | Table 3 | 상대의 μ_O · μ_S 에서의 평형상. **텍스트 전사** | 양극의 O 가 황화물을 Li₃PO₄ + S 로 만든다는 열린계 그림 |
-| Table 4 | 닫힌계 14 쌍의 x_m · 평형상 · mutual · total. **텍스트 전사 + 식 (8) 검산** | `[Nolan18]` · `jiang2022…` 이 인용한 −405 · −564 · −340 · −499 의 원전 |
+| Table 4 | 닫힌계 14 쌍의 x_m · 평형상 · mutual · total. **텍스트 전사 + 식 (8) 검산** | `[Nolan18Rev]` · `jiang2022_se_doped_lpscl_high_throughput_dft` 가 인용한 −405 · −564 · −340 · −499 의 원전 |
 | Table 5 | 전위 아래 3 계면 (Li₃PS₄ · LLZO · LiPON₀.₁₄) 의 구간별 평형상 · 범위. **텍스트 전사** | Li₃PO₄ 가 2.91 V 까지만 · 3.26 V 위 Li 없는 산물 |
 | Table 6 | 코팅 18 × 상대 4 의 mutual. **텍스트 전사** | Li₃PO₄ 만 전부 0 · LiNbO₃–Li₃PS₄ −155 |
 | Table S1 | LiPON 두 조성의 전 계단 (φ · Δn_Li · 평형상). **텍스트 전사 (§18-5 에서 사용)** | 1.07 V '산화 개시' 의 Δn_Li 가 −0.01 뿐임 |
@@ -815,7 +816,7 @@ figure-read ≈ (meV per non-Li atom)
 | **ESW 산화 개시는 S 가 정한다 (축 ①)** | 🟢 **같은 방향** | *"The sulfide SEs are oxidized at a similar potential of ∼2 to 2.5 V"* · Li₂S 2.01 V 가 바닥 |
 | **Li₃PO₄ 는 작동창 맨 아래에서만 평형** (`kb/concepts/se_redox_frontier.md` 4 장 ④) | 🟢 **같은 모양 (다른 계)** | Li₃PS₄–LCO 에서 Li₃PO₄ ≤ 2.91 V → Li₄P₂O₇ → Co 인산염 (`Table 5`). 우리는 SE 자신의 O · 양극 없음이라 경계 전압을 맞대지 않는다 |
 | **`interface_reactivity` 의 문헌 귀속** — 형식화 [Rich16] → mutual 판 [Zhu16] → 양극 SOC 두 상태 [Nolan19] (계보 카드) | 🟢 **확인 + 보정 하나** | mutual 정의 = 식 (8) ✓. 다만 **양극의 두 상태 (LCO · L₀.₅CO) 는 이 논문이 이미 한다** — [Nolan19] 의 몫은 여러 양극 · 여러 코팅으로의 전수 적용이다 |
-| *"닫힌 −0.41 → 5 V 개방 −1.27 eV/atom = 3.1 배"* (`nolan2018…` digest · `comparison_vs_ours.md` §B③ 의 '개방계 확장의 정량 동기' 행) | 🔴 **정정 필요 (원전 기준)** | −0.41 은 mutual · 원자당, −1.27 은 total · 비-Li 원자당이다. 같은 잣대로는 mutual 1.3 배 · total 2.2 배 (§5.3 · §20-2). 그 행들은 이 digest 가 고치지 않았다 |
+| *"닫힌 −0.41 → 5 V 개방 −1.27 eV/atom = 3.1 배"* (`nolan2018_computation_accelerated_design_review` digest · `comparison_vs_ours.md` §J-7 `[Nolan18Rev]` 블록의 '개방계 확장의 정량 동기' 행) | 🔴 **정정 필요 (원전 기준)** | −0.41 은 mutual · 원자당, −1.27 은 total · 비-Li 원자당이다. 같은 잣대로는 mutual 1.3 배 · total 2.2 배 (§5.3 · §20-2). 그 행들은 이 digest 가 고치지 않았다 |
 | 띠틈 · 탄성 · 수송 축 | ⚪ **무관** | 해당 계산 없음 |
 
 ### 15.3 litdb 의 관련 digest 와 엮기
@@ -838,7 +839,7 @@ figure-read ≈ (meV per non-Li atom)
 
 1. **갭 판정 (cascade 트랙)** — 이 논문은 산물 물성을 점수로 쓰지 않는다. '산물이 전자를 막고 Li 를 통하면 좋다' 는 원칙을 양극 쪽까지 문장으로 세웠고, 원소 부류 수준의 설계 규칙 (양이온 = 전자 전도 산물 / 음이온 = 절연 Li 이원상) 까지 갔다. **도펀트별 숫자** 는 여전히 비어 있다. 보고서 표 '가' 줄의 이 편은 '갭을 깨지 않음' 으로 닫을 수 있다 (판정은 사용자).
 2. **우리 작동창에서 계면을 읽으려면 열린 pseudo-binary 가 필요하다.** 이 논문 숫자로는 황화물–LCO 의 평형 계면상이 2.5 V 와 4.25 V 에서 완전히 다르다 — Li₃PO₄ 는 2.91 V 까지만, 3.26 V 위는 Li 가 없는 산물뿐이고 전자 전도성 Co 황화물은 내내 있다. '이로운 산물을 내는 도펀트' 를 물으려면 산물 집합을 **창의 두 끝 (2.5 · 4.25 V)** 에서 내야 하고, 닫힌계 한 점 (반충 대리) 으로는 이 변화를 못 본다. 도구는 이미 있다 (pymatgen 의 grand-potential 모드) — 새 물리량이므로 보고량 카드부터 (φ 선택 규칙 · 정규화 · mutual/total 선언).
-3. **정규화와 mutual/total 을 선언하지 않으면 배수가 틀린다.** 이 논문의 닫힌계 값 (원자당 · mutual) 과 전위 아래 값 (비-Li 원자당 · total) 을 나란히 놓은 *"3.1 배"* 가 litdb 에 세 군데 있다. 같은 잣대로는 mutual 1.3 배다 — 전위가 '상호 반응' 을 키우는 폭은 크지 않고, total 의 증가는 SE 자신의 산화다 (저자 설명과 같다). 우리가 열린계 카드를 쓸 때 맨 먼저 적을 줄이다.
+3. **정규화와 mutual/total 을 선언하지 않으면 배수가 틀린다.** 이 논문의 닫힌계 값 (원자당 · mutual) 과 전위 아래 값 (비-Li 원자당 · total) 을 나란히 놓은 *"3.1 배"* 가 litdb 에 다섯 군데 있다 (§20-2). 같은 잣대로는 mutual 1.3 배다 — 전위가 '상호 반응' 을 키우는 폭은 크지 않고, total 의 증가는 SE 자신의 산화다 (저자 설명과 같다). 우리가 열린계 카드를 쓸 때 맨 먼저 적을 줄이다.
 4. **'어느 산물 집합에 점수를 매기나' 는 규약이다.** ① x_m 을 mutual 의 최소에서 고르느냐 total 의 최소에서 고르느냐에 따라 표에 적히는 산물이 달라질 수 있다 (Zhu ↔ Richards 가 같은 Li₃PS₄–LiCoO₂ 에 다른 산물을 적는다 — DB · 상 집합 차이도 섞여 있어 원인은 미확정) ② 최솟값이 평평하면 (x 0.41 · 0.48 둘 다 −405) 산물 집합이 하나로 안 정해진다 ③ x 를 훑으면 금속 Co 가 평형상인 구간이 있다. 우리 카드의 '반충 최소 kink 산물' 규칙은 ① 을 정해 두었지만 ② · ③ (동률 · 인접 kink) 은 적어 둘 만하다.
 5. **코팅 지침에서 가져올 것** — Li₃PO₄ 는 네 상대 모두와 반응 0 이고 창이 4.21 V 까지다 (우리 창 위 끝에서 0.04 V 모자람 · hull 오차 안). 표준 코팅 LiNbO₃ 는 Li₃PS₄ 와 −155 meV/atom 으로 반응해 Nb 황화물을 만든다 — '코팅 자체의 안정성이 아니라 코팅–SE 반응 산물이 성능을 정한다' (Sundar 2025) 의 씨앗이 이 표에 이미 있다.
 
@@ -899,12 +900,12 @@ figure-read ≈ (meV per non-Li atom)
 
 **20-1. 맞는 것**
 - `jiang2022_se_doped_lpscl_high_throughput_dft` 의 기준선 340 · 405 · 499 · 564 meV/atom = `Table 4` mutual ✓.
-- `nolan2018_computation_accelerated_design_review` 의 Li₃PS₄–LiCoO₂ −0.41 · Li₃PS₄–Li₀.₅CoO₂ −0.56 eV/atom · 산물 Li₃PO₄ + Li₂SO₄ + Li₂S + Co₉S₈ = `Table 4` (−405 · −564) ✓ · 5 V 의 −1.27 = 본문 p. 3260 · `Table 5` (−1273) ✓.
+- `nolan2018_computation_accelerated_design_review` (`[Nolan18Rev]`) 의 Li₃PS₄–LiCoO₂ −0.41 · Li₃PS₄–Li₀.₅CoO₂ −0.56 eV/atom · 산물 Li₃PO₄ + Li₂SO₄ + Li₂S + Co₉S₈ = `Table 4` (−405 · −564) ✓ · 5 V 의 −1.27 = 본문 p. 3260 · `Table 5` (−1273) ✓.
 - `xiao2019_cathode_coating_screening` 이 옮긴 Li-rich 산화물 여섯 = p. 3263 ✓ (단 그 목록은 LLZO 용이다).
 - 계보 카드의 'mutual (끝점 준안정성 제거) 판 = [Zhu16]' = 식 (8) ✓.
 
 **20-2. 고쳐 읽어야 하는 것**
-- **'닫힌 −0.41 → 5 V 개방 −1.27 = 3.1 배'** (`nolan2018…` digest 세 곳 · `comparison_vs_ours.md` §B③ 한 행) — 두 수는 잣대가 다르다 (mutual · 원자당 ↔ total · 비-Li 원자당). 원문 기준 같은 잣대: mutual ≈ −580 (닫힌계를 비-Li 원자당으로 환산 · 우리 산술) → −596 (2 V) → −737 (5 V) = **1.3 배** · total → −1273 = **2.2 배**. '개방계로 가면 구동력이 3 배' 는 쓰지 않는다. '전위가 올라가면 SE 자신의 산화 몫이 더해져 total 이 두 배쯤 된다' 가 원문에 맞는 문장이다.
+- **'닫힌 −0.41 → 5 V 개방 −1.27 = 3.1 배'** (`nolan2018_computation_accelerated_design_review` digest 네 곳 [155 · 272 · 405 · 574 행] · `comparison_vs_ours.md` §J-7 `[Nolan18Rev]` 블록 한 행) — 두 수는 잣대가 다르다 (mutual · 원자당 ↔ total · 비-Li 원자당). 원문 기준 같은 잣대: mutual ≈ −580 (닫힌계를 비-Li 원자당으로 환산 · 우리 산술) → −596 (2 V) → −737 (5 V) = **1.3 배** · total → −1273 = **2.2 배**. '개방계로 가면 구동력이 3 배' 는 쓰지 않는다. '전위가 올라가면 SE 자신의 산화 몫이 더해져 total 이 두 배쯤 된다' 가 원문에 맞는 문장이다.
 - **'양극 SOC 두 상태 전수 적용 = [Nolan19]'** (계보 카드 · `nolan2019…` digest) — 방전 · 충전 두 상태를 나란히 계산한 것은 이 논문 (2016) 이 먼저다. [Nolan19] 의 새로움은 양극 · 코팅 화학의 범위다.
 
 **20-3. 새로 생긴 연결**

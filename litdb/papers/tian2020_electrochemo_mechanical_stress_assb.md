@@ -10,13 +10,15 @@
        검산 1 건: Fig. 6 의 초록 표식 중심 3.49 GPa = Table II 의 3.64 · 3.34 의 평균.
      ⚠ '[우리 산술]' · '[추정]' 은 논문 값이 아니다. 특히 §13-2 (표 1 음극 쪽 부피 변화의 재현 검산) 는 격자상수 기억값으로 한 어림이다 —
        Materials Project 부피로 다시 계산하기 전에는 판정이 아니라 '확인 필요' 깃발이다.
-     우리 쪽 숫자는 옮기지 않았다 — 원장 경로로만 가리킨다. -->
+     우리 쪽 숫자는 옮기지 않았다 — 원장 경로로만 가리킨다.
+     태그: methods 에 DFT 를 넣지 않았다 — 이 논문은 DFT 를 직접 돌리지 않는다 (Materials Project 자료 조회 · zuo2022 digest 의 태그 선례).
+           ESW = grand-potential 평형상 분석 · elastic = 선형 탄성 응력 환산 (탄성 상수 자체는 문헌값 입력). -->
 
 # Evaluation of the Electrochemo-Mechanically Induced Stress in All-Solid-State Li-Ion Batteries — Tian, Chakraborty, Talin, Eisenlohr & Qi (*J. Electrochem. Soc.* 2020)
 
 > slug `tian2020_electrochemo_mechanical_stress_assb` · DOI `10.1149/1945-7111/ab8f5b` (*J. Electrochem. Soc.* **167**, 090541 (2020) · 접수 2019-12-26 · 수정 2020-04-16 · 게재 2020-05-18 · JES Focus Issue on Battery Safety, Reliability and Mitigation · **OA CC BY 4.0**) · type `mixed — DFT 입력 (Materials Project 의 grand-potential 분해 반응 · 결정 부피 · first-principles 문헌값) → 연속체 화학-역학 FEM (COMSOL 5.4 · 축대칭 · 선형 탄성) · 자체 DFT 계산 0 · 자체 실험 0` · PDF `61cbac9e-123._Evaluation_of_the_electrochemo-mechanically_induced_stress_…pdf` (사용자 목록 123 번 · 11 pp = IOP 표지 1 + 논문 10 [본문 · 부록 · refs 72 편]) · **SI 미입수** (`Fig. S1` 메시 수렴 · COMSOL 입력 파일) · digested `2026-11-10` · status ✅ · 태그 **[외부·방법 원전·⛔ LiPON 박막 셀 — 황화물 0]**
 > elements: Li, P, O, N, Si, Co
-> methods: DFT, ESW, elastic
+> methods: ESW, elastic
 
 > **저자 (표지 그대로)**: **Hong-Kang Tian**¹, Aritra Chakraborty¹, **A. Alec Talin**², Philip Eisenlohr¹, **Yue Qi**¹\* — ¹ Michigan State University, Chemical Engineering and Materials Science · ² Sandia National Laboratories (Livermore). 교신 `yueqi@egr.msu.edu`.
 > 자금: DOE BES EFRC **NEES** (Nanostructures for Electrical Energy Storage · DESC0001160) · NSF DMR-1832808 (H.K.T. · Y.Q.) · Sandia (DE-NA-0003525).
@@ -105,14 +107,14 @@
 | 등방성 | 부피 변화를 등방 선변형률로 바꾼다 | p.5 식 10 |
 | 고른 값 | 음극 쪽 **−27 %** (Li₁₂Si₇ 행 — 모사한 조성 범위 Li₁.₆₈Si–Li₂Si 안의 '최악') · 양극 쪽 **−8 %** (> 3.63 V 행) | p.7 |
 
-🔑 **이 표에서 가장 중요한 한 줄 [봄]**: `Table 1` 의 0.01–0.53 V 네 행은 **SE 쪽 반응이 똑같다** (Li₂PO₂N 4 개당 8 Li₂O + Li₇PN₄ + 3 Li₃P · SE 화학식당 Li 6 개 흡수). 다른 것은 Li 를 내주는 합금상뿐인데 값은 **−23 · −24 · −27 · −29 %** 로 갈린다. 즉 이 '분해 부피 변화' 에는 **전극 합금의 탈리튬화 수축이 섞여 있고**, SE 고유의 양이 아니다. 우리 보고서가 말한 '회계에 따라 부호가 갈린다' 의 네 번째 실례다 (§13-3).
+🔑 **이 표에서 가장 중요한 한 줄 [봄]**: `Table 1` 의 0.01–0.53 V 네 행은 **SE 쪽 반응이 똑같다** (Li₂PO₂N 4 개당 8 Li₂O + Li₇PN₄ + 3 Li₃P · SE 화학식당 Li 6 개 흡수). 다른 것은 Li 를 내주는 합금상뿐인데 값은 **−23 · −24 · −27 · −29 %** 로 갈린다. 즉 이 '분해 부피 변화' 에는 **전극 합금의 탈리튬화 수축이 섞여 있고**, SE 고유의 양이 아니다. 우리 보고서가 든 세 가지 회계에 더해지는 네 번째 실례다 — 여기서 직접 보이는 것은 **값이 갈린다**는 것까지이고, 부호까지 바뀔 수 있다는 것은 우리 어림이다 (§13-3 · 추정).
 
 ### Q3. 부피 변화 → 응력 환산 방법과 숫자
 
 | 항목 | 내용 | 위치 |
 |---|---|---|
 | 솔버 | COMSOL Multiphysics 5.4 + Electrochemistry · MEMS 모듈 | p.3 "Computation Methods" |
-| 기하 | 육각 배열 2.5D 셀을 **축대칭** 단위 하나로 근사 (figure-read ≈ 반지름 1.8 μm · 높이 5.5 μm) | p.3 · `Fig. 1` · `Fig. 4` 축 |
+| 기하 | 육각 배열 2.5D 셀을 **축대칭** 단위 하나로 근사 (figure-read ≈ 반지름 1.8 μm · 높이 5.5 μm) | p.3 · `Fig. 1` · `Fig. 5` 눈금선 |
 | 화학 변형률 | ε_c,ij = ((1 + ΔV)^(1/3) − 1) δ_ij | p.5 식 10 |
 | 역학 | 정적 평형 ∇·σ = 0 · **선형 등방 탄성** σ = C : (ε − ε_c) · 미소변형 | p.5 식 11–13 |
 | 탄성 상수 | Si 96 GPa · 0.29 / LiCoO₂ 191 GPa · 0.24 / LiPON 77 GPa · 0.25 (E · ν) — **계면층의 탄성 상수는 따로 적혀 있지 않다** | `Table 3` (p.10) |
@@ -210,8 +212,8 @@
 - 의견: 3 이 논문 방법의 빈자리다. 논문은 모든 상이 MP 에 있는 경우만 다뤘다. 도핑 조성은 MP 상이 아니므로 **호스트 · 도핑 셀의 부피는 우리 DFT (EOS V₀) 에서** 와야 하고, 산물상 부피는 MP 에서 올 것이다 → **두 출처의 부피를 한 식에 섞는 문제**가 생긴다 (범함수 · 판이 다르다).
 - 의견: 4 는 아지로다이트 산화 쪽에서 결과를 좌우한다 (분자성 산물 · 기체). 0 으로 두면 수축이 부풀려진다 — 논문의 N₂ 제외와 같은 구조다.
 - 의견: 5 의 분모 선택을 결과 전에 박아야 한다. 논문식 (반응물 전체) 과 SE 부피만으로 나누는 식은 음극 쪽에서 **부호가 반대로 나올 수 있다** (§13-3).
-- 의견: 6 의 값은 원장에 있다 (`db/properties/canonical_registry.json` 의 `b0-dft-bm3-v1` · `elastic-dft-relaxedion-*` 묶음 — 여기 옮기지 않는다 · 조성 간 비교는 `HZ-elastic-cross-composition` 조건부). 등방 E · ν 로 줄이는 방식 (VRH) 은 이 논문과 같다.
-- 의견: 7–9 는 스크리닝 목적이면 FEM 대신 **구속에 무관한 눈금**으로 대신할 수 있다 — 예: 층의 이축 구속 응력 E·ε/(1 − ν). 이 논문의 10 nm 값이 대체로 그 크기다 (§13-6).
+- 의견: 6 의 값은 원장에 있다 (`db/properties/canonical_registry.json` 의 `b0-dft-bm3-v1` · `elastic-dft-relaxedion-*` 묶음 — 여기 옮기지 않는다 · 조성 간 비교는 `HZ-elastic-cross-composition` 조건부). 이 논문처럼 등방 E · ν 두 상수로 줄여 넣는다면 우리 쪽에서는 VRH 평균이 그 자리다.
+- 의견: 7–9 는 스크리닝 목적이면 FEM 대신 **구속 조건을 하나로 고정한 닫힌 식 눈금**으로 대신할 수 있다 — 예: 층의 이축 구속 응력 E·ε/(1 − ν). 이 논문의 10 nm 값이 대체로 그 크기다 (§13-6).
 - 의견: 균열 · 접촉 손실을 말하려면 **파괴 기준**이 따로 필요하다. 이 논문에는 없다. 갭 보고서가 든 정량 문턱은 `bucci2017_chemomech_failure_assb_cycling_czm` 의 것이다 (전극 팽창 기준 — SE 분해 기준이 아니다).
 
 ---
@@ -436,7 +438,7 @@
 |---|---|---|---|
 | 계 | Si / LiPON (결정 Li₂PO₂N) / LiCoO₂ 2.5D 박막 셀 | Li₆PS₅Cl 계열 (comp1 · modelc · 도핑 설계) 벌크 · 계면 스크리닝 | ⛔ 겹치는 계 0. 수치 이식 불가 |
 | 분해 산물의 출처 | MP grand-potential 평형상 (refs 37, 38) | ESW 사다리 = grand-potential (`our_dft_baseline.md` · 상 배제 규약 포함) / cascade 축 ① · ③ = MP **닫힌계 pseudo-binary 최소 kink** | 방법 계보는 같다 ([Zhu15] · [Rich16]). 논문은 열린계로 산물을 고르고 닫힌 반응식으로 다시 쓴 혼합형이다 |
-| 반응식의 꼴 | SE + **전극 상** → 산물 + 탈리튬화/리튬화된 전극 상 | 축 ③: 도핑 조성 + Li 금속 / 축 ①: 도핑 조성 + Li₀.₅NiO₂ (hull 조성) | 같은 부류 (전극 상이 식 안에 있다). Li 저장소가 다르다 — 논문은 Li–Si 합금 · LiᵧCoO₂ |
+| 반응식의 꼴 | SE + **전극 상** → 산물 + 탈리튬화/리튬화된 전극 상 | 축 ③: 도핑 조성 + Li 금속 / 축 ①: 도핑 조성 + Li₀.₅NiO₂ (hull 조성) | 같은 부류 (전극 상이 식 안에 있다). Li 저장소가 다르다 — 논문은 Li–Si 합금 · LiᵧCoO₂. ⚠ 논문의 식에서 전극 골격 (Si · CoO₂) 은 **반응하지 않고 Li 만 주고받는다** (산물 쪽의 Si · Co 는 원소 Si 와 LiCoO₂ 뿐이다 — 규산염 · Co 인산염 같은 혼합 산물이 없다 [봄]). 우리 닫힌계 최소 kink 는 전극 원소가 산물에 섞일 수 있다 — 같은 꼴이지만 같은 평형은 아니다 |
 | 부피 | MP 결정 부피 (판 · 범함수 미기재) | 호스트 · 도핑 셀 = 자체 DFT EOS V₀ (원장 `b0-dft-bm3-v1` 묶음) · **산물상 부피는 아직 보고량에 없다** | 우리 쪽에 없는 열이다. 만들 때 두 출처 (자체 DFT ↔ MP) 를 섞게 된다 |
 | 부피 변화의 분모 | 반응물 전체 (SE + 전극 상) | 미정 — 보고량 카드 전 | 분모가 부호를 바꿀 수 있다 (§13-3) |
 | 기체 | N₂ 제외 | 미정 | 아지로다이트 산화 쪽은 분자성 · 기체 산물이 더 많다 |

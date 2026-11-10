@@ -26,7 +26,9 @@
    "h": 1311,
    "dpi": 300,
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.863
+   "blank": 0.863,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + bar tops and marker centroids read from the embedded raster (checks: K* bars 25.19 / 8.44 vs text 25.1 / 8.4 GPa; Br-series E_hull 31-76 vs text 30-75 meV/atom; original-composition markers = Li 5.5, P 1.0, S 4.5, Cl 1.5)"
   },
   {
    "key": "f2",
@@ -46,7 +48,9 @@
    "h": 522,
    "dpi": 300,
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.942
+   "blank": 0.942,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + disc centroids read from the embedded raster (check: core point 24.8 GPa / 241 meV/atom vs text 25.1 GPa / 237 meV/atom)"
   },
   {
    "key": "f3",
@@ -66,7 +70,9 @@
    "h": 654,
    "dpi": 300,
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.619
+   "blank": 0.619,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + zoom of panel A + marker centroids of panel B read from the embedded raster"
   },
   {
    "key": "f4",
@@ -86,7 +92,9 @@
    "h": 945,
    "dpi": 300,
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.886
+   "blank": 0.886,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + capacity curves of panels B and D traced from the embedded raster (80 % lines located at 70.2 / 69.8 mAh/g)"
   },
   {
    "key": "f5",
@@ -106,7 +114,9 @@
    "h": 1573,
    "dpi": 300,
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.913
+   "blank": 0.913,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + capacity curves of panel D traced from the embedded raster"
   },
   {
    "key": "f6",
@@ -126,7 +136,9 @@
    "h": 805,
    "dpi": 300,
    "src": "120. A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.891
+   "blank": 0.891,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + zoom of panels C and F"
   },
   {
    "key": "fS1",
@@ -153,7 +165,9 @@
     527.9,
     429.7
    ],
-   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 177.1-429.7) started above the figure and pulled in the title-page author lines ('Equal Contribution' / 'Corresponding author', y 183-211); clip = embedded raster image bbox (90.0,250.7,521.9,423.7) + 6 pt margin, above caption (y 432.7)"
+   "recrop": "2026-11-10 litdb-curator: auto crop (bbox y 177.1-429.7) started above the figure and pulled in the title-page author lines ('Equal Contribution' / 'Corresponding author', y 183-211); clip = embedded raster image bbox (90.0,250.7,521.9,423.7) + 6 pt margin, above caption (y 432.7)",
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (before and after recrop) + marker centroids read from the embedded raster (checks: the 20 / 30 / 36 GPa curves give one V*eps per x; max over x of |Hull|/(V*eps) = 39.7 GPa at x = 0.4, as printed in the legend)"
   },
   {
    "key": "fS2",
@@ -173,7 +187,9 @@
    "h": 1569,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.875
+   "blank": 0.875,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + zoom + bar tops and marker centroids read from the embedded raster (same calibration checks as Fig. 1C: original bar 25.1 GPa, y = 0 bars 8.5 GPa)"
   },
   {
    "key": "fS3",
@@ -193,7 +209,9 @@
    "h": 789,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.932
+   "blank": 0.932,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + marker centroids read from the embedded raster"
   },
   {
    "key": "fS4",
@@ -213,7 +231,9 @@
    "h": 857,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.891
+   "blank": 0.891,
+   "viewed": false,
+   "viewed_how": "2026-11-10 litdb-curator: not opened at full size - seen only on the SI page render (p.3) and a reduced contact sheet"
   },
   {
    "key": "fS5",
@@ -233,7 +253,9 @@
    "h": 1632,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.331
+   "blank": 0.331,
+   "viewed": false,
+   "viewed_how": "2026-11-10 litdb-curator: not opened at full size - seen only on the SI page render (p.4) and a reduced contact sheet"
   },
   {
    "key": "fS6",
@@ -253,7 +275,9 @@
    "h": 673,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.901
+   "blank": 0.901,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + zoom of panel a + marker centroids of panel b read from the embedded raster"
   },
   {
    "key": "fS7",
@@ -273,7 +297,9 @@
    "h": 638,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.923
+   "blank": 0.923,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + zoom of panel c (line vertices read by eye on the zoom) + marker centroids of panel a"
   },
   {
    "key": "fS8",
@@ -293,7 +319,9 @@
    "h": 1235,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.702
+   "blank": 0.702,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read (percentages are printed in the panels)"
   },
   {
    "key": "fS9",
@@ -313,7 +341,9 @@
    "h": 704,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.976
+   "blank": 0.976,
+   "viewed": false,
+   "viewed_how": "2026-11-10 litdb-curator: not opened at full size - seen only on the SI page render (p.7) and a reduced contact sheet"
   },
   {
    "key": "fS10",
@@ -333,7 +363,9 @@
    "h": 1259,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.912
+   "blank": 0.912,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read"
   },
   {
    "key": "fS11",
@@ -354,7 +386,9 @@
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
    "blank": 0.952,
-   "manual_crop": "2026-11-10 litdb-curator: tool reported fS11 as a number gap ('p8 그래픽 없음(img0/draw0)') - Fig. S11 is a small vector-only plot on SI p.8 between the Fig. S10 caption (ends y 413.7) and its own caption (y 635.5); clip = union of vector drawings (220.5,451.0,381.7,588.5) + tick/axis text (x 188-384, y 445-610) + margin"
+   "manual_crop": "2026-11-10 litdb-curator: tool reported fS11 as a number gap ('p8 그래픽 없음(img0/draw0)') - Fig. S11 is a small vector-only plot on SI p.8 between the Fig. S10 caption (ends y 413.7) and its own caption (y 635.5); clip = union of vector drawings (220.5,451.0,381.7,588.5) + tick/axis text (x 188-384, y 445-610) + margin",
+   "viewed": false,
+   "viewed_how": "2026-11-10 litdb-curator: manual crop checked on a reduced contact sheet and the SI page render (p.8); not opened at full size"
   },
   {
    "key": "fS12",
@@ -374,7 +408,9 @@
    "h": 784,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.862
+   "blank": 0.862,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read"
   },
   {
    "key": "fS13",
@@ -394,7 +430,9 @@
    "h": 2235,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.389
+   "blank": 0.389,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read"
   },
   {
    "key": "fS14",
@@ -414,7 +452,9 @@
    "h": 870,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.868
+   "blank": 0.868,
+   "viewed": false,
+   "viewed_how": "2026-11-10 litdb-curator: not opened at full size - seen only on the SI page render (p.11) and a reduced contact sheet"
   },
   {
    "key": "fS15",
@@ -434,7 +474,9 @@
    "h": 1322,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.905
+   "blank": 0.905,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read + zoom of the top of panel a (point cloud ends at a horizontal edge near true = -0.1 eV/atom)"
   },
   {
    "key": "tS1",
@@ -454,7 +496,9 @@
    "h": 1812,
    "dpi": 300,
    "src": "120. Sup) A two-parameter space to tune solid electrolytes for lithium dendrite constriction.pdf",
-   "blank": 0.901
+   "blank": 0.901,
+   "viewed": true,
+   "viewed_how": "2026-11-10 litdb-curator: Read as an image - 'Table S1' is a grid of raw XPS spectra, not a text table, so the PDF text layer has nothing to transcribe"
   }
  ],
  "missing_labels": [
