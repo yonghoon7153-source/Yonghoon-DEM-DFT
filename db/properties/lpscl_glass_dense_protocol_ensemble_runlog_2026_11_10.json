@@ -1,0 +1,19 @@
+{
+ "schema": "runlog/v1",
+ "kind": "runlog",
+ "card": "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json",
+ "decision": "D-2026-11-10-li2s3-dense-protocol-ensemble",
+ "track": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송) — 논문 1저자 = 외부 · 위임 10-30",
+ "입력_확인_kgy_2026_11_10": {
+  "출처": "사용자 붙여넣기 2026-11-10 16:47:29 KST (kgy esp-Z590-AORUS-MASTER · check_inputs_kgy.sh · 읽기만 · fetch 9e18cd4e..4b629efd)",
+  "여섯_시드": "카드 '입력_2026_11_10' 에 그대로 (sha256 · REC · 판정 · 배위)",
+  "MD_설정_기준_파일": "넷 다 있음 — lpscl_glass_md_2026_09_26/pilot600/T600 (큐가 쓰는 기준) · lpscl_glass_md_v2_2026_09_30/seed1/T600 · lpscl_glass_control_li3ps4_600K_2026_10_13/seed1/T600 · lpscl_glass_bmeas_650K_2026_10_14/seed1/T650 (run_meta.json · md.log)",
+  "지문": "드라이버 c3e2d358ee53cefa · v2 러너 3aef029aced0de77 (~/wt_li2s2 · 기대값과 같다)",
+  "GPU_디스크": "4,067 MiB · 55 % (esp 계정 그래픽 앱 바닥 · 우리 잡 없음) · / 64 % (316 GB 남음)"
+ },
+ "도구_시험_2026_11_10": {
+  "run_stage2_kgy.sh": "selftest 21 / 21 (실제 v2 러너 + 가짜 드라이버 · 음성 11) · 깨기 8 / 8 빨강 (m1 결정 검사 · m2 sha256 · m3 상한 · m4 첫 런 한도 · m5 순서 · m6 덜 끝난 폴더 · m7 건너뛰기 · m8 러너 sha) — 이 컨테이너 (GPU 없음) 에서 · kgy 에서 selftest 를 다시 돌린다"
+ },
+ "발사": "아직 — 사용자 kgy 검사 블록 → 발사 블록",
+ "by": "agent (위임 10-30) · 2026-11-10"
+}

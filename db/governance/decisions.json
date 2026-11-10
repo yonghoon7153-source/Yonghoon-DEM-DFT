@@ -12212,6 +12212,75 @@
     "근거_발화": "사용자 2026-11-10 (이 세션): '상한 올려도돼' — b2o3 1 단계 UMA 상한 30 → 85 GPU-h · 계획 54 런 × t_a 100 ps 그대로 · gabia 단독",
     "decision_digest": "sha256:c39f3458e486dd14651cc2e25b44a5b075f930b214b16e213bb930071e8b6e9a"
    }
+  },
+  {
+   "id": "D-2026-11-10-li2s3-dense-protocol-ensemble",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "li2s.glass.transport.dense",
+   "slot": "li2s3_dense_glass_protocol_ensemble_window_ratio",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ],
+    "tasks": [
+     "md_diffusion_window",
+     "diffusion_ratio",
+     "activation_energy_difference"
+    ],
+    "methods": [
+     "uma-s-1p1-omat-turbo",
+     "langevin_nvt"
+    ],
+    "use_cases": [
+     "manuscript_relative_only"
+    ]
+   },
+   "title": "li2s-3 — li2s-2 와 같은 고정 밀도 담금질 유리를 PS₄ 로 고르지 않고 생성 절차의 산출 전체로 정의 → 측정 온도 창 (2 단계 · kgy 16 런) → 두 유리의 D 비 R(T) (3 단계는 따로 결정)",
+   "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 가 보고량 · 게이트 · 멈춤 규칙이다. li2s-2 카드에서 바꾸는 것은 하나 — 1 단계 시드 포함 규칙 (PS₄ 보존율 = 1.0 선택 → 기록만 · 문턱 없음). 입력은 li2s-2 가 kgy 에서 만든 담금질 여섯 (A · B × seed11–13 · final.xyz sha256 으로 묶음 · 다시 담금질하지 않는다) 이고 포함은 있는 판정 파일에서 기계적으로 읽는다 (pass, 또는 사유가 PS₄ 줄 하나뿐인 fail). 2 단계 = 두 계 × 시드 11 · 12 × 600 / 650 / 700 / 750 K × 400 ps = 16 런 · kgy 단독 · 한 번에 하나 (db/inputs/li2s3_dense_ensemble_2026_11_10/run_stage2_kgy.sh → v2 kgy 러너 3aef029aced0de77 · 드라이버 c3e2d358ee53cefa · --seed 3000 + 시드) · 조건부 550 K 800 ps 4 런 · 측정 가능 = 두 시드 모두 C1 ∧ C2 ∧ 골격 통과 (골격은 생산 첫 프레임 대비 읽기) · W · R · ΔEa 규칙과 허용 문구 틀은 li2s-2 카드 그대로 (+ 구조군 문구). 결과는 16 런이 끝나고 판독 소비자를 커밋한 뒤 한 번 읽는다. 절대 D · σ · Ea · 상온 전도도는 내지 않는다. li2s-2 마감 문장은 고치지 않는다.",
+   "rationale": "li2s-2 는 수송을 한 번도 재지 못하고 1 단계 시드 게이트에서 닫혔다 (B 1/5). 본 값에서 낸 사후 어림으로 그 게이트 × 4/5 규칙은 B 가 넘을 확률이 ≈ 6 % 였다 — 게이트가 가른 것은 측정 가능성이 아니라 12–15 개 P 가 하나도 안 벗어날 우연이다. 마감은 '다른 시드 게이트는 새 카드 + 사용자 결정' 을 허용했고 사용자가 이어 가라고 했다. 본 값에 맞춰 고를 여지를 없애려고 문턱을 낮추지 않고 없앴다 (전부 포함 · P 배위 표 동반). kgy 는 비어 있고 이미 만든 유리 여섯 (78 GPU-h) 을 그대로 쓴다.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "results_seen_note": "수송 결과 0 건 (MD 미실시). 1 단계 시드 판정 · PS₄ 보존율 · 결함 꼴은 봤다 — 포함 규칙은 그 결과를 본 뒤에 바꾼 것이다 (카드 '본_것_안_본_것' · '사후_변경의_한계')",
+   "card": "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json",
+   "record": "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json",
+   "depends_on": [
+    "D-2026-11-10-li2s2-dense-window-closed",
+    "D-2026-11-03-li2s2-dense-window",
+    "D-2026-10-30-li2s-first-author-confirmation-waived",
+    "D-2026-09-27-barrier-hop-count"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json",
+    "db/properties/lpscl_glass_dense_window_closed_2026_11_10.json (재개 조건 없음 · '다른 시드 게이트는 새 카드')",
+    "db/inputs/li2s3_dense_ensemble_2026_11_10/run_stage2_kgy.sh (selftest 21 / 21 · 깨기 8 / 8)",
+    "사용자 kgy 붙여넣기 2026-11-10 16:47:29 (입력 여섯 시드 sha256 · 판정 · 배위)"
+   ],
+   "reopen_criteria": [
+    "없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 카드",
+    "'시드 · 온도를 하나 더' 는 재개 사유가 아니다"
+   ],
+   "enforcement": "큐 스크립트 run_stage2_kgy.sh: 이 결정이 active 가 아니면 시작하지 않는다 (6) · v2 러너 sha16 (7) · 입력 구조 sha256 = 카드 기록 (8) · 설정 기준 (9) · 덜 끝난 런 폴더 (20) · 첫 런 8 h (21) · 누적 상한 160 h (22) · 순서 고정 · 러너가 드라이버 sha16 · 구조 값 게이트 · run_meta · dt 를 건다. 판독 소비자와 압력 도구는 결과를 읽기 전에 커밋한다. PS₄ 문턱을 다시 넣어 시드를 고르지 않는다.",
+   "cost_cap": {
+    "stage2_GPU_h": 160,
+    "machine": "kgy 단독 (gabia 는 b2o3)",
+    "stage1b_stage3": "2 단계 뒤 사용자 결정에 적는다"
+   },
+   "proposed_by": "claude-session-2026-11-10 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-10",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 '이어서해' · 'li2s-2 이게 여기서 끝이라고?' (위임 10-30) — 설계 초안 83d70b06 → kgy 입력 확인 (16:47) → 본 카드 · 큐 스크립트"
+    }
+   ]
   }
  ]
 }
