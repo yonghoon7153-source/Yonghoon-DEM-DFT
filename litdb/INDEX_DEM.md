@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 264편 · 생성 2026-11-11
+> digest 265편 · 생성 2026-11-11
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -56,7 +56,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (58편)
+## 접촉역학 · 소성 (DEM 이론) (59편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -94,6 +94,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `luding2008_cohesive_frictional_contact_models` | 점착·마찰 분말의 접촉모델 (인장 가능 LAW) — Luding (Granular Matter 2008) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 5 |
 | `martinbouvard2003_dem_composite_cold_compaction` | 연질+경질 분말 혼합물의 냉간 압밀을 DEM으로 — Martin & Bouvard (Acta Materialia 2003) | DEM | 2026-06-23 | — |
 | `mcgeary1961_bimodal_sphere_packing` | 구형 입자의 기계적 패킹 — 크기비·다성분 최대 충전밀도의 고전 — McGeary (J. Am. Ceram. Soc. 1961) | exp | 2026-06-23 | — |
+| `mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation` | 광유 안에서 잰 Li₂S–P₂S₅ (70:30 mol%) 용융 급랭 유리의 영률 · 경도 · 파괴인성 — 큐브 코너 20 mN 압입 (Oliver–Pharr · ν 0.3 가정): E 18.5 ± 0.9 GPa · H 1.9 ± 0.2 GPa (39 점) · Vickers 9.8 N 균열 길이 (Anstis 식 · k 0 | experiment (author's final manuscript · melt-quenched 70Li2S | 2026-11-12 | 🖼 26 |
 | `mesarovicfleck2000_dissimilar_elastoplastic_indentation` | 비대칭(dissimilar) 탄소성 구의 무마찰 압입 — Mesarović & Fleck (Int. J. Solids Struct. 2000) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `molerus1975_theory_of_yield_cohesive_powders` | Theory of Yield of Cohesive Powders — 응집 분말의 항복 이론: 무작위 단분산 구 충전의 외부응력 ↔ 평균 접촉력 (식 4 · 부록 A — Arzt 1982 식 (20) 의 원전) · 소성 평탄화 (p_f ≈ 3σ_f) 로 "얼린" 반데르발스 응집력 H = κN · 유효 항복궤적 tan φ_e | theory (analytic powder micromechanics: mean-field contact-f | 2026-10-03 | 🖼 12 |
 | `oh2026_bimodal_composite_cathode` | Oh 2026 (ACS Energy Letters 11, 2103-2114) — Bimodal 복합양극: 큰 다결정 + 작은 단결정 CAM → packing·porosity·tortuosity 최적화 ★★★ 우리 정확한 소재계 + 정확한 조건 + 우리 a9_50 P:S sweep의 HEADLINE 실험 검증 | experiment | 2026-07-28 | 🖼 35 |
