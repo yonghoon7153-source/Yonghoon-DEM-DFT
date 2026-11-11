@@ -1,5 +1,3 @@
 ﻿quantity,quantity_label,unit,value,value_lo,value_hi,bound,T_K,T_read,formula,elements,system,property,property_class,value_text,unit_written,conditions,basis,status,slug,paper,year,track,chapter,line,quote
 ionic_conductivity,이온전도도,S/cm,0.0070999999999999995,0.0070999999999999995,0.0070999999999999995,,298.1,stated,Li5.5PS4.5Cl1.5,Cl Li P S,Li₅.₅PS₄.₅Cl₁.₅,σ,ionic_conductivity,7.1,mS cm⁻¹,25 °C,stated,verified,kim2031_halide_argyrodite,Kim et al. 2031,2031,dft,아지로다이트 조성 설계,11,**7.1 mS cm⁻¹**
-ionic_conductivity,이온전도도,S/cm,0.007,0.007,0.007,,298.1,stated,Li5.5PS4.5Cl1.5,Cl Li P S,Li₅.₅PS₄.₅Cl₁.₅,σ,ionic_conductivity,7.0,mS cm⁻¹,25 °C,stated,verified,lee2031_second_paper,Kim et al. 2031,2031,dft,분류 대기,11,**7.0 mS cm⁻¹**
-ionic_conductivity,이온전도도,S/cm,0.007,0.007,0.007,,298.1,stated,Li5.5PS4.5Cl1.5,Cl Li P S,Li₅.₅PS₄.₅Cl₁.₅,σ,ionic_conductivity,7.0,mS cm⁻¹,25 °C,stated,verified,new2032_a,Kim et al. 2031,2031,dft,분류 대기,11,**7.0 mS cm⁻¹**
 ionic_conductivity,이온전도도,S/cm,0.007,0.007,0.007,,298.1,stated,Li5.5PS4.5Cl1.5,Cl Li P S,Li₅.₅PS₄.₅Cl₁.₅,σ,ionic_conductivity,7.0,mS cm⁻¹,25 °C,stated,verified,new2032_b,Kim et al. 2031,2031,dft,분류 대기,11,**7.0 mS cm⁻¹**

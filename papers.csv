@@ -1,6 +1,6 @@
 ﻿slug,title,authors,year,axis,chapter_id,chapter,one_liner,card,values,values_cut,doi,digest
 choi2029_no_numbers,할로젠을 늘린 아지로다이트,Kim et al.,2031,dft,se-argy,아지로다이트 조성 설계,Cl을 늘리면 전도도가 2.9에서 7.0 mS cm⁻¹로 오른다.,yes,0,,10.0000/test.31,litdb/papers/choi2029_no_numbers.md
 kim2031_halide_argyrodite,할로젠을 늘린 아지로다이트,Kim et al.,2031,dft,se-argy,아지로다이트 조성 설계,Cl을 늘리면 전도도가 2.9에서 7.1 mS cm⁻¹로 오른다.,yes,1,,10.0000/test.31,litdb/papers/kim2031_halide_argyrodite.md
-lee2031_second_paper,할로젠을 늘린 아지로다이트,Kim et al.,2031,dft,unsorted,분류 대기,Cl을 늘리면 σ가 2.9 → 7.0 mS cm⁻¹로 오른다. 자리 무질서가 원인이다.,,1,,10.0000/test.31,litdb/papers/lee2031_second_paper.md
-new2032_a,할로젠을 늘린 아지로다이트,Kim et al.,2031,dft,unsorted,분류 대기,Cl을 늘리면 σ가 2.9 → 7.0 mS cm⁻¹로 오른다. 자리 무질서가 원인이다.,,1,,10.0000/test.31,litdb/papers/new2032_a.md
+lee2031_second_paper,할로젠을 늘린 아지로다이트,Kim et al.,2031,dft,unsorted,분류 대기,Cl을 늘리면 σ가 2.9 → 7.1 mS cm⁻¹로 오른다. 자리 무질서가 원인이다.,,0,,10.0000/test.31,litdb/papers/lee2031_second_paper.md
 new2032_b,할로젠을 늘린 아지로다이트,Kim et al.,2031,dft,unsorted,분류 대기,Cl을 늘리면 σ가 2.9 → 7.0 mS cm⁻¹로 오른다. 자리 무질서가 원인이다.,,1,,10.0000/test.31,litdb/papers/new2032_b.md
+seo2033_fresh,할로젠을 늘린 아지로다이트,Kim et al.,2031,dft,unsorted,분류 대기,Cl을 늘리면 σ가 2.9 → 7.0 mS cm⁻¹로 오른다. 자리 무질서가 원인이다.,,0,,10.0000/test.31,litdb/papers/seo2033_fresh.md
