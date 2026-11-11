@@ -351,6 +351,12 @@
    "state": "active",
    "by": "사용자 (cascade 1저자)",
    "note": "사용자 2026-11-11 (이 세션 · AskUserQuestion): cascade 묶음 2 개정 2 (커밋 54a1fa01 · Cl 없는 설계 셋의 원자 부피 판 '해당 없음' · 기록기 · 판독기 고침 · vol + win 새 폴더로 다시 돌기) '비준 — gabia 블록 받기 (Recommended)' · 결정 D-2026-11-11-cascade-axes-bundle2-amend2 active"
+  },
+  {
+   "at": "2026-11-11",
+   "state": "active",
+   "by": "agent",
+   "note": "판독 (개정 2 재실행 원자료) — 막는 게이트 전부 통과 · §9 닫는 조건 충족 → 마감 기록 · 마감 결정 proposed (사용자 비준 대기)"
   }
  ],
  "ED_반영_2026_11_10": {
@@ -460,5 +466,11 @@
    "회수": "끝나면 db/raw/cascade_axes_bundle2_<날짜>/ 를 커밋 · push (자격 증명 줄은 블록 맨 끝) → 여기서 해시 대조 · --bundle2 판독 한 번 (pymatgen 2026.3.23)",
    "by": "agent · 2026-11-11"
   }
+ },
+ "판독_2026_11_11": {
+  "원자료": "db/raw/cascade_axes_bundle2_2026_11_11/ (개정 2 재실행 · 회수 4259cb18 · SHA256SUMS 23 일치 · 부피 거부 0)",
+  "판독": "db/properties/cascade_axes_bundle2_readout_2026_11_11.json · …_designs.csv — 막는 게이트 전부 통과 · 순위 축 ① · ③ · ⑤ NCM · ⑥ · ④ (⑤ Li 는 G8 로 빠짐)",
+  "§9": "닫는 조건 충족 → 마감 기록 db/properties/cascade_axes_bundle2_closed_2026_11_11.json · 결정 D-2026-11-11-cascade-axes-bundle2-closed (proposed · 사용자 비준 대기)",
+  "by": "agent · 2026-11-11"
  }
 }

@@ -12988,6 +12988,75 @@
     "근거_발화": "사용자 2026-11-11 (이 세션 · AskUserQuestion): cascade 묶음 2 개정 2 (커밋 54a1fa01 · Cl 없는 설계 셋의 원자 부피 판 '해당 없음' · 기록기 · 판독기 고침 · vol + win 새 폴더로 다시 돌기) '비준 — gabia 블록 받기 (Recommended)'",
     "decision_digest": "sha256:98d2d7fc086fcd8042f64fab41f43e458c997896df5d7a0bfeea62937d64b555"
    }
+  },
+  {
+   "id": "D-2026-11-11-cascade-axes-bundle2-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": "cascade.dopant_screening.axes_bundle_2",
+   "slot": "cascade_axes_bundle_2_closure",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "cascade_axes_ranking",
+     "decomposition_volume_change",
+     "anode_product_quality",
+     "cathode_window_dopant_fate"
+    ],
+    "methods": [
+     "mp_interfacial_reactivity",
+     "mp_grand_potential",
+     "mp_band_gap_grades",
+     "mp_structure_volumes"
+    ],
+    "use_cases": [
+     "closure"
+    ]
+   },
+   "title": "cascade 묶음 2 를 닫는다 — 순위 축 ① · ③ · ⑤ NCM · ⑥ · ④ (⑤ Li 는 G8 로 빠짐) · 무리 A 줄 17 의 선택 (Pareto 층 1) = As2S3 · BaO · Na2O · SiO2 · SrCl2 · SrO · 약점 순위 상위 10 = BaO · SrCl2 · SrO · Na2O · LiBr · Na2S · LiF · BaCl2 · CaO · SiO2 · 선택 핵 As2S3 · SiO2 는 R12 모든 판에 남는다 (사용자 = cascade 1저자)",
+   "statement": "마감 기록 db/properties/cascade_axes_bundle2_closed_2026_11_11.json 이 확정 · 허용 · 금지 서술 · 재개 조건이다: 카드 §9 의 닫는 조건 (게이트 G1–G8 · R10 · R11 · R12 · R13) 이 결과 전에 박혔고 채워졌다. 순위 축 = ① · ③ · ⑤ NCM · ⑥ · ④ (⑤ Li 는 G8 ρ 0.57 로 빠짐 · ⑤ NCM 은 G8 ρ 0.801 경계선 통과) · 무리 A 줄 17 의 선택 (Pareto 층 1) = As2S3 · BaO · Na2O · SiO2 · SrCl2 · SrO · 약점 순위 상위 10 = BaO · SrCl2 · SrO · Na2O · LiBr · Na2S · LiF · BaCl2 · CaO · SiO2 · 선택 핵 As2S3 · SiO2 는 R12 모든 판에 남는다 · 표시 모름 MoO3 · Sb2O5 · Sb2S3 · V2O5 는 DFT 로 모름을 풀 후보. 선택은 DFT 확인 후보이지 결론이 아니다 (R13).",
+   "rationale": "닫는 조건을 결과 전에 박고 (카드 §9) 그 조건이 채워졌으므로 닫는다 (마감 규율). 판독은 한 번 — 첫 시도의 G2 멈춤은 개정 2 (결과 전 · 비준) 로 고친 뒤 다시 돈 원자료로 읽었다.",
+   "decision_state": "proposed",
+   "record_kind": "closure",
+   "results_seen": true,
+   "results_seen_note": "묶음 2 판독 (2026-11-11) 을 본 뒤 — 닫는 조건 자체는 결과 전에 카드 §9 에 있었다",
+   "card": "db/properties/cascade_axes_bundle2_closed_2026_11_11.json",
+   "record": "db/properties/cascade_axes_bundle2_readout_2026_11_11.json",
+   "amends": [],
+   "depends_on": [
+    "D-2026-11-10-cascade-axes-bundle2",
+    "D-2026-11-10-cascade-axes-bundle2-amend1",
+    "D-2026-11-11-cascade-axes-bundle2-amend2",
+    "D-2026-11-05-cascade-axes-bundle-closed"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/cascade_axes_bundle2_closed_2026_11_11.json",
+    "db/properties/cascade_axes_bundle2_readout_2026_11_11.json (sha16 877401dffdd08592)",
+    "db/properties/cascade_axes_bundle2_readout_2026_11_11_designs.csv (sha16 d645fe3deadffc5c)",
+    "db/raw/cascade_axes_bundle2_2026_11_11/ (회수 4259cb18)",
+    "tools/cascade/analyze_cathode_reactivity.py sha16 4564252660cbcdd2 (--bundle2)"
+   ],
+   "reopen_criteria": [
+    "① 새 축 카드 (묶음 3 — 녹는 에너지 UMA · 탄성 · BVSE · 산물 Li 수송 등 · 결과 전 위험 표시 · 좋은 방향 · 동률 폭 · 겹침 기준 · 비준) — 묶음 3 은 묶음 2 의 순위 축을 빼지 않고 (G4 · G7 로 빠지는 것만) 묶음 2 순위표를 나란히 내며, 상위 10 이 어떻게 바뀌었는지 적는다 (ED).",
+    "② 선택 집합 후보의 DFT 확인 카드 (R13)",
+    "③ MP 판 변경 — 새 결정",
+    "④ 판독기 결함 — 고친 판독기로 과거 마감 (묶음 1 · 묶음 2) 부터 재현한 뒤 (CLAUDE.md 상시 절차)",
+    "⛔ 재개 사유가 아닌 것: 다른 동률 폭 · 다른 순위 규칙을 하나 더 돌려 본 것 · 특정 설계를 올리려는 것 · 마음에 드는 설계가 이길 때까지 축을 더하는 것"
+   ],
+   "enforcement": "① 마감 기록 2_허용_서술 밖으로 쓰지 않는다 ② 선택 · 상위 10 을 '좋은 · 안정한 도펀트' 로 쓰지 않는다 ③ R12 판 선택을 주 선택처럼 쓰지 않는다 ④ ΔV/V · MP 갭 · 반응 에너지 절대값을 인용하지 않는다",
+   "proposed_by": "agent",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-11",
+     "state": "proposed",
+     "by": "agent",
+     "note": "카드 §9 닫는 조건 충족 — 마감 기록 초안 · 사용자 (cascade 1저자) 비준 대기"
+    }
+   ]
   }
  ]
 }
