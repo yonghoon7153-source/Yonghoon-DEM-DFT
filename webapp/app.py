@@ -721,6 +721,8 @@ def cascade_page():
                            band=D.cascade_campaign_band(),
                            # §4b 재판정 패널 — 숫자는 원장 하나에서만 온다 (2026-09-13)
                            p4b=D.cascade_pilot_4b(),
+                           # 묶음 2 (MP 다축 · 2026-11-11 닫힘) — 마감 결정 active · 판독 sha16 = 마감 기록일 때만 숫자
+                           b2=D.cascade_bundle2(),
                            mo_db=D.load_molecular_orbitals())
 
 

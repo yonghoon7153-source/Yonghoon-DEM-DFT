@@ -2506,6 +2506,122 @@ def cascade_pilot_4b() -> dict:
             "date": rec.get("date")}
 
 
+#: cascade 다축 스크리닝 묶음 2 (MP 닫힌계 · 2026-11-11 닫힘) — 마감 기록 · 마감 결정
+CASCADE_B2_CLOSURE = DB / "properties" / "cascade_axes_bundle2_closed_2026_11_11.json"
+CASCADE_B2_DECISION = "D-2026-11-11-cascade-axes-bundle2-closed"
+#: 화면 이름표만 (숫자 · 방향 · 동률 폭은 판독 파일 constants 에서 읽는다 — 화면이 보관하지 않는다)
+CASCADE_B2_LABELS = {"d_ncm": ("① NCM 계면", "δ (meV/atom)"), "d_li": ("③ Li 금속", "δ (meV/atom)"),
+                     "sv_ncm": ("⑤ NCM 분해 부피", "s_V (%p)"), "dphi_li": ("⑥ Li 쪽 넓은 갭 산물", "δφ_wide"),
+                     "f_ins": ("④ 작동창 넓은 갭", "f_ins (8 점 중)")}
+CASCADE_B2_RELATIVE = ("d_ncm", "d_li", "sv_ncm", "dphi_li")   # 호스트 대비 값 (0 = 호스트) · f_ins 는 설계 자신의 비율
+
+
+def cascade_bundle2() -> dict:
+    """`/cascade` 묶음 2 패널 — 원소 (설계) 별 축 효과 · 두 축 Pareto 그림 (사용자 2026-11-11 '원소의 효과를 pareto 로').
+
+    결속: 마감 결정 `D-2026-11-11-cascade-axes-bundle2-closed` 가 active 이고 · 판독 파일 sha16 이 마감 기록
+    (`1_확정.판독`) 이 적은 값과 같고 · 판독에 막는 게이트가 없을 때만 숫자를 싣는다. 하나라도 어긋나면
+    `ok False` 와 사유만 (숫자 0 개 — 없는 값을 0 으로 그리지 않는다).
+    화면 문장은 마감 기록의 `2_허용_서술_이대로만` · `3_⛔_금지_서술` 을 그대로 옮긴다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 판정 · 재계산을 하지 않는다 — 판독 파일의 값 · 순위 · 층을 옮길 뿐이다.
+      · 절대값을 싣지 않는다 — 호스트 ΔV/V · MP 갭 · 반응 에너지 절대값은 판독 파일에 있어도 뺀다
+        (마감 기록 citable: 상대값 · 등급 · 순위만). 호스트 대비 δ · s_V · δφ 와 f_ins (8 점 비율) 만.
+      · 두 축 그림의 '앞줄' 은 Pareto 층이 아니다 — 층은 다섯 축 순위 벡터에서 정했다 (화면에 적는다).
+      · cascade v23 감사 원장 (cascade_audit_manifest.json) 에 등재하지 않았다 — 그 원장은 이 컨테이너에서
+        다시 만들면 고정 커밋 원본 해시가 깨진다 (2026-11-11 실측). 대신 마감 결정 + 마감 기록 sha16 으로 묶는다.
+    """
+    clo = _load_json(CASCADE_B2_CLOSURE)
+    if not isinstance(clo, dict):
+        return {"ok": False, "why": f"마감 기록 {CASCADE_B2_CLOSURE.name} 을 못 읽었다 — 숫자를 싣지 않는다"}
+    try:
+        import canonical as _C
+        dec = (_C.decisions() or {}).get(CASCADE_B2_DECISION)
+        state = _C.decision_state(dec) if dec is not None else None
+    except Exception:                                            # noqa: BLE001
+        state = None
+    if state != "active":
+        return {"ok": False, "why": f"마감 결정 {CASCADE_B2_DECISION} 가 active 가 아니다 ({state}) — 숫자를 싣지 않는다"}
+    conf = clo.get("1_확정") if isinstance(clo.get("1_확정"), dict) else {}
+    m = re.search(r"(db/properties/[^\s()]+\.json) \(sha16 ([0-9a-f]{16})\)", str(conf.get("판독") or ""))
+    if not m:
+        return {"ok": False, "why": "마감 기록에 판독 파일 · sha16 이 없다 — 숫자를 싣지 않는다"}
+    rel, want = m.group(1), m.group(2)
+    p = ROOT / rel
+    try:
+        raw = p.read_bytes()
+    except OSError:
+        return {"ok": False, "why": f"판독 파일 {rel} 을 못 읽었다 — 숫자를 싣지 않는다"}
+    got = hashlib.sha256(raw).hexdigest()[:16]
+    if got != want:
+        return {"ok": False, "why": f"판독 파일 sha16 {got} ≠ 마감 기록 {want} — 숫자를 싣지 않는다"}
+    try:
+        r = json.loads(raw.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError):
+        return {"ok": False, "why": "판독 파일이 JSON 이 아니다 — 숫자를 싣지 않는다"}
+    if r.get("blocking") or not isinstance(r.get("rows"), list) or not isinstance(r.get("ranking"), dict):
+        return {"ok": False, "why": f"판독이 막는 게이트로 멈춘 기록이다 ({r.get('blocking')}) — 숫자를 싣지 않는다"}
+    const = r.get("constants") or {}
+    W, DIR = const.get("widths") or {}, const.get("directions") or {}
+    axes = [a for a in (r.get("axes_ranking") or []) if a in CASCADE_B2_LABELS]
+    if not axes or any(a not in W or a not in DIR for a in axes):
+        return {"ok": False, "why": "판독 파일에 순위 축 · 동률 폭 · 방향이 없다 — 숫자를 싣지 않는다"}
+
+    def cls(a, v):
+        """호스트 대비 — 동률 폭을 넘게 나음 / 같음 / 넘게 나쁨 (R9 와 같은 '넘게') · f_ins 는 호스트가 없어 None."""
+        if v is None or a not in CASCADE_B2_RELATIVE:
+            return None
+        good = v if DIR[a] == "larger" else -v
+        return "better" if good > W[a] else ("worse" if good < -W[a] else "tie")
+
+    rk = r["ranking"]
+    order = {"A": 0, "?": 1, "B": 2}
+    rows = []
+    for x in r["rows"]:
+        v = x.get("values") or {}
+        iv = x.get("interval") or {}
+        pos = x.get("position") if x.get("in_line") else (iv.get("optimistic") or {}).get("position")
+        rows.append({"species": x.get("species"), "formula": x.get("formula"), "group": x.get("group"),
+                     "flags": x.get("flags") or [], "flags_unknown": x.get("flags_unknown") or [],
+                     "in_line": bool(x.get("in_line")), "position": x.get("position"),
+                     "interval": ({"opt": (iv.get("optimistic") or {}).get("position"),
+                                   "pess": (iv.get("pessimistic") or {}).get("position")} if iv else None),
+                     "layer": x.get("pareto_layer"), "weakest": x.get("weakest_axes") or [],
+                     "ranks": x.get("ranks") or {}, "selected": bool(x.get("selected")), "top": bool(x.get("top")),
+                     "values": {a: v.get(a) for a in axes}, "cls": {a: cls(a, v.get(a)) for a in axes},
+                     "unknown_why": {a: w for a, w in (x.get("unknown_why") or {}).items() if a in axes},
+                     "_sort": (order.get(x.get("group"), 3), 0 if x.get("in_line") else 1,
+                               pos if isinstance(pos, (int, float)) else 1e9, str(x.get("species")))})
+    rows.sort(key=lambda t: t.pop("_sort"))
+    R12 = r.get("R12") or {}
+
+    def ov(k):
+        v = R12.get(k)
+        return v.get("overlap_top_with_main") if isinstance(v, dict) else None
+    robust = [(f"축 하나씩 빼기 — {CASCADE_B2_LABELS[a][0]}", ov_) for a, ov_ in
+              ((a, ((R12.get("leave_one_axis_out") or {}).get(a) or {}).get("overlap_top_with_main")) for a in axes)]
+    robust += [("모든 동률 폭 × 0.5", ov("all_widths_x0.5")), ("모든 동률 폭 × 2", ov("all_widths_x2")),
+               ("⑤ 부호 있는 판 (기록만)", ov("signed_dV_Xin_Li_기록만")), ("기체 0 판", ov("gas0")),
+               ("⑤ 원자 부피 판", ov("atom_volume")), ("+U 산물 MP 갭 판", ov("plusU_by_gap"))]
+    summ = r.get("summary") or {}
+    return {"ok": True, "date": clo.get("date"), "status": clo.get("status"), "decision": CASCADE_B2_DECISION,
+            "readout": rel, "readout_sha16": got, "csv": rel.replace(".json", "_designs.csv"),
+            "axes": [{"key": a, "label": CASCADE_B2_LABELS[a][0], "unit": CASCADE_B2_LABELS[a][1], "w": W[a],
+                      "dir": DIR[a], "relative": a in CASCADE_B2_RELATIVE} for a in axes],
+            "n_designs": summ.get("n_designs"), "groups": summ.get("groups") or {},
+            "n_F_win": summ.get("n_F_win"), "n_F_win_unknown": summ.get("n_F_win_unknown"),
+            "line_A": rk.get("line_A_length"), "line_B": rk.get("line_B_length"),
+            "selection": rk.get("selection") or [], "top": rk.get("top") or [],
+            "top_share_pct": rk.get("top_share_of_line_pct"),
+            "dft_resolve": [c.get("species", [None])[0] for c in (rk.get("dft_resolve_candidates") or [])],
+            "robust": [{"what": k, "overlap": v} for k, v in robust],
+            "selection_core": (conf.get("R12_강건성 (기록만)") or {}).get("선택_핵 (모든 판의 선택에 남음)") or [],
+            "allowed": clo.get("2_허용_서술_이대로만") or [], "forbidden": clo.get("3_⛔_금지_서술") or [],
+            "axis_admission": conf.get("축_자격 (G4 · G7 · G8)") or {},
+            "rows": rows}
+
+
 def cascade_rows_for(dopant: str) -> dict:
     """특정 도펀트(예: Nd2O3)의 캐스케이드 행만 추림 — 조성 심층페이지용."""
     if not dopant:

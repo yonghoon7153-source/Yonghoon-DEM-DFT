@@ -1,0 +1,192 @@
+{# ══ 다축 스크리닝 묶음 2 (Materials Project 닫힌계 · 2026-11-11 닫힘) — 원소별 효과 · 두 축 Pareto 그림 ══════════
+   사용자 2026-11-11 '원소의 효과 같은 걸 cascade 페이지에 pareto 나 그런 걸 활용해서 보여주면'.
+   숫자는 data.cascade_bundle2() 하나에서만 온다 — 마감 결정 active · 판독 sha16 = 마감 기록 · 막는 게이트 없음.
+   하나라도 어긋나면 사유만 (표 · 그림 · 숫자 0 개 — 없는 값을 0 으로 그리지 않는다).
+   ⛔ 절대값 (호스트 ΔV/V · MP 갭 · 반응 에너지) 은 싣지 않는다 — 호스트 대비 δ · s_V · δφ 와 f_ins (8 점 비율) 만.
+   ⛔ 두 축 그림의 앞줄은 Pareto 층이 아니다 — 층은 다섯 축 순위 벡터에서 정했다 (그림 아래에 적는다).
+   ⛔ 표식 (◆ 선택 · ★ 상위 10) 은 텍스트 노드다 — CSS content 로 그리지 않는다 (복사 · 인쇄에 남아야 한다). #}
+{% macro b2v(a, v) %}{% if v is none %}<span class="b2-unk">모름</span>{% elif a == 'f_ins' %}{{ (v * 8)|round|int }}/8{% elif a in ('d_ncm', 'd_li') %}{{ '%+.1f'|format(v) }}{% elif a == 'sv_ncm' %}{{ '%+.2f'|format(v) }}{% else %}{{ '%+.3f'|format(v) }}{% endif %}{% endmacro %}
+<style>
+  .b2-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:8px;margin:10px 0}
+  .b2-tile{border:1px solid var(--border);border-radius:10px;padding:8px 10px}
+  .b2-tile .n{font-size:1.3rem;font-weight:800;line-height:1.15}
+  .b2-tile .t{font-size:.74rem;color:var(--muted);margin-top:2px;line-height:1.35}
+  .b2-ctl{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.84rem;margin:8px 0 4px}
+  .b2-ctl select{font:inherit;padding:2px 6px;max-width:220px}
+  .b2-wrap{max-height:560px;overflow:auto;border:1px solid var(--border);border-radius:8px}
+  table.b2t{border-collapse:collapse;font-size:.8rem;width:100%}
+  table.b2t th,table.b2t td{border-bottom:1px solid var(--border);padding:4px 7px;text-align:center;white-space:nowrap}
+  table.b2t th{position:sticky;top:0;background:var(--card);font-weight:700;z-index:1;line-height:1.25}
+  table.b2t th .u{display:block;font-weight:400;font-size:.68rem;color:var(--muted)}
+  table.b2t td.sp{text-align:left;font-weight:600}
+  table.b2t td.fm{text-align:left;font-size:.7rem;color:var(--muted)}
+  .b2-better{background:color-mix(in srgb,var(--green) 20%,var(--card))}
+  .b2-worse{background:color-mix(in srgb,var(--red) 17%,var(--card))}
+  .b2-unk{color:var(--muted);font-style:italic}
+  .b2-r{font-size:.64rem;color:var(--muted);margin-left:3px}
+  .b2-weak{box-shadow:inset 0 0 0 2px var(--amber)}
+  .b2-mk{color:var(--teal);font-weight:800}
+  .b2-top{color:var(--amber);font-weight:800}
+  tr.b2-grpB{display:none}
+  .b2-showB tr.b2-grpB{display:table-row}
+  tr.b2-split td{background:var(--bg);font-size:.72rem;color:var(--muted);text-align:left;font-weight:700}
+  .b2-legend span{display:inline-block;padding:1px 8px;border-radius:6px;margin-right:6px;font-size:.74rem}
+</style>
+<div class="card" id="bundle2" style="border-left:4px solid var(--teal)">
+  <h3 style="margin-top:0">🧭 최신 — 다축 스크리닝 묶음 2 · 원소별 효과
+    <span class="muted" style="font-size:.72rem;font-weight:400">Materials Project 닫힌계 · UMA 아님 · 우리 DFT 아님</span></h3>
+  {% if not b2 or not b2.ok %}
+  <div class="callout cal-danger" style="font-size:.86rem" id="b2-gate"><b>⛔ 이 패널은 숫자를 싣지 않는다</b> — {{ b2.why if b2 else 'cascade_bundle2() 결과가 없다' }}</div>
+  {% else %}
+  <p style="font-size:.9rem;line-height:1.65;margin:4px 0">
+    <b>Materials Project (2026.09.28) 닫힌계 hull 반응식</b>으로 91 개 도핑 설계를 다섯 축에서 호스트 Li₆PS₅Cl 과 비교했다.
+    칸 색은 호스트보다 <b>동률 폭을 넘게 나으면 초록 · 넘게 나쁘면 빨강 · 그 안이면 같음</b> 이다 (④ 는 호스트 값이 없어 색이 없다).
+    순위는 가중치 없이 <b>가장 나쁜 축 기준 (leximin)</b> 이고, <span class="b2-mk">◆</span> 선택은 위험 표시가 없는 무리 A 줄의 <b>Pareto 층 1</b> 이다 —
+    <b>DFT 확인 후보이지 결론이 아니다.</b>
+  </p>
+  <div class="b2-tiles">
+    <div class="b2-tile"><div class="n">{{ b2.n_designs }}</div><div class="t">설계 (전구체 → 도핑 조성)</div></div>
+    <div class="b2-tile"><div class="n">{{ b2.groups.get('A') }} · {{ b2.groups.get('B') }} · {{ b2.groups.get('?') }}</div>
+      <div class="t">무리 A (위험 표시 없음) · B (표시 있음) · 표시 모름</div></div>
+    <div class="b2-tile"><div class="n">{{ b2.line_A }}</div><div class="t">순위 줄 A (다섯 축 값이 다 있는 A · 같은 조성은 한 줄)</div></div>
+    <div class="b2-tile"><div class="n">{{ b2.selection|length }}</div><div class="t">◆ 선택 = 줄 A 의 Pareto 층 1</div></div>
+    <div class="b2-tile"><div class="n">10</div><div class="t">★ 약점 순위 상위 10 (줄의 {{ '%.0f'|format(b2.top_share_pct) if b2.top_share_pct is number else '—' }} %)</div></div>
+    <div class="b2-tile"><div class="n" style="font-size:1.05rem">{{ b2.selection_core|join(' · ') or '—' }}</div>
+      <div class="t">선택 핵 — 강건성 판 전부에서 선택에 남음</div></div>
+  </div>
+
+  <h4 style="margin:12px 0 2px;font-size:.92rem">두 축 그림 — 축을 골라 원소의 효과를 본다</h4>
+  <div class="b2-ctl">
+    <label>X <select id="b2x">{% for a in b2.axes %}<option value="{{ a.key }}"{% if loop.index0 == 0 %} selected{% endif %}>{{ a.label }}</option>{% endfor %}</select></label>
+    <label>Y <select id="b2y">{% for a in b2.axes %}<option value="{{ a.key }}"{% if loop.index0 == 1 %} selected{% endif %}>{{ a.label }}</option>{% endfor %}</select></label>
+    <label><input type="checkbox" id="b2showB"> 무리 B 도 그리기</label>
+  </div>
+  <div id="b2plot" style="height:500px"></div>
+  <div class="muted" id="b2miss" style="font-size:.76rem;min-height:1em"></div>
+  <p class="muted" style="font-size:.76rem;margin:2px 0 10px;line-height:1.5">
+    ⚠ 두 축 그림의 앞줄은 Pareto 층이 아니다 — 층은 다섯 축 순위 벡터에서 정했다. 회색 띠 = 호스트와 동률 폭 안 · 점선 = 호스트 (0).
+    ⑤ 는 작을수록 좋아서 뒤집어 그렸다 — 어느 축이든 <b>오른쪽 · 위가 좋은 쪽</b>이다. 그림 축 이름은 영어다 (그림 글꼴).</p>
+
+  <h4 style="margin:12px 0 4px;font-size:.92rem">원소별 효과 표 — 호스트 대비 · 순위 (r) · 약점 축 (노란 테두리)</h4>
+  <div class="b2-legend muted" style="margin:0 0 6px"><span class="b2-better">호스트보다 넘게 나음</span><span>동률 폭 안</span><span class="b2-worse">호스트보다 넘게 나쁨</span><span class="b2-weak">약점 축</span>
+    <button type="button" class="btn" style="font-size:.74rem;padding:2px 8px" onclick="var w=document.getElementById('b2wrap');w.classList.toggle('b2-showB');this.textContent=w.classList.contains('b2-showB')?'무리 B 숨기기':'무리 B ({{ b2.groups.get('B') }}) 보이기';">무리 B ({{ b2.groups.get('B') }}) 보이기</button></div>
+  <div class="b2-wrap" id="b2wrap"><table class="b2t" id="b2table"><thead><tr>
+    <th>설계</th><th>도핑 조성</th><th>무리</th>
+    {% for a in b2.axes %}<th>{{ a.label }}<span class="u">{{ a.unit }} · {{ '좋음 ↑' if a.dir == 'larger' else '좋음 ↓' }} · w {{ a.w }}</span></th>{% endfor %}
+    <th>약점 축</th><th>자리<span class="u">leximin</span></th><th>층</th><th>표시</th></tr></thead><tbody>
+  {% set ns = namespace(prev=None) %}
+  {% for r in b2.rows %}
+    {% set sect = ('A' if r.group == 'A' and r.in_line else ('A*' if r.group == 'A' else r.group)) %}
+    {% if sect != ns.prev %}
+      <tr class="b2-split{{ ' b2-grpB' if sect == 'B' else '' }}"><td colspan="{{ 7 + b2.axes|length }}">{% if sect == 'A' %}무리 A · 순위 줄 (leximin 자리 순){% elif sect == 'A*' %}무리 A · 축 값이 모름이라 줄 밖 (구간만){% elif sect == '?' %}표시 모름 — 줄 밖 · DFT 로 모름을 풀 후보 (구간: 낙관–비관 자리){% else %}무리 B — 위험 표시 있음 (선택 밖 · 줄 B 따로){% endif %}</td></tr>
+      {% set ns.prev = sect %}
+    {% endif %}
+    <tr class="{{ 'b2-grpB' if r.group == 'B' else '' }}" data-b2-species="{{ r.species }}">
+      <td class="sp">{% if r.selected %}<span class="b2-mk" title="선택 (Pareto 층 1)">◆</span> {% endif %}{% if r.top %}<span class="b2-top" title="약점 순위 상위 10">★</span> {% endif %}{{ r.species }}</td>
+      <td class="fm">{{ r.formula }}</td>
+      <td>{{ r.group }}</td>
+      {% for a in b2.axes %}{% set c = r.cls.get(a.key) %}<td class="{{ 'b2-' ~ c if c in ('better', 'worse') else '' }}{{ ' b2-weak' if a.key in r.weakest else '' }}"{% if r.unknown_why.get(a.key) %} title="{{ r.unknown_why.get(a.key)|plain }}"{% endif %}>{{ b2v(a.key, r['values'].get(a.key)) }}{% if r.in_line and r.ranks.get(a.key) is not none %}<span class="b2-r">r{{ r.ranks.get(a.key) }}</span>{% endif %}</td>{% endfor %}
+      <td>{{ r.weakest|join(', ') if r.weakest else '—' }}</td>
+      <td>{% if r.in_line %}{{ r.position }}{% elif r.interval %}{{ r.interval.opt if r.interval.opt is not none else '—' }}–{{ r.interval.pess if r.interval.pess is not none else '—' }}{% else %}—{% endif %}</td>
+      <td>{{ r.layer if r.in_line and r.layer is not none else '—' }}</td>
+      <td style="font-size:.68rem;text-align:left">{{ r.flags|join(' · ') }}{% if r.flags_unknown %}{{ ' · ' if r.flags else '' }}모름: {{ r.flags_unknown|join(' · ') }}{% endif %}</td>
+    </tr>
+  {% endfor %}
+  </tbody></table></div>
+  <p class="muted" style="font-size:.74rem;margin:4px 0 0;line-height:1.5">값: ① ③ = 반응 에너지 δ (설계 − 호스트) · ⑤ = |ΔV/V| 차 (설계 − 호스트, %p) · ⑥ = 넓은 갭 산물 부피 분율 차 · ④ = 8 전압 점 중 도펀트가 넓은 갭 산물로 가는 점의 수.
+    r = 그 축 순위 (줄 안 · 동률 폭 안 차이로도 한 칸 갈린다 — 값 크기로 읽지 않는다). 약점 축의 '①'… 는 판독 파일 열쇠 그대로 (d_ncm · d_li · sv_ncm · dphi_li · f_ins).</p>
+
+  <details style="margin-top:10px">
+    <summary style="cursor:pointer;font-weight:700;font-size:.88rem">축 자격 · 강건성 · 말할 수 있는 것 / 없는 것 · 출처</summary>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:8px;font-size:.82rem;line-height:1.55">
+      <div><b>축 자격 (G4 · G7 · G8)</b><ul style="margin:4px 0 0;padding-left:18px">
+        {% for k, v in b2.axis_admission.items() %}<li><b>{{ k }}</b> — {{ v }}</li>{% endfor %}</ul></div>
+      <div><b>강건성 (R12 · 기록만)</b> — 주 판 상위 10 과 겹치는 수
+        <table class="b2t" style="margin-top:4px"><tbody>{% for x in b2.robust %}<tr><td style="text-align:left">{{ x.what }}</td><td>{{ x.overlap if x.overlap is not none else '—' }}/10</td></tr>{% endfor %}</tbody></table>
+        <div class="muted" style="margin-top:4px">표시 모름 (DFT 로 모름을 풀 후보): {{ b2.dft_resolve|join(' · ') or '—' }}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:10px;font-size:.82rem;line-height:1.55">
+      <div style="border:1px solid var(--teal);border-radius:8px;padding:8px 12px"><b style="color:var(--teal)">✅ 이대로만 말한다 (마감 기록)</b>
+        <ul style="margin:4px 0 0;padding-left:18px">{% for s in b2.allowed %}<li>{{ s }}</li>{% endfor %}</ul></div>
+      <div style="border:1px solid var(--red);border-radius:8px;padding:8px 12px"><b style="color:var(--red)">⛔ 말하지 않는다</b>
+        <ul style="margin:4px 0 0;padding-left:18px">{% for s in b2.forbidden %}<li>{{ s }}</li>{% endfor %}</ul></div>
+    </div>
+    <p class="muted" style="font-size:.74rem;margin:8px 0 0">출처: <span class="mono">{{ b2.readout }}</span> (sha16 {{ b2.readout_sha16 }} = 마감 기록) ·
+      Origin 용 CSV <span class="mono">{{ b2.csv }}</span> · 결정 <span class="mono">{{ b2.decision }}</span> · {{ b2.status }}</p>
+  </details>
+  <script>
+  (function(){
+    var B2 = {{ {'axes': b2.axes, 'rows': b2.rows}|tojson }};
+    var EN = {d_ncm:'(1) NCM interface: δ vs host [meV/atom]', d_li:'(3) Li metal: δ vs host [meV/atom]',
+              sv_ncm:'(5) NCM decomposition |ΔV/V| vs host [%p]', dphi_li:'(6) Li-side wide-gap fraction vs host',
+              f_ins:'(4) window: wide-gap fraction of 8 points'};
+    var AX = {}; B2.axes.forEach(function(a){ AX[a.key] = a; });
+    function grp(r){
+      if (r.group === 'A' && r.in_line) return r.selected ? 'sel' : 'A';
+      if (r.group === 'A') return 'Aunk';
+      if (r.group === '?') return 'unk';
+      return 'B';
+    }
+    var STY = {sel: {name:'selection · layer 1', color:'#0d9488', size:13, symbol:'diamond', label:true},
+               A: {name:'group A', color:'#2563eb', size:9, symbol:'circle', label:false},
+               Aunk: {name:'group A, axis unknown', color:'#2563eb', size:9, symbol:'circle-open', label:true},
+               unk: {name:'flag unknown', color:'#d97706', size:10, symbol:'square-open', label:true},
+               B: {name:'group B (flagged)', color:'#9ca3af', size:6, symbol:'circle', label:false}};
+    function nv(v){ return v === null || v === undefined; }
+    function draw(){
+      var xa = document.getElementById('b2x').value, ya = document.getElementById('b2y').value;
+      var showB = document.getElementById('b2showB').checked, traces = [], miss = [];
+      ['B', 'A', 'Aunk', 'unk', 'sel'].forEach(function(g){
+        if (g === 'B' && !showB) return;
+        var ok = B2.rows.filter(function(r){
+          if (grp(r) !== g) return false;
+          if (nv(r.values[xa]) || nv(r.values[ya])) { miss.push(r.species); return false; }
+          return true; });
+        var s = STY[g];
+        traces.push({x: ok.map(function(r){ return r.values[xa]; }), y: ok.map(function(r){ return r.values[ya]; }),
+          text: ok.map(function(r){ return r.species; }), mode: s.label ? 'markers+text' : 'markers',
+          textposition: 'top center', textfont: {size: 10}, type: 'scatter', name: s.name,
+          marker: {color: s.color, size: s.size, symbol: s.symbol, line: {width: 1, color: s.color}},
+          customdata: ok.map(function(r){ return [r.formula, nv(r.layer) ? '-' : r.layer, nv(r.position) ? '-' : r.position,
+                                                  (r.weakest || []).join(', ') || '-', r.group]; }),
+          hovertemplate: '<b>%{text}</b> (%{customdata[0]})<br>group %{customdata[4]} · layer %{customdata[1]} · leximin %{customdata[2]}'
+                         + '<br>weakest: %{customdata[3]}<br>x=%{x:.3g} · y=%{y:.3g}<extra></extra>'});
+      });
+      var shapes = [];
+      [['x', xa], ['y', ya]].forEach(function(p){
+        var a = AX[p[1]]; if (!a || !a.relative) return;
+        var band = p[0] === 'x' ? {type:'rect', xref:'x', yref:'paper', x0:-a.w, x1:a.w, y0:0, y1:1}
+                                : {type:'rect', xref:'paper', yref:'y', x0:0, x1:1, y0:-a.w, y1:a.w};
+        band.fillcolor = 'rgba(148,163,184,0.18)'; band.line = {width: 0}; band.layer = 'below'; shapes.push(band);
+        var ln = p[0] === 'x' ? {type:'line', xref:'x', yref:'paper', x0:0, x1:0, y0:0, y1:1}
+                              : {type:'line', xref:'paper', yref:'y', x0:0, x1:1, y0:0, y1:0};
+        ln.line = {dash:'dot', width:1, color:'rgba(100,116,139,0.85)'}; shapes.push(ln);
+      });
+      function axc(k, arrow){
+        var a = AX[k], rev = a && a.dir === 'smaller';
+        return {title: EN[k] + (rev ? '  (reversed · better ' + arrow + ')' : '  (better ' + arrow + ')'),
+                autorange: rev ? 'reversed' : true, zeroline: false};
+      }
+      Plotly.newPlot('b2plot', traces, Object.assign({margin:{t:10, r:14, b:60, l:66}, font: plotlyFont(),
+        xaxis: axc(xa, '→'), yaxis: axc(ya, '↑'), shapes: shapes, legend: {orientation:'h', y:-0.22, x:0, font:{size:11}}, hovermode:'closest'},
+        plotlyBG()), {responsive:true, displaylogo:false});
+      var m = document.getElementById('b2miss');
+      if (m) m.textContent = miss.length ? ('두 축 중 하나가 모름이라 그림에서 빠진 설계 ' + miss.length + ' 개: ' + miss.join(' · ')) : '';
+    }
+    try {
+      if (window.Plotly) {
+        draw();
+        ['b2x', 'b2y', 'b2showB'].forEach(function(id){ var el = document.getElementById(id); if (el) el.addEventListener('change', draw); });
+        window.addEventListener('themechange', draw);
+      } else {
+        var e = document.getElementById('b2plot');
+        if (e) e.innerHTML = '<span class="muted" style="padding:24px;display:block">Plotly 로드 실패 — 아래 표는 정상이에요.</span>';
+      }
+    } catch (err) {
+      var e2 = document.getElementById('b2plot');
+      if (e2) e2.innerHTML = '<span class="muted" style="padding:24px;display:block">그림을 그리다 멈췄어요 — 아래 표는 정상이에요.</span>';
+    }
+  })();
+  </script>
+  {% endif %}
+</div>
