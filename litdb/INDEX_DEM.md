@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 263편 · 생성 2026-11-11
+> digest 264편 · 생성 2026-11-11
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -56,7 +56,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (57편)
+## 접촉역학 · 소성 (DEM 이론) (58편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -77,6 +77,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
 | `deng2021_mechanical_surface_energy_tester_bond_number` | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester — 분말 단층 (≤ 20 mg) 을 ⌀40 mm 원판에 뿌려 떨어뜨리고, 멈출 때의 감속도와 그때 떨어져 나간 질량 분율을 잰다 · "Bond 수"  | experiment (drop-impact detachment "mechanical surface energ | 2026-10-13 | 🖼 22 |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
+| `doux2020_pressure_effects_sulfide_se_jmca` | 냉간 성형압 50–370 MPa ↔ 순수 Li₆PS₅Cl (NEI) 펠릿의 상대밀도 · 이온전도도와 작동 적층압 2–70 MPa ↔ 전극 접촉 — densification 은 250 MPa 위에서 둔해지고 (상대밀도 68.3 → 75.4 → ≈77 % · σ 0.99 → 2.06 → 2.28 mS/cm · 진밀도 분모는  | experiment (순수 LPSCl powder 펠릿 cold-press 성형압 · 적층압 load cel | 2026-11-12 | 🖼 36 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
 | `giannis2021_stress_based_multicontact_dem` | 입자 응력텐서 trace 로 모든 접촉을 서로 묶은 non-binary DEM 접촉모델 (MC-stress) — Giannis (Granular Matter 2021) | DEM (contact-LAW theory, non-binary multi-contact) | 2026-08-25 | — |
 | `gonzalez2012_nonlocal_contact_confined_granular` | 비국소(nonlocal) 접촉 정식화 — 구속된 입상계에서 "접촉은 서로 독립"이라는 Hertz 가정을 깨다 — Gonzalez & Cuitiño (J. Mech. Phys. Solids 2012) | DEM 접촉이론 (해석적 비국소 탄성 contact formulation + 자체 FEM 검증 + Tatar | 2026-08-25 | — |

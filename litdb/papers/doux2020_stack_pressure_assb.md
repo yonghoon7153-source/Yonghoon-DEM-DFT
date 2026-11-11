@@ -5,6 +5,8 @@
 > ⓘ **정본 승격 2026-07-28** — 원본 `claude/stoic-knuth-NObVQ:docs/lit_doux2020_stack_pressure_assb.md`.
 > 단일-서랍 규칙(CLAUDE.md)에 따라 이관 — 그전까지 DFT webapp 목록에 안 떴다.
 
+> 🔗 **관련 카드**: [`doux2020_pressure_effects_sulfide_se_jmca`](doux2020_pressure_effects_sulfide_se_jmca.md) — 같은 1저자 · 같은 해의 **다른 논문** (*J. Mater. Chem. A* 8, 5049–5055 · 같은 NEI LPSCl 펠릿의 성형압 50–370 MPa ↔ 상대밀도 68.3–≈77 % · σ 0.99–2.28 mS/cm, 적층압 2–70 MPa ↔ Ti · 탄소 전극 접촉) — "Doux 2020" 인용은 권 · 쪽으로 가른다.
+
 
 
 
