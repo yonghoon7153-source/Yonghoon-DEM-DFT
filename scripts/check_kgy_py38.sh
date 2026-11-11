@@ -2,7 +2,7 @@
 # kgy 실행 환경 판에서 R 경로 시험 — kgy `~/dem-venv` = Python 3.8.10 · numpy 1.24.4 · scipy 1.10.1 (1저자 10-24 출력).
 # 개발 · 게이트 (3.11) 에서만 돌던 코드가 kgy 에서 멈춘 일 (`SELF-132` · 08-16 · 08-25 에 이어 세 번째) 을 다시 막는다 — 1저자 10-24 Q2 (가).
 # 인터프리터 = $KGY_PY38 (기본 = `uv python find 3.8`) · 없거나 판이 다르면 실패한다 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh`.
-# 묶음 = S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 (실제 러너 · payload) · 증서 · ⑥ 탐침 (판독기 · 감시 셸 · 블록 · 11-10) — 증거 `docs/reviews/rint2_py38_compat_evidence_20261024/`.
+# 묶음 = S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 (실제 러너 · payload) · 12 단위 끝-끝 (11-11) · 증서 · ⑥ 탐침 (판독기 · 감시 셸 · 블록 · 11-10) — 증거 `docs/reviews/rint2_py38_compat_evidence_20261024/`.
 set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PY="${KGY_PY38:-$(uv python find 3.8 2>/dev/null || true)}"
@@ -53,9 +53,10 @@ run ca_ext_b6 scripts/test_ca_ext_b6.py
 run ca_ext_runner scripts/test_ca_ext_runner.py
 run rint_r_chain scripts/test_rint_r_chain.py
 run rint_r_chain_e2e scripts/test_rint_r_chain_e2e.py
+run rint_r_chain_e2e12 scripts/test_rint_r_chain_e2e12.py
 run step3_target_cert scripts/test_step3_target_cert.py
 run step3_conv_cert scripts/test_step3_conv_cert.py
 run ca_s0_census scripts/test_ca_s0_census.py
 run probe6 docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py
 if [ "$fail" -ne 0 ]; then echo "✗ kgy 판 R 경로 시험 실패 (로그 $LOG)"; exit 1; fi
-echo "✓ kgy 판 R 경로 시험 12 묶음 통과"
+echo "✓ kgy 판 R 경로 시험 13 묶음 통과"

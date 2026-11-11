@@ -1,0 +1,473 @@
+GBL=kgy_busy
+GBD="$HOME/gpubench_${GBL}_$(date -u +%Y%m%dT%H%M%SZ)"; GBOK=0; mkdir "$GBD" 2>/dev/null && GBOK=1 && cat > "$GBD/gpu_bench_cg.py" <<'GPU_BENCH_CG_EOF'
+# -*- coding: utf-8 -*-
+"""Synthetic GPU CG benchmark (no kit, no sigma) - draft 2026-11-11.
+
+Times the SAME library calls the production solve uses (scripts/step3_sigma.py _solve_cg, GPU path):
+    Lg = cupyx.scipy.sparse.csr_matrix(L.astype(float64))
+    bg = cupy.asarray(b, dtype=float64)
+    Mg = cupyx.scipy.sparse.diags(1.0 / cupy.asarray(diag))          (Jacobi)
+    cupyx.scipy.sparse.linalg.cg(Lg, bg, tol=..., maxiter=..., M=Mg, callback=counter)
+on a synthetic SPD system: n_side^3 grid (default 298^3 = 26,463,592 unknowns), 6 neighbours per row,
+random positive edge conductances (log-uniform 1e-3..1e3), plate couplings on the two z end layers.
+tol = 0 so the solver runs a FIXED number of iterations (no convergence, no result of interest).
+
+Variants timed (per iteration):
+    A  production form   : M = diags(1/diag)                          (DIA matrix, as the production code builds it)
+    B  same numbers, CSR : M = diags(1/diag).tocsr()                  (NOT in the production code - measured only)
+    C  same numbers, op  : M = LinearOperator(matvec: (1/diag) * r)   (NOT in the production code - measured only)
+then A, B and C are run again from the same start for the same short count and the iterates are compared
+(identical or not), plus single-operation timings (L matvec, the preconditioner applies, one vector multiply).
+
+Writes only inside --out (a new folder made by the caller); the block also points CuPy's compiled-kernel cache into it.
+No kit, no repository file, no network.
+Python 3.8 compatible.  --backend numpy = tiny CPU flow check (scipy), not a benchmark.
+"""
+import argparse
+import json
+import os
+import subprocess
+import sys
+import threading
+import time
+
+import numpy as np
+import scipy
+import scipy.sparse as sparse
+
+SCHEMA = 'gpu-bench-cg-v2'
+STATE = {'res': None, 'save': None, 'lf': None}
+
+
+def fold(text):
+    """Error text without the home path (no account name on screen or in the files)."""
+    home = os.path.expanduser('~')
+    t = str(text)
+    return (t.replace(home, '~') if len(home) > 1 else t)[:300]
+LABEL_OK = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-'
+
+
+def log(msg, fh=None):
+    line = '[gb] ' + msg
+    print(line, flush=True)
+    if fh is not None:
+        fh.write(line + '\n')
+        fh.flush()
+
+
+def smi_query(fields):
+    """nvidia-smi one-line query of GPU 0 -> list of strings, or None when the tool is missing or fails."""
+    try:
+        r = subprocess.run(['nvidia-smi', '--query-gpu=' + fields, '--format=csv,noheader,nounits', '-i', '0'],
+                           stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, universal_newlines=True, timeout=20)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if r.returncode:
+        return None
+    rows = [x.strip() for x in r.stdout.strip().splitlines() if x.strip()]
+    if not rows:
+        return None
+    return [c.strip() for c in rows[0].split(',')]
+
+
+def smi_sample():
+    v = smi_query('utilization.gpu,memory.used,memory.total')
+    if v is None or len(v) < 3:
+        return None
+    try:
+        return {'t': round(time.time(), 1), 'util_pct': int(float(v[0])), 'used_mib': int(float(v[1])), 'total_mib': int(float(v[2]))}
+    except ValueError:
+        return None
+
+
+class Sampler(threading.Thread):
+    """Background nvidia-smi sampler (every `period` s) tagged with the current phase name."""
+
+    def __init__(self, period, path):
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.period, self.path = period, path
+        self.phase = 'start'
+        self.rows = []
+        self._stop_evt = threading.Event()
+
+    def run(self):
+        with open(self.path, 'w') as fh:
+            fh.write('#epoch\tphase\tgpu_util\tgpu_used_mib\tgpu_total_mib\n')
+            while not self._stop_evt.is_set():
+                s = smi_sample()
+                if s is not None:
+                    s['phase'] = self.phase
+                    self.rows.append(s)
+                    fh.write('%.1f\t%s\t%d\t%d\t%d\n' % (s['t'], self.phase, s['util_pct'], s['used_mib'], s['total_mib']))
+                    fh.flush()
+                self._stop_evt.wait(self.period)
+
+    def stop(self):
+        self._stop_evt.set()
+
+    def summary(self):
+        out = {}
+        for r in self.rows:
+            d = out.setdefault(r['phase'], {'n': 0, 'util_sum': 0, 'util_min': 101, 'util_max': -1, 'used_min': None, 'used_max': None})
+            d['n'] += 1
+            d['util_sum'] += r['util_pct']
+            d['util_min'] = min(d['util_min'], r['util_pct'])
+            d['util_max'] = max(d['util_max'], r['util_pct'])
+            d['used_min'] = r['used_mib'] if d['used_min'] is None else min(d['used_min'], r['used_mib'])
+            d['used_max'] = r['used_mib'] if d['used_max'] is None else max(d['used_max'], r['used_mib'])
+        for d in out.values():
+            d['util_mean'] = round(d.pop('util_sum') / float(d['n']), 1)
+        return out
+
+
+def mem_available_kb():
+    try:
+        with open('/proc/meminfo') as fh:
+            for ln in fh:
+                if ln.startswith('MemAvailable:'):
+                    return int(ln.split()[1])
+    except (OSError, ValueError):
+        pass
+    return None
+
+
+def build_system(n_side, seed):
+    """Synthetic SPD graph Laplacian on an n_side^3 grid (index = (ix*ny + iy)*nz + iz) + plate couplings.
+    Returns scipy CSR L (float64), rhs b, diagonal."""
+    nx = ny = nz = int(n_side)
+    n = nx * ny * nz
+    rng = np.random.default_rng(seed)
+
+    def cond(k):
+        return np.power(10.0, rng.uniform(-3.0, 3.0, size=k))
+
+    gz = cond(n - 1)
+    gz[(np.arange(n - 1, dtype=np.int64) % nz) == nz - 1] = 0.0            # no edge across a column end
+    gy = cond(n - nz)
+    gy[((np.arange(n - nz, dtype=np.int64) // nz) % ny) == ny - 1] = 0.0    # no edge across a slab end
+    gx = cond(n - ny * nz)
+    diag = np.zeros(n, np.float64)
+    diag[:-1] += gz
+    diag[1:] += gz
+    diag[:n - nz] += gy
+    diag[nz:] += gy
+    diag[:n - ny * nz] += gx
+    diag[ny * nz:] += gx
+    bot = np.arange(0, n, nz, dtype=np.int64)
+    top = bot + (nz - 1)
+    gb, gt = cond(nx * ny), cond(nx * ny)
+    diag[bot] += gb
+    diag[top] += gt
+    b = np.zeros(n, np.float64)
+    b[bot] = gb                                                            # bottom plate at potential 1, top plate at 0
+    L = sparse.diags([diag, -gz, -gz, -gy, -gy, -gx, -gx], [0, 1, -1, nz, -nz, ny * nz, -ny * nz],
+                     shape=(n, n), format='csr', dtype=np.float64)
+    L.sum_duplicates()                                     # canonical CSR (sorted columns, no duplicates) as the production coo -> tocsr gives
+    return L, b, diag
+
+
+def timed_cg(cg_fn, sync, A, b, M, maxiter):
+    """Fixed-iteration CG (tol 0) with an iteration counter callback, as the production call does.  -> (x, info, iters, seconds)."""
+    cnt = [0]
+
+    def tick(_xk):
+        cnt[0] += 1
+
+    sync()
+    t0 = time.perf_counter()
+    try:
+        x, info = cg_fn(A, b, tol=0.0, maxiter=maxiter, M=M, callback=tick)
+    except TypeError:                                      # newer libraries renamed tol -> rtol / atol (same handling as production)
+        cnt[0] = 0
+        x, info = cg_fn(A, b, rtol=0.0, atol=0.0, maxiter=maxiter, M=M, callback=tick)
+    sync()
+    return x, int(info), int(cnt[0]), time.perf_counter() - t0
+
+
+def timed_op(fn, sync, reps):
+    y = fn()                                               # first call (kernel compile, handles) is not timed
+    sync()
+    t0 = time.perf_counter()
+    for _ in range(reps):
+        y = fn()
+    sync()
+    del y
+    return (time.perf_counter() - t0) / float(reps)
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--label', required=True, help='short run label, e.g. kgy_busy / kgy_alone / gabia (letters, digits, _ and - only)')
+    ap.add_argument('--out', required=True, help='existing new folder; everything is written here')
+    ap.add_argument('--backend', default='cupy', choices=('cupy', 'numpy'))
+    ap.add_argument('--n-side', type=int, default=298)
+    ap.add_argument('--iters', type=int, default=2000, help='fixed iterations of variant A (cut down to fit --budget-s)')
+    ap.add_argument('--iters-b', type=int, default=500, help='fixed iterations of variants B and C each (0 = skip B, C and the compare)')
+    ap.add_argument('--compare-iters', type=int, default=200, help='A and B from the same start for this many iterations -> identical or not')
+    ap.add_argument('--budget-s', type=float, default=240.0, help='time budget of the variant A timed solve')
+    ap.add_argument('--seed', type=int, default=20261111)
+    ap.add_argument('--min-free-gpu-mib', type=int, default=14000, help='stop before any big allocation when less GPU memory is free')
+    ap.add_argument('--gpu-cap-gib', type=float, default=12.0, help='hard limit of the memory this run may take on the GPU (CuPy pool limit)')
+    ap.add_argument('--min-avail-host-gb', type=float, default=16.0)
+    a = ap.parse_args(argv)
+    if not a.label or any(ch not in LABEL_OK for ch in a.label):
+        print('[gb] STOP: label must use letters, digits, _ and - only (nothing written)')
+        return 2
+    if not os.path.isdir(a.out):
+        print('[gb] STOP: --out folder does not exist (nothing written)')
+        return 2
+    if os.listdir(a.out) not in ([], ['gpu_bench_cg.py']):
+        print('[gb] STOP: --out folder is not new (it holds other files) - nothing written')
+        return 2
+    res_path = os.path.join(a.out, 'bench.json')
+    lf = open(os.path.join(a.out, 'bench.log'), 'w')
+    res = {'schema': SCHEMA, 'label': a.label, 'backend': a.backend, 'n_side': a.n_side, 'seed': a.seed, 'status': 'started',
+           'utc_start': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+           'env': {'python': '%d.%d.%d' % tuple(sys.version_info[:3]), 'numpy': np.__version__, 'scipy': scipy.__version__},
+           'note': 'synthetic system, fixed iterations, tol 0 - timing only (no kit, no sigma)'}
+
+    def save():
+        tmp = res_path + '.part'
+        with open(tmp, 'w') as fh:
+            json.dump(res, fh, indent=1, sort_keys=True)
+            fh.write('\n')
+        os.replace(tmp, res_path)
+
+    save()
+    STATE.update(res=res, save=save, lf=lf)
+    gpu = a.backend == 'cupy'
+    sampler = None
+    if gpu:
+        ident = smi_query('name,driver_version,memory.total')
+        res['env']['gpu'] = None if ident is None else {'name': ident[0], 'driver': ident[1], 'mem_total_mib': ident[2]}
+        pre = []
+        for _k in range(5):                                # five samples, one second apart (the other load moves)
+            pre.append(smi_sample())
+            time.sleep(1.0)
+        res['gpu_before_samples'] = pre
+        s0 = pre[-1]
+        res['gpu_before'] = s0
+        log('GPU before (5 samples, util pct): %s; last: %s' % ([None if p is None else p['util_pct'] for p in pre], s0), lf)
+        if s0 is not None and s0['total_mib'] - s0['used_mib'] < a.min_free_gpu_mib:
+            res['status'] = 'stopped_gpu_memory'
+            save()
+            log('STOP: free GPU memory %d MiB < %d MiB (no GPU allocation made)' % (s0['total_mib'] - s0['used_mib'], a.min_free_gpu_mib), lf)
+            return 2
+        mk = mem_available_kb()
+        res['host_mem_available_kb_before'] = mk
+        if mk is not None and mk < a.min_avail_host_gb * 1048576.0:
+            res['status'] = 'stopped_host_memory'
+            save()
+            log('STOP: host MemAvailable %.1f GB < %.1f GB (nothing built)' % (mk / 1048576.0, a.min_avail_host_gb), lf)
+            return 2
+        import cupy as cp                                  # before the host build: a missing or broken CuPy stops here, in seconds
+        free_b, total_b = cp.cuda.Device().mem_info        # CuPy's own number (bytes); also covers a missing nvidia-smi
+        res['gpu_mem_info_before_mib'] = {'free': int(free_b // 1048576), 'total': int(total_b // 1048576)}
+        if free_b // 1048576 < a.min_free_gpu_mib:
+            res['status'] = 'stopped_gpu_memory'
+            save()
+            log('STOP: free GPU memory %d MiB < %d MiB (only the CUDA context was made)' % (free_b // 1048576, a.min_free_gpu_mib), lf)
+            return 2
+        cap_b = int(a.gpu_cap_gib * 1073741824)
+        cp.get_default_memory_pool().set_limit(size=cap_b)  # we fail ourselves before we can crowd another process out
+        res['gpu_cap_mib'] = int(cap_b // 1048576)
+        log('GPU free %d MiB of %d MiB; this run is capped at %d MiB' % (free_b // 1048576, total_b // 1048576, cap_b // 1048576), lf)
+        sampler = Sampler(5.0, os.path.join(a.out, 'gpu_samples.tsv'))
+        sampler.start()
+    # ---- host build (CPU) ----
+    if sampler is not None:
+        sampler.phase = 'build_host'
+    t0 = time.perf_counter()
+    L, b, diag = build_system(a.n_side, a.seed)
+    res['n'] = int(L.shape[0])
+    res['nnz'] = int(L.nnz)
+    res['build_host_s'] = round(time.perf_counter() - t0, 2)
+    log('built: n %d, nnz %d (%.2f per row) in %.1f s (host, one thread mostly)' % (res['n'], res['nnz'], res['nnz'] / float(res['n']),
+                                                                                    res['build_host_s']), lf)
+    save()
+    # ---- backend objects (the production calls) ----
+    if gpu:
+        import cupyx
+        import cupyx.scipy.sparse as cxs
+        from cupyx.scipy.sparse.linalg import cg as cg_fn
+        res['env']['cupy'] = cp.__version__
+        try:
+            res['env']['cuda_runtime'] = int(cp.cuda.runtime.runtimeGetVersion())
+        except Exception as e:                             # noqa: BLE001 - version read is optional
+            res['env']['cuda_runtime'] = 'unknown (%s)' % type(e).__name__
+        sync = cp.cuda.Device().synchronize
+        sampler.phase = 'to_gpu'
+        t0 = time.perf_counter()
+        A = cxs.csr_matrix(L.astype(np.float64))
+        bb = cp.asarray(b, dtype=np.float64)
+        dinv = 1.0 / cp.asarray(diag)
+        M_a = cxs.diags(dinv)                              # production form
+        M_b = cxs.diags(dinv).tocsr()                      # same numbers as CSR (measured only)
+        from cupyx.scipy.sparse.linalg import LinearOperator as LinOp
+        M_c = LinOp(A.shape, matvec=lambda r: dinv * r, dtype=np.float64)   # same numbers as a vector multiply (measured only)
+        sync()
+        res['to_gpu_s'] = round(time.perf_counter() - t0, 2)
+        res['precond_class'] = {'A': type(M_a).__name__, 'B': type(M_b).__name__, 'C': 'LinearOperator(vector multiply)'}
+        xp = cp
+        del cupyx
+    else:
+        from scipy.sparse.linalg import cg as cg_fn
+
+        def sync():
+            return None
+
+        A = L
+        bb = b
+        dinv = 1.0 / diag
+        M_a = sparse.diags(dinv)
+        M_b = sparse.diags(dinv).tocsr()
+        from scipy.sparse.linalg import LinearOperator as LinOp
+        M_c = LinOp(A.shape, matvec=lambda r: dinv * r, dtype=np.float64)
+        res['precond_class'] = {'A': type(M_a).__name__, 'B': type(M_b).__name__, 'C': 'LinearOperator(vector multiply)'}
+        xp = np
+    del L
+    save()
+
+    def phase(name):
+        if sampler is not None:
+            sampler.phase = name
+
+    # ---- warm-up (discarded) + plan the iteration count ----
+    phase('warmup')
+    _x, _info, it_w, s_w = timed_cg(cg_fn, sync, A, bb, M_a, 20)
+    _x, _info, it_w, s_w = timed_cg(cg_fn, sync, A, bb, M_a, 20)
+    per_w = s_w / float(max(it_w, 1))
+    iters_a = int(max(50, min(a.iters, a.budget_s / per_w)))
+    res['warmup'] = {'iters': it_w, 'seconds': round(s_w, 3), 'per_iter_s': round(per_w, 6)}
+    res['iters_planned_A'] = iters_a
+    log('warm-up: %.4f s per iteration -> variant A runs %d iterations' % (per_w, iters_a), lf)
+    save()
+    # ---- variant A (production form) ----
+    phase('cg_A')
+    xa, info_a, it_a, s_a = timed_cg(cg_fn, sync, A, bb, M_a, iters_a)
+    res['A'] = {'iters': it_a, 'info': info_a, 'seconds': round(s_a, 3), 'per_iter_s': round(s_a / float(max(it_a, 1)), 6),
+                'finite': bool(xp.isfinite(xa).all())}
+    log('A (production form, %s preconditioner): %d iterations in %.1f s = %.5f s per iteration' % (res['precond_class']['A'], it_a, s_a,
+                                                                                                 res['A']['per_iter_s']), lf)
+    del xa
+    save()
+    # ---- variants B and C (same numbers, other preconditioner forms; not in the production code) ----
+    extra = (('B', M_b, 'CSR preconditioner'), ('C', M_c, 'vector-multiply preconditioner')) if a.iters_b > 0 else ()
+    res['variants_BC'] = 'run' if extra else 'skipped (--iters-b 0)'
+    for tag, Mx, what in extra:
+        try:
+            phase('cg_' + tag)
+            iters_x = int(max(50, min(a.iters_b, 0.25 * a.budget_s / per_w)))
+            timed_cg(cg_fn, sync, A, bb, Mx, 5)            # warm-up (discarded)
+            xx, info_x, it_x, s_x = timed_cg(cg_fn, sync, A, bb, Mx, iters_x)
+            res[tag] = {'iters': it_x, 'info': info_x, 'seconds': round(s_x, 3), 'per_iter_s': round(s_x / float(max(it_x, 1)), 6),
+                        'finite': bool(xp.isfinite(xx).all())}
+            res['A_over_' + tag] = round(res['A']['per_iter_s'] / res[tag]['per_iter_s'], 3) if res[tag]['per_iter_s'] > 0 else None
+            log('%s (%s, measured only): %d iterations in %.1f s = %.5f s per iteration (A / %s = %s)' % (
+                tag, what, it_x, s_x, res[tag]['per_iter_s'], tag, res['A_over_' + tag]), lf)
+            del xx
+        except Exception as e:                             # noqa: BLE001 - optional part; the main number (A) is already saved
+            res[tag + '_error'] = '%s: %s' % (type(e).__name__, fold(e))
+            log('variant %s failed (%s) - variant A result kept' % (tag, type(e).__name__), lf)
+        save()
+    # ---- A, B, C from the same start for the same count: identical iterates or not ----
+    try:
+        if not extra:
+            raise KeyError('skipped')
+        phase('compare')
+        k = int(max(10, min(a.compare_iters, 0.08 * a.budget_s / per_w)))
+        x1, _i1, n1, _s1 = timed_cg(cg_fn, sync, A, bb, M_a, k)
+        cmpd = {'iters': k, 'max_abs_A': float(xp.max(xp.abs(x1)))}
+        x1b, _i1b, n1b, _s1b = timed_cg(cg_fn, sync, A, bb, M_a, k)      # control: variant A again from the same start
+        cmpd['A_vs_A_again'] = {'identical': bool(xp.array_equal(x1, x1b)), 'max_abs_diff': float(xp.max(xp.abs(x1 - x1b))),
+                                'iters': [n1, n1b]}
+        log('compare A vs A again (control) after %d iterations: identical %s, max abs diff %.3e' % (
+            k, cmpd['A_vs_A_again']['identical'], cmpd['A_vs_A_again']['max_abs_diff']), lf)
+        del x1b
+        for tag, Mx in (('B', M_b), ('C', M_c)):
+            x2, _i2, n2, _s2 = timed_cg(cg_fn, sync, A, bb, Mx, k)
+            cmpd['A_vs_' + tag] = {'identical': bool(xp.array_equal(x1, x2)), 'max_abs_diff': float(xp.max(xp.abs(x1 - x2))),
+                                   'iters': [n1, n2]}
+            log('compare A vs %s after %d iterations: identical %s, max abs diff %.3e' % (tag, k, cmpd['A_vs_' + tag]['identical'],
+                                                                                        cmpd['A_vs_' + tag]['max_abs_diff']), lf)
+            del x2
+        res['compare'] = cmpd
+        del x1
+    except KeyError:
+        log('variants B, C and the compare skipped (--iters-b 0)', lf)
+    except Exception as e:                                 # noqa: BLE001 - optional part
+        res['compare_error'] = '%s: %s' % (type(e).__name__, fold(e))
+        log('compare failed (%s) - timing results kept' % type(e).__name__, lf)
+    save()
+    # ---- single operations (optional) ----
+    try:
+        phase('ops')
+        v = bb.copy()
+        ops = {}
+        if gpu:
+            from cupyx.scipy.sparse.linalg import aslinearoperator
+        else:
+            from scipy.sparse.linalg import aslinearoperator
+        la, ma, mb = aslinearoperator(A), aslinearoperator(M_a), aslinearoperator(M_b)
+        ops['L_matvec_s'] = round(timed_op(lambda: A @ v, sync, 50), 6)
+        ops['L_linop_matvec_s'] = round(timed_op(lambda: la.matvec(v), sync, 50), 6)
+        ops['precond_A_apply_s'] = round(timed_op(lambda: ma.matvec(v), sync, 20), 6)
+        ops['precond_B_apply_s'] = round(timed_op(lambda: mb.matvec(v), sync, 50), 6)
+        ops['precond_C_apply_s'] = round(timed_op(lambda: M_c.matvec(v), sync, 50), 6)
+        ops['vector_multiply_s'] = round(timed_op(lambda: dinv * v, sync, 50), 6)
+        ops['axpy_like_s'] = round(timed_op(lambda: v + 0.5 * v, sync, 50), 6)
+        res['ops'] = ops
+        log('single operations (s): %s' % json.dumps(ops, sort_keys=True), lf)
+    except Exception as e:                                 # noqa: BLE001 - optional part
+        res['ops_error'] = '%s: %s' % (type(e).__name__, fold(e))
+        log('single-operation timings failed (%s) - CG results kept' % type(e).__name__, lf)
+    phase('end')
+    if gpu:
+        res['gpu_after'] = smi_sample()
+        try:
+            res['gpu_pool_used_bytes'] = int(xp.get_default_memory_pool().used_bytes())
+            res['gpu_pool_total_bytes'] = int(xp.get_default_memory_pool().total_bytes())
+        except Exception:                                  # noqa: BLE001 - optional
+            pass
+        time.sleep(6.0)
+        sampler.stop()
+        sampler.join(15.0)
+        res['gpu_samples_by_phase'] = sampler.summary()
+        log('GPU by phase: %s' % json.dumps(res['gpu_samples_by_phase'], sort_keys=True), lf)
+    res['utc_end'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    res['status'] = 'done'
+    save()
+    log('DONE label %s: A %.5f s per iteration (n %d, nnz %d)' % (a.label, res['A']['per_iter_s'], res['n'], res['nnz']), lf)
+    lf.close()
+    return 0
+
+
+def safe_main():
+    try:
+        return main()
+    except KeyboardInterrupt:                              # no traceback (it prints the full script path)
+        print('[gb] interrupted', flush=True)
+        return 130
+    except Exception as e:                                 # noqa: BLE001 - report the failure in the files, without the path
+        import traceback
+        here = [f for f in traceback.extract_tb(e.__traceback__) if os.path.basename(f.filename) == os.path.basename(__file__)]
+        where = ('script line %d' % here[-1].lineno) if here else 'unknown place'
+        msg = 'FAILED at %s - %s: %s' % (where, type(e).__name__, fold(e))
+        if STATE['res'] is not None:
+            STATE['res']['status'] = 'failed'
+            STATE['res']['error'] = msg
+            try:
+                STATE['save']()
+                log(msg, STATE['lf'])
+            except Exception:                              # noqa: BLE001 - nothing more to do
+                print('[gb] ' + msg, flush=True)
+        else:
+            print('[gb] ' + msg, flush=True)
+        return 1
+
+
+if __name__ == '__main__':
+    sys.exit(safe_main())
+GPU_BENCH_CG_EOF
+if [ "$GBOK" = 1 ] && [ "$(md5sum < "$GBD/gpu_bench_cg.py" | cut -c1-32)" = 6bbaa06e8f334d485d2da70262d08679 ]; then ( [ -f "$HOME/dem-venv/bin/activate" ] || { echo "[gb] STOP: venv not found (only the script file was written)"; exit 2; }; . "$HOME/dem-venv/bin/activate" && CUPY_CACHE_DIR="$GBD/cupy_cache" timeout 3600 python3 "$GBD/gpu_bench_cg.py" --label "$GBL" --out "$GBD"; echo "[gb] rc $? - send back the three files in ~/${GBD#$HOME/} : bench.json bench.log gpu_samples.tsv" ); else echo "[gb] paste broken (md5 differs) or the new folder could not be made - nothing run"; fi

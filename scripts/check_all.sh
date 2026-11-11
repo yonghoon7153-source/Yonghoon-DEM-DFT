@@ -338,6 +338,12 @@ run 'rint_r_chain (Rint ② R 런 사슬 · 사다리 · 예측 · 판정 · 가
 run 'rint_first_result (Rint ② 첫 풀이 끝 표지 감싸개 · 묶음 C2b · 시험 먼저)' python3 scripts/test_rint_first_result.py
 run 'ca_ext_z3 (Rint ② Z3 face_alpha + 탄소 접합 한 런 · 극한 런 · ARM_LIST · sid_off · CG 반복 수 · 시험 먼저)' python3 scripts/test_ca_ext_z3.py
 run 'rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 킷 · CPU)' python3 scripts/test_rint_r_chain_e2e.py
+#  ★ 2026-11-11 (Rint ② 계획 `docs/reviews/rint2_siteq_remaining_plan_20261110.md` §4-4 (가) (나) · §10 의 3 번 · 1저자 11-10 Q5 = 리포 시험을 먼저) —
+#    예측 12 단위 합성 끝-끝 + 기계 사이 이동 대조: 사다리 둘 → 12 단위 (세 바탕 · 원장 이어달리기) → 합치기 → 원장 판정 → 다시 판정 (따로
+#    프로세스) = 한 기계 예측과 같음 · 넘침 경로 (판정 문턱 대역) · 음성 대조 (UNIT_MISSING · UNIT_EXTRA · ATTEMPT_LEDGER_MISMATCH ·
+#    UNIT_PROVENANCE_MISMATCH) · 옮긴 폴더의 합치기 · 판정 · 다시 판정 · 갈라진 원장.  시험만 (사슬 · 러너 · payload 무변경) · 단언 33 · 실제 러너
+#    100 회쯤 · 11-11 실측 418 s (3.11) · 331 s (kgy 판 3.8).  꼴 = 원장 공유 권고안 (이어달리기) 기준 · 1저자 비준 전.
+run 'rint_r_chain_e2e12 (Rint ② R 사슬 · 12 단위 합성 끝-끝 + 이동 대조 · 실제 러너 · 픽스처 킷 · CPU)' python3 scripts/test_rint_r_chain_e2e12.py
 run 'step3_target_cert (STEP3 목표량 증서 ⓓ · RCA-07 · 13 · 해 상태 · 빠른 판 · 시험 먼저)' python3 scripts/test_step3_target_cert.py
 run 'step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 115–124 s 로 게이트에 넣음)' python3 scripts/test_step3_conv_cert.py
 # (10-21 · 1저자 *"더 꼼꼼하게"* → 위 두 줄로 게이트에 넣음 · 실측 115–124 s · 부하 낮음 · BLAS 스레드 1 · 옛 2,305 s 는 부하 8–12 때 · ⚠ K8b 는 OpenBLAS Sandybridge 경로에서 실패 = 봉인값의 경로 의존 (원장 RCA-07 메모) · 긴 판 `python3 scripts/test_step3_target_cert.py --long` ≈ 400 s = 게이트 밖 · 증서 코드를 바꾼 커밋 뒤 한 번)
@@ -358,7 +364,7 @@ run 'kg50_d3_cell_verdict   --selftest' python3 scripts/kg50_d3_cell_verdict.py 
 run 'kg50_q5_branches      --selftest' python3 scripts/kg50_q5_branches.py --selftest
 run 'kg50_q5_verdict       --selftest' python3 scripts/kg50_q5_verdict.py --selftest
 #  ★ 2026-10-24 (`SELF-132` · `SELF-133` · 1저자 Q2 (가)) — kgy 실행 환경 판 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 = kgy `~/dem-venv`) 에서
-#    R 경로 12 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 증서 · ⑥ 탐침 판독기 · 감시 셸 · 블록 = 11-10 P6R-10).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세 번째) 을 막는다.
+#    R 경로 13 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 12 단위 끝-끝 (11-11) · 증서 · ⑥ 탐침 판독기 · 감시 셸 · 블록 = 11-10 P6R-10).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세 번째) 을 막는다.
 #    인터프리터 없음 · 판 다름 = 실패 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh` (컨테이너 재시작 뒤 한 번) · 실측 ≈ 6–7 분.
 run 'kgy 판 R 경로 시험 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 · SELF-132)' bash scripts/check_kgy_py38.sh
 #  ★ 2026-10-04 (τ 결정 16 ② · 1저자 비준 *"권고대로"*) — 안 A: 망 솔버 띠 선택을 `boundary_sets` 로 추출 (추출 전 기준값과 비트 동일)

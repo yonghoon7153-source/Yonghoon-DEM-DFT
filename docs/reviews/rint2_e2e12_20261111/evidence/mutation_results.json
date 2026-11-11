@@ -1,0 +1,388 @@
+{
+ "base": {
+  "what": "변이 없음 (대조 — 사본에서 그대로 · 전부 통과해야)",
+  "mode": "redo",
+  "want_fail": [],
+  "rc": 0,
+  "fail": [],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5d",
+   "D5e",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {},
+  "caught": true,
+  "seconds": 37.7,
+  "tail": "리 감기 (`git pull --ff-only`) = 거부 · 사본 그대로 (git 의 동작) · 주 원장 + 곁가지에서 돈 시도 폴더 = 합치기 rc 3 ATTEMPT_LEDGER_MISMATCH (시도 폴더의 attempt.json ≠ 원장 항목 · 런 기록 0) · 곁가지 원장 + 주 원장의 시도 폴더 = 같은 거부\n  (임시 폴더 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 8 PASS · 0 FAIL (37.2 s)\n"
+ },
+ "M1": {
+  "what": "MergeFetch._open — 채택 시도 없는 단위의 멈춤 (UNIT_MISSING) 을 끔 (넘침 점처럼 \"다음 단계 필요\" 로 흘림)",
+  "mode": "redo",
+  "want_fail": [
+   "D5a"
+  ],
+  "rc": 1,
+  "fail": [
+   "D5a"
+  ],
+  "pass": [
+   "D5b",
+   "D5c",
+   "D5d",
+   "D5e",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D5a": "{'rc': 4, 'status': None, 'code': None, 'run': None, 'cause': 'None', 'n_runs': 0, 'so': '합치기 — 원장 d6ffbead1d9a · 시도 폴더 13 · 같은 판정 함수 · 같은 요청 순서 (값은 봉인 · 러너 = 봉인 원천 조립만)\\nEXPANSION_NEEDED — 빠진 넘침 점 [] — 그 점 시도 뒤 끝 합치기 다시 (멈춤 아님 · 판정 입력 아님)\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/kgy/sdcp/ca1_neg_early_m1/merge_summary.json\\n'})"
+  },
+  "caught": true,
+  "seconds": 40.2,
+  "tail": " 기록 0) · 곁가지 원장 + 주 원장의 시도 폴더 = 같은 거부\n  (임시 폴더 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (39.6 s)\n  - D5a 음성 (단위 하나 빠짐) — 끝 단위 (P0_c0_R_j_lo = 다시 계산이 맨 먼저 요청하는 단위) 를 돌기 전에 합치기 → rc 3 · STOPPED UNIT_MISSING (런 P01_corner · 런 기록 0 · 판정 입력 아님)\n"
+ },
+ "M4": {
+  "what": "MergeFetch.finish — 다시 계산이 끝까지 간 뒤 남는 채택 런 (UNIT_EXTRA) 멈춤을 끔",
+  "mode": "redo",
+  "want_fail": [
+   "D5b"
+  ],
+  "rc": 1,
+  "fail": [
+   "D5b"
+  ],
+  "pass": [
+   "D5a",
+   "D5c",
+   "D5d",
+   "D5e",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D5b": "{'rc': 0, 'status': 'PREDICTED', 'code': None, 'run': None, 'cause': 'None', 'n_runs': 24, 'so': '0 회 · 팔 2 사본 다시 대조)\\n  P24_origin: origin · R_j 5.355e+06 Ω · P1 · c 1 · 팔 [1, 2] → unit:P1_c1_R_j_hi attempt_15 의 U02_origin (기계 gabia · 러너 0 회 · 팔 2 사본 다시 대조)\\n합친 예측 = PREDICTED · 런 24 · 단위 · 넘침 점 12 · 남은 런 기록 5\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/kgy/sdcp/ca1_neg_extra_m4/predict_summary.json\\n'})"
+  },
+  "caught": true,
+  "seconds": 32.0,
+  "tail": " 주 원장의 시도 폴더 = 같은 거부\n  (임시 폴더 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (31.6 s)\n  - D5b 음성 (단위 하나 더 = 요청되지 않은 채택 시도) — 넘침 점 시도 셋이 있는 원장 · 폴더를 결정 기록 없이 · 넘침 없는 다시 계산으로 합침 → rc 3 · STOPPED UNIT_EXTRA (다시 계산은 끝까지 갔다 = 런 24 · 채택된 넘침 점 시도가 남았다)\n"
+ },
+ "M2": {
+  "what": "target_ledger_problem — 시도 폴더 요약 sha ↔ 원장 결과 줄 대조를 끔 (첫 방어선만)",
+  "mode": "redo",
+  "want_fail": [
+   "D5c"
+  ],
+  "rc": 1,
+  "fail": [
+   "D5c"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5d",
+   "D5e",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D5c": "(True, {'rc': 3, 'status': 'STOPPED', 'code': 'ATTEMPT_LEDGER_MISMATCH', 'run': None, 'cause': 'unit-P0_c0_R_j_lo/attempt_16 사본 요약 sha ≠ 원장 결과 줄 16 (복사하는 사이 원본이 바뀌었다)', 'n_runs': 0, 'so': \"<작업 폴더>)\\n합친 예측 = STOPPED\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/kgy/sdcp/ca1_neg_byte_m2/predict_summary.json\\n\"}, True))"
+  },
+  "caught": true,
+  "seconds": 30.6,
+  "tail": "<작업 폴더>)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (30.2 s)\n  - D5c 음성 (채택 시도 폴더의 한 바이트를 결과 뒤에 바꿈 · 옮긴 시도 폴더를 따로 뜬 사본에서) — 팔 JSON 끝에 공백 하나 → 합치기 rc 3 · STOPPED ATTEMPT_LEDGER_MISMATCH (폴더 요약 sha ≠ 원장 결과 줄 · 그 단위 첫 요청 P01_corner · 런 기록 0) · 바꾸기 전 · 되돌린 뒤의 폴더 요약 = 결과 줄 · 원 폴더는 그대로\n"
+ },
+ "M2b": {
+  "what": "M2 + MergeFetch._copy — 사본 요약 sha ↔ 원장 결과 줄 대조도 끔 (둘째 방어선까지)",
+  "mode": "redo",
+  "want_fail": [
+   "D5c"
+  ],
+  "rc": 1,
+  "fail": [
+   "D5c"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5d",
+   "D5e",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D5c": "(True, {'rc': 3, 'status': 'STOPPED', 'code': 'INPUT_SHA_MISMATCH', 'run': 'P01_corner', 'cause': 'p2_DBE_sdcp1um_vgcf100_sph_fa_cj3162277p6601683795_b2e89d89_c0_rt1em12_fb10000_a0.json sha256 58b72b1710c2… ≠ 기록 b6ee2e834633…', 'n_runs': 1, 'so': '원천 조립만)\\n멈춤 [INPUT_SHA_MISMATCH] 판정 입력 sha256 ≠ 런 산출 — p2_DBE_sdcp1um_vgcf100_sph_fa_cj3162277p6601683795_b2e89d89_c0_rt1em12_fb10000_a0.json sha256 58b72b1710c2… ≠ 기록 b6ee2e834633… (런 P01_corner)\\n합친 예측 = STOPPED\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/kgy/sdcp/ca1_neg_byte_m2b/predict_summary.json\\n'}, True))"
+  },
+  "caught": true,
+  "seconds": 31.6,
+  "tail": "<작업 폴더>)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (31.2 s)\n  - D5c 음성 (채택 시도 폴더의 한 바이트를 결과 뒤에 바꿈 · 옮긴 시도 폴더를 따로 뜬 사본에서) — 팔 JSON 끝에 공백 하나 → 합치기 rc 3 · STOPPED ATTEMPT_LEDGER_MISMATCH (폴더 요약 sha ≠ 원장 결과 줄 · 그 단위 첫 요청 P01_corner · 런 기록 0) · 바꾸기 전 · 되돌린 뒤의 폴더 요약 = 결과 줄 · 원 폴더는 그대로\n"
+ },
+ "M8": {
+  "what": "attempt_order_problem — 채택 뒤 같은 대상의 새 항목 (ATTEMPT_AFTER_ADOPTED) 거부를 끔",
+  "mode": "redo",
+  "want_fail": [
+   "D5d"
+  ],
+  "rc": 1,
+  "fail": [
+   "D5d"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5e",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D5d": "(0, 'target=unit:P0_c0_R_j0 machine=kgy commit=9b6c0c909d9f0d495e9f064c278c34efa837d7f0 — 이 번호로 --ledger <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/kgy/sdcp/ca1_ledger_fork12_m8 --attempt 17 (풀기 전 대조 = 이 항목의 지문)\\n', 3, \"it 조회 실패 · git 밖 (미확인) · ignore 밖 추적 안 된 파일 · 한 단계 안 사슬 ↔ 러너 (HEAD · 파일 지문 · 러너 파일) · 저장소 상대 경로 · 환경 지문 같음 단위 (python 부 판 · numpy · scipy 판) 다름 · 미확인 — 환경 지문 같음 단위 ≠ 계획 봉인 판 (exec_policy.env_unit · numpy '2.4.6.e2e12' ≠ '2.4.6') — 계획에 봉인한 python 부 판 · numpy · scipy 판의 venv 로 다시 (Q9 개정 4 Q3 · R4-10)\\n\"))"
+  },
+  "caught": true,
+  "seconds": 30.8,
+  "tail": "지 원장 + 주 원장의 시도 폴더 = 같은 거부\n  (임시 폴더 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (30.4 s)\n  - D5d 풀기 전 관문 (--add · 러너 없음 · 원장 무변경) — 이미 채택된 단위의 새 항목 = rc 3 ATTEMPT_AFTER_ADOPTED · 환경 같음 단위 (numpy 판) 가 계획 봉인 판과 다른 셸의 항목 = rc 3 CODE_PIN_MISMATCH\n"
+ },
+ "M9": {
+  "what": "stage_ledger --add — 계획 봉인 판 ↔ 환경 같음 단위 대조 (env_seal_problem) 를 끔",
+  "mode": "redo",
+  "want_fail": [
+   "D5d"
+  ],
+  "rc": 1,
+  "fail": [
+   "D5d"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5e",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D5d": "(3, '멈춤 [ATTEMPT_AFTER_ADOPTED] 채택된 시도 (결과 전이 아닌 첫 시도) 뒤 같은 대상의 새 시도 (풀기 전 거부 · 대조를 거치지 않고 돈 흔적 · Q9 §3-4 · R4-03) — unit:P0_c0_R_j0 은 이미 채택 시도 attempt_3 가 있다 (결과 뒤 멈춤 · 완주 = 같은 등록의 재시도가 아니다 · 재실행은 --resume)\\n', 0, 'unit:P0_c0_R_j_lo machine=kgy commit=a86024b269227b1dd39cda32bdb85c7e89c1fc17 — 이 번호로 --ledger <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/kgy/sdcp/ca1_ledger_fork11_gate_m9 --attempt 16 (풀기 전 대조 = 이 항목의 지문)\\n'))"
+  },
+  "caught": true,
+  "seconds": 30.9,
+  "tail": "지 원장 + 주 원장의 시도 폴더 = 같은 거부\n  (임시 폴더 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (30.5 s)\n  - D5d 풀기 전 관문 (--add · 러너 없음 · 원장 무변경) — 이미 채택된 단위의 새 항목 = rc 3 ATTEMPT_AFTER_ADOPTED · 환경 같음 단위 (numpy 판) 가 계획 봉인 판과 다른 셸의 항목 = rc 3 CODE_PIN_MISMATCH\n"
+ },
+ "M3": {
+  "what": "unit_summary_problem — 단위 요약의 출처 칸 ↔ 합치기 대조를 끔",
+  "mode": "redo",
+  "want_fail": [
+   "D5e"
+  ],
+  "rc": 1,
+  "fail": [
+   "D5e"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5d",
+   "D6d",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D5e": "({'add_rc': 0, 'n': 16, 'rc': 0, 'folder': '<작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/gabia/sdcp/ca1_units_prov_m3/attempt_16', 'so': '<작업 폴더> --attempt 16 (풀기 전 대조 = 이 항목의 지문)\\nfo 0 · CG 반복 15 · 이어 풀기 0 · 잔차 3.6e-16 · 판 전류 불균형 8.3e-15 · 증서 ⓐⓑⓒⓓ ✓ · 판독 보장 오차 e 8.3e-14\\nATTEMPT_RESULT n=16 status=completed side=post cause=None resume_ok=False\\nunit P0_c0_R_j_lo = UNIT_DONE · 런 2\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/gabia/sdcp/ca1_units_prov_m3/attempt_16/unit_summary.json\\n'}, 'completed', {'rc': 0, 'status': 'PREDICTED', 'code': None, 'run': None, 'cause': 'None', 'n_runs': 24, 'so': ' 회 · 팔 2 사본 다시 대조)\\n  P24_origin: origin · R_j 5.355e+06 Ω · P1 · c 1 · 팔 [1, 2] → unit:P1_c1_R_j_hi attempt_15 의 U02_origin (기계 gabia · 러너 0 회 · 팔 2 사본 다시 대조)\\n합친 예측 = PREDICTED · 런 24 · 단위 · 넘침 점 12 · 남은 런 기록 2\\n요약 → <작업 폴더>)"
+  },
+  "caught": true,
+  "seconds": 42.8,
+  "tail": " 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (42.4 s)\n  - D5e 음성 (출처 칸이 다른 단위 — 환경 같음 단위) — 그 단위 요약의 numpy 판만 다른 시도 (결과 줄 completed · 폴더 요약 sha = 바뀐 폴더) → 합치기 rc 3 · STOPPED UNIT_PROVENANCE_MISMATCH (출처 칸 code · 그 단위 첫 요청 P01_corner · 런 기록 0)\n"
+ },
+ "M5": {
+  "what": "recover_ledger — 시작 기록의 바탕 ↔ 이 폴더의 바탕 대조를 끔",
+  "mode": "redo",
+  "want_fail": [
+   "D6d"
+  ],
+  "rc": 1,
+  "fail": [
+   "D6d"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5d",
+   "D5e",
+   "D6e",
+   "D6j"
+  ],
+  "why": {
+   "D6d": "(0, 'recover — 그룹 기록 0 개 정리 · 미확인 0\\n', 0, 'recover — 그룹 기록 0 개 정리 · 미확인 0\\n'))"
+  },
+  "caught": true,
+  "seconds": 30.5,
+  "tail": " = 같은 거부\n  (임시 폴더 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (30.1 s)\n  - D6d 이동 (거부) — 옮긴 시도 폴더 (kgy 에서 돈 시도의 gabia 사본) 에 --stage recover --ledger = rc 3 (시작 기록의 바탕 ≠ 이 폴더의 바탕 · 결과 줄 · 원장 무변경) · 그 기계에서 돈 시도 폴더 (제자리) = rc 0 (할 일 없음 · 원장 무변경)\n"
+ },
+ "M6": {
+  "what": "target_ledger_problem — 한 항목 = 폴더 하나 (같은 이름 둘) 멈춤을 끔",
+  "mode": "redo",
+  "want_fail": [
+   "D6e"
+  ],
+  "rc": 1,
+  "fail": [
+   "D6e"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5d",
+   "D5e",
+   "D6d",
+   "D6j"
+  ],
+  "why": {
+   "D6e": "({'rc': 3, 'status': 'STOPPED', 'code': 'ATTEMPT_LEDGER_MISMATCH', 'run': 'P05_corner', 'cause': 'unit:P0_c0_R_j_hi: 항목 4 (unit:P0_c0_R_j_hi) 의 시도 폴더 · 거부 기록 attempt_4 이 없다 (엄격 — 결과 뒤로 본다 · 그 대상 판정 없음 · 다른 곳에 둔 시도 = 판정 --attempt-dirs · 합치기 --merge 경로)', 'n_runs': 4, 'so': '· 뒤 기록 ≠ 폴더 · Q9 §3-5) — unit:P0_c0_R_j_hi: 항목 4 (unit:P0_c0_R_j_hi) 의 시도 폴더 · 거부 기록 attempt_4 이 없다 (엄격 — 결과 뒤로 본다 · 그 대상 판정 없음 · 다른 곳에 둔 시도 = 판정 --attempt-dirs · 합치기 --merge 경로) (런 P05_corner)\\n합친 예측 = STOPPED\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/gabia/sdcp/ca1_neg_nopre_m6/predict_summary.json\\n'}, {'rc': 0, 'status': 'PREDICTED', 'code': None, 'run': None, 'cause': 'None', 'n_runs': 24, 'so': '0 회 · 팔 2 사본 다시 대조)\\n  P24_origin: origin · R_j 5.355e+06 Ω · P1 · c 1 · 팔 [1, 2] → unit:P1_c1_R_j_hi attempt_15 의 U02_origin (기계 gabia · 러너 0 회 · 팔 2 사본 다시 대조)\\n합친 예측 = PREDICTED · 런 24 · 단위 · 넘침 점 12 · 남은 런 기록 2\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/gabia/sdcp/ca1_neg_dup_m6/predict_summary.json\\n'}))"
+  },
+  "caught": true,
+  "seconds": 42.5,
+  "tail": "<작업 폴더>)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (42.1 s)\n  - D6e 이동 (거부) — 결과 전 멈춘 시도 폴더를 빼고 옮김 = 합치기 rc 3 ATTEMPT_LEDGER_MISMATCH (그 단위가 처음 요청될 때 P05_corner · 엄격: 폴더 없는 시도) · 같은 항목의 폴더 둘 (옮긴 사본 + 원본 경로를 함께 줌) = rc 3 ATTEMPT_LEDGER_MISMATCH (한 항목 = 폴더 하나)\n"
+ },
+ "M7": {
+  "what": "target_ledger_problem — 폴더 없는 시도 (엄격 · 결과 뒤로 봄) 멈춤을 끔 (그 시도를 건너뜀)",
+  "mode": "redo",
+  "want_fail": [
+   "D6e"
+  ],
+  "rc": 1,
+  "fail": [
+   "음성"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5d",
+   "D6d"
+  ],
+  "why": {
+   "음성": "KeyError: 4 @ self._copy(target, k, info['paths'][k]))"
+  },
+  "caught": false,
+  "seconds": 19.0,
+  "tail": "록의 바탕 ≠ 이 폴더의 바탕 · 결과 줄 · 원장 무변경) · 그 기계에서 돈 시도 폴더 (제자리) = rc 0 (할 일 없음 · 원장 무변경)\n  FAIL  음성 대조 다시 예외 없이  (KeyError: 4 @ self._copy(target, k, info['paths'][k]))\n  (임시 폴더 남김: <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 5 PASS · 1 FAIL (18.7 s)\n  - 음성 대조 다시 예외 없이\n"
+ },
+ "M10": {
+  "what": "found_attempts_problem — 시도 폴더 attempt.json ↔ 원장 항목 (대상 · 기계 · 재실행 원 시도) 대조를 끔",
+  "mode": "redo",
+  "want_fail": [
+   "D6j"
+  ],
+  "rc": 1,
+  "fail": [
+   "D6j"
+  ],
+  "pass": [
+   "D5a",
+   "D5b",
+   "D5c",
+   "D5d",
+   "D5e",
+   "D6d",
+   "D6e"
+  ],
+  "why": {
+   "D6j": "((True, True), 'hint: Diverging branches can\\'t be fast-forwarded, you need to either:\\nhint: \\nhint: \\tgit merge --no-ff\\nhint: \\nhint: or:\\nhint: \\nhint: \\tgit rebase\\nhint: \\nhint: Disable this message with \"git config advic', {'rc': 3, 'status': 'STOPPED', 'code': 'ATTEMPT_LEDGER_MISMATCH', 'run': 'P01_corner', 'cause': 'unit:P0_c0_R_j_lo: attempt_16: 폴더 요약 sha ≠ 원장 결과 줄 16', 'n_runs': 0, 'so': '둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — unit-P0_c0_R_j_lo/attempt_16 사본 요약 sha ≠ 원장 결과 줄 16 (복사하는 사이 원본이 바뀌었다)\\n합친 예측 = STOPPED\\n요약 → <작업 폴더>/tmp311/rint_r_chain_e2e12_0150rnb7/gabia/sdcp/ca1_neg_div_a_m10/predict_summary.json\\n'}, {'rc': 3, 'status': 'STOPPED', 'code': 'ATTEMPT_LEDGER_MISMATCH', 'run': 'P01_corner', 'cause': 'unit:P0_c0_R_j_lo: attempt_16: 폴더 요약 sha ≠ 원장 결과 줄 16', 'n_runs': 0, 'so': '둘 · 덧붙이기만이 아닌 역사 · 커밋 안 한 고침 · 폴더 요약 sha ≠ 결과 줄 · 원장에 없는 시도 폴더 · 결과 줄 없는 시도 · 채택 아닌 시도 입력 · 결과 전 · 뒤 기록 ≠ 폴더 · Q9 §3-5) — unit-P0_c0_R_j_lo/attempt_16 사본 요약 sha ≠ 원장 결과 줄 16 (복사하는 사이 원본이 바뀌었다)\\n합친 예측 = STOPPED\\n요약 → /)"
+  },
+  "caught": true,
+  "seconds": 29.5,
+  "tail": "scratchpad/rint/e2e12/tmp311/rint_r_chain_e2e12_0150rnb7)\n\n  단계별 시간 (s): {}\n\ntest_rint_r_chain_e2e12: 7 PASS · 1 FAIL (29.2 s)\n  - D6j 이동 (거부 · 갈라진 원장 = 한 원장의 두 사본에 두 기계가 각각 씀 · 같은 항목 번호가 두 사본에서 다른 시도) — 한쪽 사본을 다른 쪽으로 빨리 감기 (`git pull --ff-only`) = 거부 · 사본 그대로 (git 의 동작) · 주 원장 + 곁가지에서 돈 시도 폴더 = 합치기 rc 3 ATTEMPT_LEDGER_MISMATCH (시도 폴더의 attempt.json ≠ 원장 항목 · 런 기록 0) · 곁가지 원장 + 주 원장의 시도 폴더 = 같은 거부\n"
+ },
+ "M11": {
+  "what": "attempt_order_problem — 재실행 항목의 기계 · 환경 지문 = 원 시도 대조를 끔",
+  "mode": "upto",
+  "want_fail": [
+   "D6i"
+  ],
+  "rc": 1,
+  "fail": [
+   "D6i"
+  ],
+  "pass": [
+   "D1a",
+   "D1b",
+   "D3a",
+   "D3b",
+   "D3c",
+   "D3d",
+   "D3e",
+   "D3g",
+   "D3h"
+  ],
+  "why": {
+   "D6i": "{'label': (0, 7, False, '0_c1_R_j_lo machine=kgy resume_of=6 commit=3ca1a44d60129d524b4669767095ecba6d906d7e — 이 번호로 --ledger <작업 폴더>/tmp_mut/rint_r_chain_e2e12_3cpdyaj6/v100/sdcp/ca1_ledger_resfork --attempt 7 (풀기 전 대조 = 이 항목의 지문)\\n'), 'wrong': (3, None, None), 'back': (3, None, None, 'None')})"
+  },
+  "caught": true,
+  "seconds": 215.3,
+  "tail": "merge': 23.9, 'checks_main': 0.1}\n\ntest_rint_r_chain_e2e12: 9 PASS · 1 FAIL (215.0 s)\n  - D6i 이동 (거부 · 재실행은 같은 기계 · 같은 바탕에서만 · 원장 사본에서 관찰) — 다른 기계 이름표의 재실행 항목 = --add rc 3 RESUME_NOT_ALLOWED (원장 무변경) · 다른 바탕 (--out) 의 재실행 시도 = rc 3 · 결과 줄 rejected · 결과 전 · RESUME_NOT_ALLOWED (원천 = 그 바탕의 재실행 사슬 끝 시도 폴더가 없다) · 그 거부 뒤 원 바탕의 재실행 시도도 = rc 3 · rejected · RESUME_NOT_ALLOWED (앞 거부 시도의 폴더가 같은 바탕에 없다 — 관찰)\n"
+ },
+ "M12": {
+  "what": "attempt_presolve_problem — 재실행 원천 = 같은 바탕의 사슬 끝 시도 폴더 대조를 끔 (첫 방어선만)",
+  "mode": "upto",
+  "want_fail": [
+   "D6i"
+  ],
+  "rc": 0,
+  "fail": [],
+  "pass": [
+   "D1a",
+   "D1b",
+   "D3a",
+   "D3b",
+   "D3c",
+   "D3d",
+   "D3e",
+   "D3g",
+   "D3h",
+   "D6i"
+  ],
+  "why": {},
+  "caught": false,
+  "seconds": 221.8,
+  "tail": "ECKED'] · 팔 88\n  PASS  D3e 원장 판정 (합친 예측 · kgy) — rc 0 · 등록 판정 이름 (멈춤 아님) · 원장 채택 = 사다리 둘 + 단위 12 (그 번호) · 합친 예측의 원장 대조 기록 (ledger.merged) · 원장 커밋 = 원장 HEAD · 결과 JSON 0600\n\n  단계별 시간 (s): {'setup': 2.5, 'bg_ladP0': 71.7, 'ladders': 72.3, 'one_start': 0.1, 'bg_unit_late': 11.4, 'units': 121.2, 'merge_only': 11.5, 'merge': 24.1, 'checks_main': 0.1}\n\ntest_rint_r_chain_e2e12: 10 PASS · 0 FAIL (221.4 s)\n"
+ },
+ "M12b": {
+  "what": "M12 + resume_chain_problem — 재실행 사슬 시도의 폴더가 같은 바탕에 하나 대조도 끔 (없으면 건너뜀)",
+  "mode": "upto",
+  "want_fail": [
+   "D6i"
+  ],
+  "rc": 1,
+  "fail": [
+   "D6i"
+  ],
+  "pass": [
+   "D1a",
+   "D1b",
+   "D3a",
+   "D3b",
+   "D3c",
+   "D3d",
+   "D3e",
+   "D3g",
+   "D3h"
+  ],
+  "why": {
+   "D6i": "{'label': (3, None, True, '멈춤 [RESUME_NOT_ALLOWED] 재실행 자격 없음 (원 시도가 채택 · 재실행 사슬 끝이 아님 · 완주 · 자원 · 인프라 원인이 아님 · 검사 실패 흔적 · 기계 · 환경 지문 다름 · Q9 §3-5 개정 4 · R4-08) — 재실행 기계 · 환경 지문 ≠ 원 시도 6 (같은 기계 · 환경 지문의 모든 칸이 같아야 · Q9 R4-08 (d))\\n'), 'wrong': (0, 0, {'by': 'chain', 'cause': None, 'folder': 'attempt_7', 'folder_sha256': 'ae8333734de3abb07b2e781dfc1c21a6a6b641c50275ac59e7bcbeac304bade9', 'kind': 'result', 'n': 7, 'resume_ok': False, 'side': 'post', 'status': 'completed', 'stop': None, 'utc': '2026-11-11T13:02:47Z'}), 'back': (3, None, None, 'None')})"
+  },
+  "caught": true,
+  "seconds": 228.0,
+  "tail": "merge': 24.6, 'checks_main': 0.1}\n\ntest_rint_r_chain_e2e12: 9 PASS · 1 FAIL (227.6 s)\n  - D6i 이동 (거부 · 재실행은 같은 기계 · 같은 바탕에서만 · 원장 사본에서 관찰) — 다른 기계 이름표의 재실행 항목 = --add rc 3 RESUME_NOT_ALLOWED (원장 무변경) · 다른 바탕 (--out) 의 재실행 시도 = rc 3 · 결과 줄 rejected · 결과 전 · RESUME_NOT_ALLOWED (원천 = 그 바탕의 재실행 사슬 끝 시도 폴더가 없다) · 그 거부 뒤 원 바탕의 재실행 시도도 = rc 3 · rejected · RESUME_NOT_ALLOWED (앞 거부 시도의 폴더가 같은 바탕에 없다 — 관찰)\n"
+ }
+}
