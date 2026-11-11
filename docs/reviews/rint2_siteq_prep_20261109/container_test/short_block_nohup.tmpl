@@ -1,0 +1,105 @@
+bash <<'SITEQN'
+set -u
+L="$HOME/rint_siteq_nohup_$(date -u +%Y%m%dT%H%M%SZ)"
+mkdir "$L" || { echo "[siteq] STOP: cannot create $L (nothing started)"; exit 2; }
+cat > "$L/block.sh" <<'SITEQ_BODY' || { echo "[siteq] STOP: cannot write $L/block.sh (nothing started)"; exit 2; }
+set -u
+UMASK_START=$(umask)
+# umask 022  # form B (not chosen; the first author decides): delete the first '# ' so the block sets umask itself (siteq_block_env.txt keeps both values)
+PIN=@@PIN@@
+MACHINE=@@MACHINE@@ BASE="@@BASE@@" VENV="$HOME/dem-venv" PLAN="@@PLAN@@"
+LEDGER="@@LEDGER@@" OUTBASE="@@OUTBASE@@" PLANFILE="@@PLANFILE@@"
+PROBE_SHA=c455c792ba431f4840a4964f48f0c01142d4e05e7c5b5f5f6e3ae3b4b81e1a65
+W="$HOME/dem-siteq-$(printf %.9s "$PIN")${SITEQ_TAG:-}" OUT="$HOME/rint_siteq_${MACHINE}_$(date -u +%Y%m%d)${SITEQ_TAG:-}" MADE=
+rcfile() { if [ -n "$MADE" ]; then printf 'rc=%s end_utc=%s%s\n' "$1" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "${2:+ stop=$2}" > "$OUT/siteq_block_rc.txt.tmp" && mv -f "$OUT/siteq_block_rc.txt.tmp" "$OUT/siteq_block_rc.txt"; fi; }
+stop() { echo "[siteq] STOP: $*"; rcfile 2 "$*"; exit 2; }
+printf '%s' "$PIN" | grep -Eqx '[0-9a-f]{40}' || stop "PIN is not a 40-hex commit (nothing written)"
+for p in "$W" "$OUT"; do if [ -e "$p" ]; then stop "$p already exists (nothing written)"; fi; done
+[ -f "$VENV/bin/activate" ] || stop "venv not found: $VENV (nothing written)"
+git -C "$BASE" fetch -q origin claude/stoic-knuth-NObVQ || stop "git fetch in $BASE failed (nothing written)"
+git -C "$BASE" worktree add -q --detach "$W" "$PIN" || stop "git worktree add failed"
+[ "$(git -C "$W" rev-parse HEAD)" = "$PIN" ] || stop "worktree HEAD differs from PIN"
+mkdir "$OUT" && MADE=1 && cp "$W/docs/reviews/rint2_siteq_prep_20261109/tools/siteq_probe.py" "$OUT/" || stop "cannot create $OUT"
+echo "$PROBE_SHA  $OUT/siteq_probe.py" | sha256sum -c --quiet || stop "probe sha256 differs (probe not run)"
+set +u; . "$VENV/bin/activate"; set -u
+cd "$OUT" || stop "cannot enter $OUT"
+python3 -I - "$HOME" siteq_block_modes.txt "plan=$PLAN" "ledger=$LEDGER" "outbase=$OUTBASE" "planfile=$PLANFILE" "siteq_out=$OUT" <<'MODES' || echo "[siteq] mode listing failed (the probe still runs)"
+import errno, grp, os, pwd, stat, sys, time
+homes, me, mygid, mygroups = (os.path.abspath(sys.argv[1]), os.path.realpath(sys.argv[1])), os.geteuid(), os.getegid(), set(os.getgroups())
+try:
+    myname = pwd.getpwuid(me).pw_name
+except KeyError:
+    myname = None
+def show(p):
+    r = os.path.abspath(p)
+    for h in homes:
+        if r == h or r.startswith(h + '/'):
+            return '~' + r[len(h):]
+    return r
+def ocls(u):
+    return 'self' if u == me else ('root' if u == 0 else 'other')
+def gcls(g):
+    return 'self-primary' if g == mygid else ('self-member' if g in mygroups else ('root' if g == 0 else 'other'))
+def acl(p, name, base):
+    try:
+        b = os.getxattr(p, name)
+    except OSError as e:
+        return '0' if e.errno == errno.ENODATA else ('unsupported' if e.errno in (errno.ENOTSUP, errno.EOPNOTSUPP) else 'unreadable')
+    return str(max(0, (len(b) - 4) // 8 - base)) if len(b) >= 4 and (len(b) - 4) % 8 == 0 else 'unparsed'
+def others(g):
+    try:
+        names = set(grp.getgrgid(g).gr_mem)
+    except KeyError:
+        names = set()
+    except Exception:
+        return 'unknown'
+    try:
+        with open('/etc/passwd', encoding='utf-8', errors='replace') as f:
+            for ln in f:
+                x = ln.split(':')
+                if len(x) > 3 and x[3] == str(g):
+                    names.add(x[0])
+    except OSError:
+        return 'unknown'
+    names.discard(myname)
+    return str(len(names))
+rows = ['# siteq block modes v1 utc=%s runner=%s (read-only; owner and group shown as classes, no names, no numbers)' % (
+    time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'root' if me == 0 else 'non-root')]
+for a in sys.argv[3:]:
+    tag, _, val = a.partition('=')
+    ps = [x for x in val.split(':') if x]
+    if not ps:
+        rows.append('tag=%s kind=not-given' % tag)
+    for p in ps:
+        try:
+            lk = stat.S_ISLNK(os.lstat(p).st_mode)
+            st = os.stat(p)
+        except OSError:
+            rows.append('tag=%s kind=missing path=%s' % (tag, show(p)))
+            continue
+        m = st.st_mode
+        kind = 'dir' if stat.S_ISDIR(m) else ('file' if stat.S_ISREG(m) else 'other')
+        rows.append('tag=%s kind=%s mode=%04o owner=%s group=%s group_write=%s other_write=%s acl_extra=%s acl_default=%s '
+                    'group_others=%s link=%s path=%s' % (
+                        tag, kind, stat.S_IMODE(m), ocls(st.st_uid), gcls(st.st_gid), 'yes' if m & stat.S_IWGRP else 'no',
+                        'yes' if m & stat.S_IWOTH else 'no', acl(p, 'system.posix_acl_access', 3),
+                        acl(p, 'system.posix_acl_default', 0) if kind == 'dir' else '-', others(st.st_gid), 'yes' if lk else 'no',
+                        show(p)))
+with open(sys.argv[2], 'w', encoding='ascii', errors='backslashreplace') as f:
+    f.write('\n'.join(rows) + '\n')
+MODES
+sed 's/^/[siteq] mode /' siteq_block_modes.txt 2>/dev/null
+H=$(sed -n 's/^SigIgn:[[:space:]]*//p' /proc/$$/status 2>/dev/null); case "${H: -1}" in [13579bdf]) H=yes;; [02468ace]) H=no;; *) H=unknown;; esac
+printf 'umask_start=%s umask_probe=%s sighup_ignored=%s\n' "$UMASK_START" "$(umask)" "$H" | tee siteq_block_env.txt | sed 's/^/[siteq] block /'
+python3 -I -B -u siteq_probe.py --repo "$W" --pin "$PIN" --machine "$MACHINE" --out "$OUT" --expect-py 3.8 --expect-numpy 1.24.4 --expect-scipy 1.10.1 --plan-dirs "$PLAN" < /dev/null 2>&1 | tee siteq.log
+RC=${PIPESTATUS[0]}
+if [ -f siteq_result.json ]; then sha256sum siteq_result.json | tee siteq_result.json.sha256; fi
+rcfile "$RC"
+echo "[siteq] rc $RC (0 = no FAIL and no ERROR) - send back $OUT/siteq_result.json and the sha256 line"
+exit "$RC"
+SITEQ_BODY
+cd "$L" || exit 2
+SITEQ_TAG=_nohup nohup setsid bash -c 'echo $$ > nohup_pid.txt; bash block.sh; printf "rc=%s end_utc=%s\n" "$?" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > nohup_rc.txt.tmp && mv -f nohup_rc.txt.tmp nohup_rc.txt' > nohup.log 2>&1 < /dev/null &
+i=0; until [ -s nohup_pid.txt ] || [ "$i" -ge 100 ]; do sleep 0.1; i=$((i+1)); done
+echo "[siteq] nohup start: pid $(cat nohup_pid.txt 2>/dev/null || echo unknown) - log $L/nohup.log - finished when $L/nohup_rc.txt exists (rc=0 = no FAIL and no ERROR)"
+SITEQN

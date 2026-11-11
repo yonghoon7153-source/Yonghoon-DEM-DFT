@@ -5,6 +5,7 @@
 > 줄 번호 기준 = **`abf0911eb`** (`git show abf0911eb:scripts/rint_r_chain.py` · 8663 줄).  점검 도구 = `docs/reviews/rint2_siteq_prep_20261109/tools/siteq_probe.py` (1,147 줄 · ASCII · sha256 a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588 = 준비 때 컨테이너에서 돌린 바이트 그대로).
 > 결과의 범위: 점검 도구는 **블록이 고른 핀의 사슬 함수**로 현장 OS 를 본다.  봉인 핀에서 `scripts/rint_r_chain.py` (또는 계약 · 러너) 가 바뀌면 그 핀으로 다시 돌린다 (블록의 PIN 한 줄만 바뀜).  사슬 코드 키는 HEAD 를 담으므로 (`code_key` · RRC:1902) 두 기계 결과 대조 (§3-3) 는 같은 핀끼리만 뜻이 있다.
 > "현장 자격" 이 남은 조건으로 적힌 자리: `docs/reviews/rint2_rr3_fix_plan_20261108.md` 67 · 122 줄 (프로세스 · 잠금 · 권한 · 파일 시스템 · FIFO · NFS) · `docs/reviews/codex_review_rint2_rr_round3_20261108.md` 81 줄 (PC6-05 "FIFO/실권한 현장 자격 별도") · 184 줄 · `docs/reviews/codex_review_rint2_rr_round4_20261109.md` 148 줄 · 162 줄 ("미실행: … Linux /proc/flock/NFS·실제 SIGKILL/호스트").
+> **11-11 판** (계획 `docs/reviews/rint2_siteq_remaining_plan_20261110.md` §10 의 2 번): 틀 고침 (도구 해시 · fetch 가지 · 블록 종료 코드 파일 · umask 기록 · 모드 목록) · nohup 꼴 · 컨테이너 시험 = **§9**.  §2 · §3 의 블록 설명과 §4-5 시험은 11-09 판 (옛 틀) 이다 — 지금 틀로 돌릴 때는 §9 를 본다.
 
 ## 0. 이번에 하는 것 / 하지 않는 것
 
@@ -351,3 +352,230 @@ pip 22 개 (두 기계 같음): astunparse 1.6.3 · colorama 0.4.6 · cupy-cuda1
 - `docs/reviews/rint2_siteq_prep_20261109/SHA256SUMS` — 위 파일들 (자기 빼고)
 - 11-10 (Codex Rint ② 회차 ⑥ `RR6-01` · `RR6-02`): `SHA256SUMS` 를 지금 바이트로 다시 썼다 — `tools/siteq_probe.py` = RR6-01 고침 (C02b 가 자식 rc 0 을 요구 · `path_python3_rc` 기록) · `tools/test_siteq_c02b.py` 추가 (고치기 전 5/10 → 뒤 10/10 · 게이트 단계) · 이 README = 이 줄과 결과 안내가 더해진 판.  두 현장 기록 (kgy · gabia 11-09 · `docs/data/rint2_siteq_20261109/`) 이 쓴 판은 역사로 남긴다: 도구 `a490b9adc3eeb7468b051b32bdaa0110879b71322a3a2cfb3b723505a3df8588` · README `6401d4f9a2850946588e4929326c13ff319827720f47f55165f69c748f7859f2` (db86ce9b9).  그 두 기록의 C02b 는 자식 rc 를 기록하지 않은 판의 결과라 PATH python3 자식의 정상 종료 증서가 아니다 (판정문 `docs/reviews/codex_review_rint2_rr_round6_20261110.md` §4).
 - 리포 밖 (스크래치 · 커밋 안 함): 긴 블록 둘 · 블록 생성기 · 시험 도구 · strace 원 로그 · 시나리오 출력 · 결과 JSON · 줄 번호 기준 사본
+- 11-11 (계획 §10 의 2 번 · 1저자 11-10 Q1 · Q6 · Q8): 틀 고침 + nohup 꼴 + 컨테이너 시험 = §9 · `SHA256SUMS` 를 지금 바이트로 다시 썼다 (새 파일 셋 더함 · §9-9).  11-09 판 틀 (sha256 bc117ba6…) 은 리포 이력 (`db86ce9b9`) 에 그대로 남는다.
+
+## 9. 11-11 판 — 틀 고침 · nohup 꼴 · 컨테이너 시험
+
+> 할 일의 자리 = `docs/reviews/rint2_siteq_remaining_plan_20261110.md` §10 의 2 번 · 1저자 11-10 결정 Q1 (kgy 실행 셸 umask 022 + 실제 파일 · 폴더 모드 확인) · Q6 (현장 확인을 nohup 문맥으로도) · Q8 (블록 종료 코드를 파일로도) = 같은 문서 §0-2.
+> 바뀐 것 = 이 폴더의 틀 · 시험 · 이 README · `SHA256SUMS` 뿐.  점검 도구 `docs/reviews/rint2_siteq_prep_20261109/tools/siteq_probe.py` (sha256 c455c792…) · `scripts/` · 계획 · 원장 무변경.  풀이 · 값 (σ) 과 무관하다 (블록 = 읽기 전용 현장 점검).
+> 11-09 기록 (§2 – §7 · 결과 `docs/data/rint2_siteq_20261109/` · 핀 `db86ce9b9`) 은 그대로 둔다 — 그 기록은 옛 틀 (§9-1 의 "앞" 칸) 로 돈 것이다.  §2 · §3 의 블록 설명 (fetch 가지 · 해시 · 채우는 칸 넷) 도 그 판의 설명이다.
+
+### 9-1. 틀에서 바뀐 줄 (앞 = 11-09 판 23 줄 → 뒤 = 96 줄)
+
+| 자리 | 앞 | 뒤 | 까닭 |
+|---|---|---|---|
+| 도구 해시 줄 | PROBE_SHA = a490b9ad… (11-09 도구) | c455c792… (지금 도구 · 직접 잰 값 = 이 폴더 `SHA256SUMS` 의 tools/siteq_probe.py 줄) | 계획 §2-2 C8 · §9 어긋남 1 |
+| fetch 가지 | `claude/sdcp-dem-manuscript-si-pqwtv8` | `claude/stoic-knuth-NObVQ` | 계획 §9 어긋남 2 |
+| 채우는 칸 | 넷 (PIN · 기계 · 기준 체크아웃 · 계획 폴더) | 일곱 (+ 원장 저장소 · 출력 바탕 · 계획 파일 · §9-2) | 계획 §2-3 A2 · §5-2 "도구 밖" 행 |
+| 작업 트리 · 결과 폴더 이름 | dem-siteq-<핀 9 자리> · rint_siteq_<기계>_<UTC 날짜> | 같은 이름 + 끝에 `${SITEQ_TAG:-}` (짧은 꼴 = 빈 값 → 이름 그대로 · nohup 꼴 = _nohup) | 두 꼴을 같은 날 같은 홈에서 (N4) |
+| STOP | 화면 한 줄 · rc 2 | 같음 + 결과 폴더가 생긴 뒤의 STOP 이면 rc 파일도 | Q8 |
+| 끝 | 화면 끝 줄 `[siteq] rc …` | 화면 끝 줄은 글자 그대로 · 그 바로 앞에서 rc 파일을 쓴다 | Q8 |
+| 새로 든 줄 | — | 머리: 블록 시작 때 umask 를 기억 · 꼴 B 자리 (주석 한 줄) / 도구 앞: 모드 목록 (파이썬 63 줄 · 읽기 전용 · 화면에도 찍음) · 환경 기록 한 줄 (umask · SIGHUP 무시 여부) | Q1 · Q6 |
+| 그대로 | 같은 줄 | 관문 셋 (PIN 꼴 · 자리 없음 · venv) · worktree add · HEAD 대조 · 해시 대조 · **도구 호출 줄** · 결과 sha256 줄 · exit · ASCII · `!` 없음 · TAB 없음 | — |
+
+### 9-2. 채우는 칸 (기계마다 채운 블록을 대화로 준다 · 주소 · 사용자 이름 · 리포 밖 경로는 리포에 쓰지 않는다)
+
+| 칸 | 뜻 | 블록이 쓰는 곳 | 비었을 때 |
+|---|---|---|---|
+| @@PIN@@ | 40 자리 커밋 = 단일 개정 커밋 그 자체 (계획 §0-2 Q1) | 작업 트리 · 도구 --pin | STOP (S4) |
+| @@MACHINE@@ | kgy · gabia | 결과 폴더 이름 · 도구 --machine | — |
+| @@BASE@@ | 기준 체크아웃 (kgy = 10-24 작업 트리 · gabia = 홈의 리포 클론 · §3-1 그대로) | fetch · worktree add | — |
+| @@PLAN@@ | 계획 폴더 (여럿이면 `:` 로 잇기) — 뜻은 11-09 와 같다 | 도구 --plan-dirs (C26) **와** 모드 목록 | not-given 줄 · C26 계획 폴더 행 없음 (S2) |
+| @@LEDGER@@ | 원장 git 저장소 | 모드 목록만 | not-given 줄 |
+| @@OUTBASE@@ | R 런 출력 바탕 | 모드 목록만 | not-given 줄 |
+| @@PLANFILE@@ | 계획 파일 (봉인할 JSON 의 사본) | 모드 목록만 | not-given 줄 |
+
+- 경로는 $HOME/… 꼴로 채운다 — 블록이 큰따옴표 안에서 펼친다.  ~ 로 채우면 펼쳐지지 않아 missing 으로 적힌다.
+- kgy 의 문서 꼴 (계획 §4-3 · 명령 문서 `docs/reviews/rint2_kgy_commands_20261020.md` 487 · 501 – 506 · 531 줄): 계획 사본 = sdcp 아래 ca1_plan.json · 원장 = sdcp 아래 ca1_ledger · 한 기계 predict 바탕 = sdcp 아래 ca1_predict.  12 단위 시도 바탕 이름 · gabia 의 자리 = 문서에 없음 (계획 §8) → 1저자가 정해 채운다.
+- 원장 · 출력 바탕의 파일 체계도 C26 으로 보려면 PLAN 에 `:` 로 이어 넣는다 (계획 §2-1 R3).  그 경로가 아직 없으면 C26 detail 에 plan dirs missing 이 붙어 계획 R1 의 통과 기준과 맞물린다 → 있는 경로만 넣는다.
+
+### 9-3. 결과 폴더에 새로 생기는 파일 (돌려받을 것)
+
+| 파일 (결과 폴더 안) | 언제 · 누가 | 내용 (한 줄 · ASCII) | 돌려받나 |
+|---|---|---|---|
+| siteq_result.json · siteq_result.json.sha256 · siteq.log | 도구 · 블록 (11-09 와 같음) | — | 예 |
+| siteq_block_rc.txt | 블록 끝 (화면 끝 줄 바로 앞) · 결과 폴더가 생긴 뒤의 STOP | rc=<종료 코드> end_utc=<UTC 시각> · STOP 이면 끝에 " stop=<STOP 문구>" · 임시 이름으로 쓴 뒤 mv (반쯤 쓴 파일이 보이지 않는다) | 예 |
+| siteq_block_env.txt | 도구를 띄우기 바로 앞 · 같은 셸 | umask_start=<블록 시작 때> umask_probe=<도구를 띄울 때> sighup_ignored=yes·no·unknown (블록 셸의 /proc/<pid>/status SigIgn 에서 SIGHUP 비트) | 예 |
+| siteq_block_modes.txt | 도구 앞 (읽기 전용) | §9-4 | 예 |
+| siteq_probe.py · c09_… – c19_… 폴더 | 블록 · 도구 | — | 아니오 (11-09 와 같음) |
+
+- rc 파일의 값 = 블록 종료 코드 = 화면 끝 줄의 값 (도구 rc 0 · 1 또는 STOP 2 · S1 · S8 · S7).
+- rc 파일이 없는 경우 = ① 결과 폴더가 생기기 전의 STOP (화면 메시지만 · 11-09 와 같은 "nothing written") ② 블록이 신호 · 메모리 부족 등으로 죽음 (S10).  rc 파일 하나로는 둘을 가르지 못한다 (① 이면 결과 폴더도 없다).  nohup 꼴은 발사 폴더의 nohup_rc.txt 가 ① 을 덮는다 (§9-5).
+- 도구의 C18 은 같은 셸에서 띄운 도구가 잰 값이다 → umask_probe 와 같아야 한다 (S1 · S1b · S1c 에서 같음 · 시험이 숫자로 대조).
+
+### 9-4. 모드 목록 (siteq_block_modes.txt)
+
+머리 줄 하나 (`# siteq block modes v1 utc=… runner=root|non-root …`) + 경로마다 한 줄.  칸 = 공백으로 나눈 key=value · path 는 맨 끝 (경로에 공백이 있어도 앞 칸이 흔들리지 않게).  S1 의 실제 출력:
+
+```
+tag=plan kind=dir mode=0775 owner=self group=self-primary group_write=yes other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/sdcp
+tag=ledger kind=missing path=~/sdcp/ca1_ledger
+tag=outbase kind=dir mode=0777 owner=other group=other group_write=yes other_write=yes acl_extra=0 acl_default=5 group_others=0 link=no path=~/sdcp/scripts
+tag=planfile kind=file mode=0664 owner=other group=other group_write=yes other_write=no acl_extra=2 acl_default=- group_others=1 link=no path=~/sdcp/ca1_plan.json
+tag=siteq_out kind=dir mode=0755 owner=self group=self-primary group_write=no other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/rint_siteq_kgy_20261111
+```
+
+| 칸 | 뜻 |
+|---|---|
+| tag | 칸 이름 (plan · ledger · outbase · planfile) · siteq_out = 블록이 이번에 만든 결과 폴더 (지금 umask 가 새 폴더에 준 모드 — 계획 §0-3 "새 출력 폴더 · 파일의 모드를 목록으로") |
+| kind | dir · file · other · missing (없음 — 멈추지 않는다) · not-given (칸이 비었음) |
+| mode | 4 자리 8 진 (setgid · sticky 비트 포함) |
+| owner | self = 실행 UID 와 같음 · root = UID 0 · other — 이름도 숫자도 찍지 않는다 |
+| group | self-primary = 실행 사용자의 주 그룹 · self-member = 보조 그룹 · root = GID 0 · other — 이름 · 숫자 없음 |
+| group_write · other_write | 모드 비트 g+w · o+w |
+| acl_extra | 접근 ACL 항목 수 − 기본 셋 (소유자 · 그룹 · 기타) · 0 = 추가 없음 (ls -l 의 + 표시 없음) · unsupported = 그 파일 체계가 POSIX ACL 을 모름 (확장 속성 system.posix_acl_access 를 읽는다) |
+| acl_default | 폴더의 기본 ACL 항목 수 — 있으면 그 안에 새로 생기는 파일 · 폴더가 umask 대신 이것을 물려받는다 · 파일은 - |
+| group_others | 그 그룹에 든 다른 계정 수 = 그룹 항목의 구성원 + /etc/passwd 에서 그 그룹이 주 그룹인 계정 − 실행 계정 · 숫자 하나만 (계획 §8 의 "그룹의 다른 구성원 [미확인]" 에 쓰는 칸) |
+| link | 경로 자체가 심볼릭 링크인지 (모드 · 소유는 따라간 대상의 것) |
+| path | 홈 아래면 ~ 로 바꿔 적는다 |
+
+- 준 경로 그 자체만 본다 — 하위 폴더 · 파일은 훑지 않는다.  계획 §0-3 의 "이미 있는 777 폴더는 R 출력 자리로 쓰지 않는다" 는 그 자리를 칸에 넣었을 때 other_write=yes 로 드러난다 (S1 의 outbase).
+- 기준 숫자는 정하지 않는다 (계획 §2-3 A2 "모드 숫자 기준 문서에 없음" 그대로) — 판단 = 1저자.
+
+### 9-5. nohup 꼴 (`docs/reviews/rint2_siteq_prep_20261109/container_test/short_block_nohup.tmpl` · 105 줄)
+
+하는 일:
+
+1. 붙이면 홈 아래 새 발사 폴더 (rint_siteq_nohup_<UTC 시각>) 를 만들고, 짧은 꼴의 안쪽 94 줄을 글자 그대로 block.sh 로 쓴다 (채운 칸도 같은 자리 · 같은 값).
+2. 발사 폴더에서 `SITEQ_TAG=_nohup nohup setsid bash -c '…'` 로 띄운다 — 입력 /dev/null · 출력 nohup.log · 자기 pid → nohup_pid.txt · block.sh 가 끝나면 그 종료 코드 → nohup_rc.txt (임시 이름 → mv).
+3. pid 파일이 생기면 (최대 10 s) 한 줄 (`[siteq] nohup start: pid … - log … - finished when …/nohup_rc.txt exists …`) 을 찍고 셸로 돌아온다 → 셸을 닫아도 된다.
+4. 끝났나 = 발사 폴더에 nohup_rc.txt 가 있나 · 진행 = nohup.log · 결과 = 결과 폴더 rint_siteq_<기계>_<날짜>_nohup (작업 트리도 …_nohup).
+5. 보낼 것 = 그 결과 폴더의 파일 (§9-3) + 발사 폴더의 nohup.log · nohup_rc.txt.
+
+| 조건 (지시서) | 어떻게 | 확인 (§9-7) |
+|---|---|---|
+| (가) 출력이 핀 작업 트리 밖에 남는다 | 발사 폴더 · 결과 폴더 = 홈 아래 · 띄우는 자리 = 발사 폴더 · 출력을 nohup.log 로 직접 돌린다 (nohup.out 이 생기지 않는다) | N1 – N4: 작업 트리 깨끗 · 홈 아래 nohup.out 0 개 · 발사 폴더 = 파일 넷뿐 · C5 확인 = 사례 NO |
+| (나) 끝났는지 · 종료 코드를 파일로 | 발사 폴더 nohup_rc.txt (결과 폴더가 생기기 전의 STOP 도 덮는다) + 결과 폴더 siteq_block_rc.txt | N1 – N4: 둘 다 rc=0 |
+| (다) 붙인 셸이 끊겨도 끝까지 | nohup = SIGHUP 무시를 물려줌 · setsid = 작업이 처음부터 다른 세션 · 다른 프로세스 그룹 (끊김 신호가 그룹 단위로 닿지 않는다) | N2 · N3 PASS · 대조: S10 (짧은 꼴은 끊김에 죽는다) · M4 · M5 · 관찰 O1 |
+| (라) 도구 호출 줄 · 검사 집합이 같다 | 본문 = 짧은 꼴의 안쪽 줄 그대로 (꼴의 차이 = 본문 앞뒤의 발사 줄뿐 · SITEQ_TAG 도 발사 줄에서 준다) | T0 (줄 단위로 같음 · 도구 호출 줄 1 개씩 같음) · S1 ↔ N1 검사 ID 33 개 같은 순서 |
+
+**setsid 를 넣은 까닭 (관찰 · O1 = 이 컨테이너에서 돌린 다섯 번 모두 같은 꼴 · 요약 파일 = 마지막 한 번 · 앞선 넷 = 스크래치 · 커밋 안 함)**: nohup 만으로 띄운 작업의 프로세스 그룹에 SIGHUP 이 오면 (N2 꼴 — 발사 셸이 세션 우두머리였다가 끝남) 블록 bash · 파이썬은 무시하지만, `git worktree add` 가 띄운 자식 git reset 이 신호 1 로 죽었다 — nohup.log: `error: reset died of signal 1` → `[siteq] STOP: git worktree add failed` · rc 2.  nohup 은 "무시" 를 물려줄 뿐이고, 스스로 신호 처리기를 거는 프로그램 (git · 사슬의 run_in_group = §6 Q1) 이 exec 로 띄운 자식은 기본 동작 (종료) 으로 돌아간다 (POSIX exec 규칙 · 메시지는 관찰 그대로).  setsid 를 더하면 같은 시험 (N2) 에서 끝까지 돈다.  M5 (nohup 빼고 setsid 만) 도 끝까지 돌지만 SIGHUP 무시 문맥이 없어진다 (sighup_ignored=no).
+⚠ 생산 발사 줄 (nohup · 줄의 꼴은 문서에 없음 · 계획 §8) 에도 같은 일이 생길 수 있다 — 끊김 SIGHUP 이 사슬의 프로세스 그룹에 닿으면 사슬은 원인 signal 로 멈추고 (§6 Q1) git 의 자식도 죽을 수 있다 (멈추는 쪽 · 시간만 잃는다 · 추정).  발사 줄을 정할 때 함께 본다 (setsid · 출력 명시 돌림 · 작업 트리 밖에서 띄우기).
+
+**계획 §2-2 C5 의 추정 → 확인 (NO)**:
+
+| # | 조건 | 결과 |
+|---|---|---|
+| NO1 | 핀 작업 트리 안에서 · 출력이 터미널인 채로 nohup true | nohup: ignoring input and appending output to 'nohup.out' · 작업 트리에 nohup.out 이 생김 · `git status --porcelain --untracked-files=normal` = ?? nohup.out (dirty) · 리포 `.gitignore` 에 없음 (check-ignore rc 1) |
+| NO2 | 같은 자리 · 출력을 다른 파일로 돌림 (> log 2>&1 < /dev/null) | nohup.out 없음 · 깨끗 |
+
+⇒ 추정이 맞다: 출력이 터미널이면 nohup 은 지금 폴더에 nohup.out 을 만들고, 그 폴더가 핀 작업 트리면 사슬 · 도구가 쓰는 같은 git status 명령에 추적 안 된 파일로 잡힌다 (사슬 = CODE_PIN_MISMATCH · 도구 = C99 FAIL 의 꼴 · 계획 §2-2 C5 근거 줄).  nohup 꼴은 출력을 돌리고 작업 트리 밖에서 띄워 이를 피한다.
+
+**같은 날 두 꼴**: 이름 끝의 `${SITEQ_TAG:-}` 로 짧은 꼴 (rint_siteq_kgy_<날짜>) 과 nohup 꼴 (…_nohup) 이 겹치지 않는다 — N4 = S1 뒤 같은 홈 · 같은 날 nohup 꼴 PASS · 짧은 꼴의 결과 파일 다섯 바이트 그대로.  같은 꼴을 같은 날 다시 = 11-09 와 같이 STOP (S3).
+
+### 9-6. umask — 두 꼴 (틀 = 꼴 A · 꼴 B = 주석 한 줄 자리 · 1저자가 정한다)
+
+| | 꼴 A — 기록만 (틀 지금) | 꼴 B — 블록 머리에서 umask 022 |
+|---|---|---|
+| 하는 일 | 붙인 셸의 umask 를 바꾸지 않는다 · umask_start = umask_probe (S1 · S1b) | 머리 주석 줄 (`# umask 022  # form B …`) 의 맨 앞 '# ' 두 글자를 지우면 블록이 022 로 둔다 · umask_start = 셸 값 · umask_probe = 022 (S1c: 0002 → 0022) |
+| 도구 C18 이 보는 것 | 실행 셸의 값 그대로 (S1 = 022 · 새 파일 644 / S1b = 002 · 664) | 늘 022 (S1c: 셸 002 인데 C18 = 022 · 644) |
+| 좋은 점 | 1저자 Q1 의 확인 대상 ("kgy 실행 셸 umask 022") 을 그대로 본다 · 계획 §5-1 의 선행 ("kgy 실행 셸에 umask 022") 이 지켜졌는지 드러난다 · 블록이 고쳐 놓고 숨기지 않는다 | 생산 발사 블록 머리에 umask 줄을 두는 꼴 (계획 §3 Q1 행) 과 같은 문맥 · 셸 설정을 잊어도 블록이 만든 폴더 · 파일 = 755 · 644 |
+| 나쁜 점 | 셸에 022 를 먼저 두지 않으면 kgy 에서 C18 = 002 → 계획 A1 통과 기준 (umask 022, new file mode 644) 미달 → 셸을 고치고 블록을 다시 | C18 이 셸 상태의 증거가 아니게 된다 (블록이 둔 값) · 머리 줄이 없는 다른 실행 (손으로 다시 돌림 · recover 등) 은 셸 값으로 돈다 — 그것은 umask_start 로만 보인다 |
+| 권고 | **꼴 A** — 셸 설정 (계획 §5-1 선행) 은 블록이 확인하고, 생산 발사 줄의 umask 줄 (계획 §3 Q1) 은 따로 둔다.  두 겹이면 어느 한쪽이 빠져도 드러난다. | |
+
+### 9-7. 컨테이너 시험 (11-11 · 이 컨테이너 ≠ kgy · gabia)
+
+돌리는 법 (PID 이름공간 안에서만 — 시험 스크립트는 자기가 PID 1 이 아니면 거부한다):
+
+```bash
+unshare -pf --mount-proc --kill-child python3 -I -B docs/reviews/rint2_siteq_prep_20261109/container_test/run_block_tests.py --work <리포 밖 새 빈 폴더> --summary <요약 파일>
+```
+
+| 칸 | 내용 |
+|---|---|
+| 스크립트 | `docs/reviews/rint2_siteq_prep_20261109/container_test/run_block_tests.py` (표준 라이브러리만 · root 필요 = chown · ACL 사례 · 리포는 git archive · git show 로 읽기만 · 쓰는 곳 = --work 와 --summary 뿐 · `--only` 로 사례 골라 돌림) |
+| 환경 | Ubuntu 24.04 · 커널 6.18 · root · ext4 (POSIX ACL 됨) · GPU 없음 · git 2.43.0 · bash 5.2.21 · venv = uv CPython 3.8.20 에 --system-site-packages (numpy 1.24.4 · scipy 1.10.1 = kgy 단위 · 네트워크 0) · S8 용 venv = 3.11 (numpy 2.4.6 · scipy 1.17.1) |
+| 가짜 origin | 리포 HEAD 의 `.gitignore` · `scripts/` · 도구 파일로 만든 저장소 · 커밋 셋 (날짜 · 이름 고정 → 같은 리포 판이면 같은 해시): O = scripts 만 · 가지 claude/sdcp-dem-manuscript-si-pqwtv8 (옛 틀이 받는 가지) → X = + 도구 c455c792… (정상 사례의 PIN) → Z = 도구 1 바이트 바꿈 · 가지 claude/stoic-knuth-NObVQ 의 끝 |
+| 기준 체크아웃 | 사례마다 git clone --no-local --no-checkout — 보통 = 옛 가지만 받은 클론 (현장처럼 새 가지를 받은 적이 없는 체크아웃) · R2 · NO = 가지 전부 |
+| 홈 | 사례마다 새 폴더 · kgy 꼴 = dem-ca1-89fc4 (기준) · dem-venv · sdcp (775 · 그 아래 scripts = 777 · 이름 없는 UID 소유 · 기본 ACL 5 항목 · ca1_plan.json = 664 · 이름 있는 계정 소유 · 접근 ACL 추가 2 항목 · ca1_ledger 는 만들지 않음) / gabia 꼴 = Yonghoon-DEM-DFT · dem-venv |
+| 끊김 흉내 | pty 를 만들어 그 셸에 블록을 붙인 뒤 pty 의 주 쪽을 닫는다 (ssh 끊김과 같은 부류 · 같지는 않다) · 스크립트는 어떤 프로세스에도 신호를 보내지 않는다 (kill 호출 0 · 부모를 잃고 이 스크립트 (PID 1) 에 넘어온 프로세스는 waitpid 로 거두기만) |
+| 요약 | `docs/reviews/rint2_siteq_prep_20261109/container_test/summary_short_20261111.txt` (작업 폴더 = <WORK> · 사례 홈 = ~ 로 가림) · 전체 287 s · overall PASS |
+
+사례 (11-09 짝 = §4-5 표의 같은 번호):
+
+| 사례 | 조건 | 기대 | 결과 |
+|---|---|---|---|
+| T0 | 정적: 두 틀 · 해시 · 본문 | PROBE_SHA = 도구 = `SHA256SUMS` · fetch 가지 = stoic · ASCII · `!` · TAB 없음 · 칸 일곱 · nohup 본문 = 짧은 꼴 안쪽 94 줄 · 도구 호출 줄 같음 · 발사 줄 꼴 · 꼴 B 줄은 주석 · 옛 틀 sha256 bc117ba6… 의 해시 · 가지 = 옛 값 | 14/14 |
+| S1 | kgy · 셸 umask 022 · 칸 일곱 채움 | rc 0 · 끝 줄 그대로 · FAIL · ERROR 0 · WARN = C28 (GPU 없음) 뿐 · rc 파일 rc=0 · umask 0022 = C18 022 · 새 파일 644 · sighup no · 작업 트리 깨끗 · C26 계획 폴더 행 (있음 · 쓰기 가능 · 같은 FS · missing 주석 없음) · 모드 목록 다섯 줄 (§9-4) · 이름 · 숫자 · 홈 경로 없음 | 14/14 · PASS 24 · INFO 8 · WARN 1 (11-09 S1 과 같은 꼴) |
+| S1b | kgy · 셸 umask 002 | S1 과 같음 · umask 0002 = C18 002 · 새 파일 664 · siteq_out 0775 | 14/14 |
+| S1c | 꼴 B (주석 줄을 켬) · 셸 002 | umask_start 0002 · umask_probe 0022 = C18 022 · siteq_out 0755 | 14/14 |
+| S2 | gabia · 계획 · 원장 · 출력 바탕 · 계획 파일 칸 빔 | rc 0 · not-given 넷 + siteq_out · C26 계획 폴더 행 없음 | 14/14 |
+| S3 | S1 뒤 같은 홈 · 같은 날 · 같은 꼴 | STOP (dem-siteq-… already exists) · 홈 목록 그대로 · S1 의 rc 파일 바이트 그대로 | 4/4 |
+| N4 | S1 뒤 같은 홈 · 같은 날 · nohup 꼴 | …_nohup 폴더로 끝까지 · rc 0 · S1 결과 파일 다섯 바이트 그대로 | 20/20 |
+| S4 | PIN 자리표 그대로 | STOP (PIN is not a 40-hex commit) · 홈 그대로 · rc 파일 없음 | 3/3 |
+| S5 | 꼴은 맞고 없는 커밋 | STOP (git worktree add failed) · 홈 그대로 | 3/3 (git: invalid reference) |
+| S6 | venv 없음 | STOP (venv not found) · 홈 그대로 | 3/3 |
+| S7 | 도구가 1 바이트 다른 PIN (Z) | STOP (probe sha256 differs) · 결과 폴더 = 도구 사본 + rc 파일 (rc=2 · stop=probe sha256 differs (probe not run)) · 결과 JSON 없음 | 4/4 |
+| S8 | venv = 3.11 (kgy 단위 아님) | rc 1 · FAIL = C02 뿐 · rc 파일 rc=1 · 끝 줄 rc 1 | 14/14 · PASS 23 · FAIL 1 · INFO 8 · WARN 1 |
+| S9 | bash -i 가 블록을 표준입력으로 읽음 (붙여 넣기 꼴) | rc 0 · rc 파일 rc=0 | 14/14 |
+| R1 | **옛 틀** · 새 가지를 받은 적 없는 기준 체크아웃 | STOP (git worktree add failed) — 옛 가지를 받아도 PIN 이 없다 (가지 까닭) · 홈 그대로 | 3/3 (git: invalid reference) · 같은 꼴의 기준 체크아웃 (옛 가지만) 에서 새 틀 = S1 PASS |
+| R2 | **옛 틀** · PIN 을 이미 가진 기준 체크아웃 | STOP (probe sha256 differs) — 도구가 c455c792… 로 바뀜 (해시 까닭) · 결과 폴더 = 도구 사본뿐 · rc 파일 없음 (옛 틀) | 4/4 |
+| NO | 계획 §2-2 C5 | §9-5 표 | 3/3 |
+| N1 | nohup 꼴 · 터미널 없이 띄움 | 발사 줄 · nohup_rc.txt rc=0 · 결과 폴더 rc 파일 rc=0 · sighup_ignored yes · 작업 트리 깨끗 · nohup.out 없음 · 발사 폴더 파일 넷 · 모드 목록 S1 과 같은 꼴 | 20/20 |
+| N2 | nohup 꼴 · 발사 셸 = pty 세션 우두머리 (끝날 때 커널이 그 그룹에 SIGHUP) + pty 끊음 | 끝까지 · rc 0 | 20/20 |
+| N3 | nohup 꼴을 pty 의 대화형 셸에 붙인 뒤 시작 줄이 나오면 pty 끊음 | 붙인 셸은 끊김으로 끝남 · 작업은 끝까지 · rc 0 | 20/20 |
+| S10 | **대조**: 짧은 꼴을 pty 대화형 셸에 붙이고 도구가 도는 중 (C01 – C08 아홉 줄이 찍힌 뒤) pty 끊음 | 붙인 셸 끝남 · 30 s 뒤 rc 파일 · 결과 JSON 없음 (짧은 꼴은 끊김에 죽는다 = N2 · N3 시험이 끊김을 실제로 만든다) | 4/4 |
+| (S1 ↔ N1) | 검사 집합 | 검사 ID 목록 같음 | 33 개 같은 순서 |
+
+변이 (틀을 일부러 고장 내고 같은 시험 · 겨냥한 단언만 실패하고 나머지는 모두 성립해야 "옳은 까닭"):
+
+| 변이 | 바꾼 것 | 실패해야 할 단언 | 결과 |
+|---|---|---|---|
+| M1 | 끝의 rc 파일 쓰기 줄 (`rcfile "$RC"`) 지움 · S1 꼴 | rc_file | rc_file 하나만 실패 (rc 파일 없음) · 옳은 까닭 |
+| M2 | 해시 대조 줄 지움 · S7 꼴 (PIN = Z) | outer_rc · stop_message · rc_file · out_files | 넷만 실패 (바뀐 도구가 끝까지 돌아 rc 0 · STOP 없음 · rc 파일 rc=0 · 결과 폴더에 도구 산출물) · 옳은 까닭 |
+| M3 | 모드 목록이 소유자 이름을 찍음 (이름 없으면 숫자) · S1 꼴 | modes_no_names | 그것 하나만 실패 (owner=root · 43219 · daemon 이 찍힘) · 옳은 까닭 |
+| M4 | 발사 줄에서 nohup · setsid 둘 다 지움 · N2 꼴 | job_completes | 그것 하나만 실패 (nohup_rc.txt 없음 · 감싼 bash 사라짐) · 옳은 까닭 |
+| M5 | 발사 줄에서 nohup 만 지움 (setsid 둠) · N2 꼴 | sighup_record | 그것 하나만 실패 (끝까지 돌지만 sighup_ignored=no) · 옳은 까닭 |
+
+관찰 (판정 없음): O1 = 발사 줄에서 setsid 만 지움 (nohup 둠) · N2 꼴 → nohup_rc.txt rc=2 · nohup.log `error: reset died of signal 1` · `[siteq] STOP: git worktree add failed` (§9-5 setsid 까닭).  결과는 SIGHUP 이 올 때 작업이 무엇을 하고 있었는지에 달려 판정으로 쓰지 않는다 (이 컨테이너에서는 다섯 번 모두 같은 꼴).
+
+### 9-8. 이 블록 · 이 시험이 못 보는 것 (한정)
+
+| 한정 | 뜻 |
+|---|---|
+| 모드 목록 = 준 경로 그 자체 | 하위 폴더 · 파일 (원장 저장소 안 · 시도 폴더 · 앞으로 사슬이 만들 파일) 은 보지 않는다 — 새 파일의 모드는 C18 (umask) · siteq_out (새 폴더) 로만 짐작 · 단일 작성자 정책 (계획 A5) 의 증거는 목록 + 운영 규칙이다 |
+| 등급만 | gabia (root) 에서는 root 소유가 owner=self 로 적힌다 (머리 줄 runner=root 로 가린다) · 이름 · UID 숫자는 일부러 없다 |
+| group_others | 그룹 항목 + /etc/passwd 만 센다 — LDAP · SSSD 에만 있는 계정은 빠질 수 있다 · ACL 로 들어온 사용자는 acl_extra 로만 보인다 |
+| ACL | 확장 속성 system.posix_acl_* 만 읽는다 — NFSv4 ACL 은 보지 않는다 (0 또는 unsupported) |
+| 시각 | 목록 · umask 는 도구를 띄우기 전 한 순간 |
+| 모드 목록이 실패하는 길 | 목록 파이썬이 죽으면 화면에 한 줄 (mode listing failed) 을 찍고 도구는 그대로 돈다 (`||`) — 이 길은 시험하지 않았다 (없는 경로 · 빈 칸은 시험함) |
+| rc 파일 없음 | 결과 폴더 전 STOP 과 블록 죽음을 가르지 못한다 (§9-3) · nohup 꼴은 nohup_rc.txt 가 앞의 것을 덮는다 · 감싼 bash 까지 죽으면 nohup_rc.txt 도 없다 (pid 파일의 프로세스가 살아 있는지로 본다) |
+| nohup 꼴의 git fetch | 터미널 없이 돈다 — 기준 체크아웃이 비밀번호 · 열쇠 문구를 물으면 STOP (git fetch failed) · 11-09 두 현장의 fetch 가 묻지 않았는지는 기록에 없다 [미확인] → 물으면 짧은 꼴을 쓰거나 fetch 를 먼저 손으로 |
+| nohup 꼴의 발사 폴더 | 본문이 결과 폴더 전에 STOP 해도 발사 폴더 (block.sh · nohup.log · pid · rc) 는 남는다 — 본문 STOP 문구의 "nothing written" 은 작업 트리 · 결과 폴더를 뜻한다 |
+| nohup 꼴의 문맥 | SIGHUP 무시 + 자기 세션 (setsid) — 생산 발사 줄 (nohup · 셸의 작업으로 남음) 과 같지 않다 · 생산 줄의 꼴 = 문서에 없음 (계획 §8) |
+| 꼴 B 를 켜면 | C18 이 셸의 umask 를 보이지 않는다 (umask_start 로만) |
+| 컨테이너 | root 로만 돌았다 — 비 root 실행 (kgy) 의 등급 계산은 "다른 UID 소유 파일" 쪽만 시험됨 · 11-09 의 A11 꼴 (능력 뺀 uid 0) 은 다시 돌리지 않았다 · kgy · gabia 의 커널 · 셸 · 터미널 · ssh 가 아니다 · pty 주 쪽 닫기 = ssh 끊김의 흉내 · 11-09 §4-4 · §5 의 한정 그대로 |
+| 도구 결과 | 이 시험은 블록 틀의 동작을 본다 — 현장 자격 (C01 – C29) 의 판정은 현장 실행 몫 (계획 §5) |
+
+### 9-9. 파일 (11-11 판)
+
+| 파일 | 상태 |
+|---|---|
+| `docs/reviews/rint2_siteq_prep_20261109/container_test/short_block.tmpl` | 고침 (23 → 96 줄 · ASCII · `!` · TAB 없음) |
+| `docs/reviews/rint2_siteq_prep_20261109/container_test/short_block_nohup.tmpl` | 새 파일 (105 줄 · 같은 조건) |
+| `docs/reviews/rint2_siteq_prep_20261109/container_test/run_block_tests.py` | 새 파일 (컨테이너 시험 · PID 1 이 아니면 거부) |
+| `docs/reviews/rint2_siteq_prep_20261109/container_test/summary_short_20261111.txt` | 새 파일 (§9-7 의 원문 요약) |
+| `docs/reviews/rint2_siteq_prep_20261109/container_test/summary.txt` · `docs/reviews/rint2_siteq_prep_20261109/container_test/summary_short.txt` · `docs/reviews/rint2_siteq_prep_20261109/tools/siteq_probe.py` · `docs/reviews/rint2_siteq_prep_20261109/tools/test_siteq_c02b.py` | 그대로 |
+| `docs/reviews/rint2_siteq_prep_20261109/SHA256SUMS` | 지금 바이트로 다시 씀 (줄 6 → 9) |
+| 11-09 판 틀 | 리포 이력에 그대로 (`db86ce9b9` · sha256 bc117ba6…) — 시험의 R1 · R2 가 git show 로 꺼내 쓴다 |
+
+### 9-10. 지시 밖으로 더한 것 · 1저자가 정할 것 (11-11)
+
+지시 (계획 §10 의 2 번 · 본 세션 지시서) 밖으로 더한 것 — 빼도 되며 까닭은 아래:
+
+| 더한 것 | 까닭 |
+|---|---|
+| nohup 꼴의 setsid | 관찰 O1: nohup 만이면 작업 그룹에 온 SIGHUP 에 git 의 자식이 죽어 (다) 를 지키지 못한다 |
+| 이름 끝 `${SITEQ_TAG:-}` | 두 꼴을 같은 날 같은 홈에서 돌리게 (없으면 둘째가 already exists 로 STOP → 작업 트리 지우기 · 폴더 이름 바꾸기를 손으로) · 짧은 꼴은 빈 값이라 이름 그대로 |
+| 모드 목록의 group 등급 · group_others · acl_default · link | 계획 §2-3 A2 "그룹 쓰기를 남기려면 그룹 구성 근거" · §8 "그룹의 다른 구성원 [미확인]" · 기본 ACL 은 umask 를 덮는다 |
+| 환경 기록의 sighup_ignored | 결과만 보고 어느 꼴 (문맥) 로 돌았는지 안다 · M5 가 이것으로 잡힌다 |
+| 사례 S1c · N4 · M4 · M5 · 관찰 O1 | 꼴 B 동작 · 같은 날 두 꼴 · 끊김 시험이 실제로 무는지 · setsid 의 근거 |
+
+| # | 1저자가 정할 것 | 권고 |
+|---|---|---|
+| Q1 | umask 꼴 A (기록만 · 틀 지금) / 꼴 B (블록이 022) | 꼴 A (§9-6) |
+| Q2 | nohup 꼴을 nohup setsid 로 둘까 (지시 = nohup) | 둔다 — O1 · 작업은 그대로 SIGHUP 무시 문맥 (sighup_ignored=yes) |
+| Q3 | 생산 발사 줄에도 setsid · 출력 명시 돌림 · 작업 트리 밖에서 띄우기를 넣을까 | 계획 §10 의 4 번 (명령 블록 · 실행 정책) 에서 함께 정한다 — 넣는 쪽 (O1 · C5 확인) |
+| Q4 | 현장에서 두 꼴의 순서 | 짧은 꼴 먼저 → 같은 날 nohup 꼴 (이름이 겹치지 않는다 · N4) |
+| Q5 | group_others (그 그룹의 다른 계정 수 · 이름 없음) 를 둘까 — 11-10 에 "묻지 않음" 이던 칸 | 둔다 (계획 A2 근거 · 숫자만) · 원치 않으면 그 칸만 뺀다 |
+| Q6 | gabia 의 PLAN · LEDGER · OUTBASE · PLANFILE 자리 · kgy 의 12 단위 OUTBASE 이름 | 계획 §10 의 4 번에서 정한 뒤 채운다 · gabia = kgy 와 같은 홈 아래 꼴 (계획 §7 Q2) |

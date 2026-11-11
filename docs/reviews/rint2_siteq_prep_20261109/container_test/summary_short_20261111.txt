@@ -1,0 +1,301 @@
+siteq short block container tests (templates of 2026-11-11) -- run_block_tests.py
+env: venv38 3.8 1.24.4 1.10.1 1 | venv311 3.11 2.4.6 1.17.1 1 | git version 2.43.0 | GNU bash, version 5.2.21(1)-release (x86 | uid 0 | harness pid 1 (own PID namespace)
+templates: short_block.tmpl 98c5ed08896de7a9 | short_block_nohup.tmpl 774cae371bf8b511 | tools/siteq_probe.py c455c792ba431f48
+fake origin (from HEAD of the repository): O 9add9402321b = claude/sdcp-dem-manuscript-si-pqwtv8 (scripts only) | X 6d5f5b849d22 = PIN of the normal cases (+ probe c455c792ba43) | Z fd6a767f3a1f = tip of claude/stoic-knuth-NObVQ (probe one byte changed, bca9f5e6b723)
+base clones: --no-local --no-checkout; "single" = only claude/sdcp-dem-manuscript-si-pqwtv8 (like a site checkout that never fetched the new branch)
+
+== cases ==
+T0   static: templates, hashes, shared body  -> PASS (14/14 asserts)
+       ok  probe_sha_line                     PROBE_SHA c455c792ba43 tool c455c792ba43 SHA256SUMS c455c792ba43
+       ok  fetch_branch                       fetch ['claude/stoic-knuth-NObVQ']
+       ok  short_ascii_no_bang_no_tab         96 lines
+       ok  short_slots                        
+       ok  short_no_address                   
+       ok  nohup_ascii_no_bang_no_tab         105 lines
+       ok  nohup_slots                        
+       ok  nohup_no_address                   
+       ok  nohup_body_equals_short            body 94 lines vs short inner 94 lines
+       ok  same_probe_call                    python3 -I -B -u siteq_probe.py --repo "$W" --pin "$PIN" --machine "$MACHINE" --out "$OUT"
+       ok  nohup_launch_line                  SITEQ_TAG=_nohup nohup setsid bash -c 'echo $$ > nohup_pid.t
+       ok  folders_take_tag                   W="$HOME/dem-siteq-$(printf %.9s "$PIN")${SITEQ_TAG:-}" OUT="$HOME/rin
+       ok  form_b_line_commented              # umask 022  # form B (not chosen; the f
+       ok  old_template                       old sha bc117ba6f7bd
+S1   kgy block, shell umask 022, plan/ledger/outbase/planfile filled  -> PASS (14/14 asserts)
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:48:51Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'no'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored no
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.4 s
+       note: mode list: tag=plan kind=dir mode=0775 owner=self group=self-primary group_write=yes other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/sdcp
+       note: mode list: tag=ledger kind=missing path=~/sdcp/ca1_ledger
+       note: mode list: tag=outbase kind=dir mode=0777 owner=other group=other group_write=yes other_write=yes acl_extra=0 acl_default=5 group_others=0 link=no path=~/sdcp/scripts
+       note: mode list: tag=planfile kind=file mode=0664 owner=other group=other group_write=yes other_write=no acl_extra=2 acl_default=- group_others=1 link=no path=~/sdcp/ca1_plan.json
+       note: mode list: tag=siteq_out kind=dir mode=0755 owner=self group=self-primary group_write=no other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/rint_siteq_kgy_20261111
+S1b  kgy block, shell umask 002  -> PASS (14/14 asserts)
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:49:06Z
+       ok  umask_record                       env {'umask_start': '0002', 'umask_probe': '0002', 'sighup_ignored': 'no'} | C18 umask 002 new file 664
+       ok  sighup_record                      sighup_ignored no
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.5 s
+       note: mode list: tag=plan kind=dir mode=0775 owner=self group=self-primary group_write=yes other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/sdcp
+       note: mode list: tag=ledger kind=missing path=~/sdcp/ca1_ledger
+       note: mode list: tag=outbase kind=dir mode=0777 owner=other group=other group_write=yes other_write=yes acl_extra=0 acl_default=5 group_others=0 link=no path=~/sdcp/scripts
+       note: mode list: tag=planfile kind=file mode=0664 owner=other group=other group_write=yes other_write=no acl_extra=2 acl_default=- group_others=1 link=no path=~/sdcp/ca1_plan.json
+       note: mode list: tag=siteq_out kind=dir mode=0775 owner=self group=self-primary group_write=yes other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/rint_siteq_kgy_20261111
+S1c  form B shown: shell umask 002, the commented umask line enabled  -> PASS (14/14 asserts)
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:49:22Z
+       ok  umask_record                       env {'umask_start': '0002', 'umask_probe': '0022', 'sighup_ignored': 'no'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored no
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.5 s
+S2   gabia block, plan/ledger/outbase/planfile empty  -> PASS (14/14 asserts)
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_gabia_20261111/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:49:37Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'no'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored no
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.5 s
+       note: mode list: tag=plan kind=not-given
+       note: mode list: tag=ledger kind=not-given
+       note: mode list: tag=outbase kind=not-given
+       note: mode list: tag=planfile kind=not-given
+       note: mode list: tag=siteq_out kind=dir mode=0755 owner=self group=self-primary group_write=no other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/rint_siteq_gabia_20261111
+S3   rerun in the S1 home on the same day  -> PASS (4/4 asserts)
+       ok  outer_rc                           rc 2
+       ok  stop_message                       [siteq] STOP: ~/dem-siteq-6d5f5b849 already exists (nothing written)
+       ok  home_unchanged                     home ['dem-ca1-89fc4', 'dem-siteq-6d5f5b849', 'dem-venv', 'rint_siteq_kgy_20261111', 'sdcp']
+       ok  old_rc_file_unchanged              
+N4   nohup form in the S1 home on the same day (folders get the _nohup suffix)  -> PASS (20/20 asserts)
+       ok  launcher_rc                        
+       ok  launch_folder                      launch folder ~/rint_siteq_nohup_20261111T214937Z
+       ok  pid_file                           nohup_pid.txt '652'
+       ok  job_completes                      nohup_rc.txt 'rc=0 end_utc=2026-11-11T21:49:51Z'
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111_nohup/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:49:51Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'yes'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored yes
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       ok  nohup_files_outside_worktree       launch folder ['block.sh', 'nohup.log', 'nohup_pid.txt', 'nohup_rc.txt']
+       ok  short_form_files_untouched         ~/rint_siteq_kgy_20261111
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.2 s
+S4   PIN placeholder left as it is  -> PASS (3/3 asserts)
+       ok  outer_rc                           rc 2
+       ok  stop_message                       [siteq] STOP: PIN is not a 40-hex commit (nothing written)
+       ok  home_unchanged                     home ['dem-ca1-89fc4', 'dem-venv', 'sdcp']
+S5   well-formed but unknown commit  -> PASS (3/3 asserts)
+       ok  outer_rc                           rc 2
+       ok  stop_message                       [siteq] STOP: git worktree add failed
+       ok  home_unchanged                     home ['dem-ca1-89fc4', 'dem-venv', 'sdcp']
+       note: git said: fatal: invalid reference: deadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+S6   venv missing  -> PASS (3/3 asserts)
+       ok  outer_rc                           rc 2
+       ok  stop_message                       [siteq] STOP: venv not found: ~/dem-venv (nothing written)
+       ok  home_unchanged                     home ['dem-ca1-89fc4', 'sdcp']
+S7   PIN whose probe differs by one byte  -> PASS (4/4 asserts)
+       ok  outer_rc                           rc 2
+       ok  stop_message                       [siteq] STOP: probe sha256 differs (probe not run)
+       ok  rc_file                            rc=2 end_utc=2026-11-11T21:49:56Z stop=probe sha256 differs (probe not run)
+       ok  out_files                          result folder ['siteq_block_rc.txt', 'siteq_probe.py']
+S8   venv = Python 3.11 (not the kgy unit) -> probe FAIL  -> PASS (14/14 asserts)
+       ok  outer_rc                           rc 1
+       ok  last_line                          [siteq] rc 1 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR ['C02']
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=1 end_utc=2026-11-11T21:50:12Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'no'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored no
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       counts {"FAIL": 1, "INFO": 8, "PASS": 23, "WARN": 1}
+       note: probe 13.8 s
+S9   bash -i reads the block from stdin (paste-like)  -> PASS (14/14 asserts)
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:50:27Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'no'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored no
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.3 s
+R1   OLD template (11-09), base never fetched the new branch -> stops at worktree add  -> PASS (3/3 asserts)
+       ok  outer_rc                           rc 2
+       ok  stop_message                       [siteq] STOP: git worktree add failed
+       ok  home_unchanged                     home ['dem-ca1-89fc4', 'dem-venv', 'sdcp']
+       note: git said: fatal: invalid reference: 6d5f5b849d22971006fbe882fac2b6cb715c4d6a
+R2   OLD template (11-09), base already has the PIN -> stops at the probe hash  -> PASS (4/4 asserts)
+       ok  outer_rc                           rc 2
+       ok  stop_message                       [siteq] STOP: probe sha256 differs (probe not run)
+       ok  rc_file                            rc file absent (as wanted)
+       ok  out_files                          result folder ['siteq_probe.py']
+NO   nohup output file vs the pinned worktree (plan 2-2 C5)  -> PASS (3/3 asserts)
+       ok  NO1_tty_stdout_writes_nohup_out    rc 0; pty says "nohup: ignoring input and appending output to 'nohup.out'"
+       ok  NO1_worktree_dirty                 status '?? nohup.out'; check-ignore rc 1 (1 = not ignored)
+       ok  NO2_redirected_no_file_clean       rc 0 status ''
+N1   nohup form, launched without a terminal  -> PASS (20/20 asserts)
+       ok  launcher_rc                        
+       ok  launcher_message                   
+       ok  launch_folder                      launch folder ~/rint_siteq_nohup_20261111T215033Z
+       ok  pid_file                           nohup_pid.txt '1305'
+       ok  job_completes                      nohup_rc.txt 'rc=0 end_utc=2026-11-11T21:50:47Z'
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111_nohup/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:50:47Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'yes'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored yes
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       ok  nohup_files_outside_worktree       launch folder ['block.sh', 'nohup.log', 'nohup_pid.txt', 'nohup_rc.txt']
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.5 s
+       note: mode list: tag=plan kind=dir mode=0775 owner=self group=self-primary group_write=yes other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/sdcp
+       note: mode list: tag=ledger kind=missing path=~/sdcp/ca1_ledger
+       note: mode list: tag=outbase kind=dir mode=0777 owner=other group=other group_write=yes other_write=yes acl_extra=0 acl_default=5 group_others=0 link=no path=~/sdcp/scripts
+       note: mode list: tag=planfile kind=file mode=0664 owner=other group=other group_write=yes other_write=no acl_extra=2 acl_default=- group_others=1 link=no path=~/sdcp/ca1_plan.json
+       note: mode list: tag=siteq_out kind=dir mode=0755 owner=self group=self-primary group_write=no other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/rint_siteq_kgy_20261111_nohup
+N2   nohup form, launcher = pty session leader (kernel SIGHUP to the job group) + hang-up  -> PASS (20/20 asserts)
+       ok  launcher_rc                        
+       ok  launcher_message                   
+       ok  launch_folder                      launch folder ~/rint_siteq_nohup_20261111T215048Z
+       ok  pid_file                           nohup_pid.txt '1467'
+       ok  job_completes                      nohup_rc.txt 'rc=0 end_utc=2026-11-11T21:51:03Z'
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111_nohup/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:51:03Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'yes'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored yes
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       ok  nohup_files_outside_worktree       launch folder ['block.sh', 'nohup.log', 'nohup_pid.txt', 'nohup_rc.txt']
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.6 s
+N3   nohup form pasted into an interactive pty shell, terminal hung up after the start  -> PASS (20/20 asserts)
+       ok  launcher_message                   
+       ok  attached_shell_gone_after_hangup   
+       ok  launch_folder                      launch folder ~/rint_siteq_nohup_20261111T215104Z
+       ok  pid_file                           nohup_pid.txt '1629'
+       ok  job_completes                      nohup_rc.txt 'rc=0 end_utc=2026-11-11T21:51:18Z'
+       ok  outer_rc                           rc 0
+       ok  last_line                          [siteq] rc 0 (0 = no FAIL and no ERROR) - send back ~/rint_siteq_kgy_20261111_nohup/siteq_result.json and the sha256 line
+       ok  result_json                        siteq_result.json present
+       ok  fail_error_ids                     FAIL/ERROR []
+       ok  warn_only_c28                      WARN ['C28']
+       ok  probe_and_pin                      probe c455c792ba43 pin 6d5f5b849d22
+       ok  rc_file                            rc=0 end_utc=2026-11-11T21:51:18Z
+       ok  umask_record                       env {'umask_start': '0022', 'umask_probe': '0022', 'sighup_ignored': 'yes'} | C18 umask 022 new file 644
+       ok  sighup_record                      sighup_ignored yes
+       ok  worktree_clean                     status ''
+       ok  no_nohup_out                       nohup.out []
+       ok  c26_plan_dir                       PASS out=ext4, repo=ext4, home=ext4, plan_dir=ext4
+       ok  modes_rows                         rows ['ledger', 'outbase', 'plan', 'planfile', 'siteq_out']
+       ok  modes_no_names                     owner/group are classes; no names, uid numbers or home path
+       ok  nohup_files_outside_worktree       launch folder ['block.sh', 'nohup.log', 'nohup_pid.txt', 'nohup_rc.txt']
+       counts {"INFO": 8, "PASS": 24, "WARN": 1}
+       note: probe 13.5 s
+S10  control: short block pasted into a pty shell, terminal hung up while the probe runs  -> PASS (4/4 asserts)
+       ok  probe_started                      
+       ok  attached_shell_gone_after_hangup   
+       ok  block_killed_no_rc_file            
+       ok  block_killed_no_result             
+same check set S1 vs N1 (short vs nohup form): yes (33 ids)
+== mutants (each must fail exactly the listed asserts, all other asserts must hold) ==
+M1   MUTANT: the line that writes the rc file at the end removed -> failed ['rc_file'] ; wanted ['rc_file'] -> right reason
+       BAD rc_file                            (no rc file)
+M2   MUTANT: the probe hash check removed (PIN = Z) -> failed ['outer_rc', 'stop_message', 'rc_file', 'out_files'] ; wanted ['outer_rc', 'stop_message', 'rc_file', 'out_files'] -> right reason
+       BAD outer_rc                           rc 0
+       BAD stop_message                       (no STOP line)
+       BAD rc_file                            rc=0 end_utc=2026-11-11T21:51:49Z
+       BAD out_files                          result folder ['c09_leftover', 'c10_timeout', 'c11_sigterm', 'c12_sigkill_recover', 'c13_flock', 'c13b_readonly_ledger', 'c14_ledger_git', 'c15_atomic', 'c16_special_files', 'c16b_unlink_open', 'c17_c
+M3   MUTANT: the mode list prints owner names (and the number when no name) -> failed ['modes_no_names'] ; wanted ['modes_no_names'] -> right reason
+       BAD modes_no_names                     plan owner=root group=self-primary others=0 (want self self-primary 0); outbase owner=43219 group=other others=0 (want other other 0); planfile owner=daemon group=other others=1 (want other other 1); 
+M4   MUTANT: nohup and setsid removed from the launch line (same pty session-leader launch as N2) -> failed ['job_completes'] ; wanted ['job_completes'] -> right reason
+       BAD job_completes                      nohup_rc.txt ''; wrapper pid alive False
+M5   MUTANT: nohup removed, setsid kept (same launch as N2) -> failed ['sighup_record'] ; wanted ['sighup_record'] -> right reason
+       BAD sighup_record                      sighup_ignored no
+== observations (no verdict) ==
+O1   OBSERVATION (no verdict): setsid removed, nohup kept (same launch as N2: the kernel SIGHUP reaches the job group)
+       nohup_rc.txt 'rc=2 end_utc=2026-11-11T21:52:48Z'
+       nohup.log: error: reset died of signal 1
+       nohup.log: [siteq] STOP: git worktree add failed
+== end ==
+leftover processes in this namespace at the end: 0 (not killed by this script; they end with the namespace)
+elapsed 287 s; overall PASS
