@@ -246,6 +246,9 @@ run 'ULPRI ul_gates          --selftest (관문)'               python3 -I docs/
 run 'ULPRI ul_runner_test    --selftest (러너 모의 · 가짜 lmp)' python3 -I docs/data/ps45_unload_20261009/ul_runner_test.py --selftest
 run 'ULPRI make_unload_decks --check (덱 = 생성 결과)'        python3 -I docs/data/ps45_unload_20261009/make_unload_decks.py --check
 run 'ULPRI seal_kit          --check (봉인 · 활성 규칙)'      python3 -I docs/data/ps45_unload_20261009/seal_kit.py --check
+#  ★ 2026-11-11 (1저자 11-10 Q11 비준 · ⑥ 시도 2 발사 뒤에 넣기로 한 줄 · `docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md` '넣을 줄') —
+#    G2c′ 샌드박스 대조기 · 실행기 시험 (합성 침대 · 가짜 lmp · 실제 LIGGGHTS 없음 · 41 함수 · 11-11 실측 ≈27 s · 신호 시험은 이름공간 안 드라이버).
+run 'G2c′ 샌드박스 대조기 · 실행기 (합성 침대 · 가짜 lmp · 시험 먼저)' python3 -I docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py
 run 'webapp: launcher (포트 선점)' python3 scripts/test_webapp_launcher.py
 run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 #  ★ v3 (2026-09-09) — 화면이 원장을 따라가는가 + **원장을 보여 주는 페이지가 금지값을
