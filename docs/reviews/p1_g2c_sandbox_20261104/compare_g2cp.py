@@ -3,7 +3,8 @@
 """G2c′ 샌드박스 대조기 (읽기만 · 표준 라이브러리) — 2026-11-10 · 결과 0 건 상태에서 씀.
 
     python3 -I compare_g2cp.py OUT N     → OUT/compare_g2cp.json + 화면 표
-    rc 0 = 대조 끝 (맞음 · 틀림 · 해당 없음 은 JSON 에) · rc 2 = '계산 못 함' 이 하나라도 (입력 결손 · 읽기 문제 · 인자)
+    rc 0 = 대조 끝 (맞음 · 틀림 · 해당 없음 은 JSON 에) · rc 2 = '계산 못 함' 이 하나라도 (입력 결손 · 읽기 문제 · 인자 · 실행기 출력 아님 ·
+    등록 덱 아님 — 실행기 출력이 아니면 JSON 을 쓰지 않는다)
 
 등록 = 메모 docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전 · Codex Q6 답 반영) — 예측마다
 맞음 / 틀림 / 해당 없음 / 계산 못 함 + 등록 판정 (§3 · 허용폭 1e-5 · 열 중앙값 floor 그대로 · 키트 ul_gates.g2c_compare 와 같은 식).
@@ -14,6 +15,15 @@ torque 3 · history 4 (deltaMax · shear 3) · contactArea · delta · contactPo
 정규화 = 무순서 쌍 키 (작은 id, 큰 id) · 방향 바뀐 행 (id1 > id2) = pos 두 묶음 맞바꿈 · force · force_normal · force_tangential 9 열 ·
 shear 3 열 부호 반전 · 주기 표지 · deltaMax · torque 그대로 (torque 는 같은 방향 행만 비교).
 값 같음 = %.17g 글자에서 읽은 float 가 정확히 같음 (−0 = 0) · 바이트 같음 = 파일 sha256 같음 (행 순서 · 글자 꼴 포함).
+
+11-10 (2) 내부 반박 리뷰 G2CPR-01–11 고침 (결과 전 · 판정 규칙 · 허용폭 그대로):
+- 읽는 OUT = 실행기 출력만 (lmp_identity.txt + 팔 폴더 아홉) · 샌드박스 폴더 · 11-04 기록 폴더 · 그 조상 = 거부 · 거부하면 JSON 을 쓰지 않는다 (11).
+- 등록 덱 문: OUT/inputs.md5 의 덱 여덟 (11-04 일곱 + BW) md5 = 이 폴더 파일 — 아니면 가 · 라-재현 (나) 를 뺀 예측 = 계산 못 함 · 판정 NOT_COMPUTED (04).
+- 숫자 토큰 = ASCII · 밑줄 없음 (읽기 문제 · 키트보다 엄격) · 값 같음 = 모든 토큰이 `%.17g` 꼴 (원자 id · type = %d 꼴) 일 때만 · 원자 상자도 비교 (04).
+- 바이트 예측 = 파일 sha256 만으로 (값 읽기 실패와 따로 · 10) · 꼴이 등록 덱 출력이 아니면 계산 못 함 (04).
+- 비교할 쌍 0 = 해당 없음 (맞음 아님) · 판정은 키트 식 PASS + 쌍 0 표지 · 바: 쌍 원자가 원자 덤프에 없으면 계산 못 함 (05).
+- 파일 없음 = 필수 열 결손 → 판정 NOT_COMPUTED (키트와 같음 · 03) · 마-1 cohesion 가드 = A(N−1) · A(N) 에서 직접 센 전체 집합 (01) ·
+  예외② 사라진 쌍 = 집합 · 새 쌍 왕복 = §0-2 값 규칙 (06) · 실행 파일 신원 · 입력 덱 기록을 모르면 가 · 라-재현 (나) = 계산 못 함 (07).
 """
 from __future__ import annotations
 
@@ -39,8 +49,11 @@ ARMS = ('A', 'A2', 'B', 'B2', 'C', 'BW', 'BR', 'CW', 'CR')
 SETUP_ARMS = ('B', 'B2', 'C', 'BW', 'BR', 'CW', 'CR')
 PERIODIC_SIDE = ('B', 'B2', 'BW')
 DECKS7 = ('head.inc', 'mat.inc', 'fresh.inc', 'outA.inc', 'A.liggghts', 'A2.liggghts', 'R.liggghts')
+DECKS8 = DECKS7 + ('BW.liggghts',)      # 등록 덱 문 (G2CPR-04) — OUT/inputs.md5 의 이 여덟 = 이 폴더 파일
+GATED = ('나', '다-값', '다-바이트', '라-값', '라-바이트', '라-재현가', '마-1', '마-2', '마-3', '바', '사', '예외①', '예외②')
 ATOM_COLS = ('id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'omegax', 'omegay', 'omegaz', 'radius')
 REF_N = 40000         # run_40000 (11-04) 의 N
+EMPTY_WHY = '비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)'
 
 _L = dict(pos=(0, 1, 2, 3, 4, 5), ids=(6, 7), flag=8, force=(9, 10, 11), fn=(12, 13, 14), ft=(15, 16, 17), tq=(18, 19, 20))
 LAYOUT = {30: dict(_L, dm=21, sh=(22, 23, 24), area=25, delta=26, cp=(27, 28, 29), ncol=30),
@@ -68,9 +81,17 @@ def _flip(v, lay):
 _INT = re.compile(r'[+-]?[0-9]+')
 
 
+def _ascii_num(tok):
+    """숫자 토큰 = ASCII · 밑줄 없음 (G2CPR-04) — float() · Decimal() · int() 는 '1_0' (= 10) · 전각 '１２' · 아라비아-인도 '١٢' (= 12) 를
+    받는다 · LIGGGHTS 는 그런 글자를 쓰지 않는다 (손댄 파일) → 읽기 문제.  키트 (값 토큰 = float()) 보다 엄격한 쪽 (거부)."""
+    return tok.isascii() and '_' not in tok
+
+
 def _id_tok(tok):
     """ID 토큰 → (int | None, 문제 | None) — 키트 ul_lib._id_value · exact_id 와 같은 규칙 (정수 토큰 = int · 소수 꼴은 정확히 정수일 때만 ·
-    0 < id ≤ 2^53 · 소수 ID 를 정수로 자르지 않는다)."""
+    0 < id ≤ 2^53 · 소수 ID 를 정수로 자르지 않는다) + 숫자 토큰 ASCII · 밑줄 없음 (G2CPR-04)."""
+    if not _ascii_num(tok):
+        return None, f'ID 토큰 꼴 (ASCII · 밑줄 없음) 아님 {tok!r}'
     if _INT.fullmatch(tok):
         v = int(tok)
     else:
@@ -122,13 +143,16 @@ def _head(lines, nhead, pr):
 
 
 def read_local(path, ncol=30):
-    """쌍 덤프 한 장 → dict(ok · problems · missing_required · step · box · box_xy · by_key{키: v · flipped · idx} · dups · n_rows)."""
+    """쌍 덤프 한 장 → dict(ok · problems · missing_required · step · box · box_xy · by_key{키: v · flipped · idx} · dups · n_rows ·
+    form17 · n_nonform).  ok = 판정 (§3 · 키트 식) 이 읽을 수 있음 · form17 = 받은 행의 모든 토큰이 `%.17g` 꼴 (값 같음 예측의 조건 · G2CPR-04 —
+    판정은 form17 을 보지 않는다).  파일 없음 = 필수 열 결손 (키트 read_dump 의 cols None → NOT_COMPUTED 와 같음 · G2CPR-03)."""
     lay = LAYOUT[ncol]
     out = dict(ok=False, path=path, ncol=ncol, problems=[], missing_required=False, step=None, box=None, box_xy=None,
-               cols=None, by_key={}, dups=[], n_rows=0, n_flag_bad=0)
+               cols=None, by_key={}, dups=[], n_rows=0, n_flag_bad=0, form17=False, n_nonform=0)
     pr = out['problems']
     if not path or not os.path.isfile(path):
         pr.append(f'파일 없음: {path}')
+        out['missing_required'] = True
         return out
     lines = open(path, encoding='utf-8', errors='replace').read().splitlines()
     out['step'], n_decl, out['box'] = _head(lines, 'ITEM: NUMBER OF ENTRIES', pr)
@@ -147,7 +171,7 @@ def read_local(path, ncol=30):
         if not set(req) <= set(cols):
             out['missing_required'] = True
         return out
-    rows, rowprob = [], False
+    rows, rowprob, nonform = [], False, 0
     for ln in lines[kh + 1:]:
         if not ln.strip():
             continue
@@ -159,14 +183,18 @@ def read_local(path, ncol=30):
             pr.append(f'열 수 {len(t)} ≠ {ncol}')
             rowprob = True
             continue
-        vals, bad = [], None
+        vals, bad, rnf = [], None, 0
         for c, tok in enumerate(t):
+            if not _ascii_num(tok):
+                bad = f'숫자 토큰 꼴 (ASCII · 밑줄 없음) 아님 {tok!r}'
+                break
             if c in lay['ids']:
                 v, p_ = _id_tok(tok)
                 if v is None:
                     bad = p_
                     break
                 vals.append(v)
+                fv = float(v)
             else:
                 try:
                     f = float(tok)
@@ -177,14 +205,20 @@ def read_local(path, ncol=30):
                     bad = f'비유한 {tok!r}'
                     break
                 vals.append(f)
+                fv = f
+            if ('%.17g' % fv) != tok:       # R 덱 dump_modify = 30 열 모두 "%.17g" (ID 도 double) — 다른 꼴 = 등록 덱 출력 아님
+                rnf += 1
         if bad:
             pr.append(bad + f' — {ln[:60]}')
             rowprob = True
             continue
+        nonform += rnf
         rows.append(vals)
     if n_decl is not None and n_decl != len(rows) and not rowprob:
         pr.append(f'행 수 {len(rows)} ≠ 머리 {n_decl}')
     out['n_rows'] = len(rows)
+    out['n_nonform'] = nonform
+    out['form17'] = nonform == 0
     for idx, v in enumerate(rows):
         i, j = v[6], v[7]
         if v[lay['flag']] not in (0.0, 1.0):
@@ -202,11 +236,13 @@ def read_local(path, ncol=30):
 
 
 def read_atoms(path):
-    """원자 덤프 (id type x y z vx vy vz omegax omegay omegaz radius) → dict(ok · problems · by_id{id: (type, [x … radius])} · step · box)."""
-    out = dict(ok=False, path=path, problems=[], missing_required=False, step=None, box=None, by_id={}, n_rows=0)
+    """원자 덤프 (id type x y z vx vy vz omegax omegay omegaz radius) → dict(ok · problems · by_id{id: (type, [x … radius])} · step · box ·
+    form17 · n_nonform).  꼴 = R 덱 dump_modify "%d %d %.17g …" (id · type = %d · 나머지 %.17g · G2CPR-04)."""
+    out = dict(ok=False, path=path, problems=[], missing_required=False, step=None, box=None, by_id={}, n_rows=0, form17=False, n_nonform=0)
     pr = out['problems']
     if not path or not os.path.isfile(path):
         pr.append(f'파일 없음: {path}')
+        out['missing_required'] = True
         return out
     lines = open(path, encoding='utf-8', errors='replace').read().splitlines()
     out['step'], n_decl, out['box'] = _head(lines, 'ITEM: NUMBER OF ATOMS', pr)
@@ -220,7 +256,7 @@ def read_atoms(path):
         pr.append(f'원자 열 {cols} ≠ {ATOM_COLS}')
         out['missing_required'] = not set(ATOM_COLS) <= set(cols)
         return out
-    rowprob, n = False, 0
+    rowprob, n, nonform = False, 0, 0
     for ln in lines[kh + 1:]:
         if not ln.strip():
             continue
@@ -230,6 +266,10 @@ def read_atoms(path):
         t = ln.split()
         if len(t) != len(ATOM_COLS):
             pr.append(f'원자 열 수 {len(t)}')
+            rowprob = True
+            continue
+        if not all(_ascii_num(x) for x in t):
+            pr.append(f'숫자 토큰 꼴 (ASCII · 밑줄 없음) 아님 — {ln[:60]}')
             rowprob = True
             continue
         aid, p_ = _id_tok(t[0])
@@ -245,11 +285,14 @@ def read_atoms(path):
         if aid in out['by_id']:
             pr.append(f'원자 ID 중복 {aid}')
             continue
+        nonform += int(str(aid) != t[0]) + int(str(ty) != t[1]) + sum(1 for v, tok in zip(vals, t[2:]) if ('%.17g' % v) != tok)
         out['by_id'][aid] = (ty, vals)
         n += 1
     if n_decl is not None and n_decl != n and not rowprob:
         pr.append(f'원자 수 {n} ≠ 머리 {n_decl}')
     out['n_rows'] = n
+    out['n_nonform'] = nonform
+    out['form17'] = nonform == 0
     out['ok'] = not pr
     return out
 
@@ -285,25 +328,58 @@ def read_md5_list(path):
     return out
 
 
+def md5_table(path):
+    """md5sum 꼴 → ({이름: hash}, {두 번 이상 나온 이름}) — 같은 이름 두 줄 = 모호한 기록 (한 줄만 골라 읽지 않는다)."""
+    tab, dup = {}, set()
+    for h, n in read_md5_list(path):
+        if n in tab:
+            dup.add(n)
+        tab[n] = h
+    return tab, dup
+
+
 def read_kv(path):
-    out = {}
+    """키 · 값 줄 → dict · 두 번 이상 나온 키 = '__dup__' (모호한 기록 — 그 키는 모름으로 다룬다)."""
+    out, dup = {}, set()
     if path and os.path.isfile(path):
         for ln in open(path, encoding='utf-8', errors='replace').read().splitlines():
             t = ln.split(None, 1)
             if t:
+                if t[0] in out:
+                    dup.add(t[0])
                 out[t[0]] = t[1].strip() if len(t) > 1 else ''
+    if dup:
+        out['__dup__'] = sorted(dup)
     return out
 
 
 # ── 값 · 바이트 ──────────────────────────────────────────────────────────────────────────
+def _vok(x):
+    """값 예측이 쓸 수 있는 덤프 = 읽기 문제 없음 ∧ `%.17g` 꼴 (G2CPR-04)."""
+    return bool(x.get('ok')) and bool(x.get('form17'))
+
+
+def _bad_inputs(named):
+    """[(이름, 읽은 dict)] → 값 예측을 막는 사유 목록 (읽기 문제 · 꼴)."""
+    out = []
+    for name, x in named:
+        if not x.get('ok'):
+            out.append(f'{name} 읽기 문제: ' + '; '.join(str(p) for p in x.get('problems', [])[:2]))
+        elif not x.get('form17'):
+            out.append(f'{name} 글자 꼴 %.17g 아님 ({x.get("n_nonform")} 토큰) — 값 같음을 가를 수 없음 · 등록 덱 출력이 아니다')
+    return out
+
+
 def pairs_value(D1, D2):
-    """값 동일성 (Q6-1 앞 문장) — ID · 방향을 맞춘 30 열 · 쌍 집합 · TIMESTEP · 상자 · 중복 0."""
-    out = dict(equal=False, computed=False, why=[])
-    if not (D1['ok'] and D2['ok']):
-        out['why'] = (D1['problems'][:2] + D2['problems'][:2]) or ['읽기 실패']
+    """값 동일성 (Q6-1 앞 문장) — ID · 방향을 맞춘 30 열 · 쌍 집합 · TIMESTEP · 상자 · 중복 0 · 두 덤프 모두 `%.17g` 꼴 (G2CPR-04)."""
+    out = dict(equal=False, computed=False, why=[], empty=False)
+    bad = _bad_inputs((('D1', D1), ('D2', D2)))
+    if bad:
+        out['why'] = bad
         return out
     lay = LAYOUT[D1['ncol']]
     out['computed'] = True
+    out['empty'] = not D1['by_key'] and not D2['by_key']
     k1, k2 = D1['by_key'], D2['by_key']
     common = sorted(set(k1) & set(k2))
     only1, only2 = sorted(set(k1) - set(k2)), sorted(set(k2) - set(k1))
@@ -343,24 +419,45 @@ def pairs_value(D1, D2):
 
 
 def atoms_value(A1, A2):
+    """원자 값 동일성 — id 별 11 값 (type 포함) · id 집합 · TIMESTEP · 상자 (§0-2 · G2CPR-04) · 두 덤프 모두 꼴 맞음."""
     out = dict(equal=False, computed=False, why=[])
-    if not (A1['ok'] and A2['ok']):
-        out['why'] = (A1['problems'][:2] + A2['problems'][:2]) or ['읽기 실패']
+    bad = _bad_inputs((('원자 D1', A1), ('원자 D2', A2)))
+    if bad:
+        out['why'] = bad
         return out
     out['computed'] = True
     a, b = A1['by_id'], A2['by_id']
     common = sorted(set(a) & set(b))
     nd = sum(1 for i in common if a[i] != b[i])
     o1, o2 = len(set(a) - set(b)), len(set(b) - set(a))
-    out.update(n1=len(a), n2=len(b), n_common=len(common), only1=o1, only2=o2, n_differ=nd)
+    out.update(n1=len(a), n2=len(b), n_common=len(common), only1=o1, only2=o2, n_differ=nd, box_equal=A1['box'] == A2['box'])
     if A1['step'] != A2['step']:
         out['why'].append(f'TIMESTEP {A1["step"]} ≠ {A2["step"]}')
+    if A1['box'] != A2['box']:
+        out['why'].append('원자 덤프 상자 다름')
     if o1 or o2:
         out['why'].append(f'원자 집합 다름 ({o1} · {o2})')
     if nd:
         out['why'].append(f'값 다른 원자 {nd}')
     out['equal'] = not out['why']
     return out
+
+
+def _bytes_pred(pc, pa, Dc, Da):
+    """바이트 예측 (쌍 덤프 둘 · 원자 덤프 둘) — 파일 sha256 만으로 정한다 (값 읽기 실패와 따로 · G2CPR-10).
+    계산 못 함 = 파일 없음 · 읽은 행에 `%.17g` (원자 id · type = %d) 꼴 아닌 토큰 (등록 덱 출력이 아님 · G2CPR-04) ·
+    해당 없음 = 두 쌍 덤프를 읽었고 둘 다 쌍 0 (G2CPR-05) · pc · pa = (D1 경로, D2 경로) · Dc · Da = 읽은 dict 둘씩."""
+    miss = [p for p in tuple(pc) + tuple(pa) if not (p and os.path.isfile(p))]
+    if miss:
+        return dict(status='계산 못 함', why=['덤프 없음: ' + ', '.join(str(p) for p in miss[:4])])
+    nf = [x['path'] for x in tuple(Dc) + tuple(Da) if x.get('n_nonform')]
+    if nf:
+        return dict(status='계산 못 함', why=[f'글자 꼴 %.17g 아님 — 등록 덱 출력이 아니다 ({len(nf)} 파일)'])
+    if all(x.get('ok') and x.get('n_rows') == 0 for x in Dc):
+        return dict(status='해당 없음', why=[EMPTY_WHY])
+    pe, ae = file_bytes_equal(*pc), file_bytes_equal(*pa)
+    w = [s for s, ok in (('쌍 덤프 바이트 다름', pe), ('원자 덤프 바이트 다름', ae)) if not ok]
+    return dict(status='맞음' if not w else '틀림', why=w, pairs_equal=pe, atoms_equal=ae)
 
 
 # ── 판정 (등록 §3 · 키트 g2c_compare 와 같은 식) ─────────────────────────────────────────
@@ -423,6 +520,8 @@ def judge(ref, test, expected_step=None, mode='g2cp'):
                shear_nonzero_frac=(sum(1 for x in sh if x > 0) / len(sh)) if sh else None,
                n_periodic=sum(1 for k in O if O[k]['v'][lay['flag']] != 0.0))
     out['status'] = 'PASS' if not (miss or extra or bad or conflicts) else 'FAIL'
+    if not O and not T:      # 키트 식 그대로 PASS — 가르는 힘이 없다는 표지만 (G2CPR-05)
+        out['note'] = '쌍 0 — 등록 규칙대로 PASS · 가르는 힘 없음 (건식 N = 200 · 빈 침대는 판독 대상 아님)'
     return out
 
 
@@ -505,13 +604,15 @@ def _en(v, box):
 # ── 예측 ─────────────────────────────────────────────────────────────────────────────────
 def pred_ba(B, C, atoms, mat):
     """바 (Q6-3 사영식) — 양쪽 고착 쌍: ΔF = −kt Δs · ΔF_n,dump = −kt (n·Δs) n · ΔF_t,dump = −kt [Δs − (n·Δs) n] (ΔX = X_B − X_C) 이
-    E = 1e-9·kt|Δs| + 64ε(|F_B|+|F_C|+kt|s_B|+kt|s_C|) 안.  고착 = kt|s| ≤ (1−1e-9) μ|Fn| (둘 다) · Fn = F_C·en (C 의 shear ⊥ en)."""
+    E = 1e-9·kt|Δs| + 64ε(|F_B|+|F_C|+kt|s_B|+kt|s_C|) 안.  고착 = kt|s| ≤ (1−1e-9) μ|Fn| (둘 다) · Fn = F_C·en (C 의 shear ⊥ en) ·
+    쌍 원자가 C 원자 덤프에 없으면 계산 못 함 (G2CPR-05) · 세 덤프 모두 `%.17g` 꼴 (G2CPR-04)."""
     out = dict(status='계산 못 함', why=[], n_common=0, n_stick_both=0, n_slip_any=0, n_slip_both=0, n_slip_both_on_circle=0,
                n_boundary=0, n_dm_differ=0, n_missing_atom=0, n_fail=0, fail_by_eq={'바-1': 0, '바-2': 0, '바-3': 0},
                n_discriminating=0, by_flag={'0': dict(n_stick_both=0, n_fail=0, n_dm_differ=0), '1': dict(n_stick_both=0, n_fail=0, n_dm_differ=0)},
                worst=None, kappa_over_kt=None)
-    if not (B['ok'] and C['ok'] and atoms['ok']):
-        out['why'] = (B['problems'][:2] + C['problems'][:2] + atoms['problems'][:2]) or ['읽기 실패']
+    bad = _bad_inputs((('B', B), ('C', C), ('C 원자', atoms)))
+    if bad:
+        out['why'] = bad
         return out
     if LAYOUT[B['ncol']]['sh'] is None:
         out['why'] = ['이력 열 없음']
@@ -575,6 +676,10 @@ def pred_ba(B, C, atoms, mat):
     out['worst'] = worst[1]
     if kap:
         out['kappa_over_kt'] = dict(n=len(kap), min=min(kap), median=statistics.median(kap), max=max(kap))
+    if out['n_missing_atom']:       # G2CPR-05 — 쌍 원자가 C 원자 덤프에 없음 = 자료 어긋남 (조용히 건너뛰어 '해당 없음' 으로 빠지지 않는다)
+        out['status'] = '계산 못 함'
+        out['why'] = [f'쌍 원자가 C 원자 덤프에 없음 — {out["n_missing_atom"]} / {out["n_common"]} 쌍 (kt 를 셀 수 없다)']
+        return out
     if out['n_stick_both'] == 0:
         out['status'], out['why'] = '해당 없음', ['양쪽 고착 쌍 0 — 가르지 못함']
     else:
@@ -591,14 +696,25 @@ def _eq_ulp(a, b):
     return abs(a - b) <= ULP_K * EPS * m
 
 
+def cohesion_guarded(ANm1, AN):
+    """① 의 cohesion 가드 쌍 = A(N−1) · A(N) 둘 다 있고 A(N) deltaMax ≠ max(A(N−1) deltaMax, A(N) delta) (4 ulp 밖) 인 쌍 — **전체 집합**
+    (자르지 않는다 · 마-1 · 예외① 이 같은 함수를 쓴다 · G2CPR-01)."""
+    Pk = ANm1['by_key']
+    return {k for k, e in AN['by_key'].items() if k in Pk and not _eq_ulp(e['v'][21], max(Pk[k]['v'][21], e['v'][26]))}
+
+
 def exc1(D, ANm1, AN):
     """예외 ① deltaMax 올림 (normal_model_hooke_hysteresis.h 156–158 · 조건 없음) — (a) 모든 setup 덤프 deltaMax ≥ delta ·
-    (b) 주기 파일 쪽 (B · B2 · BW): A(N−1) 에도 있는 쌍마다 deltaMax = max(A(N−1) deltaMax, 그 쌍 delta) · (c) 명령 · 왕복 둘째 쪽 = 바뀐 쌍 0."""
+    (b) 주기 파일 쪽 (B · B2 · BW): A(N−1) 에도 있는 쌍마다 deltaMax = max(A(N−1) deltaMax, 그 쌍 delta) · (c) 명령 · 왕복 둘째 쪽 = 바뀐 쌍 0 ·
+    setup 덤프 일곱 모두 쌍 0 = 해당 없음 (G2CPR-05)."""
     out = dict(status='계산 못 함', why=[], viol_a={}, exact_a={}, viol_b={}, exact_b={}, n_raise={}, changed_c={},
-               n_raise_periodic_side=None, n_cohesion_guarded_A=None, cohesion_keys=[])
-    need = [D[a] for a in SETUP_ARMS] + [ANm1, AN]
-    if not all(x['ok'] for x in need):
-        out['why'] = ['읽기 실패: ' + ', '.join(a for a in SETUP_ARMS if not D[a]['ok'])] + ([] if ANm1['ok'] and AN['ok'] else ['A 덤프'])
+               n_raise_periodic_side=None, n_cohesion_guarded_A=None, cohesion_keys_shown=[])
+    bad = _bad_inputs([(a, D[a]) for a in SETUP_ARMS] + [('A(N−1)', ANm1), ('A(N)', AN)])
+    if bad:
+        out['why'] = bad
+        return out
+    if not any(D[a]['by_key'] for a in SETUP_ARMS):
+        out['status'], out['why'] = '해당 없음', ['setup 덤프 일곱 모두 쌍 0 — ' + EMPTY_WHY]
         return out
     for a in SETUP_ARMS:
         va = ex = 0
@@ -626,9 +742,8 @@ def exc1(D, ANm1, AN):
         X = D[x]['by_key']
         Y = AN['by_key'] if y is None else D[y]['by_key']
         out['changed_c'][lab] = sum(1 for k in set(X) & set(Y) if X[k]['v'][21] != Y[k]['v'][21])
-    coh = [list(k) for k, e in AN['by_key'].items() if k in ANm1['by_key']
-           and not _eq_ulp(e['v'][21], max(ANm1['by_key'][k]['v'][21], e['v'][26]))]
-    out['n_cohesion_guarded_A'], out['cohesion_keys'] = len(coh), coh[:10]
+    coh = sorted(cohesion_guarded(ANm1, AN))
+    out['n_cohesion_guarded_A'], out['cohesion_keys_shown'] = len(coh), [list(k) for k in coh[:10]]   # 보여주기만 앞 10 · 셈은 전체
     out['n_raise_periodic_side'] = out['n_raise'].get('B')
     w = out['why']
     if any(out['viol_a'].values()):
@@ -642,34 +757,41 @@ def exc1(D, ANm1, AN):
 
 
 def exc2(D, ANm1, AN):
-    """예외 ② 이웃 재구성 (neigh_gran.cpp 587–615) — 새 쌍 (A(N−1) 덤프에 없던 setup 쌍) 을 shear 0 / 0 아님 으로 · 사라진 쌍 수 ·
-    shear 0 인 새 쌍은 deltaMax = delta (0 에서 올림) · 새 쌍도 왕복 같음 (BW ↔ BR · CW ↔ CR)."""
+    """예외 ② 이웃 재구성 (neigh_gran.cpp 587–615) — 새 쌍 (A(N−1) 덤프에 없던 setup 쌍) 을 shear 0 / 0 아님 으로 ·
+    shear 0 인 새 쌍은 deltaMax = delta (0 에서 올림) · 새 쌍도 왕복 같음 (BW ↔ BR · CW ↔ CR · §0-2 값 규칙 = 방향 맞춘 값 · torque 는 같은 방향 행만) ·
+    사라진 쌍 (A(N−1) 에 있고 N 에 없음) = **집합** 으로 A = B (G2CPR-06) · A(N−1) · B 둘 다 쌍 0 = 해당 없음 (G2CPR-05)."""
     out = dict(status='계산 못 함', why=[], n_new=None, n_new_zero=None, n_new_restored=None, n_gone=None, n_gone_B=None,
-               viol_new_zero_dm=None, n_new_rt_differ=None, new_keys=[])
-    if not all(x['ok'] for x in (D['B'], D['BW'], D['BR'], D['CW'], D['CR'], ANm1, AN)):
-        out['why'] = ['읽기 실패']
+               n_gone_A_only=None, n_gone_B_only=None, viol_new_zero_dm=None, n_new_rt_differ=None, new_keys=[])
+    bad = _bad_inputs([(a, D[a]) for a in ('B', 'BW', 'BR', 'CW', 'CR')] + [('A(N−1)', ANm1), ('A(N)', AN)])
+    if bad:
+        out['why'] = bad
         return out
     Bk, Pk = D['B']['by_key'], ANm1['by_key']
+    if not Bk and not Pk:
+        out['status'], out['why'] = '해당 없음', ['A(N−1) · B 모두 쌍 0 — ' + EMPTY_WHY]
+        return out
     new = sorted(set(Bk) - set(Pk))
     zero = [k for k in new if Bk[k]['v'][22:25] == [0.0, 0.0, 0.0]]
+    gone_A, gone_B = set(Pk) - set(AN['by_key']), set(Pk) - set(Bk)
     out.update(n_new=len(new), n_new_zero=len(zero), n_new_restored=len(new) - len(zero), new_keys=[list(k) for k in new[:10]],
-               n_gone=len(set(Pk) - set(AN['by_key'])), n_gone_B=len(set(Pk) - set(Bk)))
+               n_gone=len(gone_A), n_gone_B=len(gone_B), n_gone_A_only=len(gone_A - gone_B), n_gone_B_only=len(gone_B - gone_A))
     out['viol_new_zero_dm'] = sum(1 for k in zero if not _eq_ulp(Bk[k]['v'][21], Bk[k]['v'][26]))
+    names = [g for g, _ in _groups(LAYOUT[30])]
     nd = 0
     for x, y in (('BW', 'BR'), ('CW', 'CR')):
         X, Y = D[x]['by_key'], D[y]['by_key']
         for k in new:
-            if k in X and k in Y and X[k]['v'] != Y[k]['v']:
+            if (k in X) != (k in Y):
                 nd += 1
-            elif (k in X) != (k in Y):
+            elif k in X and any(_cmp_groups(X, Y, [k], names).values()):
                 nd += 1
     out['n_new_rt_differ'] = nd
     if out['viol_new_zero_dm']:
         out['why'].append(f'shear 0 인 새 쌍 중 deltaMax ≠ delta {out["viol_new_zero_dm"]}')
     if nd:
         out['why'].append(f'새 쌍 왕복 다름 {nd}')
-    if out['n_gone'] != out['n_gone_B']:
-        out['why'].append(f'사라진 쌍 수 A {out["n_gone"]} ≠ B {out["n_gone_B"]}')
+    if gone_A != gone_B:
+        out['why'].append(f'사라진 쌍 집합 A ≠ B (A 만 {len(gone_A - gone_B)} · B 만 {len(gone_B - gone_A)} · 수 {len(gone_A)} · {len(gone_B)})')
     out['status'] = '맞음' if not out['why'] else '틀림'
     return out
 
@@ -705,14 +827,16 @@ def _cmp_groups(X, Y, keys, names):
     return cnt
 
 
-def pred_ma(D, AT, ANm1, AN, coh_keys):
-    """마 [내용] B ↔ C (둘 다 setup · 같은 x · v · ω)."""
+def pred_ma(D, AT, ANm1, AN):
+    """마 [내용] B ↔ C (둘 다 setup · 같은 x · v · ω) — 마-1 의 deltaMax 비교에서 빼는 cohesion 가드 쌍 = A(N−1) · A(N) 에서 직접 센
+    **전체** 집합 (예외① 결과 · 보여주기 목록과 무관 · G2CPR-01) · 비교할 쌍 0 = 해당 없음 (G2CPR-05)."""
     res = {}
-    if not all(x['ok'] for x in (D['B'], D['C'], ANm1, AN, AT['B'], AT['C'])):
-        bad = dict(status='계산 못 함', why=['읽기 실패'])
-        return {'마-1': dict(bad), '마-2': dict(bad), '마-3': dict(bad)}
+    bad = _bad_inputs((('B', D['B']), ('C', D['C']), ('A(N−1)', ANm1), ('A(N)', AN), ('B 원자', AT['B']), ('C 원자', AT['C'])))
+    if bad:
+        x = dict(status='계산 못 함', why=bad)
+        return {'마-1': dict(x), '마-2': dict(x), '마-3': dict(x)}
     Bk, Ck, Pk, Nk = D['B']['by_key'], D['C']['by_key'], ANm1['by_key'], AN['by_key']
-    coh = {tuple(k) for k in coh_keys}
+    coh = cohesion_guarded(ANm1, AN)
     common = sorted(set(Bk) & set(Ck))
     names = ['pos', 'flag', 'contactArea', 'delta', 'contactPoint']
     cnt = _cmp_groups(Bk, Ck, common, names)
@@ -725,8 +849,11 @@ def pred_ma(D, AT, ANm1, AN, coh_keys):
         w.append(f'다른 쌍 {cnt}')
     if not av['equal']:
         w.append('원자 ' + '; '.join(av['why']))
-    res['마-1'] = dict(status='맞음' if not w else '틀림', why=w, n_common=len(common), differ=cnt, n_cohesion_excluded=len(coh & set(common)),
-                      atoms=dict(n=av.get('n_common'), n_differ=av.get('n_differ')))
+    m1 = dict(status='맞음' if not w else '틀림', why=w, n_common=len(common), differ=cnt, n_cohesion_excluded=len(coh & set(common)),
+              n_cohesion_guarded=len(coh), atoms=dict(n=av.get('n_common'), n_differ=av.get('n_differ')))
+    if not Bk and not Ck:
+        m1.update(status='해당 없음', why=['B · C 모두 쌍 0 — ' + EMPTY_WHY], atoms_note='; '.join(av['why']) or '원자 같음')
+    res['마-1'] = m1
     K = sorted(set(Bk) & set(Ck) & set(Pk) & set(Nk))
     vb = sum(1 for k in K if Bk[k]['v'][22:25] != Pk[k]['v'][22:25])
     vc = sum(1 for k in K if Ck[k]['v'][22:25] != Nk[k]['v'][22:25])
@@ -741,6 +868,8 @@ def pred_ma(D, AT, ANm1, AN, coh_keys):
         w.append(f'B≠C 집합 ({len(sBC)}) ≠ A(N−1)≠A(N) 집합 ({len(sA)})')
     res['마-2'] = dict(status='맞음' if not w else '틀림', why=w, n_keys=len(K), n_set_BC=len(sBC), n_set_A=len(sA),
                       n_B_ne_Anm1=vb, n_C_ne_AN=vc, n_new=len(set(Bk) - set(Pk)))
+    if not K:
+        res['마-2'].update(status='해당 없음', why=['B · C · A(N−1) · A(N) 공통 쌍 0 — ' + EMPTY_WHY])
     cN = sorted(set(Ck) & set(Nk))
     all_names = [g for g, _ in _groups(LAYOUT[30])]
     f0 = [k for k in cN if Ck[k]['v'][8] == 0.0]
@@ -760,13 +889,16 @@ def pred_ma(D, AT, ANm1, AN, coh_keys):
         w.append(f'주기 표지 1 쌍의 힘 · 토크 밖 열 다름 {n1o}')
     res['마-3'] = dict(status='맞음' if not w else '틀림', why=w, n_flag0=len(f0), n_flag0_differ=n0, n_flag1=len(f1),
                       n_flag1_force_differ=n1f, n_flag1_other_differ=n1o)
+    if not Ck and not Nk:
+        res['마-3'].update(status='해당 없음', why=['C · A(N) 모두 쌍 0 — ' + EMPTY_WHY])
     return res
 
 
 def pred_sa(D, AN):
-    """사 [이력] C · CW 이력 4 열 ↔ A(N) (공통 쌍 · 정확)."""
-    if not all(x['ok'] for x in (D['C'], D['CW'], AN)):
-        return dict(status='계산 못 함', why=['읽기 실패'])
+    """사 [이력] C · CW 이력 4 열 ↔ A(N) (공통 쌍 · 정확) · 비교할 쌍 0 = 해당 없음 (G2CPR-05)."""
+    bad = _bad_inputs((('C', D['C']), ('CW', D['CW']), ('A(N)', AN)))
+    if bad:
+        return dict(status='계산 못 함', why=bad)
     Nk, w, det = AN['by_key'], [], {}
     for a in ('C', 'CW'):
         X = D[a]['by_key']
@@ -776,6 +908,8 @@ def pred_sa(D, AN):
             w.append(f'{a} 이력 다른 쌍 {nd}')
         if set(X) != set(Nk):
             w.append(f'{a} ↔ A(N) 쌍 집합 다름')
+    if not Nk and not D['C']['by_key'] and not D['CW']['by_key']:
+        return dict(status='해당 없음', why=['C · CW · A(N) 모두 쌍 0 — ' + EMPTY_WHY], detail=det)
     return dict(status='맞음' if not w else '틀림', why=w, detail=det)
 
 
@@ -785,16 +919,65 @@ def _ref_tables(ref):
     return (rin[0][0] if rin else None), dict((n, h) for h, n in rin), rout
 
 
+def _ident_lmp_md5(ident):
+    """lmp_identity.txt 의 실행 파일 md5 — 32 자리 16 진이 아니면 None (모름 · G2CPR-07)."""
+    v = ident.get('lmp_md5')
+    if 'lmp_md5' in ident.get('__dup__', ()):
+        return None
+    return v if isinstance(v, str) and re.fullmatch(r'[0-9a-f]{32}', v) else None
+
+
 def _decks_same(O, rin):
-    oin = dict((n, h) for h, n in read_md5_list(os.path.join(O, 'inputs.md5')))
-    return all(oin.get(d) is not None and oin.get(d) == rin.get(d) for d in DECKS7), oin
+    """OUT 의 덱 일곱 md5 ↔ 11-04 → (True | False | None, OUT 표) — None = 모름 (OUT/inputs.md5 없음 · 덱 기록 빠짐 · 11-04 덱 기록 빠짐 · G2CPR-07)."""
+    p = os.path.join(O, 'inputs.md5')
+    if not os.path.isfile(p):
+        return None, {}
+    oin, dup = md5_table(p)
+    if dup & set(DECKS7) or any(oin.get(d) is None or rin.get(d) is None for d in DECKS7):
+        return None, oin
+    return all(oin[d] == rin[d] for d in DECKS7), oin
+
+
+def _known_conditions(O, ref, ident, need_cmd=False, N=None):
+    """가 · 라-재현 (나) 의 판정 조건 셋 (넷) — (모르는 것 목록, 다른 것 목록, 자세히).  모르면 '계산 못 함' · 알고 다르면 '해당 없음' (G2CPR-07)."""
+    rlmp, rin, rout = _ref_tables(ref)
+    lm = _ident_lmp_md5(ident)
+    same_decks, _ = _decks_same(O, rin)
+    unknown, differ = [], []
+    if not rlmp:
+        unknown.append('11-04 실행 파일 md5 기록 없음')
+    if lm is None:
+        unknown.append('실행 파일 신원 (lmp_identity.txt 의 lmp_md5) 기록 없음 · 꼴 아님')
+    if same_decks is None:
+        unknown.append('덱 일곱 md5 기록 없음 (OUT/inputs.md5 · 11-04)')
+    same_lmp = None if (lm is None or not rlmp) else (lm == rlmp)
+    if same_lmp is False:
+        differ.append('실행 파일 md5 다름')
+    if same_decks is False:
+        differ.append('덱 md5 다름')
+    if N != REF_N:
+        differ.append(f'N ≠ {REF_N}')
+    det = dict(same_lmp=same_lmp, same_decks=same_decks, ref_lmp_md5=rlmp, lmp_md5=ident.get('lmp_md5'))
+    if need_cmd:
+        cmd = os.path.join(O, 'A2', 'rst', 'restart_cmd.bin')
+        rcmd = rout.get('A2/rst/restart_cmd.bin')
+        if not rcmd:
+            unknown.append('11-04 명령 파일 md5 기록 없음')
+            det['same_cmd_file'] = None
+        elif not os.path.isfile(cmd):
+            unknown.append('새 A2 명령 파일 없음')
+            det['same_cmd_file'] = None
+        else:
+            det['same_cmd_file'] = md5(cmd) == rcmd
+            if not det['same_cmd_file']:
+                differ.append('명령 파일 md5 다름')
+    return unknown, differ, det
 
 
 def pred_ga(O, N, ref, ident):
-    """가 — 11-04 다섯 팔 출력 md5 (run_40000/outputs.md5) · 판정 조건 = 같은 실행 파일 md5 ∧ 덱 일곱 md5 ∧ N = 40000."""
-    rlmp, rin, rout = _ref_tables(ref)
-    same_decks, _ = _decks_same(O, rin)
-    same_lmp = bool(rlmp) and ident.get('lmp_md5') == rlmp
+    """가 — 11-04 다섯 팔 출력 md5 (run_40000/outputs.md5) · 판정 조건 = 같은 실행 파일 md5 ∧ 덱 일곱 md5 ∧ N = 40000 ·
+    조건을 모르면 계산 못 함 · 알고 다르면 해당 없음 (G2CPR-07)."""
+    _rlmp, _rin, rout = _ref_tables(ref)
     eq, ne, absent = [], [], []
     for name, h in sorted(rout.items()):
         p = os.path.join(O, name)
@@ -804,76 +987,73 @@ def pred_ga(O, N, ref, ident):
             eq.append(name)
         else:
             ne.append(name)
-    det = dict(n_ref=len(rout), n_equal=len(eq), differ=ne[:15], absent=absent[:15], same_lmp=same_lmp, same_decks=same_decks,
-               ref_lmp_md5=rlmp, lmp_md5=ident.get('lmp_md5'))
+    unknown, differ, det = _known_conditions(O, ref, ident, N=N)
+    det.update(n_ref=len(rout), n_equal=len(eq), differ=ne[:15], absent=absent[:15])
+    obs = f'관찰만: 같은 파일 {len(eq)} / {len(rout)}'
     if not rout:
         return dict(status='계산 못 함', why=['11-04 출력 기록 없음'], **det)
-    if not (same_lmp and same_decks and N == REF_N):
-        why = [x for x, c in (('실행 파일 md5 다름', not same_lmp), ('덱 md5 다름', not same_decks), (f'N ≠ {REF_N}', N != REF_N)) if c]
-        return dict(status='해당 없음', why=why + [f'관찰만: 같은 파일 {len(eq)} / {len(rout)}'], **det)
+    if unknown:
+        return dict(status='계산 못 함', why=unknown + [obs], **det)
+    if differ:
+        return dict(status='해당 없음', why=differ + [obs], **det)
     return dict(status='맞음' if len(eq) == len(rout) else '틀림', why=[] if len(eq) == len(rout) else [f'다른 파일 {ne + absent}'], **det)
 
 
-def pred_na(O, N):
-    """나 [재생] B ↔ BW 쌍 · 원자 덤프 바이트 같음 (보조 = B ↔ B2 · A · A2 주기 파일 md5)."""
-    c = lambda a: os.path.join(O, a, 'post', 'c_%d.txt' % N)
-    t = lambda a: os.path.join(O, a, 'post', 'atom_%d.txt' % N)
-    if not all(os.path.isfile(p) for p in (c('B'), c('BW'), t('B'), t('BW'))):
-        return dict(status='계산 못 함', why=['B · BW 덤프 없음'])
-    pe, ae = file_bytes_equal(c('B'), c('BW')), file_bytes_equal(t('B'), t('BW'))
+def _dumps(O, N, a):
+    return os.path.join(O, a, 'post', 'c_%d.txt' % N), os.path.join(O, a, 'post', 'atom_%d.txt' % N)
+
+
+def pred_na(O, N, D, AT):
+    """나 [재생] B ↔ BW 쌍 · 원자 덤프 바이트 같음 (보조 = B ↔ B2 · A · A2 주기 파일 md5) — 바이트 = sha256 만 · 쌍 0 = 해당 없음."""
+    (cb, ab), (cw, aw) = _dumps(O, N, 'B'), _dumps(O, N, 'BW')
+    out = _bytes_pred((cb, cw), (ab, aw), (D['B'], D['BW']), (AT['B'], AT['BW']))
+    cb2, ab2 = _dumps(O, N, 'B2')
     ra, rb = os.path.join(O, 'A', 'rst', 'restart_%d.bin' % N), os.path.join(O, 'A2', 'rst', 'restart_%d.bin' % N)
-    aux = dict(restart_A_eq_A2=file_bytes_equal(ra, rb), B_eq_B2_pairs=file_bytes_equal(c('B'), c('B2')),
-               B_eq_B2_atoms=file_bytes_equal(t('B'), t('B2')))
-    w = [x for x, ok in (('쌍 덤프 바이트 다름', pe), ('원자 덤프 바이트 다름', ae)) if not ok]
-    return dict(status='맞음' if not w else '틀림', why=w, pairs_equal=pe, atoms_equal=ae, aux=aux)
+    out['aux'] = dict(restart_A_eq_A2=file_bytes_equal(ra, rb), B_eq_B2_pairs=file_bytes_equal(cb, cb2), B_eq_B2_atoms=file_bytes_equal(ab, ab2))
+    return out
 
 
 def pred_round(O, N, D, AT, x, y):
-    """[왕복] x (D1) ↔ y (D2) — 값 · 바이트 따로."""
+    """[왕복] x (D1) ↔ y (D2) — 값 · 바이트 따로 (바이트 = sha256 만 · 값 읽기 실패와 무관 · G2CPR-10) · 쌍 0 = 해당 없음 (G2CPR-05)."""
     pv, av = pairs_value(D[x], D[y]), atoms_value(AT[x], AT[y])
-    cpx, cpy = os.path.join(O, x, 'post', 'c_%d.txt' % N), os.path.join(O, y, 'post', 'c_%d.txt' % N)
-    apx, apy = os.path.join(O, x, 'post', 'atom_%d.txt' % N), os.path.join(O, y, 'post', 'atom_%d.txt' % N)
+    (cpx, apx), (cpy, apy) = _dumps(O, N, x), _dumps(O, N, y)
+    byt = _bytes_pred((cpx, cpy), (apx, apy), (D[x], D[y]), (AT[x], AT[y]))
     if not (pv['computed'] and av['computed']):
-        bad = dict(status='계산 못 함', why=pv['why'] + av['why'])
-        return dict(bad), dict(bad)
+        return dict(status='계산 못 함', why=pv['why'] + av['why']), byt
+    if pv['empty']:
+        return dict(status='해당 없음', why=[EMPTY_WHY]), byt
     w = list(pv['why']) + ['원자 ' + s for s in av['why']]
     val = dict(status='맞음' if not w else '틀림', why=w, pairs={k: pv[k] for k in ('n1', 'n2', 'n_common', 'only1', 'only2',
                'orientation_differs', 'dup1', 'dup2', 'n_pairs_differ', 'by_group')},
-               atoms={k: av.get(k) for k in ('n_common', 'only1', 'only2', 'n_differ')})
-    pe, ae = file_bytes_equal(cpx, cpy), file_bytes_equal(apx, apy)
-    wb = [s for s, ok in (('쌍 덤프 바이트 다름', pe), ('원자 덤프 바이트 다름', ae)) if not ok]
-    byt = dict(status='맞음' if not wb else '틀림', why=wb, pairs_equal=pe, atoms_equal=ae)
+               atoms={k: av.get(k) for k in ('n_common', 'only1', 'only2', 'n_differ', 'box_equal')})
     return val, byt
 
 
-def pred_ra_repro(O, N, ref, ident):
-    """라-재현 (Q6-2 따로) — (가) 새 C ↔ 새 CW 바이트 · (나) 새 C · CW ↔ 11-04 C md5 (같은 실행 파일 ∧ 같은 명령 파일 ∧ 덱 일곱 ∧ N 40000)."""
-    c = lambda a: os.path.join(O, a, 'post', 'c_%d.txt' % N)
-    t = lambda a: os.path.join(O, a, 'post', 'atom_%d.txt' % N)
-    if not all(os.path.isfile(p) for p in (c('C'), c('CW'), t('C'), t('CW'))):
-        bad = dict(status='계산 못 함', why=['C · CW 덤프 없음'])
-        return dict(bad), dict(bad)
-    pe, ae = file_bytes_equal(c('C'), c('CW')), file_bytes_equal(t('C'), t('CW'))
-    w = [s for s, ok in (('쌍 덤프 바이트 다름', pe), ('원자 덤프 바이트 다름', ae)) if not ok]
-    ga = dict(status='맞음' if not w else '틀림', why=w, pairs_equal=pe, atoms_equal=ae)
-    rlmp, rin, rout = _ref_tables(ref)
-    same_decks, _ = _decks_same(O, rin)
-    cmd = os.path.join(O, 'A2', 'rst', 'restart_cmd.bin')
+def pred_ra_repro_a(O, N, D, AT):
+    """라-재현 (가) — 새 C ↔ 새 CW 쌍 · 원자 덤프 바이트 (sha256 만 · 쌍 0 = 해당 없음)."""
+    (cc, ac), (cw, aw) = _dumps(O, N, 'C'), _dumps(O, N, 'CW')
+    return _bytes_pred((cc, cw), (ac, aw), (D['C'], D['CW']), (AT['C'], AT['CW']))
+
+
+def pred_ra_repro_b(O, N, ref, ident):
+    """라-재현 (나) — 새 C · CW ↔ 11-04 C md5 · 판정 조건 = 같은 실행 파일 ∧ 같은 명령 파일 ∧ 덱 일곱 ∧ N 40000 ·
+    조건을 모르면 계산 못 함 · 알고 다르면 해당 없음 (G2CPR-07)."""
+    (cc, ac), (cw, aw) = _dumps(O, N, 'C'), _dumps(O, N, 'CW')
+    _rlmp, _rin, rout = _ref_tables(ref)
     rc_ = rout.get('C/post/c_%d.txt' % REF_N)
     ra_ = rout.get('C/post/atom_%d.txt' % REF_N)
-    same_lmp = bool(rlmp) and ident.get('lmp_md5') == rlmp
-    same_cmd = os.path.isfile(cmd) and rout.get('A2/rst/restart_cmd.bin') == md5(cmd)
-    det = dict(same_lmp=same_lmp, same_cmd_file=same_cmd, same_decks=same_decks, ref_C_md5=rc_)
+    unknown, differ, det = _known_conditions(O, ref, ident, need_cmd=True, N=N)
+    det['ref_C_md5'] = rc_
     if not (rc_ and ra_):
-        na = dict(status='계산 못 함', why=['11-04 C md5 기록 없음'], **det)
-    elif not (same_lmp and same_cmd and same_decks and N == REF_N):
-        why = [x for x, cnd in (('실행 파일 md5 다름', not same_lmp), ('명령 파일 md5 다름', not same_cmd), ('덱 md5 다름', not same_decks),
-                                (f'N ≠ {REF_N}', N != REF_N)) if cnd]
-        na = dict(status='해당 없음', why=why, **det)
-    else:
-        ok = md5(c('C')) == rc_ and md5(c('CW')) == rc_ and md5(t('C')) == ra_ and md5(t('CW')) == ra_
-        na = dict(status='맞음' if ok else '틀림', why=[] if ok else ['C · CW md5 ≠ 11-04 C'], **det)
-    return ga, na
+        return dict(status='계산 못 함', why=['11-04 C md5 기록 없음'], **det)
+    if unknown:
+        return dict(status='계산 못 함', why=unknown, **det)
+    if differ:
+        return dict(status='해당 없음', why=differ, **det)
+    if not all(os.path.isfile(p) for p in (cc, cw, ac, aw)):
+        return dict(status='계산 못 함', why=['C · CW 덤프 없음'], **det)
+    ok = md5(cc) == rc_ and md5(cw) == rc_ and md5(ac) == ra_ and md5(aw) == ra_
+    return dict(status='맞음' if ok else '틀림', why=[] if ok else ['C · CW md5 ≠ 11-04 C'], **det)
 
 
 def report_a(AN, ANm1, atomsA, mat):
@@ -881,11 +1061,12 @@ def report_a(AN, ANm1, atomsA, mat):
     if not (AN['ok'] and ANm1['ok'] and atomsA['ok']):
         return dict(status='계산 못 함')
     box, dt = AN['box_xy'], mat['dt']
-    obs, mod, rel = [], [], []
+    obs, mod, rel, nmiss = [], [], [], 0
     for k in sorted(set(AN['by_key']) & set(ANm1['by_key'])):
         v, p = AN['by_key'][k]['v'], ANm1['by_key'][k]['v']
         ai, aj = atomsA['by_id'].get(k[0]), atomsA['by_id'].get(k[1])
         if ai is None or aj is None:
+            nmiss += 1
             continue
         en, r, d = _en(v, box)
         ri, rj = ai[1][9], aj[1][9]
@@ -905,13 +1086,13 @@ def report_a(AN, ANm1, atomsA, mat):
         if _nrm(do) > 0:
             rel.append(_nrm(_sub(do, dm_)) / _nrm(do))
     if not obs:
-        return dict(status='보고', n=0)
+        return dict(status='보고', n=0, n_missing_atom=nmiss)
     smm = sum(m * m for m in mod)
     slope = sum(o * m for o, m in zip(obs, mod)) / smm if smm > 0 else None
     mo = sum(obs) / len(obs)
     sst = sum((o - mo) ** 2 for o in obs)
     r2 = (1 - sum((o - slope * m) ** 2 for o, m in zip(obs, mod)) / sst) if (slope is not None and sst > 0) else None
-    return dict(status='보고', n=len(obs) // 3, slope=slope, r2=r2, median_rel=statistics.median(rel) if rel else None,
+    return dict(status='보고', n=len(obs) // 3, slope=slope, r2=r2, median_rel=statistics.median(rel) if rel else None, n_missing_atom=nmiss,
                 note='A 의 in-run 증분은 반 step 속도 (v(N−½)) 로 계산 · 여기 모형은 덤프의 v(N) — 판정 아님')
 
 
@@ -931,18 +1112,99 @@ def report_yeonsok(AN, D):
     return out
 
 
+def _within(a, b):
+    """a 가 b 이거나 b 안 (realpath 둘)."""
+    return a == b or a.startswith(b.rstrip(os.sep) + os.sep)
+
+
+def out_guard(O, here, ref):
+    """G2CPR-11 — 읽고 쓰는 OUT = 실행기 출력 (lmp_identity.txt + 팔 폴더 아홉) 만 · 샌드박스 (덱) 폴더 · 그 조상 · 11-04 기록 폴더 (그 안 · 조상) = 거부.
+    → 거부 사유 목록 (빈 목록 = 받음).  거부하면 대조기는 아무것도 쓰지 않는다."""
+    ro, rh = os.path.realpath(O), os.path.realpath(here)
+    if _within(rh, ro):
+        return [f'OUT = 샌드박스 (덱) 폴더이거나 그 조상 ({O}) — 덱 · 기록 폴더에 쓰지 않는다']
+    if ref:
+        rr = os.path.realpath(ref)
+        if _within(ro, rr) or _within(rr, ro):
+            return [f'OUT = 11-04 기록 폴더 (또는 그 안 · 조상) ({O}) — 기록 폴더에 쓰지 않는다']
+    miss = (['lmp_identity.txt'] if not os.path.isfile(os.path.join(O, 'lmp_identity.txt')) else []) + \
+        [a + '/' for a in ARMS if not os.path.isdir(os.path.join(O, a))]
+    if miss:
+        return ['실행기 (run_g2cp.sh) 출력이 아니다 — 없음: ' + ' · '.join(miss[:6]) + ' — 대조하지 않고 쓰지 않는다']
+    return []
+
+
+def deck_gate(O, here):
+    """G2CPR-04 — 등록 덱 문: OUT/inputs.md5 (실행기가 쓴 입력 md5) 의 덱 여덟 (11-04 일곱 + BW) = 이 폴더 (대조기가 물성을 읽는 곳) 의 파일 md5."""
+    p = os.path.join(O, 'inputs.md5')
+    if not os.path.isfile(p):
+        return dict(ok=False, why=['OUT/inputs.md5 없음 — 어떤 덱으로 돌았는지 모른다 (등록 실험인지 가를 수 없음)'])
+    oin, dup = md5_table(p)
+    bad = []
+    for f in DECKS8:
+        hp = os.path.join(here, f)
+        have = md5(hp) if os.path.isfile(hp) else None
+        if f in dup:
+            bad.append(f + ' 기록 중복 (모호)')
+        elif oin.get(f) is None:
+            bad.append(f + ' 기록 없음')
+        elif have is None or oin[f] != have:
+            bad.append(f + ' md5 다름')
+    return dict(ok=not bad, why=(['입력 덱 ≠ 등록 덱 (이 폴더): ' + ' · '.join(bad)] if bad else []), checked=list(DECKS8))
+
+
 def compare_all(O, N, here=HERE, ref=None):
-    """→ (결과 dict, rc) · OUT 이 있으면 OUT/compare_g2cp.json 을 쓴다."""
+    """→ (결과 dict, rc) · OUT 이 실행기 출력일 때만 OUT/compare_g2cp.json 을 쓴다 (G2CPR-11)."""
     ref = ref if ref is not None else os.path.join(here, 'run_40000')
-    res = dict(N=N, out=O, here=here, ref=ref, predictions={}, judgment={}, exceptions={}, reports={},
+    res = dict(N=N, out=O, here=here, ref=ref, predictions={}, judgment={}, exceptions={}, reports={}, json_written=False,
                thresholds=dict(REL=REL, MARGIN=MARGIN, E_REL=E_REL, E_ABS_K=E_ABS_K, ULP_K=ULP_K, CIRCLE_REL=CIRCLE_REL),
-               memo='docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전)')
+               memo='docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전 · 1저자 비준 11-10)')
     P = res['predictions']
     if not os.path.isdir(O):
         P['입력'] = dict(status='계산 못 함', why=[f'OUT 없음: {O}'])
         return res, 2
+    refuse = out_guard(O, here, ref)
+    if refuse:
+        P['입력'] = dict(status='계산 못 함', why=refuse)
+        res['rc'] = 2
+        return res, 2
     ident = read_kv(os.path.join(O, 'lmp_identity.txt'))
     res['lmp'] = ident
+
+    def guard(name, fn):
+        try:
+            return fn()
+        except Exception as e:   # noqa: BLE001 — 한 예측의 예외 = 그 예측 '계산 못 함' (다른 예측은 그대로)
+            return dict(status='계산 못 함', why=[f'{name}: {type(e).__name__}: {e}'])
+
+    P['가'] = guard('가', lambda: pred_ga(O, N, ref, ident))
+    gate = deck_gate(O, here)
+    res['deck_gate'] = gate
+    if gate['ok']:
+        _compare_registered(res, O, N, here, guard)
+    else:
+        for k in GATED:
+            P[k] = dict(status='계산 못 함', why=list(gate['why']))
+        for lab in ('다', '라'):
+            res['judgment'][lab] = dict(status='NOT_COMPUTED', why=list(gate['why']), mode='g2cp',
+                                        note='등록 덱 아님 — 등록 판정 (§3) 은 등록 실험에만 (→ UNCONFIRMED)')
+        res['exceptions'] = dict(note='등록 덱 아님 — 판독 안 함')
+        res['reports'] = dict(note='등록 덱 아님 — 보고 안 함')
+    P['라-재현나'] = guard('라-재현나', lambda: pred_ra_repro_b(O, N, ref, ident))
+    order = ('가', '나', '다-값', '다-바이트', '라-값', '라-바이트', '라-재현가', '라-재현나', '마-1', '마-2', '마-3', '바', '사', '예외①', '예외②')
+    res['predictions'] = P = {k: P[k] for k in order if k in P}
+    rc = 2 if any(isinstance(v, dict) and v.get('status') == '계산 못 함' for v in P.values()) else 0
+    res['rc'] = rc
+    res['json_written'] = True
+    with open(os.path.join(O, 'compare_g2cp.json'), 'w', encoding='utf-8') as f:
+        json.dump(res, f, ensure_ascii=False, indent=1, default=str)
+        f.write('\n')
+    return res, rc
+
+
+def _compare_registered(res, O, N, here, guard):
+    """등록 덱 문을 지난 OUT — 덤프를 읽고 예측 (가 · 라-재현 (나) 빼고) · 판정 · 예외 · 보고를 채운다."""
+    P = res['predictions']
     c = lambda a: os.path.join(O, a, 'post', 'c_%d.txt' % N)
     D = {a: read_local(c(a)) for a in ARMS}
     AT = {a: read_atoms(os.path.join(O, a, 'post', 'atom_%d.txt' % N)) for a in ARMS}
@@ -954,15 +1216,7 @@ def compare_all(O, N, here=HERE, ref=None):
     except (OSError, ValueError) as e:
         mat = None
         res['material'] = dict(error=str(e))
-
-    def guard(name, fn):
-        try:
-            return fn()
-        except Exception as e:   # noqa: BLE001 — 한 예측의 예외 = 그 예측 '계산 못 함' (다른 예측은 그대로)
-            return dict(status='계산 못 함', why=[f'{name}: {type(e).__name__}: {e}'])
-
-    P['가'] = guard('가', lambda: pred_ga(O, N, ref, ident))
-    P['나'] = guard('나', lambda: pred_na(O, N))
+    P['나'] = guard('나', lambda: pred_na(O, N, D, AT))
     for lab, x, y in (('다', 'BW', 'BR'), ('라', 'CW', 'CR')):
         try:
             v, b = pred_round(O, N, D, AT, x, y)
@@ -970,14 +1224,8 @@ def compare_all(O, N, here=HERE, ref=None):
             v = b = dict(status='계산 못 함', why=[f'{type(e).__name__}: {e}'])
         P[lab + '-값'], P[lab + '-바이트'] = v, b
         res['judgment'][lab] = judge(D[x], D[y], expected_step=N, mode='g2cp')
-    try:
-        ga, na = pred_ra_repro(O, N, ref, ident)
-    except Exception as e:   # noqa: BLE001
-        ga = na = dict(status='계산 못 함', why=[f'{type(e).__name__}: {e}'])
-    P['라-재현가'], P['라-재현나'] = ga, na
-    e1 = guard('예외①', lambda: exc1(D, ANm1, AN))
-    coh = e1.get('cohesion_keys', []) if isinstance(e1, dict) else []
-    ma = guard('마', lambda: pred_ma(D, AT, ANm1, AN, coh))
+    P['라-재현가'] = guard('라-재현가', lambda: pred_ra_repro_a(O, N, D, AT))
+    ma = guard('마', lambda: pred_ma(D, AT, ANm1, AN))
     if 'status' in ma:          # 예외 — 세 칸 모두 '계산 못 함'
         ma = {k: dict(ma) for k in ('마-1', '마-2', '마-3')}
     P.update(ma)
@@ -986,9 +1234,9 @@ def compare_all(O, N, here=HERE, ref=None):
     else:
         P['바'] = guard('바', lambda: pred_ba(D['B'], D['C'], AT['C'], mat))
     P['사'] = guard('사', lambda: pred_sa(D, AN))
-    P['예외①'] = e1
+    e1 = guard('예외①', lambda: exc1(D, ANm1, AN))
     e2 = guard('예외②', lambda: exc2(D, ANm1, AN))
-    P['예외②'] = e2
+    P['예외①'], P['예외②'] = e1, e2
     res['exceptions']['①'] = e1
     res['exceptions']['②'] = e2
     res['exceptions']['③'] = wall_scale(AT['BW'], mat) if mat else dict(why=['덱 물성 없음'])
@@ -996,12 +1244,6 @@ def compare_all(O, N, here=HERE, ref=None):
     res['reports']['연속'] = guard('연속', lambda: report_yeonsok(AN, D))
     for k in ('마-1', '마-2', '마-3'):
         P.setdefault(k, dict(status='계산 못 함', why=['마 계산 실패']))
-    rc = 2 if any(isinstance(v, dict) and v.get('status') == '계산 못 함' for v in P.values()) else 0
-    res['rc'] = rc
-    with open(os.path.join(O, 'compare_g2cp.json'), 'w', encoding='utf-8') as f:
-        json.dump(res, f, ensure_ascii=False, indent=1, default=str)
-        f.write('\n')
-    return res, rc
 
 
 def _line(name, p):
@@ -1019,14 +1261,18 @@ def main(argv):
     for name, p in res['predictions'].items():
         print(_line(name, p))
     for lab, j in res.get('judgment', {}).items():
-        print(f'판정 {lab:<5} {j.get("status")} (n_mismatch {j.get("n_mismatch")} · 비트 같은 쌍 {j.get("n_bit_equal")}/{j.get("n_ref")})')
+        print(f'판정 {lab:<5} {j.get("status")} (n_mismatch {j.get("n_mismatch")} · 비트 같은 쌍 {j.get("n_bit_equal")}/{j.get("n_ref")})'
+              + (f' — {j["note"]}' if j.get('note') else ''))
+    g = res.get('deck_gate')
+    if g is not None:
+        print('등록 덱 문 ' + ('지남' if g.get('ok') else '막힘 — ' + '; '.join(g.get('why', []))))
     e = res.get('exceptions', {})
-    if e:
+    if '①' in e:
         e1, e2, e3 = e.get('①', {}), e.get('②', {}), e.get('③', {})
         print(f'예외 ① 올림 쌍 (B) {e1.get("n_raise_periodic_side")} · cohesion 가드 (A) {e1.get("n_cohesion_guarded_A")}')
         print(f'예외 ② 새 쌍 {e2.get("n_new")} (shear 0 {e2.get("n_new_zero")} · 복원 {e2.get("n_new_restored")}) · 사라진 쌍 {e2.get("n_gone")}')
         print(f'예외 ③ 바닥 닿음 {e3.get("n_wall_touch")} · 근처 {e3.get("n_wall_near")} — {e3.get("note", "")}')
-    print(f'rc {rc} · JSON {os.path.join(O, "compare_g2cp.json") if os.path.isdir(O) else "(OUT 없음)"}')
+    print(f'rc {rc} · JSON ' + (os.path.join(O, 'compare_g2cp.json') if res.get('json_written') else '안 씀 (실행기 출력이 아니거나 OUT 없음)'))
     return rc
 
 

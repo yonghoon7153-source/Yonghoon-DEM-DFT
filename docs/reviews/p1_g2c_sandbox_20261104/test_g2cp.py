@@ -13,7 +13,10 @@
     (가 · 라-재현 (나) = 해당 없음 — 가짜 실행 파일) · 한 곳씩 깨면 그 예측만 틀림.  모형은 대조기 코드를 쓰지 않는다 (독립).
 나. 실행기 — 가짜 lmp (-h 머리 줄 · 고정 덤프 복사 · 부른 인자 기록) 로 차례 · 인자 · 멈춤 · nice · 기록.
     실행기 시험은 `unshare -pf --mount-proc --kill-child` 안에서 돈다 (못 쓰면 감싸지 않고 돌리되 시간 초과 kill 없음 ·
-    시간 한도 시험 = 신호 시험이라 건너뜀 · 건너뜀 수를 마지막 줄에 적는다).  kill 은 직접 만든 자식 (unshare) 에만 · pid > 1 · 자기 · 부모 아님.
+    시간 한도 · 사람 멈춤 시험 = 신호 시험이라 건너뜀 · 건너뜀 수를 마지막 줄에 적는다).  kill 은 직접 만든 자식에만 · pid > 1 · 자기 · 부모 아님 —
+    사람 멈춤 시험 (t31) 은 이름공간 안 드라이버 (`--sigdriver` · 이름공간 PID 1) 가 실행기 bash (직접 자식) 에만 보낸다.
+다. 메모 등록문 (t30) — §0 의 등록 문장이 §4 · 소스 · Codex 답과 어긋나지 않는지 (11-10 내부 반박 리뷰 G2CPR-02 · 09).
+11-10 (2) 내부 반박 리뷰 G2CPR-01–11 고침 = 시험 먼저 (t04 · t07 · t08 · t13 · t25 보강 · t30–t39 새로 · 고치기 전 실패 → 뒤 통과).
 """
 from __future__ import annotations
 
@@ -23,7 +26,9 @@ import json
 import math
 import os
 import random
+import re
 import shutil
+import signal
 import statistics
 import subprocess
 import sys
@@ -35,6 +40,8 @@ sys.dont_write_bytecode = True   # 리포 폴더에 __pycache__ 를 만들지 �
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.normpath(os.path.join(HERE, '..', '..', '..'))
 KIT = os.path.join(REPO, 'docs', 'data', 'ps45_unload_20261009')
+MEMO = os.path.join(REPO, 'docs', 'reviews', 'p1_g2c_compare_definition_20261105.md')
+REF40 = os.path.join(HERE, 'run_40000')
 RUNNER = 'run_g2cp.sh'
 CMPFILE = 'compare_g2cp.py'
 
@@ -507,10 +514,18 @@ def t04_read_local_problems():
     base = fmt_local(NSTEP, rows)
     L = base.splitlines()
     k = next(i for i, x in enumerate(L) if x.startswith('ITEM: ENTRIES'))
+
+    def tok_at(col, new):
+        return '\n'.join(L[:k + 1] + [' '.join([new if j == col else tok for j, tok in enumerate(L[k + 1].split())])] + L[k + 2:]) + '\n'
     cases = {
         'id 2.5': '\n'.join(L[:k + 1] + [' '.join(['2.5' if j == 6 else tok for j, tok in enumerate(L[k + 1].split())])] + L[k + 2:]) + '\n',
         'NaN': '\n'.join(L[:k + 1] + [' '.join(['nan' if j == 12 else tok for j, tok in enumerate(L[k + 1].split())])] + L[k + 2:]) + '\n',
         'id 2^53+1': '\n'.join(L[:k + 1] + [' '.join(['9007199254740993' if j == 7 else tok for j, tok in enumerate(L[k + 1].split())])] + L[k + 2:]) + '\n',
+        # G2CPR-04 — 숫자 토큰 = ASCII · 밑줄 없음 (float() · Decimal() 이 받는 '1_0' · 전각 · 아라비아-인도 숫자를 거부)
+        '값 1_0': tok_at(12, '1_0'),
+        '값 전각 숫자': tok_at(12, '１２'),
+        'id 1_0': tok_at(7, '1_0'),
+        'id 아라비아-인도 숫자': tok_at(6, '١٢'),
         '행 수': base.replace('ITEM: NUMBER OF ENTRIES\n%d' % len(rows), 'ITEM: NUMBER OF ENTRIES\n%d' % (len(rows) + 1)),
         '두 프레임': base + base,
         '열 수': '\n'.join(L[:k + 1] + [' '.join(L[k + 1].split()[:29])] + L[k + 2:]) + '\n',
@@ -525,7 +540,11 @@ def t04_read_local_problems():
     wtxt(p26, fmt_local(NSTEP, [r[:21] + r[25:] for r in rows], ncol=26))
     D26 = c.read_local(p26)
     t.ok('26 열 → 필수 열 결손', not D26['ok'] and D26.get('missing_required'), D26['problems'][:2])
-    t.ok('없는 파일 → 문제', not c.read_local(os.path.join(d, 'none.txt'))['ok'])
+    Dn = c.read_local(os.path.join(d, 'none.txt'))
+    t.ok('없는 파일 → 문제', not Dn['ok'])
+    t.ok('없는 파일 → 필수 열 결손 (G2CPR-03 · 키트 cols None 과 같음)', Dn.get('missing_required') is True, Dn.get('missing_required'))
+    An = c.read_atoms(os.path.join(d, 'none_atoms.txt'))
+    t.ok('없는 원자 파일 → 필수 열 결손', not An['ok'] and An.get('missing_required') is True, An.get('missing_required'))
     return t
 
 
@@ -668,11 +687,15 @@ def t07_judgment_matches_kit():
     fl = [list(r) for r in rows]
     fl[0][9] = rows[0][9] + 0.5e-5 * med if abs(rows[0][9]) < 0.5 * med else rows[0][9] * (1 + 0.5e-5)
     cases = {'같음': rows, '방향': [flip_row(r) if i % 2 else r for i, r in enumerate(rows)], '2e-5': f,
-             '이력만': g, '빠짐': rows[2:], '중복': rows + [rows[1]], '충돌': rows + dc, '감음': wr, 'floor': fl}
+             '이력만': g, '빠짐': rows[2:], '중복': rows + [rows[1]], '충돌': rows + dc, '감음': wr, 'floor': fl,
+             '파일 없음': None}           # G2CPR-03 — 키트 = NOT_COMPUTED (cols None) · 대조기도 같아야 한다
     for name, r2 in cases.items():
         p1, p2 = os.path.join(d, 'k1.txt'), os.path.join(d, 'k2.txt')
         wtxt(p1, fmt_local(NSTEP, [r[:21] + r[25:] for r in rows], ncol=26))
-        wtxt(p2, fmt_local(NSTEP, [r[:21] + r[25:] for r in r2], ncol=26))
+        if r2 is None:
+            p2 = os.path.join(d, 'k2_none.txt')
+        else:
+            wtxt(p2, fmt_local(NSTEP, [r[:21] + r[25:] for r in r2], ncol=26))
         a = kit.g2c_compare(p2, p1, box=(LX, LX), expected_step=NSTEP)
         b = c.judge(c.read_local(p1, ncol=26), c.read_local(p2, ncol=26), expected_step=NSTEP, mode='kit26')
         t.ok(name + ' 상태', a['status'] == b['status'], (a['status'], b['status']))
@@ -713,6 +736,26 @@ def t08_atoms_compare():
     L[-1] = ' '.join(tk)
     wtxt(p, '\n'.join(L) + '\n')
     t.ok('원자 NaN → 문제', not c.read_atoms(p)['ok'])
+    # G2CPR-04 — 원자 상자도 값 같음에 든다 (§0-2 "상자 같음")
+    p1, p2 = os.path.join(d, 'a1.txt'), os.path.join(d, 'a2.txt')
+    wtxt(p1, fmt_atoms(NSTEP, ar))
+    wtxt(p2, fmt_atoms(NSTEP, ar, box=(BOXB[0], BOXB[1], (-0.001, 0.05))))
+    v = c.atoms_value(c.read_atoms(p1), c.read_atoms(p2))
+    t.ok('원자 상자 다름 → 값 다름', v.get('computed') and not v['equal'], v)
+    # G2CPR-04 — 숫자 토큰 ASCII (전각 숫자 = 읽기 문제) · 꼴 (type '01' = %d 꼴 아님 → 값 같음 계산 못 함)
+    L = fmt_atoms(NSTEP, ar).splitlines()
+    tk = L[-1].split()
+    tk[4] = '０.００５'
+    L[-1] = ' '.join(tk)
+    wtxt(p, '\n'.join(L) + '\n')
+    t.ok('원자 전각 숫자 → 문제', not c.read_atoms(p)['ok'])
+    L = fmt_atoms(NSTEP, ar).splitlines()
+    tk = L[-1].split()
+    tk[1] = '0' + tk[1]
+    L[-1] = ' '.join(tk)
+    wtxt(p2, '\n'.join(L) + '\n')
+    v = c.atoms_value(c.read_atoms(p1), c.read_atoms(p2))
+    t.ok("원자 type '0n' → 꼴 아님 → 값 계산 못 함", not v.get('computed'), v)
     return t
 
 
@@ -920,8 +963,24 @@ def t13_end_to_end_negatives():
     os.remove(os.path.join(O, 'BR', 'post', 'c_%d.txt' % NSTEP))
     r, rc = c.compare_all(O, NSTEP, here=HERE, ref=os.path.join(HERE, 'run_40000'))
     t.ok('BR 파일 없음 → 다-값 계산 못 함', status_of(r, '다-값') == '계산 못 함')
-    t.ok('BR 파일 없음 → 판정 NOT_COMPUTED 아니면 FAIL', r['judgment']['다']['status'] in ('FAIL', 'NOT_COMPUTED'))
+    t.ok('BR 파일 없음 → 판정 NOT_COMPUTED (G2CPR-03 · 키트와 같음 · 기술 실패를 값 불일치로 적지 않는다)',
+         r['judgment']['다']['status'] == 'NOT_COMPUTED', r['judgment']['다'].get('status'))
     t.ok('BR 파일 없음 → rc 2', rc == 2, rc)
+    # G2CPR-10 — BW · BR 같은 자리에 같은 nan (두 파일 바이트 같음) → 바이트 = sha256 만으로 맞음 · 값 = 계산 못 함 · 판정 FAIL (키트와 같음)
+    d = tmpdir()
+    O = _full(d)
+    for arm in ('BW', 'BR'):
+        p = os.path.join(O, arm, 'post', 'c_%d.txt' % NSTEP)
+        L = open(p).read().splitlines()
+        k = next(i for i, x in enumerate(L) if x.startswith('ITEM: ENTRIES'))
+        tk = L[k + 1].split()
+        tk[18] = 'nan'
+        L[k + 1] = ' '.join(tk)
+        wtxt(p, '\n'.join(L) + '\n')
+    r, rc = c.compare_all(O, NSTEP, here=HERE, ref=os.path.join(HERE, 'run_40000'))
+    t.ok('같은 nan → 다-바이트 맞음 (값 실패와 따로)', status_of(r, '다-바이트') == '맞음', r['predictions'].get('다-바이트'))
+    t.ok('같은 nan → 다-값 계산 못 함', status_of(r, '다-값') == '계산 못 함')
+    t.ok('같은 nan → 판정 FAIL', r['judgment']['다']['status'] == 'FAIL', r['judgment']['다'].get('status'))
     return t
 
 
@@ -1043,10 +1102,19 @@ def t20_bw_deck_shape():
 
 
 FAKE = r'''#!{PY}
-import json, os, shutil, sys, time
+import json, os, shutil, signal, sys, time
 a = sys.argv[1:]
 mode = os.environ.get('FAKE_MODE', 'ok')
+if os.environ.get('FAKE_TERM_DELAY'):      # 느린 종료 흉내 (TERM 뒤 몇 초 더 살아 있음) — 실행기가 거둔 뒤 끝나는지 가르게
+    def _late(_s, _f):
+        time.sleep(float(os.environ['FAKE_TERM_DELAY']))
+        os._exit(143)
+    signal.signal(signal.SIGTERM, _late)
 if '-h' in a:
+    if mode.startswith('hsleep:'):      # 실행 전 (-h 머리 줄 확인 중) 사람 멈춤 시험 — 시작을 적고 잠든다
+        with open(os.environ['FAKE_LOG'], 'a') as f:
+            f.write(json.dumps(dict(h=1)) + '\n')
+        time.sleep(float(mode.split(':')[1]))
     if mode != 'nobanner':
         print('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f · 가짜 lmp)')
     print('\nCommand line options:\n')
@@ -1261,8 +1329,14 @@ def t25_runner_git_dirty():
         raise Skip('git 없음')
     d = tmpdir()
     S = sandbox_copy(d)
-    g = dict(os.environ, GIT_AUTHOR_NAME='t', GIT_AUTHOR_EMAIL='t@t', GIT_COMMITTER_NAME='t', GIT_COMMITTER_EMAIL='t@t')
-    for cmd in (['git', 'init', '-q'], ['git', 'add', '-A'], ['git', 'commit', '-q', '-m', 'x']):
+    # 시험 위생 (11-10 리뷰): 서명 · 훅이 켜진 기계에서도 버리는 임시 커밋이 서명 프로그램 · 훅을 부르지 않는다 —
+    # 서명을 강제하고 서명 프로그램 = false 인 전역 설정을 일부러 씌워 그 길이 닫혔는지 본다
+    gc = os.path.join(d, 'gitconfig_sign_trap')
+    wtxt(gc, '[commit]\n\tgpgsign = true\n[gpg]\n\tprogram = false\n')
+    g = dict(os.environ, GIT_AUTHOR_NAME='t', GIT_AUTHOR_EMAIL='t@t', GIT_COMMITTER_NAME='t', GIT_COMMITTER_EMAIL='t@t',
+             GIT_CONFIG_GLOBAL=gc, GIT_CONFIG_NOSYSTEM='1')
+    for cmd in (['git', 'init', '-q'], ['git', 'add', '-A'],
+                ['git', '-c', 'commit.gpgsign=false', '-c', 'core.hooksPath=/dev/null', 'commit', '-q', '-m', 'x']):
         subprocess.run(cmd, cwd=S, env=g, check=True, capture_output=True)
     env = fake_env(d)
     O1 = os.path.join(d, 'O1')
@@ -1387,6 +1461,402 @@ def t29_runner_then_compare():
     return t
 
 
+# ═══ 11-10 (2) 내부 반박 리뷰 G2CPR-01–11 — 시험 먼저 ════════════════════════════════════════
+def _memo_section(txt, start, end):
+    a = txt.index(start)
+    return txt[a:txt.index(end, a + len(start))]
+
+
+def _table_cells(row):
+    return [c.strip() for c in re.split(r'(?<!\\)\|', row.strip())][1:-1]
+
+
+def _pkey(r):
+    return (min(int(r[6]), int(r[7])), max(int(r[6]), int(r[7])))
+
+
+@test
+def t30_memo_registration_text():
+    """메모 §0 등록문 — G2CPR-02 (바 '틀리면' = §4 문구 그대로 · 좁히지 않음) · G2CPR-09 (가) 다-바이트 근거의 pbc 문장 = domain.cpp 그대로 ·
+    (나) §0-5 에 Codex Q6-1 원자 12 열 한정 (힘 합산 순서로 원자 12 열 차이를 설명하지 않는다)."""
+    t = T()
+    txt = open(MEMO, encoding='utf-8').read()
+    s0 = _memo_section(txt, '\n## 0. ', '\n## 1. ')
+    s4 = _memo_section(txt, '\n## 4. ', '\n## 5. ')
+    t.ok('§4 틀리면 규칙 원문 그대로', '마 · 바 ✗ = "주기 ↔ 명령 차이 = 저장 shear 뿐" 서술을 거두고 다시 본다' in s4)
+    rows = {}
+    for ln in s0.splitlines():
+        if ln.startswith('| ') and not ln.startswith('|---'):
+            cells = _table_cells(ln)
+            if cells:
+                rows.setdefault(cells[0], cells)
+    ba = rows.get('바')
+    t.ok('§0-3 바 행', ba is not None and len(ba) == 5, ba)
+    if ba and len(ba) == 5:
+        t.ok("바 '틀리면' = §4 문구 ('저장 shear 뿐' · §4 그대로)", '저장 shear 뿐' in ba[3] and '§4 그대로' in ba[3], ba[3])
+    db = rows.get('다-바이트')
+    t.ok('§0-3 다-바이트 행', db is not None and len(db) == 5, db)
+    if db and len(db) == 5:
+        t.ok('pbc 문장 = 소스 (domain.cpp 562–564 · MAX(x, lo))', 'hi 쪽 가드가 없어' not in db[4] and '562' in db[4] and 'MAX' in db[4], db[4])
+    s05 = _memo_section(txt, '\n### 0-5. ', '\n### 0-6. ')
+    t.ok('§0-5 Q6-1 원자 12 열 한정', '원자 12 열' in s05 and '힘 합산 순서' in s05, s05[-300:])
+    return t
+
+
+def _sig_driver(argv):
+    """t31 의 이름공간 안 드라이버 (`unshare -pf --mount-proc --kill-child` 아래 · 이 프로세스 = 이름공간 PID 1).
+    실행기 bash 를 직접 자식으로 띄우고 · 가짜 lmp 팔 A 가 시작한 뒤 · 그 자식 (pid > 1 · 자기 · 부모 아님) 에만 신호를 보낸다."""
+    S, O, sig, d, wait_for = argv
+    p = subprocess.Popen(['bash', os.path.join(S, RUNNER), str(NSTEP), O], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    t0 = time.time()
+
+    def started():
+        return any((c.get('arm') == 'A') if wait_for == 'A' else c.get('h') for c in fake_calls(d))
+    while time.time() - t0 < 30 and p.poll() is None and not started():
+        time.sleep(0.05)
+    time.sleep(0.5)
+    pid = p.pid
+    if not (isinstance(pid, int) and pid > 1 and pid != os.getpid() and pid != os.getppid()):
+        raise RuntimeError('신호 대상 거부: %r' % pid)
+    sent = p.poll() is None
+    ts = time.time()
+    if sent:
+        os.kill(pid, getattr(signal, sig))
+    try:
+        _out, err = p.communicate(timeout=60)
+        rc = p.returncode
+    except subprocess.TimeoutExpired:
+        safe_kill(p)
+        rc, err = 'TIMEOUT', ''
+    dt = time.time() - ts
+    time.sleep(0.3)
+    left = []
+    for q in os.listdir('/proc'):
+        if q.isdigit():
+            try:
+                cl = open('/proc/%s/cmdline' % q, 'rb').read().replace(b'\0', b' ').decode('utf-8', 'replace')
+            except OSError:
+                continue
+            if 'lmp_fake' in cl:
+                left.append(cl[:120])
+    print(json.dumps(dict(rc=rc, dt=dt, sent=sent, left=left, err=(err or '')[-400:]), ensure_ascii=False))
+    return 0
+
+
+@test
+def t31_runner_signal_stops():
+    """G2CPR-08 — 사람이 멈춤 (INT = Ctrl-C · TERM · HUP = 터미널 닫힘) → 실행기가 도는 팔의 timeout 에만 TERM → 가짜 LIGGGHTS 멈춤 ·
+    rc.txt · STOP.txt · rc 4 · 남은 팔 안 돎 · 실행기가 끝난 뒤 남은 LIGGGHTS 0 · 실행 전 (-h 중) INT = rc 3 · OUT 안 만듦.
+    신호 시험 = 이름공간 안 (드라이버 = PID 1 · 신호 = 직접 자식 실행기 bash 에만)."""
+    if not unshare_ok():
+        raise Skip('unshare -pf --mount-proc 못 씀 — 신호 시험 건너뜀')
+    t = T()
+    for sig in ('SIGINT', 'SIGTERM', 'SIGHUP', 'pre-SIGINT'):
+        pre = sig.startswith('pre-')
+        sg = sig[4:] if pre else sig
+        d = tmpdir()
+        S = sandbox_copy(d)
+        env = fake_env(d, mode='hsleep:15' if pre else 'sleep:A:15')
+        env['FAKE_TERM_DELAY'] = '2'          # 가짜 LIGGGHTS 가 TERM 뒤 2 s 더 산다 → 실행기가 거두지 않고 나가면 남은 lmp 로 잡힌다
+        O = os.path.join(d, 'O')
+        p = subprocess.run(['unshare', '-pf', '--mount-proc', '--kill-child', sys.executable, '-I', os.path.abspath(__file__),
+                            '--sigdriver', S, O, sg, d, 'h' if pre else 'A'], env=env, capture_output=True, text=True, timeout=150)
+        try:
+            r = json.loads(p.stdout.strip().splitlines()[-1])
+        except (ValueError, IndexError):
+            t.ok(sig + ' 드라이버 출력', False, (p.returncode, p.stdout[-300:], p.stderr[-300:]))
+            continue
+        t.ok(sig + ' 보냄', r['sent'], r)
+        if pre:   # 실행 전 (-h 중) 멈춤 = rc 3 · OUT 안 만듦 · 팔 안 돎 · -h 의 가짜 lmp 도 거둠
+            t.ok(sig + ' 실행기 rc 3', r['rc'] == 3, r)
+            t.ok(sig + ' 10 s 안에 멈춤', isinstance(r['dt'], (int, float)) and r['dt'] < 10, r['dt'])
+            t.ok(sig + ' 남은 가짜 lmp 0', r['left'] == [], r['left'])
+            t.ok(sig + ' OUT 안 만듦', not os.path.exists(O))
+            t.ok(sig + ' 팔 안 돎', [c for c in fake_calls(d) if c.get('arm')] == [])
+            continue
+        t.ok(sig + ' 실행기 rc 4', r['rc'] == 4, r)
+        t.ok(sig + ' 10 s 안에 멈춤', isinstance(r['dt'], (int, float)) and r['dt'] < 10, r['dt'])
+        t.ok(sig + ' 남은 가짜 lmp 0', r['left'] == [], r['left'])
+        arms = [c['arm'] for c in fake_calls(d) if c.get('arm')]
+        t.ok(sig + ' 팔 A 만 돎', arms == ['A'], arms)
+        st = os.path.join(O, 'STOP.txt')
+        t.ok(sig + ' STOP 이유 = 신호', os.path.exists(st) and '신호' in open(st).read(), open(st).read() if os.path.exists(st) else None)
+        rcl = open(os.path.join(O, 'rc.txt')).read() if os.path.exists(os.path.join(O, 'rc.txt')) else ''
+        t.ok(sig + ' rc.txt 신호 줄', ('A 신호 ' + sig[3:]) in rcl, rcl)
+    return t
+
+
+class _BedCoh(Bed):
+    KINDS = Bed.KINDS + ('cohesion',) * 11
+
+
+class _Bed0(Bed):
+    KINDS = ()
+
+
+@test
+def t32_cohesion_guard_full_set():
+    """G2CPR-01 — cohesion 가드 쌍 12 (보여주기 10 개보다 많음) 도 마-1 deltaMax 비교에서 전부 뺀다 · 예외① 이 계산 못 함이어도 같다."""
+    c = load_cmp()
+    t = T()
+    d = tmpdir()
+    O = _full(d, bed=_BedCoh())
+    r, rc = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+    t.ok('가드 쌍 12', r['exceptions']['①'].get('n_cohesion_guarded_A') == 12, r['exceptions']['①'].get('n_cohesion_guarded_A'))
+    t.ok('마-1 맞음', status_of(r, '마-1') == '맞음', r['predictions'].get('마-1'))
+    t.ok('마-1 뺀 수 12', (r['predictions'].get('마-1') or {}).get('n_cohesion_excluded') == 12, r['predictions'].get('마-1'))
+    t.ok('rc 0', rc == 0, rc)
+
+    def m_cr_nan(arm, kind, rows):
+        if arm == 'CR' and kind == 'c':
+            rows = [list(rr) for rr in rows]
+            rows[0][12] = float('nan')
+        return rows
+    d2 = tmpdir()
+    O2 = _full(d2, mutate=m_cr_nan)
+    r2, _ = c.compare_all(O2, NSTEP, here=HERE, ref=REF40)
+    t.ok('예외① 계산 못 함 (CR 읽기 문제)', status_of(r2, '예외①') == '계산 못 함', r2['predictions'].get('예외①'))
+    t.ok('그래도 마-1 맞음 (가드 쌍 = 마-1 이 직접 셈)', status_of(r2, '마-1') == '맞음', r2['predictions'].get('마-1'))
+    return t
+
+
+@test
+def t33_value_needs_17g_form():
+    """G2CPR-04 (나) — 값 같음은 `%.17g` 꼴 토큰에서만 — 6 자리 %g 덤프 (3e-9 차이가 글자로 같아짐) = 값 · 바이트 예측 계산 못 함 ·
+    판정 = 키트 식 그대로 (허용폭 · 6 자리 덤프에 맞춘 식)."""
+    c = load_cmp()
+    t = T()
+    d = tmpdir()
+    rows = Bed().rows('BW')
+    rowsR = [list(r) for r in rows]
+    for r in rowsR:
+        for col in (9, 10, 11, 22, 23, 24):
+            r[col] = r[col] * (1 + 3e-9)
+    p1, p2 = os.path.join(d, 'g1.txt'), os.path.join(d, 'g2.txt')
+    wtxt(p1, fmt_local(NSTEP, rows, tokfmt='%g'))
+    wtxt(p2, fmt_local(NSTEP, rowsR, tokfmt='%g'))
+    D1, D2 = c.read_local(p1), c.read_local(p2)
+    t.ok('읽기 ok (판정은 그대로 돈다)', D1['ok'] and D2['ok'], (D1['problems'][:2], D2['problems'][:2]))
+    v = c.pairs_value(D1, D2)
+    t.ok('값 같음 = 계산 못 함 (꼴)', not v.get('computed'), v)
+    t.ok('판정 = PASS (키트 식)', c.judge(D1, D2, expected_step=NSTEP)['status'] == 'PASS')
+    O = _full(d)
+
+    def g_rows(rr):
+        return [list(x) for x in rr]
+    for arm, rr in (('BW', g_rows(rows)), ('BR', g_rows(rowsR))):
+        wtxt(os.path.join(O, arm, 'post', 'c_%d.txt' % NSTEP), fmt_local(NSTEP, rr, tokfmt='%g'))
+    _rewrite_outputs(O)
+    r, rc = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+    t.ok('다-값 계산 못 함', status_of(r, '다-값') == '계산 못 함', r['predictions'].get('다-값'))
+    t.ok('다-바이트 계산 못 함 (등록 덱 덤프 꼴 아님)', status_of(r, '다-바이트') == '계산 못 함', r['predictions'].get('다-바이트'))
+    t.ok('라 그대로 맞음', status_of(r, '라-값') == '맞음')
+    t.ok('rc 2', rc == 2, rc)
+    return t
+
+
+@test
+def t34_registered_deck_gate():
+    """G2CPR-04 (라) — OUT/inputs.md5 의 덱 여덟 (11-04 일곱 + BW) md5 가 이 폴더 파일과 같을 때만 등록 예측을 판독한다 —
+    아니면 (가 · 라-재현 (나) 빼고) 계산 못 함 · 판정 NOT_COMPUTED · rc 2."""
+    c = load_cmp()
+    t = T()
+    gated = ('나', '다-값', '다-바이트', '라-값', '라-바이트', '라-재현가', '마-1', '마-2', '마-3', '바', '사', '예외①', '예외②')
+    for case in ('R 다름', 'BW 빠짐', 'inputs 없음', 'R 중복 줄'):
+        d = tmpdir()
+        O = _full(d)
+        p = os.path.join(O, 'inputs.md5')
+        if case == 'inputs 없음':
+            os.remove(p)
+        else:
+            L = open(p).read().splitlines()
+            if case == 'R 다름':
+                L = [('0' * 32 + '  R.liggghts') if ln.endswith('  R.liggghts') else ln for ln in L]
+            elif case == 'R 중복 줄':     # 모호한 기록 (앞 = 틀린 md5 · 뒤 = 맞는 md5) — 한 줄만 골라 읽지 않는다
+                L = [('0' * 32 + '  R.liggghts') for ln in L if ln.endswith('  R.liggghts')] + L
+            else:
+                L = [ln for ln in L if not ln.endswith('  BW.liggghts')]
+            wtxt(p, '\n'.join(L) + '\n')
+        r, rc = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+        bad = [(k, status_of(r, k)) for k in gated if status_of(r, k) != '계산 못 함']
+        t.ok(case + ' 등록 예측 = 계산 못 함', not bad, bad[:4])
+        js = [r.get('judgment', {}).get(x, {}).get('status') for x in ('다', '라')]
+        t.ok(case + ' 판정 NOT_COMPUTED', js == ['NOT_COMPUTED', 'NOT_COMPUTED'], js)
+        t.ok(case + ' rc 2', rc == 2, rc)
+        if case in ('inputs 없음', 'R 중복 줄'):   # 덱 기록을 모름 → 가 · 라-재현 (나) 의 조건도 모름 = 계산 못 함 ('다름' 아님)
+            t.ok(case + ' 가 · 라-재현나 계산 못 함', status_of(r, '가') == '계산 못 함' and status_of(r, '라-재현나') == '계산 못 함',
+                 (status_of(r, '가'), status_of(r, '라-재현나')))
+    return t
+
+
+@test
+def t35_empty_and_atom_id_mismatch():
+    """G2CPR-05 — (가) 쌍 0 침대 (건식 N = 200 꼴) = 예측 해당 없음 (맞음 아님) · 판정 = 키트 식 PASS + 쌍 0 표지 ·
+    (나) C 원자 덤프 ID 가 쌍 ID 와 안 맞으면 바 = 계산 못 함 (조용히 건너뛰어 해당 없음 아님)."""
+    c = load_cmp()
+    t = T()
+    d = tmpdir()
+    O = _full(d, bed=_Bed0())
+    r, rc = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+    for k in ('나', '다-값', '다-바이트', '라-값', '라-바이트', '라-재현가', '마-1', '마-2', '마-3', '바', '사', '예외①', '예외②'):
+        t.ok(k + ' 해당 없음', status_of(r, k) == '해당 없음', (k, status_of(r, k), (r['predictions'].get(k) or {}).get('why')))
+    jd = r['judgment']['다']
+    t.ok('판정 다 PASS + 쌍 0 표지', jd['status'] == 'PASS' and jd.get('n_ref') == 0 and '쌍 0' in str(jd.get('note', '')), jd)
+    t.ok('rc 0', rc == 0, rc)
+
+    def m5(arm, kind, rows):
+        if kind == 'atom' and arm == 'C':
+            rows = [list(rr) for rr in rows]
+            for rr in rows:
+                rr[0] = rr[0] + 1000
+        return rows
+    d2 = tmpdir()
+    O2 = _full(d2, mutate=m5)
+    r2, rc2 = c.compare_all(O2, NSTEP, here=HERE, ref=REF40)
+    t.ok('바 계산 못 함 (쌍 원자가 원자 덤프에 없음)', status_of(r2, '바') == '계산 못 함', r2['predictions'].get('바'))
+    t.ok('rc 2', rc2 == 2, rc2)
+    return t
+
+
+@test
+def t36_exc2_sets_and_orientation():
+    """G2CPR-06 — 예외② (가) 사라진 쌍 = 집합 비교 (B 에서 다른 쌍 하나를 빼고 사라진 쌍을 넣어 수만 같음 = 틀림) ·
+    (나) 새 쌍 왕복 = §0-2 값 규칙 (BR 에서 새 쌍 행 방향만 바뀜 = 맞음 · torque 는 같은 방향 행만)."""
+    c = load_cmp()
+    t = T()
+    bed = Bed()
+    cpre = bed.rows('cpre')
+
+    def m4(arm, kind, rows):
+        if arm == 'B' and kind == 'c':
+            now = {_pkey(rr) for rr in rows}
+            gone = [rr for rr in cpre if _pkey(rr) not in now]
+            rows = [list(rr) for rr in rows[1:]] + [list(gone[0])]
+        return rows
+    d = tmpdir()
+    O = _full(d, bed=bed, mutate=m4)
+    r, _ = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+    e2 = r['predictions'].get('예외②') or {}
+    t.ok('바꿔치기 → 예외② 틀림 (사라진 쌍 집합)', e2.get('status') == '틀림' and any('사라진' in w for w in e2.get('why', [])), e2)
+    bed2 = Bed()
+    newkeys = {(min(p['i'], p['j']), max(p['i'], p['j'])) for p in bed2.pairs if p['kind'] in ('new0', 'newstale')}
+
+    def m8(arm, kind, rows):
+        if arm == 'BR' and kind == 'c':
+            rows = [flip_row(rr) if _pkey(rr) in newkeys else list(rr) for rr in rows]
+        return rows
+    d2 = tmpdir()
+    O2 = _full(d2, bed=bed2, mutate=m8)
+    r2, _ = c.compare_all(O2, NSTEP, here=HERE, ref=REF40)
+    t.ok('새 쌍 방향만 → 예외② 맞음', status_of(r2, '예외②') == '맞음', r2['predictions'].get('예외②'))
+    t.ok('새 쌍 방향만 → 다-값 맞음', status_of(r2, '다-값') == '맞음', r2['predictions'].get('다-값'))
+    return t
+
+
+@test
+def t37_identity_unknown_is_not_computed():
+    """G2CPR-07 — 실행 파일 신원 (lmp_md5) · 입력 덱 기록을 모르면 가 · 라-재현 (나) = 계산 못 함 (모르는 것을 '다르다' 로 적지 않는다) ·
+    같은 이름 두 줄 = 모호한 기록 = 모름 (11-11 작은 반례)."""
+    c = load_cmp()
+    t = T()
+    for case in ('lmp_md5 줄 없음', 'lmp_md5 꼴 아님', 'lmp_md5 두 줄'):
+        d = tmpdir()
+        O = _full(d)
+        p = os.path.join(O, 'lmp_identity.txt')
+        L = [ln for ln in open(p).read().splitlines() if not ln.startswith('lmp_md5 ')]
+        if case == 'lmp_md5 꼴 아님':
+            L.append('lmp_md5 xyz')
+        elif case == 'lmp_md5 두 줄':     # 모호한 기록 (뒤 줄 = 11-04 실행 파일 md5) — 마지막 줄만 골라 읽지 않는다
+            L += ['lmp_md5 ' + '0' * 32, 'lmp_md5 f4ba3ec04933d70b641421e39e6cb283']
+        wtxt(p, '\n'.join(L) + '\n')
+        r, rc = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+        t.ok(case + ' → 가 계산 못 함', status_of(r, '가') == '계산 못 함', r['predictions'].get('가'))
+        t.ok(case + ' → 라-재현나 계산 못 함', status_of(r, '라-재현나') == '계산 못 함', r['predictions'].get('라-재현나'))
+        t.ok(case + ' → 다른 예측 그대로', status_of(r, '다-값') == '맞음' and status_of(r, '바') == '맞음')
+        t.ok(case + ' → rc 2', rc == 2, rc)
+    d = tmpdir()
+    O = _full(d)
+    os.remove(os.path.join(O, 'inputs.md5'))
+    r, rc = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+    t.ok('inputs.md5 없음 → 가 계산 못 함', status_of(r, '가') == '계산 못 함', r['predictions'].get('가'))
+    t.ok('inputs.md5 없음 → 라-재현나 계산 못 함', status_of(r, '라-재현나') == '계산 못 함', r['predictions'].get('라-재현나'))
+    return t
+
+
+@test
+def t38_runner_identity_records():
+    """G2CPR-07 (실행기) — LMP 가 심볼릭 링크여도 lmp_bytes = 대상 파일 크기 (stat -L) · lmp_realpath · glibc 줄 ·
+    공유 라이브러리 기록 (lmp_ldd.txt · lmp_libs.md5 — 기록만 · 판정 조건 아님)."""
+    t = T()
+    d = tmpdir()
+    S = sandbox_copy(d)
+    env = fake_env(d)
+    target = env['LMP']
+    link = os.path.join(d, 'lmp_link')
+    os.symlink(target, link)
+    env['LMP'] = link
+    O = os.path.join(d, 'O')
+    rc, out, err = run_runner(S, [str(NSTEP), O], env)
+    t.ok('rc 0', rc == 0, (rc, err[-300:]))
+    p = os.path.join(O, 'lmp_identity.txt')
+    ident = {}
+    if os.path.exists(p):
+        for ln in open(p).read().splitlines():
+            k, _, v = ln.partition(' ')
+            ident[k] = v
+    t.ok('lmp_bytes = 대상 크기', ident.get('lmp_bytes') == str(os.path.getsize(target)), (ident.get('lmp_bytes'), os.path.getsize(target)))
+    t.ok('lmp_realpath = 대상', ident.get('lmp_realpath') == os.path.realpath(link), ident.get('lmp_realpath'))
+    t.ok('glibc 줄', 'glibc' in ident, sorted(ident))
+    pl = os.path.join(O, 'lmp_ldd.txt')
+    t.ok('lmp_ldd.txt', os.path.exists(pl))
+    t.ok('lmp_libs.md5', os.path.exists(os.path.join(O, 'lmp_libs.md5')))
+    if shutil.which('ldd') and os.path.exists(pl):     # ldd 가 있는 기계 = 원문 + rc 를 실제로 적었나 (가짜 lmp 는 스크립트라 라이브러리 줄은 없다)
+        t.ok('ldd 원문 · rc 기록', any(ln.startswith('ldd_rc ') for ln in open(pl).read().splitlines()), open(pl).read()[-200:])
+    return t
+
+
+@test
+def t39_compare_out_guard():
+    """G2CPR-11 — 대조기는 실행기 출력 (lmp_identity.txt + 팔 폴더 아홉) 에만 JSON 을 쓴다 · OUT = 샌드박스 폴더 · 11-04 기록 폴더 ·
+    샌드박스의 조상 = 거부 (쓰지 않음 · rc 2)."""
+    c = load_cmp()
+    t = T()
+    d = tmpdir()
+    S = sandbox_copy(d)
+    ref = os.path.join(S, 'run_40000')
+    before = listing(S)
+    for name, O in (('샌드박스 폴더', S), ('11-04 기록 폴더', ref), ('조상 폴더', d)):
+        r, rc = c.compare_all(O, NSTEP, here=S, ref=ref)
+        t.ok(name + ' rc 2', rc == 2, rc)
+        t.ok(name + ' JSON 안 씀', not os.path.exists(os.path.join(O, 'compare_g2cp.json')))
+    t.ok('샌드박스 사본 그대로', listing(S) == before, sorted(set(listing(S)) ^ set(before))[:5])
+    O2 = os.path.join(d, 'plain')
+    os.makedirs(O2)
+    wtxt(os.path.join(O2, 'x.txt'), 'x')
+    r, rc = c.compare_all(O2, NSTEP, here=S, ref=ref)
+    t.ok('실행기 출력 아님 → rc 2 · JSON 안 씀', rc == 2 and not os.path.exists(os.path.join(O2, 'compare_g2cp.json')), rc)
+    d3 = tmpdir()
+    O3 = _full(d3)
+    os.remove(os.path.join(O3, 'lmp_identity.txt'))
+    r, rc = c.compare_all(O3, NSTEP, here=HERE, ref=REF40)
+    t.ok('신원 파일 없음 → rc 2 · JSON 안 씀', rc == 2 and not os.path.exists(os.path.join(O3, 'compare_g2cp.json')), rc)
+    # 검사 하나가 다른 검사 뒤에 숨지 않게 (11-11 변이: 조상 · 기록 폴더 검사를 빼도 다른 검사가 대신 잡던 틈)
+    d4 = tmpdir()
+    S4 = sandbox_copy(d4)
+    ref_out = os.path.join(tmpdir(), 'ref_elsewhere')       # 기록 폴더가 샌드박스 밖 — 조상 거부를 샌드박스 검사 혼자 해야 한다
+    shutil.copytree(os.path.join(S4, 'run_40000'), ref_out)
+    for a in ARMS:                                           # d4 를 실행기 꼴로 (신원 파일 + 팔 폴더) — 그래도 샌드박스의 조상이라 거부
+        os.makedirs(os.path.join(d4, a), exist_ok=True)
+    wtxt(os.path.join(d4, 'lmp_identity.txt'), 'lmp_md5 ' + '0' * 32 + '\n')
+    r, rc = c.compare_all(d4, NSTEP, here=S4, ref=ref_out)
+    t.ok('조상 (기록 폴더 밖) → rc 2 · JSON 안 씀', rc == 2 and not os.path.exists(os.path.join(d4, 'compare_g2cp.json')), rc)
+    inner = os.path.join(S4, 'run_40000', 'runner_shaped')    # 기록 폴더 안의 실행기 꼴 OUT — 실행기 출력 검사로는 못 막는다
+    write_fixture(inner)
+    r, rc = c.compare_all(inner, NSTEP, here=os.path.join(d4, 'other_here'), ref=os.path.join(S4, 'run_40000'))
+    t.ok('기록 폴더 안 실행기 꼴 → rc 2 · JSON 안 씀', rc == 2 and not os.path.exists(os.path.join(inner, 'compare_g2cp.json')), rc)
+    return t
+
+
 # ═══ 돌리기 ═════════════════════════════════════════════════════════════════════════════
 def main():
     npass = nfail = nskip = 0
@@ -1412,4 +1882,6 @@ def main():
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] == '--sigdriver':     # t31 이름공간 안 드라이버 (시험을 돌리지 않는다)
+        sys.exit(_sig_driver(sys.argv[2:]))
     sys.exit(main())

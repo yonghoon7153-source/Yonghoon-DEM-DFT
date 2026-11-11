@@ -1,17 +1,17 @@
-# P1 언로딩 G2c′ — 샌드박스 준비물 (2026-11-10 · 결과 0 건 · 실행 없음)
+# P1 언로딩 G2c′ — 샌드박스 준비물 (2026-11-10 · 11-11 리뷰 고침 · 결과 0 건 · 실행 없음)
 
-- 등록 · 예측 = 메모 `docs/reviews/p1_g2c_compare_definition_20261105.md` §0 (11-10 개정 · 결과 전 · Codex Q6 답 `docs/reviews/codex_review_p1_g2c_q6_20261106.md` 반영 · **1저자 비준 전**) · §5-1.
+- 등록 · 예측 = 메모 `docs/reviews/p1_g2c_compare_definition_20261105.md` §0 (11-10 개정 · 결과 전 · Codex Q6 답 `docs/reviews/codex_review_p1_g2c_q6_20261106.md` 반영 · **✅ 1저자 비준 11-10** = 메모 §0 머리 · Q8 – Q12) · §0-3 끝 공통 규칙 (11-11 내부 반박 리뷰 `G2CPR-01`–`11` 고침) · §5-1.
 - 11-04 파일 (`README.md` · 덱 조각 · `run_arms.sh` · `compare.py` · `run_40000/` · `dry/`) 은 그대로 — 이 묶음은 새 파일만 더한다.
-- ⛔ 이 컨테이너 (11-10) 에 LIGGGHTS 실행 파일이 없다 → 건식 · 샌드박스 = 1저자 비준 (메모 §0-6 Q8 · Q10) 뒤.
+- ⛔ 이 컨테이너 (11-10) 에 LIGGGHTS 실행 파일이 없다 → 빌드 → 건식 (N = 200) → 샌드박스 (N = 40,000) = **단계마다 1저자 GO 뒤** (Q10 비준 · 자동 시작 없음).
 
 | 파일 | 하는 일 |
 |---|---|
 | `BW.liggghts` | 팔 BW · CW 덱 = `include R.liggghts` + `write_restart ${RST}/restart_rt.bin` (R 덱 바이트 그대로 · 덤프는 `run 0` setup 에서 · 그 뒤 명령 restart) |
-| `run_g2cp.sh` | 실행기 — A · A2 · B · B2 · C (11-04 와 같은 덱 · 인자) · BW · BR · CW · CR 차례 · 직렬 · `nice -n 19` · 시간 한도 |
+| `run_g2cp.sh` | 실행기 — A · A2 · B · B2 · C (11-04 와 같은 덱 · 인자) · BW · BR · CW · CR 차례 · 직렬 · `nice -n 19` · 시간 한도 · 사람 멈춤 처리 |
 | `compare_g2cp.py` | 대조기 — 메모 §0-3 예측마다 맞음 / 틀림 / 해당 없음 / 계산 못 함 + 등록 §3 판정 (허용폭 그대로 · 키트 `g2c_compare` 와 같은 식 · 30 열) |
-| `test_g2cp.py` | 시험 — 합성 침대 (LIGGGHTS-PUBLIC 3d5c00f 줄을 옮긴 작은 모형) · 가짜 lmp · LIGGGHTS · MPI · 네트워크 없이 · 신호 시험은 `unshare -pf --mount-proc --kill-child` 안 |
+| `test_g2cp.py` | 시험 — 합성 침대 (LIGGGHTS-PUBLIC 3d5c00f 줄을 옮긴 작은 모형) · 가짜 lmp · 메모 등록문 · LIGGGHTS · MPI · 네트워크 없이 · 신호 시험은 `unshare -pf --mount-proc --kill-child` 안 |
 
-## 돌리는 법 (비준 · 실행 파일 · 1저자 GO 뒤)
+## 돌리는 법 (단계마다 1저자 GO 뒤)
 
 ```
 cd docs/reviews/p1_g2c_sandbox_20261104
@@ -20,17 +20,42 @@ python3 -I compare_g2cp.py <출력 폴더> 40000                                
 python3 -I test_g2cp.py                                                              # 시험 (마지막 줄 G2CP_TEST … fail=0)
 ```
 
+- **건식 (N = 200) 출력은 대조기 판독 대상이 아니다** — 접촉 0 (문법만) 이라 예측이 모두 "해당 없음" (비교할 쌍 0) 으로 나오고 판정은 등록 규칙대로 PASS + "쌍 0" 표지다.  "대조기 rc 0" 을 "예측 맞음" 으로 읽지 않는다 (G2CPR-05).
+
 ## 멈춤 (실행기)
 
 | rc | 언제 | 남는 것 |
 |---|---|---|
-| 3 | 실행 전 — 인자 · N (200 이상 · 100 의 배수) · 도구 · `LMP` 없음 · 파일 아님 · 실행 권한 없음 · `-h` 첫 머리 줄 `LIGGGHTS (` 없음 · OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ `run_40000/inputs.md5` · BW 꼴 · git 작업 트리면 이 폴더 커밋 안 된 변경 | 아무것도 (OUT 을 만들지 않는다 · 이유 = 화면) |
-| 4 | 실행 중 — 팔 rc ≠ 0 (시간 한도 = 124) · ERROR 줄 · `Loop time of` 없음 · 기대 출력 없음 | OUT 에 그 팔까지 · `STOP.txt` · `rc.txt` (남은 팔 안 돎) |
-| 0 | 팔 아홉 끝 | `lmp_identity.txt` · `inputs.md5` · `rc.txt` · 팔별 `log.txt` · `out.txt` · `post/` · `rst/` · `outputs.md5` |
+| 3 | 실행 전 — 인자 · N (200 이상 · 100 의 배수) · 도구 · `LMP` 없음 · 파일 아님 · 실행 권한 없음 · `-h` 첫 머리 줄 `LIGGGHTS (` 없음 · OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ `run_40000/inputs.md5` · BW 꼴 · git 작업 트리면 이 폴더 커밋 안 된 변경 · 사람 멈춤 신호 (팔 시작 전) | 아무것도 (OUT 을 만들지 않는다 · 이유 = 화면) |
+| 4 | 실행 중 — 팔 rc ≠ 0 (시간 한도 = 124) · ERROR 줄 · `Loop time of` 없음 · 기대 출력 없음 · **사람 멈춤** (Ctrl-C = INT · `kill -TERM <실행기 pid>` · 터미널 닫힘 = HUP) | OUT 에 그 팔까지 · `STOP.txt` · `rc.txt` (사람 멈춤 = `<팔> 신호 <INT·TERM·HUP>` 줄) · 남은 팔 안 돎 |
+| 0 | 팔 아홉 끝 | `lmp_identity.txt` · `lmp_ldd.txt` · `lmp_libs.md5` · `inputs.md5` · `rc.txt` · 팔별 `log.txt` · `out.txt` · `post/` · `rst/` · `outputs.md5` |
 
+- **멈추는 법** (G2CPR-08): Ctrl-C 또는 `kill -TERM <실행기 bash pid>` — 실행기가 도는 팔의 `timeout` (실행기가 띄운 직접 자식 · PPid 대조) 에만 TERM → `timeout` 이 LIGGGHTS 에 넘김 (30 s 안 끝나면 KILL) → 거둔 뒤 `STOP.txt` · rc 4.  실행기는 그 밖의 어떤 프로세스에도 신호를 보내지 않는다.  ⛔ LIGGGHTS 를 직접 죽이지 않는다 (팔이 rc ≠ 0 으로 멈춰도 같은 결과지만 이유가 "신호" 로 남지 않는다).
 - 끊기면 다시 돌리지 말고 보고 (새 빈 폴더 · 1저자 승인 뒤 · 이 묶음은 재개 도구가 아니다 — CLAUDE.md 멈춘 런 재개 체크리스트 ⑥).
 - 시간 한도 = `G2CP_TLONG` (A · A2 · 기본 1800 s) · `G2CP_TSHORT` (나머지 · 기본 600 s) — 넘으면 `timeout` 이 TERM → 30 s 뒤 KILL.
+- 실행 파일 신원 (`lmp_identity.txt`) = 경로 · 실제 경로 (`readlink -f`) · md5 · sha256 · 크기 (`stat -L` — 링크면 대상 크기) · `-h` 배너 · glibc · uname · git HEAD.  공유 라이브러리 = `lmp_ldd.txt` (`ldd` 원문 + rc) · `lmp_libs.md5` (라이브러리 md5) — **기록만** (11-04 기록에는 없어 대조기의 판정 조건이 아니다 · 같은 md5 실행 파일이 다른 기계에서 다른 출력을 낼 때 가릴 자료 · G2CPR-07).
+
+## 대조기가 판독하는 것 (메모 §0-3 끝 공통 규칙)
+
+- **실행기 출력만**: `lmp_identity.txt` + 팔 폴더 아홉이 있는 OUT 만 읽고 거기에만 `compare_g2cp.json` 을 쓴다 · 샌드박스 폴더 · `run_40000/` (11-04 기록) · 그 조상 = 거부 (rc 2 · 아무것도 안 씀 · G2CPR-11).
+- **등록 덱 문**: `OUT/inputs.md5` 의 덱 여덟 (11-04 일곱 + BW) md5 = 이 폴더 파일일 때만 판독 — 아니면 가 · 라-재현 (나) 를 뺀 예측 = 계산 못 함 · 다 · 라 판정 = NOT_COMPUTED (G2CPR-04).
+- **토큰 꼴**: 값 같음 = 모든 토큰이 R 덱 `dump_modify` 꼴 (쌍 `%.17g` · 원자 id · type `%d`) 일 때만 · 숫자 토큰 = ASCII · 밑줄 없음 (`1_0` · 전각 · 아라비아-인도 숫자 = 읽기 문제 · 키트보다 엄격 = 거부 쪽) · 원자 상자도 비교 (G2CPR-04).
+- **바이트 예측 = sha256 만** (값 읽기 실패와 따로 · G2CPR-10) · **쌍 0 = 해당 없음** (G2CPR-05) · 파일 없음 = 판정 NOT_COMPUTED (키트와 같음 · G2CPR-03) · 실행 파일 신원 · 덱 기록을 모르면 가 · 라-재현 (나) = 계산 못 함 (G2CPR-07) · 기록 (`inputs.md5` · `lmp_identity.txt`) 에 같은 이름이 두 줄 이상 = 모호 = 모름 (한 줄만 골라 읽지 않는다 · 메모 §0-3 규칙 ⑩).
+
+## 시험
+
+- 첫 판 (11-10 · 27 함수): 구현 없이 **0 / 27** 은 구현 세 파일 (`compare_g2cp.py` · `run_g2cp.sh` · `BW.liggghts`) 을 모두 뺀 사본 — **`BW.liggghts` 를 남기면 1 / 27** (t20 = 덱 꼴 · 11-04 md5 시험 · 11-10 내부 반박 리뷰가 바로잡음) → 구현 뒤 27 / 27.  "옳은 이유로 실패" 의 증거는 아니고 그 몫은 변이 시험 (51 중 49 · 놓친 2 = 동등 · `bd3a4e4f0` 판) 이 했다.
+- 11-11 리뷰 고침 판 (37 함수 · t30 – t39 새로 · t04 · t07 · t08 · t13 · t25 보강): 고치기 전 **22 / 37** (fail 15 · 모두 리뷰 재현과 같은 꼴) → 고친 뒤 **37 / 37** · 그 뒤 같은 판 안 보강 (시험 먼저): t31 = HUP · 실행 전 (-h 중) INT · 느린 종료 흉내 (옛 실행기 17 곳 실패) · t34 · t37 = 기록 중복 (고치기 전 35 / 37 → 37 / 37) · t34 · t38 · t39 = 변이가 찾은 시험 틈 넷 (조상 · 기록 폴더 · ldd 기록 · 가 의 덱 중복) → 마지막 **37 / 37** (약 20 s · 건너뜀 0) · 변이 (리포 밖 하네스 · 이 판) = 2 회차 95 중 90 (놓친 5 = 동등 2 + 시험 틈 3) → 시험 보강 뒤 3 회차 18 중 17 (놓친 1 = 실행 전 갈래 빼기 · 시험한 -h 자리에서 동등).
+- 사람 멈춤 시험 (t31) = 이름공간 안 드라이버 (`--sigdriver` · 이름공간 PID 1) 가 실행기 bash (직접 자식 · pid > 1 · 자기 · 부모 아님) 에만 INT · TERM · HUP 을 보낸다 (팔 A 중 셋 · 실행 전 -h 중 INT 하나 · 가짜 LIGGGHTS 는 TERM 뒤 2 s 더 산다 = 실행기가 거두는지).  t25 의 임시 git 커밋 = `-c commit.gpgsign=false -c core.hooksPath=/dev/null` (서명 · 훅이 켜진 기계에서도 서명 프로그램을 부르지 않는다).
+
+## 넣을 줄 (시도 2 발사 뒤)
+
+1저자 Q11 비준 (11-10) — `scripts/check_all.sh` 에 아래 한 줄.  **Rint ② 개발 탐침 시도 2 발사 뒤에만** 넣는다 (두 시도 사이에 `scripts/` 가 바뀌면 시도 2 가 멈춘다 · 그 전에는 `scripts/` 밑 어떤 파일도 바꾸지 않는다):
+
+```
+run 'G2c′ 샌드박스 대조기 · 실행기 (합성 침대 · 가짜 lmp · 시험 먼저)' python3 -I docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py
+```
 
 ## 하지 않는 것
 
-ibb · RJ 323957 재실행 · 남은 네 침대 RJ · 허용폭 · 판정 규칙 · 키트 (`docs/data/ps45_unload_20261009/`) · 봉인 변경 · 자동 시작.
+ibb · RJ 323957 재실행 · 남은 네 침대 RJ · 허용폭 · 판정 규칙 · 키트 (`docs/data/ps45_unload_20261009/`) · 봉인 변경 · 자동 시작 · 건식 출력을 예측 판독으로 쓰기.
