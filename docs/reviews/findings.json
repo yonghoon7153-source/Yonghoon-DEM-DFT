@@ -17348,12 +17348,18 @@
     {
       "id": "P6R3-04",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "내부 반박 리뷰 3 회차 (독립 조수 · Codex 아님) 11-10 — Rint ② 개발 탐침 ⑥ 준비물 고친 곳 (리뷰 핀 420da6bb3 · 통째 사본 · PID 이름공간 · 가짜 러너 · 합성 입력 · 변이)",
       "opened_in": "docs/reviews/rint2_probe6_prep_20261110/README.md",
       "title": "(운영 · 문서) 풀이 코드 목록이 넓고 (scripts/ 통째 · 시험 파일이 든 탐침 도구 폴더 · S0 폴더) 블록이 PIN = 가지 끝을 요구해 두 시도 사이 같은 가지의 어떤 scripts/ 커밋도 시도 2 를 막는다 — 이 조건이 README §9 에만 있고 정본 원장 §3 · KGY_BLOCK 머리 (7 행) 에는 없었다 (docs/reviews/rint2_dev_probe_ledger_20261026.md)",
-      "note": "11-10 3 회차 재리뷰 (보고 = 본 세션 scratch) · 고침 = 이 항목을 올린 커밋 (원장 §3 \"두 시도 사이 커밋\" 글 · KGY_BLOCK 머리 7 행 한 문장 · 시도 2 의 DONE 까지로 넓힘) · claimed_fixed = 다음 커밋 · 시도 2 는 같은 핀으로 떠 이 빈틈이 영향 준 일 없음"
+      "note": "11-10 3 회차 재리뷰 (보고 = 본 세션 scratch) · 고침 = 이 항목을 올린 커밋 (원장 §3 \"두 시도 사이 커밋\" 글 · KGY_BLOCK 머리 7 행 한 문장 · 시도 2 의 DONE 까지로 넓힘) · claimed_fixed = 다음 커밋 · 시도 2 는 같은 핀으로 떠 이 빈틈이 영향 준 일 없음 · 고침 커밋 = 36be2c31f (11-11 push · 게이트 181 · 시험 S 39/0 = 원장 §3 · KGY_BLOCK 글이 S11 · S14 와 맞음) · claimed_fixed = 11-11",
+      "claimed_fixed_sha": "36be2c31fe01219ed57c8b7a138f801bea0cb5f7",
+      "evidence_tests": [
+        "docs/reviews/rint2_dev_probe_ledger_20261026.md",
+        "docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md",
+        "docs/reviews/rint2_probe6_prep_20261110/tools/test_probe6_read.py"
+      ]
     },
     {
       "id": "P6R3-05",
@@ -17368,12 +17374,16 @@
     {
       "id": "SELF-165",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "자기 점검 (11-11 · 1저자가 [DEM 우선 Ⓑ] Q1 의 명령을 달라고 해 확인하다가)",
       "opened_in": "CLAUDE.md",
       "title": "11-10 밤 용훈 포메이션 [DEM 우선 Ⓑ] 에서 FAM §12-7 gabia 배치를 \"미확인 · 마지막 확인 11-04\" 로 보고하고 확인 명령을 1저자 결정 (Q1) 으로 올렸다 — 배치는 11-05 20:40:55 KST 에 끝났고 반입 (docs/data/fam_s127_gabia_20261106/) · Codex 결과 리뷰 · 원자료 확인 (11-06) 까지 끝난 일이었다 (CLAUDE.md 의 FAM 줄이 11-04 \"▶ corner_fa → corner_f0\" 에서 멈춰 있어 낡은 줄을 현재형으로 읽음 · 규율 ④ 부류 · SELF-163 과 같은 꼴)",
-      "note": "1저자에게 정정 (명령 필요 없음 · 11-11) · 고침 = 이 항목을 올린 커밋 (CLAUDE.md FAM 줄 끝 표지 · 진행 기록 11-06 두 줄을 가리킴) · claimed_fixed = 다음 커밋 · 같은 꼴을 막는 법 = 포메이션의 트랙 줄을 쓰기 전에 진행 기록에서 그 트랙의 마지막 줄을 찾아 본다"
+      "note": "1저자에게 정정 (명령 필요 없음 · 11-11) · 고침 = 이 항목을 올린 커밋 (CLAUDE.md FAM 줄 끝 표지 · 진행 기록 11-06 두 줄을 가리킴) · claimed_fixed = 다음 커밋 · 같은 꼴을 막는 법 = 포메이션의 트랙 줄을 쓰기 전에 진행 기록에서 그 트랙의 마지막 줄을 찾아 본다 · 고침 커밋 = 36be2c31f (11-11 push) · claimed_fixed = 11-11",
+      "claimed_fixed_sha": "36be2c31fe01219ed57c8b7a138f801bea0cb5f7",
+      "evidence_tests": [
+        "CLAUDE.md"
+      ]
     }
   ]
 }
