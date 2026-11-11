@@ -345,6 +345,12 @@
    "state": "active",
    "by": "agent",
    "note": "묶음 2 판독 시도 (회수 bfdf4349) → G2 불통과 (Cl 없는 설계 셋의 원자 부피 판 · 9 줄) → §9 '멈춘다' · 새 축 값 0 건 · 개정 2 (proposed) 로 기록기 · 판독기를 결과 전에 고치고 다시 돈다"
+  },
+  {
+   "at": "2026-11-11",
+   "state": "active",
+   "by": "사용자 (cascade 1저자)",
+   "note": "사용자 2026-11-11 (이 세션 · AskUserQuestion): cascade 묶음 2 개정 2 (커밋 54a1fa01 · Cl 없는 설계 셋의 원자 부피 판 '해당 없음' · 기록기 · 판독기 고침 · vol + win 새 폴더로 다시 돌기) '비준 — gabia 블록 받기 (Recommended)' · 결정 D-2026-11-11-cascade-axes-bundle2-amend2 active"
   }
  ],
  "ED_반영_2026_11_10": {
@@ -445,7 +451,7 @@
    "G3b": "옛 실행과 같은 MP 판이면 최소 kink 반응식 · x* · dE 는 묶음 1 원자료와 같아야 한다 (276/276 · 바뀐 것은 부피 기록뿐)",
    "비용": "gabia CPU ≈ 40 분 (지난 실행: vol 30 분 · win 5 분 · 갭 조회 4 분) · GPU 0 · SCF 0"
   },
-  "결정": "D-2026-11-11-cascade-axes-bundle2-amend2 (proposed · 사용자 비준 대기)",
+  "결정": "D-2026-11-11-cascade-axes-bundle2-amend2 (✅ active · 사용자 비준 2026-11-11 · 카드 커밋 54a1fa01)",
   "by": "agent · 2026-11-11",
   "gabia_블록": {
    "무엇": "CPU 파이썬 + MP 조회 (QE 아님 · GPU 0 · b2o3 UMA 런 옆 허용) · 있는 worktree 를 이 판으로 올리고 vol → win 차례로 새 폴더에",
