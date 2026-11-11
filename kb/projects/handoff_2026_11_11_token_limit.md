@@ -32,7 +32,7 @@ kb/projects/handoff_2026_11_11_token_limit.md 부터 읽고 이어서 해 줘. g
 | 기계 | 무엇 | 위치 | 끝 어림 | 끝나면 |
 |---|---|---|---|---|
 | gabia | b2o3 1 단계 **8 단계** (54 구조 · UMA 어닐 100 ps → 이완) | tmux `b2o3_s8` · `R=/data/work/runs/b2o3_bo_2026_11_09` · 감시 `bash $HOME/w_b2o3_s8.sh \| sed …` (화면 '(20 ps 까지)' 는 옛 문구 · 실제 100 ps) | 11-11 14:26 기준 21/54 · **11-13 오전 10 시쯤** | gabia **블록 v3** — 런로그 `db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json` 의 `8b_진단_블록_v3_2026_11_10` (② worktree 를 `7002085204183c88a0bec725e6d82f522eeeb1ef` 로 → ⓪ 검사 → ⓪b 궤적 에너지 → ① 본 판독 → ③ 추출 → ④ 이완 큐 → ④b rc → ⑤ 판정) · 카드 개정 4 active (`D-2026-11-10-b2o3-bo-placement-amend4-ea`) |
-| kgy | li2s-3 **2 단계** (16 런 × 400 ps · v1 큐) | tmux `li2s3s2` · `B=~/work/runs/li2s3_stage2_2026_11_10` · 큐 worktree `~/wt_li2s3` (⛔ 올리지 않는다) | 11-11 13:16 기준 3/16 · 런당 ≈ 5.1 h · **11-14 새벽 2–3 시** | 큐 끝 줄이 찍힌 뒤 **readout · pressure 한 번** (아래 §2) |
+| kgy | li2s-3 **2 단계** (16 런 × 400 ps · v1 큐) | tmux `li2s3s2` · `B=~/work/runs/li2s3_stage2_2026_11_10` · 큐 worktree `~/wt_li2s3` (⛔ 올리지 않는다) | 11-11 18:53 기준 4/16 · 650 K 부터 공유 GPU 경합으로 ≈ 55 ps/h (런당 ≈ 7.4 h) · **11-15 아침** (경합이 풀리면 11-14) | 큐 끝 줄이 찍힌 뒤 **readout · pressure 한 번** (아래 §2) |
 
 - ⛔ v1 큐 (`run_stage2_kgy.sh`) 는 멈추거나 끝나도 **다시 치지 않는다** (사다리 판독이 보류된다 · 카드 개정 3). 남은 런 · 재실행 · cond550 은 큐 v2 로만.
 - kgy GPU 의 ≈ 4 GB 는 esp 계정 그래픽 앱이다 (우리 것 아님).
