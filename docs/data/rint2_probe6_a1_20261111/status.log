@@ -1,0 +1,18 @@
+[probe6] 2026-11-10T23:51:41Z start - watcher for probe 6 (runner output goes to the log folder only)
+[probe6] 2026-11-10T23:52:19Z pre-launch: attempt 1, GPU memory in use 5727 MiB of 24576 MiB, disk free 305 GB (kit root) and 305 GB (log folder)
+[probe6] 2026-11-10T23:52:19Z runner started - maxiter 30000, host RSS cap 41 GB, sampling every 10 s
+[probe6] 2026-11-10T23:52:19Z running - elapsed 0 s, stage before_step3, log lines 0, host RSS 0 GB, GPU used 5727 MiB
+[probe6] 2026-11-11T00:02:24Z running - elapsed 605 s, stage raster, log lines 29, host RSS 7 GB, GPU used 5721 MiB
+[probe6] 2026-11-11T00:12:29Z running - elapsed 1210 s, stage raster, log lines 29, host RSS 9 GB, GPU used 5703 MiB
+[probe6] 2026-11-11T00:22:34Z running - elapsed 1815 s, stage raster, log lines 29, host RSS 9 GB, GPU used 5585 MiB
+[probe6] 2026-11-11T00:32:39Z running - elapsed 2420 s, stage raster, log lines 29, host RSS 9 GB, GPU used 5565 MiB
+[probe6] 2026-11-11T00:42:44Z running - elapsed 3025 s, stage raster, log lines 29, host RSS 9 GB, GPU used 5649 MiB
+[probe6] 2026-11-11T00:52:49Z running - elapsed 3630 s, stage raster, log lines 29, host RSS 9 GB, GPU used 5685 MiB
+[probe6] 2026-11-11T01:02:54Z running - elapsed 4235 s, stage raster, log lines 29, host RSS 9 GB, GPU used 5679 MiB
+[probe6] 2026-11-11T01:12:59Z running - elapsed 4840 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11284 MiB
+[probe6] 2026-11-11T01:23:02Z running - elapsed 5443 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11268 MiB
+[probe6] 2026-11-11T01:33:06Z running - elapsed 6047 s, stage cg, log lines 32, host RSS 25 GB, GPU used 14044 MiB
+[probe6] 2026-11-11T01:43:10Z running - elapsed 6651 s, stage cg, log lines 32, host RSS 25 GB, GPU used 14040 MiB
+[probe6] 2026-11-11T01:53:13Z running - elapsed 7254 s, stage cg, log lines 32, host RSS 25 GB, GPU used 14038 MiB
+[probe6] 2026-11-11T02:00:06Z runner ended - rc 1, wall 7667 s
+[probe6] 2026-11-11T02:00:10Z report rc 3 (0 PROBE_OK, 3 not converged, 4 incomplete, 5 rejected)
