@@ -1,3 +1,0 @@
-﻿slug,paper,title,track,chapter,property,property_class,system,value_text,value_min,value_max,unit,conditions,basis,status,line,quote,locator,caveat,answer_cut
-hollmann2025_tabpfn_tabular_foundation_model,Hollmann 2025,Hollmann 2025 — TabPFN: 소데이터 표형(tabular) 파운데이션 모델 (Nature),dem,디지털 트윈과 최적화,검증 스케일 (행 수),count,TabPFN,≤10k,,,행,,stated,text_only,32,≤10k행/500특징 스케일 검증,,대용량은 범위 밖,
-hollmann2025_tabpfn_tabular_foundation_model,Hollmann 2025,Hollmann 2025 — TabPFN: 소데이터 표형(tabular) 파운데이션 모델 (Nature),dem,디지털 트윈과 최적화,검증 스케일 (특징 수),count,TabPFN,500,,500,특징,,stated,verified,32,≤10k행/500특징 스케일 검증,,대용량은 범위 밖,

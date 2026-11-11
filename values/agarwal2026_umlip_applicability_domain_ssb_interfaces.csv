@@ -1,3 +1,0 @@
-﻿slug,paper,title,track,chapter,property,property_class,system,value_text,value_min,value_max,unit,conditions,basis,status,line,quote,locator,caveat,answer_cut
-agarwal2026_umlip_applicability_domain_ssb_interfaces,Agarwal et al. 2026,Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces,dft,원자간 퍼텐셜(MLIP) 방법론,시험한 uMLIP 수,count,uMLIP,6,6,6,개,,stated,verified,68,6 개 uMLIP × 24 개 Li/SE 계면,Introduction,,
-agarwal2026_umlip_applicability_domain_ssb_interfaces,Agarwal et al. 2026,Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces,dft,원자간 퍼텐셜(MLIP) 방법론,시험한 Li/SE 계면 수,count,Li/SE 계면,24,24,24,개,,stated,verified,68,6 개 uMLIP × 24 개 Li/SE 계면,Introduction,,
