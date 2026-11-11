@@ -1,0 +1,18 @@
+gate_receipt=1
+gate_discipline=1
+gate_undefined=1
+arm_start tag=p2_SBE_vgcf100_sph_fa_cj1000000_78c44437_c0_rt1em12_fb10000_a0 shift_zero=1
+step3_voxelize_start
+cg_maxiter=1500000
+cg_rtol=1e-12
+face_alpha_prep_s=31
+cjunc_prep_s=4040
+step3_solve n_dof=26529223 plate_bot=11769 plate_top=9578 backend=GPU
+step3_done n_dof=26529223 resid=1.1e-12 step3_s=22214 sealed=1
+payload_saved=1
+runner_peak_rss_gb=32.9
+masked: [p#] ⚠ ARMS=# ≠ 사전등록 # — **진단 런**이다.
+masked: OUTDIR 에 _arm# 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다.
+masked: [p#] ⚠ 킷이 SDCP 기본이 아니다 (kit_SBE_vgcf#) — 계약 봉인을 **돌리지 않는다.**
+masked: 이 러너는 팔만 낸다.  봉인·판정은 그 캠페인의 판정기 소관이다
+masked: (Phase A # mAh → scripts/phase_a_order_verdict.py).  OUTDIR: ~/sdcp/ca#_probe#_a#_#T#Z_arm#

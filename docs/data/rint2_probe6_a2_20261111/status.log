@@ -1,0 +1,42 @@
+[probe6] 2026-11-11T04:32:09Z start - watcher for probe 6 (runner output goes to the log folder only)
+[probe6] 2026-11-11T04:32:48Z pre-launch: attempt 2, GPU memory in use 6325 MiB of 24576 MiB, disk free 300 GB (kit root) and 300 GB (log folder)
+[probe6] 2026-11-11T04:32:48Z runner started - maxiter 1500000, host RSS cap 41 GB, sampling every 10 s
+[probe6] 2026-11-11T04:32:48Z running - elapsed 0 s, stage before_step3, log lines 0, host RSS 0 GB, GPU used 6325 MiB
+[probe6] 2026-11-11T04:42:52Z running - elapsed 604 s, stage raster, log lines 29, host RSS 7 GB, GPU used 6321 MiB
+[probe6] 2026-11-11T04:52:57Z running - elapsed 1209 s, stage raster, log lines 29, host RSS 9 GB, GPU used 6423 MiB
+[probe6] 2026-11-11T05:03:02Z running - elapsed 1814 s, stage raster, log lines 29, host RSS 9 GB, GPU used 6363 MiB
+[probe6] 2026-11-11T05:13:07Z running - elapsed 2419 s, stage raster, log lines 29, host RSS 9 GB, GPU used 6357 MiB
+[probe6] 2026-11-11T05:23:12Z running - elapsed 3024 s, stage raster, log lines 29, host RSS 9 GB, GPU used 6331 MiB
+[probe6] 2026-11-11T05:33:17Z running - elapsed 3629 s, stage raster, log lines 29, host RSS 9 GB, GPU used 6355 MiB
+[probe6] 2026-11-11T05:43:22Z running - elapsed 4234 s, stage raster, log lines 29, host RSS 9 GB, GPU used 6419 MiB
+[probe6] 2026-11-11T05:53:27Z running - elapsed 4839 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11988 MiB
+[probe6] 2026-11-11T06:03:30Z running - elapsed 5442 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11978 MiB
+[probe6] 2026-11-11T06:13:34Z running - elapsed 6046 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11962 MiB
+[probe6] 2026-11-11T06:23:38Z running - elapsed 6649 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11956 MiB
+[probe6] 2026-11-11T06:33:41Z running - elapsed 7253 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11956 MiB
+[probe6] 2026-11-11T06:43:45Z running - elapsed 7857 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11950 MiB
+[probe6] 2026-11-11T06:53:48Z running - elapsed 8460 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11948 MiB
+[probe6] 2026-11-11T07:03:52Z running - elapsed 9064 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11944 MiB
+[probe6] 2026-11-11T07:13:56Z running - elapsed 9668 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11940 MiB
+[probe6] 2026-11-11T07:23:59Z running - elapsed 10271 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11926 MiB
+[probe6] 2026-11-11T07:34:03Z running - elapsed 10875 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11912 MiB
+[probe6] 2026-11-11T07:44:07Z running - elapsed 11479 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11906 MiB
+[probe6] 2026-11-11T07:54:11Z running - elapsed 12082 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11902 MiB
+[probe6] 2026-11-11T08:04:14Z running - elapsed 12686 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11898 MiB
+[probe6] 2026-11-11T08:14:18Z running - elapsed 13290 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11888 MiB
+[probe6] 2026-11-11T08:24:21Z running - elapsed 13893 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11876 MiB
+[probe6] 2026-11-11T08:34:25Z running - elapsed 14497 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11874 MiB
+[probe6] 2026-11-11T08:44:29Z running - elapsed 15101 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11874 MiB
+[probe6] 2026-11-11T08:54:32Z running - elapsed 15704 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11874 MiB
+[probe6] 2026-11-11T09:04:36Z running - elapsed 16308 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11874 MiB
+[probe6] 2026-11-11T09:14:40Z running - elapsed 16912 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11874 MiB
+[probe6] 2026-11-11T09:24:43Z running - elapsed 17515 s, stage cg, log lines 31, host RSS 24 GB, GPU used 11868 MiB
+[probe6] 2026-11-11T09:34:47Z running - elapsed 18119 s, stage cg, log lines 31, host RSS 25 GB, GPU used 14648 MiB
+[probe6] 2026-11-11T09:44:51Z running - elapsed 18723 s, stage cg, log lines 31, host RSS 25 GB, GPU used 14648 MiB
+[probe6] 2026-11-11T09:54:54Z running - elapsed 19326 s, stage cg, log lines 31, host RSS 25 GB, GPU used 14648 MiB
+[probe6] 2026-11-11T10:04:58Z running - elapsed 19930 s, stage cg, log lines 31, host RSS 25 GB, GPU used 14648 MiB
+[probe6] 2026-11-11T10:15:02Z running - elapsed 20534 s, stage cg, log lines 31, host RSS 25 GB, GPU used 14648 MiB
+[probe6] 2026-11-11T10:25:05Z running - elapsed 21137 s, stage cg, log lines 31, host RSS 25 GB, GPU used 14648 MiB
+[probe6] 2026-11-11T10:35:09Z running - elapsed 21741 s, stage cg, log lines 31, host RSS 25 GB, GPU used 14628 MiB
+[probe6] 2026-11-11T10:45:13Z runner ended - rc 0, wall 22345 s
+[probe6] 2026-11-11T10:45:18Z report rc 0 (0 PROBE_OK, 3 not converged, 4 incomplete, 5 rejected)
