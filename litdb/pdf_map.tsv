@@ -400,3 +400,6 @@ bardenhagen2005_mpm_foam_densification_simulation	insight into the physics of fo
 # ── MPM 화학–역학 결합 (Gritton 외 2017 · Modelling Simul. Mater. Sci. Eng. 25, 045005) — litdb 2026-11-11 반입분의 누락 줄 보충 (같은 까닭 · 파일명에는 'chemical/mechanical' 의 빗금이 빠져 'chemicalmechanical') ──
 gritton2017_mpm_chemomechanical_coupling_silicon_anode	using_the_material_point_method_to_model_chemicalmechanical_coupling
 gritton2017_mpm_chemomechanical_coupling_silicon_anode	using the material point method to model chemical
+# ── DEM → MPFEM 분말압축 워크플로 (Mohammadhosseinzadeh · Ghorbani-Menghari · Kim · SoftwareX 33 (2026) 102495) — litdb 2026-11-11 그림 크롭 보강 · Elsevier 파일 이름 (PII) 에 제목 낱말이 없어 자동 매칭이 안 붙음 · 첫 digest 때의 업로드 이름 (PyCompact) 도 같이 ──
+pycompact2025_dem_mpfem_workflow	s2352711025004613
+pycompact2025_dem_mpfem_workflow	pycompact
