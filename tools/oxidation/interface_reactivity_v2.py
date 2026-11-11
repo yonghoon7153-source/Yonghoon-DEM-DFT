@@ -338,6 +338,7 @@ def closed_volume_record(pd, c1, c2, min_rxn, f1=None, f2=None, sg_cache=None):
       · products: 모든 kink (최소 kink 포함) 반응식의 산물마다 같은 hull 의 안정 엔트리 (reduced formula 같음) 의 구조 부피 ÷ 원자 수
       · reactants: c1 (설계 · 호스트 SE) · c2 (상대) 마다 hull 분해 (상 · 양 · 부피 · mp-id) 와 혼합 원자 부피 (에너지와 같은 회계)
       · argyrodite_Li6PS5Cl: 같은 hull 에서 reduced formula Li6PS5Cl 인 에너지 최저 엔트리 (원자 부피 판 · 기록만)
+        — hull 원소에 Li · P · S · Cl 이 다 있지 않으면 None + argyrodite_not_applicable (사유) · 주 판 기록은 그대로 (2026-11-11 · 카드 개정 2)
     필요한 엔트리 하나라도 구조가 없거나 · 산물의 안정 엔트리가 하나가 아니거나 · 최소 kink 가 kink 목록에 없으면
     {ok: False, refused: [사유]} (부피 숫자 없음).
     ⛔ 못 하는 것: 최소 kink 를 다시 고르지 않는다 (min_rxn 은 호출부가 준 문자열) · ΔV/V 를 내지 않는다."""
@@ -367,10 +368,18 @@ def closed_volume_record(pd, c1, c2, min_rxn, f1=None, f2=None, sg_cache=None):
         problems += w
         if r:
             reac[tag] = r
-    argy = None
+    argy, argy_na = None, None
     cand = [e for e in pd.all_entries if e.composition.reduced_formula == ARGYRODITE_RF]
     if not cand:
-        problems.append(f"{ARGYRODITE_RF} 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)")
+        # 2026-11-11 (카드 개정 2 · 결과 전): 이 hull 의 원소에 아지로다이트 원소 (Li · P · S · Cl) 가 다 있지 않으면 같은 hull 에
+        # Li6PS5Cl 이 **있을 수 없다** (Cl 을 F · Br 로 다 바꾼 설계 — TiF4 · ZrF4 · ZrBr4) — 원자 부피 판 (기록만) 만 '해당 없음' 으로
+        # 적고 주 판 (hull 혼합) 기록은 거부하지 않는다. 원소가 다 있는데 엔트리가 없으면 예전처럼 거부한다 (MP 결손 · 추측 안 함).
+        from pymatgen.core import Composition as _C
+        lack = sorted({el.symbol for el in _C(ARGYRODITE_RF).elements} - {el.symbol for el in pd.elements})
+        if lack:
+            argy_na = f"이 hull 의 원소에 {'·'.join(lack)} 가 없다 — {ARGYRODITE_RF} 가 있을 수 없다 (원자 부피 판 해당 없음 · 기록만 판 · 주 판은 그대로)"
+        else:
+            problems.append(f"{ARGYRODITE_RF} 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)")
     else:
         e = min(cand, key=lambda x: x.energy_per_atom)
         v, w = entry_volume_record(e, sg_cache)
@@ -395,7 +404,8 @@ def closed_volume_record(pd, c1, c2, min_rxn, f1=None, f2=None, sg_cache=None):
             "basis": "같은 실행 · 같은 PhaseDiagram — 산물 = pd.stable_entries (reduced formula 같음) · 반응물 = pd.get_decomposition · "
                      "아지로다이트 = pd.all_entries 중 Li6PS5Cl 에너지 최저 · 부피 = entry.structure.volume / num_sites (Å³/atom) · "
                      "kink_terms = 같은 Reaction 객체의 정확한 계수 (반응식 문자열 → 항 · 반올림 없음)",
-            "n_kinks": len(ks), "products": pv, "reactants": reac, "argyrodite_Li6PS5Cl": argy, "kink_terms": kt}
+            "n_kinks": len(ks), "products": pv, "reactants": reac, "argyrodite_Li6PS5Cl": argy,
+            "argyrodite_not_applicable": argy_na, "kink_terms": kt}
 
 
 def rxn_terms_pm(side):
@@ -1628,6 +1638,21 @@ def _selftest_bundle2(chk):
         and vc["ok"] is False and any("kink 목록" in w for w in vc["refused"])
         and vd["ok"] is False and any("Li6PS5Cl" in w for w in vd["refused"]),
         "[⛔음성] --record_volumes: 구조 없는 엔트리 (LiCl) · kink 목록에 없는 최소 kink · 아지로다이트 없음 → 기록 거부 (부피 숫자 없음 · 추측 안 함)")
+    # 2026-11-11 (카드 개정 2): Cl 없는 hull (Cl 을 F · Br 로 다 바꾼 설계) — 원자 부피 판만 '해당 없음' · 주 판 기록은 그대로
+    pdn = PhaseDiagram(_toy_lpscl_entries(drop=("Cl", "LiCl", "Li6PS5Cl")))
+    c1n = Composition("Li3PS4")
+    rxn_n = min_rxn_closed(c1n, li, pdn)[1]
+    vn = closed_volume_record(pdn, c1n, li, rxn_n, f1="Li3PS4", f2="Li")
+    na_n = vn.get("argyrodite_not_applicable") or ""
+    chk(vn.get("ok") is True and vn.get("argyrodite_Li6PS5Cl") is None and "Cl" in na_n and "해당 없음" in na_n
+        and set(vn.get("products") or {}) >= {"Li3P", "Li2S"} and (vn.get("reactants") or {}).get("c1", {}).get("basis") == "stable_entry"
+        and rxn_n in (vn.get("kink_terms") or {}) and vr.get("argyrodite_not_applicable") is None and va.get("argyrodite_not_applicable") is None,
+        "[양성] --record_volumes: hull 원소에 Cl 이 없으면 (Li–P–S) 아지로다이트 원자 부피 판만 '해당 없음 (Cl 없음)' · 산물 · 반응물 · "
+        "정확한 계수는 그대로 기록 (ok) · Cl 있는 hull 의 기록에는 '해당 없음' 이 없다")
+    vdn = closed_volume_record(PhaseDiagram(_toy_lpscl_entries(drop=("Li6PS5Cl",), nostruct=("Li2S",))), host, li, rxn)
+    chk(vdn["ok"] is False and any("Li6PS5Cl" in w for w in vdn["refused"]) and any("Li2S" in w for w in vdn["refused"])
+        and "argyrodite_not_applicable" not in vdn,
+        "[⛔음성] --record_volumes: Cl 이 있는 hull 에서 Li6PS5Cl 이 없으면 '해당 없음' 이 아니라 거부 (다른 사유와 같이 · 부피 숫자 없음)")
     # ── 배선: run_batch (MP 대신 가상 상도) — 켜면 'volumes' · 끄면 행 꼴이 전과 같다 ─────────────────
     import types
     g = globals()

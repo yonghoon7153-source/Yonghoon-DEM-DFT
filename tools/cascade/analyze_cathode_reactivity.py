@@ -1955,7 +1955,7 @@ B2_CARD_TEXT = ("w_④ = 1/8", "w_⑤ = 1 %p", "w_⑥ = 0.01", "w = 10 meV/atom 
                 "문턱 2.0 eV · 0.1 eV · 1 % · 90 % · 10 %", "release onset (max μ | evolution < 0)", "IQR ≥ 그 축의 동률 폭",
                 "새 연속 축이 하나도 순위에 못 들어가면 (G4 · G7 · G8) R10 · R11 을 내지 않는다", "같은 조성은 한 줄",
                 "CaCl2 ≡ CaS · MgCl2 ≡ MgS", "reduced formula Li6PS5Cl 인 에너지 최저 엔트리",
-                "f_ins = 8 점 중 설계 등급이 ⓐ 넓은 갭인 점의 비율", "R6c")
+                "f_ins = 8 점 중 설계 등급이 ⓐ 넓은 갭인 점의 비율", "R6c", "hull 원소에 Cl 이 없으면 원자 부피 판은 해당 없음")
 
 
 def _b2_mod(name):
@@ -2012,6 +2012,35 @@ def _b2_sides(row, rxn):
     return _b2_mod("interface_reactivity_v2").rxn_exact_sides(rxn, kt["terms"])
 
 
+def _b2_argy_possible(f, cf):
+    """설계 f · 상대 cf 의 hull 원소에 Li6PS5Cl 의 원소 (Li · P · S · Cl) 가 다 있는가 — 같은 hull 에 아지로다이트가 있을 수 있는가
+    (카드 개정 2 · 2026-11-11). 판독기가 화학식에서 따로 판정한다 (기록기의 '해당 없음' 사유 문자열을 믿지 않는다)."""
+    from pymatgen.core import Composition
+    have = {e.symbol for e in Composition(f).elements} | {e.symbol for e in Composition(cf).elements}
+    return {e.symbol for e in Composition("Li6PS5Cl").elements} <= have
+
+
+def b2_argy_problem(f, cf, vol):
+    """G2 — 아지로다이트 원자 부피 (⑤ 기록만 판) 의 꼴 (카드 개정 2). None = 정상 · 아니면 사유.
+    원소가 다 있으면: 부피가 있어야 하고 '해당 없음' 이 없어야 한다 (예전과 같다 — MP 결손은 거부).
+    원소가 모자라면 (Cl 을 F · Br 로 다 바꾼 설계): 아지로다이트 기록이 없어야 하고 '해당 없음' 사유가 있어야 한다 —
+    그 설계의 원자 부피 판 ⑤ 는 모름 (주 판은 그대로 · G8 은 두 판이 다 있는 설계만)."""
+    ag = vol.get("argyrodite_Li6PS5Cl")
+    has_v = isinstance(ag, dict) and isinstance(ag.get("volume_per_atom_A3"), (int, float))
+    na = vol.get("argyrodite_not_applicable")
+    if _b2_argy_possible(f, cf):
+        if not has_v:
+            return "아지로다이트 원자 부피 없음"
+        if na not in (None, ""):
+            return "아지로다이트 원자 부피와 '해당 없음' 사유가 같이 있다"
+        return None
+    if ag is not None:
+        return "hull 원소에 Cl 이 없는데 아지로다이트 기록이 있다"
+    if not (isinstance(na, str) and na.strip()):
+        return "아지로다이트 원자 부피 없음 (Cl 없는 설계인데 '해당 없음' 사유도 없다)"
+    return None
+
+
 def b2_dv(row, rxn=None, acc="hull"):
     """⑤ ΔV/V [%] = [V(산물) − V(반응물)] / V(반응물) — 그 반응식의 정확한 계수 (닫힌계 · 국소 x*). (값, 세부) | (None, 사유).
     acc 'hull' (주: 반응물 SE · 상대 = 같은 hull 의 평형 상 혼합 원자 부피) · 'atom' (기록만: SE = 아지로다이트 원자 부피) ·
@@ -2019,6 +2048,8 @@ def b2_dv(row, rxn=None, acc="hull"):
     vol = row.get("volumes") if isinstance(row, dict) else None
     if not (isinstance(vol, dict) and vol.get("ok") is True):
         return None, "부피 기록이 없거나 거부됐다"
+    if acc == "atom" and not isinstance((vol.get("argyrodite_Li6PS5Cl") or {}).get("volume_per_atom_A3"), (int, float)):
+        return None, "원자 부피 판 해당 없음 — " + str(vol.get("argyrodite_not_applicable") or "아지로다이트 원자 부피가 없다")
     ir = _b2_mod("interface_reactivity_v2")
     rxn = row.get("reaction") if rxn is None else rxn
     try:
@@ -2521,7 +2552,8 @@ def b2_g8(recs, a):
     r1 = b2_ranks([(r["comp_key"], {a: r["values"][a]}) for r in A], (a,), B2_W)
     r2 = b2_ranks([(r["comp_key"], {a: r["values_atom"][a]}) for r in A], (a,), B2_W)
     return {"rho": rho, "n": n, "passes": rho is not None and rho >= B2_T["rho"],
-            "n_group_A_rank_differs": sum(1 for r in A if r1[r["comp_key"]][a] != r2[r["comp_key"]][a]), "n_group_A": len(A)}
+            "n_group_A_rank_differs": sum(1 for r in A if r1[r["comp_key"]][a] != r2[r["comp_key"]][a]), "n_group_A": len(A),
+            "n_main_only": sum(1 for r in recs if r["values"][a] is not None and r["values_atom"].get(a) is None)}
 
 
 def _b2_decision():
@@ -2645,8 +2677,9 @@ def b2_gates_static(L, expected, card_text, decision, sealed, bind_prob, b1_ref,
             for t in ("c1", "c2"):
                 if not isinstance(((vol.get("reactants") or {}).get(t) or {}).get("mixture_volume_per_atom_A3"), (int, float)):
                     prob.append(f"{sp} × {cat}: 반응물 {t} 부피 없음")
-            if not isinstance((vol.get("argyrodite_Li6PS5Cl") or {}).get("volume_per_atom_A3"), (int, float)):
-                prob.append(f"{sp} × {cat}: 아지로다이트 원자 부피 없음")
+            ap = b2_argy_problem(f, cf, vol)
+            if ap:
+                prob.append(f"{sp} × {cat}: {ap}")
             if cat == "Li" and isinstance(gv, dict):
                 nog = sorted(p for p in ps if p != "Li" and p not in gv)
                 if nog:
@@ -2893,6 +2926,8 @@ def b2_r12(recs, axes, main, plus_u=None):
         out["signed_dV_Xin_Li_기록만"] = summ(b2_rank(recs, sg_axes, {**B2_W, **{a + "_signed": B2_W[a] for a in sv}}))
         out["gas0"] = summ(b2_rank([{**r, "values": {**r["values"], **{a: r["values_gas0"][a] for a in sv}}} for r in recs], axes))
         out["atom_volume"] = summ(b2_rank([{**r, "values": {**r["values"], **{a: r["values_atom"][a] for a in sv}}} for r in recs], axes))
+        out["atom_volume"]["n_designs_main_only"] = sum(1 for r in recs if any(r["values"][a] is not None and r["values_atom"].get(a) is None
+                                                                                for a in sv))
     else:
         out["signed_dV_Xin_Li_기록만"] = out["gas0"] = out["atom_volume"] = {"why": "⑤ 가 순위 축이 아니다"}
     if plus_u is not None:
@@ -3361,6 +3396,25 @@ def b2_selftest():
     chk(c15[0] == "intermediate" and abs(c15[1]["Si"]["shares"]["volatile"] - 0.15) < 1e-9 and c05[0] == "wide"
         and "volatile" not in c00[1]["Si"]["shares"] and c00[0] == "wide",
         "휘발 몫 15 % → ⓐ 될 수 없다 (ⓒ) · 5 % → ⓐ · extra_classes 없이 부르면 몫 사전이 묶음 1 판과 같다 (휘발 열쇠 없음)")
+    # ── 아지로다이트 원자 부피 판 '해당 없음' (카드 개정 2 · 2026-11-11 · Cl 을 F · Br 로 다 바꾼 설계) ─────────────────
+    AG = {"phase": "Li6PS5Cl", "volume_per_atom_A3": 18.4}
+    NA = "이 hull 의 원소에 Cl 가 없다 — Li6PS5Cl 가 있을 수 없다 (원자 부피 판 해당 없음)"
+    ap_ok = [b2_argy_problem("Li25P3S20F4Ti1", "Li", {"argyrodite_Li6PS5Cl": None, "argyrodite_not_applicable": NA}),
+             b2_argy_problem("Li25P3S20Br4Zr1", "Li0.5NiO2", {"argyrodite_Li6PS5Cl": None, "argyrodite_not_applicable": NA}),
+             b2_argy_problem("Li24P4S20Cl3F", "Li", {"argyrodite_Li6PS5Cl": AG, "argyrodite_not_applicable": None}),
+             b2_argy_problem("Li24P4S20Cl3F", "LiNiO2", {"argyrodite_Li6PS5Cl": AG})]
+    ap_bad = [b2_argy_problem("Li24P4S20Cl3F", "Li", {"argyrodite_Li6PS5Cl": None, "argyrodite_not_applicable": NA}),
+              b2_argy_problem("Li25P3S20F4Ti1", "Li", {"argyrodite_Li6PS5Cl": None, "argyrodite_not_applicable": None}),
+              b2_argy_problem("Li25P3S20F4Ti1", "Li", {"argyrodite_Li6PS5Cl": None, "argyrodite_not_applicable": "  "}),
+              b2_argy_problem("Li25P3S20F4Ti1", "Li", {"argyrodite_Li6PS5Cl": AG, "argyrodite_not_applicable": NA}),
+              b2_argy_problem("Li25P3S20F4Zr1", "Li", {"argyrodite_Li6PS5Cl": AG}),
+              b2_argy_problem("Li24P4S20Cl3F", "Li", {"argyrodite_Li6PS5Cl": AG, "argyrodite_not_applicable": NA}),
+              b2_argy_problem("Li24P4S20Cl3F", "Li", {"argyrodite_Li6PS5Cl": {"phase": "Li6PS5Cl"}}),
+              b2_argy_problem("Li25P3S20F4Ti1", "LiCl", {"argyrodite_Li6PS5Cl": None, "argyrodite_not_applicable": NA})]
+    chk(ap_ok == [None] * 4 and all(isinstance(x, str) and x for x in ap_bad),
+        "아지로다이트 원자 부피 판 (카드 개정 2): Cl 없는 설계 (TiF4 · ZrBr4 꼴) 는 기록 없음 + '해당 없음' 사유일 때만 통과 · "
+        "⛔음성 Cl 있는 설계의 '해당 없음' · 사유 없음 · 빈 사유 · Cl 없는데 기록 있음 · 부피와 사유가 같이 · 부피 숫자 없음 · "
+        f"상대 쪽 Cl (hull 원소 = 설계 ∪ 상대) → G2 사유 ({[x is not None for x in ap_bad]})")
     # ── 가상 원자료 끝까지 ─────────────────────────────────────────────────────────────────────
     DEC = ("active", "db/properties/" + B2_CARD.name)
     def run(mut=None, card_text=card, decision=DEC, b1_repro=None):
@@ -3399,6 +3453,26 @@ def b2_selftest():
         hdr = pth.read_text(encoding="utf-8").splitlines()
     chk(len(hdr) == 2 + len(by) and "sV_Li_pp" in hdr[1] and "r_f_ins" in hdr[1] and "leximin_position" in hdr[1],
         "Origin 용 CSV: 머리줄 · 열 이름 명시 · 설계마다 한 줄")
+    # 카드 개정 2 배선 — 가상 LiF 를 'Cl 없는 설계' 로 보게 하고 (판독기 원소 판정만 바꿈) 그 부피 기록을 기록기의 '해당 없음' 꼴로 →
+    # G2 통과 · 주 판 값 그대로 · 원자 부피 판 ⑤ 만 모름 · G8 은 두 판이 다 있는 설계만 (n − 1) · 사유 없는 기록은 G2 로 막힌다
+    real_ap = globals()["_b2_argy_possible"]
+    try:
+        globals()["_b2_argy_possible"] = lambda f, cf: f != _B2S_D["LiF"][0] and real_ap(f, cf)
+        r_na = run(lambda W: [r["volumes"].update(argyrodite_Li6PS5Cl=None, argyrodite_not_applicable="이 hull 의 원소에 Cl 가 없다 (selftest)")
+                              for r in W["rows"]["designs_vol"] if r["species"] == "LiF"])
+        r_na_bad = run(lambda W: [r["volumes"].update(argyrodite_Li6PS5Cl=None) for r in W["rows"]["designs_vol"] if r["species"] == "LiF"])
+    finally:
+        globals()["_b2_argy_possible"] = real_ap
+    bn = {x["species"]: x for x in r_na.get("rows", [])}
+    g8a, g8b = r0["gates"].get("G8", {}), r_na["gates"].get("G8", {})
+    chk(not r_na["blocking"] and bool(bn) and bn["LiF"]["values"] == by["LiF"]["values"]
+        and bn["LiF"]["values_atom"] == {"sv_ncm": None, "sv_li": None}
+        and str(bn["LiF"]["w5"]["Li"]["atom"].get("why")).startswith("원자 부피 판 해당 없음")
+        and all(bn[s_]["values_atom"] == by[s_]["values_atom"] for s_ in by if s_ != "LiF")
+        and all(g8b[a]["n"] == g8a[a]["n"] - 1 and g8b[a]["n_main_only"] == 1 and g8a[a]["n_main_only"] == 0 for a in ("sv_ncm", "sv_li"))
+        and "G2" in r_na_bad["blocking"] and "rows" not in r_na_bad,
+        "카드 개정 2 배선: Cl 없는 설계 (가상 LiF) 는 G2 통과 · 주 판 값 그대로 · 원자 부피 판 ⑤ 만 모름 ('해당 없음' 사유) · "
+        "G8 은 두 판이 다 있는 설계만 (n − 1 · n_main_only 1) · ⛔음성 사유 없는 기록은 G2 로 막힌다")
     # 음성 — 막는 게이트마다
     def rows_of(W, lane, sp, cat=None):
         return [r for r in W["rows"][lane] if r["species"] == sp and (cat is None or r["cathode"] == cat)]
@@ -3422,6 +3496,7 @@ def b2_selftest():
         "G3b dE + 2e-5": (run(lambda W: W["ref"][2].update(dE_eV_per_atom=W["ref"][2]["dE_eV_per_atom"] + 2e-5)), "G3b"),
         "창 행 빠짐": (run(lambda W: W["rows"]["designs_win"].pop(3)), "G2"),
         "부피 기록 거부": (run(m_vol("MgO", "Li", lambda r: r.update(volumes={"ok": False, "refused": ["x"]}))), "G2"),
+        "Cl 있는 설계의 아지로다이트 '해당 없음'": (run(m_vol("MgO", "Li", lambda r: r["volumes"].update(argyrodite_Li6PS5Cl=None, argyrodite_not_applicable="x"))), "G2"),
         "창 산물 갭 조회 없음": (run(lambda W: W["gaps"].pop("SiCl4")), "G2"),
         "정확한 계수 없음": (run(m_vol("BaO", "LNO_half", lambda r: r["volumes"].update(kink_terms={}))), "G2"),
         "좌변에 반응물 아닌 항": (run(m_vol("NaCl", "Li", lambda r: _b2_leftodd(r))), "G2"),

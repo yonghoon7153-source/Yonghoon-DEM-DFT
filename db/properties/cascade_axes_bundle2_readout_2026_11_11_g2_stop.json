@@ -1,0 +1,183 @@
+{
+ "card": "db/properties/cascade_axes_bundle2_estimand_2026_11_10.json",
+ "decision": "D-2026-11-10-cascade-axes-bundle2",
+ "run_dir": "db/raw/cascade_axes_bundle2_2026_11_10",
+ "constants": {
+  "widths": {
+   "d_ncm": 10.0,
+   "d_li": 10.0,
+   "sv_ncm": 1.0,
+   "sv_li": 1.0,
+   "dphi_li": 0.01,
+   "f_ins": 0.125
+  },
+  "directions": {
+   "d_ncm": "larger",
+   "d_li": "larger",
+   "sv_ncm": "smaller",
+   "sv_li": "smaller",
+   "dphi_li": "larger",
+   "f_ins": "larger"
+  },
+  "voltages_V": [
+   2.5,
+   2.75,
+   3.0,
+   3.25,
+   3.5,
+   3.75,
+   4.0,
+   4.25
+  ],
+  "volatile_list": [
+   "O2",
+   "N2",
+   "Cl2",
+   "Br2",
+   "BrCl",
+   "SO2",
+   "SO3",
+   "H2S",
+   "PH3",
+   "PF5",
+   "PCl3",
+   "POCl3",
+   "SF4",
+   "SF6",
+   "S2Cl2",
+   "SCl2",
+   "SOCl2",
+   "BF3",
+   "BCl3",
+   "SiF4",
+   "SiCl4",
+   "GeF4",
+   "GeCl4",
+   "SnCl4",
+   "TiCl4",
+   "VCl4",
+   "AsCl3",
+   "SbCl5",
+   "MoF6",
+   "WF6",
+   "SO2Cl2",
+   "PSCl3",
+   "VOCl3",
+   "CrO2Cl2"
+  ],
+  "gas_list": [
+   "O2",
+   "SO2",
+   "SO3",
+   "Cl2",
+   "N2",
+   "H2S",
+   "PH3"
+  ],
+  "thresholds": {
+   "x": 1e-06,
+   "dE_eV": 1e-05,
+   "tie_dE_eV": 1e-05,
+   "near_kink_eV": 0.01,
+   "g1c": 1e-09,
+   "phi_und": 0.01,
+   "anchor_lo_pct": -30.0,
+   "anchor_hi_pct": -10.0,
+   "rho": 0.8,
+   "top_n": 10
+  }
+ },
+ "⛔": "상대값 · 등급 · 순위 (줄 안 상대 위치) 만 — 순위는 DFT 확인 후보 목록이지 결론이 아니다 (R13) · MP 갭 · 부피는 외부 PBE 값",
+ "gates": {
+  "decision": {
+   "ok": true,
+   "state": "active",
+   "card": "db/properties/cascade_axes_bundle2_estimand_2026_11_10.json"
+  },
+  "B1": {
+   "ok": true,
+   "binding_problems": [],
+   "reproduction_problems": [],
+   "flag_consistency_problems": [],
+   "selection_bundle1": [
+    "V2O5"
+   ],
+   "selection_bundle1_plusU_sensitivity": [
+    "Sb2O5",
+    "SiO2"
+   ]
+  },
+  "G1": {
+   "ok": true,
+   "missing": [],
+   "load_problems": [],
+   "n_invocations": 2
+  },
+  "G3": {
+   "ok": true,
+   "new_versions": [
+    "2026.09.28"
+   ],
+   "bundle1_versions": [
+    "2026.09.28"
+   ]
+  },
+  "G2": {
+   "ok": false,
+   "n_problems": 9,
+   "problems": [
+    "TiF4 × LNO_half: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "TiF4 × LNO_full: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "TiF4 × Li: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "ZrBr4 × LNO_half: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "ZrBr4 × LNO_full: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "ZrBr4 × Li: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "ZrF4 × LNO_half: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "ZrF4 × LNO_full: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])",
+    "ZrF4 × Li: 부피 기록이 없거나 거부 (['Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다)'])"
+   ],
+   "n_expected": 92
+  },
+  "G3b": {
+   "ok": true,
+   "n_keys": 276,
+   "n_pass": 276,
+   "n_fail": 0,
+   "n_string_equal": 276,
+   "failures": [],
+   "labels": [
+    "LNO_half",
+    "LNO_full",
+    "Li"
+   ],
+   "tolerances": {
+    "x": 1e-06,
+    "dE_eV_per_atom": 1e-05,
+    "coef_rtol": 0.001
+   },
+   "rule": "카드 §4 G3b — (종, 상대) 마다 x* · dE · 최소 kink 반응식 계수 사전 (pymatgen Composition) 이 원자료와 같다",
+   "ref_problems": []
+  },
+  "G5": {
+   "ok": true,
+   "missing_in_card": [],
+   "direction_mismatch": [],
+   "volatile_list_mismatch": false,
+   "card_sha256": "622ff83f908056a6860f5076af2b0375cb61da71b5484914be3884873326f827"
+  },
+  "G1b": {
+   "ok": false,
+   "why": "G2 불통과 — 값을 내지 않는다 (부분 판독 금지)"
+  },
+  "G1c": {
+   "ok": false,
+   "why": "G2 불통과 — 값을 내지 않는다 (부분 판독 금지)"
+  }
+ },
+ "blocking": [
+  "G1b",
+  "G1c",
+  "G2"
+ ],
+ "⛔_표_없음": "막는 게이트 불통과 ['G1b', 'G1c', 'G2'] — 판독하지 않는다 (멈춘다 · 닫는 것이 아니다 · 카드 §9)"
+}

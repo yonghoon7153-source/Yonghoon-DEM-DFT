@@ -12901,6 +12901,77 @@
     "근거_발화": "내부 반박 리뷰 EE (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 사용자 2026-11-10 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐'",
     "decision_digest": "sha256:c980af13a487943e4e831c5593e2b0d0b12250514af3512810973b04f152ca49"
    }
+  },
+  {
+   "id": "D-2026-11-11-cascade-axes-bundle2-amend2",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "cascade.dopant_screening.axes_bundle_2",
+   "slot": "cascade_axes_bundle_2_amend2_clfree_atom_volume",
+   "applies_to": {
+    "systems": [
+     "lpscl_dopant_designs"
+    ],
+    "tasks": [
+     "decomposition_volume_change",
+     "anode_product_quality",
+     "cathode_window_dopant_fate",
+     "cascade_axes_ranking"
+    ],
+    "methods": [
+     "mp_interfacial_reactivity",
+     "mp_grand_potential",
+     "mp_band_gap_grades",
+     "mp_structure_volumes"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "cascade 묶음 2 개정 2 — G2 멈춤 (Cl 없는 설계 셋 TiF4 · ZrBr4 · ZrF4 의 원자 부피 판) · 기록기 · 판독기 고침 · vol + win 을 새 폴더로 다시 돈다",
+   "statement": "카드 db/properties/cascade_axes_bundle2_estimand_2026_11_10.json 의 개정_2_Cl_없는_설계_원자_부피_판_2026_11_11 이 정의다. hull 원소에 Cl 이 없으면 원자 부피 판은 해당 없음 — 기록기는 아지로다이트 기록을 비우고 사유를 적으며 주 판 (hull 혼합) · 산물 · 정확한 계수 기록은 그대로 낸다 (원소가 다 있는데 Li6PS5Cl 엔트리가 없으면 예전처럼 거부). 판독기는 설계 · 상대 화학식에서 hull 원소를 따로 판정해 G2 에서 기록 · 사유와 대조한다. 그 설계의 주 판 ⑤ 는 순위 셈에 그대로 들어가고 원자 부피 판 ⑤ (기록만) 만 모름이다 · G8 은 두 판이 다 있는 설계로만 ρ 를 내고 n · n_main_only 를 적는다 · R12 원자 부피 판에서 그 설계는 ⑤ 모름. 동률 폭 · 방향 · 문턱 · 게이트 · 순위 규칙은 안 바뀐다. vol · win 을 새 폴더 db/raw/cascade_axes_bundle2_<gabia 날짜> 로 다시 돌고 (러너 DEC = 이 결정) 옛 폴더 2026_11_10 은 판독에 안 쓴다.",
+   "rationale": "판독 시도 (2026-11-11 · 회수 bfdf4349) 가 G2 에서 멈췄다 (9 줄 = 세 설계 × 세 상대). 카드 기록만 판의 '같은 hull 에서 Li6PS5Cl' 이 Cl 을 F · Br 로 다 바꾼 설계에서는 정의되지 않는데 기록기가 그 줄 부피 전체를 거부했다. 카드 §9 '멈춘다' 절차 (원인 도구를 고치고 다시 돈다) 를 결과 전에 원장에 박는다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "새 축 ④ ⑤ ⑥ 값 0 건 (G2 불통과로 판독기가 값을 계산하지 않음) · 본 것 = 게이트 판정 · 거부 사유 · 세 설계 조성",
+   "card": "db/properties/cascade_axes_bundle2_estimand_2026_11_10.json",
+   "record": "db/properties/cascade_axes_bundle2_readout_2026_11_11_g2_stop.json",
+   "amends": "D-2026-11-10-cascade-axes-bundle2",
+   "depends_on": [
+    "D-2026-11-10-cascade-axes-bundle2",
+    "D-2026-11-10-cascade-axes-bundle2-amend1"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "tools/oxidation/interface_reactivity_v2.py sha16 a1b3af850155bc13",
+    "tools/cascade/analyze_cathode_reactivity.py sha16 4564252660cbcdd2",
+    "tools/oxidation/esw_grand_potential.py sha16 343a1f2f337b259b",
+    "tools/cascade/run_axis_ncm_gabia.sh sha16 29ffd34db528d2e0",
+    "db/properties/cascade_axes_bundle2_readout_2026_11_11_g2_stop.json (멈춘 판독 · 게이트만)",
+    "db/raw/cascade_axes_bundle2_2026_11_10/ (회수 bfdf4349 · 판독에 안 씀)"
+   ],
+   "reopen_criteria": [
+    "새 축 값을 연 뒤에는 이 규칙을 바꾸지 않는다"
+   ],
+   "enforcement": "판독기 --bundle2 의 G2 가 hull 원소 판정과 아지로다이트 기록 · 사유를 대조한다 (어긋나면 표 없음) · 러너는 DEC = 이 결정이 active 가 아니면 시작하지 않는다",
+   "cost_cap": {
+    "compute": "gabia CPU ≈ 40 분 · GPU 0 · SCF 0"
+   },
+   "track": {
+    "name": "cascade",
+    "first_author": "사용자"
+   },
+   "proposed_by": "claude-session-2026-11-10 (friendly)",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-11",
+     "state": "proposed",
+     "by": "agent",
+     "note": "묶음 2 판독 G2 멈춤 → 기록기 · 판독기 고침 (결과 전 · 새 축 값 0 건) · 사용자 비준 대기"
+    }
+   ]
   }
  ]
 }

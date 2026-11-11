@@ -339,6 +339,12 @@
    "state": "active",
    "by": "agent",
    "note": "도구 커밋 82855b0c (결과 전) · 구현 판단 · 결정 문장 정정은 개정 1 (proposed)"
+  },
+  {
+   "at": "2026-11-11",
+   "state": "active",
+   "by": "agent",
+   "note": "묶음 2 판독 시도 (회수 bfdf4349) → G2 불통과 (Cl 없는 설계 셋의 원자 부피 판 · 9 줄) → §9 '멈춘다' · 새 축 값 0 건 · 개정 2 (proposed) 로 기록기 · 판독기를 결과 전에 고치고 다시 돈다"
   }
  ],
  "ED_반영_2026_11_10": {
@@ -396,6 +402,57 @@
    "기대": "sha16 29ffd34db528d2e0 (러너) · c14120c63fb50d9f (판독기) · DRY 통과 · vol rc=0 (run.log 'G3b 재현 대조: 통과 · 쌍 276/276') · win rc=0 · ≈ 1–1.5 h",
    "회수": "끝나면 db/raw/cascade_axes_bundle2_<날짜>/ 를 커밋 · push (자격 증명 줄은 블록 맨 끝) → 여기서 --bundle2 판독 (pymatgen 2026.3.23 환경)",
    "by": "agent · 2026-11-10"
+  }
+ },
+ "개정_2_Cl_없는_설계_원자_부피_판_2026_11_11": {
+  "결과_전": "새 축 ④ ⑤ ⑥ 값 0 건 — 판독기는 G2 불통과면 값을 계산하지 않는다 (표 없음). 본 것은 게이트 판정 · 거부 사유 · 세 설계 조성뿐이다.",
+  "멈춘_판독_2026_11_11": {
+   "원자료": "db/raw/cascade_axes_bundle2_2026_11_10/ (gabia 회수 커밋 bfdf4349 · SHA256SUMS 23 파일 일치 · vol · win rc 0 · MP 판 2026.09.28 앞뒤 같음 · 도구 sha16 = 개정 1 표와 같다)",
+   "판독_전_상시_절차": "pymatgen 2026.3.23 · 판독기 selftest 통과 (묶음 2 29 · 축 ① ② ③ · +U) · --bundle1_repro 다른 곳 0 · 선택 V2O5 · +U Sb2O5 · SiO2 (봉인 결속 sha16 통과)",
+   "결과": "--bundle2 rc 2 · 막는 게이트 G2 불통과 (문제 9 / 기대 92 조성) → G1b · G1c 는 G2 때문에 안 돎 · 결정 · B1 · G1 · G3 · G3b (276/276) · G5 통과 · 표 없음",
+   "출력": "db/properties/cascade_axes_bundle2_readout_2026_11_11_g2_stop.json (게이트만 · 값 없음 · 멈춘 기록)",
+   "G2_문제_9": "TiF4 · ZrBr4 · ZrF4 × LNO_half · LNO_full · Li — '부피 기록이 없거나 거부 (Li6PS5Cl 엔트리가 이 hull 에 없다 (원자 부피 판을 못 낸다))'",
+   "원인": "세 설계 조성 (Li25P3S20F4Ti1 · Li25P3S20Br4Zr1 · Li25P3S20F4Zr1 — 묶음 1 과 같은 91 설계 표) 은 Cl 4 개를 F · Br 로 다 바꾼 꼴이라 hull 원소 (설계 ∪ 상대) 에 Cl 이 없다 → 같은 hull 에 Li6PS5Cl 이 있을 수 없다. 기록기 (interface_reactivity_v2.closed_volume_record) 는 기록만 판 (원자 부피) 의 아지로다이트 엔트리를 필수로 다뤄 그 줄의 부피 기록 전체 (주 판 반응물 · 산물 · 정확한 계수) 를 거부했다. 카드 §2 축 ⑤ 기록만_판 은 '같은 hull 에서 reduced formula Li6PS5Cl 인 에너지 최저 엔트리' 라 Cl 없는 설계에서는 정의되지 않는다 — 카드가 이 경우를 미리 적지 않았다.",
+   "카드_§9": "'멈춘다 (닫는 것이 아니다)' — G2 불통과는 판독하지 않고 원인 (도구) 을 고친 뒤 다시 돈다. 이 개정이 그 절차다."
+  },
+  "규칙 (결과 전 · 이것만 바뀐다)": {
+   "1_원자_부피_판_해당_없음": "hull 원소에 Cl 이 없으면 원자 부피 판은 해당 없음 — 기록기는 아지로다이트 기록을 비우고 (None) '해당 없음' 사유를 적으며 주 판 (hull 혼합) · 산물 · 정확한 계수 기록은 그대로 낸다. hull 원소에 Li · P · S · Cl 이 다 있는데 Li6PS5Cl 엔트리가 없으면 예전처럼 그 줄을 거부한다 (MP 결손 · 추측 안 함).",
+   "2_판독기_G2": "판독기는 설계 · 상대 화학식에서 hull 원소를 따로 판정한다 (기록기의 사유 문자열을 믿지 않는다): 원소가 다 있으면 아지로다이트 부피가 있어야 하고 '해당 없음' 이 없어야 한다 · 원소가 모자라면 아지로다이트 기록이 없어야 하고 '해당 없음' 사유가 있어야 한다 — 어긋나면 G2 불통과.",
+   "3_⑤_값": "그 설계들의 주 판 ⑤ (s_V,NCM · s_V,Li) 는 그대로 순위 셈에 들어간다 · 원자 부피 판 ⑤ (기록만) 만 모름이다.",
+   "4_G8": "G8 은 두 판 (hull 혼합 · 원자 부피) 이 다 있는 설계로만 ρ 를 낸다 (예전 식 그대로 — 둘 다 있는 설계만 쓴다) · n 과 주 판만 있는 설계 수 (n_main_only) 를 같이 적는다 · 문턱 ρ ≥ 0.8 은 그대로.",
+   "5_R12": "R12 원자 부피 판에서 그 설계들은 ⑤ 모름 (구간만 · 순위 셈 밖) · 그 수 (n_designs_main_only) 를 적는다 · 기록만.",
+   "6_G5_조각": "판독기 상수 조각 'hull 원소에 Cl 이 없으면 원자 부피 판은 해당 없음' 이 이 카드에 있어야 한다 (G5)."
+  },
+  "고르지_않은_대안": {
+   "호스트_hull_의_Li6PS5Cl_빌리기": "호스트 갈래 (Li6PS5Cl × 상대) hull 의 아지로다이트 엔트리를 세 설계에 쓰는 것 — '같은 hull' 규칙을 깨고 다른 실행의 엔트리를 섞는다. 기록만 판이라 얻는 것이 작다.",
+   "세_설계를_⑤_⑥_모름으로": "판독기만 고쳐 거부된 줄을 ⑤ · ⑥ 모름으로 두는 것 — 거부된 기록에는 주 판 숫자가 없다 (⑥ 도 산물 부피가 필요하다). 다시 도는 값이 gabia CPU 40 분 안팎이라 정보를 버릴 이유가 없다.",
+   "판독_규칙_다른_것": "동률 폭 · 방향 · 문턱 · 순위 규칙은 안 바꾼다 (§9 '재개 사유가 아닌 것')."
+  },
+  "도구": {
+   "고친_것": "tools/oxidation/interface_reactivity_v2.py (closed_volume_record — 원소 판정 · argyrodite_not_applicable 열쇠 · selftest 양성 1 · 음성 1 → 176) · tools/cascade/analyze_cathode_reactivity.py (b2_argy_problem · _b2_argy_possible · G2 · b2_dv 원자 부피 판 사유 · G8 n_main_only · R12 n_designs_main_only · G5 조각 · selftest 단위 1 · 배선 1 · 막는 게이트 음성 1)",
+   "sha16": {
+    "tools/oxidation/interface_reactivity_v2.py": "a1b3af850155bc13",
+    "tools/cascade/analyze_cathode_reactivity.py": "4564252660cbcdd2",
+    "tools/oxidation/esw_grand_potential.py": "343a1f2f337b259b",
+    "tools/cascade/run_axis_ncm_gabia.sh": "29ffd34db528d2e0"
+   },
+   "시험": "pymatgen 2026.3.23 · interface_reactivity_v2 selftest PASS (176 — 양성 1 · 음성 1 추가) · 판독기 묶음 2 31/31 (단위 1 · 배선 1 추가 · 막는 게이트 음성 묶음에 1 줄) · 축 ① 15 · ② 11 · ③ 16 · +U 10 · 깨기 14/14 빨강 (기록기 4 · 판독기 10 · scratchpad amend2_mutate.py) · --bundle1_repro 다른 곳 0 · 선택 V2O5 · +U Sb2O5 · SiO2 · esw_grand_potential · run_axis_ncm_gabia.sh 안 바뀜",
+   "안_바뀐_것": "esw_grand_potential.py · sei_product_gaps.py · run_axis_ncm_gabia.sh · 카드의 축 · 동률 폭 · 방향 · 게이트 · 순위 규칙"
+  },
+  "다시_돌기": {
+   "출력": "새 폴더 db/raw/cascade_axes_bundle2_<gabia 날짜> — vol · win 둘 다 다시 돈다 (G1 이 실행 사이 물리 도구 sha 같음을 본다 · 기록기가 바뀌었다) · 옛 폴더 db/raw/cascade_axes_bundle2_2026_11_10 은 판독에 안 쓴다 (멈춘 기록으로 남긴다)",
+   "러너_결정": "DEC=D-2026-11-11-cascade-axes-bundle2-amend2 로 띄운다 — 러너는 그 결정이 active 이고 카드가 같아야 시작한다 (비준 전에는 안 돈다)",
+   "G3b": "옛 실행과 같은 MP 판이면 최소 kink 반응식 · x* · dE 는 묶음 1 원자료와 같아야 한다 (276/276 · 바뀐 것은 부피 기록뿐)",
+   "비용": "gabia CPU ≈ 40 분 (지난 실행: vol 30 분 · win 5 분 · 갭 조회 4 분) · GPU 0 · SCF 0"
+  },
+  "결정": "D-2026-11-11-cascade-axes-bundle2-amend2 (proposed · 사용자 비준 대기)",
+  "by": "agent · 2026-11-11",
+  "gabia_블록": {
+   "무엇": "CPU 파이썬 + MP 조회 (QE 아님 · GPU 0 · b2o3 UMA 런 옆 허용) · 있는 worktree 를 이 판으로 올리고 vol → win 차례로 새 폴더에",
+   "블록": "W=/data/work/wt_cascade_b2; D=$(date +%Y_%m_%d); OUT=$W/db/raw/cascade_axes_bundle2_$D; X=D-2026-11-11-cascade-axes-bundle2-amend2; git -C $W fetch -q origin claude/friendly-meitner-lldvar && git -C $W checkout -q --detach FETCH_HEAD && git -C $W log -1 --format=%h && sha256sum $W/tools/oxidation/interface_reactivity_v2.py $W/tools/cascade/analyze_cathode_reactivity.py | cut -c1-16 && cd $W && DEC=$X OUT=$OUT AXIS=vol DRY=1 bash tools/cascade/run_axis_ncm_gabia.sh && tmux new -d -s cascade_b2b -e MP_API_KEY=\"$MP_API_KEY\" \"cd $W && DEC=$X OUT=$OUT AXIS=vol bash tools/cascade/run_axis_ncm_gabia.sh > /data/work/cascade_b2b_vol_$D.out 2>&1; echo vol rc=\\$? >> /data/work/cascade_b2b_vol_$D.out; DEC=$X OUT=$OUT AXIS=win bash tools/cascade/run_axis_ncm_gabia.sh > /data/work/cascade_b2b_win_$D.out 2>&1; echo win rc=\\$? >> /data/work/cascade_b2b_win_$D.out\" && echo \"tmux cascade_b2b 시작 · OUT=$OUT\"",
+   "기대": "sha16 a1b3af850155bc13 (기록기) · 4564252660cbcdd2 (판독기) · DRY 통과 (결정이 active 가 아니면 rc 10 으로 멈춘다) · vol rc=0 (run.log '부피 거부 0' · 'G3b 재현 대조: 통과 · 쌍 276/276') · win rc=0 · ≈ 40 분",
+   "회수": "끝나면 db/raw/cascade_axes_bundle2_<날짜>/ 를 커밋 · push (자격 증명 줄은 블록 맨 끝) → 여기서 해시 대조 · --bundle2 판독 한 번 (pymatgen 2026.3.23)",
+   "by": "agent · 2026-11-11"
   }
  }
 }
