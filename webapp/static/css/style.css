@@ -746,6 +746,9 @@ kbd{font-family:var(--mono);font-size:.72em;background:var(--bg);border:1px soli
 .find-card .fc-t{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--dim)}
 .find-card .fc-v{font-size:1.12rem;font-weight:800;color:var(--navy);margin:5px 0;line-height:1.35;
   overflow-wrap:anywhere}
+/* 2026-11-11 — 긴 핵심값 (80 자 넘음 · 여러 줄) 은 본문 글씨로 (사용자 '적어도 글처럼은'). 굵게 표시한 낱말만 남색 굵게. */
+.find-card .fc-v.fc-v-long{font-size:.9rem;font-weight:500;color:var(--text);line-height:1.7;margin:6px 0 7px}
+.find-card .fc-v.fc-v-long b,.find-card .fc-v.fc-v-long strong{font-weight:700;color:var(--navy)}
 .find-card .fc-n{font-size:.8rem;color:var(--dim);line-height:1.55;
   /* ⛔ 2026-09-08 — 긴 파일 경로(db/structures/…/anneal_results.json)가 안 접혀
      카드 밖으로 튀어나왔다(1저자 신고). 카드 본문은 출처 경로를 자주 싣는다. */
@@ -1535,3 +1538,36 @@ body.rail .rail-peek:hover ~ .sidebar,body.rail .sidebar:hover{transform:transla
 
 @media print{.v3-fold>summary::before{display:none}.v3-fold{display:block}
   .v3-fold>div,.v3-fold>ul{display:block!important}}
+
+/* ── kb 문서 접기 (2026-11-11 · `md_html` 의 `<details class="md-fold">`) ──────────────
+   원장이 접어 둔 지난 기록 (미결 리스트의 갱신 기록 · 세션 인계 기록 따위). 접힌 것도 DOM 에 그대로 있다. */
+.md-fold{margin:12px 0 16px;border:1px solid var(--border);border-radius:10px;background:var(--card)}
+.md-fold>summary{cursor:pointer;list-style:none;user-select:none;padding:9px 14px;
+  font-size:.86rem;font-weight:600;color:var(--muted);display:flex;gap:8px;align-items:baseline}
+.md-fold>summary::-webkit-details-marker{display:none}
+.md-fold>summary::before{content:'▸';font-size:.8em;opacity:.65;transition:transform .12s}
+.md-fold[open]>summary::before{transform:rotate(90deg)}
+.md-fold>summary:hover{color:var(--navy);background:var(--hover)}
+.md-fold>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.md-fold[open]>summary{border-bottom:1px solid var(--border2)}
+.md-fold>:not(summary){margin-left:16px;margin-right:16px}
+@media print{.md-fold>summary::before{display:none}}
+
+/* ── 판정 원장 결정 행 (2026-11-11 · 사용자 '판정 원장이 사람이 읽을 수 있게') ─────────────
+   여섯 칸 (ID · 종류 · 상태 · 사전등록 · 무엇을 정했나 · 비준) 이 줄바꿈 금지라 본문 칸이 좁아지고
+   긴 경로 때문에 표가 카드 밖으로 넘쳤다. 상태 묶음 한 칸 + 본문 한 칸으로 줄이고 본문을 글처럼 읽게 한다. */
+.dec-table{table-layout:fixed;width:100%}
+.dec-table td{vertical-align:top}
+.dec-table col.dec-meta-col{width:150px}
+.dec-meta{font-size:.74rem;line-height:1.55;color:var(--muted)}
+.dec-meta>div+div{margin-top:3px}
+.dec-meta .tbadge{display:inline-block;margin-bottom:2px}
+.dec-body{overflow-wrap:anywhere;word-break:break-word}
+.dec-title{font-size:.9rem;font-weight:700;color:var(--text);line-height:1.5}
+.dec-id{font-size:.7rem;color:var(--dim);margin-top:2px}
+.dec-id a{color:inherit;text-decoration:none}
+.dec-id a:hover{text-decoration:underline}
+.dec-text{font-size:.84rem;color:var(--text);line-height:1.75;margin-top:6px;max-width:72em}
+.dec-sub{font-size:.76rem;color:var(--muted);line-height:1.6;margin-top:6px}
+.dec-sub ul{margin:2px 0 0;padding-left:1.15em}
+@media (max-width:720px){.dec-table col.dec-meta-col{width:104px}.dec-text{font-size:.82rem}}

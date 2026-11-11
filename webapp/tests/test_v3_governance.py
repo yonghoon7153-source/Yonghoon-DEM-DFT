@@ -496,3 +496,29 @@ def test_five_literal_phrases_survive(gov_html):
         assert s in gov_html, f"문구가 사라졌다: {s}"
     assert "본문이 승인 뒤 바뀌었다" in A.app.jinja_env.loader.get_source(
         A.app.jinja_env, "governance.html")[0], "불일치 분기가 템플릿에서 사라졌다"
+
+
+# ── 결정 행이 글처럼 읽힌다 (2026-11-11 · 사용자 '판정 원장 … 적어도 글처럼은') ─────────────
+def test_decision_rows_are_status_cell_plus_prose_cell(gov_html):
+    """양성+⛔음성: 결정 행은 **두 칸** (상태 묶음 · 본문) 이고 표는 폭 고정이다.
+
+    종전 여섯 칸 (ID · 종류 · 상태 · 사전등록 · 무엇을 정했나 · 비준) 은 다섯 칸이 `nowrap` 이라 본문 칸이 좁았고,
+    본문의 긴 경로가 줄바꿈 자리가 없어 표가 카드 밖으로 넘쳐 글 오른쪽이 잘렸다.
+    ⛔ 이 시험이 못 하는 것: 화면 폭에서 실제로 안 넘치는지는 못 본다 (브라우저 시험의 몫).
+    """
+    rows = re.findall(r'<tr id="(D-[^"]+)"[^>]*>(.*?)</tr>', gov_html, re.S)
+    assert len(rows) == len(C.decisions()), "결정 행 수가 원장과 다르다"
+    for did, body in rows:
+        tds = re.findall(r"<td\b", body)
+        assert len(tds) == 2, f"{did} 행이 두 칸이 아니다 ({len(tds)} 칸)"
+        assert 'class="dec-meta"' in body and 'class="dec-body"' in body, f"{did} 칸 이름이 없다"
+        assert f'href="#{did}"' in body, f"{did} 행 안에 자기 앵커 링크가 없다"
+    assert gov_html.count('class="data-table dec-table"') == 3, "결정 표 세 개 (최근 · 오래된 비준 · 옛 결정) 가 아니다"
+    assert "<th>사전등록</th>" not in gov_html, "옛 여섯 칸 머리가 남았다"
+    # 제목이 있는 결정은 statement 를 **굵은 제목 칸이 아니라 본문 칸**에 싣는다
+    d = next(x for x in C.decisions().values() if x.get("title") and x.get("statement"))
+    row = dict(rows)[d["id"]]
+    title_div = re.search(r'<div class="dec-title">(.*?)</div>', row, re.S).group(1)
+    p = _probe(d["statement"])
+    if p:
+        assert p not in html.unescape(re.sub(r"<[^>]+>", "", title_div)), "본문이 굵은 제목 칸에 들어갔다"

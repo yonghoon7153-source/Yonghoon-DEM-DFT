@@ -314,7 +314,43 @@ def md_html(text: str, extensions=("tables", "fenced_code"), origin="internal") 
             md.inlinePatterns.deregister(name)
         except (KeyError, ValueError):
             pass
-    return _bind_claims(_sanitize_urls(md.convert(text or "")), origin=origin)
+    folds = []
+    if origin == "internal":
+        text, folds = _fold_pre(text or "")
+    html = md.convert(text or "")
+    if folds:
+        html = _fold_post(html, folds)
+    return _bind_claims(_sanitize_urls(html), origin=origin)
+
+
+#: 접기 (2026-11-11 · 사용자 '미결 리스트 · 원장이 사람이 읽을 수 있게') — raw HTML 은 계속 끈 채로,
+#:   **우리 kb 문서 (origin internal)** 의 줄 단위 `<details><summary>제목</summary>` · `</details>` 두 꼴만 접기로 살리고
+#:   줄머리 HTML 주석 `<!-- … -->` 는 화면에서 뺀다. 그 밖의 태그는 예전처럼 글자로 나간다 (속성 · 다른 태그 없음).
+#:   줄 판정은 `D.md_fold_lines` 하나다 — 대시보드 미결 요약 (`D.open_items_summary`) 이 같은 판정기로 접힌 절을 뺀다.
+#:   ⛔ 못 하는 것: 한 줄에 여는 · 닫는 태그가 같이 있거나 태그 앞에 다른 글이 있으면 접지 않는다 (글자로 남는다) ·
+#:     코드 펜스 안은 건드리지 않는다 · 외부 문서 (litdb 등 origin external) 에는 걸지 않는다 · 요약글은 글자 그대로다 (굵게 등 안 먹음).
+def _fold_pre(text: str):
+    out, folds, depth = [], [], 0
+    for ln, kind, depth, summ in D.md_fold_lines(text):
+        if kind == "comment":
+            continue
+        if kind == "open":
+            folds.append(summ)
+            out += ["", f"xxFOLDOPENxx{len(folds) - 1}xx", ""]
+        elif kind == "close":
+            out += ["", "xxFOLDCLOSExx", ""]
+        else:
+            out.append(ln)
+    out += ["", "xxFOLDCLOSExx", ""] * depth           # 안 닫힌 접기는 끝에서 닫는다 (뒤 본문을 삼키지 않게)
+    return "\n".join(out), folds
+
+
+def _fold_post(html: str, folds: list) -> str:
+    def opn(m):
+        t = escape(folds[int(m.group(1))])
+        return f'<details class="md-fold"><summary>{t}</summary>'
+    html = re.sub(r"<p>xxFOLDOPENxx(\d+)xx</p>", opn, html)
+    return html.replace("<p>xxFOLDCLOSExx</p>", "</details>")
 
 
 # ── 개념 문서 서버 렌더 (Codex BI P0-2b · 2026-09-08) ────────────────────────

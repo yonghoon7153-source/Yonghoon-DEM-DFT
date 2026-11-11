@@ -51,7 +51,12 @@
      "위에 있는 게 왜 위인지" 가 설명된다. 날짜 없는 옛 카드는 배지 없이 뒤에 붙는다. #}
   <div class="fc-t">{{ h.t|mdlite }}{% if h.d %}<span class="badge"
        style="margin-left:6px;color:#475569;background:#f1f5f9;font-weight:400">{{ h.d[5:] }}</span>{% endif %}</div>
-  <div class="fc-v">{{ h.v|mdlite }}</div>
+  {# 긴 핵심값은 **보통 글**로 (2026-11-11 · 사용자 *'적어도 글처럼은'*) — `fc-v` 는 짧은 수치 한 줄
+     (예: `ICOHP −6.0 ≫ −2.1 eV`) 을 크게 굵게 보이려는 칸인데, 원장 몇 줄을 통째로 싣는 카드
+     (점착 원장 최신 줄 · 판정 문장) 가 1.1 rem 800 굵기 남색 덩어리가 됐다. 80 자를 넘거나 여러 줄이면 본문 글씨로 낮춘다.
+     ⛔ 글 내용은 안 바꾼다 — 굵기 · 크기만이다. #}
+  {% set _v = '' if h.v is none else h.v|string %}
+  <div class="fc-v{% if _v|length > 80 or '\n' in _v %} fc-v-long{% endif %}">{{ h.v|mdlite }}</div>
   <div class="fc-n">{{ h.n|mdlite }}</div>
 </div>
 {% endmacro %}
@@ -78,7 +83,8 @@
 {# ⚠ 2026-09-09 — 종전엔 `## ` 절 단위 완료만 걸러서 이미 닫힌 `### ` 항목까지 대기로 셌다
    (47 로 광고, 실제 대기는 그보다 8 적었다). 닫힌 항목은 **버리지 않고** 아래 접기로. #}
 <div class="section-title">📋 미결 리스트 <span class="muted">— 판정·트리거 대기 {{ oi.total }}건{% if oi.closed %} ·
-  이미 닫힌 항목 {{ oi.closed }}건은 대기에서 뺐다{% endif %} · <a href="/todo">전체 보기</a></span></div>
+  이미 닫힌 항목 {{ oi.closed }}건은 대기에서 뺐다{% endif %}{% if oi.archived %} ·
+  원장이 접어 둔 지난 기록 {{ oi.archived }}절은 세지 않았다{% endif %} · <a href="/todo">전체 보기</a></span></div>
 <div class="grid grid-3">
 {% for s in oi.sections %}
 <div class="card find-card">

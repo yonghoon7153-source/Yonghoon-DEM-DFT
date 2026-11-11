@@ -179,12 +179,18 @@
 .doc-bar{display:flex;gap:10px;align-items:center;margin:0 0 6px}
 .doc-bar input{flex:1;max-width:420px;font:inherit;font-size:.84rem;padding:6px 10px;
   border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text)}
-.doc-toc{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:4px 14px;
-  padding:9px 13px;margin:0 0 14px;background:var(--card);
+/* 2026-11-11 — 목차를 **한 줄에 하나** 로 (사용자 '적어도 글처럼은'). 종전 flex-wrap 은 긴 제목 수십 개가
+   가로로 이어 붙어 문단처럼 엉켰다. 넘치는 제목은 말줄임 · 전체 글은 title 로. */
+.doc-toc{position:sticky;top:0;z-index:5;display:block;
+  padding:8px 13px;margin:0 0 14px;background:var(--card);
   border:1px solid var(--border);border-radius:10px;max-height:23vh;overflow:auto}
-.doc-toc a{font-size:.77rem;color:var(--dim);text-decoration:none;white-space:nowrap}
+.doc-toc a{display:block;font-size:.78rem;line-height:1.75;color:var(--muted);text-decoration:none;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .doc-toc a:hover{color:var(--navy);text-decoration:underline}
-.doc-toc a.h3{padding-left:8px;opacity:.75}
+.doc-toc a.h3{padding-left:16px;color:var(--dim);font-size:.75rem}
+.doc-toc .toc-note{display:block;font-size:.72rem;color:var(--dim);margin-top:3px}
+/* 목차가 sticky (최대 23vh) 라 앵커로 뛰면 제목이 목차 밑에 깔렸다 — 그만큼 띄워서 멈춘다. */
+#docbody h2,#docbody h3,#docbody h4{scroll-margin-top:calc(23vh + 16px)}
 .doc-toc:empty{display:none}
 /* 2026-09-14 — kb 문서의 그림(주간 정리 dpi300 PNG)이 열 폭을 꽉 채워 한 화면을 넘겼다.
    높이를 화면에 묶는다 — 원본은 /api/file 로 그대로 받는다(축소 표시일 뿐). */
@@ -195,24 +201,44 @@
   var body = document.getElementById('docbody'), toc = document.getElementById('doctoc');
   if (!body || !toc) return;
   var TOCMAX = 80;
-  Array.prototype.slice.call(body.querySelectorAll('h2, h3'), 0, TOCMAX)
+  /* 원장이 접어 둔 기록 (`details.md-fold` 안) 의 제목은 목차에 안 싣는다 (2026-11-11) — 지난 세션 인계 53 절이
+     목차를 다 먹었다. 접힌 수는 목차 끝에 한 줄로 밝힌다 (빼고 말 안 하면 '없는 것' 으로 읽힌다). */
+  var heads = Array.prototype.slice.call(body.querySelectorAll('h2, h3'));
+  var folded = heads.filter(function(h){ return h.closest('details.md-fold'); }).length;
+  heads.filter(function(h){ return !h.closest('details.md-fold'); }).slice(0, TOCMAX)
     .forEach(function(h, i){
       /* 서버 id 가 없을 때만 임시 id 를 판다 — 있으면 손대지 않는다. */
       if (!h.id) h.id = 'sec-' + i;
       var a = document.createElement('a');
-      a.href = '#' + h.id; a.textContent = h.textContent.trim();
+      a.href = '#' + h.id; a.textContent = h.textContent.trim(); a.title = a.textContent;
       if (h.tagName === 'H3') a.className = 'h3';
       toc.appendChild(a);
     });
+  if (folded && toc.childNodes.length) {
+    var note = document.createElement('span'); note.className = 'toc-note';
+    note.textContent = '접힌 지난 기록 안의 제목 ' + folded + '개는 목차에 안 실었다 — 본문의 ▸ 접기를 펴거나 위 찾기로 찾는다';
+    toc.appendChild(note);
+  }
+  /* 접힌 곳으로 가는 길 — 앵커나 찾기 결과가 접기 안이면 그 접기들을 편다 (안 펴면 화면에 안 보인다). */
+  function reveal(el){
+    for (var d = el && el.closest('details'); d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
+  }
   /* ⚓ 죽은 앵커 구조 — 옛 링크(GitHub 식 `--`)가 서버 슬러그(`-`)와 안 맞는다.
      하드코딩된 딥링크를 고치는 대신, 구분자만 다른 id 를 찾아 그리로 보낸다. */
   function norm(s){ return decodeURIComponent(s || '').replace(/-+/g, '-'); }
   function rescue(){
     var h = location.hash.slice(1);
-    if (!h || document.getElementById(h)) return;
+    if (!h) return;
+    var dh = h;
+    try { dh = decodeURIComponent(h); } catch (e) { /* 깨진 % 인코딩 — 원문으로 찾는다 */ }
+    var exact = document.getElementById(dh) || document.getElementById(h);
+    if (exact) {
+      if (exact.closest('details:not([open])')) { reveal(exact); exact.scrollIntoView({block:'start'}); }
+      return;
+    }
     var want = norm(h), hit = null;
     body.querySelectorAll('[id]').forEach(function(el){ if (!hit && norm(el.id) === want) hit = el; });
-    if (hit) hit.scrollIntoView({block:'start'});
+    if (hit) { reveal(hit); hit.scrollIntoView({block:'start'}); }
   }
   rescue(); window.addEventListener('hashchange', rescue);
 
@@ -244,6 +270,7 @@
       node.parentNode.replaceChild(frag, node);
     });
     out.textContent = n ? (n + '곳에서 찾음') : '없음';
+    body.querySelectorAll('mark.docq').forEach(reveal);
     if (first) first.scrollIntoView({block:'center'});
   }
   var qbox = document.getElementById('docq'), timer = null;

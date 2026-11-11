@@ -249,3 +249,59 @@ def test_concept_h1_is_not_a_slug_when_frontmatter_has_a_title():
     assert "MSD" in h1, h1
     # ⛔음성 — frontmatter title 도 GLOSSARY 항목도 없으면 슬러그로 떨어지는 게 맞다
     assert (A.split_frontmatter("본문뿐")[0].get("title") or "cid") == "cid"
+
+
+# ── kb 문서 접기 (2026-11-11 · 사용자 '미결 리스트 · 원장이 사람이 읽을 수 있게') ─────────────
+#   md_html 은 raw HTML 을 끈다. 우리 kb 문서 (origin internal) 의 줄 단위 `<details><summary>…</summary>` ·
+#   `</details>` 두 꼴만 접기로 살리고, 줄머리 HTML 주석은 뺀다. 판정기는 `D.md_fold_lines` 하나다.
+_FOLD_MD = ("# 제목\n\n<!-- 갱신 규칙: 사람에게 안 보일 메모 -->\n\n"
+            "<details><summary>지난 기록 (3 항목)</summary>\n\n- 가\n- 나\n\n</details>\n\n끝 문단\n")
+
+
+def test_md_fold_renders_details_for_internal_docs():
+    """양성: 줄 단위 접기 → `<details class="md-fold">` · 안의 목록은 접기 **안** · 뒤 문단은 접기 **밖**."""
+    h = A.md_html(_FOLD_MD)
+    assert '<details class="md-fold"><summary>지난 기록 (3 항목)</summary>' in h
+    inner = h.split('<details class="md-fold">', 1)[1].split("</details>", 1)[0]
+    assert "<li>가</li>" in inner and "<li>나</li>" in inner, "목록이 접기 밖으로 샜다"
+    assert "끝 문단" in h.split("</details>", 1)[1], "접기 뒤 본문이 접기 안으로 삼켜졌다"
+    assert "갱신 규칙" not in h and "&lt;!--" not in h, "줄머리 주석이 화면에 나왔다"
+    assert "&lt;details" not in h, "접기 태그가 글자로 샜다"
+
+
+def test_md_fold_is_not_applied_to_external_docs():
+    """⛔음성: 남의 문서 (litdb · origin external) 에는 접기도 주석 빼기도 안 건다 — 글자로 남는다."""
+    h = A.md_html(_FOLD_MD, origin="external")
+    assert "<details" not in h, "외부 문서의 HTML 태그를 살렸다"
+    assert "&lt;details&gt;" in h and "&lt;!--" in h, "외부 문서의 원문이 사라졌다"
+
+
+def test_md_fold_leaves_code_fences_and_mid_line_tags_alone():
+    """⛔음성: 코드 펜스 안의 접기 줄 · 앞에 글이 있는 태그 줄은 접지 않는다."""
+    md = ("```\n<details><summary>코드 안</summary>\n</details>\n```\n\n"
+          "메모 <details><summary>앞에 글</summary>\n\n본문\n")
+    h = A.md_html(md)
+    assert 'class="md-fold"' not in h, "코드 펜스나 줄 중간 태그를 접기로 읽었다"
+    assert "&lt;summary&gt;코드 안&lt;/summary&gt;" in h, "코드 펜스 안 글이 바뀌었다"
+    kinds = [k for _l, k, _d, _s in D.md_fold_lines(md)]
+    assert "open" not in kinds and kinds[:4] == ["fence"] * 4
+
+
+def test_md_fold_unclosed_is_closed_and_summary_is_escaped():
+    """⛔음성: 안 닫은 접기는 끝에서 닫는다 (짝이 맞는다) · 요약글의 태그는 글자로 나간다 (주입 안 됨)."""
+    h = A.md_html("<details><summary><img src=x onerror=alert(1)> 요약</summary>\n\n본문 하나\n")
+    assert h.count("<details") == h.count("</details>") == 1, "접기 태그 짝이 안 맞는다"
+    assert "<img" not in h and "&lt;img src=x" in h, "요약글의 HTML 이 살아났다"
+    # 짝 없는 `</details>` 는 접기가 아니다 — 글자로 남는다
+    h2 = A.md_html("본문\n\n</details>\n")
+    assert "</details>" not in h2 and "&lt;/details&gt;" in h2
+
+
+def test_todo_page_folds_every_ledger_fold():
+    """양성: /todo 는 원장의 접기 줄 수만큼 접기를 그린다 · 접기 태그가 글자로 새지 않는다."""
+    md = D.load_open_items_md()
+    n = sum(1 for _l, k, _d, _s in D.md_fold_lines(md) if k == "open")
+    assert n >= 2, "전제: 미결 리스트에 접어 둔 기록이 있다 (없으면 이 시험이 헛것을 잰다)"
+    h = _client().get("/todo").get_data(as_text=True)
+    assert h.count('<details class="md-fold">') == n
+    assert "&lt;details&gt;" not in h and "&lt;!--" not in h

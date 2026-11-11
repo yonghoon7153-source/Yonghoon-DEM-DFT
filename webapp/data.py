@@ -421,6 +421,57 @@ def requests_ledger() -> list:
     return rows
 
 
+#: 접기 문법 (2026-11-11 · 사용자 *'미결 리스트 · 판정 원장이 사람이 읽을 수 있게'*) — kb 문서가 줄 단위로 쓰는
+#:   `<details><summary>제목</summary>` · `</details>` 두 꼴. **화면 렌더 (app.md_html) 와 미결 요약 (아래) 이
+#:   같은 판정기를 쓴다** — 두 곳이 따로 파싱하면 화면은 접었는데 대시보드는 '대기' 로 세는 식으로 갈린다.
+MD_FOLD_OPEN = re.compile(r"^\s*<details>\s*<summary>(.*?)</summary>\s*$")
+MD_FOLD_CLOSE = re.compile(r"^\s*</details>\s*$")
+
+
+def md_fold_lines(text: str):
+    """마크다운 줄마다 `(줄, 종류, 접기 깊이, 요약글)` 을 낸다.
+
+    종류: `text` · `fence` (코드 펜스 줄과 그 안 — 건드리지 않는다) · `open` (접기 시작 · 요약글이 붙는다) ·
+    `close` (열린 접기가 있을 때의 `</details>` 줄) · `comment` (줄머리 HTML 주석 줄 — 여러 줄이면 닫는 줄까지).
+    깊이는 **그 줄을 처리한 뒤** 값이다 (open 줄은 이미 1 늘었다).
+
+    ⛔ 못 하는 것: 줄 중간의 태그·주석은 안 본다 (여는·닫는 태그가 한 줄에 같이 있거나 앞에 다른 글이 있으면 `text`) ·
+      주석 줄은 **줄 통째로** 주석으로 본다 (`<!-- x --> 뒤 글` 의 뒤 글도 같이 빠진다) · 열린 접기를 안 닫아도
+      오류를 내지 않는다 (렌더는 끝에서 닫는다) · 들여쓴 코드 블록 (4 칸) 은 펜스로 안 본다.
+    """
+    fence, in_cmt, depth = None, False, 0
+    for ln in (text or "").split("\n"):
+        s = ln.strip()
+        if fence:
+            if s.startswith(fence):
+                fence = None
+            yield ln, "fence", depth, None
+            continue
+        if s.startswith("```") or s.startswith("~~~"):
+            fence = s[:3]
+            yield ln, "fence", depth, None
+            continue
+        if in_cmt:
+            if "-->" in s:
+                in_cmt = False
+            yield ln, "comment", depth, None
+            continue
+        if s.startswith("<!--"):
+            in_cmt = "-->" not in s
+            yield ln, "comment", depth, None
+            continue
+        m = MD_FOLD_OPEN.match(ln)
+        if m:
+            depth += 1
+            yield ln, "open", depth, m.group(1)
+            continue
+        if depth and MD_FOLD_CLOSE.match(ln):
+            depth -= 1
+            yield ln, "close", depth, None
+            continue
+        yield ln, "text", depth, None
+
+
 def open_items_summary() -> dict:
     """kb/open_items.md → 대시보드 카드용 요약. mtime 캐시(실시간 동기).
 
@@ -431,6 +482,10 @@ def open_items_summary() -> dict:
         화면이 추측할 일이 아니다.
       · 닫힌 항목을 **버리지 않는다.** `closed_items` 로 따로 담아 화면이 접어
         보여줄 수 있게 한다 (v3 전역 규칙: 접기는 되고 삭제는 안 된다).
+      · 원장이 **접어 둔** 절 (`<details>` 안 · 지난 세션 인계 기록 따위) 의 제목은 대기로 세지 않고
+        `archived` 개수로만 낸다 (2026-11-11 — 그 전엔 ⏭ 절의 인계 기록 53 건이 '대기 90 건' 에 섞였다).
+        접힌 것이 정말 다 끝났는지는 **안 본다** — 접은 사람이 원장에서 정한 것이다.
+      · 코드 펜스 안의 `## `·`### ` 줄은 제목으로 안 센다.
     """
     return _open_items_c(_mtime_ns(OPEN_ITEMS_MD))
 
@@ -447,8 +502,14 @@ def _oi_is_closed(title: str) -> bool:
 @lru_cache(maxsize=4)
 def _open_items_c(_mt) -> dict:
     txt = load_open_items_md()
-    secs, cur, closed = [], None, []
-    for line in txt.splitlines():
+    secs, cur, closed, archived = [], None, [], 0
+    for line, kind, depth, _summ in md_fold_lines(txt):
+        if kind != "text":
+            continue
+        if depth:                                   # 원장이 접어 둔 기록 — 대기로 세지 않는다
+            if line.startswith("### "):
+                archived += 1
+            continue
         if line.startswith("## "):
             title = line[3:].strip()
             cur = None
@@ -464,7 +525,7 @@ def _open_items_c(_mt) -> dict:
                 cur["items"].append(it)
     secs = [s for s in secs if s["items"] or s["closed"]]
     return {"sections": [s for s in secs if s["items"]],
-            "closed_items": closed, "closed": len(closed),
+            "closed_items": closed, "closed": len(closed), "archived": archived,
             "total": sum(len(s["items"]) for s in secs)}
 
 # ─────────────────────────────────────────────────────────────

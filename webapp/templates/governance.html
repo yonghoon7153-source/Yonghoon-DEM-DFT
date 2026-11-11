@@ -87,42 +87,59 @@
          reopen_criteria 상호참조 · citation_hazards · 마감 기록) 갈 곳이 없었다.
          행 앵커가 있어야 `/governance#<id>` 가 성립하고, statement 안의 자동 링크도
          여기로 떨어진다. #}
+      {# ⭐ 2026-11-11 — 여섯 칸 → 두 칸 (사용자 *'판정 원장 … 사람이 읽을 수 있게 안생겼는데 · 적어도 글처럼은'*).
+         종전: ID · 종류 · 상태 · 사전등록 · 비준 다섯 칸이 전부 `nowrap` 이라 '무엇을 정했나' 칸이 좁아졌고,
+         본문의 긴 파일 경로가 줄바꿈 자리가 없어 **표가 카드 밖으로 넘쳐** 글 오른쪽이 잘렸다 · 칸이 세로 가운데 정렬이라
+         ID 와 본문이 따로 놀았다. ⇒ 왼쪽 한 칸에 상태 묶음 (종류 · 상태 · 사전등록 · 비준 · 지문) 을 위에서부터 쌓고,
+         오른쪽 칸은 제목 → ID → 본문 → 재개조건 → 근거 문서 순으로 **글처럼** 읽힌다 (`.dec-*` · style.css).
+         ⚠ 2026-09-15 의 '배지가 한 글자씩 세로로 쪼개진다' 사고는 상태 칸 폭을 150 px 로 **고정**해서 막는다
+           (table-layout fixed · 배지는 inline-block 한 줄). 문구는 한 글자도 안 바꿨다 — 시험이 글자 그대로 집는다. #}
       <tr id="{{ d.id }}" data-kind="{{ d.kind or '' }}">
-        <td class="mono" style="font-size:.7rem;white-space:nowrap">{{ d.id }}</td>
-        {# ⚠ 이 두 칸은 **`white-space:nowrap` 이 필수**다. 없으면 '무엇을 정했나' 칸이 폭을
-           다 가져가면서 한글 배지가 **한 글자씩 세로로** 쪼개진다 — `보/고/량`, `게/이/트`,
-           `◻ 제안(비/준/대/기)`. 1저자 실측 보고 2026-09-15 ("뭔가 줄바꿈되어있고 그래").
-           표는 이미 `overflow-x:auto` 안이라 넓어져도 가로 스크롤로 받는다. #}
-        <td style="white-space:nowrap"><span class="tbadge" title="원장 kind: {{ (d.kind or '미기재')|plain }}"
-              style="background:{{ dk_color.get(d.kind, '#6b7280') }};color:#fff">{{ dk_label.get(d.kind, d.kind or '미기재') }}</span></td>
-        <td style="white-space:nowrap">{% if d._state == 'active' %}<span style="color:#0d9488">✅ 유효</span>
+        <td class="dec-meta">
+          <div><span class="tbadge" title="원장 kind: {{ (d.kind or '미기재')|plain }}"
+              style="background:{{ dk_color.get(d.kind, '#6b7280') }};color:#fff">{{ dk_label.get(d.kind, d.kind or '미기재') }}</span></div>
+          <div>{% if d._state == 'active' %}<span style="color:#0d9488">✅ 유효</span>
             {%- elif d._state == 'proposed' %}<span style="color:#c05621">◻ 제안(비준 대기)</span>
             {%- elif d._state == 'superseded' %}<span style="color:#6b7280">↩ 대체됨</span>
             {%- elif d._state == 'retracted' %}<span style="color:#6b7280">↩ 철회</span>
             {%- elif d._state %}{{ d._state }}
-            {%- else %}<span style="color:#be123c">⛔ 상태 미기재</span>{% endif %}</td>
-        {# 사전등록 — 이 repo 의 규율 그 자체다. `results_seen` 이 **없는** 것을
-           "결과 보기 전" 으로 읽으면 안 된다(그건 원장에 안 적힌 것이다). #}
-        <td style="white-space:nowrap">
-          {%- if d._prereg == 'before' %}<span style="color:#0d9488">🔒 결과 보기 전</span>
-          {%- elif d._prereg == 'after' %}<span style="color:#c05621">👁 결과 본 뒤</span>
-          {%- else %}<span class="muted">– 미기재</span>{% endif %}
-          {%- if d.record_kind %}<br><span class="sub">{{ d.record_kind }}</span>{% endif %}</td>
-        <td>
+            {%- else %}<span style="color:#be123c">⛔ 상태 미기재</span>{% endif %}</div>
+          {# 사전등록 — 이 repo 의 규율 그 자체다. `results_seen` 이 **없는** 것을
+             "결과 보기 전" 으로 읽으면 안 된다(그건 원장에 안 적힌 것이다). #}
+          <div>
+            {%- if d._prereg == 'before' %}<span style="color:#0d9488">🔒 결과 보기 전</span>
+            {%- elif d._prereg == 'after' %}<span style="color:#c05621">👁 결과 본 뒤</span>
+            {%- else %}<span class="muted">– 미기재</span>{% endif %}
+            {%- if d.record_kind %} <span class="sub">· {{ d.record_kind }}</span>{% endif %}</div>
+          <div>
+            {%- if d._ratified == 'ratified' %}<span style="color:#0d9488">✅ 비준</span>
+            {%- elif d._ratified == 'revoked' %}<span style="color:#6b7280">↩ 비준 취소</span>
+            {%- elif d._ratified %}{{ d._ratified }}
+            {%- else %}<span class="muted">– 비준 없음</span>{% endif %}
+            {%- if d.ratification and d.ratification.timestamp %} <span class="sub">{{ d.ratification.timestamp[:10] }}</span>{% endif %}</div>
+          {# ⚠ 아래 두 문구는 시험(`test_governance_digest_binding_shown`)이 **글자 그대로**
+             집는다 — "🔒 일치" 와 "본문이 승인 뒤 바뀌었다". 바꾸면 그 음성시험이 죽는다. #}
+          <div>{% if d._digest == 'ok' %}<span class="sub" style="color:#0d9488">지문 🔒 일치</span>
+              {%- elif d._digest == 'bad' %}<span style="color:#be123c">⛔ 본문이 승인 뒤 바뀌었다</span>
+              {%- else %}<span class="sub muted">지문 없음</span>{% endif %}</div>
+        </td>
+        <td class="dec-body">
           {# 본문 안의 `D-YYYY-…` 를 같은 페이지 앵커로 잇는다 — 결정끼리의 참조 그래프를
-             화면에서 걷게 한다. **원장에 있는 id 만** 링크한다(declink 필터). #}
-          <div>{{ (d.title or d.statement)|bold|declink(dec_ids, d.id) }}</div>
-          {% if d.title and d.statement %}<div class="muted" style="margin-top:3px">{{ d.statement|bold|declink(dec_ids, d.id) }}</div>{% endif %}
+             화면에서 걷게 한다. **원장에 있는 id 만** 링크한다(declink 필터).
+             제목이 없으면 (원장 5 건) statement 를 굵게 하지 않고 본문 글씨로 싣는다 — 굵은 덩어리가 안 되게. #}
+          {% if d.title %}<div class="dec-title">{{ d.title|bold|declink(dec_ids, d.id) }}</div>{% endif %}
+          <div class="dec-id mono"><a href="#{{ d.id }}" title="이 결정으로 가는 링크">{{ d.id }}</a></div>
+          {% if d.statement %}<div class="dec-text">{{ d.statement|bold|declink(dec_ids, d.id) }}</div>{% endif %}
           {# ⚠ 재개 조건은 원장이 **문자열로도 배열로도** 적는다 (34건 중 6건이 배열).
              ⛔ 2026-09-15 — 종전 판은 `{{ d.reopen_criteria|bold }}` 였고, 필터가 `str(list)`
                 를 하는 바람에 **파이썬 repr** `['다음 5–10 캠페인에서 …']` 이 그대로 화면에
                 나왔다. 오류는 안 났다 — 선언은 맞고 실행 경로만 다른 일을 한 자리다.
                 `_reopen` 은 라우트가 정규화한 **문자열 목록**이다. #}
-          {% if d._reopen %}<div class="sub" style="margin-top:3px">↻ 재개조건:
+          {% if d._reopen %}<div class="dec-sub">↻ 재개조건:
             {%- if d._reopen|length == 1 %} {{ d._reopen[0]|bold|declink(dec_ids, d.id) }}
-            {%- else %}<ul style="margin:2px 0 0;padding-left:1.15em">
+            {%- else %}<ul>
               {% for x in d._reopen %}<li>{{ x|bold|declink(dec_ids, d.id) }}</li>{% endfor %}</ul>{% endif %}</div>{% endif %}
-          {% if d._docs %}<div class="sub" style="margin-top:3px">
+          {% if d._docs %}<div class="dec-sub">
             {% for x in d._docs %}{{ x.role }}
               {#- 링크 **글자는 원장이 적은 ref 그대로**(조각 `#절` 포함). href 만 파일까지 자른다. -#}
               {%- if x.url %} <a href="{{ x.url }}" class="mono">{{ x.path }}</a>
@@ -130,18 +147,6 @@
                     title="조각 참조 — 화면은 파일까지만 연다">§ {{ x.frag }}</span>{% endif %}
               {%- else %} <code>{{ x.path }}</code>{% endif %}{% if not loop.last %} · {% endif %}{% endfor %}
           </div>{% endif %}
-        </td>
-        <td style="white-space:nowrap">
-          {%- if d._ratified == 'ratified' %}<span style="color:#0d9488">✅ 비준</span>
-          {%- elif d._ratified == 'revoked' %}<span style="color:#6b7280">↩ 비준 취소</span>
-          {%- elif d._ratified %}{{ d._ratified }}
-          {%- else %}<span class="muted">– 비준 없음</span>{% endif %}
-          {%- if d.ratification and d.ratification.timestamp %}<br><span class="sub">{{ d.ratification.timestamp[:10] }}</span>{% endif %}
-          {# ⚠ 아래 두 문구는 시험(`test_governance_digest_binding_shown`)이 **글자 그대로**
-             집는다 — "🔒 일치" 와 "본문이 승인 뒤 바뀌었다". 바꾸면 그 음성시험이 죽는다. #}
-          <br>{% if d._digest == 'ok' %}<span class="sub" style="color:#0d9488">지문 🔒 일치</span>
-              {%- elif d._digest == 'bad' %}<span style="color:#be123c">⛔ 본문이 승인 뒤 바뀌었다</span>
-              {%- else %}<span class="sub muted">지문 없음</span>{% endif %}
         </td>
       </tr>
 {% endmacro %}
@@ -186,9 +191,9 @@
   </div>
 
   <div style="overflow-x:auto">
-  <table class="data-table" style="font-size:.78rem">
-    <thead><tr><th>ID</th><th>종류</th><th>상태</th><th>사전등록</th>
-      <th>무엇을 정했나</th><th>비준</th></tr></thead>
+  <table class="data-table dec-table">
+    <colgroup><col class="dec-meta-col"><col></colgroup>
+    <thead><tr><th>상태</th><th>무엇을 정했나</th></tr></thead>
     <tbody>
     {% for d in dec_recent %}{{ drow(d) }}{% endfor %}
     </tbody>
@@ -204,9 +209,9 @@
   <details class="v3-fold" style="margin-top:10px">
     <summary>🔒 오래된 비준 {{ dec_aged|length }}건 (최신 결정일 −{{ dec_aged_days }}일{% if dec_aged_cut %} · {{ dec_aged_cut }} 이전{% endif %}) — 접어 둔다</summary>
     <div style="overflow-x:auto;margin-top:6px">
-    <table class="data-table" style="font-size:.78rem">
-      <thead><tr><th>ID</th><th>종류</th><th>상태</th><th>사전등록</th>
-        <th>무엇을 정했나</th><th>비준</th></tr></thead>
+    <table class="data-table dec-table">
+      <colgroup><col class="dec-meta-col"><col></colgroup>
+    <thead><tr><th>상태</th><th>무엇을 정했나</th></tr></thead>
       <tbody>
       {% for d in dec_aged %}{{ drow(d) }}{% endfor %}
       </tbody>
@@ -224,9 +229,9 @@
   <details class="v3-fold" style="margin-top:10px">
     <summary>↩ 옛 결정 {{ dec_old|length }}건 (대체됨·철회) — 지우지 않고 접어 둔다</summary>
     <div style="overflow-x:auto;margin-top:6px">
-    <table class="data-table" style="font-size:.78rem;opacity:.82">
-      <thead><tr><th>ID</th><th>종류</th><th>상태</th><th>사전등록</th>
-        <th>무엇을 정했나</th><th>비준</th></tr></thead>
+    <table class="data-table dec-table" style="opacity:.82">
+      <colgroup><col class="dec-meta-col"><col></colgroup>
+    <thead><tr><th>상태</th><th>무엇을 정했나</th></tr></thead>
       <tbody>
       {% for d in dec_old %}{{ drow(d) }}{% endfor %}
       </tbody>

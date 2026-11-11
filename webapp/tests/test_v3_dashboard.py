@@ -272,3 +272,53 @@ def test_matrix_declares_its_snapshot_date(home):
     built = D.build_matrix().get("built")
     assert built, "전제: db/_index.json 에 built 가 있다"
     assert str(built)[:10] in home, "매트릭스 스냅샷 날짜가 화면에 없다"
+
+
+def test_open_items_folded_sections_are_archived_not_waiting(tmp_path, monkeypatch):
+    """양성+⛔음성: 원장이 `<details>` 로 접어 둔 절은 대기로 안 센다 (archived) — 접기 밖은 그대로 센다.
+
+    2026-11-11 실측: ⏭ 절의 지난 세션 인계 53 절이 '대기 90 건' 에 섞여 있었다 (실제 대기 37).
+    ⛔ 코드 펜스 안의 접기 줄 · `###` 줄은 접기도 제목도 아니다.
+    """
+    md = tmp_path / "open_items.md"
+    md.write_text(
+        "## A 절\n"
+        "### 1. 살아 있는 항목\n"
+        "<details><summary>지난 인계 기록</summary>\n\n"
+        "### ⏭-NOW-z1. 지난 세션 기록\n"
+        "### ⏭-NOW-z2. 또 지난 기록\n\n"
+        "</details>\n\n"
+        "### 2. 접기 뒤 살아 있는 항목\n"
+        "```\n<details><summary>코드 안</summary>\n### 3. 코드 안 제목은 항목이 아니다\n```\n"
+        "### 4. 펜스 뒤 항목\n", encoding="utf-8")
+    monkeypatch.setattr(D, "OPEN_ITEMS_MD", md)
+    D._open_items_c.cache_clear()
+    try:
+        oi = D.open_items_summary()
+        titles = [it for s in oi["sections"] for it in s["items"]]
+        assert titles == ["1. 살아 있는 항목", "2. 접기 뒤 살아 있는 항목", "4. 펜스 뒤 항목"], titles
+        assert oi["archived"] == 2, f"접힌 절 수가 틀렸다: {oi['archived']}"
+        assert oi["total"] == 3
+    finally:
+        D._open_items_c.cache_clear()
+
+
+def test_long_headline_cards_read_as_prose(home):
+    """양성+⛔음성: 핵심값이 80 자를 넘거나 여러 줄이면 본문 글씨 (`fc-v-long`) · 짧은 수치는 그대로 크게.
+
+    2026-11-11 (사용자 *'적어도 글처럼은'*): 점착 원장 최신 세 줄 (670 자) 이 1.1 rem 800 굵기 남색 덩어리였다.
+    """
+    cards = re.findall(r'<div class="card find-card" id="([^"]+)"[^>]*>.*?<div class="(fc-v[^"]*)">',
+                       home, re.S)
+    assert cards, "전제: 대시보드에 카드가 있다"
+    by_id = dict(cards)
+    hl = D.dashboard_highlights()
+    long_ = [h for h in hl if h.get("aid") in by_id
+             and (len(str(h.get("v") or "")) > 80 or "\n" in str(h.get("v") or ""))]
+    short = [h for h in hl if h.get("aid") in by_id and 0 < len(str(h.get("v") or "")) <= 40
+             and "\n" not in str(h.get("v") or "")]
+    assert long_ and short, "전제: 긴 핵심값 카드와 짧은 핵심값 카드가 둘 다 있다"
+    for h in long_:
+        assert by_id[h["aid"]] == "fc-v fc-v-long", f"{h['aid']} 긴 핵심값이 굵은 덩어리로 남았다"
+    for h in short:
+        assert by_id[h["aid"]] == "fc-v", f"{h['aid']} 짧은 수치까지 본문 글씨로 낮췄다"
