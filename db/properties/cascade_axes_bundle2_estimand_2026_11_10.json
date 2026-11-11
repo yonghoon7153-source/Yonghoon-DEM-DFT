@@ -357,6 +357,12 @@
    "state": "active",
    "by": "agent",
    "note": "판독 (개정 2 재실행 원자료) — 막는 게이트 전부 통과 · §9 닫는 조건 충족 → 마감 기록 · 마감 결정 proposed (사용자 비준 대기)"
+  },
+  {
+   "at": "2026-11-11",
+   "state": "closed",
+   "by": "사용자 (cascade 1저자)",
+   "note": "묶음 2 마감 비준 — D-2026-11-11-cascade-axes-bundle2-closed"
   }
  ],
  "ED_반영_2026_11_10": {
@@ -470,7 +476,7 @@
  "판독_2026_11_11": {
   "원자료": "db/raw/cascade_axes_bundle2_2026_11_11/ (개정 2 재실행 · 회수 4259cb18 · SHA256SUMS 23 일치 · 부피 거부 0)",
   "판독": "db/properties/cascade_axes_bundle2_readout_2026_11_11.json · …_designs.csv — 막는 게이트 전부 통과 · 순위 축 ① · ③ · ⑤ NCM · ⑥ · ④ (⑤ Li 는 G8 로 빠짐)",
-  "§9": "닫는 조건 충족 → 마감 기록 db/properties/cascade_axes_bundle2_closed_2026_11_11.json · 결정 D-2026-11-11-cascade-axes-bundle2-closed (proposed · 사용자 비준 대기)",
+  "§9": "닫는 조건 충족 → 마감 기록 db/properties/cascade_axes_bundle2_closed_2026_11_11.json · 결정 D-2026-11-11-cascade-axes-bundle2-closed (✅ active · 사용자 비준 2026-11-11 · 커밋 7f785e9e)",
   "by": "agent · 2026-11-11"
  }
 }
