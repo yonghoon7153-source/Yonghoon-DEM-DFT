@@ -276,5 +276,8 @@ AM 은 작은 입자 (단결정) · C65 2–3 wt% · AM:SE 40:60–60:40 vol · 
 - **순차 혼합 AM+(CA+SE)**: SE 와 도전재를 먼저 섞은 뒤 AM 을 넣는 혼합 순서.
 - **In/LiIn 대극**: In 박 — 첫 충전에서 LiIn 합금이 되며 기준 전위 ≈0.6 V vs Li (이 논문: 3.7 V vs In/LiIn = 4.3 V vs Li).
 
+## 🔗 관련 카드
+- 참고 [13] = 정본 [`doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density`](doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density.md) (Doerrer 외, *ACS Appl. Mater. Interfaces* 13 (2021) 37809 — 1저자가 이 논문 원문 참고문헌 목록에서 확인 · 2026-11-12) — 이 카드 L48 · L128 의 [13] 인용을 그 원문과 대조한 결과 = 그 카드 §13 (L128 *"densification is inhibited"* = 일부 · L48 "C65 가 최선" = 없음 · 이 카드 본문은 고치지 않았다).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
