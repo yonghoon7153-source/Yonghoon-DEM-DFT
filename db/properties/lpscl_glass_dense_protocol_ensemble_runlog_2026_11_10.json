@@ -115,5 +115,13 @@
   "어림": "B12 끝 ≈ 13:30 · 남은 12 런 × ≈ 5.07 h → 16 런 끝 ≈ 11-14 02–03 시 KST (상한 160 GPU-h 의 절반쯤 · ≈ 81 GPU-h)",
   "대조_잡_v3": "아직 안 돌림 (~/li2s3_control_job_v3.log 없음) — 블록 다시 전달 (있는 worktree 면 그 worktree 에서 fetch + checkout · 없으면 ~/lldvar 에서 worktree add)",
   "by": "agent (위임 10-30) · 2026-11-11"
+ },
+ "대조_잡_v3_2026_11_11": {
+  "출처": "사용자 붙여넣기 2026-11-11 오후 (kgy · CPU 파이썬 검사 · QE 아님 · 수송값 안 읽음)",
+  "판": "worktree ~/wt_li2s3_q2 = ab8af6ad · 판독 도구 sha16 60a7ef3ce31d0bb2 · 큐 v2 62580ea1744fef5c (카드 개정 3 과 같다)",
+  "control": "rc 0 · '대조 잡: same = True ·  · 차이 0 건' (가운데 빈 칸은 출력 줄의 status 자리 — control 결과에는 status 열쇠가 없다 · 표시만) · 출력 /home/kgy/li2s3_control_job_v3.json · sha256 63fb4bb1e65a0509a574d4f66bbb171bd5ca93cc582aa7bc06df75a7eec6fb66",
+  "결과_열람": "없음 — 10-14 기록의 재현 일치만 (값은 화면에 안 나옴)",
+  "다음": "카드 '판독_허가_2단계' 에 이 출력 · sha256 을 넣었다 → 16 런 끝 (≈ 11-14 02–03 시 KST) + 큐 끝 줄 뒤 readout · pressure 한 번",
+  "by": "agent (위임 10-30) · 2026-11-11"
  }
 }
