@@ -522,3 +522,73 @@ def test_decision_rows_are_status_cell_plus_prose_cell(gov_html):
     p = _probe(d["statement"])
     if p:
         assert p not in html.unescape(re.sub(r"<[^>]+>", "", title_div)), "본문이 굵은 제목 칸에 들어갔다"
+
+
+# ── 인용 위험 표 '파일' 칸이 한 글자 폭으로 쪼그라들던 것 (2026-11-11 · 사용자 스크린샷) ─────────────
+def test_pathwrap_breaks_only_after_slash_and_underscore():
+    """양성+⛔음성: `<wbr>` 은 `/` · `_` 뒤에만 · 태그는 이스케이프 · 태그를 벗기면 원문 그대로."""
+    f = A.app.jinja_env.filters["pathwrap"]
+    out = str(f("db/properties/b2o3_md_arrhenius.json"))
+    assert out == "db/<wbr>properties/<wbr>b2o3_<wbr>md_<wbr>arrhenius.json", out
+    assert re.sub(r"<wbr>", "", out) == "db/properties/b2o3_md_arrhenius.json"
+    bad = str(f("<script>x</script>/a_b"))
+    assert "<script>" not in bad and "&lt;script&gt;" in bad, "경로 글의 태그가 살아났다"
+    assert str(f(None)) == "" and str(f("plain")) == "plain"
+
+
+def test_hazard_rows_are_status_cell_plus_prose_cell(gov_html):
+    """양성+⛔음성: 인용 위험 행도 두 칸 · 파일 경로는 본문 칸 안 · 결속 (`data-claim`) 은 행에 그대로."""
+    m = re.search(r'<table class="data-table dec-table hz-table">(.*?)</table>', gov_html, re.S)
+    assert m, "인용 위험 표가 두 칸 꼴 (hz-table) 이 아니다"
+    tbody = re.search(r"<tbody>(.*?)</tbody>", m.group(1), re.S).group(1)
+    rows = re.findall(r"<tr(?: data-claim=\"[^\"]*\")?>(.*?)</tr>", tbody, re.S)
+    raw = D.citation_hazards().get("hazards", [])
+    assert len(rows) == len(raw), "인용 위험 행 수가 원장과 다르다"
+    for body in rows:
+        assert len(re.findall(r"<td\b", body)) == 2, "인용 위험 행이 두 칸이 아니다"
+    assert '<td class="mono"' not in m.group(1), "옛 '파일' 칸 (td.mono) 이 남았다"
+    for h in raw:
+        if h.get("file"):
+            want = re.sub(r"([/_])", r"\1<wbr>", html.escape(h["file"], quote=True)).replace("&#x27;", "&#39;")
+            assert f'<div class="dec-id mono hz-file">{want}</div>' in m.group(1), f"파일 경로가 본문 칸에 없다: {h['file']}"
+    n_claim = sum(1 for h in raw if h.get("claim") or h.get("id"))
+    assert m.group(1).count("<tr data-claim=") == n_claim, "행 결속 (data-claim) 수가 원장과 다르다"
+
+
+def test_tables_have_no_squeezed_cells():
+    """실제 브라우저 배치: /governance · / · /todo · /benchmarks · /adhesion 에 쪼그라든 표 칸이 없다 · /governance 표는 안 넘친다.
+
+    서버 시험은 HTML 글자만 봐서 '파일' 칸이 세로로 찍히는 걸 못 잡았다 (사용자가 화면을 보고 알려 줬다).
+    ⇒ `table_layout.test.mjs` 가 렌더된 HTML 을 진짜 style.css 로 배치해서 잰다 · 옛 꼴을 잡는지 먼저 본다 (자체 음성).
+    도구 (node · playwright-core · chromium) 가 없으면 skip — 없는 것을 통과로 세지 않는다.
+    """
+    import shutil
+    import subprocess
+    import tempfile
+    from pathlib import Path
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node 가 없다")
+    env = dict(os.environ)
+    direct = Path("/opt/node-tools/node_modules/playwright-core/package.json")
+    if direct.is_file():
+        env["PW_CORE_FROM"] = str(direct.parents[2] / "package.json")
+    A.app.config["TESTING"] = True
+    cl = A.app.test_client()
+    with tempfile.TemporaryDirectory() as td:
+        args = []
+        # /benchmarks · /adhesion 은 `.card td .mono` 규칙 (표 칸 anywhere 끄기) 을 지킨다 — 거기 mono 칸이 쪼그라들었었다.
+        for name, route, flag in (("governance", "/governance", ":no-overflow"), ("home", "/", ""), ("todo", "/todo", ""),
+                                  ("benchmarks", "/benchmarks", ""), ("adhesion", "/adhesion", "")):
+            r = cl.get(route)
+            assert r.status_code == 200, route
+            f = Path(td) / f"{name}.html"
+            f.write_text(r.get_data(as_text=True), encoding="utf-8")
+            args.append(f"{name}={f}{flag}")
+        js = Path(__file__).parent / "table_layout.test.mjs"
+        p = subprocess.run([node, str(js), *args], capture_output=True, text=True, env=env, timeout=240)
+    out = (p.stdout or "") + (p.stderr or "")
+    if "SKIP —" in out:
+        pytest.skip(out.strip().splitlines()[-1])
+    assert p.returncode == 0, out
+    assert "table layout PASS" in out and "ok ⓪a" in out and "ok ⓪b" in out, out

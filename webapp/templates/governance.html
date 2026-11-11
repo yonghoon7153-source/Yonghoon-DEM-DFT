@@ -293,17 +293,25 @@
   {% set hz_color = {"BLOCKED": "#be123c", "HOLD": "#c05621", "STALE": "#b45309",
                      "SUPERSEDED": "#6b7280", "CONDITIONAL": "#0284c7",
                      "PREVIEW": "#7c3aed", "RESOLVED": "#0d9488"} %}
+  {# ⭐ 2026-11-11 — 여섯 칸 → 두 칸 (사용자 스크린샷 *'요렇게 길게 나오는 파일을 수정좀 해봐'*).
+     종전: '파일' 칸이 `.card .mono{overflow-wrap:anywhere}` 때문에 최소 폭이 **글자 하나**가 돼서
+     `db/properties/…json` 이 한 글자씩 세로로 찍혔고 (46 행 전부) · 표가 카드 밖으로 넘쳐 '풀리는 조건' 오른쪽이 잘렸다.
+     ⇒ 결정 원장과 같은 꼴: 왼쪽 상태 칸 (수준 · 결속 · 범위 · 보류 문구) · 오른쪽 본문 칸 (무엇이 → 파일 → 왜 → 풀리는 조건).
+     파일 경로는 `|pathwrap` 으로 `/` · `_` 뒤에서만 꺾인다. 문구는 한 글자도 안 바꿨다 — 시험이 글자 그대로 집는다.
+     ⚠ `data-claim` 은 그대로 **행 (`tr`)** 에 단다 — 값이 든 요소에 결속한다 (회신 BG ②). #}
   <div style="overflow-x:auto">
-  <table class="data-table" style="font-size:.78rem">
-    <thead><tr><th>수준</th><th>결속</th><th>파일</th><th>무엇이</th><th>왜</th><th>풀리는 조건</th></tr></thead>
+  <table class="data-table dec-table hz-table">
+    <colgroup><col class="dec-meta-col"><col></colgroup>
+    <thead><tr><th>수준 · 결속</th><th>무엇이 · 파일 · 왜 · 풀리는 조건</th></tr></thead>
     <tbody>
     {% for h in hazards %}
     {# 회신 BG ② — 이 위험이 **어느 주장**인지 이름을 댄다 (근접성 대신 구조 결속).
        두 가지를 함께 단다: `claim`(가리키는 정본값)과 `id`(위험 자체 = 비수치 금지주장). #}
     {% set _cids = [h.claim, h.id]|select|join(' ') %}
     <tr{% if _cids %} data-claim="{{ _cids }}"{% endif %}>
-      <td style="white-space:nowrap"><span class="tbadge" style="background:{{ hz_color.get(h.level, '#6b7280') }};color:#fff">{{ h.level }}</span></td>
-      <td style="white-space:nowrap">
+      <td class="dec-meta">
+        <div><span class="tbadge" style="background:{{ hz_color.get(h.level, '#6b7280') }};color:#fff">{{ h.level }}</span></div>
+        <div>
         {%- if h._bind == 'claim' %}<span class="tbadge" style="background:#0d9488;color:#fff"
              title="정본값 {{ (h.claim)|plain }} 에 결속 — 그 수치를 쓰면 검사가 잡는다">🔗 결속됨 · 값</span>
         {%- elif h._bind == 'phrase' %}<span class="tbadge" style="background:#0d9488;color:#fff"
@@ -313,16 +321,18 @@
         {%- elif h._bind == 'inactive' %}<span class="tbadge" style="background:#6b7280;color:#fff"
              title="{{ (h.level)|plain }} — 살아 있는 금지가 아니라 결속을 요구하지 않는다. 어휘에는 남는다">↩ 결속 해제</span>
         {%- else %}<span class="tbadge" style="background:#be123c;color:#fff"
-             title="원장에 id 가 없어 어느 화면도 이 위험을 이름으로 댈 수 없다">⛔ id 없음</span>{% endif %}
-        {%- if h.binding_scope %}<br><span class="sub mono" style="font-size:.66rem"
-          {% if h.binding_scope_why %}title="{{ h.binding_scope_why|plain }}"{% endif %}>{{ h.binding_scope }}</span>{% endif %}
-        {%- if h._n_pending %}<br><span class="sub" style="font-size:.66rem;color:#c05621"
-          title="실제로 걸리지만 아직 집행하지 않는 문구">보류 문구 {{ h._n_pending }}</span>{% endif %}
+             title="원장에 id 가 없어 어느 화면도 이 위험을 이름으로 댈 수 없다">⛔ id 없음</span>{% endif %}</div>
+        {%- if h.binding_scope %}<div class="sub mono" style="font-size:.66rem"
+          {% if h.binding_scope_why %}title="{{ h.binding_scope_why|plain }}"{% endif %}>{{ h.binding_scope }}</div>{% endif %}
+        {%- if h._n_pending %}<div class="sub" style="font-size:.66rem;color:#c05621"
+          title="실제로 걸리지만 아직 집행하지 않는 문구">보류 문구 {{ h._n_pending }}</div>{% endif %}
       </td>
-      <td class="mono" style="font-size:.7rem">{{ h.file }}</td>
-      <td>{{ h.what|bold }}</td>
-      <td class="muted">{{ h.why|bold }}</td>
-      <td class="muted">{{ h.fix|bold|declink(dec_ids) }}</td>
+      <td class="dec-body">
+        <div class="dec-title">{{ h.what|bold }}</div>
+        {% if h.file %}<div class="dec-id mono hz-file">{{ h.file|pathwrap }}</div>{% endif %}
+        {% if h.why %}<div class="dec-text">{{ h.why|bold }}</div>{% endif %}
+        {% if h.fix %}<div class="hz-fix"><b>풀리는 조건</b> · {{ h.fix|bold|declink(dec_ids) }}</div>{% endif %}
+      </td>
     </tr>
     {% endfor %}
     </tbody>
@@ -401,7 +411,9 @@
           {%- if a.supersedes_assessment_id %}<br><span class="sub" style="font-size:.66rem">↩ 대체:
             <span class="mono">{{ a.supersedes_assessment_id }}</span></span>{% endif %}</td>
         <td style="word-break:keep-all">{{ a.gate or a.slot or ('(정정 레코드)' if a.kind == 'correction' else '–') }}</td>
-        <td>{% set o = a.result or a.gate_outcome or a.outcome %}
+        {# ⚠ 2026-11-11 — 이 칸이 1.8 em 폭으로 쪼그라들어 '(철회된 옛 판정 — 지우지 않고 남긴다)' 가 두 글자씩 찍혔다
+           (한글은 음절마다 꺾일 수 있어 최소 폭이 글자 하나다). 낱말 단위로만 꺾고 최소 폭을 준다. #}
+        <td style="min-width:7.5em;word-break:keep-all">{% set o = a.result or a.gate_outcome or a.outcome %}
             {%- if o == 'pass' %}<span style="color:#0d9488">✅ 통과</span>
             {%- elif o == 'fail' %}<span style="color:#be123c">⛔ 실패</span>
             {%- elif o == 'not_assessed' %}<span style="color:#c05621">◻ 미평가</span>

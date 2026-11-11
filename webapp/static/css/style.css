@@ -148,6 +148,13 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .grid-latest{grid-template-columns:minmax(0,1fr)}
 /* 카드 안 mono id (litdb 논문 id 등) 가 안 꺾여서 카드 밖으로 넘쳤다 (개념 페이지 · 실측). */
 .card .mono{overflow-wrap:anywhere}
+/* ⛔ 2026-11-11 — **표 칸 안에서는 anywhere 를 끈다** (사용자 스크린샷: 인용 위험 표 '파일' 칸이 한 글자씩 세로로).
+   anywhere 는 칸의 최소 폭 (min-content) 을 글자 하나로 만들어서, 옆 칸 글이 길면 자동 배치가 그 칸을 끝까지 줄인다
+   (이 규칙이 고친 곳: /governance 인용 위험 '파일' 46 칸 · /benchmarks '단위' 칸 — table_layout.test.mjs ⓪b 가 잰다).
+   break-word 는 넘칠 때만 꺾고 최소 폭은 안 줄인다. 긴 경로는 `|pathwrap` 으로 `/` · `_` 자리를 준다.
+   ⚠ mono 가 아닌 칸은 이 규칙 밖이다 — 한글은 음절마다 꺾일 수 있어 따로 막았다 (평가 '판정' 칸 keep-all + 최소 폭 ·
+     /adhesion 날짜 nowrap · 각 템플릿). */
+.card td.mono,.card th.mono,.card td .mono,.card th .mono{overflow-wrap:break-word}
 .section-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
   font-weight:700;margin:28px 0 12px}
 
@@ -1570,4 +1577,8 @@ body.rail .rail-peek:hover ~ .sidebar,body.rail .sidebar:hover{transform:transla
 .dec-text{font-size:.84rem;color:var(--text);line-height:1.75;margin-top:6px;max-width:72em}
 .dec-sub{font-size:.76rem;color:var(--muted);line-height:1.6;margin-top:6px}
 .dec-sub ul{margin:2px 0 0;padding-left:1.15em}
+/* 인용 위험 표 (같은 두 칸 꼴) — 파일 경로는 `|pathwrap` 의 `/` · `_` 자리에서만 꺾는다 (표 칸 anywhere 끄기는 위 `.card td .mono`). */
+.hz-fix{font-size:.8rem;color:var(--text);line-height:1.65;margin-top:6px;padding-left:9px;
+  border-left:2px solid var(--border)}
+.hz-fix>b:first-child{color:var(--muted);font-weight:700}
 @media (max-width:720px){.dec-table col.dec-meta-col{width:104px}.dec-text{font-size:.82rem}}

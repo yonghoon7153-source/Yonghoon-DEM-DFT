@@ -65,7 +65,7 @@
         <td class="mono">{{ c.unit }}</td>
         <td>{{ c.rule|mdlite }}</td>
         <td><span class="badge {{ 'ok' if c.state in ('합의', '결정') else 'b-todo' }}">{{ c.state }}</span>
-            <div class="muted mono" style="font-size:.7rem">{{ c.since }}</div></td>
+            <div class="muted mono" style="font-size:.7rem;white-space:nowrap">{{ c.since }}</div></td>
         <td>{{ reflink(c.record) }}</td></tr>
   {% endfor %}
   </tbody>

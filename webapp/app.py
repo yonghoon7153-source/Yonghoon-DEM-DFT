@@ -499,6 +499,22 @@ def _sanitize_urls(html: str) -> str:
 _BOLD_RE = re.compile(r"\*\*(.+?)\*\*", re.S)
 
 
+@app.template_filter("pathwrap")
+def _pathwrap(s):
+    """파일 경로에 **줄바꿈 자리** (`<wbr>`) 를 `/` · `_` 뒤에만 넣는다 (2026-11-11 · 사용자 스크린샷).
+
+    왜: `.card .mono{overflow-wrap:anywhere}` (10-28) 아래에서 표 칸의 최소 폭이 **글자 하나**가 돼,
+      /governance 인용 위험 표의 '파일' 칸이 `d / b / / / p …` 처럼 한 글자씩 세로로 찍혔다.
+      경로가 꺾일 자리를 `/` · `_` 로 정해 주면 `db/properties/` · `b2o3_md_` 같은 토막 단위로 꺾인다.
+    ⛔ 못 하는 것: 경로인지 판정하지 않는다 (아무 글이나 `/` · `_` 뒤에서 꺾일 수 있게 될 뿐) ·
+      `<wbr>` 은 글자가 아니라서 복사·검색·텍스트 추출 결과는 원문 그대로다 · 결속 (`_bind_claims`) 은 안 탄다 —
+      **경로 칸 전용**이다. 수치 본문에는 쓰지 않는다.
+    """
+    if s is None:
+        return Markup("")
+    return Markup(re.sub(r"([/_])", r"\1<wbr>", str(escape(str(s)))))
+
+
 @app.template_filter("bold")
 def _bold(s):
     """db JSON 문자열의 '**강조**' 만 <b> 로 승격. 나머지는 전부 이스케이프.
