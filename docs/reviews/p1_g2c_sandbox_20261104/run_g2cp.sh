@@ -1,6 +1,6 @@
 #!/bin/bash
 # G2c′ 샌드박스 실행기 (2026-11-10 · 등록 = 메모 docs/reviews/p1_g2c_compare_definition_20261105.md §0 · §5-2 · 결과 0 건 상태에서 씀)
-#   사용:  LMP=<LIGGGHTS 3d5c00f 직렬 실행 파일> bash run_g2cp.sh N OUT      (OUT = 없거나 빈 폴더 · 덮어쓰지 않는다)
+#   사용:  LMP=<LIGGGHTS 3d5c00f 직렬 실행 파일> bash run_g2cp.sh N OUT      (OUT = 없거나 빈 폴더 · 덮어쓰지 않는다 · 자리 = 아래 'OUT 자리')
 #   대조:  python3 -I compare_g2cp.py OUT N                               (따로 · 실행기는 대조하지 않는다)
 #   팔 (이 차례 · 직렬 · 한 번에 하나 · nice -n 19):
 #     A  A2  B  B2  C  = 11-04 run_arms.sh 와 같은 덱 · 같은 인자
@@ -9,7 +9,10 @@
 #   실행 전 멈춤 (rc 3 · OUT 을 만들지 않는다 · 이유 = 화면 stderr):
 #     인자 · N 꼴 (200 이상 · 100 의 배수 — R 덱 덤프 주기 100) · 도구 · LMP 없음 · 파일 아님 · 실행 권한 없음 · `-h` 첫 머리 줄에
 #     "LIGGGHTS (" 없음 (빈 임시 폴더 · -log none) · OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ run_40000/inputs.md5 · BW 덱 꼴 ·
-#     git 작업 트리 안이면 이 폴더에 커밋 안 된 변경 · 새 파일 (등록 커밋 뒤에만 돈다)
+#     git 작업 트리 안이면 이 폴더에 커밋 안 된 변경 · 새 파일 (등록 커밋 뒤에만 돈다) · OUT 자리
+#   OUT 자리 (G2CPR2-05 · 실제 경로 = readlink -m 으로 본다 · 대조기 out_guard 의 자리 규칙 + dry/ · 기존 런 폴더 안): 샌드박스 (이) 폴더 · 그 조상 ·
+#     11-04 기록 폴더 (run_40000/ · dry/) 와 그 안 · 기존 런 폴더 안 (OUT 의 조상 폴더에 런 표지 lmp_identity.txt · inputs.md5 —
+#     이 실행기 · 11-04 run_arms.sh 가 OUT 에 맨 먼저 쓰는 파일) = 실행 전 멈춤.  샌드박스 폴더 안의 새 폴더는 받는다 (대조기도 읽는다).
 #   실행 중 멈춤 (rc 4 · OUT/STOP.txt · 남은 팔 안 돎): 팔 rc ≠ 0 (시간 한도 = 124) · 로그 · 화면에 ERROR 줄 · 로그에 "Loop time of" 없음 ·
 #     기대 출력 없음 · 빈 파일
 #   시간 한도 (초): A · A2 = G2CP_TLONG (기본 1800 · 11-04 실측 20 s) · 나머지 = G2CP_TSHORT (기본 600 · 11-04 ≤ 1 s) — 넘으면 timeout 이
@@ -54,7 +57,7 @@ trap 'onsig HUP' HUP
 N=$1; O=$2
 [[ "$N" =~ ^[1-9][0-9]{0,8}$ ]] || die0 "N='$N' — 양의 정수 (ASCII 숫자 · 9 자리 안) 가 아니다"
 (( N >= 200 && N % 100 == 0 )) || die0 "N=$N — 200 이상 · 100 의 배수여야 한다 (R 덱 덤프 주기 100 → setup 덤프가 step N 에 나와야 한다)"
-for t in nice timeout md5sum sha256sum mktemp stat find sort xargs grep awk cut head tr date ls; do
+for t in nice timeout md5sum sha256sum mktemp stat find sort xargs grep awk cut head tr date ls readlink dirname; do
   command -v "$t" > /dev/null 2>&1 || die0 "도구 없음: $t"
 done
 [ -n "${LMP:-}" ] || die0 "LMP 없음 — LIGGGHTS 3d5c00f 직렬 실행 파일 경로를 LMP 로 준다 (11-10 이 컨테이너: 실행 파일 없음 · 빌드 = 1저자 GO 뒤)"
@@ -102,6 +105,26 @@ elif git -C "$HERE" rev-parse --is-inside-work-tree > /dev/null 2>&1; then
 else
   GH="리포 밖"
 fi
+
+# OUT 자리 (G2CPR2-05) — 실제 경로로 본다 (없는 끝 조각 · 심볼릭 링크 · .. 를 푼다) · 대조기 out_guard 의 자리 규칙 + dry/ · 기존 런 폴더 안
+inside() { [ "$1" = "$2" ] || [ "${1#"${2%/}"/}" != "$1" ]; }    # $1 이 $2 이거나 $2 안 (실제 경로 둘)
+RO=$(readlink -m -- "$O" 2>/dev/null)
+RH=$(readlink -m -- "$HERE" 2>/dev/null)
+[[ "$RO" == /* && "$RH" == /* ]] || die0 "OUT='$O' — 실제 경로를 알 수 없다 (readlink -m) — 자리를 확인하지 못하면 돌지 않는다"
+inside "$RH" "$RO" && die0 "OUT='$O' — 샌드박스 (덱) 폴더이거나 그 조상이다 — 덱 · 기록 폴더에 쓰지 않는다"
+for rec in run_40000 dry; do
+  RR=$(readlink -m -- "$HERE/$rec" 2>/dev/null)
+  [[ "$RR" == /* ]] || die0 "11-04 기록 폴더 $rec 의 실제 경로를 알 수 없다 (readlink -m)"
+  inside "$RO" "$RR" && die0 "OUT='$O' — 11-04 기록 폴더 ($rec/) 이거나 그 안이다 — 기록 폴더에 쓰지 않는다"
+done
+RP=$(dirname "$RO")
+while :; do
+  for m in lmp_identity.txt inputs.md5; do
+    [ -e "$RP/$m" ] && die0 "OUT='$O' — 기존 런 폴더 안이다 ($RP 에 런 표지 $m) — 다른 런의 출력 폴더 안에 새 런을 쓰지 않는다"
+  done
+  [ "$RP" = / ] && break
+  RP=$(dirname "$RP")
+done
 
 # OUT — 없거나 빈 폴더
 if [ -e "$O" ]; then

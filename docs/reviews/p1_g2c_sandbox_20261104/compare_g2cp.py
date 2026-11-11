@@ -4,7 +4,7 @@
 
     python3 -I compare_g2cp.py OUT N     → OUT/compare_g2cp.json + 화면 표
     rc 0 = 대조 끝 (맞음 · 틀림 · 해당 없음 은 JSON 에) · rc 2 = '계산 못 함' 이 하나라도 (입력 결손 · 읽기 문제 · 인자 · 실행기 출력 아님 ·
-    등록 덱 아님 — 실행기 출력이 아니면 JSON 을 쓰지 않는다)
+    실행기 출력이 끝나지 않음 · 등록 덱 아님 — 실행기 출력이 아니면 JSON 을 쓰지 않는다)
 
 등록 = 메모 docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전 · Codex Q6 답 반영) — 예측마다
 맞음 / 틀림 / 해당 없음 / 계산 못 함 + 등록 판정 (§3 · 허용폭 1e-5 · 열 중앙값 floor 그대로 · 키트 ul_gates.g2c_compare 와 같은 식).
@@ -16,7 +16,7 @@ torque 3 · history 4 (deltaMax · shear 3) · contactArea · delta · contactPo
 shear 3 열 부호 반전 · 주기 표지 · deltaMax · torque 그대로 (torque 는 같은 방향 행만 비교).
 값 같음 = %.17g 글자에서 읽은 float 가 정확히 같음 (−0 = 0) · 바이트 같음 = 파일 sha256 같음 (행 순서 · 글자 꼴 포함).
 
-11-10 (2) 내부 반박 리뷰 G2CPR-01–11 고침 (결과 전 · 판정 규칙 · 허용폭 그대로):
+11-10 (2) 내부 반박 리뷰 G2CPR-01–11 고침 (결과 전 · §3 판정 식 · 허용폭 그대로 · 판정의 NOT_COMPUTED 사유에 '등록 덱 아님' 을 더함):
 - 읽는 OUT = 실행기 출력만 (lmp_identity.txt + 팔 폴더 아홉) · 샌드박스 폴더 · 11-04 기록 폴더 · 그 조상 = 거부 · 거부하면 JSON 을 쓰지 않는다 (11).
 - 등록 덱 문: OUT/inputs.md5 의 덱 여덟 (11-04 일곱 + BW) md5 = 이 폴더 파일 — 아니면 가 · 라-재현 (나) 를 뺀 예측 = 계산 못 함 · 판정 NOT_COMPUTED (04).
 - 숫자 토큰 = ASCII · 밑줄 없음 (읽기 문제 · 키트보다 엄격) · 값 같음 = 모든 토큰이 `%.17g` 꼴 (원자 id · type = %d 꼴) 일 때만 · 원자 상자도 비교 (04).
@@ -24,6 +24,12 @@ shear 3 열 부호 반전 · 주기 표지 · deltaMax · torque 그대로 (torq
 - 비교할 쌍 0 = 해당 없음 (맞음 아님) · 판정은 키트 식 PASS + 쌍 0 표지 · 바: 쌍 원자가 원자 덤프에 없으면 계산 못 함 (05).
 - 파일 없음 = 필수 열 결손 → 판정 NOT_COMPUTED (키트와 같음 · 03) · 마-1 cohesion 가드 = A(N−1) · A(N) 에서 직접 센 전체 집합 (01) ·
   예외② 사라진 쌍 = 집합 · 새 쌍 왕복 = §0-2 값 규칙 (06) · 실행 파일 신원 · 입력 덱 기록을 모르면 가 · 라-재현 (나) = 계산 못 함 (07).
+
+11-11 2 회차 내부 반박 리뷰 G2CPR2-01 · 02 고침 (결과 전 · §3 판정 식 · 허용폭 그대로 · 판정의 NOT_COMPUTED 사유에 '실행기 출력이 끝나지 않음' 을 더함):
+- 완료 문 (메모 §0-3 규칙 ⑪ · 01): OUT/outputs.md5 있음 ∧ OUT/STOP.txt 없음 ∧ OUT/rc.txt = 팔 아홉이 차례대로 `<팔> rc 0 sec <초>` 한 줄씩 일 때만
+  판독한다 — 아니면 (멈춘 실행 · 도는 중인 실행) 예측 모두 계산 못 함 · 판정 NOT_COMPUTED + 기술 실패 표지 (JSON 은 그 표지를 담아 쓴다 · rc 2).
+- 규칙 ⑩ 보강 (02): md5 기록에서 같은 이름 줄은 hash 꼴 (32 자리 소문자 16 진) 이 아니어도 센다 (꼴 밖 줄의 이름 = 모름 · 이름을 못 읽는 줄 =
+  기록 전체 모름) · 실행 파일 md5 의 두 기록 (lmp_identity.txt 의 lmp_md5 ↔ OUT/inputs.md5 첫 줄) 이 어긋나면 신원 = 모름.
 """
 from __future__ import annotations
 
@@ -51,6 +57,7 @@ PERIODIC_SIDE = ('B', 'B2', 'BW')
 DECKS7 = ('head.inc', 'mat.inc', 'fresh.inc', 'outA.inc', 'A.liggghts', 'A2.liggghts', 'R.liggghts')
 DECKS8 = DECKS7 + ('BW.liggghts',)      # 등록 덱 문 (G2CPR-04) — OUT/inputs.md5 의 이 여덟 = 이 폴더 파일
 GATED = ('나', '다-값', '다-바이트', '라-값', '라-바이트', '라-재현가', '마-1', '마-2', '마-3', '바', '사', '예외①', '예외②')
+ORDER = ('가', '나', '다-값', '다-바이트', '라-값', '라-바이트', '라-재현가', '라-재현나', '마-1', '마-2', '마-3', '바', '사', '예외①', '예외②')
 ATOM_COLS = ('id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz', 'omegax', 'omegay', 'omegaz', 'radius')
 REF_N = 40000         # run_40000 (11-04) 의 N
 EMPTY_WHY = '비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)'
@@ -328,14 +335,30 @@ def read_md5_list(path):
     return out
 
 
+_MD5HEX = re.compile(r'[0-9a-f]{32}')
+
+
 def md5_table(path):
-    """md5sum 꼴 → ({이름: hash}, {두 번 이상 나온 이름}) — 같은 이름 두 줄 = 모호한 기록 (한 줄만 골라 읽지 않는다)."""
-    tab, dup = {}, set()
-    for h, n in read_md5_list(path):
-        if n in tab:
-            dup.add(n)
-        tab[n] = h
-    return tab, dup
+    """md5sum 꼴 기록 → ({이름: hash}, {두 줄 이상 나온 이름}, 이름을 못 읽는 줄 수) — 규칙 ⑩: 같은 이름이 두 줄 이상 = 모호한 기록 (한 줄만 골라 읽지 않는다).
+    같은 이름 줄은 hash 가 32 자리 소문자 16 진 꼴이 아니어도 **센다** (말없이 버리지 않는다 · G2CPR2-02) — 꼴 밖 줄은 값을 주지 않는다
+    (그 이름의 줄이 그것뿐이면 기록 없음 · 다른 줄이 더 있으면 중복 → 어느 쪽이든 모름) ·
+    이름을 못 읽는 줄 (토큰 하나 = 잘린 줄) 이 있으면 어느 이름의 줄인지 모르므로 기록 전체 = 모름 (셋째 값 > 0)."""
+    tab, seen, dup, junk = {}, set(), set(), 0
+    if path and os.path.isfile(path):
+        for ln in open(path, encoding='utf-8', errors='replace').read().splitlines():
+            t = ln.split(None, 1)
+            if not t:
+                continue
+            if len(t) != 2:
+                junk += 1
+                continue
+            h, n = t[0], t[1].strip()
+            if n in seen:
+                dup.add(n)
+            seen.add(n)
+            if _MD5HEX.fullmatch(h):
+                tab[n] = h
+    return tab, dup, junk
 
 
 def read_kv(path):
@@ -927,13 +950,27 @@ def _ident_lmp_md5(ident):
     return v if isinstance(v, str) and re.fullmatch(r'[0-9a-f]{32}', v) else None
 
 
+def _inputs_lmp_md5(O):
+    """OUT/inputs.md5 의 실행 파일 줄 = 첫 줄 (실행기가 맨 앞에 쓴다 · 11-04 기록도 첫 줄) 의 md5 글자 — 그 줄이 `값 이름` 꼴이 아니거나
+    그 이름이 기록에 두 줄 이상이면 None (모름).  부르는 쪽이 lmp_identity.txt 의 lmp_md5 (꼴 맞는 값) 와 글자로 견준다 (G2CPR2-02)."""
+    p = os.path.join(O, 'inputs.md5')
+    if not os.path.isfile(p):
+        return None
+    first = next((ln for ln in open(p, encoding='utf-8', errors='replace').read().splitlines() if ln.strip()), '')
+    t = first.split(None, 1)
+    if len(t) != 2:
+        return None
+    _tab, dup, _junk = md5_table(p)
+    return None if t[1].strip() in dup else t[0]
+
+
 def _decks_same(O, rin):
     """OUT 의 덱 일곱 md5 ↔ 11-04 → (True | False | None, OUT 표) — None = 모름 (OUT/inputs.md5 없음 · 덱 기록 빠짐 · 11-04 덱 기록 빠짐 · G2CPR-07)."""
     p = os.path.join(O, 'inputs.md5')
     if not os.path.isfile(p):
         return None, {}
-    oin, dup = md5_table(p)
-    if dup & set(DECKS7) or any(oin.get(d) is None or rin.get(d) is None for d in DECKS7):
+    oin, dup, junk = md5_table(p)
+    if junk or dup & set(DECKS7) or any(oin.get(d) is None or rin.get(d) is None for d in DECKS7):
         return None, oin
     return all(oin[d] == rin[d] for d in DECKS7), oin
 
@@ -948,6 +985,10 @@ def _known_conditions(O, ref, ident, need_cmd=False, N=None):
         unknown.append('11-04 실행 파일 md5 기록 없음')
     if lm is None:
         unknown.append('실행 파일 신원 (lmp_identity.txt 의 lmp_md5) 기록 없음 · 꼴 아님')
+    elif os.path.isfile(os.path.join(O, 'inputs.md5')) and _inputs_lmp_md5(O) != lm:
+        # G2CPR2-02 — 실행 파일 md5 는 두 곳에 적힌다 · 어긋난 기록에서 한 쪽만 골라 '11-04 와 같은 실행 파일' 로 판정하지 않는다
+        unknown.append('실행 파일 md5 의 두 기록이 어긋남 (lmp_identity.txt 의 lmp_md5 ≠ OUT/inputs.md5 첫 줄 · 꼴 아님 · 모호) — 신원 모름')
+        lm = None
     if same_decks is None:
         unknown.append('덱 일곱 md5 기록 없음 (OUT/inputs.md5 · 11-04)')
     same_lmp = None if (lm is None or not rlmp) else (lm == rlmp)
@@ -1139,18 +1180,60 @@ def deck_gate(O, here):
     p = os.path.join(O, 'inputs.md5')
     if not os.path.isfile(p):
         return dict(ok=False, why=['OUT/inputs.md5 없음 — 어떤 덱으로 돌았는지 모른다 (등록 실험인지 가를 수 없음)'])
-    oin, dup = md5_table(p)
+    oin, dup, junk = md5_table(p)
     bad = []
+    if junk:
+        bad.append(f'이름을 못 읽는 줄 {junk} (모호한 기록)')
     for f in DECKS8:
         hp = os.path.join(here, f)
         have = md5(hp) if os.path.isfile(hp) else None
         if f in dup:
-            bad.append(f + ' 기록 중복 (모호)')
+            bad.append(f + ' 기록 중복 · 꼴 밖 (모호)')
         elif oin.get(f) is None:
             bad.append(f + ' 기록 없음')
         elif have is None or oin[f] != have:
             bad.append(f + ' md5 다름')
     return dict(ok=not bad, why=(['입력 덱 ≠ 등록 덱 (이 폴더): ' + ' · '.join(bad)] if bad else []), checked=list(DECKS8))
+
+
+_RC_OK = r' rc 0 sec -?[0-9]+'      # 실행기 go 가 팔마다 쓰는 줄 `<팔> rc <rc> sec <초>` 의 끝난 꼴 (초 = date 차 · 시계가 뒤로 가면 음수일 수 있다)
+
+
+def run_gate(O):
+    """G2CPR2-01 (메모 §0-3 규칙 ⑪) — 완료 문: 실행기 (run_g2cp.sh) 가 팔 아홉을 끝낸 OUT 만 판독한다.
+    끝난 실행 = OUT/outputs.md5 있음 (실행기가 끝 단계에서만 쓴다) ∧ OUT/STOP.txt 없음 (실행 중 멈춤 rc 4 의 표지) ∧
+    OUT/rc.txt = 팔 아홉이 실행 차례대로 한 줄씩 `<팔> rc 0 sec <초>` (rc ≠ 0 · 신호 줄 · 같은 팔 두 줄 · 빠진 팔 · 다른 차례가 있으면 아님).
+    아니면 (멈춘 실행 · 아직 도는 실행 · 어긋난 기록) 판독하지 않는다 — 실행 실패 = 기술 실패 (§3) 를 값 불일치 (FAIL) 나 맞음 (PASS) 으로 적지 않는다.
+    보지 않는 것 = 끝난 뒤 덤프가 바뀌었는지 (outputs.md5 의 md5 ↔ 덤프 파일 · 메모 §0-5)."""
+    why = []
+    if not os.path.isfile(os.path.join(O, 'outputs.md5')):
+        why.append('outputs.md5 없음 (실행기가 끝 단계까지 가지 못했다 · 도는 중)')
+    ps = os.path.join(O, 'STOP.txt')
+    if os.path.lexists(ps):
+        try:
+            first = open(ps, encoding='utf-8', errors='replace').read(200).strip().splitlines()[:1]
+        except OSError:
+            first = []
+        why.append('STOP.txt 있음 (실행기가 멈췄다' + (': ' + first[0][:120] if first else '') + ')')
+    prc = os.path.join(O, 'rc.txt')
+    if not os.path.isfile(prc):
+        why.append('rc.txt 없음')
+    else:
+        lines = open(prc, encoding='utf-8', errors='replace').read().splitlines()
+        off = [ln for a, ln in zip(ARMS, lines) if not re.fullmatch(re.escape(a) + _RC_OK, ln)]
+        if len(lines) != len(ARMS) or off:
+            why.append(f'rc.txt ≠ 팔 아홉이 차례대로 "<팔> rc 0 sec <초>" 한 줄씩 ({len(lines)} 줄'
+                       + (f' · 어긋난 첫 줄 {off[0][:60]!r}' if off else '') + ')')
+    return dict(ok=not why, why=why, need=['outputs.md5 있음', 'STOP.txt 없음', 'rc.txt = 팔 아홉 차례대로 rc 0'])
+
+
+def _finish(res, O, rc):
+    res['rc'] = rc
+    res['json_written'] = True
+    with open(os.path.join(O, 'compare_g2cp.json'), 'w', encoding='utf-8') as f:
+        json.dump(res, f, ensure_ascii=False, indent=1, default=str)
+        f.write('\n')
+    return res, rc
 
 
 def compare_all(O, N, here=HERE, ref=None):
@@ -1170,6 +1253,18 @@ def compare_all(O, N, here=HERE, ref=None):
         return res, 2
     ident = read_kv(os.path.join(O, 'lmp_identity.txt'))
     res['lmp'] = ident
+    rg = run_gate(O)
+    res['run_gate'] = rg
+    if not rg['ok']:        # G2CPR2-01 — 멈춘 · 도는 중인 실행기 출력은 판독하지 않는다 (기술 실패를 맞음 · 틀림 · PASS · FAIL 로 적지 않는다)
+        why = ['실행기 출력이 끝나지 않았다 (멈춤 · 도는 중 · 기록 어긋남 = 기술 실패) — 판독 대상 아님: ' + ' · '.join(rg['why'])]
+        short = ['실행기 출력이 끝나지 않았다 — 판독 대상 아님 (완료 문 막힘 · 기술 실패 · 사유 = 완료 문 줄)']
+        res['predictions'] = {k: dict(status='계산 못 함', why=list(short)) for k in ORDER}
+        for lab in ('다', '라'):
+            res['judgment'][lab] = dict(status='NOT_COMPUTED', why=list(why), mode='g2cp', technical_failure=True,
+                                        note='실행기 멈춤 · 기술 실패 — 등록 판정 (§3) 은 끝난 실행에만 (→ UNCONFIRMED)')
+        res['exceptions'] = dict(note='실행기 출력이 끝나지 않음 — 판독 안 함')
+        res['reports'] = dict(note='실행기 출력이 끝나지 않음 — 보고 안 함')
+        return _finish(res, O, 2)
 
     def guard(name, fn):
         try:
@@ -1191,15 +1286,9 @@ def compare_all(O, N, here=HERE, ref=None):
         res['exceptions'] = dict(note='등록 덱 아님 — 판독 안 함')
         res['reports'] = dict(note='등록 덱 아님 — 보고 안 함')
     P['라-재현나'] = guard('라-재현나', lambda: pred_ra_repro_b(O, N, ref, ident))
-    order = ('가', '나', '다-값', '다-바이트', '라-값', '라-바이트', '라-재현가', '라-재현나', '마-1', '마-2', '마-3', '바', '사', '예외①', '예외②')
-    res['predictions'] = P = {k: P[k] for k in order if k in P}
+    res['predictions'] = P = {k: P[k] for k in ORDER if k in P}
     rc = 2 if any(isinstance(v, dict) and v.get('status') == '계산 못 함' for v in P.values()) else 0
-    res['rc'] = rc
-    res['json_written'] = True
-    with open(os.path.join(O, 'compare_g2cp.json'), 'w', encoding='utf-8') as f:
-        json.dump(res, f, ensure_ascii=False, indent=1, default=str)
-        f.write('\n')
-    return res, rc
+    return _finish(res, O, rc)
 
 
 def _compare_registered(res, O, N, here, guard):
@@ -1263,6 +1352,9 @@ def main(argv):
     for lab, j in res.get('judgment', {}).items():
         print(f'판정 {lab:<5} {j.get("status")} (n_mismatch {j.get("n_mismatch")} · 비트 같은 쌍 {j.get("n_bit_equal")}/{j.get("n_ref")})'
               + (f' — {j["note"]}' if j.get('note') else ''))
+    g0 = res.get('run_gate')
+    if g0 is not None:
+        print('완료 문 ' + ('지남' if g0.get('ok') else '막힘 — 실행기 출력이 끝나지 않았다 (판독 대상 아님 · 기술 실패): ' + '; '.join(g0.get('why', []))))
     g = res.get('deck_gate')
     if g is not None:
         print('등록 덱 문 ' + ('지남' if g.get('ok') else '막힘 — ' + '; '.join(g.get('why', []))))
