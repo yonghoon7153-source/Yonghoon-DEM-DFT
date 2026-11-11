@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-10 · managed-files: 610
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-11 · managed-files: 611
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 401건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 402건)
+- 2026-11-11 · `kb/projects/handoff_2026_11_11_token_limit.md` — 토큰 한도 인계 (2026-11-11 오후) — 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 다음 행동 · 사용자 결정 대기 · 인계 — 다음 세션이 이 카드부터 읽는다
 - 2026-11-10 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…
 - 2026-11-10 · `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` — DZ 회신 — li2s-3 구조군 정의 · 본 시드 재사용 · 골격 게이트 · 2 단계 큐: NO-GO (P0 0 · P1 6 · P2 3) — 구조군 정의와 여섯 시드 재사용은 조건부 찬성 · 실행 · 재개 경로 결함과 보고량 조건이 남음 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
@@ -26,7 +27,6 @@
 - 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 - 2026-11-09 · `kb/reviews/codex_DU_reply_cell_construction_v1_2026_11_09.md` — DU 회신 — 셀구축 v1 + b2o3 B·O 배치 카드 개정 1: NO-GO (1 단계 실행 보류 · 선행 도구 고침은 진행 가능) · P1 9 (Ewald 역격자 ½ · Li 공공 대칭 경로 · 반올림 중복 제거 · 어닐 재개 정체성 · k 탐침 가족 대비 · 최종 셋 DFT 이완본 부재 · 포논 캐시 · 허수 판정 · 골격 판정기 거리/NaN) · P2 · Q1–Q10 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
 - 2026-11-09 · `kb/reviews/codex_DV_prompt_cell_construction_v1_1_2026_11_09.md` — DV 프롬프트 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1 재리뷰 (DU NO-GO 고침 · 도구 6 · 설계 · 과거 영향 · 계산 0 건) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
-- 2026-11-09 · `kb/reviews/codex_DV_reply_cell_construction_v1_1_2026_11_09.md` — DV 회신 — 셀구축 v1.1 + b2o3 B·O 배치 카드 개정 1 v1.1: NO-GO (1 단계 생산 보류) · P1 4 (큐 실패 전파 · 완료 구조 결속 · 포논 빈 캐시 정체성 · B 결합 음이온 분류) · P2 6 · P3 2 · Q1–Q7 · 1 단계 해제조건 네 묶음 · 회신 원문 (2026-11-09 · 사용자 붙여넣기) — NO-GO …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -500,7 +500,7 @@
 - `kb/reports/weekly_2026_11_01.md` — 주간 정리 2026-10-26 ~ 11-01 (주간보고 초안)  (2026-11-01 · 초안 (2026-11-01 · 도는 계산은 마지막 실측 기준 — kg…)
 - `kb/reports/weekly_2026_11_08.md` — 주간 정리 2026-11-02 ~ 11-08 (주간보고 초안)  (2026-11-09 · 초안 (2026-11-09 · 도는 계산은 마지막 실측 기준 — kg…)
 
-## projects/ (58)
+## projects/ (59)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)  (2026-09-03 · 활성)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -527,6 +527,7 @@
 - `kb/projects/handoff_2026_11_08_evacuation.md` — 대피 인계 — 2026-11-08 (friendly 세션 토큰 소진 → 서브 대시보드 세션 · 머지 때 충돌 0 설계 · li2s-2 1 단계 kgy 진행 중 · cascade 문헌 갭 다음 단계)  (2026-11-08 · 진행)
 - `kb/projects/handoff_2026_11_10_model_switch.md` — 모델 전환 인계 (2026-11-10 저녁) — 같은 세션 · 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 기한 있는 도구 둘 · 사용자 결정 대기 셋  (2026-11-10 · 진행)
 - `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달  (2026-11-10 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …)
+- `kb/projects/handoff_2026_11_11_token_limit.md` — 토큰 한도 인계 (2026-11-11 오후) — 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 다음 행동 · 사용자 결정 대기  (2026-11-11 · 인계 — 다음 세션이 이 카드부터 읽는다)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
 - `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` — li2s_glass_bmeas_650k_letter_DA_send_2026_10_19
