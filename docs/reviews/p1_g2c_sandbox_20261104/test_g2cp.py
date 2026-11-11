@@ -19,6 +19,8 @@
 11-10 (2) 내부 반박 리뷰 G2CPR-01–11 고침 = 시험 먼저 (t04 · t07 · t08 · t13 · t25 보강 · t30–t39 새로 · 고치기 전 실패 → 뒤 통과).
 11-11 2 회차 내부 반박 리뷰 G2CPR2-01–05 고침 = 시험 먼저 (t40 완료 문 · t41 실행기 OUT 자리 · t42 표기 새로 · t08 · t16 · t34 · t37 보강 ·
 합성 fixture 가 실행기 꼴대로 rc.txt 도 쓴다).
+11-11 3 회차 내부 반박 리뷰 G2CPR3-01–04 고침 = 시험 먼저 (t43 완료 문의 outputs.md5 ↔ 실제 출력 대조 새로 · t39 dry/ · t41 자리 문 두 경계 ·
+t42 표기 보강 · t13 = 덤프를 바꾼 fixture 는 outputs.md5 도 실행기 꼴대로 다시 쓴다).
 """
 from __future__ import annotations
 
@@ -982,7 +984,11 @@ def t13_end_to_end_negatives():
     d = tmpdir()
     O = _full(d)
     os.remove(os.path.join(O, 'BR', 'post', 'c_%d.txt' % NSTEP))
+    # 기록 (outputs.md5) 이 실제 출력과 맞는 채로 덤프가 없는 꼴 — 규칙 ⑧ (파일 없음 = 필수 열 결손) 자체를 본다 (실행기 need 가 막는 꼴이라
+    # 실제로는 못 생긴다 · 끝난 뒤 빠진 꼴 = outputs.md5 에 적혔는데 없음 은 t43 · 완료 문 출력 손상 · G2CPR3-01)
+    _rewrite_outputs(O)
     r, rc = c.compare_all(O, NSTEP, here=HERE, ref=os.path.join(HERE, 'run_40000'))
+    t.ok('BR 파일 없음 → 완료 문 지남 (기록 = 실제 출력)', (r.get('run_gate') or {}).get('ok') is True, r.get('run_gate'))
     t.ok('BR 파일 없음 → 다-값 계산 못 함', status_of(r, '다-값') == '계산 못 함')
     t.ok('BR 파일 없음 → 판정 NOT_COMPUTED (G2CPR-03 · 키트와 같음 · 기술 실패를 값 불일치로 적지 않는다)',
          r['judgment']['다']['status'] == 'NOT_COMPUTED', r['judgment']['다'].get('status'))
@@ -998,6 +1004,7 @@ def t13_end_to_end_negatives():
         tk[18] = 'nan'
         L[k + 1] = ' '.join(tk)
         wtxt(p, '\n'.join(L) + '\n')
+    _rewrite_outputs(O)     # 실행기가 그 덤프를 쓴 꼴 — outputs.md5 = 실제 출력 (완료 문이 대조한다 · G2CPR3-01)
     r, rc = c.compare_all(O, NSTEP, here=HERE, ref=os.path.join(HERE, 'run_40000'))
     t.ok('같은 nan → 다-바이트 맞음 (값 실패와 따로)', status_of(r, '다-바이트') == '맞음', r['predictions'].get('다-바이트'))
     t.ok('같은 nan → 다-값 계산 못 함', status_of(r, '다-값') == '계산 못 함')
@@ -1233,12 +1240,12 @@ def fake_env(d, mode='ok', store=None):
     return env
 
 
-def run_runner(S, args, env, limit=180):
+def run_runner(S, args, env, limit=180, cwd=None):
     cmd = ['bash', os.path.join(S, RUNNER)] + list(args)
     wrap = unshare_ok()
     if wrap:
         cmd = ['unshare', '-pf', '--mount-proc', '--kill-child'] + cmd
-    p = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    p = subprocess.Popen(cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd=cwd)
     try:
         out, err = p.communicate(timeout=limit if wrap else None)
     except subprocess.TimeoutExpired:
@@ -1912,6 +1919,32 @@ def t39_compare_out_guard():
     write_fixture(inner)
     r, rc = c.compare_all(inner, NSTEP, here=os.path.join(d4, 'other_here'), ref=os.path.join(S4, 'run_40000'))
     t.ok('기록 폴더 안 실행기 꼴 → rc 2 · JSON 안 씀', rc == 2 and not os.path.exists(os.path.join(inner, 'compare_g2cp.json')), rc)
+    # G2CPR3-02 — 11-04 기록 폴더 = run_40000/ · dry/ (규칙 ⑨) — dry/ 안의 실행기 꼴 출력 (옛 실행기 · 손으로 옮긴 출력) 도 거부
+    # (고치기 전 = rc 0 · dry/ 안에 JSON) · 실제 경로로 본다 (dry 가 링크면 그 대상 안 · 그 조상도 거부 — run_40000 과 같은 규칙)
+    d5 = tmpdir()
+    S5 = sandbox_copy(d5)
+    O5 = os.path.join(S5, 'dry', 'oldrun')
+    write_fixture(O5)
+    before5 = listing(S5)
+
+    def refused5(name, O, here):
+        r, rc = c.compare_all(O, NSTEP, here=here, ref=os.path.join(here, 'run_40000'))
+        why = ' '.join((r['predictions'].get('입력') or {}).get('why', []))
+        t.ok(name + ' → rc 2 · JSON 안 씀', rc == 2 and not os.path.exists(os.path.join(O, 'compare_g2cp.json')), (rc, why[:160]))
+        t.ok(name + " → 이유 '11-04 기록 폴더 dry/'", '11-04 기록 폴더 dry/' in why, why[:200])
+    refused5('dry/ 안 실행기 꼴 (dry/oldrun)', O5, S5)
+    refused5('dry/ 자신', os.path.join(S5, 'dry'), S5)
+    t.ok('dry/ → 샌드박스 사본 그대로', listing(S5) == before5, sorted(set(listing(S5)) ^ set(before5))[:5])
+    d6 = tmpdir()
+    S6 = sandbox_copy(d6)
+    ext = tmpdir()                                            # 샌드박스 밖 — dry 링크의 대상
+    os.makedirs(os.path.join(ext, 'dry_real'))
+    os.symlink(os.path.join(ext, 'dry_real'), os.path.join(S6, 'dry'))
+    O6 = os.path.join(ext, 'dry_real', 'oldrun')
+    write_fixture(O6)
+    refused5('dry 링크 대상 안 (실제 경로 · ext/dry_real/oldrun)', O6, S6)
+    write_fixture(ext)                                        # dry 링크 대상의 조상을 실행기 꼴로 — 샌드박스의 조상은 아니다
+    refused5('dry 링크 대상의 조상 (ext)', ext, S6)
     return t
 
 
@@ -1938,6 +1971,10 @@ def t40_compare_completion_gate():
              r.get('judgment'))
         t.ok(name + ' → rc 2', rc == 2, rc)
         t.ok(name + ' → 완료 문 막힘', (r.get('run_gate') or {}).get('ok') is False, r.get('run_gate'))
+        # G2CPR3-01 뒤 — 끝나지 않은 실행 (멈춤 · 도는 중) 은 '끝난 뒤 출력 손상' 과 다른 사유로 적는다 (t43)
+        t.ok(name + ' → 사유 = 끝나지 않음 (출력 손상 아님)',
+             all('끝나지 않' in ' '.join(r.get('judgment', {}).get(x, {}).get('why', [])) and '출력 손상' not in str(r.get('judgment', {}).get(x, {}).get('note', ''))
+                 for x in ('다', '라')), [r.get('judgment', {}).get(x, {}).get('note') for x in ('다', '라')])
         return r
 
     # 리뷰 재현 A1 — CR 이 시간 한도 (rc 124) 로 멈춤: CR 쌍 덤프 반쯤 · STOP.txt · outputs.md5 없음 (고치기 전 = 판정 라 FAIL · 마 · 바 · 사 맞음)
@@ -2037,14 +2074,22 @@ def t41_runner_out_location():
             out += [os.path.relpath(os.path.join(r, x), d) for x in ds + fs]
         return sorted(out)
 
-    def refused(name, O, why, new=True):      # new = 없던 자리 (아무것도 안 만듦) · False = 이미 있는 폴더 (그대로 둠)
+    def refused(name, O, why, new=True, cwd=None):      # new = 없던 자리 (아무것도 안 만듦) · False = 이미 있는 폴더 (그대로 둠) · cwd = 상대 경로 OUT 의 기준
         n0, before = arms_run(), tree()
-        rc, out, err = run_runner(S, [str(NSTEP), O], env)
+        rc, out, err = run_runner(S, [str(NSTEP), O], env, limit=60, cwd=cwd)
         t.ok(name + ' → rc 3', rc == 3, (rc, err[-300:]))
         t.ok(name + " → 이유 '%s'" % why, why in err, err[-300:])
-        t.ok(name + (' → 아무것도 안 만듦' if new else ' → 그대로'), (not new or not os.path.lexists(os.path.normpath(O))) and tree() == before,
+        t.ok(name + (' → 아무것도 안 만듦' if new else ' → 그대로'),
+             (not new or not os.path.lexists(os.path.normpath(os.path.join(cwd or '', O)))) and tree() == before,
              sorted(set(tree()) ^ set(before))[:5])
         t.ok(name + ' → 팔 안 돎', arms_run() == n0, arms_run() - n0)
+
+    def accepted(name, O, cwd=None):          # 받는 자리 — rc 0 · 그 자리에 팔 아홉 (실제 경로 = cwd 기준)
+        n0 = arms_run()
+        rc, out, err = run_runner(S, [str(NSTEP), O], env, limit=60, cwd=cwd)
+        real = os.path.normpath(os.path.join(cwd or '', O))
+        t.ok(name + ' → rc 0 (받음) · 팔 아홉 · 그 자리에 끝난 출력', rc == 0 and arms_run() - n0 == 9 and os.path.isfile(os.path.join(real, 'outputs.md5')),
+             (rc, arms_run() - n0, err[-300:]))
 
     def refused_existing(name, O, why):       # 이미 있는 (비지 않은) 폴더 — 자리 이유가 '비어 있지 않다' 보다 먼저 나온다
         refused(name, O, why, new=False)
@@ -2071,6 +2116,19 @@ def t41_runner_out_location():
         dm = os.path.join(d, 'mark_' + m.replace('.', '_'))
         wtxt(os.path.join(dm, m), 'x\n')
         refused('런 표지 %s 있는 폴더 안 (두 단계 아래)' % m, os.path.join(dm, 'sub', 'new'), '기존 런 폴더')
+
+    # G2CPR3-04 — 자리 문의 두 경계를 시험에 묶는다 (코드는 그대로 · 리뷰 변이 K11 · K12 가 이 시험을 지났다):
+    # (가) 입력 글자 ↔ 실제 경로 — 런 표지는 OUT 의 실제 경로의 조상에서 찾는다 (K11 = 글자 그대로 $O 의 dirname → 상대 경로는 '.' 에서 돌고 ·
+    #      없는 폴더 + .. 길은 표지를 못 본다)
+    rel = os.path.join(d, 'rel_cwd')
+    os.makedirs(rel)
+    accepted('상대 경로 OUT (cwd = 런 밖 새 폴더 · rel_out)', 'rel_out', cwd=rel)
+    refused('상대 경로 OUT (cwd = 끝난 런 · new_rel)', 'new_rel', '기존 런 폴더', cwd=O1)
+    refused('없는 폴더 + .. 로 끝난 런 안 (no_such_dir/../sandbox/newrun_ok/new)',
+            os.path.join(d, 'no_such_dir', '..', os.path.basename(S), os.path.basename(O1), 'new'), '기존 런 폴더')
+    # (나) 형제 이름 — 기록 폴더 이름을 앞머리로 가진 샌드박스 안 새 폴더는 기록 폴더 안이 아니다 (K12 = 슬래시 없는 앞머리 → 과하게 막음)
+    for sib in ('run_40000_g2cp', 'dry_run2'):
+        accepted('형제 이름 %s (샌드박스 안 새 폴더)' % sib, os.path.join(S, sib))
     return t
 
 
@@ -2078,7 +2136,8 @@ def t41_runner_out_location():
 def t42_round2_notation():
     """G2CPR2-03 표기 셋 + 01 · 05 의 등록 · 사용 문서 — (가) '§3 판정 규칙은 그대로' 가 아니라 판정 식 · 허용폭 그대로 + NOT_COMPUTED 사유 더함 ·
     (나) 리뷰 권고 밖에서 더한 거부 쪽 규칙을 '같은 비준' 으로 뭉뚱그리지 않는다 · (다) 변이 3 회차 수 = 돌린 기록대로 (그 판 18 중 16) ·
-    규칙 ⑪ (완료 문) 이 등록문에 있다 · 문서의 시험 함수 수 = 이 파일의 실제 수."""
+    규칙 ⑪ (완료 문) 이 등록문에 있다 · 문서의 시험 함수 수 = 이 파일의 실제 수 · (G2CPR3-03) 같은 주장이 남은 세 자리 (README '하지 않는 것' ·
+    메모 §0 '범위' · 메모 머리 '상태') 도 판정 식 · 허용폭 그대로 + NOT_COMPUTED 사유 ① · ⑪ · 기준 날짜."""
     t = T()
     txt = open(MEMO, encoding='utf-8').read()
     s0 = _memo_section(txt, '\n## 0. ', '\n## 1. ')
@@ -2108,6 +2167,165 @@ def t42_round2_notation():
     t.ok('README — 변이 3 회차 = 돌린 기록대로 (그 판 18 중 16 · 섞인 수 "3 회차 18 중 17" 없음)', '18 중 16' in rd and '3 회차 18 중 17' not in rd)
     src = open(os.path.join(HERE, CMPFILE), encoding='utf-8').read()
     t.ok("(가) 대조기 머리글 — '판정 규칙 · 허용폭 그대로' 문구 없음", '판정 규칙 · 허용폭 그대로' not in src)
+    # G2CPR3-03 — 같은 주장이 남은 세 자리 (README '하지 않는 것' · 메모 §0 '범위' · 메모 머리 '상태') = 판정 식 · 허용폭 그대로 +
+    # 판정의 NOT_COMPUTED 사유 ① · ⑪ 더함 (§0-3) · 범위 · 상태 줄 = 기준 날짜 (11-10 개정 · 11-05 등록)
+    def claims_fixed(s):
+        return '판정 규칙' not in s and '판정 식' in s and 'NOT_COMPUTED 사유' in s and '①' in s and '⑪' in s
+    nd = rd[rd.index('\n## 하지 않는 것'):] if '\n## 하지 않는 것' in rd else ''
+    t.ok("(G2CPR3-03) README '하지 않는 것' — '판정 규칙' 대신 판정 식 · 허용폭 그대로 + NOT_COMPUTED 사유 ① · ⑪", nd and claims_fixed(nd), nd[-300:])
+    scope = next((ln for ln in s0.splitlines() if ln.startswith('> **범위')), '')
+    t.ok("(G2CPR3-03) 메모 §0 '범위' — 11-10 개정 표지 · '§3 판정 규칙' 대신 판정 식 + NOT_COMPUTED 사유 ① · ⑪",
+         scope.startswith('> **범위 (11-10 개정') and claims_fixed(scope), scope[:300])
+    pre = txt[:txt.index('\n## 0. ')]
+    st = next((ln for ln in pre.splitlines() if ln.startswith('> **상태')), '')
+    t.ok("(G2CPR3-03) 메모 머리 '상태' — 11-05 등록 때 표지 · '판정 규칙' 대신 판정 식 + NOT_COMPUTED 사유 ① · ⑪",
+         st.startswith('> **상태 (11-05') and claims_fixed(st), st[:300])
+    return t
+
+
+# ═══ 11-11 3 회차 내부 반박 리뷰 G2CPR3-01–04 — 시험 먼저 ══════════════════════════════════════
+@test
+def t43_completion_gate_outputs_md5():
+    """G2CPR3-01 (메모 §0-3 규칙 ⑪ 보강) — 완료 문은 OUT/outputs.md5 (실행기가 끝 단계에서 쓴 기록) 에 적힌 파일마다 md5 를 다시 계산해
+    실제 파일과 대조한다: 줄 꼴 = 실행기 꼴 (`<md5 32 자리 소문자 16 진>  <이름>`) · 같은 이름 두 줄 = 모호 (규칙 ⑩) · 적힌 파일 모두 있음 ∧ md5 같음 ·
+    적힌 집합 = 실제 출력 집합 (실행기와 같은 정의 — 깊이 3 의 `<폴더>/post/*` · `<폴더>/rst/*` 보통 파일 · 링크를 따라가지 않음).
+    어긋나면 (끝난 뒤 덤프 · restart 잘림 · 빠짐 · 더해짐 · 손댐 · 옮기다 · 복사하다 끊김) 판정하지 않는다 — 예측 15 모두 계산 못 함 ·
+    판정 NOT_COMPUTED + 기술 실패 표지 · rc 2 · 사유 = 출력 손상.  정직한 흐름 (끝난 출력을 그대로 둠 · 그대로 복사함 · 실제 실행기 출력을
+    복사함) = 결과가 바뀌지 않는다.  고치기 전 = 리뷰 재현 F1 · F2 (CR 쌍 덤프 잘림) 가 완료 문을 지나 판정 라 FAIL · 라-바이트 틀림."""
+    c = load_cmp()
+    t = T()
+
+    def dump(O, a, k='c'):
+        return os.path.join(O, a, 'post', ('c_%d.txt' if k == 'c' else 'atom_%d.txt') % NSTEP)
+
+    def cut_rows(p, k):
+        L = open(p).read().splitlines()
+        wtxt(p, '\n'.join(L[:-k]) + '\n')
+
+    def cut_bytes(p, frac):
+        b = open(p, 'rb').read()
+        with open(p, 'wb') as f:
+            f.write(b[:int(len(b) * frac)])
+
+    def flip_digit(p):                       # 같은 크기 · 마지막 숫자 한 글자만 바꿈 (손댐)
+        b = bytearray(open(p, 'rb').read())
+        i = max(k for k in range(len(b)) if 48 <= b[k] <= 57)
+        b[i] = 48 if b[i] != 48 else 49
+        with open(p, 'wb') as f:
+            f.write(bytes(b))
+
+    def edit_outputs(O, fn, tail='\n'):
+        p = os.path.join(O, 'outputs.md5')
+        L = fn(open(p).read().splitlines())
+        with open(p, 'w') as f:
+            f.write(''.join(x + '\n' for x in L[:-1]) + (L[-1] + tail if L else ''))
+
+    def append_bytes(p, b):
+        with open(p, 'ab') as f:
+            f.write(b)
+
+    def to_symlink(O):                       # 같은 내용 파일 (OUT 밖) 로 가는 링크 — 실행기 출력에는 링크가 없다
+        p = dump(O, 'CR')
+        q = os.path.join(os.path.dirname(O), 'elsewhere_' + os.path.basename(p))
+        shutil.copy2(p, q)
+        os.remove(p)
+        os.symlink(q, p)
+
+    def blocked(name, O, must):
+        r, rc = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+        bad = [(k, status_of(r, k)) for k in ALL15 if status_of(r, k) != '계산 못 함']
+        t.ok(name + ' → 예측 15 모두 계산 못 함', not bad, bad[:4])
+        J = r.get('judgment', {})
+        t.ok(name + ' → 판정 NOT_COMPUTED + 기술 실패 표지', [J.get(x, {}).get('status') for x in ('다', '라')] == ['NOT_COMPUTED'] * 2
+             and all(J.get(x, {}).get('technical_failure') is True for x in ('다', '라')), J)
+        t.ok(name + ' → 판정 사유 · 표지 = 출력 손상 (끝나지 않음과 가름)',
+             all('출력 손상' in ' '.join(J.get(x, {}).get('why', [])) and '출력 손상' in str(J.get(x, {}).get('note', '')) for x in ('다', '라')),
+             [((J.get(x, {}).get('why') or [''])[0][:100], J.get(x, {}).get('note')) for x in ('다', '라')])
+        t.ok(name + ' → rc 2', rc == 2, rc)
+        g = r.get('run_gate') or {}
+        why = ' '.join(g.get('why', []))
+        t.ok(name + ' → 완료 문 막힘 (outputs.md5 ↔ 실제 출력 · %s)' % ' · '.join(must),
+             g.get('ok') is False and 'outputs.md5' in why and '출력 손상' in why and all(m in why for m in must), g.get('why'))
+        return r
+
+    N = NSTEP
+    cases = (
+        ('F1 CR 쌍 덤프 끝 5 행 잘림 (줄 경계 · 리뷰 재현)', lambda O: cut_rows(dump(O, 'CR'), 5), ('md5 다름', 'CR/post/c_%d.txt' % N)),
+        ('F2 CR 쌍 덤프 바이트 0.9 에서 잘림 (줄 가운데 · 리뷰 재현)', lambda O: cut_bytes(dump(O, 'CR'), 0.9), ('md5 다름',)),
+        ('F3 CR 쌍 덤프 0 바이트', lambda O: cut_bytes(dump(O, 'CR'), 0.0), ('md5 다름',)),
+        ('F4 CR 원자 덤프 끝 3 행 잘림', lambda O: cut_rows(dump(O, 'CR', 'atom'), 3), ('md5 다름', 'CR/post/atom_%d.txt' % N)),
+        ('F5 BR 쌍 덤프 빠짐 (옮기다 끊김)', lambda O: os.remove(dump(O, 'BR')), ('적혔는데 없음', 'BR/post/c_%d.txt' % N)),
+        ('F6 A2 명령 restart 파일 반쯤 잘림', lambda O: cut_bytes(os.path.join(O, 'A2', 'rst', 'restart_cmd.bin'), 0.5),
+         ('md5 다름', 'A2/rst/restart_cmd.bin')),
+        ('F7 CR 쌍 덤프 숫자 한 글자 바뀜 (같은 크기 · 손댐)', lambda O: flip_digit(dump(O, 'CR')), ('md5 다름',)),
+        ('F8 적히지 않은 파일 더함 (A/post/extra.txt)', lambda O: wtxt(os.path.join(O, 'A', 'post', 'extra.txt'), 'x\n'),
+         ('적히지 않음', 'A/post/extra.txt')),
+        ('F9 outputs.md5 끝 줄 빠짐 (기록 잘림 · 줄 경계)', lambda O: edit_outputs(O, lambda L: L[:-1]), ('적히지 않음',)),
+        ('F10 outputs.md5 끝 줄 md5 가운데 잘림 (줄 끝 없음)', lambda O: edit_outputs(O, lambda L: L[:-1] + [L[-1][:20]], tail=''), ('꼴 밖 줄',)),
+        ('F11 outputs.md5 = 빈 파일 (실행기가 끝 단계에서 쓰는 중)', lambda O: wtxt(os.path.join(O, 'outputs.md5'), ''), ('적히지 않음',)),
+        ('F12 outputs.md5 에 꼴 밖 줄 하나 더함 (나머지 다 맞음)', lambda O: edit_outputs(O, lambda L: L + ['손으로 적은 줄']), ('꼴 밖 줄',)),
+        ('F13 outputs.md5 같은 이름 두 줄 (앞 = 틀린 md5 · 뒤 = 맞는 md5)',
+         lambda O: edit_outputs(O, lambda L: ['0' * 32 + '  ' + L[-1].split('  ', 1)[1]] + L), ('같은 이름',)),
+        ('F14 CR 쌍 덤프 = 같은 내용 파일로 가는 심볼릭 링크', to_symlink, ('적혔는데 없음', 'CR/post/c_%d.txt' % N)),
+        ('F15 outputs.md5 비UTF-8 바이트 (옮기다 깨짐)', lambda O: append_bytes(os.path.join(O, 'outputs.md5'), b'\xff\xfe\n'), ('읽기 문제',)),
+    )
+    for name, fn, must in cases:
+        d = tmpdir()
+        O = _full(d)
+        fn(O)
+        blocked(name, O, must)
+        if name.startswith('F1 '):
+            jp = os.path.join(O, 'compare_g2cp.json')
+            t.ok('F1 → JSON 에도 완료 문 막힘 (JSON 만 봐도 가른다)', os.path.exists(jp) and (json.load(open(jp)).get('run_gate') or {}).get('ok') is False)
+            p = subprocess.run([sys.executable, '-I', os.path.join(HERE, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
+            gl = [ln for ln in p.stdout.splitlines() if ln.startswith('완료 문 ')]
+            t.ok('F1 → 대조기 CLI rc 2 · 화면에 완료 문 막힘 줄 하나 (끝난 그대로가 아님 · outputs.md5)',
+                 p.returncode == 2 and len(gl) == 1 and gl[0].startswith('완료 문 막힘 — 실행기 출력이 끝난 그대로가 아니다') and 'outputs.md5' in gl[0],
+                 (p.returncode, gl, p.stdout[-300:]))
+
+    # 정직한 흐름 — 끝난 출력을 그대로 둠 · 그대로 복사함 (내용만 · 시각 바뀜 · 원 OUT 의 compare_g2cp.json 도 함께) = 결과가 같다
+    def sig(r, rc):
+        J = r.get('judgment', {})
+        return ([status_of(r, k) for k in ALL15], [(J.get(x, {}).get('status'), J.get(x, {}).get('n_mismatch'), J.get(x, {}).get('n_bit_equal'))
+                                                    for x in ('다', '라')], rc)
+    d = tmpdir()
+    O = _full(d)
+    r0, rc0 = c.compare_all(O, NSTEP, here=HERE, ref=REF40)
+    g0 = r0.get('run_gate') or {}
+    t.ok('P0 손대지 않음 → 완료 문 지남 · 판독 (다-값 맞음 · 판정 PASS · rc 0)',
+         g0.get('ok') is True and status_of(r0, '다-값') == '맞음' and r0['judgment']['라']['status'] == 'PASS' and rc0 == 0, (g0, rc0))
+    og = g0.get('outputs') or {}
+    t.ok('P0 → 적힌 파일 모두 md5 대조 (적힌 수 = 실제 수 = md5 같은 수 > 0)',
+         og.get('n_listed', 0) > 0 and og.get('n_listed') == og.get('n_actual') == og.get('n_md5_equal'), og)
+    O2 = os.path.join(d, 'copied')
+    shutil.copytree(O, O2, copy_function=shutil.copy)
+    r1, rc1 = c.compare_all(O2, NSTEP, here=HERE, ref=REF40)
+    t.ok('P1 그대로 복사 (copytree · 시각 바뀜) → 결과 같음 (예측 15 · 판정 · rc)', sig(r1, rc1) == sig(r0, rc0), (sig(r1, rc1), sig(r0, rc0)))
+    t.ok('P1 → 완료 문 지남', (r1.get('run_gate') or {}).get('ok') is True, r1.get('run_gate'))
+
+    # 실제 실행기 (가짜 lmp) 출력 — 실행기가 쓴 outputs.md5 (find · sort · md5sum 꼴) 를 그대로 대조 · 복사한 곳도 같음
+    d = tmpdir()
+    S = sandbox_copy(d)
+    env = fake_env(d)
+    O = os.path.join(d, 'O')
+    rc, out, err = run_runner(S, [str(NSTEP), O], env)
+    t.ok('P2 실행기 (가짜 lmp) rc 0', rc == 0, (rc, err[-300:]))
+    O2 = os.path.join(d, 'O_moved')
+    shutil.copytree(O, O2, copy_function=shutil.copy)
+    js = []
+    for X in (O, O2):
+        p = subprocess.run([sys.executable, '-I', os.path.join(S, CMPFILE), X, str(NSTEP)], capture_output=True, text=True, timeout=300)
+        gl = [ln for ln in p.stdout.splitlines() if ln.startswith('완료 문 ')]
+        t.ok('P2 %s → 대조기 CLI rc 0 · 완료 문 지남' % ('원래 OUT' if X == O else '복사한 OUT'), p.returncode == 0 and gl == ['완료 문 지남'],
+             (p.returncode, gl, p.stdout[-300:], p.stderr[-300:]))
+        jp = os.path.join(X, 'compare_g2cp.json')
+        js.append(json.load(open(jp)) if os.path.exists(jp) else {})
+    og = (js[1].get('run_gate') or {}).get('outputs') or {}
+    t.ok('P2 복사한 OUT → 실행기 기록의 파일 모두 md5 대조 (적힌 수 = 실제 수 = md5 같은 수 > 0)',
+         og.get('n_listed', 0) > 0 and og.get('n_listed') == og.get('n_actual') == og.get('n_md5_equal'), og)
+    t.ok('P2 → 원래 · 복사한 OUT 예측 15 같음 (다-값 맞음)',
+         [status_of(js[1], k) for k in ALL15] == [status_of(js[0], k) for k in ALL15] and status_of(js[1], '다-값') == '맞음',
+         [[status_of(jj, k) for k in ('다-값', '바')] for jj in js])
     return t
 
 

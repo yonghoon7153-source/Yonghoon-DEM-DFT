@@ -4,7 +4,7 @@
 
     python3 -I compare_g2cp.py OUT N     → OUT/compare_g2cp.json + 화면 표
     rc 0 = 대조 끝 (맞음 · 틀림 · 해당 없음 은 JSON 에) · rc 2 = '계산 못 함' 이 하나라도 (입력 결손 · 읽기 문제 · 인자 · 실행기 출력 아님 ·
-    실행기 출력이 끝나지 않음 · 등록 덱 아님 — 실행기 출력이 아니면 JSON 을 쓰지 않는다)
+    실행기 출력이 끝나지 않음 · 끝난 그대로가 아님 (출력 손상) · 등록 덱 아님 — 실행기 출력이 아니면 JSON 을 쓰지 않는다)
 
 등록 = 메모 docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전 · Codex Q6 답 반영) — 예측마다
 맞음 / 틀림 / 해당 없음 / 계산 못 함 + 등록 판정 (§3 · 허용폭 1e-5 · 열 중앙값 floor 그대로 · 키트 ul_gates.g2c_compare 와 같은 식).
@@ -30,6 +30,12 @@ shear 3 열 부호 반전 · 주기 표지 · deltaMax · torque 그대로 (torq
   판독한다 — 아니면 (멈춘 실행 · 도는 중인 실행) 예측 모두 계산 못 함 · 판정 NOT_COMPUTED + 기술 실패 표지 (JSON 은 그 표지를 담아 쓴다 · rc 2).
 - 규칙 ⑩ 보강 (02): md5 기록에서 같은 이름 줄은 hash 꼴 (32 자리 소문자 16 진) 이 아니어도 센다 (꼴 밖 줄의 이름 = 모름 · 이름을 못 읽는 줄 =
   기록 전체 모름) · 실행 파일 md5 의 두 기록 (lmp_identity.txt 의 lmp_md5 ↔ OUT/inputs.md5 첫 줄) 이 어긋나면 신원 = 모름.
+
+11-11 3 회차 내부 반박 리뷰 G2CPR3-01 · 02 고침 (결과 전 · §3 판정 식 · 허용폭 그대로 · 판정의 NOT_COMPUTED 사유 ⑪ 을 '끝난 그대로가 아님' 까지 넓힘):
+- 완료 문 보강 (메모 §0-3 규칙 ⑪ 보강 · 01): OUT/outputs.md5 에 적힌 파일마다 md5 를 다시 계산해 실제 파일과 대조 · 적힌 집합 = 실제 출력 집합
+  (실행기와 같은 정의 — 깊이 3 의 <폴더>/post/* · <폴더>/rst/* 보통 파일) · 줄 꼴 = 실행기 꼴 · 같은 이름 두 줄 = 모호 — 어긋나면 (끝난 뒤 덤프 ·
+  restart 잘림 · 빠짐 · 더해짐 · 손댐 · 옮기다 · 복사하다 끊김) 예측 모두 계산 못 함 · 판정 NOT_COMPUTED + 기술 실패 표지 (사유 = 출력 손상).
+- OUT 가드 (규칙 ⑨ · 02): 11-04 기록 폴더 = run_40000/ · dry/ — 실제 경로 · 그 안 · 조상 = 거부 (첫 구현은 run_40000/ 만 봤다).
 """
 from __future__ import annotations
 
@@ -1160,14 +1166,15 @@ def _within(a, b):
 
 def out_guard(O, here, ref):
     """G2CPR-11 — 읽고 쓰는 OUT = 실행기 출력 (lmp_identity.txt + 팔 폴더 아홉) 만 · 샌드박스 (덱) 폴더 · 그 조상 · 11-04 기록 폴더 (그 안 · 조상) = 거부.
+    11-04 기록 폴더 = `ref` (run_40000) · 샌드박스의 dry/ (G2CPR3-02 · 메모 규칙 ⑨ · 실행기 OUT 자리 문과 같은 둘) — 실제 경로 (링크 · .. 를 푼 것) 로 본다.
     → 거부 사유 목록 (빈 목록 = 받음).  거부하면 대조기는 아무것도 쓰지 않는다."""
     ro, rh = os.path.realpath(O), os.path.realpath(here)
     if _within(rh, ro):
         return [f'OUT = 샌드박스 (덱) 폴더이거나 그 조상 ({O}) — 덱 · 기록 폴더에 쓰지 않는다']
-    if ref:
-        rr = os.path.realpath(ref)
+    for rec in ([ref] if ref else []) + [os.path.join(here, 'dry')]:
+        rr = os.path.realpath(rec)
         if _within(ro, rr) or _within(rr, ro):
-            return [f'OUT = 11-04 기록 폴더 (또는 그 안 · 조상) ({O}) — 기록 폴더에 쓰지 않는다']
+            return [f'OUT = 11-04 기록 폴더 {os.path.basename(os.path.normpath(rec))}/ (또는 그 안 · 조상 · 실제 경로) ({O}) — 기록 폴더에 쓰지 않는다']
     miss = (['lmp_identity.txt'] if not os.path.isfile(os.path.join(O, 'lmp_identity.txt')) else []) + \
         [a + '/' for a in ARMS if not os.path.isdir(os.path.join(O, a))]
     if miss:
@@ -1197,17 +1204,96 @@ def deck_gate(O, here):
 
 
 _RC_OK = r' rc 0 sec -?[0-9]+'      # 실행기 go 가 팔마다 쓰는 줄 `<팔> rc <rc> sec <초>` 의 끝난 꼴 (초 = date 차 · 시계가 뒤로 가면 음수일 수 있다)
+_OUT_LINE = re.compile(r'([0-9a-f]{32})  (.+)')   # 실행기 끝 단계 md5sum 줄 꼴 (글 모드 · md5 32 자리 소문자 16 진 + 빈칸 둘 + 이름) — 이 꼴만 받는다
+
+
+def output_files(O):
+    """실행기 outputs.md5 와 같은 집합 정의 (run_g2cp.sh 끝 단계 — `find . -mindepth 3 -maxdepth 3 -type f \\( -path './*/post/*' -o
+    -path './*/rst/*' \\)`) — OUT 아래 `<폴더>/post/<파일>` · `<폴더>/rst/<파일>` 의 보통 파일 이름 집합.  링크는 따라가지 않고 넣지도 않는다 (find -P -type f)."""
+    out = set()
+    with os.scandir(O) as it1:
+        for e1 in it1:
+            if not e1.is_dir(follow_symlinks=False):
+                continue
+            with os.scandir(e1.path) as it2:
+                for e2 in it2:
+                    if e2.name not in ('post', 'rst') or not e2.is_dir(follow_symlinks=False):
+                        continue
+                    with os.scandir(e2.path) as it3:
+                        for e3 in it3:
+                            if e3.is_file(follow_symlinks=False):
+                                out.add(e1.name + '/' + e2.name + '/' + e3.name)
+    return out
+
+
+def outputs_check(O):
+    """G2CPR3-01 (메모 §0-3 규칙 ⑪ 보강) — OUT/outputs.md5 (실행기가 끝 단계에서 쓴 기록) ↔ 실제 출력.  끝난 그대로 =
+    줄마다 실행기 꼴 (`<md5 32 자리 소문자 16 진>  <이름>`) ∧ 같은 이름 두 줄 없음 (규칙 ⑩ 과 같은 뜻) ∧ 적힌 집합 = 실제 출력 집합 (output_files) ∧
+    적힌 파일마다 다시 계산한 md5 = 적힌 md5.  집합을 먼저 견주고 md5 는 둘 다에 있는 이름 (OUT 안 보통 파일) 만 계산한다.
+    → (어긋남 사유 목록 · 자세히) — 빈 목록 = 끝난 그대로 (옮기거나 그대로 복사한 출력도 같다 — 내용만 본다)."""
+    det = dict(n_listed=0, n_actual=None, n_md5_equal=0, md5_differ=[], listed_missing=[], unlisted=[], n_bad_lines=0, dup_names=[])
+    try:
+        raw = open(os.path.join(O, 'outputs.md5'), 'rb').read().decode('utf-8')
+        actual = output_files(O)
+    except (OSError, UnicodeDecodeError) as e:
+        return [f'outputs.md5 · 출력 폴더 읽기 문제 ({type(e).__name__}: {str(e)[:80]})'], det
+    lines = raw.split('\n')
+    if lines and lines[-1] == '':
+        lines.pop()
+    listed, dup, bad = {}, set(), 0
+    for ln in lines:
+        m = _OUT_LINE.fullmatch(ln)
+        if not m:
+            bad += 1
+            continue
+        if m.group(2) in listed:
+            dup.add(m.group(2))
+        listed[m.group(2)] = m.group(1)
+    missing, unlisted = sorted(set(listed) - actual), sorted(actual - set(listed))
+    differ, n_eq = [], 0
+    for n in sorted((set(listed) & actual) - dup):
+        try:
+            same = md5(os.path.join(O, n)) == listed[n]
+        except OSError:
+            same = False
+        n_eq += same
+        if not same:
+            differ.append(n)
+    det.update(n_listed=len(listed), n_actual=len(actual), n_md5_equal=n_eq, md5_differ=differ[:10], listed_missing=missing[:10],
+               unlisted=unlisted[:10], n_bad_lines=bad, dup_names=sorted(dup)[:10])
+    show = lambda xs: ' · '.join(xs[:3]) + (' …' if len(xs) > 3 else '')
+    why = []
+    if bad:
+        why.append(f'꼴 밖 줄 {bad} (실행기 줄 꼴 `<md5 32 자리 소문자 16 진>  <이름>` 아님 · 잘린 · 손댄 기록)')
+    if dup:
+        why.append(f'같은 이름 두 줄 이상 {len(dup)} (모호한 기록 · 규칙 ⑩): {show(sorted(dup))}')
+    if missing:
+        why.append(f'적혔는데 없음 {len(missing)} (빠짐 · 보통 파일 아님 — 링크 · 폴더 · 다른 이름): {show(missing)}')
+    if unlisted:
+        why.append(f'적히지 않음 {len(unlisted)} (더한 파일 · 잘린 기록): {show(unlisted)}')
+    if differ:
+        why.append(f'md5 다름 {len(differ)} (덤프 · restart 잘림 · 손댐): {show(differ)}')
+    return why, det
 
 
 def run_gate(O):
     """G2CPR2-01 (메모 §0-3 규칙 ⑪) — 완료 문: 실행기 (run_g2cp.sh) 가 팔 아홉을 끝낸 OUT 만 판독한다.
     끝난 실행 = OUT/outputs.md5 있음 (실행기가 끝 단계에서만 쓴다) ∧ OUT/STOP.txt 없음 (실행 중 멈춤 rc 4 의 표지) ∧
-    OUT/rc.txt = 팔 아홉이 실행 차례대로 한 줄씩 `<팔> rc 0 sec <초>` (rc ≠ 0 · 신호 줄 · 같은 팔 두 줄 · 빠진 팔 · 다른 차례가 있으면 아님).
-    아니면 (멈춘 실행 · 아직 도는 실행 · 어긋난 기록) 판독하지 않는다 — 실행 실패 = 기술 실패 (§3) 를 값 불일치 (FAIL) 나 맞음 (PASS) 으로 적지 않는다.
-    보지 않는 것 = 끝난 뒤 덤프가 바뀌었는지 (outputs.md5 의 md5 ↔ 덤프 파일 · 메모 §0-5)."""
+    OUT/rc.txt = 팔 아홉이 실행 차례대로 한 줄씩 `<팔> rc 0 sec <초>` (rc ≠ 0 · 신호 줄 · 같은 팔 두 줄 · 빠진 팔 · 다른 차례가 있으면 아님) ∧
+    (G2CPR3-01 · 규칙 ⑪ 보강) outputs.md5 = 실제 출력 (outputs_check — 적힌 파일 md5 · 집합 · 줄 꼴 · 같은 이름).
+    아니면 (멈춘 실행 · 아직 도는 실행 · 어긋난 기록 · 끝난 뒤 출력 손상) 판독하지 않는다 — 실행 실패 · 출력 손상 = 기술 실패 (§3) 를 값 불일치 (FAIL) 나
+    맞음 (PASS) 으로 적지 않는다.  보지 않는 것 = 기록 자신 (lmp_identity.txt · inputs.md5 · rc.txt) 이 끝난 뒤 바뀌었는지 · 덤프와 outputs.md5 를 함께
+    고쳐 쓴 출력 (md5 기록은 위조 막이가 아니다 · 메모 §0-5)."""
     why = []
+    unfinished = False
+    outputs = None
     if not os.path.isfile(os.path.join(O, 'outputs.md5')):
         why.append('outputs.md5 없음 (실행기가 끝 단계까지 가지 못했다 · 도는 중)')
+        unfinished = True
+    else:
+        bad_out, outputs = outputs_check(O)
+        if bad_out:
+            why.append('outputs.md5 ↔ 실제 출력 어긋남 (끝난 뒤 출력 손상 — 옮기다 · 복사하다 끊김 · 손댐 = 기술 실패): ' + '; '.join(bad_out))
     ps = os.path.join(O, 'STOP.txt')
     if os.path.lexists(ps):
         try:
@@ -1215,16 +1301,21 @@ def run_gate(O):
         except OSError:
             first = []
         why.append('STOP.txt 있음 (실행기가 멈췄다' + (': ' + first[0][:120] if first else '') + ')')
+        unfinished = True
     prc = os.path.join(O, 'rc.txt')
     if not os.path.isfile(prc):
         why.append('rc.txt 없음')
+        unfinished = True
     else:
         lines = open(prc, encoding='utf-8', errors='replace').read().splitlines()
         off = [ln for a, ln in zip(ARMS, lines) if not re.fullmatch(re.escape(a) + _RC_OK, ln)]
         if len(lines) != len(ARMS) or off:
             why.append(f'rc.txt ≠ 팔 아홉이 차례대로 "<팔> rc 0 sec <초>" 한 줄씩 ({len(lines)} 줄'
                        + (f' · 어긋난 첫 줄 {off[0][:60]!r}' if off else '') + ')')
-    return dict(ok=not why, why=why, need=['outputs.md5 있음', 'STOP.txt 없음', 'rc.txt = 팔 아홉 차례대로 rc 0'])
+            unfinished = True
+    return dict(ok=not why, why=why, unfinished=unfinished, damaged=bool(why) and not unfinished, outputs=outputs,
+                need=['outputs.md5 있음', 'STOP.txt 없음', 'rc.txt = 팔 아홉 차례대로 rc 0',
+                      'outputs.md5 = 실제 출력 (적힌 파일 md5 · 적힌 집합 = 실제 집합 · 줄 꼴 · 같은 이름 없음)'])
 
 
 def _finish(res, O, rc):
@@ -1256,14 +1347,19 @@ def compare_all(O, N, here=HERE, ref=None):
     rg = run_gate(O)
     res['run_gate'] = rg
     if not rg['ok']:        # G2CPR2-01 — 멈춘 · 도는 중인 실행기 출력은 판독하지 않는다 (기술 실패를 맞음 · 틀림 · PASS · FAIL 로 적지 않는다)
-        why = ['실행기 출력이 끝나지 않았다 (멈춤 · 도는 중 · 기록 어긋남 = 기술 실패) — 판독 대상 아님: ' + ' · '.join(rg['why'])]
-        short = ['실행기 출력이 끝나지 않았다 — 판독 대상 아님 (완료 문 막힘 · 기술 실패 · 사유 = 완료 문 줄)']
+        if rg['unfinished']:
+            why = ['실행기 출력이 끝나지 않았다 (멈춤 · 도는 중 · 기록 어긋남 = 기술 실패) — 판독 대상 아님: ' + ' · '.join(rg['why'])]
+            short = ['실행기 출력이 끝나지 않았다 — 판독 대상 아님 (완료 문 막힘 · 기술 실패 · 사유 = 완료 문 줄)']
+            note, what = '실행기 멈춤 · 기술 실패 — 등록 판정 (§3) 은 끝난 실행에만 (→ UNCONFIRMED)', '실행기 출력이 끝나지 않음'
+        else:               # G2CPR3-01 — 끝난 뒤 출력 손상 (outputs.md5 ↔ 실제 출력 어긋남 · 옮기다 · 복사하다 끊김 · 손댐)
+            why = ['실행기 출력이 끝난 그대로가 아니다 (끝난 뒤 출력 손상 = 기술 실패) — 판독 대상 아님: ' + ' · '.join(rg['why'])]
+            short = ['실행기 출력이 끝난 그대로가 아니다 — 판독 대상 아님 (완료 문 막힘 · 출력 손상 · 기술 실패 · 사유 = 완료 문 줄)']
+            note, what = '끝난 뒤 출력 손상 · 기술 실패 — 등록 판정 (§3) 은 끝난 그대로의 실행기 출력에만 (→ UNCONFIRMED)', '실행기 출력이 끝난 그대로가 아님 (출력 손상)'
         res['predictions'] = {k: dict(status='계산 못 함', why=list(short)) for k in ORDER}
         for lab in ('다', '라'):
-            res['judgment'][lab] = dict(status='NOT_COMPUTED', why=list(why), mode='g2cp', technical_failure=True,
-                                        note='실행기 멈춤 · 기술 실패 — 등록 판정 (§3) 은 끝난 실행에만 (→ UNCONFIRMED)')
-        res['exceptions'] = dict(note='실행기 출력이 끝나지 않음 — 판독 안 함')
-        res['reports'] = dict(note='실행기 출력이 끝나지 않음 — 보고 안 함')
+            res['judgment'][lab] = dict(status='NOT_COMPUTED', why=list(why), mode='g2cp', technical_failure=True, note=note)
+        res['exceptions'] = dict(note=what + ' — 판독 안 함')
+        res['reports'] = dict(note=what + ' — 보고 안 함')
         return _finish(res, O, 2)
 
     def guard(name, fn):
@@ -1354,7 +1450,9 @@ def main(argv):
               + (f' — {j["note"]}' if j.get('note') else ''))
     g0 = res.get('run_gate')
     if g0 is not None:
-        print('완료 문 ' + ('지남' if g0.get('ok') else '막힘 — 실행기 출력이 끝나지 않았다 (판독 대상 아님 · 기술 실패): ' + '; '.join(g0.get('why', []))))
+        lead = ('실행기 출력이 끝나지 않았다 (판독 대상 아님 · 기술 실패)' if g0.get('unfinished')
+                else '실행기 출력이 끝난 그대로가 아니다 (출력 손상 · 판독 대상 아님 · 기술 실패)')
+        print('완료 문 ' + ('지남' if g0.get('ok') else '막힘 — ' + lead + ': ' + '; '.join(g0.get('why', []))))
     g = res.get('deck_gate')
     if g is not None:
         print('등록 덱 문 ' + ('지남' if g.get('ok') else '막힘 — ' + '; '.join(g.get('why', []))))
