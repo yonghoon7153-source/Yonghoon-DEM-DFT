@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 265편 · 생성 2026-11-11
+> digest 266편 · 생성 2026-11-11
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -56,7 +56,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (59편)
+## 접촉역학 · 소성 (DEM 이론) (60편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -89,6 +89,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `johnson1971_jkr_surface_energy_contact_elastic_solids` | Surface energy and the contact of elastic solids — 표면 에너지가 있는 두 탄성 구의 접촉: 무하중에서도 유한한 접촉 반경 a³ = R(6γπR)/K · 떼는 힘 P = −(3/2)γπR (탄성률 무관) · γ = "energy of adhesion of both surfaces"  | theory (adhesive elastic contact — energy balance, JKR) + ex | 2026-10-13 | 🖼 14 |
 | `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` | 메카노퓨전 (MF) 으로 NCM811 위에 Li₆PS₅Cl 껍질 (80:20 ≈500 nm · 90:10 ≈350 nm) 을 만들면 같은 SE 총량에서 SE 덩어리 · 공극이 사라지고 이온 경로가 산다 — 수송 tortuosity (τ²_ion = Φ_SE·σ_bulk/σ_eff) 2.38 → 2.21 (80:20) ·  | exp (메카노퓨전 SE 코팅 · FIB-EDS 껍질 두께 · XRD/XPS · 전자 차단 셀 EIS → σ | 2026-10-13 | 🖼 27 |
 | `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` | 메카노퓨전 (Hosokawa Picoline + Nobilta · 1,000–10,000 rpm · 5–60 min) 으로 단결정 NCM82 위에 Li₃InCl₆ (+ CB) 껍질 — TEM 두께 ≈5 nm (99:1:0) · ≈100 nm (80:20:1) · XPS 피복률 γ 0.53 → 1.00 · 저압 (3.45  | exp + DEM (메카노퓨전 건식 코팅 · SEM/EDX · 입자 분할 AI · (S)TEM · SPED  | 2026-10-13 | 🖼 46 |
+| `kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation` | 순수 황화물 SE 를 누른 채 (in situ · ≤ 103 MPa) X 선 CT 로 본 densification (입자 파쇄 → 틈 메움 → 상온 가압 소결) 과 XCT 복셀 유한체적 σ_ion ↔ EIS — 주 재료 Li₆PS₅Br (75–150 µm 체 분급) · 계산 ÷ 실측 1.80 (8.7 MPa) → 1.07 | experiment + image-based simulation (in situ XCT 가압 셀 · EIS  | 2026-11-12 | 🖼 44 |
 | `kogutetsion2002_ep_sphere_rigid_flat` | 변형 탄소성 구 ↔ 강체 평판 접촉의 탄소성 FEM 해석 (KE 모델) — Kogut & Etsion (J. Appl. Mech. 2002) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` | 탄소 인터레이어 ↔ LPSCl 계면의 박리 인성 Γ 가 anode-free 전지의 Li 석출 위치를 정한다 — lamination(제조 압착)압 100 → 400 MPa 에서 Γ 9 → 41 J m⁻² · 문턱 ≈10 J m⁻² · 180° peel + tape 소성굽힘 보정 — Liao · Zeng · Mulla · M | exp (180° peel 박리시험 + tape 소성굽힘 보정 해석 · adhesive/cohesive fa | 2026-09-23 | 🖼 17 |
 | `luding2008_cohesive_frictional_contact_models` | 점착·마찰 분말의 접촉모델 (인장 가능 LAW) — Luding (Granular Matter 2008) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 5 |

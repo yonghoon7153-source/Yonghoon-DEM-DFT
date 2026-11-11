@@ -1,0 +1,1356 @@
+{
+ "slug": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) X-ray computed tomography high-pressure Electrochemical Symmetric Cell (XESC). ① Upside current collector, ② solid electrolyte, ③ PEEK side wall, ④ downside current collector, ⑤ spring, ⑥ duralumin body, ⑦ screw. (b) Nyquist plot and equivalent circuit with the XESC. R1: Bulk resistance, R2: Charge transfer resistance, C: Capacity components, Zw: Warburg impedance.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.0,
+    55.4,
+    468.2,
+    217.7
+   ],
+   "w": 1468,
+   "h": 722,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.848,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    222.3
+   ],
+   "src_native": [
+    1422,
+    676
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven; the auto caption also swallowed body text, replaced by the printed caption), re-cut from the embedded native raster (xref 39, 1422×676 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "측정 장치 (XESC) 와 EIS 등가회로. 시료 = PEEK 원통 안 분말 · 스프링 + 나사로 가압 (최대 ≈100 MPa = PEEK 내구 한계) · 스프링 변형은 160 kV 경 X 선 영상으로 읽어 압력으로 환산.  ⚠ 본문은 PEEK 원통 = ②, 집전체 = ① · ③ 이라 적는데 캡션은 ② = 고체전해질 · ③ = PEEK 옆벽 · ④ = 아래 집전체 — 번호 하나씩 어긋남."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Numerical region and numerical model (gray: electrode; yellow: solid electrolyte). (For interpretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    537.6,
+    287.5,
+    707.1
+   ],
+   "w": 1078,
+   "h": 752,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.114,
+   "auto_bbox": [
+    31.6,
+    426.4,
+    299.4,
+    711.7
+   ],
+   "src_native": [
+    1033,
+    706
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop also took in Eqs. (1–1)–(3) above the figure), re-cut from the embedded native raster (xref 38, 1033×706 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "계산 영역 = XCT 영상 (노랑 = SE) 을 가상 전극 (회색) 두 장 사이에 끼운 것 · 위 1 V / 아래 0 V.  어느 압력의 영상인지 캡션 · 본문에 없음 [미확인].  100 µm 막대 = 126 px 로 재면 정육면체 렌더 폭 ≈0.49 mm (두 면 · 원근 — 대략) ↔ 인쇄 350³ × 1.62 µm = 567 µm 와 맞지 않음 (§3-8)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a)Ionic conductivity, (b) X-ray computed tomography images of solid electrolyte (white: solid electrolyte; black: pore), and (c) strain as a function of applied pressure (increased from 0 MPa). Dotted lines in (c) are estimated strains at each value of Young’s modulus (E).",
+   "rotated_deg": 0,
+   "bbox": [
+    97.7,
+    55.4,
+    497.5,
+    708.7
+   ],
+   "w": 1711,
+   "h": 2768,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.81,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    565.7,
+    713.3
+   ],
+   "src_native": [
+    1665,
+    2722
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 71, 1665×2722 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 순수 황화물 (Li₆PS₅Br · 75–150 µm) 을 누른 채 (in situ) 본 σ · 단면 · 변형률 — 이 논문의 핵심 그림.  기공 숫자는 없고 단면은 정성 (흰 = SE · 검정 = 기공)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a)Ionic conductivity, (b) X-ray computed tomography images of solid electrolyte (white: solid electrolyte; black: pore), and (c) strain as a function of applied pressure (decreased from 103.0 MPa). Dotted lines in (c) are estimated strains at each value of Young’s modulus (E).",
+   "rotated_deg": 0,
+   "bbox": [
+    308.6,
+    55.4,
+    556.4,
+    491.6
+   ],
+   "w": 1078,
+   "h": 1863,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.826,
+   "auto_bbox": [
+    300.6,
+    49.4,
+    565.8,
+    496.2
+   ],
+   "src_native": [
+    1032,
+    1817
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 76, 1032×1817 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 감압 (103.0 → ≈28 MPa · 0 까지 아님) — σ −20 % [카드 산술 · 판독] · 구조 유지 · 변형률 변화는 오차 막대 (±0.02) 안.  (c) 의 기준선은 감압할수록 변형률이 커지는 쪽으로 그려졌다 (탄성 회복이면 줄어야 한다 — 원문 그림의 방향 문제)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Ionic conductivity as a function of applied pressure (a)increased from 0 MPa, and (b) decreased from 103.0 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.6,
+    55.4,
+    287.4,
+    418.8
+   ],
+   "w": 1078,
+   "h": 1560,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.939,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    297.0,
+    423.5
+   ],
+   "src_native": [
+    1032,
+    1514
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven; the auto caption also swallowed body text, replaced by the printed caption), re-cut from the embedded native raster (xref 103, 1032×1514 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ XCT 복셀 유한체적 σ (빨강) ↔ EIS (검정) — 같은 압력에서 계산 ÷ 실측 1.80 (8.7 MPa) → 1.15 (63) → 1.07 (104) [판독 · 카드 산술].  저자 문장 = 'almost the same'."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Ionic conductivity as a function of applied pressure for various solid electrolytes (increased from 0 MPa). (a) Li6PS5Cl, (b) LPS glass ceramic, (c) LPS glass.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.6,
+    55.4,
+    556.5,
+    599.9
+   ],
+   "w": 1079,
+   "h": 2313,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.936,
+   "auto_bbox": [
+    300.6,
+    49.4,
+    565.8,
+    604.5
+   ],
+   "src_native": [
+    1033,
+    2268
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 102, 1033×2268 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "다른 황화물 셋 — Li₆PS₅Cl 은 계산 ÷ 실측 2.3–2.6 (9.4 MPa) → 1.03 (96) [판독 · 카드 산술] · LPS 유리세라믹 0.70–1.28 · LPS 유리 0.94–1.08 (양쪽으로 흩어짐).  세 재료의 합성 · 입경 · 조성은 원문에 없음."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Numerical simulation distribution results of (a) potential and (b) relative ion flux density in low-pressure (8.4 MPa) X-ray computed tomography image.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.0,
+    55.4,
+    468.2,
+    260.2
+   ],
+   "w": 1463,
+   "h": 886,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.45,
+   "auto_bbox": [
+    33.8,
+    49.4,
+    565.7,
+    264.8
+   ],
+   "src_native": [
+    1422,
+    853
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 110, 1422×853 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "8.4 MPa 단면: 전위 등위선이 입자 목 (접촉) 에서 휘고 이온 흐름이 좁은 접촉에 몰린다 (빨강) — 접촉망 모델의 '협착' 을 복셀 해에서 보는 그림.  흰 (기공) 면적 ≈31 % [판독 · 단면 한 장]."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Numerical simulation distribution results of (a) potential and (b) relative ion flux density in high-pressure (103.0 MPa) X-ray computed tomography image.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.0,
+    298.5,
+    468.2,
+    501.6
+   ],
+   "w": 1457,
+   "h": 889,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.341,
+   "auto_bbox": [
+    31.6,
+    292.5,
+    567.8,
+    506.2
+   ],
+   "src_native": [
+    1422,
+    846
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven; the auto caption also swallowed body text, replaced by the printed caption), re-cut from the embedded native raster (xref 109, 1422×846 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "103.0 MPa 단면: 등위선 거의 평행 · 흐름 고름 — 흰 (기공) 면적 ≈1.2 % (흐름 지도 · 경계 화소까지 ≤ 4.3 %) · 전위 지도 1.1 % (등위선 검은 화소까지 ≤ 5.5 %) [판독 · 단면 한 장 · 복셀 1.62 µm 미만 기공은 안 보임]."
+  },
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "page": 1,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract (PDF p.1, unnumbered): rendered 3D X-ray CT volumes (yellow = solid electrolyte) at four pressures with arrows to the corresponding points of an 'Ion condictivity' (sic) vs Pressure [MPa] plot — red 'Simulation', blue 'Experiment' (same data as Fig. 5(a); axis ticks 0 / 1 and 0 / 100 only, no unit on the conductivity axis).",
+   "rotated_deg": 0,
+   "bbox": [
+    202.0,
+    298.9,
+    427.9,
+    407.9
+   ],
+   "w": 989,
+   "h": 501,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.583,
+   "src_native": [
+    941,
+    454
+   ],
+   "native_dpi": 300,
+   "manual_crop": "graphical abstract (no caption, not found by the caption-anchored tool) — cut from the embedded native raster (xref 456, 941×454 px = 300 dpi): ink bounding box → uniform 25 px white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그래픽 초록 = Fig. 5(a) 의 요약판 (같은 점) + 네 압력의 3D 렌더 — 압력이 오를수록 기공이 사라지는 그림.  축 눈금은 0 / 1 · 0 / 100 뿐이라 숫자는 Fig. 5(a) 에서 읽는다."
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 3,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1(a) — XESC schematic: ① upside current collector, ② solid electrolyte, ③ PEEK side wall, ④ downside current collector, ⑤ spring, ⑥ duralumin body, ⑦ screw; X-ray window across the sample (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "w": 698,
+   "h": 722,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.73,
+   "src_native": [
+    1422,
+    676
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel (a) of Fig. 1 — cut from the embedded native raster (xref 39, 300 dpi, no resampling): panel box [0, 0, 650, 676] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "가압 셀 도면 — 스프링이 판을 밀고 나사로 조인다 (하중 제어 · 판 고정 아님).  ⚠ 본문의 번호 (PEEK = ② · 집전체 = ① · ③) 는 이 도면과 어긋난다."
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 3,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1(b) — typical Nyquist plot of the XESC (Z′, −Z″ in ohm, 0–100×10³) and the equivalent circuit R1 + C ∥ (R2 + Zw); R1 = bulk resistance used for σ (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "w": 806,
+   "h": 635,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.951,
+   "src_native": [
+    1422,
+    676
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel (b) of Fig. 1 — cut from the embedded native raster (xref 39, 300 dpi, no resampling): panel box [663, 0, 1422, 676] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "σ = R1 (벌크) 에서 — 시료 두께 · 면적 (σ 환산 기하) 은 원문에 없음 [미확인].  어느 압력의 스펙트럼인지도 없음."
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 4,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — ionic conductivity [mS/cm] of Li6PS5Br vs applied pressure, increasing from 0 MPa (EIS, 25 °C) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 1253,
+   "h": 894,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.955,
+   "src_native": [
+    1665,
+    2722
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel (a) of Fig. 3 — cut from the embedded native raster (xref 71, 300 dpi, no resampling): panel box [0, 0, 1665, 846] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 가압 중 σ: 0.17 (8.8) · 0.32 (23.8) · 0.47 (34.0) · 0.51 (46.6) · 0.65 (63.1) · 0.71 (74.7) · 0.77 (90.9) · 0.79 mS/cm (103.8 MPa) [판독 · digitized.csv]."
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 4,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — in situ X-ray CT slices (top XY, bottom ZX; white = SE, black = pore) at 8.4, 31.4, 62.2 and 103.0 MPa, pressure increasing; scale bar 200 µm (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 1711,
+   "h": 898,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.49,
+   "src_native": [
+    1665,
+    2722
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel (b) of Fig. 3 — cut from the embedded native raster (xref 71, 300 dpi, no resampling): panel box [0, 906, 1665, 1754] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 누른 채 단면: 8.4 MPa 큰 틈 · 작은 접촉 → 31.4 MPa 입자 파쇄 · 조각이 기공 메움 → 103.0 MPa 경계가 거의 안 보임 ('상온 가압 소결').  인쇄 영상 검은 면적 분율 [판독 · 문턱 64–128]: XY 27–36 / 15–25 / 8–18 / 4–14 % · ZX 28–40 / 14–24 / 6–16 / 6–18 % — 고압에서는 문턱 민감도가 신호보다 크다.  원 지름 ≈317–322 px = ≈0.58 mm (200 µm = 110 px)."
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 4,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3(c) — strain [-] vs applied pressure (increasing); dotted lines = estimated strain for E = 25 MPa, 250 MPa, 2.5 GPa and 25 GPa (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 1341,
+   "h": 892,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.944,
+   "src_native": [
+    1665,
+    2722
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel (c) of Fig. 3 — cut from the embedded native raster (xref 71, 300 dpi, no resampling): panel box [0, 1878, 1665, 2722] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 변형률 0.26 (14.5) · 0.38 (27.1 · 33.9) · 0.43 (46.2) · 0.45 (61.1) · 0.47 (73.7) · 0.49 (89.3) · 0.47 (99.9 MPa) [판독] — 할선 55 → 211 MPa · 34 → 100 MPa 접선 ≈0.7 GPa [카드 산술] · 처음 충전 상대밀도 ≤ 1 − 0.49 ≈ 0.51 [카드 산술 · 상한]."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 5,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — ionic conductivity vs applied pressure while decreasing from 103.0 MPa (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 823,
+   "h": 605,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.959,
+   "src_native": [
+    1032,
+    1817
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel (a) of Fig. 4 — cut from the embedded native raster (xref 76, 300 dpi, no resampling): panel box [0, 0, 1032, 557] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "감압 σ: 0.79 (103.8) · 0.76 (84.4) · 0.73 (61.2) · 0.71 (51.4) · 0.63 mS/cm (28.2 MPa) [판독] — 같은 압력의 가압 값보다 1.65 배 (28 MPa) · 1.30 (51) · 1.15 (61) · 1.02 (84) [카드 산술] = 치밀화가 비가역."
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 5,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — X-ray CT slices (XY, ZX) at 103.0, 50.0 and 27.8 MPa during depressurization; scale bar 200 µm (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 1078,
+   "h": 638,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.555,
+   "src_native": [
+    1032,
+    1817
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel (b) of Fig. 4 — cut from the embedded native raster (xref 76, 300 dpi, no resampling): panel box [0, 635, 1032, 1224] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "감압 단면: 구조 유지 (저자 'relatively unaffected').  원 지름 ≈220 px = ≈0.61 mm (200 µm = 72 px) [판독]."
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 5,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — strain vs applied pressure during depressurization; dotted lines from the 103 MPa point for E = 25 MPa, 250 MPa, 2.5 GPa and 25 GPa (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 827,
+   "h": 563,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.95,
+   "src_native": [
+    1032,
+    1817
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel (c) of Fig. 4 — cut from the embedded native raster (xref 76, 300 dpi, no resampling): panel box [0, 1301, 1032, 1817] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 감압 변형률 0.462 (103.8) → 0.473 (28.1) [판독 · 오차 막대 ±0.02] — 되돌아옴 (springback) 이면 줄어야 하는데 늘었다 · 25 GPa 면 −0.003 · 2.5 GPa 면 −0.030 [카드 산술] → 이 자료로는 '25 GPa' 를 가를 수 없다.  기준선도 감압하면 커지는 쪽으로 그려졌다."
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 6,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) — ionic conductivity measured with EIS (black) vs calculated with X-ray CT (red), pressure increasing from 0 MPa (Li6PS5Br) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 1067,
+   "h": 764,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.934,
+   "src_native": [
+    1032,
+    1514
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel (a) of Fig. 5 — cut from the embedded native raster (xref 103, 300 dpi, no resampling): panel box [0, 0, 1032, 716] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 계산 0.31 (8.7) · 0.56 (32.0) · 0.75 (63.1) · 0.84 (103.8 MPa) [판독] ↔ EIS → 계산 ÷ 실측 1.80 · 1.20–1.27 · 1.15 · 1.07 [카드 산술] — 저압일수록 계산이 높다 (복셀 FV = 접촉 저항 없음 · 해상도 미만 틈 없음)."
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 6,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — ionic conductivity measured with EIS (black) vs calculated with X-ray CT (red), pressure decreasing from 103.0 MPa (Li6PS5Br) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 1061,
+   "h": 775,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.94,
+   "src_native": [
+    1032,
+    1514
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel (b) of Fig. 5 — cut from the embedded native raster (xref 103, 300 dpi, no resampling): panel box [0, 786, 1032, 1514] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "감압 가지: 계산 ÷ 실측 1.07 (103.8) · 1.08 (51.4) · 1.07–1.09 (≈32 MPa) [카드 산술].  ⚠ 계산점 x ≈32.0 MPa 인데 감압 CT 영상은 27.8 MPa 로 표기 [판독]."
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 6,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — Li6PS5Cl: ionic conductivity, EIS (black) vs X-ray CT calculation (red), pressure increasing (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 977,
+   "h": 716,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.934,
+   "src_native": [
+    1033,
+    2268
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel (a) of Fig. 6 — cut from the embedded native raster (xref 102, 300 dpi, no resampling): panel box [0, 0, 1033, 669] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 같은 계열 LPSCl: EIS 0.15 (10.6) … 1.11 mS/cm (≈94 MPa) [판독 · 마지막 점은 빨강에 가려 원 맞춤] · 계산 ÷ 실측 2.3–2.6 (9.4 MPa) · 1.19–1.23 (35.8) · 1.24–1.27 (68.9) · 1.03 (96.0) [카드 산술].  합성 · 입경 [미확인]."
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 6,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6(b) — LPS glass ceramic: ionic conductivity, EIS (black) vs X-ray CT calculation (red), pressure increasing (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1071,
+   "h": 772,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.934,
+   "src_native": [
+    1033,
+    2268
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel (b) of Fig. 6 — cut from the embedded native raster (xref 102, 300 dpi, no resampling): panel box [0, 738, 1033, 1461] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "LPS 유리세라믹: 계산 ÷ 실측 0.94–1.09 (6.8) · 0.70–0.72 (30.0) · 1.23–1.28 (59.2) · 1.03–1.08 (103.9 MPa) [카드 산술] — 양쪽으로 흩어짐.  조성 [미확인]."
+  },
+  {
+   "key": "f6c",
+   "kind": "figure",
+   "label": "6c",
+   "page": 6,
+   "file": "fig_6c.png",
+   "caption": "Fig. 6(c) — LPS glass: ionic conductivity, EIS (black) vs X-ray CT calculation (red), pressure increasing (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1071,
+   "h": 785,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.931,
+   "src_native": [
+    1033,
+    2268
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel (c) of Fig. 6 — cut from the embedded native raster (xref 102, 300 dpi, no resampling): panel box [0, 1530, 1033, 2268] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "LPS 유리: 계산 ÷ 실측 1.02–1.08 (43.7) · 1.06–1.08 (64.9) · 0.94–0.95 (90.2 MPa) [카드 산술] — 저압 계산점이 없다 (첫 계산점 43.7 MPa)."
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 7,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(a) — calculated electric potential [V] with iso-lines in a section of the 8.4 MPa X-ray CT image (white = pore; gray bars = virtual electrodes, 1 V top / 0 V bottom) (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 704,
+   "h": 885,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.449,
+   "src_native": [
+    1422,
+    853
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel (a) of Fig. 7 — cut from the embedded native raster (xref 110, 300 dpi, no resampling): panel box [0, 0, 656, 853] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "저압: 등위선이 전극과 평행하지 않고 입자 사이 목에서 촘촘 — 전위 강하가 접촉 목에 몰린다."
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 7,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — relative ion-flux density [-] at 8.4 MPa (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 737,
+   "h": 886,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.433,
+   "src_native": [
+    1422,
+    853
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel (b) of Fig. 7 — cut from the embedded native raster (xref 110, 300 dpi, no resampling): panel box [727, 0, 1422, 853] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이온 흐름이 좁은 접촉 (빨강) 에 집중 — 우리 접촉망 Holm 협착 · STEP3 복셀 해의 '목' 과 같은 그림 (그들 복셀 1.62 µm · 입자 75–150 µm = 입자 지름당 46–93 복셀 [카드 산술])."
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 7,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8(a) — calculated electric potential [V] with iso-lines in a section of the 103.0 MPa X-ray CT image (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 704,
+   "h": 889,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.315,
+   "src_native": [
+    1422,
+    846
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel (a) of Fig. 8 — cut from the embedded native raster (xref 109, 300 dpi, no resampling): panel box [0, 0, 656, 846] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "고압: 등위선 거의 평행 · 남은 기공은 작은 섬 (흰)."
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 7,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8(b) — relative ion-flux density [-] at 103.0 MPa (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 725,
+   "h": 878,
+   "dpi": 300,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.332,
+   "src_native": [
+    1422,
+    846
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel (b) of Fig. 8 — cut from the embedded native raster (xref 109, 300 dpi, no resampling): panel box [733, 0, 1422, 846] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "흐름 거의 고름 (초록) — 저자: 'homogeneous ion flux density leads to low tortuosity'."
+  },
+  {
+   "key": "e1_1",
+   "kind": "equation",
+   "label": "eq1-1",
+   "page": 3,
+   "file": "eq_01_1_curl_free_field.png",
+   "caption": "Eq. (1–1), PDF p.3 left column: ∇ × E = 0 — steady-state Maxwell equation without an induced magnetic field (the electric field is curl-free).",
+   "rotated_deg": 0,
+   "w": 1457,
+   "h": 120,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.986,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — fixed band between the neighbouring equation lines (text-layer line boxes; a white-gap walk from inside the line could cut off the vector arrows above E and j) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "정상 상태 · 자기장 유도 없음 → E 는 퍼텐셜의 기울기로 쓸 수 있다 (식 1–2).",
+   "bbox": [
+    37.0,
+    425.2,
+    296.0,
+    447.0
+   ]
+  },
+  {
+   "key": "e1_2",
+   "kind": "equation",
+   "label": "eq1-2",
+   "page": 3,
+   "file": "eq_01_2_field_potential_gradient.png",
+   "caption": "Eq. (1–2), PDF p.3: E = −grad φ (electric field from the electric potential φ).",
+   "rotated_deg": 0,
+   "w": 1457,
+   "h": 124,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — fixed band between the neighbouring equation lines (text-layer line boxes; a white-gap walk from inside the line could cut off the vector arrows above E and j) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전위 φ 를 미지수로 푸는 꼴 — 우리 STEP3 · 망 솔버와 같은 Laplace 형.",
+   "bbox": [
+    37.0,
+    447.0,
+    296.0,
+    469.0
+   ]
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "file": "eq_02_current_conservation.png",
+   "caption": "Eq. (2), PDF p.3: ∇ · j = 0 (ion current conservation in the solid electrolyte).",
+   "rotated_deg": 0,
+   "w": 1457,
+   "h": 123,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — fixed band between the neighbouring equation lines (text-layer line boxes; a white-gap walk from inside the line could cut off the vector arrows above E and j) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전류 보존 = 정상 상태 연속 식.",
+   "bbox": [
+    37.0,
+    469.0,
+    296.0,
+    491.0
+   ]
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "file": "eq_03_ohm_law_as_printed.png",
+   "caption": "Eq. (3) as printed, PDF p.3: E = σ · j — Ohm's law obtained from the Nernst–Planck flux (transport number 1, mutual diffusion neglected, homogeneous Li+ concentration); with σ defined as ionic conductivity (Eq. 4) the printed form is inverted (j = σE).",
+   "rotated_deg": 0,
+   "w": 1457,
+   "h": 123,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — fixed band between the neighbouring equation lines (text-layer line boxes; a white-gap walk from inside the line could cut off the vector arrows above E and j) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 인쇄된 꼴 E = σ·j 는 σ 를 전도도로 두면 거꾸로다 (옴 법칙 j = σE) — 본문 정의 (σ = ionic conductivity) 와 식이 어긋남.  계산 결과 (mS/cm 단위 σ) 로 보면 실제 구현은 j = σE 로 읽힌다 [카드 추론].",
+   "bbox": [
+    37.0,
+    491.0,
+    296.0,
+    520.0
+   ]
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 3,
+   "file": "eq_04_sigma_pore_zero_se_sigma400.png",
+   "caption": "Eq. (4), PDF p.3 right column: σ = 0 for the pore region, σ = σ_400MPa for the solid electrolyte region — σ_400MPa = ionic conductivity of the solid electrolyte at 400 MPa, measured with another cell (value not printed).",
+   "rotated_deg": 0,
+   "w": 1458,
+   "h": 173,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.96,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — fixed band between the neighbouring equation lines (text-layer line boxes; a white-gap walk from inside the line could cut off the vector arrows above E and j) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이진 매질 (기공 0 · SE = 400 MPa 치밀 펠릿 값) — 계면 (접촉) 저항 항이 없고 SE 셀 사이 면은 그대로 이어진다 = 우리 STEP3 복셀 FV 와 같은 CONTACT_FREE 부류 (CL-81).  입력 σ_400MPa 는 인쇄 안 됨 — 계산 σ (≈100 MPa) 가 하한을 준다: Br ≥ 0.84 · Cl ≥ 1.14 mS/cm [카드 산술].",
+   "bbox": [
+    303.0,
+    258.0,
+    562.0,
+    294.5
+   ]
+  },
+  {
+   "key": "e1_4",
+   "kind": "equation",
+   "label": "eq1-1..4",
+   "page": 3,
+   "file": "eq_01_04_governing_set_with_symbols.png",
+   "caption": "Eqs. (1–1)–(4) with the symbol definitions (p.3: left column Eqs. 1–1 to 3, right column Eq. 4 and the definition line), stacked top to bottom for pasting.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 886,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — fixed band between the neighbouring equation lines (text-layer line boxes; a white-gap walk from inside the line could cut off the vector arrows above E and j) → ink trim → uniform 6 pt white margin; equation number kept (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "보고서 MPM · 수송 절에 붙일 묶음 — 지배식 전부 + 기호 정의 (이 논문의 계산은 역학이 아니라 정상 전도 Laplace 하나뿐).",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 3,
+     "clip": [
+      37.0,
+      425.2,
+      296.0,
+      520.0
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 3,
+     "clip": [
+      303.0,
+      258.0,
+      562.0,
+      294.5
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 3,
+     "clip": [
+      305.5,
+      299.1,
+      561.5,
+      330.9
+     ]
+    }
+   ],
+   "bbox": [
+    37.0,
+    425.2,
+    296.0,
+    520.0
+   ]
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-intro-ex-situ-sem-vs-in-situ-xct",
+   "page": 2,
+   "file": "txt_p2_intro_ex_situ_sem_vs_in_situ_xct.png",
+   "caption": "PDF p.2 left column (§1 Introduction): 'High pressure (above 100 MPa) is applied to these sulfide solid electrolytes to achieve high ionic conductivity'; Sakuda et al. [8] cross-sectional SEM after ion milling — 'the solid electrolyte is of necessity decompressed and ion milled. The observation therefore has to be under ex situ conditions (not pressurized)'; 'X-ray CT is the only method that can simultaneously achieve high-resolution (≤1 μm) and high pressure (>1 MPa)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    284.8,
+    292.5,
+    523.1
+   ],
+   "w": 1461,
+   "h": 1389,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 2,
+     "clip": [
+      37.0,
+      284.8,
+      292.5,
+      523.1
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "왜 in situ 인가 — SEM 단면은 반드시 뺀 뒤 (ex situ) · 이온 밀링으로 구조가 바뀔 수 있다.  이 논문의 '고압' 은 '> 1 MPa' (XCT 셀) 기준이다 (우리 300 MPa 와 다른 뜻)."
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-p2-scope-four-sulfide-electrolytes",
+   "page": 2,
+   "file": "txt_p2_scope_four_sulfide_electrolytes.png",
+   "caption": "PDF p.2 left column end → right column top (one paragraph): in situ X-ray CT at various applied pressures + 3D numerical simulation with X-ray CT images; 'The study was mainly conducted using Li–argyrodite (L6PS5Br) [sic], but the same experiments and numerical simulations were also conducted for LPS glass, LPS glass ceramic, and Li–argyrodite (Li6PS5Cl)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    692.8,
+    292.5,
+    742.9
+   ],
+   "w": 1464,
+   "h": 675,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.868,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; 2 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 2,
+     "clip": [
+      37.0,
+      692.8,
+      292.5,
+      742.9
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 2,
+     "clip": [
+      305.5,
+      54.7,
+      561.5,
+      104.6
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "재료 넷 — 주 재료는 Li₆PS₅Br (우리 LPSCl 아님).  LPSCl · LPS 둘은 그림 6 에만 (영상 · 변형률 없음)."
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2-synthesis-li6ps5br",
+   "page": 2,
+   "file": "txt_p2_synthesis_li6ps5br_milling_490c.png",
+   "caption": "PDF p.2 right column (§2.1): Li6PS5Br synthesis — Li2S, P2S5, LiBr (3 g) in a 50 ml zirconia pot with diethyl ether (0.1 ml) and 16 zirconia balls (φ 10 mm), high-energy vibration mill 1200 rpm for 20 h, heat treated at 490 °C for 5 h [6]; dew point < −80 °C Ar; XRD (Rigaku RINT-ULTIMAIII, CuKα, 40 kV) — only Li6PS5Br peaks.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    159.3,
+    561.5,
+    271.8
+   ],
+   "w": 1461,
+   "h": 689,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 2,
+     "clip": [
+      305.5,
+      159.3,
+      561.5,
+      271.8
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "합성 조건 — 원료 비 ('specified quantity') 는 숫자 없음 · 다른 세 SE 의 합성은 원문에 없음."
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2-xesc-xct-eis-specification",
+   "page": 2,
+   "file": "txt_p2_xesc_cell_xct_voxel_eis_specification.png",
+   "caption": "PDF p.2 right column (§2.1): XESC — powder in a PEEK cylinder pressed by stainless-steel current collectors; lab-scale pseudo-parallel X-ray optics, 66 kV / 44 mA Mo target, no metal filter, cooled CCD + scintillator + microscope, sample–scintillator 8 mm; 'Field of view is 1.14 mm × 1.14 mm × 1.14 mm and the voxel size is 1.62 μm × 1.62 μm × 1.62 μm'; pressure by a spring in a duralumin body, spring strain read by 160 kV / 70 μA tungsten X-ray imaging; maximum ≈100 MPa (PEEK durability); galvanostatic EIS 1 MHz–10 Hz at 25 °C; O-ring seal, dew point below −70 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    274.4,
+    561.5,
+    584.4
+   ],
+   "w": 1461,
+   "h": 1786,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 2,
+     "clip": [
+      305.5,
+      274.4,
+      561.5,
+      584.4
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 측정 사양 원문 — 시야 1.14 mm · 복셀 1.62 µm · 최대 100 MPa · EIS 25 °C.  투영 수 · 노출 · 재구성 · 이진화 문턱은 원문에 없음 [미확인]."
+  },
+  {
+   "key": "x2e",
+   "kind": "text",
+   "label": "p2-particle-selection-resolution",
+   "page": 2,
+   "file": "txt_p2_particle_selection_75_150um_resolution.png",
+   "caption": "PDF p.2 right column end (§2.1): 'the resolution of 1.0 μm was insufficient to measure some microstructures, such as gaps between solid electrolyte particles, in detail; therefore, large solid electrolyte particles ranging in size from 75 μm to 150 μm were selectively used'; mesh screening; σ of small (20–40 μm), medium (40–75 μm) and large (75–150 μm) particles 'were almost the same and did not depend on particle size'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    588.4,
+    561.5,
+    722.0
+   ],
+   "w": 1461,
+   "h": 807,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.845,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 2,
+     "clip": [
+      305.5,
+      588.4,
+      561.5,
+      722.0
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 해상도 규칙의 원문 — 틈 (gap) 이 분해능보다 작으면 안 보이므로 큰 입자를 골랐다.  입경별 σ '거의 같음' 은 숫자 없이 문장뿐.  ⚠ '분해능 1.0 µm' < 복셀 1.62 µm (영상 분해능은 복셀보다 작을 수 없다)."
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-numerical-model-virtual-electrodes",
+   "page": 3,
+   "file": "txt_p3_numerical_model_virtual_electrodes.png",
+   "caption": "PDF p.3 left column (§2.2): numerical model — 3D SE / pore distribution from in situ X-ray CT, 'virtually sandwiched by electrodes', potential difference 1 V (not applied during the CT measurement; CT with and without potential showed no structural change), potential and ion current density computed; governing Eqs. (1)–(4).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    289.4,
+    292.5,
+    423.0
+   ],
+   "w": 1464,
+   "h": 806,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 3,
+     "clip": [
+      37.0,
+      289.4,
+      292.5,
+      423.0
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "계산 영역은 실제 집전체가 아니라 가상 전극 사이의 부분 부피 — EIS (펠릿 전체 · 실제 전극) 와 경계가 다르다."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-sigma400-mesh-fv-sor-bc-contact-neglected",
+   "page": 3,
+   "file": "txt_p3_sigma400_mesh350_fv_sor_bc_contact_neglected.png",
+   "caption": "PDF p.3 right column (§2.2): symbol definitions; steady-state Maxwell equations; transport number 1, Nernst–Planck → Ohm's law; Eq. (4) σ = 0 (pore) / σ_400MPa (SE) 'when the volume ratio of pores to solid electrolyte particles is almost zero [8]' — 'small amount of voids are observed', so the 400 MPa value 'measured with another cell' is used; '350 × 350 × 350 mesh', voxel = CT voxel 1.62 μm; finite-volume method [15]; successive over-relaxation [16]; OpenMP; electrodes at constant voltage (1 V / 0 V); 'The contact resistance between solid electrolyte particles and the change in ionic conductivity from internal stress is neglected in this numerical simulation.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    299.1,
+    561.5,
+    634.2
+   ],
+   "w": 1461,
+   "h": 1927,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.848,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 3,
+     "clip": [
+      305.5,
+      299.1,
+      561.5,
+      634.2
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 계산 방법 원문 전부 — 격자 350³ (= 42.9 M 셀 · 567 µm 정육면체 [카드 산술]) · FV + SOR · OpenMP · Dirichlet 1 V / 0 V · 접촉 저항 · 내부 응력 효과 무시.  수렴 기준 · 옆면 경계 · 계산 시간 · σ_eff 환산식은 원문에 없음 [미확인]."
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p3-p5-ct-structure-strain-effective-modulus",
+   "page": 3,
+   "file": "txt_p3_p5_ct_structure_crushing_strain_effective_modulus.png",
+   "caption": "One paragraph from PDF p.3 (right column end) → p.5 (left column), stacked: CT at 8.4 MPa — 'large gaps existed … contact area … very small'; 8.4 → 31.4 MPa — 'the size of the solid electrolyte particles decreased because they were crushed'; 'Small solid electrolyte particles filled the pores'; 31.4 → 103.0 MPa — pores fewer and smaller, 'particle boundaries were difficult to see at 103.0 MPa' = room-temperature sintering [8]; Fig. 3(c) strain from collector distance by X-ray CT; 'Increase in strain from 0 to 0.4 rapidly occurred from 0 MPa to 30 MPa'; Young's modulus of Li6PS5Br 25 GPa 'from molecular dynamics simulation' [17] vs effective 25–250 MPa; 'for high-accuracy numerical simulation of solid electrolyte compression, nonlinear numerical simulation is required'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    688.9,
+    561.5,
+    739.0
+   ],
+   "w": 1464,
+   "h": 2011,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; 2 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 3,
+     "clip": [
+      305.5,
+      688.9,
+      561.5,
+      739.0
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 5,
+     "clip": [
+      37.0,
+      54.7,
+      292.5,
+      345.2
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 치밀화 기전 (파쇄 → 메움 → 소결) 과 변형률 · '유효 E 25–250 MPa' · '비선형 계산이 필요' 원문.  ⚠ [17] Deng 2016 은 0 K 정적 DFT (분자동역학 아님 · 정본 deng2016 카드 · Li₆PS₅Br E 25.3 GPa)."
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-decompression-structure-modulus",
+   "page": 5,
+   "file": "txt_p5_decompression_structure_kept_modulus_25gpa.png",
+   "caption": "PDF p.5 left column: depressurization from 103.0 MPa — σ 'slightly decreased' to 30 MPa; structure 'relatively unaffected … maintained, even at 30 MPa'; Fig. 4(c) — 'Strong nonlinear characteristics were not observed … the Young's modulus remained almost constant at 25 GPa'; decompressed powder 'remained as a \"solid\" material'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    347.6,
+    292.5,
+    521.5
+   ],
+   "w": 1461,
+   "h": 1030,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.845,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 5,
+     "clip": [
+      37.0,
+      347.6,
+      292.5,
+      521.5
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ 감압 원문 — 0 까지 빼지 않았다 (≈28–30 MPa 에서 멈춤).  '25 GPa 로 일정' 은 오차 막대 ±0.02 로는 가를 수 없는 크기 (25 GPa 면 Δε = 0.003) [카드 산술]."
+  },
+  {
+   "key": "x5c",
+   "kind": "text",
+   "label": "p5-sim-vs-eis-contact-resistance-proof-stress",
+   "page": 5,
+   "file": "txt_p5_sim_vs_eis_contact_resistance_proof_stress_lattice_mismatch.png",
+   "caption": "One paragraph from PDF p.5 left column (§3.2) → p.5 right column top, stacked: black = EIS, red = simulation from in situ X-ray CT; 'The simulated results are almost the same as the experimental results'; the model only includes SE distribution (volume ratio and porosity); 'these results suggest that the contact resistance and the direct influence of internal stress on ionic conductivity are negligible'; 'exponential correlation between void ratio and tortuosity [19,20]'; 'The 0.2% proof stress of sulfide solid electrolyte (E = 20 GPa) is about 40 MPa'; contact stress ≥ proof stress → plastic deformation → 'would suppress the crystal lattice mismatch at particle interface, leading to the conclusion that contact resistance has a negligibly small influence'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    557.6,
+    292.5,
+    743.5
+   ],
+   "w": 1461,
+   "h": 1315,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; 2 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 5,
+     "clip": [
+      37.0,
+      557.6,
+      292.5,
+      743.5
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 5,
+     "clip": [
+      305.5,
+      551.7,
+      561.5,
+      580.9
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "★ otani2023 이 든 '③ 격자 부정합 저항 무시' 의 근거 원문 (ref 22 = 이 논문).  근거 둘: (1) 계산 ≈ 실측 (2) 0.2 % 내력 ≈40 MPa — 출처 없음 · 어느 재료인지 없음 · 값이 E × 0.002 (20 GPa × 0.2 %) 와 정확히 같다 [카드 산술].  refs 19 · 20 = Otani 그룹 (서로를 근거로 드는 고리)."
+  },
+  {
+   "key": "x5d",
+   "kind": "text",
+   "label": "p5-p6-other-electrolytes-field-maps",
+   "page": 5,
+   "file": "txt_p5_p6_other_electrolytes_potential_flux_maps.png",
+   "caption": "PDF p.5 right column → p.6 left column (one reading order), stacked: Fig. 6 — 'The numerical results agreed with the experimental results, even when the solid electrolyte was not Li6PS5Br'; Fig. 7 (8.4 MPa) — electric field 'distorted significantly', iso-lines not parallel, 'ion flux focused in a small area of contact'; Fig. 8 (103.0 MPa) — field homogeneous, iso-lines almost parallel, contact area 'very wide after room-temperature synthesis', homogeneous ion flux → 'low tortuosity'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    583.3,
+    561.5,
+    737.7
+   ],
+   "w": 1464,
+   "h": 1430,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.849,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; 2 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 5,
+     "clip": [
+      305.5,
+      583.3,
+      561.5,
+      737.7
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 6,
+     "clip": [
+      37.0,
+      459.9,
+      292.5,
+      541.3
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "전위 · 흐름 지도 해석 원문 — 저압 = 접촉 목 집중 · 고압 = 고름."
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-p7-conclusions",
+   "page": 6,
+   "file": "txt_p6_p7_conclusions.png",
+   "caption": "§4 Conclusions, PDF p.6 left column → p.6 right column → p.7 left column, stacked: (1) pressure crushed SE particles and filled gaps → room-temperature pressure sintering, σ up; nonlinear stress–strain, effective Young's modulus 'significantly lower than the value estimated from molecular dynamics simulation'; depressurization change limited; (2) 3D simulation with X-ray CT ≈ EIS, σ uniform in the SE region → contact resistance and σ 'not significantly or directly affected by internal stress'; (3) similar for Li6PS5Br, Li6PS5Cl, LPS glass ceramic, LPS glass.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    554.2,
+    292.5,
+    740.1
+   ],
+   "w": 1460,
+   "h": 1928,
+   "dpi": 400,
+   "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+   "blank": 0.87,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band between the white gaps just outside the first and last text line (found on the rendered pixel rows) → ink trim → white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded; 3 parts of one reading-order paragraph stacked top to bottom with a 10 pt white gap (2026-11-12, litdb-curator)",
+   "parts": [
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 6,
+     "clip": [
+      37.0,
+      554.2,
+      292.5,
+      740.1
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 6,
+     "clip": [
+      305.5,
+      650.5,
+      561.5,
+      742.3
+     ]
+    },
+    {
+     "src": "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf",
+     "page": 7,
+     "clip": [
+      37.0,
+      533.0,
+      292.5,
+      571.0
+     ]
+    }
+   ],
+   "viewed": true,
+   "mpm_note_ko": "결론 원문 세 항목 — 보고서 인용용."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-11 UTC = 2026-11-12 KST) found every printed item: Fig. 1–8 (8 pp; no tables; no supplementary material is announced in the paper) — 8 crops, all opened.  All 8 were re-cut from their embedded native rasters (fig_2 had Eqs. (1–1)–(3) inside the auto box; the others were cut to the caption/column width with uneven side margins; the auto captions of Fig. 1, 5 and 8 had swallowed body / reference text and were replaced by the printed captions).  Added by hand: the graphical abstract (1), 17 panel crops (Fig. 1a–b · 3a–c · 4a–c · 5a–b · 6a–c · 7a–b · 8a–b), 6 equation crops (Eqs. 1–1, 1–2, 2, 3, 4 and the stacked set with symbol definitions) and 12 evidence-paragraph crops (kind 'text').  Every one of the 44 crops was opened and checked after cutting.  Read-outs: digitized.csv (76 rows: Fig. 3a · 3c · 4a · 4c · 5a · 5b · 6a · 6b · 6c) from the native rasters (2026-11-12, litdb-curator)",
+ "note_manual": "Printed inconsistencies visible in the crops: text numbering of the cell parts (PEEK cylinder '②', current collectors '① and ③', PEEK part '②') disagrees with the Fig. 1 caption (② solid electrolyte, ③ PEEK side wall, ④ downside current collector); Eq. (3) is printed as E = σ·j although σ is defined as conductivity; 'resolution of 1.0 μm' is finer than the stated voxel size 1.62 μm; ref. [17] (Deng et al. 2016, first-principles static elastic constants) is called 'molecular dynamics simulation'; Fig. 5 caption 'decreased from 103.0 MPa' vs text 'decreased from 100 MPa'; the decompression CT image is labelled 27.8 MPa while the red simulation point of Fig. 5(b) sits at ≈32.0 MPa (read); the reference lines of Fig. 4(c) rise as the pressure decreases (elastic recovery would lower the strain); axis titles 'Ion condictivity' / 'Ioncondictivity'; 'L6PS5Br' twice in the text; 'Marm et al.' in the text for ref. [13] whose first author is M.B. Dixit; the 200 μm scale bars give a sample diameter of ≈0.58–0.61 mm (read), whereas the stated simulation mesh 350³ × 1.62 μm = 567 μm would not fit inside such a cylinder; the conductivity at 400 MPa used as simulation input is not printed anywhere.",
+ "key_note": "manual keys: ga = graphical abstract; f<N><panel> = panel crop of Fig. N (panel_of); e<eq> = equation crop (kind 'equation'); x<page><letter> = evidence paragraph (kind 'text'; x2b · x5a · x5c · x5d · x6a stack several column/page parts of one paragraph, listed in 'parts')"
+}

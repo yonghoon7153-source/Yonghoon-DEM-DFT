@@ -408,3 +408,5 @@ doux2020_pressure_effects_sulfide_se_jmca	pressure_effects_on_sulfide_electrolyt
 # ── 황화물 유리 압입 · 파괴인성 (McGrogan 외 · Adv. Energy Mater. 7 (2017) 1602011 · 저자 원고판) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
 mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation	compliant_yet_brittle_mechanical_behavior
 mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation	compliant yet brittle mechanical behavior
+# ── 황화물 SE 고압 in situ X 선 CT + 수치 모의 (Kodama 외 · J. Power Sources 462 (2020) 228160) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 ──
+kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation	high-pressure_in_situ_x-ray_computed_tomography
