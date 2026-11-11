@@ -1,4 +1,20 @@
 {
+ "kb/concepts/se_redox_frontier.md": [
+  {
+   "anchor": "환원: 들어온 전자는 빈 상태 중 가장 낮은 곳 (CBM) 으로 가요. 그래서 CBM 을 이루는 결합이 먼저 반응해요.",
+   "at": "2026-11-11 14:57",
+   "edited_at": "2026-11-11 14:57",
+   "history": [
+    {
+     "at": "2026-11-11 14:57",
+     "text": "![](/api/note-image/4408e853881edd03d602e8c90d9de212.png)\n![](/api/note-image/4408e853881edd03d602e8c90d9de212.png)"
+    }
+   ],
+   "id": "c1794376649994",
+   "text": "![](/api/note-image/4408e853881edd03d602e8c90d9de212.png)",
+   "who": ""
+  }
+ ],
  "litdb/figures/adeli2019_halide_substitution_boosting_argyrodite/fig_20.png": [
   {
    "at": "2026-08-05 05:57",
