@@ -394,3 +394,9 @@ deiseroth2008_li6ps5x_argyrodite_high_li_mobility	a class of crystalline li
 # ── 전고체전지 전망 Comment (Janek · Zeier 2016 · Nat. Energy 1, 16141 · 사용자 목록 128 번) — litdb 2026-11-10 · 제목이 짧고 'solid' · 'battery development' 가 흔한 낱말이라 뒤에 들어올 digest 와 겹치지 않게 수동 지정 · 본문만 (SI 없음) · 밑줄 · 공백 두 변형 ──
 janek2016_solid_future_battery_development	a_solid_future_for_battery_development
 janek2016_solid_future_battery_development	a solid future for battery development
+# ── MPM 발포체 치밀화 (Bardenhagen · Brydon · Guilkey 2005 · J. Mech. Phys. Solids 53, 597–617) — litdb 2026-11-11 · 카드 제목이 한국어 의역이라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
+bardenhagen2005_mpm_foam_densification_simulation	insight_into_the_physics_of_foam_densification
+bardenhagen2005_mpm_foam_densification_simulation	insight into the physics of foam densification
+# ── MPM 화학–역학 결합 (Gritton 외 2017 · Modelling Simul. Mater. Sci. Eng. 25, 045005) — litdb 2026-11-11 반입분의 누락 줄 보충 (같은 까닭 · 파일명에는 'chemical/mechanical' 의 빗금이 빠져 'chemicalmechanical') ──
+gritton2017_mpm_chemomechanical_coupling_silicon_anode	using_the_material_point_method_to_model_chemicalmechanical_coupling
+gritton2017_mpm_chemomechanical_coupling_silicon_anode	using the material point method to model chemical

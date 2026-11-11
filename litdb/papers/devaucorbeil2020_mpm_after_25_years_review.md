@@ -75,6 +75,12 @@
   인용 3종 세트.
 - ★ **image-based 치밀화 선례**(Bardenhagen 2005 foam, voxel→particle, multi-contact) = 우리 `--am-scaffold`/`--se-dump`
   (real DEM dump→MPM 격자)의 방법론적 조상.  "image/structure → MPM 입자" 가 확립된 패턴임을 확인.
+  ⚠ **2026-11-11 정오** (원전 카드 `bardenhagen2005_mpm_foam_densification_simulation` · JMPS 53, 597–617 을 PDF 로 확인):
+  그 논문의 계산은 **손으로 만든 이상화 단위 셀 2 종** · **붙는 (no-slip) 접촉** (마찰 · 다물체 접촉은 "나중") 이고, 영상
+  (voxel) 기반 이산화는 *"should be easily discretized via particle methods"* 라는 전망으로만 적혀 있다 (p.615 · 같은 취지 p.602).
+  ⇒ 위 줄과 §6 의 *image-based · voxel→particle · multi-contact · "직접 선례"* 는 **이 논문으로는 받쳐지지 않는다**
+  (리뷰가 가리킨 것이 다른 논문인지는 리뷰 원문을 다시 봐야 한다 — [미확인]).  그 논문이 주는 것은 "물질점 생성이 화소로
+  영상을 나타내는 것과 비슷하다" 는 서술 (p.600) 과 붙는 접촉으로 공칭 90 % 까지 누른 계산이다.
 - ★ **SE 취성균열 = continuous-damage/cohesive MPM 으로 넣는 길**(Homel-Herbold mixed) — yun2023 frame[5] 공백의
   구현 경로(단 우리 J2는 ductile, SE 취성은 별도 damage 필요).
 - **DEM↔MPM 분업**을 저자도 시사(MPM=DEM구성식 대규모, DEM=정확도) → 우리 frame[4]/[5] 방법론 배경 보강.

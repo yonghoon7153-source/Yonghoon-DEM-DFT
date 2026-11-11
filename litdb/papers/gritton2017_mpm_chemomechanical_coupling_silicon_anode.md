@@ -699,7 +699,7 @@ dt ← min(dt_mb, dt_diff)                                    (43)–(45)  # 밀
 - `bardenhagen2000_mpm_granular_multibody_frictional_contact` · `bardenhagen2001_mpm_improved_contact_granular_stress_waves` · `homel2017_mpm_field_gradient_partitioning_fracture_self_contact` — 이 논문에 없는 MPM 접촉 (다물체 · 견인력 분리 · 장 2 개 분할).  Guilkey 는 2001 판의 공저자다.
 - `hu2018_mls_mpm_cpic_two_way_rigid_coupling` — 우리 MLS-MPM 이산화의 원전 · 강체 결합.
 - `nezamabadi2022_mpm_cd_plastic_particle_compaction` (소성 원판) · `nguyen2017_mpm_bpm_deformable_particle_compaction` (탄성 입자 · 그 전신) — MPM 으로 변형 입자의 **압밀**까지 간 2D 선례 (이 논문에 없는 다입자 · 접촉).
-- (같은 날 반입 예정) `bardenhagen2005_mpm_foam_densification_simulation` — 이 논문이 "큰 변형에 성공한 MPM" 의 근거로 든 ref. [31] (발포체 치밀화).
+- `bardenhagen2005_mpm_foam_densification_simulation` — 이 논문이 "큰 변형에 성공한 MPM" 의 근거로 든 ref. [31] (발포체 치밀화 · 같은 날 반입).  그 카드로 확인: 탄성 뼈대 · 붙는 (no-slip) 접촉 · 정량 검증은 꽉 찬 블록 해석해 1 건 (끝 오차 ≈ 5 %) · 준정적 판정은 절반 속도 런과의 눈 대조 — "성공" 의 범위는 거기까지다.
 - `bucci2017_chemomech_failure_assb_cycling_czm` (FEM + 응집 영역) · `tian2020_electrochemo_mechanical_stress_assb` (연속체 화학–역학 FEM) · `kim2023_chemomech_failure_highstrain_anode` (실험 + FEM) — 화학–역학 결합을 FEM 쪽에서 다룬 카드.
 - `stomakhin2013_mpm_snow_elastoplastic` — 우리 MPM 탄소성 갱신 (곱셈 꼴) 의 계보 — 이 논문의 덧셈 (속도) 꼴과 대비.
 

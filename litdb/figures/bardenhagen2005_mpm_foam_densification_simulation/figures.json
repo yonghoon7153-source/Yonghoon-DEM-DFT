@@ -1,0 +1,493 @@
+{
+ "slug": "bardenhagen2005_mpm_foam_densification_simulation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-11",
+ "sources": [
+  "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 7,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Comparison of analytical and numerical solutions of the uniaxial compression of compressible Neo-Hookean material.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.2,
+    73.6,
+    359.0,
+    257.1
+   ],
+   "w": 1365,
+   "h": 1019,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.957,
+   "auto_bbox": [
+    50.7,
+    71.0,
+    421.3,
+    257.7
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 66.5–259.6 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (68 pt of white on the left, 68 pt on the right, 8.6 pt above and 6.6 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구성 재료 (압축성 neo-Hookean · K 10.2 · G 7.2 GPa · ρ 1900 kg/m³) 의 꽉 찬 블록 (1 mm³ · 셀 0.01 mm) 을 일축 변형으로 90 % 까지 — 명시적 GIMP 가 준정적 해석해를 따라가는지 보는, 이 논문의 유일한 정량 검증.  [판독 · 벡터 경로] 끝 (ε 0.900): 수치 286,061 ↔ 해석 271,063 MPa (+5.5 % · 본문 *approximately 5%*) · ε 0.1–0.9 의 구간 평균은 어디서나 +5.5–6.6 % (국소 −19 ~ +34 %) · 수치 곡선은 ε ≈ 0.029 에서 뜬다 (파가 반대쪽 경계에 닿는 때 = 0.03).  [카드 산술] 해석 곡선 = (K/2)(1/J − J) + (2G/3)(J^(−5/3) − J^(1/3)), J = 1 − ε 과 ε ≥ 0.4 에서 0.1 % 안 (식은 논문에 미인쇄) · ε 0.9 에서 응력 5 % = 판 위치 0.32 셀.  우리 쪽 쓰임: 명시적 MPM 준정적 설정 (판 속도 ÷ 파속 0.03 · 총 시간 = 파 통과 시간의 30 배) 의 단위 시험 꼴 — 꽉 찬 블록 + 해석해, 오차는 변형률 구간별로."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 8,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Unit cell initial configurations of the two foams constructed for study. The random unit cell is depicted on the left and the lattice unit cell on the right.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.9,
+    481.6,
+    359.5,
+    590.8
+   ],
+   "w": 1375,
+   "h": 606,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.578,
+   "auto_bbox": [
+    50.7,
+    481.0,
+    421.3,
+    592.2
+   ],
+   "src_native": [
+    660,
+    276
+   ],
+   "native_dpi": 200,
+   "recrop": "re-cut by hand: bounding box of the non-white pixels of the embedded raster (8-bit greyscale PNG, xref 77, 660×276 px ≈ 200 dpi) inside the band between the text above and the caption (y 472.4–594.6 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (= 2 × native; tool default 300 dpi) — the auto crop ran to the text-column edges (67 pt of white on the left, 68 pt on the right, 6.6 pt above and 7.4 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두 단위 셀의 처음 모양 — 왼쪽 random (손으로 만든 주기 구조 · φ 9.6 %) · 오른쪽 lattice (규칙 격자의 구 노드를 셀 크기의 3–8 % 만큼 흔든 것 · φ 7.9 %).  검은 판 = 일정 속도 피스톤 · 바닥 = 대칭면 · 옆 = 주기 → 두 셀 두께의 무한 층을 누르는 문제.  [판독] strut 지름 ÷ 셀 변 ≈ 0.10–0.14 (원근 그림 · 거칠다) — 셀 변 길이 · strut 지름당 격자 셀 수 · 셀당 물질점 수는 미인쇄.  우리 쪽: 입자 층이 아니라 가는 뼈대 한 물체 — 접촉은 전부 자기 접촉 (붙음)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Response of the two foam microstructures to quasi-static uniaxial compression.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.2,
+    418.6,
+    359.0,
+    601.6
+   ],
+   "w": 1365,
+   "h": 1016,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.961,
+   "auto_bbox": [
+    79.7,
+    416.0,
+    392.3,
+    602.3
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 400.6–604.2 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (40 pt of white on the left, 39 pt on the right, 8.6 pt above and 6.7 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두 발포체의 전 구간 반력 (바닥 대칭면에서 잼).  [판독 · 벡터 경로] ε 0.9: lattice 3,896 MPa (직전 최대 4,090) · random 6,673 MPa = 뼈대 재료 K 의 0.38–0.65 배.  본문 *approximately two orders of magnitude lower* ↔ Fig. 1 끝 값의 1/70 · 1/43 [카드 산술].  이 눈금에서는 고원이 안 보인다 (→ Fig. 4–6).  우리 쪽: '완전 치밀화' 근처에서 반력이 뼈대 강성에 육박 — 탄성 뼈대가 기공을 남긴 채 통째로 눌리는 체제 (우리 300 MPa ≈ 0.012 K 와 다른 체제 · 값 전이 없음)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Response of the random foam microstructure compression at two rates and a polynomial fit to the data.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.2,
+    73.7,
+    360.2,
+    254.2
+   ],
+   "w": 1372,
+   "h": 1002,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.951,
+   "auto_bbox": [
+    50.7,
+    71.0,
+    421.4,
+    255.1
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 66.5–257.0 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (68 pt of white on the left, 67 pt on the right, 8.7 pt above and 6.9 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "crop_note": "the descenders of the x-axis label 'Engineering Strain' are clipped in the PDF itself (clip of the placed figure); the crop keeps a full 6 pt margin below it",
+   "viewed": true,
+   "mpm_note_ko": "★ 준정적 판정의 전부 — random 을 판 속도 ÷ 파속 0.030 (파선) 과 그 절반 0.015 (실선) 로 누른 두 런 + 5차 다항 맞춤 (일점쇄선).  저자 판정 = 눈 대조 (*The responses for both rates are similar*).  [판독 · 카드 산술] 평균 반력의 비 (빠름 ÷ 느림): ε 0.05–0.3 1.02 · 0.3–0.55 1.35 · 0.55–0.7 1.09 · ε 0.7 에서 361 ↔ 289 MPa · 최대 차 79 MPa.  반력이 뜨는 변형률 0.032 ↔ 0.017 = 파가 바닥에 닿는 때 (봉 파속 기준 0.0319 · 0.0160).  인쇄된 맞춤선은 느린 런의 5차 최소제곱 맞춤과 rms ≈ 2 MPa · 빠른 런과는 ≈ 13 MPa — 어느 런에 맞췄는지는 본문에 없다.  0.030 곡선은 ε 0.68 에서 그림 위로 나간다.  우리 쪽: 판 Mach 0.03 ↔ 0.015 쌍의 제3자 사례 — 구조가 무너지는 구간의 반력은 이 속도 수준에서 절반으로 줄이면 평균 35 % 달라졌다."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Response of the lattice foam microstructure to quasi-static uniaxial compression and a polynomial fit to the data.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.2,
+    75.9,
+    360.2,
+    257.3
+   ],
+   "w": 1372,
+   "h": 1007,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.965,
+   "auto_bbox": [
+    50.7,
+    73.2,
+    421.4,
+    257.9
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 66.5–259.8 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (68 pt of white on the left, 67 pt on the right, 8.7 pt above and 6.6 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "lattice (0.030) 의 처음 70 % + 5차 맞춤.  [판독] 원자료: 봉우리 34 MPa (ε 0.071) → 고원 평균 10.2 MPa (ε 0.25–0.55 · 4.5–15.6) · 맞춤선: 극대 21.6 MPa (ε 0.085) · 극소 9.6 MPa (ε 0.49) · ε 0.7 에서 98.7 MPa.  봉우리 뒤 하중이 떨어지는 것 = 규칙 구조의 snap-through (본문).  [카드 재현] 원자료를 원점 지나는 5차 최소제곱으로 맞추면 인쇄된 선과 rms 0.14 MPa.  우리 쪽: 반력 곡선을 다항식으로 매끈하게 하면 봉우리가 깎인다 (34 → 21.6) — 원자료를 같이 둔다."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Approximate quasi-static response of both microstructures and yield stress estimates from the formulas of Gibson and Ashby.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.5,
+    300.9,
+    359.9,
+    480.3
+   ],
+   "w": 1368,
+   "h": 996,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.961,
+   "auto_bbox": [
+    50.7,
+    298.1,
+    421.4,
+    481.1
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 280.6–483.0 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (69 pt of white on the left, 68 pt on the right, 8.8 pt above and 6.8 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "맞춤선만 겹친 그림 + Gibson–Ashby 의 '항복' (고원 진입) 응력 수평선 — 공학 지침과의 대조.  [판독 · 벡터 좌표] G&A lattice 5.53 · random 8.13 MPa · 비 1.468 ≈ (9.6/7.9)² = 1.477 → σ ∝ φ² 꼴 · K · G 에서 구한 E_s 17.49 GPa 로 나누면 계수 0.0507 · 0.0504 [카드 산술 — 식 · 계수는 논문에 미인쇄].  맞춤선 ÷ G&A: lattice 고원 1.7–1.9 · 봉우리 3.9 · random ε 0.1 에서 1.5 · 0.3 에서 3.9 — 저자 판정 *as consistent with this guideline as many experimental data*.  random 선은 Fig. 4 의 맞춤선 (느린 런 쪽) 그대로다.  범례는 *plateau stress* · 캡션은 *yield stress*.  우리 쪽: 값 전이 없음 (발포체 지침) — '공학 지침의 1.5–3.9 배' 가 이 논문의 검증 수준이라는 것만."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 13,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Deformation of the random (left) and lattice unit cells. The frames are at 10%, 30%, 50%, 70% and 90% engineering strain from top to bottom (with the bottom frame viewpoint from below). Material points are colored by equivalent stress.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.2,
+    72.1,
+    360.8,
+    446.6
+   ],
+   "w": 1386,
+   "h": 2080,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.078,
+   "auto_bbox": [
+    50.7,
+    72.2,
+    421.4,
+    446.6
+   ],
+   "src_native": [
+    660,
+    1007
+   ],
+   "native_dpi": 200,
+   "recrop": "re-cut by hand: bounding box of the non-white pixels of the embedded raster (RGB JPEG, xref 114, 660×1007 px ≈ 200 dpi) inside the band between the text above and the caption (y 66.5–449.2 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (= 2 × native; tool default 300 dpi) — the auto crop ran to the text-column edges (66 pt of white on the left, 67 pt on the right, 5.9 pt above and 6.0 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "물질점을 등가 응력 σ_eq 로 칠한 변형 순서 — 왼 random · 오른 lattice · 위에서 아래로 10 · 30 · 50 · 70 · 90 % (맨 아래 칸은 밑에서 본 그림).  색 눈금 · 문턱 값은 없다 (문턱 위는 전부 빨강 · 모든 칸 같은 범위).  10–50 %: 굽힘과 strut 이음매 · 70 %: 접촉이 넓게 · 90 %: 낮은 응력 구역 없음 (본문).  [판독 · 내장 래스터 660 × 1007 px] 밑에서 본 칸에서 판 (파랑) 이 뚫려 보이는 넓이: random 5.1 % · lattice 12.5 % (가장 큰 구멍 2.1 % · 4.0 %) — 그런데 부피 기공 (Fig. 8) 은 lattice 0.345 < random 0.384 로 순서가 반대다.  우리 쪽: 투영 · 단면으로 본 기공과 부피 기공은 순서가 다를 수 있다 (단면 SEM ↔ 질량 기준 기공) · 붙는 (no-slip) 접촉으로 자기 접촉을 공칭 90 % 까지 끌고 간 한 물체의 그림 (격자 얽힘 없음)."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Porosities of the two foam microstructures during compression from the simulations and calculated assuming incompressibility.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.9,
+    73.7,
+    359.3,
+    255.3
+   ],
+   "w": 1363,
+   "h": 1008,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.959,
+   "auto_bbox": [
+    50.7,
+    71.0,
+    421.4,
+    255.9
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 66.5–257.8 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (69 pt of white on the left, 68 pt on the right, 8.7 pt above and 6.6 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 기공 대 변형률 — 실선 lattice · 긴 파선 그 비압축 추정 (식 2) · 짧은 파선 random · 점선 그 비압축 추정.  [판독 · 벡터 경로] 출발 0.9218 · 0.9029 (→ φ₀ 0.0782 · 0.0971 — 인쇄 7.9 · 9.6 % 와 0.1 %p 차) · ε 0.9: lattice 0.345 (비압축 0.218) · random 0.384 (비압축 0.028) = 본문 *about 35% porosity is retained near full densification*.  [카드 산술] (1 − p)/(1 − p_inc) = J (뼈대 부피비) → ε 0.9 에서 J 0.837 · 0.634: 남은 기공 = 뼈대가 16 · 37 % 눌렸다는 말과 같다.  lattice 는 ε 0.18–0.81 에서 p < p_inc (J 최대 1.11 @ ε 0.36) — 평균 응력이 압축인 계에서 뼈대 부피가 11 % 늘 수는 없으므로 부피 측도의 오차로 읽힌다 (저자 설명은 snap-through 중 압축 · 인장 구역의 경쟁).  dp/dJ = −φ₀/(1 − ε) = −0.78 · −0.97 (ε 0.9) → 뼈대 부피 10 % 오차 = 기공 8–10 %p.  우리 쪽: 단계 0 — 우리 MPM 기공은 고체 부피를 고정한 식 (2) 꼴이다 · 두 꼴의 차와 평균 응력 점검을 결과 전에 적는다."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 16,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. The effect of doubling the material constants on the response of the two foam microstructures.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.2,
+    73.7,
+    360.1,
+    254.2
+   ],
+   "w": 1371,
+   "h": 1002,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.956,
+   "auto_bbox": [
+    52.8,
+    71.0,
+    419.2,
+    254.9
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 66.5–256.9 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (66 pt of white on the left, 65 pt on the right, 8.7 pt above and 6.7 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "재료 상수 (K · G) 를 두 배로 한 런 (stiffened) ↔ 원래 런 · 전 구간.  [판독 · 벡터 경로] ε 0.9: random 6,673 → 13,631 MPa (×2.04) · lattice 3,896 → 8,222 MPa (×2.11) · ε 0.85–0.9 에서 배율 1.88–2.11 · ε 0.5–0.8 은 1.4–2.7 로 흩어진다.  단단한 lattice 가 무른 random 을 ε ≈ 0.83 에서 넘는다 (본문: *crosses*).  [판독 · 카드 산술] stiffened 런은 반력이 ε 0.0226–0.0228 에서 뜬다 = 0.0319/√2 → 판의 절대 속도를 그대로 둔 것 (판 속도 ÷ 파속 0.021).  우리 쪽: 탄성 · 속도 무관 재료에서 응력이 계수에 비례하는 것은 차원 논리 — 배율이 2 에서 벗어난 구간은 관성 · 무너짐 경로의 민감도를 보여 주는 자리다."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 17,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. The effect of doubling the material constants on the response of the random microstructure.",
+   "rotated_deg": 0,
+   "bbox": [
+    113.2,
+    73.7,
+    360.2,
+    255.7
+   ],
+   "w": 1372,
+   "h": 1010,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.954,
+   "auto_bbox": [
+    55.5,
+    71.0,
+    416.5,
+    256.2
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 66.5–258.5 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (64 pt of white on the left, 62 pt on the right, 8.7 pt above and 6.5 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "random · 처음 70 % · 원래 ↔ stiffened (+ 각각의 5차 맞춤).  [판독] 맞춤선의 배율 ε 0.3–0.68 에서 1.9–2.4 · 원자료 평균의 배율은 1.81 (ε 0.05–0.68).  ⚠ 'original' 원자료 (실선 · ε 0.7 에서 362 MPa) 는 Fig. 4 의 빠른 런과 0.5 MPa 안에서 같은 곡선인데, 그 'polynomial fit' (ε 0.7 에서 289 MPa) 은 Fig. 4 · 6 의 맞춤선 (느린 런 쪽) 이다 — 실선이 자기 맞춤선보다 위에 있다.  stiffened 맞춤선은 ε 0.69 에서 그림 위로 나간다.  우리 쪽: 값 전이 없음."
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 17,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. The effect of doubling the material constants on the response of the lattice microstructure.",
+   "rotated_deg": 0,
+   "bbox": [
+    114.1,
+    288.8,
+    359.3,
+    468.4
+   ],
+   "w": 1362,
+   "h": 997,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.954,
+   "auto_bbox": [
+    58.6,
+    286.2,
+    413.4,
+    468.9
+   ],
+   "src_native": null,
+   "recrop": "re-cut by hand: dark-pixel bounding box of the vector figure (line-art paths + Helvetica labels in the style of gnuplot output, no embedded raster) inside the band between the running head / text above and the caption (y 269.2–470.9 pt) → white canvas with a uniform 6 pt margin on all four sides, rendered at 400 dpi (tool default 300 dpi; raised so that the 0.3 pt curves and dash patterns stay distinct) — the auto crop ran to the text-column edges (61 pt of white on the left, 60 pt on the right, 8.6 pt above and 6.5 pt below); caption excluded (tool convention) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "lattice · 처음 70 % · 원래 ↔ stiffened (+ 각각의 5차 맞춤).  [판독] 원래 맞춤 극대 21.6 MPa ↔ stiffened 37.5 MPa (ε 0.078 · ×1.7) · stiffened 는 ε 0.5–0.62 에 둘째 혹 (원자료 최대 53 MPa) · 원자료 평균의 배율 1.74 (ε 0.05–0.68; 0.3–0.55 에서는 2.37).  본문: snap-through 구간은 *dominated by inertial effects* 일 수 있어 두 배 규칙이 덜 분명하다.  우리 쪽: 불안정 (좌굴 · 무너짐) 이 끼는 구간의 반력은 재하율 점검 없이 재료 효과로 읽지 않는다."
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 14,
+   "file": "eq_01_porosity_definition.png",
+   "caption": "Equation (1), PDF p.14 (journal p.610), §3.2: p = (V_bulk − V_microstructure)/V_bulk — porosity extracted from the simulation (V_bulk = volume under the piston, the 'bulk' foam volume; V_microstructure = volume occupied by the foam microstructural network).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.7,
+    352.1,
+    421.9,
+    388.1
+   ],
+   "w": 1940,
+   "h": 200,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.98,
+   "manual_crop": "display equation cut by hand — text-layer band between the prose lines above and below → dark-pixel bounding box of the equation (number included) at 400 dpi → white canvas with a uniform 7 pt margin on all four sides; neighbouring lines, running head and page number excluded (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이 논문의 기공 연산자.  V_bulk = 피스톤 아래 부피 (판 위치가 정한다) · V_microstructure = 뼈대가 차지한 부피 — *Because material deformation is tracked at each material point, it is possible to extract the porosity* 라고만 적고 계산식 (물질점 부피의 합인지 · 입자 영역의 부피인지 · 격자 점유인지) 은 인쇄하지 않았다.  우리 MPM 은 분자의 고체 부피를 씨앗 때 값으로 고정한다 (= 식 2 꼴) [우리 코드 판독 · `scripts/mpm3d_compaction.py` 2794 · 3261 행].  단계 0 에서 두 꼴을 갈라 적는다."
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 14,
+   "file": "eq_02_incompressible_foam_porosity.png",
+   "caption": "Equation (2), PDF p.14 (journal p.610), §3.2: p_inc = 1 − φ/(1 − ε_eng) — porosity of an incompressible foam (V_microstructure = Const.) in terms of the relative density φ and the engineering strain ε_eng.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.7,
+    446.8,
+    421.9,
+    484.5
+   ],
+   "w": 1940,
+   "h": 210,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.989,
+   "manual_crop": "display equation cut by hand — text-layer band between the prose lines above and below → dark-pixel bounding box of the equation (number included) at 400 dpi → white canvas with a uniform 7 pt margin on all four sides; neighbouring lines, running head and page number excluded (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "뼈대 부피가 안 변한다고 놓은 기준선 — φ = 처음 상대밀도 · ε_eng = 공칭 변형률 (압축 +) · 옆 변형이 0 일 때 (일축 변형) 만 성립.  p_inc = 0 ↔ ε = 1 − φ = 이 논문의 '완전 치밀화' (lattice 0.921 · random 0.904 — 계산은 0.90 까지) [카드 산술].  식 (1) 과 나누면 (1 − p)/(1 − p_inc) = J (뼈대 부피비) → p − p_inc = (φ/(1 − ε))(1 − J) [카드 산술].  우리 MPM 의 기공 식 1 − solid_vol/(area·height) 이 이 꼴이다 [우리 코드 판독]."
+  },
+  {
+   "key": "e01_02_ctx",
+   "kind": "equation",
+   "label": "eq1-2 (in text)",
+   "page": 14,
+   "file": "eq_01_02_porosity_definitions_in_text.png",
+   "caption": "Equations (1)–(2) with their defining sentences, PDF p.14 (journal p.610), §3.2 — the whole passage from 'Having established that the responses of the two unit cells are reasonable …' to 'The incompressible foam microstructure porosity is also presented in Fig.8.' (context crop: full text-column width).",
+   "rotated_deg": 0,
+   "bbox": [
+    49.7,
+    299.2,
+    422.3,
+    501.8
+   ],
+   "w": 2070,
+   "h": 1126,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.912,
+   "manual_crop": "context crop cut by hand — full text-column width, from the first line of the paragraph to the sentence after Eq. (2): dark-pixel bounding box at 400 dpi → white canvas with a uniform 7 pt margin; this crop deliberately keeps the surrounding sentences because the symbols of Eqs. (1)–(2) are defined only there (the clean per-equation crops are eq_01_… and eq_02_…) (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "식 (1) · (2) 와 기호의 뜻이 한 문단에 — 보고서에 정의째 붙일 때 쓴다.  기공을 '어떻게 셌는가' 에 대해 논문이 적은 것은 이 문단이 전부다 (V_microstructure 의 계산식 없음)."
+  },
+  {
+   "key": "e_s3_2_phi",
+   "kind": "equation",
+   "label": "unnumbered §3.2 (relative density)",
+   "page": 8,
+   "file": "eq_unnumbered_s3_2_relative_density.png",
+   "caption": "Unnumbered inline definition, PDF p.8 (journal p.604), §3.2: φ = ρ_foam/ρ_solid — the foam's relative density (ρ_solid = density of the network material).",
+   "rotated_deg": 0,
+   "bbox": [
+    312.0,
+    131.4,
+    391.5,
+    155.5
+   ],
+   "w": 442,
+   "h": 134,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.946,
+   "manual_crop": "inline formula cut by hand — x-range of the formula spans in the text line (the comma that follows is excluded) → dark-pixel bounding box at 400 dpi → white canvas with a uniform 7 pt margin; the neighbouring words and the lines above/below are excluded (2026-11-11, litdb-curator)",
+   "crop_note": "re-cut once after measuring the ink rows: the first band (down to y 151.3 pt) included the tops of the next text line; final band y 137.2–149.8 pt",
+   "viewed": true,
+   "mpm_note_ko": "상대밀도 = 발포체 밀도 ÷ 뼈대 재료 밀도 = 1 − 처음 기공률.  lattice 7.9 % · random 9.6 % (인쇄 · p.605) — Fig. 8 곡선의 출발점으로 읽으면 7.82 · 9.71 % [판독].  식 (2) 의 φ."
+  },
+  {
+   "key": "e_s3_2_seq",
+   "kind": "equation",
+   "label": "unnumbered §3.2 (equivalent stress)",
+   "page": 12,
+   "file": "eq_unnumbered_s3_2_equivalent_stress.png",
+   "caption": "Unnumbered inline definition, PDF p.12 (journal p.608), §3.2: σ_eq = √(1.5 Σ_ij σ′_ij σ′_ij) — the 'equivalent stress' (a norm of the stress tensor; σ′ = stress deviator) used to colour the material points in Fig. 7.",
+   "rotated_deg": 0,
+   "bbox": [
+    219.6,
+    235.5,
+    317.5,
+    267.6
+   ],
+   "w": 544,
+   "h": 179,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.947,
+   "manual_crop": "inline formula isolated by hand — in print the vinculum of the radical touches the descenders of the line above ('are plotted,') and the tip of the radical reaches into the line below, so no clean rectangle exists on the printed page; the neighbouring words (line above, line below, the words left and right on the same line) were hidden on an in-memory copy of the page (text redaction, nothing written to disk, formula glyphs untouched) and the same region was rendered at 400 dpi → dark-pixel bounding box → white canvas with a uniform 7 pt margin; the unaltered print is eq_unnumbered_s3_2_equivalent_stress_in_text.png (2026-11-11, litdb-curator)",
+   "crop_note": "re-cut once after viewing: the first attempt at hiding the neighbouring words also removed the radical, vinculum and summation glyphs (MuPDF matched them to the redaction strip) — the strip over the radical was narrowed to y 235.0–236.5 pt; neighbouring words hidden before rendering (see manual_crop), the glyphs of the formula are exactly those of the PDF",
+   "viewed": true,
+   "mpm_note_ko": "Fig. 7 을 칠한 양 = von Mises 등가 응력 (편차 응력 σ′ 의 노름 × √1.5) — *This measure emphasizes regions of high shear*.  인쇄에서는 근호 윗줄이 윗줄 글자와 닿아 있어, 이 그림은 이웃 낱말을 가린 사본에서 그렸다 (식의 글자는 그대로).  인쇄 그대로는 `…_in_text.png`."
+  },
+  {
+   "key": "e_s3_2_seq_ctx",
+   "kind": "equation",
+   "label": "unnumbered §3.2 (equivalent stress, in text)",
+   "page": 12,
+   "file": "eq_unnumbered_s3_2_equivalent_stress_in_text.png",
+   "caption": "The three printed text lines that contain the inline definition σ_eq = √(1.5 Σ_ij σ′_ij σ′_ij), PDF p.12 (journal p.608), §3.2: '… Material points are plotted, colored by a norm of the stress tensor, the \"equivalent stress\" (σ_eq = …), where σ′ is the stress deviator. This measure emphasizes regions of high shear. …' (context crop: full text-column width, unaltered print).",
+   "rotated_deg": 0,
+   "bbox": [
+    49.9,
+    227.4,
+    422.1,
+    274.7
+   ],
+   "w": 2068,
+   "h": 263,
+   "dpi": 400,
+   "src": "78ceea61-19._Insight_into_the_physics_of_foam_densification_via_numerical_simulation.pdf",
+   "blank": 0.888,
+   "manual_crop": "context crop cut by hand — the three full text lines around the inline formula (full text-column width): dark-pixel bounding box at 400 dpi → white canvas with a uniform 7 pt margin; kept as printed because the radical overlaps the lines above and below (2026-11-11, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "인쇄 그대로의 세 줄 — 근호가 위 · 아래 줄과 겹쳐 있다 (식만 따로 자른 것은 `eq_unnumbered_s3_2_equivalent_stress.png`)."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "all 11 printed figures (Fig. 1–11) were extracted with tools/litdb/extract_figures.py and then re-cut by hand to the dark-pixel bounds of each figure ± 6 pt (uniform margins on a white canvas, 400 dpi, `recrop`) — the auto crops ran to the text-column edges (≈ 40–70 pt of white left and right, 6–9 pt above and below); the paper has no tables and no supplementary material. The paper prints only 2 numbered display equations, (1) and (2): both were cropped by hand as kind \"equation\" (400 dpi, white canvas, 7 pt margin, `manual_crop`), together with one context crop that keeps their defining sentences and the 2 inline definitions the results rest on (relative density φ; equivalent stress σ_eq, as an isolated formula and as the unaltered three printed lines). Every crop (17 files) was opened and checked; 2 equation crops were re-cut once after viewing/measuring (relative density: the top of the next text line was inside the first band; equivalent stress: the first attempt at hiding the neighbouring words also removed the radical) (2026-11-11, litdb-curator)",
+ "note_manual": "all crops are rendered at 400 dpi (tool default = 300 dpi): 9 of the 11 figures are vector plots (line art in the style of gnuplot output) whose 0.3 pt curves and dash patterns separate better at 400 dpi, and the two embedded rasters (Fig. 2, Fig. 7) are 200 dpi, so 400 dpi is an exact 2× enlargement. Numbers quoted in mpm_note_ko as [판독 · 벡터 경로] were read from the path coordinates of the PDF drawing operators (frame and tick positions give the axis mapping), not from pixels; the read-out (27 curves sampled every 0.01 strain + 49 summary values) is stored next to the crops as digitized.csv. The x-axis label of Fig. 4 is clipped in the PDF itself. The text layer contains a white (invisible) 'ARTICLE IN PRESS' line at the top of every page (not in any crop)."
+}
