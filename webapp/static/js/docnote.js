@@ -28,12 +28,31 @@
  *   글을 누르거나 ✎ 를 누르면 제자리에서 고친다. 옛 글은 **지우지 않고**
  *   서버가 item.history 에 쌓는다 — 이 글들은 판단 기록이라 "그때 뭐라고 봤더라" 가
  *   나중에 질문이 된다.
+ *
+ * 접기 (2026-11-11 · 사용자 '메모 부분 접고 피는 버튼 상단에 있음 좋을듯')
+ *   여백 머리줄 (위에 붙어 있다) 의 [접기 ▸] 로 카드를 감추고 여백을 얇은 띠로 줄인다 — 본문이 넓어진다.
+ *   [◂ 펴기] 로 되돌린다. 메모 · 형광펜은 그대로다 (감출 뿐 지우지 않는다).
+ *   ⛔ 못 하는 것: 상태는 **보는 사람 브라우저에만** 기억한다 (localStorage · 막혀 있으면 이번 화면에서만) —
+ *     다른 기기 · 다른 사람과 맞추지 않는다. 접힌 채 오른쪽 클릭으로 새 메모를 열면 펴진다 (숨은 초안을 만들지 않는다).
  */
 (function (global) {
   "use strict";
 
   var BLOCKS = "p,li,h1,h2,h3,h4,h5,h6,blockquote,pre,td,th,figcaption";
   var cur = null;          // {body, rel, host, gut, notes, map, draft}
+
+  /* 여백 접기 상태 — 보는 사람 브라우저에만 (localStorage). 읽기 · 쓰기가 막혀 있으면 이번 화면에서만 기억한다. */
+  var FOLD_KEY = "dnote-folded";
+  var foldMem = null;
+  function folded() {
+    if (foldMem !== null) return foldMem;
+    try { foldMem = global.localStorage.getItem(FOLD_KEY) === "1"; } catch (e) { foldMem = false; }
+    return foldMem;
+  }
+  function setFolded(v) {
+    foldMem = !!v;
+    try { global.localStorage.setItem(FOLD_KEY, foldMem ? "1" : "0"); } catch (e) { /* 이번 화면에서만 */ }
+  }
 
   /* ⛔⛔ 2026-08-28 — 글 서식(esc/inline/autosize/wrapSel)의 **집을 comments.js 로 옮겼다.**
    *   여기에만 있어서 문헌 코멘트는 `**87.2%**` 가 별표째 보였다(1저자 신고).
@@ -200,8 +219,9 @@
       if (el) { cur.map[nt.id] = el; ok.push(nt); } else { lost.push(nt); }
     });
     cur.gut.innerHTML =
-      '<div class="dn-h">📝 메모 <span class="muted">' + cur.notes.length + "</span>" +
-      '<span class="dn-hint">본문에서 오른쪽 클릭</span></div>' +
+      '<div class="dn-h"><span class="dn-ttl">📝 메모 <span class="muted">' + cur.notes.length + "</span></span>" +
+      '<span class="dn-hint">본문에서 오른쪽 클릭</span>' +
+      '<button type="button" class="dn-fold" aria-expanded="true">접기 ▸</button></div>' +
       lost.map(function (n) { return cardHtml(n, true); }).join("") +
       ok.map(function (n) { return cardHtml(n, false); }).join("");
     paintBadge();
@@ -215,7 +235,40 @@
    *   메모를 다는 길은 그대로다: 본문 오른쪽 클릭 → openDraft 가 여백을 연다. */
   function syncOn() {
     if (!cur || !cur.host) return;
-    cur.host.classList.toggle("dnote-on", cur.notes.length > 0 || !!cur.draftEl);
+    var on = cur.notes.length > 0 || !!cur.draftEl;
+    cur.host.classList.toggle("dnote-on", on);
+    // 접기 — 초안이 열려 있으면 접지 않는다 (숨은 초안 금지 · openDraft 가 펴 둔다)
+    var f = on && folded() && !cur.draftEl;
+    cur.host.classList.toggle("dnote-folded", f);
+    var b = cur.gut && cur.gut.querySelector(".dn-fold");
+    if (b) {
+      b.setAttribute("aria-expanded", f ? "false" : "true");
+      b.textContent = f ? "◂ 펴기" : "접기 ▸";
+      b.title = f ? "메모 여백 펴기 (메모 " + cur.notes.length + " 개)" : "메모 여백 접기 — 본문이 넓어진다 (메모는 그대로)";
+    }
+  }
+
+  /* 머리줄 ([접기 ▸] 버튼) 이 위에 붙는 상자에 가리지 않게 그 높이만큼 내려 붙인다 (2026-11-11 실측) —
+   * 논문 페이지는 #doctoc (목차 · sticky top 0 · z 5) 가, 논문 창은 .modal-head (sticky · z 3) 가 위를 덮어서
+   * 굴리면 머리줄 (z 2) 이 그 뒤로 숨었다. 여백과 가로로 겹치는 붙은 상자만 센다 (겹치는 것 중 가장 큰 높이). */
+  function headTop() {
+    if (!cur || !cur.gut) return;
+    var t = 0, g = cur.gut.getBoundingClientRect();
+    [document.getElementById("doctoc"), cur.host && cur.host.querySelector(".modal-head")].forEach(function (el) {
+      if (!el || cur.gut.contains(el)) return;
+      var pos = getComputedStyle(el).position;
+      if (pos !== "sticky" && pos !== "fixed") return;
+      var a = el.getBoundingClientRect();
+      if (a.right > g.left && a.left < g.right && a.height > 0) t = Math.max(t, Math.ceil(a.height) + 4);
+    });
+    cur.gut.style.setProperty("--dn-h-top", t + "px");
+  }
+
+  function toggleFold() {
+    if (!cur) return;
+    setFolded(!folded());
+    syncOn();
+    if (!folded()) setTimeout(function () { if (cur) layout(); }, 0);   // 편 뒤에 카드 자리를 다시 잰다
   }
 
   /* 카드를 자기 자리 높이에 맞춰 세로로 놓는다. 겹치면 아래로 민다 (Word 와 같다).
@@ -223,6 +276,7 @@
    *   rect 차이가 스크롤과 무관해진다. .modal-body 가 그 상자다. */
   function layout() {
     if (!cur || !cur.gut) return;
+    headTop();
     var head = cur.gut.querySelector(".dn-h");
     var gr = cur.gut.getBoundingClientRect();
     var cards = [].slice.call(cur.gut.querySelectorAll(".dn-card,.dn-draft"));
@@ -546,6 +600,7 @@
 
   function openDraft(block, anchor) {
     killDraft();
+    if (folded()) setFolded(false);   // 접힌 여백에 초안을 쓸 수 없다 — 새 메모를 쓰면 편다 (그대로 펴 둔다)
     cur.draftEl = block;
     cur.draftAnchor = anchor;
     syncOn();                  // 여백을 먼저 펴야 초안 카드 자리를 잴 수 있다
@@ -592,6 +647,16 @@
       hostEl.appendChild(gut);
     }
     hostEl.classList.remove("dnote-on");    // 메모를 읽은 뒤 render() 의 syncOn 이 정한다
+    hostEl.classList.remove("dnote-folded");
+    if (!gut._dnFold) {                     // 머리줄 [접기 ▸ / ◂ 펴기] — gut 하나에 한 번만 단다
+      gut._dnFold = true;
+      gut.addEventListener("click", function (e) {
+        var b = e.target && e.target.closest && e.target.closest(".dn-fold");
+        if (!b) return;
+        e.preventDefault(); e.stopPropagation();
+        toggleFold();
+      });
+    }
     cur = { body: bodyEl, rel: rel, host: hostEl, gut: gut,
             notes: [], map: {}, draftEl: null, draftAnchor: "",
             pens: [], penOn: false, penColor: "yellow" };
@@ -630,7 +695,7 @@
     if (!cur) return;
     if (cur.ro) cur.ro.disconnect();
     clearHl();
-    if (cur.host) cur.host.classList.remove("dnote-on");
+    if (cur.host) { cur.host.classList.remove("dnote-on"); cur.host.classList.remove("dnote-folded"); }
     if (cur.gut && cur.gut.parentNode) cur.gut.parentNode.removeChild(cur.gut);
     cur = null;
     document.body.classList.remove("dn-pen-on");

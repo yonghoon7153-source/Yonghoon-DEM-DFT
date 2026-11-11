@@ -2696,7 +2696,12 @@ def test_docnote_highlight_paints_across_inline_tags():
         pytest.skip("node 가 없다")
     js = Path(__file__).parent / "docnote_paint.test.mjs"
     env = dict(os.environ)
-    for c in (Path("/tmp/claude-0"), Path.home()):
+    # ⚠ 2026-11-11 — 클라우드 컨테이너는 playwright-core 가 /opt/node-tools 에 있다. 거기를 안 봐서 이 시험이
+    #   이 컨테이너에서 늘 skip 이었다 (안 돈 시험). 직접 경로를 먼저 보고, 없으면 예전 두 곳을 훑는다.
+    direct = Path("/opt/node-tools/node_modules/playwright-core/package.json")
+    if direct.is_file():
+        env["PW_CORE_FROM"] = str(direct.parents[2] / "package.json")
+    for c in (() if direct.is_file() else (Path("/tmp/claude-0"), Path.home())):
         hit = next(c.rglob("node_modules/playwright-core/package.json"), None) if c.exists() else None
         if hit:
             env["PW_CORE_FROM"] = str(hit.parents[2] / "package.json")

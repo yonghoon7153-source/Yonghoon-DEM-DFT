@@ -11,7 +11,7 @@
  * 실행:  node webapp/tests/docnote_paint.test.mjs
  *        (playwright-core 와 /opt/pw-browsers 가 있어야 한다. 없으면 SKIP 으로 끝낸다.)
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, statSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 
@@ -35,8 +35,12 @@ try {
   console.log("SKIP — playwright-core 가 없다 (npm i playwright-core)");
   process.exit(0);
 }
+// ⚠ 2026-11-11 — 이 컨테이너는 `/opt/pw-browsers/chromium` 이 실행파일 (심볼릭 링크) 이라 옛 두 경로가 다 없어서
+//   이 시험이 **SKIP** 으로 끝나고 있었다 (안 돈 시험). 파일일 때만 쓴다 — 다른 환경에선 그 이름이 폴더다.
+const isFile = (p) => { try { return existsSync(p) && statSync(p).isFile(); } catch { return false; } };
 const EXE = ["/opt/pw-browsers/chromium/chrome-linux/chrome",
-             "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"].find(existsSync);
+             "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
+             "/opt/pw-browsers/chromium"].find(isFile);
 if (!EXE) { console.log("SKIP — chromium 실행파일을 못 찾았다"); process.exit(0); }
 
 const HL = [
@@ -378,6 +382,98 @@ chk(gate.draft.on && gate.draft.shown && gate.draft.hasDraft,
     `[여백 열기] 본문 오른쪽 클릭 초안이면 연다 (dnote-on=${gate.draft.on}, 보임=${gate.draft.shown}, 초안=${gate.draft.hasDraft})`);
 chk(!gate.back.on && !gate.back.shown,
     `[여백 열기] 초안을 취소하면 다시 닫는다 (dnote-on=${gate.back.on}, 보임=${gate.back.shown})`);
+
+/* 여백 접기 (2026-11-11 · 사용자 '메모 부분 접고 피는 버튼 상단에 있음 좋을듯').
+ *   사용자 화면은 개념 페이지 (.concept-wrap = 목차 | 본문 | 메모 세 칸) 다 — 그 꼴로 잰다.
+ *   (위 모달 조각 #pmbox 는 내용 폭으로 줄어드는 상자라 '본문이 넓어진다' 를 잴 수 없다 · 2026-11-11 실측.)
+ *   localStorage 는 진짜 주소에서만 열린다 (setContent 의 about:blank 는 막힌다) — 가짜 http 주소로 띄운다.
+ *   넓은 화면 (> 1280px) 이어야 '여백이 얇은 띠로 준다' 가 뜻을 갖는다 — 좁은 화면은 여백이 본문 아래로 쌓인다.
+ *   ⛔ 음성: 접힌 채 오른쪽 클릭으로 새 메모를 열면 **숨은 초안**이 생기면 안 된다 (펴서 보인다). */
+const pg2 = await b.newPage({ viewport: { width: 1600, height: 900 } });
+await pg2.route("http://fold.test/**", (route) => route.fulfill({ contentType: "text/html; charset=utf-8", body:
+  // ⚠ 실제 앱과 같은 틀 (body = flex · main.content = 남은 폭) 에 넣는다 — 틀 없이 .concept-wrap 만 두면
+  //   flex 항목이 내용 폭으로 줄어서 '본문이 넓어진다' 를 잴 수 없다 (2026-11-11 실측 · 본문 414 → 414).
+  `<!doctype html><meta charset="utf-8"><main class="content" id="main"><div class="concept-wrap"><nav class="concept-toc">목차</nav>
+   <article class="doc concept" id="concept-body"><p>여기 한 노드 안에 통째로 들어 있는 문단이다. 첫 문단 끝</p>
+   <p>두 번째 문단 시작 — 이어지는 문장이 있다.</p></article></div></main>` }));
+await pg2.goto("http://fold.test/");
+await pg2.addStyleTag({ path: CSS });
+await pg2.addScriptTag({ path: CJS });
+await pg2.addScriptTag({ path: JS });
+const fold = await pg2.evaluate(async (note) => {
+  window.fetch = function (url) {
+    const hi = String(url).includes("/api/highlights/");
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({ items: hi ? [] : [note] }) });
+  };
+  localStorage.removeItem("dnote-folded");
+  const host = document.querySelector(".concept-wrap");
+  const body = document.getElementById("concept-body");
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const vis = (el) => !!el && getComputedStyle(el).display !== "none";
+  const card = () => host.querySelector(".dn-card");
+  const btn = () => host.querySelector(".dn-fold");
+  const gutW = () => host.querySelector(".dnote-gut").getBoundingClientRect().width;
+  window.mountDocNotes(body, "kb/fold.md", host);
+  await wait(300);
+  const s0 = { on: host.classList.contains("dnote-on"), folded: host.classList.contains("dnote-folded"),
+               card: vis(card()), btn: vis(btn()), aria: btn() && btn().getAttribute("aria-expanded"),
+               w: gutW(), bodyW: body.getBoundingClientRect().width };
+  btn().click(); await wait(60);
+  const s1 = { folded: host.classList.contains("dnote-folded"), card: vis(card()), btn: vis(btn()),
+               aria: btn().getAttribute("aria-expanded"), stored: localStorage.getItem("dnote-folded"),
+               w: gutW(), bodyW: body.getBoundingClientRect().width };
+  window.unmountDocNotes();
+  window.mountDocNotes(body, "kb/fold.md", host);
+  await wait(300);
+  const s2 = { folded: host.classList.contains("dnote-folded"), card: vis(card()) };
+  body.querySelector("p").dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
+  await wait(60);
+  const s3 = { folded: host.classList.contains("dnote-folded"), draft: vis(host.querySelector(".dn-draft")),
+               stored: localStorage.getItem("dnote-folded") };
+  const x = host.querySelector(".dn-cancel"); if (x) x.click();
+  await wait(60);
+  const s4 = { folded: host.classList.contains("dnote-folded"), card: vis(card()) };
+  btn().click(); await wait(60);
+  const s5 = { folded: host.classList.contains("dnote-folded") };
+  btn().click(); await wait(60);
+  const s6 = { folded: host.classList.contains("dnote-folded"), card: vis(card()) };
+  localStorage.removeItem("dnote-folded");
+  return { s0, s1, s2, s3, s4, s5, s6 };
+}, NOTE);
+chk(fold.s0.on && !fold.s0.folded && fold.s0.card && fold.s0.btn && fold.s0.aria === "true",
+    "[접기] 처음엔 펴져 있고 머리줄에 [접기] 버튼이 보인다");
+chk(fold.s1.folded && !fold.s1.card && fold.s1.btn && fold.s1.aria === "false" && fold.s1.stored === "1",
+    `[접기] 누르면 카드가 숨고 버튼은 남는다 · 브라우저에 기억 (localStorage ${fold.s1.stored})`);
+chk(fold.s1.w < fold.s0.w / 3 && fold.s1.bodyW > fold.s0.bodyW + 200,
+    `[접기] 여백이 얇은 띠로 줄고 본문이 넓어진다 (여백 ${Math.round(fold.s0.w)} → ${Math.round(fold.s1.w)} px · 본문 ${Math.round(fold.s0.bodyW)} → ${Math.round(fold.s1.bodyW)} px)`);
+chk(fold.s2.folded && !fold.s2.card, "[접기] 다시 열어도 접힌 채다 (보는 사람 브라우저에 기억)");
+chk(!fold.s3.folded && fold.s3.draft && fold.s3.stored === "0",
+    "[접기·음성] 접힌 채 오른쪽 클릭하면 펴서 초안을 보인다 (숨은 초안 없음 · 편 상태를 기억)");
+chk(!fold.s4.folded && fold.s4.card, "[접기] 초안을 닫아도 펴진 채 남고 카드가 보인다");
+chk(fold.s5.folded && !fold.s6.folded && fold.s6.card, "[접기] 버튼으로 다시 접고 다시 편다 (오가기)");
+
+/* 머리줄이 위에 붙는 목차 (#doctoc · 논문 페이지) 에 가리지 않는가 (2026-11-11 실측 — 굴리면 버튼이 목차 뒤로 숨었다).
+ *   ⛔ 음성 대조: 목차가 없으면 0 으로 붙는다 (offset 이 늘 생기면 개념 페이지 머리줄이 괜히 내려간다). */
+const toc = await pg2.evaluate(async () => {
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const host = document.querySelector(".concept-wrap");
+  const gut = host.querySelector(".dnote-gut");
+  const top0 = getComputedStyle(gut).getPropertyValue("--dn-h-top").trim();
+  const nav = document.createElement("nav");
+  nav.id = "doctoc";
+  nav.style.cssText = "position:sticky;top:0;z-index:5;height:120px;background:#ddd";
+  host.parentNode.insertBefore(nav, host);
+  const filler = document.createElement("div"); filler.style.height = "3000px";
+  document.getElementById("concept-body").appendChild(filler);
+  window.dispatchEvent(new Event("resize"));
+  await wait(200);
+  window.scrollTo(0, 1500); await wait(200);
+  const h = host.querySelector(".dn-h").getBoundingClientRect(), n = nav.getBoundingClientRect();
+  return { top0, top1: getComputedStyle(gut).getPropertyValue("--dn-h-top").trim(), hTop: h.top, navBottom: n.bottom };
+});
+chk(toc.top0 === "0px", `[머리줄·음성 대조] 위에 붙는 목차가 없으면 0 으로 붙는다 (${toc.top0})`);
+chk(toc.top1 === "124px" && toc.hTop >= toc.navBottom - 0.5,
+    `[머리줄] 굴려도 [접기] 버튼이 위 목차 아래에 보인다 (--dn-h-top ${toc.top1} · 머리줄 위 ${Math.round(toc.hTop)} ≥ 목차 아래 ${Math.round(toc.navBottom)})`);
 
 await b.close();
 console.log(ok ? "docnote paint PASS" : "docnote paint FAIL");
