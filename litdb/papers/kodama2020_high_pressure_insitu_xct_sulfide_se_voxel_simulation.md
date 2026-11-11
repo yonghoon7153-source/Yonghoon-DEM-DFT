@@ -12,7 +12,7 @@
 >
 > **저자**: **M. Kodama\*** (교신 · 원문은 이니셜만 — 이름 전체 [미확인]) · S. Komiyama · A. Ohashi · N. Horikawa · K. Kawamura · S. Hirai — Tokyo Institute of Technology (NE-8 2-12-1 Meguro, Tokyo · School of Engineering) · *J. Power Sources* **462** (2020) 228160 (본문 8 쪽 · SI 안내 없음) · 접수 2020-02-23 · 수정 04-03 · 승인 04-04 · 온라인 04-18 · 연구비 Japan Keirin Autorace Foundation (일부) · 기여: Kodama = 개념 · 방법 · 소프트웨어 · 초고 / Komiyama = 검증 · 자원 / Ohashi = 검토 · 편집 / Horikawa = 검증 / Kawamura = 자원 / Hirai = 과제 관리 (p.7).
 > **이웃 카드 (링크만)**: [`otani2023_ionic_conductivity_path_resistance_separation_model`](otani2023_ionic_conductivity_path_resistance_separation_model.md) (그 논문 ref 22 = 이 논문 · '③ 격자 부정합 저항 무시') · [`yadav2021_lpscl_sieved_psd_impedance_tortuosity`](yadav2021_lpscl_sieved_psd_impedance_tortuosity.md) (ref 5) · [`faka2026_particle_size_consolidation_strain_lpscl`](faka2026_particle_size_consolidation_strain_lpscl.md) (ref 12) · [`sakuda2013_sulfide_mechanical_property`](sakuda2013_sulfide_mechanical_property.md) (이 논문 ref 8) · [`deng2016_elastic_superionic_electrolytes_dft`](deng2016_elastic_superionic_electrolytes_dft.md) (이 논문 ref 17) · [`kato2016_high_power_assb_lsipscl_superionic`](kato2016_high_power_assb_lsipscl_superionic.md) (ref 7) · [`thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography`](thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md) (초고압 흡수 단층촬영 · 같은 질문의 GPa 판) · [`lee2025_heckel_argyrodite_powder_densification_nanoindentation`](lee2025_heckel_argyrodite_powder_densification_nanoindentation.md) (같은 Li₆PS₅Br 의 Heckel · 나노압입).
-> **판독 원자료**: `litdb/figures/kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation/digitized.csv` (76 행 — Fig 3a · 3c · 4a · 4c · 5a · 5b · 6a · 6b · 6c) · 그림 크롭 44 장 (그림 8 재크롭 + 그래픽 초록 1 + 패널 17 · 식 6 · 근거 문단 12) — `figures.json`.
+> **판독 원자료**: `litdb/figures/kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation/digitized.csv` (81 행 — Fig 3a · 3c · 4a · 4c · 5a · 5b · 6a · 6b · 6c) · 그림 크롭 44 장 (그림 8 재크롭 + 그래픽 초록 1 + 패널 17 · 식 6 · 근거 문단 12) — `figures.json`.
 
 ---
 
@@ -246,7 +246,7 @@ PEEK 원통 (X 선 창) 안 분말을 위 · 아래 스테인리스 집전체가
 ## 6. Post-processing ★
 - **무엇을**: EIS → R1 → σ (기하 미인쇄) · CT → 집전체 거리 → 변형률 · CT 단면 (정성) · 영상 기반 FV → 계산 σ · 전위 · 상대 흐름 지도.
 - **안 한 것**: 기공률 · 상대밀도 계산 · 진밀도 · tortuosity 숫자 (본문은 'low tortuosity' 말만) · 입자 크기 분포 변화 · 접촉 면적 정량 · 해상도 수렴 (격자 · 복셀 바꾸기) · RVE 크기 시험 · 반복 측정 수 · 0 MPa 감압.
-- **이 카드의 후처리**: 원 래스터 판독 (Fig 3a · 3c · 4a · 4c · 5a · 5b · 6a–c · 76 행 · 범례 표지 제외 · 가려진 검은 점 둘은 보이는 호에 고정 반지름 원 맞춤 — 6a ≈94 MPa · 6b ≈7.8 MPa (경계 5 화소 · 낮은 신뢰)) · 계산 ÷ 실측 (가장 가까운 점 · 직선 보간 둘) · 할선 · 접선 · D₀ 상한 · 감압 이력 비 · 2D 면적 분율 (문턱 셋) · 축척 막대 → 원 지름 (원 맞춤).
+- **이 카드의 후처리**: 원 래스터 판독 (Fig 3a · 3c · 4a · 4c · 5a · 5b · 6a–c · 81 행 · 범례 표지 제외 · 가려진 검은 점 둘은 보이는 호에 고정 반지름 원 맞춤 — 6a ≈94 MPa · 6b ≈7.8 MPa (경계 5 화소 · 낮은 신뢰)) · 계산 ÷ 실측 (가장 가까운 점 · 직선 보간 둘) · 할선 · 접선 · D₀ 상한 · 감압 이력 비 · 2D 면적 분율 (문턱 셋) · 축척 막대 → 원 지름 (원 맞춤).
 
 ---
 
