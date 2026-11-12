@@ -490,3 +490,7 @@ dang2019_nmc111_secondary_particle_flat_punch_fracture_strength	fracture behavio
 #   ⚠ 크롭 46 장 = 도구 3 (recrop: Fig. 2 판 1 · Fig. 6 · Fig. 8) + 손 크롭 43 (manual_crop: 그림 7 · 식 23 · 근거 글 13) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭은 자동 bbox 로 돌아간다)
 hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load	determination_of_the_tensile_strength_of_rock
 hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load	determination of the tensile strength of rock
+# ── 단결정 NMC811 기저면 전단강도 vs 리튬화 (무압연 다공 양극 층을 경도 50.4–946 MPa 기판 위에서 Vickers 압입 · 층 견인력 = 기판 경도 · 뺀 뒤 SEM 슬립 띠 · 균열 분율 F(H) · Reuss + 기저면 단일 슬립 + 방위 분포 → τ_C 86 ± 12 → 39 ± 5 MPa) (Stallard · Vema · Hall · Dennis · Penrod · Grey · Deshpande · Fleck · J. Electrochem. Soc. 169, 040511 (2022)) — litdb 2026-11-12 (후보 N-12) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 · 같은 제1 저자 · 같은 해의 Joule 리뷰 (stallard2022_cathode_mechanical_properties_review) 와 다른 논문
+#   ⚠ 크롭 51 장 = 도구 9 (Fig. 1–8 · Table S1 — 그대로) + 손 크롭 42 (manual_crop: 패널 9 · 식 13 · 근거 글 20) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+stallard2022_nmc811_single_crystal_shear_strength_lithiation	effect_of_lithiation_upon_the_shear_strength_of_nmc811
+stallard2022_nmc811_single_crystal_shear_strength_lithiation	effect of lithiation upon the shear strength of nmc811
