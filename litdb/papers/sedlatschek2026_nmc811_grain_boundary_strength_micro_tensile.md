@@ -494,5 +494,8 @@ ASSUMED-FORM 에 붙일 수 있는 **첫 정량 한정어**. ⚠ 리튬화 상�
 | D20 | 게이지 변형률속도: 실측 ÷ 명목 (0.37 nm s⁻¹ ÷ 2.7 µm = 1.37 × 10⁻⁴ s⁻¹) | **0.142 · 0.178 · 0.183** | 압입기 변위의 ≈82–86 % 가 게이지 밖으로 |
 | D21 | 제외 곡선 포함 (figure-read 990 MPa) Weibull MLE | m ≈ **5.4** · σ_ch ≈ **835 MPa** · 평균 E ≈177 (할선 ≈213 포함) | figure-read 입력 — TREND 전용 |
 
+## 🔗 관련 카드
+- 참고 [28] 의 원전 (2026-11-12 카드): [`devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode`](devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode.md) — "139 GPa · H 8.9" = targeted 138.73 ± 18.78 · 8.89 ± 1.86 (NMC532 이차입자 · 깊이 창 75–150 nm · ν 0.3 가정) · 같은 논문 격자 분해 입자 값 123.02 · 7.78 (그 카드 §0-1 · §3).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -1,0 +1,288 @@
+figure,series,x_name,x,y_name,y,note
+fig3c_E,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,51.7,E_GPa,151.59,"vector: red polyline #39 vertex (116.07,268.94) pt; y-bar 128.69-174.02 -> SD 22.67; x-bar half-width 9.9 nm; frame x (99.97, 255.79) pt=0-500 nm, y (356.05, 241.92) pt=(60, 180)"
+fig3c_E,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,74.5,E_GPa,149.1,"vector: red polyline #39 vertex (123.19,271.31) pt; y-bar 132.17-165.56 -> SD 16.69; x-bar half-width 4.6 nm; frame x (99.97, 255.79) pt=0-500 nm, y (356.05, 241.92) pt=(60, 180)"
+fig3c_E,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,97.3,E_GPa,141.15,"vector: red polyline #39 vertex (130.30,278.86) pt; y-bar 120.23-162.55 -> SD 21.16; x-bar half-width 6.9 nm; frame x (99.97, 255.79) pt=0-500 nm, y (356.05, 241.92) pt=(60, 180)"
+fig3c_E,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,127.7,E_GPa,137.68,"vector: red polyline #39 vertex (139.78,282.17) pt; y-bar 122.72-152.63 -> SD 14.95; x-bar half-width 4.5 nm; frame x (99.97, 255.79) pt=0-500 nm, y (356.05, 241.92) pt=(60, 180)"
+fig3c_E,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,152.0,E_GPa,127.7,"vector: red polyline #39 vertex (147.34,291.66) pt; y-bar 105.33-150.14 -> SD 22.41; x-bar half-width 12.2 nm; frame x (99.97, 255.79) pt=0-500 nm, y (356.05, 241.92) pt=(60, 180)"
+fig3c_E,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,199.1,E_GPa,121.27,"vector: red polyline #39 vertex (162.00,297.78) pt; y-bar 102.83-139.65 -> SD 18.41; x-bar half-width 6.8 nm; frame x (99.97, 255.79) pt=0-500 nm, y (356.05, 241.92) pt=(60, 180)"
+fig3c_E,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,419.5,E_GPa,73.44,"vector: red polyline #39 vertex (230.70,343.26) pt; y-bar 64.46-81.91 -> SD 8.72; x-bar half-width 16.0 nm; frame x (99.97, 255.79) pt=0-500 nm, y (356.05, 241.92) pt=(60, 180)"
+fig3c_H,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,50.8,H_GPa,9.54,"vector: red polyline #334 vertex (320.33,276.99) pt; y-bar 7.59-11.50 -> SD 1.96; x-bar half-width 9.7 nm; frame x (304.23, 462.86) pt=0-500 nm, y (356.05, 241.92) pt=(4, 12)"
+fig3c_H,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,74.6,H_GPa,9.05,"vector: red polyline #334 vertex (327.89,284.05) pt; y-bar 7.85-10.24 -> SD 1.20; x-bar half-width 4.5 nm; frame x (304.23, 462.86) pt=0-500 nm, y (356.05, 241.92) pt=(4, 12)"
+fig3c_H,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,97.0,H_GPa,9.05,"vector: red polyline #334 vertex (335.00,284.05) pt; y-bar 7.09-11.04 -> SD 1.97; x-bar half-width 6.8 nm; frame x (304.23, 462.86) pt=0-500 nm, y (356.05, 241.92) pt=(4, 12)"
+fig3c_H,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,126.9,H_GPa,8.68,"vector: red polyline #334 vertex (344.48,289.29) pt; y-bar 6.46-10.87 -> SD 2.21; x-bar half-width 5.2 nm; frame x (304.23, 462.86) pt=0-500 nm, y (356.05, 241.92) pt=(4, 12)"
+fig3c_H,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,150.7,H_GPa,8.88,"vector: red polyline #334 vertex (352.04,286.42) pt; y-bar 6.79-10.97 -> SD 2.09; x-bar half-width 12.0 nm; frame x (304.23, 462.86) pt=0-500 nm, y (356.05, 241.92) pt=(4, 12)"
+fig3c_H,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,200.0,H_GPa,7.39,"vector: red polyline #334 vertex (367.70,307.75) pt; y-bar 5.36-9.38 -> SD 2.01; x-bar half-width 6.7 nm; frame x (304.23, 462.86) pt=0-500 nm, y (356.05, 241.92) pt=(4, 12)"
+fig3c_H,targeted NMC532 (red dot = mean · bar = SD),max_depth_nm,419.4,H_GPa,5.36,"vector: red polyline #334 vertex (437.28,336.65) pt; y-bar 4.33-6.42 -> SD 1.05; x-bar half-width 16.4 nm; frame x (304.23, 462.86) pt=0-500 nm, y (356.05, 241.92) pt=(4, 12)"
+fig4a_E,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,202.1,E_GPa,1.5311,"vector: red polyline #1180 vertex (110.48,503.50) pt; y-bar 0.7720-2.2902 -> SD 0.7591; x-bar half-width 7.8 nm; frame x (97.79, 254.71) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 3)"
+fig4a_E,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,523.7,E_GPa,1.4688,"vector: red polyline #1180 vertex (130.66,505.85) pt; y-bar 1.0081-1.9165 -> SD 0.4542; x-bar half-width 7.4 nm; frame x (97.79, 254.71) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 3)"
+fig4a_E,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,838.2,E_GPa,1.4935,"vector: red polyline #1180 vertex (150.40,504.92) pt; y-bar 1.1327-1.8671 -> SD 0.3672; x-bar half-width 7.4 nm; frame x (97.79, 254.71) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 3)"
+fig4a_E,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,1048.2,E_GPa,1.9671,"vector: red polyline #1180 vertex (163.58,487.04) pt; y-bar 1.6556-2.2655 -> SD 0.3050; x-bar half-width 11.3 nm; frame x (97.79, 254.71) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 3)"
+fig4a_E,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,1586.7,E_GPa,1.8672,"vector: red polyline #1180 vertex (197.39,490.81) pt; y-bar 1.6556-2.0657 -> SD 0.2050; x-bar half-width nan nm; frame x (97.79, 254.71) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 3)"
+fig4a_E,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,1908.3,E_GPa,1.9788,"vector: red polyline #1180 vertex (217.57,486.59) pt; y-bar 1.7919-2.1656 -> SD 0.1869; x-bar half-width 11.3 nm; frame x (97.79, 254.71) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 3)"
+fig4a_E,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,2118.3,E_GPa,2.2163,"vector: red polyline #1180 vertex (230.75,477.63) pt; y-bar 1.9917-2.4394 -> SD 0.2238; x-bar half-width 14.8 nm; frame x (97.79, 254.71) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 3)"
+fig4b_H,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,199.7,H_GPa,0.0523,"vector: red polyline #1332 vertex (317.27,502.07) pt; y-bar 0.0270-0.0772 -> SD 0.0251; x-bar half-width 8.0 nm; frame x (305.07, 457.77) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 0.1)"
+fig4b_H,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,522.9,H_GPa,0.044,"vector: red polyline #1332 vertex (337.01,511.48) pt; y-bar 0.0303-0.0581 -> SD 0.0139; x-bar half-width 7.6 nm; frame x (305.07, 457.77) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 0.1)"
+fig4b_H,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,838.1,H_GPa,0.0386,"vector: red polyline #1332 vertex (356.26,517.60) pt; y-bar 0.0266-0.0506 -> SD 0.0120; x-bar half-width 8.0 nm; frame x (305.07, 457.77) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 0.1)"
+fig4b_H,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,1053.9,H_GPa,0.0436,"vector: red polyline #1332 vertex (369.44,511.97) pt; y-bar 0.0361-0.0510 -> SD 0.0075; x-bar half-width 7.6 nm; frame x (305.07, 457.77) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 0.1)"
+fig4b_H,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,1592.1,H_GPa,0.0403,"vector: red polyline #1332 vertex (402.31,515.69) pt; y-bar 0.0357-0.0452 -> SD 0.0048; x-bar half-width 8.0 nm; frame x (305.07, 457.77) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 0.1)"
+fig4b_H,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,1907.3,H_GPa,0.0419,"vector: red polyline #1332 vertex (421.57,513.83) pt; y-bar 0.0369-0.0465 -> SD 0.0048; x-bar half-width 11.6 nm; frame x (305.07, 457.77) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 0.1)"
+fig4b_H,CB/PVDF 50/50 wt% film (red dot = mean · bar = SD),max_depth_nm,2123.0,H_GPa,0.0419,"vector: red polyline #1332 vertex (434.74,513.83) pt; y-bar 0.0369-0.0469 -> SD 0.0050; x-bar half-width 15.2 nm; frame x (305.07, 457.77) pt=0-2500 nm, y (561.3, 448.04) pt=(0, 0.1)"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,0.0,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 0 of 286 (190.35,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,2.6,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 6 of 286 (190.65,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,2.6,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 12 of 286 (190.65,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,2.6,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 18 of 286 (190.65,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,2.6,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 24 of 286 (190.65,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,4.7,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 30 of 286 (190.89,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,7.2,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 36 of 286 (191.19,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,9.8,load_mN,0.17,"vector: blue polylines #1040/#1090/#1091 point 42 of 286 (191.49,104.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,34.4,load_mN,0.34,"vector: blue polylines #1040/#1090/#1091 point 48 of 286 (194.35,104.63) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,58.5,load_mN,0.82,"vector: blue polylines #1040/#1090/#1091 point 54 of 286 (197.17,103.79) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,75.9,load_mN,1.29,"vector: blue polylines #1040/#1090/#1091 point 60 of 286 (199.19,102.95) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,90.3,load_mN,1.8,"vector: blue polylines #1040/#1090/#1091 point 66 of 286 (200.87,102.06) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,107.7,load_mN,2.44,"vector: blue polylines #1040/#1090/#1091 point 72 of 286 (202.90,100.93) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,124.7,load_mN,3.25,"vector: blue polylines #1040/#1090/#1091 point 78 of 286 (204.87,99.50) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,139.5,load_mN,4.04,"vector: blue polylines #1040/#1090/#1091 point 84 of 286 (206.60,98.11) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,154.0,load_mN,4.85,"vector: blue polylines #1040/#1090/#1091 point 90 of 286 (208.28,96.68) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,168.8,load_mN,5.5,"vector: blue polylines #1040/#1090/#1091 point 96 of 286 (210.01,95.55) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,183.6,load_mN,6.31,"vector: blue polylines #1040/#1090/#1091 point 102 of 286 (211.74,94.11) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,198.1,load_mN,7.12,"vector: blue polylines #1040/#1090/#1091 point 108 of 286 (213.41,92.68) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,215.5,load_mN,8.41,"vector: blue polylines #1040/#1090/#1091 point 114 of 286 (215.44,90.41) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,237.5,load_mN,9.7,"vector: blue polylines #1040/#1090/#1091 point 120 of 286 (218.01,88.14) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,254.5,load_mN,10.51,"vector: blue polylines #1040/#1090/#1091 point 126 of 286 (219.98,86.71) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,264.2,load_mN,11.16,"vector: blue polylines #1040/#1090/#1091 point 132 of 286 (221.12,85.57) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,279.1,load_mN,12.14,"vector: blue polylines #1040/#1090/#1091 point 138 of 286 (222.85,83.84) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,293.5,load_mN,13.12,"vector: blue polylines #1040/#1090/#1091 point 144 of 286 (224.53,82.11) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,313.0,load_mN,14.41,"vector: blue polylines #1040/#1090/#1091 point 150 of 286 (226.80,79.84) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,327.8,load_mN,15.36,"vector: blue polylines #1040/#1090/#1091 point 156 of 286 (228.53,78.16) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,349.9,load_mN,16.99,"vector: blue polylines #1040/#1090/#1091 point 162 of 286 (231.09,75.30) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,366.9,load_mN,18.27,"vector: blue polylines #1040/#1090/#1091 point 168 of 286 (233.07,73.03) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,388.9,load_mN,19.73,"vector: blue polylines #1040/#1090/#1091 point 174 of 286 (235.64,70.46) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,396.6,load_mN,20.38,"vector: blue polylines #1040/#1090/#1091 point 177 of 286 (236.53,69.32) pt; max load"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,406.3,load_mN,19.9,"vector: blue polylines #1040/#1090/#1091 point 179 of 286 (237.66,70.16) pt; max displacement"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,406.3,load_mN,20.07,"vector: blue polylines #1040/#1090/#1091 point 180 of 286 (237.66,69.87) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,406.3,load_mN,19.9,"vector: blue polylines #1040/#1090/#1091 point 181 of 286 (237.66,70.16) pt; max displacement"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,398.7,load_mN,18.92,"vector: blue polylines #1040/#1090/#1091 point 186 of 286 (236.77,71.89) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,391.5,load_mN,17.63,"vector: blue polylines #1040/#1090/#1091 point 192 of 286 (235.93,74.16) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,384.3,load_mN,16.51,"vector: blue polylines #1040/#1090/#1091 point 198 of 286 (235.09,76.14) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,374.5,load_mN,15.05,"vector: blue polylines #1040/#1090/#1091 point 204 of 286 (233.96,78.71) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,369.4,load_mN,14.07,"vector: blue polylines #1040/#1090/#1091 point 210 of 286 (233.37,80.43) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,359.7,load_mN,12.78,"vector: blue polylines #1040/#1090/#1091 point 216 of 286 (232.23,82.70) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,352.4,load_mN,11.66,"vector: blue polylines #1040/#1090/#1091 point 222 of 286 (231.39,84.68) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,342.7,load_mN,10.34,"vector: blue polylines #1040/#1090/#1091 point 228 of 286 (230.25,87.00) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,332.9,load_mN,9.22,"vector: blue polylines #1040/#1090/#1091 point 234 of 286 (229.12,88.98) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,320.6,load_mN,7.77,"vector: blue polylines #1040/#1090/#1091 point 240 of 286 (227.69,91.54) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,310.9,load_mN,6.64,"vector: blue polylines #1040/#1090/#1091 point 246 of 286 (226.55,93.52) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,298.6,load_mN,5.36,"vector: blue polylines #1040/#1090/#1091 point 252 of 286 (225.12,95.79) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,283.7,load_mN,3.9,"vector: blue polylines #1040/#1090/#1091 point 258 of 286 (223.39,98.36) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,269.3,load_mN,2.75,"vector: blue polylines #1040/#1090/#1091 point 264 of 286 (221.71,100.38) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,251.9,load_mN,2.1,"vector: blue polylines #1040/#1090/#1091 point 270 of 286 (219.69,101.52) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,251.9,load_mN,1.8,"vector: blue polylines #1040/#1090/#1091 point 276 of 286 (219.69,102.06) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,232.4,load_mN,0.65,"vector: blue polylines #1040/#1090/#1091 point 282 of 286 (217.41,104.09) pt"
+fig3a_inset,"typical load-displacement (targeted, NMC532)",displacement_nm,200.6,load_mN,0.0,"vector: blue polylines #1040/#1090/#1091 point 285 of 286 (213.71,105.22) pt; unloading end (load 0)"
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,95.5-103.7,probability,0.0292,vector bar; count = p*N = 2.04 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,103.7-111.9,probability,0.0151,vector bar; count = p*N = 1.06 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,111.9-120.2,probability,0.0151,vector bar; count = p*N = 1.06 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,120.2-129.7,probability,0.1007,vector bar; count = p*N = 7.05 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,129.7-137.9,probability,0.1573,vector bar; count = p*N = 11.01 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,137.9-146.1,probability,0.1007,vector bar; count = p*N = 7.05 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,146.1-154.5,probability,0.1432,vector bar; count = p*N = 10.02 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,154.5-162.6,probability,0.1714,vector bar; count = p*N = 12.00 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,162.6-170.8,probability,0.115,vector bar; count = p*N = 8.05 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,170.8-180.3,probability,0.0433,vector bar; count = p*N = 3.03 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,180.3-188.7,probability,0.0858,vector bar; count = p*N = 6.01 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,188.7-196.9,probability,0.0151,vector bar; count = p*N = 1.06 with N=70 [card read]
+fig3b_E50,"histogram bar (targeted, max depth 50 nm)",E_bin_GPa,205.1-213.4,probability,0.0151,vector bar; count = p*N = 1.06 with N=70 [card read]
+fig3b_E50,N estimate,,,N,70,[card read] bar heights are integer multiples of 1/N (split bars merged); counts sum = 70; same N in the E and H panel of this depth
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,99.1-105.0,probability,0.0471,vector bar; count = p*N = 2.03 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,105.0-111.1,probability,0.0236,vector bar; count = p*N = 1.01 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,111.1-117.0,probability,0.0707,vector bar; count = p*N = 3.04 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,117.0-123.1,probability,0.0707,vector bar; count = p*N = 3.04 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,123.1-130.4,probability,0.0707,vector bar; count = p*N = 3.04 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,130.4-136.3,probability,0.1404,vector bar; count = p*N = 6.04 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,136.3-142.2,probability,0.1799,vector bar reaches the 0.18 axis top = CLIPPED; count = N - others = 8 (p = 0.186) [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,142.2-148.3,probability,0.0707,vector bar; count = p*N = 3.04 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,148.3-154.2,probability,0.0933,vector bar; count = p*N = 4.01 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,154.2-160.3,probability,0.0471,vector bar; count = p*N = 2.03 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,160.3-166.2,probability,0.0236,vector bar; count = p*N = 1.01 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,166.2-172.2,probability,0.0471,vector bar; count = p*N = 2.03 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,172.2-178.3,probability,0.0707,vector bar; count = p*N = 3.04 with N=43 [card read]
+fig3b_E100,"histogram bar (targeted, max depth 100 nm)",E_bin_GPa,178.3-184.2,probability,0.0471,vector bar; count = p*N = 2.03 with N=43 [card read]
+fig3b_E100,N estimate,,,N,43,[card read] bar heights are integer multiples of 1/N (split bars merged); counts sum = 43; same N in the E and H panel of this depth
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,79.0-87.3,probability,0.0405,vector bar; count = p*N = 2.03 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,87.3-95.5,probability,0.0603,vector bar; count = p*N = 3.02 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,95.5-105.0,probability,0.0405,vector bar; count = p*N = 2.03 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,105.0-113.2,probability,0.0801,vector bar; count = p*N = 4.01 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,113.2-121.5,probability,0.1799,vector bar reaches the 0.18 axis top exactly; count = p*N = 8.99 -> 9 completes N=50 (not clipped) [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,121.5-129.7,probability,0.1799,vector bar reaches the 0.18 axis top exactly; count = p*N = 8.99 -> 9 completes N=50 (not clipped) [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,129.7-137.9,probability,0.1007,vector bar; count = p*N = 5.04 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,137.9-147.4,probability,0.1602,vector bar; count = p*N = 8.01 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,147.4-155.8,probability,0.0603,vector bar; count = p*N = 3.02 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,155.8-163.9,probability,0.0405,vector bar; count = p*N = 2.03 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,163.9-172.1,probability,0.0208,vector bar; count = p*N = 1.04 with N=50 [card read]
+fig3b_E150,"histogram bar (targeted, max depth 150 nm)",E_bin_GPa,172.1-181.6,probability,0.0405,vector bar; count = p*N = 2.03 with N=50 [card read]
+fig3b_E150,N estimate,,,N,50,[card read] bar heights are integer multiples of 1/N (split bars merged); counts sum = 50; same N in the E and H panel of this depth
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,5.5-6.1,probability,0.0433,vector bar; count = p*N = 3.03 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,6.1-6.6,probability,0.0433,vector bar; count = p*N = 3.03 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,6.6-7.2,probability,0.0574,vector bar; count = p*N = 4.02 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,7.2-7.8,probability,0.0717,vector bar; count = p*N = 5.02 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,7.8-8.3,probability,0.0292,vector bar; count = p*N = 2.05 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,8.3-8.9,probability,0.0717,vector bar; count = p*N = 5.02 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,8.9-9.4,probability,0.1432,vector bar; count = p*N = 10.02 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,9.4-9.9,probability,0.1573,vector bar; count = p*N = 11.01 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,9.9-10.5,probability,0.1291,vector bar; count = p*N = 9.04 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,10.5-11.0,probability,0.0292,vector bar; count = p*N = 2.05 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,11.0-11.6,probability,0.115,vector bar; count = p*N = 8.05 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,11.6-12.2,probability,0.0574,vector bar; count = p*N = 4.02 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,12.2-12.7,probability,0.0151,vector bar; count = p*N = 1.06 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,12.7-13.2,probability,0.0151,vector bar; count = p*N = 1.06 with N=70 [card read]
+fig3b_H50,"histogram bar (targeted, max depth 50 nm)",H_bin_GPa,14.3-14.8,probability,0.0292,vector bar; count = p*N = 2.05 with N=70 [card read]
+fig3b_H50,N estimate,,,N,70,[card read] bar heights are integer multiples of 1/N (split bars merged); counts sum = 70; same N in the E and H panel of this depth
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,5.2-5.5,probability,0.047,vector bar; count = p*N = 2.02 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,6.0-6.4,probability,0.0236,vector bar; count = p*N = 1.01 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,6.4-6.8,probability,0.0236,vector bar; count = p*N = 1.01 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,6.8-7.2,probability,0.0933,vector bar; count = p*N = 4.01 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,7.2-7.7,probability,0.0933,vector bar; count = p*N = 4.01 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,7.7-8.1,probability,0.047,vector bar; count = p*N = 2.02 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,8.1-8.5,probability,0.1168,vector bar; count = p*N = 5.02 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,8.5-8.9,probability,0.1168,vector bar; count = p*N = 5.02 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,8.9-9.4,probability,0.0706,vector bar; count = p*N = 3.04 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,9.4-9.8,probability,0.047,vector bar; count = p*N = 2.02 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,9.8-10.2,probability,0.0933,vector bar; count = p*N = 4.01 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,10.2-10.6,probability,0.0236,vector bar; count = p*N = 1.01 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,10.6-11.1,probability,0.0236,vector bar; count = p*N = 1.01 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,11.1-11.5,probability,0.0706,vector bar; count = p*N = 3.04 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,11.9-12.3,probability,0.047,vector bar; count = p*N = 2.02 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,12.3-12.8,probability,0.047,vector bar; count = p*N = 2.02 with N=43 [card read]
+fig3b_H100,"histogram bar (targeted, max depth 100 nm)",H_bin_GPa,13.6-14.0,probability,0.0236,vector bar; count = p*N = 1.01 with N=43 [card read]
+fig3b_H100,N estimate,,,N,43,[card read] bar heights are integer multiples of 1/N (split bars merged); counts sum = 43; same N in the E and H panel of this depth
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,4.9-5.5,probability,0.0207,vector bar; count = p*N = 1.03 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,5.5-6.1,probability,0.0602,vector bar; count = p*N = 3.01 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,6.1-6.6,probability,0.0405,vector bar; count = p*N = 2.02 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,6.6-7.2,probability,0.1404,vector bar; count = p*N = 7.02 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,7.2-7.8,probability,0.08,vector bar; count = p*N = 4.00 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,7.8-8.3,probability,0.1008,vector bar; count = p*N = 5.04 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,8.3-8.9,probability,0.1206,vector bar; count = p*N = 6.03 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,8.9-9.5,probability,0.1008,vector bar; count = p*N = 5.04 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,9.5-10.0,probability,0.08,vector bar; count = p*N = 4.00 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,10.0-10.6,probability,0.08,vector bar; count = p*N = 4.00 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,10.6-11.2,probability,0.0405,vector bar; count = p*N = 2.02 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,11.2-11.7,probability,0.0405,vector bar; count = p*N = 2.02 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,11.7-12.3,probability,0.0207,vector bar; count = p*N = 1.03 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,12.3-12.8,probability,0.0207,vector bar; count = p*N = 1.03 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,12.8-13.4,probability,0.0207,vector bar; count = p*N = 1.03 with N=50 [card read]
+fig3b_H150,"histogram bar (targeted, max depth 150 nm)",H_bin_GPa,13.4-14.0,probability,0.0405,vector bar; count = p*N = 2.02 with N=50 [card read]
+fig3b_H150,N estimate,,,N,50,[card read] bar heights are integer multiples of 1/N (split bars merged); counts sum = 50; same N in the E and H panel of this depth
+fig6a,experimental CDF (blue cross),E_GPa,1.62,cumulative_probability,0.0574,vector cross centre; y*243 = 13.94 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,4.85,cumulative_probability,0.1066,vector cross centre; y*243 = 25.89 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,8.64,cumulative_probability,0.177,vector cross centre; y*243 = 43.00 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,12.42,cumulative_probability,0.1931,vector cross centre; y*243 = 46.92 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,15.66,cumulative_probability,0.2135,vector cross centre; y*243 = 51.87 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,19.45,cumulative_probability,0.2431,vector cross centre; y*243 = 59.09 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,22.68,cumulative_probability,0.2711,vector cross centre; y*243 = 65.89 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,26.47,cumulative_probability,0.3008,vector cross centre; y*243 = 73.10 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,29.7,cumulative_probability,0.317,vector cross centre; y*243 = 77.02 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,33.6,cumulative_probability,0.3458,vector cross centre; y*243 = 84.03 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,37.27,cumulative_probability,0.3619,vector cross centre; y*243 = 87.95 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,40.51,cumulative_probability,0.3831,vector cross centre; y*243 = 93.10 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,44.41,cumulative_probability,0.395,vector cross centre; y*243 = 95.99 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,47.64,cumulative_probability,0.4035,vector cross centre; y*243 = 98.05 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,51.32,cumulative_probability,0.4154,vector cross centre; y*243 = 100.94 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,55.22,cumulative_probability,0.4408,vector cross centre; y*243 = 107.12 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,58.45,cumulative_probability,0.4569,vector cross centre; y*243 = 111.04 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,62.12,cumulative_probability,0.49,vector cross centre; y*243 = 119.08 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,65.47,cumulative_probability,0.5062,vector cross centre; y*243 = 122.99 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,69.15,cumulative_probability,0.5308,vector cross centre; y*243 = 128.97 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,72.38,cumulative_probability,0.5477,vector cross centre; y*243 = 133.10 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,76.28,cumulative_probability,0.5927,vector cross centre; y*243 = 144.02 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,79.95,cumulative_probability,0.6088,vector cross centre; y*243 = 147.94 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,83.19,cumulative_probability,0.6215,vector cross centre; y*243 = 151.03 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,87.09,cumulative_probability,0.6258,vector cross centre; y*243 = 152.06 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,90.32,cumulative_probability,0.6461,vector cross centre; y*243 = 157.01 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,93.99,cumulative_probability,0.6707,vector cross centre; y*243 = 162.99 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,97.9,cumulative_probability,0.6911,vector cross centre; y*243 = 167.94 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,101.13,cumulative_probability,0.6953,vector cross centre; y*243 = 168.97 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,104.8,cumulative_probability,0.7157,vector cross centre; y*243 = 173.92 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,108.15,cumulative_probability,0.7327,vector cross centre; y*243 = 178.04 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,111.94,cumulative_probability,0.7573,vector cross centre; y*243 = 184.02 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,115.17,cumulative_probability,0.77,vector cross centre; y*243 = 187.11 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,118.96,cumulative_probability,0.7904,vector cross centre; y*243 = 192.06 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,122.75,cumulative_probability,0.798,vector cross centre; y*243 = 193.91 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,125.98,cumulative_probability,0.8107,vector cross centre; y*243 = 197.01 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,129.77,cumulative_probability,0.8396,vector cross centre; y*243 = 204.02 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,133.0,cumulative_probability,0.8727,vector cross centre; y*243 = 212.06 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,136.79,cumulative_probability,0.8888,vector cross centre; y*243 = 215.97 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,140.57,cumulative_probability,0.91,vector cross centre; y*243 = 221.13 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,143.81,cumulative_probability,0.9176,vector cross centre; y*243 = 222.98 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,147.59,cumulative_probability,0.9422,vector cross centre; y*243 = 228.96 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,150.83,cumulative_probability,0.9507,vector cross centre; y*243 = 231.02 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,154.62,cumulative_probability,0.9626,vector cross centre; y*243 = 233.91 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,157.85,cumulative_probability,0.9668,vector cross centre; y*243 = 234.94 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,161.64,cumulative_probability,0.9796,vector cross centre; y*243 = 238.03 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,165.42,cumulative_probability,0.9829,vector cross centre; y*243 = 238.86 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,168.66,cumulative_probability,0.988,vector cross centre; y*243 = 240.09 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,172.44,cumulative_probability,0.988,vector cross centre; y*243 = 240.09 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,175.68,cumulative_probability,0.9914,vector cross centre; y*243 = 240.92 [card read: denominator 243]
+fig6a,experimental CDF (blue cross),E_GPa,179.47,cumulative_probability,0.9957,vector cross centre; y*243 = 241.95 [card read: denominator 243]
+fig6a,N estimate,,,N_denominator,243,[card read] all 51 cross heights are integer multiples of 1/243 (max deviation <0.08 count); 121/242/244 fail (deviation ~0.5)
+fig6c,experimental CDF (blue cross),H_GPa,0.14,cumulative_probability,0.1351,vector cross centre; y*243 = 32.83 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,0.42,cumulative_probability,0.2055,vector cross centre; y*243 = 49.92 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,0.7,cumulative_probability,0.2339,vector cross centre; y*243 = 56.85 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,0.98,cumulative_probability,0.2803,vector cross centre; y*243 = 68.10 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,1.31,cumulative_probability,0.3168,vector cross centre; y*243 = 76.97 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,1.59,cumulative_probability,0.3497,vector cross centre; y*243 = 84.98 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,1.87,cumulative_probability,0.3702,vector cross centre; y*243 = 89.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,2.2,cumulative_probability,0.3987,vector cross centre; y*243 = 96.88 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,2.47,cumulative_probability,0.4361,vector cross centre; y*243 = 105.97 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,2.75,cumulative_probability,0.4566,vector cross centre; y*243 = 110.95 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,3.03,cumulative_probability,0.486,vector cross centre; y*243 = 118.09 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,3.37,cumulative_probability,0.502,vector cross centre; y*243 = 121.99 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,3.65,cumulative_probability,0.5145,vector cross centre; y*243 = 125.02 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,3.93,cumulative_probability,0.5305,vector cross centre; y*243 = 128.91 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,4.25,cumulative_probability,0.5305,vector cross centre; y*243 = 128.91 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,4.54,cumulative_probability,0.5394,vector cross centre; y*243 = 131.08 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,4.82,cumulative_probability,0.5554,vector cross centre; y*243 = 134.97 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,5.1,cumulative_probability,0.5635,vector cross centre; y*243 = 136.92 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,5.41,cumulative_probability,0.5804,vector cross centre; y*243 = 141.03 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,5.7,cumulative_probability,0.6053,vector cross centre; y*243 = 147.09 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,5.98,cumulative_probability,0.6294,vector cross centre; y*243 = 152.93 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,6.31,cumulative_probability,0.6498,vector cross centre; y*243 = 157.91 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,6.59,cumulative_probability,0.6748,vector cross centre; y*243 = 163.97 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,6.87,cumulative_probability,0.6908,vector cross centre; y*243 = 167.86 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,7.15,cumulative_probability,0.7157,vector cross centre; y*243 = 173.92 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,7.48,cumulative_probability,0.7487,vector cross centre; y*243 = 181.93 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,7.76,cumulative_probability,0.7941,vector cross centre; y*243 = 192.97 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,8.04,cumulative_probability,0.8351,vector cross centre; y*243 = 202.92 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,8.36,cumulative_probability,0.868,vector cross centre; y*243 = 210.93 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,8.64,cumulative_probability,0.8974,vector cross centre; y*243 = 218.07 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,8.92,cumulative_probability,0.9339,vector cross centre; y*243 = 226.94 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,9.2,cumulative_probability,0.9508,vector cross centre; y*243 = 231.05 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,9.53,cumulative_probability,0.9589,vector cross centre; y*243 = 233.00 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,9.81,cumulative_probability,0.9758,vector cross centre; y*243 = 237.11 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,10.09,cumulative_probability,0.9793,vector cross centre; y*243 = 237.98 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,10.42,cumulative_probability,0.9793,vector cross centre; y*243 = 237.98 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,10.71,cumulative_probability,0.9838,vector cross centre; y*243 = 239.06 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,10.99,cumulative_probability,0.9874,vector cross centre; y*243 = 239.93 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,11.27,cumulative_probability,0.9874,vector cross centre; y*243 = 239.93 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,11.58,cumulative_probability,0.9918,vector cross centre; y*243 = 241.01 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,11.87,cumulative_probability,0.9918,vector cross centre; y*243 = 241.01 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,12.15,cumulative_probability,0.9963,vector cross centre; y*243 = 242.09 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,12.48,cumulative_probability,0.9963,vector cross centre; y*243 = 242.09 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,12.76,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,13.03,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,13.32,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,13.65,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,13.93,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,14.21,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,14.53,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,14.81,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,15.09,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,experimental CDF (blue cross),H_GPa,15.37,cumulative_probability,0.9998,vector cross centre; y*243 = 242.96 [card read: denominator 243]
+fig6c,N estimate,,,N_denominator,243,[card read] all 53 cross heights are integer multiples of 1/243 (max deviation <0.08 count); 121/242/244 fail (deviation ~0.5)
+fig6a_check,"[card arithmetic] Table 2 mixture CDF vs plotted black fit curve, lower limit -inf (Gaussian CDF)",,,rms_diff,0.0096,max |diff| 0.0422 over 94 curve vertices (vector path #496); f = 0.3840/0.1564/0.4596 shared by E and H (Eq. 3)
+fig6a_check,"[card arithmetic] Table 2 mixture CDF vs experimental CDF crosses, lower limit -inf (Gaussian CDF)",,,rms_diff,0.0226,max |diff| 0.0479 over 51 crosses
+fig6a_check,"[card arithmetic] Table 2 mixture CDF vs plotted black fit curve, lower limit 0 (as printed in Eq. 2)",,,rms_diff,0.0306,max |diff| 0.0676 over 94 curve vertices (vector path #496); f = 0.3840/0.1564/0.4596 shared by E and H (Eq. 3)
+fig6a_check,"[card arithmetic] Table 2 mixture CDF vs experimental CDF crosses, lower limit 0 (as printed in Eq. 2)",,,rms_diff,0.0384,max |diff| 0.0732 over 51 crosses
+fig6c_check,"[card arithmetic] Table 2 mixture CDF vs plotted black fit curve, lower limit -inf (Gaussian CDF)",,,rms_diff,0.0476,max |diff| 0.0927 over 72 curve vertices (vector path #1066); f = 0.3840/0.1564/0.4596 shared by E and H (Eq. 3)
+fig6c_check,"[card arithmetic] Table 2 mixture CDF vs experimental CDF crosses, lower limit -inf (Gaussian CDF)",,,rms_diff,0.0418,max |diff| 0.0812 over 53 crosses
+fig6c_check,"[card arithmetic] Table 2 mixture CDF vs plotted black fit curve, lower limit 0 (as printed in Eq. 2)",,,rms_diff,0.0456,max |diff| 0.0773 over 72 curve vertices (vector path #1066); f = 0.3840/0.1564/0.4596 shared by E and H (Eq. 3)
+fig6c_check,"[card arithmetic] Table 2 mixture CDF vs experimental CDF crosses, lower limit 0 (as printed in Eq. 2)",,,rms_diff,0.053,max |diff| 0.0850 over 53 crosses

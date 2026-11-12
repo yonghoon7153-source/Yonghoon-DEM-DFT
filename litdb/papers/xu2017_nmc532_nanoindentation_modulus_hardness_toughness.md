@@ -499,6 +499,7 @@ pristine 이차입자는 **E 142.5 ± 11.3 · H 8.6 ± 1.3 GPa · K_c 0.102 ± 0
 
 - ★ `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` — **짝 카드 (SELF-51)**: 다결정 **NMC811** 입계 강도 745 MPa · 나노압입 E 138 ± 24 GPa (n = 29) ·
   인용 경도 7.8 / 8.9 / **8.6 (= 이 논문)** / 14.2 · K 0.271 (Sharma 2023 차용).  이 카드가 그 인용 [29] 의 **원문**이다.
+- `devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode` (2026-11-12 카드) — 같은 그룹 2016 EML ([Sedl26] 의 [28]): NMC532 targeted **138.73 ± 18.78 · H 8.89 ± 1.86** (75–150 nm) · 격자 분해 123.02 · 7.78 · 그림 4b 의 **CB+PVDF 1.78 ± 0.35 · 0.043 ± 0.01** 과 같은 값의 원 측정 (따로 만든 50/50 필름 · 기공 61 %).
 - `sangros2020_lib_electrode_dem_mech_elec_ionic` — **이 논문을 [32] 로 인용해 E_NMC 142.5 → 111.6** 을 DEM 입력으로 쓴 선례.
 - `sangros2019_dem_calendering_lib_electrode` · `lyu2025_3d_dem_drying_calendering_lib` · `lippke2023_dem_drying_structure_formation_lib` — "142 GPa" 계보 (뿌리 추정).
 - `kang2025_toughened_bimodal_nca_lzo` — E_NCA **175 (가정)** = 치밀 결정 부류 (§7-1).

@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 271편 · 생성 2026-11-12
+> digest 272편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -57,7 +57,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (61편)
+## 접촉역학 · 소성 (DEM 이론) (62편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -77,6 +77,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` | 무른 (탄성) 구 집합의 3D 등방 압밀 — non-smooth contact dynamics (NSCD) + 입자별 FE (구 50 · 100 개 × 사면체 808 개, LMGC90) 로 jammed φ0 ≈ 0.5 에서 φ ≈ 0.96 까지 · Hertz 점접촉 DEM 이 벗어나는 지점 · 3D 미시역학 압밀 법칙 P | NSCD+FEM 3D 다입자 (LMGC90 — 탄성 구 50 · 100 개 × 4 절점 사면체 808 개 · | 2026-11-10 | 🖼 19 |
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
 | `deng2021_mechanical_surface_energy_tester_bond_number` | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester — 분말 단층 (≤ 20 mg) 을 ⌀40 mm 원판에 뿌려 떨어뜨리고, 멈출 때의 감속도와 그때 떨어져 나간 질량 분율을 잰다 · "Bond 수"  | experiment (drop-impact detachment "mechanical surface energ | 2026-10-13 | 🖼 22 |
+| `devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode` | NMC532 · PVDF · CB (90 : 5 : 5 wt%) 양극 (액체계 LIB 용 · 캘린더링 안 함 · 기공 56 %) 의 상별 탄성률 · 경도 — 단일 입자 targeted 압입 (깊이 창 75–150 nm) E 138.73 ± 18.78 · H 8.89 ± 1.86 GPa · 별도 CB/PVDF (50/50  | exp (instrumented nanoindentation: Keysight G200 Berkovich,  | 2026-11-12 | 🖼 40 |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
 | `doux2020_pressure_effects_sulfide_se_jmca` | 냉간 성형압 50–370 MPa ↔ 순수 Li₆PS₅Cl (NEI) 펠릿의 상대밀도 · 이온전도도와 작동 적층압 2–70 MPa ↔ 전극 접촉 — densification 은 250 MPa 위에서 둔해지고 (상대밀도 68.3 → 75.4 → ≈77 % · σ 0.99 → 2.06 → 2.28 mS/cm · 진밀도 분모는  | experiment (순수 LPSCl powder 펠릿 cold-press 성형압 · 적층압 load cel | 2026-11-12 | 🖼 36 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |

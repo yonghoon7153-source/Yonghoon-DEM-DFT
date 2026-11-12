@@ -736,5 +736,8 @@ Shi 는 **우리가 못 갖던 *모델→실험 닫힌 검증*** 을 제공: **�
 
 ---
 
+## 🔗 관련 카드
+- SI 참고 `[2]` 의 원전 (2026-11-12 카드): [`devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode`](devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode.md) — 원문에 **E 177.5 · σ_y 12.6 · ρ 4.85 없음** (NMC532 targeted E 138.73 · H 8.89 · 격자 123.02 · 7.78 · 이론 밀도 4.77 mg/mm³ · ν 0.3 은 압입 해석 가정값) ⇒ 이 카드의 "귀속 오류 공산" 확정 (그 카드 §0-1).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

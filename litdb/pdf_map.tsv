@@ -425,3 +425,6 @@ kollenda2024_time_sensitivity_calendered_electrode_springback_storage	time-sensi
 # ── 복합 양극 압력 의존 3D 구조 — 누른 채 X 선 CT · 기공 · NCM/LGPS 접촉 면적 분율 · 기하 경로 tortuosity · 이방 접촉 (Sakka 외 · J. Mater. Chem. A 10 (2022) 16602–16609) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
 sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps	pressure_dependence_on_the_three-dimensional_structure
 sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps	pressure dependence on the three-dimensional structure
+# ── 복합 양극 상별 나노압입 — targeted · 격자 (grid) 압입 + 통계 분해 · NMC532 / CB·PVDF (de Vasconcelos 외 · Extreme Mech. Lett. 9 (2016) 495–502) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
+devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode	grid_indentation_analysis_of_mechanical_properties
+devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode	grid indentation analysis of mechanical properties
