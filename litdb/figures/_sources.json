@@ -1547,7 +1547,7 @@
   ]
  },
  "kollenda2024_time_sensitivity_calendered_electrode_springback_storage": {
-  "figures": 2,
+  "figures": 32,
   "generated": "2026-11-12",
   "pdfs": [
    "3135943c-22._Time-sensitivity_of_intermediate_product_properties_in_lithium-ion_battery_cell_production.pdf"
@@ -3561,6 +3561,14 @@
   "pdfs": [
    "5cc7c283-106._Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.pdf",
    "e0f1efc4-106._Sup_Machine_learning_prediction_of_activation_energy_in_cubic_Liargyrodites_with_hierarchically_encoding_crystal_structurebased_HECS_descriptors.docx"
+  ]
+ },
+ "zhou2019_solvent_engineered_argyrodite_li6ps5x_conductivity": {
+  "figures": 55,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf"
   ]
  },
  "zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff": {

@@ -1,0 +1,1550 @@
+{
+ "slug": "zhou2019_solvent_engineered_argyrodite_li6ps5x_conductivity",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+  "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf"
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found Figures 1–4, Tables 1–3, Figures S1–S8 and Tables S1–S5 (20 crops, all opened); nothing missing by label. Re-cut: all 12 figures (main from the native 300 dpi rasters; SI re-rendered at 300 dpi from the raster placement rectangles — the auto crops had wide uneven margins, Fig. 2 had swallowed the running foot, Fig. S1 had taken the heading 'List of Supporting Figures') and Tables 1–3 (Table 2 lost its footnote and bottom rule, Table 3 its bottom rule); Tables S1–S5 kept. Added by hand: the TOC graphic (no caption), 17 panel crops (1a–c · 1d · 1e · three SEM insets · 2a–f · 3a–c · 3d · 3e · S7a · S7b) and 17 evidence paragraphs (main 11 · SI 6, incl. the 1.64 sentence). The paper has no equations (numbered or inline) — the definitions of relative density, σ = L/(R·A) and the DC electronic conductivity are sentences only and were cut as evidence paragraphs. After the first visual check 5 crops were re-cut (1d/1e and S7a/S7b: axis titles had landed on the neighbouring panel; S7b again to drop a picture-border line) and the text-crop search window was narrowed (the p.266 crop had taken Fig. 1e and its caption) (2026-11-12, litdb-curator).",
+ "note_manual": "Printed inconsistencies visible in the crops: a(Li6PS5Cl) 9.8590(3) Å in Fig. 1d (and Fig. 3d read 9.8589) vs 9.8598(3) Å in Table S1; a(Li6PS5Br) 9.9840(4) Å in Fig. 1e (Fig. 3d read 9.9840) vs 9.9855(4) Å in Table S2 (same R_Bragg / χ²); a(Cl0.75Br0.25) 9.8880(5) Å in Figure S3 vs 9.8880(4) Å in Table S3; Figure S6 caption labels both (a) and (c) Li6PS5Cl0.75Br0.25; Fig. 3d axis 'Lattice parameter' has no unit; abstract 'impurity contents ranging from 3 to 10%' = the range of single impurity phases (Tables 1–2: 3.3–10 %), while the argyrodite is 77(5) % of Li6PS5Cl (impurities ≈21–23 %); text '∼2.4 mS·cm−1 … for the Cl and Br phases' vs 1.9 for Br; '6 orders of magnitude' vs 5.4–5.9 decades (Table 3); 'two tons' without unit system (metric tonne → ≈250 MPa on ⌀10 mm); 'external standard' for Si that is mixed into the sample (standard addition); SI typos 'vale', 'died', 'argyodite', 'argryodites'. Number checks (card §3-6): Cl pellet (100 mg, ⌀10 mm, 34 Ω, 2.4 mS/cm) gives 0.641 mm and 1.99 g/cm³ — not 99 % of 1.64; Br closes (0.686 mm, 97.6 % of 1.90); DC σ_e from Fig. 2f + that thickness = 7.0–7.2 × 10−6 vs printed 4.4 × 10−6 mS/cm.",
+ "key_note": "manual keys: ftoc = TOC graphic · f1abc / f1d / f1e / f1a_sem–f1c_sem / f2a–f2f / f3abc / f3d / f3e / fS7a / fS7b = panel crops (panel_of) · x<page><letter> = main-text evidence paragraphs (kind 'text'; multi-part ones list 'parts' and 'pages') · xs2 / xs3a / xs3b / xs4a / xs4b / xs4c = SI paragraphs (xs4b = the 1.64 sentence) · digitized.csv = figure readings (36 rows).",
+ "figures": [
+  {
+   "key": "ftoc",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_toc.png",
+   "caption": "Table-of-contents graphic inside the abstract box (no caption, no number): 'Practical & Scalable' arrow — Ball Milling (Li2S, P2S5, LiX → Crystallization → Li6PS5X) vs Solution-engineered synthesis (Li3PS4·3THF, Li2S, LiX in ethanol → Drying & Crystallization → Li6PS5X).",
+   "rotated_deg": 0,
+   "bbox": [
+    382,
+    307,
+    555,
+    423
+   ],
+   "w": 755,
+   "h": 518,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "src_native": [
+    722,
+    485
+   ],
+   "native_dpi": 300,
+   "manual_crop": "graphic with no caption (the caption-anchored tool cannot see it) — cut from the embedded native raster (xref 50, 722×485 px = 300 dpi, no resampling) → ink trim (min RGB < 240) → uniform 6 pt (25 px) margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.745
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. XRD patterns and SEM images (insets) of (a) Li6PS5Cl, (b) Li6PS5Br, and (c) Li6PS5I from solution synthesis (all reflections correspond to the respective argyrodite phase except for the impurities as marked); Rietveld refinement of XRD patterns of (d) Li6PS5Cl and (e) Li6PS5Br. Black circles−experimental data; red lines−fitted data; blue lines−difference curve between observed and calculated data; ticks−Bragg peak positions of Li6PS5X (green), Li3PO4 (cyan), LiX (magenta), Li2S (burgundy), and Si (orange, 10 wt % addition).",
+   "rotated_deg": 0,
+   "bbox": [
+    109,
+    69,
+    516,
+    361
+   ],
+   "w": 1746,
+   "h": 1268,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.817,
+   "viewed": true,
+   "auto_bbox": [
+    54.5,
+    63.2,
+    570.5,
+    367.5
+   ],
+   "src_native": [
+    1696,
+    1218
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut from the embedded native raster (xref 108, 1696×1218 px = 300 dpi, no resampling) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "note_ko": "그림 안 인쇄 격자 상수 a = 9.8590(3) Å (d · Cl) · 9.9840(4) Å (e · Br) — Table S1 · S2 의 9.8598(3) · 9.9855(4) 와 4 째 자리가 다르다 (같은 R_Bragg 4.83 / 3.26 · χ² 4.50 / 4.71). 그림 3d 의 끝점도 그림 값 쪽 (판독 9.8589 · 9.9840)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Nyquist plots for (a) Li6PS5Cl and (d) Li6PS5Br solid electrolytes (cold-pressed at 2 tons, measured at 300 K, in the frequency range from 1 MHz to 10 mHz); DC polarization curves of (b) Li6PS5Cl and (e) Li6PS5Br solid electrolytes with an applied voltage of 0.25 (black), 0.5 (red), and 0.75 V (blue). (c,f) Linear fits.",
+   "rotated_deg": 0,
+   "bbox": [
+    89,
+    464,
+    536,
+    717
+   ],
+   "w": 1911,
+   "h": 1105,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.918,
+   "viewed": true,
+   "auto_bbox": [
+    54.5,
+    458.0,
+    570.5,
+    723.2
+   ],
+   "src_native": [
+    1862,
+    1055
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins and, for Fig. 2, a caption that had swallowed the running foot (journal line, page number, DOI)), re-cut from the embedded native raster (xref 134, 1862×1055 px = 300 dpi, no resampling) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "note_ko": "Cl · Br 펠릿 (2 tons · 3 min · ⌀10 mm · SS 블로킹 · 300 K): 낮은 주파수 꼬리의 실수축 절편 = 저항 (판독 34.7 · 46.7 Ω ↔ 본문 34 · 46 Ω) — 반원이 보이지 않아 bulk / 입계를 가르지 않은 total σ."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. XRD patterns of (a) Li6PS5Cl0.25Br0.75, (b) Li6PS5Cl0.5Br0.5, and (c) Li6PS5Cl0.75Br0.25 from solution synthesis (all reflections correspond to the respective argyrodite phase except for the impurities as marked); (d) lattice parameters from Rietveld refinements; (e) Nyquist plots for Li6PS5Cl0.25Br0.75 (blue squares), Li6PS5Cl0.5Br0.5 (red triangles), and Li6PS5Cl0.75Br0.25 (black dots) (cold-pressed at 2 tons, measured at 300 K, in the frequency range from 1 MHz to 10 mHz).",
+   "rotated_deg": 0,
+   "bbox": [
+    155,
+    69,
+    470,
+    323
+   ],
+   "w": 1366,
+   "h": 1108,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.929,
+   "viewed": true,
+   "auto_bbox": [
+    54.5,
+    63.2,
+    570.5,
+    329.0
+   ],
+   "src_native": [
+    1316,
+    1058
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut from the embedded native raster (xref 155, 1316×1058 px = 300 dpi, no resampling) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "note_ko": "d: Vegard 직선 (판독 기울기 0.127 Å per x) · e: 세 혼합 할로젠 절편 판독 23.5 (Cl0.25Br0.75) · 25.6 (Cl0.5Br0.5) · 33.0 Ω (Cl0.75Br0.25) — 두께가 원문에 없어 σ 와의 대조는 두께 역산뿐."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Comparison of all-solid-state batteries using Li6PS5Cl prepared by (a) solid-state synthesis and (b) solution-engineered synthesis: first (solid line, red) and second (dashed line, blue) are the charge−discharge voltage profiles, respectively, of TiS2/Li6PS5Cl/Li11Sn6 cells cycled at a current density of 100 μA cm−2 (corresponding to a 0.11C rate).",
+   "rotated_deg": 0,
+   "bbox": [
+    84,
+    69,
+    276,
+    219
+   ],
+   "w": 850,
+   "h": 673,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.92,
+   "viewed": true,
+   "auto_bbox": [
+    54.5,
+    63.2,
+    306.5,
+    224.7
+   ],
+   "src_native": [
+    800,
+    623
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut from the embedded native raster (xref 176, 800×623 px = 300 dpi, no resampling) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: XRD patterns of: (a) Li6PS5Cl and (b) Li6PS5Br from solution synthesis after drying at 140°C for 20 h under vacuum (all reflections correspond to the respective argyrodite phase except for the impurities as marked).",
+   "rotated_deg": 0,
+   "bbox": [
+    185,
+    104,
+    437,
+    356
+   ],
+   "w": 1041,
+   "h": 1067,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.926,
+   "viewed": true,
+   "auto_bbox": [
+    66.0,
+    66.5,
+    552.2,
+    358.6
+   ],
+   "src_native": [
+    770,
+    770
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins; Fig. S1 also took the heading 'List of Supporting Figures'), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 76 770×770 px ≈ 220 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Nyquist plot for the Li6PS5I solid electrolyte (cold-pressed at 2 tons, measured at 300K, in the frequency range from 1 MHz-10 mHz).",
+   "rotated_deg": 0,
+   "bbox": [
+    195,
+    460,
+    426,
+    676
+   ],
+   "w": 960,
+   "h": 864,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.937,
+   "viewed": true,
+   "auto_bbox": [
+    69.0,
+    403.8,
+    549.2,
+    680.5
+   ],
+   "src_native": [
+    708,
+    661
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 74 708×661 px ≈ 220 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Rietveld refinement of XRD patterns of Li6PS5Cl0.75Br0.25. Black circles – experimental data; red lines – fitted data; blue lines – difference curve between observed and calculated data; ticks – the Bragg peak positions of Li6PS5Cl0.75Br0.25 (green), Li3PO4 (cyan), LiCl0.75Br0.25 (magenta) and Li2S (burgundy).",
+   "rotated_deg": 0,
+   "bbox": [
+    145,
+    72,
+    422,
+    288
+   ],
+   "w": 1163,
+   "h": 855,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.869,
+   "viewed": true,
+   "auto_bbox": [
+    66.5,
+    66.0,
+    549.4,
+    284.7
+   ],
+   "src_native": [
+    847,
+    659
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 81 847×659 px ≈ 220 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Rietveld refinement of XRD patterns of Li6PS5Cl0.5Br0.5. Black circles – experimental data; red lines – fitted data; blue lines – difference curve between observed and calculated data; ticks – the Bragg peak positions of Li6PS5Cl0.5Br0.5 (green), Li3PO4 (cyan), LiCl0.5Br0.5 (magenta) and Li2S (burgundy).",
+   "rotated_deg": 0,
+   "bbox": [
+    144,
+    348,
+    422,
+    564
+   ],
+   "w": 1163,
+   "h": 856,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.868,
+   "viewed": true,
+   "auto_bbox": [
+    66.4,
+    343.7,
+    551.5,
+    567.1
+   ],
+   "src_native": [
+    847,
+    659
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 83 847×659 px ≈ 220 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Rietveld refinement of XRD patterns of Li6PS5Cl0.25Br0.75. Black circles – experimental data; red lines – fitted data; blue lines – difference curve between observed and calculated data; ticks – the Bragg peak positions of Li6PS5Cl0.25Br0.75 (green), Li3PO4 (cyan), LiCl0.25Br0.75 (magenta) and Li2S (burgundy).",
+   "rotated_deg": 0,
+   "bbox": [
+    148,
+    72,
+    425,
+    288
+   ],
+   "w": 1162,
+   "h": 856,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.872,
+   "viewed": true,
+   "auto_bbox": [
+    66.1,
+    66.0,
+    549.1,
+    288.3
+   ],
+   "src_native": [
+    847,
+    659
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 88 847×659 px ≈ 220 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: DC polarization curves of (a) Li6PS5Cl0.75Br0.25, (b) Li6PS5Cl0.5Br0.5, (c) Li6PS5Cl0.75Br0.25, (d) Li5.75PS4.75Cl1.25 and (e) Li5.5PS4.5Cl1.5 solid electrolytes with applied voltages of 0.25 V (black), 0.5 V (red), 0.75 V (blue) (cold-pressed at two tons, measured at 300K).",
+   "rotated_deg": 0,
+   "bbox": [
+    75,
+    360,
+    543,
+    610
+   ],
+   "w": 1942,
+   "h": 1084,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.906,
+   "viewed": true,
+   "auto_bbox": [
+    69.2,
+    354.4,
+    552.2,
+    611.9
+   ],
+   "src_native": [
+    1429,
+    763
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 90 1429×763 px ≈ 220 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 200) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator); trim threshold 200 so the faint grey picture border of the Word image (min RGB 213–230) does not set the box — the border is still visible inside the crop where it touches content (source)",
+   "note_ko": "캡션의 (a) 와 (c) 가 둘 다 Li6PS5Cl0.75Br0.25 로 인쇄 (원문 오기 — (c) 는 Cl0.25Br0.75 로 읽힌다 [카드 추론]). Word 그림의 옅은 회색 테두리 · 빈 칸이 원본 그대로 보인다."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: (a) XRD patterns of Li5.75PS4.75Cl1.25 (black) and Li5.5PS4.5Cl1.5 (red) from solution synthesis (all reflections correspond to the respective argyrodite phase except for the impurities as marked); (b) Nyquist plots for Li5.75PS4.75Cl1.25 (black squares) and Li5.5PS4.5Cl1.5 (red dots) (cold-pressed at 2 tons, measured at 300K, in the frequency range from 1 MHz-10 mHz).",
+   "rotated_deg": 0,
+   "bbox": [
+    145,
+    72,
+    411,
+    612
+   ],
+   "w": 1072,
+   "h": 2258,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.934,
+   "viewed": true,
+   "auto_bbox": [
+    67.2,
+    66.0,
+    550.3,
+    610.3
+   ],
+   "src_native": [
+    813,
+    1650
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 95 813×1650 px ≈ 220 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 200) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator); trim threshold 200 so the faint grey picture border of the Word image (min RGB 213–230) does not set the box — the border is still visible inside the crop where it touches content (source)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: The open circuit voltage of the Li11Sn6/Li cell under applied cell pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    162,
+    72,
+    450,
+    266
+   ],
+   "w": 1229,
+   "h": 836,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.937,
+   "viewed": true,
+   "auto_bbox": [
+    68.7,
+    66.0,
+    495.0,
+    272.4
+   ],
+   "src_native": [
+    878,
+    593
+   ],
+   "native_dpi": 219,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop spanned the full text width with wide, uneven side margins), re-cut by rendering the placement rectangle of the embedded raster from the page at 300 dpi (xref 99 878×593 px ≈ 219 dpi — the SI is a Word export, so the raster is upsampled, no new detail; the page render composites the raster's alpha mask onto white) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "note_ko": "판독 OCV 0.494 (50) · 0.491 (75) · 0.488 (100) · 0.487 (125) · 0.488 (175) · 0.488 V (250 MPa) — 점선 0.49 V. 셀 가압 압력의 범위 50–250 MPa 를 보여 주는 유일한 압력 축 그림 (전해질 펠릿 성형압 계열은 없다)."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Mass Fraction of Each Component in Li6PS5Cl (refined mass fraction with Si / normalized mass fraction, %): Li6PS5Cl 71(2) / 77(5) · Li3PO4 9.2(9) / 10(2) · LiCl 5.1(3) / 5.6(5) · Li2S 4.8(3) / 5.2(5) · Si 10.2(3) / n/a. Footnote a: With ∼10 wt % Si added as the reference standard for intensity normalization.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    131.5,
+    303.0,
+    256.0
+   ],
+   "w": 1051,
+   "h": 548,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.798,
+   "viewed": true,
+   "auto_bbox": [
+    55.5,
+    127.9,
+    305.4,
+    254.8
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uniform margins (re-cut for consistency with Tables 2–3)); re-rendered from the vector page at 300 dpi, caption top → bottom rule (incl. footnote) [58.0, 131.5, 303.0, 256.0] pt → ink trim (min RGB < 240) → uniform 6 pt margin (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2. Mass Fraction of Each Component in the Li6PS5Br (refined mass fraction with Si / normalized mass fraction, %): Li6PS5Br 78(2) / 91(6) · Li3PO4 7(2) / 8(3) · LiBr 3.0(2) / 3.5(4) · Li2S 2.9(3) / 3.3(4) · Si 9.6(3) / n/a. Footnote a: With ∼10 wt % Si added as the reference standard for intensity normalization.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    261.0,
+    303.0,
+    394.0
+   ],
+   "w": 1051,
+   "h": 591,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.811,
+   "viewed": true,
+   "auto_bbox": [
+    55.5,
+    257.5,
+    300.2,
+    369.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop stopped at the last body row — footnote a ('With ∼10 wt % Si added …') and the bottom rule were cut off); re-rendered from the vector page at 300 dpi, caption top → bottom rule (incl. footnote) [58.0, 261.0, 303.0, 394.0] pt → ink trim (min RGB < 240) → uniform 6 pt margin (2026-11-12, litdb-curator)"
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 4,
+   "file": "tab_3.png",
+   "caption": "Table 3. Summary of the Ionic and Electronic Conductivities of Li-Argyrodites Prepared through the Solvent-Engineered Method (ionic / electronic, mS·cm−1): Li6PS5Cl 2.4 / 5.1 × 10−6 · Li6PS5Cl0.75Br0.25 3.2 / 3.7 × 10−6 · Li6PS5Cl0.5Br0.5 3.9 / 1.4 × 10−5 · Li6PS5Cl0.25Br0.75 3.4 / 1.1 × 10−5 · Li6PS5Br 1.9 / 4.4 × 10−6 · Li5.75PS4.75Cl1.25 3.0 / 2.6 × 10−5 · Li5.5PS4.5Cl1.5 3.9 / 1.4 × 10−5.",
+   "rotated_deg": 0,
+   "bbox": [
+    322.0,
+    382.5,
+    567.0,
+    525.8
+   ],
+   "w": 1050,
+   "h": 634,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.807,
+   "viewed": true,
+   "auto_bbox": [
+    319.5,
+    379.0,
+    560.2,
+    523.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop stopped 0.5 pt above the table's bottom rule (y 524.0 pt)); re-rendered from the vector page at 300 dpi, caption top → bottom rule (incl. footnote) [322.0, 382.5, 567.0, 525.8] pt → ink trim (min RGB < 240) → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "note_ko": "★ 이 논문의 σ 표 — 모두 '2 tons (≈250 MPa [카드 산술 · 미터 톤 가정]) · 3 min 냉간 성형 · SS 블로킹 · 300 K · total' 한 조건."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 10,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Refined parameters for Li6PS5Cl (space group = F-43m, a = 9.8598(3) Å, RBragg = 4.83, X2=4.50).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    102.9,
+    548.1,
+    301.4
+   ],
+   "w": 2005,
+   "h": 828,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.918,
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 10,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Refined parameters for Li6PS5Br (space group = F-43m, a = 9.9855(4) Å, RBragg = 3.26, X2 = 4.71).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    303.8,
+    549.6,
+    581.1
+   ],
+   "w": 2011,
+   "h": 1157,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.931,
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 11,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Refined parameters for Li6PS5Cl0.75Br0.25 (space group = F-43m, a = 9.8880(4) Å, RBragg = 3.42, X2=2.90).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.2,
+    549.6,
+    368.2
+   ],
+   "w": 2011,
+   "h": 1255,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.931,
+   "viewed": true
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 11,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Refined parameters for Li6PS5Cl0.5Br0.5 (space group = F-43m, a = 9.9185(6) Å, RBragg = 3.12, X2=3.35).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    370.6,
+    549.6,
+    671.5
+   ],
+   "w": 2011,
+   "h": 1254,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.931,
+   "viewed": true
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 12,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Refined parameters for Li6PS5Cl0.25Br0.75 (space group = F-43m, a = 9.9543(3) Å, RBragg = 3.48, X2=3.76).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.2,
+    549.6,
+    373.0
+   ],
+   "w": 2011,
+   "h": 1275,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "blank": 0.932,
+   "viewed": true
+  },
+  {
+   "key": "f1abc",
+   "kind": "figure",
+   "label": "1a-c",
+   "page": 2,
+   "file": "fig_1abc.png",
+   "caption": "Fig. 1(a–c) — XRD (Cu Kα, 2θ 10–70°) of solution-made Li6PS5Cl (a: impurities Li3PO4 *, Li2S ◊, LiCl ■), Li6PS5Br (b: Li3PO4, Li2S, LiBr ○) and Li6PS5I (c: Li3PO4 only) with SEM insets (scale bar 2 µm).",
+   "rotated_deg": 0,
+   "bbox": [
+    109.0,
+    69.0,
+    301.2,
+    361.0
+   ],
+   "w": 851,
+   "h": 1249,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — cut from the embedded native raster (xref 108, 300 dpi, no resampling): px box [0, 0, 801, 1218] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.727
+  },
+  {
+   "key": "f1d",
+   "kind": "figure",
+   "label": "1d",
+   "page": 2,
+   "file": "fig_1d.png",
+   "caption": "Fig. 1(d) — Rietveld fit of Li6PS5Cl with 10 wt % Si (2θ 10–140°): χ² = 4.50, R_Bragg(Li6PS5Cl) = 4.83, S.G. F-43m, a = 9.8590(3) Å (printed in the panel; Table S1 prints 9.8598(3) Å).",
+   "rotated_deg": 0,
+   "bbox": [
+    325.2,
+    69.0,
+    516.0,
+    214.8
+   ],
+   "w": 845,
+   "h": 624,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — cut from the embedded native raster (xref 108, 300 dpi, no resampling): px box [901, 0, 1696, 608] (split at y 608 in the white gap 574–642 below panel d's 2θ axis title — the first cut at y 512 left that title on panel e and was redone) (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.89
+  },
+  {
+   "key": "f1e",
+   "kind": "figure",
+   "label": "1e",
+   "page": 2,
+   "file": "fig_1e.png",
+   "caption": "Fig. 1(e) — Rietveld fit of Li6PS5Br with 10 wt % Si: χ² = 4.71, R_Bragg(Li6PS5Br) = 3.26, S.G. F-43m, a = 9.9840(4) Å (printed in the panel; Table S2 prints 9.9855(4) Å).",
+   "rotated_deg": 0,
+   "bbox": [
+    325.2,
+    214.8,
+    516.0,
+    361.0
+   ],
+   "w": 845,
+   "h": 625,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — cut from the embedded native raster (xref 108, 300 dpi, no resampling): px box [901, 608, 1696, 1218] (split at y 608 in the white gap 574–642 below panel d's 2θ axis title — the first cut at y 512 left that title on panel e and was redone) (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.889
+  },
+  {
+   "key": "f1a_sem",
+   "kind": "figure",
+   "label": "1a-SEM",
+   "page": 2,
+   "file": "fig_1a_sem.png",
+   "caption": "Fig. 1(a) inset — SEM of 'well-ground' solution-made Li6PS5Cl (scale bar 2 µm; field ≈ 39–44 × 24–27 µm [판독 · bar 17 ± 1 px]): one dense crystallite mass larger than the field.",
+   "rotated_deg": 0,
+   "bbox": [
+    211.5,
+    73.6,
+    295.2,
+    124.9
+   ],
+   "w": 399,
+   "h": 264,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f1",
+   "manual_crop": "SEM inset of Fig. 1 — cut from the embedded native raster (xref 108, 300 dpi, no resampling): px box [427, 19, 776, 233] = the photo rectangle located by dense-pixel row/column profiles, right edge stopped at x 776 so the XRD panel's frame line (x 777–779) drawn over the photo is excluded; no ink trim; uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.3
+  },
+  {
+   "key": "f1b_sem",
+   "kind": "figure",
+   "label": "1b-SEM",
+   "page": 2,
+   "file": "fig_1b_sem.png",
+   "caption": "Fig. 1(b) inset — SEM of solution-made Li6PS5Br (scale bar 2 µm): dense, layered crystallite mass larger than the field.",
+   "rotated_deg": 0,
+   "bbox": [
+    211.5,
+    157.7,
+    295.2,
+    209.0
+   ],
+   "w": 399,
+   "h": 264,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f1",
+   "manual_crop": "SEM inset of Fig. 1 — cut from the embedded native raster (xref 108, 300 dpi, no resampling): px box [427, 370, 776, 584] = the photo rectangle located by dense-pixel row/column profiles, right edge stopped at x 776 so the XRD panel's frame line (x 777–779) drawn over the photo is excluded; no ink trim; uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.32
+  },
+  {
+   "key": "f1c_sem",
+   "kind": "figure",
+   "label": "1c-SEM",
+   "page": 2,
+   "file": "fig_1c_sem.png",
+   "caption": "Fig. 1(c) inset — SEM of solution-made Li6PS5I (scale bar 2 µm): granular agglomerate of ≈0.5–3 µm grains [판독 · 정성].",
+   "rotated_deg": 0,
+   "bbox": [
+    211.5,
+    241.9,
+    295.2,
+    293.2
+   ],
+   "w": 399,
+   "h": 264,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f1",
+   "manual_crop": "SEM inset of Fig. 1 — cut from the embedded native raster (xref 108, 300 dpi, no resampling): px box [427, 721, 776, 935] = the photo rectangle located by dense-pixel row/column profiles, right edge stopped at x 776 so the XRD panel's frame line (x 777–779) drawn over the photo is excluded; no ink trim; uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.316
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 3,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — Nyquist plot, Li6PS5Cl (SS|SE|SS, 2 tons, 300 K, 1 MHz–10 mHz); inset 0–100 Ω: spike meets the real axis at ≈34.7 Ω [판독] (text: 34 Ω).",
+   "rotated_deg": 0,
+   "bbox": [
+    89.0,
+    464.0,
+    227.5,
+    588.5
+   ],
+   "w": 610,
+   "h": 551,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 134, 300 dpi, no resampling): px box [0, 0, 577, 519] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.93
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 3,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — DC polarization of Li6PS5Cl: current (nA) vs time at 0.25 / 0.5 / 0.75 V, 30 min each.",
+   "rotated_deg": 0,
+   "bbox": [
+    232.6,
+    464.0,
+    378.3,
+    588.5
+   ],
+   "w": 656,
+   "h": 569,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 134, 300 dpi, no resampling): px box [598, 0, 1205, 519] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.888
+  },
+  {
+   "key": "f2c",
+   "kind": "figure",
+   "label": "2c",
+   "page": 3,
+   "file": "fig_2c.png",
+   "caption": "Fig. 2(c) — Li6PS5Cl: voltage vs stabilized current with linear fit — points ≈ (20.0 nA, 0.25 V), (36.0, 0.50), (50.0, 0.75) [판독] → slope ≈ 16.6 MΩ.",
+   "rotated_deg": 0,
+   "bbox": [
+    393.2,
+    464.0,
+    536.0,
+    588.5
+   ],
+   "w": 643,
+   "h": 569,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 134, 300 dpi, no resampling): px box [1267, 0, 1862, 519] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.948
+  },
+  {
+   "key": "f2d",
+   "kind": "figure",
+   "label": "2d",
+   "page": 3,
+   "file": "fig_2d.png",
+   "caption": "Fig. 2(d) — Nyquist plot, Li6PS5Br; inset 0–100 Ω: intercept ≈46.7 Ω [판독] (text: 46 Ω).",
+   "rotated_deg": 0,
+   "bbox": [
+    89.0,
+    592.1,
+    227.5,
+    717.0
+   ],
+   "w": 626,
+   "h": 556,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 134, 300 dpi, no resampling): px box [0, 534, 577, 1055] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.924
+  },
+  {
+   "key": "f2e",
+   "kind": "figure",
+   "label": "2e",
+   "page": 3,
+   "file": "fig_2e.png",
+   "caption": "Fig. 2(e) — DC polarization of Li6PS5Br: current vs time at 0.25 / 0.5 / 0.75 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    232.6,
+    592.1,
+    378.3,
+    717.0
+   ],
+   "w": 657,
+   "h": 565,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 134, 300 dpi, no resampling): px box [598, 534, 1205, 1055] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.881
+  },
+  {
+   "key": "f2f",
+   "kind": "figure",
+   "label": "2f",
+   "page": 3,
+   "file": "fig_2f.png",
+   "caption": "Fig. 2(f) — Li6PS5Br: voltage vs stabilized current with linear fit — points ≈ (19.9 nA, 0.25 V), (38.0, 0.50), (61.0, 0.75) [판독] → slope ≈ 12.1 MΩ.",
+   "rotated_deg": 0,
+   "bbox": [
+    393.2,
+    592.1,
+    536.0,
+    717.0
+   ],
+   "w": 644,
+   "h": 571,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 134, 300 dpi, no resampling): px box [1267, 534, 1862, 1055] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.95
+  },
+  {
+   "key": "f3abc",
+   "kind": "figure",
+   "label": "3a-c",
+   "page": 4,
+   "file": "fig_3abc.png",
+   "caption": "Fig. 3(a–c) — XRD of Li6PS5Cl0.25Br0.75 (a), Li6PS5Cl0.5Br0.5 (b), Li6PS5Cl0.75Br0.25 (c): argyrodite + Li3PO4 (*), Li2S (◊), LiX (■).",
+   "rotated_deg": 0,
+   "bbox": [
+    155.0,
+    69.0,
+    318.2,
+    323.0
+   ],
+   "w": 731,
+   "h": 1071,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 155, 300 dpi, no resampling): px box [0, 0, 682, 1058] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.934
+  },
+  {
+   "key": "f3d",
+   "kind": "figure",
+   "label": "3d",
+   "page": 4,
+   "file": "fig_3d.png",
+   "caption": "Fig. 3(d) — lattice parameter vs x in Li6PS5Cl1−xBrx (axis title has no unit): read 9.8589 · 9.8879 · 9.9184 · 9.9544 · 9.9840 Å [판독 · ±0.0004] — end points follow the Fig. 1d/1e values, not Tables S1/S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    321.1,
+    69.0,
+    470.0,
+    191.7
+   ],
+   "w": 641,
+   "h": 561,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 155, 300 dpi, no resampling): px box [694, 0, 1316, 511] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.926
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 4,
+   "file": "fig_3e.png",
+   "caption": "Fig. 3(e) — Nyquist plots of the three mixed-halide pellets; inset 0–50 Ω: intercepts ≈23.5 (blue, Cl0.25Br0.75) · 25.6 (red, Cl0.5Br0.5) · 33.0 Ω (black, Cl0.75Br0.25) [판독] — not printed.",
+   "rotated_deg": 0,
+   "bbox": [
+    321.1,
+    200.3,
+    470.0,
+    323.0
+   ],
+   "w": 672,
+   "h": 560,
+   "dpi": 300,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 155, 300 dpi, no resampling): px box [694, 547, 1316, 1058] (split lines placed in white gaps measured on the raster row/column ink profiles) → ink trim (min RGB < 240) → uniform 6 pt margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.923
+  },
+  {
+   "key": "fS7a",
+   "kind": "figure",
+   "label": "S7a",
+   "page": 8,
+   "file": "fig_S7a.png",
+   "caption": "Figure S7(a) — XRD of Li5.75PS4.75Cl1.25 (black, bottom) and Li5.5PS4.5Cl1.5 (red, top): Li3PO4 (*), trace Li2S (◊, black only), LiCl (■).",
+   "rotated_deg": 0,
+   "bbox": [
+    145.0,
+    72.0,
+    411.2,
+    401.3
+   ],
+   "w": 1072,
+   "h": 1378,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "fS7",
+   "manual_crop": "panel of Figure S7 — cut from the 300 dpi page render of the S7 placement rectangle [145, 72, 411, 612] pt: px box [0, 0, 1109, 1372] (split at the white row 1371–1374 under panel a's 2θ axis title — the first cut, at the larger gap above that title, left the title on panel b and was redone; panel b starts at x 140 to drop the Word picture-border line at x 132) → ink trim (min RGB < 200) → uniform 6 pt margin; caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.933
+  },
+  {
+   "key": "fS7b",
+   "kind": "figure",
+   "label": "S7b",
+   "page": 8,
+   "file": "fig_S7b.png",
+   "caption": "Figure S7(b) — Nyquist plots of Li5.75PS4.75Cl1.25 (black squares) and Li5.5PS4.5Cl1.5 (red dots); inset 0–100 Ω: intercepts ≈36.1 and 26.3 Ω [판독] — not printed.",
+   "rotated_deg": 0,
+   "bbox": [
+    178.6,
+    401.3,
+    411.2,
+    612.0
+   ],
+   "w": 937,
+   "h": 840,
+   "dpi": 300,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "panel_of": "fS7",
+   "manual_crop": "panel of Figure S7 — cut from the 300 dpi page render of the S7 placement rectangle [145, 72, 411, 612] pt: px box [140, 1372, 1109, 2250] (split at the white row 1371–1374 under panel a's 2θ axis title — the first cut, at the larger gap above that title, left the title on panel b and was redone; panel b starts at x 140 to drop the Word picture-border line at x 132) → ink trim (min RGB < 200) → uniform 6 pt margin; caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.924
+  },
+  {
+   "key": "x265a",
+   "kind": "text",
+   "label": "p265-abstract",
+   "page": 1,
+   "file": "txt_p265_abstract.png",
+   "caption": "PDF p.265 abstract (two parts: the last two lines run past the TOC graphic and were cut separately, 3 pt gap): solution-engineered, scalable route incl. the new solid solution Li6−yPS5−yCl1+y (y = 0−0.5); σ 'up to 3.9 mS·cm−1'; 'owing to a lack of amorphous contributions and low impurity contents ranging from 3 to 10%'; TiS2 cell vs ball-milled SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    302.8,
+    377.5,
+    428.0
+   ],
+   "w": 1923,
+   "h": 922,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 2 parts stacked top-to-bottom (pages [1, 1]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.17,
+   "parts": [
+    [
+     66.0,
+     302.8,
+     377.5,
+     428.0
+    ],
+    [
+     66.0,
+     428.1,
+     400.0,
+     453.6
+    ]
+   ],
+   "pages": [
+    1,
+    1
+   ]
+  },
+  {
+   "key": "x265b",
+   "kind": "text",
+   "label": "p265-ductile-modulus",
+   "page": 1,
+   "file": "txt_p265_ductile_softer_modulus.png",
+   "caption": "PDF p.265 (three parts): 'Ductile solid electrolytes with a suitable Young’s modulus can, in principle, help suppress lithium dendrite growth … better interfacial contact'; 'Whereas oxides or phosphates are brittle and rigid, lithium thiophosphates are softer and much more easily processed and densified, with a Young’s modulus more than 5−10-fold lower.12,13' + literature σ / Ea list (argyrodite ∼1 mS·cm−1, Ea 0.3−0.4 eV).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    588.0,
+    303.0,
+    633.2
+   ],
+   "w": 1400,
+   "h": 1290,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 3 parts stacked top-to-bottom (pages [1, 1, 1]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.872,
+   "parts": [
+    [
+     58.0,
+     588.0,
+     303.0,
+     633.2
+    ],
+    [
+     58.0,
+     713.2,
+     303.0,
+     761.5
+    ],
+    [
+     322.0,
+     465.8,
+     567.0,
+     587.0
+    ]
+   ],
+   "pages": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "key": "x266a",
+   "kind": "text",
+   "label": "p266-solution-route",
+   "page": 2,
+   "file": "txt_p266_solution_route_thf_ethanol.png",
+   "caption": "PDF p.266 (two parts): THF / ethanol rationale (THF: hours vs DME 10 days / ACN 2 days, low boiling point; ethanol: moderately high dielectric constant → pale yellow solution); dried powder poorly crystallized (Figure S1) → pellets sintered at 550 °C under vacuum in carbon-coated quartz; impurities Li3PO4, LiCl/LiBr, Li2S — 'somewhat higher impurity levels' than solid-state (≈10 wt % reported there); Li6PS5I almost phase-pure.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    587.3,
+    303.0,
+    766.7
+   ],
+   "w": 1406,
+   "h": 2501,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 2 parts stacked top-to-bottom (pages [2, 2]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.856,
+   "parts": [
+    [
+     58.0,
+     587.3,
+     303.0,
+     766.7
+    ],
+    [
+     322.0,
+     418.6,
+     567.0,
+     675.8
+    ]
+   ],
+   "pages": [
+    2,
+    2
+   ]
+  },
+  {
+   "key": "x266b",
+   "kind": "text",
+   "label": "p266-267-crystallinity",
+   "page": 2,
+   "file": "txt_p266_p267_crystallinity_si_standard.png",
+   "caption": "PDF p.266–267 (two parts): degree of crystallinity with Si (10 wt %) 'as an external standard in the Rietveld refinements' → 'fully (100%) crystallized', crystalline argyrodite 77(5) and 91(6) %; lattice/atomic parameters 'similar to previously reported values' (ref 42 = Kraft 2017).",
+   "rotated_deg": 0,
+   "bbox": [
+    322.0,
+    675.9,
+    567.0,
+    769.1
+   ],
+   "w": 1405,
+   "h": 903,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 2 parts stacked top-to-bottom (pages [2, 3]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.865,
+   "parts": [
+    [
+     322.0,
+     675.9,
+     567.0,
+     769.1
+    ],
+    [
+     58.0,
+     64.0,
+     303.0,
+     125.7
+    ]
+   ],
+   "pages": [
+    2,
+    3
+   ]
+  },
+  {
+   "key": "x267a",
+   "kind": "text",
+   "label": "p267-sem-ductile",
+   "page": 3,
+   "file": "txt_p267_sem_ductile_contact_cold_pressed.png",
+   "caption": "PDF p.267 (two parts): SEM 'illustrate the dense nature of the crystallite masses'; 'Highly ductile sulfide solid electrolytes have been shown to provide better contact at the grain boundaries than oxides, resulting in a more integrated solid electrolyte matrix even in cold-pressed pellets without sintering.20' (ref 20 = Seino 2014).",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    401.7,
+    303.0,
+    453.9
+   ],
+   "w": 1405,
+   "h": 604,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 2 parts stacked top-to-bottom (pages [3, 3]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.883,
+   "parts": [
+    [
+     58.0,
+     401.7,
+     303.0,
+     453.9
+    ],
+    [
+     322.0,
+     64.1,
+     567.0,
+     113.1
+    ]
+   ],
+   "pages": [
+    3,
+    3
+   ]
+  },
+  {
+   "key": "x267b",
+   "kind": "text",
+   "label": "p267-eis",
+   "page": 3,
+   "file": "txt_p267_eis_ionic_conductivity_percolation.png",
+   "caption": "PDF p.267: EIS in SS/Li6PS5X/SS at RT — 'Resistivities of 34 and 46 Ohm … converting to total conductivities of 2.4 and 1.9 mS·cm−1'; solid-state values ∼3 and ∼1; impurities 'unlikely to affect overall ionic conductivity as the dense solid electrolyte pressed pellets facilitate excellent contact … and provide sufficient Li-ion percolating pathways'; Li6PS5I 2 × 10−3 mS·cm−1.",
+   "rotated_deg": 0,
+   "bbox": [
+    322.0,
+    113.3,
+    567.0,
+    327.5
+   ],
+   "w": 1402,
+   "h": 1247,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.856
+  },
+  {
+   "key": "x267c",
+   "kind": "text",
+   "label": "p267-268-dc",
+   "page": 3,
+   "file": "txt_p267_p268_dc_electronic_conductivity.png",
+   "caption": "PDF p.267–268 (two parts): DC polarization of SS|SE|SS at RT, three voltages, current 'stabilizes on the order of 10−8 A after 30 min'; linear fit → 5.1 × 10−6 (Cl) and 4.4 × 10−6 mS·cm−1 (Br), '6 orders of magnitude lower' (Table 3 ratios: 5.6–5.7 decades [카드 산술]).",
+   "rotated_deg": 0,
+   "bbox": [
+    322.0,
+    327.4,
+    567.0,
+    454.0
+   ],
+   "w": 1405,
+   "h": 980,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 2 parts stacked top-to-bottom (pages [3, 4]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.874,
+   "parts": [
+    [
+     322.0,
+     327.4,
+     567.0,
+     454.0
+    ],
+    [
+     58.0,
+     380.4,
+     303.0,
+     416.3
+    ]
+   ],
+   "pages": [
+    3,
+    4
+   ]
+  },
+  {
+   "key": "x268a",
+   "kind": "text",
+   "label": "p268-vegard",
+   "page": 4,
+   "file": "txt_p268_mixed_halide_vegard.png",
+   "caption": "PDF p.268: mixed-halide Li6PS5Cl1−xBrx — lattice parameters 'increase linearly from x = 0 to 1 … in accord with Vegard’s law … disordered Cl/Br'; highest σ 3.9 mS·cm−1 for Li6PS5Cl0.5Br0.5; Table 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    416.3,
+    303.0,
+    639.9
+   ],
+   "w": 1406,
+   "h": 1295,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.86
+  },
+  {
+   "key": "x268b",
+   "kind": "text",
+   "label": "p268-cl-rich",
+   "page": 4,
+   "file": "txt_p268_cl_rich_neutron_needed.png",
+   "caption": "PDF p.268 (two parts): Li5.75PS4.75Cl1.25 3.0 and Li5.5PS4.5Cl1.5 3.9 mS·cm−1 (Figure S7b); much less Li2S, slightly more LiCl; author limit: 'due to the similar size and X-ray scattering factors of sulfur and chlorine, further neutron diffraction studies are essential to distinguish the degree of S/Cl disorder and Li position and occupation'.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    640.8,
+    303.0,
+    767.1
+   ],
+   "w": 1400,
+   "h": 1215,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 2 parts stacked top-to-bottom (pages [4, 4]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.861,
+   "parts": [
+    [
+     58.0,
+     640.8,
+     303.0,
+     767.1
+    ],
+    [
+     322.0,
+     529.3,
+     567.0,
+     610.1
+    ]
+   ],
+   "pages": [
+    4,
+    4
+   ]
+  },
+  {
+   "key": "x268c",
+   "kind": "text",
+   "label": "p268-269-cell",
+   "page": 4,
+   "file": "txt_p268_p269_battery_tis2_li11sn6.png",
+   "caption": "PDF p.268–269 (two parts): TiS2/Li6PS5Cl/Li11Sn6 cells, 1.5–3.0 V vs Li/Li+, 30 °C; 'a lithium alloy as the negative owing to its more robust mechanical properties'; 'theoretical capacity (239 mAh g−1)' and no difference from the ball-milled SE.",
+   "rotated_deg": 0,
+   "bbox": [
+    322.0,
+    610.1,
+    567.0,
+    769.1
+   ],
+   "w": 1400,
+   "h": 1144,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin; 2 parts stacked top-to-bottom (pages [4, 5]) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.862,
+   "parts": [
+    [
+     322.0,
+     610.1,
+     567.0,
+     769.1
+    ],
+    [
+     58.0,
+     304.9,
+     303.0,
+     343.2
+    ]
+   ],
+   "pages": [
+    4,
+    5
+   ]
+  },
+  {
+   "key": "x269a",
+   "kind": "text",
+   "label": "p269-summary",
+   "page": 5,
+   "file": "txt_p269_summary.png",
+   "caption": "PDF p.269 summary: THF/ethanol 'solvate complexes'; up to 3.9 mS·cm−1; scalable; extendable to DME/ethanol or ethanol.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    343.2,
+    303.0,
+    551.7
+   ],
+   "w": 1406,
+   "h": 1218,
+   "dpi": 400,
+   "src": "0771dde4-7._Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.853
+  },
+  {
+   "key": "xs2",
+   "kind": "text",
+   "label": "si-p2-synthesis",
+   "page": 2,
+   "file": "txt_si_p2_synthesis_thf_ethanol_550c.png",
+   "caption": "SI p.S2 Material synthesis: Li2S:P2S5 3:1 in THF 24 h → β-Li3PS4·3THF/THF; Li2S + LiX in ethanol added; overnight; centrifuge 8000 rpm 10 min; vacuum dry; Buchi oven 140 °C 20 h vacuum; pellet in carbon-coated quartz under vacuum, 550 °C 6 h, 5 °C/min → Li6PS5X or Li6−yPS5−yCl1+y (y = 0−0.5); alternative: BASF Li3PS4·3THF powder dissolved in the ethanol solution (30 min) ('died under vacuum' = dried, typo).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    107.6,
+    546.5,
+    664.2
+   ],
+   "w": 2669,
+   "h": 3086,
+   "dpi": 400,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.924
+  },
+  {
+   "key": "xs3a",
+   "kind": "text",
+   "label": "si-p3-ball-mill",
+   "page": 3,
+   "file": "txt_si_p3_ball_milled_reference_sem.png",
+   "caption": "SI p.S3: reference (solid-state) Li6PS5Cl — ZrO2 jars/balls, 400 RPM, 15 h, Fritsch P7 premium; pellet, carbon-coated quartz, 550 °C 6 h, 5 °C/min; SEM Zeiss FE-SEM + EDX, transfer holder ('a second exposure to air').",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    68.4,
+    546.5,
+    348.1
+   ],
+   "w": 2667,
+   "h": 1552,
+   "dpi": 400,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.93
+  },
+  {
+   "key": "xs3b",
+   "kind": "text",
+   "label": "si-p3-xrd",
+   "page": 3,
+   "file": "txt_si_p3_xrd_rietveld_si_standard.png",
+   "caption": "SI p.S3: PANalytical Empyrean Cu-Kα, PIXcel; phase ID in Bragg-Brentano (zero-background holder, Kapton); 'Standard addition analysis (degree of crystallinity measurements)' with 10 wt % Si (325 mesh) 'used as external reference', 0.3 mm glass capillaries, Debye-Scherrer; FullProf; parameters refined sequentially.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    359.4,
+    546.5,
+    687.3
+   ],
+   "w": 2680,
+   "h": 1815,
+   "dpi": 400,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.918
+  },
+  {
+   "key": "xs4a",
+   "kind": "text",
+   "label": "si-p4-conductivity",
+   "page": 4,
+   "file": "txt_si_p4_conductivity_pellet_density_164.png",
+   "caption": "★ SI p.S4 Conductivity measurements (whole paragraph): 'Typically, 100 mg … pressed into a 10 mm diameter pellet by a hydraulic press at two tons for 3 min'; thickness 'close to 0.6 - 0.8mm … (accurately measured by a caliper for each pellet)'; 'relative density of the pellets was around 99%; this vale was calculated from the sample geometry and mass and compared to the theoretical density of Li6PS5Cl (1.64 g•cm-3) and Li6PS5Br (1.90 g•cm-3)'; EIS 20 mV, 1 MHz–10 mHz, VMP3; error from thickness; DC 0.25 / 0.5 / 0.75 V, 30 min each.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    68.4,
+    546.5,
+    395.3
+   ],
+   "w": 2668,
+   "h": 1815,
+   "dpi": 400,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.918
+  },
+  {
+   "key": "xs4b",
+   "kind": "text",
+   "label": "si-p4-density-1.64",
+   "page": 4,
+   "file": "txt_si_p4_theoretical_density_164_sentence.png",
+   "caption": "★★ SI p.S4 — the only place in the paper (main 6 pp + SI 12 pp) where 1.64 appears: '… the relative density of the pellets was around 99%; this vale was calculated from the sample geometry and mass and compared to the theoretical density of Li6PS5Cl (1.64 g•cm-3) and Li6PS5Br (1.90 g•cm-3).' — label 'theoretical' (not 'crystallographic'), no derivation, no citation; the Br clause is set in 11.04 pt vs 12 pt for the rest of the line (text layer).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    95.0,
+    546.5,
+    257.4
+   ],
+   "w": 2667,
+   "h": 895,
+   "dpi": 400,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.918
+  },
+  {
+   "key": "xs4c",
+   "kind": "text",
+   "label": "si-p4-cell",
+   "page": 4,
+   "file": "txt_si_p4_galvanostatic_cell_374mpa.png",
+   "caption": "SI p.S4 Galvanostatic cycling: TiS2:Li6PS5Cl 1:1 (wt); Li11Sn6 (Li foil + Sn powder) at 0.49 V vs Li/Li+; SE layer = 100 mg Li6PS5Cl; 6 mg cathode mix + 30 mg Li11Sn6 'followed by pressing at 374 MPa'; PEEK mold ⌀10 mm, Ti rods; 100 μA cm−2 (0.11 C).",
+   "rotated_deg": 0,
+   "bbox": [
+    70.0,
+    406.6,
+    546.5,
+    679.4
+   ],
+   "w": 2667,
+   "h": 1508,
+   "dpi": 400,
+   "src": "d7648835-7._Sup_Solvent-Engineered_Design_of_Argyrodite_Li6PS5X_X__Cl_Br_I_Solid_Electrolytes_with_High_Ionic_Conductivity.pdf",
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the white-row gap to the neighbouring line (search window ≤ 12 pt, so figures / captions above a column top are not taken — the first run took Fig. 1e and its caption above the p.266 right column and was redone) → ink trim → uniform 6 pt margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "blank": 0.922
+  }
+ ]
+}
