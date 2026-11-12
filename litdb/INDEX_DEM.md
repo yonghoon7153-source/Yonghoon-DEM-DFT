@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 276편 · 생성 2026-11-12
+> digest 277편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -177,7 +177,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (53편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (54편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -217,6 +217,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `liu2025_dry_processing_high_energy_li_batteries_review` | 건식공정(DPT)으로 고에너지밀도 Li 전지 전극·SE막 만들기 — DPC / 분무 / 압출 / 바인더 섬유화(PTFE) 4대 기법 총설, LIB→ASSB 적용 — Liu et al. (Small 2025, 리뷰) | REVIEW (건식공정 총설; 실험·시뮬 *원저 아님* — 문헌 종합) | 2026-06-26 | 🖼 12 |
 | `lyu2025_3d_dem_drying_calendering_lib` | LIB 전극 구조진화를 건조+압연 한 번에 — 3D RVE DEM(AM + carbon-binder domain + 용매 + 입자접촉), 3-stage 건조법 + 압연→σ_e·두께방향 응력 — Lyu (Int. J. Electrical Power & Energy Systems 2025) | DEM (3D RVE, 건조+압연 연속; exp 검증) | 2026-06-26 | 🖼 10 |
 | `meng2026_phase_inversion_binder_ultrathick_zn_iodine` | 상전환 (phase inversion) 으로 만든 1.5 mm 자립 후막 활성탄 양극 (PES–PVP 바인더) + ZnI₂ 전해질 — 양극에 I₂ 를 미리 넣지 않는 Zn–I₂ 전지: 7.5 mAh cm⁻² · 1000 사이클 (38 mA cm⁻²) · −20 °C 에서 7.5 mAh cm⁻² · 3000 사이클 · ≈1 | exp (상전환 phase-inversion 습식 전극 제조 · PES–PVP binder · slurry  | 2026-10-27 | 🖼 44 |
+| `meyer2017_calendering_compaction_resistance_line_load_exponential_model` | 압연 선하중 → 코팅 밀도 · 기공률의 지수 포화 식 ρ_C = ρ_C,max − (ρ_C,max − ρ_C,0)·exp(−q_L/γ_C) 와 'compaction resistance' γ_C 의 원전 — 액체 LIB NCM 양극 γ_C 292 ± 9 / 309 ± 45 N/mm (2 / 5 m/min) ↔ 흑연 음극 1 | experiment (파일럿 2 롤 캘린더 · 롤 힘 추적 → 선하중 · 다이얼 게이지 두께 + 질량 → 코 | 2026-11-12 | 🖼 48 |
 | `mun2025_dry_electrode_technology_assb_review` | 차세대 ASSB를 위한 건식전극(dry electrode) 기술 — 무용매 제조(dry-mixing·PTFE 섬유화·calendering·co-rolling) 종합 리뷰 — Mun (Advanced Materials 2025) | review (exp/process; no DEM/MPM/FEM) | 2026-06-26 | 🖼 8 |
 | `nam2026_primer_layer_dry_electrode_collector` | Nam 2026 (ACS Energy Letters, acsenergylett.6c01260) — 건식전극(DPE)↔집전체 계면을 지배하는 Primer Layer 설계 (Super P/CNT 비율) ★ 우리 R_collector(N) 항과 PTFE 건식전극 계면의 직접 대응 논문 | exp + FEM·digital-twin (전자전도) | 2026-08-11 | 🖼 33 |
 | `ngandjong2021_dem_calendering_digital_twin` | LIB 전극 calendering(압연)을 DEM으로 — AM + carbon-binder domain 명시 + 슬러리→건조→압연→전기화학 "디지털 트윈" 파이프라인 — Ngandjong (J. Power Sources 2021) [2판] | DEM (+ CGMD 슬러리/건조 + FEM 전기화학; exp 검증) | 2026-06-26 | 🖼 10 |

@@ -1,0 +1,106 @@
+figure,series,x_name,x,x_err_half_width,y_name,y,y_err_half_width,px_x,px_y,read_how,note
+Fig. 3 left,NCM cathode 5 m/min,line load q_L [N/mm],0.7,,coating density rho_C [g/cm3],1.825,0.0538,166.3,543.0,error-bar caps (top/bottom caps → centre; left/right caps → centre),"printed 1.83 (Fig. 5 legend, Table 2)"
+Fig. 3 left,NCM cathode 5 m/min,line load q_L [N/mm],58.1,,coating density rho_C [g/cm3],2.045,0.0655,198.5,477.5,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 2.05 (Fig. 5 legend)
+Fig. 3 left,NCM cathode 5 m/min,line load q_L [N/mm],117.8,,coating density rho_C [g/cm3],2.303,0.0714,232.0,400.8,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 2.31 (Fig. 5 legend)
+Fig. 3 left,NCM cathode 5 m/min,line load q_L [N/mm],374.9,29.4,coating density rho_C [g/cm3],2.725,0.083,376.2,275.2,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 2.72
+Fig. 3 left,NCM cathode 5 m/min,line load q_L [N/mm],1065.2,,coating density rho_C [g/cm3],3.142,0.102,763.4,151.0,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 3.14
+Fig. 3 left,NCM cathode 2 m/min,line load q_L [N/mm],0.7,,coating density rho_C [g/cm3],1.844,0.058,166.3,537.2,error-bar caps (top/bottom caps → centre; left/right caps → centre),Table 2: 1.84
+Fig. 3 left,NCM cathode 2 m/min,line load q_L [N/mm],58.1,,coating density rho_C [g/cm3],2.078,0.0647,198.5,467.8,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 2.08 (Fig. 5 legend)
+Fig. 3 left,NCM cathode 2 m/min,line load q_L [N/mm],134.4,,coating density rho_C [g/cm3],2.361,0.0714,241.3,383.2,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 3 left,NCM cathode 2 m/min,line load q_L [N/mm],312.0,,coating density rho_C [g/cm3],2.734,0.0817,340.9,272.3,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 2.73
+Fig. 3 left,NCM cathode 2 m/min,line load q_L [N/mm],1032.1,,coating density rho_C [g/cm3],3.177,0.0907,744.8,140.5,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 3 right,graphite anode 5 m/min,line load q_L [N/mm],0.2,,coating density rho_C [g/cm3],0.855,,1132.3,571.8,marker outline box centre (caps hidden by overlapping markers),printed 0.86
+Fig. 3 right,graphite anode 5 m/min,line load q_L [N/mm],16.3,,coating density rho_C [g/cm3],0.959,,1184.5,495.0,marker outline box centre (caps hidden by overlapping markers),printed 0.96; heavily overlapped
+Fig. 3 right,graphite anode 5 m/min,line load q_L [N/mm],45.0,,coating density rho_C [g/cm3],1.088,,1277.0,399.5,marker outline box centre (caps hidden by overlapping markers),printed 1.08; top cap hidden
+Fig. 3 right,graphite anode 5 m/min,line load q_L [N/mm],90.9,2.32,coating density rho_C [g/cm3],1.274,0.0196,1425.5,261.5,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 1.28; Fig. 2: 18.06 kN / 200 mm = 90.3 N/mm
+Fig. 3 right,graphite anode 5 m/min,line load q_L [N/mm],180.6,5.03,coating density rho_C [g/cm3],1.491,0.0196,1715.2,101.0,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 1.49
+Fig. 3 right,graphite anode 2 m/min,line load q_L [N/mm],0.2,,coating density rho_C [g/cm3],0.855,,1132.3,571.8,marker outline box centre (caps hidden by overlapping markers),same position as the 5 m/min start
+Fig. 3 right,graphite anode 2 m/min,line load q_L [N/mm],12.9,,coating density rho_C [g/cm3],0.963,0.0125,1173.5,491.8,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 3 right,graphite anode 2 m/min,line load q_L [N/mm],43.8,3.17,coating density rho_C [g/cm3],1.098,0.0169,1273.2,392.0,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 1.10
+Fig. 3 right,graphite anode 2 m/min,line load q_L [N/mm],81.6,4.33,coating density rho_C [g/cm3],1.262,0.0189,1395.4,270.5,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 3 right,graphite anode 2 m/min,line load q_L [N/mm],184.1,4.8,coating density rho_C [g/cm3],1.512,0.0179,1726.5,85.9,error-bar caps (top/bottom caps → centre; left/right caps → centre),printed 1.51
+Fig. 6,"NCM cathode eps_C,ph (filled squares)",coating density rho_C [g/cm3],1.825,0.052,coating porosity [-],0.570,0.0125,496.6,153.0,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 6,"NCM cathode eps_C,ph (filled squares)",coating density rho_C [g/cm3],2.047,0.0624,coating porosity [-],0.518,0.0151,560.5,208.5,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 6,"NCM cathode eps_C,ph (filled squares)",coating density rho_C [g/cm3],2.305,0.0704,coating porosity [-],0.457,0.0165,635.2,272.9,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 6,"NCM cathode eps_C,ph (filled squares)",coating density rho_C [g/cm3],2.726,0.0832,coating porosity [-],0.358,0.0198,756.4,377.9,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 6,"NCM cathode eps_C,ph (filled squares)",coating density rho_C [g/cm3],3.141,0.102,coating porosity [-],0.260,0.0245,876.2,482.0,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 6,"NCM cathode eps_C,Hg (open squares)",coating density rho_C [g/cm3],1.826,,coating porosity [-],0.491,,497.0,237.0,open-square outline box centre,
+Fig. 6,"NCM cathode eps_C,Hg (open squares)",coating density rho_C [g/cm3],2.048,,coating porosity [-],0.465,,561.0,265.0,open-square outline box centre,
+Fig. 6,"NCM cathode eps_C,Hg (open squares)",coating density rho_C [g/cm3],2.307,,coating porosity [-],0.401,,635.5,333.0,open-square outline box centre,
+Fig. 6,"NCM cathode eps_C,Hg (open squares)",coating density rho_C [g/cm3],2.727,,coating porosity [-],0.255,0.0141,756.7,487.5,open-square outline box centre,error bar read
+Fig. 6,"NCM cathode eps_C,Hg (open squares)",coating density rho_C [g/cm3],3.144,,coating porosity [-],0.183,,877.0,564.3,open-square outline box centre,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],0.858,,coating porosity [-],0.608,,217.5,113.4,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],0.963,,coating porosity [-],0.561,,247.8,162.9,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.088,,coating porosity [-],0.501,,284.0,226.7,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.274,,coating porosity [-],0.419,,337.6,314.0,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.414,,coating porosity [-],0.353,,378.1,383.8,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.489,,coating porosity [-],0.319,,399.6,419.8,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.569,,coating porosity [-],0.283,,422.7,457.9,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.661,,coating porosity [-],0.241,,449.4,502.7,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.701,,coating porosity [-],0.222,,460.7,522.3,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.734,,coating porosity [-],0.206,,470.3,539.5,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,the marker at 1.73 is two overlapping points (1.73 and ≈1.75; see Fig. 8)
+Fig. 6,"graphite anode eps_C,ph (filled triangles)",coating density rho_C [g/cm3],1.769,,coating porosity [-],0.191,,480.3,554.9,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 6,"graphite anode eps_C,Hg (open triangles)",coating density rho_C [g/cm3],0.858,,coating porosity [-],0.588,0.0226,217.5,134.8,open-triangle outline: mean of box centre and centroid,"bottom cap read, top cap hidden"
+Fig. 6,"graphite anode eps_C,Hg (open triangles)",coating density rho_C [g/cm3],0.963,,coating porosity [-],0.574,,248.0,149.2,open-triangle outline: mean of box centre and centroid,
+Fig. 6,"graphite anode eps_C,Hg (open triangles)",coating density rho_C [g/cm3],1.090,,coating porosity [-],0.515,0.0132,284.5,211.8,open-triangle outline: mean of box centre and centroid,top cap read
+Fig. 6,"graphite anode eps_C,Hg (open triangles)",coating density rho_C [g/cm3],1.279,,coating porosity [-],0.443,,339.0,287.8,open-triangle outline: mean of box centre and centroid,
+Fig. 6,"graphite anode eps_C,Hg (open triangles)",coating density rho_C [g/cm3],1.488,,coating porosity [-],0.346,0.0125,399.5,390.8,open-triangle outline: mean of box centre and centroid,both caps read
+Fig. 6,"graphite anode eps_C,Hg (open triangles)",coating density rho_C [g/cm3],1.662,,coating porosity [-],0.265,,449.5,477.0,open-triangle outline: mean of box centre and centroid,outline partly merged with a cap; ±0.004
+Fig. 6,"graphite anode eps_C,Hg (open triangles)",coating density rho_C [g/cm3],1.773,,coating porosity [-],0.206,,481.5,539.5,open-triangle outline: mean of box centre and centroid,cluster of overlapping markers; ±0.004
+Fig. 8,"NCM cathode eps_C,ph (filled squares)",line load q_L [N/mm],58.9,,coating porosity [-],0.518,,217.6,206.8,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"NCM cathode eps_C,ph (filled squares)",line load q_L [N/mm],119.0,,coating porosity [-],0.457,0.0166,257.1,270.2,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 8,"NCM cathode eps_C,ph (filled squares)",line load q_L [N/mm],374.4,29.6,coating porosity [-],0.358,0.0195,425.2,374.1,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 8,"NCM cathode eps_C,ph (filled squares)",line load q_L [N/mm],1065.5,,coating porosity [-],0.260,0.0243,880.0,477.0,error-bar caps (top/bottom caps → centre; left/right caps → centre),
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],0.3,,coating porosity [-],0.609,,179.0,111.4,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],16.1,,coating porosity [-],0.561,,189.4,161.2,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],45.1,,coating porosity [-],0.503,,208.5,221.6,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],91.3,,coating porosity [-],0.416,,238.9,312.9,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],159.1,,coating porosity [-],0.353,,283.5,379.8,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],180.4,,coating porosity [-],0.319,,297.5,414.6,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],241.0,,coating porosity [-],0.281,,337.4,454.9,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],331.1,,coating porosity [-],0.239,,396.7,498.8,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],366.2,30.1,coating porosity [-],0.222,,419.8,516.6,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],456.5,,coating porosity [-],0.208,,479.2,531.6,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],518.2,,coating porosity [-],0.201,,519.8,538.4,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 8,"graphite anode eps_C,ph (filled triangles)",line load q_L [N/mm],728.0,33.4,coating porosity [-],0.190,,657.9,550.2,filled-marker blob after 7x7 erosion → box centre; triangles: centroid,
+Fig. 2,"rolling force trace, graphite anode to 1.28 g/cm3 at 5 m/min",time t [s],0.4–40.5,,rolling force F_N [kN],17.1–19.3,,,,black trace extent between the rise and the fall,plateau drifts: ≈17.5 kN (1–5 s) → ≈19.0 kN (10–13.5 s) → ≈18.0 kN (13.5–27 s) → ≈18.1–18.3 kN (27–39.5 s)
+Fig. 2,box mean value (red X),time t [s],20.0,,rolling force F_N [kN],18.06,0.46,,,centre of the solid red error bar (caps at 17.60 and 18.52 kN),18.06 kN / 200 mm coating width = 90.3 N/mm [card arithmetic]
+Fig. 2,box (dotted rectangle),time t [s],13.1–26.8,,rolling force F_N [kN],17.70–18.30,,,,dotted box edges; median line at 18.00 kN,whiskers (dotted) 16.80–19.15 kN
+Fig. 4,gamma_C NCM 2 m/min,,,,compaction resistance [N/mm],292,9,,,error-bar caps 282.3 / 301.0,= Table 2 (292 ± 9)
+Fig. 4,gamma_C NCM 5 m/min,,,,compaction resistance [N/mm],309,45,,,bar top 309.3; caps 264.4 / 354.5,= Table 2 (309 ± 45)
+Fig. 4,gamma_C graphite 2 m/min,,,,compaction resistance [N/mm],126,26.5,,,caps 99.8 / 152.8,= Table 2 (126 ± 26)
+Fig. 4,gamma_C graphite 5 m/min,,,,compaction resistance [N/mm],144,24,,,bar top 143.8; caps 120.0 / 167.6,= Table 2 (144 ± 24)
+Fig. 9,"gamma_C NCM based on eps_C,ph",,,,compaction resistance [N/mm],309,45,,,bar top 309.5; caps 264.4 / 354.6,bar value printed in the Fig. 8 legend (309)
+Fig. 9,"gamma_C NCM based on eps_C,Hg",,,,compaction resistance [N/mm],340,118,,,caps 221.9 / 458.2,bar value printed in the Fig. 8 legend (340); error bar read
+Fig. 9,"gamma_C graphite based on eps_C,ph",,,,compaction resistance [N/mm],161,6,,,bar top 161.6; caps 155.0 / 167.5,bar value printed in the Fig. 8 legend (161); error bar read
+Fig. 9,"gamma_C graphite based on eps_C,Hg",,,,compaction resistance [N/mm],177,5,,,caps 171.8 / 182.4,bar value printed in the Fig. 8 legend (177); error bar read
+Fig. 5,NCM 1.83 uncalendered — small-pore peak,pore diameter d_p [µm],0.30,,-dV/d(log d) [cm3/g],0.165,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,NCM 1.83 uncalendered — large-pore peak,pore diameter d_p [µm],1.75,,-dV/d(log d) [cm3/g],0.206,,,,same,position ±10 %
+Fig. 5,NCM 2.05 @5 m/min — small-pore peak,pore diameter d_p [µm],0.20,,-dV/d(log d) [cm3/g],0.155,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,NCM 2.05 @5 m/min — large-pore peak,pore diameter d_p [µm],1.4,,-dV/d(log d) [cm3/g],0.184,,,,same,position ±10 %
+Fig. 5,NCM 2.31 @5 — small-pore peak,pore diameter d_p [µm],0.16,,-dV/d(log d) [cm3/g],0.123,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,NCM 2.31 @5 — large-pore peak,pore diameter d_p [µm],1.1,,-dV/d(log d) [cm3/g],0.136,,,,same,position ±10 %
+Fig. 5,NCM 2.72 @5 — small-pore peak,pore diameter d_p [µm],0.09–0.12,,-dV/d(log d) [cm3/g],0.06,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,NCM 2.72 @5 — large-pore peak,pore diameter d_p [µm],0.64–0.71,,-dV/d(log d) [cm3/g],0.076,,,,same,position ±10 %
+Fig. 5,NCM 3.14 @5 — small-pore peak,pore diameter d_p [µm],0.28 (single broad peak),,-dV/d(log d) [cm3/g],0.053,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,NCM 2.08 @2 — small-pore peak,pore diameter d_p [µm],0.24,,-dV/d(log d) [cm3/g],0.148,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,NCM 2.08 @2 — large-pore peak,pore diameter d_p [µm],1.5,,-dV/d(log d) [cm3/g],0.177,,,,same,position ±10 %
+Fig. 5,NCM 2.73 @2 — small-pore peak,pore diameter d_p [µm],0.13,,-dV/d(log d) [cm3/g],0.072,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,NCM 2.73 @2 — large-pore peak,pore diameter d_p [µm],0.79,,-dV/d(log d) [cm3/g],0.091,,,,same,position ±10 %
+Fig. 5,graphite 0.86 uncalendered — small-pore peak,pore diameter d_p [µm],0.20,,-dV/d(log d) [cm3/g],0.213,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 0.86 uncalendered — large-pore peak,pore diameter d_p [µm],4.5,,-dV/d(log d) [cm3/g],0.53,,,,same,position ±10 %
+Fig. 5,graphite 0.96 @5 — small-pore peak,pore diameter d_p [µm],0.19,,-dV/d(log d) [cm3/g],0.205,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 0.96 @5 — large-pore peak,pore diameter d_p [µm],3.3,,-dV/d(log d) [cm3/g],0.45,,,,same,position ±10 %
+Fig. 5,graphite 1.08 @5 — small-pore peak,pore diameter d_p [µm],0.16–0.18,,-dV/d(log d) [cm3/g],0.185,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 1.08 @5 — large-pore peak,pore diameter d_p [µm],2.6,,-dV/d(log d) [cm3/g],0.355,,,,same,position ±10 %
+Fig. 5,graphite 1.28 @5 — small-pore peak,pore diameter d_p [µm],0.16,,-dV/d(log d) [cm3/g],0.158,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 1.28 @5 — large-pore peak,pore diameter d_p [µm],1.6,,-dV/d(log d) [cm3/g],0.213,,,,same,position ±10 %
+Fig. 5,graphite 1.49 @5 — small-pore peak,pore diameter d_p [µm],0.12,,-dV/d(log d) [cm3/g],0.11,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 1.49 @5 — large-pore peak,pore diameter d_p [µm],0.85,,-dV/d(log d) [cm3/g],0.121,,,,same,position ±10 %
+Fig. 5,graphite 1.66 @5 — small-pore peak,pore diameter d_p [µm],≈0.09 (uncertain: colour mixing),,-dV/d(log d) [cm3/g],≈0.07,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 1.66 @5 — large-pore peak,pore diameter d_p [µm],≈0.5,,-dV/d(log d) [cm3/g],≈0.08,,,,same,position ±10 %
+Fig. 5,graphite 1.77 @5 — small-pore peak,pore diameter d_p [µm],≈0.09 (single),,-dV/d(log d) [cm3/g],0.058,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 1.10 @2 — small-pore peak,pore diameter d_p [µm],0.18,,-dV/d(log d) [cm3/g],0.192,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 1.10 @2 — large-pore peak,pore diameter d_p [µm],2.7,,-dV/d(log d) [cm3/g],0.384,,,,same,position ±10 %
+Fig. 5,graphite 1.51 @2 — small-pore peak,pore diameter d_p [µm],0.11,,-dV/d(log d) [cm3/g],0.102,,,,upper envelope of the colour-classified curve (marker half-size included: heights high by ≤0.003 top / ≤0.008 bottom panels),position ±10 %
+Fig. 5,graphite 1.51 @2 — large-pore peak,pore diameter d_p [µm],0.78,,-dV/d(log d) [cm3/g],0.111,,,,same,position ±10 %

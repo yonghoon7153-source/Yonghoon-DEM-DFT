@@ -440,3 +440,6 @@ lu2020_insitu_nanoct_calendering_microstructural_evolution	microstructural evolu
 # ── 제조 모의 (CGMD) 압연 구조 → 겹침 후처리 · 복셀 메시 → 3D 전기화학 작업 흐름 (Ben Hadj Ali 외 · J. Power Sources 630 (2025) 236131) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 는 docx 라 도구 밖 · 손 크롭) ──
 benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode	a_computational_workflow_for_the_simulation_of_solid_state_battery
 benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode	a computational workflow for the simulation of solid state battery
+# ── 압연 선하중 ↔ 압연 뒤 코팅 밀도 · 기공률의 지수 포화 식 · 'compaction resistance' γ_C 원전 · LIB NCM 양극 / 흑연 음극 (Meyer 외 · J. Mater. Process. Technol. 249 (2017) 172–178) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) ──
+meyer2017_calendering_compaction_resistance_line_load_exponential_model	characterization_of_the_calendering_process_for_compaction
+meyer2017_calendering_compaction_resistance_line_load_exponential_model	characterization of the calendering process for compaction
