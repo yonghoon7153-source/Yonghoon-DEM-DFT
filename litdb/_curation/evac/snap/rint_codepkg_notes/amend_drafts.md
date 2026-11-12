@@ -1,4 +1,4 @@
-# 개정 문장 초안 — Q2 탄소 접합 원장 저장본 + Q11 GPU 전처리 C 꼴 (11-12 · 조수 · 6 판 = 2 회차 고침 (내부 반박 리뷰 재확인) + 같은 부류 시험 모듈 셋 (본 세션 결정 11-12 밤) 뒤 · 초안만 · 리포 문서는 고치지 않았다)
+# 개정 문장 초안 — Q2 탄소 접합 원장 저장본 + Q11 GPU 전처리 C 꼴 (11-12 · 조수 · 7 판 = 2 회차 고침 (내부 반박 리뷰 재확인) + 같은 부류 시험 모듈 셋 + 3 회차 마지막 좁은 고침 (재확인 2 · 본 세션 결정 11-12 밤) 뒤 · 초안만 · 리포 문서는 고치지 않았다)
 
 바탕 = 작업 트리 `/home/user/rint-codepkg` · 시험 먼저 `ebb0e9f80` → 구현 `f17ea8c6b` → 시험 보강 `2f97617ef` → (4 판) 리뷰 시험 먼저 `4557a30c2` → 리뷰 고침
 `94765bed3` → 게이트 배선 `0ac6edf3c` (여섯 다 서명 없음 · push 없음 — 본 세션이 반입하며 서명하면
@@ -78,6 +78,39 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
 - 겹 방어 (한정): `test_rint_r_chain_e2e12` 는 곧이어 `test_rint_r_chain_e2e` 를 불러오므로 제 줄을 지워도 G6 이 못 가린다 (아래층이 지움 · `test_cjunc_store_e2e` 와 같은 꼴) — 두 줄을 함께 지우면 e2e12 자리도 걸린다.
 - 1-2 의 git 새 줄 끝 괄호 → "(훅 안 게이트 · 2 회차 · 같은 부류 시험 모듈 셋 = 6 판 · 시험 `scripts/test_git_env_isolation.py`)".
 - 4-e (GPU 확인 블록 6 판) = 아래 4 절 끝 4-e.
+
+## 0-f. 7 판 (3 회차 · 마지막 좁은 고침 — 내부 반박 리뷰 재확인 2 `review/recheck2_codepkg.md` · Codex 아님 · 본 세션 결정 11-12 밤 = 권고대로 · 이 뒤 내부 재확인 없음 = Codex 봉인 전 묶음으로) 에서 달라진 것
+
+커밋 (작업 트리 · 서명 없음 · push 없음 · 바탕 `ea3b13b89`): 시험 먼저 `6a497f31b` → 고침 `0db6dee6d` → 변이 보강 · 시험 맞춤 `8b59b9618` (= 끝 · 반입하며 sha 바뀜).
+
+| RCP3 | 등급 | 처분 | 무엇 |
+|---|---|---|---|
+| 01 | P2 | 고침 | `scripts/test_ca_s0_census.py` 가 불러올 때 GIT_* 를 지운다 (다른 시험 모듈과 같은 두 줄) · 고정물 `_git` = 고정물 env.  G6 목록 일곱 → 여덟 · 적대 꼴 넷째 = **훅 꼴** (`GIT_INDEX_FILE=<V>/.git/index.lock` 하나 — git 2.43 pre-commit 훅 env 실측 · V 에 commit 도중 꼴 index.lock 사본) → G2–G6 · G8 이 넷에서 본다.  고치기 전 = G6 실패 (test_ca_s0_census) |
+| 04 | P3 | 고침 | 지우는 이름을 좁힘 = 저장소를 고르는 여덟 (`GIT_DIR` · `GIT_WORK_TREE` · `GIT_INDEX_FILE` · `GIT_OBJECT_DIRECTORY` · `GIT_ALTERNATE_OBJECT_DIRECTORIES` · `GIT_COMMON_DIR` · `GIT_NAMESPACE` · `GIT_PREFIX`) + 설정 주입 (`GIT_CONFIG_PARAMETERS` · `GIT_CONFIG_COUNT` · `GIT_CONFIG_KEY_<n>` · `GIT_CONFIG_VALUE_<n>`) 만 · 부르는 쪽 격리 (`GIT_CEILING_DIRECTORIES` · `GIT_CONFIG_NOSYSTEM` · `GIT_CONFIG_GLOBAL`) 와 그 밖 GIT_ 이름은 남긴다 (2 회차 판 = GIT_ 전부 → 천장 · 전역 끔이 사라지던 것 = 재확인 2 반례).  시험 고정물 git = `run_contract.git_fixture_env` (GIT_CONFIG_NOSYSTEM=1 · GIT_CONFIG_GLOBAL=/dev/null · HOME = 빈 임시 폴더 · XDG_CONFIG_HOME 뺌 — 생산 git 은 쓰지 않는다).  시험 G1 · G7a–e |
+| 05 | P3 | 고침 | 게이트 수준 — `scripts/check_all.sh` · `scripts/check_kgy_py38.sh` 머리에 셸 꼴 (`run_contract.GIT_DROP_SH` 글자 그대로 · bash `compgen`) 한 번 · `check_review_findings.py --selftest` 19b (commit-tree = 쓰기 · rev-parse 둘) env = `run_contract.git_env` · 러너 기각 영수증 `code_sha` 하위 셸 · S0 블록 heredoc 머리 (275 줄 · md5 `39c4b975…` · 안쪽 heredoc md5 관문 둘 그대로 · README 고침) · `ca_s0_census._git` (S0 보고 git_head · git_dirty) = 같은 규칙.  봉인 대조 먼저 (아래).  시험 G8a–c |
+| 02 | P3 | 고침 | 코드 칸 = 파일마다 stat 신원 (장치 · inode · 크기 · 수정 시각 ns · 상태 바뀐 시각 ns) 를 **정확히** 견준다 (해시 앞뒤로 재고 다르면 못 셈 = 저장본 꺼짐 · 벽시계 여유 없음 — 2 회차 판 = 수정 시각 > 시작 + 1 s) · Store 열쇠 코드 칸 ≠ 런 시작 코드 칸 → 그 런은 읽지도 쓰지도 않음.  시험 T15g (같은 초 뒤집기) · h (변이판일 때 Store) · i (시각 되돌린 뒤집기) · j (미래 수정 시각 정직한 런 = 이제 켜짐) · k (Store 코드 칸 손 고침) · 변이 보강 l (제자리 되돌림 = 상태 바뀐 시각만 다름) · m (재는 도중 바뀜) |
+| 03 | P3 | 고침 | `scripts/ca_ext_cjunc.py` 가 `cjunc_store` 를 `carbon_junction` 보다 먼저 불러온다 → 러너 꼴 (`--expect-physics ca_ext.*` 입구 풀이) 에서도 런 시작 기록이 원장 모듈보다 먼저 (`preloaded` = 빈 목록) · 시험 P6b |
+
+- 봉인 대조 (고치기 전 · 끝 판에서 다시): 바뀐 파일 19 = 194 `CODE_FILES` 32 · 언로딩 키트 SHA256SUMS · 믹서 봉인 · 정책과 겹침 0 · 사슬 `CODE_FILES` (봉인 전) 에 든 것 여섯 (`run_contract` · `cjunc_store` · `ca_ext_cjunc` · `ca_s0_census` · `rint_r_chain` (주석 한 줄) · 러너) = 코드 신원 바뀜 · S0 일곱 가운데 `ca_s0_census.py` → S0 단계 1 다시 (1-1 · 이미 계획).  Codex 리뷰 증거 목록 (회차 ③–⑥ `EVIDENCE_MANIFEST` · `SHA256SUMS` · 언로딩 ULPR integer archive `MANIFEST`) 의 **8 줄이 바탕판 바이트와 같았다** (`ca_s0_census.py` 4 · `test_ca_s0_census.py` 3 · `check_review_findings.py` 1) — 경로 = ZIP · archive 사본 (`package/repo/` · `baseline/repo/` · `codekey_sources/` · `repo/`) = 리뷰 핀의 증거 기록 · 봉인 아님 · 읽는 도구 없음 → 이제 지금 파일과 다르다 (증거 뜻은 그대로 · 한정).
+- 1-2 의 바꿀 문장 (7 판):
+  - 런 도중 코드 바뀜 줄의 "(… 자리 · sha256 · 시작 + 1 s 뒤 다시 씀)" → **"(… 자리 · sha256 · stat 신원 (장치 · inode · 크기 · 수정 · 상태 바뀐 시각 ns — 정확히 같아야 · 벽시계 여유 없음) · Store 열쇠 코드 칸 = 런 시작 칸 · 3 회차)"**.
+  - "못 가리는 것 (한정)" → 아래 남은 한정 (가)–(라) · (마).
+  - git 새 줄 → **"git 을 부르는 코드 (payload 코드 신원 · 사슬 신원 · 계획 출처 F5 · 원장 git · selftest 임시 저장소 · S0 보고 · 러너 기각 영수증 · 게이트) 는 저장소를 고르는 `GIT_*` 여덟과 설정 주입 (`GIT_CONFIG_PARAMETERS` · `GIT_CONFIG_COUNT` · `GIT_CONFIG_KEY_<n>` · `GIT_CONFIG_VALUE_<n>`) 을 물려받지 않는다 — 부르는 쪽 격리 (`GIT_CEILING_DIRECTORIES` · `GIT_CONFIG_NOSYSTEM` · `GIT_CONFIG_GLOBAL`) 는 산다 · 시험 고정물 git 은 전역 · 시스템 설정을 끊는다 (훅 안 게이트 · 2 · 3 회차 · 시험 `scripts/test_git_env_isolation.py`)."**
+  - 0-d 표 RCP2-06 줄의 "`GIT_` 접두 전부" = 7 판에서 좁힘 (위 04).
+- **남은 한정** (이 뒤 내부 재확인 없음 · Codex 봉인 전 묶음에 싣는다):
+  - (가) 열쇠 모듈을 `cjunc_store` 보다 먼저 불러오는 부르는 쪽 (시험 프로세스 · 손 실행) — 그 모듈의 import 전 바뀜은 못 가린다 (시작 기록 `preloaded` 에 적힘 · 저장본은 켜짐 · payload · 러너 꼴 = 차례 고침 · 시험 P6 · P6b).
+  - (나) 시스템 시계를 되돌리는 조작과 함께 같은 inode · 크기 · 수정 · 상태 바뀐 시각으로 다시 쓰기 — 못 가린다 (상태 바뀐 시각은 utime 으로 못 되돌린다 · 시계 조작 = 권한 · 운영 밖).
+  - (다) 낡은 .pyc (소스 바이트 같음 · .pyc 만 다름) · (라) 같은 프로세스 안 함수 바꿔 끼우기 — 그대로.
+  - (마) 정직한 다시 씀 (git checkout · touch · cp -p · rsync 로 내용 같은 파일) 도 그 런은 꺼짐 (보수적 · 다음 런 = 새 시작 기록 = 다시 켜짐 · 미래 수정 시각 정직한 런 = 이제 켜짐 · T15j).
+  - (바) 지우는 목록 밖 GIT_ 이름은 남긴다 (GIT_QUARANTINE_PATH · 대체 ref · graft · shallow · pathspec · 추적 · 실행 자리 · 신원 GIT_AUTHOR_* · GIT_COMMITTER_* …) = 좁힘의 대가 — 원장 git 고정 신원 (`LEDGER_GIT_CFG`) 은 부르는 쪽 GIT_AUTHOR_* · GIT_COMMITTER_* 가 덮을 수 있다 (사슬은 author 를 보지 않는다 = 기록만).
+  - (사) 생산 git (payload 코드 신원 · 사슬 · 원장 커밋) 은 부르는 쪽 전역 · 시스템 설정 (core.hooksPath · 서명 · 사용자) 을 따른다 (설계 · 고정물 env 는 시험만).
+  - (아) 천장 없는 git 아닌 사본 = 바깥 저장소 HEAD 를 적는다 (옛 판과 같음 · `ls-files --error-unmatch` 안 더함).
+  - (자) `check_review_findings._commit_exists` (원장 sha 실재 · 읽기) 는 부르는 쪽 env — 게이트 = 머리 셸 꼴이 지움 · 직접 부르면 부르는 쪽 몫.
+  - (차) GPU 확인 블록 · ⑥ 탐침 블록에는 셸 꼴을 넣지 않았다 (1저자 붙여 넣기 블록 · 범위 밖).
+  - (카) G6 · G7e 목록 = 손 목록 (리포 훑기 없음) — 이 묶음 밖 시험 (test_dem_gen2_t12_offline = 자체 격리 env · 다른 트랙 · test_network_solve_certificate = 읽기만) 은 보지 않는다 · G7e = 정적 (env 낱말이 있는지 · 값의 뜻은 G7c 도우미 다섯만 실행으로).
+  - (타) kgy git 판 [미확인] — `GIT_CONFIG_GLOBAL` 은 git ≥ 2.32 · 옛 git 이면 HOME 끊기 (빈 임시 폴더) 가 대신.  셸 꼴 = bash 전용 (`compgen`).
+  - (파) 시험 T8 '다른 코드' 의 뜻이 바뀜 (Store 코드 칸만 바꾼 꼴 = 이제 꺼짐 · 읽지도 쓰지도 않음) — 다른 코드 = 다른 열쇠는 T4 · T14c · T15a.
+- 4-f (GPU 확인 블록 7 판) = 아래 4 절 끝 4-f.
 
 ## 1. 등록 R (`docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md`)
 
@@ -256,3 +289,13 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
   `ea3b13b893b0161dac5b863da3b315ca332d9f32` (반입 뒤 sha 로 바꾼다) · 바뀐 줄 = 머리 주석 다섯 + Q11PIN 하나 · 5 판 사본 = `gpu_check_block_v5.txt`.
 - 다시 돌림 (6 판 · 핀 ea3b13b89): 블록 셸 관문 모의 (가짜 HOME · `$HOME/dem-mt` = 작업 트리 심볼릭 · 빈 activate) = md5 · PIN · 두 커밋 · git show ·
   sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대).  CPU 흐름은 다시 돌리지 않았다 (하네스 · 두 모듈 바이트 = 5 판과 같음).  GPU 길 = [미확인] (1저자).
+
+### 4-f. (7 판 · 3 회차 뒤) GPU 확인 블록 갱신
+
+- 3 회차는 `scripts/step3_sigma.py` 를 바꾸지 않았다 → 새 모듈 sha256 = **`859310da…b459a`** 그대로 (`git show 8b59b9618:scripts/step3_sigma.py
+  | sha256sum` 다시 셈) · 옛 `8d428ff5…f2ec` 그대로 · 하네스 글 md5 `acfeb4b4…` 그대로 (heredoc 바이트 같음) · Q11PIN 자리 = 작업 트리 끝 커밋
+  `8b59b9618500910865983b238fee44d46400922e` (반입 뒤 sha 로 바꾼다) · 바뀐 줄 = 머리 주석 넷 + Q11PIN 하나 · 6 판 사본 = `gpu_check_block_v6.txt`.
+- 블록에는 git 환경 셸 꼴 (`GIT_DROP_SH`) 을 넣지 않았다 (0-f 남은 한정 (차) — 1저자 붙여 넣기 블록 · 읽기 git 셋 (`cat-file -e` · `show`) 뿐).
+- 다시 돌림 (7 판 · 핀 8b59b9618): 블록 셸 관문 모의 (가짜 HOME · `$HOME/dem-mt` = 작업 트리 심볼릭 · 빈 activate) = md5 · PIN · 두 커밋 · git show ·
+  sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대 · 결과 파일 두 sha256 = 블록 값).  CPU 흐름은 다시 돌리지 않았다 (하네스 · 두 모듈 바이트 = 5 판과
+  같음).  GPU 길 = [미확인] (1저자).

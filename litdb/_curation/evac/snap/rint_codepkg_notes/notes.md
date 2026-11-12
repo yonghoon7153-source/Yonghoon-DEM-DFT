@@ -274,3 +274,16 @@
 - 변이 보강 2 준비 (work/r5patch/apply_mutfix2.py · g7e_defs/g7e_block): G7e = 시험 모듈 여덟의 git 부르는 자리 (정적 ast · 3.8 같음) env 넘김 · 예외 =
   ROOT 읽기 셋 · G6 목록 상수 G6_MODULES.  변이 J27–J32 (도우미 밖 고정물 git env 지움) 더함 · mutate_r3 ARCHIVE_PATHS 에 S0 블록 폴더 더함 (G8a · J17).
   변이 스크립트 work/run_mut7.sh (사본 mut7 · 바탕선 G · T15 · P · 3.11 → 3.8).
+- (22:1xZ) 다시 돌림 끝 (HEAD 0db6dee6d · logs/r5/{py311,kgy,check_all_split.log}): 3.11 = git_env 17 · run_contract 125 · gpu_precond 19 · probe6 330 ·
+  b6 502 · runner 151 · cmd_selftest 128 · cmd_repo 0 오류 · conv_cert 30 · rint_r_chain 506 · e2e 51 · e2e12 33 · cjunc_store_e2e 6 · cjunc_store 67 + T8 1 FAIL
+  (알려진 맞춤) · undef 2 건 (바탕부터 · 범위 밖) · 게이트 나누기 시험 17/17 · kgy 3.8 = 16 ✓ + cjunc_store ✗ (T8 하나 · 같음).
+- 변이 보강 · 시험 맞춤 커밋 8b59b9618 (= 끝 · 서명 없음): G7d · G7e (+ G6_MODULES) · T15l · T15m · T8 맞춤 · 머리 글.  3.11 git_env 19/19 · store 70/70 ·
+  kgy 3.8 git_env 19/19 · store 70/70 · 3.11 s0_census 186/186 (logs/r5/mutfix).
+- check_review_findings --selftest (일회용 두 파일 저장소 · 3.11) = 22/24 · 실패 둘 = 16 (등록부 비어 있지 않음) · 21 (리포 전체 누수 0) = 리포 내용 검사
+  (두 파일 저장소엔 등록부 · 문서 없음) · 19 · 19b (git 쓰기) PASS · 작업 트리에서는 안 돌림 (공유 객체 자리에 매달린 커밋을 쓴다 · 본 세션 게이트가 돈다).
+- 봉인 대조 끝 판 (logs/r5/seal_check_final.log · seal_bind_final.log): 19 파일 · 194 0 · 언로딩 키트 봉인 0 (ps45_unload · history_test · 키트 SHA256SUMS) ·
+  믹서 0 · 사슬 (봉인 전) 6 · S0 일곱 1 · Codex 리뷰 증거 목록 8 줄 바탕판 바이트와 같았음 (ZIP · archive 사본 경로).
+- GPU 블록 7 판 (gpu_check_block.txt = v7 · v6 사본) · Q11PIN 8b59b9618… · 모듈 sha 859310da 그대로 · md5 acfeb4b4 · bash -n · 탭 · CR · ! 0 · 셸 관문 모의
+  (blk_home7 · 지움) = 관문 통과 → cupy 없음 rc 1 (logs/r5/gpu_block_v7_shell_mock*).
+- amend_drafts.md 7 판 (0-f · 4-f · v6 사본 amend_drafts_v6.md) — 변이 · 끔 경로 줄은 끝난 뒤 채움.
+- 변이 띄움 (work/run_mut7.sh · 사본 work/mut7 = 8b59b9618 · J1–J32 · 3.11 → 3.8 · logs/r5/mut).
