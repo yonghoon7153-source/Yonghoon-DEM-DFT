@@ -26,8 +26,15 @@ CTL = Path("/home/user/litdb-ctl")
 BR = "claude/friendly-meitner-lldvar"
 REF = f"origin/{BR}"
 TREES = {"1": ("/home/user/litdb-canon", "tmp-litdb-evac"), "2": ("/home/user/litdb-canon2", "tmp-litdb-evac2")}
-TRAILER = ("Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>\n"
-           "Claude-Session: https://claude.ai/code/session_019HKnbzGsY9U5Gyw4qGqqzA")
+def _trailer():
+    """커밋 끝 두 줄 (공동 저자 줄 · 세션 줄) — 세션마다 다르므로 scratchpad tools/trailer.txt 에 두고 정본에는 올리지 않는다."""
+    p = SCR / "tools" / "trailer.txt"
+    if not p.is_file():
+        sys.exit("⛔ tools/trailer.txt 가 없다 — 이 세션의 커밋 끝 두 줄을 그 파일에 적는다 (정본에 올리지 않는다)")
+    return p.read_text(encoding="utf-8").strip()
+
+
+TRAILER = _trailer()
 
 
 def git(*a, check=False):

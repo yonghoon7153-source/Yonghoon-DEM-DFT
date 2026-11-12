@@ -27,7 +27,7 @@
 - 에이전트는 한 번에 둘까지. 끝날 때마다: 모음 그림 (sheet png) 을 SendUserFile 로 보내고 · status.tsv 를 끝 (slug · 커밋) 으로 고쳐 push · 한국어 12 줄 안 보고 + 의도 대조 한 줄.
 - 정본 push 규칙 = `litdb/_curation/README.md` 2 절 (시작 · push 직전 fetch · rebase · 충돌은 두 쪽 줄 다 살림 · 강제 push 금지 · INDEX_DEM 은 build_index.py 로 재생성).
 - wishlist: 에이전트의 정독 출력 `## n` 절에서 내가 `litdb/_curation/wishlist.md` 로 옮긴다 (꼴 = 그 파일 머리 · 서지는 원문 목록 그대로 · 모르면 [미확인]).
-- 보고 = 한국어 · 짧게 · 표 위주 · 숫자는 원문에서만. 커밋 끝 두 줄 = `Co-Authored-By: Claude Fable 5.2 <noreply@anthropic.com>` · `Claude-Session: https://claude.ai/code/session_019HKnbzGsY9U5Gyw4qGqqzA` (모델 이름은 그 밖 어디에도 쓰지 않는다).
+- 보고 = 한국어 · 짧게 · 표 위주 · 숫자는 원문에서만. 커밋 끝 두 줄 = 그 세션의 공동 저자 줄 · 세션 줄 — scratchpad `tools/trailer.txt` 에 두고 정본에는 올리지 않는다 (새 세션은 자기 두 줄을 그 파일에 적는다 · 그 밖의 글 · 문서에는 모델 이름을 쓰지 않는다).
 
 ## 자리
 
