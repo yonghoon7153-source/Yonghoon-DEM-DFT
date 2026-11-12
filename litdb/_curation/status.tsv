@@ -31,9 +31,9 @@ N-29	대피	끝	harthong2009_high_density_compaction_dem_voronoi_contact_law · 
 N-30	대피	끝	brodu2015_multiple_contact_dem_dense_granular · 6975e5e95	정독 71 · 카드 520 줄 · 크롭 28 · MC-DEM Rtop 1.00 (γ≈1.19 맞춤) ↔ 독립 Hertz 0.43 · errf 3.39→0.41 · 514 알 하이드로겔 · 카드 문제 = gonzalez2012 · giannis2021 · comparison 줄
 N-32	대피	끝	chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer · f219ecf08	정독 72 · N-32 끝 (chandratilleke2010 · Table 1 힘 법칙 · 연화 E ÷463 · 2012 카드 '방법 원전' 반만 맞음 = refs 9 · 12)
 N-33	대피	끝	thorntonyin1991_oblique_impact_elastic_spheres_adhesion · af33bb8dd	정독 73 · N-33 끝 (thorntonyin1991 · 탄성 전용 · 미끄럼 기준 T = μ(P + 2Pc) · 붙는 속도 식 없음 = Reed · pfeffer2001 L302 '탄소성' 원문과 다름)
-N-35	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 74 · 시작 11-13 01:24 KST
+N-35	대피	끝	nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions · 85273680c	정독 74 · N-35 끝 (nairn2015 · 축대칭 GIMP · CPDI · 축 r=0 처리 · gritton2017 L597 · L624 '축대칭이면 그대로 3D' 한정어 필요)
 N-36	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 77 · 시작 11-13 01:46 KST
-N-37	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 78
+N-37	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 78 · 시작 11-13 02:29 KST
 N-38	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 79
 N-39	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 80
 N-40	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 81
