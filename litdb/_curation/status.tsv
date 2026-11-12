@@ -25,8 +25,8 @@ N-53	대피	끝	lu2020_insitu_nanoct_calendering_microstructural_evolution · 5f
 N-54	대피	끝	paulick2015_particle_contact_stiffness_two_particle_method · 9c6ff51aa	정독 103 · 의도 대조 = 일부 (방법 · 힘–변위 · Hertz 차이 채움 · 변위 측정법 없음 · U5 충돌 없음) · 같은 저자 리뷰 카드와 서로 관련 카드 한 줄
 N-55	대피	끝	meyer2017_calendering_compaction_resistance_line_load_exponential_model · b6f5f591c	정독 104 · 의도 대조 = 일부 · he2026 L688 · L414 의 "Heckel 지수 · 하중-변위 · compaction impedance" 는 원문에 없음 (원문 = 선하중–밀도 지수 식 · "compaction resistance" · 카드 문제 기록)
 N-56	대피	도는 중		Song 2025 Powder Technol 453 120667 · 정독 105 (+SI) · 시작 11-12 12:50 KST
-N-60	대피	도는 중		Onoda–Liniger 1990 PRL 64 2727 · 정독 106 · 시작 11-12 13:10 KST
-N-61	대피	차례 기다림		PDF 받음 · Meyer 2018 J Energy Storage 18 371 · 정독 107
+N-60	대피	끝	onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset · 063da4bc7	정독 106 · 의도 대조 = 일부 (0.555 ± 0.005 값 · 재는 법 · 전단 팽창 시작 채움 · "CoV_r 의 0.6" 은 이 논문이 인용한 Scott 값 · 인력 있는 입자는 원문이 뺌) · alizadeh2018 L131 · L280 "0.6 (Onoda–Liniger)" ↔ 원문 0.555 (카드 문제 기록) · DOI 쪽에 인쇄 없음
+N-61	대피	도는 중		PDF 받음 · Meyer 2018 J Energy Storage 18 371 · 정독 107 · 시작 11-12 13:48 KST
 N-62	대피	차례 기다림		PDF 받음 · Cottrino 2013 Mater Charact 81 111 · 정독 108
 N-70	대피	차례 기다림		PDF 받음 (+SI · 영상 3) · Xu 2023 Batteries & Supercaps 6 e202300371 (원문 첫 쪽 · 후보 표가 옮긴 e202300525 와 다름) · 정독 109
 N-71	대피	차례 기다림		PDF 받음 · Silbert 2001 PRE 64 051302 · 정독 110

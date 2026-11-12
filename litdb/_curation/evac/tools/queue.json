@@ -223,5 +223,676 @@
   "model2": "계산 (DEM) 논문의 방법 절 꼴은 litdb/papers/cantor2020_compaction_model_highly_deformable_particles.md 도 참고 (같은 그룹 — Radjai · LMGC)",
   "dup": "papers/ 에 sonzogni* 없음 · '119891' · 제목 grep 0 건 ('Sonzogni' = zhang2026_xct · lyu2025 인용만) → 카드 없음",
   "note": "- 의도 = 후보 C′ 류 · 단계 5: zhang2026_xct 카드가 옮긴 '회전 롤 + 응집-소성 바인더 접촉법칙' (L97) · '롤 곡률 · 전단을 다룬 것' (L307) 이 원문과 같은지 대조. lyu2025 원문 서론의 [46] 문장 ('… microstructure and electronic properties … The bonding structure induced by calendering involves mostly vertical tensile contacts and horizontal compressive contacts') 도 원문 결과와 대조.\n- **접촉 법칙 (활물질 ↔ CBD 를 함께 다루는 법칙 · 탄소성 · 응집 · 하중 / 제하 가지) 의 식을 번호별로 따로 자르고**, 매개변수 표 (맞춘 값 · 맞춘 대상 · 물성인지 보정값인지) · 롤 기하 (지름 · 간극 · 속도) · 입자 수 · 2D / 3D · 주기 경계 · 계산 비용 · 검증 (실험 대조가 있는지) 을 표로.\n- 압연 속도 → 전극 늘어남 · 내부 이방성 (fabric) · 되돌아옴 (롤 통과 뒤 두께 회복) · 기공률 · 전자 전도 결과를 값 · 그림 번호와 함께. 우리 쪽 대조 자리 = 일축 평판 압축 (플래튼) ↔ 회전 롤의 전단 · 조건 R2 (미끄럼 · 분리) · R4 (탈압 · 되돌아옴) · 후보 C′ (항복 캡 탄소성 접촉).\n- DEM 한계 · 소성을 접촉 법칙에 넣는 어려움에 대한 원문 문장을 따옴표로 (질문 k · l).\n- 인용한 쪽 원문 두 편이 같은 inbox 에 있다 (새 카드를 만들지 않는다 · 대조용): zhang2026 = `litdb/inbox/b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf` · lyu2025 = `litdb/inbox/e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf`. 두 정본 카드 (zhang2026_xct_dem_cathode_calendering_peel_calibration · lyu2025_3d_dem_drying_calendering_lib) 에는 '🔗 관련 카드' 한 줄씩만 더한다."
+ },
+ "N-76": {
+  "nn": "",
+  "pdf": "e958c227-76._AC_impedance_analysis_of_ionic_and_electronic_conductivities_in_electrode_mixture_layers_for_an_all-solid-state_lithium-ion_battery.pdf",
+  "si": [
+   "781a0ada-76._Sup_AC_impedance_analysis_of_ionic_and_electronic_conductivities_in_electrode_mixture_layers_for_an_all-solid-state_lithium-ion_battery.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: AC impedance analysis of ionic and electronic conductivities in electrode mixture layers for an all-solid-state lithium-ion battery · Subject: Journal of Power Sources, 316 (2016) 215-223. doi:10.1016/j.jpowsour.2016.03.059 · Author: Zyun Siroma · DOI: 10.1016/j.jpowsour.2016.03.059 · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2016.03.059` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-77": {
+  "nn": "",
+  "pdf": "b10f8cff-77._Impact_of_cathode_material_particle_size_on_the_capacity_of_bulk-type_all-solid-state_batteries.pdf",
+  "si": [
+   "b0965bf7-77._Sup_Impact_of_cathode_material_particle_size_on_the_capacity_of_bulk-type_all-solid-state_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: nz8b00275 1..5 · Subject:  · Author:  · DOI: 10.1021/acsenergylett.8b00275 · PDF 5 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acsenergylett.8b00275` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-78": {
+  "nn": "",
+  "pdf": "eb3344c8-78._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+  "si": [
+   "e0e497c9-78._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Toward practical all-solid-state lithium-ion batteries with high energy density and safety_ Comparative study for electrodes fabricated by dry- and slurry-mixing processes · Subject: Journal of Power Sources, 375 (2017) 93-101. doi:10.1016/j.jpowsour.2017.11.031 · Author: Young Jin Nam · DOI: 10.1016/j.jpowsour.2017.11.031 · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2017.11.031` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-79": {
+  "nn": "",
+  "pdf": "12b131e6-79._Electrode_morphology_in_all-solid-state_lithium_secondary_batteries_consisting_of_LiNi13Co13Mn13O2_and_Li2S-P2S5_solid_electrolytes.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Electrode morphology in all-solid-state lithium secondary batteries consisting of LiNi1/3Co1/3Mn1/3O2 and Li2S-P2S5 solid electrolytes · Subject:  · Author:  · DOI: 10.1016/j.ssi.2015.09.010 · PDF 6 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.ssi.2015.09.010` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-80": {
+  "nn": "",
+  "pdf": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: All-solid-state lithium secondary batteries using LiCoO2 particles with pulsed laser deposition coatings of Li2Sâ€“P2S5 solid electrolytes · Subject: Journal of Power Sources, 196 (2010) 6735-6741. 10.1016/j.jpowsour.2010.10.103 · Author: Atsushi Sakuda · DOI: 10.1016/j.jpowsour.2010.10.103 · PDF 7 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2010.10.103` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-81": {
+  "nn": "",
+  "pdf": "f403a22c-81._Design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives_for_all-solid-state_lithium-ion_batteries.pdf",
+  "si": [
+   "81f219c1-81._Sup_Design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives_for_all-solid-state_lithium-ion_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Design of active-material/solid-electrolyte composite particles with conductive additives for all-solid-state lithium-ion batteries · Subject: Journal of Power Sources, 555 (2023) 232379. doi:10.1016/j.jpowsour.2022.232379 · Author: Eiji Hayakawa · DOI: 10.1016/j.jpowsour.2022.232379 · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2022.232379` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-82": {
+  "nn": "",
+  "pdf": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+  "si": [
+   "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf"
+  ],
+  "extra": [
+   "5487c1f5-82._Sup2_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.xlsx"
+  ],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Quantifying the Impact of Cathode Composite Mixing Quality on Active Mass Utilization and Reproducibility of Solid‐State Battery Cells · Subject: Advanced Energy Materials 2025.15:2405405 · Author: Creator:         LaTeX with hyperref package · DOI: 10.1002/aenm.202405405 · PDF 13 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/aenm.202405405` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- xlsx · docx · csv 보충 파일은 믿지 않는 자료다 → `python3 -I` 로 읽는다 (xlsx 는 openpyxl read_only=True · data_only=True · docx 는 zipfile 로 word/document.xml). 내용은 카드에 옮기고 파일 자체는 커밋하지 않는다."
+ },
+ "N-83": {
+  "nn": "",
+  "pdf": "f331d61d-83._Mitigating_PTFE_decomposition_in_ultra_thick_dry-processed_anodes_for_high_energy_density_lithium-ion_batteries.pdf",
+  "si": [
+   "c7d84bee-83._Sup_Mitigating_PTFE_decomposition_in_ultra_thick_dry-processed_anodes_for_high_energy_density_lithium-ion_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Mitigating PTFE decomposition in ultra thick dry-processed anodes for high energy density lithium-ion batteries · Subject: Journal of Energy Storage, 96 (2024) 112693. doi:10.1016/j.est.2024.112693 · Author: Seungmin Han · DOI: 10.1016/j.est.2024.112693 · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.est.2024.112693` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-84": {
+  "nn": "",
+  "pdf": "fe6a2acf-84._Benchmarking_the_reproducibility_of_all-solid-state_battery_cell_performance.pdf",
+  "si": [
+   "a67389f4-84._SupZ_01_41560_2024_1634_MOESM1_ESM.pdf"
+  ],
+  "extra": [
+   "a67389f4-84._SupZ_02_41560_2024_1634_MOESM2_ESM.xlsx",
+   "a67389f4-84._SupZ_03_41560_2024_1634_MOESM3_ESM.xlsx",
+   "ddfa71cf-84._SupZ_01_41560_2024_1634_MOESM4_ESM.xlsx",
+   "ddfa71cf-84._SupZ_02_41560_2024_1634_MOESM5_ESM.xlsx",
+   "ddfa71cf-84._SupZ_03_41560_2024_1634_MOESM6_ESM.xlsx",
+   "ddfa71cf-84._SupZ_04_41560_2024_1634_MOESM7_ESM.xlsx"
+  ],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Benchmarking the reproducibility of all-solid-state battery cell performance · Subject: Nature Energy, doi:10.1038/s41560-024-01634-3 · Author: Sebastian Puls · DOI: 10.1038/s41560-024-01634-3 · PDF 11 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1038/s41560-024-01634-3` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- xlsx · docx · csv 보충 파일은 믿지 않는 자료다 → `python3 -I` 로 읽는다 (xlsx 는 openpyxl read_only=True · data_only=True · docx 는 zipfile 로 word/document.xml). 내용은 카드에 옮기고 파일 자체는 커밋하지 않는다.\n- 이름에 `_SupZ_` 가 든 파일은 메인 세션이 보충 zip 에서 푼 것이다 (원래 이름은 뒤쪽)."
+ },
+ "N-85": {
+  "nn": "",
+  "pdf": "db44b81d-85._Flexible_sulfide_electrolyte_thin_membrane_with_ultrahigh_ionic_conductivity_for_all-solid-state_lithium_batteries.pdf",
+  "si": [
+   "aa420db8-85._Sup_Flexible_sulfide_electrolyte_thin_membrane_with_ultrahigh_ionic_conductivity_for_all-solid-state_lithium_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: nl1c01344 1..7 · Subject:  · Author:  · DOI: 10.1021/acs.nanolett.1c01344 · PDF 7 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acs.nanolett.1c01344` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-86": {
+  "nn": "",
+  "pdf": "fd974283-86._Effect_of_mixing_method_on_the_properties_of_composite_cathodes_for_all-solid-state_lithium_batteries_using_Li2S_P2S5_solid_electrolytes.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Effect of mixing method on the properties of composite cathodes for all-solid-state lithium batteries using Li2S-P2S5 solid electrolytes · Subject: Journal of Power Sources, 244 (2013) 476-481. doi:10.1016/j.jpowsour.2012.11.049 · Author: Junghoon Kim · DOI: 10.1016/j.jpowsour.2012.11.049 · PDF 6 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2012.11.049` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-87": {
+  "nn": "",
+  "pdf": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1016/j.apt.2022.103705 · PDF 10 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.apt.2022.103705` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-88": {
+  "nn": "",
+  "pdf": "0dca781a-88._Size_control_of_sulfide-based_solid_electrolyte_particles_through_liquid-phase_synthesis.pdf",
+  "si": [
+   "9f38c552-88._Sup_Size_control_of_sulfide-based_solid_electrolyte_particles_through_liquid-phase_synthesis.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Size control of sulfide-based solid electrolyte particles through liquid-phase synthesis · Subject: Powder Technology, 387 (2021) 415-420. doi:10.1016/j.powtec.2021.04.050 · Author: Shuji Ohsaki · DOI: 10.1016/j.powtec.2021.04.050 · PDF 6 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.powtec.2021.04.050` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-89": {
+  "nn": "",
+  "pdf": "d453ae79-89._Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf",
+  "si": [
+   "4481d6ea-89._Sup_Influence_of_lithium_ion_kinetics_particle_morphology_and_voids_on_the_electrochemical_performance_of_composite_cathodes_for_all-solid-state_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Influence of Lithium Ion Kinetics, Particle Morphology and Voids on the Electrochemical Performance of Composite Cathodes for All-Solid-State Batteries · Subject: Journal of The Electrochemical Society, 169(2022) 020539. doi:10.1149/1945-7111/ac50df · Author: Anja Bielefeld · DOI: 10.1149/1945-7111/ac50df · PDF 14 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1149/1945-7111/ac50df` grep = benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-90": {
+  "nn": "",
+  "pdf": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Geometrical Effect of Active Material on Electrode Tortuosity in All-Solid-State Lithium Battery · Subject: In this study, the effect of the active material geometry on the tortuosity in the ion transport path of the electrode composite of an all-solid-state lithium battery was systematically analyzed in terms of the different design and process factors of an electrode. A direct currenttechnique (i.e., chronoamperometry) using an electron-blocking cell was used to analyze the tortuosity to minimize the experimental error. In addition, aluminum oxide was selected as a hypothetical active material in a composite electrode to exclude the possible disturbance of the ion transport signal caused by real active materials. The experimental results showed that the shape and composition of the active material had significant influences on the ion transport characteristics. In particular, when a fibrous material was applied with a high active material ratio, the degree of tortuosity was significantly increased, reaching values as high as 45, due to the insufficient filling in the micropores formed by particle aggregation. Moreover, the tortuosity degree decreased below 15 as the pressing pressure increased during electrode manufacturing, and the cause of this decrease differed with the active material’s particle shape. The analysis results confirmed that the change in tortuosity resulting from the electrode design factors of an all-solid-state battery has distinctive features compared to that for a conventional liquid electrolyte-based lithium-ion battery. · Author: So-Yeon Park, Jiung Jeong and Heon-Cheol Shin · DOI: 10.3390/app122412692 · PDF 17 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.3390/app122412692` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-91": {
+  "nn": "",
+  "pdf": "d9c6f04d-91._Anode_interface-stabilizing_dry_process_employing_a_binary_binder_system_for_ultra-thick_and_durable_battery_electrode_fabrication.pdf",
+  "si": [
+   "a0189c1a-91._Sup_Anode_interface-stabilizing_dry_process_employing_a_binary_binder_system_for_ultra-thick_and_durable_battery_electrode_fabrication.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Anode interface-stabilizing dry process employing a binary binder system for ultra-thick and durable battery electrode fabrication · Subject: Chemical Engineering Journal, 503 (2025) 158271. doi:10.1016/j.cej.2024.158271 · Author: Juhyun Lee · DOI: 10.1016/j.cej.2024.158271 · PDF 10 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.cej.2024.158271` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-92": {
+  "nn": "",
+  "pdf": "04034e57-92._10_mAh_cm_2_Cathode_by_Roll_to_Roll_Process_for_Low_Cost_and_High_Energy_Density_Li_Ion_Batteries.pdf",
+  "si": [
+   "31ea73f9-92._Sup_10_mAh_cm_2_Cathode_by_Roll_to_Roll_Process_for_Low_Cost_and_High_Energy_Density_Li_Ion_Batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: 10 mAh cm−2 Cathode by Roll‐to‐Roll Process for Low Cost and High Energy Density Li‐Ion Batteries · Subject: Advanced Energy Materials 2024.14:2303455 · Author: Creator:         LaTeX with hyperref package · DOI: 10.1002/aenm.202303455 · PDF 11 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/aenm.202303455` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-93": {
+  "nn": "",
+  "pdf": "6abf5bb7-93._Low_Resistance_LiFePO4_Thick_Film_Electrode_Processed_with_Dry_Electrode_Technology_for_High_Energy_Density_Lithium_Ion_Batteries.pdf",
+  "si": [
+   "46d65a9a-93._Sup_Low_Resistance_LiFePO4_Thick_Film_Electrode_Processed_with_Dry_Electrode_Technology_for_High_Energy_Density_Lithium_Ion_Batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Low‐Resistance LiFePO4 Thick Film Electrode Processed with Dry Electrode Technology for High‐Energy‐Density Lithium‐Ion Batteries · Subject: Small Science 2024.4:2300302 · Author: Kihwan Kwon, Jiwoon Kim, Seungmin Han, Joohyun Lee, Hyungjun Lee, Jiseok Kwon, Jungwoo Lee, Jihoon Seo, Patrick Joohyun Kim, Taeseup Song, Junghyun Choi · DOI: 10.1002/smsc.202300302 · PDF 10 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/smsc.202300302` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-94": {
+  "nn": "",
+  "pdf": "3499fbf8-94._Unraveling_the_impact_of_the_degree_of_dry_mixing_on_dry-processed_lithium-ion_battery_electrodes.pdf",
+  "si": [
+   "c05bffd8-94._Sup_Unraveling_the_impact_of_the_degree_of_dry_mixing_on_dry-processed_lithium-ion_battery_electrodes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Unraveling the impact of the degree of dry mixing on dry-processed lithium-ion battery electrodes · Subject: Journal of Power Sources, 580 (2023) 233379. doi:10.1016/j.jpowsour.2023.233379 · Author: Runming Tao · DOI: 10.1016/j.jpowsour.2023.233379 · PDF 6 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2023.233379` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-95": {
+  "nn": "",
+  "pdf": "96fb0d20-95._Effect_of_active_material_morphology_on_PTFE-fibrillation_powder_characteristics_and_electrode_properties_in_dry_electrode_coating_processes.pdf",
+  "si": [
+   "9314c653-95._Sup_Effect_of_active_material_morphology_on_PTFE-fibrillation_powder_characteristics_and_electrode_properties_in_dry_electrode_coating_processes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Effect of active material morphology on PTFE-fibrillation, powder characteristics and electrode properties in dry electrode coating processes · Subject: Powder Technology, 451 (2025) 120451. doi:10.1016/j.powtec.2024.120451 · Author: Marcella Horst · DOI: 10.1016/j.powtec.2024.120451 · PDF 13 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.powtec.2024.120451` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-96": {
+  "nn": "",
+  "pdf": "45a3b6c0-96._Physio_electrochemically_durable_dry_processed_solid_state_electrolyte_films_for_all_solid_state_batteries.pdf",
+  "si": [
+   "a045de4d-96._Sup_Physio_electrochemically_durable_dry_processed_solid_state_electrolyte_films_for_all_solid_state_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Physio‐Electrochemically Durable Dry‐Processed Solid‐State Electrolyte Films for All‐Solid‐State Batteries · Subject: Adv Funct Materials 2023.33:2301341 · Author:  · DOI: 10.1002/adfm.202301341 · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/adfm.202301341` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-97": {
+  "nn": "",
+  "pdf": "44e180fc-97._Removing_electrochemical_constraints_on_polytetrafluoroethylene_as_dry-process_binder_for_high-loading_graphite_anodes.pdf",
+  "si": [
+   "c4d66c1d-97._Sup2_Removing_electrochemical_constraints_on_polytetrafluoroethylene_as_dry-process_binder_for_high-loading_graphite_anodes.pdf",
+   "d0829660-97._Sup1_Removing_electrochemical_constraints_on_polytetrafluoroethylene_as_dry-process_binder_for_high-loading_graphite_anodes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Removing electrochemical constraints on polytetrafluoroethylene as dry-process binder for high-loading graphite anodes · Subject: Joule, 8 (2024) 1350-1363. doi:10.1016/j.joule.2024.01.028 · Author: Ziqi Wei · DOI: 10.1016/j.joule.2024.01.028 · PDF 15 쪽 · 보충 PDF 2 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.joule.2024.01.028` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-98": {
+  "nn": "",
+  "pdf": "3cc6fc5c-98._All-Solid-State_Lithium_Batteries_Li_Conducting_Ionomer_Binder_for_Dry-Processed_Composite_Cathodes.pdf",
+  "si": [
+   "6f49f24f-98._Sup_All-Solid-State_Lithium_Batteries_Li_Conducting_Ionomer_Binder_for_Dry-Processed_Composite_Cathodes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: manuscript 1..9 · Subject:  · Author:  · DOI: 10.1021/acsenergylett.1c02756 · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acsenergylett.1c02756` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-99": {
+  "nn": "",
+  "pdf": "cebe3dac-99._Alleviating_kinetical_delamination_induced_by_localized_cathode_contact_via_electrochemo-mechanical_modeling_in_all-solid-state_batteries.pdf",
+  "si": [
+   "a05fbe91-99._Sup1_Alleviating_kinetical_delamination_induced_by_localized_cathode_contact_via_electrochemo-mechanical_modeling_in_all-solid-state_batteries.pdf",
+   "ee5e09e7-99._Sup2_Alleviating_kinetical_delamination_induced_by_localized_cathode_contact_via_electrochemo-mechanical_modeling_in_all-solid-state_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: JOUL102046_grabs 1..1 · Subject: Joule, 9 (2025) 102046. doi:10.1016/j.joule.2025.102046 · Author: Dongkyu Lee · DOI: 10.1016/j.joule.2025.102046 · PDF 15 쪽 · 보충 PDF 2 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.joule.2025.102046` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-100": {
+  "nn": "",
+  "pdf": "1129c54f-100._Nonintuitive_role_of_solid_electrolyte_porosity_on_failure.pdf",
+  "si": [
+   "678013c7-100._Sup_Nonintuitive_role_of_solid_electrolyte_porosity_on_failure.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: nz4c00744 1..7 · Subject:  · Author:  · DOI: 10.1021/acsenergylett.4c00744 · PDF 7 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acsenergylett.4c00744` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-101": {
+  "nn": "",
+  "pdf": "b3ee46b6-101._Characterization_of_mechanical_degradation_in_an_all-solid-state_battery_cathode.pdf",
+  "si": [
+   "bcfeb730-101._Sup_Characterization_of_mechanical_degradation_in_an_all-solid-state_battery_cathode.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Characterization of mechanical degradation in an all-solid-state battery cathode · Subject: Journal of Materials Chemistry A: Materials for energy and sustainability (2020), 8, 17399-17404, doi:10.1039/D0TA06985J · Author: Tan Shi · DOI: 10.1039/D0TA06985J · PDF 6 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1039/D0TA06985J` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-102": {
+  "nn": "",
+  "pdf": "69373920-102._An_investigation_on_process_of_seeded_granulation_in_a_continuous_drum_granulator_using_DEM.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1016/j.apt.2017.02.011 · PDF 9 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.apt.2017.02.011` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-103": {
+  "nn": "",
+  "pdf": "71c50c8f-103._Dry_electrode_manufacturing_in_a_calender_the_role_of_powder_premixing_for_electrode_quality_and_electrochemical_performance.pdf",
+  "si": [
+   "cc5ba788-103._Sup_Dry_electrode_manufacturing_in_a_calender_the_role_of_powder_premixing_for_electrode_quality_and_electrochemical_performance.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: ae2c03755 1..13 · Subject:  · Author:  · DOI: 10.1021/acsaem.2c03755 · PDF 13 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acsaem.2c03755` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-104": {
+  "nn": "",
+  "pdf": "bf1783bc-104._Thick_electrodes_for_Li-ion_batteries_A_model_based_analysis.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Thick electrodes for Li-ion batteries: A model based analysis · Subject: Journal of Power Sources, 334 (2016) 191-201. doi:10.1016/j.jpowsour.2016.09.143 · Author: Timo Danner · DOI: 10.1016/j.jpowsour.2016.09.143 · PDF 11 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2016.09.143` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-105": {
+  "nn": "",
+  "pdf": "c52c2ff7-105._Operando_neutron_imaging-guided_gradient_design_of_Li-ion_solid_conductor_for_high-mass-loading_cathodes.pdf",
+  "si": [
+   "7c8cb1dd-105._Sup1_Operando_neutron_imaging-guided_gradient_design_of_Li-ion_solid_conductor_for_high-mass-loading_cathodes.pdf"
+  ],
+  "extra": [
+   "b5ba7e48-105._SupZ_00_README.txt",
+   "b5ba7e48-105._SupZ_01_Figure_2.xlsx",
+   "b5ba7e48-105._SupZ_02_Figure_3.xlsx",
+   "b5ba7e48-105._SupZ_03_Figure_4.xlsx",
+   "b5ba7e48-105._SupZ_04_Figure_5.xlsx",
+   "b5ba7e48-105._SupZ_05_Supplementary_Figure_10.xlsx",
+   "b5ba7e48-105._SupZ_06_Supplementary_Figure_11.xlsx",
+   "b5ba7e48-105._SupZ_07_Supplementary_Figure_12.xlsx",
+   "b5ba7e48-105._SupZ_08_Supplementary_Figure_13.xlsx",
+   "b5ba7e48-105._SupZ_09_Supplementary_Figure_14.xlsx",
+   "b5ba7e48-105._SupZ_10_Supplementary_Figure_15.xlsx",
+   "b5ba7e48-105._SupZ_11_Supplementary_Figure_16.xlsx",
+   "b5ba7e48-105._SupZ_12_Supplementary_Figure_17.xlsx",
+   "b5ba7e48-105._SupZ_13_Supplementary_Figure_18.xlsx",
+   "b5ba7e48-105._SupZ_14_Supplementary_Figure_19.xlsx",
+   "b5ba7e48-105._SupZ_15_Supplementary_Figure_2.xlsx",
+   "b5ba7e48-105._SupZ_16_Supplementary_Figure_20.xlsx",
+   "b5ba7e48-105._SupZ_17_Supplementary_Figure_21.xlsx",
+   "b5ba7e48-105._SupZ_18_Supplementary_Figure_22.xlsx",
+   "b5ba7e48-105._SupZ_19_Supplementary_Figure_23.xlsx",
+   "b5ba7e48-105._SupZ_20_Supplementary_Figure_24.xlsx",
+   "b5ba7e48-105._SupZ_21_Supplementary_Figure_25.xlsx",
+   "b5ba7e48-105._SupZ_22_Supplementary_Figure_3.xlsx",
+   "b5ba7e48-105._SupZ_23_Supplementary_Figure_5.xlsx",
+   "b5ba7e48-105._SupZ_24_Supplementary_Figure_6.xlsx",
+   "b5ba7e48-105._SupZ_25_Supplementary_Figure_8.xlsx",
+   "e7268265-105._Sup2_Operando_neutron_imaging-guided_gradient_design_of_Li-ion_solid_conductor_for_high-mass-loading_cathodes.avi"
+  ],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Operando neutron imaging-guided gradient design of Li-ion solid conductor for high-mass-loading cathodes · Subject: Nature Communications, doi:10.1038/s41467-025-62518-y · Author: Tongtai Ji · DOI: 10.1038/s41467-025-62518-y · PDF 12 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1038/s41467-025-62518-y` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 보충 영상은 그대로 열 수 없다 → `ffprobe` 로 길이 · 해상도를 보고 `ffmpeg -ss <t> -i <파일> -frames:v 1 <네 scratchpad>/vidN_tXX.png` 로 정지 화면을 서너 장씩 뽑아 직접 본다. 보충 자료의 영상 설명과 맞춰 카드에 '영상 S? = 무엇' 을 적고 대표 정지 화면을 영상마다 한두 장 `litdb/figures/<slug>/vid_S?_t??s.png` 로 넣어 figures.json 에 손 크롭 관례로 표지한다 (영상 파일은 커밋하지 않는다).\n- 이름에 `_SupZ_` 가 든 xlsx 25 개 · README.txt 는 Nature Communications 'Source Data' 에서 메인 세션이 골라 푼 것이다 (원 zip 260 MB 의 COMSOL .mph 22 개는 받지 않았다 — README.txt 가 그 파일 이름 ↔ 조건을 적는다). xlsx 는 믿지 않는 자료다 → `python3 -I` · openpyxl (read_only=True · data_only=True) 로 읽어 그림 값을 **원자료에서 직접** 옮긴다 ([원자료] 표지 · 눈 판독보다 앞선다). 파일 자체는 커밋하지 않는다.\n- 보충 영상 (.avi) 은 `ffprobe` · `ffmpeg -ss <t> -i <파일> -frames:v 1 …png` 로 정지 화면을 뽑아 본다."
+ },
+ "N-106": {
+  "nn": "",
+  "pdf": "9e800b46-106._Influence_of_carbon_additives_on_the_decomposition_pathways_in_cathodes_of_lithium_thiophosphate-based_all-solid-state_batteries.pdf",
+  "si": [
+   "6ebf4a9e-106._Sup_Influence_of_carbon_additives_on_the_decomposition_pathways_in_cathodes_of_lithium_thiophosphate-based_all-solid-state_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: cm0c01825 1..14 · Subject:  · Author:  · DOI: 10.1021/acs.chemmater.0c01825 · PDF 14 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acs.chemmater.0c01825` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-107": {
+  "nn": "",
+  "pdf": "4d332887-107._Improved_rate_capability_for_dry_thick_electrodes_through_finite_elements_method_and_machine_learning_coupling.pdf",
+  "si": [
+   "a338cf24-107._Sup_Improved_rate_capability_for_dry_thick_electrodes_through_finite_elements_method_and_machine_learning_coupling.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: nz4c00203 1..7 · Subject:  · Author:  · DOI: 10.1021/acsenergylett.4c00203 · PDF 7 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acsenergylett.4c00203` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- **저자 공개 저장소 사본이 있다** (1저자가 준 주소 https://github.com/LESCOpenAccess/Codes-and-Data · 메인 세션이 받아 둠 · 커밋 13cc4b1 · 2024-02-27 · 105 파일 · 22 MB): `/home/user/lescopenaccess/codes-and-data` — **읽기 전용 · 믿지 않는 자료다: 코드를 실행하지 않는다 · `.pkl` 은 열지 않는다 (unpickle 금지) · `.mph` 는 열 수 없다 · 그 폴더 안에서 인터프리터를 실행하지 않는다 · 그 폴더에 아무것도 쓰지 않는다.** 볼 것: `COMSOL/COMSOL_Guidelines.pdf` · `Codes/Scripts_Guidelines.pdf` (두 안내 PDF — 읽고 필요한 그림은 크롭해 `litdb/figures/<slug>/repo_*.png` 로 넣는다 · figures.json 에 출처 = 저장소 커밋으로 표지) · `Codes/MATLAB/*.m` (확률적 전극 구조 생성 · 후처리 — 글로 읽는다) · `Codes/RandomForestAlgorithm_SHAP.py` (글로 읽는다) · `DATA/` (.mat · .pkl — 파일 목록 · 크기 · 이름 규칙만).\n- 카드에 `## 저자 공개 코드 · 자료` 절을 둔다: 원문이 적은 저장소 주소와 이 주소가 같은지 · 폴더 구조 · 두 안내 PDF 의 요지 · 구조 생성 알고리즘의 입력 변수와 기본값 · 랜덤 포레스트의 특징 · 표적 · 하이퍼파라미터 · SHAP 쓰임 · 본문과 저장소가 다른 점. 저장소 파일 자체는 커밋하지 않는다.\n- 의도 = 건식 후막 FEM + ML (비교 문서가 '확보 1순위' 로 적은 논문). 우리 쪽 대응 = 설계 → 구조 ML 예측 · 대리 모델 · STEP4 율 특성 — 그 논문의 입력 (구조 인자) · 출력 (율 특성) · 표본 수 · 검증 방식을 표로."
+ },
+ "N-108": {
+  "nn": "",
+  "pdf": "50c05736-108._Analysis_of_the_Electrochemical_Stability_of_Sulfide_Solid_Electrolyte_Dry_Films_for_Improved_Dry_Processed_Solid_State_Batteries.pdf",
+  "si": [
+   "ea7cdfca-108._Sup_Analysis_of_the_Electrochemical_Stability_of_Sulfide_Solid_Electrolyte_Dry_Films_for_Improved_Dry_Processed_Solid_State_Batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Analysis of the Electrochemical Stability of Sulfide Solid Electrolyte Dry Films for Improved Dry‐Processed Solid‐State Batteries · Subject: Adv Funct Materials 2026.36:e18517 · Author: Creator:         LaTeX with hyperref package · DOI: 10.1002/adfm.202518517 · PDF 17 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/adfm.202518517` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-109": {
+  "nn": "",
+  "pdf": "049fa3fd-109._Influence_of_electronically_conductive_additives_on_the_cycling_performance_of_argyrodite-based_all-solid-state_batteries.pdf",
+  "si": [
+   "704bd278-109._Sup_Influence_of_electronically_conductive_additives_on_the_cycling_performance_of_argyrodite-based_all-solid-state_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Influence of electronically conductive additives on the cycling performance of argyrodite-based all-solid-state batteries · Subject: RSC Advances (2020), 10, 1114-1119, doi:10.1039/C9RA10253A · Author: Florian Strauss · DOI: 10.1039/C9RA10253A · PDF 6 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1039/C9RA10253A` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-110": {
+  "nn": "",
+  "pdf": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Predicting the impact of adhesive forces on particle mixing and segregation · Subject:  · Author: Isabel Figueroa; Hongming Li; Joseph McCarthy · DOI: 10.1016/j.powtec.2009.06.002 · PDF 10 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.powtec.2009.06.002` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-111": {
+  "nn": "",
+  "pdf": "50640237-111._Prediction_of_powder_flow_performance_using_a_multi-component_granular_Bond_number.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Prediction of powder flow performance using a multi-component granular Bond number · Subject:  · Author:  · DOI: 10.1016/j.powtec.2015.08.031 · PDF 11 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.powtec.2015.08.031` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-113": {
+  "nn": "",
+  "pdf": "e7f6bd60-113._Effects_of_adhesion_on_mixing_homogeneity_part_I_ordered_adhesion_random_adhesion.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: PII: 0032-5910(80)85023-6 · Subject:  · Author:  · DOI: [미확인] · PDF 4 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": ""
+ },
+ "N-115": {
+  "nn": "",
+  "pdf": "3da08b62-115._A_proposed_universal_homogeneity_and_mixing_index.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: PII: 0032-5910(73)80014-2 · Subject:  · Author:  · DOI: [미확인] · PDF 6 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": ""
+ },
+ "N-116": {
+  "nn": "",
+  "pdf": "6352dfa6-116._The_use_of_bulk_density_measurements_as_flowability_indicators.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: PII: S0032-5910(98)00208-3 · Subject:  · Author:  · DOI: [미확인] · PDF 15 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": ""
+ },
+ "N-117": {
+  "nn": "",
+  "pdf": "da51bc46-117._Coordination_number_of_binary_mixtures_of_spheres.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: [미확인] · PDF 7 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": ""
+ },
+ "N-118": {
+  "nn": "",
+  "pdf": "785fb72d-118._Chaotic_mixing_of_granular_materials_in_two-dimensional_tumbling_mixers.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1063/1.166390 · PDF 12 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1063/1.166390` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-119": {
+  "nn": "",
+  "pdf": "83999766-119._Contact_electrification_in_inorganic_binary_compounds.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: 168C.tif · Subject: Author: · Author: Creator:         168C.tif · DOI: [미확인] · PDF 7 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": ""
+ },
+ "N-120": {
+  "nn": "",
+  "pdf": "8aaa0bdf-120._Estimation_of_electrostatic_charge_distribution_of_flowing_toner_particles_in_contact_with_metals.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: doi:10.1016/S0032-5910(03)00155-4 · Subject:  · Author:  · DOI: 10.1016/S0032-5910(03)00155-4 · PDF 12 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/S0032-5910(03)00155-4` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-121": {
+  "nn": "",
+  "pdf": "6a136e9a-121._Critical_review_of_the_impact_of_tortuosity_on_diffusion.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: doi:10.1016/j.ces.2007.03.041 · Subject:  · Author:  · DOI: 10.1016/j.ces.2007.03.041 · PDF 8 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.ces.2007.03.041` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-122": {
+  "nn": "",
+  "pdf": "eb379395-122._Numerical_and_experimental_evaluation_of_the_relationship_between_porous_electrode_structure_and_effective_conductivity_of_ions_and_electrons_in_lithium-ion_batteries.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Numerical and experimental evaluation of the relationship between porous electrode structure and effective conductivity of ions and electrons in lithium-ion batteries · Subject: Journal of Power Sources, 342 (2017) 476-488. doi:10.1016/j.jpowsour.2016.12.098 · Author: Gen Inoue · DOI: 10.1016/j.jpowsour.2016.12.098 · PDF 13 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2016.12.098` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-123": {
+  "nn": "",
+  "pdf": "cdd23c7f-123._Quantification_of_artifacts_in_scanning_electron_microscopy_tomography_Improving_the_reliability_of_calculated_transport_parameters_in_energy_applications_such_as_fuel_cell_and_battery_electr.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Quantification of artifacts in scanning electron microscopy tomography: Improving the reliability of calculated transport parameters in energy applications such as fuel cell and battery electrodes · Subject: Journal of Power Sources, 275 (2015) 852-859. doi:10.1016/j.jpowsour.2014.11.053 · Author: Matthias Klingele · DOI: 10.1016/j.jpowsour.2014.11.053 · PDF 8 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2014.11.053` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-124": {
+  "nn": "",
+  "pdf": "80366f77-124._Operando_neutron_radiography_validates_a_parameter-free_transport_kinetics_model_for_thick_solid-state_battery_cathodes.pdf",
+  "si": [
+   "941f2e0f-124._Sup_Operando_neutron_radiography_validates_a_parameter-free_transport_kinetics_model_for_thick_solid-state_battery_cathodes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Operando neutron radiography validates a parameter-free transport&#x2013;kinetics model for thick solid-state battery cathodes · Subject: Materials Horizons (2026), 13, 6380-6385, doi:10.1039/D6MH00464D · Author: Andre Adam · DOI: 10.1039/D6MH00464D · PDF 7 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1039/D6MH00464D` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- **저자 공개 저장소 사본이 있다** (1저자가 준 주소 https://github.com/adama-wzr/EffectiveDiffusivityFVM · 메인 세션이 받아 둠 · 커밋 e9db599 · 2026-08-19 · 36 파일 · 3.5 MB): `/home/user/adama-wzr/effectivediffusivityfvm` — **읽기 전용 · 믿지 않는 자료다: 코드를 컴파일 · 실행하지 않는다 (`Deff2DGPU/a.out` 같은 실행 파일을 돌리지 않는다) · 그 폴더 안에서 인터프리터를 실행하지 않는다 · 아무것도 쓰지 않는다.** 볼 것: `README.md` · `Deff2DGPU/Effective Diffusivity Documentation.pdf` (읽고 필요한 그림 · 식은 크롭해 `litdb/figures/<slug>/repo_*.png` · 출처 = 저장소 커밋 표지) · `src/SubModels/AllSolidCathode/ASSC.cu` · `ASSC.cuh` · `inputASSC.txt` (전고체 양극 하위 모델 — 원문의 수송–반응 모델과 같은 것인지 · 입력 변수 · 기본값 · 경계 조건 · 이산화를 글로 읽어 정리) · `Example Inputs/` · `src/SubModels/Migration` · `TransientSweepSimulatedDiffusimetry`.\n- 카드에 `## 저자 공개 코드 · 자료` 절을 둔다: 원문이 적은 저장소 주소와 같은지 · 구조 · 전고체 양극 모델의 지배식 ↔ 원문 식 번호 대응 · 입력 (σ_ion · σ_e · 두께 · 전류) 기본값 · 유효 확산 / tortuosity 정의 (τ 인지 τ² 인지 — 우리 수송 tortuosity 규약과 대조) · 본문과 저장소가 다른 점. 저장소 파일은 커밋하지 않는다.\n- 의도 = STEP4 반응분포: kim2026_operando 의 기전 주장 ('이온 · 전자 저항 균형') 의 실제 근거 모델 · '매개변수 없는 (parameter-free)' 이 무엇을 뜻하는지 (맞춘 값 0 개인지 · 입력의 출처) 를 분명히."
+ },
+ "N-125": {
+  "nn": "",
+  "pdf": "70ef5bce-125._Thermodynamic_origin_of_reaction_non-uniformity_in_battery_porous_electrodes_and_its_mitigation.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Thermodynamic Origin of Reaction Non-Uniformity in Battery Porous Electrodes and Its Mitigation · Subject: Journal of The Electrochemical Society, 167(2020) 120543. doi:10.1149/1945-7111/abb383 · Author: Fan Wang · DOI: 10.1149/1945-7111/abb383 · PDF 12 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1149/1945-7111/abb383` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-126": {
+  "nn": "",
+  "pdf": "6add2d54-126._Mechanical_properties_of_vapor_grown_carbon_nanofibers.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Mechanical properties of vapor grown carbon nanofibers · Subject:  · Author: \"Tanil Ozkan; Mohammad Naraghi; Ioannis Chasiotis\" · DOI: 10.1016/j.carbon.2009.09.011 · PDF 6 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.carbon.2009.09.011` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-112-1": {
+  "nn": "",
+  "kind": "후보 표 N-112 의 첫째 논문 (PRL 2003) 한 편",
+  "status_prefix": "N-112 첫째\t대피\t",
+  "pdf": "95104388-112-1._Controlling_cohesive_particle_mixing_and_segregation.pdf",
+  "bib": "Hongming Li, J. J. McCarthy, \"Controlling Cohesive Particle Mixing and Segregation\", Physical Review Letters 90, 184301 (2003) (Received 18 December 2002; published 8 May 2003), DOI 10.1103/PhysRevLett.90.184301 (PDF 4 쪽 · 첫 쪽에서 확인). 후보 표 N-112 는 두 편 (PRL 2003 · PRE 2005) 이고 제목이 카드에 없었다 — 이 카드는 첫째만 다룬다. 둘째 (Phys. Rev. E 71, 021305 (2005) \"Phase diagrams for cohesive particle mixing and segregation\") 는 다른 에이전트가 따로 카드를 만든다 → '🔗 관련 카드' 에 서지 한 줄 (slug 가 정본에 있으면 그 slug).",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "dup": "papers/ 에 DOI 10.1103/PhysRevLett.90.184301 grep 0 건 (jarray2019 가 'Li & McCarthy PRL 90, 184301' 로 인용) → 카드 없음 — 시작할 때 `ls litdb/papers | grep -i mccarthy` · `grep -l 184301` 로 한 번 더 확인",
+  "note": "- 의도 = 믿싱 (점착): '점착으로 분리 조절 · 점착 혼합 상태도 (Bo 축)' (jarray2019 L322). 입상 Bond 수의 정의 (쌍별 Bo_ij) · 상태도의 축 · 혼합 ↔ 분리 경계 식 · 실험 (습윤 · 입자 크기 · 밀도 · 접촉각) 을 식 번호별 크롭과 표로. 우리 쪽 대응 = 믹서 3 상 (AM_P · AM_S · SE) 쌍별 Bo · 논지 문서의 γ_A/γ_S 판가름 — 액체 다리 (습윤) 점착이지 건식 vdW 가 아니라는 한계를 머리 요약에."
+ },
+ "N-112-2": {
+  "nn": "",
+  "kind": "후보 표 N-112 의 둘째 논문 (PRE 2005) 한 편",
+  "status_prefix": "N-112 둘째\t대피\t",
+  "pdf": "97f5c87f-112-2._Phase_diagrams_for_cohesive_particle_mixing_and_segregation.pdf",
+  "bib": "Hongming Li, J. J. McCarthy, \"Phase diagrams for cohesive particle mixing and segregation\", Physical Review E 71, 021305 (2005) (Received 30 April 2004; published 28 February 2005), DOI 10.1103/PhysRevE.71.021305 (PDF 8 쪽 · 첫 쪽에서 확인). 후보 표 N-112 의 둘째 논문 — 첫째 (PRL 90, 184301 (2003) \"Controlling Cohesive Particle Mixing and Segregation\") 는 다른 에이전트가 따로 카드를 만든다 → '🔗 관련 카드' 에 서지 한 줄 (slug 가 정본에 있으면 그 slug · 서로 가리키게).",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "dup": "papers/ 에 DOI 10.1103/PhysRevE.71.021305 grep 0 건 → 카드 없음 — 시작할 때 `ls litdb/papers | grep -i mccarthy` 로 한 번 더 확인 (첫째 논문 카드가 먼저 생겼을 수 있다)",
+  "note": "- 의도 = 믹싱 (점착): 입자 수준 점착 모델 · 상태도 (혼합 / 분리 상) · 경계가 역학 · 표면 성질로 정해지는 식. 식을 번호별로 자르고 상태도 그림마다 축 · 조건 · 판독값을 표로. 우리 쪽 대응 = 믹서 쌍별 Bo · 결합 규칙 (D2 기하평균) · dev-bo · dev-u 탐색 — 습윤 (액체 다리) 계라는 한계를 머리 요약에. 2D / 3D · 실험 장치 (회전 드럼) 를 분명히."
+ },
+ "N-114": {
+  "nn": "",
+  "kind": "후보 표 N-114 (Thiel–Lai–Hersey 1981) + 그 논평의 대상 논문 (Egermann 1980) — 짧은 두 편 · 카드 둘",
+  "pdf": "33f93f2f-114-1._Suggestion_on_the_nomenclature_of_powder_mixtures.pdf",
+  "si": [],
+  "extra": [
+   "7b71e3aa-114-2._Suggestion_on_the_nomenclature_of_powder_mixtures.pdf"
+  ],
+  "bib": "① (후보 N-114) W. J. Thiel, Felix Lai, J. A. Hersey, \"Comments on 'Suggestions on the Nomenclature of Powder Mixtures'\" (Letter to the Editor), Powder Technology 28 (1981) 117–118 (PII 0032-5910(81)87021-0 · 2 쪽) = 114-1 번 파일. ② (후보 밖 · egermann1983 카드의 참고 [1]) H. Egermann, \"Suggestions on the Nomenclature of Powder Mixtures\" (Short Communication), Powder Technology 26 (1980) 235–237 (PII 0032-5910(80)85069-8 · 3 쪽) = 114-2 번 파일. 둘 다 스캔본 (OCR 글자 깨짐: 'Mistures' 등) → 쪽을 그림으로 열어 읽는다 · DOI 는 원문에 인쇄돼 있을 때만.",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+  "model2": "같은 논쟁의 정본 카드 litdb/papers/egermann1983_ordered_vs_interactive_mixture_nomenclature.md (2 쪽 용어 제안 카드 — 짧은 논문 카드의 본) 와 서로 가리키게",
+  "dup": "papers/ 에 thiel* · egermann1980* 없음 (egermann1983_ordered_vs_interactive_mixture_nomenclature = Powder Technol. 36 (1983) 117–118 — 다른 논문) → 두 편 모두 카드 없음 — 시작할 때 `ls litdb/papers | grep -iE 'thiel|egermann'` 로 한 번 더 확인 (N-113 Egermann 1980 Powder Technol. 27, 203–206 카드가 다른 에이전트로 먼저 생겼을 수 있다 — 그것도 다른 논문이다)",
+  "note": "- ⚠ **이번만 한 번에 카드 둘을 만든다** (1저자가 두 파일을 한 묶음으로 줌 · 둘 다 2–3 쪽 · 논평 ↔ 대상 논문이라 함께 읽어야 뜻이 선다): ① `thiel1981_…` (후보 N-114 · '고른 의도 대조' 절 포함) ② `egermann1980_suggestions_nomenclature_…` (후보 밖 · '고른 의도 대조' 대신 '이 논문을 넣는 까닭' 한 문단 = N-114 논평의 대상 · egermann1983 카드의 참고 [1]). slug 는 네가 정하되 N-113 (Egermann 1980 'Effects of adhesion on mixing homogeneity Part I') 과 헷갈리지 않게. 두 카드 + egermann1983 카드가 서로를 가리키게 '🔗 관련 카드' 한 줄씩 (egermann1983 카드에는 그 한 줄만 더한다 · 그 카드 L186–L192 의 '카드 없음' 표기는 고치지 않는다).\n- 그림 폴더 · 정독 출력 줄은 카드마다 따로 (batch tsv 두 줄 · findings 는 한 파일에 두 slug). 커밋은 하나로 해도 된다. 답장에 slug 둘 · 줄 수 둘 · 크롭 수 둘을 적는다.\n- 의도 (N-114) = 믹서 논지 P1: egermann1983 카드가 옮긴 문장 (*'interactive mixes frequently remain incomplete … due to insufficient break-down of the agglomerates of the adherent component'* · 'ordered' · 'random' 을 혼합 **유형** 구분에 채택 · 정도 + 유형 두 축) 이 **이 두 원문 어디에 있는지 / 없는지** 를 문장 단위로 대조 (그 카드 L19 · L31 · L132 · L171 · L187). Egermann 1980 의 표 1 (제안 명명 · 균질도 σ ↔ σ_R · 질서 여부) 을 그대로 옮기고 크롭한다.\n- 우리 쪽 쓰임 = 믹서 판독 지표 (Lacey M ≈ 1 · M > 1 해석) · 'ordered' ↔ 'interactive' 용어. 실험 자료가 없는 용어 논쟁이라는 한계를 머리 요약에."
+ },
+ "N-127": {
+  "nn": "",
+  "pdf": "03adfd5e-127._Surface_coating_by_mechanofusion_modulates_bulk_charging_pathways_and_battery_performance_of_Ni-rich_layered_cathodes.pdf",
+  "si": [
+   "d50582ef-127._Sup1_Surface_coating_by_mechanofusion_modulates_bulk_charging_pathways_and_battery_performance_of_Ni-rich_layered_cathodes.pdf"
+  ],
+  "extra": [
+   "94644e4d-127._Sup3_Surface_coating_by_mechanofusion_modulates_bulk_charging_pathways_and_battery_performance_of_Ni-rich_layered_cathodes.mp4",
+   "aee578ef-127._Sup2_Surface_coating_by_mechanofusion_modulates_bulk_charging_pathways_and_battery_performance_of_Ni-rich_layered_cathodes.mp4"
+  ],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author: Creator:         Adobe InDesign 15.1 (Windows) · DOI: 10.1073/pnas.​ · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1073/pnas.​` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 보충 영상은 그대로 열 수 없다 → `ffprobe` 로 길이 · 해상도를 보고 `ffmpeg -ss <t> -i <파일> -frames:v 1 <네 scratchpad>/vidN_tXX.png` 로 정지 화면을 서너 장씩 뽑아 직접 본다. 보충 자료의 영상 설명과 맞춰 카드에 '영상 S? = 무엇' 을 적고 대표 정지 화면을 영상마다 한두 장 `litdb/figures/<slug>/vid_S?_t??s.png` 로 넣어 figures.json 에 손 크롭 관례로 표지한다 (영상 파일은 커밋하지 않는다)."
+ },
+ "N-128": {
+  "nn": "",
+  "pdf": "75cb9184-128._Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf",
+  "si": [
+   "96188dfa-128._Sup_Role_of_grain-level_chemo-mechanics_in_composite_cathode_degradation_of_solid-state_lithium_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Role of grain-level chemo-mechanics in composite cathode degradation of solid-state lithium batteries · Subject: Nature Communications, doi:10.1038/s41467-024-52123-w · Author: Chuanlai Liu · DOI: 10.1038/s41467-024-52123-w · PDF 18 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1038/s41467-024-52123-w` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-129": {
+  "nn": "",
+  "pdf": "68116c66-129._A_black_zirconia_cathode_coating_layer_enabling_facile_charge_diffusion_and_surface_lattice_stabilization_for_lithium-ion_batteries.pdf",
+  "si": [
+   "f41ce5ec-129._Sup_A_black_zirconia_cathode_coating_layer_enabling_facile_charge_diffusion_and_surface_lattice_stabilization_for_lithium-ion_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: A black zirconia cathode coating layer enabling facile charge diffusion and surface lattice stabilization for lithium-ion batteries · Subject: Journal of Materials Chemistry A: Materials for energy and sustainability (2024), 12, 30667-30675, doi:10.1039/D4TA05179C · Author: Yoo Jung Choi · DOI: 10.1039/D4TA05179C · PDF 9 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1039/D4TA05179C` grep = choi2026_bzox_dry_zro2x_nmc_shell_coating (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
+ },
+ "N-149": {
+  "nn": "",
+  "pdf": "6161f142-149._Thermal_conductivities_of_lithium-ion-conducting_solid_electrolytes.pdf",
+  "si": [
+   "4051f7cd-149._Sup2_Thermal_conductivities_of_lithium-ion-conducting_solid_electrolytes.pdf",
+   "ed4b77bb-149._Sup1_Thermal_conductivities_of_lithium-ion-conducting_solid_electrolytes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: ae3c01977 1..9 · Subject:  · Author:  · DOI: 10.1021/acsaem.3c01977 · PDF 9 쪽 · 보충 PDF 2 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acsaem.3c01977` grep = boger2023_thermal_conductivity_argyrodite_lgps (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": ""
  }
 }
