@@ -1416,7 +1416,7 @@ def t11():
     os.chmod(ow2, 0o757)
     nd = new_store_dir('t11_norm')                              # ★ 11-12 2 회차 (재리뷰 RCP2-02) — 정규화 안 된 꼴 (`.` · `..` · 빈 성분) = 링크 검사를 비켜 간다
     sdir = os.path.join(TD, 'stores')
-    for nm, pth, word in (('상대 경로 (있는 폴더)', os.path.relpath(rel_ok), None), ('없는 폴더', os.path.join(TD, 'stores', 'nope'), None),
+    for nm, pth, word in (('상대 경로 (있는 폴더)', os.path.relpath(rel_ok), '절대 경로'), ('없는 폴더', os.path.join(TD, 'stores', 'nope'), None),
                           ('파일', fpth, None), ('그룹이 쓸 수 있음', gw, '그룹 · 남'), ('남만 쓸 수 있음 (0757 · RCP2-03)', ow2, '그룹 · 남'),
                           ('심볼릭 링크 폴더', lk, '심볼릭'),
                           ('심볼릭 링크 폴더 (끝 빗금)', lk + '/', '심볼릭'), ('심볼릭 링크 폴더 (끝 빗금 둘)', lk + '//', '심볼릭'),
@@ -1431,6 +1431,19 @@ def t11():
         except ValueError as e:
             if word is not None and word not in str(e):
                 bad_dirs[nm] = f'다른 사유로 거부: {e}'
+    #  ★ 11-12 2 회차 변이 보강 (W14) — 점 없는 상대 경로 (cwd = 그 부모 · `.` · `..` · 빈 성분 없음 = 정규화 검사가 못 막는 꼴) → 절대 경로 검사만
+    #  막는다 (위 relpath 꼴은 보통 `..` 를 품어 정규화 검사 (RCP2-02) 에도 걸린다 — 그 꼴만으로는 절대 경로 검사를 끈 변이가 안 잡혔다)
+    _cwd = os.getcwd()
+    try:
+        os.chdir(sdir)
+        try:
+            CS.Store('t11_rel')
+            bad_dirs['상대 경로 (점 없는 꼴 · cwd = 부모)'] = '받았다'
+        except ValueError as e:
+            if '절대 경로' not in str(e):
+                bad_dirs['상대 경로 (점 없는 꼴 · cwd = 부모)'] = f'다른 사유로 거부: {e}'
+    finally:
+        os.chdir(_cwd)
     ow, why_own = new_store_dir('t11_owner'), None             # ★ 대피 4 덧 — 다른 소유자 (root = 진짜 chown · 아니면 이 프로세스 사용자 번호를 바꿔 보인다)
     with other_owner(ow):
         try:
@@ -1446,7 +1459,8 @@ def t11():
             CS.Store(pth)
         except ValueError as e:
             bad_dirs[nm] = f'거부됨: {e}'
-    res['폴더 꼴 거부 (상대 · 없음 · 파일 · 그룹 · 남 쓰기 (남만 = RCP2-03) · 다른 소유자 · 심볼릭 링크 셋 (RCP-06) · 정규화 안 된 꼴 일곱 (RCP2-02)) · '
+    res['폴더 꼴 거부 (상대 둘 = 절대 경로 사유 (점 없는 꼴 = 변이 보강) · 없음 · 파일 · 그룹 · 남 쓰기 (남만 = RCP2-03) · 다른 소유자 · 심볼릭 링크 셋 '
+        '(RCP-06) · 정규화 안 된 꼴 일곱 (RCP2-02)) · '
         '정규화된 꼴 둘은 받음'] = (not bad_dirs, bad_dirs)
     bad_inp = dict(inp, kind=None)
     try:
