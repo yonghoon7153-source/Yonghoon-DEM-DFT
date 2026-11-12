@@ -304,37 +304,129 @@ def _frozen_plan(deck, B, listing):
                 t0_step=t0,t0_path=cur[t0][0],bin_steps=lat,bin_paths=[cur[x][0] for x in lat],runs=runs)
 
 
-def _log_contract(raw, runs):
+# Completion-log forms of the sealed build (LIGGGHTS-PUBLIC 3.8.0, git 3d5c00f), registration
+# draft 7-4 / Q5.  Each form below is read from same-build logs committed in this repository:
+#  * the fixed deck line `thermo_style custom step atoms ke c_rke vol` is headed
+#    `Step Atoms KinEng rke Volume` (the build drops the c_ prefix) and every Loop line ends with
+#    a ctime finish stamp (docs/data/mixer_highbo_devu_prelim_20261006/exact_runs/
+#    exact_LU212_settled/log.exact L65-67, same thermo_style line);
+#  * fix insert/pack writes its two-line insertion report (fix_insert.cpp print_stats_during)
+#    inside the thermo table of the run in which it inserts, right after that table's setup row
+#    (docs/data/kg50_d07_end_20261105/kg50_d07_b50_log_ins1.liggghts L116-121);
+#  * log.liggghts echoes every input line, comments included, so a deck comment quoting an
+#    `ERROR:` message appears verbatim (planned decks L34/L50; kg50 logs).
+# Only these forms are admitted.  Any other line inside a thermo table, any other ERROR word or
+# line-start ERROR, a malformed Loop line, a nonfinite value or a drop of the thermo atom count
+# stays TECH.
+_THERMO_HEADER = re.compile(r'[ \t]*Step[ \t]+Atoms[ \t]+KinEng[ \t]+rke[ \t]+Volume[ \t]*')
+_THERMO_ROW = re.compile(r'[ \t]*([0-9]+)[ \t]+([0-9]+)[ \t]+([^ \t]+)[ \t]+([^ \t]+)[ \t]+([^ \t]+)[ \t]*')
+_THERMO_VALUE = re.compile(r'[-+]?(?:(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[eE][-+]?[0-9]+)?|[nN][aA][nN]|[iI][nN][fF])')
+_LOOP_LINE = re.compile(r'Loop time of [-+.0-9eE]+ on ([0-9]+) procs for ([0-9]+) steps with ([0-9]+) atoms, '
+                        r'finish time [A-Z][a-z]{2} [A-Z][a-z]{2} [ 0-9][0-9] [0-9]{2}:[0-9]{2}:[0-9]{2} [0-9]{4}[ \t]*')
+_INSERT_REPORT = re.compile(r'INFO: Particle insertion ([^ \t:]+): inserted ([0-9]+) particle templates '
+                            r'\(mass ([^ \t)]+)\) at step ([0-9]+)[ \t]*')
+_INSERT_TOTAL = re.compile(r' - a total of ([0-9]+) particle templates \(mass ([^ \t)]+)\) inserted so far\.[ \t]*')
+_ERROR_LINE = re.compile(r'\bERROR\b|^[ \t]*ERROR')
+
+
+def _positive_value(text):
+    return bool(_THERMO_VALUE.fullmatch(text)) and math.isfinite(float(text)) and float(text) > 0
+
+
+def _deck_log_facts(deck):
+    """Facts of the run's own deck that its completion log must match: full-line comments
+    (with multiplicity; the build echoes each input line once) and, for each insert/pack fix,
+    the index of the run in which it inserts (the run following its declaration)."""
+    text = deck.decode('utf-8')
+    comments = {}
+    for line in text.split('\n'):
+        if line.lstrip().startswith('#'):
+            comments[line.rstrip()] = comments.get(line.rstrip(), 0)+1
+    insert_run, runs_seen = {}, 0
+    for _, tokens in preparation.rb.read_deck(text)['cmds']:
+        if tokens[0] == 'run':
+            runs_seen += 1
+        elif tokens[0] == 'fix' and len(tokens) >= 4 and tokens[3] == 'insert/pack':
+            _need(tokens[1] not in insert_run, 'insert/pack fix id repeated in deck')
+            insert_run[tokens[1]] = runs_seen
+    return dict(comment_lines=comments, insert_fix_run=insert_run)
+
+
+def _log_contract(raw, runs, facts=None):
+    """Fresh four-run completion log of the fixed deck.  Without deck facts no ERROR echo
+    and no insertion report is admitted (strictest form)."""
     text = raw.decode('utf-8')
-    _need(not re.search(r'\bERROR\b|RESUME_STEP|^\s*read_restart\b', text, re.M), 'error/resume log is not fresh completion evidence')
+    facts = facts or dict(comment_lines={}, insert_fix_run={})
+    lines = text.splitlines()
+    echoes = {}
+    for line in lines:
+        if _ERROR_LINE.search(line):
+            key = line.rstrip()
+            echoes[key] = echoes.get(key, 0)+1
+            _need(echoes[key] <= facts['comment_lines'].get(key, 0), 'error/resume log is not fresh completion evidence')
+    _need(not re.search(r'RESUME_STEP|^\s*read_restart\b', text, re.M), 'error/resume log is not fresh completion evidence')
     # Fixed deck: make_mixer_deck.py thermo_style custom step atoms ke c_rke vol.
     # Accept only its named five-column thermo table, not arbitrary numeric text.
-    loops, endpoints = [], []
-    active, last = False, None
-    for line in text.splitlines():
-        tokens = line.split()
-        if tokens == ['Step','Atoms','KinEng','c_rke','Volume']:
-            active, last = True, None
+    loops, endpoints, procs, reports = [], [], [], []
+    active, last, atoms, rows, report, expect = False, None, None, 0, None, None
+    for line in lines:
+        if line.isascii() and _THERMO_HEADER.fullmatch(line):
+            _need(not active, 'thermo header inside an unfinished table')
+            active, last, rows = True, None, 0
             continue
-        loop = re.fullmatch(r'Loop time of .+? on \d+ procs for (\d+) steps with \d+ atoms\s*', line)
-        if loop:
+        if line.startswith('Loop time of'):
+            loop = _LOOP_LINE.fullmatch(line)
+            _need(loop is not None, 'malformed Loop line')
             _need(active and last is not None, 'Loop lacks a qualified thermo table')
-            loops.append(int(loop.group(1)))
+            _need(report is None and expect is None, 'insertion report without its thermo row')
+            loops.append(int(loop.group(2)))
             endpoints.append(last)
+            procs.append(int(loop.group(1)))
             _need(len(loops) <= len(runs) and loops[-1] == runs[len(loops)-1]
                   and last == sum(runs[:len(loops)]), 'Loop/thermo cumulative run endpoint mismatch')
+            _need(int(loop.group(3)) == atoms, 'Loop atom count differs from the last thermo row')
             active, last = False, None
             continue
-        if active and tokens:
-            _need(len(tokens) == 5 and re.fullmatch(r'[0-9]+',tokens[0])
-                  and re.fullmatch(r'[0-9]+',tokens[1]), 'invalid five-column thermo row')
-            _need(all(math.isfinite(float(x)) for x in tokens), 'nonfinite thermo row')
-            last = int(tokens[0])
+        if not active or not line.strip(' \t'):
+            continue
+        _need(line.isascii(), 'non-ASCII line inside thermo table')
+        if report is not None:
+            total = _INSERT_TOTAL.fullmatch(line)
+            _need(total is not None and int(total.group(1)) == report['inserted']
+                  and total.group(2) == report['mass'], 'incomplete or inconsistent insertion report')
+            report = None
+            continue
+        info = _INSERT_REPORT.fullmatch(line)
+        if info:
+            fix, n, step = info.group(1), int(info.group(2)), int(info.group(4))
+            _need(facts['insert_fix_run'].get(fix) == len(loops) and all(r['fix'] != fix for r in reports),
+                  'insertion report of an undeclared, repeated or misplaced insert/pack fix')
+            _need(rows == 1 and expect is None and step == last+1, 'insertion report is not at the first step of its run')
+            _need(n > 0 and _positive_value(info.group(3)), 'invalid insertion report values')
+            report = dict(fix=fix, inserted=n, step=step, mass=info.group(3))
+            reports.append(report)
+            expect = (step, atoms+n)
+            continue
+        row = _THERMO_ROW.fullmatch(line)
+        _need(row is not None and all(_THERMO_VALUE.fullmatch(x) for x in row.groups()[2:]),
+              'invalid five-column thermo row')
+        _need(all(math.isfinite(float(x)) for x in row.groups()), 'nonfinite thermo row')
+        step, count = int(row.group(1)), int(row.group(2))
+        if expect is not None:
+            _need(step >= expect[0] and count == expect[1], 'thermo atom count after insertion report differs from the report')
+            expect = None
+        _need(atoms is None or count >= atoms, 'thermo atom count decreased (lost particles)')
+        last, atoms, rows = step, count, rows+1
     _need(loops == runs and not active, 'log fresh four-run completion mismatch')
+    _need(sorted(r['fix'] for r in reports) == sorted(facts['insert_fix_run']),
+          'declared insert/pack fix without its insertion report')
     return dict(status='MATCH', loop_steps=loops,last_thermo_step=endpoints[-1],
-                thermo_endpoints=endpoints,
+                thermo_endpoints=endpoints, loop_procs=procs,
+                insertion_reports=[dict(fix=r['fix'], step=r['step'], inserted=r['inserted']) for r in reports],
+                deck_comment_echo_error_lines=sum(echoes.values()),
                 total_wall_time_banner='Total wall time' in text,
-                limitation='completion log conditions only; not exitcode, MPI rank, host or same-execution certification')
+                limitation='completion log conditions only; not exitcode, MPI rank, host or same-execution certification; '
+                           'line forms are those of same-build logs, not yet of an actual first8 log')
 
 
 def _load(case_id, directory, sources, listings, optional):
@@ -352,7 +444,7 @@ def _load(case_id, directory, sources, listings, optional):
     post = directory/'post'
     listings[str(post)] = _listing(post)
     fp = _frozen_plan(deck, B, listings[str(post)])
-    log = _log_contract(_read(directory/'log.liggghts', sources), fp['runs'])
+    log = _log_contract(_read(directory/'log.liggghts', sources), fp['runs'], _deck_log_facts(deck))
     todo = [(fp['t0_step'], fp['t0_path'])]+list(zip(fp['bin_steps'], fp['bin_paths']))
     arrays, used = [], []
     for step, path in todo:

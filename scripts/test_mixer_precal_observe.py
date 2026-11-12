@@ -3,6 +3,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import re
 import subprocess
 import shutil
 from pathlib import Path
@@ -47,12 +48,14 @@ def stats(value):
 
 
 def completion_log(runs, n=3):
+    # Header and Loop lines in the sealed build's form (see ACTUAL_HEADER below); the old
+    # `c_rke` header and stamp-less Loop line were never produced by that build.
     total=0;lines=[]
     for r in runs:
         total+=r
-        lines.extend(['Step Atoms KinEng c_rke Volume',
+        lines.extend([ACTUAL_HEADER,
                       '%d %d 0 0 1'%(total,n),
-                      'Loop time of 1 on 20 procs for %d steps with %d atoms'%(r,n)])
+                      'Loop time of 1 on 20 procs for %d steps with %d atoms%s'%(r,n,ACTUAL_FINISH)])
     return '\n'.join(lines)+'\n'
 
 
@@ -450,7 +453,7 @@ class DiskContract(unittest.TestCase):
     def test_log_header_and_each_run_endpoint(self):
         runs=[1,100,100,0]
         good=completion_log(runs)
-        cases=[good.replace('Step Atoms KinEng c_rke Volume\n',''),
+        cases=[good.replace(ACTUAL_HEADER+'\n',''),
                good.replace('201 3 0 0 1','200 3 0 0 1')+'201 3 0 0 1\n',
                good.replace('101 3 0 0 1','100 3 0 0 1'),
                good.replace('201 3 0 0 1','201 3 nan 0 1'),
@@ -581,6 +584,212 @@ class ActualLiggghtsLogForm(unittest.TestCase):
         self.assertEqual(log['loop_steps'], [1, 560606, 560606, 0])
         self.assertEqual(log['last_thermo_step'], 1121213)
         self.assertEqual(got['provenance']['frames'][0]['step'], 1121000)
+
+    def test_planned_layered_deck_log_form_direct(self):
+        # Log contract only (not the rotating observation path): the planned N0 deck inserts
+        # twice (insA in run 1, insB in run 3), so its log carries two reports in two tables.
+        deck = HERE.parent.joinpath(*E0_DECK[:-2], 'PRECAL_N0', 'in.mixer').read_bytes()
+        self.assertEqual(hashlib.sha256(deck).hexdigest(),
+                         'adbbc8fa8f46730779fbf4f028f95a7aaf90c27ef2697c0dbe21a9ae1b5c6de3')
+        facts = O._deck_log_facts(deck)
+        self.assertEqual(facts['insert_fix_run'], {'insA': 0, 'insB': 2})
+        raw = actual_log(deck.decode('utf-8'), {'insA': 842, 'insB': 99158}).encode()
+        got = O._log_contract(raw, [1, 560606, 560606, 6595382], facts)
+        self.assertEqual(got['insertion_reports'], [dict(fix='insA', step=1, inserted=842),
+                                                    dict(fix='insB', step=560608, inserted=99158)])
+        self.assertEqual(got['last_thermo_step'], 7716595)
+
+
+class ActualLogRejections(unittest.TestCase):
+    """Q5 rejection side: admitting the four actual forms must not admit a true defect.
+    Each case is the full-length actual-form PRECAL_E0 log with one defect injected."""
+    RUNS = [1, 560606, 560606, 0]
+
+    @classmethod
+    def setUpClass(cls):
+        cls.deck = HERE.parent.joinpath(*E0_DECK).read_bytes()
+        assert hashlib.sha256(cls.deck).hexdigest() == E0_DECK_SHA256
+        cls.facts = O._deck_log_facts(cls.deck)
+        cls.base = actual_log(cls.deck.decode('utf-8'), {'ins': 100000})
+        L = cls.base.split('\n')
+        cls.hdr = [i for i, l in enumerate(L) if l == ACTUAL_HEADER]
+        cls.loop = [i for i, l in enumerate(L) if l.startswith('Loop time of')]
+        cls.info = [i for i, l in enumerate(L) if ': inserted ' in l]
+        cls.err = L.index(ERROR_COMMENT)
+
+    def edit(self, change):
+        L = self.base.split('\n')
+        change(L)
+        return '\n'.join(L)
+
+    def rejects(self, text, reason, facts='deck'):
+        raw = text if isinstance(text, bytes) else text.encode('utf-8')
+        with self.assertRaises(O.Tech) as ctx:
+            O._log_contract(raw, self.RUNS, self.facts if facts == 'deck' else facts)
+        self.assertIn(reason, str(ctx.exception))
+
+    def test_base_is_a_normal_actual_log(self):
+        self.assertEqual((len(self.hdr), len(self.loop), len(self.info)), (4, 4, 1))
+        self.assertEqual(self.facts['insert_fix_run'], {'ins': 0})
+        self.assertEqual(self.facts['comment_lines'][ERROR_COMMENT], 1)
+        got = O._log_contract(self.base.encode('utf-8'), self.RUNS, self.facts)
+        self.assertEqual(got['loop_steps'], self.RUNS)
+        self.assertEqual(got['insertion_reports'], [dict(fix='ins', step=1, inserted=100000)])
+        self.assertEqual(got['deck_comment_echo_error_lines'], 1)
+        self.assertEqual(got['loop_procs'], [20]*4)
+
+    def test_true_error_lines_stay_tech(self):
+        row1 = self.hdr[1]+3
+        cases = {
+            'error_in_table': lambda L: L.insert(row1, 'ERROR: Lost atoms: original 100000 current 99999 (../thermo.cpp:395)'),
+            'error_on_proc': lambda L: L.insert(self.loop[1]+1, 'ERROR on proc 7: Cannot open dump file (../dump.cpp:478)'),
+            'error_at_end': lambda L: L.append('ERROR: Particle insertion: Internal error (../fix_insert.cpp:719)'),
+            'word_mid_line': lambda L: L.insert(self.loop[0]+2, 'WARNING: ERROR handling switched off (../input.cpp:1)'),
+            'line_start_prefix': lambda L: L.insert(self.loop[2]+2, 'ERRORS: synthetic'),
+            'altered_comment': lambda L: L.insert(self.err+1, ERROR_COMMENT.replace('youngsModulus', 'poissonsRatio')),
+            'comment_echoed_twice': lambda L: L.insert(self.err+1, ERROR_COMMENT),
+            'comment_reindented': lambda L: L.__setitem__(self.err, '  '+ERROR_COMMENT),
+        }
+        for name, change in cases.items():
+            with self.subTest(name):
+                self.rejects(self.edit(change), 'error/resume log is not fresh completion evidence')
+        with self.subTest('no_deck_facts'):
+            self.rejects(self.base, 'error/resume log is not fresh completion evidence', facts=None)
+
+    def test_truncated_logs_stay_tech(self):
+        L = self.base.split('\n')
+        last_loop = L[self.loop[3]]
+        cases = [('inside_run2', '\n'.join(L[:self.hdr[1]+10])+'\n', 'log fresh four-run completion mismatch'),
+                 ('before_run0', '\n'.join(L[:self.loop[2]+1])+'\n', 'log fresh four-run completion mismatch'),
+                 ('loop_stamp_cut', '\n'.join(L[:self.loop[3]]+[last_loop[:last_loop.index(',')]]), 'malformed Loop line'),
+                 ('loop_mid_stamp', '\n'.join(L[:self.loop[3]]+[last_loop[:-9]]), 'malformed Loop line'),
+                 ('row_cut', '\n'.join(L[:self.hdr[3]+1]+[L[self.hdr[3]+1][:12]]), 'invalid five-column thermo row'),
+                 ('empty', '', 'log fresh four-run completion mismatch')]
+        for name, text, reason in cases:
+            with self.subTest(name):
+                self.rejects(text, reason)
+        with self.subTest('utf8_cut'):
+            # Cut inside a multi-byte character of an echoed Korean comment (deck L4).
+            raw = self.base.encode('utf-8')
+            with self.assertRaises(UnicodeDecodeError):
+                O._log_contract(raw[:raw.index('조성'.encode())+1], self.RUNS, self.facts)
+
+    def test_corrupted_rows_stay_tech(self):
+        r = self.hdr[1]+3
+        def value(old, new):
+            return lambda L: L.__setitem__(r, L[r].replace(old, new, 1))
+        good = actual_row(15000, 100000)
+        cases = [('nan', value('3.2685651e-12', 'nan'), 'nonfinite thermo row'),
+                 ('-nan', value('3.2685651e-12', '-nan'), 'nonfinite thermo row'),
+                 ('inf', value('1.0960987e-10', 'inf'), 'nonfinite thermo row'),
+                 ('overflow', value('2.7589053e-05', '1e999'), 'nonfinite thermo row'),
+                 ('unicode_digit', value('3.2685651e-12', '٣.2685651e-12'), 'non-ASCII line inside thermo table'),
+                 ('nbsp', lambda L: L.__setitem__(r, L[r].replace(' ', ' ')), 'non-ASCII line inside thermo table'),
+                 ('unicode_blank_line', lambda L: L.insert(r, '　'), 'non-ASCII line inside thermo table'),
+                 ('unit_separator', lambda L: L.__setitem__(r, good.strip().replace(' ', '\x1f', 1)), 'invalid five-column thermo row'),
+                 ('four_columns', lambda L: L.__setitem__(r, ' '.join(good.split()[:4])), 'invalid five-column thermo row'),
+                 ('six_columns', lambda L: L.__setitem__(r, good+' 1'), 'invalid five-column thermo row'),
+                 ('float_step', lambda L: L.__setitem__(r, good.replace('15000', '15000.0', 1)), 'invalid five-column thermo row'),
+                 ('negative_atoms', lambda L: L.__setitem__(r, good.replace(' 100000', '-100000', 1)), 'invalid five-column thermo row'),
+                 ('text_value', value('3.2685651e-12', 'abc'), 'invalid five-column thermo row'),
+                 ('underscore_value', value('2.7589053e-05', '1_000'), 'invalid five-column thermo row'),
+                 ('unknown_warning', lambda L: L.insert(r, 'WARNING: synthetic (../fix.cpp:1)'), 'invalid five-column thermo row')]
+        for name, change, reason in cases:
+            with self.subTest(name):
+                self.rejects(self.edit(change), reason)
+
+    def test_lost_particles_stay_tech(self):
+        def atoms(i, count):
+            return lambda L: L.__setitem__(i, L[i].replace('100000', str(count), 1))
+        cases = [('run2_row', atoms(self.hdr[1]+5, 99999), 'thermo atom count decreased'),
+                 ('run3_setup_row', atoms(self.hdr[2]+1, 99999), 'thermo atom count decreased'),
+                 ('run0_row', atoms(self.hdr[3]+1, 99999), 'thermo atom count decreased'),
+                 ('step1_after_report', atoms(self.info[0]+2, 99999), 'differs from the report')]
+        for name, change, reason in cases:
+            with self.subTest(name):
+                self.rejects(self.edit(change), reason)
+
+    def test_insertion_report_contract(self):
+        i = self.info[0]
+        report = self.base.split('\n')[i:i+2]
+        def setline(k, old, new):
+            return lambda L: L.__setitem__(k, L[k].replace(old, new, 1))
+        def move_to_run2(L):
+            del L[i:i+2]
+            k = L.index(ACTUAL_HEADER, i)+2
+            L[k:k] = [report[0].replace('at step 1', 'at step 2'), report[1]]
+        cases = [('total_count', setline(i+1, 'a total of 100000', 'a total of 99999'), 'inconsistent insertion report'),
+                 ('total_mass', setline(i+1, '1.000000e+01', '1.000001e+01'), 'inconsistent insertion report'),
+                 ('total_period', setline(i+1, 'so far.', 'so far'), 'inconsistent insertion report'),
+                 ('total_missing', lambda L: L.__delitem__(i+1), 'inconsistent insertion report'),
+                 ('wrong_step', setline(i, 'at step 1', 'at step 2'), 'not at the first step of its run'),
+                 ('zero_inserted', lambda L: (L.__setitem__(i, L[i].replace('inserted 100000', 'inserted 0')),
+                                             L.__setitem__(i+1, L[i+1].replace('a total of 100000', 'a total of 0'))),
+                  'invalid insertion report values'),
+                 ('nan_mass', lambda L: (L.__setitem__(i, L[i].replace('1.000000e+01', 'nan')),
+                                        L.__setitem__(i+1, L[i+1].replace('1.000000e+01', 'nan'))),
+                  'invalid insertion report values'),
+                 ('repeated', lambda L: L.__setitem__(slice(i+2, i+2), report), 'undeclared, repeated or misplaced'),
+                 ('undeclared_fix', setline(i, 'insertion ins:', 'insertion insB:'), 'undeclared, repeated or misplaced'),
+                 ('moved_to_run2', move_to_run2, 'undeclared, repeated or misplaced'),
+                 ('before_setup_row', lambda L: L.__setitem__(slice(i-1, i+2), report+[L[i-1]]), 'not at the first step of its run'),
+                 ('after_two_rows', lambda L: L.__setitem__(slice(i, i+3), [L[i+2]]+report), 'not at the first step of its run'),
+                 ('less_insertions_warning', lambda L: L.insert(i+2, 'WARNING: Particle insertion: Less insertions than requested (../fix_insert.cpp:814)'),
+                  'invalid five-column thermo row'),
+                 ('start_info_inside_table', lambda L: L.insert(i+2, 'INFO: Particle insertion ins: inserting every 0 steps'),
+                  'invalid five-column thermo row'),
+                 ('report_then_loop', lambda L: L.__delitem__(i+2), 'insertion report without its thermo row'),
+                 ('report_missing', lambda L: L.__delitem__(slice(i, i+2)), 'declared insert/pack fix without its insertion report'),
+                 ('report_outside_table', lambda L: (L.__delitem__(slice(i, i+2)), L.__setitem__(slice(i-3, i-3), report)),
+                  'declared insert/pack fix without its insertion report')]
+        for name, change, reason in cases:
+            with self.subTest(name):
+                self.rejects(self.edit(change), reason)
+
+    def test_table_structure_stays_tech(self):
+        legacy_loop = re.compile(r', finish time .*$', re.M)
+        fifth = [ACTUAL_HEADER, actual_row(1121213, 100000),
+                 'Loop time of 1.25 on 20 procs for 0 steps with 100000 atoms'+ACTUAL_FINISH]
+        cases = [('header_inside_table', lambda L: L.insert(self.hdr[1]+4, ACTUAL_HEADER), 'thermo header inside an unfinished table'),
+                 ('fifth_run', lambda L: L.__setitem__(slice(len(L)-1, len(L)-1), fifth), 'cumulative run endpoint mismatch'),
+                 ('loop_steps', lambda L: L.__setitem__(self.loop[1], L[self.loop[1]].replace('for 560606', 'for 560605')),
+                  'cumulative run endpoint mismatch'),
+                 ('loop_atoms', lambda L: L.__setitem__(self.loop[1], L[self.loop[1]].replace('100000 atoms', '99999 atoms')),
+                  'Loop atom count differs'),
+                 ('fullwidth_procs', lambda L: L.__setitem__(self.loop[0], L[self.loop[0]].replace('20 procs', '２０ procs')),
+                  'malformed Loop line'),
+                 ('prefixed_loop', lambda L: L.__setitem__(self.loop[2], 'X'+L[self.loop[2]]), 'invalid five-column thermo row'),
+                 ('legacy_header', lambda L: [L.__setitem__(k, 'Step Atoms KinEng c_rke Volume') for k in self.hdr],
+                  'Loop lacks a qualified thermo table'),
+                 ('resume_marker', lambda L: L.insert(1, 'RESUME_STEP 560607'), 'error/resume log is not fresh completion evidence'),
+                 ('read_restart_echo', lambda L: L.insert(self.err+1, 'read_restart restart/a.bin'), 'error/resume log is not fresh completion evidence')]
+        for name, change, reason in cases:
+            with self.subTest(name):
+                self.rejects(self.edit(change), reason)
+        with self.subTest('legacy_loop'):
+            self.rejects(legacy_loop.sub('', self.base), 'malformed Loop line')
+        with self.subTest('concatenated'):
+            self.rejects(self.base*2, 'error/resume log is not fresh completion evidence')
+
+    def test_end_to_end_defects_are_tech_without_metrics(self):
+        runner = ActualLiggghtsLogForm('test_actual_header_and_loop_forms')
+        runner.setUp(); self.addCleanup(runner.doCleanups)
+        B = binding(3); B['frame_pm']['meta_steps'] = dict(t0_planned=1121000, dump_every=1000)
+        small = actual_log(self.deck.decode('utf-8'), {'ins': 3})
+        L = small.split('\n'); r = L.index(ACTUAL_HEADER, L.index(ACTUAL_HEADER)+1)+3
+        cases = {'ok': small.encode(),
+                 'error': (small+'ERROR: Lost atoms: original 3 current 2 (../thermo.cpp:395)\n').encode(),
+                 'truncated': '\n'.join(L[:r]).encode(),
+                 'lost': '\n'.join(L[:r]+[L[r].replace('       3 ', '       2 ', 1)]+L[r+1:]).encode(),
+                 'utf8_cut': small.encode()[:small.encode().index('조성'.encode())+1]}
+        for name, raw in cases.items():
+            with self.subTest(name):
+                run, B2 = runner.run_dir('e2e_'+name, self.deck, '', copy.deepcopy(B), 1121000)
+                (run/'log.liggghts').write_bytes(raw)
+                got = runner.invoke(run, B2)
+                self.assertEqual(got['status'], 'OK' if name == 'ok' else 'TECH', got['reasons'])
+                if name != 'ok':
+                    self.assertIsNone(got['contact']); self.assertIsNone(got['mixing']); self.assertIsNone(got['counts'])
 
 
 if __name__=='__main__':unittest.main(verbosity=2)
