@@ -9,9 +9,14 @@
       dtype float64 를 넘겨 dtype 탐침 호출 없음
   G3  옛 판 (`11a794674` 의 `_solve_cg` = A 꼴) ↔ 지금 판 (C 꼴): 해 바이트 · info · 반복 수 (LAST_CG) · LAST_BACKEND 같음 —
       침대 셋 · `tol=` / `rtol=` 두 호출 길 · x0 없음 / 있음 (이어 풀기 ⓒ = rtol 1e-14) · 증서 켬 (callback) / 끔 · 수렴까지 (rtol 1e-12) · maxiter 도달
-  G4  부호 있는 0 (b 에 −0.0) — 반복 · info · 값 같음 · 바이트가 다르면 값 0 자리에서만 (dia→CSR 경로의 +0 합 시작 ↔ 원소 곱 −0 · 생산 b 는 ≥ +0)
+  G4  부호 있는 0 (★ 11-12 내부 반박 리뷰 RCP-09 — 옛 G4 "바이트 차이는 값 0 자리에서만" 은 해 x 가 +0 에서 시작해 −0 을 갖지 않아 늘 참이었다 = 공허):
+      G4a 전처리 적용 자체 — A 꼴 (dia → CSR · 합이 +0 에서 시작) ↔ C 꼴 (원소 곱) 이 값은 같고 바이트는 **C 가 −0 을 내는 칸에서만** 갈린다 (갈림을 실제로 가른다)
+      G4b 생산 꼴 b (np.zeros + 양수) — CG 가 전처리에 넘기는 r 어디에도 −0 이 없고 반복마다 A ↔ C 적용 바이트가 같다 (설계 논증을 이 산술에서 잰다)
+      G4c (관찰) b 에 −0 을 넣은 꼴 — info · 반복 수 · 해 값 같음 · 해 바이트 차이 수는 찍기만 (판별은 G4a)
   G5  CPU 길 (GPU_SOLVE 끔) — 옛 판과 바이트 같음 · 가짜 cg 를 부르지 않는다
-  G6  GPU 길 불러오기 실패 → CPU 폴백 — 옛 판과 같음 (해 · LAST_BACKEND 사유 글) · REQUIRE_GPU 면 둘 다 SystemExit
+  G6  GPU 길 불러오기 실패 → CPU 폴백 — 옛 판과 같음 (해 · LAST_BACKEND 사유 글) · REQUIRE_GPU 면 둘 다 SystemExit (글 전체 같음)
+  G6b (★ 11-12 RCP-08) cg 만 있고 LinearOperator 가 없는 옛 cupyx — GPU 길을 쓰지 않는다 (옛 A 꼴로 되돌리지 않는다) · CPU 폴백 = CPU 길 해 ·
+      REQUIRE_GPU 면 조치 글이 사유별 (cupy 판 · LinearOperator — "GPU 를 비우고 … 재개" 아님)
   G7  `solve_sigma_z` 끝-끝 (가짜 GPU · 증서 켬 · rtol 1e-12) — 옛 판과 결과 dict (σ 비트 · 증서 · 반복 수 · 키 집합) · LAST_BACKEND 같음 = 매니페스트 키 변화 0
 가짜 cg = cupy 12.3.0 `cupyx/scipy/sparse/linalg/_iterative.py` `cg` (14–91 줄) · `_make_system` (301–349 줄) 의 동작 그대로 옮긴 것:
   A = csr → spMV · M = csr → spMV · 그 밖 희소 행렬 → MatrixLinearOperator → matvec = (M.tocsc().tocsr() @ x.reshape(-1, 1)).reshape(-1)
@@ -138,7 +143,10 @@ def _cg_core(A, b, x0, tol, atol, maxiter, M, callback):
     iters = 0
     rho = 0
     resid = None
+    watch = REC.get('watch_r')                                   # ★ G4b — 전처리에 넘기는 r 을 반복마다 본다 (시험 고리 · 산술 그대로)
     while iters < maxiter:
+        if watch is not None:
+            watch(r)
         z = psolve(r)
         rho1 = rho
         rho = np.dot(r, z)
@@ -181,8 +189,9 @@ def fake_cg_rtol(A, b, x0=None, **kw):
 
 
 @contextlib.contextmanager
-def fake_cupy(variant='tol', fail_linalg=False):
-    """sys.modules 에 가짜 cupy · cupyx 를 끼운다 (나올 때 되돌린다).  fail_linalg = cupyx.scipy.sparse.linalg 불러오기 실패 (폴백 길)."""
+def fake_cupy(variant='tol', fail_linalg=False, no_linop=False):
+    """sys.modules 에 가짜 cupy · cupyx 를 끼운다 (나올 때 되돌린다).  fail_linalg = cupyx.scipy.sparse.linalg 불러오기 실패 (폴백 길) ·
+    no_linop = linalg 에 cg 는 있고 LinearOperator 가 없다 (옛 cupyx 꼴 · RCP-08)."""
     REC.clear()
     names = ('cupy', 'cupyx', 'cupyx.scipy', 'cupyx.scipy.sparse', 'cupyx.scipy.sparse.linalg')
     old = {k: sys.modules.get(k) for k in names}
@@ -199,7 +208,8 @@ def fake_cupy(variant='tol', fail_linalg=False):
     if not fail_linalg:
         cxl = types.ModuleType('cupyx.scipy.sparse.linalg')
         cxl.cg = fake_cg_tol if variant == 'tol' else fake_cg_rtol
-        cxl.LinearOperator = FakeLinearOperator
+        if not no_linop:
+            cxl.LinearOperator = FakeLinearOperator
         cxs.linalg = cxl
         mods['cupyx.scipy.sparse.linalg'] = cxl
     try:
@@ -339,17 +349,73 @@ def t_equal(base):
         and ra[0].tobytes() == rc[0].tobytes(), f'{ra[1:3]} {rc[1:3]}')
 
 
+def _apply_A(diag, r):
+    """옛 A 꼴 전처리 적용 — 가짜 cupy 산술 그대로 (dia → `tocsc().tocsr()` → (N,1) 곱 · scipy CSR 곱은 합을 +0 에서 시작한다)."""
+    return _psolve_of(sparse.diags(1.0 / diag))(r)
+
+
+def _apply_C(diag, r):
+    """C 꼴 전처리 적용 — 생산 GPU 길의 연산자 matvec 산술 (`(1/diag) * r` · 원소 곱 한 번)."""
+    return (1.0 / diag) * r
+
+
+def _negz(v):
+    return np.signbit(v) & (v == 0.0)
+
+
 def t_negzero(base):
+    """★ 11-12 (내부 반박 리뷰 RCP-09) — 옛 G4 는 공허했다 (해 x 가 +0 에서 시작해 −0 을 갖지 않으므로 "바이트 차이는 값 0 자리에서만" 이 늘 참).
+    갈림이 생길 수 있는 자리 = 전처리 적용 (A: +0 + d·r · C: d·r) 이고 그 입력 = CG 의 r 이다 → G4a 가 그 자리를 직접 가르고 · G4b 가 생산 꼴 b 에서
+    그 자리에 갈림의 재료 (−0) 가 오지 않음을 반복마다 잰다 · G4c = 옛 시나리오 (b 에 −0) 의 비공허한 부분 + 관찰."""
+    L, _b = system(21, (8, 8, 12), -3.0, 3.0)
+    diag = L.diagonal()
+    rng = np.random.default_rng(4)
+    r = rng.normal(size=L.shape[0])
+    r[::5] = 0.0
+    r[2::5] = -0.0
+    r[3::11] = 5e-324                                            # 양의 비정규 (곱이 +0 으로 떨어질 수 있다)
+    r[4::13] = -5e-324                                           # 음의 비정규 (곱이 −0 으로 떨어질 수 있다 — C 만 −0)
+    za, zc = _apply_A(diag, r), _apply_C(diag, r)
+    diffb = za.view(np.uint64) != zc.view(np.uint64)
+    want = _negz(zc) & (za == 0.0) & ~np.signbit(za)              # C = −0 · A = +0 인 칸
+    chk('G4a 전처리 적용 — A 꼴 ↔ C 꼴 값 같음 · 바이트 다른 칸 = 정확히 "C 가 −0 · A 가 +0" 인 칸 (−0 입력 전부 포함 · 비어 있지 않음) · 그 밖 바이트 같음 '
+        '— 부호 있는 0 갈림을 이 시험이 실제로 가른다 (RCP-09)',
+        np.array_equal(za, zc) and np.array_equal(diffb, want) and int(_negz(r).sum()) > 0 and bool(np.all(want[_negz(r)])),
+        f'−0 입력 {int(_negz(r).sum())} · 바이트 다른 칸 {int(diffb.sum())} · 기대 칸 {int(want.sum())}')
+    stats = []
+    for seed, n in ((22, (8, 8, 12)), (23, (10, 6, 14))):
+        L2, b2 = system(seed, n, -3.0, 3.0)
+        d2 = L2.diagonal()
+        for variant in ('tol', 'rtol'):
+            for resume in (False, True):
+                w = {'seed': seed, 'variant': variant, 'resume': resume, 'n_r': 0, 'negz': 0, 'ab_bytes_diff': 0}
+
+                def watch(rv, d2=d2, w=w):
+                    w['n_r'] += 1
+                    w['negz'] += int(np.count_nonzero(_negz(rv)))
+                    if _apply_A(d2, rv).tobytes() != _apply_C(d2, rv).tobytes():
+                        w['ab_bytes_diff'] += 1
+                with fake_cupy(variant) as rec, knobs([S3], cert=True, rtol=1e-12):
+                    if resume:
+                        xs = run_solve(S3, L2, b2)[0]
+                        rec['watch_r'] = watch
+                        run_solve(S3, L2, b2, x0=xs, rtol=1e-14)
+                    else:
+                        rec['watch_r'] = watch
+                        run_solve(S3, L2, b2)
+                stats.append(w)
+    chk('G4b 생산 꼴 b (np.zeros + 양수 · STEP3 조립 꼴) — CG 가 전처리에 넘긴 r 어디에도 −0 없음 · 반복마다 A ↔ C 적용 바이트 같음 (침대 둘 · tol= / rtol= · '
+        '처음 풀이 / 이어 풀기 ⓒ) — 설계 논증 "생산 b ≥ +0 이면 r 이 −0 이 될 수 없다" 를 이 산술에서 잰다 (RCP-09)',
+        len(stats) == 8 and all(w['n_r'] > 0 and w['negz'] == 0 and w['ab_bytes_diff'] == 0 for w in stats), stats)
     L, b = system(21, (8, 8, 12), -3.0, 3.0, neg_zero=True)
     with fake_cupy('tol'), knobs([base, S3], cert=True, rtol=1e-12):
         ra = run_solve(base, L, b)
         rc = run_solve(S3, L, b)
     xa, xc = ra[0], rc[0]
-    diffb = np.flatnonzero(xa.view(np.uint64) != xc.view(np.uint64))
-    chk('G4 부호 있는 0 (b 에 −0.0) — info · 반복 수 같음 · 값 같음 (−0 = +0) · 바이트 차이는 값 0 자리에서만',
-        ra[1:3] == rc[1:3] and np.array_equal(xa, xc) and bool(np.all(xa[diffb] == 0.0)),
-        f'{ra[1:3]} {rc[1:3]} 바이트 다른 칸 {len(diffb)}')
-    print(f'    (G4 관찰: 바이트 다른 칸 {len(diffb)} — 생산 b 는 np.zeros + 양수라 −0 이 없다)')
+    diffx = np.flatnonzero(xa.view(np.uint64) != xc.view(np.uint64))
+    chk('G4c (b 에 −0 을 넣은 꼴 · 생산에 없음) — info · 반복 수 같음 · 해 값 같음 (−0 = +0)', ra[1:3] == rc[1:3] and np.array_equal(xa, xc),
+        f'{ra[1:3]} {rc[1:3]}')
+    print(f'    (G4c 관찰: 해 바이트 다른 칸 {len(diffx)} — 해 x 는 +0 에서 시작해 −0 을 갖지 않는다 · 갈림의 판별은 G4a · 생산 꼴의 재료 없음은 G4b)')
 
 
 def t_cpu(base):
@@ -381,8 +447,36 @@ def t_fallback(base):
                 quiet(mod._solve_cg, L, b)
                 outs.append(None)
             except SystemExit as e:
-                outs.append(str(e).splitlines()[0])
-    chk('G6 REQUIRE_GPU — 둘 다 SystemExit (같은 첫 줄)', outs[0] is not None and outs[0] == outs[1], f'{outs}')
+                outs.append(str(e))
+    chk('G6 REQUIRE_GPU — 둘 다 SystemExit (글 전체 같음 · 사유별 조치 글을 더한 뒤에도 이 사유의 글은 옛 판 그대로)', outs[0] is not None and outs[0] == outs[1],
+        f'{outs}')
+
+
+def t_fallback_nolinop():
+    """★ 11-12 (내부 반박 리뷰 RCP-08) — cg 만 있고 LinearOperator 가 없는 옛 cupyx: 바탕 판은 dia 전처리로 GPU 를 썼고 지금 판은 C 꼴만 안다.
+    옛 A 꼴로 조용히 되돌리지 않는다 (GPU 길 전처리 꼴 = 하나 · 기록 키 없이 코드 신원이 C 꼴을 증명한다) → GPU 길을 쓰지 않고 폴백 ·
+    REQUIRE_GPU 면 멈추되 조치 글이 그 사유에 맞아야 한다 (GPU 를 비우고 같은 명령으로 재개해도 같은 실패 — cupy 판을 봐야 한다)."""
+    L, b = system(42, (6, 6, 10))
+    with fake_cupy('tol', no_linop=True) as rec, knobs([S3], cert=True, rtol=1e-12):
+        rc = run_solve(S3, L, b)
+        calls = rec.get('calls', 0)
+    with knobs([S3], gpu=False, cert=True, rtol=1e-12):
+        rcpu = run_solve(S3, L, b)
+    chk('G6b LinearOperator 없는 옛 cupyx (RCP-08) — 지금 판은 GPU 길을 쓰지 않는다 (가짜 cg 부름 0 · 옛 A 꼴로 되돌리지 않는다) · used cpu · 폴백 사유 글에 '
+        'LinearOperator · 해 · info · 반복 수 = CPU 길과 같음',
+        calls == 0 and rc[3].get('used') == 'cpu' and 'LinearOperator' in str(rc[3].get('fallback_reason'))
+        and rc[0].tobytes() == rcpu[0].tobytes() and rc[1:3] == rcpu[1:3], f'cg 부름 {calls} · {rc[3]}')
+    with fake_cupy('tol', no_linop=True), knobs([S3], cert=True, rtol=1e-12, require=True):
+        try:
+            quiet(S3._solve_cg, L, b)
+            msg = None
+        except SystemExit as e:
+            msg = str(e)
+    head, _, rest = (msg or '').partition('\n')
+    chk('G6b REQUIRE_GPU + LinearOperator 없음 — SystemExit · 첫 줄 꼴 그대로 (STEP3 ABORT — GPU 솔브 실패인데 …) · 조치 글 = 사유별 (cupy 판 · '
+        'LinearOperator 를 이름 댄다 · "GPU 를 비우고 … 재개" 가 아니다 — 비워도 같은 실패) · 자원 낱말 없음 (사슬 자동 재시도로 새지 않게)',
+        msg is not None and head.startswith('STEP3 ABORT — GPU 솔브 실패인데') and 'LinearOperator' in rest and 'cupy' in rest
+        and 'GPU 를 비우고' not in msg and not any(w in msg for w in ('MemoryError', 'OutOfMemory', 'No space left')), msg)
 
 
 def _sid_fixture(seed, n=(9, 9, 14)):
@@ -449,6 +543,8 @@ def main():
         t_cpu(base)
         print('── G6 폴백')
         t_fallback(base)
+        print('── G6b 옛 cupyx (LinearOperator 없음)')
+        t_fallback_nolinop()
         print('── G7 solve_sigma_z 끝-끝')
         t_solve_sigma(base)
     src = inspect.getsource(S3._solve_cg)
