@@ -1,0 +1,1667 @@
+{
+ "slug": "dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+  "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "page": 1,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract (PDF p.1, unnumbered, no caption): 'Isostatic Pressing for SSB Production' — pressure vessel sketch with 'Pressure' (green) and 'Heat' (red) arrows on all sides, and two half-ring scales: 'Operating Pressure Range' 207 MPa … 500 MPa … 600 MPa and 'Operating Temperature Range' 20 °C … 150 °C … 2000 °C with wedges for CIP (blue), WIP (green), HIP (orange).",
+   "rotated_deg": 0,
+   "bbox": [
+    354.9,
+    267.1,
+    555.3,
+    398.6
+   ],
+   "w": 885,
+   "h": 598,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.532,
+   "src_native": [
+    840,
+    562
+   ],
+   "native_dpi": 300,
+   "manual_crop": "graphical abstract (PDF p.1, no caption — not found by the caption-anchored tool) — cut from the embedded native raster (xref 255, 840×562 px = 300 dpi, no resampling): ink bounding box → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "그래픽 초록 = Fig. 1c 와 같은 그림 (글꼴만 다름): 표준 정격 CIP 600 MPa · 20 °C / WIP 500 MPa · 150 °C / HIP 207 MPa · 2000 °C (Table 1 과 같은 값).",
+   "viewed": true
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Current challenges in processing and integration of solid-state batteries. (b) Uneven density distribution by single uniaxial pressing in rigid die for cylinder. (c) Schematic diagram of a pressure vessel cavity into which the sample is inserted and subjected to isostatic pressure and temperature conditions, and temperature and pressure ranges for CIP (blue), WIP (green), and HIP (orange) techniques.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.2,
+    60.4,
+    517.9,
+    556.5
+   ],
+   "w": 1857,
+   "h": 2117,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.551,
+   "src_native": [
+    1827,
+    2067
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered: the embedded raster resampled and the white page margins left uneven) replaced by a cut from the embedded native raster (xref 320, 1827×2067 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here; the tool caption had swallowed the neighbouring body text and was cleaned by hand) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "(a) 부품별 공정 과제 · (b) 단축 금형 가압의 밀도 불균일 개념도 · (c) 등방 가압 개념 + CIP · WIP · HIP 압력 · 온도 범위. 전부 개념도 — 측정값 없음.",
+   "viewed": true
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 2,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1(a) — 'Processing & Integration Challenges in Solid-State Batteries': composite cathode (particle-particle contact; mechanical properties; areal loading & densification), solid electrolyte (microstructural heterogeneity; transport & mechanical properties; densification), lithium metal (texture and crystallography; mechanical properties; areal loading & densification), with 'interfacial contact' between the layers.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.2,
+    60.4,
+    511.9,
+    236.8
+   ],
+   "w": 1832,
+   "h": 785,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.44,
+   "src_native": [
+    1827,
+    2067
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — cut from the embedded native raster (xref 320, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "복합 양극의 과제로 '입자–입자 접촉 · 기계 물성 · 면적 부하와 치밀화' 를 든다 — 개념 목록일 뿐 수치 없음.",
+   "viewed": true
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 2,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1(b) — 'Solid Electrolyte Density Distribution with Uniaxial Pressing': schematic half-section of a cylinder pressed in a rigid die with four density classes (Very High / Average / Low / Very Low) — very high in the two upper corners, very low in the two lower corners, low in the upper centre, a low-density lens in the middle and a low band above the bottom.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.2,
+    240.2,
+    463.7,
+    342.9
+   ],
+   "w": 1631,
+   "h": 478,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.668,
+   "src_native": [
+    1827,
+    2067
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — cut from the embedded native raster (xref 320, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 단축 (한쪽 펀치) 금형 가압의 밀도 분포 개념도 — 위쪽 모서리 (펀치 · 벽 쪽) 가 가장 조밀 · 아래 모서리가 가장 성김 · 가운데에 낮은 밀도 렌즈. ⚠ 눈금 없는 4 단계 개념도 (출처 인용 [25] [26] · 이 논문의 측정 아님) — 등급 사이의 밀도 차 크기는 원문에 없다.",
+   "viewed": true
+  },
+  {
+   "key": "f1c",
+   "kind": "figure",
+   "label": "1c",
+   "page": 2,
+   "file": "fig_1c.png",
+   "caption": "Fig. 1(c) — 'Cold | Warm | Hot Isostatic Pressing': pressure vessel cavity with the sample receiving pressure (green arrows) and heat (red arrows) from all sides; 'Operating Pressing Range' scale 207 MPa … 500 MPa … 600 MPa and 'Operating Temperature Range' scale 20 °C … 150 °C … 2000 °C with wedges for CIP (blue), WIP (green) and HIP (orange).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.2,
+    349.4,
+    517.9,
+    556.5
+   ],
+   "w": 1857,
+   "h": 913,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.587,
+   "src_native": [
+    1827,
+    2067
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — cut from the embedded native raster (xref 320, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "CIP = 최고 압력 (600 MPa) · 상온 / WIP = 500 MPa · 150 °C / HIP = 207 MPa · 2000 °C — 압력과 온도가 서로 반대로 간다 (표 1 과 같은 값).",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. ISP integration pathways into SSB manufacturing. (a) Possible packaging of SSB systems and the underlying tri-layer architectures. (b) ISP configurations of the components and assemblies envisioned for large-scale production.",
+   "rotated_deg": 0,
+   "bbox": [
+    142.0,
+    60.4,
+    465.0,
+    419.0
+   ],
+   "w": 1396,
+   "h": 1544,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.474,
+   "src_native": [
+    1346,
+    1497
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered: the embedded raster resampled and the white page margins left uneven) replaced by a cut from the embedded native raster (xref 360, 1346×1497 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here; the tool caption had swallowed the neighbouring body text and was cleaned by hand) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "(a) 셀 포장 (원통 · 각형 · 파우치) 과 공통의 세 층 (Li on Cu · SE 막 · 복합 양극) 롤 적층 개념도 · (b) 등방 가압 대상 형상: SE 시트 / 두루마리 · 세 층 시트 · 파우치 · 두루마리.",
+   "viewed": true
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 4,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — 'Possible Packaging of SSB Cells': cylindrical cell (metal case), prismatic cell (metal case), pouch cell (metallised foil pouch); 'Underlying Trilayer Assemblies': rolls of ultrathin lithium on Cu, solid electrolyte film and composite cathode laminated between two rolls; inset stack Cu | Li metal (<25 µm) | solid electrolyte | composite cathode | Al.",
+   "rotated_deg": 0,
+   "bbox": [
+    142.0,
+    60.4,
+    465.0,
+    300.2
+   ],
+   "w": 1396,
+   "h": 1049,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.432,
+   "src_native": [
+    1346,
+    1497
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 360, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "세 층 적층 = 롤 사이 통과 (롤 가압) 뒤 감는 그림 — 등방 가압은 그 뒤의 배치 공정으로 들어간다 (본문 p.3938). Li 금속 < 25 µm 표기.",
+   "viewed": true
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 4,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — ISP configurations: 'ISP of Solid Electrolyte Sheet / Spool' (flat sheet, wound spool) and 'ISP of Trilayer Sheet Assembly / Pouches / Spools' (stacked tri-layer sheet, pouch, wound tri-layer spool).",
+   "rotated_deg": 0,
+   "bbox": [
+    147.3,
+    312.2,
+    457.6,
+    419.0
+   ],
+   "w": 1343,
+   "h": 495,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.546,
+   "src_native": [
+    1346,
+    1497
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 360, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "장비가 원통이라 두루마리 (spool) 꼴을 선호한다는 본문 (p.3942) 의 그림 — 두루마리 안쪽 층이 받는 응력 상태에 대한 논의는 원문에 없다.",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Compilation of isostatic pressing parameters used in the SSB literature for densification and integration of solid electrolytes and cells, respectively. Largely CIP is the primary technique that is leveraged within the SSB community. Shaded markers indicate either HIP or WIP cycles. The color of the markers indicates the solid electrolyte material family (pink markers, LLZO; yellow markers, Na-based NASICONs; green markers, sulfides; gray marker, hybrid electrolyte). The data for this figure are collected from refs 33, 34, 36−56. (b) XRD patterns and optical images of LLZO before and after the HIP treatment. The scale bars represent 10 mm. Data adapted from ref 33. SEM images of anti-perovskite solid electrolytes processed under (c) uniaxial loading conditions, (d) CIP conditions, and (e) WIP conditions. The scale bars in all the SEM images are 10 μm. (f, g) Tomographic reconstruction slices and pore volume visualization of the anti-perovskites processed under CIP and WIP conditions along with the measured porosity. The sub-volume investigated for porosity evaluation and visualized here is 300 × 300 × 300 μm3.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.0,
+    61.1,
+    486.2,
+    404.6
+   ],
+   "w": 1593,
+   "h": 1481,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.486,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered: the embedded raster resampled and the white page margins left uneven) replaced by a cut from the embedded native raster (xref 381, 1562×1439 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here; the tool caption had swallowed the neighbouring body text and was cleaned by hand) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 이 논문의 유일한 자체 실험 (c–g: 안티페로브스카이트 SE 의 단축 그린 펠릿 ↔ CIP ↔ WIP) + 문헌 압력 모음 (a) + LLZO HIP 전후 XRD (b · ref 33).",
+   "viewed": true
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 5,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — compilation of isostatic pressures used in the SSB literature (log axis 10^0–10^3 MPa) for 'Solid Electrolyte' densification and 'Symmetric/Full Cells' integration; shaded markers = HIP or WIP cycles, labelled 'HIP 1180 °C', 'HIP 1158 °C', 'HIP 1150 °C', 'WIP', 'WIP 70 °C'; marker colour = material family.",
+   "rotated_deg": 0,
+   "bbox": [
+    119.6,
+    61.1,
+    249.7,
+    198.7
+   ],
+   "w": 592,
+   "h": 623,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.931,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 판독 (로그 축 눈금 10⁰ · 10¹ · 10² · 10³ = 원본 래스터 행 491.5 · 333.5 · 174.5 · 16.5 → 158.33 px/decade): SE 열 ≈506 (둘) · ≈400 · ≈300 (여럿) · ≈250 · ≈220 · ≈200 (가장 많음) · ≈150 · HIP ≈132 (1180 °C) · ≈127 (1158 °C) · ≈44 · HIP ≈10 (1150 °C) MPa / 셀 열 ≈490 (WIP) · ≈500 · ≈400 · ≈200 ('WIP 70 °C' + 분홍 둘) · ≈80 (넷 이상) · ≈50 · ≈20 MPa. xlsx (SI) 와 대조: '1000 kN' 행은 200 MPa 자리에 · '200 Bar' WIP 행은 200 MPa 자리에 찍힌 것으로 읽힌다 · 2400 MPa 행은 축 밖 (digitized.csv).",
+   "viewed": true
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 5,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — XRD patterns (2θ 15–60°, Cu Kα) and optical images of an LLZO pellet 'Before HIP Treatment' (opaque white) and 'After HIP Treatment' (translucent yellow, text readable through the pellet); scale bars 10 mm; data adapted from ref 33.",
+   "rotated_deg": 0,
+   "bbox": [
+    248.9,
+    63.5,
+    482.6,
+    199.1
+   ],
+   "w": 1024,
+   "h": 615,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.833,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "LLZO HIP (ref 33 Sugata 2018 · xlsx: 132 MPa · 1180 °C · >99 %) 전후 — 새 봉우리 없음 · 상대 세기 변화 (저자: 선호 방위 가능성) · 불투명 → 반투명. 산화물 · 고온 소결 영역 — 우리 상온 LPSCl 과 다른 기전.",
+   "viewed": true
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 5,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3(c) — SEM image of the anti-perovskite solid electrolyte 'Green Pellet' (uniaxial loading conditions); scale bar 10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.2,
+    200.1,
+    238.1,
+    299.5
+   ],
+   "w": 558,
+   "h": 464,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.192,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "단축 가압 그린 펠릿 단면: 밝은 입계 선 그물 + 흩어진 기공 (어두운 점) — 본문 '~12 % 기공' 은 방사광 단층 값 (이 그림 아님) · ⚠ 단축 압력 · 유지 시간은 본문 · SI 어디에도 없다.",
+   "viewed": true
+  },
+  {
+   "key": "f3d",
+   "kind": "figure",
+   "label": "3d",
+   "page": 5,
+   "file": "fig_3d.png",
+   "caption": "Fig. 3(d) — SEM image of the anti-perovskite solid electrolyte after CIP; scale bar 10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    240.5,
+    200.1,
+    362.2,
+    299.5
+   ],
+   "w": 557,
+   "h": 464,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.192,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "CIP (SI: 414 MPa · 상온 · 10 s 유지 · 천천히 감압) 뒤 단면 — 거친 파단면 · 입계 그물이 사라짐.",
+   "viewed": true
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 5,
+   "file": "fig_3e.png",
+   "caption": "Fig. 3(e) — SEM image of the anti-perovskite solid electrolyte after WIP; scale bar 10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    364.6,
+    200.1,
+    486.2,
+    299.5
+   ],
+   "w": 557,
+   "h": 464,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.19,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "WIP (SI: 135 °C · 345 MPa · 5 min 유지) 뒤 단면 — 각진 결정 (저자: 'small rod-like crystals' 생성) · 온도가 낀 변화 (재결정 · 입성장) 가 보인다.",
+   "viewed": true
+  },
+  {
+   "key": "f3cde",
+   "kind": "figure",
+   "label": "3c-e",
+   "page": 5,
+   "file": "fig_3cde.png",
+   "caption": "Fig. 3(c)–(e) — the three SEM images side by side: green pellet (uniaxial), CIP, WIP; scale bars 10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.2,
+    200.1,
+    486.2,
+    299.5
+   ],
+   "w": 1592,
+   "h": 464,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.15,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "세 조건 나란히 — 같은 압력 대조가 아니다: 단축 (압력 미기재) → 그 펠릿을 CIP 414 MPa 또는 WIP 345 MPa · 135 °C 로 다시 누름 (순차 처리).",
+   "viewed": true
+  },
+  {
+   "key": "f3f",
+   "kind": "figure",
+   "label": "3f",
+   "page": 5,
+   "file": "fig_3f.png",
+   "caption": "Fig. 3(f) — 'CIP Tomography Reconstructions': reconstruction slice (scale bar printed '10 μm') and pore-volume rendering of the 300 × 300 × 300 µm³ sub-volume; '~1.8% Porosity'.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.0,
+    303.3,
+    302.0,
+    404.6
+   ],
+   "w": 825,
+   "h": 472,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.372,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ CIP 펠릿 방사광 단층 (APS 2-BM-B): 기공률 ~1.8 % (부분체적 300³ µm³) · 단면에 긴 균열 꼴 틈 · 기공이 한쪽 (위) 에 몰림. ⚠ 단면 축척 막대 '10 μm' 는 300 µm 부분체적과 맞지 않아 보인다 (막대가 단면 폭의 ≈1/4) [판독].",
+   "viewed": true
+  },
+  {
+   "key": "f3g",
+   "kind": "figure",
+   "label": "3g",
+   "page": 5,
+   "file": "fig_3g.png",
+   "caption": "Fig. 3(g) — 'WIP Tomography Reconstructions': reconstruction slice (scale bar printed '10 μm') and pore-volume rendering of the 300 × 300 × 300 µm³ sub-volume; '~0.15% Porosity'.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.7,
+    303.3,
+    486.0,
+    404.6
+   ],
+   "w": 814,
+   "h": 472,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.453,
+   "src_native": [
+    1562,
+    1439
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 381, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ WIP 펠릿: 기공률 ~0.15 % · 기공 몇 덩어리만. 단축 그린 펠릿 ~12 % (본문) → CIP ~1.8 % → WIP ~0.15 % — 압력도 온도도 유지 시간도 서로 다른 세 점.",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Compilation of ionic conductivity data sets from literature that leveraged ISP processing methods for solid electrolyte densification. The marker colors represent different material families (garnet, Na-solid electrolytes, and Li-based NASICONs). The data are adapted from refs 33, 38, 39, 41, 43, 51, 53, 55, 65−67. (b) Discharge polarization curves and (c) capacity retention profiles from solid-state battery cells that were integrated into tri-layer configurations using ISP processes. The corresponding solid electrolyte system is indicated in the legend. The data for (b) and (c) are adapted from refs 37, 43, 44, 50, 56, 68−71.",
+   "rotated_deg": 0,
+   "bbox": [
+    317.1,
+    61.1,
+    555.4,
+    287.0
+   ],
+   "w": 1043,
+   "h": 991,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.905,
+   "src_native": [
+    1000,
+    952
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered: the embedded raster resampled and the white page margins left uneven) replaced by a cut from the embedded native raster (xref 404, 1000×952 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here; the tool caption had swallowed the neighbouring body text and was cleaned by hand) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "문헌 모음: (a) CIP · HIP 펠릿의 ln(σT) – 1000/T · (b) 등방 가압으로 적층한 셀의 방전 곡선 · (c) 용량 유지. 저자: 등방 ↔ 표준 조건의 명시적 대조는 문헌이 늘 주지 않는다 (p.3941).",
+   "viewed": true
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 6,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — ln(σT) [S cm⁻¹ K] vs 1000/T [K⁻¹] for solid electrolytes densified by ISP: LLZO (CIP), LLZO (HIP), Na-SEs (CIP), Li-NASICON (CIP).",
+   "rotated_deg": 0,
+   "bbox": [
+    317.1,
+    61.1,
+    436.1,
+    161.9
+   ],
+   "w": 546,
+   "h": 470,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.935,
+   "src_native": [
+    1000,
+    952
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — cut from the embedded native raster (xref 404, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "산화물 · NASICON 만 (황화물 없음). 같은 계열 안에서도 σ 산포가 크다 — 저자 해석 = 등방 조건이 최적화되지 않아서. xlsx 의 25 °C 값 0.019–4.2 mS/cm (26 행).",
+   "viewed": true
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 6,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — discharge curves (voltage vs discharge capacity, mAh g⁻¹) of cells integrated by ISP: NMC | LPSCl | Li ('Three Processing Conditions'), LiRuO2 | LPSCl | Li, LFP | LAGP | Li, NVP | NZSP(NMZSP) | Na, FeS2 | NZSP(NMZSP) | Na.",
+   "rotated_deg": 0,
+   "bbox": [
+    437.8,
+    61.6,
+    555.4,
+    161.9
+   ],
+   "w": 540,
+   "h": 468,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.901,
+   "src_native": [
+    1000,
+    952
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — cut from the embedded native raster (xref 404, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "LPSCl 셀 둘 (NMC ≈200–210 · LiRuO₂ ≈265 mAh/g [판독 · 눈대중]) 이 들어 있다 — 원 논문 (refs 68 · 69 · 71) 의 값을 옮긴 2 차 자료 · 등방 ↔ 단축 대조 곡선은 없다.",
+   "viewed": true
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 6,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — capacity (mAh g⁻¹) vs cycle number (log axis 1–1000) of ISP-integrated cells: LPSCl, Na-SE, Li-NASICON, hybrid SE, LLZO.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.3,
+    169.1,
+    554.0,
+    287.0
+   ],
+   "w": 1032,
+   "h": 541,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.898,
+   "src_native": [
+    1000,
+    952
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — cut from the embedded native raster (xref 404, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "LPSCl 계열 하나가 ≈1000 사이클까지 (ref 69 Lee 2020 · WIP 490 MPa [xlsx]) — 저자가 'WIP 가 층 밀도 · 계면 접착 · Li 석출 균일성 · SE 구조 건전성을 높였다' 고 옮긴 근거.",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Overview of the protocol used for techno-economic analysis carried out here. (b) Typical features of a state-of-the-art CIP/WIP/HIP instrument commercially available today. Dimensions reflect the volume of the largest sample that can be accommodated within the instrument. Packing fraction represents the fraction of the available volume which will occupied by the material of interest. Cycles assumed are detailed in the Supporting Information. Cost per cycle and cost per volume are in U.S. dollars. (c) Projected volumes of solid electrolyte and cells that need to be processed to cater to the expected EV demands in the next 20 years. For details see the Supporting Information. Projected processing cost for (d) solid electrolyte processing and (e) cell integration considering different ISP protocols.",
+   "rotated_deg": 0,
+   "bbox": [
+    139.9,
+    60.9,
+    465.5,
+    424.3
+   ],
+   "w": 1407,
+   "h": 1564,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.688,
+   "src_native": [
+    1379,
+    1527
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered: the embedded raster resampled and the white page margins left uneven) replaced by a cut from the embedded native raster (xref 442, 1379×1527 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here; the tool caption had swallowed the neighbouring body text and was cleaned by hand) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "기술경제: (a) EV → 팩 → 모듈 → 셀 흐름 · (b) CIP · WIP · HIP 장비 가정 · (c) 처리할 부피 전망 · (d) SE · (e) 셀 적층 처리 비용 전망. 수식은 SI xlsx (카드 §3-7).",
+   "viewed": true
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 7,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) — protocol of the techno-economic analysis: EV projections → battery pack → battery module → battery cell & components ('Bipolar Cell Stacking').",
+   "rotated_deg": 0,
+   "bbox": [
+    139.9,
+    60.9,
+    464.8,
+    139.4
+   ],
+   "w": 1404,
+   "h": 377,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.52,
+   "src_native": [
+    1379,
+    1527
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 442, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "셀 = 바이폴라 적층 가정 (xlsx 의 팩 전압 3.75 V × 24 × 10 = 900 V).",
+   "viewed": true
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 7,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — instrument assumptions. CIP: dimensions 0.85 m × 2.2 m, packing fraction 0.6, cycles/hour 2, cycles/year 8320, cost/cycle $400, cost/volume $534/m³. WIP: 0.85 m × 2.2 m, 0.6, 1.2, 4992, $500, $668/m³. HIP: 0.94 m × 2.2 m, 0.6, 0.09, 670, $1750, $1910/m³.",
+   "rotated_deg": 0,
+   "bbox": [
+    141.6,
+    142.5,
+    305.2,
+    275.5
+   ],
+   "w": 732,
+   "h": 604,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.263,
+   "src_native": [
+    1379,
+    1527
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 442, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 장비 가정 (Quintus 내부 설계값): 한 번에 넣는 유효 부피 = π·D²·L/4 × 0.6 = 0.749 m³ (CIP · WIP) · 0.916 m³ (HIP) [xlsx]. 주기: CIP 30 min · WIP 50 min · HIP 11 h [카드 산술 = 1/주기 수].",
+   "viewed": true
+  },
+  {
+   "key": "f5c",
+   "kind": "figure",
+   "label": "5c",
+   "page": 7,
+   "file": "fig_5c.png",
+   "caption": "Fig. 5(c) — projected volumes (×10³ m³) of solid electrolyte and tri-layer cell to be processed, 2025–2040.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.2,
+    142.7,
+    465.1,
+    284.6
+   ],
+   "w": 708,
+   "h": 641,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.937,
+   "src_native": [
+    1379,
+    1527
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 442, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "2040: 세 층 셀 ≈42.2 · SE ≈5.8 ×10³ m³ (xlsx 42,241 · 5,808 m³). ⚠ xlsx 수식은 면적을 '팩 Ah (= Wh/900 V)' 로 셈한다 → 이 부피는 적힌 부하 (4 mAh/cm²) · 전압 (3.75 V) 으로 필요한 에너지의 1/240 만 담는다 [카드 산술 · §3-7].",
+   "viewed": true
+  },
+  {
+   "key": "f5d",
+   "kind": "figure",
+   "label": "5d",
+   "page": 7,
+   "file": "fig_5d.png",
+   "caption": "Fig. 5(d) — projected processing cost (M$) for solid electrolyte: HIP, WIP, CIP, CIP + HIP, CIP + WIP, 2025–2040.",
+   "rotated_deg": 0,
+   "bbox": [
+    142.1,
+    279.3,
+    300.5,
+    424.3
+   ],
+   "w": 710,
+   "h": 654,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.907,
+   "src_native": [
+    1379,
+    1527
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 442, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "2040 (xlsx): CIP 3.10 · WIP 3.88 · CIP+WIP 6.98 · HIP 11.10 · CIP+HIP 14.20 M$.",
+   "viewed": true
+  },
+  {
+   "key": "f5e",
+   "kind": "figure",
+   "label": "5e",
+   "page": 7,
+   "file": "fig_5e.png",
+   "caption": "Fig. 5(e) — projected processing cost (M$) for tri-layer cell integration: CIP, WIP, CIP + WIP, 2025–2040.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.9,
+    279.3,
+    465.5,
+    424.3
+   ],
+   "w": 707,
+   "h": 654,
+   "dpi": 300,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.926,
+   "src_native": [
+    1379,
+    1527
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 442, no resampling): box split in the white gap between the panels (pixel rows / columns read on a 100-px grid overlay; neighbouring-panel ink inside the box masked white where a label or an axis end crossed the split) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; panel letter kept, caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "2040 (xlsx): WIP 28.20 · CIP+WIP 50.75 · CIP 2.26 M$ — ⚠ CIP 열만 나눗수가 10⁷ (다른 열 10⁶) 이라 CIP+WIP − WIP = 22.56 M$ 의 1/10 로 그려졌다 [카드 산술 · xlsx 수식].",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematic of CIP/WIP equipment: a cross section of a threadless pin closure design.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.7,
+    240.7,
+    262.1,
+    512.1
+   ],
+   "w": 810,
+   "h": 1181,
+   "dpi": 300,
+   "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.874,
+   "recrop": "tool crop (figure complete, but the crop ran over the full text width of the SI page: 96% white) re-rendered by hand from the SI page at 300 dpi (tool default; the embedded raster is only ≈85 dpi, so this is an up-sampled render like the tool's): clip = raster box → ink bounding box → uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "CIP · WIP 용기 단면 (핀 잠금 덮개 · O 링 · 압력 연결구). 치수 없음. ⚠ 본문은 WIP 설명에 Fig. S2 · 용기 크기 (지름 3 m · 길이 5 m) 에 Fig. S1 을 가리킨다 — SI 캡션 (S1 = CIP/WIP · S2 = HIP) 과 번호가 엇갈린다.",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Schematic of HIP equipment: a cross section of the pressure vessel.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.0,
+    72.0,
+    303.5,
+    272.6
+   ],
+   "w": 902,
+   "h": 886,
+   "dpi": 300,
+   "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.734,
+   "recrop": "tool crop (figure complete, but the crop ran over the full text width of the SI page: 88% white) re-rendered by hand from the SI page at 300 dpi (tool default; the embedded raster is only ≈168 dpi, so this is an up-sampled render like the tool's): clip = raster box → ink bounding box → uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "HIP 용기 단면 (위 · 아래 덮개 · 원통 · 단열 맨틀 · 히터 · 적재 바구니 · 노 바닥). 치수 없음.",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Correlation between isostatic pressure and resultant pellet density. No obvious relation between these two variables is observed from the reported literature 1–23.",
+   "rotated_deg": 0,
+   "bbox": [
+    195.8,
+    316.8,
+    413.2,
+    576.7
+   ],
+   "w": 956,
+   "h": 1133,
+   "dpi": 300,
+   "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.927,
+   "recrop": "tool crop (figure complete, but the crop ran over the full text width of the SI page: 97% white) re-rendered by hand from the SI page at 300 dpi (tool default; the embedded raster is only ≈221 dpi, so this is an up-sampled render like the tool's): clip = raster box → ink bounding box → uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 문헌 펠릿 밀도 (%) ↔ 등방 압력 (MPa): 보이는 표지 17 개 (digitized.csv) = xlsx 'Final Density' 24 행 (겹침 포함) 과 전부 맞는다 — 단 '1000 kN' 행이 200 MPa 자리에 찍혀 있다. 200 MPa 한 자리에서 84–98.2 % 로 퍼진다. 전부 산화물 · NASICON 의 **소결 뒤** 밀도 (등방 가압은 소결 전 성형 단계) — 누른 직후 밀도가 아니다.",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Projected EV sales and corresponding pack energy required for the next twenty year duration. The data for the projected EV sales is from the National Li-ion Battery Blueprint.",
+   "rotated_deg": 0,
+   "bbox": [
+    150.8,
+    72.0,
+    486.5,
+    343.2
+   ],
+   "w": 1449,
+   "h": 1180,
+   "dpi": 300,
+   "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.899,
+   "recrop": "tool crop (figure complete, but the crop ran over the full text width of the SI page: 94% white) re-rendered by hand from the SI page at 300 dpi (tool default; the embedded raster is only ≈220 dpi, so this is an up-sampled render like the tool's): clip = raster box → ink bounding box → uniform 6 pt (25 px) margin; caption excluded (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "EV 대수 (백만) 와 팩 에너지 (×10³ GWh): 2020 3.2 → 2040 56.3 백만 대 · 144 → 2,534 GWh (xlsx · 대당 45 kWh = 180 mile × 250 Wh/mile).",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. XRD pattern of synthesized LiOHCl powder.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    546.0,
+    424.3
+   ],
+   "w": 2000,
+   "h": 1494,
+   "dpi": 300,
+   "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.924,
+   "mpm_note_ko": "합성한 안티페로브스카이트 분말의 XRD (관측 · 계산 · 차 · Pmma 반사 위치) — 저자: 상 순수. ⚠ 조성 표기가 'Li3OHCl' (S1) · 'LiOHCl' (S2 · 이 캡션) 로 다르다.",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Standard Processing Capabilities of Isostatic Pressing Equipment (footnote a: Qualitative values are represented by o, +, and +++, where o < + < +++). Rows: pressure medium — CIP liquid - water / WIP liquid - oil/water / HIP gas - argon/nitrogen; standard temperature rating (°C/°F) 20/68, 150/302, 2000/3632; standard pressure rating (MPa/ksi) 600/87, 500/72.5, 207/30; cycle time o, +, +++; equipment cost o, +, +++.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.7,
+    60.7,
+    555.6,
+    199.3
+   ],
+   "w": 1399,
+   "h": 836,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.854,
+   "recrop": "tool crop held only the title and the header row (1043×208 px; the table body is plain text without rules) — re-rendered by hand from the vector page at 400 dpi: region [313.0, 58.5, 557.5, 204.5] pt (title → footnote a) → ink trim → uniform 6 pt (33 px) margin; caption text cleaned by hand (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 장비 표준 정격: CIP 물 · 20 °C · 600 MPa / WIP 기름 · 물 · 150 °C · 500 MPa / HIP 아르곤 · 질소 · 2000 °C · 207 MPa · 주기 시간 · 장비 값은 정성 (o < + < +++).",
+   "viewed": true
+  },
+  {
+   "key": "x3936a",
+   "kind": "text",
+   "label": "p3936-title-authors-dates-doi",
+   "page": 1,
+   "file": "txt_p3936_title_authors_cite_dates_doi.png",
+   "caption": "PDF p.1 (printed p.3936) head and foot: title, authors (Marm Dixit∥, Chad Beamer*,∥, Ruhul Amin, James Shipley, Richard Eklund, Nitin Muralidharan, Lisa Lindqvist, Anton Fritz, Rachid Essehli, Mahalingam Balasubramanian, Ilias Belharouak*), 'Cite This: ACS Energy Lett. 2022, 7, 3936−3946', Received August 26, 2022 / Accepted September 28, 2022 / Published October 18, 2022, '© 2022 The Authors. Published by American Chemical Society', DOI line.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.3,
+    113.0,
+    537.7,
+    224.1
+   ],
+   "w": 2768,
+   "h": 998,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.876,
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      51.3,
+      113.0,
+      537.7,
+      224.1
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 1,
+     "bbox": [
+      315.1,
+      681.4,
+      429.2,
+      711.1
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 1,
+     "bbox": [
+      191.1,
+      758.3,
+      555.4,
+      775.2
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "서지 확인용 (제목 · 저자 · 권 · 쪽 · 접수 · 승인 · 게재 · DOI).",
+   "viewed": true
+  },
+  {
+   "key": "x3936b",
+   "kind": "text",
+   "label": "p3936-abstract",
+   "page": 1,
+   "file": "txt_p3936_abstract.png",
+   "caption": "PDF p.1 abstract: scalable processing as the bottleneck; isostatic pressing (ISP) highlighted as a versatile processing platform; summary of ISP techniques and windows; recent SSB reports using ISP; techno-economic analysis; perspectives.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.2,
+    267.3,
+    344.9,
+    431.5
+   ],
+   "w": 1698,
+   "h": 978,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.104,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "초록 — 논문의 범위 (리뷰 + 기술경제 + 전망). 자체 실험 (안티페로브스카이트) 은 초록에 없다.",
+   "viewed": true
+  },
+  {
+   "key": "x3936c",
+   "kind": "text",
+   "label": "p3936-p3937-sulfides-rt-uniaxial",
+   "page": 1,
+   "file": "txt_p3936_p3937_sulfides_room_temperature_uniaxial_loading.png",
+   "caption": "PDF p.1 right column → p.2 left column: an ideal SSB cell is a dense, thin tri-layer; garnets need dual-step sintering (> 1000 °C, hold ≥ 10 h); 'sulfide, argyrodites, and anti-perovskite materials are synthesized at lower temperatures of 100−400 °C and are generally processed into cells at room temperature and under uniaxial loading' (refs 16−19); routes are for small-scale pellets; roll-to-roll only demonstrated for hybrid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.4,
+    456.6,
+    555.7,
+    664.7
+   ],
+   "w": 1401,
+   "h": 1481,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.844,
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      315.4,
+      456.6,
+      555.7,
+      664.7
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 2,
+     "bbox": [
+      51.5,
+      607.3,
+      291.5,
+      648.8
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 황화물 · 아지로다이트 = '상온 · 단축 하중으로 셀을 만든다' — 우리 300 MPa 금형 압축이 이 문장의 '표준 조건' 쪽.",
+   "viewed": true
+  },
+  {
+   "key": "x3937a",
+   "kind": "text",
+   "label": "p3937-uniaxial-die-wall-friction",
+   "page": 2,
+   "file": "txt_p3937_uniaxial_die_wall_friction_density_variation.png",
+   "caption": "PDF p.2: conventional uniaxial press-and-sinter; compaction mechanisms 'typically consist of loose particle restacking and deformation at points of contact as pressure increases'; uniaxial pressing 'invariably leads to high variation in density throughout the compact due to friction at die walls resulting in non-uniform properties (Figure 1b)' (refs 25, 26); lubricants and additional punches help only in a limited window; high formation pressures and temperatures over sustained time are required.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    653.1,
+    292.5,
+    754.6
+   ],
+   "w": 1405,
+   "h": 1478,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.849,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      51.5,
+      653.1,
+      292.5,
+      754.6
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 2,
+     "bbox": [
+      315.4,
+      607.3,
+      555.5,
+      754.9
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 단축 금형 가압의 한계 문장 (금형 벽 마찰 → 압분체 안 밀도 편차) — 인용 근거 [25] [26] (세라믹 분말) · 이 논문의 측정 아님. 윤활제 · 양쪽 펀치로 줄일 수 있으나 '적용 창이 좁다'.",
+   "viewed": true
+  },
+  {
+   "key": "x3938a",
+   "kind": "text",
+   "label": "p3938-pascal-no-die-wall-friction",
+   "page": 3,
+   "file": "txt_p3938_pascal_law_no_die_wall_friction_three_variables.png",
+   "caption": "PDF p.3: isostatic pressing applies pressure uniformly in all directions (Pascal's law); it eliminates the frictional forces due to die-wall interaction, 'thereby improving the average density for a given applied pressure as well as the uniformity that can be achieved' (refs 29−31); density and uniformity depend on time, temperature and pressure of the ISP cycle (ref 27).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    382.2,
+    291.6,
+    534.5
+   ],
+   "w": 1400,
+   "h": 912,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.848,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ '같은 가압 압력에서 평균 밀도가 더 높다' 는 일반 주장 — 인용 [29–31] (HIP 기전 · 금속 AM) 뿐 · 같은 압력의 단축 ↔ 등방 수치는 이 논문에 없다.",
+   "viewed": true
+  },
+  {
+   "key": "x3938b",
+   "kind": "text",
+   "label": "p3938-cip-wip-hip-cycle",
+   "page": 3,
+   "file": "txt_p3938_cip_wip_hip_categories_hold_relaxation_cip_600mpa.png",
+   "caption": "PDF p.3: three categories (CIP, WIP, HIP); a typical ISP process = load the sample in the pressure vessel → raise to process temperature and pressure → hold → 'relaxation process to ambient conditions' (Figure 1c); CIP up to 600 MPa (87 000 psi), liquid = water with an additive such as oil; WIP can be performed in standard CIP vessels (text cites Figure S2).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.3,
+    535.4,
+    291.6,
+    754.9
+   ],
+   "w": 1401,
+   "h": 1285,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "공정 주기 = 올림 → 유지 → 대기 조건으로 '이완' (감압) — 감압 속도 · 감압 때 되돌아옴 · 균열에 대한 말은 없다 (R4).",
+   "viewed": true
+  },
+  {
+   "key": "x3938c",
+   "kind": "text",
+   "label": "p3938-wip-hip-ranges",
+   "page": 3,
+   "file": "txt_p3938_wip_150c_cycle_time_reactive_media_hip_200mpa_2000c_vessel_size.png",
+   "caption": "PDF p.3 right column: WIP medium heated externally and circulated; up to 150 °C (302 °F) with high-temperature oil and compatible bag material; one WIP cycle every 10−20 min feasible; reactive materials (Li metal, sulfides, argyrodites) need careful selection of the pressure medium; handling of Li metal in ISP equipment not established; HIP up to 200 MPa (30 000 psi) and 2000 °C, argon; gas compressibility → hours instead of minutes; uniform rapid cooling (URC); 'one operation cycle per minute or faster'; vessel inner diameter up to 3 m and length up to 5 m (text cites Figure S1).",
+   "rotated_deg": 0,
+   "bbox": [
+    315.4,
+    217.2,
+    556.4,
+    567.8
+   ],
+   "w": 1405,
+   "h": 2014,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "WIP 150 °C 상한 · 주기 10–20 분 · 황화물은 압력 매체 (기름 · 물) 와의 반응을 막는 포장이 필요 · HIP 200 MPa (표 1 은 207) · 수 시간. ⚠ '1 분에 한 주기 이상' 이 어느 방식인지 문장이 가리지 않는다 (기술경제 가정은 CIP 2 회/h).",
+   "viewed": true
+  },
+  {
+   "key": "x3938d",
+   "kind": "text",
+   "label": "p3938-p3939-isp-targets",
+   "page": 3,
+   "file": "txt_p3938_p3939_isp_for_se_films_trilayer_spools_shape_preserved.png",
+   "caption": "PDF p.3 → p.4: no consensus on SSB scale-up; ISP anticipated 'for compaction of densification of individual components, viz. thin SE films as well as these tri-layer cell assemblies'; batch processing of stacked sheets or wound spools; cylindrical geometries preferred (pressure uniformity, higher packing fraction of the container volume); ISP consolidates internal voids 'achieving intimate contact between particles without geometrical limitations, all while preserving the shape of an object'.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.2,
+    569.2,
+    556.4,
+    754.6
+   ],
+   "w": 1406,
+   "h": 1726,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.841,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      315.2,
+      569.2,
+      556.4,
+      754.6
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 4,
+     "bbox": [
+      51.5,
+      567.4,
+      291.5,
+      675.7
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "등방 가압의 자리 = SE 막 · 세 층 조립체의 치밀화 (배치) · '형상을 유지한 채 입자 사이 밀착' — 정성 주장.",
+   "viewed": true
+  },
+  {
+   "key": "x3939a",
+   "kind": "text",
+   "label": "p3939-survey-cip-200-250",
+   "page": 4,
+   "file": "txt_p3939_survey_cip_200_250mpa_arbitrary_no_wip_for_se.png",
+   "caption": "PDF p.4: ISP has seen limited application in the SSB field; mostly densification of green pellets prior to sintering; no time−temperature−pressure optimisation study reported for any SE; 'most reports utilize an average isostatic pressure of 200−250 MPa for the CIP cycle. The choice of this processing pressure is most likely arbitrary'; no correlation between reported pellet density and ISP conditions (Figure S3); no reports of WIP for SE densification; only a few HIP reports (Figure 3a).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    712.2,
+    291.5,
+    754.9
+   ],
+   "w": 1402,
+   "h": 1143,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.848,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      51.7,
+      712.2,
+      291.5,
+      754.9
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 4,
+     "bbox": [
+      315.2,
+      460.5,
+      555.7,
+      606.6
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 문헌 실태: CIP 200–250 MPa (임의 선택) · 압력 ↔ 밀도 상관 없음 · SE 치밀화용 WIP 보고 0 건 (2022 기준 저자 조사).",
+   "viewed": true
+  },
+  {
+   "key": "x3940a",
+   "kind": "text",
+   "label": "p3940-soft-sulfides-antiperovskite-demo",
+   "page": 5,
+   "file": "txt_p3940_soft_sulfides_counterintuitive_uniaxial_antiperovskite_demo.png",
+   "caption": "PDF p.5: almost all SE densification work with ISP is for garnet or NASICON-type crystalline materials — 'counter-intuitive, as one would assume that softer electrolytes like sulfide and argyrodites can benefit enormously'; further work needed for sulfides and halides; local microstructural differences due to uniaxial pressing can catastrophically impact the cell (refs 17, 57); proof of concept: CIP and WIP of anti-perovskite SE (Figure 3c−e); uniaxial pressing leads to 'some porosity and distinct grain boundaries' (refs 58−63); WIP shows small rod-like crystals.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.3,
+    734.4,
+    291.3,
+    754.9
+   ],
+   "w": 1401,
+   "h": 1532,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.847,
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      51.3,
+      734.4,
+      291.3,
+      754.9
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 5,
+     "bbox": [
+      315.4,
+      516.6,
+      555.7,
+      754.9
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 무른 황화물 · 아지로다이트에 대한 등방 가압 자료가 문헌에 없다는 저자 고백 + 자체 시연 재료는 안티페로브스카이트 (LPSCl 아님).",
+   "viewed": true
+  },
+  {
+   "key": "x3941a",
+   "kind": "text",
+   "label": "p3941-porosity-12-1p8-0p15",
+   "page": 6,
+   "file": "txt_p3941_porosity_uniaxial_12_cip_1p8_wip_0p15_mechanism_llto_modulus.png",
+   "caption": "PDF p.6: synchrotron tomography — 'the uniaxially pressed pellet results in a porosity of ∼12%, while the CIP pellet shows an average porosity of ∼1.8% and the WIP pellet shows a porosity of 0.15%'; densification mechanism depends on material (creep diffusion for metallic-like, grain growth for polycrystalline ceramic-like; no strict 'critical temperature'); HIP-processed LLTO Young's modulus ∼223 MPa vs 192 MPa by conventional sintering (ref 64; units as printed).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    60.2,
+    291.6,
+    368.0
+   ],
+   "w": 1400,
+   "h": 1776,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★★ 이 논문의 유일한 단축 ↔ 등방 수치: 기공률 단축 ~12 % → CIP ~1.8 % → WIP 0.15 % (안티페로브스카이트 · 방사광 단층 · 뺀 뒤). 같은 압력 대조 아님 (단축 압력 미기재 · CIP 414 MPa · WIP 345 MPa · 135 °C). ⚠ LLTO 영률 '223 · 192 MPa' 는 인쇄 그대로 — 단위 (GPa 로 보임) 는 ref 64 확인 전 [미확인].",
+   "viewed": true
+  },
+  {
+   "key": "x3941b",
+   "kind": "text",
+   "label": "p3941-no-explicit-comparison",
+   "page": 6,
+   "file": "txt_p3941_no_explicit_isp_vs_standard_comparison_conductivity_variance.png",
+   "caption": "PDF p.6: aim of the literature compilation (ISP usable for multiple material systems; spread of the data); 'The literature data does not always report the impact of ISP versus standard conditions, which makes it difficult to provide an explicit comparison for each case'; Figure 4a conductivities (CIP / HIP pellets); large variance within a material family attributed to non-optimised CIP / HIP processing.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.3,
+    369.5,
+    291.6,
+    666.2
+   ],
+   "w": 1401,
+   "h": 1714,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 저자 스스로: 문헌이 '등방 ↔ 표준 조건' 효과를 늘 보고하지 않아 사례별 명시 비교가 어렵다 — 의도 ('같은 압력 단축 ↔ 등방 대조') 가 채워지지 않는 직접 근거.",
+   "viewed": true
+  },
+  {
+   "key": "x3941c",
+   "kind": "text",
+   "label": "p3941-density-85-100-interfaces",
+   "page": 6,
+   "file": "txt_p3941_pellet_density_85_100_interfacial_contact_wip_vs_uniaxial.png",
+   "caption": "PDF p.6: reported pellet densities 85 to 100% for a range of pressures (Figure S3); ISP-integrated cells: 'CIP/HIP helps to form a better interfacial contact … The reduced contact impedance assists in obtaining practical discharge capacity'; no secondary phases; cycling close to 1000 cycles (ref 69), which 'highlighted the ameliorating influence of WIP in enhancing the density of the layers, interfacial adhesion of the cathode|solid electrolyte, uniformity of lithium deposition, and structural integrity of the solid electrolyte. Compared to this, uniaxial pressing would result in non-uniform density that would contribute to accelerated failures'.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    667.8,
+    292.5,
+    754.6
+   ],
+   "w": 1406,
+   "h": 1850,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.842,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      51.5,
+      667.8,
+      292.5,
+      754.6
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 6,
+     "bbox": [
+      315.2,
+      412.7,
+      556.4,
+      642.0
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "계면 저항 · 접촉 임피던스 = 정성 서술뿐 (값 없음 · xlsx ASR 두 행은 CIP 80 MPa 대칭 셀 615 · 133 Ω·cm² 로 단축 대조 없음). 'uniaxial pressing would result in' = 추정 문장.",
+   "viewed": true
+  },
+  {
+   "key": "x3941d",
+   "kind": "text",
+   "label": "p3941-p3942-technoeconomic-assumptions",
+   "page": 6,
+   "file": "txt_p3941_p3942_technoeconomic_assumptions_ev_cell_configuration_batch.png",
+   "caption": "PDF p.6 → p.7: preliminary techno-economic analysis for (1) SE laminate formation and (2) tri-layer cell integration; > 50 million EVs by 2040 (Figure S4, ref 72), all with SSB packs, all SE fabrication and cell integration by ISP; cell configuration 4 mAh cm⁻² cathode loading, N/P ratio 0.2, SE thickness 75 µm, cell thickness 500 µm; ramp−hold−release → essentially batch processes; instrument metrics in Figure 5b.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.4,
+    690.2,
+    556.4,
+    754.8
+   ],
+   "w": 1405,
+   "h": 1825,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.844,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      315.4,
+      690.2,
+      556.4,
+      754.8
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 7,
+     "bbox": [
+      51.2,
+      507.7,
+      291.6,
+      754.6
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "기술경제 가정 (본문 인쇄값) — 세부 수식은 SI xlsx. 등방 가압 = 올림 → 유지 → 감압의 배치 공정.",
+   "viewed": true
+  },
+  {
+   "key": "x3942a",
+   "kind": "text",
+   "label": "p3942-quintus-metrics-packing",
+   "page": 7,
+   "file": "txt_p3942_quintus_metrics_packing_fraction_capex_10yr_units_8_15.png",
+   "caption": "PDF p.7 right column: dimensions, cycle times and costs 'adapted from Quintus' internal design parameters'; largest sample handling volumes; cylindrical form factors preferred; spools/rolls of SE or tri-layer films on a backing substrate; packing fraction (sealing/backing/holding materials) assumed 0.6 — 'a conservative estimate'; cost per cycle incorporates capital expenditure over a 10-year time frame; 'roughly 8−15 HIP/WIP/CIP units will be required'.",
+   "rotated_deg": 0,
+   "bbox": [
+    315.2,
+    507.7,
+    555.7,
+    754.8
+   ],
+   "w": 1402,
+   "h": 1439,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "장비 값 = 공저자 회사 (Quintus) 의 내부 설계값 · 충전율 0.6 · 10 년 설비비 포함 주기당 비용 · 필요한 장비 8–15 대 (xlsx: CIP 7.7 · WIP 12.9 · HIP 9.5 대 — 부피가 1/240 로 잡힌 값 [카드 산술]).",
+   "viewed": true
+  },
+  {
+   "key": "x3943a",
+   "kind": "text",
+   "label": "p3943-running-cost",
+   "page": 8,
+   "file": "txt_p3943_running_cost_1_20k_usd_per_gwh.png",
+   "caption": "PDF p.8: 'the running cost of ISP for cell integration is ∼$1−20K/GWh based on the type of technique used'; different ISP cycles may be required depending on materials chemistry; initial estimate of the scale.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    60.2,
+    291.6,
+    133.3
+   ],
+   "w": 1399,
+   "h": 472,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 인쇄 결론 ~$1–20K/GWh (셀 적층) — xlsx 로 다시 셈하면 CIP 0.89 · WIP 11.1 · CIP+WIP 20.0 천$/GWh (CIP 는 10⁷ 나눗수) · 면적 수식을 고치면 2.1–4.8 백만$/GWh [카드 산술].",
+   "viewed": true
+  },
+  {
+   "key": "x3943b",
+   "kind": "text",
+   "label": "p3943-perspectives",
+   "page": 8,
+   "file": "txt_p3943_perspectives_density_99_orientation_interfaces_economies_of_scale.png",
+   "caption": "PDF p.8: perspectives (i) ISP gives high-density materials (> 99%), control of crystallographic orientations, conformal and resilient interfaces; (ii) differences between CIP, WIP and HIP; (iii) the techno-economic model as a reference point — viable only with economies of scale.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.2,
+    444.5,
+    292.5,
+    674.0
+   ],
+   "w": 1407,
+   "h": 1341,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "전망 세 가지 — '> 99 % 밀도' 는 안티페로브스카이트 WIP (0.15 % 기공) 와 LLZO HIP (> 99 %) 에서 온 말 · 황화물 값 아님.",
+   "viewed": true
+  },
+  {
+   "key": "x3943c",
+   "kind": "text",
+   "label": "p3943-si-files-affiliations-notes",
+   "page": 8,
+   "file": "txt_p3943_si_files_author_affiliations_equal_contribution_no_competing_interest.png",
+   "caption": "PDF p.8: Supporting Information list (PDF with Figures S1−S5; XLSX of the referenced experimental data; XLSX of the techno-economic model); corresponding authors (Ilias Belharouak, ORNL; Chad Beamer, Quintus Technologies, Ohio); author affiliations (ORNL Electrification & Energy Infrastructure Division; Quintus Technologies AB, Västerås; Quintus Technologies, Lewis Center); '∥M.D. and C.B. contributed equally'; 'The authors declare no competing financial interest.'",
+   "rotated_deg": 0,
+   "bbox": [
+    51.5,
+    697.5,
+    291.5,
+    754.9
+   ],
+   "w": 1401,
+   "h": 3306,
+   "dpi": 400,
+   "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.887,
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      51.5,
+      697.5,
+      291.5,
+      754.9
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 8,
+     "bbox": [
+      339.5,
+      62.7,
+      555.5,
+      109.7
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 8,
+     "bbox": [
+      315.4,
+      144.6,
+      555.7,
+      613.3
+     ],
+     "src": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "저자 11 명 가운데 5 명이 등방 가압 장비 회사 (Quintus) 소속 — 원문 표기는 '이해 상충 없음'. 장비 값 · 비용 가정의 출처가 같은 회사.",
+   "viewed": true
+  },
+  {
+   "key": "xS8a",
+   "kind": "text",
+   "label": "SI-p8-p9-S1-S2-S3",
+   "page": 8,
+   "file": "txt_si_p8_p9_s1_synthesis_s2_cip_414mpa_wip_345mpa_135c_s3_characterization.png",
+   "caption": "SI PDF p.8 → p.9: S1 preparation of the anti-perovskite ('pure orthorhombic Li3OHCl from LiOH and LiCl with molar ratios of 2:1', ball-milled, heat-treated at 350 °C for 6 h until melting, quenched in ambient air); S2 'CIP and WIP … using a Quintus laboratory WIP system. The green pellets of LiOHCl were vacuum sealed in plastic bags … For the CIP process, the pellets were pressurized to 414MPa, at room temperature and held for 10 s. A slow pressure release … For the WIP sample, the pellets were heated to 135 °C and pressurized to 345 MPa with a 5-minute dwell followed by a slow pressure release'; S3 SEM (Zeiss MERLIN), X-ray tomography at APS 2-BM-B.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.1,
+    160.0,
+    540.1,
+    687.8
+   ],
+   "w": 2000,
+   "h": 3254,
+   "dpi": 300,
+   "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.95,
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      72.1,
+      160.0,
+      540.1,
+      687.8
+     ],
+     "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 9,
+     "bbox": [
+      72.1,
+      79.6,
+      540.1,
+      315.7
+     ],
+     "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 300 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★★ 자체 실험 조건의 전부: CIP 414 MPa · 상온 · 10 s / WIP 345 MPa · 135 °C · 5 min · 둘 다 '천천히 감압' · 진공 밀봉 비닐 · 건조실에서 개봉. 그린 펠릿의 단축 압력 · 치수 · 질량 · 진밀도 · 입도 = 없음.",
+   "viewed": true
+  },
+  {
+   "key": "xS6a",
+   "kind": "text",
+   "label": "SI-p6-p8-history-system-design",
+   "page": 6,
+   "file": "txt_si_p6_p8_hip_gas_tight_92_95_wip_1960s_wet_bag_dry_bag.png",
+   "caption": "SI PDF p.6 → p.8 (section A, History and Development of ISP Processing, and System Design): HIP needs a gas-tight surface, 'typically requiring densities up to 92-95% of maximum theoretical values to avoid surface connected networked porosity', otherwise a container transfers the pressure as in CIP and WIP; WIP introduced in the 1960s for polymeric materials; cylindrical vessel with separate closures → batch processing; monoblock vs wire-wound cylinders; wet bag (powder in elastic moulds or sealed films of polyurethane or latex, submerged) vs dry bag (membrane built into the vessel).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.1,
+    562.1,
+    540.6,
+    693.9
+   ],
+   "w": 2002,
+   "h": 3246,
+   "dpi": 300,
+   "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "blank": 0.94,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      72.1,
+      562.1,
+      540.6,
+      693.9
+     ],
+     "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 7,
+     "bbox": [
+      72.1,
+      79.6,
+      540.6,
+      653.7
+     ],
+     "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    },
+    {
+     "page": 8,
+     "bbox": [
+      72.1,
+      79.6,
+      539.9,
+      130.7
+     ],
+     "src": "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 300 dpi — column rectangle(s) from the text-layer line boxes of the first / last wanted line, cut at the longest all-white pixel-row run between the wanted line and its neighbour (no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "HIP 는 표면이 기체에 닫힌 (상대 밀도 92–95 % 이상) 물체에만 직접 듣는다 — 그보다 성기면 포장 (용기) 이 압력을 전한다 (CIP · WIP 와 같음). 습식 자루 = 탄성 틀 · 밀봉 필름째 액체에 담금.",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found Fig. 1–5, Fig. S1–S5 and Table 1 (11 crops, no missing labels).  All 11 were opened.  Table 1 held only its title and header row (the body is plain text without rules) → re-rendered by hand (recrop).  Fig. 1–5 were complete but page-rendered (resampled, uneven white margins) → re-cut from the embedded native 300-dpi rasters with a uniform 6 pt margin (recrop × 5).  Fig. S1–S4 were complete but ran over the full text width of the SI page (88–97 % white) → re-rendered to the figure (recrop × 4).  Fig. S5 kept as cut by the tool.  The tool captions of Fig. 1, 2, 3 and 5 had swallowed neighbouring body text and were cleaned by hand.  Added by hand: the graphical abstract (1), 21 panel crops (1a–1c, 2a–2b, 3a–3g + the 3c–e strip, 4a–4c, 5a–5e) and 20 evidence-paragraph crops (only paragraphs the digest cites as the source of a number, a definition or a statement; 18 from the article, 2 from the SI).  The article and its SI contain no numbered or inline equations → 0 equation crops (the techno-economic formulas exist only in the SI spreadsheet and are transcribed in the digest §3-7).  After the first visual check 6 crops were re-cut: Fig. 3a (the x-axis line was clipped at the panel split; box widened and the '(b)' label of the neighbour masked), Fig. 3b (stray end of the Fig. 3a axis line masked), the p.3936 paragraph (its first line clipped the descenders of the line above → started at the paragraph head), the p.3943 author block (extended to include 'Corresponding Authors') and the two SI paragraphs (400 → 300 dpi; the SI is set in 12 pt double-spaced type).  Every one of the 53 crops was opened and checked after cutting.",
+ "note_manual": "Printed inconsistencies visible in the crops (details in the digest §3-8 / §11): (1) the article text cites 'Figure S2' for WIP in standard CIP vessels and 'Figure S1' for the vessel size (3 m × 5 m, placed after the HIP description) while the SI captions read S1 = CIP/WIP equipment, S2 = HIP equipment; (2) text 'Standard HIP … up to 200 MPa (30 000 psi)' vs Table 1 '207/30'; (3) text 'one WIP cycle every 10−20 min' and 'one operation cycle per minute or faster' vs Fig. 5b cycles/hour 1.2 (WIP) and 2 (CIP); (4) the anti-perovskite is written 'Li3OHCl' (SI S1) and 'LiOHCl' (SI S2, Fig. S5 caption); (5) Fig. 3 caption (c) 'uniaxial loading conditions' vs panel title 'Green Pellet'; the 12 % porosity of that pellet is given in the text only (no tomogram shown) and its pressing pressure is not stated anywhere; (6) Fig. 3f/3g slice scale bars are printed '10 μm' (bar = 110 px of a 379–382 px wide slice → the slice would be ≈35 μm wide if the label is right) while the evaluated sub-volume is 300 × 300 × 300 μm3 — the paper does not say whether the slice is a zoomed detail, so this is flagged as 'does not seem to match', not as a certain error; (7) LLTO Young's modulus printed '∼223 MPa' vs '192 MPa' (ref 64); (8) text 'pellet densities ranging from 85 to 100%' vs one 84 % entry in the SI spreadsheet and in Fig. S3; (9) Fig. 3a marker colours are not fully explained by the four-entry caption legend (pink LLZO, yellow Na-based NASICONs, green sulfides, gray hybrid): two green shades (bright green; dark teal) and an orange occur — matched against the spreadsheet, dark teal = sulfide cells (edge of the ≈490 MPa WIP marker, ≈400, ≈80 MPa) and bright green = Li-NASICON (solid-electrolyte column ≈200 MPa; cell column ≈500 MPa = the LATP full cell at 504 MPa; Fig. S3 / Fig. 4a also use green for Li-NASICON), while the two solid-electrolyte markers at ≈506 MPa (LATP rows in the spreadsheet) are pink; there is no sulfide marker in the solid-electrolyte column, and a pink cell marker at ≈20 MPa has no matching row; (10) Fig. 5e / spreadsheet: the 'Cell Integration – CIP' column divides by 10^7 where all other cost columns divide by 10^6; (11) spreadsheet: electrode area computed from pack-level capacity Wh / 900 V.",
+ "key_note": "manual keys: ga = graphical abstract; f<N> = whole figure (embedded native raster); f<N><letter> = panel crop (panel_of); f3cde = strip of panels c–e; fS<N> = SI figure; t1 = Table 1; x<printed page><letter> = evidence paragraph of the article (kind 'text'; multi-part ones list 'parts' with PDF page numbers), xS<SI page><letter> = SI paragraph.  'page' fields are PDF page numbers (article: printed page = 3935 + PDF page; SI pages are numbered 1–13 = PDF pages).  No equation crops (the paper has no equations).",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 37,
+  "method": "Fig. S3: marker bounding-box centres in the embedded raster (693×816 px) mapped through the axis ticks (x: 0–500 MPa at columns 132.0…622.5; y: 80–100 % at rows 691.0…27.0; linear fits, residual ≤ 0.3 MPa / 0.01 %); Fig. 3a: marker centres in the embedded raster mapped through the log-axis major ticks (rows 491.5 / 333.5 / 174.5 / 16.5 = 10^0 … 10^3 MPa, 158.33 px per decade); both cross-matched to the rows of the SI spreadsheet (Sup3)"
+ }
+}

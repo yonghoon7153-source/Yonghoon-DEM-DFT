@@ -467,3 +467,6 @@ cottrino2013_insitu_xct_granulated_alumina_die_compaction	characterization by x-
 # ── 일본어 원문 (粉体工学会誌 61, 144) — 카드 제목이 한국어라 파일명 토큰과 안 겹쳐 손으로 (2026-11-12)
 yano2024_eepa_binary_mixture_plasticity_compression_dem	numerical_analysis_of_compression_properties_of_the_binary_mixture
 yano2024_eepa_binary_mixture_plasticity_compression_dem	numerical analysis of compression properties of the binary mixture
+# ── 가압 방식 — 등방 가압 (CIP · WIP · HIP) Focus Review · 자체 시연 (안티페로브스카이트 펠릿 단축 ↔ CIP ↔ WIP 기공률) · 기술경제 스프레드시트 (Dixit · Beamer 외 · ACS Energy Lett. 7 (2022) 3936) — litdb 2026-11-12 · 본문 + SI PDF (Sup1) 둘 다 이 낱말로 붙는다 · xlsx 둘은 커밋하지 않음
+dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review	the_role_of_isostatic_pressing_in_large-scale_production
+dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review	the role of isostatic pressing in large-scale production

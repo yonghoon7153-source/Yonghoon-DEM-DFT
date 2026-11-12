@@ -470,6 +470,7 @@
 - **등방 · 온간 · 열간 가압**: `larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity` (150 °C 열간 단축 가압 · 순수 LPSCl) · `cronk2026_lis_positive_electrode_geometry_fem` (WIP 500 MPa · 80 °C + COMSOL 선형 탄성 · 등방 고유변형 · E_SE 22 GPa) · `jun2026_ppma_econductive_binder_si_lowpressure_assb` (WIP 450 MPa · 80 °C · 5 min 파우치) · `interfacial_impedance_formulation_assb_cathode` (단축 ↔ 등방 원통 · 펠릿 EIS) · `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` (준등방 초고압) · `bouvard2000_hard_soft_powder_densification` · `minnmann2021_jes_charge_transport_bottlenecks` (WIP 한 자릿수 기공 언급).
 - **사이클 응력 · 기계-전기화학**: `bucci2017_chemomech_failure_assb_cycling_czm` · `so2021_dem_fabrication_degradation_ductile_particles` · `wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn` (복셀 FE 선형 탄성 균질화) · `kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review`.
 - **수송 · 이온 앵커**: `bazzoun2026_dem_fem_rnm_ionic` (DEM + FEM + RNM · CAM 70 wt% · 400 MPa) · `schmitt2026_chemomech_stability_dry_cathode_separator_sheets` (같은 날 · 압력 이력이 다른 셀 대조).
+- **참고 [12] 의 원문 카드 (2026-11-12 추가)**: `dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review` (등방 가압 Focus Review · 서지 = 위 참고문헌 표 12 번과 같음 · **같은 압력의 단축 ↔ 등방 대조 값은 없다** — 자체 시연 (안티페로브스카이트 펠릿) 기공 단축 ~12 % (압력 미기재) → CIP 414 MPa ~1.8 % → WIP 345 MPa · 135 °C 0.15 % · 원문은 단축 가압에 대해 '이방성' 낱말 없이 금형 벽 마찰의 밀도 불균일 · 국소 미세구조 차를 말한다 — 대조는 그 카드 §0-1).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
