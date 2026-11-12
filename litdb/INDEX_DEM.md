@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 289편 · 생성 2026-11-12
+> digest 290편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -58,7 +58,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (66편)
+## 접촉역학 · 소성 (DEM 이론) (67편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -77,6 +77,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic` | 무른(초탄성 실리콘) + 단단한(PVC) 2D 입자 혼합물의 일축 압밀 실험 — 대변형 DIC 로 입자 내부 변형장 · 배위수 · 접촉 길이 (contact length) 를 재고 미시역학 압밀 법칙을 일축으로 확장 · 검증 — Cárdenas-Barrantes, Barés, Renouf, Azéma (Phys. Rev. | experiment 2D (실리콘 초탄성 + PVC 강체 이분산 원기둥 혼합 · 일축 압축 · 평판 스캐너  | 2026-11-09 | 🖼 14 |
 | `cardenasbarrantes2022_soft_spheres_3d_compaction_nscd` | 무른 (탄성) 구 집합의 3D 등방 압밀 — non-smooth contact dynamics (NSCD) + 입자별 FE (구 50 · 100 개 × 사면체 808 개, LMGC90) 로 jammed φ0 ≈ 0.5 에서 φ ≈ 0.96 까지 · Hertz 점접촉 DEM 이 벗어나는 지점 · 3D 미시역학 압밀 법칙 P | NSCD+FEM 3D 다입자 (LMGC90 — 탄성 구 50 · 100 개 × 4 절점 사면체 808 개 · | 2026-11-10 | 🖼 19 |
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
+| `dang2019_nmc111_secondary_particle_flat_punch_fracture_strength` | NMC111 2차입자 평판 압입 (flat punch indentation) 파괴강도 S_t ≈ 2.8F_c/(πd²) (Hiramatsu–Oka) — pristine Weibull 평균 188 MPa (S₀ 205 · m 4.8 · 입자 33) → 전해질 침지 165 · 첫 탈리튬화 22 · 첫 리튬화 70 MPa, 파 | exp (single-particle flat punch indentation — Nanoindenter G | 2026-11-12 | 🖼 27 |
 | `deng2021_mechanical_surface_energy_tester_bond_number` | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester — 분말 단층 (≤ 20 mg) 을 ⌀40 mm 원판에 뿌려 떨어뜨리고, 멈출 때의 감속도와 그때 떨어져 나간 질량 분율을 잰다 · "Bond 수"  | experiment (drop-impact detachment "mechanical surface energ | 2026-10-13 | 🖼 22 |
 | `devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode` | NMC532 · PVDF · CB (90 : 5 : 5 wt%) 양극 (액체계 LIB 용 · 캘린더링 안 함 · 기공 56 %) 의 상별 탄성률 · 경도 — 단일 입자 targeted 압입 (깊이 창 75–150 nm) E 138.73 ± 18.78 · H 8.89 ± 1.86 GPa · 별도 CB/PVDF (50/50  | exp (instrumented nanoindentation: Keysight G200 Berkovich,  | 2026-11-12 | 🖼 40 |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |

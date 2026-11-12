@@ -482,3 +482,7 @@ kawaguchi2018_dry_coating_model_se_particle_powtec	dry coating of electrode part
 # ── 고체전지 역학 총설 (Kalnaus · Dudney · Westover · Herbert · Hackney · Science 381, eabg5998 (2023) · 사이클 중 응력 · 해소 기전 · 2 차 인용) — litdb 2026-11-12 (후보 N-5 · alharbi2026 [86] · lee2025_heckel ref 17 · yuan2026 ref 11) · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) ──
 kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review	the_critical_role_of_mechanics
 kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review	the critical role of mechanics
+# ── NMC111 2차입자 평판 압입 파괴 강도 (Hiramatsu–Oka S_t ≈ 2.8F_c/πd² · Weibull S_m 188 MPa · SI 표 S2 원 자료 129 입자) (Dang · Wang · Cheng · J. Electrochem. Soc. 166 (13) A2749–A2751 (2019)) — litdb 2026-11-12 (후보 N-10) · 카드 제목이 한국어라 손으로 · 본문 + SI ('_Sup_') 둘 다 같은 조각 · 밑줄 · 공백 두 변형
+#   ⚠ 크롭 27 장 = 손 크롭 22 (manual_crop 5: Fig. 1 · 2 · S2 · S4 · Table S2 · 식 3 · 근거 글 14) + 재크롭 5 (recrop: Fig. 3 · S1 · S3 · S5 · Table S1) — 이 slug 로 --clean 을 돌리면 손 크롭은 지워지고 재크롭은 자동 bbox 로 돌아간다 (figures.json 표지)
+dang2019_nmc111_secondary_particle_flat_punch_fracture_strength	fracture_behavior_of_single_lini0.33mn0.33co0.33o2_particles_studied_by_flat_punch
+dang2019_nmc111_secondary_particle_flat_punch_fracture_strength	fracture behavior of single lini0.33mn0.33co0.33o2 particles studied by flat punch

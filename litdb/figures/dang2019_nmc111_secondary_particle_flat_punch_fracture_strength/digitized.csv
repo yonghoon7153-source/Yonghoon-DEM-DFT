@@ -1,0 +1,164 @@
+# dang2019_nmc111_secondary_particle_flat_punch_fracture_strength — figure readings (판독) · 2026-11-12
+# Fig. 3b (article p. A2751, embedded raster xref 141, 777x1751 px ~300 dpi): marker centres located on the native raster.
+#   Axis calibration = least squares through the inward tick marks: x (d) ticks 5/10/15/20/25 um at px 160.0/306.5/452.5/597.5/743.5
+#   (0.03429 um/px, max tick residual 0.017 um); y (S_t, panel b) ticks 0..300 MPa step 50 at px 1017.5..564.5 (0.6619 MPa/px, residual 0.24 MPa);
+#   panel a (F_c) ticks 0..90 mN step 10 at px 510.0..68.0 (0.2037 mN/px, residual 0.14 mN).
+#   Markers by colour mask (red = pristine circles, black = electrolyte-soaked squares, blue = 1st delithiation up-triangles,
+#   magenta = 1st lithiation down-triangles) -> connected components (8-neighbour, >= 20 px) -> merged blobs split by area / single-marker area
+#   (k-means); single marker centre = bounding-box centre. The legend block and the inward tick zones were masked out; black text of the
+#   panel-(a) x tick labels inside the top of panel (b) masked for the black series (rows < 600 px).
+# Matching: within each state the digitized S_t values (sorted) were aligned to the SI Table S2 values (sorted; order-preserving minimum |diff|
+#   alignment allowing unmatched table rows). Result: 126 of 129 table values located (pristine 32/33, soaked 34/34, 1st delithiation 28/29,
+#   1st lithiation 32/33); |S_dig - S_table| median 0.13-0.96 MPa, max 1.72 MPa (triangles carry a ~1 px symbol-centre offset).
+#   Three table values sit under other markers and were not located: pristine 217.0, 1st delithiation 28.2, 1st lithiation 85.5 MPa.
+#   => y_value below = the STATED Table S2 value; x_value (d) = the DIGITIZED diameter of the marker matched to it (rank alignment: when two
+#   table values differ by less than ~1 MPa their d may be swapped).
+# Cross-check with panel (a): F_c = S_t * pi * d^2 / 2.8 (Eq. 1 inverted, derived column) agrees with the digitized panel-(a) markers at the same d:
+#   median |diff| 0.08 (pristine) / 0.11 (soaked) / 0.20 (delith) / 0.20 (lith) mN -> Eq. 1 with 2.8/pi is the convention of the plotted data.
+# Fig. 2a (article p. A2750, raster xref 52, 1200x1048 px): loading-branch centre (line ~250 nm thick) read at fixed loads; ticks x 0..12000 nm at
+#   px 119.5..601.5 (24.90 nm/px), y 0..80 mN at px 416.5..83.5 (0.2401 mN/px).
+# Columns: derived = card arithmetic (F_c from Eq. 1; F/d^2 = S_t * pi/2.8 = coefficient-1 convention used by Wheatcroft 2023). provenance tags as in the card.
+figure,series,x_name,x_value,x_unit,y_name,y_value,y_unit,derived,flag,provenance
+3b,pristine,d,15.189,um,S_t,128.3,MPa,F_c=33.21 mN; F/d^2=144.0 MPa,S_digitized=128.58,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,12.514,um,S_t,137.9,MPa,F_c=24.23 mN; F/d^2=154.7 MPa,S_digitized=137.85,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,17.040,um,S_t,138.1,MPa,F_c=44.99 mN; F/d^2=154.9 MPa,S_digitized=137.85,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,9.359,um,S_t,143.6,MPa,F_c=14.11 mN; F/d^2=161.1 MPa,S_digitized=143.14,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,11.073,um,S_t,145.6,MPa,F_c=20.03 mN; F/d^2=163.4 MPa,S_digitized=145.79,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,15.326,um,S_t,150.4,MPa,F_c=39.64 mN; F/d^2=168.7 MPa,S_digitized=150.43,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,17.418,um,S_t,151.7,MPa,F_c=51.64 mN; F/d^2=170.2 MPa,S_digitized=151.42,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,7.438,um,S_t,155.9,MPa,F_c=9.68 mN; F/d^2=174.9 MPa,S_digitized=155.72,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,18.241,um,S_t,156.7,MPa,F_c=58.50 mN; F/d^2=175.8 MPa,S_digitized=157.04,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,14.177,um,S_t,160.1,MPa,F_c=36.10 mN; F/d^2=179.6 MPa,S_digitized=160.35,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,15.874,um,S_t,160.2,MPa,F_c=45.29 mN; F/d^2=179.7 MPa,S_digitized=160.35,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,6.598,um,S_t,162.1,MPa,F_c=7.92 mN; F/d^2=181.9 MPa,S_digitized=162.01,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,13.200,um,S_t,168.8,MPa,F_c=33.00 mN; F/d^2=189.4 MPa,S_digitized=168.96,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,14.983,um,S_t,168.8,MPa,F_c=42.52 mN; F/d^2=189.4 MPa,S_digitized=168.96,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,7.370,um,S_t,174.3,MPa,F_c=10.62 mN; F/d^2=195.6 MPa,S_digitized=174.26,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,10.490,um,S_t,181.5,MPa,F_c=22.41 mN; F/d^2=203.6 MPa,S_digitized=181.21,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,18.755,um,S_t,182.6,MPa,F_c=72.07 mN; F/d^2=204.9 MPa,S_digitized=182.86,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,12.514,um,S_t,188.5,MPa,F_c=33.12 mN; F/d^2=211.5 MPa,S_digitized=188.82,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,8.050,um,S_t,190.7,MPa,F_c=13.87 mN; F/d^2=214.0 MPa,S_digitized=190.36,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,10.165,um,S_t,191.4,MPa,F_c=22.19 mN; F/d^2=214.8 MPa,S_digitized=191.47,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,13.543,um,S_t,191.6,MPa,F_c=39.43 mN; F/d^2=215.0 MPa,S_digitized=191.47,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,15.566,um,S_t,192.9,MPa,F_c=52.44 mN; F/d^2=216.4 MPa,S_digitized=193.12,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,7.842,um,S_t,193.6,MPa,F_c=13.36 mN; F/d^2=217.2 MPa,S_digitized=194.17,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,8.467,um,S_t,213.2,MPa,F_c=17.15 mN; F/d^2=239.2 MPa,S_digitized=213.31,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,7.918,um,S_t,214.9,MPa,F_c=15.12 mN; F/d^2=241.1 MPa,S_digitized=215.63,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,14.949,um,S_t,226.7,MPa,F_c=56.84 mN; F/d^2=254.4 MPa,S_digitized=226.55,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,11.245,um,S_t,229.8,MPa,F_c=32.60 mN; F/d^2=257.8 MPa,S_digitized=229.86,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,7.713,um,S_t,231.4,MPa,F_c=15.45 mN; F/d^2=259.6 MPa,S_digitized=231.51,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,16.183,um,S_t,250.4,MPa,F_c=73.58 mN; F/d^2=280.9 MPa,S_digitized=250.38,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,7.678,um,S_t,251.1,MPa,F_c=16.61 mN; F/d^2=281.7 MPa,S_digitized=251.04,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,11.485,um,S_t,275.2,MPa,F_c=40.73 mN; F/d^2=308.8 MPa,S_digitized=275.53,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,12.342,um,S_t,289.2,MPa,F_c=49.43 mN; F/d^2=324.5 MPa,S_digitized=289.43,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,15.034,um,S_t,107.6,MPa,F_c=27.29 mN; F/d^2=120.7 MPa,S_digitized=107.73,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,16.406,um,S_t,113.1,MPa,F_c=34.16 mN; F/d^2=126.9 MPa,S_digitized=113.03,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,14.726,um,S_t,117.9,MPa,F_c=28.69 mN; F/d^2=132.3 MPa,S_digitized=117.66,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,13.630,um,S_t,121.2,MPa,F_c=25.26 mN; F/d^2=136.0 MPa,S_digitized=121.60,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,13.663,um,S_t,128.9,MPa,F_c=27.00 mN; F/d^2=144.6 MPa,S_digitized=128.91,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,9.787,um,S_t,131.4,MPa,F_c=14.12 mN; F/d^2=147.4 MPa,S_digitized=131.56,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,20.487,um,S_t,131.5,MPa,F_c=61.93 mN; F/d^2=147.5 MPa,S_digitized=131.56,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,19.355,um,S_t,131.9,MPa,F_c=55.44 mN; F/d^2=148.0 MPa,S_digitized=132.22,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,8.759,um,S_t,134.0,MPa,F_c=11.53 mN; F/d^2=150.3 MPa,S_digitized=134.21,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,18.361,um,S_t,134.1,MPa,F_c=50.72 mN; F/d^2=150.5 MPa,S_digitized=134.21,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,14.160,um,S_t,134.5,MPa,F_c=30.26 mN; F/d^2=150.9 MPa,S_digitized=134.54,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,21.756,um,S_t,148.4,MPa,F_c=78.81 mN; F/d^2=166.5 MPa,S_digitized=148.44,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,18.292,um,S_t,150.4,MPa,F_c=56.46 mN; F/d^2=168.7 MPa,S_digitized=150.43,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,17.246,um,S_t,152.2,MPa,F_c=50.79 mN; F/d^2=170.8 MPa,S_digitized=152.41,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,6.169,um,S_t,157.9,MPa,F_c=6.74 mN; F/d^2=177.2 MPa,S_digitized=158.04,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,18.001,um,S_t,158.1,MPa,F_c=57.48 mN; F/d^2=177.4 MPa,S_digitized=158.04,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,13.182,um,S_t,158.5,MPa,F_c=30.90 mN; F/d^2=177.8 MPa,S_digitized=158.70,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,7.113,um,S_t,159.4,MPa,F_c=9.05 mN; F/d^2=178.8 MPa,S_digitized=159.36,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,15.412,um,S_t,159.8,MPa,F_c=42.59 mN; F/d^2=179.3 MPa,S_digitized=160.02,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,12.634,um,S_t,161.5,MPa,F_c=28.92 mN; F/d^2=181.2 MPa,S_digitized=161.35,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,20.401,um,S_t,167.2,MPa,F_c=78.08 mN; F/d^2=187.6 MPa,S_digitized=167.30,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,9.376,um,S_t,171.0,MPa,F_c=16.87 mN; F/d^2=191.9 MPa,S_digitized=171.28,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,12.119,um,S_t,172.0,MPa,F_c=28.34 mN; F/d^2=193.0 MPa,S_digitized=172.60,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,10.713,um,S_t,178.9,MPa,F_c=23.04 mN; F/d^2=200.7 MPa,S_digitized=179.22,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,14.023,um,S_t,187.9,MPa,F_c=41.46 mN; F/d^2=210.8 MPa,S_digitized=187.82,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,8.656,um,S_t,192.2,MPa,F_c=16.16 mN; F/d^2=215.6 MPa,S_digitized=191.80,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,18.155,um,S_t,192.4,MPa,F_c=71.15 mN; F/d^2=215.9 MPa,S_digitized=192.46,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,8.810,um,S_t,205.2,MPa,F_c=17.87 mN; F/d^2=230.2 MPa,S_digitized=205.04,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,10.565,um,S_t,206.3,MPa,F_c=25.84 mN; F/d^2=231.5 MPa,S_digitized=206.25,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,10.449,um,S_t,212.7,MPa,F_c=26.06 mN; F/d^2=238.6 MPa,S_digitized=212.92,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,7.010,um,S_t,218.9,MPa,F_c=12.07 mN; F/d^2=245.6 MPa,S_digitized=218.94,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,12.034,um,S_t,232.4,MPa,F_c=37.76 mN; F/d^2=260.8 MPa,S_digitized=232.51,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,8.861,um,S_t,236.0,MPa,F_c=20.79 mN; F/d^2=264.8 MPa,S_digitized=236.15,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,electrolyte-soaked,d,9.444,um,S_t,241.8,MPa,F_c=24.20 mN; F/d^2=271.3 MPa,S_digitized=241.77,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,8.553,um,S_t,9.4,MPa,F_c=0.77 mN; F/d^2=10.5 MPa,S_digitized=10.76,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,19.058,um,S_t,13.8,MPa,F_c=5.62 mN; F/d^2=15.5 MPa,S_digitized=14.47,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,9.890,um,S_t,14.5,MPa,F_c=1.59 mN; F/d^2=16.3 MPa,S_digitized=14.73,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,18.801,um,S_t,15.2,MPa,F_c=6.03 mN; F/d^2=17.1 MPa,S_digitized=16.01,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,20.521,um,S_t,16.1,MPa,F_c=7.61 mN; F/d^2=18.1 MPa,S_digitized=16.05,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,14.153,um,S_t,16.3,MPa,F_c=3.66 mN; F/d^2=18.3 MPa,S_digitized=16.39,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,14.691,um,S_t,16.6,MPa,F_c=4.02 mN; F/d^2=18.6 MPa,S_digitized=17.38,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,13.862,um,S_t,17.7,MPa,F_c=3.82 mN; F/d^2=19.9 MPa,S_digitized=17.68,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,9.231,um,S_t,18.0,MPa,F_c=1.72 mN; F/d^2=20.2 MPa,S_digitized=17.95,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,16.939,um,S_t,18.6,MPa,F_c=5.99 mN; F/d^2=20.9 MPa,S_digitized=18.10,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,8.876,um,S_t,19.4,MPa,F_c=1.71 mN; F/d^2=21.8 MPa,S_digitized=18.42,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,18.275,um,S_t,20.0,MPa,F_c=7.49 mN; F/d^2=22.4 MPa,S_digitized=21.02,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,16.778,um,S_t,21.0,MPa,F_c=6.63 mN; F/d^2=23.6 MPa,S_digitized=21.49,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,12.891,um,S_t,21.0,MPa,F_c=3.92 mN; F/d^2=23.6 MPa,S_digitized=22.01,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,12.205,um,S_t,21.5,MPa,F_c=3.59 mN; F/d^2=24.1 MPa,S_digitized=22.34,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,15.189,um,S_t,23.2,MPa,F_c=6.01 mN; F/d^2=26.0 MPa,S_digitized=24.00,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,9.782,um,S_t,23.3,MPa,F_c=2.50 mN; F/d^2=26.1 MPa,S_digitized=24.11,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,7.950,um,S_t,23.8,MPa,F_c=1.69 mN; F/d^2=26.7 MPa,S_digitized=24.26,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,6.169,um,S_t,24.9,MPa,F_c=1.06 mN; F/d^2=27.9 MPa,S_digitized=24.33,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,6.928,um,S_t,25.0,MPa,F_c=1.35 mN; F/d^2=28.0 MPa,S_digitized=24.92,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,7.146,um,S_t,26.8,MPa,F_c=1.54 mN; F/d^2=30.1 MPa,S_digitized=25.08,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,7.497,um,S_t,28.3,MPa,F_c=1.78 mN; F/d^2=31.8 MPa,S_digitized=28.54,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,10.662,um,S_t,28.9,MPa,F_c=3.69 mN; F/d^2=32.4 MPa,S_digitized=29.29,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,8.003,um,S_t,29.4,MPa,F_c=2.11 mN; F/d^2=33.0 MPa,S_digitized=29.92,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,12.188,um,S_t,30.7,MPa,F_c=5.12 mN; F/d^2=34.4 MPa,S_digitized=31.61,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,9.761,um,S_t,31.9,MPa,F_c=3.41 mN; F/d^2=35.8 MPa,S_digitized=31.69,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,14.777,um,S_t,32.0,MPa,F_c=7.84 mN; F/d^2=35.9 MPa,S_digitized=32.93,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st delithiation,d,11.108,um,S_t,33.8,MPa,F_c=4.68 mN; F/d^2=37.9 MPa,S_digitized=34.59,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,23.110,um,S_t,30.0,MPa,F_c=17.98 mN; F/d^2=33.7 MPa,S_digitized=28.96,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,19.355,um,S_t,35.7,MPa,F_c=15.01 mN; F/d^2=40.1 MPa,S_digitized=34.26,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,12.565,um,S_t,45.6,MPa,F_c=8.08 mN; F/d^2=51.2 MPa,S_digitized=44.85,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,22.750,um,S_t,49.2,MPa,F_c=28.57 mN; F/d^2=55.2 MPa,S_digitized=48.16,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,19.801,um,S_t,49.8,MPa,F_c=21.91 mN; F/d^2=55.9 MPa,S_digitized=48.49,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,14.108,um,S_t,49.9,MPa,F_c=11.14 mN; F/d^2=56.0 MPa,S_digitized=48.82,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,11.433,um,S_t,52.5,MPa,F_c=7.70 mN; F/d^2=58.9 MPa,S_digitized=51.47,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,13.131,um,S_t,53.5,MPa,F_c=10.35 mN; F/d^2=60.0 MPa,S_digitized=52.13,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,15.635,um,S_t,54.1,MPa,F_c=14.84 mN; F/d^2=60.7 MPa,S_digitized=53.96,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,15.996,um,S_t,58.5,MPa,F_c=16.79 mN; F/d^2=65.6 MPa,S_digitized=58.48,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,17.143,um,S_t,61.9,MPa,F_c=20.41 mN; F/d^2=69.5 MPa,S_digitized=60.73,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,14.838,um,S_t,63.4,MPa,F_c=15.66 mN; F/d^2=71.1 MPa,S_digitized=63.35,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,12.822,um,S_t,65.0,MPa,F_c=11.99 mN; F/d^2=72.9 MPa,S_digitized=64.04,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,15.127,um,S_t,65.2,MPa,F_c=16.74 mN; F/d^2=73.2 MPa,S_digitized=64.59,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,5.706,um,S_t,67.2,MPa,F_c=2.45 mN; F/d^2=75.4 MPa,S_digitized=66.03,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,10.147,um,S_t,69.9,MPa,F_c=8.08 mN; F/d^2=78.4 MPa,S_digitized=68.68,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,10.713,um,S_t,70.3,MPa,F_c=9.05 mN; F/d^2=78.9 MPa,S_digitized=69.34,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,14.557,um,S_t,73.8,MPa,F_c=17.55 mN; F/d^2=82.8 MPa,S_digitized=73.20,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,12.822,um,S_t,76.0,MPa,F_c=14.02 mN; F/d^2=85.3 MPa,S_digitized=74.63,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,9.787,um,S_t,77.1,MPa,F_c=8.29 mN; F/d^2=86.5 MPa,S_digitized=75.96,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,7.473,um,S_t,77.7,MPa,F_c=4.87 mN; F/d^2=87.2 MPa,S_digitized=76.95,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,14.474,um,S_t,78.2,MPa,F_c=18.38 mN; F/d^2=87.7 MPa,S_digitized=78.42,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,8.502,um,S_t,79.1,MPa,F_c=6.42 mN; F/d^2=88.7 MPa,S_digitized=78.80,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,10.803,um,S_t,80.9,MPa,F_c=10.59 mN; F/d^2=90.8 MPa,S_digitized=80.78,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,8.237,um,S_t,81.7,MPa,F_c=6.22 mN; F/d^2=91.7 MPa,S_digitized=83.17,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,6.890,um,S_t,83.3,MPa,F_c=4.44 mN; F/d^2=93.5 MPa,S_digitized=83.57,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,10.521,um,S_t,84.8,MPa,F_c=10.53 mN; F/d^2=95.1 MPa,S_digitized=84.33,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,10.153,um,S_t,89.3,MPa,F_c=10.33 mN; F/d^2=100.2 MPa,S_digitized=88.99,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,8.460,um,S_t,91.3,MPa,F_c=7.33 mN; F/d^2=102.4 MPa,S_digitized=91.16,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,6.169,um,S_t,100.1,MPa,F_c=4.27 mN; F/d^2=112.3 MPa,S_digitized=99.13,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,7.850,um,S_t,100.6,MPa,F_c=6.96 mN; F/d^2=112.9 MPa,S_digitized=99.46,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,1st lithiation,d,7.970,um,S_t,118.0,MPa,F_c=8.41 mN; F/d^2=132.4 MPa,S_digitized=117.00,d digitized (Fig. 3b) | S stated (SI Table S2) | rank-aligned
+3b,pristine,d,,um,S_t,217.0,MPa,F/d^2=243.5 MPa,hidden marker (not located on Fig. 3b),S stated (SI Table S2)
+3b,1st delithiation,d,,um,S_t,28.2,MPa,F/d^2=31.6 MPa,hidden marker (not located on Fig. 3b),S stated (SI Table S2)
+3b,1st lithiation,d,,um,S_t,85.5,MPa,F/d^2=95.9 MPa,hidden marker (not located on Fig. 3b),S stated (SI Table S2)
+2a,"pristine d=16.2 um, loading branch (line centre)",displacement,162,nm,load,5,mN,,line width ~250 nm (+-125 nm),digitized
+2a,"pristine d=16.2 um, loading branch (line centre)",displacement,224,nm,load,10,mN,,line width ~250 nm (+-125 nm),digitized
+2a,"pristine d=16.2 um, loading branch (line centre)",displacement,324,nm,load,20,mN,,line width ~250 nm (+-125 nm),digitized
+2a,"pristine d=16.2 um, loading branch (line centre)",displacement,473,nm,load,40,mN,,line width ~250 nm (+-125 nm),digitized
+2a,"pristine d=16.2 um, loading branch (line centre)",displacement,622,nm,load,60,mN,,line width ~250 nm (+-125 nm),digitized
+2a,"pristine d=16.2 um, loading branch (line centre)",displacement,710,nm,load,70,mN,,line width ~250 nm (+-125 nm),digitized
+2a,"pristine d=16.2 um, loading branch (line centre)",displacement,747,nm,load,73,mN,,line width ~250 nm (+-125 nm),digitized
+2a,"pristine d=16.2 um, constant-load run-in after breakage",displacement,2004,nm,load,73.7,mN,,thin line (2 px),digitized
+2a,"pristine d=16.2 um, constant-load run-in after breakage",displacement,4494,nm,load,73.5,mN,,thin line (2 px),digitized
+2a,"pristine d=16.2 um, constant-load run-in after breakage",displacement,6983,nm,load,73.2,mN,,thin line (2 px),digitized
+2a,"pristine d=16.2 um, constant-load run-in after breakage",displacement,9473,nm,load,73.2,mN,,thin line (2 px),digitized
+2a,"pristine d=16.2 um, constant-load run-in after breakage",displacement,10967,nm,load,73.0,mN,,thin line (2 px),digitized
+2a,"pristine d=16.2 um, top of second loading branch",displacement,11515-11714,nm,load,79.6,mN,,thick line top,digitized
+2a,"pristine d=16.2 um, end of unloading",displacement,11290-11539,nm,load,0,mN,,thick line bottom,digitized

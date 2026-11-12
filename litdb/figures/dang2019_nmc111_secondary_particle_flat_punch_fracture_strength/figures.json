@@ -1,0 +1,821 @@
+{
+ "slug": "dang2019_nmc111_secondary_particle_flat_punch_fracture_strength",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+  "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) The flat punch indenter used in this study. (b) A typical indent in bulk lithium shows the shape of the flat punch. (c) The capacity-voltage profiles for preparing the NMC composite electrodes in their 1st delithiation and 1st lithiation states, respectively. (d) A pristine NMC secondary particle dispersed on the polycrystalline diamond substrate.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.1,
+    65.0,
+    326.0,
+    294.1
+   ],
+   "w": 1226,
+   "h": 956,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.465,
+   "manual_crop": "2026-11-12 수동 크롭 — the tool skipped Fig. 1 (side caption in the right column, 'p3 그래픽 없음(img0/draw0)'); rendered from PDF p.3 (printed A2750) over the embedded raster box (xref 53, 1200×930 px ≈ 300 dpi, 35.1–323.0 × 68.0–291.1 pt) + 3 pt margin · 300 dpi; figure only (caption text kept here, tool convention) — panels (a) indenter photo, bar 100 µm, (b) indent in bulk Li, bar 20 µm, (c) voltage–capacity curves 1st delithiation / 1st lithiation, (d) pristine particle, bar 5 µm",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) A typical L-D curve of a flat punch indentation measurement of a pristine NMC secondary particle with a diameter of 16.2 μm and its morphology (b) before and (c) after indentation. (c) and (d) are detailed microstructure of the fractured particle.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.1,
+    497.9,
+    326.0,
+    755.2
+   ],
+   "w": 1226,
+   "h": 1073,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.41,
+   "manual_crop": "2026-11-12 수동 크롭 — the tool skipped Fig. 2 (side caption in the right column, 'p3 그래픽 없음(img0/draw0)'); rendered from PDF p.3 (printed A2750) over the embedded raster box (xref 52, 1200×1048 px ≈ 300 dpi, 35.1–323.0 × 500.9–752.2 pt) + 3 pt margin · 300 dpi; figure only — (a) load–displacement curve, (b) optical images before / after indentation, bars 20 µm, (c) fractured particle SEM, bar 20 µm (yellow box = region of d), (d) close-up, bar 1 µm",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The distribution of (a) Fc and (b) St of NMC secondary particles of different size. (c) Weibull ﬁtting of the particle strength: Sm is the mean strength, S0 is the scale parameter and the characteristic strength, and m is the shape parameter (calculation details are shown in the Supplemental Material).",
+   "rotated_deg": 0,
+   "bbox": [
+    63.2,
+    64.5,
+    255.8,
+    490.9
+   ],
+   "w": 803,
+   "h": 1778,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.858,
+   "auto_bbox": [
+    29.9,
+    61.5,
+    289.0,
+    493.9
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was complete (panels a–c, all axes) but spanned the full column (≈145 px of white left/right vs ≈20 px top/bottom); re-rendered from PDF p.4 (printed A2751) over the embedded raster box (xref 141, 777×1751 px ≈ 300 dpi, 66.2–252.8 × 67.5–487.9 pt) + 3 pt margin · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. A nanoindentation system inside an argon-filled glove box. Insets are from top to bottom the flat-punch indenter and the build-in digital camera, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.4,
+    206.6,
+    338.2,
+    366.5
+   ],
+   "w": 1059,
+   "h": 668,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.141,
+   "auto_bbox": [
+    81.4,
+    202.5,
+    341.2,
+    370.5
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop carried the bottom half of the body line above ('Flat punch indentation measurements were conducted …'); re-rendered from SI p.1 over the embedded raster box (xref 28, 688×433 px, 87.4–335.2 × 208.5–364.5 pt) + 3 pt (top 1.4 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 1,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The microstructure of several NMC secondary particles after: (a) soaking in electrolyte, (b) 1st delithiation, and (c) 1st lithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    417.4,
+    404.7,
+    528.0
+   ],
+   "w": 1550,
+   "h": 461,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.115,
+   "manual_crop": "2026-11-12 수동 크롭 — the tool skipped Fig. S2 (side caption, 'p1 영역 없음'); rendered from SI p.1 over the embedded raster box (xref 30, 1015×294 px, 36.0–401.7 × 419.3–525.2 pt) + 3 pt (top 1.9 pt: the body line above ends at 416.0 pt) · 300 dpi; three SEM panels, bars 5 µm",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 1,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Typical L-D curves of single NMC secondary particles with diameters of about 12.5 μm at the pristine, electrolyte-soaked, the 1st delithiation, and the 1st lithiation states.",
+   "rotated_deg": 0,
+   "bbox": [
+    99.4,
+    562.2,
+    320.6,
+    743.8
+   ],
+   "w": 922,
+   "h": 758,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.847,
+   "auto_bbox": [
+    96.4,
+    558.1,
+    323.6,
+    748.8
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop carried the bottom of the section-3 heading above the plot ('… about 12.5 µm at different states …') and the SI page number '1' at the lower right; re-rendered from SI p.1 over the embedded raster box (xref 32, 597×496 px, 102.4–317.6 × 564.1–742.8 pt) + 3 pt left/right, 1.4 / 1.0 pt top/bottom (heading ends 560.8 pt · page number starts 744.6 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 2,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Typical fractured individual NMC secondary particles: (a) electrolyte-soaked, (b) 1st delithiation, and (c) 1st lithiation.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    430.4,
+    402.9,
+    541.7
+   ],
+   "w": 1542,
+   "h": 465,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.128,
+   "manual_crop": "2026-11-12 수동 크롭 — the tool skipped Fig. S4 (side caption, 'p2 영역 없음'); rendered from SI p.2 over the embedded raster box (xref 50, 1010×296 px, 36.0–399.9 × 432.3–538.9 pt) + 3 pt (top 1.4 pt: heading '5. Microstructure of fractured …' ends at 429.0 pt) · 300 dpi; three SEM panels of fracture surfaces, bars 2 / 5 / 5 µm",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 2,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. The microstructure of the NMC composite electrode at the same locations (a) before assembling the Swagelok cell (i.e., the as-prepared electrode), (b) after being disassembled from the Swagelok cell (i.e., before assembling the coin cell), and (c) after being disassembled from the coin cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    559.6,
+    402.0,
+    669.5
+   ],
+   "w": 1538,
+   "h": 459,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.132,
+   "auto_bbox": [
+    30.0,
+    560.4,
+    407.8,
+    655.3
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was CLIPPED at the bottom (it stopped at an empty text line at 657.3 pt, cutting the '50 µm' scale bars of all three panels); re-rendered from SI p.2 over the embedded raster box (xref 52, 1115×323 px, 36.0–399.0 × 561.7–667.0 pt) + 3 pt (top 1.2 pt: heading '6. …' ends 558.4 pt · caption starts 671.0 pt) · 300 dpi; the body text in the right column (x ≥ 420 pt) is excluded",
+   "caption_note": "tool caption carried the SI page number '2' at its end — removed",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The calculated mean strength, Sm, and the fitted parameters, S0 and m, of the Weibull distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    298.2,
+    527.0,
+    400.6
+   ],
+   "w": 2067,
+   "h": 428,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.931,
+   "auto_bbox": [
+    31.0,
+    32.6,
+    581.4,
+    735.7
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was the WHOLE SI PAGE 2 (2294×2930 px: Weibull text, equations, the table, Fig. S4, Fig. S5 and the right-column text); re-rendered to the title line (36.0–522.1 × 300.4–315.1 pt) + the table with its three rules (139.5–472.0 × 316.7–397.8 pt), margins ≈3–5 pt · 300 dpi; values checked against the SI text layer",
+   "caption_note": "tool caption carried the whole table body and the next heading — reduced to the title line; values: pristine 188/205/4.8 · electrolyte-soaked 165/180/4.8 · 1st delithiation 22/25/4.1 · 1st lithiation 70/77/4.1 (S_m MPa / S_0 MPa / m)",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "Table S2. The raw data of S and calculated Pf for the Weibull Fit.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    135.5,
+    559.0,
+    640.5
+   ],
+   "w": 2201,
+   "h": 2105,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.929,
+   "manual_crop": "2026-11-12 수동 크롭 — the tool did not detect Table S2 (its title line is merged into the preceding body-text block of SI p.3, so no caption candidate); rendered from the vector page SI p.3 over the title line (36.0–333.6 × 138.8–152.5 pt) + the table with its four rules (57.9–553.9 × 155.8–636.9 pt), margins ≈3–5 pt · 300 dpi; all 34 rows; values transcribed from the SI text layer (pristine n 33 · electrolyte-soaked 34 · 1st delithiation 29 · 1st lithiation 33)",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_hiramatsu_oka_particle_strength.png",
+   "caption": "Eq. [1], printed p. A2750 left column: S_t ≈ 2.8 F_c / (π d²) — strength of an NMC secondary particle from the critical (breakage) load F_c and the particle diameter d, after Hiramatsu & Oka (ref. 17, Int. J. Rock Mech. Min. Sci. 1966) for irregular brittle pieces compressed between two platens; coefficient 2.8/π ≈ 0.891 (card arithmetic). The only numbered equation of the article.",
+   "rotated_deg": 0,
+   "bbox": [
+    126.5,
+    318.6,
+    285.7,
+    336.6
+   ],
+   "w": 886,
+   "h": 100,
+   "dpi": 400,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.962,
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (130.0–186.8 × 321.6–333.0 pt) and its number '[1]' (271.8–282.2 × 323.1–332.0 pt); margins limited by the line above (ends 315.9 pt) and below (starts 339.8 pt); left column only (the right column starts at 302.1 pt) · 400 dpi",
+   "viewed": true
+  },
+  {
+   "key": "eS1",
+   "kind": "equation",
+   "label": "eqS1",
+   "page": 2,
+   "file": "eq_S01_weibull_failure_probability.png",
+   "caption": "Eq. (S1), SI p.2 §4: P_f = 1 − exp[−(S/S_0)^m] — two-parameter Weibull cumulative failure probability; S_0 = scale parameter = characteristic strength at P_f = 63.2 %, m = shape parameter (refs. 1–3 of the SI: Yoshida 2005, Yan 2019, ASTM C1239-07).",
+   "rotated_deg": 0,
+   "bbox": [
+    245.5,
+    88.6,
+    582.5,
+    115.8
+   ],
+   "w": 1874,
+   "h": 152,
+   "dpi": 400,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.961,
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer boxes of the display equation (249.5–371.5 × 91.4–114.1 pt, with the vector fraction bar) and its number '(S1)' at the right margin (537.6–579.2 pt); margins limited by the line above (ends 86.4 pt) and below (starts 117.0 pt) · 400 dpi",
+   "viewed": true
+  },
+  {
+   "key": "eS2",
+   "kind": "equation",
+   "label": "eqS2",
+   "page": 2,
+   "file": "eq_S02_weibull_mean_strength.png",
+   "caption": "Eq. (S2), SI p.2 §4: S_m = S_0 Γ(1 + 1/m) — mean strength of the fitted Weibull distribution (Γ = gamma function); this is the 'mean strength' S_m of Table S1 (pristine 188 MPa).",
+   "rotated_deg": 0,
+   "bbox": [
+    263.5,
+    204.6,
+    582.5,
+    228.8
+   ],
+   "w": 1774,
+   "h": 136,
+   "dpi": 400,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.965,
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer boxes of the display equation (267.5–359.8 × 206.2–227.5 pt, with the vector fraction bar) and its number '(S2)' (555.6–579.2 pt); margins limited by the line above (ends 203.3 pt) and below (starts 230.1 pt) · 400 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2749a",
+   "kind": "text",
+   "label": "pA2749-title-authors-abstract-doi-history",
+   "page": 2,
+   "file": "txt_p2749_title_authors_abstract_doi_history.png",
+   "caption": "Printed p. A2749 (PDF p.2) top: running head 'Journal of The Electrochemical Society, 166 (13) A2749-A2751 (2019)' + '0013-4651/2019/166(13)/A2749/3/$38.00 © The Electrochemical Society' · title 'Communication—Fracture Behavior of Single LiNi0.33Mn0.33Co0.33O2 Particles Studied by Flat Punch Indentation' · authors Dingying Dang (z), Yikai Wang (*), Yang-Tse Cheng (z) · Dept. of Chemical and Materials Engineering, University of Kentucky · abstract ('critical load … increases with increasing particle size, while the fracture strength is unaffected by the size'; 1st delithiation / lithiation 'significantly lower') · [DOI: 10.1149/2.0331913jes] · submitted June 18, 2019; revised July 29, 2019; published August 13, 2019. (The download banner line 'All rights, including for text and data mining …' between the running head and the title is part of the downloaded PDF.)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    37.5,
+    553.0,
+    223.5
+   ],
+   "w": 2168,
+   "h": 776,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.859,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — bibliographic block (running head 39.8 pt to the history line 221.4 pt; full width incl. the ECS logo) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2749b",
+   "kind": "text",
+   "label": "pA2749-intro-brittle-calendering-volume-change",
+   "page": 2,
+   "file": "txt_p2749_intro_brittle_calendering_volume_change.png",
+   "caption": "Printed p. A2749 left column, introduction (whole paragraph): spherical NMC secondary particles = micro-sized agglomerations of submicron primary particles; both secondary and primary particles are brittle; (1) slurry mixing and calendering may break the secondary particles [2,3]; (2) repeated volumetric change (∼5 %) during cycling generates stresses within and between primary particles → fracture, disintegration, electrical insulation [4–12]; fracture behaviour of single NMC secondary particles 'is still unknown' → flat punch indentation.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.4,
+    240.6,
+    285.5,
+    481.7
+   ],
+   "w": 1051,
+   "h": 1006,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.808,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes of the paragraph (35.9–283.0 × 242.1–480.2 pt), column width · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2749c",
+   "kind": "text",
+   "label": "pA2749-experimental-electrode-cell-cycling",
+   "page": 2,
+   "file": "txt_p2749_experimental_electrode_cell_cycling.png",
+   "caption": "Printed p. A2749 left column, 'Experimental' heading + first paragraph: 92 wt% NMC (LiNi0.33Mn0.33Co0.33O2, Umicore) / 4 wt% PVDF / 4 wt% carbon black (Super C65) in NMP, planetary mixer; Al foil; 100 °C vacuum overnight; mass loading 7.3 mg cm−2; UNCALENDERED electrodes cycled in Swagelok cells (to avoid damaging the particles during calendering and cell disassembly; see SI) vs Li foil, Celgard 2400, 500 µL 1 M LiPF6 in EC:EMC 3:7 (v/v) + 2 wt% VC (Gotion); C/10 between 3 V and 4.3 V vs Li/Li+, CV hold at 4.3 V until C/20.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.4,
+    494.8,
+    285.5,
+    680.2
+   ],
+   "w": 1051,
+   "h": 774,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.831,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — heading (496.3–505.2 pt) + paragraph line boxes (35.9–283.0 × 511.3–679.7 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2749d",
+   "kind": "text",
+   "label": "pA2749-harvest-dispersion-soaked-control",
+   "page": 2,
+   "file": "txt_p2749_harvest_dispersion_soaked_control.png",
+   "caption": "Printed p. A2749 in two parts (left column bottom → right column top): electrodes at the 1st delithiation and 1st lithiation states harvested, rinsed with DMC (Ar glove box), dissolved and dispersed in NMP at 80 °C for 30 min + ultrasound 10 s, a drop spread on a smooth polycrystalline diamond substrate and dried at 80 °C for 30 min; control = as-prepared electrode soaked in the electrolyte for 48 h in a Swagelok cell without cycling, dispersed the same way; pristine particles also tested; samples 'pristine', 'electrolyte-soaked', '1st-delithiation', '1st-lithiation' moved into the glove box for indentation.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.4,
+    680.2,
+    285.5,
+    721.0
+   ],
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      33.4,
+      680.2,
+      285.5,
+      721.0
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      300.4,
+      240.6,
+      552.5,
+      352.0
+     ]
+    }
+   ],
+   "w": 1052,
+   "h": 652,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.825,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — two parts stacked top→bottom with a 16 px gap: left column 35.9–283.0 × 680.7–719.5 pt, right column 302.9–550.0 × 242.1–350.7 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2749e",
+   "kind": "text",
+   "label": "pA2749-indentation-g200-flat-punch-40um-1mN-s",
+   "page": 2,
+   "file": "txt_p2749_indentation_g200_flat_punch_40um_1mN_s.png",
+   "caption": "Printed p. A2749 right column: Nanoindenter G200 (Agilent) with a flat punch diamond indenter of nominal diameter 40 µm, inside an argon-filled glove box (Fig. S1; refs 15,16); particles positioned at the centre of the punch; load-controlled, loading/unloading rate 1 mN s−1; all measurements dry, in the glove box; morphology by the G200 built-in digital microscope and SEM (FEI Quanta 250); particle diameter d calculated from the projected area of the particle (ImageJ) before indentation.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.4,
+    351.2,
+    552.5,
+    481.7
+   ],
+   "w": 1052,
+   "h": 545,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.818,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — paragraph line boxes (302.9–550.0 × 351.7–480.2 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2749f",
+   "kind": "text",
+   "label": "pA2749-ld-curve-73p8mN-critical-load",
+   "page": 2,
+   "file": "txt_p2749_ld_curve_73p8mN_critical_load_fc.png",
+   "caption": "Printed p. A2749 right column: typical L-D curve (Fig. 2a) of a pristine particle — at 73.8 mN the displacement abruptly increases = breakage; subsequent displacement increment small because the larger contact area between the fragments and the punch reduces the effective stress; L-D curves with the same fracture feature for other sizes and states (Fig. S3); definition: critical load F_c = load at breakage; F_c increases with particle size (Fig. 3a).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.4,
+    565.0,
+    552.5,
+    714.5
+   ],
+   "w": 1052,
+   "h": 624,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.815,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — paragraph line boxes (302.9–550.1 × 565.5–714.0 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2749g",
+   "kind": "text",
+   "label": "pA2749-2750-hiramatsu-oka-brittle-particle-strength",
+   "page": 2,
+   "file": "txt_p2749_2750_hiramatsu_oka_brittle_particle_strength.png",
+   "caption": "Printed p. A2749 right column bottom → p. A2750 left column: 'Because of the brittle nature of the NMC particles, the fracture of the NMC secondary particles should be similar to the uniaxial compression induced fracture of rock and alumina particles [17,18]. Here, we adopt the fracture model proposed by Hiramatsu and Oka [17] to determine the strength, St' + Eq. [1] St ≈ 2.8Fc/πd² + 'Eq. 1 has been widely used to determine the strength of various brittle particles, from macro to sub-micro-meter length scale, without knowing the precise shape of the brittle blocks [17–19]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.4,
+    714.5,
+    552.5,
+    755.0
+   ],
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      300.4,
+      714.5,
+      552.5,
+      755.0
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      32.6,
+      304.7,
+      284.7,
+      369.2
+     ]
+    }
+   ],
+   "w": 1052,
+   "h": 455,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.865,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — two parts stacked top→bottom with a 16 px gap: PDF p.2 right column 302.9–550.0 × 715.0–753.8 pt, PDF p.3 left column 35.1–282.2 × 306.2–368.7 pt (includes the equation line) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2750a",
+   "kind": "text",
+   "label": "pA2750-strength-size-independent-intergranular-cohesion",
+   "page": 3,
+   "file": "txt_p2750_strength_size_independent_intergranular_cohesion.png",
+   "caption": "Printed p. A2750 (left column → right column top): 'As shown in Fig. 3b, the fracture strength of NMC secondary particles at all states is, statistically, independent of the particle size'; fracture mainly inter-granular with some trans-granular events (Figs. 2c–2d, S4); trans-granular ↔ fracture toughness of primary particles, inter-granular ↔ cohesive strength between primary particles (interfacial properties); same cohesive strength in large and small secondary particles at the same state of charge → strength independent of size; larger particles have more interfacial area → F_c increases with d, consistent with Eq. 1 (F_c ∝ d² at constant St).",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    369.2,
+    284.7,
+    489.7
+   ],
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      32.6,
+      369.2,
+      284.7,
+      489.7
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      299.6,
+      304.8,
+      551.7,
+      346.3
+     ]
+    }
+   ],
+   "w": 1052,
+   "h": 692,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.822,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — two parts stacked top→bottom with a 16 px gap: left column 35.1–282.2 × 369.7–488.2 pt, right column 302.1–549.2 × 306.3–346.3 pt (cut just above the next paragraph) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2750b",
+   "kind": "text",
+   "label": "pA2750-weibull-sequence-soaked-12pct",
+   "page": 3,
+   "file": "txt_p2750_weibull_sequence_soaked_12pct_cycling_detrimental.png",
+   "caption": "Printed p. A2750 right column: with Fig. 3 and the Weibull analysis (Table S1), F_c, St (same particle size) and the mean strength S_m follow uncycled (pristine and electrolyte-soaked) > 1st-lithiation > 1st-delithiation; S_m of the electrolyte-soaked particles is 12 % smaller than pristine → electrode preparation and soaking have some influence; electrochemical cycling has a major detrimental effect; 1st-delithiation particles are the weakest.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.6,
+    346.3,
+    551.7,
+    455.3
+   ],
+   "w": 1051,
+   "h": 456,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.821,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — paragraph line boxes (302.1–549.2 × 346.2–454.8 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2750c",
+   "kind": "text",
+   "label": "pA2750-2751-delithiation-contraction-defects-mechanism",
+   "page": 3,
+   "file": "txt_p2750_2751_delithiation_contraction_defects_mechanism.png",
+   "caption": "Printed p. A2750 right column bottom → p. A2751 left column: primary particles in the 1st-delithiation state are smaller (∼5 %) than pristine → contraction creates defects along primary-particle interfaces → tensile stress + interface defects → inter-granular fracture at a lower F_c (smaller St); after the 1st lithiation the primary particles can return to the pristine size (if undamaged) → lower interfacial tensile stress, but the defects remain → St between pristine and 1st-delithiation; implications: (1) raise the cohesive strength between primary particles, (2) control the initial state of stress.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.6,
+    455.4,
+    551.7,
+    486.2
+   ],
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      299.6,
+      455.4,
+      551.7,
+      486.2
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      33.4,
+      550.8,
+      285.6,
+      691.3
+     ]
+    }
+   ],
+   "w": 1051,
+   "h": 731,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.81,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — two parts stacked top→bottom with a 16 px gap: PDF p.3 right column 302.1–549.2 × 455.8–484.7 pt, PDF p.4 left column 35.9–283.1 × 552.3–690.8 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2751a",
+   "kind": "text",
+   "label": "pA2751-other-factors-strength-for-computational-models",
+   "page": 4,
+   "file": "txt_p2751_other_factors_strength_for_computational_models.png",
+   "caption": "Printed p. A2751 (left column bottom → right column top): besides state of charge, cycle number, charging/discharging rate, heterogeneous Li distribution, vacancy defects and dopants may influence fracture; the flat punch approach can study these; indentation fracture may evaluate particle quality over cycle life; flat-punch indentation can study fracture in liquid electrolyte and during cycling [16]; 'We expected that the measured fracture strength of the NMC particles can be incorporated in computational models of electrodes made of NMC particles under battery operating conditions.'",
+   "rotated_deg": 0,
+   "bbox": [
+    33.4,
+    691.4,
+    285.6,
+    752.1
+   ],
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      33.4,
+      691.4,
+      285.6,
+      752.1
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      300.4,
+      65.5,
+      552.5,
+      147.2
+     ]
+    }
+   ],
+   "w": 1052,
+   "h": 612,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.817,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — two parts stacked top→bottom with a 16 px gap: left column 35.9–283.0 × 691.8–750.6 pt, right column 302.9–550.0 × 67.0–145.7 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x2751b",
+   "kind": "text",
+   "label": "pA2751-summary",
+   "page": 4,
+   "file": "txt_p2751_summary.png",
+   "caption": "Printed p. A2751 right column, Summary: fracture of NMC secondary particles dominated by inter-granular instead of trans-granular fracture; critical load increases with particle size while fracture strength is independent of size; both decrease remarkably after cycling (volume change and tensile stresses between primary particles); the flat punch approach may be applied to other particles for energy storage.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.4,
+    160.1,
+    552.5,
+    306.6
+   ],
+   "w": 1052,
+   "h": 611,
+   "dpi": 300,
+   "src": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.823,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — heading 'Summary' (161.6–170.5 pt) + paragraph (302.9–550.0 × 176.6–305.1 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "xS2a",
+   "kind": "text",
+   "label": "pS2-weibull-method-origin-pf-i-over-n",
+   "page": 2,
+   "file": "txt_S2_weibull_method_origin_pf_i_over_n_sm.png",
+   "caption": "SI p.2 §4 'Weibull distribution of fracture strength' (whole section text incl. Eqs. S1–S2): two-parameter Weibull (refs 1–3); S_0 = characteristic strength at P_f 63.2 %, m = shape parameter; 'The estimates of the two parameters can be obtained by performing Weibull Fit in Origin, in which P_f is estimated as P_f(S_i) = i/N, where i is the ith datum of particle strength, S, in MPa, in ascending order and N is the number of test particles'; S_m = S_0 Γ(1 + 1/m); Table S1 = fit results, Table S2 = raw data and P_f.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.5,
+    34.6,
+    582.0,
+    281.2
+   ],
+   "w": 2286,
+   "h": 1028,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.917,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — SI p.2 from the section heading (36.6 pt) to 'Weibull Fit.' (279.9 pt), full text width · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "xS2b",
+   "kind": "text",
+   "label": "pS2-S3-swagelok-vs-coin-cell-disassembly-damage",
+   "page": 2,
+   "file": "txt_S2_S3_swagelok_vs_coin_cell_disassembly_damage.png",
+   "caption": "SI p.2 right column → SI p.3 top (§6, explains Fig. S5): the same electrode was assembled/disassembled first in a Swagelok cell, then in a coin cell, and imaged by SEM at the same location — the NMC particles and electrode microstructure are the same before and after the Swagelok cell, whereas after the coin cell some NMC particles were damaged and the electrode was deformed (arrows in Fig. S5c).",
+   "rotated_deg": 0,
+   "bbox": [
+    417.7,
+    560.9,
+    581.7,
+    732.5
+   ],
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      417.7,
+      560.9,
+      581.7,
+      732.5
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      33.5,
+      34.6,
+      581.7,
+      120.3
+     ]
+    }
+   ],
+   "w": 2285,
+   "h": 1090,
+   "dpi": 300,
+   "src": "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "blank": 0.935,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — two parts stacked top→bottom with a 16 px gap: SI p.2 right column 420.2–579.2 × 562.4–731.0 pt (Fig. S5 at x ≤ 401.8 pt excluded), SI p.3 36.0–578.6 × 36.6–118.8 pt · 300 dpi",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "f2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p1 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "fS4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p2 영역 없음"
+   ],
+   "near_miss": []
+  }
+ ],
+ "missing_labels_resolved": [
+  {
+   "key": "f1",
+   "how": "2026-11-12 manual crop fig_1.png (PDF p.3 = printed A2750; embedded raster xref 53 with the caption in the right column — the tool looks for graphics only in the caption column)"
+  },
+  {
+   "key": "f2",
+   "how": "2026-11-12 manual crop fig_2.png (PDF p.3; embedded raster xref 52; side caption, same reason)"
+  },
+  {
+   "key": "fS2",
+   "how": "2026-11-12 manual crop fig_S2.png (SI p.1; raster xref 30; side caption)"
+  },
+  {
+   "key": "fS4",
+   "how": "2026-11-12 manual crop fig_S4.png (SI p.2; raster xref 50; side caption)"
+  },
+  {
+   "key": "tS2",
+   "how": "2026-11-12 manual crop tab_S2.png (SI p.3) — not in the tool list at all: the title line \"Table S2. …\" is merged into the preceding body-text block, so it was never a caption candidate"
+  }
+ ],
+ "note_manual": "2026-11-12 — published version (J. Electrochem. Soc. 166 (13) A2749–A2751 (2019); PDF = 4 pages: p.1 = IOP download cover page, pp.2–4 = printed A2749–A2751) + Supplementary Material (3 PDF pages, printed page numbers 1–3 = SI p.1–3). Tool run (--clean) cut 5 crops (Fig. 3, Fig. S1, S3, S5, Table S1) and missed Fig. 1, 2, S2, S4 (side captions) and Table S2 (title merged into a body block). All 10 figure/table crops were opened: 5 cut by hand (manual_crop: Fig. 1, 2, S2, S4, Table S2) and 5 tool crops re-cut (recrop: Fig. 3 uneven side margins; Fig. S1 and S3 carried neighbouring body text / page number; Fig. S5 CLIPPED its scale bars; Table S1 was the whole SI page). Figure crops = graphic only, caption text kept in this file (tool convention); table crops = title line + table. Equation crops: 3 (Eq. [1] = the only numbered equation of the article; SI Eqs. (S1), (S2)). Evidence-paragraph crops: 14 (12 from the article, 2 from the SI; only paragraphs the digest cites for a number, a definition or a statement — no whole-page crop). Every crop was opened after rendering.",
+ "key_note": "tool keys: f<N> = Fig. N, fS<N> / tS<N> = SI figure / table. manual keys: e01 = Eq. [1] (article), eS1 / eS2 = SI Eqs. (S1) / (S2), x<printed page><letter> = evidence paragraph of the article (kind 'text'; multi-part ones list 'parts' with PDF page numbers and boxes, stacked top→bottom with a 16 px gap), xS2<letter> = SI paragraph. 'page' fields are PDF page numbers (article: printed page = A2747 + PDF page; PDF p.1 is the publisher cover page). Text-crop file names use printed page numbers (txt_p2749_…, txt_S2_…).",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 143,
+  "method": "Fig. 3b (raster xref 141, 777×1751 px): marker centres located by colour masks + connected components on the native raster, axes from the inward tick marks; digitized S_t aligned within each state to the stated SI Table S2 values (126 of 129 located; |diff| median 0.13–0.96, max 1.72 MPa) → each stated S_t gets a digitized diameter d. Panel (a) cross-check: F_c = S_t·π·d²/2.8 agrees with the digitized F_c (median |diff| 0.08–0.20 mN). Fig. 2a (raster xref 52): loading-branch centre, run-in plateau and second loading branch read on the native raster. Details in the header of digitized.csv."
+ }
+}
