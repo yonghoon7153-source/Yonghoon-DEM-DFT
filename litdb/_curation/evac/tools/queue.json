@@ -906,5 +906,414 @@
   "dup": "정본에 이 논문 카드가 **이미 있다** = `boger2023_thermal_conductivity_argyrodite_lgps` (333 줄 · 크롭 15 장 · \"⛔ 본문 미확인 — Supporting Information 만 digest\" · DOI [추정]) → 그 카드를 보강한다 (새 카드 금지)",
   "note": "- ⚠ **이 일은 새 카드가 아니라 기존 카드의 보강이다.** 대상 = `litdb/papers/boger2023_thermal_conductivity_argyrodite_lgps.md` (정본에 이미 있다 · 333 줄 · 크롭 15 장 · 식 크롭 0 · 보충 자료만 읽고 만든 카드 — 머리에 '⛔ 본문 미확인' · DOI `[추정]` · 14 절 '본문 확보 시 채울 것 (TODO)'). 새 slug · 새 카드를 만들지 않는다. CURATOR_BRIEF 2 절의 '이미 카드가 있으면 멈춘다' 는 여기서는 해당 없다 (프롬프트가 '기존 카드 보강' 이라고 한 경우).\n- **이번에 받은 것 = 본문 9 쪽 + 보충 자료 두 파일** (Sup1 = S1–S12 쪽 · Sup2 = S13–S24 쪽 — 한 보충 자료가 둘로 나뉘어 있다). 기존 카드가 보충 자료의 어느 쪽까지 읽었는지 (S1–S24 전부인가) 를 먼저 확인하고, 빠진 쪽이 있으면 그것도 채운다.\n- 기존 내용은 지우지 않는다. 원문과 다른 값 · 문장을 찾으면 그 자리에 `[정정 2026-11-12 · 본문 p.N: …]` 표지로 고치고 옛 표기를 남긴다 (조용히 덮어쓰지 않는다). 머리의 '본문 미확인' · DOI `[추정]` 표지는 '2026-11-12 본문 확인' 으로 고친다 (DOI 는 첫 쪽에 인쇄된 대로). 카드 끝 (Q&A 로그 앞) 에 `## 보강 기록 (2026-11-12)` 절 — 더한 것 · 고친 것 · 대조한 범위를 표로. 메타 줄 (slug · DOI · type · PDF · digested · status) 은 꼴을 깨지 않는다.\n- 보강할 것 (이 순서):\n  ① **본문 전수 정독** — 본문의 절 · 그림 · 표 · 식을 카드에 더한다 (`## 본문 — 절별 정리` · 그림 · 표 전부 · 핵심 수치 표에 본문 값을 쪽과 함께 보탬). 카드 14 절 TODO 를 한 줄씩 닫는다 (채움 / 본문에도 없음).\n  ② 공통 지시 ① '고른 의도 대조' 절은 **'보강 의도 대조' 절** 로 쓴다 — 후보 표 4-2 절 N-149 행의 물음에 표로 답한다: (가) Ketter 2025 가 입력으로 쓴 '치밀 LPSCl κ = 0.66 W m⁻¹ K⁻¹' (`ketter2025_resistor_network_models_predict_transport_properties` L17 · L26 · L34) 이 **이 본문의 어디에 있는가** — 값 · 쪽 · 그림 / 표 · 그것이 무엇인가 (치밀로 외삽한 값인가 · 따로 만든 시료인가 · 계산값인가 · 어떤 유효 매질 식 · 어느 온도 · 어느 조성 (Li₆PS₅Cl 인가 Li₅.₅PS₄.₅Cl₁.₅ 인가)). 본문에 0.66 이 없으면 '없음' 이라고 적고 가장 가까운 값과 그 조건을 적는다 (메인 세션이 본문 글 층을 훑었을 때 '0.66' 글자열은 잡히지 않았다 — 그림 · 표 안에 있을 수 있으니 쪽을 렌더해 직접 본다). (나) 기존 카드 0 절의 판정 (우리 κ_SE = 0.7 W m⁻¹ K⁻¹ 의 근거가 이 논문에 있는가) 을 본문으로 다시 한다 (판정이 바뀌면 정정 표지). (다) 공극률 의존 (상대 밀도별 κ · 치밀 외삽 식) · 온도 의존 · 열용량 · 열확산도 · 시료 만든 압력 · 두께 · 측정 분위기.\n  ③ 기존 카드 12 절 '다른 카드의 2 차 인용 대조 (SI 로 판정할 수 있는 범위)' 를 본문으로 다시 한다 — ketter2025 의 세 줄 포함 (다르면 그 카드의 줄 번호를 적고 **그 카드는 고치지 않는다** — 카드 문제로 보고).\n  ④ **크롭** — 기존 그림 폴더를 먼저 네 scratchpad 에 백업한다. 본문 그림 · 표 전부 + 본문 식을 번호별로 + 보충 자료에서 빠진 그림 · 표. 기존 15 장 · figures.json · 손 크롭을 잃지 않는다 (`--clean` 을 쓰면 폴더가 비워지므로 쓰기 전에 무엇이 사라지는지 확인하고, 사라진 것은 되살린다). 끝에 모음 그림 (기존 + 새 크롭 전부).\n  ⑤ `## ★ 자세한 분석 — 우리 계획에 무엇을 주나` 절을 더한다 (공통 지시 ② · 본 = 아래 본 카드의 그 절). 이 논문은 열 수송이라 가압 · 탈압 흐름 밖이다 — 단계 · 후보 이름마다 '해당 없음' 을 분명히 적고, 열 채널의 입력 κ_SE 로서 주는 것 / 못 주는 것을 중심으로 쓴다 (억지로 잇지 않는다).\n  ⑥ 참고문헌 목록 전체를 원문 그대로 카드 끝 절 (`## 참고문헌 목록 (원문 그대로)`) 에 옮긴다.\n  ⑦ 정독 출력 (batch NN · 질문 a–n) 을 새로 쓴다. `## n` 절 = 이 논문이 인용했지만 정본 카드가 없는 것 가운데 쓸 것 (많아야 다섯 · 서지는 원문 목록 그대로 · papers/ 목록 + grep 확인).\n  ⑧ INDEX_DEM 재생성 (`build_index.py`) · 커밋 메시지 = `litdb: boger2023_thermal_conductivity_argyrodite_lgps 보강 — 본문 …`.\n- 답장의 첫 줄에 '기존 카드 보강 (149 번 파일 · 본문)' 이라고 적고, '카드 줄 수' · '크롭 수' 는 보강 전 → 뒤 (식 크롭 수) 로 적는다. 끝 줄 = '보강 의도 대조 결과 한 줄 (0.66 이 본문에 있음 / 일부 / 없음)'.",
   "kind": "기존 카드 보강 (149 번 파일 · boger2023_thermal_conductivity_argyrodite_lgps 에 본문을 더함)"
+ },
+ "N-2": {
+  "nn": "44",
+  "pdf": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+  "si": [
+   "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+  ],
+  "extra": [],
+  "bib": "T. Kawaguchi, H. Nakamura, S. Watano, \"Dry coating of electrode particle with model particle of sulfide solid electrolytes for all-solid-state secondary battery\", Powder Technol. 323 (2018) 581–587, DOI 10.1016/j.powtec.2016.03.055 (온라인 2016 · 권 2018 — 원문 첫 쪽 표기를 따른다). (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
+  "model": "kawaguchi2017_dry_coating_parametric_na2so4_model_se",
+  "dup": "정본에 이 논문 카드 없음. ⚠ 같은 저자의 다른 논문 카드 litdb/papers/kawaguchi2017_dry_coating_parametric_na2so4_model_se.md (DOI 10.1016/j.powtec.2016.09.085) · kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps.md · kawaguchi2026_se_size_soc_dependent_cathode_resistance.md · nakamura2020_dry_coating_ncm_li3ps4_core_shell.md 와 헷갈리지 않는다 — slug 는 다르게 (예: kawaguchi2018_dry_coating_model_se_particle_powtec) · 그 카드들에 \"관련 카드\" 한 줄씩만. — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-2 '왜' 그대로): \"c (근거 약함) — kawaguchi2017 이 Na₂SO₄ 를 황화물 SE 대리로 고른 근거 = '강성 · 탄소성이 황화물과 비슷함을 압입 시험 (ref 18) 으로 확인' · 수치는 그 카드에 없음 [미확인] (kawaguchi2017 L22 · L62 · L219) → 황화물 SE 압입 값이 원문에 있는지 확인 · 기전 원전 = 연한 게스트가 단단한 호스트 위에서 소성 변형 · 합체 (L88) · 다른 카드 = '모델 물질 건식 코팅 첫 보고' (nakamura2020) · '모델 물질 선정 · 기전 원전' (kawaguchi2023)\"\n  가리킨 카드 = hippauf2019_dry_film_ptfe_sulfide_cathode_sheet (L275) · kawaguchi2017_dry_coating_parametric_na2so4_model_se (L236 · L22 · L62 · L88 · L219) · kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps (L289) · nakamura2020_dry_coating_ncm_li3ps4_core_shell (L342).\n- 꼭 뽑을 것: **모델 물질 선정 근거 — 황화물 SE 와 모델 물질 (Na₂SO₄ 등) 의 압입 (또는 다른 역학) 값 · 시험법 · 표 · 그림 (값이 정말 있는지 · 없으면 없다고)** · 코팅 장치 · 조건 (선속도 · 시간 · 충전율) · 피복률 측정법과 값 · 기전 (게스트의 소성 변형 · 합체 · 호스트 손상) 의 근거 · SI 의 내용 · 저자 한계.\n  · 우리 쪽: 믹서 (코팅 활물질 믹싱 · [DEM 우선] Ⓒ) 와 피복 (coverage) 정의에 닿는 것 · 황화물의 연성 근거가 우리 18 배 연화 · MPM σ_y 와 견줄 만한지 (재료 · 조건 차이).",
+  "p1": true
+ },
+ "N-5": {
+  "nn": "47",
+  "pdf": "f2e9af10-5._Solid-state_batteries_The_critical_role_of_mechanics.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "S. Kalnaus, N. J. Dudney, A. S. Westover, E. Herbert, S. Hackney, \"Solid-state batteries: The critical role of mechanics\", Science 381 (2023) eabg5998 (DOI 은 원문에서). (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
+  "model": "famprikis2019_fundamentals_inorganic_sse",
+  "dup": "정본에 이 논문 카드 없음 (인용만 = alharbi2026 · lee2025_heckel · yuan2026). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-5 '왜' 그대로): \"c · l (후보 — 근거 약함) — 세 카드 (alharbi2026 ref [86] · yuan2026 ref 11 · lee2025_heckel ref 17 '고체전지 역학 총설') 가 인용하는 역학 총설 · 카드에는 제목과 '총설' 표기뿐 → SE 의 소성 · 크리프 문장이 있는지 원문 확인\"\n- 꼭 뽑을 것: 황화물 SE 의 탄성 · 소성 · 경도 · 크리프 · 파괴에 대한 문장과 값 (값마다 그 총설이 인용한 원전 번호 — 1 차 값이 아니면 \"[2차 · 원전 ref N]\" 표지) · 압밀 · 스택압 · 계면 접촉 · 입자 크기 효과 · 모델링 (DEM · FEM · 연속체) 에 대한 문장 · 그림 · 표 전부 · 저자들이 꼽은 열린 문제.\n  · 1 차 원전 후보: 이 총설이 황화물 역학 값의 출처로 든 논문 가운데 정본에 카드가 없는 것을 \"논문 에이전트 후보\" 로 따로 표 (정본 papers/ 를 ls · grep 으로 확인).",
+  "model2": ") 의 꼴",
+  "p1": true
+ },
+ "N-10": {
+  "nn": "52",
+  "pdf": "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+  "si": [
+   "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf"
+  ],
+  "extra": [],
+  "bib": "D. Dang, Y. Wang, Y.-T. Cheng, \"Communication—Fracture Behavior of Single LiNi0.33Mn0.33Co0.33O2 Particles Studied by Flat Punch Indentation\", J. Electrochem. Soc. 166 (2019) A2749–A2751, DOI 10.1149/2.0331913jes. (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
+  "model": "wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem",
+  "dup": "정본에 카드 없음 (인용만 = stallard2022 · sedlatschek2026). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-10 '왜' 그대로): \"c · 조건 R7 — 평판으로 누른 NCM 2 차입자 파괴 강도의 1 차 자료 · Wheatcroft p.4 의 'NMC111 평판 평균 188 MPa' 는 2 차 인용 · 원문 미확인 (wheatcroft L34 · L91) · stallard2022 도 '원고에는 1차 논문 (… Dang 2019 …) 을 인용' 하라고 적음 (L431)\"\n  가리킨 카드 = wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem (L189 · L34 · L91) · stallard2022_cathode_mechanical_properties_review (L239 · L431).\n- ★ 꼭 뽑을 것: 시편 (NMC111 · 2 차입자 · 입경 분포 · 제조사) · 시험 (평판 압자 · 장비 · 하중 속도 · 습기 · 입자 수) · **파괴 강도의 정의 식 (σ = 계수 · P / d² 꼴 — 계수 값 · 원전 (Hiramatsu–Oka 1966 등) · 단위)** · 값 (평균 · 분포 · Weibull 이면 모수) · \"188 MPa\" 가 이 원문에 있는지 · 어떤 정의의 값인지 · 입경 의존 · 파괴 꼴 (SEM) · 저자 한계.\n  · 2 차 인용 대조: wheatcroft · stallard 카드가 옮긴 값 · 식이 원문과 같은지 (줄을 적고 고치지 않는다).\n  · 우리 쪽: AM 파괴 (Auerbach · fracture_scaffold · DEM 파괴 판정) · 조건 R7 · 우리 NCM 입경 (r_AM_P · r_AM_S) 과 견줄 자리.",
+  "model2": "(입자 파괴 카드의 꼴)",
+  "p1": true
+ },
+ "N-11": {
+  "nn": "53",
+  "pdf": "cda474af-11._Determination_of_the_tensile_strength_of_rock_by_a_compression_test_of_an_irregular_test_piece.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "Y. Hiramatsu, Y. Oka, \"Determination of the tensile strength of rock by a compression test of an irregular test piece\", Int. J. Rock Mech. Min. Sci. Geomech. Abstr. 3 (1966) 89–90 (첫 쪽 인쇄가 \"pp. 89–99\" 일 수 있다 — 원문 그대로 적는다), DOI 10.1016/0148-9062(66)90002-7. (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
+  "model": "",
+  "dup": "정본에 카드 없음 (인용만 = stallard2022). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-11 '왜' 그대로): \"c · m — 명목 강도 σ ≈ P/D² 규약의 원 출처 · Wheatcroft 는 계수 1 · 같은 그룹 리뷰는 σ_F = 2.8 P_C/(π d_P²) (계수 ≈0.891) 로 인용해 12 % 차 · wheatcroft '[26] 원문은 미확인' (L194) → 강도 값을 R7 에 쓰기 전에 규약 확정\"\n  가리킨 카드 = wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem (L194) · stallard2022_cathode_mechanical_properties_review (L240).\n- ★ 꼭 뽑을 것: **강도 식 원문 그대로 (기호 · 계수 · 0.9 / 2.8/π 등 · 유도 가정 (구 · 불규칙 시편 · 탄성 해석) · 적용 조건 · 단위)** · 시험 (암석 종류 · 시편 · 하중) · 값과 다른 시험 (브라질 시험 등) 과의 비교 · 저자 한계.  식의 계수가 리뷰들이 인용한 꼴 (계수 1 · 2.8/π ≈ 0.891) 가운데 무엇과 같은지 분명히.\n  · 우리 쪽: AM 입자 파괴 강도 규약 (조건 R7 · Auerbach · DEM 파괴 판정) 에 이 식을 쓸 때의 가정 차이 (암석 ↔ NCM 2 차입자 · 크기 · 하중 방식).",
+  "p1": true
+ },
+ "N-12": {
+  "nn": "54",
+  "pdf": "58b8e04a-12._Effect_of_lithiation_upon_the_shear_strength_of_NMC811_single_crystals.pdf",
+  "si": [
+   "188d6013-12._Sup_Effect_of_lithiation_upon_the_shear_strength_of_NMC811_single_crystals.pdf"
+  ],
+  "extra": [],
+  "bib": "J. C. Stallard, S. Vema, D. S. Hall, A. R. Dennis, M. E. Penrod, C. P. Grey, V. S. Deshpande, N. A. Fleck, \"Effect of Lithiation upon the Shear Strength of NMC811 Single Crystals\", J. Electrochem. Soc. 169 (2022) 040511. (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
+  "model": "",
+  "dup": "정본에 카드 없음.  ⚠ 같은 그룹의 리뷰 카드 litdb/papers/stallard2022_cathode_mechanical_properties_review.md 와 다른 논문 — slug 를 다르게 (예: stallard2022_nmc811_single_crystal_shear_strength_lithiation) · 그 카드에 \"관련 카드\" 한 줄만. — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-12 '왜' 그대로): \"c · k · l · 조건 R1 · R7 — 단결정 NCM811 1 차입자 전단강도가 탈리튬에 따라 준다 (Wheatcroft p.7 인용) · sharma2023 은 이 논문 주제를 '캘린더링 슬립 / 전단띠' 로 적음 (미확인) → 가압 중 AM 이 미끄럼 · 소성을 하는지 = AM 을 강체 · 탄성 구로 두는 가정 (후보 A · D0) 의 한계 근거 후보\"\n  가리킨 카드 = wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem (L196) · sharma2023_nmc_single_crystal_anisotropic_nanoindentation (L191).\n- ★ 꼭 뽑을 것: 시편 (단결정 NCM811 · 크기 · 리튬화 상태 x 값들 · 준비) · 시험 (미세 압축 / 필라 · 평판 · 장비 · 하중 속도) · **전단 강도 · 슬립 (결정면 · 방향) · 소성 흔적 · 균열 — 리튬화 상태별 값 · 표 · 그림** · 슬립과 캘린더링 · 압밀 압력의 관계를 저자가 말했는가 (sharma2023 의 표기 확인) · 모델 (결정 소성 등 · 매개변수) · 저자 한계.\n  · 우리 쪽: AM 을 강체 · 탄성 구로 두는 가정 (DEM AM E 140 GPa · MPM 얼린 AM · 후보 A · D0) 의 한계 — 우리 압밀 압력 (300 MPa) · AM 접촉 응력 범위에서 슬립이 일어나는지 판단할 근거가 되는지 (조건 · 크기 차이 적기 · 판정은 하지 않는다).",
+  "p1": true
+ },
+ "N-14": {
+  "nn": "56",
+  "pdf": "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "S. Choi, M. Jeon, J. Ahn, … (저자 전부는 원문에서), \"Quantitative Analysis of Microstructures and Reaction Interfaces on Composite Cathodes in All-Solid-State Batteries Using a Three-Dimensional Reconstruction Technique\", ACS Appl. Mater. Interfaces 10 (2018) 23740–23747. (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
+  "model": "",
+  "dup": "정본에 카드 없음 (인용만 = shi2019 · nakamura2020). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-14 '왜' 그대로): \"i · l — shi2019 Fig 7a 의 'previously reported densities and composite cathode porosities' (Φ 0.1–0.2) 의 출처 ref [29] · 같은 [29] 가 'LPS 입자의 소성변형을 실험관측' 의 근거 (shi2019 L103–107 · L119 · '정본 litdb 에 카드가 없다' L105) · nakamura2020 = '3D 재구성 · 반응 계면 정량 (방법 근거)'\"\n  가리킨 카드 = shi2019_high_am_loading_particle_size_assb (L105 · L119 · L103–107) · nakamura2020_dry_coating_ncm_li3ps4_core_shell (L331).\n- ★ 꼭 뽑을 것: 복합 양극 (AM · SE 조성 · 입경 · 비 · 성형압) · **3D 재구성 방법 (FIB-SEM 등 · 해상도 · 부피 · 분할 문턱)** · **공극률 · 상 부피분율 · 접촉 (AM–SE 계면) 면적 · 반응 계면 정량 값 — 조성 · 압력별 표 · 그림** · **LPS (황화물) 입자의 소성 변형을 관찰했다는 근거 (그림 · 문장 · 압력)** — shi2019 가 인용한 대로인지 · 전기화학 결과와의 연결 · 저자 한계.\n  · 2 차 인용 대조: shi2019 Fig 7a 의 Φ 0.1–0.2 가 이 원문의 어떤 값인지 · 같은지.\n  · 우리 쪽: 복합 기공 · 피복 (coverage) 정의 (우리 Hertz 18 · Tabor 52 % · 기하 피복) · 단계 0 (기공 연산자 · 재구성 문턱) · 이미지 기반 비교 자리.",
+  "p1": true
+ },
+ "N-15": {
+  "nn": "57",
+  "pdf": "fa9d76bf-15._A_convected_particle_domain_interpolation_technique_to_extend_applicability_of_the_material_point_method_for_problems_involving_massive_deformations.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: A convected particle domain interpolation technique to extend applicability of the material point method for problems involving massive deformations · Subject: Numerical Meth Engineering 2011.86:1435-1456 · Author:  · DOI: 10.1002/nme.3110 · PDF 22 쪽",
+  "model": "gritton2017_mpm_chemomechanical_coupling_silicon_anode",
+  "dup": "정본에 카드 없음 (인용만 = gritton2017 · homel2017). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-15 '왜' 그대로): \"f · l — 큰 신장에서 MPM 이 수치적으로 끊기는 문제와 입자 영역 추적 (CPDI) 의 원전 · gritton2017 (§4-1 · §9 ⑨) 과 homel2017 이 둘 다 CPDI 로 계산했는데 원전 카드가 없음 → \"우리 B-spline MLS-MPM 은 어디까지 늘어나도 되는가\" 의 기준\"\n  가리킨 카드 = gritton2017_mpm_chemomechanical_coupling_silicon_anode (§4-1 · §9 ⑨) · homel2017_mpm_field_gradient_partitioning_fracture_self_contact.\n- ★ 꼭 뽑을 것: MPM 이 큰 신장에서 끊기는 (수치 파쇄 · cell-crossing) 문제의 정의와 원인 · CPDI 의 식 (입자 영역 · 변형 경사로 영역을 따라감 · 형상 함수 · 식 번호별) · GIMP · 표준 MPM 과의 비교 시험 (문제 · 해석해 · 오차 · 수렴 · 그림 · 표 숫자) · 계산 비용 · 한계 (영역 뒤틀림 · 극단 전단).  우리 쪽 = MPM (MLS-MPM · 2 차 B-spline · Taichi · 압밀 변형률) 이 이 기준에서 어디까지 안전한가 — 판정은 하지 않고 우리 변형 범위 (SE 압밀 · ε ≈ 0.1–0.3 체적 · 접촉부 국소 큰 변형) 와 원문 시험 범위를 나란히.",
+  "model2": "· litdb/papers/homel2017_mpm_field_gradient_partitioning_fracture_self_contact.md (CPDI 를 쓴 MPM 카드의 꼴)",
+  "p1": true
+ },
+ "N-16": {
+  "nn": "58",
+  "pdf": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: main.dvi · Subject:  · Author:  · DOI: [미확인] · PDF 20 쪽",
+  "model": "bardenhagen2005_mpm_foam_densification_simulation",
+  "dup": "정본에 카드 없음 (인용만 = bardenhagen2005 · gritton2017 · 같은 제1 저자의 bardenhagen2000 · 2001 · 2005 카드는 다른 논문 — \"관련 카드\" 한 줄씩). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-16 '왜' 그대로): \"f — GIMP 원전 (물질점이 셀을 넘을 때의 잡음 · 가중 함수의 일반 꼴) · bardenhagen2005 가 쓴 contiguous-particle GIMP 의 원전이고 Fig. 1 반력 튐을 이 논문으로 넘김 (§3-3 · §4-1) → CPDI · 우리 B-spline 가중의 비교 기준\"\n  가리킨 카드 = gritton2017 (ref [37]) · bardenhagen2005_mpm_foam_densification_simulation (§3-3 · §4-1).\n- ★ 꼭 뽑을 것: GIMP 의 일반 틀 (입자 특성 함수 · 가중 함수 · 식 번호별) · MPM 이 GIMP 의 특수한 경우라는 유도 · contiguous-particle GIMP · cell-crossing 잡음의 원인과 시험 (문제 · 그림 · 숫자) · 에너지 · 운동량 보존 · 한계.  bardenhagen2005 가 넘긴 \"반력 튐\" 이 이 원문에서 무엇으로 설명되는지.  우리 쪽 = 우리 MLS-MPM 의 2 차 B-spline 가중 (cell-crossing 이 매끈함) 과 GIMP 의 관계 (원문 식으로 · 판정 없이).",
+  "model2": "(GIMP 를 쓴 카드)",
+  "p1": true
+ },
+ "N-17": {
+  "nn": "59",
+  "pdf": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Fully coupled mechano-electrochemical modeling of 3D-resolved microstructures for solid state batteries manufactured by wet processing · Subject: ChemRxiv 2026.2026 · Author:  · DOI: 10.26434/chemrxiv.15001135/v1 · PDF 26 쪽",
+  "model": "benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem",
+  "dup": "정본에 카드 없음 (인용만 = benhadjali2026 · zhang2026).  같은 제1 저자 카드 litdb/papers/benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem.md 와 다른 논문 — \"관련 카드\" 한 줄. — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-17 '왜' 그대로): \"h · j — 습식 공정 3D 분해 미세구조 위에서 기계-전기화학을 한 정식화로 푼 (완전결합) 선례 · 구조를 어디서 · 언제 넘겨받았는지 · FEM 정의 · 구성식 · 물성 · 경계 · 검증 (카드에 없음) · \"★ 완전결합 틀의 원 논문 — 다음 독서 1 순위\" (benhadjali2026)\"\n  가리킨 카드 = zhang2026_polymer_electrolyte_modeling_perspective (L64 · L122) · benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (L443).\n- ★ 꼭 뽑을 것: 미세구조를 어디서 · 언제 넘겨받았나 (제조 모의 = DEM · 습식 · 건조 · 캘린더링 단계 · 넘기는 데이터 · 겹침 처리 · 메시 생성) · 완전결합 정식화 (식 번호별 · 기계 (구성식 · 물성 · 소성 여부) · 전기화학 (BV · 확산) · 결합 항 (화학 팽창 · 응력 → 전위)) · 수치 (FEM · 메시 · 풀이기 · 비용) · 경계 · 검증 (실험 · 해석해) · 결과 (응력 · 접촉 · 용량) · 저자 한계.  우리 쪽 = 질문 h (DEM → FE · MPM 넘김 선례) · 우리 DEM → STEP3 · STEP4 사슬 · [DEM 우선 (수영)] 재설계 (가압부터 한 모델) 와 견줄 자리.",
+  "p1": true
+ },
+ "N-19": {
+  "nn": "62",
+  "pdf": "247fb88f-19._Assessment_of_rolling_resistance_models_in_discrete_element_simulations.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Assessment of rolling resistance models in discrete element simulations · Subject: Powder Technology, 206 (2010) 269-282. 10.1016/j.powtec.2010.09.030 · Author: Jun Ai · DOI: 10.1016/j.powtec.2010.09.030 · PDF 14 쪽",
+  "model": "",
+  "dup": "정본에 카드 없음 (인용만 = chibwe2020 · jadidi2023). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-19 '왜' 그대로): \"k — 구 DEM 이 입자 모양을 담지 못해 비구형성을 구름마찰 (CDT, constant directional torque) 로 대리하는 모델의 원전 · DEM 의 \"모양이 안 변한다\" 한계를 인용할 문헌 후보 (jadidi2023 도 \"원저 Ai 2011\" 로 인용)\"\n  가리킨 카드 = chibwe2020_nnsi_segregation_index (L273 · L790) · jadidi2023_dem_batch_solid_mixers_review (L99 · L544).\n- ★ 꼭 뽑을 것: 구름저항 모델 네 부류 (A 일정 방향 토크 · B 점성 · C 탄소성 spring-dashpot · D 접촉 무관 등 — 원문 이름 그대로 · 식 번호별 · 매개변수 μ_r · 강성 · 감쇠) · 일반 모델 제안 · 기준 시험 (문제 · 해석해 · 그림 · 숫자) · 2D 모래더미 (안식각 · 매개변수 · 결과) · 2D 정식화 · 3D 적용 문장 · \"Model C 가 가장 적합\" 의 근거 · 비구형성 대리라는 해석이 원문에 있는지 (있으면 문장 그대로 · 없으면 없음) · 저자 한계.  우리 쪽 = 우리 LIGGGHTS 덱의 구름마찰 설정 (있으면 원장 · 덱 이름만 · 값은 리포 정본에서 확인했다고 쓸 수 있을 때만) · DEM 한계 (질문 k) 인용 문장 후보.",
+  "p1": true
+ },
+ "N-20": {
+  "nn": "63",
+  "pdf": "bff6b9b1-20._Identifying_the_origins_of_microstructural_defects_such_as_cracking_within_Ni_rich_NMC811_cathode_particles_for_lithium_ion_batteries.pdf",
+  "si": [
+   "623d3067-20._Sup_Identifying_the_origins_of_microstructural_defects_such_as_cracking_within_Ni_rich_NMC811_cathode_particles_for_lithium_ion_batteries.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Identifying the Origins of Microstructural Defects Such as Cracking within Ni‐Rich NMC811 Cathode Particles for Lithium‐Ion Batteries · Subject: Advanced Energy Materials 2020.10:2002655 · Author:  · DOI: 10.1002/aenm.202002655 · PDF 13 쪽 · 보충 PDF 1 개",
+  "model": "wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem",
+  "dup": "정본에 카드 없음 (인용만 = stallard2022 · wheatcroft2023). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-20 '왜' 그대로): \"조건 R7 (출발 상태) · l — Wheatcroft 가 \"초기 사이클 입계 균열 · 캘린더링 중 전위 활주\" 의 근거로 인용 (p.1 · p.6) → 압축 (캘린더링) 중 AM 의 전위 활주 = AM 소성 여부 · 출발 결함 (\"무손상\" 가정) 을 1 차 자료로 대조 · stallard2022 은 NMC811 2 차입자 기공 0.14 → 0.19 (5 사이클) 를 이 논문 값으로 적음 (L92)\"\n  가리킨 카드 = wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem (L199) · stallard2022_cathode_mechanical_properties_review (L248 · L92).\n- ★ 꼭 뽑을 것: 시편 (NMC811 · 처음 상태 · 캘린더링 여부 · 사이클 수) · 측정 (XCT · 회절 · 전자현미경 · 해상도) · **출발 (사이클 전 · 캘린더링 뒤) 결함 — 균열 · 내부 기공 값** · **\"전위 활주\" · 소성 · 캘린더링 압력과의 관계를 원문이 말하는가 (문장 그대로 · 없으면 없음)** · 0.14 → 0.19 가 원문의 어떤 값인지 (정의 · 측정법) · 균열 기원 (화학 · 기계 · 제조) · 저자 한계.  우리 쪽 = 조건 R7 (AM 출발 상태 · 무손상 가정) · AM 강체 · 탄성 가정 · AM 파괴 (Auerbach) 와 견줄 자리.",
+  "p1": true
+ },
+ "N-24": {
+  "nn": "67",
+  "pdf": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+  "si": [],
+  "extra": [
+   "74921154-24._SupZ_00_11340_2018_451_MOESM10_ESM.docx",
+   "74921154-24._SupZ_01_11340_2018_451_MOESM9_ESM.docx",
+   "74921154-24._SupZ_02_11340_2018_451_MOESM8_ESM.docx",
+   "74921154-24._SupZ_03_11340_2018_451_MOESM7_ESM.docx",
+   "74921154-24._SupZ_04_11340_2018_451_MOESM6_ESM.docx",
+   "74921154-24._SupZ_05_11340_2018_451_MOESM5_ESM.docx",
+   "74921154-24._SupZ_06_11340_2018_451_MOESM4_ESM.docx",
+   "74921154-24._SupZ_07_11340_2018_451_MOESM3_ESM.docx",
+   "74921154-24._SupZ_08_11340_2018_451_MOESM2_ESM.docx",
+   "74921154-24._SupZ_09_11340_2018_451_MOESM1_ESM.docx"
+  ],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: In-Situ Nanoindentation Measurement of Local Mechanical Behavior of a Li-Ion Battery Cathode in Liquid Electrolyte · Subject: Exp Mech, doi:10.1007/s11340-018-00451-6 · Author: L. S. de Vasconcelos · DOI: 10.1007/s11340-018-00451-6 · PDF 11 쪽",
+  "model": "sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile",
+  "dup": "정본에 카드 없음 (인용만 = sedlatschek2026 · stallard2022 · wang2027).  같은 그룹 2016 격자 압입 논문도 이번에 카드를 만든다 (slug devasconcelos2016_…) — \"관련 카드\" 한 줄씩. — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-24 '왜' 그대로): \"c (AM) — \"★ NCM E 의 1 차 출처 후보 (정본 Sedlatschek · Stallard 카드가 2019 · NMC532 113 GPa 로 2 차 인용)\"\"\n  가리킨 카드 = wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn (L417 · L424).\n- ★ 꼭 뽑을 것: 전극 · NCM 조성 (NMC532?) · 리튬화 상태 · 액체 전해질 안 압입 (장비 · 셀 · 압자 · 깊이) · **E · H 값 ± (상태별 · 건조 ↔ 액체 안 · 충전 상태별)** · 113 GPa 가 원문의 어떤 값인지 · ESM 의 그림 · 표 · 저자 한계.  우리 쪽 = AM E (DEM 140 · 리튬화 의존) · 사이클 원장 (cycle_contact_ledger) 의 AM 강성 가정과 견줄 자리.\n- xlsx · docx · csv 보충 파일은 믿지 않는 자료다 → `python3 -I` 로 읽는다 (xlsx 는 openpyxl read_only=True · data_only=True · docx 는 zipfile 로 word/document.xml). 내용은 카드에 옮기고 파일 자체는 커밋하지 않는다.\n- 이름에 `_SupZ_` 가 든 파일은 메인 세션이 보충 zip 에서 푼 것이다 (원래 이름은 뒤쪽).",
+  "p1": true
+ },
+ "N-26": {
+  "nn": "68",
+  "pdf": "4090b479-26._Compression_properties_of_bimodal_powders_with_different_plasticities_in_the_elastoplastic_powder_compression_process_A_numerical_analysis.pdf",
+  "si": [
+   "798457d1-26._Sup_Compression_properties_of_bimodal_powders_with_different_plasticities_in_the_elastoplastic_powder_compression_process_A_numerical_analysis.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Compression properties of bimodal powders with different plasticities in the elastoplastic powder compression process: A numerical analysis · Subject: Advanced Powder Technology, 34 (2023) 104245. doi:10.1016/j.apt.2023.104245 · Author: Takeru Yano · DOI: 10.1016/j.apt.2023.104245 · PDF 10 쪽 · 보충 PDF 1 개",
+  "model": "yano2026_se_psd_width_ionic_tortuosity_dem",
+  "dup": "정본에 카드 없음 (DOI · \"104245\" · 제목 grep = yano2026_se_psd_width_ionic_tortuosity_dem 의 인용 줄뿐).  ⚠ 같은 저자군의 다른 논문 둘과 헷갈리지 않는다 — yano2026 (정본 · SE 입도 분포 폭) · Yano 2024 (일본어 · 이원 혼합 분말 압축 · 후보 N-25 · 같은 트리에서 바로 앞 차례로 카드가 먼저 push 된다).  slug 는 그 둘과 다르게 (예: yano2023_bimodal_plasticity_elastoplastic_compression_dem) · 세 카드가 서로를 가리키게 \"관련 카드\" 한 줄씩 (남의 카드는 그 한 줄만 · 본문은 고치지 않는다). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-26 '왜' 그대로): \"d · e — 같은 저자의 '이원 압축 DEM' (소성이 다른 이원 분말) · N-25 와 짝\"\n  가리킨 카드 = yano2026_se_psd_width_ionic_tortuosity_dem (L425 · 제목이 카드에서 잘림 — 원문 제목과 대조).\n- ★ 꼭 뽑을 것 (숫자 · 식마다 쪽 · 그림 · 표 위치와 표지):\n  · DEM 접촉 모델 — 탄소성 법칙 이름 · 식 번호별 · 소성 매개변수 (예: EEPA λp) 의 정의 · 값 · 근거 · 하중을 뺄 때 (되돌아옴) 곡선이 모델에 있는지.\n  · 두 성분의 물성 (E · ν · 항복 또는 소성 지표 · 밀도 · 입경 · 크기비) · 혼합비 · 입자 수 · 상자 · 다이 · 가압 (속도 · 최대 압력 · 하중 뺌 여부) · 시간 간격 · 강성 연화 여부.\n  · ★ 압력별 상대밀도 · 기공률 (누른 채 / 뺀 뒤) — 성분 · 소성 조합 · 혼합비별 표 · 그림 숫자 전부.\n  · ★ 성분 쌍별 (단단–단단 · 단단–무른 · 무른–무른) 접촉 수 · 접촉 면적 · 하중 몫 (힘 사슬) — 우리 AM (단단) + SE (무른) 하중 분담 (CLAUDE.md MPM DO-NOT 의 ② · f_AM 두 운용 규약) 과 견줄 자리.\n  · 패킹 구조 지표 (배위수 · 동경 분포 · 국소 밀도) · 소성 차이가 치밀화 · 접촉 면적을 어떻게 바꾸나 · Heckel 등 압밀식.\n  · 실험 검증이 있는지 (어떤 분말 · 값) · 보충 자료 (SI) 의 그림 · 표 전부.\n  · Yano 2024 (N-25) · yano2026 과 무엇이 같고 다른가 (모델 · 매개변수 · 값) — 0.619 · 0.642 · 0.38 (yano2026 L192 의 NCM–LPSCl 등가 소성비 · 성분값) 이 이 논문에 있는지도.\n  · 저자 한계.\n  · 우리 랩 기준 (순수 SE 기공 10–13 % · 진밀도 1.64) · 우리 DEM (18 배 연화 · E_eff 1.35 GPa · Heckel P_y 138 MPa) · MPM (E 1.53 · σ_y 0.30 · ν 0.49) 옆에 놓을 숫자 (판정 없이).",
+  "model2": "(같은 저자군 DEM 카드의 꼴) · 앞 차례 Yano 2024 카드가 있으면 그것도",
+  "p1": true
+ },
+ "N-27": {
+  "nn": "69",
+  "pdf": "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Force chain-induced collector damage in calendering: A DEM-FEM study · Subject: Journal of Energy Storage, 138 (2025) 118688. doi:10.1016/j.est.2025.118688 · Author: He Du · DOI: 10.1016/j.est.2025.118688 · PDF 19 쪽",
+  "model": "he2026_dem_calendering_inhomogeneity_areal_density",
+  "dup": "정본에 카드 없음 (DOI · \"118688\" · 제목 grep = he2026_dem_calendering_inhomogeneity_areal_density 의 인용 줄뿐).  du2022_lmro_lpscl_reversible_redox_assb 는 다른 저자 · 다른 논문 — slug 를 그것과 다르게. — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-27 '왜' 그대로): \"d · h — '진짜 force-chain 정량 논문 · 우리 AM-AM 하중분담과 비교 가능한 유일 후보' · DEM-FEM (he2026 L689) · he2026 의 입자–Al 마찰 계수 출처 [41] (L99)\"\n  가리킨 카드 = he2026_dem_calendering_inhomogeneity_areal_density (L689 · L99).\n- ★ 꼭 뽑을 것 (숫자 · 식마다 쪽 · 그림 · 표 위치와 표지):\n  · 전극 (양극 / 음극 · 활물질 · 입경 분포 · 조성 · 바인더 · 도전재 표현) · DEM 접촉 모델 (Hertz–Mindlin · 접착 · 결합 등 · 식 번호별) · 매개변수 표 (E · ν · 반발 · 마찰 · 구름 마찰 · 출처).\n  · ★ 입자–Al 마찰 계수 값과 그 근거 — he2026 L99 이 [41] 로 든 값과 같은지.\n  · 압연 조건 (롤 지름 · 속도 · 간극 · 압하율 · 온도) · DEM ↔ FEM 연계 방식 (한 방향 / 양방향 · 무엇을 넘기나 · 집전체 재료 구성식 · 요소).\n  · ★ 힘 사슬 정의 · 판별 문턱 (평균 힘 배수 · 사슬 길이 · 각도) · 정량값 (사슬에 든 입자 몫 · 사슬이 지는 하중 몫 · 압하율별) — 그림 · 표 숫자 전부.\n  · ★ AM–AM (또는 입자 쌍 종류별) 하중 몫이 있으면 그 값 · 정의 — 우리 f_AM 의 두 운용 규약 ((a) AM–AM 접촉망 σzz 몫 · (b) 상별 virial) 가운데 어느 쪽과 같은 양인지 · 다르면 무엇이 다른지.\n  · 집전체 손상 (응력 · 변형 · 주름 · 파단 기준 · 값 · 위치) · 실험 검증 (SEM · 표면 · 값).\n  · 압연 전후 기공률 · 두께 · 밀도 (누른 채 / 뺀 뒤 · 되돌아옴).\n  · 저자 한계 · he2026 L689 의 서술 대조.\n  · 우리 쪽: 질문 d · h · 하중 분담 (CLAUDE.md MPM DO-NOT 의 ② AM 하중 분담) · 힘 사슬 (DEM 고유 · frame[5]) — 재료 · 공정 차이 (액체 전해질 전극 롤 압연 ↔ 우리 황화물 복합 양극 다이 가압 300 MPa) 를 적는다 · 판정 없이.",
+  "model2": "(같은 분야 · 압연 DEM)",
+  "p1": true
+ },
+ "N-29": {
+  "nn": "70",
+  "pdf": "44663ddf-29._Modeling_of_high-density_compaction_of_granular_materials_by_the_discrete_element_method.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Modeling of high-density compaction of granular materials by the Discrete Element Method · Subject:  · Author: \"B. Harthong; J.-F. Jérier; P. Dorémus; D. Imbault; F.-V. Donzé\" · DOI: 10.1016/j.ijsolstr.2009.05.008 · PDF 8 쪽",
+  "model": "gonzalez2012_nonlocal_contact_confined_granular",
+  "dup": "정본에 카드 없음 (DOI · \"Harthong\" · 제목 grep = demirtas2021_mpfem_hollow_sphere_die_compaction · gonzalez2012_nonlocal_contact_confined_granular · zunker2024_bulk_elastic_partII 의 언급뿐). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-29 '왜' 그대로): \"e · k · l — 접촉 결합 (비국소) + 탄소성 + 고밀도 DEM = Gonzalez 2012 (탄성 전용) 의 '소성판' · FEM 주기격자에서 fitting 한 접촉 법칙 (자유변수 있음 · 격자별 특성화 필요 — Gonzalez §1 이 한계 명시) · Demirtas 서론의 '고밀도용 최신 처방' 목록 · 비교 문서가 '확보 1 순위 · litdb 미보유' 로 지목 → 점접촉 법칙이 깨지는 밀도와 소성 대안의 맞춘 값 수\"\n  가리킨 카드 = comparison_vs_ours_DEM (§A L753–754 · §C L2501 · §F L3418–3428) · gonzalez2012 (§1) · demirtas2021 (서론) · zunker2024_bulk_elastic_partII.\n- ★ 꼭 뽑을 것 (숫자 · 식마다 쪽 · 그림 · 표 위치와 표지):\n  · 재료 (금속 분말 종류 · 탄성 / 소성 물성 · 구성식) · 입자 (크기 · 단일 / 분포 · 수).\n  · ★ 힘–변위 (접촉) 법칙 — 식 번호별 전부 · 자유 변수 (맞춘 값) 수 · 각 변수의 뜻 · 맞춘 값 · 무엇에 맞췄나 (FEM 격자 종류 · 주기 경계 · 요소 · 소성 구성식 · 하중 경로).\n  · ★ 고전 점접촉 법칙이 깨지는 상대밀도 (숫자 · 근거 그림 · 표) · 새 법칙이 맞는 최대 상대밀도.\n  · 압밀 곡선 (상대밀도 vs 압력 또는 응력) — DEM ↔ FEM ↔ 실험 대조 숫자 전부 · 하중을 뺄 때가 있으면 그것도.\n  · \"격자별 특성화 필요\" 가 원문 어디에 어떻게 적혔나 (Gonzalez §1 의 서술과 같은지) · 계산 비용 · 저자 한계.\n  · 정본 카드 (gonzalez2012 · demirtas2021 · zunker2024 partII · 비교 문서 §A · §C · §F) 의 2 차 인용 대조.\n  · 우리 쪽: 질문 e · k · l · 우리 DEM 은 고전 점접촉 + 18 배 연화 (E_eff 1.35 GPa) · 순수 SE ⟨δ⟩/d ≈ 11 % (겹침 11–12 %) 가 이 논문의 '깨지는 밀도' 의 어디쯤인가 · MPM (연속체 · 소성) 과 견줄 자리 — 재료 (금속 ↔ 황화물) · 차원 차이를 적는다 · 판정 없이.",
+  "model2": "(고밀도 접촉 법칙 카드의 꼴) · 곁 = litdb/papers/demirtas2021_mpfem_hollow_sphere_die_compaction.md",
+  "p1": true
+ },
+ "N-30": {
+  "nn": "71",
+  "pdf": "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Subject: · Subject: Keywords: · Author: Creator:         LaTeX with hyperref package · DOI: 10.1103/PhysRevE.91.032201 · PDF 6 쪽",
+  "model": "giannis2021_stress_based_multicontact_dem",
+  "dup": "정본에 카드 없음 (DOI · \"Brodu\" · 제목 grep = giannis2021_stress_based_multicontact_dem · gonzalez2012_nonlocal_contact_confined_granular 의 언급뿐). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-30 '왜' 그대로): \"e · k — 변위 기반 다접촉 보정 (Giannis 가 'MC-strain' 이라 부른 baseline · γ 1 개 · O(C²) + 반복) 과 광탄성 하이드로겔 다입자 실측 = '접촉끼리 독립' 가정이 깨지는 것을 다입자에서 잰 자료 (단일 고무구 곡선은 세 정식화를 구분 못 하고 구분력은 다입자 예측에 있음)\"\n  가리킨 카드 = comparison_vs_ours_DEM (§A L743 · L747–753) · giannis2021 · gonzalez2012.\n- ⚠ 본 세션 관찰 (글자 층 grep · 확인 전): 원문 글자 층에 \"Tatara\" 가 없다 · 기준 실험 = 하이드로겔 514 알 (E 23.3 kPa) · 맞춘 γ ≈ 1.19.  비교 문서 §A (L749) · gonzalez2012 (L607) 의 \"세 정식화가 같은 Tatara 곡선을 각자 복원\" 이 Brodu 원문에 맞는지 (giannis2021 Fig. 4 의 MC-strain γ = 0.55 가 Giannis 가 맞춘 값인지) 대조 → 다르면 카드 문제로 적고 고치지 않는다.  의도 문장의 \"광탄성\" 이 원문 측정법과 맞는지도.\n- ★ 꼭 뽑을 것 (숫자 · 식마다 쪽 · 그림 · 표 위치와 표지):\n  · ★ MC-DEM 식 — 식 번호별 · γ 의 뜻 · 맞춘 값 · 무엇에 맞췄나 · 계산 순서 (반복 · 비용) · ν = 0.5 등 가정 · 비교한 정식화 (고전 · 대안 다접촉 모형 · 원문 이름 그대로).\n  · ★ 기준 실험 — 재료 (하이드로겔 · E · ν · 크기 · 수) · 3D 접촉력 측정법 · 압축 수준 (최대 13 %) · 마찰.\n  · ★ 다입자 대조 — 접촉력 분포 · 압축 수준별 지표 (R_top 등) 값 · 그림 · 표 숫자 전부 · 어느 모형이 얼마나 맞나.\n  · 단일 입자 곡선을 따로 맞췄는지 · Tatara 를 쓰는지 (위 ⚠).\n  · 저자 한계 (γ 가 다른 것에 따라 달라질 수 있다 · 경계 처리 등).\n  · 우리 쪽: 질문 e · k · 우리 DEM 은 접촉끼리 독립 (hooke/hysteresis) + 18 배 연화 · 순수 SE ⟨δ⟩/d ≈ 11 % 와 이 논문의 압축 13 % 를 견줄 자리 · 다접촉 보정이 연화의 대안인지 (varkey2026 · giannis2021 계열 · 비교 문서 §A) — 재료 (하이드로겔 ↔ 황화물) 차이 · 판정 없이.",
+  "model2": "(다접촉 DEM 카드의 꼴) · 곁 = gonzalez2012 · 같은 트리 바로 앞 차례 Harthong 2009 카드",
+  "p1": true
+ },
+ "N-32": {
+  "nn": "72",
+  "pdf": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Subject: · Subject: Keywords: · Author: Creator:         XPP · DOI: 10.1021/ie901581t · PDF 12 쪽",
+  "model": "chandratilleke2012_particle_scale_mixing_index",
+  "dup": "정본에 카드 없음 (DOI · 제목 · \"5467\" grep = chandratilleke2012_particle_scale_mixing_index 의 인용 줄뿐).  같은 제1 저자의 2012 카드와 헷갈리지 않게 slug 를 다르게 · 두 카드가 서로 가리키게 \"관련 카드\" 한 줄씩 (2012 카드는 그 한 줄만 · 본문은 고치지 않는다). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-32 '왜' 그대로): \"e · k — chandratilleke2012 DEM 의 방법 원전: 힘 법칙 (Hertz · Mindlin 여부) · 감쇠 · 구름마찰 식이 2012 논문에 없어 카드가 '이 논문만으로 DEM 을 재현할 수 없다 (ref 18 필요)' 로 남김 → 연화 영률이 어느 점접촉 법칙에 들어갔는지\"\n  가리킨 카드 = chandratilleke2012_particle_scale_mixing_index (L187 · L291 · L307).\n- ★ 꼭 뽑을 것 (숫자 · 식마다 쪽 · 그림 · 표 위치와 표지):\n  · ★ DEM 힘 법칙 전부 — 법선 · 접선 (Hertz · Mindlin–Deresiewicz 여부) · 감쇠 꼴 · 구름 마찰 꼴 · 식 번호별 · 이것이 chandratilleke2012 의 'ref 18' 인지 (2012 카드 L187 · L291 · L307 대조).\n  · ★ 매개변수 표 — E (연화했는지 · 얼마나 · 근거) · ν · 밀도 · 마찰 · 구름 마찰 · 반발 · 시간 간격 · 입경 · 입자 수 · 채움 높이.\n  · 믹서 형상 (원통 · 날 개수 · 모양 · 크기) · 날 속도 범위 · 회전 시간.\n  · 혼합 지수 정의 (식 · 칸 크기 · 표본 수) · 날 속도별 값 · 흐름 양상 (속도장 · 대류 / 확산 · 날 앞 쌓임) — 그림 · 표 숫자 전부 · 실험 검증 (있으면 방법 · 값).\n  · 저자 한계.\n  · 우리 쪽: 질문 e · k · [DEM 우선] Ⓒ 코팅 활물질 믹싱 (믹서 층상 캠페인 · Lacey M · 3D 칸 16×16×4 등) 과 혼합 지수 · 칸 크기 정의를 견줄 자리 · 우리 연화 (18 배) 와 이 논문의 영률 선택.\n  · 우리 랩 기준 (순수 SE 기공 10–13 % · 진밀도 1.64) · 우리 DEM (hooke/hysteresis · 18 배 연화 · E_eff 1.35 GPa · Heckel P_y 138 MPa) · MPM (E 1.53 · σ_y 0.30 · ν 0.49) 과 견줄 자리 — 재료 · 차원 · 조건 차이를 적고 판정하지 않는다.",
+  "p1": true
+ },
+ "N-33": {
+  "nn": "73",
+  "pdf": "8eb4154e-33._Impact_of_elastic_spheres_with_and_without_adhesion.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: PII: 0032-5910(91)80178-L · Subject:  · Author:  · DOI: [미확인] · PDF 14 쪽",
+  "model": "thorntonning1998_adhesive_elastoplastic_contact",
+  "dup": "정본에 카드 없음 (제목 · \"Thornton … Yin\" grep = pfeffer2001_dry_particle_coating_engineered_particulates · tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond 의 인용 줄뿐).  정본 thorntonning1998_adhesive_elastoplastic_contact 는 다른 논문 (Thornton–Ning 1998) — slug 를 다르게 · 서로 가리키게 \"관련 카드\" 한 줄씩. — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-33 '왜' 그대로): \"e (근거 약함) — pfeffer2001 의 표기 '탄소성 접촉 — 카드 없음' 뿐 · 접촉 법칙 계보 (정본 thorntonning1998 은 다른 논문)\"\n  가리킨 카드 = pfeffer2001_dry_particle_coating_engineered_particulates (L302).\n- ⚠ 본 세션 관찰 (제목만 봄): 제목은 \"탄성 구 · 접착 유무\" 다 — pfeffer2001 L302 의 \"탄소성 접촉\" 표기와 맞는지 원문으로 대조 → 다르면 카드 문제로 적고 고치지 않는다.\n- ★ 꼭 뽑을 것 (숫자 · 식마다 쪽 · 그림 · 표 위치와 표지):\n  · ★ 하중–변위 모델 — 접착 없을 때 (Hertz) · 있을 때 (JKR 등 · 어느 이론) · 싣기 / 빼기 경로 · 떨어지는 점 · 식 번호별 전부 · 접선 (비스듬한 충돌이 있으면 그 법칙).\n  · ★ 충돌 결과 — 반발 계수 vs 충돌 속도 · 붙는 (sticking) 임계 속도 식과 값 · 접착 이력에 따른 에너지 손실 — 그림 · 표 숫자 전부 · 재료 값 (E · ν · 표면 에너지 · 크기).\n  · 실험 대조가 있는지 · 저자 한계.\n  · tovar2026 · pfeffer2001 의 2 차 인용 대조 · thorntonning1998 로 이어지는 계보 (무엇이 더해졌나).\n  · 우리 쪽: 질문 e · 압밀 DEM 은 접착 없는 hooke/hysteresis · 믹서 DEM 은 응집 (CED) 모델 — CLAUDE.md 믹서 dev-u 의 \"SE–SE 붙는 속도 상한 18.7 · 46.6 mm/s (벽 103 · 지금 모델 0.16)\" 과 이 논문의 붙는 임계 속도 식을 견줄 자리 (식이 같은 꼴인지 · 판정 없이).\n  · 우리 랩 기준 (순수 SE 기공 10–13 % · 진밀도 1.64) · 우리 DEM (hooke/hysteresis · 18 배 연화 · E_eff 1.35 GPa · Heckel P_y 138 MPa) · MPM (E 1.53 · σ_y 0.30 · ν 0.49) 과 견줄 자리 — 재료 · 차원 · 조건 차이를 적고 판정하지 않는다.",
+  "model2": "(같은 계보 접촉 법칙 카드의 꼴)",
+  "p1": true
+ },
+ "N-35": {
+  "nn": "74",
+  "pdf": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Axisymmetric form of the generalized interpolation material point method · Subject: Numerical Meth Engineering 2015.101:127-147 · Author: John A. Nairn and James E. Guilkey · DOI: 10.1002/nme.4792 · PDF 21 쪽",
+  "model": "gritton2017_mpm_chemomechanical_coupling_silicon_anode",
+  "dup": "정본에 카드 없음 (DOI · 제목 grep 0 건 · \"Nairn\" = devaucorbeil2020_mpm_after_25_years_review · homel2017_mpm_field_gradient_partitioning_fracture_self_contact 의 언급 — 이 논문을 가리키는지 다른 Nairn 논문인지 대조). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-35 '왜' 그대로): \"g · f — 축대칭 MPM: 2D 벤치마크 (입자 하나 압축 U1 · 구–블록 누르기 U3) 를 3D 와 같은 문제로 푸는 길 (카드 §9 ⑩ · §10 행동 4) · gritton2017 은 축대칭으로 줄일 수 있는 문제를 3D 로 풀고 2D 와 견주지 않음\"\n  가리킨 카드 = gritton2017_mpm_chemomechanical_coupling_silicon_anode (§9 ⑩ · §10 행동 4 · L597 · L624 · L58).\n- ★ 꼭 뽑을 것 (숫자 · 식마다 쪽 · 그림 · 표 위치와 표지):\n  · ★ 축대칭 GIMP 식 — 형상 함수 · 기울기 (r = 0 근처) · 평면 판과 다른 점 · 식 번호별 전부 · 질량 · 운동량 · 응력의 r 가중.\n  · ★ 축대칭으로 옮겨 시험한 MPM 확장들 (접촉 · 균열 · 열 · 그 밖) 과 결과 · 축 근처 오차.\n  · ★ 검증 문제 — 어떤 문제 (원기둥 · 구 압축 · 누르기 등 · U1 · U3 와 닮았는지) · 해석해 · 3D 와 대조 · 격자 수렴 · 숫자 전부 · 계산 비용 (3D 대비).\n  · 저자 한계 · 권고.\n  · gritton2017 (§9 ⑩ · §10 행동 4) · devaucorbeil2020 · homel2017 의 2 차 인용 대조.\n  · 우리 쪽: 질문 g · f · 재설계 단계 0–3 (2D 벤치마크 먼저 · 3D 는 뒤 — memo 3.1) · 단위 시험 U1 · U3 · 우리 MPM 은 MLS-MPM (Taichi) 2D · 3D — 축대칭이 그 사이를 잇는 길인지 (구현 판단 없이 · 무엇이 필요한지만).\n  · 우리 랩 기준 (순수 SE 기공 10–13 % · 진밀도 1.64) · 우리 DEM (hooke/hysteresis · 18 배 연화 · E_eff 1.35 GPa · Heckel P_y 138 MPa) · MPM (E 1.53 · σ_y 0.30 · ν 0.49) 과 견줄 자리 — 재료 · 차원 · 조건 차이를 적고 판정하지 않는다.",
+  "model2": "(MPM 방법 카드의 꼴) · 곁 = bardenhagen2005_mpm_foam_densification_simulation.md · 같은 트리 바로 앞 차례 Bardenhagen–Kober 2004 GIMP 카드 (먼저 push 된다 — 서로 가리키게 한 줄씩)",
+  "p1": true
+ },
+ "N-36": {
+  "nn": "77",
+  "pdf": "421c3148-36._Examination_and_analysis_of_implementation_choices_within_the_material_point_method_MPM.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: main.dvi · Subject:  · Author:  · DOI: [미확인] · PDF 22 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 22 · DOI(첫 쪽): []\n  - 첫 쪽 앞줄: c 2008 Tech Science Press / Copyright \u0002 / CMES, vol.31, no.2, pp.107-127, 2008 / Examination and Analysis of Implementation Choices within the Material / Point Method (MPM) / M. Steffen1 , P.C. Wallstedt2 , J.E. Guilkey2,3 , R.M. Kirby1 and M. Berzins1 / Abstract: The Material Point Method (MPM) / has shown itself to be a powerful tool in the simulation of large deformation problems, especially / those involving complex geometries and contact / where typical finite element type methods frequently fail. While these large complex problems / lead to some impressive simulations and solutions, there has been a lack of basic analysis characterizing the errors present in the method, even / on the simplest of problems. The large number of / choices one has when implementing the method, / such as the choice of basis functions and boundary",
+  "p1": true
+ },
+ "N-37": {
+  "nn": "78",
+  "pdf": "f66711ce-37._Decoupling_and_balancing_of_space_and_time_errors_in_the_material_point_method_MPM.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Decoupling and balancing of space and time errors in the material point method (MPM) · Subject: Numerical Meth Engineering 2010.82:1207-1243 · Author:  · DOI: 10.1002/nme.2787 · PDF 37 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/nme.2787` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 37 · DOI(첫 쪽): ['10.1002/nme.2787']\n  - 첫 쪽 앞줄: INTERNATIONAL JOURNAL FOR NUMERICAL METHODS IN ENGINEERING / Int. J. Numer. Meth. Engng 2010; 82:1207–1243 / Published online 9 December 2009 in Wiley InterScience (www.interscience.wiley.com). DOI: 10.1002/nme.2787 / Decoupling and balancing of space and time errors / in the material point method (MPM) / Michael Steffen, Robert M. Kirby∗, † and Martin Berzins / School of Computing and Scientific Computing and Imaging Institute, University of Utah, / Salt Lake City, UT 84112, U.S.A. / SUMMARY / The material point method (MPM) is a computationally effective particle method with mathematical roots / in both particle-in-cell and finite element-type methods. The method has proven to be extremely useful / in solving solid mechanics problems involving large deformations and/or fragmentation of structures, / problem domains that are sometimes problematic for finite element-type methods. Recently, the MPM / community has focused significant attention on understanding the basic mathematical error properties of",
+  "p1": true
+ },
+ "N-38": {
+  "nn": "79",
+  "pdf": "d52f189c-38._Implicit_time_integration_for_the_material_point_method_Quantitative_and_algorithmic_comparisons_with_the_finite_element_method.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Implicit time integration for the material point method: Quantitative and algorithmic comparisons with the finite element method · Subject: Numerical Meth Engineering 2003.57:1323-1338 · Author:  · DOI: 10.1002/nme.729 · PDF 16 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/nme.729` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 16 · DOI(첫 쪽): ['10.1002/nme.729)']\n  - 첫 쪽 앞줄: INTERNATIONAL JOURNAL FOR NUMERICAL METHODS IN ENGINEERING / Int. J. Numer. Meth. Engng 2003; 57:1323–1338 (DOI: 10.1002/nme.729) / Implicit time integration for the material point method: / Quantitative and algorithmic comparisons with the / \u0001nite element method / J. E. Guilkey1; ∗; † and J. A. Weiss2 / 1 Department of Mechanical Engineering; University of Utah; Salt Lake City; Utah 84112; U.S.A. / 2 Department of Bioengineering; University of Utah; Salt Lake City; Utah 84112; U.S.A. / SUMMARY / An implicit integration strategy was developed and implemented for use with the material point method / (MPM). An incremental-iterative solution strategy was developed around Newton’s method to solve the / equations of motion with Newmark integration to update the kinematic variables. Test problems directly / compared the implicit MPM solutions with those obtained using an explicit MPM code and implicit / \u0001nite element (FE) code. Results demonstrated very good agreement with FE predictions and also",
+  "p1": true
+ },
+ "N-39": {
+  "nn": "80",
+  "pdf": "58d437e1-39._An_implicit_particle-in-cell_method_for_granular_materials.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: An Implicit Particle-in-Cell Method · Subject: Journal of Computational Physics · Author: Cummins, S. J., et al. · DOI: 10.1006/jcph.2002.7101 · PDF 43 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1006/jcph.2002.7101` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 43 · DOI(첫 쪽): ['10.1006/jcph.2002.7101']\n  - 첫 쪽 앞줄: Journal of Computational Physics 180, 506–548 (2002) / doi:10.1006/jcph.2002.7101 / An Implicit Particle-in-Cell Method / for Granular Materials / S. J. Cummins and J. U. Brackbill / Theoretical Division, Los Alamos National Laboratory, Los Alamos, New Mexico 87545 / E-mail: scummins@lanl.gov, jub@lanl.gov / Received August 15, 2001 / An implicit-in-time method for granular materials is described. The method / combines the material point method, a first-order contact algorithm, and a Newton– / Krylov equation solver to give improved energy conservation, stabilization of / the finite-grid-instability, and the correct description of collisions between grains. / c 2002 Elsevier Science (USA) / \u0002",
+  "p1": true
+ },
+ "N-40": {
+  "nn": "81",
+  "pdf": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: PII: 0045-7825(94)90112-0 · Subject:  · Author:  · DOI: [미확인] · PDF 18 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 18 · DOI(첫 쪽): []\n  - 첫 쪽 앞줄: Computer methods / in applied / mechanics and / engineering / Comput. Methods Appl. Mech. Engrg. 118 (1994) 179-196 / ELSEVIER / A particle method for history-dependent materials / D. Sulsky a, Z. Chenb, H.L. Schreyer ¢'* / \"Department of Mathematics, bNew Mexico Engineering Research Institute, CDepartment of Mechanical Engineering, / University of New Mexico, Albuquerque, NM 87131, USA / Received 10 June 1993 / Revised manuscript received 15 February 1994 / Abstract / A broad class of engineering problems including penetration, tmpact and large rotations of solid bodies causes severe numerical",
+  "p1": true
+ },
+ "N-41": {
+  "nn": "82",
+  "pdf": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Calendering behavior of two-layer electrodes: A coupled DEM–FEM framework · Subject: International Journal of Mechanical Sciences, 322 (2026) 111716. doi:10.1016/j.ijmecsci.2026.111716 · Author: Yuhang Lyu · DOI: 10.1016/j.ijmecsci.2026.111716 · PDF 14 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.ijmecsci.2026.111716` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 14 · DOI(첫 쪽): ['10.1016/j.ijmecsci.2026.111716']\n  - 첫 쪽 앞줄: International Journal of Mechanical Sciences 322 (2026) 111716 / Contents lists available at ScienceDirect / International Journal of Mechanical Sciences / journal homepage: www.elsevier.com/locate/ijmecsci / Calendering behavior of two-layer electrodes: A coupled / DEM–FEM framework / Yuhang Lyu , Shaohai Dong , Zhan-Sheng Guo * / Shanghai Institute of Applied Mathematics and Mechanics, School of Mechanics and Engineering Science, Shanghai Key Laboratory of Mechanics in Energy Engineering, / Shanghai University, Shanghai, 200072, China / A R T I C L E I N F O / A B S T R A C T / Keywords: / Lithium-ion battery / Electrode manufacturing",
+  "p1": true
+ },
+ "N-42": {
+  "nn": "83",
+  "pdf": "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+  "si": [
+   "c4b1864d-42._Sup_A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: A New Three‐Dimensional Microstructure‐Resolved Model to Assess Mechanical Stress in Solid‐State Battery Electrodes · Subject: Batteries & Supercaps 2026.9:e202500540 · Author: Siwar Ben Hadj Ali, Mohammed Alabdali, Virginie Viallet, Vincent Seznec, Alejandro A. Franco · DOI: 10.1002/batt.202500540 · PDF 14 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1002/batt.202500540` grep = benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 14 · DOI(첫 쪽): ['10.1002/batt.202500540', '10.1002/batt.202500540']\n  - 첫 쪽 앞줄: Batteries & Supercaps / Research Article / doi.org/10.1002/batt.202500540 / www.batteries-supercaps.org / A New Three-Dimensional Microstructure-Resolved Model / to Assess Mechanical Stress in Solid-State Battery / Electrodes / Siwar Ben Hadj Ali, Mohammed Alabdali, Virginie Viallet, Vincent Seznec, / and Alejandro A. Franco* / In all-solid-state batteries (ASSBs), the mechanical stress generated / during electrode (de)lithiation plays a critical role in determining / the cell longevity because of the induced degradation mechanisms. This stress originates from local volume fluctuations in / the active electrode materials, such as nickel-rich LiNixMnyCozO2, / which are intrinsically coupled to spatial variations in lithium-ion",
+  "p1": true
+ },
+ "N-43": {
+  "nn": "84",
+  "pdf": "3bba10e2-43._A_versatile_and_efficient_voxelization-based_meshing_algorithm_of_multiple_phases.pdf",
+  "si": [
+   "b4ad2a77-43._Sup_A_versatile_and_efficient_voxelization-based_meshing_algorithm_of_multiple_phases.pdf"
+  ],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: research 1..4 · Subject:  · Author:  · DOI: 10.1021/acsomega.9b01279 · PDF 4 쪽 · 보충 PDF 1 개",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1021/acsomega.9b01279` grep = benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode, benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 4 · DOI(첫 쪽): ['10.1021/acsomega.9b01279']\n  - 첫 쪽 앞줄: This is an open access article published under a Creative Commons Non-Commercial No / Derivative Works (CC-BY-NC-ND) Attribution License, which permits copying and / redistribution of the article, and creation of adaptations, all for non-commercial purposes. / Article / Cite This: ACS Omega 2019, 4, 11141−11144 / http://pubs.acs.org/journal/acsodf / A Versatile and Eﬃcient Voxelization-Based Meshing Algorithm of / Multiple Phases / Mehdi Chouchane,†,‡ Alexis Rucci,†,‡ and Alejandro A. Franco*,†,‡,§,∥ / † / Laboratoire de Réactivité et Chimie des Solides (LRCS), UMR CNRS 7314, Université de Picardie Jules Verne, HUB de l’Energie, / 15 rue Baudelocque, 80039 Amiens Cedex, France / ‡ / Réseau sur le Stockage Electrochimique de l’Energie (RS2E), FR CNRS 3459, HUB de l’Energie, 15 rue Baudelocque, 80039",
+  "p1": true
+ },
+ "N-45": {
+  "nn": "85",
+  "pdf": "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: PII: S0009-2509(01)00190-7 · Subject:  · Author:  · DOI: [미확인] · PDF 15 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 15 · DOI(첫 쪽): []\n  - 첫 쪽 앞줄: Chemical Engineering Science 56 (2001) 5457–5471 / www.elsevier.com/locate/ces / Simulated and measured !ow of granules in a bladed / mixer—a detailed comparison / R. L. Stewarta , J. Bridgwatera ; ∗ , Y. C. Zhoub , A. B. Yub / a Department of Chemical Engineering, University of Cambridge, Pembroke Street, Cambridge CB2 3RA, UK / b Centre for Computer Simulation and Modelling of Particulate Systems, School of Materials Science and Engineering, / The University of New South Wales, Sydney NSW 2052, Australia / Abstract / Experimental measurements and simulations of a granular !ow system have been compared in detail. Positron emission particle / tracking (PEPT) was used to study the motion of glass beads in a vertical axis mixer with slowly rotating !at blades. Unlike / conventional techniques which are restricted to measuring the !ow at the surface or a transparent wall, PEPT revealed the motion / of material throughout the entire bed. The !ow produced was three dimensional with vortices, and is more complicated than other / granular !ows that have been described previously. Discrete element method (DEM) was employed to simulate the same system",
+  "p1": true
+ },
+ "N-46": {
+  "nn": "86",
+  "pdf": "32d38dce-46._Constriction_resistance_and_the_real_area_of_contact.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: [미확인] · PDF 13 쪽",
+  "model": "",
+  "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 13 · DOI(첫 쪽): []\n  - 첫 쪽 앞줄: British Journal of Applied Physics / You may also like / Constriction resistance and the real area of / contact / To cite this article: J A Greenwood 1966 Br. J. Appl. Phys. 17 1621 / View the article online for updates and enhancements. / - Quantifying the spreading currents over / the circular contact region in a good / conducting cover layer on a substrate / Kazuhiko Seki / - Application of Multilayer Potential / Distribution to Spreading Resistance / Correction Factors / P. A. Schumann and E. E. Gardner",
+  "p1": true
+ },
+ "N-47": {
+  "nn": "87",
+  "pdf": "a7be108b-47._DEM_speedup_Stiffness_effects_on_behavior_of_bulk_material.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1016/j.partic.2013.03.006 · PDF 6 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.partic.2013.03.006` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 6 · DOI(첫 쪽): ['10.1016/j.partic.2013.03.006']\n  - 첫 쪽 앞줄: Particuology 12 (2014) 107–112 / Contents lists available at ScienceDirect / Particuology / journal homepage: www.elsevier.com/locate/partic / DEM speedup: Stiffness effects on behavior of bulk material / Stef Lommen ∗ , Dingena Schott, Gabriel Lodewijks / Department of Maritime and Transport Technology, Delft University of Technology, 2628CD Delft, The Netherlands / a r t i c l e / i n f o / Article history: / Received 21 December 2012 / Received in revised form 20 March 2013 / Accepted 26 March 2013 / Keywords:",
+  "p1": true
+ },
+ "N-48": {
+  "nn": "88",
+  "pdf": "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: On the adhesive JKR contact and rolling models for reduced particle stiffness discrete element simulations · Subject: Powder Technology, 319 (2017) 472-482. doi:10.1016/j.powtec.2017.07.006 · Author: J. Hærvig · DOI: 10.1016/j.powtec.2017.07.006 · PDF 11 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.powtec.2017.07.006` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 11 · DOI(첫 쪽): ['10.1016/j.powtec.2017.07.006']\n  - 첫 쪽 앞줄: Powder Technology 319 (2017) 472–482 / Contents lists available at ScienceDirect / Powder Technology / journal homepage: www.elsevier.com/locate/powtec / On the adhesive JKR contact and rolling models for reduced particle / stiffness discrete element simulations / J. Hærvig a, * , U. Kleinhans b , C. Wieland b , H. Spliethoff b , A.L. Jensen a , K. Sørensen a , T.J. Condra a / a / b / Aalborg University, Department of Energy Technology, Pontoppidanstræde 111, Aalborg DK-9220, Denmark / Technical University of Munich, Institute of Energy Systems, Boltzmannstraße 15, Garching DE-85748, Germany / A R T I C L E / I N F O / Article history:",
+  "p1": true
+ },
+ "N-49": {
+  "nn": "89",
+  "pdf": "dacdd31a-49._Computer_simulation_of_the_effect_of_contact_stiffness_and_adhesion_on_the_fluidization_behaviour_of_powders.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: doi:10.1016/j.ces.2006.08.036 · Subject:  · Author:  · DOI: 10.1016/j.ces.2006.08.036 · PDF 11 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.ces.2006.08.036` grep = paulick2015_particle_contact_stiffness_two_particle_method (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 11 · DOI(첫 쪽): ['10.1016/j.ces.2006.08.036']\n  - 첫 쪽 앞줄: Chemical Engineering Science 62 (2007) 184 – 194 / www.elsevier.com/locate/ces / Computer simulation of the effect of contact stiffness and adhesion on the / ﬂuidization behaviour of powders / R. Moreno-Atanasio, B.H. Xu, M. Ghadiri ∗ / Institute of Particle Science and Engineering, University of Leeds, Leeds LS2 9JT, UK / Available online 26 August 2006 / Abstract / The effect of contact stiffness on the ﬂuidization behaviour of cohesive powders is analysed using a combined continuum and discrete model / for the ﬂuid phase and particulate phase, respectively. Four systems made of particles with two values of contact stiffness (50 and 50 000 N/m) / and two values of surface energy (0.37 and 3.7 mJ/m2 ) have been studied. The analysis has been carried out in terms of the coordination / number, average contact forces and deformations and granular temperature. The simulation results show that for the low value of surface / energy (0.37 mJ/m2 ) the contact stiffness does not inﬂuence appreciably the ﬂuidization behaviour. In contrast, the behaviour of the systems / with the large value of surface energy (3.7 mJ/m2 ) is strongly inﬂuenced by the contact stiffness: no ﬂuidization occurs for the system with",
+  "p1": true
+ },
+ "N-50": {
+  "nn": "90",
+  "pdf": "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1016/j.powtec.2011.10.057 · PDF 9 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1016/j.powtec.2011.10.057` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 9 · DOI(첫 쪽): ['10.1016/j.powtec.2011.10.057']\n  - 첫 쪽 앞줄: Powder Technology 217 (2012) 409–417 / Contents lists available at SciVerse ScienceDirect / Powder Technology / journal homepage: www.elsevier.com/locate/powtec / Rolling friction as a technique for modelling particle shape in DEM / C.M. Wensrich a,⁎, A. Katterfeld b / a / b / School of Engineering, University of Newcastle, Australia / Institut für Logistik und Materialﬂusstechnik, Otto-von-Guericke Universität, Magdeburg, Germany / a r t i c l e / i n f o / Article history: / Received 9 June 2011",
+  "p1": true
+ },
+ "N-51": {
+  "nn": "91",
+  "pdf": "c5736bb1-51._A_soft_departure_from_jamming_the_compaction_of_deformable_granular_matter_under_high_pressures.pdf",
+  "si": [],
+  "extra": [],
+  "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: A soft departure from jamming: the compaction of deformable granular matter under high pressures · Subject: Soft Matter (2024), 20, 1702-1718, doi:10.1039/D3SM01373A · Author: Joel T. Clemmer · DOI: 10.1039/D3SM01373A · PDF 17 쪽",
+  "model": "",
+  "dup": "papers/ 에서 DOI `10.1039/D3SM01373A` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
+  "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 17 · DOI(첫 쪽): ['10.1039/d3sm01373a']\n  - 첫 쪽 앞줄: Soft Matter / Published on 29 January 2024 / Licence and permissions / PAPER / Cite this: Soft Matter, 2024, / 20, 1702 / A soft departure from jamming: the compaction / of deformable granular matter under / high pressures / Joel T. Clemmer, / * Joseph M. Monti and Jeremy B. Lechman / The high-pressure compaction of three dimensional granular packings is simulated using a bonded / particle model (BPM) to capture linear elastic deformation. In the model, grains are represented by a / collection of point particles connected by bonds. A simple multibody interaction is introduced to control",
+  "p1": true
  }
 }
