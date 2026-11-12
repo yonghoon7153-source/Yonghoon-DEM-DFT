@@ -157,3 +157,19 @@
 - 끝-끝 변이 Z1–Z3 (3.11 · 1,994 s · logs/r2/mut_impl/run_py311_e2e.log) = 3/3 잡힘 (Z5 · Z4) · 사본 되돌림 diff 0.
 - 끔 길 ↔ 바탕 kgy 판 (3.8.20 · logs/r2/off_vs_base_kgy.log) = 3.11 과 같은 꼴 (rc 전부 0 · σ_e 같음 · 다른 잎 = code_sha · project_module_digest ·
   loaded_project_modules +1 (접합 켬) · 영수증 code_sha · receipt_digest).  kgy 판 묶음 25 띄움 (logs/r2/kgy_all).
+- (14:16Z) kgy 판 묶음 (3.8.20 · numpy 1.24.4 · scipy 1.10.1 · OPENBLAS 1 스레드 · HEAD 0ac6edf3c · logs/r2/kgy_all) = 25 묶음 전부 rc 0 · 합 2,629 s:
+  게이트 kgy 16 (run_contract 124 · s3_rint · ptfe_fa 242 · carbon_junction 547 · ca_ext_b6 502 · ca_ext_runner 151 · rint_r_chain 506 (489 s) · e2e 51 (597 s) ·
+  e2e12 33 (310 s) · target_cert 264 · conv_cert 29 (K4b = scipy 1.10.1 설계상 건너뜀) · s0_census 186 · probe6 330 (209 s) · gpu_precond 19/19 · cjunc_store 54/54
+  (63 s) · cjunc_store_e2e 6/6 (452 s)) + 덧 (s3_selftest · verdict 31 · z1 95 · z3 84 · first_result 9 · rint_receipts 105 · g2_am_iface 136 · 규율 selftest 128 ·
+  repo 0 오류).  작업 트리 깨끗 · 돌던 내 프로세스 0 · tmp 비움 · 지운 사본 = work/ovb_base_repo · work/mut · review/work · s0blk_home (다시 만들기 = 같은
+  git archive · alternates 절차 · 위 줄).
+
+## 리뷰 고침 회차 — 끝 (11-12)
+- 커밋 (작업 트리 · 서명 없음 · push 없음): 4557a30c2 시험 먼저 → 94765bed3 고침 → 0ac6edf3c 게이트 배선 (← 2f97617ef).
+- 처분: 고침 = RCP-01 · 02 · 05 · 06 · 08 · 09 · 10 · 11 / 한정 = 03 (+ 1저자 Q-A) · 07 / 단계 넣음 = 04 (+ 1저자 Q-B · 블록 s0probe/s0_rerun_probe_block.txt).
+- 시험: store 40/54 → 54/54 · Q11 18/19 → 19/19 · 3.11 A 27 (undef 2 = 바탕부터 · 묶음 밖) + B 5 · kgy 3.8 25 — 전부 rc 0.
+- 변이: 리뷰 31 → 30 잡힘 (MS7 동등 · MS16 = 고치기 전 동등 → 이제 T14) · 구현 쪽 110 → 107 잡힘 · 안 잡힘 3 = 미리 적은 겹 방어 · 새 F1–F18 18/18.
+- 끔 경로 ↔ 바탕 af3cce37b (3.11 · 3.8): 다른 잎 = 코드 신원 칸뿐 · σ_e 같음 · rc 0.
+- 초안 (스크래치): amend_drafts.md 4 판 · gpu_check_block.txt 4 판 · s0probe/ (감싸개 · 감시 셸 · 조립기 · 블록 · 시험 꼴) · design.md (바).
+- 남은 [미확인]: 실침대 저장 · 읽기 (S0 재기 전) · GPU 길 실기계 (블록) · kgy 총 메모리 · 기계 사이 원장 지문 결정성 · gabia Q11REPO · S0 단계 2 (DBE) 가
+  이미 돌았는지.
