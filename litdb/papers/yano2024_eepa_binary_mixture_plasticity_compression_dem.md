@@ -526,6 +526,7 @@ EEPA 접촉 법칙의 소성비 λp 만 다른 두 종의 단분산 구 (λp 0.3
 - λp 의 재료 쪽: `papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation` (LPSCl 0.642 의 깊이비 대응) · `sakuda2013_sulfide_mechanical_property`.
 - EEPA 를 쓴 다른 계산 (정본): `he2026_dem_calendering_inhomogeneity_areal_density` · `schreiner2020_dem_calendering_lib` · `otani2025_dem_se_dispersion_aggregation_compression` · `zhang2026_xct_dem_cathode_calendering_peel_calibration` · `sangros2019_dem_calendering_lib_electrode` (NCM 물성 출처).
 - 하중 뺌 (정본): `miss2026_insitu_conductivity_porosity_pressure_compaction` · `kollenda2024_time_sensitivity_calendered_electrode_springback_storage`.
+- 같은 300 MPa 급 가압 → 제하 의 큰 겹침 DEM (후보 C · 단일 재료): `zunker2025_dem_large_deformation_compaction` (출판본 2026-11-12 보강 — 축 정점 297.5 MPa · 잔류 반경응력 31 MPa 를 실험과 같은 상대밀도 축에서 대조 · '다른 재료 성질' 은 future work).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

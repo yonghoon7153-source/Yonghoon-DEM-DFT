@@ -127,7 +127,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yano2024_eepa_binary_mixture_plasticity_compression_dem` | 소성 변형성이 다른 두 성분 혼합 분말의 단축 압축 — EDEM-EEPA DEM (3D · 단분산 50 µm 구 3,077 개 · 물성은 모두 NCM111 (E 만 절반 71 GPa) · 접촉 소성비 λp 만 다름: '탄성 입자' 0.38 (NCM 값) / '소성 입자' 0.70 (Li₃PS₄ 값) · 이종 접촉 λp*  | DEM (EDEM 2023.0 EEPA, 3D monodisperse binary-plasticity pow | 2026-11-12 | 🖼 64 |
 | `zunker2024_bulk_elastic_partII` | 벌크탄성 구간 — 점착 탄소성 입자의 접촉모델 Part II (A mechanically-derived contact model for adhesive elastic-perfectly plastic particles, Part II: Contact under high compaction—modeling a bulk ela | contact-mechanics theory (bulk-elastic 추가) + FEM(Abaqus 3D)  | 2026-08-25 | — |
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
-| `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
+| `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
 ## 복합양극 미세구조 · percolation (48편)
 

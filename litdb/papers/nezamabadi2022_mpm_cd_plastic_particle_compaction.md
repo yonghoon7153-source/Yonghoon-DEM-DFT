@@ -499,7 +499,7 @@ AM 하중 차폐 (load-shielding) 서사와 같은 계열이다.  재설계 MPM 
 ## 12. 관련 카드 (중복 서술 금지 — 겹치면 넘김)
 - `nguyen2017_mpm_bpm_deformable_particle_compaction` — **짝 (같은 그룹 2017 전신)**: MPM-CD (탄성) vs BPM (소성) · 마찰 μ 0.5 · 절대 Z.
 - `pycompact2025_dem_mpfem_workflow` · `demirtas2021_mpfem_hollow_sphere_die_compaction` — 같은 층 (3) 을 **MPFEM** 으로 · 제하 루프 근거.
-- `zunker2024_mdr_contact_model_partI` · `zunker2024_bulk_elastic_partII` · `zunker2025_dem_large_deformation_compaction` — 후보 C (MDR).
+- `zunker2024_mdr_contact_model_partI` · `zunker2024_bulk_elastic_partII` · `zunker2025_dem_large_deformation_compaction` — 후보 C (MDR).  (2026-11-12 · 2025 편 출판본 보강: 실험 제하 곡선 · 잔류 반경응력 대조가 있다 — 이 카드 '제하 없음' 의 짝 근거)
 - `giannis2021_stress_based_multicontact_dem` · `varkey2026_multicontact_elastoplastic_dem` — DEM 쪽 다중 접촉 보정 (평균장).
 - `devaucorbeil2020_mpm_after_25_years_review` — MPM 접촉 (Bardenhagen 다물체) 의 리뷰 위치 · 우리 scaffold = 내재 no-slip 접촉의 최소 활용.
 - `arzt1982_particle_coordination_densification_spheres` — 3D 구 치밀화의 배위수–밀도 기하 (Z(Φ) 의 3D 대조).

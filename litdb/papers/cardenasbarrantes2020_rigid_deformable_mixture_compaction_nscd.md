@@ -631,6 +631,7 @@ rattler 처리 · Vp 의 갱신 여부 (변형 후 부피 vs 초기 부피) · �
   인계 → MPFEM, 비용 추정).
 - **후보 C · 다중접촉**: `zunker2024_mdr_contact_model_partI` · `zunker2024_bulk_elastic_partII` · `zunker2025_dem_large_deformation_compaction`
   · `giannis2021_stress_based_multicontact_dem`.
+  (2026-11-12 · zunker2025 출판본 보강: 실험 제하 · 잔류 반경응력을 상대밀도 축에서 대조 — 이 논문에 없는 탈압 쪽 근거 · 단 단일 재료)
 - **후보 A′ (MPM 다물체 접촉)**: `devaucorbeil2020_mpm_after_25_years_review` (Bardenhagen 다물체 알고리즘 언급).
 - **FEM neo-Hookean 접촉 · 비국소**: `gonzalez2012_nonlocal_contact_confined_granular`.
 - **우리 소재 Heckel 실측**: `lee2025_heckel_argyrodite_powder_densification_nanoindentation`.

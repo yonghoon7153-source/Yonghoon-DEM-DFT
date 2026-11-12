@@ -282,5 +282,7 @@ V_geo  = (4/3)πR³ − Σᵢ (π/3) δᵢ² [3R − δᵢ]                     
 | **② Part II (이 카드)** | **벌크탄성** + 변위분해 + `A_free/A_tot` | **바탕과 독립** — 어떤 접촉모델에도 얹을 수 있음 (저자 명시) |
 | ③ Zunker 2025 | 다체 DEM(LAMMPS) + 비물리접촉 선별 + MPFEM/실험 | ψ_b 를 **0.5 로 튜닝** — 이 편의 권장값과 다름 |
 
+▶ 2026-11-12 — ③ 의 출판본 (Powder Technol. 459 (2025) 120972) 은 **ψb = 0.125** (이 편 권장 0.08 의 1.56 배 · 여전히 *"tuned … in alignment with the experimental results"*) · 부록 G 민감도: ψb ↑ → 반경 성장이 일찍 멈춰 잔류 반경응력 ↓ · 벌크 전이가 날카로워 RD 0.8 위 축응력 과소 (각주 7) — `zunker2025_dem_large_deformation_compaction` §0-P · §6-G.
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
