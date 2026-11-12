@@ -416,6 +416,7 @@
 - **3D 미세구조 수송 · 전기화학**: `bielefeld2019_microstructural_modeling_composite_cathode` ([16]) · `bielefeld2020_effective_ionic_conductivity_binder` ([14]) · `minnmann2021_jes_charge_transport_bottlenecks` ([15]) · `minnmann2024_microstructure_porosity_visualization` ([8]) · `hlushkou2018_void_space_ion_transport_assb_cathode` ([20]) · `schlautmann2023_se_particle_size_composite_transport` ([42]) · `shi2019_high_am_loading_particle_size_assb` ([41]) · `bazzoun2026_dem_fem_rnm_ionic` (DEM → FEM · RNM σ_ion 의 실험 대조가 있는 쪽).
 - **τ · 수송 정의**: `landesfeind2016_tortuosity_eis_electrodes_separators` ([6]) · `landesfeind2018_tortuosity_impedance_vs_tomography` ([7]) · `aminchiang2016_nmc_electronic_ionic_transport_vs_li` ([34] · σ_AM 0.005 S/m 출처 계열).
 - **화학-기계 (이 논문이 뺀 축)**: `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` ([3]).
+- **같은 사슬 다음 편 (2026-11-12 카드)**: [`benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode`](benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode.md) — 같은 '20 % 압연' 구조 위 기계-전기화학 완전결합 (ChemRxiv 2026) · ⚠ 그 그림 2a 양극 44.6 µm · 40 × 40 µm ↔ 이 카드 표 S1 36.8 µm · 41 × 41 µm.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 295편 · 생성 2026-11-12
+> digest 296편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -252,10 +252,11 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 13 |
 
-## 화학-기계 열화 · 계면 (23편)
+## 화학-기계 열화 · 계면 (24편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
+| `benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode` | 습식 제조 모의 미세구조 (거친 입자 동역학 · 두께 20 % 압연 한 개 · 기공 12 %) 위의 3D 기계-전기화학 완전결합 반쪽 셀 — AM 안 응력 의존 화학 퍼텐셜 μ = μ₀ + RT ln X − Ωσ_h 가 확산 (식 6–7) 과 평형 전위 (식 9) 를 함께 움직이고, AM · SE · CBD 는 선형 탄성 | 3D-resolved FEM (COMSOL multiphysics) half-cell on a reused  | 2026-11-12 | 🖼 55 |
 | `bucci2017_chemomech_failure_assb_cycling_czm` | frame[5] 시간축 / 사이클-균열 — Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design — Bucci, Swamy, Chi | FEM (coupled electro-chemo-mechanical) + CZM (cohesive-zone  | 2026-06-26 | 🖼 5 |
 | `bucci2018_mechanical_instability_interface_delamination` | Mechanical instability of electrode-electrolyte interfaces in solid-state batteries — Bucci, Talamini, Renuka Balakrishna, Chiang, Carter (Phys. Rev. Materials 2018) | continuum (1D radially-symmetric analytical, cohesive-zone f | 2026-06-26 | 🖼 8 |
 | `dem_mechanical_stresses_ssb_electrode_cycling` | frame[5] 사이클 응력 DEM — Understanding mechanical stresses upon solid-state battery electrode cycling using the discrete element method — Alabdali, Zanotto, Chouchane, Ngandjong, Vial | DEM (LIGGGHTS, Hertz; uniaxial+isostatic compaction → cyclic | 2026-06-26 | 🖼 6 |

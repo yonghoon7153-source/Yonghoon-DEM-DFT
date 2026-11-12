@@ -472,6 +472,7 @@
 - **수송 · 이온 앵커**: `bazzoun2026_dem_fem_rnm_ionic` (DEM + FEM + RNM · CAM 70 wt% · 400 MPa) · `schmitt2026_chemomech_stability_dry_cathode_separator_sheets` (같은 날 · 압력 이력이 다른 셀 대조).
 - **참고 [12] 의 원문 카드 (2026-11-12 추가)**: `dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review` (등방 가압 Focus Review · 서지 = 위 참고문헌 표 12 번과 같음 · **같은 압력의 단축 ↔ 등방 대조 값은 없다** — 자체 시연 (안티페로브스카이트 펠릿) 기공 단축 ~12 % (압력 미기재) → CIP 414 MPa ~1.8 % → WIP 345 MPa · 135 °C 0.15 % · 원문은 단축 가압에 대해 '이방성' 낱말 없이 금형 벽 마찰의 밀도 불균일 · 국소 미세구조 차를 말한다 — 대조는 그 카드 §0-1).
 - 참고 [27] 의 원전 (2026-11-12 카드): [`hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode`](hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode.md) — 슬러리 도포 NCM111 (LiNbO₃ 코팅) + Li₆PS₅Cl 시트의 WIP (600 MPa 하나 · 상온–190 °C · 유지 1 s–1 min) · 감압 뒤 싱크로트론 CT 의 기공 + 탄소 복셀 분율 0.19 → 0.057 · 0.042 · 0.039 · 두께 ≈170 → 104 → 94 µm · 압력별 값 · 단축 가압 대조는 없다 (그 카드 §0-1 이 이 카드 L439 의 서지 · 한 줄 요약을 대조 — 원문과 같다).
+- **같은 제1 저자 · 같은 해 (2026-11-12 카드)**: [`benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode`](benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode.md) — 참고 [31] 의 원문 (ChemRxiv v1 프리프린트 · 2026-03-22 · 이 PDF 로는 ESM 서지 확인 안 됨) · 같은 FEM 식 꼴 (그 카드 식 (3)–(16) = 이 카드 §4-3 식 (12)–(24)) · 물성 표 = SI (그 PDF 에 없음) · 검증 = 전압 곡선만.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

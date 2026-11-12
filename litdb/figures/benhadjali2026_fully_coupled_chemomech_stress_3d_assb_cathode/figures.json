@@ -1,0 +1,1395 @@
+{
+ "slug": "benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 7,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Our computational simulation workflow for SSB composite cathodes. The process begins with the wet manufacturing simulation (from slurry to calendered electrode), followed by a half-cell mechano-electrochemical assessment based on coupled equations of electrochemistry, mass transport, and mechanics. The two physics (electrochemistry and mechanics) are fully coupled: lithium concentration–dependent volume changes influence the electrochemical response, while the mechanical feedback to electrochemistry is introduced via a stress-dependent mechano-chemical potential. This bidirectional interaction between electrochemical properties and mechanical behavior forms a closed feedback loop that is resolved through the tracking of microstructure evolution.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    308.5,
+    559.0,
+    599.0
+   ],
+   "w": 2061,
+   "h": 1211,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.73,
+   "viewed": true
+  },
+  {
+   "key": "f1eq",
+   "kind": "figure",
+   "label": "1-eq",
+   "page": 7,
+   "file": "fig_1_eqbox.png",
+   "rotated_deg": 0,
+   "bbox": [
+    313.7,
+    336.3,
+    464.4,
+    380.5
+   ],
+   "w": 628,
+   "h": 184,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.092,
+   "caption": "Fig. 1 equation boxes — Electrochemistry i_ct = i0[exp(Fη/2RT) − exp(−Fη/2RT)] (symmetric Butler–Volmer, α = 0.5 — the only place the BV form is printed) · Mass transport J = −(D/RT) c ∇μ · Volume expansion ε_e = (1/3)Δc Ω I (labelled ε_e in the figure, ε_int in Eq. 14)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_1.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f1",
+   "viewed": true,
+   "recrop": "2026-11-12 다시 자름 — 첫 판 (x 1030–1672 px) 이 왼쪽 반쪽 셀 그림 · 오른쪽 출력 그림의 가장자리 띠를 물었다 · 식 상자 양옆 빈 골 (1035–1040 · 1660–1669 px) 안으로 옮김 (x 1037–1665 · y 116–300 px)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 13,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Half-cell casing in SSB configuration, b) Volume changes of LCO and NMC cathode materials with varying nickel content obtained from crystallographic data versus the state of lithiation (reproduced with permission from [8]).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.1,
+    234.5
+   ],
+   "w": 1953,
+   "h": 708,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.815,
+   "viewed": true,
+   "caption_note": "2026-11-12 캡션 문자열만 정리 — 도구가 캡션 뒤에 붙인 절 제목 ('4. Results and discussions 4.1 …') 을 뺐다 (그림 크롭은 그대로)"
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 13,
+   "file": "fig_2a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.1,
+    320.2,
+    227.6
+   ],
+   "w": 1034,
+   "h": 648,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.718,
+   "caption": "Fig. 2(a) — half-cell domain 40 × 40 µm, total height 74.6 µm, cathode 44.6 µm; stack pressure on top; fixed walls on both sides (green squares); fixed support under the current collector; AM / SE / CBD voxel phases",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_2.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f2",
+   "viewed": true,
+   "recrop": "2026-11-12 다시 자름 — 첫 판 (오른쪽 끝 1080 px) 이 패널 b 래스터의 테두리 선 (1067–1074 px) 을 물었다 · 1064 px 로 옮김 · 오른쪽 위의 옅은 세로선 한 가닥 (범례 글자와 x 가 겹쳐 더 자를 수 없음) 은 원 그림의 패널 b 테두리 — 남김"
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 13,
+   "file": "fig_2b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    333.1,
+    72.1,
+    522.0,
+    234.8
+   ],
+   "w": 787,
+   "h": 678,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.875,
+   "caption": "Fig. 2(b) — reproduced from Koerver 2018 [8]: ΔV/V0 (%) vs x(Li) for LCO, NCM-111, 523, 622, NCA, 811 (NCM-622 last point ≈ −4.8 % at x ≈ 0.19)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_2.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f2",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 15,
+   "file": "fig_3.png",
+   "caption": "Figure 3: a) Mechano-electrochemistry coupling strategies: one-way coupling in which the mechanical response is dependent only on the Li concentration gradient within the active material versus two-way coupling which incorporates also the mechanical feedback on the electrochemical behavior via the mechano-chemical potential update. b) Average overpotential in function of specific capacity, and c) state of charge of active material in function of depth of discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    534.8,
+    385.9
+   ],
+   "w": 1960,
+   "h": 1338,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.866,
+   "viewed": true
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 15,
+   "file": "fig_3b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    354.0,
+    87.9,
+    523.2,
+    223.8
+   ],
+   "w": 705,
+   "h": 566,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.865,
+   "caption": "Fig. 3(b) — average overpotential (mV) vs specific capacity (mAh/g_NMC622), one-way (red) vs full-way coupling (blue)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_3.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f3",
+   "viewed": true
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 15,
+   "file": "fig_3c.png",
+   "rotated_deg": 0,
+   "bbox": [
+    354.0,
+    230.5,
+    523.2,
+    367.8
+   ],
+   "w": 705,
+   "h": 572,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.881,
+   "caption": "Fig. 3(c) — state of charge of AM vs depth of discharge (%), one-way (red) vs full-way coupling (blue)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_3.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f3",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 17,
+   "file": "fig_4.png",
+   "caption": "Figure 4 : a) Cyclic changes of the normal component of Cauchy stress σzz during cycling: The galvanostatic cycling was performed under C/10 for 5 cycles, b) Stress evolution and Li concentration evolution in function of time during the 1st cycle between lithiation and delithiation: fluctuation between compression and tensile stresses, c) Cyclic changes of the cathode thickness change during cycling, and, d) Cathode thickness change evolution for the 1st cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    578.5,
+    440.1
+   ],
+   "w": 2142,
+   "h": 1564,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.908,
+   "viewed": true
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 17,
+   "file": "fig_4a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    89.8,
+    78.3,
+    331.2,
+    249.7
+   ],
+   "w": 1006,
+   "h": 714,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.872,
+   "caption": "Fig. 4(a) — average σzz at the CC/cathode interface (MPa, red) and potential (V, black) vs time, 5 cycles at C/10",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_4.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 17,
+   "file": "fig_4b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    336.5,
+    78.3,
+    552.0,
+    249.7
+   ],
+   "w": 898,
+   "h": 714,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.893,
+   "caption": "Fig. 4(b) — cycle 1: σzz (MPa, red) and Li concentration (10³ mol m⁻³, black) vs time; tensile (+) / compressive (−) annotations",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_4.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 17,
+   "file": "fig_4c.png",
+   "rotated_deg": 0,
+   "bbox": [
+    89.8,
+    255.9,
+    331.2,
+    429.7
+   ],
+   "w": 1006,
+   "h": 724,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.878,
+   "caption": "Fig. 4(c) — cathode thickness change (%, blue) and potential (V, black) vs time, 5 cycles",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_4.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f4d",
+   "kind": "figure",
+   "label": "4d",
+   "page": 17,
+   "file": "fig_4d.png",
+   "rotated_deg": 0,
+   "bbox": [
+    336.5,
+    255.9,
+    552.0,
+    429.7
+   ],
+   "w": 898,
+   "h": 724,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.913,
+   "caption": "Fig. 4(d) — cycle 1: thickness change (%) vs specific capacity (mAh/g_NMC622); 'Irreversible height change' annotation between −0.68 % (start) and ≈ +0.05 % (end of lithiation)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_4.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f4",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 19,
+   "file": "fig_5.png",
+   "caption": "Figure 5 : a) and b) Evolution of the normal stress at z direction σzz and hydrostatic stress within AM during de/lithiation process, repectively, c) Shear stress at AM-SE interface, where its high localized stress in the delithiated state reveals a partial contact loss between AM and SE, d) Volumetric strain distribution across the positive electrode showing an heterogeneity in the fully delithiated state. All these physics are extracted at the first cycle at C/10 and using a deformation scale factor of 2.8.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    533.1,
+    664.3
+   ],
+   "w": 1953,
+   "h": 2498,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.692,
+   "viewed": true
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 19,
+   "file": "fig_5a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    69.7,
+    522.2,
+    232.9
+   ],
+   "w": 1830,
+   "h": 680,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.696,
+   "caption": "Fig. 5(a) — σzz in AM at start of delithiation · end of delithiation · end of lithiation (colour bar −2.5 … 1 × 10⁹ N/m²; row title says MPa)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_5.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72))",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 19,
+   "file": "fig_5b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    232.9,
+    522.2,
+    378.3
+   ],
+   "w": 1830,
+   "h": 714,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.672,
+   "caption": "Fig. 5(b) — hydrostatic stress in AM, same three states (column headers stacked on top; colour bar −2.5 … 1 × 10⁹ N/m²)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_5.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72)) · column-header strip of Fig. 5 stacked on top (16 px gap) so the three states stay labelled",
+   "panel_of": "f5",
+   "parts": [
+    [
+     19,
+     83.0,
+     69.7,
+     522.2,
+     91.8
+    ],
+    [
+     19,
+     83.0,
+     232.9,
+     522.2,
+     378.3
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "f5c",
+   "kind": "figure",
+   "label": "5c",
+   "page": 19,
+   "file": "fig_5c.png",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    378.3,
+    522.2,
+    524.3
+   ],
+   "w": 1830,
+   "h": 716,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.76,
+   "caption": "Fig. 5(c) — shear stress at the AM–SE interface, same three states (column headers stacked on top; colour bar 0 … 10 × 10⁸ N/m² = 0–1 GPa)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_5.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72)) · column-header strip of Fig. 5 stacked on top (16 px gap) so the three states stay labelled",
+   "panel_of": "f5",
+   "parts": [
+    [
+     19,
+     83.0,
+     69.7,
+     522.2,
+     91.8
+    ],
+    [
+     19,
+     83.0,
+     378.3,
+     522.2,
+     524.3
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "f5d",
+   "kind": "figure",
+   "label": "5d",
+   "page": 19,
+   "file": "fig_5d.png",
+   "rotated_deg": 0,
+   "bbox": [
+    83.0,
+    524.3,
+    522.2,
+    651.7
+   ],
+   "w": 1830,
+   "h": 639,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.584,
+   "caption": "Fig. 5(d) — volumetric strain of the composite cathode, same three states (column headers stacked on top; colour bar −0.04 … 0.02)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — cut from the tool's 300-dpi fig_5.png at blank gutters (page bbox = figure bbox + pixel offset / (300/72)) · column-header strip of Fig. 5 stacked on top (16 px gap) so the three states stay labelled",
+   "panel_of": "f5",
+   "parts": [
+    [
+     19,
+     83.0,
+     69.7,
+     522.2,
+     91.8
+    ],
+    [
+     19,
+     83.0,
+     524.3,
+     522.2,
+     651.7
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 20,
+   "file": "fig_6.png",
+   "caption": "Figure 6 : Comparison between experimental and modelled galvanostatic voltage profiles during the first and fifth cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    283.4,
+    521.1,
+    709.4
+   ],
+   "w": 1903,
+   "h": 1776,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.952,
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 6,
+   "file": "eq_01_weppner_huggins_gitt.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    200.5,
+    530.0,
+    238.4
+   ],
+   "w": 1926,
+   "h": 159,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.979,
+   "caption": "Eq. (1), PDF p.6: Weppner–Huggins GITT diffusion coefficient D_Li = (4/9π)(ΔE_s/ΔE_t)² r_p²/t_p (r_p = NMC622 particle radius)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 6,
+   "file": "eq_02_rct_exchange_current.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    428.5,
+    530.0,
+    462.6
+   ],
+   "w": 1926,
+   "h": 143,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.987,
+   "caption": "Eq. (2), PDF p.6: R_ct = RT/(zFAj0) — exchange current density from EIS charge-transfer resistance (A = geometric active interface area)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 8,
+   "file": "eq_03_li_conservation_am.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    696.8,
+    530.0,
+    728.3
+   ],
+   "w": 1926,
+   "h": 132,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.988,
+   "caption": "Eq. (3), PDF p.8: Li conservation inside AM ∂c/∂t + ∇·J = 0 (Fick's law, ref. [33])",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 9,
+   "file": "eq_04_flux_chemomechanical_potential.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    163.0,
+    530.0,
+    194.1
+   ],
+   "w": 1926,
+   "h": 130,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.987,
+   "caption": "Eq. (4), PDF p.9: Li flux driven by the chemo-mechanical potential J = −(Dc/RT)∇μ",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 9,
+   "file": "eq_05_mu_hydrostatic_stress.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    320.0,
+    530.0,
+    338.6
+   ],
+   "w": 1926,
+   "h": 78,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.973,
+   "caption": "Eq. (5), PDF p.9: μ = μ0 + RT ln X − Ωσ_h (σ_h = tr(σ)/3, Ω = partial molar volume)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 9,
+   "file": "eq_06_flux_stress_gradient.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    446.2,
+    530.0,
+    475.4
+   ],
+   "w": 1926,
+   "h": 122,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.978,
+   "caption": "Eq. (6), PDF p.9: J = −D(∇c − (c/RT)∇(Ωσ_h)) — concentration + hydrostatic-stress gradient flux",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 9,
+   "file": "eq_07_stress_concentration_pde.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    579.2,
+    530.0,
+    610.2
+   ],
+   "w": 1926,
+   "h": 130,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.959,
+   "caption": "Eq. (7), PDF p.9: ∂c/∂t − D∇²c + (D/RT)∇c·∇(Ωσ_h) + (Dc/RT)∇²(Ωσ_h) = 0 — fully coupled stress–concentration PDE (3rd and 4th terms = mechanical feedback)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 10,
+   "file": "eq_08_overpotential.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    170.2,
+    530.0,
+    189.8
+   ],
+   "w": 1926,
+   "h": 82,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.98,
+   "caption": "Eq. (8), PDF p.10: reaction overpotential η = φ_s − φ_e − E_eq",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 10,
+   "file": "eq_09_eeq_from_mu.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    298.4,
+    530.0,
+    327.0
+   ],
+   "w": 1926,
+   "h": 120,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.989,
+   "caption": "Eq. (9), PDF p.10: stress-modified equilibrium potential E_eq = −μ/F",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 10,
+   "file": "eq_10_mechanical_equilibrium.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    578.7,
+    530.0,
+    598.2
+   ],
+   "w": 1926,
+   "h": 82,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.983,
+   "caption": "Eq. (10), PDF p.10: mechanical equilibrium ∇·σ + F_b = 0 (F_b = 0; 68 MPa stack pressure as boundary condition)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 11,
+   "file": "eq_11_hooke_linear_elastic.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    297.9,
+    530.0,
+    317.4
+   ],
+   "w": 1926,
+   "h": 82,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.988,
+   "caption": "Eq. (11), PDF p.11: Hooke's law σ = C : ε_e (AM, SE and CBD all linear elastic)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 11,
+   "file": "eq_12_total_strain.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    406.4,
+    530.0,
+    437.4
+   ],
+   "w": 1926,
+   "h": 130,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.975,
+   "caption": "Eq. (12), PDF p.11: total strain ε_t = ε_e + ε_int = ½((∇u)ᵀ + ∇u) (small strain)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 11,
+   "file": "eq_13_elastic_strain.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    543.2,
+    530.0,
+    562.7
+   ],
+   "w": 1926,
+   "h": 82,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.985,
+   "caption": "Eq. (13), PDF p.11: elastic strain ε_e = ε_t − ε_int",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 11,
+   "file": "eq_14_intercalation_strain.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    647.8,
+    530.0,
+    678.9
+   ],
+   "w": 1926,
+   "h": 130,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.987,
+   "caption": "Eq. (14), PDF p.11: intercalation (eigen)strain ε_int = (1/3)Δc Ω I — thermal-strain analogue, isotropic",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 12,
+   "file": "eq_15_partial_molar_volume.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    68.5,
+    530.0,
+    101.9
+   ],
+   "w": 1926,
+   "h": 140,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.978,
+   "caption": "Eq. (15), PDF p.12: Ω = 3λ / ((x − x0) C_total) — secant partial molar volume from the lattice linear strain λ (ref. [23])",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq16",
+   "page": 12,
+   "file": "eq_16_linear_strain_lambda.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    209.6,
+    530.0,
+    250.2
+   ],
+   "w": 1926,
+   "h": 170,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.973,
+   "caption": "Eq. (16), PDF p.12: λ = (ΔV/V0 + 1)^(1/3) − 1 = ((V_x − V0)/V_x + 1)^(1/3) − 1 (ΔV from Koerver 2018 [8]; second form printed with V_x in the denominator)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — ink rows of the display equation ± 4 pt (column width 68–530 pt, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4_prior_coupled_models_novelty_claim",
+   "page": 4,
+   "file": "txt_p4_prior_coupled_models_novelty_claim.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    222.6,
+    530.0,
+    519.0
+   ],
+   "w": 1926,
+   "h": 1236,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.885,
+   "caption": "PDF p.4: fully coupled models so far only for 1D / 2D / single particle / homogenized; all 3D-resolved studies one-way (complexity, cost [25,26]); this work = 'novel experimentally validated fully coupled' workflow on wet-manufacturing-simulated 3D microstructures; same measurements used for parameterization and validation",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5_halfcell_assembly_3t_2t_68mpa",
+   "page": 5,
+   "file": "txt_p5_halfcell_assembly_3t_2t_68mpa.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    401.1,
+    530.0,
+    648.2
+   ],
+   "w": 1926,
+   "h": 1030,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.886,
+   "caption": "PDF p.5: half-cell assembly — LPSCl 100 mg pellet at 2 tons; cathode discs compressed at 3 tons then punched to Ø10 mm; mass and thickness measured (values not printed); pressed on the pellet at 2 tons; Li on Ø9 mm In; torque 11 N m 'equal to 68 MPa'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5_p6_cycling_gitt_protocol",
+   "page": 5,
+   "file": "txt_p5_p6_cycling_gitt_protocol.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    689.6,
+    530.0,
+    771.0
+   ],
+   "w": 1926,
+   "h": 870,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.895,
+   "caption": "PDF p.5–6: 25 cycles at 60 °C, 1.9–3.7 V vs Li-In, 1C = 200 mA/g, C-rate stepped every 5 cycles; first five cycles (Figure S1) used to validate the model; GITT 0.05 C, 60 min pulses, 90 min relaxation",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     5,
+     68.0,
+     689.6,
+     530.0,
+     771.0
+    ],
+    [
+     6,
+     68.0,
+     69.4,
+     530.0,
+     192.6
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6_p7_parameterization_microstructure_source",
+   "page": 6,
+   "file": "txt_p6_p7_parameterization_microstructure_source.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    492.3,
+    530.0,
+    768.6
+   ],
+   "w": 1926,
+   "h": 2028,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.907,
+   "caption": "PDF p.6–7: OCV, D_Li and j0 from the experiments parameterize the model (all in Figure S1); microstructure from previous work [27] (CGMD, LAMMPS) — AM 10 µm, porosity 12 %, carbon and binder not separate, force fields calibrated to PSD, density, viscosity; same microstructures used before in [29] (electrochemistry) and [26] (one-way mechanics)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     6,
+     68.0,
+     492.3,
+     530.0,
+     768.6
+    ],
+    [
+     7,
+     68.0,
+     69.4,
+     530.0,
+     275.7
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8_oneway_extension_20pct_overlap_voxel",
+   "page": 8,
+   "file": "txt_p8_oneway_extension_20pct_overlap_voxel.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    69.4,
+    530.0,
+    411.0
+   ],
+   "w": 1926,
+   "h": 1424,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.896,
+   "caption": "PDF p.8: extends the one-way framework [26] with the stress → chemical-potential feedback; one microstructure with 20 % thickness reduction after pressing; overlaps CBD–AM / CBD–SE added to AM / SE in a voxelization post-processing step; INNOV voxelization and multi-phase meshing",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8_comsol_halfcell_5cycles_hardware",
+   "page": 8,
+   "file": "txt_p8_comsol_halfcell_5cycles_hardware.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    461.1,
+    530.0,
+    625.1
+   ],
+   "w": 1926,
+   "h": 684,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.882,
+   "caption": "PDF p.8: mesh imported into COMSOL Multiphysics; half-cell (Al CC + 3D NMC622 cathode + SE separator + Li metal); 5 galvanostatic cycles at C/10; MatriCS, one node, 500 GB RAM, 1 processor (Xeon E5-2680 v4, 28 cores)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9_coupling_terms_vs_previous_study",
+   "page": 9,
+   "file": "txt_p9_coupling_terms_vs_previous_study.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    632.0,
+    530.0,
+    734.6
+   ],
+   "w": 1926,
+   "h": 428,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.884,
+   "caption": "PDF p.9: 3rd and 4th terms of Eq. (7) = mechanical feedback (stress-dependent Li transport) — the advance over the previous study [36] where stress was neglected in Li diffusion",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10_p11_stack_bc_dv_linear_elastic",
+   "page": 10,
+   "file": "txt_p10_p11_stack_bc_dv_linear_elastic.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    621.4,
+    530.0,
+    766.2
+   ],
+   "w": 1926,
+   "h": 1480,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.891,
+   "caption": "PDF p.10–11: F_b = 0; 68 MPa stack pressure as boundary condition; NMC622 volume change ~4.8 %; AM expected to stay elastic (refs [17,18]); simplification 'with minimum computational cost'; SE and CBD response cannot be neglected — all three phases linear elastic",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     10,
+     68.0,
+     621.4,
+     530.0,
+     766.2
+    ],
+    [
+     11,
+     68.0,
+     69.4,
+     530.0,
+     275.7
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12_dv_definition_rigid_separator_bcs_tables",
+   "page": 12,
+   "file": "txt_p12_dv_definition_rigid_separator_bcs_tables.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    280.6,
+    530.0,
+    640.5
+   ],
+   "w": 1926,
+   "h": 1500,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.894,
+   "caption": "PDF p.12: ΔV of NMC622 measured on delithiation, assumed reversible, from ref. [8] (Fig. 2b); separator and CC rigid bodies; fixed support (u = θ = 0) at the external CC surface; fixed lateral walls (cell casing); OCV, D, j0 from experiments; all other properties in Tables S1–S2 (not in this PDF)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x13a",
+   "kind": "text",
+   "label": "p13_p14_overpotential_sign_mechanism",
+   "page": 13,
+   "file": "txt_p13_p14_overpotential_sign_mechanism.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    436.3,
+    530.0,
+    766.4
+   ],
+   "w": 1926,
+   "h": 1911,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.887,
+   "caption": "PDF p.13–14: one-way vs full two-way coupling with identical parameters (Tables S1–S2); full coupling → higher average overpotential because Ωσ_h shifts E_eq; on lithiation AM expansion against SE and stack pressure → σ_h < 0 → μ up, E_eq down → larger η",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     13,
+     68.0,
+     436.3,
+     530.0,
+     766.4
+    ],
+    [
+     14,
+     68.0,
+     69.6,
+     530.0,
+     193.8
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x14a",
+   "kind": "text",
+   "label": "p14_soc_mechanical_pull_claim",
+   "page": 14,
+   "file": "txt_p14_soc_mechanical_pull_claim.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    194.4,
+    530.0,
+    483.7
+   ],
+   "w": 1926,
+   "h": 1206,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.889,
+   "caption": "PDF p.14: average SOC slightly higher with full coupling; stress-gradient flux drives Li to less-compressed regions; compression as a mechanical 'pull'; 'significant impact' claim",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x15a",
+   "kind": "text",
+   "label": "p15_p16_plasticity_ignored_uniaxial_sigmazz",
+   "page": 15,
+   "file": "txt_p15_p16_plasticity_ignored_uniaxial_sigmazz.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    679.7,
+    530.0,
+    761.1
+   ],
+   "w": 1926,
+   "h": 1300,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.886,
+   "caption": "PDF p.15–16: 'The plasticity as a material property is ignored in this study' (electrode-scale rearrangement may give irreversibility); casing x, y fixed, electrode free along z; σzz evaluated at the cathode/CC interface (where sensors measure); Li-In anode volume change set to zero (zero-strain anode like LTO)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     15,
+     68.0,
+     679.7,
+     530.0,
+     761.1
+    ],
+    [
+     16,
+     68.0,
+     69.6,
+     530.0,
+     296.0
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x16a",
+   "kind": "text",
+   "label": "p16_sigmazz_minus78_plus35_minus110",
+   "page": 16,
+   "file": "txt_p16_sigmazz_minus78_plus35_minus110.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    297.6,
+    530.0,
+    730.9
+   ],
+   "w": 1926,
+   "h": 1806,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.885,
+   "caption": "PDF p.16: average σzz at the CC/cathode interface — predominantly compressive; −78 MPa at start of delithiation, tensile ≈ +35 MPa at end of delithiation, −110 MPa at end of lithiation ('irreversibility')",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x17a",
+   "kind": "text",
+   "label": "p17_thickness_068_261_329_0725",
+   "page": 17,
+   "file": "txt_p17_thickness_068_261_329_0725.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    545.8,
+    530.0,
+    769.8
+   ],
+   "w": 1926,
+   "h": 934,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.889,
+   "caption": "PDF p.17: cathode thickness change −0.68 % from the initial compressive load, −2.61 % during charge, −3.29 % at end of charge, then 'slightly expands by 0.725 % from the initial state' on lithiation; 68 MPa 'sufficient to minimize the overall thickness variation'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x18a",
+   "kind": "text",
+   "label": "p18_irreversibility_rearrangement_claim",
+   "page": 18,
+   "file": "txt_p18_irreversibility_rearrangement_claim.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    69.6,
+    530.0,
+    254.7
+   ],
+   "w": 1926,
+   "h": 772,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.884,
+   "caption": "PDF p.18: first-cycle irreversibility attributed to particle rearrangement and densification under stack pressure ('permanent compaction', 'residual thickness reduction'); later cycles reversible",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x18b",
+   "kind": "text",
+   "label": "p18_spatial_fields_shear_1gpa_contact_loss",
+   "page": 18,
+   "file": "txt_p18_spatial_fields_shear_1gpa_contact_loss.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    289.0,
+    530.0,
+    702.1
+   ],
+   "w": 1926,
+   "h": 1722,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.888,
+   "caption": "PDF p.18: spatial σzz, σ_h and volumetric strain heterogeneity; AM negative and SE/CBD positive volumetric strain at full delithiation; interpreted as partial contact loss; AM–SE interface shear up to 1 GPa",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x20a",
+   "kind": "text",
+   "label": "p20_p21_validation_charge_discharge_upper_bc",
+   "page": 20,
+   "file": "txt_p20_p21_validation_charge_discharge_upper_bc.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    70.6,
+    530.0,
+    285.9
+   ],
+   "w": 1926,
+   "h": 2118,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.889,
+   "caption": "PDF p.20–21: voltage shifted +0.65 V (Li-In → Li/Li⁺); charge agreement 'expected' because OCV, D and j0 were extracted from charging data; discharge deviation attributed to SEI not modeled and to the upper boundary allowing minor displacement (screw-fixed in the experiment)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     20,
+     68.0,
+     70.6,
+     530.0,
+     285.9
+    ],
+    [
+     21,
+     68.0,
+     69.6,
+     530.0,
+     358.4
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x21a",
+   "kind": "text",
+   "label": "p21_p22_conclusion_irreversibility_local_stress",
+   "page": 21,
+   "file": "txt_p21_p22_conclusion_irreversibility_local_stress.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    525.6,
+    530.0,
+    772.6
+   ],
+   "w": 1926,
+   "h": 1646,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.887,
+   "caption": "PDF p.21–22: conclusion — one-way vs fully coupled comparison ('stress-driven diffusion … significant influence'; 'electrochemical responses can be underestimated when one-way coupling approaches are employed'); NMC622 ~4.8 % volume change; first-cycle irreversibility with 'average axial stress change of approximately 110 MPa' and 'irreversible thickness change of approximately 0.725 %'; local stresses up to 2.5 GPa compressive and 1 GPa tensile",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     21,
+     68.0,
+     525.6,
+     530.0,
+     772.6
+    ],
+    [
+     22,
+     68.0,
+     69.6,
+     530.0,
+     213.4
+    ]
+   ],
+   "viewed": true,
+   "recrop": "2026-11-12 다시 자름 — 첫 판 (p.21 653.4 pt 부터) 이 앞 문단의 끝 두 줄을 머리에 물고 있었다 (줄 번호 대응 실수) · 인용하는 앞 문단 ('First, a comparative study …') 을 통째로 넣도록 p.21 529.6 pt 부터로 옮김"
+  },
+  {
+   "key": "x22a",
+   "kind": "text",
+   "label": "p22_validation_summary_future_plasticity_fracture",
+   "page": 22,
+   "file": "txt_p22_validation_summary_future_plasticity_fracture.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    214.6,
+    530.0,
+    503.4
+   ],
+   "w": 1926,
+   "h": 1204,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.893,
+   "caption": "PDF p.22: agreement mainly on charge; SEI and degradation not modeled; future model should include plastic deformation and fracture of AM particles and SE (contact loss, cracks, damage mechanics)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x23a",
+   "kind": "text",
+   "label": "p23_supplementary_placeholder_xxx",
+   "page": 23,
+   "file": "txt_p23_supplementary_placeholder_xxx.png",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    409.9,
+    530.0,
+    469.3
+   ],
+   "w": 1926,
+   "h": 249,
+   "dpi": 300,
+   "src": "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf",
+   "blank": 0.93,
+   "caption": "PDF p.23: 'Supplementary material … can be found, in the online version, at XXX' — SI (Figure S1, Tables S1–S2) not included in this preprint PDF",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — ink rows of the cited paragraph lines ± 4 pt (column width 68–530 pt) · 300 dpi",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-11-12 — ChemRxiv preprint v1 (posted 22 March 2026, DOI 10.26434/chemrxiv.15001135/v1, CC-BY 4.0, 26 PDF pages; PDF p.1 = ChemRxiv cover with abstract; printed page = PDF page − 1). Supplementary material is not in this PDF ('at XXX', p.22): Figure S1 and Tables S1–S2 are not available. Tool crops 6 (Fig. 1–6) all viewed and kept (Fig. 2 caption string trimmed only). Hand crops 49: panels 13 (1-eq box · 2a · 2b · 3b · 3c · 4a–4d · 5a–5d; Fig. 5 panels carry the column-header strip stacked on top) · equations 16 ((1)–(16), one per number) · evidence paragraphs 20. Re-cut after viewing 3 (x21a · f1eq · f2a). digitized.csv = tick-calibrated pixel reads from the 300-dpi panel crops (Fig. 3b · 3c · 4a · 4b · 4c · 4d · 6).",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of) · f1eq = equation boxes inside Fig. 1 (the only place the Butler–Volmer form is printed) · e01–e16 = equations (1)–(16) · x<page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1], stacked top→bottom, 16 px gap); page = PDF page (printed page + 1)"
+}
