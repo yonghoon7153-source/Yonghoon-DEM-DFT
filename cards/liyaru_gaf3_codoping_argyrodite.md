@@ -1,4 +1,4 @@
-# Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries
+# Dual-Functional Ga/F Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries
 
 *GaF₃ 공도핑은 전도도를 조금 내주고 계면과 대기 안정성을 얻는다*
 

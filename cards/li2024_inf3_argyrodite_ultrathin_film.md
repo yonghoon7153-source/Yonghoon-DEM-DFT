@@ -1,4 +1,4 @@
-# A Versatile InF 3 Substituted Argyrodite Sul de ElectrolyteToward Ultrathin Films for AllSolidState Lithium Batteries
+# A Versatile InF₃ Substituted Argyrodite Sulfide Electrolyte Toward Ultrathin Films for All-Solid-State Lithium Batteries
 
 *InF₃ 공도핑이 아지로다이트의 Li 금속·용매 내성을 함께 높인다*
 

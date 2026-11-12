@@ -1,6 +1,6 @@
 # MPM과 연속체 모형
 
-전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 13편 · 읽기 카드 13편
+전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 19편 · 읽기 카드 8편
 
 > 물질점법과 연속체 구성 모형.
 
@@ -24,7 +24,7 @@
 
 2D 변형 입자 압밀 두 편은 재밍 뒤에는 재배열이 아니라 입자 형상 변화가 치밀화를 지배한다고 보았다. Nguyen et al. 2017은 Φ0 = 0.8 이후 배위수가 (Φ−Φ0)^0.5로 늘고 마찰 영향은 작다고 적었다. Nezamabadi et al. 2022는 입자에 소성을 넣었고, 소성 입자가 탄성 입자보다 낮은 응력으로 공극을 채운다고 적었다. 같은 제곱근 법칙은 재료와 무관하게 성립했다. 두 곡선은 σ ≳ 0.35 MPa에서 갈라졌고, 이 값은 입자 항복응력 0.4 MPa보다 낮다. [근거: Nguyen et al. 2017 (`nguyen2017_mpm_bpm_deformable_particle_compaction`); Nezamabadi et al. 2022 (`nezamabadi2022_mpm_cd_plastic_particle_compaction`)]
 
-3D나 다른 재료에서는 남는 기공의 해석이 엇갈린다. Bardenhagen et al. 2005는 탄성 발포체 단위 셀을 비압축 기준의 완전 치밀화 지점까지 눌렀고, 그 지점에서도 기공 약 35%가 남는다고 적었다. 원문은 뼈대가 서로 걸려 기공이 갇힌다고 해석했다. 검토 측은 붙는 접촉이 격자 크기의 틈을 가둬, 남은 기공 일부가 해상도 탓일 수 있다고 본다. Mohammadhosseinzadeh et al. 2026은 DEM 패킹을 입자별 FE로 넘겨 Fe–Si–Al–P 분말을 눌렀고, 상대밀도 최대 편차를 2.5 %로 보고했다. 검토 측은 이 결과의 메시 수렴이 확인되지 않았고, 마찰 µ가 사실상 보정 노브라고 본다. [근거: Bardenhagen et al. 2005 (`bardenhagen2005_mpm_foam_densification_simulation`); Mohammadhosseinzadeh et al. 2026 (`pycompact2025_dem_mpfem_workflow`)]
+3D나 다른 재료에서는 남는 기공의 해석이 엇갈린다. Bardenhagen et al. 2005는 탄성 발포체 단위 셀을 비압축 기준의 완전 치밀화 지점까지 눌렀고, 그 지점에서도 기공 약 35%가 남는다고 적었다. 원문은 뼈대가 서로 걸려 기공이 갇힌다고 해석했다. 검토 측은 붙는 접촉이 격자 크기의 틈을 가둬, 남은 기공 일부가 해상도 탓일 수 있다고 본다. Mohammadhosseinzadeh et al. 2026은 DEM packing을 입자별 FE로 넘겨 Fe–Si–Al–P 분말을 눌렀고, 상대밀도 최대 편차를 2.5 %로 보고했다. 검토 측은 이 결과의 메시 수렴이 확인되지 않았고, 마찰 µ가 사실상 보정 노브라고 본다. [근거: Bardenhagen et al. 2005 (`bardenhagen2005_mpm_foam_densification_simulation`); Mohammadhosseinzadeh et al. 2026 (`pycompact2025_dem_mpfem_workflow`)]
 
 ### 구성식의 골격과 항복면
 
@@ -71,20 +71,26 @@
 4. Homel · Herbold 2017 (`homel2017_mpm_field_gradient_partitioning_fracture_self_contact`) — 노드당 두 장으로 장 수와 메모리 문제를 피하는 길을 보인다.
 5. Hu et al. 2018 (`hu2018_mls_mpm_cpic_two_way_rigid_coupling`) — 우리 Taichi MLS-MPM 이산화의 인용 원전이다.
 
-## 이 장의 논문 (13편)
+## 이 장의 논문 (19편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
-| `bardenhagen2000_mpm_granular_multibody_frictional_contact` | Bardenhagen, Brackbill & Sulsky 2000 | The material-point method for granular materials | 알갱이별 격자 속도장을 공통 질량중심장과 비교하면 짝 탐색 없이 분리와 Coulomb 미끄럼이 되고, 전단 변형 양상이 크게 달라진다. |
-| `bardenhagen2001_mpm_improved_contact_granular_stress_waves` | Bardenhagen, Guilkey 외 4인 2001 | An improved contact algorithm for the material point method and application to stress propagation in granular material | 수직 견인력이 압축인 동안 접촉을 유지하고 작은 격자 질량에서 보정을 줄인 MPM 접촉이 3D 구 해석해와 광탄성 무늬를 정성적으로 재현한다. |
-| `bardenhagen2005_mpm_foam_densification_simulation` | Bardenhagen et al. 2005 | Insight into the physics of foam densification via numerical simulation | 입자 기법 GIMP로 탄성 발포체 단위 셀을 공칭 변형률 90 %까지 누르자, 비압축 기준의 완전 치밀화 지점에서도 기공 약 35 %가 남았다. |
+| `bardenhagen2000_mpm_granular_multibody_frictional_contact` | Bardenhagen, Brackbill & Sulsky 2000 | The material-point method for granular materials | (카드 없음) |
+| `bardenhagen2001_mpm_improved_contact_granular_stress_waves` | Bardenhagen, Guilkey 외 4인 2001 | An improved contact algorithm for the material point method and application to stress propagation in granular material | (카드 없음) |
+| `guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison` | Guilkey · Weiss 2003 | Implicit time integration for the material point method: Quantitative and algorithmic comparisons with the finite element method | (카드 없음) |
+| `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` | Bardenhagen, Kober 2004 | The generalized interpolation material point method | (카드 없음) |
+| `bardenhagen2005_mpm_foam_densification_simulation` | Bardenhagen et al. 2005 | Insight into the physics of foam densification via numerical simulation | (카드 없음) |
 | `lawrence2008_single_vgcnf_elastic_modulus_morphology` | Lawrence et al. 2008 | Elastic Properties and Morphology of Individual Carbon Nanofibers | 같은 섬유의 굽힘 탄성률과 벽 형태를 짝지어 재면 값이 6에서 207 GPa까지 퍼지고, 외벽 비율과 벽 두께가 이를 가른다. |
+| `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | Steffen · Wallstedt · Guilkey · Kirby · Berzins 2008 | Examination and analysis of implementation choices within the material point method MPM | (카드 없음) |
+| `steffen2010_mpm_space_time_error_balance_moving_mesh` | Steffen et al. 2010 | Decoupling and balancing of space and time errors in the material point method (MPM) | (카드 없음) |
+| `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | Sadeghirad et al. 2011 | A convected particle domain interpolation technique to extend applicability of the material point method for problems involving massive deformations | (카드 없음) |
 | `stomakhin2013_mpm_snow_elastoplastic` | Stomakhin et al. 2013 | A material point method for snow simulation | F = F_E·F_P 곱분해와 특이값 클램프 return mapping을 쓴 MPM이 하나의 구성식으로 눈의 흐름, 뭉침, 파쇄를 재현한다. |
+| `nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions` | Nairn · Guilkey 2015 | Axisymmetric form of the generalized interpolation material point method | (카드 없음) |
 | `klar2016_dp_sand_animation` | Klár et al. 2016 | Drucker-prager elastoplasticity for sand animation | 점착 없는 Drucker-Prager 원뿔을 Hencky 변형률 공간에서 부피를 보존하며 사영하면 MPM으로 모래의 흐름과 붕괴를 재현할 수 있다. |
-| `gritton2017_mpm_chemomechanical_coupling_silicon_anode` | Gritton et al. 2017 | Using the material point method to model chemical/mechanical coupling in the deformation of a silicon anode | MPM 입자에 리튬 농도를 싣고 밀도를 인위로 올려 규소 나노기둥의 리튬화와 탈리튬화를 3D로 풀었다. |
+| `gritton2017_mpm_chemomechanical_coupling_silicon_anode` | Gritton et al. 2017 | Using the material point method to model chemical/mechanical coupling in the deformation of a silicon anode | (카드 없음) |
 | `homel2017_mpm_field_gradient_partitioning_fracture_self_contact` | Homel · Herbold 2017 | Field‐gradient partitioning for fracture and frictional contact in the material point method | 손상장 기울기로 노드마다 물질을 두 속도장에 나누면 알갱이 수와 무관하게 파괴 뒤 마찰 접촉과 자기 접촉을 다룰 수 있다. |
 | `nguyen2017_mpm_bpm_deformable_particle_compaction` | Nguyen et al. 2017 | Compaction of granular materials composed of deformable particles | 2D 무른 입자 압밀에서 형상 변화가 치밀화를 지배하고, 마찰 영향은 작으며, 배위수는 두 방법 모두 (Φ−Φ0)^0.5를 따른다. |
 | `hu2018_mls_mpm_cpic_two_way_rigid_coupling` | Hu et al. 2018 | A moving least squares material point method with displacement discontinuity and two-way rigid body coupling | MLS-MPM은 APIC의 C_p로 힘과 변형구배를 구해 전달을 약 두 배 빠르게 하고, CPIC는 격자 한 장에서 강체 표면 양쪽 재료를 따로 움직이게 한다. |
 | `devaucorbeil2020_mpm_after_25_years_review` | de Vaucorbeil, Nguyen, Sinaie, Wu 2020 | Material point method after 25 years: Theory, implementation, and applications | MPM 25년을 정리한 첫 종합 리뷰로, 변종, 접촉, 파괴, 응용, 코드, 타 방법과의 비교를 한 틀에 묶었다. |
-| `nezamabadi2022_mpm_cd_plastic_particle_compaction` | Nezamabadi et al. 2022 | Modelling the compaction of plastic particle packings | 입자별 격자 MPM과 CD로 2D 원판 300개를 압축하자 재밍 뒤 형상 변화가 압밀을 지배했고, 소성 입자는 더 낮은 응력으로 공극을 채웠다. |
-| `pycompact2025_dem_mpfem_workflow` | Mohammadhosseinzadeh et al. 2026 | PyCompact: An integrated workflow for discrete element method–multi-particle finite element method for powder compaction simulation | LIGGGHTS 침강 패킹의 (x, y, z, r) 표만 OpenRadioss MPFEM으로 넘겨 압축과 제하를 다시 풀었고, 상대밀도 편차는 최대 2.5 %였다. |
+| `nezamabadi2022_mpm_cd_plastic_particle_compaction` | Nezamabadi et al. 2022 | Modelling the compaction of plastic particle packings | (카드 없음) |
+| `pycompact2025_dem_mpfem_workflow` | Mohammadhosseinzadeh et al. 2026 | PyCompact: An integrated workflow for discrete element method–multi-particle finite element method for powder compaction simulation | LIGGGHTS 침강 packing의 (x, y, z, r) 표만 OpenRadioss MPFEM으로 넘겨 압축과 제하를 다시 풀었고, 상대밀도 편차는 최대 2.5 %였다. |

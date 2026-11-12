@@ -1,4 +1,4 @@
-# Ordered mixing A new concept in powder mixing practice
+# Ordered Mixing: A New Concept in Powder Mixing Practice
 
 *점착성 미분은 큰 입자 표면에 붙어 정렬 단위체로 섞인다*
 

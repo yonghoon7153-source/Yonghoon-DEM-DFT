@@ -1,4 +1,4 @@
-# Substitutional Effects at A- and B-Sites in High-Entropy ABO₃ Perovskites: Insights from Machine Learning-Accelerated Simulations and Active Learning — G. Liu et al. (WPI)
+# Substitutional Effects at A- and B-Sites in High-Entropy ABO₃ Perovskites: Insights from Machine Learning-Accelerated Simulations and Active Learning
 
 *host를 고정해 A·B자리 치환을 갈라 대리모델로 훑는다*
 

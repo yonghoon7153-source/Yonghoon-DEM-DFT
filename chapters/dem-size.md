@@ -28,7 +28,7 @@ Schlautmann et al. 2023만은 순수 Li₆PS₅Cl 전도도가 입도에 평평�
 
 ### 기하와 연결성
 
-강체 구 패킹과 DEM 연결성 모델은 크기비가 충진과 이용률을 정한다고 본다. McGeary 1961은 직경비가 7을 넘어야 미세 구가 조대 구의 간극을 채우고 이성분 최대밀도가 86.0 %로 평탄해진다고 적었다. Shi et al. 2019는 CAM 이용률이 로딩과 λ = D̄_CAM/D̄_SE에 함께 달리고, 75 wt%에서 98 % 이용률에 λ_min=2.1이 필요하다고 계산했다. 85 wt%에서는 λ를 1에서 8로 키워도 θ가 ≈16 %에서 ≈20 %로만 올랐다. Zhou et al. 2025의 DEM은 2 % overlap 기준에서 미세 쪽 CAM utilization 100 %, 거친 쪽 83 %를 냈다. [근거: McGEARY 1961 (`mcgeary1961_bimodal_sphere_packing`); Shi et al. 2019 (`shi2019_high_am_loading_particle_size_assb`); Zhou et al. 2025 (`tailored_cathode_microstructure_low_pressure_assb`)]
+강체 구 packing과 DEM 연결성 모델은 크기비가 충진과 이용률을 정한다고 본다. McGeary 1961은 직경비가 7을 넘어야 미세 구가 조대 구의 간극을 채우고 이성분 최대밀도가 86.0 %로 평탄해진다고 적었다. Shi et al. 2019는 CAM 이용률이 로딩과 λ = D̄_CAM/D̄_SE에 함께 달리고, 75 wt%에서 98 % 이용률에 λ_min=2.1이 필요하다고 계산했다. 85 wt%에서는 λ를 1에서 8로 키워도 θ가 ≈16 %에서 ≈20 %로만 올랐다. Zhou et al. 2025의 DEM은 2 % overlap 기준에서 미세 쪽 CAM utilization 100 %, 거친 쪽 83 %를 냈다. [근거: McGEARY 1961 (`mcgeary1961_bimodal_sphere_packing`); Shi et al. 2019 (`shi2019_high_am_loading_particle_size_assb`); Zhou et al. 2025 (`tailored_cathode_microstructure_low_pressure_assb`)]
 
 접촉 면적과 유효 전도도는 같은 방향으로 움직이지 않을 수 있다. Park et al. 2020은 1D 원기둥 LLZO-Ta가 0D 250 nm보다 접촉면적이 낮아도 유효 이온전도도가 크게 높다고 계산했다. Yano et al. 2026의 DEM에서는 기하 τ가 1.14–1.17로 거의 평평했고 경로당 입자 수만 20.5에서 26.3으로 늘었다. 원문은 큰 입자가 경로의 입계 수를 줄이는 fast-track이 된다고 적었다. 그래서 우리는 coverage와 tau2를 하나로 접지 않고, 경로당 입자 수 N을 우리 수송 지표가 민감하게 반응하는 양으로 본다. [근거: Park et al. 2020 (`park2020_dimension_controlled_se_percolation_contact_area`); Yano et al. 2026 (`yano2026_se_psd_width_ionic_tortuosity_dem`)]
 

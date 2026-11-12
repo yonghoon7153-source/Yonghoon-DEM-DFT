@@ -1,4 +1,4 @@
-# Stability Issues in Sulfide-Based All-Solid-State Batteries: From Material Properties to Electrode Interfaces — Yang Li / … / Hong Liu* / Ce-Wen Nan / Li-Zhen Fan* (Electrochemical Energy Reviews, 미출판 manuscript draft ECER-D-26-00097)
+# Stability Issues in Sulfide-Based All-Solid-State Batteries: From Material Properties to Electrode Interfaces
 
 *황화물 전해질의 불안정은 여러 인자가 얽힌 결합 효과다*
 

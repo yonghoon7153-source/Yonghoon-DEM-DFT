@@ -1,4 +1,4 @@
-# Theory of yield of cohesive powders
+# Theory of Yield of Cohesive Powders
 
 *소성 평탄화가 응집력을 얼려 응집력이 압밀력에 비례한다*
 

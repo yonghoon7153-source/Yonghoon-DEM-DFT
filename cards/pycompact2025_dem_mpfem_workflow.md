@@ -1,17 +1,17 @@
 # PyCompact: An integrated workflow for discrete element method–multi-particle finite element method for powder compaction simulation
 
-*DEM 패킹을 입자별 FE로 넘겨 압축 밀도를 실험에 맞춘다*
+*DEM packing을 입자별 FE로 넘겨 압축 밀도를 실험에 맞춘다*
 
 - Mohammadhosseinzadeh et al. · SoftwareX 33, 102495 (2026) · doi:10.1016/j.softx.2025.102495 · digest `pycompact2025_dem_mpfem_workflow`
 - 읽기 카드: digest를 풀어 쓰고 기계로 검증한 것. 괄호 안의 L 번호는 digest의 줄이다. 인용은 digest와 원문에서 확인한다.
 
-## DEM 패킹을 입자별 FE로 넘겨 압축 밀도를 실험에 맞춘다
+## DEM packing을 입자별 FE로 넘겨 압축 밀도를 실험에 맞춘다
 
-> LIGGGHTS 침강 패킹의 (x, y, z, r) 표만 OpenRadioss MPFEM으로 넘겨 압축과 제하를 다시 풀었고, 상대밀도 편차는 최대 2.5 %였다. (L34–37 · 348)
+> LIGGGHTS 침강 packing의 (x, y, z, r) 표만 OpenRadioss MPFEM으로 넘겨 압축과 제하를 다시 풀었고, 상대밀도 편차는 최대 2.5 %였다. (L34–37 · 348)
 
 ### 요점
 
-1. LIGGGHTS DEM으로 중력 침강 패킹만 만들고, 그 중심과 반지름을 CSV로 넘겨 입자마다 사면체 메시를 씌운 뒤 OpenRadioss로 하중과 제하를 푸는 오픈소스 워크플로를 만들었다. (L34–38)
+1. LIGGGHTS DEM으로 중력 침강 packing만 만들고, 그 중심과 반지름을 CSV로 넘겨 입자마다 사면체 메시를 씌운 뒤 OpenRadioss로 하중과 제하를 푸는 오픈소스 워크플로를 만들었다. (L34–38)
 2. Fe–Si–Al–P 분말 두 종을 2000 MPa까지 누른 계산은 Coarse에서 실험 83.3 %에 대해 85.4 %, Fine에서 둘 다 87 % 안팎의 상대밀도를 냈다. (L347–348)
 3. 검증 실험과 ABAQUS 모형이 같은 그룹의 선행 연구이고 시드 반복과 펀치 속도가 없어, 검토 측은 절대값이 아닌 인계 구조와 검증 형식만 가져올 수 있다고 본다. (L20–22 · 74–76)
 
@@ -25,7 +25,7 @@
 
 ### 무엇을 언제 넘기나
 
-DEM은 누르지 않고 패킹만 만든다. 입자를 raindrop 방식으로 넣고 중력으로 침강시킨 뒤 그 배치를 VTK로 내보낸다. ParaView로 거른 (x, y, z, r) CSV 하나가 원문이 말한 두 단계의 인계면이다. 압축 전 구간은 MPFEM이 맡는다. (L166–168 · 170 · 255–257)
+DEM은 누르지 않고 packing만 만든다. 입자를 raindrop 방식으로 넣고 중력으로 침강시킨 뒤 그 배치를 VTK로 내보낸다. ParaView로 거른 (x, y, z, r) CSV 하나가 원문이 말한 두 단계의 인계면이다. 압축 전 구간은 MPFEM이 맡는다. (L166–168 · 170 · 255–257)
 
 넘기는 정보는 기하뿐이다. 접촉 목록, 겹침, 속도, 응력은 CSV에 칸이 없어 넘어가지 않는다고 검토 측은 본다. 원문은 이를 버린다고 적지 않았다. DEM은 cm 단위로 돌렸고 10을 곱해 mm로 바꿨다. (L182 · 260–263)
 

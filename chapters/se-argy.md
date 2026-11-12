@@ -12,7 +12,7 @@
 
 그러나 최적 무질서 정도와 Cl 과잉이 전도도를 올리는 기전은 아직 논문마다 다르게 답한다. 고용한계도 공정 조건과 얽혀 있다. [근거: de Klerk et al. 2016 (`deklerk2016_diffusion_site_disorder_argyrodite`); Feng et al. 2020 (`feng2020_li_deficient_argyrodite_cl_disorder`); Wang et al. 2020 (`wang2020_br_rich_argyrodite_fast_ion_conduction_origin`); Jang et al. 2025 (`jang2025_thioarsenate_argyrodite_mlip_mechanism`); Liu et al. 2022 (`liu2022_cl_crystallization_interface_argyrodite`)]
 
-공도핑 연구들은 Li 금속 계면과 대기 안정성을 얻었다고 보고하지만 전도도는 오르기도 하고 내리기도 한다. 도펀트 자리 배정과 기전 계산은 검토 측이 약하다고 본 경우가 많다. [근거: Dual-Functional GaF Co-Doped Argyrodite … (`liyaru_gaf3_codoping_argyrodite`); Li et al. 2025 (`li2025_cubr2_dualdoping_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`); Xu et al. 2026 (`xu2026_ndo_codoping_argyrodite`); Wu et al. 2026 (`wu2026_ta_argyrodite_selfpassivating`)]
+공도핑 연구들은 Li 금속 계면과 대기 안정성을 얻었다고 보고하지만 전도도는 오르기도 하고 내리기도 한다. 도펀트 자리 배정과 기전 계산은 검토 측이 약하다고 본 경우가 많다. [근거: Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`); Li et al. 2025 (`li2025_cubr2_dualdoping_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`); Xu et al. 2026 (`xu2026_ndo_codoping_argyrodite`); Wu et al. 2026 (`wu2026_ta_argyrodite_selfpassivating`)]
 
 ### 무질서가 전도를 켠다
 
@@ -34,13 +34,13 @@ Cl-rich 조성의 전도도 이득도 공정에 따라 달라진다. Liu et al. 
 
 ### 공도핑의 맞교환
 
-Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 관찰이 반복된다. GaF₃ 공도핑 논문, Taklu et al. 2021, Li et al. 2025가 이 역상관을 보고했다. Yang et al. 2025에서는 전자전도도가 2.59×10⁻⁹에서 2.2×10⁻⁸ S/cm로 올랐는데도 CCD가 0.9에서 3.1 mA/cm²로 커졌고, 원문은 CCD가 이온전도도와도 상관없어 보인다고 적었다. Liu et al. 2022는 반대로 전도도가 CCD를 주로 정한다고 해석했다. Liu et al. 2024의 검토 측은 CCD와 대칭셀 수명이 셀 형상과 압력에 의존해 다른 논문과 절대 비교할 수 없다고 본다. [근거: Dual-Functional GaF Co-Doped Argyrodite … (`liyaru_gaf3_codoping_argyrodite`); Taklu et al. 2021 (`taklu2021_cucl_dualdoping_air_stability_argyrodite`); Li et al. 2025 (`li2025_cubr2_dualdoping_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`); Liu et al. 2022 (`liu2022_cl_crystallization_interface_argyrodite`); Liu et al. 2024 (`liu2024_pband_center_sbo_dual_interface`)]
+Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 관찰이 반복된다. GaF₃ 공도핑 논문, Taklu et al. 2021, Li et al. 2025가 이 역상관을 보고했다. Yang et al. 2025에서는 전자전도도가 2.59×10⁻⁹에서 2.2×10⁻⁸ S/cm로 올랐는데도 CCD가 0.9에서 3.1 mA/cm²로 커졌고, 원문은 CCD가 이온전도도와도 상관없어 보인다고 적었다. Liu et al. 2022는 반대로 전도도가 CCD를 주로 정한다고 해석했다. Liu et al. 2024의 검토 측은 CCD와 대칭셀 수명이 셀 형상과 압력에 의존해 다른 논문과 절대 비교할 수 없다고 본다. [근거: Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`); Taklu et al. 2021 (`taklu2021_cucl_dualdoping_air_stability_argyrodite`); Li et al. 2025 (`li2025_cubr2_dualdoping_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`); Liu et al. 2022 (`liu2022_cl_crystallization_interface_argyrodite`); Liu et al. 2024 (`liu2024_pband_center_sbo_dual_interface`)]
 
 ### 자리 배정과 계산 근거
 
-3가 도판트가 P 자리(4b)에 들어간다는 배정은 여러 편이 쓰지만 직접 증거는 약하다. GaF₃ 공도핑 논문의 Ga 자리 배정은 같은 그룹의 InF₃ 선행 논문에서 그대로 인용한 것이고, 검토 측은 Li 2024의 In 자리 증거도 약하다고 본다. Xu et al. 2026(Nd–O)은 Nd³⁺의 P 치환을 inferred라 적었고, 검토 측은 Rietveld, ³¹P NMR, EXAFS가 없다고 확인했다. Yang et al. 2025의 Rietveld도 La와 O를 명목 점유로 고정한 모델이라 검토 측은 La 자리를 결정한 것이 아니라고 본다. 우리 스크리닝 규칙은 3가 도판트를 모두 Li_24g에 두어 이 배정과 갈리므로, 우리는 두 자리의 형성에너지를 DFT로 직접 비교해야 한다. [근거: Dual-Functional GaF Co-Doped Argyrodite … (`liyaru_gaf3_codoping_argyrodite`); Li 2024 (`li2024_inf3_argyrodite_ultrathin_film`); Xu et al. 2026 (`xu2026_ndo_codoping_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`)]
+3가 도판트가 P 자리(4b)에 들어간다는 배정은 여러 편이 쓰지만 직접 증거는 약하다. GaF₃ 공도핑 논문의 Ga 자리 배정은 같은 그룹의 InF₃ 선행 논문에서 그대로 인용한 것이고, 검토 측은 Li 2024의 In 자리 증거도 약하다고 본다. Xu et al. 2026(Nd–O)은 Nd³⁺의 P 치환을 inferred라 적었고, 검토 측은 Rietveld, ³¹P NMR, EXAFS가 없다고 확인했다. Yang et al. 2025의 Rietveld도 La와 O를 명목 점유로 고정한 모델이라 검토 측은 La 자리를 결정한 것이 아니라고 본다. 우리 스크리닝 규칙은 3가 도판트를 모두 Li_24g에 두어 이 배정과 갈리므로, 우리는 두 자리의 형성에너지를 DFT로 직접 비교해야 한다. [근거: Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`); Li 2024 (`li2024_inf3_argyrodite_ultrathin_film`); Xu et al. 2026 (`xu2026_ndo_codoping_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`)]
 
-기전을 받치는 계산은 실측과 어긋나는 곳이 많다. 검토 측은 GaF₃ 공도핑 논문이 표면 NEB 장벽으로 벌크 σ를 설명한 것을 범주 오류로 보고, Wu et al. 2026의 DFT 셀 팽창이 실험 격자 팽창보다 훨씬 커 NEB 장벽 감소의 상당 부분이 인공 팽창일 수 있다고 본다. Lee et al. 2024의 MTP가 실험과 맞은 구간은 0.001–14.8 mS/cm인데 논문이 내세운 값은 38–80 mS/cm다. Jang et al. 2025의 계산 σ는 실험과 겹치는 두 조성에서 3.3배와 6.3배 크다. Jiang et al. 2022의 호스트 σ가 실험과 맞은 것도 검토 측은 낮은 Ea와 Haven 비 1 가정의 상쇄로 보고 검증으로 쓰지 않는다. [근거: Dual-Functional GaF Co-Doped Argyrodite … (`liyaru_gaf3_codoping_argyrodite`); Wu et al. 2026 (`wu2026_ta_argyrodite_selfpassivating`); Lee et al. 2024 (`lee2024_multicomponent_argyrodite_mixed_oxidation_mtp`); Jang et al. 2025 (`jang2025_thioarsenate_argyrodite_mlip_mechanism`); Jiang et al. 2022 (`jiang2022_se_doped_lpscl_high_throughput_dft`)]
+기전을 받치는 계산은 실측과 어긋나는 곳이 많다. 검토 측은 GaF₃ 공도핑 논문이 표면 NEB 장벽으로 벌크 σ를 설명한 것을 범주 오류로 보고, Wu et al. 2026의 DFT 셀 팽창이 실험 격자 팽창보다 훨씬 커 NEB 장벽 감소의 상당 부분이 인공 팽창일 수 있다고 본다. Lee et al. 2024의 MTP가 실험과 맞은 구간은 0.001–14.8 mS/cm인데 논문이 내세운 값은 38–80 mS/cm다. Jang et al. 2025의 계산 σ는 실험과 겹치는 두 조성에서 3.3배와 6.3배 크다. Jiang et al. 2022의 호스트 σ가 실험과 맞은 것도 검토 측은 낮은 Ea와 Haven 비 1 가정의 상쇄로 보고 검증으로 쓰지 않는다. [근거: Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`); Wu et al. 2026 (`wu2026_ta_argyrodite_selfpassivating`); Lee et al. 2024 (`lee2024_multicomponent_argyrodite_mixed_oxidation_mtp`); Jang et al. 2025 (`jang2025_thioarsenate_argyrodite_mlip_mechanism`); Jiang et al. 2022 (`jiang2022_se_doped_lpscl_high_throughput_dft`)]
 
 ### 이 장의 값
 
@@ -59,8 +59,8 @@ Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 �
 
 - Li₆PS₅Cl계에서 4c(4d) 할로젠 점유의 최적점은 정해지지 않았다. de Klerk et al. 2016은 75 %를, 그 카드가 전하는 2024년 MTP-MLIP 연구는 25 %를 보고했고, Jang et al. 2025는 Li₆AsS₅Br에서 50 %를 내놓았다. [근거: de Klerk et al. 2016 (`deklerk2016_diffusion_site_disorder_argyrodite`); Jang et al. 2025 (`jang2025_thioarsenate_argyrodite_mlip_mechanism`)]
 - Cl이나 Br 과잉이 전도도를 올리는 레버가 Li 공공인지 4d 배치인지는 갈리지 않았다. x 하나만 바꾸는 계열에서 공공, 4d 할로젠, 24g 분율이 함께 움직인다. 우리 원장의 공공 판정과 Wang et al. 2020의 4d 배치 주장은 서로 다른 레버를 지목하며, 우리 데이터로도 어느 쪽인지 가르지 못한다. [근거: Wang et al. 2020 (`wang2020_br_rich_argyrodite_fast_ion_conduction_origin`); Feng et al. 2020 (`feng2020_li_deficient_argyrodite_cl_disorder`); Adeli et al. 2019 (`adeli2019_halide_substitution_boosting_argyrodite`)]
-- 3가 도판트가 P_4b와 Li_24g 중 어디에 앉는지는 비어 있다. 원문들의 4b 배정은 인용이나 추론에 기대고, 우리는 두 자리의 형성에너지를 아직 비교하지 않았다. [근거: Dual-Functional GaF Co-Doped Argyrodite … (`liyaru_gaf3_codoping_argyrodite`); Li 2024 (`li2024_inf3_argyrodite_ultrathin_film`); Xu et al. 2026 (`xu2026_ndo_codoping_argyrodite`)]
-- CCD를 전자전도도가 정하는지 이온전도도가 정하는지는 논문마다 다르게 읽는다. 전자전도도가 올랐는데 CCD가 커진 사례도 있다. [근거: Dual-Functional GaF Co-Doped Argyrodite … (`liyaru_gaf3_codoping_argyrodite`); Li et al. 2025 (`li2025_cubr2_dualdoping_argyrodite`); Liu et al. 2022 (`liu2022_cl_crystallization_interface_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`)]
+- 3가 도판트가 P_4b와 Li_24g 중 어디에 앉는지는 비어 있다. 원문들의 4b 배정은 인용이나 추론에 기대고, 우리는 두 자리의 형성에너지를 아직 비교하지 않았다. [근거: Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`); Li 2024 (`li2024_inf3_argyrodite_ultrathin_film`); Xu et al. 2026 (`xu2026_ndo_codoping_argyrodite`)]
+- CCD를 전자전도도가 정하는지 이온전도도가 정하는지는 논문마다 다르게 읽는다. 전자전도도가 올랐는데 CCD가 커진 사례도 있다. [근거: Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`); Li et al. 2025 (`li2025_cubr2_dualdoping_argyrodite`); Liu et al. 2022 (`liu2022_cl_crystallization_interface_argyrodite`); Yang et al. 2025 (`yang2025_lao_dualdoping_argyrodite_lacl3`)]
 
 ### 먼저 읽을 논문
 
@@ -68,13 +68,13 @@ Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 �
 2. de Klerk et al. 2016 (`deklerk2016_diffusion_site_disorder_argyrodite`) — intercage 점프를 율속으로 보는 틀과 75 % 최적 예측을 세워, 뒤 논문들이 이 예측을 시험하거나 차용한다.
 3. Adeli et al. 2019 (`adeli2019_halide_substitution_boosting_argyrodite`) — Cl 과잉 계열의 실험 기준선과 중성자 점유율, x=0.5 고용한계를 준다.
 4. Feng et al. 2020 (`feng2020_li_deficient_argyrodite_cl_disorder`) — 같은 계열을 더 높은 x로 밀고, 무질서 실측값이 측정법마다 갈리는 문제를 드러낸다.
-5. Dual-Functional GaF Co-Doped Argyrodite … (`liyaru_gaf3_codoping_argyrodite`) — 단일 도판트 대조군으로 공도핑의 전도도와 계면 맞교환, 자리 배정과 계산 근거의 약점을 한 편에서 보여 준다.
+5. Dual-Functional Ga/F Co-Doped … (`liyaru_gaf3_codoping_argyrodite`) — 단일 도판트 대조군으로 공도핑의 전도도와 계면 맞교환, 자리 배정과 계산 근거의 약점을 한 편에서 보여 준다.
 
 ## 이 장의 논문 (24편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
-| `liyaru_gaf3_codoping_argyrodite` |  | Dual-Functional GaF Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries | Li₅.₅PS₄.₅Cl₁.₅에 GaF₃를 4 % 넣으면 σ는 줄지만 F가 전자를 막아 CCD와 대기 안정성이 크게 오른다. |
+| `liyaru_gaf3_codoping_argyrodite` |  | Dual-Functional Ga/F Co-Doped Argyrodite Sulfide Electrolytes for All-Solid-State Lithium Batteries | Li₅.₅PS₄.₅Cl₁.₅에 GaF₃를 4 % 넣으면 σ는 줄지만 F가 전자를 막아 CCD와 대기 안정성이 크게 오른다. |
 | `deiseroth2008_li6ps5x_argyrodite_high_li_mobility` | Deiseroth et al. 2008 | Li₆PS₅X: A Class of Crystalline Li‐Rich Solids With an Unusually High Li⁺ Mobility | Li₆PS₅X를 단상 결정으로 확립했고, 구조와 ⁷Li NMR 선폭을 근거로 높은 Li⁺ 이동도를 주장했다 |
 | `deklerk2016_diffusion_site_disorder_argyrodite` | de Klerk et al. 2016 | Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping: The Effect of Li Vacancies, Halogens, and Halogen Disorder | Li₆PS₅X의 거시 전도는 intercage 점프가 율속이고, Cl을 4c에 75 % 두면 제한 점프율이 50 % 대비 약 두 배다. |
 | `kraft2017_lattice_polarizability_argyrodite_Li6PS5X` | Kraft et al. 2017 | Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li₆PS₅X (X = Cl, Br, I) | Li₆PS₅X에서 할라이드가 무거워질수록 격자가 물러져 E_A와 prefactor가 함께 낮아지고, 전도도는 중간 강성인 Li₆PS₅Cl₀.₅Br₀.₅에서 가장 높다. |
@@ -86,7 +86,7 @@ Li 금속 쪽에서는 전자전도도가 낮은 조성에서 CCD가 높다는 �
 | `liu2022_cl_crystallization_interface_argyrodite` | Liu et al. 2022 | Revealing the Impact of Cl Substitution on the Crystallization Behavior and Interfacial Stability of Superionic Lithium Argyrodites | Li₅.₅PS₄.₅Cl₁.₅를 450 °C에서 어닐하면 4d 무질서가 커지고 전도도가 오르며, Li 금속과의 계면 분해도 느려진다. |
 | `jang2023_zno_cosubstitution_argyrodite` | Jang et al. 2023 | Preparation of argyrodite Li6–2xZnxPS5−xOxCl with improved electrochemical performance and air stability for all-solid-state batteries | Li₆PS₅Cl에 ZnO로 Zn과 O를 함께 넣으면 CCD와 H₂S 발생은 개선되지만 이온전도도는 조성에 따라 단조 감소한다. |
 | `lee2024_multicomponent_argyrodite_mixed_oxidation_mtp` | Lee et al. 2024 | Design of multicomponent argyrodite based on a mixed oxidation state as promising solid-state electrolyte using moment tensor potentials | Li₆PS₅I의 P 자리를 4가와 6가 양이온으로 함께 치환한 조합이 84개 구조 중 가장 높은 계산 전도도를 보였다. |
-| `li2024_inf3_argyrodite_ultrathin_film` | Li 2024 | A Versatile InF 3 Substituted Argyrodite Sul de ElectrolyteToward Ultrathin Films for AllSolidState Lithium Batteries | InF₃ 공도핑은 σ를 크게 잃지 않고 Li 금속·대기·유기용매 내성을 높였지만, In과 F가 맡는 역할은 축마다 다르다. |
+| `li2024_inf3_argyrodite_ultrathin_film` | Li 2024 | A Versatile InF₃ Substituted Argyrodite Sulfide Electrolyte Toward Ultrathin Films for All-Solid-State Lithium Batteries | InF₃ 공도핑은 σ를 크게 잃지 않고 Li 금속·대기·유기용매 내성을 높였지만, In과 F가 맡는 역할은 축마다 다르다. |
 | `liu2024_pband_center_sbo_dual_interface` | Liu et al. 2024 | Regulating p‐Band Center of Sulfur in Li‐Argyrodite to Stabilize Dual Solid–Solid Interface for Robust All‐Solid‐State Lithium–Sulfur Battery | Li₆PS₅Cl에 Sb와 O를 함께 넣어 SbS₄ 사면체를 만들면 S-p 밴드중심이 내려가 Li 금속 쪽과 S₈ 쪽 계면이 동시에 안정해진다고 원문은 주장한다. |
 | `ma2024_sb_doping_lpsc_conductivity` | Ma et al. 2024 | High performance P-based argyrodite sulfide electrolytes enabled by Sb-based argyrodite doping for all-solid-state lithium metal batteries | LPSC에 LSSSI를 녹여 Sn·Sb·I를 치환하면 전도도가 오르고 Li 금속 계면과 공기 안정성이 함께 좋아진다. |
 | `jang2025_thioarsenate_argyrodite_mlip_mechanism` | Jang et al. 2025 | Mechanistic insights into superionic thioarsenate argyrodite solid electrolytes via machine learning interatomic potentials | Li₆AsS₅Br의 4a/4d 자리반전은 Li 전도도를 크게 올리지만 Ehull도 올려, 원문은 중간 반전의 설계창을 제안한다. |

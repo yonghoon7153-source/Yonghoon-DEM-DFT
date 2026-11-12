@@ -1,12 +1,12 @@
 # 그 밖의 문헌
 
-전극 미세구조 · 공정 · 장 `dem-etc` · 논문 11편 · 읽기 카드 11편
+전극 미세구조 · 공정 · 장 `dem-etc` · 논문 12편 · 읽기 카드 11편
 
 > 위 묶음에 들지 않은 DEM 축 문헌. 저장소 인덱스에서도 '기타'로 남아 있다.
 
 ## 장 서문 — 옮길 것은 방법의 뼈대이고 수치는 아니다
 
-*읽기 카드 11편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10*
+*읽기 카드 11편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 DEM 축의 기타 문헌은 두 부류로 나뉜다. 하나는 DEM 보정, 복셀 표면적 추정, 다축척 결합, 입도분포 역산 같은 방법 문헌이다. 다른 하나는 액체·수계 전지의 계면 문헌이다. [근거: Windreich et al. 2003 (`windreich2003_voxel_based_surface_area_estimation`); Coetzee 2017 (`coetzee2017_dem_calibration_review`); Balasubramanian et al. 2026 (`balasubramanian2026_rfb_electrolyte_kmc_lbm_preprint`); Eizenhammer et al. 2026 (`eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell`); Cho et al. 2026 (`cho2026_eipc_zn_anode_azib`); Park et al. 2026 (`park2026_ceramic_pp_separator`)]
 
@@ -72,12 +72,13 @@ Lee et al. 2026은 전해질 계보다 방법이 우리에게 닿는다. 우리 
 4. Eizenhammer et al. 2026 (`eizenhammer2026_lfp_psd_halfcell_many_particle_fullcell`) — 입도분포를 DEM 입자 템플릿으로 바꾸는 층화 역변환 표본 규약의 출처다.
 5. Shenouda & Hoff 2020 (`shenouda2020_dem_metal_powder_am_liggghts_tutorial`) — 우리 LIGGGHTS 입력 스크립트와 명령어 골격이 같아 input을 읽는 입문서로 쓸 수 있다.
 
-## 이 장의 논문 (11편)
+## 이 장의 논문 (12편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
 | `bzox_dry_zro2x_nmc_shell_coating_sulfide_assb` |  | superseded by choi2026_bzox_dry_zro2x_nmc_shell_coating.md | 이 기록은 보조자료(SI)만으로 만든 구판이며, 본문을 확보한 뒤 내용이 통합본으로 모두 옮겨졌다. |
 | `windreich2003_voxel_based_surface_area_estimation` | Windreich et al. 2003 | Voxel-based surface area estimation: from theory to practice | 노출 면 배치로 가중하는 MV 추정기에 물체·배경 평균을 쓰면 반경 2 voxel 구에서도 넓이 오차가 1 % 아래다. |
+| `chandratilleke2012_particle_scale_mixing_index` | Chandratilleke et al. 2012 | A particle‐scale index in the quantification of mixing of particles | (카드 없음) |
 | `coetzee2017_dem_calibration_review` | Coetzee 2017 | Review: Calibration of the discrete element method | DEM 파라미터는 벌크 역보정으로 정하는 일이 가장 흔하다. 다만 해가 유일하지 않아 여러 실험과 별도 검증이 필요하다. |
 | `shenouda2020_dem_metal_powder_am_liggghts_tutorial` | Shenouda & Hoff 2020 | Discrete Element Method Analysis for Metal Powders Used in Additive Manufacturing, and DEM Simulation Tutorial Using LIGGGHTS-PUBLIC | LIGGGHTS-PUBLIC 입문 튜토리얼이다. Hertz와 SJKR 접촉으로 점착이 커질수록 금속 AM 분말의 안식각이 오르고 유량이 떨어짐을 보였다. |
 | `beutl2024_round_robin_coin_cell_sulfide_assb` | Beutl et al. 2024 | Round‐robin test of all‐solid‐state battery with sulfide electrolyte assembly in coin‐type cell configuration | 네 기관이 같은 재료와 지시서로 CR2032 코인셀을 만들자 이온전도도는 모였고, 셀 성능과 수명은 흩어졌다. |

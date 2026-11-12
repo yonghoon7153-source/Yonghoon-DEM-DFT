@@ -1,6 +1,6 @@
 # 화학-기계 열화와 계면
 
-전극 미세구조 · 공정 · 장 `dem-degrade` · 논문 32편 · 읽기 카드 29편
+전극 미세구조 · 공정 · 장 `dem-degrade` · 논문 34편 · 읽기 카드 28편
 
 > 균열, 박리, 응력에 따른 계면 저항 변화.
 
@@ -72,20 +72,21 @@ SE 강성이 열화에 유리한지에서 모델끼리 엇갈린다. Bucci et al
 4. Parks et al. 2023 (`intergranular_cracking_nmc811_jmca2023`) — 같은 NMC811 입자를 충전 전후로 찍어 입계 균열이 전기화학으로 생기는 것을 직접 보인다.
 5. Song et al. 2025 (`song2025_porous_argyrodite_modulus_fracture_toughness`) — 다공 Li₆PS₅Cl의 벌크 영률과 파괴인성을 같은 시편에서 재어 나노압입값과 척도 차이를 드러낸다.
 
-## 이 장의 논문 (32편)
+## 이 장의 논문 (34편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
 | `dem_mechanical_stresses_ssb_electrode_cycling` | Alabdali et al. | Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method | 황화물 복합양극에서 등방 1–5 MPa 압밀은 단축 375 MPa와 비슷한 전도도를 내면서 입자 응력을 크게 낮추고, 사이클 중 응력은 AM과 SE 사이를 오간다. |
+| `hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load` | Hiramatsu · Oka 1966 | Determination of the tensile strength of rock by a compression test of an irregular test piece | (카드 없음) |
 | `bucci2017_chemomech_failure_assb_cycling_czm` | Bucci et al. 2017 | Modeling of internal mechanical failure of all-solid-state batteries during electrochemical cycling, and implications for battery design | 전극입자 팽창이 7.5 % 미만이고 SE 파괴에너지가 4 J/m² 이상이면 사이클 균열이 억제되며, compliant SE는 오히려 더 잘 깨진다. |
 | `bucci2018_mechanical_instability_interface_delamination` | Bucci et al. 2018 | Mechanical instability of electrode-electrolyte interfaces in solid-state batteries | 대부분의 물성 조합에서 부피 ~7.5 % 변화면 계면 박리가 시작되고, 무른 SE와 큰 계면에너지만 25 %까지 견딘다. |
 | `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` | Koerver et al. 2018 | Chemo-mechanical expansion of lithium electrode materials – on the route to mechanically optimized all-solid-state batteries | (카드 없음) |
 | `jung2019_cathode_electrolyte_chemical_reaction_sulfide_assb` | Jung et al. 2019 | Understanding the effects of chemical reactions at the cathode–electrolyte interface in sulfide based all-solid-state batteries | 전위 없이 SOC 0에서 두기만 해도 베어 NCM과 argyrodite 계면에 반응 산물과 균열이 생겨 입계 이온 저항이 크게 늘고, LiNbO₃ 코팅이 이를 억제한다. |
 | `doux2020_stack_pressure_assb` | Doux et al. 2020 | Stack Pressure Considerations for Room‐Temperature All‐Solid‐State Lithium Metal Batteries | LPSCl 펠릿에 남은 공극으로 Li가 creep해 단락이 생기므로, 작동 적층압은 5 MPa가 최적이다. |
 | `so2021_dem_fabrication_degradation_ductile_particles` | So, Inoue, Hirate, Nunoshita, Ishikawa, Tsuge 2021 | Simulation of Fabrication and Degradation of All-Solid-State Batteries with Ductile Particles | 연성 입자 DEM으로 보면 사이클 중 SE 전도도 손실은 균열이 키운 굴곡도가 지배하고, 높은 제조압이 그 손실을 줄인다. |
-| `stallard2022_cathode_mechanical_properties_review` | Stallard et al. 2022 | Mechanical properties of cathode materials for lithium-ion batteries | 양극재 E·H는 압흔/결정립 비가 0.1을 넘으면 입계 파쇄로 떨어지고, 강도 자료로 본 다결정 NMC333의 K_IC는 0.05–0.3 MPa·m^½로 추정된다. |
 | `intergranular_cracking_nmc811_jmca2023` | Parks et al. 2023 | Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles | 4.5 V 충전 전후 같은 NMC811 입자를 비교하자 입계 균열이 생겼고 입자 부피 증가는 대부분 균열 공극 때문이었다 |
 | `jung2023_single_crystal_ncm_morphology` | Jung et al. 2023 | Customizing the morphology and microstructure of single-crystalline Ni-rich layered cathode materials for all-solid-state batteries | 단결정 NCM은 입계와 내부 공극이 없어 ASSB에서 고율 용량과 사이클 수명이 다결정보다 높고 균열도 억제된다. |
+| `kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review` | Kalnaus et al. 2023 | Solid-state batteries: The critical role of mechanics | (카드 없음) |
 | `kim2023_chemomech_failure_highstrain_anode` | Kang et al. 2023 | Chemo-mechanical failure of solid composite cathodes accelerated by high-strain anodes in all-solid-state batteries | Li-In 음극의 부피변화가 양극 안에 동적 접촉과 계면 불균일을 만들고, 그 결과 NCA 입계 균열과 용량 급락이 일어난다. |
 | `spencerjolly2023_ag_graphite_interlayer_operando_xrd` | Spencer-Jolly et al. 2023 | Structural changes in the silver-carbon composite anode interlayer of solid-state batteries | Li는 흑연에 먼저 들어간 뒤 Ag와 화학적으로 합금되며, Ag는 CCD를 올리지 않고 집전체 쪽 석출층을 균일하게 만든다. |
 | `tron2023_lpscl_ccd_ambient_pressure` | Tron et al. 2023 | Critical Current Density Measurements of Argyrodite Li₆PS₅Cl Solid Electrolyte at Ambient Pressure | 스택압 0.20–0.28 MPa의 상용 셀에서 Li₆PS₅Cl의 CCD는 낮고, 셀 지그와 Li 표면이 그 값을 크게 흔든다. |
@@ -93,10 +94,11 @@ SE 강성이 열화에 유리한지에서 모델끼리 엇갈린다. Bucci et al
 | `yun2023_deciphering_degradation_halide_vs_sulfide` | Yun et al. 2023 | Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes: Interfacial reaction versus ionic transport | 황화물 LPSCl 양극은 계면 interphase 때문에, 할라이드 LIC 양극은 가압 균열로 인한 이온수송 손실 때문에 열화한다. |
 | `zhang2023_pfib_multiscale_imaging_4d_thick_cathode` | Zhang et al. 2023 | Coupling of multiscale imaging analysis and computational modeling for understanding thick cathode degradation mechanisms | NMC811 후막에서 분리막 쪽 CEI가 두꺼워 두께방향 리튬화가 불균일해지고, 이것이 균열과 NMC와 CBD 사이 접촉 손실로 이어진다. |
 | `jeong2025_tough_adhesive_binder_shield_ncm811` | Jeong et al. 2025 | A Tough, Adhesive, and Protective Binder Shield for Stabilizing High‐Nickel Cathodes in Lithium‐Ion Batteries | PVDF에 PAA를 붙이고 PEI로 가교한 바인더만 접착과 인성이 함께 올라 PVDF보다 오래 버텼다. |
-| `kang2025_toughened_bimodal_nca_lzo` | Kang et al. 2025 | Toughened Bimodal Cathodes for All-Solid-State Batteries via Controlled Interfacial Heterogeneity | bimodal NCA는 패킹 이득을 주지만 큰 입자의 입계 균열로 수명이 줄고, LZO 코팅이 그 균열을 막는다. |
+| `kang2025_toughened_bimodal_nca_lzo` | Kang et al. 2025 | Toughened Bimodal Cathodes for All-Solid-State Batteries via Controlled Interfacial Heterogeneity | bimodal NCA는 packing 이득을 주지만 큰 입자의 입계 균열로 수명이 줄고, LZO 코팅이 그 균열을 막는다. |
 | `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` | Liao et al. 2025 | Effects of Interfacial Adhesion on Lithium Plating Location in Solid‐State Batteries with Carbon Interlayers | 탄소 인터레이어와 LPSCl 계면의 인성이 ≈10 J m⁻²를 넘으면 Li가 집전체 쪽에만 석출된다 |
 | `song2025_porous_argyrodite_modulus_fracture_toughness` | Song et al. 2025 | Investigation of the Mechanical Properties of Porous Argyrodite Sulfide Electrolytes for All-Solid-State Batteries | mm 시편 굽힘과 CT 시험으로 잰 다공 Li₆PS₅Cl의 E는 4.7 ± 1.1 GPa, K_Ic는 0.17 ± 0.03 MPa·m^½로 나노압입값보다 훨씬 낮다. |
 | `taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode` | Taghikhani et al. 2025 | Modeling coupled electro-chemo-mechanical phenomena within all-solid-state battery composite cathodes | (카드 없음) |
+| `benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode` | Ben Hadj Ali et al. 2026 | Fully coupled mechano-electrochemical modeling of 3D-resolved microstructures for solid state batteries manufactured by wet processing | (카드 없음) |
 | `gandla2026_layered_cathode_degradation_diagnostics_review` | Gandla et al. 2026 | Decoding Multiscale Degradation of Layered Cathodes in All‐Solid‐State Lithium Batteries: An Advanced Diagnostics‐Driven Framework | 층상 양극 고체전지의 용량 감소는 균열이 만든 접촉 손실이 지배하며, 실용 압력과 하중에서 검증된 완화책은 아직 없다. |
 | `hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd` | Hamann et al. 2026 | Effects of LLZO Microstructure Porosity, LLZO/Li‐Metal Interfacial Polarization Resistance, and Applied Areal Current Density on Li‐Metal Dendrite Formation in LLZO Bilayer Symmetric Cells | 다공 계면은 계면 과전압을 낮춰 CCD를 올리지만, 이중층 경계의 국소 이온전류 증폭은 내부 덴드라이트 위험을 키운다. |
 | `hong2026_sulfide_cathode_binder_digitaltwin` | Hong et al. 2026 | Unveiling degradation mechanisms of sulfide-based composite cathodes supported by digital-twin modeling: Dry binder versus wet binder | NBR은 활물질 계면을 넓게 덮어 Li⁺ 경로를 끊고 void와 LPSCl 분해를 키우며, PTFE는 좁게 모여 경로를 보존한다. |

@@ -1,4 +1,4 @@
-# Hopping models for ion conduction in noncrystals — Dyre & Schrøder (arXiv cond-mat/0407083, 2004; based on Rev. Mod. Phys. 72 (2000) 873)
+# Hopping models for ion conduction in noncrystals
 
 *장벽 분포가 넓을 때 percolation 병목이 Arrhenius 전도를 만든다*
 

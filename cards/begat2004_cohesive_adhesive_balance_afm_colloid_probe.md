@@ -1,4 +1,4 @@
-# The cohesive-adhesive balances in dry powder inhaler formulations I direct quantification by atomic force microscopy
+# The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy
 
 *같은 탐침의 떼는 힘 비로 응집과 접착의 균형을 잰다*
 

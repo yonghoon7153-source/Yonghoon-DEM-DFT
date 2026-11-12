@@ -1,4 +1,4 @@
-# Microstructure-Resolved Impedance Modeling SSB MAIN
+# Microstructure-Resolved Impedance Modeling of Solid-State Batteries
 
 *고체전해질 임피던스는 입계보다 기공과 SEI가 좌우한다*
 

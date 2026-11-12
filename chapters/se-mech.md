@@ -6,7 +6,7 @@
 
 ## 장 서문 — 황화물 전해질의 물성 값은 모델과 압력 조건에 묶여 있다
 
-*읽기 카드 9편을 엮어 쓴 글 · 항목 30개 중 29개 검증 통과 · 2026-11-10*
+*읽기 카드 9편을 엮어 쓴 글 · 항목 30개 중 29개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 아홉 편은 황화물 고체전해질이 얼마나 무른지 묻는다. 이어서 그 무름이 탄성 계산, 전도도 측정, 열전도, 막과 셀 성능에 어떻게 드러나는지를 다룬다. [근거: Deng et al. 2016 (`deng2016_elastic_superionic_electrolytes_dft`); Cronau et al. 2021 (`cronau2021_stack_pressure_ionic_conductivity`); Böger et al. 2023 (`boger2023_thermal_conductivity_argyrodite_lgps`); Torii et al. 2025 (`torii2025_lpscl_mechanical_anisotropy_dft`); Cao et al. 2026 (`cao2026_dual_binder_18um_sulfide_electrolyte_film`); Jung et al. 2026 (`jung2026_sio2_cosubstitution_mechanical_argyrodite`)]
 

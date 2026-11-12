@@ -77,7 +77,7 @@ D의 오차는 MSD 직선 회귀가 아니라 독립 표본의 산포에서 내�
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
 | `marcolongo_ionic_correlations_failure_nernst_einstein` | Marcolongo · Marzari | Ionic correlations and failure of Nernst-Einstein relation in solid-state electrolytes | LGPS에서 Li끼리의 속도 상관으로 D_σ가 D_tr보다 커서 tracer 기반 NE 식은 σ를 과소평가하지만 Ea는 두 경로가 같다. |
-| `dyre2004_hopping_models_ion_conduction_noncrystals` | Dyre 2004 | Hopping models for ion conduction in noncrystals — Dyre & Schrøder (arXiv cond-mat/0407083, 2004; based on Rev. Mod. Phys. 72 (2000) 873) | 장벽만 무질서한 random barrier model 하나로 무질서 고체 이온 전도의 네 가지 보편 사실이 percolation에서 함께 설명된다. |
+| `dyre2004_hopping_models_ion_conduction_noncrystals` | Dyre 2004 | Hopping models for ion conduction in noncrystals | 장벽만 무질서한 random barrier model 하나로 무질서 고체 이온 전도의 네 가지 보편 사실이 percolation에서 함께 설명된다. |
 | `rao2011_argyrodite_se_studies_bvse` | Rao · Adams 2011 | Studies of lithium argyrodite solid electrolytes for all‐solid‐state batteries | 짧은 밀링과 어닐로 만든 Li₆PS₅Cl, Li₆PS₅Br은 10⁻³ S/cm급이고 I만 3–4 자릿수 낮으며, dc 전도는 cage 간 hop이 율속한다. |
 | `pranami2015_estimating_error_diffusion_coefficients_md` | Pranami · Lamm 2015 | Estimating Error in Diffusion Coefficients Derived from Molecular Dynamics Simulations | MSD 회귀가 주는 오차는 가정 위반으로 무효다. 겹치지 않는 시간원점과 여러 독립 시뮬레이션의 D 표본으로 t-분포 신뢰구간을 내야 한다. |
 | `deklerk2018_diffusion_analysis_md_beta_li3ps4` | de Klerk et al. 2018 | Analysis of Diffusion in Solid-State Electrolytes through MD Simulations, Improvement of the Li-Ion Conductivity in β-Li3PS4 as an Example | MD 궤적 하나에서 점프별 활성화에너지를 뽑아 β-Li₃PS₄의 율속 점프를 찾았고, Li 공공으로 그 점프를 여는 처방을 냈다. |

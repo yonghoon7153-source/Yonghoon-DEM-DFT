@@ -1,4 +1,4 @@
-# The cohesive-adhesive balances in dry powder inhaler formulations II influence on fine particle delivery characteristics
+# The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics
 
 *접착이 응집보다 센 약물만 운반체에 고르게 퍼진다*
 

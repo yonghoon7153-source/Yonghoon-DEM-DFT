@@ -1,4 +1,4 @@
-# On the Hausner ratio and its relationship to some properties of metal powders
+# On the Hausner Ratio and its Relationship to Some Properties of Metal Powders
 
 *Hausner 비는 동적 안식각을 따르지만 기름 점착에는 둔하다*
 
