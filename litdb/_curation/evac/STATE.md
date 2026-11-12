@@ -181,3 +181,4 @@
 - 11-12 19:2x UTC: N-39 끝 (cummins2002 · b25567d65) → N-41 시작 (트리 2 · 정독 82)
 - 11-12 19:4x UTC: N-40 끝 (sulsky1994 · 688057672) → N-42 시작 (트리 1 · 정독 83)
 - 11-12 19:4x UTC: 커밋 Q a0455e90b (로컬 · 서명) = 메모 3.2 5 회차 반입 (확인 + 마지막 고침 · 바뀐 권고 Q6) + SELF-170 원장 · 철회값 스윕 ✓ · 문서 참조 ✓ · 원장 ✓ → 게이트 1–125 → 126–183 이어서 (bj3ti9qs0 · gate_Q_p1/p2) → 둘 다 fail 0 이면 push (origin = 3daa2c48a 확인)
+- 11-12 19:5x UTC: Rint 남은 셋 닫힘 (c0ff22431 시험 먼저 → ea3b13b89 고침 · git_env 9/10 → 10/10 · G6 21/21 · Q11PIN 6 판 ea3b13b89 · 블록 rint/codepkg/gpu_check_block.txt) → 독립 짧은 재확인 조수 시작 (BRIEF rint/codepkg/BRIEF_recheck2_codepkg.md → review/recheck2_codepkg.md) → 반입 = 커밋 Q push 뒤 (게이트가 HEAD 를 잡고 있어 그 전엔 cherry-pick 안 함)

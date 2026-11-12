@@ -252,3 +252,8 @@
   셸 관문 모의 (blk_home6 · 지움) = 관문 통과 → cupy 없음 rc 1 (logs/r4/gpu_block_v6_shell_mock*.{log,json}).
 - amend_drafts.md 6 판 (0-e · 4-e · v5 사본).
 - 다시 돌림 백그라운드 (work/run_r4_all.sh → logs/r4/{py311,kgy}) = git_env · run_contract · e2e · e2e12 · conv_cert.
+- (19:5xZ) 다시 돌림 끝 (HEAD ea3b13b89 · 작업 트리 바뀐 파일 0 · logs/r4/{py311,kgy}/_summary.txt):
+  3.11 = git_env 10/10 · run_contract 125/125 · e2e 51/51 (673 s) · e2e12 33/33 (343 s) · conv_cert 30/30 (92 s).
+  kgy 3.8.20 = git_env 10/10 · run_contract 125/125 · e2e 51/51 (574 s) · e2e12 33/33 (288 s) · conv_cert 29/29 (72 s · K4b 설계상 건너뜀 = 2 회차와 같음).
+  덧 (3.11 · logs/r4/static_py311): 규율 저장소 검사 0 오류 · selftest_inventory 전부 분류 · undef rc 1 = 2 건 (generate_comparison_plots.py 6905 · 6906 = 바탕부터 · 묶음 밖 · 2 회차와 같음).
+- 정리: work/mut6 · blk_home6 · tmp/* 지움 (내 프로세스 0 · 다른 프로세스 = 본 리포 자리 · 내 스크래치 안 씀) · 다시 만들기 = 같은 절차.
