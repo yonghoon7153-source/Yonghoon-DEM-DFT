@@ -178,14 +178,6 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
 - Q11PIN = 구현 커밋 (지금 = 작업 트리의 `f17ea8c6be8504ffdaa057e40c0c505c666fdfbe` · 반입하며 sha 가 바뀌면 그 값으로 · 새 모듈 sha256 은 파일 내용이
   같으면 그대로).
 
-### 4-c. (4 판 · 리뷰 고침 뒤) 블록 갱신
-
-- 리뷰 고침 `94765bed3` (RCP-08) 이 `scripts/step3_sigma.py` 를 다시 바꿨다 → 새 모듈 sha256 = **`859310da…b459a`** (`94765bed3` · `0ac6edf3c` 같은 파일 ·
-  `git show | sha256sum`) · Q11PIN 자리 = `0ac6edf3cf4a0631a9291e0ec7dec3cb04c18b64` (반입 뒤 sha 로 바꾼다 · 새 모듈 sha256 과 내용이 같은 커밋이면 된다).
-  하네스 글 (md5 `acfeb4b4…`) 은 그대로 · 3 판 사본 = `gpu_check_block_v3.txt`.
-- 다시 돌림: CPU 흐름 (`--backend numpy` · n-side 24) 3.11 · kgy 판 3.8 둘 다 다섯 짝 비트 같음 · 주 풀이 267 · 이어 풀기 37 (CPU 길 = Q11 무관 = 흐름
-  확인) · 블록 셸 관문 모의 (가짜 HOME · 빈 activate) = md5 · PIN · 두 커밋 · git show · sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대).  GPU 길 = [미확인] (1저자).
-
 ### 4-b. (3 판 · 대피 4) 블록 확인 — 돌리지 않은 것 · 돌린 것
 
 - 블록의 하네스 글 (heredoc 사이) md5 = `acfeb4b4e1515d6aa7d46ddaf67e6e68` = 블록 관문 값 · 블록에 탭 · CR · 느낌표 0 · 두 모듈 sha256 = 블록 값
@@ -197,3 +189,11 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
   git show · sha256 관문을 지나 하네스가 `import cupy` 에서 ERROR rc 1 (기대 · 결과 파일 둘 씀).  GPU · cupy 12.3.0 길은 [미확인] (1저자 실행).
 - Q11PIN: 반입 (cherry-pick · 서명) 뒤 sha 로 바꿔 적는다 — 시험 보강 커밋은 `scripts/step3_sigma.py` 를 바꾸지 않으므로 그 커밋 sha 를 넣어도 같은 모듈
   (sha256 관문 값 그대로).  gabia 의 Q11REPO 자리 = [미확인] (본 세션).
+
+### 4-c. (4 판 · 리뷰 고침 뒤) 블록 갱신
+
+- 리뷰 고침 `94765bed3` (RCP-08) 이 `scripts/step3_sigma.py` 를 다시 바꿨다 → 새 모듈 sha256 = **`859310da…b459a`** (`94765bed3` · `0ac6edf3c` 같은 파일 ·
+  `git show | sha256sum`) · Q11PIN 자리 = `0ac6edf3cf4a0631a9291e0ec7dec3cb04c18b64` (반입 뒤 sha 로 바꾼다 · 새 모듈 sha256 과 내용이 같은 커밋이면 된다).
+  하네스 글 (md5 `acfeb4b4…`) 은 그대로 · 3 판 사본 = `gpu_check_block_v3.txt`.
+- 다시 돌림: CPU 흐름 (`--backend numpy` · n-side 24) 3.11 · kgy 판 3.8 둘 다 다섯 짝 비트 같음 · 주 풀이 267 · 이어 풀기 37 (CPU 길 = Q11 무관 = 흐름
+  확인) · 블록 셸 관문 모의 (가짜 HOME · 빈 activate) = md5 · PIN · 두 커밋 · git show · sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대).  GPU 길 = [미확인] (1저자).
