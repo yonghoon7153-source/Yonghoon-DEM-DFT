@@ -458,3 +458,6 @@ song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage	insights into
 # ── 박사 학위논문 (358 쪽 · 네 부분 PDF) — EEPA 접촉 모델 원전 · EDEM API · 철광석 미분 보정 · 사일로 (Morrissey · University of Edinburgh 2013) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 네 부분 파일 모두 이 낱말을 갖는다 · 밑줄 · 공백 두 변형
 morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis	discrete_element_modelling_of_iron_ore_pellets
 morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis	discrete element modelling of iron ore pellets
+# ── 압연 공정 모형 — 선하중 ↔ 압연 뒤 코팅 기공률의 Heckel 꼴 지수 식 · 끝값 = 0.4 × 압연 전 값 · 맞춤 수 γ_C 하나 = μ × 면적 부하 · 양극 활물질 다섯 (NCA · NCM111 · 622 · 811) · 부하 일곱 (Meyer 외 · J. Energy Storage 18 (2018) 371–379) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) · 같은 그룹 앞 논문 meyer2017_calendering_compaction_resistance_line_load_exponential_model 과 다른 논문 ──
+meyer2018_calendering_process_model_active_material_mass_loading	process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries
+meyer2018_calendering_process_model_active_material_mass_loading	process modeling of the electrode calendering of lithium-ion batteries

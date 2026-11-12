@@ -1,0 +1,169 @@
+figure,series,electrode_no,x_name,x_value,x_err,y_name,y_value,y_err,how_read,note
+Fig2,"eps_C,0 initial (cyan square)",1,electrode,NCA-80/20,,porosity,0.4495,0.0099,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.456
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",1,electrode,NCA-80/20,,porosity,0.2008,0.0038,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",1,electrode,NCA-80/20,,porosity,0.1998,,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),caps hidden inside the marker
+Fig2,"eps_C,min_p predicted (red circle)",1,electrode,NCA-80/20,,porosity,0.1798,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",2,electrode,NCA,,porosity,0.4569,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.450; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",2,electrode,NCA,,porosity,0.2040,0.0047,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",2,electrode,NCA,,porosity,0.1795,0.0029,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",2,electrode,NCA,,porosity,0.1828,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",3,electrode,NCM811,,porosity,0.4791,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.479; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",3,electrode,NCM811,,porosity,0.2145,0.0031,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",3,electrode,NCM811,,porosity,0.2007,0.0022,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",3,electrode,NCM811,,porosity,0.1916,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",4,electrode,NCM622,,porosity,0.4606,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.461; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",4,electrode,NCM622,,porosity,0.2132,0.0045,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",4,electrode,NCM622,,porosity,0.2034,0.0033,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",4,electrode,NCM622,,porosity,0.1842,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",5,electrode,NCM111,,porosity,0.4427,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.443; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",5,electrode,NCM111,,porosity,0.2022,0.0041,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",5,electrode,NCM111,,porosity,0.1891,0.0050,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",5,electrode,NCM111,,porosity,0.1771,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",6,electrode,80,,porosity,0.5484,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.549; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",6,electrode,80,,porosity,0.2377,0.0085,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",6,electrode,80,,porosity,0.2270,0.0184,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",6,electrode,80,,porosity,0.2194,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",7,electrode,120,,porosity,0.4835,0.0056,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.483
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",7,electrode,120,,porosity,0.2135,0.0061,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",7,electrode,120,,porosity,0.1797,0.0040,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",7,electrode,120,,porosity,0.1934,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",8,electrode,160,,porosity,0.4408,0.0060,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.440
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",8,electrode,160,,porosity,0.1883,0.0034,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",8,electrode,160,,porosity,0.1586,0.0033,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",8,electrode,160,,porosity,0.1763,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",9,electrode,180,,porosity,0.4371,0.0105,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.436
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",9,electrode,180,,porosity,0.1968,0.0054,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",9,electrode,180,,porosity,0.1808,0.0025,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",9,electrode,180,,porosity,0.1748,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",10,electrode,200,,porosity,0.4359,0.0040,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.435
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",10,electrode,200,,porosity,0.1916,0.0023,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",10,electrode,200,,porosity,0.1541,0.0043,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",10,electrode,200,,porosity,0.1744,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",11,electrode,240,,porosity,0.4235,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.423; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",11,electrode,240,,porosity,0.1994,0.0029,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",11,electrode,240,,porosity,0.1622,0.0030,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",11,electrode,240,,porosity,0.1694,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",12,electrode,280,,porosity,0.4247,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.424; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",12,electrode,280,,porosity,0.1895,0.0030,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",12,electrode,280,,porosity,0.1532,0.0022,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",12,electrode,280,,porosity,0.1699,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",13,electrode,NCM cathode,,porosity,0.5212,0.0151,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.521
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",13,electrode,NCM cathode,,porosity,0.1762,0.0058,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",13,electrode,NCM cathode,,porosity,0.1691,0.0040,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",13,electrode,NCM cathode,,porosity,0.2085,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",14,electrode,LMO,,porosity,0.5818,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.582; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",14,electrode,LMO,,porosity,0.3521,0.0046,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",14,electrode,LMO,,porosity,0.3321,0.0068,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",14,electrode,LMO,,porosity,0.2327,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig2,"eps_C,0 initial (cyan square)",15,electrode,graphite anode,,porosity,0.6028,,marker-box centre (= mid of black caps where visible),Table 2: 1 - sum(vol.%) = 0.602; error bar inside the marker (<= 0.009)
+Fig2,"eps_C,min_a minimal achieved (green down-triangle)",15,electrode,graphite anode,,porosity,0.1776,0.0043,triangle centroid (flat edge + h/3; checked against cap mid-points and the centred vertical tick),error = visible cap offset from the data point
+Fig2,"eps_C,min_e extrapolated (blue up-triangle)",15,electrode,graphite anode,,porosity,0.1591,0.0016,triangle centroid (flat edge - h/3; checked against cap mid-points and the centred vertical tick),
+Fig2,"eps_C,min_p predicted (red circle)",15,electrode,graphite anode,,porosity,0.2411,,"card arithmetic 0.4 x digitized eps_C,0 (red circle centres agree within 0.001-0.002)",p = 0.4 printed
+Fig6,gamma_C bar,1,electrode,NCA-80/20,,gamma_C_N_per_mm,220.4,29.0,bar-top outline row; error = half distance between the black caps,Table 3 printed mu = 0.99 +- 0.13 kN m/g (x 223 g/m2 = 220.8)
+Fig6,gamma_C bar,2,electrode,NCA,,gamma_C_N_per_mm,309.5,25.4,bar-top outline row; error = half distance between the black caps,Table 3 printed mu = 1.40 +- 0.11 kN m/g (x 223 g/m2 = 312.2)
+Fig6,gamma_C bar,3,electrode,NCM811,,gamma_C_N_per_mm,229.8,21.8,bar-top outline row; error = half distance between the black caps,Table 3 printed mu = 1.04 +- 0.10 kN m/g (x 223 g/m2 = 231.9)
+Fig6,gamma_C bar,4,electrode,NCM622,,gamma_C_N_per_mm,304.5,20.7,bar-top outline row; error = half distance between the black caps,Table 3 printed mu = 1.36 +- 0.09 kN m/g (x 223 g/m2 = 303.3)
+Fig6,gamma_C bar,5,electrode,NCM111,,gamma_C_N_per_mm,296.8,36.0,bar-top outline row; error = half distance between the black caps,Table 3 printed mu = 1.33 +- 0.16 kN m/g (x 223 g/m2 = 296.6)
+Fig10,gamma_C vs mass loading,6,mass_loading_g_per_m2,79.6,2.2,gamma_C_N_per_mm,98.0,11.2,mid-point between the error-bar caps (both directions) / marker-box centre,"fit line gamma = 1.31 M printed; re-fit of these 7 points: mu 1.310 (unweighted), 1.306 +- 0.016 (weighted)"
+Fig10,gamma_C vs mass loading,7,mass_loading_g_per_m2,120.1,2.6,gamma_C_N_per_mm,163.6,10.5,mid-point between the error-bar caps (both directions) / marker-box centre,"fit line gamma = 1.31 M printed; re-fit of these 7 points: mu 1.310 (unweighted), 1.306 +- 0.016 (weighted)"
+Fig10,gamma_C vs mass loading,8,mass_loading_g_per_m2,161.35,3.25,gamma_C_N_per_mm,167.6,11.3,mid-point between the error-bar caps (both directions) / marker-box centre,"fit line gamma = 1.31 M printed; re-fit of these 7 points: mu 1.310 (unweighted), 1.306 +- 0.016 (weighted)"
+Fig10,gamma_C vs mass loading,9,mass_loading_g_per_m2,179.5,3.1,gamma_C_N_per_mm,254.1,11.6,mid-point between the error-bar caps (both directions) / marker-box centre,"fit line gamma = 1.31 M printed; re-fit of these 7 points: mu 1.310 (unweighted), 1.306 +- 0.016 (weighted)"
+Fig10,gamma_C vs mass loading,10,mass_loading_g_per_m2,198.1,3.5,gamma_C_N_per_mm,249.3,16.2,mid-point between the error-bar caps (both directions) / marker-box centre,"fit line gamma = 1.31 M printed; re-fit of these 7 points: mu 1.310 (unweighted), 1.306 +- 0.016 (weighted)"
+Fig10,gamma_C vs mass loading,11,mass_loading_g_per_m2,241.5,1.9,gamma_C_N_per_mm,340.3,14.4,mid-point between the error-bar caps (both directions) / marker-box centre,"fit line gamma = 1.31 M printed; re-fit of these 7 points: mu 1.310 (unweighted), 1.306 +- 0.016 (weighted)"
+Fig10,gamma_C vs mass loading,12,mass_loading_g_per_m2,283.9,3.7,gamma_C_N_per_mm,371.0,5.3,mid-point between the error-bar caps (both directions) / marker-box centre,"fit line gamma = 1.31 M printed; re-fit of these 7 points: mu 1.310 (unweighted), 1.306 +- 0.016 (weighted)"
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,0.6,,porosity,0.4441,0.0104,caps,
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,0.0,,porosity,0.4540,,hidden under the NCA markers - apex only (low confidence),
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,2.5,,porosity,0.4196,0.0140,caps,
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,9.9,,porosity,0.4177,0.0049,caps,
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,47.7,,porosity,0.3605,0.0120,caps,
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,55.1,,porosity,0.3616,0.0085,caps,
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,266.2,,porosity,0.2809,0.0133,caps (two nested bars at the same line load),
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,266.2,,porosity,0.2779,0.0066,"caps (inner bar, low confidence)",
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,715.2,,porosity,0.1970,0.0171,caps,
+Fig5-left,NCA-80/20,1,line_load_N_per_mm,720.5,,porosity,0.2040,0.0155,caps,
+Fig5-left,NCA,2,line_load_N_per_mm,0.2,,porosity,0.4549,0.0067,hole centroid + cap,
+Fig5-left,NCA,2,line_load_N_per_mm,0.6,,porosity,0.4604,0.0061,triangle centroid + top cap (overlapping marker),
+Fig5-left,NCA,2,line_load_N_per_mm,9.7,,porosity,0.4313,0.0070,hole centroid = cap mid,
+Fig5-left,NCA,2,line_load_N_per_mm,128.4,,porosity,0.3447,0.0073,hole centroid = cap mid,
+Fig5-left,NCA,2,line_load_N_per_mm,146.6,,porosity,0.3521,0.0085,hole centroid = cap mid,
+Fig5-left,NCA,2,line_load_N_per_mm,345.9,,porosity,0.2844,0.0096,hole centroid = cap mid,
+Fig5-left,NCA,2,line_load_N_per_mm,369.4,,porosity,0.2806,0.0085,hole centroid = cap mid,
+Fig5-left,NCA,2,line_load_N_per_mm,747.6,,porosity,0.2155,0.0200,hole centroid = cap mid,
+Fig5-left,NCA,2,line_load_N_per_mm,759.8,,porosity,0.2076,0.0175,hole centroid = cap mid,
+Fig5-right,NCM811,3,line_load_N_per_mm,0.0,,porosity,0.4796,0.0101,ring-hole centre + caps,
+Fig5-right,NCM811,3,line_load_N_per_mm,23.1,,porosity,0.4312,0.0046,ring-hole centre,
+Fig5-right,NCM811,3,line_load_N_per_mm,122.5,,porosity,0.3596,,ring-hole centre,
+Fig5-right,NCM811,3,line_load_N_per_mm,126.5,,porosity,0.3600,,"overlapping marker, read on 6x zoom (+-0.003)",
+Fig5-right,NCM811,3,line_load_N_per_mm,296.5,,porosity,0.2876,,ring-hole centre,
+Fig5-right,NCM811,3,line_load_N_per_mm,316.3,,porosity,0.2827,,ring-hole centre,
+Fig5-right,NCM811,3,line_load_N_per_mm,718.4,,porosity,0.2189,0.0096,ring-hole centre + caps,
+Fig5-right,NCM811,3,line_load_N_per_mm,741.1,,porosity,0.2101,0.0108,ring-hole centre + caps,
+Fig5-right,NCM622,4,line_load_N_per_mm,0.0,,porosity,0.4625,,diamond-hole centre,
+Fig5-right,NCM622,4,line_load_N_per_mm,0.0,,porosity,0.4559,,diamond-hole centre,
+Fig5-right,NCM622,4,line_load_N_per_mm,26.9,,porosity,0.4175,0.0059,hole centre + caps,
+Fig5-right,NCM622,4,line_load_N_per_mm,142.3,,porosity,0.3566,0.0093,hole centre + caps,
+Fig5-right,NCM622,4,line_load_N_per_mm,146.0,,porosity,0.3560,,"overlapping marker, read on 6x zoom (+-0.003)",
+Fig5-right,NCM622,4,line_load_N_per_mm,325.0,,porosity,0.2946,,"overlapping markers, read on 6x zoom (+-0.003)",
+Fig5-right,NCM622,4,line_load_N_per_mm,325.0,,porosity,0.2890,,"overlapping markers, read on 6x zoom (+-0.003)",
+Fig5-right,NCM622,4,line_load_N_per_mm,782.2,,porosity,0.2140,0.0145,hole centre + caps,
+Fig5-right,NCM622,4,line_load_N_per_mm,795.5,,porosity,0.2114,0.0137,hole centre + caps,
+Fig5-left+right,NCM111,5,line_load_N_per_mm,0.0,,porosity,0.4439,,marker side (hidden under other markers),
+Fig5-left+right,NCM111,5,line_load_N_per_mm,19.5,,porosity,0.4008,0.0072,cap mid = square core,
+Fig5-left+right,NCM111,5,line_load_N_per_mm,140.9,,porosity,0.3308,0.0107,caps (overlapping pair),
+Fig5-left+right,NCM111,5,line_load_N_per_mm,153.5,,porosity,0.3305,0.0119,caps (overlapping pair),
+Fig5-left+right,NCM111,5,line_load_N_per_mm,477.2,,porosity,0.2473,0.0119,caps; line-load bar +-13.3 N/mm,
+Fig5-left+right,NCM111,5,line_load_N_per_mm,480.3,,porosity,0.2500,0.0116,caps,
+Fig5-left+right,NCM111,5,line_load_N_per_mm,771.2,,porosity,0.1979,0.0180,caps; line-load bar +-14.9 N/mm,
+Fig5-left+right,NCM111,5,line_load_N_per_mm,777.4,,porosity,0.2064,0.0168,caps,
+Fig9-left,80,6,line_load_N_per_mm,0.0,,porosity,0.5483,,circle-hole centre,partial series (overlapping markers not all resolved)
+Fig9-left,80,6,line_load_N_per_mm,7.0,,porosity,0.5195,0.0082,caps (two nested bars),partial series (overlapping markers not all resolved)
+Fig9-left,80,6,line_load_N_per_mm,7.0,,porosity,0.5191,0.0039,caps (inner bar),partial series (overlapping markers not all resolved)
+Fig9-left,80,6,line_load_N_per_mm,58.0,,porosity,0.4170,,overlapping circles (+-0.004),partial series (overlapping markers not all resolved)
+Fig9-left,80,6,line_load_N_per_mm,71.0,,porosity,0.4080,,overlapping circles (+-0.004),partial series (overlapping markers not all resolved)
+Fig9-left,80,6,line_load_N_per_mm,271.1,,porosity,0.2369,0.0246,hole centre = cap mid,partial series (overlapping markers not all resolved)
+Fig9-left,80,6,line_load_N_per_mm,300.6,,porosity,0.2377,0.0287,caps,partial series (overlapping markers not all resolved)
+Fig9-left,120,7,line_load_N_per_mm,0.0,,porosity,0.4828,0.0156,caps,partial series (overlapping markers not all resolved)
+Fig9-left,120,7,line_load_N_per_mm,65.4,,porosity,0.3859,0.0148,caps,partial series (overlapping markers not all resolved)
+Fig9-left,120,7,line_load_N_per_mm,209.3,,porosity,0.2900,0.0131,caps,partial series (overlapping markers not all resolved)
+Fig9-left,120,7,line_load_N_per_mm,291.0,,porosity,0.2479,0.0131,caps,partial series (overlapping markers not all resolved)
+Fig9-left,120,7,line_load_N_per_mm,295.6,,porosity,0.2551,,hole centroid,partial series (overlapping markers not all resolved)
+Fig9-left,120,7,line_load_N_per_mm,399.7,,porosity,0.2059,0.0207,caps,partial series (overlapping markers not all resolved)
+Fig9-left,120,7,line_load_N_per_mm,423.5,,porosity,0.2209,0.0236,caps,partial series (overlapping markers not all resolved)
+Fig9-left+right,160,8,line_load_N_per_mm,0.0,,porosity,0.4402,,square core,
+Fig9-left+right,160,8,line_load_N_per_mm,18.5,,porosity,0.3953,,merged core of an overlapping pair (+-0.004 / +-5 N/mm),
+Fig9-left+right,160,8,line_load_N_per_mm,75.9,,porosity,0.3410,,merged core of an overlapping pair (+-0.003 / +-5 N/mm),
+Fig9-left+right,160,8,line_load_N_per_mm,147.5,,porosity,0.2926,,merged core of an overlapping pair (+-0.003 / +-4 N/mm),
+Fig9-left+right,160,8,line_load_N_per_mm,317.9,,porosity,0.2320,0.0228,square core = cap mid,
+Fig9-left+right,160,8,line_load_N_per_mm,456.8,,porosity,0.1859,0.0139,square core = cap mid,
+Fig9-left+right,160,8,line_load_N_per_mm,479.0,,porosity,0.1891,0.0121,square core = cap mid,
+Fig9-right,180,9,line_load_N_per_mm,202.6,,porosity,0.2896,0.0107,caps,partial series (overlapping markers not all resolved)
+Fig9-right,180,9,line_load_N_per_mm,416.7,,porosity,0.2381,0.0111,caps,partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,0.0,,porosity,0.4380,,circle-with-plus marker (+-0.003),partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,16.7,,porosity,0.3840,,marker bar (+-0.003),partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,106.3,,porosity,0.3375,,marker bar (+-0.003),partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,121.7,,porosity,0.3277,,marker bar (+-0.003),partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,390.1,,porosity,0.2277,0.0137,caps,partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,408.6,,porosity,0.2336,0.0098,caps,partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,620.5,,porosity,0.1868,0.0061,caps,partial series (overlapping markers not all resolved)
+Fig9-right,200,10,line_load_N_per_mm,659.1,,porosity,0.1939,0.0076,caps,partial series (overlapping markers not all resolved)
+Fig9-right,240,11,line_load_N_per_mm,19.1,,porosity,0.3953,0.0074,caps,partial series (overlapping markers not all resolved)
+Fig9-right,240,11,line_load_N_per_mm,241.6,,porosity,0.3020,,hole centroid (+-0.003),partial series (overlapping markers not all resolved)
+Fig9-right,240,11,line_load_N_per_mm,428.1,,porosity,0.2387,0.0133,caps = hole centroid,partial series (overlapping markers not all resolved)
+Fig9-right,240,11,line_load_N_per_mm,746.8,,porosity,0.1994,0.0104,caps,partial series (overlapping markers not all resolved)
+Fig9-right,240,11,line_load_N_per_mm,750.6,,porosity,0.1998,0.0150,caps,partial series (overlapping markers not all resolved)
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,0.0,,porosity,0.4246,0.0086,hole centre = cap mid,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,68.2,,porosity,0.3796,,diamond-hole centre,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,149.3,,porosity,0.3433,,diamond-hole centre,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,157.2,,porosity,0.3375,,diamond-hole centre,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,255.7,,porosity,0.2914,,diamond-hole centre,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,269.2,,porosity,0.2964,,diamond-hole centre,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,447.2,,porosity,0.2469,0.0133,caps,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,455.3,,porosity,0.2459,0.0096,caps,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,859.6,,porosity,0.1879,0.0141,caps,
+Fig9-right,280 (legend '285'),12,line_load_N_per_mm,867.3,,porosity,0.1910,0.0148,caps,
+Fig7,breaking strength cumulative distribution,,material,graphite,,sigma_b_at_0.5_MPa,30,,interpolated at cumulative 0.5 between the two neighbouring markers,N plotted = 31; lowest read 5 MPa; highest read 111 MPa; filled pentagons (erosion cores)
+Fig7,breaking strength cumulative distribution,,material,NCM811,,sigma_b_at_0.5_MPa,63,,interpolated at cumulative 0.5 between the two neighbouring markers,N plotted = 35; lowest read n/a MPa; highest read 180 MPa; ring holes; the four lowest points hidden under the graphite markers
+Fig7,breaking strength cumulative distribution,,material,NCAI,,sigma_b_at_0.5_MPa,117,,interpolated at cumulative 0.5 between the two neighbouring markers,N plotted = 31; lowest read n/a MPa; highest read 311 MPa; triangle holes; the four lowest points not resolved; one more point near 350 MPa at 1.00
+Fig7,breaking strength cumulative distribution,,material,NCM622,,sigma_b_at_0.5_MPa,139,,interpolated at cumulative 0.5 between the two neighbouring markers,N plotted = 23; lowest read n/a MPa; highest read 343 MPa; diamond holes; lowest and highest point not resolved
+Fig7,breaking strength cumulative distribution,,material,NCM111,,sigma_b_at_0.5_MPa,274,,interpolated at cumulative 0.5 between the two neighbouring markers,N plotted = 36; lowest read 80 MPa; highest read 545 MPa; square cores
+Fig7,breaking strength cumulative distribution,,material,NCAII,,sigma_b_at_0.5_MPa,347,,interpolated at cumulative 0.5 between the two neighbouring markers,N plotted = not counted; lowest read n/a MPa; highest read 678 MPa; right-triangle holes: only 13 of the markers resolved (+-15 MPa)

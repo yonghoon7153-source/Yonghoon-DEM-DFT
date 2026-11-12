@@ -1,0 +1,1656 @@
+{
+ "slug": "meyer2018_calendering_process_model_active_material_mass_loading",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Sketch of the calendering process including the varied product formulation and geometric parameters active material AM, mass loading MC, initial coating porosity εC,0 and the resulting electrode property coating porosity εC as well as the applied line load qL.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.7,
+    57.0,
+    282.9,
+    239.8
+   ],
+   "w": 1047,
+   "h": 811,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.676,
+   "src_native": [
+    998,
+    761
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 30, 998×761 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "공정 그림: 두 롤 사이로 전극 (금속박 위 입자 코팅) 이 지나가며 ε_C,0 → ε_C. 변수 = 활물질 AM · 질량 부하 M_C · 선하중 q_L. 롤을 나온 뒤의 기공률이 ε_C (누른 채 값이 아니다).",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Initial coating porosities and minimally achieved, extrapolated and predicted coating porosities regarding variation of active material, mass loading, composition and processing. The labels consists of the electrode No. and abbreviation (Table 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    57.0,
+    282.6,
+    263.8
+   ],
+   "w": 1046,
+   "h": 912,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.913,
+   "src_native": [
+    996,
+    862
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 59, 996×862 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 15 전극의 출발 기공률 ε_C,0 (청록 □) · 최소 간극 25 µm 에서 얻은 최솟값 min_a (녹 ▼) · 식 (2) 맞춤의 외삽 최솟값 min_e (청 ▲) · 예측 min_p = 0.4·ε_C,0 (적 ●). 판독 60 값 = digitized.csv. No.1–12: min_a/ε_0 0.427–0.471 (평균 0.447) · min_e/ε_0 0.354–0.445 (평균 0.398) [카드 산술]. No.13–15 (다른 연구의 전극) 는 예측에서 벗어난다 (0.33 · 0.60 · 0.29).",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Illustration of the packing differences induced by compaction of electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.1,
+    556.9,
+    477.1,
+    728.5
+   ],
+   "w": 1546,
+   "h": 765,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.625,
+   "src_native": [
+    1496,
+    715
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 60, 1496×715 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "모식도: 압축 전 ↔ 최대 압축. IS = 활물질 입자 사이 공간 (interparticle space) · US = 활물질이 차지할 수 없는 공간 (unoccupiable space). 저자 설명 = 첨가제 (도전재 · 바인더) 가 IS 에서 밀려나 US 를 채워 기공률을 구 충전 이론값보다 더 낮춘다 → p 가 0.54 가 아니라 0.4.",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. SEM cross section of the NCM cathodes No. 6 and 8 with coating mass loadings of 80 g/cm2 (left) and 160 g/cm2 (right), respectively; No. 6 is remarkable more porous.",
+   "rotated_deg": 0,
+   "bbox": [
+    117.9,
+    57.0,
+    477.3,
+    217.9
+   ],
+   "w": 1548,
+   "h": 720,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.264,
+   "src_native": [
+    1498,
+    670
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 80, 1498×670 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "단면 SEM: No.6 (80 g/m²) 은 활물질 약 세 층 · 더 성기다 ↔ No.8 (161 g/m²). ⚠ 캡션 단위 'g/cm2' 는 원문 오기 (표 2 = g/m²).",
+   "viewed": true
+  },
+  {
+   "key": "f4L",
+   "kind": "figure",
+   "label": "4-left",
+   "page": 5,
+   "file": "fig_4_left.png",
+   "caption": "Fig. 4 (left image) — SEM cross section of NCM cathode No. 6 (label '6 - 80', coating mass loading 80 g/m2 [caption prints 'g/cm2']); scale bar 10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    117.9,
+    95.4,
+    296.2,
+    217.9
+   ],
+   "w": 793,
+   "h": 560,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.209,
+   "panel_of": "f4",
+   "src_native": [
+    1498,
+    670
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 4 (the original has no panel letters) — cut from the embedded native raster (xref 80, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "No.6: 코팅 두께 약 45 µm · 활물질 약 세 층 (본문 p.378) — 얇은 코팅은 표면 · 집전체 계면의 성긴 층 비율이 커서 출발 기공률이 높다 (0.548).",
+   "viewed": true
+  },
+  {
+   "key": "f4R",
+   "kind": "figure",
+   "label": "4-right",
+   "page": 5,
+   "file": "fig_4_right.png",
+   "caption": "Fig. 4 (right image) — SEM cross section of NCM cathode No. 8 (label '8 - 160', coating mass loading 160 g/m2 [caption prints 'g/cm2']); scale bar 10 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.8,
+    57.0,
+    477.3,
+    217.9
+   ],
+   "w": 794,
+   "h": 720,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.18,
+   "panel_of": "f4",
+   "src_native": [
+    1498,
+    670
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 4 (the original has no panel letters) — cut from the embedded native raster (xref 80, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "No.8: 출발 기공률 0.441 — 160 g/m² 부터는 출발 기공률이 거의 일정 (No.8–12: 0.42–0.44).",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Decrease of the coating porosity of the electrodes No. 1–5 with different active materials compacted with varied line loads. Electrode No. 5 is shown as a reference in both graphs. The data are approximated with the model Eq. (4). The reduced chi-squared χν2 as a measure for the goodness of fit is displayed in the legends. Even though the values for χν2 are very near to 1, the approximations describe the data courses visually sufficiently well for practical purposes.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.2,
+    545.0,
+    513.1,
+    709.4
+   ],
+   "w": 1845,
+   "h": 735,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.904,
+   "src_native": [
+    1795,
+    685
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 81, 1795×685 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 활물질 다섯 전극 (94 : 3 : 3 wt% · 223 g/m²) 의 선하중 ↔ 코팅 기공률 + 식 (4) 맞춤선. 범례 χ_ν²: NCA 3.02 · NCA-80/20 3.57 · NCM111 3.45 (왼쪽) / NCM811 4.00 · NCM622 2.24 · NCM111 3.45 (오른쪽). ⚠ 캡션은 'very near to 1' 이라 적지만 인쇄 값은 2.24–4.00 (Fig. 9 캡션은 'not for every fit near to 1'). 판독점 = digitized.csv.",
+   "viewed": true
+  },
+  {
+   "key": "f5L",
+   "kind": "figure",
+   "label": "5-left",
+   "page": 5,
+   "file": "fig_5_left.png",
+   "caption": "Fig. 5 (left diagram) — coating porosity εC [-] vs line load qL [N/mm]: NCA (dark-green open triangles, dashed fit, χν2 3.02), NCA-80/20 (light-green left-pointing triangles, dash-dot fit, χν2 3.57), NCM111 (blue squares, solid fit, χν2 3.45).",
+   "rotated_deg": 0,
+   "bbox": [
+    82.2,
+    545.0,
+    298.2,
+    709.4
+   ],
+   "w": 950,
+   "h": 735,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.907,
+   "panel_of": "f5",
+   "src_native": [
+    1795,
+    685
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 5 (the original has no panel letters) — cut from the embedded native raster (xref 81, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "NCA-80/20 (작은 입자 20 wt% 섞음) 이 낮은 선하중에서 가장 빨리 떨어진다 (γ_C 220 N/mm). 판독 예: NCA 346 N/mm → 0.284 · NCA-80/20 266 N/mm → 0.281 · NCM111 477 N/mm → 0.247.",
+   "viewed": true
+  },
+  {
+   "key": "f5R",
+   "kind": "figure",
+   "label": "5-right",
+   "page": 5,
+   "file": "fig_5_right.png",
+   "caption": "Fig. 5 (right diagram) — coating porosity εC [-] vs line load qL [N/mm]: NCM811 (red circles, dash-dot-dot fit, χν2 4.00), NCM622 (violet diamonds, dashed fit, χν2 2.24), NCM111 (blue squares, solid fit, χν2 3.45).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    545.0,
+    513.1,
+    709.4
+   ],
+   "w": 935,
+   "h": 735,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.906,
+   "panel_of": "f5",
+   "src_native": [
+    1795,
+    685
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 5 (the original has no panel letters) — cut from the embedded native raster (xref 81, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "NCM811 은 출발 기공률이 가장 높고 (0.479) 낮은 선하중에서 가장 가파르게 떨어진다 (γ_C 230 N/mm) — 저자 설명 = 입자가 굵어 마찰 면적이 작다 (파쇄 세기가 낮아서가 아니다).",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. The compaction resistance γC for the electrodes No. 1–5 with different active materials. The standard errors result from the error propagation of the approximations.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    57.0,
+    282.6,
+    245.1
+   ],
+   "w": 1046,
+   "h": 834,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.626,
+   "src_native": [
+    996,
+    784
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 94, 996×784 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 활물질별 γ_C [판독]: NCA-80/20 220 ± 29 · NCA 310 ± 25 · NCM811 230 ± 22 · NCM622 305 ± 21 · NCM111 297 ± 36 N/mm (표 3 의 μ × 223 g/m² 과 일치: 221 · 312 · 232 · 303 · 297). 단위 = N/mm (선하중) — 압력이 아니다.",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Breaking strength of the different used active materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.7,
+    548.7,
+    282.6,
+    728.6
+   ],
+   "w": 1045,
+   "h": 799,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.88,
+   "src_native": [
+    995,
+    749
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 95, 995×749 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "입자 하나씩 눌러 잰 파쇄 세기 σ_b (첫 깨짐 힘 ÷ 투영 면적) 의 누적 분포. 중앙값 [판독]: 흑연 ≈30 · NCM811 ≈63 · NCAI ≈117 · NCM622 ≈139 · NCM111 ≈274 · NCAII ≈347 MPa. Ni 가 많을수록 약하다 (저자: 제조사가 달라 일반화 불가).",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. SEM images of the different active material particles within the coating.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.1,
+    57.0,
+    477.2,
+    494.6
+   ],
+   "w": 1546,
+   "h": 1873,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.141,
+   "src_native": [
+    1496,
+    1823
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 104, 1496×1823 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "코팅 속 활물질 입자 SEM (NCM111 · NCAI · NCM622 · NCM811, 눈금 2 µm) — 전부 1 차 입자가 뭉친 2 차 입자 (다결정 응집체). 저자: Ni 가 많을수록 1 차 입자가 성기게 뭉쳐 파쇄 세기가 낮다.",
+   "viewed": true
+  },
+  {
+   "key": "f8TL",
+   "kind": "figure",
+   "label": "8-NCM111",
+   "page": 7,
+   "file": "fig_8_ncm111.png",
+   "caption": "Fig. 8 (top left) — SEM image of NCM111 particles within the coating; scale bar 2 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.1,
+    57.0,
+    296.0,
+    274.3
+   ],
+   "w": 791,
+   "h": 955,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.18,
+   "panel_of": "f8",
+   "src_native": [
+    1496,
+    1823
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 8 (the original has no panel letters) — cut from the embedded native raster (xref 104, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "NCM111: 가장 치밀한 응집체 · BET 0.22 m²/g · 파쇄 세기 중앙값 ≈274 MPa [판독].",
+   "viewed": true
+  },
+  {
+   "key": "f8TR",
+   "kind": "figure",
+   "label": "8-NCAI",
+   "page": 7,
+   "file": "fig_8_ncai.png",
+   "caption": "Fig. 8 (top right) — SEM image of NCAI particles within the coating; scale bar 2 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.3,
+    57.3,
+    477.2,
+    274.3
+   ],
+   "w": 791,
+   "h": 954,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.17,
+   "panel_of": "f8",
+   "src_native": [
+    1496,
+    1823
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 8 (the original has no panel letters) — cut from the embedded native raster (xref 104, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "NCAI (x50 15.2 µm): 파쇄 세기 중앙값 ≈117 MPa [판독] · 피크노미터 밀도 4.829 g/cm³.",
+   "viewed": true
+  },
+  {
+   "key": "f8BL",
+   "kind": "figure",
+   "label": "8-NCM622",
+   "page": 7,
+   "file": "fig_8_ncm622.png",
+   "caption": "Fig. 8 (bottom left) — SEM image of NCM622 particles within the coating; scale bar 2 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    118.1,
+    277.6,
+    296.0,
+    494.6
+   ],
+   "w": 791,
+   "h": 954,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.177,
+   "panel_of": "f8",
+   "src_native": [
+    1496,
+    1823
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 8 (the original has no panel letters) — cut from the embedded native raster (xref 104, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "NCM622: BET 0.30 m²/g · 파쇄 세기 중앙값 ≈139 MPa [판독].",
+   "viewed": true
+  },
+  {
+   "key": "f8BR",
+   "kind": "figure",
+   "label": "8-NCM811",
+   "page": 7,
+   "file": "fig_8_ncm811.png",
+   "caption": "Fig. 8 (bottom right) — SEM image of NCM811 particles within the coating; scale bar 2 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.4,
+    278.1,
+    477.2,
+    494.6
+   ],
+   "w": 799,
+   "h": 952,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.183,
+   "panel_of": "f8",
+   "src_native": [
+    1496,
+    1823
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 8 (the original has no panel letters) — cut from the embedded native raster (xref 104, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "NCM811: BET 0.27 m²/g · 파쇄 세기 중앙값 ≈63 MPa [판독] (양극 활물질 가운데 가장 약함).",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Decrease of the coating porosity of the electrodes No. 6–12 with different mass loadings, compacted by varied line loads. Electrode No. 8 is shown as a reference in both graphs. The data are approximated with the model Eq. (4). The reduced chi-squared χν2 as a measure for the goodness of fit is displayed in the legends. Even though χν2 is not for every fit near to 1, the approximations describe the data courses visually sufficiently well for practical purposes.",
+   "rotated_deg": 0,
+   "bbox": [
+    82.2,
+    538.2,
+    513.1,
+    701.0
+   ],
+   "w": 1845,
+   "h": 728,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.905,
+   "src_native": [
+    1795,
+    678
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 105, 1795×678 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 질량 부하 일곱 전극 (90 : 5 : 5 wt% · 80–284 g/m²) 의 선하중 ↔ 기공률 + 식 (4) 맞춤선. 범례 χ_ν²: 6-80 5.83 · 7-120 1.72 · 8-160 1.47 / 9-180 1.09 · 10-200 3.89 · 11-240 1.18 · 12-285 0.19. 부하가 클수록 같은 기공률에 더 큰 선하중이 든다. ⚠ 범례 '12 - 285' ↔ 표 1 · 2 '280' (실측 284 ± 4).",
+   "viewed": true
+  },
+  {
+   "key": "f9L",
+   "kind": "figure",
+   "label": "9-left",
+   "page": 7,
+   "file": "fig_9_left.png",
+   "caption": "Fig. 9 (left diagram) — coating porosity εC [-] vs line load qL [N/mm]: No. 6 (80 g/m2, black open circles, χν2 5.83), No. 7 (120 g/m2, red open triangles, χν2 1.72), No. 8 (160 g/m2, blue squares, χν2 1.47).",
+   "rotated_deg": 0,
+   "bbox": [
+    82.2,
+    538.2,
+    298.0,
+    701.0
+   ],
+   "w": 949,
+   "h": 728,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.913,
+   "panel_of": "f9",
+   "src_native": [
+    1795,
+    678
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 9 (the original has no panel letters) — cut from the embedded native raster (xref 105, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "얇은 전극 (No.6 · 7) 은 출발 기공률이 높고 (0.548 · 0.483) 최소 간극 25 µm 때문에 걸 수 있는 선하중이 작다 (끝점 ≈300 · ≈424 N/mm [판독]).",
+   "viewed": true
+  },
+  {
+   "key": "f9R",
+   "kind": "figure",
+   "label": "9-right",
+   "page": 7,
+   "file": "fig_9_right.png",
+   "caption": "Fig. 9 (right diagram) — coating porosity εC [-] vs line load qL [N/mm]: No. 8 (160, blue squares, χν2 1.47), No. 9 (180, green right-pointing triangles, 1.09), No. 10 (200, orange circles, 3.89), No. 11 (240, teal down-triangles, 1.18), No. 12 (285, violet diamonds, 0.19).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.3,
+    538.2,
+    513.1,
+    701.0
+   ],
+   "w": 928,
+   "h": 728,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.9,
+   "panel_of": "f9",
+   "src_native": [
+    1795,
+    678
+   ],
+   "native_dpi": 300,
+   "manual_crop": "panel of Fig. 9 (the original has no panel letters) — cut from the embedded native raster (xref 105, no resampling): split at the centre of the all-white gap between the sub-images → ink bounding box (min RGB < 235) → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "출발 기공률은 거의 같고 (0.42–0.44) 부하가 클수록 곡선이 천천히 내려간다 — γ_C 168 → 254 → 249 → 340 → 371 N/mm [판독 Fig. 10]. 끝점 선하중 ≈479 · ≈575 · ≈659 · ≈751 · ≈867 N/mm.",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. The compaction resistance γC for the electrodes No. 6–12 with different mass loadings and linearly fitted with γC(MC = 0) = 0. The first fitting proposed an ordinate intercept near zero.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    57.0,
+    282.6,
+    247.1
+   ],
+   "w": 1046,
+   "h": 842,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.928,
+   "src_native": [
+    996,
+    792
+   ],
+   "native_dpi": 300,
+   "recrop": "tool crop (complete, but page-rendered with unequal margins: wider left/right than top/bottom) replaced by a cut from the embedded native raster (xref 163, 996×792 px, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (caption text here) (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ γ_C ∝ M_C: γ_C = μ·M_C · μ = 1.31 ± 0.03 (N/mm)/(g/m²) = kN·m/g · R² = 0.996 (원점 통과). 판독 7 점: (80, 98) · (120, 164) · (161, 168) · (180, 254) · (198, 249) · (242, 340) · (284, 371) — No.8 (161 g/m²) 은 직선보다 −44 N/mm (−21 %). 판독점 재맞춤 μ 1.310 · 중심화 R² 0.95 [카드 산술].",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Characteristics of the used active material particles (AM), 1 according the technical data sheets; 2 measured. Particle size x10 / x50 / x90 [µm]: NCAI 7.2 / 15.2 / 29.1; NCAII 3.1 / 5.8 / 9.1 (No. 1 NCA-80/20 = 80 wt.-% NCAI + 20 wt.-% NCAII); NCM811 8.1 / 14.3 / 24.7; NCM622 6.5 / 11.7 / 20.7; NCM111 6.4 / 12.0 / 21.6 (rows 6–13 left blank); LMO 5.5 / 9.1 / 14.6 (undefined polygones); graphite 14.3 / 20.4 / 27.7 (flakes, measured). Morphology of No. 1–13: spheres.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    58.7,
+    290.2,
+    311.6
+   ],
+   "w": 1462,
+   "h": 1460,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.952,
+   "recrop": "tool crop ran over the whole page (running head, both text columns) — re-rendered by hand from the vector page at 400 dpi: region [36.1, 58.7, 290.2, 311.6] pt (title → bottom rule) → ink trim → uniform 6 pt (33 px) margin; caption text cleaned by hand (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "활물질 입도 (제조사 자료). No.6–13 의 빈칸 = 위 칸과 같음으로 읽힌다 (NCM111 — 본문 'p_NCM111-451' · 표 2 밀도비가 뒷받침). 입자 종류 · 형상 (구 / 다각형 / 판상) 이 최소 기공률 예측의 적용 한계를 정한다.",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2. Characteristics of electrodes investigated (AM = active material, CC = conductive carbon, CG = conductive graphite, B = binder). a standard deviation ≤ 3 %; b two-side coated. No. 1–5: 94 / 3 / 0 / 3 wt.-%, AM volume fraction 45.9 / 46.5 / 44.0 / 45.6 / 47.4 vol.-%, mass loading 223 ± 1 g/m2. No. 6–12: 90 / 5 / 0 / 5 wt.-%, AM 34.6 / 39.6 / 42.9 / 43.2 / 43.3 / 44.2 / 44.1 vol.-%, mass loading 80 ± 2 / 120 ± 3 / 161 ± 3 / 179 ± 3 / 198 ± 3 / 242 ± 2 / 284 ± 4 g/m2. No. 13 NCM cathode 86 / 4 / 4 / 6 wt.-%, 451 ± 14 g/m2 (two-side); No. 14 LMO 90 / 6 / 0 / 4, 133 g/m2; No. 15 graphite anode 85 / 5 / 0 / 10, 197 ± 3 g/m2 (two-side).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    526.0,
+    559.2,
+    744.7
+   ],
+   "w": 2957,
+   "h": 1270,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.958,
+   "recrop": "tool crop ran over the whole page (running head, both text columns) — re-rendered by hand from the vector page at 400 dpi: region [36.1, 526.0, 559.2, 744.7] pt (title → bottom rule) → ink trim → uniform 6 pt (33 px) margin; caption text cleaned by hand (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 조성 · 부피 분율 · 질량 부하. 부피 분율은 코팅 부피 (기공 포함) 기준 → 1 − Σvol% = 출발 기공률: Fig. 2 판독과 13/15 전극에서 ≤ 0.001 로 일치 · No.1 ↔ No.2 의 AM vol% (45.9 ↔ 46.5) 는 Fig. 2 · Fig. 5 와 서로 바뀐 것으로 보인다 [카드 산술].",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 8,
+   "file": "tab_3.png",
+   "caption": "Table 3. Mass dependency factor μ of different electrodes [kN m_length/g]: No. 1 NCA-80/20 0.99 ± 0.13; No. 2 NCA 1.40 ± 0.11; No. 3 NCM811 1.04 ± 0.10; No. 4 NCM622 1.36 ± 0.09; No. 5 NCM111 1.33 ± 0.16; No. 6–12 (80; 120; 160; 180; 200; 240; 285) 1.31 ± 0.03+. + This standard error results from the error propagation of the approximation, whereas the data of No. 1–5 are projected from the standard errors of the compaction resistance from Fig. 6 as they are higher than the mass loading standard errors.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    297.8,
+    290.2,
+    424.5
+   ],
+   "w": 1462,
+   "h": 759,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.91,
+   "recrop": "tool crop ran over the whole page (running head, both text columns) — re-rendered by hand from the vector page at 400 dpi: region [36.1, 297.8, 290.2, 424.5] pt (title → bottom rule) → ink trim → uniform 6 pt (33 px) margin; caption text cleaned by hand (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 식 (5) 의 매개변수 μ = γ_C/M_C. No.1–5 는 한 부하 (223 g/m²) 에서 γ_C 를 재고 선형 가정으로 나눈 값 (부하를 바꿔 잰 것이 아니다). 단위 kN·m/g = (N/mm)/(g/m²).",
+   "viewed": true
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_heckel_porosity_form.png",
+   "caption": "Eq. (1), printed p.372: ε = ε0 + exp(−K·P) — the Heckel relation as printed in this article (porosity ε, initial porosity of the loose packing ε0, Heckel constant K, pressure P).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    67.2,
+    559.2,
+    89.4
+   ],
+   "w": 1459,
+   "h": 109,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: band between the neighbouring text lines (line boxes from the text layer), full column width so that the equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "식 (1) — 원문 인쇄 그대로 'ε = ε0 + exp(−K·P)' (더하기). ⚠ P = 0 에서 ε = ε0 + 1 이 되므로 인쇄 오류로 보인다: Heckel 의 꼴은 ε = ε0·exp(−K·P) (ln(1/ε) = K·P + ln(1/ε0)) [카드 추론]. 가로축은 압력 P.",
+   "viewed": true
+  },
+  {
+   "key": "e1t",
+   "kind": "equation",
+   "label": "eq1+text",
+   "page": 2,
+   "file": "eq_01_heckel_porosity_form_with_text.png",
+   "caption": "Eq. (1) with its lead-in paragraph, printed p.372: 'Heckel presented an exponential relation between the applied load and the resulting density of metal powders by assuming a similarity to a first-order chemical reaction, substituting the time by the pressure P and the concentration by the density or porosity ε [21] … The Heckel equation was set up for the uniaxial compaction of metal powders and Heckel showed that it is less suitable for brittle materials as alumina. However, the brittle active materials in the coatings investigated in this work are embedded in the additive matrix increasing the deformability of the coating drastically.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    633.6,
+    290.2,
+    737.6
+   ],
+   "w": 1460,
+   "h": 775,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.857,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      36.1,
+      633.6,
+      290.2,
+      737.6
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      305.1,
+      58.2,
+      559.2,
+      82.9
+     ]
+    }
+   ],
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "Heckel 문단 + 식 (1): K = '가루의 소성 변형 능력' · 금속 가루의 일축 압축용 · 알루미나 같은 취성 재료에는 덜 맞는다 (Heckel 자신) · 저자의 정당화 = 취성 활물질이 첨가제 매트릭스에 묻혀 코팅의 변형 능력이 커진다.",
+   "viewed": true
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_compaction_model_coating_porosity.png",
+   "caption": "Eq. (2), printed p.372: εC = εC,min + (εC,0 − εC,min)·exp(−qL/γC) — compaction model for the coating porosity vs applied line load qL (εC,0 initial porosity, εC,min minimum porosity, γC compaction resistance).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    191.9,
+    559.2,
+    214.4
+   ],
+   "w": 1459,
+   "h": 113,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.963,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: band between the neighbouring text lines (line boxes from the text layer), full column width so that the equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 식 (2) — 기공률 꼴의 압연 모델 (Meyer 2017 의 식 (4) 를 기공률로 쓴 것). 맞춤 매개변수 둘 = ε_C,min · γ_C. 가로축 = 선하중 q_L [N/mm] (압력이 아니다).",
+   "viewed": true
+  },
+  {
+   "key": "e2t",
+   "kind": "equation",
+   "label": "eq2+text",
+   "page": 2,
+   "file": "eq_02_compaction_model_coating_porosity_with_text.png",
+   "caption": "Eq. (2) with its lead-in and symbol list, printed p.372: 'This exponential relation was transferred to Eq. (2) for the compaction behavior of electrodes regarding the active material particles, mixed oxides and graphite, as similar to the metal particles of Heckel. The compaction resistance γC functions as a reciprocal equivalent to Heckels constant K [22]. The minimum porosity of the coating εC,min is used as a second fitting parameter, the possibility to determine it independently would be beneficial to reduce the charactization of the compaction behavior to γC.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    88.7,
+    559.2,
+    244.7
+   ],
+   "w": 1461,
+   "h": 922,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.866,
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "식 (2) + 'γ_C 는 Heckel 상수 K 의 역수에 해당' + '최소 기공률을 따로 정할 수 있으면 압축 거동이 γ_C 하나로 줄어든다' — 이 논문의 동기.",
+   "viewed": true
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 2,
+   "file": "eq_03_coating_porosity_definition.png",
+   "caption": "Eq. (3), printed p.372: εC = 1 − ρC/ρph = 1 − (mE − mC)/((hE − hC)·ρph) — coating porosity from mass loading, thickness and mean physical density (ρC coating density, ρph mean physical density of the components, mE / mC mass loading of electrode / current collector, hE / hC thickness of electrode / current collector).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    505.8,
+    559.2,
+    539.5
+   ],
+   "w": 1459,
+   "h": 174,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.972,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: band between the neighbouring text lines (line boxes from the text layer), full column width so that the equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 식 (3) — 기공률 연산자: 질량 부하 (초음파) · 두께 (다이얼 게이지 1 µm) · 성분 밀도 (He 피크노미터, 질량 분율로 평균) 에서 셈한 기하 기공률. 압연 뒤 (하중 0) 전극에서 잰 값.",
+   "viewed": true
+  },
+  {
+   "key": "e3t",
+   "kind": "equation",
+   "label": "eq3+text",
+   "page": 2,
+   "file": "eq_03_coating_porosity_definition_with_text.png",
+   "caption": "Eq. (3) with section 2.1, printed p.372: porosity 'calculated from the mass loading, the coating thickness and the mean physical density of the components'; 'This method delivers porosities which are in well corresponce with the porosities measured by mercury porosimetry [22,23]'; mass loading by ultrasonic attenuation (USM200, Mesys) immediately after drying; tactile dial gauge (ID-C, Mitutoyo) resolution 1 µm, fixed pattern with 24 single measurements; error from penetration of the current collector 1–2 µm disregarded; physical density by gas (helium) pycnometry; 'The mean value ρph of a coating is calculated by taking the mass fractions of each component into account.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    277.1,
+    559.2,
+    570.5
+   ],
+   "w": 1465,
+   "h": 1679,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.862,
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "측정 절 전체 + 식 (3). ⚠ '수은 압입과 잘 맞는다 [22]' — 앞 논문 (Meyer 2017) 은 NCM 양극에서 기하 기공률이 수은보다 ≈8 %p 높다고 적었다; 이 논문 표 2 · Fig. 2 의 No.13 (같은 전극) 값은 0.521 → 0.176 으로 2017 년 수은 쪽 값과 같다 (분모 밀도가 바뀐 것으로 보임 · 카드 §3-9).",
+   "viewed": true
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 5,
+   "file": "eq_04_model_with_predicted_minimum_p.png",
+   "caption": "Eq. (4), printed p.375: εC = εC,0·(p + (1 − p)·exp(−qL/γC)) — Eq. (2) with the predicted minimum porosity εC,min_p = p·εC,0 (p = 0.4): the compaction resistance γC is the only fitting parameter.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    444.8,
+    290.2,
+    484.0
+   ],
+   "w": 1459,
+   "h": 112,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.965,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: band between the neighbouring text lines (line boxes from the text layer), full column width so that the equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 식 (4) — 이 논문의 모델. 최소 기공률을 p·ε_C,0 (p = 0.4) 로 고정 → 맞춤 매개변수는 γ_C 하나. 출발 기공률 ε_C,0 는 잰 값.",
+   "viewed": true
+  },
+  {
+   "key": "e4t",
+   "kind": "equation",
+   "label": "eq4+text",
+   "page": 5,
+   "file": "eq_04_model_with_predicted_minimum_p_with_text.png",
+   "caption": "Eq. (4) with its lead-in, printed p.375: 'In the following, the presented predictive model to determine the minimum porosity (εC,min_p = p·εC,0 with p = 0.4) is implemented in Eq. (2) resulting in Eq. (4) after some mathematical transformations. No. 13–15 are not further discussed, because the prediction is unconclusive within their range due to the presented reasons.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    393.9,
+    290.2,
+    462.4
+   ],
+   "w": 1461,
+   "h": 433,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.886,
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "식 (4) + 도입 문장: No.13–15 (NCM + 도전 흑연 · LMO 다각형 · 흑연 판상) 는 예측이 맞지 않아 이후 논의에서 뺀다.",
+   "viewed": true
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 8,
+   "file": "eq_05_model_with_mass_loading_mu.png",
+   "caption": "Eq. (5), printed p.378: εC = εC,0(p + (1 − p)·exp(−qL(μ·MC))) [as printed — the division sign between qL and (μ·MC) is missing; with γC = μ·MC it reads exp(−qL/(μ·MC))].",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    527.5,
+    290.2,
+    550.0
+   ],
+   "w": 1459,
+   "h": 111,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.96,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi: band between the neighbouring text lines (line boxes from the text layer), full column width so that the equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 식 (5) — 질량 부하까지 넣은 모델: γ_C = μ·M_C. ⚠ 인쇄된 식에는 q_L 과 (μ·M_C) 사이의 나눗셈 기호가 빠져 있다 (식 (4) 에 γ_C = μ·M_C 를 넣으면 exp(−q_L/(μ·M_C))) [카드 추론].",
+   "viewed": true
+  },
+  {
+   "key": "e5t",
+   "kind": "equation",
+   "label": "eq5+text",
+   "page": 8,
+   "file": "eq_05_model_with_mass_loading_mu_with_text.png",
+   "caption": "Eq. (5) with its lead-in, printed p.378: 'No. 6 consists of about three layers of active material particles (see Fig. 4) and is already a relatively thin NCM cathode with a coating thickness of about 45 µm and a capacity loading of 1.1 mAh/cm2. Thus, the presented model is valid by all means for relevant mass loadings MC > 80 g/m2. Therefore, knowing the compaction resistance of one mass loading the compaction resistance for other mass loadings can be estimated by the correlation γC = μ·MC. This results in the modified Eq. (5).'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    445.2,
+    290.2,
+    543.8
+   ],
+   "w": 1461,
+   "h": 599,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.879,
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "식 (5) + 적용 범위 문장: M_C > 80 g/m² (No.6 = 활물질 약 세 층 · 약 45 µm · 1.1 mAh/cm²).",
+   "viewed": true
+  },
+  {
+   "key": "e0a",
+   "kind": "equation",
+   "label": "eq-inline-line-load",
+   "page": 3,
+   "file": "eq_p373_line_load_definition_inline.png",
+   "caption": "Inline definition (unnumbered), printed p.373: '… For every adjusted state of compaction two sheets were calendered. Using the coating width of the electrodes wC and the rolling forces FN, the applied line load qL is calculated as follows: qL = FN/wC. The process was performed at ambient temperature.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    100.0,
+    559.2,
+    141.1
+   ],
+   "w": 1460,
+   "h": 284,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.89,
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 선하중 정의: q_L = 롤 힘 ÷ 코팅 폭 (N/mm). 압력 (힘 ÷ 접촉 면적) 으로 바꾼 식 · 접촉 길이 · 간극 값은 원문에 없다. 상온 압연 · 압축 상태마다 시트 두 장.",
+   "viewed": true
+  },
+  {
+   "key": "e0b",
+   "kind": "equation",
+   "label": "eq-inline-min-porosity-p",
+   "page": 4,
+   "file": "eq_p374_min_porosity_prediction_p04_inline.png",
+   "caption": "Inline definition (unnumbered), printed p.374: '… the extrapolated minimum εC,min_e according to the fit of the porosity degression with increasing line load by Eq. (2) and εC,min_p = p·εC,0 with p = 0.4 as a prediction approach for the minimally achievable coating porosity.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    521.4,
+    290.2,
+    543.2
+   ],
+   "w": 1460,
+   "h": 234,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.876,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      36.1,
+      521.4,
+      290.2,
+      543.2
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      305.1,
+      58.2,
+      559.2,
+      67.9
+     ]
+    }
+   ],
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 최소 기공률 예측식: ε_C,min_p = p·ε_C,0 · p = 0.4. 근거 = 단순 입방 (47.64 %) → 입방 최밀 (25.95 %) 의 비 0.54 를 첨가제 효과로 더 낮춘 값 (실용 어림).",
+   "viewed": true
+  },
+  {
+   "key": "e0c",
+   "kind": "equation",
+   "label": "eq-inline-gamma-mu",
+   "page": 8,
+   "file": "eq_p378_gamma_mu_mass_loading_inline.png",
+   "caption": "Inline relation (unnumbered), printed p.378: '… the presented model is valid by all means for relevant mass loadings MC > 80 g/m2. Therefore, knowing the compaction resistance of one mass loading the compaction resistance for other mass loadings can be estimated by the correlation γC = μ·MC. This results in the modified Eq. (5).'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    476.6,
+    290.2,
+    528.2
+   ],
+   "w": 1461,
+   "h": 339,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.883,
+   "manual_crop": "equation with its lead-in text rendered by hand from the vector page at 400 dpi (line boxes from the text layer; full column width so that the equation number is kept) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ γ_C = μ·M_C (비례 · 절편 0). 한 부하에서 잰 γ_C 로 다른 부하의 γ_C 를 어림한다.",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq-fig10-inset",
+   "page": 8,
+   "file": "eq_fig10_inset_linear_fit_gamma_mu.png",
+   "caption": "Inset of Fig. 10 (fit box): γC = μ MC; R² = 0.996; μ = 1.31 ± 0.03 (N/mm)/(g/m²) = 1.31 ± 0.03 kN·m_length/g.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.0,
+    59.0,
+    179.4,
+    97.4
+   ],
+   "w": 510,
+   "h": 210,
+   "dpi": 300,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.881,
+   "panel_of": "f10",
+   "src_native": [
+    996,
+    792
+   ],
+   "native_dpi": 300,
+   "manual_crop": "inset of Fig. 10 (fit equation box) — cut from the embedded native raster (xref 163, no resampling), pixel box [106, 8, 566, 168] → uniform 6 pt (25 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ Fig. 10 의 맞춤 결과 상자. R² 0.996 은 원점 통과 맞춤의 값 — 판독 7 점으로 다시 셈하면 가중 비중심 R² 0.997 · 중심화 R² 0.95 [카드 산술].",
+   "viewed": true
+  },
+  {
+   "key": "x371a",
+   "kind": "text",
+   "label": "p371-title-authors",
+   "page": 1,
+   "file": "txt_p371_title_authors_journal.png",
+   "caption": "PDF p.1 (printed p.371) head: running line 'Journal of Energy Storage 18 (2018) 371–379', journal banner, title, authors (Chris Meyer*, Malte Kosfeld, Wolfgang Haselrieder, Arno Kwade), affiliations a/b (Institute of Particle Technology and Battery LabFactory Braunschweig, TU Braunschweig).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    31.9,
+    559.2,
+    240.9
+   ],
+   "w": 2957,
+   "h": 1197,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.69,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "서지 확인용 (제목 · 저자 · 소속 · 학술지 · 권 · 쪽).",
+   "viewed": true
+  },
+  {
+   "key": "x371b",
+   "kind": "text",
+   "label": "p371-abstract-keywords",
+   "page": 1,
+   "file": "txt_p371_abstract_keywords.png",
+   "caption": "PDF p.1 (printed p.371): keywords (Calendering · Compaction model · Lithium-ion battery electrodes · Porosity · Ni-rich cathode materials · Mass loading) and abstract: 'a Heckel-based model equation is supplemented by a predictive model for the lowest achievable coating porosity based on the theoretical packing structures of equally sized spheres … An addition of smaller particles as well as increased initial porosities due to coarser particles decrease the compaction resistance … a linear proportional relationship for the considered range from 80 to 280 g/m2.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    265.1,
+    559.2,
+    380.1
+   ],
+   "w": 2959,
+   "h": 693,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.892,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 초록 — 고른 의도의 문장 ('Heckel 기반 모델 식 + 같은 크기 구의 이론 충전 구조로 최소 기공률 예측') 이 여기 그대로 있다.",
+   "viewed": true
+  },
+  {
+   "key": "x371c",
+   "kind": "text",
+   "label": "p371-doi-dates",
+   "page": 1,
+   "file": "txt_p371_doi_received_accepted.png",
+   "caption": "PDF p.1 (printed p.371) foot: corresponding author (C. Meyer), DOI https://doi.org/10.1016/j.est.2018.05.018, 'Received 11 April 2018; Received in revised form 25 May 2018; Accepted 26 May 2018; Available online 19 June 2018', '2352-152X/ © 2018 Elsevier Ltd. All rights reserved.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    686.7,
+    559.2,
+    749.8
+   ],
+   "w": 2555,
+   "h": 385,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.936,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "DOI · 접수 · 수정 · 승인 · 온라인 날짜 · 저작권.",
+   "viewed": true
+  },
+  {
+   "key": "x371d",
+   "kind": "text",
+   "label": "p371-intro-elastic-relaxation",
+   "page": 1,
+   "file": "txt_p371_intro_roll_compaction_coating_relaxes_elastically.png",
+   "caption": "PDF p.1 (printed p.371): 'The electrode, a particulate composite coated on a metal foil …, is compacted in between two rolls. Either the gap size or the force between the two rolls is set previously to compact the coating to the required porosity. The coating relaxes elastically when it leaves the gap.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    519.1,
+    290.2,
+    581.2
+   ],
+   "w": 1461,
+   "h": 400,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.856,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 압력을 뺄 때의 거동에 대한 원문의 유일한 문장: '간극을 나오면 코팅이 탄성 이완한다' — 크기 · 측정 없음.",
+   "viewed": true
+  },
+  {
+   "key": "x372a",
+   "kind": "text",
+   "label": "p372-intro-no-process-model",
+   "page": 2,
+   "file": "txt_p372_intro_optimum_no_process_model_to_date.png",
+   "caption": "PDF p.2 (printed p.372): '… the ability to predict the desired compaction load in order to achieve a specific pore structure is of vital importance. Most investigations focus on the electrochemical performance of differently compacted electrodes, but few regard the relation between the calendering process and the product structure. Some researchs show data regarding the hydraulic pressing [3,19,20] and roll pressing [4], but there are to date no approaches to develop a process model for the calendering of battery electrodes.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    476.4,
+    290.2,
+    633.0
+   ],
+   "w": 1464,
+   "h": 924,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "저자가 내세운 새로움: '전극 압연의 공정 모델은 아직 없다'.",
+   "viewed": true
+  },
+  {
+   "key": "x372c",
+   "kind": "text",
+   "label": "p372-methods-microcompression",
+   "page": 2,
+   "file": "txt_p372_methods_microcompression_breaking_strength.png",
+   "caption": "PDF p.2 (printed p.372): 'The active material particles are mechanically characterized by microcompression (UNAT, ASMEC, Germany). Regarding the breaking strength, at least 24 separate particles were individually loaded by applying an increasing nominal force using a cylinder of 100 µm in diameter. The loading of the force is controlled at 2.8 mN/s … The applied stress is gained by taking the projection area of the particles into account … The particle sizes are inbetween … x10 and … x90.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    570.4,
+    559.2,
+    686.2
+   ],
+   "w": 1460,
+   "h": 690,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "입자 파쇄 세기 측정법: 평판 압자 Ø100 µm · 하중 속도 2.8 mN/s · 첫 깨짐 힘 ÷ 입자 투영 면적 · 입자 ≥ 24 개.",
+   "viewed": true
+  },
+  {
+   "key": "x372d",
+   "kind": "text",
+   "label": "p372-p373-electrodes",
+   "page": 2,
+   "file": "txt_p372_p373_electrodes_overview_no13_15_from_other_studies.png",
+   "caption": "PDF p.2 → p.3 (printed p.372–373), section 2.2: 'The electrodes No. 1–5 vary in the active material used while the formulation and applied mass loading was kept constant. No. 6–12 are produced in one mixing batch but coated with different mass loadings. The last three electrodes (No. 13–15) are further examples from other studies (No. 14 [11], No. 13 and 15 [22]) to demonstrate the limits of the … prediction model … All electrodes were continuously coated with a doctor blade process, followed by three drying segments of increasing temperature.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    696.2,
+    559.2,
+    747.8
+   ],
+   "w": 1465,
+   "h": 926,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.871,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      305.1,
+      696.2,
+      559.2,
+      747.8
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      36.1,
+      325.9,
+      290.2,
+      429.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "전극 세 묶음: No.1–5 활물질 변수 · No.6–12 부하 변수 (한 배치) · No.13–15 다른 연구에서 가져온 한계 사례.",
+   "viewed": true
+  },
+  {
+   "key": "x373a",
+   "kind": "text",
+   "label": "p373-calendering",
+   "page": 3,
+   "file": "txt_p373_calendering_gkl400_roll_430mm_sheets_ambient.png",
+   "caption": "PDF p.3 (printed p.373), section 2.3: 'Calendering of the electrodes was performed by a pilot scale two roll compactor GKL 400 (Saueressig GmbH Co. KG, Germany) with rolls of 430 mm in diameter and 465 mm in width. Different line loads were applied by varying the gap size between the rolls (maximal line load of the machine: 1500 N/mm) … Beside the continuous calendering of electrodes No. 13 and 15, all other electrodes were cut in sheets of about 300 mm length and calendered discontinuously. For every adjusted state of compaction two sheets were calendered … qL = FN/wC. The process was performed at ambient temperature.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    441.9,
+    290.2,
+    514.4
+   ],
+   "w": 1465,
+   "h": 926,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.868,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      36.1,
+      441.9,
+      290.2,
+      514.4
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      305.1,
+      58.2,
+      559.2,
+      141.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 압연 조건: GKL 400 · 롤 Ø430 mm · 폭 465 mm · 최대 1500 N/mm · 간극을 바꿔 선하중 조절 · 시트 (≈300 mm) 두 장씩 · 상온. 속도 · 통과 횟수 · 코팅 폭 값 = 원문에 없음.",
+   "viewed": true
+  },
+  {
+   "key": "x373b",
+   "kind": "text",
+   "label": "p373-min-porosity-scp",
+   "page": 3,
+   "file": "txt_p373_min_porosity_sole_fitting_parameter_scp_is_us.png",
+   "caption": "PDF p.3 (printed p.373), section 3.1: 'The minimum coating porosity in the model equation proposed in [22] is an extrapolation of the curve. It is favorable to determine the final porosity in a separate way to make the compaction resistance independant from this value. Thus, the compaction resistance is the sole fitting parameter … The initial porosities ε0 of electrodes No. 1–5 and 7–12 between 42 and 48% are … somewhat lower than the theoretical porosity of 47.64% of a simple cubic packing (scp) of hard, incompressible spheres of identical size … the particles can be assumed as hard and incompressible … interparticle space IS … unoccupiable space US …'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    180.3,
+    559.2,
+    430.7
+   ],
+   "w": 1461,
+   "h": 1446,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.853,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 모델의 가정: 활물질 입자 = 단단하고 압축되지 않는 구 · 출발 구조 ≈ 단순 입방 (47.64 %) · 첨가제는 IS 에서 입자를 벌리기도 하고 US 를 채우기도 한다.",
+   "viewed": true
+  },
+  {
+   "key": "x373c",
+   "kind": "text",
+   "label": "p373-p374-initial-porosity-mass-loading",
+   "page": 3,
+   "file": "txt_p373_p374_initial_porosity_low_mass_loading_interface.png",
+   "caption": "PDF p.3 → p.4 (printed p.373–374): 'The low mass loading of 6 results in a higher value of initial porosity, because the fewer particles forming a thinner coating are not loaded by other particles from above … At higher mass loadings from 160 g/m2 on, the weight of the suspension above ensures a denser packing due to sedimentation during the drying process … The same applies for the interface porosity at the substrate surface as shown by Fig. 4, the sphere packing on the relatively even current collector surface has to be less dense [24] … the decreasing proportions of the interface porosity at the coating surface and substrate interface from the total coating volume, is the dominant one.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    431.1,
+    559.2,
+    514.4
+   ],
+   "w": 1460,
+   "h": 1043,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.843,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      305.1,
+      431.1,
+      559.2,
+      514.4
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      36.1,
+      322.7,
+      290.2,
+      416.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "얇은 코팅의 출발 기공률이 높은 이유 = 표면 · 집전체 계면의 성긴 층 비율 (벽 효과 · [24] Scott) — 우리 얇은 침대 (판 간격 < 4 r_AM) 의 벽 효과와 같은 부류.",
+   "viewed": true
+  },
+  {
+   "key": "x374a",
+   "kind": "text",
+   "label": "p374-additives-morphology",
+   "page": 4,
+   "file": "txt_p374_additives_graphite_lmo_flake_morphology_loose_packing.png",
+   "caption": "PDF p.4 (printed p.374): 'Electrodes No. 13 and 15 have a significantly higher content of additives. In case of electrode No. 13, conductive graphite particles with a median particle size of 2.4 µm are involved, which disrupt the particle packing even more if they are located in the IS. Additionally, the electrodes No. 14 and 15 differ decisively in the morphology of the AM-particles. Both, the LMO-polygones and the graphite flakes, form initially very loose packings as their rough edges are interfering with each other.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    416.8,
+    290.2,
+    500.1
+   ],
+   "w": 1464,
+   "h": 507,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.863,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "No.13–15 가 벗어나는 이유 (출발 쪽): 도전 흑연 2.4 µm · 다각형 · 판상 형상.",
+   "viewed": true
+  },
+  {
+   "key": "x374b",
+   "kind": "text",
+   "label": "p374-prediction-p04",
+   "page": 4,
+   "file": "txt_p374_min_gap_25um_factor_p04_scp_ccp_054.png",
+   "caption": "PDF p.4 (printed p.374): 'Fig. 2 shows the minimal achieved porosities εC,min_a at the minimal roller gap of 25 µm, the extrapolated minimum εC,min_e according to the fit … by Eq. (2) and εC,min_p = p·εC,0 with p = 0.4 … The prediction approach is based on the assumption that the compaction factor p between the initial and the minimum coating porosity is similar to the factor between the simple cubic packing (scp, 47.64%.) and the cubic close packing (ccp, 25.95%), which is 0.54. However, the minimal achieved porosities εC,min_a of electrodes No. 1–5 and 7–12 between 19 and 21 % deviate … more from the ccp-porosity (up to 7 % or in relative terms 37 %) than the initial porosities from the scp-porosity (up to 6 % or in relative terms 13 %). The additives … plausibly get pushed out of the IS, stay in the US and hence decrease the porosity (see Fig. 3). Therefore p has to be much smaller for the electrodes. The proposed p = 0.4 turns out to be an appropriate estimation of practical use.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    500.5,
+    290.2,
+    543.2
+   ],
+   "w": 1461,
+   "h": 1162,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.845,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      36.1,
+      500.5,
+      290.2,
+      543.2
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      305.1,
+      58.2,
+      559.2,
+      214.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ p = 0.4 의 근거 문단 전체: scp → ccp 비 0.54 는 출발점일 뿐이고 0.4 는 자료에 맞춘 실용 어림 (유도 아님). 최소 간극 25 µm.",
+   "viewed": true
+  },
+  {
+   "key": "x374c",
+   "kind": "text",
+   "label": "p374-prediction-validity",
+   "page": 4,
+   "file": "txt_p374_prediction_works_no1_12_fails_no13_15_p033.png",
+   "caption": "PDF p.4 (printed p.374): 'For the electrodes No. 1–12 the prediction approach works quite well … In case of increasing mass loadings (No. 10–12) the deviation between the predicted εC,min and the achieved εC,min_a increases significantly, probably because the applied line load is not sufficient … For the electrodes No. 13–15, the prediction approach works significantly worse with p = 0.4 … The NCM cathode No. 13 favors a slightly varied factor of pNCM111-451 = 0.33. The main difference … is the content of conductive graphite. These particles (x50 = 2.4 µm, x90 = 4.1 µm) fit very well in the US of these cathodes …'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    214.7,
+    559.2,
+    423.6
+   ],
+   "w": 1462,
+   "h": 1215,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.865,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 적용 범위: No.1–12 는 '꽤 잘' · No.10–12 는 선하중 부족으로 달성값이 예측보다 높음 · No.13 은 p = 0.33 (도전 흑연이 US 를 채움).",
+   "viewed": true
+  },
+  {
+   "key": "x374d",
+   "kind": "text",
+   "label": "p374-p375-lmo-graphite",
+   "page": 4,
+   "file": "txt_p374_p375_lmo_p060_graphite_p029_reasons.png",
+   "caption": "PDF p.4 → p.5 (printed p.374–375): 'The LMO cathode No. 14 deviates from the predicted value by significantly higher porosities than expected. The resulting pLMO = 0.60 is attributed to the polygonal particle morphology … The graphite anode No. 15 shows a substantially lower minimum porosity than expected of pgraphiteanode = 0.29 … the stacking of the flakes results in less gaps … Moreover, the graphite particles have a very low breaking strength (see Fig. 7), so that fragments resulting from the calendering can fill the US …'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    424.3,
+    559.2,
+    538.7
+   ],
+   "w": 1463,
+   "h": 1441,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.845,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      305.1,
+      424.3,
+      559.2,
+      538.7
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      36.1,
+      257.9,
+      290.2,
+      393.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 한계 사례: LMO 다각형 p = 0.60 · 흑연 판상 p = 0.29 (쌓임 + 파편이 US 를 채움). 구형이 아니면 p = 0.4 를 쓸 수 없다.",
+   "viewed": true
+  },
+  {
+   "key": "x375a",
+   "kind": "text",
+   "label": "p375-active-material",
+   "page": 5,
+   "file": "txt_p375_active_material_gamma_small_particles_friction.png",
+   "caption": "PDF p.5 (printed p.375), section 3.2: '… The sharp porosity decline of the NCA-80/20 and NCM811 electrodes result in lower values of the compaction resistance. In comparison with NCA, the porosity drop of NCA-80/20 can be attributed to the fraction of smaller AM-particles. These particles get easily pushed into the US of the larger AM-particles at low applied line loads up to about 100 N/mm2. The NCM811 particles are coarse compared to the other active materials used. This leads to the highest initial porosity and a 20 % lower specific surface. The friction between the particle surfaces is proposed as one major impact factor for the compaction resistance [22] …'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    483.3,
+    290.2,
+    534.9
+   ],
+   "w": 1460,
+   "h": 1798,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.847,
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      36.1,
+      483.3,
+      290.2,
+      534.9
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      305.1,
+      257.9,
+      559.2,
+      518.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 활물질 효과의 저자 해석: 작은 입자 20 wt% → 큰 입자 틈 (US) 으로 쉽게 밀려 들어가 γ_C ↓ · 굵은 NCM811 → 마찰 면적 ↓ → γ_C ↓. ⚠ '100 N/mm2' 는 단위 오기 (선하중 N/mm).",
+   "viewed": true
+  },
+  {
+   "key": "x375b",
+   "kind": "text",
+   "label": "p375-p376-breaking-strength",
+   "page": 5,
+   "file": "txt_p375_p376_breaking_strength_ni_content_bet_density.png",
+   "caption": "PDF p.5 → p.6 (printed p.375–376): breaking strength (Fig. 7): 'the breaking strength decreases with increasing Ni-content and slightly decreases with particle size for the two NCA fractions. The NCM811 shows the lowest values, followed by NCAI and NCM622. NCM111 turns out to be the mechanically most stable material …'; BET 0.22 (NCM111) / 0.30 (NCM622) / 0.27 m2/g (NCM811); 'the different active materials were obtained by different producers … the shown results have no general validity about the effect of the Ni-content on the mechanical integrity'; ρph,NCAII = 4.892 ± 0.003 g/cm3, ρph,NCAI = 4.829 ± 0.003 g/cm3.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    519.1,
+    559.2,
+    529.2
+   ],
+   "w": 1461,
+   "h": 2038,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.839,
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      305.1,
+      519.1,
+      559.2,
+      529.2
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      36.1,
+      294.4,
+      290.2,
+      534.6
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      305.1,
+      57.9,
+      559.2,
+      163.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 입자 파쇄 세기 · BET · 피크노미터 밀도. Ni-rich 가 약하다는 경향은 '이 논문의 재료에 한해' (제조사가 다르다).",
+   "viewed": true
+  },
+  {
+   "key": "x376a",
+   "kind": "text",
+   "label": "p376-friction-rearrangement",
+   "page": 6,
+   "file": "txt_p376_breaking_strength_not_dominant_friction_rearrangement.png",
+   "caption": "PDF p.6 (printed p.376): 'low breaking strengths are one factor leading to a low compaction resistance, but not the only one … Ultimately, the friction, hence the particle size distribution and surface, appears to be the most important particulate characteristic determining the line load necessary for the compaction … The differences discussed above occur in the early state of compaction and the impact of the data of this state has a large influence on the compaction resistance γC. At this stage, rearrangement is the dominant densification mechanism for composites of metallic nano- and microparticles [26] and the interparticular friction affects the compaction pressure significantly [27] …'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    162.8,
+    559.2,
+    434.1
+   ],
+   "w": 1464,
+   "h": 1562,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 저자 결론: γ_C 는 압축 **초기** (재배열 · 입자 사이 마찰) 가 정한다 — 파쇄 세기는 지배 인자가 아니다. [27] = 다입자 유한요소법 (MPFEM) 인용.",
+   "viewed": true
+  },
+  {
+   "key": "x376b",
+   "kind": "text",
+   "label": "p376-mass-loading",
+   "page": 6,
+   "file": "txt_p376_mass_loading_gap_limit_linear_gamma_monolayer.png",
+   "caption": "PDF p.6 (printed p.376), section 3.3: 'For electrodes No. 6–12 the mass loading is varied between 80 and 285 g/m2 … As the minimum roll gap width of 25 µm is relatively high compared to the thin electrode thicknesses of No. 6 and 7, the geometrically limited applicable line load is smaller than for thicker electrodes … The data is linearly fitted with a coefficient of determination R2 = 0,996 demonstrating the proportional correlation of γC and MC … The higher the amount of particles that have to be compacted, the more friction between the particles has to be overcome … As it is not possible to compact a monolayer of particles without particle breakage, the compaction resistance must increase at very low mass loadings.'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.1,
+    445.2,
+    559.2,
+    747.8
+   ],
+   "w": 1464,
+   "h": 1737,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.845,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★ 부하 효과: γ_C ∝ M_C (R² 0.996) · 해석 = 마찰 면적 ∝ 입자 수 · 단층은 파쇄 없이 못 누른다 → 아주 낮은 부하에서는 직선에서 벗어날 것 (저자 추정).",
+   "viewed": true
+  },
+  {
+   "key": "x378d",
+   "kind": "text",
+   "label": "p378-mu-discussion",
+   "page": 8,
+   "file": "txt_p378_mu_table3_discussion_additive_surface.png",
+   "caption": "PDF p.8 (printed p.378): 'On the basis of the linear model, the mass loading dependency μ of the compaction resistance was estimated in Table 3 for the electrodes No. 1–5 containing different cathode materials. The values of μ correlate with the compaction resistance γC from Fig. 6. The mass dependency of No. 5 is not so pronounced in comparison to No. 6–12. This can be explained by the lower content of carbon conductive additives, which have a very high specific surface area …'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    549.3,
+    290.2,
+    632.5
+   ],
+   "w": 1464,
+   "h": 517,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.856,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "⚠ 본문은 'No.5 의 μ 가 No.6–12 보다 덜 뚜렷' 이라 적지만 표 3 은 1.33 ± 0.16 ↔ 1.31 ± 0.03 (No.5 가 조금 크고 오차 안에서 같다) [원문 불일치].",
+   "viewed": true
+  },
+  {
+   "key": "x378a",
+   "kind": "text",
+   "label": "p378-conclusions",
+   "page": 8,
+   "file": "txt_p378_conclusions_validity_spherical_10wt_outlook.png",
+   "caption": "PDF p.8 (printed p.378), Conclusions: 'Lower porosities may be possible with a more powerful calendering machine, but then ion diffusion limitations and particle breakage are expected … The model is based on the comparison with sphere packing structures and is limited to the application of spherical active materials and additive contents up to 10 wt.-% … The standard errors … are suitable as a measure for the accuracy (Fig. 6 and 10). The maximum is 12 %, converted into relative errors … the particle size distribution primarly affects the compaction resistance due to different interparticular friction during the rearrangement in the early state of compaction. Future work will supplement the model by … formulation (e.g. binder and additive content) and the operating parameters such as roll temperature.'",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    643.9,
+    290.2,
+    747.8
+   ],
+   "w": 1464,
+   "h": 1798,
+   "dpi": 400,
+   "src": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+   "blank": 0.854,
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      36.1,
+      643.9,
+      290.2,
+      747.8
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      305.1,
+      58.2,
+      559.2,
+      266.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) cut at the line boxes of the wanted lines (text layer; region borders checked ink-free = no clipped neighbour line) → ink trim → parts stacked top to bottom → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "mpm_note_ko": "★★ 저자 결론 · 한계: 구형 활물질 · 첨가제 ≤ 10 wt% 에 한정 · 정확도 = 상대 표준오차 최대 12 % (판독으로는 No.1 이 13 %) · 앞으로 = 조성 · 롤 온도.",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found Fig. 1–10 and Tables 1–3 (13 crops, no missing labels; the article has no supplementary file).  All 13 were opened.  The ten figure crops were complete but page-rendered with unequal margins (wider left/right than top/bottom; Figs. 4, 5, 9 most) → re-cut from the embedded native 300-dpi rasters with a uniform 6 pt margin (recrop × 10).  The three table crops had run over the whole page → re-rendered by hand at 400 dpi (recrop × 3).  Tool captions cleaned by hand (ligatures, line-break hyphens, table bodies swallowed into two table captions).  Added by hand: 10 panel crops (Fig. 4 left / right SEM image, Fig. 5 left / right diagram, Fig. 8 four SEM images, Fig. 9 left / right diagram — the original has no panel letters), 14 equation crops (Eq. 1–5 each alone and with its lead-in text, three unnumbered inline relations qL = FN/wC, εC,min_p = p·εC,0 with p = 0.4 and γC = μ·MC, and the fit box of Fig. 10) and 20 evidence-paragraph crops (only paragraphs the digest cites as the source of a number, a definition or a statement; three further paragraph crops — literature background on particle fracture, acknowledgements, reference list — were cut, viewed and then dropped to keep the 20-per-card limit of the curator brief).  Every one of the 57 crops was opened and checked after cutting (no clipped neighbour lines, equation numbers kept, uniform margins).",
+ "note_manual": "Printed inconsistencies visible in the crops (details in the digest §3-11 / §11): (1) Eq. (1) is printed 'ε = ε0 + exp(−K·P)' (plus sign; gives ε0 + 1 at P = 0) — Heckel's form is ε = ε0·exp(−K·P); (2) Eq. (5) is printed 'exp(−qL(μ·MC))' without the division sign; (3) Fig. 4 caption 'g/cm2' and text '100 N/mm2' are unit slips (g/m2, N/mm); (4) Fig. 5 caption 'the values for χν2 are very near to 1' vs the printed 2.24–4.00 (Fig. 9 caption: 'not for every fit near to 1'); (5) Table 2 AM volume fractions of No. 1 (45.9) and No. 2 (46.5) give initial porosities 0.456 / 0.450, Fig. 2 and Fig. 5 show 0.4495 / 0.457 — the two rows look swapped; (6) Table 1 / 2 '280' and '284 ± 4' vs '285' in the Fig. 9 legend, Table 3 and the text; (7) text 'NCM811 … a 20 % lower specific surface' vs BET 0.27 (NCM811) / 0.22 (NCM111) / 0.30 m2/g (NCM622); (8) text 'The mass dependency of No. 5 is not so pronounced in comparison to No. 6–12' vs Table 3 1.33 ± 0.16 vs 1.31 ± 0.03; (9) Conclusions 'The maximum is 12 %' vs 0.13/0.99 = 13 % (No. 1, Table 3 / Fig. 6); (10) electrode No. 13 (from ref. [22]) has 0.521 initial and 0.176 / 0.169 minimum porosity here, ref. [22] printed 0.57 → 0.26 (geometrical) and 0.52 → 0.16 (mercury) for the same electrode; (11) reference [9] (compression models of pharmaceutical powder) is cited for 'tortuosity possibly impedes the wetting step'; (12) text 'the compaction behavior of the mixed NCA and the NCM111 cathode are very similar' — the mixed electrode is NCA-80/20, the similar pair in Fig. 5 / 6 is NCA and NCM111.",
+ "key_note": "manual keys: f<N> = whole figure (embedded raster); f4L / f4R, f5L / f5R, f9L / f9R, f8TL / f8TR / f8BL / f8BR = panel crops (panel_of; the original has no panel letters); t1–t3 = tables; e<n> = Eq. (n) alone (kind 'equation'), e<n>t = the equation with its lead-in text, e0a / e0b / e0c = unnumbered inline relations (line load, predicted minimum porosity, γC = μ·MC), e10 = fit box of Fig. 10; x<printed page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' with PDF page numbers).  'page' fields are PDF page numbers (printed page = 370 + PDF page).",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 168,
+  "method": "embedded 300-dpi rasters (no vector paths for the figures in this PDF): axes calibrated on the major tick marks / major grid lines (linear, residual ≤ 0.6 px = 0.0005 porosity in Fig. 2, 0.3 N/mm in Fig. 6, 0.4 N/mm in Fig. 10); Fig. 2 — square markers = marker-box centre (= mid-point of the black caps where visible), triangle markers = centroid (flat edge ± h/3, h ≈ 17.5 px), verified against the mid-point of the error-bar caps and the centred vertical tick wherever both are visible, circles = 0.4 × εC,0 (centres agree within 0.001–0.002); Fig. 6 — bar-top outline rows and cap rows; Fig. 10 — mid-points between the caps in both directions; Fig. 5 / 9 — mid-point between the error-bar caps, hole centroid of open markers, erosion core of filled squares; overlapping markers read on 6–8× zooms (±0.003–0.004) and flagged; Fig. 9 series 6, 7, 9, 10, 11 are partial; Fig. 7 — marker centres per colour, value at cumulative 0.5 interpolated.  Cross-checks: (a) initial porosities read in Fig. 2 = 1 − Σ vol.% of Table 2 within 0.001 for 13 of 15 electrodes; (b) red circles = 0.4 × squares; (c) the printed factors 0.33 / 0.60 / 0.29 for No. 13–15 = read min_a / εC,0 (0.338 / 0.605 / 0.295); (d) Fig. 6 bars = Table 3 μ × 223 g/m2 within 3 N/mm; (e) a through-origin re-fit of the seven Fig. 10 points gives μ = 1.310 (printed 1.31 ± 0.03) and a weighted uncentred R² of 0.997 (printed 0.996); (f) the means of the two highest-load points of each curve in Fig. 5 / 9 reproduce min_a of Fig. 2 within 0.001 for 10 of 11 electrodes (NCA: 0.2116 vs 0.204); (g) a one-parameter re-fit of Eq. (4) to the read points returns γC = 229 / 312 / 247 / 321 / 306 / 167 / 369 N/mm for No. 1 / 2 / 3 / 4 / 5 / 8 / 12 (Fig. 6 / 10: 220 / 310 / 230 / 305 / 297 / 168 / 371, all inside the printed error bars)."
+ }
+}
