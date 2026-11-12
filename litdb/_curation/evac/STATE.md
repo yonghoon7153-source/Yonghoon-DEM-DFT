@@ -171,3 +171,4 @@
 - 11-12 17:3x UTC: N-35 끝 (nairn2015 · 85273680c) → N-37 시작 (트리 1 · 정독 78 · 지시문에 '## 의도 대조' 제목 줄 더함) · 게이트 seg2 33/58 fail 0
 - 11-12 17:4x UTC: 게이트 조각 2 = fail 1 (단계 182 · mixer_smoke_blind ㉓) → 원인 재현 = 타임스탬프 µs 숫자와 값 바늘 글자 겹침 (SELF-170 후보 · msbdbg/SELF-170_note.md) · 고침 = 믹서 재봉인 묶음과 함께 · 같은 HEAD 로 조각 2 다시 = b1yo99kq1 (17:4x 시작)
 - 11-12 17:5x UTC: N-36 끝 (steffen2008 · 1a8702b39) → N-38 시작 (트리 2 · 정독 79)
+- 11-12 18:15 UTC 점검: 게이트 조각 2 다시 (b1yo99kq1 · gate_MO_p2b.log) 8/58 fail 0 (단계 134 kgy 도는 중 · ~18:45 끝 예상) → RC 0 이면: origin pqwtv8 = bfd9b3bbd 확인 → push O+M → `bash commitM/make_zip.sh 3daa2c48a <절대경로>.zip` → 아침 묶음에 ZIP · N-37 (트리 1 · 정독 78) · N-38 (트리 2 · 정독 79) 도는 중 · 다음 = N-39 … N-43 · N-45 … N-51 · Rint 2 회차 고침 조수 = 자기 배경 일 기다림 · 스냅샷 2d8488122
