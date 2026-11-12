@@ -71,26 +71,78 @@ def tree_snap(tree, base, prefix, dest, info):
         info.append(f"{prefix}: 추적 안 된 파일 {k}")
 
 
-def folder_tgz(rels, limit=8_000_000):
-    """scratchpad 의 폴더 · 파일 몇 개를 한 tgz 로 (이름순 · 시각 0 → 내용이 같으면 바이트가 같다). 주소 · 포트 꼴이 보이는 파일과 큰 파일은 뺀다."""
-    import gzip, io, tarfile
-    files, skipped = [], []
+SKIP_PARTS = {".git", "__pycache__", "node_modules"}
+TOTAL_LIMIT = 30_000_000      # 묶음 하나의 압축 전 합 — 넘는 파일은 뺀다 (11-12 사고: 조수의 리포 사본 1.6 GB 를 묶어 136 MB → 가지 push 막힘)
+PACK_LIMIT = 45_000_000       # 압축 뒤 이보다 크면 쓰지 않는다 (옛 판 그대로 · GitHub 한 파일 100 MB 막힘 · 50 MB 경고)
+
+
+def _git_tree_entries(d, rel):
+    """조수가 scratchpad 안에 만든 git 작업 사본 — 파일 전체 대신 바탕 커밋 뒤 바뀐 것만 (커밋 패치 · 커밋 안 된 차이 · 새 파일).
+    읽기만 (GIT_OPTIONAL_LOCKS=0 · 색인을 쓰지 않는다 — 조수가 같은 사본에서 git 을 돌려도 잠금이 겹치지 않게)."""
+    import os
+    env = dict(os.environ, GIT_OPTIONAL_LOCKS="0")
+
+    def run(*a):
+        r = subprocess.run(["git", "-C", str(d), *a], capture_output=True, env=env, timeout=300)
+        return r.stdout if r.returncode == 0 else b""
+
+    out = []
+    root = run("rev-list", "--max-parents=0", "HEAD").split()
+    parts = [b"# git work copy " + rel.encode() + b" HEAD " + run("rev-parse", "HEAD").strip()]
+    if root:
+        parts.append(b"# commits after base " + root[-1] + b"\n" + run("format-patch", "--stdout", "--binary", root[-1].decode() + "..HEAD"))
+    parts.append(b"# uncommitted diff vs HEAD\n" + run("diff", "--binary", "HEAD"))
+    out.append((f"{rel}.gitstate.patch", b"\n".join(parts) + b"\n"))
+    for name in run("ls-files", "--others", "--exclude-standard", "-z").split(b"\0"):
+        if name:
+            nm = name.decode("utf-8", "replace")
+            f = d / nm
+            if f.is_file() and not f.is_symlink():
+                out.append((f"{rel}.untracked/{nm}", f))
+    return out
+
+
+def folder_tgz(rels, limit=8_000_000, total_limit=TOTAL_LIMIT):
+    """scratchpad 의 폴더 · 파일 몇 개를 한 tgz 로 (이름순 · 시각 0 → 내용이 같으면 바이트가 같다). 주소 · 포트 꼴이 보이는 파일과 큰 파일은 뺀다.
+    .git · __pycache__ 는 건너뛰고, 안에 .git 이 있는 폴더 (조수의 리포 사본) 는 바뀐 것만 담는다 · 합이 total_limit 를 넘는 파일은 뺀다."""
+    import gzip, io, os, tarfile
+    entries, skipped = [], []
     for rel in rels:
         p = SCR / rel
-        if p.is_file():
-            files.append(p)
+        if p.is_file() and not p.is_symlink():
+            entries.append((str(p.relative_to(SCR)), p))
         elif p.is_dir():
-            files += [f for f in sorted(p.rglob("*")) if f.is_file() and not f.is_symlink()]
+            for dirpath, dirnames, filenames in os.walk(p):
+                dp = Path(dirpath)
+                if (dp / ".git").exists():
+                    r = str(dp.relative_to(SCR))
+                    try:
+                        entries += _git_tree_entries(dp, r)
+                    except Exception as e:  # noqa: BLE001 — 사본 하나가 깨져도 나머지는 묶는다
+                        skipped.append(f"{r} (git 사본 · {type(e).__name__})")
+                    dirnames[:] = []
+                    continue
+                dirnames[:] = sorted(x for x in dirnames if x not in SKIP_PARTS)
+                for fn in filenames:
+                    f = dp / fn
+                    if f.is_file() and not f.is_symlink():
+                        entries.append((str(f.relative_to(SCR)), f))
     buf = io.BytesIO()
     n = 0
+    total = 0
     with gzip.GzipFile(fileobj=buf, mode="wb", mtime=0) as gz:
         with tarfile.open(fileobj=gz, mode="w", format=tarfile.PAX_FORMAT) as tf:
-            for f in sorted(files, key=lambda x: str(x.relative_to(SCR))):
-                b = f.read_bytes()
-                if len(b) > limit or BAD.search(b):
-                    skipped.append(str(f.relative_to(SCR)))
+            for arc, src in sorted(entries, key=lambda x: x[0]):
+                try:
+                    b = src if isinstance(src, bytes) else src.read_bytes()
+                except OSError:
+                    skipped.append(arc + " (읽는 중 사라짐)")
                     continue
-                ti = tarfile.TarInfo(str(f.relative_to(SCR)))
+                if len(b) > limit or BAD.search(b) or total + len(b) > total_limit:
+                    skipped.append(arc)
+                    continue
+                total += len(b)
+                ti = tarfile.TarInfo(arc)
                 ti.size = len(b); ti.mtime = 0; ti.mode = 0o644; ti.uid = ti.gid = 0; ti.uname = ti.gname = ""
                 tf.addfile(ti, io.BytesIO(b))
                 n += 1
@@ -119,6 +171,9 @@ def snap(evac_dir):
                        ("dem_redesign_work.tgz", ["dem_redesign"]),
                        ("mixer_e0_work.tgz", ["mixer_e0_v2"])):
         data, n, skipped = folder_tgz(rels)
+        if n and len(data) > PACK_LIMIT:
+            info.append(f"⛔ {name}: 압축 {len(data)} B > {PACK_LIMIT} B — 쓰지 않음 (옛 판 그대로 · 무엇이 큰지 볼 것)")
+            continue
         if n:
             (dest / name).write_bytes(data)
             info.append(f"{name}: 파일 {n} · {len(data)} B" + (f" · 뺀 파일 {len(skipped)} (주소 꼴 · 큰 파일): {skipped[:5]}" if skipped else ""))
