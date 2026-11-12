@@ -1,0 +1,1831 @@
+{
+ "slug": "korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-11",
+ "sources": [
+  "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+  "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic overview of the experimental design, highlighting the techniques employed—nanotomography, microtomography, electrochemical impedance spectroscopy, quasielastic neutron scattering, and neutron powder diffraction—along with their respective spatial and temporal resolution ranges.",
+   "rotated_deg": 0,
+   "bbox": [
+    102.5,
+    383.0,
+    492.7,
+    716.7
+   ],
+   "w": 1664,
+   "h": 1431,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.733,
+   "auto_bbox": [
+    31.6,
+    377.0,
+    565.7,
+    721.3
+   ],
+   "src_native": [
+    1626,
+    1390
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the full text width, so side margins were uneven, and the auto caption also took the page number), re-cut from the embedded native raster (xref 4, 1626×1390 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) [5, 4, 1619, 1385] → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Electrolyte thickness and ionic conductivity of Li6PS5Cl electrolyte (a) at different densifying pressures (76.2, 127, 255, 382, 510 MPa) and the Nyquist plots at those same pressures (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    69.6,
+    537.1,
+    525.7,
+    716.7
+   ],
+   "w": 1933,
+   "h": 792,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.889,
+   "auto_bbox": [
+    31.6,
+    531.1,
+    565.8,
+    721.3
+   ],
+   "src_native": [
+    1900,
+    748
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the full text width, so side margins were uneven, and the auto caption also took the page number), re-cut from the embedded native raster (xref 32, 1900×748 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) [9, 3, 1892, 745] → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 누른 채 두께 · σ (in situ ID19 · 7.0 mm 다이). 판독: 두께 480.0 · 450.0 · 381.0 · 345.2 · 331.2 µm · σ 0.658 · 0.992 · 1.336 · 1.493 · 1.619 mS/cm (76.1 · 127.0 · 255.1 · 382.1 · 509.7 MPa) [digitized.csv]. 오른축 이름은 ρ 인데 단위는 mS cm⁻¹ (전도도)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Raw middle-slice images (a–f) of the Li6PS5Cl electrolyte at various stages of cold sintering: 76.2 MPa, 255 MPa, 382 MPa, 510 MPa, 510 MPa for 30 minutes, and after pressure release to 76.2 MPa. (g) Particle size distributions at the corresponding stages, calculated as kernel density estimation (KDE). (h) Tortuosity distributions at three selected pressures: 76.2 MPa, 255 MPa, and 510 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.6,
+    55.4,
+    513.6,
+    507.0
+   ],
+   "w": 1830,
+   "h": 1924,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.468,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    511.6
+   ],
+   "src_native": [
+    1800,
+    1882
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the full text width, so side margins were uneven, and the auto caption also took the page number), re-cut from the embedded native raster (xref 47, 1800×1882 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) [10, 2, 1790, 1876] → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Sneed and Folk’s representation of Li6PS5Cl electrolyte particles’ shape at different stages of “cold sintering”, calculated for initial pressure 76.2 MPa (a) and final pressure 510 MPa (b). Each dot corresponds to a particle, highlighting visually the changes in numbers of small (red), medium (green), and large (blue) particles after high-pressure sintering.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.6,
+    378.5,
+    513.6,
+    707.1
+   ],
+   "w": 1844,
+   "h": 1413,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.774,
+   "auto_bbox": [
+    31.6,
+    372.5,
+    565.8,
+    711.7
+   ],
+   "src_native": [
+    1800,
+    1369
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the full text width, so side margins were uneven, and the auto caption also took the page number), re-cut from the embedded native raster (xref 57, 1800×1369 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) [3, 3, 1797, 1366] → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 개수: <10 µm 3555 → 10,241 · 10–30 µm 5787 → 14,011 · >30 µm 4424 → 2865 (76.2 → 510 MPa, 본문 p.6 [인쇄]) — 큰 입자 모양은 그대로, 개수만 준다 = 파쇄."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Nyquist plots (a and b) and DRT plots (c and d) of 382 MPa densified Li6PS5Cl electrolyte. Impedance temperature dependence between −18 and −36 °C (a and c) and pressure dependence from 76.2 to 510 MPa (at similar temperature ~−35 °C) (b and d). Pr1 and Pr2 in (c) and (d) correspond to electrochemical processes 1 and 2 respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    69.6,
+    322.9,
+    525.7,
+    707.1
+   ],
+   "w": 1941,
+   "h": 1645,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.871,
+   "auto_bbox": [
+    31.6,
+    316.9,
+    565.8,
+    711.7
+   ],
+   "src_native": [
+    1900,
+    1601
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the full text width, so side margins were uneven, and the auto caption also took the page number), re-cut from the embedded native raster (xref 67, 1900×1601 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) [5, 3, 1896, 1598] → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Temperature dependence (so-called Arrhenius plots) of bulk and grain boundary (GB) conductivities measured from −40 to −20 °C (a) of Li6PS5Cl electrolyte at different “cold sintering” pressures (127, 255, 382, 510 MPa). The equivalent circuit used for fitting the impedance spectra is displayed in section (b). R denotes resistance, and CPE means a constant phase element. Quasielastic neutron scattering spectra S(|q|, ΔE) as a function of energy transfer (ΔE) measured at 380 K and averaged over momentum transfer (|q|) for powder, pellet pressed with 510 MPa, and elastic peak (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    72.4,
+    55.4,
+    522.8,
+    236.0
+   ],
+   "w": 1917,
+   "h": 796,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.859,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    240.6
+   ],
+   "src_native": [
+    1877,
+    752
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the full text width, so side margins were uneven, and the auto caption also took the page number), re-cut from the embedded native raster (xref 85, 1877×752 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) [2, 2, 1869, 748] → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. The in situ “cold sintering” experiment’s setup used at ID19 ESRF (a) with the magnification on the cell (b) with its components.",
+   "rotated_deg": 0,
+   "bbox": [
+    83.1,
+    72.0,
+    528.9,
+    363.2
+   ],
+   "w": 1847,
+   "h": 1217,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.798,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    534.9,
+    369.2
+   ],
+   "src_native": [
+    1185,
+    774
+   ],
+   "native_dpi": 191,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven margins of the auto crop), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 25 1185×774 px ≈ 191 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The sequence of different measurement steps during the in situ “cold sintering” experiment at ID19 beamline, ESRF.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    473.6,
+    540.0,
+    602.6
+   ],
+   "w": 1917,
+   "h": 529,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.838,
+   "auto_bbox": [
+    66.0,
+    467.6,
+    546.0,
+    608.4
+   ],
+   "src_native": [
+    1299,
+    358
+   ],
+   "native_dpi": 200,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven margins of the auto crop), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 27 1299×358 px ≈ 200 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 The region of interest (1080 x 1080 µm) from the middle slice of the initial “cold sintering” pressure (76.2 MPa) at the in situ experiment. Figure a) is the binary image and Figure b) is the segmented image with the watershedded particles. (µ restored from the Symbol-font glyph of the text layer.)",
+   "rotated_deg": 0,
+   "bbox": [
+    129.8,
+    85.8,
+    482.1,
+    261.2
+   ],
+   "w": 1519,
+   "h": 782,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.414,
+   "auto_bbox": [
+    66.0,
+    79.8,
+    546.8,
+    266.1
+   ],
+   "src_native": [
+    978,
+    487
+   ],
+   "native_dpi": 200,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven margins of the auto crop), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 37 978×487 px ≈ 200 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Nano-tomography measurement cell used at ID16b ESRF.",
+   "rotated_deg": 0,
+   "bbox": [
+    195.3,
+    352.3,
+    416.7,
+    641.3
+   ],
+   "w": 865,
+   "h": 1183,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.923,
+   "auto_bbox": [
+    66.0,
+    346.3,
+    422.7,
+    647.0
+   ],
+   "src_native": [
+    298,
+    389
+   ],
+   "native_dpi": 97,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop kept ≈ 40 % blank page on the left of the small raster), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 38 298×389 px ≈ 97 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. The SEM images of precursor powder before the in situ pressing experiment. (a) is the raw image, (b) is the filtered image, and (c) is the segmented image with the watershedded particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    206.0,
+    72.0,
+    405.2,
+    496.5
+   ],
+   "w": 879,
+   "h": 1819,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.6,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    535.3,
+    490.5
+   ],
+   "src_native": [
+    [
+     540,
+     375
+    ],
+    [
+     553,
+     385
+    ],
+    [
+     552,
+     383
+    ]
+   ],
+   "native_dpi": [
+    200,
+    200,
+    200
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop cut off the bottom of panel (c) (scale bar)), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded rasters (xref 45 540×375 px ≈ 200 dpi + xref 46 553×385 px ≈ 200 dpi + xref 47 552×383 px ≈ 200 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. The kernel density function dependence of LPSCl powder is calculated from the segmented particles displayed in Figure S3. (sic — the main text attributes this PSD to the SEM images of Figure S5.)",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    525.6,
+    449.7
+   ],
+   "w": 1874,
+   "h": 1564,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.972,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    531.6,
+    455.7
+   ],
+   "src_native": [
+    1386,
+    1154
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven margins of the auto crop), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 50 1386×1154 px ≈ 220 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. X-ray µ-CT grayscale distribution in LPSCl electrolyte at different “cold sintering” stages. The global shift towards higher grey values indicates pellet densification. (µ restored.)",
+   "rotated_deg": 0,
+   "bbox": [
+    112.5,
+    320.4,
+    499.4,
+    629.9
+   ],
+   "w": 1593,
+   "h": 1278,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.899,
+   "auto_bbox": [
+    66.0,
+    322.2,
+    548.8,
+    617.3
+   ],
+   "src_native": [
+    760,
+    608
+   ],
+   "native_dpi": 141,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop cut the x-axis title 'Greyscale value'), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 59 760×608 px ≈ 141 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Graphical representation of different particle shapes observed in the Sneed and folk plot.",
+   "rotated_deg": 0,
+   "bbox": [
+    135.8,
+    72.0,
+    475.9,
+    412.1
+   ],
+   "w": 1396,
+   "h": 1320,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.813,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    537.4,
+    399.5
+   ],
+   "src_native": [
+    1024,
+    1024
+   ],
+   "native_dpi": 217,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven margins of the auto crop), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 62 1024×1024 px ≈ 217 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Neutron powder diffractogram of LPSCl (NEI) and its Le Bail refinement. The black line corresponds to the Rietveld refinement, and the blue line corresponds to the difference between the experimental results and the refinement. The reflections marked with black stars correspond to the LiCl impurity phase.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.0,
+    503.5,
+    394.7
+   ],
+   "w": 1809,
+   "h": 1353,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.875,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    549.2,
+    382.2
+   ],
+   "src_native": [
+    960,
+    718
+   ],
+   "native_dpi": 160,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop cut the x-axis title '2θ [deg.]'), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 66 960×718 px ≈ 160 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Ex situ nanotomography of LPSCl electrolyte “cold sintered” at 380 MPa. A slice from the middle of the electrolyte (a) and 3d volume (b). Blue spots in (b) correspond to LiCl grains. (Main text: 382 MPa.)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.8,
+    72.0,
+    527.0,
+    287.8
+   ],
+   "w": 1855,
+   "h": 950,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.396,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    549.2,
+    275.4
+   ],
+   "src_native": [
+    1353,
+    660
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven margins of the auto crop), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 71 1353×660 px ≈ 220 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. In situ “cold sintering” experiments electrolytes’ porosity at different pressures, calculated from the pellet thickness values and using 382 MPa “cold sintered” nanotomography sample porosity as a reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    86.7,
+    99.8,
+    525.3,
+    447.3
+   ],
+   "w": 1809,
+   "h": 1427,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.968,
+   "auto_bbox": [
+    66.0,
+    93.8,
+    548.8,
+    453.3
+   ],
+   "src_native": [
+    1323,
+    1048
+   ],
+   "native_dpi": 217,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven margins of the auto crop), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 77 1323×1048 px ≈ 217 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 압력별 기공 (원문의 유일한 기공 곡선): 12.12 · 11.58 · 10.21 · 9.50 · 8.61 % [판독] — 382 MPa 점 = ex situ 나노 CT 9.5 vol % (앵커). ⚠ Fig 2a 두께 + 저자 규칙 (질량 · 결정밀도 · 단면적 일정) 으로는 34.9 · 30.6 · 18.0 · 9.5 · 5.7 % [카드 산술] — 재현 안 됨."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 12,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Quasielastic neutron scattering spectra S(|q|, ΔE) with fitting contributions as a function of energy transfer (ΔE) measured at 300 K (a), 353 K (b), and 380 K (c) for LPSCl. Data correspond to q=1.51 Å−1 Orange: elastic contribution convoluted to instrumental resolution. Green: quasielastic contribution modeled using a single-Lorentzian function of half width at half maximum (HWHM) Γ. Purple: constant background used to account for fast molecular motions. Red: theoretical S(q, ΔE). Blue dots: measured points. (Δ, Γ restored from Symbol-font glyphs.)",
+   "rotated_deg": 0,
+   "bbox": [
+    195.0,
+    72.0,
+    416.4,
+    617.3
+   ],
+   "w": 948,
+   "h": 2296,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.893,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    549.0,
+    604.8
+   ],
+   "src_native": [
+    [
+     686,
+     559
+    ],
+    [
+     688,
+     569
+    ],
+    [
+     679,
+     563
+    ]
+   ],
+   "native_dpi": [
+    223,
+    225,
+    223
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop cut the x-axis title 'ΔE [meV]' of panel (c)), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded rasters (xref 81 686×559 px ≈ 223 dpi + xref 82 688×569 px ≈ 225 dpi + xref 83 679×563 px ≈ 223 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 13,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Relationship between the quasielastic compoenent HWHM Γ and the scattering vector q2 for LPSCl (NEI). The solid lines represent the result of fitting with the Chudley−Elliott model (equation given in the title), with D the diffusion coefficient, τ the elementary time of the diffusive process, and d the jump distance Measurements at 27, 77 and 107 °C. (Γ, τ restored; the auto caption had also swallowed the two SI references printed below the figure.)",
+   "rotated_deg": 0,
+   "bbox": [
+    147.7,
+    246.5,
+    464.3,
+    497.6
+   ],
+   "w": 1333,
+   "h": 1057,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.956,
+   "auto_bbox": [
+    66.0,
+    240.5,
+    549.1,
+    503.6
+   ],
+   "src_native": [
+    971,
+    770
+   ],
+   "native_dpi": 221,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto caption swallowed the two SI references printed below the figure), re-rendered at 300 dpi (tool default) from the placement rectangle of the embedded raster (xref 91 971×770 px ≈ 221 dpi — the SI is a Word export, rasters below 300 dpi are upsampled, no new detail) → ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ CE 맞춤 범례 [인쇄]: 27 °C τ 373.2 ps · D 2.28×10⁻⁷ cm²/s · 77 °C 231.2 ps · 3.68×10⁻⁷ · 107 °C 121.5 ps · 7.00×10⁻⁷ (d 2.25 Å). 인쇄 D 는 d²/6τ (d 2.25 Å) 보다 0.8 % 크다 = d 2.26 Å 와 같음 [카드 산술]. NE 로 모든 Li (n 2.52×10²⁸ m⁻³) 면 35.5 mS/cm (300 K) — 본문 5.3 mS/cm 의 6.7 배 [카드 산술]."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1 Activation energies of Li6PS5Cl electrolyte at different “cold sintering” pressures (127, 255, 382, 510 MPa). The activation energies were calculated from −40 to −20 °C from Arrhenius plots. Ea,Rb [eV] / ± [eV] / Ea,RGB [eV] / ± [eV]: 127 MPa 0.44 / 0.03 / 0.42 / 0.02 · 255 MPa 0.42 / 0.03 / 0.38 / 0.02 · 382 MPa 0.41 / 0.03 / 0.37 / 0.02 · 510 MPa 0.40 / 0.03 / 0.33 / 0.02.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    295.6,
+    295.8,
+    397.7
+   ],
+   "w": 1098,
+   "h": 427,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "blank": 0.909,
+   "viewed": true,
+   "mpm_note_ko": "EIS 활성화 에너지 (−40 ~ −20 °C, 실험실 셀) — 벌크 0.44 → 0.40 · GB 0.42 → 0.33 eV (127 → 510 MPa) [인쇄]."
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 4,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — electrolyte (pellet) thickness [µm] (black, left axis) and ionic conductivity ρ [mS cm⁻¹] (red, right axis) vs applied pressure p [MPa], in situ (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 983,
+   "h": 789,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1900,
+    748
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 32, 300 dpi, no resampling): panel box [0, 0, 942, 748] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 두께 −31 % (480 → 331 µm) — 질량 · 단면적 일정이면 ε(76.2 MPa) ≥ 31 % 가 되어야 한다 (S11 의 12.1 % 와 모순) [카드 산술]."
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 4,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — Nyquist plots (Z′ vs −Z″ [Ω cm²]) at 76.2, 127, 255, 382, 510 MPa and at 76.2 MPa after release ('76.2 MPa, R.'); arrow marks 4.4 MHz (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 990,
+   "h": 786,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1900,
+    748
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel of Fig. 2 — cut from the embedded native raster (xref 32, 300 dpi, no resampling): panel box [951, 0, 1900, 748] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3af",
+   "kind": "figure",
+   "label": "3a–f",
+   "page": 5,
+   "file": "fig_3a_f.png",
+   "caption": "Fig. 3(a–f) — raw middle-slice μ-CT images (ESRF ID19) at 76.2, 255, 382, 510 MPa, 510 MPa after 30 min, and after release ('510 MPa, released' = back to 76.2 MPa per caption); 500 μm scale bars (panel block of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 1830,
+   "h": 1240,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1800,
+    1882
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 47, 300 dpi, no resampling): panel box [0, 0, 1800, 1192] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3g",
+   "kind": "figure",
+   "label": "3g",
+   "page": 5,
+   "file": "fig_3g.png",
+   "caption": "Fig. 3(g) — particle-size distributions (KDE vs equivalent-sphere diameter [μm]) at 76.2 MPa, 76.2 MPa released, 255, 382, 510 MPa, 510 MPa 30 min; arrows mark populations P1 (large), P2, P3 (small) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 899,
+   "h": 724,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1800,
+    1882
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 47, 300 dpi, no resampling): panel box [0, 1202, 879, 1882] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 파쇄의 근거: 76.2 → 255 MPa 큰 집단 (P1) 감소 · P2 26 → 18 µm (본문) · 510 MPa 에서 <10 µm 봉우리 (KDE 0.048 판독) 최대. 지름 = 등가 구 · 0.6 µm 화소 (1.8 µm 미만 못 가림)."
+  },
+  {
+   "key": "f3h",
+   "kind": "figure",
+   "label": "3h",
+   "page": 5,
+   "file": "fig_3h.png",
+   "caption": "Fig. 3(h) — geometric tortuosity distributions (occurrence vs tortuosity, bins 0.05) at 76.2, 255 and 510 MPa (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 900,
+   "h": 724,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1800,
+    1882
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel of Fig. 3 — cut from the embedded native raster (xref 47, 300 dpi, no resampling): panel box [923, 1202, 1800, 1882] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기하 tortuosity 봉우리 [판독]: 1.20 (76.2) · 1.15 (255) · 1.10 MPa (510) — 본문 '1.24 → 1.1'. 수송 tortuosity 아님 (τ_geo)."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 6,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — Sneed–Folk ternary shape plots at 76.2 MPa for <10 μm (red), 10–30 μm (green), >30 μm (blue) particles (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 1844,
+   "h": 737,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1800,
+    1369
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — cut from the embedded native raster (xref 57, 300 dpi, no resampling): panel box [0, 0, 1800, 690] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 6,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — Sneed–Folk ternary shape plots at 510 MPa, same three size classes (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 1844,
+   "h": 726,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1800,
+    1369
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — cut from the embedded native raster (xref 57, 300 dpi, no resampling): panel box [0, 690, 1800, 1369] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 7,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) — Nyquist plots of the 382 MPa pellet at −18 to −36.1 °C (252 kHz and 60 kHz marked) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 994,
+   "h": 797,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1900,
+    1601
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 67, 300 dpi, no resampling): panel box [0, 0, 949, 753] px — re-split after the first visual check (the x-axis titles 'Z′ [Ω cm²]' of panels a/b sit between the tick labels and the 'log ω' title of c/d, so the row split moved from y 690–708 to y 753–770) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 7,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — Nyquist plots at ≈−35 °C for 127, 255, 382, 510 MPa (80 kHz and 60 kHz marked) — no 76.2 MPa curve although the caption says 'from 76.2' (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 970,
+   "h": 800,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1900,
+    1601
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 67, 300 dpi, no resampling): panel box [975, 0, 1900, 753] px — re-split after the first visual check (the x-axis titles 'Z′ [Ω cm²]' of panels a/b sit between the tick labels and the 'log ω' title of c/d, so the row split moved from y 690–708 to y 753–770) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5c",
+   "kind": "figure",
+   "label": "5c",
+   "page": 7,
+   "file": "fig_5c.png",
+   "caption": "Fig. 5(c) — DRT h [Ω] vs log τ (top axis log ω) at −18 to −36.1 °C; peaks Pr1 (bulk) and Pr2 (GB) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 979,
+   "h": 870,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1900,
+    1601
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 67, 300 dpi, no resampling): panel box [0, 770, 942, 1601] px — re-split after the first visual check (the x-axis titles 'Z′ [Ω cm²]' of panels a/b sit between the tick labels and the 'log ω' title of c/d, so the row split moved from y 690–708 to y 753–770) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5d",
+   "kind": "figure",
+   "label": "5d",
+   "page": 7,
+   "file": "fig_5d.png",
+   "caption": "Fig. 5(d) — DRT at ≈−35 °C for loads labelled '0.5 t, 1 t, 1.5 t, 2 t' (= 127, 255, 382, 510 MPa on the 38.5 mm² pellet); the Pr2 (GB) peak shrinks with pressure (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 976,
+   "h": 886,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1900,
+    1601
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel of Fig. 5 — cut from the embedded native raster (xref 67, 300 dpi, no resampling): panel box [969, 761, 1900, 1601] px — re-split after the first visual check (the x-axis titles 'Z′ [Ω cm²]' of panels a/b sit between the tick labels and the 'log ω' title of c/d, so the row split moved from y 690–708 to y 753–770) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 8,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — Arrhenius plots ln R vs 1000/T [1000/K] of GB (circles) and bulk (squares) resistances at 127, 255, 382, 510 MPa (−40 to −20 °C), with the equivalent-circuit inset (b): R_bulk‖CPE_bulk – R_GB‖CPE_GB – CPE_e (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 964,
+   "h": 787,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1877,
+    752
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel of Fig. 6 — cut from the embedded native raster (xref 85, 300 dpi, no resampling): panel box [0, 0, 916, 752] px — re-split after the first visual check (the y-axis title 'S(|q|, ΔE) [a.u.]' of panel c starts right after the right spine of panel a at x 887–888, while the last x tick label 4.25 of panel a reaches x 915 — ink components measured on the raster — so the split moved from x 952 to x 916) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "Table 1 재현: GB 기울기 → Ea 0.414 · 0.382 · 0.369 · 0.331 eV (127 · 255 · 382 · 510 MPa) · 510 MPa bulk 0.399 eV [판독 · 카드 산술] (표: 0.42 · 0.38 · 0.37 · 0.33 · 0.40). R_GB/R_bulk (510 MPa) 3.4 (−17.6 °C) · 2.7 (−35.5 °C) [카드 산술]."
+  },
+  {
+   "key": "f6c",
+   "kind": "figure",
+   "label": "6c",
+   "page": 8,
+   "file": "fig_6c.png",
+   "caption": "Fig. 6(c) — Q-averaged QENS spectra S(|q|, ΔE) at 380 K: powder, 510 MPa pellet and elastic peak (resolution) — the two samples superimpose (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1002,
+   "h": 796,
+   "dpi": 300,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "src_native": [
+    1877,
+    752
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel of Fig. 6 — cut from the embedded native raster (xref 85, 300 dpi, no resampling): panel box [916, 0, 1877, 752] px — re-split after the first visual check (the y-axis title 'S(|q|, ΔE) [a.u.]' of panel c starts right after the right spine of panel a at x 887–888, while the last x tick label 4.25 of panel a reaches x 915 — ink components measured on the raster — so the split moved from x 952 to x 916) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "QENS 380 K — 가루와 510 MPa 펠릿이 겹친다 = 원자 척도 Li 동역학은 가압으로 안 바뀜."
+  },
+  {
+   "key": "fS10a",
+   "kind": "figure",
+   "label": "S10a",
+   "page": 10,
+   "file": "fig_S10a.png",
+   "caption": "Figure S10(a) — ex situ nano-holotomography (ESRF ID16b, 50 nm voxel) middle slice of the pellet pressed at 382 MPa (caption: 380 MPa) for 30 min; 10 µm scale bar (panel of Figure S10).",
+   "rotated_deg": 0,
+   "w": 852,
+   "h": 853,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "panel_of": "fS10",
+   "manual_crop": "panel of Figure S10 — columns 0–826 of the re-cut fig_S10.png (300 dpi render of xref 71) — left of the white gap 827–925 → ink bounding box → uniform 25 px margin; re-split after the first visual check (the first cut at the separator kept a sliver of the 'b' label in panel a) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS10b",
+   "kind": "figure",
+   "label": "S10b",
+   "page": 10,
+   "file": "fig_S10b.png",
+   "caption": "Figure S10(b) — 3D volume of the same nano-CT; blue spots = LiCl grains (caption); 10 µm scale (panel of Figure S10).",
+   "rotated_deg": 0,
+   "w": 953,
+   "h": 919,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "panel_of": "fS10",
+   "manual_crop": "panel of Figure S10 — columns 926–end of the re-cut fig_S10.png (label 'b' kept), the printed vertical separator line ([946]) painted white → ink bounding box → uniform 25 px margin; re-split after the first visual check (the first cut at the separator kept a sliver of the 'b' label in panel a) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS12a",
+   "kind": "figure",
+   "label": "S12a",
+   "page": 12,
+   "file": "fig_S12a.png",
+   "caption": "Figure S12(a) — QENS spectrum S(|q|, ΔE) at 300 K, q = 1.51 Å⁻¹ with elastic (orange), Lorentzian (green), fit (red), background (purple) (panel of Figure S12).",
+   "rotated_deg": 0,
+   "w": 948,
+   "h": 776,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "panel_of": "fS12",
+   "bbox": [
+    195.0,
+    72.0,
+    416.4,
+    252.5
+   ],
+   "manual_crop": "panel of Figure S12 — the SI places each panel as its own raster (xref 81); rendered at 300 dpi from its placement rectangle → ink bounding box → uniform 25 px margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS12b",
+   "kind": "figure",
+   "label": "S12b",
+   "page": 12,
+   "file": "fig_S12b.png",
+   "caption": "Figure S12(b) — same at 353 K (panel of Figure S12).",
+   "rotated_deg": 0,
+   "w": 943,
+   "h": 784,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "panel_of": "fS12",
+   "bbox": [
+    195.8,
+    252.4,
+    415.9,
+    434.8
+   ],
+   "manual_crop": "panel of Figure S12 — the SI places each panel as its own raster (xref 82); rendered at 300 dpi from its placement rectangle → ink bounding box → uniform 25 px margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "fS12c",
+   "kind": "figure",
+   "label": "S12c",
+   "page": 12,
+   "file": "fig_S12c.png",
+   "caption": "Figure S12(c) — same at 380 K (panel of Figure S12).",
+   "rotated_deg": 0,
+   "w": 942,
+   "h": 783,
+   "dpi": 300,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "panel_of": "fS12",
+   "bbox": [
+    196.2,
+    435.4,
+    415.8,
+    617.3
+   ],
+   "manual_crop": "panel of Figure S12 — the SI places each panel as its own raster (xref 83); rendered at 300 dpi from its placement rectangle → ink bounding box → uniform 25 px margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_q",
+   "kind": "equation",
+   "label": "eq-q",
+   "page": 3,
+   "file": "eq_q_momentum_transfer.png",
+   "caption": "Inline formula (no equation number), PDF p.3 §2.5: 'q is the momentum transfer defined as q = (4π/λ) × sin(θ/2), where λ is the …' (λ = 6.27 Å incident wavelength, θ = total scattering angle; q-range 0.2–1.8 Å⁻¹).",
+   "rotated_deg": 0,
+   "w": 1459,
+   "h": 167,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305,
+    411.0,
+    562,
+    429.2
+   ],
+   "manual_crop": "equation sentence rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — a taller column box was rendered and the text lines were selected by white-row gaps (the first cut from the text-layer line boxes clipped the descenders of the line above) → ink trim → uniform 6 pt white margin; the paper has no numbered equations, so the crop keeps the whole sentence line(s) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_tau",
+   "kind": "equation",
+   "label": "eq-tauRC",
+   "page": 7,
+   "file": "eq_tau_rc_characteristic_time.png",
+   "caption": "Inline formula (no equation number), PDF p.7 §3.2: 'τ = RC, where τ is the characteristic time, R is the resistance of the process, and C is the capacitance of the process' — the basis for reading the DRT peaks Pr1/Pr2.",
+   "rotated_deg": 0,
+   "w": 1459,
+   "h": 227,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    36,
+    96.7,
+    296,
+    125.7
+   ],
+   "manual_crop": "equation sentence rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — a taller column box was rendered and the text lines were selected by white-row gaps (the first cut from the text-layer line boxes clipped the descenders of the line above) → ink trim → uniform 6 pt white margin; the paper has no numbered equations, so the crop keeps the whole sentence line(s) (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e_ce",
+   "kind": "equation",
+   "label": "eq-CE",
+   "page": 13,
+   "file": "eq_ce_d_d2_over_6tau_figS13_title.png",
+   "caption": "Chudley–Elliott relation printed only as the title of Figure S13 (raster, no equation number): 'Chudley-Elliott, D = d²/6τ' (d = jump length fixed at 2.25 Å, τ = residence time); the SI Note 4 gives no further formula.",
+   "rotated_deg": 0,
+   "w": 647,
+   "h": 112,
+   "dpi": 400,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    147.7,
+    246.5,
+    464.3,
+    265.4
+   ],
+   "manual_crop": "title band of the Figure S13 raster (xref 91) rendered at 400 dpi (raster ≈ 221 dpi — upsampled); only the text band above the plot frame kept (white-row gaps; the first cut included the frame's top edge) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "PDF p.1 abstract: in situ densification (76.2 → 510 MPa) with EIS + μ-CT; 'large (secondary) particles are fracturing'; GB conductivity improves; σ ×2.45 '(up to 1.66 mS cm−1)' (body/conclusion: 1.62); bulk 'largely unaffected – that is, unsintered'; QENS + Nernst–Einstein '5.3 mS cm−1' = maximum without modifying the bulk.",
+   "rotated_deg": 0,
+   "w": 2043,
+   "h": 769,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    199.5,
+    316.5,
+    562.0,
+    446.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-p3-resolution-scales",
+   "page": 2,
+   "file": "txt_p2_p3_resolution_scales.png",
+   "caption": "PDF p.2 right column → p.3 left column (stacked): '2. Experimental section' — diffraction 0.1 Å–10³ Å; QENS jumps <30 Å, 10 ps–1 ns; EIS 0.1 μs–1 ms; nano-CT pixel 50 nm (effective ≈150 nm), field 128 μm × 100 μm; μ-CT pixel 600 nm (≈1.8 μm resolution), field 1.5 mm, full pellet height 330–480 μm.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1006,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    244.0,
+    562.0,
+    374.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      305.0,
+      244.0,
+      562.0,
+      374.0
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      35.5,
+      49.5,
+      296.5,
+      107.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-cells-insitu-protocol",
+   "page": 3,
+   "file": "txt_p3_cells_insitu_protocol.png",
+   "caption": "PDF p.3 §2.1–2.2: NEI commercial LPSCl; 'about 50 mg' in a POM spacer between stainless-steel blocking electrodes; ID19 in situ stepwise pressing; 76.2 MPa = 'the minimum pressure needed to keep the cell airtight'; 127/255/382/510 MPa; 30 min holds; release back to 76.2 MPa; 177° rotation (press pillars); 70–80 keV; 2560 × 2560 detector, ≈0.6 μm voxel.",
+   "rotated_deg": 0,
+   "w": 1465,
+   "h": 2029,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    35.5,
+    112.5,
+    296.5,
+    474.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-segmentation",
+   "page": 3,
+   "file": "txt_p3_segmentation_ilastik_watershed.png",
+   "caption": "PDF p.3 §2.3 (left column → right column top, stacked): Nabu reconstruction; Fiji/python/Ilastik; anisotropic-diffusion + patch-based filters; Ilastik random forest (100 trees), two classes (pore, particles), watershed separation; tortuosity after Chen et al. [26] (SI Note 1); 'Figure S3 shows the microstructure at the initial applied pressure of 76.2 MPa, displayed both as a binary image (Figure S3a) and as a segmented image processed using watershed transformation (Figure S3b)'.",
+   "rotated_deg": 0,
+   "w": 1465,
+   "h": 1645,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    35.5,
+    479.0,
+    296.5,
+    752.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      35.5,
+      479.0,
+      296.5,
+      752.0
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      305.0,
+      49.5,
+      562.0,
+      78.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-impedance",
+   "page": 3,
+   "file": "txt_p3_impedance_drt_cnls.png",
+   "caption": "PDF p.3 §2.4: BioLogic SP300; CTS T-series chamber; OCV; 10–100 mV amplitude; 7 MHz–10 Hz; three consecutive spectra after 2–4 h stabilisation; σ normalised to pellet geometry; Kramers–Kronig residuals < 5 %; DRT + CNLS in RelaxIS3; λ = 0.001; shape factor 0.5.",
+   "rotated_deg": 0,
+   "w": 1462,
+   "h": 1155,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    81.0,
+    562.0,
+    285.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x3d",
+   "kind": "text",
+   "label": "p3-qens-nanoholo",
+   "page": 3,
+   "file": "txt_p3_qens_nanoholotomography.png",
+   "caption": "PDF p.3 §2.5–2.6: QENS on 2 g LPSCl (powder, or two 18 mm pellets pressed at 510 MPa), IN16b, λ 6.27 Å, q 0.2–1.8 Å⁻¹, 0.7 μeV FWHM, ±30 μeV, QENSH single-Lorentzian fits, vanadium resolution; nano-holotomography on a 1 mm cylinder punched from a 500 μm-thick 7 mm pellet densified at 382 MPa for 30 min, ROI 128 × 108 μm, 50 nm voxel, 3203 projections, 17 keV, Paganin δ/β 139, PyHST2.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 2028,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    290.5,
+    562.0,
+    651.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x3e",
+   "kind": "text",
+   "label": "p3-p4-npd",
+   "page": 3,
+   "file": "txt_p3_p4_neutron_powder_diffraction.png",
+   "caption": "PDF p.3 right column → p.4 left column (stacked): §2.7 D2B NPD, ≈2 g in a Ø8 mm V capillary, RT, 2 h, λ 1.594 Å, Fullprof Le Bail for crystallite size and phase quantities.",
+   "rotated_deg": 0,
+   "w": 1462,
+   "h": 717,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    657.0,
+    562.0,
+    752.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      305.0,
+      657.0,
+      562.0,
+      752.0
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      35.5,
+      49.5,
+      296.5,
+      86.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-conductivity-thickness",
+   "page": 4,
+   "file": "txt_p4_conductivity_thickness_plateau.png",
+   "caption": "PDF p.4 left column → right column top (stacked): §3.1 — thickness 480 → 330 μm; σ 0.66 → 1.62 mS cm−1 at 510 MPa ('in good agreement with the literature [29]'); from ≈250 MPa densification 'begins to reach its limitation'; hold time and release: 'the conductivity values mainly remained unchanged'; one visible semicircle = bulk + GB, not separable at RT.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 2460,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    35.5,
+    93.0,
+    296.5,
+    515.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      35.5,
+      93.0,
+      296.5,
+      515.5
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      305.0,
+      49.5,
+      562.0,
+      65.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-psd-fracture",
+   "page": 4,
+   "file": "txt_p4_psd_populations_fracture.png",
+   "caption": "PDF p.4 right column: SEM PSD of the precursor (≈450 particles) — P1 ≈40 μm, P2 ≈20 μm, P3 <10 μm; 76.2 → 255 MPa 'P1 reduces to benefit the population P2', P2 shifts ≈26 → 18 μm; 'the larger particles fracture under the pressure applied'; 382 → 510 MPa more fracturing, P3 (1.8–10 μm); analysed region 1.77 mm² of 38.5 mm²; 0.6 μm pixel limits < 1.8 μm.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 2377,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    60.5,
+    562.0,
+    484.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4-p5-hold-release",
+   "page": 4,
+   "file": "txt_p4_p5_hold_release_relaxation.png",
+   "caption": "PDF p.4 right column → p.5 left column → p.5 right column top (stacked): 510 MPa 30 min hold — σ unchanged but 'the densification is still ongoing at the particle level' (labels P1/P2/P3 used inconsistently here, 'larger particles (P3) centered around 23 μm'); after release 'the solid electrolyte's microstructure also relaxed' — P1 (30–55 μm) broader, P2 and P3 decrease: '“cold sintering” … is not a fixed state'.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 1323,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    480.6,
+    562.0,
+    527.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      305.0,
+      480.6,
+      562.0,
+      527.0
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      35.5,
+      552.5,
+      296.5,
+      750.0
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      305.0,
+      552.5,
+      562.0,
+      568.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-tortuosity",
+   "page": 5,
+   "file": "txt_p5_geometric_tortuosity.png",
+   "caption": "PDF p.5 right column: geometric tortuosity — 1 = straight path; 76.2 → 510 MPa 'gradually shifts the geometrical tortuosity peak from 1.24 to 1.1' (Fig. 3h).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 691,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    563.0,
+    562.0,
+    683.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-p6-sneed-folk-counts",
+   "page": 5,
+   "file": "txt_p5_p6_sneed_folk_counts_fracture.png",
+   "caption": "PDF p.5 right column → p.6 left column (stacked): Sneed–Folk shapes at 76.2 and 510 MPa for <10, 10–33 (sic; figure 10–30) and >30 μm; 'particles' = secondary particles/aggregates (crystallites ≈50 nm from NPD); large particles keep their shape; counts <10 μm 3555 → 10,241, 10–30 μm 5787 → 14,011, >30 μm 4424 → 2865 — 'confirm the cracking of the largest particles'.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1647,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    678.0,
+    562.0,
+    752.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      305.0,
+      678.0,
+      562.0,
+      752.0
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      35.5,
+      49.5,
+      296.5,
+      285.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-porosity-nanoct",
+   "page": 6,
+   "file": "txt_p6_porosity_nanoct_thickness_method.png",
+   "caption": "PDF p.6 left column → right column (stacked): μ-CT cannot resolve pores < 1.8 μm → ex situ nano-holotomography at 382 MPa; 50 nm/voxel because of beam damage (resolution ≈3× voxel); 'significant intraparticle porosities and cracking'; segmented porosity 9.5 vol %; used as reference to convert in situ thickness into porosity ('Since the pellet’s mass and crystallographic density remain constant … changes in thickness translate linearly to changes in pellet volume—and consequently, to porosity (Figure S11)'); median pore diameter 479 nm; 10 % of the pore volume in pores > 1 μm.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 1705,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    35.5,
+    279.5,
+    296.5,
+    376.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      35.5,
+      279.5,
+      296.5,
+      376.0
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      305.0,
+      49.5,
+      562.0,
+      275.0
+     ]
+    }
+   ],
+   "mpm_note_ko": "★ 기공 연산자의 원문 문장 — 나노 CT 9.5 vol % (382 MPa · ex situ) + 두께 비례 환산 · 중앙 기공 지름 479 nm · 기공 부피의 10 % 가 > 1 µm."
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-p7-eis-drt",
+   "page": 6,
+   "file": "txt_p6_p7_low_temperature_eis_drt.png",
+   "caption": "PDF p.6 right column → p.7 left column (stacked): §3.2 laboratory repeat with low-temperature EIS; semicircle frequency shifts with T (τ = RC); bulk and GB 'difficult to separate with CNLS'; DRT (KK residual < 1 %) gives Pr1 and Pr2; high-frequency satellite peaks not analysed; Pr2 area decreases with pressure, Pr1 broadens.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1879,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    287.5,
+    562.0,
+    376.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      305.0,
+      287.5,
+      562.0,
+      376.0
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      35.5,
+      49.5,
+      296.5,
+      320.0
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-cnls-gb-limiting",
+   "page": 7,
+   "file": "txt_p7_cnls_capacitance_gb_limiting.png",
+   "caption": "PDF p.7 right column → p.8 left column (stacked): CNLS circuit (Fig. 6b); CPE1 α > 0.99, CPE2 α 0.9–1; C ≈10⁻¹⁰ F (Pr1 = bulk) and ≈10⁻⁹ F (Pr2 = GB); Arrhenius → Table 1; 'the GB resistance is significantly higher than the bulk … the GBs are limiting'; bulk σ and Ea little influenced by pressure up to 510 MPa; GB Ea 'decreases heavily'.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 1531,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    49.5,
+    562.0,
+    320.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      305.0,
+      49.5,
+      562.0,
+      320.0
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      35.5,
+      405.5,
+      296.5,
+      421.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-qens-powder-pellet",
+   "page": 8,
+   "file": "txt_p8_qens_powder_vs_pellet.png",
+   "caption": "PDF p.8 left column: QENS of raw powder and 510 MPa pellet, 300–380 K: Q-averaged spectra 'superimposed within experimental accuracy' → Li dynamics similar; long-range diffusive behaviour; 300 K broadening barely resolved (Figure S12); D and residence times from the HWHM.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1854,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    35.5,
+    416.5,
+    296.5,
+    752.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-ce-ea-ne",
+   "page": 8,
+   "file": "txt_p8_chudley_elliott_ea_nernst_einstein.png",
+   "caption": "PDF p.8 right column: HWHM plateau ≈1.5 Å⁻¹, Chudley–Elliott with fixed jump 2.25 Å (Dewald [42]); QENS Ea similar for powder and 510 MPa pellet, '0.15 eV (±0.1 eV)' vs EIS; Nernst–Einstein [43] with 'D = 2.28 10−11 m² s-1' → '5.3 mS cm−1' = 'the ionic conductivity if there are no grain boundaries at all'.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1923,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    290.0,
+    562.0,
+    631.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ NE 문장: 'D = 2.28 10−11 m² s-1' → '5.3 mS cm−1' (운반자 농도 · 온도 · Haven 비 미인쇄)."
+  },
+  {
+   "key": "x8c",
+   "kind": "text",
+   "label": "p8-p9-conclusions",
+   "page": 8,
+   "file": "txt_p8_p9_conclusions.png",
+   "caption": "§4 Conclusion, PDF p.8 right column → p.9 left column (stacked): σ plateaus while microstructure evolves; no change in density and shape of observable particles → bulk of big particles unchanged; cracking of large particles at high pressure; bulk σ pressure-independent, GB-limited (confirmed by QENS); 'cold sintering … up to 510 MPa only reorganizes the particles'; QENS-NE 5.3 mS cm−1 = 3.3× the 1.62 mS cm−1; 'the term \"cold sintering\" may be misleading'.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 2053,
+   "dpi": 400,
+   "src": "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    305.0,
+    636.5,
+    562.0,
+    752.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) — parts stacked in reading order with a 40 px white gap → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      305.0,
+      636.5,
+      562.0,
+      752.0
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      35.5,
+      49.5,
+      296.5,
+      316.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "xs1",
+   "kind": "text",
+   "label": "si-p3-note1-tortuosity",
+   "page": 3,
+   "file": "txt_si_p3_note1_tortuosity_dijkstra.png",
+   "caption": "SI p.3 Supplementary note 1: geometric tortuosity = average of quasi-Euclidean and city-block models; voxel graph (SE voxels passable, pores impassable), 6-connectivity, Dijkstra shortest path electrode-to-electrode ÷ straight-line distance (text says voxels 'connected to neighboring pore voxels' — sic).",
+   "rotated_deg": 0,
+   "w": 2670,
+   "h": 1585,
+   "dpi": 400,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    70.0,
+    70.5,
+    545.0,
+    349.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xs2",
+   "kind": "text",
+   "label": "si-p7-note2-particle-density",
+   "page": 7,
+   "file": "txt_si_p7_note2_large_particle_density.png",
+   "caption": "SI p.7 Supplementary note 2: grey-value histograms (Figure S7) — at 76.2 MPa two maxima, ≈200 (SE particles) and ≈107 (background = unresolved small particles + porosity); with pressure the background peak shifts up while the particle peak stays → 'the density of the big particles remains the same'; densification of small particles below resolution cannot be judged.",
+   "rotated_deg": 0,
+   "w": 2667,
+   "h": 1266,
+   "dpi": 400,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    70.0,
+    84.5,
+    545.0,
+    308.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xs3",
+   "kind": "text",
+   "label": "si-p10-note3-inhomogeneity",
+   "page": 10,
+   "file": "txt_si_p10_note3_inhomogeneity_licl.png",
+   "caption": "SI p.10 Supplementary note 3: 0.4 vol % (of all volume incl. porosity) high-density inclusions, mean 300 nm, grey-value density 2.07 g cm⁻³ → LiCl (NPD impurity); non-uniform greyscale inside particles = unresolved nanoporosity or chemical variation; particles = clusters of LPSCl crystallites (≈50 nm), LiCl crystallites (≈30 nm) and unresolved porosity (cross-references 'Figure S7b'/'Figure S6' should read S10b/S9).",
+   "rotated_deg": 0,
+   "w": 2670,
+   "h": 1052,
+   "dpi": 400,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    70.0,
+    369.5,
+    545.0,
+    552.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xs4",
+   "kind": "text",
+   "label": "si-p13-note4-chudley-elliott",
+   "page": 13,
+   "file": "txt_si_p13_note4_chudley_elliott.png",
+   "caption": "SI p.13 Supplementary note 4: Chudley–Elliott jump-diffusion model — instantaneous jumps between equivalent sites separated by a mean residence time τ; fixed jump distance; applied before to argyrodites [1,2].",
+   "rotated_deg": 0,
+   "w": 2665,
+   "h": 773,
+   "dpi": 400,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    70.0,
+    71.0,
+    545.0,
+    204.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, widened by 8 pt and cut back to whole text lines by white-row gaps (a line is kept when its centre lies inside the rectangle — no clipped neighbour lines) → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table S1 The sample related refined parameters with standard deviations (displayed in the brackets) — LPSCl: average apparent size 491.38 (0.35), lattice parameter 9.84369 (0.00012); LiCl: 272.03 (0.12), 5.13680 (0.00036); column units printed as [nm] for both columns (the lattice parameters are evidently Å; main text and SI Note 3 give crystallite sizes ≈50 nm and ≈30 nm, i.e. the size column also reads as Å).",
+   "rotated_deg": 0,
+   "w": 2669,
+   "h": 444,
+   "dpi": 400,
+   "src": "8ec01d74-21._Sup_Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
+   "bbox": [
+    70.0,
+    462.5,
+    545.0,
+    537.0
+   ],
+   "manual_crop": "table not found by the caption-anchored tool (caption 'Table S1 The …' has no separator and the table is pure text) — rendered by hand from the vector SI p.9 at 400 dpi: caption + table rows from the text-layer line boxes → ink trim → uniform 6 pt white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 단위 표기: 'nm' 두 칸 — 격자상수 9.84369 는 Å (LPSCl a ≈ 9.84 Å) · 크기 491.38 도 본문 · SI Note 3 의 '≈50 nm' 와 맞추면 Å (= 49.1 nm). ou2026 카드의 'd ≈ 491 nm' 은 이 인쇄값을 그대로 읽은 것."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-11 UTC = 2026-11-12 KST) found Fig. 1–6, Table 1 and Figure S1–S13 (20 crops, all opened); it missed Table S1 (caption 'Table S1 The …' without separator, pure text table) — cut by hand (tab_S1). 19 of the 20 tool crops were re-cut (main figures from their native 300 dpi rasters, SI figures re-rendered at 300 dpi from the raster placement rectangles; the auto crops had uneven margins, clipped axis titles (S7, S9, S12), a cut scale bar (S5), a 40 % blank margin (S4), and captions that had swallowed page numbers / SI references); Table 1 kept. Added by hand: 18 panel crops (2a–b · 3a–f · 3g · 3h · 4a–b · 5a–d · 6a · 6c · S10a–b · S12a–c), 3 inline-formula crops (no numbered equations in the paper: q definition · τ = RC · Chudley–Elliott D = d²/6τ from the Figure S13 title), 22 evidence paragraphs (main 18 · SI notes 4) and Table S1. After the first visual check 8 panel crops (5a–d · 6a · 6c · S10a–b), 3 formula crops and 2 text crops were re-cut (2026-11-12, litdb-curator).",
+ "note_manual": "Printed inconsistencies visible in the crops: abstract '1.66 mS cm−1' vs body/conclusion and Fig. 2a '1.62' (×2.45 fits 1.62); population labels P1/P2/P3 defined as ≈40/≈20/<10 µm (p.4, Fig. 3g arrows) but later used as '<10, 10–33, >30 μm, corresponding to … (P1, P2 and P3)' and 'small particles (P1) … larger particles (P3)'; '10 – 33 μm' (text) vs '10–30 μm' (Fig. 4); tortuosity peak '1.24' (text) vs 1.20 bin (Fig. 3h); Fig. 5 caption 'from 76.2 to 510 MPa' but panels b/d show 127–510 MPa only (d labelled in tonnes 0.5–2 t); Fig. 2a right axis named ρ for a conductivity; Table S1 units 'nm' for Å values; Figure S10 '380 MPa' vs text 382; Figure S6 caption 'Figure S3' (SEM = Figure S5); SI Note 3 'Figure S7b' / 'Figure S6' (= S10b / S9); SI Note 1 'connected to neighboring pore voxels' (passable = particle voxels); QENS temperatures 300/350/380 K (text) vs 353 K (Figure S12) vs 27/77/107 °C (Figure S13); nano-CT field '128 μm × 100 μm' (p.2) vs ROI '128 × 108 μm' (p.3) vs Fig. 1 '100 x 100 µm'; EIS window '0.1 μs to 1 ms' (p.2) vs Fig. 1 '0.14 µs – 10 s'; 'about 50 mg' LPSCl vs a 7.0 mm × 331–480 µm pellet (would need 2.7–3.9 g/cm³ apparent density); Figure S11 porosity not reproducible from Fig. 2a thickness with the stated method (card §3-3).",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of) · f3af = slice block (a–f) of Fig. 3 · fS10a/b, fS12a–c = SI panels · e_q / e_tau / e_ce = inline formula crops (kind 'equation'; the paper has no numbered equations) · x<page><letter> = main-text evidence paragraph (kind 'text'; multi-part ones list 'parts') · xs1–xs4 = SI Supplementary notes 1–4 · tS1 = Table S1 (hand crop)"
+}
