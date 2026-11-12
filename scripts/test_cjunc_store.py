@@ -22,25 +22,32 @@
   T6  못 읽음 (정직한 흐름 = 다시 짓는다 · 파일 그대로 · 덮어쓰지 않음 · ⚠ 줄) — 0 바이트 · 잘림 · 배열 · 뼈대 한 바이트 (CRC) · 중앙 목록 한 바이트 ·
       멤버 빠짐 · 같은 이름 둘
   T7  어긋남 (손으로 고친 · 어긋난 기록 = 멈춤 StoreInconsistent · 짓지 않음 · 파일 그대로) — 다른 열쇠 파일 이름 바꿈 · 뼈대 바꿔 끼움 · 머리
-      엄격 지문 · 배열 바꿈 · 배열 + 엄격 지문 다시 셈 (registry_fp) · sid 지문 · 머리 JSON · 꼴 판 · 심볼릭 링크 · 폴더 · 파일 모드 (그룹 · 남 쓰기) ·
-      파일 소유자 (RCP-06)
+      엄격 지문 · 배열 바꿈 · 배열 + 엄격 지문 다시 셈 (registry_fp) · sid 지문 · 머리 JSON · 꼴 판 · 심볼릭 링크 · 폴더 · 파일 모드 (그룹 · 남 쓰기 ·
+      그룹 쓰기만 · 남 쓰기만 = 2 회차 RCP2-03) · 파일 소유자 (RCP-06)
   T8  다른 침대 · 문턱 · 코드 · 기계의 저장본 = 열쇠가 달라 읽지 않음 → 새로 짓고 씀 (옛 파일 그대로)
   T9  같은 열쇠 동시 쓰기 — 남이 같은 원장 = peer_same · 남이 다른 원장 = 멈춤 · 실제 프로세스 둘 경주 = written 하나 + peer_same 하나 · 파일 하나
   T10 끊김 (PID 이름공간 `unshare -pf --mount-proc --kill-child` 안에서만 · kill = 직접 만든 자식) — 쓰는 도중 (임시 파일 뒤 · link 전) · 읽는 도중
-  T11 쓰기 실패 · 끔 — 디스크 여유 · link EPERM · 쓰는 중 ENOSPC · 기계 id 못 읽음 · 폴더 꼴 (상대 · 없음 · 파일 · 남이 쓸 수 있음 · 다른 소유자 ·
-      심볼릭 링크 (끝 빗금 포함 · RCP-06)) · 입력 오류 = 옛 오류 (다른 소유자 = 대피 4 덧)
+  T11 쓰기 실패 · 끔 — 디스크 여유 · link EPERM · 쓰는 중 ENOSPC · 기계 id 못 읽음 · 폴더 꼴 (상대 · 없음 · 파일 · 그룹 · 남 쓰기 (남만 = 2 회차
+      RCP2-03) · 다른 소유자 · 심볼릭 링크 (끝 빗금 포함 · RCP-06) · 정규화 안 된 꼴 (`.` · `..` · 빈 성분 — 2 회차 RCP2-02)) · 입력 오류 = 옛 오류
   T12 쓰는 쪽 발행 전 대조 (직렬화 결함 = 발행 안 함 · 멈춤 아님) — 구현 커밋에서 더함 (고치기 전 판 = 모듈 없음)
   T13 규모 (실침대 꼴 = instance 마다 작은 배열 넷 · 별칭 빈 배열) — 겹침 검사가 배열 쌍마다 돌지 않는다 (배열 수에 선형 · 옛 = 쌍마다
       np.shares_memory = 배열 47 만 개에서 끝나지 않음) · 작은 배열 12 만 개 + 별칭 6 만 자리 왕복 = 시간 안 — 구현 커밋에서 더함
-  T14 열쇠 코드 칸 = 원장 짓기가 실제로 부르는 코드 (11-12 내부 반박 리뷰 RCP-01) — 원장 짓기 동안 돈 scripts/ 파일 (sys.setprofile) ⊆ 열쇠 코드 칸 ·
-      원장 모듈 둘의 import 문 (AST 전수) ⊆ 열쇠 코드 칸 · 리뷰 반례 CE1 (fibre_segment_raster 의 선분 → 셀 차례만 뒤집은 판 · sid 같음) = 다른 열쇠 ·
-      새로 지음 · 새 프로세스에서 Store() 가 모듈을 새로 부르지 않는다 (매니페스트 exec_env 그대로) · 코드 칸 = 네 파일의 디스크 sha256
+  T14 열쇠 코드 칸 = 원장 짓기가 실제로 부르는 코드 (11-12 내부 반박 리뷰 RCP-01 · 2 회차 RCP2-05) — 원장 짓기 동안 돈 파일 (sys.setprofile) =
+      표준 라이브러리 · numpy · scipy · 열쇠 코드 칸뿐 (그 밖 = 실패 · 옛 판은 scripts/ 안만 봤다) · 원장 모듈 둘의 import 문 (AST 전수) ⊆ 표준 ∪ {numpy,
+      scipy} ∪ 열쇠 코드 넷 · 리뷰 반례 CE1 (fibre_segment_raster 의 선분 → 셀 차례만 뒤집은 판 · sid 같음 · 새 프로세스) = 다른 열쇠 · 새로 지음 · 새
+      프로세스에서 Store() 가 모듈을 새로 부르지 않는다 (매니페스트 exec_env 그대로) · 코드 칸 = 네 파일의 디스크 sha256
+  T15 런 도중 코드 바뀜 (11-12 2 회차 재리뷰 RCP2-01 · 새 프로세스 · 코드 사본 폴더) — 재리뷰 CE-A (원장 모듈을 먼저 불러 두고 그 파일이 바뀐 뒤 Store) ·
+      cjunc_store 만 불러 둔 뒤 바뀜 · 짓는 도중 바뀜 (짓기가 새 판을 부른다) · 쓰는 도중 바뀜 · 내용 그대로 다시 씀 (수정 시각 = 시작 뒤) = 저장 안 함
+      (꺼짐 · 건너뜀 · 사유 code_changed) · 뒤의 정직한 런 = 적중 아님 · 정직한 흐름 = 지어 씀 → 적중 · 런 시작 기록 (cjunc_store 를 불러온 때)
   P   payload 끝-끝 (`test_ca_ext_b6` 픽스처 · 실제 payload · CPU) — 입구 거부 (접합 없이 · 조립만 · rasterize-only (RCP-10) · 상대 · 없음 · 남이 씀 ·
       Store() 의 뜻밖의 예외 둘 = 입구 · 본 길 (RCP-10)) · 끔 / 빗나감 / 적중 팔 JSON 바이트 같음 · 못 읽음 (⚠ · 같음) · 어긋남 (rc ≠ 0 ·
-      S2_CJUNC_STORE|INCONSISTENT| · 출력 없음) · instance 둘인 침대 (세 가닥 직렬) 도 지어 씀 → 적중 (P5 · 구현 커밋에서 더함)
+      S2_CJUNC_STORE|INCONSISTENT| · 출력 없음) · instance 둘인 침대 (세 가닥 직렬) 도 지어 씀 → 적중 (P5 · 구현 커밋에서 더함) · 정규화 안 된 폴더
+      꼴 = 입구 거부 (P1 · 2 회차 RCP2-02) · cjunc_store 를 원장 모듈 셋보다 먼저 불러온다 (P6 · `python -X importtime` · 2 회차 RCP2-01)
   R   러너 (`test_ca_ext_runner` 틀 · 실제 셸 · 실제 payload) — CJUNC=1 없이 · 조립만과 함께 · 상대 · 허용 밖 글자 · 개행 · 없는 폴더 · 심볼릭 링크
-      (끝 빗금 포함 · RCP-06) = 발사 전 ABORT · 켬 = payload 인자 · 팔 JSON · 영수증 · OUTDIR = 끔과 같음 · 둘째 런 = 적중
-  C   사슬 배선 — `--cjunc-store` (ladder · predict 만 · 절대 · 있는 폴더 · 남이 못 씀 · 이 사용자 소유 · 심볼릭 링크 아님 (RCP-06)) · Runner env ·
+      (끝 빗금 포함 · RCP-06) · 정규화 안 된 꼴 (2 회차 RCP2-02) = 발사 전 ABORT · 켬 = payload 인자 · 팔 JSON · 영수증 · OUTDIR = 끔과 같음 · 둘째
+      런 = 적중
+  C   사슬 배선 — `--cjunc-store` (ladder · predict 만 · 절대 · 있는 폴더 · 남이 못 씀 · 이 사용자 소유 · 심볼릭 링크 아님 (RCP-06) · 정규화된 꼴
+      (2 회차 RCP2-02)) · Runner env ·
       봉인 원천 (RunnerGraphSource) 은 절대 안 받음 · 부모 셸 값은 지운다 · CODE_FILES · 규율 검사기 격리 목록 · CLI 회계 (이 사용자 소유 = 대피 4 덧)
 ⚠ PASS = 저장 · 읽기 · 거부 배선이 계약대로라는 증거이지 원장 (기하) 의 물리 검증이 아니다.  저장본 자신은 **자기 일관 위조** (같은 열쇠 이름 ·
    다시 센 지문) 를 가리지 못한다 — 그 몫 = 봉인 원천 재조립 대조이고 **SV 모서리 팔 (끝 그래프 지문) 만** 덮는다 (사다리 · 비 SV 예측 · 단위 팔은
@@ -56,6 +63,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import shutil
 import signal
 import stat
@@ -452,10 +460,10 @@ def t0():
     if not need_cs('T0'):
         return
     names = ('STORE_FORMAT', 'Store', 'StoreInconsistent', 'Unsupported', 'strict_digest', 'encode', 'decode', 'outcome_line',
-             'machine_fp', 'file_name', 'STATUSES', 'WARN_STATUSES')
+             'machine_fp', 'file_name', 'STATUSES', 'WARN_STATUSES', 'code_drift', 'CODE_CHANGED')
     miss = [n for n in names if not hasattr(CS, n)]
     chk('T0 cjunc_store API (Store · StoreInconsistent · Unsupported · strict_digest · encode · decode · outcome_line · machine_fp · file_name · '
-        '상태 어휘)', not miss, miss)
+        '상태 어휘 · 런 도중 코드 바뀜 (code_drift · CODE_CHANGED — 2 회차 RCP2-01))', not miss, miss)
     chk('T0 상태 어휘 = 적중 · 지어 씀 · 남이 같은 원장 · 못 읽어 다시 지음 · 저장 건너뜀 · 저장 실패 · 꺼짐 · 열쇠 못 셈 (경고 = 뒤 다섯)',
         tuple(CS.STATUSES) == ('hit', 'built_written', 'built_peer_same', 'unreadable_rebuilt', 'built_write_skipped',
                                'built_write_failed', 'disabled', 'key_unavailable')
@@ -1029,7 +1037,11 @@ def t7():
               '꼴 판 다름': lambda p: rezip(p, p, edit=hdr_edit(lambda h: h.update(format='cjstore-v0'))),
               '심볼릭 링크': to_symlink, '폴더': to_dir,
               #  ★ 11-12 (내부 반박 리뷰 RCP-06) — 이 코드는 0444 로만 발행한다 · 손으로 0666 이 된 파일 = 남이 바꿀 수 있었다
-              '파일 모드 0666 (그룹 · 남 쓰기)': lambda p: os.chmod(p, 0o666)}
+              '파일 모드 0666 (그룹 · 남 쓰기)': lambda p: os.chmod(p, 0o666),
+              #  ★ 11-12 2 회차 (재리뷰 RCP2-03) — 그룹 쓰기만 · 남 쓰기만 갈래 (0666 하나로는 검사가 둘 중 하나만 보는 변이 (0o022 → 0o002 · 0o020) 를
+              #    못 가른다 — 재리뷰 변이 N9 안 잡힘)
+              '파일 모드 0664 (그룹 쓰기만)': lambda p: os.chmod(p, 0o664), '파일 모드 0464 (그룹 쓰기만 · 소유자 읽기만)': lambda p: os.chmod(p, 0o464),
+              '파일 모드 0646 (남 쓰기만)': lambda p: os.chmod(p, 0o646), '파일 모드 0446 (남 쓰기만 · 소유자 읽기만)': lambda p: os.chmod(p, 0o446)}
     bad = {}
     for i, (nm, fn) in enumerate(cases_.items()):
         d = new_store_dir(f't7_{i}')
@@ -1044,8 +1056,9 @@ def t7():
         if not (ok and n[0] == 0 and store_files(d) == listing and before == after):
             bad[nm] = (ok, why, n, store_files(d))
     chk(f'T7 어긋남 {len(cases_)} 갈래 → StoreInconsistent (짓기 0 회 · 폴더 · 파일 그대로) — 이름 바꿈 · 뼈대 (바꿔 끼움 · 바이트만) · 머리 지문 · '
-        '배열 · 배열 뒤 남는 바이트 · 배열 + 지문 위조 (registry_fp) · sid 지문 · 머리 JSON · 꼴 판 · 심볼릭 링크 · 폴더 · 파일 모드 0666 (RCP-06)',
-        not bad and len(cases_) == 13, bad)
+        '배열 · 배열 뒤 남는 바이트 · 배열 + 지문 위조 (registry_fp) · sid 지문 · 머리 JSON · 꼴 판 · 심볼릭 링크 · 폴더 · 파일 모드 0666 (RCP-06) · '
+        '그룹 쓰기만 둘 · 남 쓰기만 둘 (2 회차 RCP2-03)',
+        not bad and len(cases_) == 17, bad)
     #  ★ 11-12 (내부 반박 리뷰 RCP-06) — 파일 소유자 ≠ 이 사용자 (이 코드는 남의 파일을 만들지 않는다 · 폴더가 0777 이던 때 남이 넣은 파일 꼴) = 멈춤.
     #    root = 진짜 chown · 아니면 os.getuid 를 잠깐 다른 번호로 (`other_owner` — Store 는 그 전에 만든다 = 폴더 검사는 지난다)
     d = new_store_dir('t7_owner')
@@ -1397,9 +1410,19 @@ def t11():
     rel_ok = new_store_dir('t11_rel')                          # 있는 폴더의 상대 경로 (절대 경로 검사만 걸리게)
     lk = os.path.join(TD, 'stores', 't11_link')                # ★ 11-12 (내부 반박 리뷰 RCP-06) — 뿌리가 심볼릭 링크 (가리키는 폴더는 꼴이 맞다)
     os.symlink(new_store_dir('t11_link_target'), lk)
+    ow2 = new_store_dir('t11_ow')                              # ★ 11-12 2 회차 (재리뷰 RCP2-03) — 남 쓰기만 (그룹 쓰기만 = gw 0775)
+    os.chmod(ow2, 0o757)
+    nd = new_store_dir('t11_norm')                              # ★ 11-12 2 회차 (재리뷰 RCP2-02) — 정규화 안 된 꼴 (`.` · `..` · 빈 성분) = 링크 검사를 비켜 간다
+    sdir = os.path.join(TD, 'stores')
     for nm, pth, word in (('상대 경로 (있는 폴더)', os.path.relpath(rel_ok), None), ('없는 폴더', os.path.join(TD, 'stores', 'nope'), None),
-                          ('파일', fpth, None), ('그룹이 쓸 수 있음', gw, None), ('심볼릭 링크 폴더', lk, '심볼릭'),
-                          ('심볼릭 링크 폴더 (끝 빗금)', lk + '/', '심볼릭'), ('심볼릭 링크 폴더 (끝 빗금 둘)', lk + '//', '심볼릭')):
+                          ('파일', fpth, None), ('그룹이 쓸 수 있음', gw, '그룹 · 남'), ('남만 쓸 수 있음 (0757 · RCP2-03)', ow2, '그룹 · 남'),
+                          ('심볼릭 링크 폴더', lk, '심볼릭'),
+                          ('심볼릭 링크 폴더 (끝 빗금)', lk + '/', '심볼릭'), ('심볼릭 링크 폴더 (끝 빗금 둘)', lk + '//', '심볼릭'),
+                          ('심볼릭 링크 + /. (RCP2-02)', lk + '/.', '정규화'), ('심볼릭 링크 + /./ (RCP2-02)', lk + '/./', '정규화'),
+                          ('심볼릭 링크 + /../<이름>/. (RCP2-02)', lk + '/../t11_link/.', '정규화'),
+                          ('실제 폴더 + /. (RCP2-02)', nd + '/.', '정규화'), ('실제 폴더 · 가운데 // (RCP2-02)', sdir + '//t11_norm', '정규화'),
+                          ('실제 폴더 · 가운데 /./ (RCP2-02)', sdir + '/./t11_norm', '정규화'),
+                          ('실제 폴더 · 가운데 /../ (RCP2-02)', sdir + '/../stores/t11_norm', '정규화')):
         try:
             CS.Store(pth)
             bad_dirs[nm] = '받았다'
@@ -1415,7 +1438,14 @@ def t11():
             why_own = str(e)
     if why_own is not None and '소유자' not in why_own:
         bad_dirs['다른 소유자'] = f'다른 사유로 거부: {why_own}'
-    res['폴더 꼴 거부 (상대 · 없음 · 파일 · 남이 씀 · 다른 소유자 · 심볼릭 링크 셋 (RCP-06))'] = (not bad_dirs, bad_dirs)
+    #  정규화된 꼴은 그대로 받는다 (과잉 거부 없음 — 끝 빗금은 걷는다)
+    for nm, pth in (('정규화된 실제 폴더', nd), ('정규화된 실제 폴더 + 끝 빗금', nd + '/')):
+        try:
+            CS.Store(pth)
+        except ValueError as e:
+            bad_dirs[nm] = f'거부됨: {e}'
+    res['폴더 꼴 거부 (상대 · 없음 · 파일 · 그룹 · 남 쓰기 (남만 = RCP2-03) · 다른 소유자 · 심볼릭 링크 셋 (RCP-06) · 정규화 안 된 꼴 일곱 (RCP2-02)) · '
+        '정규화된 꼴 둘은 받음'] = (not bad_dirs, bad_dirs)
     bad_inp = dict(inp, kind=None)
     try:
         quiet(CJ.cjunc_registry, inp['sid'], inp['lo'], inp['vox'], inp['pts'], inp['phase'], inp['fid'], None, **inp['thresholds'])
@@ -1541,9 +1571,11 @@ def t13():
         (n_mem, len(arrs2), deep_diff(big, back2)))
 
 
-# ═════════════════════════ T14 (11-12 내부 반박 리뷰 RCP-01) ═════════════════════════
+# ═════════════════════════ T14 (11-12 내부 반박 리뷰 RCP-01 · 2 회차 재리뷰 RCP2-05) ═════════════════════════
 #: 원장 (기하) 을 짓는 코드 = 열쇠의 코드 칸 (모듈 넷 — 원장 함수 · 그 선분 → 셀 함수 · 격자 지문 함수 · 직렬화기)
 KEY_CODE_FILES = ('carbon_junction.py', 'step3_sigma.py', 'fibre_segment_raster.py', 'cjunc_store.py')
+#: 시험 쪽 독립 목록 (모듈의 CODE_MODULES 를 읽지 않는다 — 그 목록을 바꾼 변이가 T14b 허용을 조용히 넓히지 못하게)
+KEY_MODULES = tuple(f[:-3] for f in KEY_CODE_FILES)
 #: 새 프로세스 탐침 — payload 가 저장본 (Store) 을 만들기 전에 이미 부른 모듈만 있는 꼴에서 Store() 가 프로젝트 모듈을 새로 부르는가
 T14_PROBE = r'''
 import json, os, sys
@@ -1569,9 +1601,67 @@ print('T14PROBE ' + json.dumps({'new_project': sorted(proj() - before), 'fsr_bef
 '''
 
 
+def _pkg_dir(mod):
+    return os.path.dirname(os.path.realpath(mod.__file__))
+
+
+def _std_dirs():
+    import sysconfig
+    out = set()
+    for k in ('stdlib', 'platstdlib'):
+        p = sysconfig.get_paths().get(k)
+        if p:
+            out.add(os.path.realpath(p))
+    return out
+
+
+def file_kind(f):
+    """원장 짓기 동안 돈 파일 하나의 출처 → 'key' (scripts/ 의 열쇠 코드 넷) · 'test' (이 시험 파일 — 짓기 함수 · quiet) · 'frozen' (`<frozen …>` ·
+    `<string>`) · 'stdlib' (표준 라이브러리 폴더 · site-/dist-packages 밖) · 'numpy' · 'scipy' (그 패키지 폴더) · 'other' (그 밖 전부 = 열쇠 밖 코드).
+    ★ 11-12 2 회차 (재리뷰 RCP2-05) — 옛 판은 scripts/ 안 파일만 봐서 scripts/ 밖 모듈 · numpy · scipy 밖 제3자 패키지 (판이 열쇠 밖) 를 걸렀다 (부분집합
+    필터 · 규율 ⑤) → 이제 허용 목록 밖 = 'other' = 실패."""
+    if f.startswith('<'):
+        return 'frozen'
+    a = os.path.realpath(f)
+    if os.path.dirname(a) == os.path.realpath(SCRIPTS) and os.path.basename(a) in KEY_CODE_FILES:
+        return 'key'
+    if a == os.path.realpath(__file__):
+        return 'test'
+    import scipy
+    for nm, d in (('numpy', _pkg_dir(np)), ('scipy', _pkg_dir(scipy))):
+        if a.startswith(d + os.sep):
+            return nm
+    parts = a.split(os.sep)
+    if 'site-packages' not in parts and 'dist-packages' not in parts and any(a.startswith(d + os.sep) for d in _std_dirs()):
+        return 'stdlib'
+    return 'other'
+
+
+def mod_kind(name):
+    """import 문의 꼭대기 모듈 이름 → '__future__' · 'stdlib' · 'numpy' · 'scipy' · 'key' (열쇠 코드 넷) · 'other' (프로젝트 모듈 · 제3자 패키지 ·
+    못 찾음).  찾기 = `importlib.util.find_spec` (꼭대기 이름 = 불러오지 않는다) 의 파일 출처 → `file_kind` 와 같은 표준 라이브러리 판정."""
+    if name == '__future__':
+        return '__future__'
+    if name in ('numpy', 'scipy'):
+        return name
+    if name in KEY_MODULES:
+        return 'key'
+    if name in sys.builtin_module_names:
+        return 'stdlib'
+    try:
+        spec = importlib.util.find_spec(name)
+    except (ImportError, ValueError):
+        return 'other'
+    origin = getattr(spec, 'origin', None) if spec is not None else None
+    if origin in ('built-in', 'frozen'):
+        return 'stdlib'
+    if not origin:
+        return 'other'
+    return 'stdlib' if file_kind(origin) == 'stdlib' else 'other'
+
+
 def ran_files(fn):
-    """fn() 을 부르는 동안 실제로 돈 (sys.setprofile 'call' 사건 — 모듈 본문 실행 포함) `scripts/` 파일 이름 집합 (이 시험 파일 뺌) → (값, 이름 집합)."""
-    me = os.path.abspath(__file__)
+    """fn() 을 부르는 동안 실제로 돈 (sys.setprofile 'call' 사건 — 모듈 본문 실행 포함) 파일 전부 (실경로 · `<…>` 는 그대로) → (값, 파일 집합)."""
     seen = set()
 
     def hook(frame, event, arg):
@@ -1584,92 +1674,94 @@ def ran_files(fn):
             val = fn()
         finally:
             sys.setprofile(old)
-    names = set()
-    for f in seen:
-        a = os.path.abspath(f)
-        if os.path.dirname(a) == SCRIPTS and a != me:
-            names.add(os.path.basename(a))
-    return val, names
+    return val, {f if f.startswith('<') else os.path.realpath(f) for f in seen}
 
 
-def project_imports(fn):
-    """scripts/<fn> 의 import 문 (함수 안 포함 · AST 전수) 이 부르는 프로젝트 모듈 (scripts/ 안 파일) · 동적 import 흔적 (importlib · __import__)."""
+def import_names(src):
+    """소스의 import 문 (함수 안 포함 · AST 전수) → (꼭대기 모듈 이름 집합 · 상대 import 있음 · 동적 import 흔적 (importlib · __import__ · import_module))."""
     import ast
-    src = open(os.path.join(SCRIPTS, fn), encoding='utf-8').read()
-    mods = set()
+    mods, rel = set(), False
     for nd in ast.walk(ast.parse(src)):
         if isinstance(nd, ast.Import):
             mods |= {al.name.split('.')[0] for al in nd.names}
         elif isinstance(nd, ast.ImportFrom):
-            mods.add('<상대 import>' if nd.level else (nd.module or '').split('.')[0])
+            if nd.level:
+                rel = True
+            else:
+                mods.add((nd.module or '').split('.')[0])
     dyn = 'importlib' in mods or '__import__' in src or 'import_module' in src
-    return {m for m in mods if m == '<상대 import>' or os.path.isfile(os.path.join(SCRIPTS, m + '.py'))}, dyn
+    return mods, rel, dyn
 
 
-@case('T14 열쇠 코드 칸 = 원장 짓기가 실제로 부르는 코드 (11-12 내부 반박 리뷰 RCP-01)')
+def import_violations(src):
+    """허용 (표준 라이브러리 ∪ {numpy, scipy} ∪ 열쇠 코드 넷 ∪ __future__) 밖 import → 정렬 목록 (상대 import · 동적 import 흔적 포함)."""
+    mods, rel, dyn = import_names(src)
+    bad = sorted(m for m in mods if mod_kind(m) == 'other')
+    return bad + (['<상대 import>'] if rel else []) + (['<동적 import>'] if dyn else [])
+
+
+@case('T14 열쇠 코드 칸 = 원장 짓기가 실제로 부르는 코드 (11-12 내부 반박 리뷰 RCP-01 · 2 회차 RCP2-05)')
 def t14():
     if not need_cs('T14'):
         return
-    import hashlib
+    import json as _json_mod
     d = new_store_dir('t14')
     code_names = set(mk_store(d).code)
-    #  (a) 동적 — 원장 짓기 동안 실제로 돈 scripts/ 파일 (픽스처 넷: instance 하나 (SDCP) · 둘 · 조밀 (자기 · 긴 접촉 · 고리 · PTFE · SDCP) · 무작위)
+    #  (판별력) 분류기 — 열쇠 밖 프로젝트 모듈 · site-packages 꼴 파일 · 못 찾는 모듈 = other · 표준 · numpy · frozen 은 그 이름
+    cls_ok = (file_kind(os.path.join(SCRIPTS, 'run_contract.py')) == 'other' and file_kind(os.path.join(SCRIPTS, 'carbon_junction.py')) == 'key'
+              and file_kind(np.__file__) == 'numpy' and file_kind(_json_mod.__file__) == 'stdlib'
+              and file_kind(os.path.join(os.sep, 'x', 'site-packages', 'foo.py')) == 'other' and file_kind('<frozen importlib._bootstrap>') == 'frozen'
+              and mod_kind('json') == 'stdlib' and mod_kind('numpy') == 'numpy' and mod_kind('run_contract') == 'other'
+              and mod_kind('se_material') == 'other' and mod_kind('zz_no_such_module_t14') == 'other' and mod_kind('step3_sigma') == 'key'
+              and import_violations('import json\nimport zz_no_such_module_t14\nfrom run_contract import x\nimport numpy.linalg\n'
+                                    'from . import y\ndef f():\n    import scipy.sparse\n') == ['run_contract', 'zz_no_such_module_t14', '<상대 import>'])
+    chk('T14 (판별력) 분류기 — scripts/ 의 열쇠 밖 모듈 · site-packages 꼴 · 못 찾는 이름 = 허용 밖 · 표준 · numpy · frozen · 열쇠 = 그 이름 · 합성 소스의 '
+        '허용 밖 import (제3자 · 프로젝트 · 상대) 를 잡는다 (2 회차 RCP2-05)', cls_ok,
+        (file_kind(os.path.join(SCRIPTS, 'run_contract.py')), file_kind(np.__file__), file_kind(_json_mod.__file__), mod_kind('json'),
+         mod_kind('run_contract')))
+    #  (a) 동적 — 원장 짓기 동안 실제로 돈 파일 전부 (픽스처 넷: instance 하나 (SDCP) · 둘 · 조밀 (자기 · 긴 접촉 · 고리 · PTFE · SDCP) · 무작위)
     ran, per = set(), {}
     for nm, inp in (('f1', f1_inputs()), ('f5', f5_inputs()), ('dense3', dense_inputs(3)), ('rand7', rand_inputs(7))):
-        _reg, names = ran_files(lambda inp=inp: CJ.cjunc_registry(inp['sid'], inp['lo'], inp['vox'], inp['pts'], inp['phase'], inp['fid'],
+        _reg, files = ran_files(lambda inp=inp: CJ.cjunc_registry(inp['sid'], inp['lo'], inp['vox'], inp['pts'], inp['phase'], inp['fid'],
                                                                    inp['kind'], **inp['thresholds']))
-        per[nm] = sorted(names)
-        ran |= names
-    chk('T14a 원장 짓기 동안 실제로 돈 scripts/ 파일 (sys.setprofile · 픽스처 넷) ⊆ 열쇠 코드 칸 · 알려진 셋 (carbon_junction · step3_sigma (_grid_fp) · '
-        'fibre_segment_raster (segment_cells)) 이 잡힌다 (갈고리 판별력) — 고치기 전 = fibre_segment_raster 가 열쇠 밖 (리뷰 반례 CE1 의 뿌리)',
-        ran <= code_names and {'carbon_junction.py', 'step3_sigma.py', 'fibre_segment_raster.py'} <= ran,
-        f'돈 파일 {sorted(ran)} · 열쇠 코드 칸 {sorted(code_names)} · 열쇠 밖 {sorted(ran - code_names)} · 픽스처별 {per}')
-    #  (b) 정적 — 원장 모듈 둘의 import 문 전수 (픽스처가 안 지나는 갈래도 덮는다 · step3_sigma 는 _grid_fp 한 함수만 쓰므로 (a) 가 본다)
+        per[nm] = sorted({file_kind(f) for f in files})
+        ran |= files
+    kinds = {f: file_kind(f) for f in ran}
+    other = sorted(f for f, k in kinds.items() if k == 'other')
+    key_seen = {os.path.basename(f) for f, k in kinds.items() if k == 'key'}
+    chk('T14a 원장 짓기 동안 실제로 돈 파일 (sys.setprofile · 픽스처 넷) = 표준 라이브러리 · numpy · scipy · 열쇠 코드 칸 · 이 시험 파일뿐 (그 밖 = scripts/ '
+        '밖 모듈 · 제3자 패키지도 실패 · 2 회차 RCP2-05) · 알려진 셋 (carbon_junction · step3_sigma (_grid_fp) · fibre_segment_raster (segment_cells)) 이 '
+        '잡힌다 (갈고리 판별력) — 1 회차 고치기 전 = fibre_segment_raster 가 열쇠 밖 (리뷰 반례 CE1 의 뿌리)',
+        not other and key_seen <= code_names and {'carbon_junction.py', 'step3_sigma.py', 'fibre_segment_raster.py'} <= key_seen,
+        f'허용 밖 {other[:6]} · 열쇠로 잡힌 것 {sorted(key_seen)} · 열쇠 코드 칸 {sorted(code_names)} · 픽스처별 출처 {per}')
+    #  (b) 정적 — 원장 모듈 둘의 import 문 전수 (픽스처가 안 지나는 갈래도 덮는다 · step3_sigma 는 _grid_fp 한 함수만 쓰므로 (a) 가 본다 · cjunc_store 의
+    #      run_contract import = 열쇠의 환경 칸 · 폴더 꼴 검사뿐 (원장 바이트 밖))
     st_bad = {}
     for fn in ('carbon_junction.py', 'fibre_segment_raster.py'):
-        pm, dyn = project_imports(fn)
-        extra = sorted({m + '.py' for m in pm} - code_names)
-        if extra or dyn:
-            st_bad[fn] = (extra, dyn)
-    chk('T14b 원장 모듈 둘 (carbon_junction · fibre_segment_raster) 의 import 문 (함수 안 포함 · AST 전수) 이 부르는 프로젝트 모듈 ⊆ 열쇠 코드 칸 · '
-        '동적 import (importlib · __import__) 없음', not st_bad, st_bad)
-    #  (c) 리뷰 반례 CE1 (in-process) — 원 코드로 지어 쓴 폴더를, 선분 → 셀 차례만 뒤집은 fibre_segment_raster (칸 집합 · sid 지문 그대로) 로 연다
+        v = import_violations(open(os.path.join(SCRIPTS, fn), encoding='utf-8').read())
+        if v:
+            st_bad[fn] = v
+    chk('T14b 원장 모듈 둘 (carbon_junction · fibre_segment_raster) 의 import 문 (함수 안 포함 · AST 전수) ⊆ 표준 라이브러리 ∪ {numpy, scipy} ∪ 열쇠 코드 넷 '
+        '(그 밖 = 프로젝트 · 제3자 패키지 · 상대 · 동적 import = 실패 · 2 회차 RCP2-05 — 옛 판은 scripts/ 파일이 있는 이름만 봤다)', not st_bad, st_bad)
+    #  (c) 리뷰 반례 CE1 — 원 코드로 지어 쓴 폴더를, 선분 → 셀 차례만 뒤집은 fibre_segment_raster (칸 집합 · sid 지문 그대로) 로 돈 **새 프로세스**가 연다
+    #      (★ 2 회차 RCP2-01 — 같은 프로세스에서 모듈을 바꿔 끼우면 이제 '런 도중 코드 바뀜' 으로 저장본이 꺼진다 = T15 · 다른 코드 판 = 다른 프로세스)
     inp = dense_inputs(7)
     d2 = new_store_dir('t14_ce1')
     s_o = mk_store(d2)
     k_o = s_o.key(**inp)
     reg_o, o1 = s_o.get_or_build(build_of(inp), **inp)
-    src = open(os.path.join(SCRIPTS, 'fibre_segment_raster.py'), encoding='utf-8').read()
-    old_line = '    return np.asarray(out[::-1] if _swap else out, np.int64)\n'
-    mdir = os.path.join(TD, 'mutfsr')
-    os.makedirs(mdir)
-    mp = os.path.join(mdir, 'fibre_segment_raster.py')
-    with open(mp, 'w', encoding='utf-8') as f:
-        f.write(src.replace(old_line, '    return np.asarray(out if _swap else out[::-1], np.int64)   # T14c (CE1) 변이\n', 1))
-    spec = importlib.util.spec_from_file_location('fibre_segment_raster', mp)
-    mut = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mut)
-    real = sys.modules.get('fibre_segment_raster')
-    sys.modules['fibre_segment_raster'] = mut                  # 원장의 `_positions` 가 부를 때 (함수 안 import) 이 판을 받는다
-    try:
-        n = [0]
-        s_m = mk_store(d2)
-        k_m = s_m.key(**inp)
-        reg_m, o2 = s_m.get_or_build(build_of(inp, n), **inp)
-        fresh_m = build_of(inp)()
-    finally:
-        if real is not None:
-            sys.modules['fibre_segment_raster'] = real
-        else:
-            sys.modules.pop('fibre_segment_raster', None)
-    fp_o, fp_m, fp_f = reg_o['fp']['registry'], reg_m['fp']['registry'], fresh_m['fp']['registry']
-    chk('T14c 리뷰 반례 CE1 — 원 코드로 지어 쓴 저장본 폴더를 fibre_segment_raster 의 선분 → 셀 차례만 뒤집은 판 (칸 집합 · sid 지문 그대로) 에서 연다 → '
-        '다른 열쇠 · 적중 아님 (새로 지어 씀 · 짓기 1 회) · 돌려준 원장 = 그 판으로 따로 지은 원장 (registry_fp) ≠ 옛 저장 원장 · 파일 둘 (옛 파일 그대로)',
-        src.count(old_line) == 1 and o1['status'] == 'built_written' and k_m != k_o and o2['status'] == 'built_written' and n[0] == 1
-        and fp_m == fp_f and fp_m != fp_o and reg_o['fp']['sid'] == reg_m['fp']['sid'] and len(store_files(d2)) == 2,
-        (o1['status'], o2['status'], n, k_o[:12], k_m[:12], fp_o[:12], fp_m[:12], fp_f[:12]))
+    mut_src, n_line = t15_mutant_text()
+    cdir = t15_code_dir('t14c', fsr_text=mut_src)
+    got = t15_run(cdir, d2, 'honest')
+    chk('T14c 리뷰 반례 CE1 — 원 코드로 지어 쓴 저장본 폴더를 fibre_segment_raster 의 선분 → 셀 차례만 뒤집은 판 (칸 집합 · sid 지문 그대로) 으로 돈 새 '
+        '프로세스가 연다 → 다른 열쇠 · 적중 아님 (새로 지어 씀 · 짓기 1 회) · 돌려준 원장 = 그 판으로 따로 지은 원장 (registry_fp) ≠ 옛 저장 원장 · 파일 둘 '
+        '(옛 파일 그대로)',
+        n_line == 1 and o1['status'] == 'built_written' and got.get('status') == 'built_written' and got.get('builds') == 1
+        and got.get('key') != k_o[:16] and got.get('reg_fp') == got.get('fresh_fp') and got.get('reg_fp') != reg_o['fp']['registry'][:16]
+        and len(store_files(d2)) == 2, (o1['status'], got, k_o[:16], reg_o['fp']['registry'][:16]))
     #  (d) 새 프로세스 — Store() 가 열쇠 코드 칸을 셀 때 프로젝트 모듈을 새로 부르지 않는다 (find_spec · 매니페스트 exec_env 의 로드 모듈 집합 ·
     #      내용 해시가 저장본 켬 ↔ 끔에서 같게) · 코드 칸 = 네 파일 = 디스크의 지금 sha256
+    import hashlib
     probe = os.path.join(TD, 'drv', 't14_probe.py')
     with open(probe, 'w', encoding='utf-8') as f:
         f.write(T14_PROBE)
@@ -1682,6 +1774,200 @@ def t14():
         '매니페스트 exec_env 그대로) · 코드 칸 = carbon_junction · step3_sigma · fibre_segment_raster · cjunc_store 네 파일 = 디스크의 지금 sha256',
         r.returncode == 0 and got.get('new_project') == [] and got.get('fsr_before') is False and got.get('fsr_after') is False
         and got.get('code') == want, (r.returncode, got, (r.stderr or '')[-400:]))
+
+
+# ═════════════════════════ T15 (11-12 2 회차 재리뷰 RCP2-01) ═════════════════════════
+#: 새 프로세스 — 코드 사본 폴더 (열쇠 코드 파일 넷) 를 sys.path 맨 앞에 두고 저장본을 쓴다.  mode = 그 런 도중 (cjunc_store 를 불러온 뒤 = 런 시작
+#  뒤) 에 무엇을 바꾸나: honest (안 바꿈) · ce_a (재리뷰 CE-A 꼴 — fibre_segment_raster 를 먼저 불러 두고 그 파일을 바꾼 뒤 Store) · before_store
+#  (cjunc_store 만 불러 두고 바꾼 뒤 Store) · during_build (Store 뒤 짓는 도중 — fibre_segment_raster 는 아직 안 불림 = 짓기가 새 판을 부른다) ·
+#  during_write (쓰는 도중 — 발행 직전 다시 셈만 잡는다) · touch (내용 그대로 다시 씀 · 수정 시각 = 시작 뒤 5 s — 뒤집었다 되돌린 꼴).
+T15_DRIVER = r'''
+import json, os, sys, time
+code_dir, scripts, store, mfile, inp_path, mode, mut_path = sys.argv[1:8]
+sys.path.insert(0, scripts)
+sys.path.insert(0, code_dir)
+if mode == 'ce_a':
+    import fibre_segment_raster                       # noqa: F401 — payload 의 래스터화 꼴 (원장 모듈을 먼저 불러 둔다 · 재리뷰 CE-A)
+import cjunc_store as CS                              # 런 시작 (payload = 입구 계약이 원장 모듈보다 먼저 부른다 · 시험 P6)
+t_after_import = time.time_ns()
+import numpy as np
+import carbon_junction as CJ
+import step3_sigma                                    # noqa: F401
+z = np.load(inp_path, allow_pickle=False)
+inp = dict(sid=z['sid'], lo=tuple(float(x) for x in z['lo']), vox=float(z['vox']), pts=z['pts'], phase=z['phase'], fid=z['fid'],
+           kind=z['kind'], thresholds=json.loads(str(z['thr'])))
+fsr = os.path.join(code_dir, 'fibre_segment_raster.py')
+
+
+def swap():                                           # 같은 자리 · 새 내용 (CE1 변이 = 선분 -> 셀 차례만 뒤집음)
+    data = open(mut_path, encoding='utf-8').read()
+    os.unlink(fsr)
+    with open(fsr, 'w', encoding='utf-8') as f:
+        f.write(data)
+
+
+def reg_of():
+    return CJ.cjunc_registry(inp['sid'], inp['lo'], inp['vox'], inp['pts'], inp['phase'], inp['fid'], inp['kind'], **inp['thresholds'])
+
+
+n = [0]
+
+
+def build():
+    n[0] += 1
+    if mode == 'during_build':
+        swap()
+    return reg_of()
+
+
+start = getattr(CS, '_START', None)
+if mode in ('ce_a', 'before_store'):
+    swap()
+elif mode == 'touch':
+    data = open(fsr, 'rb').read()
+    os.unlink(fsr)
+    with open(fsr, 'wb') as f:
+        f.write(data)
+    t = ((start or {}).get('t_ns') or time.time_ns()) + 5000000000
+    os.utime(fsr, ns=(t, t))
+elif mode == 'during_write':
+    _old = CS._write_zip
+
+    def _wz(*a, **k):
+        swap()
+        return _old(*a, **k)
+    CS._write_zip = _wz
+st = CS.Store(store, machine_paths=(mfile,))
+reg, out = st.get_or_build(build, **inp)
+fresh = reg_of()
+files = sorted(os.listdir(store))
+st_rec = None if start is None else {k: start.get(k) for k in ('t_ns', 'code', 'preloaded', 'error')}
+print('T15DRV ' + json.dumps({'mode': mode, 'status': out['status'], 'why': out.get('why'), 'key': (out.get('key') or '')[:16],
+                              'builds': n[0], 'reg_fp': reg['fp']['registry'][:16], 'fresh_fp': fresh['fp']['registry'][:16],
+                              'files': files, 'code_fsr': st.code.get('fibre_segment_raster.py', '')[:16], 'start': st_rec,
+                              't_after_import': t_after_import}, ensure_ascii=False))
+'''
+T15_FX = {}
+
+
+def t15_mutant_text():
+    """CE1 변이 (fibre_segment_raster 의 선분 → 셀 차례만 뒤집음 · 칸 집합 · sid 지문 그대로) → (소스, 바뀐 줄 수)."""
+    src = open(os.path.join(SCRIPTS, 'fibre_segment_raster.py'), encoding='utf-8').read()
+    old_line = '    return np.asarray(out[::-1] if _swap else out, np.int64)\n'
+    return src.replace(old_line, '    return np.asarray(out if _swap else out[::-1], np.int64)   # T14c · T15 (CE1) 변이\n', 1), src.count(old_line)
+
+
+def t15_code_dir(name, fsr_text=None):
+    """열쇠 코드 파일 넷의 사본 폴더 (fsr_text = 그 fibre_segment_raster 소스) — 새 프로세스의 sys.path 맨 앞 (나머지 모듈은 scripts/)."""
+    d = os.path.join(TD, 'code_' + name)
+    os.makedirs(d)
+    for fn in KEY_CODE_FILES:
+        if fn == 'fibre_segment_raster.py' and fsr_text is not None:
+            with open(os.path.join(d, fn), 'w', encoding='utf-8') as f:
+                f.write(fsr_text)
+        else:
+            shutil.copyfile(os.path.join(SCRIPTS, fn), os.path.join(d, fn))
+    return d
+
+
+def t15_inputs_file():
+    """조밀 침대 dense_inputs(7) → npz (새 프로세스가 같은 입력을 읽는다 · 문턱 = JSON)."""
+    p = T15_FX.get('inp')
+    if p is None:
+        inp = dense_inputs(7)
+        p = os.path.join(TD, 'drv', 't15_inp.npz')
+        np.savez(p, sid=inp['sid'], lo=np.asarray(inp['lo'], np.float64), vox=np.float64(inp['vox']), pts=inp['pts'], phase=inp['phase'],
+                 fid=inp['fid'], kind=inp['kind'], thr=np.array(json.dumps(inp['thresholds'])))
+        T15_FX['inp'] = p
+    return p
+
+
+def t15_run(code_dir, store, mode, mut=None):
+    """드라이버 한 번 (새 프로세스) → 결과 dict (+ rc · stderr 끝 · 띄우기 직전 시각)."""
+    drv = os.path.join(TD, 'drv', 't15_drv.py')
+    if not os.path.exists(drv):
+        with open(drv, 'w', encoding='utf-8') as f:
+            f.write(T15_DRIVER)
+    if mut is None:
+        mut = T15_FX.get('mut')
+        if mut is None:
+            mut = os.path.join(TD, 'drv', 't15_mut_fsr.py')
+            with open(mut, 'w', encoding='utf-8') as f:
+                f.write(t15_mutant_text()[0])
+            T15_FX['mut'] = mut
+    mfile = machine_file('A', ('%032x' % (abs(hash('A')) % (16 ** 32))))
+    t_launch = time.time_ns()
+    r = subprocess.run([sys.executable, drv, code_dir, SCRIPTS, store, mfile, t15_inputs_file(), mode, mut], capture_output=True, text=True,
+                       timeout=600, stdin=subprocess.DEVNULL)
+    m = [ln for ln in (r.stdout or '').splitlines() if ln.startswith('T15DRV ')]
+    got = json.loads(m[-1][7:]) if m else {}
+    got.update(rc=r.returncode, err=(r.stderr or '')[-300:], t_launch=t_launch)
+    return got
+
+
+@case('T15 런 도중 코드 바뀜 = 저장하지 않음 (11-12 2 회차 재리뷰 RCP2-01)')
+def t15():
+    if not need_cs('T15'):
+        return
+    import hashlib
+    mut_src, n_line = t15_mutant_text()
+    orig_fp = build_of(dense_inputs(7))()['fp']['registry'][:16]
+
+    def cc(g):
+        return isinstance(g.get('why'), str) and g['why'].startswith('code_changed')
+    #  (a) 재리뷰 CE-A — fibre_segment_raster 를 원판으로 불러 둔 뒤 같은 자리를 CE1 변이판으로 바꾸고 Store → 옛 판 = 변이판 열쇠에 원판 원장을 저장 ·
+    #      뒤의 정직한 런 (디스크 = 변이판) 이 적중으로 받았다 (재리뷰 실측 f24cbd6245dc · 833 위치 ↔ 그 판의 원장 202eb91e965d · 1,911)
+    sa, ca = new_store_dir('t15_a'), t15_code_dir('t15_a')
+    ga = t15_run(ca, sa, 'ce_a')
+    ga2 = t15_run(ca, sa, 'honest')                             # 새 프로세스 · 디스크 = 변이판 (정직한 런)
+    ga3 = t15_run(ca, sa, 'honest')
+    chk('T15a 재리뷰 CE-A (fibre_segment_raster 를 먼저 불러 둠 → 런 시작 뒤 그 파일이 변이판으로 → Store) → 저장 안 함 (꺼짐 · 사유 code_changed · 짓기 1 회 · '
+        '폴더 빈 채) · 뒤의 정직한 새 프로세스 (변이판) = 적중 아님 (새로 지어 씀) · 그 다음 = 적중 · 받은 원장 = 변이판으로 지은 원장 (≠ 원판 원장)',
+        n_line == 1 and ga.get('rc') == 0 and ga.get('status') == 'disabled' and cc(ga) and ga.get('builds') == 1 and ga.get('files') == []
+        and ga2.get('status') == 'built_written' and ga2.get('reg_fp') == ga2.get('fresh_fp') != orig_fp
+        and ga3.get('status') == 'hit' and ga3.get('builds') == 0 and ga3.get('reg_fp') == ga3.get('fresh_fp') and len(ga3.get('files') or []) == 1,
+        (ga, ga2.get('status'), ga2.get('reg_fp'), ga3.get('status'), ga3.get('reg_fp'), ga3.get('fresh_fp'), orig_fp))
+    #  (b) cjunc_store 만 불러 둔 뒤 (원장 모듈 아직 안 불림) 바꿈 → Store → 저장 안 함 (브리프 꼴: 시작 뒤 열쇠 코드 파일 하나를 바꿈)
+    sb, cb = new_store_dir('t15_b'), t15_code_dir('t15_b')
+    gb = t15_run(cb, sb, 'before_store')
+    chk('T15b 런 시작 (cjunc_store 를 불러온 때) 뒤 열쇠 코드 파일 하나 (fibre_segment_raster) 를 바꾸고 Store → 저장 안 함 (꺼짐 · code_changed · 짓기 1 회 · '
+        '폴더 빈 채 · 런 결과 = 지은 원장)',
+        gb.get('rc') == 0 and gb.get('status') == 'disabled' and cc(gb) and gb.get('builds') == 1 and gb.get('files') == []
+        and gb.get('reg_fp') == gb.get('fresh_fp'), gb)
+    #  (c) Store 뒤 짓는 도중 바뀜 (fibre_segment_raster 는 아직 안 불림 → 짓기가 변이판을 부른다 = 열쇠 (원판) ↔ 원장 (변이판)) → 발행 직전 다시 셈이
+    #      잡는다 · 그 폴더를 원판 코드로 다시 연 정직한 런 = 적중 아님 (옛 판 = 원판 열쇠로 변이판 원장을 적중으로 받았다)
+    sc, cc_dir = new_store_dir('t15_c'), t15_code_dir('t15_c')
+    gc_ = t15_run(cc_dir, sc, 'during_build')
+    gc2 = t15_run(t15_code_dir('t15_c_orig'), sc, 'honest')
+    chk('T15c Store 뒤 짓는 도중 열쇠 코드 파일이 바뀜 (짓기가 새 판을 불러 씀) → 발행 직전 다시 셈 ≠ 런 시작 → 저장 안 함 (건너뜀 · code_changed · 임시 파일 '
+        '없음) · 그 폴더를 원판 코드의 정직한 새 프로세스가 열면 새로 지어 씀 (받은 원장 = 원판 원장)',
+        gc_.get('rc') == 0 and gc_.get('status') == 'built_write_skipped' and cc(gc_) and gc_.get('builds') == 1 and gc_.get('files') == []
+        and gc2.get('status') == 'built_written' and gc2.get('reg_fp') == gc2.get('fresh_fp') == orig_fp,
+        (gc_, gc2.get('status'), gc2.get('reg_fp'), orig_fp))
+    #  (d) 쓰는 도중 바뀜 (발행 직전 다시 셈만 잡는다 — 짓기 · 열쇠는 같은 판)
+    sd_, cd_ = new_store_dir('t15_d'), t15_code_dir('t15_d')
+    gd = t15_run(cd_, sd_, 'during_write')
+    chk('T15d 쓰는 도중 (임시 파일 쓰기 · 발행 전) 열쇠 코드 파일이 바뀜 → 발행 직전 다시 셈이 잡는다 → 저장 안 함 (건너뜀 · code_changed · 임시 파일 없음 · '
+        '런 결과 = 지은 원장)', gd.get('rc') == 0 and gd.get('status') == 'built_write_skipped' and cc(gd) and gd.get('files') == []
+        and gd.get('reg_fp') == gd.get('fresh_fp') == orig_fp, gd)
+    #  (e) 내용 그대로 다시 씀 · 수정 시각 = 런 시작 뒤 (뒤집었다 되돌린 꼴 — 그 사이에 불린 모듈은 다른 판일 수 있다) → 꺼짐
+    se_, ce_ = new_store_dir('t15_e'), t15_code_dir('t15_e')
+    ge = t15_run(ce_, se_, 'touch')
+    chk('T15e 열쇠 코드 파일을 내용 그대로 다시 씀 · 수정 시각 = 런 시작 뒤 (뒤집었다 되돌린 꼴) → 저장 안 함 (꺼짐 · code_changed)',
+        ge.get('rc') == 0 and ge.get('status') == 'disabled' and cc(ge) and ge.get('files') == [], ge)
+    #  (f) 정직한 흐름 그대로 + 런 시작 기록 (모듈을 불러온 때의 시각 · 디스크 sha · 먼저 불린 원장 모듈)
+    sf, cf = new_store_dir('t15_f'), t15_code_dir('t15_f')
+    gf = t15_run(cf, sf, 'honest')
+    gf2 = t15_run(cf, sf, 'honest')
+    want = {fn: hashlib.sha256(open(os.path.join(cf, fn), 'rb').read()).hexdigest() for fn in KEY_CODE_FILES}
+    s1 = gf.get('start') or {}
+    chk('T15f 정직한 흐름 (코드 안 바뀜) = 지어 씀 → 다음 새 프로세스 적중 (짓기 0 회 · 같은 원장) · 런 시작 기록 = cjunc_store 를 불러온 때 (띄우기 직전 ≤ 시각 ≤ '
+        '불러온 직후) · 코드 칸 = 네 파일의 디스크 sha256 · 먼저 불린 원장 모듈 없음 (CE-A 꼴 = fibre_segment_raster 하나)',
+        gf.get('status') == 'built_written' and gf2.get('status') == 'hit' and gf2.get('builds') == 0 and gf2.get('reg_fp') == gf.get('reg_fp') == orig_fp
+        and isinstance(s1.get('t_ns'), int) and gf['t_launch'] <= s1['t_ns'] <= gf['t_after_import'] and s1.get('code') == want
+        and s1.get('preloaded') == [] and s1.get('error') is None
+        and ((ga.get('start') or {}).get('preloaded') == ['fibre_segment_raster']),
+        (gf.get('status'), gf2.get('status'), s1, gf.get('t_launch'), gf.get('t_after_import'), (ga.get('start') or {}).get('preloaded')))
 
 
 # ═════════════════════════ P — payload 끝-끝 ═════════════════════════
@@ -1720,13 +2006,16 @@ def t_payload():
     os.chmod(gw, 0o775)
     os.makedirs(os.path.join(wd, 'rel_store'))                 # 있는 폴더 (payload cwd 기준 상대 경로) — 절대 경로 검사만 걸린다
     os.chmod(os.path.join(wd, 'rel_store'), 0o755)
+    sdn = new_store_dir('pay_norm')                            # ★ 2 회차 RCP2-02 — 정규화 안 된 꼴 갈래의 폴더 (따로 · 고치기 전 판이 받아 쓰더라도 sd 를 안 건드린다)
     refuse = {'FLAG_WITHOUT_CJUNC': (B6.OFF + B6.LEAN2 + ['--step3-cjunc-store', sd], 'FLAG_WITHOUT_CJUNC'),
               'STORE_GRAPH_ONLY': (base + ['--step3-cjunc-graph-only', '--step3-cjunc-store', sd], 'STORE_GRAPH_ONLY'),
               #  ★ 11-12 (내부 반박 리뷰 RCP-10) — rasterize-only 는 접합 준비 전에 끝난다 = 저장본 인자가 조용히 안 쓰인다 → 거부 (조립만과 같은 줄)
               'STORE_RASTERIZE_ONLY': (base + ['--step3-rasterize-only', 'rast_refuse.json', '--step3-cjunc-store', sd], 'STORE_RASTERIZE_ONLY'),
               'STORE_PATH 상대': (base + ['--step3-cjunc-store', 'rel_store'], 'STORE_PATH'),
               'STORE_PATH 없음': (base + ['--step3-cjunc-store', os.path.join(sd, 'nope')], 'STORE_PATH'),
-              'STORE_PATH 남이 씀': (base + ['--step3-cjunc-store', gw], 'STORE_PATH')}
+              'STORE_PATH 남이 씀': (base + ['--step3-cjunc-store', gw], 'STORE_PATH'),
+              #  ★ 11-12 2 회차 (재리뷰 RCP2-02) — 정규화 안 된 꼴 (`<폴더>/.`) = 링크 검사를 비켜 가는 꼴 → 런 전 거부
+              'STORE_PATH 정규화 아님': (base + ['--step3-cjunc-store', sdn + '/.'], 'STORE_PATH')}
     bad = {}
     rast = os.path.join(wd, 'rast_refuse.json')
     for i, (nm, (extra, code)) in enumerate(refuse.items()):
@@ -1736,8 +2025,9 @@ def t_payload():
             os.unlink(rast)                                        # 다음 갈래가 이 파일을 보지 않게 (이 갈래의 실패로만 센다)
         if not (rc != 0 and f'S2_CJUNC_REFUSED|{code}|' in log and not os.path.exists(os.path.join(wd, f'refuse_{i}.json')) and not made_rast):
             bad[nm] = (rc, made_rast, log.strip()[-200:])
-    chk('P1 입구 거부 여섯 (접합 없이 · 조립만과 함께 · rasterize-only 와 함께 (RCP-10) · 상대 · 없는 폴더 · 남이 쓸 수 있는 폴더) → rc ≠ 0 · '
-        'S2_CJUNC_REFUSED|<코드>| · 출력 없음 (rasterize 원장도) · 저장 폴더 빈 채', not bad and store_files(sd) == [], (bad, store_files(sd)))
+    chk('P1 입구 거부 일곱 (접합 없이 · 조립만과 함께 · rasterize-only 와 함께 (RCP-10) · 상대 · 없는 폴더 · 남이 쓸 수 있는 폴더 · 정규화 안 된 꼴 '
+        '(2 회차 RCP2-02)) → rc ≠ 0 · S2_CJUNC_REFUSED|<코드>| · 출력 없음 (rasterize 원장도) · 저장 폴더 빈 채',
+        not bad and len(refuse) == 7 and store_files(sd) == [] and store_files(sdn) == [], (bad, store_files(sd), store_files(sdn)))
     #  ★ 11-12 (내부 반박 리뷰 RCP-10) — Store() 의 ValueError 밖 예외 (코드 파일을 못 읽음 OSError 꼴) 도 구조화 거부 STORE_PATH (traceback 아님) —
     #    입구 계약 (첫 Store) · 본 길 (둘째 Store · 접합 준비 직전) 두 자리 다.  감싸개 = Store.__init__ 을 바꿔 끼운 뒤 같은 payload 를 runpy 로.
     bad_b = {}
@@ -1805,6 +2095,24 @@ def t_payload():
         and not [ln for ln in logb.splitlines() if '저장본' in ln and '⚠' in ln] and '읽음' in logc and len(files3) == 1
         and store_files(sd3) == files3,
         (rca, rcb, rcc, 'instance 2 (' in loga, qa == qb, qb == qc, files3, [ln for ln in (logb + logc).splitlines() if '저장본' in ln]))
+    #  ★ P6 (11-12 2 회차 · 재리뷰 RCP2-01) — 런 시작 코드 칸 = cjunc_store 를 처음 불러온 때.  payload (저장본 켬) 는 입구 계약에서 cjunc_store 를
+    #    원장 모듈 셋 (carbon_junction · step3_sigma · fibre_segment_raster) 보다 **먼저** 부른다 — 그래야 시작 칸이 런의 모든 원장 코드 적재 앞이다
+    #    (`python -X importtime` 의 끝난 차례 · 실제 payload).  이 차례가 바뀌면 (먼저 불린 원장 모듈의 시작 전 바뀜) 저장본이 못 가린다 = 한정.
+    sd6 = new_store_dir('pay6')
+    pargs = ['--scaffold', 'am.csv', '--se', 'se.npy', '--phase', 'phase.npy', '--fibre', 'fibre.npy', '--fibre-dia', 'fibre_dia.npy',
+             '--n-vox', '24', '--step3-vox', '1.0', '--step3-fibre-stamp', 'segment']
+    r6 = subprocess.run([sys.executable, '-X', 'importtime', os.path.join(SCRIPTS, 'mpm_webapp_payload.py'), *pargs, '--out', 'p_order.json',
+                         '--show-results', *base, '--step3-cjunc-store', sd6], capture_output=True, text=True, timeout=900, cwd=wd,
+                        stdin=subprocess.DEVNULL)
+    order = []
+    for ln in (r6.stderr or '').splitlines():
+        mm = re.match(r'import time:\s+\d+ \|\s+\d+ \|\s*(\S+)\s*$', ln)
+        if mm and mm.group(1) in KEY_MODULES and mm.group(1) not in order:
+            order.append(mm.group(1))
+    chk('P6 payload (저장본 켬) 가 cjunc_store 를 원장 모듈 셋보다 먼저 불러온다 (python -X importtime 끝난 차례 · 넷 다 불림) · rc 0 · 새로 지어 저장 줄 '
+        '(런 시작 코드 칸 = 원장 코드 적재 앞 · 2 회차 RCP2-01)',
+        r6.returncode == 0 and len(order) == 4 and order[0] == 'cjunc_store' and '새로 지어 저장' in (r6.stdout or ''),
+        (r6.returncode, order, (r6.stdout or '')[-200:]))
 
 
 # ═════════════════════════ R — 러너 ═════════════════════════
@@ -1822,6 +2130,7 @@ def t_runner():
     sd = new_store_dir('runner')
     sl = os.path.join(TD, 'stores', 'runner_link')               # ★ 11-12 (내부 반박 리뷰 RCP-06) — 뿌리가 심볼릭 링크 (가리키는 폴더는 꼴이 맞다)
     os.symlink(new_store_dir('runner_link_target'), sl)
+    sdn = new_store_dir('runner_norm')                           # ★ 2 회차 RCP2-02 — 정규화 안 된 꼴 갈래의 실제 폴더 (sd 와 따로)
     bad = {}
     for nm, env, want in (('심볼릭 링크 폴더', dict(NR.CJ_RT_ENV, CJUNC_STORE=sl), 'CJUNC_STORE 가 심볼릭 링크'),
                           ('심볼릭 링크 폴더 (끝 빗금)', dict(NR.CJ_RT_ENV, CJUNC_STORE=sl + '/'), 'CJUNC_STORE 가 심볼릭 링크'),
@@ -1831,13 +2140,19 @@ def t_runner():
                           ('허용 밖 글자 (빈칸)', dict(NR.CJ_RT_ENV, CJUNC_STORE=sd + ' x'), 'CJUNC_STORE 에 허용 밖'),
                           ('개행', dict(NR.CJ_RT_ENV, CJUNC_STORE=sd + '\n/tmp'), 'CJUNC_STORE 에 허용 밖'),
                           ('영문 아닌 글자', dict(NR.CJ_RT_ENV, CJUNC_STORE=sd + '/저장'), 'CJUNC_STORE 에 허용 밖'),
-                          ('없는 폴더', dict(NR.CJ_RT_ENV, CJUNC_STORE=os.path.join(sd, 'nope')), 'CJUNC_STORE 폴더가 없다')):
+                          ('없는 폴더', dict(NR.CJ_RT_ENV, CJUNC_STORE=os.path.join(sd, 'nope')), 'CJUNC_STORE 폴더가 없다'),
+                          #  ★ 11-12 2 회차 (재리뷰 RCP2-02) — 정규화 안 된 꼴 = 마지막 글자 성분의 링크 검사를 비켜 간다 (링크 · 실제 폴더 둘 다 거부)
+                          ('심볼릭 링크 + /.', dict(NR.CJ_RT_ENV, CJUNC_STORE=sl + '/.'), 'CJUNC_STORE 경로가 정규화'),
+                          ('심볼릭 링크 + /./', dict(NR.CJ_RT_ENV, CJUNC_STORE=sl + '/./'), 'CJUNC_STORE 경로가 정규화'),
+                          ('실제 폴더 · 가운데 //', dict(NR.CJ_RT_ENV, CJUNC_STORE=sdn.replace('/stores/', '/stores//')), 'CJUNC_STORE 경로가 정규화'),
+                          ('실제 폴더 · 가운데 /../', dict(NR.CJ_RT_ENV, CJUNC_STORE=sdn.replace('/stores/', '/stores/../stores/')),
+                           'CJUNC_STORE 경로가 정규화')):
         r = NR.run_runner(ws, env)
         if not (r.rc != 0 and '[p2] ABORT' in r.log and want in r.log and not r.new_dirs and not r.argv):
             bad[nm] = (r.rc, r.log.strip()[-240:], r.new_dirs)
         NR.reset_ws(ws)
-    chk('R1 발사 전 ABORT 아홉 (심볼릭 링크 둘 (RCP-06) · CJUNC=1 없이 · 조립만 · 상대 · 빈칸 · 개행 · 영문 아닌 글자 · 없는 폴더) — rc ≠ 0 · 사유 글 · '
-        'OUTDIR · payload 없음', not bad, bad)
+    chk('R1 발사 전 ABORT 열셋 (심볼릭 링크 둘 (RCP-06) · CJUNC=1 없이 · 조립만 · 상대 · 빈칸 · 개행 · 영문 아닌 글자 · 없는 폴더 · 정규화 안 된 꼴 넷 '
+        '(2 회차 RCP2-02)) — rc ≠ 0 · 사유 글 · OUTDIR · payload 없음', not bad, bad)
     r0 = NR.run_runner(ws, NR.CJ_RT_ENV)
     arms0 = {a: open(os.path.join(r0.outdir, a), 'rb').read() for a in r0.arms} if r0.outdir else {}
     rcp0, od0 = r0.receipt_bytes, (os.path.basename(r0.outdir) if r0.outdir else None)
@@ -1885,7 +2200,14 @@ def t_chain():
                            ('허용 밖 글자 (빈칸 · 있는 폴더)', ['--stage', 'ladder', '--cjunc-store', sp_dir], '--cjunc-store 는 영문'),
                            ('없는 폴더', ['--stage', 'ladder', '--cjunc-store', os.path.join(sd, 'nope')], '--cjunc-store 는 있는 폴더'),
                            ('남이 쓸 수 있음', ['--stage', 'ladder', '--cjunc-store', gw], '--cjunc-store 는 그룹'),
-                           ('다른 소유자', ['--stage', 'ladder', '--cjunc-store', ow], '--cjunc-store 는 이 사용자 소유')):
+                           ('다른 소유자', ['--stage', 'ladder', '--cjunc-store', ow], '--cjunc-store 는 이 사용자 소유'),
+                           #  ★ 11-12 2 회차 (재리뷰 RCP2-02) — 정규화 안 된 꼴 (링크 · 실제 폴더) = 마지막 글자 성분의 링크 검사를 비켜 간다
+                           ('심볼릭 링크 + /.', ['--stage', 'ladder', '--cjunc-store', cl + '/.'], '--cjunc-store 는 정규화된'),
+                           ('심볼릭 링크 + /./', ['--stage', 'ladder', '--cjunc-store', cl + '/./'], '--cjunc-store 는 정규화된'),
+                           ('실제 폴더 · 가운데 //', ['--stage', 'ladder', '--cjunc-store', sd.replace('/stores/', '/stores//')],
+                            '--cjunc-store 는 정규화된'),
+                           ('실제 폴더 · 가운데 /../', ['--stage', 'ladder', '--cjunc-store', sd.replace('/stores/', '/stores/../stores/')],
+                            '--cjunc-store 는 정규화된')):
         buf = io.StringIO()
         with contextlib.redirect_stderr(buf), contextlib.redirect_stdout(buf), other_owner(ow if nm == '다른 소유자' else None):
             try:
@@ -1895,8 +2217,8 @@ def t_chain():
                 code = e.code
         if not (code == 2 and want in buf.getvalue()):
             errs[nm] = (code, buf.getvalue().strip()[-200:])
-    chk('C1 --cjunc-store 거부 열 (심볼릭 링크 둘 (RCP-06) · verdict · plan-doc · 합치기 · 상대 (있는 폴더) · 허용 밖 글자 · 없는 폴더 · 남이 쓸 수 있음 · '
-        '다른 소유자) → argparse 오류 (rc 2 · 갈래마다 그 사유 글)', not errs, errs)
+    chk('C1 --cjunc-store 거부 열넷 (심볼릭 링크 둘 (RCP-06) · verdict · plan-doc · 합치기 · 상대 (있는 폴더) · 허용 밖 글자 · 없는 폴더 · 남이 쓸 수 '
+        '있음 · 다른 소유자 · 정규화 안 된 꼴 넷 (2 회차 RCP2-02)) → argparse 오류 (rc 2 · 갈래마다 그 사유 글)', not errs, errs)
     old = RR.runner_env_delta
     try:
         RR.runner_env_delta = lambda plan, variant, req, outdir: {'BASE': '1', 'CJUNC_STORE': '/leak'}
