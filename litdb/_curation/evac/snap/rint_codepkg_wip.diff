@@ -386,18 +386,326 @@ index 9e60bb986..82af82224 100644
              try:
                  xg, info = cg_gpu(Lg, bg, tol=_rt, maxiter=CG_MAXITER, M=Mg, **_x0g, **_cbk)
 diff --git a/scripts/test_cjunc_store.py b/scripts/test_cjunc_store.py
-index 4592b7908..0b7f285f0 100644
+index 4592b7908..333035100 100644
 --- a/scripts/test_cjunc_store.py
 +++ b/scripts/test_cjunc_store.py
-@@ -23,6 +23,7 @@
+@@ -8,10 +8,13 @@
+ 
+ 묶음:
+   T0  모듈 · API (고치기 전 = 모듈 없음)
+-  T1  왕복 (메모리) — 원장 픽스처 넷 + 형 모둠 (dict 키 차례 · list/tuple · Python/numpy 스칼라 형 · −0 · NaN 비트 · 큰 정수 · 외톨이 대리 ·
+-      C/F 차례 · 바이트 차례 · 0 차원 · 빈 배열 · 객체 배열) → 시험 쪽 독립 비교 (형 · dtype · 모양 · 차례 표지 · 바이트) · 엄격 지문 · registry_fp
+-  T2  엄격 지문 판별력 — 형 · 차례 · 바이트 차례 · 부호 있는 0 · 키 형 하나씩 다르면 다른 지문
+-  T3  받지 않는 꼴 (별칭 · 메모리 겹침 · 비연속 · 읽기 전용 · 구조체 · dict 하위형 · 집합 · 모르는 객체) = Unsupported · 저장 안 함 (팔 결과 그대로)
++  T1  왕복 (메모리) — 원장 픽스처 (instance 하나 넷 + **instance 여럿** 셋 = F5 직렬 · 조밀 침대 둘 (자기 접합 · 긴 접촉 · 고리 · PTFE · SDCP)) +
++      형 모둠 (dict 키 차례 · list/tuple · Python/numpy 스칼라 형 · −0 · NaN 비트 · 큰 정수 · 외톨이 대리 · C/F 차례 · 바이트 차례 · 0 차원 ·
++      빈 배열 · 객체 배열) + 별칭 모둠 → 시험 쪽 독립 비교 (형 · dtype · 모양 · 차례 표지 · 바이트) · 별칭 서명 · 엄격 지문 · registry_fp
++  T2  엄격 지문 판별력 — 형 · 차례 · 바이트 차례 · 부호 있는 0 · 키 형 · 별칭 (같은 객체 ↔ 사본) 하나씩 다르면 다른 지문
++  T3  받지 않는 꼴 (메모리 겹침 · 같은 메모리의 두 보기 · 비연속 · 읽기 전용 · 구조체 · dict 하위형 · 집합 · 모르는 객체) = Unsupported ·
++      저장 안 함 (팔 결과 그대로).  ★ 별칭 (같은 객체가 두 자리에) 은 받는다 — 되가리킴으로 그대로 복원 (T1 · 원장의 pair_i · pair_j 가
++      `[빈 배열] * instance 수` 꼴 = instance 가 둘 이상인 원장은 늘 별칭이 있다 · 대피 세션 11-12 발견)
+   T4  열쇠 결속 — 침대 (sid 한 칸 · dtype) · lo · vox (1 ulp) · 점 (1 ulp) · phase · fid · kind · 문턱 열 칸 · 코드 · 환경 · 기계 · 모델 판 · 꼴 판
+   T5  흐름 — 없음 → 짓고 씀 (0444 · 이름 · 임시 파일 없음) → 새 Store 적중 (짓기 0 회) · 읽은 원장 = 지은 원장 (비트) · 계획 · 풀이 σ 비트 같음 ·
+       payload_prepare 끔 / 빗나감 / 적중 같음 (끔 = 'store' 칸 없음) · 화면 줄 (probe6 실패 낱말 없음)
+@@ -23,8 +26,11 @@
    T9  같은 열쇠 동시 쓰기 — 남이 같은 원장 = peer_same · 남이 다른 원장 = 멈춤 · 실제 프로세스 둘 경주 = written 하나 + peer_same 하나 · 파일 하나
    T10 끊김 (PID 이름공간 `unshare -pf --mount-proc --kill-child` 안에서만 · kill = 직접 만든 자식) — 쓰는 도중 (임시 파일 뒤 · link 전) · 읽는 도중
    T11 쓰기 실패 · 끔 — 디스크 여유 · link EPERM · 쓰는 중 ENOSPC · 기계 id 못 읽음 · 폴더 꼴 (상대 · 없음 · 파일 · 남이 쓸 수 있음) · 입력 오류 = 옛 오류
 +  T12 쓰는 쪽 발행 전 대조 (직렬화 결함 = 발행 안 함 · 멈춤 아님) — 구현 커밋에서 더함 (고치기 전 판 = 모듈 없음)
++  T13 규모 (실침대 꼴 = instance 마다 작은 배열 넷 · 별칭 빈 배열) — 겹침 검사가 배열 쌍마다 돌지 않는다 (배열 수에 선형 · 옛 = 쌍마다
++      np.shares_memory = 배열 47 만 개에서 끝나지 않음) · 작은 배열 12 만 개 + 별칭 6 만 자리 왕복 = 시간 안 — 구현 커밋에서 더함
    P   payload 끝-끝 (`test_ca_ext_b6` 픽스처 · 실제 payload · CPU) — 입구 거부 넷 · 끔 / 빗나감 / 적중 팔 JSON 바이트 같음 · 못 읽음 (⚠ · 같음) ·
-       어긋남 (rc ≠ 0 · S2_CJUNC_STORE|INCONSISTENT| · 출력 없음)
+-      어긋남 (rc ≠ 0 · S2_CJUNC_STORE|INCONSISTENT| · 출력 없음)
++      어긋남 (rc ≠ 0 · S2_CJUNC_STORE|INCONSISTENT| · 출력 없음) · instance 둘인 침대 (세 가닥 직렬) 도 지어 씀 → 적중 (P5 · 구현 커밋에서 더함)
    R   러너 (`test_ca_ext_runner` 틀 · 실제 셸 · 실제 payload) — CJUNC=1 없이 · 조립만과 함께 · 상대 · 허용 밖 글자 · 개행 · 없는 폴더 = 발사 전 ABORT ·
-@@ -1020,6 +1021,29 @@ def t11():
+       켬 = payload 인자 · 팔 JSON · 영수증 · OUTDIR = 끔과 같음 · 둘째 런 = 적중
+   C   사슬 배선 — `--cjunc-store` (ladder · predict 만 · 절대 · 있는 폴더 · 남이 못 씀) · Runner env · 봉인 원천 (RunnerGraphSource) 은 절대 안 받음 ·
+@@ -151,6 +157,33 @@ def deep_diff(a, b, path='$'):
+     return None if a == b else f'{path}: 값 {a!r} ≠ {b!r}'
+ 
+ 
++def alias_sig(obj):
++    """시험 쪽 독립 걸음 — 변하는 객체 (ndarray · dict · list) 를 처음 만난 차례 번호로 적은 별칭 서명.  같은 객체가 두 자리에 있으면 둘째부터
++    ('ref', 번호) — 복원본의 서명이 같아야 별칭 구조가 그대로다 (모듈의 되가리킴 구현을 쓰지 않는다).  → (서명 목록, 되가리킴 수)."""
++    seen, out = {}, []
++
++    def walk(x):
++        if isinstance(x, (np.ndarray, dict, list)):
++            k = seen.get(id(x))
++            if k is not None:
++                out.append(('ref', k))
++                return
++            seen[id(x)] = len(seen)
++            out.append(('new', seen[id(x)]))
++        if isinstance(x, np.ndarray):
++            if x.dtype.hasobject:
++                for v in x.reshape(-1, order='C'):
++                    walk(v)
++        elif isinstance(x, dict):
++            for v in x.values():
++                walk(v)
++        elif isinstance(x, (list, tuple)):
++            for v in x:
++                walk(v)
++    walk(obj)
++    return out, sum(1 for t, _k in out if t == 'ref')
++
++
+ # ═════════════════════════ 픽스처 ═════════════════════════
+ def f1_inputs(sdcp=True):
+     """test_carbon_junction F1 (직렬 사슬 · 관통 · SDCP 근접 하나) → (입력 dict, 짓기 함수) · 문턱 = 시험 값."""
+@@ -181,6 +214,68 @@ def rand_inputs(seed):
+     return dict(sid=sid, lo=(0.0, 0.0, 0.0), vox=0.25, pts=cap['P'], phase=cap['PH'], fid=cap['F'], kind=cap['K'], thresholds=thr)
+ 
+ 
++def f5_inputs():
++    """test_carbon_junction F5 (직렬 A → B → C · 접합 둘 = instance 2) — instance 가 둘 이상인 가장 작은 원장 (pair_i · pair_j 가 별칭)."""
++    P, PH, F, K = TC.rows(TC.F5)
++    sid, _ = TC.bed((P, PH, F, K), TC.F5_N)
++    thr = TC.reg_kw(dict(r_f_um=TC.RF, tol_ff_um=TC.TOL, L_par_um=TC.LPAR, r_port_um=TC.RPORT, gap_tol=2.0, s_min_um=TC.S_MIN))
++    return dict(sid=sid, lo=(0.0, 0.0, 0.0), vox=float(TC.H), pts=P, phase=PH, fid=F, kind=K, thresholds=dict(thr))
++
++
++def dense_inputs(seed, nfib=40, vox=0.25, n=(24, 24, 32)):
++    """조밀 침대 (실침대 꼴의 작은 판) — VGCF 경로 nfib (다섯째마다 꺾임 = 자기 접합 후보 · 하나는 닫힌 고리) + PTFE 경로 셋 + SDCP 점 80
++    (구 스탬프) → instance 수십 (서로 다른 섬유 · 자기 접합 · 긴 접촉 = 간선 여럿 · PTFE 덮임 · SDCP 근접).  문턱 = 생산 식
++    (`ca_ext_cjunc.registry_thresholds`)."""
++    rng = np.random.default_rng(seed)
++    box = np.array(n, float) * vox
++    polys, ph = [], []
++    for i in range(nfib):
++        p0 = rng.uniform(0.3, box - 0.3)
++        d = rng.normal(size=3)
++        d /= np.linalg.norm(d)
++        p1 = np.clip(p0 + d * rng.uniform(2.0, 5.0), 0.05, box - 0.05)
++        if i % 5 == 0:
++            polys.append([p0, p1, np.clip(p0 + (p1 - p0) * 0.15 + rng.normal(size=3) * 0.05, 0.05, box - 0.05)])
++        else:
++            polys.append([p0, p1])
++        ph.append(2)
++    c0 = box * 0.5
++    polys.append([c0 + (0.6, 0.0, 0.0), c0 + (0.0, 0.6, 0.0), c0 + (-0.6, 0.0, 0.0), c0 + (0.0, -0.6, 0.0), c0 + (0.6, 0.0, 0.0)])
++    ph.append(2)                                                  # 닫힌 고리 (첫 점 = 끝 점)
++    for _ in range(3):
++        p0 = rng.uniform(0.2, box - 0.2)
++        d = rng.normal(size=3)
++        d /= np.linalg.norm(d)
++        polys.append([p0, np.clip(p0 + 3.0 * d, 0.05, box - 0.05)])
++        ph.append(4)
++    P, PH, F, K = [], [], [], []
++    for i, (v, p) in enumerate(zip(polys, ph)):
++        pts = TC.densify(v, 0.1)
++        if p == 2 and i == nfib:
++            pts[-1] = pts[0]                                      # 고리 = 좌표 비트 같음
++        P.append(pts)
++        PH.append(np.full(len(pts), p))
++        F.append(np.full(len(pts), 100 + i))
++        K.append(np.full(len(pts), 1))
++    sd = rng.uniform(0.2, box - 0.2, (80, 3))
++    P.append(sd)
++    PH.append(np.full(len(sd), 5))
++    F.append(np.arange(len(sd)) + 500)
++    K.append(np.zeros(len(sd), int))
++    P, PH, F, K = np.vstack(P), np.concatenate(PH), np.concatenate(F), np.concatenate(K)
++    sid, _pid = quiet(S3.rasterize, np.zeros((0, 3)), np.zeros(0), np.zeros(0, np.int64), P, PH, (0.0, 0.0, 0.0), tuple(box), vox,
++                      sdcp_sphere_d_um=0.5, add_fid=F, add_kind=K, bridge_um=0.3)
++    thr = CW.registry_thresholds(s_min_um=REQ['s_min_um'], tol_ff_um=REQ['tol_ff_um'])
++    return dict(sid=sid, lo=(0.0, 0.0, 0.0), vox=float(vox), pts=P, phase=PH, fid=F, kind=K, thresholds=thr)
++
++
++def inst_stats(reg):
++    I = reg['instances']
++    return {'n': int(len(I['fi'])), 'self': int(np.sum(I['self'])), 'long': int(np.sum(I['long'])),
++            'nsub_max': (int(np.max(I['nsub'])) if len(I['nsub']) else 0), 'ptfe': int(np.sum(I['ptfe_cov'])),
++            'sdcp': int(np.sum(I['a_sdcp'])), 'unrealized': int(np.sum(~I['realized'])), 'ring': int(reg['census'].get('n_ring_pieces') or 0)}
++
++
+ def build_of(inp, counter=None):
+     def build():
+         if counter is not None:
+@@ -207,6 +302,18 @@ def kinds_object():
+             'obj': objarr, 'obj2': obj2, 'nested': {'d': {'e': [np.arange(3), (np.float64(1.0),)]}}}
+ 
+ 
++def alias_object():
++    """별칭 모둠 — 같은 객체가 두 자리에 (배열 · 빈 배열을 n 번 (원장 pair_i · pair_j 꼴) · 목록 · dict · 객체 배열 원소 · 객체 배열 자신 · 튜플 안)
++    + 값이 같은 사본 (별칭 아님)."""
++    x = np.arange(5.0)
++    lst = [1, 2]
++    dd = {'k': np.arange(3)}
++    oa = np.empty(3, dtype=object)
++    oa[0], oa[1], oa[2] = lst, lst, x
++    return {'a': x, 'b': x, 'pair_i': [np.zeros(0, np.int64)] * 5, 'pair_j': [np.zeros(0, np.int64)] * 5, 'l': [lst, lst],
++            'd': {'p': dd, 'q': dd}, 'o': oa, 'oo': [oa, oa], 't': (x, dd), 'copy': x.copy()}
++
++
+ def new_store_dir(name):
+     d = os.path.join(TD, 'stores', name)
+     os.makedirs(d)
+@@ -330,22 +437,48 @@ def t1():
+     if not need_cs('T1'):
+         return
+     objs = {'f1': quiet(build_of(f1_inputs())), 'f1_nosdcp': quiet(build_of(f1_inputs(sdcp=False))),
+-            'rand3': build_of(rand_inputs(3))(), 'rand7': build_of(rand_inputs(7))(), 'kinds': kinds_object()}
++            'rand3': build_of(rand_inputs(3))(), 'rand7': build_of(rand_inputs(7))(), 'f5': build_of(f5_inputs())(),
++            'dense1': build_of(dense_inputs(1))(), 'dense2': build_of(dense_inputs(2))(), 'kinds': kinds_object(), 'alias': alias_object()}
++    plain = ('kinds', 'alias')
+     bad = {}
+     for nm, o in objs.items():
+-        skel, arrs = CS.encode(o)
+-        back = CS.decode(skel, arrs)
+-        d = deep_diff(o, back)
+-        if d or CS.strict_digest(o) != CS.strict_digest(back):
+-            bad[nm] = d or 'strict'
+-        if nm != 'kinds' and CJ.registry_fp(back) != o['fp']['registry']:
+-            bad[nm] = 'registry_fp'
+-        if not isinstance(skel, bytes) or any(not isinstance(a, np.ndarray) or a.dtype.hasobject for a in arrs):
+-            bad[nm] = '꼴 (뼈대 bytes · 배열 = 객체 아닌 ndarray)'
+-    n_inst = {nm: len(o['instances']['fi']) for nm, o in objs.items() if nm != 'kinds'}
+-    print(f'    보고 T1 — 원장 instance 수 {n_inst}')
+-    chk('T1 encode → decode = 시험 쪽 독립 비교 같음 (형 · dict 키 차례 · dtype · 모양 · C/F · 바이트 · 실수 비트 · 객체 원소) · 엄격 지문 같음 · '
+-        'registry_fp 같음 (원장 넷 + 형 모둠)', not bad and all(v > 0 for k, v in n_inst.items() if k != 'rand3') and len(objs) == 5, bad)
++        try:
++            skel, arrs = CS.encode(o)
++            back = CS.decode(skel, arrs)
++            d = deep_diff(o, back)
++            if d or CS.strict_digest(o) != CS.strict_digest(back):
++                bad[nm] = d or 'strict'
++            if alias_sig(o) != alias_sig(back):
++                bad[nm] = '별칭 서명 (같은 객체가 두 자리 ↔ 복원본)'
++            if nm not in plain and CJ.registry_fp(back) != o['fp']['registry']:
++                bad[nm] = 'registry_fp'
++            if not isinstance(skel, bytes) or any(not isinstance(a, np.ndarray) or a.dtype.hasobject for a in arrs):
++                bad[nm] = '꼴 (뼈대 bytes · 배열 = 객체 아닌 ndarray)'
++        except CS.Unsupported as e:                              # 넘겨받은 판 = instance 둘 이상 (pair_i · pair_j 별칭) 을 거부했다
++            bad[nm] = f'Unsupported: {e}'
++    st = {nm: inst_stats(o) for nm, o in objs.items() if nm not in plain}
++    n_inst = {nm: v['n'] for nm, v in st.items()}
++    print(f'    보고 T1 — 원장 instance 수 {n_inst} · 조밀 침대 {st["dense1"]} · {st["dense2"]} · 별칭 자리 (되가리킴) '
++          f'{ {nm: alias_sig(o)[1] for nm, o in objs.items()} }')
++    chk('T1 encode → decode = 시험 쪽 독립 비교 같음 (형 · dict 키 차례 · dtype · 모양 · C/F · 바이트 · 실수 비트 · 객체 원소) · 별칭 서명 같음 · '
++        '엄격 지문 같음 · registry_fp 같음 (원장 일곱 + 형 모둠 + 별칭 모둠)', not bad and all(v > 0 for v in n_inst.values()) and len(objs) == 9, bad)
++    chk('T1 픽스처 덮임 — instance 둘 이상인 원장 셋 (F5 = 2 · 조밀 둘 ≥ 10) · 조밀 침대에 자기 접합 · 긴 접촉 (간선 여럿) · 고리 · PTFE 덮임이 '
++        '있다 · instance 둘 이상 = 별칭 자리 있음 (pair_i · pair_j)',
++        n_inst['f5'] == 2 and all(st[k]['n'] >= 10 and st[k]['self'] >= 1 and st[k]['long'] >= 1 and st[k]['nsub_max'] >= 2
++                                  and st[k]['ring'] >= 1 for k in ('dense1', 'dense2'))
++        and any(st[k]['ptfe'] >= 1 for k in ('dense1', 'dense2'))
++        and all(alias_sig(objs[k])[1] >= 2 for k in ('f5', 'dense1', 'dense2')), st)
++    cyc = [np.arange(3)]
++    cyc.append(cyc)
++    try:
++        skel, arrs = CS.encode(cyc)
++        bk = CS.decode(skel, arrs)
++        cyc_ok = (type(bk) is list and len(bk) == 2 and bk[1] is bk and bk[0].tobytes() == cyc[0].tobytes()
++                  and CS.strict_digest(cyc) == CS.strict_digest(bk))
++        why = ''
++    except Exception as e:                                         # noqa: BLE001
++        cyc_ok, why = False, f'{type(e).__name__}: {e}'
++    chk('T1 자기 자신을 담은 목록 (고리) — 걸음이 끝난다 · 복원본도 자기 자신을 담는다 · 엄격 지문 같음', cyc_ok, why)
+ 
+ 
+ # ═════════════════════════ T2 ═════════════════════════
+@@ -363,13 +496,22 @@ def t2():
+         'ustr_a': np.array(['a']), 'none': None, 'None_s': 'None', 'nest1': [[1]], 'nest0': [1], 'empty_l': [], 'empty_t': (),
+         'empty_d': {}, 'arr0d': np.array(1.0), 'arr1': np.array([1.0]),
+     }
+-    dig = {k: CS.strict_digest(v) for k, v in variants.items()}
++    #  별칭 (같은 객체가 두 자리) ↔ 값이 같은 사본 둘 — 꼴이 다르다 (복원본의 별칭 구조가 지문에 든다)
++    x5, l2, z0 = np.arange(5.0), [1, 2], np.zeros(0, np.int64)
++    variants.update({'alias_arr': {'a': x5, 'b': x5}, 'copy_arr': {'a': x5, 'b': x5.copy()}, 'alias_list': [l2, l2],
++                     'copy_list': [l2, list(l2)], 'alias_empty': [z0, z0, z0], 'copy_empty': [z0, z0.copy(), z0.copy()],
++                     'alias_empty_12': [z0, z0.copy(), z0], 'alias_empty_23': [z0.copy(), z0, z0]})
++    try:
++        dig = {k: CS.strict_digest(v) for k, v in variants.items()}
++    except CS.Unsupported as e:                                  # 넘겨받은 판 = 별칭을 거부했다
++        chk('T2 별칭 꼴의 엄격 지문을 센다 (같은 객체가 두 자리 = 받는다)', False, f'Unsupported: {e}')
++        return
+     dup = {}
+     for k, v in dig.items():
+         dup.setdefault(v, []).append(k)
+     clash = [ks for ks in dup.values() if len(ks) > 1 and set(ks) != {'arr_C', 'arr_23'}]
+-    chk('T2 형 · 차례 · 바이트 차례 · 부호 있는 0 · 키 형 · 0 차원 ↔ 1 원소 가 하나씩 다르면 엄격 지문이 다르다 (같은 값 · 같은 꼴만 같다 — '
+-        'arr_C = arr_23)', not clash and dig['arr_C'] == dig['arr_23'], clash)
++    chk('T2 형 · 차례 · 바이트 차례 · 부호 있는 0 · 키 형 · 0 차원 ↔ 1 원소 · 별칭 ↔ 사본 (배열 · 목록 · 빈 배열 · 어느 자리끼리 같은 객체인가) 가 '
++        '하나씩 다르면 엄격 지문이 다르다 (같은 값 · 같은 꼴만 같다 — arr_C = arr_23)', not clash and dig['arr_C'] == dig['arr_23'], clash)
+ 
+ 
+ # ═════════════════════════ T3 ═════════════════════════
+@@ -382,11 +524,15 @@ def t3():
+     x = np.zeros(3)
+     ro_arr = np.zeros(3)
+     ro_arr.setflags(write=False)
+-    lst = [1]
++    oarr = np.empty(4, dtype=object)
++    oarr[:] = ['a', 'b', 'c', 'd']
+ 
+     class Odd:
+         pass
+-    bad_objs = {'별칭 배열': {'a': x, 'b': x}, '별칭 목록': {'a': lst, 'b': lst}, '메모리 겹침': {'a': base[:5], 'b': base[3:8]},
++    #  ★ 별칭 (같은 객체가 두 자리) 은 여기 없다 — 받는다 (T1 · T2).  서로 다른 배열 객체가 메모리를 나눠 쓰는 꼴 (보기) 은 복원본이 둘로
++    #    갈리므로 거부 그대로다.
++    bad_objs = {'메모리 겹침': {'a': base[:5], 'b': base[3:8]}, '같은 메모리의 두 보기': {'a': x, 'b': x.view()},
++                '한 배열과 그 조각': {'a': base, 'b': base[2:4]}, '객체 배열 겹침': {'a': oarr, 'b': oarr[:2]},
+                 '비연속': {'a': base[::2]}, '읽기 전용': {'a': ro_arr}, '구조체': {'a': np.zeros(2, dtype=[('x', 'f8'), ('y', 'i4')])},
+                 'OrderedDict': collections.OrderedDict(a=1), '집합': {'a': {1, 2}}, '모르는 객체': {'a': Odd()}, 'tuple 키': {(1, 2): 1},
+                 'float 키': {1.5: 1}, '객체 배열 안 모르는 객체': {'a': np.array([Odd()], dtype=object)}}
+@@ -403,16 +549,17 @@ def t3():
+                 pass
+     ok_disjoint = True
+     try:
+-        CS.encode({'a': base[:5], 'b': base[5:]})               # 겹치지 않는 조각 둘 = 받는다 (원장의 base ≠ None 배열 꼴)
++        CS.encode({'a': base[:5], 'b': base[5:]})               # 겹치지 않는 조각 둘 (맞닿음) = 받는다 (원장의 base ≠ None 배열 꼴)
++        CS.encode({'a': base[5:], 'b': base[:5], 'c': np.zeros(0), 'd': base[5:5]})   # 주소 차례가 거꾸로 · 빈 조각 = 받는다
+     except CS.Unsupported:
+         ok_disjoint = False
+-    chk('T3 받지 않는 꼴 열둘 = encode · strict_digest 둘 다 Unsupported (조용히 다른 꼴로 저장하지 않는다) · 겹치지 않는 조각 둘 = 받는다',
+-        not got and ok_disjoint, (got, ok_disjoint))
++    chk(f'T3 받지 않는 꼴 {len(bad_objs)} = encode · strict_digest 둘 다 Unsupported (조용히 다른 꼴로 저장하지 않는다) · 겹치지 않는 조각 둘 '
++        '(맞닿음 · 주소 차례 거꾸로 · 빈 조각) = 받는다', not got and ok_disjoint and len(bad_objs) == 13, (got, ok_disjoint))
+     d = new_store_dir('t3')
+     inp = f1_inputs()
+     reg0 = build_of(inp)()
+     weird = dict(reg0)
+-    weird['census'] = dict(reg0['census'], _alias_a=x, _alias_b=x)
++    weird['census'] = dict(reg0['census'], _ov_a=base[:5], _ov_b=base[3:8])
+     st = mk_store(d)
+     got_reg, out = st.get_or_build(lambda: weird, **inp)
+     chk('T3 지은 원장이 받지 않는 꼴 → 상태 built_write_skipped (사유 unsupported) · 돌려준 원장 = 지은 그 객체 · 폴더에 파일 없음',
+@@ -515,6 +662,33 @@ def t5():
+     r1, r2 = TC.solve(inp['sid'], TC.sig_e(), TC.F1_N, p1), TC.solve(inp['sid'], TC.sig_e(), TC.F1_N, p2)
+     chk('T5c 적중 원장의 계획 = 새로 지은 원장의 계획 (비트) · 풀이 결과 dict 비트 같음 (σ > 0 · 관통 픽스처)',
+         deep_diff(p1, p2) is None and deep_diff(r1, r2) is None and float(r1['sigma_eff']) > 0.0, (deep_diff(p1, p2), deep_diff(r1, r2)))
++    #  ★ instance 여럿 (실침대 꼴 · 대피 세션 11-12) — 넘겨받은 판은 pair_i · pair_j 의 별칭 (`[빈 배열] * instance 수`) 을 거부해 저장을
++    #    건너뛰었다 (built_write_skipped · 저장본이 영영 안 생김).  지어 씀 → 적중 · 읽은 원장 = 지은 원장 (비트 · 별칭 서명) · 계획 같음.
++    multi_bad = {}
++    for nm, mi in (('f5', f5_inputs()), ('dense3', dense_inputs(3))):
++        dm = new_store_dir('t5m_' + nm)
++        nb = [0]
++        rg1, om1 = mk_store(dm).get_or_build(build_of(mi, nb), **mi)
++        rg2, om2 = mk_store(dm).get_or_build(build_of(mi, nb), **mi)
++        fresh = build_of(mi)()
++        ok = (om1['status'] == 'built_written' and om2['status'] == 'hit' and nb[0] == 1 and len(store_files(dm)) == 1
++              and len(rg1['instances']['fi']) >= 2 and deep_diff(rg1, rg2) is None and deep_diff(fresh, rg2) is None
++              and alias_sig(rg1) == alias_sig(rg2) and alias_sig(rg2)[1] >= 2
++              and rg2['instances']['pair_i'][0] is rg2['instances']['pair_i'][1])
++
++        def plan_of(rg):
++            try:
++                return ('plan', CJ.cjunc_plan(rg, 1.0e6, unreg_law='cut', ptfe_stamp='off'))
++            except ValueError as e:
++                return ('ValueError', str(e))
++        if ok:
++            (k1, v1), (k2, v2) = plan_of(fresh), plan_of(rg2)
++            ok = k1 == k2 == 'plan' and deep_diff(v1, v2) is None
++        if not ok:
++            multi_bad[nm] = (om1, om2, nb, deep_diff(rg1, rg2), inst_stats(rg1))
++    chk('T5f instance 여럿 (F5 = 2 · 조밀 침대) — 없음 → 지어 씀 (built_written · 건너뛰지 않는다) → 새 Store 적중 (짓기 0 회) · 읽은 원장 = 지은 '
++        '원장 = 따로 새로 지은 원장 (시험 쪽 독립 비교) · 별칭 서명 같음 (pair_i 의 두 자리 = 같은 객체) · 계획 (R_j 1e6 · cut) 비트 같음',
++        not multi_bad, multi_bad)
+     # payload_prepare (생산 배선) — 끔 · 빗나감 · 적중
+     ri = rand_inputs(7)
+     kw = dict(lo=ri['lo'], vox=ri['vox'], pts=ri['pts'], phase=ri['phase'], fid=ri['fid'], kind=ri['kind'], cjunc=dict(REQ), ptfe_stamp='off')
+@@ -1020,6 +1194,29 @@ def t11():
          '폴더 꼴 거부 · 입력 오류 = 옛 오류 — 팔 결과 (돌려준 원장) 는 늘 새로 지은 것과 같다', not bad, bad)
  
  

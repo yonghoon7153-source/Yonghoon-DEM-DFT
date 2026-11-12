@@ -13,7 +13,7 @@ N-18	본	끝	benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode
 N-13	본	끝	koenig2023_wet_milling_se_ion_tortuosity_composite_cathode · e132d0585	
 N-44	본	끝	sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps · 5f334e569	재료 LGPS (LPSCl 아님) · 누른 채 CT 0–100 MPa
 N-23	본	끝	devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode · dc6de4073	NMC532 E 138.73 · CB/PVDF 1.78 GPa = 자체 측정 (targeted)
-N-2	대피	차례 기다림		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 44
+N-2	대피	도는 중		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 44 · 시작 11-12 16:34 KST
 N-5	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 47
 N-10	대피	차례 기다림		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 52
 N-11	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 53
@@ -72,7 +72,7 @@ N-68	대피	차례 기다림		PDF 받음 · Sonzogni 2024 Powder Technol 442 119
 후보 밖 (68 번 파일)	대피	차례 기다림		Kashkooli 2016 J Power Sources 307 496 (+SI) — zhang2026 · lyu2025 참고문헌 목록에 없는 논문 · 1저자 11-12: 논문 에이전트 진행 · 정독 115
 보강 (68-1 번 파일)	대피	차례 기다림		기존 카드 zhang2026_xct_dem_cathode_calendering_peel_calibration 보강 (1저자가 원문 PDF 를 다시 줌 · 원문 대조 · 식 크롭 · 참고문헌 목록 · 자세한 분석 절) · 정독 123 · 차례 = 맨 끝
 보강 (68-2 번 파일)	대피	차례 기다림		기존 카드 lyu2025_3d_dem_drying_calendering_lib 보강 (원문 PDF + 보충 영상 4) · 정독 124 · 차례 = 맨 끝
-N-63	대피	도는 중		PDF 받음 (본문 + 보충 PDF + xlsx 2) · Dixit 2022 ACS Energy Lett 7 3936 (Focus Review · DOI 10.1021/acsenergylett.2c01936) · 정독 121 · 시작 11-12 15:14 KST
+N-63	대피	끝	dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review · ddba5fe6a	정독 121 · 의도 대조 = 일부 (가압 방식 분류 · 공정 창 · 등방 가압 문헌 표 51 행은 채움 · "같은 압력 단축 ↔ 등방 대조" 는 없음 — 기공률 세 점은 압력 · 온도 · 시간이 함께 다름 · 황화물 SE 치밀화 값 0 건) · 표 1 정격 CIP 600 MPa · WIP 500 MPa 150 °C · HIP 207 MPa 2000 °C · benhadjali2026 L421 "단축 가압 이방성 근거" — 이 논문에 이방성 낱말 없음 (확인 필요 · 카드 문제 기록) · 식 크롭 0 (원문에 식 없음)
 N-64	대피	도는 중		PDF 받음 · Hayashi 2025 J Jpn Soc Powder Powder Metallurgy 72 S1167 · 정독 116 · 시작 11-12 15:47 KST
 N-65	대피	차례 기다림		PDF 받음 (스캔본) · Swinkels–Wilkinson–Arzt–Ashby 1983 Acta metall 31 1829 · 정독 117
 N-66	대피	차례 기다림		PDF 받음 (+SI) · Ebner 2013 Adv Energy Mater 3 845 · 정독 118

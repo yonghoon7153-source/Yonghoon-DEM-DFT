@@ -18,6 +18,8 @@
 | §5 열린 일 | 포메이션 = `snap/formation_20261112.md` | 걸 수 있는 것부터 조수로 |
 | §6 논문 34 편 (N-2 … N-51) | PDF 전부 받음 · 대기열 · status 반영 (정독 NN 44–91 = 본 세션이 정한 번호 · 논문별 지시 = 인계 묶음 `litdb/prompts/`) | 1 순위를 2 · 3 순위보다 먼저 · 둘 병렬 |
 
+- **1저자 11-12 저녁 "다 권고대로"** = ① 논문은 넘겨받은 1 순위 34 편 (N-2 부터 번호순) 을 2 · 3 순위보다 먼저 ② 믹서 E0 자격 pilot = Rint 코드 묶음 반입 뒤 리포 등록 문서에서 다시 잡음 (인계 묶음에 초안 · 리뷰 지시서 없음) ③ 커밋 J 는 게이트 두 조각 실패 0 뒤에 push (건너뛰지 않음). → 코드 가지의 진행 기록 (`docs/session_20260923_progress.md`) 에는 다음 코드 커밋 (SELF-166 claimed_fixed) 때 같이 적는다.
+- 지금 도는 조수 (11-12 17 시): 논문 N-63 (트리 1) · N-64 (트리 2) · Rint 코드 묶음 (`/home/user/rint-codepkg`) · 정독 종합 고침 적용 (`synthfix/`) · 메모 3.2 초안 (`dem_redesign/`) + 게이트 커밋 J 1 조각 (`gate/gate_J_p1.log` · 커밋 sha = `gate/commitJ.sha`).
 - 재시작하면: 아래 '멈췄다가 이어갈 때' 3 번의 `restore.py` 한 번 — 이제 코드 가지 쪽도 한다 (리포 unshallow + 관련 가지 받기 = `check_doc_refs` 가 요구 · pip (`--ignore-installed blinker` 먼저) · kgy 판 3.8 · 인계 묶음 풀기 · Rint 작업 트리를 `snap/` 에서 되살림).
 - 스냅샷: `finish.py` 가 돌 때마다 (논문 한 편 끝 · `--sync-only`) `snap/` 에 Rint 작업 트리 (커밋 bundle · 커밋 전 diff · 새 파일 · 메모) 와 본 트리 (push 안 된 커밋 · 커밋 전 diff) 를 묶어 올린다 → 잃는 것은 마지막 스냅샷 뒤의 일뿐.
 - 게이트는 약 2 시간 (CPU 4 를 조수와 나눠 쓰면 더) — 끊기면 즉시 보고하고 조각을 다시 띄운다 · 게이트 중에는 본 트리를 건드리지 않는다.
