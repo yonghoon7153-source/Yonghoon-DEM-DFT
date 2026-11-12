@@ -71,6 +71,32 @@ def tree_snap(tree, base, prefix, dest, info):
         info.append(f"{prefix}: 추적 안 된 파일 {k}")
 
 
+def folder_tgz(rels, limit=8_000_000):
+    """scratchpad 의 폴더 · 파일 몇 개를 한 tgz 로 (이름순 · 시각 0 → 내용이 같으면 바이트가 같다). 주소 · 포트 꼴이 보이는 파일과 큰 파일은 뺀다."""
+    import gzip, io, tarfile
+    files, skipped = [], []
+    for rel in rels:
+        p = SCR / rel
+        if p.is_file():
+            files.append(p)
+        elif p.is_dir():
+            files += [f for f in sorted(p.rglob("*")) if f.is_file() and not f.is_symlink()]
+    buf = io.BytesIO()
+    n = 0
+    with gzip.GzipFile(fileobj=buf, mode="wb", mtime=0) as gz:
+        with tarfile.open(fileobj=gz, mode="w", format=tarfile.PAX_FORMAT) as tf:
+            for f in sorted(files, key=lambda x: str(x.relative_to(SCR))):
+                b = f.read_bytes()
+                if len(b) > limit or BAD.search(b):
+                    skipped.append(str(f.relative_to(SCR)))
+                    continue
+                ti = tarfile.TarInfo(str(f.relative_to(SCR)))
+                ti.size = len(b); ti.mtime = 0; ti.mode = 0o644; ti.uid = ti.gid = 0; ti.uname = ti.gname = ""
+                tf.addfile(ti, io.BytesIO(b))
+                n += 1
+    return buf.getvalue(), n, skipped
+
+
 def snap(evac_dir):
     dest = Path(evac_dir) / "snap"
     dest.mkdir(parents=True, exist_ok=True)
@@ -87,6 +113,14 @@ def snap(evac_dir):
     for extra in ("formation_20261112.md",):
         if (SCR / extra).is_file():
             put(dest, extra, (SCR / extra).read_bytes(), info)
+    # scratchpad 에만 있는 조수 산출 (정독 종합 묶음 · 메모 3.2 초안) — 내용이 같으면 바이트도 같게 묶는다 (가지에 새 덩어리가 안 쌓이게)
+    for name, rels in (("synthfix_work.tgz", ["synthfix/package", "synthfix/APPLIED.md", "synthfix/applied_log.jsonl",
+                                               "synthfix/post_build_notes.md", "synthfix/tools", "synthfix/out_before"]),
+                       ("dem_redesign_work.tgz", ["dem_redesign"])):
+        data, n, skipped = folder_tgz(rels)
+        if n:
+            (dest / name).write_bytes(data)
+            info.append(f"{name}: 파일 {n} · {len(data)} B" + (f" · 뺀 파일 {len(skipped)} (주소 꼴 · 큰 파일): {skipped[:5]}" if skipped else ""))
     (dest / "SNAP_INFO.txt").write_text("\n".join(info) + "\n", encoding="utf-8")
     return info
 
