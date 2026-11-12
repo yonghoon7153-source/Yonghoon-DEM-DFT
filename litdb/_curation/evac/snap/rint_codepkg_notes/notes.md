@@ -217,3 +217,12 @@
 - 같은 부류 남은 것 (범위 밖 · 손대지 않음): 이 묶음이 안 고친 시험 셋이 git 을 부르는 쪽 환경으로 부른다 — test_rint_r_chain_e2e `_git`
   (고정물 init · add · commit · env=None 기본) · test_rint_r_chain_e2e12 (`git init` · `pull`) · test_step3_conv_cert (`git show` 읽기).  게이트를
   git 훅 안에서 돌리면 11-12 밤 사고와 같은 꼴이 날 수 있다 (재리뷰 RCP2-06 범위 = 이 묶음이 고친 시험) → 보고 · 결정 = 본 세션.
+- (18:1xZ) kgy 3.8 변이 (사본 mut4 = 609d78ca4 · 바탕선 21 rc 0): N + H 53 = 잡힘 50 · 안 잡힘 H4 · H8 · H23 (3.11 과 같음) · logs/r3/mut/run_rev2_new_py38.log.
+- (18:2xZ) 끔 경로 ↔ 바탕 af3cce37b (work/off_vs_base.py · 바탕 = work/ovb_base_repo (alternates · HEAD af3cce37b · sparse) · 구현 = 작업 트리 609d78ca4):
+  3.11 · 3.8 둘 다 payload 넷 + 러너 rc 0 · σ_e 같음 · 다른 잎 = manifest code_sha (6) · project_module_digest (6) · loaded_project_modules (4 = 접합 켬 · +1) ·
+  영수증 code_sha · receipt_digest (1 · 1) 뿐 — logs/r3/off_vs_base_{py311,py38}.log.
+- GPU 블록 5 판 (Q11PIN 609d78ca4…): heredoc 꺼냄 md5 acfeb4b4 · git show 두 모듈 sha256 = 블록 값 · CPU 흐름 (numpy · n-side 24) 3.11 · 3.8 다섯 짝 비트 같음
+  (267 · 37) — work/gpu_v5/ · 셸 관문 모의 (가짜 HOME work/blk_home5 · dem-mt = 작업 트리 심볼릭 · 빈 activate) = 관문 통과 → cupy 없음 ERROR rc 1.
+- (18:33Z) 작업 트리 빠른 점검: check_doc_refs = 깨진 참조 없음 · check_review_findings --ban-sweep = 철회값 누수 없음 (12 분).
+- amend_drafts.md 5 판 (0-d 절 · 4-d 절 · ⬜ 같은 부류 범위 밖 질문) · 4 판 사본 amend_drafts_v4.md.
+- 끝-끝 변이 Z1–Z3 (3.11) 띄움 (logs/r3/mut/run_impl_e2e_py311.log).

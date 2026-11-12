@@ -33,10 +33,10 @@ N-32	대피	끝	chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer · 
 N-33	대피	끝	thorntonyin1991_oblique_impact_elastic_spheres_adhesion · af33bb8dd	정독 73 · N-33 끝 (thorntonyin1991 · 탄성 전용 · 미끄럼 기준 T = μ(P + 2Pc) · 붙는 속도 식 없음 = Reed · pfeffer2001 L302 '탄소성' 원문과 다름)
 N-35	대피	끝	nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions · 85273680c	정독 74 · N-35 끝 (nairn2015 · 축대칭 GIMP · CPDI · 축 r=0 처리 · gritton2017 L597 · L624 '축대칭이면 그대로 3D' 한정어 필요)
 N-36	대피	끝	steffen2008_mpm_implementation_choices_gimp_bspline_boundary · 1a8702b39	정독 77 · N-36 끝 (steffen2008 · 경계 기하 오차 h · 3h/2 · 2h · stomakhin2013 L64 3차 B-spline 식 이 논문에 없음 = 같은 해 IJNME 가능성)
-N-37	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 78 · 시작 11-13 02:29 KST
+N-37	대피	끝	steffen2010_mpm_space_time_error_balance_moving_mesh · 520778c25	정독 78 · N-37 끝 (steffen2010 · 균형 Δt = √(c₁/c₂)·h · 균형점 CFL 4.1–10.5 · 원문 안 어긋남 다섯 · 카드 문제 없음)
 N-38	대피	끝	guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison · 3d0f718a4	정독 79 · N-38 끝 (guilkey2003 · 암시 MPM ↔ NIKE3D 2.1 % · 명시 MPM 수치 벗어남 9.4 % ≫ 관성 0.4 % = 재하율 효과를 관성으로만 읽지 말 것 · 카드 문제 없음)
 N-39	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 80 · 시작 11-13 03:19 KST
-N-40	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 81
+N-40	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 81 · 시작 11-13 03:37 KST
 N-41	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 82
 N-42	대피	차례 기다림		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 83
 N-43	대피	차례 기다림		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 84
