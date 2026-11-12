@@ -37,9 +37,9 @@ N-37	대피	끝	steffen2010_mpm_space_time_error_balance_moving_mesh · 520778c2
 N-38	대피	끝	guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison · 3d0f718a4	정독 79 · N-38 끝 (guilkey2003 · 암시 MPM ↔ NIKE3D 2.1 % · 명시 MPM 수치 벗어남 9.4 % ≫ 관성 0.4 % = 재하율 효과를 관성으로만 읽지 말 것 · 카드 문제 없음)
 N-39	대피	끝	cummins2002_implicit_mpm_granular_newton_krylov · b25567d65	정독 80 · N-39 끝 (cummins2002 · 암시 MPM 알갱이 · 명시 에너지 ×14.5 [판독] · 원문 '≈7 %' ↔ 판독 +16 % · 카드 문제 없음 · 표 VI λ 100 배 어긋남)
 N-40	대피	끝	sulsky1994_mpm_particle_method_history_dependent_materials · 688057672	정독 81 · N-40 끝 (sulsky1994 · MPM 원전 · 이력 상태를 물질점에 · 접촉 1 셀 앞 시작 · klar2016 L64 'F 저장' = 원문은 작은 변형 (F 없음))
-N-41	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 82 · 시작 11-13 04:22 KST
+N-41	대피	끝	lyu2026_two_layer_gradient_electrode_calendering_dem_fem · af9fee8c8	정독 82 · N-41 끝 (lyu2026 · 이중층 경사 전극 캘린더링 DEM→FEM (기하만 넘김) · 250 MPa 층 기공 29.0 · 27.3 % [판독] · 카드 문제 없음)
 N-42	대피	도는 중		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 83 · 시작 11-13 04:38 KST
-N-43	대피	차례 기다림		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 84
+N-43	대피	도는 중		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 84 · 시작 11-13 05:27 KST
 N-45	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 85
 N-46	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 86
 N-47	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 87
