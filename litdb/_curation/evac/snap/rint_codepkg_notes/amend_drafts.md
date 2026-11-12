@@ -1,4 +1,4 @@
-# 개정 문장 초안 — Q2 탄소 접합 원장 저장본 + Q11 GPU 전처리 C 꼴 (11-12 · 조수 · 4 판 = 내부 반박 리뷰 고침 뒤 · 초안만 · 리포 문서는 고치지 않았다)
+# 개정 문장 초안 — Q2 탄소 접합 원장 저장본 + Q11 GPU 전처리 C 꼴 (11-12 · 조수 · 5 판 = 2 회차 고침 (내부 반박 리뷰 재확인) 뒤 · 초안만 · 리포 문서는 고치지 않았다)
 
 바탕 = 작업 트리 `/home/user/rint-codepkg` · 시험 먼저 `ebb0e9f80` → 구현 `f17ea8c6b` → 시험 보강 `2f97617ef` → (4 판) 리뷰 시험 먼저 `4557a30c2` → 리뷰 고침
 `94765bed3` → 게이트 배선 `0ac6edf3c` (여섯 다 서명 없음 · push 없음 — 본 세션이 반입하며 서명하면
@@ -36,6 +36,37 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
 | 09 | P3 | 고침 | 시험 G4 가 비어 있었다 (−0 이 생기지 않는 입력) → ±0 · 비정규 수를 A · C 적용에 직접 넣어 바이트 차이 자리 = (C = −0 ∧ A = +0) 자리 · 실제 풀이 8 번 (씨앗 둘 × tol / rtol × 새로 / 이어) 의 잔차에 −0 없음 · 반복마다 A = C 바이트 |
 | 10 | P3 | 고침 | payload — `--step3-rasterize-only` + `--step3-cjunc-store` = 거부 (`STORE_RASTERIZE_ONLY`) · 저장본 폴더 검사의 모든 예외 = 구조화 거부 (`S2_CJUNC_REFUSED|STORE_PATH|` + 예외 이름 · 옛 판 = ValueError 밖은 Traceback) |
 | 11 | P3 | 고침 | 머리 JSON 의 writer = pid · utc · build_seconds (호스트 이름 뺐다) |
+
+## 0-d. 5 판 (2 회차 · 내부 반박 리뷰 재확인 `review/rereview_codepkg.md` · Codex 아님 · 11-12) 에서 달라진 것
+
+커밋 (작업 트리 · 서명 없음 · push 없음 · 바탕 `0ac6edf3c`): 시험 먼저 `f8077a51d` → 고침 `4e1e5b6c6` → 게이트 배선 · 결과 전 등록 `ac7e1c58d` →
+변이 보강 (G5 · 사슬 F5) `8cc3fe462` → 변이 보강 (T11 상대 경로 = 절대 경로 사유) `609d78ca4` (= 끝 · 반입하며 sha 바뀜).
+
+| RCP2 | 등급 | 처분 | 무엇 · 이 초안에서 고친 문장 |
+|---|---|---|---|
+| 01 | P2 | 고침 | 런 시작 코드 칸 — `cjunc_store` 를 처음 불러온 때 (`_START` · payload = 입구 계약에서 원장 모듈보다 먼저 · 시험 P6) 열쇠 코드 파일 넷의 자리 · sha256 · 시각 → 짓기 전 · 발행 직전 (`os.link` 앞) 에 다시 센다 · 다르면 (자리 · 내용 · 시작 + 1 s 뒤 다시 씀) 그 런은 저장본을 읽지도 (`disabled`) 쓰지도 (`built_write_skipped`) 않는다 · 사유 머리 `code_changed:` · 팔 결과 = 새로 지은 원장.  재리뷰 CE-A (원판 원장을 변이판 열쇠로 저장 → 정직한 런 적중) = T15 에서 재현 → 고친 뒤 저장 안 함 → 1-2 의 "열쇠 = 디스크의 코드 파일 지문" 한정 줄을 아래처럼 바꿈 |
+| 02 | P3 | 고침 | 저장본 폴더 = 정규화된 꼴만 (빈 성분 `//` · `.` · `..` 없음 · 끝 빗금만 걷는다 · `run_contract.normal_path_problem` · Store · 사슬 · 러너 셋 다) — `<링크>/.` 꼴이 심볼릭 링크 거부를 비켜 가던 것 |
+| 03 | P3 | 시험 | T7 파일 모드 = 그룹 쓰기만 (0464 · 0664) · 남 쓰기만 (0446 · 0646) 갈래 · T11 뿌리 남 쓰기만 (0757) — 재리뷰 변이 N9 (0o022 → 0o002) 를 잡는다 |
+| 04 | P2 | 등록 | 2-b 의 결과 전 기대 E1–E4 · 문턱 T1–T3 (1저자 11-12 밤 Q-B (가) · 문턱 [제안] 그대로 채택) · 블록이 쓰는 자리 전부 → 리포 문서 `docs/reviews/rint2_s0_store_probe_20261112/README.md` + 블록 (같은 폴더 · PIN 자리표) · 감싸개 v2 (`cjunc_store` 를 먼저 불러오고 `store_start` · 호출마다 `code_drift` 를 적는다 · E3 에 `code_drift []` 더함) |
+| 05 | P3 | 시험 | T14 = 원장 짓기 동안 실행된 파일 전수 분류 (표준 · numpy · scipy · 열쇠 넷 밖 = 0) · 원장 모듈 import 허용 목록 · 변이 코드 폴더 새 프로세스 (scripts/ 밖도 본다) |
+| 06 | P2 | 고침 | git 을 부르는 곳이 부르는 쪽 환경의 `GIT_*` 를 물려받지 않는다 (`run_contract.git_env` · `drop_git_env` = `GIT_` 접두 전부) — 쓰기 = `run_contract --selftest` RCPT-sha 임시 저장소 (꼭대기 확인 뒤만 쓴다) · 이 묶음이 고친 시험 모듈 다섯 (불러올 때 지움) · 읽기 = payload `_code_sha` · `_exec_env` · 사슬 `git_identity` · F5 · 원장 git.  새 시험 `scripts/test_git_env_isolation.py` (게이트 121 단계 · kgy 17 묶음) = 일회용 피해 저장소만 가리키는 적대 환경 셋을 자식에만 넘긴다.  11-12 밤 사고 꼴 (GIT_DIR 아래 selftest 가 남의 가지에 커밋) = 고치기 전 재현 → 고친 뒤 피해 저장소 그대로 |
+| RCP-03 · 04 · 06 남은 몫 | — | 한정 문장 | `scripts/cjunc_store.py` 머리 — 런 시작 칸 한정 넷 ((가) `cjunc_store` 보다 먼저 불린 열쇠 모듈이 그 전에 바뀜 · (나) 시각을 되돌린 뒤집기 · (다) 낡은 .pyc · (라) 같은 프로세스 함수 바꿔 끼우기) · 뿌리 판정 = 마지막 성분 · 경로 기준 (fd 아님) |
+
+1-2 의 바꿀 문장 (5 판):
+- "폴더 = 기계마다 하나 (절대 경로 · …)" 줄에 **"정규화된 꼴 (빈 성분 · `.` · `..` 없음 — 끝 빗금만 걷는다 · 2 회차)"** 을 더한다.
+- 한정 줄 "열쇠 = 디스크의 코드 파일 지문이다 (불러온 코드 자체가 아니다 · 같은 프로세스에서 모듈을 바꿔 끼우는 것은 못 가린다 · 한정)" →
+  > 열쇠 = 디스크의 코드 파일 지문이다.  런 도중 그 파일이 바뀌면 (런 시작 = `cjunc_store` 를 처음 불러온 때 · 짓기 전 · 발행 직전 다시 셈 — 자리 ·
+  > sha256 · 시작 + 1 s 뒤 다시 씀) 그 런은 저장본을 읽지도 쓰지도 않는다 (화면 줄 `code_changed: …` · 팔 결과 = 새로 지은 원장 · 2 회차).
+  > 못 가리는 것 (한정): 먼저 불린 열쇠 모듈의 import 전 바뀜 · 시각을 되돌린 뒤집기 · 낡은 .pyc · 같은 프로세스에서 함수를 바꿔 끼우기.
+- 처분 줄 "쓰기 실패 … = 기록만" 앞에 **"런 도중 코드 바뀜 = 읽지도 쓰지도 않음 (`disabled` · `built_write_skipped` · 사유 `code_changed:` · 팔 결과 무관)"**.
+- 새 줄: **"git 을 부르는 코드 (payload 코드 신원 · 사슬 신원 · 계획 출처 F5 · 원장 git · selftest 임시 저장소) 는 부르는 쪽 환경의 `GIT_*` 를
+  물려받지 않는다 (훅 안 게이트 · 2 회차 · 시험 `scripts/test_git_env_isolation.py`)."**
+
+⬜ 본 세션 결정 (같은 부류 · 범위 밖 · 손대지 않음): 이 묶음이 안 고친 시험 셋이 git 을 부르는 쪽 환경으로 부른다 — `scripts/test_rint_r_chain_e2e.py` `_git` (고정물 init · add · commit · env 기본 None) · `scripts/test_rint_r_chain_e2e12.py` (`git init` · `pull`) · `scripts/test_step3_conv_cert.py` (`git show` 읽기).  게이트를 git 훅 안에서 돌리면 11-12 밤 사고와 같은 꼴 가능 (재리뷰 RCP2-06 범위 = 이 묶음이 고친 시험).  고치면 = 모듈 맨 앞 `run_contract.drop_git_env()` 한 줄씩 + `scripts/test_git_env_isolation.py` G6 목록에 더함.
+
+2-b → 리포 문서 `docs/reviews/rint2_s0_store_probe_20261112/README.md` 가 정본 (기대 · 문턱 · 쓰는 자리 · 멈춤 · 한정) — 이 초안의 2-b 표는 역사 (문턱 = 채택됨).
+
+4-d (GPU 확인 블록 5 판) = 아래 4 절 끝 4-d.
 
 ## 1. 등록 R (`docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md`)
 
@@ -197,3 +228,12 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
   하네스 글 (md5 `acfeb4b4…`) 은 그대로 · 3 판 사본 = `gpu_check_block_v3.txt`.
 - 다시 돌림: CPU 흐름 (`--backend numpy` · n-side 24) 3.11 · kgy 판 3.8 둘 다 다섯 짝 비트 같음 · 주 풀이 267 · 이어 풀기 37 (CPU 길 = Q11 무관 = 흐름
   확인) · 블록 셸 관문 모의 (가짜 HOME · 빈 activate) = md5 · PIN · 두 커밋 · git show · sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대).  GPU 길 = [미확인] (1저자).
+
+### 4-d. (5 판 · 2 회차 고침 뒤) GPU 확인 블록 갱신
+
+- 2 회차는 `scripts/step3_sigma.py` 를 바꾸지 않았다 → 새 모듈 sha256 = **`859310da…b459a`** 그대로 (`git show 609d78ca4:scripts/step3_sigma.py
+  | sha256sum` 다시 셈) · 옛 `8d428ff5…f2ec` 그대로 · 하네스 글 md5 `acfeb4b4…` 그대로 (heredoc 바이트 같음) · Q11PIN 자리 = 작업 트리 끝 커밋
+  `609d78ca43ad472025346d3973f0c49a23ec52c5` (반입 뒤 sha 로 바꾼다 · 새 모듈 sha256 과 내용이 같은 커밋이면 된다) · 4 판 사본 = `gpu_check_block_v4.txt`.
+- 다시 돌림 (5 판 · 핀 609d78ca4): CPU 흐름 (`--backend numpy` · n-side 24) 3.11 · kgy 판 3.8 둘 다 다섯 짝 비트 같음 · 주 풀이 267 · 이어 풀기 37
+  (CPU 길 = Q11 무관 = 흐름 확인) · 블록 셸 관문 모의 (가짜 HOME · `$HOME/dem-mt` = 작업 트리 심볼릭 · 빈 activate) = md5 · PIN · 두 커밋 · git show ·
+  sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대).  GPU 길 = [미확인] (1저자).
