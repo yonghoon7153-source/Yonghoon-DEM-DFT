@@ -78,3 +78,17 @@
   잡힘 83 · 안 잡힘 6 = 겹 방어 3 (W6b · P5 · N3c — 미리 redundant 로 적음) + 빈틈 3 (K13 · W19 · C10 — 시험 보강 2f97617ef 뒤 셋 다 잡힘 · mut3_after_testadd).
   ⇒ 끝 판 시험 기준: 잡혀야 할 86 = 86 잡힘 · 겹 방어 3 = 안 잡힘 (동등 — 같은 것을 다른 겹이 막는다).
 - (09:02Z) kgy 판 묶음 시작 (logs/evac/kgy_all · HEAD 2f97617ef · 바뀐 파일 0 · 3.8.20 · numpy 1.24.4 · scipy 1.10.1).
+- (09:26Z) 3.11 묶음 B2 끝 (logs/evac/py311_B2 · 머리 HEAD = f17ea8c6b 로 시작 · e2e 끝 무렵 시험 보강 커밋 2f97617ef — 그 뒤 묶음은 2f97617ef 트리):
+  rint_r_chain_e2e 51/51 (849 s) · e2e12 33/33 (438 s) · conv_cert 30/30 (747 s · 부하 load 6–8) · cjunc_store_e2e 6/6 (613 s · 팔 91 · 단위 3 끔 = 켬 바이트).
+  (rint_r_chain 506/506 = 앞 판 py311_B · 390 s.)  → 3.11 묶음 A (27) + B 다 통과 · undef rc 1 = 이 묶음 밖 파일 (generate_comparison_plots.py 6905 · 6906).
+- kgy 판 (지금까지 · logs/evac/kgy_all · HEAD 2f97617ef): run_contract 124 · s3_rint · s3_selftest · gpu_precond 15/15 · cjunc_store 46/46 (64 s) · carbon_junction 547 (75 s) ·
+  ptfe_fa 242 · ca_ext_b6 502 · ca_ext_runner 151 · verdict 31 · z1 95 · z3 84 · target_cert 264 · s0_census 186 · first_result 9 · rint_receipts 105 · g2_am_iface 136 ·
+  probe6 330/330 (272 s) · cmd_selftest 128/128 · cmd_repo 0 오류 (17 경고) · rint_r_chain 506/506 (560 s) — 다 rc 0.  남은 것 = e2e · e2e12 · conv_cert · cjunc_store_e2e.
+- (09:30Z) 끔 길 ↔ 바탕 대조 (work/off_vs_base.py · 3.11): 첫 판 (바탕 = work/before 그대로 = git 아님 · docs/data 없음) 은 설정 산물 넷이 더 갈렸다
+  (collector.anchors_source · pristine_precision = 바탕 사본에 rint_eis_anchors.csv 없음 · code_sha None · untracked_codelike None · risk 'untracked scan unavailable')
+  → 바탕을 스크래치 git 저장소로 (work/ovb_base_repo = before scripts + docs/reviews + docs/data/rint_eis_anchors.csv + .gitignore · 커밋 하나 cf69811) 다시:
+  payload 픽스처 둘 (b6 = instance 1 · series3 = instance 2) × (접합 켬 · 끔) 넷 + 실제 러너 (CJ_RT_ENV · 팔 SBE · DBE) — rc 전부 0 · σ_e 같음 ·
+  다른 잎 = 코드 신원 칸뿐: code_sha (커밋) · exec_env.project_module_digest · (접합 켬이면) loaded_project_modules +1 (cjunc_store — ca_ext_cjunc 가 늘 부른다) ·
+  러너 영수증 code_sha → receipt_digest → OUTDIR 접미사.  payload 인자 (scripts 경로 뺀) 같음 · 팔 이름 같음.  logs/evac/off_vs_base_gitbase_py311.log (첫 판 = off_vs_base_py311.log).
+- (09:33Z) 끔 길 ↔ 바탕 kgy 판 (3.8 · 같은 스크립트 · logs/evac/off_vs_base_gitbase_kgy.log) = 3.11 과 같음 — 다른 잎 = code_sha · project_module_digest ·
+  loaded_project_modules (접합 켬 +1) · 영수증 code_sha · receipt_digest 뿐 · rc 전부 0 · σ_e 같음.
