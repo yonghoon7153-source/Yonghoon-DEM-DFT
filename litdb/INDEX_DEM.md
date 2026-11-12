@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 315편 · 생성 2026-11-12
+> digest 316편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -66,7 +66,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (74편)
+## 접촉역학 · 소성 (DEM 이론) (75편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -96,6 +96,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
 | `giannis2021_stress_based_multicontact_dem` | 입자 응력텐서 trace 로 모든 접촉을 서로 묶은 non-binary DEM 접촉모델 (MC-stress) — Giannis (Granular Matter 2021) | DEM (contact-LAW theory, non-binary multi-contact) | 2026-08-25 | — |
 | `gonzalez2012_nonlocal_contact_confined_granular` | 비국소(nonlocal) 접촉 정식화 — 구속된 입상계에서 "접촉은 서로 독립"이라는 Hertz 가정을 깨다 — Gonzalez & Cuitiño (J. Mech. Phys. Solids 2012) | DEM 접촉이론 (해석적 비국소 탄성 contact formulation + 자체 FEM 검증 + Tatar | 2026-08-25 | — |
+| `greenwood1966_constriction_resistance_microcontact_cluster_real_area` | 미세접촉 군집의 협착 저항 = 평행 항 ρ/2Σa + 상호작용 항 (미세접촉의 수 · 크기가 아니라 군집의 크기 = Holm 반지름 α 로 정해지는 ≈ ρ/2α) — 정전기 대응 · 자기 저항 ρ/4a · 점 상호 저항 ρ/2πs · 연립방정식 (3) · 최소 발열 시행 전류 상한 (식 4) · '접촉끼리 독립' 은 군집 | theory + numerical (constriction resistance of a cluster of  | 2026-11-13 | 🖼 39 |
 | `hamasaki2022_single_parallel_contact_mwcnt_conductivity` | Electrical conductivity of a single parallel contact between carbon nanotubes — Hamasaki (Nanoscale 2022) · TEM 안에서 두 MWCNT 의 나란한 겹침 길이를 바꿔 가며 잰 접합 저항 — 짧은 겹침은 R ∝ 1/x (G ∝ 길이) · 계 | exp (in-situ TEM nanomanipulation · two-terminal I–V vs over | 2026-11-03 | 🖼 8 |
 | `harthong2009_high_density_compaction_dem_voronoi_contact_law` | 고밀도 압밀 DEM 의 접촉 법칙에 입자마다의 국소 상대밀도 (Voronoï 셀) 를 넣어 '소성 비압축' 강성을 더하다 — 단순 입방 (SC) 격자의 입자마다 FE (MDEM · ABAQUS · 3D) 에서 곡선 맞춤한 식 (10) (계수 함수 5 개 · 인쇄 숫자 10 개) → BCC · 무작위 15 입자 (YADE) | DEM 접촉 법칙 (입자마다 FE = MDEM (ABAQUS, 3D, 1/8 구 2차 사면체 1200 요소  | 2026-11-12 | 🖼 46 |
 | `he2026_dem_calendering_inhomogeneity_areal_density` | NCM 양극 calendering(롤 압연) 불균일성을 DEM 으로 — 면적로딩(areal density) 15.2→20.0 mg cm⁻² 가 힘분포·접촉수·입자 integrity 를 어떻게 가르나 · EDEM 2024 + EEPA 탄소성 접촉 · 나노압입 + Hg 압입 이중검증 — He·Zhang·Hao·Sun·Xu·C | DEM (EDEM 2024 상용, EEPA 탄소성 접촉 + JKR 집전체; 나노압입·Hg압입 검증; 액체계  | 2026-09-15 | — |
