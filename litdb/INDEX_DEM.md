@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 305편 · 생성 2026-11-12
+> digest 306편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -38,7 +38,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (17편)
+## MPM · 연속체 (18편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -53,6 +53,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `hu2018_mls_mpm_cpic_two_way_rigid_coupling` | MLS-MPM 의 원전 — 형상함수 기울기 없이 APIC 의 C_p 로 힘 · 변형구배 (전달 2 배) + CPIC: 색칠 거리장으로 격자 한 장에서 변위 불연속 · 강체 양방향 결합 ★★★ 우리 Taichi MPM 의 뿌리 · 후보 A / A′-0 부품 — Hu, Fang 외 5 인 (ACM TOG 2018) | MPM (명시적 MLS-MPM · APIC/PolyPIC 전달의 MLS 유도 + CPIC 색칠 거리장 · 강 | 2026-11-10 | 🖼 37 |
 | `klar2016_dp_sand_animation` | 모래(sand) 애니메이션을 위한 Drucker-Prager 탄소성 — Klár (ACM TOG 2016, SIGGRAPH) | MPM | 2026-06-26 | 🖼 17 |
 | `lim2025_virtual_calendering_framework` | Lim 2025 (Small 21, 2410485) — Virtual Calendering Framework: 3D-재구성 양극으로 가상 캘린더링 검증 + 전극설계 최적화 ★★★ 우리 DEM+MPM 압축의 가장 직접적인 방법론적 형제 (reconstruct-then-compress vs 우리 predict-from-pow | FEM·calendering | 2026-07-28 | 🖼 6 |
+| `nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions` | 축대칭 GIMP — MPM 을 r–z 평면의 회전체 계산으로 다시 유도 (r 가중 형상 함수 S_ip · 기울기 G_ip + 새 함수 T_ip 로 후프 응력 · 후프 변형률 · 라디안당 질량 · 축 r = 0 에서 입자 영역 자르기) · uGIMP 와 CPDI 의 닫힌 꼴 · 확장 넷 (견인력 경계 · 명시 균열 · 다물 | MPM (축대칭 GIMP 정식화 — 원통 부피 적분으로 형상 함수 S_ip · 기울기 G_ip (r 가중 · | 2026-11-12 | 🖼 100 |
 | `nam2026_dpe_microstructure_review` | Nam 2026 (Materials Horizons REVIEW, 13, 3149-3177) — 건식전극(DPE) 미세구조 엔지니어링 리뷰 ★ 우리 DEM+MPM 프로젝트의 FRAMEWORK/POSITIONING 논문 | DEM | 2026-07-28 | — |
 | `nezamabadi2022_mpm_cd_plastic_particle_compaction` | 입자마다 자기 배경격자를 둔 암시적 MPM + Contact Dynamics 로 소성 원판 300 개 압축 — 재밍 뒤 다공 연속체 압밀식 · Z−Zc ∝ √(Φ−Φc) ★★ 단일 속도장 MPM 에 없는 입자 간 접촉의 선례 (후보 A′) — Nezamabadi (Comput. Part. Mech. 2022) | MPM+CD (2D implicit MPM · multi-mesh contact dynamics · elas | 2026-11-09 | 🖼 11 |
 | `nguyen2017_mpm_bpm_deformable_particle_compaction` | 변형 입자 압밀을 두 방식으로 — 암시적 MPM+CD (탄성 연속체 입자) vs BPM (강체 1차입자 응집체 · 소성) · 2D 300 입자 · 마찰 0/0.5 · Z−Z0 ∝ (Φ−Φ0)^0.5 ★ Nezamabadi 2022 의 전신 — Nguyen (EPJ Web Conf. 2017) | MPM+CD vs BPM (2D; implicit MPM + contact dynamics vs bonded | 2026-11-09 | 🖼 6 |

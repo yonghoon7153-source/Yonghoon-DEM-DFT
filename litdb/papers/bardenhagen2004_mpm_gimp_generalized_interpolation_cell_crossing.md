@@ -623,6 +623,7 @@ MPM = 어느 셀 크기 아래에서 오차가 커진다 (finite grid instabilit
 - `hu2018_mls_mpm_cpic_two_way_rigid_coupling` — 우리 MLS-MPM 이산화 (2차 B-spline · MLS 대용 기울기) 의 원전 — §4-8.
 - `devaucorbeil2020_mpm_after_25_years_review` — MPM 변종 표 (standard MPM · GIMP · iMPM/MLS).
 - `stomakhin2013_mpm_snow_elastoplastic` · `klar2016_dp_sand_animation` — 우리 탄소성 MPM 계보 (APIC · 2차 B-spline 쪽).
+- `nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions` — 이 논문의 GIMP 를 축대칭 (r–z) 으로 다시 유도한 후속 (ref. [11] 로 인용 · uGIMP · CPDI 의 r 가중 형상 함수 + 후프 함수 T_ip · 축 r = 0 에서 영역 자르기 · 체크리스트 9 항) — 그 논문 식 (A.1) 도 l_p = 1 이면 2차 B-spline (§4-8 과 같은 산술) · 인용 쪽은 *"5:477–496"* (§0-1 의 인용 표기 어긋남과 같은 꼴).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
