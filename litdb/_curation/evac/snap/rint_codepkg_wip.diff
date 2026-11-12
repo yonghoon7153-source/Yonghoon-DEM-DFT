@@ -386,7 +386,7 @@ index 9e60bb986..82af82224 100644
              try:
                  xg, info = cg_gpu(Lg, bg, tol=_rt, maxiter=CG_MAXITER, M=Mg, **_x0g, **_cbk)
 diff --git a/scripts/test_cjunc_store.py b/scripts/test_cjunc_store.py
-index 4592b7908..95e18d180 100644
+index 4592b7908..4fbe08b8f 100644
 --- a/scripts/test_cjunc_store.py
 +++ b/scripts/test_cjunc_store.py
 @@ -8,10 +8,13 @@
@@ -705,7 +705,7 @@ index 4592b7908..95e18d180 100644
      # payload_prepare (생산 배선) — 끔 · 빗나감 · 적중
      ri = rand_inputs(7)
      kw = dict(lo=ri['lo'], vox=ri['vox'], pts=ri['pts'], phase=ri['phase'], fid=ri['fid'], kind=ri['kind'], cjunc=dict(REQ), ptfe_stamp='off')
-@@ -1020,7 +1194,114 @@ def t11():
+@@ -1020,7 +1194,137 @@ def t11():
          '폴더 꼴 거부 · 입력 오류 = 옛 오류 — 팔 결과 (돌려준 원장) 는 늘 새로 지은 것과 같다', not bad, bad)
  
  
@@ -791,6 +791,29 @@ index 4592b7908..95e18d180 100644
 +        '저장 배열 = 12 만 + 4 (별칭 빈 배열은 한 번씩만) · 복원본의 pair_i 첫 · 끝 자리 = 같은 객체 · pair_i ≠ pair_j 객체 · 120 s 안',
 +        d1 == d2 and len(arrs) == 4 * n + 4 and back is not None and back['pair_i'][0] is back['pair_i'][-1]
 +        and back['pair_j'][0] is back['pair_j'][-1] and back['pair_i'][0] is not back['pair_j'][0] and dt < 120.0, (why, len(arrs), dt))
++    if back is None or not hasattr(CS, '_read_members'):
++        chk('T13c 그릇 (zip) 왕복 — 멤버 6 만 5 천 넘음', False, '앞 단계 실패 · 또는 그릇 읽기 함수 없음')
++        return
++    #  그릇 (zip) — 멤버 수가 옛 zip 한도 (65,535) 를 넘는 파일을 쓰는 길 (`_write_zip`) · 읽는 길 (`_read_members` = `Store._read` 의 첫 단) 로
++    #  왕복 (실침대 원장 = 약 47 만 멤버 · 공개 API 는 원장 꼴만 받으므로 그릇 단을 직접 부른다 — 단원 시험이 바꿔 끼우는 고리와 같은 층)
++    zp = os.path.join(TD, 't13c.npz')
++    t0 = time.time()
++    with open(zp, 'wb') as f:
++        CS._write_zip(f, b'{"t13c":1}', skel, arrs)
++    t1 = time.time()
++    nbytes = os.path.getsize(zp)
++    hb, sb, arrs2 = CS._read_members(zp)
++    t2 = time.time()
++    back2 = CS.decode(sb, arrs2)
++    with zipfile.ZipFile(zp) as z:
++        n_mem = len(z.namelist())
++    os.unlink(zp)
++    print(f'    보고 T13c — 멤버 {n_mem:,} · 파일 {nbytes / 1e6:.1f} MB · 쓰기 {t1 - t0:.1f} s · 읽기 (CRC + 배열) {t2 - t1:.1f} s')
++    chk('T13c 그릇 (zip) 왕복 — 멤버 12 만 + 6 (> 65,535 = zip64 끝 기록) 쓰기 → 읽기 (멤버 집합 · CRC · 배열) → 풀기 = 시험 쪽 독립 비교 같음 · '
++        '별칭 서명 같음 · 엄격 지문 같음 · 머리 · 뼈대 바이트 그대로',
++        n_mem == 4 * n + 6 and n_mem > 65535 and hb == b'{"t13c":1}' and sb == skel and len(arrs2) == len(arrs)
++        and deep_diff(big, back2) is None and alias_sig(big) == alias_sig(back2) and CS.strict_digest(back2) == d1,
++        (n_mem, len(arrs2), deep_diff(big, back2)))
 +
 +
  # ═════════════════════════ P — payload 끝-끝 ═════════════════════════
@@ -820,7 +843,7 @@ index 4592b7908..95e18d180 100644
  @case('P payload 끝-끝 (실제 payload · CPU)')
  def t_payload():
      import test_ca_ext_b6 as B6
-@@ -1076,6 +1357,26 @@ def t_payload():
+@@ -1076,6 +1380,26 @@ def t_payload():
          chk('P4 저장본 어긋남 (머리 엄격 지문 고침 · CRC 새로) → rc ≠ 0 · S2_CJUNC_STORE|INCONSISTENT| · 팔 JSON 없음',
              rc4 == 0 and rc5 != 0 and 'S2_CJUNC_STORE|INCONSISTENT|' in log5 and not os.path.exists(os.path.join(wd, 'p_on5.json')),
              (rc4, rc5, log5[-300:]))
