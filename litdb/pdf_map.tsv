@@ -502,3 +502,7 @@ choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition	quant
 #   ⚠ 크롭 87 장 = 그림 19 (도구 크롭 그대로 0 · recrop 15 · manual_crop 4 = Fig. 1 · 2 · 6 · 11) + 손 크롭 68 (manual_crop: 식 47 · MATLAB 목록 1 · 근거 글 20) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability	a_convected_particle_domain_interpolation_technique_to_extend
 sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability	a convected particle domain interpolation technique to extend
+# ── GIMP 원전 — MPM 보간을 변분형 + Petrov–Galerkin 으로 일반화 (입자 특성 함수 χ_p · 가중 S̄_vp · ∇S̄_vp 식 19–20 · MPM = 델타 특수형 식 34 · contiguous particle GIMP 상자 χ_p · C¹ 식 40) · 셀 넘김 잡음의 기전 · 1D 초탄성 막대 시험 넷 (준정적 중력 기둥 · 충격 · 셀당 입자 1/2/4 · 셀 크기 0.01–10 수렴) (Bardenhagen · Kober · CMES 5(6) 477–495 (2004)) — litdb 2026-11-12 (후보 N-16) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 크롭 78 장 = 도구 8 (다시 자른 것 1 = fig_7 · caption_fix 7) + 손 크롭 70 (manual_crop: 그림 3 = fig_1 · 2 · 10 · 식 47 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing	the_generalized_interpolation_material_point_method
+bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing	the generalized interpolation material point method

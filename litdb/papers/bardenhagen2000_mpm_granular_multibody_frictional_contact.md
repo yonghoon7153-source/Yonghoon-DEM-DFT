@@ -411,6 +411,7 @@ G2P: 각 물질점은 **자기 알갱이의 장** v_i^g 에서 (10)(11)
 - `giannis2021_stress_based_multicontact_dem` · `varkey2026_multicontact_elastoplastic_dem` — DEM 쪽 다접촉 보정.
 - (같은 날 stage B 반입 예정) `nezamabadi2022_mpm_cd_plastic_particle_compaction` · `nguyen2017_mpm_bpm_deformable_particle_compaction` — 입자별 격자 + contact dynamics 로 **압밀**까지 간 2D 후속 (이 카드가 못 보여 주는 고밀도 구간).
 - (같은 날 stage A 반입 예정) `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` — 강체 + 무른 입자 혼합 압밀 (후보 B 쪽 유비).
+- `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` — 같은 제1 저자의 GIMP 원전 (보간 일반화 · MPM = 델타 특수형 · contiguous particle GIMP · 셀 넘김 잡음 · 1D 초탄성 · 접촉 없음 · 이 논문을 참고문헌에 듦 · 2026-11-12 반입).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

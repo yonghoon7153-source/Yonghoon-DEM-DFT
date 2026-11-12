@@ -169,6 +169,13 @@
    "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf"
   ]
  },
+ "bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing": {
+  "figures": 78,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "43049b95-16._The_generalized_interpolation_material_point_method.pdf"
+  ]
+ },
  "bardenhagen2005_mpm_foam_densification_simulation": {
   "figures": 17,
   "generated": "2026-11-11",

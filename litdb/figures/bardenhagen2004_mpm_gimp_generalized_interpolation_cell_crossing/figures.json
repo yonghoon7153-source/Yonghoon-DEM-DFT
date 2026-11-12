@@ -1,0 +1,2143 @@
+{
+ "slug": "bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "43049b95-16._The_generalized_interpolation_material_point_method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 8,
+   "file": "fig_1.png",
+   "caption": "Figure 1 : One dimensional “tent” grid shape function used in all GIMP Methods presented here.",
+   "rotated_deg": 0,
+   "bbox": [
+    319.3,
+    326.6,
+    556.7,
+    451.9
+   ],
+   "w": 1039,
+   "h": 572,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.984,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 놓친 그림 (벡터 · xfig 꼴 도식) · 잉크 경계 + 6 pt · 300 dpi · 캡션 글은 이 칸에",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 10,
+   "file": "fig_2.png",
+   "caption": "Figure 2 : Contiguous particle GIMP weighting function in one dimension.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.8,
+    283.8,
+    299.9,
+    409.4
+   ],
+   "w": 1034,
+   "h": 573,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.98,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 놓친 그림 (벡터 · xfig 꼴 도식) · 잉크 경계 + 6 pt · 300 dpi · 캡션 글은 이 칸에",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "식 (40) 의 그림 — l_p = L/2 (셀당 입자 1) 이면 2차 B-spline 과 같다 [카드 산술 · 카드 §4-8] · 그림은 도식 (꺾임점 0.20 L · 'l_p' 눈금만 0.25 L)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 10,
+   "file": "fig_3.png",
+   "caption": "Figure 3 : Two possible fuzzy particle discretization schemes illustrated in one–dimension for two particles per cell. All particle characteristic functions which contribute to the continuous representation of particle data for 0 ≤ x ≤ L are shown, with particle characteristic functions centered between 0 and L in bold.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.6,
+    183.5,
+    566.9,
+    427.1
+   ],
+   "w": 1078,
+   "h": 1016,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.962,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption joined from the text layer with line-break hyphen splits ('so- lutions', 'Verti- cal', 'con- tribute', 'dy- namic', 'indi- cated', 'hor- izontal', 'Dif- ferent', 'plot- ted') and text-layer word joins ('contiguousparticle' — printed with a space, render-checked) → rejoined; wording as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 12,
+   "file": "fig_4.png",
+   "caption": "Figure 4 : Numerical and analytical solutions to the quasi–static compression of a continuum bar due to a slowly increasing body force b. The MPM solution material point stresses are indicated with open triangles and the contiguous particle GIMP solution material point stresses with open circles. Vertical lines indicate cell boundaries. The solid diagonal lines indicate analytical solutions. Solutions are obtained at increasing column weights.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.6,
+    80.5,
+    567.0,
+    410.2
+   ],
+   "w": 1077,
+   "h": 1375,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.929,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption joined from the text layer with line-break hyphen splits ('so- lutions', 'Verti- cal', 'con- tribute', 'dy- namic', 'indi- cated', 'hor- izontal', 'Dif- ferent', 'plot- ted') and text-layer word joins ('contiguousparticle' — printed with a space, render-checked) → rejoined; wording as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "준정적 기둥 W 10,000 (넘김 전) · 12,000 (첫 넘김 직후 · MPM 최대 편차 W 의 14 % @ x ≈ 29 [판독])"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 13,
+   "file": "fig_5.png",
+   "caption": "Figure 5 : As in Fig. 4, but for still higher column weights. In (b), the Finite GIMP solution material point stresses are indicated with x’s.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.6,
+    80.6,
+    309.6,
+    412.4
+   ],
+   "w": 1076,
+   "h": 1384,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.922,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption joined from the text layer with line-break hyphen splits ('so- lutions', 'Verti- cal', 'con- tribute', 'dy- namic', 'indi- cated', 'hor- izontal', 'Dif- ferent', 'plot- ted') and text-layer word joins ('contiguousparticle' — printed with a space, render-checked) → rejoined; wording as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "W 30,000 (MPM ≥ 63 % · 표지 10 개 그림 밖) · 40,000 (GIMP 바닥 −5.2 % · Finite GIMP −0.01 %) [판독]"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6 : MPM and GIMP numerical and analytical solutions for the dynamic compaction of a continuum bar. The MPM solution material point stresses are indicated with open triangles and the contiguous particle GIMP solution material point stresses with open circles. Vertical lines indicate cell boundaries. The solid horizontal lines indicate the analytical solution for the stress behind a sharp shock (a discontinuity). Solutions are obtained at various fractions of the wave transit time.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.6,
+    80.6,
+    310.4,
+    397.0
+   ],
+   "w": 1079,
+   "h": 1320,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.93,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption joined from the text layer with line-break hyphen splits ('so- lutions', 'Verti- cal', 'con- tribute', 'dy- namic', 'indi- cated', 'hor- izontal', 'Dif- ferent', 'plot- ted') and text-layer word joins ('contiguousparticle' — printed with a space, render-checked) → rejoined; wording as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "Figure 7 : As in Fig. 6, but at later times.",
+   "rotated_deg": 0,
+   "bbox": [
+    334.2,
+    89.2,
+    545.9,
+    394.2
+   ],
+   "w": 932,
+   "h": 1321,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.917,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [341.8, 86.8, 543.8, 402.1] clipped the y-axis label 'Stress' and the panel letters (a)/(b); new box = ink bbox of the figure region + 6 pt, 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "충격 t/파 통과 0.75 · 1 — MPM 교란 9,083–9,159 (45–46 %) 이 x ≈ 13 에 잠김 · t = 1 에 x ≈ 37–39 둘째 무리 [판독]"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "Figure 8 : Various GIMP numerical solutions for the dynamic compaction of a continuum bar after the stress wave has reached the end of the bar. The contiguous particle GIMP solution material point stresses are indicated with open circles, and the Finite contiguous particle GIMP solution material point stresses are indicated with x’s. Vertical lines indicate cell boundaries. The solid horizontal line indicates the analytical solution for the stress behind a sharp shock.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.6,
+    87.4,
+    310.3,
+    260.8
+   ],
+   "w": 1078,
+   "h": 723,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.915,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption joined from the text layer with line-break hyphen splits ('so- lutions', 'Verti- cal', 'con- tribute', 'dy- namic', 'indi- cated', 'hor- izontal', 'Dif- ferent', 'plot- ted') and text-layer word joins ('contiguousparticle' — printed with a space, render-checked) → rejoined; wording as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 16,
+   "file": "fig_9.png",
+   "caption": "Figure 9 : MPM (a) and contiguous particle GIMP (b) solutions of the dynamic compaction of a continuum bar after the stress wave has reached the end of the bar. Different solutions have different numbers of particles/cell. Vertical lines indicate cell boundaries. The lightly dashed horizontal lines indicate the analytical solution for the stress behind a sharp shock.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.6,
+    80.4,
+    310.2,
+    432.9
+   ],
+   "w": 1078,
+   "h": 1470,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.932,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption joined from the text layer with line-break hyphen splits ('so- lutions', 'Verti- cal', 'con- tribute', 'dy- namic', 'indi- cated', 'hor- izontal', 'Dif- ferent', 'plot- ted') and text-layer word joins ('contiguousparticle' — printed with a space, render-checked) → rejoined; wording as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 16,
+   "file": "fig_10.png",
+   "caption": "Figure 10 : Results of a convergence study for the MPM, GIMP and Finite GIMP algorithms, for various particle densities. Error relative to the exact solution is plotted against computational cell size. The computation is of the quasistatic compression of a column under gravity, identical to that depicted in Fig. 4(a).",
+   "rotated_deg": 0,
+   "bbox": [
+    323.4,
+    480.9,
+    545.9,
+    639.0
+   ],
+   "w": 977,
+   "h": 709,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.948,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 놓친 그림 (벡터 · gnuplot 그림 · 쪽 오른쪽 단 아래) · 잉크 경계 + 6 pt · 300 dpi · 캡션 글은 이 칸에",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "셀 크기 0.01–10 × 1·2·4 p/c × MPM·GIMP·Finite GIMP 오차 (식 47) · 판독값 = digitized.csv · 카드 §3-5"
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 17,
+   "file": "fig_11.png",
+   "caption": "Figure 11 : Results of a convergence study for the Finite GIMP algorithm using one particle per cell, for various loading rates. Error relative to the exact solution is plotted against computational cell size. Gravity is applied five times faster, and 4 times slower, than for the results in Figs. 4 and 10.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.6,
+    321.1,
+    566.9,
+    495.3
+   ],
+   "w": 1076,
+   "h": 726,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.975,
+   "caption_fix": "2026-11-12 litdb-curator: auto caption joined from the text layer with line-break hyphen splits ('so- lutions', 'Verti- cal', 'con- tribute', 'dy- namic', 'indi- cated', 'hor- izontal', 'Dif- ferent', 'plot- ted') and text-layer word joins ('contiguousparticle' — printed with a space, render-checked) → rejoined; wording as printed",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "1 p/c Finite GIMP · 재하 속도 ×5 · ÷4 — 셀 0.01 바닥 3.1e−6 · 1.3e−6 · 4.7e−7 [판독]"
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_variational_form_momentum.png",
+   "caption": "Equation (1), PDF p.3 (journal p.479), §2: ∫_Ω ρa·δv dx + ∫_Ω σ:∇δv dx = ∫_Ω ρb·δv dx + ∫_∂Ω_τ τ·δv dS — variational (weak) form of the momentum equation",
+   "rotated_deg": 0,
+   "bbox": [
+    313.3,
+    113.9,
+    561.1,
+    163.8
+   ],
+   "w": 1455,
+   "h": 355,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.963,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "file": "eq_02_initial_partition_of_unity_chi.png",
+   "caption": "Equation (2), PDF p.3 (journal p.479), §2.1: Σ_p χ_p^i(x) = 1 ∀x — particle characteristic functions are a partition of unity in the initial configuration",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    525.9,
+    561.1,
+    547.8
+   ],
+   "w": 1446,
+   "h": 200,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.979,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "file": "eq_03_initial_particle_volume.png",
+   "caption": "Equation (3), PDF p.3 (journal p.479), §2.1: V_p^i = ∫_{Ω_p^i∩Ω^i} χ_p^i(x) dx — initial particle volume",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    678.8,
+    561.1,
+    701.2
+   ],
+   "w": 1446,
+   "h": 202,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.979,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_initial_particle_mass.png",
+   "caption": "Equation (4), PDF p.4 (journal p.480), §2.1: m_p^i = ∫ ρ^i(x) χ_p^i(x) dx — initial particle mass",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    182.1,
+    304.2,
+    204.4
+   ],
+   "w": 1447,
+   "h": 202,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_initial_particle_momentum.png",
+   "caption": "Equation (5), PDF p.4 (journal p.480), §2.1: p_p^i = ∫ ρ^i(x) v^i(x) χ_p^i(x) dx — initial particle momentum",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    218.6,
+    304.2,
+    240.6
+   ],
+   "w": 1446,
+   "h": 200,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.967,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_initial_particle_stress.png",
+   "caption": "Equation (6), PDF p.4 (journal p.480), §2.1: σ_p^i = ∫ σ^i(x) χ_p^i(x)/V_p^i dx — initial particle stress (volume average)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.4,
+    477.8,
+    304.2,
+    507.5
+   ],
+   "w": 1449,
+   "h": 243,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 4,
+   "file": "eq_07_initial_total_mass_conserved.png",
+   "caption": "Equation (7), PDF p.4 (journal p.480), §2.1: Σ_p m_p^i = ∫_{Ω^i} ρ^i(x) dx — total mass conserved exactly by the initial discretization",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    602.8,
+    304.2,
+    628.7
+   ],
+   "w": 1446,
+   "h": 222,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 4,
+   "file": "eq_08_initial_total_momentum_conserved.png",
+   "caption": "Equation (8), PDF p.4 (journal p.480), §2.1: Σ_p p_p^i = ∫_{Ω^i} ρ^i(x) v^i(x) dx — total momentum conserved exactly by the initial discretization",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    658.0,
+    304.4,
+    698.2
+   ],
+   "w": 1447,
+   "h": 301,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 4,
+   "file": "eq_09_particle_data_representation.png",
+   "caption": "Equation (9), PDF p.4 (journal p.480), §2.2: f(x) = Σ_p f_p χ_p(x) — continuous representation of particle data (χ_p sets its smoothness)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    408.5,
+    561.1,
+    430.1
+   ],
+   "w": 1447,
+   "h": 198,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 4,
+   "file": "eq_10_weak_form_sum_over_particles.png",
+   "caption": "Equation (10), PDF p.4 (journal p.480), §2.2: eq. (1) written as a sum of integrals over particle domains — trial functions = particle characteristic functions",
+   "rotated_deg": 0,
+   "bbox": [
+    316.2,
+    579.1,
+    561.1,
+    637.9
+   ],
+   "w": 1439,
+   "h": 405,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.944,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 4,
+   "file": "eq_11_current_particle_volume.png",
+   "caption": "Equation (11), PDF p.4 (journal p.480), §2.2: V_p = ∫_{Ω_p∩Ω} χ_p(x) dx — current particle volume",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    716.3,
+    561.0,
+    740.8
+   ],
+   "w": 1445,
+   "h": 214,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 5,
+   "file": "eq_12_grid_data_representation.png",
+   "caption": "Equation (12), PDF p.5 (journal p.481), §2.2: g(x) = Σ_v g_v S_v(x) — test functions represented with grid shape functions",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    349.3,
+    304.4,
+    369.5
+   ],
+   "w": 1448,
+   "h": 190,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 5,
+   "file": "eq_13_grid_shape_partition_of_unity.png",
+   "caption": "Equation (13), PDF p.5 (journal p.481), §2.2: Σ_v S_v(x) = 1 — grid shape functions are a partition of unity",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    455.8,
+    304.4,
+    476.0
+   ],
+   "w": 1447,
+   "h": 190,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.979,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 5,
+   "file": "eq_14_discrete_grid_momentum_equation.png",
+   "caption": "Equation (14), PDF p.5 (journal p.481), §2.2: ṗ_v = f_v^int + f_v^b + f_v^τ — discrete grid momentum equation (lumped mass)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    659.1,
+    304.5,
+    671.9
+   ],
+   "w": 1448,
+   "h": 149,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 5,
+   "file": "eq_15_grid_momentum_rate.png",
+   "caption": "Equation (15), PDF p.5 (journal p.481), §2.2: ṗ_v = Σ_p S̄_vp ṗ_p — grid momentum rate from particle momentum rates",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    718.1,
+    304.5,
+    739.7
+   ],
+   "w": 1448,
+   "h": 198,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq16",
+   "page": 5,
+   "file": "eq_16_internal_force_gradient_weighting.png",
+   "caption": "Equation (16), PDF p.5 (journal p.481), §2.2: f_v^int = −Σ_p σ_p·∇S̄_vp V_p — internal force through the gradient weighting function — the term where cell-crossing imbalance arises",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    88.5,
+    561.1,
+    110.5
+   ],
+   "w": 1447,
+   "h": 200,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "eq17",
+   "page": 5,
+   "file": "eq_17_body_force.png",
+   "caption": "Equation (17), PDF p.5 (journal p.481), §2.2: f_v^b = Σ_p m_p b S̄_vp — body force",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    121.1,
+    561.1,
+    143.3
+   ],
+   "w": 1447,
+   "h": 201,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.977,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq18",
+   "page": 5,
+   "file": "eq_18_traction_force.png",
+   "caption": "Equation (18), PDF p.5 (journal p.481), §2.2: f_v^τ = ∫_{∂Ω_τ} τ S_v dS — traction force",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    153.5,
+    561.0,
+    177.3
+   ],
+   "w": 1446,
+   "h": 210,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "eq19",
+   "page": 5,
+   "file": "eq_19_weighting_function_Svp.png",
+   "caption": "Equation (19), PDF p.5 (journal p.481), §2.2: S̄_vp = (1/V_p) ∫_{Ω_p∩Ω} χ_p(x) S_v(x) dx — weighting function — general GIMP form",
+   "rotated_deg": 0,
+   "bbox": [
+    314.5,
+    290.1,
+    561.0,
+    315.8
+   ],
+   "w": 1447,
+   "h": 221,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e20",
+   "kind": "equation",
+   "label": "eq20",
+   "page": 5,
+   "file": "eq_20_gradient_weighting_function.png",
+   "caption": "Equation (20), PDF p.5 (journal p.481), §2.2: ∇S̄_vp = (1/V_p) ∫_{Ω_p∩Ω} χ_p(x) ∇S_v(x) dx — gradient weighting function — general GIMP form",
+   "rotated_deg": 0,
+   "bbox": [
+    314.5,
+    329.5,
+    561.0,
+    355.4
+   ],
+   "w": 1447,
+   "h": 222,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.965,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e21",
+   "kind": "equation",
+   "label": "eq21",
+   "page": 5,
+   "file": "eq_21_grid_mass_p2g.png",
+   "caption": "Equation (21), PDF p.5 (journal p.481), §2.2: m_v = Σ_p m_p S̄_vp — particle-to-grid mass",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    531.2,
+    561.1,
+    553.1
+   ],
+   "w": 1447,
+   "h": 200,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.98,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "eq22",
+   "page": 5,
+   "file": "eq_22_grid_momentum_p2g.png",
+   "caption": "Equation (22), PDF p.5 (journal p.481), §2.2: p_v = Σ_p p_p S̄_vp — particle-to-grid momentum",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    567.7,
+    561.1,
+    589.7
+   ],
+   "w": 1446,
+   "h": 200,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e23",
+   "kind": "equation",
+   "label": "eq23",
+   "page": 5,
+   "file": "eq_23_weighting_partition_of_unity.png",
+   "caption": "Equation (23), PDF p.5 (journal p.481), §2.2: Σ_v S̄_vp = 1 — weighting functions are a partition of unity",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    680.2,
+    561.1,
+    700.7
+   ],
+   "w": 1446,
+   "h": 192,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.977,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e24",
+   "kind": "equation",
+   "label": "eq24",
+   "page": 6,
+   "file": "eq_24_total_mass_conserved_p2g.png",
+   "caption": "Equation (24), PDF p.6 (journal p.482), §2.2: Σ_v m_v = Σ_p m_p — total mass conserved in the transfer (any weighting)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    114.3,
+    304.5,
+    136.1
+   ],
+   "w": 1448,
+   "h": 199,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e25",
+   "kind": "equation",
+   "label": "eq25",
+   "page": 6,
+   "file": "eq_25_total_momentum_conserved_p2g.png",
+   "caption": "Equation (25), PDF p.6 (journal p.482), §2.2: Σ_v p_v = Σ_p p_p — total momentum conserved in the transfer (any weighting)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    150.8,
+    304.5,
+    172.4
+   ],
+   "w": 1448,
+   "h": 198,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.955,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e26",
+   "kind": "equation",
+   "label": "eq26",
+   "page": 6,
+   "file": "eq_26_particle_position_update.png",
+   "caption": "Equation (26), PDF p.6 (journal p.482), §2.2: ẋ_p = Σ_v v_v S̄_vp — particle position update from grid velocities",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    330.1,
+    304.5,
+    353.5
+   ],
+   "w": 1449,
+   "h": 208,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.965,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e27",
+   "kind": "equation",
+   "label": "eq27",
+   "page": 6,
+   "file": "eq_27_particle_momentum_update.png",
+   "caption": "Equation (27), PDF p.6 (journal p.482), §2.2: ṗ_p = m_p Σ_v a_v S̄_vp — particle momentum update from grid accelerations (reduces numerical diffusion)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    368.3,
+    304.5,
+    394.0
+   ],
+   "w": 1448,
+   "h": 221,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e28",
+   "kind": "equation",
+   "label": "eq28",
+   "page": 6,
+   "file": "eq_28_momentum_change_consistency.png",
+   "caption": "Equation (28), PDF p.6 (journal p.482), §2.2: Σ_p ṗ_p = Σ_v ṗ_v — momentum-change consistency between grid and particles",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    535.1,
+    304.5,
+    561.9
+   ],
+   "w": 1448,
+   "h": 227,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.955,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e29",
+   "kind": "equation",
+   "label": "eq29",
+   "page": 6,
+   "file": "eq_29_grid_strain_rate.png",
+   "caption": "Equation (29), PDF p.6 (journal p.482), §2.2: ε̇(x) = ½(∇S_v v_v + v_v ∇S_v) — grid strain rate (Σ_v not printed)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    154.7,
+    561.1,
+    177.0
+   ],
+   "w": 1446,
+   "h": 202,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.953,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e30",
+   "kind": "equation",
+   "label": "eq30",
+   "page": 6,
+   "file": "eq_30_particle_strain_rate_volume_average.png",
+   "caption": "Equation (30), PDF p.6 (journal p.482), §2.2: ε̇_p = Σ_v ½(∇S̄_vp v_v + v_v ∇S̄_vp) — particle strain rate = volume average over the particle domain",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    256.7,
+    561.1,
+    296.4
+   ],
+   "w": 1446,
+   "h": 299,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e31",
+   "kind": "equation",
+   "label": "eq31",
+   "page": 7,
+   "file": "eq_31_internal_force_uniform_stress.png",
+   "caption": "Equation (31), PDF p.7 (journal p.483), §2.3: f_v^int = −σ·Σ_p ∇S̄_vp V_p — internal force for a uniform stress state",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    472.9,
+    561.1,
+    494.6
+   ],
+   "w": 1447,
+   "h": 199,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e32",
+   "kind": "equation",
+   "label": "eq32",
+   "page": 7,
+   "file": "eq_32_current_partition_of_unity_chi.png",
+   "caption": "Equation (32), PDF p.7 (journal p.483), §2.3: Σ_p χ_p(x) = 1 (current configuration) — condition for zero internal force at interior vertices",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    557.4,
+    561.0,
+    579.2
+   ],
+   "w": 1445,
+   "h": 199,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e33",
+   "kind": "equation",
+   "label": "eq33",
+   "page": 7,
+   "file": "eq_33_zero_internal_force_interior_vertices.png",
+   "caption": "Equation (33), PDF p.7 (journal p.483), §2.3: f_v^int = −σ·∫_{Ω_p∩Ω} ∇S_v = 0 — zero internal force at interior vertices if Ω_p∩Ω = Ω_p (dx not printed)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    638.6,
+    561.1,
+    663.3
+   ],
+   "w": 1447,
+   "h": 215,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.959,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e34",
+   "kind": "equation",
+   "label": "eq34",
+   "page": 8,
+   "file": "eq_34_mpm_dirac_delta_special_case.png",
+   "caption": "Equation (34), PDF p.8 (journal p.484), §2.3: χ_p(x) = δ(x − x_p)V_p — Dirac delta → MPM recovered exactly (S̄_vp = S_v(x_p)); not a partition of unity",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    169.5,
+    304.5,
+    181.0
+   ],
+   "w": 1449,
+   "h": 142,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e35",
+   "kind": "equation",
+   "label": "eq35",
+   "page": 8,
+   "file": "eq_35_tent_grid_shape_function_1d.png",
+   "caption": "Equation (35), PDF p.8 (journal p.484), §3: S_v(x) = 0 · 1 + (x − x_v)/L · 1 − (x − x_v)/L (1D tent) — grid shape function used in all examples",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    111.0,
+    561.1,
+    176.7
+   ],
+   "w": 1446,
+   "h": 443,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e36",
+   "kind": "equation",
+   "label": "eq36",
+   "page": 9,
+   "file": "eq_36_contiguous_particle_step_functions.png",
+   "caption": "Equation (36), PDF p.9 (journal p.485), §3.2: χ_p(x) = H(x − (x_p − l_p)) − H(x − (x_p + l_p)) — contiguous particle = box of half-width l_p",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    727.3,
+    304.5,
+    738.8
+   ],
+   "w": 1449,
+   "h": 142,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.95,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e37",
+   "kind": "equation",
+   "label": "eq37",
+   "page": 9,
+   "file": "eq_37_contiguous_particle_indicator.png",
+   "caption": "Equation (37), PDF p.9 (journal p.485), §3.2: χ_p(x) = 1 if x ∈ Ω_p, 0 otherwise — same box, indicator form",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    195.3,
+    561.1,
+    228.3
+   ],
+   "w": 1447,
+   "h": 261,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e38",
+   "kind": "equation",
+   "label": "eq38",
+   "page": 9,
+   "file": "eq_38_contiguous_weighting_integral.png",
+   "caption": "Equation (38), PDF p.9 (journal p.485), §3.2: S̄_vp = (1/2l_p) ∫_{x_p−l_p}^{x_p+l_p} S_v(x) dx — contiguous particle weighting function",
+   "rotated_deg": 0,
+   "bbox": [
+    314.5,
+    402.7,
+    561.3,
+    430.1
+   ],
+   "w": 1449,
+   "h": 230,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.974,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e39",
+   "kind": "equation",
+   "label": "eq39",
+   "page": 9,
+   "file": "eq_39_contiguous_gradient_weighting_integral.png",
+   "caption": "Equation (39), PDF p.9 (journal p.485), §3.2: ∇S̄_vp = (1/2l_p) ∫_{x_p−l_p}^{x_p+l_p} ∇S_v(x) dx — contiguous particle gradient weighting function",
+   "rotated_deg": 0,
+   "bbox": [
+    314.5,
+    443.6,
+    561.3,
+    470.8
+   ],
+   "w": 1449,
+   "h": 229,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.97,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e40",
+   "kind": "equation",
+   "label": "eq40",
+   "page": 9,
+   "file": "eq_40_cpgimp_piecewise_weighting_function.png",
+   "caption": "Equation (40), PDF p.9 (journal p.485), §3.2: S̄_vp(x_p − x_v) = 7-branch piecewise (0 · (L+l_p+d)²/4Ll_p · 1+d/L · 1−(d²+l_p²)/2Ll_p · 1−d/L · (L+l_p−d)²/4Ll_p · 0) — C¹ contiguous particle GIMP weighting; l_p = L/2 gives the quadratic B-spline [card arithmetic]",
+   "rotated_deg": 0,
+   "bbox": [
+    314.5,
+    565.0,
+    561.1,
+    698.3
+   ],
+   "w": 1448,
+   "h": 819,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e41",
+   "kind": "equation",
+   "label": "eq41",
+   "page": 11,
+   "file": "eq_41_hyperelastic_1d_sigma_E_F_minus_1.png",
+   "caption": "Equation (41), PDF p.11 (journal p.487), §4: σ = E(F − 1) — 1D hyperelastic test material",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    621.0,
+    304.4,
+    632.0
+   ],
+   "w": 1447,
+   "h": 139,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.98,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e42",
+   "kind": "equation",
+   "label": "eq42",
+   "page": 11,
+   "file": "eq_42_static_column_analytic_stress.png",
+   "caption": "Equation (42), PDF p.11 (journal p.487), §4.1: σ(x) = E{√[(2ρ₀b/E)(Δ − x) + 1] − 1} — analytic stress in the static column (current configuration)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    676.7,
+    561.1,
+    704.8
+   ],
+   "w": 1446,
+   "h": 234,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.956,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e43",
+   "kind": "equation",
+   "label": "eq43",
+   "page": 12,
+   "file": "eq_43_column_current_length.png",
+   "caption": "Equation (43), PDF p.12 (journal p.488), §4.1: Δ = Δ₀ + ρ₀bΔ₀²/(2E) — current column length",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    138.3,
+    304.5,
+    160.6
+   ],
+   "w": 1449,
+   "h": 202,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.977,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e44",
+   "kind": "equation",
+   "label": "eq44",
+   "page": 12,
+   "file": "eq_44_column_weight_W.png",
+   "caption": "Equation (44), PDF p.12 (journal p.488), §4.1: W = ρ₀|b|Δ₀ — column weight (reporting axis of Figs. 4–5)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.9,
+    278.1,
+    304.5,
+    289.0
+   ],
+   "w": 1448,
+   "h": 139,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e45",
+   "kind": "equation",
+   "label": "eq45",
+   "page": 13,
+   "file": "eq_45_artificial_viscosity_q.png",
+   "caption": "Equation (45), PDF p.13 (journal p.489), §4.2: q = c₁ρc|ε̇L| + c₂ρ(ε̇L)² (ε̇ < 0) · 0 otherwise — artificial viscosity (Richtmyer–von Neumann + linear term)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.9,
+    444.4,
+    561.1,
+    477.4
+   ],
+   "w": 1446,
+   "h": 261,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.964,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e46",
+   "kind": "equation",
+   "label": "eq46",
+   "page": 14,
+   "file": "eq_46_deformation_gradient_behind_shock.png",
+   "caption": "Equation (46), PDF p.14 (journal p.490), §4.2: F = (ct − v₀t)/(ct) = 1 − v₀/c — deformation gradient behind the shock (stress −20000)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    572.9,
+    304.5,
+    594.0
+   ],
+   "w": 1449,
+   "h": 195,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e47",
+   "kind": "equation",
+   "label": "eq47",
+   "page": 15,
+   "file": "eq_47_particle_stress_error_measure.png",
+   "caption": "Equation (47), PDF p.15 (journal p.491), §4.4: Error = Σ_p |σ(x_p) − σ_p| 2l_p/(WΔ₀) — particle-stress error measure of the convergence study",
+   "rotated_deg": 0,
+   "bbox": [
+    314.7,
+    675.6,
+    561.1,
+    703.5
+   ],
+   "w": 1447,
+   "h": 233,
+   "dpi": 400,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.964,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x01a",
+   "kind": "text",
+   "label": "p1-header-title-authors-affiliations",
+   "page": 1,
+   "file": "txt_p1_header_title_authors_affiliations.png",
+   "caption": "PDF p.1 header (Copyright © 2004 Tech Science Press · cmes, vol.5, no.6, pp.477-495, 2004) + title + authors + footnote affiliations (Utah · Florida GERC · LANL T-14) — two parts stacked",
+   "rotated_deg": 0,
+   "bbox": [
+    58.0,
+    55.5,
+    559.4,
+    152.3
+   ],
+   "w": 2139,
+   "h": 893,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.946,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     58.0,
+     55.5,
+     559.4,
+     152.3
+    ],
+    [
+     64.5,
+     639.3,
+     304.2,
+     737.7
+    ]
+   ],
+   "pages": [
+    1,
+    1
+   ]
+  },
+  {
+   "key": "x01b",
+   "kind": "text",
+   "label": "p1-abstract-noise-destroys-degrades",
+   "page": 1,
+   "file": "txt_p1_abstract_noise_destroys_degrades.png",
+   "caption": "Abstract — MPM noise = nonphysical local variation at material points; destroys the explicit solution in one case, seriously degrades it in another; due to interpolation non-smoothness + material points crossing grid boundaries; GIMP 'capable of eliminating cell crossing noise'",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    194.5,
+    304.5,
+    516.3
+   ],
+   "w": 1078,
+   "h": 1391,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.844,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     194.5,
+     304.5,
+     516.3
+    ]
+   ]
+  },
+  {
+   "key": "x01c",
+   "kind": "text",
+   "label": "p1-intro-fem-mesh-distortion-remeshing",
+   "page": 1,
+   "file": "txt_p1_intro_fem_mesh_distortion_remeshing.png",
+   "caption": "Introduction — body-fixed FEM meshes hard and slow to generate for complex 3D objects; mesh distortion with large deformation compromises accuracy and ultimately requires re-meshing",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    194.7,
+    561.3,
+    351.4
+   ],
+   "w": 1077,
+   "h": 703,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.855,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     194.7,
+     561.3,
+     351.4
+    ]
+   ]
+  },
+  {
+   "key": "x02d",
+   "kind": "text",
+   "label": "p2-p3-smoother-representation-removes-artifact",
+   "page": 2,
+   "file": "txt_p2_p3_smoother_representation_removes_artifact.png",
+   "caption": "End of introduction — the generalization gives a smoother representation of particle data on the grid, removing the MPM artifact when material points fail to register self-similarly (expected regularly in finite deformation) — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    635.8,
+    561.0,
+    727.0
+   ],
+   "w": 1076,
+   "h": 614,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.849,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     635.8,
+     561.0,
+     727.0
+    ],
+    [
+     57.8,
+     90.8,
+     303.8,
+     127.8
+    ]
+   ],
+   "pages": [
+    2,
+    3
+   ]
+  },
+  {
+   "key": "x03e",
+   "kind": "text",
+   "label": "p3-particle-characteristic-functions-definition",
+   "page": 3,
+   "file": "txt_p3_particle_characteristic_functions_definition.png",
+   "caption": "§2 — definition of particle characteristic functions χ_p (space occupied, spatially varying volume fraction; functions of current position and deformation state)",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    279.9,
+    561.5,
+    438.8
+   ],
+   "w": 1078,
+   "h": 712,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.852,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     279.9,
+     561.5,
+     438.8
+    ]
+   ]
+  },
+  {
+   "key": "x06f",
+   "kind": "text",
+   "label": "p6-p7-observations-smoother-weighting-analytic",
+   "page": 6,
+   "file": "txt_p6_p7_observations_smoother_weighting_analytic.png",
+   "caption": "§2.3 — integrating over particle domains smooths the shape functions, widens support, makes S̄_vp at a vertex < 1 ('precisely this property which improves performance in handling finite deformations'); analytic weighting on a fixed regular grid; relation to MLPG — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    579.0,
+    561.5,
+    737.8
+   ],
+   "w": 1078,
+   "h": 1122,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.845,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     579.0,
+     561.5,
+     737.8
+    ],
+    [
+     57.8,
+     185.6,
+     303.8,
+     276.8
+    ]
+   ],
+   "pages": [
+    6,
+    7
+   ]
+  },
+  {
+   "key": "x07g",
+   "kind": "text",
+   "label": "p7-disorder-errors-reduced-not-eliminated",
+   "page": 7,
+   "file": "txt_p7_disorder_errors_reduced_not_eliminated.png",
+   "caption": "§2.3 — local grid data errors from particle disorder are only reduced, not eliminated, by smoother interpolation; eliminated for uniform stress when χ_p stay a partition of unity",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    337.8,
+    561.0,
+    418.4
+   ],
+   "w": 1076,
+   "h": 386,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.872,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     337.8,
+     561.0,
+     418.4
+    ]
+   ]
+  },
+  {
+   "key": "x08h",
+   "kind": "text",
+   "label": "p8-mpm-special-case-not-partition-of-unity-lumped-mass",
+   "page": 8,
+   "file": "txt_p8_mpm_special_case_not_partition_of_unity_lumped_mass.png",
+   "caption": "§2.3 — χ_p = δ(x − x_p)V_p recovers MPM exactly; not a partition of unity → uniform particle stress can give non-zero grid forces; Petrov–Galerkin gives lumped mass directly",
+   "rotated_deg": 0,
+   "bbox": [
+    56.1,
+    90.8,
+    304.7,
+    557.8
+   ],
+   "w": 1086,
+   "h": 1996,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.875,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     56.1,
+     90.8,
+     304.7,
+     557.8
+    ]
+   ]
+  },
+  {
+   "key": "x08i",
+   "kind": "text",
+   "label": "p8-p9-3d-practical-complication-untracked-approx",
+   "page": 8,
+   "file": "txt_p8_p9_3d_practical_complication_untracked_approx.png",
+   "caption": "§3 — in 3D, finite deforming particles need integrals over deforming/rotating domains (may need numerical integration); study done in 1D for simplicity; untracked-size approximation also examined — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    521.6,
+    561.0,
+    737.8
+   ],
+   "w": 1076,
+   "h": 1305,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.847,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     521.6,
+     561.0,
+     737.8
+    ],
+    [
+     57.8,
+     90.8,
+     304.0,
+     168.6
+    ]
+   ],
+   "pages": [
+    8,
+    9
+   ]
+  },
+  {
+   "key": "x09j",
+   "kind": "text",
+   "label": "p9-mpm-registration-abrupt-point-mass-inconsistency",
+   "page": 9,
+   "file": "txt_p9_mpm_registration_abrupt_point_mass_inconsistency.png",
+   "caption": "§3.1 — MPM efficient (only the containing cell's vertices) but interpolation depends strongly on registration and can change abruptly as particles cross cells; mass/volume vs infinitesimal point inconsistency",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    291.0,
+    304.0,
+    602.0
+   ],
+   "w": 1076,
+   "h": 1346,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.851,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     291.0,
+     304.0,
+     602.0
+    ]
+   ]
+  },
+  {
+   "key": "x09k",
+   "kind": "text",
+   "label": "p9-p10-contiguous-particle-gimp-C1-cost",
+   "page": 9,
+   "file": "txt_p9_p10_contiguous_particle_gimp_C1_cost.png",
+   "caption": "§3.2 — contiguous particle GIMP = simplest finite-particle generalization, next degree of smoothness, C¹ weighting with minimal complexity; wider support (adjacent and next-nearest cells) → more computational effort — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    241.0,
+    561.3,
+    345.7
+   ],
+   "w": 1079,
+   "h": 1226,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.849,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     241.0,
+     561.3,
+     345.7
+    ],
+    [
+     57.8,
+     90.8,
+     304.7,
+     261.2
+    ]
+   ],
+   "pages": [
+    9,
+    10
+   ]
+  },
+  {
+   "key": "x10l",
+   "kind": "text",
+   "label": "p10-untracked-particle-size-boundary-loss",
+   "page": 10,
+   "file": "txt_p10_untracked_particle_size_boundary_loss.png",
+   "caption": "§3.2 — not tracking particle volumes (l_p(t) = l_p^i): good for small deformations; errors when particles fail to stay contiguous or overlap the computational boundaries during finite deformation",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    476.5,
+    304.0,
+    662.5
+   ],
+   "w": 1076,
+   "h": 825,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.848,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     476.5,
+     304.0,
+     662.5
+    ]
+   ]
+  },
+  {
+   "key": "x11m",
+   "kind": "text",
+   "label": "p11-example-setup-E-c-L-dt-40-transits",
+   "page": 11,
+   "file": "txt_p11_example_setup_E_c_L_dt_40_transits.png",
+   "caption": "§4 — test setup: σ = E(F − 1), E = 10⁶, ρ₀ = 1, c = 1000, length 50, 50 cells L = 1, 2 particles/cell, transit time .05, CFL Δt ≤ 10⁻³ → Δt = 10⁻⁴, gravity ramped over 40 wave transit times — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    512.7,
+    304.5,
+    737.8
+   ],
+   "w": 1081,
+   "h": 2895,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.864,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     512.7,
+     304.5,
+     737.8
+    ],
+    [
+     314.5,
+     90.8,
+     562.0,
+     541.3
+    ]
+   ],
+   "pages": [
+    11,
+    11
+   ]
+  },
+  {
+   "key": "x12n",
+   "kind": "text",
+   "label": "p12-final-body-force-W40000-first-crossings",
+   "page": 12,
+   "file": "txt_p12_final_body_force_W40000_first_crossings.png",
+   "caption": "§4.1 — final body force from eq. 43 (end displacement one cell, W = 40000); W = 12000: first crossings, 3 material points in 29 ≤ x ≤ 30, MPM perturbed for x ≥ 29 and in the rest of the column",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    171.4,
+    304.5,
+    504.3
+   ],
+   "w": 1078,
+   "h": 1437,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.877,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     171.4,
+     304.5,
+     504.3
+    ]
+   ]
+  },
+  {
+   "key": "x12o",
+   "kind": "text",
+   "label": "p12-cell-crossing-noise-force-imbalance",
+   "page": 12,
+   "file": "txt_p12_cell_crossing_noise_force_imbalance.png",
+   "caption": "§4.1 — mechanism: MPM force imbalance ∝ particle stress × difference of particle counts across a vertex; contiguous GIMP reduces it substantially, residual ∝ stress × gap/overlap volume ratio, only when gaps/overlaps register non-uniformly — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    56.8,
+    511.0,
+    304.0,
+    737.8
+   ],
+   "w": 1080,
+   "h": 1179,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.843,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     56.8,
+     511.0,
+     304.0,
+     737.8
+    ],
+    [
+     314.8,
+     575.8,
+     560.1,
+     612.8
+    ]
+   ],
+   "pages": [
+    12,
+    12
+   ]
+  },
+  {
+   "key": "x12p",
+   "kind": "text",
+   "label": "p12-p13-mpm-destroyed-gimp-weight-finite-gimp-summary",
+   "page": 12,
+   "file": "txt_p12_p13_mpm_destroyed_gimp_weight_finite_gimp_summary.png",
+   "caption": "§4.1 — W = 30000 MPM destroyed; W = 40000 only traces of MPM remain, GIMP under-predicts the column weight (boundary overlap), Finite GIMP overlies the analytic solution; summary: MPM can be very noisy — three parts",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    619.5,
+    561.3,
+    737.1
+   ],
+   "w": 1077,
+   "h": 2050,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.845,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 3 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     619.5,
+     561.3,
+     737.1
+    ],
+    [
+     57.8,
+     494.5,
+     304.2,
+     737.8
+    ],
+    [
+     314.8,
+     90.8,
+     561.0,
+     195.4
+    ]
+   ],
+   "pages": [
+    12,
+    13,
+    13
+   ]
+  },
+  {
+   "key": "x13q",
+   "kind": "text",
+   "label": "p13-p14-dynamic-compaction-setup-shock-locked-in",
+   "page": 13,
+   "file": "txt_p13_p14_dynamic_compaction_setup_shock_locked_in.png",
+   "caption": "§4.2 — dynamic compaction: v₀ = c/50 into a rigid wall, one transit time, artificial viscosity c₁ = .2, c₂ = 2.0; stress behind shock −20000; first crossing at x_v = 13; MPM disturbance locked in, GIMP much smoother — three parts",
+   "rotated_deg": 0,
+   "bbox": [
+    314.8,
+    241.0,
+    561.7,
+    570.1
+   ],
+   "w": 1079,
+   "h": 2309,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.874,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 3 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     314.8,
+     241.0,
+     561.7,
+     570.1
+    ],
+    [
+     57.8,
+     603.0,
+     303.5,
+     653.4
+    ],
+    [
+     314.8,
+     505.0,
+     561.3,
+     653.4
+    ]
+   ],
+   "pages": [
+    13,
+    14,
+    14
+   ]
+  },
+  {
+   "key": "x15r",
+   "kind": "text",
+   "label": "p15-information-loss-and-particles-per-cell",
+   "page": 15,
+   "file": "txt_p15_information_loss_and_particles_per_cell.png",
+   "caption": "§4.2–4.3 — information lost to the grid when finite deformation is not tracked (tracking also corrects MPM but does not cure cell-crossing noise); particles per cell 1/2/4: MPM noisier overall with more particles — three parts",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    505.0,
+    303.8,
+    596.2
+   ],
+   "w": 1080,
+   "h": 2440,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.849,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 3 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     505.0,
+     303.8,
+     596.2
+    ],
+    [
+     57.8,
+     633.0,
+     303.8,
+     737.8
+    ],
+    [
+     314.5,
+     90.8,
+     561.7,
+     453.9
+    ]
+   ],
+   "pages": [
+    15,
+    15,
+    15
+   ]
+  },
+  {
+   "key": "x17s",
+   "kind": "text",
+   "label": "p17-p18-convergence-finite-grid-instability-saturation",
+   "page": 17,
+   "file": "txt_p17_p18_convergence_finite_grid_instability_saturation.png",
+   "caption": "§4.4 — MPM error rises below a minimum cell size (finite grid instability excited by cell-crossing noise, Brackbill 1988); GIMP converges over a wider range then saturates (boundary effect); Finite GIMP fastest, one particle/cell may be optimal; saturation from resolving dynamics — four parts",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    90.8,
+    304.2,
+    729.9
+   ],
+   "w": 1077,
+   "h": 4960,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.844,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 4 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     90.8,
+     304.2,
+     729.9
+    ],
+    [
+     314.8,
+     90.8,
+     561.0,
+     303.9
+    ],
+    [
+     314.8,
+     605.8,
+     560.8,
+     737.8
+    ],
+    [
+     57.8,
+     90.8,
+     303.8,
+     263.4
+    ]
+   ],
+   "pages": [
+    17,
+    17,
+    17,
+    18
+   ]
+  },
+  {
+   "key": "x18t",
+   "kind": "text",
+   "label": "p18-conclusions-mpm-infinitesimal-only",
+   "page": 18,
+   "file": "txt_p18_conclusions_mpm_infinitesimal_only.png",
+   "caption": "§5 — artifacts give unphysical stresses and wrong evolution of history variables in inelastic models (divergence may go undetected); use MPM only for infinitesimal deformation (no cell crossings); contiguous particle GIMP performs decidedly better — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    57.8,
+    605.8,
+    303.8,
+    737.8
+   ],
+   "w": 1075,
+   "h": 1518,
+   "dpi": 300,
+   "src": "43049b95-16._The_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.84,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     57.8,
+     605.8,
+     303.8,
+     737.8
+    ],
+    [
+     314.8,
+     90.8,
+     560.8,
+     303.9
+    ]
+   ],
+   "pages": [
+    18,
+    18
+   ]
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": [
+  {
+   "key": "f1",
+   "how": "hand crop p8 (tool: no graphics region)"
+  },
+  {
+   "key": "f2",
+   "how": "hand crop p10 (tool: no graphics region)"
+  },
+  {
+   "key": "f10",
+   "how": "hand crop p16 right column (tool: no area)"
+  }
+ ],
+ "note_manual": "2026-11-12 — CMES 5(6) 477–495 (2004) · 20 PDF pages (p20 blank) · no tables · no SI. Tool crops 8: 7 kept (fig_3 4 5 6 8 9 11 · captions rejoined = caption_fix) + fig_7 re-cut (recrop). Hand figures 3 (fig_1 · fig_2 · fig_10). Equations 47 (eq_01 … eq_47 · one crop per equation number · 400 dpi). Evidence paragraphs 20 (txt_*). Total PNG 78. Readings of Figs. 4–11 = digitized.csv (PDF vector path coordinates · axis = least squares on tick-label centres).",
+ "key_note": "manual keys: e<NN> = equation (N) · x<PDF page><letter> = evidence paragraph (kind 'text'); page = PDF page = journal page − 476"
+}

@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 294편 · 생성 2026-11-12
+> digest 295편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -38,12 +38,13 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (16편)
+## MPM · 연속체 (17편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `bardenhagen2000_mpm_granular_multibody_frictional_contact` | MPM 다물체 마찰 접촉의 원전 — 알갱이별 격자 속도장 ↔ 질량중심 속도장 비교로 침투 금지 · 자유 분리 · Coulomb 미끄럼 (알갱이 수에 선형) · no slip (= 우리 단일 속도장) ↔ 마찰 전단 대비 ★★ 후보 A′ 기반 — Bardenhagen, Brackbill & Sulsky (CMAME 2000) | MPM (2D 명시적 FLIP-MPM · 다물체 마찰 접촉 — 알갱이별 격자 속도장 ↔ 질량중심 속도장 ·  | 2026-11-09 | 🖼 13 |
 | `bardenhagen2001_mpm_improved_contact_granular_stress_waves` | MPM 다물체 접촉 개정판 — 수직 견인력으로 분리 판정 (압축이면 접촉 유지) + 작은 격자 질량의 격자 붕괴 안정화 (γ) · 3D 구 해석해 · 원판 광탄성 대조 ★★ 제하 (unloading) 에 필요 — Bardenhagen, Guilkey 외 4 인 (CMES 2001) | MPM (명시적 MPM 다물체 접촉 개정 — 견인력 기반 분리 판정 + 격자 붕괴 안정화 스케일 γ · 3D | 2026-11-09 | 🖼 16 |
+| `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` | GIMP 원전 — 물질점에 '입자 특성 함수' χ_p 를 주어 MPM 의 보간을 일반화 (MPM = χ_p 가 델타인 특수한 경우 · 식 34) · contiguous particle GIMP (상자 χ_p · C¹ 가중 · 식 40) · 셀 넘김 잡음의 기전 (균일 응력인데 격자 노드에 힘 불균형) 과 1D 막대 시험  | MPM (GIMP 원전 — 변분형 + Petrov–Galerkin 이산화로 MPM 을 일반화 · 입자 특성  | 2026-11-12 | 🖼 78 |
 | `bardenhagen2005_mpm_foam_densification_simulation` | 입자 기법 (GIMP) 으로 발포체 단위 셀을 '완전 치밀화' (공칭 변형률 90 %) 까지 누른 3D 계산 ★★ 그 지점에도 기공 ≈ 35 % 가 갇힌다 · 소성 · 마찰 · 탈압 없음 — 탄성 neo-Hookean 뼈대 · 붙는 (no-slip) 자기 접촉 · 판 속도 ÷ 파속 0.03 의 명시적 준정적 (절반 속도  | MPM (명시적 GIMP — contiguous-particle GIMP · 한 물체 뼈대의 붙는 (no-s | 2026-11-11 | 🖼 17 |
 | `choi2024_digital_twin_review_echem` | Choi 2024 (E.Chem 매거진 총설, Vol.16 No.1) — 디지털 트윈 모델링·시뮬레이션 ★ 우리 DEM+MPM의 top-down/bottom-up POSITIONING을 NAMING하는 framework 리뷰 | tool·digital-twin 총설 | 2026-07-28 | — |
 | `devaucorbeil2020_mpm_after_25_years_review` | MPM after 25 years: theory, implementation, applications (리뷰) — de Vaucorbeil, Nguyen, Sinaie, Wu (Adv. Appl. Mech. 2020) | MPM 리뷰(review) | 2026-06-26 | — |

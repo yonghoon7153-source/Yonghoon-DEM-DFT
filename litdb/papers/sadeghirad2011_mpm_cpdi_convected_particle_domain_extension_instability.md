@@ -694,6 +694,7 @@ P2G      m_i = Σ_p φ_ip m_p ;  v_i = Σ_p φ_ip m_p v_p / m_i           (1)(2)
 - `bardenhagen2005_mpm_foam_densification_simulation` — GIMP 로 발포체를 치밀화 끝까지 누른 계산 (큰 **압축** 쪽 선례).
 - `stomakhin2013_mpm_snow_elastoplastic` — 우리 MPM 탄소성 갱신의 계보 (소성 · 큰 변형 · 2차 B-spline 쪽).
 - `nezamabadi2022_mpm_cd_plastic_particle_compaction` · `nguyen2017_mpm_bpm_deformable_particle_compaction` — MPM 으로 변형 입자의 압밀까지 간 2D 선례 (이 논문에 없는 다입자 · 접촉).
+- `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` — GIMP 원전 (입자 특성 함수 χ_p · 가중 일반 꼴 식 19–20 · contiguous particle GIMP · 1D 셀 넘김 잡음 · 수렴) — 이 카드의 uGIMP = 그 예제의 'GIMP' (폭 고정) · cpGIMP = 1D 에서 'Finite GIMP' (폭 추적) [카드 판독] · 2026-11-12 반입.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

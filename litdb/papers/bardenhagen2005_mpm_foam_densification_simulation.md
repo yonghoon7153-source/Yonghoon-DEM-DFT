@@ -585,6 +585,7 @@ lattice 는 규칙성을 차츰 잃는다 — 30 % 에서는 반대칭 좌굴 �
 - `hu2018_mls_mpm_cpic_two_way_rigid_coupling` — 우리 MLS-MPM 이산화의 원전.
 - `stomakhin2013_mpm_snow_elastoplastic` — 우리 탄소성 MPM 의 계보.
 - `demirtas2021_mpfem_hollow_sphere_die_compaction` · `pycompact2025_dem_mpfem_workflow` — 입자별 유한요소 (후보 B) 로 큰 변형 압밀을 한 쪽 — 이 논문의 "FEM 은 작은 변형에 머문다" (2005) 와 나란히 읽을 것.
+- `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` — 이 논문이 쓴 contiguous particle GIMP 의 원전 · Fig. 1 반력 튐을 넘긴 곳 (기전 = 셀 넘김 잡음 · 1D 시험뿐 · 큰 변형 · 3D 는 시험 안 함 · 2026-11-12 반입).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
