@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 272편 · 생성 2026-11-12
+> digest 273편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -233,7 +233,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 13 |
 
-## 화학-기계 열화 · 계면 (19편)
+## 화학-기계 열화 · 계면 (20편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -246,6 +246,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kang2025_toughened_bimodal_nca_lzo` | 필독 / 우리-랩 — Toughened Bimodal Cathodes for ASSBs via Controlled Interfacial Heterogeneity — Kang & Shin (ACS Appl. Mater. Interfaces 2025) | exp + FEM (electrochemo-mechanical) | 2026-06-26 | 🖼 6 |
 | `kim2023_chemomech_failure_highstrain_anode` | 필독 / 우리-랩 — Chemo-mechanical Failure of Solid Composite Cathodes Accelerated by High-Strain Anodes — Kang & Shin (Energy Storage Materials 2023) | exp + FEM (electrochemo-mechanical) | 2026-06-26 | 🖼 6 |
 | `kim2025_impedance_decoupling_tlm_assb` | 필독 / 우리-랩 — Multiple-reaction kinetics of composite electrodes for sulfide-based ASSBs: Impedance decoupling (modified TLM) — Kim, Kang, Park, Lee (Electrochimica Acta 2025) | exp + equivalent-circuit modeling (modified TLM) | 2026-06-26 | 🖼 6 |
+| `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` | 리튬 전극 재료의 화학-기계 팽창 (chemo-mechanical expansion) — 단위 격자 부피 변화 ΔV/V₀ 모음 (NCM-111 · 523 · 622 · 811 · NCA · LCO · 그림 2a — NCM-811 은 x ≈ 0.15 에서 ≈ −6.5 %) · Li 부분 몰 부피 (partial molar  | experiment + linear-elastic continuum estimate (operando for | 2026-11-12 | 🖼 72 |
 | `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` | 우리-랩 (Jong-Won Lee 그룹) — Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries — 3D 전기화학-역학 시뮬레이션이 지목한 "분리막 쪽 큰 다결정(LPC, ~12 µm) 입자의 균열" 을 소 | exp (LIB 액체계 CR2032 풀셀·반쪽셀 + FIB-SEM·nanoindentation·XRD·XPS | 2026-09-22 | 🖼 29 |
 | `li2026_electrochemomechanical_coupling_asslmb_review` | 전고체 리튬금속전지 (ASSLMB) 의 전기-화학-기계 결합 리뷰 — 응력의 출처 (양극 부피변화 · 복합양극 부조화 · Li 석출/박리 · 적층압 · 열) → 전기화학 영향 → 파괴 양식 → 측정법 → 완화 전략 → AI · ⚠ 표 3 의 Li₆PS₅Cl E = 4.7 GPa 는 13 % 다공 펠릿값 · 표 3 인용 번 | review (전기-화학-기계 결합 · 전고체 Li 금속전지 · 측정 + 연속체/해석/위상장 모델 정리 —  | 2026-10-13 | 🖼 17 |
 | `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` | 다결정 NMC811 2차입자의 입계 인장강도 745 MPa (Weibull, n = 3) · 인장 영률 165 ± 7 GPa · 나노압입 영률 138 ± 24 GPa (n = 29) — FIB push-to-pull 미세인장 + SEM-DIC, 입계(intercrystalline) cracking 지배 — Sedlatsc | exp (micromechanics: FIB push-to-pull micro-tensile + SEM-DI | 2026-09-25 | 🖼 8 |
