@@ -39,9 +39,9 @@ N-39	대피	끝	cummins2002_implicit_mpm_granular_newton_krylov · b25567d65	정
 N-40	대피	끝	sulsky1994_mpm_particle_method_history_dependent_materials · 688057672	정독 81 · N-40 끝 (sulsky1994 · MPM 원전 · 이력 상태를 물질점에 · 접촉 1 셀 앞 시작 · klar2016 L64 'F 저장' = 원문은 작은 변형 (F 없음))
 N-41	대피	끝	lyu2026_two_layer_gradient_electrode_calendering_dem_fem · af9fee8c8	정독 82 · N-41 끝 (lyu2026 · 이중층 경사 전극 캘린더링 DEM→FEM (기하만 넘김) · 250 MPa 층 기공 29.0 · 27.3 % [판독] · 카드 문제 없음)
 N-42	대피	끝	benhadjali2026_oneway_chemomech_stress_stack_pressure_3d_assb_cathode · 696b6882a	정독 83 · N-42 끝 (benhadjali2026 · 한 방향 화학-기계 응력 · SE E 18.5 GPa = Li₂S–P₂S₅ 유리값 (LPSCl 아님) · fully_coupled 카드 L28 '[36] 같은 매개변수' 어긋남)
-N-43	대피	도는 중		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 84 · 시작 11-13 05:27 KST
+N-43	대피	끝	chouchane2019_innov_voxelization_multiphase_meshing · ef2c9ee10	정독 84 · N-43 끝 (chouchane2019 · INNOV 복셀→사면체 · 부피 보존 통과해도 연결성 바뀜 [판독] · benhadjali 카드 셋이 기대한 '겹친 구 → 상 · 복셀 규칙' 은 원문에 없음)
 N-45	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 85 · 시작 11-13 05:37 KST
-N-46	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 86
+N-46	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 86 · 시작 11-13 05:58 KST
 N-47	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 87
 N-48	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 88
 N-49	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 89
