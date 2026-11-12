@@ -1,0 +1,3 @@
+first read (runner form)           char-equal True  · realpath-equal True
+prereq re-read (realpath form)     char-equal False · realpath-equal True
+substring rule: lines = 2 (→ "둘 이상" SYNTAX_FAIL) · first-token rule: lines = 1

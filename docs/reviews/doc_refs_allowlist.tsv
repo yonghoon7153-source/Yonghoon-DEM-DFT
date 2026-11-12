@@ -435,3 +435,10 @@ pa3/yield.py	external	sha256:9bda813e23d38f2211b7ff0fa25a05bab9daa3a2e8a6e14ab64
 pa3/fork_enum.py	external	sha256:837867d5f52de0936ca29b603c2a1cc48807f1287fa89fc2c95b477fca881e4d	Codex [DEM 우선 (수영)] 반박 리뷰 (11-10) 판정문 · 증거 (바이트 그대로) 가 자기 묶음 기준 상대 경로로 가리키는 파일 — 리포 사본 = docs/reviews/dem_redesign_direction_20261109/pa3/fork_enum.py
 pa3/s4_enum.py	external	sha256:e6d46676103164e65c9c54df709913a9dbdb1f1d29fbdb85980b6aeae1821bfd	Codex [DEM 우선 (수영)] 반박 리뷰 (11-10) 판정문 · 증거 (바이트 그대로) 가 자기 묶음 기준 상대 경로로 가리키는 파일 — 리포 사본 = docs/reviews/dem_redesign_direction_20261109/pa3/s4_enum.py
 package/repo/docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md	external	sha256:0dd491ec325d3a18bc0b43c975804b9e909385eda2817c8fcfdf623991923b8a	Codex [DEM 우선 (수영)] 반박 리뷰 (11-10) 판정문 · 증거 (바이트 그대로) 가 자기 묶음 기준 상대 경로로 가리키는 파일 — 리포 사본 = docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md
+docs/reviews/p1_g2c_sandbox_20261104/test_g2cp_kitdiff.py	absent	-	P1 G2c′ 키트 적용 개정 4 (REG §15-2) 가 구현 때 만들 새 차등 시험 — 11-12 등록 · Codex 설계 확인 뒤 구현 (아직 없음)
+history_test/in.hist_rt1.liggghts	absent	-	REG §15-4b RT 문법 fixture 새 덱 (키트 폴더 docs/data/ps45_unload_20261009/ 기준 상대 경로) — 구현 전 (아직 없음)
+RT2/log_screen.liggghts	generated	docs/data/ps45_unload_20261009/run_unload.sh (잡 폴더 안 RT2 단계 로그 · REG §15 구현 뒤)	REG §15 · 내부 리뷰 기록이 인용하는 잡 폴더 상대 경로 (리포 파일 아님)
+post/c_40000.txt	external	ibb 잡 359243 OUT (리포 밖 · 받은 묶음 = docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/README.md)	G2c′ 샌드박스 팔의 쌍 덤프 (11-12 · 원본 리포 밖 · 가린 기록만 반입)
+ps_7_3_r45/input_ps_7_3_r45_r8.liggghts	external	ibb 7:3 원 런 덱 (리포 밖 · REG 151 행 · 쓴 격자 6×4×1 근거)	P1 내부 리뷰 기록이 인용하는 원 런 덱 (리포 파일 아님)
+EXT/screen.txt	generated	docs/data/ps45_unload_20261009/run_unload.sh (10:0 EXT 단계 화면 · 잡 폴더 안)	REG §15 가 인용하는 잡 폴더 상대 경로 (쓴 격자 grid 줄을 읽는 자리 · 리포 파일 아님)
+EXT2/screen.txt	generated	docs/data/ps45_unload_20261009/run_unload.sh (10:0 EXT2 단계 화면 · 잡 폴더 안)	REG §15 가 인용하는 잡 폴더 상대 경로 (리포 파일 아님)

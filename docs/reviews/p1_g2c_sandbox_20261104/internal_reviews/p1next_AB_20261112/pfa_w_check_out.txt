@@ -1,0 +1,17 @@
+== honest (my recomputation)
+B<->A(N) {'n': 3111, 'miss': 0, 'extra': 0, 'reset': 48, 'share': 0.015429, 'W': 0.003086, 'rmed': 0.00062, 'collapse': 0.006107, 'den': 1.043706} margin 0.05/W = 16.2
+C<->A(N) {'n': 3111, 'miss': 0, 'extra': 0, 'reset': 5, 'share': 0.001607, 'W': 0.000391, 'rmed': 0.0, 'collapse': 0.001286, 'den': 1.043706} margin 0.05/W = 128.0
+C reset pairs periodic flags: [1, 1, 1, 1, 1]
+B reset pairs: 48 with |Ft_o| < q10: 27 q10 = 1.661810874604003e-05
+pairs (largest first) needed to exceed W 0.05 alone: 12 of 3111 | top 1 % share 0.1057
+== partition fact: per-chunk W of a whole-chunk loss sums to ~1 (mean = 1/ncell)
+  NP24 6x4x1 (7:3 writer): cells 24 · mean W 0.0446 (1/n = 0.0417) · min 0.0151 · max 0.0805 · caught (>0.05) 8/24
+  NP11 11x1x1 (10:0 writer): cells 11 · mean W 0.0937 (1/n = 0.0909) · min 0.0669 · max 0.1337 · caught (>0.05) 11/11
+  NP5 5x1x1 (0:10 · 5:5 writer): cells 5 · mean W 0.2025 (1/n = 0.2000) · min 0.1747 · max 0.2532 · caught (>0.05) 5/5
+  NP4 2x2x1 (3:7 writer): cells 4 · mean W 0.2523 (1/n = 0.2500) · min 0.2088 · max 0.2951 · caught (>0.05) 4/4
+  NP6 3x2x1 (reader): cells 6 · mean W 0.1692 (1/n = 0.1667) · min 0.1422 · max 0.2134 · caught (>0.05) 6/6
+== honest one-step change along the trajectory: A(N-1) vs A(N) (not a lag test; scale only)
+  A(N-1)<->A(N) {'n': 3111, 'miss': 0, 'extra': 0, 'reset': 46, 'share': 0.014786, 'W': 0.000575, 'rmed': 0.00078, 'collapse': 0.0045, 'den': 1.043706}
+== random subsets (seeded) — W spread at fixed lost fraction 5 % (production uniformity proxy)
+  lost 0.0417: W median 0.0443 · p05 0.0359 · p95 0.0538 · caught 52/400
+  lost 0.0500: W median 0.0532 · p05 0.0442 · p95 0.0642 · caught 293/400
