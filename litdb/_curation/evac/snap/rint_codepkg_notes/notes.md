@@ -173,3 +173,23 @@
 - 초안 (스크래치): amend_drafts.md 4 판 · gpu_check_block.txt 4 판 · s0probe/ (감싸개 · 감시 셸 · 조립기 · 블록 · 시험 꼴) · design.md (바).
 - 남은 [미확인]: 실침대 저장 · 읽기 (S0 재기 전) · GPU 길 실기계 (블록) · kgy 총 메모리 · 기계 사이 원장 지문 결정성 · gabia Q11REPO · S0 단계 2 (DBE) 가
   이미 돌았는지.
+
+## 2 회차 고침 (11-12 오후 · 재리뷰 review/rereview_codepkg.md · 지시서 BRIEF_fix2_codepkg.md · 작업 트리 /home/user/rint-codepkg)
+- 커밋 (서명 없음 · push 없음 · 바탕 0ac6edf3c): f8077a51d 시험 먼저 → 4e1e5b6c6 고침 → ac7e1c58d 게이트 배선 · 결과 전 등록.
+- 고치기 전 (0ac6edf3c 코드 · 3.11): store 51 PASS · 11 FAIL (T0 · T11 · T15a–f · P1 · R1 · C1) · git_env 실패 = V 에 커밋 (GIT_DIR 꼴) · selftest 122/124
+  (RCPT-sha-clean · untracked) — logs/r3/before_{store,git_env}_py311.log.  고친 뒤: store 62/62 (74 s) · git_env 10/10 · run_contract 125/125 · Q11 19/19 ·
+  probe6 330/330 · 규율 repo 0 오류 (17 경고) — logs/r3/after_*.
+- 처분: RCP2-01 = 런 시작 코드 칸 (_START · cjunc_store 불러온 때) ↔ 짓기 전 · 발행 직전 다시 셈 (sha · 자리 · 수정 시각 > 시작 + 1 s) → 'disabled' /
+  'built_write_skipped' · why 'code_changed: …' (T15 = CE-A 꼴 · 짓는 도중 · 쓰는 도중 · touch · 정직 흐름 적중).  RCP2-06 = run_contract.git_env /
+  drop_git_env (GIT_ 접두 전부) · payload _code_sha · _exec_env · 사슬 git_identity · F5 · ledger · selftest 임시 저장소 (꼭대기 확인 뒤만 쓰기) ·
+  시험 모듈 넷 + probe6 불러올 때 지움 · 새 시험 test_git_env_isolation.py (G1–G6 · 일회용 V · 자식에만 적대 환경).  RCP2-02 = 정규화 (빈 · . · .. 성분 거부 ·
+  끝 빗금만 걷음) Store · 사슬 · 러너.  RCP2-03 = T7 그룹 쓰기만 넷 · T11 ow2 0757.  RCP2-04 = docs/reviews/rint2_s0_store_probe_20261112/ (README +
+  블록 · 감싸개 v2 = cjunc_store 먼저 불러옴 · store_start · code_drift).  RCP2-05 = T14 재작성 (실행 파일 전수 분류 · 'other' 0 · import 허용 목록 ·
+  변이 코드 폴더 subprocess).  RCP-03 · 04 · 06 남은 몫 = 한정 문장 (cjunc_store 머리).
+- 봉인 확인: 손댄 파일 = 194 CODE_FILES 32 · 언로딩 키트 SHA256SUMS · 믹서 봉인 어디에도 없음 · run_contract · payload · 사슬 · 러너 = 사슬 CODE_FILES (봉인 전) ·
+  payload = S0_SAME_FILES (S0 단계 1 다시 = 끝 핀).
+- (15:47Z) 검증 묶음 (work/run_r3_all.sh · 백그라운드 bm3t4w6o2) = 3.11 A → B → kgy_all · logs/r3/.  A (중간): run_contract 125 · 규율 selftest 128 ·
+  s3 · rint · repo 0 오류 · git_env 10 · Q11 19 · store 62 (78 s).
+- 변이 도구 work/mutate_r3.py (GIT_DIR 없음 · 사본 = git archive + git init + alternates (공용 객체 읽기만) + 커밋 하나 = precond 의 git show 가 사본 안에서
+  돈다) · 사본 work/mut3 (ac7e1c58d) · 자리 확인 rev2 21 · new 28 · rev1 31 · impl 110 = 문제 0.
+- 미리 돌림 (가벼움): H20 KILLED (G5) · H21 SURVIVED (= 빈틈 — G5 가 사슬 F5 plan_commit_problem 을 안 부름) → 묶음 끝난 뒤 G5 보강 커밋 (4 번째) 예정.
