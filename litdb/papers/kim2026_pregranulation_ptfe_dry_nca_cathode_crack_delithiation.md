@@ -445,6 +445,7 @@ NCA (쌍봉) + PTFE → [GIDE 만] PGP (Thinky 2000 rpm × 2 min × 5) → OM ·
 - 건식 혼합 · 공정 에너지: `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `lee2024_shear_force_dry_process_cathode_coverage` · `sun2026_dem_extrusion_recirculation_dry_electrode` · `zhang2026_xct_dem_cathode_calendering_peel_calibration`.
 - NCA · 균열 · 기계: `koo2025_cnt_wrapped_sc_nca_dry_cathode` · `kang2025_toughened_bimodal_nca_lzo` · `intergranular_cracking_nmc811_jmca2023` · `trevisanello2021_sc_pc_ncm_cracking_diffusion` · `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` · `wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem` · `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` · `sharma2023_nmc_single_crystal_anisotropic_nanoindentation` · `stallard2022_cathode_mechanical_properties_review` · `dem_mechanical_stresses_ssb_electrode_cycling` · `bucci2017_chemomech_failure_assb_cycling_czm`.
 - 대칭셀 tortuosity: `landesfeind2016_tortuosity_eis_electrodes_separators` · `malifarge2017_tortuosity_symmetric_cell_impedance_tlm` · `pouraghajan2018_tortuosity_polarization_interrupt_vs_blocking_electrolyte` · `morasch2018_binder_gradient_impedance_tortuosity` · `nguyen2020_electrode_tortuosity_factor`.
+- 과립 압밀의 단층 촬영 (이 카드 ref 43 의 정본 카드 · 2026-11-12): `cottrino2013_insitu_xct_granulated_alumina_die_compaction` — 분무 건조 알루미나 과립 · 금형 안 · 꺼내지 않고 단계별 X 선 단층 촬영 (값 전이 금지 · 방법만).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

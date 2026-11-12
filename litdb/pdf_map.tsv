@@ -461,3 +461,6 @@ morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis	discrete ele
 # ── 압연 공정 모형 — 선하중 ↔ 압연 뒤 코팅 기공률의 Heckel 꼴 지수 식 · 끝값 = 0.4 × 압연 전 값 · 맞춤 수 γ_C 하나 = μ × 면적 부하 · 양극 활물질 다섯 (NCA · NCM111 · 622 · 811) · 부하 일곱 (Meyer 외 · J. Energy Storage 18 (2018) 371–379) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) · 같은 그룹 앞 논문 meyer2017_calendering_compaction_resistance_line_load_exponential_model 과 다른 논문 ──
 meyer2018_calendering_process_model_active_material_mass_loading	process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries
 meyer2018_calendering_process_model_active_material_mass_loading	process modeling of the electrode calendering of lithium-ion batteries
+# ── 분무 건조 알루미나 과립의 금형 안 X 선 단층 촬영 (꺼내지 않고 단계별 · 복셀 2.5 µm · ≤ 113 MPa) — Py 1.5–5 MPa ↔ 8 MPa 에서 '막 깨지기 시작' · 2 µm 초과 기공만 (전체 기공률 아님) · 방법만 전이 — litdb 2026-11-12 (kim2026 ref 43)
+cottrino2013_insitu_xct_granulated_alumina_die_compaction	characterization_by_x-ray_tomography_of_granulated_alumina_powder
+cottrino2013_insitu_xct_granulated_alumina_die_compaction	characterization by x-ray tomography of granulated alumina powder

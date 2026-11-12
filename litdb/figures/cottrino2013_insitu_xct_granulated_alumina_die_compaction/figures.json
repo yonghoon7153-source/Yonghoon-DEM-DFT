@@ -1,0 +1,2276 @@
+{
+ "slug": "cottrino2013_insitu_xct_granulated_alumina_die_compaction",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 – Typical post-processing made on the 3D images of the pellets (a) digital image in the original grey level state (b) after binarization and (c) after the erosion–dilatation treatment.",
+   "rotated_deg": 0,
+   "bbox": [
+    340.1,
+    57.9,
+    517.0,
+    625.5
+   ],
+   "w": 492,
+   "h": 1578,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.197,
+   "src_native": [
+    462,
+    1547
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    302.9,
+    57.2,
+    554.0,
+    625.8
+   ],
+   "recrop": "tool crop complete but with a wide white band on both sides (figure narrower than the column) (1047×2370 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 6, 462×1547 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 3,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1(a) — reconstructed section of a pellet in the original grey-level state (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    340.1,
+    57.9,
+    517.0,
+    251.6
+   ],
+   "w": 492,
+   "h": 539,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.237,
+   "src_native": [
+    462,
+    1547
+   ],
+   "native_dpi": 200,
+   "panel_of": "f1",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 462, 507] px (upper image; white gap rows 507–522 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 6",
+   "viewed": true
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 3,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1(b) — the same section after binarization (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    340.1,
+    245.4,
+    516.2,
+    438.3
+   ],
+   "w": 490,
+   "h": 537,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.204,
+   "src_native": [
+    462,
+    1547
+   ],
+   "native_dpi": 200,
+   "panel_of": "f1",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 522, 462, 1026] px (middle image; gap rows 507–522 above, 1026–1041 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 6",
+   "viewed": true
+  },
+  {
+   "key": "f1c",
+   "kind": "figure",
+   "label": "1c",
+   "page": 3,
+   "file": "fig_1c.png",
+   "caption": "Fig. 1(c) — the same section after the erosion–dilatation (opening, size 1) treatment; the pores are then labelled individually (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    340.1,
+    432.1,
+    516.2,
+    625.5
+   ],
+   "w": 490,
+   "h": 538,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.198,
+   "src_native": [
+    462,
+    1547
+   ],
+   "native_dpi": 200,
+   "panel_of": "f1",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 1041, 462, 1547] px (lower image; gap rows 1026–1041 above); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 6",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 – Grey level profile as a function of the radial position. Beam hardening becomes noticeable only when sample contains moisture.",
+   "rotated_deg": 0,
+   "bbox": [
+    133.9,
+    57.9,
+    456.9,
+    258.8
+   ],
+   "w": 898,
+   "h": 559,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.846,
+   "src_native": [
+    868,
+    528
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    41.3,
+    57.2,
+    549.5,
+    259.2
+   ],
+   "recrop": "tool crop complete (page-width band, uneven white side margins) (2119×842 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 10, 868×528 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "밀도 지도를 믿기 전의 점검 그림: R.H. 90 두 시료만 가장자리가 밝다 (빔 경화) — 같은 시료의 '벽 쪽 치밀' 판독과 분리되지 않았다."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 – Initial states of packed granules with binder, stored at R.H. 5%. (a) Loose bulk state, and (b) tapped bulk state. One can note the resorption of the largest inter-granule porosities due to granule reorganisation induced by the vibrations. The packing density increases from 32.5 to 34.5% of theoretical on samples measured with ISO standard methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.0,
+    373.7,
+    550.0,
+    678.5
+   ],
+   "w": 698,
+   "h": 848,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.415,
+   "src_native": [
+    668,
+    817
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    298.3,
+    373.0,
+    550.8,
+    678.9
+   ],
+   "recrop": "tool crop complete (1052×1275 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 11, 668×817 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 4,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — axial section of the die filling, loose bulk state (granules with binders, R.H. 5; scale bar 1 mm; packing density 32.5 % of theoretical per the caption) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.0,
+    373.7,
+    542.5,
+    522.8
+   ],
+   "w": 677,
+   "h": 415,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.432,
+   "src_native": [
+    668,
+    817
+   ],
+   "native_dpi": 200,
+   "panel_of": "f3",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 668, 383] px (upper image; gap rows 383–392 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 11",
+   "viewed": true
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 4,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — axial section of the die filling, tapped bulk state (granules with binders, R.H. 5; 34.5 % of theoretical per the caption): the largest inter-granule pores are resorbed (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.0,
+    514.4,
+    550.0,
+    678.5
+   ],
+   "w": 698,
+   "h": 457,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.414,
+   "src_native": [
+    668,
+    817
+   ],
+   "native_dpi": 200,
+   "panel_of": "f3",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 392, 668, 817] px (lower image; gap rows 383–392 above); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 11",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 – Density map on axial cross sections of the pellets at 8 MPa (on the left) and 110 MPa (on the right). This allows a comparison of the density homogeneity throughout the pellets; higher heterogeneities are always observed when the granules are conditioned in a high relative humidity (R.H. 90%).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.8,
+    58.2,
+    532.3,
+    682.2
+   ],
+   "w": 1292,
+   "h": 1736,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.564,
+   "src_native": [
+    1262,
+    1706
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    45.9,
+    57.2,
+    554.1,
+    682.6
+   ],
+   "recrop": "tool crop complete (page-width band, uneven white side margins) (2118×2607 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 15, 1262×1706 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "금형 벽 · 펀치 모서리가 만드는 불균일의 꼴 (정성 · 회색값 미보정 → 시료 · 압력 사이 비교 불가). 지도 높이 h8 → h110 은 판독 가능 (digitized.csv)."
+  },
+  {
+   "key": "f4r1",
+   "kind": "figure",
+   "label": "4 · without binder · dry",
+   "page": 5,
+   "file": "fig_4_without_binder_rh5.png",
+   "caption": "Fig. 4, row 1 — density maps (average of 300 axial sections, uncalibrated grey levels) of the batch 'without binder R.H. 5' at 8 MPa (left) and 110 MPa (right); the most homogeneous batch at both pressures (text p.116); the row carries the z axis, the 'r = 1.75 mm' scale and the pellet-height arrows h8 / h110 (part of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    101.6,
+    58.2,
+    532.3,
+    193.6
+   ],
+   "w": 1198,
+   "h": 377,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.57,
+   "src_native": [
+    1262,
+    1706
+   ],
+   "native_dpi": 200,
+   "panel_of": "f4",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 1262, 347] px (row 1 incl. the z axis, the r scale and the h8 / h110 arrows; gap rows 347–351 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 15",
+   "viewed": true
+  },
+  {
+   "key": "f4r2",
+   "kind": "figure",
+   "label": "4 · without binder · humid",
+   "page": 5,
+   "file": "fig_4_without_binder_rh90.png",
+   "caption": "Fig. 4, row 2 — density maps of the batch 'without binder R.H. 90' at 8 MPa (left) and 110 MPa (right): severe heterogeneity, 'denser regions are localised near the die wall' (text p.116; beam hardening is acknowledged for the R.H. 90 samples, Fig. 2) (part of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    102.0,
+    183.4,
+    495.3,
+    289.6
+   ],
+   "w": 1094,
+   "h": 296,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.457,
+   "src_native": [
+    1262,
+    1706
+   ],
+   "native_dpi": 200,
+   "panel_of": "f4",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 351, 1262, 613] px (row 2; gap rows 347–351 above, 613–619 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 15",
+   "viewed": true
+  },
+  {
+   "key": "f4r3",
+   "kind": "figure",
+   "label": "4 · with binders · dry",
+   "page": 5,
+   "file": "fig_4_with_binders_rh5.png",
+   "caption": "Fig. 4, row 3 — density maps of the batch 'with binders R.H. 5' at 8 MPa (left) and 110 MPa (right): gradients appear at low pressure and persist (part of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    101.6,
+    279.7,
+    495.6,
+    400.3
+   ],
+   "w": 1096,
+   "h": 336,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.482,
+   "src_native": [
+    1262,
+    1706
+   ],
+   "native_dpi": 200,
+   "panel_of": "f4",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 619, 1262, 921] px (row 3; gap rows 613–619 above, 921–926 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 15",
+   "viewed": true
+  },
+  {
+   "key": "f4r4",
+   "kind": "figure",
+   "label": "4 · with binders · humid",
+   "page": 5,
+   "file": "fig_4_with_binders_rh90.png",
+   "caption": "Fig. 4, row 4 — density maps of the batch 'with binders R.H. 90' at 8 MPa (left) and 110 MPa (right): more severe gradients than the dry batch (part of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    102.0,
+    390.1,
+    495.3,
+    504.6
+   ],
+   "w": 1094,
+   "h": 319,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.457,
+   "src_native": [
+    1262,
+    1706
+   ],
+   "native_dpi": 200,
+   "panel_of": "f4",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 926, 1262, 1211] px (row 4; gap rows 921–926 above, 1211–1215 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 15",
+   "viewed": true
+  },
+  {
+   "key": "f4r5",
+   "kind": "figure",
+   "label": "4 · with binders · mixt",
+   "page": 5,
+   "file": "fig_4_with_binders_mixt.png",
+   "caption": "Fig. 4, row 5 — density maps of the batch 'with binders mixt' (filled at R.H. 5, kept in the die at R.H. 90) at 8 MPa (left) and 110 MPa (right), with the dashed region boundaries and the region numbers of the text (p.116): 1 = denser corners near the advancing (upper) punch (drawn dark), 2 = arch-like lower-density region, 3 = intermediate density near the lower punch (110 MPa map only); also the r axis, the column headings '8 MPa' / '110 MPa' and the pressure pictogram (part of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    67.8,
+    494.0,
+    495.6,
+    682.2
+   ],
+   "w": 1190,
+   "h": 524,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.637,
+   "src_native": [
+    1262,
+    1706
+   ],
+   "native_dpi": 200,
+   "panel_of": "f4",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 1215, 1262, 1706] px (row 5 with the region numbers, the r axis, the column headings and the pictogram; gap rows 1211–1215 above); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 15",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 – Density evolutions of green body pressed uniaxialy.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.4,
+    381.0,
+    286.2,
+    735.8
+   ],
+   "w": 664,
+   "h": 987,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.936,
+   "src_native": [
+    634,
+    956
+   ],
+   "native_dpi": 200,
+   "manual_crop": "Fig. 5 was not extracted by the caption-anchored tool (number gap 'f5') — cut by hand from the embedded native raster (xref 19, 634×956 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "저자의 도식 (그림 안 글자): 위 = 'Beginning of step II (Py)' · 아래 = 'End of step II' · 왼쪽 = 이 연구 (h/d 0.4 · 영역 1 · 2 → 1 · 2 · 3) · 오른쪽 = Reed (h/d 1 · 영역 1–4). 그림은 'Reed's study [13]' 이라 적었지만 본문 · 참고문헌 목록의 Reed 는 [14]."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 – Radial cross sections in the central area of pellets compacted at 8 MPa. Local magnifications show the various granule destruction mechanisms depending on the nature of the granules used. Granules without binder are subjected to brittle fracture. For the formulations with binders, the granules containing a binder with a high Tg (R.H. 5) require higher pressures to be destroyed than one containing a low Tg binder (R.H. 90), since plastic deformation is easier in the last case.",
+   "rotated_deg": 0,
+   "bbox": [
+    138.5,
+    57.9,
+    461.5,
+    448.7
+   ],
+   "w": 898,
+   "h": 1087,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.315,
+   "src_native": [
+    868,
+    1057
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    45.9,
+    57.2,
+    554.0,
+    449.5
+   ],
+   "recrop": "tool crop complete (page-width band, uneven white side margins) (2118×1635 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 23, 868×1057 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "8 MPa (> Py) 에서의 과립 거동 직접 그림: 바인더 없는 과립 = 취성 파쇄 (흰 화살표) · 바인더 있는 과립 = 변형 · 파쇄 없음."
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6 · with binders · dry",
+   "page": 7,
+   "file": "fig_6_with_binders_rh5.png",
+   "caption": "Fig. 6, upper left — radial section at mid-height, 8 MPa, granules with binders stored at R.H. 5 (high-Tg binder), with a local magnification: bright hollow (ring-shaped) granules, neither deformation nor breaking (text p.116) (part of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    138.9,
+    57.9,
+    302.1,
+    222.1
+   ],
+   "w": 454,
+   "h": 457,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.223,
+   "src_native": [
+    868,
+    1057
+   ],
+   "native_dpi": 200,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 423, 425] px (upper-left frame (batch label inside the frame); gap cols 423–442 to the right; the '8 MPa / PRESSURE' pictogram between the two rows (rows 425–639) is not included); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 23",
+   "viewed": true
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6 · with binders · humid",
+   "page": 7,
+   "file": "fig_6_with_binders_rh90.png",
+   "caption": "Fig. 6, upper right — radial section at mid-height, 8 MPa, granules with binders stored at R.H. 90 (low-Tg binder), with a local magnification (part of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    57.9,
+    459.0,
+    220.6
+   ],
+   "w": 451,
+   "h": 453,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.194,
+   "src_native": [
+    868,
+    1057
+   ],
+   "native_dpi": 200,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [442, 0, 868, 421] px (upper-right frame (batch label inside the frame); gap cols 423–442 to the left); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 23",
+   "viewed": true
+  },
+  {
+   "key": "f6c",
+   "kind": "figure",
+   "label": "6 · without binder · dry",
+   "page": 7,
+   "file": "fig_6_without_binder_rh5.png",
+   "caption": "Fig. 6, lower left — radial section at mid-height, 8 MPa, granules without binder stored at R.H. 5, with a local magnification: brittle fracture has begun (white arrows in the magnified inset); carries the '1.75 mm' radius arrow (part of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    138.5,
+    287.1,
+    302.1,
+    448.7
+   ],
+   "w": 455,
+   "h": 450,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.199,
+   "src_native": [
+    868,
+    1057
+   ],
+   "native_dpi": 200,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 639, 423, 1057] px (lower-left frame (batch label inside the frame); gap cols 423–449 to the right); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 23",
+   "viewed": true
+  },
+  {
+   "key": "f6d",
+   "kind": "figure",
+   "label": "6 · without binder · humid",
+   "page": 7,
+   "file": "fig_6_without_binder_rh90.png",
+   "caption": "Fig. 6, lower right — radial section at mid-height, 8 MPa, granules without binder stored at R.H. 90, with a local magnification: brittle fracture (white arrows in the magnified inset), more fragmentation than the dry batch (text p.116) (part of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.4,
+    287.1,
+    461.5,
+    448.7
+   ],
+   "w": 451,
+   "h": 450,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.192,
+   "src_native": [
+    868,
+    1057
+   ],
+   "native_dpi": 200,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [449, 639, 868, 1057] px (lower-right frame (batch label inside the frame); gap cols 423–449 to the left); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 23",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 – Evolution of compact microstructures with the compaction pressure on pellet axial cross sections. Comparison of the effect of relative humidity for granules stored at R.H. 5% (on the left) and 90% (on the right). (a) With binders. (b) Without binder.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.4,
+    41.8,
+    732.3,
+    524.3
+   ],
+   "w": 1920,
+   "h": 1341,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.373,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    41.1,
+    60.6,
+    524.7,
+    595.3
+   ],
+   "recrop": "tool crop TRUNCATED — Fig. 7 sits on a landscape page (page rotation 90°) and the automatic band (2016×2229 px) cut the figure; the automatic caption also stopped at 'granules stored at' (2016×2229 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 27, 1890×1310 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption'); page 8 of the PDF is a landscape page (page rotation 90°) — the raster is stored upright and 'bbox' is given in the displayed (rotated) page coordinates",
+   "viewed": true,
+   "mpm_note_ko": "조건 R3 ('입자 경계 기억') 과 닿는 그림: 과립 윤곽은 8 MPa 전부 · 18 MPa 일부 · 60 MPa 부터 이 해상도에서 안 보이고 가운데 공동만 110 MPa 까지 남는다. 캡션의 (a) · (b) 는 본문 · 그림 내용과 뒤바뀌어 있다 (a = 바인더 없음으로 읽는다)."
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 8,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(a) — left block as printed: axial sections at 8, 18, 60 and 110 MPa, R.H. 5 (left frame) and R.H. 90 (right frame). The caption calls it '(a) With binders', the text (p.116: 'Fig. 7a and b, without and with binder respectively') and the image content (fragmentation spots circled in white at 8 MPa, residual pores marked by arrows at 110 MPa, fewest residual cavities in the dry batch) make it the granules WITHOUT binder (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    41.4,
+    44.0,
+    381.0,
+    518.9
+   ],
+   "w": 944,
+   "h": 1320,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.348,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 912, 1310] px (left block; gap cols 912–975 to the right); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 8,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — right block as printed: axial sections at 8, 18, 60 and 110 MPa, R.H. 5 (left frame) and R.H. 90 (right frame). The caption calls it '(b) Without binder', the text and the image content (bright hollow granules; the same cavity group followed by a dashed circle from 8 to 110 MPa in the R.H. 5 frames and by arrows from 18 to 110 MPa in the R.H. 90 frames) make it the granules WITH binders (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    391.7,
+    41.8,
+    732.3,
+    524.3
+   ],
+   "w": 947,
+   "h": 1341,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.369,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [975, 0, 1890, 1310] px (right block; gap cols 912–975 to the left); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7a1",
+   "kind": "figure",
+   "label": "7a · first pressure row",
+   "page": 8,
+   "file": "fig_7a_8MPa.png",
+   "caption": "Fig. 7(a), 8 MPa row — left block (granules without binder per the text), R.H. 5 (left frame) / R.H. 90 (right frame); includes the panel label, the z axis and the 'h8' height arrow: granule outlines visible everywhere; white dashed circles mark fragmentation spots (three in the R.H. 5 frame, six in the R.H. 90 frame) (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    41.4,
+    44.0,
+    381.0,
+    177.3
+   ],
+   "w": 944,
+   "h": 371,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.344,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 912, 345] px (row 1 of the left block incl. panel label and axes); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7a2",
+   "kind": "figure",
+   "label": "7a · second pressure row",
+   "page": 8,
+   "file": "fig_7a_18MPa.png",
+   "caption": "Fig. 7(a), 18 MPa row — left block (without binder per the text), R.H. 5 / R.H. 90: fragmentation increased (gaps between granules filling with fragments); granule outlines still visible in large parts of both frames (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    169.6,
+    381.0,
+    272.3
+   ],
+   "w": 930,
+   "h": 286,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.212,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [11, 357, 912, 609] px (row 2 of the left block); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7a3",
+   "kind": "figure",
+   "label": "7a · third pressure row",
+   "page": 8,
+   "file": "fig_7a_60MPa.png",
+   "caption": "Fig. 7(a), 60 MPa row — left block (without binder per the text), R.H. 5 / R.H. 90: granule outlines essentially no longer resolved (faint traces in the R.H. 90 frame); round cavities and angular intergranular pores remain (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    264.7,
+    381.0,
+    354.8
+   ],
+   "w": 930,
+   "h": 251,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.22,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [11, 621, 912, 838] px (row 3 of the left block); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7a4",
+   "kind": "figure",
+   "label": "7a · fourth pressure row",
+   "page": 8,
+   "file": "fig_7a_110MPa.png",
+   "caption": "Fig. 7(a), 110 MPa row — left block (without binder per the text), R.H. 5 / R.H. 90: residual cavities / pores only (black arrows, four per frame); carries the 'h110' height arrow; the dry batch shows the fewest residual cavities (text p.119) (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    346.7,
+    381.0,
+    433.2
+   ],
+   "w": 930,
+   "h": 241,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.231,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [11, 849, 912, 1056] px (row 4 of the left block); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7b1",
+   "kind": "figure",
+   "label": "7b · first pressure row",
+   "page": 8,
+   "file": "fig_7b_8MPa.png",
+   "caption": "Fig. 7(b), 8 MPa row — right block (granules with binders per the text), R.H. 5 (left frame) / R.H. 90 (right frame); includes the panel label, the z axis, the 'r = 1.75 mm' scale and the 'h8' height arrow: bright hollow granules, outlines visible everywhere (text: only the granules in the upper part are deformed); one black dashed circle per frame marks a group of cavities (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    391.7,
+    41.8,
+    732.3,
+    176.9
+   ],
+   "w": 947,
+   "h": 376,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.369,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [975, 0, 1890, 344] px (row 1 of the right block incl. panel label and axes); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7b2",
+   "kind": "figure",
+   "label": "7b · second pressure row",
+   "page": 8,
+   "file": "fig_7b_18MPa.png",
+   "caption": "Fig. 7(b), 18 MPa row — right block (with binders per the text), R.H. 5 / R.H. 90: generalised deformation (16 MPa in the text); R.H. 5 — individual hollow granules still recognisable, the dashed circle follows the same cavity group as at 8 MPa; R.H. 90 — matrix more continuous, cavities flattened, three arrows start following cavities (the 8 MPa circle is not continued: 'between 7 and 19 MPa, it is impossible to follow the evolution of the same granules') (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    397.8,
+    169.3,
+    732.3,
+    272.3
+   ],
+   "w": 930,
+   "h": 287,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.231,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [975, 356, 1890, 609] px (row 2 of the right block); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7b3",
+   "kind": "figure",
+   "label": "7b · third pressure row",
+   "page": 8,
+   "file": "fig_7b_60MPa.png",
+   "caption": "Fig. 7(b), 60 MPa row — right block (with binders per the text), R.H. 5 / R.H. 90: outlines no longer resolved, central cavities of the largest granules remain; the dashed circle (R.H. 5) and the three arrows (R.H. 90) stay on the same cavities (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    397.8,
+    264.3,
+    732.3,
+    354.4
+   ],
+   "w": 930,
+   "h": 251,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.226,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [975, 620, 1890, 837] px (row 3 of the right block); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f7b4",
+   "kind": "figure",
+   "label": "7b · fourth pressure row",
+   "page": 8,
+   "file": "fig_7b_110MPa.png",
+   "caption": "Fig. 7(b), 110 MPa row — right block (with binders per the text), R.H. 5 / R.H. 90: central cavities of the largest hollow granules are the largest remaining defects; same dashed circle / arrows as at 60 MPa; carries the 'h110' height arrow (part of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    397.8,
+    346.7,
+    732.3,
+    433.2
+   ],
+   "w": 930,
+   "h": 241,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.23,
+   "src_native": [
+    1890,
+    1310
+   ],
+   "native_dpi": 200,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [975, 849, 1890, 1056] px (row 4 of the right block); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 27",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 – Granules “without binder R.H. 90”. Size distribution in the loose and tapped modes in sub-regions at the top and at the bottom of the sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    560.5,
+    291.6,
+    713.8
+   ],
+   "w": 668,
+   "h": 427,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.867,
+   "src_native": [
+    638,
+    396
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    45.9,
+    559.8,
+    297.0,
+    714.2
+   ],
+   "recrop": "tool crop complete (1047×644 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 31, 638×396 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 – Volume fraction of porosity in the initial state for the four batches studied (with binders R.H. 5 and R.H. 90/without binder R.H. 5 and R.H. 90).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.0,
+    548.4,
+    547.8,
+    712.9
+   ],
+   "w": 664,
+   "h": 458,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.808,
+   "src_native": [
+    634,
+    428
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    302.9,
+    547.3,
+    554.1,
+    713.2
+   ],
+   "recrop": "tool crop complete (1047×692 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 32, 634×428 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10 – Porosity evolution for granules (a) without binder and (b) with binders.",
+   "rotated_deg": 0,
+   "bbox": [
+    62.4,
+    57.9,
+    528.7,
+    384.3
+   ],
+   "w": 1296,
+   "h": 908,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.852,
+   "src_native": [
+    1266,
+    877
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    61.6,
+    57.2,
+    529.4,
+    384.7
+   ],
+   "recrop": "tool crop complete (1950×1365 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 36, 1266×877 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "이 논문의 유일한 압력별 정량 곡선 — 높이 여섯 구간의 2 µm 초과 기공 분율 (전체 기공률 아님). 판독 192 점 = digitized.csv."
+  },
+  {
+   "key": "f10a1",
+   "kind": "figure",
+   "label": "10a · dry",
+   "page": 10,
+   "file": "fig_10a_rh5.png",
+   "caption": "Fig. 10(a), upper graph — granules without binder, R.H. 5: 'Porosity ratio (vol. %) φeq > 2 µm' (horizontal) against the height in the compact (mm, vertical), six sub-regions per pressure; legend 7, 13, 19, 27, 41, 61, 88, 110 MPa (no initial state) (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    62.4,
+    60.0,
+    273.4,
+    223.5
+   ],
+   "w": 587,
+   "h": 455,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.853,
+   "src_native": [
+    1266,
+    877
+   ],
+   "native_dpi": 200,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 555, 429] px (upper-left graph; gap rows 429–487 below, cols 555–708 to the right); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 36",
+   "viewed": true
+  },
+  {
+   "key": "f10a2",
+   "kind": "figure",
+   "label": "10a · humid",
+   "page": 10,
+   "file": "fig_10a_rh90.png",
+   "caption": "Fig. 10(a), lower graph — granules without binder, R.H. 90: porosity ratio (φeq > 2 µm) against height, six sub-regions per pressure; legend Initial state, 7, 17, 21, 27, 42, 58, 86, 113 MPa (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    62.7,
+    232.7,
+    273.4,
+    383.9
+   ],
+   "w": 586,
+   "h": 421,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.832,
+   "src_native": [
+    1266,
+    877
+   ],
+   "native_dpi": 200,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 487, 555, 877] px (lower-left graph; gap rows 429–487 above); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 36",
+   "viewed": true
+  },
+  {
+   "key": "f10b1",
+   "kind": "figure",
+   "label": "10b · dry",
+   "page": 10,
+   "file": "fig_10b_rh5.png",
+   "caption": "Fig. 10(b), upper graph — granules with binders, R.H. 5: porosity ratio (φeq > 2 µm) against height, six sub-regions per pressure; legend 8, 16, 28, 41, 62, 82, 110 MPa (no initial state); the 16 and 28 MPa series are plotted at the same heights (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    318.0,
+    57.9,
+    528.7,
+    223.8
+   ],
+   "w": 586,
+   "h": 462,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.856,
+   "src_native": [
+    1266,
+    877
+   ],
+   "native_dpi": 200,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [711, 0, 1266, 430] px (upper-right graph; gap rows 430–487 below, cols 555–708 to the left); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 36",
+   "viewed": true
+  },
+  {
+   "key": "f10b2",
+   "kind": "figure",
+   "label": "10b · humid",
+   "page": 10,
+   "file": "fig_10b_rh90.png",
+   "caption": "Fig. 10(b), lower graph — granules with binders, R.H. 90: porosity ratio (φeq > 2 µm) against height, six sub-regions per pressure; legend Initial state, 8, 19, 27, 41, 63, 84, 112 MPa (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    318.0,
+    232.7,
+    528.7,
+    384.3
+   ],
+   "w": 586,
+   "h": 422,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.836,
+   "src_native": [
+    1266,
+    877
+   ],
+   "native_dpi": 200,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [708, 487, 1266, 877] px (lower-right graph incl. its y-axis title; gap rows 430–487 above); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 36",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "Fig. 11 – Distribution curves of equivalent diameter of the porosities.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.3,
+    62.9,
+    531.3,
+    524.8
+   ],
+   "w": 1299,
+   "h": 1285,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.87,
+   "src_native": [
+    1281,
+    1267
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    63.6,
+    57.2,
+    536.4,
+    524.8
+   ],
+   "recrop": "tool crop complete (1970×1949 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 40, 1281×1267 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f11a",
+   "kind": "figure",
+   "label": "11 · without binder · dry",
+   "page": 11,
+   "file": "fig_11_without_binder_rh5.png",
+   "caption": "Fig. 11, upper left — number distribution of the equivalent diameter of the pores, granules without binder R.H. 5, at 8 MPa (dashed) and 110 MPa (solid); the line styles are named in this graph only (part of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.3,
+    62.9,
+    297.5,
+    218.0
+   ],
+   "w": 649,
+   "h": 432,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.811,
+   "src_native": [
+    1281,
+    1267
+   ],
+   "native_dpi": 200,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 617, 416] px (upper-left graph; gap rows 416–435 below, cols 617–648 to the right); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 40",
+   "viewed": true
+  },
+  {
+   "key": "f11b",
+   "kind": "figure",
+   "label": "11 · without binder · humid",
+   "page": 11,
+   "file": "fig_11_without_binder_rh90.png",
+   "caption": "Fig. 11, upper right — number distribution of the equivalent pore diameter, granules without binder R.H. 90, 8 MPa (dashed) and 110 MPa (solid) (part of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    297.1,
+    64.0,
+    531.3,
+    218.8
+   ],
+   "w": 652,
+   "h": 431,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.856,
+   "src_native": [
+    1281,
+    1267
+   ],
+   "native_dpi": 200,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [648, 0, 1281, 416] px (upper-right graph); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 40",
+   "viewed": true
+  },
+  {
+   "key": "f11c",
+   "kind": "figure",
+   "label": "11 · with binders · dry",
+   "page": 11,
+   "file": "fig_11_with_binders_rh5.png",
+   "caption": "Fig. 11, middle left — number distribution of the equivalent pore diameter, granules with binders R.H. 5, 8 MPa (dashed) and 110 MPa (solid) (part of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.3,
+    214.3,
+    297.2,
+    368.7
+   ],
+   "w": 648,
+   "h": 430,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.86,
+   "src_native": [
+    1281,
+    1267
+   ],
+   "native_dpi": 200,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 435, 616, 833] px (middle-left graph); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 40",
+   "viewed": true
+  },
+  {
+   "key": "f11d",
+   "kind": "figure",
+   "label": "11 · with binders · humid",
+   "page": 11,
+   "file": "fig_11_with_binders_rh90.png",
+   "caption": "Fig. 11, middle right — number distribution of the equivalent pore diameter, granules with binders R.H. 90, 8 MPa (dashed) and 110 MPa (solid) (part of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    297.1,
+    214.0,
+    531.3,
+    368.0
+   ],
+   "w": 652,
+   "h": 429,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.863,
+   "src_native": [
+    1281,
+    1267
+   ],
+   "native_dpi": 200,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [648, 435, 1281, 833] px (middle-right graph); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 40",
+   "viewed": true
+  },
+  {
+   "key": "f11e",
+   "kind": "figure",
+   "label": "11 · with binders · mixt",
+   "page": 11,
+   "file": "fig_11_with_binders_mixt.png",
+   "caption": "Fig. 11, bottom — number distribution of the equivalent pore diameter, granules with binders 'mixt', 8 MPa (dashed) and 110 MPa (solid): the narrowest 110 MPa distribution of the with-binder batches (part of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    179.4,
+    369.3,
+    416.6,
+    524.8
+   ],
+   "w": 660,
+   "h": 433,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.865,
+   "src_native": [
+    1281,
+    1267
+   ],
+   "native_dpi": 200,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [321, 867, 948, 1267] px (bottom graph; gap rows 833–867 above); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 40",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 12,
+   "file": "fig_12.png",
+   "caption": "Fig. 12 – Evolution of interconnected porosity as the pressure increases. The large pore progressively splits into unconnected islands.",
+   "rotated_deg": 0,
+   "bbox": [
+    134.0,
+    58.2,
+    457.0,
+    271.4
+   ],
+   "w": 898,
+   "h": 593,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.819,
+   "src_native": [
+    869,
+    563
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    41.3,
+    57.2,
+    548.6,
+    271.7
+   ],
+   "recrop": "tool crop complete (page-width band, uneven white side margins) (2114×895 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 46, 869×563 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 12,
+   "file": "fig_13.png",
+   "caption": "Fig. 13 – Evolution of the density by volume of porosities (a, b) superior to 50 μm (c, d) which range size is 20–50 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.0,
+    414.0,
+    527.8,
+    736.8
+   ],
+   "w": 1292,
+   "h": 898,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.876,
+   "src_native": [
+    1262,
+    867
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    57.3,
+    413.2,
+    533.5,
+    737.1
+   ],
+   "recrop": "tool crop complete (1985×1351 px at 300 dpi, upsampled from the 200 dpi raster) → re-cut from the embedded native raster (xref 47, 1262×867 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "크기 등급별 결함 수 밀도라는 관측량 정의 (50 µm 초과 · 20–50 µm). 캡션의 패널 묶음은 축 이름과 어긋난다 (a · c = 50 µm 초과 · b · d = 20–50 µm)."
+  },
+  {
+   "key": "f13a",
+   "kind": "figure",
+   "label": "13a",
+   "page": 12,
+   "file": "fig_13a.png",
+   "caption": "Fig. 13(a) — number of pores per mm³ with equivalent diameter > 50 µm against pressure, granules without binder ('No binder'; open circles / grey line = R.H. 5, filled circles / black line = R.H. 90). The caption groups '(a, b) superior to 50 µm', the axis titles make (a) and (c) the > 50 µm class (panel of Fig. 13).",
+   "rotated_deg": 0,
+   "bbox": [
+    63.0,
+    416.1,
+    293.1,
+    577.0
+   ],
+   "w": 640,
+   "h": 448,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.89,
+   "src_native": [
+    1262,
+    867
+   ],
+   "native_dpi": 200,
+   "panel_of": "f13",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 608, 422] px (upper-left graph; gap cols 608–646 to the right, rows 422–451 below); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 47",
+   "viewed": true
+  },
+  {
+   "key": "f13b",
+   "kind": "figure",
+   "label": "13b",
+   "page": 12,
+   "file": "fig_13b.png",
+   "caption": "Fig. 13(b) — number of pores per mm³ with equivalent diameter 20–50 µm against pressure, granules without binder (R.H. 5 and R.H. 90) (panel of Fig. 13; see the caption remark under 13a).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.2,
+    414.0,
+    527.5,
+    577.0
+   ],
+   "w": 646,
+   "h": 454,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.886,
+   "src_native": [
+    1262,
+    867
+   ],
+   "native_dpi": 200,
+   "panel_of": "f13",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [646, 0, 1262, 422] px (upper-right graph); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 47",
+   "viewed": true
+  },
+  {
+   "key": "f13c",
+   "kind": "figure",
+   "label": "13c",
+   "page": 12,
+   "file": "fig_13c.png",
+   "caption": "Fig. 13(c) — number of pores per mm³ with equivalent diameter > 50 µm against pressure, granules with binders ('With binder'; open circles = R.H. 5, filled circles = R.H. 90, grey circles / dashed line = Mixt) (panel of Fig. 13; see the caption remark under 13a).",
+   "rotated_deg": 0,
+   "bbox": [
+    63.0,
+    578.0,
+    293.1,
+    736.8
+   ],
+   "w": 640,
+   "h": 442,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.862,
+   "src_native": [
+    1262,
+    867
+   ],
+   "native_dpi": 200,
+   "panel_of": "f13",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 451, 608, 867] px (lower-left graph); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 47",
+   "viewed": true
+  },
+  {
+   "key": "f13d",
+   "kind": "figure",
+   "label": "13d",
+   "page": 12,
+   "file": "fig_13d.png",
+   "caption": "Fig. 13(d) — number of pores per mm³ with equivalent diameter 20–50 µm against pressure, granules with binders (R.H. 5, R.H. 90 and 'mixt') (panel of Fig. 13; see the caption remark under 13a).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.2,
+    575.8,
+    527.8,
+    736.8
+   ],
+   "w": 647,
+   "h": 448,
+   "dpi": 200,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.862,
+   "src_native": [
+    1262,
+    867
+   ],
+   "native_dpi": 200,
+   "panel_of": "f13",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [646, 451, 1262, 867] px (lower-right graph); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 47",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 – List of the five different batches of alumina granules. — columns Name / Formulation / Storage / Granule diameter D50 (μm): Without binder R.H. 5 and R.H. 90 = without binder, dispersant PAA (1.8%), stored at 5% / 90% R.H., D50 50; With binders R.H. 5 and R.H. 90 = with binders (5%), dispersant PAA (1.8%), stored at 5% / 90% R.H., D50 89; With binders mixt = filling at 5% R.H., pressing at 90% R.H.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.3,
+    575.7,
+    548.4,
+    755.5
+   ],
+   "w": 1039,
+   "h": 751,
+   "dpi": 300,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.105,
+   "note": "tool crop kept as it is (complete: caption + table, 300 dpi); the automatic 'caption' string had run on into the table cells and was rewritten by hand (caption sentence + cell contents)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 9,
+   "file": "tab_2.png",
+   "caption": "Table 2 – Comparison of the Py as measured by standard compaction curves with the classification, in ascending order, of the strength of granules made from qualitative observations on the tomographic sections. — Types of granules / Py (MPa) / Granules strength (qualitative): With binders R.H. 5 — 5 — 1; With binders R.H. 90 — 1.8 — 2; Without binder R.H. 5 — 2.1 — 3; Without binder R.H. 90 — 1.5 — 4.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.0,
+    57.2,
+    297.2,
+    189.4
+   ],
+   "w": 1395,
+   "h": 734,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.181,
+   "auto_bbox": [
+    46.9,
+    31.8,
+    553.1,
+    758.6
+   ],
+   "recrop": "re-rendered from the vector page at 400 dpi: clip [50, 61, 293, 185] pt (caption band + table rows), ink trim, uniform 6 pt margin — the automatic crop (2089×2999 px, 80 % blank) was the whole page (text columns and figures inside)",
+   "viewed": true,
+   "mpm_note_ko": "과립 항복 압력 Py (압밀 곡선의 첫 꺾임 · 곡선 미게재) 1.5–5 MPa ↔ 영상으로 매긴 강도 순위. Heckel 의 P_y (= 1/K) 와 다른 정의."
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 13,
+   "file": "tab_3.png",
+   "caption": "Table 3 – Average diameter of the ten biggest defects. — Types of granules / Daverage (μm): Without binder, R.H. 5 — 57; Without binder, R.H. 90 — 54; With binders, R.H. 5 — 62; With binders, R.H. 90 — 69; With binders, mixt — 86 (pellets at 110 MPa, text p.122).",
+   "rotated_deg": 0,
+   "bbox": [
+    75.8,
+    57.2,
+    267.3,
+    169.4
+   ],
+   "w": 1063,
+   "h": 623,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.18,
+   "auto_bbox": [
+    46.9,
+    31.8,
+    553.0,
+    654.6
+   ],
+   "recrop": "re-rendered from the vector page at 400 dpi: clip [80, 61, 263, 165] pt (caption band + table rows), ink trim, uniform 6 pt margin — the automatic crop (2110×2596 px, 82 % blank) was the whole page (text columns and figures inside)",
+   "viewed": true,
+   "mpm_note_ko": "110 MPa 에 남는 가장 큰 결함 열 개의 평균 지름 54–86 µm = 과립 하나 크기 (속 빈 과립의 가운데 공동)."
+  },
+  {
+   "key": "x111a",
+   "kind": "text",
+   "label": "txt · compaction diagram, three regions, Py",
+   "page": 1,
+   "file": "txt_p111_p112_compaction_diagram_three_regions_py.png",
+   "caption": "pp.111–112: compaction diagrams (density vs log pressure) with three linear regions — low pressure = granule rearrangement; intermediate = 'granule fragmentation and/or plastic deformation [1]. However this phenomenon has never been directly observed yet'; the transition = 'a quantitative measurement of the granule strength, called the yield pressure (Py)'; a third region at very high pressure = intragranular densification by rearrangement of the primary particles [2]; 'there is no existing paper where a method was used enabling the experimental observation of the compaction mechanisms'.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.9,
+    523.4,
+    548.1,
+    680.6
+   ],
+   "w": 1398,
+   "h": 1516,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.848,
+   "parts": [
+    {
+     "page": 1,
+     "pdf": "main",
+     "bbox": [
+      308.9,
+      523.4,
+      548.1,
+      680.6
+     ]
+    },
+    {
+     "page": 2,
+     "pdf": "main",
+     "bbox": [
+      47.3,
+      68.5,
+      286.5,
+      168.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x112a",
+   "kind": "text",
+   "label": "txt · humidity, DEM mention, no ejection",
+   "page": 2,
+   "file": "txt_p112_humidity_dem_mention_insitu_no_ejection.png",
+   "caption": "p.112: aim of the work; humidity — 'a high hygrometry, increases the overall density of the compact but affects the internal density distribution in the sample [11]. This phenomenon has been reproduced with a discrete element modelling [1]' (the only mention of DEM in the paper); in situ advantage — 'Compared to ex-situ experiments, this method avoided the addition of stresses during the ejection step and sample misplacement at each compaction step observation.'",
+   "rotated_deg": 0,
+   "bbox": [
+    47.3,
+    423.7,
+    286.5,
+    661.1
+   ],
+   "w": 1398,
+   "h": 1386,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.859,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "이 논문에서 DEM 이 나오는 유일한 문장 (습한 시료의 밀도 구배를 [1] 의 DEM 이 재현) + 꺼내지 않는 방법의 장점."
+  },
+  {
+   "key": "x112b",
+   "kind": "text",
+   "label": "txt · granule formulation, storage, binder Tg",
+   "page": 2,
+   "file": "txt_p112_granule_formulation_storage_tg.png",
+   "caption": "p.112 (§2.1): nanometric alumina powder (Nanotek) + PAA dispersant (Mw 2000, 1.8 %); two formulations — 'without binder' and 'with binders' (5 %: binder + plasticizer + lubricant, together called 'binder'); spray-drying in an ultrasonic atomizer (Synetude SAS) [12]; storage one week at R.H. 90 % or 5 %; 'with binders mixt' = stored at 5 %, poured, then kept in the die at 90 % before compaction; loose / tapped density per ASTM B527; PEO binder Tg by DSC = 40 °C at 5 % R.H. and −19 °C at 90 % R.H.; five batches (Table 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.3,
+    733.0,
+    286.4,
+    752.7
+   ],
+   "w": 1399,
+   "h": 2015,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.86,
+   "parts": [
+    {
+     "page": 2,
+     "pdf": "main",
+     "bbox": [
+      47.3,
+      733.0,
+      286.4,
+      752.7
+     ]
+    },
+    {
+     "page": 2,
+     "pdf": "main",
+     "bbox": [
+      304.3,
+      68.5,
+      543.5,
+      397.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x112c",
+   "kind": "text",
+   "label": "txt · graphite die rig",
+   "page": 2,
+   "file": "txt_p112_p113_graphite_die_rig.png",
+   "caption": "pp.112–113 (§2.2): in situ rig — 'a graphite die (thickness 5.5 mm/interior diameter 3.5 mm and ratio height/diameter of 0.4) and one punch on each side of the cylinder', placed inside an epoxy/carbon composite tube with a force sensor in the upper part; 'the compression force was applied thanks to the raising motion of the lower grip'; rig details in [13].",
+   "rotated_deg": 0,
+   "bbox": [
+    304.3,
+    435.1,
+    543.5,
+    535.0
+   ],
+   "w": 1395,
+   "h": 944,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.865,
+   "parts": [
+    {
+     "page": 2,
+     "pdf": "main",
+     "bbox": [
+      304.3,
+      435.1,
+      543.5,
+      535.0
+     ]
+    },
+    {
+     "page": 3,
+     "pdf": "main",
+     "bbox": [
+      51.9,
+      68.5,
+      291.0,
+      122.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x113a",
+   "kind": "text",
+   "label": "txt · scan settings, voxel, image processing",
+   "page": 3,
+   "file": "txt_p113_scan_voxel_pressure_image_processing.png",
+   "caption": "p.113: 'pressed at different pressures up to 110 MPa'; one scan per pressure; voxel 2.5 μm; tomograph operated at 80 keV and 160 μA; 900 projections, about 30 min per scan; commercial reconstruction software; image processing = 3D median filter → binarization → opening (erosion–dilatation) of size 1 → equivalent diameter (sphere of the same volume); ImageJ.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.9,
+    125.8,
+    291.1,
+    397.6
+   ],
+   "w": 1398,
+   "h": 1577,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x113b",
+   "kind": "text",
+   "label": "txt · density map not calibrated, beam hardening",
+   "page": 3,
+   "file": "txt_p113_density_map_no_calibration_beam_hardening.png",
+   "caption": "p.113: density maps = average of 300 axial sections in the central part (750 μm, about 10 granules); 'a density comparison sample-by-sample or pressure-by-pressure is not possible, since no calibration of the grey-level scale was made'; the graphite die filters the low energies — 'Beam hardening becomes significant only for the samples containing a large amount of water, i.e. conditioned at R.H. 90%' (Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.9,
+    400.8,
+    291.0,
+    638.2
+   ],
+   "w": 1397,
+   "h": 1382,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "밀도 지도의 한계를 저자가 직접 적은 문장 (회색값 미보정 → 시료 · 압력 사이 비교 불가) + 빔 경화는 R.H. 90 시료에서만."
+  },
+  {
+   "key": "x114a",
+   "kind": "text",
+   "label": "txt · density maps, regions, arching, humidity",
+   "page": 4,
+   "file": "txt_p114_p116_density_maps_regions_arching_humidity.png",
+   "caption": "pp.114–116 (§3.1.2): density maps at 8 and 110 MPa (Fig. 4) — the most homogeneous map is 'without binder R.H. 5'; with binders the gradients appear at low pressure and persist; at 8 MPa denser regions (1) near the corners of the advancing punch, at high pressure a region (3) of intermediate density near the lower punch and an arch-like low-density region (2) between the lower corners ('arching effects between particles forming a connected network supported by the die wall'); humidification → 'more severe gradient densities between these different regions'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.3,
+    335.7,
+    543.5,
+    366.9
+   ],
+   "w": 1394,
+   "h": 1262,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.842,
+   "parts": [
+    {
+     "page": 4,
+     "pdf": "main",
+     "bbox": [
+      304.3,
+      335.7,
+      543.5,
+      366.9
+     ]
+    },
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      47.3,
+      68.2,
+      286.4,
+      248.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x116b",
+   "kind": "text",
+   "label": "txt · without binder, no gradient, granule stiffness",
+   "page": 6,
+   "file": "txt_p116_without_binder_no_gradient_stiffness.png",
+   "caption": "p.116: granules without binder — dry: 'high compaction ability', no density gradient at low or high pressure; humid: severe heterogeneity, 'Denser regions are localised near the die wall'; 'The pellet homogeneity increases with the granule stiffness', in agreement with Deis et al. [11].",
+   "rotated_deg": 0,
+   "bbox": [
+    304.3,
+    217.5,
+    543.5,
+    363.2
+   ],
+   "w": 1395,
+   "h": 877,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.857,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x116c",
+   "kind": "text",
+   "label": "txt · fracture modes, brittle vs plastic",
+   "page": 6,
+   "file": "txt_p116_fracture_modes_8mpa_brittle_plastic.png",
+   "caption": "p.116 (§3.1.3): fracture modes on radial sections at 8 MPa (Fig. 6) — granules without binder have begun to break, granules with binders show neither deformation nor breaking; 'This already occurs at 8 MPa, corresponding to a pressure slightly superior to the transition between stages I and II … just after the Py'; low-Tg binder → plastic behaviour, no binder or high-Tg binder → brittle; 'the fracture behaviour of the granules is related to the nature of the interparticle bounding inside each granule'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.3,
+    400.8,
+    543.5,
+    569.4
+   ],
+   "w": 1396,
+   "h": 1005,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.857,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x116d",
+   "kind": "text",
+   "label": "txt · fragmentation with pressure, resolution limit",
+   "page": 6,
+   "file": "txt_p116_p117_fragmentation_8_19mpa_binders_16mpa.png",
+   "caption": "pp.116–117: axial sections (Fig. 7a and b, 'without and with binder respectively') — without binder: 'from 8 MPa, fragmentation is generalised over the entire height'; 'At 17–19 MPa, fragmentation increases but is difficult to observe due to insufficient resolution'; more fragmentation in the wet batch at 8 MPa (water as a lubricant; Py lower for wet granules); with binders: at 8 MPa only the granules in the upper part are deformed, 'Generalised deformation is observed later at 16 MPa'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.3,
+    572.6,
+    543.5,
+    754.0
+   ],
+   "w": 1398,
+   "h": 1459,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.848,
+   "parts": [
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      304.3,
+      572.6,
+      543.5,
+      754.0
+     ]
+    },
+    {
+     "page": 7,
+     "pdf": "main",
+     "bbox": [
+      51.9,
+      538.2,
+      291.1,
+      605.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "측정 한계 문장: 17–19 MPa 의 파쇄는 '해상도 부족으로 관찰 곤란' — 풀리지 않은 조각은 바탕으로 넘어간다."
+  },
+  {
+   "key": "x117a",
+   "kind": "text",
+   "label": "txt · strength ranking, Py is not the fracture onset",
+   "page": 7,
+   "file": "txt_p117_strength_ranking_py_not_fracture_onset.png",
+   "caption": "p.117: strength ranking from the sections vs Py from standard compaction curves (Table 2); the lowest pressure tested was 8 MPa, above Py — 'based on our tomographic observation, we show that at 8 MPa granules have only began to deform or fracture. This means that in reality, Py might not exactly correspond to the granule fracture/deformation'; a similar study at lower pressures is suggested.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.9,
+    607.0,
+    291.0,
+    754.0
+   ],
+   "w": 1396,
+   "h": 1583,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.853,
+   "parts": [
+    {
+     "page": 7,
+     "pdf": "main",
+     "bbox": [
+      51.9,
+      607.0,
+      291.0,
+      754.0
+     ]
+    },
+    {
+     "page": 7,
+     "pdf": "main",
+     "bbox": [
+      308.9,
+      538.2,
+      548.0,
+      661.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "핵심 문장: 8 MPa (> Py) 에서 과립은 '막 변형 · 파쇄하기 시작' → Py 가 과립 파쇄 · 변형의 시점과 정확히 맞지 않는다."
+  },
+  {
+   "key": "x117b",
+   "kind": "text",
+   "label": "txt · intergranular and intragranular cavities",
+   "page": 7,
+   "file": "txt_p117_p119_intergranular_intragranular_cavities.png",
+   "caption": "pp.117–119: two kinds of pores — intergranular ('triangular') and intragranular (central cavities of hollow granules); at 110 MPa the central cavities of the largest granules are the largest defects and only shrink slightly; 'smallest granules see the highest stresses and are thus easier to destroy [10]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.9,
+    664.3,
+    548.1,
+    752.7
+   ],
+   "w": 1397,
+   "h": 753,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.854,
+   "parts": [
+    {
+     "page": 7,
+     "pdf": "main",
+     "bbox": [
+      308.9,
+      664.3,
+      548.1,
+      752.7
+     ]
+    },
+    {
+     "page": 9,
+     "pdf": "main",
+     "bbox": [
+      51.9,
+      229.4,
+      291.1,
+      260.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x119a",
+   "kind": "text",
+   "label": "txt · residual cavities, reorganisation above Py",
+   "page": 9,
+   "file": "txt_p119_residual_cavities_reorganisation_above_py.png",
+   "caption": "p.119: the dry sample without binder shows the fewest residual cavities; at 110 MPa the samples without binder have more intergranular porosities; wet granules with binders: 'a phenomenon of reorganisation of granules appears at pressures superior to Py. In fact, between 7 and 19 MPa, it is impossible to follow the evolution of the same granules. This is in opposition with the idea that reorganisation of granules occurs only in stage I'.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.9,
+    263.8,
+    291.1,
+    387.1
+   ],
+   "w": 1398,
+   "h": 752,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.865,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x119b",
+   "kind": "text",
+   "label": "txt · central-cavity fraction, segregation sub-regions",
+   "page": 9,
+   "file": "txt_p119_cavity_fraction_segregation_subregions.png",
+   "caption": "p.119 (§3.2.1): volume fraction of the spherical central cavities = 2 % of the granule volume (without binder) and 3 % (with binders) [12]; size segregation quantified on two sub-regions of 500 μm at the top and at the bottom of the sample, loose and tapped (Fig. 8).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.9,
+    470.0,
+    291.1,
+    524.1
+   ],
+   "w": 1399,
+   "h": 1262,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.851,
+   "parts": [
+    {
+     "page": 9,
+     "pdf": "main",
+     "bbox": [
+      51.9,
+      470.0,
+      291.1,
+      524.1
+     ]
+    },
+    {
+     "page": 9,
+     "pdf": "main",
+     "bbox": [
+      308.9,
+      68.5,
+      548.1,
+      225.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x119c",
+   "kind": "text",
+   "label": "txt · six sub-regions, pores above the detection size",
+   "page": 9,
+   "file": "txt_p119_six_subregions_pores_larger_2um.png",
+   "caption": "p.119 (§3.2.2): density gradient of the initial state — the sample is divided into six sub-regions ('height 200 voxels … 500 μm'), volume fraction of the pores larger than 2 μm in each (Fig. 9); highest packing = granules without binder, dry; plasticization by humidity and binders is detrimental to the packing ('a more sticky behaviour of the granules').",
+   "rotated_deg": 0,
+   "bbox": [
+    308.9,
+    251.8,
+    548.1,
+    363.1
+   ],
+   "w": 1397,
+   "h": 686,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x119d",
+   "kind": "text",
+   "label": "txt · axial gradient with pressure",
+   "page": 9,
+   "file": "txt_p119_p120_axial_gradient_evolution.png",
+   "caption": "pp.119–120: axial gradient under pressure (Fig. 10) — 'At low pressure, porosity is more important in the inferior part of the sample. When the pressure increases, the homogeneity of the samples improves'; with binders 'The tendency is inverted, i.e. porosity is smaller in the superior part'; the initial state of the two dry batches could not be reconstructed; R.H. 90: 'a reduction of the homogenisation at low pressure (≤8 MPa) and then … a re-homogenisation at high pressure'.",
+   "rotated_deg": 0,
+   "bbox": [
+    308.9,
+    366.4,
+    548.1,
+    512.1
+   ],
+   "w": 1396,
+   "h": 1707,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.846,
+   "parts": [
+    {
+     "page": 9,
+     "pdf": "main",
+     "bbox": [
+      308.9,
+      366.4,
+      548.1,
+      512.1
+     ]
+    },
+    {
+     "page": 10,
+     "pdf": "main",
+     "bbox": [
+      47.3,
+      446.3,
+      286.4,
+      592.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x120a",
+   "kind": "text",
+   "label": "txt · pore-size distribution, single macropore",
+   "page": 10,
+   "file": "txt_p120_pore_size_distribution_single_macropore.png",
+   "caption": "p.120 (§3.2.3): pore-size distributions (Fig. 11) — at 8 MPa the distributions are narrow because the intergranular porosity is fully interconnected: 'Most of this intergranular porosity is then agglomerated into one single macropore, the size of which is very large. This pore accounts for a very small fraction of the population (because it is calculated as a number ratio)' and it is not included in the plotted size range; with pressure it splits into unconnected islands that enter the plotted range and then close (Fig. 12).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.3,
+    618.1,
+    286.4,
+    752.4
+   ],
+   "w": 1399,
+   "h": 1516,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.853,
+   "parts": [
+    {
+     "page": 10,
+     "pdf": "main",
+     "bbox": [
+      47.3,
+      618.1,
+      286.4,
+      752.4
+     ]
+    },
+    {
+     "page": 10,
+     "pdf": "main",
+     "bbox": [
+      304.3,
+      446.3,
+      543.5,
+      569.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x120b",
+   "kind": "text",
+   "label": "txt · toughness and critical defect size",
+   "page": 10,
+   "file": "txt_p120_toughness_critical_defect_50um_20um.png",
+   "caption": "p.120 (§3.2.4): alumina toughness ≈ 4 MPa√m → a failure stress above 320 MPa needs a critical defect smaller than 50 μm, 500 MPa needs less than 20 μm; classes > 50 μm and 20–50 μm are counted (Fig. 13), pores below 20 μm are not considered.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.3,
+    595.2,
+    543.5,
+    729.5
+   ],
+   "w": 1398,
+   "h": 813,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x121a",
+   "kind": "text",
+   "label": "txt · defect count rises first, resolution limit",
+   "page": 11,
+   "file": "txt_p121_p122_defects_increase_20mpa_resolution_limit.png",
+   "caption": "pp.121–122: 'In all cases, the number of defects increases until 20 MPa' (splitting of the interconnected porosity); the tomography only sees pores larger than 2 μm — 'interconnected porosity does indeed exist at a smaller scale between small particles. At high pressure in particular, it is still present but its size is of tens of nanometer so it is not detected in our measurement.'",
+   "rotated_deg": 0,
+   "bbox": [
+    308.9,
+    641.2,
+    548.1,
+    752.6
+   ],
+   "w": 1398,
+   "h": 868,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.86,
+   "parts": [
+    {
+     "page": 11,
+     "pdf": "main",
+     "bbox": [
+      308.9,
+      641.2,
+      548.1,
+      752.6
+     ]
+    },
+    {
+     "page": 12,
+     "pdf": "main",
+     "bbox": [
+      47.3,
+      318.9,
+      286.4,
+      350.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "영상 기공 = 2 µm 초과 기공만 · 높은 압력에서도 수십 nm 기공은 남지만 검출되지 않는다 (저자)."
+  },
+  {
+   "key": "x123a",
+   "kind": "text",
+   "label": "txt · conclusions: Py, hollow cavities, ejection",
+   "page": 13,
+   "file": "txt_p123_conclusion_py_hollow_cavities_ejection.png",
+   "caption": "p.123 (conclusions): 'rearrangement and/or destruction of first granules is only beginning at this pressure [Py], on the contrary to the general agreement that Py corresponds to the end of this microscopic process'; the cavities of hollow granules are the hardest to destroy; dry granules without binder give few and small defects, but 'in uniaxial pressing, it is hardly conceivable. Indeed, due to die friction effects during ejection step, the green parts will be destroyed'; plastification by humidification or binder addition is detrimental to densification.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.9,
+    309.1,
+    291.0,
+    431.9
+   ],
+   "w": 1396,
+   "h": 1441,
+   "dpi": 400,
+   "src": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+   "blank": 0.849,
+   "parts": [
+    {
+     "page": 13,
+     "pdf": "main",
+     "bbox": [
+      51.9,
+      309.1,
+      291.0,
+      431.9
+     ]
+    },
+    {
+     "page": 13,
+     "pdf": "main",
+     "bbox": [
+      51.9,
+      526.8,
+      291.0,
+      649.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "탈압 · 배출에 대한 유일한 말: 바인더 없는 성형체는 꺼낼 때 금형 마찰로 부서질 것 (예상 · 측정 아님)."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found Fig. 1–4, 6–13 and Table 1–3 (15 crops) and reported one number gap, 'f5': Fig. 5 (a two-sketch drawing on PDF p.6 whose one-line caption stands beside other text) was not extracted — it was cut by hand from its embedded raster (manual_crop).  All 15 automatic crops were opened; 14 were replaced: the twelve figures were re-cut from their embedded native rasters (200 dpi, no resampling; the PDF has no vector plots) with a uniform 6 pt margin — eleven of them were complete but upsampled to 300 dpi and mostly page-width bands with uneven white side margins, and Fig. 7 (landscape page, page rotation 90°) was truncated and its automatic caption cut at 'granules stored at' (recrop × 12); Table 2 and Table 3 had come out as whole-page images (80 % / 82 % blank, text columns and figures inside) and were re-rendered from the vector page at 400 dpi with an explicit clip (recrop × 2); Table 1 is the automatic crop (only its caption string was rewritten).  Added by hand (manual_crop × 58): Fig. 5, 37 panel crops (Fig. 1 a–c, Fig. 3 a–b, the five batch rows of Fig. 4, the four sections of Fig. 6, the two blocks and the eight pressure rows of Fig. 7, the four graphs of Fig. 10, the five graphs of Fig. 11, Fig. 13 a–d) and 20 evidence paragraphs (text crops are limited to the paragraphs the digest quotes as the basis of a number, a definition or a claim — at most 20 per card; no whole-page images).  Re-cut during checking: fig_7a_8MPa / fig_7b_8MPa (the first boxes clipped the z-axis arrow), fig_10b_rh90 (y-axis title lost) and one text crop that started in mid-sentence (now txt_p114_p116_…).  Equation crops: 0 — the paper has no numbered and no displayed equation (the critical defect sizes on p.120 are given as numbers only).  The paper has no supplementary material.",
+ "note_manual": "Printed inconsistencies visible in the crops (details in the digest §3-10 / §11): (1) Fig. 7 caption '(a) With binders. (b) Without binder.' vs text p.116 'Fig. 7a and b, without and with binder respectively' and the image content (a = without binder); (2) Fig. 13 caption '(a, b) superior to 50 μm (c, d) … 20–50 μm' vs the axis titles (a, c = > 50 μm; b, d = 20–50 μm; a, b = without binder; c, d = with binders); (3) Fig. 5 cites 'Reed's study [13]' while the text and the reference list have Reed = [14] ([13] = Buffiere et al.); (4) Table 2 caption 'in ascending order' vs text 'in descending order' (rank 1 = strongest, Py 5 MPa); (5) text 'ASTM B527' vs Fig. 3 caption 'ISO standard methods'; (6) tube setting printed as '80 keV'; (7) text 'six subregions of height 200 voxels … 500 μm' vs the sub-region spacings read from Fig. 9 / Fig. 10 (compact height / 6 = 0.26–0.64 mm); (8) the 'Initial state' of Fig. 9 (32.4 % / 1.94 mm and 44.6 % / 2.20 mm for the two R.H. 90 batches) differs from the 'Initial state' series of Fig. 10 (38.6 % / 2.53 mm and 41.3 % / 2.58 mm) [read from the plots]; (9) the initial state of the two dry batches 'could not be reconstructed' (p.120) but Fig. 13 shows points at P ≈ 0 for R.H. 5; (10) the points of Fig. 13c sit 2–3 MPa below those of Fig. 13d and of the Fig. 10 legend; (11) Fig. 13 contains pressure steps that are not in the Fig. 10 legends (≈ 74–76 MPa; eleven steps for 'mixt'); (12) one unconnected black point at P ≈ 0 in Fig. 13a; (13) Fig. 10b, R.H. 5: the 16 MPa and 28 MPa series are plotted at the same heights; (14) p.120 'The tendency is inverted, i.e. porosity is smaller in the superior part'; (15) Table 1 D50 = 50 μm for 'without binder' vs number modes of 72–92 μm in Fig. 8 (same formulation; D50 method not given); (16) Table 1 lists five batches, Table 2 / Fig. 9 / Fig. 10 four; (17) the map heights of Fig. 4 (map width = 3.5 mm) are 6–14 % larger than the heights read from Fig. 10; (18) the frames drawn around the sections of Fig. 7 are identical in blocks a and b (template boxes, not measured heights).",
+ "key_note": "manual keys: f<N><letter> = printed panel of Fig. N (panel_of); f4r1–f4r5 = the five batch rows of Fig. 4 (no panel letters; files fig_4_<batch>.png); f6a–f6d = the four sections of Fig. 6 in reading order (files fig_6_<batch>.png); f7a1–f7a4 / f7b1–f7b4 = pressure rows 8 / 18 / 60 / 110 MPa of the two blocks of Fig. 7; f10a1, f10a2, f10b1, f10b2 = the four graphs of Fig. 10 (upper = R.H. 5, lower = R.H. 90); f11a–f11e = the five graphs of Fig. 11 in reading order (no panel letters in the print); x<printed page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts'), the file names txt_p<printed page>_… use the printed page numbers too.  'page' and all 'bbox' values = PDF page / PDF points; printed page = PDF page + 110 (pp. 111–123).  PDF p.8 (Fig. 7) is a landscape page: its bbox values are in the displayed (rotated) page coordinates.  'dpi' of an entry = resolution of that PNG (200 = native raster, 400 = vector text render, 300 = tool crop of Table 1).  Labels carry no digits other than the figure / table number (the tool's --audit concatenates every digit of a label when it looks for number gaps): in panel labels 'dry' = R.H. 5, 'humid' = R.H. 90, 'first … fourth pressure row' = 8 / 18 / 60 / 110 MPa; the labels of the text crops are digit-free (their page is in 'page', in the file name and at the start of the caption).  Text crops are cut along whole text lines, so the first / last line of a crop can carry a few words of the neighbouring sentence (e.g. x111a ends with 'Kato et al. [3] used a'; the second part of x123a begins with 'sintering.', the last word of the sentence before).",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 460,
+  "method": "embedded native rasters (200 dpi, JPEG; the PDF has no vector plots), numpy + Pillow only.  Axes calibrated on the tick marks by linear fits (the tick positions used are written in the 'note' column of the first row of each series).  Fig. 10 (192 markers = 32 series × 6 sub-regions; x = porosity ratio of pores > 2 μm, y = height): open markers = centroid of the enclosed white hole (ink threshold 205 after erasing pure grid-line pixels), filled markers = centroid of the component left after a 3×3 (or 5×5) erosion; series assigned by marker shape and legend order; four filled triangles of the 88 MPa series (without binder, R.H. 5) are hidden behind open squares and were read by eye on 10× pixel-grid zooms (±0.3 %p); internal check — the lowest sub-region centre lies at 0.47–0.53 × the sub-region spacing in all 32 series (six equal sub-regions spanning the compact), so compact height H = 6 × mean spacing.  'series summary [card arithmetic]' rows = mean porosity, top / bottom sub-region, H and (1 − ε)·H.  Fig. 9: marker centroids (24 points) + per-batch means.  Fig. 13 (97 points): centroids of the filled / open / grey circles (hole detection, label-box letters excluded by hand; five hidden markers read on 8× zooms); cross-check — number density × sphere volume at d = 30 / 55 μm gives 1.1–1.5 % (with binders) and 0.4–0.6 % (without) near 110 MPa against 1.19–1.45 % and 0.56–0.67 % from Fig. 10.  Fig. 11: mode and peak height of the dashed (8 MPa) and solid (110 MPa) curves and the solid-curve value at 20 / 30 / 40 μm (line styles named in the first graph only — assumed the same in all five).  Fig. 4: heights of the density maps at 8 and 110 MPa (map width 380 px = 3.5 mm).  Fig. 8 (modes) and Fig. 2 (grey levels at the axis / edge) were read by eye.  The frames of Fig. 7 are template boxes and were not used.  Everything read from plots is tagged [판독] in the digest; nothing here is a printed value."
+ }
+}
