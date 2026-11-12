@@ -140,3 +140,17 @@
   review/work/mut (cp -al) · 구현 쪽 = work/mutate.py (P5 자리 고침 + 새 규칙 F1–F18 · T14 무리 · 110 개 · 옛 글 110/110 한 번씩 · 3 판 사본 mutate_v3.py) ·
   사본 work/mut (따로 풀기 · 하드링크 아님 — 이 하네스는 제자리 쓰기).  끔 길 바탕 = work/ovb_base_repo (alternates = 본 저장소 객체 읽기만 · HEAD af3cce37b ·
   sparse = scripts · docs/reviews · anchors csv · .gitignore · status 깨끗).
+- (12:37Z) 묶음 B (3.11 · logs/r2/py311_B) = rint_r_chain 506/506 (441 s) · e2e 51/51 (784 s) · e2e12 33/33 (378 s) · conv_cert 30/30 (966 s · 부하 load 5) ·
+  cjunc_store_e2e 6/6 (618 s).  작업 트리 깨끗.
+- 리뷰 변이 31 (review/muts_v4.json · 사본 review/work/{new,mut} = git archive 0ac6edf3c scripts webapp + docs 넷) = 잡힘 30 · 안 잡힘 MS7 (리뷰어 판정대로 동등 —
+  발행 전 대조의 엄격 지문 줄 = _read → _content 가 같은 대조를 이미 함) · ★ MS16 (열쇠 코드에서 step3_sigma 뺌 · 고치기 전 = 동등) → 이제 T14a · b · d 가 잡음.
+  ⚠ 첫 판은 사본에 docs/reviews/rint2_probe6_prep_20261110/tools 가 없어 T5e 가 사본 탓으로 실패 (MS9 · 12 · 16 의 잡힘이 섞일 수 있음) → 더해 다시
+  (바탕선 = store 54/54 · Q11 19/19 · 첫 판 결과 = logs/r2/mut_review/mut_results_muts_v4_first_missing_probe6.json · 다시 = review/mut_results_muts_v4.json ·
+  186 s).
+- 구현 쪽 변이 (work/mutate.py · 끝-끝 Z 뺀 107 · 사본 work/mut · 603 s · logs/r2/mut_impl/run_py311.log) = 잡힘 104 · 안 잡힘 3 = W6b · P5 · N3c (셋 다 미리
+  적은 겹 방어 'redundant') · 새 규칙 F1–F18 18/18 잡힘 (F1 · F2 · F3 = T14 · F4 = T4 · F5 · F6 = T7 · F7 · F8 = T11 · F9 · F10 = C1 · F11 · F12 = R1 ·
+  F13–F15 = P1 · P1b · F16 = T5i · F17 · F18 = G6b).  바탕선 D (test_rint_r_chain D10 · D14) 는 사본에 등록 R 문서가 없어 실패 → 넣고 다시 2/2 · D 를 쓰는
+  변이는 C6 하나이고 C 가 먼저 잡음 (영향 없음).
+- 끔 길 ↔ 바탕 (3.11 · work/off_vs_base.py · 바탕 = work/ovb_base_repo (HEAD af3cce37b) · logs/r2/off_vs_base_py311.log): payload 넷 (b6 · series3 × 접합
+  켬 · 끔) + 러너 (CJ_RT_ENV · SBE · DBE) rc 전부 0 · σ_e 같음 · 다른 잎 = 코드 신원 칸뿐 (code_sha · project_module_digest · 접합 켬이면
+  loaded_project_modules +1 · 러너 영수증 code_sha · receipt_digest → OUTDIR 접미사) · payload 인자 (scripts 경로 뺀) · 팔 이름 같음 — 11-12 오전 결과와 같은 꼴.
