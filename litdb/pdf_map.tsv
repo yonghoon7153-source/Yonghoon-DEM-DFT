@@ -510,3 +510,7 @@ bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing	the generalized
 #   ⚠ 크롭 55 장 = 도구 6 (Fig. 1–6 · 그대로 · Fig. 2 캡션 문자열만 정리) + 손 크롭 49 (manual_crop: 패널 13 · 식 16 · 근거 글 20 · 다시 자름 3) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode	fully_coupled_mechano-electrochemical_modeling_of_3d-resolved
 benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode	fully coupled mechano-electrochemical modeling of 3d-resolved
+# ── DEM 구름저항 (rolling resistance) 모델 네 부류 (A 방향 일정 토크 · B 점성 · C 탄소성 스프링–대시포트 · D 접촉 무관 = 평형 위반) · 일반 Model C (되굴림 가지 · 감쇠 스위치 f) · 2D PFC2D 기준 시험 셋 (평면 · 10° 경사 · 원판 25 개 정착) + 2D 광탄성 원판 모래더미 (안식각 27°) (Ai · Chen · Rotter · Ooi · Powder Technol. 206 (2011) 269–282) — litdb 2026-11-12 (후보 N-19) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 크롭 67 장 = 도구 17 (다시 자른 것 3 = fig_8 · fig_19 · tab_1 · caption_fix 9) + 손 크롭 50 (manual_crop: 그림 3 = fig_4 · 5 · 9 · 식 27 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+ai2011_rolling_resistance_contact_models_dem	assessment_of_rolling_resistance_models_in_discrete_element
+ai2011_rolling_resistance_contact_models_dem	assessment of rolling resistance models in discrete element

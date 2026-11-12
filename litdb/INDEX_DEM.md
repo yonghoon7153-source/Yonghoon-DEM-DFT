@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 296편 · 생성 2026-11-12
+> digest 297편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -60,10 +60,11 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (68편)
+## 접촉역학 · 소성 (DEM 이론) (69편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
+| `ai2011_rolling_resistance_contact_models_dem` | DEM 구름저항 (rolling resistance) 모델 네 부류 — A 방향 일정 토크 (Zhou 1999 형 · LIGGGHTS `cdt` 와 같은 꼴) · B 점성 · C 탄소성 스프링–대시포트 (이 논문의 일반 모델 · 되굴림 가지) · D 접촉 무관 (평형 위반 · 제외) — 2D PFC2D 기준 시험 셋 +  | DEM 이론 (구름저항 모델 리뷰 · 네 부류 분류 + 일반 모델 제안) + 2D 기준 시험 (PFC2D · | 2026-11-12 | 🖼 67 |
 | `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | ASSB 양극 습식 제조 사슬 전체(슬러리→건조→압연)를 CGMD(LAMMPS, LJ + Granular-Hertz) 로 — 유변학(점도·밀도)으로 force field 를 보정하고 GeoDict 로 δ_e·τ_g 산출 — Franco 그룹 ASSB 제조모델 1호(구형 AM) — Alabdali / Zanotto / Du | CGMD/DEM (LAMMPS, Lennard-Jones + Granular-Hertzian; 슬러리 NPT | 2026-08-19 | 🖼 11 |
 | `alizadeh2018_dem_adhesion_calibration_segregation_heap` | 코팅으로 끈적해진 소량 성분의 점착을 안식각으로 보정 하는 DEM 절차 — PEG 400 코팅 효소 위약 과립 (2 wt%) + 세제 분말 3 성분 더미 형성 · JKR 계면 에너지 Γ 를 응집수 (Cohesion number) 불변 으로 강성 · 크기 환산 · 코팅–비코팅 접촉 = Γ 의 절반 · 코팅이 분리 지수를 낮 | DEM (EDEM 2.7.1, Hertz–Mindlin + JKR adhesion, sphere clumps | 2026-10-13 | 🖼 23 |
 | `arzt1982_particle_coordination_densification_spheres` | 구형 분말 치밀화에서 배위수 증가의 영향 — 무작위 조밀 충전 RDF + Voronoi 셀 해석 모델 (The influence of an increasing particle coordination on the densification of spherical powders) — Arzt (Acta Metall. 1982) | theory (analytic powder-densification geometry: random-dense | 2026-10-02 | 🖼 6 |
