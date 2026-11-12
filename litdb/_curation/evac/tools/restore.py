@@ -127,7 +127,7 @@ def restore(scr, uploads):
     n = 0
     for f in (ev / "tools").iterdir():
         t = scr / "tools" / f.name
-        if not t.exists():
+        if f.is_file() and not t.exists():
             shutil.copy2(f, t)
             n += 1
     if not (scr / "STATE.md").exists():
@@ -177,6 +177,77 @@ def restore(scr, uploads):
         print("  - ⛔ 없는 파일이 있는 키는 띄우지 못한다 — 1저자에게 그 번호의 파일을 다시 올려 달라고 한다")
 
 
+def restore_code(scr):
+    """코드 가지 (pqwtv8) 쪽 일을 이어가기 위한 복구 — 11-12 인계 뒤에 더함.  본 트리 파일은 고치지 않는다 (안내만 찍는다)."""
+    import os
+    ev = CTL[0] / "litdb" / "_curation" / "evac"
+    print("== 7. 리포 전체 이력 · 관련 가지 (문서 검사 · 게이트가 요구)")
+    if sh("git", "-C", str(MAIN), "rev-parse", "--is-shallow-repository").stdout.strip() == "true":
+        r = sh("git", "-C", str(MAIN), "fetch", "-q", "--unshallow", "origin", "claude/sdcp-dem-manuscript-si-pqwtv8")
+        print("   unshallow rc", r.returncode)
+    specs = ["+refs/heads/claude/stoic-knuth-NObVQ:refs/remotes/origin/claude/stoic-knuth-NObVQ",
+             "+refs/heads/codex/*:refs/remotes/origin/codex/*", "+refs/heads/Codex/*:refs/remotes/origin/Codex/*",
+             "+refs/heads/claude/evac-*:refs/remotes/origin/claude/evac-*", "+refs/heads/claude/wip-*:refs/remotes/origin/claude/wip-*",
+             "+refs/heads/main:refs/remotes/origin/main", "+refs/heads/manuscript-track:refs/remotes/origin/manuscript-track",
+             "+refs/heads/lit-reader:refs/remotes/origin/lit-reader", "+refs/heads/rescue/*:refs/remotes/origin/rescue/*"] + [
+        f"+refs/heads/claude/{b}:refs/remotes/origin/claude/{b}" for b in (
+            "rint-pf2-handoff-20261022", "phase-a-96arm-kgy", "resistor-network-solver-LDjW6", "review-ml-migration-1BN1c",
+            "windows-reinstall-backup-oducnh", "zip-git-gpu-setup-vdqdtd", "14-gate-code-review-9qkx05", "gate80-standby-9a26dd5f",
+            "dashboard-standby-e2f56971", "solid-state-cathode-improvement-hevry0")]
+    r = sh("git", "-C", str(MAIN), "fetch", "-q", "origin", *specs, env={**os.environ, "GIT_LFS_SKIP_SMUDGE": "1"})
+    print("   가지 받기 rc", r.returncode, "· 원격 추적 ref", len(sh("git", "-C", str(MAIN), "for-each-ref", "refs/remotes").stdout.split("\n")) - 1,
+          "→ `python3 scripts/check_doc_refs.py` 가 '깨진 참조 없음' 이어야 한다 (없는 커밋이 남으면 그 가지를 더 받는다)")
+    print("== 8. 게이트용 패키지 (본 트리 webapp/requirements.txt)")
+    sh(sys.executable, "-m", "pip", "install", "-q", "--ignore-installed", "blinker")      # debian blinker 1.7 을 pip 이 못 지움 → 이것만
+    r = sh(sys.executable, "-m", "pip", "install", "-q", "-r", str(MAIN / "webapp" / "requirements.txt"), "pandas==2.3.3", "pytz")
+    r2 = subprocess.run(["bash", "scripts/setup_kgy_py38.sh"], capture_output=True, text=True, cwd=str(MAIN))
+    print("   pip rc", r.returncode, "· kgy 판 (3.8) rc", r2.returncode, (r2.stdout.strip().split("\n") or [""])[-1][:120])
+    print("== 9. 인계 묶음 (본 세션 → 대피 세션 · 11-12)")
+    for name, dest in (("handoff_evac_20261112_redacted.tgz", "handoff_20261112"), ("handoff_evac_litread_20261112.tgz", "handoff_litread_20261112")):
+        src, out = ev / "handoff_20261112" / name, scr / dest
+        if src.is_file() and not (out.exists() and any(out.iterdir())):
+            r = sh(sys.executable, "-I", str(scr / "tools" / "safe_untar.py"), str(src), str(out))
+            print("  ", (r.stdout.strip().split("\n") or [""])[-1][:150])
+    print("   ⚠ 사본의 g2c/ibb_try4_cmds_template.txt 는 접속 계정 · 주소 · 포트를 가렸다 — 값은 1저자가 채팅으로 준다")
+    print("== 10. Rint 코드 묶음 작업 트리 (스냅샷에서)")
+    snap, rint = ev / "snap", Path("/home/user/rint-codepkg")
+    if (rint / ".git").exists():
+        print("   있음:", rint)
+    else:
+        sh("git", "-C", str(MAIN), "worktree", "add", "-q", "--detach", str(rint), "origin/claude/stoic-knuth-NObVQ", check=True)
+        b = snap / "rint_codepkg_unpushed.bundle"
+        if b.is_file():
+            sh("git", "-C", str(rint), "fetch", "-q", str(b), "+HEAD:refs/tmp/rint_snap")
+            r = sh("git", "-C", str(rint), "checkout", "-q", "--detach", "refs/tmp/rint_snap")
+            print("   커밋 되살림 rc", r.returncode, sh("git", "-C", str(rint), "log", "--oneline", "-3").stdout.replace("\n", " | ")[:200])
+        d = snap / "rint_codepkg_wip.diff"
+        if d.is_file():
+            print("   커밋 전 수정 얹기 rc", sh("git", "-C", str(rint), "apply", str(d)).returncode)
+        u = snap / "rint_codepkg_untracked.tgz"
+        if u.is_file():
+            tmp = scr / "rint" / "_untracked_restore"
+            if not tmp.exists():
+                sh(sys.executable, "-I", str(scr / "tools" / "safe_untar.py"), str(u), str(tmp))
+                for f in tmp.rglob("*"):
+                    if f.is_file():
+                        tgt = rint / f.relative_to(tmp)
+                        tgt.parent.mkdir(parents=True, exist_ok=True)
+                        if not tgt.exists():
+                            shutil.copy2(f, tgt)
+        nd = snap / "rint_codepkg_notes"
+        if nd.is_dir():
+            (scr / "rint" / "codepkg").mkdir(parents=True, exist_ok=True)
+            for f in nd.iterdir():
+                if not (scr / "rint" / "codepkg" / f.name).exists():
+                    shutil.copy2(f, scr / "rint" / "codepkg" / f.name)
+    print("== 11. 본 트리 (pqwtv8) — 손으로 볼 것")
+    print("   `git -C", MAIN, "status` · `git fetch origin claude/sdcp-dem-manuscript-si-pqwtv8` 뒤 원격 끝과 견준다.")
+    for f in ("main_unpushed.bundle", "main_wip.diff", "main_untracked.tgz"):
+        if (snap / f).is_file():
+            print(f"   스냅샷에 {f} 있음 ({(snap / f).stat().st_size} B) — push 안 된 커밋 · 커밋 전 수정이 있었다 → STATE.md '인계 받은 일' 절의 순서대로 되살린다")
+    print("   SNAP_INFO:", (snap / "SNAP_INFO.txt").read_text(encoding="utf-8")[:500] if (snap / "SNAP_INFO.txt").is_file() else "없음")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--scratch", default=str(Path(__file__).resolve().parents[1]))
@@ -191,6 +262,7 @@ def main():
         verify(scr)
     else:
         restore(scr, a.uploads)
+        restore_code(scr)
 
 
 if __name__ == "__main__":

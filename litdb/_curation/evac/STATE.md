@@ -1,6 +1,26 @@
 # 대피 세션 (litdb 논문 에이전트 전용) 상태 메모 — 압축 · 재시작 뒤 먼저 읽는다
 
-갱신 2026-11-12 14:00 KST. 진행 상태의 정본 = 정본 가지 `litdb/_curation/status.tsv` (이 메모는 보조).
+갱신 2026-11-12 17:00 KST. 진행 상태의 정본 = 정본 가지 `litdb/_curation/status.tsv` (이 메모는 보조).
+
+## ★★ 11-12 오후 — 본 세션 (stoic) 일을 전부 넘겨받음
+
+1저자 11-12: "본 세션 (stoic) 토큰이 떨어져 litdb 를 뺀 일을 전부 여기서 이어받는다" + 논문 34 편 · "논문 에이전트는 두개 조수로 병렬로 하고 나머지 GB 터지지 않은 한에서 에이전트 돌려줘" · "Rint 등 잘 부탁" · "용훈 포메이션 지금 걸 수 있는거 잘 해주고 … 컨테이너 재시작 돼도 바로 복구가능하게 안전장치".
+
+- 이제 이 세션 = 논문 에이전트 + **코드 가지 일**. 작업 가지 = `claude/sdcp-dem-manuscript-si-pqwtv8` (fast-forward 만 · rebase · force · merge 커밋 금지) · `claude/stoic-knuth-NObVQ` = 동결 (커밋 · push 금지). 규칙 = 그 가지의 CLAUDE.md + 인계 HANDOFF §7 (커밋 하나 → 게이트 두 조각 → push · 로컬 커밋 쌓지 않기 · 서명 끄지 않기 · 접속 주소 · 포트 · 계정 = 채팅만).
+- 인계 묶음 = 이 폴더 `handoff_20261112/` 의 tgz 둘 (HANDOFF.md 를 먼저 끝까지 · 사본은 접속 정보를 가렸다 · 정독 · 종합 폴더 = litread tgz). scratchpad 에 푼 자리 = `handoff_20261112/` · `handoff_litread_20261112/`.
+
+| 인계 절 | 상태 (11-12 17 시 KST 기준) | 다음 |
+|---|---|---|
+| §1 pqwtv8 ← stoic `af3cce37b` | ✅ fast-forward · push | — |
+| §2 커밋 J (G2c′ 실행기 `-h` 고침 · siteq 예행 반입 · SELF-166 open) | 본 트리에 적용 (patch · siteq 복사 · commitJ_extra) · test_g2cp 41/41 · check_doc_refs · check_review_findings 통과 · `--ban-sweep` 도는 중 (`gate/ban_sweep.log`) | sweep rc 0 → 커밋 (서명 · 트레일러) → 게이트 `CHECK_ALL_RANGE=1-125` → `126-183` (Bash 배경 · timeout 7200000 · 로그 `gate/gate_J_p1.log` · `p2`) → 둘 다 fail 0 → push → 다음 커밋에 SELF-166 claimed_fixed (push 된 sha) |
+| §3 G2c′ ibb 건식 다시 | 커밋 J push 뒤 | `git archive` tgz · sha256 → 명령 틀 (`handoff …/g2c/ibb_try4_cmds_template.txt` · 접속 값은 채팅) → 1저자 실행 → 돌아오면 `compare_g2cp.py <OUT> 200` |
+| §4 Rint ② 코드 묶음 (1 순위 · GPU 팔 12 월 초까지) | 작업 트리 `/home/user/rint-codepkg` (stoic 끝 + 시험 먼저 커밋 + 구현 = 커밋 전) · 조수가 이어받아 도는 중 (지시서 `rint/codepkg/BRIEF_evac.md` · 메모 `rint/codepkg/notes.md`) | 조수 보고 → 내부 반박 리뷰 (독립 조수 · "Codex 아님") → 반입 (cherry-pick · 서명) · 게이트 → 원장 시도 3 줄 → S0 단계 1 다시 · ⑥ 시도 3 · GPU 확인 (1저자 실행) → Codex 봉인 전 묶음 → 계획 §10 개정 → 봉인 → R |
+| §5 열린 일 | 포메이션 = `snap/formation_20261112.md` | 걸 수 있는 것부터 조수로 |
+| §6 논문 34 편 (N-2 … N-51) | PDF 전부 받음 · 대기열 · status 반영 (정독 NN 44–91 = 본 세션이 정한 번호 · 논문별 지시 = 인계 묶음 `litdb/prompts/`) | 1 순위를 2 · 3 순위보다 먼저 · 둘 병렬 |
+
+- 재시작하면: 아래 '멈췄다가 이어갈 때' 3 번의 `restore.py` 한 번 — 이제 코드 가지 쪽도 한다 (리포 unshallow + 관련 가지 받기 = `check_doc_refs` 가 요구 · pip (`--ignore-installed blinker` 먼저) · kgy 판 3.8 · 인계 묶음 풀기 · Rint 작업 트리를 `snap/` 에서 되살림).
+- 스냅샷: `finish.py` 가 돌 때마다 (논문 한 편 끝 · `--sync-only`) `snap/` 에 Rint 작업 트리 (커밋 bundle · 커밋 전 diff · 새 파일 · 메모) 와 본 트리 (push 안 된 커밋 · 커밋 전 diff) 를 묶어 올린다 → 잃는 것은 마지막 스냅샷 뒤의 일뿐.
+- 게이트는 약 2 시간 (CPU 4 를 조수와 나눠 쓰면 더) — 끊기면 즉시 보고하고 조각을 다시 띄운다 · 게이트 중에는 본 트리를 건드리지 않는다.
 
 ## ★ 멈췄다가 이어갈 때 (토큰 소진 · 압축 · 컨테이너 재시작) — 이 절부터 읽는다
 

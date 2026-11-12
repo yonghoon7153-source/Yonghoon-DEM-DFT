@@ -1,0 +1,246 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 2908f8ef1..766d48e18 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -19,7 +19,7 @@
+ ★ **2026-10-27 — 다섯 번째 복귀 병합 + Codex 가지 통합 `docs/handoff_merge_to_stoic_knuth_20261027.md`** (1저자 10-27 *"이제 원래 메인브랜치 토큰 복귀됐어 … codex에서도 이제 같이 머지해야되니까 준비해야된다고도"* · 10-22 ~ 10-27 연장 세션 (pqwtv8) 118 커밋 · fast-forward `93d93bc02` → 이 문서 커밋 · litdb 무변경 · 원장 805 → 839 · 단계 A = stoic FF (본 세션 · §2 · §3) → B = Codex 가지 17 (기준 `7799a2ff6` · 고유 36 커밋 · 우리 쪽과 파일 겹침 0 · Codex 끼리 53 파일 = blob 같음) `cherry-pick -x` = Codex 통합 계획 쪽지 (`codex/merge-prep`) 뒤에만 (본 세션 · §6) → C = pqwtv8 을 새 stoic 끝으로 FF (연장 세션 · Rint · 50kg 이어서 · §5) · ⛔ 그동안 pqwtv8 · stoic 에 다른 커밋 금지 · Codex 요청 쪽지 `docs/collab/claude_to_codex/20261026-1735_merge-prep.md` · 붙여 넣을 프롬프트 = §9 본 세션 · §10 Codex) → ✅ **단계 A · B 끝 (10-27 · 본 세션)** — A = fast-forward `67d7e2d96` push (게이트 157 ✓ · 0 ✗ · 원장 839) · B = Codex 37 `cherry-pick -x` (충돌 0) + §5 기록 `8c99336a4` + Codex 쪽지 반입 `8a2c92da9` + 대응표 쪽지 · 증거 `fc255248c` push (끝 트리 게이트 157 ✓ · 0 ✗ · 직접 4 종 통과 = T12 소비자 52/52 · T12 오프라인 PASS + 가드 제거 변이 탐지 · D2 13 · D3 28 · T12 git = scratch 2.53.0 (Ubuntu 서명 사슬 · 시스템 2.43 그대로) · 원장 842) · 대응표 `docs/collab/claude_to_codex/20261027-0220_nonrint-merge-sha-map.md` · 증거 `docs/reviews/nonrint_integration_20261027/` · CI 연결 미완료 5 = 대응표 §6 · RJ `VALUE_MISMATCH` · contact 진단 NOT_RUN 그대로 → ~~단계 C = 연장 세션 (pqwtv8 fast-forward · 1저자가 알림)~~ ⛔ **10-27 오후 1저자 = 단계 C 안 함 · 본 세션이 Rint · 비 Rint 다 이어받는다** (*"아니 codex에서 한걸 이제 너가 이어받아서 해야지"* · 연장 세션 · Codex 작업 창 = 커밋 멈춤 · Codex = 반박 리뷰만 · 순서 50kg → Rint · 단계마다 1저자 지시 뒤 · 마감 답장 `docs/collab/codex_to_claude/20261027-0451_nonrint-close-reply.md` · `docs/handoff_extension_close_reply_20261027.md` · 진행 기록 10-27 오후 줄).
+ ★ **2026-11-03 — 연장 세션 → 본 세션 복귀 인계 `docs/handoff_return_to_stoic_knuth_20261103.md`** (연장 세션이 10-27 뒤 stoic 에 바로 push 해 왔다 → 본 세션 = fast-forward 만 · 반입 전 로컬 커밋 16 (Rint ② PC7 고침 14 포함) = bundle `docs/handoff_20261103/unmerged_local_branches.bundle` · 게이트 X 해제 (1저자 11-03) · Rint ② 요구사항 · 결정 (10-26 ~ 11-03) = 그 문서 §2-1 · 붙여 넣을 프롬프트 = 그 문서 §4).
+ ★ **2026-11-04 — 비 Rint 구현 = Codex DEM 실무 창 · 반박 리뷰 = Codex 반박 리뷰 창 (따로) · Claude = Rint ② · gabia · 50kg watch · 통합** (1저자 11-04 *"권고대로 해"* · 10-27 *"Codex = 반박 리뷰만"* 을 바꿈 · 인계 `docs/handoff_codex_nonrint_20261104.md` · 가지 `codex/lhs-v13-1104` · `codex/mixer-1104` · 공유 기록 넷 = 쪽지 `docs/collab/codex_to_claude/` · 합치기 = Claude `cherry-pick -x` · P1 언로딩 · T12 = 지시 전 보류 → 11-04 오후 P1 = Claude 세션 담당 · 아래 줄).
+-★ **2026-11-04 오후 — DEM 우선 (1저자 · 교수님 피드백 키워드 · 이종기술 과제 준비)**: 키워드 = **MPM–DEM 연계 (소성변형 · 입자 형태 변형)** · **코팅 활물질 믹싱** · 1저자 *"가장 중요한게 일단 이 언로딩이 확실하게 끝나서 우리 DEM 모델에 신뢰성을 얻고 그걸 MPM에 잘 연계"* · *"Fam 등 해서 잘 압축해서 실제 전극이랑 더 재현성있게"* · 1저자가 전한 대화 = 이종기술은 내년 과제 전에 DEM 을 미리 · 남의 논문 돕기보다 우선 · 보고는 간결하게 → 용훈 포메이션 = [Rint ②] 다음 **[DEM 우선]** (아래 규칙 ①) · ✅ **Rint ② = 1순위** (1저자 11-04 *"Rint는 1순위야 이건 기한이 있는거라서"* · DEM 우선 = 그 다음) · ✅ **1저자 11-04 오후 *"ㅇㅇ 권고대로"*** (Codex 실무 창 현황 답 뒤 — P1 = 11-04 뒤 작업 없음) — Q1 **P1 언로딩 = 이 (Claude) 세션** (Rint ② 일정을 늦추지 않는 범위 · 인계서 §3-4 바뀜) · Q2 G2c 원인 가리기 = 기존 진단 · LIGGGHTS 소스 대조 → 샌드박스 작은 침대 (후보 = 접선 이력 복원 · 힘 재계산 시점 · 출력 정밀도 · ibb 안 씀 · RJ 323957 재실행 없음 · 허용폭 그대로) → ▶ 소스 대조 노트 `docs/reviews/p1_g2c_source_check_20261104.md` (관찰 · 시험 전 — 주기 restart 가 접촉 이력을 한 step 전 값으로 담는다 · `write_restart` 명령만 동기) · 샌드박스 등록 = 노트 §6-1 (결과 0 건 · 건식 통과) → ✅ 샌드박스 결과 (노트 §7 · 11-04 저녁 · 등록 `6917c3c9f` push 뒤) = 예측 ✓ 6 · ✗ 2 · — 1 (이력 열 직접 대조 = 주기 restart 의 한 step 전 이력 확인 · 빗나감 = 덤프 `force_normal` 은 쌍 전체 힘의 사영 · `write_restart` 명령 재개도 주기 경계 쌍 334 개 전부 다름 = 스텝 끝 덤프 재계산) · ~~⬜ 등록 규칙 문면대로 §2 ④ · ⑤ 를 거둘지 = 1저자 · Codex~~ → ✅ 1저자 11-05 *"권고대로"* = 통째로 거두지 않음 + 빗나간 둘 원인 정정 (노트 §7 · Codex 실무 창 = 문구 전달 수용 · P1 수치 인증 아님) → ▶ 비교 정의 메모 G2c′ `docs/reviews/p1_g2c_compare_definition_20261105.md` (같은 경로 재계산 [왕복] = 판정 · 옛 G2c = [연속] 보고 · 허용폭 그대로 · 기존 S0 다섯 = 모두 주기 restart · Q1–Q7 권고대로 · 결과 0 건 → ⬜ Q6 Codex 짧은 확인 → 등록 도구 (시험 먼저) → 샌드박스) → ✅ **11-11 밤 반입** = 메모 11-10 개정 + 샌드박스 대조기 · 실행기 · 시험 (`docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md`) · 내부 반박 리뷰 세 회차 (Codex 아님 · 1저자 11-10 *"이건 우리 자체 리뷰로 다시 해"* · 3 회차 = P1 0 · P2 0 · P3 4 → 고침 · 보고 `docs/reviews/p1_g2c_sandbox_20261104/internal_reviews/`) · 시험 41 함수 = 게이트 단계 · 결과 0 건 · 실행 없음 · ✅ 1저자 11-12 *"권고대로해"* = 11-11 고침 (권고 밖 거부 쪽 다섯 + 3 회차) 그대로 (메모 §0 머리) → ⬜ 빌드 → 건식 (N 200) → 샌드박스 (N 40,000) = 단계마다 1저자 GO (게이트가 안 도는 때) · Q3 같은 시료 원측정 (질량 · 면적 · 두께 · 측정 압력 · 공극 정의) · SEM 원본 · 보관자 = 1저자 요청 · Q4 피복 설계 메모 §4-3 Q1–Q8 = 권고대로 (구현 = Rint 회차 ② 요청서 발송 뒤) · Ⓒ D3 실측 준비 (장비 · 시료 · 측정자 · 원자료 보관자 = 1저자 · SOP · 열람 절차 초안 = Codex) · 다음 범위 = MXD2R 재확인 + D3 입력 · 등록 먼저 (진행 기록 11-04 오후) → ✅ **Ⓒ 순서 바꿈 = 시뮬레이션 먼저 (1저자 11-04 저녁 *"이런 여건이 부족해서 하는게 바로 simulation 아니야?"*)** — D3 실측 보류 (SOP 동결본 그대로) · (1) 보정 전 탐색 = 모르는 물성 (SE–SE 응집 세기 · γ_A/γ_S · 논지 §2-8 판가름 수 0.31) 축 결과 지도 (개발 자료 · 조건부 문장만) → (2) 지도로 실험 승인 (1저자) → (3) D3 실측 = 지도에서 우리 자리 고르기 → (4) 보정 → 확인 블록 · Codex 실무 창 = 탐색 팔 등록 초안만 (1저자 발송 · 결과 0 건 · 실행 없음 · ⬜ 답 대기).
++★ **2026-11-04 오후 — DEM 우선 (1저자 · 교수님 피드백 키워드 · 이종기술 과제 준비)**: 키워드 = **MPM–DEM 연계 (소성변형 · 입자 형태 변형)** · **코팅 활물질 믹싱** · 1저자 *"가장 중요한게 일단 이 언로딩이 확실하게 끝나서 우리 DEM 모델에 신뢰성을 얻고 그걸 MPM에 잘 연계"* · *"Fam 등 해서 잘 압축해서 실제 전극이랑 더 재현성있게"* · 1저자가 전한 대화 = 이종기술은 내년 과제 전에 DEM 을 미리 · 남의 논문 돕기보다 우선 · 보고는 간결하게 → 용훈 포메이션 = [Rint ②] 다음 **[DEM 우선]** (아래 규칙 ①) · ✅ **Rint ② = 1순위** (1저자 11-04 *"Rint는 1순위야 이건 기한이 있는거라서"* · DEM 우선 = 그 다음) · ✅ **1저자 11-04 오후 *"ㅇㅇ 권고대로"*** (Codex 실무 창 현황 답 뒤 — P1 = 11-04 뒤 작업 없음) — Q1 **P1 언로딩 = 이 (Claude) 세션** (Rint ② 일정을 늦추지 않는 범위 · 인계서 §3-4 바뀜) · Q2 G2c 원인 가리기 = 기존 진단 · LIGGGHTS 소스 대조 → 샌드박스 작은 침대 (후보 = 접선 이력 복원 · 힘 재계산 시점 · 출력 정밀도 · ibb 안 씀 · RJ 323957 재실행 없음 · 허용폭 그대로) → ▶ 소스 대조 노트 `docs/reviews/p1_g2c_source_check_20261104.md` (관찰 · 시험 전 — 주기 restart 가 접촉 이력을 한 step 전 값으로 담는다 · `write_restart` 명령만 동기) · 샌드박스 등록 = 노트 §6-1 (결과 0 건 · 건식 통과) → ✅ 샌드박스 결과 (노트 §7 · 11-04 저녁 · 등록 `6917c3c9f` push 뒤) = 예측 ✓ 6 · ✗ 2 · — 1 (이력 열 직접 대조 = 주기 restart 의 한 step 전 이력 확인 · 빗나감 = 덤프 `force_normal` 은 쌍 전체 힘의 사영 · `write_restart` 명령 재개도 주기 경계 쌍 334 개 전부 다름 = 스텝 끝 덤프 재계산) · ~~⬜ 등록 규칙 문면대로 §2 ④ · ⑤ 를 거둘지 = 1저자 · Codex~~ → ✅ 1저자 11-05 *"권고대로"* = 통째로 거두지 않음 + 빗나간 둘 원인 정정 (노트 §7 · Codex 실무 창 = 문구 전달 수용 · P1 수치 인증 아님) → ▶ 비교 정의 메모 G2c′ `docs/reviews/p1_g2c_compare_definition_20261105.md` (같은 경로 재계산 [왕복] = 판정 · 옛 G2c = [연속] 보고 · 허용폭 그대로 · 기존 S0 다섯 = 모두 주기 restart · Q1–Q7 권고대로 · 결과 0 건 → ⬜ Q6 Codex 짧은 확인 → 등록 도구 (시험 먼저) → 샌드박스) → ✅ **11-11 밤 반입** = 메모 11-10 개정 + 샌드박스 대조기 · 실행기 · 시험 (`docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md`) · 내부 반박 리뷰 세 회차 (Codex 아님 · 1저자 11-10 *"이건 우리 자체 리뷰로 다시 해"* · 3 회차 = P1 0 · P2 0 · P3 4 → 고침 · 보고 `docs/reviews/p1_g2c_sandbox_20261104/internal_reviews/`) · 시험 41 함수 = 게이트 단계 · 결과 0 건 · 실행 없음 · ✅ 1저자 11-12 *"권고대로해"* = 11-11 고침 (권고 밖 거부 쪽 다섯 + 3 회차) 그대로 (메모 §0 머리) → ⬜ 빌드 → 건식 (N 200) → 샌드박스 (N 40,000) = 단계마다 1저자 GO (게이트가 안 도는 때) → 11-12 1저자 = ibb cpu-60 · 빌드 없이 생산 `lmp_mpi` 1 프로세스 · 건식 job 358667 = 실행기 `-h` rc 결함 `SELF-166` (팔 0) → 고침 (시험 먼저) → 건식 다시 · Q3 같은 시료 원측정 (질량 · 면적 · 두께 · 측정 압력 · 공극 정의) · SEM 원본 · 보관자 = 1저자 요청 · Q4 피복 설계 메모 §4-3 Q1–Q8 = 권고대로 (구현 = Rint 회차 ② 요청서 발송 뒤) · Ⓒ D3 실측 준비 (장비 · 시료 · 측정자 · 원자료 보관자 = 1저자 · SOP · 열람 절차 초안 = Codex) · 다음 범위 = MXD2R 재확인 + D3 입력 · 등록 먼저 (진행 기록 11-04 오후) → ✅ **Ⓒ 순서 바꿈 = 시뮬레이션 먼저 (1저자 11-04 저녁 *"이런 여건이 부족해서 하는게 바로 simulation 아니야?"*)** — D3 실측 보류 (SOP 동결본 그대로) · (1) 보정 전 탐색 = 모르는 물성 (SE–SE 응집 세기 · γ_A/γ_S · 논지 §2-8 판가름 수 0.31) 축 결과 지도 (개발 자료 · 조건부 문장만) → (2) 지도로 실험 승인 (1저자) → (3) D3 실측 = 지도에서 우리 자리 고르기 → (4) 보정 → 확인 블록 · Codex 실무 창 = 탐색 팔 등록 초안만 (1저자 발송 · 결과 0 건 · 실행 없음 · ⬜ 답 대기).
+ ★ **2026-11-08 — 본 세션 → 서브 세션 인계 `docs/handoff_to_subsession_20261108.md`** (1저자 · 본 세션 컨텍스트 다 참 · stoic (`claude/stoic-knuth-NObVQ`) = `6a81f0c55` 에서 **동결** — 복귀 전까지 stoic push 금지 (push 직전마다 origin stoic = `6a81f0c55` 확인) · 작업 가지 B = `claude/sdcp-dem-manuscript-si-pqwtv8` (11-08 fast-forward `67d7e2d96` → `6a81f0c55` · 한 줄 이력 · rebase · force · merge 커밋 없음 · Codex 반입 = cherry-pick -x 만) · 게이트 = 원장 둘 → `--ban-sweep` → `CHECK_ALL_RANGE=1-116` · `117-174` 따로 (174 단계) · 커밋 하나 → 게이트 → 바로 push · Codex 요청서 리뷰 핀 = B 커밋 + 가지 이름 · 복귀 = 1저자 "메인 복귀" → 마지막 커밋 `docs/handoff_return_to_stoic_knuth_<날짜>.md` → 본 세션이 stoic 을 B 끝으로 fast-forward (인계 문서 §9)).
+ ★ **2026-11-09 — 새 트랙 [DEM 우선 (수영)] (1저자 · 주간보고 피드백)**: 피드백 = ① 지금 DEM → MPM 은 결합이 아니라 후처리 ② 활물질 · 전해질을 가압부터 한 모델 (MPM) 이 다 계산해야 · 안 되면 다른 모델 → 1저자 *"DEM 우선 이 원래 트랙이고 DEM 우선 (수영)이 재설계 트랙이야"* · *"이 부분은 claude에서 하자"* · *"요번 일주일동안은 우선 이걸로 … Rint는 일정대로"* · [DEM 우선] (기존 · 구현 = Codex 실무 창) 과 따로 본다 · 다음 = 방향 메모 → 독립 사전 공격 → Codex 반박 리뷰 → 1저자 (1저자 11-09 밤 *"날 설득시키는 파이프라인이랑 codex 반박 리뷰등을 통해서 한번 방향성 잡아보자"* · 진행 기록 11-09 밤) → ✅ 방향 메모 3.1 판 (사전 공격 세 번 · `docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md` · 2D 벤치마크로 한 속도장 ↔ 입자별 장을 먼저 가름 · 결과 0 건) → ✅ Codex 반박 리뷰 요청 `docs/reviews/codex_dem_redesign_direction_request_20261109.md` = 1저자 11-10 발송 (리뷰 핀 `13eb293cd` · 판정 = 본 세션에서 받음) · ✅ 1저자 11-10 Q1 (GPU 없이 단계 0–3 · 3D 는 Rint ② R 런 뒤) · Q2 (SE 형상 변형 필수) · Q3 (`SELF-160` 문구만) = 권고대로 · Q4 = 3.1 그대로 발송 → ⛔ **Codex 판정 11-10 = 방향 지지 · 단계 3 인과 · 단계 4 분기 · 자격 규칙 수정 필요 = HOLD** (`docs/reviews/codex_review_dem_redesign_direction_20261110.md` · 새 P1 DRD-01 (등급 일치 ≠ 응력비 수렴) · DRD-02 (같은 구성식 ≠ 비에서 소거 · 2D 음성으로 3D F 대조 생략 불가) · P2 DRD-03–12 · P3 DRD-13 · 처분 `docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md` = 메모 3.2 · 본 세션) · Q5 = *"순수 SE만 기준이고 다른것들은 다른값 나와도 되지 당연히"* (기준 = 순수 SE 10–13 % · 진밀도 1.64 · 복합은 예측) · 빈 곳 `SELF-161` (litdb LPSCl 카드 lee2025 · miss2026 · thompson2026 미사용 → 3.2 = 판정 뒤) · 계획서 웹앱 페이지 + docx = 본 세션 첫 일 (원문 `docs/reviews/dem_redesign_direction_20261109/briefing_ko.md` · 사양 `docs/reviews/dem_redesign_direction_20261109/plan_page_brief.md`).
+ ★ **2026-11-10 — 서브 세션 → 본 세션 복귀 인계 `docs/handoff_return_to_stoic_knuth_20261110.md`** (B 93 커밋 + 이 문서 · stoic `6a81f0c55` → B 끝 fast-forward · 충돌 0 · Rint ② 회차 ⑥ 판정 반입 (RR5-01 닫힘 · 현장 자격 부분 수용 · Q5 순서 보완 · 새 P3 RR6-01 · 02 = 같은 커밋에서 고침) · [DEM 우선 (수영)] Codex 판정 = 본 세션에서 1저자가 줌 · Codex 실무 상시 요청서 `docs/collab/claude_to_codex/20261110-1300_nonrint-standing-order.md` (1저자 *"codex 실무가 독립적으로 돌아야"*) · Rint ⑥ 수정 계획 Q1–Q4 = 1저자 11-10 권고대로 · 게이트 179 단계 · 붙여 넣을 프롬프트 = 그 문서 §4). → ✅ **11-10 본 세션 복귀 = fast-forward `e93efb6be` push** (게이트 179 ✓ · 0 ✗ · 122–179 조각 첫 회 실패 1 = E7 값 봉인 오탐 `SELF-162` · 재실행 통과) · Rint ② 현장 계획 `docs/reviews/rint2_siteq_remaining_plan_20261110.md` (1저자 Q1–Q9 권고대로) · ⑥ SBE 수치 탐침 준비 `docs/reviews/rint2_probe6_prep_20261110/README.md` → 내부 반박 리뷰 (P1 0 · P2 5 · P3 7 · 원장 `P6R-01`–`12`) → 고침 + 개발 탐침 원장 §3 두 줄 (시도 1 = 한도 30000 짧은 확인 → 시도 2 = 1500000 · 1저자 11-10 Q1 · Q2 · 순서 (가)) → 2 회차 내부 반박 리뷰 (고친 곳만 · P1 0 · P2 3 · P3 5 · 원장 `P6R2-01`–`08` · 1 회차 닫힘 10 · 부분 2) → 고침 (1저자 11-10 *"권고대로해"* = P2 셋 + P3 셋 · 두 핀 사이 풀이 코드가 바뀌면 시도 2 멈춤 · 작업 제어 셸 고침 · 계산된 꼴 누출 = 한정 · 시험 330/330 · ⚠ 두 시도 사이 풀이 코드 경로 커밋 금지) → ✅ 3 회차 짧은 재리뷰 (P1 0 · P2 0 · P3 5 · `P6R3-01`–`05` · 01 · 02 · 05 코드 고침 = 시도 2 DONE 뒤) → ✅ **시도 1 (11-11 08:52–11:00 KST · kgy · 핀 `5bca50c88`) = 등록대로 한도 30000 도달** (판독 rc 3 · 잔차 4.8e-7 · 판 전류 불균형 1.02 · 반복당 0.051 s (위 한계) · 준비 76 분 (탄소 접합 준비 67 분) · RSS 최대 32 GiB · `docs/data/rint2_probe6_a1_20261111/README.md`) → ✅ **시도 2 (11-11 13:32 → 19:45 KST · 같은 핀 · 한도 1500000) = 수렴 (판독 rc 0 · PROBE_OK)** (주 풀이 277,885 반복 · 이어 풀기 84,485 · 잔차 1.05e-12 · 판 전류 불균형 9.6e-07 · 증서 ⓐ–ⓓ 참 · 전체 6 h 12 m = 준비 76 분 + 풀이 · 증서 4 h 56 m · 반복당 0.049 s (위 한계) · RSS 최대 32.9 GiB · σ 비열람 · 한 점 (SBE · arm 0 · R_j 1e6 · P0 · c 0) · `docs/data/rint2_probe6_a2_20261111/README.md`) → 풀이 코드 목록 경로 (scripts/ 통째 포함) 커밋 금지 = 끝 (11-11 · 원장 §3 "두 시도 사이 커밋" 끝 줄) · 다음 = R 런 반복 한도 · 시간 상한 · 시간 어림을 이 실측으로 다시 → 내부 반박 리뷰 → 1저자 비용 결정 → 단일 개정 커밋 (`docs/reviews/rint2_siteq_remaining_plan_20261110.md` §10) → ✅ **시간 다시 어림 2 판 (11-11 밤 · `docs/reviews/rint2_time_reestimate_20261111/README.md`)** = 두 대 나눔 GPU 팔 끝 s 1 · 1.5 · 2 = 554.8–664.1 · 411.3–492.3 · 339.6–406.4 h (DBE 등록 비 · 추정) · 판정 · 다시 판정까지 s 2 = 476–521 h (DBE 준비도 2.933 배) / 329–373 h (DBE 준비 = SBE) · 탄소 접합 준비 재사용 이득 = s 와 무관 약 82–225 h (봉인 전에만 넣을 수 있다) · 내부 반박 리뷰 (Codex 아님 · P1 0 · P2 6 · P3 9 · 빠진 것 4) 반영 · 1저자 Q1–Q10 (권고: 재사용 지금 넣기 · maxiter 3,000,000 이상 · 시간 상한 240 h + 최대 시도 수 · ⑥ 다시 재기 기준 = 원장 풀이 코드 목록 · 11-30 기준 = GPU 팔 끝 (1저자 11-11 *"기간내로 시뮬레이션만 되면돼"*) · 두 기계 조립 같음 확인) · ✅ 12 단위 합성 끝-끝 시험 반입 (`docs/reviews/rint2_e2e12_20261111/README.md` · 게이트 182 단계 · 원장 공유 권고 = 이어달리기 · 1저자 비준 전) · 1저자 11-11 = kgy GPU 비움 + 두 대 (kgy · gabia · 킷 해시 같음) · v100 = 지금 요청 안 함 (비용) · → ✅ **1저자 11-12 결정** (*"12월 초까지만 확실하게 돌면돼 / 나머지는 권고대로"* · `docs/reviews/rint2_time_reestimate_20261111/README.md` 결정 절) = 마감 기준 = GPU 팔 12 월 초 · 탄소 접합 준비 재사용 + 전처리 C 꼴 (벤치 3.40–3.79 배 · 합성 200 반복 해 비트 같음 · `docs/reviews/rint2_time_reestimate_20261111/bench/results_20261112/README.md`) = 한 코드 묶음 (시험 먼저 → ⑥ 다시 재기 → 내부 반박 리뷰 → Codex 봉인 전 묶음) · s 미측정 유지 · ★ **1저자 11-10 운영 결정** = Codex 토큰 소진 → 반박 리뷰 자리는 내부 반박 리뷰 (독립 조수 · "Codex 아님" 으로 기록 · Codex verified 로 올리지 않는다) · Codex 남은 한 번 = Rint ② 봉인 전 묶음 · 비 Rint Codex 실무 = 본 세션이 이어받음 · **믹서 E0 자격 pilot 한 팔만 내부 반박 리뷰로 GO 를 대신한다** (그 한 팔뿐 · 발사 GO 는 1저자) · 랩 표준 (순수 SE 기공률 10–13 % · 진밀도 1.64) 고정 (진행 기록 11-10 끝 두 줄).
+diff --git a/docs/reviews/findings.json b/docs/reviews/findings.json
+index 052177bcf..24b0e6e46 100644
+--- a/docs/reviews/findings.json
++++ b/docs/reviews/findings.json
+@@ -17384,6 +17384,16 @@
+       "evidence_tests": [
+         "CLAUDE.md"
+       ]
++    },
++    {
++      "id": "SELF-166",
++      "severity": "P2",
++      "status": "open",
++      "owner": "claude",
++      "found_by": "ibb 건식 (N = 200) job 358667 (11-12 · 1저자 실행 · 생산 lmp_mpi 를 mpirun 없이 1 프로세스 · 덱 묶음 = 핀 11a794674) — 실행기 실행 전 멈춤 rc 3 'LMP -h rc 1' · 배너 = 3d5c00f 정상",
++      "opened_in": "docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh",
++      "title": "G2c′ 샌드박스 실행기 (run_g2cp.sh) 가 -h 머리 줄 확인에서 rc 0 을 요구했다 — LIGGGHTS 3d5c00f 의 -h 는 help() 뒤 error->done() = MPI_Finalize(); exit(1) (lammps.cpp 543–545 · error.cpp 369–379) 라 진짜 실행 파일은 늘 rc 1 → 실행기가 어떤 진짜 LIGGGHTS 로도 팔 하나 돌기 전에 멈춘다 · 시험의 가짜 lmp 도 -h 에 rc 0 을 내서 41 시험 · 내부 반박 리뷰 세 회차가 못 잡았다 (가짜가 진짜 꼴을 옮기지 않음 · SELF-115 와 같은 부류)",
++      "note": "결과 무관 (실행 전 멈춤 · 팔 0 · 예측 · 숫자 기준 · 판정 식 · 허용폭 · 대조기 무변경) · 고침 = 받는 rc 0 → 1 + 도움말 줄 'Command line options:' 요구 (오류 끝 error->all 도 rc 1 이라 가른다 · 거부 쪽) + 가짜 lmp 를 3d5c00f 꼴로 (배너 → 도움말 줄 → rc 1 · 소스 줄을 주석에) · t22 사례 셋 (-h rc 0 · rc 2 · 오류 끝 = rc 1 인데 도움말 없음) · t26 lmp_h_rc 1 기록 · 고치기 전 실행기 29/41 (fail 12 = 실행기 시험 11 이 job 358667 과 같은 멈춤 + t22 = rc 0 을 받아 버림 · 오류 끝 사례의 멈춤 이유가 다름) → 41/41 · 변이 6 중 6 잡음 · 고침 커밋 = 이 항목을 올린 커밋 · claimed_fixed = push 뒤 다음 커밋 · 남은 것 = 이 판 덱 묶음으로 ibb 건식 다시 (진짜 실행 파일 통과는 그때 확인) · 같은 꼴을 막는 법 = 가짜 실행 파일의 꼴 (rc · 화면) 을 소스 줄로 근거 대기"
+     }
+   ]
+ }
+diff --git a/docs/reviews/p1_g2c_compare_definition_20261105.md b/docs/reviews/p1_g2c_compare_definition_20261105.md
+index 03f5f0ea8..f97a9976e 100644
+--- a/docs/reviews/p1_g2c_compare_definition_20261105.md
++++ b/docs/reviews/p1_g2c_compare_definition_20261105.md
+@@ -16,6 +16,8 @@
+ > **권고 밖에서 더한 것 (모두 거부 쪽 — 판독을 줄일 뿐 · 예측 숫자 기준 · 판정 식 · 허용폭은 그대로)** — 위 11-11 줄의 첫 표기는 그 고침 전체를 11-10 비준 (*"다 권고야"*) 과 한 묶음으로 적었다.  그 가운데 1 회차 리뷰 권고 밖에서 고친 쪽이 더한 것 = 공통 규칙 ⑩ (고친 뒤 우리 작은 반례) · 덱 문 실패 때 판정 NOT_COMPUTED (1 회차 권고 G2CPR-04 는 "예측 계산 못 함" 까지였다) — 권고가 아니었으므로 그 비준의 문면에 없다.  2 회차 고침 (공통 규칙 ⑪ · ⑩ 보강 · 실행기 OUT 자리 문) 은 2 회차 리뷰 권고를 따랐지만 11-10 비준 뒤에 생겼다.  ⇒ 이 다섯 = ✅ **1저자 11-12 *"권고대로해"*** (보고에 올림 · G2CPR2-03) — 다섯 + 아래 3 회차 고침 = 그대로 둔다 (모두 거부 쪽 · 예측 숫자 기준 · 판정 식 · 허용폭 무변경).  다음 = 빌드 → 건식 (N = 200) → 샌드박스 (N = 40,000) · 단계마다 1저자 GO (§0-6 Q10 · 자동 시작 없음 · 게이트가 안 도는 때).
+ > **11-11 3 회차 내부 반박 리뷰 고침 (결과 전)** — 고친 곳만 다시 본 3 회차 (독립 조수 · Codex 아님 · P1 0 · P2 0 · P3 4 · `G2CPR3-01`–`04` · 2 회차 다섯 항목 = 닫힘 · 보고 = 본 세션 · 리포 반입 전) 를 결과 전에 넣었다.  §0 의 예측 · 숫자 기준 · 허용폭 · §3 판정 식은 그대로 — 판정의 NOT_COMPUTED 사유 ⑪ 을 '끝난 그대로가 아님 (끝난 뒤 출력 손상)' 까지 넓혔다 · 바뀐 것 = 공통 규칙 ⑪ 보강 (G2CPR3-01 — 완료 문이 outputs.md5 가 있는지만 봐 끝난 뒤 잘린 덤프가 판정 FAIL · 바이트 '틀림' 으로 나왔다 → 적힌 파일 md5 · 집합 대조) · 규칙 ⑨ 의 11-04 기록 폴더에 `dry/` (G2CPR3-02 — 대조기 가드가 `run_40000/` 만 봤다) · 표기 셋 (G2CPR3-03 — 아래 범위 줄 · 머리 상태 줄 · README '하지 않는 것' 의 '판정 규칙' 문구 = 판정 식 · 허용폭 그대로 + 사유 ① · ⑪ 더함) · 시험 틈 둘 (G2CPR3-04 — 실행기 OUT 자리 문의 두 경계 · 코드는 그대로) · §0-4 시험 수 · §0-5 한계.  ⑪ 보강 · ⑨ `dry/` 는 3 회차 리뷰 권고 (최소 수정) 를 따랐지만 위 다섯처럼 11-10 비준 뒤에 생긴 거부 쪽 규칙이다 → 위 다섯과 함께 ⬜ 1저자 확인 (보고에 올림).
+ 
++> **11-12 실행 자리 · 실행 파일 · 실행기 고침 (결과 전 · 건식만 · 샌드박스 N = 40,000 결과 0 건)** — 1저자 11-12 *"g2c'는 … ibb 로 가서 cpu 60 활용해서 진행"* → 실행 자리 = ibb (cpu-60 · §5-2 의 "이 컨테이너" 를 대신한다).  실행 파일 = 1저자 11-12 *"이미 lmp 관련해서 빌드되어 있는데"* → ibb 생산 `lmp_mpi` (3d5c00f · 1저자 확인 = Anaconda gcc 11.2 + `mpic++` · `Makefile.mpi`) 를 `mpirun` 없이 1 프로세스로 (§5-2 의 "직렬 STUBS 빌드" 를 대신한다 · 1 프로세스 = 분할 1 칸 = 직렬과 같은 분할 · 추정 · 실행 확인 전) → 실행 파일 md5 ≠ 11-04 (`inputs.md5` 첫 줄 f4ba3ec0…) 이라 예측 가 = 해당 없음 (§0-3 가 행의 판정 조건 그대로 · 같은 파일 수만 관찰) · 나머지 예측 · 숫자 기준 · §3 판정 식 · 허용폭 그대로.  건식 (N = 200) ibb job 358667 = 실행기 실행 전 멈춤 rc 3 (팔 0) — 실행기가 `-h` 의 rc 0 을 요구했는데 3d5c00f 의 `-h` 는 도움말 뒤 rc 1 로 끝난다 (lammps.cpp 543–545 · error.cpp 377–378) = 실행기 결함 `SELF-166` (시험의 가짜 lmp 도 rc 0 을 내 못 잡았다) → 고침 = 받는 rc 0 → 1 + 도움말 줄 `Command line options:` 요구 (오류 끝도 rc 1 이라 가른다 · 거부 쪽) · 시험 먼저 · 건식 다시 → 샌드박스 = 1저자 GO 따로 (§0-6 Q10).
++
+ > **범위 (11-10 개정)** — 고치는 것 = §3 history 행 · §4 다 근거 · 요청서 s1 의 이력 전제 (Q6-4) · §4 예측 다 · 라 · 바 (Q6-1 · 2 · 3) 와 그에 걸린 가 · 나 · 마 · 사 · 아 행의 맞음 / 틀림 숫자 기준.  **고치지 않는 것** = §2 정의 · §3 판정 식 · 허용폭 (1e-5 × max(\|D1 값\|, 열 \|D1 값\| 중앙값) · 이력 4 열에도 같은 식 = Q2) · §4 "틀리면" 규칙 (아래 표에 그대로 옮김) · 키트 (`docs/data/ps45_unload_20261009/`) · 봉인 · RJ 323957 기록 (`VALUE_MISMATCH`).  그 뒤 11-11 고침 (위 줄 · §0-3) 도 판정 식 · 허용폭은 그대로 두고 판정의 NOT_COMPUTED 사유 ① (등록 덱 아님) · ⑪ (실행기 출력이 끝나지 않음 · 끝난 그대로가 아님) 만 더했다.
+ > **근거** — Codex 답 원문 `docs/reviews/codex_review_p1_g2c_q6_20261106.md` + 이 개정에서 우리가 다시 읽은 LIGGGHTS-PUBLIC 3d5c00f src/ 줄 (읽기만 · 실행 확인 아님).  리포 사본 = `docs/reviews/codex_kg50_decks_review_20261026/evidence/kg50_design/sources/source_manifest.json` 의 파일 (pair_gran · fix_contact_history · neigh_gran · neighbor · comm · domain · normal_model_hooke_hysteresis — 11-10 git hash-object = 그 목록 blob 과 같음) · `docs/reviews/codex_kg50_decks_review_20261026/evidence/kg50_restart/upstream_sources.json` 의 파일 (write_restart · read_restart · output · 같음) · `docs/data/liggghts_3d5c00f_dem_eq_source_20261009/README.md` 폴더 (tangential_model_history · rolling_model_cdt · surface_model_default · pair_gran_base · global_properties · SHA256SUMS 통과).  리포에 없던 넷 (verlet.cpp · compute_pair_gran_local.cpp · fix_wall_gran.cpp · lammps.cpp) = 공개 저장소 그 커밋의 원문을 이 세션에서 받아 읽기만 했다 (리포에 넣지 않음 · git blob 1e4310f8 · ac22cbe7 · bc7f1374 · 1c347ad3 — GitHub API 대조는 응답 없음 · 커밋 고정 주소라 같은 판으로 봄).
+ 
+@@ -82,7 +84,7 @@
+ | 파일 (샌드박스 폴더 · 새 파일만 · 11-04 파일 · `run_40000/` · `dry/` 그대로) | 하는 일 |
+ |---|---|
+ | `docs/reviews/p1_g2c_sandbox_20261104/BW.liggghts` | 팔 BW · CW 덱 = `include R.liggghts` + `write_restart ${RST}/restart_rt.bin` (R 덱 바이트 그대로) |
+-| `docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh` | 실행기 — A · A2 · B · B2 · C (11-04 와 같은 인자) · BW · BR · CW · CR 차례 · 직렬 · `nice -n 19` · 시간 한도 · 실행 전 멈춤 rc 3 (LMP · `-h` 배너 · N · OUT · 11-04 덱 md5 · BW 꼴 · git 더러움 · OUT 자리 = 실제 경로가 11-04 기록 폴더 (`run_40000/` · `dry/`) 안 · 기존 런 폴더 안 (OUT 의 조상에 런 표지 lmp_identity.txt · inputs.md5) · 샌드박스 폴더와 그 조상 · 11-11 G2CPR2-05) · 실행 중 멈춤 rc 4 (rc · ERROR · Loop time · 출력) · 사람 멈춤 (Ctrl-C · TERM · HUP → 도는 팔의 timeout 에만 TERM → 거둔 뒤 STOP · rc 4 · 11-11 G2CPR-08) · 신원 기록 (실제 경로 · `stat -L` 크기 · glibc · uname · `ldd` · 라이브러리 md5 — 기록만 · G2CPR-07) |
++| `docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh` | 실행기 — A · A2 · B · B2 · C (11-04 와 같은 인자) · BW · BR · CW · CR 차례 · 직렬 · `nice -n 19` · 시간 한도 · 실행 전 멈춤 rc 3 (LMP · `-h` (rc 1 · 배너 · 도움말 줄 — 11-12 `SELF-166`) · N · OUT · 11-04 덱 md5 · BW 꼴 · git 더러움 · OUT 자리 = 실제 경로가 11-04 기록 폴더 (`run_40000/` · `dry/`) 안 · 기존 런 폴더 안 (OUT 의 조상에 런 표지 lmp_identity.txt · inputs.md5) · 샌드박스 폴더와 그 조상 · 11-11 G2CPR2-05) · 실행 중 멈춤 rc 4 (rc · ERROR · Loop time · 출력) · 사람 멈춤 (Ctrl-C · TERM · HUP → 도는 팔의 timeout 에만 TERM → 거둔 뒤 STOP · rc 4 · 11-11 G2CPR-08) · 신원 기록 (실제 경로 · `stat -L` 크기 · glibc · uname · `ldd` · 라이브러리 md5 — 기록만 · G2CPR-07) |
+ | `docs/reviews/p1_g2c_sandbox_20261104/compare_g2cp.py` | 대조기 — §0-3 예측마다 맞음 / 틀림 / 해당 없음 / 계산 못 함 + §3 판정 (30 열 · 키트 `g2c_compare` 와 같은 식 — 26 열 사영에서 상태 · n_mismatch 같음을 시험 · 파일 없음 포함) · §0-3 끝 공통 규칙 ① – ⑪ (등록 덱 문 · 토큰 꼴 · 쌍 0 · 바이트 = sha256 만 · OUT 가드 (`run_40000/` · `dry/`) · 기록 중복 · 완료 문 (outputs.md5 ↔ 실제 출력 대조 포함 · 3 회차)) |
+ | `docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py` | 시험 — 합성 침대 (§0-1 · §0-3-1 의 소스 줄을 옮긴 작은 모형 · 대조기 코드를 안 씀) · 가짜 lmp · 41 함수 (11-11 리뷰 고침으로 27 → 37 · 2 회차 고침으로 → 40 · 3 회차 고침으로 → 41) · LIGGGHTS · MPI · 네트워크 없음 · 신호 시험 (시간 한도 · 사람 멈춤) = `unshare -pf --mount-proc --kill-child` 안 (못 쓰면 건너뜀) · 메모 등록문 시험 (t30) |
+ | `docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md` | 사용법 · 멈춤 표 |
+diff --git a/docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md b/docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md
+index 9b2f11d0f..69611bb8b 100644
+--- a/docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md
++++ b/docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md
+@@ -1,4 +1,4 @@
+-# P1 언로딩 G2c′ — 샌드박스 준비물 (2026-11-10 · 11-11 리뷰 고침 1 · 2 · 3 회차 · 결과 0 건 · 실행 없음)
++# P1 언로딩 G2c′ — 샌드박스 준비물 (2026-11-10 · 11-11 리뷰 고침 1 · 2 · 3 회차 · 11-12 ibb 건식이 찾은 실행기 결함 고침 · 샌드박스 결과 0 건)
+ 
+ - 등록 · 예측 = 메모 `docs/reviews/p1_g2c_compare_definition_20261105.md` §0 (11-10 개정 · 결과 전 · Codex Q6 답 `docs/reviews/codex_review_p1_g2c_q6_20261106.md` 반영 · **✅ 1저자 비준 11-10** = 메모 §0 머리 · Q8 – Q12) · §0-3 끝 공통 규칙 ① – ⑪ (11-11 내부 반박 리뷰 `G2CPR-01`–`11` 고침 · 2 회차 `G2CPR2-01`–`05` 고침 · 3 회차 `G2CPR3-01`–`04` 고침) · §5-1.
+ - 11-04 파일 (`README.md` · 덱 조각 · `run_arms.sh` · `compare.py` · `run_40000/` · `dry/`) 은 그대로 — 이 묶음은 새 파일만 더한다.
+@@ -15,7 +15,7 @@
+ 
+ ```
+ cd docs/reviews/p1_g2c_sandbox_20261104
+-LMP=<LIGGGHTS 3d5c00f 직렬 실행 파일> bash run_g2cp.sh 40000 <없거나 빈 출력 폴더>      # 팔 아홉 · 11-04 실측 A 20 s · A2 17 s · 재개 ≤ 1 s
++LMP=<LIGGGHTS 3d5c00f 실행 파일> bash run_g2cp.sh 40000 <없거나 빈 출력 폴더>      # 팔 아홉 · 11-04 실측 A 20 s · A2 17 s · 재개 ≤ 1 s
+ python3 -I compare_g2cp.py <출력 폴더> 40000                                          # → <출력 폴더>/compare_g2cp.json + 화면 표 (rc 0 · 2)
+ python3 -I test_g2cp.py                                                              # 시험 (마지막 줄 G2CP_TEST … fail=0)
+ ```
+@@ -26,7 +26,7 @@ python3 -I test_g2cp.py
+ 
+ | rc | 언제 | 남는 것 |
+ |---|---|---|
+-| 3 | 실행 전 — 인자 · N (200 이상 · 100 의 배수) · 도구 · `LMP` 없음 · 파일 아님 · 실행 권한 없음 · `-h` 첫 머리 줄 `LIGGGHTS (` 없음 · OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ `run_40000/inputs.md5` · BW 꼴 · git 작업 트리면 이 폴더 커밋 안 된 변경 · 사람 멈춤 신호 (팔 시작 전) · **OUT 자리** (실제 경로로 본다 — 11-04 기록 폴더 `run_40000/` · `dry/` 와 그 안 · 기존 런 폴더 안 = OUT 의 조상 폴더에 런 표지 `lmp_identity.txt` · `inputs.md5` · 샌드박스 폴더와 그 조상 · G2CPR2-05) | 아무것도 (OUT 을 만들지 않는다 · 이유 = 화면) |
++| 3 | 실행 전 — 인자 · N (200 이상 · 100 의 배수) · 도구 · `LMP` 없음 · 파일 아님 · 실행 권한 없음 · `-h` 가 3d5c00f 정상 끝이 아님 (rc ≠ 1 · 첫 머리 줄 `LIGGGHTS (` 없음 · 도움말 줄 `Command line options:` 없음 — 11-12 `SELF-166`) · OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ `run_40000/inputs.md5` · BW 꼴 · git 작업 트리면 이 폴더 커밋 안 된 변경 · 사람 멈춤 신호 (팔 시작 전) · **OUT 자리** (실제 경로로 본다 — 11-04 기록 폴더 `run_40000/` · `dry/` 와 그 안 · 기존 런 폴더 안 = OUT 의 조상 폴더에 런 표지 `lmp_identity.txt` · `inputs.md5` · 샌드박스 폴더와 그 조상 · G2CPR2-05) | 아무것도 (OUT 을 만들지 않는다 · 이유 = 화면) |
+ | 4 | 실행 중 — 팔 rc ≠ 0 (시간 한도 = 124) · ERROR 줄 · `Loop time of` 없음 · 기대 출력 없음 · **사람 멈춤** (Ctrl-C = INT · `kill -TERM <실행기 pid>` · 터미널 닫힘 = HUP) | OUT 에 그 팔까지 · `STOP.txt` · `rc.txt` (사람 멈춤 = `<팔> 신호 <INT·TERM·HUP>` 줄) · 남은 팔 안 돎 |
+ | 0 | 팔 아홉 끝 | `lmp_identity.txt` · `lmp_ldd.txt` · `lmp_libs.md5` · `inputs.md5` · `rc.txt` · 팔별 `log.txt` · `out.txt` · `post/` · `rst/` · `outputs.md5` |
+ 
+@@ -51,6 +51,7 @@ python3 -I test_g2cp.py
+ - 11-11 2 회차 리뷰 고침 판 (40 함수 · t40 완료 문 · t41 실행기 OUT 자리 · t42 표기 새로 · t08 · t16 · t34 · t37 보강 · 합성 fixture 가 실행기 꼴대로 `rc.txt` 도 쓴다): 이 (마지막) 시험 판을 고치기 전 코드 · 문서 (`9e66fba46`) 에 돌리면 **34 / 40** (fail 6 = t16 · t34 · t37 · t40 · t41 · t42 · 리뷰 재현과 같은 꼴 · 시험을 처음 쓴 판 (t16 보강 전) 은 35 / 40) → 고친 뒤 **40 / 40** (약 25 s · 건너뜀 0).  원자 id `%d` 꼴 (G2CPR2-04) 은 시험 틈이라 고치기 전 코드도 새 t08 을 지난다 — 그 규칙을 끈 변이를 옛 시험 판 = 놓침 · 새 시험 판 = t08 실패로 확인했다.  변이 4 회차 (리포 밖 하네스 · 이 판의 새 규칙 32 개 = 완료 문 15 · md5 기록 6 · 원자 id 꼴 1 · 실행기 OUT 자리 10): 첫 실행 32 중 32 잡음 → 그 뒤 손질 (막힘 때 예측 사유 문구를 줄임) 한 판에서 다시 돌려 32 중 31 (놓친 1 = 화면의 완료 문 줄 빼기 — 줄인 문구에 같은 낱말이 들어가 t40 이 가르지 못했다 = 손질이 만든 시험 틈) → t16 · t40 이 그 줄을 줄 머리로 가르게 보강 → 마지막 판에서 다시 돌려 32 중 32 잡음 (놓친 0).
+ - 11-11 3 회차 리뷰 고침 판 (41 함수 · t43 완료 문의 outputs.md5 ↔ 실제 출력 대조 새로 · t39 `dry/` · t41 자리 문 두 경계 · t42 표기 세 자리 · t40 사유 가름 · t13 fixture 보강): 이 (마지막) 시험 판을 고치기 전 코드 · 문서 (`f48031273`) 에 돌리면 **38 / 41** (fail 3 = t39 · t42 · t43 · 리뷰 재현과 같은 꼴 · 28.1 s) → 고친 뒤 **41 / 41** (27.0 – 28.0 s · 세 번 · 건너뜀 0).  t41 은 실행기 코드가 맞아 고치기 전에도 지난다 — 3 회차 리뷰 변이 K11 (런 표지 = 글자 그대로 `$O`) · K12 (`inside` = 슬래시 없는 앞머리) 를 고치기 전 실행기에 넣으면 새 t41 이 실패한다.  변이 5 회차 (리포 밖 하네스 · 이 판의 새 규칙): 24 중 24 잡음 (완료 문 보강 14 · `dry/` 3 · 표기 5 · 실행기 경계 2 · 놓침 0) · 정직한 흐름 일곱 꼴 = 고치기 전 대조기와 결과 같음.
+ - 사람 멈춤 시험 (t31) = 이름공간 안 드라이버 (`--sigdriver` · 이름공간 PID 1) 가 실행기 bash (직접 자식 · pid > 1 · 자기 · 부모 아님) 에만 INT · TERM · HUP 을 보낸다 (팔 A 중 셋 · 실행 전 -h 중 INT 하나 · 가짜 LIGGGHTS 는 TERM 뒤 2 s 더 산다 = 실행기가 거두는지).  t25 의 임시 git 커밋 = `-c commit.gpgsign=false -c core.hooksPath=/dev/null` (서명 · 훅이 켜진 기계에서도 서명 프로그램을 부르지 않는다).
++- 11-12 `SELF-166` 고침 판 (41 함수 그대로 · 가짜 lmp 의 `-h` = 3d5c00f 꼴 (배너 → 도움말 줄 → rc 1) · t22 사례 셋 (`-h` rc 0 · rc 2 · 오류 끝 = rc 1 인데 도움말 없음) · t26 `lmp_h_rc 1` 기록): 고치기 전 실행기 **29 / 41** (fail 12 = 실행기 시험 11 이 ibb job 358667 과 같은 "LMP -h rc 1" 로 멈춤 + t22 = rc 0 을 받아 버림 · 오류 끝 사례의 멈춤 이유가 다름) → 고친 뒤 **41 / 41** (건너뜀 0).  변이 (리포 밖 사본 · 시험 함수 그대로) = 6 중 6 잡음 — rc 0 요구 (옛 판) · rc 검사 빼기 · rc ≤ 1 · 도움말 줄 검사 빼기 · 배너 검사 빼기 · 도움말 줄 늘 있음 → 각각 t22 의 해당 사례가 실패 (변이 사본에는 키트가 없어 t07 은 변이 없이도 실패 · 그 몫을 뺀 수).
+ 
+ ## 내부 반박 리뷰 보고 (독립 조수 · Codex 아님)
+ 
+@@ -59,7 +60,7 @@ python3 -I test_g2cp.py
+ - 3 회차 (11-11 · 2 회차 고침 대상) = `docs/reviews/p1_g2c_sandbox_20261104/internal_reviews/review3_20261111.md` (P1 0 · P2 0 · P3 4 = G2CPR3-01–04 → 4 회차 고침 커밋 · 2 회차 다섯 다 닫힘)
+ - 리뷰 보고의 커밋 sha 는 조수 작업 트리의 것이다 (이 가지로 cherry-pick 하며 sha 가 바뀌었다 · 커밋 글 끝 "cherry picked from" 줄이 짝).  리포 밖 작업 폴더 경로는 가렸다.
+ 
+-## 넣을 줄 (시도 2 발사 뒤)
++## 넣을 줄 (시도 2 발사 뒤) — ✅ 넣음 (`09b0bc868` · 게이트 단계)
+ 
+ 1저자 Q11 비준 (11-10) — `scripts/check_all.sh` 에 아래 한 줄.  **Rint ② 개발 탐침 시도 2 발사 뒤에만** 넣는다 (두 시도 사이에 `scripts/` 가 바뀌면 시도 2 가 멈춘다 · 그 전에는 `scripts/` 밑 어떤 파일도 바꾸지 않는다):
+ 
+@@ -67,6 +68,16 @@ python3 -I test_g2cp.py
+ run 'G2c′ 샌드박스 대조기 · 실행기 (합성 침대 · 가짜 lmp · 시험 먼저)' python3 -I docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py
+ ```
+ 
++## ibb 실행 (11-12 · 1저자 *"g2c'는 … ibb 로 가서 cpu 60 활용해서 진행"*)
++
++| 차례 | 잡 | 결과 | 원인 · 처리 |
++|---|---|---|---|
++| 시도 1 · 2 | 빌드 358638 · 358659 → 건식 358639 · 358660 | 빌드 실패 (건식 안 돎) | 내 ibb 도구 결함 — 실행용 환경 줄 (conda) 을 빌드 잡에 넣어 conda g++ 11.2 헤더 오류 · 1저자 지적 = 이미 빌드된 생산 `lmp_mpi` 를 쓴다 (09-28 믹서 영수증의 `lmp_mpi -np 1` 선례) → 빌드 그만 |
++| 시도 3 | 건식 358667 (생산 `lmp_mpi` · `mpirun` 없이 1 프로세스) | 실행 전 멈춤 rc 3 (팔 0) · "LMP -h rc 1" · 배너 = 3d5c00f 정상 | 실행기 결함 `SELF-166` — 3d5c00f 의 `-h` 는 도움말 뒤 rc 1 (lammps.cpp 543–545 · error.cpp 377–378) 인데 실행기가 rc 0 을 요구 · 가짜 lmp 도 rc 0 이라 시험이 못 잡음 → 고침 (아래 시험 줄) |
++
++- 실행 파일 = ibb 생산 `lmp_mpi` (3d5c00f · Anaconda gcc 11.2 + `mpic++` · `Makefile.mpi` · 1저자 확인) ≠ 11-04 실행 파일 (`run_40000/inputs.md5` 첫 줄) → 예측 가 = 해당 없음 (메모 §0-3 가 행 그대로) · 1 프로세스 = 분할 1 칸 (직렬과 같은 분할 · 추정 · 실행 확인 전) · 메모 §0 머리 11-12 줄.
++- 다음 = 이 판 덱 묶음으로 건식 (N = 200) 다시 → 대조기 (문법만) → 샌드박스 (N = 40,000) = 1저자 GO 따로.
++
+ ## 하지 않는 것
+ 
+-ibb · RJ 323957 재실행 · 남은 네 침대 RJ · 판정 식 · 허용폭 변경 (그대로 — 판정의 NOT_COMPUTED 사유 ① · ⑪ 만 더함 · 메모 §0-3) · 키트 (`docs/data/ps45_unload_20261009/`) · 봉인 변경 · 자동 시작 · 건식 출력을 예측 판독으로 쓰기.
++(ibb = 11-12 부터 실행 자리 · 위 절 · 주소는 리포에 안 적는다) RJ 323957 재실행 · 남은 네 침대 RJ · 판정 식 · 허용폭 변경 (그대로 — 판정의 NOT_COMPUTED 사유 ① · ⑪ 만 더함 · 메모 §0-3) · 키트 (`docs/data/ps45_unload_20261009/`) · 봉인 변경 · 자동 시작 · 건식 출력을 예측 판독으로 쓰기.
+diff --git a/docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh b/docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh
+index bc02fbef5..ea47c11d1 100644
+--- a/docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh
++++ b/docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh
+@@ -1,14 +1,15 @@
+ #!/bin/bash
+ # G2c′ 샌드박스 실행기 (2026-11-10 · 등록 = 메모 docs/reviews/p1_g2c_compare_definition_20261105.md §0 · §5-2 · 결과 0 건 상태에서 씀)
+-#   사용:  LMP=<LIGGGHTS 3d5c00f 직렬 실행 파일> bash run_g2cp.sh N OUT      (OUT = 없거나 빈 폴더 · 덮어쓰지 않는다 · 자리 = 아래 'OUT 자리')
++#   사용:  LMP=<LIGGGHTS 3d5c00f 실행 파일 (직렬 · MPI 빌드면 mpirun 없이 = 1 프로세스 · 11-12 ibb)> bash run_g2cp.sh N OUT      (OUT = 없거나 빈 폴더 · 덮어쓰지 않는다 · 자리 = 아래 'OUT 자리')
+ #   대조:  python3 -I compare_g2cp.py OUT N                               (따로 · 실행기는 대조하지 않는다)
+ #   팔 (이 차례 · 직렬 · 한 번에 하나 · nice -n 19):
+ #     A  A2  B  B2  C  = 11-04 run_arms.sh 와 같은 덱 · 같은 인자
+ #     BW = BW.liggghts (R 덱 include + write_restart) · 입력 = A 의 주기 파일      → BR = R 덱 · 입력 = BW 가 쓴 restart_rt.bin
+ #     CW = BW.liggghts · 입력 = A2 의 명령 파일 (restart_cmd.bin)                 → CR = R 덱 · 입력 = CW 가 쓴 restart_rt.bin
+ #   실행 전 멈춤 (rc 3 · OUT 을 만들지 않는다 · 이유 = 화면 stderr):
+-#     인자 · N 꼴 (200 이상 · 100 의 배수 — R 덱 덤프 주기 100) · 도구 · LMP 없음 · 파일 아님 · 실행 권한 없음 · `-h` 첫 머리 줄에
+-#     "LIGGGHTS (" 없음 (빈 임시 폴더 · -log none) · OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ run_40000/inputs.md5 · BW 덱 꼴 ·
++#     인자 · N 꼴 (200 이상 · 100 의 배수 — R 덱 덤프 주기 100) · 도구 · LMP 없음 · 파일 아님 · 실행 권한 없음 · `-h` (빈 임시 폴더 ·
++#     -log none) 가 3d5c00f 의 정상 끝이 아님 = rc ≠ 1 · 첫 머리 줄 "LIGGGHTS (" 없음 · 도움말 줄 "Command line options:" 없음 (11-12 SELF-166) ·
++#     OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ run_40000/inputs.md5 · BW 덱 꼴 ·
+ #     git 작업 트리 안이면 이 폴더에 커밋 안 된 변경 · 새 파일 (등록 커밋 뒤에만 돈다) · OUT 자리
+ #   OUT 자리 (G2CPR2-05 · 실제 경로 = readlink -m 으로 본다 · 대조기 out_guard 와 같은 자리 규칙 (dry/ 는 대조기에도 · G2CPR3-02) + 기존 런 폴더 안): 샌드박스 (이) 폴더 · 그 조상 ·
+ #     11-04 기록 폴더 (run_40000/ · dry/) 와 그 안 · 기존 런 폴더 안 (OUT 의 조상 폴더에 런 표지 lmp_identity.txt · inputs.md5 —
+@@ -68,6 +69,9 @@ TL=${G2CP_TLONG:-1800}; TS=${G2CP_TSHORT:-600}
+ [[ "$TL" =~ ^[1-9][0-9]*$ && "$TS" =~ ^[1-9][0-9]*$ ]] || die0 "시간 한도 G2CP_TLONG='$TL' · G2CP_TSHORT='$TS' — 양의 정수 (초)"
+ 
+ # -h 머리 줄 — 빈 임시 폴더에서 · -log none (log.liggghts 를 만들지 않는다 · lammps.cpp 310–319) · 배너 = lammps.cpp 359–361
++# 3d5c00f 의 -h 정상 끝 = help() (첫 줄 "Command line options:" · lammps.cpp 731–732) 뒤 error->done() = MPI_Finalize(); exit(1)
++# (lammps.cpp 543–545 · error.cpp 369–379) → rc 1.  오류 끝 (error->all) 도 rc 1 이라 도움말 줄로 가른다.  (11-12 SELF-166 — 옛 판은
++# rc 0 을 요구해 ibb 건식 job 358667 이 팔 전에 멈췄다 · 시험의 가짜 lmp 가 rc 0 을 내서 시험이 못 잡았다)
+ HT=$(mktemp -d) || die0 "mktemp 실패"
+ ( cd "$HT" && exec timeout -k 5 60 "$LMPABS" -log none -h ) > "$HT/h.txt" 2>&1 &
+ TPID=$!
+@@ -75,11 +79,13 @@ wait "$TPID"
+ HRC=$?
+ TPID=''
+ BANNER=$(grep -m1 '^LIGGGHTS (' "$HT/h.txt")
++HHELP=$(grep -c '^Command line options:$' "$HT/h.txt")
+ HHEAD=$(head -c 300 "$HT/h.txt" | head -3 | tr '\n' ' ')
+ rm -rf "$HT"
+ HT=''
+-[ "$HRC" -eq 0 ] || die0 "LMP -h rc $HRC — 실행이 안 된다 (머리: ${HHEAD:-없음})"
++[ "$HRC" -eq 1 ] || die0 "LMP -h rc $HRC — 3d5c00f 의 -h 는 도움말 뒤 rc 1 로 끝난다 (lammps.cpp 543–545 · error.cpp 377–378) · 다른 값 = 실행이 안 됐거나 다른 실행 파일 (머리: ${HHEAD:-없음})"
+ [ -n "$BANNER" ] || die0 "LMP -h 머리 줄에 'LIGGGHTS (' 가 없다 — LIGGGHTS 실행 파일이 아니다 (머리: ${HHEAD:-없음})"
++[ "${HHELP:-0}" -ge 1 ] || die0 "LMP -h 에 도움말 줄 'Command line options:' 이 없다 — rc 1 이 도움말 끝이 아니라 오류 끝이다 (머리: ${HHEAD:-없음})"
+ 
+ # 덱 — 11-04 그대로 (일곱 md5 = run_40000/inputs.md5) · BW 꼴 = include R + write_restart 한 줄
+ REF="$HERE/run_40000/inputs.md5"
+diff --git a/docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py b/docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py
+index 1edf86102..7817db0e3 100644
+--- a/docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py
++++ b/docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py
+@@ -21,6 +21,8 @@
+ 합성 fixture 가 실행기 꼴대로 rc.txt 도 쓴다).
+ 11-11 3 회차 내부 반박 리뷰 G2CPR3-01–04 고침 = 시험 먼저 (t43 완료 문의 outputs.md5 ↔ 실제 출력 대조 새로 · t39 dry/ · t41 자리 문 두 경계 ·
+ t42 표기 보강 · t13 = 덤프를 바꾼 fixture 는 outputs.md5 도 실행기 꼴대로 다시 쓴다).
++11-12 SELF-166 (ibb 건식 job 358667 이 찾음) = 시험 먼저 — 가짜 lmp 의 -h = 3d5c00f 꼴 (배너 → 도움말 줄 → rc 1) · t22 사례 셋
++(-h rc 0 · rc 2 · 오류 끝 = rc 1 인데 도움말 없음) · t26 lmp_h_rc 1 기록.
+ """
+ from __future__ import annotations
+ 
+@@ -1139,15 +1141,18 @@ if os.environ.get('FAKE_TERM_DELAY'):      # 느린 종료 흉내 (TERM 뒤 몇
+         time.sleep(float(os.environ['FAKE_TERM_DELAY']))
+         os._exit(143)
+     signal.signal(signal.SIGTERM, _late)
+-if '-h' in a:
++if '-h' in a:      # 3d5c00f 꼴 (11-12 SELF-166) — 배너 (lammps.cpp 359–361) → help() 첫 줄 'Command line options:' (731–732) → error->done() = exit(1) (error.cpp 377–378)
+     if mode.startswith('hsleep:'):      # 실행 전 (-h 머리 줄 확인 중) 사람 멈춤 시험 — 시작을 적고 잠든다
+         with open(os.environ['FAKE_LOG'], 'a') as f:
+             f.write(json.dumps(dict(h=1)) + '\n')
+         time.sleep(float(mode.split(':')[1]))
+     if mode != 'nobanner':
+         print('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f · 가짜 lmp)')
++    if mode == 'herror':      # 배너 뒤 오류 끝 (error->all · 같은 rc 1 · 도움말 없음)
++        print('ERROR: 가짜 오류 (도움말 전)')
++        sys.exit(1)
+     print('\nCommand line options:\n')
+-    sys.exit(0)
++    sys.exit({'h0': 0, 'h2': 2}.get(mode, 1))
+ args, var = {}, {}
+ i = 0
+ while i < len(a):
+@@ -1288,10 +1293,12 @@ def t21_runner_no_lmp():
+ @test
+ def t22_runner_lmp_bad():
+     t = T()
+-    for case in ('없는 파일', '실행 권한 없음', '배너 없음', '폴더'):
++    # 11-12 SELF-166 — 3d5c00f 의 -h 정상 끝 = rc 1 + 도움말 줄 · rc 0 · 2 (다른 실행 파일) · rc 1 인데 도움말 없음 (오류 끝) = 실행 전 멈춤
++    hmode = {'배너 없음': 'nobanner', '-h rc 0': 'h0', '-h rc 2': 'h2', '-h 오류 끝 (rc 1 · 도움말 없음)': 'herror'}
++    for case in ('없는 파일', '실행 권한 없음', '배너 없음', '폴더', '-h rc 0', '-h rc 2', '-h 오류 끝 (rc 1 · 도움말 없음)'):
+         d = tmpdir()
+         S = sandbox_copy(d)
+-        env = fake_env(d, mode='nobanner' if case == '배너 없음' else 'ok')
++        env = fake_env(d, mode=hmode.get(case, 'ok'))
+         if case == '없는 파일':
+             env['LMP'] = os.path.join(d, 'nope')
+         elif case == '실행 권한 없음':
+@@ -1303,6 +1310,10 @@ def t22_runner_lmp_bad():
+         t.ok(case + ' rc 3', rc == 3, (rc, err[-200:]))
+         t.ok(case + ' OUT 없음', not os.path.exists(O))
+         t.ok(case + ' 팔 안 돎', [c for c in fake_calls(d) if c.get('arm')] == [])
++        if case in ('-h rc 0', '-h rc 2'):
++            t.ok(case + ' 이유 = -h rc', 'LMP -h rc ' + case[-1] in err, err[-300:])
++        if case.startswith('-h 오류 끝'):
++            t.ok(case + ' 이유 = 도움말 줄 없음', 'Command line options:' in err, err[-300:])
+     return t
+ 
+ 
+@@ -1417,6 +1428,7 @@ def t26_runner_ok_fake():
+     if os.path.exists(os.path.join(O, 'lmp_identity.txt')):
+         ident = open(os.path.join(O, 'lmp_identity.txt')).read()
+         t.ok('배너 기록', 'LIGGGHTS (Version' in ident)
++        t.ok('lmp_h_rc 1 기록 (3d5c00f -h 정상 끝 · SELF-166)', 'lmp_h_rc 1\n' in ident, ident[:400])
+         t.ok('md5 · sha256 기록', md5f(env['LMP']) in ident and hashlib.sha256(open(env['LMP'], 'rb').read()).hexdigest() in ident)
+     if os.path.exists(os.path.join(O, 'outputs.md5')):
+         om = open(os.path.join(O, 'outputs.md5')).read()
+diff --git a/docs/session_20260923_progress.md b/docs/session_20260923_progress.md
+index c31ba46db..19353e4b5 100644
+--- a/docs/session_20260923_progress.md
++++ b/docs/session_20260923_progress.md
+@@ -1442,3 +1442,6 @@ DFT 쪽은 사용자가 다른 대시보드에서 진행한다 (09-23) — 이 
+ - **[DEM 우선 Ⓐ · Rint ②] 11-12 — 1저자 *"권고대로해"*** — G2c′ = 11-11 고침 (권고 밖 거부 쪽 다섯 + 3 회차) 그대로 (`docs/reviews/p1_g2c_compare_definition_20261105.md` §0 머리) → 다음 빌드 → 건식 → 샌드박스 = 단계마다 GO · siteq2 Q1–Q6 = 권고대로 (`docs/reviews/rint2_siteq_prep_20261109/README.md` §9-10 끝 · Q3 · Q6 = 계획 §10 의 4 번에서) · 반입 · push = `68d5d92a0` (게이트 183 단계 두 조각 실패 0).
+ - **[DEM 우선 Ⓐ · Rint ②] 11-12 — 1저자 *"ㄱㄱ"*** — G2c′ = 이 기록 커밋의 게이트가 끝난 뒤 빌드 → 건식 (N = 200) GO (샌드박스 N = 40,000 은 건식 결과 뒤 따로 GO) · siteq2 = 이 push 뒤 현장 블록 (kgy · gabia) 일곱 칸 채움 · 짧은 꼴 먼저 (README §9-10 Q4).
+ - **[Rint ②] 11-12 — 1저자 결정 (시간 어림 2 판 Q1–Q10 + 새 Q11 · Q12)** — *"11-30 약간 넘어도 돼 진행만 되니까 12월 초까지만 확실하게 돌면돼 / 나머지는 권고대로"* · *"ㅇㅇ 권고대로해"* = Q9 기준 = GPU 팔이 **12 월 초까지 확실히** 끝남 · Q2 탄소 접합 준비 재사용 + Q11 전처리 C 꼴 (벡터 곱) = **한 코드 묶음** (시험 먼저 → 원장 시도 3 줄 → ⑥ 다시 재기 → 내부 반박 리뷰 (Codex 아님) → Codex 봉인 전 묶음 → 계획 §10 개정 → 봉인 → R) · Q3 maxiter ≥ 3,000,000 · Q4 시간 상한 2 배쯤 + 최대 시도 수 (값 = 봉인 때) · Q7 v100 안 함 · Q8 ② 감도 범위 밖 · Q10 두 기계 조립 비트 확인 · Q12 s 미측정 유지 · 벤치 결과 (1저자 실행 · `docs/reviews/rint2_time_reestimate_20261111/bench/results_20261112/README.md`) = kgy A 0.0467 s (두 번 다 다른 부하 = s 못 잼) · gabia A 0.0609 s · C 꼴 3.40–3.79 배 빠름 · 200 반복 뒤 해 비트 같음 (합성 행렬) · 결정 절 = `docs/reviews/rint2_time_reestimate_20261111/README.md` 끝 쪽 · 게이트 오탐 `SELF-162` 두 번째 발생 (원장 메모).
++- **[DEM 우선 Ⓐ] 11-12 — G2c′ ibb 건식 (1저자 *"g2c'는 … ibb 로 가서 cpu 60 활용해서 진행"*)** — 시도 1 · 2 = 빌드 잡 실패 (내 ibb 도구 결함 · 실행용 conda 환경 줄을 빌드 잡에 넣음) → 1저자 지적 *"이미 lmp 관련해서 빌드되어 있는데"* = 생산 `lmp_mpi` 를 `mpirun` 없이 1 프로세스로 (09-28 믹서 영수증 선례) → 시도 3 = job 358667 = 실행기 실행 전 멈춤 rc 3 (팔 0) "LMP -h rc 1" = 실행기 결함 `SELF-166` (3d5c00f 의 `-h` = rc 1 · 가짜 lmp 는 rc 0) → 고침 (시험 먼저 29/41 → 41/41 · 변이 6/6 · 받는 rc 1 + 도움말 줄) · 메모 `docs/reviews/p1_g2c_compare_definition_20261105.md` §0 머리 11-12 줄 (실행 자리 ibb · 실행 파일 `lmp_mpi` · 예측 가 = 해당 없음) · `docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md` ibb 절 → 다음 = 이 판 덱 묶음으로 건식 다시 → 대조기 (문법만) → 샌드박스 N = 40,000 = 1저자 GO.
++- **[Rint ②] 11-12 — siteq 현장 블록 예행 (kgy · gabia × 짧은 꼴 · nohup 꼴 · 핀 `11a794674`)** — 블록 rc 0 넷 · PASS · INFO kgy 25 · 8 · gabia 24 · 9 (WARN · FAIL · ERROR 0) · 두 기계 pin · env unit · code_key SAME · 짧은 ↔ nohup 33 칸 같음 · 11-09 ↔ 11-12 33 칸 같음 · nohup 꼴 SIGHUP 무시 yes · 반입 `docs/data/rint2_siteq_20261112_rehearsal/` (예행 · 본 현장 확인 = 단일 개정 커밋 핀 · 계획 §0-2 Q1).
++- **[litdb] 11-12 — 본문 글 크롭 (1저자 질문 *"의도적으로 하는거야? 용량적으로 괜찮으면 난 좋은데"*)** — 지시서에 없던 것 (10-13 부터 카드들이 넣음 · 29 장 · 401 개 · 87 MB = litdb 그림 4.2 GB 의 2 %) → 규칙화 (카드가 인용한 문장만 · 카드당 20 개까지 · 전체 쪽 그림 안 만듦 · 정본 `73c26568e`) · 쉬는 litdb 작업 폴더 2 를 치움 (그림 4.1 GB · PDF 32 개는 스크래치 사본) → 디스크 여유 5.4 → 11 GB.

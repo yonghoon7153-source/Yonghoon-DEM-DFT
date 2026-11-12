@@ -54,12 +54,17 @@ def sync_evac():
     d = CTL / "litdb" / "_curation" / "evac"
     (d / "tools").mkdir(parents=True, exist_ok=True)
     for f in ("make_sheet.py", "make_brief.py", "launch.py", "intake.py", "finish.py", "restore.py", "queue.json",
-              "received_files.tsv", "AGENT_PROMPT_TEMPLATE.md"):
+              "received_files.tsv", "AGENT_PROMPT_TEMPLATE.md", "safe_untar.py", "thumb.py", "reg_p1.py", "reg_p3.py"):
         s = SCR / "tools" / f
         if s.is_file():
             shutil.copy2(s, d / "tools" / f)
     if (SCR / "STATE.md").is_file():
         shutil.copy2(SCR / "STATE.md", d / "STATE.md")
+    sp = SCR / "tools" / "snapshot.py"       # 코드 가지 쪽 진행 중 작업도 같이 묶어 둔다 (재시작 대비)
+    if sp.is_file():
+        shutil.copy2(sp, d / "tools" / "snapshot.py")
+        r = subprocess.run([sys.executable, "-I", str(sp), str(d)], capture_output=True, text=True)
+        print("snapshot:", (r.stdout.strip().split("\n") or [""])[1:4], r.stderr.strip()[-200:])
 
 
 def push(msg):
