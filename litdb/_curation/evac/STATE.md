@@ -150,3 +150,4 @@
 - **11-12 믹서 조회 묶음 받음** = sha256 a5753648… 같음 · `intake/mixer_e0_query_20261112/` (금지 목록 forbid.txt = 채팅 값 · 리포 · 대피 묶음에 넣지 않음) · 판독기 rc 0 · q2 74.1 step/s · 프레임 8.36–12.7 MB · q4 기본 할당 Permission denied (사용자 한도 0) · q5 OST 8 최소 여유 14.6 TB · q6 MaxRSS 다섯 다 None (walltime 3:07–6:48) · q7 바이너리 = 09-28 같음 · RPATH = 사용자 conda env · q9 표 1 비-행 INFO: 1 · - 1 (삽입 보고 꼴) · ▶ 채움 조수 (`BRIEF_fill_after_query.md`) → 내부 반박 리뷰.
 - **litdb 끝 묶음 보고 메모** = scratchpad `litdb_final_report_notes.md` (편마다 한 줄 · N-15 · 16 · 17 들어감 · N-17 = 받은 PDF 가 ChemRxiv 프리프린트 → 출판본 + SI 필요) · 도는 편 N-19 (트리 2) · N-20 (트리 1) · 다음 N-24.
 - litdb 진행: N-19 끝 (ai2011 `81d79396d`) · 도는 편 = N-20 (트리 1) · N-24 (트리 2) · 다음 N-26.
+- litdb 진행: N-20 끝 (heenan2020 `dfead3f05`) · 도는 편 = N-24 (트리 2) · N-26 (트리 1) · 다음 N-27 · 원문 대조는 본문 · SI 둘 다 grep (N-20 은 SI 파일만 보고 0 이 나왔다가 본문에서 1).
