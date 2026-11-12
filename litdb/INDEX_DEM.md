@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 306편 · 생성 2026-11-12
+> digest 307편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -38,7 +38,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (18편)
+## MPM · 연속체 (19편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -59,6 +59,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `nguyen2017_mpm_bpm_deformable_particle_compaction` | 변형 입자 압밀을 두 방식으로 — 암시적 MPM+CD (탄성 연속체 입자) vs BPM (강체 1차입자 응집체 · 소성) · 2D 300 입자 · 마찰 0/0.5 · Z−Z0 ∝ (Φ−Φ0)^0.5 ★ Nezamabadi 2022 의 전신 — Nguyen (EPJ Web Conf. 2017) | MPM+CD vs BPM (2D; implicit MPM + contact dynamics vs bonded | 2026-11-09 | 🖼 6 |
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
+| `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | MPM 구현 선택 (기저 함수 · 매끈함 길이 · 경계 처리) 이 오차 · 안정에 주는 영향 — 선형 · 2차 B-spline (+ 경계 수정 B-spline · 열린 균일 매듭) · uGIMP · cpGIMP 를 '조각 상수 함수의 합성곱' 하나로 묶고 (식 31) · 노드 적분 오차 = 합성 중점 O(Δx²) + 도약 | MPM (수치 해석 · 검증 — Uintah Computational Framework (UCF) 의 명시적 | 2026-11-12 | 🖼 74 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
 ## 접촉역학 · 소성 (DEM 이론) (74편)
