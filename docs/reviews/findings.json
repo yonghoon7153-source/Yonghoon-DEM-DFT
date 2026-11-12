@@ -17402,12 +17402,40 @@
     {
       "id": "SELF-167",
       "severity": "P3",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "게이트 커밋 K (860d02ac2) 1 조각 단계 72 실패 (11-12 · 대피 세션) — t26_runner_ok_fake 'nice 19' 단언이 [14 × 9] 을 봄 · 같은 시험을 따로 돌리면 41/41",
       "opened_in": "docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py",
       "title": "게이트를 nice -n -5 로 띄워 (조수들과 CPU 를 나눠 커밋 J 2 조각이 느려졌던 뒤 · 운영 판단) 샌드박스 실행기 시험 t26 이 거짓 실패했다 — 실행기 run_g2cp.sh 179 행은 nice -n 19 (부모 기준 증가) 라 부모가 -5 면 자식이 14 가 되고, 시험은 절대값 19 를 단언한다 (부모 nice 0 가정) · 코드 결함 아님 (ibb 실제 셸은 nice 0) · 내 운영 실수",
-      "note": "결과 무관 (실행 · 계산 없음) · 고침 = 운영 규칙: 게이트 (scripts/check_all.sh) 를 nice · renice 로 띄우거나 올리지 않는다 (느리면 조수 부하를 줄이거나 조각을 나눈다) · 게이트 K 는 두 조각을 nice 0 으로 다시 돌린다 · 시험의 '부모 nice 0' 가정은 한정으로 둔다 (고치지 않음) · claimed_fixed = 다음 커밋"
+      "note": "결과 무관 (실행 · 계산 없음) · 고침 = 운영 규칙: 게이트 (scripts/check_all.sh) 를 nice · renice 로 띄우거나 올리지 않는다 (느리면 조수 부하를 줄이거나 조각을 나눈다) · 게이트 K 는 두 조각을 nice 0 으로 다시 돌린다 · 시험의 '부모 nice 0' 가정은 한정으로 둔다 (고치지 않음) · claimed_fixed = 다음 커밋 · ✅ 11-12 게이트 K 두 조각을 nice 0 으로 다시 = 1–125 fail 0 · 126–183 fail 0 (t26 통과) · 고친 sha = 커밋 K (규칙 기록 · nice 0 게이트)",
+      "claimed_fixed_sha": "ef68eb7dada1459f1f634f5b1e2724815605c3f4",
+      "evidence_tests": [
+        "docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py"
+      ]
+    },
+    {
+      "id": "SELF-168",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "게이트 커밋 K 2 조각 도중 (11-12 · 대피 세션) — 조수 (믹서 E0 조회 블록 시험) 보고 · dpkg 기록 11:03:53 UTC gawk 설치 · /etc/alternatives/awk 11:04:03 UTC mawk 로 되돌림",
+      "opened_in": "scripts/check_all.sh",
+      "title": "내가 띄운 조수가 게이트가 도는 컨테이너에 apt 로 gawk 를 설치해 시스템 awk 가 약 10 초 (11:03:53–11:04:03 UTC) gawk 였다 — 그 창 = 2 조각 시작 (11:01:06) +167 s = 단계 126 (rint_r_chain_e2e12 · 379 s) 도는 중 · 조수 지시서에 '시스템 패키지 · 설정을 바꾸지 않는다' 가 없었다",
+      "note": "결과 무관 [확인] — 2 조각 fail 0 뒤 단계 126 만 mawk 로 다시 = rc 0 (같은 HEAD · 깨끗한 트리) · 고침 = 운영 규칙: 조수 지시서에 '시스템 패키지 설치 · 시스템 설정 (apt · update-alternatives 등) 을 바꾸지 않는다' · 게이트 중 시험이 다른 awk 를 원하면 PATH 앞자리 · 이름공간 안에서만 · claimed_fixed = 다음 커밋"
+    },
+    {
+      "id": "MXE0-01",
+      "severity": "P2",
+      "status": "claimed_fixed",
+      "owner": "claude",
+      "found_by": "믹서 E0 자격 pilot 등록 초안 작업 (11-12 · 대피 세션 · 리포 같은 빌드 로그와 관측기 계약 대조) — 등록 초안 7-4",
+      "opened_in": "scripts/mixer_precal_observe.py",
+      "title": "믹서 first8 관측기 (mixer_precal_observe.py `_log_contract`) 가 같은 빌드 (LIGGGHTS-PUBLIC 3.8.0 · 3d5c00f) 의 실제 정상 로그 꼴 넷 — thermo 머리 `Step Atoms KinEng rke Volume` (c_ 없음) · Loop 줄 끝 `, finish time <ctime>` · 삽입 run thermo 표 안 fix insert/pack 보고 두 줄 · 덱 주석의 `ERROR:` 메아리 — 을 몰라 정상 E0 런도 관측 TECH 로 판정했을 것 (발사 전 · 실제 E0 로그로는 확인 전)",
+      "note": "결과 무관 (발사 전 · 실행 없음) · 고침 = 같은 빌드의 실제 꼴 넷만 허용 · 진짜 오류 (ERROR 줄 · 잘림 · 깨진 행 · Atoms 감소 · 잘못된 삽입 보고 · 표 구조) 는 그대로 TECH · 시험 먼저 34 중 28 → 43/43 (3.11 · 3.8) · 결함 62 꼴 TECH · 단일 가드 변이 25 생존 0 · 운영 봉인 · 정책 · launch · 비활성 후보 무변경 (관측기 sha256 df22dcf0 → bb2f3229 = 재봉인 후보는 리포 밖 · 재봉인 = 1저자 별도 승인 · Q-C) · 1저자 11-12 Q5 · Q-A–Q-E 권고대로 · 실제 NP20 로그 꼴 대조 (q9) = 첫 낱말 수준 · 내부 반박 리뷰 전",
+      "claimed_fixed_sha": "f67c0cc928fc1ea99195b1ae95b46295a11b8774",
+      "evidence_tests": [
+        "scripts/test_mixer_precal_observe.py"
+      ]
     }
   ]
 }

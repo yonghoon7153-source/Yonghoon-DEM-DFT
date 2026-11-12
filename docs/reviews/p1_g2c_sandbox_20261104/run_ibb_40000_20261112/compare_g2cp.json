@@ -1,0 +1,564 @@
+{
+ "N": 40000,
+ "out": "<SCRATCH>/intake/g2cp_run40000_return_20261112/x/run40000",
+ "here": "<SCRATCH>/intake/g2cp_pin_21bb09d82/docs/reviews/p1_g2c_sandbox_20261104",
+ "ref": "<SCRATCH>/intake/g2cp_pin_21bb09d82/docs/reviews/p1_g2c_sandbox_20261104/run_40000",
+ "predictions": {
+  "가": {
+   "status": "해당 없음",
+   "why": [
+    "실행 파일 md5 다름",
+    "관찰만: 같은 파일 12 / 15"
+   ],
+   "same_lmp": false,
+   "same_decks": true,
+   "ref_lmp_md5": "f4ba3ec04933d70b641421e39e6cb283",
+   "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+   "n_ref": 15,
+   "n_equal": 12,
+   "differ": [
+    "A/rst/restart_40000.bin",
+    "A2/rst/restart_40000.bin",
+    "A2/rst/restart_cmd.bin"
+   ],
+   "absent": []
+  },
+  "나": {
+   "status": "맞음",
+   "why": [],
+   "pairs_equal": true,
+   "atoms_equal": true,
+   "aux": {
+    "restart_A_eq_A2": true,
+    "B_eq_B2_pairs": true,
+    "B_eq_B2_atoms": true
+   }
+  },
+  "다-값": {
+   "status": "맞음",
+   "why": [],
+   "pairs": {
+    "n1": 3111,
+    "n2": 3111,
+    "n_common": 3111,
+    "only1": 0,
+    "only2": 0,
+    "orientation_differs": 0,
+    "dup1": 0,
+    "dup2": 0,
+    "n_pairs_differ": 0,
+    "by_group": {
+     "pos": 0,
+     "flag": 0,
+     "force": 0,
+     "force_normal": 0,
+     "force_tangential": 0,
+     "torque": 0,
+     "deltaMax": 0,
+     "shear": 0,
+     "contactArea": 0,
+     "delta": 0,
+     "contactPoint": 0
+    }
+   },
+   "atoms": {
+    "n_common": 1220,
+    "only1": 0,
+    "only2": 0,
+    "n_differ": 0,
+    "box_equal": true
+   }
+  },
+  "다-바이트": {
+   "status": "맞음",
+   "why": [],
+   "pairs_equal": true,
+   "atoms_equal": true
+  },
+  "라-값": {
+   "status": "맞음",
+   "why": [],
+   "pairs": {
+    "n1": 3111,
+    "n2": 3111,
+    "n_common": 3111,
+    "only1": 0,
+    "only2": 0,
+    "orientation_differs": 0,
+    "dup1": 0,
+    "dup2": 0,
+    "n_pairs_differ": 0,
+    "by_group": {
+     "pos": 0,
+     "flag": 0,
+     "force": 0,
+     "force_normal": 0,
+     "force_tangential": 0,
+     "torque": 0,
+     "deltaMax": 0,
+     "shear": 0,
+     "contactArea": 0,
+     "delta": 0,
+     "contactPoint": 0
+    }
+   },
+   "atoms": {
+    "n_common": 1220,
+    "only1": 0,
+    "only2": 0,
+    "n_differ": 0,
+    "box_equal": true
+   }
+  },
+  "라-바이트": {
+   "status": "맞음",
+   "why": [],
+   "pairs_equal": true,
+   "atoms_equal": true
+  },
+  "라-재현가": {
+   "status": "맞음",
+   "why": [],
+   "pairs_equal": true,
+   "atoms_equal": true
+  },
+  "라-재현나": {
+   "status": "해당 없음",
+   "why": [
+    "실행 파일 md5 다름",
+    "명령 파일 md5 다름"
+   ],
+   "same_lmp": false,
+   "same_decks": true,
+   "ref_lmp_md5": "f4ba3ec04933d70b641421e39e6cb283",
+   "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+   "same_cmd_file": false,
+   "ref_C_md5": "3ca3e6082f9f2467592de8e2d0dbda45"
+  },
+  "마-1": {
+   "status": "맞음",
+   "why": [],
+   "n_common": 3111,
+   "differ": {
+    "pos": 0,
+    "flag": 0,
+    "contactArea": 0,
+    "delta": 0,
+    "contactPoint": 0,
+    "deltaMax": 0
+   },
+   "n_cohesion_excluded": 0,
+   "n_cohesion_guarded": 0,
+   "atoms": {
+    "n": 1220,
+    "n_differ": 0
+   }
+  },
+  "마-2": {
+   "status": "맞음",
+   "why": [],
+   "n_keys": 3111,
+   "n_set_BC": 3111,
+   "n_set_A": 3111,
+   "n_B_ne_Anm1": 0,
+   "n_C_ne_AN": 0,
+   "n_new": 0
+  },
+  "마-3": {
+   "status": "맞음",
+   "why": [],
+   "n_flag0": 2777,
+   "n_flag0_differ": 0,
+   "n_flag1": 334,
+   "n_flag1_force_differ": 334,
+   "n_flag1_other_differ": 0
+  },
+  "바": {
+   "status": "맞음",
+   "why": [],
+   "n_common": 3111,
+   "n_stick_both": 2758,
+   "n_slip_any": 353,
+   "n_slip_both": 129,
+   "n_slip_both_on_circle": 129,
+   "n_boundary": 0,
+   "n_dm_differ": 0,
+   "n_missing_atom": 0,
+   "n_fail": 0,
+   "fail_by_eq": {
+    "바-1": 0,
+    "바-2": 0,
+    "바-3": 0
+   },
+   "n_discriminating": 2758,
+   "by_flag": {
+    "0": {
+     "n_stick_both": 2460,
+     "n_fail": 0,
+     "n_dm_differ": 0
+    },
+    "1": {
+     "n_stick_both": 298,
+     "n_fail": 0,
+     "n_dm_differ": 0
+    }
+   },
+   "worst": {
+    "key": [
+     428,
+     1085
+    ],
+    "r": [
+     4.303100073705791e-20,
+     3.3546122676976977e-19,
+     3.615964647499676e-19
+    ],
+    "E": 4.260091266995924e-17,
+    "kt": 138.68216390589956
+   },
+   "kappa_over_kt": {
+    "n": 2758,
+    "min": 0.9999999999747375,
+    "median": 1.0000000000000007,
+    "max": 1.0000000000333145
+   }
+  },
+  "사": {
+   "status": "맞음",
+   "why": [],
+   "detail": {
+    "C": {
+     "n_common": 3111,
+     "n_differ": 0,
+     "same_set": true
+    },
+    "CW": {
+     "n_common": 3111,
+     "n_differ": 0,
+     "same_set": true
+    }
+   }
+  },
+  "예외①": {
+   "status": "맞음",
+   "why": [],
+   "viol_a": {
+    "B": 0,
+    "B2": 0,
+    "C": 0,
+    "BW": 0,
+    "BR": 0,
+    "CW": 0,
+    "CR": 0
+   },
+   "exact_a": {
+    "B": 0,
+    "B2": 0,
+    "C": 0,
+    "BW": 0,
+    "BR": 0,
+    "CW": 0,
+    "CR": 0
+   },
+   "viol_b": {
+    "B": 0,
+    "B2": 0,
+    "BW": 0
+   },
+   "exact_b": {
+    "B": 0,
+    "B2": 0,
+    "BW": 0
+   },
+   "n_raise": {
+    "B": 2,
+    "B2": 2,
+    "BW": 2
+   },
+   "changed_c": {
+    "C↔A(N)": 0,
+    "CW↔A(N)": 0,
+    "BR↔BW": 0,
+    "CR↔CW": 0
+   },
+   "n_raise_periodic_side": 2,
+   "n_cohesion_guarded_A": 0,
+   "cohesion_keys_shown": []
+  },
+  "예외②": {
+   "status": "맞음",
+   "why": [],
+   "n_new": 0,
+   "n_new_zero": 0,
+   "n_new_restored": 0,
+   "n_gone": 0,
+   "n_gone_B": 0,
+   "n_gone_A_only": 0,
+   "n_gone_B_only": 0,
+   "viol_new_zero_dm": 0,
+   "n_new_rt_differ": 0,
+   "new_keys": []
+  }
+ },
+ "judgment": {
+  "다": {
+   "status": "PASS",
+   "why": [],
+   "mode": "g2cp",
+   "n_ref": 3111,
+   "n_test": 3111,
+   "n_mismatch": 0,
+   "missing": [],
+   "extra": [],
+   "n_dup_consistent": 0,
+   "dup_conflicts": [],
+   "n_bit_equal": 3111,
+   "first_bad": [],
+   "discriminating_frac": 1.0,
+   "shear_nonzero_frac": 1.0,
+   "n_periodic": 334
+  },
+  "라": {
+   "status": "PASS",
+   "why": [],
+   "mode": "g2cp",
+   "n_ref": 3111,
+   "n_test": 3111,
+   "n_mismatch": 0,
+   "missing": [],
+   "extra": [],
+   "n_dup_consistent": 0,
+   "dup_conflicts": [],
+   "n_bit_equal": 3111,
+   "first_bad": [],
+   "discriminating_frac": 1.0,
+   "shear_nonzero_frac": 1.0,
+   "n_periodic": 334
+  }
+ },
+ "exceptions": {
+  "①": {
+   "status": "맞음",
+   "why": [],
+   "viol_a": {
+    "B": 0,
+    "B2": 0,
+    "C": 0,
+    "BW": 0,
+    "BR": 0,
+    "CW": 0,
+    "CR": 0
+   },
+   "exact_a": {
+    "B": 0,
+    "B2": 0,
+    "C": 0,
+    "BW": 0,
+    "BR": 0,
+    "CW": 0,
+    "CR": 0
+   },
+   "viol_b": {
+    "B": 0,
+    "B2": 0,
+    "BW": 0
+   },
+   "exact_b": {
+    "B": 0,
+    "B2": 0,
+    "BW": 0
+   },
+   "n_raise": {
+    "B": 2,
+    "B2": 2,
+    "BW": 2
+   },
+   "changed_c": {
+    "C↔A(N)": 0,
+    "CW↔A(N)": 0,
+    "BR↔BW": 0,
+    "CR↔CW": 0
+   },
+   "n_raise_periodic_side": 2,
+   "n_cohesion_guarded_A": 0,
+   "cohesion_keys_shown": []
+  },
+  "②": {
+   "status": "맞음",
+   "why": [],
+   "n_new": 0,
+   "n_new_zero": 0,
+   "n_new_restored": 0,
+   "n_gone": 0,
+   "n_gone_B": 0,
+   "n_gone_A_only": 0,
+   "n_gone_B_only": 0,
+   "viol_new_zero_dm": 0,
+   "n_new_rt_differ": 0,
+   "new_keys": []
+  },
+  "③": {
+   "n_atoms": 1220,
+   "n_wall_touch": 95,
+   "n_wall_near": 13,
+   "note": "벽 이력은 덤프에 없다 — 쌍 30 열 · 원자 12 열 일치 = 벽 이력 인증 아님"
+  }
+ },
+ "reports": {
+  "아": {
+   "status": "보고",
+   "n": 3111,
+   "slope": 0.003540355240122911,
+   "r2": 0.00010869706282889968,
+   "median_rel": 0.7842396691642154,
+   "n_missing_atom": 0,
+   "note": "A 의 in-run 증분은 반 step 속도 (v(N−½)) 로 계산 · 여기 모형은 덤프의 v(N) — 판정 아님"
+  },
+  "연속": {
+   "B": {
+    "judge_kit26": "FAIL",
+    "n_mismatch": 3107,
+    "n_pairs_force_differ": 3111,
+    "by_group": {
+     "pos": 0,
+     "flag": 0,
+     "force": 3111,
+     "force_normal": 3111,
+     "force_tangential": 3111,
+     "torque": 3111,
+     "deltaMax": 0,
+     "shear": 3111,
+     "contactArea": 0,
+     "delta": 0,
+     "contactPoint": 0
+    }
+   },
+   "C": {
+    "judge_kit26": "FAIL",
+    "n_mismatch": 331,
+    "n_pairs_force_differ": 334,
+    "by_group": {
+     "pos": 0,
+     "flag": 0,
+     "force": 334,
+     "force_normal": 334,
+     "force_tangential": 334,
+     "torque": 334,
+     "deltaMax": 0,
+     "shear": 0,
+     "contactArea": 0,
+     "delta": 0,
+     "contactPoint": 0
+    }
+   }
+  }
+ },
+ "json_written": true,
+ "thresholds": {
+  "REL": 1e-05,
+  "MARGIN": 1e-09,
+  "E_REL": 1e-09,
+  "E_ABS_K": 64,
+  "ULP_K": 4,
+  "CIRCLE_REL": 1e-09
+ },
+ "memo": "docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전 · 1저자 비준 11-10)",
+ "lmp": {
+  "lmp_path": "<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi",
+  "lmp_realpath": "<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi",
+  "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+  "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+  "lmp_bytes": "9180024",
+  "lmp_banner": "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)",
+  "lmp_h_rc": "1",
+  "glibc": "glibc 2.28",
+  "uname": "Linux 4.18.0-553.40.1.el8_10.x86_64 x86_64",
+  "git_head": "리포 밖",
+  "N": "40000",
+  "timeouts": "long=1800 short=600",
+  "date_utc": "2026-11-12T11:15:55Z"
+ },
+ "run_gate": {
+  "ok": true,
+  "why": [],
+  "unfinished": false,
+  "damaged": false,
+  "outputs": {
+   "n_listed": 25,
+   "n_actual": 25,
+   "n_md5_equal": 25,
+   "md5_differ": [],
+   "listed_missing": [],
+   "unlisted": [],
+   "n_bad_lines": 0,
+   "dup_names": []
+  },
+  "need": [
+   "outputs.md5 있음",
+   "STOP.txt 없음",
+   "rc.txt = 팔 아홉 차례대로 rc 0",
+   "outputs.md5 = 실제 출력 (적힌 파일 md5 · 적힌 집합 = 실제 집합 · 줄 꼴 · 같은 이름 없음)"
+  ]
+ },
+ "deck_gate": {
+  "ok": true,
+  "why": [],
+  "checked": [
+   "head.inc",
+   "mat.inc",
+   "fresh.inc",
+   "outA.inc",
+   "A.liggghts",
+   "A2.liggghts",
+   "R.liggghts",
+   "BW.liggghts"
+  ]
+ },
+ "material": {
+  "ntypes": 3,
+  "E": {
+   "1": 140000000.0,
+   "2": 140000000.0,
+   "3": 1350000.0
+  },
+  "nu": {
+   "1": 0.25,
+   "2": 0.25,
+   "3": 0.3
+  },
+  "rho": {
+   "1": 4800.0,
+   "2": 4800.0,
+   "3": 2000.0
+  },
+  "rad": {
+   "1": 0.002,
+   "2": 0.001,
+   "3": 0.0005
+  },
+  "mu": {
+   "(1, 1)": 0.5,
+   "(1, 2)": 0.5,
+   "(1, 3)": 0.5,
+   "(2, 1)": 0.5,
+   "(2, 2)": 0.5,
+   "(2, 3)": 0.5,
+   "(3, 1)": 0.5,
+   "(3, 2)": 0.5,
+   "(3, 3)": 0.5
+  },
+  "vc": 2.0,
+  "dt": 1e-06,
+  "skin": 0.0005,
+  "box_xy": [
+   0.012,
+   0.012
+  ],
+  "wall_z": 0.0,
+  "src_md5": {
+   "mat.inc": "e54a83736e28720be950e34ad49c5df0",
+   "fresh.inc": "215a9f14921e9c164c2282aa2dad2242"
+  }
+ },
+ "rc": 0
+}

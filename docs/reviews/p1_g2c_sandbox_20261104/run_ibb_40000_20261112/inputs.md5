@@ -1,0 +1,15 @@
+0c0daccc2a190d1cf219305bf5286d06  lmp_mpi
+215a9f14921e9c164c2282aa2dad2242  fresh.inc
+0f42677f399212260a36cee23b593024  head.inc
+e54a83736e28720be950e34ad49c5df0  mat.inc
+a8d64a5645a8b5e30ab10b86b5b90138  outA.inc
+df48771defe00ee347017b081dbfb271  A.liggghts
+dc12aa26dbd266a548ea11c4c88a60fa  A2.liggghts
+70d395e89391ce8055ee6768676598fc  BW.liggghts
+89c4a85c2f9ec763c37fdb5c3aa3f664  R.liggghts
+6ae35a017c3607107f55007e9fae9944  probe.liggghts
+9eca9e5339abd5dcfb8ed7413aa456ac  run_arms.sh
+7b246400101c26d7d71afc66c64b27fd  run_g2cp.sh
+a83fe3ffddffd84826295d37945022db  compare.py
+81c91989a066bc5b727c63bdfa9be8d7  compare_g2cp.py
+0dcf70324b67f8e0384d46e84407ffd0  test_g2cp.py

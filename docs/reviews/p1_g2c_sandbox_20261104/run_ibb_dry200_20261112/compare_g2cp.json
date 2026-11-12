@@ -1,0 +1,455 @@
+{
+ "N": 200,
+ "out": "<SCRATCH>/intake/g2cp_dry200_return_20261112/dry200",
+ "here": "<SCRATCH>/intake/g2cp_pin_21bb09d82/docs/reviews/p1_g2c_sandbox_20261104",
+ "ref": "<SCRATCH>/intake/g2cp_pin_21bb09d82/docs/reviews/p1_g2c_sandbox_20261104/run_40000",
+ "predictions": {
+  "가": {
+   "status": "해당 없음",
+   "why": [
+    "실행 파일 md5 다름",
+    "N ≠ 40000",
+    "관찰만: 같은 파일 0 / 15"
+   ],
+   "same_lmp": false,
+   "same_decks": true,
+   "ref_lmp_md5": "f4ba3ec04933d70b641421e39e6cb283",
+   "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+   "n_ref": 15,
+   "n_equal": 0,
+   "differ": [
+    "A2/rst/restart_cmd.bin"
+   ],
+   "absent": [
+    "A/post/atom_40000.txt",
+    "A/post/c_40000.txt",
+    "A/post/cpre_39999.txt",
+    "A/rst/restart_40000.bin",
+    "A2/post/atom_40000.txt",
+    "A2/post/c_40000.txt",
+    "A2/post/cpre_39999.txt",
+    "A2/rst/restart_40000.bin",
+    "B/post/atom_40000.txt",
+    "B/post/c_40000.txt",
+    "B2/post/atom_40000.txt",
+    "B2/post/c_40000.txt",
+    "C/post/atom_40000.txt",
+    "C/post/c_40000.txt"
+   ]
+  },
+  "나": {
+   "status": "해당 없음",
+   "why": [
+    "비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "aux": {
+    "restart_A_eq_A2": true,
+    "B_eq_B2_pairs": true,
+    "B_eq_B2_atoms": true
+   }
+  },
+  "다-값": {
+   "status": "해당 없음",
+   "why": [
+    "비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ]
+  },
+  "다-바이트": {
+   "status": "해당 없음",
+   "why": [
+    "비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ]
+  },
+  "라-값": {
+   "status": "해당 없음",
+   "why": [
+    "비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ]
+  },
+  "라-바이트": {
+   "status": "해당 없음",
+   "why": [
+    "비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ]
+  },
+  "라-재현가": {
+   "status": "해당 없음",
+   "why": [
+    "비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ]
+  },
+  "라-재현나": {
+   "status": "해당 없음",
+   "why": [
+    "실행 파일 md5 다름",
+    "N ≠ 40000",
+    "명령 파일 md5 다름"
+   ],
+   "same_lmp": false,
+   "same_decks": true,
+   "ref_lmp_md5": "f4ba3ec04933d70b641421e39e6cb283",
+   "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+   "same_cmd_file": false,
+   "ref_C_md5": "3ca3e6082f9f2467592de8e2d0dbda45"
+  },
+  "마-1": {
+   "status": "해당 없음",
+   "why": [
+    "B · C 모두 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "n_common": 0,
+   "differ": {
+    "pos": 0,
+    "flag": 0,
+    "contactArea": 0,
+    "delta": 0,
+    "contactPoint": 0,
+    "deltaMax": 0
+   },
+   "n_cohesion_excluded": 0,
+   "n_cohesion_guarded": 0,
+   "atoms": {
+    "n": 1220,
+    "n_differ": 0
+   },
+   "atoms_note": "원자 같음"
+  },
+  "마-2": {
+   "status": "해당 없음",
+   "why": [
+    "B · C · A(N−1) · A(N) 공통 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "n_keys": 0,
+   "n_set_BC": 0,
+   "n_set_A": 0,
+   "n_B_ne_Anm1": 0,
+   "n_C_ne_AN": 0,
+   "n_new": 0
+  },
+  "마-3": {
+   "status": "해당 없음",
+   "why": [
+    "C · A(N) 모두 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "n_flag0": 0,
+   "n_flag0_differ": 0,
+   "n_flag1": 0,
+   "n_flag1_force_differ": 0,
+   "n_flag1_other_differ": 0
+  },
+  "바": {
+   "status": "해당 없음",
+   "why": [
+    "양쪽 고착 쌍 0 — 가르지 못함"
+   ],
+   "n_common": 0,
+   "n_stick_both": 0,
+   "n_slip_any": 0,
+   "n_slip_both": 0,
+   "n_slip_both_on_circle": 0,
+   "n_boundary": 0,
+   "n_dm_differ": 0,
+   "n_missing_atom": 0,
+   "n_fail": 0,
+   "fail_by_eq": {
+    "바-1": 0,
+    "바-2": 0,
+    "바-3": 0
+   },
+   "n_discriminating": 0,
+   "by_flag": {
+    "0": {
+     "n_stick_both": 0,
+     "n_fail": 0,
+     "n_dm_differ": 0
+    },
+    "1": {
+     "n_stick_both": 0,
+     "n_fail": 0,
+     "n_dm_differ": 0
+    }
+   },
+   "worst": null,
+   "kappa_over_kt": null
+  },
+  "사": {
+   "status": "해당 없음",
+   "why": [
+    "C · CW · A(N) 모두 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "detail": {
+    "C": {
+     "n_common": 0,
+     "n_differ": 0,
+     "same_set": true
+    },
+    "CW": {
+     "n_common": 0,
+     "n_differ": 0,
+     "same_set": true
+    }
+   }
+  },
+  "예외①": {
+   "status": "해당 없음",
+   "why": [
+    "setup 덤프 일곱 모두 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "viol_a": {},
+   "exact_a": {},
+   "viol_b": {},
+   "exact_b": {},
+   "n_raise": {},
+   "changed_c": {},
+   "n_raise_periodic_side": null,
+   "n_cohesion_guarded_A": null,
+   "cohesion_keys_shown": []
+  },
+  "예외②": {
+   "status": "해당 없음",
+   "why": [
+    "A(N−1) · B 모두 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "n_new": null,
+   "n_new_zero": null,
+   "n_new_restored": null,
+   "n_gone": null,
+   "n_gone_B": null,
+   "n_gone_A_only": null,
+   "n_gone_B_only": null,
+   "viol_new_zero_dm": null,
+   "n_new_rt_differ": null,
+   "new_keys": []
+  }
+ },
+ "judgment": {
+  "다": {
+   "status": "PASS",
+   "why": [],
+   "mode": "g2cp",
+   "n_ref": 0,
+   "n_test": 0,
+   "n_mismatch": 0,
+   "missing": [],
+   "extra": [],
+   "n_dup_consistent": 0,
+   "dup_conflicts": [],
+   "n_bit_equal": 0,
+   "first_bad": [],
+   "discriminating_frac": null,
+   "shear_nonzero_frac": null,
+   "n_periodic": 0,
+   "note": "쌍 0 — 등록 규칙대로 PASS · 가르는 힘 없음 (건식 N = 200 · 빈 침대는 판독 대상 아님)"
+  },
+  "라": {
+   "status": "PASS",
+   "why": [],
+   "mode": "g2cp",
+   "n_ref": 0,
+   "n_test": 0,
+   "n_mismatch": 0,
+   "missing": [],
+   "extra": [],
+   "n_dup_consistent": 0,
+   "dup_conflicts": [],
+   "n_bit_equal": 0,
+   "first_bad": [],
+   "discriminating_frac": null,
+   "shear_nonzero_frac": null,
+   "n_periodic": 0,
+   "note": "쌍 0 — 등록 규칙대로 PASS · 가르는 힘 없음 (건식 N = 200 · 빈 침대는 판독 대상 아님)"
+  }
+ },
+ "exceptions": {
+  "①": {
+   "status": "해당 없음",
+   "why": [
+    "setup 덤프 일곱 모두 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "viol_a": {},
+   "exact_a": {},
+   "viol_b": {},
+   "exact_b": {},
+   "n_raise": {},
+   "changed_c": {},
+   "n_raise_periodic_side": null,
+   "n_cohesion_guarded_A": null,
+   "cohesion_keys_shown": []
+  },
+  "②": {
+   "status": "해당 없음",
+   "why": [
+    "A(N−1) · B 모두 쌍 0 — 비교할 쌍 0 — 가르지 못함 (건식 N = 200 · 빈 침대는 판독 대상 아님 · G2CPR-05)"
+   ],
+   "n_new": null,
+   "n_new_zero": null,
+   "n_new_restored": null,
+   "n_gone": null,
+   "n_gone_B": null,
+   "n_gone_A_only": null,
+   "n_gone_B_only": null,
+   "viol_new_zero_dm": null,
+   "n_new_rt_differ": null,
+   "new_keys": []
+  },
+  "③": {
+   "n_atoms": 1220,
+   "n_wall_touch": 0,
+   "n_wall_near": 0,
+   "note": "벽 이력은 덤프에 없다 — 쌍 30 열 · 원자 12 열 일치 = 벽 이력 인증 아님"
+  }
+ },
+ "reports": {
+  "아": {
+   "status": "보고",
+   "n": 0,
+   "n_missing_atom": 0
+  },
+  "연속": {
+   "B": {
+    "judge_kit26": "PASS",
+    "n_mismatch": 0,
+    "n_pairs_force_differ": 0,
+    "by_group": {
+     "pos": 0,
+     "flag": 0,
+     "force": 0,
+     "force_normal": 0,
+     "force_tangential": 0,
+     "torque": 0,
+     "deltaMax": 0,
+     "shear": 0,
+     "contactArea": 0,
+     "delta": 0,
+     "contactPoint": 0
+    }
+   },
+   "C": {
+    "judge_kit26": "PASS",
+    "n_mismatch": 0,
+    "n_pairs_force_differ": 0,
+    "by_group": {
+     "pos": 0,
+     "flag": 0,
+     "force": 0,
+     "force_normal": 0,
+     "force_tangential": 0,
+     "torque": 0,
+     "deltaMax": 0,
+     "shear": 0,
+     "contactArea": 0,
+     "delta": 0,
+     "contactPoint": 0
+    }
+   }
+  }
+ },
+ "json_written": true,
+ "thresholds": {
+  "REL": 1e-05,
+  "MARGIN": 1e-09,
+  "E_REL": 1e-09,
+  "E_ABS_K": 64,
+  "ULP_K": 4,
+  "CIRCLE_REL": 1e-09
+ },
+ "memo": "docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전 · 1저자 비준 11-10)",
+ "lmp": {
+  "lmp_path": "<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi",
+  "lmp_realpath": "<HOME>/LIGGGHTS-PUBLIC/src/lmp_mpi",
+  "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+  "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+  "lmp_bytes": "9180024",
+  "lmp_banner": "LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by <USER>, git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)",
+  "lmp_h_rc": "1",
+  "glibc": "glibc 2.28",
+  "uname": "Linux 4.18.0-553.40.1.el8_10.x86_64 x86_64",
+  "git_head": "리포 밖",
+  "N": "200",
+  "timeouts": "long=1800 short=600",
+  "date_utc": "2026-11-12T09:18:21Z"
+ },
+ "run_gate": {
+  "ok": true,
+  "why": [],
+  "unfinished": false,
+  "damaged": false,
+  "outputs": {
+   "n_listed": 45,
+   "n_actual": 45,
+   "n_md5_equal": 45,
+   "md5_differ": [],
+   "listed_missing": [],
+   "unlisted": [],
+   "n_bad_lines": 0,
+   "dup_names": []
+  },
+  "need": [
+   "outputs.md5 있음",
+   "STOP.txt 없음",
+   "rc.txt = 팔 아홉 차례대로 rc 0",
+   "outputs.md5 = 실제 출력 (적힌 파일 md5 · 적힌 집합 = 실제 집합 · 줄 꼴 · 같은 이름 없음)"
+  ]
+ },
+ "deck_gate": {
+  "ok": true,
+  "why": [],
+  "checked": [
+   "head.inc",
+   "mat.inc",
+   "fresh.inc",
+   "outA.inc",
+   "A.liggghts",
+   "A2.liggghts",
+   "R.liggghts",
+   "BW.liggghts"
+  ]
+ },
+ "material": {
+  "ntypes": 3,
+  "E": {
+   "1": 140000000.0,
+   "2": 140000000.0,
+   "3": 1350000.0
+  },
+  "nu": {
+   "1": 0.25,
+   "2": 0.25,
+   "3": 0.3
+  },
+  "rho": {
+   "1": 4800.0,
+   "2": 4800.0,
+   "3": 2000.0
+  },
+  "rad": {
+   "1": 0.002,
+   "2": 0.001,
+   "3": 0.0005
+  },
+  "mu": {
+   "(1, 1)": 0.5,
+   "(1, 2)": 0.5,
+   "(1, 3)": 0.5,
+   "(2, 1)": 0.5,
+   "(2, 2)": 0.5,
+   "(2, 3)": 0.5,
+   "(3, 1)": 0.5,
+   "(3, 2)": 0.5,
+   "(3, 3)": 0.5
+  },
+  "vc": 2.0,
+  "dt": 1e-06,
+  "skin": 0.0005,
+  "box_xy": [
+   0.012,
+   0.012
+  ],
+  "wall_z": 0.0,
+  "src_md5": {
+   "mat.inc": "e54a83736e28720be950e34ad49c5df0",
+   "fresh.inc": "215a9f14921e9c164c2282aa2dad2242"
+  }
+ },
+ "rc": 0
+}
