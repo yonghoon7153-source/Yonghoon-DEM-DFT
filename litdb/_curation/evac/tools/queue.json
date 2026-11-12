@@ -976,7 +976,7 @@
   "si": [],
   "extra": [],
   "bib": "S. Choi, M. Jeon, J. Ahn, … (저자 전부는 원문에서), \"Quantitative Analysis of Microstructures and Reaction Interfaces on Composite Cathodes in All-Solid-State Batteries Using a Three-Dimensional Reconstruction Technique\", ACS Appl. Mater. Interfaces 10 (2018) 23740–23747. (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "정본에 카드 없음 (인용만 = shi2019 · nakamura2020). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
   "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-14 '왜' 그대로): \"i · l — shi2019 Fig 7a 의 'previously reported densities and composite cathode porosities' (Φ 0.1–0.2) 의 출처 ref [29] · 같은 [29] 가 'LPS 입자의 소성변형을 실험관측' 의 근거 (shi2019 L103–107 · L119 · '정본 litdb 에 카드가 없다' L105) · nakamura2020 = '3D 재구성 · 반응 계면 정량 (방법 근거)'\"\n  가리킨 카드 = shi2019_high_am_loading_particle_size_assb (L105 · L119 · L103–107) · nakamura2020_dry_coating_ncm_li3ps4_core_shell (L331).\n- ★ 꼭 뽑을 것: 복합 양극 (AM · SE 조성 · 입경 · 비 · 성형압) · **3D 재구성 방법 (FIB-SEM 등 · 해상도 · 부피 · 분할 문턱)** · **공극률 · 상 부피분율 · 접촉 (AM–SE 계면) 면적 · 반응 계면 정량 값 — 조성 · 압력별 표 · 그림** · **LPS (황화물) 입자의 소성 변형을 관찰했다는 근거 (그림 · 문장 · 압력)** — shi2019 가 인용한 대로인지 · 전기화학 결과와의 연결 · 저자 한계.\n  · 2 차 인용 대조: shi2019 Fig 7a 의 Φ 0.1–0.2 가 이 원문의 어떤 값인지 · 같은지.\n  · 우리 쪽: 복합 기공 · 피복 (coverage) 정의 (우리 Hertz 18 · Tabor 52 % · 기하 피복) · 단계 0 (기공 연산자 · 재구성 문턱) · 이미지 기반 비교 자리.",
   "p1": true
