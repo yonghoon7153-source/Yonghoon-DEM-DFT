@@ -1,0 +1,97 @@
+figure,series,x,value,unit,method,pixel
+fig_3e,Cal0%,C/5,38.2,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x572.0 y1592.0
+fig_3e,Cal0%,C/10,81.1,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x728.5 y1486.0
+fig_3e,Cal0%,C/20,127.7,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x885.0 y1371.0
+fig_3e,Cal0%,C/50,171.8,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x1041.5 y1262.0
+fig_3e,Cal20%,C/5,62.7,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x571.5 y1531.5
+fig_3e,Cal20%,C/10,114.1,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x729.0 y1404.5
+fig_3e,Cal20%,C/20,156.6,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x884.5 y1299.5
+fig_3e,Cal20%,C/50,188.4,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x1042.5 y1221.0
+fig_3e,Cal35%,C/5,92.2,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x572.0 y1458.5
+fig_3e,Cal35%,C/10,140.0,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x728.5 y1340.5
+fig_3e,Cal35%,C/20,174.2,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x885.0 y1256.0
+fig_3e,Cal35%,C/50,197.3,mAh/g,"marker bbox centre; y linear fit to 11 left-axis ticks (0-200, step 20; frame top is above 200)",native p5 xref75 px x1042.0 y1199.0
+fig_7a,Cal0%,AM-pores,0.0202,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x166 y322
+fig_7a,Cal20%,AM-pores,0.012,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x213 y400
+fig_7a,Cal35%,AM-pores,0.0045,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x260 y472
+fig_7a,Cal0%,SE-pores,0.0395,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x343 y138
+fig_7a,Cal20%,SE-pores,0.0255,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x390 y272
+fig_7a,Cal35%,SE-pores,0.0098,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x437 y421
+fig_7a,Cal0%,AM-SE,0.0106,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x520 y414
+fig_7a,Cal20%,AM-SE,0.0129,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x567 y392
+fig_7a,Cal35%,AM-SE,0.0186,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x614 y337
+fig_7b,Cal0%,CBD-pores,0.3577,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x887 y135
+fig_7b,Cal20%,CBD-pores,0.2314,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x934 y271
+fig_7b,Cal35%,CBD-pores,0.1108,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x982 y401
+fig_7b,Cal0%,AM-CBD,0.0551,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x1065 y461
+fig_7b,Cal20%,AM-CBD,0.0569,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x1112 y459
+fig_7b,Cal35%,AM-CBD,0.0616,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x1159 y454
+fig_7b,Cal0%,SE-CBD,0.1098,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x1243 y402
+fig_7b,Cal20%,SE-CBD,0.1015,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x1290 y411
+fig_7b,Cal35%,SE-CBD,0.0959,m2/g,bar top outline row (scan upward from the base until the fill colour ends); y linear fit to 5 inside ticks,native p8 xref113 px x1337 y417
+fig_8a,tau_g,x=172 px,10.2,-,marker bbox centre; y linear fit to 6 inside ticks (0-10),native p8 xref111 px x172.5 y44.5
+fig_8a,tau_g,x=359 px,6.21,-,marker bbox centre; y linear fit to 6 inside ticks (0-10),native p8 xref111 px x359.5 y194.5
+fig_8a,tau_g,x=499 px,4.3,-,marker bbox centre; y linear fit to 6 inside ticks (0-10),native p8 xref111 px x499.5 y266.5
+fig_8b,delta_e,x=1220 px,0.31007,mS/cm,square marker bbox centre (7x7 opening removes connecting line); y linear fit to 5 ticks of its own axis,native p8 xref111 px x1220.0 y26.5
+fig_8b,delta_e,x=1080 px,0.30002,mS/cm,square marker bbox centre (7x7 opening removes connecting line); y linear fit to 5 ticks of its own axis,native p8 xref111 px x1080.5 y39.5
+fig_8b,delta_e,x=893 px,0.24011,mS/cm,square marker bbox centre (7x7 opening removes connecting line); y linear fit to 5 ticks of its own axis,native p8 xref111 px x893.5 y117.0
+fig_8b,delta_ion,x=1220 px,0.01801,mS/cm,square marker bbox centre (7x7 opening removes connecting line); y linear fit to 5 ticks of its own axis,native p8 xref111 px x1220.0 y55.0
+fig_8b,delta_ion,x=1080 px,0.008,mS/cm,square marker bbox centre (7x7 opening removes connecting line); y linear fit to 5 ticks of its own axis,native p8 xref111 px x1080.5 y262.0
+fig_8b,delta_ion,x=893 px,0.003,mS/cm,square marker bbox centre (7x7 opening removes connecting line); y linear fit to 5 ticks of its own axis,native p8 xref111 px x893.5 y365.5
+fig_6a,Cal0% C/50,50 mAh/g,0.0272,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x185
+fig_6a,Cal0% C/50,end (173 mAh/g),0.0222,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x297 y467
+fig_6a,Cal0% C/20,50 mAh/g,0.0547,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x185
+fig_6a,Cal0% C/20,end (129 mAh/g),0.0403,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x257 y361
+fig_6a,Cal0% C/10,50 mAh/g,0.0791,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x185
+fig_6a,Cal0% C/10,end (82 mAh/g),0.0585,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x214 y254
+fig_6a,Cal20% C/50,50 mAh/g,0.0198,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x367
+fig_6a,Cal20% C/50,end (188 mAh/g),0.0161,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x493 y503
+fig_6a,Cal20% C/20,50 mAh/g,0.0483,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x367
+fig_6a,Cal20% C/20,end (157 mAh/g),0.0353,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x464 y390
+fig_6a,Cal20% C/10,50 mAh/g,0.0769,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x367
+fig_6a,Cal20% C/10,end (115 mAh/g),0.0551,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x426 y274
+fig_6a,Cal35% C/50,50 mAh/g,0.0203,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x549
+fig_6a,Cal35% C/50,end (197 mAh/g),0.018,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x684 y492
+fig_6a,Cal35% C/20,50 mAh/g,0.0436,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x549
+fig_6a,Cal35% C/20,end (174 mAh/g),0.0353,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x663 y390
+fig_6a,Cal35% C/10,50 mAh/g,0.0709,V,activation overpotential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x549
+fig_6a,Cal35% C/10,end (138 mAh/g),0.0532,V,activation overpotential (V): end of curve (lowest pixel in its last columns),native p7 xref102 px x630 y285
+fig_6b,Cal0% C/50,50 mAh/g,0.0388,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x887
+fig_6b,Cal0% C/50,end (172 mAh/g),0.1388,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x1000 y208
+fig_6b,Cal0% C/20,50 mAh/g,0.0638,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x887
+fig_6b,Cal0% C/20,end (129 mAh/g),0.1728,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x960 y132
+fig_6b,Cal0% C/10,50 mAh/g,0.09,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x887
+fig_6b,Cal0% C/10,end (80 mAh/g),0.1866,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x915 y101
+fig_6b,Cal20% C/50,50 mAh/g,0.0145,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x1072
+fig_6b,Cal20% C/50,end (190 mAh/g),0.0665,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x1202 y370
+fig_6b,Cal20% C/20,50 mAh/g,0.0263,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x1072
+fig_6b,Cal20% C/20,end (157 mAh/g),0.0781,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x1172 y344
+fig_6b,Cal20% C/10,50 mAh/g,0.0368,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x1072
+fig_6b,Cal20% C/10,end (115 mAh/g),0.0875,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x1133 y323
+fig_6b,Cal35% C/50,50 mAh/g,0.006,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x1258
+fig_6b,Cal35% C/50,end (196 mAh/g),0.0308,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x1394 y450
+fig_6b,Cal35% C/20,50 mAh/g,0.0116,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x1258
+fig_6b,Cal35% C/20,end (173 mAh/g),0.0362,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x1372 y438
+fig_6b,Cal35% C/10,50 mAh/g,0.017,V,electrolyte potential (V): median curve pixel in the column nearest 50 mAh/g; y linear fit to axis ticks,native p7 xref102 px x1258
+fig_6b,Cal35% C/10,end (137 mAh/g),0.0411,V,electrolyte potential (V): end of curve (highest pixel in its last columns),native p7 xref102 px x1339 y427
+fig_2c,Cal0%,phi_CBD,41.02,vol%,"bar top (first fill row from frame top); frame top = 45 (top tick label at frame), frame bottom = 0",native p3 xref35 px x217 y845 frame 828.4-1016.0
+fig_2c,Cal20%,phi_CBD,40.06,vol%,"bar top (first fill row from frame top); frame top = 45 (top tick label at frame), frame bottom = 0",native p3 xref35 px x306 y849 frame 828.4-1016.0
+fig_2c,Cal35%,phi_CBD,37.9,vol%,"bar top (first fill row from frame top); frame top = 45 (top tick label at frame), frame bottom = 0",native p3 xref35 px x396 y858 frame 828.4-1016.0
+fig_2d,Cal0%,phi_SE,21.03,vol%,"bar top (first fill row from frame top); frame top = 30 (top tick label at frame), frame bottom = 0",native p3 xref35 px x529 y877 frame 819.0-1013.0
+fig_2d,Cal20%,phi_SE,25.05,vol%,"bar top (first fill row from frame top); frame top = 30 (top tick label at frame), frame bottom = 0",native p3 xref35 px x622 y851 frame 819.0-1013.0
+fig_2d,Cal35%,phi_SE,27.06,vol%,"bar top (first fill row from frame top); frame top = 30 (top tick label at frame), frame bottom = 0",native p3 xref35 px x714 y838 frame 819.0-1013.0
+fig_2e,Cal0%,phi_AM,22.01,vol%,"bar top (first fill row from frame top); frame top = 35 (top tick label at frame), frame bottom = 0",native p3 xref35 px x854 y887 frame 815.0-1009.0
+fig_2e,Cal20%,phi_AM,22.91,vol%,"bar top (first fill row from frame top); frame top = 35 (top tick label at frame), frame bottom = 0",native p3 xref35 px x947 y882 frame 815.0-1009.0
+fig_2e,Cal35%,phi_AM,28.87,vol%,"bar top (first fill row from frame top); frame top = 35 (top tick label at frame), frame bottom = 0",native p3 xref35 px x1040 y849 frame 815.0-1009.0
+fig_2f,Cal0%,phi_pores,17.02,vol%,"bar top (first outline row from frame top); frame top = 20 (top tick label at frame), frame bottom = 0",native p3 xref35 px x1170 y845 frame 816.5-1008.0
+fig_2f,Cal20%,phi_pores,12.01,vol%,"bar top (first outline row from frame top); frame top = 20 (top tick label at frame), frame bottom = 0",native p3 xref35 px x1262 y893 frame 816.5-1008.0
+fig_2f,Cal35%,phi_pores,6.06,vol%,"bar top (first outline row from frame top); frame top = 20 (top tick label at frame), frame bottom = 0",native p3 xref35 px x1353 y950 frame 816.5-1008.0
+video_mmc2,mmc2 (Cal0%),0 h,0.199,fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc2,mmc2 (Cal0%),24.93 h,0.593,fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc2,mmc2 (Cal0%),49.95 h,0.992 (5th pct 0.56),fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc3,mmc3 (Cal20%),0 h,0.211,fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc3,mmc3 (Cal20%),24.93 h,0.609,fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc3,mmc3 (Cal20%),49.95 h,1.000 (5th pct 0.71),fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc4,mmc4 (Cal35%),0 h,0.205,fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc4,mmc4 (Cal35%),24.93 h,0.657,fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72
+video_mmc4,mmc4 (Cal35%),49.95 h,0.992 (5th pct 0.89),fraction of colour-bar height (bar top ~ c_max 4.9e4 mol/m3),median of saturated particle pixels mapped to nearest colour-bar colour (3D shading included; rough),frame 0/36/71 of 72

@@ -1,0 +1,1378 @@
+{
+ "slug": "benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+  "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx (SI docx; tables rendered after LibreOffice PDF conversion, figures from word/media)"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of our computational workflow simulating the wet manufacturing process of ASSB composite cathodes: from slurry to calendered electrode followed by the half-cell electrochemical performance simulation. Adapted with permission from Alabdali et al. [13].",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.7,
+    199.5
+   ],
+   "w": 2227,
+   "h": 627,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.774,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — full-width raster (xref 37) with legend row; caption from the tool"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Composite electrode microstructures for the 10 %, 20 % and 35 % calendering degrees obtained from the manufacturing simulation developed using the CGMD technique, (b) Composite electrode microstructures after the multi-phase meshing process using our INNOV software and (c, d, e, f) volume fractions of AM, SE, CBD and pores for each calendering degree, respectively. FEM electrochemical modeling environment is a result of a specific postprocessing step performed on the CGMD simulation data. During this step, overlaps are handled based on the prioritization of the AM then the SE and finally the CBD. For each instance of overlap between AM and CBD or between AM and SE, we adjust the volume calculations by reducing the volume attributed to the CBD and adding this reduced volume to the AM or SE, respectively. This adjustment implicitly con­ siders the porosity of the CBD by reducin",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    236.7,
+    566.0,
+    510.7
+   ],
+   "w": 2228,
+   "h": 1142,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.793,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — raster xref 35 complete (a microstructure row · b meshed row · c–f bars + legend). ⚠ printed caption says '10 %, 20 % and 35 %' but the panels are labelled Cal0% · Cal20% · Cal35% (caption typo — text p.2 and Fig. S2 use 0 · 20 · 35 %)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Discharge curves of the composite electrodes along the Cal0%, Cal20% and Cal35% calendering degrees at (a) C/5, (b) C/10, (c) C/20, (d) C/50 and (e) Comparison of the simulated rated specific capacity of the Cal0%, Cal20% and Cal35% at the end of discharge (2.6 V). cases is minor (Fig. 3d). However, at high C-rates, the effect is relatively prominent (Fig. 3a). This observation can be explained by the transition from a kinetically-limited regime at high C-rates to a thermodynamically-dominated regime at lower C-rates, which is a phenomenon well known in Li ASSBs cells [38] and also, reported by our group in LIBs modeling [39]. At high C-rates, kinetic factors, such as charge transport limitations, limited active surface area and polarization effects, dominate the electrochemical behavior of the electrode. The pronounced difference in performance between calendering degrees at the",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    474.9
+   ],
+   "w": 2228,
+   "h": 1774,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.937,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — raster xref 75, panels a–e with axes and legends"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Spatial distribution of the state of lithiation inside the AM phase at different depths of discharge DOD for Cal0% (a, b, c), Cal20% (d, e, f) and Cal35% (g, h, i) calendering degrees at C/50 discharge rate.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    295.3
+   ],
+   "w": 2227,
+   "h": 1026,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.834,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — raster xref 92, 3 × 3 lithiation maps + colour bar + side labels"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. a) Calcualted ionic flux-distributions at the middlle of discharge for the three composite electrodes at C/50 with different calendering degrees, b) Cross- sectional images of the electrodes with the positions as a function of x-coordinate. The uncalendered electrode exibits a localized ionic current flow more than the calendered electrodes. overpotential (Fig. 6a) with increasing degrees of calendering can be attributed to the enhanced contact between the AM and SE particles. The high activation overpotential ηact for the Cal0% electrode, as shown in Fig. 6c, highlights the significant voltage loss required to drive the charge transfer process due to slow reaction kinetics at the AM-SE interface, either from a high reaction energy barrier or low reaction area [39]. Cal0% exhibits a much higher activation overpotential (ηact) compared to Cal20% and Cal35%, primarily due to the lo",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    332.4,
+    566.0,
+    532.3
+   ],
+   "w": 2228,
+   "h": 834,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.823,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — raster xref 90, 3D maps + x = 10 · 20 · 30 µm sections + colour bar (small tick digits 0–14 are in the raster)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) Average value of the reaction overpotential at the AM/SE interface versus the discharge specific capacity, (b) The electrolyte potential versus the discharge specific capacity, (c) Spatial distribution of activation overpotential ηact at the AM-SE reacting interface at the end of C/50 discharge for different calendering degrees, (d) The active area distribution within the composite cathode for the different calendering degrees. 3.1. Interfacial surface area particles as already observed in the volume fraction diagram (Fig. 2e), resulting in enhanced AM-SE connectivity. The specific surface area of the AM is measured at 0.16 m2.g⁻1, and the fraction of AM surface covered by SE increases from approximately 10 % at Cal0% to nearly 28 % at Cal35%. Although, for Cal35%, around 6 % of the AM surface is still in contact with pores, 24 % with CBD and 42 % with other AM particles. The",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    539.2
+   ],
+   "w": 2228,
+   "h": 2042,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.865,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — raster xref 102, panels a–d"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Specific interface area between the different phases showing a clear dependence on the calendering degree: a) for ionic conductive network, b) for electronic conductive network. electrochemically accessible material which determines the achievable capacity [8,16,41], thereby improving the overall performance in ASSBs. Fig. 7b. This enhancement in contact area facilitates more effective electronic percolation throughout the electrode, ensuring that electrons can traverse the electrode more efficiently. The improvement in microstructural connectivity, ionic and electronic, is essential for opti­ mizing charge transport and thereby the overall performance of the battery system. Our results clearly demonstrate that the combination of poor ionic connectivity and reduced electronic percolation leads to heterogeneous lithiation, as only certain regions of the electrode expe­ rience suff",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    195.2
+   ],
+   "w": 2228,
+   "h": 608,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.85,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — raster xref 113, panels a · b (legend only in a)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Calculation results of charge transport on the reconstructed electrode microstructures corresponding to different calendaring degrees: (a) Geometric tor­ tuosity for ionic transport, (b) Ionic and electronic effective conductivities. 8",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    577.6,
+    563.7,
+    721.3
+   ],
+   "w": 2218,
+   "h": 600,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.957,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — raster xref 111, two panels without printed (a)/(b) letters"
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 3,
+   "file": "fig_2a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    151.9,
+    239.9,
+    470.1,
+    335.1
+   ],
+   "w": 1327,
+   "h": 398,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.595,
+   "caption": "Fig. 2(a) — CGMD microstructures (spheres: AM blue · SE yellow · CBD red) for Cal0% · Cal20% · Cal35% with a vertical slice inset each",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f2",
+   "viewed": true
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 3,
+   "file": "fig_2b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    150.6,
+    349.5,
+    467.4,
+    431.9
+   ],
+   "w": 1321,
+   "h": 344,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.606,
+   "caption": "Fig. 2(b) — the same three electrodes after multi-phase voxel meshing (INNOV): irregular phase shapes, triangulated surfaces",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f2",
+   "viewed": true
+  },
+  {
+   "key": "f2cf",
+   "kind": "figure",
+   "label": "2c-f",
+   "page": 3,
+   "file": "fig_2cf.png",
+   "rotated_deg": 0,
+   "bbox": [
+    157.3,
+    434.0,
+    462.0,
+    507.3
+   ],
+   "w": 1270,
+   "h": 306,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.711,
+   "caption": "Fig. 2(c–f) — volume fractions φ_CBD · φ_SE · φ_AM · φ_pores (%) for Cal0% · Cal20% · Cal35% (bar read: CBD 41.0 · 40.1 · 37.9 · SE 21.0 · 25.1 · 27.1 · AM 22.0 · 22.9 · 28.9 · pores 17.0 · 12.0 · 6.1 — Table S1 prints 40 · 39 · 38 / 21 · 25 · 27 / 22 · 23 · 29 / 17 · 13 · 6)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f2",
+   "viewed": true
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 5,
+   "file": "fig_3e.png",
+   "rotated_deg": 0,
+   "bbox": [
+    213.4,
+    336.8,
+    397.9,
+    473.2
+   ],
+   "w": 769,
+   "h": 569,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.891,
+   "caption": "Fig. 3(e) — simulated specific capacity at the end of discharge (2.6 V) vs C-rate (C/5 · C/10 · C/20 · C/50) for Cal0% (squares) · Cal20% (circles) · Cal35% (triangles)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f3",
+   "viewed": true
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 7,
+   "file": "fig_6a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    133.2,
+    55.3,
+    299.0,
+    200.5
+   ],
+   "w": 691,
+   "h": 606,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.865,
+   "caption": "Fig. 6(a) — average activation (reaction) overpotential at the AM/SE interface vs discharge specific capacity, C/50 · C/20 · C/10, three calendering degrees",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f6",
+   "viewed": true
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 7,
+   "file": "fig_6b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    300.3,
+    55.3,
+    470.1,
+    200.5
+   ],
+   "w": 708,
+   "h": 606,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.863,
+   "caption": "Fig. 6(b) — electrolyte (SE) potential vs discharge specific capacity, C/50 · C/20 · C/10, three calendering degrees",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f6",
+   "viewed": true
+  },
+  {
+   "key": "f6c",
+   "kind": "figure",
+   "label": "6c",
+   "page": 7,
+   "file": "fig_6c.png",
+   "rotated_deg": 0,
+   "bbox": [
+    126.5,
+    205.8,
+    467.4,
+    380.9
+   ],
+   "w": 1421,
+   "h": 731,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.739,
+   "caption": "Fig. 6(c) — spatial distribution of activation overpotential η_act (0–0.1 V) on the reacting AM–SE interface at the end of C/50 discharge",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f6",
+   "viewed": true
+  },
+  {
+   "key": "f6d",
+   "kind": "figure",
+   "label": "6d",
+   "page": 7,
+   "file": "fig_6d.png",
+   "rotated_deg": 0,
+   "bbox": [
+    126.5,
+    384.1,
+    467.4,
+    538.7
+   ],
+   "w": 1421,
+   "h": 645,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.755,
+   "caption": "Fig. 6(d) — active (AM–SE) area distribution inside the composite cathode for the three calendering degrees",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f6",
+   "viewed": true
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 8,
+   "file": "fig_7a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    126.5,
+    52.1,
+    286.9,
+    190.3
+   ],
+   "w": 669,
+   "h": 576,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.715,
+   "caption": "Fig. 7(a) — specific interface area (m² g⁻¹) of the ionic network: AM–pores · SE–pores · AM–SE for Cal0% · Cal20% · Cal35%",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f7",
+   "viewed": true
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 8,
+   "file": "fig_7b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    304.8,
+    52.1,
+    462.6,
+    191.6
+   ],
+   "w": 658,
+   "h": 582,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.758,
+   "caption": "Fig. 7(b) — specific interface area (m² g⁻¹) of the electronic network: CBD–pores · AM–CBD · SE–CBD",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f7",
+   "viewed": true
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 8,
+   "file": "fig_8a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    124.8,
+    582.4,
+    272.5,
+    709.9
+   ],
+   "w": 616,
+   "h": 532,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.93,
+   "caption": "Fig. 8(a) — 'geometric tortuosity' τ_g of the SE phase vs calendering degree (0 · 20 · 35 %) — computed as √(φ_SE/D_eff), Eq. (7)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f8",
+   "viewed": true
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 8,
+   "file": "fig_8b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    296.4,
+    581.3,
+    471.3,
+    705.9
+   ],
+   "w": 729,
+   "h": 520,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.909,
+   "caption": "Fig. 8(b) — effective electronic conductivity δ_e (left axis, mS cm⁻¹) and effective ionic conductivity δ_ion (right axis, mS cm⁻¹) vs calendering degree",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — page bbox of the embedded raster region (300 dpi; raster is 300 dpi JPEG)",
+   "panel_of": "f8",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "rotated_deg": 0,
+   "bbox": [
+    36.0,
+    36.0,
+    559.3,
+    578.9
+   ],
+   "w": 1413,
+   "h": 1466,
+   "dpi": 150,
+   "src": "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx",
+   "blank": 0.492,
+   "caption": "Figure S1. (a–f): Examples of SEM images of differently sized SE that were wet ball milled, used to measure the Particle Size Distribution (PSD). (g) The PSD of the SE used in our wet-manufacturing simulations. Adapted with permission from Alabdali et al. [S1].",
+   "manual_crop": "2026-11-12 SI = docx (Elsevier mmc1) — 그림은 docx 안 원본 그림 (word/media) 을 그대로 옮김 (RGB) · page = LibreOffice 로 바꾼 PDF 의 쪽 · word/media/image1.png (1413×1466 · 150 dpi · RGBA → RGB on white)",
+   "viewed": true
+  },
+  {
+   "key": "fS1g",
+   "kind": "figure",
+   "label": "S1g",
+   "page": 2,
+   "file": "fig_S1g.png",
+   "rotated_deg": 0,
+   "bbox": [
+    147.1,
+    328.6,
+    467.5,
+    578.9
+   ],
+   "w": 865,
+   "h": 676,
+   "dpi": 150,
+   "src": "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx",
+   "blank": 0.739,
+   "caption": "Figure S1(g) — model SE PSD: diameter bins 1–2 · 2–3 · … · 7–8 µm = 7 · 22.5 · 25.7 · 22.1 · 11.1 · 7.12 · 4.48 % (printed on the bars; y label misspelt 'Percenatge')",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — pixel box (300, 790)–(1165, 1466) of word/media/image1.png",
+   "panel_of": "fS1",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "rotated_deg": 0,
+   "bbox": [
+    36.2,
+    237.8,
+    559.2,
+    630.8
+   ],
+   "w": 1090,
+   "h": 819,
+   "dpi": 150,
+   "src": "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx",
+   "blank": 0.719,
+   "caption": "Figure S2. Schematic representation of the transition from the granular microstructures obtained by wet manufacturing CGMD simulations to the 3D reconstructed geometries and to the multiphase meshed composite electrodes for the three electrodes: Cal0%, Cal20% and Cal35%. (box labels 41 µm × 41 µm × 46 · 36.8 · 29.9 µm)",
+   "manual_crop": "2026-11-12 SI = docx (Elsevier mmc1) — 그림은 docx 안 원본 그림 (word/media) 을 그대로 옮김 (RGB) · page = LibreOffice 로 바꾼 PDF 의 쪽 · word/media/image2.jpg (1090×819 · 150 dpi → PNG)",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    33.5,
+    563.0,
+    191.0
+   ],
+   "w": 2209,
+   "h": 657,
+   "dpi": 300,
+   "src": "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx",
+   "blank": 0.937,
+   "caption": "Table S1. Electrodes' volume fractions obtained from the wet manufacturing simulation [S1] and their corresponding thicknesses and porosities. (Calendering degree 0 · 10 · 35 % — the middle column must be 20 %: 46 × 0.80 = 36.8 µm; thickness 46 · 36.8 · 29.9 µm; AM:SE:CBD 22:21:40 · 23:25:39 · 29:27:38 vol%; porosity 17 · 13 · 6 %)",
+   "manual_crop": "2026-11-12 SI = docx (Elsevier mmc1) — 표는 LibreOffice (headless) 로 docx → PDF 바꾼 뒤 300 dpi 렌더 (서식 = 변환기 렌더 · 값은 docx XML 과 대조) · converted SI p.3 (caption + table 33.5–191 pt)",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "rotated_deg": 0,
+   "bbox": [
+    33.0,
+    33.5,
+    563.0,
+    766.0
+   ],
+   "w": 2209,
+   "h": 3510,
+   "dpi": 300,
+   "src": "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx",
+   "blank": 0.951,
+   "caption": "Table S2. The electrochemical parameters adopted in this work. (anode α_a 0.5 · i0a 3 A cm⁻² · V0Li 0 V; SE L_SE 20 µm · δ_ion 0.7 'mS.cm-2' [S2]; cathode NCM622: L_C see Fig. S2 · i0c see [S2] · α_c 0.5 · V0 see [S3] · D_AM see [S3] · C_spec 200 mAh g⁻¹ · c_max 49 mol L⁻¹ · ρ 4.77 g cm⁻³ · δ_e,AM 100 S m⁻¹; CBD δ_e 200 S m⁻¹; CC L_CC 10 µm · δ_e,CC 300 S m⁻¹ · R_CC_AM = R_CC_CBD = 2·10⁻³ Ω m² [S4])",
+   "manual_crop": "2026-11-12 SI = docx (Elsevier mmc1) — 표는 LibreOffice (headless) 로 docx → PDF 바꾼 뒤 300 dpi 렌더 (서식 = 변환기 렌더 · 값은 docx XML 과 대조) · converted SI p.4 (33.5–766 pt) + p.5 (35.5–141 pt) stacked (16 px gap) — the table breaks across two converted pages",
+   "parts": [
+    [
+     4,
+     33.0,
+     33.5,
+     563.0,
+     766.0
+    ],
+    [
+     5,
+     33.0,
+     35.5,
+     563.0,
+     141.0
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_fick_diffusion_am.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    148.4,
+    291.5,
+    176.4
+   ],
+   "w": 1061,
+   "h": 117,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.978,
+   "caption": "Eq. (1), p.4 left: Fickian Li diffusion inside AM particles ∂C_s/∂t = −∇(−D_AM∇C_s) (D_AM SOC-dependent, from ref. [31])",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 4,
+   "file": "eq_02_ohm_electronic_potential.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    232.4,
+    291.5,
+    252.8
+   ],
+   "w": 1061,
+   "h": 86,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.978,
+   "caption": "Eq. (2), p.4 left: Ohm's law for the electric potential φ_s in AM, CBD and CC domains ∇(−δ_e,i∇φ_s) = 0",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 4,
+   "file": "eq_03_ionic_charge_conservation_se.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    299.4,
+    291.5,
+    316.6
+   ],
+   "w": 1061,
+   "h": 73,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.971,
+   "caption": "Eq. (3), p.4 left: charge conservation for the ionic potential φ_SE in the SE ∇(−δ_ion∇φ_SE) = 0 (t_Li+ = 1)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_butler_volmer.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    396.2,
+    291.5,
+    425.4
+   ],
+   "w": 1061,
+   "h": 123,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.953,
+   "caption": "Eq. (4), p.4 left: Butler–Volmer current at the AM–SE contact J_BV = i0[exp(Fη/2RT) − exp(−Fη/2RT)] (i0 SOC-dependent, ref. [17])",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "recrop": "2026-11-12 다시 자름 — first cut included the descenders of the line above ('is expressed as follows'); top moved 391.6 → 396.2 pt",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_charge_transfer_resistance.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    495.4,
+    291.5,
+    522.9
+   ],
+   "w": 1061,
+   "h": 115,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.981,
+   "caption": "Eq. (5), p.4 left: charge-transfer resistance R_CT = RT/(zFA i0) (A = active surface area, z = 1)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_overpotential.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    573.2,
+    291.5,
+    590.3
+   ],
+   "w": 1061,
+   "h": 72,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.965,
+   "caption": "Eq. (6), p.4 left: overpotential η = φ_AM − φ_SE − V0^NMC622",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 4,
+   "file": "eq_07_geometric_tortuosity_sqrt_phi_over_deff.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    307.4,
+    560.5,
+    336.8
+   ],
+   "w": 1061,
+   "h": 124,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.984,
+   "caption": "Eq. (7), p.4 right: 'geometric tortuosity' τ_g = √(φ_SE/D_eff) (D_eff from DiffuDict, normalised by D_bulk = 1 m² s⁻¹ → our tau = √tau2, not a shortest-path τ_geo)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 4,
+   "file": "eq_08_effective_diffusivity_flux.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    397.9,
+    560.5,
+    424.3
+   ],
+   "w": 1061,
+   "h": 111,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.973,
+   "caption": "Eq. (8), p.4 right: D_eff = −j × length/Δc (Fick's first law in the SE domain, Δc between the outer xy planes)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 4,
+   "file": "eq_09_mcmullin_number.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    469.7,
+    560.5,
+    497.0
+   ],
+   "w": 1061,
+   "h": 114,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.972,
+   "caption": "Eq. (9), p.4 right: 'McMullin number' N_M = D_eff/D_bulk = δ_ion/δ_bulk (δ_bulk = 1.25 mS cm⁻¹, supplier) — defined as f = σ_eff/σ₀, the inverse of the usual N_M",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1_highlights_abstract",
+   "page": 1,
+   "file": "txt_p1_highlights_abstract.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    305.6,
+    560.5,
+    503.8
+   ],
+   "w": 2182,
+   "h": 827,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.882,
+   "caption": "PDF p.1: highlights ('First of its kind to model the electrochemical behavior of electrodes manufactured by wet processing') and abstract (4D = 3 spatial coordinates + time; calendering; residual voids)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2_prior_work_limits_first_time_claim",
+   "page": 2,
+   "file": "txt_p2_prior_work_limits_first_time_claim.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    502.4,
+    291.5,
+    744.6
+   ],
+   "w": 1061,
+   "h": 1612,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.822,
+   "caption": "PDF p.2: limits of Bielefeld et al. (stochastic microstructures, no carbon/binder) and the 'for the first time to our knowledge' workflow claim (CGMD slurry–drying–calendering + 4D-resolved performance model; AM, SE, CBD as separate phases)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     2,
+     37.0,
+     502.4,
+     291.5,
+     744.6
+    ],
+    [
+     2,
+     306.0,
+     50.2,
+     560.5,
+     190.6
+    ]
+   ],
+   "recrop": "2026-11-12 다시 자름 — first cut caught the bottom of the previous line; top tightened to the first-line rule (+1.4 pt)",
+   "viewed": true
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2_model_description_cgmd_steps",
+   "page": 2,
+   "file": "txt_p2_model_description_cgmd_steps.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    196.6,
+    560.5,
+    524.0
+   ],
+   "w": 1061,
+   "h": 1365,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.841,
+   "caption": "PDF p.2: two-part workflow (part 1 already published [13]); CGMD in LAMMPS; slurry, drying, calendering; CBD not split into carbon/binder; force fields parameterised to experimental properties; CBD particles shrink on drying; calendering = plane moving downward at constant speed, bottom fixed",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2_calendering_degrees_35pct_limit",
+   "page": 2,
+   "file": "txt_p2_calendering_degrees_35pct_limit.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    523.8,
+    560.5,
+    703.4
+   ],
+   "w": 1061,
+   "h": 749,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.819,
+   "caption": "PDF p.2: calendering degree = % thickness reduction; 'usability of this model is limited for calendering degrees under or equal to 35 %' (above 35 % the electrical conductivity drops because CBD volume is partially occupied by other materials under high pressure); three structures 0 · 20 · 35 % (Table S1)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "recrop": "2026-11-12 다시 자름 — first cut caught the bottom of the previous line; top tightened to the first-line rule (+1.4 pt)",
+   "viewed": true
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2_p3_overlap_postprocessing",
+   "page": 2,
+   "file": "txt_p2_p3_overlap_postprocessing.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    709.8,
+    560.5,
+    745.4
+   ],
+   "w": 1061,
+   "h": 874,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.835,
+   "caption": "PDF p.2–3: §2.2 post-processing — overlaps handled by priority AM → SE → CBD; CBD volume in AM–CBD / AM–SE overlaps reduced and added to AM or SE; implicit CBD porosity; spherical → irregular shapes (used before for LIB [24])",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     2,
+     306.0,
+     709.8,
+     560.5,
+     745.4
+    ],
+    [
+     3,
+     37.0,
+     552.2,
+     291.5,
+     722.0
+    ]
+   ],
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3_meshing_innov_voxelization",
+   "page": 3,
+   "file": "txt_p3_meshing_innov_voxelization.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    722.1,
+    291.5,
+    744.8
+   ],
+   "w": 1061,
+   "h": 392,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.83,
+   "caption": "PDF p.3: meshes generated with in-house INNOV [27, 28] using a voxelization technique (multi-phase volumetric meshes) → Cal0% · Cal20% · Cal35% (Fig. 2b) — voxel size / element count not given",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     3,
+     37.0,
+     722.1,
+     291.5,
+     744.8
+    ],
+    [
+     3,
+     306.0,
+     552.2,
+     560.5,
+     619.0
+    ]
+   ],
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3_p4_electrochem_model_no_external_force_hardware",
+   "page": 3,
+   "file": "txt_p3_p4_electrochem_model_no_external_force_hardware.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    626.2,
+    560.5,
+    745.4
+   ],
+   "w": 1061,
+   "h": 786,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.84,
+   "caption": "PDF p.3–4: §2.3 half cell (Li foil · Li6PS5Cl separator · simulated composite); electrochemistry 'without the application of any external forces, with the calendering process applied exclusively before'; COMSOL; MatriCS one node 500 GB RAM, Xeon E5-2680 v4 28 cores; four domains AM, CBD, SE, CC",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     3,
+     306.0,
+     626.2,
+     560.5,
+     745.4
+    ],
+    [
+     4,
+     37.0,
+     50.2,
+     291.5,
+     115.6
+    ]
+   ],
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4_bc_cbd_porosity_no_volume_change",
+   "page": 4,
+   "file": "txt_p4_bc_cbd_porosity_no_volume_change.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    590.8,
+    291.5,
+    742.2
+   ],
+   "w": 1061,
+   "h": 840,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.826,
+   "caption": "PDF p.4: V0 from a C/10 first-cycle NMC half cell [31]; anode BV with high i0 independent of anode SOC; Dirichlet φ_s,ext = 0 on the anode surface + current-flux BC at the free end of the CC; CBD porosity implicit; AM volume change NOT accounted (unlike [32]); pristine-state AM parameters; Table S2",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     4,
+     37.0,
+     590.8,
+     291.5,
+     742.2
+    ],
+    [
+     4,
+     306.0,
+     50.2,
+     560.5,
+     96.1
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4_charge_transport_geodict",
+   "page": 4,
+   "file": "txt_p4_charge_transport_geodict.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    106.2,
+    560.5,
+    556.2
+   ],
+   "w": 1061,
+   "h": 1876,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.866,
+   "caption": "PDF p.4: §2.4 GeoDict 2023 ConductoDict/DiffuDict on a standard desktop — δ_e by Poisson with 1 V along z; σ_AM 0.005 S m⁻¹ · σ_CBD 15.93 S m⁻¹; τ_g = √(φ_SE/D_eff) (7); D_eff = −j·length/Δc (8); N_M = D_eff/D_bulk = δ_ion/δ_bulk (9); D_bulk 1 m² s⁻¹; δ_bulk 1.25 mS cm⁻¹ (supplier); isotropic inputs; periodic xz/yz planes",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4_p5_results_capacity_c_rate",
+   "page": 4,
+   "file": "txt_p4_p5_results_capacity_c_rate.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    563.6,
+    560.5,
+    745.4
+   ],
+   "w": 1061,
+   "h": 1701,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.826,
+   "caption": "PDF p.4–5: 2.6–4.2 V vs Li+/Li; Cal20% capacity 188.28 mAh g⁻¹ (C/50) → 62.8 mAh g⁻¹ (C/5); Cal35% > Cal20% > Cal0%; gap shrinks at low C-rate (kinetic vs thermodynamic regime)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     4,
+     306.0,
+     563.6,
+     560.5,
+     745.4
+    ],
+    [
+     5,
+     37.0,
+     506.8,
+     291.5,
+     729.0
+    ]
+   ],
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5_lithiation_dod_ion_flux",
+   "page": 5,
+   "file": "txt_p5_lithiation_dod_ion_flux.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    729.2,
+    291.5,
+    741.0
+   ],
+   "w": 1061,
+   "h": 1043,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.825,
+   "caption": "PDF p.5: Fig. 4 at C/50 at 3.9 · 3.65 · 2.6 V = 25 · 75 · 100 % DOD; Cal35% uniform AM utilisation vs Cal0% localised lithiation; Fig. 5 ion-flux bottlenecks at mid-discharge",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     5,
+     37.0,
+     729.2,
+     291.5,
+     741.0
+    ],
+    [
+     5,
+     306.0,
+     506.8,
+     560.5,
+     741.0
+    ]
+   ],
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6_overpotential_active_area_electrolyte_potential",
+   "page": 6,
+   "file": "txt_p6_overpotential_active_area_electrolyte_potential.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    573.8,
+    291.5,
+    734.9
+   ],
+   "w": 1061,
+   "h": 1317,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.824,
+   "caption": "PDF p.6: lower average reaction overpotential with calendering (more AM–SE contact); high η_act for Cal0% (lower active area); lower electrolyte potential = lower SE ionic resistance",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     6,
+     37.0,
+     573.8,
+     291.5,
+     734.9
+    ],
+    [
+     6,
+     306.0,
+     573.8,
+     560.5,
+     724.3
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7_p8_interfacial_area_coverage",
+   "page": 7,
+   "file": "txt_p7_p8_interfacial_area_coverage.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    580.6,
+    291.5,
+    741.6
+   ],
+   "w": 1061,
+   "h": 1523,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.835,
+   "caption": "PDF p.7–8: §3.1 S_AM-pores 0.02 → 0.004 and S_AM-SE 0.01 → 0.019 m² g⁻¹ (Cal0% → Cal35%); AM specific surface 0.16 m² g⁻¹; AM surface covered by SE ≈10 % → ≈28 %; Cal35%: ≈6 % pores · 24 % CBD · 42 % other AM",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     7,
+     37.0,
+     580.6,
+     291.5,
+     741.6
+    ],
+    [
+     7,
+     306.0,
+     580.6,
+     560.5,
+     741.6
+    ],
+    [
+     8,
+     37.0,
+     227.0,
+     291.5,
+     262.5
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8_tortuosity_conductivity",
+   "page": 8,
+   "file": "txt_p8_tortuosity_conductivity.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    273.6,
+    291.5,
+    570.4
+   ],
+   "w": 1061,
+   "h": 1795,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.825,
+   "caption": "PDF p.8: §3.2 τ_g ≈10 (uncalendered) → ≈4 (Cal35%); δ_e 0.24 → 0.31 mS cm⁻¹ (less dependent than δ_ion); attributed to AM–CBD contact area",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     8,
+     37.0,
+     273.6,
+     291.5,
+     570.4
+    ],
+    [
+     8,
+     306.0,
+     227.0,
+     560.5,
+     356.7
+    ]
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8_p9_conclusion",
+   "page": 8,
+   "file": "txt_p8_p9_conclusion.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    363.0,
+    560.5,
+    565.9
+   ],
+   "w": 1061,
+   "h": 1222,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.835,
+   "caption": "PDF p.8–9: §4 conclusion — 'for the first time' electrochemistry of manufacturing-simulated ASSB microstructures; contact area as key geometric factor; compact structures shorten paths",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    [
+     8,
+     306.0,
+     363.0,
+     560.5,
+     565.9
+    ],
+    [
+     9,
+     37.0,
+     50.2,
+     291.5,
+     136.4
+    ]
+   ],
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9_limitations_uniaxial_isostatic_future",
+   "page": 9,
+   "file": "txt_p9_limitations_uniaxial_isostatic_future.png",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    136.4,
+    291.5,
+    545.8
+   ],
+   "w": 1061,
+   "h": 1707,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.812,
+   "caption": "PDF p.9: limitations — not industrial C-rate; 'maximum of 200 mAh/g at a low C-rate of C/50'; uniaxial calendering → suboptimal tortuosity; isostatic pressing suggested (DEM study [32]); future: AM volume change, experimental comparison",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "recrop": "2026-11-12 경계 다듬음 (같은 규칙 · 내용 같음) — bottom/top moved ≤1.6 pt so the next/previous line's ascenders/descenders cannot enter",
+   "viewed": true
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9_supplementary_data_availability",
+   "page": 9,
+   "file": "txt_p9_supplementary_data_availability.png",
+   "rotated_deg": 0,
+   "bbox": [
+    306.0,
+    165.4,
+    560.5,
+    253.0
+   ],
+   "w": 1061,
+   "h": 366,
+   "dpi": 300,
+   "src": "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
+   "blank": 0.929,
+   "caption": "PDF p.9: Appendix A (supplementary data online) and data availability ('Data is available upon reasonable request')",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; top = first line +1.4 pt where line boxes overlap) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": [
+  {
+   "key": "fS1",
+   "how": "2026-11-12 SI is a .docx (not PDF) — the tool cannot read it; Figure S1 copied from word/media/image1.png"
+  },
+  {
+   "key": "fS2",
+   "how": "2026-11-12 Figure S2 copied from word/media/image2.jpg"
+  },
+  {
+   "key": "tS1",
+   "how": "2026-11-12 Table S1 rendered from the LibreOffice-converted SI PDF p.3"
+  },
+  {
+   "key": "tS2",
+   "how": "2026-11-12 Table S2 rendered from the converted SI PDF p.4 + p.5 (stacked)"
+  }
+ ],
+ "note_manual": "2026-11-12 — published version (J. Power Sources 630 (2025) 236131; 10 PDF pages = printed pages 1–10) + SI (Elsevier mmc1.docx: Fig. S1 · S2, Table S1 · S2, refs S1–S4) + 3 videos (mmc2–4.mp4, 2.4 s · 72 frames · 640×480 each — COMSOL 'Surface: Concentration (mol/m³)' of AM, C_rate 0.02 (C/50), 0 → 49.95 h; mmc2 = Cal0%, mmc3 = Cal20%, mmc4 = Cal35% by appearance — not cited in the main text; no crops). Tool crops 8 (Fig. 1–8) all viewed and kept. Hand crops 43: panels 12 (2a · 2b · 2c–f · 3e · 6a–d · 7a · 7b · 8a · 8b) · SI 5 (Fig. S1 · S1g · S2 from docx media · Table S1 · S2 from the converted PDF) · equations 9 ((1)–(9), one per number) · evidence paragraphs 17. Re-cut after viewing 3 (eq_04 · txt_p2_prior_work · txt_p2_calendering_degrees — previous line leaked in) + 8 evidence crops edge-tightened by the same rule (no content change). digitized.csv = 96 rows read from the native 300 dpi JPEG rasters (Fig. 2c–f bars, 3e markers, 6a/6b curve values, 7 bars, 8a/8b markers — tick-line calibration) + 9 rough video colour readings.",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of) · fS1/fS1g/fS2 = SI figures from the docx media · tS1/tS2 = SI tables (converted PDF) · e01–e09 = equations (1)–(9) · x<page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1], stacked top→bottom, 16 px gap); page = PDF page = printed page (main); SI page = page of the LibreOffice-converted SI PDF"
+}

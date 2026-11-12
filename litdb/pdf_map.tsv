@@ -437,3 +437,6 @@ taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathod
 # ── LIB 양극 (NMC111 + 탄소-바인더) 을 누른 채 나노 CT 로 본 압연 모사 (기둥 압축) · 3 상 미세구조 진화 + 3D 전기화학 모델 (Lu 외 · Joule 4 (2020) 2746–2768) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (본문 · Sup 둘 다 이 조각을 가진다) ──
 lu2020_insitu_nanoct_calendering_microstructural_evolution	microstructural_evolution_of_battery_electrodes_during_calendering
 lu2020_insitu_nanoct_calendering_microstructural_evolution	microstructural evolution of battery electrodes during calendering
+# ── 제조 모의 (CGMD) 압연 구조 → 겹침 후처리 · 복셀 메시 → 3D 전기화학 작업 흐름 (Ben Hadj Ali 외 · J. Power Sources 630 (2025) 236131) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 는 docx 라 도구 밖 · 손 크롭) ──
+benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode	a_computational_workflow_for_the_simulation_of_solid_state_battery
+benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode	a computational workflow for the simulation of solid state battery
