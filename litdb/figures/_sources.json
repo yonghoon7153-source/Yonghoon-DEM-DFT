@@ -2216,6 +2216,13 @@
    "DEM 논문/28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf"
   ]
  },
+ "lyu2026_two_layer_gradient_electrode_calendering_dem_fem": {
+  "figures": 64,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf"
+  ]
+ },
  "ma2024_sb_doping_lpsc_conductivity": {
   "figures": 4,
   "generated": "2026-08-05",
