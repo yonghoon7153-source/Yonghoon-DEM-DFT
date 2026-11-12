@@ -1,0 +1,2 @@
+﻿slug,paper,title,track,chapter,property,property_class,system,value_text,value_min,value_max,unit,conditions,basis,status,line,quote,locator,caveat,answer_cut
+wang2022_two_parameter_space_dendrite_constriction,Wang et al. 2022,A Two-Parameter Space to Tune Solid Electrolytes for Lithium Dendrite Constriction,dft,음극 · 리튬 금속 계면,K_eff^max (최대 국소 유효 탄성률),elastic_modulus,황화물 셀,약 20,20,20,GPa,,cited_from_other,verified,68,"K_eff^max 는 셀 설계로 거의 정해지고 **황화물 셀에서는 약 20 GPa** 라고 쓴다 (refs 7, 8, 10, 13 — 이 논문에서 재지 않았다)","refs 7, 8, 10, 13",이 논문에서 재지 않았다,
