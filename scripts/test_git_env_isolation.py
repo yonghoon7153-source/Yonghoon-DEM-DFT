@@ -16,7 +16,8 @@ GIT_INDEX_FILE (훅 꼴) · GIT_OBJECT_DIRECTORY + GIT_COMMON_DIR.  V 상태 = H
   G4  `test_step3_gpu_precond.load_base` (기반 판 git show · 시험 모듈 불러오기 = 그 모듈의 GIT_* 지움) — 적대 = 깨끗 = 기준 git show 바이트 · V 그대로
   G5  사슬 `rint_r_chain.git_identity` · `ledger_repo_problem` · `plan_commit_problem` (F5 계획 출처 커밋 = 이 리포의 기반 판 커밋 · blob 맞음 /
       틀림) (생산 읽기) — 적대 = 깨끗 · V 그대로 (★ 11-12 2 회차 변이 보강 — F5 의 git 둘에 env 를 안 넘긴 변이가 G1–G6 에서 안 잡혔다)
-  G6  이 묶음이 고친 시험 모듈 넷 (test_rint_r_chain `git_` · test_probe6_read `git` · test_cjunc_store_e2e · test_cjunc_store) — 적대 환경에서 그 모듈을
+  G6  시험 모듈 일곱 — 이 묶음이 고친 넷 (test_rint_r_chain `git_` · test_probe6_read `git` · test_cjunc_store_e2e · test_cjunc_store) + 같은 부류 셋
+      (★ 본 세션 결정 11-12 밤: test_rint_r_chain_e2e `_git` · test_rint_r_chain_e2e12 `git` · test_step3_conv_cert) — 적대 환경에서 그 모듈을
       불러 고정물 저장소를 만들면 (init · add · commit) V 그대로 · 고정물 저장소에 커밋 하나 · 불러온 뒤 그 프로세스 환경에 GIT_* 없음
 ⚠ 고치기 전 판 = V 에 커밋 · index · 객체가 생기거나 V 의 값을 읽는다 (실패를 기록) — 그 V 는 이 시험이 만든 일회용이다.
 
@@ -315,9 +316,17 @@ elif which == 'test_probe6_read':
 
     def git(*a):
         T.git(fx, *a)
+elif which in ('test_rint_r_chain_e2e', 'test_rint_r_chain_e2e12'):
+    import importlib
+    T = importlib.import_module(which)
+
+    def git(*a):                                          # 그 모듈의 꼴 (_git · e2e12 git = E._git · env 기본 None = 이 프로세스 환경)
+        (T._git if which == 'test_rint_r_chain_e2e' else T.git)(fx, *a)
 else:
     if which == 'test_cjunc_store_e2e':
         import test_cjunc_store_e2e as T                  # noqa: F401
+    elif which == 'test_step3_conv_cert':
+        import test_step3_conv_cert as T                  # noqa: F401 — 그 모듈의 git = 읽기 (기반 판 git show · env 없이)
     else:
         import test_cjunc_store as T                      # noqa: F401
 
@@ -337,10 +346,11 @@ print('G6 ' + json.dumps({'left_git_env': left}))
 '''
 
 
-@case('G6 이 묶음이 고친 시험 모듈 넷 — 불러오면 GIT_* 를 지운다 (고정물 git 쓰기)')
+@case('G6 시험 모듈 일곱 (이 묶음이 고친 넷 + 같은 부류 셋) — 불러오면 GIT_* 를 지운다 (고정물 git 쓰기)')
 def g6():
     bad = {}
-    for which in ('test_rint_r_chain', 'test_probe6_read', 'test_cjunc_store_e2e', 'test_cjunc_store'):
+    for which in ('test_rint_r_chain', 'test_probe6_read', 'test_cjunc_store_e2e', 'test_cjunc_store',
+                  'test_rint_r_chain_e2e', 'test_rint_r_chain_e2e12', 'test_step3_conv_cert'):   # ★ 뒤 셋 = 같은 부류 (본 세션 결정 11-12 밤)
         k = [0]
 
         def run(env, _v, which=which):
@@ -355,8 +365,9 @@ def g6():
             got, n = val
             if not (same and rc == 0 and isinstance(got, dict) and got.get('left_git_env') == [] and n == '1'):
                 bad[f'{which} · {nm}'] = (same, rc, got, n, why)
-    chk('G6 이 묶음이 고친 시험 모듈 넷 (test_rint_r_chain · test_probe6_read · test_cjunc_store_e2e · test_cjunc_store) 을 적대 환경 셋에서 불러 고정물 저장소를 '
-        '만든다 (init · add · commit) → V 그대로 · 고정물에 커밋 하나 · 불러온 뒤 GIT_* 없음 (고치기 전 = V 에 커밋)', not bad, bad)
+    chk('G6 시험 모듈 일곱 (test_rint_r_chain · test_probe6_read · test_cjunc_store_e2e · test_cjunc_store + 같은 부류 test_rint_r_chain_e2e · '
+        'test_rint_r_chain_e2e12 · test_step3_conv_cert) 을 적대 환경 셋에서 불러 고정물 저장소를 만든다 (init · add · commit) → V 그대로 · '
+        '고정물에 커밋 하나 · 불러온 뒤 GIT_* 없음 (고치기 전 = V 에 커밋)', not bad, bad)
 
 
 def main():
