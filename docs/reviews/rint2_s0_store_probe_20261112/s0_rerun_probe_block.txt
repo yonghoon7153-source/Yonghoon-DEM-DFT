@@ -25,6 +25,8 @@
 # No kit, run folder or tracked repository file is changed.  No sigma.  About 1.5 h of CPU (2026-11-08: 5,383 s, RSS sample max 5.4 GiB).
 bash <<'S0Q'
 set -u
+# drop the repository-selecting GIT_* and injected git config (run_contract.GIT_DROP_SH - git env isolation, RCP3-05)
+for _gv in $(compgen -e); do case "$_gv" in (GIT_DIR|GIT_WORK_TREE|GIT_INDEX_FILE|GIT_OBJECT_DIRECTORY|GIT_ALTERNATE_OBJECT_DIRECTORIES|GIT_COMMON_DIR|GIT_NAMESPACE|GIT_PREFIX|GIT_CONFIG_PARAMETERS|GIT_CONFIG_COUNT|GIT_CONFIG_KEY_*|GIT_CONFIG_VALUE_*) unset "$_gv";; esac; done
 PIN='<PIN>'
 PROBE=1
 TAG=q2q11

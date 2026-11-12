@@ -384,7 +384,7 @@ def p_setup():
 def p_ladders():
     kgy, gabia = W['M']['kgy'], W['M']['gabia']
     os.makedirs(kgy['ledger'])
-    subprocess.run(['git', 'init', '-q', kgy['ledger']], check=True, capture_output=True)
+    subprocess.run(['git', 'init', '-q', kgy['ledger']], check=True, capture_output=True, env=_RCG.git_fixture_env())   # ★ 3 회차 (RCP3-04)
     rc0, _so = call(kgy, ['--stage', 'ledger', '--ledger', kgy['ledger'], '--init', '--plan', kgy['plan']])
     W['holder'] = 'kgy'
     rc1, n1, so1 = add(kgy, 'ladder:P0')
@@ -983,7 +983,8 @@ def n_diverged():
     tmp = os.path.join(gabia['root'], f'ca1_ledger_div{SUF}')
     git(gabia['root'], 'clone', '-q', mv['ledger'], tmp)
     br, h0 = git(tmp, 'symbolic-ref', '--short', 'HEAD'), git(tmp, 'rev-parse', 'HEAD')
-    r = subprocess.run(['git', '-C', tmp, *E.GIT_CFG, 'pull', '-q', '--ff-only', pv['ledger'], br], capture_output=True)
+    r = subprocess.run(['git', '-C', tmp, *E.GIT_CFG, 'pull', '-q', '--ff-only', pv['ledger'], br], capture_output=True,
+                       env=_RCG.git_fixture_env())                                                     # ★ 3 회차 (RCP3-04)
     ff = (r.returncode != 0, git(tmp, 'rev-parse', 'HEAD') == h0)
     ga = merge_try(gabia, 'div_a', [a['moved'] for a in mv['att'] if a['unit'] != name] + [pv['folder']], mv['ledger'])
     gb = merge_try(gabia, 'div_b', [a['moved'] for a in mv['att']], pv['ledger'])

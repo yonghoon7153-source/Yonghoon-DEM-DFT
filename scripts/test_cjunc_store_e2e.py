@@ -109,7 +109,7 @@ def flow(tag, W, store):
     xs = ['--cjunc-store', store] if store else []
     led = os.path.join(TD, f'ledger_{tag}')
     os.makedirs(led)
-    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
+    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True, env=_RCG.git_fixture_env())   # ★ 3 회차 (RCP3-04)
     rcs, sos = [], []
 
     def call(argv):

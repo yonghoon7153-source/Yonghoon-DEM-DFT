@@ -741,6 +741,15 @@ def _commit_exists(repo_root, sha):
     return None                # git 은 되는데 판정이 시간 안에 안 끝났다
 
 
+def _git_env_clean():
+    """★ 2026-11-12 3 회차 (RCP3-05) — git 을 부를 환경 = `run_contract.git_env()` (저장소 고르는 GIT_* · 설정 주입 뺌 · 이 파일 폴더의 run_contract)."""
+    _sd = os.path.dirname(os.path.abspath(__file__))
+    if _sd not in sys.path:
+        sys.path.insert(0, _sd)
+    import run_contract as _RC
+    return _RC.git_env()
+
+
 def open_items(findings):
     """아직 닫히지 않은 것 (open · claimed_fixed).  다음 리뷰 요청서에 그대로 싣는다."""
     return [f for f in findings if f.get('status') in ('open', 'claimed_fixed')]
@@ -877,13 +886,17 @@ def _selftest():
     #  ⇒ 매달린(dangling) 커밋을 하나 만들어 그 상태를 재현한다 — 객체는 실재하지만
     #    어느 ref 에서도 안 닿는다.
     _dang = None
+    #  ★ 2026-11-12 3 회차 (Rint ② 코드 묶음 · 내부 반박 리뷰 재확인 2 RCP3-05) — 이 selftest 의 git (commit-tree = **쓰기**) 은 부르는 쪽의 저장소
+    #    고르는 GIT_* · 설정 주입을 물려받지 않는다 (GIT_DIR · GIT_OBJECT_DIRECTORY 가 새면 매달린 커밋이 남의 저장소에 생긴다 · `run_contract.git_env`
+    #    한 곳 · 시험 scripts/test_git_env_isolation.py G8b) · ⚠ 원장 읽기 (`_commit_exists`) 는 부르는 쪽 env 그대로 (게이트 = check_all.sh 머리에서 지움)
+    _genv = _git_env_clean()
     try:
         _t = subprocess.run(['git', '-C', here, 'rev-parse', 'HEAD^{tree}'],
-                            capture_output=True, text=True, timeout=10)
+                            capture_output=True, text=True, timeout=10, env=_genv)
         if _t.returncode == 0:
             _c = subprocess.run(['git', '-C', here, 'commit-tree', _t.stdout.strip(), '-m',
                                  'dangling probe (selftest)'],
-                                capture_output=True, text=True, timeout=10)
+                                capture_output=True, text=True, timeout=10, env=_genv)
             if _c.returncode == 0:
                 #  ⚠ 간헐 실패 (2026-08-29 실측): 단순히 `[:8]` 로 자르면 그 접두사가
                 #    **모호**할 수 있고 (다른 객체와 충돌) 그때 검사가 거짓 실패한다.
@@ -891,7 +904,7 @@ def _selftest():
                 #    ⇒ 검사기가 가끔 빨간불을 내면 언젠가 이유 없이 GPU 런을 막는다.
                 _sr = subprocess.run(['git', '-C', here, 'rev-parse', '--short=8',
                                       _c.stdout.strip()], capture_output=True, text=True,
-                                     timeout=10)
+                                     timeout=10, env=_genv)
                 _dang = (_sr.stdout.strip() if _sr.returncode == 0
                          else _c.stdout.strip()[:8])
     except Exception:                                       # noqa: BLE001

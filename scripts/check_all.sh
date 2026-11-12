@@ -13,6 +13,10 @@
 #
 # ⚠ GPU·솔브 없음.  규칙 J 의 초소형 픽스처 스모크가 가장 오래 걸린다 (수 초).
 set -uo pipefail
+#  ★ 2026-11-12 3 회차 (Rint ② 코드 묶음 · 내부 반박 리뷰 재확인 2 RCP3-05 · 본 세션 결정) — 저장소 고르는 GIT_* · 설정 주입을 한 번 지운다 (git 훅 ·
+#    GIT_DIR 을 붙인 셸 안에서 돌려도 모든 단계가 남의 저장소를 읽고 쓰지 않게 · 격리 변수 = 천장 · 전역 설정 끄기는 남긴다) — 글자 = run_contract.GIT_DROP_SH
+#    (시험 scripts/test_git_env_isolation.py G8 이 자리 · 글자 · 동작을 대조)
+for _gv in $(compgen -e); do case "$_gv" in (GIT_DIR|GIT_WORK_TREE|GIT_INDEX_FILE|GIT_OBJECT_DIRECTORY|GIT_ALTERNATE_OBJECT_DIRECTORIES|GIT_COMMON_DIR|GIT_NAMESPACE|GIT_PREFIX|GIT_CONFIG_PARAMETERS|GIT_CONFIG_COUNT|GIT_CONFIG_KEY_*|GIT_CONFIG_VALUE_*) unset "$_gv";; esac; done
 _CA_SELF="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"   # 나누기 범위 검사의 목록 모드 자기 호출용 (cd 전에 절대 경로)
 cd "$(dirname "$0")/.."
 

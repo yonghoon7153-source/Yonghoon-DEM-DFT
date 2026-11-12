@@ -6,6 +6,10 @@
 #   탄소 접합 원장 저장본 · 저장본 끝-끝 (11-12 · Q11 · Q2 코드 묶음 · 내부 반박 리뷰 RCP-02) · git 환경 격리 (11-12 2 회차 RCP2-06) — 증거
 #   `docs/reviews/rint2_py38_compat_evidence_20261024/`.
 set -uo pipefail
+#  ★ 2026-11-12 3 회차 (Rint ② 코드 묶음 · 내부 반박 리뷰 재확인 2 RCP3-05 · 본 세션 결정) — 저장소 고르는 GIT_* · 설정 주입을 한 번 지운다 (git 훅 ·
+#    GIT_DIR 을 붙인 셸 안에서 돌려도 모든 단계가 남의 저장소를 읽고 쓰지 않게 · 격리 변수 = 천장 · 전역 설정 끄기는 남긴다) — 글자 = run_contract.GIT_DROP_SH
+#    (시험 scripts/test_git_env_isolation.py G8 이 자리 · 글자 · 동작을 대조)
+for _gv in $(compgen -e); do case "$_gv" in (GIT_DIR|GIT_WORK_TREE|GIT_INDEX_FILE|GIT_OBJECT_DIRECTORY|GIT_ALTERNATE_OBJECT_DIRECTORIES|GIT_COMMON_DIR|GIT_NAMESPACE|GIT_PREFIX|GIT_CONFIG_PARAMETERS|GIT_CONFIG_COUNT|GIT_CONFIG_KEY_*|GIT_CONFIG_VALUE_*) unset "$_gv";; esac; done
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PY="${KGY_PY38:-$(uv python find 3.8 2>/dev/null || true)}"
 if [ -z "$PY" ] || [ ! -x "$PY" ]; then

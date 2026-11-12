@@ -899,7 +899,10 @@ _SHA_RE = re.compile(r'[0-9a-f]{7,40}\Z')
 
 
 def _git(repo, *args, text=True):
-    return subprocess.run(['git', '-C', repo, *args], capture_output=True, text=text, timeout=120)
+    #  ★ 11-12 3 회차 (Rint ② · 내부 반박 리뷰 재확인 2 RCP3-05) — 부르는 쪽의 저장소 고르는 GIT_* · 설정 주입을 물려받지 않는다 (S0 보고 git_head ·
+    #    git_dirty · 계획 커밋 읽기 — 새면 남의 저장소의 HEAD · dirty · blob 을 적는다 · `run_contract.git_env` 한 곳 · 시험 scripts/test_git_env_isolation.py G8)
+    import run_contract as _RC
+    return subprocess.run(['git', '-C', repo, *args], capture_output=True, text=text, timeout=120, env=_RC.git_env())
 
 
 def _row_value(text, label):

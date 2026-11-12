@@ -46,6 +46,8 @@ import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
+import run_contract as _RCG                                # noqa: E402 — ★ 11-12 3 회차 (재확인 2 RCP3-01 · 같은 부류) 이 시험 프로세스와 그 자식 (git ·
+_RCG.drop_git_env()                                        #   payload · 러너) 은 부르는 쪽의 저장소 고르는 GIT_* 를 물려받지 않는다 (scripts/test_git_env_isolation.py G6)
 
 import ca_s0_census as S0          # noqa: E402
 import step3_sigma as S3           # noqa: E402
@@ -306,8 +308,10 @@ def t_plan():
 
 
 def _git(repo, *a):
+    #  ★ 3 회차 (재확인 2 RCP3-04) — 고정물 git = 전역 · 시스템 설정 끊기 (`run_contract.git_fixture_env` · 부르는 쪽 훅 · hooksPath · templateDir ·
+    #    commit.gpgsign 이 고정물 commit 에서 돌지 않는다 · 시험 scripts/test_git_env_isolation.py G7c)
     return subprocess.run(['git', '-C', repo, '-c', 'user.name=s0test', '-c', 'user.email=s0@test', *a],
-                          capture_output=True, text=True, check=True).stdout.strip()
+                          capture_output=True, text=True, check=True, env=_RCG.git_fixture_env()).stdout.strip()
 
 
 R_PLAN_REL = 'docs/data/s0/rint_r_plan.json'     # ★ 10-21 (PRE-design-04) — R 런 사슬 계획 (사슬 `PLAN_SCHEMA`) 파일 (같은 개정 커밋)

@@ -1451,30 +1451,69 @@ def runner_ca_ext_view(rec):
 
 
 #: ★ 11-12 2 회차 (Rint ② 코드 묶음 · 내부 반박 리뷰 재확인 RCP2-06) — git 을 부르는 생산 읽기 (payload `_code_sha` · `_exec_env` · 사슬
-#  `git_identity` · F5 계획 출처 · 원장 git) · 이 모듈의 selftest (RCPT-sha 임시 저장소) · 시험 고정물은 부르는 쪽 환경의 `GIT_*` 를 물려받지 않는다.
-#  GIT_DIR · GIT_WORK_TREE · GIT_INDEX_FILE · GIT_OBJECT_DIRECTORY · GIT_ALTERNATE_OBJECT_DIRECTORIES · GIT_COMMON_DIR … 가 새면 `git -C <폴더>` 를
-#  무시하고 **남의 저장소를 읽고 쓴다** — 11-12 밤 실제 사고 (`GIT_DIR=<본 리포>/.git` 을 붙인 `--selftest` 의 RCPT-sha 임시 폴더 commit 이 본 리포
-#  가지에 들어갔다 · git 훅 (pre-commit · pre-push) 안에서 게이트를 돌려도 git 이 넣는다 = 정직한 흐름).  규칙 = `GIT_` 로 시작하는 이름 전부
-#  (사슬 원장 git `rint_r_chain.ledger_git` 의 옛 규칙과 같다 · 그것도 이 함수를 쓴다 · 한 곳) — 시험 `scripts/test_git_env_isolation.py`.
-GIT_ENV_PREFIX = 'GIT_'
+#  `git_identity` · F5 계획 출처 · 원장 git) · 이 모듈의 selftest (RCPT-sha 임시 저장소) · 시험 고정물은 부르는 쪽 환경의 **저장소를 고르는** `GIT_*` ·
+#  설정 주입을 물려받지 않는다.  GIT_DIR · GIT_WORK_TREE · GIT_INDEX_FILE · GIT_OBJECT_DIRECTORY · GIT_ALTERNATE_OBJECT_DIRECTORIES · GIT_COMMON_DIR … 가
+#  새면 `git -C <폴더>` 를 무시하고 **남의 저장소를 읽고 쓴다** — 11-12 밤 실제 사고 (`GIT_DIR=<본 리포>/.git` 을 붙인 `--selftest` 의 RCPT-sha 임시 폴더
+#  commit 이 본 리포 가지에 들어갔다 · git 훅 (pre-commit = `GIT_INDEX_FILE=<저장소>/.git/index.lock` · pre-push) 안에서 게이트를 돌려도 git 이 넣는다 =
+#  정직한 흐름) — 시험 `scripts/test_git_env_isolation.py`.
+#  ★ 11-12 3 회차 (내부 반박 리뷰 재확인 2 RCP3-04 · 본 세션 결정 11-12 밤) — 지우는 이름을 **좁힌다**: 저장소 위치 · 색인 · 객체 여덟 + 설정 주입
+#  (GIT_CONFIG_PARAMETERS = `git -c` · GIT_CONFIG_COUNT · GIT_CONFIG_KEY_<n> · GIT_CONFIG_VALUE_<n>).  남긴다 = 부르는 쪽 격리 (GIT_CEILING_DIRECTORIES ·
+#  GIT_CONFIG_NOSYSTEM · GIT_CONFIG_GLOBAL — 2 회차 판 = `GIT_` 전부 → 천장 안 git 아닌 사본에 바깥 저장소 HEAD 를 적고 · 부르는 쪽이 끈 전역 훅을 다시
+#  켰다 · 재확인 2 ce06 C · ce06b) 와 그 밖 (신원 · 편집기 · 실행 자리 · 인증서 · 추적 …).  한 곳 = 이 목록 · 셸 꼴 `GIT_DROP_SH` (게이트 · kgy 묶음 ·
+#  러너 · S0 블록이 글자 그대로 쓴다 — 시험 G8) · 시험 고정물 = `git_fixture_env` (전역 · 시스템 설정까지 끊는다 · 생산 git 은 쓰지 않는다).
+GIT_DROP_NAMES = ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_COMMON_DIR',
+                  'GIT_NAMESPACE', 'GIT_PREFIX', 'GIT_CONFIG_PARAMETERS', 'GIT_CONFIG_COUNT')
+GIT_DROP_PREFIXES = ('GIT_CONFIG_KEY_', 'GIT_CONFIG_VALUE_')
+#: 셸 꼴 (bash) — 같은 이름을 지운다 (`compgen -e` = 내보낸 변수 이름 · case 꼴은 앞 괄호 — `$( … )` 안에서도 짝이 맞는다)
+GIT_DROP_SH_CASE = '|'.join(GIT_DROP_NAMES + tuple(x + '*' for x in GIT_DROP_PREFIXES))
+GIT_DROP_SH = 'for _gv in $(compgen -e); do case "$_gv" in (' + GIT_DROP_SH_CASE + ') unset "$_gv";; esac; done'
+
+
+def git_drop_name(k):
+    """지울 이름인가 — `GIT_DROP_NAMES` · 접두 `GIT_DROP_PREFIXES` (3 회차 RCP3-04)."""
+    return k in GIT_DROP_NAMES or k.startswith(GIT_DROP_PREFIXES)
 
 
 def git_env(env=None):
-    """git 을 부를 환경 — env (없으면 os.environ) 에서 `GIT_` 로 시작하는 이름을 전부 뺀 **새** 사전 (넘긴 사전 · os.environ 은 그대로)."""
+    """git 을 부를 환경 — env (없으면 os.environ) 에서 지울 이름 (`git_drop_name`) 을 뺀 **새** 사전 (넘긴 사전 · os.environ 은 그대로)."""
     import os as _os
     src = _os.environ if env is None else env
-    return {k: v for k, v in src.items() if not k.startswith(GIT_ENV_PREFIX)}
+    return {k: v for k, v in src.items() if not git_drop_name(k)}
 
 
 def drop_git_env(env=None):
-    """제자리 지움 — env (없으면 os.environ = 시험 프로세스가 맨 앞에서 부른다 · 그 자식 (git · payload · 러너) 이 물려받지 않게) 의 `GIT_` 이름을
-    지운다 → 지운 이름 (정렬).  ⚠ 라이브러리 (payload · 사슬) 안에서는 부르지 않는다 — 그쪽은 호출마다 `git_env()` 를 넘긴다."""
+    """제자리 지움 — env (없으면 os.environ = 시험 프로세스가 맨 앞에서 부른다 · 그 자식 (git · payload · 러너) 이 물려받지 않게) 의 지울 이름
+    (`git_drop_name`) 을 지운다 → 지운 이름 (정렬).  ⚠ 라이브러리 (payload · 사슬) 안에서는 부르지 않는다 — 그쪽은 호출마다 `git_env()` 를 넘긴다."""
     import os as _os
     tgt = _os.environ if env is None else env
-    gone = sorted(k for k in list(tgt) if k.startswith(GIT_ENV_PREFIX))
+    gone = sorted(k for k in list(tgt) if git_drop_name(k))
     for k in gone:
         del tgt[k]
     return gone
+
+
+_FIXTURE_HOME = []
+
+
+def git_fixture_env(env=None):
+    """★ 3 회차 (재확인 2 RCP3-04) — 시험 고정물 · selftest 임시 저장소를 **쓰는** git 의 환경 = `git_env(env)` + 전역 · 시스템 설정 끊기:
+    GIT_CONFIG_NOSYSTEM=1 · GIT_CONFIG_GLOBAL=/dev/null · HOME = 이 프로세스의 빈 임시 폴더 (끝날 때 지운다 · 옛 git 은 GIT_CONFIG_GLOBAL 을 모른다) ·
+    XDG_CONFIG_HOME 뺌 → 부르는 쪽의 core.hooksPath · 훅 · init.templateDir · 전역 excludes · commit.gpgsign 이 고정물 commit 에서 돌지 않는다.
+    ⚠ 생산 git (payload · 사슬 · 원장) 은 이것을 쓰지 않는다 — 부르는 쪽 설정 (천장 · 전역 설정 끄기 포함) 을 따른다."""
+    import os as _os
+    e = git_env(env)
+    e['GIT_CONFIG_NOSYSTEM'] = '1'
+    e['GIT_CONFIG_GLOBAL'] = _os.devnull
+    e.pop('XDG_CONFIG_HOME', None)
+    if not _FIXTURE_HOME or not _os.path.isdir(_FIXTURE_HOME[0]):
+        import atexit
+        import shutil
+        import tempfile
+        d = tempfile.mkdtemp(prefix='git_fixture_home_')
+        _FIXTURE_HOME[:] = [d]
+        atexit.register(shutil.rmtree, d, True)
+    e['HOME'] = _FIXTURE_HOME[0]
+    return e
 
 
 def normal_path_problem(p):
@@ -2417,7 +2456,8 @@ def _selftest():
             _f.write('A = 1\n')
         #  ★ 11-12 2 회차 (재리뷰 RCP2-06) — 부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (11-12 밤 사고 = GIT_DIR 을 붙여 돈 이 selftest 의 아래 commit
         #    이 본 리포 가지에 들어갔다) · 쓰기 (add · commit) 전에 이 임시 폴더가 그 저장소의 꼭대기인지 다시 본다 (아니면 쓰지 않는다)
-        _genv = git_env()
+        #  ★ 3 회차 (재확인 2 RCP3-04) — 시험 고정물 = 전역 · 시스템 설정도 끊는다 (부르는 쪽 core.hooksPath · 훅 · templateDir 이 임시 commit 에서 돌았다)
+        _genv = git_fixture_env()
         _sp.run(['git', 'init', '-q'], cwd=_d, capture_output=True, env=_genv)
         _top = _sp.run(['git', 'rev-parse', '--show-toplevel'], cwd=_d, capture_output=True, text=True, env=_genv)
         _own = _top.returncode == 0 and os.path.realpath((_top.stdout or '').strip()) == os.path.realpath(_d)

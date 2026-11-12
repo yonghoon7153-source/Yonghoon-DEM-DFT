@@ -3068,7 +3068,7 @@ def ledger_line(obj):
 
 def ledger_git(repo, *args, check=True):
     """원장 저장소 git (env 의 GIT_* 를 걷어낸다 · 고정 신원 · 실패 = Stop ATTEMPT_LEDGER_MISMATCH)."""
-    env = RC.git_env()                                       # ★ 11-12 2 회차 (RCP2-06) — 같은 규칙 (GIT_ 전부) 의 한 곳 (`run_contract.git_env`)
+    env = RC.git_env()                                       # ★ 11-12 2 회차 (RCP2-06) · 3 회차 (RCP3-04 = 저장소 고르는 이름 + 설정 주입) 의 한 곳 (`run_contract.git_env`)
     try:
         p = subprocess.run(['git', '-C', str(repo), *LEDGER_GIT_CFG, *args], capture_output=True, timeout=120, env=env)
     except (OSError, subprocess.TimeoutExpired) as e:

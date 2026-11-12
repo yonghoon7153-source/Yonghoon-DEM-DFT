@@ -710,9 +710,10 @@ GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=fa
 
 
 def git_(repo, *a, inp=None, env=None):
-    """고정물 git (실패 = 예외 — 고정물이 못 서면 시험이 그 자리에서 떨어진다)."""
+    """고정물 git (실패 = 예외 — 고정물이 못 서면 시험이 그 자리에서 떨어진다).  env 없음 = 고정물 env (★ 3 회차 RCP3-04 · 전역 · 시스템 설정 끊기)."""
     import subprocess
-    r = subprocess.run(['git', '-C', str(repo), *GIT_CFG, *a], input=inp, capture_output=True, env=env)
+    r = subprocess.run(['git', '-C', str(repo), *GIT_CFG, *a], input=inp, capture_output=True,
+                       env=env if env is not None else _RCG.git_fixture_env())
     if r.returncode != 0:
         raise RuntimeError(f'git {a[:2]} rc {r.returncode}: {r.stderr.decode("utf-8", "replace")[:300]}')
     return r.stdout.decode('utf-8', 'replace').strip()
@@ -9750,7 +9751,7 @@ def pc_group(f, name, end, log=None, sub='', t='2026-10-28T00:00:00Z'):
 
 def git_rc(repo, *a):
     import subprocess as _sp
-    return _sp.run(['git', '-C', str(repo), *GIT_CFG, *a], capture_output=True).returncode
+    return _sp.run(['git', '-C', str(repo), *GIT_CFG, *a], capture_output=True, env=_RCG.git_fixture_env()).returncode   # ★ 3 회차 (RCP3-04)
 
 
 def pc_copy_base(src, tag):

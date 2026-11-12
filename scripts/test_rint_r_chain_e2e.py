@@ -84,7 +84,8 @@ GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=fa
 
 
 def _git(repo, *a, inp=None, env=None):
-    r = subprocess.run(['git', '-C', str(repo), *GIT_CFG, *a], input=inp, capture_output=True, env=env)
+    #  ★ 3 회차 (재확인 2 RCP3-04) — env 없음 = 고정물 env (`run_contract.git_fixture_env` · 전역 · 시스템 설정 끊기 · 시험 scripts/test_git_env_isolation.py G7c)
+    r = subprocess.run(['git', '-C', str(repo), *GIT_CFG, *a], input=inp, capture_output=True, env=env if env is not None else _RCG.git_fixture_env())
     if r.returncode != 0:
         raise RuntimeError(f'git {a[:2]} rc {r.returncode}: {r.stderr.decode("utf-8", "replace")[:300]}')
     return r.stdout.decode('utf-8', 'replace').strip()
@@ -1251,7 +1252,7 @@ def t_ledger():
     runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
     led = os.path.join(TD, 'ledger_e14')
     os.makedirs(led)
-    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
+    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True, env=_RCG.git_fixture_env())   # ★ 3 회차 (RCP3-04)
     rc0, so0 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--init', '--plan', pp])
     rc1, so1 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--ledger-target', 'ladder:P0', '--machine', E2E_MACH, '--plan', pp,
                                  '--runner', runner, '--root', ws])
@@ -1305,7 +1306,7 @@ def t_resume_real():
     runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
     led = os.path.join(TD, 'ledger_e15')
     os.makedirs(led)
-    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
+    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True, env=_RCG.git_fixture_env())   # ★ 3 회차 (RCP3-04)
     e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--init', '--plan', pp])
     rc1, so1 = e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--add', '--ledger-target', 'ladder:P0', '--machine', E2E_MACH, '--plan', pp,
                                  '--runner', runner, '--root', ws])
@@ -1513,7 +1514,7 @@ def t_verdict_real():
     runner = os.path.join(sd, 'sdcp_gain_vox015_8arm.sh')
     led = os.path.join(TD, 'ledger_e18')
     os.makedirs(led)
-    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True)
+    subprocess.run(['git', 'init', '-q', led], check=True, capture_output=True, env=_RCG.git_fixture_env())   # ★ 3 회차 (RCP3-04)
     rcs = [e2e_call(ws, sd, ['--stage', 'ledger', '--ledger', led, '--init', '--plan', pp])[0]]
 
     def add(target):

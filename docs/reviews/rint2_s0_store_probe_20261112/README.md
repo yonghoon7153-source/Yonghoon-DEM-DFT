@@ -7,11 +7,11 @@
 - **왜 지금 등록**: 2 회차 내부 반박 리뷰 재확인 (Codex 아님 · RCP2-04) — 결과 전 기대 E · 문턱 T 가 스크래치에만 있어 결과가 오기 전 등록을 확인할 자리가
   없었다.  같은 기대 · 문턱이 블록 머리 주석에도 있다.
 - **1저자 결정 (11-12 밤 · 오버나잇)**: Q-B (가) = 공식 S0 단계 1 다시를 감싸개로 돌린다 (블록 기본 `PROBE=1`) · 문턱 T1–T3 [제안] 그대로 채택.
-- **블록** = 같은 폴더 `s0_rerun_probe_block.txt` (ASCII · 느낌표 · 탭 · CR 없음 · 273 줄 · md5 `692b34ff05823c3f24354d8fe2b0a7d3`) · 보내기 전에 `PIN='<PIN>'`
+- **블록** = 같은 폴더 `s0_rerun_probe_block.txt` (ASCII · 느낌표 · 탭 · CR 없음 · 275 줄 · md5 `39c4b975ebd32ff357c8c52d11bbb827` — ★ 11-12 3 회차 (내부 반박 리뷰 재확인 2 RCP3-05) heredoc 머리에 저장소 고르는 GIT_* · 설정 주입을 지우는 줄 (`run_contract.GIT_DROP_SH` 글자 그대로 · 시험 `scripts/test_git_env_isolation.py` G8) 과 주석 한 줄 · 옛 273 줄 판 md5 `692b34ff05823c3f24354d8fe2b0a7d3`) · 보내기 전에 `PIN='<PIN>'`
   한 줄만 채운다 (반입 뒤 가지 끝 40 자리 — 블록이 fetch 뒤 가지 끝과 대조한다) · md5 관문 = 감싸개 `86e9bf4b4cfb79fa6e4a63d69cb414b0` · 감시 셸
   `ff385531653c294089ce58f08511b6ad` · 실행 = 1저자 (kgy).
 - **감싸개 v2 (2 회차)**: `cjunc_store` 를 `carbon_junction` 보다 먼저 불러온다 — 저장본의 런 시작 코드 칸 (`cjunc_store._START` · RCP2-01) 이 원장
-  모듈 적재 앞에 잡힌다 (payload 와 같은 차례 · `scripts/test_cjunc_store.py` P6) · 기록 `store_probe.json` 에 `store_start` (코드 칸 · 먼저 불린 모듈 ·
+  모듈 적재 앞에 잡힌다 (payload 와 같은 차례 · `scripts/test_cjunc_store.py` P6 · 러너 꼴 인자 P6b = 3 회차 RCP3-03) · 기록 `store_probe.json` 에 `store_start` (코드 칸 · 먼저 불린 모듈 ·
   못 셈 사유) · 호출마다 `code_drift` 를 더했다 (절대 경로 · 기계 식별자는 싣지 않는다).
 
 ## 결과 전 기대 (먼저 적음)

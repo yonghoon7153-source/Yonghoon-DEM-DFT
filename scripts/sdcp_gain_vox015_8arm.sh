@@ -1076,8 +1076,10 @@ elif [ "$ARMS" -eq "$PREREG_ARMS" ]; then
     #    "기각됐다" 가 "다시 못 쓴다" 를 뜻하지 않는다.
     #    ⇒ 변경 불가능한 **기각 영수증**을 남기고, 원값을 보려면 사람이 명시로 친다.
     _RCPT="$OUTDIR/.rejected_$(date -u +%Y%m%dT%H%M%SZ)"
+    #  ★ 2026-11-12 3 회차 (Rint ② · 내부 반박 리뷰 재확인 2 RCP3-05) — code_sha 의 git = 부르는 쪽의 저장소 고르는 GIT_* · 설정 주입을 지운 하위 셸
+    #    (글자 = run_contract.GIT_DROP_SH · 시험 scripts/test_git_env_isolation.py G8 · 새면 남의 저장소 HEAD 를 영수증에 적는다)
     { echo "rejected_utc=$(date -u +%FT%TZ)"; echo "arms=$ARMS"; echo "outdir=$OUTDIR";
-      echo "code_sha=$(git -C "$SCR/.." rev-parse --short=8 HEAD 2>/dev/null || echo unknown)";
+      echo "code_sha=$( (for _gv in $(compgen -e); do case "$_gv" in (GIT_DIR|GIT_WORK_TREE|GIT_INDEX_FILE|GIT_OBJECT_DIRECTORY|GIT_ALTERNATE_OBJECT_DIRECTORIES|GIT_COMMON_DIR|GIT_NAMESPACE|GIT_PREFIX|GIT_CONFIG_PARAMETERS|GIT_CONFIG_COUNT|GIT_CONFIG_KEY_*|GIT_CONFIG_VALUE_*) unset "$_gv";; esac; done; git -C "$SCR/.." rev-parse --short=8 HEAD) 2>/dev/null || echo unknown)";
       echo "reason=seal_broken"; } > "$_RCPT"
     chmod 444 "$_RCPT" 2>/dev/null || true
     echo "[p2] 기각 영수증: $_RCPT  (이 디렉터리는 '한 번 기각됨' 으로 기록됐다)"

@@ -68,15 +68,24 @@ GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=fa
 REAL_PS = shutil.which('ps') or '/bin/ps'
 
 
+_RCM = []
+
+
+def _rc():
+    """run_contract (scripts/ 를 sys.path 에 넣지 않고 파일로 한 번 불러온다)."""
+    if not _RCM:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location('_run_contract_git_env', os.path.join(SCRIPTS, 'run_contract.py'))
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        _RCM.append(m)
+    return _RCM[0]
+
+
 def _drop_git_env():
     """★ 11-12 2 회차 (Rint ② 코드 묶음 · 재리뷰 RCP2-06) — 이 시험 프로세스와 그 자식 (고정물 git · 감시 셸 · 블록 bash 의 git fetch · worktree add) 은
-    부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (`run_contract.drop_git_env` 한 곳 — scripts/ 를 sys.path 에 넣지 않고 파일로 불러온다 · 시험
-    scripts/test_git_env_isolation.py G6)."""
-    import importlib.util
-    spec = importlib.util.spec_from_file_location('_run_contract_git_env', os.path.join(SCRIPTS, 'run_contract.py'))
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)
-    return m.drop_git_env()
+    부르는 쪽 환경의 저장소 고르는 GIT_* 를 물려받지 않는다 (`run_contract.drop_git_env` 한 곳 · 시험 scripts/test_git_env_isolation.py G6)."""
+    return _rc().drop_git_env()
 
 
 _drop_git_env()
@@ -2005,6 +2014,7 @@ def t_S():
 
 # ═════════════════════════ F · B · R 공용: 가짜 홈 · 핀 저장소 · 가짜 nvidia-smi · 가짜 ps ═════════════════════════
 def git(repo, *a, **kw):
+    kw.setdefault('env', _rc().git_fixture_env())          # ★ 3 회차 (재확인 2 RCP3-04) — 고정물 git = 전역 · 시스템 설정 끊기 (G7c)
     r = subprocess.run(['git', '-C', str(repo)] + list(GIT_CFG) + list(a), capture_output=True, text=True, **kw)
     if r.returncode != 0:
         raise RuntimeError('git %s rc %d: %s' % (a[:2], r.returncode, r.stderr[:300]))
@@ -3068,9 +3078,9 @@ def t_B():
     home = make_home('b_home')
     fd = fake_dir('b_fake', pin)
     bare = os.path.join(TD, 'b_origin.git')
-    subprocess.run(['git', 'clone', '-q', '--bare', repo, bare], check=True, capture_output=True)
+    subprocess.run(['git', 'clone', '-q', '--bare', repo, bare], check=True, capture_output=True, env=_rc().git_fixture_env())   # ★ 3 회차 (RCP3-04)
     git(bare, 'branch', 'claude/stoic-knuth-NObVQ', pin)
-    subprocess.run(['git', 'clone', '-q', bare, os.path.join(home, 'dem-mt')], check=True, capture_output=True)
+    subprocess.run(['git', 'clone', '-q', bare, os.path.join(home, 'dem-mt')], check=True, capture_output=True, env=_rc().git_fixture_env())
     blk0 = fenced_blocks(read_text(BLOCK_MD))[0]
     blk1 = blk0.replace('<PIN>', pin)
     blk2 = blk1.replace('\nATTEMPT=1\n', '\nATTEMPT=2\n')
@@ -3218,9 +3228,9 @@ def t_B():
     h2 = make_home('b2_home')
     fd2 = fake_dir('b2_fake', pin)
     bare2 = os.path.join(TD, 'b2_origin.git')
-    subprocess.run(['git', 'clone', '-q', '--bare', repo, bare2], check=True, capture_output=True)
+    subprocess.run(['git', 'clone', '-q', '--bare', repo, bare2], check=True, capture_output=True, env=_rc().git_fixture_env())   # ★ 3 회차 (RCP3-04)
     git(bare2, 'branch', '-f', 'claude/stoic-knuth-NObVQ', pin)
-    subprocess.run(['git', 'clone', '-q', bare2, os.path.join(h2, 'dem-mt')], check=True, capture_output=True)
+    subprocess.run(['git', 'clone', '-q', bare2, os.path.join(h2, 'dem-mt')], check=True, capture_output=True, env=_rc().git_fixture_env())
     q1 = run_block(h2, wrapper_env(h2, fd2, PROBE6_FAKE_MODE='nosolve'), blk1)
     la = glob.glob(os.path.join(h2, 'p6log_a1_*'))
     da = wait_marker(la[0]) if len(la) == 1 else False

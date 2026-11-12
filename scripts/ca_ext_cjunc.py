@@ -27,10 +27,13 @@ import math
 
 import numpy as np
 
-import carbon_junction as CJ
 #  ★ 11-12 (Rint ② Q2) — 원장 저장본 모듈은 접합 런마다 불러 둔다 (저장본 켬 · 끔의 매니페스트 `exec_env` 로드 모듈 집합 · 내용 해시가 같게 —
 #    끔 런이 이 모듈을 안 부르면 켬 런과 팔 JSON 바이트가 그 칸에서 갈린다 · 재실행 바이트 대조 `ResumeRunner`) · payload_prepare 의 store 형 검사.
+#  ★ 11-12 3 회차 (내부 반박 리뷰 재확인 2 RCP3-03) — carbon_junction 보다 **먼저** 불러온다: 저장본의 런 시작 코드 칸 (`cjunc_store._START`) 이 원장
+#    모듈 적재 앞에 잡히게 (payload 가 러너 꼴 `--expect-physics ca_ext.*` 를 풀 때 이 모듈을 입구 계약보다 먼저 부른다 · 옛 차례 = carbon_junction 먼저 →
+#    `_START['preloaded']` = ['carbon_junction'] · 시험 scripts/test_cjunc_store.py P6b)
 import cjunc_store as CJS
+import carbon_junction as CJ
 
 WIRING_VERSION = 'b6-cjunc-payload-v1'
 SUB_CJUNC = 'cjunc'
