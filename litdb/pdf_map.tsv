@@ -554,3 +554,7 @@ lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior	stiffness effec
 #   ⚠ 크롭 63 장 = 도구 15 (다시 자름 5: 그림 2 (여백 큼) · 그림 9 (실제는 그림 10 + 11 을 잡음) · 표 1 · 2 · 3 (쪽 통째) · 캡션 고침 10) + 손 48 (manual_crop: 그림 5 (도구가 놓침) · 패널 6 (2a–2d · 12a · 12b) · 식 21 · 근거 글 20) + digitized.csv (955 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem	computer_simulation_of_the_effect_of_contact_stiffness_and_adhesion
 morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem	computer simulation of the effect of contact stiffness and adhesion
+# ── 결합입자 모델 (BPM · LAMMPS BPM 패키지 · 점 입자 ~5000 개 × 입자 1024 개 · 다체 결합 항으로 ν −0.11–0.4) 로 선형 탄성 입자의 3D 등방 압밀을 재밍 너머 P/E_eff ~1 까지 · Hertz DEM 대조 (φ − φ_c ≈ 0.1 에서 갈림 · 같은 φ_MC 로는 압력 2 배 안 · DEM 의 φ_sphere > 1) (Clemmer · Monti · Lechman · Soft Matter 20 (2024) 1702–1718 · 2024-08-30 정정판) — litdb 2026-11-12 (후보 N-51) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 46 장 = 도구 15 (다시 자름 3: fig_5 · fig_11 · fig_16 위 회색 쪽 줄) + 손 31 (manual_crop: Fig. 3 (도구가 놓침 — 캡션 'Fig. 3' 이 다른 span) · 식 10 · 근거 글 20) + digitized.csv (275 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+clemmer2024_bpm_elastic_grain_compaction_beyond_jamming	a_soft_departure_from_jamming_the_compaction_of_deformable
+clemmer2024_bpm_elastic_grain_compaction_beyond_jamming	a soft departure from jamming the compaction of deformable
