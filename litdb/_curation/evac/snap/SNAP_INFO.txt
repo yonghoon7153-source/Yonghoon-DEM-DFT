@@ -1,4 +1,4 @@
-2026-11-12 11:28:17 UTC
+2026-11-12 11:31:54 UTC
 rint_codepkg: HEAD 0ac6edf3c · origin/claude/stoic-knuth-NObVQ 뒤 커밋 6
 rint_codepkg_unpushed.bundle: 90238 B
 main: HEAD ef68eb7da · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 1
@@ -12,6 +12,6 @@ gpu_check_block.txt: 14684 B
 amend_drafts.md: 15725 B
 formation_20261112.md: 3306 B
 synthfix_work.tgz: 파일 166 · 3347867 B
-dem_redesign_work.tgz: 파일 37 · 608723 B · 뺀 파일 3 (주소 꼴 · 큰 파일): ['dem_redesign/fix/arith.py', 'dem_redesign/fix/card_frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure.md', 'dem_redesign/fix/card_lee2026_mechanical_halogen_argyrodite_drycoating.md']
-mixer_e0_work.tgz: 파일 19707 · 4668689 B · 뺀 파일 11844 (주소 꼴 · 큰 파일): ['mixer_e0_v2/query_block/test/run_20261112T112618Z/t6.snap_after.json', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t6.snap_before.json', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t6/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_941000.liggghts', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t6/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_942000.liggghts', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t6/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_943000.liggghts']
+dem_redesign_work.tgz: 파일 38 · 620704 B · 뺀 파일 3 (주소 꼴 · 큰 파일): ['dem_redesign/fix/arith.py', 'dem_redesign/fix/card_frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure.md', 'dem_redesign/fix/card_lee2026_mechanical_halogen_argyrodite_drycoating.md']
+mixer_e0_work.tgz: 파일 17937 · 4827048 B · 뺀 파일 32803 (주소 꼴 · 큰 파일): ['mixer_e0_v2/query_block/test/run_20261112T112618Z/t5/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_103000.liggghts', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t5/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_1030000.liggghts', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t5/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_1031000.liggghts', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t5/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_1032000.liggghts', 'mixer_e0_v2/query_block/test/run_20261112T112618Z/t5/w/lroot/lustre/home/fakeuser/mixer_dev7_20260930_v26/E0_ref_s32452843/post/mix_1033000.liggghts']
 p1g2c_work.tgz: 파일 3 · 3351 B
