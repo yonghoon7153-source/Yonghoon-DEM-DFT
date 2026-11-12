@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 310편 · 생성 2026-11-12
+> digest 311편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -38,7 +38,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (22편)
+## MPM · 연속체 (23편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -64,6 +64,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | MPM 구현 선택 (기저 함수 · 매끈함 길이 · 경계 처리) 이 오차 · 안정에 주는 영향 — 선형 · 2차 B-spline (+ 경계 수정 B-spline · 열린 균일 매듭) · uGIMP · cpGIMP 를 '조각 상수 함수의 합성곱' 하나로 묶고 (식 31) · 노드 적분 오차 = 합성 중점 O(Δx²) + 도약 | MPM (수치 해석 · 검증 — Uintah Computational Framework (UCF) 의 명시적 | 2026-11-12 | 🖼 74 |
 | `steffen2010_mpm_space_time_error_balance_moving_mesh` | MPM 의 공간 · 시간 오차를 떼어 내 균형 맞추기 — moving-mesh MPM (참조 배치 고정 · 격자 넘김 없음) 으로 시간 오차를 드러내고, 격자 넘김의 시간 도약 오차 O(Δt²) · 노드 적분 (quadrature) 오차의 누적 (전역 ∝ α^k · α = 1/셀당 물질점 · 선형 기저 k = 1 · 2차 | MPM numerical error analysis (1D · explicit Forward-Euler /  | 2026-11-12 | 🖼 179 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
+| `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
 ## 접촉역학 · 소성 (DEM 이론) (74편)
 
