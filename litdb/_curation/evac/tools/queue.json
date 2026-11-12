@@ -1,0 +1,227 @@
+{
+ "N-54": {
+  "nn": "103",
+  "pdf": "814e7565-54._A_new_method_for_the_determination_of_particle_contact_stiffness.pdf",
+  "bib": "M. Paulick, M. Morgeneyer, A. Kwade, \"A new method for the determination of particle contact stiffness\", Granular Matter 17 (2015) 83–93, DOI 10.1007/s10035-014-0537-x (Received 19 November 2013 / Published online 21 December 2014 · PDF 11 쪽). 후보 표에는 'Paulick et al. [219] (coetzee2017 참고문헌 번호)' 뿐이었다 — 1저자가 준 PDF 의 첫 쪽에서 이 서지를 확인했다. coetzee2017 카드 L648 의 서술 (시험기 · 압반의 강성 / 변형을 배제하고 두 구 사이 접촉강성만 측정) 과 초록이 맞는다.",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "dup": "papers/ 에 paulick2015_elastic_particle_properties_dem_review (Powder Technology 2015 · DOI 10.1016/j.powtec.2015.03.040 — 같은 저자 · 같은 해의 **다른 논문**) 하나 · 이 논문의 DOI · 제목 grep 0 건 · 'Paulick' grep = alizadeh2018 · coetzee2017 · nguyen2017_mpm_bpm · paulick2015 · roessler2019 (인용 · 언급) → 카드 없음",
+  "note": "- 같은 저자 · 같은 해 카드 `paulick2015_elastic_particle_properties_dem_review` 가 있다 → slug 를 다르게 (예: paulick2015_particle_contact_stiffness_two_particle_method …) 하고 두 카드가 서로를 가리키게 '🔗 관련 카드' 한 줄씩 (그 카드 L1072 가 이 논문을 '미digest' 로 적어 둔 자리도 확인 — 그 줄은 고치지 않고 관련 카드 한 줄만 더한다).\n- 의도 = 단위 시험 U1 (입자 하나 압축) · U5 (입자끼리) 의 실험 대조 방법. 장치 · 변위 측정법 · 장치 변형 배제 방식 · 재료 (유리 구슬 지름 0.8–3.0 mm · 최대 80 N) · 힘–변위 곡선 · 강성 정의 (법선 · 할선 / 접선) · Hertz 와의 차이 · 표면 거칠기 (asperity) 영향 · 반복 하중 / 제하를 식 · 그림 번호와 함께. 식은 번호별로 따로 자른다.\n- 유리 구슬 값을 LPSCl · NCM 값처럼 쓰지 않는다 — 방법만 전이된다는 점을 머리 요약에."
+ },
+ "N-55": {
+  "nn": "104",
+  "pdf": "c1f099ac-55._Characterization_of_the_calendering_process_for_compaction_of_electrodes_for_lithium-ion_batteries.pdf",
+  "bib": "C. Meyer, H. Bockholt, W. Haselrieder, A. Kwade, \"Characterization of the calendering process for compaction of electrodes for lithium-ion batteries\", Journal of Materials Processing Tech. 249 (2017) 172–178, doi:10.1016/j.jmatprotec.2017.05.031 (PDF 7 쪽)",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+  "dup": "papers/ 에 meyer* 없음 · DOI · 제목 grep 0 건 · '249, 172' 는 he2026 · diener2022_roll_gap_springback_calendering (인용만) → 카드 없음. ⚠ 같은 그룹의 후속 Meyer 2018 (J. Energy Storage 18, 371–379 · 후보 N-61) 은 다른 에이전트가 뒤에 따로 카드를 만든다 — 그 카드와 서로 가리킬 수 있게 '🔗 관련 카드' 에 서지 한 줄을 미리 적어 둔다 (slug 는 아직 없다고 적는다).",
+  "note": "- 의도 = 후보 M0 · 단계 5: '압연의 Heckel 지수 기반 하중-변위 경험모델 + compaction impedance (압축 저항) 원전' (he2026 L688). 모델 식 (지수 식) · 매개변수 (최소 기공률 · 압축 저항) · 흑연 음극 ↔ NCM 양극 값 · 선하중 (N/mm) ↔ 코팅 밀도 · 기공률 (수은 압입 ↔ 기하) · 닫힌 기공 · 속도 영향 (≤ 5 m/min) 을 표로. 식은 번호별로 따로 자른다.\n- 선하중은 압력이 아니다 — 우리 300 MPa 일축 압축과 어떻게 견줄 수 있는지 / 없는지 (원문이 환산을 주는가) 를 분명히. 기공률이 누른 채인지 뺀 뒤 (압연 뒤) 인지.\n- he2026 카드가 옮긴 서술이 원문과 같은지 대조 (그 카드 L688 · L414)."
+ },
+ "N-56": {
+  "nn": "105",
+  "pdf": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+  "si": [
+   "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf"
+  ],
+  "bib": "Y. Song, L. Tan, K. Gao, C. He, Y. Wu, N. Li, L. Yang, Y. Mao, W.-L. Song, H.-S. Chen, \"Insights into cathode densification of calendering process by the combination of in-situ CT and DEM\", Powder Technology 453 (2025) 120667, doi:10.1016/j.powtec.2025.120667 (본문 10 쪽 · Supplementary Material 8 쪽)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "papers/ 에 song2025_electrochemo_mechanical_microelectrode_ees · song2025_porous_argyrodite_modulus_fracture_toughness (둘 다 다른 논문 · 다른 저자일 수 있음 — 확인) · DOI · 제목 grep 0 건 · '120667' grep = he2026 (인용만) → 카드 없음",
+  "note": "- 의도 = 조건 R7: he2026 의 파괴 판정 'Z 축 응력 > 2 GPa 입자 세기' 의 원출처 [38]. **2 GPa 가 원문 어디에 · 어떤 근거 (측정 / 인용 / 가정) 로 · 어떤 정의 (입자 평균 응력 / 접촉 응력 / 압괴 강도) 로 나오는지** 를 쪽 · 식 · 표로 못 박는다. 없으면 '없음'.\n- in-situ CT 장치 (미세 하중 스테이지 · 하중 · 복셀 크기) · X-CT → DEM 넘김 방법 · 접촉 모델 · 맞춘 값 · 검증 (힘–변위 · 기공률) · 누른 채 / 뺀 뒤를 표로. SI 그림 · 표도 전부.\n- 같은 주제의 정본 카드: zhang2026_xct_dem_cathode_calendering_peel_calibration · he2026_dem_calendering_inhomogeneity_areal_density (같은 그룹일 수 있다 — 저자 대조) → 서로 가리키게."
+ },
+ "N-60": {
+  "nn": "106",
+  "pdf": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+  "bib": "G. Y. Onoda, E. G. Liniger, \"Random Loose Packings of Uniform Spheres and the Dilatancy Onset\", Physical Review Letters 64 (22) (28 May 1990) 2727–2730 (Received 12 February 1990 · PDF 4 쪽 · 스캔본 — 글자 층이 OCR 이라 깨진 곳이 있다 → 쪽을 그림으로 열어 읽는다 · DOI 는 원문에 인쇄돼 있을 때만 적는다)",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+  "dup": "papers/ 에 onoda* 없음 · 'Onoda' · 'dilatancy onset' grep = alizadeh2018_dem_adhesion_calibration_segregation_heap (인용만) → 카드 없음",
+  "note": "- 의도 = 단계 4 (출발 침대 충전율 대조 · 근거 약함) + alizadeh2018 이 'CoV_r 의 0.6 출처' 로 쓴 자리 (그 카드 L280). 원문에 그 0.6 이 있는지 / 무엇의 값인지 대조 — 없으면 '없음' + 카드 문제.\n- 핵심 값 = 중력 0 극한의 느슨한 무작위 충전율 0.555 ± 0.005 · 팽창 (dilatancy) 시작 · 0.555–0.645 범위: 재는 방법 (밀도 맞춘 액체 · 유효 중력 Δg) · 구 재료 · 지름 · 외삽 방법을 그림 · 쪽과 함께.\n- 균일 유리 구의 값이다 — 우리 순수 SE 가루 (불규칙 · 점착) 의 출발 충전율과 견줄 때의 한계를 머리 요약에.\n- 스캔본이라 도구가 캡션을 못 잡을 수 있다 → 손 크롭 (manual_crop 표지). 4 쪽이라 쪽 전체 렌더도 근거 크롭으로 남긴다."
+ },
+ "N-61": {
+  "nn": "107",
+  "pdf": "345d91e1-61._Process_modeling_of_the_electrode_calendering_of_lithium-ion_batteries_regarding_variation_of_cathode_active_materials_and_mass_loadings.pdf",
+  "bib": "C. Meyer, M. Kosfeld, W. Haselrieder, A. Kwade, \"Process modeling of the electrode calendering of lithium-ion batteries regarding variation of cathode active materials and mass loadings\", Journal of Energy Storage 18 (2018) 371–379, doi:10.1016/j.est.2018.05.018 (PDF 9 쪽)",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+  "dup": "papers/ 에 이 논문 카드 없음 (DOI grep 0 건 · 제목 grep = kim2026_pregranulation · kollenda2024 의 참고문헌 줄뿐). ⚠ 같은 그룹의 앞 논문 Meyer 2017 (J. Mater. Process. Technol. 249, 172–178 · 후보 N-55) 카드가 이 세션에서 먼저 만들어졌을 수 있다 — `ls litdb/papers/ | grep -i meyer` 로 확인해 있으면 서로 가리키게 '🔗 관련 카드' 한 줄씩.",
+  "note": "- 의도 = 후보 M0 · 단계 5 (결과 전 대조): 'Heckel 기반 모델 식 + 같은 크기 구의 이론 충전 구조로 최소 기공률을 예측'. 모델 식 · 매개변수 · 활물질별 (Ni-rich 포함) · 질량 부하별 값 · 맞춤 품질 · 적용 범위를 표로. 식은 번호별로 따로 자른다.\n- 선하중 ↔ 압력 환산이 원문에 있는지 · 기공률 정의 (기하 / 수은 압입) · 압연 뒤 (뺀 뒤) 값인지.\n- wishlist 의 batch_64 줄 ('두께가 되돌아옴을 줄이는 근거' · kollenda2024 §3-3 · §12 [39]) 이 원문과 같은지도 대조해 적는다 (kollenda2024 카드는 고치지 않는다)."
+ },
+ "N-62": {
+  "nn": "108",
+  "pdf": "d7352304-62._Characterization_by_X-ray_tomography_of_granulated_alumina_powder_during_in_situ_die_compaction.pdf",
+  "bib": "S. Cottrino, Y. Jorand, E. Maire, J. Adrien, \"Characterization by X-ray tomography of granulated alumina powder during in situ die compaction\", Materials Characterization 81 (2013) 111–123, doi:10.1016/j.matchar.2013.04.004 (PDF 13 쪽)",
+  "model": "korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens",
+  "dup": "papers/ 에 cottrino* 없음 · DOI grep 0 건 · 'Cottrino' · 'granulated alumina' grep = kim2026_pregranulation_ptfe_dry_nca_cathode_crack_delithiation (인용만) → 카드 없음",
+  "note": "- 의도 = 단계 4 · 5 (결과 전 대조 **방법**): 과립 압밀을 금형 안에서 단층 촬영으로 따라간 방법 — 장치 · 복셀 크기 · 압력 단계 · 누른 채 촬영인지 · 밀도 불균일 정량 (국소 밀도 지도 · 과립 내 / 과립 사이 기공) · 벽 마찰 · 결함 크기 · 습도 · 바인더 영향을 표로.\n- 알루미나 과립 (나노 분말을 과립화한 것) 이다 — LPSCl · NCM 이 아니다. 방법만 전이되고 값은 전이되지 않는다는 점을 머리 요약에.\n- 과립이 부서지는 압력 · 과립 흔적이 남는 정도 = 우리 '입자 경계 기억' (조건 R3) 과 닿는 자리 — 원문 값 · 그림 번호."
+ },
+ "N-70": {
+  "nn": "109",
+  "pdf": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+  "si": [
+   "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf"
+  ],
+  "extra": [
+   "a9851e22-70._Sup2_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "2d36e924-70._Sup3_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "9307e61b-70._Sup4_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4"
+  ],
+  "bib": "J. Xu, B. Paredes-Goyes, Z. Su, M. Scheel, T. Weitkamp, A. Demortière, A. A. Franco, \"Computational Model for Predicting Particle Fracture During Electrode Calendering\", Batteries & Supercaps 2023, 6, e202300371, doi 10.1002/batt.202300371 (본문 10 쪽 · Supporting Information 7 쪽 · 보충 영상 3 개). ⚠ 후보 표 · he2026 카드 L690 은 'e202300525' 로 적었다 — 원문 첫 쪽은 e202300371 이다 (카드 문제로 적는다 · he2026 카드는 고치지 않는다).",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "papers/ 에 xu2023_realistic_am_shape_cgmd_calendering (같은 그룹 · 같은 해의 **다른 논문** · J. Power Sources 554) 하나 · 이 논문의 DOI · 제목 grep 0 건 · '202300525' grep = he2026 (인용만) → 카드 없음",
+  "note": "- 같은 1 저자 · 같은 해 카드 `xu2023_realistic_am_shape_cgmd_calendering` 가 있다 → slug 를 다르게 (예: xu2023_dem_bonded_particle_fracture_calendering …) 하고 서로 가리키게 '🔗 관련 카드' 한 줄씩.\n- 의도 = 조건 R7: 'bonded-particle 입자파괴 모델 (>120 MPa → bond 파단 >10 %) · 우리 Auerbach / f_intact 의 문헌 대응물' (he2026 L690). **120 MPa · 10 % 가 원문 어디에 어떤 정의로 있는지** 대조. bond 모델 (법선 / 접선 강성 · 강도 · 파단 기준) · 맞춘 값과 맞춘 대상 · 1 차 입자 수 · 2 차 입자 형상의 출처 (나노 단층 촬영) · 압력–기공률 검증 · 계산 비용을 표로. 식은 번호별로 따로.\n- 보충 영상 (mp4 세 개) 은 그대로 열 수 없다 → `ffprobe` 로 길이 · 해상도를 보고 `ffmpeg -ss <t> -i <파일> -frames:v 1 <네 scratchpad>/vidN_tXX.png` 로 정지 화면을 서너 장씩 뽑아 직접 본다 (처음 · 가운데 · 끝). SI PDF 의 영상 설명과 맞춰 카드에 '영상 S? = 무엇' 을 적고, 대표 정지 화면을 영상마다 한두 장 `litdb/figures/<slug>/vid_S?_t??s.png` 로 넣어 figures.json 에 손 크롭 관례로 표지한다 (영상 파일 자체는 커밋하지 않는다)."
+ },
+ "N-71": {
+  "nn": "110",
+  "pdf": "ba72a247-71._Granular_flow_down_an_inclined_plane_Bagnold_scaling_and_rheology.pdf",
+  "bib": "L. E. Silbert, D. Ertaş, G. S. Grest, T. C. Halsey, D. Levine, S. J. Plimpton, \"Granular flow down an inclined plane: Bagnold scaling and rheology\", Physical Review E 64, 051302 (2001) (Received 28 March 2001; published 25 October 2001), DOI 10.1103/PhysRevE.64.051302 (PDF 14 쪽)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "계산 (DEM) 논문의 방법 절 꼴은 litdb/papers/cantor2020_compaction_model_highly_deformable_particles.md 도 참고",
+  "dup": "papers/ 에 silbert* 없음 · '051302' · 'Bagnold scaling' grep = benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem · shi2019_high_am_loading_particle_size_assb (인용만) → 카드 없음",
+  "note": "- 의도 = 후보 D0 (접촉 법칙 원전): 'gran/hertz/history 꼴 원전' (benhadjali2026 L445). **접촉력 식 (법선 스프링 · 감쇠 · 접선 이력 변위 · Coulomb 한계 · Hooke 꼴 ↔ Hertz 꼴) 을 식 번호별로 따로 자르고**, 매개변수 (k_n · k_t/k_n · γ_n · γ_t · μ · 반발 계수 · 시간 간격 규칙) 값을 표로. 우리 LIGGGHTS 덱 (hooke/hysteresis · 18 배 연화) 과 식 꼴이 어떻게 다른지.\n- 2D ↔ 3D 를 둘 다 계산한 논문이다 → 질문 g (2D → 3D 전이) 에 쓸 증거 (지수 · 충전율 · 응력의 차원별 차이) 를 따로 정리.\n- 흐름 (슈트) 문제다 — 준정적 고압 압밀이 아니다. 한계를 머리 요약에. '단단한 구 · 겹침 작음' 가정에 대한 원문 문장 (DEM 한계 · 질문 k) 을 따옴표로."
+ },
+ "N-72": {
+  "nn": "111",
+  "pdf": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+  "bib": "O. R. Walton, \"Numerical simulation of inclined chute flows of monodisperse, inelastic, frictional spheres\", Mechanics of Materials 16 (1993) 239–247 (Received 28 April 1992; accepted 7 August 1992 · PDF 9 쪽 · 옛 조판 스캔일 수 있다 → 글자 층이 깨지면 쪽을 그림으로 열어 읽는다 · DOI 는 원문에 인쇄돼 있을 때만). 후보 N-72 는 두 편이고 첫째 (Walton & Braun, J. Rheol. 30 (1986) 949–980) 는 1저자가 내려받을 수 없어 제외했다 — 이 카드는 둘째만 다룬다.",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "계산 (DEM) 논문의 방법 절 꼴은 litdb/papers/cantor2020_compaction_model_highly_deformable_particles.md 도 참고",
+  "dup": "papers/ 에 walton* 없음 · 'inclined chute flows' grep 0 건 · 'Mech. Mater. 16' grep = pfeffer2001_dry_particle_coating_engineered_particulates (참고 116 · 인용만) → 카드 없음",
+  "note": "- 의도 = 후보 D0 (이력 접촉 계보): '걸쇠 스프링 (latching spring) 접촉' (pfeffer2001 L300). **하중 / 제하 강성이 다른 이력 법선 접촉 (K1 · K2 · 반발 계수와의 관계) 과 접선 (증분 미끄럼 · 마찰) 모델의 식을 번호별로 따로 자르고** 값 표를 만든다. 우리 LIGGGHTS hooke/hysteresis 덱의 하중 / 제하 가지 (K1 · K2 · kc) 와 견줄 자리 · 탈압 (단계 6 · 조건 R4) 에서 이 접촉 꼴이 주는 잔류 겹침의 뜻.\n- 첫째 논문 (Walton–Braun 1986) 의 내용을 이 논문이 어디까지 다시 적는지 (식 · 그림) 표시 — 원문에 있는 것만. 1986 원문은 보지 못했다고 [미확인] 으로.\n- 흐름 (슈트 17°) 문제다 — 준정적 고압 압밀이 아니다. 한계를 머리 요약에."
+ },
+ "N-73": {
+  "nn": "112",
+  "pdf": "757279e0-73._An_invitation_to_engage_with_computational_modeling_user_friendly_tool_for_in_silico_battery_component_generation_and_meshing.pdf",
+  "si": [
+   "db426f79-73._Sup1_An_invitation_to_engage_with_computational_modeling_user_friendly_tool_for_in_silico_battery_component_generation_and_meshing.pdf"
+  ],
+  "extra": [
+   "12e928d3-73._Sup2_An_invitation_to_engage_with_computational_modeling_user_friendly_tool_for_in_silico_battery_component_generation_and_meshing.mp4"
+  ],
+  "bib": "M. Chouchane, A. A. Franco, \"An Invitation to Engage with Computational Modeling: User-Friendly Tool for In Silico Battery Component Generation and Meshing\", Batteries & Supercaps 2021, 4, 1451–1456 (Concept), doi 10.1002/batt.202100096 (본문 6 쪽 · Supporting Information 6 쪽 · 보충 영상 1 개)",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+  "dup": "papers/ 에 chouchane* 없음 · 'batt.202100096' · 'Invitation to Engage' grep = benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (인용만) → 카드 없음",
+  "note": "- 의도 = 넘김 도구 (질문 h 이웃): benhadjali2026 이 DEM 구조를 0.2 µm 등방 복셀로 바꾼 뒤 쓴 도구 (INNOV · 복셀 메싱) 의 원전 (그 카드 L449 · L165 · L262). 도구가 하는 일 (구조 가져오기 · 확률적 생성 · 메시 알고리즘 · 내보내는 형식 · 상 / 계면 표지 · 해상도 한계) 을 단계별로. 계산 식이 없으면 없다고 적는다 (식 크롭 0 은 정상일 수 있다 — 이유를 적는다).\n- 보충 영상 (mp4 하나) 은 그대로 열 수 없다 → `ffprobe` · `ffmpeg -ss <t> -i <파일> -frames:v 1 …png` 로 정지 화면을 서너 장 뽑아 직접 보고, 대표 한두 장을 `litdb/figures/<slug>/vid_S?_t??s.png` 로 넣어 figures.json 에 손 크롭 관례로 표지 (영상 파일은 커밋하지 않는다).\n- 우리 쪽 대응 = DEM → MPM 스캐폴드 · STEP3 복셀 격자 (계단 표면 · 격자 의존) — 이 도구의 메시 방식이 그 문제를 어떻게 다루는지 / 안 다루는지."
+ },
+ "N-74": {
+  "nn": "113",
+  "pdf": "bf68a0e2-74._Coordination_number_changes_during_powder_densification.pdf",
+  "bib": "R. M. German, \"Coordination number changes during powder densification\", Powder Technology 253 (2014) 368–376, doi:10.1016/j.powtec.2013.12.006 (Received 9 October 2013 · PDF 9 쪽 · 단독 저자)",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "model2": "같은 축의 정본 카드 litdb/papers/arzt1982_particle_coordination_densification_spheres.md 와 서로 가리키게",
+  "dup": "papers/ 에 german* 없음 (egermann1983 은 다른 저자) · DOI grep 0 건 · 제목 grep = nadeem2023_gnn_mixing_index (인용만) → 카드 없음",
+  "note": "- 의도 = 단계 5 · 7: '압밀이 배위수를 바꾸는 크기' (nadeem2023 L538–546 의 근거). **배위수 ↔ 상대 밀도 식 (모든 모델 · 계수) 을 식 번호별로 따로 자르고**, 표 (모델별 식 · 적용 범위 · 출처 자료) 를 만든다: 최소 ≈3 (중력 약함 · 나노 분말) · 무작위 충전 6–7 (밀도 0.58–0.64) · 완전 치밀 ≈14.\n- 우리 쪽 대조 자리: DEM 의 SE–SE CN (접촉 정의 = 겹침 > 0) · MPM 에는 접촉망이 없음 · 등압 / 일축 · 단분산 / 이분 혼합에서의 차이를 원문이 어떻게 말하는지. arzt1982 카드의 식과 같은지 / 다른지.\n- nadeem2023 카드가 옮긴 서술이 원문과 같은지 대조."
+ },
+ "N-75": {
+  "nn": "114",
+  "pdf": "d24c923d-75._Surface_area_estimation_of_digitized_planes.pdf",
+  "bib": "J. C. Mullikin, P. W. Verbeek, \"Surface area estimation of digitized planes\", Bioimaging 1 (1993) 6–16 (Received 21 October 1992 · PDF 11 쪽 · 스캔본 — 글자 층이 OCR 이라 낱말 사이가 벌어져 있다 → 쪽을 그림으로 열어 읽는다 · DOI 는 원문에 인쇄돼 있을 때만)",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "model2": "같은 축의 정본 카드 litdb/papers/windreich2003_voxel_based_surface_area_estimation.md · litdb/papers/lindblad2005_surface_area_weighted_local_configurations.md 와 서로 가리키게",
+  "dup": "papers/ 에 mullikin* · verbeek* 없음 · 제목 grep 0 건 · 'Mullikin' grep = lindblad2005 · windreich2003 (인용만) → 카드 없음",
+  "note": "- 의도 = 단계 7 (형상 · 피복 넓이 진단): '복셀 면 면적 가중치 S1–S6 (0.894 · 1.3409 · 1.5879 …) 의 도출 · 구 · 원기둥 성능 · 물체 / 배경 평균 처방의 원전' (windreich2003 L34 · L174 · L191). **가중치 값이 원문 어디에 · 어떤 최적화 (치우침 0 · 평균 제곱 오차 최소) 로 나오는지** 를 식 · 표 번호와 함께 대조하고, windreich2003 카드가 옮긴 값과 같은지 한 줄씩 적는다 (다르면 카드 문제).\n- 표면 복셀 정의 (6-연결) · 노출 면 1 · 2 · 3 개 유형 · 치우침 / 평균 제곱 오차 식을 식 번호별로 따로 자른다. 스캔본이라 손 크롭 (manual_crop 표지) 이 많을 것이다.\n- 우리 쪽 쓰임 = 복셀 격자에서 AM–SE 계면 넓이 · 피복 (계단 표면이 넓이를 부풀리는 문제) — 이 가중치를 쓸 때의 적용 조건 (평면 · 무작위 방향) 과 한계."
+ },
+ "N-64": {
+  "nn": "116",
+  "pdf": "87762e6f-64._Application_of_Warm_Isostatic_Pressing_to_Densification_of_All_Solid-State_Composite_Cathode_Electrodes_in_All_Solid-State_Lithium-Ion_Batteries.pdf",
+  "bib": "K. Hayashi, T. Mori, K. Fukuda, H. Ito, Y. Manabe, \"Application of Warm Isostatic Pressing to Densification of All Solid-State Composite Cathode Electrodes in All Solid-State Lithium-Ion Batteries\", J. Jpn. Soc. Powder Powder Metallurgy (粉体および粉末冶金) 72 (2025) S1167–S1173, https://doi.org/10.2497/jjspm.16C-SIS6-03 (PDF 7 쪽 · 영문)",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
+  "dup": "papers/ 에 hayashi* 없음 · DOI · 제목 · 'S1167' grep = benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (인용만) → 카드 없음",
+  "note": "- 의도 = 단계 5 (결과 전 대조 후보): 'WIP 복합 양극 치밀화 (계면 · 전하이동 저항 감소의 선행)' · **압력별 기공 값이 있는지** 가 후보 표에서 [미확인] 이었다 → 원문에서 압력 · 온도 · 유지 시간별 기공률 / 상대 밀도 / 두께가 있는지, 어떻게 쟀는지 (싱크로트론 X-CT · 복셀 크기 · 분할 · 누른 채 / 뺀 뒤), 값이 무엇인지를 표로. 없으면 '없음'.\n- 재료 = NCM111 + Li6PS5Cl 복합 양극 (우리 계와 가깝다 — 조성 · 입경 · 바인더 유무 · 시트인지 펠릿인지 · 일축 가압과의 대조가 있는지를 분명히). 등방 가압 ↔ 우리 일축 300 MPa 의 차이를 머리 요약에.\n- benhadjali2026 카드 L439 가 옮긴 서술이 원문과 같은지 대조."
+ },
+ "N-65": {
+  "nn": "117",
+  "pdf": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+  "bib": "F. B. Swinkels, D. S. Wilkinson, E. Arzt, M. F. Ashby, \"Mechanisms of hot-isostatic pressing\", Acta metall. 31 (11) (1983) 1829–1840 (PII 0001-6160(83)90129-3 · Received 17 April 1983; in revised form 27 May 1983 · PDF 12 쪽 · 스캔본 — 글자 층이 OCR 이라 깨져 있다 (첫 저자 머리글자가 'F. 9.' 로 읽힌다) → 쪽을 그림으로 열어 저자 머리글자 · 식 · 값을 읽는다 · DOI 는 원문에 인쇄돼 있을 때만 — 후보 표의 DOI 10.1016/0001-6160(83)90129-3 는 2 차 기록이라고 적는다)",
+  "model": "mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation",
+  "model2": "같은 계보의 정본 카드 litdb/papers/arzt1982_particle_coordination_densification_spheres.md 와 서로 가리키게",
+  "dup": "papers/ 에 swinkels* 없음 · 'Swinkels' · 제목 grep = benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (인용만) → 카드 없음",
+  "note": "- 의도 = 후보 M0 (균질화 압밀 계보): 'HIP 기전 지도 (Arzt 계열)'. **치밀화 속도 식 (소성 항복 · 멱법칙 크리프 · 확산 등 기전별 · 초기 단계 / 최종 단계) 을 식 번호별로 따로 자르고**, 기호 · 가정 (구 충전 · 배위수 · 접촉 면적 ↔ 상대 밀도) · 재료 값 (납 · 주석 · PMMA) · 실험 장치 (밀도 연속 측정) · 모델 ↔ 실험 비교를 표로.\n- 소성 항복 치밀화 식 (압력 ↔ 상대 밀도 · 항복 세기) 은 우리 순수 SE Heckel (P_y 138 MPa) · MPM σ_y 0.30 과 견줄 자리 — 식 꼴과 적용 범위 (상대 밀도 구간) 를 분명히. 등방 압력이다 (우리는 일축 · 금형).\n- 스캔본이라 손 크롭 (manual_crop 표지) 이 많을 것이다. OCR 글자를 그대로 믿지 말고 그림으로 대조한 값만 적는다 ([판독] 표지)."
+ },
+ "N-66": {
+  "nn": "118",
+  "pdf": "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+  "si": [
+   "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf"
+  ],
+  "bib": "M. Ebner, F. Geldmacher, F. Marone, M. Stampanoni, V. Wood, \"X-Ray Tomography of Porous, Transition Metal Oxide Based Lithium Ion Battery Electrodes\", Adv. Energy Mater. 2013, 3, 845–850 (Communication), DOI 10.1002/aenm.201200932 (본문 6 쪽 · Supporting Information 11 쪽 · 18 MB). 후보 표에는 'Ebner 2013 (zhang2026_xct ref 22 · 성 · 연도만)' 뿐이었다 — 1저자가 준 PDF 첫 쪽에서 이 서지를 확인했다.",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "papers/ 에 ebner* 없음 · DOI · 제목 grep 0 건 ('Ebner' 는 landesfeind2016 · landesfeind2018 · nguyen2020 · malifarge2017 · hlushkou2018 등에 다른 Ebner 논문 인용으로 섞여 있다) → 카드 없음",
+  "note": "- 의도 = 단계 5 (출발 상태 · 영상 → DEM): zhang2026_xct 가 DEM 초기 구조로 쓴 '싱크로트론 X-CT 미압연 NMC 양극 데이터셋' 의 원전 (그 카드 L38 · L50 · L265 · L465–466). **전극 조성 (NMC : 탄소 : 바인더 wt%) · 압밀 압력 집합 · 복셀 크기 · 촬영 부피 · 분할 알고리즘 · 입자 좌표 · 부피 주석 · 공개 데이터의 꼴** 을 표로 — zhang2026 카드가 [미확인] 으로 남긴 것 ('Ebner 전극의 조성' · '0/30/60/200 MPa 가 Ebner 의 압밀 조건과 같은지') 을 원문으로 채우거나 '없음' 으로 닫는다 (zhang2026 카드는 고치지 않는다 — 카드 문제 · 보탬 후보로 보고).\n- 기공률 · tortuosity · 입도 분포 값과 정의 (tortuosity 가 τ 인지 τ² 인지 · 계산법) 를 원문 그대로. SI 그림 · 표 전부.\n- LIB 양극 (액체 전해질 계) 이다 — ASSB 가 아니다.\n- 인용한 쪽의 원문 (zhang2026 · JOM 2026) PDF 가 같은 inbox 에 있다: `litdb/inbox/b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf` — 그 논문이 이 논문을 인용한 문장을 원문으로 직접 대조할 수 있다 (zhang2026 카드는 고치지 않는다 · 다르면 카드 문제로 보고 · 그 PDF 로 새 카드를 만들지 않는다)."
+ },
+ "N-67": {
+  "nn": "119",
+  "pdf": "d0538a1f-67._Discrete_element_method_DEM_analysis_of_lithium_ion_battery_electrode_structures_from_X-ray_tomography-the_effect_of_calendering_conditions.pdf",
+  "bib": "R. Ge, D. J. Cumming, R. M. Smith, \"Discrete element method (DEM) analysis of lithium ion battery electrode structures from X-ray tomography-the effect of calendering conditions\", Powder Technology 403 (2022) 117366, doi:10.1016/j.powtec.2022.117366 (Received 22 December 2021 · PDF 10 쪽). 후보 표에는 'Ge 2022 (zhang2026_xct ref 18 · 성 · 연도만)' 뿐이었다 — 1저자가 준 PDF 첫 쪽에서 이 서지를 확인했다.",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "같은 주제의 정본 카드 litdb/papers/zhang2026_xct_dem_cathode_calendering_peel_calibration.md · litdb/papers/he2026_dem_calendering_inhomogeneity_areal_density.md 와 서로 가리키게",
+  "dup": "papers/ 에 ge2022* 없음 · DOI · '117366' · 제목 grep 0 건 → 카드 없음",
+  "note": "- 의도 = 단계 5 (출발 상태): 'X-CT 미압연 구조를 DEM 에 넣어 공극 · 접촉망 · 응력을 분석' (zhang2026_xct L96) · '플래튼 속도 0.01 m s⁻¹ 도 ref 18 과 일관' (L139). 원문 값과 대조.\n- **he2026 [39] 'Ge 2022 = 입자–입자 정지마찰 0.25 의 출처' 가 이 논문인지** 를 가른다: 이 논문의 접촉 모델 (EEPA + bond 인지) · 마찰 계수 값 표에서 0.25 가 있는지 / 없는지 (후보 표 '어긋남' 절의 미확인 항목 — he2026 원문 목록은 보지 못했으니 '이 논문에 그 값이 있다 / 없다' 까지만).\n- 접촉 법칙 식 · 매개변수 (맞춘 값 · 맞춘 대상) · X-CT → 구 근사 방법 · 압연 조건 (속도 · 간극 / 압력 · 온도?) · 되돌아옴 · 검증을 표로. 식은 번호별로 따로 자른다. DEM 한계에 대한 원문 문장을 따옴표로.\n- 인용한 쪽의 원문 (zhang2026 · JOM 2026) PDF 가 같은 inbox 에 있다: `litdb/inbox/b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf` — 그 논문이 이 논문을 인용한 문장을 원문으로 직접 대조할 수 있다 (zhang2026 카드는 고치지 않는다 · 다르면 카드 문제로 보고 · 그 PDF 로 새 카드를 만들지 않는다)."
+ },
+ "N-69": {
+  "nn": "120",
+  "pdf": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+  "bib": "A. J. Stershic, S. Simunovic, J. Nanda, \"Modeling the evolution of lithium-ion particle contact distributions using a fabric tensor approach\", Journal of Power Sources 297 (2015) 540–550, doi:10.1016/j.jpowsour.2015.07.088 (PDF 11 쪽). 후보 표에는 'Stershic 2015 (zhang2026_xct ref 30 · 성 · 연도만)' 뿐이었다 — 1저자가 준 PDF 첫 쪽에서 이 서지를 확인했다.",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "papers/ 에 stershic* 없음 · DOI grep 0 건 ('fabric tensor' 는 ngandjong2021 · sangros2019 · sangros2020 · schreiner2020 등의 본문 낱말) · 'Stershic' = zhang2026_xct · ngandjong2021_dem_calendering_digital_twin (인용만) → 카드 없음",
+  "note": "- 의도 = 조건 R7: zhang2026_xct 의 결론 '큰 입자일수록 접촉점이 많고 힘이 커서 파쇄에 더 취약하다 — X-CT 에서도 관측 (ref 30)' (그 카드 L222) 의 근거. **원문이 그 문장을 실제로 뒷받침하는지** (입자 크기 ↔ 접촉 수 · 파쇄 관찰이 있는지) 대조 — 없으면 '없음' + 카드 문제.\n- fabric tensor 정의 식 · 접촉 판정 (영상에서 접촉을 어떻게 셌나) · 조성 · 압밀압별 배위수 · 이방성 · DEM 과 실험이 어긋난 점 (원문 문장을 따옴표로 — DEM 한계 · 질문 k) 을 표로. 식은 번호별로 따로 자른다.\n- 우리 쪽 대조 자리 = DEM 접촉망의 배위수 · 방향 분포 (일축 압축 이방성) · 단계 7.\n- 인용한 쪽의 원문 (zhang2026 · JOM 2026) PDF 가 같은 inbox 에 있다: `litdb/inbox/b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf` — 그 논문이 이 논문을 인용한 문장을 원문으로 직접 대조할 수 있다 (zhang2026 카드는 고치지 않는다 · 다르면 카드 문제로 보고 · 그 PDF 로 새 카드를 만들지 않는다)."
+ },
+ "N-63": {
+  "nn": "121",
+  "pdf": "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+  "si": [
+   "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
+  ],
+  "extra": [
+   "b228588e-63._Sup2_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.xlsx",
+   "38925eb5-63._Sup3_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.xlsx"
+  ],
+  "bib": "M. Dixit, C. Beamer, R. Amin, J. Shipley, R. Eklund, N. Muralidharan, L. Lindqvist, A. Fritz, R. Essehli, M. Balasubramanian, I. Belharouak, \"The Role of Isostatic Pressing in Large-Scale Production of Solid-State Batteries\", ACS Energy Lett. 2022, 7, 3936–3946 (Focus Review), https://doi.org/10.1021/acsenergylett.2c01936 (본문 11 쪽 · Supporting Information 13 쪽 · xlsx 둘)",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
+  "dup": "papers/ 에 dixit* 없음 · DOI · 제목 grep = benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (인용만) → 카드 없음",
+  "note": "- 의도 = 단계 5 (가압 방식): '등방 가압 ASSB 의 기준 문헌 (같은 압력 단축 ↔ 등방 대조가 있는지 볼 것)' (benhadjali2026 L433). **같은 압력에서 일축 ↔ 등방 (CIP · WIP · HIP) 을 견준 값 (기공률 · 상대 밀도 · 전도도 · 계면 저항) 이 원문에 있는지** 를 표로 — 없으면 '없음'. 리뷰 논문이니 값마다 원 출처 (참고 번호) 를 같이 적는다 (2 차 값).\n- 압력 · 온도 · 유지 시간 범위 · 장비 종류별 표 · 기술경제 (xlsx) 를 정리. xlsx 둘 (기술경제 · CIP-WIP-HIP 장비 · 사이클 표) 은 믿지 않는 자료다 → `python3 -I` 로 openpyxl (read_only=True · data_only=True) 로 읽는다 (매크로 · 외부 연결 없음 — 메인 세션 확인). 표 내용은 카드에 옮기고 xlsx 파일 자체는 커밋하지 않는다.\n- 등방 압력 ↔ 우리 일축 300 MPa 금형 압축의 차이 · 탈압 (조건 R4) 에 대한 원문의 말을 머리 요약에. benhadjali2026 카드의 2 차 서술과 대조."
+ },
+ "X-68-1": {
+  "nn": "123",
+  "kind": "기존 카드 보강 (68-1 번 파일 · zhang2026_xct_dem_cathode_calendering_peel_calibration)",
+  "row": "후보 표의 행이 아니다 — **기존 카드 보강** (1저자 11-12: \"먹여준 위 두 논문도 논문에이전트 부탁\"). 1저자가 이 원문을 준 까닭은 지시서 끝 '이 논문만의 덧붙임' 에 있다.",
+  "pdf": "b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+  "bib": "X. Zhang, T. Gao, Z. Xiao, Y. Ding, \"Investigation into Microstructural and Mechanical Evolution During Lithium-Ion Battery Cathode Calendering via X-ray Tomography-Based Discrete Element Method\", JOM (2026), https://doi.org/10.1007/s11837-026-08748-x (© 2026 The Minerals, Metals & Materials Society · 특집 'Advances in Energy Materials Research: Fundamentals and Applications' · PDF 16 쪽 · 권 · 쪽은 첫 쪽에 인쇄돼 있지 않다)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "정본에 이 논문 카드가 **이미 있다** = `zhang2026_xct_dem_cathode_calendering_peel_calibration` (601 줄 · 크롭 13 장 · digested 2026-09-26) → 그 카드를 보강한다 (새 카드 금지)",
+  "note": "- ⚠ **이 일은 새 카드가 아니라 기존 카드의 보강이다.** 대상 = `litdb/papers/zhang2026_xct_dem_cathode_calendering_peel_calibration.md` (정본에 이미 있다 · 601 줄 · 크롭 13 장 · 식 크롭 0). 새 slug · 새 카드를 만들지 않는다. CURATOR_BRIEF 2 절의 '이미 카드가 있으면 멈춘다' 는 여기서는 해당 없다 (프롬프트가 '기존 카드 보강' 이라고 한 경우).\n- 기존 내용은 지우지 않는다. 원문과 다른 값 · 문장을 찾으면 그 자리에 `[정정 2026-11-12 · 원문 p.N: …]` 표지로 고치고 옛 표기를 남긴다 (조용히 덮어쓰지 않는다). 카드 끝 (Q&A 로그 앞) 에 `## 보강 기록 (2026-11-12)` 절을 만들어 더한 것 · 고친 것 · 대조한 범위를 표로 적는다. 메타 줄 (slug · DOI · type · PDF · digested · status) 은 꼴을 깨지 않는다 — 이번에 쓴 PDF 파일 이름은 보강 기록에 적는다.\n- 보강할 것 (이 순서):\n  ① **원문 전수 정독 + 카드 대조** — 카드의 핵심 수치 표 · 방법 절 · 그림 표의 값을 원문과 한 줄씩 대조 (대조한 절 · 고친 수를 기록). 카드에 [미확인] 으로 남은 것을 원문으로 채우거나 '원문에 없음' 으로 닫는다.\n  ② **크롭 보강** — 기존 그림 폴더를 먼저 네 scratchpad 에 백업한다. 그림 · 표가 빠짐없이 있는지 · 품질 (잘린 축 · 캡션 누락) 을 전부 열어 보고, 빠진 것 · 나쁜 것만 다시 자른다 (기존 손 크롭 · figures.json 항목 · 표지를 잃지 않게 — `--clean` 을 쓰면 폴더가 비워지므로 쓰기 전에 무엇이 사라지는지 확인하고, 사라진 손 크롭은 되살린다). **핵심 식을 식 번호별로 따로 자른다** (지금 0 장). 끝에 모음 그림.\n  ③ 카드에 `## ★ 자세한 분석 — 우리 계획에 무엇을 주나` 절을 더한다 (공통 지시 ② · 본 = 아래 본 카드의 그 절).\n  ④ 공통 지시 ① '고른 의도 대조' 절은 **'보강 의도 대조' 절로 바꿔 쓴다**: 1저자가 이 원문을 준 까닭 = 이 논문의 참고문헌이 후보 표 여러 행의 원 인용처이기 때문이다 (후보 표 N-55 Meyer 2017 = 참고 [8] · N-67 Ge 2022 = [18] · N-68 Sonzogni 2024 = [21] · N-66 Ebner 2013 = [22] · N-69 Stershic 2015 = [30] · 그리고 [27] Lyu 2025 · [28] Srivastava 2020 · [32] Lippke 2024). 그래서 (가) **참고문헌 목록 전체를 원문에 적힌 그대로** 카드 끝 절 (`## 참고문헌 목록 (원문 그대로)`) 에 옮기고 (나) 후보 표 · wishlist 와 닿는 참고 ([8] · [14] · [15] · [17]–[22] · [27] · [28] · [30]–[32] · [34]) 마다 '이 논문이 그 참고에 대해 한 말' (원문 문장을 따옴표로 + 쪽) 과 '카드가 옮긴 2 차 서술' (카드 줄 번호) 이 같은지 표로 대조한다 (다르면 이 카드의 그 줄을 정정 표지로 고친다 — 이 카드가 보강 대상이므로 고쳐도 된다).\n  ⑤ 정독 출력 (batch NN · 질문 a–n) 을 새로 쓴다. `## n` 절 = 이 논문이 인용했지만 정본 카드가 없는 것 가운데 a–m 에 직접 쓸 것 (많아야 다섯 · 서지는 원문 목록 그대로 · papers/ 목록 + grep 확인).\n  ⑥ INDEX_DEM 재생성 (`build_index.py`) · 비교 문서는 새 논점이 있을 때만 보탠다 · 커밋 메시지 = `litdb: zhang2026_xct_dem_cathode_calendering_peel_calibration 보강 — …`.\n- 답장의 첫 줄에 '기존 카드 보강 (68-1 번 파일)' 이라고 적고, '카드 줄 수' 는 보강 전 → 뒤, '크롭 수' 도 전 → 뒤 (식 크롭 수) 로 적는다. 끝 줄 = '보강 의도 대조 결과 한 줄 (카드 2 차 서술이 원문과 같음 / 일부 다름 / 다름)'.\n- 메인 세션이 이미 본 것 (원문 16 쪽 목록): [21] = 'M. Sonzogni, J.-M. Vanson, Y. Reynier, S. Martinet, K. Ioannidou, and F. Radjai, Powder Technol. 442, 119891 (2024)' · [18] Ge 2022 Powder Technol. 403, 117366 · [22] Ebner 2013 Adv. Energy Mater. 3, 845 · [30] Stershic 2015 J. Power Sources 297, 540 · [8] Meyer 2017 J. Mater. Process. Technol. 249, 172 — 네가 원문에서 다시 확인해 그대로 옮긴다.\n- 카드 L97 'Sonzogni (ref 21) 회전 롤 + 응집-소성 바인더 접촉법칙' · L307 '롤 곡률 · 전단 (ref 21 Sonzogni 가 다룬 것)' · L222 '큰 입자일수록 … X-CT 에서도 관측 (ref 30)' · L139 '플래튼 속도 0.01 m s⁻¹ (ref 18 과 일관)' 이 원문 문장과 같은지가 대조의 핵심이다.\n- 식 (1)–(23) (접촉 모델 · bond · 응력 텐서 · FSA 등) 을 번호별로 자른다."
+ },
+ "X-68-2": {
+  "nn": "124",
+  "kind": "기존 카드 보강 (68-2 번 파일 · lyu2025_3d_dem_drying_calendering_lib)",
+  "row": "후보 표의 행이 아니다 — **기존 카드 보강** (1저자 11-12: \"먹여준 위 두 논문도 논문에이전트 부탁\"). 1저자가 이 원문을 준 까닭은 지시서 끝 '이 논문만의 덧붙임' 에 있다.",
+  "pdf": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+  "extra": [
+   "77021b35-68-2._Sup1_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "bdc317ef-68-2._Sup2_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "5d959c56-68-2._Sup3_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "37bc0003-68-2._Sup4_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4"
+  ],
+  "bib": "Y. Lyu, S. Dong, L. T. Gao, Z.-S. Guo, \"Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering\", International Journal of Electrical Power and Energy Systems 165 (2025) 110521, doi:10.1016/j.ijepes.2025.110521 (제목 · 학술지 · 권 · 번호 = PDF 문서 정보 · 저자 = 기존 카드 표기 — 첫 쪽에서 다시 확인 · PDF 12 쪽 · 보충 영상 4 개)",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "정본에 이 논문 카드가 **이미 있다** = `lyu2025_3d_dem_drying_calendering_lib` (251 줄 · 크롭 10 장 · digested 2026-06-26 · 옛 양식) → 그 카드를 보강한다 (새 카드 금지)",
+  "note": "- ⚠ **이 일은 새 카드가 아니라 기존 카드의 보강이다.** 대상 = `litdb/papers/lyu2025_3d_dem_drying_calendering_lib.md` (정본에 이미 있다 · 251 줄 · 크롭 10 장 · 식 크롭 0). 새 slug · 새 카드를 만들지 않는다. CURATOR_BRIEF 2 절의 '이미 카드가 있으면 멈춘다' 는 여기서는 해당 없다 (프롬프트가 '기존 카드 보강' 이라고 한 경우).\n- 기존 내용은 지우지 않는다. 원문과 다른 값 · 문장을 찾으면 그 자리에 `[정정 2026-11-12 · 원문 p.N: …]` 표지로 고치고 옛 표기를 남긴다 (조용히 덮어쓰지 않는다). 카드 끝 (Q&A 로그 앞) 에 `## 보강 기록 (2026-11-12)` 절을 만들어 더한 것 · 고친 것 · 대조한 범위를 표로 적는다. 메타 줄 (slug · DOI · type · PDF · digested · status) 은 꼴을 깨지 않는다 — 이번에 쓴 PDF 파일 이름은 보강 기록에 적는다.\n- 보강할 것 (이 순서):\n  ① **원문 전수 정독 + 카드 대조** — 카드의 핵심 수치 표 · 방법 절 · 그림 표의 값을 원문과 한 줄씩 대조 (대조한 절 · 고친 수를 기록). 카드에 [미확인] 으로 남은 것을 원문으로 채우거나 '원문에 없음' 으로 닫는다.\n  ② **크롭 보강** — 기존 그림 폴더를 먼저 네 scratchpad 에 백업한다. 그림 · 표가 빠짐없이 있는지 · 품질 (잘린 축 · 캡션 누락) 을 전부 열어 보고, 빠진 것 · 나쁜 것만 다시 자른다 (기존 손 크롭 · figures.json 항목 · 표지를 잃지 않게 — `--clean` 을 쓰면 폴더가 비워지므로 쓰기 전에 무엇이 사라지는지 확인하고, 사라진 손 크롭은 되살린다). **핵심 식을 식 번호별로 따로 자른다** (지금 0 장). 끝에 모음 그림.\n  ③ 카드에 `## ★ 자세한 분석 — 우리 계획에 무엇을 주나` 절을 더한다 (공통 지시 ② · 본 = 아래 본 카드의 그 절).\n  ④ 공통 지시 ① '고른 의도 대조' 절은 **'보강 의도 대조' 절로 바꿔 쓴다**: 1저자가 이 원문을 준 까닭 = 이 논문의 참고문헌이 후보 표 여러 행의 원 인용처이기 때문이다 (후보 표 N-68 Sonzogni 2024 = 참고 [46] (제목까지 적힌 유일한 목록) · 그리고 [44] · [45] Sangrós Giménez · [47] Sun · [48] Xu · [49] · [50] Zhang · [51] · [52] Ge · [53] Ngandjong). 그래서 (가) **참고문헌 목록 전체를 원문에 적힌 그대로** 카드 끝 절 (`## 참고문헌 목록 (원문 그대로)`) 에 옮기고 (나) 후보 표 · wishlist 와 닿는 참고 ([44]–[53] 과 카드가 언급한 참고 전부) 마다 '이 논문이 그 참고에 대해 한 말' (원문 문장을 따옴표로 + 쪽) 과 '카드가 옮긴 2 차 서술' (카드 줄 번호) 이 같은지 표로 대조한다 (다르면 이 카드의 그 줄을 정정 표지로 고친다 — 이 카드가 보강 대상이므로 고쳐도 된다).\n  ⑤ 정독 출력 (batch NN · 질문 a–n) 을 새로 쓴다. `## n` 절 = 이 논문이 인용했지만 정본 카드가 없는 것 가운데 a–m 에 직접 쓸 것 (많아야 다섯 · 서지는 원문 목록 그대로 · papers/ 목록 + grep 확인).\n  ⑥ INDEX_DEM 재생성 (`build_index.py`) · 비교 문서는 새 논점이 있을 때만 보탠다 · 커밋 메시지 = `litdb: lyu2025_3d_dem_drying_calendering_lib 보강 — …`.\n- 답장의 첫 줄에 '기존 카드 보강 (68-2 번 파일)' 이라고 적고, '카드 줄 수' 는 보강 전 → 뒤, '크롭 수' 도 전 → 뒤 (식 크롭 수) 로 적는다. 끝 줄 = '보강 의도 대조 결과 한 줄 (카드 2 차 서술이 원문과 같음 / 일부 다름 / 다름)'.\n- 메인 세션이 이미 본 것 (원문 목록): [46] = 'Sonzogni M, Vanson J-M, Reynier Y, Martinet S, Ioannidou K, Radjai F. Discrete modeling of the calendering process for positive electrodes of Li-ion batteries. Powder Technol 2024;442:119891.' · 서론의 [46] 문장 = '… studied the effect of calendering on the microstructure and electronic properties of the electrodes by DEM. The bonding structure induced by calendering involves mostly vertical tensile contacts and horizontal compressive contacts.' — 네가 원문에서 다시 확인해 그대로 옮긴다.\n- 이 카드는 6 월의 옛 양식이라 짧다 (251 줄) → 핵심 수치 표에 쪽 · 표지 병기 · 방법 절 (접촉 모델 식 · 선형 병렬 결합 · 3 단계 건조법 · 매개변수 표 · 입자 수 · RVE · 검증) · 그림 표 전부를 키트 수준으로 채운다 (새 절은 번호를 이어 붙이고 기존 절은 남긴다).\n- **보충 영상 4 개 (mp4)** 는 그대로 열 수 없다 → `ffprobe` 로 길이 · 해상도를 보고 `ffmpeg -ss <t> -i <파일> -frames:v 1 <네 scratchpad>/vidN_tXX.png` 로 정지 화면을 서너 장씩 뽑아 직접 본다. 원문의 영상 설명 (Appendix / Supplementary data 절) 과 맞춰 카드에 '영상 S? = 무엇' 을 적고, 대표 정지 화면을 영상마다 한두 장 `litdb/figures/<slug>/vid_S?_t??s.png` 로 넣어 figures.json 에 손 크롭 관례로 표지한다 (영상 파일은 커밋하지 않는다)."
+ },
+ "X-68": {
+  "nn": "115",
+  "pdf": "340d3f0b-68._Multiscale_modeling_of_lithium-ion_battery_electrodes_based_on_nano-scale_X-ray_computed_tomography.pdf",
+  "si": [
+   "f45fee9b-68._Sup_Multiscale_modeling_of_lithium-ion_battery_electrodes_based_on_nano-scale_X-ray_computed_tomography.pdf"
+  ],
+  "bib": "A. G. Kashkooli, S. Farhad, D. U. Lee, K. Feng, S. Litster, S. K. Babu, L. Zhu, Z. Chen, \"Multiscale modeling of lithium-ion battery electrodes based on nano-scale X-ray computed tomography\", Journal of Power Sources 307 (2016) 496–509, doi:10.1016/j.jpowsour.2015.12.134 (본문 14 쪽 · 보충 5 쪽).",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "dup": "papers/ 에 kashkooli* · sonzogni* 없음 · DOI grep 0 건 · 'Kashkooli' grep = wang2027_ncm811_effective_bulk_modulus_mapper_dfs_gnn (인용만) → 카드 없음",
+  "note": "- 이 논문은 후보 표의 어느 행도 아니다 (후보 밖). 공통 지시 ① '고른 의도 대조' 절은 **'이 논문을 넣는 까닭' 절로 바꿔 쓴다**: 1저자가 준 논문이라는 사실 한 문단 + 이 논문이 우리 계획에 주는 것을 원문에서 뽑아 같은 표 꼴 (우리 쪽 자리 · 원문 위치 · 값 · 조건) 로 채운다. 지어낸 의도를 적지 않는다.\n- 이 논문이 실제로 주는 것 (나노 X-CT 재구성 · 대표 체적 (REV) · 유효 물성 · 입자 스케일 ↔ 전극 스케일 결합 · 검증) 을 우리 단계 7 (수송 · 복셀 격자) · 넘김 (질문 h) 쪽으로 정리. 식은 번호별로 따로 자른다. SI 그림도 전부.\n- LIB 전극 (액체 전해질 계) 이다 — ASSB 가 아니다. 절대값 전이 여부를 머리 요약에.\n- status.tsv 의 줄 이름 = '후보 밖 (68 번 파일)'. 답장 첫 줄에 '후보 밖 (68 번 파일 · Kashkooli 2016)' 이라고 적고, 끝 줄은 '넣는 까닭 대조 한 줄 (우리 계획에 주는 것 = 많음 / 일부 / 거의 없음)'.",
+  "kind": "후보 밖 논문 (68 번 파일 · Kashkooli 2016)",
+  "row": "후보 표의 행이 아니다 — 1저자가 68 번 파일로 준 논문 (후보 밖). 1저자 11-12: \"지금 먹여준 것들 다 논문 에이전트 돌린다\". 후보 표 N-68 (Sonzogni 2024) 과는 다른 논문이고, zhang2026 · lyu2025 의 참고문헌 목록에도 없다."
+ },
+ "N-68": {
+  "nn": "122",
+  "pdf": "26d1df58-68-3._Discrete_modeling_of_the_calendering_process_for_positive_electrodes_of_Li-ion_batteries.pdf",
+  "bib": "M. Sonzogni, J.-M. Vanson, Y. Reynier, S. Martinet, K. Ioannidou, F. Radjai, \"Discrete modeling of the calendering process for positive electrodes of Li-ion batteries\", Powder Technology 442 (2024) 119891, doi:10.1016/j.powtec.2024.119891 (PDF 13 쪽). 후보 표에는 'Sonzogni 2024 (zhang2026_xct ref 21 · 성 · 연도만)' 뿐이었다 — zhang2026 원문 [21] · lyu2025 원문 [46] 으로 서지를 찾았고 1저자가 준 PDF 첫 쪽에서 확인했다.",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
+  "model2": "계산 (DEM) 논문의 방법 절 꼴은 litdb/papers/cantor2020_compaction_model_highly_deformable_particles.md 도 참고 (같은 그룹 — Radjai · LMGC)",
+  "dup": "papers/ 에 sonzogni* 없음 · '119891' · 제목 grep 0 건 ('Sonzogni' = zhang2026_xct · lyu2025 인용만) → 카드 없음",
+  "note": "- 의도 = 후보 C′ 류 · 단계 5: zhang2026_xct 카드가 옮긴 '회전 롤 + 응집-소성 바인더 접촉법칙' (L97) · '롤 곡률 · 전단을 다룬 것' (L307) 이 원문과 같은지 대조. lyu2025 원문 서론의 [46] 문장 ('… microstructure and electronic properties … The bonding structure induced by calendering involves mostly vertical tensile contacts and horizontal compressive contacts') 도 원문 결과와 대조.\n- **접촉 법칙 (활물질 ↔ CBD 를 함께 다루는 법칙 · 탄소성 · 응집 · 하중 / 제하 가지) 의 식을 번호별로 따로 자르고**, 매개변수 표 (맞춘 값 · 맞춘 대상 · 물성인지 보정값인지) · 롤 기하 (지름 · 간극 · 속도) · 입자 수 · 2D / 3D · 주기 경계 · 계산 비용 · 검증 (실험 대조가 있는지) 을 표로.\n- 압연 속도 → 전극 늘어남 · 내부 이방성 (fabric) · 되돌아옴 (롤 통과 뒤 두께 회복) · 기공률 · 전자 전도 결과를 값 · 그림 번호와 함께. 우리 쪽 대조 자리 = 일축 평판 압축 (플래튼) ↔ 회전 롤의 전단 · 조건 R2 (미끄럼 · 분리) · R4 (탈압 · 되돌아옴) · 후보 C′ (항복 캡 탄소성 접촉).\n- DEM 한계 · 소성을 접촉 법칙에 넣는 어려움에 대한 원문 문장을 따옴표로 (질문 k · l).\n- 인용한 쪽 원문 두 편이 같은 inbox 에 있다 (새 카드를 만들지 않는다 · 대조용): zhang2026 = `litdb/inbox/b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf` · lyu2025 = `litdb/inbox/e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf`. 두 정본 카드 (zhang2026_xct_dem_cathode_calendering_peel_calibration · lyu2025_3d_dem_drying_calendering_lib) 에는 '🔗 관련 카드' 한 줄씩만 더한다."
+ }
+}
