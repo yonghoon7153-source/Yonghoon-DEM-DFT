@@ -1,0 +1,923 @@
+figure,kind,series,x_name,x,y_name,y,method
+Fig. 4,,CPDI,cell spacing (as plotted),0.01555,"Error Norm (Eq. 27, as plotted)",1.719e-08,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,CPDI,cell spacing (as plotted),0.03108,"Error Norm (Eq. 27, as plotted)",2.047e-07,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,CPDI,cell spacing (as plotted),0.06240,"Error Norm (Eq. 27, as plotted)",2.235e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,CPDI,cell spacing (as plotted),0.12475,"Error Norm (Eq. 27, as plotted)",2.771e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,MPM,cell spacing (as plotted),0.01555,"Error Norm (Eq. 27, as plotted)",9.913e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,MPM,cell spacing (as plotted),0.03118,"Error Norm (Eq. 27, as plotted)",1.669e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,MPM,cell spacing (as plotted),0.06250,"Error Norm (Eq. 27, as plotted)",2.111e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,MPM,cell spacing (as plotted),0.12529,"Error Norm (Eq. 27, as plotted)",4.614e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,uGIMP,cell spacing (as plotted),0.01555,"Error Norm (Eq. 27, as plotted)",2.039e-07,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,uGIMP,cell spacing (as plotted),0.03118,"Error Norm (Eq. 27, as plotted)",9.743e-07,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,uGIMP,cell spacing (as plotted),0.06250,"Error Norm (Eq. 27, as plotted)",6.041e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,uGIMP,cell spacing (as plotted),0.12539,"Error Norm (Eq. 27, as plotted)",4.703e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,cpGIMP,cell spacing (as plotted),0.01556,"Error Norm (Eq. 27, as plotted)",1.757e-08,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,cpGIMP,cell spacing (as plotted),0.03119,"Error Norm (Eq. 27, as plotted)",2.036e-07,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,cpGIMP,cell spacing (as plotted),0.06252,"Error Norm (Eq. 27, as plotted)",2.486e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 4,,cpGIMP,cell spacing (as plotted),0.12533,"Error Norm (Eq. 27, as plotted)",3.036e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 215.46 pt, 0.1 at 318.21 pt; y: 1e-3 at 75.43 pt, 1e-9 at 208.80 pt)"
+Fig. 7,,CPDI,cell spacing (as plotted),0.01244,"Error Norm (Eq. 27, as plotted)",3.643e-07,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,CPDI,cell spacing (as plotted),0.02497,"Error Norm (Eq. 27, as plotted)",2.872e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,CPDI,cell spacing (as plotted),0.04973,"Error Norm (Eq. 27, as plotted)",1.667e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,CPDI,cell spacing (as plotted),0.10081,"Error Norm (Eq. 27, as plotted)",6.293e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,unlabelled marker on x-axis (1.00E-07),cell spacing (as plotted),0.01236,"Error Norm (Eq. 27, as plotted)",9.992e-08,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,unlabelled marker on x-axis (1.00E-07),cell spacing (as plotted),0.02477,"Error Norm (Eq. 27, as plotted)",9.992e-08,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,unlabelled marker on x-axis (1.00E-07),cell spacing (as plotted),0.04966,"Error Norm (Eq. 27, as plotted)",9.992e-08,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,unlabelled marker on x-axis (1.00E-07),cell spacing (as plotted),0.09955,"Error Norm (Eq. 27, as plotted)",9.992e-08,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,uGIMP,cell spacing (as plotted),0.01241,"Error Norm (Eq. 27, as plotted)",1.729e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,uGIMP,cell spacing (as plotted),0.02488,"Error Norm (Eq. 27, as plotted)",6.706e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,uGIMP,cell spacing (as plotted),0.04988,"Error Norm (Eq. 27, as plotted)",2.343e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,uGIMP,cell spacing (as plotted),0.09999,"Error Norm (Eq. 27, as plotted)",1.119e-04,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,cpGIMP,cell spacing (as plotted),0.01241,"Error Norm (Eq. 27, as plotted)",1.178e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,cpGIMP,cell spacing (as plotted),0.02489,"Error Norm (Eq. 27, as plotted)",5.829e-06,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,cpGIMP,cell spacing (as plotted),0.04966,"Error Norm (Eq. 27, as plotted)",2.261e-05,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 7,,cpGIMP,cell spacing (as plotted),0.09955,"Error Norm (Eq. 27, as plotted)",1.099e-04,"vector marker centre; log axes calibrated on PDF gridlines/ticks (x: 0.01 at 209.12 pt, 0.1 at 314.61 pt; y: 1e-3 at 189.16 pt, 1e-7 at 326.09 pt)"
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0,vertical displacement (m),0.0104,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.005,vertical displacement (m),-0.0054,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.01,vertical displacement (m),-0.0446,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.015,vertical displacement (m),-0.1048,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.02,vertical displacement (m),-0.1843,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.025,vertical displacement (m),-0.2793,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.03,vertical displacement (m),-0.3877,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.035,vertical displacement (m),-0.5044,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.04,vertical displacement (m),-0.6268,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.045,vertical displacement (m),-0.7545,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.05,vertical displacement (m),-0.8823,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.055,vertical displacement (m),-1.0101,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.06,vertical displacement (m),-1.1329,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.065,vertical displacement (m),-1.2523,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.07,vertical displacement (m),-1.3600,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.075,vertical displacement (m),-1.4537,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.08,vertical displacement (m),-1.5296,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.085,vertical displacement (m),-1.5858,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.09,vertical displacement (m),-1.6209,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.095,vertical displacement (m),-1.6332,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.1,vertical displacement (m),-1.6238,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.105,vertical displacement (m),-1.5934,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.11,vertical displacement (m),-1.5437,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.115,vertical displacement (m),-1.4759,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.12,vertical displacement (m),-1.3945,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.125,vertical displacement (m),-1.3004,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.13,vertical displacement (m),-1.1957,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.135,vertical displacement (m),-1.0826,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.14,vertical displacement (m),-0.9644,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.145,vertical displacement (m),-0.8433,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.15,vertical displacement (m),-0.7194,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.155,vertical displacement (m),-0.5938,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.16,vertical displacement (m),-0.4720,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.165,vertical displacement (m),-0.3556,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.17,vertical displacement (m),-0.2505,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.175,vertical displacement (m),-0.1583,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.18,vertical displacement (m),-0.0850,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.185,vertical displacement (m),-0.0353,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.19,vertical displacement (m),-0.0100,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.195,vertical displacement (m),-0.0100,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.2,vertical displacement (m),-0.0343,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.205,vertical displacement (m),-0.0808,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.21,vertical displacement (m),-0.1466,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.215,vertical displacement (m),-0.2284,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.22,vertical displacement (m),-0.3242,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.225,vertical displacement (m),-0.4283,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.23,vertical displacement (m),-0.5412,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.235,vertical displacement (m),-0.6605,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.24,vertical displacement (m),-0.7635,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,extremum,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.0944,minimum vertical displacement (m),-1.6332,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 11,end of curve,"CPDI, vertical bar g = 1000 m/s2, particle q",time (s),0.2392,vertical displacement at last path point (m),-0.7635,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0,vertical displacement (m),0.0204,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.005,vertical displacement (m),-0.0406,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.01,vertical displacement (m),-0.1802,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.015,vertical displacement (m),-0.3985,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.02,vertical displacement (m),-0.6870,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.025,vertical displacement (m),-1.0429,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.03,vertical displacement (m),-1.4528,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.035,vertical displacement (m),-1.9184,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.04,vertical displacement (m),-2.4315,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.045,vertical displacement (m),-2.9887,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.05,vertical displacement (m),-3.5762,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.055,vertical displacement (m),-4.1828,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.06,vertical displacement (m),-4.7954,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.065,vertical displacement (m),-5.4004,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.07,vertical displacement (m),-5.9838,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.075,vertical displacement (m),-6.5236,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.08,vertical displacement (m),-7.0051,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.085,vertical displacement (m),-7.4060,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.09,vertical displacement (m),-7.7121,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.095,vertical displacement (m),-7.9193,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.1,vertical displacement (m),-8.0158,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.105,vertical displacement (m),-8.0041,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.11,vertical displacement (m),-7.8989,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.115,vertical displacement (m),-7.7122,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.12,vertical displacement (m),-7.4567,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.125,vertical displacement (m),-7.1437,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.13,vertical displacement (m),-6.7846,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.135,vertical displacement (m),-6.3800,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.14,vertical displacement (m),-5.9341,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.145,vertical displacement (m),-5.4419,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.15,vertical displacement (m),-4.9111,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.155,vertical displacement (m),-4.3482,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.16,vertical displacement (m),-3.7531,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.165,vertical displacement (m),-3.1401,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.17,vertical displacement (m),-2.5362,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.175,vertical displacement (m),-1.9532,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.18,vertical displacement (m),-1.4256,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.185,vertical displacement (m),-0.9646,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.19,vertical displacement (m),-0.5856,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.195,vertical displacement (m),-0.3086,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.2,vertical displacement (m),-0.1224,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.205,vertical displacement (m),-0.0264,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.21,vertical displacement (m),-0.0175,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.215,vertical displacement (m),-0.0935,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.22,vertical displacement (m),-0.2483,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.225,vertical displacement (m),-0.4789,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.23,vertical displacement (m),-0.7849,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.235,vertical displacement (m),-1.1599,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.24,vertical displacement (m),-1.6007,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,extremum,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.1009,minimum vertical displacement (m),-8.0215,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 12b,end of curve,"CPDI, vertical bar g = 3500 m/s2, particle q",time (s),0.2400,vertical displacement at last path point (m),-1.6007,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0,vertical displacement (m),0.0089,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.05,vertical displacement (m),-0.0051,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.1,vertical displacement (m),-0.0442,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.15,vertical displacement (m),-0.1095,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.2,vertical displacement (m),-0.2018,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.25,vertical displacement (m),-0.3302,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.3,vertical displacement (m),-0.5006,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.35,vertical displacement (m),-0.7022,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.4,vertical displacement (m),-0.9258,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.45,vertical displacement (m),-1.1613,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.5,vertical displacement (m),-1.3968,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.55,vertical displacement (m),-1.6324,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.6,vertical displacement (m),-1.8679,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.65,vertical displacement (m),-2.1034,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.7,vertical displacement (m),-2.3390,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.75,vertical displacement (m),-2.5673,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.8,vertical displacement (m),-2.7259,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.85,vertical displacement (m),-2.8782,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.9,vertical displacement (m),-3.0053,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),0.95,vertical displacement (m),-3.1073,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1,vertical displacement (m),-3.1780,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.05,vertical displacement (m),-3.2178,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.1,vertical displacement (m),-3.2359,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.15,vertical displacement (m),-3.2348,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.2,vertical displacement (m),-3.2124,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.25,vertical displacement (m),-3.1782,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.3,vertical displacement (m),-3.1376,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.35,vertical displacement (m),-3.0931,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.4,vertical displacement (m),-3.0555,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.45,vertical displacement (m),-3.0257,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.5,vertical displacement (m),-3.0110,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.55,vertical displacement (m),-3.0121,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.6,vertical displacement (m),-3.0269,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.65,vertical displacement (m),-3.0451,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.7,vertical displacement (m),-3.0533,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.75,vertical displacement (m),-3.0428,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.8,vertical displacement (m),-3.0021,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.85,vertical displacement (m),-2.9363,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.9,vertical displacement (m),-2.8011,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),1.95,vertical displacement (m),-2.6295,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2,vertical displacement (m),-2.4579,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.05,vertical displacement (m),-2.2864,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.1,vertical displacement (m),-2.0720,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.15,vertical displacement (m),-1.8504,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.2,vertical displacement (m),-1.6288,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.25,vertical displacement (m),-1.4108,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.3,vertical displacement (m),-1.2256,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.35,vertical displacement (m),-1.0404,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.4,vertical displacement (m),-0.8552,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.45,vertical displacement (m),-0.6817,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.5,vertical displacement (m),-0.5262,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.55,vertical displacement (m),-0.3838,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.6,vertical displacement (m),-0.2630,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.65,vertical displacement (m),-0.1690,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.7,vertical displacement (m),-0.1206,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.75,vertical displacement (m),-0.1126,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.8,vertical displacement (m),-0.1513,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.85,vertical displacement (m),-0.2316,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.9,vertical displacement (m),-0.3522,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"CPDI method (solid), cantilever, particle q",time (s),2.95,vertical displacement (m),-0.5139,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,extremum,"CPDI method (solid), cantilever, particle q",time (s),1.1083,minimum vertical displacement (m),-3.2371,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,end of curve,"CPDI method (solid), cantilever, particle q",time (s),2.9953,vertical displacement at last path point (m),-0.6648,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0,vertical displacement (m),0.0089,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.05,vertical displacement (m),-0.0053,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.1,vertical displacement (m),-0.0446,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.15,vertical displacement (m),-0.1095,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.2,vertical displacement (m),-0.2021,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.25,vertical displacement (m),-0.3267,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.3,vertical displacement (m),-0.4901,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.35,vertical displacement (m),-0.6951,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.4,vertical displacement (m),-0.9328,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.45,vertical displacement (m),-1.1890,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.5,vertical displacement (m),-1.4527,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.55,vertical displacement (m),-1.7154,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.6,vertical displacement (m),-1.9656,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.65,vertical displacement (m),-2.1958,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.7,vertical displacement (m),-2.4010,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.75,vertical displacement (m),-2.5866,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.8,vertical displacement (m),-2.7517,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.85,vertical displacement (m),-2.8997,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.9,vertical displacement (m),-3.0276,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),0.95,vertical displacement (m),-3.1279,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1,vertical displacement (m),-3.2007,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.05,vertical displacement (m),-3.2394,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.1,vertical displacement (m),-3.2576,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.15,vertical displacement (m),-3.2541,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.2,vertical displacement (m),-3.2317,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.25,vertical displacement (m),-3.1985,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.3,vertical displacement (m),-3.1553,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.35,vertical displacement (m),-3.1132,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.4,vertical displacement (m),-3.0737,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.45,vertical displacement (m),-3.0417,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.5,vertical displacement (m),-3.0246,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.55,vertical displacement (m),-3.0246,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.6,vertical displacement (m),-3.0360,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.65,vertical displacement (m),-3.0543,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.7,vertical displacement (m),-3.0644,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.75,vertical displacement (m),-3.0555,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.8,vertical displacement (m),-3.0259,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.85,vertical displacement (m),-2.9600,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.9,vertical displacement (m),-2.8557,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),1.95,vertical displacement (m),-2.7169,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2,vertical displacement (m),-2.5405,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.05,vertical displacement (m),-2.3354,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.1,vertical displacement (m),-2.1153,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.15,vertical displacement (m),-1.8979,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.2,vertical displacement (m),-1.6852,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.25,vertical displacement (m),-1.4807,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.3,vertical displacement (m),-1.2902,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.35,vertical displacement (m),-1.1072,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.4,vertical displacement (m),-0.9343,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.45,vertical displacement (m),-0.7706,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.5,vertical displacement (m),-0.6169,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.55,vertical displacement (m),-0.4802,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.6,vertical displacement (m),-0.3609,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.65,vertical displacement (m),-0.2724,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.7,vertical displacement (m),-0.2228,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.75,vertical displacement (m),-0.2183,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.8,vertical displacement (m),-0.2607,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.85,vertical displacement (m),-0.3441,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.9,vertical displacement (m),-0.4681,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,,"uGIMP (dashed), cantilever, particle q",time (s),2.95,vertical displacement (m),-0.6227,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,extremum,"uGIMP (dashed), cantilever, particle q",time (s),1.1083,minimum vertical displacement (m),-3.2587,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 15,end of curve,"uGIMP (dashed), cantilever, particle q",time (s),2.9953,vertical displacement at last path point (m),-0.7818,PDF vector path ([ 1.8188 1.8188 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0,vertical displacement (m),-0.0007,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.005,vertical displacement (m),-0.0159,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.01,vertical displacement (m),-0.0540,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.015,vertical displacement (m),-0.1131,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.02,vertical displacement (m),-0.1906,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.025,vertical displacement (m),-0.2844,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.03,vertical displacement (m),-0.3922,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.035,vertical displacement (m),-0.5089,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.04,vertical displacement (m),-0.6332,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.045,vertical displacement (m),-0.7606,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.05,vertical displacement (m),-0.8895,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.055,vertical displacement (m),-1.0196,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.06,vertical displacement (m),-1.1440,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.065,vertical displacement (m),-1.2618,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.07,vertical displacement (m),-1.3686,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.075,vertical displacement (m),-1.4625,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.08,vertical displacement (m),-1.5377,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.085,vertical displacement (m),-1.5946,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.09,vertical displacement (m),-1.6306,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.095,vertical displacement (m),-1.6456,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.1,vertical displacement (m),-1.6388,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.105,vertical displacement (m),-1.6110,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.11,vertical displacement (m),-1.5640,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.115,vertical displacement (m),-1.4992,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.12,vertical displacement (m),-1.4178,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.125,vertical displacement (m),-1.3239,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.13,vertical displacement (m),-1.2190,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.135,vertical displacement (m),-1.1046,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.14,vertical displacement (m),-0.9821,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.145,vertical displacement (m),-0.8564,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.15,vertical displacement (m),-0.7285,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.155,vertical displacement (m),-0.6013,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.16,vertical displacement (m),-0.4777,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.165,vertical displacement (m),-0.3604,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.17,vertical displacement (m),-0.2555,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.175,vertical displacement (m),-0.1671,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.18,vertical displacement (m),-0.0985,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.185,vertical displacement (m),-0.0516,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.19,vertical displacement (m),-0.0288,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.195,vertical displacement (m),-0.0306,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.2,vertical displacement (m),-0.0559,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.205,vertical displacement (m),-0.1029,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.21,vertical displacement (m),-0.1702,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.215,vertical displacement (m),-0.2536,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.22,vertical displacement (m),-0.3509,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.225,vertical displacement (m),-0.4594,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.23,vertical displacement (m),-0.5778,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.235,vertical displacement (m),-0.7015,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(c) rotated bar (dashed),time (s),0.24,vertical displacement (m),-0.8194,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,extremum,CPDI mesh(c) rotated bar (dashed),time (s),0.0950,minimum vertical displacement (m),-1.6458,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,end of curve,CPDI mesh(c) rotated bar (dashed),time (s),0.2397,vertical displacement at last path point (m),-0.8194,PDF vector path ([ 1.4701 1.4701 ] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0,vertical displacement (m),-0.0007,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.005,vertical displacement (m),-0.0159,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.01,vertical displacement (m),-0.0546,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.015,vertical displacement (m),-0.1143,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.02,vertical displacement (m),-0.1930,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.025,vertical displacement (m),-0.2867,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.03,vertical displacement (m),-0.3940,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.035,vertical displacement (m),-0.5088,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.04,vertical displacement (m),-0.6308,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.045,vertical displacement (m),-0.7566,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.05,vertical displacement (m),-0.8844,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.055,vertical displacement (m),-1.0115,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.06,vertical displacement (m),-1.1344,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.065,vertical displacement (m),-1.2526,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.07,vertical displacement (m),-1.3594,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.075,vertical displacement (m),-1.4533,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.08,vertical displacement (m),-1.5295,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.085,vertical displacement (m),-1.5858,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.09,vertical displacement (m),-1.6216,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.095,vertical displacement (m),-1.6347,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.1,vertical displacement (m),-1.6265,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.105,vertical displacement (m),-1.5970,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.11,vertical displacement (m),-1.5488,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.115,vertical displacement (m),-1.4828,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.12,vertical displacement (m),-1.4014,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.125,vertical displacement (m),-1.3088,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.13,vertical displacement (m),-1.2055,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.135,vertical displacement (m),-1.0936,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.14,vertical displacement (m),-0.9775,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.145,vertical displacement (m),-0.8561,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.15,vertical displacement (m),-0.7330,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.155,vertical displacement (m),-0.6100,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.16,vertical displacement (m),-0.4875,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.165,vertical displacement (m),-0.3721,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.17,vertical displacement (m),-0.2655,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.175,vertical displacement (m),-0.1737,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.18,vertical displacement (m),-0.1003,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.185,vertical displacement (m),-0.0486,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.19,vertical displacement (m),-0.0218,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.195,vertical displacement (m),-0.0200,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.2,vertical displacement (m),-0.0424,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.205,vertical displacement (m),-0.0871,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.21,vertical displacement (m),-0.1515,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.215,vertical displacement (m),-0.2319,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.22,vertical displacement (m),-0.3251,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.225,vertical displacement (m),-0.4280,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.23,vertical displacement (m),-0.5397,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.235,vertical displacement (m),-0.6578,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.24,vertical displacement (m),-0.7708,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,extremum,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.0951,minimum vertical displacement (m),-1.6353,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 18b,end of curve,CPDI mesh(a) vertical bar same as 4.3 (solid),time (s),0.2397,vertical displacement at last path point (m),-0.7708,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0,vertical displacement (m),0.0185,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.05,vertical displacement (m),-0.0013,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.1,vertical displacement (m),-0.0468,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.15,vertical displacement (m),-0.1167,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.2,vertical displacement (m),-0.2154,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.25,vertical displacement (m),-0.3480,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.3,vertical displacement (m),-0.5326,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.35,vertical displacement (m),-0.7356,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.4,vertical displacement (m),-0.9623,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.45,vertical displacement (m),-1.1984,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.5,vertical displacement (m),-1.4344,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.55,vertical displacement (m),-1.6705,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.6,vertical displacement (m),-1.9066,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.65,vertical displacement (m),-2.1426,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.7,vertical displacement (m),-2.3787,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.75,vertical displacement (m),-2.5939,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.8,vertical displacement (m),-2.7567,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.85,vertical displacement (m),-2.8991,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.9,vertical displacement (m),-3.0228,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),0.95,vertical displacement (m),-3.1185,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1,vertical displacement (m),-3.1846,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.05,vertical displacement (m),-3.2208,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.1,vertical displacement (m),-3.2348,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.15,vertical displacement (m),-3.2306,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.2,vertical displacement (m),-3.2058,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.25,vertical displacement (m),-3.1704,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.3,vertical displacement (m),-3.1277,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.35,vertical displacement (m),-3.0844,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.4,vertical displacement (m),-3.0475,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.45,vertical displacement (m),-3.0195,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.5,vertical displacement (m),-3.0081,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.55,vertical displacement (m),-3.0104,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.6,vertical displacement (m),-3.0275,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.65,vertical displacement (m),-3.0445,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.7,vertical displacement (m),-3.0514,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.75,vertical displacement (m),-3.0360,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.8,vertical displacement (m),-2.9933,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.85,vertical displacement (m),-2.9227,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.9,vertical displacement (m),-2.8073,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.95,vertical displacement (m),-2.6576,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2,vertical displacement (m),-2.4618,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.05,vertical displacement (m),-2.2601,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.1,vertical displacement (m),-2.0392,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.15,vertical displacement (m),-1.8176,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.2,vertical displacement (m),-1.5960,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.25,vertical displacement (m),-1.3818,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.3,vertical displacement (m),-1.1962,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.35,vertical displacement (m),-1.0106,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.4,vertical displacement (m),-0.8250,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.45,vertical displacement (m),-0.6544,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.5,vertical displacement (m),-0.4988,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.55,vertical displacement (m),-0.3562,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.6,vertical displacement (m),-0.2366,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.65,vertical displacement (m),-0.1495,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.7,vertical displacement (m),-0.1039,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.75,vertical displacement (m),-0.1004,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.8,vertical displacement (m),-0.1430,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.85,vertical displacement (m),-0.2261,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.9,vertical displacement (m),-0.3520,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.95,vertical displacement (m),-0.5139,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,extremum,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),1.1041,minimum vertical displacement (m),-3.2359,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,end of curve,"CPDI mesh(a) horizontal beam (solid, thin)",time (s),2.9918,vertical displacement at last path point (m),-0.6535,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0,vertical displacement (m),0.0185,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.05,vertical displacement (m),-0.0018,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.1,vertical displacement (m),-0.0461,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.15,vertical displacement (m),-0.1167,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.2,vertical displacement (m),-0.2142,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.25,vertical displacement (m),-0.3440,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.3,vertical displacement (m),-0.5097,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.35,vertical displacement (m),-0.7139,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.4,vertical displacement (m),-0.9541,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.45,vertical displacement (m),-1.2182,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.5,vertical displacement (m),-1.4929,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.55,vertical displacement (m),-1.7673,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.6,vertical displacement (m),-2.0281,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.65,vertical displacement (m),-2.2647,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.7,vertical displacement (m),-2.4804,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.75,vertical displacement (m),-2.6671,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.8,vertical displacement (m),-2.8316,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.85,vertical displacement (m),-2.9716,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.9,vertical displacement (m),-3.0957,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),0.95,vertical displacement (m),-3.1949,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1,vertical displacement (m),-3.2632,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.05,vertical displacement (m),-3.2986,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.1,vertical displacement (m),-3.3058,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.15,vertical displacement (m),-3.2906,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.2,vertical displacement (m),-3.2534,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.25,vertical displacement (m),-3.1977,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.3,vertical displacement (m),-3.1317,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.35,vertical displacement (m),-3.0657,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.4,vertical displacement (m),-3.0111,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.45,vertical displacement (m),-2.9728,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.5,vertical displacement (m),-2.9568,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.55,vertical displacement (m),-2.9682,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.6,vertical displacement (m),-3.0036,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.65,vertical displacement (m),-3.0514,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.7,vertical displacement (m),-3.0981,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.75,vertical displacement (m),-3.1300,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.8,vertical displacement (m),-3.1312,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.85,vertical displacement (m),-3.0833,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.9,vertical displacement (m),-2.9822,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),1.95,vertical displacement (m),-2.8320,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2,vertical displacement (m),-2.6457,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.05,vertical displacement (m),-2.4265,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.1,vertical displacement (m),-2.2023,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.15,vertical displacement (m),-1.9758,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.2,vertical displacement (m),-1.7562,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.25,vertical displacement (m),-1.5508,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.3,vertical displacement (m),-1.3535,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.35,vertical displacement (m),-1.1684,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.4,vertical displacement (m),-0.9880,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.45,vertical displacement (m),-0.8127,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.5,vertical displacement (m),-0.6476,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.55,vertical displacement (m),-0.4916,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.6,vertical displacement (m),-0.3596,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.65,vertical displacement (m),-0.2531,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.7,vertical displacement (m),-0.1814,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.75,vertical displacement (m),-0.1580,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.8,vertical displacement (m),-0.1841,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.85,vertical displacement (m),-0.2592,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.9,vertical displacement (m),-0.3774,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(c) rotated beam (short dash),time (s),2.95,vertical displacement (m),-0.5271,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,extremum,CPDI mesh(c) rotated beam (short dash),time (s),1.0810,minimum vertical displacement (m),-3.3066,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,end of curve,CPDI mesh(c) rotated beam (short dash),time (s),2.9918,vertical displacement at last path point (m),-0.6775,PDF vector path ([ 1.7484 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0,vertical displacement (m),0.0218,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.05,vertical displacement (m),0.0013,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.1,vertical displacement (m),-0.0439,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.15,vertical displacement (m),-0.1138,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.2,vertical displacement (m),-0.2098,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.25,vertical displacement (m),-0.3293,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.3,vertical displacement (m),-0.4738,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.35,vertical displacement (m),-0.6474,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.4,vertical displacement (m),-0.8490,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.45,vertical displacement (m),-1.0794,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.5,vertical displacement (m),-1.3368,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.55,vertical displacement (m),-1.6266,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.6,vertical displacement (m),-1.9459,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.65,vertical displacement (m),-2.2873,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.7,vertical displacement (m),-2.6442,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.75,vertical displacement (m),-3.0041,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.8,vertical displacement (m),-3.3433,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.85,vertical displacement (m),-3.6406,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.9,vertical displacement (m),-3.8779,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),0.95,vertical displacement (m),-4.0424,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1,vertical displacement (m),-4.1400,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.05,vertical displacement (m),-4.1765,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.1,vertical displacement (m),-4.1636,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.15,vertical displacement (m),-4.1141,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.2,vertical displacement (m),-4.0353,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.25,vertical displacement (m),-3.9295,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.3,vertical displacement (m),-3.8050,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.35,vertical displacement (m),-3.6636,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.4,vertical displacement (m),-3.5061,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.45,vertical displacement (m),-3.3356,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.5,vertical displacement (m),-3.1431,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.55,vertical displacement (m),-2.9175,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.6,vertical displacement (m),-2.6600,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.65,vertical displacement (m),-2.3835,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.7,vertical displacement (m),-2.0965,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.75,vertical displacement (m),-1.8167,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.8,vertical displacement (m),-1.5532,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.85,vertical displacement (m),-1.3230,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.9,vertical displacement (m),-1.1321,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),1.95,vertical displacement (m),-0.9878,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2,vertical displacement (m),-0.9046,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.05,vertical displacement (m),-0.8943,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.1,vertical displacement (m),-0.9480,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.15,vertical displacement (m),-1.0467,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.2,vertical displacement (m),-1.2023,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.25,vertical displacement (m),-1.4237,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.3,vertical displacement (m),-1.7148,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.35,vertical displacement (m),-2.0723,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.4,vertical displacement (m),-2.4718,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.45,vertical displacement (m),-2.8946,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.5,vertical displacement (m),-3.2960,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.55,vertical displacement (m),-3.6289,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.6,vertical displacement (m),-3.8625,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.65,vertical displacement (m),-3.9973,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.7,vertical displacement (m),-4.0511,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.75,vertical displacement (m),-4.0334,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.8,vertical displacement (m),-3.9532,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.85,vertical displacement (m),-3.8425,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.9,vertical displacement (m),-3.7274,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,CPDI mesh(b) rotated beam (dash-dot),time (s),2.95,vertical displacement (m),-3.6122,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,extremum,CPDI mesh(b) rotated beam (dash-dot),time (s),1.0485,minimum vertical displacement (m),-4.1765,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,end of curve,CPDI mesh(b) rotated beam (dash-dot),time (s),2.9909,vertical displacement at last path point (m),-3.5303,PDF vector path ([ 5.2451 1.7484 .87418 1.7484 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.05,vertical displacement (m),-0.0063,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.1,vertical displacement (m),-0.0437,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.15,vertical displacement (m),-0.1079,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.2,vertical displacement (m),-0.1989,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.25,vertical displacement (m),-0.3222,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.3,vertical displacement (m),-0.4798,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.35,vertical displacement (m),-0.6782,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.4,vertical displacement (m),-0.9097,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.45,vertical displacement (m),-1.1729,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.5,vertical displacement (m),-1.4511,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.55,vertical displacement (m),-1.7286,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.6,vertical displacement (m),-1.9981,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.65,vertical displacement (m),-2.2454,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.7,vertical displacement (m),-2.4681,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.75,vertical displacement (m),-2.6547,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.8,vertical displacement (m),-2.8275,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.85,vertical displacement (m),-2.9730,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.9,vertical displacement (m),-3.1024,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),0.95,vertical displacement (m),-3.2134,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1,vertical displacement (m),-3.2953,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.05,vertical displacement (m),-3.3373,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.1,vertical displacement (m),-3.3474,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.15,vertical displacement (m),-3.3288,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.2,vertical displacement (m),-3.2824,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.25,vertical displacement (m),-3.2053,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.3,vertical displacement (m),-3.1145,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.35,vertical displacement (m),-3.0224,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.4,vertical displacement (m),-2.9406,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.45,vertical displacement (m),-2.8740,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.5,vertical displacement (m),-2.8402,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.55,vertical displacement (m),-2.8508,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.6,vertical displacement (m),-2.8986,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.65,vertical displacement (m),-2.9674,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.7,vertical displacement (m),-3.0619,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.75,vertical displacement (m),-3.1623,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.8,vertical displacement (m),-3.2409,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.85,vertical displacement (m),-3.2705,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.9,vertical displacement (m),-3.2405,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),1.95,vertical displacement (m),-3.1611,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2,vertical displacement (m),-3.0380,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.05,vertical displacement (m),-2.8758,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.1,vertical displacement (m),-2.7031,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.15,vertical displacement (m),-2.5273,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.2,vertical displacement (m),-2.3401,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.25,vertical displacement (m),-2.1709,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.3,vertical displacement (m),-1.9981,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.35,vertical displacement (m),-1.8454,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.4,vertical displacement (m),-1.6937,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.45,vertical displacement (m),-1.5437,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.5,vertical displacement (m),-1.4026,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.55,vertical displacement (m),-1.2766,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.6,vertical displacement (m),-1.1576,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.65,vertical displacement (m),-1.0608,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.7,vertical displacement (m),-0.9978,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.75,vertical displacement (m),-0.9629,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.8,vertical displacement (m),-0.9724,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.85,vertical displacement (m),-1.0249,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.9,vertical displacement (m),-1.1209,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),2.95,vertical displacement (m),-1.2421,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,uGIMP mesh(b) rotated beam (long dash),time (s),3,vertical displacement (m),-1.3868,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,extremum,uGIMP mesh(b) rotated beam (long dash),time (s),1.0849,minimum vertical displacement (m),-3.3474,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,end of curve,uGIMP mesh(b) rotated beam (long dash),time (s),3.0036,vertical displacement at last path point (m),-1.3990,PDF vector path ([ 5.2451 3.4967 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.05,vertical displacement (m),-0.0095,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.1,vertical displacement (m),-0.0457,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.15,vertical displacement (m),-0.1067,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.2,vertical displacement (m),-0.1921,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.25,vertical displacement (m),-0.3153,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.3,vertical displacement (m),-0.5021,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.35,vertical displacement (m),-0.7346,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.4,vertical displacement (m),-0.9823,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.45,vertical displacement (m),-1.2540,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.5,vertical displacement (m),-1.5256,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.55,vertical displacement (m),-1.7972,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.6,vertical displacement (m),-2.0257,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.65,vertical displacement (m),-2.2371,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.7,vertical displacement (m),-2.4485,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.75,vertical displacement (m),-2.6599,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.8,vertical displacement (m),-2.8293,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.85,vertical displacement (m),-2.9944,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.9,vertical displacement (m),-3.1193,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),0.95,vertical displacement (m),-3.2051,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1,vertical displacement (m),-3.2562,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.05,vertical displacement (m),-3.2751,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.1,vertical displacement (m),-3.2494,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.15,vertical displacement (m),-3.1972,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.2,vertical displacement (m),-3.1505,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.25,vertical displacement (m),-3.1051,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.3,vertical displacement (m),-3.0557,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.35,vertical displacement (m),-3.0067,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.4,vertical displacement (m),-2.9661,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.45,vertical displacement (m),-2.9718,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.5,vertical displacement (m),-3.0290,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.55,vertical displacement (m),-3.0913,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.6,vertical displacement (m),-3.1336,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.65,vertical displacement (m),-3.1596,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.7,vertical displacement (m),-3.1596,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.75,vertical displacement (m),-3.1272,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.8,vertical displacement (m),-3.0552,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.85,vertical displacement (m),-2.9330,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.9,vertical displacement (m),-2.7457,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),1.95,vertical displacement (m),-2.5231,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2,vertical displacement (m),-2.3005,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.05,vertical displacement (m),-2.0779,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.1,vertical displacement (m),-1.8491,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.15,vertical displacement (m),-1.6164,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.2,vertical displacement (m),-1.3837,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.25,vertical displacement (m),-1.1514,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.3,vertical displacement (m),-0.9218,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.35,vertical displacement (m),-0.6914,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.4,vertical displacement (m),-0.4610,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.45,vertical displacement (m),-0.2456,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.5,vertical displacement (m),-0.0921,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.55,vertical displacement (m),-0.0019,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.6,vertical displacement (m),0.0268,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.65,vertical displacement (m),0.0010,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.7,vertical displacement (m),-0.0692,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.75,vertical displacement (m),-0.1637,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.8,vertical displacement (m),-0.2678,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.85,vertical displacement (m),-0.3879,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.9,vertical displacement (m),-0.5141,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),2.95,vertical displacement (m),-0.6578,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(a) horizontal beam (solid),time (s),3,vertical displacement (m),-0.8064,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,extremum,FEM mesh(a) horizontal beam (solid),time (s),1.0405,minimum vertical displacement (m),-3.2751,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,end of curve,FEM mesh(a) horizontal beam (solid),time (s),3.0002,vertical displacement at last path point (m),-0.8074,PDF vector path ([] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0,vertical displacement (m),0.0165,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.05,vertical displacement (m),-0.0004,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.1,vertical displacement (m),-0.0432,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.15,vertical displacement (m),-0.1107,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.2,vertical displacement (m),-0.2013,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.25,vertical displacement (m),-0.3238,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.3,vertical displacement (m),-0.5018,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.35,vertical displacement (m),-0.7353,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.4,vertical displacement (m),-1.0089,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.45,vertical displacement (m),-1.3046,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.5,vertical displacement (m),-1.6062,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.55,vertical displacement (m),-1.9000,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.6,vertical displacement (m),-2.1711,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.65,vertical displacement (m),-2.4095,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.7,vertical displacement (m),-2.6171,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.75,vertical displacement (m),-2.8089,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.8,vertical displacement (m),-2.9891,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.85,vertical displacement (m),-3.1533,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.9,vertical displacement (m),-3.2907,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),0.95,vertical displacement (m),-3.3879,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1,vertical displacement (m),-3.4387,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.05,vertical displacement (m),-3.4621,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.1,vertical displacement (m),-3.4621,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.15,vertical displacement (m),-3.4636,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.2,vertical displacement (m),-3.5675,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.25,vertical displacement (m),-3.6013,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.3,vertical displacement (m),-3.5794,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.35,vertical displacement (m),-3.5441,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.4,vertical displacement (m),-3.5089,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.45,vertical displacement (m),-3.4396,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.5,vertical displacement (m),-3.3391,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.55,vertical displacement (m),-3.2611,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.6,vertical displacement (m),-3.1587,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.65,vertical displacement (m),-2.9206,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.7,vertical displacement (m),-2.7300,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.75,vertical displacement (m),-2.6789,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.8,vertical displacement (m),-2.7122,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.85,vertical displacement (m),-2.7954,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.9,vertical displacement (m),-2.9128,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),1.95,vertical displacement (m),-3.0193,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2,vertical displacement (m),-3.1014,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.05,vertical displacement (m),-3.2001,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.1,vertical displacement (m),-3.4107,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.15,vertical displacement (m),-3.5896,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.2,vertical displacement (m),-3.6351,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.25,vertical displacement (m),-3.6213,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.3,vertical displacement (m),-3.5591,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.35,vertical displacement (m),-3.4773,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.4,vertical displacement (m),-3.4231,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.45,vertical displacement (m),-3.4437,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.5,vertical displacement (m),-3.4751,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.55,vertical displacement (m),-3.4145,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.6,vertical displacement (m),-3.3509,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.65,vertical displacement (m),-3.3502,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.7,vertical displacement (m),-3.3097,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.75,vertical displacement (m),-3.1800,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.8,vertical displacement (m),-3.0051,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.85,vertical displacement (m),-2.7787,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.9,vertical displacement (m),-2.5201,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),2.95,vertical displacement (m),-2.2838,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,,FEM mesh(b) rotated beam (medium dash),time (s),3,vertical displacement (m),-2.0932,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,extremum,FEM mesh(b) rotated beam (medium dash),time (s),2.2079,minimum vertical displacement (m),-3.6377,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 19b,end of curve,FEM mesh(b) rotated beam (medium dash),time (s),3.0007,vertical displacement at last path point (m),-2.0896,PDF vector path ([ 2.6225 2.6225 ] 0); axes = linear fit to tick-label centres
+Fig. 10a,domain-edge level,cpGIMP t=0.00 s,level index (top to bottom),0,depth below panel top (m),0.505,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.00 s,level index (top to bottom),1,depth below panel top (m),0.673,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.00 s,level index (top to bottom),2,depth below panel top (m),0.841,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.00 s,level index (top to bottom),3,depth below panel top (m),1.007,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.00 s,level index (top to bottom),4,depth below panel top (m),1.175,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.00 s,level index (top to bottom),5,depth below panel top (m),1.342,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.00 s,level index (top to bottom),6,depth below panel top (m),1.510,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,interval,cpGIMP t=0.00 s,interval index (top to bottom),0,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.00 s,interval index (top to bottom),1,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.00 s,interval index (top to bottom),2,interval height (m),0.166,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.00 s,interval index (top to bottom),3,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.00 s,interval index (top to bottom),4,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.00 s,interval index (top to bottom),5,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,domain-edge level,cpGIMP t=0.08 s,level index (top to bottom),0,depth below panel top (m),0.497,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.08 s,level index (top to bottom),1,depth below panel top (m),1.172,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.08 s,level index (top to bottom),2,depth below panel top (m),1.747,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.08 s,level index (top to bottom),3,depth below panel top (m),2.214,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.08 s,level index (top to bottom),4,depth below panel top (m),2.590,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.08 s,level index (top to bottom),5,depth below panel top (m),2.860,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.08 s,level index (top to bottom),6,depth below panel top (m),3.068,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,interval,cpGIMP t=0.08 s,interval index (top to bottom),0,interval height (m),0.676,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.08 s,interval index (top to bottom),1,interval height (m),0.574,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.08 s,interval index (top to bottom),2,interval height (m),0.468,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.08 s,interval index (top to bottom),3,interval height (m),0.376,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.08 s,interval index (top to bottom),4,interval height (m),0.269,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.08 s,interval index (top to bottom),5,interval height (m),0.208,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),0,depth below panel top (m),0.485,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),1,depth below panel top (m),1.167,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),2,depth below panel top (m),1.293,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),3,depth below panel top (m),1.728,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),4,depth below panel top (m),1.822,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),5,depth below panel top (m),2.190,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),6,depth below panel top (m),2.246,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),7,depth below panel top (m),2.705,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),8,depth below panel top (m),2.970,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.09 s,level index (top to bottom),9,depth below panel top (m),3.174,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),0,interval height (m),0.682,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),1,interval height (m),0.126,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); gap (no domain vertical edge crosses mid-height)
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),2,interval height (m),0.435,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),3,interval height (m),0.094,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 24 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),4,interval height (m),0.369,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),5,interval height (m),0.055,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); gap (no domain vertical edge crosses mid-height)
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),6,interval height (m),0.459,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),7,interval height (m),0.265,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.09 s,interval index (top to bottom),8,interval height (m),0.204,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),0,depth below panel top (m),0.445,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),1,depth below panel top (m),1.083,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),2,depth below panel top (m),1.458,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),3,depth below panel top (m),1.783,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),4,depth below panel top (m),1.909,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),5,depth below panel top (m),2.164,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),6,depth below panel top (m),2.288,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),7,depth below panel top (m),2.762,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),8,depth below panel top (m),2.992,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.10 s,level index (top to bottom),9,depth below panel top (m),3.175,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),0,interval height (m),0.638,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),1,interval height (m),0.375,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); gap (no domain vertical edge crosses mid-height)
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),2,interval height (m),0.325,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),3,interval height (m),0.126,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 24 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),4,interval height (m),0.255,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),5,interval height (m),0.123,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); gap (no domain vertical edge crosses mid-height)
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),6,interval height (m),0.474,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),7,interval height (m),0.230,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.10 s,interval index (top to bottom),8,interval height (m),0.183,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),0,depth below panel top (m),0.460,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),1,depth below panel top (m),0.700,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),2,depth below panel top (m),1.891,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),3,depth below panel top (m),2.056,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),4,depth below panel top (m),2.136,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),5,depth below panel top (m),2.304,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),6,depth below panel top (m),2.413,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),7,depth below panel top (m),2.775,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),8,depth below panel top (m),2.945,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),9,depth below panel top (m),3.074,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,domain-edge level,cpGIMP t=0.11 s,level index (top to bottom),10,depth below panel top (m),3.102,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),0,interval height (m),0.240,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),1,interval height (m),1.191,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); gap (no domain vertical edge crosses mid-height)
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),2,interval height (m),0.165,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),3,interval height (m),0.080,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 24 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),4,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),5,interval height (m),0.109,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); gap (no domain vertical edge crosses mid-height)
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),6,interval height (m),0.362,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),7,interval height (m),0.170,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),8,interval height (m),0.130,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10a,interval,cpGIMP t=0.11 s,interval index (top to bottom),9,interval height (m),0.027,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.05 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,domain-edge level,CPDI t=0.00 s,level index (top to bottom),0,depth below panel top (m),0.509,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.00 s,level index (top to bottom),1,depth below panel top (m),0.675,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.00 s,level index (top to bottom),2,depth below panel top (m),0.841,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.00 s,level index (top to bottom),3,depth below panel top (m),1.009,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.00 s,level index (top to bottom),4,depth below panel top (m),1.175,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.00 s,level index (top to bottom),5,depth below panel top (m),1.341,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.00 s,level index (top to bottom),6,depth below panel top (m),1.509,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,interval,CPDI t=0.00 s,interval index (top to bottom),0,interval height (m),0.166,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.00 s,interval index (top to bottom),1,interval height (m),0.166,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.00 s,interval index (top to bottom),2,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.00 s,interval index (top to bottom),3,interval height (m),0.166,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.00 s,interval index (top to bottom),4,interval height (m),0.166,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.00 s,interval index (top to bottom),5,interval height (m),0.168,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,domain-edge level,CPDI t=0.08 s,level index (top to bottom),0,depth below panel top (m),0.500,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.08 s,level index (top to bottom),1,depth below panel top (m),1.162,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.08 s,level index (top to bottom),2,depth below panel top (m),1.707,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.08 s,level index (top to bottom),3,depth below panel top (m),2.182,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.08 s,level index (top to bottom),4,depth below panel top (m),2.558,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.08 s,level index (top to bottom),5,depth below panel top (m),2.834,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.08 s,level index (top to bottom),6,depth below panel top (m),3.049,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,interval,CPDI t=0.08 s,interval index (top to bottom),0,interval height (m),0.662,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.08 s,interval index (top to bottom),1,interval height (m),0.545,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.08 s,interval index (top to bottom),2,interval height (m),0.475,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.08 s,interval index (top to bottom),3,interval height (m),0.376,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.08 s,interval index (top to bottom),4,interval height (m),0.276,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.08 s,interval index (top to bottom),5,interval height (m),0.215,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 10b,domain-edge level,CPDI t=0.09 s,level index (top to bottom),0,depth below panel top (m),0.495,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.09 s,level index (top to bottom),1,depth below panel top (m),1.162,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.09 s,level index (top to bottom),2,depth below panel top (m),1.733,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.09 s,level index (top to bottom),3,depth below panel top (m),2.246,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.09 s,level index (top to bottom),4,depth below panel top (m),2.647,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.09 s,level index (top to bottom),5,depth below panel top (m),2.927,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.09 s,level index (top to bottom),6,depth below panel top (m),3.140,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,interval,CPDI t=0.09 s,interval index (top to bottom),0,interval height (m),0.667,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 6 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.09 s,interval index (top to bottom),1,interval height (m),0.571,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.09 s,interval index (top to bottom),2,interval height (m),0.513,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.09 s,interval index (top to bottom),3,interval height (m),0.401,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.09 s,interval index (top to bottom),4,interval height (m),0.279,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 6 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.09 s,interval index (top to bottom),5,interval height (m),0.213,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,domain-edge level,CPDI t=0.10 s,level index (top to bottom),0,depth below panel top (m),0.493,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.10 s,level index (top to bottom),1,depth below panel top (m),1.154,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.10 s,level index (top to bottom),2,depth below panel top (m),1.740,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.10 s,level index (top to bottom),3,depth below panel top (m),2.266,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.10 s,level index (top to bottom),4,depth below panel top (m),2.666,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.10 s,level index (top to bottom),5,depth below panel top (m),2.933,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.10 s,level index (top to bottom),6,depth below panel top (m),3.136,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,interval,CPDI t=0.10 s,interval index (top to bottom),0,interval height (m),0.661,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 4 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.10 s,interval index (top to bottom),1,interval height (m),0.586,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.10 s,interval index (top to bottom),2,interval height (m),0.526,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.10 s,interval index (top to bottom),3,interval height (m),0.399,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.10 s,interval index (top to bottom),4,interval height (m),0.267,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.10 s,interval index (top to bottom),5,interval height (m),0.203,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 10b,domain-edge level,CPDI t=0.11 s,level index (top to bottom),0,depth below panel top (m),0.495,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.11 s,level index (top to bottom),1,depth below panel top (m),1.148,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.11 s,level index (top to bottom),2,depth below panel top (m),1.728,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.11 s,level index (top to bottom),3,depth below panel top (m),2.233,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.11 s,level index (top to bottom),4,depth below panel top (m),2.609,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.11 s,level index (top to bottom),5,depth below panel top (m),2.866,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,domain-edge level,CPDI t=0.11 s,level index (top to bottom),6,depth below panel top (m),3.068,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells)
+Fig. 10b,interval,CPDI t=0.11 s,interval index (top to bottom),0,interval height (m),0.653,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.11 s,interval index (top to bottom),1,interval height (m),0.580,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.11 s,interval index (top to bottom),2,interval height (m),0.505,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.11 s,interval index (top to bottom),3,interval height (m),0.376,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.11 s,interval index (top to bottom),4,interval height (m),0.258,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 10b,interval,CPDI t=0.11 s,interval index (top to bottom),5,interval height (m),0.202,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 210.40 pt)/33.31 pt per m (dashed grid = 0.5 m cells); inside domain(s): 6 vertical edges cross mid-height
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.000 s,level index (top to bottom),0,depth below panel top (m),0.513,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.000 s,level index (top to bottom),1,depth below panel top (m),0.680,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.000 s,level index (top to bottom),2,depth below panel top (m),0.847,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.000 s,level index (top to bottom),3,depth below panel top (m),1.012,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.000 s,level index (top to bottom),4,depth below panel top (m),1.179,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.000 s,level index (top to bottom),5,depth below panel top (m),1.346,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.000 s,level index (top to bottom),6,depth below panel top (m),1.513,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,interval,CPDI g=3500 t=0.000 s,interval index (top to bottom),0,interval height (m),0.167,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.000 s,interval index (top to bottom),1,interval height (m),0.167,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.000 s,interval index (top to bottom),2,interval height (m),0.165,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.000 s,interval index (top to bottom),3,interval height (m),0.167,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.000 s,interval index (top to bottom),4,interval height (m),0.167,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.000 s,interval index (top to bottom),5,interval height (m),0.167,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.051 s,level index (top to bottom),0,depth below panel top (m),0.492,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.051 s,level index (top to bottom),1,depth below panel top (m),2.049,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.051 s,level index (top to bottom),2,depth below panel top (m),3.245,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.051 s,level index (top to bottom),3,depth below panel top (m),4.077,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.051 s,level index (top to bottom),4,depth below panel top (m),4.589,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.051 s,level index (top to bottom),5,depth below panel top (m),4.915,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.051 s,level index (top to bottom),6,depth below panel top (m),5.147,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,interval,CPDI g=3500 t=0.051 s,interval index (top to bottom),0,interval height (m),1.557,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.051 s,interval index (top to bottom),1,interval height (m),1.196,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.051 s,interval index (top to bottom),2,interval height (m),0.832,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.051 s,interval index (top to bottom),3,interval height (m),0.512,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.051 s,interval index (top to bottom),4,interval height (m),0.326,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.051 s,interval index (top to bottom),5,interval height (m),0.233,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 10 vertical edges cross mid-height
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.102 s,level index (top to bottom),0,depth below panel top (m),0.502,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.102 s,level index (top to bottom),1,depth below panel top (m),3.035,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.102 s,level index (top to bottom),2,depth below panel top (m),5.260,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.102 s,level index (top to bottom),3,depth below panel top (m),6.992,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.102 s,level index (top to bottom),4,depth below panel top (m),8.336,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.102 s,level index (top to bottom),5,depth below panel top (m),9.257,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,domain-edge level,CPDI g=3500 t=0.102 s,level index (top to bottom),6,depth below panel top (m),9.651,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells)
+Fig. 12a,interval,CPDI g=3500 t=0.102 s,interval index (top to bottom),0,interval height (m),2.534,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 6 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.102 s,interval index (top to bottom),1,interval height (m),2.225,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 12 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.102 s,interval index (top to bottom),2,interval height (m),1.732,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.102 s,interval index (top to bottom),3,interval height (m),1.344,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 6 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.102 s,interval index (top to bottom),4,interval height (m),0.920,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 6 vertical edges cross mid-height
+Fig. 12a,interval,CPDI g=3500 t=0.102 s,interval index (top to bottom),5,interval height (m),0.394,PDF vector paths: solid near-horizontal domain-edge segments clustered by y (gap > 0.6 pt); depth = (y - 71.40 pt)/20.41 pt per m (dashed grid = 0.5 m cells); inside domain(s): 8 vertical edges cross mid-height

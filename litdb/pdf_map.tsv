@@ -498,3 +498,7 @@ stallard2022_nmc811_single_crystal_shear_strength_lithiation	effect of lithiatio
 #   ⚠ 크롭 32 장 = 도구 8 (다시 자른 것 0 · caption_fix 7) + 손 크롭 24 (manual_crop: 초록 그림 1 · 그림 1 패널 3 · 식 5 · 근거 글 15) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition	quantitative_analysis_of_microstructures_and_reaction_interfaces
 choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition	quantitative analysis of microstructures and reaction interfaces
+# ── MPM 입자 영역 추적 CPDI · extension instability 원전 (영역을 전체 변형 경사로 평행사변형 · 모서리 Q4 보간 기저 · 2D 평면 변형률 · neo-Hookean · MMS 두 건 + 자중 막대 · 외팔보 · 45° 돌린 영역) (Sadeghirad · Brannon · Burghardt · Int. J. Numer. Meth. Engng 86, 1435–1456 (2011)) — litdb 2026-11-12 (후보 N-15) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 ──
+#   ⚠ 크롭 87 장 = 그림 19 (도구 크롭 그대로 0 · recrop 15 · manual_crop 4 = Fig. 1 · 2 · 6 · 11) + 손 크롭 68 (manual_crop: 식 47 · MATLAB 목록 1 · 근거 글 20) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability	a_convected_particle_domain_interpolation_technique_to_extend
+sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability	a convected particle domain interpolation technique to extend
