@@ -1,0 +1,1499 @@
+figure,page,panel,series,branch,x,x_unit,y,y_unit,source
+Fig3,3,,Experiment,upper = loading (Δ 0→25),-0.003,mm,0.0321,N,vector path 38 vertex 0
+Fig3,3,,Experiment,upper = loading (Δ 0→25),0.997,mm,0.0464,N,vector path 38 vertex 1
+Fig3,3,,Experiment,upper = loading (Δ 0→25),1.997,mm,0.0908,N,vector path 38 vertex 2
+Fig3,3,,Experiment,upper = loading (Δ 0→25),2.998,mm,0.176,N,vector path 38 vertex 3
+Fig3,3,,Experiment,upper = loading (Δ 0→25),3.998,mm,0.2946,N,vector path 38 vertex 4
+Fig3,3,,Experiment,upper = loading (Δ 0→25),4.999,mm,0.4544,N,vector path 38 vertex 5
+Fig3,3,,Experiment,upper = loading (Δ 0→25),5.999,mm,0.6634,N,vector path 38 vertex 6
+Fig3,3,,Experiment,upper = loading (Δ 0→25),6.999,mm,0.9224,N,vector path 38 vertex 7
+Fig3,3,,Experiment,upper = loading (Δ 0→25),7.999,mm,1.2523,N,vector path 38 vertex 8
+Fig3,3,,Experiment,upper = loading (Δ 0→25),9.0,mm,1.6312,N,vector path 38 vertex 9
+Fig3,3,,Experiment,upper = loading (Δ 0→25),10.0,mm,2.0475,N,vector path 38 vertex 10
+Fig3,3,,Experiment,upper = loading (Δ 0→25),11.001,mm,2.5181,N,vector path 38 vertex 11
+Fig3,3,,Experiment,upper = loading (Δ 0→25),12.001,mm,3.0469,N,vector path 38 vertex 12
+Fig3,3,,Experiment,upper = loading (Δ 0→25),13.001,mm,3.6219,N,vector path 38 vertex 13
+Fig3,3,,Experiment,upper = loading (Δ 0→25),14.002,mm,4.2756,N,vector path 38 vertex 14
+Fig3,3,,Experiment,upper = loading (Δ 0→25),15.002,mm,4.9859,N,vector path 38 vertex 15
+Fig3,3,,Experiment,upper = loading (Δ 0→25),16.002,mm,5.7805,N,vector path 38 vertex 16
+Fig3,3,,Experiment,upper = loading (Δ 0→25),17.003,mm,6.6418,N,vector path 38 vertex 17
+Fig3,3,,Experiment,upper = loading (Δ 0→25),18.003,mm,7.5286,N,vector path 38 vertex 18
+Fig3,3,,Experiment,upper = loading (Δ 0→25),19.003,mm,8.4849,N,vector path 38 vertex 19
+Fig3,3,,Experiment,upper = loading (Δ 0→25),20.004,mm,9.5071,N,vector path 38 vertex 20
+Fig3,3,,Experiment,upper = loading (Δ 0→25),21.004,mm,10.5883,N,vector path 38 vertex 21
+Fig3,3,,Experiment,upper = loading (Δ 0→25),22.004,mm,11.7375,N,vector path 38 vertex 22
+Fig3,3,,Experiment,upper = loading (Δ 0→25),23.005,mm,12.9859,N,vector path 38 vertex 23
+Fig3,3,,Experiment,upper = loading (Δ 0→25),24.005,mm,14.2882,N,vector path 38 vertex 24
+Fig3,3,,Experiment,upper = loading (Δ 0→25),25.005,mm,15.6783,N,vector path 38 vertex 25
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),24.005,mm,13.6292,N,vector path 38 vertex 26
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),23.005,mm,11.8567,N,vector path 38 vertex 27
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),22.004,mm,10.2762,N,vector path 38 vertex 28
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),21.004,mm,8.8724,N,vector path 38 vertex 29
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),20.004,mm,7.6248,N,vector path 38 vertex 30
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),19.003,mm,6.5311,N,vector path 38 vertex 31
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),18.003,mm,5.5693,N,vector path 38 vertex 32
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),17.003,mm,4.7163,N,vector path 38 vertex 33
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),16.002,mm,3.956,N,vector path 38 vertex 34
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),15.002,mm,3.2878,N,vector path 38 vertex 35
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),14.002,mm,2.6921,N,vector path 38 vertex 36
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),13.001,mm,2.1816,N,vector path 38 vertex 37
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),12.001,mm,1.752,N,vector path 38 vertex 38
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),11.001,mm,1.3724,N,vector path 38 vertex 39
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),10.0,mm,1.0497,N,vector path 38 vertex 40
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),9.0,mm,0.7771,N,vector path 38 vertex 41
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),7.999,mm,0.5721,N,vector path 38 vertex 42
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),6.999,mm,0.4083,N,vector path 38 vertex 43
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),5.999,mm,0.2836,N,vector path 38 vertex 44
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),4.999,mm,0.1933,N,vector path 38 vertex 45
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),3.998,mm,0.1232,N,vector path 38 vertex 46
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),2.998,mm,0.0704,N,vector path 38 vertex 47
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),1.997,mm,0.0369,N,vector path 38 vertex 48
+Fig3,3,,Experiment,lower = unloading (Δ 24→1),0.997,mm,0.0289,N,vector path 38 vertex 49
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),-0.003,mm,0.1333,N,vector path 39 vertex 0
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),0.997,mm,0.2544,N,vector path 39 vertex 1
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),1.997,mm,0.3479,N,vector path 39 vertex 2
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),2.998,mm,0.4549,N,vector path 39 vertex 3
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),3.998,mm,0.5737,N,vector path 39 vertex 4
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),4.999,mm,0.7061,N,vector path 39 vertex 5
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),5.999,mm,0.8509,N,vector path 39 vertex 6
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),6.999,mm,1.0084,N,vector path 39 vertex 7
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),7.999,mm,1.1931,N,vector path 39 vertex 8
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),9.0,mm,1.3909,N,vector path 39 vertex 9
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),10.0,mm,1.6089,N,vector path 39 vertex 10
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),11.001,mm,1.8348,N,vector path 39 vertex 11
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),12.001,mm,2.0878,N,vector path 39 vertex 12
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),13.001,mm,2.3683,N,vector path 39 vertex 13
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),14.002,mm,2.6664,N,vector path 39 vertex 14
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),15.002,mm,2.9757,N,vector path 39 vertex 15
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),16.002,mm,3.307,N,vector path 39 vertex 16
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),17.003,mm,3.658,N,vector path 39 vertex 17
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),18.003,mm,4.0189,N,vector path 39 vertex 18
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),19.003,mm,4.3932,N,vector path 39 vertex 19
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),20.004,mm,4.7912,N,vector path 39 vertex 20
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),21.004,mm,5.2164,N,vector path 39 vertex 21
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),22.004,mm,5.6481,N,vector path 39 vertex 22
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),23.005,mm,6.0752,N,vector path 39 vertex 23
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),24.005,mm,6.559,N,vector path 39 vertex 24
+Fig3,3,,Point force on sphere,upper = loading (Δ 0→25),25.005,mm,6.8621,N,vector path 39 vertex 25
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),24.005,mm,5.8842,N,vector path 39 vertex 26
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),23.005,mm,5.2762,N,vector path 39 vertex 27
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),22.004,mm,4.7432,N,vector path 39 vertex 28
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),21.004,mm,4.2599,N,vector path 39 vertex 29
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),20.004,mm,3.8183,N,vector path 39 vertex 30
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),19.003,mm,3.4148,N,vector path 39 vertex 31
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),18.003,mm,3.0529,N,vector path 39 vertex 32
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),17.003,mm,2.7235,N,vector path 39 vertex 33
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),16.002,mm,2.4232,N,vector path 39 vertex 34
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),15.002,mm,2.1501,N,vector path 39 vertex 35
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),14.002,mm,1.8969,N,vector path 39 vertex 36
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),13.001,mm,1.6589,N,vector path 39 vertex 37
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),12.001,mm,1.4443,N,vector path 39 vertex 38
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),11.001,mm,1.2498,N,vector path 39 vertex 39
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),10.0,mm,1.0725,N,vector path 39 vertex 40
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),9.0,mm,0.9077,N,vector path 39 vertex 41
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),7.999,mm,0.7611,N,vector path 39 vertex 42
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),6.999,mm,0.6341,N,vector path 39 vertex 43
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),5.999,mm,0.5214,N,vector path 39 vertex 44
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),4.999,mm,0.4266,N,vector path 39 vertex 45
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),3.998,mm,0.3373,N,vector path 39 vertex 46
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),2.998,mm,0.2595,N,vector path 39 vertex 47
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),1.997,mm,0.1921,N,vector path 39 vertex 48
+Fig3,3,,Point force on sphere,lower = unloading (Δ 24→1),0.997,mm,0.138,N,vector path 39 vertex 49
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),-0.003,mm,0.1358,N,vector path 40 vertex 0
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),0.997,mm,0.2652,N,vector path 40 vertex 1
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),1.997,mm,0.3608,N,vector path 40 vertex 2
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),2.998,mm,0.4753,N,vector path 40 vertex 3
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),3.998,mm,0.6111,N,vector path 40 vertex 4
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),4.999,mm,0.763,N,vector path 40 vertex 5
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),5.999,mm,0.9404,N,vector path 40 vertex 6
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),6.999,mm,1.1474,N,vector path 40 vertex 7
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),7.999,mm,1.3804,N,vector path 40 vertex 8
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),9.0,mm,1.6477,N,vector path 40 vertex 9
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),10.0,mm,1.9482,N,vector path 40 vertex 10
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),11.001,mm,2.2876,N,vector path 40 vertex 11
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),12.001,mm,2.6642,N,vector path 40 vertex 12
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),13.001,mm,3.0762,N,vector path 40 vertex 13
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),14.002,mm,3.536,N,vector path 40 vertex 14
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),15.002,mm,4.0397,N,vector path 40 vertex 15
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),16.002,mm,4.5999,N,vector path 40 vertex 16
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),17.003,mm,5.2164,N,vector path 40 vertex 17
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),18.003,mm,5.8906,N,vector path 40 vertex 18
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),19.003,mm,6.6469,N,vector path 40 vertex 19
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),20.004,mm,7.4629,N,vector path 40 vertex 20
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),21.004,mm,8.3388,N,vector path 40 vertex 21
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),22.004,mm,9.311,N,vector path 40 vertex 22
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),23.005,mm,10.3723,N,vector path 40 vertex 23
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),24.005,mm,11.5242,N,vector path 40 vertex 24
+Fig3,3,,Elastic half space,upper = loading (Δ 0→25),25.005,mm,12.5686,N,vector path 40 vertex 25
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),24.005,mm,10.5769,N,vector path 40 vertex 26
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),23.005,mm,9.2843,N,vector path 40 vertex 27
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),22.004,mm,8.1628,N,vector path 40 vertex 28
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),21.004,mm,7.1667,N,vector path 40 vertex 29
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),20.004,mm,6.27,N,vector path 40 vertex 30
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),19.003,mm,5.4654,N,vector path 40 vertex 31
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),18.003,mm,4.7487,N,vector path 40 vertex 32
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),17.003,mm,4.1155,N,vector path 40 vertex 33
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),16.002,mm,3.5557,N,vector path 40 vertex 34
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),15.002,mm,3.0581,N,vector path 40 vertex 35
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),14.002,mm,2.62,N,vector path 40 vertex 36
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),13.001,mm,2.2319,N,vector path 40 vertex 37
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),12.001,mm,1.8996,N,vector path 40 vertex 38
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),11.001,mm,1.6166,N,vector path 40 vertex 39
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),10.0,mm,1.3632,N,vector path 40 vertex 40
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),9.0,mm,1.1353,N,vector path 40 vertex 41
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),7.999,mm,0.9347,N,vector path 40 vertex 42
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),6.999,mm,0.7613,N,vector path 40 vertex 43
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),5.999,mm,0.6116,N,vector path 40 vertex 44
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),4.999,mm,0.4867,N,vector path 40 vertex 45
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),3.998,mm,0.3798,N,vector path 40 vertex 46
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),2.998,mm,0.2867,N,vector path 40 vertex 47
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),1.997,mm,0.2067,N,vector path 40 vertex 48
+Fig3,3,,Elastic half space,lower = unloading (Δ 24→1),0.997,mm,0.1389,N,vector path 40 vertex 49
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),-0.003,mm,0.1188,N,vector path 41 vertex 0
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),0.997,mm,0.2392,N,vector path 41 vertex 1
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),1.997,mm,0.3268,N,vector path 41 vertex 2
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),2.998,mm,0.4307,N,vector path 41 vertex 3
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),3.998,mm,0.5445,N,vector path 41 vertex 4
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),4.999,mm,0.6657,N,vector path 41 vertex 5
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),5.999,mm,0.7935,N,vector path 41 vertex 6
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),6.999,mm,0.9362,N,vector path 41 vertex 7
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),7.999,mm,1.0913,N,vector path 41 vertex 8
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),9.0,mm,1.2615,N,vector path 41 vertex 9
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),10.0,mm,1.4516,N,vector path 41 vertex 10
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),11.001,mm,1.6652,N,vector path 41 vertex 11
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),12.001,mm,1.9026,N,vector path 41 vertex 12
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),13.001,mm,2.1507,N,vector path 41 vertex 13
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),14.002,mm,2.4053,N,vector path 41 vertex 14
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),15.002,mm,2.6847,N,vector path 41 vertex 15
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),16.002,mm,2.9791,N,vector path 41 vertex 16
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),17.003,mm,3.3052,N,vector path 41 vertex 17
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),18.003,mm,3.6596,N,vector path 41 vertex 18
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),19.003,mm,4.0315,N,vector path 41 vertex 19
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),20.004,mm,4.4421,N,vector path 41 vertex 20
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),21.004,mm,4.8816,N,vector path 41 vertex 21
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),22.004,mm,5.3524,N,vector path 41 vertex 22
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),23.005,mm,5.8354,N,vector path 41 vertex 23
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),24.005,mm,6.3476,N,vector path 41 vertex 24
+Fig3,3,,Independent contacts,upper = loading (Δ 0→25),25.005,mm,6.6759,N,vector path 41 vertex 25
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),24.005,mm,5.6791,N,vector path 41 vertex 26
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),23.005,mm,5.0581,N,vector path 41 vertex 27
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),22.004,mm,4.5124,N,vector path 41 vertex 28
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),21.004,mm,4.023,N,vector path 41 vertex 29
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),20.004,mm,3.5814,N,vector path 41 vertex 30
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),19.003,mm,3.1823,N,vector path 41 vertex 31
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),18.003,mm,2.8268,N,vector path 41 vertex 32
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),17.003,mm,2.5083,N,vector path 41 vertex 33
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),16.002,mm,2.2186,N,vector path 41 vertex 34
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),15.002,mm,1.9511,N,vector path 41 vertex 35
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),14.002,mm,1.7055,N,vector path 41 vertex 36
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),13.001,mm,1.4914,N,vector path 41 vertex 37
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),12.001,mm,1.3002,N,vector path 41 vertex 38
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),11.001,mm,1.1233,N,vector path 41 vertex 39
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),10.0,mm,0.962,N,vector path 41 vertex 40
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),9.0,mm,0.8201,N,vector path 41 vertex 41
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),7.999,mm,0.6889,N,vector path 41 vertex 42
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),6.999,mm,0.569,N,vector path 41 vertex 43
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),5.999,mm,0.4693,N,vector path 41 vertex 44
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),4.999,mm,0.3839,N,vector path 41 vertex 45
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),3.998,mm,0.3035,N,vector path 41 vertex 46
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),2.998,mm,0.2307,N,vector path 41 vertex 47
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),1.997,mm,0.1679,N,vector path 41 vertex 48
+Fig3,3,,Independent contacts,lower = unloading (Δ 24→1),0.997,mm,0.1168,N,vector path 41 vertex 49
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),-0.003,mm,0.1403,N,vector path 42 vertex 0
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),0.997,mm,0.2738,N,vector path 42 vertex 1
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),1.997,mm,0.3743,N,vector path 42 vertex 2
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),2.998,mm,0.4935,N,vector path 42 vertex 3
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),3.998,mm,0.6358,N,vector path 42 vertex 4
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),4.999,mm,0.7933,N,vector path 42 vertex 5
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),5.999,mm,0.9646,N,vector path 42 vertex 6
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),6.999,mm,1.1691,N,vector path 42 vertex 7
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),7.999,mm,1.3964,N,vector path 42 vertex 8
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),9.0,mm,1.6506,N,vector path 42 vertex 9
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),10.0,mm,1.9263,N,vector path 42 vertex 10
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),11.001,mm,2.2334,N,vector path 42 vertex 11
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),12.001,mm,2.5602,N,vector path 42 vertex 12
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),13.001,mm,2.904,N,vector path 42 vertex 13
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),14.002,mm,3.2988,N,vector path 42 vertex 14
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),15.002,mm,3.7233,N,vector path 42 vertex 15
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),16.002,mm,4.2114,N,vector path 42 vertex 16
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),17.003,mm,4.7549,N,vector path 42 vertex 17
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),18.003,mm,5.3473,N,vector path 42 vertex 18
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),19.003,mm,5.9849,N,vector path 42 vertex 19
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),20.004,mm,6.6941,N,vector path 42 vertex 20
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),21.004,mm,7.4625,N,vector path 42 vertex 21
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),22.004,mm,8.3059,N,vector path 42 vertex 22
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),23.005,mm,9.2146,N,vector path 42 vertex 23
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),24.005,mm,10.1726,N,vector path 42 vertex 24
+Fig3,3,,Sphere to sphere,upper = loading (Δ 0→25),25.005,mm,11.0011,N,vector path 42 vertex 25
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),24.005,mm,9.2291,N,vector path 42 vertex 26
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),23.005,mm,8.1091,N,vector path 42 vertex 27
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),22.004,mm,7.1357,N,vector path 42 vertex 28
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),21.004,mm,6.2682,N,vector path 42 vertex 29
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),20.004,mm,5.4997,N,vector path 42 vertex 30
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),19.003,mm,4.817,N,vector path 42 vertex 31
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),18.003,mm,4.214,N,vector path 42 vertex 32
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),17.003,mm,3.6834,N,vector path 42 vertex 33
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),16.002,mm,3.2109,N,vector path 42 vertex 34
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),15.002,mm,2.7968,N,vector path 42 vertex 35
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),14.002,mm,2.4299,N,vector path 42 vertex 36
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),13.001,mm,2.0992,N,vector path 42 vertex 37
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),12.001,mm,1.8065,N,vector path 42 vertex 38
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),11.001,mm,1.5418,N,vector path 42 vertex 39
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),10.0,mm,1.3078,N,vector path 42 vertex 40
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),9.0,mm,1.1008,N,vector path 42 vertex 41
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),7.999,mm,0.923,N,vector path 42 vertex 42
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),6.999,mm,0.763,N,vector path 42 vertex 43
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),5.999,mm,0.6253,N,vector path 42 vertex 44
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),4.999,mm,0.4992,N,vector path 42 vertex 45
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),3.998,mm,0.3869,N,vector path 42 vertex 46
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),2.998,mm,0.2965,N,vector path 42 vertex 47
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),1.997,mm,0.2161,N,vector path 42 vertex 48
+Fig3,3,,Sphere to sphere,lower = unloading (Δ 24→1),0.997,mm,0.1476,N,vector path 42 vertex 49
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),-0.003,mm,0.1722,N,vector path 43 vertex 0
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),0.997,mm,0.3259,N,vector path 43 vertex 1
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),1.997,mm,0.4368,N,vector path 43 vertex 2
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),2.998,mm,0.5629,N,vector path 43 vertex 3
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),3.998,mm,0.7089,N,vector path 43 vertex 4
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),4.999,mm,0.8776,N,vector path 43 vertex 5
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),5.999,mm,1.0787,N,vector path 43 vertex 6
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),6.999,mm,1.3116,N,vector path 43 vertex 7
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),7.999,mm,1.5749,N,vector path 43 vertex 8
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),9.0,mm,1.8599,N,vector path 43 vertex 9
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),10.0,mm,2.1823,N,vector path 43 vertex 10
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),11.001,mm,2.554,N,vector path 43 vertex 11
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),12.001,mm,2.9814,N,vector path 43 vertex 12
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),13.001,mm,3.4609,N,vector path 43 vertex 13
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),14.002,mm,3.9984,N,vector path 43 vertex 14
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),15.002,mm,4.6074,N,vector path 43 vertex 15
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),16.002,mm,5.2764,N,vector path 43 vertex 16
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),17.003,mm,6.0179,N,vector path 43 vertex 17
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),18.003,mm,6.8256,N,vector path 43 vertex 18
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),19.003,mm,7.7328,N,vector path 43 vertex 19
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),20.004,mm,8.7751,N,vector path 43 vertex 20
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),21.004,mm,9.9282,N,vector path 43 vertex 21
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),22.004,mm,11.1997,N,vector path 43 vertex 22
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),23.005,mm,12.6223,N,vector path 43 vertex 23
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),24.005,mm,14.2128,N,vector path 43 vertex 24
+Fig3,3,,MC-DEM,upper = loading (Δ 0→25),25.005,mm,15.7474,N,vector path 43 vertex 25
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),24.005,mm,12.9648,N,vector path 43 vertex 26
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),23.005,mm,11.2155,N,vector path 43 vertex 27
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),22.004,mm,9.7643,N,vector path 43 vertex 28
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),21.004,mm,8.5124,N,vector path 43 vertex 29
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),20.004,mm,7.4097,N,vector path 43 vertex 30
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),19.003,mm,6.4324,N,vector path 43 vertex 31
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),18.003,mm,5.5657,N,vector path 43 vertex 32
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),17.003,mm,4.7999,N,vector path 43 vertex 33
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),16.002,mm,4.1272,N,vector path 43 vertex 34
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),15.002,mm,3.5413,N,vector path 43 vertex 35
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),14.002,mm,3.0347,N,vector path 43 vertex 36
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),13.001,mm,2.5999,N,vector path 43 vertex 37
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),12.001,mm,2.2206,N,vector path 43 vertex 38
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),11.001,mm,1.9009,N,vector path 43 vertex 39
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),10.0,mm,1.6188,N,vector path 43 vertex 40
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),9.0,mm,1.3578,N,vector path 43 vertex 41
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),7.999,mm,1.1178,N,vector path 43 vertex 42
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),6.999,mm,0.9152,N,vector path 43 vertex 43
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),5.999,mm,0.7323,N,vector path 43 vertex 44
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),4.999,mm,0.5826,N,vector path 43 vertex 45
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),3.998,mm,0.4647,N,vector path 43 vertex 46
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),2.998,mm,0.36,N,vector path 43 vertex 47
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),1.997,mm,0.2614,N,vector path 43 vertex 48
+Fig3,3,,MC-DEM,lower = unloading (Δ 24→1),0.997,mm,0.1794,N,vector path 43 vertex 49
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.00379,N,14.6867,1/N,vector path 43 vertex 0
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.00545,N,17.5953,1/N,vector path 43 vertex 1
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.00711,N,19.0072,1/N,vector path 43 vertex 2
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.00877,N,19.5303,1/N,vector path 43 vertex 3
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.01043,N,19.205,1/N,vector path 43 vertex 4
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.0121,N,18.7097,1/N,vector path 43 vertex 5
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.01376,N,18.337,1/N,vector path 43 vertex 6
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.01542,N,18.1039,1/N,vector path 43 vertex 7
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.01708,N,17.9244,1/N,vector path 43 vertex 8
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.01874,N,17.7241,1/N,vector path 43 vertex 9
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.0204,N,17.4919,1/N,vector path 43 vertex 10
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.02206,N,17.2551,1/N,vector path 43 vertex 11
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.02373,N,17.034,1/N,vector path 43 vertex 12
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.02539,N,16.8269,1/N,vector path 43 vertex 13
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.02705,N,16.615,1/N,vector path 43 vertex 14
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.02871,N,16.3761,1/N,vector path 43 vertex 15
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.03037,N,16.0921,1/N,vector path 43 vertex 16
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.03203,N,15.7528,1/N,vector path 43 vertex 17
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.03369,N,15.355,1/N,vector path 43 vertex 18
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.03535,N,14.9039,1/N,vector path 43 vertex 19
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.03701,N,14.4066,1/N,vector path 43 vertex 20
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.03868,N,13.8732,1/N,vector path 43 vertex 21
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.04034,N,13.3143,1/N,vector path 43 vertex 22
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.042,N,12.7392,1/N,vector path 43 vertex 23
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.04366,N,12.156,1/N,vector path 43 vertex 24
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.04532,N,11.5728,1/N,vector path 43 vertex 25
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.04698,N,10.9951,1/N,vector path 43 vertex 26
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.04865,N,10.4285,1/N,vector path 43 vertex 27
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.05031,N,9.8761,1/N,vector path 43 vertex 28
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.05197,N,9.3412,1/N,vector path 43 vertex 29
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.05363,N,8.8256,1/N,vector path 43 vertex 30
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.05529,N,8.3303,1/N,vector path 43 vertex 31
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.05695,N,7.8567,1/N,vector path 43 vertex 32
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.05861,N,7.4043,1/N,vector path 43 vertex 33
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.06027,N,6.9736,1/N,vector path 43 vertex 34
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.06193,N,6.5635,1/N,vector path 43 vertex 35
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.0636,N,6.1744,1/N,vector path 43 vertex 36
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.06526,N,5.805,1/N,vector path 43 vertex 37
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.06692,N,5.4543,1/N,vector path 43 vertex 38
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.06858,N,5.1219,1/N,vector path 43 vertex 39
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.07024,N,4.8068,1/N,vector path 43 vertex 40
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.0719,N,4.5088,1/N,vector path 43 vertex 41
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.07357,N,4.2262,1/N,vector path 43 vertex 42
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.07523,N,3.9592,1/N,vector path 43 vertex 43
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.07689,N,3.7067,1/N,vector path 43 vertex 44
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.07855,N,3.4679,1/N,vector path 43 vertex 45
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.08021,N,3.2425,1/N,vector path 43 vertex 46
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.08187,N,3.0297,1/N,vector path 43 vertex 47
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.08353,N,2.8289,1/N,vector path 43 vertex 48
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.08519,N,2.64,1/N,vector path 43 vertex 49
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.08685,N,2.4615,1/N,vector path 43 vertex 50
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.08852,N,2.2942,1/N,vector path 43 vertex 51
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.09018,N,2.1367,1/N,vector path 43 vertex 52
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.09184,N,1.9887,1/N,vector path 43 vertex 53
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.0935,N,1.8499,1/N,vector path 43 vertex 54
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.09516,N,1.7196,1/N,vector path 43 vertex 55
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.09682,N,1.5976,1/N,vector path 43 vertex 56
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.09848,N,1.4836,1/N,vector path 43 vertex 57
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.10015,N,1.3769,1/N,vector path 43 vertex 58
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.10181,N,1.2773,1/N,vector path 43 vertex 59
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.10347,N,1.184,1/N,vector path 43 vertex 60
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.10513,N,1.0972,1/N,vector path 43 vertex 61
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.10679,N,1.0164,1/N,vector path 43 vertex 62
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.10845,N,0.9412,1/N,vector path 43 vertex 63
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.11011,N,0.871,1/N,vector path 43 vertex 64
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.11177,N,0.8059,1/N,vector path 43 vertex 65
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.11344,N,0.7454,1/N,vector path 43 vertex 66
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.1151,N,0.6892,1/N,vector path 43 vertex 67
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.11676,N,0.637,1/N,vector path 43 vertex 68
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.11842,N,0.5888,1/N,vector path 43 vertex 69
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.12008,N,0.5441,1/N,vector path 43 vertex 70
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.12174,N,0.5024,1/N,vector path 43 vertex 71
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.1234,N,0.4638,1/N,vector path 43 vertex 72
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.12507,N,0.4285,1/N,vector path 43 vertex 73
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.12673,N,0.3957,1/N,vector path 43 vertex 74
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.12839,N,0.3652,1/N,vector path 43 vertex 75
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.13005,N,0.3373,1/N,vector path 43 vertex 76
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.13171,N,0.3109,1/N,vector path 43 vertex 77
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.13337,N,0.287,1/N,vector path 43 vertex 78
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.13503,N,0.265,1/N,vector path 43 vertex 79
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.13669,N,0.2445,1/N,vector path 43 vertex 80
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.13836,N,0.2256,1/N,vector path 43 vertex 81
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.14002,N,0.2081,1/N,vector path 43 vertex 82
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.14168,N,0.1919,1/N,vector path 43 vertex 83
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.14334,N,0.1772,1/N,vector path 43 vertex 84
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.145,N,0.1634,1/N,vector path 43 vertex 85
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.14666,N,0.1509,1/N,vector path 43 vertex 86
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.14832,N,0.1392,1/N,vector path 43 vertex 87
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.14998,N,0.1283,1/N,vector path 43 vertex 88
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.15165,N,0.1184,1/N,vector path 43 vertex 89
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.15331,N,0.1092,1/N,vector path 43 vertex 90
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.15497,N,0.1007,1/N,vector path 43 vertex 91
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.15663,N,0.0929,1/N,vector path 43 vertex 92
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.15829,N,0.0856,1/N,vector path 43 vertex 93
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.15995,N,0.079,1/N,vector path 43 vertex 94
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.16161,N,0.0727,1/N,vector path 43 vertex 95
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.16328,N,0.0669,1/N,vector path 43 vertex 96
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.16494,N,0.0618,1/N,vector path 43 vertex 97
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.1666,N,0.057,1/N,vector path 43 vertex 98
+Fig4,4,"Delta=18 mm, unloading",Point force on sphere,unloading (caption),0.16826,N,0.0525,1/N,vector path 43 vertex 99
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.00446,N,11.2822,1/N,vector path 44 vertex 0
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.00641,N,12.6576,1/N,vector path 44 vertex 1
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.00837,N,11.6818,1/N,vector path 44 vertex 2
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.01033,N,11.489,1/N,vector path 44 vertex 3
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.01228,N,11.9081,1/N,vector path 44 vertex 4
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.01424,N,12.2812,1/N,vector path 44 vertex 5
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.01619,N,12.4064,1/N,vector path 44 vertex 6
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.01814,N,12.3714,1/N,vector path 44 vertex 7
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.0201,N,12.2804,1/N,vector path 44 vertex 8
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.02205,N,12.1592,1/N,vector path 44 vertex 9
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.02401,N,12.0182,1/N,vector path 44 vertex 10
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.02596,N,11.885,1/N,vector path 44 vertex 11
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.02792,N,11.7823,1/N,vector path 44 vertex 12
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.02987,N,11.7106,1/N,vector path 44 vertex 13
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.03183,N,11.655,1/N,vector path 44 vertex 14
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.03378,N,11.5959,1/N,vector path 44 vertex 15
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.03574,N,11.5206,1/N,vector path 44 vertex 16
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.03769,N,11.423,1/N,vector path 44 vertex 17
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.03965,N,11.3029,1/N,vector path 44 vertex 18
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.0416,N,11.1617,1/N,vector path 44 vertex 19
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.04355,N,11.0013,1/N,vector path 44 vertex 20
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.04551,N,10.8241,1/N,vector path 44 vertex 21
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.04746,N,10.6311,1/N,vector path 44 vertex 22
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.04942,N,10.423,1/N,vector path 44 vertex 23
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.05138,N,10.2016,1/N,vector path 44 vertex 24
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.05333,N,9.9675,1/N,vector path 44 vertex 25
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.05528,N,9.7219,1/N,vector path 44 vertex 26
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.05724,N,9.4663,1/N,vector path 44 vertex 27
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.05919,N,9.2021,1/N,vector path 44 vertex 28
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.06115,N,8.9306,1/N,vector path 44 vertex 29
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.0631,N,8.6535,1/N,vector path 44 vertex 30
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.06506,N,8.3715,1/N,vector path 44 vertex 31
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.06701,N,8.0865,1/N,vector path 44 vertex 32
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.06897,N,7.7999,1/N,vector path 44 vertex 33
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.07092,N,7.5123,1/N,vector path 44 vertex 34
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.07288,N,7.2249,1/N,vector path 44 vertex 35
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.07483,N,6.9387,1/N,vector path 44 vertex 36
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.07678,N,6.6549,1/N,vector path 44 vertex 37
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.07874,N,6.3741,1/N,vector path 44 vertex 38
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.0807,N,6.0967,1/N,vector path 44 vertex 39
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.08265,N,5.8243,1/N,vector path 44 vertex 40
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.0846,N,5.5567,1/N,vector path 44 vertex 41
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.08656,N,5.2947,1/N,vector path 44 vertex 42
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.08851,N,5.0392,1/N,vector path 44 vertex 43
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.09047,N,4.79,1/N,vector path 44 vertex 44
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.09242,N,4.5484,1/N,vector path 44 vertex 45
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.09438,N,4.3142,1/N,vector path 44 vertex 46
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.09633,N,4.0877,1/N,vector path 44 vertex 47
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.09829,N,3.8688,1/N,vector path 44 vertex 48
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.10024,N,3.6585,1/N,vector path 44 vertex 49
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.1022,N,3.4564,1/N,vector path 44 vertex 50
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.10415,N,3.2626,1/N,vector path 44 vertex 51
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.10611,N,3.077,1/N,vector path 44 vertex 52
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.10806,N,2.8996,1/N,vector path 44 vertex 53
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.11001,N,2.7304,1/N,vector path 44 vertex 54
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.11197,N,2.5692,1/N,vector path 44 vertex 55
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.11393,N,2.4157,1/N,vector path 44 vertex 56
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.11588,N,2.2702,1/N,vector path 44 vertex 57
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.11783,N,2.1318,1/N,vector path 44 vertex 58
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.11979,N,2.0005,1/N,vector path 44 vertex 59
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.12174,N,1.8764,1/N,vector path 44 vertex 60
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.1237,N,1.7589,1/N,vector path 44 vertex 61
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.12565,N,1.6479,1/N,vector path 44 vertex 62
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.12761,N,1.5432,1/N,vector path 44 vertex 63
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.12956,N,1.4441,1/N,vector path 44 vertex 64
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.13152,N,1.3509,1/N,vector path 44 vertex 65
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.13347,N,1.2633,1/N,vector path 44 vertex 66
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.13543,N,1.1804,1/N,vector path 44 vertex 67
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.13738,N,1.103,1/N,vector path 44 vertex 68
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.13934,N,1.0299,1/N,vector path 44 vertex 69
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.14129,N,0.9614,1/N,vector path 44 vertex 70
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.14324,N,0.8972,1/N,vector path 44 vertex 71
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.1452,N,0.8367,1/N,vector path 44 vertex 72
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.14715,N,0.7806,1/N,vector path 44 vertex 73
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.14911,N,0.7274,1/N,vector path 44 vertex 74
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.15106,N,0.6781,1/N,vector path 44 vertex 75
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.15302,N,0.6319,1/N,vector path 44 vertex 76
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.15497,N,0.5886,1/N,vector path 44 vertex 77
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.15693,N,0.548,1/N,vector path 44 vertex 78
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.15888,N,0.5104,1/N,vector path 44 vertex 79
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.16084,N,0.4752,1/N,vector path 44 vertex 80
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.16279,N,0.4421,1/N,vector path 44 vertex 81
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.16475,N,0.4117,1/N,vector path 44 vertex 82
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.1667,N,0.3831,1/N,vector path 44 vertex 83
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.16866,N,0.3563,1/N,vector path 44 vertex 84
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.17061,N,0.3315,1/N,vector path 44 vertex 85
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.17256,N,0.3084,1/N,vector path 44 vertex 86
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.17452,N,0.287,1/N,vector path 44 vertex 87
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.17647,N,0.2669,1/N,vector path 44 vertex 88
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.17843,N,0.2482,1/N,vector path 44 vertex 89
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.18039,N,0.2307,1/N,vector path 44 vertex 90
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.18234,N,0.2148,1/N,vector path 44 vertex 91
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.18429,N,0.1997,1/N,vector path 44 vertex 92
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.18625,N,0.1856,1/N,vector path 44 vertex 93
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.1882,N,0.1726,1/N,vector path 44 vertex 94
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.19016,N,0.1606,1/N,vector path 44 vertex 95
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.19211,N,0.1491,1/N,vector path 44 vertex 96
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.19407,N,0.1386,1/N,vector path 44 vertex 97
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.19602,N,0.1289,1/N,vector path 44 vertex 98
+Fig4,4,"Delta=18 mm, unloading",Elastic half space,unloading (caption),0.19798,N,0.1197,1/N,vector path 44 vertex 99
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.00181,N,6.7644,1/N,vector path 47 vertex 0
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.00539,N,7.5545,1/N,vector path 47 vertex 1
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.00896,N,7.2766,1/N,vector path 47 vertex 2
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.01253,N,7.1982,1/N,vector path 47 vertex 3
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.0161,N,7.9415,1/N,vector path 47 vertex 4
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.01967,N,8.8986,1/N,vector path 47 vertex 5
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.02324,N,9.7879,1/N,vector path 47 vertex 6
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.02681,N,10.3154,1/N,vector path 47 vertex 7
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.03038,N,10.5366,1/N,vector path 47 vertex 8
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.03395,N,10.5743,1/N,vector path 47 vertex 9
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.03752,N,10.5084,1/N,vector path 47 vertex 10
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.04109,N,10.382,1/N,vector path 47 vertex 11
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.04466,N,10.2125,1/N,vector path 47 vertex 12
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.04823,N,9.993,1/N,vector path 47 vertex 13
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.0518,N,9.706,1/N,vector path 47 vertex 14
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.05537,N,9.3394,1/N,vector path 47 vertex 15
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.05894,N,8.8997,1/N,vector path 47 vertex 16
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.06251,N,8.4094,1/N,vector path 47 vertex 17
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.06608,N,7.8986,1/N,vector path 47 vertex 18
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.06965,N,7.3932,1/N,vector path 47 vertex 19
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.07322,N,6.9119,1/N,vector path 47 vertex 20
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.07679,N,6.4631,1/N,vector path 47 vertex 21
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.08036,N,6.048,1/N,vector path 47 vertex 22
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.08393,N,5.6638,1/N,vector path 47 vertex 23
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.0875,N,5.3047,1/N,vector path 47 vertex 24
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.09107,N,4.9669,1/N,vector path 47 vertex 25
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.09464,N,4.6461,1/N,vector path 47 vertex 26
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.09821,N,4.3402,1/N,vector path 47 vertex 27
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.10178,N,4.0479,1/N,vector path 47 vertex 28
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.10535,N,3.7698,1/N,vector path 47 vertex 29
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.10892,N,3.5052,1/N,vector path 47 vertex 30
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.11249,N,3.2554,1/N,vector path 47 vertex 31
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.11606,N,3.0203,1/N,vector path 47 vertex 32
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.11963,N,2.8,1/N,vector path 47 vertex 33
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.1232,N,2.5949,1/N,vector path 47 vertex 34
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.12677,N,2.4041,1/N,vector path 47 vertex 35
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.13034,N,2.2268,1/N,vector path 47 vertex 36
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.13391,N,2.0634,1/N,vector path 47 vertex 37
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.13748,N,1.9122,1/N,vector path 47 vertex 38
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.14105,N,1.7726,1/N,vector path 47 vertex 39
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.14462,N,1.6437,1/N,vector path 47 vertex 40
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.1482,N,1.5249,1/N,vector path 47 vertex 41
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.15176,N,1.4151,1/N,vector path 47 vertex 42
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.15534,N,1.3138,1/N,vector path 47 vertex 43
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.15891,N,1.2202,1/N,vector path 47 vertex 44
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.16247,N,1.1335,1/N,vector path 47 vertex 45
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.16604,N,1.0534,1/N,vector path 47 vertex 46
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.16962,N,0.9787,1/N,vector path 47 vertex 47
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.17319,N,0.9098,1/N,vector path 47 vertex 48
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.17676,N,0.8457,1/N,vector path 47 vertex 49
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.18033,N,0.786,1/N,vector path 47 vertex 50
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.1839,N,0.7303,1/N,vector path 47 vertex 51
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.18747,N,0.6786,1/N,vector path 47 vertex 52
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.19104,N,0.6304,1/N,vector path 47 vertex 53
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.19461,N,0.5853,1/N,vector path 47 vertex 54
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.19818,N,0.5434,1/N,vector path 47 vertex 55
+Fig4,4,"Delta=18 mm, unloading",Experiment,unloading (caption),0.20017,N,0.5215,1/N,vector path 47 vertex 56
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.00358,N,15.2797,1/N,vector path 48 vertex 0
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.0049,N,16.9261,1/N,vector path 48 vertex 1
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.00623,N,17.7518,1/N,vector path 48 vertex 2
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.00755,N,18.5507,1/N,vector path 48 vertex 3
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.00888,N,18.8871,1/N,vector path 48 vertex 4
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.0102,N,18.8403,1/N,vector path 48 vertex 5
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.01153,N,18.5724,1/N,vector path 48 vertex 6
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.01285,N,18.4096,1/N,vector path 48 vertex 7
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.01418,N,18.4648,1/N,vector path 48 vertex 8
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.01551,N,18.6329,1/N,vector path 48 vertex 9
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.01683,N,18.7778,1/N,vector path 48 vertex 10
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.01816,N,18.821,1/N,vector path 48 vertex 11
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.01948,N,18.7406,1/N,vector path 48 vertex 12
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.02081,N,18.551,1/N,vector path 48 vertex 13
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.02213,N,18.284,1/N,vector path 48 vertex 14
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.02346,N,17.973,1/N,vector path 48 vertex 15
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.02478,N,17.6466,1/N,vector path 48 vertex 16
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.02611,N,17.3227,1/N,vector path 48 vertex 17
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.02743,N,17.0104,1/N,vector path 48 vertex 18
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.02876,N,16.7096,1/N,vector path 48 vertex 19
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03008,N,16.4169,1/N,vector path 48 vertex 20
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03141,N,16.1252,1/N,vector path 48 vertex 21
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03274,N,15.8277,1/N,vector path 48 vertex 22
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03406,N,15.5178,1/N,vector path 48 vertex 23
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03539,N,15.1903,1/N,vector path 48 vertex 24
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03671,N,14.842,1/N,vector path 48 vertex 25
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03804,N,14.4713,1/N,vector path 48 vertex 26
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.03936,N,14.0785,1/N,vector path 48 vertex 27
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04069,N,13.6642,1/N,vector path 48 vertex 28
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04201,N,13.2307,1/N,vector path 48 vertex 29
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04334,N,12.7811,1/N,vector path 48 vertex 30
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04466,N,12.3192,1/N,vector path 48 vertex 31
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04599,N,11.8479,1/N,vector path 48 vertex 32
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04731,N,11.3711,1/N,vector path 48 vertex 33
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04864,N,10.8917,1/N,vector path 48 vertex 34
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.04997,N,10.4135,1/N,vector path 48 vertex 35
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.05129,N,9.9394,1/N,vector path 48 vertex 36
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.05261,N,9.4718,1/N,vector path 48 vertex 37
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.05394,N,9.013,1/N,vector path 48 vertex 38
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.05527,N,8.5648,1/N,vector path 48 vertex 39
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.05659,N,8.1294,1/N,vector path 48 vertex 40
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.05792,N,7.7077,1/N,vector path 48 vertex 41
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.05924,N,7.3008,1/N,vector path 48 vertex 42
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06057,N,6.9094,1/N,vector path 48 vertex 43
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06189,N,6.5341,1/N,vector path 48 vertex 44
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06322,N,6.1749,1/N,vector path 48 vertex 45
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06454,N,5.8324,1/N,vector path 48 vertex 46
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06587,N,5.5055,1/N,vector path 48 vertex 47
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06719,N,5.1949,1/N,vector path 48 vertex 48
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06852,N,4.8999,1/N,vector path 48 vertex 49
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.06984,N,4.6197,1/N,vector path 48 vertex 50
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.07117,N,4.3543,1/N,vector path 48 vertex 51
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.0725,N,4.103,1/N,vector path 48 vertex 52
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.07382,N,3.8648,1/N,vector path 48 vertex 53
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.07515,N,3.6398,1/N,vector path 48 vertex 54
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.07647,N,3.4266,1/N,vector path 48 vertex 55
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.0778,N,3.2251,1/N,vector path 48 vertex 56
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.07912,N,3.0348,1/N,vector path 48 vertex 57
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.08045,N,2.8547,1/N,vector path 48 vertex 58
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.08177,N,2.6846,1/N,vector path 48 vertex 59
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.0831,N,2.5244,1/N,vector path 48 vertex 60
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.08442,N,2.3728,1/N,vector path 48 vertex 61
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.08575,N,2.2299,1/N,vector path 48 vertex 62
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.08707,N,2.095,1/N,vector path 48 vertex 63
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.0884,N,1.9677,1/N,vector path 48 vertex 64
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.08973,N,1.8479,1/N,vector path 48 vertex 65
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.09105,N,1.7349,1/N,vector path 48 vertex 66
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.09237,N,1.6285,1/N,vector path 48 vertex 67
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.0937,N,1.5283,1/N,vector path 48 vertex 68
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.09503,N,1.4339,1/N,vector path 48 vertex 69
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.09635,N,1.3451,1/N,vector path 48 vertex 70
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.09768,N,1.2619,1/N,vector path 48 vertex 71
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.099,N,1.1835,1/N,vector path 48 vertex 72
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.10033,N,1.1097,1/N,vector path 48 vertex 73
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.10165,N,1.0404,1/N,vector path 48 vertex 74
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.10298,N,0.9755,1/N,vector path 48 vertex 75
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.1043,N,0.9143,1/N,vector path 48 vertex 76
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.10563,N,0.8573,1/N,vector path 48 vertex 77
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.10695,N,0.8033,1/N,vector path 48 vertex 78
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.10828,N,0.7531,1/N,vector path 48 vertex 79
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.1096,N,0.7058,1/N,vector path 48 vertex 80
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.11093,N,0.6615,1/N,vector path 48 vertex 81
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.11226,N,0.6199,1/N,vector path 48 vertex 82
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.11358,N,0.5808,1/N,vector path 48 vertex 83
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.11491,N,0.5444,1/N,vector path 48 vertex 84
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.11623,N,0.5101,1/N,vector path 48 vertex 85
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.11756,N,0.4778,1/N,vector path 48 vertex 86
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.11888,N,0.4478,1/N,vector path 48 vertex 87
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12021,N,0.4197,1/N,vector path 48 vertex 88
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12153,N,0.393,1/N,vector path 48 vertex 89
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12286,N,0.3682,1/N,vector path 48 vertex 90
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12418,N,0.3449,1/N,vector path 48 vertex 91
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12551,N,0.3232,1/N,vector path 48 vertex 92
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12683,N,0.3026,1/N,vector path 48 vertex 93
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12816,N,0.2833,1/N,vector path 48 vertex 94
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.12948,N,0.2654,1/N,vector path 48 vertex 95
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.13081,N,0.2484,1/N,vector path 48 vertex 96
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.13214,N,0.2325,1/N,vector path 48 vertex 97
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.13346,N,0.2177,1/N,vector path 48 vertex 98
+Fig4,4,"Delta=18 mm, unloading",Independent contacts,unloading (caption),0.13479,N,0.2037,1/N,vector path 48 vertex 99
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.00427,N,9.3736,1/N,vector path 49 vertex 0
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.00607,N,12.3617,1/N,vector path 49 vertex 1
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.00786,N,13.1434,1/N,vector path 49 vertex 2
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.00965,N,13.6022,1/N,vector path 49 vertex 3
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.01144,N,13.8656,1/N,vector path 49 vertex 4
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.01324,N,14.1014,1/N,vector path 49 vertex 5
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.01503,N,14.2234,1/N,vector path 49 vertex 6
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.01682,N,14.1412,1/N,vector path 49 vertex 7
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.01861,N,13.9287,1/N,vector path 49 vertex 8
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.02041,N,13.6919,1/N,vector path 49 vertex 9
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.0222,N,13.477,1/N,vector path 49 vertex 10
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.02399,N,13.2866,1/N,vector path 49 vertex 11
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.02578,N,13.1152,1/N,vector path 49 vertex 12
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.02758,N,12.9597,1/N,vector path 49 vertex 13
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.02937,N,12.8209,1/N,vector path 49 vertex 14
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.03116,N,12.6967,1/N,vector path 49 vertex 15
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.03295,N,12.5843,1/N,vector path 49 vertex 16
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.03475,N,12.4768,1/N,vector path 49 vertex 17
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.03654,N,12.3654,1/N,vector path 49 vertex 18
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.03833,N,12.2413,1/N,vector path 49 vertex 19
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.04012,N,12.0946,1/N,vector path 49 vertex 20
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.04192,N,11.9186,1/N,vector path 49 vertex 21
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.04371,N,11.7077,1/N,vector path 49 vertex 22
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.0455,N,11.461,1/N,vector path 49 vertex 23
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.04729,N,11.1791,1/N,vector path 49 vertex 24
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.04908,N,10.8667,1/N,vector path 49 vertex 25
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.05088,N,10.5289,1/N,vector path 49 vertex 26
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.05267,N,10.1734,1/N,vector path 49 vertex 27
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.05446,N,9.8064,1/N,vector path 49 vertex 28
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.05626,N,9.4353,1/N,vector path 49 vertex 29
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.05805,N,9.0655,1/N,vector path 49 vertex 30
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.05984,N,8.702,1/N,vector path 49 vertex 31
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.06163,N,8.3483,1/N,vector path 49 vertex 32
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.06343,N,8.0067,1/N,vector path 49 vertex 33
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.06522,N,7.6786,1/N,vector path 49 vertex 34
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.06701,N,7.3646,1/N,vector path 49 vertex 35
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.0688,N,7.0635,1/N,vector path 49 vertex 36
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.07059,N,6.7752,1/N,vector path 49 vertex 37
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.07239,N,6.499,1/N,vector path 49 vertex 38
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.07418,N,6.2325,1/N,vector path 49 vertex 39
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.07597,N,5.9756,1/N,vector path 49 vertex 40
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.07776,N,5.7261,1/N,vector path 49 vertex 41
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.07956,N,5.4841,1/N,vector path 49 vertex 42
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.08135,N,5.2483,1/N,vector path 49 vertex 43
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.08314,N,5.0186,1/N,vector path 49 vertex 44
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.08493,N,4.7941,1/N,vector path 49 vertex 45
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.08673,N,4.5749,1/N,vector path 49 vertex 46
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.08852,N,4.3613,1/N,vector path 49 vertex 47
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.09031,N,4.153,1/N,vector path 49 vertex 48
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.0921,N,3.9504,1/N,vector path 49 vertex 49
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.0939,N,3.7535,1/N,vector path 49 vertex 50
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.09569,N,3.563,1/N,vector path 49 vertex 51
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.09748,N,3.3789,1/N,vector path 49 vertex 52
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.09927,N,3.2012,1/N,vector path 49 vertex 53
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.10107,N,3.0302,1/N,vector path 49 vertex 54
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.10286,N,2.8664,1/N,vector path 49 vertex 55
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.10465,N,2.7093,1/N,vector path 49 vertex 56
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.10644,N,2.5592,1/N,vector path 49 vertex 57
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.10824,N,2.4159,1/N,vector path 49 vertex 58
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.11003,N,2.2795,1/N,vector path 49 vertex 59
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.11182,N,2.1497,1/N,vector path 49 vertex 60
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.11361,N,2.0269,1/N,vector path 49 vertex 61
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.11541,N,1.9101,1/N,vector path 49 vertex 62
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.1172,N,1.7991,1/N,vector path 49 vertex 63
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.11899,N,1.6944,1/N,vector path 49 vertex 64
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.12078,N,1.5954,1/N,vector path 49 vertex 65
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.12258,N,1.5016,1/N,vector path 49 vertex 66
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.12437,N,1.4131,1/N,vector path 49 vertex 67
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.12616,N,1.3295,1/N,vector path 49 vertex 68
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.12795,N,1.2505,1/N,vector path 49 vertex 69
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.12974,N,1.176,1/N,vector path 49 vertex 70
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.13154,N,1.1055,1/N,vector path 49 vertex 71
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.13333,N,1.0392,1/N,vector path 49 vertex 72
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.13512,N,0.9766,1/N,vector path 49 vertex 73
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.13691,N,0.9176,1/N,vector path 49 vertex 74
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.13871,N,0.8619,1/N,vector path 49 vertex 75
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.1405,N,0.8093,1/N,vector path 49 vertex 76
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.14229,N,0.76,1/N,vector path 49 vertex 77
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.14409,N,0.7133,1/N,vector path 49 vertex 78
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.14588,N,0.6693,1/N,vector path 49 vertex 79
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.14767,N,0.6278,1/N,vector path 49 vertex 80
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.14946,N,0.5888,1/N,vector path 49 vertex 81
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.15125,N,0.552,1/N,vector path 49 vertex 82
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.15305,N,0.5172,1/N,vector path 49 vertex 83
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.15484,N,0.4848,1/N,vector path 49 vertex 84
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.15663,N,0.4538,1/N,vector path 49 vertex 85
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.15842,N,0.4251,1/N,vector path 49 vertex 86
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.16022,N,0.398,1/N,vector path 49 vertex 87
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.16201,N,0.3722,1/N,vector path 49 vertex 88
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.1638,N,0.348,1/N,vector path 49 vertex 89
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.16559,N,0.3255,1/N,vector path 49 vertex 90
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.16739,N,0.3041,1/N,vector path 49 vertex 91
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.16918,N,0.284,1/N,vector path 49 vertex 92
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.17097,N,0.2656,1/N,vector path 49 vertex 93
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.17277,N,0.2479,1/N,vector path 49 vertex 94
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.17456,N,0.2314,1/N,vector path 49 vertex 95
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.17635,N,0.2159,1/N,vector path 49 vertex 96
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.17814,N,0.2013,1/N,vector path 49 vertex 97
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.17993,N,0.1877,1/N,vector path 49 vertex 98
+Fig4,4,"Delta=18 mm, unloading",Sphere to sphere,unloading (caption),0.18173,N,0.1748,1/N,vector path 49 vertex 99
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.00516,N,7.7382,1/N,vector path 50 vertex 0
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.00742,N,8.827,1/N,vector path 50 vertex 1
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.00967,N,10.098,1/N,vector path 50 vertex 2
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.01192,N,10.887,1/N,vector path 50 vertex 3
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.01417,N,10.4949,1/N,vector path 50 vertex 4
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.01642,N,9.8045,1/N,vector path 50 vertex 5
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.01867,N,9.4018,1/N,vector path 50 vertex 6
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.02093,N,9.381,1/N,vector path 50 vertex 7
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.02318,N,9.6433,1/N,vector path 50 vertex 8
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.02543,N,10.0516,1/N,vector path 50 vertex 9
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.02768,N,10.4878,1/N,vector path 50 vertex 10
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.02993,N,10.865,1/N,vector path 50 vertex 11
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.03218,N,11.1318,1/N,vector path 50 vertex 12
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.03444,N,11.2715,1/N,vector path 50 vertex 13
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.03669,N,11.2907,1/N,vector path 50 vertex 14
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.03894,N,11.2083,1/N,vector path 50 vertex 15
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.04119,N,11.0465,1/N,vector path 50 vertex 16
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.04344,N,10.8273,1/N,vector path 50 vertex 17
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.04569,N,10.5699,1/N,vector path 50 vertex 18
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.04794,N,10.2898,1/N,vector path 50 vertex 19
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.0502,N,9.9982,1/N,vector path 50 vertex 20
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.05245,N,9.7032,1/N,vector path 50 vertex 21
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.0547,N,9.4096,1/N,vector path 50 vertex 22
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.05695,N,9.1202,1/N,vector path 50 vertex 23
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.0592,N,8.8353,1/N,vector path 50 vertex 24
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.06145,N,8.5551,1/N,vector path 50 vertex 25
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.06371,N,8.2786,1/N,vector path 50 vertex 26
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.06596,N,8.0052,1/N,vector path 50 vertex 27
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.06821,N,7.7348,1/N,vector path 50 vertex 28
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.07046,N,7.4669,1/N,vector path 50 vertex 29
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.07271,N,7.2018,1/N,vector path 50 vertex 30
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.07496,N,6.9402,1/N,vector path 50 vertex 31
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.07722,N,6.6825,1/N,vector path 50 vertex 32
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.07947,N,6.4293,1/N,vector path 50 vertex 33
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.08172,N,6.1807,1/N,vector path 50 vertex 34
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.08397,N,5.9373,1/N,vector path 50 vertex 35
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.08622,N,5.6996,1/N,vector path 50 vertex 36
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.08847,N,5.4676,1/N,vector path 50 vertex 37
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.09073,N,5.2417,1/N,vector path 50 vertex 38
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.09298,N,5.0214,1/N,vector path 50 vertex 39
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.09523,N,4.8072,1/N,vector path 50 vertex 40
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.09748,N,4.5988,1/N,vector path 50 vertex 41
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.09973,N,4.3963,1/N,vector path 50 vertex 42
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.10198,N,4.1997,1/N,vector path 50 vertex 43
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.10424,N,4.0088,1/N,vector path 50 vertex 44
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.10649,N,3.824,1/N,vector path 50 vertex 45
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.10874,N,3.6451,1/N,vector path 50 vertex 46
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.11099,N,3.4719,1/N,vector path 50 vertex 47
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.11324,N,3.3047,1/N,vector path 50 vertex 48
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.11549,N,3.1432,1/N,vector path 50 vertex 49
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.11775,N,2.9874,1/N,vector path 50 vertex 50
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.12,N,2.8379,1/N,vector path 50 vertex 51
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.12225,N,2.694,1/N,vector path 50 vertex 52
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.1245,N,2.5555,1/N,vector path 50 vertex 53
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.12675,N,2.4228,1/N,vector path 50 vertex 54
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.129,N,2.2958,1/N,vector path 50 vertex 55
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.13125,N,2.174,1/N,vector path 50 vertex 56
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.13351,N,2.0579,1/N,vector path 50 vertex 57
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.13576,N,1.9466,1/N,vector path 50 vertex 58
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.13801,N,1.8406,1/N,vector path 50 vertex 59
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.14026,N,1.7395,1/N,vector path 50 vertex 60
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.14251,N,1.643,1/N,vector path 50 vertex 61
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.14476,N,1.5516,1/N,vector path 50 vertex 62
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.14701,N,1.4644,1/N,vector path 50 vertex 63
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.14927,N,1.3815,1/N,vector path 50 vertex 64
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.15152,N,1.3029,1/N,vector path 50 vertex 65
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.15377,N,1.2282,1/N,vector path 50 vertex 66
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.15602,N,1.1575,1/N,vector path 50 vertex 67
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.15827,N,1.0904,1/N,vector path 50 vertex 68
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.16053,N,1.027,1/N,vector path 50 vertex 69
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.16278,N,0.9671,1/N,vector path 50 vertex 70
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.16503,N,0.9104,1/N,vector path 50 vertex 71
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.16728,N,0.8568,1/N,vector path 50 vertex 72
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.16953,N,0.8059,1/N,vector path 50 vertex 73
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.17178,N,0.758,1/N,vector path 50 vertex 74
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.17404,N,0.713,1/N,vector path 50 vertex 75
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.17629,N,0.6702,1/N,vector path 50 vertex 76
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.17854,N,0.6299,1/N,vector path 50 vertex 77
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.18079,N,0.5923,1/N,vector path 50 vertex 78
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.18304,N,0.5563,1/N,vector path 50 vertex 79
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.18529,N,0.5227,1/N,vector path 50 vertex 80
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.18754,N,0.4911,1/N,vector path 50 vertex 81
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.1898,N,0.461,1/N,vector path 50 vertex 82
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.19205,N,0.4327,1/N,vector path 50 vertex 83
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.1943,N,0.4062,1/N,vector path 50 vertex 84
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.19655,N,0.3811,1/N,vector path 50 vertex 85
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.1988,N,0.3577,1/N,vector path 50 vertex 86
+Fig4,4,"Delta=18 mm, unloading",MC-DEM,unloading (caption),0.20017,N,0.3442,1/N,vector path 50 vertex 87
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),24.004,mm,8.925,contacts per grain,vector path 161 vertex 0
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),23.003,mm,8.8715,contacts per grain,vector path 161 vertex 1
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),22.003,mm,8.7405,contacts per grain,vector path 161 vertex 2
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),21.002,mm,8.5784,contacts per grain,vector path 161 vertex 3
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),20.002,mm,8.4669,contacts per grain,vector path 161 vertex 4
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),19.002,mm,8.3889,contacts per grain,vector path 161 vertex 5
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),18.001,mm,8.3019,contacts per grain,vector path 161 vertex 6
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),17.001,mm,8.1792,contacts per grain,vector path 161 vertex 7
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),16.0,mm,8.0603,contacts per grain,vector path 161 vertex 8
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),15.0,mm,7.9389,contacts per grain,vector path 161 vertex 9
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),14.0,mm,7.8108,contacts per grain,vector path 161 vertex 10
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),12.999,mm,7.6395,contacts per grain,vector path 161 vertex 11
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),11.999,mm,7.4947,contacts per grain,vector path 161 vertex 12
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),10.998,mm,7.3046,contacts per grain,vector path 161 vertex 13
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),9.998,mm,7.1501,contacts per grain,vector path 161 vertex 14
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),8.998,mm,6.9903,contacts per grain,vector path 161 vertex 15
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),7.997,mm,6.7709,contacts per grain,vector path 161 vertex 16
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),6.997,mm,6.4949,contacts per grain,vector path 161 vertex 17
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),5.996,mm,6.1789,contacts per grain,vector path 161 vertex 18
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),4.996,mm,5.8776,contacts per grain,vector path 161 vertex 19
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),3.995,mm,5.4552,contacts per grain,vector path 161 vertex 20
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),2.995,mm,4.9018,contacts per grain,vector path 161 vertex 21
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),1.995,mm,4.2526,contacts per grain,vector path 161 vertex 22
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),0.995,mm,3.6111,contacts per grain,vector path 161 vertex 23
+Fig5,4,top-left (Independent contacts),Experiment,path 1st half (Δ 24→0),-0.006,mm,3.3661,contacts per grain,vector path 161 vertex 24
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),0.995,mm,3.4591,contacts per grain,vector path 161 vertex 25
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),1.995,mm,3.7342,contacts per grain,vector path 161 vertex 26
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),2.995,mm,4.2953,contacts per grain,vector path 161 vertex 27
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),3.995,mm,4.8021,contacts per grain,vector path 161 vertex 28
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),4.996,mm,5.2054,contacts per grain,vector path 161 vertex 29
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),5.996,mm,5.6953,contacts per grain,vector path 161 vertex 30
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),6.997,mm,5.9219,contacts per grain,vector path 161 vertex 31
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),7.997,mm,6.295,contacts per grain,vector path 161 vertex 32
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),8.998,mm,6.535,contacts per grain,vector path 161 vertex 33
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),9.998,mm,6.7302,contacts per grain,vector path 161 vertex 34
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),10.998,mm,7.0041,contacts per grain,vector path 161 vertex 35
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),11.999,mm,7.2022,contacts per grain,vector path 161 vertex 36
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),12.999,mm,7.3804,contacts per grain,vector path 161 vertex 37
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),14.0,mm,7.5817,contacts per grain,vector path 161 vertex 38
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),15.0,mm,7.8172,contacts per grain,vector path 161 vertex 39
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),16.0,mm,8.0049,contacts per grain,vector path 161 vertex 40
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),17.001,mm,8.1286,contacts per grain,vector path 161 vertex 41
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),18.001,mm,8.2376,contacts per grain,vector path 161 vertex 42
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),19.002,mm,8.3575,contacts per grain,vector path 161 vertex 43
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),20.002,mm,8.5193,contacts per grain,vector path 161 vertex 44
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),21.002,mm,8.6564,contacts per grain,vector path 161 vertex 45
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),22.003,mm,8.7855,contacts per grain,vector path 161 vertex 46
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),23.003,mm,8.868,contacts per grain,vector path 161 vertex 47
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),24.004,mm,8.9201,contacts per grain,vector path 161 vertex 48
+Fig5,4,top-left (Independent contacts),Experiment,path 2nd half (Δ 1→25),25.004,mm,8.9715,contacts per grain,vector path 161 vertex 49
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),24.004,mm,8.2351,contacts per grain,vector path 256 vertex 0
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),23.003,mm,8.1502,contacts per grain,vector path 256 vertex 1
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),22.003,mm,8.0827,contacts per grain,vector path 256 vertex 2
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),21.002,mm,8.0008,contacts per grain,vector path 256 vertex 3
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),20.002,mm,7.9071,contacts per grain,vector path 256 vertex 4
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),19.002,mm,7.8113,contacts per grain,vector path 256 vertex 5
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),18.001,mm,7.7143,contacts per grain,vector path 256 vertex 6
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),17.001,mm,7.6107,contacts per grain,vector path 256 vertex 7
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),16.0,mm,7.5031,contacts per grain,vector path 256 vertex 8
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),15.0,mm,7.3754,contacts per grain,vector path 256 vertex 9
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),14.0,mm,7.2428,contacts per grain,vector path 256 vertex 10
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),12.999,mm,7.1101,contacts per grain,vector path 256 vertex 11
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),11.999,mm,6.9863,contacts per grain,vector path 256 vertex 12
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),10.998,mm,6.8587,contacts per grain,vector path 256 vertex 13
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),9.998,mm,6.7077,contacts per grain,vector path 256 vertex 14
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),8.998,mm,6.5583,contacts per grain,vector path 256 vertex 15
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),7.997,mm,6.4049,contacts per grain,vector path 256 vertex 16
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),6.997,mm,6.1884,contacts per grain,vector path 256 vertex 17
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),5.996,mm,5.9805,contacts per grain,vector path 256 vertex 18
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),4.996,mm,5.7656,contacts per grain,vector path 256 vertex 19
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),3.996,mm,5.4958,contacts per grain,vector path 256 vertex 20
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),2.995,mm,5.2002,contacts per grain,vector path 256 vertex 21
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),1.995,mm,4.8405,contacts per grain,vector path 256 vertex 22
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),0.994,mm,4.4569,contacts per grain,vector path 256 vertex 23
+Fig5,4,top-left (Independent contacts),Independent contacts,path 1st half (Δ 24→0),-0.006,mm,3.8002,contacts per grain,vector path 256 vertex 24
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),0.994,mm,4.0651,contacts per grain,vector path 256 vertex 25
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),1.995,mm,4.4763,contacts per grain,vector path 256 vertex 26
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),2.995,mm,4.8237,contacts per grain,vector path 256 vertex 27
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),3.996,mm,5.1545,contacts per grain,vector path 256 vertex 28
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),4.996,mm,5.426,contacts per grain,vector path 256 vertex 29
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),5.996,mm,5.6937,contacts per grain,vector path 256 vertex 30
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),6.997,mm,5.9257,contacts per grain,vector path 256 vertex 31
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),7.997,mm,6.1419,contacts per grain,vector path 256 vertex 32
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),8.998,mm,6.3572,contacts per grain,vector path 256 vertex 33
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),9.998,mm,6.5424,contacts per grain,vector path 256 vertex 34
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),10.998,mm,6.6984,contacts per grain,vector path 256 vertex 35
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),11.999,mm,6.855,contacts per grain,vector path 256 vertex 36
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),12.999,mm,7.0045,contacts per grain,vector path 256 vertex 37
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),14.0,mm,7.1533,contacts per grain,vector path 256 vertex 38
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),15.0,mm,7.2855,contacts per grain,vector path 256 vertex 39
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),16.0,mm,7.4083,contacts per grain,vector path 256 vertex 40
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),17.001,mm,7.5299,contacts per grain,vector path 256 vertex 41
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),18.001,mm,7.6455,contacts per grain,vector path 256 vertex 42
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),19.002,mm,7.7414,contacts per grain,vector path 256 vertex 43
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),20.002,mm,7.8605,contacts per grain,vector path 256 vertex 44
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),21.002,mm,7.9851,contacts per grain,vector path 256 vertex 45
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),22.003,mm,8.0885,contacts per grain,vector path 256 vertex 46
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),23.003,mm,8.1835,contacts per grain,vector path 256 vertex 47
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),24.004,mm,8.2438,contacts per grain,vector path 256 vertex 48
+Fig5,4,top-left (Independent contacts),Independent contacts,path 2nd half (Δ 1→25),25.004,mm,8.2981,contacts per grain,vector path 256 vertex 49
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),24.009,mm,8.925,contacts per grain,vector path 196 vertex 0
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),23.009,mm,8.8715,contacts per grain,vector path 196 vertex 1
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),22.009,mm,8.7405,contacts per grain,vector path 196 vertex 2
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),21.009,mm,8.5784,contacts per grain,vector path 196 vertex 3
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),20.009,mm,8.4669,contacts per grain,vector path 196 vertex 4
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),19.008,mm,8.3889,contacts per grain,vector path 196 vertex 5
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),18.007,mm,8.3019,contacts per grain,vector path 196 vertex 6
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),17.007,mm,8.1792,contacts per grain,vector path 196 vertex 7
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),16.007,mm,8.0603,contacts per grain,vector path 196 vertex 8
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),15.006,mm,7.9389,contacts per grain,vector path 196 vertex 9
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),14.006,mm,7.8108,contacts per grain,vector path 196 vertex 10
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),13.006,mm,7.6395,contacts per grain,vector path 196 vertex 11
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),12.005,mm,7.4947,contacts per grain,vector path 196 vertex 12
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),11.005,mm,7.3046,contacts per grain,vector path 196 vertex 13
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),10.005,mm,7.1501,contacts per grain,vector path 196 vertex 14
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),9.004,mm,6.9903,contacts per grain,vector path 196 vertex 15
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),8.004,mm,6.7709,contacts per grain,vector path 196 vertex 16
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),7.003,mm,6.4949,contacts per grain,vector path 196 vertex 17
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),6.003,mm,6.1789,contacts per grain,vector path 196 vertex 18
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),5.002,mm,5.8776,contacts per grain,vector path 196 vertex 19
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),4.002,mm,5.4552,contacts per grain,vector path 196 vertex 20
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),3.002,mm,4.9018,contacts per grain,vector path 196 vertex 21
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),2.001,mm,4.2526,contacts per grain,vector path 196 vertex 22
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),1.001,mm,3.6111,contacts per grain,vector path 196 vertex 23
+Fig5,4,top-middle (Point force on sphere),Experiment,path 1st half (Δ 24→0),-0.0,mm,3.3661,contacts per grain,vector path 196 vertex 24
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),1.001,mm,3.4591,contacts per grain,vector path 196 vertex 25
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),2.001,mm,3.7342,contacts per grain,vector path 196 vertex 26
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),3.002,mm,4.2953,contacts per grain,vector path 196 vertex 27
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),4.002,mm,4.8021,contacts per grain,vector path 196 vertex 28
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),5.002,mm,5.2054,contacts per grain,vector path 196 vertex 29
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),6.003,mm,5.6953,contacts per grain,vector path 196 vertex 30
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),7.003,mm,5.9219,contacts per grain,vector path 196 vertex 31
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),8.004,mm,6.295,contacts per grain,vector path 196 vertex 32
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),9.004,mm,6.535,contacts per grain,vector path 196 vertex 33
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),10.005,mm,6.7302,contacts per grain,vector path 196 vertex 34
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),11.005,mm,7.0041,contacts per grain,vector path 196 vertex 35
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),12.005,mm,7.2022,contacts per grain,vector path 196 vertex 36
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),13.006,mm,7.3804,contacts per grain,vector path 196 vertex 37
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),14.006,mm,7.5817,contacts per grain,vector path 196 vertex 38
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),15.006,mm,7.8172,contacts per grain,vector path 196 vertex 39
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),16.007,mm,8.0049,contacts per grain,vector path 196 vertex 40
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),17.007,mm,8.1286,contacts per grain,vector path 196 vertex 41
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),18.007,mm,8.2376,contacts per grain,vector path 196 vertex 42
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),19.008,mm,8.3575,contacts per grain,vector path 196 vertex 43
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),20.009,mm,8.5193,contacts per grain,vector path 196 vertex 44
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),21.009,mm,8.6564,contacts per grain,vector path 196 vertex 45
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),22.009,mm,8.7855,contacts per grain,vector path 196 vertex 46
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),23.009,mm,8.868,contacts per grain,vector path 196 vertex 47
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),24.009,mm,8.9201,contacts per grain,vector path 196 vertex 48
+Fig5,4,top-middle (Point force on sphere),Experiment,path 2nd half (Δ 1→25),25.01,mm,8.9715,contacts per grain,vector path 196 vertex 49
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),24.009,mm,8.2378,contacts per grain,vector path 252 vertex 0
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),23.009,mm,8.1591,contacts per grain,vector path 252 vertex 1
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),22.009,mm,8.0664,contacts per grain,vector path 252 vertex 2
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),21.009,mm,7.9622,contacts per grain,vector path 252 vertex 3
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),20.009,mm,7.8622,contacts per grain,vector path 252 vertex 4
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),19.008,mm,7.7568,contacts per grain,vector path 252 vertex 5
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),18.007,mm,7.6649,contacts per grain,vector path 252 vertex 6
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),17.007,mm,7.5646,contacts per grain,vector path 252 vertex 7
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),16.007,mm,7.4634,contacts per grain,vector path 252 vertex 8
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),15.006,mm,7.3507,contacts per grain,vector path 252 vertex 9
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),14.006,mm,7.2236,contacts per grain,vector path 252 vertex 10
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),13.006,mm,7.1086,contacts per grain,vector path 252 vertex 11
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),12.005,mm,6.9799,contacts per grain,vector path 252 vertex 12
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),11.005,mm,6.8499,contacts per grain,vector path 252 vertex 13
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),10.005,mm,6.685,contacts per grain,vector path 252 vertex 14
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),9.004,mm,6.5315,contacts per grain,vector path 252 vertex 15
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),8.003,mm,6.383,contacts per grain,vector path 252 vertex 16
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),7.003,mm,6.1844,contacts per grain,vector path 252 vertex 17
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),6.003,mm,5.9972,contacts per grain,vector path 252 vertex 18
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),5.002,mm,5.7828,contacts per grain,vector path 252 vertex 19
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),4.002,mm,5.5107,contacts per grain,vector path 252 vertex 20
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),3.002,mm,5.2137,contacts per grain,vector path 252 vertex 21
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),2.001,mm,4.818,contacts per grain,vector path 252 vertex 22
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),1.001,mm,4.3635,contacts per grain,vector path 252 vertex 23
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 1st half (Δ 24→0),-0.0,mm,3.7352,contacts per grain,vector path 252 vertex 24
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),1.001,mm,4.0676,contacts per grain,vector path 252 vertex 25
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),2.001,mm,4.4745,contacts per grain,vector path 252 vertex 26
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),3.002,mm,4.8747,contacts per grain,vector path 252 vertex 27
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),4.002,mm,5.1836,contacts per grain,vector path 252 vertex 28
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),5.002,mm,5.452,contacts per grain,vector path 252 vertex 29
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),6.003,mm,5.6481,contacts per grain,vector path 252 vertex 30
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),7.003,mm,5.887,contacts per grain,vector path 252 vertex 31
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),8.003,mm,6.0792,contacts per grain,vector path 252 vertex 32
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),9.004,mm,6.3252,contacts per grain,vector path 252 vertex 33
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),10.005,mm,6.4975,contacts per grain,vector path 252 vertex 34
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),11.005,mm,6.675,contacts per grain,vector path 252 vertex 35
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),12.005,mm,6.8192,contacts per grain,vector path 252 vertex 36
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),13.006,mm,6.9718,contacts per grain,vector path 252 vertex 37
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),14.006,mm,7.1074,contacts per grain,vector path 252 vertex 38
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),15.006,mm,7.2341,contacts per grain,vector path 252 vertex 39
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),16.007,mm,7.3482,contacts per grain,vector path 252 vertex 40
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),17.007,mm,7.4819,contacts per grain,vector path 252 vertex 41
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),18.007,mm,7.5928,contacts per grain,vector path 252 vertex 42
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),19.008,mm,7.7041,contacts per grain,vector path 252 vertex 43
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),20.009,mm,7.8186,contacts per grain,vector path 252 vertex 44
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),21.009,mm,7.9457,contacts per grain,vector path 252 vertex 45
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),22.009,mm,8.0588,contacts per grain,vector path 252 vertex 46
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),23.009,mm,8.154,contacts per grain,vector path 252 vertex 47
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),24.009,mm,8.2457,contacts per grain,vector path 252 vertex 48
+Fig5,4,top-middle (Point force on sphere),Point force on sphere,path 2nd half (Δ 1→25),25.01,mm,8.3304,contacts per grain,vector path 252 vertex 49
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),23.994,mm,8.925,contacts per grain,vector path 231 vertex 0
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),22.995,mm,8.8715,contacts per grain,vector path 231 vertex 1
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),21.995,mm,8.7405,contacts per grain,vector path 231 vertex 2
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),20.996,mm,8.5784,contacts per grain,vector path 231 vertex 3
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),19.996,mm,8.4669,contacts per grain,vector path 231 vertex 4
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),18.997,mm,8.3889,contacts per grain,vector path 231 vertex 5
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),17.998,mm,8.3019,contacts per grain,vector path 231 vertex 6
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),16.998,mm,8.1792,contacts per grain,vector path 231 vertex 7
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),15.998,mm,8.0603,contacts per grain,vector path 231 vertex 8
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),14.998,mm,7.9389,contacts per grain,vector path 231 vertex 9
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),13.999,mm,7.8108,contacts per grain,vector path 231 vertex 10
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),12.999,mm,7.6395,contacts per grain,vector path 231 vertex 11
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),12.0,mm,7.4947,contacts per grain,vector path 231 vertex 12
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),11.001,mm,7.3046,contacts per grain,vector path 231 vertex 13
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),10.001,mm,7.1501,contacts per grain,vector path 231 vertex 14
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),9.002,mm,6.9903,contacts per grain,vector path 231 vertex 15
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),8.002,mm,6.7709,contacts per grain,vector path 231 vertex 16
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),7.003,mm,6.4949,contacts per grain,vector path 231 vertex 17
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),6.003,mm,6.1789,contacts per grain,vector path 231 vertex 18
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),5.004,mm,5.8776,contacts per grain,vector path 231 vertex 19
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),4.004,mm,5.4552,contacts per grain,vector path 231 vertex 20
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),3.004,mm,4.9018,contacts per grain,vector path 231 vertex 21
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),2.005,mm,4.2526,contacts per grain,vector path 231 vertex 22
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),1.005,mm,3.6111,contacts per grain,vector path 231 vertex 23
+Fig5,4,top-right (Sphere to sphere),Experiment,path 1st half (Δ 24→0),0.006,mm,3.3661,contacts per grain,vector path 231 vertex 24
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),1.005,mm,3.4591,contacts per grain,vector path 231 vertex 25
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),2.005,mm,3.7342,contacts per grain,vector path 231 vertex 26
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),3.004,mm,4.2953,contacts per grain,vector path 231 vertex 27
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),4.004,mm,4.8021,contacts per grain,vector path 231 vertex 28
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),5.004,mm,5.2054,contacts per grain,vector path 231 vertex 29
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),6.003,mm,5.6953,contacts per grain,vector path 231 vertex 30
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),7.003,mm,5.9219,contacts per grain,vector path 231 vertex 31
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),8.002,mm,6.295,contacts per grain,vector path 231 vertex 32
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),9.002,mm,6.535,contacts per grain,vector path 231 vertex 33
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),10.001,mm,6.7302,contacts per grain,vector path 231 vertex 34
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),11.001,mm,7.0041,contacts per grain,vector path 231 vertex 35
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),12.0,mm,7.2022,contacts per grain,vector path 231 vertex 36
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),12.999,mm,7.3804,contacts per grain,vector path 231 vertex 37
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),13.999,mm,7.5817,contacts per grain,vector path 231 vertex 38
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),14.998,mm,7.8172,contacts per grain,vector path 231 vertex 39
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),15.998,mm,8.0049,contacts per grain,vector path 231 vertex 40
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),16.998,mm,8.1286,contacts per grain,vector path 231 vertex 41
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),17.998,mm,8.2376,contacts per grain,vector path 231 vertex 42
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),18.997,mm,8.3575,contacts per grain,vector path 231 vertex 43
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),19.996,mm,8.5193,contacts per grain,vector path 231 vertex 44
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),20.996,mm,8.6564,contacts per grain,vector path 231 vertex 45
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),21.995,mm,8.7855,contacts per grain,vector path 231 vertex 46
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),22.995,mm,8.868,contacts per grain,vector path 231 vertex 47
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),23.994,mm,8.9201,contacts per grain,vector path 231 vertex 48
+Fig5,4,top-right (Sphere to sphere),Experiment,path 2nd half (Δ 1→25),24.993,mm,8.9715,contacts per grain,vector path 231 vertex 49
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),23.994,mm,8.5902,contacts per grain,vector path 257 vertex 0
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),22.995,mm,8.4805,contacts per grain,vector path 257 vertex 1
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),21.995,mm,8.363,contacts per grain,vector path 257 vertex 2
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),20.996,mm,8.2674,contacts per grain,vector path 257 vertex 3
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),19.996,mm,8.1584,contacts per grain,vector path 257 vertex 4
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),18.997,mm,8.0471,contacts per grain,vector path 257 vertex 5
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),17.997,mm,7.9301,contacts per grain,vector path 257 vertex 6
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),16.998,mm,7.8069,contacts per grain,vector path 257 vertex 7
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),15.998,mm,7.6677,contacts per grain,vector path 257 vertex 8
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),14.998,mm,7.534,contacts per grain,vector path 257 vertex 9
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),13.999,mm,7.3891,contacts per grain,vector path 257 vertex 10
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),12.999,mm,7.243,contacts per grain,vector path 257 vertex 11
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),12.0,mm,7.0958,contacts per grain,vector path 257 vertex 12
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),11.001,mm,6.9418,contacts per grain,vector path 257 vertex 13
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),10.001,mm,6.7769,contacts per grain,vector path 257 vertex 14
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),9.002,mm,6.6076,contacts per grain,vector path 257 vertex 15
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),8.002,mm,6.4104,contacts per grain,vector path 257 vertex 16
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),7.003,mm,6.1765,contacts per grain,vector path 257 vertex 17
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),6.003,mm,5.9162,contacts per grain,vector path 257 vertex 18
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),5.004,mm,5.667,contacts per grain,vector path 257 vertex 19
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),4.004,mm,5.3794,contacts per grain,vector path 257 vertex 20
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),3.004,mm,5.0254,contacts per grain,vector path 257 vertex 21
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),2.005,mm,4.6675,contacts per grain,vector path 257 vertex 22
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),1.005,mm,4.2208,contacts per grain,vector path 257 vertex 23
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 1st half (Δ 24→0),0.006,mm,3.5236,contacts per grain,vector path 257 vertex 24
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),1.005,mm,3.8277,contacts per grain,vector path 257 vertex 25
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),2.005,mm,4.2945,contacts per grain,vector path 257 vertex 26
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),3.004,mm,4.6621,contacts per grain,vector path 257 vertex 27
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),4.004,mm,4.9896,contacts per grain,vector path 257 vertex 28
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),5.004,mm,5.2867,contacts per grain,vector path 257 vertex 29
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),6.003,mm,5.5723,contacts per grain,vector path 257 vertex 30
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),7.003,mm,5.8443,contacts per grain,vector path 257 vertex 31
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),8.002,mm,6.1395,contacts per grain,vector path 257 vertex 32
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),9.002,mm,6.4047,contacts per grain,vector path 257 vertex 33
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),10.001,mm,6.6049,contacts per grain,vector path 257 vertex 34
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),11.001,mm,6.7842,contacts per grain,vector path 257 vertex 35
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),12.0,mm,6.9532,contacts per grain,vector path 257 vertex 36
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),12.999,mm,7.1175,contacts per grain,vector path 257 vertex 37
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),13.999,mm,7.2765,contacts per grain,vector path 257 vertex 38
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),14.998,mm,7.4398,contacts per grain,vector path 257 vertex 39
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),15.998,mm,7.6132,contacts per grain,vector path 257 vertex 40
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),16.998,mm,7.7517,contacts per grain,vector path 257 vertex 41
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),17.997,mm,7.8628,contacts per grain,vector path 257 vertex 42
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),18.997,mm,7.9742,contacts per grain,vector path 257 vertex 43
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),19.996,mm,8.0931,contacts per grain,vector path 257 vertex 44
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),20.996,mm,8.2069,contacts per grain,vector path 257 vertex 45
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),21.995,mm,8.3369,contacts per grain,vector path 257 vertex 46
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),22.995,mm,8.4609,contacts per grain,vector path 257 vertex 47
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),23.994,mm,8.5863,contacts per grain,vector path 257 vertex 48
+Fig5,4,top-right (Sphere to sphere),Sphere to sphere,path 2nd half (Δ 1→25),24.993,mm,8.7042,contacts per grain,vector path 257 vertex 49
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),24.0,mm,8.9255,contacts per grain,vector path 91 vertex 0
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),22.999,mm,8.872,contacts per grain,vector path 91 vertex 1
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),21.999,mm,8.741,contacts per grain,vector path 91 vertex 2
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),20.998,mm,8.5789,contacts per grain,vector path 91 vertex 3
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),19.998,mm,8.4674,contacts per grain,vector path 91 vertex 4
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),18.998,mm,8.3895,contacts per grain,vector path 91 vertex 5
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),17.997,mm,8.3023,contacts per grain,vector path 91 vertex 6
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),16.997,mm,8.1797,contacts per grain,vector path 91 vertex 7
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),15.997,mm,8.0608,contacts per grain,vector path 91 vertex 8
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),14.996,mm,7.9394,contacts per grain,vector path 91 vertex 9
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),13.995,mm,7.8114,contacts per grain,vector path 91 vertex 10
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),12.995,mm,7.64,contacts per grain,vector path 91 vertex 11
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),11.995,mm,7.4951,contacts per grain,vector path 91 vertex 12
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),10.994,mm,7.305,contacts per grain,vector path 91 vertex 13
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),9.994,mm,7.1506,contacts per grain,vector path 91 vertex 14
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),8.994,mm,6.9907,contacts per grain,vector path 91 vertex 15
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),7.993,mm,6.7714,contacts per grain,vector path 91 vertex 16
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),6.993,mm,6.4955,contacts per grain,vector path 91 vertex 17
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),5.992,mm,6.1794,contacts per grain,vector path 91 vertex 18
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),4.992,mm,5.8782,contacts per grain,vector path 91 vertex 19
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),3.992,mm,5.4557,contacts per grain,vector path 91 vertex 20
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),2.991,mm,4.9023,contacts per grain,vector path 91 vertex 21
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),1.991,mm,4.2533,contacts per grain,vector path 91 vertex 22
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),0.99,mm,3.6116,contacts per grain,vector path 91 vertex 23
+Fig5,4,bottom-left (Elastic half space),Experiment,path 1st half (Δ 24→0),-0.01,mm,3.3666,contacts per grain,vector path 91 vertex 24
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),0.99,mm,3.4596,contacts per grain,vector path 91 vertex 25
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),1.991,mm,3.7348,contacts per grain,vector path 91 vertex 26
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),2.991,mm,4.2958,contacts per grain,vector path 91 vertex 27
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),3.992,mm,4.8027,contacts per grain,vector path 91 vertex 28
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),4.992,mm,5.2059,contacts per grain,vector path 91 vertex 29
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),5.992,mm,5.6958,contacts per grain,vector path 91 vertex 30
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),6.993,mm,5.9225,contacts per grain,vector path 91 vertex 31
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),7.993,mm,6.2954,contacts per grain,vector path 91 vertex 32
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),8.994,mm,6.5355,contacts per grain,vector path 91 vertex 33
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),9.994,mm,6.7307,contacts per grain,vector path 91 vertex 34
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),10.994,mm,7.0046,contacts per grain,vector path 91 vertex 35
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),11.995,mm,7.2029,contacts per grain,vector path 91 vertex 36
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),12.995,mm,7.3809,contacts per grain,vector path 91 vertex 37
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),13.995,mm,7.5822,contacts per grain,vector path 91 vertex 38
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),14.996,mm,7.8177,contacts per grain,vector path 91 vertex 39
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),15.997,mm,8.0054,contacts per grain,vector path 91 vertex 40
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),16.997,mm,8.1293,contacts per grain,vector path 91 vertex 41
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),17.997,mm,8.2383,contacts per grain,vector path 91 vertex 42
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),18.998,mm,8.3579,contacts per grain,vector path 91 vertex 43
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),19.998,mm,8.5199,contacts per grain,vector path 91 vertex 44
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),20.998,mm,8.657,contacts per grain,vector path 91 vertex 45
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),21.999,mm,8.786,contacts per grain,vector path 91 vertex 46
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),22.999,mm,8.8685,contacts per grain,vector path 91 vertex 47
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),24.0,mm,8.9206,contacts per grain,vector path 91 vertex 48
+Fig5,4,bottom-left (Elastic half space),Experiment,path 2nd half (Δ 1→25),25.0,mm,8.972,contacts per grain,vector path 91 vertex 49
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),24.0,mm,8.4737,contacts per grain,vector path 253 vertex 0
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),22.999,mm,8.3595,contacts per grain,vector path 253 vertex 1
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),21.998,mm,8.2663,contacts per grain,vector path 253 vertex 2
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),20.998,mm,8.1574,contacts per grain,vector path 253 vertex 3
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),19.998,mm,8.0434,contacts per grain,vector path 253 vertex 4
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),18.998,mm,7.9508,contacts per grain,vector path 253 vertex 5
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),17.997,mm,7.8326,contacts per grain,vector path 253 vertex 6
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),16.997,mm,7.6867,contacts per grain,vector path 253 vertex 7
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),15.996,mm,7.5722,contacts per grain,vector path 253 vertex 8
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),14.996,mm,7.4314,contacts per grain,vector path 253 vertex 9
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),13.996,mm,7.3096,contacts per grain,vector path 253 vertex 10
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),12.995,mm,7.1805,contacts per grain,vector path 253 vertex 11
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),11.995,mm,7.0703,contacts per grain,vector path 253 vertex 12
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),10.994,mm,6.929,contacts per grain,vector path 253 vertex 13
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),9.994,mm,6.7819,contacts per grain,vector path 253 vertex 14
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),8.993,mm,6.6012,contacts per grain,vector path 253 vertex 15
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),7.993,mm,6.4188,contacts per grain,vector path 253 vertex 16
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),6.993,mm,6.2137,contacts per grain,vector path 253 vertex 17
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),5.992,mm,5.9747,contacts per grain,vector path 253 vertex 18
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),4.992,mm,5.7282,contacts per grain,vector path 253 vertex 19
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),3.991,mm,5.4648,contacts per grain,vector path 253 vertex 20
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),2.991,mm,5.1408,contacts per grain,vector path 253 vertex 21
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),1.991,mm,4.7369,contacts per grain,vector path 253 vertex 22
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),0.99,mm,4.3046,contacts per grain,vector path 253 vertex 23
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 1st half (Δ 24→0),-0.01,mm,3.5618,contacts per grain,vector path 253 vertex 24
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),0.99,mm,3.8604,contacts per grain,vector path 253 vertex 25
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),1.991,mm,4.3519,contacts per grain,vector path 253 vertex 26
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),2.991,mm,4.7651,contacts per grain,vector path 253 vertex 27
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),3.991,mm,5.1098,contacts per grain,vector path 253 vertex 28
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),4.992,mm,5.438,contacts per grain,vector path 253 vertex 29
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),5.992,mm,5.6979,contacts per grain,vector path 253 vertex 30
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),6.993,mm,5.9717,contacts per grain,vector path 253 vertex 31
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),7.993,mm,6.1581,contacts per grain,vector path 253 vertex 32
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),8.993,mm,6.3642,contacts per grain,vector path 253 vertex 33
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),9.994,mm,6.5791,contacts per grain,vector path 253 vertex 34
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),10.994,mm,6.7136,contacts per grain,vector path 253 vertex 35
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),11.995,mm,6.8671,contacts per grain,vector path 253 vertex 36
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),12.995,mm,7.0235,contacts per grain,vector path 253 vertex 37
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),13.996,mm,7.2123,contacts per grain,vector path 253 vertex 38
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),14.996,mm,7.3539,contacts per grain,vector path 253 vertex 39
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),15.996,mm,7.5069,contacts per grain,vector path 253 vertex 40
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),16.997,mm,7.666,contacts per grain,vector path 253 vertex 41
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),17.997,mm,7.8509,contacts per grain,vector path 253 vertex 42
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),18.998,mm,7.9906,contacts per grain,vector path 253 vertex 43
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),19.998,mm,8.109,contacts per grain,vector path 253 vertex 44
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),20.998,mm,8.2068,contacts per grain,vector path 253 vertex 45
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),21.998,mm,8.3142,contacts per grain,vector path 253 vertex 46
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),22.999,mm,8.4363,contacts per grain,vector path 253 vertex 47
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),24.0,mm,8.5283,contacts per grain,vector path 253 vertex 48
+Fig5,4,bottom-left (Elastic half space),Elastic half space,path 2nd half (Δ 1→25),25.0,mm,8.6099,contacts per grain,vector path 253 vertex 49
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),24.006,mm,8.9255,contacts per grain,vector path 126 vertex 0
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),23.005,mm,8.872,contacts per grain,vector path 126 vertex 1
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),22.005,mm,8.741,contacts per grain,vector path 126 vertex 2
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),21.004,mm,8.5789,contacts per grain,vector path 126 vertex 3
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),20.004,mm,8.4674,contacts per grain,vector path 126 vertex 4
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),19.003,mm,8.3895,contacts per grain,vector path 126 vertex 5
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),18.003,mm,8.3023,contacts per grain,vector path 126 vertex 6
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),17.003,mm,8.1797,contacts per grain,vector path 126 vertex 7
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),16.002,mm,8.0608,contacts per grain,vector path 126 vertex 8
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),15.002,mm,7.9394,contacts per grain,vector path 126 vertex 9
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),14.001,mm,7.8114,contacts per grain,vector path 126 vertex 10
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),13.001,mm,7.64,contacts per grain,vector path 126 vertex 11
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),12.001,mm,7.4951,contacts per grain,vector path 126 vertex 12
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),11.0,mm,7.305,contacts per grain,vector path 126 vertex 13
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),10.0,mm,7.1506,contacts per grain,vector path 126 vertex 14
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),8.999,mm,6.9907,contacts per grain,vector path 126 vertex 15
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),7.999,mm,6.7714,contacts per grain,vector path 126 vertex 16
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),6.998,mm,6.4955,contacts per grain,vector path 126 vertex 17
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),5.998,mm,6.1794,contacts per grain,vector path 126 vertex 18
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),4.998,mm,5.8782,contacts per grain,vector path 126 vertex 19
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),3.997,mm,5.4557,contacts per grain,vector path 126 vertex 20
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),2.997,mm,4.9023,contacts per grain,vector path 126 vertex 21
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),1.996,mm,4.2533,contacts per grain,vector path 126 vertex 22
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),0.996,mm,3.6116,contacts per grain,vector path 126 vertex 23
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 1st half (Δ 24→0),-0.004,mm,3.3666,contacts per grain,vector path 126 vertex 24
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),0.996,mm,3.4596,contacts per grain,vector path 126 vertex 25
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),1.996,mm,3.7348,contacts per grain,vector path 126 vertex 26
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),2.997,mm,4.2958,contacts per grain,vector path 126 vertex 27
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),3.997,mm,4.8027,contacts per grain,vector path 126 vertex 28
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),4.998,mm,5.2059,contacts per grain,vector path 126 vertex 29
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),5.998,mm,5.6958,contacts per grain,vector path 126 vertex 30
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),6.998,mm,5.9225,contacts per grain,vector path 126 vertex 31
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),7.999,mm,6.2954,contacts per grain,vector path 126 vertex 32
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),8.999,mm,6.5355,contacts per grain,vector path 126 vertex 33
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),10.0,mm,6.7307,contacts per grain,vector path 126 vertex 34
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),11.0,mm,7.0046,contacts per grain,vector path 126 vertex 35
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),12.001,mm,7.2029,contacts per grain,vector path 126 vertex 36
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),13.001,mm,7.3809,contacts per grain,vector path 126 vertex 37
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),14.001,mm,7.5822,contacts per grain,vector path 126 vertex 38
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),15.002,mm,7.8177,contacts per grain,vector path 126 vertex 39
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),16.002,mm,8.0054,contacts per grain,vector path 126 vertex 40
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),17.003,mm,8.1293,contacts per grain,vector path 126 vertex 41
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),18.003,mm,8.2383,contacts per grain,vector path 126 vertex 42
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),19.003,mm,8.3579,contacts per grain,vector path 126 vertex 43
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),20.004,mm,8.5199,contacts per grain,vector path 126 vertex 44
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),21.004,mm,8.657,contacts per grain,vector path 126 vertex 45
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),22.005,mm,8.786,contacts per grain,vector path 126 vertex 46
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),23.005,mm,8.8685,contacts per grain,vector path 126 vertex 47
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),24.006,mm,8.9206,contacts per grain,vector path 126 vertex 48
+Fig5,4,bottom-middle (MC-DEM),Experiment,path 2nd half (Δ 1→25),25.006,mm,8.972,contacts per grain,vector path 126 vertex 49
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),24.006,mm,8.7689,contacts per grain,vector path 258 vertex 0
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),23.005,mm,8.6192,contacts per grain,vector path 258 vertex 1
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),22.005,mm,8.5015,contacts per grain,vector path 258 vertex 2
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),21.004,mm,8.3659,contacts per grain,vector path 258 vertex 3
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),20.004,mm,8.2548,contacts per grain,vector path 258 vertex 4
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),19.003,mm,8.1797,contacts per grain,vector path 258 vertex 5
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),18.003,mm,8.0641,contacts per grain,vector path 258 vertex 6
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),17.003,mm,7.9393,contacts per grain,vector path 258 vertex 7
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),16.002,mm,7.8187,contacts per grain,vector path 258 vertex 8
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),15.002,mm,7.6882,contacts per grain,vector path 258 vertex 9
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),14.001,mm,7.5071,contacts per grain,vector path 258 vertex 10
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),13.001,mm,7.3115,contacts per grain,vector path 258 vertex 11
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),12.001,mm,7.139,contacts per grain,vector path 258 vertex 12
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),11.0,mm,6.9755,contacts per grain,vector path 258 vertex 13
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),10.0,mm,6.7887,contacts per grain,vector path 258 vertex 14
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),8.999,mm,6.5854,contacts per grain,vector path 258 vertex 15
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),7.999,mm,6.3732,contacts per grain,vector path 258 vertex 16
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),6.998,mm,6.1555,contacts per grain,vector path 258 vertex 17
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),5.998,mm,5.9099,contacts per grain,vector path 258 vertex 18
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),4.998,mm,5.5896,contacts per grain,vector path 258 vertex 19
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),3.997,mm,5.3243,contacts per grain,vector path 258 vertex 20
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),2.997,mm,4.957,contacts per grain,vector path 258 vertex 21
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),1.996,mm,4.6086,contacts per grain,vector path 258 vertex 22
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),0.996,mm,4.1587,contacts per grain,vector path 258 vertex 23
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 1st half (Δ 24→0),-0.004,mm,3.4231,contacts per grain,vector path 258 vertex 24
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),0.996,mm,3.6778,contacts per grain,vector path 258 vertex 25
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),1.996,mm,4.181,contacts per grain,vector path 258 vertex 26
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),2.997,mm,4.6358,contacts per grain,vector path 258 vertex 27
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),3.997,mm,4.9919,contacts per grain,vector path 258 vertex 28
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),4.998,mm,5.3953,contacts per grain,vector path 258 vertex 29
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),5.998,mm,5.7109,contacts per grain,vector path 258 vertex 30
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),6.998,mm,5.9835,contacts per grain,vector path 258 vertex 31
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),7.999,mm,6.1878,contacts per grain,vector path 258 vertex 32
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),8.999,mm,6.399,contacts per grain,vector path 258 vertex 33
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),10.0,mm,6.5791,contacts per grain,vector path 258 vertex 34
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),11.0,mm,6.7668,contacts per grain,vector path 258 vertex 35
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),12.001,mm,6.9492,contacts per grain,vector path 258 vertex 36
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),13.001,mm,7.1547,contacts per grain,vector path 258 vertex 37
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),14.001,mm,7.3761,contacts per grain,vector path 258 vertex 38
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),15.002,mm,7.5501,contacts per grain,vector path 258 vertex 39
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),16.002,mm,7.7065,contacts per grain,vector path 258 vertex 40
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),17.003,mm,7.8738,contacts per grain,vector path 258 vertex 41
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),18.003,mm,8.005,contacts per grain,vector path 258 vertex 42
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),19.003,mm,8.1559,contacts per grain,vector path 258 vertex 43
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),20.004,mm,8.2822,contacts per grain,vector path 258 vertex 44
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),21.004,mm,8.4014,contacts per grain,vector path 258 vertex 45
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),22.005,mm,8.4872,contacts per grain,vector path 258 vertex 46
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),23.005,mm,8.5972,contacts per grain,vector path 258 vertex 47
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),24.006,mm,8.7439,contacts per grain,vector path 258 vertex 48
+Fig5,4,bottom-middle (MC-DEM),MC-DEM,path 2nd half (Δ 1→25),25.006,mm,8.8588,contacts per grain,vector path 258 vertex 49
+Fig6,5,,Experiment,compression,0.0017,"1e-3 N m (as plotted, incl. shift)",0.0023,N,vector path 76 vertex 0
+Fig6,5,,Experiment,compression,0.0087,"1e-3 N m (as plotted, incl. shift)",0.0313,N,vector path 76 vertex 1
+Fig6,5,,Experiment,compression,0.0667,"1e-3 N m (as plotted, incl. shift)",0.1257,N,vector path 76 vertex 2
+Fig6,5,,Experiment,compression,0.1663,"1e-3 N m (as plotted, incl. shift)",0.2536,N,vector path 76 vertex 3
+Fig6,5,,Experiment,compression,0.3094,"1e-3 N m (as plotted, incl. shift)",0.4372,N,vector path 76 vertex 4
+Fig6,5,,Experiment,compression,0.4762,"1e-3 N m (as plotted, incl. shift)",0.6353,N,vector path 76 vertex 5
+Fig6,5,,Experiment,compression,0.6946,"1e-3 N m (as plotted, incl. shift)",0.8526,N,vector path 76 vertex 6
+Fig6,5,,Experiment,compression,0.9816,"1e-3 N m (as plotted, incl. shift)",1.1965,N,vector path 76 vertex 7
+Fig6,5,,Experiment,compression,1.2775,"1e-3 N m (as plotted, incl. shift)",1.5668,N,vector path 76 vertex 8
+Fig6,5,,Experiment,compression,1.6646,"1e-3 N m (as plotted, incl. shift)",1.9791,N,vector path 76 vertex 9
+Fig6,5,,Experiment,compression,2.0346,"1e-3 N m (as plotted, incl. shift)",2.4277,N,vector path 76 vertex 10
+Fig6,5,,Experiment,compression,2.4761,"1e-3 N m (as plotted, incl. shift)",2.894,N,vector path 76 vertex 11
+Fig6,5,,Experiment,compression,2.9804,"1e-3 N m (as plotted, incl. shift)",3.5444,N,vector path 76 vertex 12
+Fig6,5,,Experiment,compression,3.4748,"1e-3 N m (as plotted, incl. shift)",4.1279,N,vector path 76 vertex 13
+Fig6,5,,Experiment,compression,4.0337,"1e-3 N m (as plotted, incl. shift)",4.8065,N,vector path 76 vertex 14
+Fig6,5,,Experiment,compression,4.6761,"1e-3 N m (as plotted, incl. shift)",5.6198,N,vector path 76 vertex 15
+Fig6,5,,Experiment,compression,5.399,"1e-3 N m (as plotted, incl. shift)",6.518,N,vector path 76 vertex 16
+Fig6,5,,Experiment,compression,6.1263,"1e-3 N m (as plotted, incl. shift)",7.3305,N,vector path 76 vertex 17
+Fig6,5,,Experiment,compression,7.0404,"1e-3 N m (as plotted, incl. shift)",8.1778,N,vector path 76 vertex 18
+Fig6,5,,Experiment,compression,7.9726,"1e-3 N m (as plotted, incl. shift)",8.9207,N,vector path 76 vertex 19
+Fig6,5,,Experiment,compression,8.8853,"1e-3 N m (as plotted, incl. shift)",9.887,N,vector path 76 vertex 20
+Fig6,5,,Experiment,compression,9.7059,"1e-3 N m (as plotted, incl. shift)",10.7788,N,vector path 76 vertex 21
+Fig6,5,,Experiment,compression,10.5963,"1e-3 N m (as plotted, incl. shift)",11.9252,N,vector path 76 vertex 22
+Fig6,5,,Experiment,compression,11.6947,"1e-3 N m (as plotted, incl. shift)",13.2635,N,vector path 76 vertex 23
+Fig6,5,,Experiment,compression,12.7458,"1e-3 N m (as plotted, incl. shift)",14.4145,N,vector path 76 vertex 24
+Fig6,5,,Experiment,compression,13.9946,"1e-3 N m (as plotted, incl. shift)",15.7163,N,vector path 76 vertex 25
+Fig6,5,,Experiment,unloading,13.9946,"1e-3 N m (as plotted, incl. shift)",15.7163,N,vector path 103 vertex 0
+Fig6,5,,Experiment,unloading,12.8187,"1e-3 N m (as plotted, incl. shift)",14.2906,N,vector path 103 vertex 1
+Fig6,5,,Experiment,unloading,11.6405,"1e-3 N m (as plotted, incl. shift)",13.0484,N,vector path 103 vertex 2
+Fig6,5,,Experiment,unloading,10.4115,"1e-3 N m (as plotted, incl. shift)",11.7048,N,vector path 103 vertex 3
+Fig6,5,,Experiment,unloading,9.3789,"1e-3 N m (as plotted, incl. shift)",10.4824,N,vector path 103 vertex 4
+Fig6,5,,Experiment,unloading,8.4826,"1e-3 N m (as plotted, incl. shift)",9.3859,N,vector path 103 vertex 5
+Fig6,5,,Experiment,unloading,7.5129,"1e-3 N m (as plotted, incl. shift)",8.3508,N,vector path 103 vertex 6
+Fig6,5,,Experiment,unloading,6.6818,"1e-3 N m (as plotted, incl. shift)",7.181,N,vector path 103 vertex 7
+Fig6,5,,Experiment,unloading,5.8687,"1e-3 N m (as plotted, incl. shift)",6.3119,N,vector path 103 vertex 8
+Fig6,5,,Experiment,unloading,5.104,"1e-3 N m (as plotted, incl. shift)",5.4064,N,vector path 103 vertex 9
+Fig6,5,,Experiment,unloading,4.4215,"1e-3 N m (as plotted, incl. shift)",4.6673,N,vector path 103 vertex 10
+Fig6,5,,Experiment,unloading,3.7224,"1e-3 N m (as plotted, incl. shift)",3.9191,N,vector path 103 vertex 11
+Fig6,5,,Experiment,unloading,3.1616,"1e-3 N m (as plotted, incl. shift)",3.38,N,vector path 103 vertex 12
+Fig6,5,,Experiment,unloading,2.6533,"1e-3 N m (as plotted, incl. shift)",2.7979,N,vector path 103 vertex 13
+Fig6,5,,Experiment,unloading,2.1592,"1e-3 N m (as plotted, incl. shift)",2.2745,N,vector path 103 vertex 14
+Fig6,5,,Experiment,unloading,1.7873,"1e-3 N m (as plotted, incl. shift)",1.8484,N,vector path 103 vertex 15
+Fig6,5,,Experiment,unloading,1.4481,"1e-3 N m (as plotted, incl. shift)",1.4946,N,vector path 103 vertex 16
+Fig6,5,,Experiment,unloading,1.0973,"1e-3 N m (as plotted, incl. shift)",1.187,N,vector path 103 vertex 17
+Fig6,5,,Experiment,unloading,0.8228,"1e-3 N m (as plotted, incl. shift)",0.8701,N,vector path 103 vertex 18
+Fig6,5,,Experiment,unloading,0.5887,"1e-3 N m (as plotted, incl. shift)",0.6355,N,vector path 103 vertex 19
+Fig6,5,,Experiment,unloading,0.4201,"1e-3 N m (as plotted, incl. shift)",0.437,N,vector path 103 vertex 20
+Fig6,5,,Experiment,unloading,0.2582,"1e-3 N m (as plotted, incl. shift)",0.2982,N,vector path 103 vertex 21
+Fig6,5,,Experiment,unloading,0.14,"1e-3 N m (as plotted, incl. shift)",0.1309,N,vector path 103 vertex 22
+Fig6,5,,Experiment,unloading,0.0473,"1e-3 N m (as plotted, incl. shift)",0.0375,N,vector path 103 vertex 23
+Fig6,5,,Experiment,unloading,0.0205,"1e-3 N m (as plotted, incl. shift)",0.0105,N,vector path 103 vertex 24
+Fig6,5,,MC-DEM (shifted +5),compression,5.0003,"1e-3 N m (as plotted, incl. shift)",0.0023,N,vector path 129 vertex 0
+Fig6,5,,MC-DEM (shifted +5),compression,5.1209,"1e-3 N m (as plotted, incl. shift)",0.1558,N,vector path 129 vertex 1
+Fig6,5,,MC-DEM (shifted +5),compression,5.238,"1e-3 N m (as plotted, incl. shift)",0.2668,N,vector path 129 vertex 2
+Fig6,5,,MC-DEM (shifted +5),compression,5.3743,"1e-3 N m (as plotted, incl. shift)",0.3927,N,vector path 129 vertex 3
+Fig6,5,,MC-DEM (shifted +5),compression,5.5221,"1e-3 N m (as plotted, incl. shift)",0.5383,N,vector path 129 vertex 4
+Fig6,5,,MC-DEM (shifted +5),compression,5.7017,"1e-3 N m (as plotted, incl. shift)",0.7069,N,vector path 129 vertex 5
+Fig6,5,,MC-DEM (shifted +5),compression,5.9147,"1e-3 N m (as plotted, incl. shift)",0.9081,N,vector path 129 vertex 6
+Fig6,5,,MC-DEM (shifted +5),compression,6.1582,"1e-3 N m (as plotted, incl. shift)",1.1407,N,vector path 129 vertex 7
+Fig6,5,,MC-DEM (shifted +5),compression,6.4288,"1e-3 N m (as plotted, incl. shift)",1.4037,N,vector path 129 vertex 8
+Fig6,5,,MC-DEM (shifted +5),compression,6.7205,"1e-3 N m (as plotted, incl. shift)",1.6881,N,vector path 129 vertex 9
+Fig6,5,,MC-DEM (shifted +5),compression,7.0439,"1e-3 N m (as plotted, incl. shift)",2.0104,N,vector path 129 vertex 10
+Fig6,5,,MC-DEM (shifted +5),compression,7.4134,"1e-3 N m (as plotted, incl. shift)",2.3816,N,vector path 129 vertex 11
+Fig6,5,,MC-DEM (shifted +5),compression,7.8215,"1e-3 N m (as plotted, incl. shift)",2.8087,N,vector path 129 vertex 12
+Fig6,5,,MC-DEM (shifted +5),compression,8.2863,"1e-3 N m (as plotted, incl. shift)",3.2876,N,vector path 129 vertex 13
+Fig6,5,,MC-DEM (shifted +5),compression,8.8067,"1e-3 N m (as plotted, incl. shift)",3.8248,N,vector path 129 vertex 14
+Fig6,5,,MC-DEM (shifted +5),compression,9.3852,"1e-3 N m (as plotted, incl. shift)",4.4329,N,vector path 129 vertex 15
+Fig6,5,,MC-DEM (shifted +5),compression,9.9996,"1e-3 N m (as plotted, incl. shift)",5.1012,N,vector path 129 vertex 16
+Fig6,5,,MC-DEM (shifted +5),compression,10.7067,"1e-3 N m (as plotted, incl. shift)",5.8418,N,vector path 129 vertex 17
+Fig6,5,,MC-DEM (shifted +5),compression,11.4919,"1e-3 N m (as plotted, incl. shift)",6.6488,N,vector path 129 vertex 18
+Fig6,5,,MC-DEM (shifted +5),compression,12.3712,"1e-3 N m (as plotted, incl. shift)",7.5551,N,vector path 129 vertex 19
+Fig6,5,,MC-DEM (shifted +5),compression,13.4134,"1e-3 N m (as plotted, incl. shift)",8.5963,N,vector path 129 vertex 20
+Fig6,5,,MC-DEM (shifted +5),compression,14.5994,"1e-3 N m (as plotted, incl. shift)",9.7483,N,vector path 129 vertex 21
+Fig6,5,,MC-DEM (shifted +5),compression,15.8794,"1e-3 N m (as plotted, incl. shift)",11.0182,N,vector path 129 vertex 22
+Fig6,5,,MC-DEM (shifted +5),compression,17.3723,"1e-3 N m (as plotted, incl. shift)",12.4393,N,vector path 129 vertex 23
+Fig6,5,,MC-DEM (shifted +5),compression,19.125,"1e-3 N m (as plotted, incl. shift)",14.0281,N,vector path 129 vertex 24
+Fig6,5,,MC-DEM (shifted +5),compression,21.097,"1e-3 N m (as plotted, incl. shift)",15.561,N,vector path 129 vertex 25
+Fig6,5,,MC-DEM (shifted +5),unloading,21.097,"1e-3 N m (as plotted, incl. shift)",15.561,N,vector path 156 vertex 0
+Fig6,5,,MC-DEM (shifted +5),unloading,19.0453,"1e-3 N m (as plotted, incl. shift)",12.7814,N,vector path 156 vertex 1
+Fig6,5,,MC-DEM (shifted +5),unloading,17.3777,"1e-3 N m (as plotted, incl. shift)",11.0342,N,vector path 156 vertex 2
+Fig6,5,,MC-DEM (shifted +5),unloading,15.9355,"1e-3 N m (as plotted, incl. shift)",9.5843,N,vector path 156 vertex 3
+Fig6,5,,MC-DEM (shifted +5),unloading,14.6649,"1e-3 N m (as plotted, incl. shift)",8.3337,N,vector path 156 vertex 4
+Fig6,5,,MC-DEM (shifted +5),unloading,13.524,"1e-3 N m (as plotted, incl. shift)",7.2322,N,vector path 156 vertex 5
+Fig6,5,,MC-DEM (shifted +5),unloading,12.4802,"1e-3 N m (as plotted, incl. shift)",6.2561,N,vector path 156 vertex 6
+Fig6,5,,MC-DEM (shifted +5),unloading,11.5578,"1e-3 N m (as plotted, incl. shift)",5.3901,N,vector path 156 vertex 7
+Fig6,5,,MC-DEM (shifted +5),unloading,10.7526,"1e-3 N m (as plotted, incl. shift)",4.6252,N,vector path 156 vertex 8
+Fig6,5,,MC-DEM (shifted +5),unloading,10.0199,"1e-3 N m (as plotted, incl. shift)",3.9531,N,vector path 156 vertex 9
+Fig6,5,,MC-DEM (shifted +5),unloading,9.3845,"1e-3 N m (as plotted, incl. shift)",3.368,N,vector path 156 vertex 10
+Fig6,5,,MC-DEM (shifted +5),unloading,8.8018,"1e-3 N m (as plotted, incl. shift)",2.8619,N,vector path 156 vertex 11
+Fig6,5,,MC-DEM (shifted +5),unloading,8.2868,"1e-3 N m (as plotted, incl. shift)",2.4275,N,vector path 156 vertex 12
+Fig6,5,,MC-DEM (shifted +5),unloading,7.8287,"1e-3 N m (as plotted, incl. shift)",2.0485,N,vector path 156 vertex 13
+Fig6,5,,MC-DEM (shifted +5),unloading,7.4044,"1e-3 N m (as plotted, incl. shift)",1.7292,N,vector path 156 vertex 14
+Fig6,5,,MC-DEM (shifted +5),unloading,7.0087,"1e-3 N m (as plotted, incl. shift)",1.4473,N,vector path 156 vertex 15
+Fig6,5,,MC-DEM (shifted +5),unloading,6.6634,"1e-3 N m (as plotted, incl. shift)",1.1866,N,vector path 156 vertex 16
+Fig6,5,,MC-DEM (shifted +5),unloading,6.3689,"1e-3 N m (as plotted, incl. shift)",0.9468,N,vector path 156 vertex 17
+Fig6,5,,MC-DEM (shifted +5),unloading,6.0979,"1e-3 N m (as plotted, incl. shift)",0.7447,N,vector path 156 vertex 18
+Fig6,5,,MC-DEM (shifted +5),unloading,5.8587,"1e-3 N m (as plotted, incl. shift)",0.5619,N,vector path 156 vertex 19
+Fig6,5,,MC-DEM (shifted +5),unloading,5.6552,"1e-3 N m (as plotted, incl. shift)",0.4125,N,vector path 156 vertex 20
+Fig6,5,,MC-DEM (shifted +5),unloading,5.4772,"1e-3 N m (as plotted, incl. shift)",0.2945,N,vector path 156 vertex 21
+Fig6,5,,MC-DEM (shifted +5),unloading,5.3155,"1e-3 N m (as plotted, incl. shift)",0.1897,N,vector path 156 vertex 22
+Fig6,5,,MC-DEM (shifted +5),unloading,5.1793,"1e-3 N m (as plotted, incl. shift)",0.0913,N,vector path 156 vertex 23
+Fig6,5,,MC-DEM (shifted +5),unloading,5.073,"1e-3 N m (as plotted, incl. shift)",0.0096,N,vector path 156 vertex 24
+Fig6,5,,Classic DEM (shifted +10),compression,9.9989,"1e-3 N m (as plotted, incl. shift)",0.0046,N,vector path 182 vertex 0
+Fig6,5,,Classic DEM (shifted +10),compression,10.0776,"1e-3 N m (as plotted, incl. shift)",0.1248,N,vector path 182 vertex 1
+Fig6,5,,Classic DEM (shifted +10),compression,10.1618,"1e-3 N m (as plotted, incl. shift)",0.2124,N,vector path 182 vertex 2
+Fig6,5,,Classic DEM (shifted +10),compression,10.2646,"1e-3 N m (as plotted, incl. shift)",0.316,N,vector path 182 vertex 3
+Fig6,5,,Classic DEM (shifted +10),compression,10.3771,"1e-3 N m (as plotted, incl. shift)",0.4297,N,vector path 182 vertex 4
+Fig6,5,,Classic DEM (shifted +10),compression,10.5017,"1e-3 N m (as plotted, incl. shift)",0.5508,N,vector path 182 vertex 5
+Fig6,5,,Classic DEM (shifted +10),compression,10.6352,"1e-3 N m (as plotted, incl. shift)",0.6785,N,vector path 182 vertex 6
+Fig6,5,,Classic DEM (shifted +10),compression,10.7862,"1e-3 N m (as plotted, incl. shift)",0.8211,N,vector path 182 vertex 7
+Fig6,5,,Classic DEM (shifted +10),compression,10.9492,"1e-3 N m (as plotted, incl. shift)",0.9761,N,vector path 182 vertex 8
+Fig6,5,,Classic DEM (shifted +10),compression,11.1281,"1e-3 N m (as plotted, incl. shift)",1.1457,N,vector path 182 vertex 9
+Fig6,5,,Classic DEM (shifted +10),compression,11.3249,"1e-3 N m (as plotted, incl. shift)",1.336,N,vector path 182 vertex 10
+Fig6,5,,Classic DEM (shifted +10),compression,11.5374,"1e-3 N m (as plotted, incl. shift)",1.5494,N,vector path 182 vertex 11
+Fig6,5,,Classic DEM (shifted +10),compression,11.7657,"1e-3 N m (as plotted, incl. shift)",1.7864,N,vector path 182 vertex 12
+Fig6,5,,Classic DEM (shifted +10),compression,12.009,"1e-3 N m (as plotted, incl. shift)",2.0344,N,vector path 182 vertex 13
+Fig6,5,,Classic DEM (shifted +10),compression,12.2627,"1e-3 N m (as plotted, incl. shift)",2.2887,N,vector path 182 vertex 14
+Fig6,5,,Classic DEM (shifted +10),compression,12.5343,"1e-3 N m (as plotted, incl. shift)",2.5676,N,vector path 182 vertex 15
+Fig6,5,,Classic DEM (shifted +10),compression,12.8297,"1e-3 N m (as plotted, incl. shift)",2.8619,N,vector path 182 vertex 16
+Fig6,5,,Classic DEM (shifted +10),compression,13.1357,"1e-3 N m (as plotted, incl. shift)",3.1875,N,vector path 182 vertex 17
+Fig6,5,,Classic DEM (shifted +10),compression,13.4634,"1e-3 N m (as plotted, incl. shift)",3.5415,N,vector path 182 vertex 18
+Fig6,5,,Classic DEM (shifted +10),compression,13.8113,"1e-3 N m (as plotted, incl. shift)",3.913,N,vector path 182 vertex 19
+Fig6,5,,Classic DEM (shifted +10),compression,14.1779,"1e-3 N m (as plotted, incl. shift)",4.3233,N,vector path 182 vertex 20
+Fig6,5,,Classic DEM (shifted +10),compression,14.5647,"1e-3 N m (as plotted, incl. shift)",4.7621,N,vector path 182 vertex 21
+Fig6,5,,Classic DEM (shifted +10),compression,14.985,"1e-3 N m (as plotted, incl. shift)",5.2326,N,vector path 182 vertex 22
+Fig6,5,,Classic DEM (shifted +10),compression,15.4214,"1e-3 N m (as plotted, incl. shift)",5.715,N,vector path 182 vertex 23
+Fig6,5,,Classic DEM (shifted +10),compression,15.8713,"1e-3 N m (as plotted, incl. shift)",6.2266,N,vector path 182 vertex 24
+Fig6,5,,Classic DEM (shifted +10),compression,16.3313,"1e-3 N m (as plotted, incl. shift)",6.5548,N,vector path 182 vertex 25
+Fig6,5,,Classic DEM (shifted +10),unloading,16.3313,"1e-3 N m (as plotted, incl. shift)",6.5548,N,vector path 209 vertex 0
+Fig6,5,,Classic DEM (shifted +10),unloading,15.8203,"1e-3 N m (as plotted, incl. shift)",5.5589,N,vector path 209 vertex 1
+Fig6,5,,Classic DEM (shifted +10),unloading,15.3536,"1e-3 N m (as plotted, incl. shift)",4.9386,N,vector path 209 vertex 2
+Fig6,5,,Classic DEM (shifted +10),unloading,14.9107,"1e-3 N m (as plotted, incl. shift)",4.3936,N,vector path 209 vertex 3
+Fig6,5,,Classic DEM (shifted +10),unloading,14.4943,"1e-3 N m (as plotted, incl. shift)",3.9046,N,vector path 209 vertex 4
+Fig6,5,,Classic DEM (shifted +10),unloading,14.0913,"1e-3 N m (as plotted, incl. shift)",3.4635,N,vector path 209 vertex 5
+Fig6,5,,Classic DEM (shifted +10),unloading,13.722,"1e-3 N m (as plotted, incl. shift)",3.0648,N,vector path 209 vertex 6
+Fig6,5,,Classic DEM (shifted +10),unloading,13.3757,"1e-3 N m (as plotted, incl. shift)",2.7098,N,vector path 209 vertex 7
+Fig6,5,,Classic DEM (shifted +10),unloading,13.0487,"1e-3 N m (as plotted, incl. shift)",2.3916,N,vector path 209 vertex 8
+Fig6,5,,Classic DEM (shifted +10),unloading,12.745,"1e-3 N m (as plotted, incl. shift)",2.1022,N,vector path 209 vertex 9
+Fig6,5,,Classic DEM (shifted +10),unloading,12.4591,"1e-3 N m (as plotted, incl. shift)",1.835,N,vector path 209 vertex 10
+Fig6,5,,Classic DEM (shifted +10),unloading,12.1925,"1e-3 N m (as plotted, incl. shift)",1.5895,N,vector path 209 vertex 11
+Fig6,5,,Classic DEM (shifted +10),unloading,11.9396,"1e-3 N m (as plotted, incl. shift)",1.3757,N,vector path 209 vertex 12
+Fig6,5,,Classic DEM (shifted +10),unloading,11.6984,"1e-3 N m (as plotted, incl. shift)",1.1848,N,vector path 209 vertex 13
+Fig6,5,,Classic DEM (shifted +10),unloading,11.4785,"1e-3 N m (as plotted, incl. shift)",1.008,N,vector path 209 vertex 14
+Fig6,5,,Classic DEM (shifted +10),unloading,11.2778,"1e-3 N m (as plotted, incl. shift)",0.8468,N,vector path 209 vertex 15
+Fig6,5,,Classic DEM (shifted +10),unloading,11.0868,"1e-3 N m (as plotted, incl. shift)",0.7049,N,vector path 209 vertex 16
+Fig6,5,,Classic DEM (shifted +10),unloading,10.9062,"1e-3 N m (as plotted, incl. shift)",0.5741,N,vector path 209 vertex 17
+Fig6,5,,Classic DEM (shifted +10),unloading,10.7445,"1e-3 N m (as plotted, incl. shift)",0.4543,N,vector path 209 vertex 18
+Fig6,5,,Classic DEM (shifted +10),unloading,10.5977,"1e-3 N m (as plotted, incl. shift)",0.3547,N,vector path 209 vertex 19
+Fig6,5,,Classic DEM (shifted +10),unloading,10.4661,"1e-3 N m (as plotted, incl. shift)",0.2691,N,vector path 209 vertex 20
+Fig6,5,,Classic DEM (shifted +10),unloading,10.349,"1e-3 N m (as plotted, incl. shift)",0.1891,N,vector path 209 vertex 21
+Fig6,5,,Classic DEM (shifted +10),unloading,10.2398,"1e-3 N m (as plotted, incl. shift)",0.1164,N,vector path 209 vertex 22
+Fig6,5,,Classic DEM (shifted +10),unloading,10.1457,"1e-3 N m (as plotted, incl. shift)",0.0536,N,vector path 209 vertex 23
+Fig6,5,,Classic DEM (shifted +10),unloading,10.0644,"1e-3 N m (as plotted, incl. shift)",0.0023,N,vector path 209 vertex 24

@@ -289,6 +289,13 @@
    "DEM 논문/21. Discrete element simulations with Liggghts.pdf"
   ]
  },
+ "brodu2015_multiple_contact_dem_dense_granular": {
+  "figures": 28,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf"
+  ]
+ },
  "bucci2017_chemomech_failure_assb_cycling_czm": {
   "figures": 5,
   "generated": "2026-08-05",

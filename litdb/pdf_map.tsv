@@ -534,3 +534,7 @@ du2025_dem_fem_force_chain_collector_damage_calendering	force chain-induced coll
 #   ⚠ 크롭 46 장 = 도구 12 (전부 다시 자름: 캡션 빠짐 · 본문 폭 여백) + 손 크롭 34 (manual_crop: 식 14 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
 harthong2009_high_density_compaction_dem_voronoi_contact_law	modeling_of_high-density_compaction_of_granular_materials
 harthong2009_high_density_compaction_dem_voronoi_contact_law	modeling of high-density compaction of granular materials
+# ── 하이드로겔 514 알 3D 접촉력 실측 (일축 반복 압축 · 변형률 ≤ 13.4 %) 에 접촉 독립 DEM 과 다접촉 DEM 다섯 정식화 (반무한 탄성 변위를 겹침에 더함 · γ 1 개) 를 대조 (Brodu · Dijksman · Behringer · Phys. Rev. E 91, 032201 (2015)) — litdb 2026-11-12 (후보 N-30) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 보충 자료 없음 · 크롭 28 장 = 도구 6 (5 그대로 + 그림 6 다시 자름: 위의 식 (2) 를 삼킴) + 손 22 (manual_crop: 표 1 (로마 숫자 라벨이라 도구가 못 잡음) · 식 5 · 근거 글 16) + digitized.csv (1,498 행 · 벡터 경로) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+brodu2015_multiple_contact_dem_dense_granular	multiple-contact_discrete-element_model_for_simulating_dense_granular_media
+brodu2015_multiple_contact_dem_dense_granular	multiple-contact discrete-element model for simulating dense granular media
