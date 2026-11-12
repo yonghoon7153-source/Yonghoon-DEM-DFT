@@ -1,7 +1,7 @@
-2026-11-12 11:16:01 UTC
-rint_codepkg: HEAD 4557a30c2 · origin/claude/stoic-knuth-NObVQ 뒤 커밋 4
-rint_codepkg_unpushed.bundle: 81372 B
-rint_codepkg_wip.diff: 14118 B
+2026-11-12 11:24:58 UTC
+rint_codepkg: HEAD 94765bed3 · origin/claude/stoic-knuth-NObVQ 뒤 커밋 5
+rint_codepkg_unpushed.bundle: 88002 B
+rint_codepkg_wip.diff: 6592 B
 main: HEAD ef68eb7da · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 1
 main_unpushed.bundle: 2461174 B
 BRIEF_review_codepkg.md: 4482 B
@@ -14,4 +14,5 @@ amend_drafts.md: 15725 B
 formation_20261112.md: 3306 B
 synthfix_work.tgz: 파일 166 · 3347867 B
 dem_redesign_work.tgz: 파일 36 · 608313 B · 뺀 파일 3 (주소 꼴 · 큰 파일): ['dem_redesign/fix/arith.py', 'dem_redesign/fix/card_frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure.md', 'dem_redesign/fix/card_lee2026_mechanical_halogen_argyrodite_drycoating.md']
-mixer_e0_work.tgz: 파일 1244 · 1502255 B
+mixer_e0_work.tgz: 파일 13430 · 3566810 B
+p1g2c_work.tgz: 파일 3 · 3351 B
