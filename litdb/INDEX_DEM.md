@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 274편 · 생성 2026-11-12
+> digest 275편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -124,7 +124,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (47편)
+## 복합양극 미세구조 · percolation (48편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -152,6 +152,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `landesfeind2016_tortuosity_eis_electrodes_separators` | 전극·분리막 tortuosity 를 임피던스(EIS)로 측정 — 차단 전해질 대칭셀 + 전송선 모델(TLM-Q) · MacMullin 수 · Bruggeman 검증 — Landesfeind (J. Electrochem. Soc. 2016) | exp (EIS impedance — 분리막 HFR · 전극 차단 대칭셀 TLM-Q; liquid-LIB t | 2026-10-02 | 🖼 21 |
 | `landesfeind2018_tortuosity_impedance_vs_tomography` | 전극 tortuosity 의 임피던스 값 검증 — 일반 TLM 의 전자 저항 창 (R_El/R_Ion < 10⁻²) · 강구 충전 known-τ (1.56 vs Bruggeman 1.60–1.62) · 같은 코팅 X선 단층촬영 τ 의 약 2 배 (원인 = 미해상 바인더 · 탄소) — Landesfeind (J. Elect | exp (EIS 차단 대칭셀 TLM 검증 · 강구 known-τ · 같은 코팅 XTM τ 대조; liquid | 2026-10-03 | 🖼 7 |
 | `lee2026_unveiling_ptfe_dry_electrode_digital_twin` | PTFE 건식 양극의 구조적 이점을 FIB-SEM 3D 디지털 트윈으로 정량 — 0.2 wt% PTFE 가 LPSCl 을 NCM 위에 in situ 코팅 (NCM 표면 LPSCl 몫 35 → 59 %) · 상 분산 균질화 · 이온/전자 경로 개선 (기하 τ 2.16 → 1.75 · σ_ion 시뮬 +57 % / 실측 +6 | exp + voxel-sim (FIB-SEM 3D 재구성 · U-Net 분할 · GeoDict Conduct | 2026-10-13 | 🖼 36 |
+| `lu2020_insitu_nanoct_calendering_microstructural_evolution` | 리튬이온 양극 (NMC111 + 탄소-바인더 · 액체 전해질용 · SE 없음) 을 X 선 나노 CT 안에서 누른 채 (in situ · 기둥 압축 3 단계 ≤ 24 %) 본 미세구조 진화 + 그 3D 구조 위 전기화학 모델 — 큰 입자 (7.3 ± 3.1 µm) 는 회전 · 불균일 변형 · 기공 연결 상실 / 작은 입자  | experiment + image-based simulation (in situ X-ray nano-CT 기 | 2026-11-12 | 🖼 92 |
 | `malifarge2017_tortuosity_symmetric_cell_impedance_tlm` | 차단 대칭셀 임피던스의 두 레일 전송선 모델 (TLM) 로 기공 tortuosity τ₂ 추출 — 고상 전자 레일 포함 Z형 open–open 해 (Tröltzsch–Kanoun 해석식 = Siroma 표 2 · Landesfeind 2018 Eq 1 · Pouraghajan Eq 5 극한과 같은 함수) · Newman  | exp+theory (차단 대칭셀 EIS + 두 레일 TLM 전 스펙트럼 적합 · Newman P2D 주파수 | 2026-10-03 | 🖼 7 |
 | `matthews2024_ptfe_nanofibril_network` | 무용매(dry-process) NMC 전극의 PTFE 나노-피브릴 binder 망 — 계층 microstructure 와 형성기전을 고해상 SEM 으로 풀다 — Matthews (Front. Energy Res. 2024) | exp (SEM/EDX + 전기화학 + EIS; 시뮬레이션 0) | 2026-09-04 | 🖼 9 |
 | `miss2026_insitu_conductivity_porosity_pressure_compaction` | 가압 중 (in situ) 두께로 잰 Conductivity–Porosity–Pressure 관계 — µc-Li₅.₅PS₄.₅Cl₁.₅ SE · pc-NMC622 CAM 단일상 powder 펠릿: 가압↔제거 두께 표 (SE 회복 0.3–2.8 % · CAM 0.7–8.6 %) · 두 공극 영역 (ε > 0.2 접촉 지배  | experiment (in situ 가압 셀 — 마이크로미터 두께 + impedance (EIS) · 단일상 | 2026-10-09 | 🖼 13 |
