@@ -21,6 +21,8 @@
 합성 fixture 가 실행기 꼴대로 rc.txt 도 쓴다).
 11-11 3 회차 내부 반박 리뷰 G2CPR3-01–04 고침 = 시험 먼저 (t43 완료 문의 outputs.md5 ↔ 실제 출력 대조 새로 · t39 dry/ · t41 자리 문 두 경계 ·
 t42 표기 보강 · t13 = 덤프를 바꾼 fixture 는 outputs.md5 도 실행기 꼴대로 다시 쓴다).
+11-12 SELF-166 (ibb 건식 job 358667 이 찾음) = 시험 먼저 — 가짜 lmp 의 -h = 3d5c00f 꼴 (배너 → 도움말 줄 → rc 1) · t22 사례 셋
+(-h rc 0 · rc 2 · 오류 끝 = rc 1 인데 도움말 없음) · t26 lmp_h_rc 1 기록.
 """
 from __future__ import annotations
 
@@ -1139,15 +1141,18 @@ if os.environ.get('FAKE_TERM_DELAY'):      # 느린 종료 흉내 (TERM 뒤 몇 
         time.sleep(float(os.environ['FAKE_TERM_DELAY']))
         os._exit(143)
     signal.signal(signal.SIGTERM, _late)
-if '-h' in a:
+if '-h' in a:      # 3d5c00f 꼴 (11-12 SELF-166) — 배너 (lammps.cpp 359–361) → help() 첫 줄 'Command line options:' (731–732) → error->done() = exit(1) (error.cpp 377–378)
     if mode.startswith('hsleep:'):      # 실행 전 (-h 머리 줄 확인 중) 사람 멈춤 시험 — 시작을 적고 잠든다
         with open(os.environ['FAKE_LOG'], 'a') as f:
             f.write(json.dumps(dict(h=1)) + '\n')
         time.sleep(float(mode.split(':')[1]))
     if mode != 'nobanner':
         print('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f · 가짜 lmp)')
+    if mode == 'herror':      # 배너 뒤 오류 끝 (error->all · 같은 rc 1 · 도움말 없음)
+        print('ERROR: 가짜 오류 (도움말 전)')
+        sys.exit(1)
     print('\nCommand line options:\n')
-    sys.exit(0)
+    sys.exit({'h0': 0, 'h2': 2}.get(mode, 1))
 args, var = {}, {}
 i = 0
 while i < len(a):
@@ -1288,10 +1293,12 @@ def t21_runner_no_lmp():
 @test
 def t22_runner_lmp_bad():
     t = T()
-    for case in ('없는 파일', '실행 권한 없음', '배너 없음', '폴더'):
+    # 11-12 SELF-166 — 3d5c00f 의 -h 정상 끝 = rc 1 + 도움말 줄 · rc 0 · 2 (다른 실행 파일) · rc 1 인데 도움말 없음 (오류 끝) = 실행 전 멈춤
+    hmode = {'배너 없음': 'nobanner', '-h rc 0': 'h0', '-h rc 2': 'h2', '-h 오류 끝 (rc 1 · 도움말 없음)': 'herror'}
+    for case in ('없는 파일', '실행 권한 없음', '배너 없음', '폴더', '-h rc 0', '-h rc 2', '-h 오류 끝 (rc 1 · 도움말 없음)'):
         d = tmpdir()
         S = sandbox_copy(d)
-        env = fake_env(d, mode='nobanner' if case == '배너 없음' else 'ok')
+        env = fake_env(d, mode=hmode.get(case, 'ok'))
         if case == '없는 파일':
             env['LMP'] = os.path.join(d, 'nope')
         elif case == '실행 권한 없음':
@@ -1303,6 +1310,10 @@ def t22_runner_lmp_bad():
         t.ok(case + ' rc 3', rc == 3, (rc, err[-200:]))
         t.ok(case + ' OUT 없음', not os.path.exists(O))
         t.ok(case + ' 팔 안 돎', [c for c in fake_calls(d) if c.get('arm')] == [])
+        if case in ('-h rc 0', '-h rc 2'):
+            t.ok(case + ' 이유 = -h rc', 'LMP -h rc ' + case[-1] in err, err[-300:])
+        if case.startswith('-h 오류 끝'):
+            t.ok(case + ' 이유 = 도움말 줄 없음', 'Command line options:' in err, err[-300:])
     return t
 
 
@@ -1417,6 +1428,7 @@ def t26_runner_ok_fake():
     if os.path.exists(os.path.join(O, 'lmp_identity.txt')):
         ident = open(os.path.join(O, 'lmp_identity.txt')).read()
         t.ok('배너 기록', 'LIGGGHTS (Version' in ident)
+        t.ok('lmp_h_rc 1 기록 (3d5c00f -h 정상 끝 · SELF-166)', 'lmp_h_rc 1\n' in ident, ident[:400])
         t.ok('md5 · sha256 기록', md5f(env['LMP']) in ident and hashlib.sha256(open(env['LMP'], 'rb').read()).hexdigest() in ident)
     if os.path.exists(os.path.join(O, 'outputs.md5')):
         om = open(os.path.join(O, 'outputs.md5')).read()

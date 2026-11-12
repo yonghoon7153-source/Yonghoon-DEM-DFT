@@ -1,0 +1,893 @@
+{
+ "checks": [
+  {
+   "data": {
+    "here": "<HOME>/dem-siteq-11a794674/scripts",
+    "run_contract": "<HOME>/dem-siteq-11a794674/scripts/run_contract.py",
+    "schema": "rint-r-chain-v2"
+   },
+   "detail": "imported <HOME>/dem-siteq-11a794674/scripts/rint_r_chain.py",
+   "id": "C01",
+   "seconds": 0.107,
+   "status": "PASS",
+   "title": "import scripts/rint_r_chain.py from the pinned checkout"
+  },
+  {
+   "data": {
+    "expected": {
+     "numpy": "1.24.4",
+     "python_minor": "3.8",
+     "scipy": "1.10.1"
+    },
+    "in_venv": true,
+    "record_only": {
+     "blas": {
+      "blas_ilp64_opt_info": {
+       "define_macros": "[('HAVE_CBLAS', None), ('BLAS_SYMBOL_SUFFIX', '64_'), ('HAVE_BLAS_ILP64', None)]",
+       "language": "c",
+       "libraries": "['openblas64_', 'openblas64_']",
+       "library_dirs": "['/usr/local/lib']",
+       "runtime_library_dirs": "['/usr/local/lib']"
+      }
+     },
+     "cpu_model": "11th Gen Intel(R) Core(TM) i9-11900K @ 3.50GHz",
+     "cupy": [
+      "cupy-cuda12x 12.3.0"
+     ],
+     "executable": "<HOME>/dem-venv/bin/python3",
+     "gpu": [
+      "NVIDIA GeForce RTX 3090, 560.35.03"
+     ],
+     "implementation": "CPython",
+     "numpy_simd": {
+      "baseline": [
+       "SSE",
+       "SSE2",
+       "SSE3"
+      ],
+      "dispatch": [
+       "SSSE3",
+       "SSE41",
+       "POPCNT",
+       "SSE42",
+       "AVX",
+       "F16C",
+       "FMA3",
+       "AVX2",
+       "AVX512F",
+       "AVX512CD",
+       "AVX512_KNL",
+       "AVX512_KNM",
+       "AVX512_SKX",
+       "AVX512_CLX",
+       "AVX512_CNL",
+       "AVX512_ICL"
+      ],
+      "features": [
+       "AVX",
+       "AVX2",
+       "AVX512BITALG",
+       "AVX512BW",
+       "AVX512CD",
+       "AVX512DQ",
+       "AVX512F",
+       "AVX512IFMA",
+       "AVX512VBMI",
+       "AVX512VBMI2",
+       "AVX512VL",
+       "AVX512VNNI",
+       "AVX512VPOPCNTDQ",
+       "AVX512_CLX",
+       "AVX512_CNL",
+       "AVX512_ICL",
+       "AVX512_SKX",
+       "F16C",
+       "FMA3",
+       "MMX",
+       "POPCNT",
+       "SSE",
+       "SSE2",
+       "SSE3",
+       "SSE41",
+       "SSE42",
+       "SSSE3"
+      ]
+     },
+     "openblas_coretype": null,
+     "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.29",
+     "python": "3.8.10"
+    },
+    "sys_executable": "<HOME>/dem-venv/bin/python3",
+    "unit": {
+     "numpy": "1.24.4",
+     "python_minor": "3.8",
+     "scipy": "1.10.1"
+    }
+   },
+   "detail": "env unit {\"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"} vs expected {\"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"}",
+   "id": "C02",
+   "seconds": 0.348,
+   "status": "PASS",
+   "title": "environment unit (python minor, numpy, scipy) vs kgy reference"
+  },
+  {
+   "data": {
+    "path_python3": "<HOME>/dem-venv/bin/python3",
+    "path_python3_rc": 0,
+    "path_python3_stderr_tail": "",
+    "path_python3_unit": {
+     "executable": "<HOME>/dem-venv/bin/python3",
+     "numpy": "1.24.4",
+     "python_minor": "3.8",
+     "scipy": "1.10.1"
+    },
+    "same_path_as_sys_executable": true,
+    "sys_executable": "<HOME>/dem-venv/bin/python3"
+   },
+   "detail": "PATH python3 env unit {\"executable\": \"<HOME>/dem-venv/bin/python3\", \"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"} (probe {\"numpy\": \"1.24.4\", \"python_minor\": \"3.8\", \"scipy\": \"1.10.1\"}) rc 0",
+   "id": "C02b",
+   "seconds": 0.13,
+   "status": "PASS",
+   "title": "PATH python3 (used by runner -> payload) has the same env unit"
+  },
+  {
+   "data": {
+    "git_identity": {
+     "dirty": false,
+     "error": null,
+     "head": "11a7946748fa4da2cd8e691ef5f7abc02aac2a56",
+     "rel": "scripts/rint_r_chain.py"
+    }
+   },
+   "detail": "head 11a7946748fa4da2cd8e691ef5f7abc02aac2a56 dirty False rel scripts/rint_r_chain.py error None",
+   "id": "C03",
+   "seconds": 0.075,
+   "status": "PASS",
+   "title": "git_identity: HEAD == PIN, dirty False, repo-relative path"
+  },
+  {
+   "data": {
+    "code_key_sha256": "51a2ed2946c8f5956dbae5e5df93f237a8a5d7ab4111125f46fcab97b5aac159",
+    "missing_code_files": [],
+    "n_code_files": 19,
+    "problem": null
+   },
+   "detail": "code_key_sha256 51a2ed2946c8f5956dbae5e5df93f237a8a5d7ab4111125f46fcab97b5aac159",
+   "id": "C04",
+   "seconds": 0.19,
+   "status": "PASS",
+   "title": "code_record + code_dirty_problem (same-code gate) and code_key_sha256"
+  },
+  {
+   "data": {
+    "host": {
+     "boot_id": "fddca72b-d45e-4ae9-a9e6-68e301949eeb",
+     "machine_id": "7b67af05c4074b42af716fd0f6ffbe40",
+     "pidns": "pid:[4026531836]"
+    }
+   },
+   "detail": "machine_id, boot_id, pidns readable",
+   "id": "C05",
+   "seconds": 0.001,
+   "status": "PASS",
+   "title": "host_ident: machine_id, boot_id, pid namespace"
+  },
+  {
+   "data": {
+    "boot_ticks": 112279015,
+    "clk_tck": 100,
+    "euid": 1003,
+    "ruid": 1003,
+    "stat": [
+     "R",
+     112278928,
+     2146684,
+     2146683,
+     1714469
+    ],
+    "uid": 1003
+   },
+   "detail": "proc_stat/boot_ticks/_proc_ruid consistent",
+   "id": "C06",
+   "seconds": 0.0,
+   "status": "PASS",
+   "title": "/proc/<pid>/stat, /proc/uptime ticks, /proc/self/status uid"
+  },
+  {
+   "data": {
+    "alive": true,
+    "dead": false,
+    "reused": false
+   },
+   "detail": "live parent True, reaped child False, parent with other start tick False",
+   "id": "C07",
+   "seconds": 0.01,
+   "status": "PASS",
+   "title": "chain_parent_alive on a live parent, a reaped child, a reused pid"
+  },
+  {
+   "data": {
+    "members_since_now": [],
+    "old_rule_result": null,
+    "old_rule_unsure_n": 4,
+    "old_rule_unsure_sample": [
+     [
+      27789,
+      "(sd-pam)"
+     ],
+     [
+      1714385,
+      "sshd"
+     ],
+     [
+      1714468,
+      "sshd"
+     ],
+     [
+      1714554,
+      "sshd"
+     ]
+    ],
+    "processes_visible": 438,
+    "scan_seconds": 0.036
+   },
+   "detail": "fresh token -> [] in 0.04 s (438 processes); old rule (no since, no runner) unsure 4",
+   "id": "C08",
+   "seconds": 0.091,
+   "status": "PASS",
+   "title": "group_members scan of the real process table (fresh token)"
+  },
+  {
+   "data": {
+    "end": {
+     "by": "chain",
+     "cause": null,
+     "confirmed": true,
+     "ended_utc": "2026-11-12T04:42:58Z",
+     "killed": 4,
+     "left": [],
+     "left_after_exit": 4,
+     "name": "S09_run",
+     "rc": 0,
+     "schema": "rint-r-group-v1",
+     "signal": null,
+     "token": "73a0e349af557f3f60231e20388ea706",
+     "unsure": null
+    }
+   },
+   "detail": "rc 0 cause None confirmed True killed 4 pgid==pid True late_file False left_now []; runner-reported pids [2146875, 2146876, 2146877, 2146878] still alive []",
+   "id": "C09",
+   "seconds": 4.677,
+   "status": "PASS",
+   "title": "run_in_group: runner exits 0 leaving same-group and setsid children"
+  },
+  {
+   "data": {
+    "end": {
+     "by": "chain",
+     "cause": "timeout",
+     "confirmed": true,
+     "ended_utc": "2026-11-12T04:43:04Z",
+     "killed": 1,
+     "left": [],
+     "left_after_exit": null,
+     "name": "S10_run",
+     "rc": -9,
+     "schema": "rint-r-group-v1",
+     "signal": null,
+     "token": "cd2e086d50978bdf596592f661f16d73",
+     "unsure": null
+    }
+   },
+   "detail": "cause timeout rc -9 confirmed True killed 1 left_now [] elapsed 2.1 s; pids [2146898, 2146899] still alive []",
+   "id": "C10",
+   "seconds": 2.165,
+   "status": "PASS",
+   "title": "run_in_group: timeout -> killpg + token sweep"
+  },
+  {
+   "data": {
+    "end": {
+     "by": "chain",
+     "cause": "signal",
+     "confirmed": true,
+     "ended_utc": "2026-11-12T04:43:05Z",
+     "killed": 1,
+     "left": [],
+     "left_after_exit": null,
+     "name": "S11_run",
+     "rc": -9,
+     "schema": "rint-r-group-v1",
+     "signal": "SIGTERM",
+     "token": "ba67444f03adaefc1c614f56746a1344",
+     "unsure": null
+    }
+   },
+   "detail": "child rc 0 cause signal signal SIGTERM confirmed True killed 1 left_now []; pids [2146902, 2146903] still alive []",
+   "id": "C11",
+   "seconds": 0.857,
+   "status": "PASS",
+   "title": "chain-like child gets SIGTERM while waiting -> group killed, end record"
+  },
+  {
+   "data": {
+    "end": {
+     "by": "recover",
+     "cause": "parent_dead",
+     "confirmed": true,
+     "ended_utc": "2026-11-12T04:43:06Z",
+     "host": {
+      "boot_id": "fddca72b-d45e-4ae9-a9e6-68e301949eeb",
+      "machine_id": "7b67af05c4074b42af716fd0f6ffbe40",
+      "pidns": "pid:[4026531836]"
+     },
+     "killed": 3,
+     "left": [],
+     "left_after_exit": null,
+     "name": "S12_run",
+     "rc": null,
+     "schema": "rint-r-group-v1",
+     "signal": null,
+     "token": "09643ca0032d2f7ecf6e4c04a81b7968",
+     "unsure": null,
+     "why": null
+    }
+   },
+   "detail": "end record before recover False; group alive after parent SIGKILL 3; recover rc 0; end by recover cause parent_dead confirmed True killed 3 unsure None; left_now []; pids [2146924, 2146925] still alive []",
+   "id": "C12",
+   "seconds": 0.985,
+   "status": "PASS",
+   "title": "chain-like child SIGKILLed -> group survives -> --stage recover kills and confirms"
+  },
+  {
+   "data": {
+    "ex_after_holder_sigkill": [
+     "acquired",
+     0.0
+    ],
+    "ex_vs_ex": [
+     "stop:ATTEMPT_LEDGER_MISMATCH",
+     1.0
+    ],
+    "ex_vs_sh": [
+     "stop:ATTEMPT_LEDGER_MISMATCH",
+     1.0
+    ],
+    "lock_path_in_git_dir": true,
+    "sh_vs_ex": [
+     "stop:ATTEMPT_LEDGER_MISMATCH",
+     1.0
+    ],
+    "sh_vs_sh": [
+     "acquired",
+     0.0
+    ]
+   },
+   "detail": "lock_path_in_git_dir=True ex_vs_ex=stop:ATTEMPT_LEDGER_MISMATCH sh_vs_ex=stop:ATTEMPT_LEDGER_MISMATCH ex_after_holder_sigkill=acquired sh_vs_sh=acquired ex_vs_sh=stop:ATTEMPT_LEDGER_MISMATCH",
+   "id": "C13",
+   "seconds": 3.321,
+   "status": "PASS",
+   "title": "ledger_lock flock semantics on the siteq filesystem (2 processes)"
+  },
+  {
+   "data": {
+    "can_write": false,
+    "ex": "stop:ATTEMPT_LEDGER_MISMATCH",
+    "sh": "acquired"
+   },
+   "detail": "exclusive=stop:ATTEMPT_LEDGER_MISMATCH shared=acquired (expected stop / acquired-without-lock)",
+   "id": "C13b",
+   "seconds": 0.009,
+   "status": "PASS",
+   "title": "ledger_lock on a read-only ledger .git"
+  },
+  {
+   "data": {
+    "active_hooks_in_template": [],
+    "bundle_sha256": "63d04f06b481141e0bcaf918e0d9f4028ba338f681f279731582bb5d4c024fcb",
+    "global_core_hooksPath": null,
+    "head0": "73d6522370f9a83e5a8d23cb22767636855fad2e",
+    "head1": "c9f9ec03a95801dc0375d902dd7fb70d699fdec5",
+    "head_after_stale": "c9f9ec03a95801dc0375d902dd7fb70d699fdec5",
+    "history_problem": null,
+    "is_ancestor": true,
+    "repo_problem": null,
+    "stale_append": "stop:ATTEMPT_LEDGER_MISMATCH"
+   },
+   "detail": "init/commit/append/history/ancestor/stale-refusal/bundle ok",
+   "id": "C14",
+   "seconds": 0.074,
+   "status": "PASS",
+   "title": "scratch ledger git ops (init, commit, append, history, stale refusal, bundle)"
+  },
+  {
+   "data": {
+    "dir_fsync": "ok"
+   },
+   "detail": "write/replace ok, no temp leftovers, new-file refusal ok, directory fsync ok",
+   "id": "C15",
+   "seconds": 0.004,
+   "status": "PASS",
+   "title": "write_json_atomic (temp + fsync + os.replace), new-file refusal, directory fsync"
+  },
+  {
+   "data": {
+    "expected": {
+     "attempt_fifo": null,
+     "dangling": [
+      "missing",
+      null
+     ],
+     "devnull": [
+      "unreadable",
+      null
+     ],
+     "digest_plain": "29ef94e5c0fea664a65880e81a83b2e6dd44ee8ffe5617447daefa7ff5c2bf18",
+     "digest_with_fifo": null,
+     "dir": [
+      "unreadable",
+      null
+     ],
+     "empty": [
+      "ok",
+      0
+     ],
+     "fifo": [
+      "unreadable",
+      null
+     ],
+     "group_json_fifo": null,
+     "log_badname": [
+      "no_run",
+      0
+     ],
+     "log_fifo": [
+      "unreadable",
+      0
+     ],
+     "log_reg": [
+      "ok",
+      5
+     ],
+     "missing": [
+      "missing",
+      null
+     ],
+     "mode000": [
+      "unreadable",
+      null
+     ],
+     "reg": [
+      "ok",
+      3
+     ],
+     "summary_fifo": "unreadable"
+    },
+    "fifo": true,
+    "got": {
+     "attempt_fifo": null,
+     "dangling": [
+      "missing",
+      null
+     ],
+     "devnull": [
+      "unreadable",
+      null
+     ],
+     "digest_plain": "29ef94e5c0fea664a65880e81a83b2e6dd44ee8ffe5617447daefa7ff5c2bf18",
+     "digest_with_fifo": null,
+     "dir": [
+      "unreadable",
+      null
+     ],
+     "empty": [
+      "ok",
+      0
+     ],
+     "fifo": [
+      "unreadable",
+      null
+     ],
+     "group_json_fifo": null,
+     "log_badname": [
+      "no_run",
+      0
+     ],
+     "log_fifo": [
+      "unreadable",
+      0
+     ],
+     "log_reg": [
+      "ok",
+      5
+     ],
+     "missing": [
+      "missing",
+      null
+     ],
+     "mode000": [
+      "unreadable",
+      null
+     ],
+     "reg": [
+      "ok",
+      3
+     ],
+     "summary_fifo": "unreadable"
+    },
+    "mode000_expected": "unreadable"
+   },
+   "detail": "all special-file cases as expected",
+   "id": "C16",
+   "seconds": 0.13,
+   "status": "PASS",
+   "title": "read_regular_file & co on regular/empty/missing/dangling/dir/FIFO/device/mode-000 files"
+  },
+  {
+   "data": {
+    "after": [],
+    "seen": []
+   },
+   "detail": "unlink of an open file leaves no visible entry",
+   "id": "C16b",
+   "seconds": 0.201,
+   "status": "PASS",
+   "title": "unlink of an open file (NFS silly-rename detector)"
+  },
+  {
+   "data": {
+    "mode": "600"
+   },
+   "detail": "mode after chmod 0600 = 600 (verdict_results.json value seal relies on it)",
+   "id": "C17",
+   "seconds": 0.0,
+   "status": "PASS",
+   "title": "chmod 0600 takes effect (verdict_results.json value seal)"
+  },
+  {
+   "data": {
+    "new_file_mode": "664",
+    "umask": "002"
+   },
+   "detail": "umask 002, new file mode 664 (chain writes records and logs with the process umask)",
+   "id": "C18",
+   "seconds": 0.0,
+   "status": "INFO",
+   "title": "process umask and resulting file mode"
+  },
+  {
+   "data": {
+    "digest_dst": "6220ddb166ba1c71c89ad65874fbcbb3279de0aa0215b5109f0e817bb342ee46",
+    "digest_src": "6220ddb166ba1c71c89ad65874fbcbb3279de0aa0215b5109f0e817bb342ee46",
+    "mtime_preserved": true
+   },
+   "detail": "copytree/copy2 ok, folder_digest equal True, copy2 mtime preserved True",
+   "id": "C19",
+   "seconds": 0.001,
+   "status": "PASS",
+   "title": "shutil.copytree/copy2 (resume and merge copies) + folder_digest equality"
+  },
+  {
+   "data": {
+    "dev_match": true,
+    "exists": true,
+    "free_bytes": 321108668416,
+    "fstype": "ext4",
+    "inodes_free": 59756563,
+    "inodes_total": 61022208,
+    "mount_opts": "rw,relatime",
+    "mount_point": "/",
+    "path": "/tmp",
+    "realpath": "/tmp",
+    "st_dev": "259:2",
+    "super_opts": "rw",
+    "total_bytes": 982820896768,
+    "writable": true
+   },
+   "detail": "TMPDIR /tmp fstype ext4 free 321108668416 bytes (verdict/reverify graph source uses mkdtemp here; not written by this probe)",
+   "id": "C20",
+   "seconds": 0.0,
+   "status": "INFO",
+   "title": "TMPDIR facts (no write)"
+  },
+  {
+   "data": {},
+   "detail": "handlers installed for ['SIGHUP', 'SIGTERM'], restored True",
+   "id": "C21",
+   "seconds": 0.0,
+   "status": "PASS",
+   "title": "SIGTERM/SIGHUP handler install and restore (main thread)"
+  },
+  {
+   "data": {
+    "bash_version": "5.0.17(1)-release",
+    "blas_kind": "dict",
+    "blas_probe_seconds": 0.19,
+    "git_rev_parse_rc": 0,
+    "git_rev_parse_seconds": 0.0,
+    "git_top": "<HOME>/dem-siteq-11a794674",
+    "git_version": "git version 2.25.1",
+    "nvidia_smi": [
+     "NVIDIA GeForce RTX 3090, 560.35.03"
+    ],
+    "nvidia_smi_seconds": 0.07,
+    "usr_bin_time": true
+   },
+   "detail": "nvidia-smi 0.07 s (timeout 20), BLAS probe 0.19 s (timeout 120), git rev-parse 0.00 s, git version 2.25.1, bash 5.0.17(1)-release",
+   "id": "C22",
+   "seconds": 0.268,
+   "status": "INFO",
+   "title": "timings of chain subprocess helpers (nvidia-smi, BLAS probe, git), git/bash versions"
+  },
+  {
+   "data": {
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": null,
+    "LC_CTYPE": null,
+    "PYTHONIOENCODING": null,
+    "PYTHONUTF8": null,
+    "children": {
+     "isolated": {
+      "err": "",
+      "rc": 0,
+      "tail": [
+       "encoding=utf-8 utf8_mode=0"
+      ]
+     },
+     "production_like": {
+      "err": "",
+      "rc": 0,
+      "tail": [
+       "encoding=utf-8 utf8_mode=0"
+      ]
+     }
+    },
+    "preferred": "UTF-8",
+    "stdout_encoding": "utf-8",
+    "utf8_mode": 0
+   },
+   "detail": "chain-style non-ASCII text to a pipe: isolated rc 0, production-like rc 0 (encoding=utf-8 utf8_mode=0)",
+   "id": "C23",
+   "seconds": 0.018,
+   "status": "PASS",
+   "title": "stdout encoding for the chain prints (non-ASCII text to a pipe)"
+  },
+  {
+   "data": {
+    "RLIMIT_AS": [
+     null,
+     null
+    ],
+    "RLIMIT_CORE": [
+     0,
+     null
+    ],
+    "RLIMIT_CPU": [
+     null,
+     null
+    ],
+    "RLIMIT_DATA": [
+     null,
+     null
+    ],
+    "RLIMIT_FSIZE": [
+     null,
+     null
+    ],
+    "RLIMIT_NOFILE": [
+     1024,
+     1048576
+    ],
+    "RLIMIT_NPROC": [
+     256289,
+     256289
+    ]
+   },
+   "detail": "limits (soft, hard; None = unlimited) {\"RLIMIT_AS\": [null, null], \"RLIMIT_CORE\": [0, null], \"RLIMIT_CPU\": [null, null], \"RLIMIT_DATA\": [null, null], \"RLIMIT_FSIZE\": [null, null], \"RLIMIT_NOFILE\": [1024, 1048576], \"RLIMIT_NPROC\": [256289, 256289]}",
+   "id": "C24",
+   "seconds": 0.001,
+   "status": "INFO",
+   "title": "resource limits"
+  },
+  {
+   "data": {
+    "cgroup": {
+     "kernel.pid_max": "4194304",
+     "self_cgroup": [
+      "13:blkio:/",
+      "12:memory:/user.slice/user-1003.slice/session-2515.scope",
+      "11:pids:/user.slice/user-1003.slice/session-2515.scope",
+      "10:rdma:/",
+      "9:cpu,cpuacct:/",
+      "8:misc:/"
+     ],
+     "v1_memory.limit_in_bytes": "9223372036854771712",
+     "vm.overcommit_memory": "0"
+    },
+    "meminfo": {
+     "MemAvailable_kB": 50582556,
+     "MemTotal_kB": 65709496,
+     "SwapFree_kB": 775472,
+     "SwapTotal_kB": 2097148
+    }
+   },
+   "detail": "MemTotal 65709496 kB, MemAvailable 50582556 kB, swap 2097148 kB, cgroup memory.max None",
+   "id": "C25",
+   "seconds": 0.0,
+   "status": "INFO",
+   "title": "memory, swap, cgroup limits (no allocation)"
+  },
+  {
+   "data": {
+    "home:<HOME>": {
+     "dev_match": true,
+     "exists": true,
+     "free_bytes": 321108668416,
+     "fstype": "ext4",
+     "inodes_free": 59756563,
+     "inodes_total": 61022208,
+     "mount_opts": "rw,relatime",
+     "mount_point": "/",
+     "path": "<HOME>",
+     "realpath": "<HOME>",
+     "st_dev": "259:2",
+     "super_opts": "rw",
+     "total_bytes": 982820896768,
+     "writable": true
+    },
+    "out:<HOME>/rint_siteq_kgy_20261112": {
+     "dev_match": true,
+     "exists": true,
+     "free_bytes": 321108668416,
+     "fstype": "ext4",
+     "inodes_free": 59756563,
+     "inodes_total": 61022208,
+     "mount_opts": "rw,relatime",
+     "mount_point": "/",
+     "path": "<HOME>/rint_siteq_kgy_20261112",
+     "realpath": "<HOME>/rint_siteq_kgy_20261112",
+     "st_dev": "259:2",
+     "super_opts": "rw",
+     "total_bytes": 982820896768,
+     "writable": true
+    },
+    "plan_dir:<HOME>/sdcp": {
+     "dev_match": true,
+     "exists": true,
+     "free_bytes": 321108668416,
+     "fstype": "ext4",
+     "inodes_free": 59756563,
+     "inodes_total": 61022208,
+     "mount_opts": "rw,relatime",
+     "mount_point": "/",
+     "path": "<HOME>/sdcp",
+     "realpath": "<HOME>/sdcp",
+     "st_dev": "259:2",
+     "super_opts": "rw",
+     "total_bytes": 982820896768,
+     "writable": true
+    },
+    "repo:<HOME>/dem-siteq-11a794674": {
+     "dev_match": true,
+     "exists": true,
+     "free_bytes": 321108668416,
+     "fstype": "ext4",
+     "inodes_free": 59756563,
+     "inodes_total": 61022208,
+     "mount_opts": "rw,relatime",
+     "mount_point": "/",
+     "path": "<HOME>/dem-siteq-11a794674",
+     "realpath": "<HOME>/dem-siteq-11a794674",
+     "st_dev": "259:2",
+     "super_opts": "rw",
+     "total_bytes": 982820896768,
+     "writable": true
+    }
+   },
+   "detail": "out=ext4, repo=ext4, home=ext4, plan_dir=ext4",
+   "id": "C26",
+   "seconds": 0.001,
+   "status": "PASS",
+   "title": "filesystem type, free space, inodes, writability (siteq, repo, home, plan dirs)"
+  },
+  {
+   "data": {
+    "pid_max": "4194304",
+    "proc": {
+     "dev_match": true,
+     "exists": true,
+     "free_bytes": 0,
+     "fstype": "proc",
+     "inodes_free": 0,
+     "inodes_total": 0,
+     "mount_opts": "rw,nosuid,nodev,noexec,relatime",
+     "mount_point": "/proc",
+     "path": "/proc",
+     "realpath": "/proc",
+     "st_dev": "0:23",
+     "super_opts": "rw",
+     "total_bytes": 0,
+     "writable": false
+    }
+   },
+   "detail": "/proc options default, pid_max 4194304",
+   "id": "C27",
+   "seconds": 0.0,
+   "status": "INFO",
+   "title": "/proc mount options and pid_max"
+  },
+  {
+   "data": {
+    "cupy_dists": [
+     "cupy-cuda12x 12.3.0"
+    ],
+    "gpus": [
+     "NVIDIA GeForce RTX 3090, 560.35.03, 24576 MiB"
+    ],
+    "nvidia_smi_path": "/usr/bin/nvidia-smi",
+    "rc": 0
+   },
+   "detail": "GPUs ['NVIDIA GeForce RTX 3090, 560.35.03, 24576 MiB'], cupy ['cupy-cuda12x 12.3.0'] (R runs use EXPECT_BACKEND=gpu; the chain only records this)",
+   "id": "C28",
+   "seconds": 0.065,
+   "status": "INFO",
+   "title": "GPU and cupy presence (record only, no CUDA context)"
+  },
+  {
+   "data": {
+    "affinity": 16,
+    "cpu_count": 16,
+    "kernel": "5.15.0-139-generic",
+    "launch_tools": {
+     "nohup": true,
+     "screen": false,
+     "setsid": true,
+     "tmux": true
+    },
+    "machine": "x86_64",
+    "ntp_synchronized": "yes",
+    "os_release": "Ubuntu 20.04.6 LTS",
+    "platform": "Linux-5.15.0-139-generic-x86_64-with-glibc2.29"
+   },
+   "detail": "Ubuntu 20.04.6 LTS, cpus 16 (affinity 16), NTP synchronized yes, launch tools nohup,setsid,tmux",
+   "id": "C29",
+   "seconds": 0.055,
+   "status": "INFO",
+   "title": "OS, CPUs, clock sync (record only)"
+  },
+  {
+   "data": {
+    "head": "11a7946748fa4da2cd8e691ef5f7abc02aac2a56",
+    "pycache_mtime_after": null,
+    "pycache_mtime_before": null
+   },
+   "detail": "checkout still at pin and clean",
+   "id": "C99",
+   "seconds": 0.075,
+   "status": "PASS",
+   "title": "pinned checkout untouched after the probe"
+  }
+ ],
+ "counts": {
+  "INFO": 8,
+  "PASS": 25
+ },
+ "euid": 1003,
+ "expect": {
+  "numpy": "1.24.4",
+  "python_minor": "3.8",
+  "scipy": "1.10.1"
+ },
+ "machine": "kgy",
+ "out": "<HOME>/rint_siteq_kgy_20261112",
+ "pin": "11a7946748fa4da2cd8e691ef5f7abc02aac2a56",
+ "plan_dirs": "<HOME>/sdcp",
+ "probe": "rint-siteq-probe-v1",
+ "probe_sha256": "c455c792ba431f4840a4964f48f0c01142d4e05e7c5b5f5f6e3ae3b4b81e1a65",
+ "repo": "<HOME>/dem-siteq-11a794674",
+ "schema": "rint-siteq-result-v1",
+ "seconds": 14.0,
+ "uid": 1003,
+ "utc_end": "2026-11-12T04:43:11Z",
+ "utc_start": "2026-11-12T04:42:57Z"
+}

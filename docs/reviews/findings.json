@@ -17384,6 +17384,16 @@
       "evidence_tests": [
         "CLAUDE.md"
       ]
+    },
+    {
+      "id": "SELF-166",
+      "severity": "P2",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "ibb 건식 (N = 200) job 358667 (11-12 · 1저자 실행 · 생산 lmp_mpi 를 mpirun 없이 1 프로세스 · 덱 묶음 = 핀 11a794674) — 실행기 실행 전 멈춤 rc 3 'LMP -h rc 1' · 배너 = 3d5c00f 정상",
+      "opened_in": "docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh",
+      "title": "G2c′ 샌드박스 실행기 (run_g2cp.sh) 가 -h 머리 줄 확인에서 rc 0 을 요구했다 — LIGGGHTS 3d5c00f 의 -h 는 help() 뒤 error->done() = MPI_Finalize(); exit(1) (lammps.cpp 543–545 · error.cpp 369–379) 라 진짜 실행 파일은 늘 rc 1 → 실행기가 어떤 진짜 LIGGGHTS 로도 팔 하나 돌기 전에 멈춘다 · 시험의 가짜 lmp 도 -h 에 rc 0 을 내서 41 시험 · 내부 반박 리뷰 세 회차가 못 잡았다 (가짜가 진짜 꼴을 옮기지 않음 · SELF-115 와 같은 부류)",
+      "note": "결과 무관 (실행 전 멈춤 · 팔 0 · 예측 · 숫자 기준 · 판정 식 · 허용폭 · 대조기 무변경) · 고침 = 받는 rc 0 → 1 + 도움말 줄 'Command line options:' 요구 (오류 끝 error->all 도 rc 1 이라 가른다 · 거부 쪽) + 가짜 lmp 를 3d5c00f 꼴로 (배너 → 도움말 줄 → rc 1 · 소스 줄을 주석에) · t22 사례 셋 (-h rc 0 · rc 2 · 오류 끝 = rc 1 인데 도움말 없음) · t26 lmp_h_rc 1 기록 · 고치기 전 실행기 29/41 (fail 12 = 실행기 시험 11 이 job 358667 과 같은 멈춤 + t22 = rc 0 을 받아 버림 · 오류 끝 사례의 멈춤 이유가 다름) → 41/41 · 변이 6 중 6 잡음 · 고침 커밋 = 이 항목을 올린 커밋 · claimed_fixed = push 뒤 다음 커밋 · 남은 것 = 이 판 덱 묶음으로 ibb 건식 다시 (진짜 실행 파일 통과는 그때 확인) · 같은 꼴을 막는 법 = 가짜 실행 파일의 꼴 (rc · 화면) 을 소스 줄로 근거 대기"
     }
   ]
 }

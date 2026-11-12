@@ -1,14 +1,15 @@
 #!/bin/bash
 # G2c′ 샌드박스 실행기 (2026-11-10 · 등록 = 메모 docs/reviews/p1_g2c_compare_definition_20261105.md §0 · §5-2 · 결과 0 건 상태에서 씀)
-#   사용:  LMP=<LIGGGHTS 3d5c00f 직렬 실행 파일> bash run_g2cp.sh N OUT      (OUT = 없거나 빈 폴더 · 덮어쓰지 않는다 · 자리 = 아래 'OUT 자리')
+#   사용:  LMP=<LIGGGHTS 3d5c00f 실행 파일 (직렬 · MPI 빌드면 mpirun 없이 = 1 프로세스 · 11-12 ibb)> bash run_g2cp.sh N OUT      (OUT = 없거나 빈 폴더 · 덮어쓰지 않는다 · 자리 = 아래 'OUT 자리')
 #   대조:  python3 -I compare_g2cp.py OUT N                               (따로 · 실행기는 대조하지 않는다)
 #   팔 (이 차례 · 직렬 · 한 번에 하나 · nice -n 19):
 #     A  A2  B  B2  C  = 11-04 run_arms.sh 와 같은 덱 · 같은 인자
 #     BW = BW.liggghts (R 덱 include + write_restart) · 입력 = A 의 주기 파일      → BR = R 덱 · 입력 = BW 가 쓴 restart_rt.bin
 #     CW = BW.liggghts · 입력 = A2 의 명령 파일 (restart_cmd.bin)                 → CR = R 덱 · 입력 = CW 가 쓴 restart_rt.bin
 #   실행 전 멈춤 (rc 3 · OUT 을 만들지 않는다 · 이유 = 화면 stderr):
-#     인자 · N 꼴 (200 이상 · 100 의 배수 — R 덱 덤프 주기 100) · 도구 · LMP 없음 · 파일 아님 · 실행 권한 없음 · `-h` 첫 머리 줄에
-#     "LIGGGHTS (" 없음 (빈 임시 폴더 · -log none) · OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ run_40000/inputs.md5 · BW 덱 꼴 ·
+#     인자 · N 꼴 (200 이상 · 100 의 배수 — R 덱 덤프 주기 100) · 도구 · LMP 없음 · 파일 아님 · 실행 권한 없음 · `-h` (빈 임시 폴더 ·
+#     -log none) 가 3d5c00f 의 정상 끝이 아님 = rc ≠ 1 · 첫 머리 줄 "LIGGGHTS (" 없음 · 도움말 줄 "Command line options:" 없음 (11-12 SELF-166) ·
+#     OUT 비지 않음 · 11-04 덱 일곱 md5 ≠ run_40000/inputs.md5 · BW 덱 꼴 ·
 #     git 작업 트리 안이면 이 폴더에 커밋 안 된 변경 · 새 파일 (등록 커밋 뒤에만 돈다) · OUT 자리
 #   OUT 자리 (G2CPR2-05 · 실제 경로 = readlink -m 으로 본다 · 대조기 out_guard 와 같은 자리 규칙 (dry/ 는 대조기에도 · G2CPR3-02) + 기존 런 폴더 안): 샌드박스 (이) 폴더 · 그 조상 ·
 #     11-04 기록 폴더 (run_40000/ · dry/) 와 그 안 · 기존 런 폴더 안 (OUT 의 조상 폴더에 런 표지 lmp_identity.txt · inputs.md5 —
@@ -68,6 +69,9 @@ TL=${G2CP_TLONG:-1800}; TS=${G2CP_TSHORT:-600}
 [[ "$TL" =~ ^[1-9][0-9]*$ && "$TS" =~ ^[1-9][0-9]*$ ]] || die0 "시간 한도 G2CP_TLONG='$TL' · G2CP_TSHORT='$TS' — 양의 정수 (초)"
 
 # -h 머리 줄 — 빈 임시 폴더에서 · -log none (log.liggghts 를 만들지 않는다 · lammps.cpp 310–319) · 배너 = lammps.cpp 359–361
+# 3d5c00f 의 -h 정상 끝 = help() (첫 줄 "Command line options:" · lammps.cpp 731–732) 뒤 error->done() = MPI_Finalize(); exit(1)
+# (lammps.cpp 543–545 · error.cpp 369–379) → rc 1.  오류 끝 (error->all) 도 rc 1 이라 도움말 줄로 가른다.  (11-12 SELF-166 — 옛 판은
+# rc 0 을 요구해 ibb 건식 job 358667 이 팔 전에 멈췄다 · 시험의 가짜 lmp 가 rc 0 을 내서 시험이 못 잡았다)
 HT=$(mktemp -d) || die0 "mktemp 실패"
 ( cd "$HT" && exec timeout -k 5 60 "$LMPABS" -log none -h ) > "$HT/h.txt" 2>&1 &
 TPID=$!
@@ -75,11 +79,13 @@ wait "$TPID"
 HRC=$?
 TPID=''
 BANNER=$(grep -m1 '^LIGGGHTS (' "$HT/h.txt")
+HHELP=$(grep -c '^Command line options:$' "$HT/h.txt")
 HHEAD=$(head -c 300 "$HT/h.txt" | head -3 | tr '\n' ' ')
 rm -rf "$HT"
 HT=''
-[ "$HRC" -eq 0 ] || die0 "LMP -h rc $HRC — 실행이 안 된다 (머리: ${HHEAD:-없음})"
+[ "$HRC" -eq 1 ] || die0 "LMP -h rc $HRC — 3d5c00f 의 -h 는 도움말 뒤 rc 1 로 끝난다 (lammps.cpp 543–545 · error.cpp 377–378) · 다른 값 = 실행이 안 됐거나 다른 실행 파일 (머리: ${HHEAD:-없음})"
 [ -n "$BANNER" ] || die0 "LMP -h 머리 줄에 'LIGGGHTS (' 가 없다 — LIGGGHTS 실행 파일이 아니다 (머리: ${HHEAD:-없음})"
+[ "${HHELP:-0}" -ge 1 ] || die0 "LMP -h 에 도움말 줄 'Command line options:' 이 없다 — rc 1 이 도움말 끝이 아니라 오류 끝이다 (머리: ${HHEAD:-없음})"
 
 # 덱 — 11-04 그대로 (일곱 md5 = run_40000/inputs.md5) · BW 꼴 = include R + write_restart 한 줄
 REF="$HERE/run_40000/inputs.md5"

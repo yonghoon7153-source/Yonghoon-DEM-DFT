@@ -1,0 +1,1 @@
+umask_start=0022 umask_probe=0022 sighup_ignored=no

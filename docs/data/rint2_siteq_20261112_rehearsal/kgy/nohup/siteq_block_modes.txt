@@ -1,0 +1,6 @@
+# siteq block modes v1 utc=2026-11-12T04:43:14Z runner=non-root (read-only; owner and group shown as classes, no names, no numbers)
+tag=plan kind=dir mode=0775 owner=self group=self-primary group_write=yes other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/sdcp
+tag=ledger kind=missing path=~/sdcp/ca1_ledger
+tag=outbase kind=missing path=~/sdcp/ca1_predict
+tag=planfile kind=missing path=~/sdcp/ca1_plan.json
+tag=siteq_out kind=dir mode=0775 owner=self group=self-primary group_write=yes other_write=no acl_extra=0 acl_default=0 group_others=0 link=no path=~/rint_siteq_kgy_20261112_nohup
