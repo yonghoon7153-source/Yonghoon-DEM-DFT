@@ -226,3 +226,29 @@
 - (18:33Z) 작업 트리 빠른 점검: check_doc_refs = 깨진 참조 없음 · check_review_findings --ban-sweep = 철회값 누수 없음 (12 분).
 - amend_drafts.md 5 판 (0-d 절 · 4-d 절 · ⬜ 같은 부류 범위 밖 질문) · 4 판 사본 amend_drafts_v4.md.
 - 끝-끝 변이 Z1–Z3 (3.11) 띄움 (logs/r3/mut/run_impl_e2e_py311.log).
+- (19:01Z) 끝-끝 변이 Z1–Z3 (3.11 · 사본 609d78ca4) = 3/3 잡힘 (Z5 · Z4) — logs/r3/mut/run_impl_e2e_py311.log.
+- 정리: 지운 사본 = work/ovb_base_repo · ovb_r3_py311 · ovb_r3_py38 · mut4 · blk_home5 · tmpm/* (돌던 내 프로세스 0 확인 뒤 · 다시 만들기 = 같은 절차) ·
+  남김 = 스크립트 (mutate_r3.py · mutlog2json.py · make_gpu_block_v5.py · g5patch · t11patch · off_vs_base.py) · gpu_v5 · logs/r3.
+
+## 2 회차 고침 — 끝 (11-12)
+- 커밋 (작업 트리 · 서명 없음 · push 없음): f8077a51d 시험 먼저 → 4e1e5b6c6 고침 → ac7e1c58d 게이트 배선 · 결과 전 등록 → 8cc3fe462 변이 보강 (G5) →
+  609d78ca4 변이 보강 (T11) = 끝 HEAD (깨끗).
+- 처분: RCP2-01 · 02 · 06 = 고침 · 03 · 05 = 시험 · 04 = 리포 등록 문서 + 블록 · RCP-03 · 04 · 06 남은 몫 = 한정 문장.
+- 변이: N 21/21 · H 29 + 겹 방어 3 · 리뷰어 1 회차 30 + MS7 (동등) · 구현 103 + 겹 방어 3 + W14 (→ 609d78ca4 뒤 잡힘) · Z 3/3 · kgy N + H 같음.
+- 남은 [미확인] · 결정: 실기계 S0 재기 · GPU 길 · 같은 부류 범위 밖 시험 셋 (e2e `_git` · e2e12 · conv_cert) 의 GIT_* = 본 세션 결정.
+
+## 3 회차 (같은 부류 셋 · 본 세션 결정 11-12 밤 = 권고대로) — 19:0xZ
+- 시험 먼저 c0ff22431 (G6 넷 → 일곱) · 고치기 전 git_env 3.11 = 9 PASS · 1 FAIL · kgy 3.8 = 9 · 1 (G6 · 새 셋 × 적대 셋 = 9 자리 실패 · GIT_DIR = V 로 감 ·
+  나머지 둘 = rc 1) — logs/r3/before6_*.log · logs/r4/before_kgy · logs/r3/before6_g6_detail_py311.log (자리별).
+- 봉인 대조 (고치기 전 · logs/r4/seal_recheck.log): 194 CODE_FILES 32 · 사슬 CODE_FILES 20 · 언로딩 키트 SHA256SUMS · 믹서 봉인 · 정책 = 셋 없음.
+  round4 · round5 증거 SHA256SUMS 의 e2e 한 줄 = ZIP 안 사본 (핀 1f9f3607e blob) · 지금 파일과 묶이지 않음.
+- 고침 ea3b13b89 (세 모듈 sys.path 줄 뒤 두 줄 · run_contract.drop_git_env 그대로) · pyflakes 0 (work/lintenv) · 3.8 컴파일 · 만든 pyc 셋 지움.
+  고친 뒤 git_env 10/10 (3.11 · 3.8) · G6 자리 21/21 (logs/r4/after_g6_detail_py311.log).
+- 변이 (사본 work/mut6 = ea3b13b89 · logs/r4/mut): H29 (e2e) 잡힘 G · H30 (e2e12) 안 잡힘 = 겹 (E 가 지움 · 기대 redundant) · H30b (둘 다) 잡힘 ·
+  H31 (conv_cert) 잡힘 — 3.11 · 3.8 같음.  자리별 (detail_*): H29 = e2e 3 자리만 (e2e12 제 줄 작동) · H30 21/21 · H30b = e2e 3 + e2e12 3 · H31 = conv_cert 3.
+  ⚠ FAIL 줄의 bad dict 는 잘려서 찍힌다 (H30b 화면에 e2e12 가 안 보임) → 자리별은 g6_detail 로 셈.
+- 끔 길: 세 파일 = 시험 (게이트 러너 둘만 부름 · 생산 모듈이 안 부름) → 끔 길 ↔ 바탕 다시 안 돌림.
+- GPU 블록 6 판 (gpu_check_block.txt = v6 · v5 사본) · Q11PIN ea3b13b89… · 모듈 sha 859310da 그대로 · heredoc md5 acfeb4b4 그대로 · bash -n · 탭 · CR · ! 0 ·
+  셸 관문 모의 (blk_home6 · 지움) = 관문 통과 → cupy 없음 rc 1 (logs/r4/gpu_block_v6_shell_mock*.{log,json}).
+- amend_drafts.md 6 판 (0-e · 4-e · v5 사본).
+- 다시 돌림 백그라운드 (work/run_r4_all.sh → logs/r4/{py311,kgy}) = git_env · run_contract · e2e · e2e12 · conv_cert.
