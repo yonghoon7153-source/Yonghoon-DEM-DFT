@@ -524,6 +524,13 @@
    "c13446ce-64SUP1.PDF"
   ]
  },
+ "cummins2002_implicit_mpm_granular_newton_krylov": {
+  "figures": 168,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "58d437e1-39._An_implicit_particle-in-cell_method_for_granular_materials.pdf"
+  ]
+ },
  "dang2019_nmc111_secondary_particle_flat_punch_fracture_strength": {
   "figures": 27,
   "generated": "2026-11-12",
