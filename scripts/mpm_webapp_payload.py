@@ -918,13 +918,26 @@ def _cjunc_entry_contract(a):
     _given = [fl for att, _k, fl in CJUNC_CLI if getattr(a, att, None) is not None] \
         + (['--step3-cjunc-rj-limit'] if _lim is not None else []) \
         + (['--step3-cjunc-sv-cf'] if getattr(a, 'step3_cjunc_sv_cf', False) else []) \
-        + (['--step3-cjunc-graph-only'] if getattr(a, 'step3_cjunc_graph_only', False) else [])
+        + (['--step3-cjunc-graph-only'] if getattr(a, 'step3_cjunc_graph_only', False) else []) \
+        + (['--step3-cjunc-store'] if getattr(a, 'step3_cjunc_store', None) is not None else [])
+    a._cj_store = None                                        # ★ 11-12 (Q2) — 원장 저장본 폴더 (끔 = None = 옛 호출 그대로)
     if a._cj_on:
         bad = []
         #  ★ 10-26 B″ (1저자 Q1 (가)) — 조립만 + rasterize-only = 두 출력 꼴이 겹친다 (어느 쪽도 주 해를 안 푼다 · 하나만)
         if getattr(a, 'step3_cjunc_graph_only', False) and getattr(a, 'step3_rasterize_only', ''):
             bad.append(('GRAPH_ONLY_RASTERIZE_ONLY', '--step3-cjunc-graph-only + --step3-rasterize-only — 출력 꼴 둘이 겹친다 (하나만 · 조립만 = 봉인 원천 '
                                                      '기록 · rasterize-only = 상별 셀 원장)'))
+        _cjs_dir = getattr(a, 'step3_cjunc_store', None)
+        if _cjs_dir is not None:                              # ★ 11-12 (Q2) — 원장 저장본 (봉인 원천 = 조립만 은 저장본을 읽지 않는다 · 폴더 꼴)
+            if getattr(a, 'step3_cjunc_graph_only', False):
+                bad.append(('STORE_GRAPH_ONLY', '--step3-cjunc-store + --step3-cjunc-graph-only — 봉인 원천 (조립만) 은 저장본 없이 다시 조립해야 '
+                                                '독립 대조가 된다 (사슬 RunnerGraphSource · 러너도 같이 거부)'))
+            else:
+                try:
+                    import cjunc_store as _cjs_chk
+                    _cjs_chk.Store(_cjs_dir)
+                except ValueError as _e_st:
+                    bad.append(('STORE_PATH', f'--step3-cjunc-store {_cjs_dir!r} — {_e_st}'))
         for att, _k, fl in CJUNC_CLI:
             if getattr(a, att, None) is None:
                 bad.append(('MISSING', f'{fl} 가 없다 — 기본값 없음 (결과 전 선언 · 정량이면 거부 · 숫자 = 등록 R §2-1)'))
@@ -972,6 +985,7 @@ def _cjunc_entry_contract(a):
         if bad:
             raise SystemExit('\n'.join(f'S2_CJUNC_REFUSED|{c}| {w}' for c, w in bad))
         a._cj_req = {k: getattr(a, att) for att, k, _fl in CJUNC_CLI}
+        a._cj_store = getattr(a, 'step3_cjunc_store', None)
         if _lim is not None:
             a._cj_req['rj_limit'] = _lim
         if getattr(a, 'step3_cjunc_sv_cf', False):
@@ -1592,6 +1606,12 @@ def main():
                     help='S2 조립만 — 같은 인자로 접합 계를 조립해 주 계 · SV 반사실 끝 (--step3-cjunc-sv-cf 일 때) 의 가중 그래프 지문만 --out 에 '
                          '쓰고 끝낸다 (CG · 증서 · σ · 매니페스트 없음 · run_contract.cjunc_graph_only_record) · 사슬 봉인 원천 전용 · --step3-cjunc 와만 · '
                          '--step3-rasterize-only 와 동시 = 거부')
+    #  ★ 2026-11-12 (Rint ② Q2 · 1저자 11-12) — 탄소 접합 원장 (기하) 저장본 — 같은 침대 · 격자 · origin · 문턱 · 코드 · 환경 · 기계면 한 번 짓고
+    #    다음 팔이 지문을 대조해 읽는다 (`scripts/cjunc_store.py`) · 계획 · 해 · 산출 바이트 그대로 (회계 = mode) · 조립만 (봉인 원천) 과 동시 = 거부.
+    ap.add_argument('--step3-cjunc-store', default=None, metavar='DIR',
+                    help='S2 탄소 접합 원장 저장본 폴더 (절대 경로 · 있는 폴더 · 소유자 = 이 사용자 · 그룹 · 남 쓰기 없음) — 같은 열쇠 (침대 · 격자 · origin · '
+                         '문턱 · 코드 · 환경 · 기계) 의 원장을 지문 대조 뒤 읽고 없으면 짓고 쓴다 · 계획 (R_j · 법칙 · c) 은 늘 다시 만든다 · 팔 JSON · '
+                         '매니페스트 바이트 그대로 · 어긋난 저장본 = 멈춤 (S2_CJUNC_STORE|INCONSISTENT|) · --step3-cjunc 와만 · 조립만과 동시 = 거부')
     ap.add_argument('--sigma-swcnt', type=float, default=100.0,
                     help='σ_e SWCNT sheath (S/cm) — A14.  VGCF급 lit order ⚠hook: 개별 SWCNT 축방향은 '
                          '1e4-1e5 S/cm급이나 vein-번들 film 유효값은 미앵커.  ⚠ koo2026의 0.20 S/cm은 '
@@ -2455,13 +2475,27 @@ def main():
                                      '연속 중심선 없는 침대 = 거부 (점 · 복셀 인접으로 대신하지 않는다 · 설계 §4-2)')
                 _t_cj = _time.time()
                 _mcj = np.isin(phase, _cjw.ADD_PHASES)
+                #  ★ 11-12 (Rint ② Q2) — 원장 저장본 (켬일 때만 · 끔 = 옛 호출 그대로 · 키워드 없음)
+                _cjs_kw = {}
+                if getattr(a, '_cj_store', None) is not None:
+                    import cjunc_store as _cjs
+                    try:
+                        _cjs_kw = {'store': _cjs.Store(a._cj_store)}
+                    except ValueError as _e_st:
+                        raise SystemExit(f'S2_CJUNC_REFUSED|STORE_PATH| --step3-cjunc-store {a._cj_store!r} — {_e_st}')
                 try:
                     _cj_prep = _cjw.payload_prepare(sid3, lo=_lo3, vox=a.step3_vox, pts=(se[_mcj] - _off) * UM,
                                                     phase=phase[_mcj], fid=_fid_all[_mcj], kind=_kind_all[_mcj],
                                                     cjunc=a._cj_req, sdcp_mod=a._sd_req, ptfe_stamp=a._ptfe_stamp,
-                                                    **({'sv_counterfactual': a._cj_sv_cf} if a._cj_sv_cf is not None else {}))
+                                                    **({'sv_counterfactual': a._cj_sv_cf} if a._cj_sv_cf is not None else {}), **_cjs_kw)
                 except ValueError as _e_cj:
                     raise SystemExit(f'S2_CJUNC_REFUSED|PLAN| {_e_cj}')
+                except RuntimeError as _e_cs:                   # 저장본 어긋남 (`cjunc_store.StoreInconsistent`) = 멈춤 (넓은 except 가 삼키지 않게)
+                    if _cjs_kw and isinstance(_e_cs, _cjs.StoreInconsistent):
+                        raise SystemExit(f'S2_CJUNC_STORE|INCONSISTENT| {_e_cs} — 손으로 고친 · 어긋난 저장본 (지우지 않았다 · 운영자 확인)')
+                    raise
+                if isinstance(_cj_prep.get('store'), dict):
+                    print(_cjs.outcome_line(_cj_prep['store']), flush=True)
                 _cjc = _cj_prep['counts']
                 print(f"  STEP3: ★ S2 탄소 접합 — instance {_cjc['n_instances']:,} (간선 {_cjc['n_edge']:,} · 축약 {_cjc['n_contract']:,} · "
                       f"미실현 {_cjc['n_unrealized']:,} · 긴 접촉 {_cjc['n_long']:,} · SDCP 근접 {_cjc['n_sdcp_near']:,}) · "

@@ -701,6 +701,8 @@ CODE18 = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stamp_co
           'sdcp_gain_vox015_8arm.sh') + CODE_NEW6
 #: ★ 10-27 묶음 C2b — 같은 판 대조 파일 + 첫 풀이 끝 표지 감싸개 (러너 시도 꼴이 부른다 · 19 · 이름은 옛 그대로 CODE18)
 CODE18 = CODE18 + ('rint_first_result.py',)
+#: ★ 11-12 (Rint ② Q2) — + 탄소 접합 원장 저장본 모듈 (payload 가 `--step3-cjunc-store` 일 때 원장을 읽고 쓴다 · 20 · 이름은 옛 그대로 CODE18)
+CODE18 = CODE18 + ('cjunc_store.py',)
 R_PLAN_REL = 'docs/data/rint2_s0_sbe_x/rint_r_plan.json'          # S0 단계 2 보고의 r_plan.path (리포 상대 · 고정물 커밋 안 자리)
 GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false', '-c', 'init.defaultBranch=main')
 
@@ -4577,7 +4579,7 @@ def t_D09():
     return c_case('D09', 'CODE_PIN_MISMATCH', s2=s0_report(2, 'D09', mutate=_d_set_digest('step3_sigma.py')))
 
 
-@check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 19 (★ 10-27 묶음 C2b = + 감싸개 · 10-25 묶음 B 18 · 옛 12 · 사슬 폴더 = 고정물 '
+@check('D10', '정상 기록 — 사다리 · 예측 요약 code = git 신원 (dirty False) + 코드 파일 지문 20 (★ 11-12 Q2 = + 저장본 · 10-27 묶음 C2b = + 감싸개 · 10-25 묶음 B 18 · 옛 12 · 사슬 폴더 = 고정물 '
               'scripts 파일 sha256 · 러너 폴더 · 러너 sha256) · S0 단계 1 기록 (보고 sha256 · 지문 일곱 · S0 계획 sha256) · 기계 이름표 '
               '(★ 10-27 묶음 C1 — 필수 · 옛 = null) · 세 단계 지문 같음')
 def t_D10():
@@ -4589,7 +4591,7 @@ def t_D10():
             for nm in getattr(RR, 'CODE_FILES', ())]
     rec1 = (s.get('s0_reports') or {}).get('stage1') or {}
     names1 = {x.get('file') for x in rec1.get('file_digests') or []}
-    ok = (len(files) == len(CODE18) == 19 and files == want and all(x['sha256'] for x in files)     # ★ 10-27 묶음 C2b — + 감싸개 (19)
+    ok = (len(files) == len(CODE18) == 20 and files == want and all(x['sha256'] for x in files)     # ★ 10-27 묶음 C2b — + 감싸개 (19) · ★ 11-12 Q2 + 저장본 (20)
           and c.get('runner_sha256') == hashlib.sha256(Path(FX['runner']).read_bytes()).hexdigest()
           and isinstance(c.get('runner_files'), list) and (c.get('chain') or {}).get('dirty') is False
           and rec1.get('sha256') == hashlib.sha256(Path(FX['s1']).read_bytes()).hexdigest() and rec1.get('plan_sha256') == FX['s0_sha']
@@ -4672,7 +4674,7 @@ def t_D13():
     return (r['rc'] == 3 and stop_code(r) == 'MAIN_NOT_DONE' and n_calls(r['world']) == 0, (r['rc'], stop_code(r), n_calls(r['world'])))
 
 
-@check('D14', '같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (★ 10-27 묶음 C2b = 19 (+ 감싸개) · 10-25 묶음 B = 18 · 옛 12) ⊇ 일곱 + 사슬 · 러너 · '
+@check('D14', '같은 판 파일 목록 — 사슬 S0_SAME_FILES = 등록 R §2-1b 일곱 · CODE_FILES (★ 11-12 Q2 = 20 (+ 저장본) · 10-27 묶음 C2b = 19 (+ 감싸개) · 10-25 묶음 B = 18 · 옛 12) ⊇ 일곱 + 사슬 · 러너 · '
               '증서 · 계약 · SV 증거 + 판정문 F1 의 모듈 6 (ca_ext_cjunc · additives · se_material · lens_geometry · step4_dyn · rint_cycle_traj) = '
               '시험 쪽 목록 그대로 · S0 보고 code.file_digests 가 일곱을 다 싣는다 (ca_s0_census._code_info · 옛 = 다섯)')
 def t_D14():
@@ -4682,7 +4684,7 @@ def t_D14():
     names = {x['file'] for x in S0m._code_info()['file_digests']}
     need = (set(S0_SAME7) | {'rint_r_chain.py', 'sdcp_gain_vox015_8arm.sh', 'step3_conv_cert.py', 'run_contract.py', 'ca_ext_svcf.py'}
             | set(CODE_NEW6))
-    return (len(same) == 7 and set(same) == set(S0_SAME7) and need <= set(code) and len(set(code)) == len(code) == 19
+    return (len(same) == 7 and set(same) == set(S0_SAME7) and need <= set(code) and len(set(code)) == len(code) == 20
             and set(code) == set(CODE18) and set(S0_SAME7) <= names, (same, code, sorted(names)))
 
 

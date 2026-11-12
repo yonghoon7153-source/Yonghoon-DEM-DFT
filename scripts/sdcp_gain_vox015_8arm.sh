@@ -580,6 +580,33 @@ fi
 #    봉인 원천 (`rint_r_chain.RunnerGraphSource`) 전용.  끔 (기본) = 0 = 옛 경로 그대로.
 CJGO=0
 [ "${CJUNC_GRAPH_ONLY:-}" = "1" ] && CJGO=1
+#  ★ 2026-11-12 (Rint ② Q2 · 1저자 11-12) — 탄소 접합 원장 (기하) 저장본 폴더 `CJUNC_STORE=<절대 경로>` → payload `--step3-cjunc-store` (같은 열쇠 =
+#    침대 · 격자 · origin · 문턱 · 코드 · 환경 · 기계의 원장을 지문 대조 뒤 읽고 없으면 짓고 쓴다 · `scripts/cjunc_store.py`).  영수증 · OUTDIR ·
+#    팔 이름 · 팔 JSON 바이트 그대로 (정본 표 `RUNNER_CA_EXT_ENV` 밖 — 결과를 바꾸지 않는 길).  발사 전 거부 = CJUNC=1 없이 · 조립만 (봉인 원천은
+#    저장본 없이 다시 조립해야 독립 대조) · 절대 경로 아님 · 허용 밖 글자 (생성 스크립트에 박힌다 — 개행 · 빈칸 · 따옴표 · `$`) · 폴더 없음.
+CJS_FLAG=""
+if [ -n "${CJUNC_STORE:-}" ]; then
+  if [ "${CJUNC:-}" != "1" ]; then
+    echo "[p2] ABORT — CJUNC_STORE 는 CJUNC=1 일 때만 뜻이 있다 (탄소 접합 원장 저장본 · 조용한 no-op 금지)"; exit 2
+  fi
+  if [ "$CJGO" = 1 ]; then
+    echo "[p2] ABORT — CJUNC_STORE + CJUNC_GRAPH_ONLY=1 — 봉인 원천 (조립만) 은 저장본을 읽지 않는다 (독립 재조립 대조)"; exit 2
+  fi
+  case "$CJUNC_STORE" in
+    /*) ;;
+    *) echo "[p2] ABORT — CJUNC_STORE 는 절대 경로여야 한다 ($CJUNC_STORE)"; exit 2;;
+  esac
+  case "$CJUNC_STORE" in
+    *[!A-Za-z0-9._/-]*) echo "[p2] ABORT — CJUNC_STORE 에 허용 밖 글자가 있다 (영문 · 숫자 · . _ / - 만 · 생성 스크립트에 박힌다)"; exit 2;;
+  esac
+  if printf '%s' "$CJUNC_STORE" | LC_ALL=C grep -q '[^A-Za-z0-9._/-]'; then
+    echo "[p2] ABORT — CJUNC_STORE 에 허용 밖 글자가 있다 (영문 · 숫자 · . _ / - 만)"; exit 2
+  fi
+  if [ ! -d "$CJUNC_STORE" ]; then
+    echo "[p2] ABORT — CJUNC_STORE 폴더가 없다 ($CJUNC_STORE) — 운영자가 umask 022 셸에서 만든다 (payload 가 소유자 · 권한을 다시 본다)"; exit 2
+  fi
+  CJS_FLAG=" --step3-cjunc-store $CJUNC_STORE"
+fi
 OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${NG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
@@ -842,7 +869,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA${AS_FLAG}${SD_SIG_FLAG} --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$NG_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA${AS_FLAG}${SD_SIG_FLAG} --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$NG_FLAG$CJS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$ON" > "$SHF.body" ) || return 1
   #  ★ 2026-10-27 묶음 C2b — 시도 꼴: 킷 payload 줄 `python3 "$SCR/mpm_webapp_payload.py"` → 감싸개 (`rint_first_result.py <표지> <payload> …` · 같은
   #    프로세스 · 첫 σ 직후 표지) · 그 꼴이 없으면 (킷 줄이 다르다) 끼울 수 없으니 돌기 전에 선다

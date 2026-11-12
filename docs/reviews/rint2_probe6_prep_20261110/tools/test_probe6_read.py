@@ -2098,7 +2098,8 @@ FAKE_CUPYX = (
     ('cupyx/__init__.py', ''),
     ('cupyx/scipy/__init__.py', ''),
     ('cupyx/scipy/sparse/__init__.py', 'from scipy.sparse import csr_matrix, diags  # noqa: F401\n'),
-    ('cupyx/scipy/sparse/linalg/__init__.py', 'from scipy.sparse.linalg import cg  # noqa: F401\n'),
+    #  ★ 11-12 (Rint ② Q11) — 생산 GPU 길이 Jacobi 전처리를 벡터 곱 연산자 (`LinearOperator`) 로 넘긴다 → 대역도 그 이름을 잇는다 (scipy 의 같은 이름)
+    ('cupyx/scipy/sparse/linalg/__init__.py', 'from scipy.sparse.linalg import cg, LinearOperator  # noqa: F401\n'),
 )
 #: 가짜 킷의 payload 줄 (생산 킷 꼴: `scripts/mpm_input_from_case.py` 가 `--step3-gpu` 를 늘 넣는다)
 FAKE_KIT_SH = '#!/usr/bin/env bash\npython3 "$SCR/mpm_webapp_payload.py" --step3-gpu --out mpm_payload.json\n'

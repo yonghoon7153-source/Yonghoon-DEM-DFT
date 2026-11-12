@@ -11,7 +11,8 @@
   Z2  팔 JSON 바이트 (요약 arms_read sha256 = 파일 독립 계산) — 사다리 둘 · 예측 · 단위의 모든 런 · 모든 팔이 끔 = 켬
   Z3  판정 공개 칸 (이름 · 상태 · 표지 · 막는 표지 · 문장 · 보정) 같음 · 판정 결과 JSON 바이트 같음 · 사다리 · 예측 요약의 결과 칸 같음
   Z4  봉인 원천 (판정 · 예측의 RunnerGraphSource 조립만 런) 은 저장본을 받지 않는다 — 조립만 payload 인자에 `--step3-cjunc-store` 없음 · 켬 길의
-      생산 payload 인자에는 늘 있음 · 원천 런 상태 ok · SV 귀속 verified (저장본으로 지은 팔의 그래프 = 저장본 없이 다시 조립한 그래프)
+      생산 payload 인자에는 늘 있음 · 예측 · 판정의 원천 런 상태 ok · 판정 표지에 SV_UNCHECKED 없음 (저장본으로 지은 팔의 그래프 = 저장본 없이
+      다시 조립한 그래프 — 요약의 팔 공개 칸 ARM_PUBLIC 에는 sv_graph 가 없어 판정 표지로 본다)
   Z5  저장본 폴더 — 켬 길 뒤 파일 ≥ 2 (SBE · DBE 열쇠) · 이름 · 0444 · 임시 파일 없음 · 켬 길 화면 = 지어 씀 / 적중 줄 · 끔 길 = 저장본 줄 없음 ·
       요약 cjunc_store True (끔 = 칸 없음)
   Z6  적중 런 (켬 폴더 · 사다리 P0 · 원장 없이) — 모든 payload = 적중 줄 · 새 파일 없음 · 팔 JSON 바이트 = 끔 길 사다리 P0
@@ -144,8 +145,7 @@ def flow(tag, W, store):
     call(['--stage', 'predict', '--ladders', dirs['P0'], dirs['P1'], '--runner', runner, '--root', ws, '--registration', rp,
           '--max-hours', E.E2E_MAXH, '--out', ubase, '--machine', E.E2E_MACH, '--ledger', led_u, '--attempt', str(nu), '--unit', UNIT] + xs)
     dirs['unit'] = os.path.join(ubase, f'attempt_{nu}')
-    sums['unit'] = (jload(os.path.join(dirs['unit'], 'predict_summary.json'))
-                    or jload(next(iter(sorted(glob.glob(os.path.join(dirs['unit'], '*_summary.json')))), '')) or {})
+    sums['unit'] = jload(os.path.join(dirs['unit'], RR.UNIT_SUMMARY['unit'])) or {}
     vdir = os.path.join(TD, 'runs', tag, 'verdict')
     rcv, sov = call(['--stage', 'verdict', '--runs', dirs['P0'], dirs['P1'], dirs['pred'], '--root', ws, '--registration', rp,
                      '--ledger', led, '--out', vdir])
@@ -246,13 +246,13 @@ def run_all():
     go = [t for t in on['argv'].values() if '--step3-cjunc-graph-only' in t]
     prod = [t for t in on['argv'].values() if '--step3-cjunc-graph-only' not in t and '--step3-cjunc' in t]
     gsrc = ((on['sums']['pred'].get('sv_graph_source') or {}).get('runs') or [])
-    gstates = [((a.get('sv_graph') or {}).get('state')) for r in on['sums']['pred'].get('runs') or [] for a in r.get('arms_read') or []
-               if a.get('sv_graph') is not None]
+    vg = ((jload(os.path.join(on['vdir'], 'verdict_graph_src.json')) or {}).get('runs') or [])
     chk('Z4 봉인 원천 (조립만 런) 은 저장본을 받지 않는다 — 켬 길의 조립만 payload 인자 (≥ 1) 에 --step3-cjunc-store 없음 · 생산 payload 인자 (≥ 1) '
-        '에는 늘 있음 · 예측 원천 런 상태 ok · SV 귀속 verified (저장본으로 지은 팔 그래프 = 저장본 없이 다시 조립한 그래프)',
+        '에는 늘 있음 · 예측 · 판정의 원천 런 (≥ 1) 상태 ok · 판정 표지에 SV_UNCHECKED 없음 (저장본으로 지은 팔의 그래프 = 저장본 없이 다시 조립한 그래프)',
         go and prod and not any('--step3-cjunc-store' in t for t in go) and all('--step3-cjunc-store' in t for t in prod)
-        and gsrc and all(g.get('status') == 'ok' for g in gsrc) and gstates and all(s == 'verified' for s in gstates),
-        (len(go), len(prod), [g.get('status') for g in gsrc], gstates))
+        and gsrc and all(g.get('status') == 'ok' for g in gsrc) and all(g.get('status') == 'ok' for g in vg)
+        and 'SV_UNCHECKED' not in (vn.get('flags') or []),
+        (len(go), len(prod), [g.get('status') for g in gsrc], [g.get('status') for g in vg], vn.get('flags')))
     lines_on = store_lines(on['logs'])
     lines_off = store_lines(off['logs'])
     gs_lines = store_lines([p for p in on['logs'] if os.sep + 'graph_src' + os.sep in p or os.path.basename(p).startswith('G')])

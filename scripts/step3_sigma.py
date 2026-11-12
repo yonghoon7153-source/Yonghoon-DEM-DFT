@@ -566,10 +566,16 @@ def _solve_cg(L, b, x0=None, rtol=None):
         try:
             import cupy as cp
             import cupyx.scipy.sparse as cxs
-            from cupyx.scipy.sparse.linalg import cg as cg_gpu
+            from cupyx.scipy.sparse.linalg import cg as cg_gpu, LinearOperator as _LinOp
             Lg = cxs.csr_matrix(L.astype(np.float64))
             bg = cp.asarray(b, dtype=np.float64)
-            Mg = cxs.diags(1.0 / cp.asarray(diag))
+            #  ★ 2026-11-12 (Rint ② Q11 · 1저자 11-12) — 같은 Jacobi (같은 수 1/diag · 같은 정지) 를 **표현만** 벡터 곱 연산자로.  옛 꼴
+            #    `cxs.diags(1/diag)` (dia_matrix) 는 cupyx cg 의 `_make_system` 이 MatrixLinearOperator 로 감싸 적용할 때마다 `tocsc().tocsr()`
+            #    변환 뒤 곱했다 (cupy 12.3.0 `_dia.py` · 합성 벤치 반복 시간의 약 75 % · kgy · gabia 반복당 3.40–3.79 배 · 200 반복 해 비트 같음 —
+            #    `docs/reviews/rint2_time_reestimate_20261111/bench/`).  matvec 은 **늘 새 배열** (cg 첫 반복 `p = z` 별칭 — 제자리 버퍼 금지) ·
+            #    dtype 을 주어 탐침 호출 없음 · 기록 `precond` = 'jacobi' 그대로 (종류가 같다) · 시험 `scripts/test_step3_gpu_precond.py`.
+            _dinv = 1.0 / cp.asarray(diag)
+            Mg = _LinOp(Lg.shape, matvec=lambda _r: _dinv * _r, dtype=np.float64)
             _x0g = {} if x0 is None else {'x0': cp.asarray(x0, dtype=np.float64)}
             try:
                 xg, info = cg_gpu(Lg, bg, tol=_rt, maxiter=CG_MAXITER, M=Mg, **_x0g, **_cbk)

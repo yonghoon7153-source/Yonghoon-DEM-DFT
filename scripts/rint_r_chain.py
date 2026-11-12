@@ -336,7 +336,8 @@ CODE_FILES = ('rint_r_chain.py', 'run_contract.py', 'ca_ext_svcf.py', 'sr01_stam
               'ca_s0_census.py', 'ptfe_face_alpha.py', 'step3_sigma.py', 'mpm_webapp_payload.py', 'fibre_segment_raster.py',
               'sdcp_gain_vox015_8arm.sh', 'ca_ext_cjunc.py', 'additives.py', 'se_material.py', 'lens_geometry.py', 'step4_dyn.py',
               'rint_cycle_traj.py',
-              'rint_first_result.py')      # ★ 10-27 묶음 C2b — payload 프로세스 안 첫 풀이 끝 표지 감싸개 (러너 시도 꼴이 부른다)
+              'rint_first_result.py',      # ★ 10-27 묶음 C2b — payload 프로세스 안 첫 풀이 끝 표지 감싸개 (러너 시도 꼴이 부른다)
+              'cjunc_store.py')            # ★ 11-12 (Rint ② Q2) — 탄소 접합 원장 저장본 (payload 가 `--step3-cjunc-store` 일 때 원장을 읽고 쓴다)
 RUNNER_NAME = 'sdcp_gain_vox015_8arm.sh'     # 등록 R §10 (0) 의 러너 — 한 단계 안 러너 파일 = 사슬 폴더의 이 파일 (★ 10-25 · Q2 (가) ③)
 #: ★ 10-25 묶음 B (RCA2-02 · Q2 (가) ⑤ · Q9 설계 개정 4 Q3 · R4-10) — 환경 지문의 같음 단위 (python 부 판 · numpy · scipy 판 문자열 정확히)
 ENV_UNIT_KEYS = RC.ENV_UNIT_KEYS                             # ★ 10-26 B″ — 정본 = run_contract (payload 조립만 출력과 같은 칸 · 같은 이름)
@@ -5607,11 +5608,34 @@ def record_outdir(rr):
     return name + run_outdir_suffix(n, al)
 
 
+def cjunc_store_dir_problem(p):
+    """★ 11-12 (Rint ② Q2) — `--cjunc-store` 폴더 꼴 (payload `cjunc_store.Store` · 러너 CJUNC_STORE 거부와 같은 규칙) → 사유 글 | None."""
+    if not isinstance(p, str) or not os.path.isabs(p):
+        return '절대 경로여야 한다'
+    if not re.fullmatch(r'[A-Za-z0-9._/-]+', p):
+        return '영문 · 숫자 · . _ / - 글자만 (러너가 생성 스크립트에 박는다)'
+    try:
+        st = os.stat(p)
+    except OSError:
+        return '있는 폴더여야 한다 (운영자가 umask 022 셸에서 만든다)'
+    if not stat.S_ISDIR(st.st_mode):
+        return '폴더여야 한다'
+    if st.st_mode & 0o022:
+        return f'그룹 · 남이 쓸 수 없어야 한다 (모드 {oct(st.st_mode & 0o777)} · 단일 작성자)'
+    if hasattr(os, 'getuid') and st.st_uid != os.getuid():
+        return f'이 사용자 소유여야 한다 (소유자 {st.st_uid})'
+    return None
+
+
 class Runner:
-    def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R', machine=None):
+    def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R', machine=None,
+                 cjunc_store=None):
         self.runner, self.root, self.out = Path(runner), Path(root), Path(out)
         self.plan, self.variant, self.deadline, self.contract, self.dry, self.prefix = plan, variant, deadline, contract, dry, prefix
         self.machine = machine               # ★ 10-27 묶음 C1a (C6 #15 · Q11) — 런 기록마다 기계 이름표 (단계 `--machine` · 판정이 대조)
+        #  ★ 11-12 (Rint ② Q2) — 탄소 접합 원장 저장본 폴더 (`--cjunc-store` · 생산 런 env CJUNC_STORE · None = 끔 = 옛 env 그대로) — 봉인 원천
+        #    (`RunnerGraphSource`) 은 이 값을 받지 않는다 (독립 재조립)
+        self.cjunc_store = None if cjunc_store is None else str(cjunc_store)
         parent = dict(os.environ if parent_env is None else parent_env)
         self.scrubbed = sorted(k for k in parent if ENV_SCRUB_RE.match(k) or k in ENV_SCRUB_NAMES)
         self.env_base = {k: v for k, v in parent.items() if k not in self.scrubbed}
@@ -5622,7 +5646,10 @@ class Runner:
         self.graph_src = None                # ★ 10-26 B″ (Q1 (가)) — SV 끝 그래프 봉인 원천 (`RunnerGraphSource` · 단계가 정한다 · 없음 = 미확인)
 
     def env_delta(self, req, outdir):
-        return runner_env_delta(self.plan, self.variant, req, outdir)
+        d = runner_env_delta(self.plan, self.variant, req, outdir)
+        if self.cjunc_store is not None:                     # ★ 11-12 (Q2) — 생산 팔만 (끔 = 칸 없음)
+            d['CJUNC_STORE'] = self.cjunc_store
+        return d
 
     def run(self, kit, role, law, c, rj, arms, sv_cf=False):
         """런 하나 → 팔 기록 목록.  `arms` = 팔 수 (ARMS · 0..N−1) 또는 팔 번호 튜플 (ARM_LIST · 예 ORIGIN_ARMS) · sv_cf = SV 반사실 켬.
@@ -5812,6 +5839,7 @@ class RunnerGraphSource:
         arm = int(arm)
         greq = dict(req, arms=1, arm_list=(None if arm == 0 else [arm]))
         d = runner_env_delta(plan, req.get('variant'), greq, outdir)
+        d.pop('CJUNC_STORE', None)                           # ★ 11-12 (Q2) — 봉인 원천은 원장 저장본을 읽지 않는다 (독립 재조립 · 러너 · payload 도 거부)
         d.update(GRAPH_ONLY_ENV)
         return d
 
@@ -6556,6 +6584,8 @@ def stage_ladder(a, contract):
     s['attempt'] = att.public() if att is not None else None
     s.update({'law': a.law, 'variant': a.variant, 'kit': a.kit or SBE_KIT, 'runs': [], 'ladder': None, 'env_scrubbed': [],
               'after_main': None, 'bed': None, 'sv_graph_source': None, 'noop': None})
+    if getattr(a, 'cjunc_store', None) is not None:          # ★ 11-12 (Q2) — 원장 저장본 켬 (끔 = 칸 없음 = 옛 요약 바이트)
+        s['cjunc_store'] = True
     ran, chain_exc = False, None
     try:
         if not _same(a.target, TARGET_SBE_MS) or a.law not in LAWS or (a.kit or SBE_KIT) != SBE_KIT or a.variant == 'SVORDER':
@@ -6592,7 +6622,7 @@ def stage_ladder(a, contract):
         s['bed'] = bed_problem(s['s0_reports'], a.root, (SBE_KIT,))
         rcls, rkw = (att.runner_cls(), att.runner_kw()) if att is not None else (Runner, {})   # ★ 10-27 묶음 C1b-2 — 재실행 = ResumeRunner
         rn = rcls(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run, prefix='L',
-                  machine=a.machine, **rkw)
+                  machine=a.machine, cjunc_store=getattr(a, 'cjunc_store', None), **rkw)
         s['resume'] = getattr(rn, 'resume', None)
         rn.s0_grid = s0_grid_seed(s['s0_reports'])
         rn.s0_census = s0_census_seed(s['s0_reports'])
@@ -6758,6 +6788,8 @@ def stage_predict(a, contract):
     s['attempt'] = att.public() if att is not None else None
     s.update({'variant': a.variant, 'kit': a.kit or DBE_KIT, 'runs': [], 'ladders': {}, 'checks': None, 'origin': None,
               'env_scrubbed': [], 'after_main': None, 'sv_cf': None, 'bed': None, 'sv_graph_source': None})
+    if getattr(a, 'cjunc_store', None) is not None:          # ★ 11-12 (Q2) — 원장 저장본 켬 (끔 = 칸 없음 = 옛 요약 바이트)
+        s['cjunc_store'] = True
     if kind is not None:
         nm = a.unit if kind == 'unit' else a.point
         u_c, u_law, u_rr = unit_parse(nm)
@@ -6800,7 +6832,7 @@ def stage_predict(a, contract):
         s['bed'] = bed_problem(s0reps, a.root, (SBE_KIT, DBE_KIT))
         rcls, rkw = (att.runner_cls(), att.runner_kw()) if att is not None else (Runner, {})   # ★ 10-27 묶음 C1b-2 — 재실행 = ResumeRunner
         rn = rcls(a.runner, a.root, out, plan, a.variant, time.time() + a.max_hours * 3600.0, contract, dry=a.dry_run,
-                  prefix=('P' if kind is None else UNIT_PREFIX), machine=a.machine, **rkw)
+                  prefix=('P' if kind is None else UNIT_PREFIX), machine=a.machine, cjunc_store=getattr(a, 'cjunc_store', None), **rkw)
         s['resume'] = getattr(rn, 'resume', None)
         rn.sid_reg = sid_reg
         rn.s0_grid = s0_grid_seed(s0reps)
@@ -8584,8 +8616,17 @@ def main(argv=None, contract=None):
     ap.add_argument('--expand', default=None, help='predict --point · --merge — 첫 합치기의 결정 기록 (expansion.json · 넘침 점 · 끝 합치기)')
     ap.add_argument('--merge', nargs='+', default=None, help='predict — 합치기 (단위 · 넘침 점 시도 폴더 · 그 바탕 · --ledger 와 · --attempt 없이 · 넘침 있으면 '
                                                              'rc 4 + expansion.json · 끝 합치기 = --expand)')
+    ap.add_argument('--cjunc-store', default=None, help='ladder · predict (합치기 아님) — 탄소 접합 원장 (기하) 저장본 폴더 (절대 경로 · 있는 폴더 · '
+                    '이 사용자 소유 · 그룹 · 남 쓰기 없음 · 글자 = 영문 · 숫자 · . _ / -) → 생산 런 env CJUNC_STORE → payload --step3-cjunc-store '
+                    '(같은 열쇠의 원장을 지문 대조 뒤 읽고 없으면 짓고 쓴다 · 팔 JSON 바이트 그대로) · 봉인 원천 (조립만) 은 받지 않는다 · ★ 11-12 Q2')
     a = ap.parse_args(argv)
     contract = RealContract() if contract is None else contract
+    if a.cjunc_store is not None:                            # ★ 11-12 (Rint ② Q2) — 원장 저장본 (런을 도는 단계만 · 폴더 꼴 = payload `cjunc_store.Store` 와 같은 규칙)
+        if a.stage not in ('ladder', 'predict') or a.merge:
+            ap.error('--cjunc-store 는 --stage ladder · predict (런을 도는 단계 · 합치기 아님) 에서만 — 판정 · 다시 판정 · 봉인 원천은 저장본을 읽지 않는다')
+        _why = cjunc_store_dir_problem(a.cjunc_store)
+        if _why:
+            ap.error(f'--cjunc-store 는 {_why} ({a.cjunc_store!r})')
     if a.show_results and a.stage != 'verdict':
         ap.error('--show-results 는 --stage verdict 에서만 (등록 R §4-1 — 판정에 쓰는 런이 다 끝난 뒤 한 번)')
     if a.after_main and not a.variant:

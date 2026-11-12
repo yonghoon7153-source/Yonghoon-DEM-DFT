@@ -28,6 +28,9 @@ import math
 import numpy as np
 
 import carbon_junction as CJ
+#  ★ 11-12 (Rint ② Q2) — 원장 저장본 모듈은 접합 런마다 불러 둔다 (저장본 켬 · 끔의 매니페스트 `exec_env` 로드 모듈 집합 · 내용 해시가 같게 —
+#    끔 런이 이 모듈을 안 부르면 켬 런과 팔 JSON 바이트가 그 칸에서 갈린다 · 재실행 바이트 대조 `ResumeRunner`) · payload_prepare 의 store 형 검사.
+import cjunc_store as CJS
 
 WIRING_VERSION = 'b6-cjunc-payload-v1'
 SUB_CJUNC = 'cjunc'
@@ -210,12 +213,15 @@ def sdcp_mod_evidence_record(*, n_sdcp_near, n_contracted_by_c):
             's3_discriminating': bool(int(n_sdcp_near) > 0), 'label': LABEL_SDCP}
 
 
-def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None, ptfe_stamp, sv_counterfactual=None):
+def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None, ptfe_stamp, sv_counterfactual=None, store=None):
     """payload 한 런의 S2 (+ S3) 준비 — 원장 (기하) → 정량 계획.  cjunc = 선언 dict (`REQUEST_KEYS_CJUNC`) · sdcp_mod = {'c': c} | None.
     거부 사유가 하나라도 있으면 ValueError (조립 전 · CG 0 · payload 가 구조화 사유로 멈춘다).
     ★ Z3 — `cjunc['rj_limit']` ('inf' · 'zero') = 극한 런 (사다리 진단) — 계획은 `allow_rj_limits` · 원장 거부 사유는 정량 런과 같게 막는다.
     ★ 10-21 (D · 등록 R §5-6) — sv_counterfactual = SV 반사실 노브 (`carbon_junction.cjunc_plan` 에 그대로 · None = 끔 = 옛 호출 그대로) ·
-      증거 칸 (요청 · 투영) = D 모듈 `ca_ext_svcf` (payload 가 블록 뒤에 싣는다)."""
+      증거 칸 (요청 · 투영) = D 모듈 `ca_ext_svcf` (payload 가 블록 뒤에 싣는다).
+    ★ 11-12 (Rint ② Q2 · 1저자 11-12) — store = 원장 저장본 (`cjunc_store.Store` · None = 끔 = 옛 호출 그대로 · 반환 칸 그대로) — 원장 (기하) 만
+      읽거나 짓고 쓴다 · 계획은 늘 여기서 다시 만든다 · 켬이면 반환에 'store' (저장본 기록 · payload 화면 한 줄) 하나 더 (매니페스트 밖) ·
+      어긋난 저장본 = `cjunc_store.StoreInconsistent` 그대로 (payload 가 멈춘다)."""
     _unk = sorted(k for k in cjunc if k not in REQUEST_KEYS_CJUNC + ('rj_limit',))
     if _unk:
         raise ValueError(f'모르는 접합 선언 칸 {_unk} (선언 칸 = {REQUEST_KEYS_CJUNC} + rj_limit)')
@@ -223,7 +229,15 @@ def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None
                                  **{k: cjunc.get(k) for k in REQUEST_KEYS_CJUNC})
     lim = prot.get('rj_limit')
     sdp = None if sdcp_mod is None else sdcp_mod_protocol_record(c=sdcp_mod.get('c'), tol_sj_um=prot['tol_ff_um'])
-    reg = CJ.cjunc_registry(sid, lo, vox, pts, phase, fid, kind, **{k: prot[k] for k in REGISTRY_THRESHOLD_KEYS})
+    if store is not None and not isinstance(store, CJS.Store):
+        raise TypeError(f'store = {type(store).__name__} — cjunc_store.Store 만 (원장 저장본 · None = 끔)')
+    _rthr = {k: prot[k] for k in REGISTRY_THRESHOLD_KEYS}    # 원장 문턱 (옛 호출의 키워드 그대로 · 아래 `_thr` = 원장이 돌려준 값과 다른 이름)
+    _st = None
+    if store is None:
+        reg = CJ.cjunc_registry(sid, lo, vox, pts, phase, fid, kind, **_rthr)
+    else:
+        reg, _st = store.get_or_build(lambda: CJ.cjunc_registry(sid, lo, vox, pts, phase, fid, kind, **_rthr),
+                                      sid=sid, lo=lo, vox=vox, pts=pts, phase=phase, fid=fid, kind=kind, thresholds=_rthr)
     if _jsonable(reg['rules']) != prot['rules']:
         raise ValueError('원장 규칙 판 ≠ protocol 정본 (carbon_junction 이 이 배선 뒤 바뀌었다 · 다른 판 섞임 거부)')
     _thr = _jsonable(reg['thresholds'])
@@ -244,10 +258,13 @@ def payload_prepare(sid, *, lo, vox, pts, phase, fid, kind, cjunc, sdcp_mod=None
         raise ValueError(str(e)) from None
     if plan['rejections']:
         raise ValueError('정량 거부 사유 — ' + ' · '.join(f"{x.get('code')}(n={x.get('n')})" for x in plan['rejections']))
-    return {'plan': plan, 'protocol': prot, 'sdcp_protocol': sdp,
-            'fp': {'registry': reg['fp']['registry'], 'sid': reg['fp']['sid'], 'plan_rows': plan['fp_rows'],
-                   'centreline': reg['fp']['centreline'], 'membership': reg['fp']['membership']},
-            'counts': _jsonable(plan['record']['counts']), 'census': _jsonable(reg['census'])}
+    out = {'plan': plan, 'protocol': prot, 'sdcp_protocol': sdp,
+           'fp': {'registry': reg['fp']['registry'], 'sid': reg['fp']['sid'], 'plan_rows': plan['fp_rows'],
+                  'centreline': reg['fp']['centreline'], 'membership': reg['fp']['membership']},
+           'counts': _jsonable(plan['record']['counts']), 'census': _jsonable(reg['census'])}
+    if _st is not None:
+        out['store'] = _st
+    return out
 
 
 def solve_receipt(res, prep, *, name, disabled_why=None):

@@ -137,6 +137,9 @@ CLI_ACCOUNTING = {
     #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 (사슬 SV 끝 그래프 봉인 원천) — 출력 꼴만 바꾼다 (주 해를 풀지 않고 조립한 계의 지문을 쓰고 끝낸다 ·
     #    규약 id · 물리 칸 그대로 · `--step3-rasterize-only` 와 같은 부류) → mode.  출력 = `cjunc_graph_only_record` · --step3-cjunc 와만.
     '--step3-cjunc-graph-only': ('mode', None),
+    #  ★ 2026-11-12 (Rint ② Q2 · 1저자 11-12) — 탄소 접합 원장 (기하) 저장본 — 원장을 읽거나 짓고 쓰는 길만 바꾼다 (엄격 지문 대조 · 계획 · 해 ·
+    #    팔 JSON · 매니페스트 바이트 그대로 · 시험 `scripts/test_cjunc_store.py` P2 · `scripts/test_cjunc_store_e2e.py` Z2) → mode.  --step3-cjunc 와만.
+    '--step3-cjunc-store': ('mode', None),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),

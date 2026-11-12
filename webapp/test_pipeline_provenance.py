@@ -3115,6 +3115,9 @@ def main():
                     raise TypeError('tol was renamed to rtol')
                 return _cg_cpu(A, b, rtol=rtol or 1e-8, maxiter=maxiter, M=M)
             _lin.cg = _cg_gpu
+            #  ★ 11-12 (Rint ② Q11) — 생산 GPU 길이 Jacobi 전처리를 벡터 곱 연산자로 넘긴다 → 흉내도 그 이름 (scipy 의 같은 이름)
+            from scipy.sparse.linalg import LinearOperator as _LinOpCpu
+            _lin.LinearOperator = _LinOpCpu
             _cxs.linalg = _lin
             _cpx = _types.ModuleType('cupyx')
             _sci = _types.ModuleType('cupyx.scipy')

@@ -931,7 +931,10 @@ _RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP'
                 #  ★ 2026-10-21 (D · 등록 R §5-6) — SV 반사실 대조 노브 (같은 정본 표 · 부모 셸의 CJUNC_SV_CF=1 이 탐침으로 새면 "CJUNC 없이" 로 멈춘다).
                 'CJUNC_SV_CF',
                 #  ★ 2026-10-26 (B″ · 1저자 Q1 (가)) — 조립만 런 (같은 정본 표 · 부모 셸의 CJUNC_GRAPH_ONLY=1 이 탐침으로 새면 "CJUNC 없이" 로 멈춘다).
-                'CJUNC_GRAPH_ONLY')
+                'CJUNC_GRAPH_ONLY',
+                #  ★ 2026-11-12 (Rint ② Q2) — 원장 저장본 폴더 (영수증 · digest 밖 · 정본 표 밖 — 러너가 따로 읽는다 · 부모 셸의 값이 탐침으로 새면
+                #    "CJUNC=1 없이" 로 멈춘다).
+                'CJUNC_STORE')
 
 
 def _hermetic_env(env):
