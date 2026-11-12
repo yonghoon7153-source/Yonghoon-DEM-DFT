@@ -46,7 +46,7 @@ N-47	대피	끝	lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior
 N-48	대피	끝	haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem · a2f9ef81c	정독 88 · JKR 강성 낮출 때 에너지 같게 γ_mod=γ(E_mod/E)^{2/5} · 떼는 힘 (8/9)·3πRγ_mod · 반발 E 무관 (자기 상사) · SJKR 옮기면 CED∝E*^{4/5} ↔ 믹서 F₀ 규칙 E*^{2/3} (×20 에서 1.49 배) · soft SE 4.5e-4 < 원문 경고 1e-3 · 카드 문제 없음
 N-49	대피	끝	morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem · 0d7fe0870	정독 89 · γ 3.7 mJ/m² 에서 κ 50 은 덩어리 · 50,000 은 유동화 · 떼는 힘 3πγR* 같음 = 떼는 힘을 지킨 반례 (N-48 = 분리 에너지를 지키는 규칙) · 믹서 SJKR F₀ 보존 = W_sep ∝ E*^{-2/3} (×20 ÷7.37 · ×40 ÷11.7) · 카드 문제 = paulick2015_elastic L408 행 14 (기록만)
 N-50	대피	끝	wensrich2012_rolling_friction_shape_contact_eccentricity_dem · 9ca6272c5	정독 90 · 같은 '등가' μ_r 에서 구+구름마찰 안식각이 점묶음보다 4–11° 높음 (원문 up to 10°) · 같은 안식각 μ_r = 식 (9) 의 0.35–0.59 배 (구 μ_r 0.18 줄 8 칸만) · 단일 구 굴림 해석식 0.7–2 % (U2 단위 시험 기대값) · 카드 문제 = roessler2019 L244 · ai2011 L340 '카드 없음' 낡음 (기록만)
-N-51	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 91 · 시작 11-13 08:02 KST
+N-51	대피	끝	clemmer2024_bpm_elastic_grain_compaction_beyond_jamming · 21fa2502d	정독 91 · 결합입자 BPM 으로 변형 입자 3D 고압 압밀 (선형 탄성만) · Hertz DEM 은 φ−φ_c≈0.1 에서 갈라짐 · 같은 φ_MC 로 압력 차 2 배 안 · P/E_eff≈0.1 에서 φ_sphere 1.045 ↔ φ_MC 0.899 · 정정판 (2024-08-30 · 식 3 · 4) · 저자 3 명 · 카드 문제 = sankar2026 L726 · L45 · L67 'bpm/rotational 인용처' (기록만)
 N-31	—	제외		내려받기 불가 (Tatara 1989)
 N-34	본	끝	morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis · c25cbf241	크롭 267 (근거 문단 34 = 11-12 글 크롭 규칙 전에 시작한 런) · 정독 75
 N-25	본	끝	yano2024_eepa_binary_mixture_plasticity_compression_dem · 34eb27d1b	크롭 64 (글 20) · 정독 65 · 0.619 는 이 논문에 없음 (NCM–Li3PS4 0.60) → yano2026 카드 L192 · L426 귀속 = 카드 문제 (기록만)
