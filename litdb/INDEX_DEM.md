@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 304편 · 생성 2026-11-12
+> digest 305편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -60,7 +60,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (73편)
+## 접촉역학 · 소성 (DEM 이론) (74편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -126,6 +126,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `thakur2014_eepa_adhesive_elastoplastic_dem` | EEPA 점착 탄소성 접촉모델 (면적의존 점착) — 응집 분말의 미시역학 — Thakur (Granular Matter 2014) | DEM (contact-LAW theory + uniaxial calibration) | 2026-06-26 | 🖼 22 |
 | `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` | 초고압 (≈3.8 GPa) in situ 치밀화 — 비정질 Li₃PS₄ (LPS) 와 결정 Li₆PS₅Cl (LPSCl): 파리–에든버러 프레스 (UToPEC · 준등방 가압) 에서 X-선 흡수 밀도 · 단층촬영 (1.277 µm) · 에너지분산 XRD · 중성자 회절 + 실험실 EIS · 결합원자가 (BVEL) — 두  | experiment (in situ 고압 — PE 프레스 UToPEC · Beer–Lambert 흡수 밀도  | 2026-10-13 | 🖼 23 |
 | `thorntonning1998_adhesive_elastoplastic_contact` | 점착 탄소성 구의 stick/bounce — 항복압 캡(p_y) 접촉 LAW의 정의서 — Thornton & Ning (Powder Technology 1998) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 7 |
+| `thorntonyin1991_oblique_impact_elastic_spheres_adhesion` | 탄성 구 두 개의 비스듬한 충돌 — 접착 없으면 Hertz + Mindlin–Deresiewicz 증분 접선 법칙, 접착 (JKR) 이면 '벗겨진 뒤 미끄러진다' 는 새 미끄럼 기준 T = μ(P + 2Pc) — Thornton & Yin (Powder Technology 1991) | DEM (contact-LAW theory: Hertz normal + Mindlin-Deresiewicz  | 2026-11-12 | 🖼 90 |
 | `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` | 냉간분무(cold spray) 양극 복합분말 증착을 탄소성(elastoplastic) 결합구 DEM 으로 — NMC622 단일입자 충돌: 기판 항복응력이 지배 · 사선 충돌은 증착을 죽인다 · PVDF 최소량 문턱 · 입자만 한 크레이터만 돕는다 — Tovar et al. (Surf. Coat. Technol. 2026, | DEM (elastoplastic bonded-sphere, single-particle impact) +  | 2026-11-02 | 🖼 36 |
 | `vanlew2015_modifying_youngs_modulus_distribution` | 단일 pebble 압쇄실험의 E 분포로 DEM 입자별 Young률을 수정 (Hertz 접촉) — Van Lew (Fusion Eng. Des. 2015) | DEM (Hertz 접촉 + 단일입자 압쇄실험 → 입자별 E) | 2026-08-25 | 🖼 5 |
 | `varkey2026_multicontact_elastoplastic_dem` | 응력기반 multi-contact 탄소성 모델로 SE separator·양극 압밀 DEM — Varkey (Adv. Powder Tech. 2026) | DEM | 2026-06-23 | — |

@@ -3121,6 +3121,11 @@
 > · 탄성 전용 (소성 · 모양 기억 0) — 우리 MPM 고유 (소성 형상 · 공극 메움) 을 대신하지 못한다.  식 (1) 의 기준 γ = 0.5 (ν 0.5 무한 공간) / 1 (반무한) — 우리 MPM ν 0.49 와는 '거의 비압축' 만 닮음.
 > · ★ 검증 표적 후보: 3D 탄성 알 514 개의 접촉력 · Z · 판 힘 실측 ([8]) — 입자별 속도장 MPM (후보 A′) 의 접촉 표현이 binary (0.43) ↔ 결합 (1.00) 중 어디에 오는지 재는 외부 자료 (자료 공개 · 알 크기 · 판 면적 [미확인]).
 
+> 2026-11-12 추가 — `thorntonyin1991_oblique_impact_elastic_spheres_adhesion` [TY91] (Thornton · Yin, Powder Technol. 65, 153–166, 1991 · 명시 DEM 두 구 비스듬한 충돌 · 재료 이름 없는 탄성 구 R 100 µm · E 70 GPa · μ 0.35 · 접착 계산 γ 0.2 J/m² · 압밀 · 소성 · 다입자 0) — **접촉 법칙 층의 접선 이력 · 접착 원전 (탄소성 아님).**  원문 *"restricted to elastic spheres (plastic deformation at the contact is not considered)"* (p.1) — `pfeffer2001_dry_particle_coating_engineered_particulates` L302 의 '탄소성 접촉' 표기는 원문과 다르다 (카드 §13) · 법선 소성은 같은 그룹 7 년 뒤 `thorntonning1998_adhesive_elastoplastic_contact`.
+> · 접선 = Mindlin–Deresiewicz 를 Thornton–Randall 증분 규칙으로 (식 7–15 · θ · 되돌림 점 T\* · T\*\* 갱신 · θ = 1 규칙) → 완전 탄성 · 무감쇠에서도 미세 미끄럼 · 강체 미끄럼 소산 (그림 4b · 그림 6 소산 최대 0.25 · 70° [판독]) · 법선 일은 다 돌아옴 (p.4).  우리 LIGGGHTS `tangential history` = 식 (18) 처음 강성 8G*a + Coulomb 자름 [다른 카드 `boschpadros2014_dem_liggghts_msc_thesis` L186 · L192] — θ 미세 미끄럼 없음 [카드 해석].
+> · 접착 접선 = JKR + Savkoor–Briggs 벗김 (Tc 식 40) 뒤 T = μ(P + 2Pc) (식 42) · P < −0.3Pc 에서 식 (52) — PET 단섬유 마찰 (Pc 1.6 µN 실측) 대조에서 μ 를 기준마다 고름 (0.35 · 0.30) · 저자 *"not a rigorous solution, due to the approximations in existing theories and the speculative nature of the proposed sliding criteria"* (p.14).
+> · 우리 쪽: 형상 · 소성 · 조밀 영역에 대한 말이 없다 → 층③ (R6) 근거 아님 · 접촉 법칙 층 (D0 접선 · A′-0 분리 · 미끄럼 규칙 · C′ 의 접선 반쪽) 근거.  랩 표준 (순수 SE 10–13 % · 1.64 g/cm³) 옆에 놓을 숫자 없음.
+
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
 > stiffer → floor 21/37 %); **Kim 2025 (할라이드 Li₂ZrCl₆ LZC) = 할라이드 *계면 kinetics*** (bulk σ 0.51 < LPSCl
@@ -4470,6 +4475,8 @@
 
 > 2026-11-12 추가 — `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer` [Chand10] 에서 흡수할 것 (유리 유사 mm 구 · 비점착 · 흐름만 · 값 전이 금지 · 정의 · 보고 꼴만): ① **연화 목적 표지** — 연화 배수마다 '보정 (우리 압축 DEM ÷18 · 기공) ↔ 시간 간격 (이 논문 ÷463 · 우리 믹서)' 을 적고 배수를 서로 옮기지 않는다 (흐르는 침대에서 겹침 ≈ 1 % d 는 인공물 · 바뀌는 것은 겹침 · 충돌 시간 · 접촉 수) ② **접촉 지표의 E · 판정 거리 사다리** — 배위수가 간격 1 ↔ 5 % d 에 ≈ 1 바뀌고 (Fig 4) 저자가 접촉 비 상승을 연화 탓으로 돌린다 (p.5473) → s1 · s2 · 배위수 보고에 E 또는 판정 거리 사다리를 결과 전에 ③ **E 와 dt 를 같이 바꾸지 않기** — 선행 (dt 50 µs · 40 rpm 이하) ↔ 이 논문 (5 µs · 2–100 rpm) 의 '회전수 한 곡선' 비교가 교락 · 실제로 쓴 5 µs 는 연화하지 않은 E 가 요구할 간격과 비슷하다 [카드 산술] ④ **시간 · 회전수 · 에너지 세 축 보고** (같은 결과가 축마다 다른 승자) ⑤ 정본에 없던 이 계열 힘 · 토크 식 한 벌 (Table 1 — 법선 감쇠 부호 · 접선 식의 δ_i 절대값 기호 오식 주의 · 카드 §3-9 ⑥ · §10).
 
+> 2026-11-12 추가 — `thorntonyin1991_oblique_impact_elastic_spheres_adhesion` [TY91] 에서 흡수할 것 (탄성 구 두 개 · 재료 이름 없음 · 값 전이 금지 · 시험 꼴 · 법칙 꼴만): ① **U5 표적** — 같은 구 두 개 비스듬한 충돌의 θ 별 남은 선 운동 · 회전 · 소산 · 접촉점 반사각 · 중심 반발각 (그림 6 · 8 · 15 · 17 · `digitized.csv` 248 행) · 접착 없음은 *"independent of impact velocity"* (p.12) → 입자별 속도장 MPM (A′) · DEM 접선 점검을 계산하기 쉬운 속도로 ② **영 점검 (U0)** — γ = 0 이면 JKR = Hertz · 식 (42) = μP → 접착 코드의 γ = 0 판이 접착 없음 결과와 같아야 ③ **D0 접선 점검표** — Mindlin–Deresiewicz 증분 (θ · 되돌림 점) ↔ LIGGGHTS `tangential history` (식 18 + Coulomb) · 반발 계수 감쇠는 저자 결론의 *"no simple rules (e.g., coefficients of restitution, scattering probability)"* (p.13) 쪽 ④ **접착 미끄럼 · 분리 규칙의 꼴 (A′-0 · R2)** — Pc · Tc · μ(P + 2Pc) · 재접착 없음 가정 · stick-slip 조건 P < P*.
+
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)
 
 > **왜 새 축인가**: A(압밀/porosity) · B(전달 삼중항) · C(역학/morphology) · D(패킹) 는 전부 **입자 여러 개 =
@@ -5098,6 +5105,10 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > · ⛔ 표면 에너지 · 점착력 · 응집의 원인에 대한 말 · 값 없음 → 논지 (γ_A/γ_S) 의 근거로 쓰지 않는다 · 우리 드럼 믹서 DEM (강체 구 + CED · 조밀 흐름) 은 이 사다리의 앞 두 점 (혼합 · 응집) 만 다루고 셋째 (소성 변형 · 합체) 는 못 다룬다 · 유동성 대리로 HR 하나를 쓰지 않는다 (위 `grey1969_hausner_ratio_metal_powders` 줄).
 
 > 2026-11-12 추가 — `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer` — 같은 그룹 2 날개 수직 믹서 DEM (단분산 5 mm · 비점착 · 16,000 개 · 2–100 rpm · 속도마다 런 1 회): **시간으로는 빠른 날 · 회전수로는 느린 날** (M ≈ 1 = 2 rpm 4 회전 ↔ 100 rpm 6 회전 · 판독 평탄값 ≈ 0.98–0.99) · 혼합 에너지 27.6 ↔ 65.5 J (58 % 절감 · 시간 33 배) · 저자 설명 = 팽창 (공극 0.54 → 0.63 [판독]) 이 칸 입자 수를 줄여 S² ↑ (S_R² 를 고정했을 때의 이야기 [카드 추론]) · 원심력이 확산 혼합을 늦춤.  ★ 우리 믹서 Lacey 와는 **이름만 같다** — S₀² 이론 pq ↔ 런 t₀ 실측 · 칸 입자 수 가중 ↔ 같은 무게 · 이항 S_R² ↔ 균일 삽입 런 실측 · 칸당 ≈ 70–100 개 ↔ n_eff ≈ 3.6–3.7 → 네 칸을 결과 전 등록에 적는다.  ⚠ 저자 스스로 100 rpm 정상 B–W 접촉 비 상승을 *"softer particles"* (E 10⁹ → 2.16 × 10⁶ Pa · 시간 간격용) 탓으로 돌린다 (p.5473) → 우리 s1 · s2 접촉 지표의 E · 판정 거리 민감도를 등록 대상으로 · Table 1 = 2012 PSMI 카드가 [미확인] 으로 남긴 힘 · 토크 식 (Hertz 꼴 법선 · Mindlin–Deresiewicz 꼴 접선 · δ_n^{1/4} 감쇠 · 방향 일정 구름 토크).
+
+> 2026-11-12 추가 — `thorntonyin1991_oblique_impact_elastic_spheres_adhesion` [TY91] — **접착 충돌의 '붙는 속도' 식 · 값은 이 논문에 없다**: *"the computer-simulated experiments identified critical impact velocities, above which particles bounce and below which particles stick together; as expected, the observations agreed with the predictions of JKR theory, see Reed [21] … This will be the subject of a subsequent paper"* (p.13) · 반발 계수 곡선 0.  이 논문의 접착 계산 하나 (γ 0.2 J/m² · v_rel 0.1 m/s · R 100 µm · E 70 GPa) 의 정면 충돌 소산 [판독] 0.7–1.1 % ↔ `thorntonning1998_…` 식 52 · 54 [다른 카드] 로 V_s 9.5 mm/s · 0.90 % [카드 산술].
+> · 우리 믹서 dev-u *"SE–SE 붙는 속도 상한 18.7 · 46.6 mm/s (벽 103 · 지금 모델 0.16)"* [우리 · CLAUDE.md] 와 꼴 비교 (판정 없이): JKR 꼴 V_s ∝ Γ^{5/6}R^{−5/6}E*^{−1/3}ρ^{−1/2} 의 포획 에너지 = 접착 이력 고리 (닿을 때 −8Pc/9 로 뛰어듦) · SJKR (힘 = CED × 겹침 면적 · 겹침의 한 값 함수) 은 고리 넓이 0 → 붙음은 감쇠가 정한다 [카드 해석 · `johnson1971_jkr_surface_energy_contact_elastic_solids` L222 와 같은 방향] → **같은 꼴이 아니다** · 연화 E (÷ 18) 는 JKR 꼴이면 V_s × 2.62 [카드 산술] · 우리 dev-u 산술의 식은 이 카드가 보지 않음 [미확인].
+> · 비스듬한 충돌에서 접착은 작은 각 (≤ ≈ 22°) 에서 입자를 처음 경로로 되튀게 하고 (그림 15b · 중심 반발각 ≈ −0.95θ [판독]) · θ 25° 소산을 ≈ 0.05 → 0.21 로 키우며 (그림 6 보간 ↔ 그림 17 [판독]) · 임계각은 속도가 낮을수록 커진다 (서술만 · p.12–13) — 낮은 속도 · 비스듬한 접촉의 정성 지도 (탄성 · 두 구 · 값 전이 금지).
 
 ## I. 계면 점착 · 인터레이어 트랙 — **W_ad ↔ G_c 를 섞지 않는 축** (2026-09-23 신설)
 

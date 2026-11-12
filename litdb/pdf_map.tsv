@@ -542,3 +542,7 @@ brodu2015_multiple_contact_dem_dense_granular	multiple-contact discrete-element 
 #   ⚠ 크롭 45 장 = 도구 15 (전부 다시 자름: 그림 14 캡션 빠짐 · 표 1 = 쪽 전체) + 손 크롭 30 (manual_crop: 식 10 = 식 1–4 + Table 1 여섯 행 · 근거 글 20) + digitized.csv (241 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer	effect_of_blade_speed_on_granular_flow_and_mixing
 chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer	effect of blade speed on granular flow and mixing
+# ── 탄성 구 두 개의 비스듬한 충돌 DEM — 접착 없음 = Hertz + Mindlin–Deresiewicz 증분 접선 (Thornton–Randall 규칙) · 접착 = JKR + Savkoor–Briggs 벗김 뒤 새 미끄럼 기준 T = μ(P + 2Pc) · PET 단섬유 마찰 실험 (Briscoe–Kremnitzer) 대조 (Thornton · Yin · Powder Technology 65 (1991) 153–166) — litdb 2026-11-12 (후보 N-33) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 쪽마다 스캔 한 장 (OCR 글자 층) · 크롭 90 장 = 도구 15 (전부 다시 자름: 쪽 너비 전체를 잘라 이웃 단 글이 섞임) + 손 75 (manual_crop: 그림 10 · 13 (도구가 놓침 · 백지로 뺌) · 식 53 · 근거 글 20) + digitized.csv (248 행 · 스캔 판독) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+thorntonyin1991_oblique_impact_elastic_spheres_adhesion	impact_of_elastic_spheres_with_and_without_adhesion
+thorntonyin1991_oblique_impact_elastic_spheres_adhesion	impact of elastic spheres with and without adhesion
