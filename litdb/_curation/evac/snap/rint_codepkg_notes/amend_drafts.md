@@ -125,7 +125,8 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
   직후 같은 프로세스에서 ① 저장 꼴 안인가 (encode_strict) ② 짓고 씀 (`Store.get_or_build` · 발행 전 다시 읽기 대조 포함) ③ 새 Store 로 다시 → 적중
   ④ 읽은 원장 = 지은 원장 (엄격 지문 · registry_fp) ⑤ ②–④ 의 메모리 최고값 (VmHWM 되돌림) 을 잰다 → 로그 폴더 `store_probe.json` · 화면 한 줄.
   S0 에는 **지은 그 원장 객체**를 그대로 돌려준다 — S0 출력 = 감싸개 없이 돈 것과 같다 (elapsed_s 만 다르다 · 재기 초가 들어간다 → 시간 표에는
-  `store_probe.json` 의 초를 빼서 쓴다).  재기가 실패해도 (예외 · 메모리 부족) S0 는 계속한다 (사유 기록).  σ · 솔브 없음.
+  `store_probe.json` 의 초를 빼서 쓴다 · S0 보고에는 메모리 칸이 없고 감시 셸 rss.log 의 표본 최대에 재기 몫이 섞인다 → 채택 대조 때
+  `store_probe.json` 의 ②–④ 구간 (VmHWM · 시각) 으로 가린다).  재기가 실패해도 (예외 · 메모리 부족) S0 는 계속한다 (사유 기록).  σ · 솔브 없음.
 - 저장본 폴더 = 새 `~/sdcp/cjstore_s0probe_<UTC>` (재기 전용 · **R 은 그 파일을 읽지 않는다** — 단계 1 원장은 s_min 미등록 (None) 이라 R 팔 (봉인
   s_min) 과 열쇠가 다르다 · 보고 뒤 지워도 된다).  단계 1 원장은 R 팔 원장보다 instance 가 같거나 많다 = 크기 · 시간의 보수 쪽 어림.
 - 블록 꼴 = 기존 kgy 블록 (⑥ 탐침) 과 같은 관문: PIN = 가지 끝 (fetch 뒤 대조) · BASE · 핀 작업 트리 (`~/dem-s0-<pin9>` · 깨끗함 · `cjunc_store.py` 있음) ·
@@ -142,7 +143,7 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
 | 결과 전 기대 (먼저 적음) | 근거 |
 |---|---|
 | E1 S0 rc 0 · 여섯 출력 · 반입 도구 채택 후보 · git_head = PIN · git_dirty False | 11-08 실측 (5,383 s · 표본 최대 RSS 5.43 GiB) · 스크래치 모의 |
-| E2 감싸개 호출 1 번 · instance **117,583** (11-08 SBE 같은 침대 · 원장 코드 `carbon_junction.py` · `fibre_segment_raster.py` 는 11-08 핀 뒤 그대로) | 11-08 S0 접합 행 수 · `git log f47bde0f6..` |
+| E2 감싸개 호출 1 번 · instance **117,583** (11-08 SBE 같은 침대 · 원장 코드 `carbon_junction.py` · `fibre_segment_raster.py` 는 11-08 핀 뒤 그대로) | 11-08 S0 보고 `junction_census.census.n_instances` 117,583 · `git log f47bde0f6..` (일곱 파일 가운데 바뀐 것 = step3_sigma · payload 둘) |
 | E3 encode ok · 쓰기 `built_written` · 읽기 `hit` · 같음 = 엄격 True · registry_fp True · error None | 픽스처 · 합성 꼴 시험 |
 | E4 S0 의 계획 · 배열 = 11-08 과 같음 (코드 지문 · 시각 칸 빼고) | S0 계산 길 = 바뀐 두 파일의 바뀐 자리 (GPU 풀이 · 저장본 배선) 밖 · ⬜ 대조 = 본 세션 (반입 때) |
 
@@ -151,7 +152,7 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
 | T1 쓰기 (`seconds_write`) ≤ 600 s · 읽기 (`seconds_read`) ≤ 300 s · 읽기 ≤ 짓기 (`seconds_build`) 의 10 % | 보고 — R 팔마다 이득 = 짓기 − 읽기 가 작아진다 (근거 = 합성 어림 47 만 멤버 쓰기 ≈ 10 s · 읽기 ≈ 26 s (이 컨테이너) 의 10 배 여유) |
 | T2 메모리 증가 (VmHWM(②–④) − VmRSS(① 앞)) ≤ 4 GiB | 보고 — R 팔 (⑥ 시도 2 RSS 최대 32.9 GiB) 에 더해질 몫 · kgy 총 메모리 [미확인] |
 | T3 파일 크기 ≤ 2 GiB | 보고 — 기계마다 폴더 하나 · 침대 · origin · 문턱마다 파일 하나 |
-| E3 어긋남 (쓰기 `built_write_skipped` = 저장 꼴 밖 · `built_write_failed` · 읽기 ≠ hit · 같음 False · error) | ★ R 에서 `--cjunc-store` 를 쓰지 않는다 (그 침대의 이득 0 또는 결함) · 본 세션에 알림 · 고친 뒤 다시 잰다 |
+| E3 어긋남 (쓰기 `built_write_skipped` = 저장 꼴 밖 · `built_write_failed` · `disabled` = `/etc/machine-id` 를 못 읽음 (기록 칸 `store_machine_id_read` False · R 에서도 저장본 꺼짐) · 읽기 ≠ hit · 같음 False · error) | ★ R 에서 `--cjunc-store` 를 쓰지 않는다 (그 침대의 이득 0 또는 결함) · 본 세션에 알림 · 고친 뒤 다시 잰다 |
 
 - ⬜ 1저자 질문 Q-B (RCP-04): (가) 공식 S0 단계 1 다시를 감싸개로 (`PROBE=1` · 블록 기본 · CPU 1.5 h 아낌 · 선례 = 11-06 · 11-08 S0 의 `probe2.py`
   감싸개 (스택 기록) · 채택 대조 표에 감싸개 md5 · "원장 객체 그대로 돌려줌 · elapsed_s 에 재기 초" 한 줄) / (나) 공식 다시는 `PROBE=0` 으로 따로 ·

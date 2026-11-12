@@ -124,3 +124,19 @@
   built_written · 원장 202eb (옛 hit · f24cb).  check_selftest_inventory 전부 분류 · pyflakes 0 · kgy 3.8 컴파일 · bash -n.
 - 다음: 묶음 A · B (3.11) → kgy 판 → 리뷰 변이 31 (도구 review/mutate.py · 사본 다시 만듦) → 구현 쪽 변이 (work/mutate.py · 바뀐 줄 고쳐 씀) → 끔 길 ↔ 바탕 →
   RCP-04 초안 (S0 저장본 재기 블록) · amend 4 판 · design (바).
+- (11:4xZ) 묶음 A (3.11 · HEAD 0ac6edf3c · logs/r2/py311_A) = 27 묶음 rc 0 (gpu_precond 19/19 · cjunc_store 54/54 (69 s) · carbon_junction 547 · probe6 330 ·
+  ca_ext_b6 502 · runner 151 · verdict 31 · z1 95 · z3 84 · ptfe_fa 242 · target_cert 264 · s0_census 186 · webapp 넷 + provenance 284 · rint_receipts 105 ·
+  g2_am_iface 136 · first_result 9 · run_contract 124 · 규율 selftest 128 · repo 0 오류) · undef rc 1 = generate_comparison_plots.py 2 건 (바탕부터 있음 · 묶음 밖).
+  묶음 B (3.11) 띄움 (logs/r2/py311_B).
+- RCP-04 초안: 감싸개 s0probe/s0_store_probe_en.py (ASCII · 3.8 꼴 · 기록에 절대 경로 · 기계 지문 없음) · 감시 셸 s0probe/mon.sh (run2.sh 꼴 rss.log + rc= 한 줄 ·
+  끝에 out_sha256 · 묶음 tgz · DONE · `$!` 대신 jobs -p (느낌표 금지)) · 블록 조립 s0probe/make_s0_block.py → s0probe/s0_rerun_probe_block.txt (md5 관문 둘 ·
+  PROBE 0/1 · TAG).  확인: 픽스처 kit_J 감싸개 있음 ↔ 없음 (같은 --out · 3.11 · 3.8) = 다른 잎 elapsed_s 하나 · 재기 instance 2 built_written → hit · 같음 ·
+  감싸개 실패 (0777 폴더) = 기록 · S0 rc 0 · 가짜 HOME 블록 모의 (3.8.20 · 스크래치 git = scripts 사본 한 커밋 · 픽스처 킷 = kit_SBE_vgcf100 이름 · 복사본 두 줄 =
+  PIN · --vox 0.1): rc 0 · DONE · tgz → 반입 도구 import_s0_tgz.py = ADOPT_CANDIDATE · S0 git_head = 핀 · dirty False · PROBE=0 길 rc 0 · 멈춤 셋 rc 2.
+- GPU 블록 4 판: Q11PIN 0ac6edf3c · 새 모듈 sha256 859310da (리뷰 고침이 step3_sigma.py 를 다시 바꿈) · 하네스 md5 그대로 · CPU 흐름 3.11 · 3.8 다섯 짝 같음 (267 · 37) ·
+  셸 관문 모의 = cupy ERROR rc 1 (기대).  3 판 사본 gpu_check_block_v3.txt · amend 3 판 사본 amend_drafts_v3.md.
+- amend_drafts 4 판 (0-c 처분 표 · 1-1 · 1-2 · 1-4 · 2-b 새 절 (기대 E1–E4 · 문턱 T1–T3 [제안] · Q-B) · 3 · 4-c).
+- 변이 준비: 리뷰 31 = review/muts_v4.json (MS10 · MS16 자리만 4 판 글로 — 뜻 그대로) · 사본 review/work/new (git archive 0ac6edf3c scripts webapp + docs 셋) ·
+  review/work/mut (cp -al) · 구현 쪽 = work/mutate.py (P5 자리 고침 + 새 규칙 F1–F18 · T14 무리 · 110 개 · 옛 글 110/110 한 번씩 · 3 판 사본 mutate_v3.py) ·
+  사본 work/mut (따로 풀기 · 하드링크 아님 — 이 하네스는 제자리 쓰기).  끔 길 바탕 = work/ovb_base_repo (alternates = 본 저장소 객체 읽기만 · HEAD af3cce37b ·
+  sparse = scripts · docs/reviews · anchors csv · .gitignore · status 깨끗).
