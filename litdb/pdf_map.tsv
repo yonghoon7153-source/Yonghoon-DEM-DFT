@@ -449,3 +449,6 @@ paulick2015_particle_contact_stiffness_two_particle_method	a new method for the 
 # ── SE 습식 분쇄 → 복합 양극 이온 tortuosity (König 외 · ACS Appl. Energy Mater. 6 (2023) 9356–9362) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형
 koenig2023_wet_milling_se_ion_tortuosity_composite_cathode	mitigating_the_ion_transport_tortuosity_in_composite_cathodes
 koenig2023_wet_milling_se_ion_tortuosity_composite_cathode	mitigating the ion transport tortuosity in composite cathodes
+# ── 균일 구의 무작위 느슨 충전 (RLP) — 유효 중력 → 0 극한 0.555 ± 0.005 · 전단 팽창 (dilatancy) 시작 · 유리 구 250 µm 를 밀도 맞춘 액체에 침강 (Onoda · Liniger · Phys. Rev. Lett. 64 (1990) 2727–2730) — litdb 2026-11-12
+onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset	random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset
+onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset	random loose packings of uniform spheres and the dilatancy onset

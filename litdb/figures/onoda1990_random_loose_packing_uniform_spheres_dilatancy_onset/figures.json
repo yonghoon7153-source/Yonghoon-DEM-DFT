@@ -1,0 +1,843 @@
+{
+ "slug": "onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIG. 1. Variation in packing fractions of spheres with the effective gravitational acceleration. Curve A is for the random loose packings obtained in the settling experiments, while curve B is for the expanded packings obtained in the shear-cell experiments.",
+   "rotated_deg": 0,
+   "bbox": [
+    312.2,
+    75.0,
+    545.2,
+    290.2
+   ],
+   "w": 1702,
+   "h": 1578,
+   "dpi": 500,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.977,
+   "recrop": "tool crop (bbox 0–603.5 × 60.8–290.6 pt, 2515×958 px) spanned the full page width: the left text column and the header rule were inside and the axis title 'Δ g' was cut off. Re-cut by hand from the scanned page: figure ink box x 312.2–545.2 · y 75.0–290.2 pt (ink projection) -> ink bounding box -> uniform 6 pt white margin, 500 dpi (the embedded scan is 1-bit ≈600 dpi); caption excluded (tool convention), caption text corrected by hand (OCR read 'curve 8' / 'exper- iments') (2026-11-12, litdb-curator)",
+   "note": "axes: x 'Δ g' 0–1.2 (unit not printed), y 'PACKING FRACTION, η' 0.53–0.62; four points per curve at Δg ≈ 0.01, 0.30, 0.70, 1.00 [read-off]; line vertices A 0.555 · 0.559 · 0.569 · 0.5975, B 0.550 · 0.552 · 0.561 · 0.587; bar caps and method in digitized.csv (24 rows). Error bars are not symmetric about the line vertices at several points; their meaning is not stated in the paper.",
+   "viewed": true
+  },
+  {
+   "key": "f1c",
+   "kind": "figure",
+   "label": "1-with-caption",
+   "page": 2,
+   "file": "fig_1_with_caption.png",
+   "caption": "Fig. 1 with its printed caption in one piece (PDF p.2 = printed p.2728, right column top). FIG. 1. Variation in packing fractions of spheres with the effective gravitational acceleration. Curve A is for the random loose packings obtained in the settling experiments, while curve B is for the expanded packings obtained in the shear-cell experiments.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.2,
+    75.0,
+    547.6,
+    345.8
+   ],
+   "w": 1740,
+   "h": 1964,
+   "dpi": 500,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.956,
+   "panel_of": "f1",
+   "manual_crop": "figure + caption in one crop, cut by hand from the scanned page: rectangle x 304–553 · y 70–360 pt -> ink bounding box (x 309.2–547.6 · y 75.0–345.8 pt) -> uniform 6 pt white margin, 500 dpi (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1z",
+   "kind": "figure",
+   "label": "1-zoom-dg0",
+   "page": 2,
+   "file": "fig_1_zoom_dg0.png",
+   "caption": "Fig. 1, enlarged region around the first data points next to the left axis (Δg ≈ 0.01 [read-off]): the 0.56 tick, the top cap (η 0.559), the start of curve A (0.555), the middle cap (0.553), the start of curve B (0.550, on the 0.55 tick) and the bottom cap (0.545); the two error bars share one vertical stroke.",
+   "rotated_deg": 0,
+   "bbox": [
+    339.0,
+    196.0,
+    378.0,
+    241.1
+   ],
+   "w": 650,
+   "h": 751,
+   "dpi": 1200,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.945,
+   "panel_of": "f1",
+   "manual_crop": "enlargement cut by hand: fixed rectangle x 339–378 · y 196–241 pt rendered at 1200 dpi (2× the embedded 1-bit scan), no trimming, no margin — evidence for the cap assignment used in digitized.csv (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727a",
+   "kind": "text",
+   "label": "p2727-title-abstract-pacs",
+   "page": 1,
+   "file": "txt_p2727_title_abstract_pacs.png",
+   "caption": "PDF p.1 (printed p.2727) full width: running head 'VOLUME 64, NUMBER 22 · PHYSICAL REVIEW LETTERS · 28 MAY 1990', title, authors (George Y. Onoda and Eric G. Liniger, IBM Research Division, Thomas J. Watson Research Center, Yorktown Heights, New York 10598), '(Received 12 February 1990)', abstract (RLP fraction at the limit of zero gravitational force 0.555 ± 0.005 = rigidity-percolation threshold; dilatancy onset at approximately the same fraction; hard-sphere glass transition could exist in the range 0.555 to 0.645) and PACS numbers 81.20.Ev, 46.10.+z, 64.70.Pf. No DOI is printed on the page.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    47.9,
+    550.1,
+    226.8
+   ],
+   "w": 2868,
+   "h": 1060,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.914,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727b",
+   "kind": "text",
+   "label": "p2727-scott-limits",
+   "page": 1,
+   "file": "txt_p2727_scott_limits_0p63_0p60_rcp_rlp.png",
+   "caption": "PDF p.1 (printed p.2727) left column: Scott [3] — spherical balls poured into rigid containers; range of random-packing densities η with an upper limit of 0.63 and a lower limit of 0.60; upper limit = random close packing (RCP), lower limit = random loose packing (RLP).",
+   "rotated_deg": 0,
+   "bbox": [
+    50.3,
+    241.1,
+    288.8,
+    387.8
+   ],
+   "w": 1391,
+   "h": 881,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.834,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727c",
+   "kind": "text",
+   "label": "p2727-rcp-0p635",
+   "page": 1,
+   "file": "txt_p2727_rcp_density_0p635.png",
+   "caption": "PDF p.1 (printed p.2727) left column: RCP = densest packing of uniform spheres having a random structure, density 0.635 ± 0.005 ('now generally agreed', ref 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    50.5,
+    389.7,
+    289.4,
+    467.8
+   ],
+   "w": 1393,
+   "h": 500,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.856,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727d",
+   "kind": "text",
+   "label": "p2727-rlp-0p60-and-range",
+   "page": 1,
+   "file": "txt_p2727_rlp_0p60_rolling_range_0p56_0p60.png",
+   "caption": "PDF p.1 (printed p.2727) left column: no clear definition of the RLP; 'The value of η_RLP = 0.60 was obtained [3] by rolling spheres gently into a container, without shaking'; computer simulations [5]: density depends strongly on the method of packing; values by different methods fall in 0.56 < η < 0.60 — stable structures may be possible below Scott's limit. (This is where '0.60' is printed: as Scott's value.)",
+   "rotated_deg": 0,
+   "bbox": [
+    50.3,
+    470.2,
+    288.6,
+    603.2
+   ],
+   "w": 1390,
+   "h": 805,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.848,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727e",
+   "kind": "text",
+   "label": "p2727-exclusion-attractive-forces",
+   "page": 1,
+   "file": "txt_p2727_exclusion_attractive_forces.png",
+   "caption": "PDF p.1 (printed p.2727) left column: the RLP concept excludes cases with attractive forces between spheres (colloids); strongly bonded spheres form very loose stable structures (linear chains, diffusion-limited-like aggregates [6]) that would not be stable without the bonding forces.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.3,
+    607.3,
+    288.6,
+    684.3
+   ],
+   "w": 1390,
+   "h": 494,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.859,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727f",
+   "kind": "text",
+   "label": "p2727-mechanically-stable-g0",
+   "page": 1,
+   "file": "txt_p2727_mechanically_stable_gravity_limit_g0.png",
+   "caption": "PDF p.1 (printed p.2727) left column bottom -> right column top (stacked): 'mechanically stable' = static equilibrium under the existing external forces (gravity + wall reactions); loose packings can be densified by hydrostatic pressure (rubber bag); the loosest possible packing depends on the magnitude of the gravitational forces (g and sphere density); RLP defined as the loosest packing that can support an external load = lowest density at the limit g -> 0, determined experimentally in this paper.",
+   "rotated_deg": 0,
+   "bbox": [
+    50.5,
+    686.5,
+    288.5,
+    718.3
+   ],
+   "w": 1391,
+   "h": 1108,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.842,
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      50.5,
+      686.5,
+      288.5,
+      718.3
+     ]
+    },
+    {
+     "page": 1,
+     "bbox": [
+      310.1,
+      241.5,
+      548.6,
+      388.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator) — parts stacked top-to-bottom in reading order with a 9 pt white gap (column / page break inside the paragraph)",
+   "viewed": true
+  },
+  {
+   "key": "x2727g",
+   "kind": "text",
+   "label": "p2727-rigidity-percolation",
+   "page": 1,
+   "file": "txt_p2727_rigidity_percolation_threshold.png",
+   "caption": "PDF p.1 (printed p.2727) right column: RLP(g -> 0) must be a continuous network of touching spheres, more interconnected than simple percolation — a packing at its rigidity-percolation threshold [7].",
+   "rotated_deg": 0,
+   "bbox": [
+    309.8,
+    389.2,
+    548.5,
+    479.5
+   ],
+   "w": 1392,
+   "h": 568,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.86,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727h",
+   "kind": "text",
+   "label": "p2727-dilatancy-onset-definition",
+   "page": 1,
+   "file": "txt_p2727_dilatancy_onset_definition.png",
+   "caption": "PDF p.1 (printed p.2727) right column: dilatancy [8] = overall volume expands when the packing is deformed by shear (hydrostatic stress on constraining walls if expansion is constrained); 'dilatancy onset' = the density at which the dilatancy effect disappears; expected to correspond closely to RLP(g -> 0).",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    482.2,
+    550.6,
+    696.6
+   ],
+   "w": 1393,
+   "h": 1257,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.831,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2727i",
+   "kind": "text",
+   "label": "p2727-p2728-hydrostatic-shear-coupling",
+   "page": 1,
+   "file": "txt_p2727_p2728_hydrostatic_shear_coupling_critical_state.png",
+   "caption": "PDF p.1 right column bottom -> p.2 left column top (printed p.2727–2728, stacked): above the RLP hydrostatic compaction forces are supported without internal shear displacements; above the dilatancy onset shear displacements cause an outward hydrostatic stress on confining boundaries; critical-state soil mechanics [9]: shear resistance proportional to hydrostatic stress with a proportionality constant that increases with density — dilatancy onset expected where the constant goes to zero; the paper shows that RLP limit and dilatancy onset occur at the same packing fraction.",
+   "rotated_deg": 0,
+   "bbox": [
+    312.0,
+    698.5,
+    550.5,
+    719.0
+   ],
+   "w": 1391,
+   "h": 1627,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.841,
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      312.0,
+      698.5,
+      550.5,
+      719.0
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      48.5,
+      76.1,
+      287.0,
+      327.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator) — parts stacked top-to-bottom in reading order with a 9 pt white gap (column / page break inside the paragraph)",
+   "viewed": true
+  },
+  {
+   "key": "x2728a",
+   "kind": "text",
+   "label": "p2728-materials-spheres-liquids",
+   "page": 2,
+   "file": "txt_p2728_materials_glass_spheres_liquids.png",
+   "caption": "PDF p.2 (printed p.2728) left column: approach = minimise gravity with glass spheres in a density-adjustable liquid; glass spheres [10] diameter 250 ± 20 µm, specific gravity 2.46, 'coarse enough for interparticle forces (e.g., van der Waals force) to be negligible compared with inertial forces'; 64% di-iodomethane + 36% toluene = neutral buoyancy; more toluene lowers the liquid density so that Δg (effective gravitational force on the spheres) is varied; isopropyl alcohol and water for greater Δg (spellings 'bouyant', 'Isopropopyl' as printed).",
+   "rotated_deg": 0,
+   "bbox": [
+    49.1,
+    329.0,
+    287.8,
+    511.6
+   ],
+   "w": 1392,
+   "h": 1080,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2728b",
+   "kind": "text",
+   "label": "p2728-settling-extrapolation",
+   "page": 2,
+   "file": "txt_p2728_settling_cylinder_extrapolation_0p555.png",
+   "caption": "PDF p.2 (printed p.2728) left column: η_RLP as g -> 0 from spheres settling gently in a 500-ml graduated cylinder immersed in liquids of varying Δg; cylinder diameter : sphere diameter = 200 : 1; Fig. 1 curve A; 'Extrapolating these data to Δg = 0 gives η_RLP(g -> 0) = 0.555 ± 0.005.'",
+   "rotated_deg": 0,
+   "bbox": [
+    51.0,
+    513.5,
+    289.3,
+    591.8
+   ],
+   "w": 1390,
+   "h": 501,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2728c",
+   "kind": "text",
+   "label": "p2728-shear-cell",
+   "page": 2,
+   "file": "txt_p2728_shear_cell_geometry_procedure.png",
+   "caption": "PDF p.2 (printed p.2728) left column bottom -> right column (stacked): dilatancy measured by shearing material between two concentric cylinders (inner roughened aluminum rod Ø3.5 cm rotating, outer clear acrylic ID 4.0 cm stationary, gap 0.25 cm = 10 sphere diameters, wall-effect error of order 1% on the low side [4], cell length 20 cm, material height of order 10 cm, 0–300 rpm); dry material tapped to different densities; in liquids the spheres settle with tapping, then the rod is rotated and the rise of the material is observed (supernatant layer kept); volume increases in the 0–150-rpm range and stays constant above — that limiting volume is used for η.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.4,
+    593.5,
+    290.1,
+    716.6
+   ],
+   "w": 1392,
+   "h": 2255,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.839,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      51.4,
+      593.5,
+      290.1,
+      716.6
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      311.5,
+      375.4,
+      550.0,
+      637.3
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator) — parts stacked top-to-bottom in reading order with a 9 pt white gap (column / page break inside the paragraph)",
+   "viewed": true
+  },
+  {
+   "key": "x2728d",
+   "kind": "text",
+   "label": "p2728-dry-0p59-expansion-0p550",
+   "page": 2,
+   "file": "txt_p2728_dry_0p59_expansion_0p550.png",
+   "caption": "PDF p.2 (printed p.2728) right column: dry glass beads with initial packing fractions between 0.61 and 0.63 all expanded to 0.59; immersed in liquid the expansion packing fraction varies with Δg (Fig. 1); 'The value of η at Δg -> 0 is 0.550 ± 0.006.'",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    639.5,
+    549.8,
+    693.8
+   ],
+   "w": 1389,
+   "h": 368,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.859,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2728e",
+   "kind": "text",
+   "label": "p2728-p2729-wall-effect-correction",
+   "page": 2,
+   "file": "txt_p2728_p2729_wall_effect_correction_0p555.png",
+   "caption": "PDF p.2 right column bottom -> p.3 left column top (printed p.2728–2729, stacked): curve B about 1% lower than curve A, attributed to the wall effect (negligible at container width / bead size R = 200, about 1% low at R = 10 [4]); shifting B upward about 1% gives η(Δg -> 0) = 0.555 ± 0.006 as the best estimate for the expansion experiments.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.8,
+    695.9,
+    549.9,
+    716.6
+   ],
+   "w": 1392,
+   "h": 854,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.861,
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      311.8,
+      695.9,
+      549.9,
+      716.6
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      50.0,
+      75.0,
+      288.7,
+      187.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator) — parts stacked top-to-bottom in reading order with a 9 pt white gap (column / page break inside the paragraph)",
+   "viewed": true
+  },
+  {
+   "key": "x2729a",
+   "kind": "text",
+   "label": "p2729-pore-liquid-pressure",
+   "page": 3,
+   "file": "txt_p2729_pore_liquid_pressure_probe.png",
+   "caption": "PDF p.3 (printed p.2729) left column: load carried by the percolation network = effective stress; with wetting liquids shear expansion creates a negative gauge (pore liquid) pressure; pore-liquid-pressure probe [11] (1 to 1000 mbar) with glass beads in a neutrally buoyant liquid stirred in a 500-cm3 beaker: negative pore pressures sensed at η ≥ 0.56 but not at lower values (below-detection pressures at η < 0.56 not excluded).",
+   "rotated_deg": 0,
+   "bbox": [
+    49.6,
+    189.5,
+    289.0,
+    542.7
+   ],
+   "w": 1396,
+   "h": 2028,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.835,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2729b",
+   "kind": "text",
+   "label": "p2729-shear-thickening-0p56",
+   "page": 3,
+   "file": "txt_p2729_shear_thickening_0p56.png",
+   "caption": "PDF p.3 (printed p.2729) left column bottom -> right column top (stacked): shear thickening of concentrated suspensions [12–14]; cone and plate rheometer on glass beads in the neutrally buoyant liquid — shear thickening began at η ≃ 0.56 ± 0.01, 'which essentially confirms previous findings [13]'; supports dilatancy as its cause.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.0,
+    544.8,
+    287.9,
+    713.8
+   ],
+   "w": 1393,
+   "h": 1173,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.841,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      49.0,
+      544.8,
+      287.9,
+      713.8
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      310.9,
+      75.9,
+      549.2,
+      97.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator) — parts stacked top-to-bottom in reading order with a 9 pt white gap (column / page break inside the paragraph)",
+   "viewed": true
+  },
+  {
+   "key": "x2729c",
+   "kind": "text",
+   "label": "p2729-hard-sphere-transitions",
+   "page": 3,
+   "file": "txt_p2729_hard_sphere_transitions.png",
+   "caption": "PDF p.3 (printed p.2729) right column: correspondence of RLP(g -> 0) and the onset of dilatancy at η = 0.555; hard-sphere liquid–solid coexistence 0.50 < η < 0.55 [15]; suggested glass transition somewhere in 0.55 < η < 0.61 [16]; a glass transition could be possible at η > 0.555; particles become immobile at the RCP limit.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.6,
+    98.4,
+    549.3,
+    266.7
+   ],
+   "w": 1392,
+   "h": 1001,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.845,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2729d",
+   "kind": "text",
+   "label": "p2729-conclusion-acknowledgment",
+   "page": 3,
+   "file": "txt_p2729_conclusion_acknowledgment.png",
+   "caption": "PDF p.3 (printed p.2729) right column: conclusion — RLP(g -> 0) for spheres at η = 0.555 ± 0.005 = rigidity percolation threshold; this network gives rise to dilatancy and shear thickening; RLP(g -> 0) divides rheology (no coupling between hydrostatic effective stress and shear stress) from soil mechanics (coupling fundamental); 'would occur in the range 0.555 > η > 0.635' (as printed — inequality signs reversed, and 0.635 where the abstract prints 0.645); acknowledgment (J. Casey: cone and plate rheometer experiments; T. Shaw).",
+   "rotated_deg": 0,
+   "bbox": [
+    311.5,
+    270.3,
+    550.0,
+    440.6
+   ],
+   "w": 1391,
+   "h": 1012,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2729e",
+   "kind": "text",
+   "label": "p2729-p2730-references",
+   "page": 3,
+   "file": "txt_p2729_p2730_references_1_16.png",
+   "caption": "PDF p.3 right column bottom -> p.4 left -> p.4 right (printed p.2729–2730, stacked): references 1–16 as printed (1 Bernal 1964; Finney 1970 · 2 Cargill 1970; Bennett 1972 · 3 G. D. Scott, Nature (London) 188, 908 (1960); Scott and 'Kilgor', Br. J. Appl. Phys. D 2, 863 (1969) · 4 Cumberland and Crawford, The Packing of Particles (1987) · 5 Tory, Church, Tam, Ratner, Can. J. Chem. Eng. 51, 484 (1973) · 6 Witten and Sander 1981 · 7 Garboczi and Thorpe 1985 · 8 Reynolds 1885; Jenkin 1931; Frank 1965; Andrade and Fox 1949 · 9 Schofield and Wroth 1968 · 10 Mo-Sci Corp. · 11 'Tensimeter', Soil Measurement Systems · 12 Barnes 1989 · 13 Hoffman 1972, 1974, 1982 · 14 Bagnold 1954 · 15 Rosenbluth and Rosenbluth 1954; Alder and Wainwright 1957; Hoover and 'Rhee' 1968 · 16 Woodcock 1976; Bengtzelius, 'Gotze', 'Sjolander' 1984; Pusey and van 'Megan' 1987).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.0,
+    474.0,
+    548.5,
+    713.9
+   ],
+   "w": 1391,
+   "h": 2297,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.873,
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      310.0,
+      474.0,
+      548.5,
+      713.9
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      49.1,
+      76.7,
+      286.9,
+      148.2
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      309.9,
+      75.4,
+      547.9,
+      147.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator) — parts stacked top-to-bottom in reading order with a 9 pt white gap (column / page break inside the paragraph)",
+   "viewed": true
+  },
+  {
+   "key": "v2727a",
+   "kind": "text",
+   "label": "p2727-inline-eta-rlp-0p60",
+   "page": 1,
+   "file": "txt_p2727_inline_eta_rlp_0p60_and_range.png",
+   "caption": "Inline value sentence (printed p.2727, left column; the paper has no numbered or display equations): 'The value of η_RLP = 0.60 was obtained [3] by rolling spheres gently into a container, without shaking. … Values obtained by different methods fall in a range of 0.56 < η < 0.60, suggesting that stable structures may be possible below the limit given by Scott.'",
+   "rotated_deg": 0,
+   "bbox": [
+    50.3,
+    515.6,
+    288.8,
+    603.3
+   ],
+   "w": 1391,
+   "h": 553,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "inline_value": true,
+   "viewed": true
+  },
+  {
+   "key": "v2728a",
+   "kind": "text",
+   "label": "p2728-inline-eta-rlp-g0",
+   "page": 2,
+   "file": "txt_p2728_inline_eta_rlp_g0_0p555.png",
+   "caption": "Inline value sentence (printed p.2728, left column): '… Extrapolating these data to Δg = 0 gives η_RLP(g -> 0) = 0.555 ± 0.005.' (settling experiments, Fig. 1 curve A).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.2,
+    571.0,
+    289.4,
+    591.8
+   ],
+   "w": 1389,
+   "h": 182,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.893,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "inline_value": true,
+   "viewed": true
+  },
+  {
+   "key": "v2728b",
+   "kind": "text",
+   "label": "p2728-inline-eta-expansion",
+   "page": 2,
+   "file": "txt_p2728_inline_eta_expansion_0p550.png",
+   "caption": "Inline value sentence (printed p.2728, right column): 'When the beads were immersed in a liquid, the expansion packing fraction varied with Δg as shown in Fig. 1. The value of η at Δg -> 0 is 0.550 ± 0.006.' (shear cell, curve B, before the wall-effect correction).",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    661.8,
+    549.8,
+    693.8
+   ],
+   "w": 1389,
+   "h": 244,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.878,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "inline_value": true,
+   "viewed": true
+  },
+  {
+   "key": "v2729a",
+   "kind": "text",
+   "label": "p2729-inline-eta-corrected",
+   "page": 3,
+   "file": "txt_p2729_inline_eta_corrected_0p555_0p006.png",
+   "caption": "Inline value sentence (printed p.2729, left column): '… As a result, η(Δg -> 0) = 0.555 ± 0.006 becomes the best estimate for the expansion experiments.' (curve B shifted upward about 1% for the wall effect).",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    154.8,
+    288.2,
+    187.0
+   ],
+   "w": 1389,
+   "h": 245,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.9,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "inline_value": true,
+   "viewed": true
+  },
+  {
+   "key": "v2729b",
+   "kind": "text",
+   "label": "p2729-inline-range-sic",
+   "page": 3,
+   "file": "txt_p2729_inline_range_0p555_0p635_sic.png",
+   "caption": "Inline value sentence (printed p.2729, right column, end of the conclusion): 'Our evidence also indicates that a hard-sphere transition, if it exists, would occur in the range 0.555 > η > 0.635.' — printed with reversed inequality signs and with 0.635 (the abstract prints 'range of 0.555 to 0.645'; the RCP density printed on p.2727 is 0.635 ± 0.005).",
+   "rotated_deg": 0,
+   "bbox": [
+    311.4,
+    373.7,
+    549.4,
+    406.1
+   ],
+   "w": 1388,
+   "h": 246,
+   "dpi": 400,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.877,
+   "manual_crop": "evidence paragraph cut by hand from the scanned page (one 1-bit raster per page, no vector text): column rectangle from an ink row-projection of the page at 300 dpi, cut in the middle of the white gap above the first / below the last wanted line, rendered at 400 dpi, trimmed to the ink bounding box, uniform 6 pt white margin; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "inline_value": true,
+   "viewed": true
+  },
+  {
+   "key": "pg2727",
+   "kind": "text",
+   "label": "p2727-full-page",
+   "page": 1,
+   "file": "page_p2727.png",
+   "caption": "Whole PDF p.1 (printed p.2727): running head, title, authors, affiliation, received date, abstract, PACS, introduction (Scott's limits, RCP 0.635 ± 0.005, η_RLP = 0.60 and 0.56 < η < 0.60, exclusion of attractive forces, definition of RLP at g -> 0, rigidity percolation, dilatancy onset); foot '© 1990 The American Physical Society · 2727'. No DOI printed.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    612.0,
+    792.0
+   ],
+   "w": 2312,
+   "h": 2992,
+   "dpi": 272,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.89,
+   "manual_crop": "whole page rendered at the tool's own cap (long side 3000 px -> 272 dpi), no trimming — kept as page-level evidence because the paper is a 4-page scan; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "full_page": true,
+   "viewed": true
+  },
+  {
+   "key": "pg2728",
+   "kind": "text",
+   "label": "p2728-full-page",
+   "page": 2,
+   "file": "page_p2728.png",
+   "caption": "Whole PDF p.2 (printed p.2728): critical-state coupling, materials (glass spheres 250 ± 20 µm, s.g. 2.46; di-iodomethane / toluene), settling experiment and extrapolation 0.555 ± 0.005, Fig. 1 with caption, shear-cell geometry and procedure, dry 0.61–0.63 -> 0.59, expansion value 0.550 ± 0.006.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    612.0,
+    792.0
+   ],
+   "w": 2312,
+   "h": 2992,
+   "dpi": 272,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.898,
+   "manual_crop": "whole page rendered at the tool's own cap (long side 3000 px -> 272 dpi), no trimming — kept as page-level evidence because the paper is a 4-page scan; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "full_page": true,
+   "viewed": true
+  },
+  {
+   "key": "pg2729",
+   "kind": "text",
+   "label": "p2729-full-page",
+   "page": 3,
+   "file": "page_p2729.png",
+   "caption": "Whole PDF p.3 (printed p.2729): wall-effect correction 0.555 ± 0.006, pore-liquid-pressure probe (η ≥ 0.56), shear thickening onset η ≃ 0.56 ± 0.01, hard-sphere transitions, conclusion, acknowledgment, references 1–11.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    612.0,
+    792.0
+   ],
+   "w": 2312,
+   "h": 2992,
+   "dpi": 272,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.886,
+   "manual_crop": "whole page rendered at the tool's own cap (long side 3000 px -> 272 dpi), no trimming — kept as page-level evidence because the paper is a 4-page scan; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "full_page": true,
+   "viewed": true
+  },
+  {
+   "key": "pg2730",
+   "kind": "text",
+   "label": "p2730-full-page",
+   "page": 4,
+   "file": "page_p2730.png",
+   "caption": "Whole PDF p.4 (printed p.2730): end of reference 11 and references 12–16; the rest of the page is blank.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    612.0,
+    792.0
+   ],
+   "w": 2312,
+   "h": 2992,
+   "dpi": 272,
+   "src": "04e0e1fd-60._Random_loose_packings_of_uniform_spheres_and_the_dilatancy_onset.pdf",
+   "blank": 0.986,
+   "manual_crop": "whole page rendered at the tool's own cap (long side 3000 px -> 272 dpi), no trimming — kept as page-level evidence because the paper is a 4-page scan; saved as 16-level gray (2026-11-12, litdb-curator)",
+   "full_page": true,
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "The paper has one figure (Fig. 1), no tables and no numbered or display equations. tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found the Fig. 1 caption but, because every page is a single 1-bit raster, cut a full-width strip (left text column + header rule inside, axis title cut) — re-cut by hand (recrop). Added by hand (manual_crop): Fig. 1 with caption, one enlargement of the Δg ≈ 0 region, 19 evidence paragraphs, 5 inline value sentences (in place of equation crops — there is no equation to cut) and the 4 whole pages. All 31 crops were opened and checked; none of the hand crops needed a second cut (2026-11-12, litdb-curator).",
+ "note_manual": "Scan facts: 4 pages, each one 5060×6898 px 1-bit image (PDF places it on 595.06×792 pt -> 8.50 px/pt horizontally, 8.71 px/pt vertically, i.e. the page rendering is 2.4 % compressed vertically relative to the scan pixels; crops follow the PDF page rendering) plus an OCR text layer (not used for values — every number and quotation was read from the page images). DOI: not printed on any page; the PDF metadata 'keywords' field carries 'doi:10.1103/PhysRevLett.64.2727' (publisher-generated file). Printed inconsistencies visible in the crops: abstract 'range of 0.555 to 0.645' vs conclusion 'range 0.555 > η > 0.635' (reversed signs, different upper value); spellings 'bouyant', 'bouyancy', 'Isopropopyl', 'Tensimeter', 'Kilgor', 'Rhee', 'van Megan' as printed; the unit / definition of the 'Δ g' axis (0–1.2) is not printed; the meaning of the error bars is not stated and several bars are not centred on the line vertices. Crops are saved as 16-level gray (4-bit) PNG — the source is 1-bit, resolution unchanged.",
+ "key_note": "f1 = Fig. 1 (re-cut, caption excluded) · f1c = Fig. 1 + caption · f1z = enlargement (panel_of f1) · x<printed page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' with PDF page numbers) · v<printed page><letter> = inline value sentence (kind 'text', inline_value) · pg<printed page> = whole page (kind 'text', full_page) · 'page' fields are PDF page numbers (printed page = 2726 + PDF page)",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 24,
+  "method": "native 1-bit page scan (5060×6898 px); axis calibration from the inner tick marks on all four frame sides (bilinear, max tick residual 1.2 px = 0.00007 in η); polyline vertices from straight-line fits of each segment (rms ≤ 0.9 px) evaluated at the error-bar x; bar caps = centre rows of the cap strokes; read-off uncertainty ≈ ±0.0002 in η, ±0.001 in Δg"
+ }
+}

@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 279편 · 생성 2026-11-12
+> digest 280편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -58,7 +58,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (63편)
+## 접촉역학 · 소성 (DEM 이론) (64편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -103,6 +103,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `mesarovicfleck2000_dissimilar_elastoplastic_indentation` | 비대칭(dissimilar) 탄소성 구의 무마찰 압입 — Mesarović & Fleck (Int. J. Solids Struct. 2000) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `molerus1975_theory_of_yield_cohesive_powders` | Theory of Yield of Cohesive Powders — 응집 분말의 항복 이론: 무작위 단분산 구 충전의 외부응력 ↔ 평균 접촉력 (식 4 · 부록 A — Arzt 1982 식 (20) 의 원전) · 소성 평탄화 (p_f ≈ 3σ_f) 로 "얼린" 반데르발스 응집력 H = κN · 유효 항복궤적 tan φ_e | theory (analytic powder micromechanics: mean-field contact-f | 2026-10-03 | 🖼 12 |
 | `oh2026_bimodal_composite_cathode` | Oh 2026 (ACS Energy Letters 11, 2103-2114) — Bimodal 복합양극: 큰 다결정 + 작은 단결정 CAM → packing·porosity·tortuosity 최적화 ★★★ 우리 정확한 소재계 + 정확한 조건 + 우리 a9_50 P:S sweep의 HEADLINE 실험 검증 | experiment | 2026-07-28 | 🖼 35 |
+| `onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset` | 균일 구의 무작위 느슨 충전 (RLP) 은 유효 중력이 0 으로 갈 때 충전율 0.555 ± 0.005 까지 내려간다 — 유리 구 250 ± 20 µm 를 밀도를 맞춘 액체 (di-iodomethane + toluene) 속에 가라앉혀 유효 중력 Δg 를 바꾸고 0 으로 외삽 · 같은 충전율에서 전단 팽창 (dilatan | experiment (uniform glass spheres 250 µm — packing fraction  | 2026-11-12 | 🖼 31 |
 | `papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation` | 아르곤 글러브박스 안 온도 가변 (−40 → 300 °C) 나노압입으로 잰 무기 Li 전도 고체전해질 다섯 시편 (열간 가압 분말 펠릿 Li₆PS₅Cl · Li₁₀SnP₂S₁₂ (LSPS) + LAGP · LLZTO 2 종 · 기준 석영 유리) 의 환산 탄성률 · 경도 · 손실 계수 · 압입 크리프 — Li₆PS₅Cl ( | experiment (glovebox variable-temperature nanoindentation −4 | 2026-11-10 | 🖼 22 |
 | `pasha2014_linear_elastoplastic_adhesive_contact` | 선형 탄소성·점착 접촉 변형 모델 (미세 점착분말용 piecewise-linear LAW) — Pasha (Granular Matter 2014) | DEM (contact-LAW theory + EDEM 구현/검증) | 2026-06-26 | 🖼 23 |
 | `paulick2015_elastic_particle_properties_dem_review` | DEM 결과에 대한 입자 탄성 물성(Young's modulus E · shear modulus G · 접촉강성 contact stiffness)의 영향 리뷰 — 조밀계 vs 희박계 · 오버랩 1 % 규칙 · "밀할수록 강성이 중요해진다" — Paulick, Morgeneyer, Kwade (Powder Technolog | DEM (review — 탄성 파라미터 민감도) | 2026-08-25 | — |
