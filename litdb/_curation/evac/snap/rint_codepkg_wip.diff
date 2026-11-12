@@ -1,0 +1,167 @@
+diff --git a/scripts/cjunc_store.py b/scripts/cjunc_store.py
+index 2aba698d0..8569fcd34 100644
+--- a/scripts/cjunc_store.py
++++ b/scripts/cjunc_store.py
+@@ -6,9 +6,13 @@
+ (`docs/reviews/rint2_time_reestimate_20261111/README.md` A-2 · E-2 4 번) — ⑥ 실측 팔 하나의 준비 4,567 s 가운데 4,040 s.  계획 (R_j · 법칙 · c · SV)
+ 은 팔마다 그대로 다시 만든다 (`ca_ext_cjunc.payload_prepare`).  산출 바이트 (팔 JSON · 매니페스트 · 영수증 · 이름) 는 끔과 같다 — 결과 = 화면 한 줄뿐.
+ 
+-열쇠 (`Store.key_parts` → sha256) = 꼴 판 · 모델 판 · 스키마 · 코드 파일 sha256 (`carbon_junction.py` · `step3_sigma.py` · 이 파일) · 환경 같음 단위
+-(`run_contract.env_unit_now` = python 부 판 · numpy · scipy) · 기계 지문 (`/etc/machine-id` blake2b — 못 읽으면 저장본 꺼짐 = 매번 짓기) · sid 격자 지문 ·
+-lo · vox (실수 비트) · 입력 넷 (`carbon_junction._input_check` 의 정준 float64 · int64 값) · 문턱 칸 (이름 · 형 · 비트).
++열쇠 (`Store.key_parts` → sha256) = 꼴 판 · 모델 판 · 스키마 · 코드 파일 sha256 (`CODE_MODULES` 넷 = `carbon_junction.py` · `step3_sigma.py` ·
++`fibre_segment_raster.py` · 이 파일 — 원장 짓기가 실제로 부르는 모듈 + 직렬화기 · 시험 T14 가 짓는 동안 돈 파일 (sys.setprofile) · 원장 모듈의 import 문
++(AST) 이 이 넷 안인지 잰다 · ★ 11-12 내부 반박 리뷰 RCP-01 — 옛 판은 fibre_segment_raster 를 빠뜨려 선분 → 셀 차례만 바뀐 코드에서 옛 원장을 돌려줬다) ·
++환경 (`run_contract.env_unit_now` = python 부 판 · numpy · scipy 판 글자 + 실행 자리 지문 = venv 접두 · numpy · scipy 패키지 폴더 실경로의 blake2b ·
++RCP-05) · 기계 지문 (`/etc/machine-id` blake2b — 못 읽으면 저장본 꺼짐 = 매번 짓기) · sid 격자 지문 · lo · vox (실수 비트) · 입력 넷
++(`carbon_junction._input_check` 의 정준 float64 · int64 값) · 문턱 칸 (이름 · 형 · 비트).  코드 칸의 파일 = `importlib.util.find_spec` 이 가리키는 자리 (불러온
++모듈이면 그 파일 · 아니면 import 가 찾을 파일) 를 **불러오지 않고** 해시한다 — 저장본 켬 런의 로드 모듈 집합 (매니페스트 exec_env) 이 끔과 같게.
+ 
+ 파일 = `<폴더>/cjreg_<열쇠>.npz` (zip · STORED · 멤버 = header.json · skeleton.json (형 표지 트리) · a<i>.npy (배열 · `allow_pickle=False`)) ·
+ 0444 · 단일 작성자 (임시 파일 O_EXCL 0600 → fsync → 읽어 대조 → chmod 0444 → `os.link` (먼저 쓴 쪽이 이김 · 덮어쓰기 없음) → 폴더 fsync).
+@@ -26,8 +30,11 @@ lo · vox (실수 비트) · 입력 넷 (`carbon_junction._input_check` 의 정
+ `instances.pair_i` · `pair_j` = `[빈 배열] * instance 수` — instance 가 둘 이상인 원장은 늘 별칭이 있다 · `carbon_junction._merge_instances`).  서로
+ 다른 배열 객체가 메모리를 나눠 쓰는 꼴 (보기 · 조각) 은 받지 않는다 (저장 안 함).  규모: 실침대 원장 = instance 십수만 × 작은 배열 넷 (약 47 만
+ 멤버 · zip64) — 겹침 검사는 주소 구간 정렬 (배열 수 n 에 n log n).
+-⚠ 한정: 같은 열쇠 이름 아래 **자기 일관 위조** (내용 · 머리 · 지문을 모두 다시 센 파일) 는 저장본 혼자 가리지 못한다 — 그 몫 = 봉인 원천 재조립 대조
+-(`rint_r_chain.RunnerGraphSource` · 저장본을 읽지 않는다) · 폴더 권한 (소유자 = 이 사용자 · 그룹 · 남 쓰기 없음 · 파일 0444).
++⚠ 한정: 같은 열쇠 이름 아래 **자기 일관 위조** (내용 · 머리 · 지문을 모두 다시 센 파일) 는 저장본 혼자 가리지 못한다.  저장본 밖 독립 대조 = 봉인 원천
++재조립 (`rint_r_chain.RunnerGraphSource` · 저장본을 읽지 않는다) 이고 그것은 **SV 모서리 팔 (끝 그래프 지문) 만** 덮는다 — 사다리 · 비 SV 예측 · 단위
++팔은 독립 대조가 없다 (같은 코드 · 환경의 결정성 + 열쇠 + 폴더 권한 (소유자 = 이 사용자 · 그룹 · 남 쓰기 없음 · 심볼릭 링크 아님) + 파일 권한 (소유자 ·
++그룹 · 남 쓰기 없음 · 0444 로 발행) 에 기댄다 · ★ 11-12 내부 반박 리뷰 RCP-03 — S0 단계 2 봉인 원장 지문 ↔ DBE arm 0 팔 대조 · SBE 사다리 팔의
++대조 길 = 1저자 결정).
+ ⚠ Python 3.8 (kgy) 에서 돈다 — 3.9+ 문법 · 새 라이브러리 함수 없음.
+ """
+ import errno
+@@ -36,7 +43,6 @@ import json
+ import os
+ import re
+ import secrets
+-import socket
+ import struct
+ import time
+ import zipfile
+@@ -53,8 +59,11 @@ DISK_MARGIN_BYTES = 1 << 30
+ MEMBER_OVERHEAD_BYTES = 512                                  # zip 멤버 하나의 머리 (지역 · 중앙 목록 · npy 머리) 넉넉한 어림 — 쓰기 전 자리 검사
+ HEADER_MEMBER, SKELETON_MEMBER = 'header.json', 'skeleton.json'
+ _ARRAY_MEMBER_RE = re.compile(r'a(0|[1-9][0-9]*)\.npy')
+-#: 원장 코드 = 이 파일들의 바이트 (열쇠 칸) — 원장 함수 · 격자 지문 함수 · 이 직렬화기
+-CODE_MODULES = ('carbon_junction', 'step3_sigma', 'cjunc_store')
++#: 원장 코드 = 이 파일들의 바이트 (열쇠 칸) — 원장 함수 · 격자 지문 함수 (`step3_sigma._grid_fp`) · 원장의 선분 → 셀 함수
++#  (`fibre_segment_raster.segment_cells` · `carbon_junction._positions` 가 부른다) · 이 직렬화기.  ★ 11-12 (내부 반박 리뷰 RCP-01) — 옛 판은 셋
++#  (fibre_segment_raster 빠짐) 이라 그 파일만 바뀐 코드 판이 같은 열쇠로 옛 원장을 읽었다 (리뷰 반례 CE1 · 시험 T14c).  이 목록 ⊇ 원장 짓기가
++#  실제로 부르는 프로젝트 모듈 = 시험 T14a (짓는 동안 돈 파일) · T14b (원장 모듈 둘의 import 문) 가 잰다 — 원장 코드가 새 모듈을 부르기 시작하면 거기서 터진다.
++CODE_MODULES = ('carbon_junction', 'step3_sigma', 'fibre_segment_raster', 'cjunc_store')
+ STATUSES = ('hit', 'built_written', 'built_peer_same', 'unreadable_rebuilt', 'built_write_skipped', 'built_write_failed', 'disabled',
+             'key_unavailable')
+ WARN_STATUSES = ('unreadable_rebuilt', 'built_write_skipped', 'built_write_failed', 'disabled', 'key_unavailable')
+@@ -381,6 +390,39 @@ def _file_sha(path):
+     return h.hexdigest()
+ 
+ 
++def code_file(name):
++    """열쇠 코드 칸의 모듈 → 파일 경로 (`importlib.util.find_spec` — 불러온 모듈이면 그 `__spec__` 의 파일 · 아니면 import 가 찾을 파일) · **불러오지
++    않는다** (★ 11-12 RCP-01 — 저장본 켬 런이 끔 런에 없는 모듈을 부르면 매니페스트 exec_env 의 로드 모듈 집합 · 내용 해시가 갈린다 · 시험 T14d).
++    못 찾음 = ValueError (Store 를 만들지 않는다 — payload 가 구조화 거부 STORE_PATH 로 멈춘다)."""
++    import importlib.util
++    try:
++        spec = importlib.util.find_spec(name)
++    except (ImportError, ValueError) as e:
++        raise ValueError(f'열쇠 코드 모듈 {name} 을 못 찾는다 ({type(e).__name__}: {e})') from None
++    origin = getattr(spec, 'origin', None) if spec is not None else None
++    if not origin or not os.path.isfile(origin):
++        raise ValueError(f'열쇠 코드 모듈 {name} 의 파일이 없다 ({origin!r})')
++    return origin
++
++
++def env_paths_fp():
++    """실행 자리 지문 (blake2b 16 바이트 hex) — 인터프리터 접두 (`sys.prefix` = venv) · numpy · scipy 패키지 폴더의 실경로.  ★ 11-12 (내부 반박 리뷰
++    RCP-05) — 판 글자가 같은 두 venv · 두 설치 (빌드 · BLAS 가 다를 수 있다 · 원장 길의 1 차원 `np.linalg.norm` = BLAS dot) 를 가른다 · 경로 글 대신 지문
++    (머리 · 열쇠에 계정 · 집 폴더 글을 남기지 않는다).  ⚠ 같은 자리에서 다시 빌드한 설치 · 같은 machine-id 를 가진 복제 기계는 가르지 못한다 (한정)."""
++    import sys
++    import scipy
++    parts = (os.path.realpath(sys.prefix), os.path.dirname(os.path.realpath(np.__file__)), os.path.dirname(os.path.realpath(scipy.__file__)))
++    return hashlib.blake2b('\0'.join(parts).encode('utf-8', 'surrogatepass'), digest_size=16).hexdigest()
++
++
++def root_last(p):
++    """폴더 경로의 끝 빗금을 걷은 꼴 (심볼릭 링크 판정용 — `lstat('링크/')` 은 링크를 따라간다) · '/' 는 그대로."""
++    q = p
++    while len(q) > 1 and q.endswith('/'):
++        q = q[:-1]
++    return q
++
++
+ def _tag(v):
+     if v is None:
+         return ['none']
+@@ -415,16 +457,21 @@ def _errname(e):
+ 
+ # ═════════════════════════ 저장본 ═════════════════════════
+ class Store:
+-    """저장본 폴더 하나 (절대 경로 · 있는 폴더 · 소유자 = 이 사용자 · 그룹 · 남 쓰기 없음).  열쇠의 코드 · 환경 · 기계 칸은 만들 때 한 번 읽는다."""
++    """저장본 폴더 하나 (절대 경로 · 있는 폴더 · 심볼릭 링크 아님 · 소유자 = 이 사용자 · 그룹 · 남 쓰기 없음).  열쇠의 코드 · 환경 · 기계 칸은 만들 때
++    한 번 읽는다 (코드 칸 = 그때의 디스크 파일 — 불러온 코드 자체가 아니다 · 한정)."""
+ 
+     def __init__(self, root, machine_paths=MACHINE_ID_PATHS):
+         if not isinstance(root, str) or not os.path.isabs(root):
+             raise ValueError(f'저장본 폴더 = 절대 경로 ({root!r})')
++        import stat as _stat
+         try:
++            lst = os.lstat(root_last(root))
+             st = os.stat(root)
+         except OSError as e:
+             raise ValueError(f'저장본 폴더가 없다 ({root} · {_errname(e)})') from None
+-        import stat as _stat
++        #  ★ 11-12 (내부 반박 리뷰 RCP-06) — 뿌리 = 링크를 따르지 않는다 (남이 바꿀 수 있는 링크 너머 폴더에 쓰지 않는다 · 끝 빗금도 · 사슬 · 러너도 같은 규칙)
++        if _stat.S_ISLNK(lst.st_mode):
++            raise ValueError(f'저장본 폴더가 심볼릭 링크다 ({root}) — 실제 폴더 경로를 준다')
+         if not _stat.S_ISDIR(st.st_mode):
+             raise ValueError(f'저장본 자리가 폴더가 아니다 ({root})')
+         if st.st_mode & 0o022:
+@@ -432,13 +479,12 @@ class Store:
+         if hasattr(os, 'getuid') and st.st_uid != os.getuid():
+             raise ValueError(f'저장본 폴더 소유자 ({st.st_uid}) ≠ 이 사용자 ({os.getuid()})')
+         self.root = root
+-        import importlib
+         import run_contract as RC
+         self.code = {}
+-        for m in CODE_MODULES:
+-            mod = importlib.import_module(m)
+-            self.code[os.path.basename(mod.__file__)] = _file_sha(mod.__file__)
+-        self.env = RC.env_unit_now()
++        for m in CODE_MODULES:                               # ★ 11-12 (RCP-01) — find_spec 으로 파일만 (불러오지 않는다 · `code_file`)
++            f = code_file(m)
++            self.code[os.path.basename(f)] = _file_sha(f)
++        self.env = dict(RC.env_unit_now(), paths=env_paths_fp())   # ★ 11-12 (RCP-05) — 판 글자 + 실행 자리 지문
+         self.machine = machine_fp(machine_paths)
+ 
+     # ── 열쇠 ──
+@@ -524,10 +570,12 @@ class Store:
+             return 'built_write_failed', f'statvfs {_errname(e)}', None
+         if free < 2 * size + DISK_MARGIN_BYTES:
+             return 'built_write_skipped', f'disk 여유 {free} < 2 × {size} + 1 GiB', None
++        #  ★ 11-12 (내부 반박 리뷰 RCP-11) — 쓴 쪽 칸에 호스트 이름을 싣지 않는다 (사슬은 기계를 실행자가 넣는 짧은 이름표로만 남긴다 · 호스트
++        #    이름은 FQDN · 주소일 수 있다) · 기계 구별 = 열쇠의 machine-id 지문
+         header = {'format': STORE_FORMAT, 'kind': STORE_KIND, 'key': key, 'key_parts': parts,
+                   'skeleton_sha256': hashlib.sha256(skel).hexdigest(), 'n_arrays': len(arrays), 'strict': strict,
+                   'registry_fp': reg['fp']['registry'],
+-                  'writer': {'host': socket.gethostname(), 'pid': os.getpid(), 'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
++                  'writer': {'pid': os.getpid(), 'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+                              'build_seconds': round(float(build_s), 3)}}
+         hb = json.dumps(header, ensure_ascii=True, sort_keys=True, separators=(',', ':')).encode('ascii')
+         tmp = os.path.join(self.root, f'.{FILE_PREFIX}{key}.{os.getpid()}.{secrets.token_hex(4)}.tmp')
+@@ -661,6 +709,13 @@ def _read_members(path):
+         raise _Unreadable(f'lstat {_errname(e)}') from None
+     if _stat.S_ISLNK(st.st_mode) or not _stat.S_ISREG(st.st_mode):
+         raise StoreInconsistent('not_regular', '저장본 자리가 보통 파일이 아니다 (심볼릭 링크 · 폴더 — 이 코드는 만들지 않는다)', path)
++    #  ★ 11-12 (내부 반박 리뷰 RCP-06) — 이 코드는 이 사용자 소유 · 그룹 · 남 쓰기 없는 파일만 만든다 (임시 0600 → 0444 → link) · 다른 소유자 (폴더가 0777
++    #    이던 때 남이 넣은 파일) · 손으로 0666 이 된 파일 = 자기 일관이어도 받지 않는다 (멈춤).  링크 수는 보지 않는다 (발행 중 임시 이름 + 최종 이름 = 2 인
++    #    순간을 다른 팔이 읽을 수 있다 — 정직한 흐름 · 한정).
++    if hasattr(os, 'getuid') and st.st_uid != os.getuid():
++        raise StoreInconsistent('file_owner', f'저장본 파일 소유자 ({st.st_uid}) ≠ 이 사용자 ({os.getuid()}) — 이 코드는 남의 파일을 만들지 않는다', path)
++    if st.st_mode & 0o022:
++        raise StoreInconsistent('file_mode', f'저장본 파일을 그룹 · 남이 쓸 수 있다 (모드 {oct(st.st_mode & 0o777)} — 이 코드는 0444 로 발행한다)', path)
+     if st.st_size == 0:
+         raise _Unreadable('0 바이트')
+     try:

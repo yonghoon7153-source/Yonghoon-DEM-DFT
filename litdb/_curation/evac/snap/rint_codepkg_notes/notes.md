@@ -105,3 +105,16 @@
 - 정리: 사본 work/mut · t_add · ovb* · ovb_base_repo · blk_home · gpu_check 산출 · tmp/* 지움 (돌던 내 프로세스 0 확인 뒤) · 남김 = work/before (앞 조수 · 고치기 전 판) · 스크립트 · logs.
   amend_drafts.md 3 판 (0-b 절 · 2 절 앞 조건 고침 · 4-b 절) · design.md (마) 표에 시험 보강 줄.  ⚠ 시험 임시 폴더 (s3base_gp_* 등) 를 지우지 않는 꼴 = 기존 시험들과 같은 버릇 (고치지 않음).
 - 끝.  작업 트리 = 깨끗 · HEAD 2f97617ef (← f17ea8c6b ← ebb0e9f80 ← af3cce37b).
+
+## 리뷰 고침 회차 (11-12 · 내부 반박 리뷰 review/review_codepkg.md 대응 · 작업 트리 /home/user/rint-codepkg)
+- (11:1xZ) 시험 먼저 커밋 = 4557a30c2 (← 2f97617ef).  고치기 전 판 (2f97617ef 코드) 결과: Q11 18/19 (실패 G6b REQUIRE 조치 글 = 옳은 이유) ·
+  store 40 PASS · 14 FAIL (실패 = 새 검사뿐: T4 ×2 (환경 자리) · T5i (host) · T7 (0666) · T7c (파일 소유자) · T11 (심볼릭 셋) · T14a–d · P1 (rasterize-only 만) ·
+  P1b (둘 다 traceback) · R1 (심볼릭 둘) · C1 (심볼릭 둘)).  T14c = 리뷰 CE1 그대로 재현 (같은 열쇠 dbfa9d249e29 · hit · 옛 f24cbd6245dc ↔ 새로 지음 202eb91e965d).
+  기록 logs/r2/before/.  G4a · G4b = 시험 질 고침 (RCP-09) 이라 고치기 전에도 통과 (코드 결함 아님 · 커밋 메시지에 적음).
+- RCP-01 처분 = (가) 를 고름: 열쇠 코드 칸 = 모듈 넷 (carbon_junction · step3_sigma · fibre_segment_raster · cjunc_store) + 측정 시험 (T14a 동적 =
+  sys.setprofile 로 원장 짓기 동안 돈 파일 · T14b 정적 = 원장 모듈 둘의 import 문 AST 전수).  (나) CODE_FILES 전체를 안 고른 까닭 ① 목록 정본이
+  rint_r_chain 에 있다 — payload 프로세스에서 사슬 모듈을 부르면 매니페스트 exec_env (로드 모듈 · 내용 해시) 가 바뀌고 (켬 ↔ 끔 팔 바이트) · AST 로 꺼내거나
+  사본을 두는 것은 규율 ① 위반 ② 러너 셸 · 사슬 · 판정 코드처럼 원장에 안 닿는 파일까지 묶는다 (과결속 — 캠페인 안에서는 비용 0 이지만 뜻이 틀린다)
+  ③ (가) 는 측정 시험이 앞으로의 표류 (원장 코드가 새 모듈을 부르기 시작함) 를 잡는다 — (나) 는 목록 밖 모듈이 생기면 다시 조용히 샌다.
+  코드 칸 파일 경로 = importlib.util.find_spec (불러오지 않는다 — 불러온 모듈이면 그 __spec__ · 아니면 import 가 찾을 자리) → 저장본 켬 런의 로드 모듈
+  집합이 끔과 같다 (T14d).
