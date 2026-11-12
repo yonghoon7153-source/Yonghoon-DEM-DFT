@@ -287,3 +287,9 @@
   (blk_home7 · 지움) = 관문 통과 → cupy 없음 rc 1 (logs/r5/gpu_block_v7_shell_mock*).
 - amend_drafts.md 7 판 (0-f · 4-f · v6 사본 amend_drafts_v6.md) — 변이 · 끔 경로 줄은 끝난 뒤 채움.
 - 변이 띄움 (work/run_mut7.sh · 사본 work/mut7 = 8b59b9618 · J1–J32 · 3.11 → 3.8 · logs/r5/mut).
+- (22:5xZ) 변이 J1–J32 (사본 8b59b9618 · 3.11 · 3.8 같음 · logs/r5/mut): 31 잡힘 (G1 · G6 · G7c · G7d · G7e · G8a–c · T15a · e · i/l · k · m · P6b) · J22 안 잡힘
+  (미리 적은 겹 방어).  ⚠ J21 (ctime 뺌) 은 T15i 에서도 잡혔다 = 이 파일계가 unlink + 새 파일에 같은 inode 번호를 다시 씀 → T15l 이 결정적 판.
+- 끔 경로 ↔ 바탕 af3cce37b (3.11 · 3.8 · logs/r5/off_vs_base_*): rc 0 · σ_e 같음 · 다른 잎 = 코드 신원뿐 (code_sha · project_module_digest ·
+  loaded_project_modules · receipt_digest → OUTDIR `_r` 꼬리) = 2 회차와 같은 부류.
+- amend_drafts.md 7 판 마감 (0-f 다시 돌림 · 변이 · 끔 경로 줄 · 4-f).  지운 것 = work/mut7 · ovb5_wd_* · ovb5_base · tmp/* (내 프로세스 0 확인 뒤).
+- 끝: 작업 트리 HEAD 8b59b9618 (깨끗) · 커밋 6a497f31b → 0db6dee6d → 8b59b9618 (서명 없음 · push 없음).

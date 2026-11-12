@@ -1311,7 +1311,7 @@
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: A soft departure from jamming: the compaction of deformable granular matter under high pressures · Subject: Soft Matter (2024), 20, 1702-1718, doi:10.1039/D3SM01373A · Author: Joel T. Clemmer · DOI: 10.1039/D3SM01373A · PDF 17 쪽",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1039/D3SM01373A` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 17 · DOI(첫 쪽): ['10.1039/d3sm01373a']\n  - 첫 쪽 앞줄: Soft Matter / Published on 29 January 2024 / Licence and permissions / PAPER / Cite this: Soft Matter, 2024, / 20, 1702 / A soft departure from jamming: the compaction / of deformable granular matter under / high pressures / Joel T. Clemmer, / * Joseph M. Monti and Jeremy B. Lechman / The high-pressure compaction of three dimensional granular packings is simulated using a bonded / particle model (BPM) to capture linear elastic deformation. In the model, grains are represented by a / collection of point particles connected by bonds. A simple multibody interaction is introduced to control",
   "p1": true
