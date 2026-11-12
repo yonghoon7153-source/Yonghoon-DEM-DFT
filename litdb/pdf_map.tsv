@@ -443,3 +443,6 @@ benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode	a computatio
 # ── 압연 선하중 ↔ 압연 뒤 코팅 밀도 · 기공률의 지수 포화 식 · 'compaction resistance' γ_C 원전 · LIB NCM 양극 / 흑연 음극 (Meyer 외 · J. Mater. Process. Technol. 249 (2017) 172–178) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) ──
 meyer2017_calendering_compaction_resistance_line_load_exponential_model	characterization_of_the_calendering_process_for_compaction
 meyer2017_calendering_compaction_resistance_line_load_exponential_model	characterization of the calendering process for compaction
+# ── 두 입자 접촉강성 측정법 — 한 알 (WPW) · 두 알 (WPPW) 압축을 같은 힘에서 빼 입자–입자 접촉만 남김 · 유리 구슬 0.8–3.0 mm · 최대 80 N (Paulick 외 · Granular Matter 17 (2015) 83–93) — litdb 2026-11-12 · 같은 저자 리뷰 (paulick2015_elastic_particle_properties_dem_review) 와 다른 논문
+paulick2015_particle_contact_stiffness_two_particle_method	a_new_method_for_the_determination_of_particle_contact_stiffness
+paulick2015_particle_contact_stiffness_two_particle_method	a new method for the determination of particle contact stiffness

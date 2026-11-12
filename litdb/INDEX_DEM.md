@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 277편 · 생성 2026-11-12
+> digest 278편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -57,7 +57,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | 🖼 37 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (62편)
+## 접촉역학 · 소성 (DEM 이론) (63편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -105,6 +105,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation` | 아르곤 글러브박스 안 온도 가변 (−40 → 300 °C) 나노압입으로 잰 무기 Li 전도 고체전해질 다섯 시편 (열간 가압 분말 펠릿 Li₆PS₅Cl · Li₁₀SnP₂S₁₂ (LSPS) + LAGP · LLZTO 2 종 · 기준 석영 유리) 의 환산 탄성률 · 경도 · 손실 계수 · 압입 크리프 — Li₆PS₅Cl ( | experiment (glovebox variable-temperature nanoindentation −4 | 2026-11-10 | 🖼 22 |
 | `pasha2014_linear_elastoplastic_adhesive_contact` | 선형 탄소성·점착 접촉 변형 모델 (미세 점착분말용 piecewise-linear LAW) — Pasha (Granular Matter 2014) | DEM (contact-LAW theory + EDEM 구현/검증) | 2026-06-26 | 🖼 23 |
 | `paulick2015_elastic_particle_properties_dem_review` | DEM 결과에 대한 입자 탄성 물성(Young's modulus E · shear modulus G · 접촉강성 contact stiffness)의 영향 리뷰 — 조밀계 vs 희박계 · 오버랩 1 % 규칙 · "밀할수록 강성이 중요해진다" — Paulick, Morgeneyer, Kwade (Powder Technolog | DEM (review — 탄성 파라미터 민감도) | 2026-08-25 | — |
+| `paulick2015_particle_contact_stiffness_two_particle_method` | 두 입자 사이 접촉강성을 재는 방법 — 한 알 (벽–입자–벽 WPW) 과 두 알 (벽–입자–입자–벽 WPPW) 을 같은 시험기로 누르고 같은 힘에서 변위를 빼 입자–입자 (PP) 접촉만 남긴다 · 소다석회 유리 구슬 0.8 · 1.5 · 3.0 mm · 최대 80 N · 90 µm/min · 5 회 반복 · Hertz 대 | experiment (입자 접촉강성 측정법 · 일축 압축 시험기 Zwick Z010 · 유리 구슬 한 알 / | 2026-11-12 | 🖼 58 |
 | `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` | LIGGGHTS SJKR 의 cohesionEnergyDensity (CED) 를 원통 인양 시험으로 보정 — 점착 분말 (젖은 모래 9.5 wt% 수분) 은 안식각이 40–84° 로 재현되지 않으니, 대신 기둥이 서 있다 → 볼록하게 휜다 → 무너진다 의 상 전이와 슬라이스별 지름 (상대 굽힘) 을 기준으로 · 상 전이 | DEM (LIGGGHTS 3.01, Hertz–Mindlin + simplified JKR cohesion  | 2026-10-13 | 🖼 20 |
 | `schreiner2020_dem_calendering_lib` | LIB 전극 calendering(압연)을 DEM으로 — NMC622 양극 · EDEM(상용) + EEPA 탄소성 접촉 + Bonding(Potyondy–Cundall) · 3-모듈 "USER TOOL"(공정 파라미터 예측) — Schreiner·Klinger·Reinhart (Procedia CIRP 2020, 짧은 학 | DEM (EDEM 상용, EEPA+Bonding; 나노압입 보정 + 공정 USER TOOL) | 2026-06-27 | 🖼 6 |
 | `sharma2023_nmc_single_crystal_anisotropic_nanoindentation` | 단결정 NMC622 결정립을 EBSD 방위와 짝지어 나노압입 → 이방 탄성상수 C_ij 6개 역산 (VRH: E 140.16 GPa · ν 0.253) + 소결 펠릿 NMC111/532/622/811 의 압입탄성률 M · 경도 H · 압입인성 K_c — Sharma, Meng, Wu, de Vasconcelos, Li,  | exp (EBSD-correlated Berkovich CSM nanoindentation + Vlassak | 2026-09-26 | 🖼 12 |

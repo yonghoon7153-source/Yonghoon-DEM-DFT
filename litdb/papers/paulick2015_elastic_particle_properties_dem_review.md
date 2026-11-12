@@ -1080,6 +1080,11 @@ Table 4 형식이 그대로 템플릿이다.
 
 ---
 
+## 🔗 관련 카드
+- 위 §15 표가 "다른 Paulick 논문 [219]" 로 적은 논문의 원문 카드 (2026-11-12): [`paulick2015_particle_contact_stiffness_two_particle_method`](paulick2015_particle_contact_stiffness_two_particle_method.md) — 같은 저자 · 같은 해의 실험 논문 (Granular Matter 17, 83–93): 한 알 (WPW) · 두 알 (WPPW) 압축 변위를 같은 힘에서 빼 입자–입자 접촉강성만 재는 방법 · 유리 구슬 0.8–3.0 mm · 최대 80 N · 값 전이 금지 (그 카드 §0-1 · §3).
+
+---
+
 ## 🗨️ Q&A 로그
 
 *(빈 칸 — 후속 질문·답변을 여기에 누적)*
