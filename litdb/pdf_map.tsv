@@ -419,3 +419,6 @@ korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens	investigating the 
 # ── 복합 양극 CAM 질량비 × XCT NCM–NCM 배위수 · 2D 화학–역학 응력 (Park 외 · ACS Nano 19 (2025) 22262–22269) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 같은 성의 다른 카드 park2019 · park2020 · park2024 · park2026 (다른 논문) 과 갈라 둔다 · 밑줄 · 공백 두 변형 ──
 park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics	chemo-mechanical_behavior_and_stability_of_high-loading
 park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics	chemo-mechanical behavior and stability of high-loading
+# ── 압연 뒤 보관 중 두께 시계열 · 측정 유효 기간 (Kollenda 외 · Procedia CIRP 130 (2024) 470–478) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 · 밑줄 · 공백 두 변형 ──
+kollenda2024_time_sensitivity_calendered_electrode_springback_storage	time-sensitivity_of_intermediate_product_properties
+kollenda2024_time_sensitivity_calendered_electrode_springback_storage	time-sensitivity of intermediate product properties
