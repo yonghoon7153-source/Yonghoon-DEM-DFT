@@ -583,7 +583,8 @@ CJGO=0
 #  ★ 2026-11-12 (Rint ② Q2 · 1저자 11-12) — 탄소 접합 원장 (기하) 저장본 폴더 `CJUNC_STORE=<절대 경로>` → payload `--step3-cjunc-store` (같은 열쇠 =
 #    침대 · 격자 · origin · 문턱 · 코드 · 환경 · 기계의 원장을 지문 대조 뒤 읽고 없으면 짓고 쓴다 · `scripts/cjunc_store.py`).  영수증 · OUTDIR ·
 #    팔 이름 · 팔 JSON 바이트 그대로 (정본 표 `RUNNER_CA_EXT_ENV` 밖 — 결과를 바꾸지 않는 길).  발사 전 거부 = CJUNC=1 없이 · 조립만 (봉인 원천은
-#    저장본 없이 다시 조립해야 독립 대조) · 절대 경로 아님 · 허용 밖 글자 (생성 스크립트에 박힌다 — 개행 · 빈칸 · 따옴표 · `$`) · 폴더 없음.
+#    저장본 없이 다시 조립해야 독립 대조) · 절대 경로 아님 · 허용 밖 글자 (생성 스크립트에 박힌다 — 개행 · 빈칸 · 따옴표 · `$`) · 심볼릭 링크 (끝 빗금을
+#    걷고 본다 · ★ 11-12 내부 반박 리뷰 RCP-06 · payload `cjunc_store.Store` · 사슬 `cjunc_store_dir_problem` 과 같은 규칙) · 폴더 없음.
 CJS_FLAG=""
 if [ -n "${CJUNC_STORE:-}" ]; then
   if [ "${CJUNC:-}" != "1" ]; then
@@ -601,6 +602,11 @@ if [ -n "${CJUNC_STORE:-}" ]; then
   esac
   if printf '%s' "$CJUNC_STORE" | LC_ALL=C grep -q '[^A-Za-z0-9._/-]'; then
     echo "[p2] ABORT — CJUNC_STORE 에 허용 밖 글자가 있다 (영문 · 숫자 · . _ / - 만)"; exit 2
+  fi
+  _CJS_LAST="$CJUNC_STORE"
+  while [ "${#_CJS_LAST}" -gt 1 ] && [ "${_CJS_LAST%/}" != "$_CJS_LAST" ]; do _CJS_LAST="${_CJS_LAST%/}"; done
+  if [ -L "$_CJS_LAST" ]; then
+    echo "[p2] ABORT — CJUNC_STORE 가 심볼릭 링크다 ($CJUNC_STORE) — 실제 폴더 경로를 준다 (남이 바꿀 수 있는 링크를 따르지 않는다)"; exit 2
   fi
   if [ ! -d "$CJUNC_STORE" ]; then
     echo "[p2] ABORT — CJUNC_STORE 폴더가 없다 ($CJUNC_STORE) — 운영자가 umask 022 셸에서 만든다 (payload 가 소유자 · 권한을 다시 본다)"; exit 2

@@ -562,11 +562,20 @@ def _solve_cg(L, b, x0=None, rtol=None):
     LAST_BACKEND.pop('rtol', None)
     if CG_RTOL != _CG_RTOL_DEFAULT:                        # 노브를 켰을 때만 기록 (끔 = 옛 키 그대로)
         LAST_BACKEND['rtol'] = float(CG_RTOL)
+    _gpu_why = None                                        # ★ 11-12 (RCP-08) — GPU 길 실패 사유 (조치 글을 사유별로 · None = 옛 글 그대로)
     if GPU_SOLVE:
         try:
             import cupy as cp
             import cupyx.scipy.sparse as cxs
-            from cupyx.scipy.sparse.linalg import cg as cg_gpu, LinearOperator as _LinOp
+            from cupyx.scipy.sparse.linalg import cg as cg_gpu
+            #  ★ 11-12 (Rint ② Q11 · 내부 반박 리뷰 RCP-08) — LinearOperator 는 따로 부른다: cg 만 있는 옛 cupyx 면 C 꼴 (아래) 을 만들 수 없다.  옛 A 꼴
+            #    (dia_matrix) 로 조용히 되돌리지 않는다 — GPU 길 전처리 꼴은 하나 (기록 키 없이 코드 신원이 C 꼴을 증명한다 · 설계 (가)) → 그 cupyx 에서는
+            #    GPU 길이 실패 사유 'no_linop' 으로 떨어진다 (REQUIRE_GPU = 사유별 조치 글로 멈춤 · 아니면 CPU 폴백).  R 판 cupy 12.3.0 에는 있다 (무영향).
+            try:
+                from cupyx.scipy.sparse.linalg import LinearOperator as _LinOp
+            except ImportError:
+                _gpu_why = 'no_linop'
+                raise
             Lg = cxs.csr_matrix(L.astype(np.float64))
             bg = cp.asarray(b, dtype=np.float64)
             #  ★ 2026-11-12 (Rint ② Q11 · 1저자 11-12) — 같은 Jacobi (같은 수 1/diag · 같은 정지) 를 **표현만** 벡터 곱 연산자로.  옛 꼴
@@ -588,6 +597,15 @@ def _solve_cg(L, b, x0=None, rtol=None):
             return cp.asnumpy(xg), int(info)
         except Exception as _e:
             LAST_BACKEND['fallback_reason'] = f'{type(_e).__name__}: {_e}'
+            if REQUIRE_GPU and _gpu_why == 'no_linop':
+                #  ★ 11-12 (RCP-08) — 사유별 조치 글: GPU 를 비우고 재개해도 같은 실패다 (설치된 cupyx 의 모양) · 첫 줄 · 둘째 줄은 옛 꼴 그대로
+                raise SystemExit(
+                    f'STEP3 ABORT — GPU 솔브 실패인데 `--step3-require-gpu` 다: '
+                    f'{type(_e).__name__}: {_e}\n'
+                    f'     CPU 폴백은 backend 봉인(expect gpu)이 거부하므로 계산을 버리게 된다.\n'
+                    f'     조치: 이 환경의 cupy 판을 확인한다 — GPU 길 Jacobi 전처리 (C 꼴) 는 '
+                    f'cupyx.scipy.sparse.linalg.LinearOperator 가 있어야 한다 (R 판 cupy 12.3.0 에는 있다) · '
+                    f'GPU 를 비우거나 같은 명령으로 다시 돌려도 같은 실패다.')
             if REQUIRE_GPU:
                 #  fail-closed — 폴백 결과는 backend 봉인이 어차피 거부한다 (sr01:307).
                 #  몇 시간 CPU 를 태우고 버리는 대신 **지금** 멈춘다.

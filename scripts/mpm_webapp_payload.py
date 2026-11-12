@@ -932,12 +932,16 @@ def _cjunc_entry_contract(a):
             if getattr(a, 'step3_cjunc_graph_only', False):
                 bad.append(('STORE_GRAPH_ONLY', '--step3-cjunc-store + --step3-cjunc-graph-only — 봉인 원천 (조립만) 은 저장본 없이 다시 조립해야 '
                                                 '독립 대조가 된다 (사슬 RunnerGraphSource · 러너도 같이 거부)'))
+            elif getattr(a, 'step3_rasterize_only', ''):
+                #  ★ 11-12 (내부 반박 리뷰 RCP-10) — rasterize-only 는 접합 준비 전에 끝난다 = 저장본 인자가 조용히 안 쓰인다 (조립만과 같은 줄)
+                bad.append(('STORE_RASTERIZE_ONLY', '--step3-cjunc-store + --step3-rasterize-only — rasterize-only 는 접합 원장을 짓기 전에 끝난다 '
+                                                    '(저장본이 조용히 안 쓰인다 · 하나만)'))
             else:
                 try:
                     import cjunc_store as _cjs_chk
                     _cjs_chk.Store(_cjs_dir)
-                except ValueError as _e_st:
-                    bad.append(('STORE_PATH', f'--step3-cjunc-store {_cjs_dir!r} — {_e_st}'))
+                except Exception as _e_st:                    # noqa: BLE001 — ★ 11-12 (RCP-10) Store() 의 예외 전부 = 구조화 거부 (traceback 아님)
+                    bad.append(('STORE_PATH', f'--step3-cjunc-store {_cjs_dir!r} — {type(_e_st).__name__}: {_e_st}'))
         for att, _k, fl in CJUNC_CLI:
             if getattr(a, att, None) is None:
                 bad.append(('MISSING', f'{fl} 가 없다 — 기본값 없음 (결과 전 선언 · 정량이면 거부 · 숫자 = 등록 R §2-1)'))
@@ -1607,11 +1611,13 @@ def main():
                          '쓰고 끝낸다 (CG · 증서 · σ · 매니페스트 없음 · run_contract.cjunc_graph_only_record) · 사슬 봉인 원천 전용 · --step3-cjunc 와만 · '
                          '--step3-rasterize-only 와 동시 = 거부')
     #  ★ 2026-11-12 (Rint ② Q2 · 1저자 11-12) — 탄소 접합 원장 (기하) 저장본 — 같은 침대 · 격자 · origin · 문턱 · 코드 · 환경 · 기계면 한 번 짓고
-    #    다음 팔이 지문을 대조해 읽는다 (`scripts/cjunc_store.py`) · 계획 · 해 · 산출 바이트 그대로 (회계 = mode) · 조립만 (봉인 원천) 과 동시 = 거부.
+    #    다음 팔이 지문을 대조해 읽는다 (`scripts/cjunc_store.py`) · 계획 · 해 · 산출 바이트 그대로 (회계 = mode) · 조립만 (봉인 원천) 과 동시 = 거부 ·
+    #    ★ 11-12 (내부 반박 리뷰 RCP-10) rasterize-only 와 동시 = 거부 (접합 준비 전에 끝나 저장본이 조용히 안 쓰인다).
     ap.add_argument('--step3-cjunc-store', default=None, metavar='DIR',
-                    help='S2 탄소 접합 원장 저장본 폴더 (절대 경로 · 있는 폴더 · 소유자 = 이 사용자 · 그룹 · 남 쓰기 없음) — 같은 열쇠 (침대 · 격자 · origin · '
-                         '문턱 · 코드 · 환경 · 기계) 의 원장을 지문 대조 뒤 읽고 없으면 짓고 쓴다 · 계획 (R_j · 법칙 · c) 은 늘 다시 만든다 · 팔 JSON · '
-                         '매니페스트 바이트 그대로 · 어긋난 저장본 = 멈춤 (S2_CJUNC_STORE|INCONSISTENT|) · --step3-cjunc 와만 · 조립만과 동시 = 거부')
+                    help='S2 탄소 접합 원장 저장본 폴더 (절대 경로 · 있는 폴더 · 심볼릭 링크 아님 · 소유자 = 이 사용자 · 그룹 · 남 쓰기 없음) — 같은 열쇠 '
+                         '(침대 · 격자 · origin · 문턱 · 코드 · 환경 · 기계) 의 원장을 지문 대조 뒤 읽고 없으면 짓고 쓴다 · 계획 (R_j · 법칙 · c) 은 늘 다시 '
+                         '만든다 · 팔 JSON · 매니페스트 바이트 그대로 · 어긋난 저장본 = 멈춤 (S2_CJUNC_STORE|INCONSISTENT|) · --step3-cjunc 와만 · 조립만 · '
+                         '--step3-rasterize-only 와 동시 = 거부')
     ap.add_argument('--sigma-swcnt', type=float, default=100.0,
                     help='σ_e SWCNT sheath (S/cm) — A14.  VGCF급 lit order ⚠hook: 개별 SWCNT 축방향은 '
                          '1e4-1e5 S/cm급이나 vein-번들 film 유효값은 미앵커.  ⚠ koo2026의 0.20 S/cm은 '
@@ -2481,8 +2487,8 @@ def main():
                     import cjunc_store as _cjs
                     try:
                         _cjs_kw = {'store': _cjs.Store(a._cj_store)}
-                    except ValueError as _e_st:
-                        raise SystemExit(f'S2_CJUNC_REFUSED|STORE_PATH| --step3-cjunc-store {a._cj_store!r} — {_e_st}')
+                    except Exception as _e_st:                  # noqa: BLE001 — ★ 11-12 (RCP-10) Store() 의 예외 전부 = 구조화 거부 (입구 계약과 같은 꼴)
+                        raise SystemExit(f'S2_CJUNC_REFUSED|STORE_PATH| --step3-cjunc-store {a._cj_store!r} — {type(_e_st).__name__}: {_e_st}')
                 try:
                     _cj_prep = _cjw.payload_prepare(sid3, lo=_lo3, vox=a.step3_vox, pts=(se[_mcj] - _off) * UM,
                                                     phase=phase[_mcj], fid=_fid_all[_mcj], kind=_kind_all[_mcj],

@@ -5609,15 +5609,19 @@ def record_outdir(rr):
 
 
 def cjunc_store_dir_problem(p):
-    """★ 11-12 (Rint ② Q2) — `--cjunc-store` 폴더 꼴 (payload `cjunc_store.Store` · 러너 CJUNC_STORE 거부와 같은 규칙) → 사유 글 | None."""
+    """★ 11-12 (Rint ② Q2) — `--cjunc-store` 폴더 꼴 (payload `cjunc_store.Store` · 러너 CJUNC_STORE 거부와 같은 규칙 · ★ 11-12 내부 반박 리뷰 RCP-06 =
+    뿌리 심볼릭 링크 (끝 빗금 포함) 거부) → 사유 글 | None."""
     if not isinstance(p, str) or not os.path.isabs(p):
         return '절대 경로여야 한다'
     if not re.fullmatch(r'[A-Za-z0-9._/-]+', p):
         return '영문 · 숫자 · . _ / - 글자만 (러너가 생성 스크립트에 박는다)'
     try:
+        lst = os.lstat(p.rstrip('/') or '/')                 # ★ 11-12 (내부 반박 리뷰 RCP-06) — 끝 빗금을 걷고 링크를 따르지 않는다 (`cjunc_store.root_last`)
         st = os.stat(p)
     except OSError:
         return '있는 폴더여야 한다 (운영자가 umask 022 셸에서 만든다)'
+    if stat.S_ISLNK(lst.st_mode):
+        return '심볼릭 링크가 아니어야 한다 (실제 폴더 경로를 준다 · 남이 바꿀 수 있는 링크를 따르지 않는다)'
     if not stat.S_ISDIR(st.st_mode):
         return '폴더여야 한다'
     if st.st_mode & 0o022:
@@ -8617,7 +8621,7 @@ def main(argv=None, contract=None):
     ap.add_argument('--merge', nargs='+', default=None, help='predict — 합치기 (단위 · 넘침 점 시도 폴더 · 그 바탕 · --ledger 와 · --attempt 없이 · 넘침 있으면 '
                                                              'rc 4 + expansion.json · 끝 합치기 = --expand)')
     ap.add_argument('--cjunc-store', default=None, help='ladder · predict (합치기 아님) — 탄소 접합 원장 (기하) 저장본 폴더 (절대 경로 · 있는 폴더 · '
-                    '이 사용자 소유 · 그룹 · 남 쓰기 없음 · 글자 = 영문 · 숫자 · . _ / -) → 생산 런 env CJUNC_STORE → payload --step3-cjunc-store '
+                    '심볼릭 링크 아님 · 이 사용자 소유 · 그룹 · 남 쓰기 없음 · 글자 = 영문 · 숫자 · . _ / -) → 생산 런 env CJUNC_STORE → payload --step3-cjunc-store '
                     '(같은 열쇠의 원장을 지문 대조 뒤 읽고 없으면 짓고 쓴다 · 팔 JSON 바이트 그대로) · 봉인 원천 (조립만) 은 받지 않는다 · ★ 11-12 Q2')
     a = ap.parse_args(argv)
     contract = RealContract() if contract is None else contract
