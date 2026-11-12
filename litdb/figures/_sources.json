@@ -1533,8 +1533,8 @@
   ]
  },
  "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation": {
-  "figures": 8,
-  "generated": "2026-11-11",
+  "figures": 44,
+  "generated": "2026-11-12",
   "pdfs": [
    "2038fbfe-8._High-pressure_in_situ_X-ray_computed_tomography_and_numerical_simulation_of_sulfide_solid_electrolyte.pdf"
   ]
@@ -1555,7 +1555,7 @@
   ]
  },
  "korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens": {
-  "figures": 20,
+  "figures": 64,
   "generated": "2026-11-11",
   "pdfs": [
    "423f6f31-21._Investigating_the_densification_of_Li6PS5Cl_solid_electrolyte_through_multi-scale_characterization_techniques.pdf",
@@ -2481,6 +2481,14 @@
   "pdfs": [
    "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
    "71. Sup) Park2024_SevenNet_Parallel_GNN_MD.pdf"
+  ]
+ },
+ "park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics": {
+  "figures": 56,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "06b00677-6._Chemo-mechanical_behavior_and_stability_of_high-loading_cathodes_in_solid-state_batteries.pdf",
+   "54daa555-6._Sup_Chemo-mechanical_behavior_and_stability_of_high-loading_cathodes_in_solid-state_batteries.pdf"
   ]
  },
  "park2026_llzo_li13si4_dopant_interface_thermal_battery": {
