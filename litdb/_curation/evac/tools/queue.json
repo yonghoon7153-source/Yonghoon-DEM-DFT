@@ -952,7 +952,7 @@
   "si": [],
   "extra": [],
   "bib": "Y. Hiramatsu, Y. Oka, \"Determination of the tensile strength of rock by a compression test of an irregular test piece\", Int. J. Rock Mech. Min. Sci. Geomech. Abstr. 3 (1966) 89–90 (첫 쪽 인쇄가 \"pp. 89–99\" 일 수 있다 — 원문 그대로 적는다), DOI 10.1016/0148-9062(66)90002-7. (본 세션이 적은 서지 메모 — 네가 원문 첫 쪽에서 다시 확인)",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "정본에 카드 없음 (인용만 = stallard2022). — 시작할 때 파일 목록 · DOI · 제1 저자 성으로 한 번 더 확인",
   "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 고른 의도 (후보 표 N-11 '왜' 그대로): \"c · m — 명목 강도 σ ≈ P/D² 규약의 원 출처 · Wheatcroft 는 계수 1 · 같은 그룹 리뷰는 σ_F = 2.8 P_C/(π d_P²) (계수 ≈0.891) 로 인용해 12 % 차 · wheatcroft '[26] 원문은 미확인' (L194) → 강도 값을 R7 에 쓰기 전에 규약 확정\"\n  가리킨 카드 = wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem (L194) · stallard2022_cathode_mechanical_properties_review (L240).\n- ★ 꼭 뽑을 것: **강도 식 원문 그대로 (기호 · 계수 · 0.9 / 2.8/π 등 · 유도 가정 (구 · 불규칙 시편 · 탄성 해석) · 적용 조건 · 단위)** · 시험 (암석 종류 · 시편 · 하중) · 값과 다른 시험 (브라질 시험 등) 과의 비교 · 저자 한계.  식의 계수가 리뷰들이 인용한 꼴 (계수 1 · 2.8/π ≈ 0.891) 가운데 무엇과 같은지 분명히.\n  · 우리 쪽: AM 입자 파괴 강도 규약 (조건 R7 · Auerbach · DEM 파괴 판정) 에 이 식을 쓸 때의 가정 차이 (암석 ↔ NCM 2 차입자 · 크기 · 하중 방식).",
   "p1": true
