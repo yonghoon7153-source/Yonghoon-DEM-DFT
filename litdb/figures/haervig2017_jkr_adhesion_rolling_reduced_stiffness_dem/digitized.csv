@@ -1,0 +1,807 @@
+figure,series,x_name,x,y_name,y,note
+fig12,c(e) Eq.(25) particle-wall,e,0.1,c,5364.5938,"vector square centre (175.821,542.776) pt p.8; x ticks 175.821..459.556 = 0.1..0.9 (lin resid 1.9e-06); y major ticks = decades 1e-1..1e4 (log resid 2.1e-05 dec)"
+fig12,c(e) Eq.(25) particle-wall,e,0.2,c,584.6484,same calibration as first row of this series
+fig12,c(e) Eq.(25) particle-wall,e,0.3,c,147.2588,same calibration as first row of this series
+fig12,c(e) Eq.(25) particle-wall,e,0.4,c,50.9584,same calibration as first row of this series
+fig12,c(e) Eq.(25) particle-wall,e,0.5,c,20.4351,same calibration as first row of this series
+fig12,c(e) Eq.(25) particle-wall,e,0.6,c,8.6658,same calibration as first row of this series
+fig12,c(e) Eq.(25) particle-wall,e,0.7,c,3.613,same calibration as first row of this series
+fig12,c(e) Eq.(25) particle-wall,e,0.8,c,1.3357,same calibration as first row of this series
+fig12,c(e) Eq.(25) particle-wall,e,0.9,c,0.3338,same calibration as first row of this series
+fig8,"lambda=1e6, Ad=5",E_mod/E,1e-3..1e3 (flat),e_eff/e,0.8841,horizontal solid vector line at y=544.091 pt p.6; y ticks 676.539..526.72 = 0..1 (lin resid 3.2e-06); x decades 172.1..457.057 (log resid 1.8e-05)
+fig8,"lambda=1e6, Ad=10",E_mod/E,1e-3..1e3 (flat),e_eff/e,0.7446,horizontal dashed vector line at y=564.978 pt p.6; y ticks 676.539..526.72 = 0..1 (lin resid 3.2e-06); x decades 172.1..457.057 (log resid 1.8e-05)
+fig8,"lambda=1e6, Ad=20",E_mod/E,1e-3..1e3 (flat),e_eff/e,0.3231,horizontal dotted vector line at y=628.138 pt p.6; y ticks 676.539..526.72 = 0..1 (lin resid 3.2e-06); x decades 172.1..457.057 (log resid 1.8e-05)
+fig8,"lambda=1e6, Ad=40",E_mod/E,1e-3..1e3 (flat),e_eff/e,0.0001,horizontal solid vector line at y=676.523 pt p.6; y ticks 676.539..526.72 = 0..1 (lin resid 3.2e-06); x decades 172.1..457.057 (log resid 1.8e-05)
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1000.1,e_eff/e,0.0,vector polyline vertices p.6; y ticks 223.322..73.966 = 0..1 (lin resid 3.0e-06); x decades 172.455..456.532 = 1e3..1e9 (log resid 1.2e-05)
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,5012.28,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,6309.9,e_eff/e,0.16994,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,7943.07,e_eff/e,0.3318,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,10000.9,e_eff/e,0.4321,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,12590.6,e_eff/e,0.50778,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,15849.4,e_eff/e,0.56868,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,19951.6,e_eff/e,0.61932,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,25120.5,e_eff/e,0.66234,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,31623.9,e_eff/e,0.69932,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,39809,e_eff/e,0.73144,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,50122.4,e_eff/e,0.75953,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,63101.6,e_eff/e,0.78427,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,79433.9,e_eff/e,0.80613,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,100013,e_eff/e,0.82553,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,125905,e_eff/e,0.84276,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,158500,e_eff/e,0.85821,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,199515,e_eff/e,0.87199,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,251216,e_eff/e,0.88432,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,316237,e_eff/e,0.89534,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,398087,e_eff/e,0.90523,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,501220,e_eff/e,0.91433,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,631011,e_eff/e,0.92241,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,794333,e_eff/e,0.92968,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.00007e+06,e_eff/e,0.93623,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.25904e+06,e_eff/e,0.9422,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.58499e+06,e_eff/e,0.94747,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.99523e+06,e_eff/e,0.95241,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,2.51201e+06,e_eff/e,0.95672,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,3.16234e+06,e_eff/e,0.96073,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,3.98084e+06,e_eff/e,0.96438,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,5.01216e+06,e_eff/e,0.96762,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,6.31005e+06,e_eff/e,0.97059,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,7.94326e+06,e_eff/e,0.97327,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.00011e+07,e_eff/e,0.9757,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.25903e+07,e_eff/e,0.97791,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.58498e+07,e_eff/e,0.97992,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.99521e+07,e_eff/e,0.98176,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,2.51211e+07,e_eff/e,0.9834,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,3.16232e+07,e_eff/e,0.98491,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,3.981e+07,e_eff/e,0.98626,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,5.01212e+07,e_eff/e,0.9875,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,6.31e+07,e_eff/e,0.98862,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,7.9432e+07,e_eff/e,0.98965,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.00006e+08,e_eff/e,0.99058,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.25908e+08,e_eff/e,0.99144,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.58497e+08,e_eff/e,0.99219,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.9951e+08,e_eff/e,0.99288,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,2.51209e+08,e_eff/e,0.99353,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,3.16229e+08,e_eff/e,0.99412,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,3.98077e+08,e_eff/e,0.99464,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,5.01208e+08,e_eff/e,0.99507,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,6.30995e+08,e_eff/e,0.99553,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,7.94313e+08,e_eff/e,0.99596,same calibration as first row of this series
+fig7,"Ad=5 (e=0.3, non-modified model)",lambda,1.0001e+09,e_eff/e,0.99631,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1000.1,e_eff/e,0.0,vector polyline vertices p.6; y ticks 223.322..73.966 = 0..1 (lin resid 3.0e-06); x decades 172.455..456.532 = 1e3..1e9 (log resid 1.2e-05)
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1269.03,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1610.36,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,2043.59,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,2593.13,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,3290.6,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,4175.47,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,5298.53,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,6723.35,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,8532.13,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,10827,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,13739.1,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,17432.8,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,22124.9,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,28074.5,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,31623.9,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,39809,e_eff/e,0.26045,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,50122.4,e_eff/e,0.38348,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,63101.6,e_eff/e,0.47025,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,79433.9,e_eff/e,0.53816,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,100013,e_eff/e,0.5938,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,125905,e_eff/e,0.64058,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,158500,e_eff/e,0.68054,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,199515,e_eff/e,0.7151,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,251216,e_eff/e,0.74522,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,316237,e_eff/e,0.77165,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,398087,e_eff/e,0.79495,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,501220,e_eff/e,0.81565,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,631011,e_eff/e,0.83397,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,794333,e_eff/e,0.85032,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.00007e+06,e_eff/e,0.86493,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.25904e+06,e_eff/e,0.87798,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.58499e+06,e_eff/e,0.88973,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.99523e+06,e_eff/e,0.90012,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,2.51201e+06,e_eff/e,0.90972,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,3.16234e+06,e_eff/e,0.91826,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,3.98084e+06,e_eff/e,0.92588,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,5.01216e+06,e_eff/e,0.93282,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,6.31005e+06,e_eff/e,0.93915,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,7.94326e+06,e_eff/e,0.94481,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.00011e+07,e_eff/e,0.94984,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.25903e+07,e_eff/e,0.95455,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.58498e+07,e_eff/e,0.95871,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.99521e+07,e_eff/e,0.96254,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,2.51211e+07,e_eff/e,0.96597,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,3.16232e+07,e_eff/e,0.96909,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,3.981e+07,e_eff/e,0.97189,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,5.01212e+07,e_eff/e,0.97444,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,6.31e+07,e_eff/e,0.97679,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,7.9432e+07,e_eff/e,0.97889,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.00006e+08,e_eff/e,0.9808,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.25908e+08,e_eff/e,0.98255,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.58497e+08,e_eff/e,0.98413,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.9951e+08,e_eff/e,0.98553,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,2.51209e+08,e_eff/e,0.98684,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,3.16229e+08,e_eff/e,0.98806,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,3.98077e+08,e_eff/e,0.98913,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,5.01208e+08,e_eff/e,0.9901,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,6.30995e+08,e_eff/e,0.99099,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,7.94313e+08,e_eff/e,0.99178,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.0001e+09,e_eff/e,0.99254,same calibration as first row of this series
+fig7,"Ad=10 (e=0.3, non-modified model)",lambda,1.01263e+09,e_eff/e,0.99257,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,158500,e_eff/e,0.0,vector polyline vertices p.6; y ticks 223.322..73.966 = 0..1 (lin resid 3.0e-06); x decades 172.455..456.532 = 1e3..1e9 (log resid 1.2e-05)
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,199515,e_eff/e,0.15693,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,251216,e_eff/e,0.32558,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,316237,e_eff/e,0.42766,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,398087,e_eff/e,0.50429,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,501220,e_eff/e,0.56583,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,631011,e_eff/e,0.61694,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,794333,e_eff/e,0.66029,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.00007e+06,e_eff/e,0.69754,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.25904e+06,e_eff/e,0.72989,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.58499e+06,e_eff/e,0.75818,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.99523e+06,e_eff/e,0.78307,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,2.51201e+06,e_eff/e,0.805,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,3.16234e+06,e_eff/e,0.82459,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,3.98084e+06,e_eff/e,0.84195,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,5.01216e+06,e_eff/e,0.85745,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,6.31005e+06,e_eff/e,0.87131,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,7.94326e+06,e_eff/e,0.88373,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.00011e+07,e_eff/e,0.89486,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.25903e+07,e_eff/e,0.90488,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.58498e+07,e_eff/e,0.91389,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.99521e+07,e_eff/e,0.92202,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,2.51211e+07,e_eff/e,0.92933,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,3.16232e+07,e_eff/e,0.93594,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,3.981e+07,e_eff/e,0.94186,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,5.01212e+07,e_eff/e,0.94725,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,6.31e+07,e_eff/e,0.95218,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,7.9432e+07,e_eff/e,0.95659,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.00006e+08,e_eff/e,0.96058,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.25908e+08,e_eff/e,0.96421,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.58497e+08,e_eff/e,0.96747,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.9951e+08,e_eff/e,0.97044,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,2.51209e+08,e_eff/e,0.97316,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,3.16229e+08,e_eff/e,0.97558,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,3.98077e+08,e_eff/e,0.97782,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,5.01208e+08,e_eff/e,0.97982,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,6.30995e+08,e_eff/e,0.98165,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,7.94313e+08,e_eff/e,0.98332,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.0001e+09,e_eff/e,0.98485,same calibration as first row of this series
+fig7,"Ad=20 (e=0.3, non-modified model)",lambda,1.02272e+09,e_eff/e,0.98498,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1000.1,e_eff/e,0.0,vector polyline vertices p.6; y ticks 223.322..73.966 = 0..1 (lin resid 3.0e-06); x decades 172.455..456.532 = 1e3..1e9 (log resid 1.2e-05)
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.00007e+06,e_eff/e,0.0,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.25904e+06,e_eff/e,0.25226,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.58499e+06,e_eff/e,0.37832,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.99523e+06,e_eff/e,0.46633,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,2.51201e+06,e_eff/e,0.535,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,3.16234e+06,e_eff/e,0.59118,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,3.98084e+06,e_eff/e,0.63835,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,5.01216e+06,e_eff/e,0.67863,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,6.31005e+06,e_eff/e,0.71344,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,7.94326e+06,e_eff/e,0.74377,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.00011e+07,e_eff/e,0.77031,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.25903e+07,e_eff/e,0.79383,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.58498e+07,e_eff/e,0.81461,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.99521e+07,e_eff/e,0.83307,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,2.51211e+07,e_eff/e,0.84952,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,3.16232e+07,e_eff/e,0.86422,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,3.981e+07,e_eff/e,0.87737,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,5.01212e+07,e_eff/e,0.88916,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,6.31e+07,e_eff/e,0.89975,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,7.9432e+07,e_eff/e,0.90929,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.00006e+08,e_eff/e,0.91785,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.25908e+08,e_eff/e,0.92551,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.58497e+08,e_eff/e,0.93254,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.9951e+08,e_eff/e,0.93878,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,2.51209e+08,e_eff/e,0.94449,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,3.16229e+08,e_eff/e,0.94963,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,3.98077e+08,e_eff/e,0.95424,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,5.01208e+08,e_eff/e,0.95853,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,6.30995e+08,e_eff/e,0.96227,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,7.94313e+08,e_eff/e,0.96578,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.0001e+09,e_eff/e,0.96891,same calibration as first row of this series
+fig7,"Ad=40 (e=0.3, non-modified model)",lambda,1.10312e+09,e_eff/e,0.97012,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.0,v_normal_m_per_s,4.99998,vector polyline vertices p.9; x ticks 161.789..446.4 = 0..0.2 us (lin resid 3.4e-07); y ticks 695.126..524.358 = -6..6 m/s (lin resid 2.5e-05)
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.000202,v_normal_m_per_s,5.09716,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.000404,v_normal_m_per_s,5.18619,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.000606,v_normal_m_per_s,5.26792,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.000808,v_normal_m_per_s,5.34212,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.001011,v_normal_m_per_s,5.40832,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.001212,v_normal_m_per_s,5.46622,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.001414,v_normal_m_per_s,5.51527,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.001616,v_normal_m_per_s,5.55512,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.001818,v_normal_m_per_s,5.58526,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.00202,v_normal_m_per_s,5.60529,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.002222,v_normal_m_per_s,5.61478,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.002424,v_normal_m_per_s,5.61344,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.002626,v_normal_m_per_s,5.60086,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.002828,v_normal_m_per_s,5.57683,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.00303,v_normal_m_per_s,5.54099,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.003232,v_normal_m_per_s,5.49321,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.003434,v_normal_m_per_s,5.43327,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.003637,v_normal_m_per_s,5.3611,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.003838,v_normal_m_per_s,5.27649,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.00404,v_normal_m_per_s,5.17959,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.004242,v_normal_m_per_s,5.07025,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.004445,v_normal_m_per_s,4.94868,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.004646,v_normal_m_per_s,4.81495,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.004848,v_normal_m_per_s,4.66921,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.00505,v_normal_m_per_s,4.51181,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.005253,v_normal_m_per_s,4.34294,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.005454,v_normal_m_per_s,4.16291,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.005656,v_normal_m_per_s,3.9722,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.005859,v_normal_m_per_s,3.77129,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.00606,v_normal_m_per_s,3.56055,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.006263,v_normal_m_per_s,3.34053,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.006464,v_normal_m_per_s,3.11187,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.006667,v_normal_m_per_s,2.87527,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.006868,v_normal_m_per_s,2.63122,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.007071,v_normal_m_per_s,2.38056,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.007273,v_normal_m_per_s,2.12393,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.007475,v_normal_m_per_s,1.86218,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.007676,v_normal_m_per_s,1.59606,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.007879,v_normal_m_per_s,1.32636,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.008081,v_normal_m_per_s,1.05385,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.008283,v_normal_m_per_s,0.77951,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.008485,v_normal_m_per_s,0.50405,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.008687,v_normal_m_per_s,0.22845,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.008889,v_normal_m_per_s,-0.04652,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.009091,v_normal_m_per_s,-0.32008,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.009293,v_normal_m_per_s,-0.59126,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.009495,v_normal_m_per_s,-0.85941,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.009697,v_normal_m_per_s,-1.12363,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.009899,v_normal_m_per_s,-1.38314,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.010101,v_normal_m_per_s,-1.63738,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.010303,v_normal_m_per_s,-1.88529,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.010505,v_normal_m_per_s,-2.12653,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.010707,v_normal_m_per_s,-2.36018,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.010909,v_normal_m_per_s,-2.58582,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.011111,v_normal_m_per_s,-2.80282,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.011313,v_normal_m_per_s,-3.01068,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.011515,v_normal_m_per_s,-3.20884,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.011717,v_normal_m_per_s,-3.39696,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.011919,v_normal_m_per_s,-3.57467,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.012121,v_normal_m_per_s,-3.74164,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.012323,v_normal_m_per_s,-3.8975,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.012525,v_normal_m_per_s,-4.04212,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.012727,v_normal_m_per_s,-4.17528,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.012929,v_normal_m_per_s,-4.29685,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.013132,v_normal_m_per_s,-4.40675,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.013333,v_normal_m_per_s,-4.50492,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.013535,v_normal_m_per_s,-4.59149,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.013737,v_normal_m_per_s,-4.66633,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.013939,v_normal_m_per_s,-4.72972,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.014141,v_normal_m_per_s,-4.78165,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.014344,v_normal_m_per_s,-4.82233,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.014545,v_normal_m_per_s,-4.85206,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.014747,v_normal_m_per_s,-4.87096,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.01495,v_normal_m_per_s,-4.87939,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.015152,v_normal_m_per_s,-4.87771,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.015354,v_normal_m_per_s,-4.86618,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.015555,v_normal_m_per_s,-4.84517,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.015758,v_normal_m_per_s,-4.81502,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.015959,v_normal_m_per_s,-4.77623,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.016162,v_normal_m_per_s,-4.72915,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.016363,v_normal_m_per_s,-4.67413,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.016566,v_normal_m_per_s,-4.61187,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.016767,v_normal_m_per_s,-4.54251,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.01697,v_normal_m_per_s,-4.46669,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.017172,v_normal_m_per_s,-4.38483,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.017374,v_normal_m_per_s,-4.29734,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.017576,v_normal_m_per_s,-4.20486,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.017778,v_normal_m_per_s,-4.10768,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.01798,v_normal_m_per_s,-4.00642,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.018182,v_normal_m_per_s,-3.90143,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.018384,v_normal_m_per_s,-3.79343,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.018586,v_normal_m_per_s,-3.6831,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.018788,v_normal_m_per_s,-3.59316,same calibration as first row of this series
+fig13,"Emod/E=1e0 (PSL on quartz, v0=5 m/s)",t_us,0.02,v_normal_m_per_s,-3.59316,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.0,v_normal_m_per_s,4.99998,vector polyline vertices p.9; x ticks 161.789..446.4 = 0..0.2 us (lin resid 3.4e-07); y ticks 695.126..524.358 = -6..6 m/s (lin resid 2.5e-05)
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.000505,v_normal_m_per_s,5.09674,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.001011,v_normal_m_per_s,5.18542,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.001515,v_normal_m_per_s,5.26679,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.00202,v_normal_m_per_s,5.34079,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.002525,v_normal_m_per_s,5.40691,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.00303,v_normal_m_per_s,5.46468,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.003535,v_normal_m_per_s,5.5138,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.00404,v_normal_m_per_s,5.55378,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.004545,v_normal_m_per_s,5.58421,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.00505,v_normal_m_per_s,5.60459,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.005556,v_normal_m_per_s,5.61456,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.00606,v_normal_m_per_s,5.61379,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.006565,v_normal_m_per_s,5.60199,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.007071,v_normal_m_per_s,5.5788,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.007576,v_normal_m_per_s,5.54394,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.008081,v_normal_m_per_s,5.49728,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.008586,v_normal_m_per_s,5.43854,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.009091,v_normal_m_per_s,5.3677,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.009596,v_normal_m_per_s,5.28464,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.010101,v_normal_m_per_s,5.18929,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.010606,v_normal_m_per_s,5.0817,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.011111,v_normal_m_per_s,4.96189,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.011616,v_normal_m_per_s,4.83013,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.012121,v_normal_m_per_s,4.68643,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.012626,v_normal_m_per_s,4.53106,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.013132,v_normal_m_per_s,4.36431,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.013636,v_normal_m_per_s,4.18652,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.014141,v_normal_m_per_s,3.99813,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.014647,v_normal_m_per_s,3.79947,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.015152,v_normal_m_per_s,3.59105,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.015656,v_normal_m_per_s,3.37342,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.016162,v_normal_m_per_s,3.14708,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.016666,v_normal_m_per_s,2.91272,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.017172,v_normal_m_per_s,2.67092,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.017677,v_normal_m_per_s,2.42251,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.018182,v_normal_m_per_s,2.16806,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.018687,v_normal_m_per_s,1.90834,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.019192,v_normal_m_per_s,1.6442,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.019697,v_normal_m_per_s,1.37632,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.020202,v_normal_m_per_s,1.10564,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.020707,v_normal_m_per_s,0.83285,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.021212,v_normal_m_per_s,0.55886,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.021717,v_normal_m_per_s,0.28453,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.022223,v_normal_m_per_s,0.01061,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.022727,v_normal_m_per_s,-0.26197,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.023232,v_normal_m_per_s,-0.53251,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.023737,v_normal_m_per_s,-0.8001,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.024242,v_normal_m_per_s,-1.06397,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.024747,v_normal_m_per_s,-1.32348,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.025253,v_normal_m_per_s,-1.57772,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.025757,v_normal_m_per_s,-1.82606,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.026263,v_normal_m_per_s,-2.06786,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.026768,v_normal_m_per_s,-2.30235,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.027273,v_normal_m_per_s,-2.5289,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.027778,v_normal_m_per_s,-2.74724,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.028283,v_normal_m_per_s,-2.95643,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.028788,v_normal_m_per_s,-3.15635,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.029293,v_normal_m_per_s,-3.34636,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.029798,v_normal_m_per_s,-3.52619,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.030303,v_normal_m_per_s,-3.69533,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.030808,v_normal_m_per_s,-3.85365,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.031313,v_normal_m_per_s,-4.00087,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.031818,v_normal_m_per_s,-4.13677,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.032323,v_normal_m_per_s,-4.26129,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.032828,v_normal_m_per_s,-4.37422,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.033333,v_normal_m_per_s,-4.47555,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.033838,v_normal_m_per_s,-4.56535,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.034344,v_normal_m_per_s,-4.64356,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.034848,v_normal_m_per_s,-4.71025,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.035354,v_normal_m_per_s,-4.76562,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.035859,v_normal_m_per_s,-4.80989,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.036363,v_normal_m_per_s,-4.84313,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.036869,v_normal_m_per_s,-4.86562,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.037374,v_normal_m_per_s,-4.87764,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.037878,v_normal_m_per_s,-4.87946,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.038384,v_normal_m_per_s,-4.87145,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.038889,v_normal_m_per_s,-4.85388,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.039393,v_normal_m_per_s,-4.82718,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.039899,v_normal_m_per_s,-4.79169,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.040404,v_normal_m_per_s,-4.74792,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.040909,v_normal_m_per_s,-4.69613,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.041414,v_normal_m_per_s,-4.63689,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.041919,v_normal_m_per_s,-4.57055,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.042424,v_normal_m_per_s,-4.49761,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.042929,v_normal_m_per_s,-4.41849,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.043434,v_normal_m_per_s,-4.3336,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.043939,v_normal_m_per_s,-4.24358,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.044445,v_normal_m_per_s,-4.14865,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.044949,v_normal_m_per_s,-4.04949,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.045454,v_normal_m_per_s,-3.94655,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.04596,v_normal_m_per_s,-3.8403,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.046465,v_normal_m_per_s,-3.73138,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.046969,v_normal_m_per_s,-3.62077,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.047475,v_normal_m_per_s,-3.59323,same calibration as first row of this series
+fig13,"Emod/E=1e-1 (PSL on quartz, v0=5 m/s)",t_us,0.05,v_normal_m_per_s,-3.59323,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.0,v_normal_m_per_s,4.99998,vector polyline vertices p.9; x ticks 161.789..446.4 = 0..0.2 us (lin resid 3.4e-07); y ticks 695.126..524.358 = -6..6 m/s (lin resid 2.5e-05)
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.00202,v_normal_m_per_s,5.15015,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.00404,v_normal_m_per_s,5.28106,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.00606,v_normal_m_per_s,5.39286,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.008081,v_normal_m_per_s,5.48393,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.010101,v_normal_m_per_s,5.55245,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.012121,v_normal_m_per_s,5.59679,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.014141,v_normal_m_per_s,5.61513,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.016162,v_normal_m_per_s,5.60613,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.018182,v_normal_m_per_s,5.56854,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.020202,v_normal_m_per_s,5.50122,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.022223,v_normal_m_per_s,5.40347,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.024242,v_normal_m_per_s,5.27481,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.026263,v_normal_m_per_s,5.11508,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.028283,v_normal_m_per_s,4.92444,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.030303,v_normal_m_per_s,4.70329,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.032323,v_normal_m_per_s,4.45257,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.034344,v_normal_m_per_s,4.17345,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.036363,v_normal_m_per_s,3.86735,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.038384,v_normal_m_per_s,3.5361,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.040404,v_normal_m_per_s,3.18186,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.042424,v_normal_m_per_s,2.80697,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.044445,v_normal_m_per_s,2.41408,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.046465,v_normal_m_per_s,2.00609,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.048485,v_normal_m_per_s,1.58601,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.050505,v_normal_m_per_s,1.15701,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.052525,v_normal_m_per_s,0.72252,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.054545,v_normal_m_per_s,0.28572,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.056566,v_normal_m_per_s,-0.14989,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.058586,v_normal_m_per_s,-0.581,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.060606,v_normal_m_per_s,-1.00445,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.062627,v_normal_m_per_s,-1.41701,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.064646,v_normal_m_per_s,-1.81573,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.066666,v_normal_m_per_s,-2.19772,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.068687,v_normal_m_per_s,-2.5606,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.070707,v_normal_m_per_s,-2.9019,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.072727,v_normal_m_per_s,-3.21967,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.074748,v_normal_m_per_s,-3.51206,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.076768,v_normal_m_per_s,-3.77783,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.078788,v_normal_m_per_s,-4.01562,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.080808,v_normal_m_per_s,-4.22482,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.082828,v_normal_m_per_s,-4.40478,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.084848,v_normal_m_per_s,-4.5553,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.086869,v_normal_m_per_s,-4.67666,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.088889,v_normal_m_per_s,-4.769,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.090909,v_normal_m_per_s,-4.83301,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.092929,v_normal_m_per_s,-4.86962,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.094949,v_normal_m_per_s,-4.87981,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.09697,v_normal_m_per_s,-4.86492,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.09899,v_normal_m_per_s,-4.82634,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.101009,v_normal_m_per_s,-4.76541,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.10303,v_normal_m_per_s,-4.68411,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.10505,v_normal_m_per_s,-4.5839,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.10707,v_normal_m_per_s,-4.46669,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.109091,v_normal_m_per_s,-4.33444,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.111111,v_normal_m_per_s,-4.1887,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.113131,v_normal_m_per_s,-4.03165,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.115151,v_normal_m_per_s,-3.86517,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.117171,v_normal_m_per_s,-3.6916,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.119191,v_normal_m_per_s,-3.59323,same calibration as first row of this series
+fig13,"Emod/E=1e-2 (PSL on quartz, v0=5 m/s)",t_us,0.2,v_normal_m_per_s,-3.59323,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.4177,e_eff,0.3941,vector p.5; x ticks 327.078..547.503 pt = 0..16 m/s; y ticks 653.948..538.058 pt = 0..1; filled-circle marker centre
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.5714,e_eff,0.4725,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.6752,e_eff,0.4375,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.7031,e_eff,0.4563,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.7121,e_eff,0.424,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.7864,e_eff,0.5599,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.8118,e_eff,0.4377,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.8918,e_eff,0.4947,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,2.9976,e_eff,0.5419,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.0179,e_eff,0.4532,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.024,e_eff,0.5915,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.0909,e_eff,0.5709,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.1306,e_eff,0.4376,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.1806,e_eff,0.5533,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.2934,e_eff,0.5908,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.3346,e_eff,0.6354,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.4254,e_eff,0.5265,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.5326,e_eff,0.6445,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.5582,e_eff,0.5255,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.5818,e_eff,0.5904,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.6331,e_eff,0.564,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.7827,e_eff,0.6919,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.7839,e_eff,0.6558,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.7848,e_eff,0.6682,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,3.8723,e_eff,0.7248,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.0315,e_eff,0.6681,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.2341,e_eff,0.6886,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.2711,e_eff,0.6759,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.2998,e_eff,0.6524,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.5488,e_eff,0.7903,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.573,e_eff,0.7034,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.6409,e_eff,0.6987,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,4.7395,e_eff,0.6972,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,5.0278,e_eff,0.7482,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,5.5322,e_eff,0.7955,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,5.7218,e_eff,0.7394,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,5.9319,e_eff,0.7587,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.0459,e_eff,0.761,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.2217,e_eff,0.7771,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.223,e_eff,0.7956,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.2281,e_eff,0.7604,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.2738,e_eff,0.7641,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.2842,e_eff,0.7495,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.3202,e_eff,0.775,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.3331,e_eff,0.7436,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.4035,e_eff,0.772,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.4062,e_eff,0.8108,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.7327,e_eff,0.8116,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.867,e_eff,0.7789,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,6.9477,e_eff,0.7924,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.0843,e_eff,0.7915,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.2516,e_eff,0.7955,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.2884,e_eff,0.7805,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.3247,e_eff,0.809,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.4107,e_eff,0.7913,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.4365,e_eff,0.7813,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.4985,e_eff,0.7992,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.5157,e_eff,0.8274,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.7214,e_eff,0.7833,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.928,e_eff,0.8073,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.9645,e_eff,0.7867,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,7.9891,e_eff,0.7597,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.0231,e_eff,0.8108,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.0379,e_eff,0.804,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.0883,e_eff,0.7667,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.143,e_eff,0.7896,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.3504,e_eff,0.8227,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.4913,e_eff,0.776,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.5052,e_eff,0.8112,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.6295,e_eff,0.7979,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.6461,e_eff,0.8182,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,8.877,e_eff,0.8084,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,9.0368,e_eff,0.8148,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,9.1702,e_eff,0.8221,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,9.2188,e_eff,0.8127,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,9.2729,e_eff,0.8256,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,9.2952,e_eff,0.8188,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,9.7178,e_eff,0.8366,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,9.9027,e_eff,0.8221,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.1386,e_eff,0.8303,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.1488,e_eff,0.8138,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.1685,e_eff,0.8232,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.1963,e_eff,0.8408,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.217,e_eff,0.812,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.2315,e_eff,0.802,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.2448,e_eff,0.8288,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.3012,e_eff,0.8211,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.3023,e_eff,0.8373,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.3421,e_eff,0.8108,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.431,e_eff,0.8313,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.5817,e_eff,0.816,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.5978,e_eff,0.8292,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.867,e_eff,0.8253,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.9299,e_eff,0.8033,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.9307,e_eff,0.8141,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.9584,e_eff,0.8291,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,10.9729,e_eff,0.82,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.0099,e_eff,0.8067,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.0421,e_eff,0.8317,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.0673,e_eff,0.8141,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.1174,e_eff,0.8246,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.212,e_eff,0.8202,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.3276,e_eff,0.8439,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.3918,e_eff,0.8404,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.7068,e_eff,0.8397,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,11.8241,e_eff,0.8352,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.0057,e_eff,0.8258,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.0065,e_eff,0.8366,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.1782,e_eff,0.8509,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.2191,e_eff,0.8377,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.3583,e_eff,0.8203,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.494,e_eff,0.8082,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.5066,e_eff,0.825,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.7299,e_eff,0.8158,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.7387,e_eff,0.8331,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,12.7394,e_eff,0.8434,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.008,e_eff,0.8304,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.0586,e_eff,0.848,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.2256,e_eff,0.8476,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.2327,e_eff,0.8417,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.2695,e_eff,0.8247,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.274,e_eff,0.8341,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.3658,e_eff,0.844,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.715,e_eff,0.8454,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.8512,e_eff,0.8386,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.8837,e_eff,0.8163,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.9227,e_eff,0.8309,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,13.9917,e_eff,0.84,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.0304,e_eff,0.8506,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.0327,e_eff,0.83,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.136,e_eff,0.8414,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.2522,e_eff,0.8208,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.3672,e_eff,0.8369,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.4962,e_eff,0.8354,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.6065,e_eff,0.8386,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.7353,e_eff,0.8353,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.8451,e_eff,0.8323,same calibration as first row of this series
+fig6,Experiment Dahneke [27] (PSL on polished quartz),impact_velocity_m_per_s,14.9396,e_eff,0.8264,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,0.0,e_eff,0.0,vector p.5; x ticks 327.078..547.503 pt = 0..16 m/s; y ticks 653.948..538.058 pt = 0..1; polyline vertex
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,2.4,e_eff,0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,2.5,e_eff,0.2236,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,2.6,e_eff,0.308,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,2.6999,e_eff,0.3676,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,2.8,e_eff,0.4139,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,2.9,e_eff,0.4517,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.0,e_eff,0.4834,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.1,e_eff,0.5105,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.2,e_eff,0.534,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.3,e_eff,0.5547,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.4,e_eff,0.5731,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.5,e_eff,0.5895,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.6,e_eff,0.6042,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.7,e_eff,0.6175,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.8,e_eff,0.6296,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,3.9,e_eff,0.6406,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.0,e_eff,0.6507,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.1,e_eff,0.66,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.2,e_eff,0.6685,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.3,e_eff,0.6765,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.4,e_eff,0.6838,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.5,e_eff,0.6906,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.6,e_eff,0.697,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.7,e_eff,0.703,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.8,e_eff,0.7085,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,4.9,e_eff,0.7137,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.0,e_eff,0.7186,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.1,e_eff,0.7233,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.2,e_eff,0.7276,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.3,e_eff,0.7317,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.4,e_eff,0.7356,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.5,e_eff,0.7393,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.6,e_eff,0.7428,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.7,e_eff,0.7461,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.8,e_eff,0.7492,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,5.9,e_eff,0.7522,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.0,e_eff,0.755,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.1,e_eff,0.7578,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.2,e_eff,0.7603,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.3,e_eff,0.7628,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.4,e_eff,0.7652,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.5,e_eff,0.7674,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.6,e_eff,0.7696,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.7,e_eff,0.7717,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.8,e_eff,0.7737,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,6.9,e_eff,0.7756,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.0,e_eff,0.7774,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.1,e_eff,0.7792,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.2,e_eff,0.7809,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.3,e_eff,0.7825,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.4,e_eff,0.7841,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.5,e_eff,0.7856,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.6,e_eff,0.7871,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.7,e_eff,0.7885,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.8001,e_eff,0.7899,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,7.9,e_eff,0.7912,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.0,e_eff,0.7925,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.1001,e_eff,0.7937,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.1999,e_eff,0.7949,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.3,e_eff,0.796,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.4,e_eff,0.7972,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.5,e_eff,0.7982,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.6,e_eff,0.7993,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.7,e_eff,0.8003,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.8,e_eff,0.8013,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,8.9,e_eff,0.8022,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.0,e_eff,0.8032,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.1,e_eff,0.8041,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.2,e_eff,0.8049,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.3,e_eff,0.8058,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.4,e_eff,0.8066,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.5,e_eff,0.8074,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.6,e_eff,0.8082,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.7,e_eff,0.809,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.8,e_eff,0.8097,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,9.9,e_eff,0.8104,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.0,e_eff,0.8112,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.1,e_eff,0.8118,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.2,e_eff,0.8125,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.3,e_eff,0.8132,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.4,e_eff,0.8138,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.5,e_eff,0.8144,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.6,e_eff,0.815,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.7,e_eff,0.8156,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.8,e_eff,0.8162,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,10.9,e_eff,0.8168,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,11.0001,e_eff,0.8173,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,11.1,e_eff,0.8179,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,11.2,e_eff,0.8184,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,11.3,e_eff,0.8189,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,11.3999,e_eff,0.8194,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,11.6,e_eff,0.8204,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,11.8,e_eff,0.8213,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,12.0,e_eff,0.8222,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,12.2,e_eff,0.823,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,12.3,e_eff,0.8235,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,12.5,e_eff,0.8243,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,12.7,e_eff,0.825,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,12.9,e_eff,0.8258,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,13.1,e_eff,0.8265,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,13.3,e_eff,0.8272,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,13.4,e_eff,0.8275,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,13.5,e_eff,0.8279,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,13.7,e_eff,0.8285,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,14.0,e_eff,0.8294,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,14.2001,e_eff,0.83,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,14.4,e_eff,0.8306,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,14.5,e_eff,0.8308,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,14.7,e_eff,0.8314,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,14.8,e_eff,0.8316,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,14.9,e_eff,0.8319,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,15.0,e_eff,0.8322,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,15.2,e_eff,0.8326,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,15.3,e_eff,0.8329,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,15.4,e_eff,0.8331,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,15.5,e_eff,0.8334,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,15.8,e_eff,0.834,same calibration as first row of this series
+fig6,Simulation Emod/E=1e0 (line),impact_velocity_m_per_s,16.0,e_eff,0.8345,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,0.0,e_eff,-0.0,vector p.5; x ticks 327.078..547.503 pt = 0..16 m/s; y ticks 653.948..538.058 pt = 0..1; square marker centre
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,0.5,e_eff,-0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,1.0,e_eff,-0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,1.5,e_eff,-0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,2.0,e_eff,-0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,2.5,e_eff,0.2236,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,3.0,e_eff,0.4834,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,3.5,e_eff,0.5895,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,3.9999,e_eff,0.6507,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,4.5,e_eff,0.6906,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,5.0,e_eff,0.7186,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,5.5,e_eff,0.7393,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,5.9999,e_eff,0.755,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,6.4999,e_eff,0.7674,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,6.9999,e_eff,0.7774,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,7.4999,e_eff,0.7856,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,7.9999,e_eff,0.7924,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,8.4999,e_eff,0.7982,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,8.9999,e_eff,0.8032,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,9.4999,e_eff,0.8074,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,9.9999,e_eff,0.8111,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,10.4999,e_eff,0.8144,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,10.9999,e_eff,0.8173,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,11.4999,e_eff,0.8199,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,11.9999,e_eff,0.8222,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,12.4999,e_eff,0.8243,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,12.9999,e_eff,0.8261,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,13.4999,e_eff,0.8279,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,13.9999,e_eff,0.8294,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,14.5,e_eff,0.8308,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,14.9999,e_eff,0.8321,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,15.4999,e_eff,0.8334,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-1 (squares),impact_velocity_m_per_s,16.0,e_eff,0.8345,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,-0.0001,e_eff,0.0,vector p.5; x ticks 327.078..547.503 pt = 0..16 m/s; y ticks 653.948..538.058 pt = 0..1; cross marker centre
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,0.4999,e_eff,0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,0.9999,e_eff,0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,1.4999,e_eff,0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,1.9999,e_eff,0.0,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,2.4999,e_eff,0.2236,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,2.9999,e_eff,0.4834,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,3.4999,e_eff,0.5894,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,3.9998,e_eff,0.6507,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,4.4999,e_eff,0.6906,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,4.9999,e_eff,0.7186,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,5.4998,e_eff,0.7393,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,5.9999,e_eff,0.755,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,6.4999,e_eff,0.7674,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,6.9999,e_eff,0.7774,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,7.4998,e_eff,0.7856,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,7.9998,e_eff,0.7924,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,8.4998,e_eff,0.7982,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,8.9999,e_eff,0.8031,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,9.4998,e_eff,0.8074,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,9.9998,e_eff,0.8111,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,10.4999,e_eff,0.8144,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,10.9998,e_eff,0.8173,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,11.4998,e_eff,0.8199,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,11.9999,e_eff,0.8222,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,12.4999,e_eff,0.8242,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,12.9999,e_eff,0.8261,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,13.4999,e_eff,0.8278,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,13.9999,e_eff,0.8294,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,14.4999,e_eff,0.8308,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,14.9998,e_eff,0.8321,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,15.4999,e_eff,0.8333,same calibration as first row of this series
+fig6,Simulation Emod/E=1e-2 (crosses),impact_velocity_m_per_s,15.9999,e_eff,0.8344,same calibration as first row of this series
+fig11,e=0.1 (line),Ad,100,lambda_crit,5.36379e+08,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.1 (line),Ad,1005.39,lambda_crit,1.72033e+11,same calibration as first row of this series
+fig11,e=0.2 (line),Ad,100,lambda_crit,5.84704e+07,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.2 (line),Ad,1006.26,lambda_crit,1.87832e+10,same calibration as first row of this series
+fig11,e=0.3 (line),Ad,100,lambda_crit,1.47215e+07,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.3 (line),Ad,1004.55,lambda_crit,4.7093e+09,same calibration as first row of this series
+fig11,e=0.4 (line),Ad,100,lambda_crit,5.09625e+06,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.4 (line),Ad,1006.59,lambda_crit,1.63856e+09,same calibration as first row of this series
+fig11,e=0.5 (line),Ad,100,lambda_crit,2.04327e+06,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.5 (line),Ad,1010.49,lambda_crit,6.63382e+08,same calibration as first row of this series
+fig11,e=0.6 (line),Ad,100,lambda_crit,866844,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.6 (line),Ad,1007.52,lambda_crit,2.79318e+08,same calibration as first row of this series
+fig11,e=0.7 (line),Ad,100,lambda_crit,361398,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.7 (line),Ad,1009.41,lambda_crit,1.16994e+08,same calibration as first row of this series
+fig11,e=0.8 (line),Ad,100,lambda_crit,133578,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.8 (line),Ad,1008.39,lambda_crit,4.31358e+07,same calibration as first row of this series
+fig11,e=0.9 (line),Ad,100,lambda_crit,33383.7,vector line p.8; x = frame 181.2..466.535 pt = Ad 1e2..1e3 (grid at 2e2..9e2 checked); y ticks 63.521..190.336 pt = 1e12..1e4 (2 decades/tick) — left end
+fig11,e=0.9 (line),Ad,1008.57,lambda_crit,1.07852e+07,same calibration as first row of this series
+fig3,"delta_n,0 (original)",overlap_pt_from_origin,55.781,ratio_to_delta_n0,1.0,"Fig. 3 schematic p.4 — light-grey vector grid lines at the x tick labels (delta_n,0 · delta_n,0,mod2 · delta_n,0,mod1) and y tick labels (0 · -(8/9)F_c,mod2 · -(8/9)F_c); origin = frame left x 175.671 pt; ratios only (axes carry no numbers)"
+fig3,"delta_n,0,mod2 (reduced stiffness and adhesiveness, Eq. 24)",overlap_pt_from_origin,140.116,ratio_to_delta_n0,2.51189,card: (E/E_mod)^(2/5) at E_mod/E=0.1 -> 2.51189
+fig3,"delta_n,0,mod1 (reduced stiffness only)",overlap_pt_from_origin,258.914,ratio_to_delta_n0,4.64162,card: (E/E_mod)^(2/3) at E_mod/E=0.1 -> 4.64159
+fig3,"F_c,mod2/F_c (from -(8/9)F levels; F=0 grid at y 526.603)",y_pt,574.022,ratio,0.39810,card: (E_mod/E)^(2/5) at 0.1 -> 0.39811
+fig4,xi_crit knee: original (solid),xi_pt,110.444,ratio_to_xi_crit,1.00000,"Fig. 4 schematic p.5 — knees of the three plot polylines (2 segments each: rise then flat); origin (163.295, 239.769) pt; legend sample lines excluded; ratios only"
+fig4,M_r knee: original (solid),M_pt,78.700,ratio_to_M_r,1.00000,"Fig. 4 schematic p.5 — knees of the three plot polylines (2 segments each: rise then flat); origin (163.295, 239.769) pt; legend sample lines excluded; ratios only"
+fig4,xi_crit knee: dashed = legend 'Reduced stiffness' (caption swaps dotted/dashed),xi_pt,237.945,ratio_to_xi_crit,2.15444,"Fig. 4 schematic p.5 — knees of the three plot polylines (2 segments each: rise then flat); origin (163.295, 239.769) pt; legend sample lines excluded; ratios only"
+fig4,M_r knee: dashed = legend 'Reduced stiffness' (caption swaps dotted/dashed),M_pt,169.555,ratio_to_M_r,2.15445,"Fig. 4 schematic p.5 — knees of the three plot polylines (2 segments each: rise then flat); origin (163.295, 239.769) pt; legend sample lines excluded; ratios only"
+fig4,xi_crit knee: dotted = legend 'Reduced stiffness and adhesiveness',xi_pt,175.042,ratio_to_xi_crit,1.58489,"Fig. 4 schematic p.5 — knees of the three plot polylines (2 segments each: rise then flat); origin (163.295, 239.769) pt; legend sample lines excluded; ratios only"
+fig4,M_r knee: dotted = legend 'Reduced stiffness and adhesiveness',M_pt,49.656,ratio_to_M_r,0.63095,"Fig. 4 schematic p.5 — knees of the three plot polylines (2 segments each: rise then flat); origin (163.295, 239.769) pt; legend sample lines excluded; ratios only"
