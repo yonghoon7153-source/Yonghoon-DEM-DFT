@@ -1,24 +1,27 @@
-# Q11 GPU 확인 블록 (초안 · 11-12 · 조수 · 돌리지 않음 · 1저자가 kgy · gabia 에서 붙여 넣는다 · 킷 없음 · σ 없음)
+# Q11 GPU 확인 블록 (초안 4 판 · 11-12 · 조수 · 돌리지 않음 · 1저자가 kgy · gabia 에서 붙여 넣는다 · 킷 없음 · σ 없음)
 # 무엇: 생산 함수 scripts/step3_sigma.py _solve_cg 를 두 커밋 (옛 11a794674 = A 꼴 dia_matrix 전처리 · 새 = 코드 묶음 커밋 = C 꼴 벡터 곱 연산자)
 #   에서 같은 합성 SPD 계 (298^3 = 26,463,592 미지수 · 벤치와 같은 짜임 · 전도도 10^-1..10^1) 에 돌려 견준다 —
 #   대조 (옛·옛 / 새·새 200 반복) · 짧게 (옛·새 200 반복) · 주 풀이 (0 에서 생산 정지 rtol 1e-12 까지 · 증서 켬 = callback) ·
 #   이어 풀기 (같은 x0 = 옛 주 해 · rtol 1e-14 = 증서 ⓒ 바닥).
 # 결과 전 기대 (먼저 적음): 다섯 짝 모두 해 바이트 · info · 반복 수 · LAST_BACKEND 같음 · 새 꼴이 반복당 빠름 (합성 벤치 A / C = 3.40 gabia ·
 #   3.79 kgy).  다르면 그대로 보고 (시험을 고치지 않는다).  시간 어림 = 주 풀이 반복 수에 달림 (조수 CPU 어림 = 아래 자리표 메모).
-# 자리표 (2 판 · 11-12 대피 세션이 구현 커밋 기준으로 채움 · 본 세션이 반입 뒤 다시 본다):
-#   Q11PIN = 코드 묶음 구현 커밋 = 지금은 작업 트리 (/home/user/rint-codepkg) 의 f17ea8c6b (서명 없음 · push 없음).  본 세션이 반입하며
+# 자리표 (4 판 · 11-12 내부 반박 리뷰 고침 뒤 · 본 세션이 반입 뒤 다시 본다):
+#   Q11PIN = 코드 묶음 끝 커밋 = 지금은 작업 트리 (/home/user/rint-codepkg) 의 0ac6edf3c (서명 없음 · push 없음 · 리뷰 고침 94765bed3 에서
+#     step3_sigma.py 가 다시 바뀌었다 = LinearOperator 를 cg 와 따로 들여 없을 때 따로 사유).  본 세션이 반입하며
 #     서명 · cherry-pick 하면 sha 가 바뀐다 -> 그 40 자리로 바꾼다 (안 바꾸면 블록이 "commits not in Q11REPO" 로 서고 아무것도 돌리지 않는다).
+#     새 모듈 sha256 관문 값 (맨 끝 줄 --new-sha) 과 내용이 같은 커밋이면 어느 것이든 된다 (94765bed3 · 0ac6edf3c 둘 다 같은 파일).
 #   Q11REPO = 그 커밋을 fetch 한 리포 체크아웃.  아래 값 = kgy 의 기준 체크아웃 자리 (근거 = 리포
 #     docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md 의 BASE 줄).  gabia 의 자리는 [미확인] - 본 세션이 채운다.  블록은 fetch 하지 않는다
 #     (1저자가 먼저 git fetch).  두 모듈 파일만 git show 로 꺼낸다 - 형제 모듈 se_material 은 Q11REPO 작업 트리의 판에서 읽는다 (풀이 함수와 무관).
-#   두 모듈 sha256 (맨 끝 줄) = 옛 8d428ff5... = 11a794674 의 scripts/step3_sigma.py · 새 45d645a2... = f17ea8c6b 의 같은 파일
-#     (대피 세션에서 git show | sha256sum 으로 다시 확인).  파일 내용 기준이라 반입으로 커밋 sha 가 바뀌어도 그대로다.
+#   두 모듈 sha256 (맨 끝 줄) = 옛 8d428ff5... = 11a794674 의 scripts/step3_sigma.py · 새 859310da... = 94765bed3 · 0ac6edf3c 의 같은 파일
+#     (3 판의 새 45d645a2... = f17ea8c6b 판 = 리뷰 고침 전 · 이제 쓰지 않는다 · git show | sha256sum 으로 다시 확인).
+#     파일 내용 기준이라 반입으로 커밋 sha 가 바뀌어도 그대로다 (반입 때 step3_sigma.py 를 손대면 다시 센다).
 # 관문: 새 폴더 (~/q11check_<이름표>_<UTC>) · 스크립트 md5 · 두 커밋 있음 · 두 모듈 sha256 · venv (~/dem-venv) · 시간 상한 5400 s ·
 #   쓰는 곳 = 그 새 폴더뿐 (CuPy 캐시 포함).  느낌표 · 탭 · CR 없음.
 # 돌려 받을 것: ~/q11check_<이름표>_<UTC>/result.json · check.log
 Q11L=kgy
 Q11REPO="$HOME/dem-mt"
-Q11PIN=f17ea8c6be8504ffdaa057e40c0c505c666fdfbe
+Q11PIN=0ac6edf3cf4a0631a9291e0ec7dec3cb04c18b64
 Q11D="$HOME/q11check_${Q11L}_$(date -u +%Y%m%dT%H%M%SZ)"; Q11OK=0; mkdir "$Q11D" 2>/dev/null && Q11OK=1 && cat > "$Q11D/q11_gpu_check.py" <<'Q11_CHECK_EOF'
 # -*- coding: utf-8 -*-
 """Q11 GPU check (no kit, no sigma) - draft 2026-11-12 (Rint 2, preconditioner representation only).
@@ -250,4 +253,4 @@ def main(argv=None):
 if __name__ == '__main__':
     sys.exit(main())
 Q11_CHECK_EOF
-if [ "$Q11OK" = 1 ] && [ "$(md5sum < "$Q11D/q11_gpu_check.py" | cut -c1-32)" = acfeb4b4e1515d6aa7d46ddaf67e6e68 ]; then ( case "$Q11PIN" in ""|*[^0-9a-f]*) echo "[q11] STOP: Q11PIN not filled (40 hex)"; exit 2;; esac; [ "${#Q11PIN}" = 40 ] || { echo "[q11] STOP: Q11PIN not 40 hex"; exit 2; }; git -C "$Q11REPO" cat-file -e "11a794674^{commit}" && git -C "$Q11REPO" cat-file -e "${Q11PIN}^{commit}" || { echo "[q11] STOP: commits not in Q11REPO (git fetch first)"; exit 2; }; git -C "$Q11REPO" show "11a794674:scripts/step3_sigma.py" > "$Q11D/s3_old.py" && git -C "$Q11REPO" show "${Q11PIN}:scripts/step3_sigma.py" > "$Q11D/s3_new.py" || { echo "[q11] STOP: git show failed"; exit 2; }; [ -f "$HOME/dem-venv/bin/activate" ] || { echo "[q11] STOP: venv not found (only the script file was written)"; exit 2; }; . "$HOME/dem-venv/bin/activate" && CUPY_CACHE_DIR="$Q11D/cupy_cache" timeout 5400 python3 "$Q11D/q11_gpu_check.py" --label "$Q11L" --out "$Q11D" --old "$Q11D/s3_old.py" --new "$Q11D/s3_new.py" --old-sha 8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec --new-sha 45d645a24eb8d023b22a8e164acbead1a25aea13745aac6e79c9449ab5a4ceb9 --scripts "$Q11REPO/scripts"; echo "[q11] rc $? - send back ~/${Q11D#$HOME/}/result.json and check.log" ); else echo "[q11] paste broken (md5 differs) or the new folder could not be made - nothing run"; fi
+if [ "$Q11OK" = 1 ] && [ "$(md5sum < "$Q11D/q11_gpu_check.py" | cut -c1-32)" = acfeb4b4e1515d6aa7d46ddaf67e6e68 ]; then ( case "$Q11PIN" in ""|*[^0-9a-f]*) echo "[q11] STOP: Q11PIN not filled (40 hex)"; exit 2;; esac; [ "${#Q11PIN}" = 40 ] || { echo "[q11] STOP: Q11PIN not 40 hex"; exit 2; }; git -C "$Q11REPO" cat-file -e "11a794674^{commit}" && git -C "$Q11REPO" cat-file -e "${Q11PIN}^{commit}" || { echo "[q11] STOP: commits not in Q11REPO (git fetch first)"; exit 2; }; git -C "$Q11REPO" show "11a794674:scripts/step3_sigma.py" > "$Q11D/s3_old.py" && git -C "$Q11REPO" show "${Q11PIN}:scripts/step3_sigma.py" > "$Q11D/s3_new.py" || { echo "[q11] STOP: git show failed"; exit 2; }; [ -f "$HOME/dem-venv/bin/activate" ] || { echo "[q11] STOP: venv not found (only the script file was written)"; exit 2; }; . "$HOME/dem-venv/bin/activate" && CUPY_CACHE_DIR="$Q11D/cupy_cache" timeout 5400 python3 "$Q11D/q11_gpu_check.py" --label "$Q11L" --out "$Q11D" --old "$Q11D/s3_old.py" --new "$Q11D/s3_new.py" --old-sha 8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec --new-sha 859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a --scripts "$Q11REPO/scripts"; echo "[q11] rc $? - send back ~/${Q11D#$HOME/}/result.json and check.log" ); else echo "[q11] paste broken (md5 differs) or the new folder could not be made - nothing run"; fi

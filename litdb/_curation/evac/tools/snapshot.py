@@ -170,7 +170,8 @@ def snap(evac_dir):
                                                "synthfix/post_build_notes.md", "synthfix/tools", "synthfix/out_before"]),
                        ("dem_redesign_work.tgz", ["dem_redesign"]),
                        ("mixer_e0_work.tgz", ["mixer_e0_v2"]),
-                       ("p1g2c_work.tgz", ["p1g2c", "g2c_dry/compare_run40000.log", "g2c_dry/compare_dry200.log"])):
+                       ("p1g2c_work.tgz", ["p1g2c", "g2c_dry/compare_run40000.log", "g2c_dry/compare_dry200.log"]),
+                       ("litdb_wish_work.tgz", ["litdb_wish", "tools/wishlist_table.py", "wishlist_table.tsv"])):
         data, n, skipped = folder_tgz(rels)
         if n and len(data) > PACK_LIMIT:
             info.append(f"⛔ {name}: 압축 {len(data)} B > {PACK_LIMIT} B — 쓰지 않음 (옛 판 그대로 · 무엇이 큰지 볼 것)")
