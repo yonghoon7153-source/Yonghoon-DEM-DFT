@@ -494,3 +494,7 @@ hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load	determination o
 #   ⚠ 크롭 51 장 = 도구 9 (Fig. 1–8 · Table S1 — 그대로) + 손 크롭 42 (manual_crop: 패널 9 · 식 13 · 근거 글 20) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 stallard2022_nmc811_single_crystal_shear_strength_lithiation	effect_of_lithiation_upon_the_shear_strength_of_nmc811
 stallard2022_nmc811_single_crystal_shear_strength_lithiation	effect of lithiation upon the shear strength of nmc811
+# ── 습식 시트 황화물 복합 양극의 FIB-SEM 3D 재구성 정량 (LPN821 · LiNbO₃ 코팅 NCM622 · 231 MPa 적층 · 사이클 1 회 뒤 기공 14.99 % · 연결도 · L/H · 두 상 경계 · 기공 원천 분해) (Choi 외 · ACS Appl. Mater. Interfaces 10, 23740–23747 (2018)) — litdb 2026-11-12 (후보 N-14) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형
+#   ⚠ 크롭 32 장 = 도구 8 (다시 자른 것 0 · caption_fix 7) + 손 크롭 24 (manual_crop: 초록 그림 1 · 그림 1 패널 3 · 식 5 · 근거 글 15) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition	quantitative_analysis_of_microstructures_and_reaction_interfaces
+choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition	quantitative analysis of microstructures and reaction interfaces
