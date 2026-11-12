@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 299편 · 생성 2026-11-12
+> digest 300편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -60,7 +60,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (70편)
+## 접촉역학 · 소성 (DEM 이론) (71편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -130,6 +130,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `vu2019_soft_grain_compression_beyond_jamming_dic` | 무른 입자 (초탄성 실리콘 · 탄소성 한천 하이드로겔) 의 2D 일축 단계 압축 실험 — 재밍점을 지나 공칭 충전율 (packing fraction) 1.34 까지, 대변형 DIC 로 입자 내부 오른쪽 Cauchy–Green 변형장 · 접촉 판정 (경계 0.5 mm 근접 + 변형 1 % · contact criterion | experiment 2D (초탄성 실리콘 원기둥 · 탄소성 (elastoplastic) 한천 1 % 하이드로 | 2026-11-10 | 🖼 28 |
 | `wang2024_hot_pressed_lpscl_pressure_invariant_conductivity` | 열간 가압 (hot pressing) 한 Li₆PS₅Cl 단독 펠릿 — 가압 온도 20–200 °C · 압력 150–450 MPa · 분말 질량 스윕의 겉보기 밀도 (densification · porosity) 와 이온전도도, 측정 스택압 0–8 MPa 에서 σ ≈2.7 mS/cm 불변 ↔ 냉간 펠릿 ≈20 배 변동 — | experiment (hot-press powder compaction · densification · po | 2026-10-14 | 🖼 27 |
 | `xu2017_nmc532_nanoindentation_modulus_hardness_toughness` | NMC532 이차입자의 E · H · 계면 K_c 를 SOC · 사이클의 함수로 — 글러브박스 나노압입 (Berkovich Oliver–Pharr + cube-corner pop-in), 소결 펠릿 · 제일원리 E 대비 — Xu, Sun, de Vasconcelos, Zhao (J. Electrochem. Soc. 201 | exp (instrumented nanoindentation in Ar glovebox — Berkovich | 2026-09-25 | 🖼 9 |
+| `yano2023_eepa_bimodal_size_plasticity_compression_dem` | 크기 이원 (bimodal) 분말의 탄소성 단축 압축 — EDEM-EEPA DEM (3D · GPU · 큰 입자 지름 50 µm + 작은 입자 12.5 µm (크기비 4 · 대조 = 크기비 1 단분산) · 작은 입자 부피 몫 Vf 0 · 0.1 · 0.3 · 0.5 · 물성은 모두 NCM111 (E 만 절반 71 GPa) | DEM (EDEM 2019 EEPA, 3D GPU, bimodal-size NCM-property spher | 2026-11-12 | 🖼 70 |
 | `yano2024_eepa_binary_mixture_plasticity_compression_dem` | 소성 변형성이 다른 두 성분 혼합 분말의 단축 압축 — EDEM-EEPA DEM (3D · 단분산 50 µm 구 3,077 개 · 물성은 모두 NCM111 (E 만 절반 71 GPa) · 접촉 소성비 λp 만 다름: '탄성 입자' 0.38 (NCM 값) / '소성 입자' 0.70 (Li₃PS₄ 값) · 이종 접촉 λp*  | DEM (EDEM 2023.0 EEPA, 3D monodisperse binary-plasticity pow | 2026-11-12 | 🖼 64 |
 | `zunker2024_bulk_elastic_partII` | 벌크탄성 구간 — 점착 탄소성 입자의 접촉모델 Part II (A mechanically-derived contact model for adhesive elastic-perfectly plastic particles, Part II: Contact under high compaction—modeling a bulk ela | contact-mechanics theory (bulk-elastic 추가) + FEM(Abaqus 3D)  | 2026-08-25 | — |
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |

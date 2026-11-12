@@ -522,3 +522,7 @@ heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct	identifyin
 #   ⚠ ESM = docx 10 개 (74921154-24._SupZ_00…09_…MOESM10…1_ESM.docx — 그림 S1–S8 · 표 S1–S2) · 크롭 63 장 = 도구 14 (그대로 3 · 다시 자름 11) + 손 49 (manual_crop: 그림 5 · 패널 15 · 식 9 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte	in-situ_nanoindentation_measurement_of_local_mechanical
 devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte	in-situ nanoindentation measurement of local mechanical
+# ── 크기 이원 (50 / 12.5 µm · 크기비 4) NCM 물성 구의 EEPA 탄소성 단축 압축 DEM — λp 0 · 0.38 · 0.5 · 0.7 (계산마다 모든 접촉 같음) · 400 MPa → 0.02 s 유지 → 제하 · 작은 입자 최적 몫이 소성으로 0.3 → 0.5 (Yano · Ohsaki · Nakamura · Watano · Adv. Powder Technol. 34 (2023) 104245) — litdb 2026-11-12 (후보 N-26) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 · 본문 + SI (Sup) 둘 다 이 낱말로 붙는다
+#   ⚠ 크롭 70 장 = 도구 17 (전부 다시 자름: 캡션 빠짐 · 이웃 그림 합침 · 쪽 전체 · 섞임) + 손 크롭 53 (manual_crop: 그림 · 표 5 = fig_2 · fig_3 · fig_11 · fig_S6 · tab_1 · 식 28 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
+yano2023_eepa_bimodal_size_plasticity_compression_dem	compression_properties_of_bimodal_powders_with_different_plasticities
+yano2023_eepa_bimodal_size_plasticity_compression_dem	compression properties of bimodal powders with different plasticities
