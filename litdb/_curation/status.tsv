@@ -14,9 +14,9 @@ N-13	본	끝	koenig2023_wet_milling_se_ion_tortuosity_composite_cathode · e132d
 N-44	본	끝	sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps · 5f334e569	재료 LGPS (LPSCl 아님) · 누른 채 CT 0–100 MPa
 N-23	본	끝	devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode · dc6de4073	NMC532 E 138.73 · CB/PVDF 1.78 GPa = 자체 측정 (targeted)
 N-2	대피	끝	kawaguchi2018_dry_coating_model_se_particle_powtec · 63915ae16	정독 44 · 의도 대조 = 채움 (황화물 SE 압입 값 = SI Table S1 · 상대 잔류 깊이 0.80 ↔ Na₂SO₄ 0.94 · 하중 기울기 6.06 ↔ 6.79 ×10⁻² N^0.5/µm · 경도 · 영률 · 항복 값은 없음) · 360 MPa 압분체 공극 0.202 → 0.174 → 0.121 [판독] · NCM–NCM 접촉 0 인 입자 60 % [인쇄] · 카드 문제 (기록만): kawaguchi2017 L22 · L62 · L219 의 [미확인] 은 이 논문 SI 로 풀림 (갱신 거리) · 다섯 카드 (hippauf2019 L275 · kawaguchi2017 L236 · kawaguchi2023 L289 · nakamura2020 L342 · yano2024 L506) 의 "카드 없음" 낡음 · yano2024 L233 · L488 대기 안정성 귀속 = 원문이 넓음 · alizadeh2018 L269 Silva ↔ Sliva [미확인] · 사용량 한도로 한 번 멈춘 뒤 Opus 조수가 이어 끝냄
-N-5	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 47 · 시작 11-12 16:41 KST
+N-5	대피	끝	kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review · b489fd092	정독 47 · 의도 대조 = 일부 (SE 의 소성 · 크리프 문장은 있음 · 황화물 값은 K ≈0.2 MPa·m^½ 하나 [2 차 · ref 54] · 크리프는 ref 70 을 가리킬 뿐 값 없음 · Li₆PS₅Cl · 압밀 · 입자 계산 0 회) · Lipon Fig. 4 벡터 판독: 10 s 유지 크리프 +4.9–6.9 nm [판독] · 카드 문제 (기록만): yuan2026 L59 "SPE 영률 · 항복강도 낮다 (Kalnaus ref 11)" 를 받치는 문장이 이 총설에 없음 · 총설 2 차 라벨이 원전과 다름 (NMC532 K "single-crystal 0.3" ↔ xu2017 소결 펠릿 0.309 · NMC 부피 변화 3.3–7.8 % = 2 차 입자 ↔ li2026 단위포 5.1 %) · 사용량 한도로 한 번 멈춘 뒤 Opus 조수가 이어 끝냄
 N-10	대피	도는 중		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 52 · 시작 11-12 17:52 KST
-N-11	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 53
+N-11	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 53 · 시작 11-12 18:00 KST
 N-12	대피	차례 기다림		PDF 받음 (+SI 1) · 본 세션에서 넘겨받음 (11-12) · 정독 54
 N-14	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 56
 N-15	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 57

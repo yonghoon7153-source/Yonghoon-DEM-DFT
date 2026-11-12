@@ -68,3 +68,9 @@
   (T4 스키마 갈래 · T11 다른 소유자 · C1 여덟째 다른 소유자 · 도우미 other_owner = root 면 진짜 chown · 아니면 os.getuid 를 잠깐 바꿈) → HEAD 코드에서 통과 ·
   변이 셋 (K13 · W19 · C10) 을 그 사본에서 넣으면 셋 다 잡힘 · chown 실패 길 (root 아님 흉내) 도 T11 · C 통과.  mutate.py 에 K13 · W19 · C10 더함 (92 개) —
   줄 2 변이 (HEAD 시험) 에서는 안 잡힐 것 = 빈틈 증거 · 시험 보강 커밋 (줄 1 · 2 가 트리를 다 쓴 뒤) 뒤 셋만 다시 = 잡힘 확인.
+- (09:0xZ) ★ 시험 보강 커밋 = 2f97617ef (작업 트리 · scripts/test_cjunc_store.py 하나 · 서명 없음 · push 없음 · 꼬리 = Claude Opus 5.5 (이 조수 모델) + 같은 세션 줄).
+  변이 셋 = 앞 판 시험 (f17ea8c6b · 줄 2 변이 run) 에서 K13 · W19 SURVIVED (C10 = 줄 2 결과 기다림) → 보강 판 (work/t_add = HEAD 2f97617ef scripts) 에서
+  K13 · W19 · C10 셋 다 KILLED (logs/evac/mut3_after_testadd).  HEAD 코드 46/46 (77 s · logs/evac/t_add_store_full_py311.log).
+  ⚠ 기록: 줄 1 B2 의 rint_r_chain_e2e (51/51 · 849 s) 끝 무렵 ~ e2e12 시작 때 트리에 그 시험 파일 수정이 (커밋 전) 있었다 — 사슬 · 러너 · payload 가 읽는
+  CODE_FILES 밖 (시험 파일) 이라 결과 무관 · B2 의 뒤 묶음 (e2e12 · conv_cert · cjunc_store_e2e) 은 HEAD 2f97617ef 에서 돈 셈.
+  rint_r_chain_e2e (3.11) = 51/51 · 849 s (앞 조수 판의 E14 FAIL = 끊김 산물 확정 — 같은 HEAD 다시 = E14 · E15 PASS).
