@@ -6,19 +6,34 @@
 11-12 밤 실제 사고: 리뷰 조수가 `GIT_DIR=<본 리포>/.git` 을 명령 앞에 붙여 `run_contract.py --selftest` 를 돌렸고, 그 selftest (RCPT-sha) 의 임시 폴더
 `git init · add -A · commit` 이 임시 폴더 대신 본 리포 가지에 커밋을 만들었다 (본 세션이 되돌림).  git 훅 (pre-commit · pre-push) 안에서 게이트를 돌려도
 git 이 이 변수들을 넣는다 (정직한 흐름).  ⇒ 이 시험은 **이 시험이 만든 일회용 임시 저장소** (피해 저장소 V) 만 가리키는 적대 환경을 **자식 프로세스에만**
-넘긴다 — 이 프로세스의 환경은 바꾸지 않는다 · 본 리포 · 작업 트리 저장소를 가리키지 않는다.  적대 꼴 셋: GIT_DIR (사고 꼴) · GIT_DIR + GIT_WORK_TREE +
-GIT_INDEX_FILE (훅 꼴) · GIT_OBJECT_DIRECTORY + GIT_COMMON_DIR.  V 상태 = HEAD · ref 전부 · index · config · HEAD reflog · worktrees · stash · 객체 목록.
+넘긴다 — 이 프로세스의 환경은 바꾸지 않는다 · 본 리포 · 작업 트리 저장소를 가리키지 않는다.  적대 꼴 넷: GIT_DIR (사고 꼴) · GIT_DIR + GIT_WORK_TREE +
+GIT_INDEX_FILE · GIT_OBJECT_DIRECTORY + GIT_COMMON_DIR · ★ 3 회차 (재확인 2 RCP3-01) 훅 꼴 = GIT_INDEX_FILE 하나 (`<V>/.git/index.lock` 절대 경로 — git 2.43
+pre-commit 훅 env 실측 · V 에 commit 도중 꼴의 index.lock 사본을 둔다).  V 상태 = HEAD · ref 전부 · index · index.lock · config · HEAD reflog · worktrees ·
+stash · 객체 목록.
 
-  G1  run_contract.git_env · drop_git_env — GIT_ 로 시작하는 이름 전부 뺀 사본 (넘긴 사전 그대로) · 제자리 지움 (지운 이름 돌려줌) · 그 밖 이름 그대로
+  G1  run_contract.git_env · drop_git_env — ★ 3 회차 (재확인 2 RCP3-04 · 본 세션 결정) 지우는 이름 = 저장소 위치 · 색인 · 객체 (GIT_DIR · GIT_WORK_TREE ·
+      GIT_INDEX_FILE · GIT_OBJECT_DIRECTORY · GIT_ALTERNATE_OBJECT_DIRECTORIES · GIT_COMMON_DIR · GIT_NAMESPACE · GIT_PREFIX) + 설정 주입 (GIT_CONFIG_PARAMETERS ·
+      GIT_CONFIG_COUNT · GIT_CONFIG_KEY_<n> · GIT_CONFIG_VALUE_<n>) 뿐 — 격리 변수 (GIT_CEILING_DIRECTORIES · GIT_CONFIG_NOSYSTEM · GIT_CONFIG_GLOBAL) 와
+      그 밖 GIT_ 이름 (신원 · 편집기 · 실행 자리 · 인증서 · 추적 …) 은 남긴다 (옛 2 회차 판 = GIT_ 전부) · 넘긴 사전 그대로 · 제자리 지움 (지운 이름 돌려줌)
   G2  `run_contract.py --selftest` (RCPT-sha 의 임시 저장소 init · add · commit + payload `_code_sha` 읽기) — 적대 셋에서 V 그대로 · rc · PASS/FAIL 줄 =
       깨끗한 환경과 같음 (고치기 전 = V 에 커밋 · RCPT-sha 둘 FAIL — 11-12 밤 사고 그대로)
   G3  payload `_code_sha` · `_exec_env` (생산 읽기 · 고정물 저장소 F) — 적대 = 깨끗 (V 의 HEAD 를 읽지 않는다) · V 그대로
   G4  `test_step3_gpu_precond.load_base` (기반 판 git show · 시험 모듈 불러오기 = 그 모듈의 GIT_* 지움) — 적대 = 깨끗 = 기준 git show 바이트 · V 그대로
   G5  사슬 `rint_r_chain.git_identity` · `ledger_repo_problem` · `plan_commit_problem` (F5 계획 출처 커밋 = 이 리포의 기반 판 커밋 · blob 맞음 /
       틀림) (생산 읽기) — 적대 = 깨끗 · V 그대로 (★ 11-12 2 회차 변이 보강 — F5 의 git 둘에 env 를 안 넘긴 변이가 G1–G6 에서 안 잡혔다)
-  G6  시험 모듈 일곱 — 이 묶음이 고친 넷 (test_rint_r_chain `git_` · test_probe6_read `git` · test_cjunc_store_e2e · test_cjunc_store) + 같은 부류 셋
-      (★ 본 세션 결정 11-12 밤: test_rint_r_chain_e2e `_git` · test_rint_r_chain_e2e12 `git` · test_step3_conv_cert) — 적대 환경에서 그 모듈을
-      불러 고정물 저장소를 만들면 (init · add · commit) V 그대로 · 고정물 저장소에 커밋 하나 · 불러온 뒤 그 프로세스 환경에 GIT_* 없음
+  G6  시험 모듈 여덟 — 이 묶음이 고친 넷 (test_rint_r_chain `git_` · test_probe6_read `git` · test_cjunc_store_e2e · test_cjunc_store) + 같은 부류 셋
+      (★ 본 세션 결정 11-12 밤: test_rint_r_chain_e2e `_git` · test_rint_r_chain_e2e12 `git` · test_step3_conv_cert) + ★ 3 회차 (재확인 2 RCP3-01)
+      test_ca_s0_census `_git` (S0 계획 고정물 저장소 · 게이트 · kgy 묶음) — 적대 환경에서 그 모듈을 불러 고정물 저장소를 만들면 (init · add · commit)
+      V 그대로 · 고정물 저장소에 커밋 하나 · 불러온 뒤 그 프로세스 환경에 GIT_* 없음
+  G7  ★ 3 회차 (재확인 2 RCP3-04) — 부르는 쪽 격리가 산다 · 시험 고정물은 스스로 끊는다: (a) 천장 (GIT_CEILING_DIRECTORIES) 안 git 아닌 사본 = payload
+      `_code_sha` None (옛 판처럼 · 2 회차 판 = 바깥 저장소 HEAD) (b) 부르는 쪽 GIT_CONFIG_GLOBAL=/dev/null + HOME 전역 core.hooksPath → run_contract
+      --selftest 훅 0 회 (옛 판처럼 · 2 회차 판 = 1 회씩) (c) 부르는 쪽 격리 없이 전역 설정 셋 (HOME core.hooksPath · XDG_CONFIG_HOME core.hooksPath ·
+      HOME init.templateDir) → selftest 임시 저장소 · 시험 모듈 고정물 도우미 다섯 (git_ · _git · e2e12 git · probe6 git · s0 census _git) 의 commit 에서
+      훅 0 회 (고정물 git = GIT_CONFIG_NOSYSTEM=1 · GIT_CONFIG_GLOBAL=/dev/null · HOME 임시)
+  G8  ★ 3 회차 (재확인 2 RCP3-05) — 게이트 수준: (a) `check_all.sh` · `check_kgy_py38.sh` 머리 · 러너 기각 영수증 code_sha 줄 · S0 블록 heredoc 머리가
+      같은 셸 꼴 (`run_contract.GIT_DROP_SH` 글자 그대로 · 자리 = 첫 단계 · 첫 git 앞) · 그 셸 꼴을 bash 로 돌린 뒤 남는 GIT_ 이름 = 파이썬 규칙 (b)
+      `check_review_findings.py --selftest` (매달린 커밋 commit-tree = 쓰기) — 적대 환경 넷에서 V 그대로 · 그 커밋은 자기 저장소 (일회용 사본 F) 에
+      (c) `ca_s0_census._code_info` (S0 보고 git_head · git_dirty) — 적대 = 깨끗 · V 그대로
 ⚠ 고치기 전 판 = V 에 커밋 · index · 객체가 생기거나 V 의 값을 읽는다 (실패를 기록) — 그 V 는 이 시험이 만든 일회용이다.
 
   python3 scripts/test_git_env_isolation.py
@@ -104,7 +119,7 @@ def repo_state(v):
         objs += [os.path.relpath(os.path.join(r, f), gd) for f in fs]
     wt = os.path.join(gd, 'worktrees')
     return {'head': g(v, 'rev-parse', 'HEAD').strip(), 'refs': g(v, 'for-each-ref', '--format=%(refname) %(objectname)'),
-            'index': fh('index'), 'config': fh('config'), 'reflog': fh(os.path.join('logs', 'HEAD')),
+            'index': fh('index'), 'index_lock': fh('index.lock'), 'config': fh('config'), 'reflog': fh(os.path.join('logs', 'HEAD')),
             'worktrees': sorted(os.listdir(wt)) if os.path.isdir(wt) else [], 'stash': g(v, 'stash', 'list'),
             'n_objects': len(objs), 'objects': hashlib.sha256('\n'.join(sorted(objs)).encode('utf-8')).hexdigest()}
 
@@ -115,13 +130,19 @@ def victim(tag):
     return v, repo_state(v)
 
 
+#: ★ 3 회차 (재확인 2 RCP3-01) — 정직한 훅 꼴 (git 2.43 pre-commit 훅 env 실측: GIT_INDEX_FILE=<저장소>/.git/index.lock 절대 경로 하나 · GIT_DIR 없음)
+HOOK_FORM = 'GIT_INDEX_FILE(훅 꼴 · index.lock)'
+VARIANTS = ('GIT_DIR', 'GIT_DIR+GIT_WORK_TREE+GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY+GIT_COMMON_DIR', HOOK_FORM)
+
+
 def hostile_envs(v):
-    """적대 환경 셋 (모두 V 만 가리킨다 · 자식 프로세스에만 넘긴다)."""
+    """적대 환경 넷 (모두 V 만 가리킨다 · 자식 프로세스에만 넘긴다)."""
     gd = os.path.join(v, '.git')
     base = dict(CLEAN, TMPDIR=TD)
     return {'GIT_DIR': dict(base, GIT_DIR=gd),
             'GIT_DIR+GIT_WORK_TREE+GIT_INDEX_FILE': dict(base, GIT_DIR=gd, GIT_WORK_TREE=v, GIT_INDEX_FILE=os.path.join(gd, 'index')),
-            'GIT_OBJECT_DIRECTORY+GIT_COMMON_DIR': dict(base, GIT_OBJECT_DIRECTORY=os.path.join(gd, 'objects'), GIT_COMMON_DIR=gd)}
+            'GIT_OBJECT_DIRECTORY+GIT_COMMON_DIR': dict(base, GIT_OBJECT_DIRECTORY=os.path.join(gd, 'objects'), GIT_COMMON_DIR=gd),
+            HOOK_FORM: dict(base, GIT_INDEX_FILE=os.path.join(gd, 'index.lock'))}
 
 
 def run_py(code, args, env, timeout=300):
@@ -137,10 +158,14 @@ def tagged(out, tag):
 
 
 def per_variant(tag, fn):
-    """적대 꼴마다 새 V 로 fn(env, v) → (값, rc, stderr 끝) 을 돌려 V 상태를 견준다 → {꼴: (V 그대로, 값, rc, 사유)}."""
+    """적대 꼴마다 새 V 로 fn(env, v) → (값, rc, stderr 끝) 을 돌려 V 상태를 견준다 → {꼴: (V 그대로, 값, rc, 사유)}.
+    훅 꼴 = V 의 index 를 index.lock 으로 복사해 둔다 (commit 도중 꼴 — 그 커밋의 색인) · 그 파일도 V 상태에 든다."""
     out = {}
-    for nm in ('GIT_DIR', 'GIT_DIR+GIT_WORK_TREE+GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY+GIT_COMMON_DIR'):
-        v, s0 = victim(tag)
+    for nm in VARIANTS:
+        v, _s = victim(tag)
+        if nm == HOOK_FORM:
+            shutil.copyfile(os.path.join(v, '.git', 'index'), os.path.join(v, '.git', 'index.lock'))
+        s0 = repo_state(v)
         val, rc, err = fn(hostile_envs(v)[nm], v)
         s1 = repo_state(v)
         diff = sorted(k for k in s0 if s0[k] != s1[k])
@@ -149,28 +174,42 @@ def per_variant(tag, fn):
 
 
 # ═════════════════════════ G1 ═════════════════════════
-@case('G1 run_contract.git_env · drop_git_env')
+#: ★ 3 회차 (재확인 2 RCP3-04 · 본 세션 결정 11-12 밤) — 지울 이름 (시험 쪽 기준 · 대상 모듈의 상수를 쓰지 않는다)
+DROP_EXPECT = ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_COMMON_DIR', 'GIT_NAMESPACE',
+               'GIT_PREFIX', 'GIT_CONFIG_PARAMETERS', 'GIT_CONFIG_COUNT')
+DROP_EXPECT_PREFIX = ('GIT_CONFIG_KEY_', 'GIT_CONFIG_VALUE_')
+
+
+def dropped(k):
+    return k in DROP_EXPECT or k.startswith(DROP_EXPECT_PREFIX)
+
+
+@case('G1 run_contract.git_env · drop_git_env (지우는 이름 = 저장소 위치 · 색인 · 객체 + 설정 주입 — 3 회차 RCP3-04)')
 def g1():
     import run_contract as RC
     fn, dr = getattr(RC, 'git_env', None), getattr(RC, 'drop_git_env', None)
     if fn is None or dr is None:
         chk('G1 run_contract 에 git_env · drop_git_env 가 있다', False, '고치기 전 판 — 도우미 없음')
         return
-    base = {'GIT_DIR': '/x', 'GIT_WORK_TREE': '/y', 'GIT_INDEX_FILE': '/z', 'GIT_OBJECT_DIRECTORY': '/o', 'GIT_ALTERNATE_OBJECT_DIRECTORIES': '/a',
-            'GIT_COMMON_DIR': '/c', 'GIT_CONFIG_COUNT': '1', 'GIT_NAMESPACE': 'n', 'PATH': '/bin', 'HOME': '/h', 'XGIT_DIR': 'keep', 'git_dir': 'keep'}
+    gone = {k: '/x' for k in DROP_EXPECT}
+    gone.update({'GIT_CONFIG_KEY_0': 'core.hooksPath', 'GIT_CONFIG_VALUE_0': '/h', 'GIT_CONFIG_KEY_12': 'a.b', 'GIT_CONFIG_VALUE_12': 'c'})
+    keep_git = {'GIT_CEILING_DIRECTORIES': '/o', 'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_CONFIG_SYSTEM': '/s',
+                'GIT_DISCOVERY_ACROSS_FILESYSTEM': '1', 'GIT_AUTHOR_NAME': 'a', 'GIT_COMMITTER_EMAIL': 'c@c', 'GIT_EDITOR': ':',
+                'GIT_EXEC_PATH': '/usr/lib/git-core', 'GIT_SSL_CAINFO': '/ca', 'GIT_TERMINAL_PROMPT': '0', 'GIT_ASKPASS': '/a', 'GIT_TRACE': '0'}
+    keep = dict(keep_git, PATH='/bin', HOME='/h', XGIT_DIR='keep', git_dir='keep')
+    base = dict(keep, **gone)
     snap = dict(base)
     out = fn(base)
-    keep = {'PATH': '/bin', 'HOME': '/h', 'XGIT_DIR': 'keep', 'git_dir': 'keep'}
     e2 = dict(base)
     removed = dr(e2)
     os_before = dict(os.environ)
     dflt = fn()
-    chk('G1 git_env(사전) = GIT_ 로 시작하는 이름 전부 뺀 새 사전 (GIT_DIR · WORK_TREE · INDEX_FILE · OBJECT_DIRECTORY · ALTERNATE · COMMON_DIR · CONFIG_COUNT · '
-        'NAMESPACE) · 그 밖 이름 그대로 (XGIT_DIR · 소문자 git_dir 포함) · 넘긴 사전 그대로 · drop_git_env(사전) = 제자리 지움 + 지운 이름 (정렬) · '
-        'git_env() = os.environ 기준 · os.environ 그대로',
-        out == keep and base == snap and out is not base and e2 == keep and removed == sorted(k for k in base if k.startswith('GIT_'))
-        and dflt == {k: v for k, v in os.environ.items() if not k.startswith('GIT_')} and dict(os.environ) == os_before,
-        (out, removed, e2))
+    chk('G1 git_env(사전) = 저장소 위치 · 색인 · 객체 여덟 + 설정 주입 (CONFIG_PARAMETERS · CONFIG_COUNT · CONFIG_KEY_<n> · CONFIG_VALUE_<n>) 만 뺀 새 사전 · '
+        '격리 변수 (CEILING · NOSYSTEM · GLOBAL) · 그 밖 GIT_ (CONFIG_SYSTEM · DISCOVERY · 신원 · 편집기 · 실행 자리 · 인증서 · 프롬프트 · 추적) · GIT_ 아닌 '
+        '이름 그대로 · 넘긴 사전 그대로 · drop_git_env(사전) = 제자리 지움 + 지운 이름 (정렬) · git_env() = os.environ 기준 · os.environ 그대로',
+        out == keep and base == snap and out is not base and e2 == keep and removed == sorted(gone)
+        and dflt == {k: v for k, v in os.environ.items() if not dropped(k)} and dict(os.environ) == os_before,
+        (sorted(set(keep) ^ set(out or {})), removed))
 
 
 # ═════════════════════════ G2 ═════════════════════════
@@ -196,8 +235,8 @@ def g2():
     res = per_variant('g2', run)
     bad = {nm: (same, rc, why[0], [ln for ln in (val or []) if ln.startswith('FAIL')][:4], why[1])
            for nm, (same, val, rc, why) in res.items() if not (same and rc == rc0 and val == ref)}
-    chk('G2 적대 환경 셋 (GIT_DIR · +WORK_TREE+INDEX_FILE · OBJECT_DIRECTORY+COMMON_DIR → 일회용 V) 에서 run_contract --selftest — V 그대로 (HEAD · ref · index · '
-        'config · reflog · worktrees · stash · 객체) · rc · PASS/FAIL 줄 = 깨끗한 환경과 같음 (고치기 전 = V 에 커밋 · RCPT-sha FAIL · 11-12 밤 사고 꼴)',
+    chk('G2 적대 환경 넷 (GIT_DIR · +WORK_TREE+INDEX_FILE · OBJECT_DIRECTORY+COMMON_DIR · 훅 꼴 GIT_INDEX_FILE 하나 → 일회용 V) 에서 run_contract --selftest — V 그대로 (HEAD · ref · index · '
+        'config · reflog · worktrees · stash · 객체 · index.lock) · rc · PASS/FAIL 줄 = 깨끗한 환경과 같음 (고치기 전 = V 에 커밋 · RCPT-sha FAIL · 11-12 밤 사고 꼴)',
         not bad, bad)
 
 
@@ -229,7 +268,7 @@ def g3():
         return json.loads(tagged(out, 'G3') or 'null'), rc, err
     res = per_variant('g3', run)
     bad = {nm: (same, rc, val, why) for nm, (same, val, rc, why) in res.items() if not (same and rc == 0 and val == ref)}
-    chk('G3 적대 환경 셋에서 payload `_code_sha` · `_exec_env` 가 F 를 읽는다 (= 깨끗한 환경 값 · V 의 HEAD 가 아님) · V 그대로', not bad, bad)
+    chk('G3 적대 환경 넷 (훅 꼴 포함) 에서 payload `_code_sha` · `_exec_env` 가 F 를 읽는다 (= 깨끗한 환경 값 · V 의 HEAD 가 아님) · V 그대로', not bad, bad)
 
 
 # ═════════════════════════ G4 ═════════════════════════
@@ -255,7 +294,7 @@ def g4():
         return tagged(out, 'G4'), rc, err
     res = per_variant('g4', run)
     bad = {nm: (same, rc, val, why) for nm, (same, val, rc, why) in res.items() if not (same and rc == 0 and val == want)}
-    chk('G4 적대 환경 셋에서 load_base 가 이 리포의 기반 판을 읽는다 (= 기준 git show 바이트 · 고치기 전 = V 에서 찾다 실패) · V 그대로', not bad, bad)
+    chk('G4 적대 환경 넷 (훅 꼴 포함) 에서 load_base 가 이 리포의 기반 판을 읽는다 (= 기준 git show 바이트 · 고치기 전 = V 에서 찾다 실패) · V 그대로', not bad, bad)
 
 
 # ═════════════════════════ G5 ═════════════════════════
@@ -295,7 +334,7 @@ def g5():
         return json.loads(tagged(out, 'G5') or 'null'), rc, err
     res = per_variant('g5', run)
     bad = {nm: (same, rc, val, why) for nm, (same, val, rc, why) in res.items() if not (same and rc == 0 and val == ref)}
-    chk('G5 적대 환경 셋에서 사슬 git_identity (HEAD · dirty · rel) · ledger_repo_problem · plan_commit_problem (F5 · 맞음 / 틀림) = 깨끗한 '
+    chk('G5 적대 환경 넷 (훅 꼴 포함) 에서 사슬 git_identity (HEAD · dirty · rel) · ledger_repo_problem · plan_commit_problem (F5 · 맞음 / 틀림) = 깨끗한 '
         '환경 값 (V 를 읽지 않는다) · V 그대로', not bad, bad)
 
 
@@ -316,6 +355,11 @@ elif which == 'test_probe6_read':
 
     def git(*a):
         T.git(fx, *a)
+elif which == 'test_ca_s0_census':                      # ★ 3 회차 (재확인 2 RCP3-01) — S0 계획 고정물 저장소의 도우미 (make_plan_repo 가 쓰는 _git)
+    import test_ca_s0_census as T
+
+    def git(*a):
+        T._git(fx, *a)
 elif which in ('test_rint_r_chain_e2e', 'test_rint_r_chain_e2e12'):
     import importlib
     T = importlib.import_module(which)
@@ -346,11 +390,12 @@ print('G6 ' + json.dumps({'left_git_env': left}))
 '''
 
 
-@case('G6 시험 모듈 일곱 (이 묶음이 고친 넷 + 같은 부류 셋) — 불러오면 GIT_* 를 지운다 (고정물 git 쓰기)')
+@case('G6 시험 모듈 여덟 (이 묶음이 고친 넷 + 같은 부류 셋 + test_ca_s0_census) — 불러오면 GIT_* 를 지운다 (고정물 git 쓰기)')
 def g6():
     bad = {}
     for which in ('test_rint_r_chain', 'test_probe6_read', 'test_cjunc_store_e2e', 'test_cjunc_store',
-                  'test_rint_r_chain_e2e', 'test_rint_r_chain_e2e12', 'test_step3_conv_cert'):   # ★ 뒤 셋 = 같은 부류 (본 세션 결정 11-12 밤)
+                  'test_rint_r_chain_e2e', 'test_rint_r_chain_e2e12', 'test_step3_conv_cert',     # ★ 같은 부류 셋 (본 세션 결정 11-12 밤)
+                  'test_ca_s0_census'):                                                            # ★ 3 회차 (재확인 2 RCP3-01)
         k = [0]
 
         def run(env, _v, which=which):
@@ -365,9 +410,228 @@ def g6():
             got, n = val
             if not (same and rc == 0 and isinstance(got, dict) and got.get('left_git_env') == [] and n == '1'):
                 bad[f'{which} · {nm}'] = (same, rc, got, n, why)
-    chk('G6 시험 모듈 일곱 (test_rint_r_chain · test_probe6_read · test_cjunc_store_e2e · test_cjunc_store + 같은 부류 test_rint_r_chain_e2e · '
-        'test_rint_r_chain_e2e12 · test_step3_conv_cert) 을 적대 환경 셋에서 불러 고정물 저장소를 만든다 (init · add · commit) → V 그대로 · '
-        '고정물에 커밋 하나 · 불러온 뒤 GIT_* 없음 (고치기 전 = V 에 커밋)', not bad, bad)
+    chk('G6 시험 모듈 여덟 (test_rint_r_chain · test_probe6_read · test_cjunc_store_e2e · test_cjunc_store + 같은 부류 test_rint_r_chain_e2e · '
+        'test_rint_r_chain_e2e12 · test_step3_conv_cert + test_ca_s0_census) 을 적대 환경 넷 (훅 꼴 포함) 에서 불러 고정물 저장소를 만든다 (init · add · '
+        'commit) → V 그대로 (index.lock 포함) · 고정물에 커밋 하나 · 불러온 뒤 GIT_* 없음 (고치기 전 = V 에 커밋 · 훅 꼴 = V 의 index.lock 이 고정물 항목으로)',
+        not bad, {k: (v[0], v[1], v[2], v[3], v[4][0]) for k, v in bad.items()})
+
+
+# ═════════════════════════ G7 (★ 3 회차 · 재확인 2 RCP3-04) ═════════════════════════
+G7A_CODE = r'''
+import json, sys
+sys.path.insert(0, sys.argv[1])
+import mpm_webapp_payload as P
+print('G7A ' + json.dumps({'sha': P._code_sha(sys.argv[2])}))
+'''
+#: 시험 모듈 고정물 도우미 다섯 (모듈 · 도우미 이름) — 그 도우미로 고정물 저장소를 만든다 (init · add · commit)
+G7_HELPERS = (('test_rint_r_chain', 'git_'), ('test_rint_r_chain_e2e', '_git'), ('test_rint_r_chain_e2e12', 'git'),
+              ('test_probe6_read', 'git'), ('test_ca_s0_census', '_git'))
+G7C_CODE = r'''
+import importlib, os, sys
+which, attr, scripts, tools6, fx = sys.argv[1:6]
+sys.path.insert(0, scripts)
+if which == 'test_probe6_read':
+    sys.path.insert(0, tools6)
+T = importlib.import_module(which)
+git = getattr(T, attr)
+os.makedirs(fx, exist_ok=True)
+git(fx, 'init', '-q')
+with open(os.path.join(fx, 'a.txt'), 'w') as f:
+    f.write('a')
+git(fx, 'add', '-A')
+git(fx, 'commit', '-qm', 'x')
+print('G7C ok')
+'''
+
+
+def hook_kit():
+    """가짜 전역 설정 셋 + 훅 (pre-commit · post-commit · post-checkout · post-merge = 표지 파일에 한 줄) → ({꼴: env 덧칸}, 표지 폴더, hooksPath 를 둔
+    HOME).  꼴 = HOME/.gitconfig core.hooksPath · XDG_CONFIG_HOME/git/config core.hooksPath (HOME = 빈 폴더) · HOME/.gitconfig init.templateDir."""
+    root = os.path.join(TD, 'g7_kit')
+    marks, hooks, tpl = (os.path.join(root, x) for x in ('marks', 'hooks', os.path.join('tpl', 'hooks')))
+    for d in (marks, hooks, tpl):
+        os.makedirs(d)
+    for d in (hooks, tpl):
+        for hk in ('pre-commit', 'post-commit', 'post-checkout', 'post-merge'):
+            q = os.path.join(d, hk)
+            with open(q, 'w', encoding='utf-8') as f:
+                f.write('#!/bin/sh\necho x >> "%s/%s"\nexit 0\n' % (marks, hk))
+            os.chmod(q, 0o755)
+    homes = {}
+    for nm, rel, text in (('home_hooks', '.gitconfig', '[core]\n\thooksPath = %s\n' % hooks),
+                          ('xdg', os.path.join('git', 'config'), '[core]\n\thooksPath = %s\n' % hooks),
+                          ('home_tpl', '.gitconfig', '[init]\n\ttemplateDir = %s\n' % os.path.dirname(tpl)),
+                          ('home_empty', None, None)):
+        d = os.path.join(root, nm)
+        os.makedirs(d)
+        if rel:
+            os.makedirs(os.path.dirname(os.path.join(d, rel)), exist_ok=True)
+            with open(os.path.join(d, rel), 'w', encoding='utf-8') as f:
+                f.write(text)
+        homes[nm] = d
+    kinds = {'HOME core.hooksPath': {'HOME': homes['home_hooks']},
+             'XDG_CONFIG_HOME core.hooksPath': {'HOME': homes['home_empty'], 'XDG_CONFIG_HOME': homes['xdg']},
+             'HOME init.templateDir': {'HOME': homes['home_tpl']}}
+    return kinds, marks, homes['home_hooks']
+
+
+def marks_count(marks):
+    """표지 폴더의 훅 실행 수 (훅 이름 → 줄 수) 를 세고 비운다."""
+    n = {}
+    for m in sorted(os.listdir(marks)):
+        with open(os.path.join(marks, m), encoding='utf-8') as f:
+            n[m] = len(f.read().splitlines())
+        os.unlink(os.path.join(marks, m))
+    return n
+
+
+@case('G7 부르는 쪽 격리가 산다 · 시험 고정물은 스스로 끊는다 (3 회차 RCP3-04)')
+def g7():
+    import run_contract as RC
+    #  (a) 천장 — 바깥 저장소 O 안의 git 아닌 사본 (O/kit/scripts · 추적 안 됨)
+    o = make_repo('g7_outer', {'README': 'outer\n'})
+    kit = os.path.join(o, 'kit', 'scripts')
+    os.makedirs(kit)
+    with open(os.path.join(kit, 'm.py'), 'w', encoding='utf-8') as f:
+        f.write('A = 1\n')
+    o_short = g(o, 'rev-parse', '--short', 'HEAD').strip()
+    got = {}
+    for lab, extra in (('천장 없음', {}), ('천장 = 바깥 저장소', {'GIT_CEILING_DIRECTORIES': o})):
+        rc, out, err = run_py(G7A_CODE, [SCRIPTS, kit], dict(CLEAN, TMPDIR=TD, **extra))
+        got[lab] = (rc, json.loads(tagged(out, 'G7A') or 'null'), err[-200:])
+    chk('G7a 부르는 쪽 천장 (GIT_CEILING_DIRECTORIES = 바깥 저장소) 안의 git 아닌 사본 → payload `_code_sha` = None (출처 없음 · 옛 판처럼) · 천장 없음 = 바깥 '
+        '저장소 HEAD +dirty (대조 — 천장이 판별한다 · 2 회차 판 = 천장을 지워 늘 바깥 HEAD · 재확인 2 ce06 C)',
+        got['천장 없음'][0] == 0 and (got['천장 없음'][1] or {}).get('sha') == o_short + '+dirty'
+        and got['천장 = 바깥 저장소'][0] == 0 and isinstance(got['천장 = 바깥 저장소'][1], dict) and got['천장 = 바깥 저장소'][1].get('sha', 'x') is None, got)
+    kinds, marks, home_hooks = hook_kit()
+    #  (b) 부르는 쪽이 GIT_CONFIG_GLOBAL=/dev/null 로 전역 설정을 끈 채 (HOME 에 전역 core.hooksPath) → selftest 의 임시 commit 에서 훅 0
+    rc, lines, log = selftest_lines(dict(CLEAN, TMPDIR=TD, HOME=home_hooks, GIT_CONFIG_GLOBAL=os.devnull))
+    nb = marks_count(marks)
+    chk('G7b 부르는 쪽 GIT_CONFIG_GLOBAL=/dev/null (+ HOME 전역 core.hooksPath) 에서 run_contract --selftest → rc 0 · 전역 훅 0 회 (부르는 쪽 격리가 산다 · '
+        '옛 판처럼 — 2 회차 판 = 그 변수를 지워 pre · post 1 회씩 · 재확인 2 ce06b)',
+        rc == 0 and nb == {}, (rc, nb, [ln for ln in lines if ln.startswith('FAIL')][:3], log[-200:]))
+    #  (c) 부르는 쪽 격리 없이 전역 설정 셋 → selftest 임시 저장소 · 시험 모듈 고정물 도우미 다섯 = 훅 0 · 고정물 커밋 하나
+    bad = {}
+    for kn, extra in kinds.items():
+        rc, lines, log = selftest_lines(dict(CLEAN, TMPDIR=TD, **extra))
+        n = marks_count(marks)
+        if not (rc == 0 and n == {}):
+            bad[f'selftest · {kn}'] = (rc, n, [ln for ln in lines if ln.startswith('FAIL')][:2])
+        for mod, attr in G7_HELPERS:
+            fx = os.path.join(TD, f'g7c_{mod}_{len(os.listdir(TD))}')
+            rc, out, err = run_py(G7C_CODE, [mod, attr, SCRIPTS, TOOLS6, fx], dict(CLEAN, TMPDIR=TD, **extra))
+            n = marks_count(marks)
+            cnt = g(fx, 'rev-list', '--count', 'HEAD', check=False).strip() if os.path.isdir(os.path.join(fx, '.git')) else None
+            if not (rc == 0 and n == {} and cnt == '1' and tagged(out, 'G7C') == 'ok'):
+                bad[f'{mod}.{attr} · {kn}'] = (rc, n, cnt, err[-160:])
+    fx_env = getattr(RC, 'git_fixture_env', None)
+    fe = fx_env() if fx_env else {}
+    chk('G7c 부르는 쪽 격리 없이 전역 설정 셋 (HOME core.hooksPath · XDG_CONFIG_HOME core.hooksPath · HOME init.templateDir) → run_contract --selftest '
+        '(RCPT-sha 임시 저장소) · 시험 모듈 고정물 도우미 다섯 (test_rint_r_chain.git_ · e2e._git · e2e12.git · probe6.git · test_ca_s0_census._git) 의 '
+        'commit 에서 훅 0 회 · 고정물 커밋 하나 · `run_contract.git_fixture_env` = GIT_CONFIG_NOSYSTEM=1 · GIT_CONFIG_GLOBAL=/dev/null · HOME = 빈 임시 폴더 · '
+        'XDG_CONFIG_HOME 없음 · 지울 이름 없음 (고치기 전 = 훅이 돈다)',
+        not bad and fe.get('GIT_CONFIG_NOSYSTEM') == '1' and fe.get('GIT_CONFIG_GLOBAL') == os.devnull and 'XDG_CONFIG_HOME' not in fe
+        and os.path.isdir(fe.get('HOME') or '') and os.listdir(fe['HOME']) == [] and fe.get('HOME') != os.environ.get('HOME')
+        and not any(dropped(k) for k in fe),
+        (bad, {k: fe.get(k) for k in ('GIT_CONFIG_NOSYSTEM', 'GIT_CONFIG_GLOBAL', 'HOME')} if fe else '고치기 전 판 — git_fixture_env 없음'))
+
+
+# ═════════════════════════ G8 (★ 3 회차 · 재확인 2 RCP3-05) ═════════════════════════
+#: 같은 셸 꼴 (`run_contract.GIT_DROP_SH` 글자 그대로) 을 둘 자리 — head = 첫 단계 (`run `) 앞 줄 하나 · code_sha = 러너 기각 영수증 code_sha 줄 안 ·
+#  s0q = S0 블록 heredoc (`bash <<'S0Q'`) 안 첫 `git -C` 앞 줄 하나
+SH_FILES = (('scripts/check_all.sh', 'head'), ('scripts/check_kgy_py38.sh', 'head'), ('scripts/sdcp_gain_vox015_8arm.sh', 'code_sha'),
+            ('docs/reviews/rint2_s0_store_probe_20261112/s0_rerun_probe_block.txt', 's0q'))
+
+
+def sh_place_problem(kind, text, sh):
+    """셸 꼴 sh 가 그 파일의 제자리에 글자 그대로 (한 번) 있는가 → 사유 | None."""
+    lines = text.splitlines()
+    hit = [i for i, ln in enumerate(lines) if sh in ln]
+    if len(hit) != 1:
+        return f'셸 꼴 줄 수 {len(hit)} (1 이어야)'
+    i = hit[0]
+    if kind == 'head':
+        first = [j for j, ln in enumerate(lines) if ln.startswith('run ')]
+        if not first or i > first[0] or lines[i].strip() != sh:
+            return f'첫 단계 앞 줄 하나가 아니다 (줄 {i + 1} · 첫 run {first[0] + 1 if first else None})'
+    elif kind == 'code_sha':
+        if 'code_sha=' not in lines[i] or 'rev-parse --short=8 HEAD' not in lines[i]:
+            return '기각 영수증 code_sha 줄이 아니다'
+    elif kind == 's0q':
+        h = [j for j, ln in enumerate(lines) if ln.strip() == "bash <<'S0Q'"]
+        g0 = [j for j, ln in enumerate(lines) if h and j > h[0] and 'git -C' in ln]
+        if not (h and g0 and h[0] < i < g0[0] and lines[i].strip() == sh):
+            return f'S0Q 안 첫 git 앞 줄 하나가 아니다 (줄 {i + 1})'
+    return None
+
+
+G8C_CODE = r'''
+import json, sys
+sys.path.insert(0, sys.argv[1])
+import ca_s0_census as S0
+ci = S0._code_info()
+print('G8C ' + json.dumps({'head': ci.get('git_head'), 'dirty': ci.get('git_dirty')}))
+'''
+
+
+@case('G8 게이트 수준 — 셸 꼴 넷 · check_review_findings --selftest · ca_s0_census (3 회차 RCP3-05)')
+def g8():
+    import run_contract as RC
+    #  (a) 셸 꼴 — 자리 · 글자 · 동작 (bash 로 돌린 뒤 남는 GIT_ 이름 = 파이썬 규칙)
+    sh = getattr(RC, 'GIT_DROP_SH', None)
+    if not isinstance(sh, str):
+        chk('G8a run_contract.GIT_DROP_SH (셸 꼴) 이 있고 게이트 머리 둘 · 러너 code_sha 줄 · S0 블록 머리에 같은 글자로 있다', False, '고치기 전 판 — 없음')
+    else:
+        probs = {}
+        for rel, kind in SH_FILES:
+            with open(os.path.join(ROOT, rel), encoding='utf-8') as f:
+                pr = sh_place_problem(kind, f.read(), sh)
+            if pr:
+                probs[rel] = pr
+        synth = {k: 'x' for k in DROP_EXPECT}
+        synth.update({'GIT_CONFIG_KEY_0': 'k', 'GIT_CONFIG_VALUE_0': 'v', 'GIT_CONFIG_KEY_7': 'k', 'GIT_CONFIG_VALUE_7': 'v',
+                      'GIT_CEILING_DIRECTORIES': '/o', 'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': '/dev/null', 'GIT_CONFIG_SYSTEM': '/s',
+                      'GIT_AUTHOR_NAME': 'a', 'GIT_EXEC_PATH': '/e', 'GIT_EDITOR': ':', 'XGIT_DIR': 'k'})
+        r = subprocess.run(['bash', '-c', sh + '\ncompgen -e'], env=dict(synth, PATH=os.environ.get('PATH', '/usr/bin:/bin')), capture_output=True,
+                           text=True, timeout=60, stdin=subprocess.DEVNULL)
+        left = sorted(x for x in (r.stdout or '').split() if x in synth)
+        want = sorted(k for k in synth if not dropped(k))
+        chk('G8a 셸 꼴 (`run_contract.GIT_DROP_SH`) 이 check_all.sh · check_kgy_py38.sh 머리 (첫 단계 앞) · 러너 기각 영수증 code_sha 줄 · S0 블록 heredoc '
+            '머리 (첫 git 앞) 에 같은 글자로 한 번씩 · bash 로 돌린 뒤 남는 이름 = 파이썬 규칙 (격리 변수 · 신원 · 실행 자리 · GIT_ 아닌 이름은 남고 저장소 '
+            '고르는 이름 · 설정 주입은 사라짐) = `git_env` 결과',
+            not probs and r.returncode == 0 and left == want and sorted(RC.git_env(synth)) == want, (probs, r.returncode, left, want, (r.stderr or '')[-160:]))
+    #  (b) check_review_findings --selftest — 매달린 커밋 (commit-tree = 쓰기) 이 자기 저장소 (일회용 사본 F) 에 · V 그대로
+    src = {}
+    for rel in ('scripts/check_review_findings.py', 'scripts/run_contract.py'):
+        with open(os.path.join(ROOT, rel), encoding='utf-8') as f:
+            src[rel] = f.read()
+
+    def crf(env, _v=None):
+        fr = make_repo(f'g8b_F_{len(os.listdir(TD))}', src)
+        n0 = repo_state(fr)['n_objects']
+        r = subprocess.run([sys.executable, os.path.join(fr, 'scripts', 'check_review_findings.py'), '--selftest'], capture_output=True, text=True,
+                           env=env, timeout=600, cwd=TD, stdin=subprocess.DEVNULL)
+        return repo_state(fr)['n_objects'] - n0, r.returncode, (r.stderr or '') + (r.stdout or '')[-200:]
+    d0, rc0, log0 = crf(dict(CLEAN, TMPDIR=TD))
+    res = per_variant('g8b', crf)
+    bad = {nm: (same, val, rc, why[0]) for nm, (same, val, rc, why) in res.items() if not (same and isinstance(val, int) and val >= 1)}
+    chk('G8b check_review_findings --selftest (19b 매달린 커밋 · commit-tree = 쓰기) — 깨끗한 환경 = 자기 저장소 (일회용 사본 F) 에 객체가 생긴다 (판별) · '
+        '적대 환경 넷에서도 F 에 생기고 V 그대로 (고치기 전 = GIT_DIR · OBJECT_DIRECTORY 꼴에서 V 에 객체 · 재확인 2 ce06 B)',
+        d0 >= 1 and not bad, (d0, rc0, bad, log0[-200:] if d0 < 1 else ''))
+    #  (c) ca_s0_census._code_info — S0 보고 git_head · git_dirty (이 리포를 읽는다)
+    want_head = g(ROOT, 'rev-parse', 'HEAD').strip()
+    rc0, out0, err0 = run_py(G8C_CODE, [SCRIPTS], dict(CLEAN, TMPDIR=TD))
+    ref = json.loads(tagged(out0, 'G8C') or 'null')
+    chk('G8c 기준 — 깨끗한 환경의 ca_s0_census._code_info = 이 리포 HEAD · dirty 칸 bool', rc0 == 0 and isinstance(ref, dict)
+        and ref.get('head') == want_head and isinstance(ref.get('dirty'), bool), (rc0, ref, err0[-300:]))
+
+    def run_c(env, _v):
+        rc, out, err = run_py(G8C_CODE, [SCRIPTS], env)
+        return json.loads(tagged(out, 'G8C') or 'null'), rc, err
+    res = per_variant('g8c', run_c)
+    bad = {nm: (same, rc, val, why[0]) for nm, (same, val, rc, why) in res.items() if not (same and rc == 0 and val == ref)}
+    chk('G8c 적대 환경 넷에서 ca_s0_census._code_info (git_head · git_dirty) = 깨끗한 환경 값 (V 의 HEAD · 색인을 읽지 않는다) · V 그대로 (index.lock 포함 · '
+        '고치기 전 = GIT_DIR 꼴 둘 = V 의 HEAD · 객체 꼴 · 훅 꼴 = dirty 모름 (None))', not bad, bad)
 
 
 def main():

@@ -38,11 +38,14 @@
       프로세스에서 Store() 가 모듈을 새로 부르지 않는다 (매니페스트 exec_env 그대로) · 코드 칸 = 네 파일의 디스크 sha256
   T15 런 도중 코드 바뀜 (11-12 2 회차 재리뷰 RCP2-01 · 새 프로세스 · 코드 사본 폴더) — 재리뷰 CE-A (원장 모듈을 먼저 불러 두고 그 파일이 바뀐 뒤 Store) ·
       cjunc_store 만 불러 둔 뒤 바뀜 · 짓는 도중 바뀜 (짓기가 새 판을 부른다) · 쓰는 도중 바뀜 · 내용 그대로 다시 씀 (수정 시각 = 시작 뒤) = 저장 안 함
-      (꺼짐 · 건너뜀 · 사유 code_changed) · 뒤의 정직한 런 = 적중 아님 · 정직한 흐름 = 지어 씀 → 적중 · 런 시작 기록 (cjunc_store 를 불러온 때)
+      (꺼짐 · 건너뜀 · 사유 code_changed) · 뒤의 정직한 런 = 적중 아님 · 정직한 흐름 = 지어 씀 → 적중 · 런 시작 기록 (cjunc_store 를 불러온 때) ·
+      ★ 3 회차 (재확인 2 RCP3-02) 같은 초 뒤집기 (수정 시각 = 런 시작) · 변이판일 때 Store 뒤 되돌림 · 수정 시각을 되돌린 뒤집기 (os.utime) · Store 코드
+      칸 ≠ 런 시작 = 저장 안 함 · 수정 시각이 미래인 사본 (rsync -t 꼴) 의 정직한 런 = 지어 씀 → 적중 (코드 칸 = 파일별 stat 신원 정확 대조)
   P   payload 끝-끝 (`test_ca_ext_b6` 픽스처 · 실제 payload · CPU) — 입구 거부 (접합 없이 · 조립만 · rasterize-only (RCP-10) · 상대 · 없음 · 남이 씀 ·
       Store() 의 뜻밖의 예외 둘 = 입구 · 본 길 (RCP-10)) · 끔 / 빗나감 / 적중 팔 JSON 바이트 같음 · 못 읽음 (⚠ · 같음) · 어긋남 (rc ≠ 0 ·
       S2_CJUNC_STORE|INCONSISTENT| · 출력 없음) · instance 둘인 침대 (세 가닥 직렬) 도 지어 씀 → 적중 (P5 · 구현 커밋에서 더함) · 정규화 안 된 폴더
-      꼴 = 입구 거부 (P1 · 2 회차 RCP2-02) · cjunc_store 를 원장 모듈 셋보다 먼저 불러온다 (P6 · `python -X importtime` · 2 회차 RCP2-01)
+      꼴 = 입구 거부 (P1 · 2 회차 RCP2-02) · cjunc_store 를 원장 모듈 셋보다 먼저 불러온다 (P6 · `python -X importtime` · 2 회차 RCP2-01) · 러너 꼴 인자
+      (`--expect-physics` 에 ca_ext.cjunc 칸) 에서도 (P6b · 먼저 불린 열쇠 모듈 없음 · 3 회차 RCP3-03)
   R   러너 (`test_ca_ext_runner` 틀 · 실제 셸 · 실제 payload) — CJUNC=1 없이 · 조립만과 함께 · 상대 · 허용 밖 글자 · 개행 · 없는 폴더 · 심볼릭 링크
       (끝 빗금 포함 · RCP-06) · 정규화 안 된 꼴 (2 회차 RCP2-02) = 발사 전 ABORT · 켬 = payload 인자 · 팔 JSON · 영수증 · OUTDIR = 끔과 같음 · 둘째
       런 = 적중
@@ -1806,12 +1809,6 @@ if mode == 'ce_a':
     import fibre_segment_raster                       # noqa: F401 — payload 의 래스터화 꼴 (원장 모듈을 먼저 불러 둔다 · 재리뷰 CE-A)
 import cjunc_store as CS                              # 런 시작 (payload = 입구 계약이 원장 모듈보다 먼저 부른다 · 시험 P6)
 t_after_import = time.time_ns()
-import numpy as np
-import carbon_junction as CJ
-import step3_sigma                                    # noqa: F401
-z = np.load(inp_path, allow_pickle=False)
-inp = dict(sid=z['sid'], lo=tuple(float(x) for x in z['lo']), vox=float(z['vox']), pts=z['pts'], phase=z['phase'], fid=z['fid'],
-           kind=z['kind'], thresholds=json.loads(str(z['thr'])))
 fsr = os.path.join(code_dir, 'fibre_segment_raster.py')
 
 
@@ -1820,6 +1817,41 @@ def swap():                                           # 같은 자리 · 새 내
     os.unlink(fsr)
     with open(fsr, 'w', encoding='utf-8') as f:
         f.write(data)
+
+
+def put_back(b):                                      # 원판 바이트로 되돌려 씀 (같은 자리 · 새 파일)
+    os.unlink(fsr)
+    with open(fsr, 'wb') as f:
+        f.write(b)
+
+
+start = getattr(CS, '_START', None)
+st = None
+if mode in ('samesec', 'samesec_store', 'mtime_restore'):
+    #  ★ 3 회차 (재확인 2 RCP3-02) — 뒤집었다 되돌린 꼴 (원장 모듈 적재 전 · 결정적): samesec = 변이판 → 불러옴 → 원판 바이트로 되돌려 씀 · 수정 시각 =
+    #    런 시작 (옛 판의 1 s 여유 안 · 재확인 2 samesec 318 ms) · samesec_store = 변이판일 때 Store (코드 칸 = 변이판) → 원판으로 되돌려 씀 · 수정 시각 =
+    #    런 시작 · mtime_restore = 변이판 → 불러옴 → 1.2 s 뒤 원판 바이트 + 원래 수정 시각 (os.utime · 옛 한정 (나) 꼴)
+    orig = open(fsr, 'rb').read()
+    st0 = os.stat(fsr)
+    swap()
+    if mode == 'samesec_store':
+        st = CS.Store(store, machine_paths=(mfile,))
+    else:
+        import fibre_segment_raster                   # noqa: F401 — 변이판이 불린다
+    if mode == 'mtime_restore':
+        time.sleep(1.2)
+    put_back(orig)
+    if mode == 'mtime_restore':
+        os.utime(fsr, ns=(st0.st_atime_ns, st0.st_mtime_ns))
+    else:
+        t0 = (start or {}).get('t_ns') or time.time_ns()
+        os.utime(fsr, ns=(t0, t0))
+import numpy as np
+import carbon_junction as CJ
+import step3_sigma                                    # noqa: F401
+z = np.load(inp_path, allow_pickle=False)
+inp = dict(sid=z['sid'], lo=tuple(float(x) for x in z['lo']), vox=float(z['vox']), pts=z['pts'], phase=z['phase'], fid=z['fid'],
+           kind=z['kind'], thresholds=json.loads(str(z['thr'])))
 
 
 def reg_of():
@@ -1836,7 +1868,6 @@ def build():
     return reg_of()
 
 
-start = getattr(CS, '_START', None)
 if mode in ('ce_a', 'before_store'):
     swap()
 elif mode == 'touch':
@@ -1853,7 +1884,10 @@ elif mode == 'during_write':
         swap()
         return _old(*a, **k)
     CS._write_zip = _wz
-st = CS.Store(store, machine_paths=(mfile,))
+if st is None:
+    st = CS.Store(store, machine_paths=(mfile,))
+if mode == 'store_code_differs':                      # ★ 3 회차 (RCP3-02) — Store 코드 칸 ≠ 런 시작 (손으로 고친 꼴 · 디스크 그대로 — 그 가드만 판별)
+    st.code['fibre_segment_raster.py'] = '0' * 64
 reg, out = st.get_or_build(build, **inp)
 fresh = reg_of()
 files = sorted(os.listdir(store))
@@ -1984,6 +2018,52 @@ def t15():
         and s1.get('preloaded') == [] and s1.get('error') is None
         and ((ga.get('start') or {}).get('preloaded') == ['fibre_segment_raster']),
         (gf.get('status'), gf2.get('status'), s1, gf.get('t_launch'), gf.get('t_after_import'), (ga.get('start') or {}).get('preloaded')))
+    #  ★ 3 회차 (내부 반박 리뷰 재확인 2 RCP3-02) — 코드 칸 = 파일별 stat 신원 (장치 · inode · 크기 · 수정 시각 ns · 상태 시각 ns) 정확 대조 + Store 코드 칸 =
+    #    런 시작 코드 칸일 때만 읽고 쓴다.  옛 판 = 수정 시각을 시작 + 1 s 와 견줌 (벽시계) → 아래 (g) (h) (i) 를 놓치고 (j) 를 거짓으로 껐다.
+    #  (g) 같은 초 뒤집기 — 변이판을 불러 쓴 뒤 원판 바이트로 되돌려 씀 · 수정 시각 = 런 시작 (재확인 2 samesec: 변이판 원장을 원판 열쇠로 저장 → 원판 정직한 런 적중)
+    sg, cg_ = new_store_dir('t15_g'), t15_code_dir('t15_g')
+    gg = t15_run(cg_, sg, 'samesec')
+    gg2 = t15_run(t15_code_dir('t15_g_orig'), sg, 'honest')
+    chk('T15g 같은 초 뒤집기 (런 시작 뒤 변이판 → 불러옴 → 원판 바이트로 되돌려 씀 · 수정 시각 = 런 시작 — 옛 1 s 여유 안) → 저장 안 함 (꺼짐 · code_changed · '
+        '폴더 빈 채) · 그 폴더를 원판 코드로 연 정직한 새 프로세스 = 새로 지어 씀 (받은 원장 = 원판 원장 · 옛 판 = 변이판 원장 적중)',
+        gg.get('rc') == 0 and gg.get('status') in ('disabled', 'built_write_skipped') and cc(gg) and gg.get('files') == []
+        and gg2.get('status') == 'built_written' and gg2.get('reg_fp') == gg2.get('fresh_fp') == orig_fp,
+        (gg.get('status'), gg.get('why'), gg.get('files'), gg2.get('status'), gg2.get('reg_fp'), orig_fp, gg.get('err')))
+    #  (h) 변이판일 때 Store (열쇠 코드 칸 = 변이판) → 같은 초 안에 원판으로 되돌림 → 짓기 = 원판 (재확인 2 samesec_store)
+    sh_, ch_ = new_store_dir('t15_h'), t15_code_dir('t15_h')
+    gh = t15_run(ch_, sh_, 'samesec_store')
+    gh2 = t15_run(t15_code_dir('t15_h_mut', fsr_text=mut_src), sh_, 'honest')
+    chk('T15h Store 를 변이판일 때 만들고 (열쇠 코드 칸 = 변이판) 원판으로 되돌려 씀 (수정 시각 = 런 시작) → 저장 안 함 (꺼짐 · code_changed — Store 코드 칸 '
+        '≠ 런 시작 · stat 신원) · 그 폴더를 변이판 코드로 연 정직한 런 = 새로 지어 씀 (받은 원장 = 변이판 원장 · 옛 판 = 원판 원장 적중)',
+        gh.get('rc') == 0 and gh.get('status') == 'disabled' and cc(gh) and gh.get('files') == []
+        and gh2.get('status') == 'built_written' and gh2.get('reg_fp') == gh2.get('fresh_fp') != orig_fp,
+        (gh.get('status'), gh.get('why'), gh.get('files'), gh2.get('status'), gh2.get('reg_fp'), gh2.get('fresh_fp'), gh.get('err')))
+    #  (i) 수정 시각을 되돌린 뒤집기 (os.utime — 옛 한정 (나)) — ctime · inode 는 utime 으로 못 되돌린다
+    si, ci = new_store_dir('t15_i'), t15_code_dir('t15_i')
+    gi = t15_run(ci, si, 'mtime_restore')
+    gi2 = t15_run(t15_code_dir('t15_i_orig'), si, 'honest')
+    chk('T15i 수정 시각을 되돌린 뒤집기 (변이판 → 불러옴 → 1.2 s 뒤 원판 바이트 + 원래 수정 시각 · os.utime — 옛 한정 (나)) → 저장 안 함 (꺼짐 · code_changed · '
+        'inode · 상태 시각) · 원판 코드의 정직한 런 = 새로 지어 씀 (받은 원장 = 원판 원장)',
+        gi.get('rc') == 0 and gi.get('status') in ('disabled', 'built_write_skipped') and cc(gi) and gi.get('files') == []
+        and gi2.get('status') == 'built_written' and gi2.get('reg_fp') == gi2.get('fresh_fp') == orig_fp,
+        (gi.get('status'), gi.get('why'), gi.get('files'), gi2.get('status'), gi2.get('reg_fp'), gi.get('err')))
+    #  (j) 수정 시각이 미래인 사본 (다른 기계에서 rsync -t 로 옮긴 꼴 · 내용 · 자리 그대로) 의 정직한 런 — 옛 판 = 정직한 런마다 꺼짐 (재확인 2 future mtime)
+    sj, cj_ = new_store_dir('t15_j'), t15_code_dir('t15_j')
+    fut = time.time_ns() + 3600 * 10 ** 9
+    for fn in KEY_CODE_FILES:
+        os.utime(os.path.join(cj_, fn), ns=(fut, fut))
+    gj = t15_run(cj_, sj, 'honest')
+    gj2 = t15_run(cj_, sj, 'honest')
+    chk('T15j 열쇠 코드 파일 넷의 수정 시각이 미래 (+1 h · 다른 기계에서 rsync -t 로 옮긴 꼴 · 내용 · 자리 그대로) 인 정직한 런 = 지어 씀 → 다음 새 프로세스 '
+        '적중 (짓기 0 회 · 같은 원장 — 벽시계와 견주지 않는다 · 옛 판 = 정직한 런마다 꺼짐)',
+        gj.get('status') == 'built_written' and gj2.get('status') == 'hit' and gj2.get('builds') == 0
+        and gj2.get('reg_fp') == gj.get('reg_fp') == orig_fp, (gj.get('status'), gj.get('why'), gj2.get('status'), gj2.get('why')))
+    #  (k) Store 코드 칸 ≠ 런 시작 코드 칸 (손으로 고친 꼴 · 디스크 그대로) — 그 가드만 판별
+    sk, ck = new_store_dir('t15_k'), t15_code_dir('t15_k')
+    gk = t15_run(ck, sk, 'store_code_differs')
+    chk('T15k Store 코드 칸 ≠ 런 시작 코드 칸 (Store 를 만든 뒤 칸 하나를 손으로 바꿈 · 디스크 그대로) → 저장 안 함 (꺼짐 · code_changed · 짓기 1 회 · 폴더 빈 채)',
+        gk.get('rc') == 0 and gk.get('status') == 'disabled' and cc(gk) and gk.get('builds') == 1 and gk.get('files') == [],
+        (gk.get('status'), gk.get('why'), gk.get('files'), gk.get('err')))
 
 
 # ═════════════════════════ P — payload 끝-끝 ═════════════════════════
@@ -2129,6 +2209,38 @@ def t_payload():
         '(런 시작 코드 칸 = 원장 코드 적재 앞 · 2 회차 RCP2-01)',
         r6.returncode == 0 and len(order) == 4 and order[0] == 'cjunc_store' and '새로 지어 저장' in (r6.stdout or ''),
         (r6.returncode, order, (r6.stdout or '')[-200:]))
+    #  ★ P6b (3 회차 · 내부 반박 리뷰 재확인 2 RCP3-03) — 러너 꼴 인자 (`--expect-physics` 에 ca_ext.cjunc 칸 = 러너 NG_DECL) 의 payload 도 cjunc_store 를
+    #    carbon_junction 보다 먼저 부른다 (옛 차례 = `ca_ext_protocol_fields` → ca_ext_cjunc 가 carbon_junction 먼저 → `_START['preloaded']` =
+    #    ['carbon_junction'] · cjunc_store 머리 한정 (가) 의 "payload 는 그런 모듈이 없다" 가 거짓이었다) · 입구에서 멈춤 (솔브 없음)
+    key6 = sorted(k for k in _RCG.ca_ext_protocol_fields() if k.startswith('ca_ext.cjunc.'))[0]
+    sd6b = new_store_dir('pay6b')
+    r6b = subprocess.run([sys.executable, '-c', P6B_CODE, SCRIPTS, sd6b, key6], capture_output=True, text=True, timeout=600, cwd=wd,
+                         stdin=subprocess.DEVNULL)
+    o6b = [ln for ln in (r6b.stdout or '').splitlines() if ln.startswith('P6B ')]
+    o6b = json.loads(o6b[-1][4:]) if o6b else None
+    chk('P6b 러너 꼴 인자 (--step3-cjunc --step3-cjunc-store <폴더> --expect-physics <ca_ext.cjunc 칸>=…) 의 payload — cjunc_store 가 carbon_junction 보다 '
+        '먼저 불린다 (sys.modules 넣은 차례) · 런 시작 기록의 먼저 불린 열쇠 모듈 = 없음 · 입구에서 멈춤 (3 회차 RCP3-03)',
+        isinstance(o6b, dict) and (o6b.get('start_order') or [None])[0] == 'cjunc_store' and 'carbon_junction' in (o6b.get('start_order') or [])
+        and o6b.get('preloaded') == [] and o6b.get('exited') is True, (o6b, key6, (r6b.stderr or '')[-300:]))
+
+
+#: ★ P6b (3 회차 RCP3-03) — 실제 payload 를 runpy (__main__) 로 러너 꼴 인자에 띄워 입구에서 멈춘 뒤 열쇠 모듈 넷의 불린 차례 (sys.modules 넣은 차례 =
+#  import 시작 차례) · cjunc_store 런 시작 기록의 먼저 불린 열쇠 모듈을 적는다 (GPU · 솔브 없음)
+P6B_CODE = r'''
+import json, runpy, sys
+scripts, store, key = sys.argv[1:4]
+sys.path.insert(0, scripts)
+sys.argv = ['mpm_webapp_payload.py', '--step3-cjunc', '--step3-cjunc-store', store, '--expect-physics', key + '=1']
+exited = False
+try:
+    runpy.run_path(scripts + '/mpm_webapp_payload.py', run_name='__main__')
+except SystemExit:
+    exited = True
+KEYM = ('carbon_junction', 'step3_sigma', 'fibre_segment_raster', 'cjunc_store')
+cs = sys.modules.get('cjunc_store')
+print('P6B ' + json.dumps({'start_order': [m for m in sys.modules if m in KEYM], 'exited': exited,
+                           'preloaded': (cs._START.get('preloaded') if cs is not None else None)}))
+'''
 
 
 # ═════════════════════════ R — 러너 ═════════════════════════
