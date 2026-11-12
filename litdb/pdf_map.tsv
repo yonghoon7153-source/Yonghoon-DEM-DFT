@@ -486,3 +486,7 @@ kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review	the critical rol
 #   ⚠ 크롭 27 장 = 손 크롭 22 (manual_crop 5: Fig. 1 · 2 · S2 · S4 · Table S2 · 식 3 · 근거 글 14) + 재크롭 5 (recrop: Fig. 3 · S1 · S3 · S5 · Table S1) — 이 slug 로 --clean 을 돌리면 손 크롭은 지워지고 재크롭은 자동 bbox 로 돌아간다 (figures.json 표지)
 dang2019_nmc111_secondary_particle_flat_punch_fracture_strength	fracture_behavior_of_single_lini0.33mn0.33co0.33o2_particles_studied_by_flat_punch
 dang2019_nmc111_secondary_particle_flat_punch_fracture_strength	fracture behavior of single lini0.33mn0.33co0.33o2 particles studied by flat punch
+# ── 암석 인장강도 — 불규칙 시편 · 구의 두 점 압축 (S_t ≑ 0.9 F₀/d² = 1.4 F₀/2πa² ≈ 2.8 F₀/πd² · 탄성 구 Legendre 급수 · 3D 동결 광탄성 · 8 암석 ↔ 원판 지름 압축) (Hiramatsu · Oka · Int. J. Rock Mech. Min. Sci. 3, 89–99 (1966)) — litdb 2026-11-12 (후보 N-11) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형
+#   ⚠ 크롭 46 장 = 도구 3 (recrop: Fig. 2 판 1 · Fig. 6 · Fig. 8) + 손 크롭 43 (manual_crop: 그림 7 · 식 23 · 근거 글 13) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭은 자동 bbox 로 돌아간다)
+hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load	determination_of_the_tensile_strength_of_rock
+hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load	determination of the tensile strength of rock
