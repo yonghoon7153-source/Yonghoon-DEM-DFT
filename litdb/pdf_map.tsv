@@ -431,3 +431,6 @@ devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode	grid indent
 # ── 화학-기계 팽창 · Li 부분 몰 부피 · 구속 셀 operando 응력 · 압력별 OCV (Koerver 외 · Energy Environ. Sci. 11 (2018) 2142–2158) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 ──
 koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb	chemo-mechanical_expansion_of_lithium_electrode_materials
 koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb	chemo-mechanical expansion of lithium electrode materials
+# ── 황화물 ASSB 복합 양극 전기화학–화학–역학 결합 2D FEM phase-field 파괴 모형 (Taghikhani 외 · J. Mech. Phys. Solids 198 (2025) 106060) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 · 밑줄 · 공백 두 변형 ──
+taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode	modeling_coupled_electro-chemo-mechanical_phenomena_within_all-solid-state
+taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode	modeling coupled electro-chemo-mechanical phenomena within all-solid-state

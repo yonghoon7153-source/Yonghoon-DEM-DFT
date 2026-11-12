@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 273편 · 생성 2026-11-12
+> digest 274편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -233,7 +233,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 13 |
 
-## 화학-기계 열화 · 계면 (20편)
+## 화학-기계 열화 · 계면 (21편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -254,6 +254,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `so2021_dem_fabrication_degradation_ductile_particles` | frame[5] 사이클 열화 DEM — Simulation of Fabrication and Degradation of All-Solid-State Batteries with Ductile Particles — So, Inoue, Hirate, Nunoshita, Ishikawa, Tsuge (J. Electrochem. | DEM (소성 ductile-particle contact model + 2-step fabrication→ | 2026-06-26 | 🖼 10 |
 | `spencerjolly2023_ag_graphite_interlayer_operando_xrd` | Ag–흑연 복합 인터레이어(anodeless Li₆PS₅Cl)의 구조 변화를 operando XRD 로 — 충전: Li 가 흑연에 전기화학적으로 들어간 뒤 Ag 와 화학적으로 합금화 (Li_xAg → LiAg → Li₉Ag₄ → Li₁₀Ag₃) · 방전은 역경로가 아니다 · Ag 는 CCD 를 올리지 않고 CC 쪽 Li/ | exp (operando PXRD — lab Cu Kα reflection + Diamond I12 sync | 2026-09-23 | 🖼 11 |
 | `tabakovic2026_mechanical_stress_eis_ica_drt_dfn` | 기계 응력(정수압 σ_h 1–10 MPa)이 LIB 의 EIS · DRT · ICA 를 어떻게 바꾸나 — DFN(PyBaMM) + 2-스케일 선형탄성 역학 완전 결합 시뮬레이션 · "우세 전극" 가설 — Tabaković · Katrašnik · Zelič (SSRN 프리프린트, 동료심사 전) | continuum (DFN/P2D in PyBaMM + 2-scale linear-elastic partic | 2026-09-23 | 🖼 10 |
+| `taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode` | 황화물 전고체전지 복합 양극 (NMC811 + Li₆PS₅Cl) 의 전기화학–화학–역학 완전 결합 2D 평면변형 유한요소 phase-field 파괴 모형 (COMSOL · AT-1 · ℓ₀ 100 nm · ≈3.5 M 자유도 · 선형 탄성 · 소성 없음) — 운전 적층압 0 / 5 / 40 MPa · 공극 15 % ↔ 0 | FEM (2D plane-strain · fully coupled electro-chemo-mechanica | 2026-11-12 | 🖼 89 |
 | `tron2023_lpscl_ccd_ambient_pressure` | 상압 (스택압 0.20–0.28 MPa) Li/Li₆PS₅Cl/Li 대칭셀의 임계 전류 밀도 (CCD) — 셀 지그 · 전해질 두께 · Li 원천이라는 '숨은 변수' 와 galvanodynamic 분극 (Tafel 차용) 판정법: CCD 0.023–0.19 mA cm⁻² · 저항은 Li–SE interface 가 지배 · | experiment (Li/Li₆PS₅Cl/Li 대칭셀 · 단계 정전류 + galvanodynamic 분극  | 2026-10-14 | 🖼 19 |
 | `wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem` | 다결정 NMC811 2차입자 파괴강도 σ_F = P_f/D² — 평판 압축 207 ± 49 MPa · 원뿔-구형 팁 67 ± 21 MPa (pristine) → 3 사이클 뒤 36 ± 15 · 4.3 V 에서 11 ± 4 MPa, 큰 입자일수록 약함, 파괴 양식은 입계(intergranular) Mode I crackin | exp (in situ SEM micro-indentation of isolated secondary par | 2026-09-26 | 🖼 16 |
 | `yun2023_deciphering_degradation_halide_vs_sulfide` | 필독 / 우리-랩 / ★최애 — Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes: Interfacial reaction versus ionic transport — Yun, Shin, Hoan | exp (impedance decoupling, SSRM/FS local mapping) + FEM (vol | 2026-06-26 | 🖼 5 |
