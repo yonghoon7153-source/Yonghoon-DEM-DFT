@@ -36,3 +36,15 @@
 - (09:4x) 시험 더함 (T5g · h · T6b · T7 둘 + T7b · T11 둘 · C1 일곱 · R1 일곱 · P1 있는 상대 폴더) · 변이 도구 work/mutate.py (84 개 · 사본 work/mut · 한 번에 하나) 1 차 = 잡힘 81 · 안 잡힘 3 (R6 = testzip 건너뜀 — 작은 멤버는 첫 읽기에 CRC 가 걸려 못 가름 → T6b (큰 멤버 npy 머리) 더해 잡게 함 · W6b · P5 = 겹 방어) · N3b 는 잡힘 (개행은 grep 겹이 못 봄 = case 겹이 필수) → 기대 고침 + N3c · W2b 더함 (86 개).  기록 logs/evac/mut/run_py311.log (1 차 · 시험 고치기 전).
 - ★ (09:5x) 구현 커밋 = f17ea8c6b (작업 트리 · push 없음 · 서명 없음 · 13 파일).  커밋 직전 3.11: Q11 15/15 · store 46/46 (52 s).
 - 다음: 3.11 묶음 A (빠른 것들) → B (사슬 · e2e · 증서 · store e2e) → kgy 판 → 변이 다시 (끝 판) → GPU 블록 자리표 · 개정 초안.  묶음 기록 = logs/evac/py311_A · py311_B · kgy_A · kgy_B (_summary.txt).
+- (대피 2 · 08:25Z) 3.11 묶음 A (HEAD f17ea8c6b · 작업 트리 깨끗) = 27 묶음 가운데 26 rc 0 · 1 rc 1:
+  run_contract 124/124 (1 s) · cmd selftest 128/128 (90 s) · s3 selftest PASS · s3 rint PASS · cmd repo 0 오류 (37 s) · probe6 330/330 (216 s) ·
+  carbon_junction 547/547 (61 s) · gpu_precond 15/15 (1 s) · cjunc_store 46/46 (55 s) · ca_ext_b6 502 (41 s) · ca_ext_runner 151 (143 s) ·
+  ca_ext_verdict 31 (39 s) · z1 95 (32 s) · z3 84 (26 s) · ptfe_fa 242 (63 s) · target_cert 264/264 빠른 판 (27 s) · s0_census 186 (13 s) ·
+  webapp provenance 284/284 (12 s) · rint_receipts 105 (65 s) · g2_am_iface 136 (5 s) · first_result 9/9 · webapp ca_ext_labels 93 · rint_scope 31 ·
+  je_label 22 · temp_pressure ALL PASS · net_current ALL PASS · mpm_lab_cmp 23/23.
+  rc 1 = undef (scripts/check_undefined_names.py 전체 훑기) 2 건 = scripts/generate_comparison_plots.py 6905 · 6906 (log_vuln · log_phi_logcn) —
+  이 묶음이 손대지 않은 파일 (git diff af3cce37b HEAD 에 없음) · pyflakes 판 (스크래치 lintenv) 으로는 3 건 (+ viz_mixer_bed.py:90 npart) · 셋 다
+  바꾼 · 새 파일 아님 · scripts/check_all.sh 에 이 검사 단계 없음 (grep 0 줄).  기록 logs/evac/py311_A/_summary.txt.
+- GPU 블록 머리 자리표 채움 (Q11PIN = f17ea8c6b… · Q11REPO = $HOME/dem-mt (근거 KGY_BLOCK.md BASE 줄 · gabia 미확인)) · amend_drafts.md 2 판 씀.
+- 다음: 3.11 묶음 B (사슬 · e2e · e2e12 · 증서 · store e2e) 백그라운드.
+- (08:28Z) 묶음 B 를 nohup 으로 잘못 띄움 (SIGHUP 무시가 자식에 상속) → 몇 초 뒤 멈춤 · 남은 프로세스 0 확인 · 기록 폴더 py311_B_nohup_stopped_invalid (쓰지 않는다) · nohup 없이 다시 띄움.
