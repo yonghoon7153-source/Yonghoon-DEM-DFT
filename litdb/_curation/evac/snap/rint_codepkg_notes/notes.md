@@ -48,3 +48,7 @@
 - GPU 블록 머리 자리표 채움 (Q11PIN = f17ea8c6b… · Q11REPO = $HOME/dem-mt (근거 KGY_BLOCK.md BASE 줄 · gabia 미확인)) · amend_drafts.md 2 판 씀.
 - 다음: 3.11 묶음 B (사슬 · e2e · e2e12 · 증서 · store e2e) 백그라운드.
 - (08:28Z) 묶음 B 를 nohup 으로 잘못 띄움 (SIGHUP 무시가 자식에 상속) → 몇 초 뒤 멈춤 · 남은 프로세스 0 확인 · 기록 폴더 py311_B_nohup_stopped_invalid (쓰지 않는다) · nohup 없이 다시 띄움.
+- (대피 3 · 08:36Z · 사용량 한도로 한 번 끊김 → 본 세션 지시로 이어감) 상태 확인: 작업 트리 깨끗 · HEAD f17ea8c6b · 내 프로세스 = 묶음 B (run_bundle.sh pid 2415 —
+  살아 있다 · rint_r_chain 506/506 390 s 끝 · rint_r_chain_e2e 도는 중) · 다른 check_all.sh · check_kgy_py38.sh = 본 트리 게이트 (본 세션 것 · 건드리지 않음).
+  변이 도구에 끝-끝 변이 셋 (Z1 요약 칸 · Z2 ladder 배선 · Z3 predict 배선 · --e2e 일 때만) 더함 = 89 개 · 옛 글 자리 89/89 한 번씩 (사본 work/mut = 구현 커밋과 같음).
+  남은 차례: B 끝 → 변이 (86 · 3.11) → kgy 판 묶음 → 끔 길 ↔ 바탕 커밋 산출 대조 (본 세션 지시 "기본 끔 경로 비트 같음") → 끝-끝 변이 셋 → GPU 하네스 CPU 흐름 확인 → 보고.
