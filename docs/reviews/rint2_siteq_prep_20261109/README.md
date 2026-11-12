@@ -579,3 +579,5 @@ unshare -pf --mount-proc --kill-child python3 -I -B docs/reviews/rint2_siteq_pre
 | Q4 | 현장에서 두 꼴의 순서 | 짧은 꼴 먼저 → 같은 날 nohup 꼴 (이름이 겹치지 않는다 · N4) |
 | Q5 | group_others (그 그룹의 다른 계정 수 · 이름 없음) 를 둘까 — 11-10 에 "묻지 않음" 이던 칸 | 둔다 (계획 A2 근거 · 숫자만) · 원치 않으면 그 칸만 뺀다 |
 | Q6 | gabia 의 PLAN · LEDGER · OUTBASE · PLANFILE 자리 · kgy 의 12 단위 OUTBASE 이름 | 계획 §10 의 4 번에서 정한 뒤 채운다 · gabia = kgy 와 같은 홈 아래 꼴 (계획 §7 Q2) |
+
+> ✅ **1저자 11-12 *"권고대로해"*** — Q1 꼴 A · Q2 nohup setsid 그대로 · Q3 계획 §10 의 4 번 (명령 블록 · 실행 정책) 에서 넣는 쪽으로 · Q4 짧은 꼴 먼저 → 같은 날 nohup 꼴 · Q5 group_others 둔다 · Q6 계획 §10 의 4 번에서 정한 뒤 채움 (gabia = kgy 와 같은 홈 아래 꼴).  다음 = 현장 블록 (kgy · gabia) 일곱 칸을 채워 1저자에게 → 결과 (JSON · sha256) 반입.
