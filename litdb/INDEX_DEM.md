@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 314편 · 생성 2026-11-12
+> digest 315편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -200,7 +200,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (64편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (65편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -262,6 +262,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `schmitt2026_chemomech_stability_dry_cathode_separator_sheets` | PTFE 건식 (dry-process) 양극 · 분리막 시트 vs 냉간압축 펠릿 — 시트 양극이 첫 방전 · CE · 율속에서 앞서고 계면 분해 (ToF-SIMS PO₃⁻ · SO₃⁻ · DEMS O₂) 는 더 크다 · 100 사이클 유지율은 여섯 시트 구성 중 셋만 펠릿보다 높다 (남은 용량은 다섯 [판독]) → 저자  | exp (PTFE 건식 시트 공정 · 분리막 binder 0–1 wt% EIS · 양극 DC 분극 σ_ion | 2026-11-06 | 🖼 9 |
 | `so2021_dem_mold_pressure_assb_coldpress` | 몰드압력이 ASSB 압밀·이온전도도에 미치는 영향 — 소성변형 포함 3D DEM cold-press 모델 — So (J. Power Sources 2021) | DEM | 2026-06-23 | 🖼 9 |
 | `song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage` | 액체 LIB 양극 (NCM9055 + PVDF + 도전재 95 : 2.5 : 2.5 · SE 없음) 을 X 선 CT 안에서 지름 200 µm 평두 압자로 누른 채 (in situ · 다섯 단계 · 두께 87.5 → 44 µm) 찍고, 그 CT 입자를 등가 구 942 개로 옮긴 DEM (탄성 구 + 평행 결합 · E 47  | experiment + DEM (in situ X-ray CT 압축 스테이지 · CT 기반 등가 구 DEM  | 2026-11-12 | 🖼 93 |
+| `stewart2001_dem_pept_bladed_mixer_detailed_comparison` | 2 날개 수직 원통 믹서 (지름 249 mm · 날 높이 40 mm · 1 rad/s) 의 유리구 유동을 PEPT (양전자 방출 입자 추적 · 3D) 로 재고 같은 계의 DEM (16,000 구 · 단분산 5 mm) 다섯 경우와 셀마다 견준 논문 — 다섯 경우는 미끄럼 · 구름 마찰 (μ_s 0.2–0.5 · μ_r 0– | DEM (in-house soft-sphere · Cundall–Strack + rolling frictio | 2026-11-12 | 🖼 49 |
 | `sun2026_dem_extrusion_recirculation_dry_electrode` | 트윈스크류 압출(extrusion) + 재순환(recirculation) 무용매 공정을 DEM 으로 — 3D 프린팅용 필라멘트 미세구조 — Sun / Vigneaux / Franco (Batteries & Supercaps 2026) | DEM (LIGGGHTS: Hertz + SJKR 점착 + CDT 구름마찰; 트윈스크류 압출기 STL + 재 | 2026-09-19 | 🖼 10 |
 | `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | 🖼 26 |
 | `wet_processing_resolved_am_ssb_cathode_manufacturing` | ASSB 양극을 습식공정(슬러리→건조→압연)으로 — 실제 형상(resolved, multisphere) AM 입자를 nano-CT에서 추출해 DEM 제조 시뮬 + GeoDict로 σ_ionic·σ_e 산출 — Weitze / Franco (Energy Storage Materials 2024) | DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry | 2026-06-26 | 🖼 8 |

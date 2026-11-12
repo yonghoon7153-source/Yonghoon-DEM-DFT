@@ -3206,6 +3206,13 @@
    "f66711ce-37._Decoupling_and_balancing_of_space_and_time_errors_in_the_material_point_method_MPM.pdf"
   ]
  },
+ "stewart2001_dem_pept_bladed_mixer_detailed_comparison": {
+  "figures": 49,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf"
+  ]
+ },
  "stomakhin2013_mpm_snow_elastoplastic": {
   "figures": 12,
   "generated": "2026-08-05",
