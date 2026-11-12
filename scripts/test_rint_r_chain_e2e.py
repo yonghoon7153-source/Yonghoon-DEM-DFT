@@ -66,6 +66,8 @@ import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
+import run_contract as _RCG                                # noqa: E402 — ★ 11-12 같은 부류 (재리뷰 RCP2-06 · 본 세션 결정 11-12 밤) 이 시험 프로세스와 그 자식 (git ·
+_RCG.drop_git_env()                                        #   payload · 러너) 은 부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (scripts/test_git_env_isolation.py G6)
 REG_DOC = os.path.join(ROOT, 'docs', 'reviews', 'rint_carbon_additive_registration_R_draft_20261020.md')
 
 import rint_r_chain as RR                                  # noqa: E402
