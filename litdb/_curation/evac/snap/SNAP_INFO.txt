@@ -1,10 +1,11 @@
-2026-11-12 14:47:17 UTC
+2026-11-12 14:55:08 UTC
 rint_codepkg: HEAD 0ac6edf3c · origin/claude/stoic-knuth-NObVQ 뒤 커밋 6
 rint_codepkg_unpushed.bundle: 90238 B
 main: HEAD bfd9b3bbd · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 0
 BRIEF_rereview_codepkg.md: 4333 B
 BRIEF_review_codepkg.md: 4482 B
 notes.md: 34601 B
+BRIEF_fix2_codepkg.md: 4462 B
 amend_drafts_v3.md: 15725 B
 design.md: 20127 B
 BRIEF_evac.md: 5575 B
@@ -15,6 +16,6 @@ amend_drafts.md: 28035 B
 formation_20261112.md: 3306 B
 synthfix_work.tgz: 파일 166 · 3347867 B
 dem_redesign_work.tgz: 파일 83 · 1373734 B · 뺀 파일 4 (주소 꼴 · 큰 파일): ['dem_redesign/fix/_claims_head.json', 'dem_redesign/fix/arith.py', 'dem_redesign/fix/card_frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure.md', 'dem_redesign/fix/card_lee2026_mechanical_halogen_argyrodite_drycoating.md']
-mixer_e0_work.tgz: 파일 15297 · 7980070 B · 뺀 파일 22434 (주소 꼴 · 큰 파일): ['mixer_e0_v2/query_block/test/fakes/sinfo', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_nodes_cpu.txt', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_partitions.txt', 'mixer_e0_v2/reseal_dry/head/CLAUDE.md', 'mixer_e0_v2/reseal_dry/head/docs/50kg/report_y4/draft2/figs/p3_contacts.png']
+mixer_e0_work.tgz: 파일 15298 · 7980104 B · 뺀 파일 24509 (주소 꼴 · 큰 파일): ['mixer_e0_v2/query_block/test/fakes/sinfo', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_nodes_cpu.txt', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_partitions.txt', 'mixer_e0_v2/reseal_dry/head/CLAUDE.md', 'mixer_e0_v2/reseal_dry/head/docs/50kg/report_y4/draft2/figs/p3_contacts.png']
 p1g2c_work.tgz: 파일 40 · 183252 B
 litdb_wish_work.tgz: 파일 4 · 13365 B
