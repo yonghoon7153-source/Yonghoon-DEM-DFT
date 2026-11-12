@@ -1,0 +1,27 @@
+TICK batch_04_findings.md 백틱 뗀 곳 2
+TICK batch_07_findings.md 백틱 뗀 곳 2
+TICK batch_09_findings.md 백틱 뗀 곳 2
+TICK batch_15_findings.md 백틱 뗀 곳 1
+TICK batch_18_findings.md 백틱 뗀 곳 3
+TICK batch_23_findings.md 백틱 뗀 곳 1
+TICK batch_25_findings.md 백틱 뗀 곳 1
+TICK batch_29_findings.md 백틱 뗀 곳 1
+TICK batch_37_findings.md 백틱 뗀 곳 1
+TICK batch_41_findings.md 백틱 뗀 곳 1
+TICK batch_42_findings.md 백틱 뗀 곳 2
+TICK batch_43_findings.md 백틱 뗀 곳 1
+TICK batch_50_findings.md 백틱 뗀 곳 1
+TICK batch_51_findings.md 백틱 뗀 곳 1
+TICK batch_64_findings.md 백틱 뗀 곳 4
+TICK batch_66_findings.md 백틱 뗀 곳 2
+TICK batch_76_findings.md 백틱 뗀 곳 3
+TICK layer3_findings.md 백틱 뗀 곳 5
+TICK card_problems.md 백틱 뗀 곳 11
+CARDS 배치 41 · 항목 합 837
+M_MERGE 머리 21: 요지 / 단계 0 — 기공 연산자 · 판정 기준 / 단계 1 — 메모리 · 장 수 / 단계 2 와 단위 시험 U0–U6 / 단계 3 — 2D 접촉 표현 대조 / 단계 4 — 3D 순수 SE 보정 / 단계 5 — 3D 복합 가압 / 단계 6 — 탈압 / 단계 7 — 형상 · 피복 · 수송 / 후보 (D0 · A′-0 · A · A′ · B · C · C′ · M0) 에 대한 것 / 조건 R1–R7 에 대한 것 / 결과 전 대조 항목 / 흐름 밖 — 접촉망 수송 · 계면 저항 / 흐름 밖 — 믹싱 · 입도 설계 · 건식 공정 / 흐름 밖 — 실험과의 대조 · 측정법 / 흐름 밖 — 열화 · 사이클 / 흐름 밖 — 다른 계산 방법 · 보고 방식 · 그 밖 / 가장 무게 있는 열 / 어긋남 / 빈 곳 / 읽은 범위와 셈
+BAN batch_01_findings.md:14 표지 덧붙임
+BAN batch_14_findings.md:217 표지 덧붙임
+BAN batch_14_findings.md:244 표지 덧붙임
+BAN card_problems.md:495 표지 덧붙임
+BAN card_problems.md:522 표지 덧붙임
+FILES 123 · 카드 줄 281 · 스윕 남은 문제 0 · 바이트 6061023

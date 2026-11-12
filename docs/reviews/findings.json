@@ -17388,12 +17388,26 @@
     {
       "id": "SELF-166",
       "severity": "P2",
-      "status": "open",
+      "status": "claimed_fixed",
       "owner": "claude",
       "found_by": "ibb 건식 (N = 200) job 358667 (11-12 · 1저자 실행 · 생산 lmp_mpi 를 mpirun 없이 1 프로세스 · 덱 묶음 = 핀 11a794674) — 실행기 실행 전 멈춤 rc 3 'LMP -h rc 1' · 배너 = 3d5c00f 정상",
       "opened_in": "docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh",
       "title": "G2c′ 샌드박스 실행기 (run_g2cp.sh) 가 -h 머리 줄 확인에서 rc 0 을 요구했다 — LIGGGHTS 3d5c00f 의 -h 는 help() 뒤 error->done() = MPI_Finalize(); exit(1) (lammps.cpp 543–545 · error.cpp 369–379) 라 진짜 실행 파일은 늘 rc 1 → 실행기가 어떤 진짜 LIGGGHTS 로도 팔 하나 돌기 전에 멈춘다 · 시험의 가짜 lmp 도 -h 에 rc 0 을 내서 41 시험 · 내부 반박 리뷰 세 회차가 못 잡았다 (가짜가 진짜 꼴을 옮기지 않음 · SELF-115 와 같은 부류)",
-      "note": "결과 무관 (실행 전 멈춤 · 팔 0 · 예측 · 숫자 기준 · 판정 식 · 허용폭 · 대조기 무변경) · 고침 = 받는 rc 0 → 1 + 도움말 줄 'Command line options:' 요구 (오류 끝 error->all 도 rc 1 이라 가른다 · 거부 쪽) + 가짜 lmp 를 3d5c00f 꼴로 (배너 → 도움말 줄 → rc 1 · 소스 줄을 주석에) · t22 사례 셋 (-h rc 0 · rc 2 · 오류 끝 = rc 1 인데 도움말 없음) · t26 lmp_h_rc 1 기록 · 고치기 전 실행기 29/41 (fail 12 = 실행기 시험 11 이 job 358667 과 같은 멈춤 + t22 = rc 0 을 받아 버림 · 오류 끝 사례의 멈춤 이유가 다름) → 41/41 · 변이 6 중 6 잡음 · 고침 커밋 = 이 항목을 올린 커밋 · claimed_fixed = push 뒤 다음 커밋 · 남은 것 = 이 판 덱 묶음으로 ibb 건식 다시 (진짜 실행 파일 통과는 그때 확인) · 같은 꼴을 막는 법 = 가짜 실행 파일의 꼴 (rc · 화면) 을 소스 줄로 근거 대기"
+      "note": "결과 무관 (실행 전 멈춤 · 팔 0 · 예측 · 숫자 기준 · 판정 식 · 허용폭 · 대조기 무변경) · 고침 = 받는 rc 0 → 1 + 도움말 줄 'Command line options:' 요구 (오류 끝 error->all 도 rc 1 이라 가른다 · 거부 쪽) + 가짜 lmp 를 3d5c00f 꼴로 (배너 → 도움말 줄 → rc 1 · 소스 줄을 주석에) · t22 사례 셋 (-h rc 0 · rc 2 · 오류 끝 = rc 1 인데 도움말 없음) · t26 lmp_h_rc 1 기록 · 고치기 전 실행기 29/41 (fail 12 = 실행기 시험 11 이 job 358667 과 같은 멈춤 + t22 = rc 0 을 받아 버림 · 오류 끝 사례의 멈춤 이유가 다름) → 41/41 · 변이 6 중 6 잡음 · 고침 커밋 = 이 항목을 올린 커밋 · claimed_fixed = push 뒤 다음 커밋 · 남은 것 = 이 판 덱 묶음으로 ibb 건식 다시 (진짜 실행 파일 통과는 그때 확인) · 같은 꼴을 막는 법 = 가짜 실행 파일의 꼴 (rc · 화면) 을 소스 줄로 근거 대기 · 고침 커밋 = 21bb09d82 (11-12 push · 대피 세션 · 게이트 183 단계 = 1–125 fail 0 · 126–183 fail 0 · 같은 HEAD) · claimed_fixed = 11-12 (진짜 LIGGGHTS 로 건식 다시 = ibb 시도 4 · 1저자 실행 대기)",
+      "claimed_fixed_sha": "21bb09d8291f30dca217f595e34c2dfdb11f652c",
+      "evidence_tests": [
+        "docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py"
+      ]
+    },
+    {
+      "id": "SELF-167",
+      "severity": "P3",
+      "status": "open",
+      "owner": "claude",
+      "found_by": "게이트 커밋 K (860d02ac2) 1 조각 단계 72 실패 (11-12 · 대피 세션) — t26_runner_ok_fake 'nice 19' 단언이 [14 × 9] 을 봄 · 같은 시험을 따로 돌리면 41/41",
+      "opened_in": "docs/reviews/p1_g2c_sandbox_20261104/test_g2cp.py",
+      "title": "게이트를 nice -n -5 로 띄워 (조수들과 CPU 를 나눠 커밋 J 2 조각이 느려졌던 뒤 · 운영 판단) 샌드박스 실행기 시험 t26 이 거짓 실패했다 — 실행기 run_g2cp.sh 179 행은 nice -n 19 (부모 기준 증가) 라 부모가 -5 면 자식이 14 가 되고, 시험은 절대값 19 를 단언한다 (부모 nice 0 가정) · 코드 결함 아님 (ibb 실제 셸은 nice 0) · 내 운영 실수",
+      "note": "결과 무관 (실행 · 계산 없음) · 고침 = 운영 규칙: 게이트 (scripts/check_all.sh) 를 nice · renice 로 띄우거나 올리지 않는다 (느리면 조수 부하를 줄이거나 조각을 나눈다) · 게이트 K 는 두 조각을 nice 0 으로 다시 돌린다 · 시험의 '부모 nice 0' 가정은 한정으로 둔다 (고치지 않음) · claimed_fixed = 다음 커밋"
     }
   ]
 }
