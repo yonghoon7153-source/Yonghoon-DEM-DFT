@@ -1,0 +1,5 @@
+pkg|2|name=ucx|json=ucx-1.20.0-hf72d326_1.json|matches=1
+json|2|b6f7dc4b6a740606c90f19473efcb151675bc2df55ef1ffc4bdbdbaf4386efc1|57289|1774502932
+parse|2|elements=160|escaped=0|files_keys=1|depth_end=0|instr_end=0|bad=0
+sum|2|listed=160|in_list=160|over_cap=0|hashed=160|bytes_hashed=59458782|links=28|reasons=-
+digest|2|0007c02a43c17638f6c1424813820fc5bbb35761337a43975f659abe3c3998fd|lines=160

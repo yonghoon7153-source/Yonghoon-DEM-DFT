@@ -1,0 +1,4 @@
+q2b|run=E0_ref_s32452843|files=1037|matched=1037|sorted=1037|other=0|noise=0
+sel|first|1000
+sel|mid|519000
+sel|last|1037000

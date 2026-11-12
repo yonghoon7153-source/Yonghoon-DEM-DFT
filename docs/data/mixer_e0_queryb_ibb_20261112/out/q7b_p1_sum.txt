@@ -1,0 +1,5 @@
+pkg|1|name=openmpi|json=openmpi-5.0.10-h67ed482_1.json|matches=1
+json|1|20c0c4a7131cf9548f5356fd45055cdbdc391f0f2d4ccbcef85925fc05664819|79016|1774502932
+parse|1|elements=223|escaped=0|files_keys=1|depth_end=0|instr_end=0|bad=0
+sum|1|listed=223|in_list=223|over_cap=0|hashed=223|bytes_hashed=37227400|links=49|reasons=-
+digest|1|8b45bed39e310e1e993ade388046af7b3843c352edfbfb247a745173e6fb9fc0|lines=223

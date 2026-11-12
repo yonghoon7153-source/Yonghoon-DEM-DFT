@@ -1,0 +1,5 @@
+pkg|5|name=libfabric1|json=libfabric1-2.5.0-h8f87c3e_1.json|matches=1
+json|5|98bfc7aadabf1d011ef112ca1c44b47266e9b11a1816e90f16dd9ccc0ae4705a|2412|1774502932
+parse|5|elements=3|escaped=0|files_keys=1|depth_end=0|instr_end=0|bad=0
+sum|5|listed=3|in_list=3|over_cap=0|hashed=3|bytes_hashed=4018772|links=1|reasons=-
+digest|5|3887e46706d7b111c027b07a35f2f99097ccbefe4f076929a31fa6c5949fd28f|lines=3

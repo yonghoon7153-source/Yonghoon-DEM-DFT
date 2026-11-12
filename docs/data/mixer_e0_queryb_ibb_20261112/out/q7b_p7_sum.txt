@@ -1,0 +1,5 @@
+pkg|7|name=libhwloc|json=libhwloc-2.13.0-default_he001693_1000.json|matches=1
+json|7|ef996d7abb85938bdccd0fc9cf2db8236f43469055d215cf103ec47e91ac68a7|206982|1774502932
+parse|7|elements=551|escaped=0|files_keys=1|depth_end=0|instr_end=0|bad=0
+sum|7|listed=551|in_list=551|over_cap=0|hashed=551|bytes_hashed=5560582|links=6|reasons=-
+digest|7|065848331ae1f0b0c2f43892c3984de1c83a6a6298be1a3b4dfe732be37ef49b|lines=551

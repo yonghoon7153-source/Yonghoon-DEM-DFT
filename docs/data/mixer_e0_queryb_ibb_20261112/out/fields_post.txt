@@ -1,0 +1,3 @@
+redaction.available=1
+redaction.residual_token_hits=0
+redaction.files_not_redacted=0

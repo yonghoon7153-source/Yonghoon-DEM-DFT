@@ -1,0 +1,3 @@
+frame|pos=first|step=1000|type=f|bytes=8360447|end_nl=yes|newlines=100009|l1_timestep=yes|tstep=same|l3_natoms=yes|atoms=100000|nl_eq_9_plus_atoms=yes
+frame|pos=mid|step=519000|type=f|bytes=12743797|end_nl=yes|newlines=100009|l1_timestep=yes|tstep=same|l3_natoms=yes|atoms=100000|nl_eq_9_plus_atoms=yes
+frame|pos=last|step=1037000|type=f|bytes=12725255|end_nl=yes|newlines=100009|l1_timestep=yes|tstep=same|l3_natoms=yes|atoms=100000|nl_eq_9_plus_atoms=yes

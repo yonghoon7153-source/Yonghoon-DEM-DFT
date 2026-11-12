@@ -1,0 +1,7 @@
+log|4|lines=553|tables=4|nonrow=2|emitted=2|suppressed=0|tables_suppressed=0|cr=0
+table|4|1|header_cols=5|rows=2|rows_nonfinite=0|row_cols=5:2|nonrow=2|blank=0|closed=yes
+table|4|2|header_cols=5|rows=148|rows_nonfinite=0|row_cols=5:148|nonrow=0|blank=0|closed=yes
+table|4|3|header_cols=5|rows=149|rows_nonfinite=0|row_cols=5:149|nonrow=0|blank=0|closed=yes
+table|4|4|header_cols=5|rows=1|rows_nonfinite=0|row_cols=5:1|nonrow=0|blank=0|closed=yes
+nr|4|1|1|rows_before=1|sp=0|tab=0|word=INFO:
+nr|4|1|2|rows_before=1|sp=1|tab=0|word=-

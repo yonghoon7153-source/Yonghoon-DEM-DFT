@@ -1,0 +1,5 @@
+pkg|3|name=ucc|json=ucc-1.7.0-hcedbda0_0.json|matches=1
+json|3|9bd503b1bdaca0793e2894d1c4f6b07ed5be5a29b3e686cade987b00584d6598|14538|1774502932
+parse|3|elements=43|escaped=0|files_keys=1|depth_end=0|instr_end=0|bad=0
+sum|3|listed=43|in_list=43|over_cap=0|hashed=43|bytes_hashed=296444579|links=22|reasons=-
+digest|3|5b0cfaad253d0702db3942114911597ab58c039ce0d696251058399bce21e029|lines=43
