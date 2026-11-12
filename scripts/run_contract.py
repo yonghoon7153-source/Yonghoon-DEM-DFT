@@ -1450,6 +1450,51 @@ def runner_ca_ext_view(rec):
     return out
 
 
+#: ★ 11-12 2 회차 (Rint ② 코드 묶음 · 내부 반박 리뷰 재확인 RCP2-06) — git 을 부르는 생산 읽기 (payload `_code_sha` · `_exec_env` · 사슬
+#  `git_identity` · F5 계획 출처 · 원장 git) · 이 모듈의 selftest (RCPT-sha 임시 저장소) · 시험 고정물은 부르는 쪽 환경의 `GIT_*` 를 물려받지 않는다.
+#  GIT_DIR · GIT_WORK_TREE · GIT_INDEX_FILE · GIT_OBJECT_DIRECTORY · GIT_ALTERNATE_OBJECT_DIRECTORIES · GIT_COMMON_DIR … 가 새면 `git -C <폴더>` 를
+#  무시하고 **남의 저장소를 읽고 쓴다** — 11-12 밤 실제 사고 (`GIT_DIR=<본 리포>/.git` 을 붙인 `--selftest` 의 RCPT-sha 임시 폴더 commit 이 본 리포
+#  가지에 들어갔다 · git 훅 (pre-commit · pre-push) 안에서 게이트를 돌려도 git 이 넣는다 = 정직한 흐름).  규칙 = `GIT_` 로 시작하는 이름 전부
+#  (사슬 원장 git `rint_r_chain.ledger_git` 의 옛 규칙과 같다 · 그것도 이 함수를 쓴다 · 한 곳) — 시험 `scripts/test_git_env_isolation.py`.
+GIT_ENV_PREFIX = 'GIT_'
+
+
+def git_env(env=None):
+    """git 을 부를 환경 — env (없으면 os.environ) 에서 `GIT_` 로 시작하는 이름을 전부 뺀 **새** 사전 (넘긴 사전 · os.environ 은 그대로)."""
+    import os as _os
+    src = _os.environ if env is None else env
+    return {k: v for k, v in src.items() if not k.startswith(GIT_ENV_PREFIX)}
+
+
+def drop_git_env(env=None):
+    """제자리 지움 — env (없으면 os.environ = 시험 프로세스가 맨 앞에서 부른다 · 그 자식 (git · payload · 러너) 이 물려받지 않게) 의 `GIT_` 이름을
+    지운다 → 지운 이름 (정렬).  ⚠ 라이브러리 (payload · 사슬) 안에서는 부르지 않는다 — 그쪽은 호출마다 `git_env()` 를 넘긴다."""
+    import os as _os
+    tgt = _os.environ if env is None else env
+    gone = sorted(k for k in list(tgt) if k.startswith(GIT_ENV_PREFIX))
+    for k in gone:
+        del tgt[k]
+    return gone
+
+
+def normal_path_problem(p):
+    """★ 11-12 2 회차 (재리뷰 RCP2-02) — 경로 성분 꼴: 끝 빗금을 걷은 뒤 빈 성분 (`//`) · `.` · `..` 성분이 없어야 한다 → 사유 글 | None ('/' = None).
+    왜: 탄소 접합 원장 저장본 뿌리의 심볼릭 링크 판정 (`lstat` = 마지막 **글자** 성분) 을 `<링크>/.` · `<링크>/./` · `<폴더>/../<링크>/.` 꼴이 비켜 갔다
+    (Store · 사슬 · 러너 세 겹 다 받음) → 정규화된 꼴만 받는다.  판정 범위 = 마지막 성분 (중간 성분의 링크는 따른다 — 정직한 '홈이 다른 자리' · 한정).
+    부르는 곳 = `cjunc_store.Store` · 사슬 `rint_r_chain.cjunc_store_dir_problem` · 러너 CJUNC_STORE = 같은 규칙의 셸 꼴 (시험 T11 · C1 · R1 · P1)."""
+    if not isinstance(p, str) or not p:
+        return '경로가 빈 글이거나 글이 아니다'
+    q = p.rstrip('/') or '/'
+    if q == '/':
+        return None
+    comps = q.split('/')
+    if q.startswith('/'):
+        comps = comps[1:]
+    if any(c in ('', '.', '..') for c in comps):
+        return "정규화된 경로여야 한다 (빈 성분 (//) · '.' · '..' 성분 없이 · 끝 빗금만 걷는다)"
+    return None
+
+
 #: ★ 10-26 B″ (1저자 Q1 (가) · 묶음 B 보고 §13 결정 1) — 환경 지문의 같음 단위 칸 (python 부 판 · numpy · scipy 판 문자열 정확히 · 사슬
 #   `rint_r_chain.ENV_UNIT_KEYS` 가 이 이름을 쓴다)
 ENV_UNIT_KEYS = ('python_minor', 'numpy', 'scipy')
@@ -2370,10 +2415,18 @@ def _selftest():
         os.mkdir(_sd)
         with open(os.path.join(_sd, 'x.py'), 'w') as _f:
             _f.write('A = 1\n')
-        for _c in (['git', 'init', '-q'], ['git', 'add', '-A'],
-                   ['git', '-c', 'user.email=t@t', '-c', 'user.name=t',
-                    'commit', '-qm', 'i']):
-            _sp.run(_c, cwd=_d, capture_output=True)
+        #  ★ 11-12 2 회차 (재리뷰 RCP2-06) — 부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (11-12 밤 사고 = GIT_DIR 을 붙여 돈 이 selftest 의 아래 commit
+        #    이 본 리포 가지에 들어갔다) · 쓰기 (add · commit) 전에 이 임시 폴더가 그 저장소의 꼭대기인지 다시 본다 (아니면 쓰지 않는다)
+        _genv = git_env()
+        _sp.run(['git', 'init', '-q'], cwd=_d, capture_output=True, env=_genv)
+        _top = _sp.run(['git', 'rev-parse', '--show-toplevel'], cwd=_d, capture_output=True, text=True, env=_genv)
+        _own = _top.returncode == 0 and os.path.realpath((_top.stdout or '').strip()) == os.path.realpath(_d)
+        chk(_own, 'RCPT-sha-tmp 임시 저장소 꼭대기 = 임시 폴더 (쓰기 전 확인 · 부르는 쪽 GIT_* 를 물려받지 않는다 · 2 회차 RCP2-06)')
+        if _own:
+            for _c in (['git', 'add', '-A'],
+                       ['git', '-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false',
+                        'commit', '-qm', 'i']):
+                _sp.run(_c, cwd=_d, capture_output=True, env=_genv)
         _s0 = _pay._code_sha(_sd)
         chk(bool(_s0) and '+dirty' not in _s0, 'RCPT-sha-clean 갓 커밋한 트리는 clean')
         with open(os.path.join(_d, 'stray_data.txt'), 'w') as _f:

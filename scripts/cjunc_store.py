@@ -34,7 +34,20 @@ RCP-05) · 기계 지문 (`/etc/machine-id` blake2b — 못 읽으면 저장본 
 재조립 (`rint_r_chain.RunnerGraphSource` · 저장본을 읽지 않는다) 이고 그것은 **SV 모서리 팔 (끝 그래프 지문) 만** 덮는다 — 사다리 · 비 SV 예측 · 단위
 팔은 독립 대조가 없다 (같은 코드 · 환경의 결정성 + 열쇠 + 폴더 권한 (소유자 = 이 사용자 · 그룹 · 남 쓰기 없음 · 심볼릭 링크 아님) + 파일 권한 (소유자 ·
 그룹 · 남 쓰기 없음 · 0444 로 발행) 에 기댄다 · ★ 11-12 내부 반박 리뷰 RCP-03 — S0 단계 2 봉인 원장 지문 ↔ DBE arm 0 팔 대조 · SBE 사다리 팔의
-대조 길 = 1저자 결정).
+대조 길 = 1저자 결정 · 2 회차 = 그 대조는 여전히 없다 (한정 그대로) — 다만 재리뷰 RCP2-01 꼴 (런 도중 코드 바뀜 → 옛 코드 원장이 새 코드 열쇠로 저장
+→ 뒤 런 적중) 은 아래 '런 시작 코드 칸' 이 막는다 · 같은 코드 · 환경의 결정성 가정은 남는다).
+★ 11-12 2 회차 (내부 반박 리뷰 재확인 RCP2-01) — **런 시작 코드 칸**: 이 모듈을 처음 불러온 때 (`_START` · payload = 입구 계약에서 원장 모듈 셋보다 먼저
+부른다 — 시험 P6) 열쇠 코드 파일 넷의 자리 · sha256 · 시각을 잰다.  `get_or_build` 시작 · 발행 직전 (`os.link` 바로 앞) 에 다시 세어 (`code_drift`) 파일
+자리 · 내용이 다르거나 시작 뒤 (+ 1 s) 다시 쓴 파일 (내용 같아도 — 뒤집었다 되돌린 꼴) 이 있으면 그 런은 읽지도 (꺼짐 'disabled') 쓰지도 ('built_write_skipped')
+않는다 · 사유 = `code_changed: …` (팔 결과 = 새로 지은 원장 그대로 · 다음 런부터 새 코드의 열쇠).  옛 판 = 코드 칸이 Store() 때의 디스크 해시라 런 도중
+코드가 바뀌면 옛 코드로 지은 원장이 새 코드 열쇠로 저장되고 뒤의 정직한 런이 적중으로 받았다 (재리뷰 반례 CE-A · 시험 T15).
+⚠ 한정 (RCP2-01): (가) 이 모듈보다 **먼저** 불린 열쇠 모듈 (`_START['preloaded']`) 이 이 모듈을 부르기 전에 바뀐 것은 못 가린다 (payload 는 그런 모듈이
+없다 = P6 · 다른 호출자는 cjunc_store 를 먼저 부른다) (나) 수정 시각을 되돌린 (`cp -p` · `rsync -t` 꼴) 내용 뒤집기가 두 재기 사이에서 되돌아가면
+못 가린다 (다) 코드 칸 = 소스 sha256 — 같은 초 · 같은 크기 편집의 낡은 `.pyc` 가 도는 것은 가리지 못한다 (라) 같은 프로세스 안에서 함수 객체를 바꿔 끼우는
+것 (파일 그대로) 은 못 가린다.
+★ 11-12 2 회차 (재리뷰 RCP2-02) — 뿌리 = 정규화된 꼴만 (`run_contract.normal_path_problem` — 빈 성분 · `.` · `..` 성분 = 마지막 글자 성분의 링크 판정을
+비켜 간다 · 사슬 · 러너 같은 규칙).  ⚠ 한정 (RCP-06 남은 몫): 링크 판정은 마지막 성분뿐 (중간 성분 링크는 따른다) · 뿌리 · 파일 검사는 경로 기준이다
+(검사 ↔ 사용 사이 바꿔치기 = fd 기준 아님) — 막는 것 = 이 사용자만 쓰는 폴더 (소유자 · 모드 검사).
 ⚠ Python 3.8 (kgy) 에서 돈다 — 3.9+ 문법 · 새 라이브러리 함수 없음.
 """
 import errno
@@ -420,6 +433,70 @@ def root_last(p):
     return p.rstrip('/') or '/'
 
 
+# ═════════════════════════ 런 시작 코드 칸 (★ 11-12 2 회차 · 내부 반박 리뷰 재확인 RCP2-01) ═════════════════════════
+#: 런 도중 코드 바뀜 사유의 머리 (기록 `why` · 상태 = 'disabled' (get_or_build 시작) · 'built_write_skipped' (발행 직전))
+CODE_CHANGED = 'code_changed'
+#: 수정 시각 여유 (ns) — 런 시작 + 이 값보다 뒤에 다시 쓴 열쇠 코드 파일 = 바뀐 것으로 본다 (내용이 같아도 — 뒤집었다 되돌린 꼴 · 그 사이에 불린 모듈은
+#  다른 판일 수 있다) · 파일 체계의 시각 거칠기 · 몇 백 ms 시계 차를 흡수
+MTIME_SLACK_NS = 1000000000
+
+
+def _code_column():
+    """열쇠 코드 칸 지금 값 → ({파일 이름: sha256}, {파일 이름: 실경로}) — `code_file` (불러오지 않는다) · 못 찾음 = ValueError · 못 읽음 = OSError."""
+    code, paths = {}, {}
+    for m in CODE_MODULES:
+        f = code_file(m)
+        b = os.path.basename(f)
+        code[b] = _file_sha(f)
+        paths[b] = os.path.realpath(f)
+    return code, paths
+
+
+def _start_record():
+    """이 모듈을 처음 불러온 때 = 런 시작 (payload = 입구 계약에서 원장 모듈보다 먼저 · 시험 P6) → {시각 ns · 코드 칸 · 실경로 · 먼저 불린 열쇠 모듈 ·
+    못 셈 사유}.  못 세면 (모듈 · 파일 없음) 오류만 적는다 (접합 끔 런에서도 불리는 모듈 — 예외를 올리지 않는다 · 저장본은 그때 꺼진다)."""
+    import sys
+    rec = {'t_ns': time.time_ns(), 'code': None, 'paths': None, 'error': None,
+           'preloaded': sorted(m for m in CODE_MODULES if m != 'cjunc_store' and m in sys.modules)}
+    try:
+        rec['code'], rec['paths'] = _code_column()
+    except (ValueError, OSError) as e:
+        rec['error'] = f'{type(e).__name__}: {e}'
+    return rec
+
+
+_START = _start_record()
+
+
+def code_drift():
+    """런 시작 (`_START`) 뒤 열쇠 코드 파일이 바뀌었는가 → 사유 목록 (빈 목록 = 그대로).  본다: 파일 자리 (`code_file` 이 지금 가리키는 실경로 — 같은
+    프로세스에서 모듈을 바꿔 끼운 꼴 포함) · 내용 sha256 · 수정 시각 (> 시작 + `MTIME_SLACK_NS` = 다시 씀 · 내용이 같아도).  시작 때 못 셌으면 그 사유
+    하나 (= 저장본 꺼짐)."""
+    s = _START
+    if s.get('error') or not s.get('code'):
+        return [f'런 시작 때 코드 칸을 못 셌다 ({s.get("error")})']
+    try:
+        now, paths = _code_column()
+    except (ValueError, OSError) as e:
+        return [f'지금 코드 칸을 못 센다 ({type(e).__name__}: {e})']
+    why = []
+    for b in sorted(set(now) | set(s['code'])):
+        a, c = s['code'].get(b), now.get(b)
+        if s['paths'].get(b) != paths.get(b):
+            why.append(f'{b} 자리 바뀜')
+        elif a != c:
+            why.append(f'{b} sha {str(a)[:12]} → {str(c)[:12]}')
+        else:
+            try:
+                mt = os.stat(paths[b]).st_mtime_ns
+            except OSError as e:
+                why.append(f'{b} stat {_errname(e)}')
+                continue
+            if mt > s['t_ns'] + MTIME_SLACK_NS:
+                why.append(f'{b} 런 시작 뒤 다시 씀 (내용 같음)')
+    return why
+
+
 def _tag(v):
     if v is None:
         return ['none']
@@ -454,13 +531,19 @@ def _errname(e):
 
 # ═════════════════════════ 저장본 ═════════════════════════
 class Store:
-    """저장본 폴더 하나 (절대 경로 · 있는 폴더 · 심볼릭 링크 아님 · 소유자 = 이 사용자 · 그룹 · 남 쓰기 없음).  열쇠의 코드 · 환경 · 기계 칸은 만들 때
-    한 번 읽는다 (코드 칸 = 그때의 디스크 파일 — 불러온 코드 자체가 아니다 · 한정)."""
+    """저장본 폴더 하나 (절대 경로 · 정규화된 꼴 · 있는 폴더 · 심볼릭 링크 아님 · 소유자 = 이 사용자 · 그룹 · 남 쓰기 없음).  열쇠의 코드 · 환경 · 기계
+    칸은 만들 때 한 번 읽는다 (코드 칸 = 그때의 디스크 파일 — 불러온 코드 자체가 아니다 · ★ 2 회차 RCP2-01 = 런 시작 (`_START`) 과 다르면 get_or_build
+    가 읽지도 쓰지도 않고 · 발행 직전에 다시 센다 · `code_drift`)."""
 
     def __init__(self, root, machine_paths=MACHINE_ID_PATHS):
         if not isinstance(root, str) or not os.path.isabs(root):
             raise ValueError(f'저장본 폴더 = 절대 경로 ({root!r})')
         import stat as _stat
+        import run_contract as RC
+        #  ★ 11-12 2 회차 (재리뷰 RCP2-02) — 정규화된 꼴만 (`<링크>/.` · `/./` · `//` · `/../` 이 아래 마지막 성분 링크 판정을 비켜 갔다 · 사슬 · 러너 같은 규칙)
+        _np = RC.normal_path_problem(root)
+        if _np is not None:
+            raise ValueError(f'저장본 폴더 경로가 정규화된 꼴이 아니다 ({root}) — {_np}')
         try:
             lst = os.lstat(root_last(root))
             st = os.stat(root)
@@ -476,7 +559,6 @@ class Store:
         if hasattr(os, 'getuid') and st.st_uid != os.getuid():
             raise ValueError(f'저장본 폴더 소유자 ({st.st_uid}) ≠ 이 사용자 ({os.getuid()})')
         self.root = root
-        import run_contract as RC
         self.code = {}
         for m in CODE_MODULES:                               # ★ 11-12 (RCP-01) — find_spec 으로 파일만 (불러오지 않는다 · `code_file`)
             f = code_file(m)
@@ -594,6 +676,12 @@ class Store:
             del got                                                        # 대조용 사본 (원장만큼의 메모리) 을 발행 전에 놓는다
             os.chmod(tmp, 0o444)
             nbytes = os.path.getsize(tmp)
+            #  ★ 11-12 2 회차 (RCP2-01) — 발행 직전 열쇠 코드 칸 다시 셈 ≠ 런 시작 → 발행 안 함 (짓는 · 쓰는 도중 바뀜 · 짓기가 바뀐 판을 불렀을 수 있다 ·
+            #    임시 파일 = 아래 finally 가 지운다)
+            _dr = code_drift()
+            if _dr:
+                return 'built_write_skipped', (f'{CODE_CHANGED}: 발행 직전 다시 센 열쇠 코드 칸 ≠ 런 시작 ({"; ".join(_dr)}) — 저장 안 함 · '
+                                               f'런 도중 코드 바뀜'), None
             try:
                 _link(tmp, final)
             except FileExistsError:
@@ -648,6 +736,13 @@ class Store:
             return r
         if self.machine is None:
             out.update(status='disabled', why='기계 id 를 못 읽었다 (/etc/machine-id) — 저장본 꺼짐 · 매번 짓기')
+            return built(), out
+        #  ★ 11-12 2 회차 (내부 반박 리뷰 재확인 RCP2-01) — 런 시작 (이 모듈을 불러온 때) 뒤 열쇠 코드 파일이 바뀌었으면 이 런은 읽지도 쓰지도 않는다
+        #    (불러온 코드 ↔ 열쇠의 코드 칸이 어긋날 수 있다 — 옛 판 = 옛 코드 원장을 새 코드 열쇠로 저장 → 뒤 런 적중 · 재리뷰 CE-A · 시험 T15)
+        _dr = code_drift()
+        if _dr:
+            out.update(status='disabled', why=(f'{CODE_CHANGED}: 런 시작 (cjunc_store 를 불러온 때) 뒤 열쇠 코드 파일이 바뀌었다 ({"; ".join(_dr)}) — '
+                                               f'이 런은 저장본을 읽지도 쓰지도 않는다 · 매번 짓기'))
             return built(), out
         try:
             parts = self.key_parts(sid=sid, lo=lo, vox=vox, pts=pts, phase=phase, fid=fid, kind=kind, thresholds=thresholds)

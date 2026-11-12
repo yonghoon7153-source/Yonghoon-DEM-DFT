@@ -41,6 +41,8 @@ from scipy import sparse
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
+import run_contract as _RCG                                # noqa: E402 — ★ 11-12 2 회차 (재리뷰 RCP2-06) 이 시험 프로세스와 그 자식 (git · payload ·
+_RCG.drop_git_env()                                        #   러너) 은 부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (scripts/test_git_env_isolation.py G6)
 #: 고치기 전 판 (Q11 · Q2 묶음의 바탕 · 이 판의 GPU 길 = dia_matrix 전처리)
 BASE_COMMIT = '11a794674'
 

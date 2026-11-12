@@ -636,8 +636,10 @@ def _exec_env(script_dir):
     if out['pythonpath']:
         out['risk'].append('PYTHONPATH set')
     try:                                                   # repo 전역 untracked code-like
+        #  ★ 11-12 2 회차 (Rint ② · 재리뷰 RCP2-06) — 부르는 쪽 환경의 GIT_* (GIT_DIR · GIT_WORK_TREE · GIT_INDEX_FILE …) 를 물려받지 않는다
+        #    (새면 `-C script_dir` 를 무시하고 남의 저장소를 읽는다 · `run_contract.git_env` · 시험 scripts/test_git_env_isolation.py G3)
         _r = _sp.run(['git', '-C', script_dir, 'ls-files', '--others', '--exclude-standard'],
-                     capture_output=True, text=True, timeout=30)
+                     capture_output=True, text=True, timeout=30, env=_RC.git_env())
         #  ⚠ **모름 ≠ 없음** — git 이 실패하면 stdout 이 비는데, 그것을 "untracked 없음" 으로
         #    적으면 스캔 실패가 **깨끗함으로 위장**된다 (이 리포의 반복 결함 부류; 이 줄은
         #    내가 붙인 회귀 `execenv-unknown-not-empty` 가 실제로 잡아서 추가됐다).
@@ -714,9 +716,12 @@ def _code_sha(script_dir):
     #    타임아웃을 `except` 로 삼켜 조용히 실패)을 GAP3-41 로 고쳤다.  서로 다른 파일,
     #    같은 결함.  git 호출에 `except Exception` 을 넓게 두면 **느린 파일시스템이
     #    봉인을 지운다**.
+    #  ★ 11-12 2 회차 (Rint ② · 재리뷰 RCP2-06) — 세 git 호출 모두 부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (새면 남의 저장소의 sha · dirty 를 적는다 ·
+    #    `run_contract.git_env` · 시험 scripts/test_git_env_isolation.py G2 · G3)
+    _genv = _RC.git_env()
     try:
         sha = _sp.run(['git', '-C', script_dir, 'rev-parse', '--short', 'HEAD'],
-                      capture_output=True, text=True, timeout=30)
+                      capture_output=True, text=True, timeout=30, env=_genv)
         if sha.returncode != 0 or not sha.stdout.strip():
             return None                                        # git 을 못 쓴다 = 출처 없음
         _sha = sha.stdout.strip()
@@ -726,12 +731,12 @@ def _code_sha(script_dir):
     try:
         st = _sp.run(['git', '-C', script_dir, 'status', '--porcelain',
                       '--untracked-files=no'],
-                     capture_output=True, text=True, timeout=GIT_DIRTY_TIMEOUT_S)
+                     capture_output=True, text=True, timeout=GIT_DIRTY_TIMEOUT_S, env=_genv)
         dirty = bool((st.stdout or '').strip())
         if not dirty:
             un = _sp.run(['git', '-C', script_dir, 'ls-files', '--others',
                           '--exclude-standard', '--', script_dir],
-                         capture_output=True, text=True, timeout=GIT_DIRTY_TIMEOUT_S)
+                         capture_output=True, text=True, timeout=GIT_DIRTY_TIMEOUT_S, env=_genv)
             dirty = bool((un.stdout or '').strip())            # scripts/ 안 untracked = shadowing 위험
         return _sha + ('+dirty' if dirty else '')
     except Exception:                                          # noqa: BLE001

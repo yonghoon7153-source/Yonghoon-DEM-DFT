@@ -67,6 +67,20 @@ ARM = 'p2_SBE_vgcf100_sph_fa_cj1000000_78c44437_c0_rt1em12_fb10000_a0'
 GIT_CFG = ('-c', 'user.email=t@t', '-c', 'user.name=t', '-c', 'commit.gpgsign=false', '-c', 'init.defaultBranch=main')
 REAL_PS = shutil.which('ps') or '/bin/ps'
 
+
+def _drop_git_env():
+    """★ 11-12 2 회차 (Rint ② 코드 묶음 · 재리뷰 RCP2-06) — 이 시험 프로세스와 그 자식 (고정물 git · 감시 셸 · 블록 bash 의 git fetch · worktree add) 은
+    부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (`run_contract.drop_git_env` 한 곳 — scripts/ 를 sys.path 에 넣지 않고 파일로 불러온다 · 시험
+    scripts/test_git_env_isolation.py G6)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('_run_contract_git_env', os.path.join(SCRIPTS, 'run_contract.py'))
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m.drop_git_env()
+
+
+_drop_git_env()
+
 #: σ 류 자리에 심는 표식: 합성 폴더의 σ · 전류 · 구간 · 저항 · 소산 몫 값은 전부 0.00713331NNN 꼴이다
 SENT = '71333'
 #: 등록 축 (등록 R §10-1 (2) · 1저자 결정값): 시험의 독립 표 (감시 셸 · 원장 줄 초안 · 가짜 러너가 받은 env 를 이것과 대조한다)

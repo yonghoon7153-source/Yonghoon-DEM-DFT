@@ -957,19 +957,22 @@ def git_identity(path):
         p = Path(path).resolve()
         isf = p.is_file()
         d = str(p.parent if isf else p)
-        r = subprocess.run(['git', '-C', d, 'rev-parse', 'HEAD'], capture_output=True, text=True)
+        #  ★ 11-12 2 회차 (재리뷰 RCP2-06) — 세 호출 모두 부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (새면 남의 저장소의 HEAD · dirty 를 읽는다 ·
+        #    `run_contract.git_env` · 시험 scripts/test_git_env_isolation.py G5)
+        genv = RC.git_env()
+        r = subprocess.run(['git', '-C', d, 'rev-parse', 'HEAD'], capture_output=True, text=True, env=genv)
         head = (r.stdout or '').strip()
         if r.returncode != 0 or not _hex40(head):
             rec['error'] = f'git rev-parse HEAD rc {r.returncode} · 출력 {head[:44]!r} · {(r.stderr or "").strip()[:160]}'
             return rec
         rec['head'] = head
-        r = subprocess.run(['git', '-C', d, 'rev-parse', '--show-prefix'], capture_output=True, text=True)
+        r = subprocess.run(['git', '-C', d, 'rev-parse', '--show-prefix'], capture_output=True, text=True, env=genv)
         if r.returncode != 0:
             rec['error'] = f'git rev-parse --show-prefix rc {r.returncode} · {(r.stderr or "").strip()[:160]}'
             return rec
         pre = (r.stdout or '').strip()
         rec['rel'] = (pre + p.name) if isf else (pre.rstrip('/') or '.')
-        r = subprocess.run(['git', '-C', d, 'status', '--porcelain', '--untracked-files=normal'], capture_output=True, text=True)
+        r = subprocess.run(['git', '-C', d, 'status', '--porcelain', '--untracked-files=normal'], capture_output=True, text=True, env=genv)
         if r.returncode != 0:
             rec['error'] = f'git status rc {r.returncode} · {(r.stderr or "").strip()[:160]}'
             return rec
@@ -1773,11 +1776,11 @@ def plan_commit_problem(src, rel, want):
         return f'S0 단계 2 보고의 R 계획 경로 {rel!r} — 리포 상대 ASCII 경로여야 (절대 · .. · 공백 금지 · F5)'
     sha = m.group(1)
     try:
-        r = subprocess.run(['git', '-C', str(HERE), 'cat-file', '-e', f'{sha}^{{commit}}'], capture_output=True)
+        r = subprocess.run(['git', '-C', str(HERE), 'cat-file', '-e', f'{sha}^{{commit}}'], capture_output=True, env=RC.git_env())   # ★ 2 회차 RCP2-06
         if r.returncode != 0:
             return (f'S0 단계 2 보고의 계획 출처 커밋 {sha[:12]} 이 이 사슬 저장소에 없다 (git fetch 뒤 · git 밖 사본 = 확인 못 함 · 미확인 = '
                     f'멈춤 · F5)')
-        r = subprocess.run(['git', '-C', str(HERE), 'show', f'{sha}:{rel}'], capture_output=True)
+        r = subprocess.run(['git', '-C', str(HERE), 'show', f'{sha}:{rel}'], capture_output=True, env=RC.git_env())
         if r.returncode != 0:
             return f'커밋 {sha[:12]} 에 R 계획 파일 {rel} 이 없다 (F5)'
         got = hashlib.sha256(r.stdout).hexdigest()
@@ -3065,7 +3068,7 @@ def ledger_line(obj):
 
 def ledger_git(repo, *args, check=True):
     """원장 저장소 git (env 의 GIT_* 를 걷어낸다 · 고정 신원 · 실패 = Stop ATTEMPT_LEDGER_MISMATCH)."""
-    env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+    env = RC.git_env()                                       # ★ 11-12 2 회차 (RCP2-06) — 같은 규칙 (GIT_ 전부) 의 한 곳 (`run_contract.git_env`)
     try:
         p = subprocess.run(['git', '-C', str(repo), *LEDGER_GIT_CFG, *args], capture_output=True, timeout=120, env=env)
     except (OSError, subprocess.TimeoutExpired) as e:
@@ -3079,7 +3082,7 @@ def ledger_git(repo, *args, check=True):
 def _git_top(path):
     try:
         p = subprocess.run(['git', '-C', str(path), 'rev-parse', '--show-toplevel'], capture_output=True, timeout=60,
-                           env={k: v for k, v in os.environ.items() if not k.startswith('GIT_')})
+                           env=RC.git_env())
     except (OSError, subprocess.TimeoutExpired):
         return None
     return os.path.realpath(p.stdout.decode('utf-8', 'replace').strip()) if p.returncode == 0 else None
@@ -5610,11 +5613,14 @@ def record_outdir(rr):
 
 def cjunc_store_dir_problem(p):
     """★ 11-12 (Rint ② Q2) — `--cjunc-store` 폴더 꼴 (payload `cjunc_store.Store` · 러너 CJUNC_STORE 거부와 같은 규칙 · ★ 11-12 내부 반박 리뷰 RCP-06 =
-    뿌리 심볼릭 링크 (끝 빗금 포함) 거부) → 사유 글 | None."""
+    뿌리 심볼릭 링크 (끝 빗금 포함) 거부 · ★ 2 회차 RCP2-02 = 정규화된 꼴만 (`run_contract.normal_path_problem`)) → 사유 글 | None."""
     if not isinstance(p, str) or not os.path.isabs(p):
         return '절대 경로여야 한다'
     if not re.fullmatch(r'[A-Za-z0-9._/-]+', p):
         return '영문 · 숫자 · . _ / - 글자만 (러너가 생성 스크립트에 박는다)'
+    _np = RC.normal_path_problem(p)                           # ★ 11-12 2 회차 (재리뷰 RCP2-02) — `<링크>/.` · `/./` · `//` · `/../` = 아래 링크 판정을 비켜 간다
+    if _np is not None:
+        return _np
     try:
         lst = os.lstat(p.rstrip('/') or '/')                 # ★ 11-12 (내부 반박 리뷰 RCP-06) — 끝 빗금을 걷고 링크를 따르지 않는다 (`cjunc_store.root_last`)
         st = os.stat(p)

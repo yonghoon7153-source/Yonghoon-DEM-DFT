@@ -605,6 +605,12 @@ if [ -n "${CJUNC_STORE:-}" ]; then
   fi
   _CJS_LAST="$CJUNC_STORE"
   while [ "${#_CJS_LAST}" -gt 1 ] && [ "${_CJS_LAST%/}" != "$_CJS_LAST" ]; do _CJS_LAST="${_CJS_LAST%/}"; done
+  #  ★ 11-12 2 회차 (재리뷰 RCP2-02) — 정규화된 꼴만 (빈 성분 // · . · .. 성분이 아래 마지막 성분 링크 판정을 비켜 간다 · run_contract.normal_path_problem 과 같은 규칙)
+  if [ "$_CJS_LAST" != "/" ]; then
+    case "$_CJS_LAST/" in
+      *//*|*/./*|*/../*) echo "[p2] ABORT — CJUNC_STORE 경로가 정규화된 꼴이 아니다 (빈 성분 // · . · .. 성분 없이 · 끝 빗금만 걷는다) ($CJUNC_STORE)"; exit 2;;
+    esac
+  fi
   if [ -L "$_CJS_LAST" ]; then
     echo "[p2] ABORT — CJUNC_STORE 가 심볼릭 링크다 ($CJUNC_STORE) — 실제 폴더 경로를 준다 (남이 바꿀 수 있는 링크를 따르지 않는다)"; exit 2
   fi

@@ -38,6 +38,8 @@ import time
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, 'scripts')
 sys.path.insert(0, SCRIPTS)
+import run_contract as _RCG                                # noqa: E402 — ★ 11-12 2 회차 (재리뷰 RCP2-06) 이 시험 프로세스와 그 자식 (git · payload ·
+_RCG.drop_git_env()                                        #   러너) 은 부르는 쪽 환경의 GIT_* 를 물려받지 않는다 (scripts/test_git_env_isolation.py G6)
 
 import test_rint_r_chain_e2e as E                           # noqa: E402 — 끝-끝 틀 (픽스처 · 고정물 체크아웃 · 사슬 부르기) · 사본 없음
 

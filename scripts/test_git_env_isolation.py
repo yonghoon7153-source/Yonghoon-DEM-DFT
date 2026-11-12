@@ -183,8 +183,10 @@ def selftest_lines(env):
 def g2():
     rc0, ref, log0 = selftest_lines(dict(CLEAN, TMPDIR=TD))
     rcpt = [ln for ln in ref if 'RCPT-sha' in ln]
-    chk('G2 기준 — 깨끗한 환경의 selftest rc 0 · RCPT-sha 넷 PASS (기준이 선다)', rc0 == 0 and len(rcpt) == 4 and all(ln.startswith('PASS') for ln in rcpt),
-        (rc0, rcpt, log0[-300:]))
+    names = {ln.split()[1] for ln in rcpt}
+    chk('G2 기준 — 깨끗한 환경의 selftest rc 0 · RCPT-sha 줄 (clean · untracked · shadow · modified 넷 포함) 전부 PASS (기준이 선다)',
+        rc0 == 0 and {'RCPT-sha-clean', 'RCPT-sha-untracked', 'RCPT-sha-shadow', 'RCPT-sha-modified'} <= names
+        and all(ln.startswith('PASS') for ln in rcpt), (rc0, rcpt, log0[-300:]))
 
     def run(env, _v):
         rc, lines, log = selftest_lines(env)
