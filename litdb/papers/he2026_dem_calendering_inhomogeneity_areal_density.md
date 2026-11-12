@@ -692,6 +692,8 @@ Fig S1 코팅 치수 · Fig S2 산업 공정(슬러리/코팅/압연) · **Fig S
 | **N8 (문헌)** — **Song 2025** (*Powder Technol.* 453, 120667) | **2 GPa 문턱의 원출처** + in-situ CT × DEM. 문턱의 재료 근거를 확인하려면 필수 | ⛔ 미digest |
 | **N9 (문헌)** — Raju 2024 (*JES* 171, 80519) | NMC811 **SC vs PC** 압연밀도 ↔ 사이클 안정성 — 우리 SC/PC 트랙(`trevisanello2021_*`, `jung2023_*`)과 접점 | ⬜ 후보 |
 
+> 🔗 **관련 카드 (2026-11-12 한 줄 추가)**: [`song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage`](song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage.md) = 위 N8 (이 카드의 [38] Song 2025) 의 원문 카드 — 원문의 파괴 판정은 명목 응력 σm = f_max/d² (식 3 · p.6) · 문턱 ≈200 MPa (5.5 µm · 6 mN 인용 = Maeng 2020) 이고 **'2 GPa' · 'Z 축 응력' 은 원문 (본문 + SI) 에 없다** → 이 카드 L187 · L367 · L503 · L692 의 "[38] 차용" 은 he2026 원문을 다시 봐야 한다 (그 카드 §0-1) · 표 1 의 E 47 GPa · ν 0.25 와 같은 값이 Song 2025 SI 표 S1 에 Lundkvist 2024 인용으로 있다.
+
 ---
 
 ## 🗨️ Q&A 로그

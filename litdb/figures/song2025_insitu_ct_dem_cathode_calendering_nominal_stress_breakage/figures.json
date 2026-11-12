@@ -1,0 +1,2723 @@
+{
+ "slug": "song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+  "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf"
+ ],
+ "figures": [
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "page": 1,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract (PDF p.1, unnumbered, no caption): 'Cathode densification using in-situ CT' (two CT-based particle renders), 'Compress simulation using DEM' (two sphere models) and 'Comparison between load-displacement curves' — force (mN, 0–7000) vs 'Electrode displacement (um)' (0–50) with the cyan 'Compression measurement' band, the stars 'Electrode stage A-E', the dash-dot 'Equivalent simulation' curve, force-chain insets and the labels 'Non-uniform compaction' / 'Uniform compaction'.",
+   "rotated_deg": 0,
+   "bbox": [
+    202.0,
+    338.0,
+    469.4,
+    465.6
+   ],
+   "w": 1164,
+   "h": 582,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.724,
+   "src_native": [
+    1114,
+    532
+   ],
+   "native_dpi": 300,
+   "manual_crop": "graphical abstract (PDF p.1, no caption — not found by the caption-anchored tool) — cut from the embedded native raster (xref 1091, 1114×532 px = 300 dpi, no resampling), ink bounding box, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. The in-situ micro-mechanical stage and preview of the imaging result. (a) Sample holder. (b) Micro-mechanical stage fixed to the CT scanning device. (c) CT image reconstruction slice of the indenter and uncompressed electrode sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.1,
+    542.5,
+    554.0,
+    697.5
+   ],
+   "w": 1066,
+   "h": 696,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.136,
+   "src_native": [
+    1016,
+    646
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    300.6,
+    536.5,
+    565.8,
+    702.1
+   ],
+   "recrop": "tool crop complete (margins 5–12 pt, slightly uneven) → re-cut from the embedded native raster (xref 4, 1016×646 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 2,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1(a) — sample holder: transparent polycarbonate tube with the fixed indenter (top) and the sample on the driven rod ('Sample' arrow) (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.1,
+    542.5,
+    367.3,
+    651.9
+   ],
+   "w": 288,
+   "h": 506,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.266,
+   "src_native": [
+    1016,
+    646
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 0, 238, 456] px (red frame of panel (a); gap rows 456–463 below, connector-line gap cols 238–250 to the right); ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 4",
+   "viewed": true
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 2,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1(b) — micro-mechanical stage mounted between the X-ray 'Source' and the 'Detector' of the CT; red dashed box = sample holder of (a) (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    370.4,
+    542.5,
+    554.0,
+    697.5
+   ],
+   "w": 815,
+   "h": 696,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.135,
+   "src_native": [
+    1016,
+    646
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [251, 0, 1016, 646] px (red frame of panel (b)); ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 4",
+   "viewed": true
+  },
+  {
+   "key": "f1c",
+   "kind": "figure",
+   "label": "1c",
+   "page": 2,
+   "file": "fig_1c.png",
+   "caption": "Fig. 1(c) — reconstructed CT slice of the frustum-shaped indenter (flat tip, inclined flanks) above the uncompressed electrode (bright dots = active particles) (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.1,
+    653.8,
+    367.3,
+    697.5
+   ],
+   "w": 288,
+   "h": 232,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.355,
+   "src_native": [
+    1016,
+    646
+   ],
+   "native_dpi": 300,
+   "panel_of": "f1",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): box [0, 464, 238, 646] px (red frame of panel (c)); ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 4",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Image processing flow for initial discrete element configuration. (a) Image reconstruction by threshold segmentation and particle separation; (b) equivalent particles in DEM simulation; (c) particle size distribution of DEM model.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.6,
+    578.1,
+    537.7,
+    716.2
+   ],
+   "w": 2055,
+   "h": 626,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.586,
+   "src_native": [
+    2009,
+    580
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    571.6,
+    565.8,
+    721.3
+   ],
+   "recrop": "tool crop = page-width band with ≈24 pt white side margins → re-cut from the embedded native raster (xref 36, 2009×580 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 3,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — CT reconstruction of the active particles after threshold segmentation and particle separation (blue, box outline) (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    56.6,
+    579.5,
+    202.7,
+    716.2
+   ],
+   "w": 659,
+   "h": 620,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.444,
+   "src_native": [
+    2009,
+    580
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centre of the all-white column run x = 611–670 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 36",
+   "viewed": true
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 3,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — equivalent-sphere DEM model built from (a); sphere colour = particle size (942 particles) (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    217.1,
+    578.1,
+    366.1,
+    712.3
+   ],
+   "w": 671,
+   "h": 610,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.414,
+   "src_native": [
+    2009,
+    580
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): between the all-white column runs x = 611–670 and 1292–1325 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 36",
+   "viewed": true
+  },
+  {
+   "key": "f2c",
+   "kind": "figure",
+   "label": "2c",
+   "page": 3,
+   "file": "fig_2c.png",
+   "caption": "Fig. 2(c) — particle size distribution of the DEM model: 'Volume fraction (%)' (0–30) vs 'Particle diameter (um)' (2–15), 1-um bars from 4–5 to 13–14 um, maximum ≈27 % at 9–10 um (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "bbox": [
+    374.3,
+    580.7,
+    537.7,
+    714.0
+   ],
+   "w": 731,
+   "h": 606,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.853,
+   "src_native": [
+    2009,
+    580
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): right of the all-white column run x = 1292–1325 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 36",
+   "viewed": true,
+   "mpm_note_ko": "CT 기반 DEM 모델의 입도 (부피 분율 막대). 판독 막대 → 수 평균 지름 8.94 µm [카드 산술] = 본문 8.92 µm · 5–13 µm 합 98.6–98.7 % = 본문 98.72 %."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Comparison between experimental images and DEM simulations from stage A to stage E. (a) CT-based constructed models; (b) ball-stick models; (c) DEM models.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    56.2,
+    467.5,
+    234.9
+   ],
+   "w": 1466,
+   "h": 795,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.516,
+   "src_native": [
+    1420,
+    749
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.7,
+    565.7,
+    240.0
+   ],
+   "recrop": "tool crop = page-width band with ≈96 pt white side margins → re-cut from the embedded native raster (xref 56, 1420×749 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Comparison between experiments and DEM simulations. (a) Force-displacement curve. (b) Porosities at different compressive displacements.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    285.0,
+    515.5,
+    458.1
+   ],
+   "w": 1868,
+   "h": 771,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.925,
+   "src_native": [
+    1822,
+    725
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    278.5,
+    566.0,
+    463.2
+   ],
+   "recrop": "tool crop = page-width band with ≈47–50 pt white side margins; the auto caption had swallowed body text (replaced by the printed caption) → re-cut from the embedded native raster (xref 58, 1822×725 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "★ 보정 · 검증 그림. (a) 힘–변위: 별 (A–E) [판독] 0 / 12.8 / 20.6 / 32.4 / 42.7 µm ↔ ≈0 / 751 / 1310 / 2853 / 5640 mN · '등가 모의' 곡선 ÷ 별 = 0.50 · 0.75 · 1.05 · 1.20 (B–E) [카드 산술] · 곡선은 ≈25 µm 아래에서 측정 띠 아래, ≈39 µm 위에서 띠 위. (b) 기공률 = 활물질이 아닌 모든 것 (ε_pore+binder): CT 39.0 / 35.7 / 25.0 ↔ DEM 43.1 / 31.4 / 27.7 % (C · D · E) [판독]. ⚠ 단계 D 의 변위 ≈32.9 µm (두께 ≈54.6 µm) ↔ 본문 '50 µm'."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 4,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — force (mN) vs load displacement (um): cyan band 'Compression measurement', green stars 'Electrode stage A-E', blue dash-dot 'Equivalent simulation' (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    285.0,
+    293.5,
+    458.1
+   ],
+   "w": 943,
+   "h": 771,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.9,
+   "src_native": [
+    1822,
+    725
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centre of the all-white column run x = 895–950 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 58",
+   "viewed": true
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 4,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — 'Porosity ε_pore+binder' (%, 20–60) vs load displacement (um, 0–50): black squares 'CT reconstruction', red circles 'DEM simulation' at the five stages (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    306.9,
+    285.0,
+    515.5,
+    457.9
+   ],
+   "w": 919,
+   "h": 770,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.951,
+   "src_native": [
+    1822,
+    725
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centre of the all-white column run x = 895–950 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 58",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Volume rendering overlaid with strain cloud maps of stage A, stage B and stage C.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.4,
+    56.1,
+    467.0,
+    171.2
+   ],
+   "w": 1465,
+   "h": 530,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.553,
+   "src_native": [
+    1417,
+    482
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.8,
+    566.0,
+    176.0
+   ],
+   "recrop": "tool crop = page-width band with ≈96–99 pt white side margins; the auto caption had swallowed body text (replaced) → re-cut from the embedded native raster (xref 67, 1417×482 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a) The particle coordination number and (b) the distance distribution of particle contact pairs of stage A, B, and C.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.6,
+    546.1,
+    514.1,
+    725.8
+   ],
+   "w": 1856,
+   "h": 798,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.786,
+   "src_native": [
+    1810,
+    752
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    74.2,
+    539.7,
+    520.6,
+    730.8
+   ],
+   "recrop": "tool crop complete (≈6 pt margins); the auto caption ended with the page number (removed) → re-cut from the embedded native raster (xref 69, 1810×752 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 5,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — number fraction (%) vs coordination number (0–11) for stage A / B / C (bars) with fitted curves (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    80.6,
+    546.1,
+    292.3,
+    723.8
+   ],
+   "w": 932,
+   "h": 790,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.768,
+   "src_native": [
+    1810,
+    752
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centre of the all-white column run x = 884–918 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 69",
+   "viewed": true
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 5,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6(b) — number fraction (%) vs particle distance (um, 4–24) of the particle contact pairs for stage A / B / C (bars) with fitted curves (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.7,
+    546.1,
+    514.1,
+    725.8
+   ],
+   "w": 939,
+   "h": 798,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.806,
+   "src_native": [
+    1810,
+    752
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centre of the all-white column run x = 884–918 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 69",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Schematic diagrams and (b)the average particle distance between the particle contact pairs of stage A, B, and C on the plate side and the foil side.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    56.2,
+    466.8,
+    236.2
+   ],
+   "w": 1463,
+   "h": 800,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.559,
+   "src_native": [
+    1417,
+    752
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    37.4,
+    50.0,
+    557.9,
+    241.0
+   ],
+   "recrop": "tool crop = band with ≈90 pt white side margins → re-cut from the embedded native raster (xref 82, 1417×752 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 6,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(a) — CT renders of stage A / B / C split at mid-height ('Foil side' = lower half) with a coloured label slice at the cut plane (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    130.6,
+    56.2,
+    466.8,
+    161.1
+   ],
+   "w": 1451,
+   "h": 487,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.478,
+   "src_native": [
+    1417,
+    752
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): rows 0–437 (the renders of (a) end at row 437; rows 438–441 are white right of x = 140); the upper part of the neighbouring '(b)' label (cols 40–78, rows 424–437) painted white — no content of panel (a) lies there; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 82; whitened boxes (native px) [[36, 422, 82, 438]]",
+   "viewed": true
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 6,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — average particle distance (um, axis 6–13) of the contact pairs on the 'Plate side' and the 'Foil side' for stage A / B / C (horizontal bars) (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    157.7,
+    462.7,
+    236.2
+   ],
+   "w": 1446,
+   "h": 377,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.729,
+   "src_native": [
+    1417,
+    752
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): rows 422–751 (the '(b)' label starts at row 424); the bottom tails of the renders of panel (a) (cols ≥ 82, rows 422–437) painted white — no content of panel (b) lies there; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 82; whitened boxes (native px) [[82, 422, 1417, 438]]",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Force chains of particles under different compression ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    275.7,
+    552.5,
+    492.1
+   ],
+   "w": 2175,
+   "h": 952,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.644,
+   "src_native": [
+    2129,
+    906
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    36.2,
+    269.2,
+    559.0,
+    497.2
+   ],
+   "recrop": "tool crop complete (≈6 pt margins) → re-cut from the embedded native raster (xref 84, 2129×906 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "힘 사슬 (접촉력 + 평행 결합력). ⚠ 여섯 패널의 색 눈금이 서로 다르다: CR 10 % ≈0.8–4.2 · 20 % ≈4.4–7.0 · 30 % ≈4.7–7.9 · 35–50 % ≈0.1–13.2 mN [판독 · 거친] → 패널끼리 색 밀도를 견줄 수 없다."
+  },
+  {
+   "key": "f8t",
+   "kind": "figure",
+   "label": "8-top",
+   "page": 6,
+   "file": "fig_8_top.png",
+   "caption": "Fig. 8 (upper row) — force chains at CR = 10 %, 20 %, 30 %; each panel has its own 'Force Chain' colour bar (unit: mN; labelled ticks 1–4, 5–6, 5–7).",
+   "rotated_deg": 0,
+   "bbox": [
+    43.4,
+    275.7,
+    551.6,
+    387.7
+   ],
+   "w": 2168,
+   "h": 517,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.673,
+   "src_native": [
+    2129,
+    906
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): upper row (CR = 10 / 20 / 30 %), split at the centre of the all-white row run y = 469–497 px (the original has no panel letters); ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 84",
+   "viewed": true
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8-bottom",
+   "page": 6,
+   "file": "fig_8_bottom.png",
+   "caption": "Fig. 8 (lower row) — force chains at CR = 35 %, 40 %, 50 %; colour bars 'Force Chain' (unit: mN; labelled ticks 5 and 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    394.7,
+    552.5,
+    492.1
+   ],
+   "w": 2175,
+   "h": 456,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.626,
+   "src_native": [
+    2129,
+    906
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): lower row (CR = 35 / 40 / 50 %), split at the centre of the all-white row run y = 469–497 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 84",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Particle breakage risk and visualization under different compression ratios. (a) Distribution of σm under different compression ratios. (b) Phase diagram of particles maintaining mechanical integrity. (c-e) Three-dimensional perspective view of particles with breakage risk under three compression ratios. (f-h) Two-dimensional cross-sectional view of slice location.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.7,
+    56.3,
+    509.1,
+    402.9
+   ],
+   "w": 1814,
+   "h": 1494,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.557,
+   "src_native": [
+    1768,
+    1448
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    49.8,
+    566.0,
+    408.0
+   ],
+   "recrop": "tool crop = page-width band with ≈54–57 pt white side margins → re-cut from the embedded native raster (xref 102, 1768×1448 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "★ 파괴 판정 그림. (a) 주황 화살표 'Breakage risk' = 명목 응력 200 MPa [판독 200.3] — 본문에는 이 숫자가 없다 (5.5 µm · 6 mN → 198 MPa [카드 산술]). 200 MPa 초과 막대 합: CR 50 % ≈19.6–20.1 % (본문 20.31 %) · CR 35 % ≈0.9 % (본문 1.38 %) [판독]. (b) 위험 없는 입자 비율: CR 25 / 30 / 35 / 40 / 45 / 50 % = 99.7 / 99.6 / 98.6 / 96.7 / 91.5 / 79.7 % [판독]. ⚠ (c–e) 는 CR 40 / 45 / 50 % (a 는 20 / 35 / 50 %). '2 GPa' 는 이 그림 · 논문 어디에도 없다."
+  },
+  {
+   "key": "f9a",
+   "kind": "figure",
+   "label": "9a",
+   "page": 7,
+   "file": "fig_9a.png",
+   "caption": "Fig. 9(a) — distribution of the nominal stress σm: number fraction (%) vs nominal stress (MPa, bins of 50 MPa up to 400) for CR = 20 %, 35 %, 50 % (bars + fitted curves); orange arrow 'Breakage risk' pointing at 200 MPa (panel of Fig. 9).",
+   "rotated_deg": 0,
+   "bbox": [
+    85.7,
+    62.5,
+    292.3,
+    217.1
+   ],
+   "w": 911,
+   "h": 694,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.854,
+   "src_native": [
+    1768,
+    1448
+   ],
+   "native_dpi": 300,
+   "panel_of": "f9",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centres of the all-white runs x = 863–885 and y = 673–721 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 102",
+   "viewed": true,
+   "mpm_note_ko": "명목 응력 σm = f_max/d² 분포 (50 MPa 칸) + 'Breakage risk' 화살표 (200 MPa). 판독값은 digitized.csv."
+  },
+  {
+   "key": "f9b",
+   "kind": "figure",
+   "label": "9b",
+   "page": 7,
+   "file": "fig_9b.png",
+   "caption": "Fig. 9(b) — 'Particle proportion without risk of breakage (%)' (60–100) vs compression ratio (%, 20–50): black squares at CR = 20, 25, 30, 35, 40, 45, 50 %; blue area 'Maintain integrity', orange area 'Breakage risk' (panel of Fig. 9).",
+   "rotated_deg": 0,
+   "bbox": [
+    297.8,
+    56.3,
+    509.1,
+    217.4
+   ],
+   "w": 930,
+   "h": 721,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.392,
+   "src_native": [
+    1768,
+    1448
+   ],
+   "native_dpi": 300,
+   "panel_of": "f9",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centres of the all-white runs x = 863–885 and y = 673–721 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 102",
+   "viewed": true,
+   "mpm_note_ko": "위험 없는 입자 비율 ↔ 압축비. 축 범위 60–100 % · 20–50 % (눈금선 없음 — 테두리로 보정 · CR 35 → 1.39 % · CR 50 → 20.31 % 로 본문 값 재현)."
+  },
+  {
+   "key": "f9ce",
+   "kind": "figure",
+   "label": "9c-e",
+   "page": 7,
+   "file": "fig_9cde.png",
+   "caption": "Fig. 9(c–e) — 3D views of the particles with breakage risk (red) at CR = 40 %, 45 %, 50 % (labels printed in the panels); 'Slice position' marks the plane of (f–h) (panels of Fig. 9).",
+   "rotated_deg": 0,
+   "bbox": [
+    85.7,
+    229.1,
+    499.7,
+    331.1
+   ],
+   "w": 1775,
+   "h": 475,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.519,
+   "src_native": [
+    1768,
+    1448
+   ],
+   "native_dpi": 300,
+   "panel_of": "f9",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): rows between the all-white row runs y = 673–721 and 1147–1164 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 102",
+   "viewed": true
+  },
+  {
+   "key": "f9fh",
+   "kind": "figure",
+   "label": "9f-h",
+   "page": 7,
+   "file": "fig_9fgh.png",
+   "caption": "Fig. 9(f–h) — 2D cross-sections at the slice position: grey = particles, red = particles with breakage risk (panels of Fig. 9).",
+   "rotated_deg": 0,
+   "bbox": [
+    86.4,
+    335.5,
+    500.7,
+    402.9
+   ],
+   "w": 1776,
+   "h": 331,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.499,
+   "src_native": [
+    1768,
+    1448
+   ],
+   "native_dpi": 300,
+   "panel_of": "f9",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): rows below the all-white row run y = 1147–1164 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 102",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. (a) Components of the stress tensor and (b) fabric tensor deviation for the calendered electrodes under different compression ratios.",
+   "rotated_deg": 0,
+   "bbox": [
+    91.1,
+    572.1,
+    504.0,
+    725.8
+   ],
+   "w": 1770,
+   "h": 690,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.839,
+   "src_native": [
+    1724,
+    644
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    64.8,
+    565.6,
+    530.5,
+    730.8
+   ],
+   "recrop": "tool crop with ≈26 pt side margins; the auto caption ended with the page number (removed) → re-cut from the embedded native raster (xref 104, 1724×644 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "평균 응력 (식 4) 과 fabric 편차 (식 5–6) — CR 20 / 35 / 50 %: σzz 11.6 / 42.2 / 111.3 · σxx 5.4 / 23.9 / 77.8 · σyy 5.2 / 23.0 / 74.9 MPa [판독] · F^dev_zz +0.003 / −0.029 / −0.071 (세 성분 합 ≈0 으로 판독 확인). σzz 는 같은 압축의 판 평균 응력 f(d) (SI Fig. S5) 의 0.51–0.60 배 [카드 산술] — 원문 설명 없음."
+  },
+  {
+   "key": "f10a",
+   "kind": "figure",
+   "label": "10a",
+   "page": 7,
+   "file": "fig_10a.png",
+   "caption": "Fig. 10(a) — components of the average stress σxx, σyy, σzz (MPa, 0–120) at CR = 20 %, 35 %, 50 % (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    91.1,
+    572.1,
+    293.2,
+    725.8
+   ],
+   "w": 892,
+   "h": 690,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.816,
+   "src_native": [
+    1724,
+    644
+   ],
+   "native_dpi": 300,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the all-white columns x = 844–846 px (right frame of (a) ends at 843); ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 104",
+   "viewed": true
+  },
+  {
+   "key": "f10b",
+   "kind": "figure",
+   "label": "10b",
+   "page": 7,
+   "file": "fig_10b.png",
+   "caption": "Fig. 10(b) — components of the fabric tensor deviation F^dev_xx, F^dev_yy, F^dev_zz (−0.08 … 0.04) at CR = 20 %, 35 %, 50 % (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "bbox": [
+    294.0,
+    572.1,
+    504.0,
+    725.8
+   ],
+   "w": 925,
+   "h": 690,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.869,
+   "src_native": [
+    1724,
+    644
+   ],
+   "native_dpi": 300,
+   "panel_of": "f10",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the all-white columns x = 844–846 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 104",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Effect of the mean particle diameter on electrode densification. (a-c) Discrete element models with different average diameters (D = 6 μm, 9 μm, and 12 μm). (d) Particle size distribution of three discrete element models. (e-f) Components of the stress tensor and distribution of σm for the three discrete element models under a compression ratio of 50 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.1,
+    441.0,
+    552.2,
+    706.6
+   ],
+   "w": 2175,
+   "h": 1157,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.624,
+   "src_native": [
+    2129,
+    1111
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    434.5,
+    565.8,
+    711.7
+   ],
+   "recrop": "tool crop complete (≈10–13 pt side margins) → re-cut from the embedded native raster (xref 109, 2129×1111 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f11ac",
+   "kind": "figure",
+   "label": "11a-c",
+   "page": 8,
+   "file": "fig_11abc.png",
+   "caption": "Fig. 11(a–c) — DEM models with mean particle diameter D = 6, 9, 12 um (same box, sphere colour = size) (panels of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.4,
+    441.0,
+    547.9,
+    571.7
+   ],
+   "w": 2156,
+   "h": 595,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.401,
+   "src_native": [
+    2129,
+    1111
+   ],
+   "native_dpi": 300,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): rows above the centre of the all-white row run y = 547–579 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 109",
+   "viewed": true
+  },
+  {
+   "key": "f11d",
+   "kind": "figure",
+   "label": "11d",
+   "page": 8,
+   "file": "fig_11d.png",
+   "caption": "Fig. 11(d) — particle size distributions of the three models: 'Volume fraction (%)' vs particle diameter (um, 2–15); normal distributions centred at 6, 9, 12 um, peaks ≈27 % (panel of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.1,
+    579.7,
+    198.6,
+    706.6
+   ],
+   "w": 702,
+   "h": 579,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.919,
+   "src_native": [
+    2129,
+    1111
+   ],
+   "native_dpi": 300,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the centres of the all-white runs y = 547–579, x = 654–717 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 109",
+   "viewed": true
+  },
+  {
+   "key": "f11e",
+   "kind": "figure",
+   "label": "11e",
+   "page": 8,
+   "file": "fig_11e.png",
+   "caption": "Fig. 11(e) — components of the average stress σxx, σyy, σzz (MPa, 0–140) for D = 6, 9, 12 at CR = 50 % (panel of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    214.0,
+    579.7,
+    372.4,
+    705.6
+   ],
+   "w": 710,
+   "h": 575,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.721,
+   "src_native": [
+    2129,
+    1111
+   ],
+   "native_dpi": 300,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): between the all-white column runs x = 654–717 and 1378–1448 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 109",
+   "viewed": true
+  },
+  {
+   "key": "f11f",
+   "kind": "figure",
+   "label": "11f",
+   "page": 8,
+   "file": "fig_11f.png",
+   "caption": "Fig. 11(f) — number fraction (%) vs nominal stress (MPa, 0–400) for D = 6, 9, 12 at CR = 50 % (panel of Fig. 11).",
+   "rotated_deg": 0,
+   "bbox": [
+    389.5,
+    579.7,
+    552.2,
+    706.6
+   ],
+   "w": 728,
+   "h": 579,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.924,
+   "src_native": [
+    2129,
+    1111
+   ],
+   "native_dpi": 300,
+   "panel_of": "f11",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): right of the all-white column run x = 1378–1448 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 109",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Effect of the particle size distribution on electrode densification. (a-c) Discrete element models with different normal distribution (σ = 0.5, 1.5, and 2.5). (d) Particle size distribution of three discrete element models. (e-f) Components of the fabric tensor deviation and distribution of σm for the three discrete element models under a compression ratio of 50 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    56.9,
+    552.4,
+    310.9
+   ],
+   "w": 2174,
+   "h": 1109,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.629,
+   "src_native": [
+    2128,
+    1063
+   ],
+   "native_dpi": 300,
+   "auto_bbox": [
+    31.6,
+    50.4,
+    566.0,
+    316.0
+   ],
+   "recrop": "tool crop complete (≈10–13 pt side margins) → re-cut from the embedded native raster (xref 134, 2128×1063 px = 300 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (25 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "f12ac",
+   "kind": "figure",
+   "label": "12a-c",
+   "page": 9,
+   "file": "fig_12abc.png",
+   "caption": "Fig. 12(a–c) — DEM models with mean diameter 9 um and standard deviation σ = 0.5, 1.5, 2.5 (panels of Fig. 12).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    56.9,
+    550.0,
+    184.3
+   ],
+   "w": 2163,
+   "h": 581,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.394,
+   "src_native": [
+    2128,
+    1063
+   ],
+   "native_dpi": 300,
+   "panel_of": "f12",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): rows above the all-white rows y = 533–535 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 134",
+   "viewed": true
+  },
+  {
+   "key": "f12d",
+   "kind": "figure",
+   "label": "12d",
+   "page": 9,
+   "file": "fig_12d.png",
+   "caption": "Fig. 12(d) — particle size distributions of the three models: 'Volume fraction (%)' vs particle diameter (um); normal distributions with σ = 0.5, 1.5, 2.5 around 9 um (peaks ≈79, 27, 16 %) (panel of Fig. 12).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.6,
+    187.1,
+    200.1,
+    310.7
+   ],
+   "w": 706,
+   "h": 565,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.927,
+   "src_native": [
+    2128,
+    1063
+   ],
+   "native_dpi": 300,
+   "panel_of": "f12",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): split at the all-white rows y = 533–535 and the centre of the all-white column run x = 658–721 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 134",
+   "viewed": true
+  },
+  {
+   "key": "f12e",
+   "kind": "figure",
+   "label": "12e",
+   "page": 9,
+   "file": "fig_12e.png",
+   "caption": "Fig. 12(e) — components of the fabric tensor deviation F^dev_xx, F^dev_yy, F^dev_zz (−0.10 … 0.04) for σ = 0.5, 1.5, 2.5 at CR = 50 % (panel of Fig. 12).",
+   "rotated_deg": 0,
+   "bbox": [
+    215.4,
+    187.1,
+    373.1,
+    310.5
+   ],
+   "w": 707,
+   "h": 564,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.82,
+   "src_native": [
+    2128,
+    1063
+   ],
+   "native_dpi": 300,
+   "panel_of": "f12",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): between the all-white column runs x = 658–721 and 1379–1454 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 134",
+   "viewed": true
+  },
+  {
+   "key": "f12f",
+   "kind": "figure",
+   "label": "12f",
+   "page": 9,
+   "file": "fig_12f.png",
+   "caption": "Fig. 12(f) — number fraction (%) vs nominal stress (MPa, 0–400) for σ = 0.5, 1.5, 2.5 at CR = 50 % (panel of Fig. 12).",
+   "rotated_deg": 0,
+   "bbox": [
+    391.4,
+    185.0,
+    552.4,
+    310.9
+   ],
+   "w": 721,
+   "h": 575,
+   "dpi": 300,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.923,
+   "src_native": [
+    2128,
+    1063
+   ],
+   "native_dpi": 300,
+   "panel_of": "f12",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): right of the all-white column run x = 1379–1454 px; ink bounding box (min RGB < 235) → uniform 6 pt (25 px) margin; xref 134",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Schematic of the three-dimensional structure of the micro-mechanical loading stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    106.4,
+    351.9,
+    468.4,
+    694.2
+   ],
+   "w": 1368,
+   "h": 1296,
+   "dpi": 263,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.768,
+   "src_native": [
+    1519,
+    1331
+   ],
+   "native_dpi": 263,
+   "auto_bbox": [
+    84.0,
+    332.7,
+    511.3,
+    707.0
+   ],
+   "recrop": "tool crop complete (≈6 pt margins) → re-cut from the embedded native raster (xref 26, 1519×1331 px = 263 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (22 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Image collection settings using in CT.",
+   "rotated_deg": 0,
+   "bbox": [
+    168.6,
+    107.1,
+    426.2,
+    394.7
+   ],
+   "w": 629,
+   "h": 699,
+   "dpi": 168,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.12,
+   "src_native": [
+    601,
+    671
+   ],
+   "native_dpi": 168,
+   "auto_bbox": [
+    162.6,
+    101.1,
+    432.2,
+    400.7
+   ],
+   "recrop": "tool crop complete (≈6 pt margins) → re-cut from the embedded native raster (xref 33, 601×671 px = 168 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (14 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "CT 설정 화면: 90 kV · 89 µA · 화소 0.5 µm · 광학 배율 19.86 ('20X') · 노출 7.5 s · 투영 2401 · 카메라 binning 2 · 영상 971 × 999 · 필터 LE6 · 재구성 필터 Smooth(0.5) · 2024-07-14."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 2,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. Parallel bonding method of spherical particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    185.1,
+    472.5,
+    412.7,
+    726.0
+   ],
+   "w": 832,
+   "h": 922,
+   "dpi": 250,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.526,
+   "src_native": [
+    815,
+    905
+   ],
+   "native_dpi": 250,
+   "auto_bbox": [
+    173.9,
+    462.8,
+    426.4,
+    719.4
+   ],
+   "recrop": "tool crop cut off the bottom ≈10 pt of the figure (lower edge of the bond disk) → re-cut from the embedded native raster (xref 34, 815×905 px = 250 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (21 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Geometric description of a frustum-shaped indenter embedded in active layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.0,
+    234.8,
+    478.8,
+    369.2
+   ],
+   "w": 1123,
+   "h": 451,
+   "dpi": 222,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.289,
+   "src_native": [
+    1133,
+    442
+   ],
+   "native_dpi": 222,
+   "auto_bbox": [
+    84.0,
+    68.9,
+    514.0,
+    380.7
+   ],
+   "recrop": "tool crop started at the top of the page and swallowed the σ^max / τ^max equations and the section heading above the figure; the auto caption had swallowed body text (replaced) → re-cut from the embedded native raster (xref 89, 1133×442 px = 222 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (18 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. Load-average stress curve (f(d) curve) using DEM.",
+   "rotated_deg": 0,
+   "bbox": [
+    101.6,
+    222.1,
+    497.8,
+    504.1
+   ],
+   "w": 1134,
+   "h": 817,
+   "dpi": 200,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.966,
+   "src_native": [
+    1153,
+    813
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    92.7,
+    212.9,
+    522.9,
+    495.9
+   ],
+   "recrop": "tool crop cut off the bottom ≈11 pt of the figure (x-axis title 'Load displacement (m)') → re-cut from the embedded native raster (xref 92, 1153×813 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "DEM (주기 상자 · 평판) 의 판 평균 응력 f(d) — 끝점 43.0 µm ≈187 MPa [판독]. ⚠ 인쇄된 4 차식 계수로 계산하면 166 MPa (곡선의 0.84–0.89 배) [카드 산술]."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Three-dimensional reconstruction and two-dimensional slice of the pore structure of sample stage C and DEM simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.8,
+    168.1,
+    471.9,
+    397.3
+   ],
+   "w": 978,
+   "h": 670,
+   "dpi": 200,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.384,
+   "src_native": [
+    944,
+    642
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    101.3,
+    165.9,
+    505.3,
+    386.9
+   ],
+   "recrop": "tool crop cut off the bottom ≈11 pt of the figure (lower part of the two 2D slices) → re-cut from the embedded native raster (xref 95, 944×642 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. Five different-sized regions and porosity extracted from each region.",
+   "rotated_deg": 0,
+   "bbox": [
+    148.0,
+    501.2,
+    448.8,
+    743.1
+   ],
+   "w": 869,
+   "h": 705,
+   "dpi": 200,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.707,
+   "src_native": [
+    841,
+    673
+   ],
+   "native_dpi": 200,
+   "auto_bbox": [
+    129.4,
+    415.5,
+    468.7,
+    749.8
+   ],
+   "recrop": "tool crop started above the figure and swallowed the end of the Fig. S6 caption and part of the 'RVE size' heading → re-cut from the embedded native raster (xref 96, 841×673 px = 200 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (17 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "CT 영역 크기 (40–120 µm) 별 기공률: 59.9 / 62.9 / 64.3 / 66.0 / 66.1 % [판독] — ⚠ 본문 · DEM 의 초기 기공률 56.02 % (100 µm 영역) 와 ≈10 %p 다르다 (정의 · 시료 설명 없음)."
+  },
+  {
+   "key": "fS7p",
+   "kind": "figure",
+   "label": "S7-plot",
+   "page": 6,
+   "file": "fig_S7_plot.png",
+   "caption": "Fig. S7 (lower part) — porosity (%, 50–70) of the CT regions 'Size' 1–5 (40 × 40 … 120 × 120 um) with error bars (panel of Fig. S7).",
+   "rotated_deg": 0,
+   "bbox": [
+    148.0,
+    621.2,
+    441.9,
+    743.1
+   ],
+   "w": 850,
+   "h": 372,
+   "dpi": 200,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.952,
+   "src_native": [
+    841,
+    673
+   ],
+   "native_dpi": 200,
+   "panel_of": "fS7",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): lower part (porosity vs region size); rows below the centre of the all-white row run y = 320–332 px (the original has no panel letters); ink bounding box (min RGB < 235) → uniform 6 pt (17 px) margin; xref 96",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. Laser particle measurement of NMC900505.",
+   "rotated_deg": 0,
+   "bbox": [
+    140.1,
+    103.6,
+    454.4,
+    383.1
+   ],
+   "w": 1152,
+   "h": 1029,
+   "dpi": 254,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.133,
+   "src_native": [
+    1110,
+    987
+   ],
+   "native_dpi": 254,
+   "auto_bbox": [
+    134.1,
+    97.6,
+    460.4,
+    388.1
+   ],
+   "recrop": "tool crop complete (≈6 pt margins) → re-cut from the embedded native raster (xref 99, 1110×987 px = 254 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (21 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true,
+   "mpm_note_ko": "분말 성적서 사진: Ni 89.60 · Co 5.18 · Mn 5.22 mol% · D10 6.87 · D50 9.43 · D90 12.94 · Dmin 4.45 · Dmax 19.09 µm · 탭 밀도 2.61 · 겉보기 밀도 1.81 g/cm³ · BET 0.6159 m²/g · 구형 · 첫 방전 217.8 mAh/g (0.2 C · 4.25–2.5 V)."
+  },
+  {
+   "key": "fS8p",
+   "kind": "figure",
+   "label": "S8-physical",
+   "page": 7,
+   "file": "fig_S8_physical.png",
+   "caption": "Fig. S8 (right half) — physical characteristics of the powder certificate: apparent density 1.81 g/cm3, tap density 2.61 g/cm3, BET 0.6159 m2/g, laser particle size D10 6.87 / D50 9.43 / D90 12.94 / Dmin 4.45 / Dmax 19.09 um (red box), H2O 251 ppm, 'Spherical' (panel of Fig. S8).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.9,
+    103.9,
+    454.4,
+    383.1
+   ],
+   "w": 602,
+   "h": 1028,
+   "dpi": 254,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.205,
+   "src_native": [
+    1110,
+    987
+   ],
+   "native_dpi": 254,
+   "panel_of": "fS8",
+   "manual_crop": "panel crop — cut from the embedded native raster (no resampling): right half of the photographed certificate (physical characteristics incl. the laser particle-size box marked in red); ink bounding box (min RGB < 235) → uniform 6 pt (21 px) margin; xref 99",
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 7,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. Schematic diagram of paper organization structure.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.2,
+    459.1,
+    502.3,
+    737.4
+   ],
+   "w": 1057,
+   "h": 727,
+   "dpi": 180,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.608,
+   "src_native": [
+    1036,
+    704
+   ],
+   "native_dpi": 180,
+   "auto_bbox": [
+    84.7,
+    452.7,
+    510.3,
+    745.8
+   ],
+   "recrop": "tool crop complete (≈6 pt margins) → re-cut from the embedded native raster (xref 100, 1036×704 px = 180 dpi, no resampling): ink bounding box (min RGB < 235) → white canvas with a uniform 6 pt (15 px) margin; caption not included in the image (it is in 'caption')",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 5,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Input parameters for the model calibration — Particle density 4.75 g/cm³; Particle Young's modulus 47 GPa (Ref. 1); Poisson ratio 0.25 (Ref. 1); Coefficient of restitution 0.25; Bond stiffness coefficient 0.1.",
+   "rotated_deg": 0,
+   "bbox": [
+    148.3,
+    545.9,
+    446.7,
+    704.8
+   ],
+   "w": 1724,
+   "h": 949,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.936,
+   "auto_bbox": [
+    149.1,
+    69.2,
+    496.4,
+    701.4
+   ],
+   "recrop": "re-rendered from the vector page at 400 dpi: clip [140, 541, 456, 706] pt (title line + table rules), ink trim, uniform 6 pt margin — the automatic crop (1448×2635 px, 94 % blank) ran from the top of the page down to the table and swallowed the equation block and Fig. S5",
+   "viewed": true,
+   "mpm_note_ko": "DEM 입력값 전부 (다섯 줄). E 47 GPa · ν 0.25 는 SI Ref. 1 (Lundkvist 2024) · 반발 계수 0.25 · 결합 강성 계수 0.1 은 출처 · 단위 · 정의 없음 (맞춘 값으로 보임 [카드 추론]). 마찰 계수 · 결합 반경 · 결합 강도 · 시간 간격 · 판 속도는 표에 없다."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "Eq. (1)",
+   "page": 3,
+   "file": "eq_01_particle_motion_translation_rotation.png",
+   "caption": "Eq. (1), p.3: equations of motion of a particle — m a + c v = F_c + F_b + m g; I θ̈ = M_c + M_b (contact + parallel-bond forces / moments, damping c, gravity).",
+   "rotated_deg": 0,
+   "bbox": [
+    38.5,
+    206.7,
+    288.2,
+    225.9
+   ],
+   "w": 1453,
+   "h": 173,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.973,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "Eq. (2)",
+   "page": 3,
+   "file": "eq_02_parallel_bond_formation_criterion.png",
+   "caption": "Eq. (2), p.3: bond formation criterion — L_AB ≤ (r_A + r_B) + f_b (r_A + r_B), f_b = 0.3 in this paper.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.4,
+    313.5,
+    288.2,
+    321.4
+   ],
+   "w": 1459,
+   "h": 110,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.973,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "Eq. (3)",
+   "page": 6,
+   "file": "eq_03_nominal_stress_max_contact_force_over_d2.png",
+   "caption": "Eq. (3), p.6: nominal stress of a particle — σ_m = f_max / d² (maximum contact force over the squared particle diameter) — the breakage-risk measure.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    655.2,
+    288.2,
+    672.3
+   ],
+   "w": 1457,
+   "h": 161,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.988,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 이 논문의 파괴 위험 척도. 입자에 걸린 가장 큰 접촉력 ÷ 지름² — 응력 텐서 성분 (Z 축 응력) 이 아니다."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "Eq. (4)",
+   "page": 7,
+   "file": "eq_04_average_stress_tensor.png",
+   "caption": "Eq. (4), p.7: average (homogenized) stress tensor — σ_ij = (1/V) Σ_{c∈V} v_i^c f_i^c (printed with the index i on both factors).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    454.5,
+    288.2,
+    474.3
+   ],
+   "w": 1457,
+   "h": 176,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.985,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "Eq. (5)",
+   "page": 7,
+   "file": "eq_05_fabric_tensor.png",
+   "caption": "Eq. (5), p.7: fabric tensor — F = (1/N) Σ_{c∈N} n^c n^c (N contacts, n^c unit contact normal).",
+   "rotated_deg": 0,
+   "bbox": [
+    306.4,
+    470.0,
+    557.4,
+    489.6
+   ],
+   "w": 1460,
+   "h": 175,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "Eq. (6)",
+   "page": 8,
+   "file": "eq_06_fabric_tensor_spherical_deviatoric_split.png",
+   "caption": "Eq. (6), p.8: decomposition of the fabric tensor — F = (1/3) I + F^dev.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.4,
+    55.4,
+    288.2,
+    71.9
+   ],
+   "w": 1459,
+   "h": 158,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.986,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "eS1",
+   "kind": "equation",
+   "label": "SI Eq. S1 (unnumbered)",
+   "page": 3,
+   "file": "eq_S01_normal_contact_force_increment.png",
+   "caption": "SI p.3 (unnumbered; S1 = order of appearance): incremental normal contact force — ΔF_n^c = −k_n^c Δu_n^BA.",
+   "rotated_deg": 0,
+   "bbox": [
+    262.3,
+    184.3,
+    332.5,
+    197.4
+   ],
+   "w": 456,
+   "h": 139,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.935,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS2",
+   "kind": "equation",
+   "label": "SI Eq. S2 (unnumbered)",
+   "page": 3,
+   "file": "eq_S02_overlap_condition_no_contact.png",
+   "caption": "SI p.3 (unnumbered; S2): no-contact condition as printed — u_n^BA = r_A + r_B − |x_B − x_A| < 0 → normal and shear forces set to zero.",
+   "rotated_deg": 0,
+   "bbox": [
+    235.9,
+    246.0,
+    359.5,
+    260.6
+   ],
+   "w": 753,
+   "h": 147,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.947,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS3",
+   "kind": "equation",
+   "label": "SI Eq. S3 (unnumbered)",
+   "page": 3,
+   "file": "eq_S03_hertz_normal_stiffness.png",
+   "caption": "SI p.3 (unnumbered; S3): Hertz normal stiffness — k_n^c = E* √(R*) δ_n^(1/2).",
+   "rotated_deg": 0,
+   "bbox": [
+    263.8,
+    369.7,
+    331.9,
+    385.9
+   ],
+   "w": 444,
+   "h": 156,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.932,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS4",
+   "kind": "equation",
+   "label": "SI Eq. S4 (unnumbered)",
+   "page": 3,
+   "file": "eq_S04_parallel_bond_force_moment_increments.png",
+   "caption": "SI p.3 (unnumbered; S4): parallel-bond increments — ΔF_n^b = −k_n^b A Δu_n^BA, ΔF_s^b = −k_s^b A Δu_s^BA, ΔM_n^b = −k_n^b J Δθ_n^BA, ΔM_s^b = −k_s^b I Δθ_s^BA (printed with k_n on J and k_s on I).",
+   "rotated_deg": 0,
+   "bbox": [
+    251.9,
+    415.6,
+    342.2,
+    485.6
+   ],
+   "w": 568,
+   "h": 455,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.915,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS5",
+   "kind": "equation",
+   "label": "SI Eq. S5 (inline, unnumbered)",
+   "page": 3,
+   "file": "eq_S05_bond_disk_area_inertia_inline.png",
+   "caption": "SI p.3 (inline; S5): bonding-disk section properties — A = π R_b², I = ¼ π R_b⁴, J = ½ π R_b⁴ (R_b = radius of the bonding disk), with the three text lines that define them.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.1,
+    559.3,
+    505.4,
+    658.5
+   ],
+   "w": 2373,
+   "h": 617,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.958,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI); inline definitions A = πR_b², I = ¼πR_b⁴, J = ½πR_b⁴ kept with their three text lines",
+   "viewed": true
+  },
+  {
+   "key": "eS6",
+   "kind": "equation",
+   "label": "SI Eq. S6 (unnumbered)",
+   "page": 4,
+   "file": "eq_S06_bond_max_tensile_shear_stress.png",
+   "caption": "SI p.4 (unnumbered; S6): maximum tensile and shear stress on the parallel bond from beam theory — σ^max = |F_n^b|/A + |M_s^b| R_b / I ; τ^max = |F_s^b|/A + |M_n^b| R_b / J.",
+   "rotated_deg": 0,
+   "bbox": [
+    245.3,
+    75.9,
+    349.2,
+    147.0
+   ],
+   "w": 643,
+   "h": 461,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.94,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS7",
+   "kind": "equation",
+   "label": "SI Eq. S7 (unnumbered)",
+   "page": 4,
+   "file": "eq_S07_frustum_total_force_integral.png",
+   "caption": "SI p.4 (unnumbered; S7): total force on the frustum-shaped indenter at depth d0 — F(d0) = f(d0)·π r² + ∫_0^d0 f(d0 − x)·π[(r + tan α·x + tan α·dx)² − (r + tan α·x)²].",
+   "rotated_deg": 0,
+   "bbox": [
+    100.8,
+    524.6,
+    483.1,
+    552.0
+   ],
+   "w": 2190,
+   "h": 218,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.958,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS8",
+   "kind": "equation",
+   "label": "SI Eq. S8 (unnumbered)",
+   "page": 4,
+   "file": "eq_S08_frustum_force_first_order.png",
+   "caption": "SI p.4 (unnumbered; S8): first-order form — F(d0) ≈ f(d0)·π r² + 2π ∫_0^d0 f(d0 − x)·(r tan α + tan² α·x) dx.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.3,
+    571.4,
+    423.3,
+    598.7
+   ],
+   "w": 1688,
+   "h": 218,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.956,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS9",
+   "kind": "equation",
+   "label": "SI Eq. S9 (inline, unnumbered)",
+   "page": 4,
+   "file": "eq_S09_average_stress_quartic_assumption_inline.png",
+   "caption": "SI p.4 (inline; S9): assumed form of the average stress — 'Here, we assume f(d) to be a quadratic function: f(d) = A d + B d0² + C d0³ + D d0⁴' (four terms up to the fourth power).",
+   "rotated_deg": 0,
+   "bbox": [
+    98.8,
+    602.9,
+    452.7,
+    614.1
+   ],
+   "w": 2032,
+   "h": 128,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.915,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI); the text line that defines f(d) (printed 'quadratic', four terms up to the fourth power)",
+   "viewed": true
+  },
+  {
+   "key": "eS10",
+   "kind": "equation",
+   "label": "SI Eq. S10 (unnumbered)",
+   "page": 4,
+   "file": "eq_S10_flat_term_expansion.png",
+   "caption": "SI p.4 (unnumbered; S10): flat-face term — f(d0)·π r² = (A d0 + B d0² + C d0³ + D d0⁴)·π r².",
+   "rotated_deg": 0,
+   "bbox": [
+    159.4,
+    649.8,
+    365.6,
+    660.9
+   ],
+   "w": 1212,
+   "h": 128,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.925,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS11",
+   "kind": "equation",
+   "label": "SI Eq. S11 (unnumbered)",
+   "page": 4,
+   "file": "eq_S11_side_term_expansion.png",
+   "caption": "SI p.4 (unnumbered; S11): flank term — 2π ∫_0^d0 [A(d0 − x) + B(d0 − x)² + C(d0 − x)³ + D(d0 − x)⁴]·(r tan α + tan² α·x) dx.",
+   "rotated_deg": 0,
+   "bbox": [
+    107.0,
+    680.7,
+    491.3,
+    708.0
+   ],
+   "w": 2201,
+   "h": 218,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.957,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eS12",
+   "kind": "equation",
+   "label": "SI Eq. S12 (unnumbered)",
+   "page": 5,
+   "file": "eq_S12_frustum_force_closed_form.png",
+   "caption": "SI p.5 (unnumbered; S12): closed form — F(d0) = π r² (A d0 + B d0² + C d0³ + D d0⁴) + π (A r tan α d0² + A tan² α d0³/3 + 2 B r tan α d0³/3 + B tan² α d0⁴/6 + C r tan α d0⁴/2 + C tan² α d0⁵/10 + 2 D r tan α d0⁵/5 + D tan² α d0⁶/15).",
+   "rotated_deg": 0,
+   "bbox": [
+    102.8,
+    75.2,
+    493.1,
+    149.2
+   ],
+   "w": 2234,
+   "h": 477,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.947,
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin (the SI equations carry no numbers; S<n> = order of appearance in the SI)",
+   "viewed": true
+  },
+  {
+   "key": "eSA",
+   "kind": "equation",
+   "label": "SI contact + bond model block",
+   "page": 3,
+   "file": "eq_S01_S06_contact_bond_model_with_text.png",
+   "caption": "SI pp.3–4: whole derivation of the contact model — Hertz normal contact (ΔF_n^c, k_n^c = E*√R* δ_n^(1/2)), parallel-bond force / moment increments, bonding-disk A, I, J and the beam-theory maximum bond stresses, with the connecting text.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.1,
+    77.8,
+    505.8,
+    717.8
+   ],
+   "w": 2375,
+   "h": 4036,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.959,
+   "parts": [
+    {
+     "page": 3,
+     "pdf": "si",
+     "bbox": [
+      90.1,
+      77.8,
+      505.8,
+      717.8
+     ]
+    },
+    {
+     "page": 4,
+     "pdf": "si",
+     "bbox": [
+      245.3,
+      75.9,
+      349.2,
+      147.0
+     ]
+    }
+   ],
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin; whole SI derivation of the contact / parallel-bond model (SI p.3 + top of p.4) stacked",
+   "viewed": true
+  },
+  {
+   "key": "eSB",
+   "kind": "equation",
+   "label": "SI frustum equivalent-force block",
+   "page": 4,
+   "file": "eq_S07_S12_frustum_equivalent_force_with_text.png",
+   "caption": "SI pp.4–5: whole derivation 'Stress equivalent calculation based on indenter shape' — assumption (no lateral resistance), F(d0) integral over the frustum flank, first-order form, quartic f(d), closed form, and the fitted coefficients A, B, C, D = 4.90e11, 2.00e16, 4.08e20, 2.21e25.",
+   "rotated_deg": 0,
+   "bbox": [
+    90.1,
+    416.9,
+    505.4,
+    721.0
+   ],
+   "w": 2373,
+   "h": 2439,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.923,
+   "parts": [
+    {
+     "page": 4,
+     "pdf": "si",
+     "bbox": [
+      90.1,
+      416.9,
+      505.4,
+      721.0
+     ]
+    },
+    {
+     "page": 5,
+     "pdf": "si",
+     "bbox": [
+      90.3,
+      75.2,
+      505.0,
+      194.9
+     ]
+    }
+   ],
+   "manual_crop": "equation cut by hand — vector text rendered at 400 dpi from a clip that excludes the neighbouring text lines, ink trim, uniform 6 pt margin; whole SI derivation 'Stress equivalent calculation based on indenter shape' (text after Fig. S4 on SI p.4 + closed form and fitted coefficients on p.5) stacked",
+   "viewed": true,
+   "mpm_note_ko": "힘–변위 대조의 환산 사슬. α 값은 원문에 없다 — 인쇄된 계수로 Fig. 4a 곡선을 되살리려면 tan α ≈1.2 (α ≈50°) [카드 산술 · 역산]."
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-prior-insitu-ct-lack-of-constraints",
+   "page": 2,
+   "file": "txt_p2_prior_insitu_ct_lateral_spilling_gap.png",
+   "caption": "p.2: earlier in-situ CT on small samples — 'the lateral movements and spilling of particles near the edges do not accurately characterize the physical mechanisms of real calendering processes, due to the lack of constraints [16]' → this work: in-situ stage with larger samples and quantitative loads.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    452.5,
+    289.4,
+    594.7
+   ],
+   "w": 1464,
+   "h": 856,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2-indenter-sample-electrode-ct-settings",
+   "page": 2,
+   "file": "txt_p2_indenter_sample_electrode_ct_settings.png",
+   "caption": "p.2: flat loading instead of rolling; indenter 'has a diamond structure with a diameter of 200 μm for contact area'; 'More than 7 sets of compressive experiments'; samples 'larger than 500 μm × 500 μm'; laboratory electrodes, active particles : PVDF : conductive carbon = 95:2.5:2.5, NCM9055 (Ningbo Ronbay); Zeiss Xradia 520 Versa, 90 kV, resolution 500 nm, 20× objective, exposure 7.5 s, '2401 slices' per stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.8,
+    274.6,
+    558.2,
+    491.9
+   ],
+   "w": 1463,
+   "h": 1273,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.836,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-dem-hertz-parallel-bond",
+   "page": 3,
+   "file": "txt_p3_dem_hertz_parallel_bond_cbd.png",
+   "caption": "p.3: 'The interaction between active particles is modeled as the Hertz contact, and a parallel bond model is used to simulate the binding effect of binder substrate, which is also called the carbon binder domain (CBD)'; parallel bond = springs of constant normal and shear stiffness on the contact disk [23,24].",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    75.9,
+    288.7,
+    197.2
+   ],
+   "w": 1460,
+   "h": 740,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-symbols-bond-formation-fb",
+   "page": 3,
+   "file": "txt_p3_symbols_bond_formation_fb_0p3.png",
+   "caption": "p.3: symbols of Eq. (1) and the bond criterion Eq. (2) — 'The value of fb is set to 0.3, which is related to the binder content in simulation [25]. Thus, we will facilitate its possible impact on the calculation results in the discussion part.'",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    233.5,
+    289.4,
+    413.9
+   ],
+   "w": 1465,
+   "h": 1068,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.867,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-ct-to-dem-equivalent-spheres-rve",
+   "page": 3,
+   "file": "txt_p3_ct_to_dem_equivalent_spheres_rve_942.png",
+   "caption": "p.3: CT → DEM — particles reconstructed from the CT images ('bijective mapping between the computational particles and actual particles'), equivalent spheres justified by the 'high sphericity of NCM9055'; DEM domain 100 μm × 100 μm 'large enough to be modeled as a representative volume element (RVE)'; rigid flat plate above, periodic x and y; 942 particles; diameter 4–14 μm, mean near 9 μm; initial particle volume fraction 43.98 % (same as the real electrode); visualisation by SDEM [28].",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    416.6,
+    288.7,
+    560.6
+   ],
+   "w": 1460,
+   "h": 1801,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.838,
+   "parts": [
+    {
+     "page": 3,
+     "pdf": "main",
+     "bbox": [
+      37.8,
+      416.6,
+      288.7,
+      560.6
+     ]
+    },
+    {
+     "page": 3,
+     "pdf": "main",
+     "bbox": [
+      306.8,
+      54.9,
+      557.7,
+      219.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x3d",
+   "kind": "text",
+   "label": "p3-stages-a-e-fitted-parameters",
+   "page": 3,
+   "file": "txt_p3_stages_A_E_thickness_fitted_parameters.png",
+   "caption": "p.3: five loading stages A–E — 'initial active layer thickness of 87.5 μm, subsequently reduced to 74.5 μm, 66.5 μm, 50 μm, and 44 μm'; 'final stage E reaches a compressive ratio of nearly 50 %'; 'By using the fitted parameters listed in Table S1, the compressive process can be characterized well in simulations.'",
+   "rotated_deg": 0,
+   "bbox": [
+    306.8,
+    274.6,
+    557.7,
+    460.4
+   ],
+   "w": 1460,
+   "h": 1098,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x3e",
+   "kind": "text",
+   "label": "p3-p4-equivalent-force-porosity-plastic-breakage",
+   "page": 3,
+   "file": "txt_p3_p4_equivalent_force_porosity_overlap_plastic_breakage.png",
+   "caption": "pp.3–4: 'due to the frustum-shaped indenter, the force-displacement curve obtained from simulation is actually an equivalent result inferred from the average stress' (Figs. S4, S5); porosity: 'The overlap between particles due to the compression process are considered, and all materials except active particles are modeled as pores'; 'the difference between experiment and simulation derives from the image quality, as well as the plastic deformation and breakage of the particles [29].'",
+   "rotated_deg": 0,
+   "bbox": [
+    306.8,
+    462.9,
+    557.7,
+    554.3
+   ],
+   "w": 1460,
+   "h": 811,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.849,
+   "parts": [
+    {
+     "page": 3,
+     "pdf": "main",
+     "bbox": [
+      306.8,
+      462.9,
+      557.7,
+      554.3
+     ]
+    },
+    {
+     "page": 4,
+     "pdf": "main",
+     "bbox": [
+      37.9,
+      490.5,
+      288.7,
+      529.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "DEM 한계를 저자가 직접 적은 문장: 실험 ↔ 모의 기공률 차 = 영상 품질 + 입자의 소성 변형 · 파괴."
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-good-agreement-two-stages",
+   "page": 4,
+   "file": "txt_p4_good_agreement_two_stage_force_growth.png",
+   "caption": "p.4: 'The good agreement between the load-strain curves in Fig. 4 indicates that the DEM scheme can accurately capture and reproduce the mechanical characteristics'; two stages — 'In the first stage, the main deformation is the reduction of pores, and particles are not contacted directly. In the second stage, with the particles overlapping, there is a sudden increase in the load'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    532.1,
+    288.7,
+    644.6
+   ],
+   "w": 1460,
+   "h": 691,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-stages-d-e-fragmentation-ct-limit",
+   "page": 4,
+   "file": "txt_p4_stages_D_E_fragmentation_ct_limit.png",
+   "caption": "p.4: 'Over-compaction in stages D and E disrupts the internal structure of the electrode, causing extensive particle fragmentation and significantly compromising CT data accuracy. Additionally, the collapse of porous structures exceeds the limitations of CT device, rendering the data analytically meaningless.' → quantitative analysis only for stages A, B, C.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.9,
+    693.9,
+    288.7,
+    743.6
+   ],
+   "w": 1460,
+   "h": 636,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.845,
+   "parts": [
+    {
+     "page": 4,
+     "pdf": "main",
+     "bbox": [
+      37.9,
+      693.9,
+      288.7,
+      743.6
+     ]
+    },
+    {
+     "page": 4,
+     "pdf": "main",
+     "bbox": [
+      306.8,
+      490.5,
+      557.7,
+      540.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x4d",
+   "kind": "text",
+   "label": "p4-p5-pore-inference-coordination-distance",
+   "page": 4,
+   "file": "txt_p4_p5_pore_inference_coordination_distance.png",
+   "caption": "pp.4–5: 'Due to the low density of binder and conductive carbon, it is difficult to distinguish them from the air in CT images, so that the measurement of pore is based on the inference of distance between active particles'; coordination number = neighbours 'within a certain range near the particle'; particle-distance peak shifts left with compaction (Fig. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    306.8,
+    710.0,
+    557.7,
+    738.6
+   ],
+   "w": 1460,
+   "h": 637,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.849,
+   "parts": [
+    {
+     "page": 4,
+     "pdf": "main",
+     "bbox": [
+      306.8,
+      710.0,
+      557.7,
+      738.6
+     ]
+    },
+    {
+     "page": 5,
+     "pdf": "main",
+     "bbox": [
+      37.8,
+      203.1,
+      288.7,
+      273.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-plate-side-foil-side-distance",
+   "page": 5,
+   "file": "txt_p5_plate_side_foil_side_distance.png",
+   "caption": "p.5: plate side vs foil side — average distance near the flat plate 11.66 → 9.84 μm (−15.61 %), near the foil 10.72 → 9.61 μm (−10.35 %) from stage A to C; initial heterogeneity 'attributed to the gravitational settling of active particles in the slurry [30]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    276.3,
+    288.9,
+    420.0
+   ],
+   "w": 1461,
+   "h": 864,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-force-chains-discrete-to-continuous",
+   "page": 5,
+   "file": "txt_p5_force_chains_discrete_to_continuous_body.png",
+   "caption": "p.5: force chains (Fig. 8) — CR 10 / 20 %: chains 'mainly carried by the binder between particles', strong chains at the upper layer; CR 30 / 35 %: 'several extremely strong chains penetrate from the top to bottom'; CR 40 / 50 %: 'the large pores between particles have been filled and the particles are no longer rearranged … uniform compression stage'; 'the electrode exhibits an evolution from a discrete body to a continuous body'.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.8,
+    213.6,
+    557.7,
+    524.8
+   ],
+   "w": 1460,
+   "h": 1795,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-breakage-criterion-nominal-stress-6mN",
+   "page": 6,
+   "file": "txt_p6_breakage_criterion_nominal_stress_5p5um_6mN.png",
+   "caption": "p.6: ★ breakage criterion — 'The breakage criteria used in DEM is various and controversial [36]. Here, the maximum contact force is used to calculate the nominal stress [37]' (Eq. 3, σm = fmax/d²); 'nominal stress within the range of 0-400 MPa is divided into 8 intervals'; 'From the experimental study of nanoindentation, the NMC particle with a size of 5.5 μm have a significant risk of fracture when exceeding 6 mN [38]'; particles at risk 20.31 % at CR = 50 % vs 1.38 % at CR = 35 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    597.5,
+    288.9,
+    733.4
+   ],
+   "w": 1463,
+   "h": 1755,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.865,
+   "parts": [
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      37.8,
+      597.5,
+      288.9,
+      733.4
+     ]
+    },
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      306.8,
+      524.5,
+      558.2,
+      689.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true,
+   "mpm_note_ko": "★ 고른 의도의 핵심 문단. 문턱 숫자 (200 MPa) 는 문장에 없고 '5.5 µm · 6 mN [38]' 만 있다 → 6 mN ÷ (5.5 µm)² = 198.3 MPa [카드 산술]."
+  },
+  {
+   "key": "x6c",
+   "kind": "text",
+   "label": "p6-p8-average-stress-fabric-definitions",
+   "page": 6,
+   "file": "txt_p6_p8_average_stress_fabric_tensor_definitions.png",
+   "caption": "pp.6–8: definitions with their text — average stress tensor Eq. (4) ('v_i^c is the contact force and f_i^c is the contact force' as printed), fabric tensor Eq. (5), spherical / deviatoric split Eq. (6).",
+   "rotated_deg": 0,
+   "bbox": [
+    306.8,
+    691.9,
+    557.5,
+    720.7
+   ],
+   "w": 1462,
+   "h": 1432,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.916,
+   "parts": [
+    {
+     "page": 6,
+     "pdf": "main",
+     "bbox": [
+      306.8,
+      691.9,
+      557.5,
+      720.7
+     ]
+    },
+    {
+     "page": 7,
+     "pdf": "main",
+     "bbox": [
+      37.8,
+      454.5,
+      288.7,
+      547.6
+     ]
+    },
+    {
+     "page": 7,
+     "pdf": "main",
+     "bbox": [
+      306.4,
+      454.4,
+      557.7,
+      551.6
+     ]
+    },
+    {
+     "page": 8,
+     "pdf": "main",
+     "bbox": [
+      37.6,
+      55.4,
+      288.3,
+      71.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-average-particle-size-risk",
+   "page": 8,
+   "file": "txt_p8_average_particle_size_breakage_risk.png",
+   "caption": "p.8: CT model: 5–13 μm = 98.72 %, mean diameter 8.92 μm; synthetic models with mean 6, 9, 12 μm (normal, standard deviation 1.5), same box 100 × 100 × 87.5 μm and porosity 56.02 %; at CR = 50 % the breakage-risk number fraction is 17.33 %, 19.99 %, 23.10 %.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.9,
+    354.4,
+    289.4,
+    425.2
+   ],
+   "w": 1463,
+   "h": 987,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.855,
+   "parts": [
+    {
+     "page": 8,
+     "pdf": "main",
+     "bbox": [
+      37.9,
+      354.4,
+      289.4,
+      425.2
+     ]
+    },
+    {
+     "page": 8,
+     "pdf": "main",
+     "bbox": [
+      306.8,
+      54.9,
+      557.7,
+      146.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x8c",
+   "kind": "text",
+   "label": "p8-size-distribution-lubricant",
+   "page": 8,
+   "file": "txt_p8_size_distribution_small_particles_lubricant.png",
+   "caption": "p.8: size distribution at mean 9 μm with standard deviation 0.5 / 1.5 / 2.5 — the widest distribution gives 16.84 % at risk ('smallest value in three cases'); 'the presence of small particles will act as a \"lubricant\" to fill the gaps between the large particles … evenly distribute the load'.",
+   "rotated_deg": 0,
+   "bbox": [
+    306.8,
+    170.0,
+    558.2,
+    408.2
+   ],
+   "w": 1463,
+   "h": 1389,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-conclusion-future-work",
+   "page": 9,
+   "file": "txt_p9_conclusion_future_work.png",
+   "caption": "p.9 Conclusion + outlook: non-uniform → uniform compaction, 'the compressive stiffness increases sharply'; 'large particles during over-compaction have a higher risk of fragmentation'; 'In the future, we will improve the resolution of images and focus on the deformation and fracture failure of active particles during the compaction'.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.8,
+    383.4,
+    289.4,
+    642.2
+   ],
+   "w": 1464,
+   "h": 1504,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-refs-36-38-breakage-criterion-sources",
+   "page": 10,
+   "file": "txt_p10_refs_36_38_breakage_criterion_sources.png",
+   "caption": "p.10 refs [36]–[38], the sources of the breakage criterion: de Bono & McDowell 2016 (Géotechnique 66, 1014), Lobo-Guerrero & Vallejo 2005 (Géotechnique 55, 245), Maeng, Chung, Min, Shin 2020 (J. Power Sources 448, 227395).",
+   "rotated_deg": 0,
+   "bbox": [
+    307.5,
+    381.7,
+    555.3,
+    451.9
+   ],
+   "w": 1443,
+   "h": 456,
+   "dpi": 400,
+   "src": "469527f8-56._Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.872,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "xS6a",
+   "kind": "text",
+   "label": "SI-p6-image-based-porosity-overlap",
+   "page": 6,
+   "file": "txt_S6_image_based_porosity_particles_fuse_overlap.png",
+   "caption": "SI p.6: image-based porosity — 'the black part represents the proportion of active particles. It is evident that these particles fuse during the compression process, thereby impacting the accuracy of porosity measurements. The DEM result on the right demonstrates particle overlap, which mitigates the discrepancy between calculated and experimental results.' (the text points to 'Fig. S3' — the figure is S6).",
+   "rotated_deg": 0,
+   "bbox": [
+    90.0,
+    107.4,
+    505.4,
+    164.1
+   ],
+   "w": 2374,
+   "h": 381,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.895,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  },
+  {
+   "key": "xS8a",
+   "kind": "text",
+   "label": "SI-p8-reference-1",
+   "page": 8,
+   "file": "txt_S8_si_reference_1_lundkvist.png",
+   "caption": "SI p.8 References: 1. A. Lundkvist, P.-L. Larsson, A.H.S. Iyer, E. Olsson, Discrete element modelling of the elastic-plastic and viscoelastic properties of a lithium-ion battery electrode layer, Powder Technology 443 (2024) 119873 — the 'Ref. 1' of Table S1 (E 47 GPa, ν 0.25).",
+   "rotated_deg": 0,
+   "bbox": [
+    90.3,
+    137.2,
+    504.5,
+    195.0
+   ],
+   "w": 2367,
+   "h": 387,
+   "dpi": 400,
+   "src": "ff6be7e4-56.__Sup_Insights_into_cathode_densification_of_calendering_process_by_the_combination_of_in-situ_CT_and_DEM.pdf",
+   "blank": 0.919,
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, column rectangle(s) from the text-layer line boxes of the first / last wanted line, ink trim, parts stacked with a 3.4 pt gap, uniform 6 pt margin",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found every captioned item: Fig. 1–12 of the article, Fig. S1–S9 and Table S1 of the Supplementary Material (22 crops, no missing labels). All 22 were opened and all 22 were replaced: the main-text figures were complete but mostly page-width bands with uneven white side margins (Fig. 3, 5, 7: ≈90–99 pt) and the auto captions of Fig. 4, 5, 6, 10 had swallowed body text or the page number; in the SI the auto crops of Fig. S3, S5, S6 were cut at the bottom (x-axis title of Fig. S5 lost), Fig. S4 and S7 had swallowed the equations / caption / heading above them, and the Table S1 crop ran from the top of the page (equation block + Fig. S5 inside, 94 % blank).  Figures were re-cut from their embedded native rasters (main PDF 300 dpi; SI 168–263 dpi, no resampling) with a uniform 6 pt margin (recrop × 21); Table S1 was re-rendered from the vector page at 400 dpi (recrop × 1).  Added by hand (manual_crop × 71): the graphical abstract (PDF p.1, no caption), 30 panel crops, 20 equation crops (Eq. 1–6 of the article one by one; the twelve unnumbered SI equations one by one as S1–S12 in order of appearance; two stacked SI derivation blocks) and 20 evidence paragraphs (text crops are limited to the paragraphs the digest quotes as the basis of a number, a definition or a claim — CURATOR_BRIEF 2-1 rule of 2026-11-12, at most 20 per card; eleven further paragraph crops made before that rule — abstract, contact-model survey, stage description, DVC paragraph, particle-integrity motivation, stress/fabric discussion, acknowledgments, refs [21]–[25], SI stage text, SI frustum assumption and SI fit coefficients — were removed; the last two remain readable inside the stacked SI derivation block eq_S07_S12_frustum_equivalent_force_with_text).  One equation crop (eq_S10) was re-cut once because the first clip touched the descenders of the text line above.",
+ "note_manual": "Printed inconsistencies visible in the crops (details in the digest §3-12 / §11): (1) text p.3 gives the stage-D thickness as 50 μm (displacement 37.5 μm) while Fig. 4(a)/(b) place stage D at ≈32.4–32.9 μm (thickness ≈54.6 μm); (2) Fig. 9(c–e) are labelled CR = 40 / 45 / 50 % while Fig. 9(a) and the text use CR = 20 / 35 / 50 %; (3) the breakage threshold is never printed as a number — only the arrow at 200 MPa in Fig. 9(a) and '5.5 μm … 6 mN [38]' in the text; (4) Fig. 9(a) bars above 200 MPa at CR = 35 % sum to ≈0.9 % while the text says 1.38 %; (5) Eq. (4) is printed σ_ij = (1/V) Σ v_i^c f_i^c with both factors called 'the contact force'; (6) SI: 'f(d) to be a quadratic function' is a quartic written with d and d0 mixed; the fitted coefficients give 166 MPa at 43 μm while the plotted curve of Fig. S5 reads ≈187 MPa; the SI text points to 'Fig. S2' / 'Fig. S3' / 'Fig. S3' where Fig. S4 / S5 / S6 are meant; the angle α of the frustum is not given; (7) Fig. S7 gives ≈66 % porosity for the 100 μm region while the text and the DEM use 56.02 %; (8) Fig. S8 caption 'NMC900505' vs text 'NCM9055'; text 'in-situ nano-mechanical stage' (p.2, once) vs 'micro-mechanical stage'; (9) the six colour bars of Fig. 8 have different ranges; (10) SI author order (… Yikun Wu, Le Yang, Na Li …) differs from the article (… Yikun Wu, Na Li, Le Yang …); (11) Fig. S2 screenshot prints the source / detector distances with the unit 'mm' (10501.3418 / 18054.1973).",
+ "key_note": "manual keys: ga = graphical abstract; f<N><panels> = panel crop of Fig. N (panel_of; f8t / f8b = upper / lower row of Fig. 8, which has no panel letters; fS7p / fS8p = part of an SI figure); fS<N> / tS<N> = SI figure / table; e<n> = Eq. (n) of the article (kind 'equation'); eS<n> = n-th equation of the SI in order of appearance (the SI equations are unnumbered); eSA / eSB = stacked SI derivation blocks with their text; x<PDF page><letter> = evidence paragraph of the article (kind 'text'; multi-part ones list 'parts'), xS<page><letter> = SI paragraph.  'page' = PDF page; for the article the printed page number equals the PDF page (article number 120667, pp. 1–10); SI pages are unnumbered (PDF pages 1–8).",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 269,
+  "method": "embedded native rasters (main PDF 300 dpi, SI 200 dpi; the PDF has no vector plots): axes calibrated on the tick marks / plot frame by linear fits (residuals: Fig. 4a 7 mN / 0.03 um, Fig. 4b 0.03 % / 0.03 um, Fig. 9a 0.1 %, Fig. 10a 0.1 MPa, Fig. S5 0.07 MPa / 0.02 um); bars = first fill row of the bar colour −1…1.5 px (outline centre); markers = centroid of the eroded fill; curves = mean row of the line colour in a 5–7 px column window; legend boxes excluded.  Cross-checks against printed numbers: Fig. 7b bars 11.66 / 9.83 / 10.72 / 9.61 um vs text 11.66 / 9.84 / 10.72 / 9.61; Fig. 9b CR 35 / 50 % → 1.39 / 20.31 % at risk vs text 1.38 / 20.31; Fig. 11f / 12f bins above 200 MPa sum to 19.96 / 23.08 / 16.78 % vs text 19.99 / 23.10 / 16.84; Fig. 2c bars → number-mean diameter 8.94 um vs text 8.92; the three F^dev components of Fig. 10b / 12e sum to 0.000–0.0005 (trace-free).  Fig. 8 colour-bar ranges are rough (labelled ticks extrapolated to the bar ends)."
+ }
+}

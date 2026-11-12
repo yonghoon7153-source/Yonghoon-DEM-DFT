@@ -433,6 +433,7 @@ GIN (Graph Isomorphism Network) 층은 h_v ← MLP((1 + ε)·h_v + Σ_{u∈N(v)}
 - DEM 캘린더 (이 논문 [18]): `sangros2019_dem_calendering_lib_electrode`.
 - 수송 대조의 깊이 기준: `bazzoun2026_dem_fem_rnm_ionic` (접촉망 RNM ↔ 연속체 FEM — 이 논문의 "복셀 결합 vs 접촉" 문제의 수송판).
 - 참고 [26] 의 원전 (2026-11-12 카드): [`devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode`](devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode.md) — 138.73 ± 18.78 · 1.78 ± 0.35 GPa 는 원문 값 (NMC532 확정) · 둘 다 **targeted** (격자 분해 값은 123.02 · 4.40) · 1.78 = 따로 만든 61 % 다공 CB/PVDF 필름 (그 카드 §0-1).
+- 같은 그룹 (BIT · Chunwang He · Le Yang · Hao-Sen Chen) 의 캘린더링 논문 (2026-11-12 카드): [`song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage`](song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage.md) — NCM9055 양극의 in situ CT 압입 + CT 기반 등가 구 DEM (E_NCM 47 GPa · Lundkvist 2024 인용) · 입자 파괴 위험 = 명목 응력 f_max/d² ≈200 MPa.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
