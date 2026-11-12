@@ -100,3 +100,8 @@
   3.11 합: 묶음 A 27 (1,067 s · undef 만 rc 1 = 묶음 밖 파일) + B (rint_r_chain 390 · e2e 849 · e2e12 438 · conv_cert 747 · store e2e 613 s).
 - 끝-끝 변이: Z1 KILLED (Z5 — 요약 칸) · Z2 KILLED (Z4) · Z3 = 도는 중.
 - (09:5xZ) 끝 HEAD 2f97617ef 트리에서 3.11 다시: store 46/46 (54 s · logs/evac/store_final_head_py311.log) · Q11 15/15.  undef 2 건 = 바탕 (스크래치 git 바탕) 에서도 같은 2 건 (logs/evac/undef_base_py311.log) = 묶음 밖 기존.
+- (09:58Z) 끝-끝 변이 Z1 · Z2 · Z3 = 셋 다 KILLED (1,876 s · Z5 · Z4 가 잡음 · logs/evac/mut2_run_py311_e2e.log · 사본 시험 = HEAD 2f97617ef 와 같게 맞춘 뒤).
+  ⇒ 변이 합 (끝 판 시험): 잡혀야 할 89 (Z 뺀 86 + Z 3) 전부 잡힘 · 겹 방어 3 (W6b · P5 · N3c) 안 잡힘 = 동등.
+- 정리: 사본 work/mut · t_add · ovb* · ovb_base_repo · blk_home · gpu_check 산출 · tmp/* 지움 (돌던 내 프로세스 0 확인 뒤) · 남김 = work/before (앞 조수 · 고치기 전 판) · 스크립트 · logs.
+  amend_drafts.md 3 판 (0-b 절 · 2 절 앞 조건 고침 · 4-b 절) · design.md (마) 표에 시험 보강 줄.  ⚠ 시험 임시 폴더 (s3base_gp_* 등) 를 지우지 않는 꼴 = 기존 시험들과 같은 버릇 (고치지 않음).
+- 끝.  작업 트리 = 깨끗 · HEAD 2f97617ef (← f17ea8c6b ← ebb0e9f80 ← af3cce37b).

@@ -161,3 +161,7 @@ litdb 확인 = 정본 `litdb/papers/` 파일 목록 509 장 (`git ls-tree`) + `g
 - [n] Y. Wang and Y.-T. Cheng, Scripta Materialia, 130, 191 (2017) (원문 참고 [15] · 인쇄 그대로) | c · m — 글러브박스 평판 압입 방법 (장치 · 보정 — 이 논문이 프레임 순응 · 열 표류 보정을 적지 않아 방법 원전에서 확인) | papers/ 목록 + "Scripta" grep — 카드 없음
 - [n] Y. Wang, Q. Zhang, D. Li, J. Hu, J. Xu, D. Dang, X. Xiao, and Y. T. Cheng, Advanced Energy Materials, 8(10), 1702578 (2018) (원문 참고 [16] · 인쇄 그대로) | c · m — 액체 전해질 속 · 순환 중 압입 (이 논문 결론이 후속으로 가리킴: *"in the liquid electrolyte and during electrochemical cycling"*) | papers/ 목록 + "1702578" grep — 카드 없음
 - (참고 · 후보로 세지 않음) 원문 참고 [17] Hiramatsu & Oka 1966 (식 [1] 의 원전) = **후보 표 N-11 에 이미 있다** · [2] · [3] Sangrós Giménez 2019 = 정본 카드 있음 (`sangros2019_…` · `sangros2020_lib_electrode_…`) · [8] · [13] = 정본 카드 있음 (`xu2017_…` · `devasconcelos2016_…`).
+
+### batch_53 (대피 세션)
+- [n] 6. AKAZAWA T. A new testing method to find the tensile strength of concrete, J. Japan Soc. Civil Engrs 29, 777–787 (1943). | 원판 지름 압축 (Brazilian) 시험의 원전 — Fig. 7 의 기준 시험 (S_t)_d 와 2D 짝 공식 2F/(πDt) 의 근거 (질문 c · g · m 의 2D ↔ 3D 쪼개짐 계수) · 카드 §12 · §3-6 · §3-8 | litdb 확인: papers/ 537 파일 목록 + grep 'akazawa' · 'tensile strength of concrete' → 카드 없음 (이 카드 §12 의 인용뿐)
+- [n] 7. CARNIERO F. L. L. B. and BARCELLOS A. Résistance à la Traction des Batons, Instituto National de Technologia, Rio de Janeiro (1949). | 같은 시험의 다른 원전 (질문 c · g) — 인쇄 철자 그대로 ("Carniero" · "Batons" · "National") · 카드 §12 | litdb 확인: grep 'carniero' · 'carneiro' · 'barcellos' · 'traction des b' → 카드 없음
