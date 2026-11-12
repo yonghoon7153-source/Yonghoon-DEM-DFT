@@ -470,3 +470,6 @@ yano2024_eepa_binary_mixture_plasticity_compression_dem	numerical analysis of co
 # ── 가압 방식 — 등방 가압 (CIP · WIP · HIP) Focus Review · 자체 시연 (안티페로브스카이트 펠릿 단축 ↔ CIP ↔ WIP 기공률) · 기술경제 스프레드시트 (Dixit · Beamer 외 · ACS Energy Lett. 7 (2022) 3936) — litdb 2026-11-12 · 본문 + SI PDF (Sup1) 둘 다 이 낱말로 붙는다 · xlsx 둘은 커밋하지 않음
 dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review	the_role_of_isostatic_pressing_in_large-scale_production
 dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review	the role of isostatic pressing in large-scale production
+# ── 슬러리 도포 NCM111 (LiNbO₃ 코팅) + Li₆PS₅Cl 양극 시트의 온간 등방 가압 (WIP · 600 MPa 하나 · 상온–190 °C · 1 s–1 min) — 감압 뒤 싱크로트론 CT 의 void ratio (기공 + 탄소 복셀 분율 · 화소 0.65 µm) 0.19 → 0.057 · 0.042 · 0.039 · 두께 ≈170 → 104 → 94 µm · 압력별 값 없음 (Hayashi 외 · J. Jpn. Soc. Powder Powder Metallurgy 72 (2025) S1167–S1173) — litdb 2026-11-12 (benhadjali2026 ref 27 · 후보 N-64) · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음)
+hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode	application_of_warm_isostatic_pressing_to_densification_of_all_solid-state_composite_cathode_electrodes
+hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode	application of warm isostatic pressing to densification of all solid-state composite cathode electrodes
