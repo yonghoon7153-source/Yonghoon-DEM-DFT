@@ -118,3 +118,9 @@
   ③ (가) 는 측정 시험이 앞으로의 표류 (원장 코드가 새 모듈을 부르기 시작함) 를 잡는다 — (나) 는 목록 밖 모듈이 생기면 다시 조용히 샌다.
   코드 칸 파일 경로 = importlib.util.find_spec (불러오지 않는다 — 불러온 모듈이면 그 __spec__ · 아니면 import 가 찾을 자리) → 저장본 켬 런의 로드 모듈
   집합이 끔과 같다 (T14d).
+- (11:2xZ) 고침 커밋 = 94765bed3 (RCP-01 · 03 한정 · 05 · 06 · 08 · 10 · 11) · 게이트 배선 커밋 = 0ac6edf3c (RCP-02 · check_all 183 → 186 단계 · kgy 13 → 16 묶음 ·
+  CI 는 Rint test_*.py 줄이 없어 안 넣음).  고친 뒤 (3.11): store 54/54 (61 s · logs/r2/after/store_py311.log) · Q11 19/19 · 빠른 묶음 (run_contract 124 ·
+  s3 selftest · rint · 규율 selftest 128 · repo 0 오류 · ca_ext_runner 151 · ca_ext_b6 502) 통과 (logs/r2/quick) · 리뷰 CE1 다시 = mut 판 다른 열쇠 (7d086 ↔ 4fe10) ·
+  built_written · 원장 202eb (옛 hit · f24cb).  check_selftest_inventory 전부 분류 · pyflakes 0 · kgy 3.8 컴파일 · bash -n.
+- 다음: 묶음 A · B (3.11) → kgy 판 → 리뷰 변이 31 (도구 review/mutate.py · 사본 다시 만듦) → 구현 쪽 변이 (work/mutate.py · 바뀐 줄 고쳐 씀) → 끔 길 ↔ 바탕 →
+  RCP-04 초안 (S0 저장본 재기 블록) · amend 4 판 · design (바).
