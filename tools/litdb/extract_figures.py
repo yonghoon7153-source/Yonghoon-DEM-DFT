@@ -1909,7 +1909,12 @@ def audit():
             flags.append(f"본문 없이 SI {len(si)}장뿐")
 
         def gaps(lst, pre=""):
-            ns = sorted(int(re.sub(r"\D", "", r["label"]) or 0) for r in lst)
+            # 번호 구멍은 **그림 번호** 에만 뜻이 있다.  글 · 식 크롭 (kind text · equation) 의 라벨은 쪽 번호와
+            # 값이 섞인 긴 숫자열이라 (예: 'p2728-dry-0p59-expansion-0p550' → 27,280,590,550) 번호로 읽으면
+            # range() 가 수백억이 되어 MemoryError 로 --audit 전체가 죽는다 (2026-11-12 정본에서 실제로 남).
+            # ⇒ kind 가 figure 이고 라벨이 그림 번호 꼴 ('3' · '3a' · 'S5') 인 것만 센다.
+            ns = sorted({int(mm.group(1)) for r in lst if r.get("kind") == "figure"
+                         for mm in [re.fullmatch(r"S?(\d{1,3})[A-Za-z]?", str(r.get("label", "")))] if mm})
             if not ns:
                 return []
             return [f"{pre}{k}" for k in range(1, max(ns)) if k not in ns]
