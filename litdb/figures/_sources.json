@@ -2172,6 +2172,13 @@
    "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf"
   ]
  },
+ "lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior": {
+  "figures": 40,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "a7be108b-47._DEM_speedup_Stiffness_effects_on_behavior_of_bulk_material.pdf"
+  ]
+ },
  "lu2020_insitu_nanoct_calendering_microstructural_evolution": {
   "figures": 92,
   "generated": "2026-11-12",

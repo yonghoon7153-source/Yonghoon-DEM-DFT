@@ -546,3 +546,7 @@ chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer	effect of blade spe
 #   ⚠ 쪽마다 스캔 한 장 (OCR 글자 층) · 크롭 90 장 = 도구 15 (전부 다시 자름: 쪽 너비 전체를 잘라 이웃 단 글이 섞임) + 손 75 (manual_crop: 그림 10 · 13 (도구가 놓침 · 백지로 뺌) · 식 53 · 근거 글 20) + digitized.csv (248 행 · 스캔 판독) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 thorntonyin1991_oblique_impact_elastic_spheres_adhesion	impact_of_elastic_spheres_with_and_without_adhesion
 thorntonyin1991_oblique_impact_elastic_spheres_adhesion	impact of elastic spheres with and without adhesion
+# ── DEM 계산 속도용 입자 강성 감소 (EDEM Hertz–Mindlin · 3D 구 · G 10⁴–10¹¹ Pa) — 단일 충돌 · 50 kg 블록 낙하 벌크 강성 (log–log 기울기 ≈0.59 [판독]) · 벌크 반발 · 안식각 · 쐐기 관입 · 평균 겹침 < 반지름의 0.3 % 면 안식각 · 관입은 큰 차 없음 (Lommen · Schott · Lodewijks · Particuology 12 (2014) 107–112) — litdb 2026-11-12 (후보 N-47) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 40 장 = 도구 10 (표 1 다시 자름: 쪽 아래 2/3 를 통째로 잡음 · 캡션 고침 4) + 손 30 (manual_crop: 그림 7 · 표 2 (도구가 놓침) · 패널 9a · 9b · 식 6 · 근거 글 20) + digitized.csv (182 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior	stiffness_effects_on_behavior_of_bulk_material
+lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior	stiffness effects on behavior of bulk material

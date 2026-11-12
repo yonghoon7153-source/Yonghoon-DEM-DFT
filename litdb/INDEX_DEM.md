@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 316편 · 생성 2026-11-12
+> digest 317편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -66,7 +66,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (75편)
+## 접촉역학 · 소성 (DEM 이론) (76편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -110,6 +110,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kogutetsion2002_ep_sphere_rigid_flat` | 변형 탄소성 구 ↔ 강체 평판 접촉의 탄소성 FEM 해석 (KE 모델) — Kogut & Etsion (J. Appl. Mech. 2002) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens` | 순수 Li₆PS₅Cl (NEI) 을 누른 채 (in situ · 76.2 → 510 MPa) 싱크로트론 μ-CT + EIS 로 본 '냉간 소결' — 큰 (2 차) 입자 파쇄 · 입자 개수 · 형상 · 기하 tortuosity · 30 분 유지 · 76.2 MPa 로 감압 · 저온 EIS + DRT 로 벌크 ↔ 입계 분리  | experiment (in situ μ-CT + EIS 가압 셀 · 저온 EIS DRT/CNLS impeda | 2026-11-12 | 🖼 64 |
 | `liao2025_interfacial_adhesion_li_plating_carbon_interlayer` | 탄소 인터레이어 ↔ LPSCl 계면의 박리 인성 Γ 가 anode-free 전지의 Li 석출 위치를 정한다 — lamination(제조 압착)압 100 → 400 MPa 에서 Γ 9 → 41 J m⁻² · 문턱 ≈10 J m⁻² · 180° peel + tape 소성굽힘 보정 — Liao · Zeng · Mulla · M | exp (180° peel 박리시험 + tape 소성굽힘 보정 해석 · adhesive/cohesive fa | 2026-09-23 | 🖼 17 |
+| `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior` | DEM 계산 속도를 위해 입자 강성 (전단탄성률 G) 을 낮추면 벌크 거동이 어디서부터 바뀌나 — EDEM Hertz–Mindlin 3D 구 · G 10⁴–10¹¹ Pa 스윕: 구–벽 충돌 힘 ∝ G^0.40 · 접촉 시간 ∝ G^−0.40 [판독] · 50 kg 블록 낙하 벌크 강성 'linear correlation' | DEM (EDEM commercial · built-in Hertz–Mindlin with Tsuji-typ | 2026-11-12 | 🖼 40 |
 | `luding2008_cohesive_frictional_contact_models` | 점착·마찰 분말의 접촉모델 (인장 가능 LAW) — Luding (Granular Matter 2008) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 5 |
 | `martinbouvard2003_dem_composite_cold_compaction` | 연질+경질 분말 혼합물의 냉간 압밀을 DEM으로 — Martin & Bouvard (Acta Materialia 2003) | DEM | 2026-06-23 | — |
 | `mcgeary1961_bimodal_sphere_packing` | 구형 입자의 기계적 패킹 — 크기비·다성분 최대 충전밀도의 고전 — McGeary (J. Am. Ceram. Soc. 1961) | exp | 2026-06-23 | — |
