@@ -1,11 +1,8 @@
-2026-11-12 15:43:05 UTC
+2026-11-12 15:44:11 UTC
 rint_codepkg: HEAD 4e1e5b6c6 · origin/claude/stoic-knuth-NObVQ 뒤 커밋 8
 rint_codepkg_unpushed.bundle: 116602 B
-main: HEAD ed62b45c2 · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 1
-main_unpushed.bundle: 689957 B
-main_wip.diff: 5922377 B
-main_untracked.tgz: 221929 B
-main: 추적 안 된 파일 38
+main: HEAD 3daa2c48a · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 2
+main_unpushed.bundle: 1149130 B
 BRIEF_rereview_codepkg.md: 4333 B
 BRIEF_review_codepkg.md: 4482 B
 notes.md: 34601 B
@@ -20,6 +17,6 @@ amend_drafts.md: 28035 B
 formation_20261112.md: 3306 B
 synthfix_work.tgz: 파일 166 · 3347867 B
 dem_redesign_work.tgz: 파일 88 · 1537269 B · 뺀 파일 4 (주소 꼴 · 큰 파일): ['dem_redesign/fix/_claims_head.json', 'dem_redesign/fix/arith.py', 'dem_redesign/fix/card_frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure.md', 'dem_redesign/fix/card_lee2026_mechanical_halogen_argyrodite_drycoating.md']
-mixer_e0_work.tgz: 파일 15301 · 5882082 B · 뺀 파일 1772 (주소 꼴 · 큰 파일): ['mixer_e0_v2/query_block/test/fakes/sinfo', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_nodes_cpu.txt', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_partitions.txt', 'mixer_e0_v2/query_block_b/test/fakes/sinfo', 'mixer_e0_v2/reseal_dry/runs/S4/g_N0/source/scripts/measure_bed_aspect.py']
+mixer_e0_work.tgz: 파일 15303 · 5882236 B · 뺀 파일 1770 (주소 꼴 · 큰 파일): ['mixer_e0_v2/query_block/test/fakes/sinfo', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_nodes_cpu.txt', 'mixer_e0_v2/query_block/test/run_20261112T114407Z/t3/w/lroot/lustre/home/fakeuser/mixer_e0_query_20261112T114409Z/raw/q8_sinfo_partitions.txt', 'mixer_e0_v2/query_block_b/test/fakes/sinfo', 'mixer_e0_v2/reseal_dry/runs/S4/g_N0/source/scripts/measure_bed_aspect.py']
 p1g2c_work.tgz: 파일 50 · 251726 B
-litdb_wish_work.tgz: 파일 4 · 14093 B
+litdb_wish_work.tgz: 파일 4 · 14388 B
