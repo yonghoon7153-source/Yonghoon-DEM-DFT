@@ -1256,7 +1256,7 @@
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: [미확인] · PDF 13 쪽",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "DOI 를 자동으로 못 읽었다 — 시작할 때 papers/ 파일 목록 · 제1 저자 성 · 제목 낱말 grep 으로 중복을 확인",
   "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 13 · DOI(첫 쪽): []\n  - 첫 쪽 앞줄: British Journal of Applied Physics / You may also like / Constriction resistance and the real area of / contact / To cite this article: J A Greenwood 1966 Br. J. Appl. Phys. 17 1621 / View the article online for updates and enhancements. / - Quantifying the spreading currents over / the circular contact region in a good / conducting cover layer on a substrate / Kazuhiko Seki / - Application of Multilayer Potential / Distribution to Spreading Resistance / Correction Factors / P. A. Schumann and E. E. Gardner",
   "p1": true

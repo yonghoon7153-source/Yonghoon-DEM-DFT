@@ -257,3 +257,14 @@
   kgy 3.8.20 = git_env 10/10 · run_contract 125/125 · e2e 51/51 (574 s) · e2e12 33/33 (288 s) · conv_cert 29/29 (72 s · K4b 설계상 건너뜀 = 2 회차와 같음).
   덧 (3.11 · logs/r4/static_py311): 규율 저장소 검사 0 오류 · selftest_inventory 전부 분류 · undef rc 1 = 2 건 (generate_comparison_plots.py 6905 · 6906 = 바탕부터 · 묶음 밖 · 2 회차와 같음).
 - 정리: work/mut6 · blk_home6 · tmp/* 지움 (내 프로세스 0 · 다른 프로세스 = 본 리포 자리 · 내 스크래치 안 씀) · 다시 만들기 = 같은 절차.
+
+## 3 회차 · 마지막 좁은 고침 (재확인 2 `review/recheck2_codepkg.md` · RCP3-01–05 · 본 세션 결정 11-12 밤) — 20:3xZ~
+- 봉인 대조 (logs/r4/seal_recheck3.log): 손댈 18 파일 = 194 CODE_FILES 32 · 언로딩 키트 SHA256SUMS (76 + history 15) · seal_kit · 믹서 봉인 셋 겹침 0 ·
+  사슬 CODE_FILES 20 (봉인 전) 에 든 것 = run_contract · cjunc_store · ca_ext_cjunc · ca_s0_census · rint_r_chain · 러너.
+- 시험 먼저 6a497f31b: git_env 9 · 8 FAIL · store --only T15,P 13 · 6 FAIL (3.11 · 3.8 같음 · logs/r5/before/).
+- 고침 0db6dee6d: quick 3.11 git_env 17/17 · store T15,P 19/19 · run_contract 125 · cmd_repo 0 오류 (17 경고) · check_all 단계 목록 190 줄 그대로.
+- 다시 돌림 백그라운드 (work/run_r5_all.sh → logs/r5/{py311,check_all_split.log,kgy}) — ⚠ 묶음 이름 실수: ca_s0_census → 'ca_s0_census' 는 run_bundle 에
+  없음 (s0_census 가 맞다) → 3.11 s0_census 는 따로.  ⚠ cjunc_store 전체 = T8 '다른 코드' 1 FAIL (Store 코드 칸만 바꾼 꼴이 새 가드에 걸려 꺼짐 =
+  뜻이 바뀜) → 시험 맞춤 (변이 보강 커밋에 함께 · 다른 코드 = 다른 열쇠는 T4 · T14c · T15a).
+- 변이 보강 (준비 · work/r5patch/apply_mutfix.py): G7d (git_fixture_env 넘긴 env 꼴 — XDG · HOME 줄 변이) · T15l (제자리 되돌림 · ctime 만) ·
+  T15m (재는 도중 바뀜) · T8 맞춤.  변이 J1–J26 (mutate_r3.py set r5).  끔 길 바탕 work/ovb5_base (alternates · HEAD af3cce37b · sparse).
