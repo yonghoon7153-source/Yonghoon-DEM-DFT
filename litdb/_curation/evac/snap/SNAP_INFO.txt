@@ -1,8 +1,7 @@
-2026-11-12 09:03:57 UTC
+2026-11-12 09:14:09 UTC
 rint_codepkg: HEAD 2f97617ef · origin/claude/stoic-knuth-NObVQ 뒤 커밋 3
 rint_codepkg_unpushed.bundle: 70918 B
-main: HEAD 21bb09d82 · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 1
-main_unpushed.bundle: 28110 B
+main: HEAD 21bb09d82 · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 0
 notes.md: 19642 B
 design.md: 14988 B
 BRIEF_evac.md: 5575 B
@@ -12,4 +11,4 @@ amend_drafts.md: 15660 B
 formation_20261112.md: 3306 B
 synthfix_work.tgz: 파일 166 · 3347867 B
 dem_redesign_work.tgz: 파일 5 · 86796 B
-mixer_e0_work.tgz: 파일 15 · 68204 B
+mixer_e0_work.tgz: 파일 18 · 100431 B
