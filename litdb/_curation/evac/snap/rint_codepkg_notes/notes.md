@@ -74,3 +74,7 @@
   ⚠ 기록: 줄 1 B2 의 rint_r_chain_e2e (51/51 · 849 s) 끝 무렵 ~ e2e12 시작 때 트리에 그 시험 파일 수정이 (커밋 전) 있었다 — 사슬 · 러너 · payload 가 읽는
   CODE_FILES 밖 (시험 파일) 이라 결과 무관 · B2 의 뒤 묶음 (e2e12 · conv_cert · cjunc_store_e2e) 은 HEAD 2f97617ef 에서 돈 셈.
   rint_r_chain_e2e (3.11) = 51/51 · 849 s (앞 조수 판의 E14 FAIL = 끊김 산물 확정 — 같은 HEAD 다시 = E14 · E15 PASS).
+- (09:02Z) 변이 (3.11 · 사본 work/mut = f17ea8c6b scripts · 끝-끝 Z 뺀 89 · 490 s · logs/evac/mut2 · mut2_run_py311.log · 바탕선 17 묶음 rc 0):
+  잡힘 83 · 안 잡힘 6 = 겹 방어 3 (W6b · P5 · N3c — 미리 redundant 로 적음) + 빈틈 3 (K13 · W19 · C10 — 시험 보강 2f97617ef 뒤 셋 다 잡힘 · mut3_after_testadd).
+  ⇒ 끝 판 시험 기준: 잡혀야 할 86 = 86 잡힘 · 겹 방어 3 = 안 잡힘 (동등 — 같은 것을 다른 겹이 막는다).
+- (09:02Z) kgy 판 묶음 시작 (logs/evac/kgy_all · HEAD 2f97617ef · 바뀐 파일 0 · 3.8.20 · numpy 1.24.4 · scipy 1.10.1).
