@@ -410,3 +410,6 @@ mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation	compliant_yet_bri
 mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation	compliant yet brittle mechanical behavior
 # ── 황화물 SE 고압 in situ X 선 CT + 수치 모의 (Kodama 외 · J. Power Sources 462 (2020) 228160) — litdb 2026-11-12 반입 · 카드 제목이 한국어라 자동 매칭이 파일 이름과 짝을 못 지음 ──
 kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation	high-pressure_in_situ_x-ray_computed_tomography
+# ── 복합 양극 SE 입경 · 치밀화 · operando EDXRD (Jeong 외 · Adv. Energy Mater. 14 (2024) 2304544) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 같은 1저자 성의 다른 카드 jeong2025_tough_adhesive_binder_shield_ncm811 (다른 논문) 과 갈라 둔다 · 밑줄 · 공백 두 변형 ──
+jeong2024_operando_densification_chemomechanics_se_size_composite_cathode	operando_investigation_on_the_role_of_densification
+jeong2024_operando_densification_chemomechanics_se_size_composite_cathode	operando investigation on the role of densification

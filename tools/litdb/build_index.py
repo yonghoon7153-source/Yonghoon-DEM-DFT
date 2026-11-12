@@ -85,6 +85,8 @@ SIZE_EFFECT_SLUGS = frozenset({
     "ou2026_microstructural_multiscale_fast_ion_transport",
     # 2026-11-10 — LPSCl 입경별 (10 µm · 1 µm · < 1 µm) 입자 압입 + ~10 µm 펠릿 압력별 밀도 (lee2025_heckel 의 이웃)
     "var2026_sulfide_se_mechanical_properties_local_indentation_pellet",
+    # 2026-11-12 — NCM811 복합 양극 SE ≈1 vs 3–5 µm: 무하중 XCT 기공 11 vs 16 % · 재압축 '임계압' · operando EDXRD (stavola2023 의 입도 쪽 짝)
+    "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
 })
 
 # 주제 묶음 — slug/제목에 이 낱말이 있으면 그 절로. 위에서부터 먼저 맞는 것.
