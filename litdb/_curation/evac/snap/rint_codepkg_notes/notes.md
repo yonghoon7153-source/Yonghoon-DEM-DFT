@@ -92,3 +92,11 @@
   러너 영수증 code_sha → receipt_digest → OUTDIR 접미사.  payload 인자 (scripts 경로 뺀) 같음 · 팔 이름 같음.  logs/evac/off_vs_base_gitbase_py311.log (첫 판 = off_vs_base_py311.log).
 - (09:33Z) 끔 길 ↔ 바탕 kgy 판 (3.8 · 같은 스크립트 · logs/evac/off_vs_base_gitbase_kgy.log) = 3.11 과 같음 — 다른 잎 = code_sha · project_module_digest ·
   loaded_project_modules (접합 켬 +1) · 영수증 code_sha · receipt_digest 뿐 · rc 전부 0 · σ_e 같음.
+- (09:49Z) kgy 판 묶음 끝 (logs/evac/kgy_all · HEAD 2f97617ef · 3.8.20 · numpy 1.24.4 · scipy 1.10.1 · 25 묶음 전부 rc 0 · 합 2,799 s):
+  게이트 kgy 13 (run_contract 124 · s3_rint · ptfe_fa 242 · carbon_junction 547 · ca_ext_b6 502 · ca_ext_runner 151 · rint_r_chain 506 (560 s) · e2e 51 (618 s) ·
+  e2e12 33 (287 s) · target_cert 264 · conv_cert 29 (68 s · K4b = scipy 1.10.1 설계상 건너뜀 · 세지 않음) · s0_census 186 · probe6 330 (272 s)) +
+  새 셋 (gpu_precond 15/15 · cjunc_store 46/46 (64 s) · cjunc_store_e2e 6/6 (452 s)) + 덧 (s3_selftest · verdict 31 · z1 95 · z3 84 · first_result 9 ·
+  rint_receipts 105 · g2_am_iface 136 · cmd_selftest 128 · cmd_repo 0 오류).
+  3.11 합: 묶음 A 27 (1,067 s · undef 만 rc 1 = 묶음 밖 파일) + B (rint_r_chain 390 · e2e 849 · e2e12 438 · conv_cert 747 · store e2e 613 s).
+- 끝-끝 변이: Z1 KILLED (Z5 — 요약 칸) · Z2 KILLED (Z4) · Z3 = 도는 중.
+- (09:5xZ) 끝 HEAD 2f97617ef 트리에서 3.11 다시: store 46/46 (54 s · logs/evac/store_final_head_py311.log) · Q11 15/15.  undef 2 건 = 바탕 (스크래치 git 바탕) 에서도 같은 2 건 (logs/evac/undef_base_py311.log) = 묶음 밖 기존.
