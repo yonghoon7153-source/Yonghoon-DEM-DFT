@@ -17440,12 +17440,17 @@
   {
    "id": "SELF-169",
    "severity": "P3",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "믹서 E0 2 회차 고침 조수 보고 (11-12 23:4x KST · 대피 세션) — pqwtv8 로컬 끝이 커밋 ff61079c2 'i' (트리 = scripts/x.py 하나 · 저자 t)",
    "opened_in": "scripts/run_contract.py",
    "title": "내가 띄운 Rint 재리뷰 조수가 scratch 사본 시험에서 GIT_DIR 를 본 리포 .git 으로 export 한 채 run_contract.py --selftest (RCPT-sha · 임시 폴더 git init · add -A · commit) 를 돌려 본 리포 가지 끝에 쓰레기 커밋이 생기고 색인이 1 항목이 됐다 — 조수 지시서에 GIT_DIR 금지가 없었고 selftest 는 git 을 부를 때 GIT_* 환경을 지우지 않는다",
-   "note": "결과 무관 [확인] — push 전 (원격 bfd9b3bbd 그대로) · 스냅숏 전 · 처리 = 조수 멈춤 · GIT_DIR 가진 프로세스 0 · git update-ref (CAS) + read-tree → HEAD bfd9b3bbd · 색인 22904 · status 깨끗 · .git/config 바뀐 칸 없음 · reflog = 그 커밋 하나 · 고침 = (1) 운영: 조수 지시서에 'GIT_DIR · GIT_WORK_TREE · GIT_INDEX_FILE 을 export 하지 않는다' (11-12 밤부터 · CLAUDE.md 컨테이너 줄) (2) 코드: selftest 의 git 호출에서 GIT_* 환경을 지움 = Rint ② 묶음 2 회차 고침 RCP2-06 (시험 먼저) · claimed_fixed = 그 반입 커밋"
+   "note": "결과 무관 [확인] — push 전 (원격 bfd9b3bbd 그대로) · 스냅숏 전 · 처리 = 조수 멈춤 · GIT_DIR 가진 프로세스 0 · git update-ref (CAS) + read-tree → HEAD bfd9b3bbd · 색인 22904 · status 깨끗 · .git/config 바뀐 칸 없음 · reflog = 그 커밋 하나 · 고침 = (1) 운영: 조수 지시서에 'GIT_DIR · GIT_WORK_TREE · GIT_INDEX_FILE 을 export 하지 않는다' (11-12 밤부터 · CLAUDE.md 컨테이너 줄) (2) 코드: selftest 의 git 호출에서 GIT_* 환경을 지움 = Rint ② 묶음 2 회차 고침 RCP2-06 (시험 먼저) · claimed_fixed = 그 반입 커밋 · 11-13 고침 반입 (대피 세션 · Rint ② 코드 묶음 3 회차 RCP3-04 · RCP3-01) = 시험 · 고정물이 저장소를 고르는 GIT_ 이름 여덟 + 설정 주입 넷을 지우고 격리 변수 (CEILING · NOSYSTEM · GLOBAL) 는 남김 · 고정물 git 은 NOSYSTEM=1 · GLOBAL=/dev/null · HOME 임시로 스스로 끊음 · 훅 꼴 (GIT_INDEX_FILE=<repo>/.git/index.lock) 적대 시험 · git_env 19/19 (3.11 · 3.8) · 조수 지시서 규칙 (export 금지) 은 그대로",
+   "claimed_fixed_sha": "27ef82d242d30b0477d411762342938abdac3a5e",
+   "evidence_tests": [
+    "scripts/test_git_env_isolation.py",
+    "scripts/test_ca_s0_census.py"
+   ]
   },
   {
    "id": "SELF-170",
