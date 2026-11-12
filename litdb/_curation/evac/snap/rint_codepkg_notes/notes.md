@@ -193,3 +193,14 @@
 - 변이 도구 work/mutate_r3.py (GIT_DIR 없음 · 사본 = git archive + git init + alternates (공용 객체 읽기만) + 커밋 하나 = precond 의 git show 가 사본 안에서
   돈다) · 사본 work/mut3 (ac7e1c58d) · 자리 확인 rev2 21 · new 28 · rev1 31 · impl 110 = 문제 0.
 - 미리 돌림 (가벼움): H20 KILLED (G5) · H21 SURVIVED (= 빈틈 — G5 가 사슬 F5 plan_commit_problem 을 안 부름) → 묶음 끝난 뒤 G5 보강 커밋 (4 번째) 예정.
+- (17:37Z) 검증 묶음 끝 (HEAD ac7e1c58d · 작업 트리 바뀐 파일 0 · logs/r3/{py311_A,py311_B,kgy_all}/_summary.txt):
+  3.11 A = 28 rc 0 (run_contract 125 · 규율 selftest 128 · repo 0 오류 · git_env 10 · Q11 19 · store 62 · carbon_junction 547 · probe6 330 ·
+  ca_ext_b6 502 · runner 151 · verdict 31 · z1 95 · z3 84 · ptfe_fa 242 · target_cert 264 · s0_census 186 · rint_receipts 105 · g2_am_iface 136 ·
+  first_result 9 · webapp provenance 284 · 웹앱 여섯) + undef rc 1 = generate_comparison_plots.py 6905 · 6906 (바탕부터 · 묶음 밖 · 같은 2 건).
+  3.11 B = rint_r_chain 506 (385 s) · e2e 51 (768 s) · e2e12 33 (408 s) · conv_cert 30 (684 s) · store e2e 6 (684 s).
+  kgy 3.8.20 = 26 rc 0 (git_env 10 · Q11 19 · store 62 (89 s) · rint_r_chain 506 (520 s) · e2e 51 · e2e12 33 · conv_cert 29 (K4b 설계상 건너뜀) ·
+  store e2e 6 (448 s) · probe6 330 · …).
+- (17:3xZ) 변이 보강 커밋 8cc3fe462 (G5 에 사슬 plan_commit_problem — H21 이 앞 판 시험에서 SURVIVED (logs/r3/mut_probe) · 고친 G5 사본에서
+  KILLED (logs/r3/mut_probe_g5)) · 3.11 · 3.8 둘 다 10/10 · pyflakes 깨끗.  사본 work/mut4 = 8cc3fe462 (scripts 나무 같음 · 변이 자리 194/194).
+- GPU 블록 5 판 = gpu_check_block.txt (Q11PIN 8cc3fe462… · 새 모듈 sha256 859310da 그대로 = 2 회차가 step3_sigma.py 안 바꿈 · 하네스 md5
+  acfeb4b4 그대로 · 느낌표 · 탭 · CR 0 · bash -n) · 4 판 사본 gpu_check_block_v4.txt.

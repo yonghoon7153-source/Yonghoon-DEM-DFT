@@ -168,3 +168,5 @@
 - 11-12 16:3x UTC: 믹서 보충 조회 블록 b 끝 (query_block_b · sha256 d1a400ad…104c · 시험 1104/1104 ×2 · ibb = 아침 1저자) · 아침 보고 초안 = morning_report_draft.md · 게이트 seg2 = bgu1lbawn 가 seg1 RC=0 이면 자동 시작
 - 11-12 16:3x UTC: N-32 끝 (chandratilleke2010 · f219ecf08 · finish 416b9b849) → N-35 시작 (트리 1 · 정독 74)
 - 11-12 16:4x UTC: N-33 끝 (thorntonyin1991 · af33bb8dd) → N-36 시작 (트리 2 · 정독 77) · 게이트 seg1 RC 0 (125/125) · seg2 16:36 시작
+- 11-12 17:3x UTC: N-35 끝 (nairn2015 · 85273680c) → N-37 시작 (트리 1 · 정독 78 · 지시문에 '## 의도 대조' 제목 줄 더함) · 게이트 seg2 33/58 fail 0
+- 11-12 17:4x UTC: 게이트 조각 2 = fail 1 (단계 182 · mixer_smoke_blind ㉓) → 원인 재현 = 타임스탬프 µs 숫자와 값 바늘 글자 겹침 (SELF-170 후보 · msbdbg/SELF-170_note.md) · 고침 = 믹서 재봉인 묶음과 함께 · 같은 HEAD 로 조각 2 다시 = b1yo99kq1 (17:4x 시작)
