@@ -1,12 +1,12 @@
-2026-11-12 07:34:18 UTC
+2026-11-12 07:40:18 UTC
 rint_codepkg: HEAD ebb0e9f80 · origin/claude/stoic-knuth-NObVQ 뒤 커밋 1
 rint_codepkg_unpushed.bundle: 35784 B
-rint_codepkg_wip.diff: 64996 B
-rint_codepkg_untracked.tgz: 10255 B
+rint_codepkg_wip.diff: 72174 B
+rint_codepkg_untracked.tgz: 12251 B
 rint_codepkg: 추적 안 된 파일 1
 main: HEAD 21bb09d82 · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 1
 main_unpushed.bundle: 28110 B
-notes.md: 8845 B
+notes.md: 9624 B
 design.md: 10707 B
 BRIEF_evac.md: 5575 B
 BRIEF_codepkg.md: 11688 B

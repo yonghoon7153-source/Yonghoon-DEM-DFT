@@ -386,7 +386,7 @@ index 9e60bb986..82af82224 100644
              try:
                  xg, info = cg_gpu(Lg, bg, tol=_rt, maxiter=CG_MAXITER, M=Mg, **_x0g, **_cbk)
 diff --git a/scripts/test_cjunc_store.py b/scripts/test_cjunc_store.py
-index 4592b7908..333035100 100644
+index 4592b7908..95e18d180 100644
 --- a/scripts/test_cjunc_store.py
 +++ b/scripts/test_cjunc_store.py
 @@ -8,10 +8,13 @@
@@ -705,7 +705,7 @@ index 4592b7908..333035100 100644
      # payload_prepare (생산 배선) — 끔 · 빗나감 · 적중
      ri = rand_inputs(7)
      kw = dict(lo=ri['lo'], vox=ri['vox'], pts=ri['pts'], phase=ri['phase'], fid=ri['fid'], kind=ri['kind'], cjunc=dict(REQ), ptfe_stamp='off')
-@@ -1020,6 +1194,29 @@ def t11():
+@@ -1020,7 +1194,114 @@ def t11():
          '폴더 꼴 거부 · 입력 오류 = 옛 오류 — 팔 결과 (돌려준 원장) 는 늘 새로 지은 것과 같다', not bad, bad)
  
  
@@ -732,9 +732,121 @@ index 4592b7908..333035100 100644
 +        and mk_store(d).get_or_build(build_of(inp), **inp)[1]['status'] == 'built_written', (o, store_files(d)))
 +
 +
++# ═════════════════════════ T13 (구현 커밋에서 더함 · 대피 세션 11-12) ═════════════════════════
++def ledger_like(n, rng, alias=True):
++    """실침대 원장 꼴의 합성 객체 — instance n 개 · instance 마다 작은 int64 배열 넷 (seg_i · seg_j · self_A · self_B) · pair_i · pair_j =
++    같은 빈 배열을 n 번 (alias) · 큰 배열 몇."""
++    lens = rng.integers(1, 40, size=4 * n)
++    obj = {k: [np.arange(int(m), dtype=np.int64) + i for i, m in enumerate(lens[j * n:(j + 1) * n])]
++           for j, k in enumerate(('seg_i', 'seg_j', 'self_A', 'self_B'))}
++    if alias:
++        obj['pair_i'] = [np.zeros(0, np.int64)] * n
++        obj['pair_j'] = [np.zeros(0, np.int64)] * n
++    obj['Lc'] = rng.normal(size=n)
++    obj['Ci'] = rng.normal(size=(n, 3))
++    reason = np.empty(n, dtype=object)
++    reason[:] = ''
++    reason[::7] = 'covered_SDCP'
++    obj['reason'] = reason
++    return obj
++
++
++@case('T13 규모 — 작은 배열 수만 개 · 별칭 빈 배열 (실침대 꼴)')
++def t13():
++    if not need_cs('T13'):
++        return
++    rng = np.random.default_rng(13)
++    small = ledger_like(500, rng, alias=False)                 # 배열 2,000 + 3 (별칭 없음 — 넘겨받은 판도 걷는다)
++    calls = [0]
++    orig = np.shares_memory
++
++    def counting(*a, **k):
++        calls[0] += 1
++        return orig(*a, **k)
++    np.shares_memory = counting
++    try:
++        _sk, arrs_s = CS.encode(small)
++        CS.strict_digest(small)
++    finally:
++        np.shares_memory = orig
++    linear = chk('T13a 겹침 검사가 배열 쌍마다 돌지 않는다 — 배열 2,002 개 (+ 객체 배열 하나) 에서 np.shares_memory 부름 ≤ 배열 수 (옛 = 쌍마다 · 약 2 백만 번 × 2 = '
++                 '배열 47 만 개인 실침대 원장에서 끝나지 않는다)', calls[0] <= len(arrs_s) and len(arrs_s) == 2002, (calls[0], len(arrs_s)))
++    if not linear:
++        chk('T13b 큰 규모 왕복 (작은 배열 12 만 + 별칭 6 만 자리)', False, 'T13a 실패 = 쌍마다 도는 판 — 큰 규모는 돌리지 않는다 (끝나지 않는다)')
++        return
++    n = 30000
++    big = ledger_like(n, rng)
++    t0 = time.time()
++    try:
++        d1 = CS.strict_digest(big)
++        skel, arrs = CS.encode(big)
++        back = CS.decode(skel, arrs)
++        d2 = CS.strict_digest(back)
++        why = ''
++    except CS.Unsupported as e:
++        d1, d2, arrs, back, why = 1, 2, [], None, f'Unsupported: {e}'
++    dt = time.time() - t0
++    print(f'    보고 T13b — 배열 {len(arrs):,} · 뼈대 {len(skel) / 1e6 if back is not None else 0:.1f} MB · 지문 둘 + 싣기 + 풀기 {dt:.1f} s')
++    chk('T13b 큰 규모 왕복 — instance 3 만 꼴 (작은 배열 12 만 + 별칭 빈 배열 6 만 자리 + 객체 배열 3 만 원소) 지문 · 싣기 · 풀기 · 지문 = 같음 · '
++        '저장 배열 = 12 만 + 4 (별칭 빈 배열은 한 번씩만) · 복원본의 pair_i 첫 · 끝 자리 = 같은 객체 · pair_i ≠ pair_j 객체 · 120 s 안',
++        d1 == d2 and len(arrs) == 4 * n + 4 and back is not None and back['pair_i'][0] is back['pair_i'][-1]
++        and back['pair_j'][0] is back['pair_j'][-1] and back['pair_i'][0] is not back['pair_j'][0] and dt < 120.0, (why, len(arrs), dt))
++
++
  # ═════════════════════════ P — payload 끝-끝 ═════════════════════════
++def make_fixture_series3(B6, d):
++    """b6 픽스처 (세로 VGCF 두 가닥 · 접합 하나) 의 위 가닥을 둘로 가른 침대 — 세 가닥 직렬 (아래 판 ↔ 접합 ↔ 접합 ↔ 위 판) = instance 둘
++    (실침대처럼 pair_i · pair_j 가 별칭인 원장).  행 차례 = SE · V1 · V2 · V3 · PTFE · SDCP (fid 마다 붙어 있다)."""
++    B6.make_fixture(d, sdcp=True)
++    pts, ph = np.load(os.path.join(d, 'se.npy')), np.load(os.path.join(d, 'phase.npy'))
++    fid, kind = np.load(os.path.join(d, 'fibre.npy')), np.load(os.path.join(d, 'fibre_kind.npy'))
++    v2 = np.flatnonzero((ph == 2) & (fid == 1))
++    assert len(v2) == 37 and np.all(np.diff(v2) == 1), 'b6 픽스처 꼴이 바뀌었다 (V2 = 37 점 한 덩어리)'
++    a, b = int(v2[0]), int(v2[-1]) + 1
++    n2a = B6._box(B6.line((24.5, 24.5, 12.5), (24.5, 24.5, 18.5), 21))
++    n2b = B6._box(B6.line((24.5, 24.5, 18.5), (24.5, 24.5, 23.2), 17))
++    new_fid = int(fid.max()) + 1
++
++    def splice(arr, mid_a, mid_b):
++        return np.concatenate([arr[:a], mid_a, mid_b, arr[b:]])
++    np.save(os.path.join(d, 'se.npy'), splice(pts, n2a, n2b))
++    np.save(os.path.join(d, 'phase.npy'), splice(ph, np.full(len(n2a), 2, ph.dtype), np.full(len(n2b), 2, ph.dtype)))
++    np.save(os.path.join(d, 'fibre.npy'), splice(fid, np.full(len(n2a), 1, fid.dtype), np.full(len(n2b), new_fid, fid.dtype)))
++    np.save(os.path.join(d, 'fibre_kind.npy'), splice(kind, np.full(len(n2a), 1, kind.dtype), np.full(len(n2b), 1, kind.dtype)))
++    np.save(os.path.join(d, 'fibre_dia.npy'), np.ones(len(pts) - (b - a) + len(n2a) + len(n2b)))
++    return d
++
++
  @case('P payload 끝-끝 (실제 payload · CPU)')
  def t_payload():
+     import test_ca_ext_b6 as B6
+@@ -1076,6 +1357,26 @@ def t_payload():
+         chk('P4 저장본 어긋남 (머리 엄격 지문 고침 · CRC 새로) → rc ≠ 0 · S2_CJUNC_STORE|INCONSISTENT| · 팔 JSON 없음',
+             rc4 == 0 and rc5 != 0 and 'S2_CJUNC_STORE|INCONSISTENT|' in log5 and not os.path.exists(os.path.join(wd, 'p_on5.json')),
+             (rc4, rc5, log5[-300:]))
++    #  ★ P5 (대피 세션 11-12) — instance 둘 (세 가닥 직렬 = pair_i · pair_j 별칭이 있는 원장 · 실침대 꼴) 도 지어 쓰고 다음 팔이 읽는다
++    wd3 = os.path.join(TD, 'payload3')
++    os.makedirs(wd3)
++    make_fixture_series3(B6, wd3)
++    sd3 = new_store_dir('pay3')
++    rca, loga, _da = B6.run_payload(wd3, base, out='q_off.json')
++    rcb, logb, _db = B6.run_payload(wd3, base + ['--step3-cjunc-store', sd3], out='q_on1.json')
++    files3 = store_files(sd3)
++    rcc, logc, _dc = B6.run_payload(wd3, base + ['--step3-cjunc-store', sd3], out='q_on2.json')
++
++    def rb3(nm):
++        p = os.path.join(wd3, nm)
++        return open(p, 'rb').read() if os.path.exists(p) else None
++    qa, qb, qc = rb3('q_off.json'), rb3('q_on1.json'), rb3('q_on2.json')
++    chk('P5 instance 둘인 침대 (세 가닥 직렬) — 끔 · 켬 (빗나감) · 켬 (적중) rc 0 셋 · payload 가 instance 2 를 찍는다 · 팔 JSON 바이트 같음 셋 · '
++        '첫 켬 = 새로 지어 저장 (⚠ 줄 없음 — 넘겨받은 판 = 별칭 거부로 저장 안 함) · 둘째 = 읽음 · 저장본 파일 하나',
++        rca == rcb == rcc == 0 and 'instance 2 (' in loga and qa is not None and qa == qb == qc and '새로 지어 저장' in logb
++        and not [ln for ln in logb.splitlines() if '저장본' in ln and '⚠' in ln] and '읽음' in logc and len(files3) == 1
++        and store_files(sd3) == files3,
++        (rca, rcb, rcc, 'instance 2 (' in loga, qa == qb, qb == qc, files3, [ln for ln in (logb + logc).splitlines() if '저장본' in ln]))
+ 
+ 
+ # ═════════════════════════ R — 러너 ═════════════════════════
 diff --git a/scripts/test_cjunc_store_e2e.py b/scripts/test_cjunc_store_e2e.py
 index 51fbc7fa0..fcbe46452 100644
 --- a/scripts/test_cjunc_store_e2e.py

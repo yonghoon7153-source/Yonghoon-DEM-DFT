@@ -1,6 +1,6 @@
 # 대피 세션 (litdb 논문 에이전트 전용) 상태 메모 — 압축 · 재시작 뒤 먼저 읽는다
 
-갱신 2026-11-12 17:00 KST. 진행 상태의 정본 = 정본 가지 `litdb/_curation/status.tsv` (이 메모는 보조).
+갱신 2026-11-12 16:45 KST. 진행 상태의 정본 = 정본 가지 `litdb/_curation/status.tsv` (이 메모는 보조).
 
 ## ★★ 11-12 오후 — 본 세션 (stoic) 일을 전부 넘겨받음
 
@@ -12,17 +12,18 @@
 | 인계 절 | 상태 (11-12 17 시 KST 기준) | 다음 |
 |---|---|---|
 | §1 pqwtv8 ← stoic `af3cce37b` | ✅ fast-forward · push | — |
-| §2 커밋 J (G2c′ 실행기 `-h` 고침 · siteq 예행 반입 · SELF-166 open) | 본 트리에 적용 (patch · siteq 복사 · commitJ_extra) · test_g2cp 41/41 · check_doc_refs · check_review_findings 통과 · `--ban-sweep` 도는 중 (`gate/ban_sweep.log`) | sweep rc 0 → 커밋 (서명 · 트레일러) → 게이트 `CHECK_ALL_RANGE=1-125` → `126-183` (Bash 배경 · timeout 7200000 · 로그 `gate/gate_J_p1.log` · `p2`) → 둘 다 fail 0 → push → 다음 커밋에 SELF-166 claimed_fixed (push 된 sha) |
+| §2 커밋 J (G2c′ 실행기 `-h` 고침 · siteq 예행 반입 · SELF-166 open) | 커밋 `21bb09d82` (서명 · 본 트리 · push 전 · 사본 = `snap/main_unpushed.bundle`) · 사전 점검 셋 통과 (doc_refs · findings · ban sweep) · 게이트 1 조각 (1–125) 16:26 KST 시작 · 도는 중 (`gate/gate_J_p1.log` · 끝 줄 `GATE_P1_RC=`) · 2 번 단계 한 개가 733 s 걸림 → 7000 s 안에 못 끝나면 끊긴 자리부터 범위를 나눠 다시 | 1 조각 fail 0 → 2 조각 `CHECK_ALL_RANGE=126-183` (배경 · timeout 7200000) → 둘 다 fail 0 → push → 다음 커밋 = SELF-166 claimed_fixed + 진행 기록 (인계 · 1저자 결정) |
 | §3 G2c′ ibb 건식 다시 | 커밋 J push 뒤 | `git archive` tgz · sha256 → 명령 틀 (`handoff …/g2c/ibb_try4_cmds_template.txt` · 접속 값은 채팅) → 1저자 실행 → 돌아오면 `compare_g2cp.py <OUT> 200` |
 | §4 Rint ② 코드 묶음 (1 순위 · GPU 팔 12 월 초까지) | 작업 트리 `/home/user/rint-codepkg` (stoic 끝 + 시험 먼저 커밋 + 구현 = 커밋 전) · 조수가 이어받아 도는 중 (지시서 `rint/codepkg/BRIEF_evac.md` · 메모 `rint/codepkg/notes.md`) | 조수 보고 → 내부 반박 리뷰 (독립 조수 · "Codex 아님") → 반입 (cherry-pick · 서명) · 게이트 → 원장 시도 3 줄 → S0 단계 1 다시 · ⑥ 시도 3 · GPU 확인 (1저자 실행) → Codex 봉인 전 묶음 → 계획 §10 개정 → 봉인 → R |
 | §5 열린 일 | 포메이션 = `snap/formation_20261112.md` | 걸 수 있는 것부터 조수로 |
 | §6 논문 34 편 (N-2 … N-51) | PDF 전부 받음 · 대기열 · status 반영 (정독 NN 44–91 = 본 세션이 정한 번호 · 논문별 지시 = 인계 묶음 `litdb/prompts/`) | 1 순위를 2 · 3 순위보다 먼저 · 둘 병렬 |
 
 - **1저자 11-12 저녁 "다 권고대로"** = ① 논문은 넘겨받은 1 순위 34 편 (N-2 부터 번호순) 을 2 · 3 순위보다 먼저 ② 믹서 E0 자격 pilot = Rint 코드 묶음 반입 뒤 리포 등록 문서에서 다시 잡음 (인계 묶음에 초안 · 리뷰 지시서 없음) ③ 커밋 J 는 게이트 두 조각 실패 0 뒤에 push (건너뛰지 않음). → 코드 가지의 진행 기록 (`docs/session_20260923_progress.md`) 에는 다음 코드 커밋 (SELF-166 claimed_fixed) 때 같이 적는다.
-- 지금 도는 조수 (11-12 17 시): 논문 N-63 (트리 1) · N-64 (트리 2) · Rint 코드 묶음 (`/home/user/rint-codepkg`) · 정독 종합 고침 적용 (`synthfix/`) · 메모 3.2 초안 (`dem_redesign/`) + 게이트 커밋 J 1 조각 (`gate/gate_J_p1.log` · 커밋 sha = `gate/commitJ.sha`).
+- 지금 도는 조수 (11-12 16:45 KST): 논문 N-2 (트리 1 · 정독 44 · 16:34 시작) · N-64 (트리 2 · 정독 116) · Rint 코드 묶음 (`/home/user/rint-codepkg`) · 정독 종합 고침 적용 (`synthfix/`) · 메모 3.2 초안 (`dem_redesign/`) + 게이트 커밋 J 1 조각. 논문 끝 = 9 편 (N-52 · 53 · 54 · 55 · 56 · 60 · 61 · 62 · 63). 다음 차례 = 1 순위 번호순 (N-5 → N-10 → …).
 - 재시작하면: 아래 '멈췄다가 이어갈 때' 3 번의 `restore.py` 한 번 — 이제 코드 가지 쪽도 한다 (리포 unshallow + 관련 가지 받기 = `check_doc_refs` 가 요구 · pip (`--ignore-installed blinker` 먼저) · kgy 판 3.8 · 인계 묶음 풀기 · Rint 작업 트리를 `snap/` 에서 되살림).
 - 스냅샷: `finish.py` 가 돌 때마다 (논문 한 편 끝 · `--sync-only`) `snap/` 에 Rint 작업 트리 (커밋 bundle · 커밋 전 diff · 새 파일 · 메모) 와 본 트리 (push 안 된 커밋 · 커밋 전 diff) 를 묶어 올린다 → 잃는 것은 마지막 스냅샷 뒤의 일뿐.
 - 게이트는 약 2 시간 (CPU 4 를 조수와 나눠 쓰면 더) — 끊기면 즉시 보고하고 조각을 다시 띄운다 · 게이트 중에는 본 트리를 건드리지 않는다.
+- gabia · kgy 킷 확인 (1저자 11-12 16:35 KST 실행 결과): 두 기계에서 킷별 내용 해시 같음 — `kit_SBE_vgcf100` 168823a6…f533d7 (파일 23) · `kit_DBE_sdcp1um_vgcf100` 6a9301b2…526d9e (파일 19) · 링크 2 + 2 (= 본 세션 기록 '파일 42 · 링크 4' 와 맞음). gabia 쪽 링크 넷 (`latest_run` · `scripts` × 2) 은 끊김 — kgy 홈 절대 경로를 그대로 담고 있다. 코드 읽기 (관찰 · 시험 전): 러너 `scripts/sdcp_gain_vox015_8arm.sh` 716 행 = `latest_run` 이 없으면 `run_*` 중 `se_dump.npy` 있는 마지막 폴더로 넘어감 · 러너의 `SCR` 은 러너 자신의 폴더 (108 행) 라 킷의 `scripts` 링크는 R 에서 안 쓰임 (킷 자체 `run_mpm.sh` = STEP2 만 씀). 1저자에게 gabia `latest_run` 을 상대 링크로 고치는 블록을 드림 (16:45 KST · 실행 결과 대기). `scripts` 링크 = R 핀 사본이 gabia 에 생긴 뒤.
 
 ## ★ 멈췄다가 이어갈 때 (토큰 소진 · 압축 · 컨테이너 재시작) — 이 절부터 읽는다
 
