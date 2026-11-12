@@ -59,3 +59,7 @@
 - (08:43Z) GPU 하네스: 블록에서 꺼낸 파일 md5 = acfeb4b4… (블록 관문 값과 같음) · 탭 · CR · 느낌표 0 · 두 모듈 sha256 = 블록 값 (git show 다시 셈) ·
   CPU 흐름 (--backend numpy · n-side 24 · 13,824 미지수): 3.11 · kgy 판 3.8 둘 다 다섯 짝 비트 같음 · 주 풀이 267 반복 · 이어 풀기 37 (CPU 길은 Q11 이 안 바꿈 = 흐름 확인일 뿐) ·
   블록 셸 관문 모의 (HOME = 스크래치 · dem-mt = 작업 트리 심볼릭 · 빈 activate): md5 · PIN · 두 커밋 · git show · sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대).  work/gpu_check · work/blk_home.
+- (08:47Z) 줄 1b = work/lane1b.sh (B2 끝 기다림 → off_vs_base.py all (바탕 = work/before/scripts = ebb0e9f80 scripts · git hash-object 666/666 같음 확인) → 줄 2 변이 끝 기다림 → 끝-끝 변이 Z1–Z3) · lane1b.out.
+  S0 단계 1 다시 = 필요 (바뀐 파일 가운데 step3_sigma.py · mpm_webapp_payload.py 가 S0_SAME_FILES 일곱 안 — rint_r_chain.py 345 줄).
+- (08:50Z) 끝 판 시험 파일 (f17ea8c6b) 을 바탕 코드 (work/before_final = ebb0e9f80 scripts + 끝 판 시험 넷) 에서: Q11 10/13 (G1 · G1r · G2 = dia_matrix · 끝 판에서 15 검사) ·
+  store 0 PASS · 24 FAIL (T0–T13 = 모듈 없음 · P1 · P2 · P5 · R1 · R2 · C1–C5 · 끝 판 46 검사) · store e2e 0/1 (Z0 = 사슬 선택지 없음) — logs/evac/before/final_tests_*_on_base_py311.log.
