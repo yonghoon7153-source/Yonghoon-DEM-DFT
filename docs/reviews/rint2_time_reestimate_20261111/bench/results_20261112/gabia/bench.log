@@ -1,0 +1,13 @@
+[gb] GPU before (5 samples, util pct): [44, 55, 50, 57, 52]; last: {'t': 1794447034.3, 'util_pct': 52, 'used_mib': 1924, 'total_mib': 49140}
+[gb] GPU free 46348 MiB of 48539 MiB; this run is capped at 12288 MiB
+[gb] built: n 26463592, nnz 184712320 (6.98 per row) in 14.9 s (host, one thread mostly)
+[gb] warm-up: 0.0605 s per iteration -> variant A runs 2000 iterations
+[gb] A (production form, dia_matrix preconditioner): 2000 iterations in 121.7 s = 0.06086 s per iteration
+[gb] B (CSR preconditioner, measured only): 500 iterations in 9.6 s = 0.01920 s per iteration (A / B = 3.171)
+[gb] C (vector-multiply preconditioner, measured only): 500 iterations in 9.0 s = 0.01792 s per iteration (A / C = 3.397)
+[gb] compare A vs A again (control) after 200 iterations: identical True, max abs diff 0.000e+00
+[gb] compare A vs B after 200 iterations: identical True, max abs diff 0.000e+00
+[gb] compare A vs C after 200 iterations: identical True, max abs diff 0.000e+00
+[gb] single operations (s): {"L_linop_matvec_s": 0.006749, "L_matvec_s": 0.00678, "axpy_like_s": 0.002881, "precond_A_apply_s": 0.044678, "precond_B_apply_s": 0.003071, "precond_C_apply_s": 0.001589, "vector_multiply_s": 0.001203}
+[gb] GPU by phase: {"build_host": {"n": 3, "used_max": 2191, "used_min": 2191, "util_max": 55, "util_mean": 48.3, "util_min": 42}, "cg_A": {"n": 24, "used_max": 8309, "used_min": 8309, "util_max": 100, "util_mean": 96.0, "util_min": 86}, "cg_B": {"n": 2, "used_max": 8309, "used_min": 8309, "util_max": 100, "util_mean": 100.0, "util_min": 100}, "cg_C": {"n": 2, "used_max": 8309, "used_min": 8309, "util_max": 100, "util_mean": 98.0, "util_min": 96}, "compare": {"n": 6, "used_max": 8717, "used_min": 8309, "util_max": 100, "util_mean": 98.7, "util_min": 92}, "end": {"n": 2, "used_max": 8717, "used_min": 8717, "util_max": 59, "util_mean": 56.0, "util_min": 53}, "to_gpu": {"n": 2, "used_max": 5659, "used_min": 3605, "util_max": 55, "util_mean": 53.5, "util_min": 52}, "warmup": {"n": 1, "used_max": 8309, "used_min": 8309, "util_max": 94, "util_mean": 94.0, "util_min": 94}}
+[gb] DONE label gabia: A 0.06086 s per iteration (n 26463592, nnz 184712320)

@@ -1,0 +1,13 @@
+[gb] GPU before (5 samples, util pct): [83, 83, 83, 88, 86]; last: {'t': 1794447415.6, 'util_pct': 86, 'used_mib': 5705, 'total_mib': 24576}
+[gb] GPU free 18187 MiB of 24151 MiB; this run is capped at 12288 MiB
+[gb] built: n 26463592, nnz 184712320 (6.98 per row) in 9.4 s (host, one thread mostly)
+[gb] warm-up: 0.0475 s per iteration -> variant A runs 2000 iterations
+[gb] A (production form, dia_matrix preconditioner): 2000 iterations in 93.3 s = 0.04667 s per iteration
+[gb] B (CSR preconditioner, measured only): 500 iterations in 6.5 s = 0.01294 s per iteration (A / B = 3.608)
+[gb] C (vector-multiply preconditioner, measured only): 500 iterations in 6.2 s = 0.01230 s per iteration (A / C = 3.794)
+[gb] compare A vs A again (control) after 200 iterations: identical True, max abs diff 0.000e+00
+[gb] compare A vs B after 200 iterations: identical True, max abs diff 0.000e+00
+[gb] compare A vs C after 200 iterations: identical True, max abs diff 0.000e+00
+[gb] single operations (s): {"L_linop_matvec_s": 0.005156, "L_matvec_s": 0.004907, "axpy_like_s": 0.001695, "precond_A_apply_s": 0.034873, "precond_B_apply_s": 0.002199, "precond_C_apply_s": 0.000856, "vector_multiply_s": 0.000834}
+[gb] GPU by phase: {"build_host": {"n": 2, "used_max": 5964, "used_min": 5964, "util_max": 89, "util_mean": 84.5, "util_min": 80}, "cg_A": {"n": 19, "used_max": 12082, "used_min": 12082, "util_max": 100, "util_mean": 99.9, "util_min": 99}, "cg_B": {"n": 1, "used_max": 12082, "used_min": 12082, "util_max": 100, "util_mean": 100.0, "util_min": 100}, "cg_C": {"n": 1, "used_max": 12082, "used_min": 12082, "util_max": 100, "util_mean": 100.0, "util_min": 100}, "compare": {"n": 5, "used_max": 12044, "used_min": 12044, "util_max": 100, "util_mean": 100.0, "util_min": 100}, "end": {"n": 2, "used_max": 12044, "used_min": 12044, "util_max": 86, "util_mean": 83.5, "util_min": 81}, "to_gpu": {"n": 2, "used_max": 9634, "used_min": 7378, "util_max": 92, "util_mean": 88.5, "util_min": 85}}
+[gb] DONE label kgy_alone: A 0.04667 s per iteration (n 26463592, nnz 184712320)
