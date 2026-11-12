@@ -24,7 +24,8 @@
   T7  어긋남 (손으로 고친 · 어긋난 기록 = 멈춤 StoreInconsistent · 짓지 않음 · 파일 그대로) — 다른 열쇠 파일 이름 바꿈 · 뼈대 바꿔 끼움 · 머리
       엄격 지문 · 배열 바꿈 · 배열 + 엄격 지문 다시 셈 (registry_fp) · sid 지문 · 머리 JSON · 꼴 판 · 심볼릭 링크 · 폴더 · 파일 모드 (그룹 · 남 쓰기 ·
       그룹 쓰기만 · 남 쓰기만 = 2 회차 RCP2-03) · 파일 소유자 (RCP-06)
-  T8  다른 침대 · 문턱 · 코드 · 기계의 저장본 = 열쇠가 달라 읽지 않음 → 새로 짓고 씀 (옛 파일 그대로)
+  T8  다른 침대 · 문턱 · 기계 · origin 의 저장본 = 열쇠가 달라 읽지 않음 → 새로 짓고 씀 (옛 파일 그대로) · ★ 3 회차 (RCP3-02) Store 코드 칸만 바꾼 꼴 =
+      꺼짐 (읽지도 쓰지도 않음 · 다른 코드 = 다른 열쇠는 T4 · T14c · T15a)
   T9  같은 열쇠 동시 쓰기 — 남이 같은 원장 = peer_same · 남이 다른 원장 = 멈춤 · 실제 프로세스 둘 경주 = written 하나 + peer_same 하나 · 파일 하나
   T10 끊김 (PID 이름공간 `unshare -pf --mount-proc --kill-child` 안에서만 · kill = 직접 만든 자식) — 쓰는 도중 (임시 파일 뒤 · link 전) · 읽는 도중
   T11 쓰기 실패 · 끔 — 디스크 여유 · link EPERM · 쓰는 중 ENOSPC · 기계 id 못 읽음 · 폴더 꼴 (상대 · 없음 · 파일 · 그룹 · 남 쓰기 (남만 = 2 회차
@@ -40,7 +41,8 @@
       cjunc_store 만 불러 둔 뒤 바뀜 · 짓는 도중 바뀜 (짓기가 새 판을 부른다) · 쓰는 도중 바뀜 · 내용 그대로 다시 씀 (수정 시각 = 시작 뒤) = 저장 안 함
       (꺼짐 · 건너뜀 · 사유 code_changed) · 뒤의 정직한 런 = 적중 아님 · 정직한 흐름 = 지어 씀 → 적중 · 런 시작 기록 (cjunc_store 를 불러온 때) ·
       ★ 3 회차 (재확인 2 RCP3-02) 같은 초 뒤집기 (수정 시각 = 런 시작) · 변이판일 때 Store 뒤 되돌림 · 수정 시각을 되돌린 뒤집기 (os.utime) · Store 코드
-      칸 ≠ 런 시작 = 저장 안 함 · 수정 시각이 미래인 사본 (rsync -t 꼴) 의 정직한 런 = 지어 씀 → 적중 (코드 칸 = 파일별 stat 신원 정확 대조)
+      칸 ≠ 런 시작 = 저장 안 함 · 수정 시각이 미래인 사본 (rsync -t 꼴) 의 정직한 런 = 지어 씀 → 적중 (코드 칸 = 파일별 stat 신원 정확 대조) ·
+      ★ 3 회차 변이 보강: 제자리 되돌림 (`cp -p` 꼴 · 같은 inode · 크기 · 수정 시각 = 상태 바뀐 시각만 다름 · T15l) · 재는 도중 바뀜 = 못 셈 (T15m)
   P   payload 끝-끝 (`test_ca_ext_b6` 픽스처 · 실제 payload · CPU) — 입구 거부 (접합 없이 · 조립만 · rasterize-only (RCP-10) · 상대 · 없음 · 남이 씀 ·
       Store() 의 뜻밖의 예외 둘 = 입구 · 본 길 (RCP-10)) · 끔 / 빗나감 / 적중 팔 JSON 바이트 같음 · 못 읽음 (⚠ · 같음) · 어긋남 (rc ≠ 0 ·
       S2_CJUNC_STORE|INCONSISTENT| · 출력 없음) · instance 둘인 침대 (세 가닥 직렬) 도 지어 씀 → 적중 (P5 · 구현 커밋에서 더함) · 정규화 안 된 폴더
@@ -1125,7 +1127,7 @@ def t7():
 
 
 # ═════════════════════════ T8 ═════════════════════════
-@case('T8 다른 침대 · 문턱 · 코드 · 기계의 저장본 = 읽지 않음 → 새로 짓고 씀')
+@case('T8 다른 침대 · 문턱 · 기계 · origin 의 저장본 = 읽지 않음 → 새로 짓고 씀 · Store 코드 칸만 바꿈 = 꺼짐')
 def t8():
     if not need_cs('T8'):
         return
@@ -1153,9 +1155,17 @@ def t8():
         except Exception as e:                                     # noqa: BLE001
             bad[nm] = f'{type(e).__name__}: {e}'
             continue
+        if nm == '다른 코드':
+            #  ★ 3 회차 (재확인 2 RCP3-02) — Store 코드 칸만 바꾼 꼴 (디스크 · 런 시작 그대로) = Store 코드 칸 ≠ 런 시작 코드 칸 → 이 런은 읽지도 쓰지도 않는다
+            #    (꺼짐 · 짓기 1 회 · 옛 파일 그대로 · 파일 하나).  다른 코드 = 다른 열쇠는 T4 (열쇠 칸) · T14c · T15a (새 프로세스 · 디스크 변이판 = 새로 지어 씀)
+            if not (o['status'] == 'disabled' and str(o.get('why') or '').startswith('code_changed') and n[0] == 1 and finger(p) == before
+                    and len(store_files(d)) == 1):
+                bad[nm] = (o, n, store_files(d))
+            continue
         if not (o['status'] == 'built_written' and n[0] == 1 and finger(p) == before and len(store_files(d)) == 2):
             bad[nm] = (o, n, store_files(d))
-    chk('T8 다른 침대 · 문턱 · 코드 · 기계 · origin = 다른 열쇠 → 옛 저장본을 읽지 않고 새로 짓고 씀 (옛 파일 그대로 · 파일 둘)', not bad, bad)
+    chk('T8 다른 침대 · 문턱 · 기계 · origin = 다른 열쇠 → 옛 저장본을 읽지 않고 새로 짓고 씀 (옛 파일 그대로 · 파일 둘) · 다른 코드 (Store 코드 칸만 바꿈) = '
+        '꺼짐 (읽지도 쓰지도 않음 · 옛 파일 그대로 · 3 회차 RCP3-02 — 다른 코드의 열쇠 = T4 · 새 프로세스 = T14c · T15a)', not bad, bad)
 
 
 # ═════════════════════════ T9 ═════════════════════════
@@ -1827,22 +1837,37 @@ def put_back(b):                                      # 원판 바이트로 되�
 
 start = getattr(CS, '_START', None)
 st = None
-if mode in ('samesec', 'samesec_store', 'mtime_restore'):
+if mode in ('samesec', 'samesec_store', 'mtime_restore', 'inplace_restore'):
     #  ★ 3 회차 (재확인 2 RCP3-02) — 뒤집었다 되돌린 꼴 (원장 모듈 적재 전 · 결정적): samesec = 변이판 → 불러옴 → 원판 바이트로 되돌려 씀 · 수정 시각 =
     #    런 시작 (옛 판의 1 s 여유 안 · 재확인 2 samesec 318 ms) · samesec_store = 변이판일 때 Store (코드 칸 = 변이판) → 원판으로 되돌려 씀 · 수정 시각 =
     #    런 시작 · mtime_restore = 변이판 → 불러옴 → 1.2 s 뒤 원판 바이트 + 원래 수정 시각 (os.utime · 옛 한정 (나) 꼴)
+    #  inplace_restore (★ 3 회차 변이 보강) = mtime_restore 를 **제자리** 로 (`cp -p` 가 있는 파일에 쓰는 꼴 — 같은 inode · 같은 크기 · 원래 수정 시각 →
+    #    다른 것은 상태 바뀐 시각 하나뿐 · 그것을 뺀 변이가 inode 바뀌는 T15i 에서 안 잡혔다)
     orig = open(fsr, 'rb').read()
     st0 = os.stat(fsr)
-    swap()
+    if mode == 'inplace_restore':
+        with open(fsr, 'r+b') as f:
+            f.truncate(0)
+            f.write(open(mut_path, 'rb').read())
+    else:
+        swap()
     if mode == 'samesec_store':
         st = CS.Store(store, machine_paths=(mfile,))
     else:
         import fibre_segment_raster                   # noqa: F401 — 변이판이 불린다
-    if mode == 'mtime_restore':
+    if mode in ('mtime_restore', 'inplace_restore'):
         time.sleep(1.2)
-    put_back(orig)
-    if mode == 'mtime_restore':
+    if mode == 'inplace_restore':
+        with open(fsr, 'r+b') as f:
+            f.truncate(0)
+            f.write(orig)
+    else:
+        put_back(orig)
+    if mode in ('mtime_restore', 'inplace_restore'):
         os.utime(fsr, ns=(st0.st_atime_ns, st0.st_mtime_ns))
+        st1 = os.stat(fsr)
+        same_id = {'ino': st1.st_ino == st0.st_ino, 'size': st1.st_size == st0.st_size, 'mtime': st1.st_mtime_ns == st0.st_mtime_ns,
+                   'ctime': st1.st_ctime_ns == st0.st_ctime_ns}
     else:
         t0 = (start or {}).get('t_ns') or time.time_ns()
         os.utime(fsr, ns=(t0, t0))
@@ -1895,6 +1920,7 @@ st_rec = None if start is None else {k: start.get(k) for k in ('t_ns', 'code', '
 print('T15DRV ' + json.dumps({'mode': mode, 'status': out['status'], 'why': out.get('why'), 'key': (out.get('key') or '')[:16],
                               'builds': n[0], 'reg_fp': reg['fp']['registry'][:16], 'fresh_fp': fresh['fp']['registry'][:16],
                               'files': files, 'code_fsr': st.code.get('fibre_segment_raster.py', '')[:16], 'start': st_rec,
+                              'same_id': globals().get('same_id'),
                               't_after_import': t_after_import}, ensure_ascii=False))
 '''
 T15_FX = {}
@@ -2064,6 +2090,43 @@ def t15():
     chk('T15k Store 코드 칸 ≠ 런 시작 코드 칸 (Store 를 만든 뒤 칸 하나를 손으로 바꿈 · 디스크 그대로) → 저장 안 함 (꺼짐 · code_changed · 짓기 1 회 · 폴더 빈 채)',
         gk.get('rc') == 0 and gk.get('status') == 'disabled' and cc(gk) and gk.get('builds') == 1 and gk.get('files') == [],
         (gk.get('status'), gk.get('why'), gk.get('files'), gk.get('err')))
+    #  (l) ★ 3 회차 변이 보강 — 제자리 되돌림 (`cp -p` 꼴 · 같은 inode · 같은 크기 · 원래 수정 시각 = 다른 것은 상태 바뀐 시각뿐)
+    sl, cl = new_store_dir('t15_l'), t15_code_dir('t15_l')
+    gl = t15_run(cl, sl, 'inplace_restore')
+    gl2 = t15_run(t15_code_dir('t15_l_orig'), sl, 'honest')
+    chk('T15l 제자리 되돌림 (있는 파일에 변이판 → 불러옴 → 1.2 s 뒤 원판 바이트 + 원래 수정 시각 · inode · 크기 같음 = 상태 바뀐 시각만 다름) → 저장 안 함 '
+        '(꺼짐 · code_changed) · 원판 코드의 정직한 런 = 새로 지어 씀 (받은 원장 = 원판 원장)',
+        gl.get('rc') == 0 and gl.get('same_id') == {'ino': True, 'size': True, 'mtime': True, 'ctime': False}
+        and gl.get('status') in ('disabled', 'built_write_skipped') and cc(gl) and gl.get('files') == []
+        and gl2.get('status') == 'built_written' and gl2.get('reg_fp') == gl2.get('fresh_fp') == orig_fp,
+        (gl.get('same_id'), gl.get('status'), gl.get('why'), gl.get('files'), gl2.get('status'), gl.get('err')))
+    #  (m) ★ 3 회차 변이 보강 — 코드 칸을 재는 도중 파일이 바뀌면 (해시 앞뒤 stat 신원 다름) 못 셈 = OSError (시작 기록 = 오류 → 저장본 꺼짐) · 같은 프로세스 ·
+    #      코드 사본 (code_file 을 사본으로 돌린다 · 리포 파일은 건드리지 않는다)
+    cm = t15_code_dir('t15_m')
+    o_cf, o_fs = CS.code_file, CS._file_sha
+    race_err, plain = None, None
+    try:
+        CS.code_file = lambda m: os.path.join(cm, m + '.py')
+
+        def racy(p):
+            h = o_fs(p)
+            if os.path.basename(p) == 'fibre_segment_raster.py':
+                s_ = os.stat(p)
+                os.utime(p, ns=(s_.st_atime_ns, s_.st_mtime_ns + 1000))
+            return h
+        CS._file_sha = racy
+        try:
+            CS._code_column()
+        except OSError as e:
+            race_err = str(e)
+        CS._file_sha = o_fs
+        plain = CS._code_column()
+    finally:
+        CS.code_file, CS._file_sha = o_cf, o_fs
+    chk('T15m 코드 칸을 재는 도중 열쇠 코드 파일이 바뀜 (해시 앞뒤 stat 신원 다름) → OSError (런 시작이면 못 셈 = 저장본 꺼짐) · 안 바뀌면 칸 셋 (sha · 실경로 · '
+        'stat 신원) 을 낸다 (3 회차 변이 보강 — 그 검사를 지운 변이가 안 잡혔다)',
+        isinstance(race_err, str) and '재는 도중' in race_err and isinstance(plain, tuple) and len(plain) == 3
+        and set(plain[2]) == set(KEY_CODE_FILES), (race_err, None if plain is None else sorted(plain[2])))
 
 
 # ═════════════════════════ P — payload 끝-끝 ═════════════════════════

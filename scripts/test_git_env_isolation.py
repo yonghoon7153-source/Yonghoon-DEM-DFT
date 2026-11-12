@@ -29,7 +29,9 @@ stash · 객체 목록.
       `_code_sha` None (옛 판처럼 · 2 회차 판 = 바깥 저장소 HEAD) (b) 부르는 쪽 GIT_CONFIG_GLOBAL=/dev/null + HOME 전역 core.hooksPath → run_contract
       --selftest 훅 0 회 (옛 판처럼 · 2 회차 판 = 1 회씩) (c) 부르는 쪽 격리 없이 전역 설정 셋 (HOME core.hooksPath · XDG_CONFIG_HOME core.hooksPath ·
       HOME init.templateDir) → selftest 임시 저장소 · 시험 모듈 고정물 도우미 다섯 (git_ · _git · e2e12 git · probe6 git · s0 census _git) 의 commit 에서
-      훅 0 회 (고정물 git = GIT_CONFIG_NOSYSTEM=1 · GIT_CONFIG_GLOBAL=/dev/null · HOME 임시)
+      훅 0 회 (고정물 git = GIT_CONFIG_NOSYSTEM=1 · GIT_CONFIG_GLOBAL=/dev/null · HOME 임시) · ★ 3 회차 변이 보강: (d) `git_fixture_env(넘긴 env)` 꼴
+      (XDG_CONFIG_HOME · 넘긴 HOME 을 뺀다 · 지울 이름 뺌 · 천장 · PATH 남김) (e) 시험 모듈 여덟의 git 부르는 자리 (정적 · subprocess · 첫 낱말 git) 가
+      모두 env 를 넘긴다 (예외 = 이 리포를 읽기만 하는 자리 셋 · 도우미 다섯 밖의 고정물 init · pull · clone · git_rc 를 본다)
   G8  ★ 3 회차 (재확인 2 RCP3-05) — 게이트 수준: (a) `check_all.sh` · `check_kgy_py38.sh` 머리 · 러너 기각 영수증 code_sha 줄 · S0 블록 heredoc 머리가
       같은 셸 꼴 (`run_contract.GIT_DROP_SH` 글자 그대로 · 자리 = 첫 단계 · 첫 git 앞) · 그 셸 꼴을 bash 로 돌린 뒤 남는 GIT_ 이름 = 파이썬 규칙 (b)
       `check_review_findings.py --selftest` (매달린 커밋 commit-tree = 쓰기) — 적대 환경 넷에서 V 그대로 · 그 커밋은 자기 저장소 (일회용 사본 F) 에
@@ -393,9 +395,7 @@ print('G6 ' + json.dumps({'left_git_env': left}))
 @case('G6 시험 모듈 여덟 (이 묶음이 고친 넷 + 같은 부류 셋 + test_ca_s0_census) — 불러오면 GIT_* 를 지운다 (고정물 git 쓰기)')
 def g6():
     bad = {}
-    for which in ('test_rint_r_chain', 'test_probe6_read', 'test_cjunc_store_e2e', 'test_cjunc_store',
-                  'test_rint_r_chain_e2e', 'test_rint_r_chain_e2e12', 'test_step3_conv_cert',     # ★ 같은 부류 셋 (본 세션 결정 11-12 밤)
-                  'test_ca_s0_census'):                                                            # ★ 3 회차 (재확인 2 RCP3-01)
+    for which in G6_MODULES:                                       # 같은 부류 셋 (본 세션 결정 11-12 밤) · ★ 3 회차 (재확인 2 RCP3-01) test_ca_s0_census
         k = [0]
 
         def run(env, _v, which=which):
@@ -426,6 +426,55 @@ print('G7A ' + json.dumps({'sha': P._code_sha(sys.argv[2])}))
 #: 시험 모듈 고정물 도우미 다섯 (모듈 · 도우미 이름) — 그 도우미로 고정물 저장소를 만든다 (init · add · commit)
 G7_HELPERS = (('test_rint_r_chain', 'git_'), ('test_rint_r_chain_e2e', '_git'), ('test_rint_r_chain_e2e12', 'git'),
               ('test_probe6_read', 'git'), ('test_ca_s0_census', '_git'))
+#: G6 의 시험 모듈 여덟 (★ 3 회차 변이 보강 — G6 · G7e 가 같이 쓴다) · 이 리포를 읽기만 하는 git 자리 (모듈 · 하위 명령) · 모듈마다 git 자리 수 하한
+#  (훑기가 빈손이 아님)
+G6_MODULES = ('test_rint_r_chain', 'test_probe6_read', 'test_cjunc_store_e2e', 'test_cjunc_store', 'test_rint_r_chain_e2e', 'test_rint_r_chain_e2e12',
+              'test_step3_conv_cert', 'test_ca_s0_census')
+G7E_READ_ROOT = {('test_rint_r_chain', 'check-ignore'), ('test_ca_s0_census', 'show'), ('test_step3_conv_cert', 'show')}
+G7E_MIN_SITES = {m: 1 for m in G6_MODULES if m != 'test_cjunc_store'}        # test_cjunc_store = git 을 직접 부르지 않는다 (불러올 때 지움만)
+G7E_RUN = ('run', 'check_output', 'check_call', 'call', 'Popen')
+
+
+def g7e_git_sites(path):
+    """파일 하나의 git 부르는 자리 → [(줄 · env 넘김 · 문자열 낱말 · ROOT 를 가리킴)] — subprocess 꼴 함수 (G7E_RUN) 의 첫 인자가 'git' 으로 시작하는
+    목록 · 튜플 (또는 그것 + …).  env 넘김 = env= 낱말 또는 `**kw` + 감싼 함수 안 `….setdefault('env', …)`."""
+    import ast
+    tree = ast.parse(open(path, encoding='utf-8').read())
+
+    def argv(call):
+        a = call.args[0] if call.args else None
+        while isinstance(a, ast.BinOp) and isinstance(a.op, ast.Add):
+            a = a.left
+        if isinstance(a, (ast.List, ast.Tuple)) and a.elts and isinstance(a.elts[0], ast.Constant) and a.elts[0].value == 'git':
+            return a.elts
+        return None
+
+    def fname(f):
+        return f.attr if isinstance(f, ast.Attribute) else (f.id if isinstance(f, ast.Name) else None)
+
+    def sets_env(fn):
+        return fn is not None and any(isinstance(n, ast.Call) and fname(n.func) == 'setdefault' and n.args and isinstance(n.args[0], ast.Constant)
+                                      and n.args[0].value == 'env' for n in ast.walk(fn))
+
+    def is_root(e):
+        return (isinstance(e, ast.Name) and e.id == 'ROOT') or (isinstance(e, ast.Call) and any(isinstance(x, ast.Name) and x.id == 'ROOT' for x in e.args))
+
+    out = []
+
+    def walk(node, fn):
+        for ch in ast.iter_child_nodes(node):
+            if isinstance(ch, ast.Call) and fname(ch.func) in G7E_RUN:
+                el = argv(ch)
+                if el is not None:
+                    kws = [k.arg for k in ch.keywords]
+                    has_env = 'env' in kws or (None in kws and sets_env(fn))
+                    consts = [e.value for e in el if isinstance(e, ast.Constant) and isinstance(e.value, str)]
+                    out.append((ch.lineno, has_env, consts, any(is_root(e) for e in el)))
+            walk(ch, ch if isinstance(ch, (ast.FunctionDef, ast.AsyncFunctionDef)) else fn)
+    walk(tree, None)
+    return out
+
+
 G7C_CODE = r'''
 import importlib, os, sys
 which, attr, scripts, tools6, fx = sys.argv[1:6]
@@ -534,6 +583,32 @@ def g7():
         and os.path.isdir(fe.get('HOME') or '') and os.listdir(fe['HOME']) == [] and fe.get('HOME') != os.environ.get('HOME')
         and not any(dropped(k) for k in fe),
         (bad, {k: fe.get(k) for k in ('GIT_CONFIG_NOSYSTEM', 'GIT_CONFIG_GLOBAL', 'HOME')} if fe else '고치기 전 판 — git_fixture_env 없음'))
+    #  (d) ★ 3 회차 변이 보강 — 넘긴 env 의 꼴 (XDG_CONFIG_HOME · HOME 을 넘겨도 뺀다 · 이 시험 프로세스 env 에는 XDG 가 없어 (c) 꼴로는 못 가린다)
+    fe2 = fx_env({'XDG_CONFIG_HOME': '/x', 'HOME': '/h', 'GIT_DIR': '/v', 'GIT_CONFIG_KEY_0': 'k', 'GIT_CEILING_DIRECTORIES': '/o', 'PATH': '/bin'}) if fx_env else {}
+    chk('G7d git_fixture_env(넘긴 env) — XDG_CONFIG_HOME 뺌 · HOME = 빈 임시 폴더 (넘긴 /h 아님) · 지울 이름 (GIT_DIR · CONFIG_KEY_0) 뺌 · 천장 · PATH 남김 · '
+        'NOSYSTEM=1 · GLOBAL=/dev/null (3 회차 변이 보강 — XDG 뺌 · HOME 줄을 지운 변이가 (c) 에서 안 잡혔다)',
+        'XDG_CONFIG_HOME' not in fe2 and fe2.get('HOME') not in (None, '/h') and os.path.isdir(fe2.get('HOME') or '') and 'GIT_DIR' not in fe2
+        and 'GIT_CONFIG_KEY_0' not in fe2 and fe2.get('GIT_CEILING_DIRECTORIES') == '/o' and fe2.get('PATH') == '/bin'
+        and fe2.get('GIT_CONFIG_NOSYSTEM') == '1' and fe2.get('GIT_CONFIG_GLOBAL') == os.devnull, fe2)
+    #  (e) ★ 3 회차 변이 보강 — 시험 모듈 여덟 (G6) 에서 git 을 부르는 자리 (subprocess 의 run · check_output · check_call · call · Popen · 첫 낱말 'git')
+    #      는 env 를 넘긴다 (고정물 env · 넘긴 env · 도우미의 `kw.setdefault('env', …)` + `**kw`) — 예외 = 이 리포 (ROOT) 를 읽기만 하는 자리 셋.
+    #      정적 훑기 (ast · 3.8 에서도 · 불러오지 않는다) — 도우미 다섯 밖의 고정물 git (init · pull · clone · git_rc) 을 지운 변이를 (c) 가 못 본다
+    miss, found, ro_seen = [], {}, set()
+    for mod in G6_MODULES:
+        path = os.path.join(TOOLS6 if mod == 'test_probe6_read' else SCRIPTS, mod + '.py')
+        sites = g7e_git_sites(path)
+        found[mod] = len(sites)
+        for line, has_env, consts, reads_root in sites:
+            ro = [s for (m_, s) in G7E_READ_ROOT if m_ == mod and s in consts and reads_root]
+            if ro:
+                ro_seen.add((mod, ro[0]))
+            elif not has_env:
+                miss.append(f'{mod}:{line} {consts[:4]}')
+    chk('G7e 시험 모듈 여덟의 git 부르는 자리 (정적 · subprocess · 첫 낱말 git) 가 모두 env 를 넘긴다 — 예외 = 이 리포를 읽기만 하는 자리 셋 '
+        '(test_rint_r_chain check-ignore · test_ca_s0_census show · test_step3_conv_cert show) · 훑기가 빈손 아님 (모듈마다 자리 수 ≥ 기대) '
+        '(3 회차 변이 보강 — 도우미 밖 고정물 git 의 env 를 지운 변이가 (c) 에서 안 잡혔다)',
+        not miss and ro_seen == set(G7E_READ_ROOT) and all(found.get(m_, 0) >= n_ for m_, n_ in G7E_MIN_SITES.items()),
+        (miss, sorted(ro_seen), found))
 
 
 # ═════════════════════════ G8 (★ 3 회차 · 재확인 2 RCP3-05) ═════════════════════════
