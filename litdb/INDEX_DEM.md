@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 298편 · 생성 2026-11-12
+> digest 299편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -60,7 +60,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (69편)
+## 접촉역학 · 소성 (DEM 이론) (70편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -83,6 +83,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `dang2019_nmc111_secondary_particle_flat_punch_fracture_strength` | NMC111 2차입자 평판 압입 (flat punch indentation) 파괴강도 S_t ≈ 2.8F_c/(πd²) (Hiramatsu–Oka) — pristine Weibull 평균 188 MPa (S₀ 205 · m 4.8 · 입자 33) → 전해질 침지 165 · 첫 탈리튬화 22 · 첫 리튬화 70 MPa, 파 | exp (single-particle flat punch indentation — Nanoindenter G | 2026-11-12 | 🖼 27 |
 | `deng2021_mechanical_surface_energy_tester_bond_number` | A study of particle adhesion for cohesive powders using a novel mechanical surface energy tester — 분말 단층 (≤ 20 mg) 을 ⌀40 mm 원판에 뿌려 떨어뜨리고, 멈출 때의 감속도와 그때 떨어져 나간 질량 분율을 잰다 · "Bond 수"  | experiment (drop-impact detachment "mechanical surface energ | 2026-10-13 | 🖼 22 |
 | `devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode` | NMC532 · PVDF · CB (90 : 5 : 5 wt%) 양극 (액체계 LIB 용 · 캘린더링 안 함 · 기공 56 %) 의 상별 탄성률 · 경도 — 단일 입자 targeted 압입 (깊이 창 75–150 nm) E 138.73 ± 18.78 · H 8.89 ± 1.86 GPa · 별도 CB/PVDF (50/50  | exp (instrumented nanoindentation: Keysight G200 Berkovich,  | 2026-11-12 | 🖼 40 |
+| `devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte` | NMC532 이차입자 응집체 · 소결 펠릿 · PVDF · CB/PVDF 의 건조 ↔ 액체 전해질 (1 M LiPF₆-PC · 1 h) 속 나노압입 — 응집체 E 113 → 108 · H 7.8 → 7.8 GPa · 펠릿 200 → 201 · 14.0 → 13.9 GPa (깊이 85 nm · 평균 · 차이 없음) · 응집 | exp (instrumented nanoindentation inside an Ar glovebox, dry | 2026-11-12 | 🖼 63 |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
 | `doux2020_pressure_effects_sulfide_se_jmca` | 냉간 성형압 50–370 MPa ↔ 순수 Li₆PS₅Cl (NEI) 펠릿의 상대밀도 · 이온전도도와 작동 적층압 2–70 MPa ↔ 전극 접촉 — densification 은 250 MPa 위에서 둔해지고 (상대밀도 68.3 → 75.4 → ≈77 % · σ 0.99 → 2.06 → 2.28 mS/cm · 진밀도 분모는  | experiment (순수 LPSCl powder 펠릿 cold-press 성형압 · 적층압 load cel | 2026-11-12 | 🖼 36 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |

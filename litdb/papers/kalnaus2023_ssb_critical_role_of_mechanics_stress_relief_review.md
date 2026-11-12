@@ -425,6 +425,7 @@
 - 양극재 파괴 · 부피 변화: `xu2017_nmc532_nanoindentation_modulus_hardness_toughness` · `stallard2022_cathode_mechanical_properties_review` · `sharma2023_nmc_single_crystal_anisotropic_nanoindentation` · `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` · `intergranular_cracking_nmc811_jmca2023` · `devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode` (ref 55 와 같은 그룹의 **다른** 2016 논문 — E · H 만 · §3-12 ④).
 - 같은 주제의 총설 · 모델: `li2026_electrochemomechanical_coupling_asslmb_review` · `deysher2022_transport_mechanical_aspects_assb_review` · `kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review` · `bucci2017_chemomech_failure_assb_cycling_czm` · `taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode` · `barai2021_delamination_cathode_llzo_multiscale`.
 - 스택압 · 시간 의존 되돌아옴: `doux2020_stack_pressure_assb` · `kollenda2024_time_sensitivity_calendered_electrode_springback_storage` · `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography`.
+- ref 55 의 원전 (2026-11-12 카드): [`devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte`](devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte.md) — 0.3 = **소결 다결정 펠릿** (결정립 3–10 µm) 건조 0.298 · 0.1 = 응집체 (일차입자 계면) 건조 0.104 (wet 0.212) — "single-crystal" 은 원문 결론의 *"large single particles"* 를 옮긴 라벨로 보인다 (단결정 시료 측정 아님).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

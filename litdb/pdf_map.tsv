@@ -518,3 +518,7 @@ ai2011_rolling_resistance_contact_models_dem	assessment of rolling resistance mo
 #   ⚠ 크롭 39 장 = 도구 16 (재크롭 9: Table 1 · SI 그림 S1–S8 · 캡션 고침 5) + 손 크롭 23 (manual_crop: 패널 2 · 그림 안 식 1 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
 heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct	identifying_the_origins_of_microstructural_defects
 heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct	identifying the origins of microstructural defects
+# ── NMC532 응집체 (as-received 이차입자 · PS 기지) · 소결 펠릿 · PVDF · CB/PVDF 의 건조 ↔ 1 M LiPF6-PC 속 나노압입 (Berkovich 85 nm · cube-corner 팝인 K_c) (de Vasconcelos · Sharma · Xu · Zhao · Exp. Mech. 59 (2019) 337–347) — litdb 2026-11-12 (후보 N-24) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ ESM = docx 10 개 (74921154-24._SupZ_00…09_…MOESM10…1_ESM.docx — 그림 S1–S8 · 표 S1–S2) · 크롭 63 장 = 도구 14 (그대로 3 · 다시 자름 11) + 손 49 (manual_crop: 그림 5 · 패널 15 · 식 9 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte	in-situ_nanoindentation_measurement_of_local_mechanical
+devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte	in-situ nanoindentation measurement of local mechanical

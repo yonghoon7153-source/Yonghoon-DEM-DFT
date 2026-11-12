@@ -399,6 +399,7 @@
 - NCM 기계 물성 사슬: [`stallard2022_cathode_mechanical_properties_review`](stallard2022_cathode_mechanical_properties_review.md) · [`wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem`](wheatcroft2023_nmc811_secondary_particle_fracture_insitu_sem.md).
 - SE 압입 짝: [`lee2025_heckel_argyrodite_powder_densification_nanoindentation`](lee2025_heckel_argyrodite_powder_densification_nanoindentation.md) · [`papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation`](papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation.md).
 - E_AM 를 입력으로 쓴 DEM · CGMD: [`xu2023_realistic_am_shape_cgmd_calendering`](xu2023_realistic_am_shape_cgmd_calendering.md) (135 GPa) · [`so2021_dem_mold_pressure_assb_coldpress`](so2021_dem_mold_pressure_assb_coldpress.md).
+- 같은 그룹 · 같은 NMC532 의 2019 *Exp. Mech.* 카드 (2026-11-12): [`devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte`](devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte.md) — [Sedl26] [27] 의 원문: as-received 이차입자 응집체 (PS 기지) **113 · H 7.8 GPa** (85 nm · 건조 Ar · 평균) · 소결 펠릿 200 · 14.0 · 1 M LiPF₆-PC 속 E · H 불변 · 응집체 K_c 0.104 → 0.212 — 이 카드 L68 의 "7.8 → [27]" 매핑 확정 · 비슷한 깊이에서 이 카드 targeted 값의 약 0.8 배.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

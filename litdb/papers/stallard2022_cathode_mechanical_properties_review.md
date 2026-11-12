@@ -541,6 +541,7 @@ Fig 8 은 첫 손 클립이 Stage I 표면선 왼끝 (x 62.5 pt, 높이 0 인 �
 - `bucci2017_chemomech_failure_assb_cycling_czm` — 황화물 SE G_c (ASSB 쪽 인성 앵커).
 - (동시 작업 중) Sharma 2023 *Extreme Mech. Lett.* 58, 101920 — NMC811 0.271 · 단결정 여부 판정 (이 카드 작성 시점 정본에 **없음**).
 - `stallard2022_nmc811_single_crystal_shear_strength_lithiation` — **같은 제1 저자 · 같은 해의 다른 논문** (*J. Electrochem. Soc.* 169, 040511 · 무압연 다공 층의 Vickers 압입 + 기판 경도) · 단결정 NMC811 기저면 τ_C 86 ± 12 → 39 ± 5 MPa (리튬화 y 1 → 0.14 · Reuss 환산 · 저자 '상한 추정') — 이 리뷰 표의 '단결정 NMC: 없음' 자리에 들어갈 역학 값 (다른 양 · 다른 시험).
+- [`devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte`](devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte.md) (2026-11-12 카드) — **[74] 의 원문**: Fig 12A 의 110 · 109 · 198 · 198 = 그 논문 그림 8 의 **중앙** [Q1, Q3] · Fig 7 의 점 113 · 7.80 = 응집체 건조 평균 · Fig 9 의 NMC532 E 곡선 = 그 논문 그림 7b (A_P^½ = 4.95 h) · Fig 9 의 NMC532 **H** 곡선은 그 논문에 없음 · 전해질 = propylene carbonate (PC).
 
 ---
 
