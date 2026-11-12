@@ -216,7 +216,7 @@
   "generated": "2026-11-12",
   "pdfs": [
    "be97bf85-18._A_computational_workflow_for_the_simulation_of_solid_state_battery_electrodes_from_manufacturing_to_electrochemical_performance.pdf",
-   "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx"
+   "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx (SI docx; tables rendered after LibreOffice PDF conversion, figures from word/media)"
   ]
  },
  "benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem": {
@@ -3530,6 +3530,13 @@
   "generated": "2026-08-25",
   "pdfs": [
    "e7ac4cb0-2026.08.18__________.pdf"
+  ]
+ },
+ "yano2024_eepa_binary_mixture_plasticity_compression_dem": {
+  "figures": 64,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "935970a7-25._Numerical_analysis_of_compression_properties_of_the_binary_mixture_of_powder_with_different_particle_plasticiti.pdf"
   ]
  },
  "yano2026_se_psd_width_ionic_tortuosity_dem": {

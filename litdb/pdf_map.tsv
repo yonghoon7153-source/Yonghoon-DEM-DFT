@@ -464,3 +464,6 @@ meyer2018_calendering_process_model_active_material_mass_loading	process modelin
 # ── 분무 건조 알루미나 과립의 금형 안 X 선 단층 촬영 (꺼내지 않고 단계별 · 복셀 2.5 µm · ≤ 113 MPa) — Py 1.5–5 MPa ↔ 8 MPa 에서 '막 깨지기 시작' · 2 µm 초과 기공만 (전체 기공률 아님) · 방법만 전이 — litdb 2026-11-12 (kim2026 ref 43)
 cottrino2013_insitu_xct_granulated_alumina_die_compaction	characterization_by_x-ray_tomography_of_granulated_alumina_powder
 cottrino2013_insitu_xct_granulated_alumina_die_compaction	characterization by x-ray tomography of granulated alumina powder
+# ── 일본어 원문 (粉体工学会誌 61, 144) — 카드 제목이 한국어라 파일명 토큰과 안 겹쳐 손으로 (2026-11-12)
+yano2024_eepa_binary_mixture_plasticity_compression_dem	numerical_analysis_of_compression_properties_of_the_binary_mixture
+yano2024_eepa_binary_mixture_plasticity_compression_dem	numerical analysis of compression properties of the binary mixture

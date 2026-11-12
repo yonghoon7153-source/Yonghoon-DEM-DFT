@@ -484,6 +484,7 @@ EDEM 의 JKR (접촉력 부분만 · 접촉 밖 vdW 없음) · 1 mm 입자 · 0.
 ## 🔗 관련 카드
 - 같은 모델: `thakur2014_eepa_adhesive_elastoplastic_dem` (학술지 판 · 선형).
 - EEPA 를 쓴 계산 (정본): `he2026_dem_calendering_inhomogeneity_areal_density` · `schreiner2020_dem_calendering_lib` · `yano2026_se_psd_width_ionic_tortuosity_dem` (λp = C_p · 0.619 는 이 학위논문에 없음) · `zhang2026_xct_dem_cathode_calendering_peel_calibration` · `otani2025_dem_se_dispersion_aggregation_compression` · `lee2024_multiphysics_dem_fem_initial_pressure_assb`.
+- 이종 접촉 소성비 규칙 (같은 EDEM · EEPA 를 쓴 오사카 그룹): `yano2024_eepa_binary_mixture_plasticity_compression_dem` — λp* = 1 − E₁*/E₂* (NCM–Li₃PS₄ 0.60 · 0.619 는 그 논문에도 없음) · 그 논문 표 2 의 입력 이름 = 식 (3)–(9) · (22) 의 n · x · Δγ · ζ_tm 으로 인쇄 (이 카드 L74 의 [카드 추론] 이름 대응) · ζ_tm 0.67 = 2/3 근거 (Di Renzo 2005 · Kruggel-Emden 2008) 가 그 논문 p.146 에 인쇄됨.
 - 접촉 법칙 계보 (정본): `luding2008_cohesive_frictional_contact_models` · `thorntonning1998_adhesive_elastoplastic_contact` · `pasha2014_linear_elastoplastic_adhesive_contact` · `johnson1971_jkr_surface_energy_contact_elastic_solids` · `dmt1975_adhesion_contact_deformation` · `paulick2015_particle_contact_stiffness_two_particle_method`.
 - 접착 보정 · 흐름 (정본): `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` (이 학위논문 인용 · SJKR CED) · `coetzee2017_dem_calibration_review` · `alizadeh2018_dem_adhesion_calibration_segregation_heap` · `molerus1975_theory_of_yield_cohesive_powders`.
 - 하중 뺌 (정본): `kollenda2024_time_sensitivity_calendered_electrode_springback_storage` · `miss2026_insitu_conductivity_porosity_pressure_compaction`.
