@@ -53,7 +53,8 @@ def prefix(key, q):
 def sync_evac():
     d = CTL / "litdb" / "_curation" / "evac"
     (d / "tools").mkdir(parents=True, exist_ok=True)
-    for f in ("make_sheet.py", "make_brief.py", "launch.py", "intake.py", "finish.py", "queue.json", "AGENT_PROMPT_TEMPLATE.md"):
+    for f in ("make_sheet.py", "make_brief.py", "launch.py", "intake.py", "finish.py", "restore.py", "queue.json",
+              "received_files.tsv", "AGENT_PROMPT_TEMPLATE.md"):
         s = SCR / "tools" / f
         if s.is_file():
             shutil.copy2(s, d / "tools" / f)

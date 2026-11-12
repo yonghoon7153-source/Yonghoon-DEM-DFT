@@ -10,10 +10,16 @@
 2. 돌던 편의 뒷정리 (트리 1 = `/home/user/litdb-canon` · 트리 2 = `/home/user/litdb-canon2`):
    - `git -C <트리> status --short` 가 비어 있고 원격에 그 논문 카드 커밋이 있으면 (`git log origin/claude/friendly-meitner-lldvar --oneline | head`) 에이전트는 끝낸 것이다 → `python3 -I <scratchpad>/tools/finish.py --key <키> --slug <slug> --commit <sha> --memo "<한 줄>"` 로 마무리 (모음 그림 = `<scratchpad>/litcards/<slug>_sheet*.png` → 1저자에게 보냄).
    - 트리가 더럽거나 (쓰다 만 카드 · 그림) 커밋이 없으면 에이전트가 중간에 멈춘 것이다 → ① 에이전트가 살아 있으면 (ListAgents) SendMessage 로 "지시서대로 이어서 끝내라" ② 없으면 쓰다 만 것을 `git -C <트리> stash -u` 로 치워 두고 (지우지 않는다) 같은 키로 다시 띄운다 (정독 NN 그대로 · `launch.py`).
-3. 컨테이너가 새로 떴으면 (scratchpad · 트리 · 패키지가 없다):
-   - `python3 -m pip install "pymupdf==1.28.2" pillow numpy openpyxl` → 트리 셋을 다시 만든다 (아래 '자리' 절) → `python3 tools/litdb/extract_figures.py --selftest` 84/84.
-   - 도구: 정본 `litdb/_curation/evac/tools/*` 를 scratchpad `tools/` 로 복사 (경로 상수 `SCR` 은 파일 위치에서 정해진다 · `intake.py` 의 업로드 폴더 상수 `UP` 은 새 세션 경로로 고친다).
-   - PDF: 업로드 폴더에 남아 있으면 `tools/seen.json` 없이 `python3 -I tools/intake.py` 를 다시 돌려 stage · inbox 를 채운다 (queue.json 의 손으로 쓴 항목은 그대로 둔다). 남아 있지 않으면 1저자에게 다시 올려 달라고 한다 (status.tsv 에 받은 번호가 적혀 있다).
+3. 컨테이너가 새로 떴으면 (`/home/user/litdb-ctl` · scratchpad `tools/` 가 없다 = 재시작된 것) — **복구 도구 한 번**:
+   ```
+   git -C /home/user/Yonghoon-DEM-DFT fetch origin claude/friendly-meitner-lldvar
+   git -C /home/user/Yonghoon-DEM-DFT show origin/claude/friendly-meitner-lldvar:litdb/_curation/evac/tools/restore.py > /tmp/restore.py
+   python3 -I /tmp/restore.py --scratch <이 세션의 scratchpad 경로> --uploads /root/.claude/uploads/<세션 id>
+   ```
+   패키지 (PyMuPDF 1.28.2 등) · 작업 트리 셋 · scratchpad 도구 · stage · inbox (업로드 폴더가 남아 있을 때) · 참고 저장소 셋 · 그림 도구 selftest 를 한 번에 다시 만들고, inbox 를 받은 파일 목록 (`tools/received_files.tsv` — 170 파일 · 이름 · 크기 · sha256) 과 견줘 없는 번호를 찍는다. 11-12 에 빈 자리에서 시험: 업로드 폴더만 있으면 inbox 170/170 이 이름 · 해시까지 똑같이 다시 만들어진다.
+   - 그 뒤 `tools/trailer.txt` 에 이 세션의 커밋 끝 두 줄을 적는다 (정본에 없다).
+   - **업로드 폴더가 사라졌으면** PDF 는 복구할 수 없다 (PDF 는 저작권 때문에 공개 가지에 올리지 않았다) → 1저자에게 '차례 기다림' 번호의 파일을 다시 올려 달라고 한다 (PushNotification 한 번 + 답장에 번호 목록). 그동안 띄울 수 있는 것이 없으면 멈춘다 — status.tsv 의 '도는 중' 줄은 '차례 기다림 (재시작으로 끊김)' 으로 고쳐 push 한다.
+   - 재시작으로 끊긴 편 (status '도는 중' 인데 원격에 카드 커밋이 없음) 은 처음부터 다시 띄운다 (에이전트 기록도 사라져 SendMessage 로 못 잇는다).
 4. 다음 차례 = status.tsv 의 '차례 기다림' 을 N 번호순으로 · 한 번에 둘 (트리 1 · 2) · **기존 카드 보강 (68-1 zhang2026 · 68-2 lyu2025 · N-148 · N-149) 은 맨 끝** (다른 에이전트가 같은 카드에 관련 카드 줄을 더하므로).
 5. 한 편이 끝날 때마다: 모음 그림을 1저자에게 보냄 → `finish.py --key … --next <다음 키> --tree <1|2>` (status · wishlist · 이어가기 자료 push + 다음 지시문 출력) → 그 지시문으로 `litdb-curator` 에이전트를 띄움 → 1저자에게 표로 보고 (12 줄 안 + 의도 대조 한 줄).
 
