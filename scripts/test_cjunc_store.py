@@ -15,7 +15,8 @@
   T3  받지 않는 꼴 (메모리 겹침 · 같은 메모리의 두 보기 · 비연속 · 읽기 전용 · 구조체 · dict 하위형 · 집합 · 모르는 객체) = Unsupported ·
       저장 안 함 (팔 결과 그대로).  ★ 별칭 (같은 객체가 두 자리에) 은 받는다 — 되가리킴으로 그대로 복원 (T1 · 원장의 pair_i · pair_j 가
       `[빈 배열] * instance 수` 꼴 = instance 가 둘 이상인 원장은 늘 별칭이 있다 · 대피 세션 11-12 발견)
-  T4  열쇠 결속 — 침대 (sid 한 칸 · dtype) · lo · vox (1 ulp) · 점 (1 ulp) · phase · fid · kind · 문턱 열 칸 · 코드 · 환경 · 기계 · 모델 판 · 꼴 판
+  T4  열쇠 결속 — 침대 (sid 한 칸 · dtype) · lo · vox (1 ulp) · 점 (1 ulp) · phase · fid · kind · 문턱 열 칸 · 코드 · 환경 · 기계 · 모델 판 · 스키마 ·
+      꼴 판 (스키마 = 대피 4 덧 · 열쇠 칸마다 하나씩)
   T5  흐름 — 없음 → 짓고 씀 (0444 · 이름 · 임시 파일 없음) → 새 Store 적중 (짓기 0 회) · 읽은 원장 = 지은 원장 (비트) · 계획 · 풀이 σ 비트 같음 ·
       payload_prepare 끔 / 빗나감 / 적중 같음 (끔 = 'store' 칸 없음) · 화면 줄 (probe6 실패 낱말 없음)
   T6  못 읽음 (정직한 흐름 = 다시 짓는다 · 파일 그대로 · 덮어쓰지 않음 · ⚠ 줄) — 0 바이트 · 잘림 · 배열 · 뼈대 한 바이트 (CRC) · 중앙 목록 한 바이트 ·
@@ -25,7 +26,8 @@
   T8  다른 침대 · 문턱 · 코드 · 기계의 저장본 = 열쇠가 달라 읽지 않음 → 새로 짓고 씀 (옛 파일 그대로)
   T9  같은 열쇠 동시 쓰기 — 남이 같은 원장 = peer_same · 남이 다른 원장 = 멈춤 · 실제 프로세스 둘 경주 = written 하나 + peer_same 하나 · 파일 하나
   T10 끊김 (PID 이름공간 `unshare -pf --mount-proc --kill-child` 안에서만 · kill = 직접 만든 자식) — 쓰는 도중 (임시 파일 뒤 · link 전) · 읽는 도중
-  T11 쓰기 실패 · 끔 — 디스크 여유 · link EPERM · 쓰는 중 ENOSPC · 기계 id 못 읽음 · 폴더 꼴 (상대 · 없음 · 파일 · 남이 쓸 수 있음) · 입력 오류 = 옛 오류
+  T11 쓰기 실패 · 끔 — 디스크 여유 · link EPERM · 쓰는 중 ENOSPC · 기계 id 못 읽음 · 폴더 꼴 (상대 · 없음 · 파일 · 남이 쓸 수 있음 · 다른 소유자) ·
+      입력 오류 = 옛 오류 (다른 소유자 = 대피 4 덧)
   T12 쓰는 쪽 발행 전 대조 (직렬화 결함 = 발행 안 함 · 멈춤 아님) — 구현 커밋에서 더함 (고치기 전 판 = 모듈 없음)
   T13 규모 (실침대 꼴 = instance 마다 작은 배열 넷 · 별칭 빈 배열) — 겹침 검사가 배열 쌍마다 돌지 않는다 (배열 수에 선형 · 옛 = 쌍마다
       np.shares_memory = 배열 47 만 개에서 끝나지 않음) · 작은 배열 12 만 개 + 별칭 6 만 자리 왕복 = 시간 안 — 구현 커밋에서 더함
@@ -33,8 +35,8 @@
       어긋남 (rc ≠ 0 · S2_CJUNC_STORE|INCONSISTENT| · 출력 없음) · instance 둘인 침대 (세 가닥 직렬) 도 지어 씀 → 적중 (P5 · 구현 커밋에서 더함)
   R   러너 (`test_ca_ext_runner` 틀 · 실제 셸 · 실제 payload) — CJUNC=1 없이 · 조립만과 함께 · 상대 · 허용 밖 글자 · 개행 · 없는 폴더 = 발사 전 ABORT ·
       켬 = payload 인자 · 팔 JSON · 영수증 · OUTDIR = 끔과 같음 · 둘째 런 = 적중
-  C   사슬 배선 — `--cjunc-store` (ladder · predict 만 · 절대 · 있는 폴더 · 남이 못 씀) · Runner env · 봉인 원천 (RunnerGraphSource) 은 절대 안 받음 ·
-      부모 셸 값은 지운다 · CODE_FILES · 규율 검사기 격리 목록 · CLI 회계
+  C   사슬 배선 — `--cjunc-store` (ladder · predict 만 · 절대 · 있는 폴더 · 남이 못 씀 · 이 사용자 소유) · Runner env · 봉인 원천 (RunnerGraphSource) 은
+      절대 안 받음 · 부모 셸 값은 지운다 · CODE_FILES · 규율 검사기 격리 목록 · CLI 회계 (이 사용자 소유 = 대피 4 덧)
 ⚠ PASS = 저장 · 읽기 · 거부 배선이 계약대로라는 증거이지 원장 (기하) 의 물리 검증이 아니다.  저장본 자신은 **자기 일관 위조** (같은 열쇠 이름 ·
    다시 센 지문) 를 가리지 못한다 — 그 몫 = 봉인 원천 재조립 대조 (판정 단계 · 저장본을 읽지 않는다) · 한정 (T7 보고 줄).
 
@@ -318,6 +320,31 @@ def new_store_dir(name):
     os.makedirs(d)
     os.chmod(d, 0o755)
     return d
+
+
+@contextlib.contextmanager
+def other_owner(d):
+    """★ 대피 4 덧 — 폴더 d 를 '이 사용자 소유 아님' 으로 (root = 진짜 chown 다른 번호 · root 아님 = `os.getuid` 를 잠깐 다른 번호로 · 같은 비교 줄을
+    거친다).  d = None 이면 아무것도 안 한다.  끝나면 되돌린다."""
+    if d is None:
+        yield
+        return
+    real = os.getuid
+    st0 = os.stat(d)
+    chowned = patched = False
+    try:
+        try:
+            os.chown(d, real() + 12345, -1)
+            chowned = True
+        except (PermissionError, OSError):
+            os.getuid = lambda: real() + 12345
+            patched = True
+        yield
+    finally:
+        if patched:
+            os.getuid = real
+        if chowned:
+            os.chown(d, st0.st_uid, -1)
 
 
 def store_files(d):
@@ -617,6 +644,12 @@ def t4():
         keys['모델 판'] = st.key(**inp)
     finally:
         CJ.CJUNC_MODEL_VERSION = old_mv
+    old_sc = CJ.CJUNC_SCHEMA                                 # ★ 대피 4 덧 — 열쇠의 스키마 칸 (코드 sha 와 겹 방어 · 칸 하나씩)
+    try:
+        CJ.CJUNC_SCHEMA = old_sc + '-x'
+        keys['스키마'] = st.key(**inp)
+    finally:
+        CJ.CJUNC_SCHEMA = old_sc
     old_fmt = CS.STORE_FORMAT
     try:
         CS.STORE_FORMAT = old_fmt + '-x'
@@ -629,7 +662,7 @@ def t4():
     chk('T4 열쇠 = 64 hex · 같은 입력 · 새 Store 도 같은 열쇠 (결정적)', isinstance(k0, str) and len(k0) == 64
         and all(c in '0123456789abcdef' for c in k0) and k0 == k0b, (k0, k0b))
     chk(f'T4 열쇠 결속 {len(keys) - 1} 갈래 (침대 · lo · vox · 점 · phase · fid · kind · 문턱 열 칸 · s_min None · 칸 빠짐 · 코드 · 환경 · 기계 · 모델 · '
-        '꼴) — 하나씩 바꾸면 모두 다른 열쇠 (서로도 다름)', len(set(vals)) == len(vals), [k for k, v in keys.items() if vals.count(v) > 1])
+        '스키마 · 꼴) — 하나씩 바꾸면 모두 다른 열쇠 (서로도 다름)', len(set(vals)) == len(vals), [k for k, v in keys.items() if vals.count(v) > 1])
     chk('T4 열쇠는 정준 입력 (원장이 실제로 쓰는 float64 · int64 값) 에 묶인다 — 같은 값이면 메모리 차례 (F) · 정수 폭 (int32 · int8) 이 달라도 '
         '같은 열쇠 (한정: 입력 dtype 은 열쇠 밖 = 원장도 정준 값만 본다)',
         same_canon == k0, (same_canon, k0))
@@ -1296,7 +1329,16 @@ def t11():
             bad_dirs[nm] = '받았다'
         except ValueError:
             pass
-    res['폴더 꼴 거부 (상대 · 없음 · 파일 · 남이 씀)'] = (not bad_dirs, bad_dirs)
+    ow, why_own = new_store_dir('t11_owner'), None             # ★ 대피 4 덧 — 다른 소유자 (root = 진짜 chown · 아니면 이 프로세스 사용자 번호를 바꿔 보인다)
+    with other_owner(ow):
+        try:
+            CS.Store(ow)
+            bad_dirs['다른 소유자'] = '받았다'
+        except ValueError as e:
+            why_own = str(e)
+    if why_own is not None and '소유자' not in why_own:
+        bad_dirs['다른 소유자'] = f'다른 사유로 거부: {why_own}'
+    res['폴더 꼴 거부 (상대 · 없음 · 파일 · 남이 씀 · 다른 소유자)'] = (not bad_dirs, bad_dirs)
     bad_inp = dict(inp, kind=None)
     try:
         quiet(CJ.cjunc_registry, inp['sid'], inp['lo'], inp['vox'], inp['pts'], inp['phase'], inp['fid'], None, **inp['thresholds'])
@@ -1585,6 +1627,7 @@ def t_chain():
     gw = new_store_dir('chain_gw')
     os.chmod(gw, 0o775)
     sp_dir = new_store_dir('chain has space')                  # 있는 폴더 · 허용 밖 글자 (빈칸 — 러너가 생성 스크립트에 박는 글자 규칙)
+    ow = new_store_dir('chain_owner')                          # ★ 대피 4 덧 — 다른 소유자
     errs = {}
     for nm, argv, want in (('verdict 에 줌', ['--stage', 'verdict', '--cjunc-store', sd], '--cjunc-store 는 --stage ladder'),
                            ('plan-doc 에 줌', ['--stage', 'plan-doc', '--cjunc-store', sd], '--cjunc-store 는 --stage ladder'),
@@ -1593,9 +1636,10 @@ def t_chain():
                            ('상대 경로 (있는 폴더)', ['--stage', 'ladder', '--cjunc-store', os.path.relpath(sd)], '--cjunc-store 는 절대 경로'),
                            ('허용 밖 글자 (빈칸 · 있는 폴더)', ['--stage', 'ladder', '--cjunc-store', sp_dir], '--cjunc-store 는 영문'),
                            ('없는 폴더', ['--stage', 'ladder', '--cjunc-store', os.path.join(sd, 'nope')], '--cjunc-store 는 있는 폴더'),
-                           ('남이 쓸 수 있음', ['--stage', 'ladder', '--cjunc-store', gw], '--cjunc-store 는 그룹')):
+                           ('남이 쓸 수 있음', ['--stage', 'ladder', '--cjunc-store', gw], '--cjunc-store 는 그룹'),
+                           ('다른 소유자', ['--stage', 'ladder', '--cjunc-store', ow], '--cjunc-store 는 이 사용자 소유')):
         buf = io.StringIO()
-        with contextlib.redirect_stderr(buf), contextlib.redirect_stdout(buf):
+        with contextlib.redirect_stderr(buf), contextlib.redirect_stdout(buf), other_owner(ow if nm == '다른 소유자' else None):
             try:
                 RR.main(argv)
                 code = 0
@@ -1603,7 +1647,7 @@ def t_chain():
                 code = e.code
         if not (code == 2 and want in buf.getvalue()):
             errs[nm] = (code, buf.getvalue().strip()[-200:])
-    chk('C1 --cjunc-store 거부 일곱 (verdict · plan-doc · 합치기 · 상대 (있는 폴더) · 허용 밖 글자 · 없는 폴더 · 남이 쓸 수 있음) → argparse 오류 '
+    chk('C1 --cjunc-store 거부 여덟 (verdict · plan-doc · 합치기 · 상대 (있는 폴더) · 허용 밖 글자 · 없는 폴더 · 남이 쓸 수 있음 · 다른 소유자) → argparse 오류 '
         '(rc 2 · 갈래마다 그 사유 글)', not errs, errs)
     old = RR.runner_env_delta
     try:
