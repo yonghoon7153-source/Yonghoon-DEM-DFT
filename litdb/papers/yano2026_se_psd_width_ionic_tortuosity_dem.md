@@ -432,6 +432,7 @@ NCM622 : Li₆PS₅Cl = 70 : 30 wt% 복합체에서 LPSCl 몫을 **원 분말 (D
 - DEM · 최단 경로 · 응집: `sangros2020_dem_electrical_conductive_paths_assb` · `so2022_dem_compaction_coated_particles_assb` · `otani2025_dem_se_dispersion_aggregation_compression` · `thakur2014_eepa_adhesive_elastoplastic_dem` · `frankenberg2024_dem_high_intensity_mixer_assb`.
 - 같은 그룹 (오사카): `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps`.
 - 순수 SE 입도: `faka2026_particle_size_consolidation_strain_lpscl`.
+- EEPA 원전 (학위논문): `morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis` — λp = 그 학위논문의 C_p = δp/δ = 1 − k₁/k₂ (식 6.1 · n = 1 에서만 정확) · δp = C_p^(1/n) δ (식 4.19) · slope / tensile exponent · tangential stiff multiplier = n · X · κ_tm · 0.619 는 그 학위논문에 없다.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

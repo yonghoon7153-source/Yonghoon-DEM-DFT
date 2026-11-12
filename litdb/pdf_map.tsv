@@ -455,3 +455,6 @@ onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset	random loose pack
 # ── 액체 LIB 양극의 in situ X 선 CT 압입 + CT 기반 등가 구 DEM · 입자 파괴 위험 = 명목 응력 f_max/d² (Song 외 · Powder Technol. 453 (2025) 120667) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (본문 · 보충 자료 둘 다 이 낱말을 갖는다)
 song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage	insights_into_cathode_densification_of_calendering_process
 song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage	insights into cathode densification of calendering process
+# ── 박사 학위논문 (358 쪽 · 네 부분 PDF) — EEPA 접촉 모델 원전 · EDEM API · 철광석 미분 보정 · 사일로 (Morrissey · University of Edinburgh 2013) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 네 부분 파일 모두 이 낱말을 갖는다 · 밑줄 · 공백 두 변형
+morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis	discrete_element_modelling_of_iron_ore_pellets
+morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis	discrete element modelling of iron ore pellets

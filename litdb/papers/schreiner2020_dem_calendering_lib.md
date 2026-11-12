@@ -280,5 +280,7 @@
 - **2023 resupply**: PDF 하단 "resupply of March 2023 ... content unaffected" = *내용 동일, 템플릿만 정정*. 인용 시 원 2020 게재 유지.
 - **Fig 3/4/5 일부 값(broken bonds ~25k–28k, 압밀압력 ~150 MPa)은 디지타이즈** → **추세만(±)**. **stated**: porosity 43 %·ρ 2.53·d_sheet 56 µm·PSD d₅₀ 7.19/최소 3.4/상한 20 µm·RVE 250²×120→56 µm·indenter ⌀100 µm·0.15 µm/s·λ_P(0.9/0.8/0.975→0.985)·Δ_Y(5/20/60 J/m²)·bond 영구파단·roll ~400 mm·Table 1 조성·밀도.
 
+> 🔗 **관련 카드 (2026-11-12 한 줄 추가)**: [`morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis`](morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis.md) = 이 카드가 쓴 EEPA 접촉 모델의 학위논문 원전 (Morrissey, Edinburgh 2013) — 식 · 매개변수 정의 · EDEM API 구현 · 검증 · 항복점 없음 (p.77) · 강성을 벌크 강성 대신 강도에 맞춰 무르게 고른 보정 (그 카드 §3-4).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

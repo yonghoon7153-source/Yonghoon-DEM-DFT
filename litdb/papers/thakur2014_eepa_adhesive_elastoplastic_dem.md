@@ -390,5 +390,7 @@ EEPA의 **고유 신규성 = 점착력 f_min이 소성 접촉면적과 함께 �
 **없음** (사용자 지시: SI 없음, PDF만 복사). 본문 18쪽 자체가 완결. 비선형(n>1) 결과는 별도 논문 ref[54](Morrissey
 PhD 2013); packing/compression/caking 실험 짝은 ref[45](Particuology 12, 2–12, 2014).
 
+> 🔗 **관련 카드 (2026-11-12 한 줄 추가)**: [`morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis`](morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis.md) = 위 ref[54] (Morrissey PhD 2013) 의 원문 카드 — EEPA 의 제안 · EDEM API 구현 · 두 입자 검증 · 비선형 (n = 1.5) 판 · 철광석 미분 보정이 거기 있다 · 학위논문의 꼴은 Δγ 를 넣어 f_min = (3/2)πΔγa (a = 소성 접촉 반지름) 로 정하고 k_adh 를 유도 (식 4.16) 하며 끌어당김 가지 지수 X 를 n 과 따로 둔다 · 접선 강성은 고정 2/7 이 아니라 배수 κ_tm 변수 (p.81) — 이 카드의 '−k_adh·δⁿ' · 'k_t = 2/7·k₁' 와 꼴이 다르다 (그 카드 §0-1).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
