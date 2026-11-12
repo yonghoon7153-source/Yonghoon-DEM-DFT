@@ -292,6 +292,9 @@ ASSB 양극은 CAM이 SE에 *직접 둘러싸여* 있어 **(1) 불완전 고체-
 - ⚠ **Li-metal 음극**: full cell이 Li-metal — 음극 단락/Li 거동은 우리 *복합 양극* 범위 밖(Doux와 같은 주의). 가져올 것은 **양극 microstructure·utilization·τ·porosity·작동압-retention**.
 - ⚠ **digitized vs stated**: porosity 11.3/4.4 %·tortuosity 1.84/1.21·BET 6.02/9.24·utilization 표·R_ct 17.3/9.9·retention·R_SSE/NCM ±545/+34·용량우위 +18/+20/+22·DRT 면적 +8/+26/+115 %는 **본문 stated**(신뢰). Nyquist R_b·voltage profile 세부는 TREND.
 
+## 🔗 관련 카드
+- ref 12 ("Sakka(Sakuda) et al.") 의 원전 (2026-11-12 카드): [`sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps`](sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps.md) — 1저자 = Yuya Sakka (교신 Orikasa) · 50 MPa 접촉 분율 · R_ct 는 원문과 맞고 '모델 25 MPa' 는 원문에 없음 (그 카드 §0-1).
+
 ---
 
 ## 🗨️ Q&A 로그

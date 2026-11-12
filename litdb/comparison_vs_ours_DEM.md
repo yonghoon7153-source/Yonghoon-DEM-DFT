@@ -455,13 +455,14 @@
     ↔ oxide는 >1000 °C 소결 — 우리 300 MPa cold-press DEM+MPM 파이프라인 전체의 전제를 리뷰가 명문화 (§2.3).
   - ★ **압력의 3축 등장** (우리 fab-vs-operating 구분의 확장판): ① 압밀축 — 압력↑ → porosity↓·CAM-SE 실접촉면적↑ →
     R_ct+R_bulk 동시↓, **단 과압 → tortuosity↑·이방 접촉구조**(가압방향 접촉↑ ↔ 측방 pore-지배 약접촉 잔존)[151 Sakka
-    JMCA 2022] = 우리 DEM 압력스윕·τ_Laplace 이방성 검증거리(신규); ② 열축 — **성형압↑ → 계면 치밀 비정질 P₂Sₓ층 in-situ
+    JMCA 2022 → 1 차 카드 `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps`] = 우리 DEM 압력스윕·τ_Laplace 이방성 검증거리(신규); ② 열축 — **성형압↑ → 계면 치밀 비정질 P₂Sₓ층 in-situ
     형성 → 총발열 −40–50 %**[106–109] (압력-열안전 커플); ③ 작동압축(음극) — void 수축/안정/성장 상도(P 0–20 MPa ×
     i 0–40 mA/cm²)[189] + **Li 변형기구 지도 → CCD vs stack pressure 예측**[191] + "well-defined pressure window"
     (부족→void / 과압→GB Li 압입) = Doux2020 5 MPa 최적·Lee2025 2 MPa 합류.  미래방향 ③ "**저압/무가압 설계**"가
     리뷰의 결론 = 우리 300 MPa 압밀구조의 저압 unload 접촉/σ 유지율 시뮬이 정확히 그 요구.
+    ↳ **[151] 원문 대조 (2026-11-12 · 1 차 카드 `sakka2022_…` §0-1)**: 재료 = **LGPS + LiNbO₃-NCM111 + AB** (LPSCl 아님) · 지름 1 mm 셀 **누른 채** CT (≈0.5 µm) 0 → 100 MPa — 복합 기공 44 → 23 % · 같은 셀 LGPS 층 53 → ≈5 % · NCM/LGPS 접촉 **분율** 75–78 → 83–84 % (50 MPa 에서 멈춤) · R_ct ×1/15 · '과압' = **100 MPa** 에서 **기하 경로 τ** (경로 ÷ 두께 · Z 방향 하나) 평균 3.83 → 5.38 (판독) · 이방 접촉은 **정성** (방향별 수치는 원문에 없음) · 'R_bulk' 는 원문 양이 아니다 (겉보기 전도도 +24 %) · ⇒ 견줄 자리는 τ_Laplace 이방성이 아니라 우리 τ_geo 의 압력 의존 · AM 표면 법선 방향별 SE 피복 (새 관측량).
   - 기계축 물성: **E 10–30 GPa·K_IC 0.2–0.4 MPa·m^½**(§C 참조) — porosity floor의 E-의존(우리 A축 논지)과 정합.
-  - ⚠ 리뷰=2차출처·자체 데이터 0 — cite는 1차([151],[191] 등)로; porosity 절대값 없음(우리 Minnmann/Doux/Sakuda 유지).
+  - ⚠ 리뷰=2차출처·자체 데이터 0 — cite는 1차([151] = 카드 `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps`,[191] 등)로; porosity 절대값 없음(리뷰 — [151] 원문은 CT 분할 기공을 준다: LGPS 계 · ≤100 MPa · 진밀도 분모 없음)(우리 Minnmann/Doux/Sakuda 유지).
 
 - **★ Luan 2025 AFM (`luan2025_graded_cathode_400whkg_pouch`) — 압력 층위는 완벽히 일치, 그런데 porosity 를 안 준다.**
   산업 파일럿(GRINM)이 **우리와 같은 소재계·같은 성형압**으로 4 mAh cm⁻² graded 양극과 5 Ah 파우치를 만들었다:
