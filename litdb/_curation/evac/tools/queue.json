@@ -1234,7 +1234,7 @@
   ],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: research 1..4 · Subject:  · Author:  · DOI: 10.1021/acsomega.9b01279 · PDF 4 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1021/acsomega.9b01279` grep = benhadjali2025_cgmd_calendering_to_3d_electrochemistry_assb_cathode, benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 4 · DOI(첫 쪽): ['10.1021/acsomega.9b01279']\n  - 첫 쪽 앞줄: This is an open access article published under a Creative Commons Non-Commercial No / Derivative Works (CC-BY-NC-ND) Attribution License, which permits copying and / redistribution of the article, and creation of adaptations, all for non-commercial purposes. / Article / Cite This: ACS Omega 2019, 4, 11141−11144 / http://pubs.acs.org/journal/acsodf / A Versatile and Eﬃcient Voxelization-Based Meshing Algorithm of / Multiple Phases / Mehdi Chouchane,†,‡ Alexis Rucci,†,‡ and Alejandro A. Franco*,†,‡,§,∥ / † / Laboratoire de Réactivité et Chimie des Solides (LRCS), UMR CNRS 7314, Université de Picardie Jules Verne, HUB de l’Energie, / 15 rue Baudelocque, 80039 Amiens Cedex, France / ‡ / Réseau sur le Stockage Electrochimique de l’Energie (RS2E), FR CNRS 3459, HUB de l’Energie, 15 rue Baudelocque, 80039",
   "p1": true
