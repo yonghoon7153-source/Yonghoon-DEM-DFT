@@ -52,3 +52,10 @@
   살아 있다 · rint_r_chain 506/506 390 s 끝 · rint_r_chain_e2e 도는 중) · 다른 check_all.sh · check_kgy_py38.sh = 본 트리 게이트 (본 세션 것 · 건드리지 않음).
   변이 도구에 끝-끝 변이 셋 (Z1 요약 칸 · Z2 ladder 배선 · Z3 predict 배선 · --e2e 일 때만) 더함 = 89 개 · 옛 글 자리 89/89 한 번씩 (사본 work/mut = 구현 커밋과 같음).
   남은 차례: B 끝 → 변이 (86 · 3.11) → kgy 판 묶음 → 끔 길 ↔ 바탕 커밋 산출 대조 (본 세션 지시 "기본 끔 경로 비트 같음") → 끝-끝 변이 셋 → GPU 하네스 CPU 흐름 확인 → 보고.
+- (대피 4 · 08:41Z · 새 조수가 이어받음) 상태: 작업 트리 깨끗 · HEAD f17ea8c6b · 묶음 B (py311_B) 는 E14 FAIL (cause=signal · 08:37:41Z · 앞 조수 정지와 같은 때 = 끊김 산물로 봄) 뒤 E15 에서 시험 프로세스가 죽음 (run_bundle.sh · 시험 둘 다 없음) ·
+  E15 의 따로 세션 사슬 (e15_stage_driver · pid 22969 · 부모 1) 만 고아로 남아 사다리를 끝까지 돈다 (내가 만든 자식 아님 → kill 하지 않고 끝나기를 기다린다 · 쓰는 곳 = 옛 tmp/rint_r_chain_e2e_lwue6x6a 뿐).
+  → 묶음 B 를 처음부터 다시 (py311_B2 · e2e · e2e12 · conv_cert · cjunc_store_e2e · rint_r_chain 은 506/506 끝났으므로 빼고).  변이 사본 work/mut = HEAD scripts 와 diff 0 확인.
+- (08:44Z) 줄 1 = 3.11 묶음 B 다시 (logs/evac/py311_B2 · py311_B2.out · 백그라운드) · 줄 2 = work/lane2.sh (고아 끝 기다림 → 변이 바탕선 → 변이 86 (Z 뺌 · logs/evac/mut2) → kgy 판 묶음 (logs/evac/kgy_all · 게이트 13 + 새 시험 셋 + 덧) · lane2.out).
+- (08:43Z) GPU 하네스: 블록에서 꺼낸 파일 md5 = acfeb4b4… (블록 관문 값과 같음) · 탭 · CR · 느낌표 0 · 두 모듈 sha256 = 블록 값 (git show 다시 셈) ·
+  CPU 흐름 (--backend numpy · n-side 24 · 13,824 미지수): 3.11 · kgy 판 3.8 둘 다 다섯 짝 비트 같음 · 주 풀이 267 반복 · 이어 풀기 37 (CPU 길은 Q11 이 안 바꿈 = 흐름 확인일 뿐) ·
+  블록 셸 관문 모의 (HOME = 스크래치 · dem-mt = 작업 트리 심볼릭 · 빈 activate): md5 · PIN · 두 커밋 · git show · sha256 관문 통과 → cupy 없음 ERROR rc 1 (기대).  work/gpu_check · work/blk_home.

@@ -116,7 +116,8 @@ def snap(evac_dir):
     # scratchpad 에만 있는 조수 산출 (정독 종합 묶음 · 메모 3.2 초안) — 내용이 같으면 바이트도 같게 묶는다 (가지에 새 덩어리가 안 쌓이게)
     for name, rels in (("synthfix_work.tgz", ["synthfix/package", "synthfix/APPLIED.md", "synthfix/applied_log.jsonl",
                                                "synthfix/post_build_notes.md", "synthfix/tools", "synthfix/out_before"]),
-                       ("dem_redesign_work.tgz", ["dem_redesign"])):
+                       ("dem_redesign_work.tgz", ["dem_redesign"]),
+                       ("mixer_e0_work.tgz", ["mixer_e0_v2"])):
         data, n, skipped = folder_tgz(rels)
         if n:
             (dest / name).write_bytes(data)
