@@ -14,7 +14,8 @@ GIT_INDEX_FILE (훅 꼴) · GIT_OBJECT_DIRECTORY + GIT_COMMON_DIR.  V 상태 = H
       깨끗한 환경과 같음 (고치기 전 = V 에 커밋 · RCPT-sha 둘 FAIL — 11-12 밤 사고 그대로)
   G3  payload `_code_sha` · `_exec_env` (생산 읽기 · 고정물 저장소 F) — 적대 = 깨끗 (V 의 HEAD 를 읽지 않는다) · V 그대로
   G4  `test_step3_gpu_precond.load_base` (기반 판 git show · 시험 모듈 불러오기 = 그 모듈의 GIT_* 지움) — 적대 = 깨끗 = 기준 git show 바이트 · V 그대로
-  G5  사슬 `rint_r_chain.git_identity` · `ledger_repo_problem` (생산 읽기) — 적대 = 깨끗 · V 그대로
+  G5  사슬 `rint_r_chain.git_identity` · `ledger_repo_problem` · `plan_commit_problem` (F5 계획 출처 커밋 = 이 리포의 기반 판 커밋 · blob 맞음 /
+      틀림) (생산 읽기) — 적대 = 깨끗 · V 그대로 (★ 11-12 2 회차 변이 보강 — F5 의 git 둘에 env 를 안 넘긴 변이가 G1–G6 에서 안 잡혔다)
   G6  이 묶음이 고친 시험 모듈 넷 (test_rint_r_chain `git_` · test_probe6_read `git` · test_cjunc_store_e2e · test_cjunc_store) — 적대 환경에서 그 모듈을
       불러 고정물 저장소를 만들면 (init · add · commit) V 그대로 · 고정물 저장소에 커밋 하나 · 불러온 뒤 그 프로세스 환경에 GIT_* 없음
 ⚠ 고치기 전 판 = V 에 커밋 · index · 객체가 생기거나 V 의 값을 읽는다 (실패를 기록) — 그 V 는 이 시험이 만든 일회용이다.
@@ -261,28 +262,40 @@ G5_CODE = r'''
 import json, sys
 sys.path.insert(0, sys.argv[1])
 import rint_r_chain as RR
-print('G5 ' + json.dumps({'id': RR.git_identity(sys.argv[2]), 'ledger': RR.ledger_repo_problem(sys.argv[3])}))
+base, blob = sys.argv[4], sys.argv[5]
+print('G5 ' + json.dumps({'id': RR.git_identity(sys.argv[2]), 'ledger': RR.ledger_repo_problem(sys.argv[3]),
+                          'plan': RR.plan_commit_problem('commit:' + base, 'scripts/step3_sigma.py', blob),
+                          'plan_wrong_blob': RR.plan_commit_problem('commit:' + base, 'scripts/step3_sigma.py', '0' * 64)}))
 '''
 
 
-@case('G5 사슬 git_identity · ledger_repo_problem (생산 읽기)')
+@case('G5 사슬 git_identity · ledger_repo_problem · plan_commit_problem (생산 읽기)')
 def g5():
     f = make_repo('g5_fixture', {'scripts/x.py': 'A = 1\n'})
     led = make_repo('g5_ledger', {'l.txt': 'l\n'})
     xp = os.path.join(f, 'scripts', 'x.py')
     want_head = g(f, 'rev-parse', 'HEAD').strip()
-    rc0, out0, err0 = run_py(G5_CODE, [SCRIPTS, xp, led], dict(CLEAN, TMPDIR=TD))
+    #  F5 (계획 출처 커밋) — 사슬은 자기 저장소 (scripts 의 git) 에서 커밋 · blob 을 찾는다 → 이 리포의 기반 판 커밋 (G4 와 같은 앞 조건) · 그 판
+    #  scripts/step3_sigma.py 의 blob sha256 = 맞는 계획 · 0 × 64 = 틀린 계획 (판별 — 맞음 = None · 틀림 = 사유 글)
+    base = g(ROOT, 'rev-parse', '--verify', f'{PRECOND_BASE}^{{commit}}').strip()
+    blob = hashlib.sha256(subprocess.run(['git', '-C', ROOT, 'show', f'{base}:scripts/step3_sigma.py'], capture_output=True, env=CLEAN,
+                                         check=True).stdout).hexdigest()
+    argv = [SCRIPTS, xp, led, base, blob]
+    rc0, out0, err0 = run_py(G5_CODE, argv, dict(CLEAN, TMPDIR=TD))
     ref = json.loads(tagged(out0, 'G5') or 'null')
-    chk('G5 기준 — 깨끗한 환경 = F 의 HEAD · 깨끗 · 상대 경로 scripts/x.py · 원장 저장소 꼴 문제 없음',
+    chk('G5 기준 — 깨끗한 환경 = F 의 HEAD · 깨끗 · 상대 경로 scripts/x.py · 원장 저장소 꼴 문제 없음 · 계획 출처 커밋 (이 리포의 기반 판 · '
+        'blob 맞음) 문제 없음 · blob 틀림 = 사유 (판별)',
         rc0 == 0 and isinstance(ref, dict) and ref['id'].get('head') == want_head and ref['id'].get('dirty') is False
-        and ref['id'].get('rel') == 'scripts/x.py' and ref.get('ledger') is None, (rc0, ref, err0[-300:]))
+        and ref['id'].get('rel') == 'scripts/x.py' and ref.get('ledger') is None and ref.get('plan') is None
+        and isinstance(ref.get('plan_wrong_blob'), str) and 'blob sha256' in ref['plan_wrong_blob'], (rc0, ref, err0[-300:]))
 
     def run(env, _v):
-        rc, out, err = run_py(G5_CODE, [SCRIPTS, xp, led], env)
+        rc, out, err = run_py(G5_CODE, argv, env)
         return json.loads(tagged(out, 'G5') or 'null'), rc, err
     res = per_variant('g5', run)
     bad = {nm: (same, rc, val, why) for nm, (same, val, rc, why) in res.items() if not (same and rc == 0 and val == ref)}
-    chk('G5 적대 환경 셋에서 사슬 git_identity (HEAD · dirty · rel) · ledger_repo_problem = 깨끗한 환경 값 (V 를 읽지 않는다) · V 그대로', not bad, bad)
+    chk('G5 적대 환경 셋에서 사슬 git_identity (HEAD · dirty · rel) · ledger_repo_problem · plan_commit_problem (F5 · 맞음 / 틀림) = 깨끗한 '
+        '환경 값 (V 를 읽지 않는다) · V 그대로', not bad, bad)
 
 
 # ═════════════════════════ G6 ═════════════════════════
