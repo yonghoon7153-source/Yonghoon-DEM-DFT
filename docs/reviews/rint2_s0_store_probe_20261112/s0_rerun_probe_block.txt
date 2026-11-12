@@ -1,0 +1,273 @@
+# S0 stage 1 rerun on kgy + carbon-junction registry store measurement (v2 2026-11-12, Rint 2 code package, RCP-04 / RCP2-04).
+# Paste the whole block at the kgy bash prompt (the account that runs R).  Fill PIN first (40-hex tip of the branch after the
+# code package import).  PROBE=1 runs S0 under the store probe wrapper (same registry object back to S0, S0 outputs the same,
+# only elapsed_s includes the probe seconds); PROBE=0 runs S0 alone (the 2026-11-06 form).  TAG = output folder suffix.
+# Author decision 2026-11-12 night: Q-B (a) = the official S0 stage 1 rerun runs under the probe (PROBE=1 = this block's default) and
+# the proposed thresholds T1-T3 are adopted as written.  Registered before the result in the repository:
+# docs/reviews/rint2_s0_store_probe_20261112/README.md (same E1-E4, T1-T3, md5 gates).
+# Expected before the result:
+#   E1 S0 rc 0, six outputs, import tool ADOPT_CANDIDATE, S0 report git_head = PIN, git_dirty False
+#   E2 one wrapper call, instances 117,583 (the 2026-11-08 SBE run, same bed; the registry code carbon_junction.py and
+#      fibre_segment_raster.py is unchanged since that pin f47bde0f6)
+#   E3 encode ok, write built_written, read hit, same = strict True and registry_fp True, store_start preloaded [] and error None,
+#      code_drift [], error None
+#   E4 S0 plan and arrays = 2026-11-08 (code fingerprint and time fields aside)
+# Thresholds (exceeded = report, the R plan decides):
+#   T1 seconds_write <= 600 s, seconds_read <= 300 s, seconds_read <= 10 % of seconds_build
+#   T2 memory increase (VmHWM over steps 2-4 minus VmRSS before step 1) <= 4 GiB
+#   T3 store file <= 2 GiB
+# E3 fails (built_write_skipped, built_write_failed, disabled = code_changed or no /etc/machine-id, read not hit, same False, error):
+# R does not use --cjunc-store; tell the main session; measure again after the fix.
+# Writes: a new log folder ~/s0log_<UTC>, a new S0 output folder ~/sdcp/ca1_s0_sbe_<UTC>_<TAG>, a new store folder
+# ~/sdcp/cjstore_s0probe_<UTC> (PROBE=1; measurement only - its file is never read by R, the stage-1 thresholds differ), the
+# pinned worktree ~/dem-s0-<pin9> (git worktree add, or reused) with its admin entry under BASE's .git/worktrees, BASE's FETCH_HEAD
+# and the remote-tracking ref of the branch (git fetch), and at the end ~/s0log_<UTC>.tgz (+ .sha256).
+# No kit, run folder or tracked repository file is changed.  No sigma.  About 1.5 h of CPU (2026-11-08: 5,383 s, RSS sample max 5.4 GiB).
+bash <<'S0Q'
+set -u
+PIN='<PIN>'
+PROBE=1
+TAG=q2q11
+BASE="$HOME/dem-mt"
+BR=claude/stoic-knuth-NObVQ
+KIT="$HOME/sdcp/kit_SBE_vgcf100"
+stop() { echo "[s0q] STOP: $* (S0 not started)"; exit 2; }
+case "$PROBE" in 0|1) ;; *) stop "PROBE must be 0 or 1 (nothing written)";; esac
+printf '%s' "$TAG" | grep -Eqx '[A-Za-z0-9_]{1,40}' || stop "TAG must be letters, digits or _ (nothing written)"
+printf '%s' "$PIN" | grep -Eqx '[0-9a-f]{40}' || stop "PIN is not a 40-hex commit (nothing written)"
+STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+W="$HOME/dem-s0-$(printf %.9s "$PIN")"
+O="$HOME/sdcp/ca1_s0_sbe_${STAMP}_${TAG}"
+L="$HOME/s0log_${STAMP}"
+S="$HOME/sdcp/cjstore_s0probe_${STAMP}"
+for p in "$O" "$L" "$S" "$L.tgz"; do if [ -e "$p" ]; then stop "$p already exists (nothing written)"; fi; done
+[ -x "$HOME/dem-venv/bin/python3" ] || stop "venv python not found (nothing written)"
+[ -d "$KIT" ] || stop "kit not found (nothing written)"
+git -C "$BASE" rev-parse --git-dir > /dev/null 2>&1 || stop "BASE is not a git checkout - fix the BASE line (nothing written)"
+for d in "$HOME"/s0log_*; do
+  [ -d "$d" ] || continue
+  if [ -e "$d/DONE" ] || [ -e "$d/STOPPED" ]; then continue; fi
+  stop "earlier log folder $d has no DONE or STOPPED: an S0 run may still be running there - look at its rss.log (nothing written)"
+done
+git -C "$BASE" fetch -q origin "$BR" || stop "git fetch failed (nothing written)"
+TIP="$(git -C "$BASE" rev-parse FETCH_HEAD)"
+[ "$TIP" = "$PIN" ] || stop "PIN is not the tip of $BR after the fetch (tip $TIP) - use the tip or fix the PIN line (only git fetch ran)"
+if [ -e "$W" ]; then echo "[s0q] reusing worktree $W"; else
+  git -C "$BASE" worktree add -q --detach "$W" "$PIN" || stop "git worktree add failed"
+fi
+[ "$(git -C "$W" rev-parse HEAD)" = "$PIN" ] || stop "worktree HEAD differs from PIN"
+[ -z "$(git -C "$W" status --porcelain)" ] || stop "worktree $W has local changes (S0 records git_dirty) - use a clean worktree"
+[ -f "$W/scripts/cjunc_store.py" ] || stop "the pinned worktree has no scripts/cjunc_store.py (pin is before the code package)"
+umask 022
+mkdir "$L" || stop "cannot create $L"
+stopl() { echo "reason=$*" > "$L/STOPPED"; stop "$*"; }
+if [ "$PROBE" = 1 ]; then mkdir "$S" || stopl "cannot create $S"; fi
+cat > "$L/s0_store_probe.py" <<'S0Q_PROBE_EOF'
+# -*- coding: utf-8 -*-
+"""S0 stage 1 wrapper - measures the carbon-junction registry store (scripts/cjunc_store.py) on the real bed (v2 2026-11-12, RCP-04 / RCP2-04).
+
+    python3 s0_store_probe.py <log dir> <store dir (new, empty, 0755, this user)> <worktree>/scripts/ca_s0_census.py --stage 1 --kit <kit> --out <new dir>
+
+What it does: wraps carbon_junction.cjunc_registry (stage 1 builds the registry once, junction census).  Right after the
+registry is built, in the same process:
+  1 encode_strict (is the registry inside the store format, time)
+  2 Store.get_or_build with build = return the registry just built -> encode, write, re-read check before publish (status, time, bytes)
+  3 a NEW Store, get_or_build again with build = raise (must be a hit, read time)
+  4 read registry vs built registry: strict digest and registry_fp
+  5 RSS from /proc/self/status (VmRSS, VmHWM; VmHWM is reset before step 2 so it covers steps 2-4 only)
+-> <log dir>/store_probe.json and one stderr line '[store-probe] ...'.  S0 gets back THE SAME registry object it built (the read copy
+is dropped) - S0 report, plan and arrays are the same as without the wrapper (only the elapsed_s field differs; checked on the S0
+test fixture kit).  If the measurement fails (exception, memory) S0 still continues and the reason is recorded.  No sigma, no solve.
+The record holds no absolute path and no machine identifier (store dir = folder name only).
+cjunc_store is imported BEFORE carbon_junction (as in the payload): its run-start code column (cjunc_store._START, RCP2-01) is taken
+before the registry modules load; the record keeps the preloaded list, the start error and code_drift() at each call (all must be
+empty for the store to write).
+Stage 1 registry = s_min not registered (None, every self candidate) - same or more instances than an R arm registry (sealed s_min):
+size and time are a conservative estimate.  Python 3.8 compatible.
+"""
+import gc
+import hashlib
+import json
+import os
+import runpy
+import sys
+import time
+
+TOOL = 's0_store_probe v2 (2026-11-12 RCP-04 / RCP2-04)'
+
+
+def _status():
+    out = {}
+    try:
+        with open('/proc/self/status', encoding='ascii', errors='replace') as f:
+            for ln in f:
+                k, _, v = ln.partition(':')
+                if k in ('VmRSS', 'VmHWM'):
+                    out[k] = int(v.split()[0])
+    except OSError:
+        pass
+    return out
+
+
+def _reset_hwm():
+    try:
+        with open('/proc/self/clear_refs', 'w') as f:
+            f.write('5')
+        return True
+    except OSError:
+        return False
+
+
+def _sha(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for b in iter(lambda: f.read(1 << 20), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def main():
+    if len(sys.argv) < 4:
+        print(__doc__, file=sys.stderr)
+        return 2
+    log_dir, store_dir, script = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2]), os.path.abspath(sys.argv[3])
+    os.makedirs(log_dir, exist_ok=True)
+    rec_path = os.path.join(log_dir, 'store_probe.json')
+    sys.path.insert(0, os.path.dirname(script))
+    import cjunc_store as CS
+    import numpy as np
+    import scipy
+    import carbon_junction as CJ
+    st0 = getattr(CS, '_START', None) or {}
+    head = {'tool': TOOL, 'python': sys.version.split()[0], 'numpy': np.__version__, 'scipy': scipy.__version__,
+            'store_dir_name': os.path.basename(store_dir.rstrip('/')),
+            'module_sha256': {os.path.basename(m.__file__): _sha(m.__file__) for m in (CJ, CS)},
+            'store_start': {'code': st0.get('code'), 'preloaded': st0.get('preloaded'), 'error': st0.get('error')}}
+    orig = CJ.cjunc_registry
+    calls = []
+
+    def save():
+        with open(rec_path, 'w', encoding='utf-8') as f:
+            json.dump(dict(head, calls=calls), f, ensure_ascii=False, indent=1)
+
+    def wrapped(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, **thr):
+        t0 = time.time()
+        reg = orig(sid, box_lo, vox, add_pts, add_phase, add_fid, add_kind, **thr)
+        rec = {'call': len(calls) + 1, 'seconds_build': round(time.time() - t0, 3), 'thresholds': {k: repr(thr[k]) for k in sorted(thr)},
+               'n_instances': None, 'encode': None, 'write': None, 'read': None, 'same': None, 'rss_kb': {}, 'hwm_reset': None,
+               'store_files': None, 'code_drift': None, 'error': None}
+        calls.append(rec)
+        try:
+            rec['n_instances'] = int(len(reg['instances']['fi']))
+            rec['rss_kb']['before'] = _status()
+            rec['hwm_reset'] = _reset_hwm()
+            t1 = time.time()
+            try:
+                strict, skel, arrays = CS.encode_strict(reg)
+                rec['encode'] = {'ok': True, 'seconds': round(time.time() - t1, 3), 'n_arrays': len(arrays), 'skeleton_bytes': len(skel),
+                                 'array_bytes': int(sum(int(a.nbytes) for a in arrays))}
+            except CS.Unsupported as e:
+                strict, skel, arrays = None, None, ()
+                rec['encode'] = {'ok': False, 'why': ('Unsupported: ' + str(e))[:300], 'seconds': round(time.time() - t1, 3)}
+            del skel, arrays
+            kw = dict(sid=sid, lo=box_lo, vox=vox, pts=add_pts, phase=add_phase, fid=add_fid, kind=add_kind, thresholds=thr)
+            st1 = CS.Store(store_dir)
+            rec['store_machine_id_read'] = st1.machine is not None
+            _r1, o1 = st1.get_or_build(lambda: reg, **kw)
+            rec['write'] = {k: o1.get(k) for k in ('status', 'why', 'file', 'seconds_write', 'bytes')}
+            rec['rss_kb']['after_write'] = _status()
+            del _r1, st1
+
+            def must_not_build():
+                raise RuntimeError('store probe: expected a hit but the build function was called')
+            got = None
+            try:
+                got, o2 = CS.Store(store_dir).get_or_build(must_not_build, **kw)
+                rec['read'] = {k: o2.get(k) for k in ('status', 'why', 'seconds_read', 'bytes')}
+            except Exception as e:                         # noqa: BLE001 - record only (S0 continues)
+                rec['read'] = {'status': 'error', 'why': (type(e).__name__ + ': ' + str(e))[:300]}
+            rec['rss_kb']['after_read'] = _status()
+            if got is not None and strict is not None:
+                rec['same'] = {'strict': CS.strict_digest(got) == strict, 'registry_fp': CJ.registry_fp(got) == reg['fp']['registry'],
+                               'object_is_new': got is not reg}
+            del got
+            rec['store_files'] = sorted(os.listdir(store_dir))
+            rec['code_drift'] = CS.code_drift()
+        except BaseException as e:                         # noqa: BLE001 - MemoryError too; S0 continues (KeyboardInterrupt re-raised)
+            if isinstance(e, KeyboardInterrupt):
+                raise
+            rec['error'] = (type(e).__name__ + ': ' + str(e))[:400]
+        finally:
+            gc.collect()
+            rec['rss_kb']['after_gc'] = _status()
+            save()
+            w, r, en = rec.get('write') or {}, rec.get('read') or {}, rec.get('encode') or {}
+            print('[store-probe] instances {} - build {} s - encode {} s ({}) - write {} {} s {} B - read {} {} s - same {} - VmHWM(2-4) {} kB'
+                  ' - error {}'.format(rec.get('n_instances'), rec['seconds_build'], en.get('seconds'), en.get('ok'), w.get('status'),
+                                       w.get('seconds_write'), w.get('bytes'), r.get('status'), r.get('seconds_read'), rec.get('same'),
+                                       (rec['rss_kb'].get('after_read') or {}).get('VmHWM'), rec.get('error')),
+                  file=sys.stderr, flush=True)
+        return reg
+    CJ.cjunc_registry = wrapped
+    save()
+    sys.argv = sys.argv[3:]
+    runpy.run_path(script, run_name='__main__')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+S0Q_PROBE_EOF
+cat > "$L/mon.sh" <<'S0Q_MON_EOF'
+# S0 stage 1 monitor (draft 2026-11-12): starts S0 stage 1 (PROBE 1 = under the store probe wrapper), samples the RSS of the
+# Python process every 5 s, records its rc (same rss.log form as the 2026-11-06 run2.sh: '<s> <kB>' lines, then one 'rc=<n>' line),
+# writes out_sha256.txt, packs the log folder and the output folder into ~/<log folder name>.tgz (the store folder is not packed),
+# then touches DONE.
+# usage: bash mon.sh <L log dir> <W pinned worktree> <O new output dir> <S store dir> <KIT> <PROBE 0|1> [extra S0 args]
+L=$1; W=$2; O=$3; S=$4; KIT=$5; PROBE=$6; shift 6
+cd "$L" || exit 2
+PY="$HOME/dem-venv/bin/python3"
+if [ "$PROBE" = 1 ]; then
+  "$PY" "$L/s0_store_probe.py" "$L" "$S" "$W/scripts/ca_s0_census.py" --stage 1 --kit "$KIT" --out "$O" "$@" > "$L/run.log" 2>&1 &
+else
+  "$PY" "$W/scripts/ca_s0_census.py" --stage 1 --kit "$KIT" --out "$O" "$@" > "$L/run.log" 2>&1 &
+fi
+PID=$(jobs -p | tail -n 1)
+T0=$(date +%s)
+if [ -n "$PID" ]; then
+  echo "$PID" > "$L/s0.pid"
+  while kill -0 "$PID" 2>/dev/null; do
+    R=$(awk '/^VmRSS/{print $2}' "/proc/$PID/status" 2>/dev/null)
+    echo "$(( $(date +%s) - T0 )) ${R:-0}" >> "$L/rss.log"
+    sleep 5
+  done
+  wait "$PID"
+  echo "rc=$?" >> "$L/rss.log"
+else
+  echo "no pid from jobs -p - the S0 process was not tracked" >> "$L/mon_err.txt"
+  echo "nopid" > "$L/s0.pid"
+  echo "rc=-1" >> "$L/rss.log"
+fi
+echo "end_utc=$(date -u +%Y%m%dT%H%M%SZ)" >> "$L/meta.txt"
+if [ -d "$O" ]; then ( cd "$O" && sha256sum -- * > "$L/out_sha256.txt" 2>> "$L/mon_err.txt" ); fi
+B="$HOME/$(basename "$L").tgz"
+if [ -d "$O" ]; then
+  tar czf "$B" -C "$(dirname "$L")" "$(basename "$L")" -C "$(dirname "$O")" "$(basename "$O")" 2>> "$L/mon_err.txt"
+else
+  tar czf "$B" -C "$(dirname "$L")" "$(basename "$L")" 2>> "$L/mon_err.txt"
+fi
+( cd "$(dirname "$B")" && sha256sum -- "$(basename "$B")" > "$(basename "$B").sha256" ) 2>> "$L/mon_err.txt"
+touch "$L/DONE"
+S0Q_MON_EOF
+[ "$(md5sum < "$L/s0_store_probe.py" | cut -c1-32)" = 86e9bf4b4cfb79fa6e4a63d69cb414b0 ] || stopl "probe script paste broken (md5 differs)"
+[ "$(md5sum < "$L/mon.sh" | cut -c1-32)" = ff385531653c294089ce58f08511b6ad ] || stopl "monitor script paste broken (md5 differs)"
+printf 'pin=%s\nprobe=%s\ntag=%s\nkit=%s\nout=%s\nstore=%s\nstart_utc=%s\n' "$PIN" "$PROBE" "$TAG" "$(basename "$KIT")" "$(basename "$O")" "$(basename "$S")" "$STAMP" > "$L/meta.txt"
+setsid bash "$L/mon.sh" "$L" "$W" "$O" "$S" "$KIT" "$PROBE" > "$L/mon.out" 2>&1 < /dev/null &
+i=0
+while [ "$i" -lt 15 ]; do [ -s "$L/s0.pid" ] && break; sleep 2; i=$((i + 1)); done
+[ -s "$L/s0.pid" ] || stopl "the monitor did not start within 30 s - look at $L/mon.out"
+echo "[s0q] S0 stage 1 started (probe $PROBE) - log folder $L , output $O"
+echo "[s0q] progress:  tail -n 1 $L/rss.log ; grep -c . $L/run.log"
+echo "[s0q] when $L/DONE appears (about 1.5 h): send back ~/$(basename "$L").tgz and its .sha256 (S0 outputs + logs + store_probe.json)"
+echo "[s0q] the store folder $S is not packed - after the report it can be removed (R never reads it)"
+S0Q
