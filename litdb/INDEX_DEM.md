@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 301편 · 생성 2026-11-12
+> digest 302편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -60,7 +60,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | MPM 이 큰 인장에서 끊기는 문제 (extension instability) 를 입자 영역을 변형 경사 F 로 실어 나르는 평행사변형 (CPDI) + 그 모서리 값의 Q4 보간 기저로 푼 원전 — 2D 평면 변형률 · 탄성 neo-Hookean · 동적 시험 다섯 (MMS 수렴 두 건 · 자중 막대 평균 신장 ×2.8  | MPM (명시적 GIMP 계열 · USL · 입자 영역 = 평행사변형을 전체 변형 경사 F 로 실어 나름 ( | 2026-11-12 | 🖼 87 |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (71편)
+## 접촉역학 · 소성 (DEM 이론) (72편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -90,6 +90,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `giannis2021_stress_based_multicontact_dem` | 입자 응력텐서 trace 로 모든 접촉을 서로 묶은 non-binary DEM 접촉모델 (MC-stress) — Giannis (Granular Matter 2021) | DEM (contact-LAW theory, non-binary multi-contact) | 2026-08-25 | — |
 | `gonzalez2012_nonlocal_contact_confined_granular` | 비국소(nonlocal) 접촉 정식화 — 구속된 입상계에서 "접촉은 서로 독립"이라는 Hertz 가정을 깨다 — Gonzalez & Cuitiño (J. Mech. Phys. Solids 2012) | DEM 접촉이론 (해석적 비국소 탄성 contact formulation + 자체 FEM 검증 + Tatar | 2026-08-25 | — |
 | `hamasaki2022_single_parallel_contact_mwcnt_conductivity` | Electrical conductivity of a single parallel contact between carbon nanotubes — Hamasaki (Nanoscale 2022) · TEM 안에서 두 MWCNT 의 나란한 겹침 길이를 바꿔 가며 잰 접합 저항 — 짧은 겹침은 R ∝ 1/x (G ∝ 길이) · 계 | exp (in-situ TEM nanomanipulation · two-terminal I–V vs over | 2026-11-03 | 🖼 8 |
+| `harthong2009_high_density_compaction_dem_voronoi_contact_law` | 고밀도 압밀 DEM 의 접촉 법칙에 입자마다의 국소 상대밀도 (Voronoï 셀) 를 넣어 '소성 비압축' 강성을 더하다 — 단순 입방 (SC) 격자의 입자마다 FE (MDEM · ABAQUS · 3D) 에서 곡선 맞춤한 식 (10) (계수 함수 5 개 · 인쇄 숫자 10 개) → BCC · 무작위 15 입자 (YADE) | DEM 접촉 법칙 (입자마다 FE = MDEM (ABAQUS, 3D, 1/8 구 2차 사면체 1200 요소  | 2026-11-12 | 🖼 46 |
 | `he2026_dem_calendering_inhomogeneity_areal_density` | NCM 양극 calendering(롤 압연) 불균일성을 DEM 으로 — 면적로딩(areal density) 15.2→20.0 mg cm⁻² 가 힘분포·접촉수·입자 integrity 를 어떻게 가르나 · EDEM 2024 + EEPA 탄소성 접촉 · 나노압입 + Hg 압입 이중검증 — He·Zhang·Hao·Sun·Xu·C | DEM (EDEM 2024 상용, EEPA 탄소성 접촉 + JKR 집전체; 나노압입·Hg압입 검증; 액체계  | 2026-09-15 | — |
 | `heck2026_densification_sulfide_se_binder_scalable` | 황화물 SE 바인더 분리막의 일축 치밀화 — β-Li₃PS₄ (LPS) + HNBR 0 · 3 · 4.3 wt% 슬러리 시트 (+ Li₆PS₅Cl 대조): 제조압 · 적층압 · 치밀화 온도 · 층 두께가 밀도 (in-die 0.01 → 1.5 → 0.01 GPa · out-of-die) · 접착 · 나노압입 · σ_ion | experiment (일축 치밀화 — 실험실 프레스 · CompreDrive in-die 밀도 + EIS · | 2026-10-13 | 🖼 34 |
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | 탄소성 반구–강체평판 접촉의 유한요소 연구 — Jackson & Green (J. Tribology 2005) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 13 |

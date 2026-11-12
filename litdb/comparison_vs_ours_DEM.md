@@ -772,6 +772,12 @@
     ⇒ **권고 = P0(후처리 진단만, 코드 변경 0) 먼저**, P1(명시적 1-반복, 힘커널 ~2n̄ 배)은 P0 결과 유의할 때만,
     P2(완전 구현)는 **보류**(hooke/hysteresis 의 접촉 **이력변수**가 반복 안의 접촉 생성/소멸과 충돌).
     ⚠ 논문에 **벽시계·반복횟수 수치 없음** → "3–10× 느려짐" 은 **우리 추정**.
+
+> 2026-11-12 추가 — `harthong2009_high_density_compaction_dem_voronoi_contact_law` [Harthong09] (Harthong · Jérier · Dorémus · Imbault · Donzé, Int. J. Solids Struct. 46 (2009) 3357–3364 · DOI 10.1016/j.ijsolstr.2009.05.008 · 입자마다 FE (MDEM · ABAQUS · 3D) → DEM (YADE) · 납 · 마찰 없음 · 단분산 · 실험 없음) — 위 두 줄이 '확보 1 순위 · 미보유' 로 지목한 논문 · 이제 카드 있음.
+> · ★ **결합 꼴이 다르다**: 접촉 강성 S = S₁(h) + S₂(ρ) · ρ = 그 구의 Voronoï (radical) 셀로 잰 국소 상대밀도 (쌍 평균) · S₂ ∝ (ρ − ρ₀)²/(1 − ρ) 가 ρ → 1 에서 발산 = **입자 부피 구속**으로 한 구의 모든 접촉을 묶는다 (이 축의 변위 기반 비국소 · 응력 기반 다접촉과 다른 셋째 꼴) · 맞춘 값 = 계수 함수 5 (n₂ 의 함수 · 인쇄 숫자 10) · 맞춘 대상 = 단순 입방 격자 FE 곡선 (실험 아님).
+> · ⚠ **'탄소성' 은 일부만**: DEM 법칙은 **탄성 없는 강소성** σ = K₂εⁿ² (K₂ 20.5 MPa · n₂ 0.24) — 탄성 · 제하 가지 없음 (탄성은 FE 입자에만 · 그 효과도 버림) · ⚠ **'격자별 case-by-case 특성화 필요' 는 이 논문 문장이 아니다** — 원문은 SC 에서 맞춘 법칙을 *"extrapolated to random packings, under every loading"* 한다고 쓴다 (p.3358 · 실제 검증은 BCC · 무작위 정수압뿐).
+> · 숫자: 독립 접촉 한계 ≈ 0.8 (문헌 요약) · SC FE 독립 범위 h/R 0.15 (정수압) / 0.35 (die) → ρ 0.662 / 0.635 [카드 산술] · 무작위 15 입자 Storåkers ↔ FE 일치 ρ < 0.85 (저자 설명 = 단일 접촉 과대 ↔ 비압축 · impingement 누락의 상쇄) · 새 법칙 ≈ 0.95 · 강체 판정의 2 차 접촉 0.87 · 0.91 ↔ FE 0.80 · 0.83 · ⛔ 절대값 전이 금지 (납 · mm 구 · 힘 F/(K₂R²) 만).
+
 ---
 
 - **★★★ Paulick 2015 (`papers/paulick2015_elastic_particle_properties_dem_review.md`, Powder Technol. 283, 66–76)
@@ -2780,6 +2786,10 @@
   - ★ **Varkey 와 짝으로 인용하면 층③ 논거가 양쪽에서 잠긴다**: Varkey = **DEM 쪽에서** "구는 타협 · <20 % porosity
     미추구" 자인 / Demirtas = **연속체 쪽에서** "DEM 은 변형된 표면을 보정 못 한다" 진술 + 형상변화 실증.
 
+> 2026-11-12 추가 — `harthong2009_high_density_compaction_dem_voronoi_contact_law` [Harthong09] — 위 Demirtas 서론 목록의 [30] · 위 줄이 *"DEM 이 무너지는 RD 수치 문턱은 이 논문에 없다"* 고 적은 그 숫자를 준다 (납 강소성 · 마찰 없음 · 단분산 · 정수압): 독립 접촉 법칙 한계 ≈ 0.8 (문헌 요약 · Mesarovic–Fleck 2000 · Martin 2003 인용) · 단순 입방 격자 FE h/R 0.15 → ρ 0.66 [카드 산술] · 무작위 15 입자 0.85 · 새 법칙 ≈ 0.95 — '깨지는 밀도' 는 처음 충전 · 하중 경로와 한 묶음으로만 옮긴다.
+> · Demirtas 의 *"require particular calibration methods, which increase the computational cost of DEM"* 중 **보정 (SC 격자 FE 곡선 맞춤 · 계수 함수 5) 은 있고 DEM 비용 수치는 없다** · FE 쪽 한계 = *"limited to assemblies of about a hundred particles"* (p.3358 · 검증 15 입자).
+> · ★ 강체 구 접촉 판정이 옆 흐름이 만드는 2 차 접촉을 늦게 잡는다 (무작위 0.87 · 0.91 ↔ FE 0.80 · 0.83 · BCC 정수압은 기하상 ρ π/3 = 1.047 [카드 산술]) = 위 Demirtas Fig 9 '열린 접촉' 과 반대 방향 (생기는 쪽) 의 위상 사건 — 둘 다 강체 구 DEM 이 원리적으로 못 낸다.
+
 - **★★★ 2026-09-03 — [Cronk26] "길이척도 없는 탄성 모델은 크기효과를 못 낸다" = frame[5] 의 교과서적 반례**
   (`papers/cronk2026_lis_positive_electrode_geometry_fem.md` §4·§5)
   - **그들 FEM 구성모델 전수**(SI Table S6/S7, 실물 확인): **선형탄성 + 등방 eigenstrain** 뿐이다 —
@@ -3815,6 +3825,8 @@
     **Int. J. Solids Struct. 46, 3357–3364** — **비국소 + 탄소성 + 고밀도**, 즉 이 논문의 소성판.
     ⛔ litdb 미보유.  ⚠ 그쪽은 **FEM 에서 fitting** 하므로 자유변수가 있고 격자별 case-by-case 특성화가 필요하다
     (Gonzalez §1 이 그 한계를 명시).
+  ★ **2026-11-12 보강 — [Harthong09]** (`papers/harthong2009_high_density_compaction_dem_voronoi_contact_law.md` · DOI 10.1016/j.ijsolstr.2009.05.008) — 위 '⛔ litdb 미보유' 는 이 카드로 낡았다.  원문 대조: ① **'탄소성' 은 일부** — DEM 법칙 (식 10) 은 탄성 없는 강소성 멱법칙 (식 2) 에 맞춤 · 제하 가지 없음 ② **자유변수** = 계수 함수 5 (α₁ = 0.97 − 0.58n₂ · β₁ = 1.75(1 + n₂/2) · γ₁ = 15/(1 + 3n₂) − 4 · δ₁ = 8 · α₂ = 15(1 − n₂/2)) = 인쇄 숫자 10 · 맞춘 대상 = 단순 입방 격자 FE (단순 압축 · 정수압) ③ **'격자별 case-by-case 특성화 필요' 는 Gonzalez 쪽 비판이다** — 원문은 반대로 SC → 무작위 · 모든 하중 외삽을 주장 (p.3358) · 실제 검증은 BCC · 무작위 정수압뿐이고 어긋남 (2 차 접촉 지연 · BCC die 옆 힘 +19–23 % · 무작위 중간 밀도 ρ 0.6–0.75 에서 식 (10) = FE 의 0.67–0.77 배 [판독]) 이 남는다 ④ 결합 = 입자 Voronoï 국소 상대밀도 (변위 · 응력 기반 아님) — 위 P0 (`g_NL` 후처리 진단) 의 소성 짝을 원하면 같은 덤프에서 입자 셀 상대밀도 분포를 내는 진단이 먼저다 [카드 추론].
+
 ---
 
 - **★★★ 탄성 파라미터 축의 미충족 5건 — Paulick 2015 기준 (2026-08-25 신설,

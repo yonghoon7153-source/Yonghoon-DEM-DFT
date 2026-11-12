@@ -1,0 +1,122 @@
+# Harthong et al. 2009 IJSS 46:3357 - raster reads (figures are embedded ~200 dpi rasters; no vector paths).
+# Method: native raster extracted from the PDF; axes calibrated linearly on tick marks (Figs 5a, 6, 7, 8b, 11, 12) or on tick-label glyph centres (Fig 10);
+# 'col' = all dark pixel runs in one pixel column at the given x (series told apart by gray level: black Eq.(10)/MDEM vs gray Storakers / 2nd contact, and by run height: square markers 5-6 px);
+# 'grid' = value read by eye on a 3x enlargement with a calibrated grid overlay. Typical read error +-1-2 px = +-0.02-0.05 F/(K2R^2) (Figs 6-8, 11), +-0.1-0.2 (Figs 10, 12).
+# y = F/(K2 R^2) unless stated. 'merged' = two series in one pixel run (value = run centre). Values are model/FE outputs for lead (K2 20.5 MPa, n2 0.24) unless n2 given.
+figure,panel,series,x_quantity,x,y,method,note
+fig12,a,all curves start,relative density,0.44,~0.3-0.6,col,first curve pixels at rho 0.44 (none at 0.435): initial relative density of the 15-sphere packing
+fig12,a,Storakers Eq.(14),relative density,0.55,2.59,col,gray thin line
+fig12,a,MDEM,relative density,0.55,2.09,col,square markers
+fig12,a,Eq.(10),relative density,0.55,1.38,col,
+fig12,a,Storakers Eq.(14),relative density,0.60,3.76,col,
+fig12,a,MDEM,relative density,0.60,3.14,col,
+fig12,a,Eq.(10),relative density,0.60,2.09,col,Eq.(10)/MDEM = 0.67
+fig12,a,Storakers Eq.(14),relative density,0.65,5.02,col,
+fig12,a,MDEM,relative density,0.65,4.22,col,
+fig12,a,Eq.(10),relative density,0.65,2.93,col,
+fig12,a,Storakers Eq.(14),relative density,0.70,6.19,col,Storakers/MDEM = 1.12
+fig12,a,MDEM,relative density,0.70,5.52,col,
+fig12,a,Eq.(10),relative density,0.70,3.93,col,Eq.(10)/MDEM = 0.71
+fig12,a,Storakers Eq.(14),relative density,0.75,7.19,col,
+fig12,a,MDEM,relative density,0.75,6.77,col,
+fig12,a,Eq.(10),relative density,0.75,5.23,col,Eq.(10)/MDEM = 0.77
+fig12,a,Storakers+MDEM,relative density,0.80,8.19,col,merged (Storakers crosses MDEM near 0.8)
+fig12,a,Eq.(10),relative density,0.80,6.94,col,
+fig12,a,MDEM,relative density,0.825,9.03,col,
+fig12,a,Storakers Eq.(14),relative density,0.825,8.49,col,
+fig12,a,Eq.(10),relative density,0.825,7.99,col,
+fig12,a,MDEM,relative density,0.85,10.20,col,
+fig12,a,Eq.(10) or Storakers,relative density,0.85,8.9-9.2,col,two thin runs 9.24 and 8.91 (not separable)
+fig12,a,MDEM+Eq.(10),relative density,0.90,12.9-13.8,col,two runs 13.75 and 12.92 (order not separable)
+fig12,a,Storakers Eq.(14),relative density,0.90,9.87,col,
+fig12,a,MDEM+Eq.(10),relative density,0.925,16.1,col,merged
+fig12,a,Storakers Eq.(14),relative density,0.925,10.28,col,
+fig12,a,MDEM+Eq.(10),relative density,0.95,21.4,col,merged; MDEM top marker ~24 at ~0.955
+fig12,a,Storakers Eq.(14),relative density,0.95,10.70,col,line ends ~0.97 at ~11
+fig12,b,Eq.(14),h_av/R,0.10,3.18,col,gray
+fig12,b,Eq.(10),h_av/R,0.10,2.63,col,black
+fig12,b,Eq.(14),h_av/R,0.15,5.14,col,
+fig12,b,Eq.(10),h_av/R,0.15,4.43,col,
+fig12,b,Eq.(14),h_av/R,0.18,6.44,col,
+fig12,b,Eq.(10),h_av/R,0.18,6.06,col,
+fig12,b,crossing,h_av/R,0.19-0.20,6.8-7.4,col,merged run = the two laws cross
+fig12,b,Eq.(10),h_av/R,0.22,9.49,col,
+fig12,b,Eq.(14),h_av/R,0.22,8.28,col,
+fig12,b,Eq.(10),h_av/R,0.24,12.92,col,
+fig12,b,Eq.(14),h_av/R,0.24,9.28,col,
+fig12,b,Eq.(10),h_av/R,0.26,19.77,col,
+fig12,b,Eq.(14),h_av/R,0.26,10.20,col,
+fig12,b,Eq.(10),h_av/R,0.265,23.1,col,reaches 25 near 0.267
+fig12,b,Eq.(14),h_av/R,0.28,11.04,col,line end
+fig11,a,all curves start,relative density,0.675,0.02,col,initial relative density of the single sphere's random cell
+fig11,a,Eq.(10),relative density,0.80,0.49,col,dark solid run
+fig11,a,MDEM (12 initial contacts),relative density,0.80,0.33-0.43,col,dashed runs (spread)
+fig11,a,Eq.(10),relative density,0.90,0.94,col,
+fig11,a,MDEM (12 initial contacts),relative density,0.90,0.71-1.08,col,spread
+fig11,a,Eq.(10),relative density,0.95,~1.41-1.43,col,line end ~0.952
+fig11,a,MDEM (12 initial contacts),relative density,0.95,1.19-1.58,col,spread
+fig11,b,MDEM 2nd contact (black dashed),relative density,0.80,0 (onset),col,text: 0.8
+fig11,b,MDEM 2nd contact (gray dashed),relative density,0.83,0 (onset),col,text: 0.83
+fig11,b,Eq.(10) 2nd contact (black),relative density,0.87,0 (onset),col,text: 0.87
+fig11,b,Eq.(10) 2nd contact (gray),relative density,0.91,0 (onset),col,text: 0.91
+fig11,b,MDEM 2nd contact (black dashed),relative density,0.95,1.02,col,
+fig11,b,MDEM 2nd contact (gray dashed),relative density,0.95,0.88,col,
+fig11,b,Eq.(10) 2nd contact (black),relative density,0.95,0.35,col,Eq.(10)/MDEM = 0.34
+fig11,b,Eq.(10) 2nd contact (gray),relative density,0.95,0.17,col,Eq.(10)/MDEM = 0.20
+fig11,b,MDEM 2nd contacts,relative density,0.965,1.44-1.50,col,line end ~0.97 at ~1.56
+fig11,b,Eq.(10) 2nd contacts,relative density,0.985,0.61 / 0.36,col,line ends
+fig8,b,Eq.(10)+MDEM 1st contact,relative density,0.80,0.47,col,merged
+fig8,b,Eq.(10)+MDEM 1st contact,relative density,0.85,0.66,col,merged
+fig8,b,Eq.(10) 1st contact,relative density,0.90,0.90,col,
+fig8,b,Eq.(10) 1st contact,relative density,0.95,1.33,col,
+fig8,b,MDEM 1st contact,relative density,0.95,1.16,col,Eq.(10)/MDEM = 1.14
+fig8,b,MDEM 2nd contact,relative density,0.93,0.06,col,first gray marker above the zero line (onset ~0.92-0.93)
+fig8,b,MDEM 2nd contact,relative density,0.95,0.155,col,
+fig8,b,Eq.(10) 2nd contact,relative density,0.68-1.0,0,col,zero throughout (criterion (7): 2nd contact at rho > 1)
+fig10,a,all curves start,relative density,0.68,0,grid,BCC initial pi*sqrt(3)/8 = 0.680
+fig10,a,Eq.(10)+MDEM,relative density,0.80,0.95,col,merged
+fig10,a,Eq.(10),relative density,0.85,1.48,col,
+fig10,a,MDEM,relative density,0.85,1.32,col,Eq.(10)/MDEM = 1.13
+fig10,a,Eq.(10),relative density,0.90,2.05,col,
+fig10,a,MDEM,relative density,0.90,1.73,col,Eq.(10)/MDEM = 1.19
+fig10,a,Eq.(10)+MDEM,relative density,0.95,2.97,col,merged
+fig10,a,new-contact circle,relative density,~0.93,~2.1,grid,arrowed circle (change of curvature)
+fig10,b,axial Eq.(10)+MDEM,relative density,0.90,3.72,col,merged
+fig10,b,axial Eq.(10)+MDEM,relative density,0.95,5.3-5.5,col,
+fig10,b,lateral Eq.(10),relative density,0.90,2.04,col,gray solid
+fig10,b,lateral MDEM,relative density,0.90,1.72,col,gray squares; Eq.(10)/MDEM = 1.19
+fig10,b,lateral Eq.(10),relative density,0.93,2.60,col,
+fig10,b,lateral MDEM,relative density,0.93,2.19,col,
+fig10,b,lateral Eq.(10),relative density,0.95,3.16,col,
+fig10,b,lateral MDEM,relative density,0.95,2.57,col,Eq.(10)/MDEM = 1.23
+fig10,b,new-contact circles,relative density,~0.77-0.79 and ~0.97-0.98,-,grid,arrowed circles (eye; die 2nd contact geometric pi/4 = 0.785)
+fig7,-,Storakers Eq.(14) dashed,h/R,0.08,0.431,col,Eq.(14) with R0 = R/2 n2 0.24 gives 0.417 (card arithmetic)
+fig7,-,Storakers Eq.(14) dashed,h/R,0.12,0.647,col,Eq.(14): 0.656
+fig7,-,Storakers Eq.(14) dashed,h/R,0.15,0.853,col,Eq.(14): 0.842
+fig7,-,Storakers Eq.(14) dashed,h/R,0.18,1.029,col,Eq.(14): 1.033
+fig7,-,Storakers Eq.(14) dashed,h/R,0.50,3.255,col,Eq.(14): 3.244
+fig7,-,Storakers Eq.(14) dashed,h/R,0.60,3.980,col,Eq.(14): 3.979; reaches 5 at ~0.74 (grid)
+fig7,-,MDEM+Eq.(10) bundle (3 loadings superimposed),h/R,0.10,0.382,col,Storakers/bundle = 1.40
+fig7,-,MDEM+Eq.(10) bundle,h/R,0.12,0.441,col,
+fig7,-,MDEM+Eq.(10) bundle,h/R,0.15,0.559,col,Storakers/bundle = 1.53
+fig7,-,MDEM+Eq.(10) bundle,h/R,0.18,0.676,col,
+fig7,-,die MDEM,h/R,0.70,~2.55-2.61,col+grid,
+fig7,-,die Eq.(10),h/R,0.70,~2.17-2.22,col+grid,Eq.(10)/MDEM ~0.85
+fig7,-,die MDEM,h/R,0.80,~3.55,col+grid,
+fig7,-,die Eq.(10),h/R,0.80,~2.99-3.08,col+grid,Eq.(10)/MDEM ~0.85; card integration of printed Eq.(10)+(4) with rho0 = pi/6 gives 3.78
+fig7,-,simple compression MDEM,h/R,1.0,~3.23,grid,gray squares
+fig7,-,simple compression Eq.(10),h/R,1.0,~2.97,grid,gray thin line; card integration of Eq.(12) gives 3.175
+fig6,a,top run (n2=0 Eq.(10)),h/R,0.98,3.98,col,card integration of Eq.(12) n2=0: 3.90
+fig6,a,n2=0.1,h/R,0.98,3.45,col,card integration: 3.45
+fig6,a,n2=0.24,h/R,0.98,3.11,col,card integration: 3.06
+fig6,a,n2=0.5,h/R,0.98,2.57-2.67,col,card integration: 2.59
+fig6,a,n2=1,h/R,0.98,1.83,col,card integration: 1.77
+fig6,b,n2=0,h/R,0.30,2.28,col,card integration (Eq.(10)+(3) with rho0 = pi/6): 2.25
+fig6,b,n2=0.1,h/R,0.30,1.87,col,card integration: 1.81
+fig6,b,n2=0.24,h/R,0.30,1.42 (and 1.54),col,card integration: 1.42 (1.54 = marker run)
+fig6,b,n2=0.5,h/R,0.30,1.03,col,card integration: 0.98
+fig6,b,n2=1,h/R,0.30,0.50,col,card integration: 0.46
+fig5,a,R=1 mm / 100 mm (overlapping),h/R,0.20,0.18-0.20,col,Fig.3/6b hydrostatic n2 0.24 at same h/R = 0.77 (ratio ~4.1)
+fig5,a,R=1 mm / 100 mm,h/R,0.30,0.38-0.41,col,ratio to Fig.3/6b ~3.6
+fig5,a,R=1 mm / 100 mm,h/R,0.35,0.61-0.68,col,ratio ~3.8
+fig5,a,R=1 mm / 100 mm,h/R,0.37,0.81-0.98,col,ratio ~3.8; curve ends ~0.378 at ~1.19

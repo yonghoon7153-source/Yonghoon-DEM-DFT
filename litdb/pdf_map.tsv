@@ -530,3 +530,7 @@ yano2023_eepa_bimodal_size_plasticity_compression_dem	compression properties of 
 #   ⚠ 보충 자료 없음 · 크롭 70 장 = 도구 12 (전부 다시 자름: 그림 11 = 내장 원본 래스터에서 · 표 1 = 400 dpi 벡터 재렌더) + 손 58 (manual_crop: 패널 17 · 식 21 · 근거 글 20) + digitized.csv (163 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 du2025_dem_fem_force_chain_collector_damage_calendering	force_chain-induced_collector_damage_in_calendering
 du2025_dem_fem_force_chain_collector_damage_calendering	force chain-induced collector damage in calendering
+# ── 고밀도 압밀 DEM 의 접촉 법칙에 입자 Voronoï 국소 상대밀도 항을 더한 FE (MDEM · ABAQUS · 3D) 맞춤 법칙 — 단순 입방 격자에서 계수 함수 5 개를 맞춰 BCC · 무작위 15 입자 (YADE) 정수압으로 검증 · 고전 독립 접촉 ≈ 0.8 (무작위 0.85) · 새 법칙 ≈ 0.95 (Harthong · Jérier · Dorémus · Imbault · Donzé · Int. J. Solids Struct. 46 (2009) 3357–3364) — litdb 2026-11-12 (후보 N-29) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 변형 · SI 없음
+#   ⚠ 크롭 46 장 = 도구 12 (전부 다시 자름: 캡션 빠짐 · 본문 폭 여백) + 손 크롭 34 (manual_crop: 식 14 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
+harthong2009_high_density_compaction_dem_voronoi_contact_law	modeling_of_high-density_compaction_of_granular_materials
+harthong2009_high_density_compaction_dem_voronoi_contact_law	modeling of high-density compaction of granular materials
