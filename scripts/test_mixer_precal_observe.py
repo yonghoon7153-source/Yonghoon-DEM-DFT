@@ -1,5 +1,6 @@
 """Small synthetic observation contracts; no simulator or research data."""
 import copy
+import hashlib
 import importlib.util
 import json
 import subprocess
@@ -53,6 +54,92 @@ def completion_log(runs, n=3):
                       '%d %d 0 0 1'%(total,n),
                       'Loop time of 1 on 20 procs for %d steps with %d atoms'%(r,n)])
     return '\n'.join(lines)+'\n'
+
+
+# Actual log.liggghts text form of the sealed build (LIGGGHTS-PUBLIC 3.8.0, git 3d5c00f),
+# registration draft 7-4.  Every line form below is copied from same-build logs in this
+# repository, not invented:
+#  - thermo header for `thermo_style custom step atoms ke c_rke vol` has no c_ prefix and every
+#    Loop line ends with a ctime finish stamp: docs/data/mixer_highbo_devu_prelim_20261006/
+#    exact_runs/exact_LU212_settled/log.exact L65-67 (same thermo_style line as the deck);
+#  - fix insert/pack writes a two-line report inside the thermo table of the run that inserts:
+#    docs/data/kg50_d07_end_20261105/kg50_d07_b50_log_ins1.liggghts L116-121;
+#  - log.liggghts echoes every input line, comments included (the kg50 logs carry 48-54 '#'
+#    lines each), so the planned deck comment L34 that quotes `ERROR:` is echoed verbatim.
+ACTUAL_HEADER = '    Step    Atoms         KinEng            rke         Volume '
+ACTUAL_FINISH = ', finish time Tue Oct  6 19:30:09 2026'
+ERROR_COMMENT = '#   (`ERROR: youngsModulus <= 1e9 required for SI units`, global_properties.cpp:371).'
+INSERT_FIX = ('fix ins all insert/pack seed 32452843 distributiontemplate pdd &\n'
+              '    maxattempt 200 insert_every once overlapcheck yes all_in yes vel constant 0. 0. -0.2 &\n'
+              '    region ins_reg particles_in_region 3 ntry_mc 20000\n')
+SMALL_DECK = ('timestep 0.01\nfix mvD all move/mesh mesh Drum rotate origin 0 0 0 axis 1 0 0 period 2\n'
+              'dump dmp all custom 50 post/dump_*.liggghts id type x y z radius\nrun 1\nrun 100\nrun 100\nrun 0\n')
+E0_DECK = ('docs', 'reviews', 'mixer_first8_launch_preparation_20261106', 'planned_assets', 'PRECAL_E0', 'in.mixer')
+E0_DECK_SHA256 = '8b588b24117ab77bf72d93662237268b401f714df8515d62ef7b964d01c6e718'
+
+
+def actual_row(step, atoms):
+    # Thermo row of this build: %8d %8d then %14.8g per float column and a trailing space.
+    ke, rke = (3.2685651e-12, 1.0960987e-10) if atoms else (0., 0.)
+    return '%8d %8d %14.8g %14.8g %14.8g ' % (step, atoms, ke, rke, 2.7589053e-05)
+
+
+def actual_log(deck_text, inserted, procs=20):
+    """Synthetic log.liggghts in the sealed build's form for `deck_text`.
+
+    Echoes every input line ('&' continuations joined) and, at each `run`, writes the setup
+    lines, the thermo table (setup row, every `thermo` steps, end row), the insertion report
+    after the setup row of the first run that follows an insert/pack fix, the Loop line with
+    its finish stamp and the timing summary.  `inserted` maps fix id -> particles placed."""
+    out = ['LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, compiled 2026-03-26-14:37:06 by builder, '
+           'git commit 3d5c00f20519e6bb6eb6756f51f1ad36564e649d)']
+    lines = deck_text.split('\n')
+    if lines and lines[-1] == '':
+        lines.pop()
+    step = atoms = every = 0
+    pending, started, i = [], set(), 0
+    while i < len(lines):
+        logical = lines[i].rstrip(); i += 1
+        while logical.endswith('&') and not logical.lstrip().startswith('#') and i < len(lines):
+            logical = logical[:-1]+' '+lines[i].rstrip(); i += 1
+        out.append(logical)
+        tokens = logical.split('#')[0].split()
+        if tokens[:1] == ['thermo'] and len(tokens) == 2:
+            every = int(tokens[1])
+        elif tokens[:1] == ['fix'] and len(tokens) > 3 and tokens[3] == 'insert/pack':
+            pending.append(tokens[1])
+        elif tokens[:1] == ['run']:
+            n = int(tokens[1]); start, end = step, step+n
+            out += ['Setting up run at Tue Oct  6 15:00:00 2026', '']
+            for fix in pending:
+                if fix not in started:
+                    out.append('INFO: Particle insertion %s: inserting every 0 steps' % fix); started.add(fix)
+            out += ['Memory usage per processor = 102.09 Mbytes', ACTUAL_HEADER, actual_row(start, atoms)]
+            if n and pending:
+                for fix in pending:
+                    k = inserted[fix]; atoms += k
+                    out += ['INFO: Particle insertion %s: inserted %d particle templates (mass %e) at step %d'
+                            % (fix, k, 1e-4*k, start+1),
+                            ' - a total of %d particle templates (mass %e) inserted so far.' % (k, 1e-4*k)]
+                pending = []
+            if every:
+                out += [actual_row(s, atoms) for s in range((start//every+1)*every, end, every)]
+            if end != start:
+                out.append(actual_row(end, atoms))
+            out.append('Loop time of 1.25 on %d procs for %d steps with %d atoms%s' % (procs, n, atoms, ACTUAL_FINISH))
+            out += ['', '', 'Pair  time (%) = 0 (0)', 'Neigh time (%) = 0 (0)', 'Comm  time (%) = 0 (0)',
+                    'Outpt time (%) = 0 (0)', 'Other time (%) = 1.25 (100)', '',
+                    'Nlocal:    %d ave %d max %d min' % (atoms, atoms, atoms), 'Histogram: 1 0 0 0 0 0 0 0 0 0', '',
+                    'Total # of neighbors = 0', 'Ave neighs/atom = 0', 'Neighbor list builds = 0',
+                    'Dangerous builds = 0']
+            step = end
+    return '\n'.join(out)+'\n'
+
+
+def write_dump(path, step, D):
+    text = 'ITEM: TIMESTEP\n%d\nITEM: NUMBER OF ATOMS\n%d\nITEM: BOX BOUNDS ff ff ff\n-1 1\n-1 1\n-1 1\nITEM: ATOMS id type x y z radius\n' % (step, len(D['id']))
+    text += ''.join(' '.join('%.17g' % D[k][i] for k in ('id', 'type', 'x', 'y', 'z', 'radius'))+'\n' for i in range(len(D['id'])))
+    path.write_text(text)
 
 
 class SourceBoundary(unittest.TestCase):
@@ -424,6 +511,76 @@ class DiskContract(unittest.TestCase):
         result=self.invoke(run,B)
         self.assertEqual(result['status'],'UNDEFINED',result)
         self.assertIsNone(result['contact'])
+
+
+class ActualLiggghtsLogForm(unittest.TestCase):
+    """Registration draft Q5: a normal completed run written in the sealed build's actual log
+    form (header without c_, Loop finish stamp, insertion report inside the first table,
+    echoed deck comment quoting ERROR) must qualify; the observer must not call it TECH."""
+    RUNS = [1, 100, 100, 0]
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(); self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+
+    def run_dir(self, name, deck, log, B=None, step=200):
+        run = self.root/name; (run/'post').mkdir(parents=True)
+        B = B or binding(3)
+        (run/'in.mixer').write_bytes(deck if isinstance(deck, bytes) else deck.encode())
+        (run/'deck_meta.json').write_text(json.dumps(B))
+        (run/'log.liggghts').write_text(log)
+        write_dump(run/'post'/('mix_%d.liggghts' % step), step, data(3))
+        return run, B
+
+    def invoke(self, run, B):
+        with mock.patch.object(O, 'validate_case', side_effect=lambda case, deck, meta: meta):
+            return O.analyse_run(B['case_id'], run, None)
+
+    def assert_ok(self, deck, inserted, name):
+        run, B = self.run_dir(name, deck, actual_log(deck, inserted))
+        got = self.invoke(run, B)
+        self.assertEqual(got['status'], 'OK', got['reasons'])
+        self.assertEqual(got['provenance']['completion_log']['loop_steps'], self.RUNS)
+        self.assertEqual(got['provenance']['completion_log']['last_thermo_step'], 201)
+        return got
+
+    def test_actual_header_and_loop_forms_direct(self):
+        # Forms 1+2 only (no insert fix, no ERROR comment in the deck): header without c_ and
+        # the Loop finish stamp are present in every log of this build.
+        try:
+            got = O._log_contract(actual_log(SMALL_DECK, {}).encode(), self.RUNS)
+        except O.Tech as exc:
+            self.fail('normal actual-form log rejected: %s' % exc)
+        self.assertEqual(got['loop_steps'], self.RUNS)
+        self.assertEqual(got['last_thermo_step'], 201)
+
+    def test_actual_header_and_loop_forms(self):
+        self.assert_ok(SMALL_DECK, {}, 'forms12')
+
+    def test_actual_insertion_report_inside_first_table(self):
+        self.assert_ok(INSERT_FIX+SMALL_DECK, {'ins': 3}, 'forms123')
+
+    def test_actual_deck_comment_echo_quoting_error(self):
+        self.assert_ok(ERROR_COMMENT+'\n'+SMALL_DECK, {}, 'forms124')
+
+    def test_actual_all_four_forms(self):
+        self.assert_ok(ERROR_COMMENT+'\n'+INSERT_FIX+SMALL_DECK, {'ins': 3}, 'forms1234')
+
+    def test_planned_precal_e0_deck_and_full_length_log(self):
+        # The exact planned PRECAL_E0 deck bytes (static asset sha256) and a full-length log:
+        # run 1 / 560606 / 560606 / 0, thermo every 5000, NP20.  Atom count is kept equal to
+        # the tiny t0 dump; the log contract does not compare it with the planned 100000.
+        deck = HERE.parent.joinpath(*E0_DECK).read_bytes()
+        self.assertEqual(hashlib.sha256(deck).hexdigest(), E0_DECK_SHA256)
+        B = binding(3)
+        B['frame_pm']['meta_steps'] = dict(t0_planned=1121000, dump_every=1000)
+        run, B = self.run_dir('e0_planned', deck, actual_log(deck.decode('utf-8'), {'ins': 3}), B, 1121000)
+        got = self.invoke(run, B)
+        self.assertEqual(got['status'], 'OK', got['reasons'])
+        log = got['provenance']['completion_log']
+        self.assertEqual(log['loop_steps'], [1, 560606, 560606, 0])
+        self.assertEqual(log['last_thermo_step'], 1121213)
+        self.assertEqual(got['provenance']['frames'][0]['step'], 1121000)
 
 
 if __name__=='__main__':unittest.main(verbosity=2)
