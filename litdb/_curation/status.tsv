@@ -27,9 +27,9 @@ N-20	대피	끝	heenan2020_nmc811_calendering_defects_cycling_cracking_multiscal
 N-24	대피	끝	devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte · 5a9267e96	정독 67 · 453줄 · 크롭 63 · 113 GPa = NMC532 응집체 (as-received 이차입자) 건조 · 85 nm · 평균 · wet 108 · 소결 펠릿 200/201 GPa · H 7.8 / 14.0 · K_c 응집체 0.104 → 0.212 · 펠릿 0.298/0.291 · 리튬화 · SOC 변화 없음 · 서지 = (2019) 59:337–347 (후보 표 '59 (3) (2018)' 과 다름) · ⚠ 우리 K_IC_AM_P 0.3 = 펠릿 값 (응집체 0.104 의 2.9 배) · 카드 문제 wang2027 L417 · stallard2022 L110 · L113 · L195 · kalnaus2023 · sharma2023
 N-26	대피	끝	yano2023_eepa_bimodal_size_plasticity_compression_dem · a29696886	정독 68 · 카드 584 줄 · 크롭 70 · 식 28 · 소성 λp 가 공극 최소 Vf 를 옮김 · 이원 층 유지 중 힘 6–26 % 빠짐 · 카드 문제 = yano2026 L153 f₀ 꼴
 N-27	대피	끝	du2025_dem_fem_force_chain_collector_damage_calendering · 5d7833e66	정독 69 · 카드 557 줄 · 크롭 70 · 압하율 10→40 % 접촉 쌍 23,940→41,816 · 강한 사슬 몫 21.49→9.73 % (수 몫 · 하중 몫 아님) · 카드 문제 = he2026 L98–100 · L368 · L689
-N-29	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 70 · 시작 11-12 23:20 KST
+N-29	대피	끝	harthong2009_high_density_compaction_dem_voronoi_contact_law · 1864d8ad2	정독 70 · 카드 527 줄 · 크롭 46 · Voronoi 국소 상대밀도 결합 접촉 법칙 ≈ 0.95 까지 · 맞춘 계수 함수 5 · DEM 법칙 = 강소성 (탄성 없음) · 카드 문제 = gonzalez2012 · comparison · zunker2024 줄
 N-30	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 71 · 시작 11-13 00:01 KST
-N-32	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 72
+N-32	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 72 · 시작 11-13 00:15 KST
 N-33	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 73
 N-35	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 74
 N-36	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 77
