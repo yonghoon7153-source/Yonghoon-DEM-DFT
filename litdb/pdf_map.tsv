@@ -538,3 +538,7 @@ harthong2009_high_density_compaction_dem_voronoi_contact_law	modeling of high-de
 #   ⚠ 보충 자료 없음 · 크롭 28 장 = 도구 6 (5 그대로 + 그림 6 다시 자름: 위의 식 (2) 를 삼킴) + 손 22 (manual_crop: 표 1 (로마 숫자 라벨이라 도구가 못 잡음) · 식 5 · 근거 글 16) + digitized.csv (1,498 행 · 벡터 경로) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 brodu2015_multiple_contact_dem_dense_granular	multiple-contact_discrete-element_model_for_simulating_dense_granular_media
 brodu2015_multiple_contact_dem_dense_granular	multiple-contact discrete-element model for simulating dense granular media
+# ── 2 날개 수직 원통 믹서 DEM — 단분산 5 mm 유리 유사 구 16,000 개 · 날 속도 2–100 rpm · 흐름 · 배위수 · Lacey 지수 · 힘 망 · 토크 · Table 1 = 이 계열 DEM 의 힘 · 토크 식 (Chandratilleke · Zhou · Yu · Bridgwater · Ind. Eng. Chem. Res. 49 (2010) 5467–5478) — litdb 2026-11-12 (후보 N-32) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 45 장 = 도구 15 (전부 다시 자름: 그림 14 캡션 빠짐 · 표 1 = 쪽 전체) + 손 크롭 30 (manual_crop: 식 10 = 식 1–4 + Table 1 여섯 행 · 근거 글 20) + digitized.csv (241 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer	effect_of_blade_speed_on_granular_flow_and_mixing
+chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer	effect of blade speed on granular flow and mixing

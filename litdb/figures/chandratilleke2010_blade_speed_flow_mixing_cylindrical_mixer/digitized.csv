@@ -1,0 +1,246 @@
+# chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer - raster reads (2026-11-12, litdb-curator). Ind. Eng. Chem. Res. 2010, 49, 5467-5478.
+# Method: native embedded rasters extracted from the PDF (Figs 4, 7, 12, 13, 14 = 1-bit inverted masks; Figs 6, 8, 9 = RGB); axes calibrated linearly on frame lines + tick marks (log on Figs 12a, 13a, 14).
+# marker bbox centre = scipy fill-holes + opening blobs; column run = dark-pixel run centre in one pixel column; colour mask = RGB thresholds per series; row run = crossings along one pixel row.
+# These are [판독] values - use printed text values where they exist. Typical read error: CN +-0.02, porosity +-0.002, M +-0.01, rev +-0.05, force +-1-2 %, torque +-0.005 N m.
+figure,panel,series,x_quantity,x,y,y_quantity,method,note
+fig4,-,CN 5% gap (triangle),blade speed (rpm),2,6.344,coordination number,marker bbox centre,marker bbox height 53 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 5% gap (triangle),blade speed (rpm),9.55,6.249,coordination number,marker bbox centre,marker bbox height 51 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 5% gap (triangle),blade speed (rpm),23.87,6.175,coordination number,marker bbox centre,marker bbox height 52 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 5% gap (triangle),blade speed (rpm),47.75,5.933,coordination number,marker bbox centre,marker bbox height 50 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 5% gap (triangle),blade speed (rpm),100,5.445,coordination number,marker bbox centre,marker bbox height 52 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 1% gap (circle),blade speed (rpm),2,5.432,coordination number,marker bbox centre,marker bbox height 54 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 1% gap (circle),blade speed (rpm),9.55,5.3,coordination number,marker bbox centre,marker bbox height 53 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 1% gap (circle),blade speed (rpm),23.87,5.189,coordination number,marker bbox centre,marker bbox height 53 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 1% gap (circle),blade speed (rpm),47.75,4.871,coordination number,marker bbox centre,marker bbox height 55 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,CN 1% gap (circle),blade speed (rpm),100,4.344,coordination number,marker bbox centre,marker bbox height 56 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,porosity 0-40 mm (square),blade speed (rpm),9.55,0.5552,porosity,marker bbox centre,marker bbox height 64 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,porosity 0-40 mm (square),blade speed (rpm),47.75,0.5873,porosity,marker bbox centre,marker bbox height 54 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,porosity 0-40 mm (square),blade speed (rpm),100,0.6324,porosity,marker bbox centre,marker bbox height 56 px; read error ~+-0.02 CN / +-0.002 porosity
+fig4,-,porosity 0-40 mm (square),blade speed (rpm),2,0.5389,porosity,zoom 3x grid,square merged with steep curve; edges y 1015-1068 px read on 3x zoom
+fig4,-,porosity 0-40 mm (square),blade speed (rpm),0,~0.45,porosity,eye,"marker sits on the axis corner (x = 0, y = bottom limit 0.45); value = axis limit"
+fig6,b,"1 (2 rpm, black)",M level,0.5,1.16,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"1 (2 rpm, black)",M level,0.8,2.18,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"1 (2 rpm, black)",M level,0.9,2.9,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"1 (2 rpm, black)",M level,0.95,3.7,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"1 (2 rpm, black)",M level,0.97,4.18,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"1 (2 rpm, black)",revolutions,0.1,0.097,Lacey M,colour mask column track,
+fig6,b,"1 (2 rpm, black)",revolutions,1,0.473,Lacey M,colour mask column track,
+fig6,b,"1 (2 rpm, black)",revolutions,2,0.771,Lacey M,colour mask column track,
+fig6,b,"1 (2 rpm, black)",revolutions,3,0.914,Lacey M,colour mask column track,
+fig6,b,"1 (2 rpm, black)",revolutions,4,0.965,Lacey M,colour mask column track,
+fig6,b,"1 (2 rpm, black)",revolutions (last tracked),4.6,0.979,Lacey M,colour mask column track,end value; the 2 rpm run ends ~5.2 rev (157 s in Fig 6a) and is then covered by other curves
+fig6,b,"2 (9.55 rpm, green)",M level,0.5,1.26,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"2 (9.55 rpm, green)",M level,0.8,2.44,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"2 (9.55 rpm, green)",M level,0.9,3.3,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"2 (9.55 rpm, green)",M level,0.95,4.06,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"2 (9.55 rpm, green)",M level,0.97,4.7,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"2 (9.55 rpm, green)",revolutions,0.1,0.089,Lacey M,colour mask column track,
+fig6,b,"2 (9.55 rpm, green)",revolutions,1,0.417,Lacey M,colour mask column track,
+fig6,b,"2 (9.55 rpm, green)",revolutions,2,0.71,Lacey M,colour mask column track,
+fig6,b,"2 (9.55 rpm, green)",revolutions,3,0.875,Lacey M,colour mask column track,
+fig6,b,"2 (9.55 rpm, green)",revolutions,4,0.948,Lacey M,colour mask column track,
+fig6,b,"2 (9.55 rpm, green)",revolutions (last tracked),9.94,0.984,Lacey M,colour mask column track,end value
+fig6,b,"3 (47.75 rpm, blue)",M level,0.5,1.38,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"3 (47.75 rpm, blue)",M level,0.8,3.0,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"3 (47.75 rpm, blue)",M level,0.9,3.98,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"3 (47.75 rpm, blue)",M level,0.95,5.0,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"3 (47.75 rpm, blue)",M level,0.97,6.1,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"3 (47.75 rpm, blue)",revolutions,0.1,0.104,Lacey M,colour mask column track,
+fig6,b,"3 (47.75 rpm, blue)",revolutions,1,,Lacey M,colour mask column track,
+fig6,b,"3 (47.75 rpm, blue)",revolutions,2,0.63,Lacey M,colour mask column track,
+fig6,b,"3 (47.75 rpm, blue)",revolutions,3,0.802,Lacey M,colour mask column track,
+fig6,b,"3 (47.75 rpm, blue)",revolutions,4,0.902,Lacey M,colour mask column track,
+fig6,b,"3 (47.75 rpm, blue)",revolutions (last tracked),9.6,0.984,Lacey M,colour mask column track,end value
+fig6,b,"4 (100 rpm, red)",M level,0.5,1.58,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"4 (100 rpm, red)",M level,0.8,2.92,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"4 (100 rpm, red)",M level,0.9,3.74,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"4 (100 rpm, red)",M level,0.95,4.58,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"4 (100 rpm, red)",M level,0.97,5.0,revolutions to first reach,colour mask column track (continuity),first revolution at which the curve reaches the M level
+fig6,b,"4 (100 rpm, red)",revolutions,0.1,0.119,Lacey M,colour mask column track,
+fig6,b,"4 (100 rpm, red)",revolutions,1,0.388,Lacey M,colour mask column track,
+fig6,b,"4 (100 rpm, red)",revolutions,2,0.607,Lacey M,colour mask column track,
+fig6,b,"4 (100 rpm, red)",revolutions,3,0.817,Lacey M,colour mask column track,
+fig6,b,"4 (100 rpm, red)",revolutions,4,0.918,Lacey M,colour mask column track,
+fig6,b,"4 (100 rpm, red)",revolutions (last tracked),9.94,0.991,Lacey M,colour mask column track,end value
+fig6,a,1 (2 rpm),M level,0.5,34.8,time to first reach (s),row run scan,"x = (px-92.5)/3.906 s; curves 3, 4 not separable at <5 s (3.9 px/s)"
+fig6,a,2 (9.55 rpm),M level,0.5,7.8,time to first reach (s),row run scan,
+fig6,a,1 (2 rpm),M level,0.8,64.3,time to first reach (s),row run scan,"x = (px-92.5)/3.906 s; curves 3, 4 not separable at <5 s (3.9 px/s)"
+fig6,a,2 (9.55 rpm),M level,0.8,15.2,time to first reach (s),row run scan,
+fig6,a,1 (2 rpm),M level,0.9,86.1,time to first reach (s),row run scan,"x = (px-92.5)/3.906 s; curves 3, 4 not separable at <5 s (3.9 px/s)"
+fig6,a,2 (9.55 rpm),M level,0.9,20.6,time to first reach (s),row run scan,
+fig6,a,1 (2 rpm),M level,0.95,108.6,time to first reach (s),row run scan,"x = (px-92.5)/3.906 s; curves 3, 4 not separable at <5 s (3.9 px/s)"
+fig6,a,2 (9.55 rpm),M level,0.95,25.7,time to first reach (s),row run scan,
+fig6,a,1 (2 rpm),M level,0.97,129.0,time to first reach (s),row run scan,"x = (px-92.5)/3.906 s; curves 3, 4 not separable at <5 s (3.9 px/s)"
+fig6,a,2 (9.55 rpm),M level,0.97,30.0,time to first reach (s),row run scan,
+fig6,a,all curves,time (s),0,~0.10,Lacey M,eye,start value (side-by-side loading)
+fig6,a,3 and 4 plateau,time (s),>10,~0.988,Lacey M,row of thin line + curves,plateau ~0.98-0.99 (not 1.00); thin horizontal line at M ~0.99
+fig7,a,Total (10 rpm),revolutions,10-20,6.11,coordination number,column runs median,IQR 6.091-6.124
+fig7,a,"W-W, B-B and B-W, W-B (10 rpm)",revolutions,10-20,3.137,coordination number,column runs median,IQR 3.130-3.148 (four curves merged)
+fig7,b,Total (100 rpm),revolutions,10-20,5.29,coordination number,column runs median,IQR 5.275-5.308
+fig7,b,"W-W, B-B and B-W, W-B (100 rpm)",revolutions,10-20,2.804,coordination number,column runs median,IQR 2.793-2.812 (four curves merged)
+fig7,a,Total (10 rpm),revolutions,0.25,6.1,coordination number,column runs,
+fig7,a,"W-W, B-B (10 rpm)",revolutions,0.25,6.0,coordination number,column runs,start ~6.1
+fig7,a,"B-W, W-B (10 rpm)",revolutions,0.25,2.09,coordination number,column runs,start ~2.06
+fig7,b,Total (100 rpm),revolutions,0.02,6.22,coordination number,column runs,start; then drop
+fig7,b,Total (100 rpm),revolutions,0.5,5.16,coordination number,column runs,minimum after start-up (bed dilation)
+fig7,b,"B-W, W-B (100 rpm)",revolutions,0.5,1.92,coordination number,column runs,dip after start-up
+fig8,a,1 (2 rpm),revolutions,8-9.9,3.168,B-W coordination number,colour mask median,
+fig8,b,1 (2 rpm),revolutions,8-9.9,0.504,B-W CN / total CN,colour mask median,
+fig8,a,2 (9.55 rpm),revolutions,8-9.9,3.145,B-W coordination number,colour mask median,
+fig8,a,3 (47.75 rpm),revolutions,8-9.9,2.991,B-W coordination number,colour mask median,
+fig8,b,3 (47.75 rpm),revolutions,8-9.9,0.504,B-W CN / total CN,colour mask median,
+fig8,a,4 (100 rpm),revolutions,8-9.9,2.827,B-W coordination number,colour mask median,
+fig8,b,4 (100 rpm),revolutions,8-9.9,0.518,B-W CN / total CN,colour mask median,
+fig8,b,2 (9.55 rpm),revolutions,4.5-5.5,0.489,B-W CN / total CN,colour mask median,green hidden under other curves after ~6 rev
+fig8,a,4 (100 rpm),revolutions,0.67,1.84,B-W coordination number,colour mask min,start-up dip
+fig8,a,all,revolutions,<0.12,~2.05,B-W coordination number,colour mask,"start (blue first point ~1.05 at rev 0, then jumps)"
+fig8,b,all,revolutions,<0.6,0.33-0.38,B-W CN / total CN,eye,start
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),18,-1.66,Vz/Vtheta,colour mask cluster centre,run 27 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),30,-1.03,Vz/Vtheta,colour mask cluster centre,run 22 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),42,-0.7,Vz/Vtheta,colour mask cluster centre,run 8 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),54,-0.51,Vz/Vtheta,colour mask cluster centre,run 7 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),66,-0.19,Vz/Vtheta,colour mask cluster centre,run 5 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),78,0.04,Vz/Vtheta,colour mask cluster centre,run 14 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),90,-0.11,Vz/Vtheta,colour mask cluster centre,run 8 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),102,,Vz/Vtheta,colour mask,hidden / not separable
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),114,-0.08,Vz/Vtheta,colour mask cluster centre,run 6 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),126,-0.07,Vz/Vtheta,colour mask cluster centre,run 6 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),138,0.01,Vz/Vtheta,colour mask cluster centre,run 10 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),150,-0.03,Vz/Vtheta,colour mask cluster centre,run 6 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),162,0.23,Vz/Vtheta,colour mask cluster centre,run 19 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"1 (9.55 rpm, red open circle)",theta (deg),174,0.68,Vz/Vtheta,colour mask cluster centre,run 14 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),18,-0.89,Vz/Vtheta,colour mask cluster centre,run 4 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),30,-0.8,Vz/Vtheta,colour mask cluster centre,run 10 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),42,-0.33,Vz/Vtheta,colour mask cluster centre,run 23 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),54,-0.11,Vz/Vtheta,colour mask cluster centre,run 9 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),66,-0.03,Vz/Vtheta,colour mask cluster centre,run 12 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),78,,Vz/Vtheta,colour mask,hidden / not separable
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),90,-0.12,Vz/Vtheta,colour mask cluster centre,run 8 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),102,-0.09,Vz/Vtheta,colour mask cluster centre,run 8 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),114,-0.03,Vz/Vtheta,colour mask cluster centre,run 6 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),126,-0.02,Vz/Vtheta,colour mask cluster centre,run 10 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),138,-0.01,Vz/Vtheta,colour mask cluster centre,run 12 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),150,0.05,Vz/Vtheta,colour mask cluster centre,run 16 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),162,0.32,Vz/Vtheta,colour mask cluster centre,run 18 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"2 (47.75 rpm, blue open triangle)",theta (deg),174,0.78,Vz/Vtheta,colour mask cluster centre,run 11 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),18,-0.84,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),30,-0.73,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),42,-0.57,Vz/Vtheta,colour mask cluster centre,run 14 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),54,-0.43,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),66,-0.26,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),78,-0.08,Vz/Vtheta,colour mask cluster centre,run 16 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),90,-0.04,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),102,-0.02,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),114,0.03,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),126,0.07,Vz/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),138,0.26,Vz/Vtheta,colour mask cluster centre,run 24 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),150,0.66,Vz/Vtheta,colour mask cluster centre,run 20 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),162,0.96,Vz/Vtheta,colour mask cluster centre,run 7 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,a,"3 (100 rpm, green filled circle)",theta (deg),174,,Vz/Vtheta,colour mask,hidden / not separable
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),18,0.14,Vr/Vtheta,colour mask cluster centre,run 13 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),30,0.3,Vr/Vtheta,colour mask cluster centre,run 5 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),42,0.09,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),54,-0.03,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),66,-0.07,Vr/Vtheta,colour mask cluster centre,run 5 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),78,-0.1,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),90,-0.1,Vr/Vtheta,colour mask cluster centre,run 16 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),102,-0.02,Vr/Vtheta,colour mask cluster centre,run 14 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),114,-0.06,Vr/Vtheta,colour mask cluster centre,run 4 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),126,-0.01,Vr/Vtheta,colour mask cluster centre,run 5 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),138,-0.0,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),150,-0.01,Vr/Vtheta,colour mask cluster centre,run 13 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),162,-0.01,Vr/Vtheta,colour mask cluster centre,run 16 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"1 (9.55 rpm, red open circle)",theta (deg),174,-0.51,Vr/Vtheta,colour mask cluster centre,run 41 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),18,0.17,Vr/Vtheta,colour mask cluster centre,run 4 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),30,0.21,Vr/Vtheta,colour mask cluster centre,run 28 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),42,-0.03,Vr/Vtheta,colour mask cluster centre,run 12 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),54,-0.06,Vr/Vtheta,colour mask cluster centre,run 4 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),66,-0.08,Vr/Vtheta,colour mask cluster centre,run 11 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),78,,Vr/Vtheta,colour mask,hidden / not separable
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),90,-0.18,Vr/Vtheta,colour mask cluster centre,run 12 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),102,-0.07,Vr/Vtheta,colour mask cluster centre,run 14 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),114,-0.03,Vr/Vtheta,colour mask cluster centre,run 9 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),126,-0.06,Vr/Vtheta,colour mask cluster centre,run 10 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),138,-0.06,Vr/Vtheta,colour mask cluster centre,run 11 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),150,-0.03,Vr/Vtheta,colour mask cluster centre,run 12 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),162,0.04,Vr/Vtheta,colour mask cluster centre,run 11 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"2 (47.75 rpm, blue open triangle)",theta (deg),174,-0.7,Vr/Vtheta,colour mask cluster centre,run 17 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),18,0.19,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),30,-0.01,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),42,-0.06,Vr/Vtheta,colour mask cluster centre,run 14 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),54,,Vr/Vtheta,colour mask,hidden / not separable
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),66,-0.11,Vr/Vtheta,colour mask cluster centre,run 16 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),78,-0.03,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),90,0.03,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),102,0.02,Vr/Vtheta,colour mask cluster centre,run 16 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),114,0.06,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),126,0.1,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),138,0.15,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),150,0.07,Vr/Vtheta,colour mask cluster centre,run 19 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),162,-0.12,Vr/Vtheta,colour mask cluster centre,run 15 px; +-0.03-0.05 (markers overlap lines/other markers)
+fig9,b,"3 (100 rpm, green filled circle)",theta (deg),174,,Vr/Vtheta,colour mask,hidden / not separable
+fig12,b,mean normal contact force,blade speed (rpm),2,0.01369,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),5,0.01377,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),10,0.01394,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),20,0.01467,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),30,0.01561,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),40,0.0166,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),50,0.01758,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),60,0.01852,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),70,0.01947,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),80,0.02042,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),90,0.02134,N,column run,tick rows excluded
+fig12,b,mean normal contact force,blade speed (rpm),100,0.02223,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),2,0.002792,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),5,0.002808,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),10,0.002853,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),20,0.003044,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),30,0.003232,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),40,0.003415,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),50,0.003607,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),60,0.003827,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),70,0.00407,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),80,0.004328,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),90,0.004614,N,column run,tick rows excluded
+fig13,b,mean shear contact force,blade speed (rpm),100,0.004903,N,column run,tick rows excluded
+fig12,a,1 (2 rpm),cumulative probability,0.3,2.60e-03,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,2 (47.75 rpm),cumulative probability,0.3,3.53e-03,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,3 (100 rpm),cumulative probability,0.3,4.44e-03,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,1 (2 rpm),cumulative probability,0.5,6.01e-03,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,2 (47.75 rpm),cumulative probability,0.5,7.87e-03,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,3 (100 rpm),cumulative probability,0.5,1.04e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,1 (2 rpm),cumulative probability,0.7,1.30e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,2 (47.75 rpm),cumulative probability,0.7,1.63e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,3 (100 rpm),cumulative probability,0.7,2.14e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,1 (2 rpm),cumulative probability,0.9,3.38e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,2 (47.75 rpm),cumulative probability,0.9,4.16e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,3 (100 rpm),cumulative probability,0.9,5.47e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,1 (2 rpm),cumulative probability,0.95,5.15e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,2 (47.75 rpm),cumulative probability,0.95,6.34e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,3 (100 rpm),cumulative probability,0.95,8.11e-02,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,1 (2 rpm),cumulative probability,0.99,1.01e-01,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,2 (47.75 rpm),cumulative probability,0.99,1.31e-01,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig12,a,3 (100 rpm),cumulative probability,0.99,1.59e-01,normal force (N),row run (log x),curves cross near CP 0.1 (~9e-4 N)
+fig13,a,1 (2 rpm),cumulative probability,0.3,5.52e-04,shear force (N),row run (log x),
+fig13,a,2 (47.75 rpm),cumulative probability,0.3,8.06e-04,shear force (N),row run (log x),
+fig13,a,3 (100 rpm),cumulative probability,0.3,1.08e-03,shear force (N),row run (log x),
+fig13,a,1 (2 rpm),cumulative probability,0.5,1.27e-03,shear force (N),row run (log x),
+fig13,a,2 (47.75 rpm),cumulative probability,0.5,1.71e-03,shear force (N),row run (log x),
+fig13,a,3 (100 rpm),cumulative probability,0.5,2.33e-03,shear force (N),row run (log x),
+fig13,a,1 (2 rpm),cumulative probability,0.7,2.68e-03,shear force (N),row run (log x),
+fig13,a,2 (47.75 rpm),cumulative probability,0.7,3.30e-03,shear force (N),row run (log x),
+fig13,a,3 (100 rpm),cumulative probability,0.7,4.66e-03,shear force (N),row run (log x),
+fig13,a,1 (2 rpm),cumulative probability,0.9,6.68e-03,shear force (N),row run (log x),
+fig13,a,2 (47.75 rpm),cumulative probability,0.9,8.31e-03,shear force (N),row run (log x),
+fig13,a,3 (100 rpm),cumulative probability,0.9,1.16e-02,shear force (N),row run (log x),
+fig13,a,1 (2 rpm),cumulative probability,0.95,1.02e-02,shear force (N),row run (log x),
+fig13,a,2 (47.75 rpm),cumulative probability,0.95,1.25e-02,shear force (N),row run (log x),
+fig13,a,3 (100 rpm),cumulative probability,0.95,1.74e-02,shear force (N),row run (log x),
+fig13,a,1 (2 rpm),cumulative probability,0.99,2.09e-02,shear force (N),row run (log x),
+fig13,a,2 (47.75 rpm),cumulative probability,0.99,2.73e-02,shear force (N),row run (log x),
+fig13,a,3 (100 rpm),cumulative probability,0.99,3.72e-02,shear force (N),row run (log x),
+fig14,-,blade torque (circles),blade speed (rpm),2,1.12,N m,marker bbox centre (log x),fit curve Gamma = 1.086 exp(0.0047 w) printed p.5475
+fig14,-,blade torque (circles),blade speed (rpm),9.55,1.135,N m,marker bbox centre (log x),fit curve Gamma = 1.086 exp(0.0047 w) printed p.5475
+fig14,-,blade torque (circles),blade speed (rpm),23.87,1.197,N m,marker bbox centre (log x),fit curve Gamma = 1.086 exp(0.0047 w) printed p.5475
+fig14,-,blade torque (circles),blade speed (rpm),47.75,1.333,N m,marker bbox centre (log x),fit curve Gamma = 1.086 exp(0.0047 w) printed p.5475
+fig14,-,blade torque (circles),blade speed (rpm),100,1.762,N m,marker bbox centre (log x),fit curve Gamma = 1.086 exp(0.0047 w) printed p.5475
