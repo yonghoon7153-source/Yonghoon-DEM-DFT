@@ -1,0 +1,1398 @@
+{
+ "slug": "koenig2023_wet_milling_se_ion_tortuosity_composite_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+  "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic illustration of the symmetrical cell Li | LPSClBr0.7 | composite cathode | LPSClBr0.7 | Li (home-built cell).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    426.3,
+    297.5,
+    550.1
+   ],
+   "w": 1051,
+   "h": 517,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.849,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — cell schematic raster (xref 132); caption from the tool"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Formation of a Li concentration gradient inside the composite cathode of a symmetrical cell Li metal | solid electrolyte | composite electrode | solid electrolyte | Li metal, leading to electron blocking inside the cathode. = + + · Z R R R i i 2 ( ) tanh( ) cell low ion electrolyte interfaces (4) where τ is the time constant for the formation of a stationary Li concentration gradient across the composite electrode, and the exponent α is 0.5 in the ideal case.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    297.5,
+    273.3
+   ],
+   "w": 1051,
+   "h": 913,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.708,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — Li-gradient / electron-blocking schematic (xref 166)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Impedance spectra of symmetrical cells Li metal | solid electrolyte | composite electrode | solid electrolyte | Li metal containing different volume fractions of the solid electrolyte Li5.3PS4.3ClBr0.7. The solid electrolyte particles were prepared by HDM. To facilitate the comparison of the spectra, the high-frequency resistance due to the resistance of the two electrolyte layers, 2Relectrolyte, was subtracted.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    225.5,
+    561.5,
+    369.2
+   ],
+   "w": 1051,
+   "h": 600,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.921,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — HDM Nyquist raster (xref 167) incl. inset and legend"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Effective tortuosity τeff of composite electrodes plotted vs volume fraction of the solid electrolyte. The solid electrolyte particles were prepared either exclusively by HDM (open symbols) or an additional LWM step. The data obtained in this study are compared to those of Minnmann et al.23 and Park et al.36 In addition, the blue area indicates the data range obtained for laboratory-scale LIBs containing a liquid electrolyte.19,20 The dashed lines are guides for the eye.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    109.9,
+    297.5,
+    260.6
+   ],
+   "w": 1051,
+   "h": 628,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.923,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — τ_eff vs ε raster (xref 202); digitized.csv rows 'Fig 4'"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) SEM image of solid electrolyte LPSClBr0.7 particles prepared exclusively by HDM; (b−d) Cross-sectional SEM/EDX images of composite electrodes with HDM solid electrolyte volume fraction εSE",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    54.4,
+    561.5,
+    396.9
+   ],
+   "w": 1051,
+   "h": 1428,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.19,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — 8-panel SEM/EDX raster (xref 203); panels cut separately (f5a–f5h)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: XRD patterns of glass-ceramic solid electrolyte Li5.3PS4.3ClBr0.7 prepared either",
+   "rotated_deg": 0,
+   "bbox": [
+    111.7,
+    182.8,
+    483.4,
+    404.6
+   ],
+   "w": 1550,
+   "h": 925,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.925,
+   "viewed": true,
+   "recrop": "2026-11-12 다시 자름 — tool crop carried the section heading line 'milling (LWM) step' of SI p.2 above the plot; re-cut to the embedded raster (xref 72: 114.7–480.4 × 185.8–401.6 pt) + 3 pt (bottom 404.6 < caption 407.3)"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Arrhenius plot of ionic conductivity for the glass-ceramic solid electrolyte",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    450.2,
+    532.8,
+    707.6
+   ],
+   "w": 1950,
+   "h": 1074,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.963,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — Arrhenius raster (SI xref 71); digitized.csv rows 'Fig S2'"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Particle size distribution for the glass-ceramic solid electrolyte Li5.3PS4.3ClBr0.7",
+   "rotated_deg": 0,
+   "bbox": [
+    104.2,
+    67.9,
+    490.5,
+    294.6
+   ],
+   "w": 1610,
+   "h": 946,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.938,
+   "viewed": true,
+   "recrop": "2026-11-12 다시 자름 — tool crop stopped at y 293.0 pt and clipped ≈0.65 pt (≈3 px) of the x-axis title 'particle size d / µm' (raster xref 75 content ends 293.65 pt); re-cut to the raster bounds (107.2–487.5 × 70.9–294.3 pt) + 3 pt sides"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Mass density of argyrodite-type solid electrolyte Li6PS5Cl1, Li6PS5Cl0.75Br0.252, Li6PS5Cl0.5Br0.52, Li6PS5Cl0.25Br0.752 and Li6PS5Br3 plotted versus the ratio of molar mass to",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    130.0,
+    533.5,
+    390.0
+   ],
+   "w": 1953,
+   "h": 1085,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.933,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — density-rule raster (SI xref 84); content ends 2.5 pt above the raster bottom, crop bottom 390.0 does not clip it"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Left: Impedance spectrum of a composite cathode with NCM85/10/5 and glass-",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    115.5,
+    530.5,
+    377.3
+   ],
+   "w": 1941,
+   "h": 1092,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.923,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — SOC0 ion-blocking spectrum + T-type TLM (SI xref 87)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Impedance spectra of symmetrical cells Li metal | solid electrolyte | composite",
+   "rotated_deg": 0,
+   "bbox": [
+    65.4,
+    364.9,
+    533.5,
+    608.3
+   ],
+   "w": 1951,
+   "h": 1015,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.935,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — LWM Nyquist raster (SI xref 89)"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Mass Ratio of the Active Material Particles to the Solid Electrolyte Particles, w, Volume Fractions of the Particles, and Porosity εvoid of the Composite Cathodes mass ratio w AM: SE/% εAM/% εSE/% porosity εvoid/% SE prepared by HDM 70:30 43.9 45.0 11.1 80:20 48.4 28.9 22.7 85:15 55.3 23.4 21.3 SE prepared by LWM 70:30 44.7 45.9 9.4 80:20 54.1 32.4 13.5 85:15 56.1 23.7 20.2",
+   "rotated_deg": 0,
+   "bbox": [
+    46.5,
+    126.7,
+    295.7,
+    274.5
+   ],
+   "w": 1040,
+   "h": 617,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.847,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — Table 1 (main p.3); values read from the PDF text layer"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Molar volume of the anions in different argyrodite-type solid electrolytes, molar",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    510.5,
+    532.5,
+    746.3
+   ],
+   "w": 1945,
+   "h": 984,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.697,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — Table S1 (SI p.4)"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Weight ratio of active material particles to solid electrolyte particles, measured",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    146.6,
+    532.5,
+    490.4
+   ],
+   "w": 1945,
+   "h": 1434,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.68,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — Table S2 (SI p.5); ε_void column = eq 8 as printed (void ratio) [card arithmetic]"
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 8,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Weight ratios, volume fractions, effective ionic conductivities and effective tortuosities of composite electrodes from Park et al.5",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    269.0,
+    532.5,
+    494.2
+   ],
+   "w": 1945,
+   "h": 940,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.652,
+   "viewed": true,
+   "kept": "2026-11-12 tool crop kept — Table S3 (SI p.8)"
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_cell_impedance_sum.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    472.0,
+    557.0,
+    492.5
+   ],
+   "w": 1013,
+   "h": 87,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.945,
+   "caption": "Eq. (1), p.3 right (Theoretical background): Z_cell = 2R_electrolyte + Z_interfaces + Z_composite — symmetric cell Li | SE | composite | SE | Li",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "file": "eq_02_composite_high_frequency_parallel.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    543.6,
+    557.0,
+    576.8
+   ],
+   "w": 1013,
+   "h": 139,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.962,
+   "caption": "Eq. (2), p.3 right: Z_composite(ω → ∞) = R_ion·R_e− / (R_ion + R_e−) — ionic and electronic rails in parallel at high frequency",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "file": "eq_03_cell_impedance_intermediate.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    684.2,
+    557.0,
+    706.4
+   ],
+   "w": 1013,
+   "h": 94,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.949,
+   "caption": "Eq. (3), p.3 right: Z_cell(intermediate ω) = 2R_electrolyte + Z_interfaces (valid if R_e− ≪ R_ion and R_e− ≪ 2R_electrolyte)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_warburg_short_low_frequency.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    321.6,
+    293.0,
+    366.2
+   ],
+   "w": 1013,
+   "h": 186,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.959,
+   "caption": "Eq. (4), p.4 left: Z_cell(low ω) = 2R_electrolyte + R_interfaces + R_ion·tanh((iωτ)^α)/(iωτ)^α — Warburg-short from the Li concentration gradient (electron blocking); τ = time constant, α = 0.5 ideal",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_effective_ionic_conductivity.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    435.0,
+    293.0,
+    467.6
+   ],
+   "w": 1013,
+   "h": 137,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.974,
+   "caption": "Eq. (5), p.4 left: σ_ion,eff = (1/R_ion)·(d_cathode/A)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_thickness_vs_solid_volume_porosity.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    537.4,
+    293.0,
+    567.6
+   ],
+   "w": 1013,
+   "h": 126,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.971,
+   "caption": "Eq. (6), p.4 left, AS PRINTED: d_cathode = (V_solid/A)·(1 + ε_void) — this form makes ε_void the void ratio V_void/V_solid (SI Table S2 column), not the porosity of main Table 1 [card arithmetic, see card §3-4]",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 4,
+   "file": "eq_07_solid_volume_from_mass.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    594.2,
+    293.0,
+    634.4
+   ],
+   "w": 1013,
+   "h": 169,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.966,
+   "caption": "Eq. (7), p.4 left: V_solid = m_cathode·(w_AM/ρ_AM + w_SE/ρ_SE)",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 4,
+   "file": "eq_08_porosity_as_printed.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    681.0,
+    293.0,
+    713.6
+   ],
+   "w": 1013,
+   "h": 137,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.974,
+   "caption": "Eq. (8), p.4 left, AS PRINTED: ε_void = d_cathode·A/V_solid − 1 (= void ratio; reproduces SI Table S2 ε_void 6/6, whereas main Table 1 equals 1 − V_solid/(d_cathode·A)) [card arithmetic]",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 4,
+   "file": "eq_09_effective_tortuosity_definition.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    107.0,
+    557.0,
+    137.6
+   ],
+   "w": 1013,
+   "h": 129,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.969,
+   "caption": "Eq. (9), p.4 right: τ_eff = (σ_ion,electrolyte/σ_ion,eff)·ε_SE — the tortuosity factor (= our tau2 = φ·σ₀/σ_eff, not its square root); σ_ion,electrolyte = pure SE (pellet) conductivity",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "eS1",
+   "kind": "equation",
+   "label": "eqS1",
+   "page": 6,
+   "file": "eq_S1_t_type_transmission_line.png",
+   "rotated_deg": 0,
+   "bbox": [
+    69.8,
+    684.5,
+    528.5,
+    752.5
+   ],
+   "w": 1913,
+   "h": 284,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.937,
+   "caption": "SI Eq. (S1), SI p.6: impedance of the T-type transmission-line model (Siroma 2015) used for the SOC0 ion-blocking cell of Fig. S5 — Ẑ = Z_eon·Z_ion/(Z_eon+Z_ion) + 2Z_eon²·√Z_int/(Z_eon+Z_ion)^{3/2}·(cosh(√((Z_eon+Z_ion)/Z_int)) − 1)/sinh(√((Z_eon+Z_ion)/Z_int))",
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1_abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    256.0,
+    429.5,
+    411.0
+   ],
+   "w": 1582,
+   "h": 647,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.0,
+   "caption": "PDF p.1 abstract: SE volume fraction ≲30 % for energy density; LWM step narrows the SE PSD; τ as low as 8.0 at ε_SE around 0.25; close to lab-scale LIB values",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1_tau_definition_target",
+   "page": 1,
+   "file": "txt_p1_tau_definition_target.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    470.4,
+    557.0,
+    574.4
+   ],
+   "w": 1013,
+   "h": 434,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.848,
+   "caption": "PDF p.1 right: 'effective ion transport tortuosity τ_eff' increases with decreasing ε_SE; target ε_SE ≲ 0.3 (ref 17)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p1_p2_lib_tortuosity_literature",
+   "page": 1,
+   "file": "txt_p1_p2_lib_tortuosity_literature.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    574.6,
+    557.0,
+    667.5
+   ],
+   "w": 1013,
+   "h": 1464,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.829,
+   "caption": "PDF p.1–2: LIB literature τ_eff (Thorat 2.5→3.5 · Landesfeind 3.0→7.0 · Cronau 2.0→4.5 · Ebner diffusion simulation 1.3→2.0 'has to be taken with caution … diffusion simulations can underestimate ion transport tortuosity'); LIBs 4.5–7 at ε_LE ≈ 0.3",
+   "parts": [
+    [
+     1,
+     314.0,
+     574.6,
+     557.0,
+     667.5
+    ],
+    [
+     2,
+     50.0,
+     59.6,
+     293.0,
+     313.8
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2_assb_literature_models_underestimate",
+   "page": 2,
+   "file": "txt_p2_assb_literature_models_underestimate.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    313.9,
+    293.0,
+    711.6
+   ],
+   "w": 1013,
+   "h": 1658,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.824,
+   "caption": "PDF p.2 left: ASSB literature τ_eff (Froboese 10–20 at ε_SE 0.4 · Kaiser 1.8→316 · Minnmann 2.4→130, LWM 34 at 0.25 · Bielefeld 5.0 at 0.3 · Yamakawa 11 at 0.25) — 'results of theoretical studies on computer-generated microstructures appear to underestimate the ion transport tortuosities in real composite electrodes of ASSBs'",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap) · bottom 711.6 pt with white-out of the next line's superscripts '23' '24' (x 205.5–213.8 · 268.7–276.9, y > 709.6) — they rise above this line's box",
+   "viewed": true,
+   "recut_after_view": "2026-11-12 first cut (bottom 711.0) showed the tops of the next line's superscripts; re-rendered with the white-out"
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2_study_design_soc50_no_carbon",
+   "page": 2,
+   "file": "txt_p2_study_design_soc50_no_carbon.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    709.6,
+    293.0,
+    755.6
+   ],
+   "w": 1013,
+   "h": 1409,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.825,
+   "caption": "PDF p.2: study design — HDM vs additional LWM step (wet milling = higher yield than dry milling with small balls); NCM85/10/5 + Li5.3PS4.3ClBr0.7; no conductive additive; CAM at SOC50 so that electronic ≫ ionic conductivity; simpler TLM than Minnmann",
+   "parts": [
+    [
+     2,
+     50.0,
+     709.6,
+     293.0,
+     755.6
+    ],
+    [
+     2,
+     314.0,
+     59.6,
+     557.0,
+     347.3
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap) · part 1 starts at 709.6 pt so the superscripts '23' '24' are whole; the strip above 711.25 pt outside their columns is whited out (previous line's descenders)",
+   "viewed": true,
+   "recut_after_view": "2026-11-12 first cut (top 711.2) clipped the superscript tops; re-rendered"
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2_hdm_lwm_synthesis",
+   "page": 2,
+   "file": "txt_p2_hdm_lwm_synthesis.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    406.9,
+    557.0,
+    606.0
+   ],
+   "w": 1013,
+   "h": 830,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.826,
+   "caption": "PDF p.2 right: HDM synthesis (Pulverisette 7, 2 g, 20 mL ZrO2 pot, 10 × ⌀10 mm balls, 8.25 h = 99 × (5 min + 15 min rest), 850 rpm, agate mortar) and LWM (2 g + heptane 4.0 mL + dibutyl ether 0.8 mL, 30 g ⌀1 mm balls, 200 rpm, 2 h = 30 min milling / 30 min rest, vacuum drying, mortar)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x2e",
+   "kind": "text",
+   "label": "p2_p3_se_pellet_conductivity_protocol",
+   "page": 2,
+   "file": "txt_p2_p3_se_pellet_conductivity_protocol.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    655.5,
+    557.0,
+    755.5
+   ],
+   "w": 1013,
+   "h": 519,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.836,
+   "caption": "PDF p.2–3: pure SE pellet conductivity — 100 mg in CompreCell/CompreDrive, fabrication 392 MPa for 90 s, stack 98 MPa during EIS, 10^5–10^1 Hz, 10 mV, 85 → 30 °C in 5 °C steps",
+   "parts": [
+    [
+     2,
+     314.0,
+     655.5,
+     557.0,
+     755.5
+    ],
+    [
+     3,
+     50.0,
+     58.8,
+     293.0,
+     79.3
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3_composite_mixing_cam",
+   "page": 3,
+   "file": "txt_p3_composite_mixing_cam.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    79.4,
+    293.0,
+    120.4
+   ],
+   "w": 1013,
+   "h": 355,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.836,
+   "caption": "PDF p.3 left: composite cathodes mixed in an agate mortar for 15 min at mass ratio 70:30 · 80:20 · 85:15; polycrystalline NCM85/10/5 (BASF, 3–6 µm), LiNbO3 1 wt% sol–gel coating",
+   "parts": [
+    [
+     3,
+     50.0,
+     79.4,
+     293.0,
+     120.4
+    ],
+    [
+     3,
+     50.0,
+     281.0,
+     293.0,
+     320.8
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3_porosity_pellet_392MPa_caliper",
+   "page": 3,
+   "file": "txt_p3_porosity_pellet_392MPa_caliper.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    320.9,
+    293.0,
+    399.6
+   ],
+   "w": 1013,
+   "h": 328,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.82,
+   "caption": "PDF p.3 left: porosity/thickness pellets — 20 mg mixture in a ⌀10 mm PEEK tube, compressed at 392 MPa with stainless-steel pistons, thickness by micrometer caliper (Mitutoyo); volume fractions in Table 1",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3_symmetric_cell_assembly_pressures",
+   "page": 3,
+   "file": "txt_p3_symmetric_cell_assembly_pressures.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    399.6,
+    293.0,
+    420.8
+   ],
+   "w": 1013,
+   "h": 867,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.827,
+   "caption": "PDF p.3: symmetric-cell build — 150 mg SE separator at 98 MPa; 20 mg composite + 25 mg In; whole cell 392 MPa; cycled to SOC50 at 98 MPa stack; 250 mg SE added on the cathode side (98 MPa); anode scratched off; 100 mg SE added; pressed 392 MPa; 10 mg Li foil both sides; pressed 98 MPa",
+   "parts": [
+    [
+     3,
+     50.0,
+     399.6,
+     293.0,
+     420.8
+    ],
+    [
+     3,
+     50.0,
+     596.9,
+     293.0,
+     755.3
+    ],
+    [
+     3,
+     314.0,
+     58.8,
+     557.0,
+     79.2
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x3d",
+   "kind": "text",
+   "label": "p3_electrochemistry_eis_conditions",
+   "page": 3,
+   "file": "txt_p3_electrochemistry_eis_conditions.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    79.3,
+    557.0,
+    267.4
+   ],
+   "w": 1013,
+   "h": 785,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.816,
+   "caption": "PDF p.3 right: cycling at 98 MPa, room temperature, 0.1 C, 3.9–2.5 V, one full cycle then charge to SOC50; EIS at OCP 10^6–10^−4 Hz, 10 mV rms, RelaxIS; AC vs DC polarization argument",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4_density_assumptions",
+   "page": 4,
+   "file": "txt_p4_density_assumptions.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    717.0,
+    293.0,
+    755.6
+   ],
+   "w": 1013,
+   "h": 314,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.849,
+   "caption": "PDF p.4: 'The density of NCM80/15/5 was assumed to be identical to that of NCM85/10/5 (ρ = 4.81 g/cm³, ref 32)' (sentence direction looks reversed — the CAM used is NCM85/10/5); LPSClBr0.7 density estimated from Fig. S4",
+   "parts": [
+    [
+     4,
+     50.0,
+     717.0,
+     293.0,
+     755.6
+    ],
+    [
+     4,
+     314.0,
+     59.8,
+     557.0,
+     92.4
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4_warburg_fit_electronic_assumption",
+   "page": 4,
+   "file": "txt_p4_warburg_fit_electronic_assumption.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    197.3,
+    557.0,
+    219.0
+   ],
+   "w": 1013,
+   "h": 1265,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.837,
+   "caption": "PDF p.4 right: HDM spectra (ε_SE 0.450 · 0.289 · 0.234), 2R_electrolyte subtracted; 10^5–10^1 Hz semicircle = interfaces (R ∥ CPE); low-frequency Warburg-short fit; NCM electronic conductivity at SOC50 assumed ≥ LCO at SOC50 (>100 mS/cm) → ≥ 2 orders above ionic",
+   "parts": [
+    [
+     4,
+     314.0,
+     197.3,
+     557.0,
+     219.0
+    ],
+    [
+     4,
+     314.0,
+     456.0,
+     557.0,
+     733.7
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4_p5_results_rion_tau",
+   "page": 4,
+   "file": "txt_p4_p5_results_rion_tau.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    733.9,
+    557.0,
+    756.5
+   ],
+   "w": 1013,
+   "h": 927,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.845,
+   "caption": "PDF p.4–5: R_ion 22.6 → 347 Ω·cm² (ε_SE^HDM 0.450 → 0.234); τ_eff 6.3 → 35.4 via eqs 5 and 9; Minnmann/Park data added; LWM spectra ('see Figure S4' — the LWM spectra are Fig. S6) τ_eff 3.1 → 8.0 (ε_SE^LWM 0.459 → 0.237)",
+   "parts": [
+    [
+     4,
+     314.0,
+     733.9,
+     557.0,
+     756.5
+    ],
+    [
+     5,
+     50.0,
+     55.9,
+     293.0,
+     103.6
+    ],
+    [
+     5,
+     50.0,
+     359.1,
+     293.0,
+     502.6
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5_sem_interpretation_lowest_tau_lib_comparison",
+   "page": 5,
+   "file": "txt_p5_sem_interpretation_lowest_tau_lib_comparison.png",
+   "rotated_deg": 0,
+   "bbox": [
+    50.0,
+    502.8,
+    293.0,
+    755.6
+   ],
+   "w": 1013,
+   "h": 1304,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.83,
+   "caption": "PDF p.5: SEM — LWM gives lower average size and narrower distribution → more homogeneous SE distribution 'which should result in fewer constrictivities'; τ_eff = 8.0 at ε_SE 0.237 'the lowest value reported so far'; same range as LIBs (blue band = interpolation of refs 19, 20)",
+   "parts": [
+    [
+     5,
+     50.0,
+     502.8,
+     293.0,
+     755.6
+    ],
+    [
+     5,
+     314.0,
+     490.3,
+     557.0,
+     546.2
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5_p6_conclusions",
+   "page": 5,
+   "file": "txt_p5_p6_conclusions.png",
+   "rotated_deg": 0,
+   "bbox": [
+    314.0,
+    568.8,
+    557.0,
+    757.6
+   ],
+   "w": 1013,
+   "h": 986,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.837,
+   "caption": "PDF p.5–6 conclusions: ε_SE varied 0.5 → 0.25; LWM reduces mean SE size and narrows the PSD → mitigated τ especially at ε_SE ≲ 0.3; τ_eff 8.0 at 0.237; similar to LIBs",
+   "parts": [
+    [
+     5,
+     314.0,
+     568.8,
+     557.0,
+     757.6
+    ],
+    [
+     6,
+     50.0,
+     59.8,
+     293.0,
+     103.5
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xs3",
+   "kind": "text",
+   "label": "si_p3_p4_density_estimation",
+   "page": 3,
+   "file": "txt_si_p3_p4_density_estimation.png",
+   "rotated_deg": 0,
+   "bbox": [
+    69.8,
+    428.4,
+    528.5,
+    686.0
+   ],
+   "w": 1913,
+   "h": 1271,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.933,
+   "caption": "SI p.3–4: density estimate of Li5.3PS4.3ClBr0.7 — anion sublattice packing similar in argyrodites; V_m(anions) from ionic radii r(S2−) 184, r(Cl−) 181, r(Br−) 196 pm; cations in voids; ρ read from the fitted line (red star, Fig. S4)",
+   "parts": [
+    [
+     3,
+     69.8,
+     428.4,
+     528.5,
+     686.0
+    ],
+    [
+     4,
+     69.8,
+     70.3,
+     528.5,
+     113.3
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xs5",
+   "kind": "text",
+   "label": "si_p5_porosity_eq8",
+   "page": 5,
+   "file": "txt_si_p5_porosity_eq8.png",
+   "rotated_deg": 0,
+   "bbox": [
+    69.8,
+    70.5,
+    528.5,
+    127.7
+   ],
+   "w": 1913,
+   "h": 240,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.935,
+   "caption": "SI p.5: 'The porosity of the composite electrodes, ε_void, was calculated by using Eq. (8)' (Table S2 follows)",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xs6",
+   "kind": "text",
+   "label": "si_p6_p7_tlm_soc0_model",
+   "page": 6,
+   "file": "txt_si_p6_p7_tlm_soc0_model.png",
+   "rotated_deg": 0,
+   "bbox": [
+    69.8,
+    616.3,
+    528.5,
+    659.3
+   ],
+   "w": 1913,
+   "h": 1132,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.923,
+   "caption": "SI p.6–7: T-type TLM for the SOC0 ion-blocking cell — Z_ion = R_ion; Z_eon = R_eon^bulk + (R_eon^gb ∥ CPE_eon^gb); Z_int = CPE_int (SOC0)",
+   "parts": [
+    [
+     6,
+     69.8,
+     616.3,
+     528.5,
+     659.3
+    ],
+    [
+     7,
+     69.8,
+     70.5,
+     528.5,
+     294.7
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xs8",
+   "kind": "text",
+   "label": "si_p8_park_tau_sigma_2p52",
+   "page": 8,
+   "file": "txt_si_p8_park_tau_sigma_2p52.png",
+   "rotated_deg": 0,
+   "bbox": [
+    69.8,
+    69.2,
+    528.5,
+    210.5
+   ],
+   "w": 1913,
+   "h": 590,
+   "dpi": 300,
+   "src": "ff65464d-13._Sup_Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.915,
+   "caption": "SI p.8: τ_eff of Park et al. computed with Eq. (9) assuming σ_ion = 2.52 mS/cm (crystalline LPSCl, refs 6, 7) because no value is available for Park's heat-treated LPSCl",
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 5,
+   "file": "fig_5a.png",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    58.4,
+    430.7,
+    139.0
+   ],
+   "w": 490,
+   "h": 336,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.087,
+   "caption": "Fig. 5(a) — SEM of LPSClBr0.7 particles after HDM only (5 µm bar)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 5,
+   "file": "fig_5b.png",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    141.4,
+    430.7,
+    222.5
+   ],
+   "w": 490,
+   "h": 338,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.085,
+   "caption": "Fig. 5(b) — FIB-SEM cross-section of the HDM composite, ε_SE^HDM = 0.289 (2 µm bar)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5c",
+   "kind": "figure",
+   "label": "5c",
+   "page": 5,
+   "file": "fig_5c.png",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    225.2,
+    430.7,
+    307.2
+   ],
+   "w": 490,
+   "h": 342,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.098,
+   "caption": "Fig. 5(c) — EDX S map of panel b (SE)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5d",
+   "kind": "figure",
+   "label": "5d",
+   "page": 5,
+   "file": "fig_5d.png",
+   "rotated_deg": 0,
+   "bbox": [
+    313.4,
+    309.7,
+    430.7,
+    392.9
+   ],
+   "w": 490,
+   "h": 347,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.106,
+   "caption": "Fig. 5(d) — EDX Ni map of panel b (NCM)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5e",
+   "kind": "figure",
+   "label": "5e",
+   "page": 5,
+   "file": "fig_5e.png",
+   "rotated_deg": 0,
+   "bbox": [
+    440.1,
+    58.4,
+    557.4,
+    139.0
+   ],
+   "w": 490,
+   "h": 336,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.09,
+   "caption": "Fig. 5(e) — SEM of LPSClBr0.7 particles after the additional LWM step (5 µm bar)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5f",
+   "kind": "figure",
+   "label": "5f",
+   "page": 5,
+   "file": "fig_5f.png",
+   "rotated_deg": 0,
+   "bbox": [
+    440.1,
+    141.4,
+    557.4,
+    222.5
+   ],
+   "w": 490,
+   "h": 338,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.103,
+   "caption": "Fig. 5(f) — FIB-SEM cross-section of the LWM composite, ε_SE^LWM = 0.324 (2 µm bar)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5g",
+   "kind": "figure",
+   "label": "5g",
+   "page": 5,
+   "file": "fig_5g.png",
+   "rotated_deg": 0,
+   "bbox": [
+    440.1,
+    225.2,
+    557.4,
+    307.2
+   ],
+   "w": 490,
+   "h": 342,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.087,
+   "caption": "Fig. 5(g) — EDX S map of panel f (SE)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  },
+  {
+   "key": "f5h",
+   "kind": "figure",
+   "label": "5h",
+   "page": 5,
+   "file": "fig_5h.png",
+   "rotated_deg": 0,
+   "bbox": [
+    440.1,
+    309.7,
+    557.4,
+    392.9
+   ],
+   "w": 490,
+   "h": 347,
+   "dpi": 300,
+   "src": "a54f15d9-13._Mitigating_the_ion_transport_tortuosity_in_composite_cathodes_of_all-solid-state_batteries_by_wet_milling_of_the_solid_electrolyte_particles.pdf",
+   "blank": 0.08,
+   "caption": "Fig. 5(h) — EDX Ni map of panel f (NCM)",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel bbox from the white gutters of the embedded raster (xref 203, 300 dpi; columns 0–471 · 528–999 px, rows 0–318 · 346–666 · 695–1019 · 1047–1376 px) + 2 pt",
+   "panel_of": "f5",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-11-12 — published version (ACS Appl. Energy Mater. 2023, 6, 9356–9362; 7 PDF pages = printed pages 9356–9362; open access 'Published by American Chemical Society') + SI (9 PDF pages S-1–S-9: Fig. S1–S6, Table S1–S3, Eq. (S1), refs 1–7). Tool crops 15 (Fig. 1–5, Table 1, Fig. S1–S6, Table S1–S3) all viewed: 13 kept · 2 re-cut (fig_S1 neighbour heading line · fig_S3 x-axis title clipped by 0.65 pt). Hand crops 38: equations 10 ((1)–(9) one per number + SI (S1)) · Fig. 5 panels 8 (a–h) · evidence paragraphs 20 (16 main + 4 SI). Re-cut after viewing 2 (x2b · x2c superscript overlap). digitized.csv = 82 rows (Fig. 4 markers + LIB band edges · Fig. S2 Arrhenius markers + card fit · Fig. S3 cumulative levels · Nyquist last points / maxima) from the native rasters (main ≈300 dpi, SI ≈220 dpi). All figures are rasters (no vector plots).",
+ "key_note": "manual keys: f5a–f5h = panel crops of Fig. 5 (panel_of f5) · e01–e09 = equations (1)–(9) · eS1 = SI Eq. (S1) · x<page><letter> = main evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1], stacked top→bottom, 16 px gap) · xs<page> = SI evidence paragraph; page = PDF page (main p.1 = printed 9356); SI page = SI PDF page (S-n)",
+ "missing_labels_resolved": []
+}

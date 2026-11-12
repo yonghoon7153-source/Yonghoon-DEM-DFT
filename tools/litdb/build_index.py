@@ -87,6 +87,8 @@ SIZE_EFFECT_SLUGS = frozenset({
     "var2026_sulfide_se_mechanical_properties_local_indentation_pellet",
     # 2026-11-12 — NCM811 복합 양극 SE ≈1 vs 3–5 µm: 무하중 XCT 기공 11 vs 16 % · 재압축 '임계압' · operando EDXRD (stavola2023 의 입도 쪽 짝)
     "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
+    # 2026-11-12 — 같은 그룹 (Marburg) LWM 습식 분쇄 SE (D50 1.01 → 0.79 µm) · 복합 양극 τ_eff (= tau2 · 자기 펠릿 σ₀) 35.4 → 8.0 · 392 MPa 펠릿 공극 (80:20) 22.7 → 13.5 % — 펠릿 σ₂₅ 4.43 → 1.09 (정규화 함정)
+    "koenig2023_wet_milling_se_ion_tortuosity_composite_cathode",
 })
 
 # 주제 묶음 — slug/제목에 이 낱말이 있으면 그 절로. 위에서부터 먼저 맞는 것.

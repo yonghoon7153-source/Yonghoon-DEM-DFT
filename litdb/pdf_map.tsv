@@ -446,3 +446,6 @@ meyer2017_calendering_compaction_resistance_line_load_exponential_model	characte
 # ── 두 입자 접촉강성 측정법 — 한 알 (WPW) · 두 알 (WPPW) 압축을 같은 힘에서 빼 입자–입자 접촉만 남김 · 유리 구슬 0.8–3.0 mm · 최대 80 N (Paulick 외 · Granular Matter 17 (2015) 83–93) — litdb 2026-11-12 · 같은 저자 리뷰 (paulick2015_elastic_particle_properties_dem_review) 와 다른 논문
 paulick2015_particle_contact_stiffness_two_particle_method	a_new_method_for_the_determination_of_particle_contact_stiffness
 paulick2015_particle_contact_stiffness_two_particle_method	a new method for the determination of particle contact stiffness
+# ── SE 습식 분쇄 → 복합 양극 이온 tortuosity (König 외 · ACS Appl. Energy Mater. 6 (2023) 9356–9362) — litdb 2026-11-12 · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형
+koenig2023_wet_milling_se_ion_tortuosity_composite_cathode	mitigating_the_ion_transport_tortuosity_in_composite_cathodes
+koenig2023_wet_milling_se_ion_tortuosity_composite_cathode	mitigating the ion transport tortuosity in composite cathodes
