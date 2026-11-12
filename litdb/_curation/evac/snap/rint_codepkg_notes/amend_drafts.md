@@ -91,7 +91,7 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
 | 02 | P3 | 고침 | 코드 칸 = 파일마다 stat 신원 (장치 · inode · 크기 · 수정 시각 ns · 상태 바뀐 시각 ns) 를 **정확히** 견준다 (해시 앞뒤로 재고 다르면 못 셈 = 저장본 꺼짐 · 벽시계 여유 없음 — 2 회차 판 = 수정 시각 > 시작 + 1 s) · Store 열쇠 코드 칸 ≠ 런 시작 코드 칸 → 그 런은 읽지도 쓰지도 않음.  시험 T15g (같은 초 뒤집기) · h (변이판일 때 Store) · i (시각 되돌린 뒤집기) · j (미래 수정 시각 정직한 런 = 이제 켜짐) · k (Store 코드 칸 손 고침) · 변이 보강 l (제자리 되돌림 = 상태 바뀐 시각만 다름) · m (재는 도중 바뀜) |
 | 03 | P3 | 고침 | `scripts/ca_ext_cjunc.py` 가 `cjunc_store` 를 `carbon_junction` 보다 먼저 불러온다 → 러너 꼴 (`--expect-physics ca_ext.*` 입구 풀이) 에서도 런 시작 기록이 원장 모듈보다 먼저 (`preloaded` = 빈 목록) · 시험 P6b |
 
-- 봉인 대조 (고치기 전 · 끝 판에서 다시): 바뀐 파일 19 = 194 `CODE_FILES` 32 · 언로딩 키트 SHA256SUMS · 믹서 봉인 · 정책과 겹침 0 · 사슬 `CODE_FILES` (봉인 전) 에 든 것 여섯 (`run_contract` · `cjunc_store` · `ca_ext_cjunc` · `ca_s0_census` · `rint_r_chain` (주석 한 줄) · 러너) = 코드 신원 바뀜 · S0 일곱 가운데 `ca_s0_census.py` → S0 단계 1 다시 (1-1 · 이미 계획).  Codex 리뷰 증거 목록 (회차 ③–⑥ `EVIDENCE_MANIFEST` · `SHA256SUMS` · 언로딩 ULPR integer archive `MANIFEST`) 의 **8 줄이 바탕판 바이트와 같았다** (`ca_s0_census.py` 4 · `test_ca_s0_census.py` 3 · `check_review_findings.py` 1) — 경로 = ZIP · archive 사본 (`package/repo/` · `baseline/repo/` · `codekey_sources/` · `repo/`) = 리뷰 핀의 증거 기록 · 봉인 아님 · 읽는 도구 없음 → 이제 지금 파일과 다르다 (증거 뜻은 그대로 · 한정).
+- 봉인 대조 (고치기 전 · 끝 판에서 다시): 바뀐 파일 19 = 194 `CODE_FILES` 32 · 언로딩 키트 SHA256SUMS · 믹서 봉인 · 정책과 겹침 0 · 사슬 `CODE_FILES` (봉인 전) 에 든 것 여섯 (`run_contract` · `cjunc_store` · `ca_ext_cjunc` · `ca_s0_census` · `rint_r_chain` (주석 한 줄) · 러너) = 코드 신원 바뀜 · S0 일곱 가운데 `ca_s0_census.py` → S0 단계 1 다시 (1-1 · 이미 계획).  Codex 리뷰 증거 목록 (회차 ③–⑥ `EVIDENCE_MANIFEST` · `SHA256SUMS` · 언로딩 ULPR integer archive `MANIFEST`) 의 **8 줄이 바탕판 바이트와 같았다** (`ca_s0_census.py` 4 · `test_ca_s0_census.py` 3 · `check_review_findings.py` 1) — 경로 = ZIP · archive 사본 (`package/repo/` · `baseline/repo/` · `codekey_sources/` · `repo/`) = 리뷰 핀의 증거 기록 · 봉인 아님 · 그 목록을 지금 파일과 대조하는 도구 없음 (scripts · webapp · CI 훑음) → 이제 지금 파일과 다르다 (증거 뜻은 그대로 · 한정).
 - 1-2 의 바꿀 문장 (7 판):
   - 런 도중 코드 바뀜 줄의 "(… 자리 · sha256 · 시작 + 1 s 뒤 다시 씀)" → **"(… 자리 · sha256 · stat 신원 (장치 · inode · 크기 · 수정 · 상태 바뀐 시각 ns — 정확히 같아야 · 벽시계 여유 없음) · Store 열쇠 코드 칸 = 런 시작 칸 · 3 회차)"**.
   - "못 가리는 것 (한정)" → 아래 남은 한정 (가)–(라) · (마).
@@ -110,6 +110,16 @@ sha 가 바뀐다 → 아래 sha 는 반입 뒤 값으로 바꿔 적는다).  �
   - (카) G6 · G7e 목록 = 손 목록 (리포 훑기 없음) — 이 묶음 밖 시험 (test_dem_gen2_t12_offline = 자체 격리 env · 다른 트랙 · test_network_solve_certificate = 읽기만) 은 보지 않는다 · G7e = 정적 (env 낱말이 있는지 · 값의 뜻은 G7c 도우미 다섯만 실행으로).
   - (타) kgy git 판 [미확인] — `GIT_CONFIG_GLOBAL` 은 git ≥ 2.32 · 옛 git 이면 HOME 끊기 (빈 임시 폴더) 가 대신.  셸 꼴 = bash 전용 (`compgen`).
   - (파) 시험 T8 '다른 코드' 의 뜻이 바뀜 (Store 코드 칸만 바꾼 꼴 = 이제 꺼짐 · 읽지도 쓰지도 않음) — 다른 코드 = 다른 열쇠는 T4 · T14c · T15a.
+- 다시 돌림 (보고 · 값 = 답장 · 로그 = 스크래치 `logs/r5/`): 고침 `0db6dee6d` 에서 3.11 묶음 (git_env · run_contract · gpu_precond · cjunc_store · probe6 ·
+  b6 · 러너 · 규율 둘 · conv_cert · 사슬 · e2e · e2e12 · cjunc_store_e2e) + 게이트 나누기 시험 + kgy 판 3.8 열일곱 묶음 = 통과 (cjunc_store 의 T8 '다른 코드'
+  한 줄만 실패 = 뜻이 바뀜 → 변이 보강 커밋에서 맞춤) · 끝 `8b59b9618` 에서 git_env · cjunc_store (3.11 · 3.8) · s0_census (3.11) 다시 = 통과 ·
+  `check_review_findings --selftest` = 일회용 두 파일 저장소에서 git 쓰기 둘 (19 · 19b) 통과 (리포 내용 검사 16 · 21 은 그 저장소에 등록부가 없어 실패 =
+  본 세션 게이트 몫) · undef 2 건 (`generate_comparison_plots.py` 6905 · 6906) = 바탕부터 · 묶음 밖.
+- 변이 (사본 = 끝 커밋 · 새 가드마다 지운 변이 하나 + 강도 낮춤 · J1–J32 · 3.11 · 3.8 같음): 31 잡힘 (뜻한 시험 — G1 · G6 · G7c · G7d · G7e · G8a · G8b · G8c ·
+  T15a · T15e · T15i/T15l · T15k · T15m · P6b) · J22 (stat 신원에서 inode 뺌) 안 잡힘 = 미리 적은 겹 방어 (다시 만든 파일은 상태 바뀐 시각이 덮는다).
+- 끔 경로 ↔ 바탕 `af3cce37b` (3.11 · 3.8): payload 넷 (b6 · series3 × 접합 켬 · 끔) + 러너 rc 0 · σ_e 같음 · payload 인자 · 팔 이름 같음 · 다른 잎 = 코드
+  신원뿐 (manifest code_sha · project_module_digest · loaded_project_modules (접합 켬 +1) · 영수증 code_sha · receipt_digest → OUTDIR `_r` 꼬리) = 2 회차와
+  같은 부류.
 - 4-f (GPU 확인 블록 7 판) = 아래 4 절 끝 4-f.
 
 ## 1. 등록 R (`docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md`)

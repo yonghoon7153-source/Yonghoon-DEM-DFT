@@ -1300,7 +1300,7 @@
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1016/j.powtec.2011.10.057 · PDF 9 쪽",
-  "model": "",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
   "dup": "papers/ 에서 DOI `10.1016/j.powtec.2011.10.057` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": "- 이 논문은 본 세션 (stoic) 이 맡았던 1 순위 후보다 — 11-12 에 대피 세션이 넘겨받았다. 아래는 본 세션이 써 둔 지시 그대로다 (그 안의 scratchpad · 트리 경로 · PDF 파일 이름은 본 세션 것이니 이 지시서 머리의 경로 · 파일 이름으로 바꿔 읽는다 · '다섯 편 공통 지시' = 이 지시서의 공통 지시 절).\n- 본 세션이 적어 둔 재료 (지시서는 쓰지 않았다 — 후보 표 행의 '왜' 칸이 고른 의도다):\n  - 쪽: 9 · DOI(첫 쪽): ['10.1016/j.powtec.2011.10.057']\n  - 첫 쪽 앞줄: Powder Technology 217 (2012) 409–417 / Contents lists available at SciVerse ScienceDirect / Powder Technology / journal homepage: www.elsevier.com/locate/powtec / Rolling friction as a technique for modelling particle shape in DEM / C.M. Wensrich a,⁎, A. Katterfeld b / a / b / School of Engineering, University of Newcastle, Australia / Institut für Logistik und Materialﬂusstechnik, Otto-von-Guericke Universität, Magdeburg, Germany / a r t i c l e / i n f o / Article history: / Received 9 June 2011",
   "p1": true

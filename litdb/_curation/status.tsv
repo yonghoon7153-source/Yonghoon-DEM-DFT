@@ -44,9 +44,9 @@ N-45	대피	끝	stewart2001_dem_pept_bladed_mixer_detailed_comparison · 0297aa5
 N-46	대피	끝	greenwood1966_constriction_resistance_microcontact_cluster_real_area · afe1af9e9	정독 86 · N-46 끝 (greenwood1966 · 군집 협착 = 평행 항 + 상호작용 항 · 독립은 군집 ≫ 반지름 합일 때만 · 표 2 면적 ×625 ↔ 저항 ÷4.18 재현 · 카드 문제 = 인용 범위만)
 N-47	대피	끝	lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior · 6908bed59	정독 87 · N-47 끝 (lommen2014 · 강성 연화 = 계산 시간용 · 판정 = 평균 겹침/반지름 0.3 % · 벌크 강성 · 반발에는 안전 범위 없음 · coetzee2017 · paulick2015 카드 어긋남 여럿)
 N-48	대피	끝	haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem · a2f9ef81c	정독 88 · JKR 강성 낮출 때 에너지 같게 γ_mod=γ(E_mod/E)^{2/5} · 떼는 힘 (8/9)·3πRγ_mod · 반발 E 무관 (자기 상사) · SJKR 옮기면 CED∝E*^{4/5} ↔ 믹서 F₀ 규칙 E*^{2/3} (×20 에서 1.49 배) · soft SE 4.5e-4 < 원문 경고 1e-3 · 카드 문제 없음
-N-49	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 89 · 시작 11-13 07:04 KST
+N-49	대피	끝	morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem · 0d7fe0870	정독 89 · γ 3.7 mJ/m² 에서 κ 50 은 덩어리 · 50,000 은 유동화 · 떼는 힘 3πγR* 같음 = 떼는 힘을 지킨 반례 (N-48 = 분리 에너지를 지키는 규칙) · 믹서 SJKR F₀ 보존 = W_sep ∝ E*^{-2/3} (×20 ÷7.37 · ×40 ÷11.7) · 카드 문제 = paulick2015_elastic L408 행 14 (기록만)
 N-50	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 90 · 시작 11-13 07:57 KST
-N-51	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 91
+N-51	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 91 · 시작 11-13 08:02 KST
 N-31	—	제외		내려받기 불가 (Tatara 1989)
 N-34	본	끝	morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis · c25cbf241	크롭 267 (근거 문단 34 = 11-12 글 크롭 규칙 전에 시작한 런) · 정독 75
 N-25	본	끝	yano2024_eepa_binary_mixture_plasticity_compression_dem · 34eb27d1b	크롭 64 (글 20) · 정독 65 · 0.619 는 이 논문에 없음 (NCM–Li3PS4 0.60) → yano2026 카드 L192 · L426 귀속 = 카드 문제 (기록만)
