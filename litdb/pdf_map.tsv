@@ -479,3 +479,6 @@ zunker2025_dem_large_deformation_compaction	s0032591025003675-main
 # ── 같은 그룹의 첫 보고 (Powder Technol. 323, 581 · 온라인 2016) — 카드 제목이 한국어라 파일명 토큰과 안 겹쳐 손으로 · 본문 + SI 둘 다 같은 조각 (2026-11-12)
 kawaguchi2018_dry_coating_model_se_particle_powtec	dry_coating_of_electrode_particle_with_model_particle_of_sulfide
 kawaguchi2018_dry_coating_model_se_particle_powtec	dry coating of electrode particle with model particle of sulfide
+# ── 고체전지 역학 총설 (Kalnaus · Dudney · Westover · Herbert · Hackney · Science 381, eabg5998 (2023) · 사이클 중 응력 · 해소 기전 · 2 차 인용) — litdb 2026-11-12 (후보 N-5 · alharbi2026 [86] · lee2025_heckel ref 17 · yuan2026 ref 11) · 카드 제목이 한국어라 자동 매칭이 안 붙음 · 밑줄 · 공백 두 변형 (SI 없음) ──
+kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review	the_critical_role_of_mechanics
+kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review	the critical role of mechanics
