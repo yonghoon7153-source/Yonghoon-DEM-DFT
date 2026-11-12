@@ -1,0 +1,67 @@
+# batch 78 — 정독 질문 a–n 의 근거 (한 편 · 2026-11-12)
+
+대상: `steffen2010_mpm_space_time_error_balance_moving_mesh` — M. Steffen, R. M. Kirby, M. Berzins, "Decoupling and balancing of space and time errors in the material point method (MPM)", *Int. J. Numer. Meth. Engng* 82 (2010) 1207–1243 · DOI 10.1002/nme.2787 (후보 표 N-37 · 가리킨 카드 = `gritton2017_mpm_chemomechanical_coupling_silicon_anode` ref. [36] · 11-12 대피 세션이 본 세션에서 넘겨받음).
+명시적 MPM 의 '시간 0 차 수렴' 을 공간 오차가 가속도에 섞여 시간 갱신에 붙는다는 모형 (식 1) 으로 설명하고, moving-mesh MPM · 단순 문제 둘 · 한 걸음 국소 절단 오차로 공간 · 시간 오차를 갈라 균형 Δt 를 예측 · 확인한 1D 탄성 수치 해석.
+쪽 = 학술지 인쇄 쪽 p.1207–1243 (PDF 쪽 = 인쇄 쪽 − 1206) · SI 없음 · 판독 원자료 = `litdb/figures/steffen2010_mpm_space_time_error_balance_moving_mesh/digitized.csv` (250 행 · PDF 벡터 경로 좌표).
+
+## a — 순수 SE (LPSCl · 황화물) 의 압력별 기공 곡선
+이 배치에 없음 (재료 · 압력 · 기공 · 밀도 0 — 무차원 1D 탄성 막대).
+
+## b — 압력을 뺄 때 되돌아오는 양과 잰 방법
+이 배치에 없음 — 누름 · 뺌 · 판 0 회 (탄성파 주기 운동만).  참고 (b 아님): 쌓인 수치 오차가 *"oscillate around the true solution"* (p.1230) 이라는 진술 → 되돌아옴처럼 작은 차를 읽을 때 같은 해상도의 수치 오차 바닥을 먼저 재야 한다는 카드 추론 (카드 §8 단계 6).
+
+## c — 항복 · 경도 · 크리프 값과 정의
+이 배치에 없음 — 구성식은 1D neo-Hookean σ = (E/2)(F − 1/F) (식 132 · ν 0) 하나 · 'plastic' 은 본문 0 회 (참고문헌 제목 [14] · [15] 에만).
+
+## d — 단단한 입자와 무른 입자를 섞어 누를 때 단단한 입자의 하중 몫 · 재밍
+이 배치에 없음 (한 물체 탄성 막대).
+
+## e — 점접촉 법칙이 큰 변형에서 깨지는 범위와 대안
+이 배치에 없음 (접촉 · DEM 0 회).
+
+## f — MPM 의 접촉 · 다물체 · 강체 결합 방법과 해상도 규칙 · 수치 오차 추정
+- [f] steffen2010_mpm_space_time_error_balance_moving_mesh | **오차 모형 · 균형 Δt**: v^{k+1} = v^k + (a^k + c₁h^p)Δt + c₂Δt^q (식 1 · Lawson 외 [18] 의 꼴) → 중심차분 (국소 O(Δt³)) 에서 c₁h^p = c₂Δt² → Δt = √(c₁/c₂)·h (2 차 공간 · moving-mesh · 2차 B-spline · 식 124) · √(c₁/c₂)·√h (선형 기저 standard MPM · 식 128) · *"Constants c1 and c2 are problem dependent"* | 카드 §3-2 · p.1210 · p.1231–1232 · 식 1 · 116–128 | [인쇄] | 1D 탄성 · 매끈한 해 · 명시 중심차분
+- [f] steffen2010_mpm_space_time_error_balance_moving_mesh | **상수 측정 · 예측 확인**: c₁ = ε_a/h² = 1.7895×10⁻² × 1024² = 1.8764×10⁴ (moving-mesh · 선형 · 4 PPC) · c₂ = ε_v/Δt³ = 1.1277×10⁷ (Δt 10⁻⁴ · 2²⁰ 셀) · standard c₁ = 6.0538×10¹ (ε_a 5.9119×10⁻²) · c₂ = 1.1278×10⁷ → 2048 셀 균형 1.9917 · 2.3908 · 5.1196 · 2.6507 ×10⁻⁵ (moving-mesh 선형 · B-spline · standard 선형 · B-spline) · 원문 *"precisely"* ↔ 점근선 교차 1.945 · 2.156 · 7.06 · 2.86 ×10⁻⁵ (−2.3 · −9.8 · +38 · +7.7 %) · c₂ 해석값 (1/24)A(Cπ)⁴·cos(0.2122π)/√2 = 1.1277×10⁷ (A 0.05 · C 100) = 인쇄값 | 카드 §3-6 · p.1236 · p.1238 · 식 133–138 · 그림 14–19 | [인쇄] · [판독] · [카드 산술] | 절대 크기 (그림 16 · 19 는 c 값의 ≈0.004 배) · 노름 · CFL 식 미인쇄
+- [f] steffen2010_mpm_space_time_error_balance_moving_mesh | **공간 · 시간 오차를 가르는 장치**: ① moving-mesh MPM (참조 배치 기저 · F_p = I + Σ∇₀Φ_i(X_p)u_i · PK1 내부력 · 식 44–45 — 노드 적분 오차가 시간 불변 · 격자 넘김 0) ② 고정 조각 선형 속도장 (도약 오차만) ③ 불연속 g(x) 중점 적분 (노드 적분 오차만) ④ 한 걸음 국소 오차 (*"As overall stability of the simulation is not required when looking at a single time-step, we are free to operate in regimes we could not previously test"*) | 카드 §3-1 · §4-1 · p.1215–1217 · p.1220–1230 · p.1235 | [인쇄] | moving-mesh 는 큰 변형 불가 (p.1219)
+- [f] steffen2010_mpm_space_time_error_balance_moving_mesh | **해상도 규칙 = 기저 · PPC (h 의 절대 크기 아님)**: 노드 힘 오차 상한 선형 2σΔx/h (C₁ ½) · 2차 B-spline σΔx²/h² (C₂ ⅛) (식 94–95) → 걸음당 ε = Cαγ(t) (α = Δx/h = 1/PPC) → 전역 E_q = ½TCα^kΔt + ½T²Cα^k (k = 1 · 2 · 식 112–113 · 둘째 항 Δt 무관) · *"If the number of PPC remains constant … the global displacement error will not be reduced as grid resolution is increased … the number of PPC must increase as the number of grid cells is increased"* (p.1240) · 그림 13a: 선형 고정 PPC 최소 = 2 PPC 9.47×10⁻³ (h 1/8) … 64 PPC 1.49×10⁻⁴ (1/64) · 128 → 1024 셀에서 3.0–9.5 배 커짐 · 그림 13b (PPC = N/4) 기울기 0.96 · 물질점 O(N²) *"prohibitive"* | 카드 §3-4 · §3-5 · p.1227–1230 · p.1233–1235 · p.1240 | [인쇄] · [판독] · [카드 산술] | 1D · 선형 기저 · 지름당 셀 규칙 없음 · 접촉 없음
+- [f] steffen2010_mpm_space_time_error_balance_moving_mesh | **시간 간격 규칙**: 균형 Δt 는 안정 한계보다 *"much higher"* → *"running with a time-step significantly lower than the stability limit has no effect on reducing the temporal errors further"* (p.1240) · *"time-steps near the stability limit are sufficient in most cases"* (p.1241) · 균형점 CFL (= cΔt/h · c 100) 4.08 · 4.90 · 10.5 · 5.43 · 표 II (B-spline 64 셀 CFL 0.9 = RMS 8.39×10⁻⁵ · 0.50 s ↔ 선형 128 셀 CFL 0.1 = 2.21×10⁻² · 9.62 s · 오차 263 배 · 시간 19 배) | 카드 §3-6 · §3-7 · p.1240–1241 | [인쇄] · [카드 산술] | CFL 식 미인쇄 · 표 II 의 T · A · E 미인쇄
+- [f] steffen2010_mpm_space_time_error_balance_moving_mesh | **시간 도약 오차**: 한 걸음 ↔ 두 걸음 차 ≤ ¼[(∂v/∂x)v_p + a_p]Δt² (식 82) · 표 I 추정 2.34 · 9.36 · 28.1 ×10⁻⁸ ↔ 계산 1.81 · 7.60 · 18.4 ×10⁻⁸ · 전체 MPM (64 셀 · 100 PPC · CFL 0.1) 쌓인 도약 오차 1.60×10⁻⁵ = 변위 오차 최대 1.82×10⁻⁴ 의 ≈9 % | 카드 §3-3 · p.1223–1225 · p.1233 · 그림 11 | [인쇄] · [판독] · [카드 산술] | Δt₀ 인쇄값 0.01 ↔ 표 I 이 맞는 값 10⁻³ (원문 안 어긋남)
+- [f] steffen2010_mpm_space_time_error_balance_moving_mesh | **standard MPM 절차 = 초기화만 바꾸면 중심차분**: *"a simple change of initializing particle velocities a half time-step earlier … leads to the following set of staggered central-difference update equations"* (식 23–27) — 우리 MLS-MPM 의 '격자 속도 갱신 → G2P → x += dt·v' 와 같은 꼴 (정지 출발이면 사실상 CD · 카드 추론) | 카드 §3-1 · §7-1 · p.1214 | [인쇄] · [카드 추론] | 우리 코드의 시간 차수는 재야 한다
+
+## g — 2D 결과를 3D 로 옮길 때의 경고나 증거
+- [g] steffen2010_mpm_space_time_error_balance_moving_mesh | 계산은 전부 1D · 다차원은 분리형 기저 곱 (식 29 · *"in three-dimensions"* · 3D B-spline 문장 p.1215) 뿐 · 1D 결론을 2D/3D 로 옮기는 데 대한 말 **없음**.  카드 산술: PPC · α 는 방향마다 → 그림 13b 의 'PPC ∝ N' 을 3D 방향마다 옮기면 물질점 ∝ N⁶ | 카드 §4-4 · p.1214–1215 | [인쇄] · [카드 산술] | 1D 만
+
+## h — DEM 에서 FE · MPM 으로 넘긴 선례와 넘긴 시점
+이 배치에 없음 (DEM · 넘김 0 회).  참고 (h 아님): moving-mesh MPM ↔ FEM 의 관계 — *"This is similar to what is done in standard FEM methods with the major difference being that particle locations essentially define the quadrature point locations"* (p.1215 · 카드 §3-1).
+
+## i — 복합 양극 (AM + SE) 의 압력별 기공
+이 배치에 없음.
+
+## j — 카드가 스스로 "아직 못 한다 · 한계" 라고 적은 것 가운데 가압 · 탈압 계산과 닿는 것
+- [j] steffen2010_mpm_space_time_error_balance_moving_mesh | 저자 한계: moving-mesh MPM 은 *"not well suited for large deformation problems and can experience mesh entanglement issues"* (p.1219) — 압밀 같은 큰 변형은 standard MPM 이 맡고 그쪽 노드 적분 오차는 *"time-dependent"* · *"compounding"* (p.1218) · 권고 범위 = *"a similar variant of MPM as used in this paper"* (p.1241) · 덩어리 질량의 안정 · 단조성 이점 *"not explored in this work"* (p.1240) · 공간 2 차 한계 (노드 적분 · 덩어리 질량 · p.1209 · p.1241) | 카드 §3-8 · §11 | [인쇄] | 1D 탄성
+- [j] steffen2010_mpm_space_time_error_balance_moving_mesh | 카드가 남긴 미확인: CFL 식 · RMS · 격자 속도 L2 노름 식 · §6.3–6.4 · 표 II 의 A · E · T · 그림 15 · 16 의 228 배 차 · 그림 18 평탄의 원인 · B-spline c₁ · 코드 · 기계 · 그림 9 의 기준해 (∫g = J/12) | 카드 §13 | [미확인] | —
+
+## k — DEM 의 한계
+- [k] steffen2010_mpm_space_time_error_balance_moving_mesh — Steffen, Kirby & Berzins 2010 (Int. J. Numer. Meth. Engng 82, 1207–1243) | DEM 한계 = **말 없음** (DEM · discrete element · contact · granular · powder 0 회 [카드 전문 검색]) · 가까운 문장은 FE 쪽의 큰 변형 한계: *"these algorithms have enabled, from the engineering perspective, complicated large deformation simulations where finite element-type methods often fail due to numerical issues such as mesh-entanglement"* (p.1209) | 카드 §4-4 | [인쇄] | DEM 무관
+
+## l — 소성변형이 왜 어려운가
+- [l] steffen2010_mpm_space_time_error_balance_moving_mesh — Steffen, Kirby & Berzins 2010 (Int. J. Numer. Meth. Engng 82, 1207–1243) | **소성 계산 없음** (본문 'plastic' 0 회).  큰 변형의 수치 비용 (원문): 격자가 물질과 함께 움직이는 moving-mesh (≈ FEM) 는 *"not well suited for large deformation problems and can experience mesh entanglement issues. The use of moving-mesh MPM may seem counter intuitive as large deformation problems are one of the main strengths of MPM"* (p.1219) → 큰 변형은 격자를 되돌리는 standard MPM 이 맡고 그 대가가 *"Quadrature errors are unique in MPM, in that they are fairly low order and time-dependent, or coupled, in standard Eulerian MPM … quadrature errors have a compounding effect on MPM"* (p.1218).  우회 · 비용: 2차 B-spline (적분 오차 α → α² · 표 II 오차 263 배 ↓ · 시간 19 배 ↓) · PPC 를 격자와 함께 (1D 물질점 O(N²) · *"prohibitive"*) · 에너지 일관 암시 판 (Love · Sulsky [15, 16] — *"add considerable computational complexity … not often used in practice"* p.1210) | 카드 §3-4 · §3-7 · §4-4 | [인쇄] | 1D 탄성 · 소성 시험 없음 · 맞춘 값 없음
+
+## m — 받아들일 통찰
+- [m] steffen2010_mpm_space_time_error_balance_moving_mesh | 무엇: **공간 · 시간 오차를 따로 재는 수렴 판정 절차** — 한 시각 격자 가속도 L2 오차 (식 133) 의 h 사다리 + 한 걸음 국소 오차의 Δt 사다리 → c₁ · c₂ → 균형 Δt = √(c₁/c₂)·h^{p/2} 를 결과 전에 적고 다른 해상도에서 기울기 1 → 3 전이로 확인 · 어디에: 단계 2 · U6 (U1 의 공간 사다리 꼴) · 왜: §6.4 · 그림 14–19 · p.1235–1238 (예측 −2.3 … +38 % [판독]) — 카드 §8 · §9 행동 1
+- [m] steffen2010_mpm_space_time_error_balance_moving_mesh | 무엇: **'안정 한계 근처면 충분' 을 우리 압밀에서 시험하는 팔** — 균형 Δt 가 CFL 1 의 4–10 배라 (1D 탄성 · 카드 산술) Courant 를 줄여도 답이 안 바뀌어야 한다 → 우리 침대에서 Courant 계수만 0.4 → 0.2 (판 Mach · 격자 · PPC · 서보 고정) · 바뀌면 시간 이산이 아닌 결합 (판 속도 · 서보 · 관성) · 우리 속도 사다리 (`--sub` · 판 Mach) 의 변화는 재하 속도 (물리) 로 읽고 '시간 오차' 로 읽지 않는다 · 어디에: 단계 4 · 단계 5 · 단계 6 · U6 · 왜: p.1240–1241 · 표 II — 카드 §7-2 · §9 행동 2
+- [m] steffen2010_mpm_space_time_error_balance_moving_mesh | 무엇: **격자 사다리는 셀당 물질점과 엇갈려** — 선형 기저 고정 PPC 는 최소 뒤 오차가 커진다 (그림 13a · 128 → 1024 셀 3.0–9.5 배 [판독]) · B-spline 은 적분 오차 α² · 우리 격자 사다리 (방향당 2 PPC 고정 · 겉보기 차수 ≈0.10 [우리 기록]) 의 비수렴을 기하 해상 (d_h/dx) ↔ 고정 PPC 적분 바닥으로 가르는 팔 (방향당 2 · 3) · 어디에: 단계 4 · U6 · 왜: p.1233–1235 · p.1240 — 카드 §7-3 · §9 행동 3
+- [m] steffen2010_mpm_space_time_error_balance_moving_mesh | 무엇: **보고 칸의 함정** — 원문 안 어긋남 (Δt₀ 0.01 ↔ 표 I 이 맞는 10⁻³ · t = 0.2122·C ↔ /C · '∫g dx = 0' ↔ 식 87 값 J/12 · CFL · 노름 식 미인쇄 · 'precisely' ↔ +38 %) → 우리 수치 시험 보고에 노름 식 · 평가 시각 · CFL 식 (어느 파속) · 반 걸음 초기화 여부 · 예측 허용폭을 칸으로 · 어디에: 단계 0 · 왜: 카드 §3-3 · §3-4 · §3-6 · §3-8
+
+## n — 논문 에이전트 후보 (이 논문이 인용했지만 정본에 카드가 없는 것)
+litdb 확인 = 정본 `litdb/papers/` 파일 목록 555 장 (이 카드 전) (`git ls-tree`) + `git grep` (제목 낱말 · 제1 저자 성 · DOI) — 아래 다섯 모두 자기 카드 없음 (`steffen2008_…` 의 참고문헌 줄에서 인용만 되는 것이 있다).
+- [n] 18. Lawson J, Berzins M, Dew PM. Balancing space and time errors in the method of lines for parabolic equations. SIAM Journal on Scientific and Statistical Computing 1991; 12(3):573–594. (원문 참고문헌 18 · 인쇄 그대로) | f · m — 식 (1) 균형 모형 · 오차 제어의 원전 (*"is the basis on which we formulate our analysis"* p.1210) — 공간 · 시간 오차를 함께 조절하는 방법 자체 (이 논문은 *"we do not go as far as attempting to control errors in MPM"*) · 카드 §3-2 · §12 | litdb 확인: ls lawson* 없음 · "method of lines for parabolic" grep 0 건
+- [n] 11. Steffen M, Kirby RM, Berzins M. Analysis and reduction of quadrature errors in the material point method (MPM). International Journal for Numerical Methods in Engineering 2008; 76(6):922–948. DOI: 10.1002/nme.2360. (원문 참고문헌 11 · 인쇄 그대로) | f — 식 (93)–(95) 노드 힘 오차 상한 (선형 C₁ ½ · B-spline C₂ ⅛) 의 원 분석 · 카드 §3-4 · §12 | litdb 확인: "Analysis and reduction of quadrature errors" · "nme.2360" grep = `steffen2008_…` 참고문헌 줄에서 인용만 · 카드 없음 (wishlist batch_57 · 같은 서지 이미 있음)
+- [n] 7. Wallstedt PC, Guilkey JE. An evaluation of explicit time integration schemes for use with the generalized interpolation material point method. Journal of Computational Physics 2008; 227(22):9628–9642. (원문 참고문헌 7 · 인쇄 그대로) | f — 이 논문이 설명하려는 '시간 0 차 수렴' 관측 (*"no temporal error convergence in the regions of time-step selection where their simulations were stable"* p.1210) · USF · USL · CD 비교 · 카드 §3-2 · §12 | litdb 확인: "explicit time integration schemes" grep = `steffen2008_…` 참고문헌 줄에서 인용만 · 카드 없음 (wishlist batch_57 · steffen2008 줄에 이미 있음)
+- [n] 3. Brydon AD, Bardenhagen SG, Miller EA, Seidler GT. Simulation of the densification of real open-celled foam microstructures. Journal of the Mechanics and Physics of Solids 2005; 53:2638–2660. (원문 참고문헌 3 · 인쇄 그대로) | h · f (단계 5) — 실제 (영상) 미세구조를 MPM 으로 치밀화 · *"ease of initial discretization of complex geometries using techniques similar to those used by Brydon et al. in the simulation of foam [3]"* (p.1215) · 정본 `bardenhagen2005_mpm_foam_densification_simulation` (같은 권 597–617 · 단위 셀) 과 **다른 논문** · 카드 §12 | litdb 확인: ls brydon* 없음 · "open-celled foam" grep 0 건 · 'Brydon' grep = `bardenhagen2005_…` 의 공저자 · `steffen2008_…` 참고 줄 (그 2005 논문) 뿐 · '2638' 은 무관한 표 값만
+- [n] 4. Nairn JA. Numerical simulations of transverse compression and densification in wood. Wood and Fiber Science 2006; 38(4):576–591. (원문 참고문헌 4 · 인쇄 그대로) | a · f (단계 5) — MPM 으로 셀 구조 (목재) 를 가로 압축 · 치밀화 (*"compression of wood [4]"* p.1208) · 정본 `nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions` 는 다른 논문 · 카드 §12 | litdb 확인: ls nairn* = nairn2015 뿐 · "transverse compression and densification" grep = `steffen2008_…` 참고문헌 줄에서 인용만
+- (참고 · 후보로 세지 않음) 원문 참고 [22] Tran LT, Kim J, Berzins M (IJNMF 2009 · 인쇄 DOI 10.1002/nme.2360 = [11] 의 DOI — 오기로 보임) = wishlist 에 2007 기술 보고서 판 · [17] Bardenhagen S 2002 (J Comput Phys 180:383–403) = wishlist (batch_57) · [15] Love E, Sulsky DL 2006 (IJNME 65(10):1608–1638) = wishlist (그 줄 연도 2005) · [21] Guilkey · Weiss 2003 = 정본 `guilkey2003_…` · [10] Bardenhagen · Kober 2004 = 정본 `bardenhagen2004_…` · [12] Steffen 외 2008 CMES = 정본 `steffen2008_…` (이 목록의 권 32(2) ↔ 원문 31(2)) · [1] Sulsky · Chen · Schreyer 1994 = 후보 표 N-40.
+
+## 카드 문제
+없음 — 가리킨 카드 `gritton2017_mpm_chemomechanical_coupling_silicon_anode` L91 (*"MPM along with the multiple variants of the method are well described in the literature [32–37]"* — 이 논문 = [36] · 값 인용 없음) 은 원문과 맞다 · `steffen2008_…` L131 (앞 논문 [11] 의 도약 오차 꼴) 도 이 논문 식 (93)–(95) 과 같은 꼴 · 후보 표 L61 서지 칸은 제목 괄호 '(mpm)' 소문자 · 학술지 약어 꼴만 다르다 (저자 · 연도 · 권 · 쪽 같음).
+참고 (카드 문제 아님 · 원문 쪽 어긋남): Δt₀ 0.01 ↔ 10⁻³ · t = 0.2122·C ↔ /C · '∫g dx = 0' ↔ J/12 · 참고 [22] DOI = [11] DOI · 참고 [12] 권 32(2) ↔ 원문 31(2) (`steffen2008_…` L3 · L416) — 카드 §3-8.

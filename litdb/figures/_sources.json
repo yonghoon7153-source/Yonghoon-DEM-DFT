@@ -3169,6 +3169,13 @@
    "421c3148-36._Examination_and_analysis_of_implementation_choices_within_the_material_point_method_MPM.pdf"
   ]
  },
+ "steffen2010_mpm_space_time_error_balance_moving_mesh": {
+  "figures": 179,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "f66711ce-37._Decoupling_and_balancing_of_space_and_time_errors_in_the_material_point_method_MPM.pdf"
+  ]
+ },
  "stomakhin2013_mpm_snow_elastoplastic": {
   "figures": 12,
   "generated": "2026-08-05",
