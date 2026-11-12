@@ -17,6 +17,8 @@
 
 - 시작할 때와 push 직전에 `git fetch origin claude/friendly-meitner-lldvar` → 원격 끝 위로 rebase.  충돌이 INDEX.md · INDEX_DEM.md · comparison_vs_ours_DEM.md · figures/_sources.json · pdf_map.tsv · 이 폴더 파일에서 나면 **두 쪽 줄을 다 살려** 푼다 (남의 카드 · 줄은 지우지 않는다).  push 가 non-fast-forward 로 거부되면 다시 fetch · rebase.  **강제 push 금지.**
 - INDEX_DEM.md = `python3 tools/litdb/build_index.py` 로 재생성 (손편집 금지) · 끝에 `python3 tools/litdb/build_index.py --check`.
+- 충돌 풀기 세부: INDEX_DEM.md 충돌은 손으로 풀지 말고 rebase 뒤 재생성 · `figures/_sources.json` 은 두 쪽 항목을 다 살린 뒤 `python3 -m json.tool` 로 읽히는지 확인 · 그림 도구가 **남의 카드** `_sources` 항목까지 고쳤으면 그 부분은 되돌린다 · `tools/litdb/build_index.py` 의 SIZE_EFFECT_SLUGS 같은 목록 충돌은 두 줄 다 남긴다.
+- 카드 (`papers/<slug>.md`) · 그림 폴더 (`figures/<slug>/`) · 정독 출력 (NN 범위가 나뉨) 은 세션마다 다른 파일이라 충돌하지 않는다 — 충돌은 위 공용 파일에서만 난다.
 - 이 가지 밖 (코드 · 문서 가지) 에는 쓰지 않는다.  litdb 한정 커밋 · push 는 1저자 상시 승인.
 - 커밋 메시지 끝 두 줄 = 그 세션의 공동 저자 · 세션 줄 (모델 이름은 넣지 않는다).
 
