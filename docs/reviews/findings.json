@@ -17446,6 +17446,16 @@
    "opened_in": "scripts/run_contract.py",
    "title": "내가 띄운 Rint 재리뷰 조수가 scratch 사본 시험에서 GIT_DIR 를 본 리포 .git 으로 export 한 채 run_contract.py --selftest (RCPT-sha · 임시 폴더 git init · add -A · commit) 를 돌려 본 리포 가지 끝에 쓰레기 커밋이 생기고 색인이 1 항목이 됐다 — 조수 지시서에 GIT_DIR 금지가 없었고 selftest 는 git 을 부를 때 GIT_* 환경을 지우지 않는다",
    "note": "결과 무관 [확인] — push 전 (원격 bfd9b3bbd 그대로) · 스냅숏 전 · 처리 = 조수 멈춤 · GIT_DIR 가진 프로세스 0 · git update-ref (CAS) + read-tree → HEAD bfd9b3bbd · 색인 22904 · status 깨끗 · .git/config 바뀐 칸 없음 · reflog = 그 커밋 하나 · 고침 = (1) 운영: 조수 지시서에 'GIT_DIR · GIT_WORK_TREE · GIT_INDEX_FILE 을 export 하지 않는다' (11-12 밤부터 · CLAUDE.md 컨테이너 줄) (2) 코드: selftest 의 git 호출에서 GIT_* 환경을 지움 = Rint ② 묶음 2 회차 고침 RCP2-06 (시험 먼저) · claimed_fixed = 그 반입 커밋"
+  },
+  {
+   "id": "SELF-170",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "게이트 조각 2 (126–183 · HEAD 3daa2c48a · 11-12 17:3x UTC · 대피 세션) 단계 182 fast 자기검사 전수 — scripts/mixer_smoke_blind.py --selftest ㉓ 한 건 실패 · 같은 HEAD 바로 다시 = 통과 · PYTHONHASHSEED 0–7 = 통과",
+   "opened_in": "scripts/mixer_smoke_blind.py",
+   "title": "믹서 selftest ⑮ · ⑯ · ㉓ 의 값 누출 검사가 기록 · 화면의 µs 타임스탬프 숫자와 글자로 겹치면 거짓 실패 (예: 바늘 '0.9643' ⊂ '…:10.964312Z' · 'HHMMSS.ffffff' 파일 이름)",
+   "note": "원인 재현 = 시계를 2026-11-12T17:35:10.964312Z 로 고정한 사본 → ⑮ ✗ · ㉓ ✗ (rc 1) · 고정 안 한 같은 사본 = 통과 · 어림 확률 (한 번) ⑮ ~1e-3 · ㉓ ~4e-5 · 판독 · 봉인 동작 무관 (selftest 문자열 검사만) · 고칠 방향 = 바늘 앞 글자가 숫자가 아닐 때만 누출로 셈 ((?<![0-9]) + 바늘 · 진짜 누출 '\"M\": 0.9643' · '-0.3929' · repr 앞자리는 그대로 잡힘) + 합성 문자열 시험 · 시계 고정 사본 전 ✗ → 뒤 ✓ · 오늘 고치지 않은 까닭 = mixer_smoke_blind.py sha256 = E0 진단 기록이 봉인하는 도구 (mixer_stage_gate.e0_record_tools · '기록 = 지금 리포 도구') · 믹서 E0 재봉인 (커밋 A · B) 대기 → 고침은 재봉인 묶음과 함께 (도구 해시를 한 번만 바꿈) · 게이트 처리 = 같은 HEAD 로 조각 2 다시 = 58/58 (거짓 실패 원인 재현 = flake 아님)"
   }
  ]
 }
