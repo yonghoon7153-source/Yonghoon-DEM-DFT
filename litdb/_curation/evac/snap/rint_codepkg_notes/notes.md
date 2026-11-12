@@ -63,3 +63,8 @@
   S0 단계 1 다시 = 필요 (바뀐 파일 가운데 step3_sigma.py · mpm_webapp_payload.py 가 S0_SAME_FILES 일곱 안 — rint_r_chain.py 345 줄).
 - (08:50Z) 끝 판 시험 파일 (f17ea8c6b) 을 바탕 코드 (work/before_final = ebb0e9f80 scripts + 끝 판 시험 넷) 에서: Q11 10/13 (G1 · G1r · G2 = dia_matrix · 끝 판에서 15 검사) ·
   store 0 PASS · 24 FAIL (T0–T13 = 모듈 없음 · P1 · P2 · P5 · R1 · R2 · C1–C5 · 끝 판 46 검사) · store e2e 0/1 (Z0 = 사슬 선택지 없음) — logs/evac/before/final_tests_*_on_base_py311.log.
+- (08:55Z) ★ 빈틈 발견 (변이 목록 대조): 새 규칙 셋에 시험 · 변이가 없었다 — ① 열쇠의 스키마 칸 (T4 가 안 바꿈 · 코드 sha 와 겹 방어) ② 저장본 폴더 소유자 (Store ·
+  cjunc_store.py 432) ③ 사슬 폴더 소유자 (rint_r_chain.cjunc_store_dir_problem) — 시험 파일에 소유자 문자열 0.  → 스크래치 사본 work/t_add 에서 시험 보강
+  (T4 스키마 갈래 · T11 다른 소유자 · C1 여덟째 다른 소유자 · 도우미 other_owner = root 면 진짜 chown · 아니면 os.getuid 를 잠깐 바꿈) → HEAD 코드에서 통과 ·
+  변이 셋 (K13 · W19 · C10) 을 그 사본에서 넣으면 셋 다 잡힘 · chown 실패 길 (root 아님 흉내) 도 T11 · C 통과.  mutate.py 에 K13 · W19 · C10 더함 (92 개) —
+  줄 2 변이 (HEAD 시험) 에서는 안 잡힐 것 = 빈틈 증거 · 시험 보강 커밋 (줄 1 · 2 가 트리를 다 쓴 뒤) 뒤 셋만 다시 = 잡힘 확인.
