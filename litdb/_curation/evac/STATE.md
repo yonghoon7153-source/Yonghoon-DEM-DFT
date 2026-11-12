@@ -186,3 +186,5 @@
 - 11-12 20:4x UTC: N-41 끝 (lyu2026 · af9fee8c8) → N-43 시작 (트리 2 · 정독 84)
 - 11-12 20:5x UTC: N-42 끝 (benhadjali2026 oneway · 696b6882a) → N-45 시작 (트리 1)
 - 11-12 21:0x UTC: N-43 끝 (chouchane2019 · ef2c9ee10) → N-46 시작 (트리 2)
+- 11-12 21:0x UTC: N-45 끝 (stewart2001 · 0297aa543) → N-47 시작 (트리 1)
+- 11-12 21:2x UTC: ✅ push 3daa2c48a..a0455e90b (커밋 Q · 게이트 125/125 + 58/58 fail 0) · 다음 리포 일 = Rint 반입 (3 회차 고침 끝난 뒤 cherry-pick -x 서명 → 게이트 → push · SELF-169 claimed_fixed)

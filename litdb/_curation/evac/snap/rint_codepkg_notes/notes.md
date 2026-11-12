@@ -268,3 +268,9 @@
   뜻이 바뀜) → 시험 맞춤 (변이 보강 커밋에 함께 · 다른 코드 = 다른 열쇠는 T4 · T14c · T15a).
 - 변이 보강 (준비 · work/r5patch/apply_mutfix.py): G7d (git_fixture_env 넘긴 env 꼴 — XDG · HOME 줄 변이) · T15l (제자리 되돌림 · ctime 만) ·
   T15m (재는 도중 바뀜) · T8 맞춤.  변이 J1–J26 (mutate_r3.py set r5).  끔 길 바탕 work/ovb5_base (alternates · HEAD af3cce37b · sparse).
+- (21:2xZ) 봉인 대조 (끝 판 전 · work/seal_check_r5.py · seal_bind_r5.py → logs/r5/seal_check_now.log · seal_bind_now.log): 바뀐 19 = 194 · 언로딩 키트 ·
+  믹서 봉인 겹침 0 · 사슬 CODE_FILES (봉인 전) 6 · S0 일곱 1 (ca_s0_census) · ★ Codex 리뷰 증거 목록 8 줄이 바탕판 바이트와 같았다 (round3–6 · ULPR integer
+  archive · ZIP 사본 경로 · 증거 기록 · 읽는 도구 없음 — test_rint_r_chain 은 round4 frozen_cases 폴더만) → 한정.
+- 변이 보강 2 준비 (work/r5patch/apply_mutfix2.py · g7e_defs/g7e_block): G7e = 시험 모듈 여덟의 git 부르는 자리 (정적 ast · 3.8 같음) env 넘김 · 예외 =
+  ROOT 읽기 셋 · G6 목록 상수 G6_MODULES.  변이 J27–J32 (도우미 밖 고정물 git env 지움) 더함 · mutate_r3 ARCHIVE_PATHS 에 S0 블록 폴더 더함 (G8a · J17).
+  변이 스크립트 work/run_mut7.sh (사본 mut7 · 바탕선 G · T15 · P · 3.11 → 3.8).
