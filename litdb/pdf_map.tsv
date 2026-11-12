@@ -526,3 +526,7 @@ devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte	in-situ nanoi
 #   ⚠ 크롭 70 장 = 도구 17 (전부 다시 자름: 캡션 빠짐 · 이웃 그림 합침 · 쪽 전체 · 섞임) + 손 크롭 53 (manual_crop: 그림 · 표 5 = fig_2 · fig_3 · fig_11 · fig_S6 · tab_1 · 식 28 · 근거 글 20) + digitized.csv — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워지고 재크롭이 자동 bbox 로 되돌아간다)
 yano2023_eepa_bimodal_size_plasticity_compression_dem	compression_properties_of_bimodal_powders_with_different_plasticities
 yano2023_eepa_bimodal_size_plasticity_compression_dem	compression properties of bimodal powders with different plasticities
+# ── NMC532 : CB : PVDF = 90 : 5 : 5 액체계 LIB 양극 롤 압연 (지름 200 mm · 압하율 10–40 %) 을 평판 근사 DEM (EDEM 2021 · EEPA · 3D RVE 100 µm) → 한 방향 FEM (ANSYS 2022 · Al 박) 으로 — 힘 사슬 밀도 · 방향 · 세기 · 집전체 손상 (Du · Zhang · Du · Yang · Zhao · J. Energy Storage 138 (2025) 118688) — litdb 2026-11-12 (후보 N-27) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴
+#   ⚠ 보충 자료 없음 · 크롭 70 장 = 도구 12 (전부 다시 자름: 그림 11 = 내장 원본 래스터에서 · 표 1 = 400 dpi 벡터 재렌더) + 손 58 (manual_crop: 패널 17 · 식 21 · 근거 글 20) + digitized.csv (163 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+du2025_dem_fem_force_chain_collector_damage_calendering	force_chain-induced_collector_damage_in_calendering
+du2025_dem_fem_force_chain_collector_damage_calendering	force chain-induced collector damage in calendering

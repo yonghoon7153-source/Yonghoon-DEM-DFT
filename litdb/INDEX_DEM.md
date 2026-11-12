@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 300편 · 생성 2026-11-12
+> digest 301편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -190,7 +190,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (61편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (62편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -204,6 +204,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `demirtas2021_mpfem_hollow_sphere_die_compaction` | 중공(hollow) 구의 다이 압밀을 3D MPFEM(입자마다 FE 메시 = 진짜 형상 소성)으로 — ★★★ 저자들이 본문에서 "DEM 은 압밀 중 변형된 입자 표면을 보정할 수 없다" 고 명시 = 우리 3층 지도 층③(입자 형상 소성 = 연속체 소관) 의 제3자 근거 — Demirtas & Klinzing (Merck, | MPFEM (Abaqus/Explicit 3D 다입자 유한요소; 입자당 C3D8R ~1650 요소, elas | 2026-08-25 | 🖼 14 |
 | `diener2022_roll_gap_springback_calendering` | 캘린더링 롤 간극을 직접 재서 본 NMC622 양극의 순간 탄성 회복 (springback) · 탄성/소성 변형 분율 — 질량 200–350 g/m² · PVDF 1.5–4 wt% 변수, 선하중 ≈60–1000 N/mm, SB 선형 경험식 — Diener · Ivanov · Haselrieder · Kwade (Energ | experiment (파일럿 캘린더 GKL400 · 롤 위치 직접 측정 센서 4 개 · 접촉식 두께 · Me | 2026-10-13 | 🖼 11 |
 | `dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review` | 등방 가압 (CIP · WIP · HIP) 을 전고체전지 양산 공정으로 — Focus Review + 자체 시연 한 건 + 기술경제: 단축 금형 가압은 벽 마찰로 압분체 밀도가 고르지 않다 (인용 · 개념도) · 문헌의 CIP 는 대개 200–250 MPa '임의 선택' · 압력 ↔ 펠릿 밀도 상관 없음 · 황화물 SE  | review + own demonstration experiment (ACS Energy Lett. Focu | 2026-11-12 | 🖼 53 |
+| `du2025_dem_fem_force_chain_collector_damage_calendering` | 액체 LIB 양극 (NMC532 : CB : PVDF = 90 : 5 : 5 · SE 없음) 의 롤 압연을 평판 근사 DEM (EDEM 2021 · 단단한 구 · 탄소성 점착 접촉 법칙 · 3D RVE 100 µm) 과 한 방향 집전체 FEM (ANSYS 2022 · Al 박 RVE 100 × 100 × 17 µm · 정 | DEM (Altair EDEM 2021, EEPA elasto-plastic adhesive law, rig | 2026-11-12 | 🖼 70 |
 | `duquesnoy2023_ml_multiobjective_manufacturing_optimization` | 물리기반 시뮬 합성데이터 + ML(SISSO+베이지안 다목적최적화)로 LIB 전극 제조 역설계 — Duquesnoy (Energy Storage Mater. 2023) | mixed (CGMD+DEM physics-sim + SISSO ML + Bayesian multi-obje | 2026-07-10 | 🖼 17 |
 | `frankenberg2024_dem_high_intensity_mixer_assb` | ASSB 복합양극을 고강도 믹서(high-intensity mixer) 로 만드는 공정을 DEM으로 — coarse-graining + force-scaling(접촉력 스케일링) + 3단계 보정으로 stressing condition을 추출하고, 그것을 미세구조·풀셀 용량에 연결 — Frankenberg (Powder T | DEM (Rocky 2023 R1, coarse-grained + force-scaling, 3-step c | 2026-06-26 | — |
 | `galvezaranda2025_paml_vgg16_dem_slurry_drying` | 건조(slurry drying) DEM 궤적을 predictor–corrector 로 쪼개다 — VGG16→Conv1D 가 프레임 한 칸(1,500,000 DEM step)을 건너뛰고 nDEM(5–10 k) 실제 DEM step 이 그것을 물리 위로 되돌린다, NMC111 96 % AM / 4 % CBD 학습 → 94/6 | PAML 하이브리드(predictor–corrector): per-particle VGG16→Conv1D 시 | 2026-09-11 | 🖼 13 |
