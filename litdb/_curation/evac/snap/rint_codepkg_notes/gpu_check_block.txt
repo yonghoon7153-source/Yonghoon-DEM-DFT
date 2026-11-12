@@ -6,14 +6,14 @@
 # 결과 전 기대 (먼저 적음): 다섯 짝 모두 해 바이트 · info · 반복 수 · LAST_BACKEND 같음 · 새 꼴이 반복당 빠름 (합성 벤치 A / C = 3.40 gabia ·
 #   3.79 kgy).  다르면 그대로 보고 (시험을 고치지 않는다).  시간 어림 = 주 풀이 반복 수에 달림 (조수 CPU 어림 = 아래 자리표 메모).
 # 자리표 (5 판 · 11-12 2 회차 고침 (내부 반박 리뷰 재확인 · Codex 아님) 뒤 · 본 세션이 반입 뒤 다시 본다):
-#   Q11PIN = 코드 묶음 끝 커밋 = 지금은 작업 트리 (/home/user/rint-codepkg) 의 8cc3fe462 (서명 없음 · push 없음).  2 회차 고침은
+#   Q11PIN = 코드 묶음 끝 커밋 = 지금은 작업 트리 (/home/user/rint-codepkg) 의 609d78ca4 (서명 없음 · push 없음).  2 회차 고침은
 #     step3_sigma.py 를 바꾸지 않았다 (새 모듈 sha256 = 4 판 값 그대로 · git show | sha256sum 으로 다시 셈).  본 세션이 반입하며
 #     서명 · cherry-pick 하면 sha 가 바뀐다 -> 그 40 자리로 바꾼다 (안 바꾸면 블록이 "commits not in Q11REPO" 로 서고 아무것도 돌리지 않는다).
-#     새 모듈 sha256 관문 값 (맨 끝 줄 --new-sha) 과 내용이 같은 커밋이면 어느 것이든 된다 (94765bed3 · 0ac6edf3c · 8cc3fe462 다 같은 파일).
+#     새 모듈 sha256 관문 값 (맨 끝 줄 --new-sha) 과 내용이 같은 커밋이면 어느 것이든 된다 (94765bed3 · 0ac6edf3c · 609d78ca4 다 같은 파일).
 #   Q11REPO = 그 커밋을 fetch 한 리포 체크아웃.  아래 값 = kgy 의 기준 체크아웃 자리 (근거 = 리포
 #     docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md 의 BASE 줄).  gabia 의 자리는 [미확인] - 본 세션이 채운다.  블록은 fetch 하지 않는다
 #     (1저자가 먼저 git fetch).  두 모듈 파일만 git show 로 꺼낸다 - 형제 모듈 se_material 은 Q11REPO 작업 트리의 판에서 읽는다 (풀이 함수와 무관).
-#   두 모듈 sha256 (맨 끝 줄) = 옛 8d428ff5... = 11a794674 의 scripts/step3_sigma.py · 새 859310da... = 94765bed3 · 0ac6edf3c · 8cc3fe462 의 같은 파일
+#   두 모듈 sha256 (맨 끝 줄) = 옛 8d428ff5... = 11a794674 의 scripts/step3_sigma.py · 새 859310da... = 94765bed3 · 0ac6edf3c · 609d78ca4 의 같은 파일
 #     (3 판의 새 45d645a2... = f17ea8c6b 판 = 리뷰 고침 전 · 이제 쓰지 않는다 · git show | sha256sum 으로 다시 확인).
 #     파일 내용 기준이라 반입으로 커밋 sha 가 바뀌어도 그대로다 (반입 때 step3_sigma.py 를 손대면 다시 센다).
 # 관문: 새 폴더 (~/q11check_<이름표>_<UTC>) · 스크립트 md5 · 두 커밋 있음 · 두 모듈 sha256 · venv (~/dem-venv) · 시간 상한 5400 s ·
@@ -21,7 +21,7 @@
 # 돌려 받을 것: ~/q11check_<이름표>_<UTC>/result.json · check.log
 Q11L=kgy
 Q11REPO="$HOME/dem-mt"
-Q11PIN=8cc3fe462d70b931cc8d2393f3d1b48b49c83a44
+Q11PIN=609d78ca43ad472025346d3973f0c49a23ec52c5
 Q11D="$HOME/q11check_${Q11L}_$(date -u +%Y%m%dT%H%M%SZ)"; Q11OK=0; mkdir "$Q11D" 2>/dev/null && Q11OK=1 && cat > "$Q11D/q11_gpu_check.py" <<'Q11_CHECK_EOF'
 # -*- coding: utf-8 -*-
 """Q11 GPU check (no kit, no sigma) - draft 2026-11-12 (Rint 2, preconditioner representation only).

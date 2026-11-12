@@ -204,3 +204,16 @@
   KILLED (logs/r3/mut_probe_g5)) · 3.11 · 3.8 둘 다 10/10 · pyflakes 깨끗.  사본 work/mut4 = 8cc3fe462 (scripts 나무 같음 · 변이 자리 194/194).
 - GPU 블록 5 판 = gpu_check_block.txt (Q11PIN 8cc3fe462… · 새 모듈 sha256 859310da 그대로 = 2 회차가 step3_sigma.py 안 바꿈 · 하네스 md5
   acfeb4b4 그대로 · 느낌표 · 탭 · CR 0 · bash -n) · 4 판 사본 gpu_check_block_v4.txt.
+- (17:5xZ–18:05Z) 변이 3.11 (사본 work/mut4 = 8cc3fe462 · GIT_DIR 없음 · 바탕선 21 묶음 rc 0 · logs/r3/mut/):
+  재리뷰 X1–X21 (= N1–N21) 21/21 잡힘 (★ X9 = N9 그룹 쓰기만 → T7 이 잡음) · 2 회차 H 32 = 잡힘 29 · 안 잡힘 3 = H4 · H8 · H23 (셋 다 미리 적은
+  겹 방어 — 자리만 바뀐 같은 내용 · 런 시작 못 셈 = Store() 가 먼저 STORE_PATH · 환경 지운 뒤 꼭대기 확인 늘 참) · H27 (redundant 로 적었는데) 잡힘
+  (G6 · test_cjunc_store_e2e 는 test_rint_r_chain 을 함수 안에서 부름 = 불러올 때 지움이 그 모듈 자신의 겹뿐) · 1 회차 리뷰어 31 = 30 잡힘 · MS7
+  안 잡힘 (1 회차 리뷰어 판정 = 동등) · 구현 쪽 107 (Z 뺌) = 103 잡힘 · 안 잡힘 = W6b · P5 · N3c (겹 방어) + ★ W14 (절대 경로 검사 끔) —
+  2 회차 정규화 검사가 T11 의 relpath (`..` 품음) 를 먼저 거부해 생긴 시험 빈틈 → 변이 보강 커밋 609d78ca4 (T11 사유 '절대 경로' + 점 없는 상대
+  경로 꼴) → W14 잡힘 (logs/r3/mut/run311_t11) · store 62/62 (3.11 73 s · 3.8 77 s).
+- 끝 HEAD = 609d78ca4 · 사본 mut4 나무 = 609d78ca4 (scripts · probe6 tools) · GPU 블록 5 판 Q11PIN = 609d78ca4… 로 다시.
+- 정정 (내 사전 표지): H27 을 redundant 로 적은 까닭 (test_cjunc_store_e2e 가 test_rint_r_chain 을 불러 지운다) 은 틀렸다 — 그 모듈이 부르는 것은
+  test_rint_r_chain_e2e (rint_r_chain · test_ca_ext_runner 를 부름 · 지움 없음) → 그 모듈 자신의 지움이 유일한 겹 → G6 이 잡은 것이 맞다.
+- 같은 부류 남은 것 (범위 밖 · 손대지 않음): 이 묶음이 안 고친 시험 셋이 git 을 부르는 쪽 환경으로 부른다 — test_rint_r_chain_e2e `_git`
+  (고정물 init · add · commit · env=None 기본) · test_rint_r_chain_e2e12 (`git init` · `pull`) · test_step3_conv_cert (`git show` 읽기).  게이트를
+  git 훅 안에서 돌리면 11-12 밤 사고와 같은 꼴이 날 수 있다 (재리뷰 RCP2-06 범위 = 이 묶음이 고친 시험) → 보고 · 결정 = 본 세션.
