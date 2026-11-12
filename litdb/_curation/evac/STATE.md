@@ -12,7 +12,7 @@
 | 인계 절 | 상태 (11-12 17 시 KST 기준) | 다음 |
 |---|---|---|
 | §1 pqwtv8 ← stoic `af3cce37b` | ✅ fast-forward · push | — |
-| §2 커밋 J (G2c′ 실행기 `-h` 고침 · siteq 예행 반입 · SELF-166 open) | 커밋 `21bb09d82` (서명 · 본 트리 · push 전 · 사본 = `snap/main_unpushed.bundle`) · 사전 점검 셋 통과 (doc_refs · findings · ban sweep) · 게이트 1 조각 (1–125) 16:26 KST 시작 · 도는 중 (`gate/gate_J_p1.log` · 끝 줄 `GATE_P1_RC=`) · 2 번 단계 한 개가 733 s 걸림 → 7000 s 안에 못 끝나면 끊긴 자리부터 범위를 나눠 다시 | 1 조각 fail 0 → 2 조각 `CHECK_ALL_RANGE=126-183` (배경 · timeout 7200000) → 둘 다 fail 0 → push → 다음 커밋 = SELF-166 claimed_fixed + 진행 기록 (인계 · 1저자 결정) |
+| §2 커밋 J (G2c′ 실행기 `-h` 고침 · siteq 예행 반입 · SELF-166 open) | 커밋 `21bb09d82` (서명 · 본 트리 · push 전 · 사본 = `snap/main_unpushed.bundle`) · 사전 점검 셋 통과 · **게이트 1 조각 (1–125) = 통과** (`CHECK_ALL_PART range=1-125 total=183 ran=125 fail=0` · 17:16 KST · 2975 s · `gate/gate_J_p1.log`) · 2 조각 (126–183) 17:17 KST 시작 · 도는 중 (`gate/gate_J_p2.log` · 끝 줄 `GATE_P2_RC=`) | 2 조각 fail 0 → 원격 pqwtv8 이 `af3cce37b` 그대로인지 보고 `git push -u origin claude/sdcp-dem-manuscript-si-pqwtv8` → 다음 커밋 = SELF-166 claimed_fixed + 진행 기록 (인계 · 1저자 결정 · gabia 킷 확인) → 게이트 → push → §3 ibb 건식 묶음 |
 | §3 G2c′ ibb 건식 다시 | 커밋 J push 뒤 | `git archive` tgz · sha256 → 명령 틀 (`handoff …/g2c/ibb_try4_cmds_template.txt` · 접속 값은 채팅) → 1저자 실행 → 돌아오면 `compare_g2cp.py <OUT> 200` |
 | §4 Rint ② 코드 묶음 (1 순위 · GPU 팔 12 월 초까지) | 작업 트리 `/home/user/rint-codepkg` (stoic 끝 + 시험 먼저 커밋 + 구현 = 커밋 전) · 조수가 이어받아 도는 중 (지시서 `rint/codepkg/BRIEF_evac.md` · 메모 `rint/codepkg/notes.md`) | 조수 보고 → 내부 반박 리뷰 (독립 조수 · "Codex 아님") → 반입 (cherry-pick · 서명) · 게이트 → 원장 시도 3 줄 → S0 단계 1 다시 · ⑥ 시도 3 · GPU 확인 (1저자 실행) → Codex 봉인 전 묶음 → 계획 §10 개정 → 봉인 → R |
 | §5 열린 일 | 포메이션 = `snap/formation_20261112.md` | 걸 수 있는 것부터 조수로 |
