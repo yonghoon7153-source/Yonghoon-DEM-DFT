@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 307편 · 생성 2026-11-12
+> digest 308편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -38,7 +38,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | 체 분급한 Li₆PS₅Cl (Ampcera 0.5–150 µm → <20 · 20–50 · 50–150 µm) 의 입도 등급이 순수 SE 이온 전도 · 복합양극 유효 이온 전도 · 전도도 기반 tortuosity · Li 금속 반쪽셀에 미치는 영향 — 임피던스 연구 — Yadav · Davoisne · Morcrette  | experiment (체 분급 LPSCl · SS 차단전극 EIS · Li\|SE\|복합양극\|SE\|Li 대칭셀  | 2026-10-30 | 🖼 6 |
 | `yano2026_se_psd_width_ionic_tortuosity_dem` | Li₆PS₅Cl 입도 분포 폭이 복합양극 이온 경로 tortuosity 에 미치는 영향 — 원 분말 (넓은 PSD) ↔ 습식 볼밀 분말 (좁은 PSD) 혼합 4 조성 · 차단전극 EIS + EDEM-EEPA DEM + A∗ 최단 경로 (입자 수 보정 τ∗) — Yano · Hofer · Ohsaki (교신) · … · K | experiment + DEM (EDEM 2024.1 EEPA · A* shortest-path τ_geo  | 2026-10-30 | 🖼 17 |
 
-## MPM · 연속체 (19편)
+## MPM · 연속체 (20편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -49,6 +49,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `choi2024_digital_twin_review_echem` | Choi 2024 (E.Chem 매거진 총설, Vol.16 No.1) — 디지털 트윈 모델링·시뮬레이션 ★ 우리 DEM+MPM의 top-down/bottom-up POSITIONING을 NAMING하는 framework 리뷰 | tool·digital-twin 총설 | 2026-07-28 | — |
 | `devaucorbeil2020_mpm_after_25_years_review` | MPM after 25 years: theory, implementation, applications (리뷰) — de Vaucorbeil, Nguyen, Sinaie, Wu (Adv. Appl. Mech. 2020) | MPM 리뷰(review) | 2026-06-26 | — |
 | `gritton2017_mpm_chemomechanical_coupling_silicon_anode` | MPM 에 확산을 얹은 화학–역학 양방향 결합 — 입자에 실은 농도 · 응력 의존 확산계수 · 리튬화 자유 변형률을 변형률 속도에 더하는 hypoelastic–plastic + 밀도를 올려 준정적으로 (질량 스케일링) · 3D 규소 나노기둥의 리튬화 → 탈리튬화 한 바퀴 ★★ 접촉 없음 (한 속도장 = 붙음) · 정량 검 | MPM (명시적 CPDI-MPM · Uintah — 입자에 실은 정규화 농도의 확산 풀이 + 응력 의존 확산 | 2026-11-11 | 🖼 66 |
+| `guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison` | 암시적 MPM (격자 변위 증분의 Newton 반복 + 사다리꼴 시간 적분) — 준정적은 질량 행렬 · 관성항을 빼서 · 2D 평면변형률 초탄성 빌릿 50 % 압축이 암시 FE (NIKE3D) 와 가로 변위 2.1 % (정적) · 2.5 % (동적 판 50 cm/s) 로 맞고 명시 MPM 은 같은 동적 문제에서 6.7 % | MPM (방법 논문 — 암시 MPM · Newton 증분-반복 · 사다리꼴 (요약은 Newmark) 시간 적 | 2026-11-12 | 🖼 53 |
 | `homel2017_mpm_field_gradient_partitioning_fracture_self_contact` | MPM 에서 속도장을 알갱이 수만큼 늘리지 않는 접촉 — 손상장 (또는 표면 표지) 의 기울기로 노드마다 물질을 두 속도장으로 나눠 마찰 접촉 · 분리 · 파괴 · '자기 접촉' ★★★ 후보 A′ 의 '장 2 개' 길 + R7 (AM 파괴) 부품 — Homel & Herbold (IJNME 2017) | MPM (명시적 CPDI-MPM · 손상장 / 표면 표지장의 기울기로 노드마다 두 속도장 분할 (DFG pa | 2026-11-10 | 🖼 36 |
 | `hu2018_mls_mpm_cpic_two_way_rigid_coupling` | MLS-MPM 의 원전 — 형상함수 기울기 없이 APIC 의 C_p 로 힘 · 변형구배 (전달 2 배) + CPIC: 색칠 거리장으로 격자 한 장에서 변위 불연속 · 강체 양방향 결합 ★★★ 우리 Taichi MPM 의 뿌리 · 후보 A / A′-0 부품 — Hu, Fang 외 5 인 (ACM TOG 2018) | MPM (명시적 MLS-MPM · APIC/PolyPIC 전달의 MLS 유도 + CPIC 색칠 거리장 · 강 | 2026-11-10 | 🖼 37 |
 | `klar2016_dp_sand_animation` | 모래(sand) 애니메이션을 위한 Drucker-Prager 탄소성 — Klár (ACM TOG 2016, SIGGRAPH) | MPM | 2026-06-26 | 🖼 17 |
