@@ -29,9 +29,9 @@ N-26	대피	끝	yano2023_eepa_bimodal_size_plasticity_compression_dem · a296968
 N-27	대피	끝	du2025_dem_fem_force_chain_collector_damage_calendering · 5d7833e66	정독 69 · 카드 557 줄 · 크롭 70 · 압하율 10→40 % 접촉 쌍 23,940→41,816 · 강한 사슬 몫 21.49→9.73 % (수 몫 · 하중 몫 아님) · 카드 문제 = he2026 L98–100 · L368 · L689
 N-29	대피	끝	harthong2009_high_density_compaction_dem_voronoi_contact_law · 1864d8ad2	정독 70 · 카드 527 줄 · 크롭 46 · Voronoi 국소 상대밀도 결합 접촉 법칙 ≈ 0.95 까지 · 맞춘 계수 함수 5 · DEM 법칙 = 강소성 (탄성 없음) · 카드 문제 = gonzalez2012 · comparison · zunker2024 줄
 N-30	대피	끝	brodu2015_multiple_contact_dem_dense_granular · 6975e5e95	정독 71 · 카드 520 줄 · 크롭 28 · MC-DEM Rtop 1.00 (γ≈1.19 맞춤) ↔ 독립 Hertz 0.43 · errf 3.39→0.41 · 514 알 하이드로겔 · 카드 문제 = gonzalez2012 · giannis2021 · comparison 줄
-N-32	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 72 · 시작 11-13 00:15 KST
+N-32	대피	끝	chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer · f219ecf08	정독 72 · N-32 끝 (chandratilleke2010 · Table 1 힘 법칙 · 연화 E ÷463 · 2012 카드 '방법 원전' 반만 맞음 = refs 9 · 12)
 N-33	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 73 · 시작 11-13 00:43 KST
-N-35	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 74
+N-35	대피	도는 중		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 74 · 시작 11-13 01:24 KST
 N-36	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 77
 N-37	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 78
 N-38	대피	차례 기다림		PDF 받음 · 본 세션에서 넘겨받음 (11-12) · 정독 79
