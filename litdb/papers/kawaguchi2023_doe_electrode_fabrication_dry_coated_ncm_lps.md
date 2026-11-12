@@ -306,6 +306,7 @@ NCM (LiNbO₃) + 액상 진탕 LPS → 막자 예비 혼합 → 건식 충격 �
 - 건식 공정 · 압축 · 미세구조: `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` · `lee2024_shear_force_dry_process_cathode_coverage` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin` (PTFE 건식 양극 디지털 트윈) · `lee2026_mechanical_halogen_argyrodite_drycoating` (1저자 공저 — RAM 건식 코팅의 기계 물성 축).
 - 수송 해석: `otani2023_ionic_conductivity_path_resistance_separation_model` · `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity` · `so2022_dem_compaction_coated_particles_assb`.
 - SE 기계 물성: `sakuda2013_sulfide_mechanical_property`.
+- 이 논문의 ref 27 (2026-11-12 카드): `kawaguchi2018_dry_coating_model_se_particle_powtec` — 모델 물질 (Na₂SO₄) 건식 코팅 첫 보고 · 선정 근거 = 압분 펠릿 Berkovich 압입 (SI · 지수 둘 · 경도 · 영률 값 없음) · 기전 (게스트 소성 변형 · 합체) 은 제안 수준.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

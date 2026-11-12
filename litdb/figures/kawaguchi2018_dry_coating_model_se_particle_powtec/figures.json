@@ -1,0 +1,1265 @@
+{
+ "slug": "kawaguchi2018_dry_coating_model_se_particle_powtec",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+  "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of dry impact-blending device (Hybridizer). (a) Front view and (b) side view.",
+   "rotated_deg": 0,
+   "bbox": [
+    59.7,
+    47.2,
+    526.7,
+    329.9
+   ],
+   "w": 1947,
+   "h": 1179,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.843,
+   "kept": "2026-11-12 tool crop kept — device schematic raster (xref 12, 1264×752 px ≈ 200 dpi), panels (a) front view and (b) side view with the part legend 1–7; even 27 px margins",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. SEM images of (a) LiNi1/3Co1/3Mn1/3O2 (NCM) and (b) Na2SO4.",
+   "rotated_deg": 0,
+   "bbox": [
+    124.0,
+    509.8,
+    462.5,
+    644.1
+   ],
+   "w": 1412,
+   "h": 560,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.172,
+   "kept": "2026-11-12 tool crop kept — two SEM panels (xref 11, 907×340 px ≈ 200 dpi): (a) NCM, bar 1 μm; (b) Na2SO4, bar 500 nm",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Experimental procedure.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.4,
+    47.2,
+    487.7,
+    226.3
+   ],
+   "w": 1547,
+   "h": 747,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.937,
+   "kept": "2026-11-12 tool crop kept — flow chart raster (xref 22, 3992×1858 px ≈ 800 dpi) rendered at 300 dpi; all labels legible",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. FESEM and EDX images of powder products.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    371.5,
+    541.6,
+    732.7
+   ],
+   "w": 1987,
+   "h": 1506,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.188,
+   "auto_bbox": [
+    63.0,
+    250.2,
+    541.1,
+    732.1
+   ],
+   "auto_wh": [
+    1993,
+    2009
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop (1993×2009 px) ran up into the two body-text columns above the figure (PDF p.3: end of §2.1 and start of §2.2); re-rendered from the embedded raster box (xref image 1295×969 px ≈ 200 dpi) narrowed to the non-white content + 6.5 pt margin · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. SEM images of NCM particles after washing out Na2SO4 from powder C at (a) lower and (b) higher magniﬁcations.",
+   "rotated_deg": 0,
+   "bbox": [
+    115.7,
+    47.2,
+    470.8,
+    174.8
+   ],
+   "w": 1481,
+   "h": 533,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.194,
+   "kept": "2026-11-12 tool crop kept — two SEM panels (xref 39, 922×322 px): (a) bar 10 μm, (b) bar 1 μm; the raster itself carries ≈50 px of white at the left and right",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 4,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. FESEM and EDX images of cross-section of single particle in powder C prepared by dry impact-blending process.",
+   "rotated_deg": 0,
+   "bbox": [
+    91.4,
+    630.3,
+    495.0,
+    732.1
+   ],
+   "w": 1683,
+   "h": 425,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.177,
+   "kept": "2026-11-12 tool crop kept — three panels (xref 40, 1088×250 px): cross-section SEM, Mn map, S map; bars 1 μm",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Proposed mechanism of dry coating process in this study (cross-sectional view).",
+   "rotated_deg": 0,
+   "bbox": [
+    102.8,
+    47.2,
+    501.4,
+    191.3
+   ],
+   "w": 1662,
+   "h": 602,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.774,
+   "kept": "2026-11-12 tool crop kept — mechanism sketch raster (xref 56, 1074×368 px): (a) initial state, (b) plastic deformation and coalescence of guest particles, (c) formation of continuous coating layer",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. (a) Electrical resistivity of compressed pellet prepared from Na2SO4, NCM, powder A, B and C as a function of compression pressure. (b) Increase in electrical resistivity normalized by weight fraction of Na2SO4 (Rinc) of compressed pellet (360 MPa) prepared from powder A, B and C.",
+   "rotated_deg": 0,
+   "bbox": [
+    95.6,
+    517.2,
+    508.9,
+    723.9
+   ],
+   "w": 1723,
+   "h": 863,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.883,
+   "auto_bbox": [
+    36.5,
+    517.2,
+    567.6,
+    723.6
+   ],
+   "auto_wh": [
+    2214,
+    861
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was complete but spanned the full text width (273 px of white on the left and on the right vs 27 px top/bottom); re-rendered from the embedded raster box (1114×540 px ≈ 200 dpi) narrowed to the non-white content + 6.5 pt margin · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 5,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8(a) — electrical resistivity [Ω·m, log 10^0–10^10] of the compressed pellet vs compression pressure [MPa, 0–450]; five series (Na2SO4 ●, powder C □, powder B △, powder A ○, NCM ■), six pressures each (≈15, 50, 100, 200, 360, ≈405 MPa — read from the marker positions).",
+   "rotated_deg": 0,
+   "bbox": [
+    95.7,
+    524.2,
+    300.0,
+    723.9
+   ],
+   "w": 852,
+   "h": 833,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.867,
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel split in the white gutter of the embedded raster (xref 57, 1114×540 px ≈ 200 dpi; the white gutter is only native columns 546–556 → split at 300.0 pt; the margin on the split side is clamped to that line), narrowed to the non-white content + 6.5 pt on the other three sides · 300 dpi",
+   "panel_of": "f8",
+   "viewed": true
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 5,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8(b) — R_inc [×10^4 Ω·m] of the pellets compressed at 360 MPa: powder A (vibration mixing), powder B (mortar-and-pestle mixing), powder C (dry impact-blending) — bars ≈0.10 / 0.12 / 1.51 (read).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    517.3,
+    508.8,
+    700.2
+   ],
+   "w": 870,
+   "h": 763,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.881,
+   "manual_crop": "2026-11-12 수동 패널 크롭 — panel split in the white gutter of the embedded raster (xref 57, 1114×540 px ≈ 200 dpi; the white gutter is only native columns 546–556 → split at 300.0 pt; the margin on the split side is clamped to that line), narrowed to the non-white content + 6.5 pt on the other three sides · 300 dpi",
+   "panel_of": "f8",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 6,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. FESEM and EDX images of cross-section of compressed pellet (360 MPa) prepared from each powder products.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.2,
+    47.2,
+    523.3,
+    393.5
+   ],
+   "w": 1918,
+   "h": 1444,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.204,
+   "kept": "2026-11-12 tool crop kept — 3×3 panel raster (xref 68, 1245×929 px): SEM / S map / Mn map of the pellets of powders A, B, C; bars 5 μm",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 6,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Number of NCM-NCM contacts per single particle of NCM on cross-section of compressed pellets (360 MPa) prepared from powder A, B and C.",
+   "rotated_deg": 0,
+   "bbox": [
+    49.1,
+    557.1,
+    269.7,
+    723.5
+   ],
+   "w": 1839,
+   "h": 1387,
+   "dpi": 600,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.932,
+   "auto_bbox": [
+    27.7,
+    556.9,
+    290.7,
+    723.5
+   ],
+   "auto_wh": [
+    1097,
+    695
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was complete but had uneven white margins (116 px left/right vs 28 px top/bottom); re-rendered from the embedded raster box (2320×1719 px ≈ 800 dpi) narrowed to the non-white content + 6.5 pt margin · 600 dpi (small legend type)",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 6,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Void fraction in compressed pellet (360 MPa) prepared from powder A, B and C. The error bars mean the max.-min. values (n = 3).",
+   "rotated_deg": 0,
+   "bbox": [
+    316.3,
+    534.7,
+    538.3,
+    724.1
+   ],
+   "w": 927,
+   "h": 790,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.894,
+   "auto_bbox": [
+    295.7,
+    534.7,
+    558.8,
+    723.5
+   ],
+   "auto_wh": [
+    1097,
+    788
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was complete but had uneven white margins (113 px left/right vs 27 px top/bottom); re-rendered from the embedded raster box (581×492 px ≈ 200 dpi) narrowed to the non-white content + 6.5 pt margin · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Load-penetration depth curve of sulfide solid electrolyte and model material (Na2SO4) measured by indentation test. An indenter was initially being pushed against compacted pellet prepared from each powder sample (loading cycle). The indenter was then being pulled out from the pellet (unloading cycle). Berkovich type indenter was used. Indenter displacement velocity was set as 0.03 mm/min. — axes: x = penetration depth [μm] 0–80, y = root square of indentation load [N^0.5] 0–6; blue circles = sulfide solid electrolyte (75 mol% Li2S·25 mol% P2S5), red triangles = model material (Na2SO4).",
+   "rotated_deg": 0,
+   "bbox": [
+    119.2,
+    293.3,
+    497.7,
+    589.3
+   ],
+   "w": 1578,
+   "h": 1234,
+   "dpi": 300,
+   "src": "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.929,
+   "auto_bbox": [
+    67.3,
+    355.7,
+    546.9,
+    588.5
+   ],
+   "auto_wh": [
+    1999,
+    971
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was CLIPPED at the top (upper frame of the plot, the '5' and '6' tick labels, the first legend entry 'Sulfide solid electrolyte (75 mol% Li2S·25 mol% P2S5)' and the upper part of the y-axis title were cut off); re-rendered from the vector page (SI p.1) over the whole plot, narrowed to the non-white content + 6.5 pt margin · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. Volume based particle size distributions of the two powder samples. — x = particle size [μm] (log, 0.01–100), y = particle size distribution function [–] 0–2; ● NCM (D50 = 5.4 μm), ○ Na2SO4 (D50 = 0.95 μm, bimodal).",
+   "rotated_deg": 0,
+   "bbox": [
+    109.7,
+    336.9,
+    501.9,
+    628.0
+   ],
+   "w": 1635,
+   "h": 1214,
+   "dpi": 300,
+   "src": "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.944,
+   "auto_bbox": [
+    100.8,
+    196.7,
+    515.6,
+    627.2
+   ],
+   "auto_wh": [
+    1730,
+    1795
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop carried the last row and the bottom rule of Table S1 (same SI page) above the plot; re-rendered from the vector page (SI p.2) over the plot only, narrowed to the non-white content + 6.5 pt margin · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "file": "tab_1.png",
+   "caption": "Table 1 Properties of host and guest particles used in this study. — LiNi1/3Co1/3Mn1/3O2 (NCM): host particle, volume median diameter 5.4 μm, true density 4794 kg/m3, 'Rigid and brittle', 'Conductive' · Na2SO4: guest particle, 0.95 μm, 2664 kg/m3, 'Soft and ductile', 'Non-conductive'.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.7,
+    676.6,
+    556.8,
+    747.4
+   ],
+   "w": 2929,
+   "h": 395,
+   "dpi": 400,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.926,
+   "auto_bbox": [
+    28.7,
+    32.7,
+    557.8,
+    745.3
+   ],
+   "auto_wh": [
+    2206,
+    2970
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was the WHOLE PAGE (2206×2970 px: Fig. 1, body text, Fig. 2 and the table); re-rendered to the table only (title lines 'Table 1 / Properties of host and guest particles used in this study.' + header + 2 rows + rules, 4 pt margin) from the vector page (PDF p.2 = printed p.582) · 400 dpi (6.4 pt type)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Bulk and tapped densities of each powder product. — Powder A (vibration mixing): bulk 656, tapped 1040 kg/m3 · Powder B (mortar-and-pestle mixing): 990, 1360 · Powder C (dry impact-blending process): 765, 1080.",
+   "rotated_deg": 0,
+   "bbox": [
+    38.5,
+    53.7,
+    297.6,
+    158.8
+   ],
+   "w": 1441,
+   "h": 585,
+   "dpi": 400,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.927,
+   "auto_bbox": [
+    37.5,
+    32.7,
+    566.6,
+    645.7
+   ],
+   "auto_wh": [
+    2206,
+    2555
+   ],
+   "recrop": "2026-11-12 hand re-crop — the tool crop was the WHOLE PAGE (2206×2555 px: the table, the end of §3.2, §4, acknowledgements and the reference list); re-rendered to the table only (title lines 'Table 2 / Bulk and tapped densities of each powder product.' + header + 3 rows + rules, 4 pt margin) from the vector page (PDF p.7 = printed p.587) · 400 dpi (6.4 pt type)",
+   "viewed": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 2,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Mechanical properties of sulfide solid electrolyte and Na2SO4 measured by indentation test. — Sulfide solid electrolyte (75 mol% Li2S · 25 mol% P2S5): relative residual depth 0.80 [–], slope at loading cycle 6.06×10^-2 [N^0.5/μm] · Model particle (Na2SO4): 0.94, 6.79×10^-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    58.7,
+    90.2,
+    543.1,
+    239.3
+   ],
+   "w": 2019,
+   "h": 622,
+   "dpi": 300,
+   "src": "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.93,
+   "kept": "2026-11-12 tool crop kept — SI Table S1 (vector text + rules) with its title line above the table; values checked against the SI text layer",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_rinc_definition.png",
+   "caption": "Eq. (1), printed p.584 right column (§2.4 Characterization): R_inc = (R_product − R_NCM) / x_Na2SO4 — increase in electrical resistivity of the compressed pellet normalised by the weight fraction of Na2SO4 (R_product = resistivity of the pellet made from a powder product, R_NCM = resistivity of the NCM pellet, x_Na2SO4 = weight fraction of Na2SO4 in the pellet, measured by ICP-AES). The only numbered equation of the paper.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    378.0,
+    555.8,
+    402.5
+   ],
+   "w": 1429,
+   "h": 137,
+   "dpi": 400,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.97,
+   "manual_crop": "2026-11-12 수동 식 크롭 — text-layer line boxes of the display equation (column width, equation number included) · 400 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x581a",
+   "kind": "text",
+   "label": "p581-journal-title-authors-history-abstract-doi",
+   "page": 1,
+   "file": "txt_p581_title_authors_history_abstract_doi.png",
+   "caption": "PDF p.1 (printed p.581) in four parts: running head 'Powder Technology 323 (2018) 581–587' · title, authors (Takashi Kawaguchi, Hideya Nakamura*, Satoru Watano), affiliation (Dept. of Chemical Engineering, Osaka Prefecture University) · article history (Received 30 December 2015 / revised 29 March 2016 / Accepted 30 March 2016 / Available online 2 April 2016), keywords and abstract ('© 2016 Elsevier B.V.') · footer: corresponding author e-mail, DOI http://dx.doi.org/10.1016/j.powtec.2016.03.055, ISSN line.",
+   "rotated_deg": 0,
+   "bbox": [
+    237.0,
+    36.7,
+    367.0,
+    45.1
+   ],
+   "w": 2190,
+   "h": 1199,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.894,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      237.0,
+      36.7,
+      367.0,
+      45.1
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 1,
+     "bbox": [
+      39.5,
+      166.5,
+      564.9,
+      235.1
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 1,
+     "bbox": [
+      39.5,
+      256.2,
+      564.9,
+      400.9
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 1,
+     "bbox": [
+      39.5,
+      692.8,
+      296.6,
+      746.3
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x581b",
+   "kind": "text",
+   "label": "p581-582-prior-methods-drawbacks",
+   "page": 1,
+   "file": "txt_p581_582_prior_methods_pld_ballmill_hotpress_drawbacks.png",
+   "caption": "Printed p.581 right column (end) + p.582 left column (top): earlier ways to build intimate electrode–electrolyte contact — pulsed laser deposition [13] (lab-scale, scale-up impractical), planetary ball milling [14] (breakage and attrition of electrode particles cannot be avoided), hot pressing [15] (heating can damage the solid electrolyte) → processing technologies are 'strongly required'.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.5,
+    616.5,
+    564.6,
+    710.2
+   ],
+   "w": 1073,
+   "h": 538,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.807,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      307.5,
+      616.5,
+      564.6,
+      710.2
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 2,
+     "bbox": [
+      30.7,
+      359.7,
+      287.8,
+      390.6
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x582a",
+   "kind": "text",
+   "label": "p582-dry-coating-proposal-no-previous-attempt",
+   "page": 2,
+   "file": "txt_p582_dry_coating_proposal_no_previous_attempt.png",
+   "caption": "Printed p.582 left + right column: proposal — dry coating (larger host particles directly coated with smaller guest particles by mechanical forces, no solvents or binders [16,17]); 'there is no attempt to use dry coating processes to produce composite particles for all-solid-state batteries'; this study = NCM host + Na2SO4 as a model particle of sulfide solid electrolytes (guest) in the dry impact-blending process 'Hybridizer'.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.7,
+    391.1,
+    287.8,
+    505.7
+   ],
+   "w": 1073,
+   "h": 800,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.803,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      30.7,
+      391.1,
+      287.8,
+      505.7
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 2,
+     "bbox": [
+      298.7,
+      359.7,
+      555.8,
+      432.5
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x582b",
+   "kind": "text",
+   "label": "p582-583-equipment-hybridizer-nhs0",
+   "page": 2,
+   "file": "txt_p582_583_equipment_hybridizer_nhs0_dimensions.png",
+   "caption": "Printed p.582 right column (end) + p.583 left column: §2.1 Equipment — Hybridizer NHS-0 (Nara Machinery Co., Ltd.): chamber with cooling jacket (inside diameter 125 mm, depth 49 mm, effective volume 470 × 10^3 mm3), high-speed rotor with six blades (diameter 118 mm), circulation pipe; powder circulates with the high-speed air flow and is repeatedly subjected to 'impact, compression, and shearing forces'.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    486.2,
+    555.8,
+    506.6
+   ],
+   "w": 1072,
+   "h": 537,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.806,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      298.7,
+      486.2,
+      555.8,
+      506.6
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 3,
+     "bbox": [
+      39.5,
+      255.1,
+      296.6,
+      359.2
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x583a",
+   "kind": "text",
+   "label": "p583-584-powder-samples-model-material-indentation",
+   "page": 3,
+   "file": "txt_p583_584_powder_samples_model_material_indentation.png",
+   "caption": "Printed p.583 right column (end) + p.584 left column (top): §2.2 Powder samples — NCM-03 (Toda Kogyo), Na2SO4 (JIS special grade, Wako); NCM volume median diameter 5.4 μm, 'relatively rigid, brittle, and electrically conductive'; ★ Na2SO4 used as model material 'because enough amounts of sulfide solid electrolytes to conduct our experiments is commercially unavailable'; 'We preliminarily conducted an indentation test [18] and have confirmed that mechanical properties of Na2SO4 were similar to a sulfide solid electrolyte (75 mol%Li2S·25 mol%P2S5), as shown in the supporting information (Fig. S1 and Table S1)'; Na2SO4 milled to 0.95 μm with a multi-ring-type wet grinding system (MICROS-0, Nara); 'relatively soft, ductile, and non-conductive'; particle size by laser diffraction (SALD7500, Shimadzu; Fig. S2).",
+   "rotated_deg": 0,
+   "bbox": [
+    307.5,
+    276.1,
+    564.6,
+    360.6
+   ],
+   "w": 1073,
+   "h": 979,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.807,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      307.5,
+      276.1,
+      564.6,
+      360.6
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 4,
+     "bbox": [
+      30.7,
+      202.7,
+      287.8,
+      348.8
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x584a",
+   "kind": "text",
+   "label": "p584-procedure-powders-a-b-c-16000rpm-5min",
+   "page": 4,
+   "file": "txt_p584_procedure_powders_abc_16000rpm_5min_70_30.png",
+   "caption": "Printed p.584 left column: §2.3 Experimental procedure — powder A = vibrating mixer (FLX-F60, AS ONE) 1 min; powder B = manual mortar-and-pestle mixing 30 min (both 'typical procedures before assembling all-solid-state cells' [6,19]); powder C = mortar-and-pestle premix, then dry impact-blending at 16,000 rpm for 5 min ('set based on our preliminary investigations, while there may be a room for optimization'); in all processes total initial powder 10 g, NCM : Na2SO4 = 70 : 30 wt.% [19].",
+   "rotated_deg": 0,
+   "bbox": [
+    30.7,
+    380.7,
+    287.8,
+    559.3
+   ],
+   "w": 1073,
+   "h": 745,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.805,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x584b",
+   "kind": "text",
+   "label": "p584-characterization-pellet-dc-resistance",
+   "page": 4,
+   "file": "txt_p584_characterization_pellet_die_dc_resistance_logic.png",
+   "caption": "Printed p.584 left column (end) + right column (top): §2.4 Characterization — FESEM + EDX (SU8200, Hitachi); compressed pellets 'which mimic an electrode layer'; 0.5 g of powder in a die of 10 mm inner diameter (inner wall = non-conductive polyacetal resin), hand press 'at various compression pressures'; DC resistance of the pellet inside the die in the vertical direction (electrometer Model 6514, KEITHLEY); reading rule: NCM agglomerates/networks → lower resistivity, NCM well covered with Na2SO4 → higher resistivity; R_inc 'defined as follows'.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.7,
+    589.9,
+    287.8,
+    620.8
+   ],
+   "w": 1073,
+   "h": 845,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.803,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      30.7,
+      589.9,
+      287.8,
+      620.8
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 4,
+     "bbox": [
+      298.7,
+      202.8,
+      555.8,
+      370.5
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x584c",
+   "kind": "text",
+   "label": "p584-rinc-terms-icp-contact-count-void-fraction",
+   "page": 4,
+   "file": "txt_p584_rinc_terms_icp_contact_count_void_fraction.png",
+   "caption": "Printed p.584 right column (below Eq. 1): definitions of R_product, R_NCM, x_Na2SO4; weight fraction of Na2SO4 in the pellet by ICP-AES (SPS7800, Seiko Instruments); pellet cross-sections by argon ion beam cross-section polisher (IM4000, Hitachi); 'number of NCM-NCM contacts per single particle of NCM on the cross-section was directly counted' at ×5000 (50.4 pixel/μm) or ×50,000 (50.3 pixel/100 nm), 1000 particles counted; 'Void fraction of the pellet was calculated from height of the compressed pellets and true densities of NCM and Na2SO4 (Table 1)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    412.1,
+    555.8,
+    548.9
+   ],
+   "w": 1072,
+   "h": 571,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.796,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x584d",
+   "kind": "text",
+   "label": "p584-585-coverage-a-b-c-no-breakage-layer-0p5um",
+   "page": 4,
+   "file": "txt_p584_585_coverage_abc_no_breakage_layer_0p5um.png",
+   "caption": "Printed p.584 right column (end) + p.585 left column: §3.1 — powder A: Na2SO4 'agglomerated due to lower external force', NCM not covered; powder B: NCM 'partially covered', not fully; powder C: NCM 'fully covered'; Fig. 5: 'No breakage and attrition of NCM particles were observed' after washing out Na2SO4; Fig. 6: NCM 'coated with continuous layer of Na2SO4. Thickness of the coating layer was around 0.5 μm'.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    600.3,
+    555.8,
+    622.1
+   ],
+   "w": 1072,
+   "h": 979,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.807,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      298.7,
+      600.3,
+      555.8,
+      622.1
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 5,
+     "bbox": [
+      39.5,
+      223.7,
+      296.6,
+      432.5
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x585a",
+   "kind": "text",
+   "label": "p585-mechanism-plastic-deformation-coalescence",
+   "page": 5,
+   "file": "txt_p585_mechanism_plastic_deformation_coalescence.png",
+   "caption": "Printed p.585 left column (end) + right column (top): ★ proposed mechanism (Fig. 7) — some guest particles adhere after the mortar-and-pestle mixing; in the dry impact-blending process 'the particles are subjected to high impact force, and plastic deformation and coalescence of guest particles occurred without breakage and attrition of host particles'; 'due to significant difference in the mechanical properties' (Na2SO4 soft and ductile / NCM rigid and brittle); 'a key property for successful dry coating is difference in mechanical properties between electrode particles and solid electrolyte particles'; continuous layer 'expected' to be more stable than the discrete layer at the early stage.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    432.9,
+    296.6,
+    505.7
+   ],
+   "w": 1072,
+   "h": 712,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.806,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      39.5,
+      432.9,
+      296.6,
+      505.7
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 5,
+     "bbox": [
+      307.5,
+      223.7,
+      564.6,
+      317.4
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x585b",
+   "kind": "text",
+   "label": "p585-586-resistivity-reproducibility-net-fraction-20p24",
+   "page": 5,
+   "file": "txt_p585_586_resistivity_reproducibility_net_fraction_20p24.png",
+   "caption": "Printed p.585 right column + first line of p.586: §3.2 — Fig. 8(a) resistivity vs compression pressure; 'good reproducibility … no need to consider the measurement deviations' (no data shown); mixtures lie between Na2SO4 and NCM; powder C higher than A and B; ★ 'Net mass fraction of Na2SO4 in the powder C, measured by an ICP-AES, was 20.24 wt.%' — loss from the initial 30 wt.% 'may be due to adhesion of Na2SO4 to inner wall of the chamber'; powders A and B 'considered as 30 wt.%' because all the mixture could be collected.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.5,
+    349.3,
+    564.6,
+    507.1
+   ],
+   "w": 1073,
+   "h": 717,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.8,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      307.5,
+      349.3,
+      564.6,
+      507.1
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 6,
+     "bbox": [
+      30.7,
+      422.5,
+      287.8,
+      432.5
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x585c",
+   "kind": "text",
+   "label": "p585-586-captions-fig8-fig10-fig11",
+   "page": 5,
+   "file": "txt_p585_586_captions_fig8_fig10_fig11_360mpa_n3.png",
+   "caption": "Printed captions of Fig. 8 (p.585: '(a) Electrical resistivity of compressed pellet … as a function of compression pressure. (b) … R_inc of compressed pellet (360 MPa) …'), Fig. 10 (p.586: 'Number of NCM-NCM contacts per single particle of NCM on cross-section of compressed pellets (360 MPa) …') and Fig. 11 (p.586: 'Void fraction in compressed pellet (360 MPa) … The error bars mean the max.-min. values (n = 3).') — source of the 360 MPa pellet pressure and of n = 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    729.0,
+    564.6,
+    747.1
+   ],
+   "w": 2918,
+   "h": 323,
+   "dpi": 400,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.907,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 400 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      39.5,
+      729.0,
+      564.6,
+      747.1
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 6,
+     "bbox": [
+      30.7,
+      729.0,
+      287.8,
+      746.0
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 6,
+     "bbox": [
+      298.7,
+      729.0,
+      555.8,
+      746.0
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x586a",
+   "kind": "text",
+   "label": "p586-rinc-result-interpretation",
+   "page": 6,
+   "file": "txt_p586_rinc_result_interpretation.png",
+   "caption": "Printed p.586 left column: R_inc (Eq. 1) of powder C 'remarkably higher' than A and B (Fig. 8b); 'Higher resistivity means that solid-solid interfacial contacts between conductive NCM particles and non-conductive Na2SO4 particles were well formed in the pellet'.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.7,
+    422.5,
+    287.8,
+    537.1
+   ],
+   "w": 1073,
+   "h": 478,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.811,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x586b",
+   "kind": "text",
+   "label": "p586-pellet-cross-sections-dispersion",
+   "page": 6,
+   "file": "txt_p586_pellet_cross_sections_agglomeration_dispersion.png",
+   "caption": "Printed p.586 right column: Fig. 9 — light gray = NCM, dark gray = Na2SO4 (from EDX); pellet A: NCM 'highly agglomerated', interfacial contacts not well formed; pellet B: some NCM still agglomerated; pellet C: NCM 'well dispersed in Na2SO4 matrix without agglomeration'; first line of the Fig. 10 sentence.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    422.5,
+    555.8,
+    526.6
+   ],
+   "w": 1072,
+   "h": 435,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.794,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x587a",
+   "kind": "text",
+   "label": "p586-587-contacts-60pct-void-fraction-compressibility",
+   "page": 6,
+   "file": "txt_p586_587_contacts_60pct_void_fraction_compressibility.png",
+   "caption": "Printed p.586 right column (last line) + p.587 left column: Fig. 10 — number of NCM–NCM contacts per NCM particle on the cross-section; pellet C 'much smaller', ★ '60% of NCM particles did not contact with other NCM particles'; Fig. 11 — void fraction highest in A ('void spaces between NCM particles remained due to agglomeration'), lower in B, 'significantly decreased' in C 'in spite of lower net amount of Na2SO4'; Table 2 bulk/tapped densities do not follow the void-fraction order → difference 'attributed to the difference in the compressibility'.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.7,
+    516.7,
+    555.8,
+    526.6
+   ],
+   "w": 1072,
+   "h": 929,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.805,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      298.7,
+      516.7,
+      555.8,
+      526.6
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 7,
+     "bbox": [
+      39.5,
+      171.5,
+      296.6,
+      380.1
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x587b",
+   "kind": "text",
+   "label": "p587-conclusions",
+   "page": 7,
+   "file": "txt_p587_conclusions.png",
+   "caption": "Printed p.587 left column: §4 Conclusions — Hybridizer gives composite particles fully covered with the model particles 'without breakage and attrition'; continuous layer on a single particle; in compressed pellets electrode particles well dispersed 'with less agglomeration and less void space'; 'performance of all-solid-state batteries are likely to remarkably improve' (suggestion — no cell test in the paper).",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    391.1,
+    296.6,
+    578.9
+   ],
+   "w": 1072,
+   "h": 784,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.811,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "x587c",
+   "kind": "text",
+   "label": "p587-acknowledgements-indentation-toyohashi-apt2015-si",
+   "page": 7,
+   "file": "txt_p587_acknowledgements_indentation_toyohashi_apt2015.png",
+   "caption": "Printed p.587: Acknowledgements — JST ALCA-SPRING; FESEM/EDX by Profs. M. Tatsumisago and A. Hayashi (Osaka Prefecture Univ.); ★ 'Profs. A. Matsuda and H. Muto (Toyohashi University of Technology) for indentation tests'; 'This invited article was presented at the 6th Asian Particle Technology Symposium, Seoul, Korea, Sept. 15–18, 2015'; Appendix A — supplementary data online at the article DOI.",
+   "rotated_deg": 0,
+   "bbox": [
+    39.5,
+    589.9,
+    296.6,
+    641.7
+   ],
+   "w": 1072,
+   "h": 725,
+   "dpi": 300,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.855,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      39.5,
+      589.9,
+      296.6,
+      641.7
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 7,
+     "bbox": [
+      307.5,
+      56.4,
+      564.6,
+      129.1
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 7,
+     "bbox": [
+      307.5,
+      140.6,
+      564.6,
+      181.9
+     ],
+     "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  },
+  {
+   "key": "x587d",
+   "kind": "text",
+   "label": "p587-references-13-19",
+   "page": 7,
+   "file": "txt_p587_references_13_19.png",
+   "caption": "Printed p.587 reference list, entries [13]–[19]: [13] Sakuda et al. J. Power Sources 196 (2011) 6735 (PLD coating) · [14] Nagao et al. J. Mater. Chem. 22 (2012) 10015 · [15] Kitaura et al. J. Mater. Chem. 21 (2011) 118 · [16] Pfeffer, Dave, Wei, Ramlakhan, Powder Technol. 117 (2001) 40–67 (dry particle coating) · [17] Yang, Sliva, Banerjee, Dave, Pfeffer, Powder Technol. 158 (2005) 21–33 · ★ [18] 'T. Futamia, M. Ohira, H. Muto, M. Sakai, Indentation contact behavior of copper–graphite particulate composites …, Carbon 46 (2008) 671–678' (the indentation test method) · [19] Mizuno et al. J. Power Sources 146 (2005) 711–714.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.5,
+    465.6,
+    564.6,
+    633.4
+   ],
+   "w": 1429,
+   "h": 933,
+   "dpi": 400,
+   "src": "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.836,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 400 dpi · parts stacked top→bottom (16 px gap)",
+   "viewed": true
+  },
+  {
+   "key": "xS1a",
+   "kind": "text",
+   "label": "SI-p1-title-fig-s1-caption",
+   "page": 1,
+   "file": "txt_S1_title_fig_s1_caption_berkovich_0p03mm_min.png",
+   "caption": "SI p.1 in two parts: SI title block ('Supplementary materials for …', Takashi KAWAGUCHI, Hideya NAKAMURA*, and Satoru WATANO, Osaka Prefecture University) · ★ caption of Fig. S1: 'Load-penetration depth curve of sulfide solid electrolyte and model material (Na2SO4) measured by indentation test. An indenter was initially being pushed against compacted pellet prepared from each powder sample (loading cycle). The indenter was then being pulled out from the pellet (unloading cycle). Berkovich type indenter was used. Indenter displacement velocity was set as 0.03 mm/min.'",
+   "rotated_deg": 0,
+   "bbox": [
+    97.0,
+    34.4,
+    523.0,
+    179.9
+   ],
+   "w": 1975,
+   "h": 849,
+   "dpi": 300,
+   "src": "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "blank": 0.908,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — text-layer line boxes (column width; neighbour lines excluded by their boxes) · 300 dpi · parts stacked top→bottom (16 px gap)",
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      97.0,
+      34.4,
+      523.0,
+      179.9
+     ],
+     "src": "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    },
+    {
+     "page": 1,
+     "bbox": [
+      70.3,
+      596.9,
+      544.0,
+      651.1
+     ],
+     "src": "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
+    }
+   ],
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found Fig. 1–11, Table 1–2 (article) and Fig. S1–S2, Table S1 (SI) = 16 crops, no missing labels. All 16 were opened. 8 kept as cut by the tool (Fig. 1, 2, 3, 5, 6, 7, 9, Table S1). 8 re-cut by hand (recrop): Fig. 4 (two body-text columns above the figure were included), Fig. 8, 10, 11 (complete but with uneven white side margins — narrowed to the embedded raster box + 6.5 pt; Fig. 10 at 600 dpi), Fig. S1 (top of the plot, first legend entry and the upper tick labels were CLIPPED), Fig. S2 (last row of Table S1 was included above the plot), Table 1 and Table 2 (the tool crops were whole pages → cut to the table only, 400 dpi). No whole-page crop remains.",
+ "note_manual": "2026-11-12 — published version (Powder Technology 323 (2018) 581–587; 7 PDF pages = printed pages 581–587; © 2016 Elsevier B.V.; available online 2 April 2016) + Supplementary materials (2 PDF pages: Fig. S1, Table S1, Fig. S2). Hand crops added: 2 panel crops of Fig. 8 (a, b), 1 equation crop (Eq. (1) — the only numbered equation; the SI has none) and 19 evidence-paragraph crops (18 from the article, 1 from the SI; only paragraphs the digest cites as the source of a number, a definition or a statement — no whole-page crop). Re-cut after the first visual check: x581b (the lower edge caught the tops of the next line → vertical margins of all paragraph crops reduced from 2.0/2.6 pt to 1.0/1.0 pt; e01 and x581a were re-rendered with the new margins) and f8a (the first split line at 302.5 pt let the rotated y-axis title of panel (b) into the right margin → split moved to 300.0 pt and the margin clamped on that side). All 38 crops were opened after the final cut. All article figures are embedded rasters (≈200 dpi; Fig. 3 and Fig. 10 ≈800 dpi, Fig. 10 is 1-bit); the two SI plots are vector. Printed peculiarities visible in the crops: Eq. (1) is typeset with the subscript 'Na2SO4' of x as 'Na2SO' + raised '4'; reference [18] prints the first author as 'T. Futamia'; Fig. 8(a) shows six pressures (≈15, 50, 100, 200, 360, ≈405 MPa by reading) although the text only says 'various compression pressures'.",
+ "key_note": "tool keys: f<N> = Fig. N, t<N> = Table N, fS<N> / tS<N> = SI figure / table. manual keys: f8a, f8b = panel crops of Fig. 8 (panel_of f8) · e01 = Eq. (1) · x<printed page><letter> = evidence paragraph of the article (kind 'text'; multi-part ones list 'parts' with PDF page numbers and boxes, stacked top→bottom with a 16 px gap) · xS1a = SI paragraph. 'page' fields are PDF page numbers (article: printed page = 580 + PDF page; SI pages are unnumbered = PDF pages 1–2). File names of evidence crops use printed page numbers (txt_p584_…).",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 333,
+  "method": "Fig. S1 / S2 (SI, vector): marker and polyline coordinates taken from the PDF drawing commands and mapped through the axis frame lines (Fig. S1: x 0–80 μm = 170.31–481.92 pt, y 0–6 N^0.5 = 531.94–309.77 pt; Fig. S2: x log 0.01–100 μm = 169.61–481.46 pt, y 0–2 = 573.26–350.67 pt). Fig. 8, 10, 11 (article, raster): marker centres / bar tops / error-bar caps located on the embedded native rasters (xref 57: 1114×540 px; xref 69: 2320×1719 px, 1-bit; xref 70: 581×492 px) and mapped through the tick marks; overlapped markers are flagged row by row. Details and self-checks in the header of digitized.csv."
+ }
+}

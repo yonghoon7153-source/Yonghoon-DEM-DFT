@@ -476,3 +476,6 @@ hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode	applicatio
 # ── 출판본 (Powder Technol. 459, 120972) — Elsevier 파일명 (1-s2.0-S0032591025003675-main.pdf) 이 slug 토큰과 안 겹쳐 손으로 (2026-11-12)
 #   ⚠ 부록 그림 C.15–G.22 · 표 A.2 · E.3 · 식 48 · 글 19 · 영상 프레임 8 은 손 크롭 — 이 slug 로 --clean 을 돌리면 지워진다 (figures.json manual_crop 표지) · mp4 둘은 커밋하지 않는다
 zunker2025_dem_large_deformation_compaction	s0032591025003675-main
+# ── 같은 그룹의 첫 보고 (Powder Technol. 323, 581 · 온라인 2016) — 카드 제목이 한국어라 파일명 토큰과 안 겹쳐 손으로 · 본문 + SI 둘 다 같은 조각 (2026-11-12)
+kawaguchi2018_dry_coating_model_se_particle_powtec	dry_coating_of_electrode_particle_with_model_particle_of_sulfide
+kawaguchi2018_dry_coating_model_se_particle_powtec	dry coating of electrode particle with model particle of sulfide
