@@ -154,3 +154,6 @@
 - 끔 길 ↔ 바탕 (3.11 · work/off_vs_base.py · 바탕 = work/ovb_base_repo (HEAD af3cce37b) · logs/r2/off_vs_base_py311.log): payload 넷 (b6 · series3 × 접합
   켬 · 끔) + 러너 (CJ_RT_ENV · SBE · DBE) rc 전부 0 · σ_e 같음 · 다른 잎 = 코드 신원 칸뿐 (code_sha · project_module_digest · 접합 켬이면
   loaded_project_modules +1 · 러너 영수증 code_sha · receipt_digest → OUTDIR 접미사) · payload 인자 (scripts 경로 뺀) · 팔 이름 같음 — 11-12 오전 결과와 같은 꼴.
+- 끝-끝 변이 Z1–Z3 (3.11 · 1,994 s · logs/r2/mut_impl/run_py311_e2e.log) = 3/3 잡힘 (Z5 · Z4) · 사본 되돌림 diff 0.
+- 끔 길 ↔ 바탕 kgy 판 (3.8.20 · logs/r2/off_vs_base_kgy.log) = 3.11 과 같은 꼴 (rc 전부 0 · σ_e 같음 · 다른 잎 = code_sha · project_module_digest ·
+  loaded_project_modules +1 (접합 켬) · 영수증 code_sha · receipt_digest).  kgy 판 묶음 25 띄움 (logs/r2/kgy_all).
