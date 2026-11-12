@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 318편 · 생성 2026-11-12
+> digest 319편 · 생성 2026-11-12
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -66,7 +66,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (77편)
+## 접촉역학 · 소성 (DEM 이론) (78편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -118,6 +118,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation` | 광유 안에서 잰 Li₂S–P₂S₅ (70:30 mol%) 용융 급랭 유리의 영률 · 경도 · 파괴인성 — 큐브 코너 20 mN 압입 (Oliver–Pharr · ν 0.3 가정): E 18.5 ± 0.9 GPa · H 1.9 ± 0.2 GPa (39 점) · Vickers 9.8 N 균열 길이 (Anstis 식 · k 0 | experiment (author's final manuscript · melt-quenched 70Li2S | 2026-11-12 | 🖼 26 |
 | `mesarovicfleck2000_dissimilar_elastoplastic_indentation` | 비대칭(dissimilar) 탄소성 구의 무마찰 압입 — Mesarović & Fleck (Int. J. Solids Struct. 2000) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `molerus1975_theory_of_yield_cohesive_powders` | Theory of Yield of Cohesive Powders — 응집 분말의 항복 이론: 무작위 단분산 구 충전의 외부응력 ↔ 평균 접촉력 (식 4 · 부록 A — Arzt 1982 식 (20) 의 원전) · 소성 평탄화 (p_f ≈ 3σ_f) 로 "얼린" 반데르발스 응집력 H = κN · 유효 항복궤적 tan φ_e | theory (analytic powder micromechanics: mean-field contact-f | 2026-10-03 | 🖼 12 |
+| `morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem` | 점착 분말 CFD-DEM 에서 접촉 강성 선택이 점착 거동을 바꾸는가 — 선형 스프링 κ 50 ↔ 50,000 N/m × 표면 에너지 γ 0.37 ↔ 3.7 mJ/m² (d 98 µm · 45,000 입자 · 의사 3D 한 입자 두께): γ 0.37 은 κ 와 무관하게 0.2 s 안에 유동화 (그래도 정상 상태 배위수 0 | CFD-DEM (CCDM = combined continuum and discrete model, Xu &  | 2026-11-12 | 🖼 63 |
 | `morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis` | EEPA (Edinburgh Elasto-Plastic Adhesion) 접촉 모델의 학위논문 원전 — 하중 · 제하 강성비 (k₂ : k₁) 로 남기는 소성 겹침 δp 이력 + 소성 접촉 반지름 a 에 비례해 자라는 끌어당김 f_min = (3/2)πΔγa + 별도 지수 X 의 끌어당김 가지 · 선형 (n = 1) ·  | PhD thesis (DEM contact-law development — EEPA linear/non-li | 2026-11-12 | 🖼 267 |
 | `oh2026_bimodal_composite_cathode` | Oh 2026 (ACS Energy Letters 11, 2103-2114) — Bimodal 복합양극: 큰 다결정 + 작은 단결정 CAM → packing·porosity·tortuosity 최적화 ★★★ 우리 정확한 소재계 + 정확한 조건 + 우리 a9_50 P:S sweep의 HEADLINE 실험 검증 | experiment | 2026-07-28 | 🖼 35 |
 | `onoda1990_random_loose_packing_uniform_spheres_dilatancy_onset` | 균일 구의 무작위 느슨 충전 (RLP) 은 유효 중력이 0 으로 갈 때 충전율 0.555 ± 0.005 까지 내려간다 — 유리 구 250 ± 20 µm 를 밀도를 맞춘 액체 (di-iodomethane + toluene) 속에 가라앉혀 유효 중력 Δg 를 바꾸고 0 으로 외삽 · 같은 충전율에서 전단 팽창 (dilatan | experiment (uniform glass spheres 250 µm — packing fraction  | 2026-11-12 | 🖼 31 |

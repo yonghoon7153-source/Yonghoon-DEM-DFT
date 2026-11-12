@@ -550,3 +550,7 @@ thorntonyin1991_oblique_impact_elastic_spheres_adhesion	impact of elastic sphere
 #   ⚠ 크롭 40 장 = 도구 10 (표 1 다시 자름: 쪽 아래 2/3 를 통째로 잡음 · 캡션 고침 4) + 손 30 (manual_crop: 그림 7 · 표 2 (도구가 놓침) · 패널 9a · 9b · 식 6 · 근거 글 20) + digitized.csv (182 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior	stiffness_effects_on_behavior_of_bulk_material
 lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior	stiffness effects on behavior of bulk material
+# ── 점착 분말 유동화 CFD-DEM (CCDM · 의사 3D 한 입자 두께 · 선형 스프링 κ 50 · 50,000 N/m × 표면 에너지 γ 0.37 · 3.7 mJ/m² · d 98 µm · N 45,000) — 침강 배위수 · 힘 · 변형 · γ 0.37 은 κ 와 무관하게 유동화 · γ 3.7 은 κ 50 이면 막힘 (블록 · 채널) · κ 50,000 이면 유동화 = 강성 선택이 점착 거동을 바꿈 · 힘 기준 같은 F_OFF 라도 결과가 갈림 (Moreno-Atanasio · Xu · Ghadiri · Chem. Eng. Sci. 62 (2007) 184–194) — litdb 2026-11-12 (후보 N-49) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · SI 없음
+#   ⚠ 크롭 63 장 = 도구 15 (다시 자름 5: 그림 2 (여백 큼) · 그림 9 (실제는 그림 10 + 11 을 잡음) · 표 1 · 2 · 3 (쪽 통째) · 캡션 고침 10) + 손 48 (manual_crop: 그림 5 (도구가 놓침) · 패널 6 (2a–2d · 12a · 12b) · 식 21 · 근거 글 20) + digitized.csv (955 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem	computer_simulation_of_the_effect_of_contact_stiffness_and_adhesion
+morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem	computer simulation of the effect of contact stiffness and adhesion
