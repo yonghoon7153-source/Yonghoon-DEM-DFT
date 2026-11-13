@@ -1,0 +1,76 @@
+{
+  "test_sha256": "f7c577b68388c1f923ac46adc8462f0410d1d565ca4c93b1e07679364503cc00",
+  "before": {
+    "scope": "manual document-contract regression, not production/physical tests",
+    "memo_sha256": "2faf58241c7d657e1bda97ac1dc3fcf4b0619bac0fe814c844242eca9188cbe0",
+    "original_reviewed_memo": true,
+    "methods": 14,
+    "failed_methods": 12,
+    "failure_observations": 29,
+    "errors": 0,
+    "successful": false,
+    "rc": 1
+  },
+  "after": {
+    "scope": "manual document-contract regression, not production/physical tests",
+    "memo_sha256": "6a1f6ccd10e6dd6f2dbbdde9c814bb87e36c64fb035ab18da9062b00a4ce5252",
+    "original_reviewed_memo": false,
+    "methods": 14,
+    "failed_methods": 0,
+    "failure_observations": 0,
+    "errors": 0,
+    "successful": true,
+    "rc": 0
+  },
+  "mutations": [
+    {
+      "name": "cap_revert",
+      "scope": "manual document-contract regression, not production/physical tests",
+      "memo_sha256": "6d29764209c5f25079d4908a628295de2815fd704baea94231c1051927783bcc",
+      "original_reviewed_memo": false,
+      "methods": 14,
+      "failed_methods": 4,
+      "failure_observations": 5,
+      "errors": 0,
+      "successful": false,
+      "rc": 1
+    },
+    {
+      "name": "dense_revert",
+      "scope": "manual document-contract regression, not production/physical tests",
+      "memo_sha256": "f390ff903484a51e63ff21b6df0bd1deee03219c4f67c166249de625e710eb5a",
+      "original_reviewed_memo": false,
+      "methods": 14,
+      "failed_methods": 4,
+      "failure_observations": 11,
+      "errors": 0,
+      "successful": false,
+      "rc": 1
+    },
+    {
+      "name": "box_revert",
+      "scope": "manual document-contract regression, not production/physical tests",
+      "memo_sha256": "21d92c74f04a0264261fc55f175917ea85c16f106a96abd47832d1bc50ddbf0e",
+      "original_reviewed_memo": false,
+      "methods": 14,
+      "failed_methods": 3,
+      "failure_observations": 9,
+      "errors": 0,
+      "successful": false,
+      "rc": 1
+    },
+    {
+      "name": "appendix_cap_revert",
+      "scope": "manual document-contract regression, not production/physical tests",
+      "memo_sha256": "f6a90fc228aed4b445a78926417fc75dfc8689bf9aa0f7d9c9942efb3b59e39a",
+      "original_reviewed_memo": false,
+      "methods": 14,
+      "failed_methods": 1,
+      "failure_observations": 1,
+      "errors": 0,
+      "successful": false,
+      "rc": 1
+    }
+  ],
+  "scope": "author-side document transcriptions/witnesses; no production or research execution; mutations are not extra unique methods"
+}

@@ -1,0 +1,49 @@
+{
+  "scope": "card comparison and synthetic arithmetic only; no original papers newly read",
+  "memo_sha256": "2faf58241c7d657e1bda97ac1dc3fcf4b0619bac0fe814c844242eca9188cbe0",
+  "request_pin": "1e823a34ce8459f7596c8c80e4874bc933220733",
+  "literature_pin_as_packaged": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+  "LE25": {
+    "ratio_h150_h300": 1.1251224760234557,
+    "log_ratio": 0.11789189730714401,
+    "report_band_from_unrounded_card_values": [
+      1.0949252267366907,
+      1.1656273809654567
+    ],
+    "same_ratio_under_common_TD_rescaling": {
+      "1.64": 1.1251224760234557,
+      "1.86": 1.1251224760234557
+    }
+  },
+  "MI26": {
+    "release_300MPa_to_110kPa_percent": 1.6156462585034115
+  },
+  "KO25": {
+    "ratio_h127_h255": 1.1811023622047243
+  },
+  "DO20J": {
+    "density_ratio_250_150": 1.0725462304409674,
+    "density_ratio_370_150": 1.0981507823613088
+  },
+  "ketter2025": {
+    "porosity_TD164_percent": 0.3658536585365857,
+    "porosity_TD186_percent": 12.15053763440861
+  },
+  "D3_pure_continuum_counterexample": {
+    "M_GPa_actual": 37.07563025210084,
+    "M_GPa_soft": 26.18456375838924,
+    "recovery_percent_actual": 0.8091568449682685,
+    "recovery_percent_soft": 1.1457131872356796
+  },
+  "LA25_timing_synthetic_counterexample": {
+    "description": "Fixed mass and area; initial porosity 2.4%, thickness grows 1% during intervening history. This is hypothetical, not a measured LA25 change.",
+    "initial_porosity_percent": 2.4,
+    "later_porosity_percent": 3.3663366336633693,
+    "change_percentage_points": 0.9663366336633694
+  },
+  "M0_policy_conflict": {
+    "rule_1_fitted_parameter_count": 1,
+    "M0_rows_fitted_parameter_count": 3,
+    "both_are_unqualified_current_text": true
+  }
+}

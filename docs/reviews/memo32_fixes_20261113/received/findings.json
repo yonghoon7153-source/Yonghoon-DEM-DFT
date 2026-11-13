@@ -1,0 +1,129 @@
+{
+  "pin": "1e823a34ce8459f7596c8c80e4874bc933220733",
+  "scope": "memo32 document and small synthetic review only",
+  "verdict": "PARTIAL_ACCEPTANCE_REVISIONS_REQUIRED",
+  "overall_gate": "HOLD",
+  "execution_authorized": false,
+  "ledger_modified": false,
+  "findings": [
+    {
+      "id": "M32R-01",
+      "severity": "P1",
+      "prior_ids": [
+        "DRD-01"
+      ],
+      "memo_lines": [
+        380,
+        392,
+        418,
+        419,
+        454,
+        999,
+        1029
+      ],
+      "title": "최초 상한 도달을 목표 충전율의 점별 응력 하한으로 전환",
+      "counterexample": "모든 해상도 동일: Phi .94에서 2.4 MPa 최초 도달 뒤 .95에서 .6 MPa; F=1 MPa. 추정 R>=2.352476815936이나 실제 목표점 R=.6.",
+      "minimum_fix": "상한 중단은 목표점 미확인으로 분류하거나 단조성의 별도 조건·확인 방법을 명시"
+    },
+    {
+      "id": "M32R-02",
+      "severity": "P2",
+      "prior_ids": [
+        "DRD-08"
+      ],
+      "memo_lines": [
+        299,
+        341,
+        350,
+        351,
+        361,
+        458
+      ],
+      "title": "조밀 U6(c) 위반 보고와 통과/중단 규칙 미연결",
+      "counterexample": "단위 질량 접선속도 (1,-1,0)->(1.1,-1.1,0): 운동량0, 에너지1->1.21; U6c 후속 처분 미정.",
+      "minimum_fix": "U5 조건의 적용 범위·등록 허용폭·초과 시 중단을 U6c에 명시"
+    },
+    {
+      "id": "M32R-03",
+      "severity": "P2",
+      "prior_ids": [
+        "DRD-12"
+      ],
+      "memo_lines": [
+        497,
+        508,
+        509,
+        1112,
+        1113,
+        1114,
+        1115,
+        1116,
+        1117
+      ],
+      "title": "자기 걷기 밖의 필수 상자 비교점 실패 처분 누락",
+      "counterexample": "자격점 양쪽 .18 GPa, 줄인 상자 추가 .12 GPa 비교 실패; 공통 .18 차 .8%p만 확인.",
+      "minimum_fix": "필수 비교 완결성을 F 분기 전에 검사하고 결측이면 상자 비교 미확인으로 채택 차단"
+    },
+    {
+      "id": "M32R-04",
+      "severity": "P3",
+      "prior_ids": [
+        "DRD-11"
+      ],
+      "memo_lines": [
+        280
+      ],
+      "title": "O7 분리 없음의 과도한 단정",
+      "counterexample": "같은 2차 B-spline stencil에서 G2P 속도차로 거리 .3->.6 가능.",
+      "minimum_fix": "명시적 분리 법칙 없음으로 한정"
+    },
+    {
+      "id": "M32R-05",
+      "severity": "P3",
+      "prior_ids": [
+        "DRD-10"
+      ],
+      "memo_lines": [
+        192,
+        193,
+        228,
+        241
+      ],
+      "title": "M0 적합 자유도 1 대 3 충돌",
+      "counterexample": "동일한 3계수 적합이 공통 규칙에는 금지, M0 표에는 허용.",
+      "minimum_fix": "M0 3자유도 예외를 명시하거나 표를 적합1+사전고정2로 일치"
+    },
+    {
+      "id": "M32R-06",
+      "severity": "P3",
+      "prior_ids": [
+        "SELF-161"
+      ],
+      "memo_lines": [
+        579,
+        624
+      ],
+      "title": "LA25 측정 전 압력·시간 이력 누락",
+      "counterexample": "카드: 약6시간 작동압 시험 후 Cu박 제거 뒤 두께 측정. 즉시 탈압과 동일하지 않음.",
+      "minimum_fix": "측정 이력과 카드 해석 표지를 요약·Q9에 추가"
+    }
+  ],
+  "document_closure_possible": [
+    "DRD-02",
+    "DRD-03",
+    "DRD-04",
+    "DRD-05",
+    "DRD-06",
+    "DRD-07",
+    "DRD-09",
+    "DRD-13"
+  ],
+  "partial_or_revision": [
+    "DRD-01",
+    "DRD-08",
+    "DRD-10",
+    "DRD-11",
+    "DRD-12",
+    "SELF-161"
+  ]
+}

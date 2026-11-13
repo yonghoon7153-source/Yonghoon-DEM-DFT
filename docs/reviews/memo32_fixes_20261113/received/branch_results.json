@@ -1,0 +1,64 @@
+{
+  "scope": "synthetic document contracts only; real runs=0; qualification=unverified",
+  "stage3_input_rows": 192,
+  "stage3_prose_appendix_mismatches": 0,
+  "stage4_semantic_rows": 17,
+  "stage4_counts": {
+    "hold": 11,
+    "4-i": 2,
+    "4-ii": 1,
+    "4-iii": 3
+  },
+  "F_result_input_rows": 68,
+  "opening_transition_rows": 20,
+  "empty_valid_set": "hold",
+  "fixed_packing_id": 1,
+  "exploration_exact_tie_small_sigma": "0.12",
+  "qualification_symbolic_log_tie_small_sigma": "0.12",
+  "old_DRD06_cross_but_qualification_failure": [
+    "F-hold",
+    "S-soft"
+  ],
+  "new_missing_box_point": {
+    "final_soft_walk": [
+      "0.18",
+      "0.12"
+    ],
+    "reduced_soft_walk": [
+      "0.18",
+      "0.27"
+    ],
+    "final_soft_porosity_percent": {
+      "0.18": "11.8",
+      "0.12": "10.6"
+    },
+    "reduced_soft_porosity_percent": {
+      "0.18": "11.0",
+      "0.27": "12.1",
+      "0.12": null
+    },
+    "both_S_pairs": "4-ii; S-real above, S-soft cross; no own-walk or qualification failure",
+    "extra_required_point_failed_after_retry": [
+      "0.12"
+    ],
+    "final_sigma_star": 0.16264836064977203,
+    "reduced_sigma_star": 0.21642826926623143,
+    "both_qualification_points": [
+      "0.18",
+      "0.18"
+    ],
+    "observed_differences_pp": {
+      "0.18": "0.8"
+    },
+    "literal_comparison_at_missing_point": "undefined: abs(10.6 - failed-run) > 1 cannot be evaluated",
+    "if_missing_pairs_are_skipped": [
+      "F-i",
+      "F-real"
+    ],
+    "if_required_comparison_is_incomplete_then_hold": [
+      "F-box-or-comparison-hold",
+      "S-soft"
+    ],
+    "status": "gap in contract; neither missing-data policy is explicitly assigned; not a solver test"
+  }
+}

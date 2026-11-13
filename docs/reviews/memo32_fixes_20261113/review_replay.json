@@ -1,0 +1,27 @@
+{
+  "scope": "four original synthetic review transcriptions; not production tests or physical qualification",
+  "scripts": [
+    {
+      "script": "probe_convergence.py",
+      "source_sha256": "941aaf350dd706a0b9d41dbf9b91f3970204360113547b0ea6f28045d2f26630",
+      "rc": 0
+    },
+    {
+      "script": "agent_contact/contact_probe.py",
+      "source_sha256": "646352a6f54d5c0253e492649d10263c8ad00b1f12736672306b78ca691a7bb7",
+      "rc": 0
+    },
+    {
+      "script": "agent_branches/branch_probe.py",
+      "source_sha256": "dcbe58e08ce4faa60a76b9475a531d63fb9a7f23ae93ee7e850d69ee0e3a891b",
+      "rc": 0
+    },
+    {
+      "script": "agent_literature/reproduce.py",
+      "source_sha256": "086dcde65900534635bc373882ccd0bd3cf1e3886eb1ab93da469080d52656cb",
+      "rc": 0
+    }
+  ],
+  "semantic_outputs_matched": 5,
+  "originals_unchanged": true
+}

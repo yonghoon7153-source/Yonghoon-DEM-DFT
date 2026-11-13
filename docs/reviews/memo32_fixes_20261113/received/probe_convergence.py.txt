@@ -1,0 +1,122 @@
+"""Independent arithmetic transcription of memo D-1, not an MPM/DEM run.
+
+Only tiny synthetic arrays, no imports of supplied executable code.
+The input_guard below is REVIEWER-ADDED: it is not credited to the memo.
+"""
+import math,json,argparse
+from pathlib import Path
+from itertools import product
+
+def input_guard(xs):
+    return (len(xs)==4 and all(x is None or (isinstance(x,(int,float)) and math.isfinite(x)) for x in xs)
+            and all(x is not None for x in xs[1:]))
+
+def arm(xs,delta=.02,tau=.02,raised=False):
+    if not input_guard(xs):return {'state':'OUTSIDE_DOCUMENT_VALID_INPUT','reviewer_guard':True}
+    x0,x1,x2,x3=xs
+    d0=None if x0 is None else x1-x0
+    d1=x2-x1;d2=x3-x2
+    low,high=(.29,.75) if raised else (.5,1.1)
+    if d1*d2>0 and low*abs(d1)<=abs(d2)<=high*abs(d1):
+        lo=min(x3,x3+3*d2)-delta;hi=max(x3,x3+3*d2)+delta;kind='A'
+    elif abs(d1)<=tau and abs(d2)<=tau:
+        u=[d1,d2]+([d0] if d0 is not None and abs(d0)<=tau else [])
+        same_nonzero=all(t>0 for t in u) or all(t<0 for t in u)
+        if same_nonzero:return {'state':'UNRESOLVED','d':[d0,d1,d2]}
+        w=delta+3*max(map(abs,u));lo=x3-w;hi=x3+w;kind='B'
+    else:return {'state':'UNRESOLVED','d':[d0,d1,d2]}
+    return {'state':kind,'interval':[lo,hi],'d':[d0,d1,d2]}
+
+def grade(intervals):
+    if len(intervals)!=3:return 'OUTSIDE_DOCUMENT_VALID_INPUT'
+    a,b=math.log(1.15),math.log(1.3)
+    if any(lo>hi or math.isnan(lo) or math.isnan(hi) for lo,hi in intervals):return 'OUTSIDE_DOCUMENT_VALID_INPUT'
+    los=[i[0] for i in intervals];his=[i[1] for i in intervals]
+    if all(lo>=a for lo in los) and sum(los)/3>=b:return 'DIFFERENT'
+    if all(lo>=-b and hi<=b for lo,hi in intervals) and sum(los)/3>=-a and sum(his)/3<=a:return 'SAME'
+    if all(hi<=-a for hi in his) and sum(his)/3<=-b:return 'REVERSE'
+    return 'MIDDLE'
+
+def pair(s,f):
+    if 'interval' not in s or 'interval' not in f:return {'grade':'MIDDLE'}
+    si,fi=s['interval'],f['interval'];iv=[si[0]-fi[1],si[1]-fi[0]]
+    return {'interval_lnR':iv,'R_bounds':[math.exp(iv[0]),math.exp(iv[1])],'grade':grade([iv]*3)}
+
+def run():
+    ns=[8,12,16,24];f=arm([0.]*4)
+    report={'scope':'synthetic arithmetic only; reviewer transcription; no current production decision function exists','memo_sha256':'2faf58241c7d657e1bda97ac1dc3fcf4b0619bac0fe814c844242eca9188cbe0','cases':{}}
+    def add(name,x,truth,known=True):
+        a=arm(x);r={'values_lnSigma':x,'arm':a,'true_lnR':truth,'known_in_memo':known,**pair(a,f)}
+        report['cases'][name]=r
+    add('prior_DRD01',[math.log(1.1+3.36/n) for n in ns],math.log(1.1))
+    add('slow_one_term',[.664*n**-.1 for n in ns],0.)
+    add('same_arm_cancellation',[math.log(1.25)+8/n-144/n**2 for n in ns],math.log(1.25))
+    add('hidden_slow_term',[math.log(1.1)+.5*n**-.1+2.6/n**2 for n in ns],math.log(1.1))
+    x=[.664*n**-.1 for n in ns];x[0]=x[1]
+    add('d0_zero',x,0.)
+    for eps in [-.0001,.0001]:
+        y=x[:];y[0]+=eps;add('d0_perturb_'+str(eps),y,0.)
+    add('all_zero',[0.]*4,0.)
+    add('monotone_B_zero_witness',[.01,.01,.012,.018],None)
+    add('no_8_slow',[None]+[.664*n**-.1 for n in ns[1:]],0.)
+    add('pure_noise_common_positive_sample',[.1,.1,.1,.1],0.,False)
+    report['boundary_examples']={
+        'different_exact_log1.3':grade([[math.log(1.3)]*2]*3),
+        'same_exact_log1.15':grade([[math.log(1.15)]*2]*3),
+        'reverse_exact_minuslog1.3':grade([[-math.log(1.3)]*2]*3),
+        'empty':grade([]),
+        'nonfinite_arm':[arm([v]*4) for v in [float('nan'),float('inf'),float('-inf')]],
+        'empty_arm':arm([]),
+        'note':'Malformed-input rejection is reviewer-added, not a memo/software qualification.'}
+    scan=[]
+    for raised in [False,True]:
+        accepted=miss=0;worst_factor=0.
+        grid=[12,16,24,36] if raised else ns
+        for ip in range(1,4001):
+            p=ip/1000
+            for c in [-10.,10.]:
+                a=arm([c*n**-p for n in grid],delta=0.,raised=raised)
+                if a['state']=='A':
+                    accepted+=1
+                    lo,hi=a['interval'];miss+=not(lo-1e-13<=0<=hi+1e-13)
+                    worst_factor=max(worst_factor,abs(c*grid[-1]**-p/a['d'][2]))
+        scan.append({'raised':raised,'accepted_parameter_rows':accepted,'truth_misses':miss,'largest_tail_over_d2':worst_factor})
+    report['one_term_scan']=scan
+    # New counterexample: no spatial error at all. A first-crossing pressure cap
+    # is not a lower bound on later pointwise pressure without monotonicity.
+    cap=2.4;target=.95;phi=.94
+    phi_arm=arm([phi]*4,delta=.002,tau=.002)
+    f_target=arm([math.log(1.)]*4)
+    censored=[math.log(cap)-f_target['interval'][1],float('inf')]
+    # Piecewise curve: rising to cap then decreasing linearly to 0.6 MPa.
+    def stress(p):
+        return 1.5+(cap-1.5)*(p-.90)/(.94-.90) if p<=.94 else cap+(.6-cap)*(p-.94)/(.95-.94)
+    truth=stress(target)/1.
+    report['new_cap_counterexample']={
+        'source_lines':[380,392,418,419,454,1029],
+        'pressure_unit':'MPa','phi_cap_all_grids':[phi]*4,'phi_cap_interval':phi_arm['interval'],
+        'target_phi':target,'cap_qualifies_under_D1':phi_arm['interval'][1]<=target,
+        'first_cap_stress':stress(phi),'stress_at_target':stress(target),'F_stress_at_target':1.,
+        'reported_lower_R':math.exp(censored[0]),'reported_grade_three_packings':grade([censored]*3),
+        'actual_R':truth,'actual_point_grade':grade([[math.log(truth)]*2]*3),
+        'other_dense_point_phi':.90,'other_dense_point_R':stress(.90),
+        'other_dense_point_interval_grade':pair(arm([math.log(stress(.90))]*4),f)['grade'],
+        'near_jamming_point_assumed_grade':'SAME',
+        'reported_trial_grade_with_two_dense_points':'DIFFERENT',
+        'actual_trial_grade_with_reverse_point':'REVERSE',
+        'no_discretization_error':True,
+        'comment':'Two continuations share the exact observed prefix: constant 2.4 or drop to 0.6 after cap. No data collected after cap selects one. This is a logical construction, not a claim about an actual MPM bed.',
+        'minimum_fix':'Treat first-cap censoring as unknown pointwise target stress unless independently justified path monotonicity is part of the estimand; do not substitute a prefix maximum silently.'}
+    assert report['cases']['prior_DRD01']['grade']=='MIDDLE'
+    assert report['cases']['slow_one_term']['grade']=='MIDDLE'
+    assert report['cases']['d0_zero']['grade']=='DIFFERENT'
+    assert all(s['truth_misses']==0 for s in scan)
+    assert report['new_cap_counterexample']['reported_grade_three_packings']=='DIFFERENT'
+    assert report['new_cap_counterexample']['actual_point_grade']=='REVERSE'
+    # JSON finite format: represent an infinity as string if any reports retain it.
+    return report
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('--out',default=str(Path(__file__).with_name('convergence_results.json')));a=p.parse_args()
+    r=run();Path(a.out).write_text(json.dumps(r,ensure_ascii=False,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+    print(json.dumps({'prior_DRD01':r['cases']['prior_DRD01'],'one_term_scan':r['one_term_scan'],'new_cap_counterexample':r['new_cap_counterexample']},ensure_ascii=False,indent=2))

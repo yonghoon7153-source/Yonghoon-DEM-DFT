@@ -1,0 +1,41 @@
+{
+  "scope": "selected unittest result lines, not raw logs",
+  "logs": [
+    {
+      "label": "red",
+      "raw_log_sha256": "e4c4a9bdba33c84054cb43cfeec4be14d2462dbe9c9dda5e7173e50bf470c1e1",
+      "selected_sha256": "cc2c4d2b615a6ae32552d512f4189651138f991105e3cf479c46b853de1320a9",
+      "transformation": "kept unittest method status, Ran, FAILED/OK lines; removed tracebacks and full memo assertion text containing environment paths; removed trailing whitespace from selected lines"
+    },
+    {
+      "label": "green",
+      "raw_log_sha256": "dc8ac31a77b35d5de1ea75c6c871bbde67e5aea7679c6edb13439e3968131a46",
+      "selected_sha256": "1597a304defd4865af5143eb9e57b8c68362e0a2e845881d0de6dd7e7f4e0b15",
+      "transformation": "kept unittest method status, Ran, FAILED/OK lines; removed tracebacks and full memo assertion text containing environment paths; removed trailing whitespace from selected lines"
+    },
+    {
+      "label": "cap_revert",
+      "raw_log_sha256": "fec60e886239c918e3602a676feb07678d4dfb441162832533da92dd393f11e2",
+      "selected_sha256": "eed58e5c50c9fc9bd34774fac35c8e98410791b53ed29a10dbe496fb32bf827e",
+      "transformation": "kept unittest method status, Ran, FAILED/OK lines; removed tracebacks and full memo assertion text containing environment paths; removed trailing whitespace from selected lines"
+    },
+    {
+      "label": "dense_revert",
+      "raw_log_sha256": "2b4e2c9697ce424ece33c436bc9c34bdb0d18881415783467713b478f65d26e7",
+      "selected_sha256": "c49479fbb437a8e248fc30d11ef5050551d960f2544a4a4d25637510aae363c4",
+      "transformation": "kept unittest method status, Ran, FAILED/OK lines; removed tracebacks and full memo assertion text containing environment paths; removed trailing whitespace from selected lines"
+    },
+    {
+      "label": "box_revert",
+      "raw_log_sha256": "b686f9ca45f565edeab1b2a74f65921804d50fd36ad5d4e3199ad3ff6dd154d4",
+      "selected_sha256": "ac4d34d6bacc2136369d8c51f5dd440c792c5d7cc2863fa6a94c627d53b85355",
+      "transformation": "kept unittest method status, Ran, FAILED/OK lines; removed tracebacks and full memo assertion text containing environment paths; removed trailing whitespace from selected lines"
+    },
+    {
+      "label": "appendix_cap_revert",
+      "raw_log_sha256": "e7db22520ca1fe061ef02ef7491599db6566feb04179bf564041d19e297ab3cd",
+      "selected_sha256": "6dbf0f30dfd46db1341e5650e61563e8863dc01f44779eeeeb20fe5eb96ac03b",
+      "transformation": "kept unittest method status, Ran, FAILED/OK lines; removed tracebacks and full memo assertion text containing environment paths; removed trailing whitespace from selected lines"
+    }
+  ]
+}

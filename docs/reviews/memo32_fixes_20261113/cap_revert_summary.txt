@@ -1,0 +1,16 @@
+test_LA25_timing_in_both_summaries (__main__.ContractChecks.test_LA25_timing_in_both_summaries) ... ok
+test_M0_common_policy (__main__.ContractChecks.test_M0_common_policy) ... ok
+test_O7_has_explicit_law_qualifier (__main__.ContractChecks.test_O7_has_explicit_law_qualifier) ... ok
+test_body_appendix_rule_witnesses (__main__.ContractChecks.test_body_appendix_rule_witnesses) ...
+test_box_complete_and_other_guards_preserved (__main__.ContractChecks.test_box_complete_and_other_guards_preserved) ... ok
+test_box_missing_duplicate_nonfinite (__main__.ContractChecks.test_box_missing_duplicate_nonfinite) ... ok
+test_cap_band_not_out (__main__.ContractChecks.test_cap_band_not_out) ... FAIL
+test_cap_both_and_mixed_never_discard_or_infer (__main__.ContractChecks.test_cap_both_and_mixed_never_discard_or_infer) ...
+test_cap_nonmonotone_same_prefix (__main__.ContractChecks.test_cap_nonmonotone_same_prefix) ... FAIL
+test_dense_each_obligation (__main__.ContractChecks.test_dense_each_obligation) ... ok
+test_dense_energy_and_momentum_counterexample (__main__.ContractChecks.test_dense_energy_and_momentum_counterexample) ... ok
+test_dense_missing_registration_or_observation (__main__.ContractChecks.test_dense_missing_registration_or_observation) ... ok
+test_observed_points_preserved (__main__.ContractChecks.test_observed_points_preserved) ... ok
+test_required_box_point_outside_own_walk (__main__.ContractChecks.test_required_box_point_outside_own_walk) ... ok
+Ran 14 tests in 0.005s
+FAILED (failures=5)

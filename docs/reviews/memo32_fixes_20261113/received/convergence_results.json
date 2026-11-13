@@ -1,0 +1,389 @@
+{
+  "scope": "synthetic arithmetic only; reviewer transcription; no current production decision function exists",
+  "memo_sha256": "2faf58241c7d657e1bda97ac1dc3fcf4b0619bac0fe814c844242eca9188cbe0",
+  "cases": {
+    "prior_DRD01": {
+      "values_lnSigma": [
+        0.41871033485818504,
+        0.3220834991691134,
+        0.2700271372130602,
+        0.2151113796169455
+      ],
+      "arm": {
+        "state": "A",
+        "interval": [
+          0.030364106828601318,
+          0.23511137961694548
+        ],
+        "d": [
+          -0.09662683568907166,
+          -0.052056361956053177,
+          -0.05491575759611472
+        ]
+      },
+      "true_lnR": 0.09531017980432493,
+      "known_in_memo": true,
+      "interval_lnR": [
+        0.010364106828601317,
+        0.25511137961694547
+      ],
+      "R_bounds": [
+        1.0104180002084457,
+        1.2906053599985614
+      ],
+      "grade": "MIDDLE"
+    },
+    "slow_one_term": {
+      "values_lnSigma": [
+        0.5393355911805404,
+        0.5179048222244574,
+        0.5032179000814522,
+        0.48322228561142394
+      ],
+      "arm": {
+        "state": "UNRESOLVED",
+        "d": [
+          -0.02143076895608298,
+          -0.014686922143005265,
+          -0.019995614470028233
+        ]
+      },
+      "true_lnR": 0.0,
+      "known_in_memo": true,
+      "grade": "MIDDLE"
+    },
+    "same_arm_cancellation": {
+      "values_lnSigma": [
+        -1.0268564486857903,
+        -0.11018978201912355,
+        0.1606435513142097,
+        0.3064768846475431
+      ],
+      "arm": {
+        "state": "A",
+        "interval": [
+          0.28647688464754306,
+          0.7639768846475432
+        ],
+        "d": [
+          0.9166666666666667,
+          0.27083333333333326,
+          0.14583333333333337
+        ]
+      },
+      "true_lnR": 0.22314355131420976,
+      "known_in_memo": true,
+      "interval_lnR": [
+        0.26647688464754304,
+        0.7839768846475432
+      ],
+      "R_bounds": [
+        1.305357415189863,
+        2.190165002609541
+      ],
+      "grade": "DIFFERENT"
+    },
+    "hidden_slow_term": {
+      "values_lnSigma": [
+        0.5420613779824427,
+        0.5033543063120322,
+        0.4843955714319244,
+        0.46369627171386435
+      ],
+      "arm": {
+        "state": "A",
+        "interval": [
+          0.38159837255968415,
+          0.48369627171386437
+        ],
+        "d": [
+          -0.03870707167041054,
+          -0.01895873488010774,
+          -0.02069929971806006
+        ]
+      },
+      "true_lnR": 0.09531017980432493,
+      "known_in_memo": true,
+      "interval_lnR": [
+        0.36159837255968413,
+        0.5036962717138643
+      ],
+      "R_bounds": [
+        1.4356222408727508,
+        1.654826669151652
+      ],
+      "grade": "DIFFERENT"
+    },
+    "d0_zero": {
+      "values_lnSigma": [
+        0.5179048222244574,
+        0.5179048222244574,
+        0.5032179000814522,
+        0.48322228561142394
+      ],
+      "arm": {
+        "state": "B",
+        "interval": [
+          0.4032354422013392,
+          0.5632091290215087
+        ],
+        "d": [
+          0.0,
+          -0.014686922143005265,
+          -0.019995614470028233
+        ]
+      },
+      "true_lnR": 0.0,
+      "known_in_memo": true,
+      "interval_lnR": [
+        0.3832354422013392,
+        0.5832091290215087
+      ],
+      "R_bounds": [
+        1.467023388626848,
+        1.7917792651239863
+      ],
+      "grade": "DIFFERENT"
+    },
+    "d0_perturb_-0.0001": {
+      "values_lnSigma": [
+        0.5178048222244575,
+        0.5179048222244574,
+        0.5032179000814522,
+        0.48322228561142394
+      ],
+      "arm": {
+        "state": "B",
+        "interval": [
+          0.4032354422013392,
+          0.5632091290215087
+        ],
+        "d": [
+          9.999999999998899e-05,
+          -0.014686922143005265,
+          -0.019995614470028233
+        ]
+      },
+      "true_lnR": 0.0,
+      "known_in_memo": true,
+      "interval_lnR": [
+        0.3832354422013392,
+        0.5832091290215087
+      ],
+      "R_bounds": [
+        1.467023388626848,
+        1.7917792651239863
+      ],
+      "grade": "DIFFERENT"
+    },
+    "d0_perturb_0.0001": {
+      "values_lnSigma": [
+        0.5180048222244574,
+        0.5179048222244574,
+        0.5032179000814522,
+        0.48322228561142394
+      ],
+      "arm": {
+        "state": "UNRESOLVED",
+        "d": [
+          -9.999999999998899e-05,
+          -0.014686922143005265,
+          -0.019995614470028233
+        ]
+      },
+      "true_lnR": 0.0,
+      "known_in_memo": true,
+      "grade": "MIDDLE"
+    },
+    "all_zero": {
+      "values_lnSigma": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "arm": {
+        "state": "B",
+        "interval": [
+          -0.02,
+          0.02
+        ],
+        "d": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "true_lnR": 0.0,
+      "known_in_memo": true,
+      "interval_lnR": [
+        -0.04,
+        0.04
+      ],
+      "R_bounds": [
+        0.9607894391523232,
+        1.0408107741923882
+      ],
+      "grade": "SAME"
+    },
+    "monotone_B_zero_witness": {
+      "values_lnSigma": [
+        0.01,
+        0.01,
+        0.012,
+        0.018
+      ],
+      "arm": {
+        "state": "B",
+        "interval": [
+          -0.019999999999999993,
+          0.055999999999999994
+        ],
+        "d": [
+          0.0,
+          0.002,
+          0.005999999999999998
+        ]
+      },
+      "true_lnR": null,
+      "known_in_memo": true,
+      "interval_lnR": [
+        -0.039999999999999994,
+        0.076
+      ],
+      "R_bounds": [
+        0.9607894391523232,
+        1.078962574157284
+      ],
+      "grade": "SAME"
+    },
+    "no_8_slow": {
+      "values_lnSigma": [
+        null,
+        0.5179048222244574,
+        0.5032179000814522,
+        0.48322228561142394
+      ],
+      "arm": {
+        "state": "UNRESOLVED",
+        "d": [
+          null,
+          -0.014686922143005265,
+          -0.019995614470028233
+        ]
+      },
+      "true_lnR": 0.0,
+      "known_in_memo": true,
+      "grade": "MIDDLE"
+    },
+    "pure_noise_common_positive_sample": {
+      "values_lnSigma": [
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ],
+      "arm": {
+        "state": "B",
+        "interval": [
+          0.08,
+          0.12000000000000001
+        ],
+        "d": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "true_lnR": 0.0,
+      "known_in_memo": false,
+      "interval_lnR": [
+        0.06,
+        0.14
+      ],
+      "R_bounds": [
+        1.0618365465453596,
+        1.1502737988572274
+      ],
+      "grade": "MIDDLE"
+    }
+  },
+  "boundary_examples": {
+    "different_exact_log1.3": "DIFFERENT",
+    "same_exact_log1.15": "SAME",
+    "reverse_exact_minuslog1.3": "REVERSE",
+    "empty": "OUTSIDE_DOCUMENT_VALID_INPUT",
+    "nonfinite_arm": [
+      {
+        "state": "OUTSIDE_DOCUMENT_VALID_INPUT",
+        "reviewer_guard": true
+      },
+      {
+        "state": "OUTSIDE_DOCUMENT_VALID_INPUT",
+        "reviewer_guard": true
+      },
+      {
+        "state": "OUTSIDE_DOCUMENT_VALID_INPUT",
+        "reviewer_guard": true
+      }
+    ],
+    "empty_arm": {
+      "state": "OUTSIDE_DOCUMENT_VALID_INPUT",
+      "reviewer_guard": true
+    },
+    "note": "Malformed-input rejection is reviewer-added, not a memo/software qualification."
+  },
+  "one_term_scan": [
+    {
+      "raised": false,
+      "accepted_parameter_rows": 4722,
+      "truth_misses": 0,
+      "largest_tail_over_d2": 2.944997609573309
+    },
+    {
+      "raised": true,
+      "accepted_parameter_rows": 4686,
+      "truth_misses": 0,
+      "largest_tail_over_d2": 2.9976237963400343
+    }
+  ],
+  "new_cap_counterexample": {
+    "source_lines": [
+      380,
+      392,
+      418,
+      419,
+      454,
+      1029
+    ],
+    "pressure_unit": "MPa",
+    "phi_cap_all_grids": [
+      0.94,
+      0.94,
+      0.94,
+      0.94
+    ],
+    "phi_cap_interval": [
+      0.938,
+      0.942
+    ],
+    "target_phi": 0.95,
+    "cap_qualifies_under_D1": true,
+    "first_cap_stress": 2.4,
+    "stress_at_target": 0.6000000000000003,
+    "F_stress_at_target": 1.0,
+    "reported_lower_R": 2.3524768159362126,
+    "reported_grade_three_packings": "DIFFERENT",
+    "actual_R": 0.6000000000000003,
+    "actual_point_grade": "REVERSE",
+    "other_dense_point_phi": 0.9,
+    "other_dense_point_R": 1.5,
+    "other_dense_point_interval_grade": "DIFFERENT",
+    "near_jamming_point_assumed_grade": "SAME",
+    "reported_trial_grade_with_two_dense_points": "DIFFERENT",
+    "actual_trial_grade_with_reverse_point": "REVERSE",
+    "no_discretization_error": true,
+    "comment": "Two continuations share the exact observed prefix: constant 2.4 or drop to 0.6 after cap. No data collected after cap selects one. This is a logical construction, not a claim about an actual MPM bed.",
+    "minimum_fix": "Treat first-cap censoring as unknown pointwise target stress unless independently justified path monotonicity is part of the estimand; do not substitute a prefix maximum silently."
+  }
+}
