@@ -8,7 +8,7 @@
   없었다.  같은 기대 · 문턱이 블록 머리 주석에도 있다.
 - **1저자 결정 (11-12 밤 · 오버나잇)**: Q-B (가) = 공식 S0 단계 1 다시를 감싸개로 돌린다 (블록 기본 `PROBE=1`) · 문턱 T1–T3 [제안] 그대로 채택.
 - **블록** = 같은 폴더 `s0_rerun_probe_block.txt` (ASCII · 느낌표 · 탭 · CR 없음 · 275 줄 · md5 `39c4b975ebd32ff357c8c52d11bbb827` — ★ 11-12 3 회차 (내부 반박 리뷰 재확인 2 RCP3-05) heredoc 머리에 저장소 고르는 GIT_* · 설정 주입을 지우는 줄 (`run_contract.GIT_DROP_SH` 글자 그대로 · 시험 `scripts/test_git_env_isolation.py` G8) 과 주석 한 줄 · 옛 273 줄 판 md5 `692b34ff05823c3f24354d8fe2b0a7d3`) · 보내기 전에 `PIN='<PIN>'`
-  한 줄만 채운다 (반입 뒤 가지 끝 40 자리 — 블록이 fetch 뒤 가지 끝과 대조한다) · md5 관문 = 감싸개 `86e9bf4b4cfb79fa6e4a63d69cb414b0` · 감시 셸
+  한 줄만 채운다 (반입 뒤 가지 끝 40 자리 — 블록이 fetch 뒤 가지 끝과 대조한다) [정정 11-13 · 이번 실행 = PIN · BR 두 줄 — 반입 가지가 pqwtv8 (stoic 동결) · 아래 실행 기록] · md5 관문 = 감싸개 `86e9bf4b4cfb79fa6e4a63d69cb414b0` · 감시 셸
   `ff385531653c294089ce58f08511b6ad` · 실행 = 1저자 (kgy).
 - **감싸개 v2 (2 회차)**: `cjunc_store` 를 `carbon_junction` 보다 먼저 불러온다 — 저장본의 런 시작 코드 칸 (`cjunc_store._START` · RCP2-01) 이 원장
   모듈 적재 앞에 잡힌다 (payload 와 같은 차례 · `scripts/test_cjunc_store.py` P6 · 러너 꼴 인자 P6b = 3 회차 RCP3-03) · 기록 `store_probe.json` 에 `store_start` (코드 칸 · 먼저 불린 모듈 ·
@@ -19,7 +19,7 @@
 | | 내용 | 근거 |
 |---|---|---|
 | E1 | S0 rc 0 · 여섯 출력 · 반입 도구 (`docs/data/rint2_s0_sbe_20261108/tools/import_s0_tgz.py`) 채택 후보 · S0 보고 git_head = PIN · git_dirty False | 11-08 실측 (5,383 s · 표본 최대 RSS 5.43 GiB) · 픽스처 킷 모의 |
-| E2 | 감싸개 호출 1 번 · instance **117,583** | 11-08 SBE S0 보고 `junction_census.census.n_instances` · 같은 침대 · 원장 코드 (`carbon_junction.py` · `fibre_segment_raster.py`) 는 11-08 핀 `f47bde0f6` 뒤 그대로 (S0 일곱 파일 가운데 바뀐 것 = `step3_sigma.py` · `mpm_webapp_payload.py` 둘) |
+| E2 | 감싸개 호출 1 번 · instance **117,583** | 11-08 SBE S0 보고 `junction_census.census.n_instances` · 같은 침대 · 원장 코드 (`carbon_junction.py` · `fibre_segment_raster.py`) 는 11-08 핀 `f47bde0f6` 뒤 그대로 (S0 일곱 파일 가운데 바뀐 것 = `step3_sigma.py` · `mpm_webapp_payload.py` 둘) [정정 11-13 · Codex 요청 1/2 대조 = 셋 — `scripts/ca_s0_census.py` 도 바뀜 (`a0455e90b..8ace86a82`) · 원장 짓기 두 파일은 그대로] |
 | E3 | encode ok · 쓰기 `built_written` · 읽기 `hit` · 같음 = 엄격 True · registry_fp True · `store_start` 의 preloaded `[]` · error None · `code_drift` `[]` · error None | 저장본 시험 (픽스처 · 합성 꼴) · 감싸개 픽스처 대조 |
 | E4 | S0 의 계획 · 배열 = 11-08 과 같음 (코드 지문 · 시각 칸 빼고) | S0 계산 길 = 바뀐 두 파일의 바뀐 자리 (GPU 풀이 표현 · 저장본 배선 · git 환경) 밖 · 대조 = 본 세션 (반입 때) |
 
@@ -57,3 +57,8 @@ PIN 자리표 그대로 · PROBE 가 0/1 밖 · TAG 글자 밖 · 새 폴더 넷
 - 감싸개가 못 잡는 실패 (커널 OOM 등) 면 Q-B (나) — `PROBE=0` 공식 다시 + 같은 핀의 개발 재기 런 — 로 돌린다.
 - 스크래치 확인 = 픽스처 킷 (instance 2) 감싸개 있음 ↔ 없음 출력 같음 (3.11 · 3.8.20) · 블록 heredoc md5 · `bash -n` · 1 판 블록의 가짜 HOME 모의 (멈춤 ·
   채택 후보) — 실기계 (kgy) 결과는 [미확인].
+
+## 실행 기록 (11-13)
+
+- 1저자 kgy · 01:47:26 UTC 시작 · 핀 `56f4cfbb1` (반입 가지 `claude/sdcp-dem-manuscript-si-pqwtv8` 끝 · 시작 관문 통과) · PROBE 1 · TAG q2q11 · 블록은 이 폴더 블록에서 두 줄만 바꿈: `PIN` (자리표 → 핀) · `BR` (`claude/stoic-knuth-NObVQ` → `claude/sdcp-dem-manuscript-si-pqwtv8` — stoic 동결이라 그대로면 시작 관문에서 멈춤).
+- 결과 = 돌려받은 뒤 (결과 0 건 · 이 줄을 쓸 때 미열람).
