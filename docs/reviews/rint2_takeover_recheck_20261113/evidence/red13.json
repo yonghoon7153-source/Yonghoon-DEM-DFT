@@ -1,0 +1,28 @@
+{
+  "methods": 13,
+  "failed_methods": 12,
+  "failed_method_ids": [
+    "boundary_tests.AssemblyBoundaryTests.test_generated_shapes_and_counts",
+    "boundary_tests.AssemblyBoundaryTests.test_ids_validated_before_conversion",
+    "boundary_tests.AssemblyBoundaryTests.test_missing_or_invalid_generated_arrays",
+    "boundary_tests.AssemblyBoundaryTests.test_serialized_number_and_descriptor_boundaries",
+    "boundary_tests.AssemblyBoundaryTests.test_serialized_required_fields",
+    "boundary_tests.AuditBoundaryTests.test_part_write_failure_cannot_reuse_old_audit",
+    "boundary_tests.AuditBoundaryTests.test_payload_propagates_supersession_and_builds_lazily",
+    "boundary_tests.AuditBoundaryTests.test_record_construction_failure_cannot_reuse_old_audit",
+    "boundary_tests.AuditBoundaryTests.test_runner_moves_audit_only_when_store_enabled",
+    "boundary_tests.AuditBoundaryTests.test_success_preserves_previous_bytes",
+    "boundary_tests.AuditBoundaryTests.test_supersession_failure_is_distinct",
+    "boundary_tests.AuditBoundaryTests.test_supersession_setup_failures_are_distinct"
+  ],
+  "assertion_failures": 56,
+  "errors": 4,
+  "successful": false,
+  "test_sha256": "bdeb2b4a7f2723350af031482bcc9ccfe34ca7f07335cb8796f2f04d108160cb",
+  "source_sha256": {
+    "cjunc_asm_compare.py": "d7bee44f43f553166c8b2c32511715cb7ac5f16ea817d6ea48977152c807cf6b",
+    "cjunc_store.py": "f4bfe9394a99002951147374467a21282efea84caa7a945d7578511134ac96ff",
+    "mpm_webapp_payload.py": "e6bc8f2b050719866bcfcdcade1178fe9d42637f3c6aa75359cc85963b5624de",
+    "sdcp_gain_vox015_8arm.sh": "7012e49193a6ba6d14655c20849a1550b2b7a110575b5ba51a43cd3fa774e666"
+  }
+}

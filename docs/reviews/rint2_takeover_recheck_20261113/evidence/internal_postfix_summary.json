@@ -1,0 +1,62 @@
+{
+  "original": {
+    "run": 13,
+    "failures": 0,
+    "errors": 0,
+    "failure_ids": [],
+    "error_ids": []
+  },
+  "mutations": {
+    "ignore_descriptor_length": {
+      "run": 1,
+      "failures": 1,
+      "errors": 0,
+      "failure_ids": [
+        "independent_boundaries.AssemblyBoundaryTests.test_serialized_number_and_descriptor_boundaries (key='shape')"
+      ],
+      "error_ids": []
+    },
+    "coerce_id_ndarray_first": {
+      "run": 1,
+      "failures": 1,
+      "errors": 0,
+      "failure_ids": [
+        "independent_boundaries.AssemblyBoundaryTests.test_ids_validated_before_conversion (ids='array([0., 1.])')"
+      ],
+      "error_ids": []
+    },
+    "omit_supersession": {
+      "run": 1,
+      "failures": 1,
+      "errors": 0,
+      "failure_ids": [
+        "independent_boundaries.AuditBoundaryTests.test_part_write_failure_cannot_reuse_old_audit"
+      ],
+      "error_ids": []
+    },
+    "construct_before_supersession": {
+      "run": 1,
+      "failures": 1,
+      "errors": 0,
+      "failure_ids": [
+        "independent_boundaries.AuditBoundaryTests.test_record_construction_failure_cannot_reuse_old_audit"
+      ],
+      "error_ids": []
+    }
+  },
+  "residual_failure_injections": {
+    "uuid_ose": {
+      "exception": "AuditSupersessionError",
+      "special_fatal_class": true,
+      "previous_canonical_remains": true,
+      "scope": "injected I/O error only, no claim of observed OS entropy/stat failure"
+    },
+    "lexists_lstat_ose_then_part_ose": {
+      "exception": "AuditSupersessionError",
+      "special_fatal_class": true,
+      "previous_canonical_remains": true,
+      "scope": "injected I/O error only, no claim of observed OS entropy/stat failure"
+    }
+  },
+  "kind": "internal_not_external_verdict"
+}

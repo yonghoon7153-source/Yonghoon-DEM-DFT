@@ -57,6 +57,40 @@ def _arr(a):
     return {'dtype': a.dtype.str, 'shape': [int(x) for x in a.shape], 'sha256': h.hexdigest()}
 
 
+def _count(value, positive=False):
+    return type(value) is int and (1 if positive else 0) <= value <= 2**63 - 1
+
+
+def _descriptor_problem(value, kinds, length=None):
+    if not isinstance(value, dict) or not _hex64(value.get('sha256')):
+        return 'array descriptor/hash'
+    shape = value.get('shape')
+    if type(shape) is not list or len(shape) != 1 or not _count(shape[0]):
+        return 'array shape'
+    if length is not None and shape != [length]:
+        return 'array length'
+    try:
+        dtype = np.dtype(value.get('dtype')) if type(value.get('dtype')) is str else None
+    except (TypeError, ValueError):
+        dtype = None
+    if dtype is None or dtype.hasobject or dtype.kind not in kinds:
+        return 'array dtype'
+    return None
+
+
+def _source_array(value, kinds, length=None):
+    if value is None:
+        raise ValueError('missing array')
+    arr = np.asarray(value)
+    if arr.dtype.hasobject or arr.dtype.kind not in kinds or arr.ndim != 1:
+        raise ValueError('array dtype/shape')
+    if length is not None and len(arr) != length:
+        raise ValueError('array length')
+    if not np.all(np.isfinite(arr)):
+        raise ValueError('nonfinite array')
+    return arr
+
+
 def assembly_record(asm_out, graph_fp=None, dof_ids=None):
     """조립 출력 (`CjuncAssembler.build` · `_assemble` 의 첫 반환 = {'L', 'b', 'Ab', 'gb', 'At', 'gt', 'n_dof', …} 또는 {'reason'}) → 조립 기록.
     graph_fp = 그 계의 main 정규 가중 그래프 지문 (`build(..., graph_fp=True)` 뒤 `self.graph_fp`) · dof_ids = 조립 번호 차례의 원 dof 번호 (없으면 None ·
@@ -71,26 +105,77 @@ def assembly_record(asm_out, graph_fp=None, dof_ids=None):
     if fmt != 'csr':
         rec['reason'] = f'조립 행렬 꼴 {fmt!r} (csr 이어야)'
         return rec
+    # Check original types/shapes before any integer conversion or hashing.
+    try:
+        n = o.get('n_dof')
+        if isinstance(n, np.integer) and not isinstance(n, np.bool_):
+            n = int(n)
+        if not _count(n, positive=True) or tuple(L.shape) != (n, n):
+            raise ValueError('dof count/shape')
+        data = _source_array(L.data, 'f', int(L.nnz))
+        indices = _source_array(L.indices, 'iu', len(data))
+        indptr = _source_array(L.indptr, 'iu', n + 1)
+        if len(data) == 0 or indptr[0] != 0 or indptr[-1] != len(data) or np.any(indptr[1:] < indptr[:-1]):
+            raise ValueError('CSR pointer/empty')
+        if np.any(indices < 0) or np.any(indices >= n):
+            raise ValueError('CSR index')
+        _source_array(o.get('b'), 'f', n)
+        for idx, weight in (('Ab', 'gb'), ('At', 'gt')):
+            aa = _source_array(o.get(idx), 'iu')
+            _source_array(o.get(weight), 'f', len(aa))
+            if np.any(aa < 0) or np.any(aa >= n):
+                raise ValueError('boundary index')
+        ids = None
+        if dof_ids is not None:
+            if isinstance(dof_ids, (list, tuple)) and any(
+                    not isinstance(x, (int, np.integer)) or isinstance(x, (bool, np.bool_)) for x in dof_ids):
+                raise ValueError('DOF id type')
+            ids = _source_array(dof_ids, 'iu', n)
+            if np.any(ids < 0) or any(int(x) > 2**63 - 1 for x in ids) or len(np.unique(ids)) != n:
+                raise ValueError('DOF ids range/duplicate')
+    except (ValueError, TypeError, OverflowError, AttributeError) as exc:
+        rec['reason'] = 'invalid assembly input: ' + str(exc)
+        return rec
     rec['complete'] = True
     rec['csr'] = {'format': 'csr', 'shape': [int(x) for x in L.shape], 'nnz': int(L.nnz), 'sorted_indices': bool(L.has_sorted_indices),
                   'data': _arr(L.data), 'indices': _arr(L.indices), 'indptr': _arr(L.indptr)}
     rec['rhs'] = _arr(o.get('b'))
     rec['dof'] = {'n': int(o.get('n_dof')), 'Ab': _arr(o.get('Ab')), 'gb': _arr(o.get('gb')), 'At': _arr(o.get('At')), 'gt': _arr(o.get('gt')),
-                  'ids': (None if dof_ids is None else _arr(np.asarray(dof_ids, np.int64)))}
+                  'ids': (None if ids is None else _arr(ids.astype(np.int64)))}
     return rec
 
 
 def _record_problem(r):
     if not isinstance(r, dict) or r.get('schema') != SCHEMA:
         return '조립 기록 꼴 (schema) 이 아니다'
-    if not r.get('complete'):
+    if r.get('complete') is not True or r.get('reason') is not None:
         return f'조립 미완료 ({r.get("reason")}) — 양성 근거 아님'
     if not _hex64(r.get('graph_fp')):
         return 'main 그래프 지문이 없다 (null · 꼴 아님) — 양성 근거 아님'
     if r['graph_fp'] == empty_graph_fp():
         return 'main 그래프 = 빈 그래프 — 양성 근거 아님'
-    if int((r.get('dof') or {}).get('n') or 0) <= 0 or int((r.get('csr') or {}).get('nnz') or 0) <= 0:
-        return 'dof · nnz 0 — 양성 근거 아님'
+    dof, csr = r.get('dof'), r.get('csr')
+    if not isinstance(dof, dict) or not isinstance(csr, dict):
+        return 'missing dof/CSR — 양성 근거 아님'
+    n, nnz = dof.get('n'), csr.get('nnz')
+    if not _count(n, True) or not _count(nnz, True):
+        return 'invalid dof/nnz — 양성 근거 아님'
+    shape = csr.get('shape')
+    if (type(shape) is not list or len(shape) != 2 or not all(_count(x, True) for x in shape)
+            or shape != [n, n] or csr.get('format') != 'csr' or type(csr.get('sorted_indices')) is not bool):
+        return 'invalid CSR shape/format — 양성 근거 아님'
+    checks = [(csr.get('data'), 'f', nnz), (csr.get('indices'), 'iu', nnz),
+              (csr.get('indptr'), 'iu', n + 1), (r.get('rhs'), 'f', n)]
+    for idx, weight in (('Ab', 'gb'), ('At', 'gt')):
+        if _descriptor_problem(dof.get(idx), 'iu'):
+            return 'invalid boundary descriptor — 양성 근거 아님'
+        checks.append((dof.get(weight), 'f', dof[idx]['shape'][0]))
+    if 'ids' not in dof:
+        return 'missing DOF ids field — 양성 근거 아님'
+    if dof['ids'] is not None:
+        checks.append((dof['ids'], 'iu', n))
+    if any(_descriptor_problem(value, kinds, length) for value, kinds, length in checks):
+        return 'invalid array descriptor — 양성 근거 아님'
     return None
 
 
