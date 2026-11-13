@@ -1,0 +1,30 @@
+{
+  "pin": "5afa16488c6cf70d333406bc0802c2139b4a425c",
+  "previous_pin": "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+  "scope": "section6 rule38 wording and direct regression only",
+  "dispositions": [
+    {
+      "id": "M32RF-01",
+      "severity": "P2",
+      "status": "document_closure_possible",
+      "parent": "M32R-01"
+    },
+    {
+      "id": "M32R-01",
+      "status": "document_fix_scope_closure_possible",
+      "prior_limits_preserved": true
+    }
+  ],
+  "prior_document_acceptance_preserved": [
+    "M32R-02",
+    "M32R-03",
+    "M32R-04",
+    "M32R-05",
+    "M32R-06"
+  ],
+  "new_findings": [],
+  "ledger_modified": false,
+  "overall_gate": "HOLD",
+  "research_execution_approved": false,
+  "registration_approved": false
+}

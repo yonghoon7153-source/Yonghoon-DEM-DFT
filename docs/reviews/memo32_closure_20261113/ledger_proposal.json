@@ -1,0 +1,28 @@
+{
+  "proposal_only": true,
+  "ledger_modified": false,
+  "review_pin": "5afa16488c6cf70d333406bc0802c2139b4a425c",
+  "overall_gate": "HOLD",
+  "document_closure_possible": [
+    "M32RF-01",
+    "M32R-01"
+  ],
+  "prior_document_acceptance_preserved": [
+    "M32R-02",
+    "M32R-03",
+    "M32R-04",
+    "M32R-05",
+    "M32R-06"
+  ],
+  "new_findings": [],
+  "disposition_text": "M32RF-01 (P2): section6 rule38 cap-bound wording and direct regression residual independently closable in document scope; M32R-01 document repair residual also closable. Prior M32R-02-06 document acceptance maintained. No new P1/P2/P3. Overall HOLD.",
+  "status_application": "Claude applies under current ledger convention during integration; no automatic verified/closed promotion by this receipt",
+  "not_closed": [
+    "DRD-01 universal convergence and physical qualification",
+    "other existing DRD limits",
+    "actual numerical policy and registration",
+    "operational reseal and research execution",
+    "deployment"
+  ],
+  "residual_parent": "M32RF-01 is residual of M32R-01; no duplicate new P1"
+}

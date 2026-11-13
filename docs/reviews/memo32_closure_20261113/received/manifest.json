@@ -1,0 +1,45 @@
+{
+  "source_zip": {
+    "name": "codex_memo32_rule38_independent_closure_5afa16488_20261113.zip",
+    "bytes": 4687839,
+    "sha256": "136a57b0410199fd49f8711e65140d003b4c7677cbdbbd7ce272a27275f9474f",
+    "members": 90,
+    "hash_lists": [
+      {
+        "member": "input/SHA256SUMS",
+        "verified": 56
+      },
+      {
+        "member": "SHA256SUMS",
+        "verified": 89
+      }
+    ],
+    "crc_paths_duplicates_links": "PASS"
+  },
+  "selected": [
+    {
+      "zip_member": "FINAL_RULE38_RECHECK_5afa16488_20261113.md",
+      "selected_file": "verdict.md.txt",
+      "bytes": 5745,
+      "sha256": "4c881490caa63d0f9ff99c4e2012d207bc9877db7704f155b2b4ce8d7d308429",
+      "transformation": "none; exact bytes"
+    },
+    {
+      "zip_member": "FINDINGS.json",
+      "selected_file": "findings.json",
+      "bytes": 738,
+      "sha256": "dc97201953310ad1c98c6efaa785ff691489efabf4d99cb98f8fe834b8afa676",
+      "transformation": "none; exact bytes"
+    },
+    {
+      "zip_member": "REVIEW_RESULTS.json",
+      "selected_file": "review_results.json",
+      "bytes": 2038,
+      "sha256": "331b14a85e62ecb15f6f144894babc096157752a4e16ba521843d8972450da72",
+      "transformation": "none; exact bytes"
+    }
+  ],
+  "whole_original_zip_committed": false,
+  "original_zip_retained_in_handoff": true,
+  "raw_logs_and_remote_responses": "excluded from public receipt; preserved in original ZIP"
+}
