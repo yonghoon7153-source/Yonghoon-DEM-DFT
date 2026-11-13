@@ -216,3 +216,5 @@
 - 다음 Rint 커밋 (한 커밋 · 게이트 두 조각 · push = ① 시작 뒤): 원장 시도 3 줄 (+ 저장본 켬 = 1저자 11-12 권고대로 → 시도 3 빗나감 · 4 적중) · run_probe6.sh 시도 3 · 4 짝 고침 (시험 먼저) · S0 블록 BR 기록 · 비 Rint → Codex DEM 실무 결정 기록 (CLAUDE.md ★ · 쪽지 = codex_practice_1113/prompt_dem_silmu.md · 진행 기록).
 - 11-13 01:47:26 UTC [Rint ②] ✅ kgy S0 단계 1 다시 시작 (1저자 · PROBE 1 · 로그 <HOME>/s0log_20261113T014726Z · 출력 <HOME>/sdcp/ca1_s0_sbe_20261113T014726Z_q2q11 · 저장본 <HOME>/sdcp/cjstore_s0probe_20261113T014726Z (재기 전용 · 보고 뒤 지워도 됨)) · 시작 관문 통과 = pqwtv8 끝 = 56f4cfbb1 확인됨 → pqwtv8 push 잠금 풂 · DONE 어림 03:15 UTC · 그 뒤 GPU 확인 (3 단계 대기 줄을 1저자가 걸었는지 확인 필요) · 돌려받을 것 = s0log_20261113T014726Z.tgz + .sha256 · result.json · check.log · q11_after_s0.out.
 - 11-13 02:1x UTC: Rint Codex 1/2 요청서 초안 조수 (Opus · 배경 · 출력 rint/codex_req_1113/) 띄움.
+- 11-13 01:50 UTC: kgy GPU = 1저자 다른 일 사용 중 (87 % · 6451 MiB · 1저자 "딴거 쓰고 있어") → ② GPU 확인은 그대로 돌리되 "GPU 부하 있음" 기록 · 반복당 속도 = 참고만 (비트 같음 판정은 무관) · ⑥ 시도 3 · 4 · R 런 = GPU 비운 뒤 (1저자와 차례 맞춤).
+- 11-13: 1저자가 P1 A · B 설계 확인 ZIP (codex_p1_g2c_ab_design_3daa2c48a.zip · 224 파일 · sha256 = 만든 것과 같음) 을 Codex 반박에 보낼지 물음 → 권고 = 지금 그대로 (내부 리뷰 5 회차는 붙이지 않음 = 독립 확인) · 판정은 DEM 실무가 받아 SR5 와 합쳐 개정 5 회차 하나로.
