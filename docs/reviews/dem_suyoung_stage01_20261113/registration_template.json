@@ -1,0 +1,152 @@
+{
+  "schema": "dem-suyoung-stage01-registration-draft-v1",
+  "status": "DRAFT_NOT_FROZEN",
+  "overall": "HOLD",
+  "source": {
+    "memo_path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "memo_sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0",
+    "document_receipt_pin": "f846f5bbe3a2d7cdbe256f29a5e3ef969835e1e2"
+  },
+  "scientific_run_count": 0,
+  "implementation_performed": false,
+  "tests_executed": false,
+  "packing_policy": {
+    "planned_independent_N": 3,
+    "identity_order": "generation_seed_order",
+    "records": [
+      {
+        "packing_id": 1,
+        "seed": null,
+        "generator_pin": null,
+        "input_sha256": null
+      },
+      {
+        "packing_id": 2,
+        "seed": null,
+        "generator_pin": null,
+        "input_sha256": null
+      },
+      {
+        "packing_id": 3,
+        "seed": null,
+        "generator_pin": null,
+        "input_sha256": null
+      }
+    ]
+  },
+  "measurements_from_existing_plan": [
+    {
+      "id": "3a_R",
+      "definition": "Phi_m",
+      "points": [
+        0.84,
+        0.9,
+        0.95
+      ],
+      "arms": [
+        "S",
+        "F_mu0.5"
+      ]
+    },
+    {
+      "id": "3a_band",
+      "definition": "Phi_d",
+      "points": [
+        0.9,
+        0.95
+      ],
+      "arms": [
+        "F_mu0"
+      ]
+    },
+    {
+      "id": "3b_k1_R",
+      "definition": "Phi_m",
+      "points": [
+        0.86,
+        0.9,
+        0.94
+      ],
+      "arms": [
+        "S",
+        "F_mu0.5"
+      ]
+    },
+    {
+      "id": "3b_k02_delta",
+      "definition": "Phi_m",
+      "pressure_over_E": 0.4,
+      "arms": [
+        "A_mu0.5",
+        "F_mu0.5"
+      ]
+    },
+    {
+      "id": "3b_bands",
+      "definition": "Phi_d",
+      "pressure_over_E_by_kappa": {
+        "1": 0.25,
+        "0.2": 0.4
+      },
+      "arms": [
+        "F_mu0"
+      ]
+    }
+  ],
+  "ladder_plan": {
+    "baseline": [
+      8,
+      12,
+      16,
+      24
+    ],
+    "baseline_decision": [
+      12,
+      16,
+      24
+    ],
+    "conditional_raised": [
+      12,
+      16,
+      24,
+      36
+    ],
+    "raised_decision": [
+      16,
+      24,
+      36
+    ],
+    "activation": "U6(b) bias signal and prior author cost acceptance; not stage3 outcomes",
+    "selection_record": null
+  },
+  "pending_fields": {
+    "code_pin": null,
+    "material_profile_sha256": null,
+    "boundary_profile_sha256": null,
+    "threshold_and_tolerance_profile_sha256": null,
+    "seed_manifest_sha256": null,
+    "required_case_manifest_sha256": null,
+    "resource_contract": null,
+    "access_scope": null,
+    "interpolation_and_zero_denominator_contract": null,
+    "power_table_sha256": null,
+    "independent_review_pin": null
+  },
+  "stage1_inputs": {
+    "real14_coordinate_access": false,
+    "census_records": [],
+    "bed_categories": [
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5"
+    ],
+    "thick_electrode_extension": "H100_PENDING"
+  },
+  "freeze_record": null,
+  "implementation_go": false,
+  "research_execution_go": false,
+  "reseal_go": false,
+  "warning": "Document template only. Existing plan numbers are not a newly frozen execution configuration."
+}
