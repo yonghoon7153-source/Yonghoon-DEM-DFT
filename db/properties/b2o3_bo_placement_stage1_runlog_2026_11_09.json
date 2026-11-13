@@ -344,5 +344,28 @@
   "회수_블록": "R=/data/work/runs/b2o3_bo_2026_11_09; W=/data/work/wt_b2o3_rec; O=db/raw/b2o3_bo_stage1_2026_11_13\n{ [ ! -e $W ] || { echo \"⛔ $W 가 이미 있다\"; false; }; } && git -C /data/work/repo fetch origin claude/evac-2026-11-12 && git -C /data/work/repo worktree add --detach $W FETCH_HEAD && mkdir -p $W/$O && rsync -a -m --exclude='/src/' --exclude='/diag_src/' --include='*/' --include='*.json' --include='post_relax.xyz' --include='/*.log' --exclude='*' $R/ $W/$O/ && (cd $W/$O && find . -type f ! -name SHA256SUMS | sort | xargs sha256sum > SHA256SUMS && echo \"파일 $(wc -l < SHA256SUMS) 개 · $(du -sh . | cut -f1)\" && grep -E \" \\./(s6_verdict|s7_receipt|s8_readout|s8b_diag)\\.json$\" SHA256SUMS) && git -C $W add $O && git -C $W commit -q -m \"b2o3 stage-1 UMA raw outputs from gabia (screen verdict, pilot receipt, stage-8 anneal + readout, 8b diagnosis · rc 0)\" -m $'Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\\nClaude-Session: https://claude.ai/code/session_01Er41drwDRfvL6hhZbVtBiw' && git -C $W push origin HEAD:claude/evac-2026-11-12 && git -C /data/work/repo worktree remove $W && echo \"✅ 회수 push 끝\"",
   "다음": "① 회수 (gabia → claude/evac-2026-11-12 · 위 블록 · push 가 마지막) ② 9 단계 DFT — 앞 조건 DY 확인 4 (EOS (E, P, V) 결과 파일 결속) + 입력 생성 + 메모리 프로브 (CPU 검사) · 상한 60 GPU-h · 사용자 결정",
   "by": "agent · 2026-11-13"
+ },
+ "8b_기록_요약_2026_11_13": {
+  "출처": "회수 커밋 a1b4b011f (gabia → claude/evac-2026-11-12) · db/raw/b2o3_bo_stage1_2026_11_13/ — 파일 267 개 · 8.9 MB · SHA256SUMS 로컬 전부 일치 · s8b_diag.json sha256 4e0ac9ba87b530cf…",
+  "결속_대조": "s6_verdict.json 6889935781b9… = 7b 영수증의 screen_verdict sha · s8_readout.json 168f8e502f63… = 블록 1 읽기 값 · s8b_diag 입력 sha (diag_frames cce4447e50de · stage8_readout 168f8e502f63 · diag_relax_results 42c7da1e8efb) = 회수 파일 sha · s7_receipt 92d5b76380b9 · s8_anneal/anneal_results 338e6015e60f",
+  "⛔_값_규율": "총에너지 절대값 · 원자당 정규화는 싣지 않는다 (카드 5 금지) — 아래는 전부 상대값 (eV / B₂O₃ = eV / 셀) · 절대값은 원자료 파일에만",
+  "성공_집합": "가족마다 18 / 18 · 두 시점 같음 (④ 아님) · 부모 상태 ok100 54 · G1 통과 · G2 같은 조성 · G3 F_B 0/18 · F_P 0/18 · F_free 0/18 (50) → 1/18 (100)",
+  "가족_최저_런 (끝 꼴)": {
+   "50ps": "F_B cfg0037 (끝 F_B) · F_P cfg0019 (끝 F_P) · F_free cfg0011 (끝 F_free)",
+   "100ps": "F_B cfg0040 (끝 F_B · 파일럿 구조와 같은 바탕) · F_P cfg0015 (끝 F_P) · F_free cfg0039 (끝 mixed — 50 → 100 ps 에 끝 꼴이 바뀐 유일한 런)",
+   "⚠": "세 가족 모두 두 시점의 최저 런이 다르다 — ③ 이 '같은 최저 런 유지' 를 뜻하지 않는 것과 같은 방향의 기록"
+  },
+  "최저_간_차 m_G − m_F (50 → 100 ps)": "F_P − F_B 0.155 → 0.518 (+0.363) · F_free − F_B 3.565 → 3.736 (+0.171) · F_free − F_P 3.410 → 3.218 (−0.192)",
+  "최저_런의_Δ (E_100 − E_50)": "F_B: 100 ps 최저 cfg0040 −0.594 · 50 ps 최저 cfg0037 +0.273 · F_P: cfg0015 −0.374 · cfg0019 +0.182 · F_free: cfg0039 −1.182 · cfg0011 +1.438",
+  "런별_Δ_분포 (E_100 − E_50)": "전체 54: 중앙 −0.100 · IQR 0.457 · 범위 −1.182 … +1.438 · 내려감 29 / 올라감 25 · 가족별 중앙 (IQR · 범위): F_B −0.060 (0.595 · −0.594 … +0.480) · F_P +0.042 (0.372 · −0.526 … +0.402) · F_free −0.139 (0.499 · −1.182 … +1.438)",
+  "짝_변화 δ_FG,i = Δ_F,i − Δ_G,i (18 바탕)": "δ(F_B − F_P) 중앙 −0.043 (−0.700 … +1.006) · δ(F_B − F_free) 중앙 −0.140 (−1.609 … +1.186) · δ(F_P − F_free) 중앙 −0.054 (−1.397 … +1.255)",
+  "옆_기록 (게이트 아님 · EA Q2 · EC P2-4)": {
+   "가족_E_중앙_차": "F_P − F_B 0.392 (50) · 0.369 (100) · F_free − F_B 4.18 (50) · 4.22 (100)",
+   "짝_판정": "최저 순서와 같은 부호 13 / 18 (50) · 14 / 18 (100) — '짝으로도 같은 방향' 문턱 5/6 (15/18) 미달 · 두 시점 다 False"
+  },
+  "구간_평균 (8 단계 md.traj · 기록만)": "구간 [40,50] · [90,100] ps · 프레임 11 개씩 · Epot 변화 ([90,100] − [40,50]) 가족별 중앙 (q25 … q75): F_B −0.391 (−0.628 … +0.064) · F_P +0.049 (−0.444 … +0.287) · F_free −0.225 (−0.524 … +0.360) · 전체 중앙 −0.144 · 내려감 30 / 올라감 24 · T 구간 평균 가족별 중앙 496–503 K (설정 500) · md.log 대조: 여러 시도 섞인 런 0 · 궤적과 차 |Epot| ≤ 5.0e-4 eV · |T| ≤ 0.05 K",
+  "읽기 (agent · 판정 아님 · 판정은 ③ 그대로)": "F_B–F_P 최저 차가 시점에 따라 문턱 0.20 을 오간다 (0.155 ↔ 0.518) · 같은 런의 50 → 100 ps 변화가 가족 간 차와 같은 크기 (F_B · F_P 의 |Δ| 최대 0.59 · 0.53) 이고 세 가족 모두 최저 런이 바뀌었다 — 가족 최저는 아직 어닐 시간에 따른 요동 폭 안이다. 가족 중앙 차 · 짝은 옆 기록이라 판정에 안 쓴다. F_free 의 높은 자리 (최저 기준 3.2 eV 이상) 는 가족 순서 기록이지 승자 문장이 아니다",
+  "다음": "9 단계 DFT 준비 (DY 확인 4 · 사용자 결정) — 입력 = 가족마다 UMA 최저 둘 (100 ps 본 판독 기준 · 개정 1 9_DFT ①)",
+  "by": "agent · 2026-11-13"
  }
 }
