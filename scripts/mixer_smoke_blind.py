@@ -1445,6 +1445,11 @@ def selftest():
             G['cv'].check_window = real_
         return rc_, o_.getvalue() + e_.getvalue()
 
+    def _canary_present(text, needle):
+        """SELF-170: ignore a literal canary embedded after an ASCII digit (timestamps)."""
+        import re
+        return re.search(r'(?<![0-9])' + re.escape(needle), text) is not None
+
     def _canaries(vals):
         """seed 별 d · 런별 M · q — 화면 · 기록에 나오면 안 되는 표기 (소수 4 자리 · repr 앞 7 자).  소수 3 자리에서 끝나는 '둥근' 값은 뺀다
         (0.2000 · 0.0000 같은 표기는 다른 등록 수치 · u 항과 구별되지 않는다)."""
@@ -1473,7 +1478,7 @@ def selftest():
             per_run = [_Ma(a_) for a_ in set(LC_REF + LH_REF + LC_SOFT + LH_SOFT)]
             canary = _canaries(d + ds + q + per_run)
             text = (out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8')
-            leaked = sorted(c_ for c_ in canary if c_ in shown or c_ in text)
+            leaked = sorted(c_ for c_ in canary if _canary_present(shown, c_) or _canary_present(text, c_))
             vault = Path(rec['vault']['file'])
             vj = json.loads(vault.read_text(encoding='utf-8'))
             sm = rec['statistics']['soft']
@@ -1514,7 +1519,7 @@ def selftest():
             st = json.loads((out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8'))['statistics']['ref']
             res = dict(first=rc1 == 0, second=rc2 == G['RC_CONSUMED'] and _sha_file(out_ / G['INTERIM_RECORD']) == rsha
                        and len(list((out_ / G['INTERIM_DIR']).glob('interim_full_*.json'))) == vault_n
-                       and f"{st['delta3']:.4f}" not in s2 and '두 번째' in s2)
+                       and not _canary_present(s2, f"{st['delta3']:.4f}") and '두 번째' in s2)
             out2 = td_ / 'OUT2'                                   # 18 런 폴더 + manifest 를 새 OUT 으로 복사 (OUT 의 claim · 기록 없이) — 표지가 따라온다
             out2.mkdir()
             for n_ in dd.COHORTS['confirm']:
@@ -1756,7 +1761,7 @@ def selftest():
             text = (out_ / G['INTERIM_RECORD']).read_text(encoding='utf-8')
             rec2 = json.loads(text)
             ok_self = (rc2 == 0 and rec2['outcome'] == 'TECH' and G['interim_projection_problems'](rec2) == [] and 'M_bin' not in text
-                       and rec2['statistics']['ref'] is None and f'{_Ma(LC_REF[0]):.4f}' not in text + s2)
+                       and rec2['statistics']['ref'] is None and not _canary_present(text + s2, f'{_Ma(LC_REF[0]):.4f}'))
         return ok_val and ok_self
     chk('㉓ 투영 검사기 (interim_projection_problems) — 정상 기록은 문제 0 · seed 별 값 · 런별 M_bin · 허용 밖 최상위 키 · 요약 안 seed 별 목록 · 결과 키 (rows) 가 '
         '들어오면 잡는다 / 투영기가 스스로 어기면 (런별 입력에 M_bin) 값 · 런별 입력을 비운 TECH 기록만 쓴다 (기록 자체는 검사 통과 · 새지 않는다)', okx(_t24))
