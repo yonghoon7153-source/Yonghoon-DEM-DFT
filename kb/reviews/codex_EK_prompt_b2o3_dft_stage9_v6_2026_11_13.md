@@ -7,7 +7,7 @@ letter: EK
 track: b2o3
 channel: codex
 kind: prompt
-status: 작성 2026-11-13 · §4 는 gabia v6 검사 뒤 채운다 · 코드 기준 커밋 (이 편지 초안과 같은 커밋 · 브랜치 claude/evac-2026-11-12 · 도구 sha256 0c3b7f51 · 실행기 e2d6f728 · 변이 도구 3090ec9f) · 앞 편지 EJ (NO-GO · v5 6302f8a8)
+status: 작성 2026-11-13 · gabia v6 검사 결과 넣음 (HEAD 46e212782 · selftest 185/185 · prepare s9_v6 · 입력 6 = v2–v5 바이트 같음) · 발송 (사용자) · 코드 기준 커밋 46e21278 (브랜치 claude/evac-2026-11-12 · 도구 sha256 0c3b7f51 · 실행기 e2d6f728 · 변이 도구 3090ec9f) · 앞 편지 EJ (NO-GO · v5 6302f8a8)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -29,7 +29,7 @@ evidenceScope: multi-source-primary
 
 EJ 회신 (NO-GO · P2 1 · v5 커밋 6302f8a8 · 도구 sha256 34ec73b6) 을 고친 v6 다. DFT 결과는 여전히 0 건 (GPU 잡 하나도 안 돌았다). 바뀐 것은 도구 `tools/doping/b2o3_bo_dft.py` 의 `_commit` (쓰기 전 경로 검사) 과 시험 · 변이 도구 (변이 하나 더) · 카드 `개정_5_9단계_DFT_운영_2026_11_13` 의 v6 문구 · 결정 status_history (여전히 proposed). 판독 · 응력 · 숫자 토큰 · 기하 검사는 v5 그대로 · 실행기 `run_force_check_scf.sh` 와 판 고정 판독기 (872d91f7… = 12b8bdef) 도 그대로다.
 
-v6 sha256 — 도구 `0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b08cd0b` · 실행기 `e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9` (v3 그대로) · 변이 도구 `3090ec9f1686303fe61a35b294c476bf513c18b4f2b72a668b36dcb125e935d8`.
+v6 sha256 — 도구 `0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b08cd0b` · 실행기 `e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9` (v3 그대로) · 변이 도구 `3090ec9f1686303fe61a35b294c476bf513c18b4f2b72a668b36dcb125e935d8`. **코드 기준 커밋 `46e21278`** (도구 · 변이 도구 · 카드 · 결정 · EJ 회신 원문 · 이 편지 초안) — 그 뒤 커밋은 런로그 · 이 편지 §4 · 미결 목록뿐이다 (코드 변경 없음 · gabia 는 `46e212782` 를 꺼냈다).
 
 **묻는 것**: EJ 의 링크 반례 둘이 v6 에서 쓰기 전에 정확한 이유로 거부되고 새 파일 · 기존 파일 변경이 없는지 (재현해 보고) · 고치면서 새로 생긴 구멍이 있는지 → GO / 조건부 GO / NO-GO.
 
@@ -50,7 +50,16 @@ v6 sha256 — 도구 `0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b
 
 ## 4. gabia 검사 (v6 · GPU 안 씀)
 
-(gabia v6 검사 뒤 채운다 — 블록은 런로그 `db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json` 키 `9단계_EJ_회신_v6_2026_11_13`.)
+2026-11-13 · 사용자 실행 · 런로그 `db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json` 키 `9단계_v6_검사_2026_11_13` (블록은 키 `9단계_EJ_회신_v6_2026_11_13`).
+
+- worktree `$R/dft_src_v6` = **HEAD 46e212782** (코드 기준 커밋) · 도구 sha256 `0c3b7f51…` **OK** · 실행기 `e2d6f728…` **OK**.
+- selftest **185/185** (리눅스 — 링크 시험 셋이 건너뛰지 않고 실제로 돌았다) · 실행기 selftest **24 통과 · 0 실패** · 변이 도구 정적 검사 **7/7** (gabia `uma` env python · CPU · 검사용).
+- **prepare v6 (새 폴더 `$R/s9_v6`)**: 판 고정 판독기 (872d91f7) 로 8 단계 본 판독을 실제 데이터로 다시 내고 대조 → 통과 · 단일점 6 잡 (k 3×2×1) · 고른 구조는 v1–v5 와 같다 · 쓰기 전 경로 검사 (잡 폴더 밖 · 실제 경로 겹침 없음) 통과.
+- **reject 시운전 (`--stage sp`)**: 계획 다시 결속 통과 → '옮길 출력 없음'.
+- 입력 지문: 6 입력 모두 `nosym = .true.` · `tot_charge = 0.0` · `disk_io = 'nowf'` · `K_POINTS automatic` / `3 2 1 0 0 0` · 입력 sha256 은 **v2 · v3 · v4 · v5 와 6/6 바이트까지 같다** (`834fbada…` · `f5b7bcd2…` · `93a54b64…` · `03c0bbdd…` · `3ee0b4a9…` · `0836ebf7…`) · 계획 `5224375fb9e9d8dc` (도구 sha 가 들어가 v5 와 다름).
+- GPU pw.x 경로 `/data/apps/qe-7.4.1-gpu/bin/pw.x` (→ `../PW/src/pw.x` 링크 · 실행 안 함).
+- GPU 지금: 여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음 (시작은 안 했다).
+- 깨기 114/114 는 로컬 수치다 (gabia 에서는 정적 검사만 · 같은 도구 sha256).
 
 ## 5. 일부러 안 한 것
 

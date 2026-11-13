@@ -513,5 +513,17 @@
   "블록_설명": "① 새 worktree $R/dft_src_v6 ② 도구 · 실행기 sha256 ③ selftest 185/185 (링크 시험 셋 포함 — 리눅스는 링크를 만든다) ④ 실행기 selftest (v3 그대로) ⑤ 변이 도구 정적 검사 ⑥ 새 폴더 $R/s9_v6 에 prepare (입력 6 은 v2–v5 와 바이트까지 같아야 한다) ⑦ reject --stage sp 시운전 ⑧ 입력 지문 ⑨ GPU pw.x 파일 (실행 안 함) ⑩ 지금 GPU (시작 안 함) — 하나라도 실패하면 '⛔ 멈췄다'",
   "다음": "gabia v6 검사 출력 → EK 프롬프트 (kb/reviews/codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md) §4 에 넣고 발송 → EK 회신 → 사용자 개정 5 비준 (DY 확인 4 좁은 조건 해제 포함) → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (T=$R/dft_src_v6 · C=$R/s9_v6)",
   "by": "agent · 2026-11-13"
+ },
+ "9단계_v6_검사_2026_11_13": {
+  "출처": "사용자 붙여넣기 2026-11-13 (gabia · 키 9단계_EJ_회신_v6_2026_11_13 의 검사 블록 · 셸 위치 /data/work/wt_cascade_b2)",
+  "worktree": "$R/dft_src_v6 = HEAD 46e212782 (코드 기준 커밋) · b2o3_bo_dft.py sha256 0c3b7f51… OK · run_force_check_scf.sh e2d6f728… OK",
+  "selftest_gabia": "도구 185/185 (리눅스 — 링크 시험 셋이 실제로 돌았다) · 실행기 24 통과 · 0 실패 · 변이 도구 정적 검사 7/7 (gabia uma env python · CPU · 검사용)",
+  "prepare_v6": "통과 — $R/s9_v6/dft_plan.json · 단일점 6 (k 3×2×1) · 판 고정 판독기 872d91f7 로 8 단계를 실제 데이터로 다시 결속 · 가전자 Li 3 · B 3 · O 6 · P 5 · S 6 · Cl 7 · 고른 것 v1–v5 와 같음 (sp_FB_1_cfg0040 · sp_FB_2_cfg0015 · sp_FP_1_cfg0015 · sp_FP_2_cfg0019 · sp_Ffree_1_cfg0039 · sp_Ffree_2_cfg0017) · 쓰기 전 경로 검사 (잡 폴더 밖 · 실제 경로 겹침 없음) 통과",
+  "reject_시운전 (sp)": "계획 다시 결속 통과 → '옮길 출력 없음' (출력이 아직 없다 — 누락이지 실패가 아니다)",
+  "입력_지문": "6 입력 모두 nosym · tot_charge 0.0 · nowf · K_POINTS automatic / 3 2 1 0 0 0 · sha256 앞 16: sp_FB_1_cfg0040 834fbada34cd234c · sp_FB_2_cfg0015 f5b7bcd272b69870 · sp_FP_1_cfg0015 93a54b64f68420a2 · sp_FP_2_cfg0019 03c0bbdde90cb776 · sp_Ffree_1_cfg0039 3ee0b4a96db89efb · sp_Ffree_2_cfg0017 0836ebf76487842a — **v2 · v3 · v4 · v5 와 6/6 바이트까지 같다** · dft_plan.json 5224375fb9e9d8dc (도구 sha 가 들어가 v5 c079c6f7… 와 다름)",
+  "GPU_pw.x": "/data/apps/qe-7.4.1-gpu/bin/pw.x → ../PW/src/pw.x (링크 · 실행 안 함)",
+  "GPU (시작 안 함)": "여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음",
+  "다음": "EK 발송 (kb/reviews/codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md · §4 채움) → EK 회신 → 사용자 개정 5 비준 (DY 확인 4 좁은 조건 해제 포함) → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (T=$R/dft_src_v6 · C=$R/s9_v6)",
+  "by": "agent · 2026-11-13"
  }
 }
