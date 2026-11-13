@@ -28,6 +28,9 @@
   B  블록: KGY_BLOCK.md 의 블록을 그대로 꺼내 가짜 홈에서 (시도 1 → 시도 2 · 멈춤 조건 · 블록이 STOP 줄을 보여 준다)
   R  실물: 실제 러너 · 실제 payload · 픽스처 킷 (CPU · `scripts/test_rint_r_chain_e2e.py` 의 침대): 실물 꼴 · 실물 σ 가 판독기 출력 ·
      묶음에 없다 (양성 대조 포함) · 한도 도달 (시도 1 꼴) 뒤 다음 시도 (시도 2 꼴) · step3 통째 덤프 변이를 잡는다
+★ 11-13 (Codex 반박 1/2 고침 묶음 · 1저자 Q4 · 원장 §3 시도 3 · 4 = 탄소 접합 원장 저장본 켬): T30 (판독기 · 저장본 기록 · audit 곁 파일 상태 ·
+  목록) · F22 (감시 셸 · 시도 3 = 빈 저장본 짓고 씀 → 시도 4 = 적중 · 앞 조건 · 멈춤 조건 · graft · shallow) · F23 (감시 셸 git 읽기 = 저장소 고르는
+  GIT_* 지움 · 대체 객체 끔) · R6 (실제 러너 · payload · 저장본 · 시도 3 → 4) · S16 (감시 셸 · 원장 §3 의 시도 3 · 4 줄)
 ⚠ PASS 는 준비물의 배선 · σ 비열람 · 실패 처리의 증거다.  실침대 반복 수 · 시간 · 메모리는 kgy 런이 잰다 (여기에 킷도 GPU 도 없다).
 """
 import argparse
@@ -102,11 +105,20 @@ AXES = {
 #: 두 시도 (1저자 11-10): 시도 1 = 짧은 확인 (한도에 닿아 끝나는 것이 정상) · 시도 2 = 본 한도
 ATTEMPT_MAXITER = {1: '30000', 2: '1500000'}
 A1, A2 = ATTEMPT_MAXITER[1], ATTEMPT_MAXITER[2]
+#: 시도 3 · 4 (11-13 · 원장 §3 · 1저자 Q4): 탄소 접합 원장 저장본 켬 · 한도 = 시도 2 와 같음 · 저장본 = ~/p6_cjstore (고정) · 기대 상태
+STORE_ATTEMPTS = {3: '1500000', 4: '1500000'}
+ALL_MAXITER = dict(ATTEMPT_MAXITER)
+ALL_MAXITER.update(STORE_ATTEMPTS)
+STORE_STATUS_T = {3: 'built_written', 4: 'hit'}
+STORE_ST = ('hit', 'built_written', 'built_peer_same', 'unreadable_rebuilt', 'built_write_skipped', 'built_write_failed', 'disabled',
+            'key_unavailable')
+FAKE_KEY = 'ab' * 32
+AUDIT_NAME = 'cjstore_audit_' + ARM + '.json'
 #: 합성 기본 = 시도 2 꼴 (감시 셸 · 판독기가 시도 번호 ↔ 한도 짝을 본다 · P6R2-04 · 그래서 정직한 꼴의 한도는 등록 값뿐이다)
 MAXITER = A2
 #: R3 (실물 · 시도 1 꼴 · 한도에 닿음) 만 쓰는 사본 고침 (시험 전용): 짝 표의 시도 1 한도 → 2 (픽스처 침대는 한도 30000 안에서 모인다)
 PAIR_PATCH_W = ('  1) WANT_MAX=30000;;\n', '  1) WANT_MAX=2;;\n')
-PAIR_PATCH_R = ('ATTEMPT_MAXITER = {1: 30000, 2: 1500000}', 'ATTEMPT_MAXITER = {1: 2, 2: 1500000}')
+PAIR_PATCH_R = ('ATTEMPT_MAXITER = {1: 30000, ', 'ATTEMPT_MAXITER = {1: 2, ')
 PIN_FIX = 'e93efb6be' + '0' * 31                             # 합성 핀 (팔의 code_sha 가 그 앞자리)
 S0_RUN = 'run_VGCF3_PTFE1_20261023_210442_2904445'
 #: 풀이 코드 (P6R2-03 · 시험의 독립 표): 두 시도의 핀 사이에 이 경로가 바뀌면 시도 2 를 띄우지 않는다.  러너 · payload 가 여는 리포 파일을
@@ -320,7 +332,11 @@ ENV_KEYS_T = ('python', 'python_impl', 'numpy', 'scipy', 'cupy', 'cupy_cuda_runt
 ENV_NAMES_T = ('CUDA_VISIBLE_DEVICES', 'OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'OPENBLAS_CORETYPE', 'PYTHONUNBUFFERED', 'BASH_ENV')
 #: 감시 셸 meta.txt 의 키 (시험의 독립 표): (int | str, 값 꼴)
 META_SCHEMA = dict([
-    ('probe6_meta_version', ('int', r'[0-9]{1,3}')), ('attempt', ('int', r'[12]')), ('pin', ('str', r'[0-9a-f]{40}')),
+    ('probe6_meta_version', ('int', r'[0-9]{1,3}')), ('attempt', ('int', r'[1-4]')), ('pin', ('str', r'[0-9a-f]{40}')),
+    ('attempt2_pin', ('str', r'[0-9a-f]{40}')), ('attempt3_pin', ('str', r'[0-9a-f]{40}')), ('code_same_as_attempt3', ('int', r'[01]')),
+    ('store', ('str', r'~?[A-Za-z0-9._/+-]{1,300}')),
+    ('store_listing_before', ('str', r'(?:[A-Za-z0-9._+-]{1,120}:(?:[0-9a-f]{64}|other)(?:,[A-Za-z0-9._+-]{1,120}:(?:[0-9a-f]{64}|other)){0,15})?')),
+    ('store_listing_after', ('str', r'(?:[A-Za-z0-9._+-]{1,120}:(?:[0-9a-f]{64}|other)(?:,[A-Za-z0-9._+-]{1,120}:(?:[0-9a-f]{64}|other)){0,15})?')),
     ('attempt1_pin', ('str', r'[0-9a-f]{40}')), ('code_same_as_attempt1', ('int', r'[01]')),
     ('maxiter', ('int', r'[0-9]{1,9}')), ('expect_rtol', ('str', r'[0-9][0-9.eE+-]{0,11}')), ('expect_backend', ('str', r'gpu|cpu')),
     ('expect_rj', ('str', r'[0-9][0-9.eE+-]{0,11}')), ('pythonpath_removed', ('int', r'[01]')),
@@ -358,8 +374,12 @@ RES_SCHEMA['runner_peak_rss_gb'] = 'num+'
 HELD_BACK_T = ['conv_cert.dsigma_rel', 'conv_cert.target_err_bound_rel', 'conv_cert.target_width_rel', 'conv_cert.target_in_bracket']
 TOP_KEYS = frozenset(('schema', 'tool', 'scope', 'held_back', 'folder', 'receipt', 'meta', 'env', 'attempt', 'kit_run_new_files',
                       'kit_run_before_files', 'source', 'arm', 'fields', 's0_plan_sha256', 'log', 'timing', 'resources', 'verdict', 'rc',
-                      'problems', 'notes'))
-TOP_REQUIRED = TOP_KEYS - {'arm', 's0_plan_sha256', 'log'}
+                      'problems', 'notes', 'store'))
+TOP_REQUIRED = TOP_KEYS - {'arm', 's0_plan_sha256', 'log', 'store'}
+#: ★ 11-13 저장본 audit 곁 파일 칸 (판독기의 닫힌 표 · 신원 글만)
+STORE_SCHEMA = {'audit_file': ('re', r'cjstore_audit_p2_[A-Za-z0-9_]+_a0\.json'), 'audit_schema': ('re', r'cjstore-audit-v[0-9]{1,3}'),
+                'status': ('enum', STORE_ST), 'key': 'hex64', 'file': ('re', r'cjreg_[0-9a-f]{64}\.npz'), 'file_sha256': 'hex64',
+                'audit_sha256': 'hex64'}
 VERDICT_RC = {'PROBE_OK': 0, 'PROBE_NOT_CONVERGED': 3, 'PROBE_INCOMPLETE': 4, 'PROBE_REJECTED': 5}
 _REASON = re.compile(r"[A-Za-z0-9 (),/'_.-]{1,100}")
 _SUPSUB_T = '⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉'
@@ -452,8 +472,10 @@ def report_problems(rep):
         if not (isinstance(x, list) and all(isinstance(s, str) and len(s) <= 400 and all(32 <= ord(c) < 127 for c in s) for s in x)):
             P.append('%s list shape' % k)
     a = rep.get('attempt')
-    if not (_miss_ok(a) or (isinstance(a, int) and not isinstance(a, bool) and a in (1, 2))):
+    if not (_miss_ok(a) or (isinstance(a, int) and not isinstance(a, bool) and a in (1, 2, 3, 4))):
         P.append('attempt shape')
+    if 'store' in rep:
+        P += _table_problems('store', rep['store'], STORE_SCHEMA)
     fo = rep.get('folder')
     if not (isinstance(fo, dict) and set(fo) == {'n_files', 'files', 'listing_sha256', 'sha256sum_style', 'problem', 'path'}):
         P.append('folder block keys')
@@ -648,6 +670,15 @@ def screen_problems(screen, rep):
             continue
         m = re.fullmatch(r'READER_CRASH [A-Za-z]+ while writing the report or the filtered log \(no value printed\) - rc 4', b)
         if m:
+            continue
+        if b.startswith('store audit '):
+            st_ = rep.get('store') or {}
+            miss_ = {'missing': 'absent'}
+            want_ = 'store audit %s  status %s  key %s  file %s  file_sha256 %s' % (
+                st_.get('audit_file'), _fmt(st_.get('status', miss_)), _fmt(st_.get('key', miss_)), _fmt(st_.get('file', miss_)),
+                _fmt(st_.get('file_sha256', miss_)))
+            if b != want_.encode('ascii', 'replace').decode('ascii'):
+                P.append('store audit line differs from the report')
             continue
         m = re.fullmatch(r'(\S+)\s+= (.*)', b)
         if m:
@@ -1580,6 +1611,75 @@ def suite_T(mod, rec):
         rr = run_case('t29', **kw)
         rec('T29 PROBE_OK 경로 (%s): rc 4 (PROBE_OK 아님) · 누출 없음' % tag, rr.rc == 4 and no_leak(rr) == [],
             (rr.rc, (rr.rep or {}).get('problems'), no_leak(rr)[:3]))
+    # T30 ★ 11-13 시도 3 · 4 (원장 §3 · 탄소 접합 원장 저장본 켬): meta 저장본 칸 · audit 곁 파일 (상태 · 열쇠 · 파일 · sha) · 목록
+    fsha = 'cd' * 32
+    reg = 'cjreg_%s.npz' % FAKE_KEY
+
+    def audit(status='built_written', file_sha=fsha, key=FAKE_KEY, schema='cjstore-audit-v1'):
+        return json.dumps({'schema': schema, 'status': status, 'key': key, 'file': reg, 'file_sha256': file_sha, 'why': None,
+                           'bytes': 14, 'seconds_read': None, 'seconds_build': 3.0, 'seconds_write': 0.1,
+                           'runtime': {'python': '3.8.10', 'env': {}}}, sort_keys=True)
+
+    def m3(**over):
+        base = dict(attempt=3, attempt1_pin=None, code_same_as_attempt1=None, attempt2_pin=PIN_FIX, store='~/p6_cjstore',
+                    store_listing_before='', store_listing_after='%s:%s' % (reg, fsha), logdir='~/p6log_a3_x',
+                    outdir='~/sdcp/ca1_probe6_a3_x_arm1')
+        base.update(over)
+        return meta_text(**base)
+
+    def m4(**over):
+        base = dict(attempt=4, attempt1_pin=None, code_same_as_attempt1=None, attempt3_pin=PIN_FIX, code_same_as_attempt3=1,
+                    store='~/p6_cjstore', store_listing_before='%s:%s' % (reg, fsha), store_listing_after='%s:%s' % (reg, fsha),
+                    logdir='~/p6log_a4_x', outdir='~/sdcp/ca1_probe6_a4_x_arm1')
+        base.update(over)
+        return meta_text(**base)
+    ok3 = run_case('t30', arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit()})
+    st3 = (ok3.rep or {}).get('store') or {}
+    rec('T30a 시도 3 (빈 저장본 → 짓고 씀): rc 0 · PROBE_OK · 보고 store = audit 곁 파일 이름 · 상태 built_written · 열쇠 · 파일 · sha · 구조 · 화면 = 보고 · '
+        '누출 없음',
+        ok3.rc == 0 and st3.get('audit_file') == AUDIT_NAME and st3.get('status') == 'built_written' and st3.get('key') == FAKE_KEY
+        and st3.get('file') == reg and st3.get('file_sha256') == fsha and report_problems(ok3.rep) == []
+        and screen_problems(ok3.out, ok3.rep) == [] and no_leak(ok3) == [],
+        (ok3.rc, (ok3.rep or {}).get('problems'), st3, report_problems(ok3.rep)[:3], screen_problems(ok3.out, ok3.rep)[:3]))
+    ok4 = run_case('t30', arm=arm_doc(), meta=m4(), extra={AUDIT_NAME: audit(status='hit')})
+    rec('T30b 시도 4 (시도 3 이 남긴 저장본 → 적중): rc 0 · PROBE_OK · 상태 hit · 구조 · 화면 = 보고',
+        ok4.rc == 0 and ((ok4.rep or {}).get('store') or {}).get('status') == 'hit' and report_problems(ok4.rep) == []
+        and screen_problems(ok4.out, ok4.rep) == [], (ok4.rc, (ok4.rep or {}).get('problems')))
+    bad30 = (
+        ('시도 3 인데 상태 hit (빈 저장본이 아니었다)', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(status='hit')})),
+        ('시도 3 인데 상태 disabled (런 도중 코드 바뀜 · 저장본을 쓰지 않음)', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(status='disabled')})),
+        ('시도 4 인데 상태 built_written (적중 아님)', dict(arm=arm_doc(), meta=m4(), extra={AUDIT_NAME: audit()})),
+        ('시도 3 audit 곁 파일 없음', dict(arm=arm_doc(), meta=m3())),
+        ('시도 4 audit 곁 파일 없음', dict(arm=arm_doc(), meta=m4())),
+        ('시도 2 에 audit 곁 파일 (저장본은 시도 3 · 4 만)', dict(arm=arm_doc(), extra={AUDIT_NAME: audit()})),
+        ('시도 2 meta 에 저장본 칸', dict(arm=arm_doc(), meta=meta_text(store='~/p6_cjstore', store_listing_before='',
+                                                                    store_listing_after='%s:%s' % (reg, fsha)))),
+        ('시도 1 에 audit 곁 파일', dict(arm=arm_doc(), meta=meta_a1(), log=runner_log(maxiter=int(A1)), extra={AUDIT_NAME: audit()})),
+        ('audit 파일 sha ≠ 끝 목록의 sha', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(file_sha='ef' * 32)})),
+        ('audit 파일이 끝 목록에 없음', dict(arm=arm_doc(), meta=m3(store_listing_after='cjreg_%s.npz:%s' % ('01' * 32, fsha)),
+                                    extra={AUDIT_NAME: audit()})),
+        ('시도 3 시작 목록이 비어 있지 않음', dict(arm=arm_doc(), meta=m3(store_listing_before='%s:%s' % (reg, fsha)), extra={AUDIT_NAME: audit()})),
+        ('시도 4 목록이 런 도중 바뀜 (앞 ≠ 끝)', dict(arm=arm_doc(), meta=m4(store_listing_before='%s:%s' % (reg, 'ef' * 32)),
+                                          extra={AUDIT_NAME: audit(status='hit')})),
+        ('시도 4 시작 목록이 빔', dict(arm=arm_doc(), meta=m4(store_listing_before=''), extra={AUDIT_NAME: audit(status='hit')})),
+        ('시도 3 meta 에 저장본 칸 없음', dict(arm=arm_doc(), meta=m3(store=None), extra={AUDIT_NAME: audit()})),
+        ('시도 3 meta 에 attempt2_pin 없음', dict(arm=arm_doc(), meta=m3(attempt2_pin=None), extra={AUDIT_NAME: audit()})),
+        ('시도 4 meta 에 code_same_as_attempt3 없음', dict(arm=arm_doc(), meta=m4(code_same_as_attempt3=None),
+                                                       extra={AUDIT_NAME: audit(status='hit')})),
+        ('시도 3 meta 에 attempt1_pin (모순)', dict(arm=arm_doc(), meta=m3(attempt1_pin=PIN_FIX), extra={AUDIT_NAME: audit()})),
+        ('시도 3 meta 에 attempt3_pin (모순)', dict(arm=arm_doc(), meta=m3(attempt3_pin=PIN_FIX), extra={AUDIT_NAME: audit()})),
+        ('시도 2 meta 에 attempt2_pin (모순)', dict(arm=arm_doc(), meta=meta_text(attempt2_pin=PIN_FIX))),
+        ('audit 곁 파일 둘', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(),
+                                                             AUDIT_NAME.replace('_a0.json', 'x_a0.json'): audit()})),
+        ('다른 팔의 audit 곁 파일', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME.replace(ARM, ARM.replace('_a0', 'x_a0')): audit()})),
+        ('audit 곁 파일이 JSON 아님', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: 'not json'})))
+    res30 = []
+    for tag, kw in bad30:
+        rr = run_case('t30', **kw)
+        res30.append((tag, rr.rc == 4 and no_leak(rr) == [] and report_problems(rr.rep) == [], rr.rc, (rr.rep or {}).get('problems')))
+    rec('T30c 저장본 기록이 등록과 다른 %d 꼴 (상태 · 곁 파일 있음 / 없음 · 시도 1 · 2 의 저장본 · 목록 sha · 시작 목록 · 목록 바뀜 · 칸 없음 · 모순 · 둘 · 다른 팔 · '
+        'JSON 아님): 모두 rc 4 · 누출 없음 · 보고 구조 통과' % len(bad30),
+        all(x[1] for x in res30) and len(res30) == 22, [x for x in res30 if not x[1]])
 
 
 @case('T 판독기 (합성 폴더)')
@@ -1677,6 +1777,24 @@ MUTANTS = (
     ('rc 3 경로의 대조를 끔 (rc 0 만)', [("        if rc in (RC_OK, RC_NOT_CONVERGED):\n            # identity", "        if rc == RC_OK:\n            # identity")]),
     ('rc 3 에서 기록 문제를 무시 (rc 0 만 4 로)', [("        if incomplete and rc in (RC_OK, RC_NOT_CONVERGED):", "        if incomplete and rc == RC_OK:")]),
     ('R_j 대조를 안 봄', [("if args.logdir and arm_path is not None and f.get('rj_matches_registered') is not True:", "if False:")]),
+    # ── 11-13 시도 3 · 4 (저장본) 의 새 검사가 시험에 묶였는가
+    ('시도 3 · 4 저장본 상태를 안 봄', [("                    elif store.get('status') != want:", "                    elif False:")]),
+    ('저장본 파일 sha 대조를 안 봄', [("                    elif not (isinstance(store.get('file'), str) and after.get(store['file']) == store.get('file_sha256')):",
+                                     "                    elif False:")]),
+    ('시도 3 빈 저장본 시작을 안 봄', [("                    elif att == 3 and lb != '':", "                    elif False:")]),
+    ('시도 4 목록 바뀜을 안 봄', [("                    elif att == 4 and not (lb and lb == la):", "                    elif False:")]),
+    ('시도 1 · 2 의 저장본 기록을 안 봄', [("                    if sk or not is_missing(store.get('audit_file')):", "                    if False:")]),
+    ('시도 3 · 4 저장본 칸 없음을 받음', [("                    if len(sk) != 3:", "                    if False:")]),
+    ('시도 3 의 attempt2 칸을 안 봄', [("                if att == 3 and not isinstance(m_.get('attempt2_pin'), str):", "                if False:")]),
+    ('시도 4 의 attempt3 칸을 안 봄', [("                if att == 4 and not (isinstance(m_.get('attempt3_pin'), str) and m_.get('code_same_as_attempt3') == 1):",
+                                      "                if False:")]),
+    ('다른 시도의 핀 칸 모순을 안 봄', [("                if att != 3 and 'attempt2_pin' in m_ or att != 4 and ('attempt3_pin' in m_ or 'code_same_as_attempt3' in m_):",
+                                       "                if False:")]),
+    ('시도 3 · 4 의 시도 2 칸 모순을 안 봄', [("                if att in (3, 4) and ('attempt1_pin' in m_ or 'code_same_as_attempt1' in m_):", "                if False:")]),
+    ('audit 곁 파일 둘을 받음', [("    if len(audits) > 1:", "    if len(audits) > 99:")]),
+    ('다른 팔의 audit 곁 파일을 받음', [("            if arm_path is not None and audits[0] != AUDIT_PREFIX + os.path.basename(arm_path):", "            if False:")]),
+    ('JSON 아닌 audit 곁 파일을 받음', [("            incomplete = True\n            probs.append('store audit side file ' + (why or 'is not an object'))",
+                                       "            probs.append('store audit side file ' + (why or 'is not an object'))")]),
     ('R_j 팔 이름을 안 봄', [("(float(rj) == xj) and ('_cj%d_' % int(xj)) in os.path.basename(arm_path)", "(float(rj) == xj)")]),
     ('pythonpath_set 을 안 봄', [("('kit_run_matches_s0', 1), ('solve_started', 1), ('pythonpath_set', 0)):", "('kit_run_matches_s0', 1), ('solve_started', 1)):")]),
     ('영수증 arms 없음을 받음', [("if receipt.get('receipt_arms') != 1:", "if receipt.get('receipt_arms') not in (1,) and not is_missing(receipt.get('receipt_arms')):")]),
@@ -1764,6 +1882,13 @@ def runner_cmd_line(maxiter, outdir='<O>', w='<W>'):
     axes = ' '.join('%s=%s' % (k, v) for k, v in wrapper_axes_ordered())
     return 'env -u BASH_ENV -u SHELLOPTS %s P2_EXTRA="--step3-maxiter %s" OUTDIR=%s PYTHONUNBUFFERED=1 bash %s/%s' % (
         axes, maxiter, outdir, w, RUNNER_REL)
+
+
+def runner_cmd_line_store(maxiter, outdir='<O>', w='<W>', store='~/p6_cjstore'):
+    """★ 11-13 시도 3 · 4 의 러너 명령 글 = 시도 1 · 2 꼴 + P2_EXTRA 뒤 CJUNC_STORE (홈을 ~ 로 접은 꼴 · command.txt 와 같은 꼴)."""
+    axes = ' '.join('%s=%s' % (k, v) for k, v in wrapper_axes_ordered())
+    return 'env -u BASH_ENV -u SHELLOPTS %s P2_EXTRA="--step3-maxiter %s" CJUNC_STORE=%s OUTDIR=%s PYTHONUNBUFFERED=1 bash %s/%s' % (
+        axes, maxiter, store, outdir, w, RUNNER_REL)
 
 
 def watcher_cmd_line(maxiter):
@@ -1960,7 +2085,8 @@ def t_S():
     s4 = rd[i4:i5] if 0 <= i4 < i5 else ''
     newnums = ('not_converged_info', 'not_converged_resid', 'solve_to_end_s', 'masked_lines_dropped', 'gpu_used_start_mib',
                'disk_free_gb_kit', 'orphans', 'env_', 'attempt1_pin', 'code_same_as_attempt1', 'expect_rj', 'pythonpath_removed',
-               'rj_matches_registered')
+               'rj_matches_registered', 'attempt2_pin', 'attempt3_pin', 'code_same_as_attempt3', 'store_listing_before',
+               'store_listing_after', 'audit_sha256')
     chk('S13 README §4 에 새로 내는 수마다 "σ 를 되짚을 수 없다" 까닭 줄 (이름이 §4 에 있다)', all(n in s4 for n in newnums),
         [n for n in newnums if n not in s4])
     # S14 문서 (P6R2-01 · 03 · 07 · 08): 시도 2 = 풀이를 시작한 시도 1 (solve_started=1) 의 DONE 뒤 (원장 §3 2 번 줄 · 블록 머리 · README §3) ·
@@ -1989,6 +2115,31 @@ def t_S():
         ('README §9 의 명령 줄 넷 = 원장 §3 글자 그대로', all(x in set(ln[4:] for ln in s9.split('\n') if ln.startswith('    ')) for x in need))) if not c]
     chk('S14 문서 (시도 2 앞 조건 solve_started=1 세 곳 · README §9 정함 · 풀이 코드 목록 · 블록 멈춤 안내 · README §7 한계 · 시험 수)', probs14 == [],
         probs14)
+    # S16 ★ 11-13 시도 3 · 4 (원장 §3 · 저장본) 와 감시 셸 git 읽기 격리
+    wt16 = read_text(WRAPPER)
+    rc_ = _rc()
+    st_line = [ln for ln in wt16.split('\n') if ln.startswith('if [ -n "$STORE" ]; then CMD=(')]
+    cs16 = [ln for ln in wt16.split('\n') if ln.strip().startswith('CJUNC_STORE=*)')]
+    chk('S16a 감시 셸: 시도 3 · 4 의 러너 env = 시도 1 · 2 꼴 + P2_EXTRA 뒤 CJUNC_STORE · command.txt 는 CJUNC_STORE 를 홈 ~ 로 접는다 · 짝 표 3 · 4 = 1500000 · '
+        '저장본 = ~/p6_cjstore 고정',
+        len(st_line) == 1 and '"${AXES[@]}" "P2_EXTRA=--step3-maxiter $MAXITER" "CJUNC_STORE=$STORE" "OUTDIR=$O" PYTHONUNBUFFERED=1' in st_line[0]
+        and len(cs16) == 1 and 'homerel' in cs16[0]
+        and '  3) WANT_MAX=1500000;;' in wt16 and '  4) WANT_MAX=1500000;;' in wt16 and 'STORE="${HOME%/}/p6_cjstore"' in wt16, st_line)
+    hd = wt16.find(rc_.GIT_DROP_SH)
+    first_git = wt16.find('git -C')
+    chk('S16b 감시 셸 git 읽기 = 봉인용: run_contract.GIT_DROP_SH 글자 그대로 한 줄 · export GIT_NO_REPLACE_OBJECTS=1 · 둘 다 첫 git -C 앞 · graft · shallow 관문 함수',
+        wt16.count(rc_.GIT_DROP_SH) == 1 and 0 <= hd < first_git and 0 <= wt16.find('export GIT_NO_REPLACE_OBJECTS=1') < first_git
+        and 'history_problem()' in wt16 and '--is-shallow-repository' in wt16 and 'info/grafts' in wt16, (hd, first_git))
+    lf16 = ARGS.ledger if (ARGS is not None and ARGS.ledger) else LEDGER_FILE
+    sec16 = ledger_section3(read_text(lf16)) if os.path.exists(lf16) else ''
+    s16 = set(ln[4:] for ln in sec16.split('\n') if ln.startswith('    '))
+    need16 = [watcher_cmd_line(STORE_ATTEMPTS[3]), runner_cmd_line_store(STORE_ATTEMPTS[3])]
+    row3 = [ln for ln in sec16.split('\n') if ln.startswith('| 3 |')]
+    row4 = [ln for ln in sec16.split('\n') if ln.startswith('| 4 |')]
+    chk('S16c 원장 §3 (%s) 에 시도 줄 3 · 4 (한도 1500000 · 결과 칸 결과 0 건) · 시도 3 · 4 의 명령 줄 (감시 셸 · 러너 CJUNC_STORE) 이 네 칸 들여 쓴 줄로 있다'
+        % os.path.relpath(lf16, ROOT),
+        len(row3) == 1 and len(row4) == 1 and all('1500000' in r_ and '결과 0 건' in r_ for r_ in row3 + row4) and all(x in s16 for x in need16),
+        ([x[:70] for x in need16 if x not in s16], row3[:1], row4[:1]))
     # S15 변이 사본은 문법이 성립한다 (W = bash -n · M = compile): 문법이 깨진 사본은 F · T 묶음이 엉뚱한 까닭 (구문 오류) 으로 "잡는다"
     #     (2 회차 고침 중 W 변이 하나가 빈 then 절이라 구문 오류였고 F01a 가 그 까닭으로 잡았다 · 그 꼴을 막는다)
     wsrc15, rsrc15 = read_text(WRAPPER), read_text(READER)
@@ -2028,6 +2179,14 @@ FAKE_RUNNER = r'''#!/usr/bin/env bash
 #   PYTHONUTF8=1 python3 "$SCR/check_undefined_names.py" "$SCR/mpm_webapp_payload.py" "$SCR/step3_sigma.py" >/dev/null 2>&1
 D="$PROBE6_FAKE_DIR"
 env | LC_ALL=C sort > "$D/runner_env.txt"
+fake_store() {   # CJUNC_STORE set: the registry file (made once, 0444) and the arm audit side file next to the arm (status)
+  local f st
+  f="$CJUNC_STORE/cjreg_@FAKE_KEY@.npz"
+  if [ -f "$f" ]; then st=hit; else printf 'fake registry\n' > "$f"; chmod 0444 "$f"; st=built_written; fi
+  printf '{"schema": "cjstore-audit-v1", "status": "%s", "key": "@FAKE_KEY@", "file": "cjreg_@FAKE_KEY@.npz", "file_sha256": "%s", "why": null, "bytes": 14}\n' \
+    "$st" "$(sha256sum "$f" | awk '{print $1}')" > "$OUTDIR/cjstore_audit_$PROBE6_FAKE_ARM.json"
+  echo "$st" >> "$D/store_status.txt"
+}
 pwd -P > "$D/runner_cwd.txt"
 umask > "$D/runner_umask.txt"
 echo called >> "$D/calls.txt"
@@ -2045,7 +2204,8 @@ fi
 sed -e "s/@MAXITER_FMT@/$MF/" "$D/log_head.txt"
 echo "fake runner stderr line PROBE6_STDERR_MARK" >&2
 case "${PROBE6_FAKE_MODE:-ok}" in
-  ok)    sleep "${PROBE6_FAKE_SLEEP:-3}"; cp "$D/arm.json" "$OUTDIR/$PROBE6_FAKE_ARM.json"; cat "$D/log_tail_ok.txt"; exit 0;;
+  ok)    sleep "${PROBE6_FAKE_SLEEP:-3}"; if [ -n "${CJUNC_STORE:-}" ]; then fake_store; fi
+         cp "$D/arm.json" "$OUTDIR/$PROBE6_FAKE_ARM.json"; cat "$D/log_tail_ok.txt"; exit 0;;
   dirty) touch "$(cd "$(dirname "$0")/.." && pwd -P)/untracked_by_runner.txt"
          sleep 1; cp "$D/arm.json" "$OUTDIR/$PROBE6_FAKE_ARM.json"; cat "$D/log_tail_ok.txt"; exit 0;;
   fail)  sleep "${PROBE6_FAKE_SLEEP:-2}"; cp "$D/arm_failed.json" "$RUN/$PROBE6_FAKE_ARM.json.failed"
@@ -2058,6 +2218,7 @@ case "${PROBE6_FAKE_MODE:-ok}" in
   big)   python3 -c 'import time; b = bytearray(50 * 1024 * 1024); time.sleep(40)';;
 esac
 '''
+FAKE_RUNNER = FAKE_RUNNER.replace('@FAKE_KEY@', FAKE_KEY)
 #: 가짜 러너의 런 전 관문 둘 (핀 저장소의 scripts/ · 진짜 관문의 자리 · env PROBE6_FAKE_GATE 로 실패 · 지연)
 FAKE_GATE = r'''import os
 import sys
@@ -2256,8 +2417,8 @@ def wrapper_env(home, fake=None, **over):
 
 def run_wrapper(repo, pin, home, tag, env, maxiter=None, out=None, lg=None, mk_log=True, timeout=180, wrapper=None, umask=None,
                 attempt=1):
-    """maxiter 기본 = 그 시도 번호의 등록 한도 (1 → 30000 · 2 → 1500000)."""
-    maxiter = ATTEMPT_MAXITER[attempt] if maxiter is None else maxiter
+    """maxiter 기본 = 그 시도 번호의 등록 한도 (1 → 30000 · 2 → 1500000 · 3 · 4 → 1500000)."""
+    maxiter = ALL_MAXITER[attempt] if maxiter is None else maxiter
     out = out or os.path.join(home, 'sdcp', 'ca1_probe6_a%d_%s_arm1' % (attempt, tag))
     lg = lg or os.path.join(home, 'p6log_a%d_%s' % (attempt, tag))
     if mk_log and not os.path.isdir(lg):
@@ -2747,6 +2908,113 @@ def t_F(pre='f'):
         'runner_started=1' in wf and 'session' in wf and not os.path.exists(os.path.join(r.lg, 'DONE'))
         and os.path.isdir(os.path.join(h, '.probe6.lock')) and ' runner started - maxiter ' in st21, (r.rc, wf, st21[-500:]))
     safe_kill(read_pid(os.path.join(fdm, 'runner.pid')))
+    # F22 ★ 11-13 시도 3 · 4 (원장 §3 · 탄소 접합 원장 저장본 켬): 시도 3 = 빈 저장본 → 짓고 씀 · 시도 4 = 시도 3 이 남긴 저장본 → 적중
+    h22 = make_home(pre + '_h22')
+    for nm, files in (('p6log_a1_20991231T000001Z', lf_done(1, pin)), ('p6log_a2_20991231T000002Z', lf_done(2, pin))):
+        log_folder(h22, nm, files)
+    fd22 = fake_dir(pre + '_fake22', pin)
+    r3 = run_wrapper(repo, pin, h22, 'f22', wrapper_env(h22, fd22, PROBE6_FAKE_SLEEP='1'), attempt=3)
+    store22 = os.path.join(h22, 'p6_cjstore')
+    regf = os.path.join(store22, 'cjreg_%s.npz' % FAKE_KEY)
+    rsha = sha256_file(regf) if os.path.exists(regf) else None
+    renv22 = dict(ln.split('=', 1) for ln in read_text(os.path.join(fd22, 'runner_env.txt')).splitlines() if '=' in ln) \
+        if os.path.exists(os.path.join(fd22, 'runner_env.txt')) else {}
+    cmd22 = read_text(os.path.join(r3.lg, 'command.txt')).splitlines() if os.path.exists(os.path.join(r3.lg, 'command.txt')) else []
+    st3 = ((r3.rep or {}).get('store') or {})
+    bp3 = bundle_problems(r3.lg, T_SEALED, h22)
+    chk('F22a 시도 3 (끝난 시도 2 뒤 · 저장본 없음): 감시 셸 rc 0 · PROBE_OK · 저장본 폴더를 만들었다 (0755) · 러너 env CJUNC_STORE = ~/p6_cjstore 의 실제 경로 · '
+        'command.txt = 원장 꼴 (CJUNC_STORE 를 ~ 로 접음 · 홈 경로 없음) · meta attempt 3 · attempt2_pin · 저장본 목록 (앞 빔 · 끝 = 짓고 쓴 파일) · '
+        '보고 상태 built_written · 묶음 꼴',
+        r3.rc == 0 and (r3.rep or {}).get('verdict') == 'PROBE_OK' and os.path.isdir(store22)
+        and (os.stat(store22).st_mode & 0o777) == 0o755 and renv22.get('CJUNC_STORE') == os.path.join(h22, 'p6_cjstore')
+        and len(cmd22) == 2 and cmd22[1] == runner_cmd_line_store(STORE_ATTEMPTS[3], outdir='~/sdcp/ca1_probe6_a3_f22_arm1', w=repo)
+        and r3.meta.get('attempt') == '3' and r3.meta.get('attempt2_pin') == pin and r3.meta.get('store') == '~/p6_cjstore'
+        and r3.meta.get('store_listing_before') == '' and r3.meta.get('store_listing_after') == 'cjreg_%s.npz:%s' % (FAKE_KEY, rsha)
+        and st3.get('status') == 'built_written' and 'attempt1_pin' not in r3.meta and bp3 == [],
+        (r3.rc, stop_line(r3), (r3.rep or {}).get('problems'), renv22.get('CJUNC_STORE'), cmd22[1:], bp3[:4],
+         dict((k, r3.meta.get(k)) for k in ('attempt', 'attempt2_pin', 'store', 'store_listing_before', 'store_listing_after'))))
+    r4 = run_wrapper(repo, pin, h22, 'f22b', wrapper_env(h22, fd22, PROBE6_FAKE_SLEEP='1'), attempt=4)
+    st4 = ((r4.rep or {}).get('store') or {})
+    chk('F22b 시도 4 (같은 홈 · 끝난 시도 3 뒤): 감시 셸 rc 0 · PROBE_OK · 상태 hit · meta attempt3_pin · code_same_as_attempt3=1 · 저장본 목록 앞 = 끝 = 시도 3 의 끝 · '
+        '가짜 러너가 본 상태 차례 = built_written → hit · 저장본 파일 그대로',
+        r4.rc == 0 and (r4.rep or {}).get('verdict') == 'PROBE_OK' and st4.get('status') == 'hit' and r4.meta.get('attempt3_pin') == pin
+        and r4.meta.get('code_same_as_attempt3') == '1' and r4.meta.get('store_listing_before') == r3.meta.get('store_listing_after')
+        and r4.meta.get('store_listing_after') == r3.meta.get('store_listing_after')
+        and os.path.exists(os.path.join(fd22, 'store_status.txt')) and read_text(os.path.join(fd22, 'store_status.txt')).split() == ['built_written', 'hit']
+        and rsha is not None and sha256_file(regf) == rsha,
+        (r4.rc, stop_line(r4), (r4.rep or {}).get('problems'), st4))
+    stops22 = []
+
+    def stop22(label, att, needle, folders, prep=None, env_over=None, maxiter=None, rp=None):
+        h = make_home('%s_h22s_%d' % (pre, len(stops22)))
+        for nm, files in folders:
+            log_folder(h, nm, files)
+        if prep:
+            prep(h)
+        fdx = fake_dir('%s_fake22s_%d' % (pre, len(stops22)), (rp or (repo, pin))[1])
+        r_ = run_wrapper((rp or (repo, pin))[0], (rp or (repo, pin))[1], h, 'f22s', wrapper_env(h, fdx, **(env_over or {})), attempt=att,
+                         maxiter=maxiter)
+        line = stop_line(r_)
+        called = os.path.exists(os.path.join(fdx, 'calls.txt'))
+        stops22.append((label, r_.rc == 2 and needle in line and 'runner not started' in line and not called, line[-220:] or r_.so[-220:]))
+    a1, a2 = ('p6log_a1_20991231T000001Z', lf_done(1, pin)), ('p6log_a2_20991231T000002Z', lf_done(2, pin))
+
+    def a3done(listing):
+        d_ = lf_done(3, pin)
+        d_['meta.txt'] += 'store_listing_after=%s\n' % listing
+        return ('p6log_a3_20991231T000003Z', d_)
+    good_list = 'cjreg_%s.npz:%s' % (FAKE_KEY, hashlib.sha256(b'fake registry\n').hexdigest())
+
+    def put_store(h, body=b'fake registry\n'):
+        os.makedirs(os.path.join(h, 'p6_cjstore'))
+        with open(os.path.join(h, 'p6_cjstore', 'cjreg_%s.npz' % FAKE_KEY), 'wb') as fh:
+            fh.write(body)
+    stop22('시도 3 · 끝난 시도 2 없음', 3, 'attempt 3 needs exactly one attempt-2', [a1])
+    stop22('시도 3 · 저장본에 남은 파일', 3, 'attempt 3 needs an absent or empty store folder', [a1, a2], prep=put_store)
+    stop22('시도 3 · 저장본이 심볼릭 링크', 3, 'symbolic link', [a1, a2],
+           prep=lambda h: (os.makedirs(os.path.join(h, 'real_store')), os.symlink(os.path.join(h, 'real_store'), os.path.join(h, 'p6_cjstore'))))
+    stop22('시도 3 · 한도 30000 (짝 아님)', 3, 'registered pairs', [a1, a2], maxiter=A1)
+    stop22('시도 3 · 끝난 시도 4 뒤', 3, 'attempt 3 does not run after attempt 4', [a1, a2, ('p6log_a4_20991231T000009Z', lf_done(4, pin))])
+    stop22('시도 2 · 끝난 시도 3 뒤', 2, 'attempt 2 does not run after attempt 3', [a1, a3done(good_list)])
+    stop22('시도 4 · 끝난 시도 3 없음', 4, 'attempt 4 needs exactly one attempt-3', [a1, a2])
+    stop22('시도 4 · 저장본 없음', 4, 'attempt 4 needs the store folder', [a1, a2, a3done(good_list)])
+    stop22('시도 4 · 저장본이 시도 3 이 남긴 것과 다름', 4, 'differs from what attempt 3 left', [a1, a2, a3done(good_list)],
+           prep=lambda h: put_store(h, b'other registry\n'))
+    stop22('시도 4 · 시도 3 meta 에 저장본 목록 없음', 4, 'no store listing', [a1, a2, ('p6log_a3_20991231T000003Z', lf_done(3, pin))],
+           prep=put_store)
+    stop22('시도 3 · GIT_GRAFT_FILE 이 걸림', 3, 'GIT_GRAFT_FILE', [a1, a2], env_over={'GIT_GRAFT_FILE': os.path.join(TD, 'no_graft')})
+    sh_repo = os.path.join(TD, pre + '_pin_shallow')
+    subprocess.run(['git', 'clone', '-q', '--depth', '1', 'file://' + repo2, sh_repo], check=True, capture_output=True,
+                   env=_rc().git_fixture_env())
+    stop22('시도 3 · 핀 작업 트리가 얕은 복제 (커밋 여럿인 저장소의 depth 1)', 3, 'shallow clone', [a1, a2], rp=(sh_repo, git(sh_repo, 'rev-parse', 'HEAD')))
+    calls22 = len(read_text(os.path.join(fd22, 'calls.txt')).splitlines()) if os.path.exists(os.path.join(fd22, 'calls.txt')) else 0
+    chk('F22c 시도 3 · 4 멈춤 %d 꼴 (앞 시도 · 저장본 남음 · 링크 · 짝 · 뒤 시도 끝남 · 시도 4 앞 조건 · 저장본 없음 · 다름 · 목록 없음 · graft · shallow): '
+        '전부 rc 2 · 그 사유 · 러너 호출 0' % len(stops22),
+        len(stops22) == 12 and all(ok for _l, ok, _w in stops22) and calls22 == 2, [x for x in stops22 if not x[1]])
+    git(repo2, 'checkout', '-q', '--detach', pb)
+    h = make_home(pre + '_h22code')
+    for nm, files in (('p6log_a1_20991231T000001Z', lf_done(1, pa)), ('p6log_a2_20991231T000002Z', lf_done(2, pa))):
+        log_folder(h, nm, files)
+    d3 = lf_done(3, pa)
+    d3['meta.txt'] += 'store_listing_after=%s\n' % good_list
+    log_folder(h, 'p6log_a3_20991231T000003Z', d3)
+    put_store(h)
+    r_ = run_wrapper(repo2, pb, h, 'f22code', wrapper_env(h, fake_dir(pre + '_fake22code', pb)), attempt=4)
+    chk('F22d 시도 3 의 핀과 시도 4 의 핀 사이에 풀이 코드가 바뀜 → STOP (바뀐 파일 이름) · 러너 시작 안 함',
+        r_.rc == 2 and 'the solve code changed between the attempt-3 pin' in stop_line(r_) and RUNNER_REL in stop_line(r_), stop_line(r_) or r_.so[-300:])
+    # F23 ★ 11-13 감시 셸의 git 읽기 = 봉인용 (Codex 반박 1/2 §3): 부르는 쪽 GIT_DIR (남의 저장소) 를 지운다 · 러너에 GIT_NO_REPLACE_OBJECTS=1
+    vic, vpin = make_pin_repo(pre + '_victim')
+    h = make_home(pre + '_h23')
+    fd23 = fake_dir(pre + '_fake23', pin)
+    r_ = run_wrapper(repo, pin, h, 'f23', wrapper_env(h, fd23, PROBE6_FAKE_SLEEP='1', GIT_DIR=os.path.join(vic, '.git'),
+                                                       GIT_WORK_TREE=vic))
+    renv23 = dict(ln.split('=', 1) for ln in read_text(os.path.join(fd23, 'runner_env.txt')).splitlines() if '=' in ln) \
+        if os.path.exists(os.path.join(fd23, 'runner_env.txt')) else {}
+    chk('F23 부르는 쪽 GIT_DIR · GIT_WORK_TREE = 남의 저장소: 감시 셸이 지우고 핀 작업 트리를 읽는다 (rc 0 · PROBE_OK · git_lines_after 0) · 러너 env 에 GIT_DIR · '
+        'GIT_WORK_TREE 없음 · GIT_NO_REPLACE_OBJECTS=1 · 남의 저장소 HEAD 그대로',
+        r_.rc == 0 and (r_.rep or {}).get('verdict') == 'PROBE_OK' and 'GIT_DIR' not in renv23 and 'GIT_WORK_TREE' not in renv23
+        and renv23.get('GIT_NO_REPLACE_OBJECTS') == '1' and git(vic, 'rev-parse', 'HEAD') == vpin,
+        (r_.rc, stop_line(r_), r_.so[-300:]))
     # F09 실패 경로 (러너 rc 1 · 팔 없음 · .failed 남음 = 시도 1 이 한도에 닿은 꼴)
     r = run_wrapper(repo, pin, home, 'fail', wrapper_env(home, fd, PROBE6_FAKE_MODE='fail'))
     left = os.path.join(home, 'sdcp', KIT, S0_RUN, ARM + '.json.failed')
@@ -3498,6 +3766,35 @@ def t_R():
     chk('R5b 시도 1 의 남은 .failed: 시도 2 가 시작 전에 바이트 사본 (kit_run_before · sha256 = 시도 1 로그 폴더의 사본) · 시도 2 판독기는 그것을 새 파일로 읽지 않는다',
         s3sha is not None and bf5.get(ARM + '.json.failed') == s3sha and ARM + '.json.failed' not in [
             x.get('name') for x in (r5.rep or {}).get('kit_run_new_files') or []], (s3sha, bf5))
+    # R6 ★ 11-13 시도 3 · 4 (원장 §3 · 실제 러너 · payload · 탄소 접합 원장 저장본): R5 (끝난 시도 2) 뒤 같은 홈 · 같은 사본 · 같은 침대 →
+    #    시도 3 (저장본 없음 → 감시 셸이 만듦 → payload 가 짓고 씀) → 시도 4 (그 저장본 → 적중)
+    r6 = run_wrapper(repo, pin, home, 'r6', wenv, timeout=900, attempt=3)
+    st6 = (r6.rep or {}).get('store') or {}
+    f6 = (r6.rep or {}).get('fields') or {}
+    store6 = os.path.join(home, 'p6_cjstore')
+    regs6 = sorted(os.listdir(store6)) if os.path.isdir(store6) else []
+    reg6 = os.path.join(store6, regs6[0]) if len(regs6) == 1 else None
+    arm6 = os.path.join(r6.out, ARM + '.json')
+    chk('R6a 시도 3 (실물): 감시 셸 rc 0 · 판독 rc 0 · 저장본 상태 built_written · 저장본 파일 하나 (cjreg_<64 hex>.npz · 0444) · meta 끝 목록 = 그 파일의 sha256 · '
+        'audit 곁 파일 = 출력 폴더 (러너가 옮김) · 반복 수 = R2 와 같음 (같은 침대)',
+        r6.rc == 0 and (r6.rep or {}).get('rc') == 0 and st6.get('status') == 'built_written' and reg6 is not None
+        and re.fullmatch(r'cjreg_[0-9a-f]{64}\.npz', regs6[0]) is not None and (os.stat(reg6).st_mode & 0o777) == 0o444
+        and r6.meta.get('store_listing_after') == '%s:%s' % (regs6[0], sha256_file(reg6)) and st6.get('file') == regs6[0]
+        and os.path.exists(os.path.join(r6.out, AUDIT_NAME)) and f6.get('cg_iters') == it_ok,
+        (r6.rc, stop_line(r6), (r6.rep or {}).get('problems'), st6, regs6, f6.get('cg_iters'), it_ok))
+    r7 = run_wrapper(repo, pin, home, 'r7', wenv, timeout=900, attempt=4)
+    st7 = (r7.rep or {}).get('store') or {}
+    f7 = (r7.rep or {}).get('fields') or {}
+    arm7 = os.path.join(r7.out, ARM + '.json')
+    vals6 = real_sigma_values(arm6) if os.path.exists(arm6) else []
+    bp7 = bundle_problems(r7.lg, vals6, home, sd_min=7) if vals6 else ['no arm 6']
+    chk('R6b 시도 4 (실물 · 같은 저장본): 감시 셸 rc 0 · 판독 rc 0 · 상태 hit · 같은 파일 · meta 앞 목록 = 끝 목록 = 시도 3 의 끝 · 반복 수 = 시도 3 · 팔 JSON 바이트 = 시도 3 '
+        '(저장본 적중이 결과를 바꾸지 않는다 · 이 CPU 대역 산술) · 묶음 꼴 · σ 없음',
+        r7.rc == 0 and (r7.rep or {}).get('rc') == 0 and st7.get('status') == 'hit' and st7.get('file') == st6.get('file')
+        and r7.meta.get('store_listing_before') == r6.meta.get('store_listing_after') == r7.meta.get('store_listing_after')
+        and f7.get('cg_iters') == f6.get('cg_iters') and os.path.exists(arm6) and os.path.exists(arm7)
+        and sha256_file(arm6) == sha256_file(arm7) and bp7 == [],
+        (r7.rc, stop_line(r7), (r7.rep or {}).get('problems'), st7, f7.get('cg_iters'), bp7[:4]))
     # R2e (대조) 같은 실물 팔을 실제 S0 계획 (kgy 침대의 입력 지문) 으로 읽으면 다른 침대로 잡는다
     mod = load_reader(READER)
     rr = run_reader(mod, r.out, r.lg, run_r2, s0=True)
