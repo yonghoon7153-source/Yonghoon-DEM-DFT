@@ -2507,6 +2507,13 @@ def main():
                     raise
                 if isinstance(_cj_prep.get('store'), dict):
                     print(_cjs.outcome_line(_cj_prep['store']), flush=True)
+                    #  ★ 11-13 (Codex 반박 1/2 §3 RCP-07) — 팔마다 저장본 상태 (상태 · 열쇠 · 파일 · 파일 sha256 · 실행 환경) 를 과학 payload 밖 곁 파일
+                    #    (`--out` 옆 `cjstore_audit_<출력 이름>` · 러너가 팔과 함께 OUTDIR 로 옮긴다 · 사슬 요약이 팔별로 싣는다) 에 — 팔 JSON 바이트 그대로 ·
+                    #    못 쓰면 ⚠ 줄만 (팔 결과 무관)
+                    try:
+                        _cjs.write_audit(a.out, _cjs.audit_record(_cj_prep['store'], root=a._cj_store))
+                    except Exception as _e_au:                  # noqa: BLE001 — 기록만 (팔 결과 무관)
+                        print(f'  STEP3: ⚠ S2 탄소 접합 원장 저장본 — 팔 audit 곁 파일을 못 썼다 ({type(_e_au).__name__}) · 팔 결과 무관', flush=True)
                 _cjc = _cj_prep['counts']
                 print(f"  STEP3: ★ S2 탄소 접합 — instance {_cjc['n_instances']:,} (간선 {_cjc['n_edge']:,} · 축약 {_cjc['n_contract']:,} · "
                       f"미실현 {_cjc['n_unrealized']:,} · 긴 접촉 {_cjc['n_long']:,} · SDCP 근접 {_cjc['n_sdcp_near']:,}) · "

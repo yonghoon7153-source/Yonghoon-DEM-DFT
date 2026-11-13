@@ -997,7 +997,16 @@ PYGO
     echo "     원본을 남겨 둔다: $FRESH"
     return 1
   fi
-  mv "$FRESH" "$OUT"
+  mv "$FRESH" "$OUT" || return 1
+  #  ★ 2026-11-13 (Rint ② · Codex 반박 1/2 §3 RCP-07) — 저장본 켬이면 payload 가 팔 옆에 남긴 audit 곁 파일 (`cjstore_audit_<팔>` · 과학 payload 밖) 을
+  #    팔과 함께 OUTDIR 로 옮긴다 (사슬 요약이 팔별로 싣는다 · 끔 = 곁 파일 없음 = 옛 동작 그대로 · 못 옮김 = 경고 줄만 · 팔 결과 무관)
+  local CJA
+  CJA="$(dirname "$FRESH")/cjstore_audit_$(basename "$FRESH")"
+  if [ -f "$CJA" ]; then
+    mv "$CJA" "$(dirname "$OUT")/cjstore_audit_$(basename "$OUT")" 2>/dev/null \
+      || echo "[p2] 팔 audit 곁 파일을 옮기지 못했다 ($CJA) — 기록만 · 팔 결과 무관"
+  fi
+  return 0
 }
 
 echo "[p2] vox $VOX · 브리지 $BRIDGE_UM µm 고정 · 섬유 $FIBRE_STAMP · $ARMS 팔${ARM_LIST:+ (ARM_LIST=$ARM_LIST)} · out $OUTDIR"
