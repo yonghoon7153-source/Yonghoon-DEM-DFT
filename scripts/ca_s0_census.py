@@ -933,6 +933,10 @@ def verify_plan_commit(repo, sha, plan_path, r_doc=R_DOC_DEFAULT, *, r_plan_path
     if r.returncode != 0 or not r.stdout.strip():
         raise S0Error(f'커밋 {sha} 이 저장소 {repo} 에 없다 (git fetch 뒤 다시)')
     full = r.stdout.strip()
+    import run_contract as _RC
+    _hp = _RC.git_history_problem(repo)                     # ★ 11-13 (Codex 반박 1/2 §3) — graft · shallow 이력의 조상 관문 = 닫힘 (graft 가 곁가지를 조상으로)
+    if _hp is not None:
+        raise S0Error(f'단계 2 관문 — 개정 커밋의 조상 대조를 믿을 수 없다: {_hp}')
     r = _git(repo, 'merge-base', '--is-ancestor', full, 'HEAD')
     if r.returncode != 0:
         raise S0Error(f'커밋 {full[:12]} 이 이 작업 트리 HEAD 의 조상이 아니다 (가지 밖 · 또는 HEAD 가 개정 전)')

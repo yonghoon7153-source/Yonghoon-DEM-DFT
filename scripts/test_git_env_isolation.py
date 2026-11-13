@@ -36,6 +36,12 @@ stash · 객체 목록.
       같은 셸 꼴 (`run_contract.GIT_DROP_SH` 글자 그대로 · 자리 = 첫 단계 · 첫 git 앞) · 그 셸 꼴을 bash 로 돌린 뒤 남는 GIT_ 이름 = 파이썬 규칙 (b)
       `check_review_findings.py --selftest` (매달린 커밋 commit-tree = 쓰기) — 적대 환경 넷에서 V 그대로 · 그 커밋은 자기 저장소 (일회용 사본 F) 에
       (c) `ca_s0_census._code_info` (S0 보고 git_head · git_dirty) — 적대 = 깨끗 · V 그대로
+  G7f–h ★ 11-13 Codex 반박 1/2 RCPX-02 · §3 — 고정물 git 의 남은 주입 셋: (f) 부르는 쪽 GIT_TEMPLATE_DIR (훅 든 틀) → selftest · 도우미 다섯 훅 0 회 ·
+      고정물 GIT_TEMPLATE_DIR = 빈 전용 틀 (g) 고정물 저장소 .git/hooks 에 훅을 넣어도 안 돈다 (core.hooksPath = 빈 전용 폴더 · 부르는 쪽
+      GIT_CONFIG_PARAMETERS 는 이 값으로 바뀐다) (h) 부르는 쪽 GIT_QUARANTINE_PATH (pre-receive 꼴) → 도우미 commit rc 0
+  G9  ★ 11-13 Codex 반박 1/2 §3 — 봉인용 git 객체 · 이력: (a) 바꿔치기 객체 (refs/replace · GIT_REPLACE_REF_BASE) 가 있어도 계획 출처 대조 · dirty ·
+      code_sha · S0 git show 가 원래 객체를 읽는다 (GIT_NO_REPLACE_OBJECTS=1) (b) 깨끗한 기준 (c) graft · shallow (GIT_GRAFT_FILE · 없는 파일 포함 ·
+      GIT_SHALLOW_FILE · info/grafts · shallow 저장소) = 계획 출처 · 원장 조상 대조 · S0 단계 2 관문이 사유와 함께 닫는다 ('unshallow 하라')
 ⚠ 고치기 전 판 = V 에 커밋 · index · 객체가 생기거나 V 의 값을 읽는다 (실패를 기록) — 그 V 는 이 시험이 만든 일회용이다.
 
   python3 scripts/test_git_env_isolation.py
@@ -182,6 +188,10 @@ DROP_EXPECT = ('GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTO
 DROP_EXPECT_PREFIX = ('GIT_CONFIG_KEY_', 'GIT_CONFIG_VALUE_')
 
 
+#: ★ 11-13 (Codex 반박 1/2 §3) — git_env 가 늘 넣는 값 (대체 객체 끔 · 시험 쪽 기준 글자)
+SET_EXPECT = {'GIT_NO_REPLACE_OBJECTS': '1'}
+
+
 def dropped(k):
     return k in DROP_EXPECT or k.startswith(DROP_EXPECT_PREFIX)
 
@@ -208,9 +218,11 @@ def g1():
     dflt = fn()
     chk('G1 git_env(사전) = 저장소 위치 · 색인 · 객체 여덟 + 설정 주입 (CONFIG_PARAMETERS · CONFIG_COUNT · CONFIG_KEY_<n> · CONFIG_VALUE_<n>) 만 뺀 새 사전 · '
         '격리 변수 (CEILING · NOSYSTEM · GLOBAL) · 그 밖 GIT_ (CONFIG_SYSTEM · DISCOVERY · 신원 · 편집기 · 실행 자리 · 인증서 · 프롬프트 · 추적) · GIT_ 아닌 '
-        '이름 그대로 · 넘긴 사전 그대로 · drop_git_env(사전) = 제자리 지움 + 지운 이름 (정렬) · git_env() = os.environ 기준 · os.environ 그대로',
-        out == keep and base == snap and out is not base and e2 == keep and removed == sorted(gone)
-        and dflt == {k: v for k, v in os.environ.items() if not dropped(k)} and dict(os.environ) == os_before,
+        '이름 그대로 · 넘긴 사전 그대로 · drop_git_env(사전) = 제자리 지움 + 지운 이름 (정렬) · git_env() = os.environ 기준 · os.environ 그대로 · ★ 11-13 '
+        'git_env 는 GIT_NO_REPLACE_OBJECTS=1 을 늘 넣는다 (부르는 쪽 값 0 도 1 로 · 대체 객체 끔 §3 · drop_git_env 는 넣지 않는다)',
+        out == dict(keep, **SET_EXPECT) and base == snap and out is not base and e2 == keep and removed == sorted(gone)
+        and dflt == dict({k: v for k, v in os.environ.items() if not dropped(k)}, **SET_EXPECT) and dict(os.environ) == os_before
+        and fn(dict(base, GIT_NO_REPLACE_OBJECTS='0')).get('GIT_NO_REPLACE_OBJECTS') == '1',
         (sorted(set(keep) ^ set(out or {})), removed))
 
 
@@ -782,9 +794,11 @@ def g9():
         c3 = gn(led, 'rev-parse', 'HEAD').strip()
         return led, c1, d_, c3
     hres = {}
-    for form in ('clean', 'GIT_SHALLOW_FILE', 'GIT_GRAFT_FILE', 'info/grafts', 'shallow clone'):
+    for form in ('clean', 'GIT_SHALLOW_FILE', 'GIT_GRAFT_FILE', 'GIT_GRAFT_FILE (없는 파일)', 'info/grafts', 'shallow clone'):
         led, c1, d_, c3 = make_l('g9_led_' + str(len(hres)))
         env = dict(CLEAN, TMPDIR=TD)
+        if form == 'GIT_GRAFT_FILE (없는 파일)':                    # env 가 있기만 해도 닫힘 (값 무관 · 겹 방어 판별 — git 경로 검사로는 못 본다)
+            env['GIT_GRAFT_FILE'] = os.path.join(TD, 'g9_no_such_graft')
         if form == 'GIT_SHALLOW_FILE':
             q = os.path.join(TD, f'g9_shallow_{len(hres)}')
             with open(q, 'w') as fh:
@@ -812,12 +826,13 @@ def g9():
     chk('G9b 기준 — 깨끗한 원장 저장소: 원장 역사 = 줄 바꿈 사유 (graft · shallow 낱말 없음) · 저장소 꼴 문제 없음 · 곁가지 d 는 조상 아님 · S0 단계 2 관문 = 조상 아님 '
         '사유 (판별이 선다)', ok_c, hres['clean'])
     bad_h = {}
-    for form in ('GIT_SHALLOW_FILE', 'GIT_GRAFT_FILE', 'info/grafts', 'shallow clone'):
+    for form in ('GIT_SHALLOW_FILE', 'GIT_GRAFT_FILE', 'GIT_GRAFT_FILE (없는 파일)', 'info/grafts', 'shallow clone'):
         val, rc, err = hres[form]
         v = val or {}
         if not (rc == 0 and g9_hist_reason(v.get('hist')) and g9_hist_reason(v.get('repo')) and v.get('anc') is False and g9_hist_reason(v.get('s0'))):
             bad_h[form] = (rc, v, err[-160:])
-    chk('G9c graft · shallow 가 걸린 이력 — GIT_SHALLOW_FILE (HEAD 만) · GIT_GRAFT_FILE (c3 의 부모 = 곁가지) · .git/info/grafts · 실제 얕은 복제 넷 모두: 원장 역사 = '
+    chk('G9c graft · shallow 가 걸린 이력 — GIT_SHALLOW_FILE (HEAD 만) · GIT_GRAFT_FILE (c3 의 부모 = 곁가지) · GIT_GRAFT_FILE (없는 파일 · env 만으로 닫힘) · '
+        '.git/info/grafts (c3 = 뿌리) · 실제 얕은 복제 다섯 모두: 원장 역사 = '
         'graft · shallow 사유 (unshallow 안내 · 잘린 역사를 통과시키지 않는다) · 원장 저장소 꼴 = 같은 사유 · 곁가지 조상 대조 = False · S0 단계 2 관문 = 같은 사유 '
         '(닫힘 · 고치기 전 = 잘린 역사 통과 · 곁가지가 조상)', not bad_h, bad_h)
 
@@ -884,8 +899,9 @@ def g8():
         want = sorted(k for k in synth if not dropped(k))
         chk('G8a 셸 꼴 (`run_contract.GIT_DROP_SH`) 이 check_all.sh · check_kgy_py38.sh 머리 (첫 단계 앞) · 러너 기각 영수증 code_sha 줄 · S0 블록 heredoc '
             '머리 (첫 git 앞) 에 같은 글자로 한 번씩 · bash 로 돌린 뒤 남는 이름 = 파이썬 규칙 (격리 변수 · 신원 · 실행 자리 · GIT_ 아닌 이름은 남고 저장소 '
-            '고르는 이름 · 설정 주입은 사라짐) = `git_env` 결과',
-            not probs and r.returncode == 0 and left == want and sorted(RC.git_env(synth)) == want, (probs, r.returncode, left, want, (r.stderr or '')[-160:]))
+            '고르는 이름 · 설정 주입은 사라짐) = `git_env` 결과 (★ 11-13 — git_env 가 더 넣는 GIT_NO_REPLACE_OBJECTS=1 빼고 · 셸 꼴은 이름 지우기만 = 한정)',
+            not probs and r.returncode == 0 and left == want and sorted(k for k in RC.git_env(synth) if k not in SET_EXPECT) == want
+            and all(RC.git_env(synth).get(k) == v for k, v in SET_EXPECT.items()), (probs, r.returncode, left, want, (r.stderr or '')[-160:]))
     #  (b) check_review_findings --selftest — 매달린 커밋 (commit-tree = 쓰기) 이 자기 저장소 (일회용 사본 F) 에 · V 그대로
     src = {}
     for rel in ('scripts/check_review_findings.py', 'scripts/run_contract.py'):

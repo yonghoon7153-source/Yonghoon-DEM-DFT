@@ -1474,11 +1474,60 @@ def git_drop_name(k):
     return k in GIT_DROP_NAMES or k.startswith(GIT_DROP_PREFIXES)
 
 
+#: ★ 11-13 (Codex 반박 1/2 §3 · 1저자 "권고대로") — git_env 가 늘 넣는 값: 대체 객체 (replace refs · `GIT_REPLACE_REF_BASE` · 기본 refs/replace/<A>) 를
+#  따르지 않는다.  판정문 반례: F5 `plan_commit_problem(A, …, sha(B))` 가 A→B 대체 아래 B 바이트를 받고 · `git_identity` · payload `_code_sha` 의 dirty 가
+#  사라지고 · S0 `_git show` 가 B blob 을 돌려줬다 (적대 env 없이 기본 refs/replace 만으로도) — 변수 하나를 지우는 것으로는 부족하다 → 명시적으로 끈다.
+#  셸 꼴 `GIT_DROP_SH` 은 이름 지우기만 (게이트 · kgy 묶음 · 러너 · 등록 S0 블록 글자 그대로 · 그 셸 git 읽기 = 기록 · 한정 = 묶음 README).
+GIT_SET_ENV = (('GIT_NO_REPLACE_OBJECTS', '1'),)
+#: ★ 11-13 (§3) — 이력을 바꾸는 env (graft · shallow 파일) — 이력 읽기 (`git_history_problem`) 는 있으면 닫힌다 (지우지 않는다 · 사유를 낸다)
+GIT_HISTORY_ENV = ('GIT_GRAFT_FILE', 'GIT_SHALLOW_FILE')
+
+
 def git_env(env=None):
-    """git 을 부를 환경 — env (없으면 os.environ) 에서 지울 이름 (`git_drop_name`) 을 뺀 **새** 사전 (넘긴 사전 · os.environ 은 그대로)."""
+    """git 을 부를 환경 — env (없으면 os.environ) 에서 지울 이름 (`git_drop_name`) 을 뺀 **새** 사전 + `GIT_SET_ENV` (★ 11-13 · 대체 객체 끔) (넘긴 사전 ·
+    os.environ 은 그대로)."""
     import os as _os
     src = _os.environ if env is None else env
-    return {k: v for k, v in src.items() if not git_drop_name(k)}
+    out = {k: v for k, v in src.items() if not git_drop_name(k)}
+    out.update(GIT_SET_ENV)
+    return out
+
+
+def git_history_problem(repo, env=None):
+    """★ 11-13 (Codex 반박 1/2 §3 · 1저자 "권고대로") 봉인용 **이력** 읽기 (원장 역사 · 첫 부모 · 조상 대조 · S0 단계 2 조상 관문) 앞 — graft · shallow 가
+    걸린 이력이면 사유 (닫힘) | None.  본다: 부르는 쪽 env 의 GIT_GRAFT_FILE · GIT_SHALLOW_FILE (있으면 값과 무관 — 빈 값도 shallow 판정을 바꾼다) ·
+    `git rev-parse --is-shallow-repository` (= true 면 닫힘 · 못 읽음 = 미확인 = 닫힘) · `git rev-parse --git-path info/grafts` 가 가리키는 파일 (있으면 닫힘).
+    판정문 반례: HEAD 만 담은 shallow 파일 · graft 파일 아래 원장 역사 대조가 잘린 역사를 전체 역사로 통과시켰다 (줄 지우기 = None) · graft 가 곁가지를
+    조상으로 만들었다.  ⚠ 현장 저장소가 얕은 복제면 이 관문에서 멈춘다 → `git fetch --unshallow` 뒤 다시 (현장 확인 필요 · 묶음 README)."""
+    import os as _os
+    import subprocess as _sp
+    e = git_env(env)
+    bad = [k for k in GIT_HISTORY_ENV if k in e]
+    if bad:
+        return (f'git 이력 = graft · shallow 환경 ({", ".join(bad)}) 아래 — 잘린 · 바뀐 역사를 봉인 대조에 쓰지 않는다 (그 변수를 지우고 다시 · 얕은 '
+                f'저장소면 git fetch --unshallow)')
+    try:
+        r = _sp.run(['git', '-C', str(repo), 'rev-parse', '--is-shallow-repository'], capture_output=True, text=True, timeout=60, env=e)
+    except (OSError, _sp.SubprocessError) as x:
+        return f'git 이력 꼴 (shallow 여부) 을 못 읽는다 ({type(x).__name__}) — 미확인 = 닫힘 (shallow · graft 확인 뒤 다시)'
+    out = (r.stdout or '').strip()
+    if r.returncode != 0 or out not in ('true', 'false'):
+        return f'git 이력 꼴 (shallow 여부) 을 못 읽는다 (rc {r.returncode} · {out[:20]!r}) — 미확인 = 닫힘 (shallow · graft 확인 뒤 다시)'
+    if out == 'true':
+        return f'git 저장소 {repo} 가 얕은 (shallow) 복제다 — 잘린 역사로 봉인 대조를 하지 않는다 · git fetch --unshallow 뒤 다시 (unshallow)'
+    try:
+        r = _sp.run(['git', '-C', str(repo), 'rev-parse', '--git-path', 'info/grafts'], capture_output=True, text=True, timeout=60, env=e)
+    except (OSError, _sp.SubprocessError) as x:
+        return f'git graft 파일 자리를 못 읽는다 ({type(x).__name__}) — 미확인 = 닫힘'
+    gp = (r.stdout or '').strip()
+    if r.returncode != 0 or not gp:
+        return f'git graft 파일 자리를 못 읽는다 (rc {r.returncode}) — 미확인 = 닫힘'
+    if not _os.path.isabs(gp):
+        gp = _os.path.join(str(repo), gp)
+    if _os.path.lexists(gp):
+        return (f'git graft 파일이 있다 ({_os.path.basename(gp)}) — graft 가 바꾼 역사로 봉인 대조를 하지 않는다 (graft 를 지우거나 git replace --convert-graft-file '
+                f'뒤 · 대체 객체도 끈 채로 다시)')
+    return None
 
 
 def drop_git_env(env=None):
@@ -1499,20 +1548,29 @@ def git_fixture_env(env=None):
     """★ 3 회차 (재확인 2 RCP3-04) — 시험 고정물 · selftest 임시 저장소를 **쓰는** git 의 환경 = `git_env(env)` + 전역 · 시스템 설정 끊기:
     GIT_CONFIG_NOSYSTEM=1 · GIT_CONFIG_GLOBAL=/dev/null · HOME = 이 프로세스의 빈 임시 폴더 (끝날 때 지운다 · 옛 git 은 GIT_CONFIG_GLOBAL 을 모른다) ·
     XDG_CONFIG_HOME 뺌 → 부르는 쪽의 core.hooksPath · 훅 · init.templateDir · 전역 excludes · commit.gpgsign 이 고정물 commit 에서 돌지 않는다.
+    ★ 11-13 (Codex 반박 1/2 RCPX-02 · §3) — 그래도 남던 길을 막는다: GIT_TEMPLATE_DIR = 시험 전용 빈 private 폴더 (부르는 쪽 template 의 훅이 git init 에
+    복사돼 고정물 commit 에서 돌았다) · core.hooksPath = 시험 전용 빈 폴더 (GIT_CONFIG_PARAMETERS 한 줄 · 고정물 저장소 .git/hooks 의 훅도 돌지 않는다 ·
+    부르는 쪽 설정 주입은 git_env 가 이미 지웠다) · GIT_QUARANTINE_PATH 뺌 (pre-receive 훅 안 꼴 = 고정물 ref 갱신 거부 rc 128 · 거짓 멈춤).
+    격리 변수 (CEILING · NOSYSTEM · GLOBAL) 는 그대로 · `safe.directory=*` 는 쓰지 않는다.
     ⚠ 생산 git (payload · 사슬 · 원장) 은 이것을 쓰지 않는다 — 부르는 쪽 설정 (천장 · 전역 설정 끄기 포함) 을 따른다."""
     import os as _os
     e = git_env(env)
     e['GIT_CONFIG_NOSYSTEM'] = '1'
     e['GIT_CONFIG_GLOBAL'] = _os.devnull
     e.pop('XDG_CONFIG_HOME', None)
-    if not _FIXTURE_HOME or not _os.path.isdir(_FIXTURE_HOME[0]):
+    e.pop('GIT_QUARANTINE_PATH', None)
+    if not _FIXTURE_HOME or not all(_os.path.isdir(x) for x in _FIXTURE_HOME):
         import atexit
         import shutil
         import tempfile
-        d = tempfile.mkdtemp(prefix='git_fixture_home_')
-        _FIXTURE_HOME[:] = [d]
-        atexit.register(shutil.rmtree, d, True)
-    e['HOME'] = _FIXTURE_HOME[0]
+        root = tempfile.mkdtemp(prefix='git_fixture_')
+        dirs = [_os.path.join(root, x) for x in ('home', 'template', 'hooks')]
+        for x in dirs:
+            _os.mkdir(x, 0o700)
+        _FIXTURE_HOME[:] = dirs
+        atexit.register(shutil.rmtree, root, True)
+    e['HOME'], e['GIT_TEMPLATE_DIR'] = _FIXTURE_HOME[0], _FIXTURE_HOME[1]
+    e['GIT_CONFIG_PARAMETERS'] = "'core.hookspath=" + _FIXTURE_HOME[2].replace("'", "'\\''") + "'"     # 옛 꼴 ('key=value') = 옛 git 도 읽는다
     return e
 
 
