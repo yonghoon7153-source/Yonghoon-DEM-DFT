@@ -43,7 +43,9 @@
 | `20b93e4b6` | 고침 — ⑥ 시도 3 · 4 (감시 셸 · 판독기 · 원장 §3 줄 · 준비 README) + 시험 보강 (T30c 사유 글 · F22c 14 꼴 · 같은 변이 고침) |
 | `163246c5b` | 시험 먼저 — ⑥ 판독기 audit 열쇠 ↔ 저장본 파일 이름 대조 (같은 부류 보강 · T30c 23 꼴) |
 | `137f91df5` | 고침 — ⑥ 판독기 열쇠 ↔ 파일 이름 대조 (다르면 rc 4) |
-| (이 README · 원장 `docs/reviews/findings.json` RCPX-01–06 · SELF-180 · 181) | 이 묶음의 마지막 두 커밋 |
+| `4aca9ff04` | 기록 — 이 README (첫 판) |
+| `c9d0cdd9e` | 원장 — `docs/reviews/findings.json` RCPX-01–06 · SELF-180 · SELF-181 (claimed_fixed) |
+| (이 README 끝 판 · 다음 커밋) | 변이 MW 끝 (22/22) · kgy 판 18 묶음 · 변이 문법 확인 |
 
 ## 3. 변이 (고친 가드마다 · 작업 트리에서 한 군데 바꾸고 해당 시험을 돌린 뒤 되돌림)
 
@@ -54,7 +56,9 @@
 | 조립 비교 (MK) | 11/11 | MK-11 (조기 반환 null 거부 뺌) 첫 회 생존 → K5 사유 낱말을 좁혀 잡힘 |
 | Q11 하네스 · 블록 셸 (MQ) | 16/16 | — |
 | ⑥ 판독기 (시험 안 M 묶음 · 새 14 = 시도 3 · 4 13 + 열쇠 ↔ 파일 이름 1) | 14/14 | "JSON 아닌 audit 곁 파일" 의 `incomplete` 줄만 빼는 변이 = 관찰상 같은 변이 (상태 대조가 같은 rc 4 를 낸다) → 변이를 사유 글까지 빼는 꼴로 바꾸고 T30c 가 23 꼴마다 사유 글을 본다 |
-| ⑥ 감시 셸 (MW · 시험 묶음 F) | §3-1 | — |
+| ⑥ 감시 셸 (MW · 시험 묶음 F) | 22/22 (§3-1) | 첫 꼴 MW-18 · 20 = bash 문법 오류 (가드를 보지 않음) → 문법 유지 꼴 18b · 20b 로 다시 = 잡힘 |
+
+변이 꼴의 문법 확인 (뒤에 한 번 더 · 11-13): Python 변이 = `compile` 통과 (M1 8 · M2 11 · MK 11 · ⑥ 판독기 14) · 셸 변이 = `bash -n` rc 0 (M1-09 · MQ 셸 5 · MW 20 + 18b · 20b) · Q11 하네스 변이 11 = 블록 heredoc 안 하네스 `compile` 통과 · 잡은 시험 = 그 가드의 뜻 시험 (G8h · i · j · k 등 · md5 관문 G8b 만으로 잡힌 것 없음).  문법 오류였던 것 = MW-18 · 20 첫 꼴 둘뿐.
 
 ### 3-1. ⑥ 감시 셸 변이 (MW)
 
@@ -79,8 +83,14 @@
 | MW-15 러너에 CJUNC_STORE 안 줌 | F22a | 예 |
 | MW-16 저장본 폴더 안 만듦 | F22a | 예 |
 | MW-17 command.txt CJUNC_STORE 홈 접기 뺌 | F22a | 예 |
+| MW-18b meta attempt3_pin · code_same 뺌 (문법 유지 꼴) | F22b | 예 |
+| MW-19 끝 목록 안 잼 | F22a (F22b · F22c 도) | 예 |
+| MW-20b 시도 3 meta attempt2_pin 뺌 (문법 유지 꼴) | F22a | 예 |
+| MW-21 시도 3 한도 짝 30000 | F22a (F22b · F22c 도) | 예 |
+| MW-22 앞 번호 = 시도 N−1 대신 시도 1 | F22b (F22c · F22d 도) | 예 |
 
-- 17/17 잡힘 (11-13 06:30–07:05 UTC).  07:05 UTC 컨테이너 재시작으로 MW-18 이 도중에 끊겼다 (사본의 감시 셸은 남은 백업으로 되돌려 리포 판과 바이트 같음 확인) → MW-18–22 를 같은 명령 · 새 출력으로 다시 돌림 = 아래 줄 (다음 커밋에서 채운다).
+- **22/22 잡힘.**  첫 묶음 = MW-01–17 (06:30–07:05 UTC) · 07:05 UTC 컨테이너 재시작으로 MW-18 이 도중에 끊겼다 (사본의 감시 셸은 남은 백업으로 되돌려 리포 판과 바이트 같음 확인) → MW-18–22 를 같은 명령 · 새 출력으로 다시 돌렸다.
+- 변이 MW-18 · MW-20 의 첫 꼴 (`if … then` 몸의 echo 줄을 통째로 빼기) 은 빈 `then … fi` = bash 문법 오류였다 (`bash -n` rc 2 · F 33 개 전부 실패 = 가드를 본 것이 아니다) → 변이로 세지 않고 몸을 `:` 로 바꾼 꼴 (18b · 20b · `bash -n` rc 0) 로 다시 돌렸다 → 그 시험 하나만 실패 (F22b · F22a).  나머지 20 변이는 `bash -n` rc 0 (돌리기 전 확인).
 
 ### 3-2. 판정문 반례 다시 돌림 (Codex 탐침 원본 · 고친 트리 `scripts/` · Python 3.11 · 이 컨테이너)
 
@@ -167,7 +177,7 @@
 - RCPX-03: 실제 두 기계 조립 · cuSPARSE 조립 바이트는 재지 않았다 · 비교 도구는 기록 꼴을 정할 뿐.
 - §3: Python 봉인 읽기만 `GIT_NO_REPLACE_OBJECTS` 를 건다 · 셸 GIT_DROP_SH 자리 (§6 표) 는 그대로 · lazy fetch (부분 복제) 는 막지 않는다 (내용 sha 대조가 지킨다).
 - ⑥ 시도 3 · 4: 한도에 닿아 팔이 거부되면 audit 곁 파일이 출력 폴더에 없어 판독기는 rc 4 (저장본 기록 없음) — 미수렴과 저장본 결함을 rc 로 가르지 못한다 (러너 로그 · 킷 런 폴더를 본다) · 시도 2 ↔ 3 · 4 는 코드 묶음이 달라 차이를 C 꼴 하나로 귀속하지 않는다.
-- kgy 판 (3.8) 전체 묶음 (`scripts/check_kgy_py38.sh` · 18 묶음): 첫 회 (06:30 UTC · 핀 `20b93e4b6` 위) = 12 묶음 통과 (run_contract 125/125 · step3_rint · ptfe_face_alpha 242 · carbon_junction 547/547 · ca_ext_b6 502 · ca_ext_runner 151 · rint_r_chain 506/506 · rint_r_chain_e2e 51 · rint_r_chain_e2e12 33 · step3_target_cert 264/264 · step3_conv_cert 29/29 · ca_s0_census 186) 뒤 재시작으로 끊김 → 끝 핀에서 다시 (다음 커밋에서 채운다).
+- kgy 판 (3.8) 전체 묶음 (`scripts/check_kgy_py38.sh` · 18 묶음): 첫 회 (06:30 UTC · `20b93e4b6` 위) = 12 묶음 통과 뒤 07:05 UTC 재시작으로 끊김 → 코드 끝 판 `137f91df5` 에서 처음부터 다시 = **18 묶음 통과 · rc 0 · 54 분** (run_contract 125/125 · step3_rint · ptfe_face_alpha 242 · carbon_junction 547/547 · ca_ext_b6 502 · ca_ext_runner 151 · rint_r_chain 506/506 · rint_r_chain_e2e 51 · rint_r_chain_e2e12 33 · step3_target_cert 264/264 · step3_conv_cert 29/29 · ca_s0_census 186 · probe6 357 · step3_gpu_precond 33/33 · cjunc_store 84 · cjunc_store_e2e 8 · git_env_isolation 25 · cjunc_asm_compare 7/7 · 모두 0 FAIL).  `137f91df5` 뒤 커밋 = README · 원장만 (코드 · 시험 변경 0).
 
 ## 8. 1저자가 정할 것
 
