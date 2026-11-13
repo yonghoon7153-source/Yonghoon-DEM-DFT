@@ -1,0 +1,28 @@
+{
+  "production_ast_identical": true,
+  "before_sha256": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+  "after_sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+  "test_sha256": "1ede720f62d942e0e808759d052a818010cad2a964bef56b159de6d1a88d6f37",
+  "methods": 11,
+  "red_failures": 15,
+  "red_errors": 0,
+  "green_failures": 0,
+  "green_errors": 0,
+  "mutations": [
+    {
+      "mutation": "remove_boundary",
+      "rc": 1
+    },
+    {
+      "mutation": "remove_escape",
+      "rc": 1
+    },
+    {
+      "mutation": "never_detect",
+      "rc": 1
+    }
+  ],
+  "full_selftest_run": false,
+  "physical_results": 0,
+  "operating_seals_changed": 0
+}
