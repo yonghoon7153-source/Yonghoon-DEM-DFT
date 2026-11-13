@@ -1,0 +1,367 @@
+{
+  "kind": "internal preparation checks, not external verdict",
+  "independent_source_only_review": true,
+  "independent_results_sha256": "89f55fd26441601033e03783f6db294e49fdc3d4c3652d3e917e2610894214c5",
+  "observations": [
+    {
+      "name": "source_Q14_S0_FINALPIN_DRAFT.txt",
+      "sha256": "ef5b8fc4ca0cb19b98252a65b50f88b8ee0797a44339d71e6ad051bc3c10d54d",
+      "md5": "ff18ab9426f2913e55b963c7c4a8bab6"
+    },
+    {
+      "name": "source_Q14_Q11_FINALPIN_DRAFT.txt",
+      "sha256": "34747fbcaab9af010820f50e8121c94307d11312ec15ba42b0bbfe6d16d6e7fd",
+      "md5": "9a969d6d024e266b19c52c797872fcc8"
+    },
+    {
+      "name": "source_s0_store_probe.py",
+      "sha256": "6dd477748d65b58297a4760638639809f31a177165c4fc4c1cecc9ea71169263",
+      "md5": "86e9bf4b4cfb79fa6e4a63d69cb414b0"
+    },
+    {
+      "name": "source_s0_monitor.sh",
+      "sha256": "01a1b0fbabe64f357a2d59e1cbead6b196f7ad5e0fc37514f083ace828088c3a",
+      "md5": "13b1babd690950db9c758506bb35d951"
+    },
+    {
+      "name": "source_s0_monitor_before.sh",
+      "sha256": "81118eadd8c86db0fc5aae1dbda2aaf74f58ae1deccf94a30092b108469eb5fb",
+      "md5": "ff385531653c294089ce58f08511b6ad"
+    },
+    {
+      "name": "source_q11_gpu_check.py",
+      "sha256": "07ac60d4d3dd1021603632621f6c9e5664a1741a7e4de45ab1b6b01161640c43",
+      "md5": "4eb8a6c3ed2da1039e6b0988f63db906"
+    },
+    {
+      "name": "s0_original",
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "sha256": "38f5d7487aead37e3582ef6e6ad7ca6063736ba074b76cd828ea0c031b9bd6a4"
+    },
+    {
+      "name": "q11_original",
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "sha256": "569c9f0b5a9b2041b2a5a8cd427580dd516d3d8927062bfe26516a8353c960ac"
+    },
+    {
+      "name": "S0_body_hash",
+      "expected": "64c6f72c28764399e497f11ce52d6e52",
+      "actual": "64c6f72c28764399e497f11ce52d6e52"
+    },
+    {
+      "name": "S0_syntax",
+      "rc": 0
+    },
+    {
+      "name": "S0_no_go",
+      "rc": 2
+    },
+    {
+      "name": "S0_corrupted_body",
+      "rc": 2
+    },
+    {
+      "name": "Q11_body_hash",
+      "expected": "f7e12bc584e1ff8c46d3fc643ba57e73",
+      "actual": "f7e12bc584e1ff8c46d3fc643ba57e73"
+    },
+    {
+      "name": "Q11_syntax",
+      "rc": 0
+    },
+    {
+      "name": "Q11_no_go",
+      "rc": 2
+    },
+    {
+      "name": "Q11_corrupted_body",
+      "rc": 2
+    },
+    {
+      "name": "s0_monitor.sh_syntax_only",
+      "rc": 0
+    },
+    {
+      "name": "s0_monitor_before.sh_syntax_only",
+      "rc": 0
+    },
+    {
+      "name": "source_equivalence",
+      "embedded_helpers_match": true,
+      "pinned_probe_identical": true,
+      "pinned_q11_identical": true,
+      "pinned_monitor_matches_before": true
+    },
+    {
+      "name": "isolated_unguarded_child_launch",
+      "rc": 0
+    },
+    {
+      "name": "child_bypass_observation",
+      "go_absent": true,
+      "pin": "wrong",
+      "nonexistent_unverified_worktree_reached_mock": true,
+      "old_run_log_overwritten": true,
+      "actual_monitor_or_python_executed": false
+    },
+    {
+      "name": "consume_valid_internal_records",
+      "result": {
+        "identical": true,
+        "converged": true,
+        "backend_ok": true,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": true,
+        "why": []
+      }
+    },
+    {
+      "name": "consume_identical_but_unconverged",
+      "result": {
+        "identical": true,
+        "converged": false,
+        "backend_ok": true,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "converged false: main/resolve runs are not all info 0 with finite solutions (equality is not convergence)"
+        ]
+      }
+    },
+    {
+      "name": "consume_nonfinite",
+      "result": {
+        "identical": true,
+        "converged": false,
+        "backend_ok": true,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "converged false: main/resolve runs are not all info 0 with finite solutions (equality is not convergence)"
+        ]
+      }
+    },
+    {
+      "name": "consume_mismatched_pair",
+      "result": {
+        "identical": false,
+        "converged": true,
+        "backend_ok": true,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "identical false: the five pairs are not all bit-identical (solution bytes, info, iterations, LAST_BACKEND)"
+        ]
+      }
+    },
+    {
+      "name": "consume_fallback",
+      "result": {
+        "identical": true,
+        "converged": true,
+        "backend_ok": false,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "backend_ok false: a run did not use gpu + jacobi without fallback"
+        ]
+      }
+    },
+    {
+      "name": "consume_wrong_backend_used",
+      "result": {
+        "identical": true,
+        "converged": true,
+        "backend_ok": false,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "backend_ok false: a run did not use gpu + jacobi without fallback"
+        ]
+      }
+    },
+    {
+      "name": "consume_short_iterations_wrong",
+      "result": {
+        "identical": true,
+        "converged": true,
+        "backend_ok": true,
+        "short_iters_ok": false,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "short_iters_ok false: a fixed-iteration run did not run exactly 200 iterations"
+        ]
+      }
+    },
+    {
+      "name": "consume_missing_pair",
+      "result": {
+        "identical": false,
+        "converged": true,
+        "backend_ok": true,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "identical false: the five pairs are not all bit-identical (solution bytes, info, iterations, LAST_BACKEND)"
+        ]
+      }
+    },
+    {
+      "name": "consume_cpu_flow_never_adopt",
+      "result": {
+        "identical": true,
+        "converged": true,
+        "backend_ok": false,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "backend_ok false: a run did not use cpu + jacobi without fallback",
+          "backend numpy: small CPU flow check, never the GPU check"
+        ]
+      }
+    },
+    {
+      "name": "consume_live_source_detected",
+      "result": {
+        "identical": true,
+        "converged": true,
+        "backend_ok": true,
+        "short_iters_ok": true,
+        "source_ok": false,
+        "adopt": false,
+        "why": [
+          "source_ok false: a project module was loaded from the live repository (--forbid-dir) during the run"
+        ]
+      }
+    },
+    {
+      "name": "mutation_remove_convergence_requirement",
+      "false_adoption_reproduced": true
+    }
+  ],
+  "isolated_history_guard": {
+    "source_body_sha256": "867357dcd382462c9549832a7fc981927ea1d5c4f4698306c1738d8bc3441434",
+    "isolated_guard_sha256": "5ba71d09d0a7ccd478edf1c796848696a3789b751aa8e9f9a73ca81969cf6fd7",
+    "cases": [
+      {
+        "name": "clean",
+        "rc": 0,
+        "expected": 0,
+        "passed": true
+      },
+      {
+        "name": "shallow",
+        "rc": 2,
+        "expected": 2,
+        "passed": true
+      },
+      {
+        "name": "replace",
+        "rc": 2,
+        "expected": 2,
+        "passed": true
+      },
+      {
+        "name": "graft_file",
+        "rc": 2,
+        "expected": 2,
+        "passed": true
+      },
+      {
+        "name": "git_read_error",
+        "rc": 2,
+        "expected": 2,
+        "passed": true
+      }
+    ],
+    "real_git_or_fetch_called": false,
+    "HOME_changed": false,
+    "monitor_or_solver_executed": false
+  },
+  "setup_interruption": {
+    "count": 1,
+    "reason": "MSYS failed to initialize under sandbox before any guard case ran; original stderr retained privately. Same guard cases then run with local MSYS startup permission.",
+    "target_cases_executed_in_interrupted_start": 0
+  },
+  "full_monitor_or_GO_body_executed": false,
+  "solver_or_GPU_or_field_executed": false,
+  "signals_executed": false,
+  "HOME_reassigned": false,
+  "scope_note": "No whole-script end-to-end field validation; known helper-only bypass documented, helpers are comparison evidence not supported entrypoints.",
+  "independent_supplementary": [
+    {
+      "name": "fresh_reject_old_file",
+      "rc": 2
+    },
+    {
+      "name": "fresh_reject_old_dir",
+      "rc": 2
+    },
+    {
+      "name": "fresh_reject_dangling",
+      "rc": 2
+    },
+    {
+      "name": "fresh_allow_absent",
+      "rc": 0
+    },
+    {
+      "name": "md5_reject_wrong",
+      "rc": 2
+    },
+    {
+      "name": "history_clean",
+      "rc": 0
+    },
+    {
+      "name": "history_unreadable",
+      "rc": 2
+    },
+    {
+      "name": "history_shallow",
+      "rc": 2
+    },
+    {
+      "name": "history_refs",
+      "rc": 2
+    },
+    {
+      "name": "history_refs_error",
+      "rc": 2
+    },
+    {
+      "name": "history_graft_error",
+      "rc": 2
+    },
+    {
+      "name": "history_existing_graft",
+      "rc": 2
+    },
+    {
+      "name": "CPU_correct_backend_still_no_adoption",
+      "result": {
+        "identical": true,
+        "converged": true,
+        "backend_ok": true,
+        "short_iters_ok": true,
+        "source_ok": true,
+        "adopt": false,
+        "why": [
+          "backend numpy: small CPU flow check, never the GPU check"
+        ],
+        "rule": "exact function, constant omitted from this auxiliary assertion"
+      }
+    }
+  ],
+  "counting_note": "Independent isolated gates12 and author history gates5 overlap; pure consume10, mutation1 and supplemental CPU case1 are separate observations, not summed as unique test methods.",
+  "independent_report_sha256": "6e9504e24894b6f8eb57c15e67ef647b917b9793f5c92b4afc0cefc02186f531"
+}

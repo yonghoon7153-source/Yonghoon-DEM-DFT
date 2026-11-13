@@ -1,0 +1,66 @@
+{
+  "files": [
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/ca_s0_census.py",
+      "sha256": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163",
+      "git_blob": "ffb219c23eba9894f80f422cfc1ca28ea476489e"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/cjunc_store.py",
+      "sha256": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f",
+      "git_blob": "3da981b4a5563cfaf6595c9961491a4dfde01c61"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/carbon_junction.py",
+      "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+      "git_blob": "12bd06bfc25f36eecb59b5d307de2e1595b29650"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/fibre_segment_raster.py",
+      "sha256": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0",
+      "git_blob": "c117c51152e85b55d23cd1425c4d8e5e25542928"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/mpm_webapp_payload.py",
+      "sha256": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a",
+      "git_blob": "ce27b386345ee71f298ccba6bdc4f5d8f9529008"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/step3_sigma.py",
+      "sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+      "git_blob": "59b58f02f64fbbcaaaa3256fc57557be6d842e72"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/se_material.py",
+      "sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+      "git_blob": "506caca0f8744ee89836a026685f0730ef478f94"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/ptfe_face_alpha.py",
+      "sha256": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e",
+      "git_blob": "28cc23b861dd33ddbbb21d3e1495086fef7ef3ee"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/test_rint_destination_audit.py",
+      "sha256": "c99b01e04c6d8ecf91206b41aaf224927ea13072c2c3ff491ec2a348fa4eedf8",
+      "git_blob": "0eb3edd3347a10dc877a47e7a557aa83c5aba059"
+    },
+    {
+      "pin": "11a7946748fa4da2cd8e691ef5f7abc02aac2a56",
+      "path": "scripts/step3_sigma.py",
+      "sha256": "8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec",
+      "git_blob": "9e60bb986629aa9d81df361c76d2c114dc92e652"
+    }
+  ],
+  "only_source_read": true,
+  "actual_result_read": false
+}
