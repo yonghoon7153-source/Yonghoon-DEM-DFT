@@ -443,5 +443,17 @@
   "블록_설명": "① 새 worktree $R/dft_src_v3 (대피 브랜치 끝 · HEAD 를 찍는다) ② 도구 · 실행기 sha256 ③ selftest 142/142 ④ 실행기 selftest 24 통과 · 0 실패 ⑤ 변이 도구 정적 검사 ⑥ 새 폴더 $R/s9_v3 에 prepare (8 단계를 md.traj 까지 다시 결속 · 단일점 입력 6 · GPU 안 씀) ⑦ reject --stage sp 시운전 (계획 다시 결속 · 출력이 아직 없으니 옮길 것 없음 — 대상 결속 경로가 실제 데이터에서 도는지) ⑧ 입력 지문 ⑨ GPU pw.x 파일 (7.4.1 경로 · 실행 안 함) ⑩ 지금 GPU (시작 안 함) — 하나라도 실패하면 거기서 멈추고 '⛔ 멈췄다' · 셸은 안 닫힌다 · 이 폴더가 비준 뒤 단일점 6 의 본 폴더다 (도구 판이 그대로면)",
   "다음": "gabia v3 검사 출력 → EH 프롬프트 (kb/reviews/codex_EH_prompt_b2o3_dft_stage9_v3_2026_11_13.md) §4 에 넣고 발송 → EH 회신 → 사용자 개정 5 비준 → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (gabia 에 다른 GPU 잡 없이)",
   "by": "agent · 2026-11-13"
+ },
+ "9단계_v3_검사_2026_11_13": {
+  "출처": "사용자 붙여넣기 2026-11-13 (gabia · 키 9단계_EG_회신_v3_2026_11_13 의 검사 블록 · 셸 위치 /data/work/wt_cascade_b2 — 경로는 전부 절대경로)",
+  "worktree": "$R/dft_src_v3 = df8ba73f2 (fetch → FETCH_HEAD · 328cf95b1..df8ba73f2 · 도구 · 실행기 내용은 f6b9d3a6 과 같다 — df8ba73f 는 런로그만) · b2o3_bo_dft.py sha256 f6105cfc… OK · run_force_check_scf.sh e2d6f728… OK",
+  "selftest_gabia": "도구 142/142 · 실행기 24 통과 · 0 실패 · 변이 도구 정적 검사 7/7",
+  "prepare_v3": "통과 — $R/s9_v3/dft_plan.json · 단일점 6 (k 3×2×1) · 8 단계 실제 데이터 (md.traj 포함) 다시 결속 · 가전자 Li 3 · B 3 · O 6 · P 5 · S 6 · Cl 7 · 고른 것 v1 · v2 · 로컬 회수본 계산과 같음 (sp_FB_1_cfg0040 · sp_FB_2_cfg0015 · sp_FP_1_cfg0015 · sp_FP_2_cfg0019 · sp_Ffree_1_cfg0039 · sp_Ffree_2_cfg0017)",
+  "reject_시운전 (sp)": "계획 다시 결속 (8 단계 실제 데이터) 통과 → '옮길 출력 없음' (출력이 아직 없다 — 누락이지 실패가 아니다) · EG P1-2 경로가 실제 데이터에서 돈다",
+  "입력_지문": "6 입력 모두 nosym · tot_charge 0.0 · nowf · K_POINTS automatic / 3 2 1 0 0 0 · sha256 앞 16: dft_plan.json 574f066b93416bc4 (v2 와 다름 — 계획에 도구 sha · 계약 qe_version 이 들어간다) · 입력 6 은 v2 와 바이트까지 같다 (834fbada · f5b7bcd2 · 93a54b64 · 03c0bbdd · 3ee0b4a9 · 0836ebf7 — v3 는 입력 쓰기를 안 바꿨다 · 로컬 재생성과도 6/6 같음)",
+  "GPU_pw.x": "/data/apps/qe-7.4.1-gpu/bin/pw.x → ../PW/src/pw.x (링크 · 실행 안 함 · 출력의 판 7.4.1 은 판독 때 잡마다 대조)",
+  "GPU (시작 안 함)": "여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음",
+  "다음": "EH 발송 (kb/reviews/codex_EH_prompt_b2o3_dft_stage9_v3_2026_11_13.md · §4 채움) → EH 회신 → 사용자 개정 5 비준 → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (T=$R/dft_src_v3 · C=$R/s9_v3 · gabia 에 다른 GPU 잡 없이)",
+  "by": "agent · 2026-11-13"
  }
 }
