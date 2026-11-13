@@ -1019,6 +1019,9 @@ def run(args):
                     elif store.get('status') != want:
                         incomplete = True
                         probs.append('store audit status is not %s for attempt %d (or the side file is missing)' % (want, att))
+                    elif store.get('file') != 'cjreg_%s.npz' % store.get('key'):
+                        incomplete = True
+                        probs.append('the store audit key does not match its store file name (cjreg_<key>.npz)')
                     elif not (isinstance(store.get('file'), str) and after.get(store['file']) == store.get('file_sha256')):
                         incomplete = True
                         probs.append('the store file of the audit is not in the store listing after the run with the same sha256')
