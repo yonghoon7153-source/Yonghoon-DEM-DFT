@@ -1,0 +1,14 @@
+{
+  "file": "codex_nsb_three_fixes_c5aa7bb527c5_review_delivery_20261114.zip",
+  "bytes": 1011617,
+  "sha256": "b03f4c693f063f9f2dafe5157d67cc735e9469235092967f5e4658f7747123af",
+  "files": 272,
+  "outer_hashes": 271,
+  "preserved_original_files": 269,
+  "inner_hashes": 268,
+  "snapshot_blobs": 24,
+  "crc_paths_duplicates_links": "PASS",
+  "candidate_changed": false,
+  "test_reexecution": false,
+  "result": "REVIEW_DELIVERY_ONLY_HOLD"
+}
