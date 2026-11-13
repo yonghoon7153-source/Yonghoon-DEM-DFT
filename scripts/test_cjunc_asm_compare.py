@@ -11,6 +11,8 @@
   K4  DOF 원 번호 목록이 다름 (나머지 같음) → dof_equal False · bytes_equal False · 한쪽만 실음 = 한정 사유 글
   K5  조립만 기록 (`run_contract.cjunc_graph_only_record`) — 조기 반환 (null) · 사유 있음 · main null · 빈 그래프 = 양성 근거 아님 · 정상 둘 = 가중 그래프
       같음까지만 (조립 바이트 같음은 말할 수 없다는 사유 글)
+  K6  칸 하나만 다른 기록 (반례 기록의 사본에서 RHS sha · indptr sha · 판 결합 gb sha 하나씩 바꿈) → 그 칸만 다름 · bytes_equal False · 주장 = 가중
+      그래프 같음만 (칸마다 대조가 실제로 일한다)
 ⚠ PASS = 비교 함수가 두 주장을 가른다는 증거 · 두 기계 실측 · 풀이 · σ 와 무관.
 
   python3 scripts/test_cjunc_asm_compare.py
@@ -98,9 +100,11 @@ def main():
            'main 지문 null': AC.assembly_record(o1, None, dof_ids=[0, 1]),
            '빈 그래프 지문': AC.assembly_record(o1, ef, dof_ids=[0, 1])}
     res3 = {k: AC.compare_assembly(r1, v) for k, v in bad.items()}
-    chk('K3 조립 미완료 · main 지문 null · 빈 그래프 지문 → 못 견줌 (comparable False · 칸 None · 주장 없음 · 사유 = 양성 근거 아님)',
+    word3 = {'조립 미완료 (조기 반환)': '조립 미완료', 'main 지문 null': 'main 그래프 지문이 없다', '빈 그래프 지문': '빈 그래프'}
+    chk('K3 조립 미완료 · main 지문 null · 빈 그래프 지문 → 못 견줌 (comparable False · 칸 None · 주장 없음 · 사유 = 그 꼴의 글 · 양성 근거 아님)',
         all(r['comparable'] is False and r['graph_equal'] is None and r['bytes_equal'] is None and r['claims'] == []
-            and any('양성 근거 아님' in w for w in r['why']) for r in res3.values()) and bad['조립 미완료 (조기 반환)']['complete'] is False
+            and any('양성 근거 아님' in w and word3[k] in w for w in r['why']) for k, r in res3.items())
+        and bad['조립 미완료 (조기 반환)']['complete'] is False
         and isinstance(ef, str) and len(ef) == 64, res3)
     c4 = AC.compare_assembly(r1, AC.assembly_record(o3, f3, dof_ids=[1, 0]))
     c5 = AC.compare_assembly(r1, AC.assembly_record(o3, f3))
@@ -123,10 +127,26 @@ def main():
              'main null': AC.graph_only_positive_problem(go({'rule': rule, 'main': None, 'lower': None, 'upper': None})),
              '빈 그래프': AC.graph_only_positive_problem(go({'rule': rule, 'main': ef, 'lower': None, 'upper': None}))}
     cg = AC.compare_graph_only(good, go({'rule': rule, 'main': f2, 'lower': None, 'upper': None}))
-    chk('K5 조립만 기록 — 조기 반환 (null) · 사유 있음 · main null · 빈 그래프 = 양성 근거 아님 (사유 글) · 정상 = 문제 없음 · 정상 둘 비교 = 가중 그래프 같음만 '
+    word5 = {'조기 반환 (null)': '조기 반환', '사유 있음': '조립 사유', 'main null': 'main 그래프 지문 null', '빈 그래프': '빈 그래프'}
+    chk('K5 조립만 기록 — 조기 반환 (null) · 사유 있음 · main null · 빈 그래프 = 양성 근거 아님 (그 꼴의 사유 글) · 정상 = 문제 없음 · 정상 둘 비교 = 가중 그래프 같음만 '
         '(조립 바이트 같음은 이 기록으로 말할 수 없다는 사유 글 · RCPX-03)',
-        all(isinstance(v, str) and v for v in probs.values()) and AC.graph_only_positive_problem(good) is None and cg['comparable']
+        all(isinstance(v, str) and word5[k] in v and '양성 근거 아님' in v for k, v in probs.items())
+        and AC.graph_only_positive_problem(good) is None and cg['comparable']
         and cg['graph_equal'] is True and cg['claims'] == [AC.CLAIM_GRAPH] and any('조립 바이트' in w for w in cg['why']), (probs, cg))
+    import copy
+    flips = {}
+    for nm, path in (('rhs', ('rhs',)), ('indptr', ('csr', 'indptr')), ('gb', ('dof', 'gb'))):
+        rx = copy.deepcopy(r1)
+        node = rx
+        for k in path:
+            node = node[k]
+        node['sha256'] = '0' * 64
+        flips[nm] = AC.compare_assembly(r1, rx)
+    chk('K6 칸 하나만 다른 기록 (RHS · CSR indptr · DOF 판 결합 gb 의 sha 하나씩) → 그 칸만 다름 · bytes_equal False · 주장 = 가중 그래프 같음만',
+        flips['rhs']['rhs_equal'] is False and flips['rhs']['csr_equal'] is True and flips['rhs']['dof_equal'] is True
+        and flips['indptr']['csr_equal'] is False and flips['indptr']['rhs_equal'] is True
+        and flips['gb']['dof_equal'] is False and flips['gb']['csr_equal'] is True
+        and all(v['bytes_equal'] is False and v['claims'] == [AC.CLAIM_GRAPH] for v in flips.values()), flips)
     print(f'\n== test_cjunc_asm_compare: {_ok}/{_ok + len(_fail)} PASS')
     if _fail:
         print('FAIL: ' + ' · '.join(_fail))

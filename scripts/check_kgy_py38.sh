@@ -3,7 +3,8 @@
 # 개발 · 게이트 (3.11) 에서만 돌던 코드가 kgy 에서 멈춘 일 (`SELF-132` · 08-16 · 08-25 에 이어 세 번째) 을 다시 막는다 — 1저자 10-24 Q2 (가).
 # 인터프리터 = $KGY_PY38 (기본 = `uv python find 3.8`) · 없거나 판이 다르면 실패한다 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh`.
 # 묶음 = S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 (실제 러너 · payload) · 12 단위 끝-끝 (11-11) · 증서 · ⑥ 탐침 (판독기 · 감시 셸 · 블록 · 11-10) · GPU 전처리 C 꼴 ·
-#   탄소 접합 원장 저장본 · 저장본 끝-끝 (11-12 · Q11 · Q2 코드 묶음 · 내부 반박 리뷰 RCP-02) · git 환경 격리 (11-12 2 회차 RCP2-06) — 증거
+#   탄소 접합 원장 저장본 · 저장본 끝-끝 (11-12 · Q11 · Q2 코드 묶음 · 내부 반박 리뷰 RCP-02) · git 환경 격리 (11-12 2 회차 RCP2-06) · 조립 비교 (11-13
+#   Codex 반박 1/2 RCPX-03) — 증거
 #   `docs/reviews/rint2_py38_compat_evidence_20261024/`.
 set -uo pipefail
 #  ★ 2026-11-12 3 회차 (Rint ② 코드 묶음 · 내부 반박 리뷰 재확인 2 RCP3-05 · 본 세션 결정) — 저장소 고르는 GIT_* · 설정 주입을 한 번 지운다 (git 훅 ·
@@ -68,5 +69,6 @@ run step3_gpu_precond scripts/test_step3_gpu_precond.py
 run cjunc_store scripts/test_cjunc_store.py
 run cjunc_store_e2e scripts/test_cjunc_store_e2e.py
 run git_env_isolation scripts/test_git_env_isolation.py
+run cjunc_asm_compare scripts/test_cjunc_asm_compare.py
 if [ "$fail" -ne 0 ]; then echo "✗ kgy 판 R 경로 시험 실패 (로그 $LOG)"; exit 1; fi
-echo "✓ kgy 판 R 경로 시험 17 묶음 통과"
+echo "✓ kgy 판 R 경로 시험 18 묶음 통과"

@@ -339,6 +339,9 @@ run 'cjunc_store_e2e (Rint ② Q2 저장본 사슬 끝-끝 · 켬 ↔ 끔 바이
 #    물려받지 않는가 — 이 시험이 만든 일회용 피해 저장소만 가리키는 적대 환경 셋을 자식 프로세스에만 (11-12 밤 사고 꼴 · 고치기 전 = 그 저장소에 커밋) ·
 #    11-12 실측 ≈ 7 s.
 run 'git_env_isolation (Rint ② 2 회차 RCP2-06 · git 환경 격리 · 일회용 저장소)' python3 scripts/test_git_env_isolation.py
+#  ★ 2026-11-13 (Rint ② Codex 반박 1/2 RCPX-03 · Q12 설계) — 두 기계 조립 비교 도구 (가중 그래프 같음 ↔ 조립 바이트 같음 · 판정문 반례 = 실제
+#    `_assemble` 병렬 간선 차례 · CSR 1 ulp) · 실제 실행 없음 · CPU · 수 초.
+run 'cjunc_asm_compare (Rint ② Codex 반박 1/2 RCPX-03 · Q12 조립 비교 설계 · 시험 먼저)' python3 scripts/test_cjunc_asm_compare.py
 #  ★ 2026-10-20 (Rint ② B6 · 설계 v1 §4-2 · §5-2 · §6 · §7 · 1저자 N1–N18 권고대로) — payload 의 탄소 접합 · SDCP 수정자 배선 · 조합 정책
 #    (face_alpha + cjunc = 거부 · face_alpha / cjunc + rtol = 허용) · 러너 다음 세대 손잡이 · 판정기 소비자 검사 (기본 끔 · 끄면 옛 경로 그대로):
 #    ca_ext_b6 = run_contract 등록 · payload 끝-끝 (고치기 전 1/50 · `--old-scripts DIR` = 끔 비트 대조 B) · 10-20 실측 50 s ·
@@ -384,8 +387,8 @@ run 'kg50_d3_cell_verdict   --selftest' python3 scripts/kg50_d3_cell_verdict.py 
 run 'kg50_q5_branches      --selftest' python3 scripts/kg50_q5_branches.py --selftest
 run 'kg50_q5_verdict       --selftest' python3 scripts/kg50_q5_verdict.py --selftest
 #  ★ 2026-10-24 (`SELF-132` · `SELF-133` · 1저자 Q2 (가)) — kgy 실행 환경 판 (Python 3.8 · numpy 1.24.4 · scipy 1.10.1 = kgy `~/dem-venv`) 에서
-#    R 경로 17 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 12 단위 끝-끝 (11-11) · 증서 · ⑥ 탐침 판독기 · 감시 셸 · 블록 = 11-10 P6R-10 · GPU 전처리 C 꼴 ·
-#    원장 저장본 · 저장본 끝-끝 = 11-12 RCP-02 · git 환경 격리 = 11-12 2 회차 RCP2-06).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세
+#    R 경로 18 묶음 (S0 · S1 · S2/S3 · 계약 · 사슬 · 끝-끝 · 12 단위 끝-끝 (11-11) · 증서 · ⑥ 탐침 판독기 · 감시 셸 · 블록 = 11-10 P6R-10 · GPU 전처리 C 꼴 ·
+#    원장 저장본 · 저장본 끝-끝 = 11-12 RCP-02 · git 환경 격리 = 11-12 2 회차 RCP2-06 · 조립 비교 = 11-13 RCPX-03).  3.11 에서만 돌던 코드가 kgy 에서 멈춘 일 (08-16 · 08-25 · 10-24 세
 #    번째) 을 막는다.
 #    인터프리터 없음 · 판 다름 = 실패 (건너뛰지 않는다) → `bash scripts/setup_kgy_py38.sh` (컨테이너 재시작 뒤 한 번) · 실측 ≈ 6–7 분 (10-24 · 13 묶음 때) ·
 #    11-12 더한 셋의 kgy 판 실측 = 전처리 ≈ 2 s · 저장본 64 s · 저장본 끝-끝 452 s.
