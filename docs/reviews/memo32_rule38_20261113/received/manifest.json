@@ -1,0 +1,64 @@
+{
+  "packages": [
+    {
+      "name": "codex_memo32_six_fixes_independent_review_9bbd365b2_20261113.zip",
+      "bytes": 3843050,
+      "sha256": "1f13669c1332e946217b77623a11f95a7fbacc026ac09e0b4e29ba1a19aa1581",
+      "members": 88,
+      "outer_checksums": 87,
+      "crc_paths_duplicates_links": "PASS"
+    },
+    {
+      "name": "ORIGINAL_INPUT.zip",
+      "bytes": 1043748,
+      "sha256": "69f8cf908e1017e8907c5ea1d7c78b261e70b7c16ec3dde0165eec9cd566852b",
+      "members": 39,
+      "outer_checksums": 38,
+      "crc_paths_duplicates_links": "PASS"
+    }
+  ],
+  "input_copy_matches_original_request": {
+    "files": 39,
+    "matched": 39,
+    "extra": 0
+  },
+  "selected": [
+    {
+      "zip_member": "FINAL_REVIEW_MEMO32_FIXES_9bbd365b2_20261113.md",
+      "repo_copy": "received/verdict.md.txt",
+      "original_sha256": "2cde178875f0354fed94839cb316f37b8fb387eacbd71cd15bccce3dd5bae0c0",
+      "copy_sha256": "73f97727843e8a929d50d6bbb06f57e71a5ded49145b98ad47e1be1155fb7a46",
+      "original_bytes": 15016,
+      "copy_bytes": 14888,
+      "transformation": "One public repository hyperlink target replaced by <PUBLIC_REPOSITORY_COMMIT_LINK>; other bytes unchanged. Original preserved in received ZIP."
+    },
+    {
+      "zip_member": "FINDINGS.json",
+      "repo_copy": "received/findings.json",
+      "original_sha256": "4b2cd20ec0f246bc28fdecac7e3b3ffea457b094e645884be4de852c20f54c88",
+      "copy_sha256": "4b2cd20ec0f246bc28fdecac7e3b3ffea457b094e645884be4de852c20f54c88",
+      "original_bytes": 1741,
+      "copy_bytes": 1741,
+      "transformation": "NONE"
+    },
+    {
+      "zip_member": "independent_probe.py",
+      "repo_copy": "received/independent_probe.py.txt",
+      "original_sha256": "9f9b748bdbf41e2152021d9c652d9ba5a4ee667e476efeae2c29db97a9b80fb3",
+      "copy_sha256": "9f9b748bdbf41e2152021d9c652d9ba5a4ee667e476efeae2c29db97a9b80fb3",
+      "original_bytes": 8688,
+      "copy_bytes": 8688,
+      "transformation": "NONE"
+    },
+    {
+      "zip_member": "MINIMAL_REPAIR_CHECK.json",
+      "repo_copy": "received/review_minimal_repair_check.json",
+      "original_sha256": "268079dd921aae5961f9d8c454c0ced75307155625ee60661fa411f45f6c57e6",
+      "copy_sha256": "268079dd921aae5961f9d8c454c0ced75307155625ee60661fa411f45f6c57e6",
+      "original_bytes": 612,
+      "copy_bytes": 612,
+      "transformation": "NONE"
+    }
+  ],
+  "raw_zip_in_repo": false
+}

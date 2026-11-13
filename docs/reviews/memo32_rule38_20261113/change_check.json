@@ -1,0 +1,14 @@
+{
+  "memo_before_sha256": "6a1f6ccd10e6dd6f2dbbdde9c814bb87e36c64fb035ab18da9062b00a4ce5252",
+  "memo_after_sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0",
+  "lines_before": 1231,
+  "lines_after": 1231,
+  "changed_lines": [
+    693
+  ],
+  "same_as_review_minimal_scratch": true,
+  "old_test_methods_preserved": 14,
+  "new_test_methods": 1,
+  "test_source_sha256": "8bac16262f75b4d164eb2b8a12b871d4f56f83af50378d8e303d35f57491db71",
+  "independent_probe_sha256": "9f9b748bdbf41e2152021d9c652d9ba5a4ee667e476efeae2c29db97a9b80fb3"
+}

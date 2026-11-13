@@ -1,0 +1,53 @@
+{
+  "review_pin": "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+  "review_scope": "document fixes only",
+  "overall_gate": "HOLD",
+  "production_approved": false,
+  "ledger_modified": false,
+  "dispositions": {
+    "M32R-01": "partial",
+    "M32R-02": "document_closure_possible",
+    "M32R-03": "document_closure_possible",
+    "M32R-04": "wording_closure_possible",
+    "M32R-05": "document_consistency_closure_possible",
+    "M32R-06": "fixed_card_comparison_closure_possible"
+  },
+  "new_findings": [
+    {
+      "id": "M32RF-01",
+      "severity": "P2",
+      "parent_id": "M32R-01",
+      "prior_id": "DRD-01",
+      "file": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+      "line": 693,
+      "title": "Active rule 38 retains withdrawn cap-to-target lower bound",
+      "counterexample": {
+        "phi_target": 0.95,
+        "phi_cap_interval": [
+          0.938,
+          0.942
+        ],
+        "cap_MPa": 2.4,
+        "denominator_target_MPa": 1.0,
+        "denominator_ln_upper_error": 0.02,
+        "old_ratio_lower": 2.3524768159362126,
+        "possible_postcap_ratio": 0.6
+      },
+      "minimum_fix": "Replace or explicitly withdraw section 6 rule 38, apply the same target-unknown rule as section 4 and D-1/D-2, and add a targeted regression.",
+      "reproduced_by": "independent_probe.py",
+      "candidate_rc": 1,
+      "scratch_one_line_repair_rc": 0,
+      "production_false_green_claimed": false
+    }
+  ],
+  "not_closed": [
+    "universal convergence",
+    "physical qualification",
+    "numeric policy approval",
+    "registration",
+    "operational seal",
+    "research execution",
+    "deployment",
+    "other original DRD limitations"
+  ]
+}

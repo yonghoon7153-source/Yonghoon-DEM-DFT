@@ -83,6 +83,20 @@ class ContractChecks(unittest.TestCase):
     def test_cap_band_not_out(self):
         self.assertEqual(cap_band(),'UNDETERMINED')
 
+    def test_section6_rule38_rejects_cap_target_bound(self):
+        # M32RF-01: inspect the active prohibition list itself. The older
+        # body/appendix witnesses do not cover this separate rule.
+        section = TEXT.split('## 6.', 1)[1].split('## 7.', 1)[0]
+        rules = [s for s in section.splitlines() if s.startswith('38. ')]
+        self.assertEqual(len(rules), 1)
+        rule = rules[0]
+        self.assertIn('목표점 응력 미확정', rule)
+        self.assertIn('목표점 응력의 한쪽 경계를 만들지 않는다', rule)
+        self.assertIn('해당 점은 중간 (미도달)', rule)
+        self.assertIn('해당 F 띠 점은 미정', rule)
+        self.assertNotIn('[ln 상한', rule)
+        self.assertNotIn('확인될 때만이다', rule)
+
     def test_cap_both_and_mixed_never_discard_or_infer(self):
         for pairs in [[('cap','cap')]*3, [(1.,'cap')]*3, [('cap',1.),(1.,1.),(1.,1.)]]:
             with self.subTest(pairs=pairs): self.assertEqual(point(pairs),'MIDDLE')

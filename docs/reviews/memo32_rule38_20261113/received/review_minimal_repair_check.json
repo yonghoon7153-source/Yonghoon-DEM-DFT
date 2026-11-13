@@ -1,0 +1,26 @@
+{
+  "runs": [
+    {
+      "case": "candidate",
+      "input_sha256": "6a1f6ccd10e6dd6f2dbbdde9c814bb87e36c64fb035ab18da9062b00a4ce5252",
+      "rc": 1,
+      "expected_rc": 1,
+      "finding_ids": [
+        "M32RF-01"
+      ]
+    },
+    {
+      "case": "scratch_rule38_replacement",
+      "input_sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0",
+      "rc": 0,
+      "expected_rc": 0,
+      "finding_ids": []
+    }
+  ],
+  "same_line_count": 1231,
+  "only_changed_line": [
+    693
+  ],
+  "candidate_source_unchanged": true,
+  "production_fix_applied": false
+}

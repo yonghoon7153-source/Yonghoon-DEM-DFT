@@ -1,0 +1,142 @@
+"""Independent document-rule transcriptions and static witnesses, not a solver.
+
+No supplied project/test code is imported. A failing scope_consistency result is
+the reproduced residual finding, not an exception or an executed physical run.
+"""
+from pathlib import Path
+from itertools import product
+import argparse,hashlib,json,math
+
+ROOT=Path(__file__).resolve().parent
+P=argparse.ArgumentParser()
+P.add_argument('--memo',type=Path,default=ROOT/'input/snapshot/docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md')
+P.add_argument('--out',type=Path,default=ROOT/'INDEPENDENT_RESULTS.json')
+args=P.parse_args();raw=args.memo.read_bytes();text=raw.decode('utf-8');lines=text.splitlines()
+def row(prefix):
+ matches=[(i+1,s) for i,s in enumerate(lines) if s.startswith(prefix)]
+ assert len(matches)==1,(prefix,len(matches))
+ return matches[0]
+
+# These are explicit readings of the new prose and appendix, independently
+# written here. Their agreement does not turn prose into executable production.
+def body_point(state_grid):
+ return 'MIDDLE_UNREACHED' if any(s=='cap' for s in state_grid) else 'CONTINUE_EXISTING_RULES'
+def appendix_point(state_grid):
+ for k in range(3):
+  for arm in range(2):
+   for level in range(3):
+    if state_grid[(k*2+arm)*3+level]=='cap':return 'MIDDLE_UNREACHED'
+ return 'CONTINUE_EXISTING_RULES'
+caps=[]
+for k,arm,level in product(range(3),range(2),range(3)):
+ grid=['value']*18;grid[(k*2+arm)*3+level]='cap'
+ caps.append({'case':f'fill{k+1}_arm{arm}_level{level}','body':body_point(grid),'appendix':appendix_point(grid)})
+for name,grid in [('both_all',['cap']*18),('cap_plus_double_noise',['cap']+['noise']*17),('all_values',['value']*18),('no_cap_with_noise',['noise']*9+['value']*9)]:
+ caps.append({'case':name,'body':body_point(grid),'appendix':appendix_point(grid)})
+assert all(x['body']==x['appendix'] for x in caps)
+assert caps[-2]['body']==caps[-1]['body']=='CONTINUE_EXISTING_RULES'
+
+def aggregate_bands(points):
+ if any(p in ('OUT','LARGE') for p in points):return 'OUT'
+ if 'UNKNOWN' in points:return 'UNKNOWN'
+ return 'IN'
+band_cases=[{'points':p,'aggregate':aggregate_bands(p)} for p in [
+ ['UNKNOWN','IN','IN','IN'],['UNKNOWN','OUT','IN','IN'],['UNKNOWN','LARGE','IN','IN'],['IN']*4]]
+assert [r['aggregate'] for r in band_cases]==['UNKNOWN','OUT','OUT','IN']
+
+def dense_gate(reg,observed,violations):
+ # Only a registered/observed criterion can support a verified violation.
+ # Both known violation and missing evidence block entry; their reporting
+ # priority when simultaneous is not used to authorize anything.
+ if any(v and r and o for v,r,o in zip(violations,reg,observed)):return 'FAIL'
+ if not all(reg) or not all(observed):return 'HOLD'
+ return 'PASS'
+dense=[]
+for i in range(8):
+ for fault in ('violation','unregistered','unobserved'):
+  reg=[True]*8;obs=[True]*8;v=[False]*8
+  if fault=='violation':v[i]=True
+  if fault=='unregistered':reg[i]=False
+  if fault=='unobserved':obs[i]=False
+  got=dense_gate(reg,obs,v);expected='FAIL' if fault=='violation' else 'HOLD';assert got==expected
+  dense.append({'criterion':i,'fault':fault,'gate':got})
+assert dense_gate([True]*8,[True]*8,[False]*8)=='PASS'
+
+expected={(a,s,k,box) for a,ss in [('real',[.18]),('soft',[.18,.12])] for s in ss for k in (1,2,3) for box in ('final','reduced')}
+records=[{'key':key,'ok':True,'identity_ok':True,'value':11.8 if key[-1]=='final' else 11.0} for key in sorted(expected)]
+def complete(rows,required):
+ if not required or len(rows)!=len(required):return False
+ keys=[r['key'] for r in rows]
+ return len(set(keys))==len(keys) and set(keys)==required and all(r['ok'] and r['identity_ok'] and type(r['value']) in (int,float) and math.isfinite(r['value']) for r in rows)
+assert complete(records,expected)
+idx=next(i for i,r in enumerate(records) if r['key']==('soft',.12,1,'reduced'))
+mutants={}
+mutants['missing_extra_point']=[r for i,r in enumerate(records) if i!=idx]
+mutants['empty']=[]
+mutants['duplicate_extra_point']=records+[dict(records[idx])]
+for label,key,val in [('failed_finite_leftover','ok',False),('wrong_identity','identity_ok',False),('nan','value',float('nan')),('inf','value',float('inf'))]:
+ rr=[dict(r) for r in records];rr[idx][key]=val;mutants[label]=rr
+box_cases=[{'fault':n,'complete':complete(v,expected)} for n,v in mutants.items()]
+assert not any(x['complete'] for x in box_cases)
+box_cases.append({'fault':'unregistered_required_set','complete':complete(records,set())})
+
+def body_f(reduced,comp,fhold,effect,real,soft,context):
+ fallback='S-soft' if context=='4-ii' else 'AUTHOR'
+ if fhold:return 'F-HOLD',fallback
+ if reduced and not comp:return 'F-COMPARISON-UNKNOWN',fallback
+ if reduced and effect:return 'F-BOX',fallback
+ if real=='cross':return 'F-i','F-real'
+ if real=='above' and soft=='cross':return 'F-ii',('S-soft' if context=='4-ii' else 'F-soft')
+ return 'F-iii',('S-soft' if context=='4-ii' else 'AUTHOR_AFTER_RECHECK')
+def appendix_f(reduced,comp,fhold,effect,real,soft,context):
+ predicates=[fhold,reduced and not comp,reduced and comp and effect,real=='cross',real=='above' and soft=='cross',True]
+ name=['F-HOLD','F-COMPARISON-UNKNOWN','F-BOX','F-i','F-ii','F-iii'][next(i for i,x in enumerate(predicates) if x)]
+ if name in ('F-HOLD','F-COMPARISON-UNKNOWN','F-BOX'):dest='S-soft' if context=='4-ii' else 'AUTHOR'
+ elif name=='F-i':dest='F-real'
+ elif name=='F-ii':dest='S-soft' if context=='4-ii' else 'F-soft'
+ else:dest='S-soft' if context=='4-ii' else 'AUTHOR_AFTER_RECHECK'
+ return name,dest
+frows=[]
+for args_f in product((False,True),repeat=4):
+ for real,soft,ctx in product(('above','below','cross'),('above','below','cross'),('4-ii','4-iii')):
+  data=(*args_f,real,soft,ctx);body=body_f(*data);appendix=appendix_f(*data);assert body==appendix
+  frows.append({'input':data,'body':body,'appendix':appendix})
+
+rule_no,rule=row('38. 못 닿은 팔') if any(s.startswith('38. 못 닿은 팔') for s in lines) else row('38. 상한 중단')
+bound_claim=('정직한 한쪽 경계 [ln 상한' in rule and '확인될 때만이다' in rule)
+current_body='못 닿음 = 목표점 응력 미확정' in row('- 팔의 구간')[1]
+current_appendix='못닿음  목표점 응력 미확정 → 점 중간' in text
+conflict=bound_claim and current_body and current_appendix
+
+def B_values(x,delta=.002,tau=.002):
+ d=[x[i+1]-x[i] for i in range(3)]
+ assert max(abs(d[1]),abs(d[2]))<=tau
+ return [min(x[-2:])-delta,max(x[-2:])+delta]
+cap_iv=B_values([.94]*4)
+legacy_lo=math.log(2.4)-(math.log(1.0)+.02)
+assert cap_iv[1]<.95 and math.exp(legacy_lo)>1.3
+
+anchors={}
+for prefix in ['- 팔의 구간','| U6 |','  - 하는 일.','| O7 |','| **M0**','- **랩 표준과 다른 문헌 값','- 무엇 (값):']:
+ n,s=row(prefix);anchors[prefix]={'line':n,'text':s}
+assert '| 명시적 분리 법칙 없음 |' in anchors['| O7 |']['text']
+assert all(s in anchors['| **M0**']['text'] for s in ('적합 1','사전 고정 2','미정'))
+assert '세 매개변수 중 어느 하나를 맞출지' in text and '그 목록이 비어 있으면 비교 실행을 열지 않는다' in text
+for p in ('- **랩 표준과 다른 문헌 값','- 무엇 (값):'):
+ assert all(s in anchors[p]['text'] for s in ('약 6 시간','Cu 포일 제거','카드 해석','압밀 직후 공극으로 옮기지 않음'))
+
+out={'scope':'Independent finite document-rule examples and static consistency, no production or physical execution',
+ 'memo_sha256':hashlib.sha256(raw).hexdigest(),'cap_cases':caps,'band_cases':band_cases,'dense_obligations':dense,
+ 'energy_counterexample':{'momentum_before':0,'momentum_after':0,'energy_before':1.0,'energy_after':sum(v*v/2 for v in [1.1,-1.1,0])},
+ 'required_box_items':len(expected),'box_mutants':box_cases,'F_branch_rows':len(frows),'F_branch_mismatches':0,
+ 'M32R01_residual':{'section6_line':rule_no,'section6_rule':rule,'active_scope_consistent':not conflict,
+   'phi_cap_interval':cap_iv,'target_phi':.95,'legacy_target_R_lower':math.exp(legacy_lo),
+   'postcap_possible_actual_R':.6,'current_main_rule':'MIDDLE_UNREACHED','section6_inference_if_followed':'DIFFERENT',
+   'note':'Arithmetic contradiction only; no DEM/MPM curve was measured'},
+ 'O7_shared_stencil_gap':{'before':.3,'after_dt1':(.9+.9)-(.6+.6)},
+ 'LA25_synthetic_later_porosity_percent':100*(1-(1-.024)/1.01),
+ 'anchors':anchors,'new_findings':['M32RF-01'] if conflict else []}
+args.out.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+(args.out.parent/(args.out.stem+'_f_branches.json')).write_text(json.dumps(frows,indent=2)+'\n',encoding='utf-8')
+print(json.dumps({k:v for k,v in out.items() if k not in ('anchors','dense_obligations','cap_cases')},ensure_ascii=False,indent=2))
+raise SystemExit(1 if conflict else 0)
