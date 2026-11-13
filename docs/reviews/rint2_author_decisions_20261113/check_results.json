@@ -1,0 +1,39 @@
+{
+  "base": "97d8831a858fab5f92ed3e580817eea2eaa85f5f",
+  "code_or_tests_changed": false,
+  "research_results": 0,
+  "actual_input_read": false,
+  "native_checks": [
+    {
+      "repo": "rint",
+      "script": "check_doc_refs.py",
+      "rc": 1,
+      "stdout_sha256": "04042437771eac1f12836cf15c8b506884d5512e399ff805b0281b544bd7f194",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "repo": "rint",
+      "script": "check_review_findings.py",
+      "rc": 0,
+      "stdout_sha256": "66cd26cbdac537670510a2d26cea3852402868c526356596e05c9e13fd21d754",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "final_reference_log_sha256": "04042437771eac1f12836cf15c8b506884d5512e399ff805b0281b544bd7f194",
+  "doc_refs_diagnostic": {
+    "native_rc": 1,
+    "known_windows_path_exception_occurrences": 96,
+    "unmatched": [],
+    "missing_paths": 0,
+    "checker_changed": false
+  },
+  "document_checks": {
+    "decisions": 6,
+    "qa_slots_per_environment": 6,
+    "distinct_attempt3_and_4_store_conditions": true,
+    "scientific_validation": false,
+    "author_preparation_directions_received": true,
+    "actual_execution_go": false,
+    "approval_text_reference_check": "rerun after approval record; earlier configuration-path failed attempt excluded"
+  }
+}
