@@ -1,0 +1,20 @@
+[
+  {
+    "file": "codex_review_memo32_plan_fixes_20261113.md",
+    "source_sha256": "745d5175719739920b562ebfad73911a067d0a3563789a24731515a291aa0763",
+    "stored_sha256": "745d5175719739920b562ebfad73911a067d0a3563789a24731515a291aa0763",
+    "transformation": "none"
+  },
+  {
+    "file": "FINAL_CHECKS.json",
+    "source_sha256": "b010e0a50c9bc064a5d58a40b3250b23e94b5968a9947f327e2d25d8ab403ecd",
+    "stored_sha256": "198b8680911660d805eeb449e1512953cd4f4a8bc7186f4d87090c7fafce5497",
+    "transformation": "CRLF to LF only"
+  },
+  {
+    "file": "INDEPENDENT_CHECKS.json",
+    "source_sha256": "30b34dfa59e685bc7f5373373d9cf138b4351a311b907f1d87a46e31df1f7d0f",
+    "stored_sha256": "ff7844d258692ccd8a07600a3721b1d078637e74054c9c2597968322e8911100",
+    "transformation": "CRLF to LF only"
+  }
+]

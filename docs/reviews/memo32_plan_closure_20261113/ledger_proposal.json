@@ -1,0 +1,21 @@
+{
+  "scope": "M32P-01 and M32P-02 communication only",
+  "candidate": "e2b74919bc681f45b001145f07109d6fc9d12b90",
+  "direct_change": false,
+  "automatic_verified_closed": false,
+  "proposals": [
+    {
+      "id": "M32P-01",
+      "author_fix": "claimed_fixed evidence",
+      "independent_verdict": "CLOSABLE_LIMITED",
+      "note": "전달 문서 범위 종결 가능 수령; 원장 처분은 Claude, 물리·실행 범위 미포함"
+    },
+    {
+      "id": "M32P-02",
+      "author_fix": "claimed_fixed evidence",
+      "independent_verdict": "CLOSABLE_LIMITED",
+      "note": "전달 문서 범위 종결 가능 수령; 원장 처분은 Claude, 물리·실행 범위 미포함"
+    }
+  ],
+  "progress_sentence": "M32P-01·02 초심자판 수정 독립 재확인 수령. 문서 범위 종결 가능, 새 지적0, 전체 HOLD. 검토 핀 생성물 무변경."
+}

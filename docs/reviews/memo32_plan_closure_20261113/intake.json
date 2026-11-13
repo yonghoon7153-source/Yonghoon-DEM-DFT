@@ -1,0 +1,18 @@
+{
+  "zip_name": "codex_memo32_plan_fixes_review_evidence_20261113.zip",
+  "bytes": 3281055,
+  "sha256": "a26bf5fdf863c7cb2b5f78754b70428a09ac1dcc5685112f3470c9480fb0eac6",
+  "members": 85,
+  "hash_lists": {
+    "input/SHA256SUMS": 51,
+    "SHA256SUMS": 84
+  },
+  "source_manifests_recomputed_and_local_pinned_git_blob_matches": {
+    "input/BEFORE_MANIFEST.json": 11,
+    "input/SNAPSHOT_MANIFEST.json": 35
+  },
+  "crc_paths_duplicates_links": "PASS",
+  "original_archive_modified": false,
+  "research_tests_rerun": false,
+  "scope": "receipt integrity only; review outcomes attributed to independent reviewer"
+}
