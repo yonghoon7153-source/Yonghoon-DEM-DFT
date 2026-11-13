@@ -1,0 +1,26 @@
+{
+  "proposal_only": true,
+  "ledger_modified": false,
+  "overall_gate": "HOLD",
+  "review_pin": "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+  "document_closure_possible": [
+    "M32R-02",
+    "M32R-03",
+    "M32R-04",
+    "M32R-05",
+    "M32R-06"
+  ],
+  "partial": [
+    "M32R-01"
+  ],
+  "residual": {
+    "id": "M32RF-01",
+    "severity": "P2",
+    "parent": "M32R-01",
+    "prior": "DRD-01",
+    "proposed_status": "claimed_fixed",
+    "candidate": "<<sha:docs: correct memo32 rule38 cap-bound remnant>>",
+    "scope": "section6 rule38 only; independent closure pending; not a separate P1"
+  },
+  "automatic_verified_or_closed": false
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "label": "regression_before",
+    "raw_sha256": "0df89a999d9deed6d443a31ca7848bd6316e4fab5a328dfabf4c09fadce24d30",
+    "copy_sha256": "4f684d4c30fbe591fd866d590f540d7cf8d9b254d5083101209d2db9c0b5f47c",
+    "transform": "Selected unittest method status and final count lines only; trailing spaces removed. Traceback environment paths excluded."
+  },
+  {
+    "label": "regression_after",
+    "raw_sha256": "5c4de72542c90eaf3c0adb77e74eff083030de4cca23443f3397a3db68a44162",
+    "copy_sha256": "94efa176fe1d95349b0537a83077aa75dff9303f729c946f9a80144ce02734d9",
+    "transform": "Selected unittest method status and final count lines only; trailing spaces removed. Traceback environment paths excluded."
+  }
+]

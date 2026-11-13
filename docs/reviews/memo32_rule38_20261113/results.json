@@ -1,0 +1,50 @@
+{
+  "scope": "document checks and small independent arithmetic; not production/physical qualification",
+  "regression_before": {
+    "rc": 1,
+    "scope": "manual document-contract regression, not production/physical tests",
+    "memo_sha256": "6a1f6ccd10e6dd6f2dbbdde9c814bb87e36c64fb035ab18da9062b00a4ce5252",
+    "original_reviewed_memo": false,
+    "methods": 15,
+    "failed_methods": 1,
+    "failure_observations": 1,
+    "errors": 0,
+    "successful": false
+  },
+  "regression_after": {
+    "rc": 0,
+    "scope": "manual document-contract regression, not production/physical tests",
+    "memo_sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0",
+    "original_reviewed_memo": false,
+    "methods": 15,
+    "failed_methods": 0,
+    "failure_observations": 0,
+    "errors": 0,
+    "successful": true
+  },
+  "independent_probe": [
+    {
+      "label": "independent_before",
+      "rc": 1,
+      "memo_sha256": "6a1f6ccd10e6dd6f2dbbdde9c814bb87e36c64fb035ab18da9062b00a4ce5252",
+      "findings": [
+        "M32RF-01"
+      ],
+      "scope_consistent": false,
+      "legacy_target_R_lower": 2.3524768159362126,
+      "possible_postcap_ratio": 0.6,
+      "report_sha256": "492f1df929ebf848fe07064d1149ed743570be4edb865792b23169332d161b64"
+    },
+    {
+      "label": "independent_after",
+      "rc": 0,
+      "memo_sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0",
+      "findings": [],
+      "scope_consistent": true,
+      "legacy_target_R_lower": 2.3524768159362126,
+      "possible_postcap_ratio": 0.6,
+      "report_sha256": "e3c648f1524460c552753b79438ac39e0f3a1d352c25500025a710b2f0393316"
+    }
+  ],
+  "original_probe_unchanged": true
+}
