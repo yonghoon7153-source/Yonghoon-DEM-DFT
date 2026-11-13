@@ -1,0 +1,1205 @@
+{
+  "schema": "memo32-review-sources/1",
+  "base": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+  "literature_pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+  "repo_files": 108,
+  "literature_cards": 41,
+  "unresolved_slug_tokens": [],
+  "files": [
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/EVIDENCE_SHA256SUMS",
+      "bytes": 9779,
+      "sha256": "f384b55180081d7d73de0b98e8ae692baa812debd71427de32b43c81ea0d09f7",
+      "blob": "7da626684b7ec72d11d93a92b6d9dd8f85af10f8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/IMPORT_SHA256SUMS",
+      "bytes": 2892,
+      "sha256": "465adedf547968f260285fc54016d579e83d99471b8564b90cfa9427031ce6d8",
+      "blob": "f16a0fa8d97abf37179e54725fe11acbb87e5e8d"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/README.md",
+      "bytes": 3262,
+      "sha256": "96c4841058a71757856f04f5d0ab28c7a8c8367f3d078e89a70ce73c88f36851",
+      "blob": "4666b8f06b6e93d694688956d6e5912870219cb5"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/README_import.md",
+      "bytes": 2114,
+      "sha256": "3292108caffb6eb17aebdd2de8ecabcb4dc42c9d33e352f46a471b90c6f1165c",
+      "blob": "5a70c1abc7b71ce66c5574bdcaef01b4364e909a"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/_import_manifest.json",
+      "bytes": 19001,
+      "sha256": "92d8eda98dfb379f405a860a3656e141d47cd6bcb7ced64889e50a3f68c76817",
+      "blob": "b8f52d7c52c11d3d27e89909f4f7352340cd1a36"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/_repro_ours_20261110/reproduce_review_ours.json",
+      "bytes": 1101,
+      "sha256": "871dc386184ad55c095cd618e55ce7ec09d84ee0a2b54f7f2884cdfaecca0f50",
+      "blob": "674805f79a815d921e0bc6ee16db8b4402c74746"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/branches_review/findings.json",
+      "bytes": 3490,
+      "sha256": "c6585a5d73aee0565d89608f07d0319fbaec088f794a9d49b090988cbb8501f4",
+      "blob": "4f5db08f5cd8be2fe06a9121094b6a2e803e43f5"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/branches_review/independent_enumeration.py",
+      "bytes": 11683,
+      "sha256": "68cc7a3dc1ab0f3c9ed2aa6334f5317200bc2758991ad74d1adcd65d6c6ce6dd",
+      "blob": "eaba539988bb8ffaf100f5edc86b92dde6389e30"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/branches_review/independent_results.json",
+      "bytes": 5622,
+      "sha256": "b92ef68c86ccbc104bdcc1a33bcc5401fcc6e6052dcb56996e1b3dab58ae04e7",
+      "blob": "f4bacffdf27f652dc265cd7a616d9c2c0be45054"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/code_arithmetic_review/REPORT.md",
+      "bytes": 20281,
+      "sha256": "603b79837144505e8a9bcbd69bf4dc662fae5e5d26fb926c88dbca1cb93785e1",
+      "blob": "9e62f803ebe8d07a2e3d3ea8b0357588653baf44"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/code_arithmetic_review/findings.json",
+      "bytes": 5073,
+      "sha256": "7cda1e7b451d377e8c55476149b5887d6230a3394a3d5a9da5da79010a62db1c",
+      "blob": "1a24cec1d82c6ec53f695fb5677ef91786e02da1"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/code_arithmetic_review/reproduce.py",
+      "bytes": 9590,
+      "sha256": "35c20792b26e005e27bb8e4d5a39fecb01a53eddd06c2cd88f784e7d8b2d9318",
+      "blob": "d0b5f45667e153543417c0e44836dcf4ad0e81eb"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/code_arithmetic_review/results.json",
+      "bytes": 13216,
+      "sha256": "78807d97741bbb9a0d7af0ad2269b4a602242d5612094724324623b35dab3fe1",
+      "blob": "eb3146348962043f5b3253b409f56b686b681ae1"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/expected/branches_review/independent_results.json",
+      "bytes": 5622,
+      "sha256": "b92ef68c86ccbc104bdcc1a33bcc5401fcc6e6052dcb56996e1b3dab58ae04e7",
+      "blob": "f4bacffdf27f652dc265cd7a616d9c2c0be45054"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/expected/code_arithmetic_review/results.json",
+      "bytes": 13216,
+      "sha256": "78807d97741bbb9a0d7af0ad2269b4a602242d5612094724324623b35dab3fe1",
+      "blob": "eb3146348962043f5b3253b409f56b686b681ae1"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/expected/physics_review/counterexamples.json",
+      "bytes": 2025,
+      "sha256": "32992ae5be325043f88cc7d4bf94730b5702e76348befacb2a09bddc79c13137",
+      "blob": "075e26d459e9b65bdc314d93eb0ec6f772300970"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/findings_review.json",
+      "bytes": 5278,
+      "sha256": "83cd7db223b4305f7eb65909ba82e150108dcaf38830480e22761cd924175960",
+      "blob": "99968668be10c593f0d4e75aba024213a0edba81"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/input_verification.json",
+      "bytes": 12462,
+      "sha256": "999fecba130aa697c19a8fc51e698c28d5b9323f4d1fc2fba35032548e918b6b",
+      "blob": "d33bd002266ec13e46560aad5dd48dbd71287ca4"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/physics_review/REPORT.md",
+      "bytes": 19718,
+      "sha256": "c9107269325a7b9ddd02ce82253e655f64e31fb9d3499e959362dbba4310127e",
+      "blob": "0d8c5088bc16db9c7ca6244391808b3a7aad09e2"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/physics_review/SOURCES.md",
+      "bytes": 7756,
+      "sha256": "02cfc3a40a7a48bed8fea406222ebf0ebab1d7b2757ef1b98a8582a6afc66676",
+      "blob": "93eb030ed77f42dfa470ab90cfa6ad6c7ccd9d50"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/physics_review/counterexamples.json",
+      "bytes": 2025,
+      "sha256": "32992ae5be325043f88cc7d4bf94730b5702e76348befacb2a09bddc79c13137",
+      "blob": "075e26d459e9b65bdc314d93eb0ec6f772300970"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/physics_review/counterexamples.py",
+      "bytes": 2842,
+      "sha256": "23a9353a87288639ccd2e5f866e9488ad075c4af89964ad096c4b15fe085406f",
+      "blob": "33563a34c26ea148575281a675fa0e29ec2fab70"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/remote_blob_comparison.json",
+      "bytes": 12208,
+      "sha256": "7a0debd265132c101ee41fa87674424d62cde31d8d97efa1305b3bf06beeb371",
+      "blob": "350d7c014d70a8116a4067150c27c44894469e9d"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/remote_pin_provenance.json",
+      "bytes": 774,
+      "sha256": "9b2f793f743d9c2255daa64a477df91d23f058b186301c963e2e8dcb75706ea9",
+      "blob": "6c016c3ddd930dfd02a7f07cde15ed99bd0fc603"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/remote_sources/verification.json",
+      "bytes": 1093,
+      "sha256": "f186e7f27c3987d5c619f2d84fa3a6037a8c7a81be2737d77e4215530ea6981c",
+      "blob": "349939015fe37a142a8529c2edc1a89ebd192760"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduce_review.py",
+      "bytes": 3958,
+      "sha256": "7dd581c36c65fd1c0e19d85740a22a9a80335d5fbc2130c9cc2a748c04022dc0",
+      "blob": "e8462fc7c307dd5d2edcb2601ccf4607ee0e7023"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduction/branches_review.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduction/branches_review.stdout.txt",
+      "bytes": 2451,
+      "sha256": "4d4e58a9be6b3a4797af89503d330ae65fc14fbb570a803397041739da5a8347",
+      "blob": "a552ea29207df61e539ce6e039d455bb75d2c9cc"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduction/code_arithmetic_review.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduction/code_arithmetic_review.stdout.txt",
+      "bytes": 5346,
+      "sha256": "4f3b44b084b6c4c11d252d343d0ce68b782c6434f70ecc10c12a41fdc91dfbba",
+      "blob": "02046ba5ee9b4eec08a87ffd55bbac87fd4ba06a"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduction/physics_review.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduction/physics_review.stdout.txt",
+      "bytes": 59,
+      "sha256": "55ed26ecef4ff2c9e24b41049bd1ed3d433df21658bf4ecd1cadcfbea95b4131",
+      "blob": "74a6a997804deae2d306182500412a0b0550505d"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_dem_redesign_direction_evidence_20261110/reproduction/summary.json",
+      "bytes": 1195,
+      "sha256": "7b484858b3c99cc79b34a9a6f1221a5cc5803b446788111bb27cd8648edbf5e0",
+      "blob": "c0031aff9c3c724aad1a813ed68fee24c76589d3"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
+      "bytes": 31065,
+      "sha256": "ee1d011e301640719e1e7e811ab124562f044b19682a60aee3f35d3a5e0d9058",
+      "blob": "331e217a234baca112eb06fa82bc678feb957d47"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/dem3d_composite_overshielding.md",
+      "bytes": 3514,
+      "sha256": "4b51f124d963f2339830e4a0077bb29868f76361cf4f06b5bcfda18a10ee2156",
+      "blob": "753715ae4c821cfdaca1bd2cfc01e9e816b185ca"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/changelog_v3_2.md",
+      "bytes": 64900,
+      "sha256": "05533f84740d1d2ea371407fe8ff462ab8332005f2b1084224e21b2485616a93",
+      "blob": "6cecf9aa7357abb435847793a453bd6722fd01ac"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/drd_table.md",
+      "bytes": 27405,
+      "sha256": "abaa898c9703bb337aea60f062635c218b972345aa864ecd605edf84c02e0fd0",
+      "blob": "9fd5f42fc2e5120204663d3da075ad4dde9c1e87"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_arith4_before_s12.py",
+      "bytes": 21767,
+      "sha256": "b586517d3e7d23d22cecc0d03c432453137cfe2da64c45e73d875728ab4b9e35",
+      "blob": "30c6e09c0bae2e363470278535714a5c8284d681"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_arith4_out.txt",
+      "bytes": 11913,
+      "sha256": "421583ae6a7a31b4642bd46ceebc81dd25f83c3e151a6b0a5390820a792889da",
+      "blob": "d464daf3d6fc02738fb0a8ce23a7cd402bb0799c"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_arith4_out_11.txt",
+      "bytes": 449,
+      "sha256": "2a892b974564eadbe01cb1c7c19986704a706511434569ba9ca2b48be99d0c09",
+      "blob": "462549d5578dc71c44aa4e63380a15b1d1eccdb1"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_arith4_out_9_10.txt",
+      "bytes": 1946,
+      "sha256": "b004aebcfe8b4c89d5b10c09e3e6a1b30739efbc20f9162e8783fd55b1c359b1",
+      "blob": "1ada3e77be9fbbbf86e99d30a4633b5e1b57fee4"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_arith4_out_full.txt",
+      "bytes": 16860,
+      "sha256": "1876f73638f66453a24f17f3b7edd2f98dd13685907900e098dece313f1bbd8e",
+      "blob": "99af93254b37a428de5bbc72554f71fff94eeb90"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_arith5_out.txt",
+      "bytes": 29023,
+      "sha256": "563b275b8e6d0067cf4c096cbb28894caa2204ae07de7210de22ba1cc246dee5",
+      "blob": "e9a21a059a88bfb322a70ea2b3f85394272a0bc3"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_arith6_out.txt",
+      "bytes": 4992,
+      "sha256": "93d216f6551c1c2b186dbd4d7545946e1d06914ec2db7302b157a4cb15314e37",
+      "blob": "864eb903b8e5bd7bd87a04606ab6c3a271c9be6f"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_ban5.py",
+      "bytes": 732,
+      "sha256": "19a08a6772b94cc77ea2304e3ab551e605da02c8e9ed4cb61596251f2404e08e",
+      "blob": "55b8da3f31298e06e53d3f38a0c0387a8ed35384"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_ban_check.py",
+      "bytes": 675,
+      "sha256": "de4d639993998a5b9495c600024140eb6f85aa09b71c547cdc3832269117ae5e",
+      "blob": "a2675d18e2b862580607638b2222754a8fcdd305"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_changelog_s7.md",
+      "bytes": 9426,
+      "sha256": "cc7606026048677ddb8a9d9b5738be5299ec79833459ce48f6079fbf363d4798",
+      "blob": "a0fa30c588c4e3f12a34a53e1f72d94dcadacdd1"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_changelog_s8.md",
+      "bytes": 12281,
+      "sha256": "5ab88eda19fd15b66094180dd48f178f381a0663e78790dce807c586dd3e0f27",
+      "blob": "ff6c4023f84c0476a1c8274a920e8c34d9d08e80"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_diff_fix5.txt",
+      "bytes": 174476,
+      "sha256": "16436d894aff252adf908da291db3380efc11fede3204accb027c41eb0d0b8ce",
+      "blob": "475d513957b18b344850397fc8fa534dede305bf"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_r3_calc_out.txt",
+      "bytes": 5005,
+      "sha256": "5f00e3acd4d2f872e95404055cbef29c037a867d038c9a4ba6e2bcdcf970eb4d",
+      "blob": "d76b04ef5d5e8e7d75b913171e7d423d0dcd0c57"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_r3_card_list.txt",
+      "bytes": 26875,
+      "sha256": "d0c7d69dd98eefb89485dd1077e49aec7f99f0275c52728df69c34b009403eca",
+      "blob": "ea07fb5feb40389cb4bd7c78007134866140f2e5"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_r3_memo_slugs.txt",
+      "bytes": 2147,
+      "sha256": "aebca757437c5c1b56e9afc3005955760d6c180e9f7ef25d66f4664a386c5860",
+      "blob": "4b71a5c35150271b6bddbed4b4b5a85200874f61"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_r3_memo_tokens.txt",
+      "bytes": 2582,
+      "sha256": "281b90b731cee9239c48e56d34b76a88d439025bf30877b8437b1cb62370b393",
+      "blob": "28a4ae47c07a27afe44159e275d4d45f0bdb7b27"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_wd.py",
+      "bytes": 755,
+      "sha256": "9a819d9d200602bd79e429a1de810a37de0f4a2bcacecf20261f69e71a591ec4",
+      "blob": "86fccf8a0c658e7af938c18441cf2d0dd3b69753"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/_wdiff_fix5.txt",
+      "bytes": 32796,
+      "sha256": "7a1ef34b1dbfa9b64d0844aa48e963377e2a431e0bdcf2477b52c17079e586f5",
+      "blob": "c9f39d14f02479ae79b479e418e3d7e9bc045ed7"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/arith.py",
+      "bytes": 2180,
+      "sha256": "6ab401e1832795aea360b68a393b35100386869c360e7063692c13a1c6519ea9",
+      "blob": "a68c8407051cfc3cbec9178ecf86b0a5285842fc"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/arith2.py",
+      "bytes": 3278,
+      "sha256": "c053f61f3851061392e888c200410ffc09eee7565315d686152002ce3b8f9b69",
+      "blob": "1e26fbe25e7429f49768779face90ff1cd105ed1"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/arith3.py",
+      "bytes": 11303,
+      "sha256": "5cf116936ddafb1eada1259e7eea5e5e847540f91861e2db8fb64dc2d688991a",
+      "blob": "f9b97c6ef56e090f4b66042b5ca4105d025af492"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/arith4.py",
+      "bytes": 23941,
+      "sha256": "7395cf746443b870032de5e3aae84b60dc29ac72b2ab9e0bdc27117c738eb340",
+      "blob": "874773b1b894aa958340f6b9773c8bb268b1d3e8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/arith5.py",
+      "bytes": 28925,
+      "sha256": "3a175e06b9bc75fcf642b033862c2568f99dea5dfc2327b22083fee34cd79f92",
+      "blob": "2d2c09dff24b377eb11721bc04b2f84735dc901c"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/arith6.py",
+      "bytes": 13067,
+      "sha256": "5f293922e2a16cd2ef31b1a813bbc0b5b945a4e7d61b25c576f7c9db3a520c9e",
+      "blob": "72bd8091d0279937024af77ca5bfd9e6fc2ef2c0"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/cards2/_lpscl.txt",
+      "bytes": 26391,
+      "sha256": "23a634f661e957300f754655e895671bee9c997bc45c71f0fda3d0823f45b123",
+      "blob": "2f3e8764a691df84d23f762183221d6c4b43be88"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/changelog_before_review.md",
+      "bytes": 21946,
+      "sha256": "5cb2b18715e659f65cac9d8427a8c2767fecc13bc4db888314546bc33098f0e6",
+      "blob": "36ee5d9663df245df5518a2797178e5828ba035a"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/changelog_before_review2.md",
+      "bytes": 33321,
+      "sha256": "54bdc4fc9342854b053a6bb1eba605122e23513cda1ce1fb186dba7d73d46e35",
+      "blob": "21996c03373f054591b8e781103c9cc6e75dbc98"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/changelog_before_review3.md",
+      "bytes": 43623,
+      "sha256": "6892b084956b31ce5b2ff34ee12f672fb87bc486391bd0b9e863027a7b1d1256",
+      "blob": "a6f7f630ea687e842e13bd5a2dbc30a244bd12b5"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/changelog_before_review4.md",
+      "bytes": 53136,
+      "sha256": "e8d6cf8960b1d5c0c4d262282eccea07a8daaa5fd176cd99468da4b182dff989",
+      "blob": "4835a55a855d0703bb1d5fe8166c9129189fbe03"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/d1_new.txt",
+      "bytes": 4209,
+      "sha256": "da67c74f228d67038188d20d48773fa000e1d5777744145c0936e1753d445f63",
+      "blob": "7415b9aa1e0f00ffe264c672f9ee440745c2cbe2"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/drd_table_before_review.md",
+      "bytes": 15995,
+      "sha256": "7ef050cdcdbac2b58dfc835a89f2acc298b038ecddfc40266b8f7e5ee64867dc",
+      "blob": "7612be5ed425e63e6c9004fde399294ef2254177"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/drd_table_before_review2.md",
+      "bytes": 16565,
+      "sha256": "3773b992942c3d3b210a22d4e7f391b04f50a8dcb0279f4b7468cc3fe8b80b99",
+      "blob": "c2967b2dd500749e8055f7d17e5a1c9f867d2ae2"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/drd_table_before_review3.md",
+      "bytes": 19910,
+      "sha256": "a816eeb187d0279d2e43b43698056cee01f5cb97e3368a10a7dde6f59686e93c",
+      "blob": "1568f3709d7154e15aacdc321d7bc2ccab8d7ccd"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/drd_table_before_review4.md",
+      "bytes": 23416,
+      "sha256": "7e588de9efb7304b7a0ae02acee15e062329cd586d4ca2ff8e32bf530cadaf18",
+      "blob": "56d4bd813f46abaf78efda47692f62cefaad52d9"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/patch5.py",
+      "bytes": 46235,
+      "sha256": "1a77aa986a2376098800a44e2e65f07c5a7deb0ae75c1faf16ba6a73c7b6280d",
+      "blob": "5d2738ee7c583d8db686109f4801ba73e66eb6c0"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/patch_drd4.py",
+      "bytes": 8234,
+      "sha256": "a338d7fc7d635aeaad535a76dea7a7e816bb5b7c398a3fe9f3a9cf581dad2e95",
+      "blob": "97ff9483cac6b9644e3d03a3649566918e5e06db"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/patch_r3.py",
+      "bytes": 75985,
+      "sha256": "4deb8f0a16a5c868e1abba179ac2ecbdbc6bf1b32f1d5a878a7828c5649b4bb3",
+      "blob": "9f94036ad4f274fe0f57ee38c14ba0e3b088f36d"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/patch_r4.py",
+      "bytes": 69119,
+      "sha256": "9a21e0f721e5af0af93f60fa3093743f081358c13e346fda42bfcde949282275",
+      "blob": "f256093978f13465076b2f933bd2bbf8d2c1b24e"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/fix/tablecheck.py",
+      "bytes": 447,
+      "sha256": "f161c0af8070d406a4c6e8af39a694806771ebd7d2dca3924d3ee4506910e932",
+      "blob": "48a9f18496923bfb1f7a8b8a5e9e5820282d6e21"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md",
+      "bytes": 114603,
+      "sha256": "0dd491ec325d3a18bc0b43c975804b9e909385eda2817c8fcfdf623991923b8a",
+      "blob": "3ddf429f5e4095e89d6dd372cbb0a5a938c9cc4a"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+      "bytes": 407897,
+      "sha256": "2faf58241c7d657e1bda97ac1dc3fcf4b0619bac0fe814c844242eca9188cbe0",
+      "blob": "388dafdb52a7f2f1226ab495baf8eb69c565b4b8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2_before_review5.md",
+      "bytes": 388715,
+      "sha256": "c9a8f4322448266215e8fb3e27f9361c1ecf83f5803e7f3b2672db8d422866d6",
+      "blob": "bde61c1d32c72f0818f9802402aa8087b457d28a"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/_calc_r4_out.txt",
+      "bytes": 6960,
+      "sha256": "2e21d3e8b6cc4d187073f67fe9eaeea81f2844877d3a0133833b9eb77f0c6ee2",
+      "blob": "b8640851e866ed3d2f6c79d35e7655ef65419d4b"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/_diff_fix4_repo.txt",
+      "bytes": 254725,
+      "sha256": "f32f45194cf56ba98ee554c45b020c0f491bf6b7c204d523f4d65f54ab1af89c",
+      "blob": "2dc323c08f6ffe459b0831d163eee754f13c532b"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/_diff_fix4_scratch.txt",
+      "bytes": 252628,
+      "sha256": "a4aafc1a8cb486d43208f09c810f0e40bd47770baf7d97bbc692b1ccc2e9249f",
+      "blob": "ddf13b3732c865700b58dc7b21e1ca5b18b0f571"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/_diff_r3.txt",
+      "bytes": 196639,
+      "sha256": "990ca3cd81dea63f627eaf4407e247caa6de89c300a70d7743cc3d3c405be19b",
+      "blob": "e7f75f38603f1aeff02f39fbbac4fb46ab264208"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/_diff_r4.txt",
+      "bytes": 222170,
+      "sha256": "bf668193699afcd01e5c3d1b5036c52d4ce039ee02defc6b33b0f5d5053e01d7",
+      "blob": "7f6dc5d9ca7e8961ed8e07d994a64bab910d1018"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/_wdiff_fix4.txt",
+      "bytes": 73893,
+      "sha256": "16b8e45a290901d7d6fbd6f184f93e7c0090a286a3e0b14e4011e0c5a807a2f3",
+      "blob": "229b98aeca645fce4c06ae3c243f52b9540d3528"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/calc_a_rule.py",
+      "bytes": 1089,
+      "sha256": "d0d08f55290fdf8cf004d5e2965884152a419e31333614e54aa15e3d17eddc4f",
+      "blob": "910f8b9b959a2556a06dae0895988dda237bd16f"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/calc_a_rule2.py",
+      "bytes": 1887,
+      "sha256": "6a2e6da28f4ad670e4647dd16ae80bcf839e243273b41d20517840a2ca718263",
+      "blob": "ba96cb9133b66c3ffd5e075dace23ff24f66da35"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/calc_bh00_corner.py",
+      "bytes": 870,
+      "sha256": "868e45f1fce8c6a741a6b2de3ab39a73c0c878cf47fc7e512569922563277608",
+      "blob": "db03e052f4dfc52378f10c9b83f45468ac3526fa"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/calc_r2_rule.py",
+      "bytes": 7088,
+      "sha256": "4f63fa7a30b7f695086c9532feb0a7165dc32b762cdbc193e2cf0429ef5493cf",
+      "blob": "4393f23e4b1a662ac66a170503063c78df3c275d"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/calc_r3_rule.py",
+      "bytes": 10495,
+      "sha256": "070cb364ba11a2066ef9a4584791aa377a68d3b1e9833f3a4e8b312b2159101c",
+      "blob": "c0ecc1f9bec2022fc7db2bfe0b4846d69878555e"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/calc_r4_recheck.py",
+      "bytes": 14411,
+      "sha256": "e340aeb1a8e2b19e84650a2538df3451a2c571ad16e2c8c40861c34498ff3394",
+      "blob": "4764c9cbd9e9f07708aa1040d228b52f3288e8b8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/disposition.md",
+      "bytes": 18908,
+      "sha256": "f2ff530f46a5c03d70acf1d72f315f3effd5adc3907653c4c6d6427f677debcb",
+      "blob": "e069f3ee077a803c30c60fb5364cb4c647a24ce8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/disposition2.md",
+      "bytes": 14347,
+      "sha256": "bf70b1d2ff6fe332d2d1f534d318563d88de624ecdacac916008129b052ff2e5",
+      "blob": "9ebf92fb5248f785d71182f4e54767183edfd5e8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/disposition3.md",
+      "bytes": 20325,
+      "sha256": "d78a7d8de8a07b655ce38a4c0291b7e01754d7efcc03ea7b25a697e52dd03083",
+      "blob": "fcff235e8bee5df1198b7ee5c3cef7c7bdceaf5f"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/disposition4.md",
+      "bytes": 20914,
+      "sha256": "1881dfc547d6d8da96c252674f873cb0f2cd82b80b516e2e4922916b543ffd70",
+      "blob": "0639ffed9f932f79f6221b1a6547f4ef0425e2ff"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/disposition5.md",
+      "bytes": 21486,
+      "sha256": "ba87378fd1a9922d0eecf922f73ee66967dc4ecfe490c1f4b07f490aa7b27beb",
+      "blob": "876c668e3ecb08e0ee7d7b7100740634bc9caec8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/recheck5_calc.py",
+      "bytes": 31938,
+      "sha256": "a8c4ea9c24fa3cdc15de051d8b1ae89a988106a91d5f377ddd63f8ddfe6e7723",
+      "blob": "da13a0a04411e8081bd2e12bc876c902c287eecd"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/recheck5_calc_out.txt",
+      "bytes": 17671,
+      "sha256": "df64279c2e915f0b4ed0a7baf294b7037c5fca2fe74c3758083e510df84300a5",
+      "blob": "ec37298c247ce64d0b33c1252e4882e315d3d3dc"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/recheck5_fix4_memo32.md",
+      "bytes": 16608,
+      "sha256": "8d5e2dc7ec79fc408e25e701128c9e31a64c76bb79c1060b98d0b033b140b0a7",
+      "blob": "18f0b7bfe1207a683ea9a6052f54516ca5820223"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/review2_memo32.md",
+      "bytes": 27309,
+      "sha256": "9c8c4e2d0c0d0e95014cdebdc3090da65329067069cc107c144f096ea3015964",
+      "blob": "d0f89dfa064901acda25b563ffd64daa8551bbac"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/review3_memo32.md",
+      "bytes": 20793,
+      "sha256": "f2dbc98c01dce4b1827b8d77c353278c10b13d8b0506f49911fa00b5a5c0d6ff",
+      "blob": "2b789eeb21420688ea4afa15e29427cd8b759c87"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/review4_recheck_memo32.md",
+      "bytes": 17196,
+      "sha256": "5ee8aa4bf745b128bb98e31e35a53b19df9ad315987e91615602817a98120039",
+      "blob": "747e2f2c876112869a60c8649f53d45d6aef73ff"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/review_memo32.md",
+      "bytes": 29500,
+      "sha256": "5e62a4c503880b3698ecc17e225c255a4d51055bc1fd682a77588919c0abaf10",
+      "blob": "655c2ec1701ef719abf85bba147b93541ce09993"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/review/wdiff.py",
+      "bytes": 2082,
+      "sha256": "fb709d49bf2709282357d381a11ea2fe34560ecb8d296a240cab7e0f8e58ec98",
+      "blob": "208e301d7a61e7b46b5f01cf3a41882a6a5b4d35"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md",
+      "bytes": 3830,
+      "sha256": "2349db91d5c0f1bca9329b00b3ccec3be03062a732c8973c4b88daa70c2ef8df",
+      "blob": "00eacf16f483de79cfb1ce4681601598b2a5eed8"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "docs/mpm_dem_wallP_crossvalidation.md",
+      "bytes": 9093,
+      "sha256": "52c9379b7d7929550d41e518130afd2cf675dded92f43952ed68fc96c5dc2426",
+      "blob": "dbe30b10f9a3609d5a7fa7cefaa6857cd95c3e10"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "scripts/mpm2d_real9.py",
+      "bytes": 8721,
+      "sha256": "4d0644e2e7baa1f7085d5aeb27859c9cb0c9022f611a9c737855b3ea81ce1131",
+      "blob": "99e0c015a83e33430e2a2909c895b055f0ee3634"
+    },
+    {
+      "namespace": "snapshot",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "scripts/mpm3d_compaction.py",
+      "bytes": 335832,
+      "sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+      "blob": "fb1bf65535135ecdb7acb87833b7acdb389e54db"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/bardenhagen2000_mpm_granular_multibody_frictional_contact.md",
+      "bytes": 50555,
+      "sha256": "a7cd186bdb3d873168c3b6d5e311a741a2dc08b53dc607ae571b319a597ef561",
+      "blob": "bd0758cf5b1b2a1fb1637c55a7dce72d55349b80"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/bardenhagen2001_mpm_improved_contact_granular_stress_waves.md",
+      "bytes": 51721,
+      "sha256": "1ea8b77cc5d575fb8e3bd86940266ed3d820e707492cfac233d3af71202b61bd",
+      "blob": "3aa2aef30f5743449b71656530ee1fc66abe1be7"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/beutl2024_round_robin_coin_cell_sulfide_assb.md",
+      "bytes": 62607,
+      "sha256": "fe5539ce111b6304b7e80e9c207de8a04eb6b418e0b2486e29617a40467132d2",
+      "blob": "8b38aff0e555b3b13eeac5b63a4b740dd919c2d7"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd.md",
+      "bytes": 66911,
+      "sha256": "2a4cf40d3cad4e5e5d96a49ed6d4564676248965ed58141f6cf336fe00de2db6",
+      "blob": "5500422e6ff82773056e0accc89268c5f0d9fd7f"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings.md",
+      "bytes": 21050,
+      "sha256": "6d26ce059868e3bbdd7a6a9bf535e080da5ee61d52aca1e6fab7200b417abf19",
+      "blob": "1903f8fdc4a9cc1c211c817b6a48e9314e25da3b"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/cardenasbarrantes2022_soft_hard_grains_compaction_experiment_dic.md",
+      "bytes": 105395,
+      "sha256": "e6b54585ec0474de44cd2ca6de8616066b808c2dbd554e000848a8114410e658",
+      "blob": "cc240fd50a092403de46d9d71691193d0a4acc69"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/cardenasbarrantes2022_soft_spheres_3d_compaction_nscd.md",
+      "bytes": 94938,
+      "sha256": "1fbc0e0646a33fe5d49c8205c4c4a092bb412b06a3ceaa2af193e9cd4b983043",
+      "blob": "893f81ae4cdbd8ac7707699699564ded31f15a85"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/cronau2021_stack_pressure_ionic_conductivity.md",
+      "bytes": 96991,
+      "sha256": "31d994ffa0eb76e10fce184aba9175af3c9381fe65c4292055a38abf4777d4c6",
+      "blob": "a292060570d33305f32333102c4339bb79a49e78"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/demirtas2021_mpfem_hollow_sphere_die_compaction.md",
+      "bytes": 84508,
+      "sha256": "dd102e16eeac99915ea0c494da85c6e738da41b8c3dd344253e1a3134f056698",
+      "blob": "ed3b03fdcdc6b16ace8bc7e991e9b3b07d7d025a"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density.md",
+      "bytes": 68851,
+      "sha256": "970118198f6fcfe27e45621a3c9190db47e523e7aef5b1ab06721c5b7ec3e20d",
+      "blob": "4f968f00d6b245ab847570a83728afd70b2bad74"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/doux2020_pressure_effects_sulfide_se_jmca.md",
+      "bytes": 53596,
+      "sha256": "4764b9b0db4c3e3c106d3b08eb95b8b4e7dee1aa7371807bc33f1d577271194c",
+      "blob": "60095c438e53816b691c40365256f64197c9d80a"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/doux2020_stack_pressure_assb.md",
+      "bytes": 28411,
+      "sha256": "551682ec27b7d8043ec766a0bc529c86fbb60f0f30891d85b7c5c236eb8b3112",
+      "blob": "8a67c00442a1c8c821b8c6246024134019cd4f1a"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/faka2026_particle_size_consolidation_strain_lpscl.md",
+      "bytes": 38365,
+      "sha256": "1ad598fe5f4920501e5f7b0fae5237856e29e86e8fa99d038bc52c1701a439f3",
+      "blob": "e5e3c668b0d365be193712b730daf356f1701aac"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure.md",
+      "bytes": 53645,
+      "sha256": "e5ced1a9be9815cd55d29d9e09f227052c203f32972b26559717f349e8b89f66",
+      "blob": "70ad530c836b0250f22fd70ac954a766ebdbb3e2"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/giannis2021_stress_based_multicontact_dem.md",
+      "bytes": 51770,
+      "sha256": "9d2618cafd7087912c45d630e728fd230caa2287b7cb80c668c3df3165c79f6e",
+      "blob": "33392674a5083269ecaa53ccd985f6634c096e8a"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/homel2017_mpm_field_gradient_partitioning_fracture_self_contact.md",
+      "bytes": 114559,
+      "sha256": "37777788261447dee8cf1d045eec61da248c1597ab13b8bbb1ecde961a1788e5",
+      "blob": "65cc5dd17765dc9582ae03d0320d2fe920d4e449"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/hu2018_mls_mpm_cpic_two_way_rigid_coupling.md",
+      "bytes": 90357,
+      "sha256": "0eebc7c075916154527cd206be0f0d10fc156e82c1a8c05281675b10365faf80",
+      "blob": "0604742c642911a8d924a760ef2f3be6427ac937"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/jung2026_sio2_cosubstitution_mechanical_argyrodite.md",
+      "bytes": 41768,
+      "sha256": "47792f751d406a18a0651f20e62b8ad78d15bc2b6d4004904b0aa906da674331",
+      "blob": "cab04bd0af8dcec5d0ecaf73a1e9899d66eb87ea"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/ketter2025_resistor_network_models_predict_transport_properties.md",
+      "bytes": 61036,
+      "sha256": "8d58d69da8ab3bc1b9928782c1071d4b77c43d5a43baead63e9f3bbe2c08de72",
+      "blob": "e7c3ef16d4597fa7db82ef6d3874c4e8ef45d227"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens.md",
+      "bytes": 77771,
+      "sha256": "f6af0af52bffb9e60fe9dac6e5d03e82336840fdfa779c8eb71a458c2f65dc7e",
+      "blob": "4de5e3499175da64d5fbc34693ad8b86466be3ec"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity.md",
+      "bytes": 62630,
+      "sha256": "ce338f1ee88d630f26b7bf85e473f3787bc6e212c85e67892f6921e722581edb",
+      "blob": "8e6f831c4b23b0c99d201b354bfc45e5424db277"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/lee2025_heckel_argyrodite_powder_densification_nanoindentation.md",
+      "bytes": 37479,
+      "sha256": "225e31cca079c3af408948e5ec3e3870904236627cebe3db01d5cf2ce6e5ad46",
+      "blob": "7bccdb72d6716671fed2cdc87a2f3c4caa14f5ae"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/lee2026_mechanical_halogen_argyrodite_drycoating.md",
+      "bytes": 72499,
+      "sha256": "bcfc5068e4537778b1214679fdcf74454924983598ca1ea474e963a570ab2d7d",
+      "blob": "dc6df13a54c97828fe3ecfc8caed3d8d2564d365"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/martinbouvard2003_dem_composite_cold_compaction.md",
+      "bytes": 19095,
+      "sha256": "32588bf078df06c9648f964d0064aaf94a7e79b984138eb329a3ab3c96fbd53a",
+      "blob": "f62b354b898ee36f811fef4e1d04c74e853014dd"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/miss2026_insitu_conductivity_porosity_pressure_compaction.md",
+      "bytes": 56663,
+      "sha256": "8b88570d2cfdeadc5b96b5bbbc69d439e37970501a712b38b36374231c698121",
+      "blob": "64cfcc00fa02aec7039ecbc35831aae7ebbe82b0"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/nezamabadi2022_mpm_cd_plastic_particle_compaction.md",
+      "bytes": 54254,
+      "sha256": "89fea8a356b7da7625a9ea197603448bf4b379cd0336080c766e6d736cd1755d",
+      "blob": "cd3bb4f57550a0e51acafaf97e5ace6b35061f72"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/nguyen2017_mpm_bpm_deformable_particle_compaction.md",
+      "bytes": 37781,
+      "sha256": "3e847ba9fba212eed33f73919ac5707fcb1b3ba2c25aecbfabbaad7f24a2d2b3",
+      "blob": "d2e2da4d797805339cd69127558841ae980a8764"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/ohno2020_interlab_ionic_conductivity_argyrodite.md",
+      "bytes": 46201,
+      "sha256": "cdc1f72cfbdabad0d4e288fb2936381984a8af4cfb48545b431f36b327b1e13f",
+      "blob": "eac1790ebb2810326370eb555cc9a7b67d562ccb"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/papakyriakou2021_mechanical_behavior_inorganic_li_solid_electrolytes_nanoindentation.md",
+      "bytes": 87938,
+      "sha256": "83b9af0d8df9b86d071d8f719f606a2393c3a39a057e6d4d38b645c40ef006ba",
+      "blob": "a4bcfb7361a77cd6f8b7d7f1e7ea518bee567dfd"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/pycompact2025_dem_mpfem_workflow.md",
+      "bytes": 106106,
+      "sha256": "49098a830ade55cf3f8f7ae3c83fde78dc7196444ad79d9f8b0eb9f0e434d034",
+      "blob": "4f7bdea013374ce23dd2502a52af5e0893226c07"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/so2021_dem_mold_pressure_assb_coldpress.md",
+      "bytes": 19923,
+      "sha256": "aa75871b99f8882950a485acbc3a22b61ad878b964c5853482579cf614f0a8f4",
+      "blob": "c06ab2ca34407185de69c5874e9c7b35a3b841d2"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/so2022_dem_contact_model_assb_compaction_sintering.md",
+      "bytes": 36074,
+      "sha256": "ea1e32d0970c8632f88d9f7369be1dcf767c2e0f9133c60ced07c0b071a296bc",
+      "blob": "4a1bacf012a36eae14539126c1289c4c82fb151c"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/song2025_porous_argyrodite_modulus_fracture_toughness.md",
+      "bytes": 25951,
+      "sha256": "e81ee1ef0efee30823c519314a006632502757784ac03ff1fbb44471898e7367",
+      "blob": "0d42393e5bf2955e9ba5127986b4521089c858e3"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography.md",
+      "bytes": 37204,
+      "sha256": "d248f7efa559b651692591491560f27acc213aaffea09f280027dbf645f4f2eb",
+      "blob": "7a7ac7dfaf91d47172596c3e1c589af897ad3de2"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/tron2023_lpscl_ccd_ambient_pressure.md",
+      "bytes": 58650,
+      "sha256": "ef0c0fb1c36d842bdac6fcbe6f7ac1e5c85dd9f4a8bf0c0614e5b658f27b7df4",
+      "blob": "f03b0b74af4dc4ea25457fa93d024af9fe160c1f"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/var2026_sulfide_se_mechanical_properties_local_indentation_pellet.md",
+      "bytes": 74043,
+      "sha256": "32ca8b64ce9a056e9b3d3af8777790fda7fd1288150301ba7961707fa6434bdc",
+      "blob": "7c0f95a7d223f02fc96fa3b28f6c22359352b342"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/varkey2026_multicontact_elastoplastic_dem.md",
+      "bytes": 8676,
+      "sha256": "250538f9e11c12f6848c3b6258a500d7d15269a6fc91848fc741e2868413ef3a",
+      "blob": "39a80858d6ea9b929bc932404837ca43e44f4441"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/wang2024_hot_pressed_lpscl_pressure_invariant_conductivity.md",
+      "bytes": 52487,
+      "sha256": "46ebb901e58d819daf1ea24093f63ff963056619bd94241d0bd8c6634fdeaaa3",
+      "blob": "7a6cf99247e8a8b46adc013a4449c9594d6c72de"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/zhou2019_solvent_engineered_argyrodite_li6ps5x_conductivity.md",
+      "bytes": 72603,
+      "sha256": "ec3b0b04ca10f1740385165b5a72b2eb9a0e8e1487f1ab4197a168a38359cf46",
+      "blob": "8022bbd76a8eae770cb8c8560ad2cc920ef55b21"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/zunker2025_dem_large_deformation_compaction.md",
+      "bytes": 131299,
+      "sha256": "d57045f990b969087ce597ad6d78bd5b0b4a24c9f58d0f59b03feb9607d7abbb",
+      "blob": "083dc910b67f8e54ab43d70c10263e85d8faf02d"
+    },
+    {
+      "namespace": "literature",
+      "pin": "4243d57fa5b62461b35d4a8ceff736599a87484e",
+      "path": "litdb/papers/zunker2024_mdr_contact_model_partI.md",
+      "bytes": 38287,
+      "sha256": "8f2822409bfe199028c00665474c96289f14259da8edaa107ce9f67a7d0d9313",
+      "blob": "12ec65d5985b73b3944cdd01fd335429d129330e"
+    }
+  ],
+  "new_test_execution": 0,
+  "physical_results": 0,
+  "selection_note": "Case-preserving slug matching; partI exact title included after initial lowercase-only scan."
+}
