@@ -1,0 +1,130 @@
+{
+ "all_identical": true,
+ "args": {
+  "backend": "cupy",
+  "label": "kgy",
+  "logc": 1.0,
+  "maxiter": 60000,
+  "n_side": 298,
+  "new": "<HOME>/q11check_kgy_20261113T044848Z/s3_new.py",
+  "new_sha": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+  "old": "<HOME>/q11check_kgy_20261113T044848Z/s3_old.py",
+  "old_sha": "8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec",
+  "rtol": 1e-12,
+  "rtol_resolve": 1e-14,
+  "seed": 20261112,
+  "short_iters": 200
+ },
+ "backend": "cupy",
+ "control_new_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "control_old_old": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "env": {
+  "cupy": "12.3.0",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "numpy": "1.24.4",
+  "python": "3.8.10"
+ },
+ "error": null,
+ "expect": "all pairs bit-identical; new faster per iteration",
+ "files": {
+  "new_sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+  "old_sha256": "8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec"
+ },
+ "label": "kgy",
+ "main_new": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "info": 0,
+  "iters": 2631,
+  "per_iter_s": 0.012967,
+  "seconds": 34.116,
+  "x_sha256": "64f21eae1572ef3d62eb62df581b69b994a25eb8c2c10c9c3b005027dc639650"
+ },
+ "main_old": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "info": 0,
+  "iters": 2631,
+  "per_iter_s": 0.04754,
+  "seconds": 125.077,
+  "x_sha256": "64f21eae1572ef3d62eb62df581b69b994a25eb8c2c10c9c3b005027dc639650"
+ },
+ "main_old_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "resolve_new": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "info": 0,
+  "iters": 621,
+  "per_iter_s": 0.015067,
+  "seconds": 9.357,
+  "x_sha256": "b0132b4e1e6cc35fa8432c4bb7e0a723ad7c8ffd48ec03b4c617d71ea2b051c5"
+ },
+ "resolve_old": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "info": 0,
+  "iters": 621,
+  "per_iter_s": 0.050311,
+  "seconds": 31.243,
+  "x_sha256": "b0132b4e1e6cc35fa8432c4bb7e0a723ad7c8ffd48ec03b4c617d71ea2b051c5"
+ },
+ "resolve_old_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "schema": "q11-gpu-check-v1",
+ "short_old_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "speed_ratio_main": 3.666,
+ "system": {
+  "n": 26463592,
+  "nnz": 184712320
+ }
+}

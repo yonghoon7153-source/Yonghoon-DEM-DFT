@@ -1,0 +1,8 @@
+pin=56f4cfbb1d26371007b460a992d4cfc1ef68e950
+probe=1
+tag=q2q11
+kit=kit_SBE_vgcf100
+out=ca1_s0_sbe_20261113T014726Z_q2q11
+store=cjstore_s0probe_20261113T014726Z
+start_utc=20261113T014726Z
+end_utc=20261113T032036Z

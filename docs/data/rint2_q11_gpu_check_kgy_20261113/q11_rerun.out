@@ -1,0 +1,10 @@
+[q11] built: n 26463592, nnz 184712320 in 9.5 s (logc 1.0)
+[q11] control old vs old (200 it): {'bytes_identical': True, 'value_differ_count': 0, 'max_abs_diff': 0.0, 'info_same': True, 'iters_same': True, 'backend_same': True}
+[q11] control new vs new (200 it): {'bytes_identical': True, 'value_differ_count': 0, 'max_abs_diff': 0.0, 'info_same': True, 'iters_same': True, 'backend_same': True}
+[q11] short old vs new (200 it): {'bytes_identical': True, 'value_differ_count': 0, 'max_abs_diff': 0.0, 'info_same': True, 'iters_same': True, 'backend_same': True} - per iteration old 0.05289 s, new 0.018475 s
+[q11] main old: info 0, iterations 2631, 125.077 s (0.04754 s per iteration)
+[q11] main new: info 0, iterations 2631, 34.116 s (0.012967 s per iteration)
+[q11] main old vs new: {'bytes_identical': True, 'value_differ_count': 0, 'max_abs_diff': 0.0, 'info_same': True, 'iters_same': True, 'backend_same': True}
+[q11] resolve (x0 = old main solution, rtol 1e-14): old info 0 it 621, new info 0 it 621 - {'bytes_identical': True, 'value_differ_count': 0, 'max_abs_diff': 0.0, 'info_same': True, 'iters_same': True, 'backend_same': True}
+[q11] DONE label kgy: all pairs identical = True, main per-iteration ratio old / new = 3.666
+[q11] rc 0 - send back ~/q11check_kgy_20261113T044848Z/result.json and check.log
