@@ -13073,6 +13073,73 @@
     "근거_발화": "사용자 2026-11-11 (이 세션 · AskUserQuestion): cascade 묶음 2 마감 (커밋 7f785e9e · 판독 막는 게이트 전부 통과 · 선택 As2S3 · BaO · Na2O · SiO2 · SrCl2 · SrO · 카드 §9 닫는 조건 충족) '비준 — 묶음 2 마감 (Recommended)'",
     "decision_digest": "sha256:dad7d20f307e991c8cbff27d3cef50068a514c4a34d5d0c9ef49875349b9c511"
    }
+  },
+  {
+   "id": "D-2026-11-13-b2o3-bo-placement-amend5-dft",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.dft_stage9",
+   "slot": "b2o3_bo_placement_dft_stage9_amend5",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family"
+    ],
+    "methods": [
+     "qe-uspp-paw__pbe-scf-fixedcell-relax"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 카드 개정 5 (결과 전) — 9 단계 DFT 운영값 · 탐침 발동 (세 가족 쌍) · 기준 셀 만들기 · 출력 결속 · EOS (E, P, V) 출력 파일 결속 (DY 확인 4) · 10 단계 고르기 기계화",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_5_9단계_DFT_운영_2026_11_13' 이 개정 1 9_DFT · 10_고르기의 빈 운영값을 채운다: SCF (mixing plain 0.3 · electron_maxstep 200 · david · disk_io nowf · tprnfor · 이완만 tstress) · 유사포텐셜 파일 이름 · 단일점 대상 = 판 고정 판독기로 다시 낸 8 단계 성공 목록의 가족별 최저 둘 · UMA 기하 그대로 · 가족 대표 = 단일점 최저 · k 탐침 발동은 세 가족 쌍 모두 (0.05 변화 · 순서 · 0.10 경계) · 발동하면 4×2×1 새 판 · 기준 셀 = host 1×2×5 cellpar 를 V₀ 2436.33 으로 등방 스케일 · 이온 이완 bfgs forc 1.0d-3 · etot 1.0d-5 · nstep 200 · (E, P, V) 는 이완 출력에서 도구가 읽어 판 고정 eos_robust 로 · 출력 · 앞 단계 판정을 다시 내서 결속 · 누락 ≠ 실패 · 실패 잡이 있으면 판정 안 함 · EOS 생략일 때만 10 단계 고르기 · 생략 불가면 멈춤.",
+   "rationale": "개정 1 은 9 단계의 규칙 (단일점 · k 탐침 · 고정셀 이온 이완 · EOS 생략) 을 정했지만 운영값과 출력 결속이 비어 있었고, Codex DY 는 EOS 의 (E, P, V) 결과 파일 결속을 DFT 진입 전 조건으로 남겼다. DFT 결과를 하나도 보기 전에 운영값 · 도구 · 음성 시험을 고정한다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "DFT 결과 0 건 · 8 단계 · 8b 판독 (사유 ③) 은 봤다 — UMA 판정은 바꾸지 않는다",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "record": "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json",
+   "amends": "D-2026-11-09-b2o3-bo-placement-amend1",
+   "depends_on": [
+    "D-2026-11-09-b2o3-bo-placement-amend1",
+    "D-2026-11-10-b2o3-bo-placement-amend4-ea",
+    "D-2026-11-09-cell-construction-protocol-v1"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_5_9단계_DFT_운영_2026_11_13)",
+    "tools/doping/b2o3_bo_dft.py sha256 559f0152b8774b022c1ae53a9db7ebf52569c191182127dd42af59369a59c60a (selftest 66/66 · 깨기 38/38)",
+    "kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md (확인 4 — EOS 결과 파일 결속은 DFT 진입 전)"
+   ],
+   "reopen_criteria": [
+    "DFT 결과 (단일점 · 탐침 · 이완) 를 연 뒤에는 이 운영값을 바꾸지 않는다 — 바꿔야 하면 새 개정 · 새 폴더"
+   ],
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": "claude-session-2026-11-12 (evac)",
+   "cost_cap": {
+    "dft_GPU_h": "상한 60 (개정 1 그대로 · 어림 20–45 · 발동 시 + 단일점 6)",
+    "machine": "gabia GPU · UMA 와 동시 금지"
+   },
+   "enforcement": "tools/doping/b2o3_bo_dft.py — 판 고정 판독기 (872d91f7) 로 8 단계를 단계마다 다시 결속 · 입력을 묶인 구조에서 다시 만들어 sha256 대조 · 출력 검사 (설정 · PP MD5 · 셀 · 처음 좌표 · 수렴 · 응력 위치 · 부피) · 앞 단계 판정을 출력에서 다시 내서 대조 · (E, P, V) 는 출력에서 · 판 고정 eos_robust · 10 단계 규칙",
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 2026-11-13 'ㅇㅇ ㄱㄱ' (9 단계 DFT 준비 · 도구 뒤 Codex 확인 권고에 동의) — 도구 · 개정을 DFT 결과 전에 커밋 · Codex EF 뒤 사용자 비준"
+    }
+   ],
+   "ratification": {
+    "state": "proposed"
+   }
   }
  ]
 }
