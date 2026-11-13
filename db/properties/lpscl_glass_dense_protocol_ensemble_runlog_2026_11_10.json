@@ -145,5 +145,22 @@
   "결과_열람": "없음 — 진행 신호만",
   "다음": "16 런 + 큐 끝 줄 뒤 readout · pressure 한 번 (카드 `판독_허가_2단계` 걸림)",
   "by": "agent (위임 10-30) · 2026-11-12"
+ },
+ "진행_2026_11_13_1051": {
+  "출처": "사용자 붙여넣기 2026-11-13 10:51:50 KST (kgy esp-Z590-AORUS-MASTER · watch -n 30 · 큐 로그 끝 줄 · 끝난 런 수 · md.log 마지막 줄 · nvidia-smi · 대조 잡 줄)",
+  "끝난_런": "12 / 16",
+  "지금_런": "A seed11 T750 — 07:36:59 시작 · PID 2465266 · --seed 3011 · 시작 전 GPU 4061 MiB (≤ 6,000) · run_meta OK (prod 400 · seed 3011) · dt OK (0.0020 ps/행) · 10:51 md.log 258.0 / 405 ps (64 %) · 순간 T 719.2 K",
+  "속도": "≈ 79.4 ps/h (07:36:59 → 10:51:50 · 258 ps) · 이 런 끝 어림 ≈ 12:42 · 남은 3 런 × ≈ 5.1 h → 16 런 끝 ≈ 11-14 04 시 무렵 (11-12 어림과 같다)",
+  "GPU": "6451 MiB · 90 % (esp 앱 ≈ 4 GB + 우리 MD ≈ 2.4 GB)",
+  "대조_잡_v3": "same = True · 차이 0 건 · /home/kgy/li2s3_control_job_v3.json · 머리 63fb4bb1e65a0509 (카드 판독_허가_2단계 와 같음)",
+  "사용자_질문_일시정지": {
+   "질문": "사용자 11-13 10:5x '이거 잠깐 stop해서 gpu 사용 안할 수 있나?'",
+   "답 (agent)": "MD 파이썬 (PID 2465266) 만 kill -STOP → GPU 계산 0 · VRAM ≈ 2.4 GB 는 쥔 채 · kill -CONT 로 258 ps 에서 그대로 이어짐 (결과 같음). 근거: v1 러너 (glass_kgy_q_v2.sh · sha16 3aef029a) 는 시작 검사 뒤 `wait $PID` 만 한다 (비대화형 bash 의 wait 는 멈춤에 안 돌아온다 · 정체 감시 없음) · 큐 상한 검사 (누적 + 직전 런 > 160 h) 는 ≈ 40 h 넘게 세워야 걸린다 · 얼린 시간은 이 런의 장부 시간에 들어간다 (판독 ⑥ 비용은 기록만 · 게이트 아님) · 풀 때 다음 런 시작 문턱 (GPU ≤ 6,000 MiB · 1 h) 에 다른 잡이 걸리면 v1 큐가 멈춘다 (종료 12 → 카드: v1 다시 안 침 · 남은 런 큐 v2) · 죽이기는 권하지 않음 (258 ps 손실 · 사람 정지 = v1 재기동 금지)",
+   "블록_얼리기": "P=2465266; case \"$(cat /proc/$P/comm 2>/dev/null)\" in python*) tr '\\0' ' ' < /proc/$P/cmdline | grep -q \"li2s3_stage2_2026_11_10/A/seed11/T750\" && kill -STOP $P && sleep 3 && ps -o pid=,stat=,etime= -p $P && nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader && date \"+%F %T 얼림\";; *) echo \"⛔ PID $P 가 그 MD 가 아니다 — 안 건드림\";; esac",
+   "블록_풀기": "P=2465266; kill -CONT $P && sleep 3 && ps -o pid=,stat=,etime= -p $P && date \"+%F %T 다시 돌림\"",
+   "실행": "미확인 — 사용자가 얼렸는지 · 언제 풀었는지는 다음 붙여넣기로 적는다 (얼렸으면 그 런의 장부 시간에 정지 시간이 들어간다)"
+  },
+  "결과_열람": "없음 — 진행 신호만",
+  "by": "agent (위임 10-30) · 2026-11-13"
  }
 }
