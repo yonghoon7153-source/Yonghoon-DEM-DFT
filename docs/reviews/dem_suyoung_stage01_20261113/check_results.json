@@ -1,0 +1,40 @@
+{
+  "base": "f846f5bbe3a2d7cdbe256f29a5e3ef969835e1e2",
+  "code_or_tests_changed": false,
+  "research_results": 0,
+  "actual_input_read": false,
+  "native_checks": [
+    {
+      "repo": "dem",
+      "script": "check_doc_refs.py",
+      "rc": 1,
+      "stdout_sha256": "1f192130aa8e58ec4ec5609d3468dbb9035e9d8d2616d8b5fd2b5ba051f32db6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "repo": "dem",
+      "script": "check_review_findings.py",
+      "rc": 0,
+      "stdout_sha256": "f5387565fa3e2a2f2b08a93c6c3310c7bd67d3d69f5fdb67ad83ae258eba7a7b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "final_reference_log_sha256": "1f192130aa8e58ec4ec5609d3468dbb9035e9d8d2616d8b5fd2b5ba051f32db6",
+  "doc_refs_diagnostic": {
+    "native_rc": 1,
+    "known_windows_path_exception_occurrences": 96,
+    "unmatched": [],
+    "missing_paths": 0,
+    "checker_changed": false
+  },
+  "document_checks": {
+    "source_hash_and_six_section_hashes": "PASS",
+    "packing_slots": 3,
+    "pending_seed_slots": 3,
+    "freeze_record": null,
+    "status": "DRAFT_NOT_FROZEN",
+    "measurement_points": "manual comparison with memo stage3 3a/3b",
+    "U5_obligations": "eight including 2-prime; source preserved",
+    "scientific_validation": false
+  }
+}

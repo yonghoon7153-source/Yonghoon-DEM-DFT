@@ -1,0 +1,39 @@
+{
+  "source_path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+  "source_pin": "5afa16488c6cf70d333406bc0802c2139b4a425c",
+  "source_sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0",
+  "sections": {
+    "observables": {
+      "first_line": 271,
+      "last_line": 288,
+      "excerpt_sha256": "7c64c24629fc0dd6161d5c79238b1044f3e22d58095f6001168ffecdcce2cec4"
+    },
+    "stage0": {
+      "first_line": 307,
+      "last_line": 323,
+      "excerpt_sha256": "a0c2d0f1cabd21017a1e91b547085f04d48eb62b6c04b09128f6d81083558ea9"
+    },
+    "stage1": {
+      "first_line": 325,
+      "last_line": 334,
+      "excerpt_sha256": "2e67268794f810f103eda8facf8c8495aec47e2cf0884d5f3a7942695883e011"
+    },
+    "stage2": {
+      "first_line": 336,
+      "last_line": 363,
+      "excerpt_sha256": "6fad3587ac10b18b0a7903938942041a5901f7a24f287aa6e22fcc676be3d2ac"
+    },
+    "stage3": {
+      "first_line": 365,
+      "last_line": 481,
+      "excerpt_sha256": "e7bf388be9817f17a197a20b2fbb32a55ba1a062f6924a96cfe777e65b11f2a4"
+    },
+    "rule38": {
+      "first_line": 693,
+      "last_line": 693,
+      "excerpt_sha256": "ea4c62f86c3e50f853bba9ef663e1c3ab856b2842ba8d2b68fcf26909934ea99"
+    }
+  },
+  "external_papers_reopened": false,
+  "actual_dataset_read": false
+}
