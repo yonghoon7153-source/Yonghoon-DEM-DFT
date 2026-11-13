@@ -7,7 +7,7 @@ letter: EG
 track: b2o3
 channel: codex
 kind: prompt
-status: 작성 2026-11-13 · gabia v2 검사 전 (결과를 §4 에 넣은 뒤 발송) · 코드 기준 = 이 편지를 들인 커밋 (브랜치 claude/evac-2026-11-12) · 앞 편지 EF (NO-GO · v1 4b95dedb)
+status: 작성 2026-11-13 · gabia v2 검사 결과 넣음 (HEAD 328cf95b1 · 입력 sha256 로컬 = gabia 6/6) · 발송 (사용자) · 코드 기준 커밋 328cf95b (브랜치 claude/evac-2026-11-12 · 도구 sha256 4e865e5c · 실행기 9157ca2c · 변이 도구 0c8ef487) · 앞 편지 EF (NO-GO · v1 4b95dedb)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -29,7 +29,7 @@ evidenceScope: multi-source-primary
 
 EF 회신 (NO-GO · P1 6 · P2 6 · v1 커밋 4b95dedb · 도구 sha256 559f0152) 을 고친 v2 다. DFT 결과는 여전히 0 건 (GPU 잡 하나도 안 돌았다). 바뀐 것은 도구 `tools/doping/b2o3_bo_dft.py` (v2 · `reject` 명령 추가) · 실행기 `tools/doping/run_force_check_scf.sh` (`_gpu_guard`) · 카드 `개정_5_9단계_DFT_운영_2026_11_13` 의 v2 문구 · 결정 `D-2026-11-13-b2o3-bo-placement-amend5-dft` 의 status_history (여전히 proposed). 판 고정 판독기 (`b2o3_bo_readout.py` 872d91f7… = 12b8bdef) 는 그대로다.
 
-v2 sha256 — 도구 `4e865e5c3e5785b24955b2805d11fe3f3905ca5ae1fc0911acd513f96e2f9048` · 실행기 `9157ca2cd953555a34e16bf2b51e6a3de1f3a71676ea4085ae29ef7c4923a04e` · 변이 시험 `tools/doping/b2o3_bo_dft_mutations.py` `0c8ef4871c0b82abab17190eb535ddc5af736f933fcbd2d7a1fad6c285ff9f93` (새 파일 · 아래 §3). 커밋은 이 편지를 들인 커밋이고, gabia 가 그 판을 꺼낸 HEAD 를 §4 에 적는다.
+v2 sha256 — 도구 `4e865e5c3e5785b24955b2805d11fe3f3905ca5ae1fc0911acd513f96e2f9048` · 실행기 `9157ca2cd953555a34e16bf2b51e6a3de1f3a71676ea4085ae29ef7c4923a04e` · 변이 시험 `tools/doping/b2o3_bo_dft_mutations.py` `0c8ef4871c0b82abab17190eb535ddc5af736f933fcbd2d7a1fad6c285ff9f93` (새 파일 · 아래 §3). **코드 기준 커밋 `328cf95b`** (도구 · 실행기 · 변이 도구 · 카드 · 결정 · 이 편지 초안) — gabia 가 이 판을 꺼냈다 (§4) · 그 뒤 커밋은 이 편지 §4 · 런로그 · 미결 목록뿐이다 (코드 변경 없음).
 
 **묻는 것**: EF 의 반례가 v2 에서 막히는지 (재현해 보고) · 고치면서 새로 생긴 구멍이 있는지 → GO / 조건부 GO / NO-GO.
 
@@ -42,13 +42,13 @@ v2 sha256 — 도구 `4e865e5c3e5785b24955b2805d11fe3f3905ca5ae1fc0911acd513f96e
 | **P1-3** 탐침 격자 | 입력에 **nosym** (시간 반전만 · 대칭 축소 없음) → 출력의 k 점 직교 좌표 (2π/alat) 를 출력의 결정 축으로 분수 좌표로 바꿔 **요청 격자 (shift 0) 위에 있는지 → 가중치 몫 (w·N/2 ∈ {1, 2}) → 격자 전체를 정확히 한 번씩 · 합 2** 를 본다. 점 수 비교가 아니다 | `kmesh_problems` | 탐침 출력이 3×2×1 목록 (4 점 · 같은 에너지) · 단일점 출력이 4×2×1 목록 · 단위 시험 (줄임 · 안 줄임 (noinv 꼴) 통과 · shift · 점 빠짐 · 가중치 1.5 배 · 짝 점 5/6 · 대칭 축소 · 더 성긴 격자) |
 | **P1-4** 이완 기준 | 출력의 `(criteria: energy < … Ry, force < … Ry/Bohr)` 줄 · 머리의 `energy/force convergence thresh.` · `nstep` 이 계약 (1e-5 · 1e-3 · 200) 과 같음 · **마지막 힘 블록 (원자 수만큼 다 읽음) 의 모든 성분 ≤ 1e-3 Ry/Bohr** (벡터 크기 아님) | `out_problems` (relax) | 기준 1e-2 · 1e-1 · 머리 문턱 1e-4 · nstep 50 · 마지막 힘 성분 0.05 |
 | **P1-5** 전자 수 | 유사포텐셜 가전자 수를 계획에 기록 (UPF v1 `Z valence` 줄 · v2 `z_valence` 속성) · 출력 전자 수 = Σ 조성 × 가전자 − 총전하 (입력에 `tot_charge = 0.0` 명시) · **결측 거부** · PP 마다 출력 Zval = 계획 | `pseudo_record` · `upf_zval` · `out_problems` | 595 · 줄 삭제 · S Zval 5 · 가전자 못 읽는 UPF |
-| **P1-6** EOS 보류 대상 | EOS 필요면 `stage10` · `electronic_targets` **둘 다 null** · 이완 구조는 `relaxed` 에 진단 자료로만 (`relaxed_note`) | `read_relax` | 세 가족 |P| 2.5 GPa · 차 0.095 + |P| 1.9 |
+| **P1-6** EOS 보류 대상 | EOS 필요면 `stage10` · `electronic_targets` **둘 다 null** · 이완 구조는 `relaxed` 에 진단 자료로만 (`relaxed_note`) | `read_relax` | 세 가족 P 2.5 GPa · 차 0.095 + P 1.9 GPa |
 | P2 저장만 하던 증거 | 앞 단계 판정을 **통째로 다시 내서** 저장된 판정과 대조 (`_norm_v` — 도구 경로만 빼고 sha 로) — 행 · 대표 · 순서 · 차 · G5 · 문장 · 출력 sha256 · k 점 수 · 다음 잡 · 기준 셀 · 발동 · 쌍 | `_rebind_sp` · `_rebind_kp` | 단일점 판정의 순서 · 문장 · G5 · 출력 sha 손댐 · 탐침 판정의 출력 sha 전부 0 · 이완 잡 목록 · 쌍 값 |
 | P2 경로 기준 | 잡 · 구조 · 출력 · 안정성 · 전자구조 대상 = **계획 폴더 기준** {rel · sha256} · 판정 사이 고리 = 그 판정 파일 폴더 기준 · `rel_base` 를 적는다 | `stage10` · `read_relax` | 대상 경로가 계획 폴더 기준으로 실재 · sha256 일치 |
 | P2 깨진 바이트 | utf-8 **strict** · 실패는 `decode_error` 로 기록 · 거부 (표시용으로만 대체 문자) | `parse_pw_out` | `1.0E-\xff08` |
 | P2 CRLF | 모든 파일을 utf-8 · LF **바이트**로 쓴다 (`_write_bytes`) · 읽기도 바이트에서 | `_write_bytes` · `_load` · `parse_pw_in` | 도구가 쓴 파일 (계획 · 입력 · 판정 · 이완 구조) 에 CR 없음 |
 | P2 GPU 확인 | 실행기 `_gpu_guard`: `MIN_FREE_MIB>0` 이거나 `GPU_EXCLUSIVE=1` 이면 nvidia-smi 없음 · 조회 실패 · 빈 값 · 숫자 아님 → **시작 안 함** · `GPU_EXCLUSIVE=1` 이면 compute 프로세스가 하나라도 있으면 시작 안 함. **보장 범위는 잡 시작 때뿐** — 도는 중에 올라오는 잡은 못 막는다 (공통 잠금 없음) → 카드에 운영 규칙으로 적었다 (9 단계 동안 gabia 에 다른 GPU 잡을 띄우지 않는다) | `run_force_check_scf.sh` | 실행기 selftest 20/20 (모의 nvidia-smi 9 경우 포함) |
-| P2 거부 잡 재실행 | `reject --plan … --stage sp|kprobe|relax [--verdict …]` — 판독기 검사에 걸린 출력만 `scf.out.rejected.N` 으로 **옮긴다** (지우지 않는다 · 번호를 덮지 않는다 · 입력이 기록과 다른 잡은 손대지 않는다 · 판정 → 계획 고리가 이 계획이어야) → 실행기는 scf.out 이 없는 잡만 처음부터 다시 | `reject_outputs` · `_jobs_for_reject` | 걸린 출력 하나만 `.rejected.1` · 두 번째는 `.rejected.2` · 다른 계획의 판정 거부 |
+| P2 거부 잡 재실행 | `reject --plan … --stage {sp · kprobe · relax} [--verdict …]` — 판독기 검사에 걸린 출력만 `scf.out.rejected.N` 으로 **옮긴다** (지우지 않는다 · 번호를 덮지 않는다 · 입력이 기록과 다른 잡은 손대지 않는다 · 판정 → 계획 고리가 이 계획이어야) → 실행기는 scf.out 이 없는 잡만 처음부터 다시 | `reject_outputs` · `_jobs_for_reject` | 걸린 출력 하나만 `.rejected.1` · 두 번째는 `.rejected.2` · 다른 계획의 판정 거부 |
 
 그 밖에 고친 것: 이미 있는 잡 입력 · 이완 구조 파일은 같은 바이트일 때만 둔다 (다르면 멈춤 · 덮지 않는다).
 
@@ -64,11 +64,20 @@ v2 sha256 — 도구 `4e865e5c3e5785b24955b2805d11fe3f3905ca5ae1fc0911acd513f96e
 - **selftest 119/119** (v1 66) — 위 표의 반례 전부를 거부 이유 (메시지 문구) 까지 확인한다 · 양성 경로 (6 단일점 → 탐침 → 이완 → EOS 생략 → 10 단계 두 갈래 · 발동 경로 · 4×2×1 판) 는 v1 그대로 지나간다. 8 단계 결속은 selftest 에서 `_FakeRD` (`anneal_readout` · `verify_screen_verdict` · `load_records` 만 가짜 · `eos_robust` · `end_motif` · `_core` · `CONTRACT` 는 진짜 판 고정 판독기).
 - **깨기 (변이) 73/73 빨강** (로컬 · `python3 tools/doping/b2o3_bo_dft_mutations.py` 로 재현 — 약 6 분 · CPU 1 코어 · `--selftest` 는 변이 대상이 도구에 정확히 한 번씩 있고 바꾼 소스가 문법상 맞는지만 몇 초에 본다) — 검사 한 줄씩 끄고 selftest 가 빨개지는지 (출력 검사 33 · k 격자 4 · 단계 출력 3 · 유사포텐셜 3 · 다시 결속 13 · 판정 사슬 8 · 10 단계 · EOS 보류 3 · 쓰기 · 덮지 않음 · 거부 6). 첫 판은 69/71 이었다 — '가중치 몫' (시험의 기대 문구가 넓어서 다른 거부 메시지에도 걸렸다) · '계약 같음' (계획에 저장된 계약을 손대는 시험이 없었다) 이 초록이었고 시험을 넣어 71/71 → 그 뒤 `!` 수 검사 둘을 더해 73 개. 깨진 검사가 나쁜 출력을 통과시키면 뒤 단계가 판정 파일을 써 버려 selftest 가 중간에 멈추는 경우 ('crash') 는 그 변이의 자기 시험에서 먼저 ✗ 가 난 것을 확인했다 (변이마다 처음 ✗ 난 시험 이름을 기록 · 변이 소스 73 개 모두 문법 오류 없음).
 - **실제 QE 7.4.1 출력 5 개로 파서 · 검사 대조** (저장소 `db/raw`): nosym 출력 셋 (`ndo_site_eos_2026_10_16/MLi_04_x108` · `MP_07_x100` (relax 2×2×1) · `nd_q2_decomp_2026_10_23/run_kgy/host` (relax 3×3×2 · 10 점)) 은 k 격자 검사 통과 · `MLi_04_x108` 은 계약만 그 잡의 설정 (원자 수 58 · mv smearing · 그 PP 이름) 으로 바꾸면 **v2 검사 전부 통과** (전자 수 298 = Σ 조성 × Zval · Zval · BFGS 기준 · 머리 문턱 · nstep · 마지막 힘 성분 6.8e-4 · 응력 위치 · 부피 · 처음 좌표 · 셀) · 대칭 축소 출력 (`li2s_neb_cellconv_2026_10_09/c444/li2s/ep_initial` · 2 Sym. Ops) 은 k 격자 검사가 '−k 와 같은데 가중치가 둘 몫 (대칭 축소)' 으로 거부.
-- **'한 출력 = 한 실행' 규칙을 저장소의 실제 PWSCF 출력 전부 (238 개) 에 걸어 봤다**: JOB DONE 이 있는 고정셀 단일 실행 **221 개 (scf 180 · relax 41) 모두 설정 줄 각 한 번 · JOB DONE 뒤 계산 기록 없음 · utf-8 정상** · SCF 177 개는 `!` 정확히 하나 (0 개 셋은 nscf 류 — 이 단계에 없다) · relax 41 개 모두 `!` 수 = BFGS 가 센 SCF 수 (JOB DONE 뒤는 '=---=' 줄과 `Warning: ieee_… is signaling` 뿐) · vc-relax 11 개는 최종 scf 가 설정 줄을 한 번 더 찍어 '한 번씩' 검사에 걸린다 (이 단계는 vc-relax 를 쓰지 않는다 — 걸리는 게 맞다) · JOB DONE 없는 6 개는 미완료.
+- **'한 출력 = 한 실행' 규칙을 저장소의 실제 PWSCF 출력 전부 (238 개) 에 걸어 봤다**: JOB DONE 이 있는 고정셀 단일 실행 **221 개 (scf 180 · relax 41) 모두 설정 줄 각 한 번 · JOB DONE 뒤 계산 기록 없음 · utf-8 정상** · SCF 177 개는 `!` 정확히 하나 (`!` 0 개인 셋은 SCF 미수렴 — 'convergence NOT achieved … stopping' 뒤 JOB DONE · 도구는 '`!` 없음 · 수렴 아님' 으로 거부) · relax 41 개 모두 `!` 수 = BFGS 가 센 SCF 수 (JOB DONE 뒤는 '=---=' 줄과 `Warning: ieee_… is signaling` 뿐) · vc-relax 11 개는 최종 scf 가 설정 줄을 한 번 더 찍어 '한 번씩' 검사에 걸린다 (이 단계는 vc-relax 를 쓰지 않는다 — 걸리는 게 맞다) · JOB DONE 없는 6 개는 미완료.
 
 ## 4. gabia 검사 (v2 · GPU 안 씀)
 
-(사용자 실행 뒤 채운다 — worktree · 도구 · 실행기 sha256 · selftest · 실행기 selftest · 새 검사 폴더 prepare (8 단계 실제 데이터 결속 · 입력 6 · nosym · tot_charge · 가전자 기록) · 입력 지문 · 깨기 숫자 · 커밋)
+2026-11-13 · 사용자 실행 · 런로그 `db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json` 키 `9단계_v2_검사_2026_11_13`.
+
+- worktree `$R/dft_src_v2` = **HEAD 328cf95b1** (대피 브랜치 끝을 FETCH_HEAD 로) · 도구 sha256 `4e865e5c…` **OK** · 실행기 `9157ca2c…` **OK**.
+- selftest **119/119** · 실행기 selftest **20 통과 · 0 실패** (gabia `uma` env python · CPU · 검사용).
+- **prepare v2 (새 폴더 `$R/s9_v2`)**: 판 고정 판독기 (872d91f7) 로 8 단계 본 판독을 **실제 데이터 (md.traj 포함) 로 다시 내고** 본 판독 파일 몸통 · 성공 목록을 대조 → 통과 · 단일점 6 잡 (k 3×2×1) · 가전자 Li 3 · B 3 · O 6 · P 5 · S 6 · Cl 7 을 계획에 기록 · 고른 구조는 v1 검사 · 로컬 회수본 계산과 같다 — F_B cfg0040 · cfg0015 · F_P cfg0015 · cfg0019 · F_free cfg0039 · cfg0017 (UMA 끝 꼴 기록 · 판정 아님: F_B · F_B · F_P · F_P · mixed · F_free).
+- 유사포텐셜 md5 (앞 8): li e912e257 · s 88d86576 · cl fc6f6913 · P 8b930f41 · B 8c825a59 · O 0234752a (v1 검사와 같다 · B 는 gabia 안 사본 — 옛 b2o3 탄성 · lpsocl DFT 가 쓴 파일).
+- 입력 지문: 6 입력 모두 `nosym = .true.` · `tot_charge = 0.0` · `disk_io = 'nowf'` · `K_POINTS automatic` / `3 2 1 0 0 0` · sha256 앞 16 — 계획 `3e9f1833cd13e1bc` · sp_FB_1 `834fbada34cd234c` · sp_FB_2 `f5b7bcd272b69870` · sp_FP_1 `93a54b64f68420a2` · sp_FP_2 `03c0bbdde90cb776` · sp_Ffree_1 `3ee0b4a96db89efb` · sp_Ffree_2 `0836ebf76487842a`.
+- **기계 사이 바이트 동일 (EF P2-4)**: 로컬 (ase 3.29.0) 에서 회수본 post_relax 구조 (결과 기록 sha256 과 일치) 로 같은 도구 함수가 만든 입력의 sha256 이 gabia 와 **6/6 같다**.
+- GPU 지금: 여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음 (시작은 안 했다).
+- 깨기 73/73 은 로컬 수치다 (gabia 에서는 안 돌렸다 · 같은 도구 sha256).
 
 ## 5. 일부러 안 한 것
 

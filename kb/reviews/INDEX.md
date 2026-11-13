@@ -158,7 +158,7 @@ evidenceScope: multi-source-primary
 | ED | 2026-11-10 | `internal_ED_prompt_cascade_bundle2_card_2026_11_10.md` | `internal_ED_reply_cascade_bundle2_card_2026_11_10.md` | 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · Codex 토큰 없음 · 사용자 '반박 리뷰를 에이전트 사용해서') · 회신은 `internal_ED_reply_cascade_bundle2_card_2026_11_10.md` · ✅ 회신 수령 2026-11-10 — 조건부 GO (P0 0 · P1 6 · P2 5) · 카드에 문장 1–19 반영 | 같은 라벨 · 주제 토큰 일치 ['bundle2', 'card', 'cascade'] |
 | EE | 2026-11-10 | `internal_EE_prompt_li2s3_queue_v2_2026_11_10.md` | `internal_EE_reply_li2s3_queue_v2_2026_11_10.md` | 발송 2026-11-10 — 내부 반박 리뷰 (큐 v2 를 쓴 에이전트와 다른 독립 에이전트) · 회신은 `internal_EE_reply_li2s3_queue_v2_2026_11_10.md` · 회신 전에는 개정 3 을 활성하지 않는다 · ✅ 회신 수령 2026-11-10 — 조건부 GO (P0 0 · P1 3 · P2 6) · 고친 뒤 재현 스크립트가 '거부' 로 바뀌는지 본다 | 같은 라벨 · 주제 토큰 일치 ['li2s3', 'queue', 'v2'] |
 | EF | 2026-11-13 | `codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` | `codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md` | 작성 2026-11-13 · gabia 검사 결과 넣음 · 발송 (사용자) → 회신 NO-GO (codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md) · 코드 기준 커밋 4b95dedb (브랜치 claude/evac-2026-11-12 · 도구 sha256 559f0152) · 앞 편지 DY (GO · 1 단계 UMA) | 같은 라벨 · 주제 토큰 일치 ['b2o3', 'dft', 'stage9', 'tools'] |
-| EG | 2026-11-13 | `codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md` | — | 작성 2026-11-13 · gabia v2 검사 전 (결과를 §4 에 넣은 뒤 발송) · 코드 기준 = 이 편지를 들인 커밋 (브랜치 claude/evac-2026-11-12) · 앞 편지 EF (NO-GO · v1 4b95dedb) | — |
+| EG | 2026-11-13 | `codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md` | — | 작성 2026-11-13 · gabia v2 검사 결과 넣음 (HEAD 328cf95b1 · 입력 sha256 로컬 = gabia 6/6) · 발송 (사용자) · 코드 기준 커밋 328cf95b (브랜치 claude/evac-2026-11-12 · 도구 sha256 4e865e5c · 실행기 9157ca2c · 변이 도구 0c8ef487) · 앞 편지 EF (NO-GO · v1 4b95dedb) | — |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
