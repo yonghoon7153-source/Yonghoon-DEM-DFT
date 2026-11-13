@@ -5637,6 +5637,35 @@ def cjunc_store_dir_problem(p):
     return None
 
 
+#: ★ 11-13 RCP-07 (Codex 반박 1/2 §3 · Q7) — 팔 audit 곁 파일 (payload `cjunc_store.write_audit` · 러너가 팔과 함께 OUTDIR 로 옮긴다) 의 앞자리 · 요약 팔별
+#:   표시 칸 (기록만 — 판정 · 같음 대조 · 재개 바이트 대조에 쓰지 않는다 · 곁 파일 이름은 `p2_` 가 아니어서 팔 · 결과 흔적 낱말과 겹치지 않는다)
+CJUNC_AUDIT_PREFIX = 'cjstore_audit_'
+CJUNC_AUDIT_ARM_KEYS = ('arm', 'status', 'key', 'store_file', 'file_sha256', 'why', 'problem')
+
+
+def cjunc_store_arm_audit(outdir, files):
+    """런 폴더 · 팔 파일 이름 목록 → [{arm · status · key · store_file · file_sha256 · why · problem}] (받은 차례 · 기록만).  곁 파일 없음 = problem 'missing' ·
+    못 읽음 · 꼴 아님 = problem 'unreadable: <형>' (상태 None) — 어느 팔이 적중 원장으로 풀었나 (RCP-07) 의 기록 칸이지 증명이 아니다 (곁 파일은 payload 가
+    쓴 자기 기록 · 저장본 밖 독립 대조 = 봉인 원천 재조립 · SV 모서리 팔만 — 한정 그대로)."""
+    out = []
+    for f in files:
+        row = dict.fromkeys(CJUNC_AUDIT_ARM_KEYS)
+        row['arm'] = f
+        p = Path(outdir) / (CJUNC_AUDIT_PREFIX + str(f))
+        if not p.is_file():
+            row['problem'] = 'missing'
+        else:
+            try:
+                d = json.loads(p.read_text(encoding='utf-8'))
+                if not isinstance(d, dict):
+                    raise ValueError('JSON 객체가 아니다')
+                row.update(status=d.get('status'), key=d.get('key'), store_file=d.get('file'), file_sha256=d.get('file_sha256'), why=d.get('why'))
+            except (OSError, ValueError, UnicodeDecodeError) as e:
+                row['problem'] = f'unreadable: {type(e).__name__}'
+        out.append(row)
+    return out
+
+
 class Runner:
     def __init__(self, runner, root, out, plan, variant, deadline, contract, dry=False, parent_env=None, prefix='R', machine=None,
                  cjunc_store=None):
@@ -5654,6 +5683,12 @@ class Runner:
         self.s0_grid = None                  # ★ 10-25 묶음 B (RCA2-03) — S0 off 격자 지문 (`s0_grid_seed` · 단계가 정한다)
         self.s0_census = None                # ★ 10-25 묶음 B (X6) — S0 단계 2 봉인 SV census (`s0_census_seed`)
         self.graph_src = None                # ★ 10-26 B″ (Q1 (가)) — SV 끝 그래프 봉인 원천 (`RunnerGraphSource` · 단계가 정한다 · 없음 = 미확인)
+        self.store_audit = []                # ★ 11-13 RCP-07 — 저장본 켬 런의 팔별 audit ([{run · arms}] · 요약 `cjunc_store_arms` · 끔 = 빈 목록 · 요약 칸 없음)
+
+    def _store_audit(self, name, outdir, arms_):
+        """★ 11-13 RCP-07 — 저장본 켬이면 이 런 팔들의 audit 곁 파일 (`cjunc_store_arm_audit`) 을 모은다 (기록만 · 끔 = 아무것도 안 함)."""
+        if self.cjunc_store is not None:
+            self.store_audit.append({'run': name, 'arms': cjunc_store_arm_audit(outdir, [x.get('file') for x in arms_])})
 
     def env_delta(self, req, outdir):
         d = runner_env_delta(self.plan, self.variant, req, outdir)
@@ -5725,6 +5760,7 @@ class Runner:
             rec['arms_read'] = arms_read_record(outdir=outdir)
             raise
         rec['arms_read'] = arms_read_record(arms_)
+        self._store_audit(name, outdir, arms_)               # ★ 11-13 RCP-07 — 팔별 저장본 상태 (기록만)
         a0 = arms_[0]
         ok = '✓' if all(x is True for x in a0['cert_pass']) else ('— (조기 반환 · 솔브 없음)' if a0['state'] != 'positive' else '✗')
         print(f'  {name}: {role} · R_j {disp_rj(rj)} · {law} · c {c or "-"} · 팔 {arm_indices(req)}{" · SV 반사실" if sv_cf else ""} → rc 0 · '
@@ -5807,6 +5843,7 @@ class ResumeRunner(Runner):
             rec['arms_read'] = arms_read_record(outdir=outdir)    # ★ 11-08 RR3-01 — 생성 한 함수 (복사 다시 읽기 실패 = 파일 신원)
             raise
         rec['arms_read'] = arms_read_record(arms_)
+        self._store_audit(name, outdir, arms_)               # ★ 11-13 RCP-07 — 복사한 런 폴더의 곁 파일 (원 시도가 쓴 상태 그대로)
         self.resume['copied'].append(name)
         print(f'  {name}: {req["role"]} · R_j {disp_rj(req["rj"])} · {req["law"]} · c {req["c"] or "-"} → 원 시도 attempt_{self.src_n} 에서 복사 '
               f'(러너 0 회 · 팔 {len(arms_)} 다시 대조)')
@@ -6663,6 +6700,8 @@ def stage_ladder(a, contract):
                 s['ladder'], s['flags'] = lad.st, list(lad.flags)
                 s['runs'] = rn.records
                 s['sv_graph_source'] = rn.graph_src.public()
+                if rn.cjunc_store is not None:               # ★ 11-13 RCP-07 — 팔별 저장본 상태 (켬만 · 끔 = 칸 없음 = 옛 요약 바이트)
+                    s['cjunc_store_arms'] = rn.store_audit
         except Stop as e:
             s['status'] = e.code if e.code in REGISTERED_OUTCOMES else 'STOPPED'
             raise
@@ -6878,6 +6917,8 @@ def stage_predict(a, contract):
             finally:
                 s['checks'], s['origin'], s['runs'] = pr.checks, pr.origin, rn.records
                 s['sv_graph_source'] = rn.graph_src.public()
+                if rn.cjunc_store is not None:               # ★ 11-13 RCP-07 — 팔별 저장본 상태 (켬만 · 끔 = 칸 없음 = 옛 요약 바이트)
+                    s['cjunc_store_arms'] = rn.store_audit
         except Stop as e:
             #  ★ 4판 (Q1) — NOT_COMPUTED (풀이 · 증서 실패 · 단락 ELECTRODE_SHORT) = 예측 단계의 등록 결과 (사다리와 같은 뜻 · 판정이 원 팔에서
             #    다시 계산해 이름 · 사유를 남긴다) · 그 밖 멈춤 (계약 · 기록 · 일관 검사 …) = STOPPED (판정 입력 아님)
