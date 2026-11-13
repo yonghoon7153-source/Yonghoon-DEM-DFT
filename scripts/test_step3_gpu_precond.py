@@ -13,11 +13,22 @@
       G4a 전처리 적용 자체 — A 꼴 (dia → CSR · 합이 +0 에서 시작) ↔ C 꼴 (원소 곱) 이 값은 같고 바이트는 **C 가 −0 을 내는 칸에서만** 갈린다 (갈림을 실제로 가른다)
       G4b 생산 꼴 b (np.zeros + 양수) — CG 가 전처리에 넘기는 r 어디에도 −0 이 없고 반복마다 A ↔ C 적용 바이트가 같다 (설계 논증을 이 산술에서 잰다)
       G4c (관찰) b 에 −0 을 넣은 꼴 — info · 반복 수 · 해 값 같음 · 해 바이트 차이 수는 찍기만 (판별은 G4a)
+      ★ 11-13 Codex 반박 1/2 RCPX-06 — '입력 r 에 −0 이 없으면 A ↔ C 비트 같음' 은 충분조건이 아니다 (철회 · 음의 비정규 곱이 underflow 하면 C = −0 ·
+      A = +0).  비트 같음은 잰 입력 · 환경 범위에서만 말한다 (G4b = 이 가짜 산술 · 이 침대 둘에서 반복마다 잰 값).
+      G4d (기록 · 보장 아님) 실제 `_solve_cg` 가 만든 M 에 diag [4, 4] · r [−5e-324, 1] (r 에 −0 없음) → A [+0, 0.25] · C [−0, 0.25]
+      G4e (기록) 유한 SPD [[4, −1], [−1, 4]] · b [0, 1] · x0 [5e-324, 15e-324] 의 첫 잔차 = 같은 꼴 · 그 반복에서 A ↔ C 적용 바이트 다름 ·
+          끝 해 · info · 반복 수는 찍기만 (Codex 관찰 = 같았다)
   G5  CPU 길 (GPU_SOLVE 끔) — 옛 판과 바이트 같음 · 가짜 cg 를 부르지 않는다
   G6  GPU 길 불러오기 실패 → CPU 폴백 — 옛 판과 같음 (해 · LAST_BACKEND 사유 글) · REQUIRE_GPU 면 둘 다 SystemExit (글 전체 같음)
   G6b (★ 11-12 RCP-08) cg 만 있고 LinearOperator 가 없는 옛 cupyx — GPU 길을 쓰지 않는다 (옛 A 꼴로 되돌리지 않는다) · CPU 폴백 = CPU 길 해 ·
       REQUIRE_GPU 면 조치 글이 사유별 (cupy 판 · LinearOperator — "GPU 를 비우고 … 재개" 아님)
   G7  `solve_sigma_z` 끝-끝 (가짜 GPU · 증서 켬 · rtol 1e-12) — 옛 판과 결과 dict (σ 비트 · 증서 · 반복 수 · 키 집합) · LAST_BACKEND 같음 = 매니페스트 키 변화 0
+  G8  ★ 11-13 Codex 반박 1/2 Q11 · `SELF-181` — GPU 확인 블록 v8 (`docs/reviews/rint2_codepkg_20261113/q11_gpu_check_block_v8.txt`):
+      a 글자 (ASCII · '!' · 탭 · CR 없음 · bash -n) b 하네스 md5 관문 = 추출 바이트 · v7 과 다름 c git 읽기 앞 GIT_DROP_SH · GIT_NO_REPLACE_OBJECTS=1
+      d se_material = 핀에서 git show 로 새 폴더에 · --scripts = 그 폴더 · live 저장소 경로 없음 (`SELF-181`) · sha 셋 = 이 리포 e 핀 blob 대조
+      f 머리 소비 규칙 g–i 하네스 (numpy · 작은 계): maxiter 1 = all_identical 참인데 adopt 거짓 (판정문 재현) · 수렴 = adopt 거짓 (numpy) ·
+      v7 꼴 live import = rc 2 j 가짜 cupy (이 프로세스): adopt 참 · maxiter 1 거짓 · 다른 전처리 거짓 k consume 칸 하나씩 l 블록 셸 끝-끝
+      (cupy 없는 이 기계 · 저장소 = 이 리포 · HOME 임시 · rc 1 = cupy 없음 · 리포 그대로)
 가짜 cg = cupy 12.3.0 `cupyx/scipy/sparse/linalg/_iterative.py` `cg` (14–91 줄) · `_make_system` (301–349 줄) 의 동작 그대로 옮긴 것:
   A = csr → spMV · M = csr → spMV · 그 밖 희소 행렬 → MatrixLinearOperator → matvec = (M.tocsc().tocsr() @ x.reshape(-1, 1)).reshape(-1)
   (cupy dia 의 `__mul__` = `tocsr()` = `tocsc().tocsr()` · `_dia.py` 140–190) · LinearOperator → 그 matvec · 정지 = resid ≤ max(atol, tol·‖b‖) ·
@@ -68,7 +79,8 @@ def quiet(fn, *a, **k):
 
 
 def load_base():
-    src = subprocess.run(['git', '-C', ROOT, 'show', f'{BASE_COMMIT}:scripts/step3_sigma.py'], capture_output=True, check=True).stdout
+    src = subprocess.run(['git', '-C', ROOT, 'show', f'{BASE_COMMIT}:scripts/step3_sigma.py'], capture_output=True, check=True,
+                         env=_RCG.git_env()).stdout                # ★ 11-13 §3 — 봉인용 읽기 env (대체 객체 끔)
     d = tempfile.mkdtemp(prefix='s3base_gp_')
     p = os.path.join(d, 'step3_sigma_base_gp.py')
     with open(p, 'wb') as fh:
@@ -407,7 +419,7 @@ def t_negzero(base):
                         run_solve(S3, L2, b2)
                 stats.append(w)
     chk('G4b 생산 꼴 b (np.zeros + 양수 · STEP3 조립 꼴) — CG 가 전처리에 넘긴 r 어디에도 −0 없음 · 반복마다 A ↔ C 적용 바이트 같음 (침대 둘 · tol= / rtol= · '
-        '처음 풀이 / 이어 풀기 ⓒ) — 설계 논증 "생산 b ≥ +0 이면 r 이 −0 이 될 수 없다" 를 이 산술에서 잰다 (RCP-09)',
+        '처음 풀이 / 이어 풀기 ⓒ) — 이 산술 · 이 침대에서 반복마다 잰 값 (RCP-09 · ★ 11-13 RCPX-06: r 에 −0 없음만으로는 충분조건이 아니다 — G4d)',
         len(stats) == 8 and all(w['n_r'] > 0 and w['negz'] == 0 and w['ab_bytes_diff'] == 0 for w in stats), stats)
     L, b = system(21, (8, 8, 12), -3.0, 3.0, neg_zero=True)
     with fake_cupy('tol'), knobs([base, S3], cert=True, rtol=1e-12):
@@ -525,6 +537,327 @@ def t_solve_sigma(base):
         f'같음 {same} 키 {keys} backend {bks} 증서 {cc.get("status")}')
 
 
+def t_negzero_product(base):
+    """★ 11-13 Codex 반박 1/2 RCPX-06 — '입력 r 에 −0 이 없으면 A ↔ C 비트 같음' 은 충분조건이 아니다 (철회).  음의 유한 비정규 곱이 underflow 하면
+    C 꼴 (원소 곱 · 생산 GPU 길 연산자) 은 −0 · A 꼴 (CSR 합 · +0 에서 시작) 은 +0.  기록 시험 (보장 아님) = 판정문 반례 그대로."""
+    L = sparse.csr_matrix(np.array([[4.0, -1.0], [-1.0, 4.0]]))
+    b = np.array([0.0, 1.0])
+    Ms = {}
+    for tag, mod in (('A', base), ('C', S3)):
+        with fake_cupy('tol') as rec, knobs([mod], cert=True, rtol=1e-12):
+            run_solve(mod, L, b)
+            Ms[tag] = (rec.get('M_seen') or [None])[-1]
+    r = np.array([-5e-324, 1.0])
+    za = _psolve_of(Ms['A'])(r) if sparse.issparse(Ms['A']) else None
+    zc = Ms['C'].matvec(r) if isinstance(Ms['C'], FakeLinearOperator) else None
+    ok = (za is not None and zc is not None and not _negz(r).any() and np.array_equal(za, zc)
+          and za.view(np.uint64)[0] != zc.view(np.uint64)[0] and bool(_negz(zc)[0]) and za[0] == 0.0 and not np.signbit(za[0])
+          and za.view(np.uint64)[1] == zc.view(np.uint64)[1] and float(za[1]) == 0.25)
+    chk('G4d ★ 11-13 Codex 반박 1/2 RCPX-06 기록 (보장 아님) — 실제 `_solve_cg` 가 만든 M (A = 옛 판 dia · C = 지금 판 연산자) 에 diag [4, 4] · '
+        'r = [−5e-324, 1] (r 에 −0 없음) → A = [+0, 0.25] · C = [−0, 0.25] · 값 같음 · 첫 칸 바이트 다름 ⇒ "r 에 −0 이 없으면 비트 같음" 은 충분조건이 '
+        '아니다 (음의 비정규 곱 underflow)', ok, f'A {None if za is None else [float(v).hex() for v in za]} · '
+        f'C {None if zc is None else [float(v).hex() for v in zc]}')
+    x0 = np.array([5e-324, 15e-324])
+    d2 = np.array([4.0, 4.0])
+    obs = {}
+    for tag, mod in (('A', base), ('C', S3)):
+        w = {'first_r': None, 'diff_iters': 0, 'n_r': 0}
+
+        def watch(rv, w=w):
+            w['n_r'] += 1
+            if w['first_r'] is None:
+                w['first_r'] = np.array(rv, copy=True)
+            if _apply_A(d2, rv).tobytes() != _apply_C(d2, rv).tobytes():
+                w['diff_iters'] += 1
+        with fake_cupy('tol') as rec, knobs([mod], cert=True, rtol=1e-12):
+            rec['watch_r'] = watch
+            obs[tag] = run_solve(mod, L, b, x0=x0) + (w,)
+    want_r = np.array([-5e-324, 1.0])
+    fr = [obs[t][4]['first_r'] for t in ('A', 'C')]
+    chk('G4e ★ 11-13 RCPX-06 기록 — 유한 SPD [[4, −1], [−1, 4]] · b [0, 1] · 비음수 x0 [5e-324, 15e-324]: 첫 잔차 = [−5e-324, 1] (−0 없음 · A · C 같음) · '
+        '그 잔차에서 A ↔ C 전처리 적용 바이트 다름 (두 풀이 모두 ≥ 1 반복)',
+        all(v is not None and v.tobytes() == want_r.tobytes() for v in fr) and all(obs[t][4]['diff_iters'] >= 1 for t in ('A', 'C')),
+        f'첫 잔차 {[None if v is None else [float(x).hex() for x in v] for v in fr]} · 다른 반복 {[obs[t][4]["diff_iters"] for t in ("A", "C")]}')
+    xa, xc = obs['A'][0], obs['C'][0]
+    print(f'    (G4e 관찰 · 보장 아님: 끝 해 바이트 같음 {xa.tobytes() == xc.tobytes()} · info {obs["A"][1]} / {obs["C"][1]} · '
+          f'반복 {obs["A"][2]} / {obs["C"][2]} — Codex 관찰 = 같음 · info 0 · 반복 2)')
+
+
+# ═════════════════════════ G8 (★ 11-13 Codex 반박 1/2 Q11 · SELF-181) — GPU 확인 블록 v8 ═════════════════════════
+#  환경 변수 Q11_BLOCK_UNDER_TEST = 다른 블록 파일로 G8 을 돌린다 (옛 v7 블록 대조 · 증거용 · 게이트는 쓰지 않는다)
+BLOCK_V8 = os.environ.get('Q11_BLOCK_UNDER_TEST') or os.path.join(ROOT, 'docs', 'reviews', 'rint2_codepkg_20261113', 'q11_gpu_check_block_v8.txt')
+V7_HARNESS_MD5 = 'acfeb4b4e1515d6aa7d46ddaf67e6e68'
+#: 소비 규칙의 사유 머리 (하네스 `consume` 의 why 글 첫 낱말 — 시험 쪽 기준 글자)
+WHY_HEAD = {'identical': 'identical false', 'converged': 'converged false', 'backend_ok': 'backend_ok false',
+            'short_iters_ok': 'short_iters_ok false', 'source_ok': 'source_ok false', 'numpy': 'backend numpy'}
+
+
+def _sha256_bytes(bts):
+    import hashlib
+    return hashlib.sha256(bts).hexdigest()
+
+
+def _git_show(rev_path):
+    r = subprocess.run(['git', '-C', ROOT, 'show', rev_path], capture_output=True, env=_RCG.git_env())
+    return r.stdout if r.returncode == 0 else None
+
+
+def block_parts(text):
+    lines = text.split('\n')
+    i = [k for k, ln in enumerate(lines) if ln.endswith("<<'Q11_CHECK_EOF'")]
+    j = [k for k, ln in enumerate(lines) if ln == 'Q11_CHECK_EOF']
+    if len(i) != 1 or len(j) != 1 or not i[0] < j[0]:
+        return None
+    return '\n'.join(lines[i[0] + 1:j[0]]) + '\n', lines[:i[0] + 1], lines[j[0] + 1:]
+
+
+def _load_harness(src, name='q11_harness_t'):
+    d = tempfile.mkdtemp(prefix='q11h_')
+    p = os.path.join(d, 'q11_gpu_check.py')
+    with open(p, 'w', encoding='utf-8') as fh:
+        fh.write(src)
+    spec = importlib.util.spec_from_file_location(name, p)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m, p
+
+
+def _stage(folder, new_bytes=None):
+    """하네스가 쓸 폴더 — s3_old.py (기반 판) · s3_new.py (지금 판 또는 넘긴 바이트) · se_material.py (이 리포 · 핀과 같은 바이트)."""
+    os.makedirs(folder, exist_ok=True)
+    with open(os.path.join(folder, 's3_old.py'), 'wb') as fh:
+        fh.write(_git_show(f'{BASE_COMMIT}:scripts/step3_sigma.py') or b'')
+    with open(os.path.join(folder, 's3_new.py'), 'wb') as fh:
+        fh.write(new_bytes if new_bytes is not None else open(os.path.join(SCRIPTS, 'step3_sigma.py'), 'rb').read())
+    with open(os.path.join(folder, 'se_material.py'), 'wb') as fh:
+        fh.write(open(os.path.join(SCRIPTS, 'se_material.py'), 'rb').read())
+    return folder
+
+
+def _harness_sub(hp, folder, out, extra):
+    import json
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE='1')
+    cmd = [sys.executable, hp, '--backend', 'numpy', '--n-side', '6', '--out', out, '--old', os.path.join(folder, 's3_old.py'),
+           '--new', os.path.join(folder, 's3_new.py'), '--label', 't'] + extra
+    r = subprocess.run(cmd, capture_output=True, text=True, env=env, cwd=tempfile.gettempdir(), timeout=600)
+    try:
+        res = json.load(open(os.path.join(out, 'result.json'), encoding='utf-8'))
+    except Exception:                                       # noqa: BLE001
+        res = None
+    return r.returncode, res, (r.stdout + r.stderr)[-600:]
+
+
+def _consume_fixture():
+    bk = {'requested': 'gpu', 'used': 'gpu', 'fallback_reason': None, 'precond': 'jacobi'}
+    pair = {'bytes_identical': True, 'value_differ_count': 0, 'max_abs_diff': 0.0, 'info_same': True, 'iters_same': True, 'backend_same': True}
+    short = [{'info': 200, 'iters': 200, 'finite': True, 'backend': dict(bk)} for _ in range(6)]
+    solve = [{'info': 0, 'iters': 57, 'finite': True, 'backend': dict(bk)} for _ in range(4)]
+    return [dict(pair) for _ in range(5)], short, solve
+
+
+def t_block_v8():
+    import hashlib
+    import json
+    import re
+    if not os.path.isfile(BLOCK_V8):
+        chk('G8 GPU 확인 블록 v8 파일이 있다', False, f'없음 — {os.path.relpath(BLOCK_V8, ROOT)} (고치기 전 판)')
+        return
+    raw = open(BLOCK_V8, 'rb').read()
+    text = raw.decode('utf-8', 'replace')
+    bn = subprocess.run(['bash', '-n', BLOCK_V8], capture_output=True, text=True)
+    chk('G8a 블록 글자 — ASCII 만 · "!" 없음 (대화형 bash 역사 확장) · 탭 · CR 없음 · 끝 줄 바꿈 · bash -n rc 0',
+        all(c < 128 for c in raw) and b'!' not in raw and b'\t' not in raw and b'\r' not in raw and raw.endswith(b'\n') and bn.returncode == 0,
+        f'bash -n rc {bn.returncode} {bn.stderr[:200]}')
+    parts = block_parts(text)
+    if parts is None:
+        chk('G8b 하네스 heredoc (Q11_CHECK_EOF) 하나', False, '찾지 못함')
+        return
+    harness, pre, post = parts
+    m5 = re.search(r'md5sum < "\$Q11D/q11_gpu_check\.py" \| cut -c1-32\)" = ([0-9a-f]{32}) \]', '\n'.join(post))
+    hmd5 = hashlib.md5(harness.encode('utf-8')).hexdigest()
+    try:
+        compile(harness, 'q11_gpu_check.py', 'exec')
+        comp = True
+    except SyntaxError:
+        comp = False
+    chk('G8b 하네스 md5 관문 = 추출한 하네스 바이트의 md5 (cat heredoc 이 쓰는 바이트) · v7 하네스 (acfeb4b4…) 와 다름 · 컴파일 됨',
+        m5 is not None and m5.group(1) == hmd5 and hmd5 != V7_HARNESS_MD5 and comp, f'관문 {m5.group(1) if m5 else None} · 추출 {hmd5}')
+    gi = [k for k, ln in enumerate(post) if 'git -C' in ln]
+    di = [k for k, ln in enumerate(post) if ln.strip() == _RCG.GIT_DROP_SH]
+    ei = [k for k, ln in enumerate(post) if ln.strip() == 'export GIT_NO_REPLACE_OBJECTS=1']
+    chk('G8c 셸 git 읽기 앞 — run_contract.GIT_DROP_SH 글자 그대로 한 줄 · export GIT_NO_REPLACE_OBJECTS=1 한 줄 · 둘 다 첫 git -C 앞 (봉인용 읽기 · §3)',
+        gi and len(di) == 1 and len(ei) == 1 and di[0] < gi[0] and ei[0] < gi[0] and text.count(_RCG.GIT_DROP_SH) == 1,
+        f'git {gi[:1]} drop {di} export {ei}')
+    old_b = _git_show(f'{BASE_COMMIT}:scripts/step3_sigma.py')
+    sha_old = _sha256_bytes(old_b or b'')
+    sha_new = _sha256_bytes(open(os.path.join(SCRIPTS, 'step3_sigma.py'), 'rb').read())
+    sha_se = _sha256_bytes(open(os.path.join(SCRIPTS, 'se_material.py'), 'rb').read())
+    call = [ln for ln in post if 'q11_gpu_check.py" --label' in ln]
+    c0 = call[0] if len(call) == 1 else ''
+    chk('G8d 모듈 출처 (`SELF-181`) — se_material = 핀에서 git show 로 새 폴더 ($Q11D/se_material.py) · 하네스 --scripts "$Q11D" · --forbid-dir "$Q11REPO" · '
+        'PYTHONDONTWRITEBYTECODE=1 · live 저장소 scripts 경로 ($Q11REPO/scripts) 없음 · --old-sha · --new-sha · --se-sha = 이 리포의 기반 판 · 지금 판 · '
+        'se_material sha256',
+        'show "${Q11PIN}:scripts/se_material.py" > "$Q11D/se_material.py"' in text and '--scripts "$Q11D"' in c0
+        and '--forbid-dir "$Q11REPO"' in c0 and 'PYTHONDONTWRITEBYTECODE=1' in c0 and '$Q11REPO/scripts' not in text
+        and f'--old-sha {sha_old}' in c0 and f'--new-sha {sha_new}' in c0 and f'--se-sha {sha_se}' in c0 and old_b is not None,
+        c0[-400:])
+    mp = re.search(r'^Q11PIN=([0-9a-f]{40})$', text, re.M)
+    pin = mp.group(1) if mp else None
+    pin_new = _git_show(f'{pin}:scripts/step3_sigma.py') if pin else None
+    pin_se = _git_show(f'{pin}:scripts/se_material.py') if pin else None
+    base_se = _git_show(f'{BASE_COMMIT}:scripts/se_material.py')
+    chk('G8e Q11PIN (40 hex) 의 blob = 블록 sha — 핀 step3_sigma.py = --new-sha · 핀 se_material.py = --se-sha · 기반 판 se_material.py = 같은 sha '
+        '(옛 · 새 모듈이 같은 se_material 을 쓴다)',
+        pin is not None and pin_new is not None and _sha256_bytes(pin_new) == sha_new and pin_se is not None
+        and _sha256_bytes(pin_se) == sha_se and base_se is not None and _sha256_bytes(base_se) == sha_se, f'핀 {pin}')
+    head = '\n'.join(pre)
+    chk('G8f 머리 소비 규칙 (결과 전 · Q11) — consume.adopt · Equality is not convergence · rc 줄 = 판정 아님 · kgy ↔ gabia 이식 안 함 · '
+        '하네스 CONSUME_RULE 같은 뜻',
+        all(w in head for w in ('consume.adopt', 'Equality is not convergence', 'The rc line only says', 'says nothing about gabia'))
+        and 'CONSUME_RULE' in harness and 'Equality is not convergence' in harness)
+    try:
+        H, hp = _load_harness(harness)
+    except Exception as e:                                   # noqa: BLE001
+        chk('G8g 하네스 불러오기', False, f'{type(e).__name__}: {e}')
+        return
+    td = tempfile.mkdtemp(prefix='q11v8_')
+    fold = _stage(os.path.join(td, 'f'))
+    se_args = ['--scripts', fold, '--forbid-dir', ROOT, '--old-sha', sha_old, '--new-sha', sha_new, '--se-sha', sha_se]
+    rc1, r1, t1 = _harness_sub(hp, fold, os.path.join(td, 'o1'), se_args + ['--maxiter', '1'])
+    c1 = (r1 or {}).get('consume') or {}
+    chk('G8g 하네스 (numpy · 6^3 · maxiter 1 = 판정문 Q11 재현) — rc 0 · all_identical 참 · 주 · 이어 풀이 info 1 · consume.adopt 거짓 · identical 참 · '
+        'converged 거짓 · short_iters_ok 참 · 사유에 converged · numpy',
+        rc1 == 0 and r1 is not None and r1.get('all_identical') is True and (r1.get('main_old') or {}).get('info') == 1
+        and c1.get('adopt') is False and c1.get('identical') is True and c1.get('converged') is False and c1.get('short_iters_ok') is True
+        and any(w.startswith(WHY_HEAD['converged']) for w in c1.get('why', [])) and any(w.startswith(WHY_HEAD['numpy']) for w in c1.get('why', [])),
+        f'rc {rc1} · {c1} · {t1[-200:]}')
+    rc2, r2, t2 = _harness_sub(hp, fold, os.path.join(td, 'o2'), se_args)
+    c2 = (r2 or {}).get('consume') or {}
+    f2 = (r2 or {}).get('files') or {}
+    chk('G8h 하네스 (numpy · 수렴) — rc 0 · identical · converged · backend_ok · short_iters_ok · source_ok 참 · adopt 거짓 (사유 = numpy 하나 · GPU 확인 아님) · '
+        'se_material = --scripts 에서 · live 저장소 모듈 0 · 폴더에 .pyc 없음',
+        rc2 == 0 and all(c2.get(k) is True for k in ('identical', 'converged', 'backend_ok', 'short_iters_ok', 'source_ok'))
+        and c2.get('adopt') is False and len(c2.get('why', [])) == 1 and c2['why'][0].startswith(WHY_HEAD['numpy'])
+        and f2.get('se_material_from_scripts') is True and f2.get('loaded_from_forbid_dir_end') == []
+        and not any(n.endswith('.pyc') or n == '__pycache__' for n in os.listdir(fold)), f'rc {rc2} · {c2} · {f2} · {t2[-200:]}')
+    fold7 = _stage(os.path.join(td, 'f7'))                  # v7 꼴 = 모듈 사본 폴더에 se_material 없음 (step3_sigma 는 제 폴더를 sys.path 맨 앞에 둔다)
+    os.remove(os.path.join(fold7, 'se_material.py'))
+    rc3, r3, t3 = _harness_sub(hp, fold7, os.path.join(td, 'o3'), ['--scripts', SCRIPTS, '--forbid-dir', ROOT])
+    rc4, r4, t4 = _harness_sub(hp, fold, os.path.join(td, 'o4'), se_args[:-1] + ['0' * 64])
+    chk('G8i v7 꼴 live import (모듈 사본 폴더에 se_material 없음 · --scripts = 이 리포 scripts) → rc 2 · 사유 = live 저장소 모듈 (se_material) · 풀이 0 · '
+        'se_material sha 틀림 → rc 2 · 풀이 0',
+        rc3 == 2 and 'live repository' in str((r3 or {}).get('error')) and 'main_old' not in (r3 or {'main_old': 1})
+        and 'short_runs' not in (r3 or {'short_runs': 1}) and rc4 == 2 and 'se_material.py' in str((r4 or {}).get('error'))
+        and 'short_runs' not in (r4 or {'short_runs': 1}), f'{rc3} {(r3 or {}).get("error")} · {rc4} {(r4 or {}).get("error")}')
+    #  ── j 가짜 cupy (이 프로세스) — 하네스 main 을 직접 부른다 · se_material 은 이 프로세스에 이미 (live scripts) 있으므로 잠시 뺀다
+    fake_mods = {}
+
+    def call_fake(out, extra, new_bytes=None):
+        f = _stage(os.path.join(td, out + '_f'), new_bytes)
+        forbid = tempfile.mkdtemp(prefix='q11forbid_')
+        saved_se = sys.modules.pop('se_material', None)
+        saved_path = list(sys.path)
+        try:
+            with fake_cupy('tol'):
+                cpm = sys.modules['cupy']
+                cpm.__version__ = 'fake-12.3.0'
+                cpm.cuda = types.SimpleNamespace(Device=lambda i: types.SimpleNamespace(synchronize=lambda: None),
+                                                 runtime=types.SimpleNamespace(getDeviceProperties=lambda i: {'name': b'fake'}))
+                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                    try:
+                        rc = H.main(['--backend', 'cupy', '--n-side', '6', '--out', os.path.join(td, out), '--old', os.path.join(f, 's3_old.py'),
+                                     '--new', os.path.join(f, 's3_new.py'), '--scripts', f, '--forbid-dir', forbid, '--label', out] + extra)
+                    except SystemExit as e:                   # 옛 하네스 (인자 모름) = argparse 멈춤
+                        rc = e.code
+        finally:
+            sys.path[:] = saved_path
+            sys.modules.pop('se_material', None)
+            if saved_se is not None:
+                sys.modules['se_material'] = saved_se
+        try:
+            res = json.load(open(os.path.join(td, out, 'result.json'), encoding='utf-8'))
+        except Exception:                                    # noqa: BLE001
+            res = {}
+        return rc, res
+    fake_mods['pos'] = call_fake('j1', [])
+    fake_mods['it1'] = call_fake('j2', ['--maxiter', '1'])
+    new_src = open(os.path.join(SCRIPTS, 'step3_sigma.py'), 'rb').read()
+    tweak = new_src.replace(b'_dinv = 1.0 / cp.asarray(diag)', b'_dinv = 1.0000000001 / cp.asarray(diag)', 1)
+    fake_mods['diff'] = call_fake('j3', [], new_bytes=tweak)
+    cp_, ci_, cd_ = (fake_mods[k][1].get('consume') or {} for k in ('pos', 'it1', 'diff'))
+    chk('G8j 가짜 cupy (cupy 12.3.0 cg 산술 · 이 프로세스) — 같은 전처리: rc 0 · adopt 참 (identical · converged · backend gpu · 200 반복 · source) · '
+        'maxiter 1: all_identical 참인데 adopt 거짓 (converged 거짓) · 다른 전처리 (1/diag 를 아주 조금 바꾼 새 판): identical 거짓 → adopt 거짓',
+        fake_mods['pos'][0] == 0 and cp_.get('adopt') is True and fake_mods['it1'][0] == 0 and fake_mods['it1'][1].get('all_identical') is True
+        and ci_.get('adopt') is False and ci_.get('converged') is False and ci_.get('identical') is True and tweak != new_src
+        and fake_mods['diff'][0] == 0 and cd_.get('identical') is False and cd_.get('adopt') is False,
+        f'{fake_mods["pos"][0]} {cp_} | {ci_} | {cd_}')
+    if not hasattr(H, 'consume'):
+        chk('G8k consume 칸 하나씩 (합성 기록)', False, '하네스에 consume 없음 (옛 판)')
+        return
+    pairs, short, solve = _consume_fixture()
+    base_c = H.consume('cupy', 200, pairs, short, solve)
+    flips = []
+
+    def flip(name, key, fn, backend='cupy', source_ok=True):
+        p_, s_, v_ = _consume_fixture()
+        fn(p_, s_, v_)
+        c = H.consume(backend, 200, p_, s_, v_, source_ok=source_ok)
+        others = [k for k in ('identical', 'converged', 'backend_ok', 'short_iters_ok', 'source_ok') if k != key and key != 'numpy']
+        ok = (c['adopt'] is False and any(w.startswith(WHY_HEAD[key]) for w in c['why'])
+              and (key == 'numpy' or (c[key] is False and all(c[k] is True for k in others))))
+        flips.append((name, ok, c['why']))
+    flip('pair bytes', 'identical', lambda p, s, v: p[3].update(bytes_identical=False))
+    flip('pair iters', 'identical', lambda p, s, v: p[4].update(iters_same=False))
+    flip('main info 1', 'converged', lambda p, s, v: v[0].update(info=1))
+    flip('resolve not finite', 'converged', lambda p, s, v: v[3].update(finite=False))
+    flip('short used cpu', 'backend_ok', lambda p, s, v: s[2]['backend'].update(used='cpu'))
+    flip('solve precond amg', 'backend_ok', lambda p, s, v: v[1]['backend'].update(precond='amg'))
+    flip('fallback reason', 'backend_ok', lambda p, s, v: v[2]['backend'].update(fallback_reason='x'))
+    flip('short iters 199', 'short_iters_ok', lambda p, s, v: s[5].update(iters=199))
+    flip('short info 0', 'short_iters_ok', lambda p, s, v: s[0].update(info=0))
+    flip('source', 'source_ok', lambda p, s, v: None, source_ok=False)
+
+    def to_cpu(p, s, v):
+        for r in s + v:
+            r['backend'].update(used='cpu', requested='cpu')
+    flip('backend numpy', 'numpy', to_cpu, backend='numpy')
+    chk('G8k consume 칸 하나씩 (합성 기록) — 기준 = adopt 참 · 쌍 바이트 · 반복 수 · 주 info 1 · 이어 풀이 비유한 · 짧은 런 cpu · amg · 폴백 사유 · '
+        '199 반복 · info 0 · live 모듈 · numpy 백엔드 = 하나씩 adopt 거짓 · 그 칸만 거짓 · 그 사유 글',
+        base_c['adopt'] is True and base_c['why'] == [] and all(ok for _n, ok, _w in flips) and len(flips) == 11,
+        [(n, w) for n, ok, w in flips if not ok] or base_c)
+    import importlib.util as _iu
+    if _iu.find_spec('cupy') is not None:
+        print('    (G8l 건너뜀 — 이 기계에 cupy 가 있다 (실제 GPU 확인을 돌리지 않는다))')
+        return
+    home = tempfile.mkdtemp(prefix='q11home_')
+    os.makedirs(os.path.join(home, 'dem-venv', 'bin'))
+    open(os.path.join(home, 'dem-venv', 'bin', 'activate'), 'w').close()
+    blk = text.replace('Q11REPO="$HOME/dem-mt"', 'Q11REPO="' + ROOT + '"', 1)
+    bp = os.path.join(home, 'block.sh')
+    with open(bp, 'w', encoding='utf-8') as fh:
+        fh.write(blk)
+    st0 = subprocess.run(['git', '-C', ROOT, 'status', '--porcelain'], capture_output=True, text=True, env=_RCG.git_env()).stdout
+    env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+    env['HOME'] = home
+    rb = subprocess.run(['bash', bp], capture_output=True, text=True, env=env, cwd=home, timeout=900)
+    st1 = subprocess.run(['git', '-C', ROOT, 'status', '--porcelain'], capture_output=True, text=True, env=_RCG.git_env()).stdout
+    outs = [d for d in os.listdir(home) if d.startswith('q11check_kgy_')]
+    res_b, files_b, names = None, {}, []
+    if len(outs) == 1:
+        names = sorted(os.listdir(os.path.join(home, outs[0])))
+        try:
+            res_b = json.load(open(os.path.join(home, outs[0], 'result.json'), encoding='utf-8'))
+            files_b = res_b.get('files') or {}
+        except Exception:                                    # noqa: BLE001
+            res_b = None
+    chk('G8l 블록 셸 끝-끝 (cupy 없는 이 기계 · Q11REPO = 이 리포 · HOME 임시) — md5 관문 통과 · git show 셋 · 하네스 rc 1 (cupy 없음 = 기록된 오류) · '
+        'sha 셋 맞음 · se_material = 새 폴더에서 · 폴더 = 블록 · 하네스 · 모듈 셋 · 결과 · 로그뿐 (.pyc 없음) · 이 리포 git status 그대로',
+        '[q11] rc 1 ' in rb.stdout and res_b is not None and 'cupy' in str(res_b.get('error')) and files_b.get('se_material_from_scripts') is True
+        and files_b.get('new_sha256') == sha_new and files_b.get('old_sha256') == sha_old and files_b.get('se_material_sha256') == sha_se
+        and names == sorted(['check.log', 'q11_gpu_check.py', 'result.json', 's3_new.py', 's3_old.py', 'se_material.py']) and st0 == st1,
+        f'{rb.stdout[-300:]} {rb.stderr[-300:]} {names} {None if res_b is None else res_b.get("error")}')
+
+
 def main():
     print('── G1 · G1r 전처리 꼴 (고치기 전 = dia_matrix)')
     t_form('tol')
@@ -549,6 +882,10 @@ def main():
         t_fallback_nolinop()
         print('── G7 solve_sigma_z 끝-끝')
         t_solve_sigma(base)
+        print('── G4d · G4e 부호 있는 0 — 충분조건 철회 기록 (11-13 RCPX-06)')
+        t_negzero_product(base)
+    print('── G8 GPU 확인 블록 v8 (11-13 Q11 소비 규칙 · SELF-181)')
+    t_block_v8()
     src = inspect.getsource(S3._solve_cg)
     print(f'\n== test_step3_gpu_precond: {_ok}/{_ok + len(_fail)} PASS (판 = {"고침 뒤" if "LinearOperator" in src else "고치기 전"})')
     if _fail:
