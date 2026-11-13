@@ -1,0 +1,2282 @@
+{
+  "base": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+  "method": "ancestry then exact cherry-pick footer then stable patch-id since 2026-11-08; textconv disabled",
+  "branches": [
+    {
+      "branch": "codex/closure-receipt-1109",
+      "head": "3124b8fa44c2b9a764124ae2bf08621ac2fa2877",
+      "nonancestor_commits": [
+        "3124b8fa44c2b9a764124ae2bf08621ac2fa2877"
+      ]
+    },
+    {
+      "branch": "codex/dem-demp-contract-1110",
+      "head": "fa073370edd483bc425c58311d010fd1ac211c04",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04"
+      ]
+    },
+    {
+      "branch": "codex/dem-findings-proposals-1110",
+      "head": "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d"
+      ]
+    },
+    {
+      "branch": "codex/dem-gate-draft-1110",
+      "head": "77eda58211459e5c14354e200adaaca81e4e2d2d",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d"
+      ]
+    },
+    {
+      "branch": "codex/dem-gen2-1109",
+      "head": "9241933b983605e3210753369a7cae5d6fc43432",
+      "nonancestor_commits": [
+        "9241933b983605e3210753369a7cae5d6fc43432"
+      ]
+    },
+    {
+      "branch": "codex/dem-gen2-fixes-1109",
+      "head": "6adf932499cd9a7e21685e249700bde81be44c9f",
+      "nonancestor_commits": [
+        "08fb8b178eae3010aa6658b571c83a0bc8eef12d",
+        "6adf932499cd9a7e21685e249700bde81be44c9f"
+      ]
+    },
+    {
+      "branch": "codex/dem-gen2-receipt-1109",
+      "head": "33d05e23274d2c8cf2e4f6c52d7a35504408827c",
+      "nonancestor_commits": [
+        "33d05e23274d2c8cf2e4f6c52d7a35504408827c"
+      ]
+    },
+    {
+      "branch": "codex/dem-gen2-request",
+      "head": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe"
+      ]
+    },
+    {
+      "branch": "codex/dem-gen2-t12",
+      "head": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f"
+      ]
+    },
+    {
+      "branch": "codex/dem-gen2-t12r",
+      "head": "96f15ed17e03181b6096fb65f71ec7f577f17523",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523"
+      ]
+    },
+    {
+      "branch": "codex/dem-live-ra-contract-1110",
+      "head": "63a513560c2770990920065be94ef966a8be018b",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b"
+      ]
+    },
+    {
+      "branch": "codex/dem-p2-consumer-1110",
+      "head": "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4"
+      ]
+    },
+    {
+      "branch": "codex/dem-q3-prefill-1110",
+      "head": "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b"
+      ]
+    },
+    {
+      "branch": "codex/dem-qualification-matrix-1110",
+      "head": "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d"
+      ]
+    },
+    {
+      "branch": "codex/dem-s0-contract-1110",
+      "head": "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f"
+      ]
+    },
+    {
+      "branch": "codex/dem-t0-contract-1110",
+      "head": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d"
+      ]
+    },
+    {
+      "branch": "codex/dem-t11-contract-1110",
+      "head": "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9"
+      ]
+    },
+    {
+      "branch": "codex/dem-t5-contract-1110",
+      "head": "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4"
+      ]
+    },
+    {
+      "branch": "codex/e0r3-receipt-1113",
+      "head": "148a8f30b16edd181c1d89d62dc23e58e33266bc",
+      "nonancestor_commits": [
+        "148a8f30b16edd181c1d89d62dc23e58e33266bc"
+      ]
+    },
+    {
+      "branch": "codex/lhs-1108",
+      "head": "32208409de9f6670140c5e2041d039fe57420c34",
+      "nonancestor_commits": [
+        "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+        "d3a8abc09dbd77ea4b19b2edbc60f7181322e595",
+        "edbe6eb176d22db574953d3e47d11969b353421b",
+        "73895add198eae4926b1944b6e1f05a54ca57d13",
+        "bb6e86ac44f70a27b154db62fc14a624cab944df",
+        "068072d65a5ecfefb0462ecd348f2f930133b6e2",
+        "14773e25b32eec187366b58168e2cf98fd4730c7",
+        "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+        "ac8cdbc89dd161e5bdaf2878c41f5e5750691251",
+        "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+        "6fbd066832d3273d56037005ea26eb884b73646a",
+        "349e946697b67768a5a1a209121fb90244aef485",
+        "32208409de9f6670140c5e2041d039fe57420c34"
+      ]
+    },
+    {
+      "branch": "codex/lhs-boundary-fixes-1110",
+      "head": "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad",
+        "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f"
+      ]
+    },
+    {
+      "branch": "codex/lhs-document-cells-1110",
+      "head": "6add88f264d2c651b467f3906e755824ed6e40ad",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad"
+      ]
+    },
+    {
+      "branch": "codex/lhs-lpi-plan-1110",
+      "head": "02a2087803d737290822964807e197133224029a",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad",
+        "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+        "02a2087803d737290822964807e197133224029a"
+      ]
+    },
+    {
+      "branch": "codex/lhs-n-definitions-1106",
+      "head": "288929658dca6f7b23473bc42c911113f308ed82",
+      "nonancestor_commits": [
+        "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+        "d3a8abc09dbd77ea4b19b2edbc60f7181322e595",
+        "edbe6eb176d22db574953d3e47d11969b353421b",
+        "73895add198eae4926b1944b6e1f05a54ca57d13",
+        "bb6e86ac44f70a27b154db62fc14a624cab944df",
+        "068072d65a5ecfefb0462ecd348f2f930133b6e2",
+        "14773e25b32eec187366b58168e2cf98fd4730c7",
+        "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+        "ac8cdbc89dd161e5bdaf2878c41f5e5750691251",
+        "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+        "288929658dca6f7b23473bc42c911113f308ed82"
+      ]
+    },
+    {
+      "branch": "codex/lhs-policy-1109",
+      "head": "847d4952407acbd870c946fa3fbdf9e0c91c975b",
+      "nonancestor_commits": [
+        "56a08a7679b156bae1ffddcc44457bd8f8cfd172",
+        "847d4952407acbd870c946fa3fbdf9e0c91c975b"
+      ]
+    },
+    {
+      "branch": "codex/lhs-q1-options-1109",
+      "head": "476e736e251991f4f5916fe02d990454acaa064d",
+      "nonancestor_commits": [
+        "aeb5f1fe7991f08f5c4de47cdad8b959d26690ea",
+        "476e736e251991f4f5916fe02d990454acaa064d"
+      ]
+    },
+    {
+      "branch": "codex/lhs-v13-1104",
+      "head": "349e946697b67768a5a1a209121fb90244aef485",
+      "nonancestor_commits": [
+        "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+        "d3a8abc09dbd77ea4b19b2edbc60f7181322e595",
+        "edbe6eb176d22db574953d3e47d11969b353421b",
+        "73895add198eae4926b1944b6e1f05a54ca57d13",
+        "bb6e86ac44f70a27b154db62fc14a624cab944df",
+        "068072d65a5ecfefb0462ecd348f2f930133b6e2",
+        "14773e25b32eec187366b58168e2cf98fd4730c7",
+        "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+        "ac8cdbc89dd161e5bdaf2878c41f5e5750691251",
+        "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+        "6fbd066832d3273d56037005ea26eb884b73646a",
+        "349e946697b67768a5a1a209121fb90244aef485"
+      ]
+    },
+    {
+      "branch": "codex/lhs-wsl30-1108",
+      "head": "78e257de6e6a9fcd9808dc55b3da6902ae4da6f1",
+      "nonancestor_commits": [
+        "78e257de6e6a9fcd9808dc55b3da6902ae4da6f1"
+      ]
+    },
+    {
+      "branch": "codex/lhs12-clarify-1108",
+      "head": "39b635a405f0d0141f1404de08acdb5461938f8e",
+      "nonancestor_commits": [
+        "39b635a405f0d0141f1404de08acdb5461938f8e"
+      ]
+    },
+    {
+      "branch": "codex/lhs12-receipt-1109",
+      "head": "eba2e2baf4b6324f21972e9bb5a538f6562fc653",
+      "nonancestor_commits": [
+        "eba2e2baf4b6324f21972e9bb5a538f6562fc653"
+      ]
+    },
+    {
+      "branch": "codex/lhs214-relaunch",
+      "head": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+      "nonancestor_commits": [
+        "e41d091f5ac948b3529eaed3aae03eb380dad9e0",
+        "ffbd438e7522d58eb069561fe58020f4086707ac",
+        "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+        "854857e576a2a8aba07ec861dbee39d4bb59efae"
+      ]
+    },
+    {
+      "branch": "codex/memo32-1113",
+      "head": "1e823a34ce8459f7596c8c80e4874bc933220733",
+      "nonancestor_commits": [
+        "1e823a34ce8459f7596c8c80e4874bc933220733"
+      ]
+    },
+    {
+      "branch": "codex/memo32-closure-1113",
+      "head": "8687c9641ba06447cbc952f734341000d323e645",
+      "nonancestor_commits": [
+        "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+        "5afa16488c6cf70d333406bc0802c2139b4a425c",
+        "8687c9641ba06447cbc952f734341000d323e645"
+      ]
+    },
+    {
+      "branch": "codex/memo32-fixes-1113",
+      "head": "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+      "nonancestor_commits": [
+        "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2"
+      ]
+    },
+    {
+      "branch": "codex/memo32-plan-1113",
+      "head": "ce936985f496ce4d5982625af6fe74f0d8aee281",
+      "nonancestor_commits": [
+        "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+        "5afa16488c6cf70d333406bc0802c2139b4a425c",
+        "8687c9641ba06447cbc952f734341000d323e645",
+        "ce936985f496ce4d5982625af6fe74f0d8aee281"
+      ]
+    },
+    {
+      "branch": "codex/memo32-plan-fixes-1113",
+      "head": "e2b74919bc681f45b001145f07109d6fc9d12b90",
+      "nonancestor_commits": [
+        "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+        "5afa16488c6cf70d333406bc0802c2139b4a425c",
+        "8687c9641ba06447cbc952f734341000d323e645",
+        "ce936985f496ce4d5982625af6fe74f0d8aee281",
+        "e2b74919bc681f45b001145f07109d6fc9d12b90"
+      ]
+    },
+    {
+      "branch": "codex/memo32-plan-receipt-1113",
+      "head": "f846f5bbe3a2d7cdbe256f29a5e3ef969835e1e2",
+      "nonancestor_commits": [
+        "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+        "5afa16488c6cf70d333406bc0802c2139b4a425c",
+        "8687c9641ba06447cbc952f734341000d323e645",
+        "ce936985f496ce4d5982625af6fe74f0d8aee281",
+        "e2b74919bc681f45b001145f07109d6fc9d12b90",
+        "f846f5bbe3a2d7cdbe256f29a5e3ef969835e1e2"
+      ]
+    },
+    {
+      "branch": "codex/memo32-rule38-1113",
+      "head": "5afa16488c6cf70d333406bc0802c2139b4a425c",
+      "nonancestor_commits": [
+        "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+        "5afa16488c6cf70d333406bc0802c2139b4a425c"
+      ]
+    },
+    {
+      "branch": "codex/merge-prep",
+      "head": "761c331bcac1ec6a82d83ad085870dd912e6e6b2",
+      "nonancestor_commits": [
+        "761c331bcac1ec6a82d83ad085870dd912e6e6b2"
+      ]
+    },
+    {
+      "branch": "codex/mixer-1104",
+      "head": "4eb6c593ec5384ed8e51079f5ec7196b1eeae80f",
+      "nonancestor_commits": [
+        "2a5d7b1c70384d7f29dd41ea9f20913dea190bd6",
+        "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+        "67d23a4fdeab0f09c8a8c2602cfc59daecd07f20",
+        "c29a53723f279ada302d31ddb759257faa16740e",
+        "d0107959955f284df56cb546ee008595d26dac61",
+        "0f284e7db65278acb52dd4666b1b22151604e9ba",
+        "6d9d838a931bf2269d7bd43f22fe61c904f4b9ac",
+        "189930cc68b6e58beb6b4546d80353dc03852195",
+        "ec484c2719d6a444214ddc9c48fe683a7735688b",
+        "cce92af161fa5385fd2fd895ae5c85adb786ce01",
+        "b5331d89e9029a1e372d320acee31cddce41474e",
+        "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+        "7e40b7f2398a82cd5ae04b84017c0a9e1a89d521",
+        "b57fe91503ba68cec6f41aec247851262788e48f",
+        "a4c78001f706c08de1dddcac09a31a921c4faca7",
+        "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+        "e6000405b7625acf8c2c0a393571b116479e0e97",
+        "4eb6c593ec5384ed8e51079f5ec7196b1eeae80f"
+      ]
+    },
+    {
+      "branch": "codex/mixer-1108",
+      "head": "1cd237679b5e590a929b89dd3ccf3d57ce1f8238",
+      "nonancestor_commits": [
+        "2a5d7b1c70384d7f29dd41ea9f20913dea190bd6",
+        "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+        "67d23a4fdeab0f09c8a8c2602cfc59daecd07f20",
+        "c29a53723f279ada302d31ddb759257faa16740e",
+        "d0107959955f284df56cb546ee008595d26dac61",
+        "0f284e7db65278acb52dd4666b1b22151604e9ba",
+        "6d9d838a931bf2269d7bd43f22fe61c904f4b9ac",
+        "189930cc68b6e58beb6b4546d80353dc03852195",
+        "ec484c2719d6a444214ddc9c48fe683a7735688b",
+        "cce92af161fa5385fd2fd895ae5c85adb786ce01",
+        "b5331d89e9029a1e372d320acee31cddce41474e",
+        "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+        "7e40b7f2398a82cd5ae04b84017c0a9e1a89d521",
+        "b57fe91503ba68cec6f41aec247851262788e48f",
+        "a4c78001f706c08de1dddcac09a31a921c4faca7",
+        "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+        "e6000405b7625acf8c2c0a393571b116479e0e97",
+        "4eb6c593ec5384ed8e51079f5ec7196b1eeae80f",
+        "1cd237679b5e590a929b89dd3ccf3d57ce1f8238"
+      ]
+    },
+    {
+      "branch": "codex/mixer-d3-design",
+      "head": "e0daf7b234bcc7935259d786e270268372abe2a2",
+      "nonancestor_commits": [
+        "1c58f45b686307bbbce289f32c03ed3c6c07a057",
+        "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+        "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+        "e0daf7b234bcc7935259d786e270268372abe2a2"
+      ]
+    },
+    {
+      "branch": "codex/mixer-e0-1113",
+      "head": "b94090e04d9a35dc97f91839fae4ba3fd5b2d165",
+      "nonancestor_commits": [
+        "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+        "864b26e491b4d698ca9d7265e3bf45fb06072c1c",
+        "b94090e04d9a35dc97f91839fae4ba3fd5b2d165"
+      ]
+    },
+    {
+      "branch": "codex/mixer-inactive-prep-1109",
+      "head": "73e659273fd2ed6406a4c90011fc6079c7adf95f",
+      "nonancestor_commits": [
+        "73e659273fd2ed6406a4c90011fc6079c7adf95f"
+      ]
+    },
+    {
+      "branch": "codex/mixer-mgs01-1109",
+      "head": "aab74e46baed555e51033dd9ae54d2fd754e1d5e",
+      "nonancestor_commits": [
+        "aab74e46baed555e51033dd9ae54d2fd754e1d5e"
+      ]
+    },
+    {
+      "branch": "codex/mixer-mlar01-1109",
+      "head": "215e9cc007cc1307fc3bd3f31fa48cff1addc2a1",
+      "nonancestor_commits": [
+        "215e9cc007cc1307fc3bd3f31fa48cff1addc2a1"
+      ]
+    },
+    {
+      "branch": "codex/mixer-mxd2",
+      "head": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+      "nonancestor_commits": [
+        "3ca28d474d4f0a775bad657acc307f1a5c8447ce",
+        "486a57cf58d3e0d93ef79be6aae50968929099c0",
+        "34782a1874435e317f44c9d8f2045d53ceaf4dcc",
+        "045e0b3098e8fe5a64d6eb0da310da776e68f995"
+      ]
+    },
+    {
+      "branch": "codex/mixer-path-fix-1109",
+      "head": "3ca47af5b0acd1b39c1d437949413ef3ac31b831",
+      "nonancestor_commits": [
+        "2ac1a2482f0290566ac1d67d972f7c9544a9d291",
+        "3ca47af5b0acd1b39c1d437949413ef3ac31b831"
+      ]
+    },
+    {
+      "branch": "codex/mixer-path-receipt-1109",
+      "head": "1fbd6d69f3714c85594b49bd1b7a2fd70f373b07",
+      "nonancestor_commits": [
+        "1fbd6d69f3714c85594b49bd1b7a2fd70f373b07"
+      ]
+    },
+    {
+      "branch": "codex/mixer-qualification-plan-1110",
+      "head": "0c56deba6f2fb824996d770163a19c8e7dbd8abe",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad",
+        "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+        "02a2087803d737290822964807e197133224029a",
+        "b3ad4d4f66bc8133cc419e89071bb171ed976655",
+        "0c56deba6f2fb824996d770163a19c8e7dbd8abe"
+      ]
+    },
+    {
+      "branch": "codex/mixer-receipt-1109",
+      "head": "979b1c721ba3a2a7a4bdf5b11472be2e4de2f213",
+      "nonancestor_commits": [
+        "0d5a918eded0ba8c7c502560e0b8db0e8e8717b3",
+        "979b1c721ba3a2a7a4bdf5b11472be2e4de2f213"
+      ]
+    },
+    {
+      "branch": "codex/mixer-scope-followup-1110",
+      "head": "b3ad4d4f66bc8133cc419e89071bb171ed976655",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad",
+        "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+        "02a2087803d737290822964807e197133224029a",
+        "b3ad4d4f66bc8133cc419e89071bb171ed976655"
+      ]
+    },
+    {
+      "branch": "codex/mixer-seed-1108",
+      "head": "a836aa4c0e6127741fa8abeddac28a67d9623591",
+      "nonancestor_commits": [
+        "a836aa4c0e6127741fa8abeddac28a67d9623591"
+      ]
+    },
+    {
+      "branch": "codex/mixer-windows-path-fix-1109",
+      "head": "dcfd62262f101598e4301862e2b3065c44514bb0",
+      "nonancestor_commits": [
+        "be4388d0c1d3836bc44df0eada6793fbffdcd6e7",
+        "d310f741a636954b600c9e4f000bfccba2fee3ce",
+        "dcfd62262f101598e4301862e2b3065c44514bb0"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-approved-forms-1109",
+      "head": "b54e89e65c2daeb97dc10ff256a7be1d5b8cbeee",
+      "nonancestor_commits": [
+        "b54e89e65c2daeb97dc10ff256a7be1d5b8cbeee"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-approved-forms-final-1109",
+      "head": "6b9d8e14917060465e059d91e6e63f19b1d8bd52",
+      "nonancestor_commits": [
+        "6b9d8e14917060465e059d91e6e63f19b1d8bd52"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-claude-query",
+      "head": "3fab532fa0409c5300e8f2c3336cd408259a6064",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-facts-reply",
+      "head": "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064",
+        "18c7b83f97f84808d3283d8bbc37725b48bc5924"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-first-link-1109",
+      "head": "0f7ea5ea5d3435e2416dbb5de8f92f21f1a8a24b",
+      "nonancestor_commits": [
+        "43eb8a28c95b92faa120793c0f720d8d3cd409bd",
+        "b492a206205958a7f5ab2a53d2e14e5403690f2e",
+        "708add516725cd3566d3b6c0ca3c1b7d15a10435",
+        "0f7ea5ea5d3435e2416dbb5de8f92f21f1a8a24b"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-handoff",
+      "head": "5de9682e15c6890d031edcf29b5b639e1863bdb6",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064",
+        "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+        "5de9682e15c6890d031edcf29b5b639e1863bdb6"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-next-decisions-1109",
+      "head": "b7ec640bc216b9353433806716cc5a7d11d14211",
+      "nonancestor_commits": [
+        "b7ec640bc216b9353433806716cc5a7d11d14211"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-next-prep-1109",
+      "head": "3287537dd90b95160027ff1c0d4f933948ff14e5",
+      "nonancestor_commits": [
+        "3287537dd90b95160027ff1c0d4f933948ff14e5"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-nsb-fixes-1110",
+      "head": "c5aa7bb527c5cf0907651bae688bb97de206a8b6",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad",
+        "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+        "02a2087803d737290822964807e197133224029a",
+        "b3ad4d4f66bc8133cc419e89071bb171ed976655",
+        "0c56deba6f2fb824996d770163a19c8e7dbd8abe",
+        "084c978afc363078781dba37a318dc37e8edc084",
+        "96376652f9c6591feaacfbfb9a53264cd0dcb6d2",
+        "a69095c7f1cc4908a14b93912d97cb93cc33eb64",
+        "c5aa7bb527c5cf0907651bae688bb97de206a8b6"
+      ]
+    },
+    {
+      "branch": "codex/nonrint-standing-handoff-1110",
+      "head": "a69095c7f1cc4908a14b93912d97cb93cc33eb64",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad",
+        "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+        "02a2087803d737290822964807e197133224029a",
+        "b3ad4d4f66bc8133cc419e89071bb171ed976655",
+        "0c56deba6f2fb824996d770163a19c8e7dbd8abe",
+        "084c978afc363078781dba37a318dc37e8edc084",
+        "96376652f9c6591feaacfbfb9a53264cd0dcb6d2",
+        "a69095c7f1cc4908a14b93912d97cb93cc33eb64"
+      ]
+    },
+    {
+      "branch": "codex/notes-1108",
+      "head": "9c71b039f1df49dbf8507298be05b2ad11882890",
+      "nonancestor_commits": [
+        "9c71b039f1df49dbf8507298be05b2ad11882890"
+      ]
+    },
+    {
+      "branch": "codex/p1-g2c-diagnosis",
+      "head": "b584e2c1c77d78c3f619d98af9b00c374c0bb7eb",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064",
+        "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+        "5de9682e15c6890d031edcf29b5b639e1863bdb6",
+        "3e66189b01f8101808100d74fdd5abd57d2bb7ee",
+        "e5ea4ef2e15866b9400dc70e7560091ed581a3b6",
+        "3f5094bd46b36f2dac4b5424bc715836c7f65648",
+        "04e1b518696eeb19bb7733de4c7bdb83e36e9b91",
+        "b584e2c1c77d78c3f619d98af9b00c374c0bb7eb"
+      ]
+    },
+    {
+      "branch": "codex/p1-input-identity",
+      "head": "3e66189b01f8101808100d74fdd5abd57d2bb7ee",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064",
+        "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+        "5de9682e15c6890d031edcf29b5b639e1863bdb6",
+        "3e66189b01f8101808100d74fdd5abd57d2bb7ee"
+      ]
+    },
+    {
+      "branch": "codex/p1-preflight-complete",
+      "head": "04e1b518696eeb19bb7733de4c7bdb83e36e9b91",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064",
+        "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+        "5de9682e15c6890d031edcf29b5b639e1863bdb6",
+        "3e66189b01f8101808100d74fdd5abd57d2bb7ee",
+        "e5ea4ef2e15866b9400dc70e7560091ed581a3b6",
+        "3f5094bd46b36f2dac4b5424bc715836c7f65648",
+        "04e1b518696eeb19bb7733de4c7bdb83e36e9b91"
+      ]
+    },
+    {
+      "branch": "codex/p1-readiness",
+      "head": "e5ea4ef2e15866b9400dc70e7560091ed581a3b6",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064",
+        "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+        "5de9682e15c6890d031edcf29b5b639e1863bdb6",
+        "3e66189b01f8101808100d74fdd5abd57d2bb7ee",
+        "e5ea4ef2e15866b9400dc70e7560091ed581a3b6"
+      ]
+    },
+    {
+      "branch": "codex/p1-staging-plan",
+      "head": "3f5094bd46b36f2dac4b5424bc715836c7f65648",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+        "3fab532fa0409c5300e8f2c3336cd408259a6064",
+        "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+        "5de9682e15c6890d031edcf29b5b639e1863bdb6",
+        "3e66189b01f8101808100d74fdd5abd57d2bb7ee",
+        "e5ea4ef2e15866b9400dc70e7560091ed581a3b6",
+        "3f5094bd46b36f2dac4b5424bc715836c7f65648"
+      ]
+    },
+    {
+      "branch": "codex/review-handoff-1108",
+      "head": "33d3cf0dd52ae3813804f06733d9bd281cb8a9a2",
+      "nonancestor_commits": [
+        "33d3cf0dd52ae3813804f06733d9bd281cb8a9a2"
+      ]
+    },
+    {
+      "branch": "codex/t12r01-closure",
+      "head": "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+        "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+        "96f15ed17e03181b6096fb65f71ec7f577f17523",
+        "58b6ccb0d754b07b6f1695328267c9aa531a4bb6"
+      ]
+    },
+    {
+      "branch": "codex/ulpri-closure",
+      "head": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+      "nonancestor_commits": [
+        "e7131e7d978085e9705b9c833616ec36b1208210",
+        "962caea2d1857b0e34fe724e38815661936b7183",
+        "be6af85342428731030042c8a669f0b830a7e882",
+        "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+        "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+        "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+        "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+        "bffc42cab29da37b45f8a713e30e8572b91e7da3"
+      ]
+    },
+    {
+      "branch": "codex/unloading-ulpr",
+      "head": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "nonancestor_commits": [
+        "e491ccd5643e4c395527bc54c5b83d9897e2bf46",
+        "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+        "652d43704034f24d2f4a024092b36ce0ddf558fe",
+        "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362"
+      ]
+    },
+    {
+      "branch": "codex/unloading-ulpri",
+      "head": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "nonancestor_commits": [
+        "e491ccd5643e4c395527bc54c5b83d9897e2bf46",
+        "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+        "652d43704034f24d2f4a024092b36ce0ddf558fe",
+        "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+        "643344fee22a5d1131a59c8cd46bcf6c9a09d65b",
+        "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde"
+      ]
+    },
+    {
+      "branch": "codex/web-cap-radius-1110",
+      "head": "96376652f9c6591feaacfbfb9a53264cd0dcb6d2",
+      "nonancestor_commits": [
+        "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+        "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+        "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+        "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+        "63a513560c2770990920065be94ef966a8be018b",
+        "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+        "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+        "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+        "fa073370edd483bc425c58311d010fd1ac211c04",
+        "77eda58211459e5c14354e200adaaca81e4e2d2d",
+        "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+        "6add88f264d2c651b467f3906e755824ed6e40ad",
+        "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+        "02a2087803d737290822964807e197133224029a",
+        "b3ad4d4f66bc8133cc419e89071bb171ed976655",
+        "0c56deba6f2fb824996d770163a19c8e7dbd8abe",
+        "084c978afc363078781dba37a318dc37e8edc084",
+        "96376652f9c6591feaacfbfb9a53264cd0dcb6d2"
+      ]
+    }
+  ],
+  "commits": {
+    "3124b8fa44c2b9a764124ae2bf08621ac2fa2877": {
+      "sha": "3124b8fa44c2b9a764124ae2bf08621ac2fa2877",
+      "title": "Consolidate limited acceptances after MLAR evidence repack",
+      "state": "cherry_pick_footer",
+      "target": "8a67b7eae838cedcf4c3e1e56c86722fb7cf4ab6"
+    },
+    "3f81b6162838c3453f3df806a2b0d176ae2c887b": {
+      "sha": "3f81b6162838c3453f3df806a2b0d176ae2c887b",
+      "title": "Prefill DEM Q3 metadata from repository declarations",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0052_dem-q3-prefill.md",
+          "docs/reviews/dem_q3_prefill_20261110/README.md",
+          "docs/reviews/dem_q3_prefill_20261110/provenance.json"
+        ]
+      }
+    },
+    "c5ebaa71298691020313e272b39c0a80b51cdc4d": {
+      "sha": "c5ebaa71298691020313e272b39c0a80b51cdc4d",
+      "title": "Prepare synthetic T0 identity and polarity contract",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0104_dem-t0-contract.md",
+          "docs/reviews/dem_t0_contract_20261110/README.md",
+          "docs/reviews/dem_t0_contract_20261110/contract_draft.json",
+          "docs/reviews/dem_t0_contract_20261110/review_request.md",
+          "docs/reviews/dem_t0_contract_20261110/verification_summary.json",
+          "scripts/dem_gen2_t0_contract.py",
+          "scripts/test_dem_gen2_t0_contract.py"
+        ]
+      }
+    },
+    "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4": {
+      "sha": "d11b60d2bc75948b0bc8a2c33f84e3b0b65869d4",
+      "title": "Prepare synthetic T5 planned-manifest contract",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0121_dem-t5-contract.md",
+          "docs/reviews/dem_t5_contract_20261110/README.md",
+          "docs/reviews/dem_t5_contract_20261110/preregistration_draft.json",
+          "docs/reviews/dem_t5_contract_20261110/review_request.md",
+          "docs/reviews/dem_t5_contract_20261110/verification_summary.json",
+          "scripts/dem_gen2_t5_contract.py",
+          "scripts/test_dem_gen2_t5_contract.py"
+        ]
+      }
+    },
+    "ea5f22b6ae807dda3decf1928ec310d459996cb9": {
+      "sha": "ea5f22b6ae807dda3decf1928ec310d459996cb9",
+      "title": "Prepare synthetic T11 exact-time contract",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0127_dem-t11-contract.md",
+          "docs/reviews/dem_t11_contract_20261110/README.md",
+          "docs/reviews/dem_t11_contract_20261110/contract_draft.json",
+          "docs/reviews/dem_t11_contract_20261110/review_request.md",
+          "docs/reviews/dem_t11_contract_20261110/verification_summary.json",
+          "scripts/dem_gen2_t11_contract.py",
+          "scripts/test_dem_gen2_t11_contract.py"
+        ]
+      }
+    },
+    "63a513560c2770990920065be94ef966a8be018b": {
+      "sha": "63a513560c2770990920065be94ef966a8be018b",
+      "title": "Prepare synthetic live and R-a channel contract",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0133_dem-live-ra-contract.md",
+          "docs/reviews/dem_live_ra_contract_20261110/README.md",
+          "docs/reviews/dem_live_ra_contract_20261110/contract_draft.json",
+          "docs/reviews/dem_live_ra_contract_20261110/review_request.md",
+          "docs/reviews/dem_live_ra_contract_20261110/verification_summary.json",
+          "scripts/dem_gen2_live_contract.py",
+          "scripts/test_dem_gen2_live_contract.py"
+        ]
+      }
+    },
+    "f4647f2b7c218a6df7def3292c092273f9d4e35f": {
+      "sha": "f4647f2b7c218a6df7def3292c092273f9d4e35f",
+      "title": "Prepare synthetic S0 boundary serialization contract",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0138_dem-s0-contract.md",
+          "docs/reviews/dem_s0_contract_20261110/README.md",
+          "docs/reviews/dem_s0_contract_20261110/contract_draft.json",
+          "docs/reviews/dem_s0_contract_20261110/review_request.md",
+          "docs/reviews/dem_s0_contract_20261110/verification_summary.json",
+          "scripts/dem_gen2_s0_contract.py",
+          "scripts/test_dem_gen2_s0_contract.py"
+        ]
+      }
+    },
+    "c571a27119ace92ca34d3d6f2b61135219a3f1b4": {
+      "sha": "c571a27119ace92ca34d3d6f2b61135219a3f1b4",
+      "title": "Prepare synthetic P2 consumer and separation contract",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0149_dem-p2-consumer-contract.md",
+          "docs/reviews/dem_p2_consumer_contract_20261110/README.md",
+          "docs/reviews/dem_p2_consumer_contract_20261110/contract_draft.json",
+          "docs/reviews/dem_p2_consumer_contract_20261110/review_request.md",
+          "docs/reviews/dem_p2_consumer_contract_20261110/verification_summary.json",
+          "scripts/dem_gen2_p2_contract.py",
+          "scripts/test_dem_gen2_p2_contract.py"
+        ]
+      }
+    },
+    "b7fbe749ea8ffa3151b3e768de445c572940c43d": {
+      "sha": "b7fbe749ea8ffa3151b3e768de445c572940c43d",
+      "title": "Prepare synthetic qualification case matrix",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0200_dem-qualification-matrix.md",
+          "docs/reviews/dem_qualification_matrix_20261110/README.md",
+          "docs/reviews/dem_qualification_matrix_20261110/contract_draft.json",
+          "docs/reviews/dem_qualification_matrix_20261110/review_request.md",
+          "docs/reviews/dem_qualification_matrix_20261110/verification_summary.json",
+          "scripts/dem_gen2_qualification_matrix.py",
+          "scripts/test_dem_gen2_qualification_matrix.py"
+        ]
+      }
+    },
+    "fa073370edd483bc425c58311d010fd1ac211c04": {
+      "sha": "fa073370edd483bc425c58311d010fd1ac211c04",
+      "title": "Prepare synthetic DEMP evidence contract",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0215_dem-demp-contract.md",
+          "docs/reviews/dem_demp_contract_20261110/README.md",
+          "docs/reviews/dem_demp_contract_20261110/contract_draft.json",
+          "docs/reviews/dem_demp_contract_20261110/review_request.md",
+          "docs/reviews/dem_demp_contract_20261110/verification_summary.json",
+          "scripts/dem_gen2_demp_contract.py",
+          "scripts/test_dem_gen2_demp_contract.py"
+        ]
+      }
+    },
+    "77eda58211459e5c14354e200adaaca81e4e2d2d": {
+      "sha": "77eda58211459e5c14354e200adaaca81e4e2d2d",
+      "title": "Draft DEM synthetic tests gate integration",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0220_dem-gate-draft.md",
+          "docs/reviews/dem_gate_patch_draft_20261110/.gitattributes",
+          "docs/reviews/dem_gate_patch_draft_20261110/README.md",
+          "docs/reviews/dem_gate_patch_draft_20261110/check_all_dem_gen2.patch",
+          "docs/reviews/dem_gate_patch_draft_20261110/patch_draft_verification.json"
+        ]
+      }
+    },
+    "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d": {
+      "sha": "edc9fc83a22ee3d71bcbbf97fc03d28cda199a1d",
+      "title": "Map DEM findings and propose sealed fixes",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0225_dem-findings-proposals.md",
+          "docs/reviews/dem_findings_proposals_20261110/MV09_correction.md",
+          "docs/reviews/dem_findings_proposals_20261110/README.md",
+          "docs/reviews/dem_findings_proposals_20261110/scope_proposals.md",
+          "docs/reviews/dem_findings_proposals_20261110/scope_provenance.json"
+        ]
+      }
+    },
+    "9241933b983605e3210753369a7cae5d6fc43432": {
+      "sha": "9241933b983605e3210753369a7cae5d6fc43432",
+      "title": "Prepare inactive DEM gen2 producer and qualification drafts",
+      "state": "cherry_pick_footer",
+      "target": "27ed57b9636bc0839e11ba521d7eef78d4a2c413"
+    },
+    "08fb8b178eae3010aa6658b571c83a0bc8eef12d": {
+      "sha": "08fb8b178eae3010aa6658b571c83a0bc8eef12d",
+      "title": "Prepare inactive DEM gen2 producer and qualification drafts",
+      "state": "patch_id_equal",
+      "target": "27ed57b9636bc0839e11ba521d7eef78d4a2c413",
+      "patch_id": "54ae0c8f6386809cfa7dbcc30e7c0665edce50f0"
+    },
+    "6adf932499cd9a7e21685e249700bde81be44c9f": {
+      "sha": "6adf932499cd9a7e21685e249700bde81be44c9f",
+      "title": "Fix DEM gen2 preparation review findings",
+      "state": "cherry_pick_footer",
+      "target": "160b9ee104fbe0bee9dcf87cd80976000eec2c37"
+    },
+    "33d05e23274d2c8cf2e4f6c52d7a35504408827c": {
+      "sha": "33d05e23274d2c8cf2e4f6c52d7a35504408827c",
+      "title": "Record limited acceptance of DEM gen2 four fixes",
+      "state": "cherry_pick_footer",
+      "target": "2be18e9ecd4e818f39681ae896753b71485c6017"
+    },
+    "e7131e7d978085e9705b9c833616ec36b1208210": {
+      "sha": "e7131e7d978085e9705b9c833616ec36b1208210",
+      "title": "Prepare DEM generation 2 design review request",
+      "state": "cherry_pick_footer",
+      "target": "7132febf443151385ee0f30b457a6c6dec9f8d3d"
+    },
+    "962caea2d1857b0e34fe724e38815661936b7183": {
+      "sha": "962caea2d1857b0e34fe724e38815661936b7183",
+      "title": "Record DEM generation 2 full gate evidence",
+      "state": "cherry_pick_footer",
+      "target": "e2a783db45838d6eed604d573c022435b94738ed"
+    },
+    "be6af85342428731030042c8a669f0b830a7e882": {
+      "sha": "be6af85342428731030042c8a669f0b830a7e882",
+      "title": "Apply ratified DEM gen2 plan corrections and T12 handoff",
+      "state": "cherry_pick_footer",
+      "target": "7ee9855a4447214f6367bfd63a92c7367afa4f58"
+    },
+    "2443a63eaa87d52e385a35f8bab4225efa0d25fe": {
+      "sha": "2443a63eaa87d52e385a35f8bab4225efa0d25fe",
+      "title": "Record verified full gate for ratified DEM gen2 plan",
+      "state": "cherry_pick_footer",
+      "target": "a15969bea0a9610fbb52cb799b4c716f36bb0a99"
+    },
+    "d6e692488a56baf11f7206c5cd45c6bc404b92f0": {
+      "sha": "d6e692488a56baf11f7206c5cd45c6bc404b92f0",
+      "title": "Add pinned T12 consumer contract and synthetic boundary probes",
+      "state": "cherry_pick_footer",
+      "target": "18a86c36b4c7d78b3e41d817f50d1fcbbfdeb857"
+    },
+    "f1da507e8ab8bf812a242b9749d4c320be90fd73": {
+      "sha": "f1da507e8ab8bf812a242b9749d4c320be90fd73",
+      "title": "Repin T12 consumer contract to published ULPRI and cover resume ambiguity",
+      "state": "cherry_pick_footer",
+      "target": "551d7deb644d0d06a190a033bfddcdd6e48e4cca"
+    },
+    "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f": {
+      "sha": "2b4b40ea5e375659bfad8243c1ccb6fe0ef2853f",
+      "title": "Record passing T12 full gate and preserved review evidence",
+      "state": "cherry_pick_footer",
+      "target": "81058d38380e20142a3abe1375eec53c8f31d0e5"
+    },
+    "bffc42cab29da37b45f8a713e30e8572b91e7da3": {
+      "sha": "bffc42cab29da37b45f8a713e30e8572b91e7da3",
+      "title": "Record scoped ULPRI closure and prepare T12 external review handoff",
+      "state": "cherry_pick_footer",
+      "target": "fae10225da6f8b649afcac8b5dfb2966e8202995"
+    },
+    "3eecce8af503556b678f8f4a02343e6bce3d0b83": {
+      "sha": "3eecce8af503556b678f8f4a02343e6bce3d0b83",
+      "title": "Prevent implicit Git fetches in pinned T12 consumer snapshots",
+      "state": "cherry_pick_footer",
+      "target": "16c8d5171e1073a10a329fd9bb2b63a40ecf751c"
+    },
+    "96f15ed17e03181b6096fb65f71ec7f577f17523": {
+      "sha": "96f15ed17e03181b6096fb65f71ec7f577f17523",
+      "title": "Record passing T12R full gate and offline review evidence",
+      "state": "cherry_pick_footer",
+      "target": "7c5aedd67f6fe896fc50c4fdca5b654b9b109399"
+    },
+    "148a8f30b16edd181c1d89d62dc23e58e33266bc": {
+      "sha": "148a8f30b16edd181c1d89d62dc23e58e33266bc",
+      "title": "docs: confirm E0-R3 historical correction receipt",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0449_e0r3-correction-received.md",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/E0R3_RECEIPT_20261113.md",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/e0r3_verification_20261113.json"
+        ]
+      }
+    },
+    "c8a55c8ae1021ec80634ee8c6533deeebc67ce61": {
+      "sha": "c8a55c8ae1021ec80634ee8c6533deeebc67ce61",
+      "title": "Record LHS Q1 receipts and prepare pressure inventory",
+      "state": "cherry_pick_footer",
+      "target": "edef28a903deb1d6125d24898a8c9ca188164c4a"
+    },
+    "d3a8abc09dbd77ea4b19b2edbc60f7181322e595": {
+      "sha": "d3a8abc09dbd77ea4b19b2edbc60f7181322e595",
+      "title": "Record LHS inventory external review and correction plan",
+      "state": "cherry_pick_footer",
+      "target": "7c3d3133d223657af34f5f6c987036ea30c28757"
+    },
+    "edbe6eb176d22db574953d3e47d11969b353421b": {
+      "sha": "edbe6eb176d22db574953d3e47d11969b353421b",
+      "title": "Fix LHS inventory output failures and qualify timing",
+      "state": "cherry_pick_footer",
+      "target": "aede55a6fa119e5a616ee687db0d736b2443ab5c"
+    },
+    "73895add198eae4926b1944b6e1f05a54ca57d13": {
+      "sha": "73895add198eae4926b1944b6e1f05a54ca57d13",
+      "title": "Record scoped LPI closure and open audit observation",
+      "state": "cherry_pick_footer",
+      "target": "3f49d1f5adf20fda4603cd0c604072b8c195eb9d"
+    },
+    "bb6e86ac44f70a27b154db62fc14a624cab944df": {
+      "sha": "bb6e86ac44f70a27b154db62fc14a624cab944df",
+      "title": "Draft LHS damping observation companion without value access",
+      "state": "cherry_pick_footer",
+      "target": "bffa28a64148e7b4b6be978eb2717fc74abebd07"
+    },
+    "068072d65a5ecfefb0462ecd348f2f930133b6e2": {
+      "sha": "068072d65a5ecfefb0462ecd348f2f930133b6e2",
+      "title": "Record external acceptance of LHS damping companion",
+      "state": "cherry_pick_footer",
+      "target": "a15fbf66ef1f9d8365a66a7826a77d50d5541740"
+    },
+    "14773e25b32eec187366b58168e2cf98fd4730c7": {
+      "sha": "14773e25b32eec187366b58168e2cf98fd4730c7",
+      "title": "Prepare LHS inventory diagnosis and guarded WSL procedure",
+      "state": "cherry_pick_footer",
+      "target": "6ef1ef11415002b4b73f4d101343c189cfdd7810"
+    },
+    "fe90b0bd0212da6fba8dffd56991a0b2bbea9615": {
+      "sha": "fe90b0bd0212da6fba8dffd56991a0b2bbea9615",
+      "title": "Draft prospective LHS relaxed pressure and particle count comparison",
+      "state": "cherry_pick_footer",
+      "target": "8fe4fcaa0e721f61115758b38f1808811af650b4"
+    },
+    "ac8cdbc89dd161e5bdaf2878c41f5e5750691251": {
+      "sha": "ac8cdbc89dd161e5bdaf2878c41f5e5750691251",
+      "title": "Record scoped external acceptance of LHS inventory preparation",
+      "state": "cherry_pick_footer",
+      "target": "b5d0309e0779563964e5b490cb523fd8eadc287c"
+    },
+    "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3": {
+      "sha": "c3887490e252d1ca6f1246efd4c6c2fa5850cfc3",
+      "title": "Record scoped external acceptance of LHS particle count draft",
+      "state": "cherry_pick_footer",
+      "target": "366f624bf53c1f6153da0c81aa596ad20b25fc86"
+    },
+    "6fbd066832d3273d56037005ea26eb884b73646a": {
+      "sha": "6fbd066832d3273d56037005ea26eb884b73646a",
+      "title": "Specify LHS N preaccess definitions and separate execution decisions",
+      "state": "cherry_pick_footer",
+      "target": "1b20ce0606f3b49ef1abc4dd2bc540ead773905a"
+    },
+    "349e946697b67768a5a1a209121fb90244aef485": {
+      "sha": "349e946697b67768a5a1a209121fb90244aef485",
+      "title": "Identify twelve-question LHS N draft as canonical",
+      "state": "cherry_pick_footer",
+      "target": "5dd1e7ec01362db7a7fd0db264e79bbbb87152da"
+    },
+    "32208409de9f6670140c5e2041d039fe57420c34": {
+      "sha": "32208409de9f6670140c5e2041d039fe57420c34",
+      "title": "Record LHS inventory GO and unresolved start boundaries",
+      "state": "cherry_pick_footer",
+      "target": "7de0a3fffc4af0931e888c3016c48ea8bf8238e6"
+    },
+    "6add88f264d2c651b467f3906e755824ed6e40ad": {
+      "sha": "6add88f264d2c651b467f3906e755824ed6e40ad",
+      "title": "Prepare LHS preaccess document cells",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0229_lhs-document-cells.md",
+          "docs/reviews/lhs_document_cells_20261110/README.md",
+          "docs/reviews/lhs_document_cells_20261110/freeze_receipt_template.json"
+        ]
+      }
+    },
+    "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f": {
+      "sha": "ace5912fbaf2a892b52e32c7bdb0b89a490cdc3f",
+      "title": "Fix unsealed LHS consumer and display boundaries",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [
+          "scripts/g2_network_reread.py",
+          "scripts/lhs_release_build.py",
+          "webapp/templates/single.html"
+        ],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0237_lhs-boundary-fixes.md",
+          "docs/reviews/dem_findings_proposals_20261110/scope_proposals.md",
+          "docs/reviews/lhs_boundary_fixes_20261110/README.md",
+          "docs/reviews/lhs_boundary_fixes_20261110/review_request.md",
+          "docs/reviews/lhs_boundary_fixes_20261110/sealed_and_editorial_proposals.md",
+          "docs/reviews/lhs_boundary_fixes_20261110/verification_summary.json",
+          "scripts/test_lhs_reread_receipt_boundary.py",
+          "scripts/test_lhs_tau_blank_boundary.py",
+          "scripts/test_single_header_numeric_boundary.py"
+        ]
+      }
+    },
+    "02a2087803d737290822964807e197133224029a": {
+      "sha": "02a2087803d737290822964807e197133224029a",
+      "title": "Document LPI-A01 diagnostic receipt plan",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0243_lhs-lpi-diagnostic-plan.md",
+          "docs/reviews/lhs_lpi_diagnostic_plan_20261110.md"
+        ]
+      }
+    },
+    "288929658dca6f7b23473bc42c911113f308ed82": {
+      "sha": "288929658dca6f7b23473bc42c911113f308ed82",
+      "title": "Specify inactive LHS N definitions before value access",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261106-0802_lhs-n-definitions-and-mxd2r.md",
+          "docs/reviews/lhs_pressure_n_definition_extension_20261106.json",
+          "docs/reviews/lhs_pressure_n_definition_extension_20261106.md"
+        ]
+      }
+    },
+    "56a08a7679b156bae1ffddcc44457bd8f8cfd172": {
+      "sha": "56a08a7679b156bae1ffddcc44457bd8f8cfd172",
+      "title": "Record LHS document policy ratification",
+      "state": "cherry_pick_footer",
+      "target": "5a9b73d1fd5f1aa2b694982136d9b5cec892c64a"
+    },
+    "847d4952407acbd870c946fa3fbdf9e0c91c975b": {
+      "sha": "847d4952407acbd870c946fa3fbdf9e0c91c975b",
+      "title": "Prepare LHS preaccess freeze draft",
+      "state": "cherry_pick_footer",
+      "target": "095bf43f2ff0cea52c3c503ba88bffddef188ce5"
+    },
+    "aeb5f1fe7991f08f5c4de47cdad8b959d26690ea": {
+      "sha": "aeb5f1fe7991f08f5c4de47cdad8b959d26690ea",
+      "title": "Document non-Rint decisions before execution GO",
+      "state": "patch_id_equal",
+      "target": "c7cd5fce974ddbaf4ffae2c1063a1ff2471f8bc6",
+      "patch_id": "565a15f8e73e19c0bf311ab159fa5ae952dc9e3d"
+    },
+    "476e736e251991f4f5916fe02d990454acaa064d": {
+      "sha": "476e736e251991f4f5916fe02d990454acaa064d",
+      "title": "Record LHS Q1 metadata constraints and remaining options",
+      "state": "cherry_pick_footer",
+      "target": "dfadc452c856adba58d3f08b4b8f8fa5a5bbcbfa"
+    },
+    "78e257de6e6a9fcd9808dc55b3da6902ae4da6f1": {
+      "sha": "78e257de6e6a9fcd9808dc55b3da6902ae4da6f1",
+      "title": "Record WSL30 inventory receipt and next author questions",
+      "state": "cherry_pick_footer",
+      "target": "9c061aafd083f140a97271b68545fc20ae9d6fe0"
+    },
+    "39b635a405f0d0141f1404de08acdb5461938f8e": {
+      "sha": "39b635a405f0d0141f1404de08acdb5461938f8e",
+      "title": "docs(lhs): clarify exclusive direction and cohort rules",
+      "state": "cherry_pick_footer",
+      "target": "455171e3dcbf1e86a2b843a34553f295a0052196"
+    },
+    "eba2e2baf4b6324f21972e9bb5a538f6562fc653": {
+      "sha": "eba2e2baf4b6324f21972e9bb5a538f6562fc653",
+      "title": "Record LHS12 document-scope acceptance receipt",
+      "state": "cherry_pick_footer",
+      "target": "e33cbafec79a4da654f78514baaf3e2218b16189"
+    },
+    "e41d091f5ac948b3529eaed3aae03eb380dad9e0": {
+      "sha": "e41d091f5ac948b3529eaed3aae03eb380dad9e0",
+      "title": "Review LHS214 relaunch preflight and pin syntax",
+      "state": "cherry_pick_footer",
+      "target": "481b964d04a644e1e74cff9bf3b2c9f89ecb8c38"
+    },
+    "ffbd438e7522d58eb069561fe58020f4086707ac": {
+      "sha": "ffbd438e7522d58eb069561fe58020f4086707ac",
+      "title": "Record LHS214 full gate evidence",
+      "state": "cherry_pick_footer",
+      "target": "1baa0d9b7a9d5b2c6b101b5d203eacb1e18fd6ca"
+    },
+    "ed6ed401f904d9f818cbdced42d111a7b1efb8d2": {
+      "sha": "ed6ed401f904d9f818cbdced42d111a7b1efb8d2",
+      "title": "Fix LHS214 preflight receipt SHA boundaries",
+      "state": "cherry_pick_footer",
+      "target": "09bf1813c1b5a188c0caf056ad490ea0f86da8fb"
+    },
+    "854857e576a2a8aba07ec861dbee39d4bb59efae": {
+      "sha": "854857e576a2a8aba07ec861dbee39d4bb59efae",
+      "title": "Record verified full gate for LHS214 receipt SHA fix",
+      "state": "cherry_pick_footer",
+      "target": "b7a979032160dc1d9514c612aa36ff0d6c28bf54"
+    },
+    "1e823a34ce8459f7596c8c80e4874bc933220733": {
+      "sha": "1e823a34ce8459f7596c8c80e4874bc933220733",
+      "title": "docs: request independent rereview of DEM memo 3.2",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0219_memo32-rereview-request.md",
+          "docs/reviews/memo32_rereview_20261113/finding_map.md",
+          "docs/reviews/memo32_rereview_20261113/preattack.md",
+          "docs/reviews/memo32_rereview_20261113/review_request.md",
+          "docs/reviews/memo32_rereview_20261113/source_manifest.json"
+        ]
+      }
+    },
+    "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2": {
+      "sha": "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+      "title": "docs: address memo32 independent findings M32R-01-06",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [
+          "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md"
+        ],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0528_memo32-independent-fixes.md",
+          "docs/reviews/memo32_fixes_20261113/PREATTACK.md",
+          "docs/reviews/memo32_fixes_20261113/README.md",
+          "docs/reviews/memo32_fixes_20261113/appendix_cap_revert_summary.txt",
+          "docs/reviews/memo32_fixes_20261113/box_revert_summary.txt",
+          "docs/reviews/memo32_fixes_20261113/cap_revert_summary.txt",
+          "docs/reviews/memo32_fixes_20261113/check_contract.py",
+          "docs/reviews/memo32_fixes_20261113/check_results.json",
+          "docs/reviews/memo32_fixes_20261113/contract_results.json",
+          "docs/reviews/memo32_fixes_20261113/dense_revert_summary.txt",
+          "docs/reviews/memo32_fixes_20261113/edit_map.json",
+          "docs/reviews/memo32_fixes_20261113/green_summary.txt",
+          "docs/reviews/memo32_fixes_20261113/ledger_proposal.json",
+          "docs/reviews/memo32_fixes_20261113/log_selection.json",
+          "docs/reviews/memo32_fixes_20261113/received/.gitattributes",
+          "docs/reviews/memo32_fixes_20261113/received/branch_probe.py.txt",
+          "docs/reviews/memo32_fixes_20261113/received/branch_results.json",
+          "docs/reviews/memo32_fixes_20261113/received/contact_probe.py.txt",
+          "docs/reviews/memo32_fixes_20261113/received/contact_probe_results.json",
+          "docs/reviews/memo32_fixes_20261113/received/convergence_results.json",
+          "docs/reviews/memo32_fixes_20261113/received/findings.json",
+          "docs/reviews/memo32_fixes_20261113/received/literature_reproduce.py.txt",
+          "docs/reviews/memo32_fixes_20261113/received/literature_results.json",
+          "docs/reviews/memo32_fixes_20261113/received/manifest.json",
+          "docs/reviews/memo32_fixes_20261113/received/probe_convergence.py.txt",
+          "docs/reviews/memo32_fixes_20261113/received/verdict.md.txt",
+          "docs/reviews/memo32_fixes_20261113/red_summary.txt",
+          "docs/reviews/memo32_fixes_20261113/review_replay.json",
+          "docs/reviews/memo32_fixes_20261113/review_request.md"
+        ]
+      }
+    },
+    "5afa16488c6cf70d333406bc0802c2139b4a425c": {
+      "sha": "5afa16488c6cf70d333406bc0802c2139b4a425c",
+      "title": "docs: correct memo32 rule38 cap-bound remnant",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [
+          "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md"
+        ],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0601_memo32-rule38-residual.md",
+          "docs/reviews/memo32_fixes_20261113/check_contract.py",
+          "docs/reviews/memo32_rule38_20261113/PREATTACK.md",
+          "docs/reviews/memo32_rule38_20261113/README.md",
+          "docs/reviews/memo32_rule38_20261113/change_check.json",
+          "docs/reviews/memo32_rule38_20261113/check_results.json",
+          "docs/reviews/memo32_rule38_20261113/ledger_proposal.json",
+          "docs/reviews/memo32_rule38_20261113/log_selection.json",
+          "docs/reviews/memo32_rule38_20261113/received/.gitattributes",
+          "docs/reviews/memo32_rule38_20261113/received/findings.json",
+          "docs/reviews/memo32_rule38_20261113/received/independent_probe.py.txt",
+          "docs/reviews/memo32_rule38_20261113/received/manifest.json",
+          "docs/reviews/memo32_rule38_20261113/received/review_minimal_repair_check.json",
+          "docs/reviews/memo32_rule38_20261113/received/verdict.md.txt",
+          "docs/reviews/memo32_rule38_20261113/regression_after_summary.txt",
+          "docs/reviews/memo32_rule38_20261113/regression_before_summary.txt",
+          "docs/reviews/memo32_rule38_20261113/results.json",
+          "docs/reviews/memo32_rule38_20261113/review_request.md"
+        ]
+      }
+    },
+    "8687c9641ba06447cbc952f734341000d323e645": {
+      "sha": "8687c9641ba06447cbc952f734341000d323e645",
+      "title": "docs: receive memo32 rule38 scoped closure",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0623_memo32-document-closure-received.md",
+          "docs/reviews/memo32_closure_20261113/README.md",
+          "docs/reviews/memo32_closure_20261113/check_results.json",
+          "docs/reviews/memo32_closure_20261113/commit_files.json",
+          "docs/reviews/memo32_closure_20261113/intake_verification.json",
+          "docs/reviews/memo32_closure_20261113/ledger_proposal.json",
+          "docs/reviews/memo32_closure_20261113/received/.gitattributes",
+          "docs/reviews/memo32_closure_20261113/received/findings.json",
+          "docs/reviews/memo32_closure_20261113/received/manifest.json",
+          "docs/reviews/memo32_closure_20261113/received/review_results.json",
+          "docs/reviews/memo32_closure_20261113/received/verdict.md.txt"
+        ]
+      }
+    },
+    "ce936985f496ce4d5982625af6fe74f0d8aee281": {
+      "sha": "ce936985f496ce4d5982625af6fe74f0d8aee281",
+      "title": "docs: refresh memo32 plan pages and docx",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [
+          "docs/reviews/dem_redesign_direction_20261109/DEM_redesign_plan_for_newcomers_20261110.docx",
+          "docs/reviews/dem_redesign_direction_20261109/briefing_ko.md",
+          "docs/reviews/dem_redesign_direction_20261109/plan_newcomer_docx_model.json",
+          "docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md",
+          "scripts/build_dem_redesign_plan.py",
+          "webapp/static/explain/dem_redesign_plan_20261110.html",
+          "webapp/static/explain/dem_redesign_plan_newcomer_20261110.html",
+          "webapp/test_dem_redesign_plan_page.py"
+        ],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0653_memo32-plan-refresh.md",
+          "docs/reviews/memo32_plan_refresh_20261113/README.md",
+          "docs/reviews/memo32_plan_refresh_20261113/check_results.json",
+          "docs/reviews/memo32_plan_refresh_20261113/green_contract.json",
+          "docs/reviews/memo32_plan_refresh_20261113/ledger_proposal.json",
+          "docs/reviews/memo32_plan_refresh_20261113/page_regression.log",
+          "docs/reviews/memo32_plan_refresh_20261113/preservation.json",
+          "docs/reviews/memo32_plan_refresh_20261113/red_before_edit.json",
+          "docs/reviews/memo32_plan_refresh_20261113/red_final_contract.json",
+          "docs/reviews/memo32_plan_refresh_20261113/review_request.md",
+          "docs/reviews/memo32_plan_refresh_20261113/self_check.md",
+          "docs/reviews/memo32_plan_refresh_20261113/source_map.md",
+          "docs/reviews/memo32_plan_refresh_20261113/visual_checks.json",
+          "webapp/test_dem_redesign_plan_v32.py"
+        ]
+      }
+    },
+    "e2b74919bc681f45b001145f07109d6fc9d12b90": {
+      "sha": "e2b74919bc681f45b001145f07109d6fc9d12b90",
+      "title": "docs: clarify memo32 newcomer contact and calibration",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [
+          "docs/reviews/dem_redesign_direction_20261109/DEM_redesign_plan_for_newcomers_20261110.docx",
+          "docs/reviews/dem_redesign_direction_20261109/plan_newcomer_docx_model.json",
+          "docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md",
+          "scripts/build_dem_redesign_plan.py",
+          "webapp/static/explain/dem_redesign_plan_newcomer_20261110.html",
+          "webapp/test_dem_redesign_plan_page.py"
+        ],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0752_memo32-plan-clarification.md",
+          "docs/reviews/memo32_plan_fixes_20261113/INDEPENDENT_PROBE_RESULTS.json",
+          "docs/reviews/memo32_plan_fixes_20261113/README.md",
+          "docs/reviews/memo32_plan_fixes_20261113/check_results.json",
+          "docs/reviews/memo32_plan_fixes_20261113/codex_review_memo32_plan_refresh_20261113.md",
+          "docs/reviews/memo32_plan_fixes_20261113/evidence_manifest.json",
+          "docs/reviews/memo32_plan_fixes_20261113/existing11.json",
+          "docs/reviews/memo32_plan_fixes_20261113/existing11.log",
+          "docs/reviews/memo32_plan_fixes_20261113/green.json",
+          "docs/reviews/memo32_plan_fixes_20261113/green.log",
+          "docs/reviews/memo32_plan_fixes_20261113/intake.json",
+          "docs/reviews/memo32_plan_fixes_20261113/ledger_proposal.json",
+          "docs/reviews/memo32_plan_fixes_20261113/mutation_results.json",
+          "docs/reviews/memo32_plan_fixes_20261113/page_regression.log",
+          "docs/reviews/memo32_plan_fixes_20261113/preservation.json",
+          "docs/reviews/memo32_plan_fixes_20261113/red.json",
+          "docs/reviews/memo32_plan_fixes_20261113/red.log",
+          "docs/reviews/memo32_plan_fixes_20261113/review_request.md",
+          "docs/reviews/memo32_plan_fixes_20261113/source_map.md",
+          "docs/reviews/memo32_plan_fixes_20261113/visual_checks.json",
+          "webapp/test_dem_redesign_plan_clarification.py",
+          "webapp/test_dem_redesign_plan_v32.py"
+        ]
+      }
+    },
+    "f846f5bbe3a2d7cdbe256f29a5e3ef969835e1e2": {
+      "sha": "f846f5bbe3a2d7cdbe256f29a5e3ef969835e1e2",
+      "title": "docs: receive scoped M32P closure review",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0804_memo32-plan-review-received.md",
+          "docs/reviews/memo32_plan_closure_20261113/FINAL_CHECKS.json",
+          "docs/reviews/memo32_plan_closure_20261113/INDEPENDENT_CHECKS.json",
+          "docs/reviews/memo32_plan_closure_20261113/README.md",
+          "docs/reviews/memo32_plan_closure_20261113/codex_review_memo32_plan_fixes_20261113.md",
+          "docs/reviews/memo32_plan_closure_20261113/intake.json",
+          "docs/reviews/memo32_plan_closure_20261113/ledger_proposal.json",
+          "docs/reviews/memo32_plan_closure_20261113/selected_manifest.json"
+        ]
+      }
+    },
+    "761c331bcac1ec6a82d83ad085870dd912e6e6b2": {
+      "sha": "761c331bcac1ec6a82d83ad085870dd912e6e6b2",
+      "title": "Prepare non-Rint integration plan on frozen Claude handoff",
+      "state": "cherry_pick_footer",
+      "target": "8a2c92da9bf70072c1de197cbb5b1b148881ff69"
+    },
+    "2a5d7b1c70384d7f29dd41ea9f20913dea190bd6": {
+      "sha": "2a5d7b1c70384d7f29dd41ea9f20913dea190bd6",
+      "title": "Prepare MXD2R scoped recheck request and current-source evidence",
+      "state": "cherry_pick_footer",
+      "target": "9385fa183408955015522a4aced3a57bbb1d2c19"
+    },
+    "df9a4623e2f9e6302e6bc8922bd0612ab48e120c": {
+      "sha": "df9a4623e2f9e6302e6bc8922bd0612ab48e120c",
+      "title": "Draft D3 measurement SOP and controlled data access",
+      "state": "cherry_pick_footer",
+      "target": "9d3ade6298ccb480d9fb53502e6296656f879c4e"
+    },
+    "67d23a4fdeab0f09c8a8c2602cfc59daecd07f20": {
+      "sha": "67d23a4fdeab0f09c8a8c2602cfc59daecd07f20",
+      "title": "Record D3 SOP acceptance and clarify sequential validation",
+      "state": "cherry_pick_footer",
+      "target": "b9b94a1d457dcd2e8d1b4ac0c8a6f3888a6e1898"
+    },
+    "c29a53723f279ada302d31ddb759257faa16740e": {
+      "sha": "c29a53723f279ada302d31ddb759257faa16740e",
+      "title": "Record independent D3S NOTE01 confirmation",
+      "state": "cherry_pick_footer",
+      "target": "75b3c23124475c5d8269a669ed8b8e654902f084"
+    },
+    "d0107959955f284df56cb546ee008595d26dac61": {
+      "sha": "d0107959955f284df56cb546ee008595d26dac61",
+      "title": "Draft precalibration mixer exploration map",
+      "state": "cherry_pick_footer",
+      "target": "6c3a62bdd7aec1053cde87dbd20dea5a19eb56f9"
+    },
+    "0f284e7db65278acb52dd4666b1b22151604e9ba": {
+      "sha": "0f284e7db65278acb52dd4666b1b22151604e9ba",
+      "title": "Record precalibration map acceptance and clarify wall forces",
+      "state": "cherry_pick_footer",
+      "target": "5cb412083d4a7964852ed9ab543589c8ea5a7f74"
+    },
+    "6d9d838a931bf2269d7bd43f22fe61c904f4b9ac": {
+      "sha": "6d9d838a931bf2269d7bd43f22fe61c904f4b9ac",
+      "title": "Record independent PRECAL NOTE01 confirmation",
+      "state": "cherry_pick_footer",
+      "target": "dc6246dc0bc3a9cbdda923015a0f6066fbccb1d8"
+    },
+    "189930cc68b6e58beb6b4546d80353dc03852195": {
+      "sha": "189930cc68b6e58beb6b4546d80353dc03852195",
+      "title": "Prepare first8 precalibration mixer contracts and observations",
+      "state": "cherry_pick_footer",
+      "target": "970a4383768cdd7d7e59df5d2f4e77b7893a1223"
+    },
+    "ec484c2719d6a444214ddc9c48fe683a7735688b": {
+      "sha": "ec484c2719d6a444214ddc9c48fe683a7735688b",
+      "title": "Bind precal observation inputs and loaded source bytes",
+      "state": "cherry_pick_footer",
+      "target": "d6d1ae68ef824911ed1c20173afb7e2ca49e1447"
+    },
+    "cce92af161fa5385fd2fd895ae5c85adb786ce01": {
+      "sha": "cce92af161fa5385fd2fd895ae5c85adb786ce01",
+      "title": "Record scoped external acceptance of PRE8 bindings",
+      "state": "cherry_pick_footer",
+      "target": "0fb9cd9b7e3f8bb6d4811975d798f5fd4e633c1e"
+    },
+    "b5331d89e9029a1e372d320acee31cddce41474e": {
+      "sha": "b5331d89e9029a1e372d320acee31cddce41474e",
+      "title": "Preserve recovered PRE8 metadata bytes",
+      "state": "cherry_pick_footer",
+      "target": "a3fda0e74591331dca82b4eed94440383ed359d7"
+    },
+    "eb400b9dde3d630d8d4571d48b879ef5093d08e5": {
+      "sha": "eb400b9dde3d630d8d4571d48b879ef5093d08e5",
+      "title": "Draft mixer damping applicability and resource update",
+      "state": "cherry_pick_footer",
+      "target": "fa5da68ccecee379b196818dab3c1439fcc4ad00"
+    },
+    "7e40b7f2398a82cd5ae04b84017c0a9e1a89d521": {
+      "sha": "7e40b7f2398a82cd5ae04b84017c0a9e1a89d521",
+      "title": "Record external acceptance of mixer damping draft",
+      "state": "cherry_pick_footer",
+      "target": "45629ae5cc41a91db8b156fd724f2dd49d55a7f7"
+    },
+    "b57fe91503ba68cec6f41aec247851262788e48f": {
+      "sha": "b57fe91503ba68cec6f41aec247851262788e48f",
+      "title": "Prepare first8 mixer single case launch and collection drafts",
+      "state": "cherry_pick_footer",
+      "target": "ae9a5ddc4f413c70406ea0ea4fb8dce4e8224722"
+    },
+    "a4c78001f706c08de1dddcac09a31a921c4faca7": {
+      "sha": "a4c78001f706c08de1dddcac09a31a921c4faca7",
+      "title": "Guard mixer launch environment campaign reservations and receipts",
+      "state": "cherry_pick_footer",
+      "target": "a2e0396241c4e4cddea3c8771872f9fdcc650ef7"
+    },
+    "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97": {
+      "sha": "69b6bec7ac20343dd884f8d5fa63e8bf45e7df97",
+      "title": "Reject every invalid D2 insertion seed with specific reasons",
+      "state": "cherry_pick_footer",
+      "target": "a6dfe970cbb4c54c0b93754c00d92174086333b6"
+    },
+    "e6000405b7625acf8c2c0a393571b116479e0e97": {
+      "sha": "e6000405b7625acf8c2c0a393571b116479e0e97",
+      "title": "Record scoped external closure of MXD2R R01 seed validation",
+      "state": "cherry_pick_footer",
+      "target": "fb40a016db0e41599482ad6134d0b5684106ea73"
+    },
+    "4eb6c593ec5384ed8e51079f5ec7196b1eeae80f": {
+      "sha": "4eb6c593ec5384ed8e51079f5ec7196b1eeae80f",
+      "title": "Prepare inactive first8 source reseal candidate after R01 acceptance",
+      "state": "cherry_pick_footer",
+      "target": "90fe9d18bd81c1f42bf5cf6861048d520f395657"
+    },
+    "1cd237679b5e590a929b89dd3ccf3d57ce1f8238": {
+      "sha": "1cd237679b5e590a929b89dd3ccf3d57ce1f8238",
+      "title": "Record scoped acceptance of inactive first8 reseal candidate",
+      "state": "cherry_pick_footer",
+      "target": "0173e37e34288996db11787f2dc8549f022c8450"
+    },
+    "1c58f45b686307bbbce289f32c03ed3c6c07a057": {
+      "sha": "1c58f45b686307bbbce289f32c03ed3c6c07a057",
+      "title": "Revise mixer D3 finite-grid design proposal",
+      "state": "cherry_pick_footer",
+      "target": "fd9c1fe8826a311036aa7633f590e56ec18211ce"
+    },
+    "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2": {
+      "sha": "d5ab56ba9a9416e5cae2becf3c85b7c54d30d1d2",
+      "title": "Record mixer D3 full gate evidence",
+      "state": "cherry_pick_footer",
+      "target": "5bccdf7003eab0bd1ee07e943f117e4da1033780"
+    },
+    "9c2f7b47fd4559ee4c08f23e667cdae92badbb04": {
+      "sha": "9c2f7b47fd4559ee4c08f23e667cdae92badbb04",
+      "title": "Implement ratified D3 finite-grid candidate reader",
+      "state": "cherry_pick_footer",
+      "target": "b014ea9ff1ffab77926ef227a905ae1d55217606"
+    },
+    "e0daf7b234bcc7935259d786e270268372abe2a2": {
+      "sha": "e0daf7b234bcc7935259d786e270268372abe2a2",
+      "title": "Record verified full gate for D3 candidate reader",
+      "state": "cherry_pick_footer",
+      "target": "e93792b26f432c2e6007f21fea90387782fb613b"
+    },
+    "087ba5eb9a8d1d2c363d265bacfe064116361c80": {
+      "sha": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "title": "fix: bound SELF-170 canaries in mixer selftest",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [
+          "scripts/mixer_smoke_blind.py"
+        ],
+        "absent_at_B": [
+          "docs/reviews/mixer_self170_20261113/README.md",
+          "docs/reviews/mixer_self170_20261113/synthetic_summary.json",
+          "scripts/test_mixer_self170_canaries.py"
+        ]
+      }
+    },
+    "864b26e491b4d698ca9d7265e3bf45fb06072c1c": {
+      "sha": "864b26e491b4d698ca9d7265e3bf45fb06072c1c",
+      "title": "docs: stage mixer E0 registration candidate and handoff",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0219_mixer-e0-self170-preparation.md",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/README.md",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/intake_manifest.json",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/baseline_table.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/changes.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/e0_pilot_registration_draft.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/fill_queryb_disposition.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/query_block_b/read_query_bundle_b.py.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/disposition.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/disposition2.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/rereview_report.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/review_report.md.txt",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/reference_map.json",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/registration_candidate.md"
+        ]
+      }
+    },
+    "b94090e04d9a35dc97f91839fae4ba3fd5b2d165": {
+      "sha": "b94090e04d9a35dc97f91839fae4ba3fd5b2d165",
+      "title": "docs: record inherited mixer evidence manifest gaps",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261113-0226_mixer-e0-historical-manifest-receipt.md",
+          "docs/reviews/mixer_e0_pilot_registration_20261113/historical_manifest_receipt.json"
+        ]
+      }
+    },
+    "73e659273fd2ed6406a4c90011fc6079c7adf95f": {
+      "sha": "73e659273fd2ed6406a4c90011fc6079c7adf95f",
+      "title": "Prepare inactive first8 current source copy",
+      "state": "cherry_pick_footer",
+      "target": "1df1ba5a70716cdefca606031ca36b6804b565ef"
+    },
+    "aab74e46baed555e51033dd9ae54d2fd754e1d5e": {
+      "sha": "aab74e46baed555e51033dd9ae54d2fd754e1d5e",
+      "title": "fix(mixer): require exact string seed inputs",
+      "state": "cherry_pick_footer",
+      "target": "356dfefd1baea287f8115fef55a7a9ca4a2980c1"
+    },
+    "215e9cc007cc1307fc3bd3f31fa48cff1addc2a1": {
+      "sha": "215e9cc007cc1307fc3bd3f31fa48cff1addc2a1",
+      "title": "fix(mixer): reject whitespace and control path bindings",
+      "state": "cherry_pick_footer",
+      "target": "0b2c1a39bcc12130beaa59a78dd214f38efd3d3c"
+    },
+    "3ca28d474d4f0a775bad657acc307f1a5c8447ce": {
+      "sha": "3ca28d474d4f0a775bad657acc307f1a5c8447ce",
+      "title": "Fix mixer D2 validation and preserve supported phase sets",
+      "state": "cherry_pick_footer",
+      "target": "456339847b92c503f1373050b103f8224e7ac1f4"
+    },
+    "486a57cf58d3e0d93ef79be6aae50968929099c0": {
+      "sha": "486a57cf58d3e0d93ef79be6aae50968929099c0",
+      "title": "Record mixer D2 full gate evidence",
+      "state": "cherry_pick_footer",
+      "target": "04bddd49ae1d087f583f7e482b0d8ac3a9898744"
+    },
+    "34782a1874435e317f44c9d8f2045d53ceaf4dcc": {
+      "sha": "34782a1874435e317f44c9d8f2045d53ceaf4dcc",
+      "title": "Add mixer D2 consumers with bound deck validation",
+      "state": "cherry_pick_footer",
+      "target": "5f7847f0b0338307b39e525ea876a505aa3245af"
+    },
+    "045e0b3098e8fe5a64d6eb0da310da776e68f995": {
+      "sha": "045e0b3098e8fe5a64d6eb0da310da776e68f995",
+      "title": "Record verified full gate for mixer D2 consumers",
+      "state": "cherry_pick_footer",
+      "target": "84a1efe835ef6b80ad98cf574dcfa1b6f6cf002f"
+    },
+    "2ac1a2482f0290566ac1d67d972f7c9544a9d291": {
+      "sha": "2ac1a2482f0290566ac1d67d972f7c9544a9d291",
+      "title": "Prepare inactive first8 current source copy",
+      "state": "patch_id_equal",
+      "target": "1df1ba5a70716cdefca606031ca36b6804b565ef",
+      "patch_id": "22b82297cbeb54b4b5c4993a27b07d6d0f9e9b55"
+    },
+    "3ca47af5b0acd1b39c1d437949413ef3ac31b831": {
+      "sha": "3ca47af5b0acd1b39c1d437949413ef3ac31b831",
+      "title": "Fix inactive mixer evidence path isolation",
+      "state": "cherry_pick_footer",
+      "target": "f46c73f4c2098e60650b420d02ef7a0f5fc7e556"
+    },
+    "1fbd6d69f3714c85594b49bd1b7a2fd70f373b07": {
+      "sha": "1fbd6d69f3714c85594b49bd1b7a2fd70f373b07",
+      "title": "Record limited acceptance of inactive mixer path fixes",
+      "state": "cherry_pick_footer",
+      "target": "1ffba56fb87840caf410ca85f649a997d9fe7b17"
+    },
+    "b3ad4d4f66bc8133cc419e89071bb171ed976655": {
+      "sha": "b3ad4d4f66bc8133cc419e89071bb171ed976655",
+      "title": "Document mixer scope and diagnostic followup",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0246_mixer-scope-followup.md",
+          "docs/reviews/mixer_scope_followup_20261110/README.md",
+          "docs/reviews/mixer_scope_followup_20261110/diagnostic_receipt_template.json",
+          "docs/reviews/mixer_scope_followup_20261110/scope_provenance.json"
+        ]
+      }
+    },
+    "0c56deba6f2fb824996d770163a19c8e7dbd8abe": {
+      "sha": "0c56deba6f2fb824996d770163a19c8e7dbd8abe",
+      "title": "Document mixer qualification and transition plan",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0247_mixer-qualification-plan.md",
+          "docs/reviews/mixer_qualification_plan_20261110.md"
+        ]
+      }
+    },
+    "0d5a918eded0ba8c7c502560e0b8db0e8e8717b3": {
+      "sha": "0d5a918eded0ba8c7c502560e0b8db0e8e8717b3",
+      "title": "Record mixer limited review receipts and MLAR package gap",
+      "state": "cherry_pick_footer",
+      "target": "3e32488bff57b7d39a10cfd077856a6831bc17c0"
+    },
+    "979b1c721ba3a2a7a4bdf5b11472be2e4de2f213": {
+      "sha": "979b1c721ba3a2a7a4bdf5b11472be2e4de2f213",
+      "title": "Clarify MLAR preparation stderr provenance",
+      "state": "cherry_pick_footer",
+      "target": "29ffda1cac33d1aa96619b348d0c9a3042da3b4b"
+    },
+    "a836aa4c0e6127741fa8abeddac28a67d9623591": {
+      "sha": "a836aa4c0e6127741fa8abeddac28a67d9623591",
+      "title": "fix(mixer): reject invalid generated insertion seeds",
+      "state": "cherry_pick_footer",
+      "target": "dff4ceec9a419e1da14b7e289dfbf994ee36e17d"
+    },
+    "be4388d0c1d3836bc44df0eada6793fbffdcd6e7": {
+      "sha": "be4388d0c1d3836bc44df0eada6793fbffdcd6e7",
+      "title": "Prepare inactive first8 current source copy",
+      "state": "patch_id_equal",
+      "target": "1df1ba5a70716cdefca606031ca36b6804b565ef",
+      "patch_id": "22b82297cbeb54b4b5c4993a27b07d6d0f9e9b55"
+    },
+    "d310f741a636954b600c9e4f000bfccba2fee3ce": {
+      "sha": "d310f741a636954b600c9e4f000bfccba2fee3ce",
+      "title": "Fix inactive mixer evidence path isolation",
+      "state": "patch_id_equal",
+      "target": "f46c73f4c2098e60650b420d02ef7a0f5fc7e556",
+      "patch_id": "ec0b0ada66e9ad30842f26940e481537537555fd"
+    },
+    "dcfd62262f101598e4301862e2b3065c44514bb0": {
+      "sha": "dcfd62262f101598e4301862e2b3065c44514bb0",
+      "title": "Reject unsupported Windows paths in inactive verifier",
+      "state": "cherry_pick_footer",
+      "target": "86bceb195b2ba9802e3ab808adfaf1b1f36a11ba"
+    },
+    "b54e89e65c2daeb97dc10ff256a7be1d5b8cbeee": {
+      "sha": "b54e89e65c2daeb97dc10ff256a7be1d5b8cbeee",
+      "title": "Prepare non-Rint forms after five author decisions",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [
+          "docs/reviews/nonrint_approved_preparation_20261109/lhs_wsl_readonly_command_draft.md"
+        ],
+        "different_at_B": [
+          "docs/reviews/nonrint_approved_preparation_20261109/README.md",
+          "docs/reviews/nonrint_approved_preparation_20261109/dem_nonresult_intake_form.md",
+          "docs/reviews/nonrint_approved_preparation_20261109/dem_quantitative_choices_and_t12_contract.md",
+          "docs/reviews/nonrint_approved_preparation_20261109/lhs_nonresult_intake_form.md",
+          "docs/reviews/nonrint_approved_preparation_20261109/mixer_ibb_qualification_receipt_plan.md"
+        ],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261109-0929_nonrint-approved-forms.md"
+        ]
+      }
+    },
+    "6b9d8e14917060465e059d91e6e63f19b1d8bd52": {
+      "sha": "6b9d8e14917060465e059d91e6e63f19b1d8bd52",
+      "title": "Prepare non-Rint forms on latest B",
+      "state": "cherry_pick_footer",
+      "target": "533ae324cb31e7535f84162c450a172ff4c85aab"
+    },
+    "58b6ccb0d754b07b6f1695328267c9aa531a4bb6": {
+      "sha": "58b6ccb0d754b07b6f1695328267c9aa531a4bb6",
+      "title": "Record external T12R-01 closure and scoped handoff",
+      "state": "cherry_pick_footer",
+      "target": "b4e59a9edb42fec33bee9a27e5570308c270becf"
+    },
+    "3fab532fa0409c5300e8f2c3336cd408259a6064": {
+      "sha": "3fab532fa0409c5300e8f2c3336cd408259a6064",
+      "title": "Ask Claude counterpart for existing non-Rint facts and artifacts",
+      "state": "cherry_pick_footer",
+      "target": "c6d71cced2a4414b20292af507b26d58e3504b1b"
+    },
+    "18c7b83f97f84808d3283d8bbc37725b48bc5924": {
+      "sha": "18c7b83f97f84808d3283d8bbc37725b48bc5924",
+      "title": "Record Claude facts reply and historical P1 input identities",
+      "state": "cherry_pick_footer",
+      "target": "fb392b9b825a13316dddc50e677cdd13e0515bc2"
+    },
+    "43eb8a28c95b92faa120793c0f720d8d3cd409bd": {
+      "sha": "43eb8a28c95b92faa120793c0f720d8d3cd409bd",
+      "title": "Prepare non-Rint forms on latest B",
+      "state": "patch_id_equal",
+      "target": "533ae324cb31e7535f84162c450a172ff4c85aab",
+      "patch_id": "e0e300a5da5fad4af4688bda55efd54f624e9599"
+    },
+    "b492a206205958a7f5ab2a53d2e14e5403690f2e": {
+      "sha": "b492a206205958a7f5ab2a53d2e14e5403690f2e",
+      "title": "Record LHS Q1 metadata constraints and remaining options",
+      "state": "patch_id_equal",
+      "target": "dfadc452c856adba58d3f08b4b8f8fa5a5bbcbfa",
+      "patch_id": "9970bb66002902add477b860aa6460bfe2ea8747"
+    },
+    "708add516725cd3566d3b6c0ca3c1b7d15a10435": {
+      "sha": "708add516725cd3566d3b6c0ca3c1b7d15a10435",
+      "title": "Add synthetic DEM observation boundary bridge with guarded context",
+      "state": "cherry_pick_footer",
+      "target": "3900da4e000a3bc5b1234038a493aab2c869d05e"
+    },
+    "0f7ea5ea5d3435e2416dbb5de8f92f21f1a8a24b": {
+      "sha": "0f7ea5ea5d3435e2416dbb5de8f92f21f1a8a24b",
+      "title": "Hand off non-Rint first link and metadata drafts",
+      "state": "cherry_pick_footer",
+      "target": "8d5cce99f21578f5c1980040a976d57cb7d35823"
+    },
+    "5de9682e15c6890d031edcf29b5b639e1863bdb6": {
+      "sha": "5de9682e15c6890d031edcf29b5b639e1863bdb6",
+      "title": "Index five non-Rint tracks and future CI handoff conditions",
+      "state": "cherry_pick_footer",
+      "target": "45e3e31bb43fdfedd01d224596d1e7ed2e05d23d"
+    },
+    "b7ec640bc216b9353433806716cc5a7d11d14211": {
+      "sha": "b7ec640bc216b9353433806716cc5a7d11d14211",
+      "title": "Document non-Rint decisions before execution GO",
+      "state": "cherry_pick_footer",
+      "target": "c7cd5fce974ddbaf4ffae2c1063a1ff2471f8bc6"
+    },
+    "3287537dd90b95160027ff1c0d4f933948ff14e5": {
+      "sha": "3287537dd90b95160027ff1c0d4f933948ff14e5",
+      "title": "Prepare DEM and LHS decision evidence table",
+      "state": "cherry_pick_footer",
+      "target": "a0eac62b39b6dedec24659a883a557243942a917"
+    },
+    "084c978afc363078781dba37a318dc37e8edc084": {
+      "sha": "084c978afc363078781dba37a318dc37e8edc084",
+      "title": "Normalize viewer contact cap radius",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [
+          "webapp/static/js/viewer3d.js"
+        ],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0300_web-cap-radius.md"
+        ]
+      }
+    },
+    "96376652f9c6591feaacfbfb9a53264cd0dcb6d2": {
+      "sha": "96376652f9c6591feaacfbfb9a53264cd0dcb6d2",
+      "title": "Complete viewer cap review artifacts",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0302_web-cap-review-completion.md",
+          "docs/reviews/web_cap_radius_20261110/README.md",
+          "docs/reviews/web_cap_radius_20261110/review_request.md",
+          "docs/reviews/web_cap_radius_20261110/scope_provenance.json",
+          "docs/reviews/web_cap_radius_20261110/sealed_and_editorial_proposals.md",
+          "docs/reviews/web_cap_radius_20261110/verification_summary.json",
+          "scripts/test_viewer_cap_radius.mjs"
+        ]
+      }
+    },
+    "a69095c7f1cc4908a14b93912d97cb93cc33eb64": {
+      "sha": "a69095c7f1cc4908a14b93912d97cb93cc33eb64",
+      "title": "Summarize non-RInt standing preparation batch",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0304_nonrint-standing-handoff.md",
+          "docs/reviews/nonrint_standing_handoff_20261110/README.md",
+          "docs/reviews/nonrint_standing_handoff_20261110/commit_order.json"
+        ]
+      }
+    },
+    "c5aa7bb527c5cf0907651bae688bb97de206a8b6": {
+      "sha": "c5aa7bb527c5cf0907651bae688bb97de206a8b6",
+      "title": "Fix NSB numeric precision and negative-case evidence",
+      "state": "unmatched",
+      "target": null,
+      "path_coverage": {
+        "same_at_B": [],
+        "different_at_B": [],
+        "absent_at_B": [
+          "docs/collab/codex_to_claude/20261110-0516_nonrint-nsb-three-fixes.md",
+          "docs/reviews/nonrint_nsb_fixes_20261110/README.md",
+          "docs/reviews/nonrint_nsb_fixes_20261110/RECEIPT.md",
+          "docs/reviews/nonrint_nsb_fixes_20261110/chain_README.md",
+          "docs/reviews/nonrint_nsb_fixes_20261110/chain_verification.json",
+          "docs/reviews/nonrint_nsb_fixes_20261110/review_request.md",
+          "docs/reviews/nonrint_nsb_fixes_20261110/t5_fix.md",
+          "docs/reviews/nonrint_nsb_fixes_20261110/t5_verification.json",
+          "docs/reviews/nonrint_nsb_fixes_20261110/verdict_received.json",
+          "scripts/dem_gen2_p2_contract.py",
+          "scripts/dem_gen2_qualification_matrix.py",
+          "scripts/dem_gen2_t5_contract.py",
+          "scripts/test_dem_gen2_nsb_chain_regression.py",
+          "scripts/test_dem_gen2_t5_precision.py"
+        ]
+      }
+    },
+    "9c71b039f1df49dbf8507298be05b2ad11882890": {
+      "sha": "9c71b039f1df49dbf8507298be05b2ad11882890",
+      "title": "Record November 8 DEM work-window resume state",
+      "state": "cherry_pick_footer",
+      "target": "d6f38bed13c5f0dc8e136f24d1b877de74563b22"
+    },
+    "3e66189b01f8101808100d74fdd5abd57d2bb7ee": {
+      "sha": "3e66189b01f8101808100d74fdd5abd57d2bb7ee",
+      "title": "Record user-observed P1 six-input identity match",
+      "state": "cherry_pick_footer",
+      "target": "19c3b5a97eeb7e332eb53cabe03f8e0d0efa23e2"
+    },
+    "e5ea4ef2e15866b9400dc70e7560091ed581a3b6": {
+      "sha": "e5ea4ef2e15866b9400dc70e7560091ed581a3b6",
+      "title": "Prepare read-only P1 readiness inventory instructions",
+      "state": "cherry_pick_footer",
+      "target": "dd288876a0e6b3a492617c74ff86d2e2d7434c31"
+    },
+    "3f5094bd46b36f2dac4b5424bc715836c7f65648": {
+      "sha": "3f5094bd46b36f2dac4b5424bc715836c7f65648",
+      "title": "Record P1 readiness observations and unexecuted staging plan",
+      "state": "cherry_pick_footer",
+      "target": "7763922b8895a10e02b7b1e8a4734f200155848b"
+    },
+    "04e1b518696eeb19bb7733de4c7bdb83e36e9b91": {
+      "sha": "04e1b518696eeb19bb7733de4c7bdb83e36e9b91",
+      "title": "Record reported P1 preflight completion and one-RJ approval plan",
+      "state": "cherry_pick_footer",
+      "target": "bcd6047e3b670207af2fe802b89a38e2825ff6ee"
+    },
+    "b584e2c1c77d78c3f619d98af9b00c374c0bb7eb": {
+      "sha": "b584e2c1c77d78c3f619d98af9b00c374c0bb7eb",
+      "title": "Add bounded read-only G2c breakdown for recorded RJ failure",
+      "state": "cherry_pick_footer",
+      "target": "25b89eb089c0a3fb146e0c9fe04aa74a45a28a4f"
+    },
+    "33d3cf0dd52ae3813804f06733d9bd281cb8a9a2": {
+      "sha": "33d3cf0dd52ae3813804f06733d9bd281cb8a9a2",
+      "title": "Prepare B-pinned LHS12 and MLA independent review handoffs",
+      "state": "cherry_pick_footer",
+      "target": "2e07fb985e75ff03cb2fb442fc7319f907b0435d"
+    },
+    "e491ccd5643e4c395527bc54c5b83d9897e2bf46": {
+      "sha": "e491ccd5643e4c395527bc54c5b83d9897e2bf46",
+      "title": "Fix ULPR resume ownership and dump validation",
+      "state": "cherry_pick_footer",
+      "target": "23e8eec57190d8320169c3813b8be883a87ac31c"
+    },
+    "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3": {
+      "sha": "8347d32ea678c0174bd77d4c79cfbd7b0591e4a3",
+      "title": "Record ULPR full gate and environment compatibility",
+      "state": "cherry_pick_footer",
+      "target": "98f4d3d403217ee53de1fcc7858e26f9b3bbe5b0"
+    },
+    "652d43704034f24d2f4a024092b36ce0ddf558fe": {
+      "sha": "652d43704034f24d2f4a024092b36ce0ddf558fe",
+      "title": "Validate exact unloading resume identifiers before authorization",
+      "state": "cherry_pick_footer",
+      "target": "cd117c230754056718f2e61c30da03dcecac18fa"
+    },
+    "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362": {
+      "sha": "01c1aaf5be8acdf7d1716f34cc86fc77d8e27362",
+      "title": "Record verified full gate for unloading resume validation",
+      "state": "cherry_pick_footer",
+      "target": "d833c36e6e8817ab6603093d258428a2d84ea657"
+    },
+    "643344fee22a5d1131a59c8cd46bcf6c9a09d65b": {
+      "sha": "643344fee22a5d1131a59c8cd46bcf6c9a09d65b",
+      "title": "Reject ambiguous unloading resume markers and separators",
+      "state": "cherry_pick_footer",
+      "target": "916637c062901cf9551ebc8e3c7ff87fdc1ff39f"
+    },
+    "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde": {
+      "sha": "4c29705fa1c4ba94737a858b206fa4f4c5bb2bde",
+      "title": "Record passing ULPRI full gate and review evidence",
+      "state": "cherry_pick_footer",
+      "target": "77a61631a2301f540a52d1d8be75cb9704d2225c"
+    }
+  },
+  "caution": "unmatched is not proof that a semantic change is absent; per-path blob coverage is provided, no automatic cherry-pick"
+}
