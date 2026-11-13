@@ -1,0 +1,32 @@
+{
+  "schema": "proposal-only",
+  "overall": "HOLD",
+  "shared_ledger_modified": false,
+  "items": [
+    {
+      "id": "RTR-01",
+      "parent": "RTA-02",
+      "external_disposition": "CLOSABLE_LIMITED_CODE",
+      "review_pin": "648bb499015764f5aed74d4ca41f31a9d7c83f0d",
+      "scope": "final destination stale audit reuse",
+      "no_automatic_verified_or_closed": true
+    },
+    {
+      "id": "RTRR-01",
+      "severity": "P3",
+      "blocking": false,
+      "status_proposed": "claimed_fixed",
+      "scope": "wording only: move-error does not always imply missing or source preservation",
+      "fix_commit": "<<sha:Record RTR-01 acceptance and narrow audit wording>>"
+    }
+  ],
+  "preserve": [
+    "RCPX-01",
+    "RCPX-02",
+    "RCPX-03",
+    "RCPX-04",
+    "RCPX-05",
+    "RCPX-06",
+    "RTA-01"
+  ]
+}

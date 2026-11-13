@@ -1,0 +1,21 @@
+{
+  "isolated_snapshot13": {
+    "methods": 13,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "project_modules_from_snapshot": [
+      "carbon_junction",
+      "cjunc_asm_compare"
+    ]
+  },
+  "rc": 0,
+  "support_included": "scripts/carbon_junction.py",
+  "stdout_sha256": "ce4c3ffa0877b558d7f1ae0a71b9d37ed9e641c9def28bf97012d4dbb5e4cc67",
+  "stderr_sha256": "f6c2430cf751e4d69ca879c3d5e88e4984b122677112e9124c91b2a76f15b254",
+  "numpy": "2.3.5",
+  "scipy": "1.17.1",
+  "python": "3.12.14",
+  "new_unique_methods": 0,
+  "scope": "Packaging dependency check only; no actual solver or field execution."
+}
