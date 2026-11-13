@@ -1,0 +1,65 @@
+{
+  "schema": "mixer-e0-registration-intake/1",
+  "bundle_sha256": "2dc4e8af7eb37d521bd1961c1645cfb9845f9cb9f2d7ef433c5bf858f6333cc5",
+  "base": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+  "copies": [
+    {
+      "source_member": "mixer_e0_v2/e0_pilot_registration_draft.md",
+      "copy": "received/e0_pilot_registration_draft.md.txt",
+      "bytes": 174548,
+      "sha256": "42be4c652b38248adfcd28a28e045fecf6526019b768b2f6bf0715754e0a5f2e"
+    },
+    {
+      "source_member": "mixer_e0_v2/baseline_table.md",
+      "copy": "received/baseline_table.md.txt",
+      "bytes": 67280,
+      "sha256": "a6e08a07c2ca3b9834d8a99b288ca1e7ae9c36f6507d53d3bc391076c34b3a8d"
+    },
+    {
+      "source_member": "mixer_e0_v2/changes.md",
+      "copy": "received/changes.md.txt",
+      "bytes": 46956,
+      "sha256": "d9324cd9dac911f7943942be5485976e77b082ffaeff2052f85e5b3d894b28e4"
+    },
+    {
+      "source_member": "mixer_e0_v2/fill_queryb_disposition.md",
+      "copy": "received/fill_queryb_disposition.md.txt",
+      "bytes": 15911,
+      "sha256": "eff66434d51abb469f57e74689ba0054792fe8b5fec377be4427ede6cb449479"
+    },
+    {
+      "source_member": "mixer_e0_v2/review/review_report.md",
+      "copy": "received/review/review_report.md.txt",
+      "bytes": 32760,
+      "sha256": "7a2cc7cee83f77849126a08fed00bdab2aea5d7c9bf02cd6192c46d6ba5b75f8"
+    },
+    {
+      "source_member": "mixer_e0_v2/review/rereview_report.md",
+      "copy": "received/review/rereview_report.md.txt",
+      "bytes": 25590,
+      "sha256": "055db0287ba11bfa2afd19f8286ddf558ff51e1686d0800e371e95e78779ee76"
+    },
+    {
+      "source_member": "mixer_e0_v2/review/disposition.md",
+      "copy": "received/review/disposition.md.txt",
+      "bytes": 14213,
+      "sha256": "29fc7c23b6c15fd86ba2aaf5417ecd1c50c8cb6ebbfd78f085188fa0336a0f34"
+    },
+    {
+      "source_member": "mixer_e0_v2/review/disposition2.md",
+      "copy": "received/review/disposition2.md.txt",
+      "bytes": 12317,
+      "sha256": "d73fd104c1255c3a5313b2cf306e895b237c524c3923a690a2c623a0276b000e"
+    },
+    {
+      "source_member": "mixer_e0_v2/query_block_b/read_query_bundle_b.py",
+      "copy": "received/query_block_b/read_query_bundle_b.py.txt",
+      "bytes": 25255,
+      "sha256": "b0ae3ecff25d75b02376cc23c363ab04a7d197712d31ee483ff95216455c3cf7"
+    }
+  ],
+  "new_site_execution": 0,
+  "pilot_results": 0,
+  "ratified": false,
+  "operating_reseal": false
+}

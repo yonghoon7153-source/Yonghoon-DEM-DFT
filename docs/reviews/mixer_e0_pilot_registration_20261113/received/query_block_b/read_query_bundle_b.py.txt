@@ -1,0 +1,460 @@
+#!/usr/bin/env python3
+"""read_query_bundle_b.py — ibb 에서 가져온 믹서 E0 보충 조회 묶음 (mixer_e0_queryb_<UTC>.tgz · q9b · q2b · q7b) 을 빈 새 폴더에 안전하게 풀고 대조 · 요약한다.
+
+사용 (리포 밖 · 빈 새 폴더 · 격리 모드 · 이 파일은 풀 폴더와 다른 곳에 둔다):
+  python3 -I read_query_bundle_b.py <묶음.tgz> <빈 새 폴더> --expect-md5 <블록 md5> --expect-sha256 <화면 sha256>
+         [--json <요약.json (없는 새 파일)>] [--forbid-file <찾을 문자열 목록 (한 줄에 하나)>] [--q7b-ref <앞선 요약.json (이 판독기의 --json)>]
+하는 일: 묶음 sha256 → 멤버 검사 (out/ 바로 아래 정규 파일만 · 절대경로 · '..' · 링크 · 장치 · 하위 폴더 · 크기 상한 · 소유자 이름 = 거부)
+  → 정규 파일만 직접 써서 풂 (extractall 안 씀) → out/SHA256SUMS 전수 → query_script.sh md5 = 블록 md5 → 형식 · 상태 어휘
+  → 가림 (남은 토큰 0 · 가리지 못한 파일 0) → (선택) 금지 문자열 0 → 줄 꼴 검사 (q9b · q2b · q7b · probes 줄이 정해진 꼴 밖이면 거부)
+  → q9b · q2b · q7b 요약 (+ 선택 --q7b-ref 대조).
+rc 0 = 묶음 구조 정상.  rc 1 = 문제 목록.  rc 2 = 사용 거부.  ⚠ 자격 판정 · 실행 승인 · 봉인 값 확정이 아니다 (관측일 뿐).
+q9b 의 '허용 꼴 ③ 밖' 은 첫 낱말 · 차례 · 표 안 자리 · 앞 공백 수준의 관찰이다 — step · 넣은 수 · mass · 다음 행 Atoms (숫자 · 본문) 는 이 조회 밖이다.
+"""
+import argparse
+import hashlib
+import json
+import os
+import re
+import sys
+import tarfile
+
+FORMAT = 'mixer_e0_queryb/1'
+MAX_MEMBERS = 500
+MAX_MEMBER = 20 * 1024 * 1024
+MAX_TOTAL = 100 * 1024 * 1024
+STATUSES = {'OK', 'FAIL', 'MISSING', 'TIMEOUT', 'TRUNC', 'ABSENT', 'DENIED', 'SKIPPED_BUDGET', 'SKIPPED_INTERRUPT', 'SKIPPED_SWITCH'}
+LOGS = [('1', 'E0_ref_s32452843', 'e0'), ('2', 'E0_ref_s49979687', 'e0'), ('3', 'E0_ref_s67867967', 'e0'), ('4', 'E0_ref2_s32452843', 'e0'),
+        ('5', 'E0_ref_dthalf_s32452843', 'e0'), ('6', 'LHx10_ref_r2_s32452843', 'devbo'), ('7', 'LHx30_ref_r2_s32452843', 'devbo'),
+        ('8', 'LU212_ref_r2_s32452843', 'devu'), ('9', 'LU637_ref_r2_s32452843', 'devu')]
+# 덱의 insert/pack 선언 다음 run 의 thermo 표 번호 (기대 · 리포 덱 사본): DEV E0 = L102 fix ins → L131 run 1 (표 1)
+# LH · LU (dev-bo · dev-u) = L104 fix insA → L133 run 1 (표 1) · L148 fix insB → L151 run (셋째 run = 표 3)
+DECK_PAIR_TABLES = {'e0': [1], 'devbo': [1, 3], 'devu': [1, 3]}
+PKGS = [('1', 'openmpi'), ('2', 'ucx'), ('3', 'ucc'), ('4', 'libfabric'), ('5', 'libfabric1'), ('6', 'libpmix'), ('7', 'libhwloc')]
+# 11-10 메타 out/conda1_meta.txt 의 JSON 이름 (L64 · L56 · L10 · L63 · L78 · L65 · L46)
+REF_JSON_1110 = {'openmpi': 'openmpi-5.0.10-h67ed482_1.json', 'ucx': 'ucx-1.20.0-hf72d326_1.json', 'ucc': 'ucc-1.7.0-hcedbda0_0.json',
+                 'libfabric': 'libfabric-2.5.0-ha770c72_1.json', 'libfabric1': 'libfabric1-2.5.0-h8f87c3e_1.json',
+                 'libpmix': 'libpmix-5.0.8-h31fc519_4.json', 'libhwloc': 'libhwloc-2.13.0-default_he001693_1000.json'}
+RE_LOG = re.compile(r'log\|(\d+)\|lines=(\d+)\|tables=(\d+)\|nonrow=(\d+)\|emitted=(\d+)\|suppressed=(\d+)\|tables_suppressed=(\d+)\|cr=(\d+)')
+RE_TAB = re.compile(r'table\|(\d+)\|(\d+)\|header_cols=(\d+)\|rows=(\d+)\|rows_nonfinite=(\d+)\|row_cols=([\d:,]+|-)\|nonrow=(\d+)\|blank=(\d+)\|closed=(yes|no)')
+RE_NR = re.compile(r'nr\|(\d+)\|(\d+)\|(\d+)\|rows_before=(\d+)\|sp=(\d+)\|tab=(\d+)\|word=([A-Za-z#:._?<>~-]+)')
+RE_PICKH = re.compile(r'q2b\|run=([A-Za-z0-9_]+)\|files=(\d+)\|matched=(\d+)\|sorted=(\d+)\|other=(\d+)\|noise=(\d+)')
+RE_SEL = re.compile(r'sel\|(first|mid|last)\|(\d+)')
+RE_FRAME = re.compile(r'frame\|pos=(first|mid|last)\|step=(\d+)\|type=([felodA-Z]+)\|bytes=(\d+|-)\|end_nl=(yes|no|-)\|newlines=(\d+|-)\|l1_timestep=(yes|no|-)'
+                      r'\|tstep=(same|num|differ|nonint|missing|-)\|l3_natoms=(yes|no|-)\|atoms=(\d+|NONINT|TOOLONG|missing|-)\|nl_eq_9_plus_atoms=(yes|no|-)')
+RE_F = re.compile(r'f\|(\d+)\|([-felod])\|(\d+|-)\|([-felod])\|(\d+|-)\|(\d+|-)\|([0-9a-f]{64}|[A-Z_]+)')
+RE_PKG = re.compile(r'pkg\|(\d+)\|name=([a-z0-9_-]+)\|json=([A-Za-z0-9._+-]+)\|matches=(\d+)')
+RE_JSON = re.compile(r'json\|(\d+)\|([0-9a-f]{64}|[A-Z_]+)\|(\d*)\|(\d*)')
+RE_PARSE = re.compile(r'parse\|(\d+)\|(elements=(\d+)\|escaped=(\d+)\|files_keys=(\d+)\|depth_end=(\d+)\|instr_end=(\d+)\|bad=(\d+)|-)')
+RE_SUM = re.compile(r'sum\|(\d+)\|listed=(\d+)\|in_list=(\d+)\|over_cap=(\d+)\|hashed=(\d+)\|bytes_hashed=(\d+)\|links=(\d+)\|reasons=((?:[A-Z_]+:\d+;?)+|-)')
+RE_DIG = re.compile(r'digest\|(\d+)\|([0-9a-f]{64})\|lines=(\d+)')
+RE_PROBE = re.compile(r'[a-z0-9_]+\|[A-Z_]+\|(-?\d+|-)\|\d+\|\d+\|[A-Za-z0-9_.+-]+')
+
+
+def sha256_bytes(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+def kv(text):
+    out = {}
+    for line in text.splitlines():
+        if '=' in line:
+            k, v = line.split('=', 1)
+            out.setdefault(k, []).append(v)
+    return out
+
+
+def f1(d, k, default=None):
+    v = d.get(k)
+    return v[0] if v else default
+
+
+def extract(a, bad):
+    with open(a.tgz, 'rb') as f:
+        blob = f.read()
+    tsha = sha256_bytes(blob)
+    print(f'묶음 sha256 {tsha} · {len(blob)} 바이트')
+    if a.expect_sha256 is not None and a.expect_sha256.strip().lower() != tsha:
+        bad.append('묶음 sha256 이 화면 값과 다름')
+    files = {}
+    with tarfile.open(a.tgz, 'r:gz') as tf:
+        members = tf.getmembers()
+        if len(members) > MAX_MEMBERS:
+            bad.append(f'멤버 {len(members)} 개 > {MAX_MEMBERS}')
+            return tsha, files
+        total = 0
+        for m in members:
+            n = m.name
+            parts = n.split('/')
+            if m.uname or m.gname or m.uid or m.gid:
+                bad.append(f'소유자 정보가 남음: {n!r}')
+            if n == 'out' and m.isdir():
+                continue
+            if n.startswith('/') or '..' in parts or len(parts) != 2 or parts[0] != 'out' or not parts[1]:
+                bad.append(f'멤버 이름 거부 (out/ 바로 아래 파일만): {n!r}')
+                continue
+            if not m.isfile():
+                bad.append(f'정규 파일 아님 (링크 · 장치 · 폴더): {n!r}')
+                continue
+            if m.size > MAX_MEMBER:
+                bad.append(f'멤버 크기 상한 초과: {n!r}')
+                continue
+            total += m.size
+            if total > MAX_TOTAL:
+                bad.append('전체 크기 상한 초과')
+                break
+            files[parts[1]] = tf.extractfile(m).read()
+    return tsha, files
+
+
+def write_out(dest, files):
+    od = os.path.join(dest, 'out')
+    os.makedirs(od)
+    for name, data in files.items():
+        with open(os.path.join(od, name), 'xb') as f:
+            f.write(data)
+
+
+def text(files, name):
+    b = files.get(name)
+    return None if b is None else b.decode('utf-8', 'replace')
+
+
+def lines(files, name):
+    t = text(files, name)
+    return None if t is None else t.splitlines()
+
+
+def probes_of(files):
+    pr = {}
+    for line in lines(files, 'probes.txt') or []:
+        c = line.split('|')
+        if len(c) >= 6:
+            pr[c[0]] = c
+    return pr
+
+
+def form_check(files, pr, bad):
+    """정해진 줄 꼴 밖의 줄 = 거부 (가림 검사의 둘째 층 — 숫자 값 · 본문이 섞이면 여기서 걸린다).  상태가 OK 가 아닌 출력 (오류 문구) 은 보지 않는다."""
+    def chk(name, regs):
+        ls = lines(files, name)
+        if ls is None:
+            return
+        badl = [l for l in ls if not any(r.fullmatch(l) for r in regs)]
+        if badl:
+            bad.append(f'꼴 밖 줄 {len(badl)} 개: {name} (첫 줄 {badl[0][:60]!r})')
+    for line in lines(files, 'probes.txt') or []:
+        if not RE_PROBE.fullmatch(line):
+            bad.append(f'꼴 밖 줄: probes.txt ({line[:60]!r})')
+            break
+    for i, _, _ in LOGS:
+        if pr.get('q9b_l' + i, ['', ''])[1] == 'OK':
+            chk('q9b_l%s.txt' % i, [RE_LOG, RE_TAB, RE_NR])
+    if pr.get('q2b_pick', ['', ''])[1] == 'OK':
+        chk('q2b_pick.txt', [RE_PICKH, RE_SEL])
+    chk('q2b_frames.txt', [RE_FRAME])
+    for k, _ in PKGS:
+        chk('q7b_p%s_sum.txt' % k, [RE_PKG, RE_JSON, RE_PARSE, RE_SUM, RE_DIG])
+        if pr.get('q7b_p%s_combine' % k, ['', ''])[1] == 'OK':
+            chk('q7b_p%s_files.txt' % k, [RE_F])
+
+
+def q9b_summary(files, pr):
+    out = {'logs': {}, 'deck_pair_tables': DECK_PAIR_TABLES,
+           'note': '관찰 · 판정 아님 — 허용 꼴 ③ (등록 7-6) 를 첫 낱말 · 차례 · 표 안 자리 · 앞 공백 수준에서만 본다 (숫자 · 본문 밖)'}
+    nread = nclean = 0
+    for i, run, grp in LOGS:
+        st = pr.get('q9b_l' + i, ['', 'ABSENT_LINE'])[1]
+        L = {'run': run, 'group': grp, 'status': st}
+        out['logs'][i] = L
+        if st != 'OK':
+            continue
+        tables, nrs = {}, []
+        for line in lines(files, 'q9b_l%s.txt' % i) or []:
+            m = RE_LOG.fullmatch(line)
+            if m:
+                L.update(lines_total=int(m.group(2)), tables=int(m.group(3)), nonrow=int(m.group(4)), emitted=int(m.group(5)),
+                         suppressed=int(m.group(6)), tables_suppressed=int(m.group(7)), cr=int(m.group(8)))
+                continue
+            m = RE_TAB.fullmatch(line)
+            if m:
+                tables[int(m.group(2))] = {'header_cols': int(m.group(3)), 'rows': int(m.group(4)), 'rows_nonfinite': int(m.group(5)),
+                                           'row_cols': m.group(6), 'nonrow': int(m.group(7)), 'blank': int(m.group(8)), 'closed': m.group(9)}
+                continue
+            m = RE_NR.fullmatch(line)
+            if m:
+                nrs.append({'table': int(m.group(2)), 'seq': int(m.group(3)), 'rows_before': int(m.group(4)), 'sp': int(m.group(5)),
+                            'tab': int(m.group(6)), 'word': m.group(7)})
+        nread += 1
+        L['table_summary'] = tables
+        L['nonrow_lines'] = nrs
+        inpair = set()
+        pairs = []
+        for j in range(len(nrs) - 1):
+            a, b = nrs[j], nrs[j + 1]
+            if (j in inpair) or a['table'] != b['table'] or b['seq'] != a['seq'] + 1:
+                continue
+            if (a['word'], a['sp'], a['tab'], a['rows_before']) == ('INFO:', 0, 0, 1) and (b['word'], b['sp'], b['tab'], b['rows_before']) == ('-', 1, 0, 1):
+                pairs.append(a['table'])
+                inpair.update((j, j + 1))
+        pt = sorted(set(pairs))
+        L['pair_tables'] = pt
+        L['tables_with_two_pairs'] = sorted({t for t in pairs if pairs.count(t) > 1})
+        L['outside_lines'] = len(nrs) - len(inpair)
+        L['outside_words'] = sorted({nrs[j]['word'] for j in range(len(nrs)) if j not in inpair})
+        L['blank_in_pair_tables'] = sorted(t for t in pt if tables.get(t, {}).get('blank', 0) > 0)
+        L['pair_table_rows_lt2'] = sorted(t for t in pt if tables.get(t, {}).get('rows', 0) < 2)
+        L['pair_tables_vs_deck'] = 'same' if pt == DECK_PAIR_TABLES[grp] else 'different'
+        L['unclosed_tables'] = sorted(t for t, v in tables.items() if v['closed'] != 'yes')
+        L['clean'] = (L['outside_lines'] == 0 and L['pair_tables_vs_deck'] == 'same' and not L['blank_in_pair_tables']
+                      and not L['pair_table_rows_lt2'] and not L['tables_with_two_pairs'] and L.get('suppressed', 1) == 0)
+        nclean += 1 if L['clean'] else 0
+    out['n_logs_read'] = nread
+    out['n_logs_clean'] = nclean
+    out['absent'] = [i for i, L in out['logs'].items() if L['status'] == 'ABSENT']
+    out['not_read'] = [i + ':' + L['status'] for i, L in out['logs'].items() if L['status'] not in ('OK', 'ABSENT')]
+    return out
+
+
+def q2b_summary(files, pr):
+    out = {'frames': {}, 'note': '관찰 · 판정 아님 — 등록 7-3 C3 셈 정의의 전제 (끝 바이트 개행 · 개행 수 = 9 + 원자 수 · TIMESTEP = 이름 step) 를 DEV 세 장에서'}
+    for line in lines(files, 'q2b_pick.txt') or []:
+        m = RE_PICKH.fullmatch(line)
+        if m:
+            out['pick'] = {'run': m.group(1), 'files': int(m.group(2)), 'matched': int(m.group(3)), 'sorted': int(m.group(4)), 'other': int(m.group(5))}
+        m = RE_SEL.fullmatch(line)
+        if m:
+            out.setdefault('sel', {})[m.group(1)] = int(m.group(2))
+    for line in lines(files, 'q2b_frames.txt') or []:
+        m = RE_FRAME.fullmatch(line)
+        if not m:
+            continue
+        g = m.groups()
+        fr = dict(zip(('pos', 'step', 'type', 'bytes', 'end_nl', 'newlines', 'l1_timestep', 'tstep', 'l3_natoms', 'atoms', 'nl_eq_9_plus_atoms'), g))
+        fr['c3_premise'] = (fr['end_nl'] == 'yes' and fr['l1_timestep'] == 'yes' and fr['tstep'] == 'same' and fr['l3_natoms'] == 'yes'
+                            and fr['atoms'].isdigit() and fr['nl_eq_9_plus_atoms'] == 'yes')
+        out['frames'][fr['pos']] = fr
+    fr = out['frames']
+    out['c3_premise_all3'] = len(fr) == 3 and all(f['c3_premise'] for f in fr.values())
+    return out
+
+
+def q7b_summary(files, pr):
+    out = {'pkgs': {}, 'note': '관찰 · 판정 아님 — 설치된 파일 목록의 해시다 (실제로 불러 쓴 부품이 무엇인지는 말하지 않는다 · 등록 13-1 · 15-1 L11)'}
+    nok = nh = 0
+    for k, name in PKGS:
+        P = {'name': name}
+        out['pkgs'][k] = P
+        for line in lines(files, 'q7b_p%s_sum.txt' % k) or []:
+            m = RE_PKG.fullmatch(line)
+            if m:
+                P.update(json=m.group(3), matches=int(m.group(4)))
+            m = RE_JSON.fullmatch(line)
+            if m:
+                P.update(json_sha256_or_reason=m.group(2), json_bytes=m.group(3), json_mtime=m.group(4))
+            m = RE_PARSE.fullmatch(line)
+            if m:
+                P['parse'] = m.group(2)
+                P['parse_ok'] = bool(m.group(3)) and (m.group(5), m.group(6), m.group(7), m.group(8)) == ('1', '0', '0', '0')
+            m = RE_SUM.fullmatch(line)
+            if m:
+                P.update(listed=int(m.group(2)), in_list=int(m.group(3)), over_cap=int(m.group(4)), hashed=int(m.group(5)),
+                         bytes_hashed=int(m.group(6)), links=int(m.group(7)),
+                         reasons={} if m.group(8) == '-' else {x.split(':')[0]: int(x.split(':')[1]) for x in m.group(8).split(';') if x})
+            m = RE_DIG.fullmatch(line)
+            if m:
+                P.update(digest=m.group(2), digest_lines=int(m.group(3)))
+        P['json_vs_1110'] = 'absent' if P.get('json') in (None, '-') else ('same' if P.get('json') == REF_JSON_1110[name] else 'different')
+        fl = []
+        for line in lines(files, 'q7b_p%s_files.txt' % k) or []:
+            m = RE_F.fullmatch(line)
+            if m:
+                fl.append([int(m.group(1))] + list(m.groups()[1:]))
+        P['files'] = fl
+        if P.get('matches', 0) == 0:
+            P['status'] = 'ABSENT'
+        elif P.get('matches', 0) > 1:
+            P['status'] = 'AMBIGUOUS'
+        elif not P.get('parse_ok'):
+            P['status'] = 'PARSE_BAD'
+        elif 'digest' not in P or 'listed' not in P:
+            P['status'] = 'INCOMPLETE'
+        elif P['reasons']:
+            P['status'] = 'FAIL'
+        else:
+            P['status'] = 'OK'
+        if P['status'] == 'OK':
+            nok += 1
+        nh += P.get('hashed', 0)
+        P['not_hashed'] = [f'{r[0]}:{r[6]}' for r in fl if not re.fullmatch(r'[0-9a-f]{64}', r[6])][:50]
+    out['n_pkgs_ok'] = nok
+    out['n_hashed_total'] = nh
+    return out
+
+
+def q7b_compare(cur, ref):
+    """앞선 요약 (같은 판독기의 --json) 과 꾸러미마다 대조.  JSON 이 같을 때만 번호로 파일을 맞춘다 (번호 = JSON files 배열의 자리)."""
+    res = {'pkgs': {}, 'ref_bundle_sha256': ref.get('bundle', {}).get('sha256'), 'ref_captured_start_utc': ref.get('bundle', {}).get('fields', {}).get('captured_start_utc')}
+    for k, name in PKGS:
+        a = ref.get('q7b', {}).get('pkgs', {}).get(k, {})
+        b = cur['pkgs'].get(k, {})
+        R = {'name': name}
+        res['pkgs'][k] = R
+        if a.get('status') in (None, 'ABSENT') or b.get('status') in (None, 'ABSENT'):
+            R['compare'] = 'absent_ref' if a.get('status') in (None, 'ABSENT') else 'absent_now'
+            continue
+        if 'digest' not in a or 'digest' not in b:
+            R['compare'] = 'no_data'
+            continue
+        if a.get('json_sha256_or_reason') != b.get('json_sha256_or_reason'):
+            R.update(compare='json_changed', ref_json=a.get('json'), now_json=b.get('json'))
+            continue
+        fa = {r[0]: r for r in a.get('files', [])}
+        fb = {r[0]: r for r in b.get('files', [])}
+        ch, mt = [], 0
+        for i in sorted(set(fa) | set(fb)):
+            x, y = fa.get(i), fb.get(i)
+            if x is None or y is None:
+                ch.append({'i': i, 'missing_in': 'ref' if x is None else 'now'})
+                continue
+            if (x[1], x[3], x[4], x[6]) != (y[1], y[3], y[4], y[6]):
+                ch.append({'i': i, 'old_lt': x[1], 'new_lt': y[1], 'old_tt': x[3], 'new_tt': y[3], 'old_size': x[4], 'new_size': y[4],
+                           'old_sha': x[6], 'new_sha': y[6], 'old_lm': x[2], 'new_lm': y[2], 'old_tm': x[5], 'new_tm': y[5]})
+            elif (x[2], x[5]) != (y[2], y[5]):
+                mt += 1
+        R['compare'] = 'same' if (a['digest'] == b['digest'] and not ch) else 'different'
+        R['changed'] = ch
+        R['mtime_only_changes'] = mt
+    return res
+
+
+def show(S):
+    print('── 요약 (관측 · 자격 판정 아님)')
+    for q in ('nodes', 'q9b', 'q2b', 'q7b'):
+        sc = S['status_counts'].get(q, {})
+        print(f"  {q}  " + ' · '.join(f'{k} {v}' for k, v in sorted(sc.items())))
+    q9 = S['q9b']
+    print(f"q9b 읽은 로그 {q9['n_logs_read']} · 허용 꼴 ③ 밖 0 + 보고 쌍 표 = 덱 기대 인 로그 {q9['n_logs_clean']} · 없음 {q9['absent']} · 못 읽음 {q9['not_read']}")
+    for i, L in sorted(q9['logs'].items(), key=lambda x: int(x[0])):
+        if L['status'] != 'OK':
+            print(f"    l{i} {L['run']}: {L['status']}")
+            continue
+        print(f"    l{i} {L['run']} ({L['group']}): 표 {L.get('tables')} · 비-행 {L.get('nonrow')} (넘침 {L.get('suppressed')}) · 보고 쌍 표 {L['pair_tables']} "
+              f"(덱 기대 {DECK_PAIR_TABLES[L['group']]} → {L['pair_tables_vs_deck']}) · 쌍 밖 줄 {L['outside_lines']} {L['outside_words']} · "
+              f"쌍 표의 빈 줄 {L['blank_in_pair_tables']} · 닫히지 않은 표 {L['unclosed_tables']} · CR {L.get('cr')}")
+    q2 = S['q2b']
+    print(f"q2b 고름 {q2.get('pick')} · {q2.get('sel')} · 세 장 다 C3 전제 = {q2['c3_premise_all3']}")
+    for pos in ('first', 'mid', 'last'):
+        f = q2['frames'].get(pos)
+        if f:
+            print(f"    {pos} step {f['step']}: 끝 개행 {f['end_nl']} · 개행 {f['newlines']} · 원자 {f['atoms']} · 개행 = 9 + 원자 {f['nl_eq_9_plus_atoms']} · "
+                  f"1 째 줄 {f['l1_timestep']} · TIMESTEP 꼴 {f['tstep']} · 3 째 줄 {f['l3_natoms']}")
+    q7 = S['q7b']
+    print(f"q7b 꾸러미 OK {q7['n_pkgs_ok']} / 7 · 해시한 파일 {q7['n_hashed_total']}")
+    for k, P in sorted(q7['pkgs'].items(), key=lambda x: int(x[0])):
+        print(f"    p{k} {P['name']}: {P['status']} · JSON {P.get('json')} (11-10 과 {P['json_vs_1110']}) · 목록 {P.get('listed')} (넘침 {P.get('over_cap')}) · "
+              f"해시 {P.get('hashed')} · 링크 {P.get('links')} · 사유 {P.get('reasons')} · 다이제스트 {P.get('digest', '-')[:16]}…")
+    if 'q7b_ref' in S:
+        print(f"q7b 대조 (앞선 묶음 {str(S['q7b_ref']['ref_bundle_sha256'])[:16]}… · {S['q7b_ref']['ref_captured_start_utc']})")
+        for k, R in sorted(S['q7b_ref']['pkgs'].items(), key=lambda x: int(x[0])):
+            ch = R.get('changed', [])
+            print(f"    p{k} {R['name']}: {R['compare']}" + (f" · 바뀐 번호 {[c['i'] for c in ch][:20]} · 시각만 바뀐 것 {R.get('mtime_only_changes')}" if R['compare'] == 'different' else ''))
+
+
+def main():
+    ap = argparse.ArgumentParser(description='믹서 E0 보충 조회 묶음 (q9b · q2b · q7b) 안전 해제 · 대조 · 요약 (읽기만)')
+    ap.add_argument('tgz')
+    ap.add_argument('dest', help='없거나 빈 새 폴더')
+    ap.add_argument('--expect-md5', default=None, help='블록 머리 · 마지막 줄의 스크립트 md5')
+    ap.add_argument('--expect-sha256', default=None, help='ibb 화면에 찍힌 tgz sha256')
+    ap.add_argument('--json', default=None, help='요약 JSON 을 쓸 새 파일 (이미 있으면 거부)')
+    ap.add_argument('--forbid-file', default=None, help='찾을 문자열 목록 (한 줄에 하나) — 하나라도 나오면 rc 1')
+    ap.add_argument('--q7b-ref', default=None, help='앞선 묶음의 요약 JSON (이 판독기의 --json) — q7b 꾸러미 · 파일마다 대조')
+    a = ap.parse_args()
+    bad = []
+    if os.path.exists(a.dest) and (not os.path.isdir(a.dest) or os.listdir(a.dest)):
+        print('거부: 풀 폴더가 비어 있지 않다 (빈 새 폴더만)')
+        return 2
+    if a.json and os.path.exists(a.json):
+        print('거부: --json 파일이 이미 있다 (새 파일만)')
+        return 2
+    ref = None
+    if a.q7b_ref:
+        with open(a.q7b_ref, encoding='utf-8') as f:
+            ref = json.load(f)
+    tsha, files = extract(a, bad)
+    os.makedirs(a.dest, exist_ok=True)
+    write_out(a.dest, files)
+
+    sums = text(files, 'SHA256SUMS')
+    if sums is None:
+        bad.append('out/SHA256SUMS 없음')
+    else:
+        listed = set()
+        for line in sums.splitlines():
+            if not line.strip():
+                continue
+            h, _, name = line.partition('  ')
+            listed.add(name)
+            if name not in files:
+                bad.append(f'SHA256SUMS 의 파일이 묶음에 없음: {name}')
+            elif sha256_bytes(files[name]) != h:
+                bad.append(f'sha256 불일치: {name}')
+        extra = sorted(n for n in files if n not in listed and n != 'SHA256SUMS')
+        if extra:
+            bad.append(f'SHA256SUMS 에 없는 파일: {extra[:5]}')
+    script = files.get('query_script.sh')
+    smd5 = hashlib.md5(script).hexdigest() if script is not None else None
+    print(f'query_script.sh md5 {smd5}')
+    if a.expect_md5 is not None and smd5 != a.expect_md5.strip().lower():
+        bad.append('query_script.sh md5 이 블록 md5 와 다름 (다른 판의 스크립트가 돌았다)')
+    fields = kv(text(files, 'fields.txt') or '')
+    post = kv(text(files, 'fields_post.txt') or '')
+    if f1(fields, 'format') != FORMAT:
+        bad.append(f"형식 칸이 {FORMAT} 가 아님: {fields.get('format')}")
+    pr = probes_of(files)
+    for c in pr.values():
+        if c[1] not in STATUSES:
+            bad.append(f'모르는 상태 {c[1]} ({c[0]})')
+    if f1(post, 'redaction.residual_token_hits') != '0':
+        bad.append(f"가림 뒤 남은 토큰 {post.get('redaction.residual_token_hits')} (0 이어야 반입)")
+    if f1(post, 'redaction.files_not_redacted') != '0' or post.get('redact_skipped_deadline') or post.get('redact_fail'):
+        bad.append(f"가림 못 한 파일 {post.get('redact_skipped_deadline', []) + post.get('redact_fail', [])}")
+    if a.forbid_file:
+        with open(a.forbid_file, encoding='utf-8') as f:
+            words = [w.strip() for w in f if w.strip()]
+        hits = [(n, w) for n, b in files.items() for w in words if w.encode() in b]
+        print(f'금지 문자열 {len(words)} 개 · 나온 곳 {len(hits)}')
+        if hits:
+            bad.append(f'금지 문자열이 나옴: {len(hits)} 곳 (파일 {sorted({n for n, _ in hits})[:5]})')
+    form_check(files, pr, bad)
+    print(f"형식 {f1(fields, 'format')} · 블록 {f1(fields, 'block_id')} · 수집 {f1(fields, 'captured_start_utc')} → "
+          f"{f1(fields, 'captured_end_utc')} ({f1(fields, 'elapsed_seconds')} 초) · MIX_Q {f1(fields, 'switch.MIX_Q')} · 노드 토큰 {f1(fields, 'redaction.node_tokens')} · 파일 {len(files)}")
+    S = {'bundle': {'sha256': tsha, 'script_md5': smd5, 'n_files': len(files), 'fields': {k: v[0] for k, v in fields.items() if len(v) == 1}}}
+    sc = {}
+    for name, c in pr.items():
+        q = 'nodes' if name.startswith('nodes') else name.split('_')[0]
+        sc.setdefault(q, {})[c[1]] = sc.setdefault(q, {}).get(c[1], 0) + 1
+    S['status_counts'] = sc
+    S['q9b'] = q9b_summary(files, pr)
+    S['q2b'] = q2b_summary(files, pr)
+    S['q7b'] = q7b_summary(files, pr)
+    S['truncated'] = any(c[1] == 'TRUNC' for c in pr.values())
+    if ref is not None:
+        S['q7b_ref'] = q7b_compare(S['q7b'], ref)
+    show(S)
+    if a.json:
+        with open(a.json, 'x', encoding='utf-8') as f:
+            json.dump(S, f, ensure_ascii=False, indent=1, sort_keys=True)
+        print(f'요약 JSON → {a.json}')
+    if bad:
+        print('── 문제 ' + str(len(bad)))
+        for b in bad:
+            print('  ✗ ' + b)
+        return 1
+    print('── 구조 정상 (rc 0) — 관측일 뿐 · 자격 · 봉인 · GO 아님')
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -1,0 +1,281 @@
+# 믹서 E0 자격 pilot 한 팔 — 기준 고정 표 (초안 · 2026-11-12 · 리뷰 고침 2 회차 판)
+
+**지위: 초안 · 문서만 · 실행 0 · 제출 0 · pilot 결과 0 건 · 자격 판정 아님 · 전체 HOLD 그대로.**
+받은 메타 (관측) 와 리포 기록을 "발사 때 대조할 기준" 으로 적어 둔 표다. 값이 맞는다고 실행 승인이 되지 않는다.
+11-11 본 세션 초안 (`from_main/draft/baseline_table.md`) 을 이어 썼다. 옛 칸은 리포와 한 칸씩 대조해 맞는 것은 그대로 두었다. 바뀐 곳 = 같은 폴더 `changes.md`.
+**11-12 조회 뒤 (그 판)**: 등록 초안 13 절 조회 q1–q9 (`QY` · 아래 읽는 법) 로 [미확인] 칸을 채웠다. 채우지 못한 칸은 [미확인] + 이유 그대로 (9 절). 1저자 11-12 결정 (등록 초안 18 절 Q1–Q13 · Q-A–Q-E 권고대로) 을 상태 칸에 적었다. 고치기 전 판 = `baseline_table_before_query.md` · 바뀐 곳 = `changes.md` 5 절.
+**11-12 리뷰 고침 1 회차 (앞 판)**: 내부 반박 리뷰 (Codex 아님) `review/review_report.md` 가운데 이 표에 닿는 지적 (MXE0R-03 · 05 · 06 · 09 · 10 · 12 · 13 · 17) 을 고쳤다 — 해시 · 크기 · 문턱 값은 그대로다. 새로 쓴 근거 하나 = G2c′ 잡 359243 의 job 안 `ldd` 기록 (2-A 끝 · 관찰 15). Q-H (기본 할당 한도 문의) 는 1저자 11-12 *"고민 안 해도 돼"* 로 빠졌다 (5 절). 처분 = `review/disposition.md` · 고치기 전 판 = `baseline_table_before_review.md` · 바뀐 곳 = `changes.md` 6 절.
+**11-12 리뷰 고침 2 회차 (이 판 · 마지막 고침 회차)**: 재확인 `review/rereview_report.md` (Codex 아님) 가운데 이 표에 닿는 것 (MXE0R2-01 재봉인 순서 · 09 런타임 신원 시점 · 08 수집 창 · 12 원격 ref · 03 C3 셈 정의) 만 고쳤다 — 해시 · 크기 · 문턱 값은 그대로다. 재봉인 순서의 근거 = HEAD `bfd9b3bbd` 사본 건식 `reseal_dry/README.md` (등록 초안 7-6). 처분 = `review/disposition2.md` · 고치기 전 판 = `baseline_table_before_review2.md` · 바뀐 곳 = `changes.md` 7 절.
+
+## 읽는 법
+
+- 원천 = `docs/data/mixer_e0_meta_ibb_20261110/out/` (가린 사본 132 파일). "근거" 칸의 파일 이름은 그 폴더 안이고 `L` 뒤 숫자는 그 파일의 줄 번호다.
+- 리포 경로 줄임: `F8` = `docs/reviews/mixer_first8_launch_preparation_20261106` · `P8` = `docs/reviews/mixer_precal_first8_preparation_20261104` · `IN` = `docs/reviews/mixer_inactive_preparation_20261109`. out/ 밖 근거에는 "리포" 라고 적었다.
+- 리포 대조 기준 = `21bb09d82` (2026-11-12 · 이 표의 sha256 대조 · 인용 줄) · 관측기 고친 판 = `f67c0cc92` · 리뷰 고침 판의 대조 HEAD = `bfd9b3bbd`. 두 커밋 사이 인용 파일 가운데 바뀐 것 = 관측기 · `CLAUDE.md` (L40 → L41) · `docs/reviews/findings.json` · `docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md` (L77 에 두 줄 들어감) · `docs/session_20260923_progress.md` (L1447 뒤에 열 줄) [관찰 — `git diff 21bb09d82 bfd9b3bbd`] → 이 표의 인용 줄은 `21bb09d82` 판으로 읽는다 · 바뀐 상태 = 4 절 G2c′ 줄 (리뷰 MXE0R-13). ✅ `51d45732c` · `f67c0cc92` · `bfd9b3bbd` = push 됨 — 원격 추적 ref 가 11-12T14:06:16Z 에 `bfd9b3bbd` 로 바뀌었고 셋 다 `git branch -r --contains` = 작업 가지 1 [관찰 · 2 회차 다시 확인 · fetch 안 함 · 리뷰 MXE0R2-12] (옛 "원격 추적 ref 에 아직 없다" 는 쓸 때 (14:00:55Z) 는 맞았다).
+- 수집 창 = 2026-11-10T14:49:56Z ~ 14:53:02Z · 186 초 (`fields.txt` L5 · L577 · L578). **out/ 의 값은 그 3 분의 관측이다.**
+- **경로 문자열은 적지 않는다** (지시서 2 · 3 절). 바이너리 · MPI · conda 환경 · 런 폴더는 판 · git · sha256 · 크기 · 이름만 적고, 가린 경로는 out/ 줄 번호로만 가리킨다. 주소 · 호스트 이름 · 노드 이름 · 계정 이름 · 포트는 이 문서에 없다.
+- "다시 확인" = 발사 직전에 다시 재는가. 발사 직전 = 제출 전 5 분 안 + job 시작 때 (리포 `F8/inventory.md` L43–48 preflight 1–6 · `F8/submit_one.py.txt` L125–126 의 300 초).
+- **`QY`** = 11-12 조회 묶음 (sha256 a5753648e0ac34574fa8f5fa231366338093663a1155f549775a5f5ffc95beb0 · 블록 스크립트 md5 664376ce372ee4b60779d4f27e380165 · 수집 2026-11-12T11:52:36Z ~ 11:54:07Z · 91 초 · 판독기 rc 0). 근거 = 판독 요약 JSON 의 키 (예 `QY q7.libs[*]`) · 판독 화면 줄 (예 `QY 판독 L51`). **QY 의 값은 그 91 초의 관측이다** (out/ = 11-10 의 186 초와 다른 창). 지금 scratch (`intake/mixer_e0_query_20261112/`) 에만 있다 — 리포 반입 = 가린 out/ 만 · 새 증거 폴더 [제안].
+- out/ · QY 에 없는 값은 **[미확인]** 이다 (계획 문서 말로는 UNKNOWN / PROBE_NEEDED). 지어 채우지 않았다.
+- [산술] = 인용한 숫자로 계산한 값. [추정] = 가정이 든 값. [관찰] = 코드 · 다른 런 기록으로 본 것 (이 pilot 으로 확인 전).
+
+## 0-A. 기준 고정 요약 (지시서 2 절의 칸)
+
+| 칸 | 기준 값 | 근거 | 상태 | 비었거나 미정이면 채우는 법 |
+|---|---|---|---|---|
+| 바이너리 | LIGGGHTS-PUBLIC 3.8.0 · 빌드 2026-03-26-14:37:06 · git 3d5c00f20519e6bb6eb6756f51f1ad36564e649d · sha256 ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f · 9180024 B · 09-28 영수증 바이너리와 같음 · 11-12 다시 = 같음 | `lmp1_help.txt` L1 · `fields.txt` L485–487 · 리포 `docs/data/mixer_phase_receipt_20260928/receipt_v2_ibb.json` L1474 · `QY q7.bin_sha256_or_reason` · `bin_bytes` · `bin_vs_ref` same · 판독 L51 | 관측 · Q4 확정 (1저자 11-10 · 리포 `docs/data/mixer_e0_meta_ibb_20261110/README.md` L15 · L30) | 준비 · staging · job 시작에 sha256 다시 (preflight 2–3) |
+| 링크 라이브러리 | 30 개 (vdso 빼고) 전부 sha256 — 2-A 표 · ldd not found 0 · 찾는 길 = 바이너리 RPATH 1 줄 (사용자 conda 환경의 lib · 로그인 홈 꼴 · RUNPATH 없음) · libgcc_s.so.1 = 11-10 해시 0907d66b… 와 같음 | `QY q7.libs` · `n_hashed` 30 / `n_paths` 30 · `n_not_found` 0 · `rpath_lines` · 판독 L51–52 · 11-10 `hashes.txt` L478 · 리포 `docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/lmp_ldd.txt` | 관측 (11-12 · 로그인 셸) · **job 안 ldd = 같은 30 soname · 같은 차례 · 가린 경로 30/30 같음** (G2c′ 잡 359243 · 11-12T11:15Z · 1 프로세스 · `mpirun` 없음) [관찰 · 이 판 대조 · 2-A 끝] · job 안 내용 해시 [미확인] (그 기록 = md5 · 이 표 = sha256) · 이 목록이 못 묶는 것 = Open MPI 5 의 dlopen 부품 · PRTE 실행 파일 [추정] (3 절) (옛 [미확인] = 30 행 중 해시 1 · `hashes.txt` L475–504 → 채움) | 봉인 묶음에 목록 · 발사 직전 + T9 직후 `MIX_Q=q7` 대조 (회수 때 = 덧 · 등록 초안 12 절 W9 ✓ / △ / ✗ · 18 절 Q-G′ · 2 회차) |
+| MPI | Open MPI 5.0.10 · mpirun sha256 407990f94f9d3863be273b44e6e8fc96b9a015a3b14763ae0aab60857d1ee72d · 190592 B · 사용자 conda 환경 안 · 호출 꼴 `--oversubscribe --bind-to none -np 20` · `libmpi.so.40` 실제 파일 sha256 25f0176bfdb79513ebfc357091c4c57aa3a18ebf667b173411d1a6a89649d067 (2-A) | `mpi1_version.txt` L24 · `fields.txt` L520–521 · 리포 `F8/job_start.py.txt` L44 · `QY q7.libs` | 파일 신원 관측 · mpirun 이 PRTE 를 쓴다 [관찰 — `mpi1_version.txt` L2 · L15 의 PRTE 경고 문구 ("PRTE has detected" · "where prterun is running")] · PRTE 실행 파일 (prterun · prted) · dlopen 부품의 신원 = **못 묶음** [미확인 · 한정 — 등록 초안 1 절 · 15 절] · 런타임 (rank · 배치 · TMPDIR) [미확인] | pilot job 시작 영수증 (pilot 자신의 몫) · conda 꾸러미 파일 목록 해시 = q7b [제안 · 등록 초안 13-1 · Q-G′] · 러너의 TMPDIR 고정 = 코드 명세 (등록 초안 7-7 K5) |
+| STL 셋 | Drum fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730 (14310 B) · Front 443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81 (5990 B) · Back 2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5 (10790 B) | 리포 `F8/planned_assets/SHA256SUMS` L38–40 · `hashes.txt` L6–8 (ibb 체크아웃) · L462 · L470 · L464 (DEV E0 런) · 본 세션 sha256 (HEAD 의 `dem_scripts/mixer_20260919/*.stl` 셋 같음) | 바이트 확정 · 기하 자격 아님 (`F8/inventory.md` L26) | staging · job 시작 대조 |
+| 케이스 덱 (E0) | `in.mixer` 11347 B · sha256 8b588b24117ab77bf72d93662237268b401f714df8515d62ef7b964d01c6e718 (계획 자산 = 비활성 후보 사본 · 바이트 같음) | 본 세션 sha256 (`F8/planned_assets/PRECAL_E0/in.mixer` · `IN/candidate/candidate_assets/PRECAL_E0/in.mixer`) · `F8/planned_assets/SHA256SUMS` L36 · `F8/blockers.json` L72 | 확정 | — |
+| 메타 (E0) | 후보 둘: 원 계획 c6543f3800d0d76d0d75ca04f4aebc5d9dd557de0702d94c0355910121efe218 (생성기 해시 661936b7…) / 비활성 후보 498b941c898ea963ae50d931dc1fb71e164f6b5082436f661d1a474ea8ae80d3 (생성기 해시 dc253bc8…) · 다른 곳 = `generator_sha256` 한 칸 | `F8/planned_assets/SHA256SUMS` L37 · `IN/candidate/candidate_asset_manifest.json` L36 · `IN/README.md` L25 · 본 세션 sha256 | **Q7 = 현재 소스 후보 (498b941c…) — 1저자 11-12 권고대로** · 운영 봉인 교체 = 별도 승인 (등록 초안 7-6) (옛 "미정") | 재봉인 단계 — 2 회차 건식: 메타 **여덟** = 새 IN 후보 값 (자산 40 은 옛 후보와 바이트 같음 · E0 = 498b941c…) · 정적 목록 머리 `source_pin` 그대로 (527e244e… = 덱 · STL 생성 핀) + 새 칸 `metadata_generation_source_pin` [제안] · 놓일 메타 = HEAD `validate_case` 8/8 확인 (등록 초안 7-6 · 18 절 Q-C′ 바뀐 권고 · `reseal_dry/README.md`) |
+| 소스 핀 | 운영 봉인 = 527e244e4ebd6f0cb04c6cfb2ff5f3a52fb01996 (원 자산 생성 핀 · `F8/source_seal.json` L2) / 비활성 사본 검증 · 메타 생성 핀 = e48e5fa0498ab7ee8fd84163d9af024d07cbb135 (`IN/candidate/inactive_candidate.json`) · HEAD `21bb09d82` 의 12 의존 sha256 = 비활성 사본 12/12 · 원 봉인과는 2 개 다름 (`make_mixer_deck.py` · `mixer_deck_readback.py`) · 11-12 HEAD `bfd9b3bbd` = 재봉인 후보 12/12 (관측기만 비활성 사본과 다름 · 원 봉인과 3 개 다름) [관찰 — `git show` 대조] | 본 세션 sha256 · `IN/README.md` L11–17 · `fix_q5/seal_candidate/source_seal.candidate.json` | **Q7 · Q-C (1저자 11-12 권고대로)**: 현재 소스 12 + Q5 고친 관측기 · 핀 후보 = f67c0cc92 (Q5 패치 둘을 담은 커밋 · tree 4f293308… = 후보의 패치 트리 [관찰]) · 정하는 것 · 재봉인 = 별도 승인 (옛 "미정") · ✅ f67c0cc92 = push 됨 (11-12T14:06:16Z · `branch -r --contains` = 1 · 2 회차 · 리뷰 MXE0R2-12) · 핀 확인 규칙 그대로 (등록 초안 7-6 순서 2) | 재봉인 단계 — 차례 = HEAD 사본 건식으로 찾은 꼴 (IN ② → build = 커밋 A → F8 ③④① = 커밋 B · ① 만 먼저 금지 · 등록 초안 7-6 · `reseal_dry/README.md`) |
+| 관측기 | `scripts/mixer_precal_observe.py` df22dcf03fcd628901ffb6ac7362579faee6e94285404a3163bed44d3666f013 (두 핀 · HEAD `21bb09d82` 같음 = 운영 봉인 판) · 같은 빌드 실제 로그 꼴과 네 가지 어긋남 [관찰] · E0 에서 t0 프레임 한 장만 본다 [관찰 — 코드 판독] · Q5 고침 = bb2f322987fa6eb2e49159e6cc1447f5264036fc9cd84b3f4d59a60ffbc63710 (시험 43/43 · 11-12 리포 반입 51d45732c · f67c0cc92 · HEAD 판) | `F8/source_seal.json` L11 · 등록 초안 7-4 · 7-6 · 리포 `scripts/mixer_precal_observe.py` L297–302 · `fix_q5/README.md` · `git show HEAD:` 대조 | 고침 리포 반입 · 원장 `MXE0-01` claimed_fixed · 운영 봉인은 df22dcf0… 그대로 (재봉인 전) · 1저자 11-12 Q-A–Q-E 권고대로 · q9 대조 = **r1 한 로그** 의 첫 낱말 · 줄 수 맞음 · 순서 · 자리 [미확인] (옛 "고침 필요 (Q5)") · 줄 번호는 판마다 다르다 (Q5 패치가 L304 뒤를 92 줄 밀었다 · 등록 초안 7-1 · 리뷰 MXE0R-11) | 재봉인 (별도 승인) · 등록 초안 q9b (13-1 · Q-F′) |
+| 가드 · job 시작 · 러너 | submit_one.py.txt sha256 d1232bff3576016e0235d0764dfdb029e582da400a2b4abbe53bf571039e16a8 · job_start.py.txt 5e140635336be247ee3a776be58b2b3eb8679562c02bfc9cb593e27c24276b91 (= 가드의 `REVIEWED_JOB_START_SHA256`) · run_one.sbatch.txt 5360aa212f2bba98c49bebf8ab5288a1d3069ba087f595b521f2b274972a8f15 (Python 경로 UNRESOLVED) | 본 세션 sha256 · `F8/submit_one.py.txt` L15 · `F8/run_one.sbatch.txt` L14 | 비활성 초안 · 가짜 sbatch · 모의 프로세스로만 시험 (`F8/README.md` L30 · L34) | 봉인 단계 |
+| NP | 20 | 리포 `IN/author_policy_record.json` L13 | 확정 (1저자 11-09) | — |
+| 동시 실행 수 | 1 팔 (E0 pilot) · 가드 규칙 = first8 돌고 있는 팔 + 남은 예약 < `max_concurrency` · 내 잡 CPU 합 + 20 ≤ 60 · **등록 값 = 정책 파일 `max_concurrency` 1 · 승인 `approved_concurrency` 1** (가드는 1–2 를 받는다 · 등록 초안 6-1 P1 · 봉인 검사 · 리뷰 MXE0R-05) | `IN/author_policy_record.json` L14 · `F8/submit_one.py.txt` L53–54 · L83–84 · L132–134 · `F8/campaign_policy.json.example` L8 (지금 null) | 정책 확정 · 지금 내 잡 수는 아래 4 절 (11-12 G2c′ 잡 · 샌드박스 359243 끝 · 다음 [미확인]) | 제출 전 5 분 안 `squeue` (원 출력 sha256 · 등록 초안 6-1) |
+| walltime | `1-00:00:00` [초안] | 등록 초안 4-4 | ✅ 1저자 11-12 Q1 권고대로 · `QY` q6 대조 (sacct 와 2–6 초 · 속도 차 0.014 ~ 0.053 % — 옛 "≤ 0.05 %" 는 반올림이 넘었다 · 리뷰 MXE0R-12) = 그대로 | — |
+| 디스크 | post + restart 파일 크기 합 상한 29266573952 B · 여유 바닥 32193231348 B · inode 바닥 1261 [초안] | 등록 초안 5-3 · 5-4 | ✅ 1저자 11-12 Q2 권고대로 · 봉인 전 확인 = 11-12 `QY` q1–q3 대조 끝 · 식 · 값 그대로 (등록 초안 5-5) | — |
+| 런 폴더 규칙 | 발사 때 새로 만든다 (dev7 · dev7_v26 안 씀) · 제안 이름 `mixer_precal_first8_20261106` · 아래 `campaign_policy.json` · `cases/PRECAL_E0/` · `admission/` · 경로 꼴 = 풀린 꼴 [초안] | 리포 `docs/data/mixer_e0_meta_ibb_20261110/README.md` L16 · `F8/commands.txt` L68–71 · 등록 초안 3 절 | 새로 만들기 = 1저자 11-10 Q5 · 경로 꼴 = Q4 권고대로 (11-12) | — |
+| 감시 주기 | 읽기 전용 watch 기록 10 분 · 사람 판단 = 첫 프레임 · +1 h · 그 뒤 1 h 마다 · 끝 [초안] | 등록 초안 9 절 | ✅ 1저자 11-12 Q3 권고대로 | — |
+| SLURM | partition cpu · QOS cpu-60 (사용자당 cpu 60) · association MaxWall 7-00:00:00 · 파티션 14-00:00:00 · 11-12 빈 코어 = 4 절 (시점 값) | 4 절 · `QY q8` | 관측 (11-10 · 빈 코어 11-12) | 발사 직전 |
+| D0.7 (가드의 `d07_finished` 칸) | 완주 — ibb job 338349 · 끝 step 2135002 (`Simulation Finished`) · 11-05 수령 | 리포 `docs/session_20260923_progress.md` L1322 · `docs/data/kg50_d07_end_20261105/README.md` | 기록 있음 | live_preflight 에 참으로 · 근거 참조를 붙인다 |
+| 덤프 형식 줄 (`dump_modify … format` 한 줄 꼴) | 같은 바이너리에서 6 열 `%.17g` 꼴 실측 통과 (10-06 정확 좌표 런) · pilot 의 12 열 꼴은 미실측 | 리포 `docs/data/mixer_highbo_devu_prelim_20261006/README.md` L80 · `…/exact_runs/exact_LU212_settled/exact_receipt.json` L77 · 덱 `F8/planned_assets/PRECAL_E0/in.mixer` L138 | 부분 | pilot 자신의 몫 |
+| Python (ibb) | 3.10.20 (사용자 conda · numpy 2.2.6) · 3.9.13 (시스템 · numpy 1.21.5) · 가드 · job 시작은 표준 라이브러리만 쓴다 · 관측기는 회수 뒤 로컬에서 돈다 | 3 절 · 리포 `F8/commands.txt` L53–58 | 어느 쪽 = 미정 | 봉인 단계 (러너에 절대 경로로) |
+
+## 0-B. 영수증 칸 (R0–R6) 과 이 표의 자리
+
+영수증 칸의 정의 = 리포 `docs/reviews/nonrint_approved_preparation_20261109/mixer_ibb_qualification_receipt_plan.md` L53–59.
+
+| 칸 | 이 표의 절 | 지금 상태 |
+|---|---|---|
+| R0 대상 · 범위 | 1 | 수집 메타 있음. 설치 실체 인증 · 운영자 · 승인 참조는 out/ 밖 (1저자) |
+| R1 링크 · 경로 | 6 | 조상 경로의 종류 · 모드 관측 있음. 링크 거부 자격 시험은 안 했다 |
+| R2 권한 · 변경 통제 | 2 · 6 | 모드 · 소유 · ACL 수 관측 있음. 변경 통제 (불변 창) 는 out/ 에 없다 [미확인] · 대안 = 발사 직전 + T9 직후 두 번 대조 (등록 초안 W9 · 2 회차 · 회수 때 = 덧 · 런 전 · 중 변경 = 자격 거부) — 그 사이의 변경은 못 잡는다 (리뷰 MXE0R-06) |
+| R3 binary / MPI | 2 · 2-A · 3 | sha256 · 판 · ldd 관측 있음 · **라이브러리 해시 30/30 (11-12 `QY` q7 · 로그인 셸)** · 찾는 길 = 바이너리 RPATH (사용자 conda 환경 · 로그인 홈 꼴) → 영수증의 신원 = 바이너리 + 2-A 목록 (바이너리 sha256 만으로는 런타임이 고정되지 않는다 · 8 절 관찰 10). job 안 ldd = 같은 30 soname · 가린 경로 30/30 (G2c′ 359243 · 1 프로세스 · 관찰 15) · 못 묶는 것 = PRTE 실행 파일 · dlopen 부품 [추정 · 미확인] · job 안 MPI 런타임 = [미확인] |
+| R4 SLURM · 자원 | 4 | QOS · association · 파티션 · 내 잡 수 관측 있음 (시점 값 · 11-12 같은 QOS 의 G2c′ 잡 — 샌드박스 359243 은 11-12 에 끝 · 다음 잡 [미확인] · 리뷰 MXE0R-13) · 동시 한도 칸 = 정책 · 승인 1 · 1 (등록 초안 6-1 P1) · 11-12 빈 코어 = `QY` q8 시점 값 · DEV E0 잡 sacct (State · ExitCode · Elapsed · AllocCPUS · ReqMem) 있음 · MaxRSS = [미확인] |
+| R5 시간 · 저장 · 회수 | 5 | df · inode · 사용량 · OST 별 여유 (`QY` q5) · DEV E0 런별 크기 (`QY` q1 · q2) 관측 있음. 기본 한도 값 = [미확인] (`QY` q4 `-U` 권한 없음) · 1저자 11-12 *"고민 안 해도 돼"* = 묻지 않는다 (Q-H 빠짐) → 감시 = 등록 초안 S8 (초과 표지 = 멈춤) · 계획 (`FQP` L45) 이탈 기록 = 등록 초안 5-4 끝. walltime · 문턱은 등록 초안 (11-12 대조 = 그대로) |
+| R6 최종 결속 | 7 | first8 묶음이 ibb 에 아직 없다 → 전부 [미확인] (봉인 단계의 몫) |
+
+## 1. 수집 · 대상 (R0)
+
+| 칸 | 값 | 근거 | 다시 확인 |
+|---|---|---|---|
+| 대상 별칭 | ibb | `fields.txt` L3 | 예 — preflight 1 (날짜 · 호스트 · 운영자). 원문은 ibb 의 raw/ 에만 둔다 |
+| 수집 스크립트 | md5 4e01c25f8f3a1cebc9daee51e2999cc4 · sha256 4d9e11f4ea216e71d506e9225160e92e5bd89bd52461c929ce72e8f4691a0553 | `fields.txt` L13 · L14 | 아니오 — 수집 도구의 신원일 뿐이다 |
+| OS | Rocky Linux 8.7 · 커널 4.18.0-553.40.1.el8_10.x86_64 · glibc 2.28 · bash 4.4.20 | `os_release.txt` L7 · `os_uname.txt` L1 · `os_glibc.txt` L1 · `fields.txt` L7 | 아니오 — 발사 판정에 쓰지 않는 기록 칸 |
+| SLURM 할당 안에서 수집했나 | 아니오 (로그인 셸) | `fields.txt` L47 | 예 — job 안 환경 (PATH · 라이브러리 · TMPDIR) 은 이 수집이 잰 적이 없다 (job 안 근거 하나 = 다른 잡 G2c′ 359243 의 `ldd` · 2-A 끝 · 관찰 15) |
+| 조회 결과 | OK 127 · FAIL 13 | `fields.txt` L579 | 해당 없음 |
+| FAIL 13 의 내용 | 가지 이름 10 (체크아웃 10 곳) · 정적 배너 1 · `lmp_mpi -h` 종료 코드 1 · `quota -s` 1 | `probes.txt` L9 (repo1 · 나머지 9 곳 같은 꼴) · L95 · L97 · L115 | 해당 없음 |
+| 가림 뒤 남은 토큰 | 0 | `fields_post.txt` L2 | 해당 없음 |
+| 조회 묶음 (11-12 · `QY`) | 블록 스크립트 md5 664376ce372ee4b60779d4f27e380165 · sha256 4f11af486803d76c71cf584c0fcf38fcd911c690d9e7f479013fd0441745646e · 24822 B · 묶음 sha256 a5753648e0ac34574fa8f5fa231366338093663a1155f549775a5f5ffc95beb0 · 파일 43 · 형식 `mixer_e0_query/1` | `QY bundle.script_md5` · `bundle.fields.script_sha256` · `script_bytes` · `bundle.sha256` · `bundle.n_files` · 판독 L1–2 · L4 | 아니오 — 조회 도구 · 묶음의 신원이다 |
+| 조회 창 · 결과 (11-12) | 2026-11-12T11:52:36Z ~ 11:54:07Z (91 초) · 로그인 셸 (SLURM 할당 밖) · OK 54 · FAIL 1 (q4 `lfs quota -U` = Permission denied) · 금지 문자열 4 개 대조 · 나온 곳 0 · 가림 뒤 남은 토큰 0 (1저자 화면 "가림 0 곳" · 지시서 0 절) | `QY bundle.fields.captured_start_utc` · `captured_end_utc` · `elapsed_seconds` · `inside_slurm_allocation` · `probe_status_counts` · `q.q4.not_ok` · 판독 L3 · L4 · L9 | 해당 없음 |
+| 조회가 돈 셸 · awk | bash 4.4.20(1)-release · GNU Awk 4.2.1 — 조회 블록 README 의 "bash 4.4 실행 미확인" 은 이번에 그 판에서 돌았다 | `QY bundle.fields.bash_version` · `awk_version` | 아니오 |
+
+## 2. 바이너리 (R3)
+
+| 칸 | 값 | 근거 | 다시 확인 |
+|---|---|---|---|
+| 자리 | 로그인 경로 → 실제 경로가 Lustre 위로 풀린다 (가린 꼴 = 근거 줄) | `fields.txt` L483–484 | 예 — job 시작 때 실제 경로를 다시 푼다 (preflight 2) |
+| 후보 | 후보 123 개 중 실제 파일 1 개. conda 환경 쪽 `lmp_mpi` 후보는 없음 (UNRESOLVED) | `fields.txt` L481 · L482 · L378 | 아니오 |
+| sha256 | ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f · 11-12 다시 = 같음 · 9180024 B | `fields.txt` L486 · `hashes.txt` L474 · `QY q7.bin_sha256_or_reason` · `bin_vs_ref` same · 판독 L51 | 예 — 준비 · staging · job 시작 세 번 (preflight 2–3). 파일이 그룹 쓰기 가능이라 바뀔 수 있다 |
+| 09-28 영수증 바이너리와 같은가 | 같음 (`same`) → Q4 = 이 바이너리 | `fields.txt` L487 (대조 값 = `meta_script.sh` L11 · 리포 `docs/data/mixer_phase_receipt_20260928/receipt_v2_ibb.json` L1474) | 예 — sha256 대조 한 번으로 같이 본다 |
+| 크기 · 수정 시각 | 9180024 B · mtime 1774503499 (= 2026-03-26T05:38:19Z [산술]) | `fields.txt` L485 · `hashes.txt` L474 | 예 (sha256 과 같이) |
+| 판 · 빌드 · git | LIGGGHTS-PUBLIC 3.8.0 · compiled 2026-03-26-14:37:06 by `<BUILD_USER>` · git 3d5c00f20519e6bb6eb6756f51f1ad36564e649d | `lmp1_help.txt` L1 | 아니오 — sha256 이 같으면 같은 바이트다. job 로그 첫 줄 배너는 기록한다 |
+| 배너를 얻은 방법 | `lmp_mpi -h` 실행 (종료 코드 1 · 출력 9033 B). 파일에서 찾는 정적 배너는 실패 (0 B) | `probes.txt` L97 · L95 | 해당 없음 |
+| 파일 종류 | ELF 64-bit · x86-64 · 동적 링크 · not stripped | `lmp1_file.txt` L1 | 아니오 |
+| 권한 | 일반 파일 · 모드 775 · 소유 = 나 · 그룹 = 나 · 그룹 쓰기 가능 · 이름 붙은 ACL 0 · 홈 디렉터리는 700 | `fields.txt` L485 · `walk.txt` L75 · `fields.txt` L549–550 · `walk.txt` L72 | 예 — 변경 통제는 정해진 것이 없다 (R2 · [미확인]) |
+| 덱이 쓰는 스타일 | 있음: pair gran 의 hertz · history · sjkr · cdt / fix mesh/surface · wall/gran · particletemplate/sphere · particledistribution/discrete · insert/pack · nve/sphere · move/mesh · property/global · gravity / compute erotate/sphere / dump custom | `lmp1_help.txt` L36 · L41 · L45 · L49 · L64–78 · L85 · L100 | 아니오 — 기능 목록일 뿐이다. 물리 · 로그 호환 자격이 아니다 |
+| 링크 라이브러리 (ldd) | 31 줄 = 사용자 conda 환경 23 · 시스템 7 · vdso 1. MPI = `libmpi.so.40` (conda 환경) · 11-12 다시 = 같은 23 · 7 · 1 갈래 · not found 0 [산술 · `QY q7.libs`] | `lmp1_ldd.txt` L1–31 (L3) · `QY q7.n_paths` 30 · `n_not_found` 0 · 리포 `docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/lmp_ldd.txt` L1–32 | 예 — 로그인 셸 값이다. job 안 근거 하나: G2c′ 잡 359243 (1 프로세스) 의 job 안 `ldd` = 같은 31 줄 꼴 (vdso 1 + 30) · 같은 차례 · 가린 경로 30/30 같음 · `./` 꼴 7 같음 · ldd_rc 0 [관찰 · 이 판 대조 · 관찰 15]. pilot job 안 (20 rank · mpirun) 은 [미확인] — 러너 명세 (등록 초안 7-7 K5) |
+| 링크 라이브러리 sha256 | **30/30 (11-12 · `QY` q7) — 2-A 표.** 29 개는 ldd 경로가 심볼릭 링크라 `readlink -e` 로 실제 파일을 해시했다 (해시 전후 stat 같을 때만 · `query_block/README.md` 1 절 q7) · 해시 못 함 0 · libgcc_s.so.1 = 11-10 값 0907d66b… 와 같음. 수정 시각 30 개 전부 바이너리 빌드 (2026-03-26T05:38:19Z) 전 — 가장 늦은 것 2026-03-26T05:28:47Z = mpirun 과 같은 시각 [산술 · `q7.libs[*].mtime`] (수정 시각은 바이트 증명이 아니다) · (옛 [미확인] = "30 행 중 29 행이 심볼릭 링크라 해시가 없다" → 채움) | `QY q7.libs` · `n_hashed` 30 · `not_hashed` [] · 판독 L51 · 11-10 `hashes.txt` L475–504 (L478) | 예 — 발사 직전 + T9 직후 `MIX_Q=q7` 로 2-A 와 대조 (회수 때 = 덧 · 등록 초안 12 절 W9 · 2 회차 · 18 절 Q-G′) · job 안 sha256 [미확인] (G2c′ 359243 의 job 안 기록은 md5 · 관찰 15) |
+| 라이브러리를 찾는 길 (RPATH 등) | **바이너리의 RPATH (DT_RPATH) 1 줄 = 사용자 conda 환경의 lib 폴더 하나 · 로그인 홈 꼴 (풀린 실제 경로 꼴 아님) · RUNPATH 없음** (11-12 · 가린 문자열은 근거 줄에). → LD_LIBRARY_PATH UNSET · conda 활성 없이도 conda 환경으로 풀리는 까닭이다 [관찰]. 로더는 RPATH 를 LD_LIBRARY_PATH 보다 먼저 본다 [관찰 — ld.so 규칙 · 이 바이너리로 시험 안 함]. 다만 경로에 `./` 가 낀 7 개 (2-A 24–30) 는 conda 라이브러리 자신의 `$ORIGIN` 길로 풀린 꼴이다 [추정 — 경로 꼴] — 그 길이 RUNPATH 면 LD_LIBRARY_PATH 가 먼저 닿는다 (그 라이브러리들의 동적 칸은 안 읽음 · [미확인]) · (옛 [미확인] "까닭은 out/ 에 없다" → 채움) | `QY q7.rpath_lines` · 판독 L52 · `fields.txt` L50 · `lmp1_ldd.txt` L3 | 예 — job 안 LD_LIBRARY_PATH 는 job 시작 영수증 몫 [미확인] |
+
+### 2-A. 링크 라이브러리 30 개 (11-12 · `QY` q7 · 로그인 셸 `ldd` 차례)
+
+자리 = ldd 가 푼 경로의 자리 (사용자 conda 환경 / 시스템 · 경로 문자열은 안 적음). 실제 파일 이름 = `readlink -e` 뒤의 파일 이름만. 근거 = `QY q7.libs[*]` (`soname` · `ldd_path_type` · `real_path` 의 이름 · `bytes` · `sha256_or_reason` · `mtime`). `linux-vdso.so.1` 은 커널이 주는 것이라 파일 · 해시가 없다 (목록 밖).
+
+| # | soname | 자리 | ldd 경로 | 실제 파일 이름 | 크기 (B) | sha256 | 수정 시각 (UTC) |
+|---|---|---|---|---|---|---|---|
+| 1 | libstdc++.so.6 | conda 환경 | 링크 | libstdc++.so.6.0.34 | 14196512 | d3f1293e2d2161711b793ab445cfcf579e6fd45e6dd03ae2b70ddf6be2f9c3c7 | 2025-11-10T11:03:06Z |
+| 2 | libmpi.so.40 | conda 환경 | 링크 | libmpi.so.40.40.7 | 3878976 | 25f0176bfdb79513ebfc357091c4c57aa3a18ebf667b173411d1a6a89649d067 | 2026-03-26T05:28:47Z |
+| 3 | libm.so.6 | 시스템 | 링크 | libm-2.28.so | 1598848 | a9fc2589ddba4222d5b7900593de3e1b25c43d9764e62ebf6864b0ea437fd95b | 2023-10-06T15:49:08Z |
+| 4 | libgcc_s.so.1 | conda 환경 | 파일 | libgcc_s.so.1 | 658656 | 0907d66b5a5f028480cf78adad58180e1c1183a3a085877e8f4fd471af60d50c | 2025-11-10T11:02:56Z |
+| 5 | libpthread.so.0 | 시스템 | 링크 | libpthread-2.28.so | 149976 | a7d30de93feab8aaad6d4ddf42ff78b7653629f861120832d40720e14739f970 | 2023-10-06T15:49:09Z |
+| 6 | libc.so.6 | 시스템 | 링크 | libc-2.28.so | 2089936 | fa2930ac9be4ae3be945dcad3124547e3b2eade257311fd37f4535a9460b487e | 2023-10-06T15:49:09Z |
+| 7 | libdl.so.2 | 시스템 | 링크 | libdl-2.28.so | 19128 | d36497cd17e917168ba8cd5c03bee341435b2f4da8d6f7912db4652cb04cf074 | 2023-10-06T15:49:09Z |
+| 8 | ld-linux-x86-64.so.2 | 시스템 | 링크 | ld-2.28.so | 1061896 | dc4a1fbac1514bcaa09f212aa4c11eee30749069210270e9d1ae19ac8b1ddcad | 2023-10-06T15:49:09Z |
+| 9 | libucc.so.1 | conda 환경 | 링크 | libucc.so.1.0.0 | 1215136 | f1a5ada871f7ffc779164029a6b7806e4ad62b379edeb09e157966229634d3b4 | 2026-03-09T19:09:30Z |
+| 10 | libopen-pal.so.80 | conda 환경 | 링크 | libopen-pal.so.80.0.5 | 1393216 | a688237724f002d45599bb3b04ccbb515591074ef68ee8c8f23ce484dc414f5b | 2026-03-26T05:28:47Z |
+| 11 | libfabric.so.1 | conda 환경 | 링크 | libfabric.so.1.31.0 | 2009136 | 7b2f6f33c3eb9d765a8d3485d89e00af77505a7673dbc64b6d04fc2a0cf544b7 | 2026-03-26T05:28:47Z |
+| 12 | libucp.so.0 | conda 환경 | 링크 | libucp.so.0.0.0 | 7377960 | f56519de48ea895c556cd63434c836db1fbed661e693e4c1843ea9d96735736f | 2026-01-23T19:49:57Z |
+| 13 | libucs.so.0 | conda 환경 | 링크 | libucs.so.0.0.0 | 1662560 | 30c914177bab40ddead293ec9f6e6aa20ce041c52e0d0a6a93ae24474470f979 | 2026-03-26T05:28:47Z |
+| 14 | libucm.so.0 | conda 환경 | 링크 | libucm.so.0.0.0 | 419912 | 23f8a4cd260bede7f081a6c484ef07b681d5dfe163ea2279df146264f8271abf | 2026-01-23T19:49:57Z |
+| 15 | libuct.so.0 | conda 환경 | 링크 | libuct.so.0.0.0 | 1253424 | eda30f2260f72278d8e9808eff1cbfd91cc8f2c65804f1b53ecda0c586686a29 | 2026-01-23T19:49:57Z |
+| 16 | libnl-route-3.so.200 | conda 환경 | 링크 | libnl-route-3.so.200.26.0 | 720544 | aa0bf613d4f68d5fed3eb4fabd1a6f05153efd9a5b45a357054feffc16ce38b7 | 2026-03-26T05:28:46Z |
+| 17 | libnl-3.so.200 | conda 환경 | 링크 | libnl-3.so.200.26.0 | 168928 | bb62ae8fcd41dd98a0f487a38ecd0357668831fd60388dedcf4ffeb45237cea8 | 2024-11-17T12:33:46Z |
+| 18 | librt.so.1 | 시스템 | 링크 | librt-2.28.so | 42744 | cbbee63576d8cfb63731cac6cdbbd93ef227af6e8217794b953bbd8e51c058fa | 2023-10-06T15:49:09Z |
+| 19 | libutil.so.1 | 시스템 | 링크 | libutil-2.28.so | 17016 | f977bed24ad73aaef3900af65294e88081864e79f405d7c89fcaf1bfbf7c3397 | 2023-10-06T15:49:08Z |
+| 20 | libevent_core-2.1.so.7 | conda 환경 | 링크 | libevent_core-2.1.so.7.0.1 | 259496 | 2799b55b0c6eee5d98f7a1db9b63294570624a751f2ba8e65c5d26699e43486f | 2023-06-02T17:12:56Z |
+| 21 | libevent_pthreads-2.1.so.7 | conda 환경 | 링크 | libevent_pthreads-2.1.so.7.0.1 | 16848 | 782ee178934e1fffd86626a9c057e2e26cdb1a482cdd8856f4b83fcc2cd032e0 | 2023-06-02T17:12:56Z |
+| 22 | libhwloc.so.15 | conda 환경 | 링크 | libhwloc.so.15.10.2 | 430912 | 4d54872bbb71dd88443834fb7c266950134b08ba47d56028f8cb71f8bed98dbc | 2026-03-26T05:28:47Z |
+| 23 | libpmix.so.2 | conda 환경 | 링크 | libpmix.so.2.13.8 | 2407200 | 80f9744cace23aa60d1893c21d3f558de8a793312d643ede0351292aa9d5a373 | 2026-03-26T05:28:47Z |
+| 24 | librdmacm.so.1 | conda 환경 | 링크 · `./` 꼴 | librdmacm.so.`<IPV4>` | 140888 | 7ac5b6da8ecb98d5dfa6c3a188558b00a1f21f27cf48373fd963c86677437008 | 2026-03-26T05:28:46Z |
+| 25 | libefa.so.1 | conda 환경 | 링크 · `./` 꼴 | libefa.so.`<IPV4>` | 63712 | bc530cf5d8b7b2407781a3e937381ad5051fb71d34a0feca31527c4e233a61f6 | 2026-03-03T03:11:21Z |
+| 26 | libibverbs.so.1 | conda 환경 | 링크 · `./` 꼴 | libibverbs.so.`<IPV4>` | 165024 | 8b1ac7ae9707749927ae445bb6cedf85df88e505fc8d060aef4fa08774ccc69b | 2026-03-26T05:28:46Z |
+| 27 | libatomic.so.1 | conda 환경 | 링크 · `./` 꼴 | libatomic.so.1.2.0 | 168920 | 3867bd037fd67c64cac210a97c52c2ef6fdc38f72d046080ed63419616977448 | 2025-11-10T11:02:56Z |
+| 28 | libxml2.so.16 | conda 환경 | 링크 · `./` 꼴 | libxml2.so.16.1.2 | 1440208 | c21af3ce8a8f62eaf2bffe4a98bfdffbd7a960e499250cd0892dc711b61321fb | 2026-03-26T05:28:47Z |
+| 29 | libz.so.1 | conda 환경 | 링크 · `./` 꼴 | libz.so.1.3.1 | 108688 | 96b55bbfb48f50af95da290c4cce33d0724e6565715bfc2e859de7d9efde3cbc | 2025-08-29T13:58:54Z |
+| 30 | libiconv.so.2 | conda 환경 | 링크 · `./` 꼴 | libiconv.so.2.7.0 | 1178544 | ec9f94edf6d531397d6a53e5fd0a93747d683d64eafcb12e7a75546824152a3d | 2025-08-11T10:39:28Z |
+
+- 24–26 의 실제 파일 이름은 판 숫자 넷이 IPv4 꼴이라 가림 규칙이 `<IPV4>` 로 바꿨다 — 이름 [미확인] · 크기 · sha256 은 그대로다 (8 절 관찰 13).
+- 이 목록은 로그인 셸 (SLURM 할당 밖) 의 `ldd` 다. **job 안 근거 하나 (리뷰 MXE0R-06)**: G2c′ 잡 359243 (11-12T11:15:55Z · ibb cpu-60 · 1 코어 · 같은 바이너리 sha256 ee2d7726… · `mpirun` 없이 1 프로세스) 의 실행기가 잡 안에서 남긴 `ldd` (리포 `docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/lmp_ldd.txt` · ldd_rc 0 · 실행기 `run_g2cp.sh` L160–165 · `21bb09d82` 판 = HEAD 판) = 이 표와 **같은 30 soname · 같은 차례 · 가린 경로 문자열 30/30 같음 · `./` 꼴 7 (24–30) 같음** [관찰 · 이 판 대조 — 경로 값은 옮기지 않음]. 내용 해시는 대조하지 못한다 — 그 기록 (`lmp_libs.md5`) 은 md5 이고 이 표는 sha256 이며, 시각도 약 37 분 다르다. 그 잡의 환경 (conda 활성 · LD_LIBRARY_PATH) 과 pilot 의 경로 (`mpirun` · 20 rank · PRTE) 에서 같은지는 [미확인] (3 절 · 등록 초안 17 절 11).
+
+## 3. MPI · 실행 환경 (R3)
+
+| 칸 | 값 | 근거 | 다시 확인 |
+|---|---|---|---|
+| mpirun 자리 | 사용자 conda 환경의 bin (가린 꼴 = 근거 줄) | `fields.txt` L518–519 | 예 — job 시작 때 |
+| 후보 | 후보 26 개 중 실제 파일 1 개 (mpiexec 도 같은 파일) | `fields.txt` L516 · L517 · L511 | 아니오 |
+| mpirun sha256 | 407990f94f9d3863be273b44e6e8fc96b9a015a3b14763ae0aab60857d1ee72d · 190592 B · mtime 1774502927 (= 2026-03-26T05:28:47Z [산술]) · 모드 755 | `fields.txt` L521 · L520 · `hashes.txt` L505 | 예 |
+| MPI 판 | mpirun (Open MPI) 5.0.10 | `mpi1_version.txt` L24 | 아니오 (sha256 이 같으면) |
+| conda 꾸러미 (사용자 환경 · 79 개 중) | openmpi-5.0.10-h67ed482_1 · mpi-1.0.1-openmpi · ucx-1.20.0 · libfabric-2.5.0 · libpmix-5.0.8 · libhwloc-2.13.0 · libstdcxx-15.2.0 · libgcc-15.2.0 | `conda1_meta.txt` L64 · L38 · L56 · L63 · L65 · L46 · L12 · L55 | 예 — conda 환경은 고칠 수 있는 자리다 (디렉터리 모드 2775 · `walk.txt` L79–82) · 꾸러미 파일 목록 해시 (openmpi · ucx · ucc · libfabric · libfabric1 · libpmix · libhwloc — `conda1_meta.txt` L64 · L56 · L10 · L63 · L78 · L65 · L46 · prrte 라는 따로 된 꾸러미는 79 줄에 없다 [관찰 · 이 판 검색] → PRTE 실행 파일은 openmpi 꾸러미 안 [추정]) = q7b [제안 · 등록 초안 13-1 · Q-G′] · 발사 직전 + 회수 때 |
+| 다른 MPI 의 흔적 | 시스템 anaconda 꾸러미 목록에 mpich 이름이 있다 (mpi-1.0-mpich · mpich-3.3.2-external_0). 그쪽 `mpirun` 파일은 없다 (UNRESOLVED) → 실제 mpirun 은 위 하나뿐 | `conda2_meta.txt` L9 · L15 · `fields.txt` L515 | 예 — job 안에서 실제로 풀린 mpirun 을 적는다 |
+| 로그인 셸 환경 | PATH 앞쪽 = LIGGGHTS 빌드 폴더 · 다른 프로그램 하나 · 사용자 conda 환경 · 시스템 anaconda. CONDA_DEFAULT_ENV=base · LD_LIBRARY_PATH UNSET · OMP_NUM_THREADS UNSET · 모듈 0 (라이브러리는 바이너리 RPATH 로 풀린다 — 2 절) | `fields.txt` L49 · L51 · L50 · L54 · L57 · `module_list.txt` L1 | 예 — job 안 환경은 잰 적이 없다 |
+| 수집 때 MPI 경고 | "세션 폴더가 공유 파일시스템 (lustre) 위" 라는 PRTE 경고. 수집 블록이 TMPDIR 을 자기 폴더로 잡아서 났다. 경고 문구가 PRTE · prterun 을 말한다 (L2 · L15) → `mpirun` 이 PRTE 를 쓴다 [관찰] — 그 실행 파일의 신원은 2-A 밖 (0-A MPI 줄) | `mpi1_version.txt` L2–7 · L15 | 아니오 — 단 job 안 TMPDIR 자리는 **[미확인]**: 가드가 운영자 셸의 TMPDIR 을 sbatch 에 넘기고 (리포 `F8/submit_one.py.txt` L39 · `--export=ALL` L91) job 시작 대조기는 환경을 물려준다 (`F8/job_start.py.txt` L47) [관찰 — 코드 판독] → 운영자 셸 값에 달렸다 · 러너가 고정 · 기록 = 코드 명세 (등록 초안 7-7 K5 · 리뷰 MXE0R-06) |
+| DEV 런이 쓴 MPI 호출 | 플래그 `--oversubscribe --bind-to none` · NP 20 · conda 환경 활성 · PATH 덧붙임 없음 (DEV E0 다섯 다 같음) | `seal_extract.txt` L984–990 (E0_ref_s32452843) · L944–950 (s49979687) · L584–590 (s67867967) · L464–470 (ref2) · L744–750 (dthalf) | 아니오 (기록) |
+| pilot 러너가 쓸 호출 | job 시작 대조기가 `<mpirun 절대 경로> --oversubscribe --bind-to none -np 20 <바이너리 절대 경로> -in in.mixer` 한 번 · OMP · OPENBLAS · MKL 스레드 1 · conda 환경 활성 없음 · 그 밖 환경은 job 의 것을 물려받는다 (LD_LIBRARY_PATH 를 정하지 않는다) · 링크 라이브러리는 RPATH 로 활성 없이 풀린다 [관찰 — 로그인 셸 ldd · 다른 잡 G2c′ 359243 의 job 안 `ldd` 도 경로 30/30 같음 (관찰 15) · pilot job 안 (`mpirun` · 20 rank) [미확인]] · TMPDIR = 운영자 셸 값 (가드 L39 · 위 경고 줄) | 리포 `F8/job_start.py.txt` L44 · L47 · `QY q7.rpath_lines` | 예 — DEV 와 다른 조합이다 (등록 초안 17 절 11 · 7-7 K5) |
+| MPI 런타임 (rank 수 · 바인딩 · 노드 배치) | **[미확인]** — 로그인 셸에서 `--version` 만 돌렸다 · G2c′ 359243 은 `mpirun` 없이 1 프로세스라 MPI 런타임 근거가 아니다 | `probes.txt` L98 | 예 — job 안에서만 볼 수 있다 (pilot 자신의 몫 · rank 수 = 로그 Loop 줄의 자기 보고 = 등록 초안 C6 ①) |
+| Python (가드 · job 시작용) | 후보 둘. 사용자 conda = 3.10.20 · numpy 2.2.6 · scipy 1.15.3 · sha256 561c350efec08f1712162c4d649f4b668bacceb68388e973efec964f0073cd92 / 시스템 anaconda = 3.9.13 · numpy 1.21.5 · scipy 1.9.1 · sha256 e8cd6aea4793c192bb74ffcfc1c670afa4629eca2a3ea998c5e15c1c876a3917. 어느 쪽을 쓸지 **미정**. 가드 · job 시작은 표준 라이브러리만 쓴다 | `py1_version.txt` L1 · `py1_modules.txt` L1–2 · `fields.txt` L529 / `py2_version.txt` L1 · `py2_modules.txt` L1–2 · `fields.txt` L532 · 리포 `F8/job_start.py.txt` L3 · `F8/submit_one.py.txt` L6–13 | 예 — 러너에 절대 경로로 박는 칸이다 (리포 `F8/run_one.sbatch.txt` L14 = UNRESOLVED) |
+| 관측기가 도는 자리 | 회수 뒤 로컬 스냅숏에서 (`--case PRECAL_E0 --run <스냅숏>`) — ibb 에서 돌리지 않는다 | 리포 `F8/commands.txt` L53–58 · `F8/inventory.md` L60 | 해당 없음 — 로컬 Python · numpy 판은 회수 때 기록 |
+
+## 4. SLURM (R4)
+
+| 칸 | 값 | 근거 | 다시 확인 |
+|---|---|---|---|
+| SLURM 판 | slurm 22.05.2 | `slurm_sinfo_version.txt` L1 | 아니오 |
+| 파티션 | cpu (기본) · up · 노드 4 · 노드당 CPU 152 · 노드당 메모리 515000 MB · 상태 mix | `slurm_sinfo_partitions.txt` L1 (열 뜻 = `meta_script.sh` L440) | 예 — 상태는 시점 값 |
+| 파티션 시간 상한 | 14-00:00:00 | `slurm_sinfo_partitions.txt` L1 | 예 — 관리자가 바꿀 수 있는 값 |
+| 노드 사용 | 할당 / 유휴 / 기타 / 전체 = 4 / 0 / 0 / 4 (유휴 노드 0) · 11-12 (`QY` q8 · 시점): 노드 넷 모두 mix (유휴 노드 0) · 노드별 유휴 CPU 35 · 3 · 151 · 151 | `slurm_sinfo_summary.txt` L2 · `QY q8.cpu_nodes` · 판독 L53 | 예 — 시점 값. 빈 코어는 아래 줄 (11-12) |
+| QOS cpu-60 | 사용자당 한도 = cpu 60 (GPU a100 0 · rtx3090 0). 우선순위 0. MaxWall · 사용자당 잡 수 · 제출 수 칸은 빈칸 | `slurm_qos.txt` L23 (열 뜻 = `meta_script.sh` L442) | 예 |
+| 내 association | QOS = cpu-60 하나 · **MaxWall = 7-00:00:00**. Partition · DefaultQOS · MaxJobs · MaxSubmit · MaxTRES · GrpTRES 칸은 빈칸. 줄 1 개 | `slurm_assoc_me.txt` L1 (열 뜻 = `meta_script.sh` L443 · Account 열은 일부러 안 모았다) | 예 |
+| 걸리는 시간 상한 | 7-00:00:00 [추정 — association 7 일과 파티션 14 일 중 작은 쪽이 걸린다고 읽음] | 위 두 줄 | 예 |
+| 내 잡 수 (11-10 관측) | 0 (squeue 종료 코드 0 · 출력 0 줄) | `slurm_squeue_me.txt` (0 줄) · `probes.txt` L110 · `fields.txt` L537–538 | 예 — 제출 전 5 분 안. 가드 규칙 = 내 잡 CPU + 20 ≤ 60 (리포 `F8/submit_one.py.txt` L132–133) |
+| 내 잡 (11-12 기록) | **바뀜** — 11-12 같은 계정 · ibb 에서 언로딩 G2c′ 잡 (빌드 358638 · 358659 · 건식 358639 · 358660 · 358667 · 359157) · 1저자 *"ibb 로 가서 cpu 60 활용해서 진행"* · **샌드박스 359243 (N 40000 · 1 코어) = 11-12 끝** (팔 아홉 rc 0 · 판정 다 · 라 PASS) · 다음 G2c′ 잡 = [미확인] (리뷰 MXE0R-13 — 옛 "다음 = 건식 다시 → 샌드박스 = 1저자 GO" 는 `21bb09d82` 때 상태) | 리포 HEAD `bfd9b3bbd` 의 `docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md` L78 · `docs/session_20260923_progress.md` L1455 (옛 근거 = `21bb09d82` 의 README L71–80 · progress L1445) | 예 — pilot 제출 전 내 잡 CPU 합을 다시 본다 (등록 초안 6-1 P4) · 순서 = 1저자 (등록 초안 Q11 — 전제는 제출 직전 다시) |
+| 다른 사용자 큐 · 빈 코어 | 빈 코어 (11-12 · `QY` q8 · 시점 값 · 판정 아님): cpu 파티션 CPU 할당 268 · 유휴 340 · 전체 608 · 유휴 ≥ 20 노드 3 · 다른 사용자 큐 = **[미확인]** (타인 자료라 안 모았다 · 그대로) | `QY q8.partitions` · `cpu_nodes_with_idle_ge_20` · 판독 L53 | 예 — 발사 직전 `MIX_Q=q8` (대기 가늠용 · 판정에는 안 쓴다) |
+| 메모리 요청 · 한도 | DEV 러너와 first8 러너 초안 둘 다 메모리 지정이 없다. DEV E0 다섯 런은 그 꼴로 완주했다. **11-12 (`QY` q6)**: 다섯 잡 ReqMem = 515000M (= 위 파티션 줄의 노드당 메모리 515000 MB 와 같은 값) · **MaxRSS = [미확인]** — sacct 가 잡 줄만 내고 step 줄 (.batch 등) 이 없어 다섯 다 빈칸이다. 왜 step 줄이 없는지 [미확인] (step 기록 보관 기간 · 수집 설정 등 [추정]) · (옛 [미확인] "MaxRSS 는 안 쟀다" → ReqMem 만 채움) | `QY q6.jobs[*].ReqMem` · `max_step_maxrss_bytes` null · `steps` {} · 판독 L46–50 · 리포 `dem_scripts/mixer_20260921/launch_highbo.sh` L293–298 · `F8/run_one.sbatch.txt` L2–7 · `docs/session_20260923_progress.md` L822 · `docs/reviews/mixer_highbo_stiffness_prereg_20260929.md` L346 ("메모리 미측정") | 예 — 메모리 사용량은 pilot 안에서 (끝의 sacct · 등록 초안 10 절 — 그때 step 줄이 남는지 [미확인]) · ReqMem = 노드 전부 꼴이 대기 · 노드 공유에 주는 영향 [미확인] (등록 초안 17 절 19) |
+| DEV E0 잡 다섯 sacct (11-12) | 다섯 다 COMPLETED · 0:0 · AllocCPUS 20 · Elapsed 03:53:20 · 03:52:38 · 03:07:57 · 04:50:21 · 06:48:45 (= 등록 초안 4-1 런 시간 + 2 ~ 6 초) · 잡당 한 줄 (step 줄 없음) | `QY q6.jobs[*]` · 판독 L46–50 | 아니오 — 등록 초안 C1 의 꼴이 실제 sacct 출력에서 읽힌다는 관찰 (NNodes 는 이번에 안 부름) |
+
+## 5. 디스크 (R5)
+
+| 칸 | 값 | 근거 | 다시 확인 |
+|---|---|---|---|
+| 홈 파일시스템 | lustre · 마운트 옵션 rw, checksum, flock, nouser_xattr, lruresize, lazystatfs, nouser_fid2path, verbose, encrypt (원격 이름은 가림) | `fields.txt` L539–540 · `findmnt_home.txt` L1 | 아니오 (정적). 단 런 폴더 경로가 정해지면 그 경로로 df 를 한 번 잰다 |
+| 전체 · 사용 · 여유 (바이트) | 745348133519360 · 565160840167424 · **142604135108608 B** · 80 % · 11-12 (`QY` q5 · `lfs df`): OST 8 개 크기 합 = 같은 745348133519360 B [산술 · `osts[*].kb` × 1024] · OST 여유 합 133551229964288 B (11-10 보다 9052905144320 B 적음 [산술] · 공유 FS · 명령도 다름) | `df_home_bytes.txt` L2 · `QY q5.osts` · `sum_avail_bytes` · 판독 L44 | 예 — 공유 파일시스템 · 시점 값 |
+| 같은 값 (df -h) | 678T · 515T · 130T · 80 % | `df_home_human.txt` L2 | (위와 같음) |
+| inode | 전체 755667898 · 사용 196186622 · **여유 559481276** · 26 % | `df_home_inodes.txt` L2 | 예 |
+| 믹서 폴더가 있는 파일시스템 | 세 폴더 모두 같은 Lustre | `fields.txt` L541–546 | 아니오 |
+| 내 사용량 | 2228675672 KB · 파일 543500 개 · 11-12: 2228984468 KB · 파일 548348 개 (+308796 KB · +4848 개 [산술] · 시점 값) | `lfs_quota_home.txt` L3 · `QY q4.user` · 판독 L41 | 예 |
+| 내 할당 (한도) | 개인 칸은 quota 0 · limit 0 (블록 · 파일 둘 다). "기본 할당 설정을 쓴다" 는 줄이 2 개 있다 (11-12 같은 꼴). 기본 한도 조회 `lfs quota -U` = **Permission denied** (11-12) → **기본 한도의 실제 값 = [미확인] (그대로)**. 이 Lustre 판의 `-u` 칸이 기본 값을 보여 주는지도 [미확인] (보여 준다면 0 = 한도 없음 [추정]) | `lfs_quota_home.txt` L3 · L4 · L5 · `QY q4.default` · `q4.user` · `q.q4.not_ok` · 판독 L9 · L36–43 | **한도 값은 다시 묻지 않는다** — 1저자 11-12 *"고민 안 해도 돼"* (Q-H 를 질문에서 뺌 · 관리자 문의 안 함). 감시만: watch 에서 내 사용량 · 한도 넘음 표지 (`lfs quota -u`) 와 `Disk quota exceeded` 줄 = 멈춤 (등록 초안 S8). `FQP` L45 ("미정이면 자격/실행에 사용할 수 없다") 와 어긋남 = 등록 초안 5-4 끝 "계획 이탈 · 1저자 결정" 으로 기록 · live_preflight 에서 한도는 따로 `user_quota_limit = "UNKNOWN"` (등록 초안 6-1 P5 · 리뷰 MXE0R-09). job 시작 대조기는 할당을 안 본다 — 할당은 live_preflight 몫 (리포 `F8/job_start.py.txt` L43 주석) |
+| `quota -s` | 실패 (종료 코드 1 · 출력 0 B). Lustre 라 `lfs quota` 로 따로 받았다 | `probes.txt` L115 · L116 | 아니오 |
+| OST 별 여유 | OST 8 개 (11-12 · `QY` q5 · 시점 값): 최소 여유 14629480562688 B (= 여유 바닥 32193231348 B 의 454.4 배 · 상한 29266573952 B 의 499.9 배 [산술]) · 최대 18585076764672 B · 합 133551229964288 B · 사용률 79 ~ 84 % · (옛 [미확인] "df 는 집계 값" → 채움) | `QY q5.min_avail_bytes` · `min_avail_vs_floor` · `max_avail_bytes` · `sum_avail_bytes` · `osts[*].use` · 판독 L44 | 예 — 발사 직전 (파일 하나는 OST 하나에 놓인다 [추정 — 줄무늬 수 미확인]) |
+| 믹서 폴더 크기 (du -sk) | 09-21 층상 runs 524888 KB · dev7 63444400 KB · dev7_v26 90504844 KB | `mix1_du.txt` L1 · `mix2_du.txt` L1 · `mix3_du.txt` L1 | 아니오 — Q6 산술의 입력이다 |
+| DEV E0 런별 덤프 크기 · 프레임 한 장 크기 | **채움 (11-12 · `QY` q1 · q2) — 표 = 등록 초안 5-1.** 런별 post 1037 · 1037 · 1037 · 1467 · 1037 파일 · 합 12621133693 ~ 17839891349 B · 평균 프레임 12160798 ~ 12176710 B · 최대 12745190 ~ 12764485 B (`%g` 규칙 14000512 B 의 0.910 ~ 0.912 배) · restart 3 파일 115100185 ~ 115288377 B · r1: 첫 프레임 = job 시작 + 11.0 초 · 1000 step 당 평균 13.49 초 · 처음 프레임 8360447 B → 끝 12725255 B. 전부 기본 `%g` 꼴 (DEV · dev-bo · dev-u 덱에 `dump_modify` 줄 0) — pilot 의 전 정밀도 크기가 아니다 · (옛 [미확인] "out/ 에는 폴더 합계와 런별 항목 수만" → 채움) | `QY q1[*]` · `q2.*` · 판독 L16–28 · `mix3_run23_ls.txt` L10 · `fields.txt` L348 · 리포 `docs/data/mixer_highbo_dev_decks_20260930_v26/decks/*/in.mixer` · `…_20261002_bo` · `…_20261005_u` (본 세션 grep) | 아니오 — Q6 산술의 입력 (11-12 대조 끝 · 등록 초안 5-5) |
+| first8 제안 root | 없음 (홈 아래 믹서 폴더는 dev7 · dev7_v26 · 수집 폴더뿐) | `fields.txt` L353 · `home_mixer_dirs.txt` L1–3 | 예 — Q5: 발사 때 새로 만든다 |
+| 회수 목적지 여유 | **[미확인]** (로컬). 이 컨테이너는 디스크 여유 8.4 GB 라 목적지가 될 수 없다 | 리포 `docs/session_20260923_progress.md` L1437 | 예 — 1저자 WSL 여유를 회수 전에 (등록 초안 Q8) |
+
+## 6. 경로 · 권한 (R1 · R2 · 보조)
+
+| 칸 | 값 | 근거 | 다시 확인 |
+|---|---|---|---|
+| 홈의 실제 자리 | 로그인 홈 경로는 루트 아래 심볼릭 링크 (모드 777 · 소유 root) 를 지나 Lustre 위 실제 경로로 풀린다 | `fields.txt` L6 · `walk.txt` L77 · L85 | 아니오 — 단 봉인 묶음의 경로 문자열은 한 가지 꼴로 통일해야 한다 (8 절 관찰 1) |
+| 홈 | 디렉터리 700 · 소유 = 나 · 이름 붙은 ACL 0 | `walk.txt` L86 · L72 · `fields.txt` L547–548 | 아니오 |
+| 바이너리 조상 | 루트 555 root · Lustre 마운트 755 root · 홈 상위 755 root · 홈 700 나 · LIGGGHTS 폴더 775 · src 775 (그룹 쓰기) | `walk.txt` L69–74 | 예 (R2) |
+| dev7_v26 폴더 | 775 · 그룹 쓰기 가능 · 이름 붙은 ACL 0 | `fields.txt` L193 · L555–556 · `walk.txt` L68 | 아니오 — pilot 은 이 폴더를 쓰지 않는다 (Q5) |
+| conda 환경 경로 | 환경 폴더 넷 = 2775 (그룹 쓰기) · mpirun = 755 | `walk.txt` L79–83 | 예 (R2) |
+| 새 폴더의 기본 권한 (umask) | **[미확인]** | — | 예 — 런 폴더를 만든 뒤 모드를 본다 |
+
+## 7. 덱 · 템플릿 신원 (R6 · out/ 에 있는 것만)
+
+| 칸 | 값 | 근거 | 다시 확인 |
+|---|---|---|---|
+| ibb 위 first8 E0 덱 | **없음** (ABSENT). first8 root 가 없다 — Q5 대로 아직 안 만들었으니 정상 | `hashes.txt` L473 · `fields.txt` L355 | 예 — 발사 때 새로 놓고 sha256 을 계획 바이트와 대조 (preflight 3) |
+| ibb 위 first8 메타 · STL · 러너 · 가드 · 정책 · 승인 파일 | **없음** (같은 까닭) | `fields.txt` L353 | 예 — 봉인 단계에서 처음 생긴다 |
+| ibb 체크아웃 (repo1) | HEAD 063309e5e821e6fd898f23eb7d9a9861ef5b1dbd (리포에 있는 커밋 · 10-06) · 가지 이름 조회 실패 (떨어진 HEAD 로 읽음 [추정]) · status 출력 0 B · 마지막 커밋 1791277818 (= 2026-10-06T09:10:18Z [산술]) | `repo1_head.txt` L1 · `probes.txt` L9 · L11 · `repo1_log1.txt` L1 · 리포 `git log -1 063309e5e` | 예 — 단 이 체크아웃은 pilot 소스가 아니다 (아래 줄) |
+| 체크아웃에 first8 스크립트가 있나 | **없음** — `scripts/mixer_precal_prepare.py` · `scripts/mixer_precal_observe.py` 가 ABSENT (체크아웃 10 곳 모두) | `hashes.txt` L16–17 (다른 9 곳 = L33 · L50 · L67 · L84 · L101 · L118 · L135 · L152 · L169 부터 두 줄씩) | 예 — pilot 소스 묶음은 새로 놓아야 한다 |
+| 체크아웃의 STL 셋 | Drum fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730 (14310 B) · Front 443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81 (5990 B) · Back 2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5 (10790 B) = 0-A 와 같음 | `hashes.txt` L6 · L7 · L8 | 예 — staging 뒤 pilot 폴더의 STL 로 다시 |
+| 체크아웃의 생성기 · 되읽기 · 비교기 · M 판독기 | make_mixer_deck.py f3cd4d9f… · mixer_deck_readback.py 1bab4ba1… · mixer_deck_diff.py 8cc033ce… · measure_mixing_index.py 4375ec56… | `hashes.txt` L13 · L12 · L11 · L14 | 아니오 — pilot 에 안 쓰는 옛 판이다 (8 절 관찰 2) |
+| 체크아웃의 런처 · 정책 · 시작 대조기 | launch_highbo.sh ed469ffa… · launch_policy.json 08bdcb4f… (DEV 런 봉인의 STIFF-DEV-U-2026-10-05 와 같은 해시) · start_check.py 93fa907e… | `hashes.txt` L1 · L2 · L3 · `seal_extract.txt` L673–674 | 아니오 — first8 은 이 런처 · 정책을 쓰지 않는다 (리포 `F8/inventory.md` L30) |
+| DEV E0 다섯 런 (dev7_v26) 의 덱 sha256 | E0_ref_s32452843 78ad92356373e00a… · E0_ref_s49979687 0544fffbf5c7ae26… · E0_ref_s67867967 b79e0d73c8a36c78… · E0_ref2_s32452843 cc470941768ae5dd… · E0_ref_dthalf_s32452843 819c8a7f2310d2b5… = 리포 `docs/data/mixer_highbo_dev_decks_20260930_v26/decks/` 의 덱과 같음 (본 세션 sha256) | `hashes.txt` L461 · L453 · L341 · L304 · L386 (`seal_extract.txt` L961 · L921 · L561 · L441 · L721 과 같다) | 아니오 — Q6 산술의 출처 신원이다 (pilot 덱이 아니다) |
+| DEV E0 런의 STL 셋 | 체크아웃 STL 과 같은 세 해시 | `hashes.txt` L462 · L470 · L464 (E0_ref_s32452843) | 아니오 |
+| DEV E0 런의 실행 기록 | 다섯 다 시작 대조 ok=true · NP 20 · QOS cpu-60 · 파티션 cpu · 시간 한도 2-00:00:00 · 바이너리 sha256 = 2 절과 같음 · 정책 STIFF-DEV7-2026-09-30-v26-dev-e0-rot | `seal_extract.txt` L965 · L984 · L986–988 · L960 · L993 (E0_ref_s32452843 · 나머지 넷 같은 칸) | 아니오 |
+| DEV E0 진단 기록 | dev7_v26 = schema mixer_dev_e0_diag/1 · verdict PASS (기록 5 개). dev7 (옛 덱) = FAIL | `diag_extract.txt` L3–12 · L1–2 | 아니오 — pilot 판정과 무관 |
+
+## 8. 읽다가 본 것 (관찰 · 판정 아님)
+
+1. **경로 꼴이 두 가지다.** 로그인 홈 경로는 심볼릭 링크를 지난다 (`walk.txt` L77). DEV 봉인에도 두 꼴이 섞여 있다 — 발사 기록의 `lmp_path` 칸이 09-28 런은 로그인 꼴, 09-30 런은 풀린 꼴이다 (`seal_extract.txt` L22 · L976). first8 가드는 자기 파일의 풀린 경로와 문자열로 대조한다 (리포 `F8/submit_one.py.txt` L43–46 · L52). 봉인 묶음 · 정책의 경로를 로그인 꼴로 적으면 제출이 막힌다 [관찰 — 코드 판독 · 시험 안 함]. 계획 문서의 정본 root 문자열 (`F8/commands.txt` L25 · L69 · `F8/campaign_policy.json.example` 의 install_root) 은 로그인 꼴이다.
+2. **ibb 체크아웃은 first8 소스가 아니다.** first8 스크립트 둘이 없고 (`hashes.txt` L16–17), 생성기 해시 f3cd4d9f… 는 first8 봉인의 생성기 661936b7… (리포 `F8/source_seal.json` L27) 와도 HEAD 의 dc253bc8… 와도 다르다.
+3. **라이브러리 신원 — 11-12 에 채웠다** (`QY` q7 · 2-A). 11-10 에는 30 행 중 29 행이 심볼릭 링크라 해시가 없었다 (`hashes.txt` L475–504 · 그때 고정된 것은 실행 파일 둘의 바이트뿐). 11-12 실제 파일 30/30 해시 · 신원은 이제 "바이너리 + 2-A 목록" 이다 (관찰 10).
+4. **Python 판이 first8 시험 판과 다르다.** ibb = 3.10.20 (사용자 conda) · 3.9.13 (시스템). first8 문서의 시험 판 = 3.8.20 · 3.12.14 · 3.11.17 (리포 `F8/README.md` L36 · `P8/README.md` L51). ibb 판에서 가드 · job 시작을 돌린 기록은 없다.
+5. **유휴 노드가 0 이었다** (`slurm_sinfo_summary.txt` L2). 11-10 에는 내 잡이 0 이었지만 11-12 에 G2c′ 잡이 같은 QOS 를 썼다 (샌드박스 359243 은 11-12 끝 · 다음 잡 [미확인] · 4 절). 바로 시작된다는 보장은 없다. 11-12 (`QY` q8) 에도 노드 넷 모두 mix (유휴 노드 0) · 유휴 CPU 340 · 유휴 ≥ 20 노드 3 — 시점 값.
+6. **관측기 로그 계약과 실제 ibb 로그 형식이 네 군데에서 어긋난다** [관찰 — 리포의 같은 빌드 로그 줄 · 덱 주석 · 본 세션 재현 `work/check_log_contract_output.txt`] — 등록 초안 7-4. → 11-12 Q5 고침이 리포에 들어갔다 (51d45732c · f67c0cc92 · HEAD 관측기 bb2f3229…) · 운영 봉인은 재봉인 전이라 df22dcf0… 그대로 (등록 초안 7-6).
+7. **관측기는 E0 에서 t0 프레임 한 장만 본다** — 나머지 1120 장의 결손 · 겹침을 잡지 않는다 [관찰 — `scripts/mixer_precal_observe.py` L297–302 판독 · 두 판 같은 줄]. 등록 초안 7-3 점검표 C3 (이름 꼴 · 개수 · 장마다 줄 수 = 개행 수 · 끝 개행 · 끝 줄 칸 수 · TIMESTEP = 이름 step — 2 회차 셈 정의 · 끝 개행은 [추정] → 봉인 전 q2b) · C7 (t0 정밀도 꼴 · 유효숫자 = 앞 0 뺀 셈) 이 그 **일부만** 채운다 — 1120 장의 값 내용 (비유한 · 손상된 숫자) 은 [미확인] (옛 "C3 이 그 자리를 채운다" 는 근거보다 넓었다 · 리뷰 MXE0R-03).
+8. **메타 · 생성기 · 관측기는 짝으로 움직인다** — HEAD 소스 (생성기 dc253bc8…) 로는 원 메타 (c6543f38…) 가 "metadata differs from the fixed case recipe" 로 거부되고 (리포 `IN/README.md` L23), 원 가드는 원 메타만 받는다 (`F8/submit_one.py.txt` L147–150 · `F8/static_asset_manifest.json`). 등록 초안 Q7.
+9. **덤프 형식 줄은 6 열 꼴만 실측됐다** (리포 `docs/data/mixer_highbo_devu_prelim_20261006/README.md` L80). 덱 주석 "ibb 바이너리 실측 전" (`F8/planned_assets/PRECAL_E0/in.mixer` L138) 은 6 열 꼴에 대해서는 낡았고, 12 열 꼴에 대해서는 아직 맞다. 11-12 (`QY` q3) 6 열 크기: 원자당 hp 99.1 ~ 100.1 B · g6 52.2 ~ 53.1 B · 비 1.885 ~ 1.901 (등록 초안 5-3 (2)).
+10. **바이너리가 RPATH 로 사용자 conda 환경에 묶여 있다** (11-12 `QY` q7 · 판독 L52). 함의 (봉인 · 재현):
+    - 바이너리 sha256 이 같아도 런타임은 같지 않을 수 있다 — conda 환경 폴더는 그룹 쓰기 가능 (6 절 · `walk.txt` L79–82) 이고, conda 설치 · 갱신은 바이너리를 건드리지 않고 라이브러리를 바꾼다 [추정]. 09-28 영수증 · 09-30 DEV 런 때의 라이브러리 바이트는 기록이 없다 [미확인] (수정 시각만 다 그 전 [관찰 — 증명 아님]).
+    - 그래서 봉인 · 영수증 (R3) 의 신원 = 바이너리 + 2-A 목록 · 대조 = 발사 직전 + T9 직후 (회수 때 = 덧 · 등록 초안 W9 · 18 절 Q-G′ · 2 회차).
+    - **그래도 못 묶는 것 (리뷰 MXE0R-06 · 한정)**: `mpirun` 이 쓰는 PRTE 의 실행 파일 (prterun · prted) [관찰 = PRTE 사용 · 3 절 경고 문구 / 실행 파일 신원 = 미확인] · Open MPI · UCX · libfabric 가 dlopen 하는 부품 (ldd 30 개 밖) [추정 — 빌드 꼴 판독 안 함] · 두 대조 사이 (대기 · 런 중) 의 변경 — 같은 값으로 되돌려 놓으면 두 번 다 같게 나온다. 보충 = 꾸러미 파일 목록 해시 q7b [제안 · 등록 초안 13-1] — 그것도 설치된 파일의 신원이지 실제로 불러 쓴 부품의 증명은 아니다.
+    - RPATH 는 로그인 홈 꼴이라 홈 심볼릭 링크 (`walk.txt` L77) 가 계산 노드에서도 풀려야 한다 [추정 — DEV 다섯 런이 같은 바이너리로 완주했으니 그때는 풀렸다 [관찰]].
+    - 재현 = 같은 경로의 같은 환경. 다른 계정 · 기계면 다시 빌드 · 링크해야 한다 [추정].
+    - RPATH 는 LD_LIBRARY_PATH 보다 먼저라 job 환경이 바이너리의 직접 라이브러리를 바꾸지 못한다 [관찰 — ld.so 규칙] · `./` 갈래 7 개는 예외일 수 있다 (2 절).
+11. **메모리 지정 없는 잡의 ReqMem = 노드 메모리 전부와 같은 값** (DEV E0 다섯 · 515000M · `QY` q6 · 4 절). first8 러너도 메모리 줄이 없다. 스케줄러가 메모리를 소비 자원으로 셈하면 pilot 은 메모리가 빈 노드를 기다릴 수 있다 [추정 · 설정 미확인] — 등록 초안 17 절 19.
+12. **q9 (DEV E0 r1 · NP 20) 의 thermo 표 안 비-행 줄 = 표 1 의 `INFO:` 1 · `-` 1 뿐** — 고친 관측기 허용 꼴 ③ 과 첫 낱말 · 줄 수 수준에서 맞다 · 순서 · 자리 · 앞 공백 [미확인] · **r1 한 로그만** 셌다 (등록 초안 7-6 · 13-1 q9b · Q-F′ · 리뷰 MXE0R-08).
+13. **가림 규칙이 라이브러리 판 숫자를 IPv4 로 오인했다** — 실제 파일 이름 셋 (2-A 24–26) 의 판 숫자가 `<IPV4>` 로 바뀌었다 (`QY q7.libs[*].real_path`). 노출 쪽이 아니라 정보 손실 쪽이다 · 크기 · sha256 은 그대로.
+14. **옛 폴더 평균의 치우침 어림은 방향이 반대였다** — 등록 초안 5-2 는 "위로 약 1.5 %" 로 봤는데 E0 실측 평균이 폴더 평균의 1.019 ~ 1.020 배다 (`QY q1[*].mean_vs_est52`). 까닭 [미확인]. 문턱에 쓰지 않은 어림이라 상한 · 바닥은 그대로다.
+15. **job 안 `ldd` 근거가 하나 생겼다 (11-12 · 리뷰 MXE0R-06)** — G2c′ 잡 359243 (ibb cpu-60 · 1 코어 · 같은 바이너리 · `mpirun` 없음) 의 실행기가 잡 안에서 남긴 `ldd` = 2-A 와 같은 30 soname · 같은 차례 · 가린 경로 30/30 · `./` 꼴 7 [관찰 · 이 판 대조]. 말하지 않는 것: 내용 해시 같음 (그 기록 = md5) · pilot 의 `mpirun` · 20 rank 경로 · 그 잡의 환경 (2-A 끝).
+16. **이미 반입된 out/ `slurm_sinfo_summary.txt` 의 NODELIST 칸 (L2–5) 이 가림 자리표가 아니다** [관찰 — 칸 수 · 끝 칸 꼴만 셈 · 값은 이 표에 옮기지 않음 · 리뷰 MXE0R-17]. 옛 가림 목록 (`meta_script.sh`) 에 노드 이름이 없었다. 등록 초안 11 절 7 은 노드 이름을 가림 대상으로 적는다 → 그 칸의 처리 = 1저자 (등록 초안 18 절 Q-J).
+
+## 9. "[미확인]" 칸 모음
+
+| # | 칸 | 채우는 길 | 11-12 (`QY`) |
+|---|---|---|---|
+| 1 | 링크 라이브러리 29 개의 sha256 | 링크 대상 파일의 sha256 (q7) | ✅ 30/30 (2-A · 판독 L51) |
+| 2 | 라이브러리를 찾는 길 (RPATH 등) | `readelf -d` 읽기 조회 (q7) | ✅ 바이너리 RPATH 1 줄 · RUNPATH 없음 (2 절 · 판독 L52) · `./` 갈래 7 개 라이브러리의 동적 칸은 [미확인] (안 읽음) |
+| 3 | job 안 환경 · MPI 런타임 (rank · 바인딩 · TMPDIR) | pilot job 의 시작 영수증 · 러너 명세 (등록 초안 7-7 K5) | 부분 — job 안 `ldd` 경로 30/30 = q7 (다른 잡 G2c′ 359243 · 1 프로세스 · 관찰 15) [관찰] · MPI 런타임 · TMPDIR · PRTE · dlopen 부품 = [미확인] 그대로 (조회 범위 밖 · 로그인 셸) |
+| 4 | Python 경로 · 판 고정 | 봉인 단계에서 정함 | [미확인] 그대로 |
+| 5 | 메모리 요청 · 한도 · DEV E0 의 MaxRSS | DEV E0 잡 다섯의 sacct (q6) | 부분 — ReqMem 515000M ✅ (4 절) · **MaxRSS [미확인]**: sacct 가 잡 줄만 내고 step 줄이 없어 다섯 다 빈칸 · 왜인지 [미확인] · 대안 = pilot 안 (끝의 sacct · 등록 초안 10 절) |
+| 6 | 빈 코어 수 · 다른 사용자 큐 | 발사 직전 조회 (판정 아님 · q8) | 부분 — 빈 코어 = 11-12 시점 값 ✅ (4 절) · 다른 사용자 큐 [미확인] (안 모음) · 발사 직전 `MIX_Q=q8` |
+| 7 | 기본 할당 한도의 실제 값 | `lfs quota` 기본 한도 읽기 조회 (q4) | **[미확인] 그대로 · 더 채우지 않는다** — `lfs quota -U` = Permission denied (판독 L36–37) · 내 칸 quota 0 · limit 0 + 기본 설정 두 줄 · 1저자 11-12 *"고민 안 해도 돼"* = 관리자 문의 안 함 (Q-H 빠짐) → 감시 규칙 (등록 초안 S8) · 계획 이탈 기록 (등록 초안 5-4 끝) |
+| 8 | OST 별 여유 | `lfs df` 읽기 조회 (q5) | ✅ (5 절 · 판독 L44 · 시점 값) |
+| 9 | DEV E0 런별 덤프 크기 · 프레임 한 장 크기 · 첫 프레임까지 시간 | du · 파일 목록 읽기 조회 (q1 · q2) | ✅ (5 절 · 등록 초안 5-1 · 판독 L16–28) |
+| 10 | 전 정밀도 12 열 프레임의 실제 크기 · 쓰기 시간 | pilot 자신 (q3 은 6 열 꼴 비만) | [미확인] 그대로 — q3 은 6 열 크기 비만 (hp/g6 1.885 ~ 1.901 · 등록 초안 5-3 (2)) |
+| 11 | 새 폴더 기본 권한 (umask) | 런 폴더를 만든 뒤 | [미확인] 그대로 |
+| 12 | first8 덱 · 메타 · STL · 러너 · 가드 · 정책 · 승인 파일 (ibb 위) | 봉인 단계 (지금은 없음) | [미확인] 그대로 |
+| 13 | 실제 DEV E0 로그의 thermo 표 안 비-행 줄 꼴 | q9 (값 없이 첫 낱말 · 줄 수만) | 부분 — **r1 한 로그** 의 첫 낱말 · 줄 수 ✅ (표 1 `INFO:` 1 · `-` 1 · 표 2 – 4 = 0 · 판독 L54–58) · 순서 · 표 안 자리 · 앞 공백 [미확인] · r2–r5 안 셈 → q9b (등록 초안 7-6 · 13-1 · Q-F′ · 리뷰 MXE0R-08) |
+| 14 | 회수 목적지 (1저자 WSL) 여유 | 회수 전 1저자 | [미확인] 그대로 |
+| 15 | 지금 내 잡 CPU 합 (G2c′ 포함) | 제출 전 5 분 안 squeue | [미확인] 그대로 — q8 은 파티션 · 노드 값이지 내 잡이 아니다 |
+
+## 10. 발사 직전 다시 확인할 것 (요약)
+
+| 순서 | 무엇 | 기준 값 (이 표) | 규칙 |
+|---|---|---|---|
+| 1 | 날짜 · 호스트 · 운영자 · 내 association · QOS | 4 절 | preflight 1 |
+| 2 | 바이너리 · mpirun 의 실제 경로 · sha256 (+ 라이브러리 30 개 = 2-A 와 대조 · `MIX_Q=q7` · 등록 초안 Q-G′ · 승인 시 q7b 꾸러미 파일 목록) | 0-A · 2 · 2-A · 3 절 | preflight 2 — job 안에서 한 번 더 (바이너리 · mpirun = 대조기 S7) · T9 직후 다시 (아래 9 · 2 회차) |
+| 3 | 덱 · 메타 · STL · 소스 · 러너 · 정책의 sha256 | 0-A (계획 바이트) | preflight 3 — 준비 · staging · job 시작 세 번 |
+| 4 | 내 잡의 CPU 합 + 20 ≤ 60 · first8 돌고 있는 팔 0 · 파티션 cpu · QOS cpu-60 · 정책 `max_concurrency` 1 · 승인 `approved_concurrency` 1 | 4 절 · 0-A | preflight 4 · 가드 300 초 규칙 · `observed_unix` = 수집 스크립트의 첫 시각 · 원 출력 sha256 · 파일마다 `captured_unix` ∈ [`observed_unix`, +10 초] [초안 · 넘으면 다시 수집] (등록 초안 6-1 · 2 회차) |
+| 5 | 여유 바이트 · inode · 사용량 (OST 별 최소 여유) · 할당 한도 = [미확인] 그대로 (Q-H 빠짐 · 1저자 11-12 · `user_quota_limit = "UNKNOWN"` 칸 따로) | 5 절 | preflight 5 — 바닥 값은 등록 초안 5 · 6 절 · 감시 S8 |
+| 6 | walltime | 등록 초안 4 절 | preflight 6 |
+| 7 | D0.7 완주 근거 · MXD2R 처분 · 승인 묶음 아홉 영수증 | 0-A · 등록 초안 17 절 14 | 가드 L113 · L127–128 |
+| 8 | 빈 코어 (시점 · 판정 아님) | 4 절 | 선택 — `MIX_Q=q8` (조회 블록 README 4 절) |
+| 9 | **런 뒤 (T9 직후 · 2 회차 — 회수 때는 덧)**: 런타임 신원 다시 — 바이너리 · mpirun · 라이브러리 30 개 (+ 승인 시 q7b 꾸러미 파일 목록) 를 발사 직전 값 · 이 표와 대조 | 0-A · 2-A · 3 절 | 등록 초안 12 절 W9 · 리뷰 MXE0R-06 · 재리뷰 MXE0R2-09 — 다르면 바뀐 파일의 수정 시각으로 ✗ (≤ `end_unix` + 60 = 자격 거부) / △ (모두 뒤 = 런 뒤 변경) · 같아도 두 대조 사이의 변경은 못 잡는다 |
+
+## 11. 한정
+
+- sha256 은 내용 신원이다. 작동 · 호환 · 승인의 증명이 아니다.
+- `lmp_mpi -h` 의 목록은 기능 목록이다. 물리 · 로그 호환 자격이 아니다.
+- "[미확인]" · FAIL 은 0 · 빈 큐 · 무제한 할당을 뜻하지 않는다.
+- out/ 의 값은 로그인 셸에서 3 분 동안 본 것이다. job 안 값과 같다는 보장이 없다. 4 절 "11-12 기록" 줄만 out/ · QY 밖 (리포 기록) 이다.
+- `QY` 로 채운 칸은 11-12 로그인 셸의 91 초 관측이다. q4 · q5 · q8 은 시점 값 · q7 은 로그인 셸 `ldd` (job 안 아님) · q1–q3 · q6 · q9 는 DEV (옛 덱 세대 · 기본 `%g`) 의 값이다 — pilot 의 크기 · 시간이 아니다.
+- 런타임 신원은 바이너리 + mpirun + 직접 링크 30 개 (2-A) 까지다. PRTE 실행 파일 · dlopen 부품 · 대조 사이 (대기 · 런 중) 의 변경은 [미확인] 이다 (0-A MPI 줄 · 8 절 관찰 10 · 리뷰 MXE0R-06).
+- job 안 근거는 다른 잡 (G2c′ 359243 · 1 프로세스 · `mpirun` 없음) 의 `ldd` 하나다 — 경로 대조만이고 내용 해시 대조가 아니다 (관찰 15).
+- 이 표는 자격 수행 · 운영 승인 · 발사 GO 가 아니다.

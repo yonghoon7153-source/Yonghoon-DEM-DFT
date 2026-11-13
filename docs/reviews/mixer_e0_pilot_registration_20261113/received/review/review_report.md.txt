@@ -1,0 +1,133 @@
+내부 반박 리뷰 (Codex 아님) — 초안 단계
+
+# 1. 집계
+
+**P1 0 · P2 9 · P3 11 (항목 20) · 보장 G1–G16 = 깨짐 2 (G8 · G16) · 조건부 9 · 섬 5**
+
+- 대상 = `e0_pilot_registration_draft.md` (조회 뒤 판 · 596 줄) · `baseline_table.md` (273 줄) · `work/check_log_contract.py` + 출력 · `QY` 조회 묶음 (가린 사본) · `query_block/` · 리포 `51d45732c` · `f67c0cc92` · HEAD `bfd9b3bbd` (읽기만 · 2026-11-12).
+- 이 리뷰는 봉인 뒤의 "블록 + 기준 표 + 봉인 묶음" 리뷰 (등록 17 절) 를 대신하지 않는다. 원장에서 Codex verified 로 쓰지 않는다 (`MXE0-01` 포함).
+- 줄임: 등록 0 절과 같음 (`F8` · `P8` · `IN` · `M-2` · `FQP` · `RCP`). `등록` = 등록 초안 · `기준` = 기준 고정 표 · `review/scripts/` = 이 리뷰의 재현 폴더 (`mixer_e0_v2/review/scripts/`) · `<REPO>` = 리포 뿌리.
+
+# 2. 항목 표
+
+| ID | 등급 | 자리 (파일 · 절 · 줄) | 문서의 주장 | 반례 (작게 · 손으로) | 재현 (명령 · 결과 · 스크립트 sha256) | 권고 |
+|---|---|---|---|---|---|---|
+| MXE0R-01 | P2 | 등록 7-6 재봉인 순서 L363–368 (순서 4 = L367) · 1 절 L38 · 7-5 L315 | 순서 1–5 를 마치면 Q7 메타 (498b941c…) 묶음으로 GO 단계에 간다. 순서 4 의 교체 = `F8/source_seal.json` · `IN/source_inventory.json` 관측기 행 | 순서 4 뒤에도 `F8/static_asset_manifest.json` 의 PRECAL_E0 `deck_meta.json` = c6543f38… 그대로다. 가드 `F8/submit_one.py.txt` L147–150 은 그 목록으로 놓인 `deck_meta.json` (498b941c…) 을 맞춘다 → `unsealed or changed planned input deck_meta.json` 로 거부 (HOLD). `IN/README.md` L63 "기존 드라이버는 … `source_seal.json`과 `static_asset_manifest.json`을 계속 읽는다" — 7-5 가 이 사실을 적고도 순서 4 에 넣지 않았다 | 가드 L147–150 판독 · `sha256sum F8/planned_assets/PRECAL_E0/deck_meta.json` = c6543f38… · static 목록의 PRECAL_E0 다섯 = 8b588b24 · c6543f38 · fe821a8a · 443f9c3c · 2e7b962d (본 리뷰 재계산 · 실행 없음) | 순서 4 에 `F8/static_asset_manifest.json` · `F8/planned_assets/PRECAL_E0/deck_meta.json` · `F8/planned_assets/SHA256SUMS` 교체 (또는 후보 목록을 읽는 드라이버) 를 넣고, 순서 5 시험에 "후보 메타 = 통과 · 원 메타 = 거부" 두 경우를 둔다 |
+| MXE0R-02 | P2 | 등록 2 절 L51 (목적 (2) (3)) · 7-2 L267 · L270 · 7-3 L276–285 | 통과 + C1–C5 ✓ + 1저자 = 자격 수용. 목적 = (2) job 안 해시 · 배너 · rank 20 (3) 전 정밀도 12 열 덤프가 써지고 읽힌다 | ① 손 로그 Loop 줄 넷이 "on 1 procs" → 고친 관측기 MATCH (`_LOOP_LINE` 의 procs 는 모으기만 · 대조 없음). C1 AllocCPUS 20 · S7 SLURM_NTASKS 20 은 할당이지 실제 rank 가 아니다 (`F8/inventory.md` L60 "rank/binary identity need separate receipts" · `RCP` R4 L57 "예정 NP20과 실제 ranks 일치"). NP 5 · 10 이면 ≈ 21 · 41 step/s → 14.8 · 7.6 h 로 24 h 안에 끝나 통과 [산술 · `docs/reviews/mixer_highbo_stiffness_prereg_20260929.md` L346 처리량 ÷ 슬롯]. 배너는 9 절 T1 에서 눈으로만 본다 ② `dump_modify format` 이 안 먹어 기본 `%g` 로 써도 관측기 (t0 의 열 6 개만 씀) · C3 (이름 · 개수 · >0) · C4 (≤ 상한) 통과 — 5-3 L184 자신이 "형식 줄이 안 먹으면 프레임은 더 작다" 고 적는다 ③ M-2 L32 의 "열 · 같은 사건 · 출처" 칸이 C1–C5 에 없다 (post 수정 시각 ↔ job 창 · 관측기 provenance ↔ 봉인 대조 없음) | `python3 -I -B review/scripts/g14_counterexamples.py review/scripts/observer_HEAD_copy.py.txt` → N1 `MATCH procs=[1, 1, 1, 1]` (스크립트 3146e96d… · 출력 373b8895… · 관측기 사본 bb2f3229…) | C6 (기록 대조) 하나: log.liggghts Loop 줄 넷 = `on 20 procs` · 첫 줄 배너 = 봉인 문자열 · t0 프레임 앞 몇 줄의 x · y · z 가 15 자리 이상 (기본 `%g` = 6 자리) · post 수정 시각 ⊂ [`job_start.json` 시각, sacct End]. 안 하면 L51 (2) (3) 을 "봉인 명령 · 할당으로 갈음 (확인 안 함)" 으로 줄인다 |
+| MXE0R-03 | P2 | 등록 7-3 C3 L280 · L285 · 18 절 Q12 L569 | "관측기가 E0 에서 t0 밖을 안 보므로 C3 이 덤프 결손을 잡는다" | `post/mix_500000.liggghts` 가 1 B (또는 머리만) 로 잘려도 C3 (이름 · 개수 · >0) ✓ · C4 (합 ≤ 29266573952) ✓ · 관측기 (t0 한 장 · L297–302) ✓ → 자격 수용 가능. 덤프 쓰기 실패를 LIGGGHTS 가 알리지 않을 수 있다 [추정 — 쓰기 반환 미검사] | 손 셈: 1120 × 정상 + 1 B ≪ 상한 · 관측기 L298–302 = 회전 팔만 bin 1 격자 (판독) | C3 에 장마다 "줄 수 = 100009 (머리 9 + 원자 100000) · 끝 줄 12 칸" (`wc -l` · 끝 줄 · 새 도구 없이) 을 넣거나, Q12 · L285 를 "C3 은 파일 빠짐만 잡는다 · 내용 결손 [미확인]" 으로 줄인다 |
+| MXE0R-04 | P2 | 등록 6 절 S5 L222 · L226–227 · 9 절 T2 L397 · 7-1 L254 ↔ 9 절 L413 ↔ 7-2 L268 | S5 = "post 의 가장 큰 step 파일의 수정 시각이 30 분 넘게 그대로" · 정상 런을 멈추지 않는다 (가장 느린 구간의 127 배) | ① "가장 큰" 을 이름 차례 (`ls post` 의 끝) 로 읽으면 `mix_99000.liggghts` 가 step 99000 부터 990000 까지 "가장 큰" 으로 남는다 (891000 step) → 정상 런이 step 99000 + 30 분에 S5 → 중단 = 팔을 잃는다 (재시도 없음 · L234) ② R 상태 한정이 없다 — 정상 끝 (마지막 프레임 = 끝 2.3–3.4 초 전) 뒤 30 분이 지난 watch 줄도 S5 꼴 ("→ 기술 실패") ③ "job 시작" 이 대기 (PD) 를 넣는지 없다 ④ 7-1 L254 감시 "진행 불명 = TECH / HOLD" ↔ 9 절 L413 "UNKNOWN 두 번 = 확인만" ↔ 7-2 L268 "S1–S7" | `python3 -I -B review/scripts/g5_g6_watch_counterexamples.py` → (1) 891000 step = 161.3 / 200.4 / 233.9 분 (92.04 / 74.12 / 63.49 step/s) (2) 2.3 · 3.4 초 (스크립트 591d24a8… · 출력 d3453f0e…) | S5 = "squeue 상태 R 인 동안 · post 안 파일 수정 시각의 최댓값 (이름 아님) · 첫 프레임 전 = `job_start.json` 시각부터". watch 블록 컨테이너 시험에 ① ② 를 넣는다. "진행 불명" 처리를 한 자리로 (M-2 L33 STOP "불명 상태" = 후속 wave 중단 ↔ 12 절 "미확인 = N0 HOLD" 로 잇기) |
+| MXE0R-05 | P2 | 등록 6 절 S0a–S0b L215–216 · 16 절 L521–522 · 12 절 W2 L453 · 17 절 9 L542 | 가드가 동시 1 팔 · CPU 60 · 300 초를 강제한다 | ① 가드 L53–54 는 정책 `max_concurrency` 1–2 를 받고 승인 `approved_concurrency` 와 같기만 본다 (`F8/campaign_policy.json.example` L8 = null). 2 로 쓰면 L83 · L134 가 둘째 자리를 연다 — 그때 둘째 팔을 막는 것은 다른 case 의 `MAP_CASE_GO` (사람) 뿐. 등록은 "1 팔" 근거로 `IN/author_policy_record.json` (initial_E0_concurrent_arms 1) 만 들고 정책 파일 값을 등록값으로 적지 않는다 ② CPU 합 · `running_first8` · `observed_unix` 는 손으로 쓰는 `live_preflight` JSON 값 (L125 · L132 · L134) — `observed_unix` 를 지금 시각으로 쓰면 조회 없이 300 초 통과 | 가드 L53–54 · L83–84 · L125–134 · example L8 판독 (실행 없음) | 등록 고정값에 `campaign_policy.max_concurrency = 1` · `approved_concurrency = 1` 을 적고 봉인 검사에 넣는다. live_preflight 는 원 명령 출력 (squeue · df · 시각) 의 sha256 을 칸으로 묶는다 (17 절 9 을 등록 규칙으로) |
+| MXE0R-06 | P2 | 등록 1 절 L40 · 18 절 Q-G L579 · 17 절 6 · 10 · 11 (L539 · L543–544) · 12 절 W1–W8 · 기준 2-A · 3 절 L139–145 | 바이너리 sha256 + 링크 라이브러리 30 개 sha256 (발사 직전 q7 다시) 로 런타임 신원을 묶는다 | ① Open MPI 5.0.10 의 mpirun 은 PRRTE (prterun · prted) 를 띄우고 MCA 부품 (.so) 을 dlopen 한다 [추정] — UCX · libfabric · PMIx · hwloc 쪽 부품 (기준 L139 꾸러미) 은 ldd 30 개 밖 → 부품 하나가 바뀌어도 30 개 · 바이너리 · mpirun 해시는 그대로 ② conda 환경 = 그룹 쓰기 (2775 · `walk.txt` L79–82) — q7 재조회 (제출 전) → 대기 → job 시작 → 런 중 사이에 바뀌어도 잡을 칸이 없다 (job 시작 대조기 S7 = 바이너리만 · 런 뒤 재대조 없음 · `RCP` R2 L55 "불변 창" · R3 L56 "job-start 의 실제 결속 재확인") ③ W1–W8 에 런타임 신원 칸이 없어 N0 는 바이너리 해시로만 이어진다 ④ 가드가 운영자 셸의 TMPDIR 을 넘긴다 (`F8/submit_one.py.txt` L39) — PRTE 세션 폴더 자리가 고정 · 기록되지 않는다 (기준 L142 [미확인]) | 판독. 덧 (안 쓰인 근거): 리포의 G2c′ 잡 359243 기록 (`docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/` 의 `lmp_identity.txt` · `lmp_ldd.txt` · `lmp_libs.md5` · 11-12T11:15Z · 같은 바이너리 sha256 ee2d7726…) 의 soname 30 개 = `QY` q7 의 30 개 (로더 표기만 다름 · 본 리뷰 대조) — job 안 ldd 근거 (1 프로세스 · mpirun 없음 · md5 라 2-A sha256 과 해시 대조는 안 됨) | 봉인 MPI 행 = conda 꾸러미 (openmpi · ucx · libfabric · libpmix · libhwloc · prrte [추정]) 의 파일 목록 해시 (conda-meta 읽기 · 실행 없음 [제안]) · 대조 = 발사 직전 + 회수 때 (런 뒤) · W 양식에 "런타임 신원 (런 전 · 뒤) 일치" 칸 · TMPDIR 을 러너가 고정 · 기록. 못 하면 L40 · Q-G 를 "바이너리 + 직접 링크 30 개 (dlopen · 런 중 변경 [미확인])" 로 줄인다 |
+| MXE0R-07 | P2 | 등록 0 절 L11 · 7-6 순서 5 L368 · 12 절 W4 L455 · W6 L457 · 17 절 18 L551 | 내부 리뷰 대체는 E0 한 팔뿐 · N0 는 W6 (Codex 반박 창 GO) | 관측기 고침 (bb2f3229…) · 재봉인 묶음 (12 파일 + 메타 498b941c… + 정책 · 러너) 은 first8 여덟 팔이 함께 쓰는 자산이다. 순서 5 는 그것을 내부 반박 리뷰로 닫고, W6 은 "N0 는 first8 본 런" 만 적는다 → Codex 가 N0 칸만 보면 공유 자산은 내부 리뷰만 거친 채 N0 로 넘어간다. `FQP` L52 "운영 전환/재봉인 … 각 고정 범위의 반박 창 GO와 1저자 별도 GO" · L43 · `RCP` R6 L59. W4 "리뷰" 는 누구인지 없다 | 판독 | W6 에 "Codex GO 범위 = 재봉인 묶음 (관측기 고침 포함) + N0 칸" 을 적고 W4 의 리뷰 = Codex 반박 창으로 적는다. 또는 재봉인 묶음에 "E0 한 팔 한정" 표지 → N0 전에 Codex 범위로 다시 |
+| MXE0R-08 | P2 | 등록 7-6 L343–358 (판정 L357–358) · 16 절 L520 · E10 L383 · 18 절 Q-F L578 | 고친 관측기 허용 꼴 ↔ q9 = 맞음 → "허용 목록 밖의 새 꼴이 없다 → ③ 을 고칠 것 없음" | 근거 = NP 20 로그 하나 (DEV E0 r1 · 옛 덱 세대). 같은 블록 · 같은 NP 20 의 r2–r5 네 로그는 안 셌다. Q-B (런 뒤 고치지 않음) 때문에 pilot 표 안에 목록 밖 줄이 한 줄이라도 생기면 되돌릴 수 없는 관측 TECH — 손 로그 N3 (표 안 WARNING) = TECH | g14 N3 → `TECH: invalid five-column thermo row` (위 스크립트) | Q-F (q9b) 대상을 DEV E0 다섯 로그 전부 (+ 있으면 dev-bo · dev-u 의 정착 로그) 로 넓히고 판정을 "n 로그에서 목록 밖 0" 꼴로. 안 하면 L358 을 "r1 한 로그에서" 로 줄인다 |
+| MXE0R-09 | P2 | 등록 18 절 Q-H L580 · 기준 5 절 L176 | 기본 한도 답이 없으면 `disk` 참에 "기본 한도 [미확인] · 내 칸 0 · 0" 한정을 붙여 1저자가 정한다 | `FQP` L45 "`UNKNOWN`은 … 무제한 quota … 를 뜻하지 않는다 · 미정이면 자격/실행에 사용할 수 없다" · L29 (quota UNKNOWN → NO_GO) · L41 — 대안은 계획이 막은 길이다. 위험: 한도가 지금 사용량 2228984468 KB 와 + 약 29.27 GB 사이면 런 중 쓰기 실패 → 팔을 잃는다 (재시도 없음) [산술 · 가능성 미상] | 판독 | 대안을 남기면 "계획 (FQP L45) 이탈 · 1저자 위험 수용" 으로 이름 붙여 기록하고, live_preflight 에 "여유 확인 · 한도 UNKNOWN" 을 따로 적는다 (참 하나로 합치지 않는다) |
+| MXE0R-10 | P3 | 등록 0 절 L12 ↔ 7-6 L321 | "리포 HEAD = `21bb09d82`" | 같은 문서 L321 = HEAD `bfd9b3bbd`. 리뷰 시점 원격 작업 가지 끝 = `ef68eb7da` — `51d45732c` · `f67c0cc92` · `bfd9b3bbd` 는 원격에 없다 → 핀 후보 `f67c0cc92` 가 이 컨테이너에만 있다 [관찰 · 리뷰 시점]. (CLAUDE.md L40 인용은 `21bb09d82` 로 묶여 맞다 · HEAD 에선 L41) | `git -C <REPO> log --oneline -6` · 원격 가지 `git log` 에서 두 sha 검색 = 0 | L12 = "인용 줄 = `21bb09d82` · 관측기 = `f67c0cc92` · HEAD `bfd9b3bbd`". 7-6 순서 2 에 "핀 커밋이 원격에서 풀린다" 확인을 넣는다 |
+| MXE0R-11 | P3 | 등록 7-1 L256–258 · L261 · 12 절 W4 L455 | 관측기 L393 · L402 · L453 · L460–467 · L484 · L307–337 | 경로 `scripts/mixer_precal_observe.py` 는 HEAD 에서 고친 판 (bb2f3229…) 이다 — L304 뒤 +92 밀림: L393→L485 · L402→L494 · L453→L545 · L460→L552 · L462→L554 · L484→L576 · `_log_contract` 범위도 바뀜 (L246 · L297–302 는 그대로) | 두 사본 (`review/scripts/observer_21bb_copy.py.txt` df22dcf0… · `observer_HEAD_copy.py.txt` bb2f3229…) 줄 대조 | 줄 번호에 판 표기 (df22dcf0…) 또는 고친 판 줄로. 7-6 순서 4 의 "고칠 자리" 목록에 7-1 · W4 를 더한다 |
+| MXE0R-12 | P3 | 등록 4-2 L97 · 12 절 W3 L454 | "sacct 속도는 4-1 보다 0.02 ~ 0.05 % 느리다" · "회전 NP20 ≈ 64 step/s 가 쌓인 E0 보다 8–18 % 느렸다" | 다섯 런 = 0.021 · 0.014 · 0.053 · 0.034 · 0.016 % → 0.01 ~ 0.05 %. 원문 (`docs/reviews/mixer_highbo_stiffness_prereg_20260929.md` L346) = "E0 … 64 step/s 보다 8–18 % 빠르다" — 뒤집으면 7–18 % 느리다 | `python3 -I -B review/scripts/arith_41.py` (스크립트 160fca6d… · 출력 de06a414…) | 두 숫자 고침 (판정 영향 없음) |
+| MXE0R-13 | P3 | 기준 4 절 L161 · 등록 15 절 L505 · 18 절 Q11 L568 · `fill_report.md` L127 | G2c′ "다음 = 건식 다시 → 샌드박스 (N 40000) = 1저자 GO" · "G2c′ 잡이 ibb 에서 돈다" · fill_report "새로 인용한 리포 줄의 파일은 21bb09d82 와 같다 (관측기만 바뀜)" | HEAD 의 같은 인용 자리 (`docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md` L78 · 진행 기록 L1455) = 샌드박스 359243 끝 · PASS. `21bb09d82` → `bfd9b3bbd` 사이 인용 파일 가운데 `README_g2cp.md` · `CLAUDE.md` · `findings.json` · 진행 기록도 바뀌었다 (리포 전체 156 파일) | `git -C <REPO> diff --stat 21bb09d82 bfd9b3bbd` (인용 넷 = +59 / −4 줄) · README_g2cp L78 판독 | L161 · L505 를 "359243 끝 (11-12) · 다음 G2c′ 잡 [미확인]" 으로. Q11 의 순서 전제는 제출 직전 다시 |
+| MXE0R-14 | P3 | 등록 5-3 L172 · L177 · 5-4 L199 · C4 L281 | 한 줄 = id 6 + type 2 + 10 × 24 + 구분자 12 = 260 · 파일 수 예산 1146 [추정] | 실제 줄 (`dump_modify format` 한 줄 꼴 · 토큰마다 공백 + 끝 개행) = 6+1 + 1+1 + 10 × (24+1) + 1 = 260 — 식의 "type 2" 가 끝 개행을 흡수해 우연히 같다 (이 덱 type ≤ 3 → 무해). 1146 은 [추정] (모르는 것 6) 인데 C4 의 ✗ 문턱이다 — 정상 셈 1138 (SLURM 출력이 밖) ~ 1140 (안). 디렉터리 · 링크를 세는지 · 목록 밖 이름 처리가 없다 | 손 셈 · `arith_41.py` (files 1146 · inode 1261) | 5-3 식 옆에 실제 줄 꼴을 적는다. C4 에 셈 정의 (런 폴더 안 · 디렉터리 포함 여부) 와 "넘으면 이름 목록을 기록" 을 적는다 (문턱 1146 그대로) |
+| MXE0R-15 | P3 | 등록 6 절 S6 L223 · L228 | S6 ② "thermo 줄에 비유한 값 (nan · inf)" · ① "줄 첫머리 ERROR" | ② 를 로그 전체에서 대소문자 무시로 nan · inf 를 세면 정상 `INFO:` 줄 2 개가 걸린다 (L228 이 ① 에서 막은 함정과 같은 부류) ① 0 아닌 rank 의 오류는 화면 (simulator.stdout · stderr) 에만 찍히고 log.liggghts 엔 없다 [관찰 — LAMMPS 계열 오류 처리 판독] → 잡이 끝나 T9 · 걸리면 S5 가 잡는다 (운영 영향 작음) | `g5_g6_watch_counterexamples.py` (3) → 단순 셈 2 · thermo 행만 0 | ② = "thermo 행 (첫 칸 정수 step · 다섯 칸) 안에서만". ① = log.liggghts + simulator.stdout + simulator.stderr 의 줄 첫머리 (덱 주석 메아리 예외는 log 에만) |
+| MXE0R-16 | P3 | 등록 11 절 규칙 1–2 L436–437 · 7-3 C5 L282 | 회수 = job 끝 뒤 · 전 파일 목록 → 새 스냅숏 → 대조 · C5 = 감시 · 중단 · 회수 기록으로 확인 | ① 목록 파일을 쓰는 자리가 없다 — 런 폴더 안이면 C4 셈이 바뀌고 목록이 자기 sha256 을 못 담는다 ② job 끝 ~ 목록 사이 바뀐 파일은 목록 = 스냅숏 이라 못 잡는다 (손 반례: 끝 뒤 한 파일 편집 → 둘 다 바뀐 값 → "일치") ③ C5 "손 편집 없음" 은 흔적 없는 행위의 부재라 기록만으로 판정되지 않는다 | 판독 · 손 반례 | 목록 = 런 폴더 밖 새 폴더 · 목록에 mtime 칸 → "전 파일 mtime ≤ sacct End" · post + restart 합 = 마지막 watch 줄 값 대조 · C5 이름을 "기록에 반하는 흔적 없음" 으로 |
+| MXE0R-17 | P3 | 등록 11 절 규칙 7–8 L442–443 | 가림 = 홈 · 계정 · 호스트 · 노드 이름 (초안 추가) · uid/gid · 빌드 사용자 · 원격 FS · IPv4 / 반입 전 = 남은 토큰 0 + 계정 · 주소 · 포트를 따로 찾아 0 | ① 규칙 8 의 따로 찾기에 호스트 · 노드 이름이 없다 ② `sbatch --parsable` 의 `;클러스터` 꼬리 · IPv6 · MAC · PRTE 세션 폴더 경로 (호스트 · uid 가 든다 [추정]) 가 목록 밖 ③ 이미 반입된 `docs/data/mixer_e0_meta_ibb_20261110/out/slurm_sinfo_summary.txt` L2–5 의 NODELIST 칸이 가림 자리표가 아닌 영문 토큰이다 [관찰 · 값은 옮기지 않음] — 옛 목록엔 노드 이름이 없었다 | `awk` 로 칸 수 · 끝 칸 꼴만 셈 (값 출력 없음) | 규칙 8 따로 찾기에 호스트 · 노드 이름 · IPv6 · MAC · sbatch 꼬리를 더하고, 기존 out/ NODELIST 칸 처리를 1저자에게 묻는다 |
+| MXE0R-18 | P3 | 등록 16 절 개정 절차 L526 | 등록 결함이 드러나면 원 / 새 규칙 · 이유 · 시각 … 을 적고 1저자 비준 뒤 바꾼다 · 결과를 본 뒤 문턱을 옮겨 통과시키지 않는다 | 이 런의 결과로 결함이 드러난 경우 (예: 모르는 파일 7 개로 C4 1146 초과) 이 런의 판정이 원 규칙 그대로인지 · 새 규칙으로 다시 매기는지 문장이 없다. 고-Bo 선례 (HBR5-06 "원 규칙 NOT_MET · 명시적 후속 개정") 는 적는다 | 판독 | 한 줄: "이 런의 판정 = 원 규칙 그대로 · 새 규칙은 다음 런부터" |
+| MXE0R-19 | P3 | 등록 17 절 13 L546 | 열린 믹서 항목 = MIX-11 · MXD2-01 · SELF-62 · MLA-01–03 · MIP-01 · MXD2R-04 · MXD2R-R01 | 빠진 넷: `HBR5-03` (open P1 · 실행 프로토콜 (직렬 / MPI 20 · 빌드 · 재개) 과 비교의 교락) · `HBR7-01` (open P1 · E0 정적 검사로 reference 자격을 인증 못 함) · `PS-01` · `KG50-01` (claimed_fixed P1 · insert/pack 이 MPI 분해에 따라 0 개 삽입 · 칸 폭 < 지름이면 불가) | 원장 id · status 읽기 (`python3 -I -B` · 본 리뷰) | 17 절 13 에 넷을 더하고 한 줄씩 처분 — 앞 둘 = 15 절 L500 "통과 ≠ 자격" 의 근거로 · 뒤 둘 = NP 20 삽입 위험 (DEV E0 r1 NP 20 은 다 넣음 · 표 1 WARNING 0 [관찰 · 한 런]) |
+| MXE0R-20 | P3 | 등록 7-3 C3 L280 · 원천 `F8/inventory.md` L60 | C3 = post 정확히 1121 파일 · "다른 이름 없음" | C3 에 이름 꼴이 없다. 원천 inventory L60 = "post/dump_<step>.liggghts" ↔ 덱 L136 = `post/mix_*.liggghts` → inventory 를 따라 C3 을 세우면 정상 1121 장이 다 "다른 이름". 관측기는 `_(\d+)\.[A-Za-z]+$` 일반 꼴이라 무해 | 덱 L136 · inventory L60 판독 | C3 에 `post/mix_<step>.liggghts` (덱 L136 · 0 채움 없음) 를 적는다 |
+
+# 3. 보장 표 G1–G16
+
+| G | 판정 | 시도한 반례 | 근거 |
+|---|---|---|---|
+| G1 walltime `1-00:00:00` | 섬 | 넘으려면 12.98 step/s 아래 (= 1121213 ÷ 86400) — 실측 최저 63.49 의 0.20 배. 전 정밀도 쓰기 (≈ 26 MB / 13 초) 는 몇 % [추정] · 덱 세대 · 러너 차이로 4.9 배를 깰 손 반례 없음 | 4-1 · 4-3 · `arith_41.py` |
+| G2 프레임 1121 · t0 1121000 · restart 3 | 섬 | 덤프 정의 = `run 1` 뒤 (step 1) → step 0 프레임 없음 · run 시작 1 · 560607 · 1121213 과 `run 0` 은 1000 배수 아님 · restart 56060 × 20 = 1121200 ≤ 1121213 (a / b 번갈아 2) + settled 1 | 덱 L132 · L133 · L136 · L150 · 손 셈 |
+| G3 크기 상한 29266573952 B | 섬 | 줄 최대 260 (실제 꼴 손 셈 = 식 · 우연 MXE0R-14) · 머리 9 줄 ≪ 512 B · 체크포인트 실측 383.5–384.5 B/원자 (pilot 덱 [미확인]) — 넘쳐도 프레임 여유 (실측 최대 / 식 0.91) 가 흡수 | 5-3 · `QY` q1 · q3 |
+| G4 파일 수 1146 · inode 1261 | 섬 | 정상 셈 1138–1140 ≤ 1146 · 1261 ≪ 여유 559481276 · 모르는 파일 7 개부터 C4 ✗ (정의 문제 — MXE0R-14) | 5-4 |
+| G5 S5 30 분 | 조건부 | 이름 차례 "가장 큰" → 정상 런 S5 (step 99000–990000 고정 · 161–234 분) · 끝난 잡 · job 시작 정의. 수정 시각 최댓값 · R 상태 한정이면 섬 (여유 127 배) | MXE0R-04 · `g5_g6_watch_counterexamples.py` |
+| G6 S6 셋 | 조건부 | ② 로그 전체 셈 = 정상 INFO 2 줄 · ① 화면 전용 오류 못 봄 · ③ 은 섬 (덜 넣은 삽입이면 step 1 값이 기준 — 감소 아님) | MXE0R-15 |
+| G7 7-4 네 관찰 · 빠진 어긋남 | 조건부 | 네 관찰 재현 = 같은 출력 (ea5cf4db…) · 덤프 머리 (관측기는 열 이름으로 찾음) · 파일 이름 (일반 꼴) · 메타 (7-5) 에 새 어긋남 없음. 남은 것 = NP 20 표 안 보고 두 줄의 순서 · 자리 · 앞 공백 (q9 한 로그 · 첫 낱말) | 7-6 · MXE0R-08 · 20 |
+| G8 C1–C5 기록만 · C3 이 빈 곳을 채움 | 깨짐 | C3 이 잘린 프레임 통과 · C5 기록 판정 아님 · rank · 형식 · 같은 사건 확인 없음 | MXE0R-02 · 03 · 16 |
+| G9 가드 동시 1 · CPU 60 · 300 초 | 조건부 | 정책 max_concurrency 2 → 둘째 자리 · live_preflight 손 값 (observed_unix 지금 시각) 으로 300 초 · CPU 통과 | MXE0R-05 |
+| G10 예약 대조 뒤 자동 열림 없음 | 조건부 | 같은 case 재제출 = 남은 예약이 막음 · 다른 case = `MAP_CASE_GO` (W8 · 사람) 없이 안 열림 → 자동 열림을 못 만듦. 단 정책 값 (1) 미등록 | 10 절 · 가드 L66–86 · L129 · L135 |
+| G11 회수 대조 | 조건부 | 부분 · 진행 중 = 잡음 · job 끝 ~ 목록 사이 변경 · 목록 자리 미정 = 못 잡음 | MXE0R-16 |
+| G12 가림 | 조건부 | 규칙 8 따로 찾기에 호스트 · 노드 없음 · sbatch 꼬리 · IPv6 · MAC · 기존 out/ NODELIST | MXE0R-17 |
+| G13 내부 리뷰 대체 범위 | 조건부 | 공유 자산 (관측기 고침 · 재봉인) 이 내부 리뷰만으로 N0 에 넘어갈 수 있다 — W6 범위를 적으면 섬 | MXE0R-07 |
+| G14 관측기 고침 (Q5) | 조건부 | 손 로그 10: 정상 MATCH · 표 안 WARNING / 소실 / 주석 메아리 2 번 / 덱 정보 없음 = TECH (의도대로) · "on 1 procs" / 표 밖 WARNING / 음수 KE / 메아리 없음 = MATCH (계약이 안 보는 칸) · 덜 넣은 삽입 + WARNING 없음 = MATCH 인데 이 빌드에선 안 나는 꼴 (`fix_insert.cpp` L811 보고 → L813–814 부족이면 proc 0 이 늘 WARNING [관찰 · 리포의 소스 사본]). q9 첫 낱말 대조는 앞 공백 · 순서 · 숫자를 보장하지 않는다 — 다르면 TECH 쪽 (거짓 수용 아님) | `g14_counterexamples.py` · MXE0R-02 · 08 |
+| G15 결과를 보고 문턱을 옮김 | 섬 | 조회 전 · 뒤 판의 S0a–S7 · C1–C5 표 줄 글자가 같음 · 문턱 값 그대로 (늘어난 1 회 = 대조 문장) · `query_block/README.md` (6 절 판단 셋) 수정 시각 11:45:54 < 수집 11:52:36Z [관찰 · 컨테이너 파일 시각] · 바뀐 E6 = 예측 (판정선 아님 · Q-A 결정) | 두 판 diff (본 리뷰) |
+| G16 RPATH · 런타임 신원 | 깨짐 | dlopen 부품 · prterun · 그룹 쓰기 · 대기 틈 · 런 뒤 재대조 없음 · W 칸 없음 · TMPDIR | MXE0R-06 |
+
+# 4. 등록 18 절 Q1–Q13 (+ Q-F · Q-G · Q-H) — 근거보다 넓은가
+
+| Q | 한 줄 |
+|---|---|
+| Q1 | 아니오 — 여유 4.9 배 · 손 반례 없음 (G1) |
+| Q2 | 아니오 — 식 · 값 재계산 일치 · "상한이 되는 조건 [추정]" 표지 맞음 (G3 · G4) |
+| Q3 | 문턱은 아니오 · 정의가 모자람 (이름 차례 · R 한정 · job 시작 — MXE0R-04) |
+| Q4 | 아니오 |
+| Q5 | 고침 자체는 근거 안 (손 로그로 거짓 수용 없음) · "허용 목록 밖 새 꼴 없음" 은 넓음 (로그 하나 — MXE0R-08) |
+| Q6 | 아니오 (실행 · 결과가 자리로 옮겨짐) |
+| Q7 | 권고는 아니오 · 실행 순서가 모자람 (`static_asset_manifest` — MXE0R-01) |
+| Q8 | 아니오 · 가림 목록 보강 필요 (MXE0R-17) |
+| Q9 | 아니오 (M-2 L32 "각 정량 문턱 미등록" 과 같다) |
+| Q10 | 아니오 |
+| Q11 | 전제가 낡음 (G2c′ 샌드박스 359243 끝 — MXE0R-13) |
+| Q12 | 넓음 — "C3 이 덤프 결손을 잡는다" (MXE0R-03) · C5 기록 판정 아님 (MXE0R-16) |
+| Q13 | 조건부 — `max_concurrency = 1` 이 등록돼야 (MXE0R-05) · W6 범위 (MXE0R-07) |
+| Q-F | 권고 맞음 · 대상을 다섯 로그로 (MXE0R-08) |
+| Q-G | 처방이 근거보다 좁다 (dlopen · 대기 틈 · 런 뒤 — MXE0R-06) |
+| Q-H | 대안이 계획 (`FQP` L45 · L29) 을 넘는다 (MXE0R-09) |
+
+# 5. A · C · D · E 결과
+
+**A. 숫자 · 줄 · sha256 · 커밋**
+
+- 맞음 (재계산): `F8/planned_assets/PRECAL_E0/in.mixer` 8b588b24… · `deck_meta.json` c6543f38… · static 목록 PRECAL_E0 다섯 · 운영 봉인 12 (관측기 df22dcf0…) · HEAD 관측기 bb2f3229… · `21bb09d82` 관측기 df22dcf0… · 재봉인 후보 12 (관측기 bb2f3229…) · `work/check_log_contract.py` 0a8acdc9… · 출력 ea5cf4db… · `QY` 묶음 a5753648… · 블록 스크립트 md5 664376ce… · 기준 2-A 30/30 (summary.json 과 대조).
+- 맞음 (산술): 4-1 런 시간 · 속도 다섯 + 옛 다섯 · 63.49–92.04 (1.45 배) · dev-bo 3 · 4 초 · 4-3 3.38 / 4.20 / 4.91 h · 4-4 4.9 / 5.7 배 · 대안 2.4–2.9 / 9.8–11.4 배 · S5 10.9–15.8 초 · 114–166 배 · E9 · 5-1 합 (7763 · 5355) · 5-2 비 (1.019–1.020 · 87 %) · 5-3 260 · 26000512 · 29146573952 · 120000000 · 29266573952 · 바닥 32193231348 (올림) · 1146 · 1261 · 교차 확인 (1) (3) (4) · E4 · E5 · df 4430 배 · OST 454.4 배.
+- 맞음 (원천): 커밋 `51d45732c` → `f67c0cc92` → `bfd9b3bbd` (로컬) · M-2 (`0c56deba6`) L30–35 여섯 칸 = 2 절 대응 · 진행 기록 L1423 · L1437 · L1445 (두 판 같은 줄) · 7-4 재현 (옛 관측기 사본에 다시 = 같은 출력 ea5cf4db…) · HEAD 사본 (`git archive`) 에서 `scripts/test_mixer_precal_observe.py` 43/43.
+- 틀림: L97 (MXE0R-12) · W3 기준 뒤집힘 (MXE0R-12) · L12 HEAD (MXE0R-10) · 7-1 · W4 관측기 줄 (MXE0R-11) · 기준 L161 · 등록 L505 상태 (MXE0R-13).
+- 근거보다 넓음: L51 목적 (2) (3) (MXE0R-02) · L569 (MXE0R-03) · L358 (MXE0R-08) · L40 · Q-G (MXE0R-06) · W6 범위 (MXE0R-07).
+
+**C. 범위**
+
+- 새 물리 문턱 · 성능 합격선 없음 (Q9 · 14 절) — 맞음. C1–C5 = 기록 대조 · 물리 문턱 아님 — 맞음 (단 C4 의 1146 은 [추정] 이 굳은 문턱 — MXE0R-14).
+- 표지: [산술] 들은 맞음 · E6 "[관찰 — 코드 판독 · 빌드 소스]" 는 소스 사본으로 맞음 (`fix_insert.cpp` L811 → L813–814) · 계획보다 넓은 처방 = Q-H 대안 (FQP L45 — MXE0R-09).
+- 결과 뒤 문턱 옮김 틈: 5-5 = 닫힘 (한 번 · 끝 · 다시 안 고침) · Q-B "런 뒤 고치지 않는다" = 닫힘 · 16 절 개정 절차 = 이 런 판정의 처리 문장 없음 (MXE0R-18).
+
+**D. 원장** — 빠진 넷 `HBR5-03` · `HBR7-01` · `PS-01` · `KG50-01` (MXE0R-19). 나머지 (`MIX-11` · `MXD2-01` · `SELF-62` · `SELF-70` · `MLA-01`–`03` · `MIP-01` · `MXD2R-04` · `MXD2R-R01` · `MXE0-01`) 는 두 문서에 있다.
+
+**E. 빠진 칸**
+
+| 계획 칸 | 결과 |
+|---|---|
+| M-2 L30–35 여섯 칸 | 2 절에 다 있음. L32 "열 · 같은 사건 · 출처" 는 C1–C5 에 없음 (MXE0R-02) · "입자/상 재고" = 관측기 D13 (총수) + 상별은 보고만 (SELF-70) — 맞음 · L33 STOP "불명 상태" ↔ 9 절 UNKNOWN 처리 (MXE0R-04 ④) |
+| `FQP` 3 절 일곱 행 (L37–43) | 한 설치·경로 = 기준 6 절 · Q4 ✓ · 권한·변경통제 "불변 창" 없음 (MXE0R-06) · binary/MPI "wrapper" 없음 (MXE0R-06) · Slurm/live "ranks" (MXE0R-02) · live 집계 근거 (MXE0R-05) · quota (MXE0R-09) · 시간·감시·중단 ✓ (정의 MXE0R-04) · 최종 운영 묶음의 반박 창 GO 범위 (MXE0R-07) |
+| `RCP` R0–R6 (L53–59) | R0 ✓ (기준 1 절) · R1 실제 링크 시험 = 범위 밖 · R2 불변 창 (MXE0R-06) · R3 job-start 결속 (MXE0R-06) · R4 실제 ranks (MXE0R-02) · 예약 집계 (MXE0R-05) · R5 ✓ (quota MXE0R-09) · R6 반박 검토 참조 (MXE0R-07) · 영수증 이음 = C2 ✓ |
+
+**범위 밖 (봉인 뒤 다시)**: 봉인 묶음 (아직 없음) · 블록 실행 (조회 · watch · 컨테이너 시험 675 PASS 재실행 안 함) · ibb 판 Python 실행 (가드 · job 시작 · 3.10.20 / 3.9.13) · 실제 링크 시험 (R1) · first8 묶음 시험 셋 (Q-E · 기록만 · 다시 안 돌림).
+
+**fill_report · changes 5 절 대조 (맨 끝)**: 주장 대부분이 본문에 들어갔다 (문턱 그대로 · 5-5 · Q-A → E6 · Q-B 대조 표 · q1–q9 자리 · Q-F/G/H). 틀린 것 하나 = `fill_report.md` L127 "관측기만 바뀜" (MXE0R-13).
+
+# 6. 확인하지 못한 것 · 봉인 단계에서 다시 볼 것
+
+1. NP 20 삽입 표 안 보고 두 줄의 순서 · 자리 · 앞 공백 — 실제 로그로 [미확인] (Q-F · 다섯 로그로).
+2. pilot 의 전 정밀도 덤프 쓰기 시간 · 프레임 크기 · 체크포인트 크기 (접촉 이력) — 실측 없음.
+3. Open MPI 5 의 실제 런타임 부품 (dlopen 목록 · prterun) [추정] — conda-meta 파일 해시로 실행 없이 닫히는지.
+4. job 안 TMPDIR · LD_LIBRARY_PATH · rank 배치 (G2c′ 359243 은 1 프로세스 · mpirun 없음).
+5. Lustre 기본 한도 실제 값 (Q-H) · 회수 목적지 여유 (1저자 WSL).
+6. 재봉인 실물: `source_pin` 키 (null 금지) · `static_asset_manifest` · `SHA256SUMS` · IN 후보 목록 이음 → first8 묶음 시험 셋 재실행 (Q-E).
+7. watch 블록 (DEM1 꼴) — 컨테이너 시험에 반례 셋 (1121 이름 차례 · 끝난 잡 · INFO 줄) 을 넣었는지.
+8. 핀 커밋 (`51d45732c` · `f67c0cc92` · `bfd9b3bbd`) 의 원격 반영 (리뷰 시점 없음).
+9. 원장 표지: 이 리뷰 = 내부 반박 리뷰 (Codex 아님) · 초안 단계 — `MXE0-01` 을 verified 로 올리지 않는다.
+
+# 부록. 재현 파일 (`mixer_e0_v2/review/scripts/` · sha256)
+
+| 파일 | sha256 | 무엇 |
+|---|---|---|
+| `g14_counterexamples.py` | 3146e96dd1c951dfbfd6b004c36d1c62d25d59e51245b5e6acdd26b7f93e3170 | 고친 관측기 로그 계약에 손 로그 10 (AST 로 함수 · 상수만 꺼냄 · 리포 import 0) |
+| `g14_output.txt` | 373b8895a972ee1214412e60d92c371372e9da03a0c4b5d52c6dceaad535fe7e | 위 출력 |
+| `g5_g6_watch_counterexamples.py` | 591d24a863cd59e01abcd949abe396b023d307d32b8900594d61cfe9523bdc51 | S5 이름 차례 · 끝난 잡 · S6 ② 단순 셈 |
+| `g5_g6_output.txt` | d3453f0e745a562c6bfb2de65f155e26017609fc50fe3a2e876b521ec6f0b5e0 | 위 출력 |
+| `arith_41.py` | 160fca6d14054e92ebcf9c947df3b9eac380fca731dcfe4eddb396c9e8bdc48a | 4 · 5 절 산술 재계산 |
+| `arith_41_output.txt` | de06a4145420c593634c9a675f43a1f3bd1edb850f31eba1fe77402998ce82cd | 위 출력 |
+| `fill_fraction.py` | 888dc42dcb6de0cfef1620ebf08be47c9d11f4a1099caee0ee2e8062546526e4 | 삽입 영역 채움 비 (pilot ↔ DEV · 참고) |
+| `observer_HEAD_copy.py.txt` | bb2f322987fa6eb2e49159e6cc1447f5264036fc9cd84b3f4d59a60ffbc63710 | HEAD 관측기 사본 (고친 판) |
+| `observer_21bb_copy.py.txt` | df22dcf03fcd628901ffb6ac7362579faee6e94285404a3163bed44d3666f013 | `21bb09d82` 관측기 사본 (봉인 판) |
+| `rerun_7_4_output.txt` | ea5cf4db59ff59e35512ed773fdafe67d66972988ecc820d0952f962a64359b7 | 7-4 재현 다시 (등록 출력과 같은 sha256) |
