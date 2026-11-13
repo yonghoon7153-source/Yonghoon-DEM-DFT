@@ -1672,15 +1672,17 @@ def suite_T(mod, rec):
         ('audit 곁 파일 둘', 'more than one store audit side file', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(),
                                                              AUDIT_NAME.replace('_a0.json', 'x_a0.json'): audit()})),
         ('다른 팔의 audit 곁 파일', 'does not belong to the arm file read', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME.replace(ARM, ARM.replace('_a0', 'x_a0')): audit()})),
-        ('audit 곁 파일이 JSON 아님', 'store audit side file unreadable', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: 'not json'})))
+        ('audit 곁 파일이 JSON 아님', 'store audit side file unreadable', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: 'not json'})),
+        ('audit 열쇠 ≠ 파일 이름의 열쇠 (손댄 곁 파일)', 'the store audit key does not match its store file name',
+         dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(key='01' * 32)})))
     res30 = []
     for tag, why, kw in bad30:
         rr = run_case('t30', **kw)
         pr_ = (rr.rep or {}).get('problems') or []
         res30.append((tag, rr.rc == 4 and no_leak(rr) == [] and report_problems(rr.rep) == [] and any(why in str(x) for x in pr_), rr.rc, pr_))
     rec('T30c 저장본 기록이 등록과 다른 %d 꼴 (상태 · 곁 파일 있음 / 없음 · 시도 1 · 2 의 저장본 · 목록 sha · 시작 목록 · 목록 바뀜 · 칸 없음 · 모순 · 둘 · 다른 팔 · '
-        'JSON 아님): 모두 rc 4 · 그 꼴의 사유 글 · 누출 없음 · 보고 구조 통과' % len(bad30),
-        all(x[1] for x in res30) and len(res30) == 22, [x for x in res30 if not x[1]])
+        'JSON 아님 · 열쇠 ↔ 파일 이름): 모두 rc 4 · 그 꼴의 사유 글 · 누출 없음 · 보고 구조 통과' % len(bad30),
+        all(x[1] for x in res30) and len(res30) == 23, [x for x in res30 if not x[1]])
 
 
 @case('T 판독기 (합성 폴더)')
@@ -1793,6 +1795,7 @@ MUTANTS = (
                                        "                if False:")]),
     ('시도 3 · 4 의 시도 2 칸 모순을 안 봄', [("                if att in (3, 4) and ('attempt1_pin' in m_ or 'code_same_as_attempt1' in m_):", "                if False:")]),
     ('audit 곁 파일 둘을 받음', [("    if len(audits) > 1:", "    if len(audits) > 99:")]),
+    ('audit 열쇠 ↔ 파일 이름 대조를 안 봄', [("                    elif store.get('file') != 'cjreg_%s.npz' % store.get('key'):", "                    elif False:")]),
     ('다른 팔의 audit 곁 파일을 받음', [("            if arm_path is not None and audits[0] != AUDIT_PREFIX + os.path.basename(arm_path):", "            if False:")]),
     # (incomplete 줄만 빼는 꼴은 관찰상 같은 변이 = 상태 대조가 같은 rc 4 를 낸다 (11-13 실측) → 사유 글까지 뺀다 · T30c 가 꼴마다 사유를 본다)
     ('JSON 아닌 audit 곁 파일을 받음', [("            incomplete = True\n            probs.append('store audit side file ' + (why or 'is not an object'))",
