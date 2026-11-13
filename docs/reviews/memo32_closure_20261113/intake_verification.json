@@ -1,0 +1,99 @@
+{
+  "review_pin": "5afa16488c6cf70d333406bc0802c2139b4a425c",
+  "packages": [
+    {
+      "name": "codex_memo32_rule38_independent_closure_5afa16488_20261113.zip",
+      "bytes": 4687839,
+      "sha256": "136a57b0410199fd49f8711e65140d003b4c7677cbdbbd7ce272a27275f9474f",
+      "members": 90,
+      "hash_lists": [
+        {
+          "member": "input/SHA256SUMS",
+          "verified": 56
+        },
+        {
+          "member": "SHA256SUMS",
+          "verified": 89
+        }
+      ],
+      "crc_paths_duplicates_links": "PASS"
+    },
+    {
+      "name": "codex_memo32_rule38_independent_closure_5afa16488_20261113.zip!input/input_evidence/codex_memo32_six_fixes_independent_review_9bbd365b2_20261113.zip",
+      "bytes": 3843050,
+      "sha256": "1f13669c1332e946217b77623a11f95a7fbacc026ac09e0b4e29ba1a19aa1581",
+      "members": 88,
+      "hash_lists": [
+        {
+          "member": "input/SHA256SUMS",
+          "verified": 38
+        },
+        {
+          "member": "SHA256SUMS",
+          "verified": 87
+        }
+      ],
+      "crc_paths_duplicates_links": "PASS"
+    },
+    {
+      "name": "codex_memo32_rule38_independent_closure_5afa16488_20261113.zip!input/input_evidence/codex_memo32_six_fixes_independent_review_9bbd365b2_20261113.zip!input/input_evidence/codex_memo32_review_1e823a34c_20261113.zip",
+      "bytes": 574126,
+      "sha256": "e9d9827b09ed55a5d3c3c23668d0d10cdefe65c117f3e001297d8a9326820d8f",
+      "members": 63,
+      "hash_lists": [
+        {
+          "member": "agent_contact/SHA256SUMS",
+          "verified": 4
+        },
+        {
+          "member": "agent_literature/SHA256SUMS",
+          "verified": 7
+        },
+        {
+          "member": "SHA256SUMS",
+          "verified": 62
+        }
+      ],
+      "crc_paths_duplicates_links": "PASS"
+    },
+    {
+      "name": "codex_memo32_rule38_independent_closure_5afa16488_20261113.zip!input/input_evidence/codex_memo32_six_fixes_independent_review_9bbd365b2_20261113.zip!ORIGINAL_INPUT.zip",
+      "bytes": 1043748,
+      "sha256": "69f8cf908e1017e8907c5ea1d7c78b261e70b7c16ec3dde0165eec9cd566852b",
+      "members": 39,
+      "hash_lists": [
+        {
+          "member": "SHA256SUMS",
+          "verified": 38
+        }
+      ],
+      "crc_paths_duplicates_links": "PASS"
+    },
+    {
+      "name": "codex_memo32_rule38_independent_closure_5afa16488_20261113.zip!input/input_evidence/codex_memo32_six_fixes_independent_review_9bbd365b2_20261113.zip!ORIGINAL_INPUT.zip!input_evidence/codex_memo32_review_1e823a34c_20261113.zip",
+      "bytes": 574126,
+      "sha256": "e9d9827b09ed55a5d3c3c23668d0d10cdefe65c117f3e001297d8a9326820d8f",
+      "members": 63,
+      "hash_lists": [
+        {
+          "member": "agent_contact/SHA256SUMS",
+          "verified": 4
+        },
+        {
+          "member": "agent_literature/SHA256SUMS",
+          "verified": 7
+        },
+        {
+          "member": "SHA256SUMS",
+          "verified": 62
+        }
+      ],
+      "crc_paths_duplicates_links": "PASS"
+    }
+  ],
+  "reviewed_input_exact_files": 57,
+  "snapshot_git_blobs": 47,
+  "received_suite_rerun": false,
+  "research_execution": false,
+  "overall_gate": "HOLD"
+}

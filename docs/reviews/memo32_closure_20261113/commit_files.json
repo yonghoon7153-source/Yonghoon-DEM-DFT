@@ -1,0 +1,261 @@
+{
+  "base": "d3705e9d11886e0a0cefe3cf6a961e7d42b6901c",
+  "commits": [
+    {
+      "pin": "9bbd365b2f94d10d75063f93e3d9b18fe6c9b4b2",
+      "files": [
+        {
+          "status": "A",
+          "path": "docs/collab/codex_to_claude/20261113-0528_memo32-independent-fixes.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/PREATTACK.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/appendix_cap_revert_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/box_revert_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/cap_revert_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/check_contract.py"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/check_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/contract_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/dense_revert_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/edit_map.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/green_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/ledger_proposal.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/log_selection.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/.gitattributes"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/branch_probe.py.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/branch_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/contact_probe.py.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/contact_probe_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/convergence_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/findings.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/literature_reproduce.py.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/literature_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/probe_convergence.py.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/received/verdict.md.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/red_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/review_replay.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_fixes_20261113/review_request.md"
+        }
+      ]
+    },
+    {
+      "pin": "5afa16488c6cf70d333406bc0802c2139b4a425c",
+      "files": [
+        {
+          "status": "A",
+          "path": "docs/collab/codex_to_claude/20261113-0601_memo32-rule38-residual.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/reviews/memo32_fixes_20261113/check_contract.py"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/PREATTACK.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/change_check.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/check_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/ledger_proposal.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/log_selection.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/received/.gitattributes"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/received/findings.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/received/independent_probe.py.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/received/manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/received/review_minimal_repair_check.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/received/verdict.md.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/regression_after_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/regression_before_summary.txt"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_rule38_20261113/review_request.md"
+        }
+      ]
+    },
+    {
+      "pin": "<<sha:docs: receive memo32 rule38 scoped closure>>",
+      "files": [
+        {
+          "status": "A",
+          "path": "docs/collab/codex_to_claude/20261113-0623_memo32-document-closure-received.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/README.md"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/check_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/commit_files.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/intake_verification.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/ledger_proposal.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/received/.gitattributes"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/received/findings.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/received/manifest.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/received/review_results.json"
+        },
+        {
+          "status": "A",
+          "path": "docs/reviews/memo32_closure_20261113/received/verdict.md.txt"
+        }
+      ]
+    }
+  ],
+  "deleted_or_moved": 0
+}
