@@ -1,0 +1,167 @@
+{
+  "date_KST": "2026-11-14",
+  "candidate": "c5aa7bb527c5cf0907651bae688bb97de206a8b6",
+  "parent": "a69095c7f1cc4908a14b93912d97cb93cc33eb64",
+  "comparison_B": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+  "old_package_files": 269,
+  "old_outer_hashes": 268,
+  "snapshot_blobs": 24,
+  "file_set_hashes_and_blob_bytes": "PASS",
+  "candidate_changed": false,
+  "tests_reexecuted": false,
+  "independent_fix_verdict": "NOT_RECEIVED_IN_THIS_CHAT_OR_SELECTED_RECORDS",
+  "scope_of_search": "Selected queue/collab/review documents at B and inherited fixed package; not a claim about every external session.",
+  "B_same_path_counts": {
+    "ABSENT": 23,
+    "IDENTICAL": 1,
+    "DIFFERENT": 0
+  },
+  "rows": [
+    {
+      "path": "docs/collab/codex_to_claude/20261110-0516_nonrint-nsb-three-fixes.md",
+      "sha256": "d526eeb44e0e6c55957bf3ab11021408498f30c51501b3cf9cb6638acfcf47fc",
+      "git_blob": "973c32ac9db9d4ef2abed81e88e31ef3bd54e838",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/README.md",
+      "sha256": "afbc176267906296a26af62625b0aa27136bbd5af5c8676999021bf38c93c2d9",
+      "git_blob": "5fe3815c58a8967aaa22fd8c692da4b714cb37bf",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/RECEIPT.md",
+      "sha256": "c194f1405b55ecdbef3320ebb15131b45df8a60ab849bdcda31fb46f0e418cf3",
+      "git_blob": "6ae7d20133d37d9d60d0a2b8beef1d809ff83f1b",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/chain_README.md",
+      "sha256": "d69884db76b106324ebe94afd9ff8ec16af97e87a4bfac95f5aff76a6210ade9",
+      "git_blob": "127f827319d9290ebe4cdf515424e50bb49bd90f",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/chain_verification.json",
+      "sha256": "3f25a903e51fe6637a082a3af3245f366c7363d3e35ea3f929dcf18456177e48",
+      "git_blob": "db0d0d894d95eb02dc52c2c05c5f9111d74a4404",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/review_request.md",
+      "sha256": "91ca8cbf8a6872f0f225b29c104a15a5668ec89e9feff55f53c1b13fb52a26bc",
+      "git_blob": "acf0bbf8953c665818baa868bc6534de19289ef4",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/t5_fix.md",
+      "sha256": "953479fbe884fee4fe36681dc5345b50bc14bead35fc777895c82fe778be53c9",
+      "git_blob": "8afd285ceeb58af63c0d3d5b4ef44fc6993e018c",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/t5_verification.json",
+      "sha256": "f9c185cce810ee06e3e7e44c4f9a23216b08da4e62da28100a3e3e9079c3b186",
+      "git_blob": "ea77841df5d19f0cdf2bf7f3123c59ab9fe5c177",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "docs/reviews/nonrint_nsb_fixes_20261110/verdict_received.json",
+      "sha256": "e326d63db982e7df5ab3f34bb72a598c8c82fdb9b44d8d8c2986ede5a9c4ab8e",
+      "git_blob": "f22e4031646287ef2aa68b3732021cb5256350c3",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/dem_gen2_live_contract.py",
+      "sha256": "a4e4d1c9e6574bac2c338d68e093dd999afc2c42c82c9f84f5011abd437d189c",
+      "git_blob": "936bfb332457ba35cbce49c7096b1685875a6f5d",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/dem_gen2_p2_contract.py",
+      "sha256": "5a1830c9cf38f7081edbcb687fbc133449af767b0320cfaa1297b578b2f34f8d",
+      "git_blob": "bffa41912fe5be18e383c3cdcfbc343ccd7d7a89",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/dem_gen2_qualification.py",
+      "sha256": "9bcf11ba48403f1073a0bbd6c6c2d93cbd34d7512c8ff810a48d57493f1f9c2c",
+      "git_blob": "ebf53e68675c0bc52ee4eb06a6eb2290f6a52e4a",
+      "B_same_path": "IDENTICAL"
+    },
+    {
+      "path": "scripts/dem_gen2_qualification_matrix.py",
+      "sha256": "54919d9d3c8b52c0861deb80a6bdb4b34febb039af93c3827b705e3f27e35755",
+      "git_blob": "ed4db4f21b31c48177da5487f8b79545f3ec535d",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/dem_gen2_s0_contract.py",
+      "sha256": "4d3d5827a1f4bb5bf0f6a894f72249ba1c60e0d0677ffd5d01bb6c68d3a7721d",
+      "git_blob": "39482f80b7c3fd0a1981a28854a0e1162cfc4eb9",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/dem_gen2_t0_contract.py",
+      "sha256": "1518197eaa68c8baf7e356f0f5fad5cbadc38af5f5455ebade3b2ed8585b84fd",
+      "git_blob": "0543277d2903806ae85d2c68d0935a34142c7c0b",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/dem_gen2_t11_contract.py",
+      "sha256": "b12daff4201c7b1424f47e9a558587b5f0216d6207061fbd6bf2de40814cfd59",
+      "git_blob": "94ce7f82ca74b8b82f7d86b01b15784f6cc8cbe9",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/dem_gen2_t5_contract.py",
+      "sha256": "e0ea567cb775d6d25db8caa1be35c2973b85070a525ef4b58fd55740110b8988",
+      "git_blob": "beed88cc37b1a53b5ec1ab7fa850ff326e8f069f",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/test_dem_gen2_live_contract.py",
+      "sha256": "78bb9922813c208b514c7ced4525d58e8b828c4d90cebb83655b5791bf42421a",
+      "git_blob": "b564f58d16ac98d909cfbc2eb2efbcb4da8f435d",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/test_dem_gen2_nsb_chain_regression.py",
+      "sha256": "3a243579bff25958909b7392658a4554187fc64739f3a9a8c1993f81351b48cd",
+      "git_blob": "e6dfe0f39bb6b7fca50d35e7b378c6e61a9726dd",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/test_dem_gen2_p2_contract.py",
+      "sha256": "0aa20e8128a1e1d9ed0b03e0c61e93c200466562d797df6d5371f0a4a21babe3",
+      "git_blob": "7a40457407a360ee5f999308a746a7fdcbfdd501",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/test_dem_gen2_qualification_matrix.py",
+      "sha256": "ef659db192b8abc965c3dbfa7e070fd48a3a60b8093982b5921fdf0ab346192e",
+      "git_blob": "6c590d1af9124b16f0882b7c421d1c544aa27daf",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/test_dem_gen2_s0_contract.py",
+      "sha256": "6de7ad2fee12e959df6653116939cca517cbf5e96a225e1bd350e2cbe23c1c17",
+      "git_blob": "e188b283c870501a1f7a7ab976c833a32c5e557a",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/test_dem_gen2_t5_contract.py",
+      "sha256": "38c3cda7d2ba24b2c22c5bd2f88e5169837c61b9df73cac825b1725ed0baa520",
+      "git_blob": "9f473ca17e3903d0f07ec11b730e8bd9c3cbbd3c",
+      "B_same_path": "ABSENT"
+    },
+    {
+      "path": "scripts/test_dem_gen2_t5_precision.py",
+      "sha256": "fcf406e7c9ffae945864d1e370525d5dd755e88b470a448708c5f508372bac8e",
+      "git_blob": "1a7b26acbb2a51ef8f19e56c21cd67ef8c45cd9c",
+      "B_same_path": "ABSENT"
+    }
+  ],
+  "whole_status": "HOLD",
+  "field_execution": false
+}

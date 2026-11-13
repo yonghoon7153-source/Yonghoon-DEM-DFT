@@ -1,0 +1,45 @@
+{
+  "fixed_reference_files": [
+    {
+      "commit": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "path": "scripts/mixer_smoke_blind.py",
+      "sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+      "git_blob": "ef2e75f12f72dca2c82e2845ce7f58e5d27a3a91",
+      "static_chk_call_sites": 30,
+      "runtime_tests_executed": 0,
+      "same_at_mixer_end_b94090e04": true
+    },
+    {
+      "commit": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "path": "scripts/test_mixer_self170_canaries.py",
+      "sha256": "1ede720f62d942e0e808759d052a818010cad2a964bef56b159de6d1a88d6f37",
+      "git_blob": "fad49143f599766fc698285fdc950f3a769ac205"
+    },
+    {
+      "commit": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "path": "docs/reviews/mixer_self170_20261113/README.md",
+      "sha256": "61fa8d798b88a468803bd30ab44e10df15587ed69550bf2bf6bb282ca204be96",
+      "git_blob": "55b41b5f64c58cdbaa2eaf7c061d1cfe553e7765"
+    },
+    {
+      "commit": "db5abe6b359abdc44b3c17bb91d984a5fee3a567",
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/README.md",
+      "sha256": "fddf7c6befb229ffae8b4d111a1fd63195a64fac706c3436a671493acf7d3130",
+      "git_blob": "de7a4947fcbbeff1f358528c9252c4711d23fdf9"
+    },
+    {
+      "commit": "db5abe6b359abdc44b3c17bb91d984a5fee3a567",
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/stage0_registration.md",
+      "sha256": "5c0efc65034cf46dcc08540cfed0cabd4f8577230589f68db3a3ff1c729ecf0f",
+      "git_blob": "69cae23dfabe41dac9b4eaed518038dd7be66969"
+    },
+    {
+      "commit": "db5abe6b359abdc44b3c17bb91d984a5fee3a567",
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/stage1_census_design.md",
+      "sha256": "3699597bc9998b99b3e4b2dc92917e6940f1e6a36eec4dfd4f793696c4c8451b",
+      "git_blob": "c060f7d6723de74feeaa2aba4dadfc6c396b4360"
+    }
+  ],
+  "read_only_source_document_metadata": true,
+  "field_or_value_access": false
+}
