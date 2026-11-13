@@ -3099,6 +3099,9 @@ def ledger_repo_problem(repo):
     me = _git_top(HERE)
     if me is not None and me == top:
         return f'원장 저장소 = 사슬 체크아웃 ({top}) — 실행 트리와 다른 체크아웃에 둔다 (Q9 §3-5)'
+    _hp = RC.git_history_problem(str(repo))                   # ★ 11-13 (Codex 반박 1/2 §3) — graft · shallow 원장 저장소 = 닫힘 (입구에서 사유)
+    if _hp is not None:
+        return f'원장 저장소 이력 — {_hp}'
     return None
 
 
@@ -3117,7 +3120,11 @@ def ledger_blob(repo, commit):
 
 
 def ledger_is_ancestor(repo, a, b):
-    return _hex40(a) and _hex40(b) and ledger_git(repo, 'merge-base', '--is-ancestor', a, b, check=False).returncode == 0
+    #  ★ 11-13 (Codex 반박 1/2 §3) — graft · shallow 가 걸린 이력의 조상 대조 = 거짓 (닫힘 · graft 가 곁가지를 조상으로 만들었다 · 사유는
+    #    `ledger_repo_problem` · `ledger_history_problem` 이 낸다)
+    if not (_hex40(a) and _hex40(b)) or RC.git_history_problem(str(repo)) is not None:
+        return False
+    return ledger_git(repo, 'merge-base', '--is-ancestor', a, b, check=False).returncode == 0
 
 
 def ledger_history_problem(repo, commit):
@@ -3125,7 +3132,12 @@ def ledger_history_problem(repo, commit):
     사유 · Q9 §3-5 개정 3).  ★ 10-28 밤 PC5-01 (사전 공격 5 회차 PC-01 · merge -s ours) — 원장 파일을 바꾼 커밋은 모두 첫 부모 역사 위에 있어야 한다
     (그 커밋에서 닿는 커밋 중 원장 파일을 바꾼 병합 아닌 커밋이 첫 부모 역사 밖 = 병합으로 숨긴 원장 판 · 정직한 결과 줄 커밋을 둘째 부모로 숨기고 다른 줄로
     본가지를 옮긴 꼴 = 사유 · 조상 대조가 그 숨긴 커밋을 조상으로 받지 않게).  끝 커밋 교체 (reset · amend · 정직한 커밋이 닿지 않음) 는 역사로 못 본다 →
-    결과 줄을 폴더 증거에서 다시 센다 (`result_line_problem`)."""
+    결과 줄을 폴더 증거에서 다시 센다 (`result_line_problem`).
+    ★ 11-13 (Codex 반박 1/2 §3) — graft · shallow 가 걸린 이력 = 사유 (닫힘 · `run_contract.git_history_problem` · 옛 = HEAD 만 담은 shallow · graft 파일
+    아래 줄 지우기를 None 으로 통과)."""
+    _hp = RC.git_history_problem(str(repo))
+    if _hp is not None:
+        return f'원장 역사를 믿을 수 없다 — {_hp}'
     p = ledger_git(repo, 'log', '--first-parent', '--format=%H', commit, '--', LEDGER_FILE, check=False)
     if p.returncode != 0:
         return '원장 역사를 못 읽는다'
