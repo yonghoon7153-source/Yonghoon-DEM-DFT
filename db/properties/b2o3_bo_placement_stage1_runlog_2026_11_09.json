@@ -9,7 +9,7 @@
  "decision": "D-2026-11-09-b2o3-bo-placement-amend1 (active · 개정 1 v1.3 · 사용자 비준 2026-11-09)",
  "protocol": "D-2026-11-09-cell-construction-protocol-v1 (active · v1.3)",
  "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json → 개정_1_셀구축_v1_2026_11_09",
- "status": "7a 파일럿 런 끝 (11-10 09:07 감시 · 1 / 1 · 78 분) → 다음 7b (스냅숏 추출 · 이완 3 · 영수증) — 복귀 뒤 friendly 세션이 잇는다 (복귀 카드 §0)",
+ "status": "8 단계 끝 (11-13 10:40 감시 · 54 / 54) → 블록 v3 발급 (8b_블록_발급_2026_11_13) — ① 본 판독 · ③ 50 ps 프레임 · ④ 이완만 → ⑤ 판독 뒤 승자 문장",
  "고정_DY_확인_2": {
   "생성_명령": "python3 tools/doping/b2o3_enumerate.py --base db/structures/modelc_V0_k663.xyz --supercell 1 2 1 --n_B 2 --n_O 3 --fix_halogen --top 45 --o_motif_top all --out db/inputs/b2o3_bo_placement_2026_11_09/candidates",
   "생성_결과": "바탕 45 (B 2 개 × P 10 자리 전수 C(10,2)) × O 꼴 3 = 135 구조 · 128 원자 (Li58P8B2S41O3Cl16) · Li 후보 50 · Ewald 최저 −2256.634 · 최고 −2250.840 eV · 27.8 s · --verify 문제 0 · Codex DX · DY 가 쓴 생성 세트와 이름 · Ewald 값이 같다 (cfg0000_E-2256.634 …)",
@@ -262,5 +262,34 @@
   "곁_잡": "cascade 묶음 2 재실행 끝 (tmux cascade_b2b 없음 · vol rc=0 · win rc=0 · 회수 · 판독 · 마감 11-11 끝) — 감시 화면의 그 줄은 이제 정보 없음",
   "다음": "8 단계 끝 (≈ 11-13 10:08) 뒤 런로그 `8b_진단_블록_v3_2026_11_10` 의 gabia 블록 v3",
   "by": "agent · 2026-11-12"
+ },
+ "8단계_끝_2026_11_13_1040": {
+  "관측": "2026-11-13 10:40:24 KST (gabia · 사용자 붙여넣기 · 감시 watch -n 30 'bash $HOME/w_b2o3_s8.sh | sed …')",
+  "진행": "tmux b2o3_s8 없음 · 이완까지 끝난 구조 54 / 54 · 구조당 평균 80 분 (끝난 54 개 기준) · 다 끝남 · 로그 꼬리 '2026-11-10 09:58:21 시작 (입력 · 소스 해시 재대조 통과)'",
+  "GPU": "1 MiB / 49140 MiB · 사용률 0 % (gabia 비었음)",
+  "비용_어림": "8 단계 ≈ 72 GPU-h (54 × 80 분 · 11-10 09:58 → 11-13 오전) · 1 단계 합계 ≈ 74 / 상한 85",
+  "rc": "감시 화면은 run_rc · check_rc 줄을 못 보여 준다 (감시 grep '끝 rc' ↔ 큐 '끝 run_rc=') — 블록 v3 첫 단계에서 s8_anneal.log 로 직접 확인한다 (둘 다 0 이 아니면 거기서 멈춘다)",
+  "결과_열람": "없음 — 진행 신호만 (본 판독 · 50 ps 진단 둘 다 아직 안 열었다)",
+  "곁_잡": "감시 화면 아래 cascade 묶음 2 줄 (tmux cascade_b2b 없음 · vol rc=0 · win rc=0) 은 11-11 에 끝 · 판독 · 마감된 재실행 그대로 — 새 정보 없음",
+  "다음": "블록 v3 → 키 8b_블록_발급_2026_11_13",
+  "by": "agent · 2026-11-13"
+ },
+ "8b_블록_발급_2026_11_13": {
+  "근거": "런로그 8b_진단_블록_v3_2026_11_10 (✅ 비준 커밋 7002085204183c88a0bec725e6d82f522eeeb1ef) — 순서 ② → ⓪ → ⓪b → ① → ③ → ④ 를 블록 1 하나로 · ④b → ⑤ 는 큐가 끝난 뒤 블록 2",
+  "로컬_대조_2026_11_13": "7002085 판 b2o3_bo_anneal_diag.py sha256 86b359f958e2aa97… (v3 값과 같음) · 그 판 원장에서 D-2026-11-10-b2o3-bo-placement-amend4-ea active · 12b8bdef 판 b2o3_bo_readout.py 872d91f7508ad21c… · run_uma_kgy.sh (095a655a…) · run_anneal.py (d12e120f…) 는 12b8bdef = 7002085 = 지금 HEAD 와 바이트 같음 · 7002085 는 origin/claude/evac-2026-11-12 이력 안",
+  "v3_에서_바꾼_것 (운영만 — 판정 규칙 · 도구 · 명령 인자는 그대로)": [
+   "fetch 브랜치 friendly → claude/evac-2026-11-12 (대피 중 원격 블록 규칙 · 커밋은 정확한 해시라 같은 판) · 그 커밋이 gabia 저장소에 이미 있으면 fetch 하지 않는다",
+   "$R/diag_src 가 이미 있으면 HEAD 가 7002085… 일 때만 진행 (다르면 멈춤 · 새로 만들지 않는다)",
+   "⓪b 한 줄에 종료 코드를 붙였다 (둘 다 True 가 아니면 멈춤 · 화면에 찍는 것은 v3 와 같다 — 에너지 값은 안 찍는다)",
+   "④ N_EXPECT 는 ③ 이 쓴 $R/s8b_frames/manifest.json 의 n 에서 읽는다 (손으로 옮겨 적지 않는다 · 진단 도구가 manifest 'n' = 프레임 수로 쓴다)",
+   "감시 스크립트 = ~/w_b2o3_s8b.sh — 실행기가 ~/w_<SESSION>.sh 를 쓴다 (run_uma_kgy.sh write_watch) · v3 기록의 '감시' 줄 w_b2o3_s8.sh 는 8 단계 것이라 8b 진행을 못 보여 준다 (정정 · v3 키는 그대로 둔다)",
+   "블록 전체를 ( … ) 서브셸로 감쌌다 — 멈춤이 사용자 셸을 닫지 않게 exit 대신 false · 인증을 물을 수 있는 fetch 뒤에 다른 줄을 두지 않는다 (블록 하나가 한 명령)"
+  ],
+  "블록_1": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; D=$R/diag_src; H=7002085204183c88a0bec725e6d82f522eeeb1ef\n( echo \"== 8 단계 rc\" && grep -a -E \"끝 run_rc=|결과 검사 check_rc=\" $R/s8_anneal.log | tail -2 && grep -a \"끝 run_rc=\" $R/s8_anneal.log | tail -1 | grep -q \"run_rc=0$\" && grep -a \"결과 검사 check_rc=\" $R/s8_anneal.log | tail -1 | grep -q \"check_rc=0 \" \\\n && echo \"== ② 진단 도구 worktree\" && { git -C /data/work/repo cat-file -e \"$H^{commit}\" 2>/dev/null || git -C /data/work/repo fetch origin claude/evac-2026-11-12; } \\\n && if [ -e $D ]; then [ \"$(git -C $D rev-parse HEAD)\" = $H ] || { echo \"⛔ $D 가 다른 판\"; false; }; else git -C /data/work/repo worktree add --detach $D $H; fi && git -C $D rev-parse HEAD \\\n && echo \"== ⓪ 비준 · 지문\" && $PY -c \"import json,sys; L=json.load(open('$D/db/governance/decisions.json'))['decisions']; s=[e.get('decision_state') for e in L if e.get('id')=='D-2026-11-10-b2o3-bo-placement-amend4-ea']; print('D-2026-11-10-b2o3-bo-placement-amend4-ea', s); sys.exit(0 if s==['active'] else 1)\" \\\n && echo \"86b359f958e2aa97eea8ec726826be6d46f9d8518b2a8b3b523882452312639f  $D/tools/doping/b2o3_bo_anneal_diag.py\" | sha256sum -c - \\\n && echo \"872d91f7508ad21c3d67f373bee228bd894994b731a77f69525818db3a8967cf  $R/src/tools/doping/b2o3_bo_readout.py\" | sha256sum -c - \\\n && echo \"== ⓪b 궤적에 에너지 · 운동량 (값은 안 찍음)\" && $PY -c \"import glob,sys; from ase.io import read; p=sorted(glob.glob('$R/s8_anneal/*/md.traj'))[0]; a=read(p, index=50); e=a.calc is not None and 'energy' in a.calc.results; m=a.has('momenta'); print('energy', e, 'momenta', m); sys.exit(0 if e and m else 1)\" \\\n && echo \"== ① 본 판독 (100 ps)\" && cd $R/src && $PY tools/doping/b2o3_bo_readout.py anneal --verdict $R/s6_verdict.json --receipt $R/s7_receipt.json --results $R/s8_anneal/anneal_results.json --out $R/s8_readout.json \\\n && echo \"== ③ 50 ps 프레임\" && $PY $D/tools/doping/b2o3_bo_anneal_diag.py extract --readout_tool $R/src/tools/doping/b2o3_bo_readout.py --verdict $R/s6_verdict.json --receipt $R/s7_receipt.json --results $R/s8_anneal/anneal_results.json --out_dir $R/s8b_frames \\\n && N=$($PY -c \"import json; print(json.load(open('$R/s8b_frames/manifest.json'))['n'])\") && echo \"N_EXPECT $N\" \\\n && { [ ! -e $R/s8b_relax ] || { echo \"⛔ s8b_relax 가 이미 있다\"; false; }; } \\\n && echo \"== ④ 이완만 발사\" && R=$R SRC=$R/src PY=$PY CAND=$R/s8b_frames N_EXPECT=$N SESSION=b2o3_s8b OUTNAME=s8b_relax TIME_PS=0 TEMP=500 SEED=20261109 RELAX_FMAX=0.05 bash $R/src/db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "감시": "watch -n 30 'bash $HOME/w_b2o3_s8b.sh | sed -E \"s/· 이완 .*/· 이완 중 (값 숨김)/\"' — 이완 중 relax.log 끝 줄 (FIRE 에너지) 을 가린다 (EC P2-5) · 이완만이라 md.log 가 없어 '구조당 평균' 줄은 안 나온다 (정상)",
+  "블록_2 (큐 끝난 뒤)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; D=$R/diag_src\n( echo \"== ④b 8b rc\" && grep -a -E \"끝 run_rc=|결과 검사 check_rc=\" $R/s8b_relax.log | tail -2 && grep -a \"끝 run_rc=\" $R/s8b_relax.log | tail -1 | grep -q \"run_rc=0$\" && grep -a \"결과 검사 check_rc=\" $R/s8b_relax.log | tail -1 | grep -q \"check_rc=0 \" \\\n && echo \"== ⑤ 판독 (50 ps 대 100 ps)\" && $PY $D/tools/doping/b2o3_bo_anneal_diag.py judge --readout_tool $R/src/tools/doping/b2o3_bo_readout.py --frames $R/s8b_frames/diag_frames.json --relax $R/s8b_relax/anneal_results.json --readout $R/s8_readout.json --out $R/s8b_diag.json \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계 (rc 줄이 없으면 큐가 아직 안 끝났다)\"",
+  "어림": "프레임 ≤ 54 개 이완만 · 7b 이완 3 개가 ≈ 3 분 → 어림 1–2 시간 · GPU-h ≈ 1–2 (합계 ≈ 75–76 / 85)",
+  "⛔": "승자 문장은 ⑤ 뒤에만 (개정 4 판정_사유 · 본_판독) · ① 출력은 본 판독 기록으로만 적는다 · s8_anneal 폴더 · $R/src 는 건드리지 않는다",
+  "by": "agent · 2026-11-13"
  }
 }
