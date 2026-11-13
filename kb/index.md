@@ -1,14 +1,16 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-13 · managed-files: 613
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-13 · managed-files: 615
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 404건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 406건)
 - 2026-11-13 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
-- 2026-11-13 · `kb/reviews/codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` — EF 프롬프트 — b2o3 B·O 배치 9 단계 DFT 도구 · 카드 개정 5 (결과 전): 출력 결속 · EOS (E, P, V) 결과 파일 결속 (DY 확인 4) · k 탐침 발동 범위 · 기준 셀 · 10 단계 고르기 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 (발송 전 · 사용자가 보낸다) · 기준 커…
+- 2026-11-13 · `kb/reviews/codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` — EF 프롬프트 — b2o3 B·O 배치 9 단계 DFT 도구 · 카드 개정 5 (결과 전): 출력 결속 · EOS (E, P, V) 결과 파일 결속 (DY 확인 4) · k 탐침 발동 범위 · 기준 셀 · 10 단계 고르기 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia 검사 결과 넣음 · 발송 (사…
+- 2026-11-13 · `kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md` — EF 회신 — b2o3 9 단계 DFT 도구 · 카드 개정 5: NO-GO (P0 0 · P1 6 · P2 6) · DY 확인 4 아직 해제 못 함 · 세 쌍 탐침 해석 찬성 · 기준 셀 조건부 수용 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
+- 2026-11-13 · `kb/reviews/codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md` — EG 프롬프트 — b2o3 9 단계 DFT 도구 v2 (Codex EF NO-GO 고침) 재확인: 한 출력 = 한 실행 · k 격자 대조 · 전자 수 · BFGS 기준 · 다시 결속 · EOS 보류 대상 null — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v2 검사 전 (결과를 §4 …
 - 2026-11-12 · `kb/projects/handoff_2026_11_12_evacuation.md` — 대피 인계 — 2026-11-12 (friendly 세션 토큰 소진 → 서브 세션 · 머지 때 충돌 0 설계 · b2o3 8 단계 gabia · li2s-3 2 단계 kgy 진행 중) · 진행
 - 2026-11-11 · `kb/projects/handoff_2026_11_11_token_limit.md` — 토큰 한도 인계 (2026-11-11 오후) — 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 다음 행동 · 사용자 결정 대기 · 인계 — 다음 세션이 이 카드부터 읽는다
 - 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…
@@ -25,8 +27,6 @@
 - 2026-11-10 · `kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md` — EE 회신 (내부 반박 리뷰) — li2s-3 큐 v2 · 판독 v2 경로: 조건부 GO (P0 0 · P1 3 · P2 6) — DZ 반례는 막는다 · 결과를 본 뒤 사다리 런을 다시 굴려 최종 갈래를 바꾸는 길 · 환경변수 카드 · 원장 · PHASE 로 첫 런 한도를 피하는 길이 남음 · 회신 원문 (독립 리뷰 에이전트 · 2026-11-10) — 저장소 …
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_model_switch.md` — 모델 전환 인계 (2026-11-10 저녁) — 같은 세션 · 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 기한 있는 도구 둘 · 사용자 결정 대기 셋 · 진행
 - 2026-11-10 · `kb/projects/handoff_2026_11_10_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-08 를 friendly 로 · fast-forward (2026-11-10) · b2o3 1 단계 7b 부터 · li2s-2 마감 · 웹앱 개념 카드 전달 · 발송 대기 — 사용자가 §0 프롬프트를 본 세션 (friendly) …
-- 2026-11-09 · `kb/concepts/se_redox_frontier.md` — 산화 · 환원은 어디서 먼저 일어나나 — free S²⁻ (VBM) · P–S σ* (CBM) · Li₃PO₄ 두 경로 · 확정 (개념 카드)
-- 2026-11-09 · `kb/reviews/codex_DU_prompt_cell_construction_v1_2026_11_09.md` — DU 프롬프트 — 셀구축 v1 (도핑 argyrodite 셀 만들기 · 고르기 · 안정성 · 후처리) + b2o3 B·O 배치 카드 개정 1 설계 리뷰 (결과 0 건 · 계산 전) · 발송 완료 · 회신 수령 2026-11-09 **NO-GO** (`c…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (273)
+## reviews/ (275)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-13 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -389,7 +389,9 @@
 - `kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 프롬프트 — b2o3 B·O 배치: 파일럿 이완 에너지가 100 ps 까지 계속 내려간다 → 8 단계 (54 런 × 100 ps) 판독 전에 박은 어닐 시간 진단 (50 ps 프레임 이완 · 두 시점 가족 판독) 과 잠정 규칙이 충분한가  (2026-11-10 · 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종…)
 - `kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 회신 — b2o3 어닐 시간 진단 (개정 3): 개정 3 문구 · 비교 규칙 그대로의 최종 판정은 보류 (P0 0 · P1 2 · P2 2) — D1 · D2 진단은 찬성 · 54 런은 계속 · 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로)  (2026-11-10 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …)
 - `kb/reviews/codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` — EB 프롬프트 — li2s-3 회신 DZ 고침: 사후 검증 (v1 런) · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 판독 허가 문 · 압력 도구 · 대조 잡 — v1 런을 사후 검증으로 받아도 되는가 · 고친 큐 v2 를 추가 런 전으로 미뤄도 되는가  (2026-11-10 · Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리…)
-- `kb/reviews/codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` — EF 프롬프트 — b2o3 B·O 배치 9 단계 DFT 도구 · 카드 개정 5 (결과 전): 출력 결속 · EOS (E, P, V) 결과 파일 결속 (DY 확인 4) · k 탐침 발동 범위 · 기준 셀 · 10 단계 고르기 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 (발송 전 · 사용자가 보낸다) · 기준 커…)
+- `kb/reviews/codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` — EF 프롬프트 — b2o3 B·O 배치 9 단계 DFT 도구 · 카드 개정 5 (결과 전): 출력 결속 · EOS (E, P, V) 결과 파일 결속 (DY 확인 4) · k 탐침 발동 범위 · 기준 셀 · 10 단계 고르기 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia 검사 결과 넣음 · 발송 (사…)
+- `kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md` — EF 회신 — b2o3 9 단계 DFT 도구 · 카드 개정 5: NO-GO (P0 0 · P1 6 · P2 6) · DY 확인 4 아직 해제 못 함 · 세 쌍 탐침 해석 찬성 · 기준 셀 조건부 수용  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
+- `kb/reviews/codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md` — EG 프롬프트 — b2o3 9 단계 DFT 도구 v2 (Codex EF NO-GO 고침) 재확인: 한 출력 = 한 실행 · k 격자 대조 · 전자 수 · BFGS 기준 · 다시 결속 · EOS 보류 대상 null — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v2 검사 전 (결과를 §4 …)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
 - `kb/reviews/codex_G_reply_to_F_2026_08_27.md` — 교차리뷰 G — 회신 F 수용 보고 + 후속 질문 (R3 설계·D_inc 오차·N_eff)  (2026-08-27 · 회신수령-반영완료 (→ codex_H_reply_to_G_2026_0…)

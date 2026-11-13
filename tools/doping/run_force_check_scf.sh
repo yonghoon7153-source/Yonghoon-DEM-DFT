@@ -57,6 +57,47 @@ _fc_ok() {
   return 0
 }
 
+# ── GPU 확인 (잡마다 시작 전) — 2026-11-13 Codex EF P2-5 ───────────────────────────
+#   MIN_FREE_MIB > 0 : VRAM 여유가 문턱 아래면 물러난다 · ⛔ 조회 실패 (빈 값 · 숫자 아님 · nvidia-smi 없음) 도 물러난다
+#     (옛 판은 조회가 비면 그냥 시작했다).
+#   GPU_EXCLUSIVE=1  : GPU 에 다른 compute 프로세스가 하나라도 있으면 물러난다 (조회 실패도) — 'UMA 등 다른 GPU 잡과
+#     동시 금지' 를 잡 시작 때 확인한다.
+#   ⛔ 못 하는 것: 잡이 **도는 중에** 다른 잡이 GPU 에 올라오는 것은 막지 못한다 (예약 · 공통 잠금이 아니다) —
+#     그쪽 실행기의 VRAM 문턱 · 운영 규칙 (gabia: pw.x 와 UMA 동시 금지) 으로 막는다.
+#   둘 다 꺼져 있으면 (기본) 옛 판과 같다 — 다른 쓰임 (힘 대조 · Nd Q1 · Q2) 의 동작은 안 바뀐다.
+_gpu_guard() {   # 0 = 시작해도 된다 · 1 = 물러난다
+  local now free_mib apps
+  now=$(date '+%m-%d %H:%M:%S')
+  if [ "${MIN_FREE_MIB:-0}" -gt 0 ] || [ "${GPU_EXCLUSIVE:-0}" = 1 ]; then
+    command -v nvidia-smi >/dev/null 2>&1 || { echo "[$now] ⛔ nvidia-smi 가 없다 — GPU 상태를 모른다 · 이 잡이 물러난다"; return 1; }
+  fi
+  if [ "${MIN_FREE_MIB:-0}" -gt 0 ]; then
+    free_mib=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' \r')
+    case "$free_mib" in
+      ''|*[!0-9]*) echo "[$now] ⛔ VRAM 조회 실패 ('$free_mib') — 이 잡이 물러난다 (조회 실패를 '여유 있음' 으로 읽지 않는다)"; return 1 ;;
+    esac
+    if [ "$free_mib" -lt "$MIN_FREE_MIB" ]; then
+      echo "[$now] ⛔ VRAM 여유 ${free_mib} MiB < MIN_FREE_MIB=${MIN_FREE_MIB} — **이 잡이 물러난다**."
+      echo "   남의 잡을 죽이지 않으려고 시작하지 않는다. 남은 점은 던지지 않았다."
+      echo "   먼저 돌던 계산이 끝난 뒤 같은 명령으로 이어 돌리면 끝난 점은 건너뛴다."
+      return 1
+    fi
+    echo "[$now]   VRAM 여유 ${free_mib} MiB (문턱 ${MIN_FREE_MIB})"
+  fi
+  if [ "${GPU_EXCLUSIVE:-0}" = 1 ]; then
+    apps=$(nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader 2>/dev/null) \
+      || { echo "[$now] ⛔ GPU 프로세스 조회 실패 — 독점 실행이라 물러난다"; return 1; }
+    apps=$(printf '%s\n' "$apps" | grep -v -i -E '^[[:space:]]*$|no running' || true)
+    if [ -n "$apps" ]; then
+      echo "[$now] ⛔ GPU 에 다른 compute 프로세스가 있다 — 독점 실행 (GPU_EXCLUSIVE=1) 이라 이 잡이 물러난다:"
+      printf '%s\n' "$apps" | sed 's/^/       /'
+      return 1
+    fi
+    echo "[$now]   GPU 독점 확인 (다른 compute 프로세스 0)"
+  fi
+  return 0
+}
+
 # ── --selftest : 완료 판정의 양성·음성 경로 (회신 BO 조건 1) ────────────────────
 if [ "${ROOT}" = "--selftest" ]; then
   _T=$(mktemp -d); _n=0; _f=0
@@ -89,6 +130,20 @@ if [ "${ROOT}" = "--selftest" ]; then
   _chk "relax 수렴 → 완료"                   "_fc_ok $_T/rr/scf.out"
   cp "$_T/rr/scf.in" "$_T/rx/"; printf "${_B}JOB DONE\n" > "$_T/rx/scf.out"
   _chk "relax 수렴 선언 없음 → **미완료**"    "! _fc_ok $_T/rx/scf.out"
+  # ── 2026-11-13 (Codex EF P2-5): GPU 확인 — 가짜 nvidia-smi ──
+  mkdir -p "$_T/gb"
+  printf '#!/bin/bash\ncase "$*" in *query-compute-apps*) [ "${MOCK_APPS_RC:-0}" = 0 ] || exit 9; [ -n "${MOCK_APPS:-}" ] && printf "%%s\\n" "$MOCK_APPS"; exit 0;; *memory.free*) [ "${MOCK_FREE_RC:-0}" = 0 ] || exit 9; printf "%%s\\n" "${MOCK_FREE:-}"; exit 0;; esac\n' > "$_T/gb/nvidia-smi"
+  chmod +x "$_T/gb/nvidia-smi"
+  _g() { ( PATH="$_T/gb:$PATH" env "$@" bash -c "$(declare -f _gpu_guard); _gpu_guard" >/dev/null 2>&1 ); }
+  _chk "VRAM 46000 ≥ 45000 → 시작"                      "_g MIN_FREE_MIB=45000 MOCK_FREE=46000"
+  _chk "VRAM 44000 < 45000 → 물러남"                    "! _g MIN_FREE_MIB=45000 MOCK_FREE=44000"
+  _chk "VRAM 조회 빈 값 → 물러남 (옛 판은 시작)"          "! _g MIN_FREE_MIB=45000 MOCK_FREE="
+  _chk "VRAM 조회 실패 (rc≠0) → 물러남"                 "! _g MIN_FREE_MIB=45000 MOCK_FREE_RC=1"
+  _chk "독점: 다른 compute 프로세스 → 물러남"            "! _g GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 MOCK_FREE=46000 'MOCK_APPS=123, python, 1500 MiB'"
+  _chk "독점: 프로세스 조회 실패 → 물러남"               "! _g GPU_EXCLUSIVE=1 MOCK_APPS_RC=1"
+  _chk "독점: 프로세스 0 · 여유 충분 → 시작"             "_g GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 MOCK_FREE=46000 MOCK_APPS="
+  _chk "둘 다 꺼짐 (기본) → 시작 (옛 쓰임 그대로)"        "_g MIN_FREE_MIB=0 GPU_EXCLUSIVE=0"
+  _chk "독점인데 nvidia-smi 없음 → 물러남"               "! ( PATH=/usr/bin/false-dir:/nonexistent env GPU_EXCLUSIVE=1 /bin/bash -c \"\$(declare -f _gpu_guard); _gpu_guard\" >/dev/null 2>&1 )"
   rm -rf "$_T"; echo "selftest: $_n 통과 · $_f 실패"; [ "$_f" = 0 ]; exit $?
 fi
 [ -n "$ROOT" ] || { echo "usage: $0 <스냅샷 디렉터리> [NP=16]"; exit 2; }
@@ -306,22 +361,11 @@ for i in "${INS[@]}"; do
   if _fc_ok "$d/scf.out"; then
     echo "[$(ts)] skip $n (완료: JOB DONE + 수렴 + 힘)"; skip_n=$((skip_n+1)); continue
   fi
-  # ── VRAM 양보 가드 (2026-09-08) ────────────────────────────────────────────
+  # ── VRAM 양보 가드 (2026-09-08) · 조회 실패 · 독점 (2026-11-13 Codex EF P2-5) ──────────────
   # ⛔ GPU 를 남과 나눠 쓸 때 QE 는 cuMemAlloc 으로 즉사한다 (li3nd r2 실측, 두 번).
-  #   위험한 건 **내가 죽는 것이 아니라 남을 죽이는 것**이다 — 먼저 돌던 잡이 BFGS
-  #   스텝에서 메모리를 더 잡으려 할 때 내가 자리를 먹고 있으면 그쪽이 죽는다.
-  #   그래서 점을 시작하기 **전에** 여유를 보고, 바닥이면 **이 잡이 물러난다**.
-  #   MIN_FREE_MIB=0 으로 끌 수 있다 (독점 실행일 때).
-  if [ "${MIN_FREE_MIB:-0}" -gt 0 ] && command -v nvidia-smi >/dev/null 2>&1; then
-    free_mib=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits 2>/dev/null | head -1)
-    if [ -n "$free_mib" ] && [ "$free_mib" -lt "$MIN_FREE_MIB" ]; then
-      echo "[$(ts)] ⛔ VRAM 여유 ${free_mib} MiB < MIN_FREE_MIB=${MIN_FREE_MIB} — **이 잡이 물러난다**."
-      echo "   남의 잡을 죽이지 않으려고 시작하지 않는다. 남은 점은 던지지 않았다."
-      echo "   먼저 돌던 계산이 끝난 뒤 같은 명령으로 이어 돌리면 끝난 점은 건너뛴다."
-      break
-    fi
-    echo "[$(ts)]   VRAM 여유 ${free_mib} MiB (문턱 ${MIN_FREE_MIB})"
-  fi
+  #   위험한 건 **내가 죽는 것이 아니라 남을 죽이는 것**이다 — 점을 시작하기 **전에** 보고, 바닥이면 **이 잡이 물러난다**.
+  #   MIN_FREE_MIB=0 · GPU_EXCLUSIVE=0 (기본) 이면 확인하지 않는다 (독점 실행일 때). 규칙은 _gpu_guard 한 곳.
+  _gpu_guard || break
   s=$(date +%s)
   ( cd "$d" && $MPI "$PWX" $PW_EXTRA -in scf.in > scf.out 2>&1 )
   e=$(date +%s)
