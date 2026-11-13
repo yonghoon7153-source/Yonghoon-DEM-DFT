@@ -1,0 +1,29 @@
+{
+  "native_checks": [
+    {
+      "repo": "nonrint",
+      "script": "check_doc_refs.py",
+      "rc": 1,
+      "stdout_sha256": "80fc7adf1858cc69e9a0ace140704be706999983ada5c5beae95d9d9afbbcb83",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "repo": "nonrint",
+      "script": "check_review_findings.py",
+      "rc": 0,
+      "stdout_sha256": "f5387565fa3e2a2f2b08a93c6c3310c7bd67d3d69f5fdb67ad83ae258eba7a7b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "doc_refs_diagnostic": {
+    "native_rc": 1,
+    "missing_paths": 0,
+    "bad_sha_occurrences": 96,
+    "known_exception_pairs_after_slash_normalization": 96,
+    "unmatched": [],
+    "note": "Windows walk paths use backslashes, exception table uses forward slashes; checker not changed; not a native pass"
+  },
+  "whole_gate_executed": false,
+  "research_or_field_execution": false,
+  "real_value_access": false
+}

@@ -1,0 +1,39 @@
+{
+  "source_sha256": "c020825f0bfc9423e5f88b728eb6ddf9dbf5d339d72252f1ae9dee8f18655b13",
+  "final_sha256": "465d21d2b26fa3a37f1887203701cb729b8b14a82ff3219f2b7056acf33b540a",
+  "source_pin": "e2b74919bc681f45b001145f07109d6fc9d12b90",
+  "receipt_pin": "f846f5bbe3a2d7cdbe256f29a5e3ef969835e1e2",
+  "changed_members": [
+    "word/document.xml"
+  ],
+  "replacements": [
+    [
+      "이 설명문의 M32P-01·02 수정은 재확인 대기이며 전체 HOLD입니다.",
+      "이 설명문의 M32P-01·02 수정도 2026-11-13 독립 재확인에서 전달 문서 범위 종결 가능으로 받았으며 전체 HOLD입니다."
+    ],
+    [
+      "이번 문구 수정은 재확인 대기입니다.",
+      "2026-11-13 독립 재확인에서 두 수정 모두 전달 문서 범위 종결 가능이며 새 지적 없음으로 받았습니다."
+    ]
+  ],
+  "all_other_zip_member_bytes_identical": true,
+  "scientific_text_and_equations_unchanged": true,
+  "scope": "delivery copy: two review-status sentences updated from received verdict; no operational GO",
+  "visual_check": {
+    "renderer": "Word 2021 read-only PDF + Poppler",
+    "pages": 8,
+    "inspected_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "clipping_or_overlap_observed": false,
+    "packaged_renderer": "unavailable: LibreOffice not installed",
+    "source_saved_by_Word": false
+  }
+}
