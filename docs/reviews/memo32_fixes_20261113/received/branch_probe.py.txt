@@ -1,0 +1,217 @@
+"""Document-only synthetic branch probes for memo32; standard library only.
+
+Does not import, execute, or modify research/engine sources. Labels are memo
+decision-contract outputs, not evidence of physical qualification.
+"""
+from collections import Counter
+from decimal import Decimal as D
+from itertools import product
+import json
+import math
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent
+STATES = ("hold", "cross", "above", "below")
+
+
+def prose_stage3(g, band, a, technical, friction):
+    # M:462,466-478: alarms precede table, then apply supplements inside only.
+    if technical or friction or a == "opposite":
+        return "ra"
+    table = {
+        "different": {"in": "na", "undefined": "ma", "out": "ra"},
+        "same": {"in": "ga", "undefined": "ma", "out": "ra"},
+        "middle": {"in": "ma", "undefined": "ma", "out": "ra"},
+        "opposite": {"in": "ra", "undefined": "ra", "out": "ra"},
+    }
+    ans = table[g][band]
+    if band == "in":
+        if ans in ("ga", "ma") and a == "insufficient":
+            ans = "na"
+        elif ans == "ga" and a == "middle":
+            ans = "ma"
+    return ans
+
+
+def appendix_stage3(g, band, a, technical, friction):
+    # M:1064-1070, independently transcribed sequential form.
+    if technical or friction or a == "opposite":
+        return "ra"
+    if band == "out" or g == "opposite":
+        return "ra"
+    if band == "undefined":
+        return "ma"
+    if g == "different":
+        return "na"
+    if g == "same":
+        return {"insufficient": "na", "middle": "ma"}.get(a, "ga")
+    return "na" if a == "insufficient" else "ma"
+
+
+def stage4(real, soft, value_reverse=False):
+    # M:500-503 / D-3:1083-1088.
+    if "hold" in (real, soft):
+        return "hold"
+    if (real, soft) in (("below", "cross"), ("below", "above"),
+                        ("cross", "above")):
+        return "hold"
+    if real == soft == "cross" and value_reverse:
+        return "hold"
+    if real == "cross":
+        return "4-i"
+    if real == "above" and soft == "cross":
+        return "4-ii"
+    return "4-iii"
+
+
+def fallback(context):
+    return "S-soft" if context == "4-ii" else "author"
+
+
+def f_result(real, soft, value_reverse, box_effect, context):
+    # M:510-515 / D-3:1116-1120: evaluate F-hold before box effect.
+    outcome = stage4(real, soft, value_reverse)
+    if outcome == "hold":
+        return ("F-hold", fallback(context))
+    if box_effect:
+        return ("F-box", fallback(context))
+    if real == "cross":
+        return ("F-i", "F-real")
+    if real == "above" and soft == "cross":
+        return ("F-ii", "S-soft" if context == "4-ii" else "F-soft")
+    return ("F-iii", "S-soft" if context == "4-ii" else "da-after-recheck")
+
+
+def opening(context, initial_band="in", recheck=None,
+            defect=False, repair_used=False, memory=True, gate=True):
+    # M:506-507 / D-3:1095-1111. New stage3 result must be reclassified,
+    # not recursively carried through without a finite repair-used state.
+    if initial_band == "undefined":
+        if recheck == "undefined":
+            return ("not-open-undefined", fallback(context))
+        if recheck in ("out", "large"):
+            if repair_used:
+                return ("second-failure", "author-no-verdict")
+            if defect:
+                return ("repair-once", "new-stage3-and-stage4-decision")
+            return ("not-open-fail", fallback(context))
+        if recheck != "in":
+            raise ValueError("undefined history requires one registered recheck")
+    if memory is not True:
+        return ("not-open-cost", fallback(context))
+    if not gate:
+        return ("cannot-open-gate", fallback(context))
+    return ("open", "run-F-pair")
+
+
+def main():
+    g_values = ("different", "same", "middle", "opposite")
+    a_values = ("insufficient", "sufficient", "middle", "opposite")
+    comparison = []
+    for inp in product(g_values, ("in", "undefined", "out"), a_values,
+                       (False, True), (False, True)):
+        p = prose_stage3(*inp)
+        a = appendix_stage3(*inp)
+        comparison.append({"input": inp, "prose": p, "appendix": a})
+    assert all(row["prose"] == row["appendix"] for row in comparison)
+
+    s4 = [{"real": r, "soft": s, "value_reverse": False,
+           "output": stage4(r, s)} for r, s in product(STATES, repeat=2)]
+    s4.append({"real": "cross", "soft": "cross", "value_reverse": True,
+               "output": stage4("cross", "cross", True)})
+    f_rows = []
+    for base, box, ctx in product(s4, (False, True), ("4-ii", "4-iii")):
+        f_rows.append({**base, "box_effect": box, "context": ctx,
+                       "f_result": f_result(base["real"], base["soft"],
+                                             base["value_reverse"], box, ctx)})
+
+    opening_rows = []
+    opening_cases = [
+        ("initial-in", {}),
+        ("undefined-then-in", {"initial_band": "undefined", "recheck": "in"}),
+        ("undefined-again", {"initial_band": "undefined", "recheck": "undefined"}),
+        ("outside-no-defect", {"initial_band": "undefined", "recheck": "out"}),
+        ("large-no-defect", {"initial_band": "undefined", "recheck": "large"}),
+        ("outside-defect", {"initial_band": "undefined", "recheck": "out", "defect": True}),
+        ("outside-after-repair", {"initial_band": "undefined", "recheck": "out", "defect": True, "repair_used": True}),
+        ("memory-false", {"memory": False}),
+        ("memory-missing", {"memory": None}),
+        ("gate-fails", {"gate": False}),
+    ]
+    for ctx, (case, opts) in product(("4-ii", "4-iii"), opening_cases):
+        opening_rows.append({"case": case, "context": ctx, "output": opening(ctx, **opts)})
+
+    # Original DRD-04/05/06 cases: safe choices in the new contract.
+    valid_points = []
+    empty_result = "hold" if not valid_points else min(valid_points)
+    assert empty_result == "hold"
+    start = min([(D("0.12"), D("11")), (D("0.18"), D("12"))],
+                key=lambda pair: (abs(pair[1] - D("11.5")), pair[0]))[0]
+    # Logarithmic midpoint gives equal symbolic distances; tie-break small sigma.
+    equal_log_distance = D("1")
+    qual = min([(D("0.12"), equal_log_distance), (D("0.18"), equal_log_distance)],
+               key=lambda pair: (pair[1], pair[0]))[0]
+    assert start == qual == D("0.12")
+    original_f = f_result("hold", "cross", False, True, "4-ii")
+    assert original_f == ("F-hold", "S-soft")
+
+    # New contract gap: missing extra matched-box point outside the reduced
+    # box's own walk. None is failed after retry, not a numeric observation.
+    final_soft = {"0.18": D("11.8"), "0.12": D("10.6")}
+    reduced_soft = {"0.18": D("11.0"), "0.27": D("12.1"), "0.12": None}
+    own_final_walk = ["0.18", "0.12"]
+    own_reduced_walk = ["0.18", "0.27"]
+    final_star = 0.12 * (0.18 / 0.12) ** ((11.5 - 10.6) / (11.8 - 10.6))
+    reduced_star = 0.18 * (0.27 / 0.18) ** ((11.5 - 11.0) / (12.1 - 11.0))
+    final_qual = min(own_final_walk, key=lambda k: (abs(math.log(float(k) / final_star)), float(k)))
+    reduced_qual = min(own_reduced_walk, key=lambda k: (abs(math.log(float(k) / reduced_star)), float(k)))
+    # Ensure the failed .12 point is not either pair's qualification point:
+    # otherwise its thickness failure could already hold the final S arm.
+    assert final_qual == reduced_qual == "0.18"
+    missing_required = [k for k in own_final_walk if reduced_soft.get(k) is None]
+    deltas_observed = {k: abs(v - reduced_soft[k]) for k, v in final_soft.items()
+                       if reduced_soft.get(k) is not None}
+    # Both S-real arms are above; both S-soft arms cross; all their own
+    # walks and qualifications pass. S-real matched values are identical.
+    observed_box_effect = any(v > D("1") for v in deltas_observed.values())
+    assert not observed_box_effect
+    assert missing_required == ["0.12"]
+    missing_case = {
+        "final_soft_walk": own_final_walk,
+        "reduced_soft_walk": own_reduced_walk,
+        "final_soft_porosity_percent": {k: str(v) for k, v in final_soft.items()},
+        "reduced_soft_porosity_percent": {k: None if v is None else str(v) for k, v in reduced_soft.items()},
+        "both_S_pairs": "4-ii; S-real above, S-soft cross; no own-walk or qualification failure",
+        "extra_required_point_failed_after_retry": missing_required,
+        "final_sigma_star": final_star,
+        "reduced_sigma_star": reduced_star,
+        "both_qualification_points": [final_qual, reduced_qual],
+        "observed_differences_pp": {k: str(v) for k, v in deltas_observed.items()},
+        "literal_comparison_at_missing_point": "undefined: abs(10.6 - failed-run) > 1 cannot be evaluated",
+        "if_missing_pairs_are_skipped": f_result("cross", "cross", False, observed_box_effect, "4-ii"),
+        "if_required_comparison_is_incomplete_then_hold": ("F-box-or-comparison-hold", "S-soft"),
+        "status": "gap in contract; neither missing-data policy is explicitly assigned; not a solver test",
+    }
+
+    summary = {
+        "scope": "synthetic document contracts only; real runs=0; qualification=unverified",
+        "stage3_input_rows": len(comparison),
+        "stage3_prose_appendix_mismatches": sum(r["prose"] != r["appendix"] for r in comparison),
+        "stage4_semantic_rows": len(s4),
+        "stage4_counts": dict(Counter(row["output"] for row in s4)),
+        "F_result_input_rows": len(f_rows),
+        "opening_transition_rows": len(opening_rows),
+        "empty_valid_set": empty_result,
+        "fixed_packing_id": 1,
+        "exploration_exact_tie_small_sigma": str(start),
+        "qualification_symbolic_log_tie_small_sigma": str(qual),
+        "old_DRD06_cross_but_qualification_failure": original_f,
+        "new_missing_box_point": missing_case,
+    }
+    (OUT / "branch_results.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (OUT / "branch_tables.json").write_text(json.dumps({"stage3": comparison, "stage4": s4, "F_results": f_rows, "opening": opening_rows}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()

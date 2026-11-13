@@ -1,0 +1,18 @@
+{
+  "doc_refs": {
+    "native_rc": 1,
+    "missing_paths": 0,
+    "missing_sha_occurrences": 96,
+    "source_sha256": "d3793817526505fa079b1b7ccc0a0ad05204a5f22a544d80a68c8e9b20778f38",
+    "existing_exception_matches_after_slash_normalization": 96,
+    "native_pass": false,
+    "limitation": "Existing Windows backslash versus POSIX exception-key mismatch. Checker unchanged. Two newly introduced documentation path references corrected and rechecked."
+  },
+  "review_findings": {
+    "rc": 0,
+    "source_sha256": "edf3297395dea41ac66f86e97da8b3b8c215e943cdaf6c644c4648ffc203f3bd",
+    "args": []
+  },
+  "whole_gate": "NOT_RUN; Claude integration task",
+  "checker_raw_logs_in_repo": false
+}

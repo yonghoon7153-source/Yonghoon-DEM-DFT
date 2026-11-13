@@ -1,0 +1,98 @@
+{
+  "zip_name": "codex_memo32_review_1e823a34c_20261113.zip",
+  "zip_bytes": 574126,
+  "zip_sha256": "e9d9827b09ed55a5d3c3c23668d0d10cdefe65c117f3e001297d8a9326820d8f",
+  "members": 63,
+  "outer_checksums": 62,
+  "crc_safe_paths_duplicates": "PASS",
+  "internal_checksums": [
+    {
+      "list": "agent_branches/SHA256SUMS.txt",
+      "entries": 5,
+      "matched": 5
+    },
+    {
+      "list": "agent_contact/SHA256SUMS",
+      "entries": 4,
+      "matched": 4
+    },
+    {
+      "list": "agent_literature/SHA256SUMS",
+      "entries": 7,
+      "matched": 7
+    }
+  ],
+  "selected": [
+    {
+      "original_zip_member": "FINAL_REVIEW_MEMO32_1e823a34c_20261113.md",
+      "repo_copy": "received/verdict.md.txt",
+      "bytes": 24168,
+      "sha256": "4f58c03e2bfe0a4b021df7cfd379cd4b5613ce8e007adb8ba0e91de8e5c1f0a8",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "FINDINGS.json",
+      "repo_copy": "received/findings.json",
+      "bytes": 3717,
+      "sha256": "08ade2c81237e48f1d3b5a1176ec57b0dbf98df47b7927291ee4b4ca25e05306",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "convergence_results.json",
+      "repo_copy": "received/convergence_results.json",
+      "bytes": 9407,
+      "sha256": "a15cad00e3b53d6f929305434c0a856f4a9c33258fae57b73a7159626d067206",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "agent_contact/contact_probe_results.json",
+      "repo_copy": "received/contact_probe_results.json",
+      "bytes": 22349,
+      "sha256": "26b1ad6ca6e23d45d574676c28b4843a1a4f4c13b66dcdb78802f463de5384d4",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "agent_branches/branch_results.json",
+      "repo_copy": "received/branch_results.json",
+      "bytes": 1765,
+      "sha256": "194ca304127579a3db4c44c757f5ae3ffa53f13e32862f5977ff2e680510e2d7",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "agent_literature/results.json",
+      "repo_copy": "received/literature_results.json",
+      "bytes": 1787,
+      "sha256": "6060a3671fc7dac1ac46ed79f69b6d99bc9fba2a25498f167e18737039259258",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "probe_convergence.py",
+      "repo_copy": "received/probe_convergence.py.txt",
+      "bytes": 7220,
+      "sha256": "941aaf350dd706a0b9d41dbf9b91f3970204360113547b0ea6f28045d2f26630",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "agent_contact/contact_probe.py",
+      "repo_copy": "received/contact_probe.py.txt",
+      "bytes": 8303,
+      "sha256": "646352a6f54d5c0253e492649d10263c8ad00b1f12736672306b78ca691a7bb7",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "agent_branches/branch_probe.py",
+      "repo_copy": "received/branch_probe.py.txt",
+      "bytes": 10159,
+      "sha256": "dcbe58e08ce4faa60a76b9475a531d63fb9a7f23ae93ee7e850d69ee0e3a891b",
+      "byte_transform": "NONE; filename mapping only"
+    },
+    {
+      "original_zip_member": "agent_literature/reproduce.py",
+      "repo_copy": "received/literature_reproduce.py.txt",
+      "bytes": 4879,
+      "sha256": "086dcde65900534635bc373882ccd0bd3cf1e3886eb1ab93da469080d52656cb",
+      "byte_transform": "NONE; filename mapping only"
+    }
+  ],
+  "excluded": "Original ZIP and full historical inputs/raw environment receipts kept outside repository; selected file references retain their original ZIP context."
+}

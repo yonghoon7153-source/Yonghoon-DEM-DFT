@@ -1,0 +1,194 @@
+"""Independent memo-contract arithmetic; stdlib only, no supplied code imports.
+
+This script does not implement or validate an MPM/DEM solver. Each named case is
+one synthetic observation or document-contract check; subobservations are not
+independent physical tests. It reads only the pinned memo and writes its report
+inside this scratch directory.
+"""
+from fractions import Fraction as Q
+from itertools import permutations
+from pathlib import Path
+import hashlib
+import json
+import sys
+
+ROOT = Path(__file__).resolve().parent
+MEMO = ROOT.parent / 'input/memo32/snapshot/docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md'
+EXPECTED = '2faf58241c7d657e1bda97ac1dc3fcf4b0619bac0fe814c844242eca9188cbe0'
+raw = MEMO.read_bytes()
+assert hashlib.sha256(raw).hexdigest() == EXPECTED
+
+
+def kinetic(vs):
+    return sum(sum(x*x for x in v) for v in vs) / 2
+
+
+def momentum(vs):
+    return [sum(v[k] for v in vs) for k in range(len(vs[0]))]
+
+
+def bspline(x):
+    x = abs(x)
+    if x < Q(1, 2):
+        return Q(3, 4) - x*x
+    if x < Q(3, 2):
+        return (Q(3, 2)-x)**2 / 2
+    return Q(0)
+
+
+def support(x):
+    return [n for n in range(-5, 12) if bspline(x-n) > 0]
+
+
+def result_for_jt(jt):
+    jbc = (Q(21, 10) + jt) / 2
+    vs = [[Q(-1, 2), -jt], [Q(-1, 2), Q(1, 10)+jt-jbc], [Q(0), -2+jbc]]
+    slip = vs[1][1] - vs[0][1]
+    return {'jt_on_B': jt, 'jbc_on_C': jbc, 'velocities': vs,
+            'AB_final_slip': slip, 'AB_Jt_times_final_slip': jt*slip,
+            'AB_Coulomb_bound_ok': abs(jt) <= Q(1, 4),
+            'AB_final_Coulomb_law_ok': (slip == 0 and abs(jt) <= Q(1, 4))
+                or (slip != 0 and abs(jt) == Q(1, 4) and jt*slip < 0),
+            'kinetic_after': kinetic(vs), 'momentum_after': momentum(vs)}
+
+
+def sequential(pair_order):
+    vs = [[Q(0), Q(0)], [Q(-1), Q(1, 10)], [Q(0), Q(-2)]]
+    abjt = Q(0)
+    for pair in pair_order:
+        if pair == 'AB':
+            jn = -(vs[1][0]-vs[0][0])/2
+            jt = max(-jn/2, min(jn/2, -(vs[1][1]-vs[0][1])/2))
+            abjt = jt
+            vs[0][0] -= jn
+            vs[1][0] += jn
+            vs[0][1] -= jt
+            vs[1][1] += jt
+        else:
+            jn = -(vs[2][1]-vs[1][1])/2
+            vs[1][1] -= jn
+            vs[2][1] += jn
+    slip = vs[1][1]-vs[0][1]
+    return {'pair_order': pair_order, 'velocities': vs, 'AB_jt': abjt,
+            'AB_final_slip': slip, 'AB_Jt_times_final_slip': abjt*slip,
+            'BC_final_normal_separation_speed': vs[2][1]-vs[1][1],
+            'kinetic_after': kinetic(vs), 'momentum_after': momentum(vs)}
+
+
+cases = {}
+cases['platen_U8'] = [
+    {'node_before': v, 'wall_velocity': Q(-1),
+     'unilateral_after': min(v, Q(-1)), 'unilateral_wall_impulse': v-min(v, Q(-1)),
+     'bilateral_after': Q(-1), 'bilateral_wall_impulse': v+1}
+    for v in [Q(-2), Q(-1), Q(0)]
+]
+assert cases['platen_U8'][0]['unilateral_wall_impulse'] == 0
+assert cases['platen_U8'][0]['bilateral_wall_impulse'] == -1
+
+v0 = [[Q(1)], [Q(-1)], [Q(0)]]
+v1 = [[Q(11, 10)], [Q(-11, 10)], [Q(0)]]
+cases['DRD08_pair_conservation_not_energy'] = {
+    'kinetic_before': kinetic(v0), 'kinetic_after': kinetic(v1),
+    'momentum_before': momentum(v0), 'momentum_after': momentum(v1),
+    'U5c_iii_rejects': kinetic(v1) > kinetic(v0)}
+assert kinetic(v1) == Q(121, 100)
+
+v0 = [[Q(1), Q(1, 2)], [Q(-1), Q(-1, 2)]]
+v1 = [[Q(0), Q(1)], [Q(0), Q(-1)]]
+cases['wrong_friction_direction_energy_decreases'] = {
+    'kinetic_before': kinetic(v0), 'kinetic_after': kinetic(v1),
+    'momentum_before': momentum(v0), 'momentum_after': momentum(v1),
+    'slip_before': Q(1), 'slip_after': Q(2), 'jt_times_final_slip': Q(1),
+    'Coulomb_bound_ok': True, 'U5c_iiprime_rejects': True}
+assert kinetic(v0) == Q(5, 4) and kinetic(v1) == 1
+
+cases['MR2_03_final_slip_contract'] = {
+    'kinetic_before': Q(501, 200),
+    'simultaneous_correct': result_for_jt(Q(1, 4)),
+    'wrong_pre_slip_choice': result_for_jt(Q(-1, 4)),
+    'AB_then_BC_once': result_for_jt(Q(-1, 20))}
+assert cases['MR2_03_final_slip_contract']['simultaneous_correct']['AB_final_slip'] == Q(-23, 40)
+assert cases['MR2_03_final_slip_contract']['AB_then_BC_once']['AB_Jt_times_final_slip'] == Q(41, 800)
+
+permutation_runs = []
+for labels in permutations(['A', 'B', 'C']):
+    ranks = {body: i for i, body in enumerate(labels)}
+    order = sorted(['AB', 'BC'], key=lambda pair: tuple(sorted(ranks[b] for b in pair)))
+    row = sequential(order)
+    row['body_label_order'] = list(labels)
+    permutation_runs.append(row)
+cases['six_body_label_permutations_of_sequential_toy'] = permutation_runs
+states = {str(r['velocities']) for r in permutation_runs}
+assert len(states) == 2
+
+initial = [Q(3, 5), Q(51, 10)]
+moved = [initial[0]+1, initial[1]-1]
+distance = initial[1]-initial[0]
+shared = sorted(set(support(moved[0])) & set(support(moved[1])))
+cases['DRD09_support_approach'] = {
+    'positions_initial': initial, 'positions_moved': moved,
+    'initial_distance': distance, 'support_radius_w': Q(3, 2), 'budgets': [1, 1],
+    'old_one_budget_edge': distance <= 3+1,
+    'current_sum_budget_edge': distance <= 3+1+1,
+    'initial_supports': [support(x) for x in initial],
+    'moved_supports': [support(x) for x in moved], 'shared_positive_mass_nodes': shared,
+    'same_color_P2G_accepted_under_329': False,
+    'reason': 'If both remain one color, rule (ii) discards the P2G step before use.'}
+assert shared == [3] and distance > 4 and distance <= 5
+
+cases['DRD09_original_ID_vs_nearest_ID'] = {
+    'original_three_IDs_at_one_node': [1, 2, 3],
+    'original_conflict_graph': [[1, 2], [1, 3], [2, 3]],
+    'minimum_colors_original': 3,
+    'nearest_owner_only': [1], 'apparent_colors_after_identity_loss': 1,
+    'memo_327_preserves_original_IDs': True}
+
+cases['DRD11_fixed_AM_impulse'] = {
+    'mass': 1, 'velocity_before': -1, 'velocity_after': 0,
+    'grid_impulse': 1, 'fixed_AM_impulse': -1,
+    'zero_AM_velocity_does_not_mean_zero_reaction': True}
+
+positions = [Q(3, 5), Q(9, 10)]
+weights = [[bspline(x-node) for node in [0, 1, 2]] for x in positions]
+velocities = [sum(node*w for node, w in zip([0, 1, 2], ws)) for ws in weights]
+cases['DRD11_same_quadratic_stencil_not_permanent_weld'] = {
+    'particle_positions': positions, 'shared_stencil': [0, 1, 2],
+    'grid_velocity': [0, 1, 2], 'weights': weights, 'G2P_velocities': velocities,
+    'separation_before': positions[1]-positions[0],
+    'separation_after_dt1': positions[1]+velocities[1]-positions[0]-velocities[0]}
+assert all(sum(ws) == 1 for ws in weights) and velocities == positions
+assert cases['DRD11_same_quadratic_stencil_not_permanent_weld']['separation_after_dt1'] == Q(3, 5)
+
+lines = raw.decode('utf-8').splitlines()
+assert '(c) 물체 ≥ 3 노드에서 U5 (c)' in lines[350]
+assert '위반 비율' in lines[350] and '응력 차를 보고한다' in lines[350]
+assert '침투 · 질량 보존 위반' in lines[457]
+assert '| O7 | 탈압 되돌아옴 | 분리 없음 |' in lines[279]
+cases['NEW_CONTACT_01_U6c_decision_hole'] = {
+    'type': 'synthetic observed-result vector, not an implemented acceptance function',
+    'other_U0_U1_U2_U5_U7_U8_fixtures': 'assume passed',
+    'U6a_Phi12': Q(9, 10), 'U6a_Phi16': Q(9, 10),
+    'U6b_each_arm_ln_sigma_by_resolution': [0, 0, 0, 0],
+    'U6c_local_counterexample': cases['DRD08_pair_conservation_not_energy'],
+    'U6c_energy_violation_fraction': Q(1),
+    'U6c_permutation_stress_difference_fraction_alternative': Q(1, 5),
+    'global_458_technical_failure': False,
+    'U6c_required_next_action_in_351': 'report',
+    'explicit_U6c_rejection_branch': None,
+    'interpretation': 'No claim that an implementation passes: document leaves the rejection/stop policy undefined.'}
+
+
+def encode(value):
+    if isinstance(value, Q):
+        return {'exact': str(value), 'float': float(value)}
+    raise TypeError(type(value).__name__)
+
+
+payload = {
+    'scope': 'Pinned memo text plus synthetic arithmetic only. Research engine runs: 0.',
+    'memo_SHA256': EXPECTED, 'memo_lines': len(lines),
+    'python': sys.version, 'cases': cases,
+    'counting': 'Named cases include old counterexample reproductions and subobservations; not physical tests or implementations.'}
+output = json.dumps(payload, ensure_ascii=False, indent=2, default=encode)
+(ROOT / 'contact_probe_results.json').write_text(output+'\n', encoding='utf-8')
+print(output)

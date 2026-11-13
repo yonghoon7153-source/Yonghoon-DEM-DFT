@@ -1,0 +1,81 @@
+{
+  "proposal_only": true,
+  "ledger_modified": false,
+  "overall_gate": "HOLD",
+  "candidate_commit": "<<sha:docs: address memo32 independent findings M32R-01-06>>",
+  "existing_document_closure_possible": [
+    "DRD-02",
+    "DRD-03",
+    "DRD-04",
+    "DRD-05",
+    "DRD-06",
+    "DRD-07",
+    "DRD-09",
+    "DRD-13"
+  ],
+  "existing_partial": [
+    "DRD-01",
+    "DRD-08",
+    "DRD-10",
+    "DRD-11",
+    "DRD-12",
+    "SELF-161"
+  ],
+  "new_findings": [
+    {
+      "id": "M32R-01",
+      "severity": "P1",
+      "prior_ids": [
+        "DRD-01"
+      ],
+      "proposed_status": "claimed_fixed",
+      "scope": "document candidate only; independent recheck pending"
+    },
+    {
+      "id": "M32R-02",
+      "severity": "P2",
+      "prior_ids": [
+        "DRD-08"
+      ],
+      "proposed_status": "claimed_fixed",
+      "scope": "document candidate only; independent recheck pending"
+    },
+    {
+      "id": "M32R-03",
+      "severity": "P2",
+      "prior_ids": [
+        "DRD-12"
+      ],
+      "proposed_status": "claimed_fixed",
+      "scope": "document candidate only; independent recheck pending"
+    },
+    {
+      "id": "M32R-04",
+      "severity": "P3",
+      "prior_ids": [
+        "DRD-11"
+      ],
+      "proposed_status": "claimed_fixed",
+      "scope": "document candidate only; independent recheck pending"
+    },
+    {
+      "id": "M32R-05",
+      "severity": "P3",
+      "prior_ids": [
+        "DRD-10"
+      ],
+      "proposed_status": "claimed_fixed",
+      "scope": "document candidate only; independent recheck pending"
+    },
+    {
+      "id": "M32R-06",
+      "severity": "P3",
+      "prior_ids": [
+        "SELF-161"
+      ],
+      "proposed_status": "claimed_fixed",
+      "scope": "document candidate only; independent recheck pending"
+    }
+  ],
+  "instructions": "Claude to reconcile existing IDs and narrow scope; no automatic verified/closed promotion; received/findings.json is an immutable review copy, not project ledger."
+}
