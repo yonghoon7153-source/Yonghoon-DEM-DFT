@@ -1,0 +1,66 @@
+{
+  "memo_v3_2.md": true,
+  "briefing_ko.md": true,
+  "historical_fixture_three_outputs_identical": true,
+  "docx_nonempty_paragraphs": 211,
+  "docx_model_all_text_matches": true,
+  "status_controls": {
+    "candidate": {
+      "accepted": true,
+      "line": "원 메모 = 문서 잔여 종결 가능, 전체 HOLD"
+    },
+    "원 메모": {
+      "accepted": false,
+      "error": "원 메모.md:4: 제목 블록의 줄 \"원 메모 = 문서 잔여 종결 가능, 전체 HOLD\" 을 뒷받침하는 글 \"원 메모\" 이 원고에 없다"
+    },
+    "전체 HOLD": {
+      "accepted": false,
+      "error": "전체 HOLD.md:4: 제목 블록의 줄 \"원 메모 = 문서 잔여 종결 가능, 전체 HOLD\" 을 뒷받침하는 글 \"전체 HOLD\" 이 원고에 없다"
+    },
+    "문서 범위 종결 가능": {
+      "accepted": false,
+      "error": "문서 범위 종결 가능.md:4: 제목 블록의 줄 \"외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중\" 을 뒷받침하는 글 \"방향은 맞다\" 이 원고에 없다"
+    }
+  },
+  "independent_local_reverts": [
+    {
+      "reverted": "section4",
+      "line": 45,
+      "real_candidate_test": "test_contact_explanation_in_section4",
+      "detected": true
+    },
+    {
+      "reverted": "unloading",
+      "line": 40,
+      "real_candidate_test": "test_unloading_reporting_not_zero_recovery",
+      "detected": true
+    },
+    {
+      "reverted": "calibration",
+      "line": 124,
+      "real_candidate_test": "test_calibration_is_not_validation",
+      "detected": true
+    },
+    {
+      "reverted": "glossary",
+      "line": 141,
+      "real_candidate_test": "test_glossary_not_permanent_weld",
+      "detected": true
+    }
+  ],
+  "arithmetic": {
+    "interpolated_velocity": [
+      0.6,
+      0.9
+    ],
+    "gap_before": 0.3,
+    "gap_after_dt1": 0.6,
+    "bounded_response_range": [
+      0.15,
+      0.16
+    ],
+    "unreachable_target": 0.115,
+    "scope": "dimensionless only"
+  },
+  "corrected_docx_sha256": "c020825f0bfc9423e5f88b728eb6ddf9dbf5d339d72252f1ae9dee8f18655b13"
+}
