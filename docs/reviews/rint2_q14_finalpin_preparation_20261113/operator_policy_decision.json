@@ -1,0 +1,21 @@
+{
+  "author_date_KST": "2026-11-14",
+  "record_date_UTC": "2026-11-13",
+  "question_scope": "S0 and probe6 stop-time policy only",
+  "author_reply": "운영자 감시·UTC 표시 유지 (권고)",
+  "approved": true,
+  "policy": "Keep existing monitor logic; operator monitoring and absolute UTC stop-deadline display.",
+  "automatic_stop_added": false,
+  "Q11_existing_timeout_seconds": 5400,
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "actual_execution_GO": false,
+  "actual_operator": null,
+  "start_utc": null,
+  "stop_utc": null,
+  "supported_environment": null,
+  "resources": null,
+  "overnight_scope_reply": "현장 실행 없이 실무 준비 계속 (권고)",
+  "overnight_scope": "documents, blocks and authorized synthetic preparation only; no field execution",
+  "scientific_results": 0,
+  "overall": "HOLD"
+}
