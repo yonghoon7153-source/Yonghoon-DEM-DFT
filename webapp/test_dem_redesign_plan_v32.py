@@ -87,8 +87,8 @@ class Content32(unittest.TestCase):
         spec.loader.exec_module(mod)
         current = source('plan_newcomer_ko.md')
         doc = mod.parse(current, 'current.md', extended=True)
-        self.assertEqual(mod._newcomer_status_line(doc)[-1], '외부 검토 = 문서 잔여 종결 가능, 전체 HOLD')
-        for missing in ('전체 HOLD', '문서 범위 종결 가능'):
+        self.assertEqual(mod._newcomer_status_line(doc)[-1], '원 메모 = 문서 잔여 종결 가능, 전체 HOLD')
+        for missing in ('원 메모', '전체 HOLD', '문서 범위 종결 가능'):
             with self.subTest(missing=missing), self.assertRaises(mod.ParseError):
                 mod._newcomer_status_line(mod.parse(current.replace(missing, '근거 누락'), 'missing.md', extended=True))
         fixture = (ROOT/'webapp/test_fixtures/dem_redesign_plan/fixture_ko.md').read_text(encoding='utf-8')

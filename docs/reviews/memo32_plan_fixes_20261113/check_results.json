@@ -1,0 +1,31 @@
+{
+  "checks": [
+    {
+      "script": "scripts/check_doc_refs.py",
+      "sha256": "d3793817526505fa079b1b7ccc0a0ad05204a5f22a544d80a68c8e9b20778f38",
+      "rc": 1,
+      "seconds": 10.11,
+      "stdout_bytes": 11360,
+      "stderr_bytes": 0
+    },
+    {
+      "script": "scripts/check_review_findings.py",
+      "sha256": "edf3297395dea41ac66f86e97da8b3b8c215e943cdaf6c644c4648ffc203f3bd",
+      "rc": 0,
+      "seconds": 110.928,
+      "stdout_bytes": 233908,
+      "stderr_bytes": 0
+    }
+  ],
+  "windows_reference_diagnostic": {
+    "native_rc": 1,
+    "bad_sha_occurrences": 96,
+    "normalized_pairs_in_existing_exception_table": 96,
+    "unmatched": [],
+    "explanation": "walk_docs yields Windows backslashes; exception keys use forward slashes; source unchanged; diagnostic comparison is not native pass"
+  },
+  "new_missing_path_references": 0,
+  "native_docrefs_pass": false,
+  "linux_integration_gate": "Claude pending",
+  "full_gate_run": false
+}

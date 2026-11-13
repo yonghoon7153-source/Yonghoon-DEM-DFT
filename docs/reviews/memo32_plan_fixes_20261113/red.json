@@ -1,0 +1,8 @@
+{
+  "methods": 9,
+  "failures": 6,
+  "errors": 0,
+  "rc": 1,
+  "source_sha256": "7322d4d855da94aa783e57422ac04f1020022f4609908cb67183ee75a0e50d2d",
+  "scope": "targeted document assertions and dimensionless arithmetic, not physics or arbitrary semantic validation"
+}
