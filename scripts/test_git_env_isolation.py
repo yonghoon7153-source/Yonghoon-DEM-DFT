@@ -581,7 +581,7 @@ def g7():
         'XDG_CONFIG_HOME 없음 · 지울 이름 없음 (고치기 전 = 훅이 돈다)',
         not bad and fe.get('GIT_CONFIG_NOSYSTEM') == '1' and fe.get('GIT_CONFIG_GLOBAL') == os.devnull and 'XDG_CONFIG_HOME' not in fe
         and os.path.isdir(fe.get('HOME') or '') and os.listdir(fe['HOME']) == [] and fe.get('HOME') != os.environ.get('HOME')
-        and not any(dropped(k) for k in fe),
+        and not any(dropped(k) for k in fe if k != 'GIT_CONFIG_PARAMETERS'),    # ★ 11-13 RCPX-02 — 고정물 자신의 hooksPath 고정 한 줄만 (G7g 가 값을 본다)
         (bad, {k: fe.get(k) for k in ('GIT_CONFIG_NOSYSTEM', 'GIT_CONFIG_GLOBAL', 'HOME')} if fe else '고치기 전 판 — git_fixture_env 없음'))
     #  (d) ★ 3 회차 변이 보강 — 넘긴 env 의 꼴 (XDG_CONFIG_HOME · HOME 을 넘겨도 뺀다 · 이 시험 프로세스 env 에는 XDG 가 없어 (c) 꼴로는 못 가린다)
     fe2 = fx_env({'XDG_CONFIG_HOME': '/x', 'HOME': '/h', 'GIT_DIR': '/v', 'GIT_CONFIG_KEY_0': 'k', 'GIT_CEILING_DIRECTORIES': '/o', 'PATH': '/bin'}) if fx_env else {}
@@ -609,6 +609,217 @@ def g7():
         '(3 회차 변이 보강 — 도우미 밖 고정물 git 의 env 를 지운 변이가 (c) 에서 안 잡혔다)',
         not miss and ro_seen == set(G7E_READ_ROOT) and all(found.get(m_, 0) >= n_ for m_, n_ in G7E_MIN_SITES.items()),
         (miss, sorted(ro_seen), found))
+    #  (f) ★ 11-13 Codex 반박 1/2 RCPX-02 — 부르는 쪽 GIT_TEMPLATE_DIR (훅을 담은 template) 이 고정물 git init 에 들어와 commit 에서 훅이 돌았다 (HOME · XDG ·
+    #      전역 · 시스템 설정을 끊어도 남는 길 · 옛 HOME init.templateDir 갈래는 이 길을 덮지 않는다) → 고정물 = 시험 전용 빈 private template
+    tpl_dir = os.path.join(TD, 'g7_kit', 'tpl')
+    home_empty = os.path.join(TD, 'g7_kit', 'home_empty')
+    envf = {'HOME': home_empty, 'GIT_TEMPLATE_DIR': tpl_dir}
+    bad_f = {}
+    rc, lines, log = selftest_lines(dict(CLEAN, TMPDIR=TD, **envf))
+    n = marks_count(marks)
+    if not (rc == 0 and n == {}):
+        bad_f['selftest'] = (rc, n, [ln for ln in lines if ln.startswith('FAIL')][:2])
+    for mod, attr in G7_HELPERS:
+        fx = os.path.join(TD, f'g7f_{mod}_{len(os.listdir(TD))}')
+        rc, out, err = run_py(G7C_CODE, [mod, attr, SCRIPTS, TOOLS6, fx], dict(CLEAN, TMPDIR=TD, **envf))
+        n = marks_count(marks)
+        cnt = g(fx, 'rev-list', '--count', 'HEAD', check=False).strip() if os.path.isdir(os.path.join(fx, '.git')) else None
+        if not (rc == 0 and n == {} and cnt == '1' and tagged(out, 'G7C') == 'ok'):
+            bad_f[f'{mod}.{attr}'] = (rc, n, cnt, err[-160:])
+    td_ = fe.get('GIT_TEMPLATE_DIR')
+    chk('G7f 부르는 쪽 GIT_TEMPLATE_DIR (훅 넷을 담은 template · HOME 빈 폴더) → run_contract --selftest · 고정물 도우미 다섯의 commit 에서 훅 0 회 · 고정물 커밋 '
+        '하나 · git_fixture_env 의 GIT_TEMPLATE_DIR = 시험 전용 빈 private 폴더 (부르는 쪽 값 아님 · RCPX-02 · 고치기 전 = 훅이 돈다)',
+        not bad_f and isinstance(td_, str) and os.path.isdir(td_) and os.listdir(td_) == [] and td_ != tpl_dir
+        and (fx_env(dict(envf)) or {}).get('GIT_TEMPLATE_DIR') == td_, (bad_f, td_))
+    #  (g) ★ RCPX-02 — hooksPath 고정 (빈 폴더): 고정물 저장소의 .git/hooks 에 훅이 있어도 (다른 꼴로 만든 저장소 · 손으로 넣은 훅) 고정물 commit 에서 돌지
+    #      않는다 · 부르는 쪽이 env 로 넣은 설정 주입은 고정물 자신의 한 줄로 바뀐다
+    fxg = os.path.join(TD, 'g7g_repo')
+    os.makedirs(fxg)
+    genv = fx_env() if fx_env else dict(CLEAN)
+    subprocess.run(['git', 'init', '-q', fxg], check=True, capture_output=True, env=genv)
+    hk = os.path.join(fxg, '.git', 'hooks')
+    os.makedirs(hk, exist_ok=True)
+    for nm_ in ('pre-commit', 'post-commit'):
+        q = os.path.join(hk, nm_)
+        with open(q, 'w', encoding='utf-8') as f:
+            f.write('#!/bin/sh\necho x >> "%s/%s"\nexit 0\n' % (marks, nm_))
+        os.chmod(q, 0o755)
+    with open(os.path.join(fxg, 'a.txt'), 'w', encoding='utf-8') as f:
+        f.write('a')
+    rg1 = subprocess.run(['git', '-C', fxg, *GCFG, 'add', '-A'], capture_output=True, env=genv)
+    rg2 = subprocess.run(['git', '-C', fxg, *GCFG, 'commit', '-qm', 'x'], capture_output=True, env=genv)
+    ng = marks_count(marks)
+    hp = subprocess.run(['git', '-C', fxg, 'config', '--get', 'core.hookspath'], capture_output=True, text=True, env=genv)
+    hpath = (hp.stdout or '').strip()
+    inj = fx_env({'GIT_CONFIG_PARAMETERS': "'core.hookspath=/evil'", 'PATH': '/bin'}) if fx_env else {}
+    chk('G7g 고정물 hooksPath = 시험 전용 빈 폴더 — 고정물 저장소 .git/hooks 의 pre · post-commit 훅이 고정물 commit 에서 0 회 (rc 0) · git config core.hookspath = '
+        '그 빈 폴더 · 부르는 쪽 GIT_CONFIG_PARAMETERS (core.hookspath=/evil) 는 고정물 자신의 한 줄로 바뀐다 (RCPX-02 · 고치기 전 = .git/hooks 훅이 돈다)',
+        rg1.returncode == 0 and rg2.returncode == 0 and ng == {} and hpath and os.path.isdir(hpath) and os.listdir(hpath) == []
+        and '/evil' not in str(inj.get('GIT_CONFIG_PARAMETERS')) and inj.get('GIT_CONFIG_PARAMETERS') == genv.get('GIT_CONFIG_PARAMETERS'),
+        (rg2.returncode, ng, hpath, inj.get('GIT_CONFIG_PARAMETERS'), (rg2.stderr or b'')[-200:]))
+    #  (h) ★ 11-13 Codex 반박 1/2 §3 — 부르는 쪽 GIT_QUARANTINE_PATH (pre-receive 훅 안 꼴) 가 고정물 commit 의 ref 갱신을 막았다 (rc 128 · 거짓 멈춤) →
+    #      고정물 env 에서 지운다
+    qdir = os.path.join(TD, 'g7h_quarantine')
+    os.makedirs(qdir)
+    fxh = os.path.join(TD, 'g7h_repo')
+    rc, out, err = run_py(G7C_CODE, ['test_ca_s0_census', '_git', SCRIPTS, TOOLS6, fxh], dict(CLEAN, TMPDIR=TD, GIT_QUARANTINE_PATH=qdir))
+    cnt = g(fxh, 'rev-list', '--count', 'HEAD', check=False).strip() if os.path.isdir(os.path.join(fxh, '.git')) else None
+    chk('G7h 부르는 쪽 GIT_QUARANTINE_PATH → 고정물 도우미 commit rc 0 · 고정물 커밋 하나 · git_fixture_env 에 GIT_QUARANTINE_PATH 없음 (§3 · 고치기 전 = ref 갱신 '
+        '거부 rc 128)', rc == 0 and tagged(out, 'G7C') == 'ok' and cnt == '1' and 'GIT_QUARANTINE_PATH' not in (fx_env({'GIT_QUARANTINE_PATH': qdir}) or {}),
+        (rc, cnt, err[-200:]))
+
+
+# ═════════════════════════ G9 (★ 11-13 Codex 반박 1/2 §3 — 봉인용 git 객체 · 이력) ═════════════════════════
+G9_CODE = r'''
+import json, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import rint_r_chain as RR
+import mpm_webapp_payload as P
+import ca_s0_census as S0
+mode, args = sys.argv[2], json.loads(sys.argv[3])
+out = {}
+if mode == 'objects':
+    RR.HERE = Path(args['repo'])                          # 사슬 저장소 = 고정물 F (F5 는 HERE 의 git 을 읽는다)
+    out['plan_B'] = RR.plan_commit_problem('commit:' + args['A'], 'plan.json', args['shaB'])
+    out['plan_A'] = RR.plan_commit_problem('commit:' + args['A'], 'plan.json', args['shaA'])
+    out['ident'] = RR.git_identity(args['x'])
+    out['code_sha'] = P._code_sha(args['sd'])
+    out['s0_show'] = S0._git(args['repo'], 'show', args['A'] + ':plan.json').stdout
+else:
+    led = Path(args['led'])
+    out['hist'] = RR.ledger_history_problem(led, args['head'])
+    out['repo'] = RR.ledger_repo_problem(led)
+    out['anc'] = bool(RR.ledger_is_ancestor(led, args['side'], args['head']))
+    try:
+        S0.verify_plan_commit(str(led), args['side'], 'plan.json', r_plan_path='rplan.json')
+        out['s0'] = None
+    except S0.S0Error as e:
+        out['s0'] = str(e)
+print('G9 ' + json.dumps(out, ensure_ascii=False))
+'''
+#: graft · shallow 사유 글에 들어갈 낱말 (고친 판의 사유 = 'shallow' · 'graft' · unshallow 안내)
+G9_HIST_WORDS = ('shallow', 'graft')
+#: 원장 파일 이름 (= `rint_r_chain.LEDGER_FILE` · 시험 쪽 기준 글자)
+RR_LEDGER = 'rint_r_attempts.jsonl'
+
+
+def g9_run(mode, args, env):
+    rc, out, err = run_py(G9_CODE, [SCRIPTS, mode, json.dumps(args)], env)
+    return json.loads(tagged(out, 'G9') or 'null'), rc, err
+
+
+def g9_hist_reason(s):
+    return isinstance(s, str) and any(w in s for w in G9_HIST_WORDS)
+
+
+@case('G9 봉인용 git 객체 · 이력 — replacement · graft · shallow (11-13 Codex 반박 1/2 §3)')
+def g9():
+    import hashlib as _h
+    nr = dict(CLEAN, GIT_NO_REPLACE_OBJECTS='1')               # 시험 쪽 기준 git (대체 객체를 따르지 않는다)
+
+    def gn(repo, *a, check=True):
+        r = subprocess.run(['git', '-C', repo, *GCFG, *a], capture_output=True, text=True, env=nr, stdin=subprocess.DEVNULL)
+        if check and r.returncode != 0:
+            raise RuntimeError(f'기준 git {a[:2]} rc {r.returncode}: {r.stderr[:300]}')
+        return r.stdout
+    #  ── 객체 (replacement): 고정물 F — 커밋 A (plan A · x 1) · 커밋 B (plan B · x 2) · HEAD = A (떨어진 HEAD) · 작업 트리 · 색인 = B 의 트리 (dirty ·
+    #     A → B 대체 아래에서는 HEAD 트리가 B 로 보여 깨끗해진다 = 판정문 §3 꼴)
+    def make_f(name):
+        f = make_repo(name, {'plan.json': 'A-plan\n', 'scripts/x.py': 'X = 1\n'})
+        a_ = gn(f, 'rev-parse', 'HEAD').strip()
+        for rel, txt in (('plan.json', 'B-plan\n'), ('scripts/x.py', 'X = 2\n')):
+            with open(os.path.join(f, rel), 'w', encoding='utf-8') as fh:
+                fh.write(txt)
+        gn(f, 'add', '-A')
+        gn(f, 'commit', '-qm', 'B')
+        b_ = gn(f, 'rev-parse', 'HEAD').strip()
+        gn(f, 'checkout', '-q', a_)
+        for rel, txt in (('plan.json', 'B-plan\n'), ('scripts/x.py', 'X = 2\n')):      # 작업 트리 · 색인 = B 의 트리 (A 와 다름 = dirty)
+            with open(os.path.join(f, rel), 'w', encoding='utf-8') as fh:
+                fh.write(txt)
+        gn(f, 'add', '-A')
+        return f, a_, b_
+    sha_a = _h.sha256(b'A-plan\n').hexdigest()
+    sha_b = _h.sha256(b'B-plan\n').hexdigest()
+    res = {}
+    for form in ('clean', 'GIT_REPLACE_REF_BASE', 'refs/replace (기본)'):
+        f, a_, b_ = make_f('g9_obj_' + str(len(res)))
+        env = dict(CLEAN, TMPDIR=TD)
+        if form == 'GIT_REPLACE_REF_BASE':
+            gn(f, 'update-ref', 'refs/zzrep/' + a_, b_)
+            env['GIT_REPLACE_REF_BASE'] = 'refs/zzrep/'
+        elif form == 'refs/replace (기본)':
+            gn(f, 'replace', a_, b_)
+        args = {'repo': f, 'A': a_, 'shaA': sha_a, 'shaB': sha_b, 'x': os.path.join(f, 'scripts', 'x.py'), 'sd': os.path.join(f, 'scripts')}
+        res[form] = g9_run('objects', args, env) + (a_,)
+    ok_o, why_o = True, {}
+    for form, (val, rc, err, a_) in res.items():
+        good = (rc == 0 and isinstance(val, dict) and val.get('plan_A') is None and isinstance(val.get('plan_B'), str)
+                and (val.get('ident') or {}).get('head') == a_ and (val.get('ident') or {}).get('dirty') is True
+                and str(val.get('code_sha')).endswith('+dirty') and val.get('s0_show') == 'A-plan\n')
+        if not good:
+            ok_o = False
+            why_o[form] = (rc, val, err[-200:])
+    chk('G9a 대체 객체 (replacement) — 깨끗 · GIT_REPLACE_REF_BASE (refs/zzrep/<A> = B) · 기본 refs/replace/<A> = B 세 꼴 모두: F5 plan_commit_problem 은 A 의 '
+        '원 blob 을 읽는다 (A 해시 = None · B 해시 = 사유) · 사슬 git_identity HEAD = A · dirty True · payload _code_sha = +dirty · S0 _git show = A 내용 '
+        '(GIT_NO_REPLACE_OBJECTS=1 · 고치기 전 = B 바이트를 받고 dirty 가 사라진다)', ok_o, why_o)
+    #  ── 이력 (graft · shallow): 원장 저장소 L — c1 'a' → c2 'b' (줄 바꿈 = 덧붙이기 아님) → c3 'b c' · 곁가지 d (L 의 HEAD 조상 아님)
+    def make_l(name):
+        led = make_repo(name, {RR_LEDGER: 'a\n'})
+        c1 = gn(led, 'rev-parse', 'HEAD').strip()
+        gn(led, 'checkout', '-q', '-b', 'side')
+        with open(os.path.join(led, 'side.txt'), 'w', encoding='utf-8') as fh:
+            fh.write('s\n')
+        gn(led, 'add', '-A')
+        gn(led, 'commit', '-qm', 'side')
+        d_ = gn(led, 'rev-parse', 'HEAD').strip()
+        gn(led, 'checkout', '-q', 'main')
+        for txt in ('b\n', 'b\nc\n'):
+            with open(os.path.join(led, RR_LEDGER), 'w', encoding='utf-8') as fh:
+                fh.write(txt)
+            gn(led, 'commit', '-qam', 'l')
+        c3 = gn(led, 'rev-parse', 'HEAD').strip()
+        return led, c1, d_, c3
+    hres = {}
+    for form in ('clean', 'GIT_SHALLOW_FILE', 'GIT_GRAFT_FILE', 'info/grafts', 'shallow clone'):
+        led, c1, d_, c3 = make_l('g9_led_' + str(len(hres)))
+        env = dict(CLEAN, TMPDIR=TD)
+        if form == 'GIT_SHALLOW_FILE':
+            q = os.path.join(TD, f'g9_shallow_{len(hres)}')
+            with open(q, 'w') as fh:
+                fh.write(c3 + '\n')
+            env['GIT_SHALLOW_FILE'] = q
+        elif form == 'GIT_GRAFT_FILE':
+            q = os.path.join(TD, f'g9_graft_{len(hres)}')
+            with open(q, 'w') as fh:
+                fh.write(f'{c3} {d_}\n')                           # c3 의 부모 = 곁가지 d (원장 역사 잘림 · d 가 조상처럼)
+            env['GIT_GRAFT_FILE'] = q
+        elif form == 'info/grafts':
+            os.makedirs(os.path.join(led, '.git', 'info'), exist_ok=True)
+            with open(os.path.join(led, '.git', 'info', 'grafts'), 'w') as fh:
+                fh.write(f'{c3}\n')                                  # c3 = 뿌리 (원장 역사 잘림 · 줄 바꾼 c2 가 안 보인다)
+        elif form == 'shallow clone':
+            cl = os.path.join(TD, f'g9_led_shallow_{len(hres)}')
+            subprocess.run(['git', 'clone', '-q', '--depth', '1', '--no-single-branch', 'file://' + led, cl], check=True, capture_output=True, env=CLEAN)
+            led = cl
+            gn(led, 'fetch', '-q', '--depth', '1', 'origin', 'side')
+        args = {'led': led, 'head': c3, 'side': d_}
+        hres[form] = g9_run('history', args, env)
+    v0 = hres['clean'][0] or {}
+    ok_c = (hres['clean'][1] == 0 and isinstance(v0.get('hist'), str) and not g9_hist_reason(v0.get('hist')) and v0.get('repo') is None
+            and v0.get('anc') is False and isinstance(v0.get('s0'), str) and not g9_hist_reason(v0.get('s0')))
+    chk('G9b 기준 — 깨끗한 원장 저장소: 원장 역사 = 줄 바꿈 사유 (graft · shallow 낱말 없음) · 저장소 꼴 문제 없음 · 곁가지 d 는 조상 아님 · S0 단계 2 관문 = 조상 아님 '
+        '사유 (판별이 선다)', ok_c, hres['clean'])
+    bad_h = {}
+    for form in ('GIT_SHALLOW_FILE', 'GIT_GRAFT_FILE', 'info/grafts', 'shallow clone'):
+        val, rc, err = hres[form]
+        v = val or {}
+        if not (rc == 0 and g9_hist_reason(v.get('hist')) and g9_hist_reason(v.get('repo')) and v.get('anc') is False and g9_hist_reason(v.get('s0'))):
+            bad_h[form] = (rc, v, err[-160:])
+    chk('G9c graft · shallow 가 걸린 이력 — GIT_SHALLOW_FILE (HEAD 만) · GIT_GRAFT_FILE (c3 의 부모 = 곁가지) · .git/info/grafts · 실제 얕은 복제 넷 모두: 원장 역사 = '
+        'graft · shallow 사유 (unshallow 안내 · 잘린 역사를 통과시키지 않는다) · 원장 저장소 꼴 = 같은 사유 · 곁가지 조상 대조 = False · S0 단계 2 관문 = 같은 사유 '
+        '(닫힘 · 고치기 전 = 잘린 역사 통과 · 곁가지가 조상)', not bad_h, bad_h)
 
 
 # ═════════════════════════ G8 (★ 3 회차 · 재확인 2 RCP3-05) ═════════════════════════

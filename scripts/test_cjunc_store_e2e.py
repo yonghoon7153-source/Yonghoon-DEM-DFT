@@ -16,6 +16,8 @@
   Z5  저장본 폴더 — 켬 길 뒤 파일 ≥ 2 (SBE · DBE 열쇠) · 이름 · 0444 · 임시 파일 없음 · 켬 길 화면 = 지어 씀 / 적중 줄 · 끔 길 = 저장본 줄 없음 ·
       요약 cjunc_store True (끔 = 칸 없음)
   Z6  적중 런 (켬 폴더 · 사다리 P0 · 원장 없이) — 모든 payload = 적중 줄 · 새 파일 없음 · 팔 JSON 바이트 = 끔 길 사다리 P0
+  Z5b · Z6b (★ 11-13 RCP-07) 요약 팔별 저장본 상태 `cjunc_store_arms` (런마다 팔마다 상태 · 열쇠 · 저장본 파일 · 파일 sha256 · 기록만) — 켬 = 단계 넷 ·
+      적중 런 = 모두 hit · 끔 = 칸 없음
 ⚠ PASS = 저장본이 생산 사슬 (S0 보고 · 사다리 · 예측 · 단위 · 판정 · 다시 판정) 의 산출 바이트를 바꾸지 않는다는 증거 (픽스처 · CPU) — GPU 길 · 실침대
    (원장 크기 · 읽기 시간) 은 보지 않는다.  합치기 (`--merge`) 는 단위 열두 개가 있어야 해 여기서 돌리지 않는다 — 합치기는 팔 JSON · 요약만 읽으므로
    Z2 의 바이트 같음이 그 입력을 덮는다 (한정).
@@ -267,6 +269,19 @@ def run_all():
         and all(on['sums'][k].get('cjunc_store') is True for k in ('P0', 'P1', 'pred', 'unit'))
         and all('cjunc_store' not in off['sums'][k] for k in ('P0', 'P1', 'pred', 'unit')),
         (files_on, modes, len(lines_on), lines_off[:2], gs_lines[:2], [on['sums'][k].get('cjunc_store') for k in ('P0', 'P1', 'pred', 'unit')]))
+    #  ★ 11-13 RCP-07 — 요약에 팔별 저장본 상태 (런마다 팔마다 · 기록만) · 끔 = 칸 없음
+
+    def arm_states(s):
+        rows = s.get('cjunc_store_arms')
+        if not isinstance(rows, list):
+            return None
+        return [(r.get('run'), a.get('arm'), a.get('status'), a.get('problem')) for r in rows for a in (r.get('arms') or [])]
+    st_on = {k: arm_states(on['sums'][k]) for k in ('P0', 'P1', 'pred', 'unit')}
+    chk('Z5b 요약 팔별 저장본 상태 (RCP-07) — 켬 = 단계 넷 모두 cjunc_store_arms (런 ≥ 1 · 팔마다 built_written | hit | built_peer_same · problem 없음 · 짓고 쓴 수 '
+        '+ 앞 단계 = 저장본 파일 수 이상) · 끔 = 칸 없음',
+        all(isinstance(v, list) and v and all(x[2] in ('built_written', 'hit', 'built_peer_same') and x[3] is None for x in v) for v in st_on.values())
+        and sum(1 for v in st_on.values() for x in v if x[2] == 'built_written') == len(files_on)
+        and all('cjunc_store_arms' not in off['sums'][k] for k in ('P0', 'P1', 'pred', 'unit')), st_on)
     # Z6 — 적중 런
     hb = os.path.join(TD, 'runs', 'hit_P0')
     rc, so = E.e2e_call(ws, sd, ['--stage', 'ladder', '--law', 'P0', '--target', str(RR.TARGET_SBE_MS), '--runner', W['runner'], '--root', ws,
@@ -280,6 +295,9 @@ def run_all():
         rc == 0 and sh.get('status') == 'CALIBRATED' and hl and all('읽음' in ln for ln in hl) and sorted(os.listdir(store)) == files_on
         and mh and mh == mo0, (rc, sh.get('status'), hl[:3], sorted(os.listdir(store)) == files_on, sorted(set(mh) ^ set(mo0))[:3],
                                so[-400:]))
+    sth = arm_states(sh)
+    chk('Z6b 적중 런 요약 팔별 저장본 상태 (RCP-07) — 모든 팔 hit · problem 없음 (원장 없는 꼴 · 러너가 킷 런 폴더의 곁 파일을 OUTDIR 로 옮긴다)',
+        isinstance(sth, list) and sth and all(x[2] == 'hit' and x[3] is None for x in sth), sth)
 
 
 if __name__ == '__main__':
