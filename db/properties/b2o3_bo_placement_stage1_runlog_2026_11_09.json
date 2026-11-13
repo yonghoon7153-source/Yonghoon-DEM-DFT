@@ -490,5 +490,17 @@
   "블록_설명": "① 새 worktree $R/dft_src_v5 ② 도구 · 실행기 sha256 ③ selftest 182/182 ④ 실행기 selftest (v3 그대로) ⑤ 변이 도구 정적 검사 ⑥ 새 폴더 $R/s9_v5 에 prepare (계획 파일은 잡 폴더 밖 · 입력 6 은 v2–v4 와 바이트까지 같아야 한다) ⑦ reject --stage sp 시운전 ⑧ 입력 지문 ⑨ GPU pw.x 파일 (실행 안 함) ⑩ 지금 GPU (시작 안 함) — 하나라도 실패하면 '⛔ 멈췄다'",
   "다음": "gabia v5 검사 출력 → EJ 프롬프트 (kb/reviews/codex_EJ_prompt_b2o3_dft_stage9_v5_2026_11_13.md) §4 에 넣고 발송 → EJ 회신 → 사용자 개정 5 비준 → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (T=$R/dft_src_v5 · C=$R/s9_v5)",
   "by": "agent · 2026-11-13"
+ },
+ "9단계_v5_검사_2026_11_13": {
+  "출처": "사용자 붙여넣기 2026-11-13 (gabia · 키 9단계_EI_회신_v5_2026_11_13 의 검사 블록 · 셸 위치 /data/work/wt_cascade_b2) — 붙여넣기의 앞부분 (worktree · HEAD · sha256 확인 줄) 이 잘려 있다",
+  "worktree": "$R/dft_src_v5 · HEAD 줄은 붙여넣기에서 잘림 (블록은 대피 브랜치 끝을 꺼낸다 — 푸시된 끝 = 6302f8a83) · 도구 sha256 34ec73b6… 은 prepare 머리 줄에 찍힘 · 도구 · 실행기 sha256 확인은 && 사슬 앞쪽이라 그 뒤 단계 (selftest 이후) 가 돈 것으로 통과가 확인된다",
+  "selftest_gabia": "도구 182/182 · 실행기 24 통과 · 0 실패 · 변이 도구 정적 검사 7/7 (gabia uma env python · CPU · 검사용)",
+  "prepare_v5": "통과 — $R/s9_v5/dft_plan.json · 단일점 6 (k 3×2×1) · 판 고정 판독기 872d91f7 로 8 단계를 실제 데이터로 다시 결속 · 가전자 Li 3 · B 3 · O 6 · P 5 · S 6 · Cl 7 · 고른 것 v1–v4 와 같음 (sp_FB_1_cfg0040 · sp_FB_2_cfg0015 · sp_FP_1_cfg0015 · sp_FP_2_cfg0019 · sp_Ffree_1_cfg0039 · sp_Ffree_2_cfg0017) · 계획 파일은 잡 폴더 밖 (v5 _commit 경로 규칙 통과)",
+  "reject_시운전 (sp)": "계획 다시 결속 통과 → '옮길 출력 없음' (출력이 아직 없다 — 누락이지 실패가 아니다)",
+  "입력_지문": "6 입력 모두 nosym · tot_charge 0.0 · nowf · K_POINTS automatic / 3 2 1 0 0 0 · sha256 앞 16: sp_FB_1_cfg0040 834fbada34cd234c · sp_FB_2_cfg0015 f5b7bcd272b69870 · sp_FP_1_cfg0015 93a54b64f68420a2 · sp_FP_2_cfg0019 03c0bbdde90cb776 · sp_Ffree_1_cfg0039 3ee0b4a96db89efb · sp_Ffree_2_cfg0017 0836ebf76487842a — **v2 · v3 · v4 와 6/6 바이트까지 같다** · dft_plan.json c079c6f7f4683c90 (도구 sha 가 들어가 v4 2dd87af6… 와 다름)",
+  "GPU_pw.x": "/data/apps/qe-7.4.1-gpu/bin/pw.x → ../PW/src/pw.x (링크 · 실행 안 함)",
+  "GPU (시작 안 함)": "여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음",
+  "다음": "EJ 발송 (kb/reviews/codex_EJ_prompt_b2o3_dft_stage9_v5_2026_11_13.md · §4 채움) → EJ 회신 → 사용자 개정 5 비준 (DY 확인 4 좁은 조건 해제 포함) → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (T=$R/dft_src_v5 · C=$R/s9_v5)",
+  "by": "agent · 2026-11-13"
  }
 }
