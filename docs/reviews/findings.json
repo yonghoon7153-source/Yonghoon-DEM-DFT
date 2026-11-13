@@ -17461,6 +17461,125 @@
    "opened_in": "scripts/mixer_smoke_blind.py",
    "title": "믹서 selftest ⑮ · ⑯ · ㉓ 의 값 누출 검사가 기록 · 화면의 µs 타임스탬프 숫자와 글자로 겹치면 거짓 실패 (예: 바늘 '0.9643' ⊂ '…:10.964312Z' · 'HHMMSS.ffffff' 파일 이름)",
    "note": "원인 재현 = 시계를 2026-11-12T17:35:10.964312Z 로 고정한 사본 → ⑮ ✗ · ㉓ ✗ (rc 1) · 고정 안 한 같은 사본 = 통과 · 어림 확률 (한 번) ⑮ ~1e-3 · ㉓ ~4e-5 · 판독 · 봉인 동작 무관 (selftest 문자열 검사만) · 고칠 방향 = 바늘 앞 글자가 숫자가 아닐 때만 누출로 셈 ((?<![0-9]) + 바늘 · 진짜 누출 '\"M\": 0.9643' · '-0.3929' · repr 앞자리는 그대로 잡힘) + 합성 문자열 시험 · 시계 고정 사본 전 ✗ → 뒤 ✓ · 오늘 고치지 않은 까닭 = mixer_smoke_blind.py sha256 = E0 진단 기록이 봉인하는 도구 (mixer_stage_gate.e0_record_tools · '기록 = 지금 리포 도구') · 믹서 E0 재봉인 (커밋 A · B) 대기 → 고침은 재봉인 묶음과 함께 (도구 해시를 한 번만 바꿈) · 게이트 처리 = 같은 HEAD 로 조각 2 다시 = 58/58 (거짓 실패 원인 재현 = flake 아님)"
+  },
+  {
+   "id": "RCPX-01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
+   "opened_in": "scripts/cjunc_store.py",
+   "external_id": "RCPX-01",
+   "title": "저장본 적중 반환 전 코드 칸을 다시 재지 않아, 시작 검사 뒤 (열쇠 셈 · 파일 읽기 중) 디스크 소스가 바뀌면 옛 원장을 hit 로 돌려준다",
+   "note": "고침 = get_or_build 적중 반환 직전 code_drift() 다시 셈 · 바뀌면 저장본을 쓰지 않고 새로 짓기 (status disabled · 사유 글) · 시험 T15n (열쇠 셈 도중 코드 파일 바꿈 → 고치기 전 hit (옛 원장 f24cbd ≠ 새 202eb9) → 뒤 disabled) · 변이 M1-01 잡힘 · 한정 = 한 번 더 재는 것이 임의 동시 변경을 원자적으로 막지는 않는다 (실행 소스 불변 전제 그대로 · 판정문 RCPX-01 최소 수정)",
+   "claimed_fixed_sha": "bbe468a7d02223f51bc20442f402d6a3cb2b3847",
+   "evidence_tests": [
+    "scripts/test_cjunc_store.py"
+   ]
+  },
+  {
+   "id": "RCPX-02",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
+   "opened_in": "scripts/run_contract.py",
+   "external_id": "RCPX-02",
+   "title": "git 시험 고정물 env 가 부르는 쪽 GIT_TEMPLATE_DIR 를 남겨, git init 이 그 틀의 훅을 복사하고 고정물 commit 이 실행한다",
+   "note": "고침 = run_contract.git_fixture_env: GIT_TEMPLATE_DIR = 빈 전용 틀 · core.hooksPath = 빈 전용 폴더 (GIT_CONFIG_PARAMETERS) · GIT_QUARANTINE_PATH 뺌 · CEILING · NOSYSTEM · GLOBAL 그대로 · 생산 git 무변경 · 시험 G7f · g · h (고치기 전 훅 1 회씩 · rc 128 → 뒤 0 회 · rc 0) · 변이 M2-09–11 잡힘",
+   "claimed_fixed_sha": "b33347fc03788a650b2820e8c08b986cf3400630",
+   "evidence_tests": [
+    "scripts/test_git_env_isolation.py"
+   ]
+  },
+  {
+   "id": "RCPX-03",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
+   "opened_in": "docs/reviews/codex_rint2_codepkg_review_request_20261113.md",
+   "external_id": "RCPX-03",
+   "title": "Q12 두 기계 조립 대조 설계가 정규 가중 그래프 지문만으로 조립 행렬 (CSR) 비트 같음을 판정하려 했다 (병렬 간선 합산 차례 = 1 ulp 반례)",
+   "note": "고침 = 새 개발 설계 도구 scripts/cjunc_asm_compare.py (가중 그래프 같음 ↔ 조립 바이트 같음 = CSR 형식 · 모양 · data · indices · indptr · RHS · DOF 차례를 따로 · 미완료 · main null · 빈 그래프 = 양성 근거 아님 · 조립만 기록 = 가중 그래프 같음까지만) · 시험 K1a (판정문 반례 재현) · K1–K6 · 고치기 전 1/2 → 7/7 (3.11 · 3.8) · 변이 11/11 · 실제 두 기계 실행 없음 (1저자 결정 · 개발 탐침 원장 줄 먼저)",
+   "claimed_fixed_sha": "234a17524a97805b5b7b97d52249540c605f6a74",
+   "evidence_tests": [
+    "scripts/test_cjunc_asm_compare.py"
+   ]
+  },
+  {
+   "id": "RCPX-04",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
+   "opened_in": "scripts/cjunc_store.py",
+   "external_id": "RCPX-04",
+   "title": "CRC 를 지난 배열 멤버 머리의 예상 밖 예외 (shape 2**100 → OverflowError) 가 어긋남 (StoreInconsistent) 으로 분류되지 않았다",
+   "note": "고침 = 배열 멤버 해석의 MemoryError 는 그대로 올리고 그 밖 예외는 StoreInconsistent (array) · 시험 T7x-1 · T7x-2 · 변이 M1-02 · M1-03 잡힘",
+   "claimed_fixed_sha": "bbe468a7d02223f51bc20442f402d6a3cb2b3847",
+   "evidence_tests": [
+    "scripts/test_cjunc_store.py"
+   ]
+  },
+  {
+   "id": "RCPX-05",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
+   "opened_in": "scripts/cjunc_store.py",
+   "external_id": "RCPX-05",
+   "title": "저장본 머리의 중복 칸 (key_parts · registry_fp) 만 고친 파일을 hit 로 받았다 (출처 진단 모순 · 계산 오염은 입증 안 됨)",
+   "note": "고침 = 머리 key_of(key_parts) = 머리 key · 머리 registry_fp = 복원 원장 fp 대조 → 어긋남 · 시험 T7x-3 (반례 둘 + key_parts 없음) · T7x-4 (비권위 칸 writer · runtime 은 hit 그대로) · 변이 M1-04 · M1-05 잡힘",
+   "claimed_fixed_sha": "bbe468a7d02223f51bc20442f402d6a3cb2b3847",
+   "evidence_tests": [
+    "scripts/test_cjunc_store.py"
+   ]
+  },
+  {
+   "id": "RCPX-06",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
+   "opened_in": "docs/reviews/codex_rint2_codepkg_review_request_20261113.md",
+   "external_id": "RCPX-06",
+   "title": "\"입력 r 에 −0 이 없으면 A 꼴 ↔ C 꼴 전처리 비트 같음\" 은 충분조건이 아니다 (음의 유한 비정규 곱 underflow: diag [4,4] · r [−5e-324, 1] → A [+0, .25] · C [−0, .25])",
+   "note": "고침 = 문구 철회 · 범위 좁힘 (비트 같음 = 잰 입력 · 환경에서만 · 전처리 곱의 부호 있는 0 포함) · 기록 시험 G4d · G4e (보장 아님 · 이 가짜 산술 관찰: 끝 해 바이트 같음 · info 0 · 반복 2) · G4b 글 좁힘 · 정정 글 = 묶음 README (요청서는 고정 문서라 고치지 않음) · 생산 step3_sigma.py 무변경",
+   "claimed_fixed_sha": "4aca9ff046e860622b560219c20a223f4119fb57",
+   "evidence_tests": [
+    "scripts/test_step3_gpu_precond.py",
+    "docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md"
+   ]
+  },
+  {
+   "id": "SELF-180",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "1저자 전달 · Codex 반박 1/2 판정문 §7 (최종 ZIP extra/code_diff_codepin_to_pin.txt 117 B)",
+   "opened_in": "docs/reviews/codex_rint2_codepkg_review_request_20261113.md",
+   "title": "요청서 §9 의 \"code_diff 가 비었다\" 는 틀렸다 — 코드 핀 ↔ 리뷰 핀 사이 바뀐 것 = 감시 폴더의 S0 등록 README 한 파일 (+7 −2 · 문서) 이었다",
+   "note": "처리 = 정정 기록 (보낸 글은 1저자가 전달 때 정정 · 판정문 §7 정정 수용 · 신규 P3 중복 등재 안 함) · 요청서는 고정 문서라 고치지 않는다 · 정정 글 = 묶음 README (docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md) · 실제 코드 · 실행 블록 변경 0 · 교훈 = 전칭 (비었다 · 0) 은 diff 원문을 붙여 대조한다 (CLAUDE.md 사전 공격 ①)",
+   "claimed_fixed_sha": "4aca9ff046e860622b560219c20a223f4119fb57",
+   "evidence_tests": [
+    "docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md"
+   ]
+  },
+  {
+   "id": "SELF-181",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "Codex 반박 1/2 판정문 §7 (GPU 소비 규칙 한정 · \"형제 모듈은 live scripts 경로에서 import\")",
+   "opened_in": "docs/reviews/rint2_codepkg_20261113/q11_gpu_check_block_v8.txt",
+   "title": "Q11 GPU 확인 블록 v7 이 se_material 을 핀이 아니라 live 작업 트리 ($Q11REPO/scripts) 에서 불러왔다 (출처 신원 · pycache 격리 빈틈) · 결과 전 소비 규칙 없음",
+   "note": "고침 = 블록 v8: se_material 을 핀에서 git show 로 새 폴더 (모듈 사본과 같은 폴더 · step3_sigma 는 제 폴더를 sys.path 맨 앞에 둔다) · sha 대조 · 불러온 자리 대조 · live 저장소 모듈 = 멈춤 (rc 2) · PYTHONDONTWRITEBYTECODE=1 · git 읽기 앞 GIT_DROP_SH + GIT_NO_REPLACE_OBJECTS=1 · result.json consume (identical · converged · backend_ok · short_iters_ok · source_ok · adopt) · 시험 G8a–l (v8 33/33 · 옛 v7 블록 23/32) · 변이 16/16 · 실제 GPU 실행 없음",
+   "claimed_fixed_sha": "57acfb0c8c74db6468ffc01baf7af23f079aa261",
+   "evidence_tests": [
+    "scripts/test_step3_gpu_precond.py"
+   ]
   }
  ]
 }
