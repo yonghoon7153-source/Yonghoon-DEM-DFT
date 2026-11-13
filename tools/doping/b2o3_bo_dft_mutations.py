@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""b2o3_bo_dft.py 의 깨기 (변이) 시험 — 검사 한 줄씩 끄고 그 도구의 selftest 가 빨개지는지 본다 (Codex EF · EG 재현용).
+"""b2o3_bo_dft.py 의 깨기 (변이) 시험 — 검사 한 줄씩 끄고 그 도구의 selftest 가 빨개지는지 본다 (Codex EF · EG · EH 재현용).
 
   python3 b2o3_bo_dft_mutations.py --selftest   # 정적 검사 (몇 초) — 변이 대상 문자열이 도구에 정확히 한 번씩 있고 · 바꾼 소스가 문법상 맞는지
                                                 #   + 음성 (없는 대상 · 두 번 있는 대상 · 문법이 깨지는 변이를 잡는지)
@@ -33,7 +33,8 @@ M = [
  ("JOB DONE 수", 'if o["n_job_done"] != 1 or not o["job_done"]:', 'if False:'),
  ("설정 줄 한 번", '    many = {k: c for k, c in o["once"].items() if c != 1}', '    many = {}'),
  ("JOB DONE 뒤 기록", '    if o["after_done"]:', '    if False:'),
- ("이완 '!' 수 = BFGS", '        if o["bfgs"] and o["n_scf"] != o["bfgs"]["scf_cycles"]:', '        if False:'),
+ ("이완 '!' 수 = BFGS", '        elif o["n_scf"] != o["bfgs"]["scf_cycles"]:', '        elif False:'),
+ ("BFGS 기록 필수", '        if o["bfgs"] is None:\n            q.append("BFGS 기록 줄', '        if False:\n            q.append("BFGS 기록 줄'),
  ("SCF 수렴", 'if not o["scf_converged"]:', 'if False:'),
  ("입력 이름", 'if o["input_name"] != "scf.in":', 'if False:'),
  ("ecut", 'if o[k] is None or abs(o[k] - DFT[k]) > TOL["ecut"]:', 'if False:'),
@@ -56,15 +57,34 @@ M = [
  ("힘 성분", 'if fm is not None and fm > R["forc_conv_thr"] + TOL["force_print"]:', 'if False:'),
  ("최종 좌표", 'if o["final"] is None or len(o["final"]["symbols"]) != DFT["nat"]:', 'if False:'),
  ("Final energy", 'if o["final_E_Ry"] is None or o["E_Ry"] is None or abs(o["final_E_Ry"] - o["E_Ry"]) > TOL["E_final_Ry"]:', 'if False:'),
- ("응력 못 읽음", '        if o["P_kbar"] is None:', '        if False:'),
+ ("응력 본문 검사 호출", '    if ts:\n        q += stress_problems(o)', '    if False:\n        q += stress_problems(o)'),
+ ("응력 없으면 거부", '    if st is None:\n        return [f"응력 (P)', '    if st is None:\n        return []\n        return [f"응력 (P)'),
+ ("응력 P = 대각합/3", '    if abs(st["P_kbar"] - tr3) > TOL["stress_P_kbar"]:', '    if False:'),
+ ("응력 두 단위", '    if d > TOL["stress_unit_kbar"]:', '    if False:'),
+ ("응력 머리 P 토큰", '    if P is None:\n        return None, f"머리의 P 토큰', '    if False:\n        return None, f"머리의 P 토큰'),
+ ("응력 행 6 값", '        if v is None:\n            return None, f"행렬 행', '        if False:\n            return None, f"행렬 행'),
  ("부피", 'if V0 is None or o["volume_A3"] is None or abs(o["volume_A3"] - V0) > TOL["V_A3"]:', 'if False:'),
  ("QE 판 고정", '    if o["version"] != DFT["qe_version"]:', '    if False:'),
  # ── 한 계산 상태 (state_problems · Codex EG P1-1) ──
  ("블록 개수", '    bad = {k: (len(p[k]), v) for k, v in want.items() if len(p[k]) != v}', '    bad = {}'),
  ("SCF 묶음 순서", '        if any(x >= y for x, y in zip(seq, seq[1:])):\n            q.append(f"SCF', '        if False:\n            q.append(f"SCF'),
  ("이완 끝 순서", '        if any(x >= y for x, y in zip(seq, seq[1:])):\n            q.append("이완 끝 순서', '        if False:\n            q.append("이완 끝 순서'),
- ("힘 원자 번호", '    if o.get("final_forces_ids") != list(range(1, nat + 1)) or o.get("final_forces_max_comp_RyBohr") is None:', '    if False:'),
- ("최종 좌표 행만", '            if rows and all(mm_):', '            if rows:'),
+ ("힘 원자 번호", '    if ids != list(range(1, nat + 1)):', '    if False:'),
+ ("힘 값 유한", '    elif o.get("final_forces_max_comp_RyBohr") is None:', '    elif False:'),
+ ("힘 행 못 읽음 표시", '                bad = bad or next(t for t in m.groups()[1:] if _tok(t) is None)', '                pass'),
+ ("최종 좌표 행만", '        if not h or not rows or not all(mm_):', '        if not h or not rows:'),
+ ("최종 좌표 유한", '            if any(v is None for v in xyz):', '            if False:'),
+ # ── 숫자 토큰 · 줄 꼴 (Codex EH P1-1 · P1-2) ──
+ ("숫자 토큰 전체", '    if not _RX_FLOAT.fullmatch(s):\n        return None\n    x = float(s.replace("D", "E").replace("d", "e"))',
+  '    m_ = _RX_FLOAT.match(s)\n    if not m_:\n        return None\n    x = float(m_.group(0).replace("D", "E").replace("d", "e"))'),
+ ("숫자 유한", '    return x if math.isfinite(x) else None', '    return x'),
+ ("정수 칸 부호 없음", '        return int(s) if _RX_UINT.fullmatch(s) else None', '        return int(s) if re.fullmatch(r"[-+]?[0-9]+", s) else None'),
+ ("줄 끝까지", '    return _vals(re.search(r"(?m)^[ \\t]*" + body + r"[ \\t]*$", txt), casts)', '    return _vals(re.search(r"(?m)^[ \\t]*" + body, txt), casts)'),
+ ("에너지 줄 통째", '    return _vals(re.fullmatch(r"[ \\t]*" + body + r"[ \\t]*", txt[s:e if e >= 0 else len(txt)]), casts)',
+  '    return _vals(re.match(r"[ \\t]*" + body, txt[s:e if e >= 0 else len(txt)]), casts)'),
+ ("목록 번호 차례", '        v = _toks(m.groups()[-nval:]) if (m and int(m.group(1)) == i) else None', '        v = _toks(m.groups()[-nval:]) if m else None'),
+ ("Zval 토큰 전체", '        z = _RX_ZVAL.fullmatch(mm.group(4))', '        z = re.search(r"Zval =[ \\t]*([0-9.]+)", mm.group(4))'),
+ ("원자 수 줄 한 번", '"nat": r"number of atoms/cell", ', ''),
  # ── k 격자 (kmesh_problems) ──
  ("격자 밖", '        if np.abs(x - np.round(x)).max() > TOL["k_grid"]:', '        if False:'),
  ("가중치 몫", '        if abs(m - round(m)) > TOL["k_weight"] or int(round(m)) not in (1, 2):', '        if False:'),
@@ -107,9 +127,17 @@ M = [
  ("EOS 보류 대상 null", '        rv["electronic_targets"] = None', '        rv["electronic_targets"] = [{"family": F, **relaxed[F]["file"]} for F in FAM]'),
  # ── 쓰기 · 덮지 않음 · 거부 보존 ──
  ("LF 쓰기", '    path.write_bytes(text.encode("utf-8"))', '    path.write_bytes(text.replace("\\n", "\\r\\n").encode("utf-8"))'),
- ("덮지 않음 prepare", '    if (out_dir / "dft_plan.json").exists():', '    if False:'),
+ ("덮지 않음 (쓰기 직전)", '        raise SystemExit(f"⛔ {out} 가 이미 있다 — 덮지 않는다 (쓰기 직전 확인', '        if False: raise SystemExit(f"⛔ {out} 가 이미 있다 — 덮지 않는다 (쓰기 직전 확인'),
  ("잡 입력 덮지 않음", '            if f.read_bytes() != t.encode("utf-8"):', '            if False:'),
- ("이완 구조 덮지 않음", '    if p.exists() and p.read_bytes() != buf.getvalue().encode("utf-8"):', '    if False:'),
+ ("이완 구조 충돌 이유", '                if what == "이완 구조":', '                if False:'),
+ # ── 검사 뒤 쓰기 · JSON 유한성 (Codex EH 확인 목록 2 · P1-1) ──
+ ("판정은 맨 끝", '    body = _dumps(obj)\n    if Path(out).exists():', '    body = _dumps(obj)\n    _write_bytes(out, body)\n    if False:'),
+ ("전부 대조한 뒤 쓰기", '    for p, t in _pending(items):\n        _write_bytes(p, t)',
+  '    for p, t, w_ in items:\n        for p2, t2 in _pending([(p, t, w_)]):\n            _write_bytes(p2, t2)'),
+ ("이완 구조 쓰기 순서", '        xyz[rp] = t                                  # 쓰기는',
+  '        xyz[rp] = t; _write_bytes(rp, t)              # 쓰기는'),
+ ("JSON allow_nan", 'default=_jdefault, allow_nan=False)', 'default=_jdefault, allow_nan=True)'),
+ ("numpy 값 변환", '    if isinstance(x, np.generic):\n        return x.item()', '    if False:\n        return x.item()'),
  ("reject 보존", '        fout.rename(dest)', '        fout.unlink()'),
  ("reject 계획 고리", '    if _bound(cur.get("plan"), p.parent, "계획") != plan_path:', '    if False:'),
  ("reject 다시 결속", '    v = _verify_for_reject(RD, vp, kind, stage, host)', '    v = json.loads(vp.read_bytes().decode("utf-8"))'),

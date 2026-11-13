@@ -7,6 +7,10 @@
 v2 (2026-11-13) = Codex EF 회신 (NO-GO · P1 6 · P2 6) 고침 — kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md.
 v3 (2026-11-13) = Codex EG 회신 (NO-GO · P1 2 · P2 4) 고침 — kb/reviews/codex_EG_reply_b2o3_dft_stage9_v2_2026_11_13.md
    (출력 상태 결속 = 블록 문법 · 힘 원자 번호 · reject 대상 다시 결속 · G5 원자료 · QE 판 고정 · 실행기 조회 종료코드).
+v4 (2026-11-13) = Codex EH 회신 (NO-GO · P1 2 · P2 2) 고침 — kb/reviews/codex_EH_reply_b2o3_dft_stage9_v3_2026_11_13.md
+   (출력의 숫자는 줄 단위로 그 자리의 **토큰 전체가 유한한 숫자일 때만** 읽는다 · 응력 블록 본문 (3 행 × 6 값 · P = kbar 대각합/3 ·
+   kbar = Ry/bohr³ × RY_KBAR) · BFGS 기록 필수 · **검사가 다 끝난 뒤에만** 판정 · 다음 잡 입력 · 이완 구조를 쓴다 · JSON 에
+   NaN · Inf 를 쓰지 않는다).
 
   prepare      8 단계 결과를 판 고정 판독기로 다시 결속 (anneal_readout 다시 내기 · 본 판독 파일 몸통 대조 · 보류면 멈춤) →
                가족마다 UMA 어닐 최저 둘 (6 · 판독기의 성공 정의 그대로 · 가족 최저 · 성공 수를 본 판독과 대조) →
@@ -37,10 +41,15 @@ MD5 · 셀 축 · 처음 좌표 (그 잡의 입력과 같음 — 바꿔치기) �
 '!' → 힘 → 응력 한 벌 · 마지막 묶음 뒤 bfgs converged → criteria → Final energy → 최종 좌표 → JOB DONE 이 한 번씩 순서대로 —
 값 (E · 힘 · P · 최종 좌표) 은 마지막 묶음에서만 읽는다) · **마지막 힘 블록의 원자 번호 = 1…nat** · 이완은 **BFGS 기준 · 머리의 수렴 문턱 · nstep 이
 계약과 같음** · 'bfgs converged' · **마지막 힘 블록의 모든 성분 ≤ forc_conv_thr** · 최종 좌표 · Final energy = 마지막 '!' ·
-응력이 마지막 SCF 뒤 · 부피 = V₀.
+응력이 마지막 SCF 뒤 · **마지막 응력 블록 = 머리 P + 3 행 × 6 값 · P = kbar 대각합/3 (반올림 0.01) · kbar = Ry/bohr³ × RY_KBAR
+(0.006)** · **BFGS 기록 줄을 읽을 수 있어야** (SCF 수 대조) · 부피 = V₀. **숫자는 토큰 전체 · 유한한 값만** (앞부분만 읽지 않는다 ·
+NaN · Inf · 넘침 · 꼬리 글자 → 그 값 없음 = 거부 · Codex EH P1-1 · P1-2) · 목록 (k 점 · 처음 좌표 · 결정 축 · 힘 · 응력 · 최종 좌표) 은
+머리 뒤 정해진 줄을 차례로 읽는다 — 한 줄이라도 꼴이 아니면 목록 전체를 버린다 (건너뛰고 다음 줄을 대신 읽지 않는다).
 
 경로 규약: 잡 · 구조 · 출력 · 대상의 {rel · sha256} 은 **계획 폴더 (dft_plan.json 이 있는 곳) 기준** · 판정 파일 사이의 고리
 (plan · sp_verdict · prev) 는 **그 판정 파일이 있는 폴더 기준**. 파일은 utf-8 · LF 로 쓴다 (Windows 에서도 같은 바이트 · sha).
+**쓰기는 검사가 다 끝난 뒤에만** (_commit · Codex EH 확인 목록 2) — 판정 텍스트 (유한성) · 이미 있는 잡 입력 · 이완 구조의 바이트
+대조를 먼저 다 하고, 없는 것만 쓰고, 판정 파일은 맨 끝에 쓴다. 어느 검사에서 멈추면 새 파일이 하나도 생기지 않는다.
 
 ⛔ 이 도구가 못 하는 것
   · pw.x 를 돌리지 않는다 (실행기 tools/doping/run_force_check_scf.sh · gabia GPU · GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 —
@@ -60,8 +69,11 @@ MD5 · 셀 축 · 처음 좌표 (그 잡의 입력과 같음 — 바꿔치기) �
   · 블록 문법은 QE 7.4.1 고정셀 SCF · relax (BFGS · tprnfor · tstress) 출력의 실측 문법이다 — vc-relax · 고정 원자 (if_pos 열이 붙은
     최종 좌표) · 다른 판 · verbosity high 의 추가 힘 분해는 이 도구 범위 밖이다 (만나면 거부 · 이 단계 입력은 그런 출력을 만들지 않는다 ·
     k 격자 허용 1e-4 도 이 셀 · 격자에서만 확인했다 · 심하게 찌그러진 셀로 넓히지 않는다).
-  · 위조 방지 장치가 아니다 — 섞이거나 잘리거나 끼워 넣은 출력을 거른다. 개수 · 순서를 그대로 두고 블록 안 숫자만 바꾼 출력은 못 가린다
-    (출력 sha256 을 판정에 적어 뒤에서 대조할 뿐이다).
+  · 위조 방지 장치가 아니다 — 섞이거나 잘리거나 끼워 넣은 출력 · 읽을 수 없는 숫자 · 머리와 본문이 어긋난 응력 블록을 거른다.
+    형식 · 내부 관계까지 일관되게 바꾼 숫자 · **다른 계산의 완전한 블록이나 중간 SCF 묶음을 바꿔 넣은 출력은 못 가린다** —
+    블록 문법 통과는 '같은 실행에서 생성된 상태' 라는 인증이 아니다 (Codex EH Q2). 판정에 적은 출력 sha256 은 '판정 때 이 바이트를
+    읽었다' 는 증거이지 생성 당시 원본이라는 증거가 아니다. PWSCF 판 문자열 (7.4.1) 대조도 출력 머리의 판 확인일 뿐 실행 바이너리 ·
+    빌드의 동일성 인증이 아니다 (Codex EH Q4).
 
 쓰는 법 (gabia — 판 고정 판독기 $R/src · 이 도구는 다른 worktree)
   python3 b2o3_bo_dft.py --selftest
@@ -108,6 +120,9 @@ KIND_RX = "b2o3_bo_dft_relax_verdict/v2"
 RY_EV = 13.605693122994
 BOHR_A = 0.529177210903
 RYBOHR_EVA = RY_EV / BOHR_A
+#: QE Modules/constants.f90 (CODATA 2018 — HARTREE_SI 4.3597447222071e-18 J · BOHR_RADIUS_SI 0.529177210903e-10 m) —
+#: AU_GPA = HARTREE_SI / BOHR_RADIUS_SI³ / 1e9 · RY_KBAR = 10 · AU_GPA / 2 = 147105.078 (응력 행렬의 Ry/bohr³ 열 ↔ kbar 열 대조용)
+RY_KBAR = 10.0 * (4.3597447222071e-18 / 0.529177210903e-10 ** 3 / 1.0e9) / 2.0
 FAM = ["F_B", "F_P", "F_free"]
 TAG = {"F_B": "FB", "F_P": "FP", "F_free": "Ffree"}
 SPECIES = ["Li", "B", "O", "P", "S", "Cl"]
@@ -131,7 +146,11 @@ DFT = {
     "qe_version": "7.4.1",                                                                               # [제안 개정 5 v3]
 }
 TOL = {"ecut": 1e-6, "conv_rel": 1e-6, "degauss": 1e-6, "cell_A": 1e-4, "pos_A": 1e-4, "V_A3": 0.01, "E_final_Ry": 1e-6,
-       "nelec": 1e-6, "zval": 1e-6, "k_grid": 1e-4, "k_weight": 1e-4, "force_print": 1e-9}
+       "nelec": 1e-6, "zval": 1e-6, "k_grid": 1e-4, "k_weight": 1e-4, "force_print": 1e-9,
+       # 응력 블록 (Codex EH P2-2) — 출력 반올림 상한: P (f12.2) 반 칸 0.005 + 대각 셋 (f12.2) 반 칸의 평균 0.005 = 0.01 ·
+       # kbar (f12.2) 반 칸 0.005 + Ry (f13.8) 반 칸 × RY_KBAR 0.00074 = 0.0057 → 0.006. 실측 (저장소 QE 7.4.1 · 6.7 출력 85 개 ·
+       # 응력 블록 1016 개 · 2026-11-13) 최대 0.0067 · 0.0057.
+       "stress_P_kbar": 0.0100001, "stress_unit_kbar": 0.006}
 B_CUT_A = {"S": 2.2, "O": 1.7}            # 기록용 B 배위 (카드 G7 · 판정 아님)
 P_CUT_A = {"S": 2.4, "O": 1.8}            # 기록용 P 배위 (골격 기록 · 판정 아님)
 
@@ -188,8 +207,25 @@ def _entry(p, base) -> dict:
     return {"rel": _rel(p, base), "sha256": _sha(p)}
 
 
+def _jdefault(x):
+    """JSON 이 모르는 값 — numpy 스칼라 · 배열은 파이썬 값으로 (그 값의 유한성은 allow_nan=False 가 본다) · 나머지는 글자."""
+    if isinstance(x, np.generic):
+        return x.item()
+    if isinstance(x, np.ndarray):
+        return x.tolist()
+    return str(x)
+
+
+def _dumps(obj) -> str:
+    """판정 · 계획 JSON 텍스트 — 유한하지 않은 수 (NaN · Inf · numpy 포함) 가 하나라도 있으면 멈춘다 (쓰지 않는다 · Codex EH P1-1)."""
+    try:
+        return json.dumps(obj, ensure_ascii=False, indent=1, default=_jdefault, allow_nan=False) + "\n"
+    except ValueError as e:
+        raise SystemExit(f"⛔ 기록할 값에 유한하지 않은 수 (NaN · Inf) 가 있다 — 쓰지 않는다 ({e})")
+
+
 def _dump(obj, path) -> Path:
-    return _write_bytes(path, json.dumps(obj, ensure_ascii=False, indent=1, default=str) + "\n")
+    return _write_bytes(path, _dumps(obj))
 
 
 def _load(path, kind) -> dict:
@@ -204,7 +240,7 @@ def _load(path, kind) -> dict:
 
 def _norm_v(v) -> dict:
     """판정 파일 대조용 — 도구 경로는 빼고 sha256 만 (같은 판이면 경로가 달라도 같은 판정)."""
-    o = json.loads(json.dumps(v, ensure_ascii=False, default=str))
+    o = json.loads(json.dumps(v, ensure_ascii=False, default=_jdefault))
     o["tools"] = {k: (x or {}).get("sha256") for k, x in (o.get("tools") or {}).items()}
     return o
 
@@ -365,42 +401,158 @@ def parse_pw_in(path) -> dict:
 
 
 # ───────────────────────── 출력 읽기 ─────────────────────────
-_RE_E = re.compile(r"^!\s+total energy\s+=\s+(-?\d+\.\d+)\s+Ry", re.M)
-_RE_P = re.compile(r"total\s+stress\s+\(Ry/bohr\*\*3\)\s+\(kbar\)\s+P=\s*(-?\d+\.?\d*)")
-_RE_PP = re.compile(r"PseudoPot\.\s*#\s*\d+\s+for\s+(\w+)\s+read from file:\s*\n\s*(\S+)\s*\n\s*MD5 check sum:\s*([0-9a-fA-F]+)")
-_RE_F = re.compile(r"atom\s+\d+\s+type\s+\d+\s+force\s*=\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)")
-_RE_K = re.compile(r"k\(\s*\d+\)\s*=\s*\(\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*\),\s*wk\s*=\s*([-\d.]+)")
+#: 숫자 토큰 문법 (Codex EH P1-2) — 토큰 **전체**가 이 꼴이고 유한할 때만 값이다 (앞부분만 읽지 않는다: '0.00BROKEN' · '0.00\\x00' →
+#: None · '2.50E+01' → 25.0 · NaN · Inf · 넘침 · 유니코드 숫자 · 밑줄 → None). 정수 (개수 · 번호) 는 부호 없는 0-9 만.
+_RX_FLOAT = re.compile(r"[-+]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:[EeDd][-+]?[0-9]+)?")
+_RX_UINT = re.compile(r"[0-9]+")
+#: 줄 꼴 (QE 7.4.1 실측 — db/raw ndo_site_eos · li2s_neb_cellconv) · 값 칸 = (\S+) 를 _tok 으로
+_RE_PP = re.compile(r"(?m)^[ \t]*PseudoPot\.[ \t]*#[ \t]*[0-9]+[ \t]+for[ \t]+(\S+)[ \t]+read from file:[ \t]*\n"
+                    r"[ \t]*(\S+)[ \t]*\n[ \t]*MD5 check sum:[ \t]*([0-9a-fA-F]{32})[ \t]*\n([^\n]*)")
+_RX_ZVAL = re.compile(r"[ \t]*Pseudo is [^\n]*, Zval =[ \t]*(\S+)[ \t]*")
+_RX_KROW = re.compile(r"[ \t]*k\([ \t]*([0-9]+)\)[ \t]*=[ \t]*\([ \t]*(\S+)[ \t]+(\S+)[ \t]+(\S+)[ \t]*\),[ \t]*wk[ \t]*=[ \t]*(\S+)[ \t]*")
+_RX_AROW = re.compile(r"[ \t]*a\(([0-9])\)[ \t]*=[ \t]*\([ \t]*(\S+)[ \t]+(\S+)[ \t]+(\S+)[ \t]*\)[ \t]*")
+_RX_TROW = re.compile(r"[ \t]*([0-9]+)[ \t]+(\S+)[ \t]+tau\([ \t]*([0-9]+)\)[ \t]*=[ \t]*\([ \t]*(\S+)[ \t]+(\S+)[ \t]+(\S+)[ \t]*\)[ \t]*")
+_RX_SHDR = re.compile(r"[ \t]*total[ \t]+stress[ \t]+\(Ry/bohr\*\*3\)[ \t]+\(kbar\)[ \t]+P=[ \t]*(\S+)[ \t]*")
+_RX_SROW = re.compile(r"[ \t]*" + r"[ \t]+".join([r"(\S+)"] * 6) + r"[ \t]*")
+_RX_FINAL = re.compile(r"[ \t]*([A-Za-z]+)[ \t]+(\S+)[ \t]+(\S+)[ \t]+(\S+)[ \t]*")
 #: 한 실행에서 딱 한 번 찍히는 설정 줄 (실측: QE 7.4.1 SCF · 고정셀 relax 출력 4 개에서 모두 1 — 2026-11-13) — 둘이면 섞인 출력
 _ONCE = {"ecutwfc": r"kinetic-energy cutoff", "ecutrho": r"charge density cutoff", "nelec": r"number of electrons",
          "nk": r"number of k points=", "conv_thr": r"scf convergence threshold", "xc": r"Exchange-correlation=",
          "axes": r"crystal axes: \(cart", "initial": r"positions \(alat units\)", "volume": r"unit-cell volume",
-         "alat": r"lattice parameter \(alat\)"}
+         "alat": r"lattice parameter \(alat\)", "nat": r"number of atoms/cell", "celldm": r"celldm\(1\)="}
 _ONCE_RELAX = {"etot_thr": r"energy convergence thresh\.", "forc_thr": r"force convergence thresh\.", "nstep": r"(?m)^\s*nstep\s*="}
 #: 한 계산 상태의 블록 표지 (Codex EG P1-1) — 개수 · 순서 검사는 state_problems
-_MARK = {"E": r"(?m)^!\s+total energy", "F": r"Forces acting on atoms", "S": r"total\s+stress\s+\(Ry/bohr\*\*3\)",
+_MARK = {"E": r"(?m)^![ \t]+total energy", "F": r"Forces acting on atoms", "S": r"total[ \t]+stress[ \t]+\(Ry/bohr\*\*3\)",
          "B": r"bfgs converged in", "C": r"\(criteria: energy <", "FE": r"Final energy\s+=", "BF": r"Begin final coordinates",
          "EF": r"End final coordinates", "JD": r"JOB DONE"}
 _MARK_NAME = {"E": "'!'", "F": "힘", "S": "응력", "B": "bfgs converged", "C": "criteria", "FE": "Final energy", "BF": "Begin final",
               "EF": "End final"}
-_RE_FROW = re.compile(r"\s*atom\s+(\d+)\s+type\s+\d+\s+force\s*=\s*(\S+)\s+(\S+)\s+(\S+)\s*")
+_RE_FROW = re.compile(r"[ \t]*atom[ \t]+([0-9]+)[ \t]+type[ \t]+[0-9]+[ \t]+force[ \t]*=[ \t]*(\S+)[ \t]+(\S+)[ \t]+(\S+)[ \t]*")
 #: JOB DONE 뒤에 있으면 안 되는 계산 기록 (실제 출력의 JOB DONE 뒤 = '=---=' 줄 · 런타임 경고 'ieee_… is signaling' 뿐)
 _AFTER_DONE = (r"(?m)^!\s+total energy", r"Forces acting on atoms", r"total\s+stress", r"bfgs converged", r"Final energy",
                r"Begin final coordinates", r"Program PWSCF", r"number of k points", r"kinetic-energy cutoff",
                r"convergence has been achieved", r"number of electrons")
 
 
-def _num(rx, txt, cast=float):
+def _num(rx, txt, cast=str):
+    """글자 칸 (판 · 입력 이름) — 숫자는 여기서 읽지 않는다 (_line · _tok)."""
     m = re.search(rx, txt)
-    try:
-        return cast(m.group(1)) if m else None
-    except ValueError:
+    return cast(m.group(1)) if m else None
+
+
+def _tok(s, cast=float):
+    """숫자 토큰 하나 → 수 — 토큰 **전체**가 숫자 꼴이고 유한할 때만 (아니면 None · 0 으로 두지 않는다 · Codex EH P1-1 · P1-2)."""
+    if not isinstance(s, str):
         return None
+    if cast is int:
+        return int(s) if _RX_UINT.fullmatch(s) else None
+    if not _RX_FLOAT.fullmatch(s):
+        return None
+    x = float(s.replace("D", "E").replace("d", "e"))
+    return x if math.isfinite(x) else None
+
+
+def _toks(ss, cast=float):
+    """토큰 여럿 → 모두 읽히면 목록 · 하나라도 아니면 None."""
+    v = [_tok(s, cast) for s in ss]
+    return None if any(x is None for x in v) else v
+
+
+def _vals(m, casts):
+    if not m:
+        return None
+    g = m.groups()
+    v = [_tok(s, c) for s, c in zip(g, casts or (float,) * len(g))]
+    if len(v) != len(g) or any(x is None for x in v):
+        return None
+    return v[0] if len(v) == 1 else v
+
+
+def _line(txt, body, *casts):
+    """줄 **전체**가 body 꼴인 첫 줄 → 값 칸 ((\\S+)) 을 casts (기본 float) 로 → 값 하나 또는 목록 · 줄이 없거나 하나라도 못 읽으면 None.
+
+    줄 앞뒤는 공백 · 탭만 — 값 뒤에 꼬리 글자가 붙은 줄은 꼴이 아니다. 같은 줄이 둘인 출력은 '한 번만' 검사 (_ONCE · 블록 표지)
+    가 따로 거부한다.
+    """
+    return _vals(re.search(r"(?m)^[ \t]*" + body + r"[ \t]*$", txt), casts)
+
+
+def _line_at(txt, at, body, *casts):
+    """at 이 있는 줄이 통째로 body 꼴이어야 → 값 (_line 과 같은 규칙)."""
+    s = txt.rfind("\n", 0, at) + 1
+    e = txt.find("\n", at)
+    return _vals(re.fullmatch(r"[ \t]*" + body + r"[ \t]*", txt[s:e if e >= 0 else len(txt)]), casts)
+
+
+def _next_lines(txt, at, n):
+    """at 이 있는 줄 다음의 n 줄 (모자라면 있는 만큼)."""
+    e = txt.find("\n", at)
+    return [] if e < 0 else txt[e + 1:].split("\n", n)[:n]
+
+
+def _numbered(lines, rx, n, nval):
+    """머리 뒤 n 줄 — 줄마다 rx 꼴 · 첫 칸 번호 = 1, 2, … · 끝 nval 칸 = 유한한 숫자 → [[값 …] …] · 한 줄이라도 아니면 None."""
+    if len(lines) != n:
+        return None
+    out = []
+    for i, ln in enumerate(lines, 1):
+        m = rx.fullmatch(ln)
+        v = _toks(m.groups()[-nval:]) if (m and int(m.group(1)) == i) else None
+        if v is None:
+            return None
+        out.append(v)
+    return out
+
+
+def _stress_at(txt, at):
+    """마지막 응력 블록 (Codex EH P2-2) — 머리 줄 (P 하나) + 3 행 × 6 값 (Ry/bohr³ 셋 · kbar 셋) 을 엄격히 → (dict, None) 또는
+    (None, 이유). 일관성 (P = kbar 대각합/3 · 두 단위) 은 stress_problems 가 본다."""
+    s = txt.rfind("\n", 0, at) + 1
+    L = txt[s:].split("\n", 4)[:4]
+    h = _RX_SHDR.fullmatch(L[0]) if L else None
+    if not h:
+        return None, "머리 줄 꼴이 아니다 (P= 뒤에 값 하나 · 꼬리 글자 없음)"
+    P = _tok(h.group(1))
+    if P is None:
+        return None, f"머리의 P 토큰 {h.group(1)!r} 가 유한한 숫자가 아니다"
+    if len(L) < 4:
+        return None, "행렬 3 행이 없다 (잘린 블록)"
+    rows = []
+    for ln in L[1:]:
+        m = _RX_SROW.fullmatch(ln)
+        v = _toks(m.groups()) if m else None
+        if v is None:
+            return None, f"행렬 행 {ln.strip()[:60]!r} 이 유한한 숫자 6 개가 아니다 (빠진 · 깨진 본문)"
+        rows.append(v)
+    return {"P_kbar": P, "ry": [r[:3] for r in rows], "kbar": [r[3:] for r in rows]}, None
+
+
+def stress_problems(o) -> list:
+    """마지막 응력 블록의 내부 일관성 (Codex EH P2-2 — 위조 방지가 아니라 빠진 본문 · 머리와 본문이 어긋난 조각을 잡는다).
+
+    QE 7.4.1 은 한 σ 에서 P = tr(σ)·RY_KBAR/3 과 행렬 (Ry/bohr³ · kbar) 을 같이 찍는다 → 머리 P = kbar 대각합/3 (반올림 0.01) ·
+    kbar 열 = Ry 열 × RY_KBAR (0.006).
+    """
+    st = o.get("stress")
+    if st is None:
+        return [f"응력 (P) 을 마지막 묶음에서 못 읽었다 — {o.get('stress_why') or '응력 블록 없음'}"]
+    q, kb, ry = [], st["kbar"], st["ry"]
+    tr3 = (kb[0][0] + kb[1][1] + kb[2][2]) / 3.0
+    if abs(st["P_kbar"] - tr3) > TOL["stress_P_kbar"]:
+        q.append(f"응력 머리 P {st['P_kbar']:.2f} ≠ kbar 행렬 대각합/3 {tr3:.3f} (반올림 허용 0.01) — 머리와 본문이 다른 조각")
+    d = max(abs(kb[a][b] - ry[a][b] * RY_KBAR) for a in range(3) for b in range(3))
+    if d > TOL["stress_unit_kbar"]:
+        q.append(f"응력 행렬의 kbar 열 ≠ Ry/bohr³ 열 × {RY_KBAR:.2f} (최대 차 {d:.4f} > {TOL['stress_unit_kbar']}) — 한 σ 의 두 단위가 다르다")
+    return q
 
 
 def parse_pw_out(path) -> dict:
-    """pw.x 출력 → 결속 · 판정에 쓰는 값 (못 찾은 것은 None — 0 으로 두지 않는다).
+    """pw.x 출력 → 결속 · 판정에 쓰는 값 (못 찾은 것 · 못 읽은 것은 None — 0 으로 두지 않는다).
 
     utf-8 strict — 깨진 바이트는 decode_error 로 남기고 (판정에서 거부) 나머지는 대체 문자로 읽어 보여만 준다 (Codex EF P2-3).
+    숫자 (Codex EH P1-1 · P1-2): 줄 단위로 그 자리의 **토큰 전체**를 _tok 으로 읽는다 — 꼬리 글자 · NaN · Inf · 넘침이면 None (그 줄이
+    없을 때와 같이 거부된다). 목록 (k 점 · 결정 축 · 처음 좌표 · 힘 · 응력 · 최종 좌표) 은 머리 뒤의 정해진 줄을 차례로 읽는다 —
+    한 줄이라도 꼴이 아니면 목록 전체가 None (건너뛰고 다음 줄을 대신 읽지 않는다).
     """
     p = Path(path)
     b = p.read_bytes()
@@ -416,87 +568,85 @@ def parse_pw_out(path) -> dict:
     o["once_relax"] = {k: len(re.findall(rx, txt)) for k, rx in _ONCE_RELAX.items()}
     jd = txt.rfind("JOB DONE")
     o["after_done"] = [rx for rx in _AFTER_DONE if jd >= 0 and re.search(rx, txt[jd:])]
-    o["version"] = _num(r"Program PWSCF v\.(\S+) starts", txt, str)
-    o["input_name"] = _num(r"Reading input from (\S+)", txt, str)
-    o["nat"] = _num(r"number of atoms/cell\s*=\s*(\d+)", txt, int)
-    o["nelec"] = _num(r"number of electrons\s*=\s*([\d.]+)", txt)
-    o["ecutwfc"] = _num(r"kinetic-energy cutoff\s*=\s*([\d.]+)\s*Ry", txt)
-    o["ecutrho"] = _num(r"charge density cutoff\s*=\s*([\d.]+)\s*Ry", txt)
-    o["conv_thr"] = _num(r"scf convergence threshold\s*=\s*([\d.Ee+-]+)", txt)
-    o["etot_thr"] = _num(r"energy convergence thresh\.\s*=\s*([\d.Ee+-]+)", txt)
-    o["forc_thr"] = _num(r"force convergence thresh\.\s*=\s*([\d.Ee+-]+)", txt)
-    o["nstep"] = _num(r"nstep\s*=\s*(\d+)", txt, int)
-    m = re.search(r"number of k points=\s*(\d+)\s+(\S+)\s+smearing, width \(Ry\)=\s*([\d.Ee+-]+)", txt)
-    o["nk"], o["smearing"], o["degauss"] = (int(m.group(1)), m.group(2).lower(), float(m.group(3))) if m else (None, None, None)
+    o["version"] = _num(r"Program PWSCF v\.(\S+) starts", txt)
+    o["input_name"] = _num(r"Reading input from (\S+)", txt)
+    o["nat"] = _line(txt, r"number of atoms/cell[ \t]*=[ \t]*(\S+)", int)
+    o["nelec"] = _line(txt, r"number of electrons[ \t]*=[ \t]*(\S+)")
+    o["ecutwfc"] = _line(txt, r"kinetic-energy cutoff[ \t]*=[ \t]*(\S+)[ \t]+Ry")
+    o["ecutrho"] = _line(txt, r"charge density cutoff[ \t]*=[ \t]*(\S+)[ \t]+Ry")
+    o["conv_thr"] = _line(txt, r"scf convergence threshold[ \t]*=[ \t]*(\S+)")
+    o["etot_thr"] = _line(txt, r"energy convergence thresh\.[ \t]*=[ \t]*(\S+)")
+    o["forc_thr"] = _line(txt, r"force convergence thresh\.[ \t]*=[ \t]*(\S+)")
+    o["nstep"] = _line(txt, r"nstep[ \t]*=[ \t]*(\S+)", int)
+    m = re.search(r"(?m)^[ \t]*number of k points=[ \t]*(\S+)[ \t]+(\S+)[ \t]+smearing, width \(Ry\)=[ \t]*(\S+)[ \t]*$", txt)
+    o["nk"], o["smearing"], o["degauss"] = (_tok(m.group(1), int), m.group(2).lower(), _tok(m.group(3))) if m else (None, None, None)
     o["klist"] = None
-    if m:
-        c = txt.find("cart. coord. in units 2pi/alat", m.end())
-        if c >= 0:
-            rows = _RE_K.findall(txt[c:c + 160 * (o["nk"] + 2)])
-            if len(rows) >= o["nk"]:
-                o["klist"] = [[float(x) for x in r] for r in rows[:o["nk"]]]
+    if m and o["nk"]:
+        L = _next_lines(txt, m.start(), o["nk"] + 1)      # 머리 바로 다음 줄 = 'cart. coord. in units 2pi/alat' · 그 뒤 nk 줄
+        if L and re.fullmatch(r"[ \t]*cart\. coord\. in units 2pi/alat[ \t]*", L[0]):
+            o["klist"] = _numbered(L[1:], _RX_KROW, o["nk"], 4)
     m = re.search(r"Exchange-correlation=\s*([^\n(]+)", txt)
     o["xc"] = m.group(1).split() if m else None
     pps = []
     for mm in _RE_PP.finditer(txt):
-        z = re.search(r"Zval\s*=\s*([\d.]+)", txt[mm.end():mm.end() + 400])
+        z = _RX_ZVAL.fullmatch(mm.group(4))               # MD5 바로 다음 줄 'Pseudo is …, Zval = …'
         pps.append({"el": mm.group(1), "file": Path(mm.group(2)).name, "md5": mm.group(3).lower(),
-                    "zval": float(z.group(1)) if z else None})
+                    "zval": _tok(z.group(1)) if z else None})
     o["pp"] = pps
-    v = _num(r"unit-cell volume\s*=\s*([\d.]+)\s*\(a\.u\.\)\^3", txt)
+    v = _line(txt, r"unit-cell volume[ \t]*=[ \t]*(\S+)[ \t]+\(a\.u\.\)\^3")
     o["volume_A3"] = v * BOHR_A ** 3 if v is not None else None
-    alat = _num(r"celldm\(1\)=\s*([\d.]+)", txt)
+    cd = _line(txt, r"celldm\(1\)=[ \t]*(\S+)[ \t]+celldm\(2\)=[ \t]*(\S+)[ \t]+celldm\(3\)=[ \t]*(\S+)")
+    alat = cd[0] if cd else None
     o["alat_bohr"] = alat
-    m = re.search(r"crystal axes: \(cart\. coord\. in units of alat\)\s*\n"
-                  r"\s*a\(1\) = \(\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*\)\s*\n"
-                  r"\s*a\(2\) = \(\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*\)\s*\n"
-                  r"\s*a\(3\) = \(\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*\)", txt)
-    o["axes_alat"] = np.array([float(x) for x in m.groups()]).reshape(3, 3).tolist() if m else None
+    m = re.search(r"(?m)^[ \t]*crystal axes: \(cart\. coord\. in units of alat\)[ \t]*$", txt)
+    o["axes_alat"] = _numbered(_next_lines(txt, m.start(), 3), _RX_AROW, 3, 3) if m else None
     o["cell_A"] = (np.array(o["axes_alat"]) * alat * BOHR_A).tolist() if (o["axes_alat"] and alat) else None
     pos = None
-    k = txt.find("positions (alat units)")
-    if k >= 0 and o["nat"] and alat:
-        rows = re.findall(r"^\s*\d+\s+([A-Za-z]+)\s+tau\(\s*\d+\)\s*=\s*\(\s*([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s*\)",
-                          txt[k:k + 200 * o["nat"]], re.M)
-        if len(rows) >= o["nat"]:
-            rows = rows[:o["nat"]]
-            pos = {"symbols": [r[0] for r in rows],
-                   "cart_A": (np.array([[float(x) for x in r[1:]] for r in rows]) * alat * BOHR_A).tolist()}
+    m = re.search(r"(?m)^[ \t]*site n\.[ \t]+atom[ \t]+positions \(alat units\)[ \t]*$", txt)
+    if m and o["nat"] and alat:
+        L = _next_lines(txt, m.start(), o["nat"])
+        xyz = _numbered(L, _RX_TROW, o["nat"], 3)
+        if xyz is not None and all(int(_RX_TROW.fullmatch(ln).group(3)) == i for i, ln in enumerate(L, 1)):
+            pos = {"symbols": [_RX_TROW.fullmatch(ln).group(2) for ln in L],
+                   "cart_A": (np.array(xyz) * alat * BOHR_A).tolist()}
     o["initial"] = pos
     # ── 블록 위치 · 마지막 계산 상태 (Codex EG P1-1) — 개수 · 순서는 state_problems 가 보고, 값은 마지막 묶음에서만 읽는다 ──
     pos = {k: [mm.start() for mm in re.finditer(rx, txt)] for k, rx in _MARK.items()}
     o["_pos"] = pos
     o["n_scf"] = len(pos["E"])
-    o["E_Ry"] = _num(r"total energy\s+=\s+(-?\d+\.\d+)\s+Ry", txt[pos["E"][-1]:pos["E"][-1] + 200]) if pos["E"] else None
+    o["E_Ry"] = _line_at(txt, pos["E"][-1], r"![ \t]+total energy[ \t]+=[ \t]*(\S+)[ \t]+Ry") if pos["E"] else None
     o["scf_converged"] = "convergence has been achieved" in txt and "convergence NOT achieved" not in txt
     o["job_done"] = "JOB DONE" in txt
-    o["final_forces_ids"], o["final_forces_max_comp_RyBohr"], o["max_force_eV_A"] = None, None, None
+    o["final_forces_ids"], o["final_forces_bad"] = None, None
+    o["final_forces_max_comp_RyBohr"], o["max_force_eV_A"] = None, None
     if pos["F"]:
-        ids, arr = _force_rows(txt, pos["F"][-1])
-        o["final_forces_ids"] = ids
+        ids, arr, bad = _force_rows(txt, pos["F"][-1])
+        o["final_forces_ids"], o["final_forces_bad"] = ids, bad
         if arr is not None and len(ids):
             o["final_forces_max_comp_RyBohr"] = float(np.abs(arr).max())
             o["max_force_eV_A"] = float(np.linalg.norm(arr, axis=1).max()) * RYBOHR_EVA
-    o["P_kbar"] = _num(r"P=\s*(-?\d+\.?\d*)", txt[pos["S"][-1]:pos["S"][-1] + 200]) if pos["S"] else None
+    o["stress"], o["stress_why"] = _stress_at(txt, pos["S"][-1]) if pos["S"] else (None, "응력 블록 없음")
+    o["P_kbar"] = o["stress"]["P_kbar"] if o["stress"] else None
     o["spin_polarized"] = ("SPIN UP" in txt) or ("Starting magnetic structure" in txt)
-    m = re.search(r"bfgs converged in\s+(\d+)\s+scf cycles and\s+(\d+)\s+bfgs steps", txt)
-    o["bfgs"] = {"scf_cycles": int(m.group(1)), "steps": int(m.group(2))} if m else None
-    m = re.search(r"\(criteria: energy <\s*([\d.Ee+-]+)\s*Ry, force <\s*([\d.Ee+-]+)\s*Ry/Bohr\)", txt)
-    o["bfgs_criteria"] = [float(m.group(1)), float(m.group(2))] if m else None
-    o["final_E_Ry"] = _num(r"Final energy\s+=\s+(-?\d+\.\d+)\s+Ry", txt)
-    fin = None
+    bf = _line(txt, r"bfgs converged in[ \t]*(\S+)[ \t]+scf cycles and[ \t]*(\S+)[ \t]+bfgs steps", int, int)
+    o["bfgs"] = {"scf_cycles": bf[0], "steps": bf[1]} if bf else None
+    o["bfgs_criteria"] = _line(txt, r"\(criteria: energy <[ \t]*(\S+)[ \t]+Ry, force <[ \t]*(\S+)[ \t]+Ry/Bohr\)")
+    o["final_E_Ry"] = _line(txt, r"Final energy[ \t]+=[ \t]*(\S+)[ \t]+Ry")
+    fin, o["final_why"] = None, None
     if len(pos["BF"]) == 1 and len(pos["EF"]) == 1 and pos["BF"][0] < pos["EF"][0]:
         blk = txt[pos["BF"][0]:pos["EF"][0]]
         h = re.search(r"ATOMIC_POSITIONS\s*\(?\s*(\w+)\s*\)?[ \t]*\n", blk)
-        if h:
-            rows = [ln for ln in blk[h.end():].split("\n") if ln.strip()]
-            mm_ = [re.fullmatch(r"\s*([A-Za-z]+)\s+(\S+)\s+(\S+)\s+(\S+)\s*", ln) for ln in rows]
-            if rows and all(mm_):                 # 머리 뒤는 좌표 행만 (둘째 머리 · 다른 줄이 끼면 못 읽음 = 거부)
-                try:
-                    fin = {"units": h.group(1).lower(), "symbols": [x.group(1) for x in mm_],
-                           "xyz": [[float(x.group(k)) for k in (2, 3, 4)] for x in mm_]}
-                except ValueError:
-                    fin = None
+        rows = [ln for ln in blk[h.end():].split("\n") if ln.strip()] if h else []
+        mm_ = [_RX_FINAL.fullmatch(ln) for ln in rows]
+        if not h or not rows or not all(mm_):         # 머리 뒤는 좌표 행만 (둘째 머리 · 다른 줄이 끼면 못 읽음 = 거부)
+            o["final_why"] = "ATOMIC_POSITIONS 머리 하나 뒤에 좌표 행만 있어야 한다"
+        else:
+            xyz = [_toks(x.groups()[1:]) for x in mm_]
+            if any(v is None for v in xyz):           # Codex EH P1-1 — NaN · Inf · 꼬리 글자 좌표는 구조가 아니다
+                bad = next(t for x in mm_ for t in x.groups()[1:] if _tok(t) is None)
+                o["final_why"] = f"좌표 토큰 {bad!r} 가 유한한 숫자가 아니다"
+            else:
+                fin = {"units": h.group(1).lower(), "symbols": [x.group(1) for x in mm_], "xyz": xyz}
     o["final"] = fin
     o["gpu"] = "GPU acceleration is ACTIVE" in txt
     m = re.search(r"PWSCF\s*:\s*(.+?)CPU\s+(.+?)WALL", txt)
@@ -507,20 +657,22 @@ def parse_pw_out(path) -> dict:
 
 def _force_rows(txt, at):
     """'Forces acting on atoms' 머리 바로 뒤의 원자 행 (빈 줄만 건너뜀 · 행이 끊기면 끝 — verbosity high 의 힘 분해는 안 읽는다)
-    → (원자 번호 목록, 값 배열 또는 None)."""
-    ids, vals = [], []
+    → (원자 번호 목록, 값 배열 또는 None, 처음 못 읽은 토큰 또는 None) — 값은 토큰 전체 · 유한 (Codex EH P1-1: NaN 은 'fm > 문턱'
+    비교가 거짓이라 빠져나갔다 → 한 성분이라도 유한한 숫자가 아니면 배열을 안 낸다)."""
+    ids, vals, bad = [], [], None
     for ln in txt[at:].split("\n")[1:]:
         m = _RE_FROW.fullmatch(ln)
         if m:
             ids.append(int(m.group(1)))
-            try:
-                vals.append([float(m.group(k)) for k in (2, 3, 4)])
-            except ValueError:
-                return ids, None
+            v = _toks(m.groups()[1:])
+            if v is None:
+                bad = bad or next(t for t in m.groups()[1:] if _tok(t) is None)
+            else:
+                vals.append(v)
             continue
         if ids or ln.strip():
             break
-    return ids, (np.array(vals, float) if vals else None)
+    return ids, (np.array(vals, float) if (vals and bad is None) else None), bad
 
 
 def state_problems(o, *, stage, tstress, nat) -> list:
@@ -556,10 +708,13 @@ def state_problems(o, *, stage, tstress, nat) -> list:
         seq = [p["B"][0], p["C"][0], p["FE"][0], p["BF"][0], p["EF"][0], p["JD"][0]]
         if any(x >= y for x, y in zip(seq, seq[1:])):
             q.append("이완 끝 순서 (bfgs converged → criteria → Final energy → 최종 좌표 → JOB DONE) 가 맞지 않는다")
-    if o.get("final_forces_ids") != list(range(1, nat + 1)) or o.get("final_forces_max_comp_RyBohr") is None:
-        ids = o.get("final_forces_ids") or []
+    ids = o.get("final_forces_ids") or []
+    if ids != list(range(1, nat + 1)):
         q.append(f"마지막 힘 블록의 원자 번호가 1…{nat} 이 아니다 (행 {len(ids)} · 중복 {len(ids) - len(set(ids))} · "
-                 f"누락 {len(set(range(1, nat + 1)) - set(ids))}) 또는 값을 못 읽었다")
+                 f"누락 {len(set(range(1, nat + 1)) - set(ids))})")
+    elif o.get("final_forces_max_comp_RyBohr") is None:
+        q.append(f"마지막 힘 블록의 값이 유한한 숫자가 아니다 (토큰 {o.get('final_forces_bad')!r}) — NaN · Inf · 꼬리 글자는 힘이 아니다 "
+                 "(Codex EH P1-1)")
     return q
 
 
@@ -622,7 +777,7 @@ def out_problems(o, inp, *, stage, pp, V0=None) -> list:
     if o["after_done"]:
         q.append(f"JOB DONE 뒤에 계산 기록 {o['after_done'][:2]} (이어 붙임 — JOB DONE 은 마지막 실행의 끝이어야 한다)")
     if o["E_Ry"] is None:
-        q.append("'!' 총에너지 없음")
+        q.append("'!' 총에너지 (마지막 묶음) 를 못 읽었다 — 줄이 없거나 값이 유한한 숫자가 아니다")
     if not o["scf_converged"]:
         q.append("SCF 수렴 아님 (convergence NOT achieved 또는 수렴 줄 없음)")
     if o["input_name"] != "scf.in":
@@ -673,7 +828,10 @@ def out_problems(o, inp, *, stage, pp, V0=None) -> list:
     if inp.get("k_shift") != [0, 0, 0]:
         q.append(f"입력 k shift {inp.get('k_shift')} ≠ 0 0 0")
     q += kmesh_problems(o, inp["k"])
-    q += state_problems(o, stage=stage, tstress=str(inp["keys"].get("tstress", "")).lower() == ".true.", nat=len(inp["symbols"]))
+    ts = str(inp["keys"].get("tstress", "")).lower() == ".true."
+    q += state_problems(o, stage=stage, tstress=ts, nat=len(inp["symbols"]))
+    if ts:
+        q += stress_problems(o)
     if stage == "relax":
         R = DFT["relax"]
         many = {k: c for k, c in o["once_relax"].items() if c != 1}
@@ -691,16 +849,19 @@ def out_problems(o, inp, *, stage, pp, V0=None) -> list:
         fm = o["final_forces_max_comp_RyBohr"]
         if fm is not None and fm > R["forc_conv_thr"] + TOL["force_print"]:
             q.append(f"마지막 힘 성분 최대 {fm:.2e} Ry/Bohr > forc_conv_thr {R['forc_conv_thr']} (모든 성분 기준)")
-        if o["bfgs"] and o["n_scf"] != o["bfgs"]["scf_cycles"]:
+        if o["bfgs"] is None:
+            q.append("BFGS 기록 줄 ('bfgs converged in N scf cycles and M bfgs steps') 을 못 읽었다 — SCF 수를 대조할 수 없다 (Codex EH P2-1)")
+        elif o["n_scf"] != o["bfgs"]["scf_cycles"]:
             q.append(f"'!' 총에너지 {o['n_scf']} 개 ≠ BFGS 가 센 SCF {o['bfgs']['scf_cycles']} 번 (끼워 넣은 · 빠진 조각)")
         if o["final"] is None or len(o["final"]["symbols"]) != DFT["nat"]:
-            q.append("최종 좌표 블록을 못 읽었다 (하나의 Begin/End final 안에 ATOMIC_POSITIONS 머리 하나 · 좌표 행만) · 원자 수 다름")
+            q.append("최종 좌표 블록을 못 읽었다 (하나의 Begin/End final 안에 ATOMIC_POSITIONS 머리 하나 · 좌표 행만 · 유한한 숫자) · "
+                     f"원자 수 다름 — {o.get('final_why') or '원자 수'}")
         elif o["final"]["symbols"] != list(inp["symbols"]):
             q.append("최종 좌표의 원소 순서가 입력과 다르다")
         if o["final_E_Ry"] is None or o["E_Ry"] is None or abs(o["final_E_Ry"] - o["E_Ry"]) > TOL["E_final_Ry"]:
             q.append(f"Final energy {o['final_E_Ry']} ≠ 마지막 '!' {o['E_Ry']}")
-        if o["P_kbar"] is None:
-            q.append("응력 (P) 을 마지막 묶음에서 못 읽었다 (tstress)")
+        if not ts:
+            q.append("이완 입력에 tstress 가 없다 — P 를 읽을 수 없다")
         if V0 is None or o["volume_A3"] is None or abs(o["volume_A3"] - V0) > TOL["V_A3"]:
             q.append(f"부피 {o['volume_A3']} Å³ ≠ 기준 셀 V₀ {V0}")
     return q
@@ -967,8 +1128,7 @@ def prepare(RD, verdict, receipt, results, readout, pseudo_dir, out_dir, k_main=
         raise SystemExit(f"⛔ k_main {k_main} — {DFT['k_main']} (기본) 또는 {DFT['k_probe']} (탐침 발동 뒤) 만")
     if k_main == DFT["k_probe"] and not after_kprobe:
         raise SystemExit("⛔ k_main 4×2×1 은 탐침 발동 판정 (--after_kprobe) 이 있을 때만 — 결과 전 규칙 (DU P1-5)")
-    if (out_dir / "dft_plan.json").exists():
-        raise SystemExit(f"⛔ {out_dir}/dft_plan.json 가 이미 있다 — 덮지 않는다 (새 폴더)")
+    # 계획이 이미 있으면 _commit 이 쓰기 직전에 멈춘다 (덮지 않는다 · 새 폴더) — 앞에서 따로 막지 않는다 (같은 검사 둘이면 시험이 가르지 못한다)
     A100, succ, raw, res_dir = stage8(RD, verdict, receipt, results, readout)
     after_entry = _entry(after_kprobe, out_dir) if after_kprobe else None
     _k_main_check(RD, k_main, after_entry, out_dir, _sha(results))
@@ -982,7 +1142,6 @@ def prepare(RD, verdict, receipt, results, readout, pseudo_dir, out_dir, k_main=
         jobs.append({"job": job, "family": s["family"], "i": s["i"], "name": s["name"], "rank": s["rank"],
                      "E_uma_eV": s["E"], "structure": _entry(p, out_dir), "input_sha256": _text_sha(t),
                      "uma_record": coord_record(RD, a)})
-    _write_jobs(out_dir, "sp", texts)
     plan = {"kind": KIND_PLAN, "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json#개정_1 9_DFT · 개정_5",
             "tools": _tools(RD),
             "inputs": {"screen_verdict": _entry(verdict, out_dir), "pilot_receipt": _entry(receipt, out_dir),
@@ -991,7 +1150,7 @@ def prepare(RD, verdict, receipt, results, readout, pseudo_dir, out_dir, k_main=
             "stage8": _stage8_summary(A100),
             "contract": DFT, "pseudo": ps, "k_main": k_main, "jobs_sp": jobs,
             "rel_base": "잡 · 구조 · 입력의 rel 은 이 계획 폴더 기준"}
-    _dump(plan, out_dir / "dft_plan.json")
+    _commit(out_dir, {"sp": texts}, {}, plan, out_dir / "dft_plan.json")
     return plan
 
 
@@ -1074,15 +1233,42 @@ def _expected_relax(plan, base, reps, host):
     return jobs, texts, cell_rec
 
 
-def _write_jobs(base, stage, texts):
-    """잡 입력을 쓴다 — 이미 있으면 같은 바이트일 때만 둔다 (다르면 멈춤 · 덮지 않는다)."""
-    for job, t in texts.items():
-        f = Path(base) / stage / job / "scf.in"
+def _pending(items):
+    """[(경로, 텍스트, 무엇)] → 아직 없는 것만 [(경로, 텍스트)] · 이미 있는 것은 같은 바이트여야 (다르면 멈춤 · 아무것도 안 썼다)."""
+    new = []
+    for f, t, what in items:
+        f = Path(f)
         if f.exists():
             if f.read_bytes() != t.encode("utf-8"):
+                if what == "이완 구조":
+                    raise SystemExit(f"⛔ {f} 가 이미 있고 이번 이완 출력에서 만든 구조와 다르다 — 덮지 않는다 (앞 판정 · 출력을 먼저 확인)")
                 raise SystemExit(f"⛔ {f} 가 이미 있고 다시 만든 입력과 다르다 — 덮지 않는다")
             continue
+        new.append((f, t))
+    return new
+
+
+def _write_jobs(base, stage, texts):
+    """잡 입력을 쓴다 — 전부 먼저 대조하고 (이미 있으면 같은 바이트여야) 그다음 없는 것만 쓴다."""
+    for f, t in _pending([(Path(base) / stage / job / "scf.in", t, "잡 입력") for job, t in texts.items()]):
         _write_bytes(f, t)
+
+
+def _commit(base, jobs_by_stage, files, obj, out):
+    """판정 · 계획을 쓰는 유일한 길 (Codex EH 확인 목록 2) — 모든 검사가 끝난 뒤에 부른다.
+
+    ① 판정 텍스트를 먼저 만든다 (유한하지 않은 수면 여기서 멈춤) ② 쓸 잡 입력 · 이완 구조를 전부 대조 (이미 있는 것은 같은 바이트여야)
+    ③ 없는 것만 쓰고 ④ 판정 파일은 맨 끝에. ①② 에서 멈추면 새 파일이 하나도 생기지 않는다 (③ 도중의 디스크 오류는 막지 못한다 —
+    그때도 판정 파일은 없다).
+    """
+    body = _dumps(obj)
+    if Path(out).exists():
+        raise SystemExit(f"⛔ {out} 가 이미 있다 — 덮지 않는다 (쓰기 직전 확인 · 새 폴더 · 새 판정 이름)")
+    items = [(Path(base) / stage / job / "scf.in", t, "잡 입력") for stage, texts in jobs_by_stage.items() for job, t in texts.items()]
+    items += [(Path(p), t, "이완 구조") for p, t in files.items()]
+    for p, t in _pending(items):
+        _write_bytes(p, t)
+    _write_bytes(out, body)
 
 
 def _sp_rows(plan, base, outs):
@@ -1127,8 +1313,7 @@ def read_sp(RD, plan_path, out, host=None):
         raise SystemExit(f"⛔ {out} 가 이미 있다 — 덮지 않는다")
     plan, base, A100, succ, raw, res_dir = _rebind_plan(RD, plan_path)
     v, stage, texts, _ = _build_sp_verdict(RD, plan, base, Path(plan_path).resolve(), Path(out).resolve().parent, host, A100)
-    _write_jobs(base, stage, texts)
-    _dump(v, out)
+    _commit(base, {stage: texts}, {}, v, out)
     return v
 
 
@@ -1182,8 +1367,7 @@ def read_kprobe(RD, sp_path, out, host):
     if plan["k_main"] != DFT["k_main"]:
         raise SystemExit("⛔ 이 단일점 판정에는 k 탐침이 없다 (k_main 4×2×1 판) — read_relax 로 간다")
     kv, texts = _build_kp_verdict(RD, v, plan, base, reps, sp_path, Path(out).resolve().parent, host)
-    _write_jobs(base, "relax", texts)
-    _dump(kv, out)
+    _commit(base, {"relax": texts}, {}, kv, out)
     return kv
 
 
@@ -1226,7 +1410,7 @@ def read_relax(RD, prev_path, out, host):
     cell_rec = prev["reference_cell"]
     V0 = DFT["ref_cell"]["V0_A3"]
     outs = read_stage_outputs(base, jobs, stage="relax", pp=_pp(plan), V0=V0)
-    fam, rows, relaxed = {}, [], {}
+    fam, rows, relaxed, xyz = {}, [], {}, {}
     for j in jobs:
         o = outs[j["job"]]
         inp = parse_pw_in(base / "relax" / j["job"] / "scf.in")
@@ -1234,8 +1418,10 @@ def read_relax(RD, prev_path, out, host):
         if fin["units"] != "crystal":
             raise SystemExit(f"⛔ {j['job']}: 최종 좌표 단위 {fin['units']} ≠ crystal")
         a = Atoms(fin["symbols"], scaled_positions=np.array(fin["xyz"]), cell=inp["cell"], pbc=True)
-        rp = write_relaxed(base / "relaxed" / f"{j['job']}.xyz", a)
-        relaxed[j["family"]] = {"job": j["job"], "file": _entry(rp, base), "parent_structure": j["structure"],
+        rp, t = base / "relaxed" / f"{j['job']}.xyz", _xyz_text(a)
+        xyz[rp] = t                                  # 쓰기는 모든 검사 뒤 (_commit · Codex EH 확인 목록 2)
+        relaxed[j["family"]] = {"job": j["job"], "file": {"rel": _rel(rp, base), "sha256": _text_sha(t)},
+                                "parent_structure": j["structure"],
                                 "parent_sp_job": j["parent_sp_job"], "record": coord_record(RD, a)}
         E, P, V = o["E_Ry"] * RY_EV, o["P_kbar"] / 10.0, o["volume_A3"]
         fam[j["family"]] = (E, P, V)
@@ -1270,20 +1456,17 @@ def read_relax(RD, prev_path, out, host):
         rv["stage10"] = None
         rv["electronic_targets"] = None          # Codex EF P1-6 — EOS 보류면 실행 대상 없음 (이완 구조는 relaxed 에 진단 자료로만)
         rv["relaxed_note"] = "EOS 보류 — relaxed 는 진단 자료 · 안정성 · 전자구조 실행 대상이 아니다"
-    _dump(rv, out)
+    _commit(base, {}, xyz, rv, out)
     return rv
 
 
-def write_relaxed(path, atoms) -> Path:
-    """이완 끝 구조 (extxyz · LF) — 이미 있으면 같은 바이트일 때만 둔다 (다르면 멈춤 · 앞 판정의 구조를 덮지 않는다)."""
+def _xyz_text(atoms) -> str:
+    """이완 끝 구조 텍스트 (extxyz · LF) — 파일은 _commit 이 쓴다 (이미 있으면 같은 바이트일 때만 · 앞 판정의 구조를 덮지 않는다)."""
     from ase.io import write
     import io
     buf = io.StringIO()
     write(buf, atoms, format="extxyz")
-    p = Path(path)
-    if p.exists() and p.read_bytes() != buf.getvalue().encode("utf-8"):
-        raise SystemExit(f"⛔ {p} 가 이미 있고 이번 이완 출력에서 만든 구조와 다르다 — 덮지 않는다 (앞 판정 · 출력을 먼저 확인)")
-    return _write_bytes(p, buf.getvalue())
+    return buf.getvalue()
 
 
 # ───────────────────────── reject 의 잡 목록 ─────────────────────────
@@ -1351,8 +1534,47 @@ def _kpts_tr(mesh):
 
 
 def _frag_stress(P):
-    return (f"          total   stress  (Ry/bohr**3)                   (kbar)     P=      {P:8.2f}\n"
-            "   0.00001392   0.00000588  -0.00001346            2.05        0.87       -1.98\n")
+    """응력 블록 — QE 7.4.1 stress.f90 꼴 (10x · 'total   stress  (Ry/bohr**3) ' · 18x · '(kbar)' · 5x · 'P=' f12.2 / 3 행 × (3f13.8 · 4x ·
+    3f12.2)) · kbar 대각 = P (대각합/3 = P) · 비대각은 작게 · Ry 열 = kbar / RY_KBAR (두 단위 일치 — 실측 MLi_04_x108 과 같은 꼴)."""
+    k = [[P, -0.58, -1.88], [-0.58, P, -1.42], [-1.88, -1.42, P]]
+    s = f"          total   stress  (Ry/bohr**3)                   (kbar)     P={P:12.2f}\n"
+    for r in k:
+        s += "".join(f"{x / RY_KBAR:13.8f}" for x in r) + "    " + "".join(f"{x:12.2f}" for x in r) + "\n"
+    return s
+
+
+def _last_tok(t, start_rx, tok_rx, new, last=True):
+    """selftest — start_rx 의 마지막 (또는 첫) 자리 뒤에서 tok_rx 의 값 칸 (그룹 2) 하나만 new 로 (개수 · 순서는 그대로)."""
+    ms = list(re.finditer(start_rx, t))
+    a = ms[-1 if last else 0].start()
+    m = re.compile(tok_rx).search(t, a)
+    return t[:m.start(2)] + new + t[m.end(2):]
+
+
+def _force1(t, new):                     # 마지막 힘 블록 원자 1 의 첫 성분
+    return _last_tok(t, r"Forces acting on atoms", r"(?m)^([ \t]*atom[ \t]+1[ \t]+type[ \t]+[0-9]+[ \t]+force[ \t]*=[ \t]*)(\S+)", new)
+
+
+def _final_li(t, new):                   # 최종 좌표의 첫 Li 행 x
+    return _last_tok(t, r"Begin final coordinates", r"(?m)^(Li[ \t]+)(\S+)", new)
+
+
+def _p_tok(t, new):                      # 마지막 응력 머리의 P 토큰
+    return _last_tok(t, r"total[ \t]+stress", r"(P=[ \t]*)(\S+)", new)
+
+
+def _drop_stress_rows(t):                # 마지막 응력 머리 뒤 3 행 삭제
+    a = t.rindex("total   stress")
+    e = t.index("\n", a) + 1
+    return t[:e] + t[e:].split("\n", 3)[3]
+
+
+def _kbar_bump(t):                       # 마지막 응력 첫 행의 kbar 마지막 칸만 +5 (Ry 열 · 대각 그대로)
+    a = t.rindex("total   stress")
+    e = t.index("\n", a) + 1
+    e2 = t.index("\n", e)
+    row = t[e:e2]
+    return t[:e] + row[:-12] + f"{float(row[-12:]) + 5.0:12.2f}" + t[e2:]
 
 
 def _frag_forces(nat, first=None, ids=None, small=0.0001):
@@ -1586,6 +1808,28 @@ def _selftest() -> int:
         "[음성] k 격자 — 더 성긴 격자 (2×2×1) 의 점이 4×2×1 위에 있어도 덮음 · 가중치로 거부")
     chk(kmesh_problems({"klist": None, "axes_alat": None}, [3, 2, 1]) != [], "[음성] k 점 목록을 못 읽으면 거부")
 
+    # ── 숫자 토큰 · JSON 유한성 · 화면 출력 (Codex EH P1-1 · P1-2 · P2-1) ──
+    chk(_tok("-10.88") == -10.88 and _tok("1.0E-10") == 1e-10 and _tok("1.0D-10") == 1e-10 and _tok("+5") == 5.0
+        and _tok(".5") == 0.5 and _tok("2.50E+01") == 25.0 and _tok("58", int) == 58 and _tok("0.0100") == 0.01,
+        "[양성] 숫자 토큰 — 소수 · 지수 (E · D) · 부호 · 정수 꼴을 토큰 끝까지 읽는다")
+    chk(all(_tok(s) is None for s in ("nan", "NaN", "inf", "-Infinity", "1e999", "0.00BROKEN", "0.00\x00", "\u0661\u0662",
+                                       "1_000", "", "--1", "1.2.3", "0x10", "*" * 12, "2.50E+01x"))
+        and all(_tok(s, int) is None for s in ("+58", "-1", "5.0", "58x", "", "\u0661")),
+        "[음성] 숫자 토큰 — NaN · Inf · 넘침 · 꼬리 글자 · NUL · 유니코드 숫자 · 밑줄 · Fortran 넘침 별표 → None (앞부분만 읽지 않는다) · "
+        "정수 칸은 부호 · 소수점 거부")
+    chk(refuses("유한하지 않은", _dumps, {"a": [1.0, float("nan")]}) and refuses("유한하지 않은", _dumps, {"b": np.float32("inf")})
+        and refuses("유한하지 않은", _dumps, {"c": np.array([1.0, np.nan])}),
+        "[음성] 판정 JSON — NaN · Inf (파이썬 · numpy 스칼라 · 배열) 가 하나라도 있으면 쓰지 않는다 (allow_nan=False)")
+    chk(json.loads(_dumps({"x": np.float32(1.5), "n": np.int64(3), "t": np.bool_(True)})) == {"x": 1.5, "n": 3, "t": True},
+        "[양성] 판정 JSON — numpy 값은 파이썬 값으로 (글자로 바꿔 유한성 검사를 비켜 가지 않는다)")
+    try:
+        say = _say_relax({"rows": [{"job": "rx_FB_cfg0003", "P_GPa": None, "bfgs": None, "final_force_max_comp_RyBohr": None}],
+                          "decision": "d", "scope": "s", "stage10": None, "relaxed_note": "n"})
+    except Exception as ex:                       # noqa: BLE001 — 터지면 빨강
+        say = [f"터짐 {type(ex).__name__}"]
+    chk(any("bfgs — 걸음" in ln and "P — GPa" in ln for ln in say),
+        "[양성] read_relax 화면 출력 — 칸이 비어도 (bfgs · P · 힘 None) 터지지 않고 '—' (판정을 쓴 뒤 화면에서 터지지 않는다 · EH P2-1)")
+
     with tempfile.TemporaryDirectory() as td:
         td = Path(td)
         # ── 유사포텐셜 가짜 (원소 머리 · 가전자) ──
@@ -1801,6 +2045,19 @@ def _selftest() -> int:
             ("힘 2≠1", {"insert_before_done": _frag_forces(128)}),                        # EG P1-1 (JOB DONE 앞 힘 조각)
             ("응력 1≠0", {"insert_before_done": _frag_stress(0.0)}),                     # tstress 없는 단일점에 응력 조각
             ("원자 번호", {"force_ids": [2, 2] + list(range(3, 129))}),                    # EG P1-1 (원자 1 행 빼고 2 행 복제)
+            # EH P1-1 · P1-2 — 숫자는 토큰 전체 · 유한 (개수 · 순서는 그대로)
+            ("유한한 숫자가 아니다", {"post": lambda t: _force1(t, "NaN")}),
+            ("총에너지 (마지막 묶음) 를 못 읽었다", {"post": lambda t: _last_tok(t, r"(?m)^!", r"(=[ \t]*)(\S+)", "NaN")}),
+            ("원자 수", {"post": lambda t: t.replace("number of atoms/cell      =           128", "number of atoms/cell      =           128x")}),
+            ("conv_thr", {"post": lambda t: t.replace("scf convergence threshold =      1.0E-08", "scf convergence threshold =      1.0E-08junk")}),
+            ("Zval", {"post": lambda t: _last_tok(t, r"PseudoPot\. # 1 ", r"(Zval =[ \t]*)(\S+)", "3.0x", last=False)}),
+            ("요청 격자", {"post": lambda t: _last_tok(t, r"cart\. coord\. in units 2pi/alat", r"(wk =[ \t]*)(\S+)", "0.3333333x")}),
+            ("처음 좌표 블록을 못 읽었다", {"post": lambda t: _last_tok(t, r"positions \(alat units\)", r"(tau\([ \t]*1\) = \([ \t]*)(\S+)", "NaN")}),
+            ("설정 줄이 한 번씩이 아니다", {"tail_junk": "     number of atoms/cell      =           128\n"}),
+            ("ecutwfc", {"post": lambda t: t.replace("kinetic-energy cutoff     =      52.0000  Ry",
+                                                      "kinetic-energy cutoff     =      52.0000  Ry  x")}),     # 줄 끝까지
+            ("총에너지 (마지막 묶음) 를 못 읽었다", {"post": lambda t: re.sub(r"(?m)^(![ \t]+total energy[^\n]*Ry)$", r"\1 x", t)}),
+            ("요청 격자", {"post": lambda t: t.replace("k(    2)", "k(    1)")}),                  # 목록 번호가 차례가 아님
         ]
         for kw_, over in bad_cases:
             _write_bytes(d2 / "scf.out", fo(d2, sp_E["F_P"][0], **over))
@@ -1879,6 +2136,19 @@ def _selftest() -> int:
             "[음성] 입력 k shift 가 0 0 0 이 아니면 거부 (격자 대조의 전제)")
         chk(refuses("덮지 않는다", _write_jobs, out, "kprobe", {spv["jobs_kprobe"][0]["job"]: "&CONTROL\n/\n"}),
             "[음성] 잡 입력이 이미 있고 다르면 덮지 않는다")
+        kp_files = [out / "kprobe" / j["job"] / "scf.in" for j in spv["jobs_kprobe"]]
+        kp_keep = [p.read_bytes() for p in kp_files]
+        sv_keep = (out / "sp_verdict.json").read_bytes()
+        os.remove(out / "sp_verdict.json")
+        for p in kp_files:
+            os.remove(p)
+        kp_files[-1].write_bytes(b"&CONTROL\n/\n")           # 마지막 잡 — 하나씩 대조하며 쓰면 앞 둘이 먼저 생긴다 (v3 꼴)
+        chk(refuses("덮지 않는다", read_sp, RD, P, out / "sp_verdict.json") and not (out / "sp_verdict.json").exists()
+            and not any(p.exists() for p in kp_files[:-1]),
+            "[음성] 다음 잡 입력 하나가 다른 바이트로 이미 있으면 판정 · 나머지 입력을 하나도 안 쓴다 (검사 뒤 쓰기 · EH 확인 목록 2)")
+        for p, b_ in zip(kp_files, kp_keep):
+            p.write_bytes(b_)
+        (out / "sp_verdict.json").write_bytes(sv_keep)
 
         # ── 단일점 판정 손댐 — 뒤 단계가 통째로 다시 내서 잡는다 (EF P2-1) ──
         SPV = out / "sp_verdict.json"
@@ -2084,7 +2354,7 @@ def _selftest() -> int:
         put_rx(ERX, PRX, F_P={"post": fe_after_coords})
         chk(refuses("이완 끝 순서", read_relax, RD, KPV, RXV, host),
             "[음성] Final energy 가 최종 좌표 뒤에 있으면 (개수는 맞아도) 판독 안 함 — 이완 끝 순서")
-        put_rx(ERX, PRX, F_B={"post": lambda t: t.replace(f"P=      {PRX['F_B']:8.2f}", "P=      ********")})
+        put_rx(ERX, PRX, F_B={"post": lambda t: t.replace(f"P={PRX['F_B']:12.2f}", "P=" + "*" * 12)})
         chk(refuses("응력 (P) 을 마지막 묶음에서 못 읽었다", read_relax, RD, KPV, RXV, host),
             "[음성] 마지막 응력 줄의 P 값이 깨져 있으면 판독 안 함 (P 를 지어내지 않는다)")
 
@@ -2094,6 +2364,51 @@ def _selftest() -> int:
         put_rx(ERX, PRX, F_free={"post": two_heads})
         chk(refuses("최종 좌표 블록을 못 읽었다", read_relax, RD, KPV, RXV, host),
             "[음성] 최종 좌표 블록 안에 머리가 둘이면 (좌표 행만이 아니면) 판독 안 함")
+
+        # ── EH 반례 — 숫자를 끝까지 · 유한하게 · 응력 본문 · BFGS 기록 — 거부 + 판정 · 이완 구조 · 대상 파일이 새로 안 생김 ──
+        def files_now():
+            return {p_ for p_ in out.rglob("*") if p_.is_file()}
+
+        def refuses_clean(kw):
+            before = files_now()
+            return refuses(kw, read_relax, RD, KPV, RXV, host) and files_now() == before and not RXV.exists()
+
+        eh_cases = [
+            ("유한한 숫자가 아니다", PRX, {"F_B": {"post": lambda t: _force1(t, "NaN")}},
+             "마지막 힘 블록 원자 1 첫 성분 NaN ('fm > 문턱' 이 거짓이라 빠져나갔다 · EH P1-1)"),
+            ("유한한 숫자가 아니다", PRX, {"F_B": {"post": lambda t: _force1(t, "Infinity")}}, "마지막 힘 성분 Infinity"),
+            ("최종 좌표 블록을 못 읽었다", PRX, {"F_P": {"post": lambda t: _final_li(t, "NaN")}}, "최종 좌표 Li 하나 NaN (EH P1-1)"),
+            ("최종 좌표 블록을 못 읽었다", PRX, {"F_P": {"post": lambda t: _final_li(t, "inf")}}, "최종 좌표 Li 하나 inf"),
+            ("응력 (P) 을 마지막 묶음에서 못 읽었다", P25, {F: {"post": lambda t: _p_tok(t, "0.00BROKEN")} for F in FAM},
+             "EOS 보류 (P 2.5 GPa) 출력의 P 토큰 '0.00BROKEN' (앞부분 0 만 읽혀 EOS 생략으로 뒤집혔다 · EH P1-2)"),
+            ("응력 (P) 을 마지막 묶음에서 못 읽었다", P25, {F: {"post": lambda t: _p_tok(t, "0.00\x00")} for F in FAM},
+             "EOS 보류 출력의 P 토큰 '0.00' + NUL"),
+            ("BFGS 기록 줄", PRX, {"F_free": {"post": lambda t: t.replace("bfgs converged in  2 scf", "bfgs converged in  ??? scf")}},
+             "bfgs converged in ??? (대조를 건너뛰고 판정을 쓴 뒤 화면 출력이 터졌다 · EH P2-1)"),
+            ("응력 (P) 을 마지막 묶음에서 못 읽었다", P25, {F: {"post": _drop_stress_rows} for F in FAM},
+             "EOS 보류 출력의 마지막 응력 행렬 세 행 삭제 (EH P2-2)"),
+            ("대각합/3", P25, {F: {"post": lambda t: _p_tok(t, "0.00")} for F in FAM},
+             "EOS 보류 출력의 응력 머리 P 25.00 → 0.00 (행렬은 그대로 · EH P2-2)"),
+            ("두 단위", PRX, {"F_B": {"post": _kbar_bump}}, "마지막 응력 행렬의 kbar 칸 하나만 +5 (Ry 열 그대로 · 한 σ 의 두 단위가 다름)"),
+        ]
+        for kw_, Pm, over, what in eh_cases:
+            put_rx(ERX, Pm, **over)
+            chk(refuses_clean(kw_), f"[음성] {what} → 판독 안 함 · 판정 · 이완 구조 · 대상 파일이 새로 안 생김")
+        f3 = rdir / sorted((e for e in plan8 if e["family"] == "F_B"), key=lambda e: recs[e["name"]]["E"])[2]["name"] / "post_relax.xyz"
+        k3 = f3.read_bytes()
+        f3.write_bytes(k3 + b"\n")
+        put_rx(ERX, PRX)
+        chk(refuses_clean("결속되지 않는다"),
+            "[음성] 이완 출력은 다 통과했는데 10 단계 고르기에서 멈추면 (안정성 대상 셋째의 post_relax 가 기록과 다름) — 이완 구조 · "
+            "판정을 하나도 안 쓴다 (검사 뒤 쓰기 · EH 확인 목록 2)")
+        f3.write_bytes(k3)
+        put_rx(ERX, P25, **{F: {"post": lambda t: _p_tok(t, "2.50E+01")} for F in FAM})
+        rv_e = read_relax(RD, KPV, RXV, host)
+        chk(not rv_e["eos"]["skip_eos"] and rv_e["stage10"] is None and rv_e["electronic_targets"] is None
+            and all(abs(rv_e["eos_input"][F]["P_GPa"] - 2.5) < 1e-12 for F in FAM),
+            "[양성] 지수 표기 P '2.50E+01' 은 토큰 끝까지 읽어 25.0 kbar (2.5 GPa) — EOS 보류 그대로 · 안정성 · 전자구조 대상 null "
+            "(EH P1-2: 지원하는 표기는 끝까지 · 나머지는 거부)")
+        os.remove(RXV)
         put_rx(ERX, PRX)
         rv = read_relax(RD, KPV, RXV, host)
         ei = rv["eos_input"]
@@ -2117,8 +2432,8 @@ def _selftest() -> int:
         rx0 = out / rv["relaxed"]["F_B"]["file"]["rel"]
         rxk = rx0.read_bytes()
         rx0.write_bytes(rxk + b"\n")
-        chk(refuses("만든 구조와 다르다", read_relax, RD, KPV, RXV, host),
-            "[음성] 이완 구조 파일이 이미 있고 이번 출력에서 만든 것과 다르면 덮지 않는다")
+        chk(refuses("만든 구조와 다르다", read_relax, RD, KPV, RXV, host) and not RXV.exists(),
+            "[음성] 이완 구조 파일이 이미 있고 이번 출력에서 만든 것과 다르면 덮지 않는다 · 판정도 안 쓴다")
         rx0.write_bytes(rxk)
         put_rx({"F_B": -101.0, "F_P": -100.95, "F_free": -97.0}, {"F_B": 1.0, "F_P": -0.5, "F_free": 0.8})
         rv2 = read_relax(RD, KPV, RXV, host)
@@ -2191,6 +2506,23 @@ def _selftest() -> int:
         rfp = real_variant(_insert_before_done(rt, _frag_final(i_r["symbols"], frr)), "f.out")
         chk(any("블록 개수" in w for w in state_problems(rfp, stage="relax", tstress=True, nat=58)),
             "[음성] 실측 출력 + 최종 좌표 블록 하나 더 → 블록 개수로 거부")
+        st0 = r0["stress"]
+        chk(stress_problems(r0) == [] and st0["kbar"][1][1] == -14.91 and abs(st0["ry"][1][1] + 0.00010136) < 1e-12
+            and r0["bfgs"] == {"scf_cycles": 66, "steps": 65} and r0["final_E_Ry"] == -2227.3058185476,
+            "[양성] 실측 MLi_04_x108 — 마지막 응력 3 행 × 6 · P −10.88 = kbar 대각합/3 · 두 단위 일치 · BFGS 66/65 · Final energy")
+        chk(any("못 읽었다" in w for w in stress_problems(real_variant(_drop_stress_rows(rt), "s0.out"))),
+            "[음성] 실측 출력의 마지막 응력 행렬 세 행 삭제 → 거부 (EH P2-2 재현)")
+        chk(any("대각합/3" in w for w in stress_problems(real_variant(_p_tok(rt, "0.00"), "s1.out"))),
+            "[음성] 실측 출력의 응력 머리 P −10.88 → 0.00 (행렬 그대로) → 거부 (EH P2-2 재현)")
+        chk(real_variant(_p_tok(rt, "-10.88BROKEN"), "s2.out")["P_kbar"] is None,
+            "[음성] 실측 출력의 P 토큰 꼬리 글자 → P 없음 (앞부분 −10.88 을 읽지 않는다)")
+        rnf = real_variant(_force1(rt, "NaN"), "n0.out")
+        chk(any("유한한 숫자가 아니다" in w for w in state_problems(rnf, stage="relax", tstress=True, nat=58)),
+            "[음성] 실측 출력의 마지막 힘 원자 1 첫 성분 NaN → 거부 (EH P1-1 재현)")
+        chk(real_variant(_final_li(rt, "NaN"), "n1.out")["final"] is None and real_variant(_final_li(rt, "Infinity"), "n2.out")["final"] is None,
+            "[음성] 실측 출력의 최종 좌표 Li 하나 NaN · Infinity → 최종 좌표 없음 (EH P1-1 재현)")
+        chk(real_variant(rt.replace("bfgs converged in  66 scf", "bfgs converged in ??? scf"), "b0.out")["bfgs"] is None,
+            "[음성] 실측 출력의 'bfgs converged in ???' → BFGS 기록 없음 (이완은 거부 · EH P2-1 재현)")
         # 기준 셀: host 가 다르면 멈춘다
         bad_host = td / "host_bad.xyz"
         bad_host.write_text(host.read_text().replace("Cl", "Br", 1))
@@ -2203,6 +2535,29 @@ def _selftest() -> int:
 
 
 # ───────────────────────── CLI ─────────────────────────
+def _f(x, spec):
+    """화면 출력용 — 없는 값 · 꼴이 안 맞는 값은 '—' (판정 파일을 쓴 뒤 화면 출력이 터지지 않게 · Codex EH P2-1)."""
+    try:
+        return format(x, spec) if x is not None else "—"
+    except (TypeError, ValueError):
+        return "—"
+
+
+def _say_relax(v) -> list:
+    L = []
+    for r_ in v.get("rows") or []:
+        L.append(f"   {r_.get('job')}: P {_f(r_.get('P_GPa'), '+.2f')} GPa · bfgs {_f((r_.get('bfgs') or {}).get('steps'), 'd')} 걸음 · "
+                 f"마지막 힘 성분 최대 {_f(r_.get('final_force_max_comp_RyBohr'), '.1e')} Ry/Bohr")
+    L += [f"   {v.get('decision')}", f"   범위: {v.get('scope')}"]
+    st = v.get("stage10")
+    if st:
+        L.append(f"   10 단계: {st.get('rule')}")
+        L += [f"     안정성 대상 {s.get('family')} {s.get('name')}" for s in st.get("stability_targets") or []]
+    else:
+        L.append(f"   ⛔ {v.get('relaxed_note')}")
+    return L
+
+
 def main(argv=None):
     if argv is None and "--selftest" in sys.argv[1:]:
         return _selftest()
@@ -2275,17 +2630,7 @@ def main(argv=None):
         return 0
     v = read_relax(RD, A.prev, A.out, A.host)
     print(f"-> {A.out}")
-    for r_ in v["rows"]:
-        print(f"   {r_['job']}: P {r_['P_GPa']:+.2f} GPa · bfgs {r_['bfgs']['steps']} 걸음 · "
-              f"마지막 힘 성분 최대 {r_['final_force_max_comp_RyBohr']:.1e} Ry/Bohr")
-    print(f"   {v['decision']}")
-    print(f"   범위: {v['scope']}")
-    if v.get("stage10"):
-        print(f"   10 단계: {v['stage10']['rule']}")
-        for s in v["stage10"]["stability_targets"]:
-            print(f"     안정성 대상 {s['family']} {s['name']}")
-    else:
-        print(f"   ⛔ {v.get('relaxed_note')}")
+    print("\n".join(_say_relax(v)))
     return 0
 
 
