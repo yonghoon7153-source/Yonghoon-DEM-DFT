@@ -430,6 +430,7 @@
   "기계_사이_바이트_동일 (EF P2-4)": "로컬 (ase 3.29.0) 에서 회수본 db/raw/b2o3_bo_stage1_2026_11_13/s8_anneal/<이름>/post_relax.xyz (결과 기록 sha256 과 6/6 일치) 로 pw_input_text (pseudo_dir /data/work/pseudo) 를 다시 내면 입력 sha256 이 gabia 와 6/6 같다",
   "GPU (시작 안 함)": "여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음",
   "다음": "EG 발송 (kb/reviews/codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md · §4 채움) → EG 회신 → 사용자 개정 5 비준 → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (gabia 에 다른 GPU 잡 없이 · 이 폴더 그대로 — 도구 판이 같으면)",
-  "by": "agent · 2026-11-13"
+  "by": "agent · 2026-11-13",
+  "EG_발송": "2026-11-13 사용자 '보냈엉' — 편지 기준 커밋 d167f98d (§4 채운 판) · 회신 대기 · GPU 는 회신 GO + 개정 5 비준 뒤"
  }
 }
