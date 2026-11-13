@@ -1,0 +1,84 @@
+{
+  "origin": "internal independent preparation review; not external verdict",
+  "source_sha256": "98ac7520347f782a12ebeb7f204c33541ad845c206093fdfc107d16d44044cb3",
+  "observations": [
+    {
+      "name": "attempt_3_static",
+      "body_md5": "75e074183a6674f799c16be386bb698d",
+      "embedded_md5": "75e074183a6674f799c16be386bb698d",
+      "md5_matches": true,
+      "template_matches": true,
+      "tool_md5": {
+        "run_probe6.sh": "7dd4f93660658959f6f4db5530e98ecc",
+        "probe6_read.py": "351dc88d3b6549168a8b76367c748c2f",
+        "sdcp_gain_vox015_8arm.sh": "2515312c524638c1cc5058c461d19d8b"
+      },
+      "source_sha256": "455987b8759e149e30d47efe5f913bb9c22775774dd030d4dea14cd4c66397c4",
+      "cr_count": 0
+    },
+    {
+      "name": "attempt_3_syntax",
+      "rc": 0
+    },
+    {
+      "name": "attempt_3_no_go",
+      "rc": 2
+    },
+    {
+      "name": "attempt_3_bad_body_hash",
+      "rc": 2
+    },
+    {
+      "name": "attempt_4_static",
+      "body_md5": "70cd05aacb3702c41589c6a660c541aa",
+      "embedded_md5": "70cd05aacb3702c41589c6a660c541aa",
+      "md5_matches": true,
+      "template_matches": true,
+      "tool_md5": {
+        "run_probe6.sh": "7dd4f93660658959f6f4db5530e98ecc",
+        "probe6_read.py": "351dc88d3b6549168a8b76367c748c2f",
+        "sdcp_gain_vox015_8arm.sh": "2515312c524638c1cc5058c461d19d8b"
+      },
+      "source_sha256": "6143f8600832c93bd8514d5a7466e5ca6786ad3085fa693c8dd8abb4cf9586d8",
+      "cr_count": 0
+    },
+    {
+      "name": "attempt_4_syntax",
+      "rc": 0
+    },
+    {
+      "name": "attempt_4_no_go",
+      "rc": 2
+    },
+    {
+      "name": "attempt_4_bad_body_hash",
+      "rc": 2
+    },
+    {
+      "name": "template_syntax",
+      "rc": 0
+    },
+    {
+      "name": "watcher_syntax_only",
+      "rc": 0
+    },
+    {
+      "name": "isolated_background_launch_failure",
+      "rc": 2
+    },
+    {
+      "name": "isolated_background_launch_failure_log",
+      "no_status_log": true,
+      "no_watcher_pid": true
+    }
+  ],
+  "initial_launch_unconfirmed_rc": 0,
+  "fixed_launch_unconfirmed_rc": 2,
+  "polling_test": "sleep stubbed; 90 loop observations, not 180 seconds elapsed",
+  "field_git_or_host_checks_executed": false,
+  "GO_body_executed": false,
+  "watcher_executed": false,
+  "signals_or_research_execution": false,
+  "home_reassigned": false,
+  "review_process": "Initial source-only review; reported defect followed by author correction and source-only recheck. Author documents not read."
+}

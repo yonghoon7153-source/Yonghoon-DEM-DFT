@@ -1,0 +1,42 @@
+{
+  "prior_code_pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+  "final_code_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "source_comparison": [
+    {
+      "path": "scripts/ca_s0_census.py",
+      "before_sha256": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+      "final_sha256": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163",
+      "same": false
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "before_sha256": "9bad445b8322e8b080429d9af6e38cf185b01e740e68b9e5846b4b2290ed6885",
+      "final_sha256": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a",
+      "same": false
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "before_sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+      "final_sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+      "same": true
+    },
+    {
+      "path": "scripts/se_material.py",
+      "before_sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+      "final_sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+      "same": true
+    }
+  ],
+  "q11_blocks": {
+    "old_as_run_md5": "9182316778b3d01719a8f0219eb3601b",
+    "current_md5": "b9d45d762f708d6f75ef0ebd6499add9",
+    "same": false
+  },
+  "historical_record_ref": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+  "actual_records_read": [
+    "README only"
+  ],
+  "result_json_or_raw_logs_read": false,
+  "fresh_execution": false,
+  "s0_q11_disposition": "FINAL_PIN_RECHECK_PLAN_APPROVED_RESULTS_PENDING"
+}

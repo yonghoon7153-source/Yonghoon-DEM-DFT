@@ -1,0 +1,58 @@
+{
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "source_branch": "codex/rint-rtr01-receipt-1113",
+  "block_branch": "codex/rint-probe6-blocks-1113",
+  "overall": "HOLD",
+  "actual_execution_approved": false,
+  "artifacts": [
+    {
+      "attempt": 3,
+      "file": "P6_ATTEMPT_3_DRAFT.txt",
+      "bytes": 9599,
+      "sha256": "455987b8759e149e30d47efe5f913bb9c22775774dd030d4dea14cd4c66397c4",
+      "file_md5": "3818cc5af5e5baa6abdbf4c294aacd6d",
+      "body_md5": "75e074183a6674f799c16be386bb698d",
+      "status": "DRAFT_NOT_EXECUTION_APPROVED",
+      "maxiter": 1500000,
+      "store_policy": "ABSENT_OR_EMPTY"
+    },
+    {
+      "attempt": 4,
+      "file": "P6_ATTEMPT_4_DRAFT.txt",
+      "bytes": 9599,
+      "sha256": "6143f8600832c93bd8514d5a7466e5ca6786ad3085fa693c8dd8abb4cf9586d8",
+      "file_md5": "d144fcc7a4516b110d2cc270308d2779",
+      "body_md5": "70cd05aacb3702c41589c6a660c541aa",
+      "status": "DRAFT_NOT_EXECUTION_APPROVED",
+      "maxiter": 1500000,
+      "store_policy": "RETAIN_ATTEMPT3_EXACT_LISTING"
+    }
+  ],
+  "tool_identity": {
+    "WATCHER": {
+      "path": "docs/reviews/rint2_probe6_prep_20261110/tools/run_probe6.sh",
+      "md5": "7dd4f93660658959f6f4db5530e98ecc",
+      "sha256": "fe3b5348afd588f092acda6f412f7ff9a31f722e20673ca1f89f3954be1fd424"
+    },
+    "READER": {
+      "path": "docs/reviews/rint2_probe6_prep_20261110/tools/probe6_read.py",
+      "md5": "351dc88d3b6549168a8b76367c748c2f",
+      "sha256": "60b11e10c0caf6670e31a3252d2ba1fdac614971b8c91f7efd0bc16c95e2cdca"
+    },
+    "RUNNER": {
+      "path": "scripts/sdcp_gain_vox015_8arm.sh",
+      "md5": "2515312c524638c1cc5058c461d19d8b",
+      "sha256": "119e1de9b619e0c4bde5a0c58f337345ed5ccfb8b6b4c648f1fe112c5e4b1f7c"
+    }
+  },
+  "no_built_in_wall_timeout": true,
+  "automatic_retry": false,
+  "pending": [
+    "author GO per attempt",
+    "site checkout identity",
+    "supported environment and DFT pause",
+    "resource plan/operator stop deadline",
+    "accepted final-pin S0/store and current Q11 results; plan approved 2026-11-13",
+    "attempt4 author review of attempt3 receipt"
+  ]
+}
