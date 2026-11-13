@@ -1,0 +1,153 @@
+{
+  "source_tgz_sha256": "2dc4e8af7eb37d521bd1961c1645cfb9845f9cb9f2d7ef433c5bf858f6333cc5",
+  "outer_payload_manifest_verified": 186,
+  "inner_lists": [
+    {
+      "source_list": "mixer_e0_v2/fix_q5/SHA256SUMS",
+      "matched": 30,
+      "different_count": 16,
+      "missing_count": 0,
+      "details": [
+        {
+          "member": "mixer_e0_v2/fix_q5/README.md",
+          "expected_sha256": "842430db09885e13989c0371001b96ff6bfa6d4b85a8e1c9c7d07cdd14ba11b4",
+          "actual_sha256": "d7e39a378761c94b140d1f8507ffd1f10a16b39825a978a010ba168142d92162",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/after_prepare_py38.log",
+          "expected_sha256": "d59eabb726de5b3886e3a830fcc1a47f08944c37cedb75b2378a7a36c4f7b70e",
+          "actual_sha256": "e5ac47a6fa9e3c6f96d011d050d3c7b66bc96e4c48c8fda9ef4dab5b69082eee",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/after_test_launcher.log",
+          "expected_sha256": "9c841688cdaadca30603e0fc529bee366fd64cd73ca532959a56b18bc2285ee1",
+          "actual_sha256": "9215b82752500f677f6aa577f8ff9c584196f9daa68df26e25c281fee2faae27",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/after_test_mixer_d2_consumers.log",
+          "expected_sha256": "6c748bf671dc2a487b8782d0cfc8267c164b4938f85d46ab4f1df7f0f2c30678",
+          "actual_sha256": "7ceba8a00eead13d142e95d7a21af07c43395d8c6de61347048a3e4459b23e8d",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/after_test_mixer_generator_seeds.log",
+          "expected_sha256": "bc12c4e6915248f233c824c7e16a5184f4446bc65093a64b49f677419f68ebb0",
+          "actual_sha256": "69700350054afac03a2fe426f1e39c3312d1dc20c36258118fc4a2a83dba2cef",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/after_test_mixer_precal_prepare.log",
+          "expected_sha256": "64bf1fa2767efc7924244a6557ae71e6ae86557b44eb765c894f055aea7d099e",
+          "actual_sha256": "d9af3f1aae3c9c67170ef57a1392d4ea82b207093e4c4f5513933d73ba2996f5",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/base_prepare.log",
+          "expected_sha256": "18f09ead9132098e9ee87a5cbae31a518c1a7da2acb7eef58947e1c990de8d43",
+          "actual_sha256": "a03f9a5cd49c44bf3701032e8f6185c21c50a298929211568ba85fefddc6e734",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/c1_observe.log",
+          "expected_sha256": "7bb4bf2ad7dab24635944c394720066ab0d43ac7b4fbc1bab5159ccde770e0a2",
+          "actual_sha256": "e06cb3a3f34d68298234fa2f73ac8eb00de5add9bfa28b3f846519a3252c2339",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/first8_package_tests/f8_test_job_start_draft_after.log",
+          "expected_sha256": "9b6b30a8e7a646ed8d6bec610a2edd757ba0f66ec7ee1196ea75ce5ccd3f2cbe",
+          "actual_sha256": "9be5ff0ec12be8194ec9e7b89a0e2027d130c616ac1a3f326ccadfab2fb80b60",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/first8_package_tests/f8_test_job_start_draft_before.log",
+          "expected_sha256": "2f3d520b5c64da8a772470e1f2bb227248ba88c2412b84d1f258bb46d2684570",
+          "actual_sha256": "46fa86a0439d728fbb4854c3e491b670d5b7b016e64fb8be956c1d22234e398a",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/first8_package_tests/f8_test_mla_boundaries_after.log",
+          "expected_sha256": "7e9d9b7f1dbb4fc1eaa406e0236f610303166a7fad3e7a955dd8e422c049c813",
+          "actual_sha256": "7a6732de0fa181c899beebefc319a6b543dfe7a86d68c60e742f80b038232c79",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/first8_package_tests/f8_test_mla_boundaries_before.log",
+          "expected_sha256": "b3e7cd40e4b55aa73da7b25f195e65c560cf09e7553f4a27160e0f4c49a198b4",
+          "actual_sha256": "fcc0716fd096fc453202c1b047e978414372f5fcfcf05a33bd0cf1d90e43818f",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/first8_package_tests/f8_test_submit_draft_after.log",
+          "expected_sha256": "eca1a2bc555be49424e5d00746148064c0564f3f02006fbbc677aae5f077534f",
+          "actual_sha256": "5110938afd1086a609a95533e054a97fd0dab1a893b9b16cb91919e79cf2a86f",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/first8_package_tests/f8_test_submit_draft_before.log",
+          "expected_sha256": "be3d2ebb27512027faca9b30b13b60786fc1860e4420dbe11df82b39f8f700e7",
+          "actual_sha256": "7038dba6e46bdf9b14ad0719fafaa07ab23070a81cf4660e5ee4236308afe06c",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/inactive_verifier/verify_q5-fix.out",
+          "expected_sha256": "bc741905565674313b1b6306211ce05cbb6e2016414817bc4af5648887929fa8",
+          "actual_sha256": "8e5a76c28fd3cd69a748ac30364dfe25f134a75d12de3cbff62481ffc0483712",
+          "exists_in_source_tgz": true
+        },
+        {
+          "member": "mixer_e0_v2/fix_q5/evidence/old_testfile_vs_new_observer.log",
+          "expected_sha256": "32fdf66fb598d3fb97c8aa5f42c29e6a3963e59342c823bb0391afb1f5e07bec",
+          "actual_sha256": "36d6f122726c2a64865ac6752375af11bb777494421f7e5f99c5f86cb0e10f49",
+          "exists_in_source_tgz": true
+        }
+      ]
+    },
+    {
+      "source_list": "mixer_e0_v2/reseal_dry/SHA256SUMS",
+      "matched": 12,
+      "different_count": 0,
+      "missing_count": 4,
+      "details": [
+        {
+          "member": "mixer_e0_v2/reseal_dry/runs/summary.tsv",
+          "expected_sha256": "39fab5e3dd9e2353f07b87c5e04d6a33c6a89a3723fa12c87f45e815190b0b4e",
+          "actual_sha256": null,
+          "exists_in_source_tgz": false
+        },
+        {
+          "member": "mixer_e0_v2/reseal_dry/runs/S1/3_IN_build_new_ev/report.json",
+          "expected_sha256": "160304b90c94219d1bd790fb182a0cd0380b06d977abb503a373733e7b7b0d08",
+          "actual_sha256": null,
+          "exists_in_source_tgz": false
+        },
+        {
+          "member": "mixer_e0_v2/reseal_dry/runs/S1/cand_reseal_files.sha256",
+          "expected_sha256": "1a15362e10aedcae1b9b8a1761836432566c81a0c2575760ee46ac5aa9f1ddf7",
+          "actual_sha256": null,
+          "exists_in_source_tgz": false
+        },
+        {
+          "member": "mixer_e0_v2/reseal_dry/runs/K4_probe.out",
+          "expected_sha256": "860aec978c5620c699e6affe5acab7d56b7d2cdc87518a99c52273e873b3def1",
+          "actual_sha256": null,
+          "exists_in_source_tgz": false
+        }
+      ]
+    },
+    {
+      "source_list": "mixer_e0_v2/review/scripts2/SHA256SUMS",
+      "matched": 10,
+      "different_count": 0,
+      "missing_count": 0,
+      "details": []
+    }
+  ],
+  "cause": "NOT_ESTABLISHED",
+  "no_recreated_logs": true,
+  "no_modified_internal_lists": true,
+  "operating_reseal_hold": true
+}
