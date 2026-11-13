@@ -1,0 +1,17 @@
+{
+  "scope": "M32P-01 P2 and M32P-02 P3 document communication only",
+  "candidate": "<<sha:docs: clarify memo32 newcomer contact and calibration>>",
+  "direct_ledger_change": false,
+  "verified_or_closed_proposal": false,
+  "items": [
+    {
+      "id": "M32P-01",
+      "proposal": "record received finding and author-side correction; independent recheck pending"
+    },
+    {
+      "id": "M32P-02",
+      "proposal": "record received finding and author-side correction; independent recheck pending"
+    }
+  ],
+  "progress_sentence": "초심자판 접촉·분리와 보정 표현 수정, 직접 회귀 6실패→9/9 및 기존11/347 통과, 반박 재확인 대기. 원 메모 수용 범위·전체 HOLD 유지."
+}

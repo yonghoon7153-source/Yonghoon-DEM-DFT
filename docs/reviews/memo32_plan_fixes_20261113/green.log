@@ -1,0 +1,14 @@
+test_calibration_is_not_validation (__main__.Clarification.test_calibration_is_not_validation) ... ok
+test_contact_explanation_in_section4 (__main__.Clarification.test_contact_explanation_in_section4) ... ok
+test_generated_outputs_carry_corrections (__main__.Clarification.test_generated_outputs_carry_corrections) ... ok
+test_glossary_not_permanent_weld (__main__.Clarification.test_glossary_not_permanent_weld) ... ok
+test_one_parameter_can_have_unreachable_target (__main__.Clarification.test_one_parameter_can_have_unreachable_target) ... ok
+test_review_scopes_are_distinct (__main__.Clarification.test_review_scopes_are_distinct) ... ok
+test_section_locator_does_not_accept_witness_elsewhere (__main__.Clarification.test_section_locator_does_not_accept_witness_elsewhere) ... ok
+test_shared_nodes_allow_different_interpolated_velocity (__main__.Clarification.test_shared_nodes_allow_different_interpolated_velocity) ... ok
+test_unloading_reporting_not_zero_recovery (__main__.Clarification.test_unloading_reporting_not_zero_recovery) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.021s
+
+OK

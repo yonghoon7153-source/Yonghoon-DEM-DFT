@@ -1,0 +1,97 @@
+{
+  "M32P-01": {
+    "scope": "dimensionless interpolation counterexample only; no physical separation law or solver certification",
+    "nodes": [
+      0.0,
+      1.0,
+      2.0
+    ],
+    "weights": [
+      [
+        0.405,
+        0.59,
+        0.005
+      ],
+      [
+        0.18,
+        0.74,
+        0.08
+      ]
+    ],
+    "velocity": [
+      0.6,
+      0.9
+    ],
+    "initial_gap": 0.3,
+    "gap_after_dt1": 0.6,
+    "occurrences": {
+      "markdown_lines": [
+        45
+      ],
+      "html_lines": [
+        171
+      ],
+      "docx_paragraphs": [
+        41
+      ],
+      "json": true
+    }
+  },
+  "M32P-02": {
+    "scope": "abstract bounded response, not a material model",
+    "theta_interval": [
+      0,
+      1
+    ],
+    "response": "y = 0.15 + 0.01*theta",
+    "reachable_interval": [
+      0.15,
+      0.16
+    ],
+    "target": 0.115,
+    "reachable": false,
+    "occurrences": {
+      "markdown_lines": [
+        124
+      ],
+      "html_lines": [
+        272
+      ],
+      "docx_paragraphs": [
+        146
+      ],
+      "json": true
+    }
+  },
+  "JSON_DOCX": {
+    "nonempty_paragraphs_exact_order_after_whitespace_normalization": 211,
+    "match": true
+  },
+  "historical_fixture": {
+    "HTML_JSON_cache_identical": true,
+    "sha256": [
+      "62cc8b415899b7c578f7bdc6c69600c32a8192cc7e0773918be227ee1edb223a",
+      "636a1a0618aafff2426d3c7ce1315296912ba8b68b44a9b07814e36ba52c5a52",
+      "cb20bbbf26b16d70ed34e4b197f45974f63a161d458a48f6768a18b0b34d66b5"
+    ]
+  },
+  "title_controls": {
+    "current": {
+      "accepted": true,
+      "line": "외부 검토 = 문서 잔여 종결 가능, 전체 HOLD"
+    },
+    "missing_HOLD": {
+      "accepted": false,
+      "error": "missing_HOLD.md:4: 제목 블록의 줄 \"외부 검토 = 문서 잔여 종결 가능, 전체 HOLD\" 을 뒷받침하는 글 \"전체 HOLD\" 이 원고에 없다"
+    },
+    "missing_scoped_closure": {
+      "accepted": false,
+      "error": "missing_scoped_closure.md:4: 제목 블록의 줄 \"외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중\" 을 뒷받침하는 글 \"방향은 맞다\" 이 원고에 없다"
+    },
+    "legacy": {
+      "accepted": true,
+      "line": "외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중"
+    }
+  },
+  "memo_sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0"
+}

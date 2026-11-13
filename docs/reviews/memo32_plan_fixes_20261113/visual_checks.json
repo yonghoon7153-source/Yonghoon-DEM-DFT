@@ -1,0 +1,39 @@
+{
+  "docx_pages": 8,
+  "all_pages_visually_inspected": true,
+  "renderer": "Word read-only PDF with macro and link updates disabled; Poppler PNG",
+  "bundled_renderer": "unavailable: soffice.exe not found",
+  "poppler_warnings": [
+    "Symbol display font",
+    "ArialUnicode display font"
+  ],
+  "observed_clipping_overlap_missing_glyphs": false,
+  "html_conditions": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "externalResources": []
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "scrollWidth": 390,
+      "externalResources": []
+    },
+    {
+      "name": "dark",
+      "width": 1440,
+      "scrollWidth": 1440,
+      "externalResources": []
+    }
+  ],
+  "html_sections": [
+    4,
+    10,
+    11
+  ],
+  "final_screenshots": 9,
+  "format_parts_equal": 5,
+  "scope": "finite local display QA, not cross-renderer or physical qualification"
+}

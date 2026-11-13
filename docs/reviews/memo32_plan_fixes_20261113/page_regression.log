@@ -1,0 +1,362 @@
+── ⓪ 원문 둘 · 정본 docx 가 제자리에
+  PASS  원문 (a) briefing_ko.md 가 있고 마커 날짜가 첫 줄에 하나
+  PASS  원고 (b) plan_newcomer_ko.md 가 있고 마커 날짜가 첫 줄에 하나
+  PASS  정본 docx 가 제자리에 있다
+  PASS  정본 docx = 메모 3.2 재생성 고정 바이트 (sha256)
+── ① 생성기: --check · 결정적 · 원문이 바뀌면 출력이 바뀜 · 낯선 구성 거부
+  PASS  생성기 scripts/build_dem_redesign_plan.py 가 있고 import 된다
+  PASS  생성기의 경로 상수 = 이 시험의 경로
+  PASS  --check (프로세스 안 · 리포 루트) → rc 0
+  PASS  인자 없이 = --check (rc 0 · 파일을 쓰지 않는다)
+  PASS  build_all 이 생성물 3 개 (HTML 둘 · JSON) 를 낸다
+  PASS  메모리에서 다시 만든 HTML (a) = 커밋된 파일 바이트
+  PASS  메모리에서 다시 만든 HTML (b) = 커밋된 파일 바이트
+  PASS  메모리에서 다시 만든 JSON = 커밋된 파일 바이트
+  PASS  원고에 수식이 없으면 수식 캐시 파일도 없다 (있으면 낡은 것)
+  PASS  두 번 만들면 같은 바이트 (결정적 · 시각 없음)
+  PASS  생성물에 CR · BOM 없음 · 끝 줄바꿈 하나
+  PASS  JSON 이 원고의 sha256 을 싣는다 (어느 원고로 만든 것인지)
+  PASS  임시 루트 사본 (그대로) → --check rc 0
+  PASS  briefing 한 글자 바꾼 사본 → --check rc 1
+  PASS    그때 바뀌는 것은 HTML (a) 뿐
+  PASS  원고 한 글자 바꾼 사본 → --check rc 1
+  PASS    그때 바뀌는 것은 HTML (b) 와 JSON
+  PASS  --write 는 세 파일을 다시 쓰고 (rc 0) 그 뒤 --check 가 rc 0
+  PASS  커밋된 생성물이 없으면 --check rc 1
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): ### 3 단 머리
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 인용 블록 (>)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 코드 울타리 (```)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 링크 [글](주소)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림 ![글](주소)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): HTML 태그
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 둘째 HTML 주석
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 3 단 목록
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 홀수 들여쓰기 목록
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 표 칸 수가 머리와 다름
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 표 구분 줄 없음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 짝 없는 **
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 짝 없는 `
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 짝 없는 *기울임
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 낱말 가운데 별표
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 역슬래시
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): HTML 문자 참조
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 줄 끝 빈칸
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 두 줄 문단
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 번호 목록이 1 에서 시작하지 않음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 절 번호 건너뜀
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 마커 없음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 마커 날짜 꼴이 다름
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 제목 (#) 둘
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): "한 줄로" 없음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 탭 문자
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 원고에 열 너비 규칙이 없는 표 (docx)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 짝 없는 $ (글 안 수식)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 수식을 여는 $ 뒤의 빈칸
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 수식을 닫는 $ 바로 뒤의 숫자
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 글 안의 $$
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 머리 줄 안의 수식
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 캐시에 없는 수식 (--check 는 pandoc 을 부르지 않는다)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 줄 수식을 닫는 $$ 가 없다 (빈 줄에서 끊김)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 한 줄 수식이 $$ 로 닫히지 않는다
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 줄 수식 뒤에 빈 줄이 없다
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림 파일이 없다
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림이 PNG 가 아니다 (이름만 .png)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림이 너무 크다 (상한 넘음)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림 경로에 ".." (원고 폴더 밖)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림 확장자가 png 가 아니다
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림 폭이 범위 밖 (5 %)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 그림 줄 뒤에 붙은 글
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): 캡션 없는 그림
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 원문의 달러 기호 (수식은 처음 보는 분용 원고에서만 받는다)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 단계 번호 건너뜀
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 질문에 "답:" 없음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 갈림 표에 모르는 칩
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 배지를 만들 지위 글이 없음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 계획서 꼴 절이 없음 (하지 않는 말)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 논문 표의 인용 번호가 참고문헌에 없음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 참고문헌 표의 머리 행이 다름 (싣지 않는 칸의 글이 바뀜)
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 참고문헌 번호가 차례가 아님
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 큰 지적 (P1) 줄이 ID 로 시작하지 않음
+  PASS  낯선 구성 거부 (rc 2 · 줄 번호): (a) 단계 줄 끝에 버려질 글 (":" 없이 덧붙은 글)
+  PASS  ParseError 글 = "파일:줄: 까닭" 꼴
+  PASS  고정폭 안의 달러 기호는 수식이 아니다: 생성기와 이 시험의 원고 읽개가 같은 답 (수식 둘 · 글 조각은 고정폭 글자 그대로)
+  PASS  수식을 더한 원고 (그 식이 캐시에 없음) → --check rc 2 · 까닭에 캐시 경로와 --write
+  PASS    pandoc 이 없는 기계의 --write → rc 2 (조용히 빼고 싣지 않는다) · 캐시에 그 식을 쓰지 않는다
+  PASS    변환기가 있으면 --write → rc 0 · 캐시가 원고의 식을 모두 (겹치는 식은 한 번 · 원고 순서) 싣고 · 그 뒤 --check 는 변환기 없이 rc 0
+  PASS    그 페이지 (b) 에 더한 수식 둘 (글 안 · 줄) · JSON 의 수식 (글 안 / 줄 · 순서) = 원고의 수식
+  PASS    캐시의 꼴이 다르면 (손으로 망가뜨림) → --check rc 2 (캐시 파일 이름을 짚는다)
+  PASS    망가진 캐시는 --write 가 처음부터 다시 만든다 (rc 0 · 식 수 그대로 · 그 뒤 --check rc 0)
+  PASS    원고에서 그 수식을 다시 빼면 → --check rc 1 (낡은 캐시) · --write 가 캐시를 줄이거나 지우고 · 다시 rc 0
+  PASS  그림을 더한 원고 → --check rc 1 · --write rc 0 · 다시 --check rc 0 (pandoc 없이)
+  PASS    그 페이지 (b) 에 그 그림 (PNG 를 data URI 로 · 폭 50 %) 과 캡션 · JSON 에 그림 블록 (경로 · sha256)
+  PASS    그림 파일이 바뀌면 (한 바이트) → --check rc 1 (페이지가 그림의 바이트를, JSON 이 그 sha256 을 싣는다)
+  PASS  폭을 적지 않은 그림은 본문 폭에 맞춘다 (페이지 width:100% · JSON 601 x 367 px)
+  PASS  그림 크기 규칙 (figure_display): 폭 없음 = 본문 폭 601 px · {width=60%} = 361 px · 키 큰 그림은 한 쪽에 들어가게 줄인다 (키 860 px 까지)
+── ② 페이지 (a) 계획서: 한 파일로 닫힘 · 색 토큰 · 인쇄 · 문체
+  PASS  (a) 정적 파일이 webapp/static/explain/ 에 있다
+  PASS  (a) UTF-8 · LF 만 · BOM 없음 · 끝 줄바꿈 하나
+  PASS  (a) <!doctype html> · lang="ko" · charset · viewport
+  PASS  (a) <title> = "DEM 재설계 (수영) 계획서" 로 시작
+  PASS  (a) 태그 짝이 맞다 (닫히지 않은 · 엇갈린 태그 0)
+  PASS  (a) 금지 요소 없음 (script · link · iframe · form · svg … 찾은 것 [])
+  PASS  (a) 외부 자원 · 스킴 없음: 그림은 페이지 안에 실은 PNG (data URI) 뿐 (찾은 것 [])
+  PASS  (a) <img> 0 개 (기대 0): 모두 alt · width · height 가 있다
+  PASS  (a) 이벤트 속성 (on…) 없음 (찾은 것 [])
+  PASS  (a) <style> 하나 (인라인) · @import · url( 없음
+  PASS  (a) "http" 글자열이 파일 어디에도 없음 (DOI 는 글자로)
+  PASS  (a) href 는 "/" · 짝 페이지 · #자리 뿐 (그 밖 [])
+  PASS  (a) #자리 링크가 모두 실제 id 를 가리킨다 (없는 것 [])
+  PASS  (a) id 중복 없음
+  PASS  (a) 처음 링크 <a … href="/">
+  PASS  (a) 짝 페이지 링크 (머리 nav.top 안)
+  PASS  (a) 색 토큰 세 블록 (:root · prefers-color-scheme dark · data-theme dark) 이 있고 토큰 이름이 같다 (18 개)
+  PASS  (a) 어두운 두 블록의 값이 같고 · 밝은 값과 다르다 (바탕 · 글자)
+  PASS  (a) 쓰는 토큰이 모두 정의돼 있다 (정의 안 된 것 [])
+  PASS  (a) 어두운 블록에 color-scheme:dark
+  PASS  (a) body 배경 명시 (var(--bg))
+  PASS  (a) 글꼴 = 시스템 스택만
+  PASS  (a) 표는 모두 가로 스크롤 상자 안 (표 3 · 상자 안 3)
+  PASS  (a) @media print = A4 · 흰 바탕 · 그림자 없음 · 쪽 나눔 규칙
+  PASS  (a) 보이는 글의 천 단위 콤마 0 (찾은 것 [])
+  PASS  (a) em dash 없음 (파일 전체)
+  PASS  (a) 모델 이름 · ID 없음 (-)
+  PASS  (a) 보이는 글에 주소 · 포트 · user@host 없음 (-)
+  PASS  (a) 절대 경로 없음 (-)
+  PASS  (a) 생성물 표지 (생성기 이름 · 손으로 고치지 않는다) 가 머리 주석에
+  PASS  (a) 수식 · 그림 없음: 계획서 원문은 수식 · 그림을 받지 않는다 (달러 기호는 rc 2)
+── ③ 페이지 (a) 계획서 꼴 · 원문 핵심
+  PASS  표지 머리: 제목 <h1> = "DEM 재설계 (수영) 계획서" (하나뿐)
+  PASS  표지 머리: 원문 제목 줄의 꼬리표 · 부제가 그대로
+  PASS  표지 머리: 날짜 = 원문 마커 날짜 (2026-11-13)
+  PASS  표지 머리: 배지 셋 = 결과 0 건 · 실행 GO 요청 아님 · Codex 판정 = 문서 잔여 종결 가능 (HOLD) (지금 ['결과 0 건', '실행 GO 요청 아님', 'Codex 판정 = 문서 잔여 종결 가능 (HOLD)'])
+  PASS  배지 글이 원문 "지위" 줄에서 나온다 (원문에 그 글이 있다)
+  PASS  "지위" 문단 (p.status) · "한 줄로" 요약 상자 (div.oneline)
+  PASS  번호 붙은 절 머리: 원문의 절 10 개가 순서대로 (<h2>)
+  PASS  절마다 section id (s1 … s9 · refs) · 차례 (nav.toc) 가 그 자리를 가리킨다
+  PASS  §3 로드맵: 순서 있는 목록 (ol.road) 에 카드 8 장 (단계 0–7 · 순서대로)
+  PASS  §3 로드맵: 카드마다 단계 번호 · 이름 · 괄호 안 (기계 · 기간) 칩 · 내용이 원문 그대로
+  PASS  §3 로드맵: "다음 단계의 문" 문장이 문 줄 (p.gate) 로 · 핵심 단계 (단계 3) 카드 강조 (step key)
+  PASS  §3 일정: 따로 띠 (div.sched) · [추정] 표지 · 원문 글
+  PASS  §3 갈림: 결정표 (table.fork) 의 결과 칩 다섯 = (가) (나) (마) (라) (다) · 칩마다 다른 색 클래스 (지금 [('k-ga', '(가)'), ('k-na', '(나)'), ('k-ma', '(마)'), ('k-ra', '(라)'), ('k-da', '(다)')])
+  PASS  §3 갈림: 칩 색 클래스마다 CSS 규칙 (바탕 · 글자 토큰)
+  PASS  §3 갈림: 머리 글 "갈림 (결과 전에 정함)" · 표 머리 = 원문
+  PASS  §4 = 강조 상자 (div.box.emph) · 절의 본문이 모두 그 안에 · "1.64 는 고정이고 손잡이가 아니다."
+  PASS  §5 = 경고 상자 (div.box.warn) · 절의 본문이 모두 그 안에 · "둘 다 틀렸다."
+  PASS  §6 = "하지 않는 말" 테두리 상자 (div.box.dont) · 절의 본문이 모두 그 안에 · "2D 숫자를 3D 로 옮기지 않는다."
+  PASS  §6 상자 테두리 = 네 변 (border) · 목록 여섯 줄
+  PASS  §8 질문 표 (table.qa): 머리 = 질문 · 권고 · 1저자 답 · 줄 다섯 (Q1.–Q5.)
+  PASS  §8 질문 표: 줄마다 질문 · 권고 · 답 (= 원문의 "답:" 뒤 글) 이 원문 그대로
+  PASS  §9 Codex 판정 상자 (div.verdict) · 판정 줄 (p.vline) = "문서 범위 종결 가능 … HOLD 다"
+  PASS  §9 큰 지적 둘 = 눈에 띄는 카드 (div.finding · id drd-01 · drd-02 · P1 표지 · "고침" 줄) (지금 ['drd-01', 'drd-02'])
+  PASS  §9 그 밖 지적 ID (DRD-03 … DRD-13) 가 고정폭으로
+  PASS  참고문헌: 번호 붙은 서지 (ol.refs) 10 행 · id ref-1 … ref-10
+  PASS  참고문헌: 행마다 서지 글이 원문 그대로 · litdb slug 는 작은 고정폭 (code.slug)
+  PASS  litdb slug 10 개 (서로 다름 · 원문 그대로)
+  PASS  원문의 DOI 8 개가 글자로 남아 있다
+  PASS  §2 논문 표: 일곱 줄 · 첫 칸의 [n] 이 참고문헌 자리 (#ref-n) 로 가는 링크
+  PASS  원문 핵심이 남아 있다: "진밀도 1.64"
+  PASS  원문 핵심이 남아 있다: "10–13 %"
+  PASS  원문 핵심이 남아 있다: "하지 않는 말"
+  PASS  원문 핵심이 남아 있다: "SELF-161"
+  PASS  원문 핵심이 남아 있다: "SELF-160"
+  PASS  원문 핵심이 남아 있다: "DRD-01"
+  PASS  원문 핵심이 남아 있다: "DRD-02"
+  PASS  원문 핵심이 남아 있다: "Q1."
+  PASS  원문 핵심이 남아 있다: "Q2."
+  PASS  원문 핵심이 남아 있다: "Q3."
+  PASS  원문 핵심이 남아 있다: "Q4."
+  PASS  원문 핵심이 남아 있다: "Q5."
+  PASS  원문 핵심이 남아 있다: "11.5 %"
+  PASS  원문 핵심이 남아 있다: "M32RF-01"
+  PASS  원문 핵심이 남아 있다: "5afa16488"
+  PASS  참고문헌: 표의 셋째 칸 머리 ("litdb 카드 (slug)") 가 행마다 이름표로 (10 번)
+  PASS  원문 줄 전수 포함: briefing 의 줄 (목록 · 문단 · 표 칸 · 머리) 이 모두 · 원문 순서대로 페이지에 있다 (조각 202 · 없는 것 0)
+  PASS    그 검사는 조각마다 한 글자를 바꾸면 모두 잡는다 (못 잡은 것 0)
+── ④ 페이지 (b) 처음 보는 분: 한 파일로 닫힘 · 색 토큰 · 인쇄 · 문체
+  PASS  (b) 정적 파일이 webapp/static/explain/ 에 있다
+  PASS  (b) UTF-8 · LF 만 · BOM 없음 · 끝 줄바꿈 하나
+  PASS  (b) <!doctype html> · lang="ko" · charset · viewport
+  PASS  (b) <title> = "DEM 재설계 (수영) 계획서" 로 시작
+  PASS  (b) 태그 짝이 맞다 (닫히지 않은 · 엇갈린 태그 0)
+  PASS  (b) 금지 요소 없음 (script · link · iframe · form · svg … 찾은 것 [])
+  PASS  (b) 외부 자원 · 스킴 없음: 그림은 페이지 안에 실은 PNG (data URI) 뿐 (찾은 것 [])
+  PASS  (b) <img> 0 개 (기대 0): 모두 alt · width · height 가 있다
+  PASS  (b) 이벤트 속성 (on…) 없음 (찾은 것 [])
+  PASS  (b) <style> 하나 (인라인) · @import · url( 없음
+  PASS  (b) "http" 글자열이 파일 어디에도 없음 (DOI 는 글자로)
+  PASS  (b) href 는 "/" · 짝 페이지 · #자리 뿐 (그 밖 [])
+  PASS  (b) #자리 링크가 모두 실제 id 를 가리킨다 (없는 것 [])
+  PASS  (b) id 중복 없음
+  PASS  (b) 처음 링크 <a … href="/">
+  PASS  (b) 짝 페이지 링크 (머리 nav.top 안)
+  PASS  (b) 색 토큰 세 블록 (:root · prefers-color-scheme dark · data-theme dark) 이 있고 토큰 이름이 같다 (18 개)
+  PASS  (b) 어두운 두 블록의 값이 같고 · 밝은 값과 다르다 (바탕 · 글자)
+  PASS  (b) 쓰는 토큰이 모두 정의돼 있다 (정의 안 된 것 [])
+  PASS  (b) 어두운 블록에 color-scheme:dark
+  PASS  (b) body 배경 명시 (var(--bg))
+  PASS  (b) 글꼴 = 시스템 스택만
+  PASS  (b) 표는 모두 가로 스크롤 상자 안 (표 6 · 상자 안 6)
+  PASS  (b) @media print = A4 · 흰 바탕 · 그림자 없음 · 쪽 나눔 규칙
+  PASS  (b) 보이는 글의 천 단위 콤마 0 (찾은 것 [])
+  PASS  (b) em dash 없음 (파일 전체)
+  PASS  (b) 모델 이름 · ID 없음 (-)
+  PASS  (b) 보이는 글에 주소 · 포트 · user@host 없음 (-)
+  PASS  (b) 절대 경로 없음 (-)
+  PASS  (b) 생성물 표지 (생성기 이름 · 손으로 고치지 않는다) 가 머리 주석에
+  PASS  (a) 와 (b) 의 색 토큰 (밝은 · 어두운) 이 같다: 한 벌
+── ⑤ 페이지 (b) docx 꼴 · 원고 핵심
+  PASS  제목 블록 네 줄: 제목 · 부제 (원고 제목 줄에서 꼬리표를 뺀 글) · "처음 보는 분을 위한 설명" · 날짜 · 지위 줄
+  PASS  제목 블록: 클래스 (subtitle · audience · statusline) · <h1> 하나뿐
+  PASS  "지위" 문단 (p.status) · "한 줄로" 상자 (div.oneline)
+  PASS  절 제목 12 개 (1–11 + 참고문헌) 가 순서대로 (<h2>)
+  PASS  절마다 section id (s1 … s11 · refs)
+  PASS  표 6 개 (= 원고의 표 수) · 표마다 머리 행 (<thead> · th scope="col") · 열 너비 (<col>)
+  PASS  표 머리 행 음영 = 토큰 (--th) · 테두리 = 토큰 (--line)
+  PASS  색 계열 = docx 의 음영 (머리 행 E6EDF3 · 상자 EAF2FA · 제목 1F4E79 · 글자 1F2933 · 흐린 글 5B6770 · 테두리 B8C4CE)
+  PASS  "계획은 작은 대조부터" 절: 단계 표 (단계 0–7) 와 결과별 갈림 표 (네 줄) · 사이의 굵은 문장
+  PASS  "용어 풀이" 절의 표 14 행: 용어 · 뜻이 원고 그대로
+  PASS  참고문헌 표 10 행 (tr id ref-1 … ref-10): 번호 · 서지 · 비고가 원고 그대로
+  PASS  원고의 DOI 8 개가 글자로 남아 있다
+  PASS  목록: 글머리 두 단 (ul 안 ul) · 번호 목록 (ol) 이 원고대로
+  PASS  원고 핵심이 남아 있다: "진밀도"
+  PASS  원고 핵심이 남아 있다: "1.64"
+  PASS  원고 핵심이 남아 있다: "10–13 %"
+  PASS  원고 핵심이 남아 있다: "하지 않는 말"
+  PASS  원고 핵심이 남아 있다: "11.5 %"
+  PASS  원고 핵심이 남아 있다: "15–18 배"
+  PASS  원고 핵심이 남아 있다: "[8]"
+  PASS  원고 핵심이 남아 있다: "[9]"
+  PASS  원고 핵심이 남아 있다: "[10]"
+  PASS  마커 날짜 (2026-11-13) 가 제목 블록에
+  PASS  원고 줄 전수 포함: 원고의 줄 (목록 · 문단 · 표 칸 · 머리 · 그림 캡션) 이 모두 · 원고 순서대로 페이지에 있다 (조각 190 · 없는 것 0)
+  PASS    그 검사는 조각마다 한 글자를 바꾸면 모두 잡는다 (못 잡은 것 0)
+  PASS  수식: 페이지의 <math> 0 개 = 원고의 수식 0 개 (글 안 / 줄 · LaTeX 주석 · 원고 순서대로)
+  PASS  그림: 페이지의 <figure> 0 개 = 원고의 그림 줄 0 개 (그림 바이트 = 원고 옆 PNG 파일 · 순서대로)
+── ⑥ docx 정본 (형식 기준) · 빌더 JSON
+  PASS  정본: A4 · 여백 (위 1440 · 좌우 1440 · 아래 1300)
+  PASS  정본: 글꼴 = 맑은 고딕 (한글) + Calibri (라틴) · 본문 10.5 pt
+  PASS  정본: 제목 블록 네 줄 (제목 · 부제 · "처음 보는 분을 위한 설명" · 날짜 · 지위 줄)
+  PASS  정본: "지위:" 문단 · "한 줄로:" 상자 (음영 EAF2FA · 왼쪽 띠)
+  PASS  정본: Heading1 12 개 = 원고의 절 제목 12 개 (순서대로)
+  PASS  정본: 목록 문단 45 (= 원고의 목록 줄 수)
+  PASS  정본: 표 6 · 머리 행 음영 E6EDF3 · 머리 행 반복 (tblHeader)
+  PASS  정본: 용어 풀이 표 14 행 (+ 머리) · 참고문헌 표 10 행 (+ 머리)
+  PASS  정본: 용어 풀이 14 행의 용어가 원고 그대로
+  PASS  정본: 바닥글 = 제목 · 쪽 번호 (PAGE / NUMPAGES)
+  PASS  정본: 원고 핵심 "진밀도"
+  PASS  정본: 원고 핵심 "1.64"
+  PASS  정본: 원고 핵심 "10–13 %"
+  PASS  정본: 원고 핵심 "하지 않는 말"
+  PASS  정본: 원고의 DOI 8 개 전부 · 참고문헌 10 행의 서지
+  PASS  정본: 마커 날짜 (2026-11-13)
+  PASS  정본: 원고의 본문 줄 (목록 · 문단 · 표 칸 · 머리 · 그림 캡션) 이 정본 글과 어긋나지 않는다: 모두 · 원고 순서대로 (조각 190 · 없는 것 0)
+  PASS    원고를 한 글자 바꾼 사본이면 그 검사가 실패한다 (바꾼 줄을 짚는다)
+  PASS    조각마다 한 글자를 바꿔도 모두 잡는다 (못 잡은 것 0)
+  PASS  정본: 수식 (m:oMath) · 줄 수식 (m:oMathPara) · 그림 (w:drawing) 의 수 = 원고의 수식 0 · 그림 0
+  PASS  JSON: 커밋돼 있고 원고 경로 · sha256 · 마커 날짜를 싣는다
+  PASS  JSON 의 문단 글 · 순서 = 정본 docx 의 문단 글 · 순서 (전수)
+  PASS  JSON 의 수식 (글 안 / 줄 · 순서) · 그림 (경로 · 순서) = 원고의 수식 · 그림
+  PASS  JSON: 표 6 · 열 너비 합 = 본문 너비 9026 · 정본의 열 너비와 같다
+  PASS  JSON · 생성기 · 빌더에 em dash · 모델 이름 · 절대 경로 없음 (이 시험 파일 = em dash 만: 금지 낱말의 정규식을 싣고 있다)
+── ⑦ 서로 링크 · 사이드바 · 실제 서빙
+  PASS  (a) 머리에서 (b) 로: 링크 글 "처음 보는 분을 위한 설명"
+  PASS  (b) 머리에서 (a) 로: 링크 글 "자세한 계획서"
+  PASS  base.html 사이드바에 <li> 하나: 링크 = 페이지 (a) · 글 "DEM 재설계 계획서 (수영)" · 짧은 한국어 title
+  PASS    그 <li> 는 "Rint 설명" 바로 뒤 · "DEM 방법 그림" 앞 · 이웃과 같은 꼴의 Jinja 주석 (이 시험 이름)
+  PASS    base.html 의 새 줄 (주석 + <li>) 에 em dash · 모델 이름 · 절대 경로 없음
+[Storage] NOT configured - SUPABASE_URL=False SUPABASE_KEY=False
+[Security] WARNING: auth OFF - local/private only. For public deploy set WEBAPP_REQUIRE_AUTH=1 + WEBAPP_AUTH_TOKEN.
+  PASS  GET /static/explain/dem_redesign_plan_20261110.html → 200
+  PASS  (a) text/html 로 서빙
+  PASS  (a) 서빙된 바이트 = 리포 파일
+  PASS  GET /static/explain/dem_redesign_plan_newcomer_20261110.html → 200
+  PASS  (b) text/html 로 서빙
+  PASS  (b) 서빙된 바이트 = 리포 파일
+  PASS  렌더된 화면 (/seminar) 사이드바에 링크가 보인다
+  PASS  게이트 (scripts/check_all.sh) 에 이 시험 단계 한 줄
+── ⑧ docx 빌더 (node · docx 모듈이 있을 때만)
+  PASS  빌더 scripts/build_dem_redesign_plan_docx.js 가 있고 머리 주석에 정본을 바꾸는 절차가 있다
+  PASS  빌더 실행 rc 0 · docx 를 쓴다 (docx 모듈 9.6.1)
+  PASS  빌더 출력의 문단 글 · 순서 = 정본 (빈 문단까지)
+  PASS  빌더 출력의 문서 속성 (제목 · 만든 이 · 설명) = 정본
+  PASS  빌더 출력의 word/document.xml = 정본 (요소 · 속성 · 글 · 순서)
+  PASS  빌더 출력의 word/styles.xml = 정본 (요소 · 속성 · 글 · 순서)
+  PASS  빌더 출력의 word/numbering.xml = 정본 (요소 · 속성 · 글 · 순서)
+  PASS  빌더 출력의 word/footer1.xml = 정본 (요소 · 속성 · 글 · 순서)
+  PASS  빌더 출력의 word/settings.xml = 정본 (요소 · 속성 · 글 · 순서)
+  PASS  빌더 출력의 수식 · 줄 수식 · 그림 수 = 원고의 수 (0 · 0 · 0)
+  PASS  빌더 출력 ZIP 에 폴더 항목이 없다 (Word 클라우드 공동 편집이 거부한 꼴)
+  PASS  빌더는 --out 없이 돌리면 쓰지 않고 rc 2 (정본을 실수로 덮지 않는다)
+── ⑨ 수식 · 그림 고정물 (짧은 원고 조각 → 페이지 · JSON · docx)
+  PASS  고정물 셋이 제자리에 (원고 조각 · PNG · 수식 캐시) · PNG 는 작다 (4 KB 아래)
+  PASS  고정물 원고: 줄 수식 둘 · 글 안 수식 · 그림 하나 · 분수 · 첨자 · 합 기호 · 식 번호가 있다 (수식 12 · 그림 1)
+  PASS  고정물 → 페이지 · JSON 을 pandoc 없이 만든다 · 다시 낸 수식 캐시 = 커밋된 캐시 바이트
+  PASS    두 번 만들면 같은 바이트
+  PASS  (고정물) UTF-8 · LF 만 · BOM 없음 · 끝 줄바꿈 하나
+  PASS  (고정물) <!doctype html> · lang="ko" · charset · viewport
+  PASS  (고정물) <title> = "DEM 재설계 (수영) 계획서" 로 시작
+  PASS  (고정물) 태그 짝이 맞다 (닫히지 않은 · 엇갈린 태그 0)
+  PASS  (고정물) 금지 요소 없음 (script · link · iframe · form · svg … 찾은 것 [])
+  PASS  (고정물) 외부 자원 · 스킴 없음: 그림은 페이지 안에 실은 PNG (data URI) 뿐 (찾은 것 [])
+  PASS  (고정물) <img> 1 개 (기대 1): 모두 alt · width · height 가 있다
+  PASS  (고정물) 이벤트 속성 (on…) 없음 (찾은 것 [])
+  PASS  (고정물) <style> 하나 (인라인) · @import · url( 없음
+  PASS  (고정물) "http" 글자열이 파일 어디에도 없음 (DOI 는 글자로)
+  PASS  (고정물) href 는 "/" · 짝 페이지 · #자리 뿐 (그 밖 [])
+  PASS  (고정물) #자리 링크가 모두 실제 id 를 가리킨다 (없는 것 [])
+  PASS  (고정물) id 중복 없음
+  PASS  (고정물) 처음 링크 <a … href="/">
+  PASS  (고정물) 짝 페이지 링크 (머리 nav.top 안)
+  PASS  (고정물) 색 토큰 세 블록 (:root · prefers-color-scheme dark · data-theme dark) 이 있고 토큰 이름이 같다 (18 개)
+  PASS  (고정물) 어두운 두 블록의 값이 같고 · 밝은 값과 다르다 (바탕 · 글자)
+  PASS  (고정물) 쓰는 토큰이 모두 정의돼 있다 (정의 안 된 것 [])
+  PASS  (고정물) 어두운 블록에 color-scheme:dark
+  PASS  (고정물) body 배경 명시 (var(--bg))
+  PASS  (고정물) 글꼴 = 시스템 스택만
+  PASS  (고정물) 표는 모두 가로 스크롤 상자 안 (표 1 · 상자 안 1)
+  PASS  (고정물) @media print = A4 · 흰 바탕 · 그림자 없음 · 쪽 나눔 규칙
+  PASS  (고정물) 보이는 글의 천 단위 콤마 0 (찾은 것 [])
+  PASS  (고정물) em dash 없음 (파일 전체)
+  PASS  (고정물) 모델 이름 · ID 없음 (-)
+  PASS  (고정물) 보이는 글에 주소 · 포트 · user@host 없음 (-)
+  PASS  (고정물) 절대 경로 없음 (-)
+  PASS  (고정물) 생성물 표지 (생성기 이름 · 손으로 고치지 않는다) 가 머리 주석에
+  PASS  고정물 페이지: 수식 12 개 = 원고의 수식 12 개 (글 안 / 줄 · LaTeX 주석 · 원고 순서대로)
+  PASS  고정물 페이지: 줄 수식 = <div class="eq"> 안의 <math display="block"> · 분수 (mfrac) · 아래첨자 (msub) · 위아래 끝을 단 합 기호 (munderover · ∑)
+  PASS  고정물 페이지: 식 번호 (원고의 \tag{1}) 가 식 끝의 글자 "(1)" 로 · 위첨자 (msup) 가 든 글 안 수식
+  PASS  고정물 페이지: 수식 안에 바깥 것이 없다 (script · 링크 · 그림 0) · 수식 글꼴 · 줄 수식 가로 스크롤 규칙이 CSS 에
+  PASS  고정물 페이지: 그림 = <figure> 안의 <img> (PNG 를 data URI 로: 바이트 = 고정물 PNG) 와 그 아래 <figcaption>
+  PASS  고정물 페이지: 그림 폭 = 원고의 {width=60%} · width · height 속성 = PNG 의 가로 · 세로 (360 x 220) · alt = 캡션 글
+  PASS  고정물 페이지: 캡션은 그림 아래 · 가운데 · 작은 흐린 글 (CSS) · 캡션 안의 글 안 수식 셋
+  PASS  고정물 페이지: 표 칸 · 번호 목록 · "한 줄로" 상자 안의 글 안 수식
+  PASS  고정물 페이지: 인쇄할 때 수식 · 그림이 쪽 끝에서 갈리지 않는다 (.fig · .eq break-inside:avoid)
+  PASS  고정물 페이지: 원고 조각의 글 (문단 · 목록 · 표 칸 · 머리 · 캡션) 이 모두 · 순서대로 (조각 28 · 없는 것 0)
+  PASS    조각마다 한 글자를 바꾸면 모두 잡는다 (못 잡은 것 0)
+  PASS  고정물 JSON: 수식 (글 안 / 줄 · 순서) = 원고 · 줄 수식 블록은 m:oMathPara · 글 안 수식 런은 m:oMath
+  PASS  고정물 JSON: 그림 블록 = 경로 · sha256 · 제 크기 · docx 에 실을 크기 (본문 폭 601 px 의 60 % = 361 x 221) · alt · 캡션 런
+  PASS  고정물 JSON 의 문단 글 = 원고 조각의 글 (순서대로 · 수식 자리는 글이 아니다)
+  PASS  고정물 수식 캐시: schema · 식마다 latex · display · mathml · omml · pandoc 판 · 겹치는 식은 한 번 (원고에 처음 나온 순서)
+  PASS  OMML 스키마 순서 고침 (_omml_fix): 괄호 속성 (sepChr 가 endChr 앞) · 보통 글 런의 겹친 글자 꼴 · 행렬 열 속성 (count 가 mcJc 앞) · 그 밖은 그대로
+  PASS  고정물 수식 캐시: OMML 이 온전한 XML (m: 요소만 · xmlns 선언 없음) · Word 스키마 순서 · MathML 도 온전한 XML
+  PASS  수식 변환 검사 (math_entry_problem): 고정물 캐시의 식은 모두 받고 · 수식 아닌 것이 섞인 변환 12 가지는 모두 거부한다
+  PASS    캐시 파일에 그런 변환이 들어 있으면 페이지를 만들지 않고 멈춘다 (캐시 파일 이름 · 줄 1)
+  PASS  --write-math-cache <고정물>: 캐시가 다 있으면 pandoc 없이도 같은 바이트를 쓴다 (rc 0)
+  PASS    캐시가 없으면 (pandoc 도 없으면) rc 2 · 캐시 파일을 만들지 않는다
+  SKIP  pandoc 이 없다 (캐시를 만든 판 3.1.3 이 아니다): 캐시 재현 검사를 건너뜀 (세지 않는다)
+  PASS  고정물 docx: 빌더 실행 rc 0
+  PASS  고정물 docx: document.xml 이 온전한 XML · 수식 자리 표지가 남지 않았다
+  PASS  고정물 docx: Word 수식 (m:oMath) = 원고의 수식 12 개 · 줄 수식 (m:oMathPara) = 2 개
+  PASS  고정물 docx: 분수 (m:f) · 아래첨자 (m:sSub) · 위첨자 (m:sSup) · 합 기호 (m:nary · ∑) 가 OMML 요소로
+  PASS  고정물 docx: 끼워 넣은 OMML = JSON 이 실은 OMML (바이트 그대로 · 문서 순서)
+  PASS  고정물 docx: 줄 수식은 문단 바로 아래의 m:oMathPara · 가운데 맞춤 (m:jc center)
+  PASS  고정물 docx: 글 안 수식이 든 문단 (7) 은 줄 간격 규칙 "auto" 를 적는다 (키 큰 수식에 줄이 늘어난다) · 수식이 없는 문단은 정본처럼 적지 않는다
+  PASS  고정물 docx: 그림 관계 하나 (…/relationships/image → media/….png) · 그 파일의 바이트 = 고정물 PNG · w:drawing 하나
+  PASS  고정물 docx: 그림 크기 = 본문 폭의 60 % (361 x 221 px · 1 px = 9525 EMU) · 본문 폭 (9026 DXA = 5731510 EMU) 안
+  PASS  고정물 docx: 그림 문단은 가운데 · 바로 다음 문단이 캡션 (가운데 · "그림 1." 로 시작 · 글 안 수식 셋)
+  PASS  고정물 docx: 문단 글 · 순서 = JSON 의 문단 글 · 순서
+  PASS  고정물 docx: ZIP 에 폴더 항목 없음 · [Content_Types].xml 에 png
+  PASS  빌더: 그림 파일이 JSON 의 sha256 과 다르면 쓰지 않고 멈춘다
+  PASS  빌더: 그림 경로가 리포 밖을 가리키면 (..) 쓰지 않고 멈춘다
+  PASS  빌더: 수식이 OMML 꼴이 아니면 쓰지 않고 멈춘다
+
+== test_dem_redesign_plan_page: 347/347 PASS

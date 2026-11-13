@@ -1,0 +1,42 @@
+{
+  "test_sha256": "4f4d6b1ad382cdfcfc6283bf3b12ae951dea37404233041f2cae19101b974198",
+  "cases": [
+    {
+      "case": "section4_old_claim",
+      "method": "test_contact_explanation_in_section4",
+      "expected_pass": false,
+      "passed": false,
+      "failures": 1,
+      "errors": 0,
+      "source_sha256": "209b140ca04ac7f6e097769fe83fc460525135171071c5baf14c06fa3d0b3152"
+    },
+    {
+      "case": "glossary_old_claim",
+      "method": "test_glossary_not_permanent_weld",
+      "expected_pass": false,
+      "passed": false,
+      "failures": 1,
+      "errors": 0,
+      "source_sha256": "6c2d079b4fe4e3686dee5a178f7b6dd6820a254d551c0d38002ab3ace34e6aa5"
+    },
+    {
+      "case": "section10_old_claim",
+      "method": "test_calibration_is_not_validation",
+      "expected_pass": false,
+      "passed": false,
+      "failures": 1,
+      "errors": 0,
+      "source_sha256": "fdb5299cd110bb120976da162a8e20a47889e5adc65b6739bdcaca80127be2e4"
+    },
+    {
+      "case": "history_outside_section4",
+      "method": "test_contact_explanation_in_section4",
+      "expected_pass": true,
+      "passed": true,
+      "failures": 0,
+      "errors": 0,
+      "source_sha256": "ea4ef320ce888636e75af2aa0f970abde5ed0569b4f3534e2d060cffbdc551c1"
+    }
+  ],
+  "scope": "three deliberate regressions and one location control, not additional unique test methods"
+}

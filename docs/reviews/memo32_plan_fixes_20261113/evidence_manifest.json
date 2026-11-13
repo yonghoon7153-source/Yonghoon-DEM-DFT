@@ -1,0 +1,79 @@
+[
+  {
+    "source": "intake.json",
+    "stored": "intake.json",
+    "sha256": "f44461d2c33d10fdd48db3507b177962170152c0769ef52595945c652934df13",
+    "transformation": "none"
+  },
+  {
+    "source": "red.json",
+    "stored": "red.json",
+    "sha256": "e8ebbc83db6669d9753cc4c6a136f963272db40cd08fc485d70721ab4ca044de",
+    "transformation": "none"
+  },
+  {
+    "source": "green.json",
+    "stored": "green.json",
+    "sha256": "a380733808f7f524982e52db6c963861772e7e4a5922301d7a5fc9e504e3dc31",
+    "transformation": "none"
+  },
+  {
+    "source": "existing11.json",
+    "stored": "existing11.json",
+    "sha256": "e4c4a01b30f4534256c3981453cc35b1c7b52c41ec0a56f1ce86b42f4b95cabf",
+    "transformation": "none"
+  },
+  {
+    "source": "mutation_results.json",
+    "stored": "mutation_results.json",
+    "sha256": "e2b5f567ac307c2a074a5ec0af3cc10cd879d12d39387e178c6c85ed31795187",
+    "transformation": "none"
+  },
+  {
+    "source": "preservation.json",
+    "stored": "preservation.json",
+    "sha256": "6fc935fc394ea3c4591dc6727956bfb252768ad52b24e3c060e02d5f18ca5fbf",
+    "transformation": "none"
+  },
+  {
+    "source": "INDEPENDENT_PROBE_RESULTS.json",
+    "stored": "INDEPENDENT_PROBE_RESULTS.json",
+    "transformation": "CRLF to LF only; original JSON retained in received ZIP",
+    "source_sha256": "388eb836739b27aa1c0b3c5359781d260d74132151120153a0bf0a043a28e729",
+    "stored_sha256": "2ab935d141622a00e5baae17cd6ae1c7e7d75f14fbf6286eb6e704025d999cf0"
+  },
+  {
+    "source": "codex_review_memo32_plan_refresh_20261113.md",
+    "stored": "codex_review_memo32_plan_refresh_20261113.md",
+    "sha256": "5c23398b32c3e9af848ca3991dc435332943d39fcf6c74c468f261ba477dbe9e",
+    "transformation": "none"
+  },
+  {
+    "source": "red.log",
+    "stored": "red.log",
+    "source_sha256": "6048bbbb063fe0a8eb460f092ae7898bfdcd6536b3f02438dbfa0b6acb8b2531",
+    "stored_sha256": "3b2a4fff6c085f04785b9b2919583cf2c8658b7a833c724eb20f2c36e5e1aa86",
+    "transformation": "CRLF to LF; exact worktree path replaced with <REPO> where present"
+  },
+  {
+    "source": "green.stderr",
+    "stored": "green.log",
+    "source_sha256": "3aabe284f18115d9e1ceca3ce2659331164ee973b2830ccb4b00a9453cded366",
+    "stored_sha256": "b61c398d98f7f717b19f1239aa5ee06c1887f14e7e499a0d9a2d6abcaaacac2f",
+    "transformation": "CRLF to LF; exact worktree path replaced with <REPO> where present"
+  },
+  {
+    "source": "existing11.stderr",
+    "stored": "existing11.log",
+    "source_sha256": "56765875cf6b6573e10b055532a8dcd8a9fff1011c3504ca2c4f992cb0eb5cfc",
+    "stored_sha256": "f3306e9a89eb6f8b9182da027bf92dc38ea3d089dcfd6e8638f59b351a979282",
+    "transformation": "CRLF to LF; exact worktree path replaced with <REPO> where present"
+  },
+  {
+    "source": "page_regression.stdout",
+    "stored": "page_regression.log",
+    "source_sha256": "8abc47edb064d541cd73cbcef0ae7878562ca45efdc14707b1b66218af0b54f3",
+    "stored_sha256": "141e0b29aec2fb3dcd9695f4e250a2c4397d66c31f06adb839e97b7aed5129c9",
+    "transformation": "CRLF to LF; exact worktree path replaced with <REPO> where present"
+  }
+]

@@ -79,7 +79,7 @@ OUT_MODEL = 'docs/reviews/dem_redesign_direction_20261109/plan_newcomer_docx_mod
 DOCX = 'docs/reviews/dem_redesign_direction_20261109/DEM_redesign_plan_for_newcomers_20261110.docx'
 #: 1저자가 11-10 에 올린 docx 형식을 보존한 11-13 메모 3.2 재생성본.  원고가 바뀌어 빌더로 다시 만들어 정본을 바꾸면 이 값도 같이 바꾼다
 #: (절차 = scripts/build_dem_redesign_plan_docx.js 머리 주석).
-DOCX_SHA256 = '090a8e68a4bfc490c59343c5f462802bd8483105a68eb0b03be3b8ff42c13622'
+DOCX_SHA256 = 'c020825f0bfc9423e5f88b728eb6ddf9dbf5d339d72252f1ae9dee8f18655b13'
 #: 원고에 수식이 있을 때만 생기는 생성물 (LaTeX → MathML · OMML 변환 캐시 · 원고 옆)
 NEW_MATH = SRC_NEW[:-3] + '_math.json'
 #: 수식 · 그림 고정물 (짧은 원고 조각 · 작은 PNG · 그 수식 캐시).  고정물로 만든 HTML · docx 는 커밋하지 않고 시험이 그때 만든다.
@@ -1108,7 +1108,7 @@ def main():
     chk('제목 블록 네 줄: 제목 · 부제 (원고 제목 줄에서 꼬리표를 뺀 글) · "처음 보는 분을 위한 설명" · 날짜 · 지위 줄',
         [_vis(x) for x in re.findall(r'<(?:h1|p)[^>]*>(.*?)</(?:h1|p)>', hd, re.S)]
         == [TITLE, '가압부터 탈압까지 한 모델로 계산하기', '처음 보는 분을 위한 설명',
-            f'{date_b} · 계획 문서 · 계산 결과는 아직 없음 · 외부 검토 = 문서 잔여 종결 가능, 전체 HOLD'])
+            f'{date_b} · 계획 문서 · 계산 결과는 아직 없음 · 원 메모 = 문서 잔여 종결 가능, 전체 HOLD'])
     chk('제목 블록: 클래스 (subtitle · audience · statusline) · <h1> 하나뿐',
         all(f'<p class="{c}">' in hd for c in ('subtitle', 'audience', 'statusline')) and src_b.count('<h1') == 1)
     chk('"지위" 문단 (p.status) · "한 줄로" 상자 (div.oneline)',
@@ -1188,7 +1188,7 @@ def main():
         == ('Malgun Gothic', 'Calibri', '21'))
     chk('정본: 제목 블록 네 줄 (제목 · 부제 · "처음 보는 분을 위한 설명" · 날짜 · 지위 줄)',
         paras[:4] == [TITLE, '가압부터 탈압까지 한 모델로 계산하기', '처음 보는 분을 위한 설명',
-                      f'{date_b}  ·  계획 문서  ·  계산 결과는 아직 없음  ·  외부 검토 = 문서 잔여 종결 가능, 전체 HOLD'])
+                      f'{date_b}  ·  계획 문서  ·  계산 결과는 아직 없음  ·  원 메모 = 문서 잔여 종결 가능, 전체 HOLD'])
     chk('정본: "지위:" 문단 · "한 줄로:" 상자 (음영 EAF2FA · 왼쪽 띠)',
         lambda: paras[4].startswith('지위: 계획 문서입니다.') and paras[5].startswith('한 줄로: 전극을 누르는 과정을')
         and [p for p in body.findall(W + 'p') if para_text(p).startswith('한 줄로')][0].find(W + 'pPr').find(W + 'shd').get(W + 'fill') == 'EAF2FA'
