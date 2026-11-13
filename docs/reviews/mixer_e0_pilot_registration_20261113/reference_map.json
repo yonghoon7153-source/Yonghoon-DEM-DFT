@@ -1,0 +1,643 @@
+{
+  "source_sha256": "42be4c652b38248adfcd28a28e045fecf6526019b768b2f6bf0715754e0a5f2e",
+  "only_transformation": "backtick file references plus prefatory status; normative body otherwise exact text",
+  "references": {
+    "from_main/draft/registration_draft.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/from_main/draft/registration_draft.md",
+      "sha256": "ae035bf2d2461529ae8b47101c282e850070896a2b2dd89a584bbb3fae1d9924"
+    },
+    "changes.md": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/changes.md.txt",
+      "sha256": "d9324cd9dac911f7943942be5485976e77b082ffaeff2052f85e5b3d894b28e4"
+    },
+    "fill_report.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/fill_report.md",
+      "sha256": "48aa1c156c3de010949f65b86ff02e17154e39b4bababbce4657857d590ccc0d"
+    },
+    "e0_pilot_registration_draft_before_query.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/e0_pilot_registration_draft_before_query.md",
+      "sha256": "e40ed1cf4ef0bfdb90e3bc32b186e775b72e3ca165134c4384eb9a5614d7cf97"
+    },
+    "review/review_report.md": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/review_report.md.txt",
+      "sha256": "7a2cc7cee83f77849126a08fed00bdab2aea5d7c9bf02cd6192c46d6ba5b75f8"
+    },
+    "review/disposition.md": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/disposition.md.txt",
+      "sha256": "29fc7c23b6c15fd86ba2aaf5417ecd1c50c8cb6ebbfd78f085188fa0336a0f34"
+    },
+    "e0_pilot_registration_draft_before_review.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/e0_pilot_registration_draft_before_review.md",
+      "sha256": "798b5fcab06f60e158903b6e9c5e84e584712907db5c9fd958d28dc8942bc945"
+    },
+    "review/rereview_report.md": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/rereview_report.md.txt",
+      "sha256": "055db0287ba11bfa2afd19f8286ddf558ff51e1686d0800e371e95e78779ee76"
+    },
+    "reseal_dry/README.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/reseal_dry/README.md",
+      "sha256": "6c5809743d7bee1155d09579eae930529e70e4036e3f3f22c5aa76ddf8f449f7"
+    },
+    "review/disposition2.md": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/review/disposition2.md.txt",
+      "sha256": "d73fd104c1255c3a5313b2cf306e895b237c524c3923a690a2c623a0276b000e"
+    },
+    "e0_pilot_registration_draft_before_review2.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/e0_pilot_registration_draft_before_review2.md",
+      "sha256": "f43af6323a6b8dfaa57856b696d1c6453ab375d6298d94efab9de0ed7fbc2f9b"
+    },
+    "query_block_b/README.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/query_block_b/README.md",
+      "sha256": "3cd6d7e06e54f88d2c898329d39030dd708ab877c35dc296128ecbcf1e958745"
+    },
+    "fill_queryb_disposition.md": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/fill_queryb_disposition.md.txt",
+      "sha256": "eff66434d51abb469f57e74689ba0054792fe8b5fec377be4427ede6cb449479"
+    },
+    "e0_pilot_registration_draft_before_queryb.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/e0_pilot_registration_draft_before_queryb.md",
+      "sha256": "9efdd31394f974b61816839c969fb2428dc1daa1b6cb01f37ea56aa681a05a1c"
+    },
+    "baseline_table.md": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/baseline_table.md.txt",
+      "sha256": "a6e08a07c2ca3b9834d8a99b288ca1e7ae9c36f6507d53d3bc391076c34b3a8d"
+    },
+    "docs/session_20260923_progress.md": {
+      "kind": "repo_file",
+      "target": "docs/session_20260923_progress.md",
+      "sha256": "715ff951a4887cfdf9b458aebb1a54c2a78ac5ce37fa15a592097a29e60adaca"
+    },
+    "query_block/README.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/query_block/README.md",
+      "sha256": "2ec377112cee7fd14f79f39823bc7e8421dab987116a65520bb4abc60db2f965"
+    },
+    "query_block_b/query_block_b.txt": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/query_block_b/query_block_b.txt",
+      "sha256": "d1a400ad776b38d3b3c6ec8736f4c5b4bf5435c75a1632a5218ed587411d104c"
+    },
+    "query_block_b/read_query_bundle_b.py": {
+      "kind": "received_exact_file",
+      "target": "docs/reviews/mixer_e0_pilot_registration_20261113/received/query_block_b/read_query_bundle_b.py.txt",
+      "sha256": "b0ae3ecff25d75b02376cc23c363ab04a7d197712d31ee483ff95216455c3cf7"
+    },
+    "summary.json": {
+      "kind": "label_or_runtime_name",
+      "target": "summary.json",
+      "verified": false
+    },
+    "docs/reviews/mixer_qualification_plan_20261110.md": {
+      "kind": "fixed_other_branch_reference",
+      "ref": "origin/codex/mixer-qualification-plan-1110",
+      "pin": "0c56deba6",
+      "target": "docs/reviews/mixer_qualification_plan_20261110.md",
+      "included_in_this_copy": false
+    },
+    "docs/reviews/nonrint_first_link_20261109/mixer_ibb_fixed_qualification_plan.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/nonrint_first_link_20261109/mixer_ibb_fixed_qualification_plan.md",
+      "sha256": "70e7b463555df9575fdf807ed13312baee51cc3174362bc0835869eb039c0cf6"
+    },
+    "docs/reviews/nonrint_approved_preparation_20261109/mixer_ibb_qualification_receipt_plan.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/nonrint_approved_preparation_20261109/mixer_ibb_qualification_receipt_plan.md",
+      "sha256": "dedf98adff2416db6111d007eb85974ce12e04bf2c7bf8eeb3ee6f5059032bcb"
+    },
+    "P8/README.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_precal_first8_preparation_20261104/README.md",
+      "sha256": "b2216eb1b6e8003d7157282b2e8b1e07045c66386d08386b61454d9bd53f4be6"
+    },
+    "F8/inventory.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/inventory.md",
+      "sha256": "2c17359d7ee9174c551fcaa606afd16804788f9995ae89c901d1955bf1ea20a1"
+    },
+    "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "sha256": "1e21ea3b8bee8eef87dd08d8ef395f434d73fe824ea429c347548de08530ab0c"
+    },
+    "F8/planned_assets/PRECAL_E0/deck_meta.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/PRECAL_E0/deck_meta.json",
+      "sha256": "c6543f3800d0d76d0d75ca04f4aebc5d9dd557de0702d94c0355910121efe218"
+    },
+    "IN/author_policy_record.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_inactive_preparation_20261109/author_policy_record.json",
+      "sha256": "75c171578887c07db020bcef0613113853ebace149539ae51ce60705da3e66cd"
+    },
+    "F8/submit_one.py.txt": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/submit_one.py.txt",
+      "sha256": "d1232bff3576016e0235d0764dfdb029e582da400a2b4abbe53bf571039e16a8"
+    },
+    "F8/README.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/README.md",
+      "sha256": "13855f91329e420fe09fbfcd7e94659ad51869fa06ace483dab980ee8f7b6db7"
+    },
+    "docs/data/mixer_e0_meta_ibb_20261110/README.md": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/README.md",
+      "sha256": "ec2df46c56420b4ad1c9d4cd0efa91dee914c2f5b9d923887019097f03302795"
+    },
+    "F8/blockers.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/blockers.json",
+      "sha256": "d7cf4f23502386d4bf780f8d3adb1baeabcea867d68c7557879497de803c7c54"
+    },
+    "fields.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/fields.txt",
+      "sha256": "97bd0b99186bf26f7be8ba21029dad5b6e4f28ef508dd4eea64a603d73e0c7bb"
+    },
+    "deck_meta.json": {
+      "kind": "label_or_runtime_name",
+      "target": "deck_meta.json",
+      "verified": false
+    },
+    "IN/candidate/candidate_asset_manifest.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_inactive_preparation_20261109/candidate/candidate_asset_manifest.json",
+      "sha256": "9ba72a0951474873575f73a24ba565eb711650356d035d3c548579ca69bc57d3"
+    },
+    "IN/README.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_inactive_preparation_20261109/README.md",
+      "sha256": "357505633e1abf89357d545a2fe6be732dec07ca7cefc0f3ab22ae49363d1dd4"
+    },
+    "docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/lmp_ldd.txt": {
+      "kind": "repo_file",
+      "target": "docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/lmp_ldd.txt",
+      "sha256": "0a12479d5c4f3502c81fa8f1e6a8830c92f3205ff74f4dc687d336ca88891d88"
+    },
+    "launch_highbo.sh": {
+      "kind": "label_or_runtime_name",
+      "target": "launch_highbo.sh",
+      "verified": false
+    },
+    "F8/commands.txt": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/commands.txt",
+      "sha256": "3c8706271a874e07b0a45cecfcff98c09d2c6c96151c9869d11b1737f9b2a5fd"
+    },
+    "F8/job_start.py.txt": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/job_start.py.txt",
+      "sha256": "5e140635336be247ee3a776be58b2b3eb8679562c02bfc9cb593e27c24276b91"
+    },
+    "F8/run_one.sbatch.txt": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/run_one.sbatch.txt",
+      "sha256": "5360aa212f2bba98c49bebf8ab5288a1d3069ba087f595b521f2b274972a8f15"
+    },
+    "fix_q5/README.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/fix_q5/README.md",
+      "sha256": "d7e39a378761c94b140d1f8507ffd1f10a16b39825a978a010ba168142d92162"
+    },
+    "hashes.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/hashes.txt",
+      "sha256": "5d567ed5b6f743fc12b3ba59120e7300e275932acac758eaa7bf14994af018c3"
+    },
+    "campaign_policy.json": {
+      "kind": "label_or_runtime_name",
+      "target": "campaign_policy.json",
+      "verified": false
+    },
+    "job_start.json": {
+      "kind": "label_or_runtime_name",
+      "target": "job_start.json",
+      "verified": false
+    },
+    "log.liggghts": {
+      "kind": "label_or_runtime_name",
+      "target": "log.liggghts",
+      "verified": false
+    },
+    "seal_extract.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/seal_extract.txt",
+      "sha256": "dafe5d582de2a13a1d23378d8a711c063a9619247943e281e31de459aa6979a5"
+    },
+    "mix3_run23_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run23_ls.txt",
+      "sha256": "8739308d65212088e9dc5fcb2f799b2d61b252a8da2972086e691b2b2f4eec34"
+    },
+    "mix3_run22_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run22_ls.txt",
+      "sha256": "748dc3d7a8ad3e807499d5a2d13c27c195a8b28257ac7346c7af480d450936a6"
+    },
+    "mix3_run9_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run9_ls.txt",
+      "sha256": "591c026b623b28d162fb5ce7e3ef4e9a28c81c0fb412ac12f981e169a0fc6526"
+    },
+    "mix3_run1_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run1_ls.txt",
+      "sha256": "c9fdbbc6b8e41f654131f8c03adac5354915a8dbbb1dd2d70f86d340b60842be"
+    },
+    "mix3_run14_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run14_ls.txt",
+      "sha256": "5d55bf15140d9e0ca67275b694cbdbd0a7281cb17c445f49796735686424c6fe"
+    },
+    "mix2_run1_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix2_run1_ls.txt",
+      "sha256": "50e59f4e8ee2cc7d73aa4e68b5b5476a0b3d7b2666258a8bb047b20a06e504f9"
+    },
+    "mix2_run2_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix2_run2_ls.txt",
+      "sha256": "cd7d71792f5d06a76325f5a1235156bd5d934b9af58324f702f6068c57ed2808"
+    },
+    "mix2_run3_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix2_run3_ls.txt",
+      "sha256": "56c92311638a1c407aabbad8319e5dcb60af02c909ccde6a2809c2d603136b4d"
+    },
+    "mix2_run7_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix2_run7_ls.txt",
+      "sha256": "b0b577d292eb624f06e9c0f503926a652464f2df104c053ef40b304597991df0"
+    },
+    "mix2_run4_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix2_run4_ls.txt",
+      "sha256": "c7a30e7efee8ecae1dd7be9cff28a0681b697bd3e9a3fa2edda899929e58f287"
+    },
+    "mix3_run11_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run11_ls.txt",
+      "sha256": "82905c59e07aed12b3889814fa2a5b9e639acf08daa252e7bd079189bf3fe3ed"
+    },
+    "mix3_run16_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run16_ls.txt",
+      "sha256": "5442a898f60382dd68e52c6eff60d6a9614ed925aa7676757c70cfbfdf8781f4"
+    },
+    "docs/data/mixer_highbo_devbo_prelim_20261003/README.md": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_highbo_devbo_prelim_20261003/README.md",
+      "sha256": "e1ded08092599e7804164f7d1a2db7cf289eeeaa84b08de98ceac036adbb3018"
+    },
+    "review/scripts/arith_41_output.txt": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/review/scripts/arith_41_output.txt",
+      "sha256": "de06a4145420c593634c9a675f43a1f3bd1edb850f31eba1fe77402998ce82cd"
+    },
+    "dem_scripts/mixer_20260921/launch_highbo.sh": {
+      "kind": "repo_file",
+      "target": "dem_scripts/mixer_20260921/launch_highbo.sh",
+      "sha256": "ed469ffad993b321563cb35e3242d0223a132f251a0ed119588f02b5b106b6fb"
+    },
+    "mix3_du.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_du.txt",
+      "sha256": "aeef075ebca57c1882fe582bd8b221a4470a25f6563256e1561b164279d70b72"
+    },
+    "mix2_du.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix2_du.txt",
+      "sha256": "e8f37616c6e8cf21291718882d8157a7c49815a816a84827d53d7a03b1b45d1c"
+    },
+    "docs/data/mixer_highbo_dev_decks_20260930_v26/README.md": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_highbo_dev_decks_20260930_v26/README.md",
+      "sha256": "f2af9ef775736df2c0b6226dd42ce88f1238d0d51afe7e30c42d5b726864efe8"
+    },
+    "docs/data/mixer_highbo_devu_prelim_20261006/exact_runs/exact_LU212_settled/exact_receipt.json": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_highbo_devu_prelim_20261006/exact_runs/exact_LU212_settled/exact_receipt.json",
+      "sha256": "e7879e62f7038245f6877a7371d0343ee4ed084107098ebf93c5a52efccb7884"
+    },
+    "scripts/mixer_stage_gate.py": {
+      "kind": "repo_file",
+      "target": "scripts/mixer_stage_gate.py",
+      "sha256": "e62df852d6cdeb031a7d5ff6418eee2477f5e00df8fae91fdd7758f3cafb21f5"
+    },
+    "docs/data/kg50_d07_end_20261105/kg50_d07_b50_log_ins1.liggghts": {
+      "kind": "repo_file",
+      "target": "docs/data/kg50_d07_end_20261105/kg50_d07_b50_log_ins1.liggghts",
+      "sha256": "b1b298bbd54f77a1adf47745e6b1eed14ab2a35bbb5aea9c473b6e9ff46657f5"
+    },
+    "mix_99000.liggghts": {
+      "kind": "label_or_runtime_name",
+      "target": "mix_99000.liggghts",
+      "verified": false
+    },
+    "review/scripts/g5_g6_output.txt": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/review/scripts/g5_g6_output.txt",
+      "sha256": "d3453f0e745a562c6bfb2de65f155e26017609fc50fe3a2e876b521ec6f0b5e0"
+    },
+    "review/scripts2/rules_counterexamples_output.txt": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/review/scripts2/rules_counterexamples_output.txt",
+      "sha256": "3577d990dd8ca3d65fd0f7deffb086d9ecc69705b6d948898b78865c0c868343"
+    },
+    "mpi1_version.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mpi1_version.txt",
+      "sha256": "fae83741df61fbca60a71c7cf2723de5fb312c92f0d2b7c7c18b5f8700d880fe"
+    },
+    "job_end.json": {
+      "kind": "label_or_runtime_name",
+      "target": "job_end.json",
+      "verified": false
+    },
+    "docs/reviews/mixer_highbo_prereg_20260927.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_highbo_prereg_20260927.md",
+      "sha256": "bea00c122e70b0d6cad8d14797433f0e9d518ed80f45dde9e0080b6a56ffed4f"
+    },
+    "scripts/mixer_precal_observe.py": {
+      "kind": "repo_file",
+      "target": "scripts/mixer_precal_observe.py",
+      "sha256": "bb2f322987fa6eb2e49159e6cc1447f5264036fc9cd84b3f4d59a60ffbc63710"
+    },
+    "submission.claim.json": {
+      "kind": "label_or_runtime_name",
+      "target": "submission.claim.json",
+      "verified": false
+    },
+    "submission.receipt.json": {
+      "kind": "label_or_runtime_name",
+      "target": "submission.receipt.json",
+      "verified": false
+    },
+    "F8/source_seal.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/source_seal.json",
+      "sha256": "a3668a2fba82629489a58d740e529697114eadfbd435df46a61edf8cc9dd5808"
+    },
+    "review/scripts/g14_output.txt": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/review/scripts/g14_output.txt",
+      "sha256": "373b8895a972ee1214412e60d92c371372e9da03a0c4b5d52c6dceaad535fe7e"
+    },
+    "docs/data/kg50_d07_end_20261105/kg50_d07_b50_log_main1103.liggghts": {
+      "kind": "repo_file",
+      "target": "docs/data/kg50_d07_end_20261105/kg50_d07_b50_log_main1103.liggghts",
+      "sha256": "4b39e80f44088cd3440569f43995317235d16c6662e612c2b263f660aa0ad056"
+    },
+    "kg50_d07_b50_log_ins1.liggghts": {
+      "kind": "label_or_runtime_name",
+      "target": "kg50_d07_b50_log_ins1.liggghts",
+      "verified": false
+    },
+    "work/check_log_contract.py": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/work/check_log_contract.py",
+      "sha256": "0a8acdc98281093832a80c16685488cb59b084f89b9568f8bb79b5c7ef265d80"
+    },
+    "work/check_log_contract_output.txt": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/work/check_log_contract_output.txt",
+      "sha256": "ea5cf4db59ff59e35512ed773fdafe67d66972988ecc820d0952f962a64359b7"
+    },
+    "scripts/test_mixer_precal_observe.py": {
+      "kind": "repo_file",
+      "target": "scripts/test_mixer_precal_observe.py",
+      "sha256": "3e19ba2b4ff677c3953bd87e8ea7dc89a88f79d9255bb2a46f9f49b705416eb9"
+    },
+    "query_block/src/query_script.sh": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/query_block/src/query_script.sh",
+      "sha256": "4f11af486803d76c71cf584c0fcf38fcd911c690d9e7f479013fd0441745646e"
+    },
+    "IN/source_inventory.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_inactive_preparation_20261109/source_inventory.json",
+      "sha256": "e0edbae3bb1421a617a642a049e4c3f18f2b3d0037a7343f89a241a7a241bfac"
+    },
+    "inactive_candidate.json": {
+      "kind": "label_or_runtime_name",
+      "target": "inactive_candidate.json",
+      "verified": false
+    },
+    "report.json": {
+      "kind": "label_or_runtime_name",
+      "target": "report.json",
+      "verified": false
+    },
+    "F8/static_asset_manifest.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/static_asset_manifest.json",
+      "sha256": "c0d5179c5196373ad4e08a0c2aa3bafece259dd918c8fa36c8844a3d04186a10"
+    },
+    "reseal_dry/tools/apply_reseal.py": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/reseal_dry/tools/apply_reseal.py",
+      "sha256": "eaea5d7ea75e99384243a3cbc28027c57f523a8bb91076dc7b4a98db4e994fdc"
+    },
+    "job_start.py.txt": {
+      "kind": "label_or_runtime_name",
+      "target": "job_start.py.txt",
+      "verified": false
+    },
+    "reseal_dry/tools/validate_planned.py": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/reseal_dry/tools/validate_planned.py",
+      "sha256": "20454f9c7b9f47fafa84f7668e4417d86fa096492ad820b6069823e30f763231"
+    },
+    "guard_case.py": {
+      "kind": "label_or_runtime_name",
+      "target": "guard_case.py",
+      "verified": false
+    },
+    "PRECAL_E0.reservation.json": {
+      "kind": "label_or_runtime_name",
+      "target": "PRECAL_E0.reservation.json",
+      "verified": false
+    },
+    "PRECAL_E0.submission.json": {
+      "kind": "label_or_runtime_name",
+      "target": "PRECAL_E0.submission.json",
+      "verified": false
+    },
+    "out/meta_script.sh": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/meta_script.sh",
+      "sha256": "4d9e11f4ea216e71d506e9225160e92e5bd89bd52461c929ce72e8f4691a0553"
+    },
+    "docs/data/mixer_e0_meta_ibb_20261110/out/slurm_sinfo_summary.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/slurm_sinfo_summary.txt",
+      "sha256": "d5fff7c60d869eb0379d4af20e140a71449eb19734cd9602f4ad6c09905bb655"
+    },
+    "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_highbo_stiffness_prereg_20260929.md",
+      "sha256": "7967d924df23f1447b67a15781ef1890852a8de7de255cb0369b0e1c7a89c57d"
+    },
+    "review/scripts2/arith_w3_output.txt": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/review/scripts2/arith_w3_output.txt",
+      "sha256": "f9a004f4de2fa358ce55c35e67b44ac6345bf86fb4730628594553742de17fef"
+    },
+    "docs/reviews/findings.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/findings.json",
+      "sha256": "6f71427d6f28d9c2d22d5c6bb5a5788fa705700e9b6b29fc3a42dd6526131427"
+    },
+    "meta_script.sh": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/meta_script.sh",
+      "sha256": "4d9e11f4ea216e71d506e9225160e92e5bd89bd52461c929ce72e8f4691a0553"
+    },
+    "query_block_b.txt": {
+      "kind": "label_or_runtime_name",
+      "target": "query_block_b.txt",
+      "verified": false
+    },
+    "conda1_meta.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/conda1_meta.txt",
+      "sha256": "446324af6c51b5b6f3390118e48b8569417ec1cd8f0720a5c8cebd87fe8f547b"
+    },
+    "mix3_run12_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run12_ls.txt",
+      "sha256": "cdc8ad8abd57169eaea8410316492a4fb8a028f512300a0b295504b806649062"
+    },
+    "mix3_run21_ls.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/mix3_run21_ls.txt",
+      "sha256": "2300df80ce23b44f7b30cae26bad6fb8b59881b2ed605123fd975312c6e0c92e"
+    },
+    "fill_queryb_work/cmp_1110.py": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/fill_queryb_work/cmp_1110.py",
+      "sha256": "7fff7f5f9d29a7a18ecc097aebe5dddb10d6bbd3d3a2225cfc12bb03875d5b43"
+    },
+    "fill_queryb_work/xcheck_q7_q7b.py": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/fill_queryb_work/xcheck_q7_q7b.py",
+      "sha256": "4ee4f28da8cb22be28b1e017e0f350826f2b1a257938cf6ce93387bd366c6832"
+    },
+    "block/query_block_b.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_queryb_ibb_20261112/block/query_block_b.txt",
+      "sha256": "d1a400ad776b38d3b3c6ec8736f4c5b4bf5435c75a1632a5218ed587411d104c"
+    },
+    "reader_summary.json": {
+      "kind": "label_or_runtime_name",
+      "target": "reader_summary.json",
+      "verified": false
+    },
+    "README.md": {
+      "kind": "repo_file",
+      "target": "README.md",
+      "sha256": "c52ccee2b9dda4629f681f3388a0fa8b3ee3c8eb17618d78baec52c5a6061573"
+    },
+    "docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/p1_g2c_sandbox_20261104/README_g2cp.md",
+      "sha256": "b7700dc361f4d569248b6a0ace7a00de648966b5bc5129c9de9aeba2b7c3aed5"
+    },
+    "review_brief.md": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/review_brief.md",
+      "sha256": "7318744ba4ed81d8780e064ba9d7408853abb96160992b77151debb33c8f1634"
+    },
+    "walk.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/walk.txt",
+      "sha256": "c4446ec6c0a0093b477bb3f346f30de9277827bdf201f4752314a2ee9c99a326"
+    },
+    "planned_assets/PRECAL_E0/deck_meta.json": {
+      "kind": "repo_file",
+      "target": "docs/reviews/mixer_first8_launch_preparation_20261106/planned_assets/PRECAL_E0/deck_meta.json",
+      "sha256": "c6543f3800d0d76d0d75ca04f4aebc5d9dd557de0702d94c0355910121efe218"
+    },
+    "slurm_sinfo_summary.txt": {
+      "kind": "repo_file",
+      "target": "docs/data/mixer_e0_meta_ibb_20261110/out/slurm_sinfo_summary.txt",
+      "sha256": "d5fff7c60d869eb0379d4af20e140a71449eb19734cd9602f4ad6c09905bb655"
+    },
+    "docs/reviews/nonrint_next_decisions_20261109.md": {
+      "kind": "repo_file",
+      "target": "docs/reviews/nonrint_next_decisions_20261109.md",
+      "sha256": "68857081516bfa2f57ea1627c903b1053a3d304ef6bfc19226be49f5894d19de"
+    },
+    "scripts/measure_mixing_index.py": {
+      "kind": "repo_file",
+      "target": "scripts/measure_mixing_index.py",
+      "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a"
+    },
+    "lmp_identity.txt": {
+      "kind": "label_or_runtime_name",
+      "target": "lmp_identity.txt",
+      "verified": false
+    },
+    "lmp_ldd.txt": {
+      "kind": "label_or_runtime_name",
+      "target": "lmp_ldd.txt",
+      "verified": false
+    },
+    "docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh": {
+      "kind": "repo_file",
+      "target": "docs/reviews/p1_g2c_sandbox_20261104/run_g2cp.sh",
+      "sha256": "bdde391ef3ee6543896adca5b0c4c1cf8faa3c473cdb7ecd82afcc6d6304ef67"
+    },
+    "src/query_script.sh": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/query_block/src/query_script.sh",
+      "sha256": "4f11af486803d76c71cf584c0fcf38fcd911c690d9e7f479013fd0441745646e"
+    },
+    "read_query_bundle.py": {
+      "kind": "label_or_runtime_name",
+      "target": "read_query_bundle.py",
+      "verified": false
+    },
+    "src/query_script_b.sh": {
+      "kind": "verified_bundle_member",
+      "target": "mixer_e0_v2/query_block_b/src/query_script_b.sh",
+      "sha256": "01e8731a51a266ac9190a26ee4f9f08468a3605f635ca71de30688457a36108e"
+    },
+    "read_query_bundle_b.py": {
+      "kind": "label_or_runtime_name",
+      "target": "read_query_bundle_b.py",
+      "verified": false
+    },
+    "cmp_1110.py": {
+      "kind": "label_or_runtime_name",
+      "target": "cmp_1110.py",
+      "verified": false
+    },
+    "xcheck_q7_q7b.py": {
+      "kind": "label_or_runtime_name",
+      "target": "xcheck_q7_q7b.py",
+      "verified": false
+    },
+    "rerun_summary.json": {
+      "kind": "label_or_runtime_name",
+      "target": "rerun_summary.json",
+      "verified": false
+    }
+  }
+}
