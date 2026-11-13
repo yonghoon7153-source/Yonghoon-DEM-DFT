@@ -7,7 +7,7 @@ letter: EI
 track: b2o3
 channel: codex
 kind: prompt
-status: 작성 2026-11-13 · §4 는 gabia v4 검사 뒤 채운다 · 코드 기준 커밋 (이 편지 초안과 같은 커밋 · 브랜치 claude/evac-2026-11-12 · 도구 sha256 c8255d94 · 실행기 e2d6f728 · 변이 도구 bbdbaf66) · 앞 편지 EH (NO-GO · v3 f6b9d3a6)
+status: 작성 2026-11-13 · gabia v4 검사 결과 넣음 (HEAD 67cca09c0 · selftest 178/178 · prepare s9_v4 · 입력 6 = v3 바이트 같음) · 발송 (사용자) · 코드 기준 커밋 67cca09c (브랜치 claude/evac-2026-11-12 · 도구 sha256 c8255d94 · 실행기 e2d6f728 · 변이 도구 bbdbaf66) · 앞 편지 EH (NO-GO · v3 f6b9d3a6)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -29,7 +29,7 @@ evidenceScope: multi-source-primary
 
 EH 회신 (NO-GO · P1 2 · P2 2 · v3 커밋 f6b9d3a6 · 도구 sha256 f6105cfc) 을 고친 v4 다. DFT 결과는 여전히 0 건 (GPU 잡 하나도 안 돌았다). 바뀐 것은 도구 `tools/doping/b2o3_bo_dft.py` (v4) · 변이 도구 `tools/doping/b2o3_bo_dft_mutations.py` (변이 목록) · 카드 `개정_5_9단계_DFT_운영_2026_11_13` 의 v4 문구 · 결정 `D-2026-11-13-b2o3-bo-placement-amend5-dft` 의 status_history (여전히 proposed). 실행기 `run_force_check_scf.sh` 와 판 고정 판독기 (`b2o3_bo_readout.py` 872d91f7… = 12b8bdef) 는 그대로다.
 
-v4 sha256 — 도구 `c8255d94dbdea7d0078215ba88b2e231be98b9e10eeeb9d98f7933ac7fdf32fb` · 실행기 `e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9` (v3 그대로) · 변이 도구 `bbdbaf66c5ac862be658b6589bde9245c91a95bc9226d9d9eae207f7eb94297a`.
+v4 sha256 — 도구 `c8255d94dbdea7d0078215ba88b2e231be98b9e10eeeb9d98f7933ac7fdf32fb` · 실행기 `e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9` (v3 그대로) · 변이 도구 `bbdbaf66c5ac862be658b6589bde9245c91a95bc9226d9d9eae207f7eb94297a`. **코드 기준 커밋 `67cca09c`** (도구 · 변이 도구 · 카드 · 결정 · EH 회신 원문 · 이 편지 초안) — 그 뒤 커밋은 런로그 · 이 편지 §4 · 미결 목록뿐이다 (코드 변경 없음 · gabia 는 `67cca09c` 를 꺼냈다).
 
 EH 의 네 지적이 모두 '숫자를 끝까지 · 엄격하게 읽는가' 한 계열이라, 숫자를 하나씩 땜질하지 않고 **출력에서 읽는 숫자 전부를 한 규칙**으로 모았다 (아래 표 첫 줄). 그리고 확인 목록 2 대로 **모든 검사가 끝난 뒤에만** 파일을 쓴다.
 
@@ -60,7 +60,16 @@ EH 의 네 지적이 모두 '숫자를 끝까지 · 엄격하게 읽는가' 한 
 
 ## 4. gabia 검사 (v4 · GPU 안 씀)
 
-(gabia v4 검사 뒤 채운다 — 블록은 런로그 `db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json` 키 `9단계_EH_회신_v4_2026_11_13`.)
+2026-11-13 · 사용자 실행 · 런로그 `db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json` 키 `9단계_v4_검사_2026_11_13` (블록은 키 `9단계_EH_회신_v4_2026_11_13`).
+
+- worktree `$R/dft_src_v4` = **HEAD 67cca09c0** (코드 기준 커밋) · 도구 sha256 `c8255d94…` **OK** · 실행기 `e2d6f728…` **OK**.
+- selftest **178/178** · 실행기 selftest **24 통과 · 0 실패** · 변이 도구 정적 검사 **7/7** (gabia `uma` env python · CPU · 검사용).
+- **prepare v4 (새 폴더 `$R/s9_v4`)**: 판 고정 판독기 (872d91f7) 로 8 단계 본 판독을 **실제 데이터로 다시 내고** 대조 → 통과 · 단일점 6 잡 (k 3×2×1) · 고른 구조는 v1 · v2 · v3 와 같다 · 계획 · 입력은 검사 뒤 `_commit` 으로 한꺼번에 썼다.
+- **reject 시운전 (`--stage sp`)**: 계획 다시 결속 통과 → '옮길 출력 없음' (출력이 아직 없다).
+- 입력 지문: 6 입력 모두 `nosym = .true.` · `tot_charge = 0.0` · `disk_io = 'nowf'` · `K_POINTS automatic` / `3 2 1 0 0 0` · 입력 sha256 은 **v2 · v3 와 6/6 바이트까지 같다** (`834fbada…` · `f5b7bcd2…` · `93a54b64…` · `03c0bbdd…` · `3ee0b4a9…` · `0836ebf7…` — v4 는 입력 쓰기를 안 바꿨다) · 계획 `2dd87af69ca15215` (도구 sha 가 들어가 v3 와 다름).
+- GPU pw.x 경로 `/data/apps/qe-7.4.1-gpu/bin/pw.x` (→ `../PW/src/pw.x` 링크 · 실행 안 함).
+- GPU 지금: 여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음 (시작은 안 했다).
+- 깨기 109/109 는 로컬 수치다 (gabia 에서는 정적 검사만 · 같은 도구 sha256).
 
 ## 5. 일부러 안 한 것
 

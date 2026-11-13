@@ -467,5 +467,17 @@
   "블록_설명": "① 새 worktree $R/dft_src_v4 (대피 브랜치 끝 · HEAD 를 찍는다) ② 도구 · 실행기 sha256 ③ selftest 178/178 ④ 실행기 selftest (v3 그대로) ⑤ 변이 도구 정적 검사 ⑥ 새 폴더 $R/s9_v4 에 prepare (8 단계를 다시 결속 · 단일점 입력 6 · GPU 안 씀 · 이번엔 계획 · 입력을 검사 뒤 한꺼번에 쓴다) ⑦ reject --stage sp 시운전 ⑧ 입력 지문 (입력 6 의 sha256 은 v2 · v3 와 같아야 한다 — 입력 생성은 안 바뀌었다 · dft_plan.json 만 도구 sha 때문에 다르다) ⑨ GPU pw.x 파일 (실행 안 함) ⑩ 지금 GPU (시작 안 함) — 하나라도 실패하면 '⛔ 멈췄다'",
   "다음": "gabia v4 검사 출력 → EI 프롬프트 (kb/reviews/codex_EI_prompt_b2o3_dft_stage9_v4_2026_11_13.md) §4 에 넣고 발송 → EI 회신 → 사용자 개정 5 비준 → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (gabia 에 다른 GPU 잡 없이)",
   "by": "agent · 2026-11-13"
+ },
+ "9단계_v4_검사_2026_11_13": {
+  "출처": "사용자 붙여넣기 2026-11-13 (gabia · 키 9단계_EH_회신_v4_2026_11_13 의 검사 블록 · 셸 위치 /data/work/wt_cascade_b2 — 경로는 전부 절대경로)",
+  "worktree": "$R/dft_src_v4 = 67cca09c0 (fetch → FETCH_HEAD · df8ba73f2..67cca09c0) · b2o3_bo_dft.py sha256 c8255d94… OK · run_force_check_scf.sh e2d6f728… OK",
+  "selftest_gabia": "도구 178/178 · 실행기 24 통과 · 0 실패 · 변이 도구 정적 검사 7/7 (gabia uma env python · CPU · 검사용)",
+  "prepare_v4": "통과 — $R/s9_v4/dft_plan.json · 단일점 6 (k 3×2×1) · 판 고정 판독기 872d91f7 로 8 단계를 실제 데이터로 다시 결속 · 가전자 Li 3 · B 3 · O 6 · P 5 · S 6 · Cl 7 · 고른 것 v1 · v2 · v3 와 같음: sp_FB_1_cfg0040 ← cfg0040 bo4 (UMA 끝 꼴 F_B) · sp_FB_2_cfg0015 ← cfg0015 bo4 (F_B) · sp_FP_1_cfg0015 ← cfg0015 distributed (F_P) · sp_FP_2_cfg0019 ← cfg0019 distributed (F_P) · sp_Ffree_1_cfg0039 ← cfg0039 free_s (mixed) · sp_Ffree_2_cfg0017 ← cfg0017 free_s (F_free) · v4 는 계획 · 입력을 검사 뒤 _commit 으로 한꺼번에 썼다",
+  "reject_시운전 (sp)": "계획 다시 결속 통과 → '옮길 출력 없음' (출력이 아직 없다 — 누락이지 실패가 아니다)",
+  "입력_지문": "6 입력 모두 nosym · tot_charge 0.0 · nowf · K_POINTS automatic / 3 2 1 0 0 0 · sha256 앞 16: sp_FB_1_cfg0040 834fbada34cd234c · sp_FB_2_cfg0015 f5b7bcd272b69870 · sp_FP_1_cfg0015 93a54b64f68420a2 · sp_FP_2_cfg0019 03c0bbdde90cb776 · sp_Ffree_1_cfg0039 3ee0b4a96db89efb · sp_Ffree_2_cfg0017 0836ebf76487842a — **v2 · v3 와 6/6 바이트까지 같다** (v4 는 입력 쓰기를 안 바꿨다) · dft_plan.json 2dd87af69ca15215 (도구 sha 가 들어가 v3 574f066b… 와 다름)",
+  "GPU_pw.x": "/data/apps/qe-7.4.1-gpu/bin/pw.x → ../PW/src/pw.x (링크 · 실행 안 함 · 출력의 판 7.4.1 은 판독 때 잡마다 대조)",
+  "GPU (시작 안 함)": "여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음",
+  "다음": "EI 발송 (kb/reviews/codex_EI_prompt_b2o3_dft_stage9_v4_2026_11_13.md · §4 채움) → EI 회신 → 사용자 개정 5 비준 → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (T=$R/dft_src_v4 · C=$R/s9_v4 · gabia 에 다른 GPU 잡 없이)",
+  "by": "agent · 2026-11-13"
  }
 }
