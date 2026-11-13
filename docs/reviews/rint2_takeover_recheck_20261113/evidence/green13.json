@@ -1,0 +1,15 @@
+{
+  "methods": 13,
+  "failed_methods": 0,
+  "failed_method_ids": [],
+  "assertion_failures": 0,
+  "errors": 0,
+  "successful": true,
+  "test_sha256": "bdeb2b4a7f2723350af031482bcc9ccfe34ca7f07335cb8796f2f04d108160cb",
+  "source_sha256": {
+    "cjunc_asm_compare.py": "762723a5af60ee46d022d3a05f81f78cae6587ebc56f37673b9ed30b908ab6fc",
+    "cjunc_store.py": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f",
+    "mpm_webapp_payload.py": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a",
+    "sdcp_gain_vox015_8arm.sh": "4a1050ea651aee3cc390bd965b864daa3b410ecf1e9d8a5a660386280c13a164"
+  }
+}

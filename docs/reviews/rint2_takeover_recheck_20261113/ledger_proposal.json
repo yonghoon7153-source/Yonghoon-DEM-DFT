@@ -1,0 +1,23 @@
+{
+  "schema": "proposal-only",
+  "overall": "HOLD",
+  "review_status": "external_recheck_pending",
+  "items": [
+    {
+      "id": "RTA-01",
+      "severity": "P2",
+      "status_proposed": "claimed_fixed",
+      "origin": "internal_attack",
+      "scope": "Q12 assembly record acceptance boundary"
+    },
+    {
+      "id": "RTA-02",
+      "severity": "P3",
+      "status_proposed": "claimed_fixed",
+      "origin": "internal_attack",
+      "scope": "prior audit supersession and store-off movement"
+    }
+  ],
+  "no_automatic_verified_or_closed": true,
+  "shared_ledger_modified": false
+}

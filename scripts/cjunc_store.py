@@ -955,9 +955,33 @@ def audit_path(out_path):
     return os.path.join(os.path.dirname(out_path), AUDIT_PREFIX + os.path.basename(out_path))
 
 
+class AuditSupersessionError(OSError):
+    """Previous audit could not be retired; publishing a new arm must stop."""
+
+
 def write_audit(out_path, rec):
-    """팔 audit 곁 파일 쓰기 (임시 → os.replace) → 경로.  실패 = 예외 (부르는 쪽이 기록만 · 팔 결과 무관)."""
+    """Retire old audit before constructing/writing this attempt's record.
+
+    rec may be a lazy zero-argument builder. An old record is preserved in a
+    unique sibling; failure to retire it is fatal, other I/O failures leave no
+    previous canonical record to be collected as this attempt's audit.
+    The containing run directory must remain unchanged by other processes.
+    """
+    import uuid
     p = audit_path(out_path)
+    try:
+        try:
+            os.lstat(p)
+            exists = True
+        except FileNotFoundError:
+            exists = False
+        if exists:
+            previous = p + '.previous.' + uuid.uuid4().hex
+            os.rename(p, previous)
+    except OSError as exc:
+        raise AuditSupersessionError('cannot retire previous arm audit') from exc
+    if callable(rec):
+        rec = rec()
     part = p + '.part'
     with open(part, 'w', encoding='utf-8') as f:
         json.dump(rec, f, ensure_ascii=False, sort_keys=True, indent=1)
