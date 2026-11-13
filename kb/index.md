@@ -1,12 +1,12 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-13 · managed-files: 621
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-13 · managed-files: 623
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 412건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 414건)
 - 2026-11-13 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-13 · `kb/reviews/codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` — EF 프롬프트 — b2o3 B·O 배치 9 단계 DFT 도구 · 카드 개정 5 (결과 전): 출력 결속 · EOS (E, P, V) 결과 파일 결속 (DY 확인 4) · k 탐침 발동 범위 · 기준 셀 · 10 단계 고르기 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia 검사 결과 넣음 · 발송 (사…
 - 2026-11-13 · `kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md` — EF 회신 — b2o3 9 단계 DFT 도구 · 카드 개정 5: NO-GO (P0 0 · P1 6 · P2 6) · DY 확인 4 아직 해제 못 함 · 세 쌍 탐침 해석 찬성 · 기준 셀 조건부 수용 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
@@ -17,6 +17,8 @@
 - 2026-11-13 · `kb/reviews/codex_EI_prompt_b2o3_dft_stage9_v4_2026_11_13.md` — EI 프롬프트 — b2o3 9 단계 DFT 도구 v4 (Codex EH NO-GO 고침) 재확인: 숫자 토큰 전체 · 유한 · 응력 본문 (3 행 × 6 · P = 대각합/3 · 두 단위) · BFGS 기록 필수 · 검사 뒤 쓰기 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v4 검사 결과 넣음 (HEA…
 - 2026-11-13 · `kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md` — EI 회신 — b2o3 9 단계 DFT 도구 v4: NO-GO (P1 1 · P2 1 · P3 1) · EH 네 지적 닫힘 · 유한한 분수 좌표 토큰이 셀 변환에서 inf 가 되어 전자구조 대상으로 · 판정 경로가 만들 입력 경로와 겹치면 덮어씀 · '판정은 맨 끝' 변이가 두 동작 · 응력 허용 타당 (상한 0.0057356) · CRLF 거부 = LF 범위 명시 · 쓰기 실패 범위 좁히기 · DY 확인 4 (EOS 결과 파일 결속) 해제 가능 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
 - 2026-11-13 · `kb/reviews/codex_EJ_prompt_b2o3_dft_stage9_v5_2026_11_13.md` — EJ 프롬프트 — b2o3 9 단계 DFT 도구 v5 (Codex EI NO-GO 고침) 재확인: 이완 최종 좌표를 셀로 바꾼 구조의 기하 검사 · 판정 경로는 잡 · 구조 폴더 밖 · 변이 한 동작 · 쓰기 실패 범위 · LF 범위 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v5 검사 결과 넣음 (sel…
+- 2026-11-13 · `kb/reviews/codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md` — EJ 회신 — b2o3 9 단계 DFT 도구 v5: NO-GO (P2 1) · EI P1 (변환 뒤 기하) · P3 (변이) 닫힘 · 경로 충돌 P2 가 생성할 입력 쪽 링크 (디렉터리 링크 · 파일 링크) 로 남음 · 쓸 입력 · 구조의 실제 경로를 판정 목적지와 비교 · Q4 범위 문장 수용 · 부분 판정은 다음 단계가 JSONDecodeError 로 멈춤 · EOS (E, P, V) 결속 해제 유지 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
+- 2026-11-13 · `kb/reviews/codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md` — EK 프롬프트 — b2o3 9 단계 DFT 도구 v6 (Codex EJ NO-GO 고침) 재확인: 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 겹침 거부 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · §4 는 gabia v6 검사 뒤 채운다…
 - 2026-11-12 · `kb/projects/handoff_2026_11_12_evacuation.md` — 대피 인계 — 2026-11-12 (friendly 세션 토큰 소진 → 서브 세션 · 머지 때 충돌 0 설계 · b2o3 8 단계 gabia · li2s-3 2 단계 kgy 진행 중) · 진행
 - 2026-11-11 · `kb/projects/handoff_2026_11_11_token_limit.md` — 토큰 한도 인계 (2026-11-11 오후) — 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 다음 행동 · 사용자 결정 대기 · 인계 — 다음 세션이 이 카드부터 읽는다
 - 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…
@@ -25,8 +27,6 @@
 - 2026-11-10 · `kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 회신 — b2o3 어닐 시간 진단 (개정 3): 개정 3 문구 · 비교 규칙 그대로의 최종 판정은 보류 (P0 0 · P1 2 · P2 2) — D1 · D2 진단은 찬성 · 54 런은 계속 · 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
 - 2026-11-10 · `kb/reviews/codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` — EB 프롬프트 — li2s-3 회신 DZ 고침: 사후 검증 (v1 런) · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 판독 허가 문 · 압력 도구 · 대조 잡 — v1 런을 사후 검증으로 받아도 되는가 · 고친 큐 v2 를 추가 런 전으로 미뤄도 되는가 · Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리…
 - 2026-11-10 · `kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md` — EB 회신 (내부 반박 리뷰) — li2s-3 판독 도구 · 카드 개정 DZ: NO-GO (P0 1 · P1 6 · P2 7) — 생산 프레임 수 기대값이 실제 드라이버보다 하나 많다 (4001 대 4000) · 접근 (v1 런 사후 검증) 은 조건부 찬성 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…
-- 2026-11-10 · `kb/reviews/internal_EC_prompt_b2o3_amend4_diag_v2_2026_11_10.md` — EC 프롬프트 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 회신 EA 의 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) 이 채워졌는가 · 발송 2026-11-10 — 내부 반박 리뷰 (에이전트 · 사용자 '…
-- 2026-11-10 · `kb/reviews/internal_EC_reply_b2o3_amend4_diag_v2_2026_11_10.md` — EC 회신 (내부 반박 리뷰) — b2o3 개정 4 · 어닐 시간 진단 도구 v2: 조건부 GO (P0 0 · P1 2 · P2 5) — gabia 블록이 결과 공개 전 도구 고정을 기계로 안 지킨다 · 끝 구조만 걸린 100 ps 이완 실패가 성공 집합 규칙을 비켜 간다 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (281)
+## reviews/ (283)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-13 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -398,6 +398,8 @@
 - `kb/reviews/codex_EI_prompt_b2o3_dft_stage9_v4_2026_11_13.md` — EI 프롬프트 — b2o3 9 단계 DFT 도구 v4 (Codex EH NO-GO 고침) 재확인: 숫자 토큰 전체 · 유한 · 응력 본문 (3 행 × 6 · P = 대각합/3 · 두 단위) · BFGS 기록 필수 · 검사 뒤 쓰기 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v4 검사 결과 넣음 (HEA…)
 - `kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md` — EI 회신 — b2o3 9 단계 DFT 도구 v4: NO-GO (P1 1 · P2 1 · P3 1) · EH 네 지적 닫힘 · 유한한 분수 좌표 토큰이 셀 변환에서 inf 가 되어 전자구조 대상으로 · 판정 경로가 만들 입력 경로와 겹치면 덮어씀 · '판정은 맨 끝' 변이가 두 동작 · 응력 허용 타당 (상한 0.0057356) · CRLF 거부 = LF 범위 명시 · 쓰기 실패 범위 좁히기 · DY 확인 4 (EOS 결과 파일 결속) 해제 가능  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
 - `kb/reviews/codex_EJ_prompt_b2o3_dft_stage9_v5_2026_11_13.md` — EJ 프롬프트 — b2o3 9 단계 DFT 도구 v5 (Codex EI NO-GO 고침) 재확인: 이완 최종 좌표를 셀로 바꾼 구조의 기하 검사 · 판정 경로는 잡 · 구조 폴더 밖 · 변이 한 동작 · 쓰기 실패 범위 · LF 범위 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v5 검사 결과 넣음 (sel…)
+- `kb/reviews/codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md` — EJ 회신 — b2o3 9 단계 DFT 도구 v5: NO-GO (P2 1) · EI P1 (변환 뒤 기하) · P3 (변이) 닫힘 · 경로 충돌 P2 가 생성할 입력 쪽 링크 (디렉터리 링크 · 파일 링크) 로 남음 · 쓸 입력 · 구조의 실제 경로를 판정 목적지와 비교 · Q4 범위 문장 수용 · 부분 판정은 다음 단계가 JSONDecodeError 로 멈춤 · EOS (E, P, V) 결속 해제 유지  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
+- `kb/reviews/codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md` — EK 프롬프트 — b2o3 9 단계 DFT 도구 v6 (Codex EJ NO-GO 고침) 재확인: 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 겹침 거부 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · §4 는 gabia v6 검사 뒤 채운다…)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
 - `kb/reviews/codex_G_reply_to_F_2026_08_27.md` — 교차리뷰 G — 회신 F 수용 보고 + 후속 질문 (R3 설계·D_inc 오차·N_eff)  (2026-08-27 · 회신수령-반영완료 (→ codex_H_reply_to_G_2026_0…)

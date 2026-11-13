@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""b2o3_bo_dft.py 의 깨기 (변이) 시험 — 검사 한 줄씩 끄고 그 도구의 selftest 가 빨개지는지 본다 (Codex EF · EG · EH · EI 재현용).
+"""b2o3_bo_dft.py 의 깨기 (변이) 시험 — 검사 한 줄씩 끄고 그 도구의 selftest 가 빨개지는지 본다 (Codex EF · EG · EH · EI · EJ 재현용).
 
   python3 b2o3_bo_dft_mutations.py --selftest   # 정적 검사 (몇 초) — 변이 대상 문자열이 도구에 정확히 한 번씩 있고 · 바꾼 소스가 문법상 맞는지
                                                 #   + 음성 (없는 대상 · 두 번 있는 대상 · 문법이 깨지는 변이를 잡는지)
@@ -134,6 +134,7 @@ M = [
  ("판정은 맨 끝", '    for p, t in _pending(items):\n        _write_bytes(p, t)\n    _write_bytes(out, body)',
   '    _write_bytes(out, body)\n    for p, t in _pending(items):\n        _write_bytes(p, t)'),
  ("판정 경로 ≠ 잡 폴더", '        if o_ == r_ or r_ in o_.parents:', '        if False:'),
+ ("쓸 파일 실제 경로 겹침", '        if r_ in seen:', '        if False:'),
  ("이완 구조 기하 (호출)", '        if _geom_bad(a):                             # Codex EI P1', '        if False:                             # Codex EI P1'),
  ("기하 좌표 유한", '    return not (np.isfinite(a.positions).all() and np.isfinite(c).all()', '    return not (True and np.isfinite(c).all()'),
  ("기하 부피", 'and abs(float(np.linalg.det(c))) > 1.0)', 'and True)'),

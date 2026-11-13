@@ -14,6 +14,9 @@ v4 (2026-11-13) = Codex EH 회신 (NO-GO · P1 2 · P2 2) 고침 — kb/reviews/
 v5 (2026-11-13) = Codex EI 회신 (NO-GO · P1 1 · P2 1 · P3 1) 고침 — kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md
    (이완 최종 좌표를 셀로 바꾼 구조도 기하 검사 (유한 · 정칙 — 토큰이 유한해도 셀을 곱하면 넘칠 수 있다) · 판정 · 계획 파일은
    잡 · 구조 폴더 (sp · kprobe · relax · relaxed) 밖에만 · 변이는 한 동작씩 · 쓰기 실패 범위 · LF 범위 문구).
+v6 (2026-11-13) = Codex EJ 회신 (NO-GO · P2 1) 고침 — kb/reviews/codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md
+   (이번에 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 가 서로 다 달라야 쓴다 — 다음 잡 폴더 · 입력 파일이 링크라
+   판정 경로와 같은 파일을 가리키면 쓰기 전에 멈춘다).
 
   prepare      8 단계 결과를 판 고정 판독기로 다시 결속 (anneal_readout 다시 내기 · 본 판독 파일 몸통 대조 · 보류면 멈춤) →
                가족마다 UMA 어닐 최저 둘 (6 · 판독기의 성공 정의 그대로 · 가족 최저 · 성공 수를 본 판독과 대조) →
@@ -55,7 +58,8 @@ NaN · Inf · 넘침 · 꼬리 글자 → 그 값 없음 = 거부 · Codex EH P1
 대조를 먼저 다 하고, 없는 것만 쓰고, 판정 파일은 맨 끝에 쓴다. 쓰기 전 검사에서 멈추면 새 파일이 하나도 생기지 않는다 · 보조 파일
 (잡 입력 · 이완 구조) 을 쓰다 실패하면 판정 파일은 없다 · 판정 파일 자체를 쓰다 실패하면 부분 파일이 남을 수 있다 — 다음 단계는 그
 파일을 읽지 못하고 멈춘다 (지우지 말고 옮겨 보존한 뒤 새 이름으로 다시 · Codex EI Q4). 판정 · 계획 파일은 잡 · 구조 폴더 (sp · kprobe ·
-relax · relaxed) 밖에만 둔다 — 그 폴더는 입력 · 출력 · 이완 구조 자리다 (Codex EI P2).
+relax · relaxed) 밖에만 둔다 — 그 폴더는 입력 · 출력 · 이완 구조 자리다 (Codex EI P2). 이번에 쓸 판정 · 입력 · 이완 구조의 실제
+경로 (링크를 푼 것) 는 서로 다 달라야 한다 — 잡 폴더 · 입력 파일이 링크라 같은 파일을 가리키면 쓰기 전에 멈춘다 (Codex EJ P2).
 
 ⛔ 이 도구가 못 하는 것
   · pw.x 를 돌리지 않는다 (실행기 tools/doping/run_force_check_scf.sh · gabia GPU · GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 —
@@ -1274,7 +1278,8 @@ def _commit(base, jobs_by_stage, files, obj, out):
     """판정 · 계획을 쓰는 유일한 길 (Codex EH 확인 목록 2) — 모든 검사가 끝난 뒤에 부른다.
 
     ① 판정 텍스트를 먼저 만든다 (유한하지 않은 수면 여기서 멈춤) ② 판정 · 계획 파일이 잡 · 구조 폴더 (sp · kprobe · relax · relaxed)
-    밖인지 · 아직 없는지 ③ 쓸 잡 입력 · 이완 구조를 전부 대조 (이미 있는 것은 같은 바이트여야) ④ 없는 것만 쓰고 ⑤ 판정 파일은 맨 끝에.
+    밖인지 · 아직 없는지 · 이번에 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 가 서로 다 다른지 (Codex EJ P2) ③ 쓸 잡 입력 ·
+    이완 구조를 전부 대조 (이미 있는 것은 같은 바이트여야) ④ 없는 것만 쓰고 ⑤ 판정 파일은 맨 끝에.
     ①–③ 에서 멈추면 새 파일이 하나도 생기지 않는다 · ④ 도중의 실패면 판정 파일은 없다 · ⑤ 판정 파일 자체를 쓰다 실패하면 부분 파일이
     남을 수 있다 — 다음 단계는 그 파일을 읽지 못하고 멈춘다 (지우지 말고 옮겨 보존한 뒤 새 이름으로 다시 · Codex EI Q4).
     """
@@ -1289,6 +1294,13 @@ def _commit(base, jobs_by_stage, files, obj, out):
         raise SystemExit(f"⛔ {out} 가 이미 있다 — 덮지 않는다 (쓰기 직전 확인 · 새 폴더 · 새 판정 이름)")
     items = [(Path(base) / stage / job / "scf.in", t, "잡 입력") for stage, texts in jobs_by_stage.items() for job, t in texts.items()]
     items += [(Path(p), t, "이완 구조") for p, t in files.items()]
+    seen = {o_: f"판정 · 계획 {out}"}                 # Codex EJ P2 — 링크로 같은 파일을 가리키면 나중 쓰기가 앞 쓰기를 덮는다
+    for p, t, what in items:
+        r_ = Path(p).resolve()
+        if r_ in seen:
+            raise SystemExit(f"⛔ {what} {p} 의 실제 경로 {r_} 가 {seen[r_]} 와 겹친다 (링크) — 쓰면 한쪽이 다른 쪽을 덮는다 · "
+                             "아무것도 쓰지 않았다")
+        seen[r_] = f"{what} {p}"
     for p, t in _pending(items):
         _write_bytes(p, t)
     _write_bytes(out, body)
@@ -2189,6 +2201,47 @@ def _selftest() -> int:
             "(입력을 판정 JSON 으로 덮던 경로 · EI P2)")
         chk(refuses("잡 · 구조 폴더", read_sp, RD, P, out / "sp" / "sp_verdict.json") and not (out / "sp" / "sp_verdict.json").exists(),
             "[음성] 판정 경로가 단일점 폴더 안 (sp/) 이어도 거부 — 판정은 잡 · 구조 폴더 밖에만")
+        # EJ P2 — 생성할 입력 쪽의 링크 (디렉터리 링크 · 파일 링크) 로 판정 경로와 같은 파일을 가리킴 · 입력끼리 겹침
+        ej_o1, ej_o2 = td / "ej_other1", td / "ej_other2"
+        ej_o1.mkdir()
+        ej_o2.mkdir()
+        j0dir = kp_files[0].parent
+        try:
+            j0dir.rmdir()                                  # 빈 다음 잡 폴더 → 바깥 폴더를 가리키는 링크로
+            os.symlink(ej_o1, j0dir, target_is_directory=True)
+            mk1 = True
+        except (OSError, NotImplementedError):
+            mk1 = False
+            j0dir.mkdir(exist_ok=True)
+        chk((refuses("겹친다", read_sp, RD, P, ej_o1 / "scf.in") and not (ej_o1 / "scf.in").exists()
+             and not any(p.exists() for p in kp_files[1:])) if mk1 else True,
+            "[음성] 다음 잡 폴더가 바깥 폴더를 가리키는 링크이고 판정 경로가 그 안의 scf.in 이면 → 쓰기 전에 거부 · 입력 · 판정 하나도 안 씀 "
+            "(EJ P2 디렉터리 링크)" + ("" if mk1 else " (이 환경은 링크를 못 만들어 건너뜀)"))
+        if mk1:
+            os.remove(j0dir)
+            j0dir.mkdir()
+        try:
+            os.symlink(ej_o2 / "scf.in", kp_files[0])     # 다음 입력 = 아직 없는 바깥 파일을 가리키는 링크
+            mk2 = True
+        except (OSError, NotImplementedError):
+            mk2 = False
+        chk((refuses("겹친다", read_sp, RD, P, ej_o2 / "scf.in") and not (ej_o2 / "scf.in").exists()
+             and not any(p.exists() for p in kp_files[1:]) and kp_files[0].is_symlink()) if mk2 else True,
+            "[음성] 다음 입력 scf.in 이 아직 없는 바깥 파일을 가리키는 링크이고 판정 경로가 그 파일이면 → 쓰기 전에 거부 (EJ P2 파일 링크)"
+            + ("" if mk2 else " (이 환경은 링크를 못 만들어 건너뜀)"))
+        if mk2:
+            os.remove(kp_files[0])
+        try:
+            os.symlink(kp_files[1], kp_files[0])          # 한 잡 입력 → 다른 잡 입력 자리 (아직 없음)
+            mk3 = True
+        except (OSError, NotImplementedError):
+            mk3 = False
+        chk((refuses("겹친다", read_sp, RD, P, out / "sp_verdict.json") and not (out / "sp_verdict.json").exists()
+             and not kp_files[1].exists() and not kp_files[2].exists()) if mk3 else True,
+            "[음성] 한 잡 입력이 다른 잡 입력 자리를 가리키는 링크면 → 쓰기 전에 거부 (나중 것이 앞 것을 덮는다 · EJ P2 와 같은 꼴)"
+            + ("" if mk3 else " (이 환경은 링크를 못 만들어 건너뜀)"))
+        if mk3:
+            os.remove(kp_files[0])
         for p, b_ in zip(kp_files, kp_keep):
             p.write_bytes(b_)
         (out / "sp_verdict.json").write_bytes(sv_keep)
