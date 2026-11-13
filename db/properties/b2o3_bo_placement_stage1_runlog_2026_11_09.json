@@ -291,5 +291,17 @@
   "어림": "프레임 ≤ 54 개 이완만 · 7b 이완 3 개가 ≈ 3 분 → 어림 1–2 시간 · GPU-h ≈ 1–2 (합계 ≈ 75–76 / 85)",
   "⛔": "승자 문장은 ⑤ 뒤에만 (개정 4 판정_사유 · 본_판독) · ① 출력은 본 판독 기록으로만 적는다 · s8_anneal 폴더 · $R/src 는 건드리지 않는다",
   "by": "agent · 2026-11-13"
+ },
+ "8b_진행_2026_11_13_1100": {
+  "관측": "2026-11-13 11:00:28 KST (gabia · 사용자 붙여넣기 · watch -n 30 'bash $HOME/w_b2o3_s8b.sh | sed …')",
+  "진행": "tmux b2o3_s8b 살아 있음 · 이완까지 끝난 구조 3 / 54 · 진행 중 cfg0005_E-2255.140_O-bo4_t050 (이완 값 숨김 · 폴더 이름의 E 는 6 단계 이완값 · 이미 본 것) · 큐 로그 '2026-11-13 10:59:21 시작 (입력 · 소스 해시 재대조 통과)'",
+  "N_EXPECT": "54 — 블록 1 ③ 이 쓴 manifest 의 n (실행기 감시의 분모 54) ⇒ 8 단계 54 런 모두 50 ps 프레임을 냈다 (부모 상태 분포 ok100 · relax100_failed 는 블록 1 출력으로 확인)",
+  "속도": "구조당 1 분 미만 (감시 '구조당 평균 0 분 (끝난 3 개 기준)') · 감시 어림 끝 11:13",
+  "GPU": "1756 MiB / 49140 MiB · 36 %",
+  "결과_열람": "없음 — 이완 값은 감시에서 가림 (EC P2-5) · 진행 신호만",
+  "미회수": "블록 1 출력 (8 단계 rc · ② HEAD · ⓪ 결정 · 지문 · ⓪b · ① 본 판독 줄 · ③ 프레임 · 부모 상태 · ④ 실행기 줄) — ⓪ 은 런로그에 적게 돼 있다 (v3) · 스크롤이 없으면 읽기 블록 (아래) 으로 다시 찍는다",
+  "읽기_블록 (아무것도 안 바꿈)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; D=$R/diag_src\ngrep -a -E \"끝 run_rc=|결과 검사 check_rc=\" $R/s8_anneal.log | tail -2; git -C $D rev-parse HEAD; sha256sum $D/tools/doping/b2o3_bo_anneal_diag.py $R/src/tools/doping/b2o3_bo_readout.py $R/s8_readout.json $R/s8b_frames/diag_frames.json; $PY -c \"import json,collections; L=json.load(open('$D/db/governance/decisions.json'))['decisions']; print('⓪', [e.get('decision_state') for e in L if e.get('id')=='D-2026-11-10-b2o3-bo-placement-amend4-ea']); r=json.load(open('$R/s8_readout.json')); print('①', r['decision'], r.get('hold_reasons','')); x=json.load(open('$R/s8b_frames/diag_frames.json')); print('③ 프레임', x['n_frames'], '/ 계획', x.get('plan_n'), '· 부모 상태', dict(collections.Counter(x['parent_status'].values())))\"; grep -a -E \"시작|대기|⛔\" $R/s8b_relax.log | head -4",
+  "다음": "큐 끝 (tmux b2o3_s8b 없음 · 54 / 54) → 블록 2 (④b rc → ⑤ 판독) → 기록 → 승자 문장은 ⑤ 사유대로",
+  "by": "agent · 2026-11-13"
  }
 }
