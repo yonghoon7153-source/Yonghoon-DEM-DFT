@@ -744,24 +744,37 @@ def t_block_v8():
     os.remove(os.path.join(fold7, 'se_material.py'))
     rc3, r3, t3 = _harness_sub(hp, fold7, os.path.join(td, 'o3'), ['--scripts', SCRIPTS, '--forbid-dir', ROOT])
     rc4, r4, t4 = _harness_sub(hp, fold, os.path.join(td, 'o4'), se_args[:-1] + ['0' * 64])
+    other = _stage(os.path.join(td, 'f_other'))             # --scripts = 다른 폴더 (se_material 사본 있음) · 모듈은 제 폴더 (fold) 의 것을 먼저 본다
+    rc5, r5, t5 = _harness_sub(hp, fold, os.path.join(td, 'o5'), ['--scripts', other])
     chk('G8i v7 꼴 live import (모듈 사본 폴더에 se_material 없음 · --scripts = 이 리포 scripts) → rc 2 · 사유 = live 저장소 모듈 (se_material) · 풀이 0 · '
-        'se_material sha 틀림 → rc 2 · 풀이 0',
+        'se_material sha 틀림 → rc 2 · 풀이 0 · 불러온 se_material ≠ --scripts 의 것 (모듈 폴더 사본이 먼저) → rc 2 · 풀이 0',
         rc3 == 2 and 'live repository' in str((r3 or {}).get('error')) and 'main_old' not in (r3 or {'main_old': 1})
         and 'short_runs' not in (r3 or {'short_runs': 1}) and rc4 == 2 and 'se_material.py' in str((r4 or {}).get('error'))
-        and 'short_runs' not in (r4 or {'short_runs': 1}), f'{rc3} {(r3 or {}).get("error")} · {rc4} {(r4 or {}).get("error")}')
+        and 'short_runs' not in (r4 or {'short_runs': 1}) and rc5 == 2 and 'not imported from --scripts' in str((r5 or {}).get('error'))
+        and 'short_runs' not in (r5 or {'short_runs': 1}),
+        f'{rc3} {(r3 or {}).get("error")} · {rc4} {(r4 or {}).get("error")} · {rc5} {(r5 or {}).get("error")}')
     #  ── j 가짜 cupy (이 프로세스) — 하네스 main 을 직접 부른다 · se_material 은 이 프로세스에 이미 (live scripts) 있으므로 잠시 뺀다
     fake_mods = {}
 
-    def call_fake(out, extra, new_bytes=None):
+    def call_fake(out, extra, new_bytes=None, late=False):
         f = _stage(os.path.join(td, out + '_f'), new_bytes)
         forbid = tempfile.mkdtemp(prefix='q11forbid_')
         saved_se = sys.modules.pop('se_material', None)
         saved_path = list(sys.path)
+        sync = (lambda: None)
+        if late:                                             # 풀이 도중 (첫 검사 뒤) live 저장소 (forbid) 의 모듈을 불러오는 꼴
+            with open(os.path.join(forbid, 'q11_late_mod.py'), 'w') as fh:
+                fh.write('X = 1\n')
+
+            def sync():
+                if forbid not in sys.path:
+                    sys.path.insert(0, forbid)
+                importlib.import_module('q11_late_mod')
         try:
             with fake_cupy('tol'):
                 cpm = sys.modules['cupy']
                 cpm.__version__ = 'fake-12.3.0'
-                cpm.cuda = types.SimpleNamespace(Device=lambda i: types.SimpleNamespace(synchronize=lambda: None),
+                cpm.cuda = types.SimpleNamespace(Device=lambda i: types.SimpleNamespace(synchronize=sync),
                                                  runtime=types.SimpleNamespace(getDeviceProperties=lambda i: {'name': b'fake'}))
                 with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                     try:
@@ -772,6 +785,7 @@ def t_block_v8():
         finally:
             sys.path[:] = saved_path
             sys.modules.pop('se_material', None)
+            sys.modules.pop('q11_late_mod', None)
             if saved_se is not None:
                 sys.modules['se_material'] = saved_se
         try:
@@ -784,13 +798,17 @@ def t_block_v8():
     new_src = open(os.path.join(SCRIPTS, 'step3_sigma.py'), 'rb').read()
     tweak = new_src.replace(b'_dinv = 1.0 / cp.asarray(diag)', b'_dinv = 1.0000000001 / cp.asarray(diag)', 1)
     fake_mods['diff'] = call_fake('j3', [], new_bytes=tweak)
-    cp_, ci_, cd_ = (fake_mods[k][1].get('consume') or {} for k in ('pos', 'it1', 'diff'))
+    fake_mods['late'] = call_fake('j4', [], late=True)
+    cp_, ci_, cd_, cl_ = (fake_mods[k][1].get('consume') or {} for k in ('pos', 'it1', 'diff', 'late'))
     chk('G8j 가짜 cupy (cupy 12.3.0 cg 산술 · 이 프로세스) — 같은 전처리: rc 0 · adopt 참 (identical · converged · backend gpu · 200 반복 · source) · '
-        'maxiter 1: all_identical 참인데 adopt 거짓 (converged 거짓) · 다른 전처리 (1/diag 를 아주 조금 바꾼 새 판): identical 거짓 → adopt 거짓',
+        'maxiter 1: all_identical 참인데 adopt 거짓 (converged 거짓) · 다른 전처리 (1/diag 를 아주 조금 바꾼 새 판): identical 거짓 → adopt 거짓 · '
+        '풀이 도중 live 저장소 모듈 import (첫 검사 뒤) → source_ok 거짓 → adopt 거짓',
         fake_mods['pos'][0] == 0 and cp_.get('adopt') is True and fake_mods['it1'][0] == 0 and fake_mods['it1'][1].get('all_identical') is True
         and ci_.get('adopt') is False and ci_.get('converged') is False and ci_.get('identical') is True and tweak != new_src
-        and fake_mods['diff'][0] == 0 and cd_.get('identical') is False and cd_.get('adopt') is False,
-        f'{fake_mods["pos"][0]} {cp_} | {ci_} | {cd_}')
+        and fake_mods['diff'][0] == 0 and cd_.get('identical') is False and cd_.get('adopt') is False
+        and fake_mods['late'][0] == 0 and cl_.get('source_ok') is False and cl_.get('identical') is True and cl_.get('adopt') is False
+        and (fake_mods['late'][1].get('files') or {}).get('loaded_from_forbid_dir_end') == ['q11_late_mod'],
+        f'{fake_mods["pos"][0]} {cp_} | {ci_} | {cd_} | {cl_}')
     if not hasattr(H, 'consume'):
         chk('G8k consume 칸 하나씩 (합성 기록)', False, '하네스에 consume 없음 (옛 판)')
         return
