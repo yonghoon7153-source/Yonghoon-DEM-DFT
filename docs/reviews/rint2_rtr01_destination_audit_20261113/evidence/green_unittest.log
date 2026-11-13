@@ -1,0 +1,15 @@
+test_archive_allocation_failure_stops_arm_publication (rtr01_tests.DestinationAuditTests.test_archive_allocation_failure_stops_arm_publication) ... ok
+test_arm_move_failure_cannot_publish_audit_as_new (rtr01_tests.DestinationAuditTests.test_arm_move_failure_cannot_publish_audit_as_new) ... ok
+test_audit_builder_failure_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_audit_builder_failure_is_missing_not_old_success) ... ok
+test_audit_move_failure_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_audit_move_failure_is_missing_not_old_success) ... ok
+test_missing_new_audit_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_missing_new_audit_is_missing_not_old_success) ... ok
+test_normal_publish_preserves_old_and_reads_new (rtr01_tests.DestinationAuditTests.test_normal_publish_preserves_old_and_reads_new) ... ok
+test_repeated_retirement_never_overwrites_history (rtr01_tests.DestinationAuditTests.test_repeated_retirement_never_overwrites_history) ... ok
+test_retirement_failure_stops_arm_publication (rtr01_tests.DestinationAuditTests.test_retirement_failure_stops_arm_publication) ... ok
+test_store_off_preserves_existing_sidecars_and_no_aggregation (rtr01_tests.DestinationAuditTests.test_store_off_preserves_existing_sidecars_and_no_aggregation) ... ok
+test_valid_skip_preserves_existing_audit (rtr01_tests.DestinationAuditTests.test_valid_skip_preserves_existing_audit) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 2.085s
+
+OK

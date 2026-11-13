@@ -1,0 +1,29 @@
+{
+  "probe_sha256": "a667df6a3082ffdfb826f6e7ba955bfa82fa1cbf27c59562d3d27d59c2471ef8",
+  "rc": 0,
+  "fragment_sha256": "2d332313f7d862ab0279bc4015c0eb513415e25daae5c5df7650ce346cd3ce96",
+  "cases": [
+    {
+      "case": "missing_new_audit",
+      "rc": 0,
+      "audit_unchanged": true,
+      "status": "hit",
+      "problem": null
+    },
+    {
+      "case": "normal_new_audit",
+      "rc": 0,
+      "audit_unchanged": false,
+      "status": "built_written",
+      "problem": null
+    },
+    {
+      "case": "audit_move_failure",
+      "rc": 0,
+      "audit_unchanged": true,
+      "status": "hit",
+      "problem": null
+    }
+  ],
+  "scope": "Unmodified independent probe, fixed before sources; rc0 means counterexamples reproduced, not fixed."
+}

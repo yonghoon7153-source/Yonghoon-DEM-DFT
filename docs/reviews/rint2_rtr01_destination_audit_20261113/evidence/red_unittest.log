@@ -1,0 +1,85 @@
+test_archive_allocation_failure_stops_arm_publication (rtr01_tests.DestinationAuditTests.test_archive_allocation_failure_stops_arm_publication) ... FAIL
+test_arm_move_failure_cannot_publish_audit_as_new (rtr01_tests.DestinationAuditTests.test_arm_move_failure_cannot_publish_audit_as_new) ... FAIL
+test_audit_builder_failure_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_audit_builder_failure_is_missing_not_old_success) ... FAIL
+test_audit_move_failure_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_audit_move_failure_is_missing_not_old_success) ... FAIL
+test_missing_new_audit_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_missing_new_audit_is_missing_not_old_success) ... FAIL
+test_normal_publish_preserves_old_and_reads_new (rtr01_tests.DestinationAuditTests.test_normal_publish_preserves_old_and_reads_new) ... FAIL
+test_repeated_retirement_never_overwrites_history (rtr01_tests.DestinationAuditTests.test_repeated_retirement_never_overwrites_history) ... FAIL
+test_retirement_failure_stops_arm_publication (rtr01_tests.DestinationAuditTests.test_retirement_failure_stops_arm_publication) ... FAIL
+test_store_off_preserves_existing_sidecars_and_no_aggregation (rtr01_tests.DestinationAuditTests.test_store_off_preserves_existing_sidecars_and_no_aggregation) ... ok
+test_valid_skip_preserves_existing_audit (rtr01_tests.DestinationAuditTests.test_valid_skip_preserves_existing_audit) ... ok
+
+======================================================================
+FAIL: test_archive_allocation_failure_stops_arm_publication (rtr01_tests.DestinationAuditTests.test_archive_allocation_failure_stops_arm_publication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 122, in test_archive_allocation_failure_stops_arm_publication
+    self.assertNotEqual(self.publish('mktemp() { return 1; }').returncode, 0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_arm_move_failure_cannot_publish_audit_as_new (rtr01_tests.DestinationAuditTests.test_arm_move_failure_cannot_publish_audit_as_new)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 165, in test_arm_move_failure_cannot_publish_audit_as_new
+    self.assertEqual(self.row()['problem'], 'missing')
+AssertionError: None != 'missing'
+
+======================================================================
+FAIL: test_audit_builder_failure_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_audit_builder_failure_is_missing_not_old_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 94, in test_audit_builder_failure_is_missing_not_old_success
+    self.assert_missing_new()
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 82, in assert_missing_new
+    self.assertEqual(self.row()['problem'], 'missing')
+AssertionError: None != 'missing'
+
+======================================================================
+FAIL: test_audit_move_failure_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_audit_move_failure_is_missing_not_old_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 101, in test_audit_move_failure_is_missing_not_old_success
+    self.assert_missing_new()
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 82, in assert_missing_new
+    self.assertEqual(self.row()['problem'], 'missing')
+AssertionError: None != 'missing'
+
+======================================================================
+FAIL: test_missing_new_audit_is_missing_not_old_success (rtr01_tests.DestinationAuditTests.test_missing_new_audit_is_missing_not_old_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 88, in test_missing_new_audit_is_missing_not_old_success
+    self.assert_missing_new()
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 82, in assert_missing_new
+    self.assertEqual(self.row()['problem'], 'missing')
+AssertionError: None != 'missing'
+
+======================================================================
+FAIL: test_normal_publish_preserves_old_and_reads_new (rtr01_tests.DestinationAuditTests.test_normal_publish_preserves_old_and_reads_new)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 110, in test_normal_publish_preserves_old_and_reads_new
+    self.assertEqual(len(self.archived()), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_repeated_retirement_never_overwrites_history (rtr01_tests.DestinationAuditTests.test_repeated_retirement_never_overwrites_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 156, in test_repeated_retirement_never_overwrites_history
+    self.assertEqual(len(self.archived()), 2)
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_retirement_failure_stops_arm_publication (rtr01_tests.DestinationAuditTests.test_retirement_failure_stops_arm_publication)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\scripts\test_rint_destination_audit.py", line 115, in test_retirement_failure_stops_arm_publication
+    self.assertNotEqual(result.returncode, 0)
+AssertionError: 0 == 0
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.607s
+
+FAILED (failures=8)

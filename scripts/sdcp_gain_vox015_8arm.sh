@@ -997,9 +997,23 @@ PYGO
     echo "     원본을 남겨 둔다: $FRESH"
     return 1
   fi
+  # RTR-01: 새 팔을 게시하기 전에 최종 폴더의 옛 audit 을 별도 이름으로 보존한다.
+  # 유효한 기존 팔의 SKIP 은 위에서 끝난다. 단일 작성자 계약이며 동시 게시를 허용하지 않는다.
+  local CJD CJP
+  CJD="$(dirname "$OUT")/cjstore_audit_$(basename "$OUT")"
+  if [ -n "$CJS_FLAG" ] && { [ -e "$CJD" ] || [ -L "$CJD" ]; }; then
+    CJP="$(mktemp -d "${CJD}.previous.XXXXXXXXXX")" || {
+      echo "[p2] ABORT — 옛 audit 보존 폴더를 만들지 못했다 ($CJD)"; return 1;
+    }
+    if ! mv -- "$CJD" "$CJP/audit"; then
+      echo "[p2] ABORT — 옛 audit 을 퇴역시키지 못했다 ($CJD) — 새 팔 게시 안 함"
+      return 1
+    fi
+  fi
   mv "$FRESH" "$OUT" || return 1
   #  ★ 2026-11-13 (Rint ② · Codex 반박 1/2 §3 RCP-07) — 저장본 켬이면 payload 가 팔 옆에 남긴 audit 곁 파일 (`cjstore_audit_<팔>` · 과학 payload 밖) 을
-  #    팔과 함께 OUTDIR 로 옮긴다 (사슬 요약이 팔별로 싣는다 · 끔 = 곁 파일 없음 = 옛 동작 그대로 · 못 옮김 = 경고 줄만 · 팔 결과 무관)
+  #    팔과 함께 OUTDIR 로 옮긴다. 새 audit 없음/이동 실패 = missing (옛 성공 기록 재사용 안 함).
+  #    끔 = 옛 동작 그대로 · 못 옮김 = 경고 줄만 · 팔 결과 무관.
   local CJA
   CJA="$(dirname "$FRESH")/cjstore_audit_$(basename "$FRESH")"
   if [ -n "$CJS_FLAG" ] && [ -f "$CJA" ]; then

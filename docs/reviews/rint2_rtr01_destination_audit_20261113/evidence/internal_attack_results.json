@@ -1,0 +1,128 @@
+[
+  {
+    "name": "baseline",
+    "ran": 10,
+    "failures": [],
+    "errors": [],
+    "skipped": [],
+    "success": true
+  },
+  {
+    "name": "independent_extra",
+    "ran": 7,
+    "failures": [],
+    "errors": [],
+    "skipped": [],
+    "success": true
+  },
+  {
+    "name": "remove_retirement",
+    "ran": 10,
+    "failures": [
+      "test_archive_allocation_failure_stops_arm_publication (remove_retirement.DestinationAuditTests.test_archive_allocation_failure_stops_arm_publication)",
+      "test_arm_move_failure_cannot_publish_audit_as_new (remove_retirement.DestinationAuditTests.test_arm_move_failure_cannot_publish_audit_as_new)",
+      "test_audit_builder_failure_is_missing_not_old_success (remove_retirement.DestinationAuditTests.test_audit_builder_failure_is_missing_not_old_success)",
+      "test_audit_move_failure_is_missing_not_old_success (remove_retirement.DestinationAuditTests.test_audit_move_failure_is_missing_not_old_success)",
+      "test_missing_new_audit_is_missing_not_old_success (remove_retirement.DestinationAuditTests.test_missing_new_audit_is_missing_not_old_success)",
+      "test_normal_publish_preserves_old_and_reads_new (remove_retirement.DestinationAuditTests.test_normal_publish_preserves_old_and_reads_new)",
+      "test_repeated_retirement_never_overwrites_history (remove_retirement.DestinationAuditTests.test_repeated_retirement_never_overwrites_history)",
+      "test_retirement_failure_stops_arm_publication (remove_retirement.DestinationAuditTests.test_retirement_failure_stops_arm_publication)"
+    ],
+    "errors": [],
+    "skipped": [],
+    "success": false
+  },
+  {
+    "name": "ignore_retirement_failure",
+    "ran": 10,
+    "failures": [
+      "test_retirement_failure_stops_arm_publication (ignore_retirement_failure.DestinationAuditTests.test_retirement_failure_stops_arm_publication)"
+    ],
+    "errors": [],
+    "skipped": [],
+    "success": false
+  },
+  {
+    "name": "ignore_arm_move_failure",
+    "ran": 10,
+    "failures": [
+      "test_arm_move_failure_cannot_publish_audit_as_new (ignore_arm_move_failure.DestinationAuditTests.test_arm_move_failure_cannot_publish_audit_as_new)"
+    ],
+    "errors": [],
+    "skipped": [],
+    "success": false
+  },
+  {
+    "name": "drop_store_on_guard",
+    "ran": 10,
+    "failures": [],
+    "errors": [
+      "test_store_off_preserves_existing_sidecars_and_no_aggregation (drop_store_on_guard.DestinationAuditTests.test_store_off_preserves_existing_sidecars_and_no_aggregation)"
+    ],
+    "skipped": [],
+    "success": false
+  },
+  {
+    "name": "drop_dangling_symlink_guard",
+    "ran": 10,
+    "failures": [],
+    "errors": [],
+    "skipped": [],
+    "success": true
+  },
+  {
+    "name": "drop_dangling_symlink_guard_extra",
+    "ran": 7,
+    "failures": [
+      "test_dangling_destination_symlink_is_archived (__main__.extras.<locals>.ExtraTests.test_dangling_destination_symlink_is_archived)"
+    ],
+    "errors": [],
+    "skipped": [],
+    "success": false
+  },
+  {
+    "name": "reuse_archive_overwriting_history",
+    "ran": 10,
+    "failures": [
+      "test_archive_allocation_failure_stops_arm_publication (reuse_archive_overwriting_history.DestinationAuditTests.test_archive_allocation_failure_stops_arm_publication)",
+      "test_repeated_retirement_never_overwrites_history (reuse_archive_overwriting_history.DestinationAuditTests.test_repeated_retirement_never_overwrites_history)"
+    ],
+    "errors": [],
+    "skipped": [],
+    "success": false
+  },
+  {
+    "name": "move_old_audit_without_preservation",
+    "ran": 10,
+    "failures": [
+      "test_arm_move_failure_cannot_publish_audit_as_new (move_old_audit_without_preservation.DestinationAuditTests.test_arm_move_failure_cannot_publish_audit_as_new)",
+      "test_audit_builder_failure_is_missing_not_old_success (move_old_audit_without_preservation.DestinationAuditTests.test_audit_builder_failure_is_missing_not_old_success)",
+      "test_audit_move_failure_is_missing_not_old_success (move_old_audit_without_preservation.DestinationAuditTests.test_audit_move_failure_is_missing_not_old_success)",
+      "test_missing_new_audit_is_missing_not_old_success (move_old_audit_without_preservation.DestinationAuditTests.test_missing_new_audit_is_missing_not_old_success)",
+      "test_normal_publish_preserves_old_and_reads_new (move_old_audit_without_preservation.DestinationAuditTests.test_normal_publish_preserves_old_and_reads_new)",
+      "test_repeated_retirement_never_overwrites_history (move_old_audit_without_preservation.DestinationAuditTests.test_repeated_retirement_never_overwrites_history)",
+      "test_retirement_failure_stops_arm_publication (move_old_audit_without_preservation.DestinationAuditTests.test_retirement_failure_stops_arm_publication)"
+    ],
+    "errors": [],
+    "skipped": [],
+    "success": false
+  },
+  {
+    "name": "remove_source_writer_retirement",
+    "ran": 10,
+    "failures": [],
+    "errors": [],
+    "skipped": [],
+    "success": true
+  },
+  {
+    "name": "remove_source_writer_retirement_extra",
+    "ran": 7,
+    "failures": [
+      "test_source_old_audit_builder_failure (__main__.extras.<locals>.ExtraTests.test_source_old_audit_builder_failure)"
+    ],
+    "errors": [],
+    "skipped": [],
+    "success": false
+  }
+]

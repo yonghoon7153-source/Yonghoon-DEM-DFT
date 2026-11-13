@@ -1,0 +1,38 @@
+{
+  "schema": "proposal-only",
+  "overall": "HOLD",
+  "shared_ledger_modified": false,
+  "prior_review_receipt": {
+    "pin": "97d8831a858fab5f92ed3e580817eea2eaa85f5f",
+    "closable_limited": [
+      "RCPX-01",
+      "RCPX-02",
+      "RCPX-03",
+      "RCPX-04",
+      "RCPX-05",
+      "RCPX-06",
+      "RTA-01"
+    ],
+    "disposition": "Add narrow external acceptance evidence; no automatic verified/closed promotion."
+  },
+  "items": [
+    {
+      "id": "RTA-02",
+      "severity": "P3",
+      "status_proposed": "claimed_fixed",
+      "external_status": "partial",
+      "scope": "Destination audit supersession residual RTR-01, awaiting narrow recheck"
+    },
+    {
+      "id": "RTR-01",
+      "severity": "P3",
+      "status_proposed": "claimed_fixed",
+      "origin": "external_independent_review",
+      "parent": "RTA-02",
+      "counting": "same residual, do not count as a new P1/P2 or duplicate scientific failure",
+      "fix_commit": "<<sha:Retire destination audit before publishing>>",
+      "external_recheck": "pending"
+    }
+  ],
+  "no_automatic_verified_or_closed": true
+}

@@ -1,0 +1,11 @@
+{
+  "methods": 10,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "rc": 0,
+  "test_sha256": "c99b01e04c6d8ecf91206b41aaf224927ea13072c2c3ff491ec2a348fa4eedf8",
+  "source_sha256": "34e056ae7622e51d543ef1aae6c8385f604fd1d3f416c4e2c05bb0d2accb2cff",
+  "publication_fragment_sha256": "a5b7bbd12e34a754f1cd5a3fe39e9b68f17c8826e054b5eaf0737493b8f102ec",
+  "scope": "Exact Bash publication and valid SKIP fragments; exact AST writer/consumer/store-off. Synthetic check-arm assumption; no full runner or research execution."
+}
