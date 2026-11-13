@@ -99,6 +99,11 @@ NEWCOMER_AUDIENCE = ('처음 보는 분을 위한 설명', ('처음 보는 분',
 NEWCOMER_STATUS = (
     ('계획 문서', ('계획 문서입니다',)),
     ('계산 결과는 아직 없음', ('아직 계산 결과는 없습니다',)),
+    ('외부 검토 = 문서 잔여 종결 가능, 전체 HOLD', ('문서 범위 종결 가능', '전체 HOLD')),
+)
+# 과거 원고·수식/그림 고정물은 당시 지위를 유지한다. 새 종결 문구가 있는
+# 원고는 반드시 새 표지의 근거를 모두 갖춰야 하며 옛 표지로 돌아가지 않는다.
+NEWCOMER_STATUS_LEGACY = NEWCOMER_STATUS[:2] + (
     ('외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중', ('방향은 맞다', '판정 규칙 몇 개는 고쳐야 한다')),
 )
 NEWCOMER_CREATOR = 'DEM 재설계 (수영) 트랙'
@@ -1567,11 +1572,12 @@ def render_plan(doc):
 def _newcomer_status_line(doc):
     """제목 블록의 넷째 줄 조각들 (날짜 · 지위 셋).  뒷받침하는 글이 원고에 없으면 멈춘다."""
     whole = '\n'.join([plain(doc.status), plain(doc.oneline)] + [_section_text(s) for s in doc.sections])
-    for text, needs in (NEWCOMER_AUDIENCE,) + NEWCOMER_STATUS:
+    status = NEWCOMER_STATUS if '종결 가능' in whole else NEWCOMER_STATUS_LEGACY
+    for text, needs in (NEWCOMER_AUDIENCE,) + status:
         for need in needs:
             if need not in whole:
                 raise ParseError(doc.name, doc.status_line, '제목 블록의 줄 "%s" 을 뒷받침하는 글 "%s" 이 원고에 없다' % (text, need))
-    return [doc.date] + [t for t, _n in NEWCOMER_STATUS]
+    return [doc.date] + [t for t, _n in status]
 
 
 def _section_text(sec):
