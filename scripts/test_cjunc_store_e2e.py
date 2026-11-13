@@ -277,8 +277,8 @@ def run_all():
             return None
         return [(r.get('run'), a.get('arm'), a.get('status'), a.get('problem')) for r in rows for a in (r.get('arms') or [])]
     st_on = {k: arm_states(on['sums'][k]) for k in ('P0', 'P1', 'pred', 'unit')}
-    chk('Z5b 요약 팔별 저장본 상태 (RCP-07) — 켬 = 단계 넷 모두 cjunc_store_arms (런 ≥ 1 · 팔마다 built_written | hit | built_peer_same · problem 없음 · 짓고 쓴 수 '
-        '+ 앞 단계 = 저장본 파일 수 이상) · 끔 = 칸 없음',
+    chk('Z5b 요약 팔별 저장본 상태 (RCP-07) — 켬 = 단계 넷 모두 cjunc_store_arms (런 ≥ 1 · 팔마다 built_written | hit | built_peer_same · problem 없음 · 단계 넷의 짓고 쓴 '
+        '수 합 = 저장본 파일 수) · 끔 = 칸 없음',
         all(isinstance(v, list) and v and all(x[2] in ('built_written', 'hit', 'built_peer_same') and x[3] is None for x in v) for v in st_on.values())
         and sum(1 for v in st_on.values() for x in v if x[2] == 'built_written') == len(files_on)
         and all('cjunc_store_arms' not in off['sums'][k] for k in ('P0', 'P1', 'pred', 'unit')), st_on)
