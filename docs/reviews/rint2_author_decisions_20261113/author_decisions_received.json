@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-13",
+  "timezone": "Asia/Seoul",
+  "recorded_utc": "2026-11-13 11:41 UTC",
+  "source": "direct author replies in this chat",
+  "answers": [
+    {
+      "question": "Q1 all six keys per supported environment; manifest/cost preparation only; actual execution separate",
+      "answer": "전 6개 대조 계획으로 준비"
+    },
+    {
+      "question": "Q3-Q6 Q12 draft, preflight, final2/2 inclusion, final-pin attempt3/4 block after review; no actual execution/reseal",
+      "answer": "권고대로 준비"
+    }
+  ],
+  "Q2": "existing environment record/fixed contract outside key unchanged",
+  "actual_execution_go": false,
+  "reseal_go": false,
+  "registration_frozen": false
+}

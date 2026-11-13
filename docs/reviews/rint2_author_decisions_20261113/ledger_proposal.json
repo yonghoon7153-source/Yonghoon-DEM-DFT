@@ -1,0 +1,23 @@
+{
+  "schema": "proposal-only",
+  "overall": "HOLD",
+  "direct_shared_ledger_edit": false,
+  "proposed_development_row": {
+    "id": null,
+    "topic": "Q12 two-environment assembly comparison",
+    "state": "DRAFT_NOT_REGISTERED",
+    "source_pin": null,
+    "input_identity": null,
+    "expected": "distinct weighted-graph and assembly-byte claims; incomplete records give no positive claim",
+    "out_of_scope": [
+      "solver sigma",
+      "convergence",
+      "production qualification"
+    ],
+    "result": null,
+    "author_registration_approval": null,
+    "author_preparation_approval": "2026-11-13 Q3 prepare draft; actual registration identity/approval still pending"
+  },
+  "findings_updates": [],
+  "note": "Do not apply a runnable registry row until identity and author registration decision are fixed."
+}

@@ -1,0 +1,116 @@
+{
+  "schema": "rint-author-decisions-draft-v1",
+  "base_pin": "97d8831a858fab5f92ed3e580817eea2eaa85f5f",
+  "overall": "HOLD",
+  "decisions": {
+    "Q1": "PREPARATION_DIRECTION_RATIFIED_FIELDS_PENDING",
+    "Q2": "POLICY_PREVIOUSLY_RATIFIED_FIELDS_PENDING",
+    "Q3": "PREPARATION_DIRECTION_RATIFIED_FIELDS_PENDING",
+    "Q4": "PREPARATION_DIRECTION_RATIFIED_FIELDS_PENDING",
+    "Q5": "PREPARATION_DIRECTION_RATIFIED_FIELDS_PENDING",
+    "Q6": "PREPARATION_DIRECTION_RATIFIED_FIELDS_PENDING"
+  },
+  "supported_environments": [],
+  "qa_plan_scope": "six unique geometry slots per supported environment; repeat the complete six-slot manifest for each selected environment",
+  "environment_fields": [
+    "environment_alias",
+    "python_build",
+    "numpy_version",
+    "scipy_version",
+    "blas_build",
+    "simd",
+    "thread_limits",
+    "source_pin",
+    "immutability_period"
+  ],
+  "qa_plan": [
+    {
+      "slot": 1,
+      "kit_id": "SBE",
+      "origin_id": 0,
+      "key": null,
+      "environment_alias": null,
+      "independent_build_evidence": null,
+      "result": null
+    },
+    {
+      "slot": 2,
+      "kit_id": "SBE",
+      "origin_id": 1,
+      "key": null,
+      "environment_alias": null,
+      "independent_build_evidence": null,
+      "result": null
+    },
+    {
+      "slot": 3,
+      "kit_id": "SBE",
+      "origin_id": 2,
+      "key": null,
+      "environment_alias": null,
+      "independent_build_evidence": null,
+      "result": null
+    },
+    {
+      "slot": 4,
+      "kit_id": "DBE",
+      "origin_id": 0,
+      "key": null,
+      "environment_alias": null,
+      "independent_build_evidence": null,
+      "result": null
+    },
+    {
+      "slot": 5,
+      "kit_id": "DBE",
+      "origin_id": 1,
+      "key": null,
+      "environment_alias": null,
+      "independent_build_evidence": null,
+      "result": null
+    },
+    {
+      "slot": 6,
+      "kit_id": "DBE",
+      "origin_id": 2,
+      "key": null,
+      "environment_alias": null,
+      "independent_build_evidence": null,
+      "result": null
+    }
+  ],
+  "q12": {
+    "registration_id": null,
+    "code_pin": null,
+    "input_identity": null,
+    "environment_pair": null,
+    "result": null,
+    "claims": [
+      "weighted_graph_equal",
+      "assembly_bytes_equal"
+    ],
+    "read_solver_sigma": false
+  },
+  "probe6": {
+    "final_pin": null,
+    "recheck_verdict_pin": null,
+    "block_hash": null,
+    "timeout": null,
+    "attempt3": "empty_or_absent_store_before_attempt",
+    "attempt4": "same_store_from_attempt3_not_empty_requirement",
+    "freeze_only_author_DFT": true,
+    "automatic_retry": false,
+    "result": null
+  },
+  "execution_go": false,
+  "reseal_go": false,
+  "author_preparation_approval": {
+    "date": "2026-11-13",
+    "timezone": "Asia/Seoul",
+    "Q1": "all six geometry keys per supported environment",
+    "Q3_Q6": "prepare as recommended",
+    "field_execution": false,
+    "reseal": false
+  },
+  "qa_overflow_policy": "additional five origins for an affected kit are not covered by the six-key plan; fix expanded identity/cost/comparison manifest before use"
+}
