@@ -3,7 +3,7 @@
 
   python3 b2o3_bo_dft_mutations.py --selftest   # 정적 검사 (몇 초) — 변이 대상 문자열이 도구에 정확히 한 번씩 있고 · 바꾼 소스가 문법상 맞는지
                                                 #   + 음성 (없는 대상 · 두 번 있는 대상 · 문법이 깨지는 변이를 잡는지)
-  python3 b2o3_bo_dft_mutations.py              # 변이 전부 실행 (73 개 · 약 6 분 · CPU 1 코어) → '깨기 N/N 빨강'
+  python3 b2o3_bo_dft_mutations.py              # 변이 전부 실행 (도구 + 실행기 · 약 7 분 · CPU 1 코어) → '깨기 N/N 빨강'
 
 변이마다 도구를 고친 사본 tools/doping/_mut_dft.py 를 만들어 '--selftest' 를 돌리고 지운다 (판독기 · host 구조를 같은 상대 경로로
 찾게 같은 폴더에 둔다). 빨강 = selftest 가 'N/N' 이 아님 (crash 포함) · 줄마다 처음 ✗ 난 시험 이름을 같이 찍는다 — crash 가 그 변이의
@@ -33,8 +33,7 @@ M = [
  ("JOB DONE 수", 'if o["n_job_done"] != 1 or not o["job_done"]:', 'if False:'),
  ("설정 줄 한 번", '    many = {k: c for k, c in o["once"].items() if c != 1}', '    many = {}'),
  ("JOB DONE 뒤 기록", '    if o["after_done"]:', '    if False:'),
- ("SCF '!' 한 번", '    elif stage != "relax" and o["n_scf"] != 1:', '    elif False:'),
- ("이완 '!' 수 = BFGS", '        elif o["n_scf"] != o["bfgs"]["scf_cycles"]:', '        elif False:'),
+ ("이완 '!' 수 = BFGS", '        if o["bfgs"] and o["n_scf"] != o["bfgs"]["scf_cycles"]:', '        if False:'),
  ("SCF 수렴", 'if not o["scf_converged"]:', 'if False:'),
  ("입력 이름", 'if o["input_name"] != "scf.in":', 'if False:'),
  ("ecut", 'if o[k] is None or abs(o[k] - DFT[k]) > TOL["ecut"]:', 'if False:'),
@@ -50,17 +49,22 @@ M = [
  ("prefix", 'if o["prefixes"] and o["prefixes"] != [inp["keys"].get("prefix")]:', 'if False:'),
  ("k shift", 'if inp.get("k_shift") != [0, 0, 0]:', 'if False:'),
  ("k 격자 호출", '    q += kmesh_problems(o, inp["k"])', '    q += []'),
- ("힘 블록", '    if (not o["forces_block"]', '    if False and (not o["forces_block"]'),
  ("이완 설정 한 번", '        many = {k: c for k, c in o["once_relax"].items() if c != 1}', '        many = {}'),
  ("BFGS 기준", '        if (c is None or abs(c[0]', '        if False and (c is None or abs(c[0]'),
  ("이완 문턱", '        if (o["etot_thr"] is None', '        if False and (o["etot_thr"] is None'),
  ("nstep", 'if o["nstep"] != R["nstep"]:', 'if False:'),
  ("힘 성분", 'if fm is not None and fm > R["forc_conv_thr"] + TOL["force_print"]:', 'if False:'),
- ("bfgs", '        if o["bfgs"] is None:', '        if False:'),
  ("최종 좌표", 'if o["final"] is None or len(o["final"]["symbols"]) != DFT["nat"]:', 'if False:'),
  ("Final energy", 'if o["final_E_Ry"] is None or o["E_Ry"] is None or abs(o["final_E_Ry"] - o["E_Ry"]) > TOL["E_final_Ry"]:', 'if False:'),
- ("응력 뒤", 'if o["P_kbar"] is None or o["E_last_at"] is None or o["P_at"] < o["E_last_at"]:', 'if False:'),
+ ("응력 못 읽음", '        if o["P_kbar"] is None:', '        if False:'),
  ("부피", 'if V0 is None or o["volume_A3"] is None or abs(o["volume_A3"] - V0) > TOL["V_A3"]:', 'if False:'),
+ ("QE 판 고정", '    if o["version"] != DFT["qe_version"]:', '    if False:'),
+ # ── 한 계산 상태 (state_problems · Codex EG P1-1) ──
+ ("블록 개수", '    bad = {k: (len(p[k]), v) for k, v in want.items() if len(p[k]) != v}', '    bad = {}'),
+ ("SCF 묶음 순서", '        if any(x >= y for x, y in zip(seq, seq[1:])):\n            q.append(f"SCF', '        if False:\n            q.append(f"SCF'),
+ ("이완 끝 순서", '        if any(x >= y for x, y in zip(seq, seq[1:])):\n            q.append("이완 끝 순서', '        if False:\n            q.append("이완 끝 순서'),
+ ("힘 원자 번호", '    if o.get("final_forces_ids") != list(range(1, nat + 1)) or o.get("final_forces_max_comp_RyBohr") is None:', '    if False:'),
+ ("최종 좌표 행만", '            if rows and all(mm_):', '            if rows:'),
  # ── k 격자 (kmesh_problems) ──
  ("격자 밖", '        if np.abs(x - np.round(x)).max() > TOL["k_grid"]:', '        if False:'),
  ("가중치 몫", '        if abs(m - round(m)) > TOL["k_weight"] or int(round(m)) not in (1, 2):', '        if False:'),
@@ -69,7 +73,6 @@ M = [
  # ── 단계 출력 (read_stage_outputs) ──
  ("누락", '    if missing:\n        raise SystemExit(f"⛔ {stage} 출력 누락', '    if False:\n        raise SystemExit(f"⛔ {stage} 출력 누락'),
  ("입력 sha", 'if not fin.is_file() or _sha(fin) != j["input_sha256"]:\n            bad.append', 'if not fin.is_file():\n            bad.append'),
- ("판 갈림", '    if len(vers) != 1:', '    if False:'),
  # ── 유사포텐셜 ──
  ("원소 머리", '        if e != el:', '        if False:'),
  ("가전자 못 읽음", '        if z is None or not math.isfinite(z) or z <= 0:', '        if False:'),
@@ -87,6 +90,7 @@ M = [
  ("발동 근거 다시", '    _rebind_kp(RD, kp_path, None)                # 발동', '    pass                # 발동'),
  ("도구 sha", '    if (t.get("dft_tool") or {}).get("sha256") != _tool_fp()["sha256"]:', '    if False:'),
  ("계약 같음", '    if plan.get("contract") != json.loads(json.dumps(DFT)):', '    if False:'),
+ ("8 단계 요약 대조", '    if plan.get("stage8") != _stage8_summary(A100):', '    if False:'),
  ("단일점 입력 다시", '        if _text_sha(exp[j["job"]]) != j["input_sha256"]:', '        if False:'),
  # ── 판정 사슬 ──
  ("단일점 판정 통째", '    if _norm_v(v_new) != _norm_v(v):', '    if False:'),
@@ -108,21 +112,44 @@ M = [
  ("이완 구조 덮지 않음", '    if p.exists() and p.read_bytes() != buf.getvalue().encode("utf-8"):', '    if False:'),
  ("reject 보존", '        fout.rename(dest)', '        fout.unlink()'),
  ("reject 계획 고리", '    if _bound(cur.get("plan"), p.parent, "계획") != plan_path:', '    if False:'),
+ ("reject 다시 결속", '    v = _verify_for_reject(RD, vp, kind, stage, host)', '    v = json.loads(vp.read_bytes().decode("utf-8"))'),
+ ("reject relax host", '    if stage == "relax" and host is None:', '    if False:'),
+ ("잡 이름 꼴", '    if stage not in _JOB_RE or not isinstance(job, str) or not re.fullmatch(_JOB_RE[stage], job):', '    if False:'),
+ ("잡 폴더 바로 아래", '    if d.parent != root:', '    if False:'),
 ]
 
+#: 실행기 (bash) 변이 — GPU 확인 (Codex EF P2-5 · EG P2-2 · P2-3) · selftest 는 'bash run_force_check_scf.sh --selftest'
+M_RUNNER = [
+ ("실행기 항상 허용", '_gpu_guard() {   # 0 = 시작해도 된다 · 1 = 물러난다\n  local', '_gpu_guard() {   # 0 = 시작해도 된다 · 1 = 물러난다\n  return 0\n  local'),
+ ("실행기 nvidia-smi 존재", '    command -v nvidia-smi >/dev/null 2>&1 || {', '    true || {'),
+ ("실행기 VRAM 종료코드", '    if [ "$rc" -ne 0 ]; then\n      echo "[$now] ⛔ VRAM 조회 실패', '    if false; then\n      echo "[$now] ⛔ VRAM 조회 실패'),
+ ("실행기 VRAM 숫자 아님", "      ''|*[!0-9]*) echo", "      '__never__') echo"),
+ ("실행기 VRAM 문턱", '    if [ "$free_mib" -lt "$MIN_FREE_MIB" ]; then', '    if false; then'),
+ ("실행기 독점 종료코드", '    if [ "$rc" -ne 0 ]; then\n      echo "[$now] ⛔ GPU 프로세스 조회 실패', '    if false; then\n      echo "[$now] ⛔ GPU 프로세스 조회 실패'),
+ ("실행기 독점 다른 프로세스", '    if [ -n "$apps" ]; then', '    if false; then'),
+]
+RUNNER = HERE / "run_force_check_scf.sh"
+MUT_RUNNER = HERE / "_mut_runner.sh"
 
-def problems(src: str, muts) -> list:
-    """정적 검사 — 대상이 정확히 한 번 · 바꾼 소스가 문법상 맞음 → [(이름, 이유)]."""
+
+def problems(src: str, muts, lang="py") -> list:
+    """정적 검사 — 대상이 정확히 한 번 · 바꾼 소스가 문법상 맞음 (py: ast · sh: bash -n) → [(이름, 이유)]."""
     bad = []
     for name, old, new in muts:
         n = src.count(old)
         if n != 1:
             bad.append((name, f"대상 문자열 {n} 곳"))
             continue
-        try:
-            ast.parse(src.replace(old, new))
-        except SyntaxError as e:
-            bad.append((name, f"문법 오류 {e.msg} (줄 {e.lineno})"))
+        m = src.replace(old, new)
+        if lang == "py":
+            try:
+                ast.parse(m)
+            except SyntaxError as e:
+                bad.append((name, f"문법 오류 {e.msg} (줄 {e.lineno})"))
+        else:
+            r = subprocess.run(["bash", "-n"], input=m, capture_output=True, text=True)
+            if r.returncode != 0:
+                bad.append((name, f"bash 문법 오류 {r.stderr.strip()[:80]}"))
     return bad
 
 
@@ -135,8 +162,11 @@ def _selftest() -> int:
         ok[1] += bool(c)
         print(("  ✓ " if c else "  ✗ ") + m)
 
-    chk(problems(src, M) == [], f"[양성] 변이 {len(M)} 개 — 대상이 도구에 정확히 한 번씩 · 바꾼 소스 문법 맞음")
-    chk(len({n for n, _, _ in M}) == len(M), "[양성] 변이 이름이 겹치지 않는다")
+    rsrc = RUNNER.read_text(encoding="utf-8")
+    chk(problems(src, M) == [], f"[양성] 도구 변이 {len(M)} 개 — 대상이 정확히 한 번씩 · 바꾼 소스 문법 맞음")
+    chk(problems(rsrc, M_RUNNER, "sh") == [], f"[양성] 실행기 변이 {len(M_RUNNER)} 개 — 대상이 정확히 한 번씩 · bash -n 통과")
+    chk(len({n for n, _, _ in M + M_RUNNER}) == len(M) + len(M_RUNNER), "[양성] 변이 이름이 겹치지 않는다")
+    chk(problems(rsrc, [("문법", M_RUNNER[1][1], M_RUNNER[1][1] + " (")], "sh") != [], "[음성] bash 문법이 깨지는 변이를 잡는다")
     fake = [("없는 대상", "if 이런_줄은_없다:", "if False:")]
     chk(problems(src, fake) and "0 곳" in problems(src, fake)[0][1], "[음성] 도구에 없는 대상을 잡는다 (낡은 변이)")
     dup = [("두 번", "\n", "\n")]
@@ -151,9 +181,10 @@ def main() -> int:
     if "--selftest" in sys.argv[1:]:
         return _selftest()
     src = TOOL.read_text(encoding="utf-8")
-    bad = problems(src, M)
+    rsrc = RUNNER.read_text(encoding="utf-8")
+    bad = problems(src, M) + problems(rsrc, M_RUNNER, "sh")
     if bad:
-        print("⛔ 변이 목록이 도구와 맞지 않는다 — 돌리지 않는다:", bad)
+        print("⛔ 변이 목록이 도구 · 실행기와 맞지 않는다 — 돌리지 않는다:", bad)
         return 2
     red = 0
     try:
@@ -166,10 +197,20 @@ def main() -> int:
             first = next((ln.strip() for ln in r.stdout.splitlines() if ln.strip().startswith("✗")), "")
             print(f"  {'빨강' if hit else '⛔초록'} {name} ({m.group(0) if m else 'crash rc=%d' % r.returncode}) {first[:90]}",
                   flush=True)
+        for name, old, new in M_RUNNER:
+            MUT_RUNNER.write_text(rsrc.replace(old, new), encoding="utf-8")
+            r = subprocess.run(["bash", str(MUT_RUNNER), "--selftest"], capture_output=True, text=True, timeout=300)
+            m = re.search(r"selftest: (\d+) 통과 · (\d+) 실패", r.stdout)
+            hit = r.returncode != 0 or m is None or m.group(2) != "0"
+            red += hit
+            first = next((ln.strip() for ln in r.stdout.splitlines() if ln.strip().startswith("✗")), "")
+            print(f"  {'빨강' if hit else '⛔초록'} {name} ({m.group(0) if m else 'rc=%d' % r.returncode}) {first[:90]}", flush=True)
     finally:
         MUT.unlink(missing_ok=True)
-    print(f"깨기 {red}/{len(M)} 빨강")
-    return 0 if red == len(M) else 1
+        MUT_RUNNER.unlink(missing_ok=True)
+    n = len(M) + len(M_RUNNER)
+    print(f"깨기 {red}/{n} 빨강 (도구 {len(M)} · 실행기 {len(M_RUNNER)})")
+    return 0 if red == n else 1
 
 
 if __name__ == "__main__":

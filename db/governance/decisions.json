@@ -13095,7 +13095,7 @@
     ]
    },
    "title": "b2o3 B·O 배치 카드 개정 5 (결과 전) — 9 단계 DFT 운영값 · 탐침 발동 (세 가족 쌍) · 기준 셀 만들기 · 출력 결속 · EOS (E, P, V) 출력 파일 결속 (DY 확인 4) · 10 단계 고르기 기계화",
-   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_5_9단계_DFT_운영_2026_11_13' 이 개정 1 9_DFT · 10_고르기의 빈 운영값을 채운다: SCF (mixing plain 0.3 · electron_maxstep 200 · david · disk_io nowf · tprnfor · 이완만 tstress) · 유사포텐셜 파일 이름 · 단일점 대상 = 판 고정 판독기로 다시 낸 8 단계 성공 목록의 가족별 최저 둘 · UMA 기하 그대로 · 가족 대표 = 단일점 최저 · k 탐침 발동은 세 가족 쌍 모두 (0.05 변화 · 순서 · 0.10 경계) · 발동하면 4×2×1 새 판 · 기준 셀 = host 1×2×5 cellpar 를 V₀ 2436.33 으로 등방 스케일 · 이온 이완 bfgs forc 1.0d-3 · etot 1.0d-5 · nstep 200 · (E, P, V) 는 이완 출력에서 도구가 읽어 판 고정 eos_robust 로 · 출력 · 앞 단계 판정을 다시 내서 결속 · 누락 ≠ 실패 · 실패 잡이 있으면 판정 안 함 · EOS 생략일 때만 10 단계 고르기 · 생략 불가면 멈춤. v2 (Codex EF NO-GO 반영): 한 출력 = 한 실행 · 전자 수 = Σ 조성 × 가전자 (총전하 0) · PP Zval · k 점 좌표 · 가중치를 요청 격자와 정확히 대조 (nosym) · 출력의 BFGS 기준 · 문턱 · nstep · 마지막 힘 모든 성분 · 다시 결속 때 구조 · k 판 자격 재검사 · 판정 통째 대조 · EOS 보류면 안정성 · 전자구조 대상 null · 경로 계획 폴더 기준 · utf-8 LF · 실행기 GPU 확인 (시작 때만 보장) · reject 로 실패 출력 보존 · 판정 범위는 이 수렴 설정 · 고정 기준 셀 조건부.",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_5_9단계_DFT_운영_2026_11_13' 이 개정 1 9_DFT · 10_고르기의 빈 운영값을 채운다: SCF (mixing plain 0.3 · electron_maxstep 200 · david · disk_io nowf · tprnfor · 이완만 tstress) · 유사포텐셜 파일 이름 · 단일점 대상 = 판 고정 판독기로 다시 낸 8 단계 성공 목록의 가족별 최저 둘 · UMA 기하 그대로 · 가족 대표 = 단일점 최저 · k 탐침 발동은 세 가족 쌍 모두 (0.05 변화 · 순서 · 0.10 경계) · 발동하면 4×2×1 새 판 · 기준 셀 = host 1×2×5 cellpar 를 V₀ 2436.33 으로 등방 스케일 · 이온 이완 bfgs forc 1.0d-3 · etot 1.0d-5 · nstep 200 · (E, P, V) 는 이완 출력에서 도구가 읽어 판 고정 eos_robust 로 · 출력 · 앞 단계 판정을 다시 내서 결속 · 누락 ≠ 실패 · 실패 잡이 있으면 판정 안 함 · EOS 생략일 때만 10 단계 고르기 · 생략 불가면 멈춤. v2 (Codex EF NO-GO 반영): 한 출력 = 한 실행 · 전자 수 = Σ 조성 × 가전자 (총전하 0) · PP Zval · k 점 좌표 · 가중치를 요청 격자와 정확히 대조 (nosym) · 출력의 BFGS 기준 · 문턱 · nstep · 마지막 힘 모든 성분 · 다시 결속 때 구조 · k 판 자격 재검사 · 판정 통째 대조 · EOS 보류면 안정성 · 전자구조 대상 null · 경로 계획 폴더 기준 · utf-8 LF · 실행기 GPU 확인 (시작 때만 보장) · reject 로 실패 출력 보존 · 판정 범위는 이 수렴 설정 · 고정 기준 셀 조건부. v3 (Codex EG NO-GO 반영): 블록 문법 = 한 계산 상태 (값은 마지막 묶음에서만 · 힘 원자 번호 1…nat · 최종 좌표 블록 하나) · QE 7.4.1 고정 · reject 는 계획 · 앞 판정을 다시 결속해 잡 목록을 얻고 단계 폴더 밖을 건드리지 않는다 · 계획의 8 단계 요약을 다시 낸 본 판독과 대조 · 실행기 조회 종료코드 확인.",
    "rationale": "개정 1 은 9 단계의 규칙 (단일점 · k 탐침 · 고정셀 이온 이완 · EOS 생략) 을 정했지만 운영값과 출력 결속이 비어 있었고, Codex DY 는 EOS 의 (E, P, V) 결과 파일 결속을 DFT 진입 전 조건으로 남겼다. DFT 결과를 하나도 보기 전에 운영값 · 도구 · 음성 시험을 고정한다.",
    "decision_state": "proposed",
    "record_kind": "amendment",
@@ -13111,9 +13111,10 @@
    ],
    "supersedes": [],
    "evidence": [
-    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_5_9단계_DFT_운영_2026_11_13 · v2)",
-    "tools/doping/b2o3_bo_dft.py v2 sha256 4e865e5c3e5785b24955b2805d11fe3f3905ca5ae1fc0911acd513f96e2f9048 (selftest 119/119 · 깨기 73/73 빨강 — tools/doping/b2o3_bo_dft_mutations.py)",
-    "tools/doping/run_force_check_scf.sh sha256 9157ca2cd953555a34e16bf2b51e6a3de1f3a71676ea4085ae29ef7c4923a04e (_gpu_guard · selftest 20/20)",
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_5_9단계_DFT_운영_2026_11_13 · v3)",
+    "tools/doping/b2o3_bo_dft.py v3 sha256 f6105cfc2ae933eaf321472d232bca47d4512198a3d68c66a62b0b1804c6ab2e (selftest 142/142 · 깨기 87/87 빨강 (도구 80 · 실행기 7) — tools/doping/b2o3_bo_dft_mutations.py 760a0fb11b4b67f9)",
+    "tools/doping/run_force_check_scf.sh sha256 e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9 (_gpu_guard · selftest 24 통과 · 0 실패)",
+    "kb/reviews/codex_EG_reply_b2o3_dft_stage9_v2_2026_11_13.md (NO-GO · P1 2 · P2 4 — v2 4e865e5c)",
     "kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md (NO-GO · P1 6 · P2 6 — v1 559f0152)",
     "kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md (확인 4 — EOS 결과 파일 결속은 DFT 진입 전)"
    ],
@@ -13129,7 +13130,7 @@
     "dft_GPU_h": "상한 60 (개정 1 그대로 · 어림 20–45 · 발동 시 + 단일점 6)",
     "machine": "gabia GPU · UMA 와 동시 금지"
    },
-   "enforcement": "tools/doping/b2o3_bo_dft.py v2 — 판 고정 판독기 (872d91f7) 로 8 단계를 단계마다 다시 결속 · 구조 · k 판 자격 다시 검사 · 입력을 묶인 구조에서 다시 만들어 sha256 대조 · 출력 검사 (한 실행 · 전자 수 · Zval · k 격자 · 설정 · PP MD5 · 셀 · 처음 좌표 · 수렴 · BFGS 기준 · 힘 성분 · 응력 위치 · 부피) · 앞 단계 판정을 통째로 다시 내서 대조 · (E, P, V) 는 출력에서 · 판 고정 eos_robust · 10 단계 규칙 · EOS 보류면 대상 null · 실행기 _gpu_guard",
+   "enforcement": "tools/doping/b2o3_bo_dft.py v3 — 판 고정 판독기 (872d91f7) 로 8 단계를 단계마다 다시 결속 · 구조 · k 판 자격 다시 검사 · 입력을 묶인 구조에서 다시 만들어 sha256 대조 · 출력 검사 (한 실행 · 전자 수 · Zval · k 격자 · 설정 · PP MD5 · 셀 · 처음 좌표 · 수렴 · BFGS 기준 · 힘 성분 · 응력 위치 · 부피) · 앞 단계 판정을 통째로 다시 내서 대조 · (E, P, V) 는 출력에서 · 판 고정 eos_robust · 10 단계 규칙 · EOS 보류면 대상 null · 실행기 _gpu_guard · 블록 문법 (한 계산 상태) · 힘 원자 번호 · QE 판 고정 · reject 다시 결속 · 8 단계 요약 대조 · 실행기 조회 종료코드",
    "status": "proposed",
    "status_history": [
     {
@@ -13143,6 +13144,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex EF NO-GO (v1 4b95dedb · P1 6 · P2 6) → v2 고침 (도구 · 실행기 · 카드 문구) · 여전히 proposed · DFT 결과 0 건 · Codex EG 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EG NO-GO (v2 328cf95b · P1 2 · P2 4) → v3 고침 (도구 · 실행기 · 변이 도구 · 카드 문구) · 여전히 proposed · DFT 결과 0 건 · Codex EH 뒤 사용자 비준"
     }
    ],
    "ratification": {

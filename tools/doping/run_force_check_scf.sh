@@ -58,21 +58,26 @@ _fc_ok() {
 }
 
 # ── GPU 확인 (잡마다 시작 전) — 2026-11-13 Codex EF P2-5 ───────────────────────────
-#   MIN_FREE_MIB > 0 : VRAM 여유가 문턱 아래면 물러난다 · ⛔ 조회 실패 (빈 값 · 숫자 아님 · nvidia-smi 없음) 도 물러난다
-#     (옛 판은 조회가 비면 그냥 시작했다).
+#   MIN_FREE_MIB > 0 : VRAM 여유가 문턱 아래면 물러난다 · ⛔ 조회 실패 (nvidia-smi 없음 · **종료코드 ≠ 0 (숫자가 찍혔어도)** ·
+#     빈 값 · 숫자 아님) 도 물러난다 (옛 판은 조회가 비면 그냥 시작했다 · 2026-11-13 Codex EG P2-2: 파이프가 종료코드를 버려서
+#     '46000 출력 후 exit 9' 를 통과시켰다 → 원문 · 종료코드를 먼저 받고 성공한 경우에만 숫자를 가공한다).
 #   GPU_EXCLUSIVE=1  : GPU 에 다른 compute 프로세스가 하나라도 있으면 물러난다 (조회 실패도) — 'UMA 등 다른 GPU 잡과
 #     동시 금지' 를 잡 시작 때 확인한다.
 #   ⛔ 못 하는 것: 잡이 **도는 중에** 다른 잡이 GPU 에 올라오는 것은 막지 못한다 (예약 · 공통 잠금이 아니다) —
 #     그쪽 실행기의 VRAM 문턱 · 운영 규칙 (gabia: pw.x 와 UMA 동시 금지) 으로 막는다.
 #   둘 다 꺼져 있으면 (기본) 옛 판과 같다 — 다른 쓰임 (힘 대조 · Nd Q1 · Q2) 의 동작은 안 바뀐다.
 _gpu_guard() {   # 0 = 시작해도 된다 · 1 = 물러난다
-  local now free_mib apps
-  now=$(date '+%m-%d %H:%M:%S')
+  local now raw rc free_mib apps
+  now=$(date '+%m-%d %H:%M:%S' 2>/dev/null)
   if [ "${MIN_FREE_MIB:-0}" -gt 0 ] || [ "${GPU_EXCLUSIVE:-0}" = 1 ]; then
     command -v nvidia-smi >/dev/null 2>&1 || { echo "[$now] ⛔ nvidia-smi 가 없다 — GPU 상태를 모른다 · 이 잡이 물러난다"; return 1; }
   fi
   if [ "${MIN_FREE_MIB:-0}" -gt 0 ]; then
-    free_mib=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits 2>/dev/null | head -1 | tr -d ' \r')
+    raw=$(nvidia-smi --query-gpu=memory.free --format=csv,noheader,nounits 2>/dev/null); rc=$?
+    if [ "$rc" -ne 0 ]; then
+      echo "[$now] ⛔ VRAM 조회 실패 (nvidia-smi 종료코드 $rc) — 이 잡이 물러난다 (숫자가 찍혔어도 실패한 조회는 믿지 않는다)"; return 1
+    fi
+    free_mib=$(printf '%s\n' "$raw" | head -1 | tr -d ' \r')
     case "$free_mib" in
       ''|*[!0-9]*) echo "[$now] ⛔ VRAM 조회 실패 ('$free_mib') — 이 잡이 물러난다 (조회 실패를 '여유 있음' 으로 읽지 않는다)"; return 1 ;;
     esac
@@ -85,9 +90,11 @@ _gpu_guard() {   # 0 = 시작해도 된다 · 1 = 물러난다
     echo "[$now]   VRAM 여유 ${free_mib} MiB (문턱 ${MIN_FREE_MIB})"
   fi
   if [ "${GPU_EXCLUSIVE:-0}" = 1 ]; then
-    apps=$(nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader 2>/dev/null) \
-      || { echo "[$now] ⛔ GPU 프로세스 조회 실패 — 독점 실행이라 물러난다"; return 1; }
-    apps=$(printf '%s\n' "$apps" | grep -v -i -E '^[[:space:]]*$|no running' || true)
+    raw=$(nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader 2>/dev/null); rc=$?
+    if [ "$rc" -ne 0 ]; then
+      echo "[$now] ⛔ GPU 프로세스 조회 실패 (nvidia-smi 종료코드 $rc) — 독점 실행이라 물러난다"; return 1
+    fi
+    apps=$(printf '%s\n' "$raw" | grep -v -i -E '^[[:space:]]*$|no running' || true)
     if [ -n "$apps" ]; then
       echo "[$now] ⛔ GPU 에 다른 compute 프로세스가 있다 — 독점 실행 (GPU_EXCLUSIVE=1) 이라 이 잡이 물러난다:"
       printf '%s\n' "$apps" | sed 's/^/       /'
@@ -132,18 +139,28 @@ if [ "${ROOT}" = "--selftest" ]; then
   _chk "relax 수렴 선언 없음 → **미완료**"    "! _fc_ok $_T/rx/scf.out"
   # ── 2026-11-13 (Codex EF P2-5): GPU 확인 — 가짜 nvidia-smi ──
   mkdir -p "$_T/gb"
-  printf '#!/bin/bash\ncase "$*" in *query-compute-apps*) [ "${MOCK_APPS_RC:-0}" = 0 ] || exit 9; [ -n "${MOCK_APPS:-}" ] && printf "%%s\\n" "$MOCK_APPS"; exit 0;; *memory.free*) [ "${MOCK_FREE_RC:-0}" = 0 ] || exit 9; printf "%%s\\n" "${MOCK_FREE:-}"; exit 0;; esac\n' > "$_T/gb/nvidia-smi"
-  chmod +x "$_T/gb/nvidia-smi"
-  _g() { ( PATH="$_T/gb:$PATH" env "$@" bash -c "$(declare -f _gpu_guard); _gpu_guard" >/dev/null 2>&1 ); }
-  _chk "VRAM 46000 ≥ 45000 → 시작"                      "_g MIN_FREE_MIB=45000 MOCK_FREE=46000"
-  _chk "VRAM 44000 < 45000 → 물러남"                    "! _g MIN_FREE_MIB=45000 MOCK_FREE=44000"
-  _chk "VRAM 조회 빈 값 → 물러남 (옛 판은 시작)"          "! _g MIN_FREE_MIB=45000 MOCK_FREE="
-  _chk "VRAM 조회 실패 (rc≠0) → 물러남"                 "! _g MIN_FREE_MIB=45000 MOCK_FREE_RC=1"
-  _chk "독점: 다른 compute 프로세스 → 물러남"            "! _g GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 MOCK_FREE=46000 'MOCK_APPS=123, python, 1500 MiB'"
-  _chk "독점: 프로세스 조회 실패 → 물러남"               "! _g GPU_EXCLUSIVE=1 MOCK_APPS_RC=1"
-  _chk "독점: 프로세스 0 · 여유 충분 → 시작"             "_g GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 MOCK_FREE=46000 MOCK_APPS="
-  _chk "둘 다 꺼짐 (기본) → 시작 (옛 쓰임 그대로)"        "_g MIN_FREE_MIB=0 GPU_EXCLUSIVE=0"
-  _chk "독점인데 nvidia-smi 없음 → 물러남"               "! ( PATH=/usr/bin/false-dir:/nonexistent env GPU_EXCLUSIVE=1 /bin/bash -c \"\$(declare -f _gpu_guard); _gpu_guard\" >/dev/null 2>&1 )"
+  # 가짜 nvidia-smi — 값을 **찍고 나서** 종료코드를 낸다 ('숫자 출력 + 비정상 종료' 를 흉내 · Codex EG P2-2)
+  printf '#!/bin/bash\ncase "$*" in *query-compute-apps*) [ -n "${MOCK_APPS:-}" ] && printf "%%s\\n" "$MOCK_APPS"; exit "${MOCK_APPS_RC:-0}";; *memory.free*) printf "%%s\\n" "${MOCK_FREE:-}"; exit "${MOCK_FREE_RC:-0}";; esac\n' > "$_T/gb/nvidia-smi"
+  chmod +x "$_T/gb/nvidia-smi"; mkdir -p "$_T/nopath"
+  # _gx <기대 종료코드> <기대 문구> VAR=값 … — 함수를 실제로 돌려 **종료코드와 이유 (메시지)** 를 같이 본다 (Codex EG P2-3:
+  #   옛 시험은 'env: command not found (127)' 를 '물러남' 으로 셌다). 시험을 띄우는 env · bash 는 절대경로.
+  _gx() { local want_rc="$1" want_msg="$2" out rc; shift 2
+          out=$( /usr/bin/env PATH="$_T/gb:$PATH" "$@" /bin/bash -c "$(declare -f _gpu_guard); _gpu_guard" 2>&1 ); rc=$?
+          [ "$rc" = "$want_rc" ] && { [ -z "$want_msg" ] || printf '%s' "$out" | grep -q -- "$want_msg"; }; }
+  _chk "VRAM 46000 ≥ 45000 → 시작"                      "_gx 0 'VRAM 여유 46000' MIN_FREE_MIB=45000 MOCK_FREE=46000"
+  _chk "VRAM 44000 < 45000 → 물러남"                    "_gx 1 '44000 MiB < MIN_FREE_MIB' MIN_FREE_MIB=45000 MOCK_FREE=44000"
+  _chk "VRAM 조회 빈 값 → 물러남 (옛 판은 시작)"          "_gx 1 'VRAM 조회 실패 (' MIN_FREE_MIB=45000 MOCK_FREE="
+  _chk "VRAM 조회 실패 (빈 값 · rc 1) → 물러남"          "_gx 1 '종료코드 1' MIN_FREE_MIB=45000 MOCK_FREE_RC=1"
+  _chk "VRAM 46000 을 찍고 exit 9 → 물러남 (EG P2-2)"    "_gx 1 '종료코드 9' MIN_FREE_MIB=45000 MOCK_FREE=46000 MOCK_FREE_RC=9"
+  _chk "VRAM 46000 exit 9 + 독점 · 빈 목록 → 물러남"     "_gx 1 'VRAM 조회 실패 (nvidia-smi 종료코드 9)' GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 MOCK_FREE=46000 MOCK_FREE_RC=9 MOCK_APPS="
+  _chk "독점: 다른 compute 프로세스 → 물러남"            "_gx 1 '다른 compute 프로세스가 있다' GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 MOCK_FREE=46000 'MOCK_APPS=123, python, 1500 MiB'"
+  _chk "독점: 프로세스 조회 실패 → 물러남"               "_gx 1 'GPU 프로세스 조회 실패 (nvidia-smi 종료코드 1)' GPU_EXCLUSIVE=1 MOCK_APPS_RC=1"
+  _chk "독점: 빈 목록을 찍고 exit 9 → 물러남"            "_gx 1 'GPU 프로세스 조회 실패 (nvidia-smi 종료코드 9)' GPU_EXCLUSIVE=1 MOCK_APPS= MOCK_APPS_RC=9"
+  _chk "독점: 프로세스 0 · 여유 충분 → 시작"             "_gx 0 'GPU 독점 확인' GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 MOCK_FREE=46000 MOCK_APPS="
+  _chk "둘 다 꺼짐 (기본) → 시작 (옛 쓰임 그대로)"        "_gx 0 '' MIN_FREE_MIB=0 GPU_EXCLUSIVE=0"
+  # nvidia-smi 없음 — PATH 를 빈 폴더로 (env · bash 는 절대경로) · 그 이유 ('nvidia-smi 가 없다') 로 물러나야 한다 (EG P2-3)
+  _chk "독점인데 nvidia-smi 없음 → 그 이유로 물러남"      "out=\$( /usr/bin/env PATH=$_T/nopath GPU_EXCLUSIVE=1 /bin/bash -c \"\$(declare -f _gpu_guard); _gpu_guard\" 2>&1 ); [ \$? = 1 ] && printf '%s' \"\$out\" | grep -q 'nvidia-smi 가 없다'"
+  _chk "VRAM 문턱인데 nvidia-smi 없음 → 그 이유로 물러남" "out=\$( /usr/bin/env PATH=$_T/nopath MIN_FREE_MIB=45000 /bin/bash -c \"\$(declare -f _gpu_guard); _gpu_guard\" 2>&1 ); [ \$? = 1 ] && printf '%s' \"\$out\" | grep -q 'nvidia-smi 가 없다'"
   rm -rf "$_T"; echo "selftest: $_n 통과 · $_f 실패"; [ "$_f" = 0 ]; exit $?
 fi
 [ -n "$ROOT" ] || { echo "usage: $0 <스냅샷 디렉터리> [NP=16]"; exit 2; }
