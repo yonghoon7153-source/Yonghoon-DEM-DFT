@@ -1,6 +1,6 @@
 # 접촉역학과 소성
 
-전극 미세구조 · 공정 · 장 `dem-contact` · 논문 68편 · 읽기 카드 42편
+전극 미세구조 · 공정 · 장 `dem-contact` · 논문 74편 · 읽기 카드 42편
 
 > 탄소성 접촉 모형, 점착, 분말 치밀화 이론.
 
@@ -70,10 +70,11 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 3. Cárdenas-Barrantes et al. 2020 (`cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd`) — 강체와 무른 입자 혼합의 압밀을 배위수와 단일 입자 응답으로 풀어 무른 입자 갈래의 중심에 있다.
 4. So et al. 2022 (`so2022_dem_contact_model_assb_compaction_sintering`) — 경도 기반 항복과 평형 overlap으로 실제 E_SE를 쓴 채 LPS 압밀을 실험에 맞춘 배터리 DEM이다.
 
-## 이 장의 논문 (68편)
+## 이 장의 논문 (74편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
+| `greenwood1966_constriction_resistance_microcontact_cluster_real_area` | Greenwood 1966 | Constriction resistance and the real area of contact | (카드 없음) |
 | `kakar1967_deformation_theory_hot_pressing` | Kakar · Chaklader 1967 | Deformation Theory of Hot-Pressing | 부피 보존 잘린 구 모델은 D − D₀ = (3/2)D₀(a/R)²를 주지만, 납과 사파이어 실측은 미끄러짐과 재적층 때문에 모델보다 더 치밀하다. |
 | `grey1969_hausner_ratio_metal_powders` | R. O. Grey · J. K. Beddow 1968 | On the Hausner Ratio and its Relationship to Some Properties of Metal Powders | 탭 밀도 대 겉보기 밀도 비는 건조 구리 분말에서 흐름과 동적 안식각을 따르지만 흐름 시간과 안식각을 대신하지 못한다. |
 | `johnson1971_jkr_surface_energy_contact_elastic_solids` | Johnson · Kendall · Roberts 1971 | Surface energy and the contact of elastic solids | 표면 에너지를 넣은 에너지 평형으로 접촉 반경과 떼는 힘 P = −(3/2)γπR을 얻었고, 이 떼는 힘은 탄성률과 무관하다. |
@@ -91,14 +92,17 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `martinbouvard2003_dem_composite_cold_compaction` | Martin · Bouvard 2003 | Study of the cold compaction of composite powders by the discrete element method | 연질과 경질 구의 혼합 분말을 DEM으로 압밀해, 경질 입자가 압밀을 저지하는 두 메커니즘을 정량적으로 나누었다. |
 | `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | Begat · Morton · Staniforth · Price 2004 | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy | AFM 콜로이드 탐침 하나로 자기 물질과 상대 물질 결정면의 떼는 힘 비를 재면 접촉 기하를 지우고 응집과 접착의 균형을 정량할 수 있다. |
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | Jackson · Green 2005 | A Finite Element Study of Elasto-Plastic Hemispherical Contact Against a Rigid Flat | 탄성-완전소성 반구를 강체평판에 누르면 평균 접촉압 한계가 a/R 값에 따라 2.84σ_y에서 σ_y까지 내려간다. |
+| `morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem` | Moreno-Atanasio et al. 2007 | Computer simulation of the effect of contact stiffness and adhesion on the fluidization behaviour of powders | (카드 없음) |
 | `luding2008_cohesive_frictional_contact_models` | Luding 2008 | Cohesive, frictional powders: contact models for tension | 점착 탄소성 이력 선형 스프링 하나로 압밀, 응력완화, 인장·압축 강도시험까지 재현하고, 인장강도는 점착 강성 k_c가 정한다. |
 | `harthong2009_high_density_compaction_dem_voronoi_contact_law` | Harthong et al. 2009 | Modeling of high-density compaction of granular materials by the Discrete Element Method | (카드 없음) |
 | `matsusaka2010_triboelectric_charging_powders_review` | Matsusaka et al. 2010 | Triboelectric charging of powders: A review | 분말의 마찰 대전은 주로 유효 일함수 차를 따른 전자 이동이고, 두 모형 모두 반복 충돌에서 전하가 평형값에 지수 접근한다고 준다. |
 | `ai2011_rolling_resistance_contact_models_dem` | Ai et al. 2011 | Assessment of rolling resistance models in discrete element simulations | (카드 없음) |
 | `gonzalez2012_nonlocal_contact_confined_granular` | Gonzalez · Cuitiño 2012 | A nonlocal contact formulation for confined granular systems | 다른 접촉력이 만드는 원거리 변형을 접근량에 더한 무보정 탄성 법칙은 구속된 입상계에서 Hertz보다 큰 하중과 이른 2차 접촉을 예측한다. |
+| `wensrich2012_rolling_friction_shape_contact_eccentricity_dem` | Wensrich · Katterfeld 2012 | Rolling friction as a technique for modelling particle shape in DEM | (카드 없음) |
 | `morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis` | Morrissey 2013 | Discrete Element Modelling of Iron Ore Pellets to Include the Effects of Moisture and Fines | (카드 없음) |
 | `sakuda2013_sulfide_mechanical_property` | Sakuda et al. 2013 | Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery | Li₂S–P₂S₅ 유리는 상온 냉간가압만으로 치밀해지고, 18–25 GPa의 중간 탄성률을 가져 전고체전지에 유리하다. |
 | `boschpadros2014_dem_liggghts_msc_thesis` | Carles Bosch Padrós 2014 | Discrete element simulations with LIGGGHTS | LIGGGHTS의 Hertz/history 접촉식과 사용법을 정리했지만, 결과는 정량 검증이 없는 정성 데모에 그쳤다. |
+| `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior` | Lommen et al. 2014 | DEM speedup: Stiffness effects on behavior of bulk material | (카드 없음) |
 | `pasha2014_linear_elastoplastic_adhesive_contact` | Pasha et al. 2014 | A linear model of elasto-plastic and adhesive contact deformation | pull-off를 소성 평탄화 면적의 표면에너지 일로 유도한 선형 접촉모델이 Thornton–Ning 모델의 충돌 거동을 거의 재현한다. |
 | `thakur2014_eepa_adhesive_elastoplastic_dem` | Thakur et al. 2014 | Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model | (카드 없음) |
 | `brodu2015_multiple_contact_dem_dense_granular` | Brodu et al. 2015 | Multiple-contact discrete-element model for simulating dense granular media | (카드 없음) |
@@ -106,6 +110,7 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `paulick2015_particle_contact_stiffness_two_particle_method` | Paulick et al. 2015 | A new method for the determination of particle contact stiffness | (카드 없음) |
 | `vanlew2015_modifying_youngs_modulus_distribution` | Van Lew et al. 2015 | Modifying Young's modulus in DEM simulations based on distributions of experimental measurements | 단일 pebble 압쇄로 잰 입자별 E는 벌크값보다 낮고, 이를 넣은 DEM packing은 더 무르다. |
 | `devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode` | Vasconcelos et al. 2016 | Grid indentation analysis of mechanical properties of composite electrodes in Li-ion batteries | (카드 없음) |
+| `haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem` | Hærvig et al. 2017 | On the adhesive JKR contact and rolling models for reduced particle stiffness discrete element simulations | (카드 없음) |
 | `mcgrogan2017_compliant_brittle_li2s_p2s5_glass_nanoindentation` | McGrogan et al. 2017 | Compliant Yet Brittle Mechanical Behavior of Li₂S–P₂S₅ Lithium‐Ion‐Conducting Solid Electrolyte | 광유 속 압입으로 잰 70Li₂S–30P₂S₅ 유리는 E 18.5 GPa로 무르지만 K_Ic 0.23 MPa·m^½로 취성이다. |
 | `xu2017_nmc532_nanoindentation_modulus_hardness_toughness` | Xu et al. 2017 | Mechanical and Structural Degradation of LiNixMnyCozO₂Cathode in Li-Ion Batteries: An Experimental Study | (카드 없음) |
 | `dang2019_nmc111_secondary_particle_flat_punch_fracture_strength` | Dang et al. 2019 | Communication—Fracture Behavior of Single LiNi 0.33 Mn 0.33 Co 0.33 O₂ Particles Studied by Flat Punch Indentation | (카드 없음) |
@@ -131,6 +136,7 @@ DEM에서 널리 쓰는 이력 선형 법칙들은 소성 분기를 두지만 �
 | `stallard2022_nmc811_single_crystal_shear_strength_lithiation` | Stallard et al. 2022 | Effect of Lithiation upon the Shear Strength of NMC811 Single Crystals | (카드 없음) |
 | `sharma2023_nmc_single_crystal_anisotropic_nanoindentation` | Sharma et al. 2023 | Nanoindentation measurements of anisotropic mechanical properties of single crystalline NMC cathodes for Li-ion batteries | (카드 없음) |
 | `yano2023_eepa_bimodal_size_plasticity_compression_dem` | Yano et al. 2023 | Compression properties of bimodal powders with different plasticities in the elastoplastic powder compression process: A numerical analysis | (카드 없음) |
+| `clemmer2024_bpm_elastic_grain_compaction_beyond_jamming` | Clemmer et al. 2024 | A soft departure from jamming: the compaction of deformable granular matter under high pressures | (카드 없음) |
 | `electromechanical_contact_model_particulate_systems` | Zhang et al. 2024 | An electro-mechanical contact model for particulate systems | Hertz 접촉반경을 Holm 접촉저항과 벌크저항에 넣고 nodal 망으로 풀면 금속 입자계의 힘에 따른 전기저항이 해석해와 실험을 따른다. |
 | `yano2024_eepa_binary_mixture_plasticity_compression_dem` | Yano et al. 2024 | Numerical Analysis of Compression Properties of the Binary Mixture of Powder with Different Particle Plasticities | (카드 없음) |
 | `zunker2024_bulk_elastic_partII` | Zunker · Kamrin 2024 | A mechanically-derived contact model for adhesive elastic-perfectly plastic particles, Part II: Contact under high compaction—modeling a bulk elastic response | (카드 없음) |

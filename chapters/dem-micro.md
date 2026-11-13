@@ -1,6 +1,6 @@
 # 복합양극 미세구조
 
-전극 미세구조 · 공정 · 장 `dem-micro` · 논문 76편 · 읽기 카드 68편
+전극 미세구조 · 공정 · 장 `dem-micro` · 논문 77편 · 읽기 카드 68편
 
 > 공극률, 굴곡도, 이온 · 전자 경로의 연결성.
 
@@ -78,7 +78,7 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 4. Bielefeld et al. 2019 (`bielefeld2020_effective_ionic_conductivity_binder`) — Bielefeld et al. 2019의 유효 이온전도도 편으로, 접촉 저항 없는 연속체 계산이 조성과 바인더에 어떻게 반응하는지 보여 준다.
 5. Bazzoun et al. 2026 (`bazzoun2026_dem_fem_rnm_ionic`) — DEM 구조 위 RNM 계산을 같은 소재계의 EIS 실측과 맞대어 계산과 실측의 거리를 보여 준다.
 
-## 이 장의 논문 (76편)
+## 이 장의 논문 (77편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -112,6 +112,7 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 | `banerjee2019_tunneling_tlm_parallel_nanoscale_contacts` | Banerjee et al. 2019 | A Two Dimensional Tunneling Resistance Transmission Line Model for Nanoscale Parallel Electrical Contacts | 나란한 겹침 접촉을 터널 전류와 결합한 전송선 모형으로 풀면 접촉 저항은 간극에 지수적으로 오르고 긴 겹침에서 포화한다. |
 | `bielefeld2019_microstructural_modeling_composite_cathode` | Bielefeld et al. 2019 | Microstructural Modeling of Composite Cathodes for All-Solid-State Batteries | 작은 AM 입자와 낮은 공극률이 이온·전자 클러스터 연결을 돕고, 두께는 얇은 전극에서만 겉보기 차이를 낸다. |
 | `bielefeld2020_effective_ionic_conductivity_binder` | Bielefeld et al. 2019 | Modeling Effective Ionic Conductivity and Binder Influence in Composite Cathodes for All-Solid-State Batteries | 연속체 전도 계산으로 AM 분율, 입경, 공극, 바인더가 유효 이온전도도와 τ²를 좌우함을 정량했다. |
+| `chouchane2019_innov_voxelization_multiphase_meshing` | Chouchane et al. 2019 | A Versatile and Efficient Voxelization-Based Meshing Algorithm of Multiple Phases | (카드 없음) |
 | `froboese2019_microstructure_ionic_conductivity_assb_electrode` | Froboese et al. 2019 | Effect of Microstructure on the Ionic Conductivity of an All Solid-State Battery Electrode | 비활성 유리구 모델 전극에서 분율이 40 %를 넘으면 작은 입경일수록 기공이 늘고 이온전도도가 더 떨어진다. |
 | `park2019_electrode_design_methodology_assb_3d` | Park et al. 2019 | Electrode design methodology for all-solid-state batteries: 3D structural analysis and performance prediction | 복셀 구조 해석에서 LSTP를 30에서 20 wt%로 줄이면 이온 MacMullin 수가 178에서 28,556으로 뛴다. |
 | `lu2020_insitu_nanoct_calendering_microstructural_evolution` | Lu et al. 2020 | Microstructural Evolution of Battery Electrodes During Calendering | (카드 없음) |

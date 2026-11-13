@@ -1,6 +1,6 @@
 # 전극 공정
 
-전극 미세구조 · 공정 · 장 `dem-process` · 논문 79편 · 읽기 카드 63편
+전극 미세구조 · 공정 · 장 `dem-process` · 논문 81편 · 읽기 카드 63편
 
 > 혼합, 캘린더링, 가압, 건식 전극 제조.
 
@@ -70,7 +70,7 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 4. OTANI et al. 2025 (`otani2025_dem_se_dispersion_aggregation_compression`) — 압축 전 SE 분산 상태가 압밀 뒤 밀도와 접촉면적을 정한다는 것을 응집수 한 축으로 보인 DEM이다.
 5. Zhang et al. 2026 (`zhang2026_xct_dem_cathode_calendering_peel_calibration`) — 같은 모델 안에서 하중 상태 값과 제하 후 값이 어떻게 갈리는지 보여 견줄 값의 상태를 정하는 기준을 준다.
 
-## 이 장의 논문 (79편)
+## 이 장의 논문 (81편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -78,6 +78,7 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `hersey1975_ordered_mixing_concept` | J.A. Hersey 1975 | Ordered Mixing: A New Concept in Powder Mixing Practice | 상호작용하는 미분이 운반체 표면에 붙어 같은 단위체를 이루면, 그 혼합물은 흔히 무작위 혼합물보다 더 균질하다. |
 | `egermann1983_ordered_vs_interactive_mixture_nomenclature` | H. Egermann · N. A. Orr 1983 | Ordered mixtures — Interactive mixtures | 'ordered'는 무작위보다 고른 혼합 정도에만 쓰고, 미분이 운반체에 붙는 혼합의 유형은 'interactive'로 부르자는 제안이다. |
 | `pfeffer2001_dry_particle_coating_engineered_particulates` | Pfeffer · Dave · Wei · Ramlakhan 2001 | Synthesis of engineered particulates with tailored properties using dry particle coating | 건식 코팅은 게스트 응집체를 깨는 강한 충돌과 전단이 핵심이다. 장치 조건은 아직 시행착오로 잡고, DEM은 게스트를 함께 다루지 못한다. |
+| `stewart2001_dem_pept_bladed_mixer_detailed_comparison` | Stewart · Bridgwater · Zhou · Yu 2001 | Simulated and measured flow of granules in a bladed mixer—a detailed comparison | (카드 없음) |
 | `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` | Begat · Morton · Staniforth · Price 2004 | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics | 접착과 자기 응집의 비 Λ₁₂가 1보다 큰 약물은 lactose에 고르게 퍼지고, 1보다 작은 약물은 덩어리로 남는다. |
 | `geldart2006_powder_flowability_angle_of_repose_tester` | Geldart et al. 2006 | Characterization of powder flowability using measurement of angle of repose | 100 g 소량 동적 안식각 시험기로 잰 AOR은 Hausner 비와 직선으로 맞고, 측정 방법이 다른 AOR끼리는 비교할 수 없다. |
 | `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer` | Chandratilleke et al. 2010 | Effect of Blade Speed on Granular Flow and Mixing in a Cylindrical Mixer | (카드 없음) |
@@ -141,6 +142,7 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` | Kissel et al. 2026 | Mechanofusion-derived cathode composite microstructures with scalable mixed conducting matrix coatings for solid state batteries | 메카노퓨전 회전수가 LIC 껍질의 피복과 형태를 정하고, 매트릭스 CB는 소량(80:20:0.5)일 때 셀 성능이 가장 좋았다. |
 | `koo2026_swcnt_sheath_thick_electrode` | Koo et al. 2026 | A continuous carbon nanotube sheath enables ultrahigh energy density and fast charging in dry-processed thick electrodes | 정전기로 감은 연속 SWCNT sheath가 도전재를 입자 표면에 넣어, 두꺼운 건식 양극의 전자·이온 수송과 반응을 균일하게 한다. |
 | `lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode` | Lee et al. 2026 | Integrated one-step dry process enabling prelithiated thick electrodes without primer coating for high energy density and initial coulombic efficiency | 건식 PTFE 후막 음극을 Li/Cu 박에 라미네이트하면 프라이머 없이 붙고, 고상 선리튬화로 첫 사이클 효율이 오른다. |
+| `lyu2026_two_layer_gradient_electrode_calendering_dem_fem` | Lyu et al. 2026 | Calendering behavior of two-layer electrodes: A coupled DEM–FEM framework | (카드 없음) |
 | `meng2026_phase_inversion_binder_ultrathick_zn_iodine` | Meng et al. 2026 | Phase Inversion‐Engineered Ultrathick Electrodes With Intrinsic Hydrogel Interphase for High Areal Capacity Aqueous Zinc–Iodine Batteries at Room/Subzero Temperatures | 요오드를 ZnI₂ 전해질에 두고 상전환 1.5 mm 활성탄 후막으로 받으면 고면적용량 Zn–I₂ 전지가 상온과 −20 °C에서 오래 돈다. |
 | `nam2026_dpe_microstructure_review` | Nam et al. 2026 | Materials- and process-driven microstructural engineering for scalable dry-processed electrode manufacturing | 건식전극(DPE) 제조를 네 단계로 나누고, 각 단계가 만드는 결함과 이를 줄이는 소재·공정 전략을 미세구조 관점으로 묶은 리뷰다. |
 | `nam2026_primer_layer_dry_electrode_collector` | Nam et al. 2026 | Revisiting Primer Layer Design for Robust Dry Electrode−Current Collector Interfaces in Lithium-Ion Batteries | primer 자체의 전도와 전극과의 접촉은 반대로 가고, Super P와 CNT를 반씩 섞은 S50C50이 그 교점에서 가장 좋은 성능을 냈다. |

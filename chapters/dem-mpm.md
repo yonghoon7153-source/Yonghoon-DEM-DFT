@@ -1,6 +1,6 @@
 # MPM과 연속체 모형
 
-전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 19편 · 읽기 카드 8편
+전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 21편 · 읽기 카드 8편
 
 > 물질점법과 연속체 구성 모형.
 
@@ -71,12 +71,14 @@
 4. Homel · Herbold 2017 (`homel2017_mpm_field_gradient_partitioning_fracture_self_contact`) — 노드당 두 장으로 장 수와 메모리 문제를 피하는 길을 보인다.
 5. Hu et al. 2018 (`hu2018_mls_mpm_cpic_two_way_rigid_coupling`) — 우리 Taichi MLS-MPM 이산화의 인용 원전이다.
 
-## 이 장의 논문 (19편)
+## 이 장의 논문 (21편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
+| `sulsky1994_mpm_particle_method_history_dependent_materials` | Sulsky · Chen · Schreyer 1994 | A particle method for history-dependent materials | (카드 없음) |
 | `bardenhagen2000_mpm_granular_multibody_frictional_contact` | Bardenhagen, Brackbill & Sulsky 2000 | The material-point method for granular materials | (카드 없음) |
 | `bardenhagen2001_mpm_improved_contact_granular_stress_waves` | Bardenhagen, Guilkey 외 4인 2001 | An improved contact algorithm for the material point method and application to stress propagation in granular material | (카드 없음) |
+| `cummins2002_implicit_mpm_granular_newton_krylov` | Cummins · Brackbill 2002 | An Implicit Particle-in-Cell Method for Granular Materials | (카드 없음) |
 | `guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison` | Guilkey · Weiss 2003 | Implicit time integration for the material point method: Quantitative and algorithmic comparisons with the finite element method | (카드 없음) |
 | `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` | Bardenhagen, Kober 2004 | The generalized interpolation material point method | (카드 없음) |
 | `bardenhagen2005_mpm_foam_densification_simulation` | Bardenhagen et al. 2005 | Insight into the physics of foam densification via numerical simulation | (카드 없음) |

@@ -1,6 +1,6 @@
 # 화학-기계 열화와 계면
 
-전극 미세구조 · 공정 · 장 `dem-degrade` · 논문 34편 · 읽기 카드 28편
+전극 미세구조 · 공정 · 장 `dem-degrade` · 논문 35편 · 읽기 카드 28편
 
 > 균열, 박리, 응력에 따른 계면 저항 변화.
 
@@ -72,7 +72,7 @@ SE 강성이 열화에 유리한지에서 모델끼리 엇갈린다. Bucci et al
 4. Parks et al. 2023 (`intergranular_cracking_nmc811_jmca2023`) — 같은 NMC811 입자를 충전 전후로 찍어 입계 균열이 전기화학으로 생기는 것을 직접 보인다.
 5. Song et al. 2025 (`song2025_porous_argyrodite_modulus_fracture_toughness`) — 다공 Li₆PS₅Cl의 벌크 영률과 파괴인성을 같은 시편에서 재어 나노압입값과 척도 차이를 드러낸다.
 
-## 이 장의 논문 (34편)
+## 이 장의 논문 (35편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -99,6 +99,7 @@ SE 강성이 열화에 유리한지에서 모델끼리 엇갈린다. Bucci et al
 | `song2025_porous_argyrodite_modulus_fracture_toughness` | Song et al. 2025 | Investigation of the Mechanical Properties of Porous Argyrodite Sulfide Electrolytes for All-Solid-State Batteries | mm 시편 굽힘과 CT 시험으로 잰 다공 Li₆PS₅Cl의 E는 4.7 ± 1.1 GPa, K_Ic는 0.17 ± 0.03 MPa·m^½로 나노압입값보다 훨씬 낮다. |
 | `taghikhani2025_electrochemomechanical_phase_field_fracture_assb_composite_cathode` | Taghikhani et al. 2025 | Modeling coupled electro-chemo-mechanical phenomena within all-solid-state battery composite cathodes | (카드 없음) |
 | `benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode` | Ben Hadj Ali et al. 2026 | Fully coupled mechano-electrochemical modeling of 3D-resolved microstructures for solid state batteries manufactured by wet processing | (카드 없음) |
+| `benhadjali2026_oneway_chemomech_stress_stack_pressure_3d_assb_cathode` | Ben Hadj Ali et al. 2026 | A New Three‐Dimensional Microstructure‐Resolved Model to Assess Mechanical Stress in Solid‐State Battery Electrodes | (카드 없음) |
 | `gandla2026_layered_cathode_degradation_diagnostics_review` | Gandla et al. 2026 | Decoding Multiscale Degradation of Layered Cathodes in All‐Solid‐State Lithium Batteries: An Advanced Diagnostics‐Driven Framework | 층상 양극 고체전지의 용량 감소는 균열이 만든 접촉 손실이 지배하며, 실용 압력과 하중에서 검증된 완화책은 아직 없다. |
 | `hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd` | Hamann et al. 2026 | Effects of LLZO Microstructure Porosity, LLZO/Li‐Metal Interfacial Polarization Resistance, and Applied Areal Current Density on Li‐Metal Dendrite Formation in LLZO Bilayer Symmetric Cells | 다공 계면은 계면 과전압을 낮춰 CCD를 올리지만, 이중층 경계의 국소 이온전류 증폭은 내부 덴드라이트 위험을 키운다. |
 | `hong2026_sulfide_cathode_binder_digitaltwin` | Hong et al. 2026 | Unveiling degradation mechanisms of sulfide-based composite cathodes supported by digital-twin modeling: Dry binder versus wet binder | NBR은 활물질 계면을 넓게 덮어 Li⁺ 경로를 끊고 void와 LPSCl 분해를 키우며, PTFE는 좁게 모여 경로를 보존한다. |
