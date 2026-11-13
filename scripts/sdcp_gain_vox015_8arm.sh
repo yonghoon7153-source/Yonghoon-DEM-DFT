@@ -1012,8 +1012,9 @@ PYGO
   fi
   mv "$FRESH" "$OUT" || return 1
   #  ★ 2026-11-13 (Rint ② · Codex 반박 1/2 §3 RCP-07) — 저장본 켬이면 payload 가 팔 옆에 남긴 audit 곁 파일 (`cjstore_audit_<팔>` · 과학 payload 밖) 을
-  #    팔과 함께 OUTDIR 로 옮긴다. 새 audit 없음/이동 실패 = missing (옛 성공 기록 재사용 안 함).
-  #    끔 = 옛 동작 그대로 · 못 옮김 = 경고 줄만 · 팔 결과 무관.
+  #    팔과 함께 OUTDIR 로 옮긴다. 최종 audit 없음 = missing, 읽기 실패 = unreadable.
+  #    이동 오류는 경고만 남기며, 일부/전부 이동 뒤 실패할 때 source·destination 상태는 일률 보장하지 않는다.
+  #    옛 audit 재사용을 막는 범위다. 끔 = 옛 동작 그대로 · 팔 결과 무관 (RTRR-01 문구 한정).
   local CJA
   CJA="$(dirname "$FRESH")/cjstore_audit_$(basename "$FRESH")"
   if [ -n "$CJS_FLAG" ] && [ -f "$CJA" ]; then

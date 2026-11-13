@@ -1,0 +1,126 @@
+{
+  "origin": "received independent observations; not rerun here",
+  "source_sha256": "1e5fd4dcc61d81f5dc7aab74f6af5eb89887ebd59d588ff5f04683b99d397c9e",
+  "fields_selected": [
+    "scenario",
+    "rc",
+    "consumer",
+    "source_audit_exists",
+    "old_history_count",
+    "old_hit_reused"
+  ],
+  "observations": [
+    {
+      "scenario": "strict_shell_missing",
+      "rc": 0,
+      "consumer": {
+        "arm": "p2_synthetic.json",
+        "status": null,
+        "key": null,
+        "store_file": null,
+        "file_sha256": null,
+        "why": null,
+        "problem": "missing"
+      },
+      "source_audit_exists": false,
+      "old_history_count": 1,
+      "old_hit_reused": false
+    },
+    {
+      "scenario": "old_source_builder_failure",
+      "rc": 0,
+      "consumer": {
+        "arm": "p2_synthetic.json",
+        "status": null,
+        "key": null,
+        "store_file": null,
+        "file_sha256": null,
+        "why": null,
+        "problem": "missing"
+      },
+      "source_audit_exists": false,
+      "old_history_count": 1,
+      "old_hit_reused": false
+    },
+    {
+      "scenario": "dangling_final",
+      "rc": 0,
+      "consumer": {
+        "arm": "p2_synthetic.json",
+        "status": null,
+        "key": null,
+        "store_file": null,
+        "file_sha256": null,
+        "why": null,
+        "problem": "missing"
+      },
+      "source_audit_exists": false,
+      "old_history_count": 0,
+      "old_hit_reused": false
+    },
+    {
+      "scenario": "retire_then_error",
+      "rc": 1,
+      "consumer": {
+        "arm": "p2_synthetic.json",
+        "status": null,
+        "key": null,
+        "store_file": null,
+        "file_sha256": null,
+        "why": null,
+        "problem": "missing"
+      },
+      "source_audit_exists": false,
+      "old_history_count": 1,
+      "old_hit_reused": false
+    },
+    {
+      "scenario": "new_audit_move_then_error",
+      "rc": 0,
+      "consumer": {
+        "arm": "p2_synthetic.json",
+        "status": "built_written",
+        "key": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "store_file": "cjreg_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.npz",
+        "file_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "why": null,
+        "problem": null
+      },
+      "source_audit_exists": false,
+      "old_history_count": 1,
+      "old_hit_reused": false
+    },
+    {
+      "scenario": "new_audit_partial_copy_error",
+      "rc": 0,
+      "consumer": {
+        "arm": "p2_synthetic.json",
+        "status": null,
+        "key": null,
+        "store_file": null,
+        "file_sha256": null,
+        "why": null,
+        "problem": "unreadable: JSONDecodeError"
+      },
+      "source_audit_exists": true,
+      "old_history_count": 1,
+      "old_hit_reused": false
+    },
+    {
+      "scenario": "normal_unicode_directory",
+      "rc": 0,
+      "consumer": {
+        "arm": "p2_synthetic.json",
+        "status": "built_written",
+        "key": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "store_file": "cjreg_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.npz",
+        "file_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "why": null,
+        "problem": null
+      },
+      "source_audit_exists": false,
+      "old_history_count": 1,
+      "old_hit_reused": false
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "zip": "codex_rtr01_648bb4990157_independent_evidence_20261113.zip",
+  "bytes": 868567,
+  "sha256": "2ac0489e29b17cdfede11bd65049bfb3cefa8e874b2af6fe2129da97d49b469b",
+  "files": 90,
+  "outer_hashes": 89,
+  "crc_paths_duplicates_links": "PASS",
+  "review_pin": "648bb499015764f5aed74d4ca41f31a9d7c83f0d",
+  "source_blob_matches": [
+    {
+      "member": "candidate/scripts/cjunc_asm_compare.py",
+      "path": "scripts/cjunc_asm_compare.py",
+      "bytes": 14390,
+      "sha256": "762723a5af60ee46d022d3a05f81f78cae6587ebc56f37673b9ed30b908ab6fc"
+    },
+    {
+      "member": "candidate/scripts/cjunc_store.py",
+      "path": "scripts/cjunc_store.py",
+      "bytes": 63389,
+      "sha256": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f"
+    },
+    {
+      "member": "candidate/scripts/mpm_webapp_payload.py",
+      "path": "scripts/mpm_webapp_payload.py",
+      "bytes": 323488,
+      "sha256": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+    },
+    {
+      "member": "candidate/scripts/rint_r_chain.py",
+      "path": "scripts/rint_r_chain.py",
+      "bytes": 670211,
+      "sha256": "5fbc1c3417f17eba9bc9e569a9dad28f569ed1eedb64f8fcdd725492854de78b"
+    },
+    {
+      "member": "candidate/scripts/sdcp_gain_vox015_8arm.sh",
+      "path": "scripts/sdcp_gain_vox015_8arm.sh",
+      "bytes": 85088,
+      "sha256": "34e056ae7622e51d543ef1aae6c8385f604fd1d3f416c4e2c05bb0d2accb2cff"
+    },
+    {
+      "member": "candidate/scripts/test_rint_destination_audit.py",
+      "path": "scripts/test_rint_destination_audit.py",
+      "bytes": 8766,
+      "sha256": "c99b01e04c6d8ecf91206b41aaf224927ea13072c2c3ff491ec2a348fa4eedf8"
+    },
+    {
+      "member": "candidate/scripts/test_rint_takeover_boundaries.py",
+      "path": "scripts/test_rint_takeover_boundaries.py",
+      "bytes": 8700,
+      "sha256": "bdeb2b4a7f2723350af031482bcc9ccfe34ca7f07335cb8796f2f04d108160cb"
+    },
+    {
+      "member": "support/scripts/carbon_junction.py",
+      "path": "scripts/carbon_junction.py",
+      "bytes": 204952,
+      "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb"
+    }
+  ],
+  "execution_performed": false
+}

@@ -1,0 +1,13 @@
+{
+  "review_pin": "648bb499015764f5aed74d4ca41f31a9d7c83f0d",
+  "original_report_sha256": "5a42b2bab782b840c5f01c0326f1876c3775703bbdff4bc1895113e4404c515d",
+  "zip_sha256": "2ac0489e29b17cdfede11bd65049bfb3cefa8e874b2af6fe2129da97d49b469b",
+  "disposition": "RTR-01 CLOSABLE_LIMITED_CODE",
+  "new_p1": 0,
+  "new_p2": 0,
+  "new_p3_nonblocking": [
+    "RTRR-01"
+  ],
+  "overall": "HOLD",
+  "actual_run_approved": false
+}

@@ -1,0 +1,49 @@
+{
+  "review_pin": "648bb499015764f5aed74d4ca41f31a9d7c83f0d",
+  "shell_executable_lines_equal": true,
+  "shell_before_sha256": "34e056ae7622e51d543ef1aae6c8385f604fd1d3f416c4e2c05bb0d2accb2cff",
+  "shell_after_sha256": "119e1de9b619e0c4bde5a0c58f337345ed5ccfb8b6b4c648f1fe112c5e4b1f7c",
+  "source_manifest": [
+    {
+      "path": "scripts/sdcp_gain_vox015_8arm.sh",
+      "sha256": "119e1de9b619e0c4bde5a0c58f337345ed5ccfb8b6b4c648f1fe112c5e4b1f7c",
+      "unchanged_from_review_pin": false
+    },
+    {
+      "path": "scripts/cjunc_store.py",
+      "sha256": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f",
+      "unchanged_from_review_pin": true
+    },
+    {
+      "path": "scripts/rint_r_chain.py",
+      "sha256": "5fbc1c3417f17eba9bc9e569a9dad28f569ed1eedb64f8fcdd725492854de78b",
+      "unchanged_from_review_pin": true
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "sha256": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a",
+      "unchanged_from_review_pin": true
+    },
+    {
+      "path": "scripts/cjunc_asm_compare.py",
+      "sha256": "762723a5af60ee46d022d3a05f81f78cae6587ebc56f37673b9ed30b908ab6fc",
+      "unchanged_from_review_pin": true
+    },
+    {
+      "path": "scripts/test_rint_takeover_boundaries.py",
+      "sha256": "bdeb2b4a7f2723350af031482bcc9ccfe34ca7f07335cb8796f2f04d108160cb",
+      "unchanged_from_review_pin": true
+    },
+    {
+      "path": "scripts/test_rint_destination_audit.py",
+      "sha256": "c99b01e04c6d8ecf91206b41aaf224927ea13072c2c3ff491ec2a348fa4eedf8",
+      "unchanged_from_review_pin": true
+    },
+    {
+      "path": "scripts/carbon_junction.py",
+      "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+      "unchanged_from_review_pin": true
+    }
+  ],
+  "research_execution": false
+}
