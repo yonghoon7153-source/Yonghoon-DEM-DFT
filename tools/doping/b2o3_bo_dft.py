@@ -11,6 +11,9 @@ v4 (2026-11-13) = Codex EH 회신 (NO-GO · P1 2 · P2 2) 고침 — kb/reviews/
    (출력의 숫자는 줄 단위로 그 자리의 **토큰 전체가 유한한 숫자일 때만** 읽는다 · 응력 블록 본문 (3 행 × 6 값 · P = kbar 대각합/3 ·
    kbar = Ry/bohr³ × RY_KBAR) · BFGS 기록 필수 · **검사가 다 끝난 뒤에만** 판정 · 다음 잡 입력 · 이완 구조를 쓴다 · JSON 에
    NaN · Inf 를 쓰지 않는다).
+v5 (2026-11-13) = Codex EI 회신 (NO-GO · P1 1 · P2 1 · P3 1) 고침 — kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md
+   (이완 최종 좌표를 셀로 바꾼 구조도 기하 검사 (유한 · 정칙 — 토큰이 유한해도 셀을 곱하면 넘칠 수 있다) · 판정 · 계획 파일은
+   잡 · 구조 폴더 (sp · kprobe · relax · relaxed) 밖에만 · 변이는 한 동작씩 · 쓰기 실패 범위 · LF 범위 문구).
 
   prepare      8 단계 결과를 판 고정 판독기로 다시 결속 (anneal_readout 다시 내기 · 본 판독 파일 몸통 대조 · 보류면 멈춤) →
                가족마다 UMA 어닐 최저 둘 (6 · 판독기의 성공 정의 그대로 · 가족 최저 · 성공 수를 본 판독과 대조) →
@@ -49,7 +52,10 @@ NaN · Inf · 넘침 · 꼬리 글자 → 그 값 없음 = 거부 · Codex EH P1
 경로 규약: 잡 · 구조 · 출력 · 대상의 {rel · sha256} 은 **계획 폴더 (dft_plan.json 이 있는 곳) 기준** · 판정 파일 사이의 고리
 (plan · sp_verdict · prev) 는 **그 판정 파일이 있는 폴더 기준**. 파일은 utf-8 · LF 로 쓴다 (Windows 에서도 같은 바이트 · sha).
 **쓰기는 검사가 다 끝난 뒤에만** (_commit · Codex EH 확인 목록 2) — 판정 텍스트 (유한성) · 이미 있는 잡 입력 · 이완 구조의 바이트
-대조를 먼저 다 하고, 없는 것만 쓰고, 판정 파일은 맨 끝에 쓴다. 어느 검사에서 멈추면 새 파일이 하나도 생기지 않는다.
+대조를 먼저 다 하고, 없는 것만 쓰고, 판정 파일은 맨 끝에 쓴다. 쓰기 전 검사에서 멈추면 새 파일이 하나도 생기지 않는다 · 보조 파일
+(잡 입력 · 이완 구조) 을 쓰다 실패하면 판정 파일은 없다 · 판정 파일 자체를 쓰다 실패하면 부분 파일이 남을 수 있다 — 다음 단계는 그
+파일을 읽지 못하고 멈춘다 (지우지 말고 옮겨 보존한 뒤 새 이름으로 다시 · Codex EI Q4). 판정 · 계획 파일은 잡 · 구조 폴더 (sp · kprobe ·
+relax · relaxed) 밖에만 둔다 — 그 폴더는 입력 · 출력 · 이완 구조 자리다 (Codex EI P2).
 
 ⛔ 이 도구가 못 하는 것
   · pw.x 를 돌리지 않는다 (실행기 tools/doping/run_force_check_scf.sh · gabia GPU · GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 —
@@ -73,7 +79,10 @@ NaN · Inf · 넘침 · 꼬리 글자 → 그 값 없음 = 거부 · Codex EH P1
     형식 · 내부 관계까지 일관되게 바꾼 숫자 · **다른 계산의 완전한 블록이나 중간 SCF 묶음을 바꿔 넣은 출력은 못 가린다** —
     블록 문법 통과는 '같은 실행에서 생성된 상태' 라는 인증이 아니다 (Codex EH Q2). 판정에 적은 출력 sha256 은 '판정 때 이 바이트를
     읽었다' 는 증거이지 생성 당시 원본이라는 증거가 아니다. PWSCF 판 문자열 (7.4.1) 대조도 출력 머리의 판 확인일 뿐 실행 바이너리 ·
-    빌드의 동일성 인증이 아니다 (Codex EH Q4).
+    빌드의 동일성 인증이 아니다 (Codex EH Q4). 유한한 숫자로 바꾼 좌표 (예: 분수 좌표 1e6) 도 여기 든다 — 기하가 유한 · 정칙이면
+    판정하지 않고 끝 꼴 · 배위를 기록할 뿐이다 (카드 G7 · 셀을 곱해 넘친 좌표는 Codex EI P1 로 거부한다).
+  · 출력은 pw.x 가 쓴 LF 텍스트 그대로만 받는다 — CRLF 로 바뀐 출력 (Windows 복사 등) 은 줄 꼴이 맞지 않아 거부된다 (gabia 에서 만들고
+    gabia 에서 판독 · Codex EI Q3).
 
 쓰는 법 (gabia — 판 고정 판독기 $R/src · 이 도구는 다른 worktree)
   python3 b2o3_bo_dft.py --selftest
@@ -148,7 +157,7 @@ DFT = {
 TOL = {"ecut": 1e-6, "conv_rel": 1e-6, "degauss": 1e-6, "cell_A": 1e-4, "pos_A": 1e-4, "V_A3": 0.01, "E_final_Ry": 1e-6,
        "nelec": 1e-6, "zval": 1e-6, "k_grid": 1e-4, "k_weight": 1e-4, "force_print": 1e-9,
        # 응력 블록 (Codex EH P2-2) — 출력 반올림 상한: P (f12.2) 반 칸 0.005 + 대각 셋 (f12.2) 반 칸의 평균 0.005 = 0.01 ·
-       # kbar (f12.2) 반 칸 0.005 + Ry (f13.8) 반 칸 × RY_KBAR 0.00074 = 0.0057 → 0.006. 실측 (저장소 QE 7.4.1 · 6.7 출력 85 개 ·
+       # kbar (f12.2) 반 칸 0.005 + Ry (f13.8) 반 칸 × RY_KBAR 0.000736 = 0.0057355 → 0.006. 실측 (저장소 QE 7.4.1 · 6.7 출력 85 개 ·
        # 응력 블록 1016 개 · 2026-11-13) 최대 0.0067 · 0.0057.
        "stress_P_kbar": 0.0100001, "stress_unit_kbar": 0.006}
 B_CUT_A = {"S": 2.2, "O": 1.7}            # 기록용 B 배위 (카드 G7 · 판정 아님)
@@ -972,6 +981,13 @@ def select_sp(succ, n=None):
     return out
 
 
+def _geom_bad(a) -> bool:
+    """기하가 유한 · 정칙이 아니면 True — 좌표 · 셀에 NaN · inf · 부피 ≤ 1 Å³ (판 고정 판독기 run_anneal.geometry_problems 와 같은 꼴 ·
+    끝 꼴 'invalid' 를 내는 조건). 8 단계 구조 (_struct) · 이완 최종 구조 (read_relax) 가 같이 쓴다."""
+    c = np.asarray(a.cell.array, float)              # 부피는 행렬식으로 (ASE get_volume 은 0 인 축이 있으면 예외로 멈춘다)
+    return not (np.isfinite(a.positions).all() and np.isfinite(c).all() and abs(float(np.linalg.det(c))) > 1.0)
+
+
 def _struct(RD, raw, res_dir, name):
     from ase.io import read
     r = raw.get(name) or {}
@@ -985,7 +1001,7 @@ def _struct(RD, raw, res_dir, name):
         comp[s] = comp.get(s, 0) + 1
     if dict(sorted(comp.items())) != DFT["composition"]:
         raise SystemExit(f"⛔ {name}: 조성 {comp} ≠ {DFT['composition']}")
-    if not (np.isfinite(a.positions).all() and np.isfinite(a.cell.array).all() and abs(a.get_volume()) > 1.0):
+    if _geom_bad(a):
         raise SystemExit(f"⛔ {name}: 기하가 유한 · 정칙이 아니다")
     return p, a
 
@@ -1257,11 +1273,18 @@ def _write_jobs(base, stage, texts):
 def _commit(base, jobs_by_stage, files, obj, out):
     """판정 · 계획을 쓰는 유일한 길 (Codex EH 확인 목록 2) — 모든 검사가 끝난 뒤에 부른다.
 
-    ① 판정 텍스트를 먼저 만든다 (유한하지 않은 수면 여기서 멈춤) ② 쓸 잡 입력 · 이완 구조를 전부 대조 (이미 있는 것은 같은 바이트여야)
-    ③ 없는 것만 쓰고 ④ 판정 파일은 맨 끝에. ①② 에서 멈추면 새 파일이 하나도 생기지 않는다 (③ 도중의 디스크 오류는 막지 못한다 —
-    그때도 판정 파일은 없다).
+    ① 판정 텍스트를 먼저 만든다 (유한하지 않은 수면 여기서 멈춤) ② 판정 · 계획 파일이 잡 · 구조 폴더 (sp · kprobe · relax · relaxed)
+    밖인지 · 아직 없는지 ③ 쓸 잡 입력 · 이완 구조를 전부 대조 (이미 있는 것은 같은 바이트여야) ④ 없는 것만 쓰고 ⑤ 판정 파일은 맨 끝에.
+    ①–③ 에서 멈추면 새 파일이 하나도 생기지 않는다 · ④ 도중의 실패면 판정 파일은 없다 · ⑤ 판정 파일 자체를 쓰다 실패하면 부분 파일이
+    남을 수 있다 — 다음 단계는 그 파일을 읽지 못하고 멈춘다 (지우지 말고 옮겨 보존한 뒤 새 이름으로 다시 · Codex EI Q4).
     """
     body = _dumps(obj)
+    o_ = Path(out).resolve()
+    for d in ("sp", "kprobe", "relax", "relaxed"):    # Codex EI P2 — 판정이 만들 입력 · 앞으로의 출력 자리와 겹치지 않게
+        r_ = (Path(base) / d).resolve()
+        if o_ == r_ or r_ in o_.parents:
+            raise SystemExit(f"⛔ 판정 · 계획 파일 {out} 이 잡 · 구조 폴더 {d}/ 안에 있다 — 그 폴더는 입력 · 출력 · 이완 구조 자리다 "
+                             "(겹치면 만든 입력을 덮거나 실행기가 끝난 잡으로 본다) · 계획 폴더 바로 아래 같은 다른 곳에 둔다")
     if Path(out).exists():
         raise SystemExit(f"⛔ {out} 가 이미 있다 — 덮지 않는다 (쓰기 직전 확인 · 새 폴더 · 새 판정 이름)")
     items = [(Path(base) / stage / job / "scf.in", t, "잡 입력") for stage, texts in jobs_by_stage.items() for job, t in texts.items()]
@@ -1418,6 +1441,9 @@ def read_relax(RD, prev_path, out, host):
         if fin["units"] != "crystal":
             raise SystemExit(f"⛔ {j['job']}: 최종 좌표 단위 {fin['units']} ≠ crystal")
         a = Atoms(fin["symbols"], scaled_positions=np.array(fin["xyz"]), cell=inp["cell"], pbc=True)
+        if _geom_bad(a):                             # Codex EI P1 — 토큰이 유한해도 셀을 곱하면 넘친다 (1e308 → inf)
+            raise SystemExit(f"⛔ {j['job']}: 최종 좌표를 셀로 바꾼 구조가 유한 · 정칙이 아니다 (분수 좌표 토큰은 유한해도 셀을 곱하면 "
+                             "넘칠 수 있다) — 판정 · 이완 구조 · 대상을 하나도 쓰지 않는다")
         rp, t = base / "relaxed" / f"{j['job']}.xyz", _xyz_text(a)
         xyz[rp] = t                                  # 쓰기는 모든 검사 뒤 (_commit · Codex EH 확인 목록 2)
         relaxed[j["family"]] = {"job": j["job"], "file": {"rel": _rel(rp, base), "sha256": _text_sha(t)},
@@ -1868,6 +1894,12 @@ def _selftest() -> int:
         base_atoms = Atoms(sy_, scaled_positions=np.array(frac), cell=h.cell, pbc=True)
         chk(len(base_atoms) == 128 and dict(sorted(Counter(sy_).items())) == DFT["composition"],
             "[양성] 시험 구조 128 원자 · 카드 조성")
+        g_inf = base_atoms.copy()
+        g_inf.positions[5, 0] = np.inf
+        g_flat = base_atoms.copy()
+        g_flat.set_cell(np.diag([10.0, 10.0, 0.0]), scale_atoms=False)
+        chk(not _geom_bad(base_atoms) and _geom_bad(g_inf) and _geom_bad(g_flat),
+            "[양성/음성] 기하 검사 — 정상 구조는 통과 · 좌표 inf · 부피 0 셀은 거부 (판독기 끝 꼴 'invalid' 와 같은 조건)")
 
         def variant(seed, scale=1.0):
             a = base_atoms.copy()
@@ -2028,40 +2060,41 @@ def _selftest() -> int:
         good2 = (d2 / "scf.out").read_bytes()
         other = fo(d2, -90.0, ecut=40.0, job_done=False)
         bad_cases = [
-            ("JOB DONE", {"job_done": False}), ("SCF 수렴", {"not_conv": True}), ("ecutwfc", {"ecut": 60.0}),
-            ("conv_thr", {"conv": "1.0E-06"}), ("smearing", {"smear": "Marzari-Vanderbilt"}),
-            ("smearing", {"width": "0.0050"}), ("교환상관", {"xc": "SLA  PW   PSX  PSC"}),
+            ("JOB DONE", {"job_done": False}), ("SCF 수렴", {"not_conv": True}), ("ecutwfc", {"ecut": 60.0}, "ecutwfc 60"),
+            ("conv_thr", {"conv": "1.0E-06"}, "conv_thr 1e-6"), ("smearing", {"smear": "Marzari-Vanderbilt"}, "smearing 종류"),
+            ("smearing", {"width": "0.0050"}, "smearing 폭"), ("교환상관", {"xc": "SLA  PW   PSX  PSC"}),
             ("스핀", {"spin": True}), ("처음 좌표", {"shift_pos": 0.01}), ("입력 이름", {"input_name": "x.in"}),
             ("힘 0≠1", {"drop_forces": True}), ("prefix", {"prefix": "sp_other"}),
             ("유사포텐셜 S", {"pp": {**PPR, "S": {**PPR["S"], "md5": "f" * 32}}}),
             ("실행이 2 개", {"append_run": other}),                                       # EF P1-1 (ENCUT 40 · 미완료 둘째 실행)
             ("JOB DONE 뒤에 계산 기록", {"tail_junk": "!    total energy              =    -7.40000000 Ry\n"}),
-            ("설정 줄이 한 번씩이 아니다", {"tail_junk": "     kinetic-energy cutoff     =      40.0000  Ry\n"}),
-            ("전자 수", {"nelec": 595.0}), ("전자 수", {"nelec": "missing"}),                # EF P1-5
-            ("Zval", {"zval_over": {"S": 5.0}}),
-            ("요청 격자", {"mesh": [4, 2, 1]}),                                           # EF P1-3 (3×2×1 입력 · 4×2×1 목록)
+            ("설정 줄이 한 번씩이 아니다", {"tail_junk": "     kinetic-energy cutoff     =      40.0000  Ry\n"}, "ecut 줄 둘"),
+            ("전자 수", {"nelec": 595.0}, "전자 수 595"), ("전자 수", {"nelec": "missing"}, "전자 수 줄 없음"),                # EF P1-5
+            ("Zval", {"zval_over": {"S": 5.0}}, "Zval S 5.0"),
+            ("요청 격자", {"mesh": [4, 2, 1]}, "k 목록 4×2×1"),                                           # EF P1-3 (3×2×1 입력 · 4×2×1 목록)
             ("셀 축", {"axes_eps": 0.01}), ("PWSCF 판 7.3.1 ≠ 계약", {"version": "7.3.1"}),       # EG P2-4 (판 고정)
             ("'!' 2≠1", {"E_list": [sp_E["F_P"][0] + 0.5, sp_E["F_P"][0]]}),             # 단일점에 SCF 조각을 끼워 넣음
             ("힘 2≠1", {"insert_before_done": _frag_forces(128)}),                        # EG P1-1 (JOB DONE 앞 힘 조각)
             ("응력 1≠0", {"insert_before_done": _frag_stress(0.0)}),                     # tstress 없는 단일점에 응력 조각
             ("원자 번호", {"force_ids": [2, 2] + list(range(3, 129))}),                    # EG P1-1 (원자 1 행 빼고 2 행 복제)
             # EH P1-1 · P1-2 — 숫자는 토큰 전체 · 유한 (개수 · 순서는 그대로)
-            ("유한한 숫자가 아니다", {"post": lambda t: _force1(t, "NaN")}),
-            ("총에너지 (마지막 묶음) 를 못 읽었다", {"post": lambda t: _last_tok(t, r"(?m)^!", r"(=[ \t]*)(\S+)", "NaN")}),
-            ("원자 수", {"post": lambda t: t.replace("number of atoms/cell      =           128", "number of atoms/cell      =           128x")}),
-            ("conv_thr", {"post": lambda t: t.replace("scf convergence threshold =      1.0E-08", "scf convergence threshold =      1.0E-08junk")}),
-            ("Zval", {"post": lambda t: _last_tok(t, r"PseudoPot\. # 1 ", r"(Zval =[ \t]*)(\S+)", "3.0x", last=False)}),
-            ("요청 격자", {"post": lambda t: _last_tok(t, r"cart\. coord\. in units 2pi/alat", r"(wk =[ \t]*)(\S+)", "0.3333333x")}),
-            ("처음 좌표 블록을 못 읽었다", {"post": lambda t: _last_tok(t, r"positions \(alat units\)", r"(tau\([ \t]*1\) = \([ \t]*)(\S+)", "NaN")}),
-            ("설정 줄이 한 번씩이 아니다", {"tail_junk": "     number of atoms/cell      =           128\n"}),
+            ("유한한 숫자가 아니다", {"post": lambda t: _force1(t, "NaN")}, "힘 NaN"),
+            ("총에너지 (마지막 묶음) 를 못 읽었다", {"post": lambda t: _last_tok(t, r"(?m)^!", r"(=[ \t]*)(\S+)", "NaN")}, "'!' 에너지 NaN"),
+            ("원자 수", {"post": lambda t: t.replace("number of atoms/cell      =           128", "number of atoms/cell      =           128x")}, "원자 수 꼬리 '128x'"),
+            ("conv_thr", {"post": lambda t: t.replace("scf convergence threshold =      1.0E-08", "scf convergence threshold =      1.0E-08junk")}, "conv_thr 꼬리 'junk'"),
+            ("Zval", {"post": lambda t: _last_tok(t, r"PseudoPot\. # 1 ", r"(Zval =[ \t]*)(\S+)", "3.0x", last=False)}, "Zval 꼬리 '3.0x'"),
+            ("요청 격자", {"post": lambda t: _last_tok(t, r"cart\. coord\. in units 2pi/alat", r"(wk =[ \t]*)(\S+)", "0.3333333x")}, "k 가중치 꼬리 'x'"),
+            ("처음 좌표 블록을 못 읽었다", {"post": lambda t: _last_tok(t, r"positions \(alat units\)", r"(tau\([ \t]*1\) = \([ \t]*)(\S+)", "NaN")}, "처음 좌표 NaN"),
+            ("설정 줄이 한 번씩이 아니다", {"tail_junk": "     number of atoms/cell      =           128\n"}, "원자 수 줄 둘"),
             ("ecutwfc", {"post": lambda t: t.replace("kinetic-energy cutoff     =      52.0000  Ry",
-                                                      "kinetic-energy cutoff     =      52.0000  Ry  x")}),     # 줄 끝까지
-            ("총에너지 (마지막 묶음) 를 못 읽었다", {"post": lambda t: re.sub(r"(?m)^(![ \t]+total energy[^\n]*Ry)$", r"\1 x", t)}),
-            ("요청 격자", {"post": lambda t: t.replace("k(    2)", "k(    1)")}),                  # 목록 번호가 차례가 아님
+                                                      "kinetic-energy cutoff     =      52.0000  Ry  x")}, "ecut 줄 끝 'Ry  x'"),     # 줄 끝까지
+            ("총에너지 (마지막 묶음) 를 못 읽었다", {"post": lambda t: re.sub(r"(?m)^(![ \t]+total energy[^\n]*Ry)$", r"\1 x", t)}, "'!' 줄 끝 ' x'"),
+            ("요청 격자", {"post": lambda t: t.replace("k(    2)", "k(    1)")}, "k 목록 번호 k(2)→k(1)"),                  # 목록 번호가 차례가 아님
         ]
-        for kw_, over in bad_cases:
+        for case in bad_cases:                      # (거부 이유 낱말, 출력 바꿈, 라벨 — 같은 낱말 시험이 둘이면 라벨로 가른다)
+            kw_, over, label = case[0], case[1], (case[2] if len(case) > 2 else case[0])
             _write_bytes(d2 / "scf.out", fo(d2, sp_E["F_P"][0], **over))
-            chk(refuses(kw_, read_sp, RD, P, out / "sp_verdict.json"), f"[음성] 단일점 출력 {kw_} 어긋남 → 판독 안 함")
+            chk(refuses(kw_, read_sp, RD, P, out / "sp_verdict.json"), f"[음성] 단일점 출력 {label} 어긋남 → 판독 안 함")
         # 깨진 바이트 (EF P2-3) — '1.0E-\xff08'
         (d2 / "scf.out").write_bytes(good2.replace(b"1.0E-08", b"1.0E-\xff08"))
         chk(refuses("바이트 손상", read_sp, RD, P, out / "sp_verdict.json"), "[음성] 출력에 깨진 바이트 → 판독 안 함 (조용히 지우지 않는다)")
@@ -2146,6 +2179,16 @@ def _selftest() -> int:
         chk(refuses("덮지 않는다", read_sp, RD, P, out / "sp_verdict.json") and not (out / "sp_verdict.json").exists()
             and not any(p.exists() for p in kp_files[:-1]),
             "[음성] 다음 잡 입력 하나가 다른 바이트로 이미 있으면 판정 · 나머지 입력을 하나도 안 쓴다 (검사 뒤 쓰기 · EH 확인 목록 2)")
+        for p in kp_files:
+            p.unlink(missing_ok=True)
+        (out / "sp_verdict.json").unlink(missing_ok=True)
+        files0 = {p_ for p_ in out.rglob("*") if p_.is_file()}
+        chk(refuses("잡 · 구조 폴더", read_sp, RD, P, kp_files[0]) and not any(p.exists() for p in kp_files)
+            and {p_ for p_ in out.rglob("*") if p_.is_file()} == files0,
+            "[음성] 판정 경로를 만들 탐침 입력 자리 (kprobe/<잡>/scf.in) 로 주면 → 판독 안 함 · 입력 · 판정 하나도 안 씀 "
+            "(입력을 판정 JSON 으로 덮던 경로 · EI P2)")
+        chk(refuses("잡 · 구조 폴더", read_sp, RD, P, out / "sp" / "sp_verdict.json") and not (out / "sp" / "sp_verdict.json").exists(),
+            "[음성] 판정 경로가 단일점 폴더 안 (sp/) 이어도 거부 — 판정은 잡 · 구조 폴더 밖에만")
         for p, b_ in zip(kp_files, kp_keep):
             p.write_bytes(b_)
         (out / "sp_verdict.json").write_bytes(sv_keep)
@@ -2394,6 +2437,9 @@ def _selftest() -> int:
         for kw_, Pm, over, what in eh_cases:
             put_rx(ERX, Pm, **over)
             chk(refuses_clean(kw_), f"[음성] {what} → 판독 안 함 · 판정 · 이완 구조 · 대상 파일이 새로 안 생김")
+        put_rx(ERX, PRX, F_P={"post": lambda t: _final_li(t, "1e308")})
+        chk(refuses_clean("셀로 바꾼 구조가 유한"),
+            "[음성] 최종 Li 분수 좌표 토큰 '1e308' (토큰은 유한 · 셀을 곱하면 inf) → 판독 안 함 · 이완 구조 · 판정 · 대상 파일이 새로 안 생김 (EI P1)")
         f3 = rdir / sorted((e for e in plan8 if e["family"] == "F_B"), key=lambda e: recs[e["name"]]["E"])[2]["name"] / "post_relax.xyz"
         k3 = f3.read_bytes()
         f3.write_bytes(k3 + b"\n")

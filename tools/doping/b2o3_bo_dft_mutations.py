@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""b2o3_bo_dft.py 의 깨기 (변이) 시험 — 검사 한 줄씩 끄고 그 도구의 selftest 가 빨개지는지 본다 (Codex EF · EG · EH 재현용).
+"""b2o3_bo_dft.py 의 깨기 (변이) 시험 — 검사 한 줄씩 끄고 그 도구의 selftest 가 빨개지는지 본다 (Codex EF · EG · EH · EI 재현용).
 
   python3 b2o3_bo_dft_mutations.py --selftest   # 정적 검사 (몇 초) — 변이 대상 문자열이 도구에 정확히 한 번씩 있고 · 바꾼 소스가 문법상 맞는지
                                                 #   + 음성 (없는 대상 · 두 번 있는 대상 · 문법이 깨지는 변이를 잡는지)
@@ -131,7 +131,12 @@ M = [
  ("잡 입력 덮지 않음", '            if f.read_bytes() != t.encode("utf-8"):', '            if False:'),
  ("이완 구조 충돌 이유", '                if what == "이완 구조":', '                if False:'),
  # ── 검사 뒤 쓰기 · JSON 유한성 (Codex EH 확인 목록 2 · P1-1) ──
- ("판정은 맨 끝", '    body = _dumps(obj)\n    if Path(out).exists():', '    body = _dumps(obj)\n    _write_bytes(out, body)\n    if False:'),
+ ("판정은 맨 끝", '    for p, t in _pending(items):\n        _write_bytes(p, t)\n    _write_bytes(out, body)',
+  '    _write_bytes(out, body)\n    for p, t in _pending(items):\n        _write_bytes(p, t)'),
+ ("판정 경로 ≠ 잡 폴더", '        if o_ == r_ or r_ in o_.parents:', '        if False:'),
+ ("이완 구조 기하 (호출)", '        if _geom_bad(a):                             # Codex EI P1', '        if False:                             # Codex EI P1'),
+ ("기하 좌표 유한", '    return not (np.isfinite(a.positions).all() and np.isfinite(c).all()', '    return not (True and np.isfinite(c).all()'),
+ ("기하 부피", 'and abs(float(np.linalg.det(c))) > 1.0)', 'and True)'),
  ("전부 대조한 뒤 쓰기", '    for p, t in _pending(items):\n        _write_bytes(p, t)',
   '    for p, t, w_ in items:\n        for p2, t2 in _pending([(p, t, w_)]):\n            _write_bytes(p2, t2)'),
  ("이완 구조 쓰기 순서", '        xyz[rp] = t                                  # 쓰기는',
