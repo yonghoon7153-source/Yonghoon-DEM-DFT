@@ -1,0 +1,39 @@
+{
+ "kind": "b2o3_bo_pilot_receipt/v1",
+ "inputs": {
+  "snapshots": {
+   "path": "s7b_snaps/cfg0040_E-2252.241_O-bo4_snapshots.json",
+   "sha256": "3e0485805322b9d619d3f68b3e6f49bdc2200e8d249ff5bf087fdd9477188298"
+  },
+  "relax_results": {
+   "path": "s7b_relax/anneal_results.json",
+   "sha256": "fba6096627dc60561875f7f637d06a93bd325c8e3591ce221def050ec90db053"
+  },
+  "screen_verdict": {
+   "path": "s6_verdict.json",
+   "sha256": "6889935781b9390e5297dac28db635cf1f9fbf9d3eb73ae332b0a68e4e0dc587"
+  }
+ },
+ "pilot_name": "cfg0040_E-2252.241_O-bo4",
+ "traj_sha256": "f15d1b19766559751ffd65015c2725365b9e2ad7cc308016b18ac18f199026eb",
+ "frames": {
+  "20": 20,
+  "50": 50,
+  "100": 100
+ },
+ "E": {
+  "20": -542.9734980788944,
+  "50": -543.6644926749318,
+  "100": -544.0224362384636
+ },
+ "end_motif": {
+  "20": "F_B",
+  "50": "F_B",
+  "100": "F_B"
+ },
+ "decision": "t_a = 100 ps",
+ "t_a_ps": 100,
+ "spread_eV": 1.0489381595691611,
+ "same_end_motif": true,
+ "⚠": "운영 규칙 (길이 고르기) — 수렴 증거가 아니다 · 파일럿의 선택된 t_a 보다 긴 결과는 다른 배치와 견주지 않는다"
+}

@@ -1,0 +1,1095 @@
+2026-11-09 20:07:12 시작 (입력 · 소스 해시 재대조 통과)
+Loading UMA-s-1p1 (cuda)...
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+To process: 135/135 (실패 재시도 0 · 옛 기록 받음 0)
+
+[1/135] cfg0000_E-2256.634_O-bo4
+  [cfg0000_E-2256.634_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0000_E-2256.634_O-bo4] MD done (0.0s) E_pre=-4.1266 → E_md=-4.1266 eV/atom
+  [cfg0000_E-2256.634_O-bo4] relax 251 steps (28.6s) E_post=-4.2437 eV/atom, ΔE_anneal=-117.0 meV/atom, conv=True
+
+[2/135] cfg0000_E-2256.634_O-distributed
+  [cfg0000_E-2256.634_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0000_E-2256.634_O-distributed] MD done (0.0s) E_pre=-4.1417 → E_md=-4.1417 eV/atom
+  [cfg0000_E-2256.634_O-distributed] relax 217 steps (24.6s) E_post=-4.2371 eV/atom, ΔE_anneal=-95.4 meV/atom, conv=True
+
+[3/135] cfg0000_E-2256.634_O-free_s
+  [cfg0000_E-2256.634_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0000_E-2256.634_O-free_s] MD done (0.0s) E_pre=-4.1386 → E_md=-4.1386 eV/atom
+  [cfg0000_E-2256.634_O-free_s] relax 77 steps (8.9s) E_post=-4.2119 eV/atom, ΔE_anneal=-73.3 meV/atom, conv=True
+
+[4/135] cfg0001_E-2255.860_O-bo4
+  [cfg0001_E-2255.860_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0001_E-2255.860_O-bo4] MD done (0.0s) E_pre=-4.1259 → E_md=-4.1259 eV/atom
+  [cfg0001_E-2255.860_O-bo4] relax 162 steps (18.7s) E_post=-4.2381 eV/atom, ΔE_anneal=-112.2 meV/atom, conv=True
+
+[5/135] cfg0001_E-2255.860_O-distributed
+  [cfg0001_E-2255.860_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0001_E-2255.860_O-distributed] MD done (0.0s) E_pre=-4.1412 → E_md=-4.1412 eV/atom
+  [cfg0001_E-2255.860_O-distributed] relax 169 steps (19.6s) E_post=-4.2389 eV/atom, ΔE_anneal=-97.7 meV/atom, conv=True
+
+[6/135] cfg0001_E-2255.860_O-free_s
+  [cfg0001_E-2255.860_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0001_E-2255.860_O-free_s] MD done (0.0s) E_pre=-4.1369 → E_md=-4.1369 eV/atom
+  [cfg0001_E-2255.860_O-free_s] relax 78 steps (8.9s) E_post=-4.2110 eV/atom, ΔE_anneal=-74.1 meV/atom, conv=True
+
+[7/135] cfg0002_E-2255.792_O-bo4
+  [cfg0002_E-2255.792_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0002_E-2255.792_O-bo4] MD done (0.0s) E_pre=-4.1321 → E_md=-4.1321 eV/atom
+  [cfg0002_E-2255.792_O-bo4] relax 307 steps (35.0s) E_post=-4.2407 eV/atom, ΔE_anneal=-108.6 meV/atom, conv=True
+
+[8/135] cfg0002_E-2255.792_O-distributed
+  [cfg0002_E-2255.792_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0002_E-2255.792_O-distributed] MD done (0.0s) E_pre=-4.1463 → E_md=-4.1463 eV/atom
+  [cfg0002_E-2255.792_O-distributed] relax 275 steps (31.4s) E_post=-4.2370 eV/atom, ΔE_anneal=-90.7 meV/atom, conv=True
+
+[9/135] cfg0002_E-2255.792_O-free_s
+  [cfg0002_E-2255.792_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0002_E-2255.792_O-free_s] MD done (0.0s) E_pre=-4.1422 → E_md=-4.1422 eV/atom
+  [cfg0002_E-2255.792_O-free_s] relax 101 steps (11.7s) E_post=-4.2064 eV/atom, ΔE_anneal=-64.2 meV/atom, conv=True
+
+[10/135] cfg0003_E-2255.483_O-bo4
+  [cfg0003_E-2255.483_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0003_E-2255.483_O-bo4] MD done (0.0s) E_pre=-4.1327 → E_md=-4.1327 eV/atom
+  [cfg0003_E-2255.483_O-bo4] relax 352 steps (39.9s) E_post=-4.2451 eV/atom, ΔE_anneal=-112.4 meV/atom, conv=True
+
+[11/135] cfg0003_E-2255.483_O-distributed
+  [cfg0003_E-2255.483_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0003_E-2255.483_O-distributed] MD done (0.0s) E_pre=-4.1483 → E_md=-4.1483 eV/atom
+  [cfg0003_E-2255.483_O-distributed] relax 189 steps (21.4s) E_post=-4.2355 eV/atom, ΔE_anneal=-87.2 meV/atom, conv=True
+
+[12/135] cfg0003_E-2255.483_O-free_s
+  [cfg0003_E-2255.483_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0003_E-2255.483_O-free_s] MD done (0.0s) E_pre=-4.1429 → E_md=-4.1429 eV/atom
+  [cfg0003_E-2255.483_O-free_s] relax 149 steps (17.2s) E_post=-4.2111 eV/atom, ΔE_anneal=-68.2 meV/atom, conv=True
+
+[13/135] cfg0004_E-2255.404_O-bo4
+  [cfg0004_E-2255.404_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0004_E-2255.404_O-bo4] MD done (0.0s) E_pre=-4.1211 → E_md=-4.1211 eV/atom
+  [cfg0004_E-2255.404_O-bo4] relax 128 steps (14.4s) E_post=-4.2356 eV/atom, ΔE_anneal=-114.5 meV/atom, conv=True
+
+[14/135] cfg0004_E-2255.404_O-distributed
+  [cfg0004_E-2255.404_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0004_E-2255.404_O-distributed] MD done (0.0s) E_pre=-4.1388 → E_md=-4.1388 eV/atom
+  [cfg0004_E-2255.404_O-distributed] relax 216 steps (25.5s) E_post=-4.2373 eV/atom, ΔE_anneal=-98.5 meV/atom, conv=True
+
+[15/135] cfg0004_E-2255.404_O-free_s
+  [cfg0004_E-2255.404_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0004_E-2255.404_O-free_s] MD done (0.0s) E_pre=-4.1357 → E_md=-4.1357 eV/atom
+  [cfg0004_E-2255.404_O-free_s] relax 143 steps (17.1s) E_post=-4.2104 eV/atom, ΔE_anneal=-74.7 meV/atom, conv=True
+
+[16/135] cfg0005_E-2255.140_O-bo4
+  [cfg0005_E-2255.140_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0005_E-2255.140_O-bo4] MD done (0.0s) E_pre=-4.1268 → E_md=-4.1268 eV/atom
+  [cfg0005_E-2255.140_O-bo4] relax 219 steps (25.0s) E_post=-4.2388 eV/atom, ΔE_anneal=-111.9 meV/atom, conv=True
+
+[17/135] cfg0005_E-2255.140_O-distributed
+  [cfg0005_E-2255.140_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0005_E-2255.140_O-distributed] MD done (0.0s) E_pre=-4.1462 → E_md=-4.1462 eV/atom
+  [cfg0005_E-2255.140_O-distributed] relax 416 steps (47.9s) E_post=-4.2377 eV/atom, ΔE_anneal=-91.6 meV/atom, conv=True
+
+[18/135] cfg0005_E-2255.140_O-free_s
+  [cfg0005_E-2255.140_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0005_E-2255.140_O-free_s] MD done (0.0s) E_pre=-4.1394 → E_md=-4.1394 eV/atom
+  [cfg0005_E-2255.140_O-free_s] relax 145 steps (16.6s) E_post=-4.2125 eV/atom, ΔE_anneal=-73.1 meV/atom, conv=True
+
+[19/135] cfg0006_E-2255.067_O-bo4
+  [cfg0006_E-2255.067_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0006_E-2255.067_O-bo4] MD done (0.0s) E_pre=-4.1287 → E_md=-4.1287 eV/atom
+  [cfg0006_E-2255.067_O-bo4] relax 219 steps (25.7s) E_post=-4.2383 eV/atom, ΔE_anneal=-109.6 meV/atom, conv=True
+
+[20/135] cfg0006_E-2255.067_O-distributed
+  [cfg0006_E-2255.067_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0006_E-2255.067_O-distributed] MD done (0.0s) E_pre=-4.1436 → E_md=-4.1436 eV/atom
+  [cfg0006_E-2255.067_O-distributed] relax 253 steps (29.1s) E_post=-4.2381 eV/atom, ΔE_anneal=-94.5 meV/atom, conv=True
+
+[21/135] cfg0006_E-2255.067_O-free_s
+  [cfg0006_E-2255.067_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0006_E-2255.067_O-free_s] MD done (0.0s) E_pre=-4.1404 → E_md=-4.1404 eV/atom
+  [cfg0006_E-2255.067_O-free_s] relax 82 steps (9.6s) E_post=-4.2068 eV/atom, ΔE_anneal=-66.5 meV/atom, conv=True
+
+[22/135] cfg0007_E-2254.978_O-bo4
+  [cfg0007_E-2254.978_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0007_E-2254.978_O-bo4] MD done (0.0s) E_pre=-4.1363 → E_md=-4.1363 eV/atom
+  [cfg0007_E-2254.978_O-bo4] relax 306 steps (35.2s) E_post=-4.2424 eV/atom, ΔE_anneal=-106.1 meV/atom, conv=True
+
+[23/135] cfg0007_E-2254.978_O-distributed
+  [cfg0007_E-2254.978_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0007_E-2254.978_O-distributed] MD done (0.0s) E_pre=-4.1570 → E_md=-4.1570 eV/atom
+  [cfg0007_E-2254.978_O-distributed] relax 155 steps (17.7s) E_post=-4.2404 eV/atom, ΔE_anneal=-83.4 meV/atom, conv=True
+
+[24/135] cfg0007_E-2254.978_O-free_s
+  [cfg0007_E-2254.978_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0007_E-2254.978_O-free_s] MD done (0.0s) E_pre=-4.1512 → E_md=-4.1512 eV/atom
+  [cfg0007_E-2254.978_O-free_s] relax 72 steps (8.2s) E_post=-4.2132 eV/atom, ΔE_anneal=-61.9 meV/atom, conv=True
+
+[25/135] cfg0008_E-2254.892_O-bo4
+  [cfg0008_E-2254.892_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0008_E-2254.892_O-bo4] MD done (0.0s) E_pre=-4.1357 → E_md=-4.1357 eV/atom
+  [cfg0008_E-2254.892_O-bo4] relax 274 steps (31.4s) E_post=-4.2454 eV/atom, ΔE_anneal=-109.7 meV/atom, conv=True
+
+[26/135] cfg0008_E-2254.892_O-distributed
+  [cfg0008_E-2254.892_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0008_E-2254.892_O-distributed] MD done (0.0s) E_pre=-4.1508 → E_md=-4.1508 eV/atom
+  [cfg0008_E-2254.892_O-distributed] relax 124 steps (14.3s) E_post=-4.2367 eV/atom, ΔE_anneal=-85.9 meV/atom, conv=True
+
+[27/135] cfg0008_E-2254.892_O-free_s
+  [cfg0008_E-2254.892_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0008_E-2254.892_O-free_s] MD done (0.0s) E_pre=-4.1458 → E_md=-4.1458 eV/atom
+  [cfg0008_E-2254.892_O-free_s] relax 73 steps (8.7s) E_post=-4.2102 eV/atom, ΔE_anneal=-64.4 meV/atom, conv=True
+
+[28/135] cfg0009_E-2254.873_O-bo4
+  [cfg0009_E-2254.873_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0009_E-2254.873_O-bo4] MD done (0.0s) E_pre=-4.1217 → E_md=-4.1217 eV/atom
+  [cfg0009_E-2254.873_O-bo4] relax 189 steps (22.8s) E_post=-4.2353 eV/atom, ΔE_anneal=-113.6 meV/atom, conv=True
+
+[29/135] cfg0009_E-2254.873_O-distributed
+  [cfg0009_E-2254.873_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0009_E-2254.873_O-distributed] MD done (0.0s) E_pre=-4.1402 → E_md=-4.1402 eV/atom
+  [cfg0009_E-2254.873_O-distributed] relax 213 steps (24.8s) E_post=-4.2341 eV/atom, ΔE_anneal=-94.0 meV/atom, conv=True
+
+[30/135] cfg0009_E-2254.873_O-free_s
+  [cfg0009_E-2254.873_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0009_E-2254.873_O-free_s] MD done (0.0s) E_pre=-4.1347 → E_md=-4.1347 eV/atom
+  [cfg0009_E-2254.873_O-free_s] relax 99 steps (11.5s) E_post=-4.2082 eV/atom, ΔE_anneal=-73.4 meV/atom, conv=True
+
+[31/135] cfg0010_E-2254.741_O-bo4
+  [cfg0010_E-2254.741_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0010_E-2254.741_O-bo4] MD done (0.0s) E_pre=-4.1247 → E_md=-4.1247 eV/atom
+  [cfg0010_E-2254.741_O-bo4] relax 170 steps (19.9s) E_post=-4.2346 eV/atom, ΔE_anneal=-109.9 meV/atom, conv=True
+
+[32/135] cfg0010_E-2254.741_O-distributed
+  [cfg0010_E-2254.741_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0010_E-2254.741_O-distributed] MD done (0.0s) E_pre=-4.1397 → E_md=-4.1397 eV/atom
+  [cfg0010_E-2254.741_O-distributed] relax 212 steps (24.0s) E_post=-4.2376 eV/atom, ΔE_anneal=-97.9 meV/atom, conv=True
+
+[33/135] cfg0010_E-2254.741_O-free_s
+  [cfg0010_E-2254.741_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0010_E-2254.741_O-free_s] MD done (0.0s) E_pre=-4.1355 → E_md=-4.1355 eV/atom
+  [cfg0010_E-2254.741_O-free_s] relax 90 steps (10.3s) E_post=-4.2108 eV/atom, ΔE_anneal=-75.3 meV/atom, conv=True
+
+[34/135] cfg0011_E-2254.709_O-bo4
+  [cfg0011_E-2254.709_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0011_E-2254.709_O-bo4] MD done (0.0s) E_pre=-4.1346 → E_md=-4.1346 eV/atom
+  [cfg0011_E-2254.709_O-bo4] relax 244 steps (27.7s) E_post=-4.2401 eV/atom, ΔE_anneal=-105.5 meV/atom, conv=True
+
+[35/135] cfg0011_E-2254.709_O-distributed
+  [cfg0011_E-2254.709_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0011_E-2254.709_O-distributed] MD done (0.0s) E_pre=-4.1479 → E_md=-4.1479 eV/atom
+  [cfg0011_E-2254.709_O-distributed] relax 291 steps (33.4s) E_post=-4.2382 eV/atom, ΔE_anneal=-90.3 meV/atom, conv=True
+
+[36/135] cfg0011_E-2254.709_O-free_s
+  [cfg0011_E-2254.709_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0011_E-2254.709_O-free_s] MD done (0.0s) E_pre=-4.1445 → E_md=-4.1445 eV/atom
+  [cfg0011_E-2254.709_O-free_s] relax 109 steps (12.6s) E_post=-4.2158 eV/atom, ΔE_anneal=-71.3 meV/atom, conv=True
+
+[37/135] cfg0012_E-2254.602_O-bo4
+  [cfg0012_E-2254.602_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0012_E-2254.602_O-bo4] MD done (0.0s) E_pre=-4.1279 → E_md=-4.1279 eV/atom
+  [cfg0012_E-2254.602_O-bo4] relax 140 steps (16.1s) E_post=-4.2431 eV/atom, ΔE_anneal=-115.2 meV/atom, conv=True
+
+[38/135] cfg0012_E-2254.602_O-distributed
+  [cfg0012_E-2254.602_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0012_E-2254.602_O-distributed] MD done (0.0s) E_pre=-4.1443 → E_md=-4.1443 eV/atom
+  [cfg0012_E-2254.602_O-distributed] relax 251 steps (28.6s) E_post=-4.2372 eV/atom, ΔE_anneal=-92.8 meV/atom, conv=True
+
+[39/135] cfg0012_E-2254.602_O-free_s
+  [cfg0012_E-2254.602_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0012_E-2254.602_O-free_s] MD done (0.0s) E_pre=-4.1418 → E_md=-4.1418 eV/atom
+  [cfg0012_E-2254.602_O-free_s] relax 150 steps (16.9s) E_post=-4.2095 eV/atom, ΔE_anneal=-67.7 meV/atom, conv=True
+
+[40/135] cfg0013_E-2254.514_O-bo4
+  [cfg0013_E-2254.514_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0013_E-2254.514_O-bo4] MD done (0.0s) E_pre=-4.1267 → E_md=-4.1267 eV/atom
+  [cfg0013_E-2254.514_O-bo4] relax 176 steps (20.0s) E_post=-4.2409 eV/atom, ΔE_anneal=-114.2 meV/atom, conv=True
+
+[41/135] cfg0013_E-2254.514_O-distributed
+  [cfg0013_E-2254.514_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0013_E-2254.514_O-distributed] MD done (0.0s) E_pre=-4.1451 → E_md=-4.1451 eV/atom
+  [cfg0013_E-2254.514_O-distributed] relax 203 steps (23.6s) E_post=-4.2376 eV/atom, ΔE_anneal=-92.5 meV/atom, conv=True
+
+[42/135] cfg0013_E-2254.514_O-free_s
+  [cfg0013_E-2254.514_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0013_E-2254.514_O-free_s] MD done (0.0s) E_pre=-4.1394 → E_md=-4.1394 eV/atom
+  [cfg0013_E-2254.514_O-free_s] relax 74 steps (8.5s) E_post=-4.2059 eV/atom, ΔE_anneal=-66.6 meV/atom, conv=True
+
+[43/135] cfg0014_E-2254.460_O-bo4
+  [cfg0014_E-2254.460_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0014_E-2254.460_O-bo4] MD done (0.0s) E_pre=-4.1262 → E_md=-4.1262 eV/atom
+  [cfg0014_E-2254.460_O-bo4] relax 166 steps (19.3s) E_post=-4.2293 eV/atom, ΔE_anneal=-103.1 meV/atom, conv=True
+
+[44/135] cfg0014_E-2254.460_O-distributed
+  [cfg0014_E-2254.460_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0014_E-2254.460_O-distributed] MD done (0.0s) E_pre=-4.1432 → E_md=-4.1432 eV/atom
+  [cfg0014_E-2254.460_O-distributed] relax 236 steps (26.9s) E_post=-4.2371 eV/atom, ΔE_anneal=-93.9 meV/atom, conv=True
+
+[45/135] cfg0014_E-2254.460_O-free_s
+  [cfg0014_E-2254.460_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0014_E-2254.460_O-free_s] MD done (0.0s) E_pre=-4.1394 → E_md=-4.1394 eV/atom
+  [cfg0014_E-2254.460_O-free_s] relax 150 steps (17.9s) E_post=-4.2108 eV/atom, ΔE_anneal=-71.5 meV/atom, conv=True
+
+[46/135] cfg0015_E-2254.436_O-bo4
+  [cfg0015_E-2254.436_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0015_E-2254.436_O-bo4] MD done (0.0s) E_pre=-4.1200 → E_md=-4.1200 eV/atom
+  [cfg0015_E-2254.436_O-bo4] relax 306 steps (35.5s) E_post=-4.2390 eV/atom, ΔE_anneal=-119.0 meV/atom, conv=True
+
+[47/135] cfg0015_E-2254.436_O-distributed
+  [cfg0015_E-2254.436_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0015_E-2254.436_O-distributed] MD done (0.0s) E_pre=-4.1389 → E_md=-4.1389 eV/atom
+  [cfg0015_E-2254.436_O-distributed] relax 296 steps (34.7s) E_post=-4.2406 eV/atom, ΔE_anneal=-101.7 meV/atom, conv=True
+
+[48/135] cfg0015_E-2254.436_O-free_s
+  [cfg0015_E-2254.436_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0015_E-2254.436_O-free_s] MD done (0.0s) E_pre=-4.1337 → E_md=-4.1337 eV/atom
+  [cfg0015_E-2254.436_O-free_s] relax 106 steps (12.0s) E_post=-4.2120 eV/atom, ΔE_anneal=-78.3 meV/atom, conv=True
+
+[49/135] cfg0016_E-2254.317_O-bo4
+  [cfg0016_E-2254.317_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0016_E-2254.317_O-bo4] MD done (0.0s) E_pre=-4.1349 → E_md=-4.1349 eV/atom
+  [cfg0016_E-2254.317_O-bo4] relax 196 steps (22.3s) E_post=-4.2402 eV/atom, ΔE_anneal=-105.2 meV/atom, conv=True
+
+[50/135] cfg0016_E-2254.317_O-distributed
+  [cfg0016_E-2254.317_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0016_E-2254.317_O-distributed] MD done (0.0s) E_pre=-4.1493 → E_md=-4.1493 eV/atom
+  [cfg0016_E-2254.317_O-distributed] relax 132 steps (15.1s) E_post=-4.2388 eV/atom, ΔE_anneal=-89.5 meV/atom, conv=True
+
+[51/135] cfg0016_E-2254.317_O-free_s
+  [cfg0016_E-2254.317_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0016_E-2254.317_O-free_s] MD done (0.0s) E_pre=-4.1488 → E_md=-4.1488 eV/atom
+  [cfg0016_E-2254.317_O-free_s] relax 120 steps (14.3s) E_post=-4.2072 eV/atom, ΔE_anneal=-58.4 meV/atom, conv=True
+
+[52/135] cfg0017_E-2254.242_O-bo4
+  [cfg0017_E-2254.242_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0017_E-2254.242_O-bo4] MD done (0.0s) E_pre=-4.1279 → E_md=-4.1279 eV/atom
+  [cfg0017_E-2254.242_O-bo4] relax 233 steps (27.5s) E_post=-4.2446 eV/atom, ΔE_anneal=-116.7 meV/atom, conv=True
+
+[53/135] cfg0017_E-2254.242_O-distributed
+  [cfg0017_E-2254.242_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0017_E-2254.242_O-distributed] MD done (0.0s) E_pre=-4.1445 → E_md=-4.1445 eV/atom
+  [cfg0017_E-2254.242_O-distributed] relax 269 steps (30.9s) E_post=-4.2371 eV/atom, ΔE_anneal=-92.6 meV/atom, conv=True
+
+[54/135] cfg0017_E-2254.242_O-free_s
+  [cfg0017_E-2254.242_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0017_E-2254.242_O-free_s] MD done (0.0s) E_pre=-4.1424 → E_md=-4.1424 eV/atom
+  [cfg0017_E-2254.242_O-free_s] relax 163 steps (18.6s) E_post=-4.2064 eV/atom, ΔE_anneal=-64.0 meV/atom, conv=True
+
+[55/135] cfg0018_E-2254.225_O-bo4
+  [cfg0018_E-2254.225_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0018_E-2254.225_O-bo4] MD done (0.0s) E_pre=-4.1225 → E_md=-4.1225 eV/atom
+  [cfg0018_E-2254.225_O-bo4] relax 174 steps (19.8s) E_post=-4.2384 eV/atom, ΔE_anneal=-115.9 meV/atom, conv=True
+
+[56/135] cfg0018_E-2254.225_O-distributed
+  [cfg0018_E-2254.225_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0018_E-2254.225_O-distributed] MD done (0.0s) E_pre=-4.1398 → E_md=-4.1398 eV/atom
+  [cfg0018_E-2254.225_O-distributed] relax 228 steps (25.9s) E_post=-4.2365 eV/atom, ΔE_anneal=-96.7 meV/atom, conv=True
+
+[57/135] cfg0018_E-2254.225_O-free_s
+  [cfg0018_E-2254.225_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0018_E-2254.225_O-free_s] MD done (0.0s) E_pre=-4.1349 → E_md=-4.1349 eV/atom
+  [cfg0018_E-2254.225_O-free_s] relax 71 steps (8.0s) E_post=-4.2079 eV/atom, ΔE_anneal=-73.0 meV/atom, conv=True
+
+[58/135] cfg0019_E-2254.209_O-bo4
+  [cfg0019_E-2254.209_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0019_E-2254.209_O-bo4] MD done (0.0s) E_pre=-4.1247 → E_md=-4.1247 eV/atom
+  [cfg0019_E-2254.209_O-bo4] relax 346 steps (39.9s) E_post=-4.2404 eV/atom, ΔE_anneal=-115.7 meV/atom, conv=True
+
+[59/135] cfg0019_E-2254.209_O-distributed
+  [cfg0019_E-2254.209_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0019_E-2254.209_O-distributed] MD done (0.0s) E_pre=-4.1400 → E_md=-4.1400 eV/atom
+  [cfg0019_E-2254.209_O-distributed] relax 289 steps (33.1s) E_post=-4.2412 eV/atom, ΔE_anneal=-101.3 meV/atom, conv=True
+
+[60/135] cfg0019_E-2254.209_O-free_s
+  [cfg0019_E-2254.209_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0019_E-2254.209_O-free_s] MD done (0.0s) E_pre=-4.1376 → E_md=-4.1376 eV/atom
+  [cfg0019_E-2254.209_O-free_s] relax 155 steps (17.9s) E_post=-4.2077 eV/atom, ΔE_anneal=-70.0 meV/atom, conv=True
+
+[61/135] cfg0020_E-2254.057_O-bo4
+  [cfg0020_E-2254.057_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0020_E-2254.057_O-bo4] MD done (0.0s) E_pre=-4.1245 → E_md=-4.1245 eV/atom
+  [cfg0020_E-2254.057_O-bo4] relax 193 steps (22.0s) E_post=-4.2385 eV/atom, ΔE_anneal=-114.0 meV/atom, conv=True
+
+[62/135] cfg0020_E-2254.057_O-distributed
+  [cfg0020_E-2254.057_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0020_E-2254.057_O-distributed] MD done (0.0s) E_pre=-4.1385 → E_md=-4.1385 eV/atom
+  [cfg0020_E-2254.057_O-distributed] relax 469 steps (53.8s) E_post=-4.2405 eV/atom, ΔE_anneal=-102.0 meV/atom, conv=True
+
+[63/135] cfg0020_E-2254.057_O-free_s
+  [cfg0020_E-2254.057_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0020_E-2254.057_O-free_s] MD done (0.0s) E_pre=-4.1353 → E_md=-4.1353 eV/atom
+  [cfg0020_E-2254.057_O-free_s] relax 72 steps (8.3s) E_post=-4.2086 eV/atom, ΔE_anneal=-73.3 meV/atom, conv=True
+
+[64/135] cfg0021_E-2254.015_O-bo4
+  [cfg0021_E-2254.015_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0021_E-2254.015_O-bo4] MD done (0.0s) E_pre=-4.1234 → E_md=-4.1234 eV/atom
+  [cfg0021_E-2254.015_O-bo4] relax 254 steps (28.7s) E_post=-4.2385 eV/atom, ΔE_anneal=-115.1 meV/atom, conv=True
+
+[65/135] cfg0021_E-2254.015_O-distributed
+  [cfg0021_E-2254.015_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0021_E-2254.015_O-distributed] MD done (0.0s) E_pre=-4.1451 → E_md=-4.1451 eV/atom
+  [cfg0021_E-2254.015_O-distributed] relax 288 steps (32.9s) E_post=-4.2356 eV/atom, ΔE_anneal=-90.5 meV/atom, conv=True
+
+[66/135] cfg0021_E-2254.015_O-free_s
+  [cfg0021_E-2254.015_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0021_E-2254.015_O-free_s] MD done (0.0s) E_pre=-4.1390 → E_md=-4.1390 eV/atom
+  [cfg0021_E-2254.015_O-free_s] relax 59 steps (6.8s) E_post=-4.2073 eV/atom, ΔE_anneal=-68.2 meV/atom, conv=True
+
+[67/135] cfg0022_E-2253.923_O-bo4
+  [cfg0022_E-2253.923_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0022_E-2253.923_O-bo4] MD done (0.0s) E_pre=-4.1287 → E_md=-4.1287 eV/atom
+  [cfg0022_E-2253.923_O-bo4] relax 122 steps (14.0s) E_post=-4.2360 eV/atom, ΔE_anneal=-107.3 meV/atom, conv=True
+
+[68/135] cfg0022_E-2253.923_O-distributed
+  [cfg0022_E-2253.923_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0022_E-2253.923_O-distributed] MD done (0.0s) E_pre=-4.1485 → E_md=-4.1485 eV/atom
+  [cfg0022_E-2253.923_O-distributed] relax 217 steps (24.6s) E_post=-4.2373 eV/atom, ΔE_anneal=-88.8 meV/atom, conv=True
+
+[69/135] cfg0022_E-2253.923_O-free_s
+  [cfg0022_E-2253.923_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0022_E-2253.923_O-free_s] MD done (0.0s) E_pre=-4.1436 → E_md=-4.1436 eV/atom
+  [cfg0022_E-2253.923_O-free_s] relax 86 steps (9.8s) E_post=-4.2095 eV/atom, ΔE_anneal=-65.9 meV/atom, conv=True
+
+[70/135] cfg0023_E-2253.919_O-bo4
+  [cfg0023_E-2253.919_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0023_E-2253.919_O-bo4] MD done (0.0s) E_pre=-4.1236 → E_md=-4.1236 eV/atom
+  [cfg0023_E-2253.919_O-bo4] relax 243 steps (27.8s) E_post=-4.2427 eV/atom, ΔE_anneal=-119.1 meV/atom, conv=True
+
+[71/135] cfg0023_E-2253.919_O-distributed
+  [cfg0023_E-2253.919_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0023_E-2253.919_O-distributed] MD done (0.0s) E_pre=-4.1418 → E_md=-4.1418 eV/atom
+  [cfg0023_E-2253.919_O-distributed] relax 237 steps (27.2s) E_post=-4.2343 eV/atom, ΔE_anneal=-92.4 meV/atom, conv=True
+
+[72/135] cfg0023_E-2253.919_O-free_s
+  [cfg0023_E-2253.919_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0023_E-2253.919_O-free_s] MD done (0.0s) E_pre=-4.1363 → E_md=-4.1363 eV/atom
+  [cfg0023_E-2253.919_O-free_s] relax 163 steps (19.2s) E_post=-4.2093 eV/atom, ΔE_anneal=-73.1 meV/atom, conv=True
+
+[73/135] cfg0024_E-2253.918_O-bo4
+  [cfg0024_E-2253.918_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0024_E-2253.918_O-bo4] MD done (0.0s) E_pre=-4.1288 → E_md=-4.1288 eV/atom
+  [cfg0024_E-2253.918_O-bo4] relax 161 steps (19.3s) E_post=-4.2386 eV/atom, ΔE_anneal=-109.8 meV/atom, conv=True
+
+[74/135] cfg0024_E-2253.918_O-distributed
+  [cfg0024_E-2253.918_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0024_E-2253.918_O-distributed] MD done (0.0s) E_pre=-4.1471 → E_md=-4.1471 eV/atom
+  [cfg0024_E-2253.918_O-distributed] relax 314 steps (36.5s) E_post=-4.2405 eV/atom, ΔE_anneal=-93.4 meV/atom, conv=True
+
+[75/135] cfg0024_E-2253.918_O-free_s
+  [cfg0024_E-2253.918_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0024_E-2253.918_O-free_s] MD done (0.0s) E_pre=-4.1438 → E_md=-4.1438 eV/atom
+  [cfg0024_E-2253.918_O-free_s] relax 120 steps (13.8s) E_post=-4.2086 eV/atom, ΔE_anneal=-64.8 meV/atom, conv=True
+
+[76/135] cfg0025_E-2253.580_O-bo4
+  [cfg0025_E-2253.580_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0025_E-2253.580_O-bo4] MD done (0.0s) E_pre=-4.1212 → E_md=-4.1212 eV/atom
+  [cfg0025_E-2253.580_O-bo4] relax 252 steps (28.9s) E_post=-4.2373 eV/atom, ΔE_anneal=-116.0 meV/atom, conv=True
+
+[77/135] cfg0025_E-2253.580_O-distributed
+  [cfg0025_E-2253.580_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0025_E-2253.580_O-distributed] MD done (0.0s) E_pre=-4.1416 → E_md=-4.1416 eV/atom
+  [cfg0025_E-2253.580_O-distributed] relax 226 steps (26.3s) E_post=-4.2352 eV/atom, ΔE_anneal=-93.6 meV/atom, conv=True
+
+[78/135] cfg0025_E-2253.580_O-free_s
+  [cfg0025_E-2253.580_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0025_E-2253.580_O-free_s] MD done (0.0s) E_pre=-4.1355 → E_md=-4.1355 eV/atom
+  [cfg0025_E-2253.580_O-free_s] relax 85 steps (9.9s) E_post=-4.2122 eV/atom, ΔE_anneal=-76.7 meV/atom, conv=True
+
+[79/135] cfg0026_E-2253.426_O-bo4
+  [cfg0026_E-2253.426_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0026_E-2253.426_O-bo4] MD done (0.0s) E_pre=-4.1189 → E_md=-4.1189 eV/atom
+  [cfg0026_E-2253.426_O-bo4] relax 250 steps (28.7s) E_post=-4.2391 eV/atom, ΔE_anneal=-120.2 meV/atom, conv=True
+
+[80/135] cfg0026_E-2253.426_O-distributed
+  [cfg0026_E-2253.426_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0026_E-2253.426_O-distributed] MD done (0.0s) E_pre=-4.1363 → E_md=-4.1363 eV/atom
+  [cfg0026_E-2253.426_O-distributed] relax 225 steps (26.8s) E_post=-4.2325 eV/atom, ΔE_anneal=-96.1 meV/atom, conv=True
+
+[81/135] cfg0026_E-2253.426_O-free_s
+  [cfg0026_E-2253.426_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0026_E-2253.426_O-free_s] MD done (0.0s) E_pre=-4.1309 → E_md=-4.1309 eV/atom
+  [cfg0026_E-2253.426_O-free_s] relax 126 steps (14.3s) E_post=-4.2092 eV/atom, ΔE_anneal=-78.3 meV/atom, conv=True
+
+[82/135] cfg0027_E-2253.406_O-bo4
+  [cfg0027_E-2253.406_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0027_E-2253.406_O-bo4] MD done (0.0s) E_pre=-4.1284 → E_md=-4.1284 eV/atom
+  [cfg0027_E-2253.406_O-bo4] relax 139 steps (16.0s) E_post=-4.2346 eV/atom, ΔE_anneal=-106.2 meV/atom, conv=True
+
+[83/135] cfg0027_E-2253.406_O-distributed
+  [cfg0027_E-2253.406_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0027_E-2253.406_O-distributed] MD done (0.0s) E_pre=-4.1407 → E_md=-4.1407 eV/atom
+  [cfg0027_E-2253.406_O-distributed] relax 221 steps (25.7s) E_post=-4.2396 eV/atom, ΔE_anneal=-98.8 meV/atom, conv=True
+
+[84/135] cfg0027_E-2253.406_O-free_s
+  [cfg0027_E-2253.406_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0027_E-2253.406_O-free_s] MD done (0.0s) E_pre=-4.1380 → E_md=-4.1380 eV/atom
+  [cfg0027_E-2253.406_O-free_s] relax 103 steps (11.5s) E_post=-4.2105 eV/atom, ΔE_anneal=-72.6 meV/atom, conv=True
+
+[85/135] cfg0028_E-2253.398_O-bo4
+  [cfg0028_E-2253.398_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0028_E-2253.398_O-bo4] MD done (0.0s) E_pre=-4.1173 → E_md=-4.1173 eV/atom
+  [cfg0028_E-2253.398_O-bo4] relax 154 steps (17.5s) E_post=-4.2404 eV/atom, ΔE_anneal=-123.1 meV/atom, conv=True
+
+[86/135] cfg0028_E-2253.398_O-distributed
+  [cfg0028_E-2253.398_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0028_E-2253.398_O-distributed] MD done (0.0s) E_pre=-4.1372 → E_md=-4.1372 eV/atom
+  [cfg0028_E-2253.398_O-distributed] relax 179 steps (21.3s) E_post=-4.2385 eV/atom, ΔE_anneal=-101.4 meV/atom, conv=True
+
+[87/135] cfg0028_E-2253.398_O-free_s
+  [cfg0028_E-2253.398_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0028_E-2253.398_O-free_s] MD done (0.0s) E_pre=-4.1316 → E_md=-4.1316 eV/atom
+  [cfg0028_E-2253.398_O-free_s] relax 88 steps (10.5s) E_post=-4.2126 eV/atom, ΔE_anneal=-81.0 meV/atom, conv=True
+
+[88/135] cfg0029_E-2253.369_O-bo4
+  [cfg0029_E-2253.369_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0029_E-2253.369_O-bo4] MD done (0.0s) E_pre=-4.1253 → E_md=-4.1253 eV/atom
+  [cfg0029_E-2253.369_O-bo4] relax 223 steps (26.5s) E_post=-4.2393 eV/atom, ΔE_anneal=-114.0 meV/atom, conv=True
+
+[89/135] cfg0029_E-2253.369_O-distributed
+  [cfg0029_E-2253.369_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0029_E-2253.369_O-distributed] MD done (0.0s) E_pre=-4.1422 → E_md=-4.1422 eV/atom
+  [cfg0029_E-2253.369_O-distributed] relax 170 steps (19.7s) E_post=-4.2361 eV/atom, ΔE_anneal=-93.9 meV/atom, conv=True
+
+[90/135] cfg0029_E-2253.369_O-free_s
+  [cfg0029_E-2253.369_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0029_E-2253.369_O-free_s] MD done (0.0s) E_pre=-4.1393 → E_md=-4.1393 eV/atom
+  [cfg0029_E-2253.369_O-free_s] relax 67 steps (7.6s) E_post=-4.2066 eV/atom, ΔE_anneal=-67.3 meV/atom, conv=True
+
+[91/135] cfg0030_E-2253.338_O-bo4
+  [cfg0030_E-2253.338_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0030_E-2253.338_O-bo4] MD done (0.0s) E_pre=-4.1264 → E_md=-4.1264 eV/atom
+  [cfg0030_E-2253.338_O-bo4] relax 214 steps (24.5s) E_post=-4.2378 eV/atom, ΔE_anneal=-111.4 meV/atom, conv=True
+
+[92/135] cfg0030_E-2253.338_O-distributed
+  [cfg0030_E-2253.338_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0030_E-2253.338_O-distributed] MD done (0.0s) E_pre=-4.1454 → E_md=-4.1454 eV/atom
+  [cfg0030_E-2253.338_O-distributed] relax 272 steps (31.0s) E_post=-4.2357 eV/atom, ΔE_anneal=-90.3 meV/atom, conv=True
+
+[93/135] cfg0030_E-2253.338_O-free_s
+  [cfg0030_E-2253.338_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0030_E-2253.338_O-free_s] MD done (0.0s) E_pre=-4.1405 → E_md=-4.1405 eV/atom
+  [cfg0030_E-2253.338_O-free_s] relax 139 steps (15.9s) E_post=-4.2098 eV/atom, ΔE_anneal=-69.3 meV/atom, conv=True
+
+[94/135] cfg0031_E-2253.187_O-bo4
+  [cfg0031_E-2253.187_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0031_E-2253.187_O-bo4] MD done (0.0s) E_pre=-4.1232 → E_md=-4.1232 eV/atom
+  [cfg0031_E-2253.187_O-bo4] relax 140 steps (15.9s) E_post=-4.2390 eV/atom, ΔE_anneal=-115.8 meV/atom, conv=True
+
+[95/135] cfg0031_E-2253.187_O-distributed
+  [cfg0031_E-2253.187_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0031_E-2253.187_O-distributed] MD done (0.0s) E_pre=-4.1394 → E_md=-4.1394 eV/atom
+  [cfg0031_E-2253.187_O-distributed] relax 303 steps (34.9s) E_post=-4.2391 eV/atom, ΔE_anneal=-99.7 meV/atom, conv=True
+
+[96/135] cfg0031_E-2253.187_O-free_s
+  [cfg0031_E-2253.187_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0031_E-2253.187_O-free_s] MD done (0.0s) E_pre=-4.1347 → E_md=-4.1347 eV/atom
+  [cfg0031_E-2253.187_O-free_s] relax 139 steps (16.1s) E_post=-4.2096 eV/atom, ΔE_anneal=-74.9 meV/atom, conv=True
+
+[97/135] cfg0032_E-2253.172_O-bo4
+  [cfg0032_E-2253.172_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0032_E-2253.172_O-bo4] MD done (0.0s) E_pre=-4.1323 → E_md=-4.1323 eV/atom
+  [cfg0032_E-2253.172_O-bo4] relax 187 steps (21.4s) E_post=-4.2406 eV/atom, ΔE_anneal=-108.3 meV/atom, conv=True
+
+[98/135] cfg0032_E-2253.172_O-distributed
+  [cfg0032_E-2253.172_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0032_E-2253.172_O-distributed] MD done (0.0s) E_pre=-4.1491 → E_md=-4.1491 eV/atom
+  [cfg0032_E-2253.172_O-distributed] relax 259 steps (29.6s) E_post=-4.2416 eV/atom, ΔE_anneal=-92.5 meV/atom, conv=True
+
+[99/135] cfg0032_E-2253.172_O-free_s
+  [cfg0032_E-2253.172_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0032_E-2253.172_O-free_s] MD done (0.0s) E_pre=-4.1449 → E_md=-4.1449 eV/atom
+  [cfg0032_E-2253.172_O-free_s] relax 79 steps (9.0s) E_post=-4.2091 eV/atom, ΔE_anneal=-64.2 meV/atom, conv=True
+
+[100/135] cfg0033_E-2253.158_O-bo4
+  [cfg0033_E-2253.158_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0033_E-2253.158_O-bo4] MD done (0.0s) E_pre=-4.1267 → E_md=-4.1267 eV/atom
+  [cfg0033_E-2253.158_O-bo4] relax 268 steps (30.4s) E_post=-4.2398 eV/atom, ΔE_anneal=-113.0 meV/atom, conv=True
+
+[101/135] cfg0033_E-2253.158_O-distributed
+  [cfg0033_E-2253.158_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0033_E-2253.158_O-distributed] MD done (0.0s) E_pre=-4.1456 → E_md=-4.1456 eV/atom
+  [cfg0033_E-2253.158_O-distributed] relax 166 steps (18.9s) E_post=-4.2357 eV/atom, ΔE_anneal=-90.2 meV/atom, conv=True
+
+[102/135] cfg0033_E-2253.158_O-free_s
+  [cfg0033_E-2253.158_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0033_E-2253.158_O-free_s] MD done (0.0s) E_pre=-4.1407 → E_md=-4.1407 eV/atom
+  [cfg0033_E-2253.158_O-free_s] relax 83 steps (9.6s) E_post=-4.2118 eV/atom, ΔE_anneal=-71.1 meV/atom, conv=True
+
+[103/135] cfg0034_E-2252.947_O-bo4
+  [cfg0034_E-2252.947_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0034_E-2252.947_O-bo4] MD done (0.0s) E_pre=-4.1210 → E_md=-4.1210 eV/atom
+  [cfg0034_E-2252.947_O-bo4] relax 279 steps (31.8s) E_post=-4.2437 eV/atom, ΔE_anneal=-122.6 meV/atom, conv=True
+
+[104/135] cfg0034_E-2252.947_O-distributed
+  [cfg0034_E-2252.947_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0034_E-2252.947_O-distributed] MD done (0.0s) E_pre=-4.1379 → E_md=-4.1379 eV/atom
+  [cfg0034_E-2252.947_O-distributed] relax 253 steps (29.2s) E_post=-4.2366 eV/atom, ΔE_anneal=-98.7 meV/atom, conv=True
+
+[105/135] cfg0034_E-2252.947_O-free_s
+  [cfg0034_E-2252.947_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0034_E-2252.947_O-free_s] MD done (0.0s) E_pre=-4.1332 → E_md=-4.1332 eV/atom
+  [cfg0034_E-2252.947_O-free_s] relax 76 steps (8.6s) E_post=-4.2092 eV/atom, ΔE_anneal=-76.1 meV/atom, conv=True
+
+[106/135] cfg0035_E-2252.927_O-bo4
+  [cfg0035_E-2252.927_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0035_E-2252.927_O-bo4] MD done (0.0s) E_pre=-4.1255 → E_md=-4.1255 eV/atom
+  [cfg0035_E-2252.927_O-bo4] relax 187 steps (22.1s) E_post=-4.2359 eV/atom, ΔE_anneal=-110.4 meV/atom, conv=True
+
+[107/135] cfg0035_E-2252.927_O-distributed
+  [cfg0035_E-2252.927_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0035_E-2252.927_O-distributed] MD done (0.0s) E_pre=-4.1400 → E_md=-4.1400 eV/atom
+  [cfg0035_E-2252.927_O-distributed] relax 345 steps (39.9s) E_post=-4.2396 eV/atom, ΔE_anneal=-99.5 meV/atom, conv=True
+
+[108/135] cfg0035_E-2252.927_O-free_s
+  [cfg0035_E-2252.927_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0035_E-2252.927_O-free_s] MD done (0.0s) E_pre=-4.1386 → E_md=-4.1386 eV/atom
+  [cfg0035_E-2252.927_O-free_s] relax 233 steps (26.8s) E_post=-4.2152 eV/atom, ΔE_anneal=-76.6 meV/atom, conv=True
+
+[109/135] cfg0036_E-2252.653_O-bo4
+  [cfg0036_E-2252.653_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0036_E-2252.653_O-bo4] MD done (0.0s) E_pre=-4.1309 → E_md=-4.1309 eV/atom
+  [cfg0036_E-2252.653_O-bo4] relax 195 steps (22.8s) E_post=-4.2392 eV/atom, ΔE_anneal=-108.3 meV/atom, conv=True
+
+[110/135] cfg0036_E-2252.653_O-distributed
+  [cfg0036_E-2252.653_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0036_E-2252.653_O-distributed] MD done (0.0s) E_pre=-4.1490 → E_md=-4.1490 eV/atom
+  [cfg0036_E-2252.653_O-distributed] relax 221 steps (25.0s) E_post=-4.2397 eV/atom, ΔE_anneal=-90.7 meV/atom, conv=True
+
+[111/135] cfg0036_E-2252.653_O-free_s
+  [cfg0036_E-2252.653_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0036_E-2252.653_O-free_s] MD done (0.0s) E_pre=-4.1439 → E_md=-4.1439 eV/atom
+  [cfg0036_E-2252.653_O-free_s] relax 117 steps (12.7s) E_post=-4.2133 eV/atom, ΔE_anneal=-69.4 meV/atom, conv=True
+
+[112/135] cfg0037_E-2252.640_O-bo4
+  [cfg0037_E-2252.640_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0037_E-2252.640_O-bo4] MD done (0.0s) E_pre=-4.1287 → E_md=-4.1287 eV/atom
+  [cfg0037_E-2252.640_O-bo4] relax 272 steps (30.8s) E_post=-4.2454 eV/atom, ΔE_anneal=-116.7 meV/atom, conv=True
+
+[113/135] cfg0037_E-2252.640_O-distributed
+  [cfg0037_E-2252.640_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0037_E-2252.640_O-distributed] MD done (0.0s) E_pre=-4.1442 → E_md=-4.1442 eV/atom
+  [cfg0037_E-2252.640_O-distributed] relax 296 steps (32.7s) E_post=-4.2372 eV/atom, ΔE_anneal=-93.0 meV/atom, conv=True
+
+[114/135] cfg0037_E-2252.640_O-free_s
+  [cfg0037_E-2252.640_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0037_E-2252.640_O-free_s] MD done (0.0s) E_pre=-4.1421 → E_md=-4.1421 eV/atom
+  [cfg0037_E-2252.640_O-free_s] relax 88 steps (9.7s) E_post=-4.2082 eV/atom, ΔE_anneal=-66.1 meV/atom, conv=True
+
+[115/135] cfg0038_E-2252.500_O-bo4
+  [cfg0038_E-2252.500_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0038_E-2252.500_O-bo4] MD done (0.0s) E_pre=-4.1265 → E_md=-4.1265 eV/atom
+  [cfg0038_E-2252.500_O-bo4] relax 320 steps (35.1s) E_post=-4.2385 eV/atom, ΔE_anneal=-112.0 meV/atom, conv=True
+
+[116/135] cfg0038_E-2252.500_O-distributed
+  [cfg0038_E-2252.500_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0038_E-2252.500_O-distributed] MD done (0.0s) E_pre=-4.1422 → E_md=-4.1422 eV/atom
+  [cfg0038_E-2252.500_O-distributed] relax 262 steps (29.0s) E_post=-4.2368 eV/atom, ΔE_anneal=-94.6 meV/atom, conv=True
+
+[117/135] cfg0038_E-2252.500_O-free_s
+  [cfg0038_E-2252.500_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0038_E-2252.500_O-free_s] MD done (0.0s) E_pre=-4.1397 → E_md=-4.1397 eV/atom
+  [cfg0038_E-2252.500_O-free_s] relax 148 steps (17.3s) E_post=-4.2086 eV/atom, ΔE_anneal=-68.9 meV/atom, conv=True
+
+[118/135] cfg0039_E-2252.471_O-bo4
+  [cfg0039_E-2252.471_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0039_E-2252.471_O-bo4] MD done (0.0s) E_pre=-4.1252 → E_md=-4.1252 eV/atom
+  [cfg0039_E-2252.471_O-bo4] relax 211 steps (24.3s) E_post=-4.2420 eV/atom, ΔE_anneal=-116.8 meV/atom, conv=True
+
+[119/135] cfg0039_E-2252.471_O-distributed
+  [cfg0039_E-2252.471_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0039_E-2252.471_O-distributed] MD done (0.0s) E_pre=-4.1405 → E_md=-4.1405 eV/atom
+  [cfg0039_E-2252.471_O-distributed] relax 277 steps (31.5s) E_post=-4.2438 eV/atom, ΔE_anneal=-103.3 meV/atom, conv=True
+
+[120/135] cfg0039_E-2252.471_O-free_s
+  [cfg0039_E-2252.471_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0039_E-2252.471_O-free_s] MD done (0.0s) E_pre=-4.1385 → E_md=-4.1385 eV/atom
+  [cfg0039_E-2252.471_O-free_s] relax 74 steps (8.4s) E_post=-4.2086 eV/atom, ΔE_anneal=-70.1 meV/atom, conv=True
+
+[121/135] cfg0040_E-2252.241_O-bo4
+  [cfg0040_E-2252.241_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0040_E-2252.241_O-bo4] MD done (0.0s) E_pre=-4.1191 → E_md=-4.1191 eV/atom
+  [cfg0040_E-2252.241_O-bo4] relax 436 steps (50.0s) E_post=-4.2454 eV/atom, ΔE_anneal=-126.4 meV/atom, conv=True
+
+[122/135] cfg0040_E-2252.241_O-distributed
+  [cfg0040_E-2252.241_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0040_E-2252.241_O-distributed] MD done (0.0s) E_pre=-4.1364 → E_md=-4.1364 eV/atom
+  [cfg0040_E-2252.241_O-distributed] relax 208 steps (23.7s) E_post=-4.2355 eV/atom, ΔE_anneal=-99.2 meV/atom, conv=True
+
+[123/135] cfg0040_E-2252.241_O-free_s
+  [cfg0040_E-2252.241_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0040_E-2252.241_O-free_s] MD done (0.0s) E_pre=-4.1298 → E_md=-4.1298 eV/atom
+  [cfg0040_E-2252.241_O-free_s] relax 151 steps (17.3s) E_post=-4.2098 eV/atom, ΔE_anneal=-80.0 meV/atom, conv=True
+
+[124/135] cfg0041_E-2251.915_O-bo4
+  [cfg0041_E-2251.915_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0041_E-2251.915_O-bo4] MD done (0.0s) E_pre=-4.1188 → E_md=-4.1188 eV/atom
+  [cfg0041_E-2251.915_O-bo4] relax 132 steps (15.5s) E_post=-4.2384 eV/atom, ΔE_anneal=-119.6 meV/atom, conv=True
+
+[125/135] cfg0041_E-2251.915_O-distributed
+  [cfg0041_E-2251.915_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0041_E-2251.915_O-distributed] MD done (0.0s) E_pre=-4.1367 → E_md=-4.1367 eV/atom
+  [cfg0041_E-2251.915_O-distributed] relax 262 steps (30.4s) E_post=-4.2396 eV/atom, ΔE_anneal=-102.9 meV/atom, conv=True
+
+[126/135] cfg0041_E-2251.915_O-free_s
+  [cfg0041_E-2251.915_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0041_E-2251.915_O-free_s] MD done (0.0s) E_pre=-4.1318 → E_md=-4.1318 eV/atom
+  [cfg0041_E-2251.915_O-free_s] relax 126 steps (14.6s) E_post=-4.2092 eV/atom, ΔE_anneal=-77.4 meV/atom, conv=True
+
+[127/135] cfg0042_E-2251.775_O-bo4
+  [cfg0042_E-2251.775_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0042_E-2251.775_O-bo4] MD done (0.0s) E_pre=-4.1189 → E_md=-4.1189 eV/atom
+  [cfg0042_E-2251.775_O-bo4] relax 323 steps (37.0s) E_post=-4.2406 eV/atom, ΔE_anneal=-121.7 meV/atom, conv=True
+
+[128/135] cfg0042_E-2251.775_O-distributed
+  [cfg0042_E-2251.775_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0042_E-2251.775_O-distributed] MD done (0.0s) E_pre=-4.1373 → E_md=-4.1373 eV/atom
+  [cfg0042_E-2251.775_O-distributed] relax 308 steps (35.0s) E_post=-4.2360 eV/atom, ΔE_anneal=-98.7 meV/atom, conv=True
+
+[129/135] cfg0042_E-2251.775_O-free_s
+  [cfg0042_E-2251.775_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0042_E-2251.775_O-free_s] MD done (0.0s) E_pre=-4.1327 → E_md=-4.1327 eV/atom
+  [cfg0042_E-2251.775_O-free_s] relax 158 steps (17.9s) E_post=-4.2095 eV/atom, ΔE_anneal=-76.8 meV/atom, conv=True
+
+[130/135] cfg0043_E-2251.319_O-bo4
+  [cfg0043_E-2251.319_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0043_E-2251.319_O-bo4] MD done (0.0s) E_pre=-4.1243 → E_md=-4.1243 eV/atom
+  [cfg0043_E-2251.319_O-bo4] relax 171 steps (19.7s) E_post=-4.2426 eV/atom, ΔE_anneal=-118.3 meV/atom, conv=True
+
+[131/135] cfg0043_E-2251.319_O-distributed
+  [cfg0043_E-2251.319_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0043_E-2251.319_O-distributed] MD done (0.0s) E_pre=-4.1411 → E_md=-4.1411 eV/atom
+  [cfg0043_E-2251.319_O-distributed] relax 324 steps (37.2s) E_post=-4.2356 eV/atom, ΔE_anneal=-94.5 meV/atom, conv=True
+
+[132/135] cfg0043_E-2251.319_O-free_s
+  [cfg0043_E-2251.319_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0043_E-2251.319_O-free_s] MD done (0.0s) E_pre=-4.1379 → E_md=-4.1379 eV/atom
+  [cfg0043_E-2251.319_O-free_s] relax 130 steps (14.9s) E_post=-4.2075 eV/atom, ΔE_anneal=-69.6 meV/atom, conv=True
+
+[133/135] cfg0044_E-2250.840_O-bo4
+  [cfg0044_E-2250.840_O-bo4] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0044_E-2250.840_O-bo4] MD done (0.0s) E_pre=-4.1222 → E_md=-4.1222 eV/atom
+  [cfg0044_E-2250.840_O-bo4] relax 149 steps (17.0s) E_post=-4.2443 eV/atom, ΔE_anneal=-122.1 meV/atom, conv=True
+
+[134/135] cfg0044_E-2250.840_O-distributed
+  [cfg0044_E-2250.840_O-distributed] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0044_E-2250.840_O-distributed] MD done (0.0s) E_pre=-4.1386 → E_md=-4.1386 eV/atom
+  [cfg0044_E-2250.840_O-distributed] relax 267 steps (30.8s) E_post=-4.2374 eV/atom, ΔE_anneal=-98.9 meV/atom, conv=True
+
+[135/135] cfg0044_E-2250.840_O-free_s
+  [cfg0044_E-2250.840_O-free_s] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0044_E-2250.840_O-free_s] MD done (0.0s) E_pre=-4.1364 → E_md=-4.1364 eV/atom
+  [cfg0044_E-2250.840_O-free_s] relax 132 steps (15.1s) E_post=-4.2068 eV/atom, ΔE_anneal=-70.4 meV/atom, conv=True
+이번 묶음: 135 기록 · 실패 0 · 미수렴 0
+
+==============================================================================
+Champion                                E_pre    E_post   ΔE meV/at     status
+------------------------------------------------------------------------------
+cfg0040_E-2252.241_O-bo4              -4.1191   -4.2454    -126.4    converged
+cfg0028_E-2253.398_O-bo4              -4.1173   -4.2404    -123.1    converged
+cfg0034_E-2252.947_O-bo4              -4.1210   -4.2437    -122.6    converged
+cfg0044_E-2250.840_O-bo4              -4.1222   -4.2443    -122.1    converged
+cfg0042_E-2251.775_O-bo4              -4.1189   -4.2406    -121.7    converged
+cfg0026_E-2253.426_O-bo4              -4.1189   -4.2391    -120.2    converged
+cfg0041_E-2251.915_O-bo4              -4.1188   -4.2384    -119.6    converged
+cfg0023_E-2253.919_O-bo4              -4.1236   -4.2427    -119.1    converged
+cfg0015_E-2254.436_O-bo4              -4.1200   -4.2390    -119.0    converged
+cfg0043_E-2251.319_O-bo4              -4.1243   -4.2426    -118.3    converged
+cfg0000_E-2256.634_O-bo4              -4.1266   -4.2437    -117.0    converged
+cfg0039_E-2252.471_O-bo4              -4.1252   -4.2420    -116.8    converged
+cfg0017_E-2254.242_O-bo4              -4.1279   -4.2446    -116.7    converged
+cfg0037_E-2252.640_O-bo4              -4.1287   -4.2454    -116.7    converged
+cfg0025_E-2253.580_O-bo4              -4.1212   -4.2373    -116.0    converged
+cfg0018_E-2254.225_O-bo4              -4.1225   -4.2384    -115.9    converged
+cfg0031_E-2253.187_O-bo4              -4.1232   -4.2390    -115.8    converged
+cfg0019_E-2254.209_O-bo4              -4.1247   -4.2404    -115.7    converged
+cfg0012_E-2254.602_O-bo4              -4.1279   -4.2431    -115.2    converged
+cfg0021_E-2254.015_O-bo4              -4.1234   -4.2385    -115.1    converged
+cfg0004_E-2255.404_O-bo4              -4.1211   -4.2356    -114.5    converged
+cfg0013_E-2254.514_O-bo4              -4.1267   -4.2409    -114.2    converged
+cfg0020_E-2254.057_O-bo4              -4.1245   -4.2385    -114.0    converged
+cfg0029_E-2253.369_O-bo4              -4.1253   -4.2393    -114.0    converged
+cfg0009_E-2254.873_O-bo4              -4.1217   -4.2353    -113.6    converged
+cfg0033_E-2253.158_O-bo4              -4.1267   -4.2398    -113.0    converged
+cfg0003_E-2255.483_O-bo4              -4.1327   -4.2451    -112.4    converged
+cfg0001_E-2255.860_O-bo4              -4.1259   -4.2381    -112.2    converged
+cfg0038_E-2252.500_O-bo4              -4.1265   -4.2385    -112.0    converged
+cfg0005_E-2255.140_O-bo4              -4.1268   -4.2388    -111.9    converged
+cfg0030_E-2253.338_O-bo4              -4.1264   -4.2378    -111.4    converged
+cfg0035_E-2252.927_O-bo4              -4.1255   -4.2359    -110.4    converged
+cfg0010_E-2254.741_O-bo4              -4.1247   -4.2346    -109.9    converged
+cfg0024_E-2253.918_O-bo4              -4.1288   -4.2386    -109.8    converged
+cfg0008_E-2254.892_O-bo4              -4.1357   -4.2454    -109.7    converged
+cfg0006_E-2255.067_O-bo4              -4.1287   -4.2383    -109.6    converged
+cfg0002_E-2255.792_O-bo4              -4.1321   -4.2407    -108.6    converged
+cfg0036_E-2252.653_O-bo4              -4.1309   -4.2392    -108.3    converged
+cfg0032_E-2253.172_O-bo4              -4.1323   -4.2406    -108.3    converged
+cfg0022_E-2253.923_O-bo4              -4.1287   -4.2360    -107.3    converged
+cfg0027_E-2253.406_O-bo4              -4.1284   -4.2346    -106.2    converged
+cfg0007_E-2254.978_O-bo4              -4.1363   -4.2424    -106.1    converged
+cfg0011_E-2254.709_O-bo4              -4.1346   -4.2401    -105.5    converged
+cfg0016_E-2254.317_O-bo4              -4.1349   -4.2402    -105.2    converged
+cfg0039_E-2252.471_O-distributed      -4.1405   -4.2438    -103.3    converged
+cfg0014_E-2254.460_O-bo4              -4.1262   -4.2293    -103.1    converged
+cfg0041_E-2251.915_O-distributed      -4.1367   -4.2396    -102.9    converged
+cfg0020_E-2254.057_O-distributed      -4.1385   -4.2405    -102.0    converged
+cfg0015_E-2254.436_O-distributed      -4.1389   -4.2406    -101.7    converged
+cfg0028_E-2253.398_O-distributed      -4.1372   -4.2385    -101.4    converged
+cfg0019_E-2254.209_O-distributed      -4.1400   -4.2412    -101.3    converged
+cfg0031_E-2253.187_O-distributed      -4.1394   -4.2391     -99.7    converged
+cfg0035_E-2252.927_O-distributed      -4.1400   -4.2396     -99.5    converged
+cfg0040_E-2252.241_O-distributed      -4.1364   -4.2355     -99.2    converged
+cfg0044_E-2250.840_O-distributed      -4.1386   -4.2374     -98.9    converged
+cfg0027_E-2253.406_O-distributed      -4.1407   -4.2396     -98.8    converged
+cfg0042_E-2251.775_O-distributed      -4.1373   -4.2360     -98.7    converged
+cfg0034_E-2252.947_O-distributed      -4.1379   -4.2366     -98.7    converged
+cfg0004_E-2255.404_O-distributed      -4.1388   -4.2373     -98.5    converged
+cfg0010_E-2254.741_O-distributed      -4.1397   -4.2376     -97.9    converged
+cfg0001_E-2255.860_O-distributed      -4.1412   -4.2389     -97.7    converged
+cfg0018_E-2254.225_O-distributed      -4.1398   -4.2365     -96.7    converged
+cfg0026_E-2253.426_O-distributed      -4.1363   -4.2325     -96.1    converged
+cfg0000_E-2256.634_O-distributed      -4.1417   -4.2371     -95.4    converged
+cfg0038_E-2252.500_O-distributed      -4.1422   -4.2368     -94.6    converged
+cfg0043_E-2251.319_O-distributed      -4.1411   -4.2356     -94.5    converged
+cfg0006_E-2255.067_O-distributed      -4.1436   -4.2381     -94.5    converged
+cfg0009_E-2254.873_O-distributed      -4.1402   -4.2341     -94.0    converged
+cfg0029_E-2253.369_O-distributed      -4.1422   -4.2361     -93.9    converged
+cfg0014_E-2254.460_O-distributed      -4.1432   -4.2371     -93.9    converged
+cfg0025_E-2253.580_O-distributed      -4.1416   -4.2352     -93.6    converged
+cfg0024_E-2253.918_O-distributed      -4.1471   -4.2405     -93.4    converged
+cfg0037_E-2252.640_O-distributed      -4.1442   -4.2372     -93.0    converged
+cfg0012_E-2254.602_O-distributed      -4.1443   -4.2372     -92.8    converged
+cfg0017_E-2254.242_O-distributed      -4.1445   -4.2371     -92.6    converged
+cfg0013_E-2254.514_O-distributed      -4.1451   -4.2376     -92.5    converged
+cfg0032_E-2253.172_O-distributed      -4.1491   -4.2416     -92.5    converged
+cfg0023_E-2253.919_O-distributed      -4.1418   -4.2343     -92.4    converged
+cfg0005_E-2255.140_O-distributed      -4.1462   -4.2377     -91.6    converged
+cfg0002_E-2255.792_O-distributed      -4.1463   -4.2370     -90.7    converged
+cfg0036_E-2252.653_O-distributed      -4.1490   -4.2397     -90.7    converged
+cfg0021_E-2254.015_O-distributed      -4.1451   -4.2356     -90.5    converged
+cfg0030_E-2253.338_O-distributed      -4.1454   -4.2357     -90.3    converged
+cfg0011_E-2254.709_O-distributed      -4.1479   -4.2382     -90.3    converged
+cfg0033_E-2253.158_O-distributed      -4.1456   -4.2357     -90.2    converged
+cfg0016_E-2254.317_O-distributed      -4.1493   -4.2388     -89.5    converged
+cfg0022_E-2253.923_O-distributed      -4.1485   -4.2373     -88.8    converged
+cfg0003_E-2255.483_O-distributed      -4.1483   -4.2355     -87.2    converged
+cfg0008_E-2254.892_O-distributed      -4.1508   -4.2367     -85.9    converged
+cfg0007_E-2254.978_O-distributed      -4.1570   -4.2404     -83.4    converged
+cfg0028_E-2253.398_O-free_s           -4.1316   -4.2126     -81.0    converged
+cfg0040_E-2252.241_O-free_s           -4.1298   -4.2098     -80.0    converged
+cfg0015_E-2254.436_O-free_s           -4.1337   -4.2120     -78.3    converged
+cfg0026_E-2253.426_O-free_s           -4.1309   -4.2092     -78.3    converged
+cfg0041_E-2251.915_O-free_s           -4.1318   -4.2092     -77.4    converged
+cfg0042_E-2251.775_O-free_s           -4.1327   -4.2095     -76.8    converged
+cfg0025_E-2253.580_O-free_s           -4.1355   -4.2122     -76.7    converged
+cfg0035_E-2252.927_O-free_s           -4.1386   -4.2152     -76.6    converged
+cfg0034_E-2252.947_O-free_s           -4.1332   -4.2092     -76.1    converged
+cfg0010_E-2254.741_O-free_s           -4.1355   -4.2108     -75.3    converged
+cfg0031_E-2253.187_O-free_s           -4.1347   -4.2096     -74.9    converged
+cfg0004_E-2255.404_O-free_s           -4.1357   -4.2104     -74.7    converged
+cfg0001_E-2255.860_O-free_s           -4.1369   -4.2110     -74.1    converged
+cfg0009_E-2254.873_O-free_s           -4.1347   -4.2082     -73.4    converged
+cfg0020_E-2254.057_O-free_s           -4.1353   -4.2086     -73.3    converged
+cfg0000_E-2256.634_O-free_s           -4.1386   -4.2119     -73.3    converged
+cfg0005_E-2255.140_O-free_s           -4.1394   -4.2125     -73.1    converged
+cfg0023_E-2253.919_O-free_s           -4.1363   -4.2093     -73.1    converged
+cfg0018_E-2254.225_O-free_s           -4.1349   -4.2079     -73.0    converged
+cfg0027_E-2253.406_O-free_s           -4.1380   -4.2105     -72.6    converged
+cfg0014_E-2254.460_O-free_s           -4.1394   -4.2108     -71.5    converged
+cfg0011_E-2254.709_O-free_s           -4.1445   -4.2158     -71.3    converged
+cfg0033_E-2253.158_O-free_s           -4.1407   -4.2118     -71.1    converged
+cfg0044_E-2250.840_O-free_s           -4.1364   -4.2068     -70.4    converged
+cfg0039_E-2252.471_O-free_s           -4.1385   -4.2086     -70.1    converged
+cfg0019_E-2254.209_O-free_s           -4.1376   -4.2077     -70.0    converged
+cfg0043_E-2251.319_O-free_s           -4.1379   -4.2075     -69.6    converged
+cfg0036_E-2252.653_O-free_s           -4.1439   -4.2133     -69.4    converged
+cfg0030_E-2253.338_O-free_s           -4.1405   -4.2098     -69.3    converged
+cfg0038_E-2252.500_O-free_s           -4.1397   -4.2086     -68.9    converged
+cfg0021_E-2254.015_O-free_s           -4.1390   -4.2073     -68.2    converged
+cfg0003_E-2255.483_O-free_s           -4.1429   -4.2111     -68.2    converged
+cfg0012_E-2254.602_O-free_s           -4.1418   -4.2095     -67.7    converged
+cfg0029_E-2253.369_O-free_s           -4.1393   -4.2066     -67.3    converged
+cfg0013_E-2254.514_O-free_s           -4.1394   -4.2059     -66.6    converged
+cfg0006_E-2255.067_O-free_s           -4.1404   -4.2068     -66.5    converged
+cfg0037_E-2252.640_O-free_s           -4.1421   -4.2082     -66.1    converged
+cfg0022_E-2253.923_O-free_s           -4.1436   -4.2095     -65.9    converged
+cfg0024_E-2253.918_O-free_s           -4.1438   -4.2086     -64.8    converged
+cfg0008_E-2254.892_O-free_s           -4.1458   -4.2102     -64.4    converged
+cfg0002_E-2255.792_O-free_s           -4.1422   -4.2064     -64.2    converged
+cfg0032_E-2253.172_O-free_s           -4.1449   -4.2091     -64.2    converged
+cfg0017_E-2254.242_O-free_s           -4.1424   -4.2064     -64.0    converged
+cfg0007_E-2254.978_O-free_s           -4.1512   -4.2132     -61.9    converged
+cfg0016_E-2254.317_O-free_s           -4.1488   -4.2072     -58.4    converged
+==============================================================================
+Total: 3120.6s · 이번에 돈 구조 135 · 종료코드 0
+Results: /data/work/runs/b2o3_bo_2026_11_09/s6_screen/anneal_results.json
+2026-11-09 20:59:37 끝 run_rc=0
+check_results OK — 문제 0 건 (/data/work/runs/b2o3_bo_2026_11_09/s6_screen/anneal_results.json)
+2026-11-09 20:59:40 결과 검사 check_rc=0 (0 = 요청한 시간 · 온도 · 개수 · 결과 파일 해시가 기록과 같다)

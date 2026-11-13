@@ -1,0 +1,367 @@
+{
+  "provenance": {
+    "timestamp_iso": "2026-11-10T09:46:46.294595+09:00",
+    "python_version": "3.11.15",
+    "platform": "Linux-6.8.0-110-generic-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "hostname": "kserver116-27",
+    "ase_version": "3.28.0",
+    "numpy_version": "2.4.4",
+    "scipy_version": "1.17.1",
+    "fairchem_version": "unknown",
+    "torch_version": "2.8.0+cu128",
+    "uma_model_name": "uma-s-1p1",
+    "uma_task_name": "omat",
+    "git_commit": "12d3c1bbdde18f073b2eae1799b40a4faf6c87de",
+    "git_branch": "HEAD",
+    "git_dirty": false
+  },
+  "temperature_K": 500.0,
+  "time_ps": 0.0,
+  "model": "uma-s-1p1/omat",
+  "n_done": 3,
+  "n_converged": 3,
+  "n_unconverged": 0,
+  "n_failed": 0,
+  "results": [
+    {
+      "name": "cfg0040_E-2252.241_O-bo4_t020",
+      "seed": 20310128,
+      "rng_streams": {
+        "velocities": 20310128,
+        "langevin": 21310131
+      },
+      "struct_sha256": {
+        "input": "7474b8fabc718dd6",
+        "post_md": "7474b8fabc718dd6",
+        "post_relax": "2847c46b371976e5"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/data/work/runs/b2o3_bo_2026_11_09/s7b_snaps/cfg0040_E-2252.241_O-bo4_t020.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 0.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -534.713350959027,
+      "E_md_final": -534.713350959027,
+      "E_post_relax": -542.9734980788944,
+      "delta_E_anneal_meV_per_atom": -64.53239937396393,
+      "cell_pre": [
+        [
+          6.939527034469135,
+          -0.02159340523757825,
+          -0.011876394420200683
+        ],
+        [
+          6.902079392760808,
+          11.928355146881096,
+          -0.03790978551062029
+        ],
+        [
+          17.269582100088602,
+          9.843280139842182,
+          28.945817433831788
+        ]
+      ],
+      "cell_post": [
+        [
+          6.937911908132482,
+          -0.010049313229648056,
+          -0.020052745011828434
+        ],
+        [
+          6.9203433377773145,
+          11.93451000847011,
+          -0.0604206625468989
+        ],
+        [
+          17.24763946178227,
+          9.832545599673798,
+          28.83667415645288
+        ]
+      ],
+      "volume_pre": 2404.609442656137,
+      "volume_post": 2396.594185359764,
+      "t_md_s": 0.0018658638000488281,
+      "t_relax_s": 12.24550175666809,
+      "n_relax_steps": 110,
+      "relax_steps_max": 1500,
+      "relax_fmax": 0.05,
+      "fmax_final": 0.045115409698619206,
+      "opt_run_returned": null,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7b_relax/cfg0040_E-2252.241_O-bo4_t020/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7b_relax/cfg0040_E-2252.241_O-bo4_t020/post_relax.xyz",
+      "outputs": {
+        "post_md": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t020/post_md.xyz",
+          "sha256": "96b41ecce8b0010a5a06ae3affcb6ce0f14740ceb21fec008be51c4558d0f541"
+        },
+        "post_relax": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t020/post_relax.xyz",
+          "sha256": "9ed4f2ac94e8bf484dc8864830bc50b935bae6e2ae41db7dbd589ad481db204c"
+        },
+        "md_traj": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t020/md.traj",
+          "sha256": "7c8dd57441a4e58836aaa60a1fd51efd154284884f2baeec54d8aaf6ff307654",
+          "n_frames": 1,
+          "log_every_steps": 500,
+          "dt_fs": 2.0,
+          "n_steps": 0
+        }
+      },
+      "log_every_steps": 500,
+      "composition": {
+        "B": 2,
+        "Cl": 16,
+        "Li": 58,
+        "O": 3,
+        "P": 8,
+        "S": 41
+      },
+      "status": "converged",
+      "identity": {
+        "input_file_sha256": "e10df8cc906db49e011d007099a9ecc21a57c5111c3f68c33be261c6fa707845",
+        "input_struct": "7474b8fabc718dd6",
+        "n_atoms": 128,
+        "stage": "relax_only",
+        "temperature_K": 500.0,
+        "time_ps": 0.0,
+        "dt_fs": 2.0,
+        "friction": 0.01,
+        "relax_steps": 1500,
+        "relax_fmax": 0.05,
+        "cell_relax": true,
+        "seed": 20310128,
+        "model": "uma-s-1p1/omat"
+      },
+      "identity_sha": "20da20d5f323d9979cc80e0514f2f48d37e7ebbc356c71cfbc2582ac2a5a0e7b"
+    },
+    {
+      "name": "cfg0040_E-2252.241_O-bo4_t050",
+      "seed": 20271793,
+      "rng_streams": {
+        "velocities": 20271793,
+        "langevin": 21271796
+      },
+      "struct_sha256": {
+        "input": "7c76f797f09c060f",
+        "post_md": "7c76f797f09c060f",
+        "post_relax": "8ab60dec5b01eed2"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/data/work/runs/b2o3_bo_2026_11_09/s7b_snaps/cfg0040_E-2252.241_O-bo4_t050.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 0.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -535.437334692265,
+      "E_md_final": -535.437334692265,
+      "E_post_relax": -543.6644926749318,
+      "delta_E_anneal_meV_per_atom": -64.27467173958412,
+      "cell_pre": [
+        [
+          6.939527034469135,
+          -0.02159340523757825,
+          -0.011876394420200683
+        ],
+        [
+          6.902079392760808,
+          11.928355146881096,
+          -0.03790978551062029
+        ],
+        [
+          17.269582100088602,
+          9.843280139842182,
+          28.945817433831788
+        ]
+      ],
+      "cell_post": [
+        [
+          6.948861492724553,
+          -0.02001318207455294,
+          -0.01372255266346611
+        ],
+        [
+          6.914149897921802,
+          11.950556854233195,
+          -0.04398825737794558
+        ],
+        [
+          17.287361511885575,
+          9.853989703581757,
+          28.930748684750256
+        ]
+      ],
+      "volume_pre": 2404.609442656137,
+      "volume_post": 2411.419931002666,
+      "t_md_s": 0.002763986587524414,
+      "t_relax_s": 7.536153078079224,
+      "n_relax_steps": 68,
+      "relax_steps_max": 1500,
+      "relax_fmax": 0.05,
+      "fmax_final": 0.04581300255387657,
+      "opt_run_returned": null,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7b_relax/cfg0040_E-2252.241_O-bo4_t050/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7b_relax/cfg0040_E-2252.241_O-bo4_t050/post_relax.xyz",
+      "outputs": {
+        "post_md": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t050/post_md.xyz",
+          "sha256": "f81b0d870ca6f19685a11d3b62ba8e4ade923f70edac6cb660b1e69853ef475b"
+        },
+        "post_relax": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t050/post_relax.xyz",
+          "sha256": "2e456cc699feaf8b96fc7de54af68409be62c4cd11f34655ad3b27e0c1b15842"
+        },
+        "md_traj": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t050/md.traj",
+          "sha256": "ba04b093707f29bba041c2177d2b8b11507c7a313901af2030ffe51ad0e75742",
+          "n_frames": 1,
+          "log_every_steps": 500,
+          "dt_fs": 2.0,
+          "n_steps": 0
+        }
+      },
+      "log_every_steps": 500,
+      "composition": {
+        "B": 2,
+        "Cl": 16,
+        "Li": 58,
+        "O": 3,
+        "P": 8,
+        "S": 41
+      },
+      "status": "converged",
+      "identity": {
+        "input_file_sha256": "c0a82d866c7c330cff5bad7b3079b838ed022c86c16ddd47b75b830a69888d19",
+        "input_struct": "7c76f797f09c060f",
+        "n_atoms": 128,
+        "stage": "relax_only",
+        "temperature_K": 500.0,
+        "time_ps": 0.0,
+        "dt_fs": 2.0,
+        "friction": 0.01,
+        "relax_steps": 1500,
+        "relax_fmax": 0.05,
+        "cell_relax": true,
+        "seed": 20271793,
+        "model": "uma-s-1p1/omat"
+      },
+      "identity_sha": "f610e6b33651e3cc7bce6cfb14dbee768d3fa2ae58e40f6e3c52f5e50a348a99"
+    },
+    {
+      "name": "cfg0040_E-2252.241_O-bo4_t100",
+      "seed": 20308163,
+      "rng_streams": {
+        "velocities": 20308163,
+        "langevin": 21308166
+      },
+      "struct_sha256": {
+        "input": "b17ecc7f6e4b9456",
+        "post_md": "b17ecc7f6e4b9456",
+        "post_relax": "a75b36c3324afa55"
+      },
+      "\u26a0_\uc7ac\ud604": "seed \uace0\uc815\uc740 \uc7ac\ud604\uc758 **\ud544\uc694\uc870\uac74**\uc774\uc9c0 \ucda9\ubd84\uc870\uac74\uc774 \uc544\ub2c8\ub2e4 \u2014 GPU \ucee4\ub110 \ube44\uacb0\uc815\uc131\u00b7ASE/torch \ubc84\uc804\u00b7\uc7a5\uce58\uac00 \ubc14\ub00c\uba74 \ub2ec\ub77c\uc9c4\ub2e4",
+      "xyz_input": "/data/work/runs/b2o3_bo_2026_11_09/s7b_snaps/cfg0040_E-2252.241_O-bo4_t100.xyz",
+      "n_atoms": 128,
+      "temperature_K": 500.0,
+      "time_ps": 0.0,
+      "dt_fs": 2.0,
+      "E_pre_anneal": -535.3854037550861,
+      "E_md_final": -535.3854037550861,
+      "E_post_relax": -544.0224362384636,
+      "delta_E_anneal_meV_per_atom": -67.47681627638613,
+      "cell_pre": [
+        [
+          6.939527034469135,
+          -0.02159340523757825,
+          -0.011876394420200683
+        ],
+        [
+          6.902079392760808,
+          11.928355146881096,
+          -0.03790978551062029
+        ],
+        [
+          17.269582100088602,
+          9.843280139842182,
+          28.945817433831788
+        ]
+      ],
+      "cell_post": [
+        [
+          6.935673044123257,
+          -0.026720369226372883,
+          -0.03134782478819699
+        ],
+        [
+          6.889539187616462,
+          11.934522330443015,
+          -0.05357029240525693
+        ],
+        [
+          17.171578850608235,
+          9.848995955406131,
+          28.964169604224967
+        ]
+      ],
+      "volume_pre": 2404.609442656137,
+      "volume_post": 2410.791701193966,
+      "t_md_s": 0.002592802047729492,
+      "t_relax_s": 23.669346809387207,
+      "n_relax_steps": 215,
+      "relax_steps_max": 1500,
+      "relax_fmax": 0.05,
+      "fmax_final": 0.048768015203501706,
+      "opt_run_returned": null,
+      "converged": true,
+      "post_md_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7b_relax/cfg0040_E-2252.241_O-bo4_t100/post_md.xyz",
+      "post_relax_xyz": "/data/work/runs/b2o3_bo_2026_11_09/s7b_relax/cfg0040_E-2252.241_O-bo4_t100/post_relax.xyz",
+      "outputs": {
+        "post_md": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t100/post_md.xyz",
+          "sha256": "4bf4f395d91ca769bcffad339977259eca924b04f4715e7f5931fe00cef2ef5c"
+        },
+        "post_relax": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t100/post_relax.xyz",
+          "sha256": "97334492b171d8d204a4a697e64d619e6992fbddd51699533bf9125cddc3a581"
+        },
+        "md_traj": {
+          "rel": "cfg0040_E-2252.241_O-bo4_t100/md.traj",
+          "sha256": "d1f88b73e89a68b07f5ce7cb557b2fd6d411330bc084b56afd664a432bb495bd",
+          "n_frames": 1,
+          "log_every_steps": 500,
+          "dt_fs": 2.0,
+          "n_steps": 0
+        }
+      },
+      "log_every_steps": 500,
+      "composition": {
+        "B": 2,
+        "Cl": 16,
+        "Li": 58,
+        "O": 3,
+        "P": 8,
+        "S": 41
+      },
+      "status": "converged",
+      "identity": {
+        "input_file_sha256": "e22c8c37de228a4cdefc2cd62d0954dafef57b7c7b0d07e8a3a9c9a3e29efe3c",
+        "input_struct": "b17ecc7f6e4b9456",
+        "n_atoms": 128,
+        "stage": "relax_only",
+        "temperature_K": 500.0,
+        "time_ps": 0.0,
+        "dt_fs": 2.0,
+        "friction": 0.01,
+        "relax_steps": 1500,
+        "relax_fmax": 0.05,
+        "cell_relax": true,
+        "seed": 20308163,
+        "model": "uma-s-1p1/omat"
+      },
+      "identity_sha": "065eff22adba2343ee7bb50ee8274d4698592ae60dadd16f74ee8d951373d7a9"
+    }
+  ]
+}

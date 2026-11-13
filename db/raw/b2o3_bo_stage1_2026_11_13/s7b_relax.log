@@ -1,0 +1,39 @@
+2026-11-10 09:45:50 시작 (입력 · 소스 해시 재대조 통과)
+Loading UMA-s-1p1 (cuda)...
+WARNING:root:If 'dataset_list' is provided in the config, the code assumes that each dataset maps to itself. Please use 'dataset_mapping' as 'dataset_list' is deprecated and will be removed in the future.
+To process: 3/3 (실패 재시도 0 · 옛 기록 받음 0)
+
+[1/3] cfg0040_E-2252.241_O-bo4_t020
+  [cfg0040_E-2252.241_O-bo4_t020] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0040_E-2252.241_O-bo4_t020] MD done (0.0s) E_pre=-4.1774 → E_md=-4.1774 eV/atom
+  [cfg0040_E-2252.241_O-bo4_t020] relax 110 steps (12.2s) E_post=-4.2420 eV/atom, ΔE_anneal=-64.5 meV/atom, conv=True
+
+[2/3] cfg0040_E-2252.241_O-bo4_t050
+  [cfg0040_E-2252.241_O-bo4_t050] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0040_E-2252.241_O-bo4_t050] MD done (0.0s) E_pre=-4.1831 → E_md=-4.1831 eV/atom
+  [cfg0040_E-2252.241_O-bo4_t050] relax 68 steps (7.5s) E_post=-4.2474 eV/atom, ΔE_anneal=-64.3 meV/atom, conv=True
+
+[3/3] cfg0040_E-2252.241_O-bo4_t100
+  [cfg0040_E-2252.241_O-bo4_t100] MD: T=500.0K, dt=2.0fs, steps=0 (0.0ps), 128 atoms
+/data/apps/miniforge3/envs/uma/lib/python3.11/site-packages/ase/md/langevin.py:110: FutureWarning: The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct NVT distributions. The deviations are typically small for large systems but can be more pronounced for small systems. Use `fixcm=False` together with `ase.constraints.FixCom`. `fixcm` is deprecated since ASE 3.28.0 and will be removed in a future release.
+  warnings.warn(msg, FutureWarning)
+  [cfg0040_E-2252.241_O-bo4_t100] MD done (0.0s) E_pre=-4.1827 → E_md=-4.1827 eV/atom
+  [cfg0040_E-2252.241_O-bo4_t100] relax 215 steps (23.7s) E_post=-4.2502 eV/atom, ΔE_anneal=-67.5 meV/atom, conv=True
+이번 묶음: 3 기록 · 실패 0 · 미수렴 0
+
+==============================================================================
+Champion                                E_pre    E_post   ΔE meV/at     status
+------------------------------------------------------------------------------
+cfg0040_E-2252.241_O-bo4_t100         -4.1827   -4.2502     -67.5    converged
+cfg0040_E-2252.241_O-bo4_t020         -4.1774   -4.2420     -64.5    converged
+cfg0040_E-2252.241_O-bo4_t050         -4.1831   -4.2474     -64.3    converged
+==============================================================================
+Total: 44.7s · 이번에 돈 구조 3 · 종료코드 0
+Results: /data/work/runs/b2o3_bo_2026_11_09/s7b_relax/anneal_results.json
+2026-11-10 09:46:47 끝 run_rc=0
+check_results OK — 문제 0 건 (/data/work/runs/b2o3_bo_2026_11_09/s7b_relax/anneal_results.json)
+2026-11-10 09:46:48 결과 검사 check_rc=0 (0 = 요청한 시간 · 온도 · 개수 · 결과 파일 해시가 기록과 같다)
