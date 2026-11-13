@@ -1,0 +1,34 @@
+{
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "stage_planning_approved": true,
+  "actual_execution_GO": false,
+  "overall": "HOLD",
+  "operator": null,
+  "supported_environment_record": null,
+  "source_input_path_freeze_confirmed": false,
+  "author_DFT_only_paused": false,
+  "other_accounts_untouched": true,
+  "stages": {
+    "S0_STORE": {
+      "GO": false,
+      "start_utc": null,
+      "operator_stop_deadline_utc": null,
+      "operator_stop_and_recovery_procedure": null,
+      "resource_headroom_receipt": null,
+      "result": null,
+      "accepted_by_author": false
+    },
+    "Q11": {
+      "GO": false,
+      "start_utc": null,
+      "operator_stop_deadline_utc": null,
+      "operator_stop_and_recovery_procedure": null,
+      "resource_headroom_receipt": null,
+      "result": null,
+      "accepted_by_author": false
+    }
+  },
+  "s0_plan_adoption_location": null,
+  "probe6_attempt3_GO": false,
+  "probe6_attempt4_GO": false
+}

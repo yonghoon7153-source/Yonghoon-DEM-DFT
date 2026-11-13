@@ -1,0 +1,39 @@
+{
+  "proposal_only": true,
+  "shared_ledger_modified": false,
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "result_count": 0,
+  "overall": "HOLD",
+  "author_Q14_plan_approved": true,
+  "field_GO": false,
+  "S0": {
+    "E1": "rc0 + six bound outputs + hashes + PIN/clean",
+    "E2_instances_expected": 117583,
+    "E3": "encode true, built_written then hit, same true, no preload/drift/error",
+    "E4": "historical arrays/settings; only explained identity/time/path differences",
+    "T1_write_seconds_max": 600,
+    "T1_read_seconds_max": 300,
+    "T1_read_build_ratio_max": 0.1,
+    "T2_increment_GiB_max": 4,
+    "T3_store_GiB_max": 2
+  },
+  "Q11": {
+    "backend": "cupy",
+    "n_side": 298,
+    "seed": 20261112,
+    "maxiter": 60000,
+    "short_iters": 200,
+    "existing_timeout_seconds": 5400,
+    "adopt_requires": [
+      "identical",
+      "converged",
+      "backend_ok",
+      "short_iters_ok",
+      "source_ok",
+      "bound complete receipt"
+    ]
+  },
+  "gate_proposal": "test_rint_destination_audit.py expected 10/10 rc0; Claude applies on import",
+  "manual_deadline_policy": "recommended, no new automatic stop logic; actual operator/deadline pending",
+  "no_automatic_verified_or_closed": true
+}

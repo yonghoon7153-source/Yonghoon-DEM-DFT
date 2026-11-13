@@ -1,0 +1,62 @@
+{
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "source_branch": "codex/rint-rtr01-receipt-1113",
+  "artifacts": [
+    {
+      "file": "Q14_S0_FINALPIN_DRAFT.txt",
+      "bytes": 15823,
+      "sha256": "ef5b8fc4ca0cb19b98252a65b50f88b8ee0797a44339d71e6ad051bc3c10d54d",
+      "md5": "ff18ab9426f2913e55b963c7c4a8bab6",
+      "body_md5": "64c6f72c28764399e497f11ce52d6e52"
+    },
+    {
+      "file": "Q14_Q11_FINALPIN_DRAFT.txt",
+      "bytes": 21881,
+      "sha256": "34747fbcaab9af010820f50e8121c94307d11312ec15ba42b0bbfe6d16d6e7fd",
+      "md5": "9a969d6d024e266b19c52c797872fcc8",
+      "body_md5": "f7e12bc584e1ff8c46d3fc643ba57e73"
+    }
+  ],
+  "components": [
+    {
+      "file": "s0_store_probe.py",
+      "sha256": "6dd477748d65b58297a4760638639809f31a177165c4fc4c1cecc9ea71169263",
+      "md5": "86e9bf4b4cfb79fa6e4a63d69cb414b0"
+    },
+    {
+      "file": "s0_monitor_before.sh",
+      "sha256": "81118eadd8c86db0fc5aae1dbda2aaf74f58ae1deccf94a30092b108469eb5fb",
+      "md5": "ff385531653c294089ce58f08511b6ad"
+    },
+    {
+      "file": "s0_monitor.sh",
+      "sha256": "01a1b0fbabe64f357a2d59e1cbead6b196f7ad5e0fc37514f083ace828088c3a",
+      "md5": "13b1babd690950db9c758506bb35d951"
+    },
+    {
+      "file": "q11_gpu_check.py",
+      "sha256": "07ac60d4d3dd1021603632621f6c9e5664a1741a7e4de45ab1b6b01161640c43",
+      "md5": "4eb8a6c3ed2da1039e6b0988f63db906"
+    }
+  ],
+  "original_blocks": [
+    {
+      "path": "docs/reviews/rint2_s0_store_probe_20261112/s0_rerun_probe_block.txt",
+      "md5": "39c4b975ebd32ff357c8c52d11bbb827",
+      "sha256": "38f5d7487aead37e3582ef6e6ad7ca6063736ba074b76cd828ea0c031b9bd6a4"
+    },
+    {
+      "path": "docs/reviews/rint2_codepkg_20261113/q11_gpu_check_block_v8.txt",
+      "md5": "b9d45d762f708d6f75ef0ebd6499add9",
+      "sha256": "569c9f0b5a9b2041b2a5a8cd427580dd516d3d8927062bfe26516a8353c960ac"
+    }
+  ],
+  "preservation": {
+    "s0_probe_exact": true,
+    "q11_harness_exact": true,
+    "s0_monitor_changes": "Only two Python invocations add -I -B; original monitor control and bundle logic retained."
+  },
+  "execution_GO": false,
+  "result_count": 0,
+  "overall": "HOLD"
+}
