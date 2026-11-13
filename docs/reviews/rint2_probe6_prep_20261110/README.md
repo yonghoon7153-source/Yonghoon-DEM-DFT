@@ -67,6 +67,7 @@
 - `env_<이름>` 여섯 (`unset` · `empty` · `set` · `value:<짧은 값>`): 설정 이름의 있음 / 없음 · 스레드 수 · GPU 번호 · BLAS 계산 경로 이름. 결과가 아니다.
 - `attempt` · `expect_rtol` · `expect_backend` · `solve_started` · `pregate`: 시도 번호 · 감시 셸이 넣은 등록 값 · 표지 (0 / 1).
 - (2 회차 고침) `attempt1_pin` · `code_same_as_attempt1` (시도 2 만): 시도 1 폴더 meta 의 핀 (커밋 번호) · 두 핀 사이에 풀이 코드가 같다는 표지 (1). 코드 판의 식별자이지 풀이 값이 아니다. `expect_rj`: 감시 셸이 넣은 등록 접합 저항 (1e6 Ω · 입력 값이지 결과가 아니다). `pythonpath_removed`: 부르는 셸에 PYTHONPATH 가 있어 걷었는지 (0 / 1). `rj_matches_registered` (보고 fields): 영수증 · 팔 이름의 R_j 가 그 등록 값인지 (참 / 거짓). 다섯 다 셈 · 표지 · 입력 식별자라 해의 크기가 없다 (σ 를 되짚을 수 없다).
+- (11-13 · 시도 3 · 4 = 탄소 접합 원장 저장본 켬) `attempt2_pin` (시도 3) · `attempt3_pin` · `code_same_as_attempt3` (시도 4): 앞 시도 폴더 meta 의 핀 · 풀이 코드 같음 표지 (코드 판의 식별자).  `store` · `store_listing_before` · `store_listing_after`: 저장본 폴더 (홈을 ~ 로 접은 꼴) · 들어 있는 파일 이름 (`cjreg_<열쇠>.npz`) 과 sha256: 원장 파일의 신원이다 (원장 = 풀이 전 기하 · 접합 목록 · 풀이 결과 σ 를 담지 않는다).  보고 `store` 블록 (`audit_file` · `audit_sha256` · `status` · `key` · `file` · `file_sha256`): audit 곁 파일의 신원 글과 상태 이름뿐 (곁 파일의 초 · 바이트 수 · 실행 환경은 옮기지 않는다).
 
 ## 5. 러너가 화면 · 로그에 σ 를 찍는가 (코드에서 확인)
 

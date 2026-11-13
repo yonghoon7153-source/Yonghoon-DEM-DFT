@@ -1646,39 +1646,40 @@ def suite_T(mod, rec):
         ok4.rc == 0 and ((ok4.rep or {}).get('store') or {}).get('status') == 'hit' and report_problems(ok4.rep) == []
         and screen_problems(ok4.out, ok4.rep) == [], (ok4.rc, (ok4.rep or {}).get('problems')))
     bad30 = (
-        ('시도 3 인데 상태 hit (빈 저장본이 아니었다)', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(status='hit')})),
-        ('시도 3 인데 상태 disabled (런 도중 코드 바뀜 · 저장본을 쓰지 않음)', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(status='disabled')})),
-        ('시도 4 인데 상태 built_written (적중 아님)', dict(arm=arm_doc(), meta=m4(), extra={AUDIT_NAME: audit()})),
-        ('시도 3 audit 곁 파일 없음', dict(arm=arm_doc(), meta=m3())),
-        ('시도 4 audit 곁 파일 없음', dict(arm=arm_doc(), meta=m4())),
-        ('시도 2 에 audit 곁 파일 (저장본은 시도 3 · 4 만)', dict(arm=arm_doc(), extra={AUDIT_NAME: audit()})),
-        ('시도 2 meta 에 저장본 칸', dict(arm=arm_doc(), meta=meta_text(store='~/p6_cjstore', store_listing_before='',
+        ('시도 3 인데 상태 hit (빈 저장본이 아니었다)', 'store audit status is not built_written for attempt 3', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(status='hit')})),
+        ('시도 3 인데 상태 disabled (런 도중 코드 바뀜 · 저장본을 쓰지 않음)', 'store audit status is not built_written for attempt 3', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(status='disabled')})),
+        ('시도 4 인데 상태 built_written (적중 아님)', 'store audit status is not hit for attempt 4', dict(arm=arm_doc(), meta=m4(), extra={AUDIT_NAME: audit()})),
+        ('시도 3 audit 곁 파일 없음', 'store audit status is not built_written for attempt 3', dict(arm=arm_doc(), meta=m3())),
+        ('시도 4 audit 곁 파일 없음', 'store audit status is not hit for attempt 4', dict(arm=arm_doc(), meta=m4())),
+        ('시도 2 에 audit 곁 파일 (저장본은 시도 3 · 4 만)', 'attempt 2 has a store record', dict(arm=arm_doc(), extra={AUDIT_NAME: audit()})),
+        ('시도 2 meta 에 저장본 칸', 'attempt 2 has a store record', dict(arm=arm_doc(), meta=meta_text(store='~/p6_cjstore', store_listing_before='',
                                                                     store_listing_after='%s:%s' % (reg, fsha)))),
-        ('시도 1 에 audit 곁 파일', dict(arm=arm_doc(), meta=meta_a1(), log=runner_log(maxiter=int(A1)), extra={AUDIT_NAME: audit()})),
-        ('audit 파일 sha ≠ 끝 목록의 sha', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(file_sha='ef' * 32)})),
-        ('audit 파일이 끝 목록에 없음', dict(arm=arm_doc(), meta=m3(store_listing_after='cjreg_%s.npz:%s' % ('01' * 32, fsha)),
+        ('시도 1 에 audit 곁 파일', 'attempt 1 has a store record', dict(arm=arm_doc(), meta=meta_a1(), log=runner_log(maxiter=int(A1)), extra={AUDIT_NAME: audit()})),
+        ('audit 파일 sha ≠ 끝 목록의 sha', 'is not in the store listing after the run', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(file_sha='ef' * 32)})),
+        ('audit 파일이 끝 목록에 없음', 'is not in the store listing after the run', dict(arm=arm_doc(), meta=m3(store_listing_after='cjreg_%s.npz:%s' % ('01' * 32, fsha)),
                                     extra={AUDIT_NAME: audit()})),
-        ('시도 3 시작 목록이 비어 있지 않음', dict(arm=arm_doc(), meta=m3(store_listing_before='%s:%s' % (reg, fsha)), extra={AUDIT_NAME: audit()})),
-        ('시도 4 목록이 런 도중 바뀜 (앞 ≠ 끝)', dict(arm=arm_doc(), meta=m4(store_listing_before='%s:%s' % (reg, 'ef' * 32)),
+        ('시도 3 시작 목록이 비어 있지 않음', 'attempt 3 store was not empty at the start', dict(arm=arm_doc(), meta=m3(store_listing_before='%s:%s' % (reg, fsha)), extra={AUDIT_NAME: audit()})),
+        ('시도 4 목록이 런 도중 바뀜 (앞 ≠ 끝)', 'attempt 4 store listing changed during the run', dict(arm=arm_doc(), meta=m4(store_listing_before='%s:%s' % (reg, 'ef' * 32)),
                                           extra={AUDIT_NAME: audit(status='hit')})),
-        ('시도 4 시작 목록이 빔', dict(arm=arm_doc(), meta=m4(store_listing_before=''), extra={AUDIT_NAME: audit(status='hit')})),
-        ('시도 3 meta 에 저장본 칸 없음', dict(arm=arm_doc(), meta=m3(store=None), extra={AUDIT_NAME: audit()})),
-        ('시도 3 meta 에 attempt2_pin 없음', dict(arm=arm_doc(), meta=m3(attempt2_pin=None), extra={AUDIT_NAME: audit()})),
-        ('시도 4 meta 에 code_same_as_attempt3 없음', dict(arm=arm_doc(), meta=m4(code_same_as_attempt3=None),
+        ('시도 4 시작 목록이 빔', 'attempt 4 store listing changed during the run or was empty', dict(arm=arm_doc(), meta=m4(store_listing_before=''), extra={AUDIT_NAME: audit(status='hit')})),
+        ('시도 3 meta 에 저장본 칸 없음', 'attempt 3 meta lacks the store keys', dict(arm=arm_doc(), meta=m3(store=None), extra={AUDIT_NAME: audit()})),
+        ('시도 3 meta 에 attempt2_pin 없음', 'attempt 3 meta does not show the attempt-2 pin', dict(arm=arm_doc(), meta=m3(attempt2_pin=None), extra={AUDIT_NAME: audit()})),
+        ('시도 4 meta 에 code_same_as_attempt3 없음', 'attempt 4 meta does not show the attempt-3 pin and the same solve code', dict(arm=arm_doc(), meta=m4(code_same_as_attempt3=None),
                                                        extra={AUDIT_NAME: audit(status='hit')})),
-        ('시도 3 meta 에 attempt1_pin (모순)', dict(arm=arm_doc(), meta=m3(attempt1_pin=PIN_FIX), extra={AUDIT_NAME: audit()})),
-        ('시도 3 meta 에 attempt3_pin (모순)', dict(arm=arm_doc(), meta=m3(attempt3_pin=PIN_FIX), extra={AUDIT_NAME: audit()})),
-        ('시도 2 meta 에 attempt2_pin (모순)', dict(arm=arm_doc(), meta=meta_text(attempt2_pin=PIN_FIX))),
-        ('audit 곁 파일 둘', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(),
+        ('시도 3 meta 에 attempt1_pin (모순)', 'attempt 3 meta carries attempt-2 keys', dict(arm=arm_doc(), meta=m3(attempt1_pin=PIN_FIX), extra={AUDIT_NAME: audit()})),
+        ('시도 3 meta 에 attempt3_pin (모순)', 'meta carries the pin key of another attempt', dict(arm=arm_doc(), meta=m3(attempt3_pin=PIN_FIX), extra={AUDIT_NAME: audit()})),
+        ('시도 2 meta 에 attempt2_pin (모순)', 'meta carries the pin key of another attempt', dict(arm=arm_doc(), meta=meta_text(attempt2_pin=PIN_FIX))),
+        ('audit 곁 파일 둘', 'more than one store audit side file', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: audit(),
                                                              AUDIT_NAME.replace('_a0.json', 'x_a0.json'): audit()})),
-        ('다른 팔의 audit 곁 파일', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME.replace(ARM, ARM.replace('_a0', 'x_a0')): audit()})),
-        ('audit 곁 파일이 JSON 아님', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: 'not json'})))
+        ('다른 팔의 audit 곁 파일', 'does not belong to the arm file read', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME.replace(ARM, ARM.replace('_a0', 'x_a0')): audit()})),
+        ('audit 곁 파일이 JSON 아님', 'store audit side file unreadable', dict(arm=arm_doc(), meta=m3(), extra={AUDIT_NAME: 'not json'})))
     res30 = []
-    for tag, kw in bad30:
+    for tag, why, kw in bad30:
         rr = run_case('t30', **kw)
-        res30.append((tag, rr.rc == 4 and no_leak(rr) == [] and report_problems(rr.rep) == [], rr.rc, (rr.rep or {}).get('problems')))
+        pr_ = (rr.rep or {}).get('problems') or []
+        res30.append((tag, rr.rc == 4 and no_leak(rr) == [] and report_problems(rr.rep) == [] and any(why in str(x) for x in pr_), rr.rc, pr_))
     rec('T30c 저장본 기록이 등록과 다른 %d 꼴 (상태 · 곁 파일 있음 / 없음 · 시도 1 · 2 의 저장본 · 목록 sha · 시작 목록 · 목록 바뀜 · 칸 없음 · 모순 · 둘 · 다른 팔 · '
-        'JSON 아님): 모두 rc 4 · 누출 없음 · 보고 구조 통과' % len(bad30),
+        'JSON 아님): 모두 rc 4 · 그 꼴의 사유 글 · 누출 없음 · 보고 구조 통과' % len(bad30),
         all(x[1] for x in res30) and len(res30) == 22, [x for x in res30 if not x[1]])
 
 
@@ -1793,8 +1794,9 @@ MUTANTS = (
     ('시도 3 · 4 의 시도 2 칸 모순을 안 봄', [("                if att in (3, 4) and ('attempt1_pin' in m_ or 'code_same_as_attempt1' in m_):", "                if False:")]),
     ('audit 곁 파일 둘을 받음', [("    if len(audits) > 1:", "    if len(audits) > 99:")]),
     ('다른 팔의 audit 곁 파일을 받음', [("            if arm_path is not None and audits[0] != AUDIT_PREFIX + os.path.basename(arm_path):", "            if False:")]),
+    # (incomplete 줄만 빼는 꼴은 관찰상 같은 변이 = 상태 대조가 같은 rc 4 를 낸다 (11-13 실측) → 사유 글까지 뺀다 · T30c 가 꼴마다 사유를 본다)
     ('JSON 아닌 audit 곁 파일을 받음', [("            incomplete = True\n            probs.append('store audit side file ' + (why or 'is not an object'))",
-                                       "            probs.append('store audit side file ' + (why or 'is not an object'))")]),
+                                       "            pass")]),
     ('R_j 팔 이름을 안 봄', [("(float(rj) == xj) and ('_cj%d_' % int(xj)) in os.path.basename(arm_path)", "(float(rj) == xj)")]),
     ('pythonpath_set 을 안 봄', [("('kit_run_matches_s0', 1), ('solve_started', 1), ('pythonpath_set', 0)):", "('kit_run_matches_s0', 1), ('solve_started', 1)):")]),
     ('영수증 arms 없음을 받음', [("if receipt.get('receipt_arms') != 1:", "if receipt.get('receipt_arms') not in (1,) and not is_missing(receipt.get('receipt_arms')):")]),
@@ -2983,14 +2985,20 @@ def t_F(pre='f'):
     stop22('시도 4 · 시도 3 meta 에 저장본 목록 없음', 4, 'no store listing', [a1, a2, ('p6log_a3_20991231T000003Z', lf_done(3, pin))],
            prep=put_store)
     stop22('시도 3 · GIT_GRAFT_FILE 이 걸림', 3, 'GIT_GRAFT_FILE', [a1, a2], env_over={'GIT_GRAFT_FILE': os.path.join(TD, 'no_graft')})
+    stop22('시도 3 · GIT_SHALLOW_FILE 이 걸림', 3, 'GIT_SHALLOW_FILE', [a1, a2], env_over={'GIT_SHALLOW_FILE': os.path.join(TD, 'no_shallow')})
     sh_repo = os.path.join(TD, pre + '_pin_shallow')
     subprocess.run(['git', 'clone', '-q', '--depth', '1', 'file://' + repo2, sh_repo], check=True, capture_output=True,
                    env=_rc().git_fixture_env())
     stop22('시도 3 · 핀 작업 트리가 얕은 복제 (커밋 여럿인 저장소의 depth 1)', 3, 'shallow clone', [a1, a2], rp=(sh_repo, git(sh_repo, 'rev-parse', 'HEAD')))
+    # info/grafts: git 2.43 실측 = GIT_NO_REPLACE_OBJECTS=1 로도 접붙임이 살아 조상 대조가 바뀌고 --is-shallow-repository 는 false 다 (11-13)
+    gr_repo, gr_pin = make_pin_repo(pre + '_pin_graft')
+    os.makedirs(os.path.join(gr_repo, '.git', 'info'), exist_ok=True)
+    write_text(os.path.join(gr_repo, '.git', 'info', 'grafts'), gr_pin + '\n')
+    stop22('시도 3 · 핀 저장소에 info/grafts (접붙인 이력)', 3, 'info/grafts', [a1, a2], rp=(gr_repo, gr_pin))
     calls22 = len(read_text(os.path.join(fd22, 'calls.txt')).splitlines()) if os.path.exists(os.path.join(fd22, 'calls.txt')) else 0
-    chk('F22c 시도 3 · 4 멈춤 %d 꼴 (앞 시도 · 저장본 남음 · 링크 · 짝 · 뒤 시도 끝남 · 시도 4 앞 조건 · 저장본 없음 · 다름 · 목록 없음 · graft · shallow): '
-        '전부 rc 2 · 그 사유 · 러너 호출 0' % len(stops22),
-        len(stops22) == 12 and all(ok for _l, ok, _w in stops22) and calls22 == 2, [x for x in stops22 if not x[1]])
+    chk('F22c 시도 3 · 4 멈춤 %d 꼴 (앞 시도 · 저장본 남음 · 링크 · 짝 · 뒤 시도 끝남 · 시도 4 앞 조건 · 저장본 없음 · 다름 · 목록 없음 · graft env · '
+        'shallow env · 얕은 복제 · info/grafts): 전부 rc 2 · 그 사유 · 러너 호출 0' % len(stops22),
+        len(stops22) == 14 and all(ok for _l, ok, _w in stops22) and calls22 == 2, [x for x in stops22 if not x[1]])
     git(repo2, 'checkout', '-q', '--detach', pb)
     h = make_home(pre + '_h22code')
     for nm, files in (('p6log_a1_20991231T000001Z', lf_done(1, pa)), ('p6log_a2_20991231T000002Z', lf_done(2, pa))):

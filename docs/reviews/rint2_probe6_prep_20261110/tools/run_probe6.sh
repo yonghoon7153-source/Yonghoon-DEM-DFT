@@ -5,10 +5,10 @@
 #   W        pinned worktree (git HEAD must equal PIN; tree clean, untracked files included)
 #   O        runner output folder: must not exist or be empty; name ca1_probe6_a<N>_<...>_arm1
 #   L        log folder: must exist and hold nothing but nohup.out; directly in $HOME; name p6log_a<N>_<...> (N = attempt,
-#            1 or 2, same as O)
+#            1 to 4, same as O)
 #   PIN      expected commit (40 hex)
 #   MAXITER  CG iteration limit (digits) -> P2_EXTRA="--step3-maxiter MAXITER"; the registered pair: attempt 1 -> 30000,
-#            attempt 2 -> 1500000 (any other pair is a STOP)
+#            attempt 2 -> 1500000, attempts 3 and 4 -> 1500000 (any other pair is a STOP)
 #   ROOT     kit root (default $HOME/sdcp) - the runner is started there
 #
 # Rules: docs/reviews/rint2_dev_probe_ledger_20261026.md section 2 (seven boxes) and section 3 (attempt lines); command =
@@ -16,11 +16,13 @@
 # What it does:
 #   umask 022, job control off -> checks (nothing is written outside L and the lock, and the runner is not started, unless
 #   all pass): arguments, folders, attempt number and its limit, one-watcher lock ($HOME/.probe6.lock), earlier attempts
-#   in $HOME/p6log_* (every one has an end marker; this attempt number has not run to the end yet; attempt 1 does not
-#   run after an attempt 2 that ran to the end; attempt 2 needs exactly one attempt-1 folder with DONE and
-#   solve_started=1, whose pin is this pin or an earlier commit of it, and the same solve code CODE_PATHS; "ran to the
-#   end" = DONE with solve_started=1, or WATCHER_FAILED after the runner-start line), no runner or payload of this account
-#   already running, pin, clean tree, venv, kit, S0 plan, kit payload line, GPU, cupy, the runner's own pre-run gates
+#   in $HOME/p6log_* (every one has an end marker; this attempt number has not run to the end yet; an attempt does not
+#   run after a higher-numbered attempt that ran to the end; attempt N >= 2 needs exactly one attempt-(N-1) folder with
+#   DONE and solve_started=1, whose pin is this pin or an earlier commit of it (history not grafted, not shallow);
+#   attempts 2 and 4 also need the same solve code CODE_PATHS as attempt 1 and 3; "ran to the end" = DONE with
+#   solve_started=1, or WATCHER_FAILED after the runner-start line), the store folder (attempts 3 and 4, below), no runner
+#   or payload of this account already running, pin, clean tree, venv, kit, S0 plan, kit payload line, GPU, cupy, the
+#   runner's own pre-run gates
 #   -> environment fingerprint (versions only, no host name)
 #   -> removes PYTHONPATH and every runner-axis variable from the environment and sets exactly the registered ones
 #      (+ PYTHONUNBUFFERED=1); the runner gets no BASH_ENV and no SHELLOPTS (env -u)
@@ -38,11 +40,22 @@
 # The runner itself writes into the kit run folder (generated arm script, time -v record, and on failure the
 # rejected arm JSON) and would overwrite same-named files of an earlier attempt, so the watcher copies such files
 # into the log folder: kit_run_before/ (present before the start) and kit_run_new/ (written by this attempt).
+# Attempts 3 and 4 (ledger section 3, 2026-11-13 - carbon-junction registry store of the Rint 2 code package): the same probe
+#   with the store on, CJUNC_STORE = the fixed folder ~/p6_cjstore.  Attempt 3: the store folder is absent or empty
+#   (the watcher makes it, umask 022, after every check) -> the payload builds the registry and writes it (arm audit status
+#   built_written).  Attempt 4: the store folder holds exactly what attempt 3 left (names and sha256 from attempt 3's meta)
+#   -> the payload reads it (status hit).  The arm audit side file cjstore_audit_<arm>.json (next to the arm in O, the runner
+#   moves it) carries the status; the reader checks it.  meta: store, store_listing_before, store_listing_after.
+# git reads of this watcher (pin, clean tree, ancestry, solve-code diff) are sealing reads (Codex rebuttal 1/2 section 3): the
+#   repository-selecting GIT_* names are unset (same text as run_contract.GIT_DROP_SH) and replacement objects are off
+#   (GIT_NO_REPLACE_OBJECTS=1, exported - the runner inherits it).
 # Knobs for testing (both recorded in meta.txt): PROBE6_SAMPLE_S = sampling interval in s (default 10),
 #   PROBE6_CAP_GB = host RSS cap in GB (default min(46, MemAvailable - 6)).
 set -u
 umask 022
 set +m   # job control off (SHELLOPTS / BASH_ENV may turn it on): with it on, setsid forks and the runner leaves the watched group
+for _gv in $(compgen -e); do case "$_gv" in (GIT_DIR|GIT_WORK_TREE|GIT_INDEX_FILE|GIT_OBJECT_DIRECTORY|GIT_ALTERNATE_OBJECT_DIRECTORIES|GIT_COMMON_DIR|GIT_NAMESPACE|GIT_PREFIX|GIT_CONFIG_PARAMETERS|GIT_CONFIG_COUNT|GIT_CONFIG_KEY_*|GIT_CONFIG_VALUE_*) unset "$_gv";; esac; done
+export GIT_NO_REPLACE_OBJECTS=1
 
 KIT=kit_SBE_vgcf100
 TOL_FF=0.07381254285530132
@@ -158,6 +171,28 @@ runner_leads_session() {   # 0 = the runner (RPID) leads its own session (setsid
   done
   return 1
 }
+history_problem() {   # prints a reason when the pinned worktree's history is grafted or shallow (ancestry / diff untrustworthy)
+  local s gp
+  if [ -n "${GIT_GRAFT_FILE+x}" ] || [ -n "${GIT_SHALLOW_FILE+x}" ]; then
+    echo "GIT_GRAFT_FILE / GIT_SHALLOW_FILE is set (graft / shallow history) - unset it before the watcher"; return 0
+  fi
+  s="$(git -C "$W" rev-parse --is-shallow-repository 2>/dev/null)" || { echo "cannot tell whether the pinned worktree is a shallow clone (git rev-parse failed)"; return 0; }
+  [ "$s" = false ] || { echo "the pinned worktree is a shallow clone (history cut) - run git fetch --unshallow first"; return 0; }
+  gp="$(git -C "$W" rev-parse --git-path info/grafts 2>/dev/null)" || { echo "cannot read the git path info/grafts of the pinned worktree"; return 0; }
+  case "$gp" in /*) ;; *) gp="$W/$gp";; esac
+  if [ -e "$gp" ] || [ -L "$gp" ]; then echo "the pinned worktree's repository has info/grafts (grafted history) - remove it first"; fi
+  return 0
+}
+store_listing() {   # name:sha256 of every entry of the store folder (C order, comma separated; a non-regular entry = name:other)
+  local LC_ALL=C f n out=""
+  for f in "$STORE"/* "$STORE"/.[!.]* "$STORE"/..?*; do
+    [ -e "$f" ] || [ -L "$f" ] || continue
+    n="$(basename "$f")"
+    if [ -f "$f" ] && [ ! -L "$f" ]; then out="$out,$n:$(sha256sum "$f" | awk '{print $1}')"; else out="$out,$n:other"; fi
+  done
+  printf '%s' "${out#,}"
+  return 0
+}
 finished() {   # $1 = an earlier log folder: 0 when that attempt counts as run to the end (ledger section 3)
   if [ -f "$1/DONE" ] && grep -qx 'solve_started=1' "$1/meta.txt" 2>/dev/null; then return 0; fi
   if [ -f "$1/WATCHER_FAILED" ] && grep -q ' runner started - maxiter ' "$1/status.log" 2>/dev/null; then return 0; fi
@@ -235,7 +270,9 @@ HP="$(cd "$HOME" 2>/dev/null && pwd -P)" || HP=""
 case "$(basename "$L")" in
   p6log_a1_*) ATTEMPT=1;;
   p6log_a2_*) ATTEMPT=2;;
-  *) stop "log folder name must start with p6log_a1_ or p6log_a2_ (the attempt number)";;
+  p6log_a3_*) ATTEMPT=3;;
+  p6log_a4_*) ATTEMPT=4;;
+  *) stop "log folder name must start with p6log_a1_, p6log_a2_, p6log_a3_ or p6log_a4_ (the attempt number)";;
 esac
 case "$(basename "$O")" in
   "ca1_probe6_a${ATTEMPT}_"*_arm1) ;;
@@ -247,8 +284,10 @@ digits "$MAXITER" 9 && [ "$MAXITER" -ge 1 ] || stop "MAXITER must be a positive 
 case "$ATTEMPT" in
   1) WANT_MAX=30000;;
   2) WANT_MAX=1500000;;
+  3) WANT_MAX=1500000;;
+  4) WANT_MAX=1500000;;
 esac
-[ "$MAXITER" = "$WANT_MAX" ] || stop "attempt $ATTEMPT runs with maxiter $WANT_MAX (registered pair 1 -> 30000, 2 -> 1500000), not $MAXITER"
+[ "$MAXITER" = "$WANT_MAX" ] || stop "attempt $ATTEMPT runs with maxiter $WANT_MAX (registered pairs 1 -> 30000, 2 -> 1500000, 3 -> 1500000, 4 -> 1500000), not $MAXITER"
 if mkdir "$LOCK" 2>/dev/null; then
   LOCKED=1
   printf 'pid=%s\nlogdir=%s\n' "$$" "$(homerel "$L")" > "$LOCK/owner"
@@ -267,27 +306,51 @@ for d in "$HOME"/p6log_a"$ATTEMPT"_*; do
     stop "attempt $ATTEMPT already ran to the end in $(homerel "$d") (DONE with solve_started=1, or WATCHER_FAILED after the runner-start line) - one ledger line per attempt"
   fi
 done
-if [ "$ATTEMPT" = 1 ]; then
-  for d in "$HOME"/p6log_a2_*; do
-    if [ -d "$d" ] && finished "$d"; then stop "attempt 2 already ran to the end in $(homerel "$d") - attempt 1 does not run after attempt 2"; fi
+for M in 2 3 4; do   # a higher-numbered attempt that ran to the end closes this number
+  [ "$M" -gt "$ATTEMPT" ] || continue
+  for d in "$HOME"/p6log_a"$M"_*; do
+    if [ -d "$d" ] && finished "$d"; then stop "attempt $M already ran to the end in $(homerel "$d") - attempt $ATTEMPT does not run after attempt $M"; fi
   done
-else
+done
+PREV=0; PD=""
+if [ "$ATTEMPT" -ge 2 ]; then
+  PREV=$((ATTEMPT - 1))
   N1=0
-  for d in "$HOME"/p6log_a1_*; do
+  for d in "$HOME"/p6log_a"$PREV"_*; do
     [ -d "$d" ] || continue
     if [ -f "$d/DONE" ] && grep -qx 'solve_started=1' "$d/meta.txt" 2>/dev/null; then
       N1=$((N1 + 1))
       P1="$(sed -n 's/^pin=//p' "$d/meta.txt" | head -n 1)"
+      PD="$d"
     fi
   done
-  [ "$N1" = 1 ] || stop "attempt 2 needs exactly one attempt-1 log folder with DONE and solve_started=1 (found $N1)"
-  ( LC_ALL=C; case "$P1" in ""|*[!0-9a-f]*) exit 1;; esac; [ "${#P1}" -eq 40 ] ) || stop "the attempt-1 meta pin is not a 40-hex commit"
+  [ "$N1" = 1 ] || stop "attempt $ATTEMPT needs exactly one attempt-$PREV log folder with DONE and solve_started=1 (found $N1)"
+  ( LC_ALL=C; case "$P1" in ""|*[!0-9a-f]*) exit 1;; esac; [ "${#P1}" -eq 40 ] ) || stop "the attempt-$PREV meta pin is not a 40-hex commit"
 fi
 PSL="$(ps -u "$(id -u)" -o pid=,args= 2>/dev/null)" || stop "cannot list the processes of this account (ps failed)"
 BUSY="$(printf '%s\n' "$PSL" | awk -v me="$$" '$1 != me && (index($0, "sdcp_gain_vox015_8arm.sh") || index($0, "mpm_webapp_payload.py")) { n++ } END { print n + 0 }')"
 [ "$BUSY" = 0 ] || stop "a runner (sdcp_gain_vox015_8arm.sh) or payload (mpm_webapp_payload.py) already runs under this account ($BUSY process(es)) - one solve at a time"
 if [ -e "$O" ] || [ -L "$O" ]; then
   { [ -d "$O" ] && [ ! -L "$O" ] && [ -z "$(ls -A "$O" 2>/dev/null)" ]; } || stop "output folder exists and is not empty: $(homerel "$O")"
+fi
+# store folder (attempts 3 and 4): fixed ~/p6_cjstore; attempt 3 = absent or empty, attempt 4 = what attempt 3 left
+STORE=""; STORE_BEFORE=""; STORE_AFTER=""
+if [ "$ATTEMPT" -ge 3 ]; then
+  STORE="${HOME%/}/p6_cjstore"
+  ( LC_ALL=C; case "$STORE" in *[!A-Za-z0-9._/-]*) exit 1;; esac ) || stop "the store folder path has a character the runner refuses (only A-Za-z0-9._/-): $(homerel "$STORE")"
+  case "$STORE/" in *//*|*/./*|*/../*) stop "the store folder path is not in normal form (no //, . or .. parts): $(homerel "$STORE")";; esac
+  if [ -L "$STORE" ]; then stop "the store folder is a symbolic link: $(homerel "$STORE")"; fi
+  if [ "$ATTEMPT" = 3 ]; then
+    if [ -e "$STORE" ]; then
+      { [ -d "$STORE" ] && [ -z "$(ls -A "$STORE" 2>/dev/null)" ]; } || stop "attempt 3 needs an absent or empty store folder (it builds and writes the registry): $(homerel "$STORE")"
+    fi
+  else
+    [ -d "$STORE" ] || stop "attempt 4 needs the store folder attempt 3 wrote: $(homerel "$STORE")"
+    WANT_LIST="$(sed -n 's/^store_listing_after=//p' "$PD/meta.txt" | head -n 1)"
+    [ -n "$WANT_LIST" ] || stop "the attempt-3 meta has no store listing (store_listing_after)"
+    STORE_BEFORE="$(store_listing)"
+    [ "$STORE_BEFORE" = "$WANT_LIST" ] || stop "the store folder differs from what attempt 3 left (names / sha256) - attempt 4 reads exactly that registry"
+  fi
 fi
 T="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 TW="$(cd "$W/$TOOLS_REL" 2>/dev/null && pwd -P)" || TW=""
@@ -301,15 +364,20 @@ HEAD_NOW="$(git -C "$W" rev-parse HEAD 2>/dev/null)" || stop "git rev-parse fail
 DIRTY="$(git -C "$W" status --porcelain --untracked-files=all 2>/dev/null)" || stop "git status failed in the pinned worktree"
 GIT_BEFORE="$(printf '%s' "$DIRTY" | grep -c .)"
 [ -z "$DIRTY" ] || stop "pinned worktree is not clean ($GIT_BEFORE line(s) in git status)"
-# attempt 2 runs the solve code of attempt 1 (author 2026-11-10 Q2 (a)): same branch, and CODE_PATHS equal at both pins
-if [ "$ATTEMPT" = 2 ]; then
+# attempt N >= 2: the attempt-(N-1) pin is this pin or an earlier commit of it (history neither grafted nor shallow); attempt 2
+# runs the solve code of attempt 1 (author 2026-11-10 Q2 (a)) and attempt 4 the solve code of attempt 3 (CODE_PATHS equal)
+if [ "$ATTEMPT" -ge 2 ]; then
+  HPB="$(history_problem)"
+  [ -z "$HPB" ] || stop "$HPB"
   { [ "$P1" = "$PIN" ] || git -C "$W" merge-base --is-ancestor "$P1" "$PIN" 2>/dev/null; } \
-    || stop "the attempt-1 pin is not this PIN or an earlier commit of it"
+    || stop "the attempt-$PREV pin is not this PIN or an earlier commit of it"
+fi
+if [ "$ATTEMPT" = 2 ] || [ "$ATTEMPT" = 4 ]; then
   git -C "$W" diff --quiet "$P1" "$PIN" -- "${CODE_PATHS[@]}" 2>/dev/null
   case $? in
     0) ;;
-    1) stop "the solve code changed between the attempt-1 pin and this PIN: $(git -C "$W" diff --name-only "$P1" "$PIN" -- "${CODE_PATHS[@]}" 2>/dev/null | head -n 5 | tr '\n' ' ')- attempt 2 runs the code of attempt 1";;
-    *) stop "cannot compare the solve code of the attempt-1 pin and this PIN (git diff failed)";;
+    1) stop "the solve code changed between the attempt-$PREV pin and this PIN: $(git -C "$W" diff --name-only "$P1" "$PIN" -- "${CODE_PATHS[@]}" 2>/dev/null | head -n 5 | tr '\n' ' ')- attempt $ATTEMPT runs the code of attempt $PREV";;
+    *) stop "cannot compare the solve code of the attempt-$PREV pin and this PIN (git diff failed)";;
   esac
 fi
 VENV="$HOME/dem-venv"
@@ -442,6 +510,7 @@ if [ -n "${PYTHONPATH+x}" ]; then PP=1; fi
 # PYTHONUNBUFFERED=1 is not a physics axis: the payload prints "CG not converged" without a flush, and a buffered
 # line is lost when the run is stopped early (README section 4)
 CMD=("${AXES[@]}" "P2_EXTRA=--step3-maxiter $MAXITER" "OUTDIR=$O" PYTHONUNBUFFERED=1)
+if [ -n "$STORE" ]; then CMD=("${AXES[@]}" "P2_EXTRA=--step3-maxiter $MAXITER" "CJUNC_STORE=$STORE" "OUTDIR=$O" PYTHONUNBUFFERED=1); fi
 cd "$ROOT" || stop "cannot enter the kit root"
 
 # ---- the runner's own pre-run gates (read from the runner text, run the same way, before the runner starts) ----
@@ -474,12 +543,17 @@ for f in "$RUNP"/p2_SBE_vgcf100_*.json "$RUNP"/p2_SBE_vgcf100_*.json.failed "$RU
     NBEFORE=$((NBEFORE + 1))
   fi
 done
+# attempt 3: the store folder is made only now (every check passed); umask 022 -> 0755 (the payload checks owner and mode)
+if [ "$ATTEMPT" = 3 ] && [ ! -d "$STORE" ]; then
+  mkdir "$STORE" || stop "cannot make the store folder $(homerel "$STORE")"
+fi
 {
   echo "# cwd: $(homerel "$ROOT")"
   printf '%s' "${RENV[*]}"
   for a in "${CMD[@]}"; do
     case "$a" in
       OUTDIR=*) printf ' OUTDIR=%s' "$(homerel "${a#*=}")";;
+      CJUNC_STORE=*) printf ' CJUNC_STORE=%s' "$(homerel "${a#*=}")";;
       *" "*) printf ' %s="%s"' "${a%%=*}" "${a#*=}";;
       *) printf ' %s' "$a";;
     esac
@@ -575,6 +649,7 @@ LEFT="$(group_count)"
 
 # ---- record (no value of the solve is read here) ----
 MODEBAD="$(find "$O" "$L" ! -type l -perm /022 2>/dev/null | wc -l)"
+if [ -n "$STORE" ]; then STORE_AFTER="$(store_listing)"; fi
 GIT_AFTER="$(git -C "$W" status --porcelain --untracked-files=all 2>/dev/null | grep -c .)"
 SOLVE=0
 if grep -q 'STEP3 solve:' "$L/runner.log" 2>/dev/null; then SOLVE=1; fi
@@ -593,6 +668,18 @@ sha() { sha256sum "$1" 2>/dev/null | awk '{print $1}'; }
   if [ "$ATTEMPT" = 2 ]; then
     echo "attempt1_pin=$P1"
     echo "code_same_as_attempt1=1"
+  fi
+  if [ "$ATTEMPT" = 3 ]; then
+    echo "attempt2_pin=$P1"
+  fi
+  if [ "$ATTEMPT" = 4 ]; then
+    echo "attempt3_pin=$P1"
+    echo "code_same_as_attempt3=1"
+  fi
+  if [ -n "$STORE" ]; then
+    echo "store=$(homerel "$STORE")"
+    echo "store_listing_before=$STORE_BEFORE"
+    echo "store_listing_after=$STORE_AFTER"
   fi
   echo "maxiter=$MAXITER"
   echo "expect_rtol=$EXP_RTOL"

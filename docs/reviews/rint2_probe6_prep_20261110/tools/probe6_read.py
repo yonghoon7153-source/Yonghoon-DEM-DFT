@@ -15,6 +15,7 @@ exit code  0 PROBE_OK             one accepted arm, every required key present, 
            3 PROBE_NOT_CONVERGED  keys present but not a clean positive converged solve (iterations are still reported);
                                   the identity / registered-value / record checks hold as for 0 (attempt 1's normal end)
            4 PROBE_INCOMPLETE     something required is missing or has an unexpected shape (shown as NONE + reason),
+                                  the store record of attempts 3 / 4 is not the registered one (side file, status, listing),
                                   an identity / registered-value check has no evidence or differs (also on the not-converged
                                   path), or the report could not be written
            5 PROBE_REJECTED       rejection marker, non-SBE arm, or the seal is broken in the runner log
@@ -36,7 +37,23 @@ VERDICT = {RC_OK: 'PROBE_OK', RC_NOT_CONVERGED: 'PROBE_NOT_CONVERGED', RC_INCOMP
 KIT_ARM_PREFIX = 'p2_SBE_vgcf100_'
 ARM_RE = r'p2_[A-Za-z0-9_]+_a([0-7])\.json'
 #: the registered pair of attempt number and CG iteration limit (ledger section 3; the watcher stops on any other pair)
-ATTEMPT_MAXITER = {1: 30000, 2: 1500000}
+ATTEMPT_MAXITER = {1: 30000, 2: 1500000, 3: 1500000, 4: 1500000}
+#: attempts 3 and 4 (ledger section 3, 2026-11-13): carbon-junction registry store on - the status the arm audit side file must show
+#: (3 = empty store, the payload builds and writes the registry; 4 = the store attempt 3 left, the payload reads it)
+STORE_ATTEMPT_STATUS = {3: 'built_written', 4: 'hit'}
+#: the arm audit side file (scripts/cjunc_store.py AUDIT_PREFIX + arm file name; outside the science payload) - closed table,
+#: identity strings only (the registry key, the store file name and its sha256, the status)
+AUDIT_PREFIX = 'cjstore_audit_'
+STORE_STATUSES = ('hit', 'built_written', 'built_peer_same', 'unreadable_rebuilt', 'built_write_skipped', 'built_write_failed',
+                  'disabled', 'key_unavailable')
+AUDIT_FIELDS = (
+    ('audit_schema', ('schema',), ('re', r'cjstore-audit-v[0-9]{1,3}')),
+    ('status', ('status',), ('enum', STORE_STATUSES)),
+    ('key', ('key',), ('re', r'[0-9a-f]{64}')),
+    ('file', ('file',), ('re', r'cjreg_[0-9a-f]{64}\.npz')),
+    ('file_sha256', ('file_sha256',), ('re', r'[0-9a-f]{64}')),
+)
+STORE_LIST_RE = r'(?:[A-Za-z0-9._+-]{1,120}:(?:[0-9a-f]{64}|other)(?:,[A-Za-z0-9._+-]{1,120}:(?:[0-9a-f]{64}|other)){0,15})?'
 
 # ---------------------------------------------------------------------------------------------------------------
 # THE closed allowlist.  (output key, path below mpm_metrics.step3, kind, required for PROBE_OK)
@@ -113,11 +130,14 @@ META_FIELDS = (
     ('tool_sha256_wrapper', r'[0-9a-f]{64}', 'str'), ('tool_sha256_reader', r'[0-9a-f]{64}', 'str'),
     ('runner_sha256', r'[0-9a-f]{64}', 'str'), ('runner_log_sha256', r'[0-9a-f]{64}', 'str'),
     ('s0_plan_sha256', r'[0-9a-f]{64}', 'str'), ('kit_run_before', r'[0-9]{1,4}', 'int'), ('kit_run_new', r'[0-9]{1,4}', 'int'),
-    ('attempt', r'[12]', 'int'), ('expect_rtol', r'[0-9][0-9.eE+-]{0,11}', 'str'), ('expect_backend', r'gpu|cpu', 'str'),
+    ('attempt', r'[1-4]', 'int'), ('expect_rtol', r'[0-9][0-9.eE+-]{0,11}', 'str'), ('expect_backend', r'gpu|cpu', 'str'),
     ('solve_started', r'[01]', 'int'), ('orphans', r'[0-9]{1,6}', 'int'), ('orphans_left', r'[0-9]{1,6}', 'int'),
     ('pregate', r'[01]', 'int'), ('gpu_used_start_mib', r'[0-9]{1,7}|NA', 'str'), ('disk_free_gb_kit', r'[0-9]{1,9}|NA', 'str'),
     ('disk_free_gb_log', r'[0-9]{1,9}|NA', 'str'), ('attempt1_pin', r'[0-9a-f]{40}', 'str'), ('code_same_as_attempt1', r'[01]', 'int'),
     ('expect_rj', r'[0-9][0-9.eE+-]{0,11}', 'str'), ('pythonpath_removed', r'[01]', 'int'),
+    ('attempt2_pin', r'[0-9a-f]{40}', 'str'), ('attempt3_pin', r'[0-9a-f]{40}', 'str'), ('code_same_as_attempt3', r'[01]', 'int'),
+    ('store', r'~?[A-Za-z0-9._/+-]{1,300}', 'str'), ('store_listing_before', STORE_LIST_RE, 'str'),
+    ('store_listing_after', STORE_LIST_RE, 'str'),
 ) + tuple(('env_' + n, r'unset|empty|set|value:[A-Za-z0-9][A-Za-z0-9,._-]{0,31}', 'str') for n in (
     'CUDA_VISIBLE_DEVICES', 'OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'OPENBLAS_CORETYPE', 'PYTHONUNBUFFERED', 'BASH_ENV'))
 #: watcher environment fingerprint (key=value) - versions only
@@ -652,7 +672,7 @@ def run(args):
         probs.append('output folder: ' + rep['folder']['problem'])
         incomplete = True
     names = sorted(os.listdir(out)) if os.path.isdir(out) and not os.path.islink(out) else []
-    arms, unknown = [], []
+    arms, unknown, audits = [], [], []
     for nm in names:
         if nm.startswith('.rejected_'):
             rejected = True
@@ -661,6 +681,8 @@ def run(args):
             pass
         elif nm.startswith('p2_') and nm.endswith('.json'):
             arms.append(nm)
+        elif nm.startswith(AUDIT_PREFIX + 'p2_') and nm.endswith('.json'):
+            audits.append(nm)
         else:
             unknown.append(nm)
     for nm in arms:
@@ -816,6 +838,27 @@ def run(args):
     else:
         fields['rj_matches_registered'] = (float(rj) == xj) and ('_cj%d_' % int(xj)) in os.path.basename(arm_path)
     rep['fields'] = fields
+    # ---- store audit side file (attempts 3 and 4; identity strings only) ----
+    store = {'audit_file': missing('absent')}
+    if len(audits) > 1:
+        incomplete = True
+        probs.append('more than one store audit side file in the output folder (%d) - none read' % len(audits))
+        store['audit_file'] = missing('more than one')
+    elif audits:
+        ap_ = os.path.join(out, audits[0])
+        store['audit_file'] = audits[0]
+        adoc, why = load_json(ap_) if (os.path.isfile(ap_) and not os.path.islink(ap_)) else (None, 'not a regular file')
+        if isinstance(adoc, dict):
+            for k, v in read_table(adoc, AUDIT_FIELDS).items():
+                store[k] = v
+            store['audit_sha256'] = sha256_file(ap_)
+            if arm_path is not None and audits[0] != AUDIT_PREFIX + os.path.basename(arm_path):
+                incomplete = True
+                probs.append('the store audit side file does not belong to the arm file read')
+        else:
+            incomplete = True
+            probs.append('store audit side file ' + (why or 'is not an object'))
+    rep['store'] = store
     # ---- log / timing / resources ----
     timing, res = {}, {}
     if args.logdir:
@@ -947,6 +990,44 @@ def run(args):
                 if att == 1 and ('attempt1_pin' in m_ or 'code_same_as_attempt1' in m_):
                     incomplete = True
                     probs.append('attempt 1 meta carries attempt-2 keys (contradiction)')
+                if att in (3, 4) and ('attempt1_pin' in m_ or 'code_same_as_attempt1' in m_):
+                    incomplete = True
+                    probs.append('attempt %d meta carries attempt-2 keys (contradiction)' % att)
+                if att == 3 and not isinstance(m_.get('attempt2_pin'), str):
+                    incomplete = True
+                    probs.append('attempt 3 meta does not show the attempt-2 pin (attempt2_pin)')
+                if att == 4 and not (isinstance(m_.get('attempt3_pin'), str) and m_.get('code_same_as_attempt3') == 1):
+                    incomplete = True
+                    probs.append('attempt 4 meta does not show the attempt-3 pin and the same solve code (attempt3_pin, code_same_as_attempt3)')
+                if att != 3 and 'attempt2_pin' in m_ or att != 4 and ('attempt3_pin' in m_ or 'code_same_as_attempt3' in m_):
+                    incomplete = True
+                    probs.append('meta carries the pin key of another attempt (contradiction)')
+                # store (attempts 3 and 4 only): meta store keys, the audit side file and its status, the listing
+                sk = [k for k in ('store', 'store_listing_before', 'store_listing_after') if k in m_]
+                if att in (1, 2):
+                    if sk or not is_missing(store.get('audit_file')):
+                        incomplete = True
+                        probs.append('attempt %s has a store record (meta store keys or an audit side file) - the store is for attempts 3 and 4'
+                                     % att)
+                elif att in STORE_ATTEMPT_STATUS:
+                    want = STORE_ATTEMPT_STATUS[att]
+                    lb, la = m_.get('store_listing_before'), m_.get('store_listing_after')
+                    after = dict(x.split(':', 1) for x in la.split(',')) if isinstance(la, str) and la else {}
+                    if len(sk) != 3:
+                        incomplete = True
+                        probs.append('attempt %d meta lacks the store keys (store, store_listing_before, store_listing_after)' % att)
+                    elif store.get('status') != want:
+                        incomplete = True
+                        probs.append('store audit status is not %s for attempt %d (or the side file is missing)' % (want, att))
+                    elif not (isinstance(store.get('file'), str) and after.get(store['file']) == store.get('file_sha256')):
+                        incomplete = True
+                        probs.append('the store file of the audit is not in the store listing after the run with the same sha256')
+                    elif att == 3 and lb != '':
+                        incomplete = True
+                        probs.append('attempt 3 store was not empty at the start (store_listing_before)')
+                    elif att == 4 and not (lb and lb == la):
+                        incomplete = True
+                        probs.append('attempt 4 store listing changed during the run or was empty (store_listing_before / after)')
                 xr = _num(m_['expect_rtol']) if isinstance(m_.get('expect_rtol'), str) else None
                 if xr is None or receipt.get('receipt_step3_rtol') != xr:
                     incomplete = True
@@ -1048,6 +1129,11 @@ def screen(rep):
         L.append('[probe6] kit run new file %s  size %d  sha256 %s  copy_ok %s' % (x['name'], x['size'], x['sha256'], x.get('copy_ok')))
     for x in rep.get('kit_run_before_files') or []:
         L.append('[probe6] kit run earlier file (copied before the start) %s  size %d  sha256 %s' % (x['name'], x['size'], x['sha256']))
+    st = rep.get('store') or {}
+    if not is_missing(st.get('audit_file', missing('absent'))):
+        L.append('[probe6] store audit %s  status %s  key %s  file %s  file_sha256 %s'
+                 % (st.get('audit_file'), fmt(st.get('status', missing('absent'))), fmt(st.get('key', missing('absent'))),
+                    fmt(st.get('file', missing('absent'))), fmt(st.get('file_sha256', missing('absent')))))
     L.append('[probe6] held back (names only): ' + ' '.join(rep['held_back']))
     for p in rep['problems']:
         L.append('[probe6] problem: ' + p)
