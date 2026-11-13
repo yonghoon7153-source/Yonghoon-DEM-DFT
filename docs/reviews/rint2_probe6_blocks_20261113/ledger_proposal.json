@@ -1,0 +1,12 @@
+{
+  "schema": "proposal-only",
+  "overall": "HOLD",
+  "shared_ledger_modified": false,
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "attempt3": {"maxiter": 1500000, "expected_store_status": "built_written", "store_precondition": "absent_or_empty", "start_time": null, "result": null, "execution_GO": false},
+  "attempt4": {"maxiter": 1500000, "expected_store_status": "hit", "store_precondition": "same_as_attempt3_final_listing", "start_time": null, "result": null, "execution_GO": false},
+  "q14": {"final_pin_recheck_plan_approved": true, "S0_store_results": null, "current_Q11_results": null},
+  "time_policy": {"builtin_wall_clock_timeout": false, "operator": null, "stop_deadline_utc": null},
+  "no_automatic_retry": true,
+  "no_automatic_verified_or_closed": true
+}

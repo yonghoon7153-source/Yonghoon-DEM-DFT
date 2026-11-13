@@ -1,0 +1,10 @@
+{
+  "date": "2026-11-13",
+  "question": "Q14 final-pin S0/store and current Q11 recheck plan",
+  "author_reply": "최종 핀 재확인 계획으로 준비 (권고)",
+  "plan_approved": true,
+  "actual_execution_approved": false,
+  "scope": ["S0 stage1/store recheck planning", "current Q11 source-binding and consume-rule recheck planning"],
+  "results_received": false,
+  "overall": "HOLD"
+}
