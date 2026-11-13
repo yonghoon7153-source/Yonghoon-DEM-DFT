@@ -1,0 +1,36 @@
+{
+  "received_on": "2026-11-13",
+  "review_pin": "97d8831a858fab5f92ed3e580817eea2eaa85f5f",
+  "zip": {
+    "zip": "codex_rint_takeover_recheck_97d8831a858f_independent_evidence_20261113.zip",
+    "bytes": 3430999,
+    "sha256": "e34b60d774dc2329c5a3883868c7009f1e3499678ba2631b42809bec8df00b8b",
+    "files": 145,
+    "outer_hashes": 144
+  },
+  "original_report_sha256": "482d6339e52025faf5bcb09ad2c8f5f67fb0572e629084f799459343f0b3cd10",
+  "original_report_repository_copy": false,
+  "verdict": "PARTIAL",
+  "overall": "HOLD",
+  "closable_limited": [
+    "RCPX-01",
+    "RCPX-02",
+    "RCPX-03",
+    "RCPX-04",
+    "RCPX-05",
+    "RCPX-06",
+    "RTA-01"
+  ],
+  "partial": [
+    "RTA-02"
+  ],
+  "new_finding": {
+    "id": "RTR-01",
+    "severity": "P3"
+  },
+  "received_direct_methods": 13,
+  "received_assembly_assertion_items": 7,
+  "new_p1": 0,
+  "new_p2": 0,
+  "shared_ledger_modified": false
+}

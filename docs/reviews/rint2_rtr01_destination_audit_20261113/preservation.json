@@ -1,0 +1,42 @@
+{
+  "base": "92bdd4e7b7e589518fc97cc6f898e60a456b5fbd",
+  "comparison_pin": "97d8831a858fab5f92ed3e580817eea2eaa85f5f",
+  "modified_tracked_before_docs_added": [
+    "scripts/sdcp_gain_vox015_8arm.sh"
+  ],
+  "source_unchanged": [
+    {
+      "path": "scripts/cjunc_store.py",
+      "sha256": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f"
+    },
+    {
+      "path": "scripts/mpm_webapp_payload.py",
+      "sha256": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+    },
+    {
+      "path": "scripts/rint_r_chain.py",
+      "sha256": "5fbc1c3417f17eba9bc9e569a9dad28f569ed1eedb64f8fcdd725492854de78b"
+    },
+    {
+      "path": "scripts/cjunc_asm_compare.py",
+      "sha256": "762723a5af60ee46d022d3a05f81f78cae6587ebc56f37673b9ed30b908ab6fc"
+    },
+    {
+      "path": "scripts/test_rint_takeover_boundaries.py",
+      "sha256": "bdeb2b4a7f2723350af031482bcc9ccfe34ca7f07335cb8796f2f04d108160cb"
+    },
+    {
+      "path": "scripts/ca_s0_census.py",
+      "sha256": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a"
+    }
+  ],
+  "sealed_code_file_count": 32,
+  "sealed_intersection": [],
+  "source_diff_sha256": "a9462fed6e221a9598b5c92e0ee28706dc3d24935aa9a4fe0627bdbcb42f41ad",
+  "shared_ledger_or_gate_modified": false,
+  "bash_n_rc": 0
+}

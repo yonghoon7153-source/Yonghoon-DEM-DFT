@@ -1,0 +1,29 @@
+[
+  {
+    "source": "red/unittest.log",
+    "destination": "red_unittest.log",
+    "source_sha256": "9d819de55ce2bb1e5f06af8b1a55648e47eed31b9afc07abdfabfd2309ff7f67",
+    "curated_sha256": "937ae79732d6d6c2a4df7f5455c144c3c1450d356572ac4e08bf0b462ba1c8be",
+    "repository_prefix_replacements": 11,
+    "other_changes": false,
+    "line_endings": "CRLF normalized to LF"
+  },
+  {
+    "source": "green/unittest.log",
+    "destination": "green_unittest.log",
+    "source_sha256": "b9edeb6169d16a8e89c9a8033cb569d89400f912b61cd654bbadca995c3e891f",
+    "curated_sha256": "468f1273fe4f7960265e0370af55a98dce0b71154e0af13406dd644091261de5",
+    "repository_prefix_replacements": 0,
+    "other_changes": false,
+    "line_endings": "CRLF normalized to LF"
+  },
+  {
+    "source": "independent_attack/results.json",
+    "destination": "internal_attack_results.json",
+    "source_sha256": "a1d7c0392f8704d8b7d5fbe72c6760583cb8ee4f63b29b2c9fe90a2dd6422ea6",
+    "curated_sha256": "8a05d9bd7874ddf84828d7c42617bb3f94bae238c1effcd49328128590b23f09",
+    "repository_prefix_replacements": 0,
+    "line_endings": "CRLF normalized to LF",
+    "other_changes": false
+  }
+]
