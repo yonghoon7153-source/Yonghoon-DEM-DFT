@@ -42,18 +42,24 @@
       (꺼짐 · 건너뜀 · 사유 code_changed) · 뒤의 정직한 런 = 적중 아님 · 정직한 흐름 = 지어 씀 → 적중 · 런 시작 기록 (cjunc_store 를 불러온 때) ·
       ★ 3 회차 (재확인 2 RCP3-02) 같은 초 뒤집기 (수정 시각 = 런 시작) · 변이판일 때 Store 뒤 되돌림 · 수정 시각을 되돌린 뒤집기 (os.utime) · Store 코드
       칸 ≠ 런 시작 = 저장 안 함 · 수정 시각이 미래인 사본 (rsync -t 꼴) 의 정직한 런 = 지어 씀 → 적중 (코드 칸 = 파일별 stat 신원 정확 대조) ·
-      ★ 3 회차 변이 보강: 제자리 되돌림 (`cp -p` 꼴 · 같은 inode · 크기 · 수정 시각 = 상태 바뀐 시각만 다름 · T15l) · 재는 도중 바뀜 = 못 셈 (T15m)
+      ★ 3 회차 변이 보강: 제자리 되돌림 (`cp -p` 꼴 · 같은 inode · 크기 · 수정 시각 = 상태 바뀐 시각만 다름 · T15l) · 재는 도중 바뀜 = 못 셈 (T15m) ·
+      ★ 11-13 Codex 반박 1/2 RCPX-01: 시작 검사 뒤 · 적중 반환 전 (열쇠 셈 도중) 바뀜 = 적중 아님 (꺼짐 · T15n)
+  T7x (11-13 Codex 반박 1/2 RCPX-04 · 05) CRC 뒤 배열 머리 shape (2**100,) = 어긋남 (날 OverflowError 아님) · 배열 읽기 MemoryError 그대로 · 머리 중복 칸
+      (key_parts · registry_fp) 만 고친 파일 = 어긋남 · 비권위 진단 칸 (writer · runtime) 은 대조 안 함 (적중)
+  T16 (11-13 Q2 · RCP-07) 실행 환경 기록 runtime_record (머리 · 열쇠 아님) · 팔 audit 기록 audit_record · 곁 파일 write_audit (cjstore_audit_<출력>)
   P   payload 끝-끝 (`test_ca_ext_b6` 픽스처 · 실제 payload · CPU) — 입구 거부 (접합 없이 · 조립만 · rasterize-only (RCP-10) · 상대 · 없음 · 남이 씀 ·
       Store() 의 뜻밖의 예외 둘 = 입구 · 본 길 (RCP-10)) · 끔 / 빗나감 / 적중 팔 JSON 바이트 같음 · 못 읽음 (⚠ · 같음) · 어긋남 (rc ≠ 0 ·
       S2_CJUNC_STORE|INCONSISTENT| · 출력 없음) · instance 둘인 침대 (세 가닥 직렬) 도 지어 씀 → 적중 (P5 · 구현 커밋에서 더함) · 정규화 안 된 폴더
       꼴 = 입구 거부 (P1 · 2 회차 RCP2-02) · cjunc_store 를 원장 모듈 셋보다 먼저 불러온다 (P6 · `python -X importtime` · 2 회차 RCP2-01) · 러너 꼴 인자
-      (`--expect-physics` 에 ca_ext.cjunc 칸) 에서도 (P6b · 먼저 불린 열쇠 모듈 없음 · 3 회차 RCP3-03)
+      (`--expect-physics` 에 ca_ext.cjunc 칸) 에서도 (P6b · 먼저 불린 열쇠 모듈 없음 · 3 회차 RCP3-03) · ★ 11-13 RCP-07 팔 audit 곁 파일 (P7 · 끔 = 없음 ·
+      빗나감 built_written · 적중 hit · 파일 sha256)
   R   러너 (`test_ca_ext_runner` 틀 · 실제 셸 · 실제 payload) — CJUNC=1 없이 · 조립만과 함께 · 상대 · 허용 밖 글자 · 개행 · 없는 폴더 · 심볼릭 링크
       (끝 빗금 포함 · RCP-06) · 정규화 안 된 꼴 (2 회차 RCP2-02) = 발사 전 ABORT · 켬 = payload 인자 · 팔 JSON · 영수증 · OUTDIR = 끔과 같음 · 둘째
-      런 = 적중
+      런 = 적중 · ★ 11-13 RCP-07 러너가 팔 audit 곁 파일을 팔과 함께 OUTDIR 로 옮긴다 (R3)
   C   사슬 배선 — `--cjunc-store` (ladder · predict 만 · 절대 · 있는 폴더 · 남이 못 씀 · 이 사용자 소유 · 심볼릭 링크 아님 (RCP-06) · 정규화된 꼴
       (2 회차 RCP2-02)) · Runner env ·
-      봉인 원천 (RunnerGraphSource) 은 절대 안 받음 · 부모 셸 값은 지운다 · CODE_FILES · 규율 검사기 격리 목록 · CLI 회계 (이 사용자 소유 = 대피 4 덧)
+      봉인 원천 (RunnerGraphSource) 은 절대 안 받음 · 부모 셸 값은 지운다 · CODE_FILES · 규율 검사기 격리 목록 · CLI 회계 (이 사용자 소유 = 대피 4 덧) ·
+      ★ 11-13 RCP-07 팔 audit 곁 파일 읽기 (C6 · 요약 팔별 표시)
 ⚠ PASS = 저장 · 읽기 · 거부 배선이 계약대로라는 증거이지 원장 (기하) 의 물리 검증이 아니다.  저장본 자신은 **자기 일관 위조** (같은 열쇠 이름 ·
    다시 센 지문) 를 가리지 못한다 — 그 몫 = 봉인 원천 재조립 대조이고 **SV 모서리 팔 (끝 그래프 지문) 만** 덮는다 (사다리 · 비 SV 예측 · 단위 팔은
    독립 대조가 없다 — 같은 코드 · 환경의 결정성 + 열쇠 (T14) + 폴더 · 파일 권한에 기댄다 · 11-12 내부 반박 리뷰 RCP-03) · 한정 (T7 보고 줄).
@@ -1106,7 +1112,8 @@ def t7():
     import hashlib
     with zipfile.ZipFile(p) as z:
         h = json.loads(z.read('header.json').decode('utf-8'))
-    h.update(strict=CS.strict_digest(regB), skeleton_sha256=hashlib.sha256(skel).hexdigest(), n_arrays=len(arrs))
+    #  ★ 11-13 (RCPX-05) — 머리 registry_fp 도 위조 원장 것으로 (자기 일관 위조 = 머리 중복 칸까지 다시 셈 · 한정 보고가 계속 그 한정을 보이게)
+    h.update(strict=CS.strict_digest(regB), skeleton_sha256=hashlib.sha256(skel).hexdigest(), n_arrays=len(arrs), registry_fp=regB['fp']['registry'])
     writable(p)
     with zipfile.ZipFile(p + '.f', 'w', zipfile.ZIP_STORED) as z:
         z.writestr('header.json', json.dumps(h).encode('utf-8'))
@@ -1909,6 +1916,16 @@ elif mode == 'during_write':
         swap()
         return _old(*a, **k)
     CS._write_zip = _wz
+elif mode == 'during_key':
+    #  ★ 11-13 Codex 반박 1/2 RCPX-01 — get_or_build 시작 검사 (code_drift) 뒤 · 적중 반환 전 (열쇠 셈 도중) 디스크의 열쇠 코드 파일이 바뀜 (한 번 ·
+    #    원장 산술 · 열쇠 셈 결과는 그대로 · 판정문 반례 꼴 = 시작 검사 뒤 raster 반환 차례만 뒤집음)
+    _oif = CS._inputs_fp
+
+    def _ifp(*a, **k):
+        CS._inputs_fp = _oif
+        swap()
+        return _oif(*a, **k)
+    CS._inputs_fp = _ifp
 if st is None:
     st = CS.Store(store, machine_paths=(mfile,))
 if mode == 'store_code_differs':                      # ★ 3 회차 (RCP3-02) — Store 코드 칸 ≠ 런 시작 (손으로 고친 꼴 · 디스크 그대로 — 그 가드만 판별)
@@ -2127,6 +2144,174 @@ def t15():
         'stat 신원) 을 낸다 (3 회차 변이 보강 — 그 검사를 지운 변이가 안 잡혔다)',
         isinstance(race_err, str) and '재는 도중' in race_err and isinstance(plain, tuple) and len(plain) == 3
         and set(plain[2]) == set(KEY_CODE_FILES), (race_err, None if plain is None else sorted(plain[2])))
+    #  (n) ★ 11-13 Codex 반박 1/2 RCPX-01 — 시작 검사 뒤 · 적중 반환 전 (열쇠 셈 도중) 디스크 열쇠 코드 파일이 바뀜 → 옛 판 = 'hit' (원판 원장 · 같은 프로세스의
+    #      저장본 없는 재조립 = 새 판 원장) · 고친 판 = 적중 직전 다시 셈 → 저장본을 쓰지 않는다 (꺼짐 · code_changed · 짓기 1 회 = 새 판) · 폴더 그대로
+    sn, cn = new_store_dir('t15_n'), t15_code_dir('t15_n')
+    gn0 = t15_run(cn, sn, 'honest')
+    gn = t15_run(cn, sn, 'during_key')
+    chk('T15n 시작 검사 뒤 · 적중 반환 전 (열쇠 셈 도중) 열쇠 코드 파일이 바뀜 (원판으로 지어 쓴 저장본 · 새 프로세스) → 적중 아님 (꺼짐 · code_changed · 짓기 1 회) · '
+        '받은 원장 = 같은 프로세스의 저장본 없는 재조립 (새 판) ≠ 저장본의 원판 원장 · 폴더 그대로 (파일 하나) — 옛 판 = hit (RCPX-01)',
+        gn0.get('status') == 'built_written' and gn0.get('reg_fp') == orig_fp and len(gn0.get('files') or []) == 1
+        and gn.get('rc') == 0 and gn.get('status') == 'disabled' and cc(gn) and gn.get('builds') == 1
+        and gn.get('reg_fp') == gn.get('fresh_fp') != orig_fp and gn.get('files') == gn0.get('files'),
+        (gn0.get('status'), gn.get('status'), gn.get('why'), gn.get('builds'), gn.get('reg_fp'), gn.get('fresh_fp'), orig_fp, gn.get('err')))
+
+
+# ═════════════════════════ T7x (11-13 Codex 반박 1/2 RCPX-04 · 05) ═════════════════════════
+def npy_bytes_header(descr, shape):
+    """npy 1.0 머리만 (자료 없음 · 판정문 반례 꼴 — shape 만 바꾼 배열 멤버 · CRC 는 rezip 이 새로 센다)."""
+    raw = repr({'descr': descr, 'fortran_order': False, 'shape': shape}).encode('latin1')
+    raw += b' ' * ((64 - ((len(raw) + 11) % 64)) % 64) + b'\n'
+    return b'\x93NUMPY\x01\x00' + struct.pack('<H', len(raw)) + raw + b'\0' * 8
+
+
+@case('T7x CRC 뒤 배열 해석의 뜻밖의 예외 · 머리 중복 칸 대조 (11-13 Codex 반박 1/2 RCPX-04 · 05)')
+def t7x():
+    if not need_cs('T7x'):
+        return
+    import hashlib
+    inp = f1_inputs()
+    #  RCPX-04 — a0.npy 머리의 shape 만 (2**100,) (CRC 새로 · testzip None) → 옛 판 = 날 OverflowError (StoreInconsistent 밖) · 고친 판 = 어긋남 (멈춤)
+    d = new_store_dir('t7x_ovf')
+    p, _reg, _o = write_one(d, inp)
+    rezip(p, p, edit=lambda nm, b: npy_bytes_header('<f8', (2 ** 100,)) if nm == 'a0.npy' else b)
+    with zipfile.ZipFile(p) as z:
+        crc_ok = z.testzip() is None
+    before = finger(p)
+    n = [0]
+    got = None
+    try:
+        mk_store(d).get_or_build(build_of(inp, n), **inp)
+        got = ('예외 없음', None)
+    except Exception as e:                                         # noqa: BLE001
+        got = (type(e).__name__, getattr(e, 'code', None))
+    chk('T7x-1 배열 멤버 머리 shape (2**100,) (CRC 맞음 · testzip None) → StoreInconsistent (code array · 날 OverflowError 아님) · 짓기 0 회 · 파일 그대로 '
+        '(RCPX-04)', crc_ok and got == ('StoreInconsistent', 'array') and n[0] == 0 and finger(p) == before, (crc_ok, got, n))
+    #  MemoryError 는 그대로 (배열 읽기 자리 · CRC 뒤) — 바꿔 끼운 np.lib.format.read_array 가 MemoryError
+    d = new_store_dir('t7x_mem')
+    p, _reg, _o = write_one(d, inp)
+    o_ra = np.lib.format.read_array
+
+    def mem(*a_, **k_):
+        raise MemoryError('메모리 (시험)')
+    np.lib.format.read_array = mem
+    n = [0]
+    try:
+        try:
+            mk_store(d).get_or_build(build_of(inp, n), **inp)
+            got_m = '예외 없음'
+        except Exception as e:                                     # noqa: BLE001
+            got_m = type(e).__name__
+    finally:
+        np.lib.format.read_array = o_ra
+    chk('T7x-2 배열 읽기 자리의 MemoryError → 그대로 MemoryError (어긋남으로 바꾸지 않는다 · 짓기 0 회 · RCPX-04 의 MemoryError 전달 유지)',
+        got_m == 'MemoryError' and n[0] == 0, (got_m, n))
+    #  RCPX-05 — 머리의 중복 칸만 고친 파일 (몸 · 엄격 지문 · 열쇠 그대로 · ZIP 새로) → 옛 판 = hit · 고친 판 = 어긋남 (멈춤)
+    def hdr(fn_):
+        def edit(nm, b):
+            if nm != 'header.json':
+                return b
+            h = json.loads(b.decode('utf-8'))
+            fn_(h)
+            return json.dumps(h).encode('utf-8')
+        return edit
+
+    def set_env_numpy(h):
+        h['key_parts']['env']['numpy'] = '0.0.0'
+
+    def set_regfp(h):
+        h['registry_fp'] = '0' * 32
+
+    def drop_parts(h):
+        h.pop('key_parts', None)
+    bad = {}
+    for nm, fn_ in (('key_parts.env.numpy 만 바꿈', set_env_numpy), ('registry_fp 만 바꿈', set_regfp), ('key_parts 칸 없음', drop_parts)):
+        d = new_store_dir('t7x_h_' + str(len(bad)) + '_' + hashlib.sha1(nm.encode('utf-8')).hexdigest()[:6])
+        p, _reg, _o = write_one(d, inp)
+        rezip(p, p, edit=hdr(fn_))
+        before = finger(p)
+        n = [0]
+        ok, why = raises_inconsistent(lambda: mk_store(d).get_or_build(build_of(inp, n), **inp))
+        if not (ok and n[0] == 0 and finger(p) == before):
+            bad[nm] = (ok, why, n)
+    chk('T7x-3 머리 중복 칸만 고친 저장본 (key_parts.env.numpy · registry_fp · key_parts 없음 — 몸 · 엄격 지문 · 열쇠 그대로) → StoreInconsistent · 짓기 0 회 · '
+        '파일 그대로 (key_of(key_parts) = key · 머리 registry_fp = 복원 원장 fp · 옛 판 = hit · RCPX-05)', not bad, bad)
+    #  비권위 진단 칸 (writer · runtime) 은 대조하지 않는다 — 바꿔도 적중 (판별: 위 갈래는 멈추고 이 갈래는 적중)
+    d = new_store_dir('t7x_writer')
+    p, _reg, _o = write_one(d, inp)
+    rezip(p, p, edit=hdr(lambda h: h.update(writer={'pid': 1, 'utc': 'x', 'build_seconds': 0.0}, runtime={'x': 1})))
+    n = [0]
+    try:
+        _r, o = mk_store(d).get_or_build(build_of(inp, n), **inp)
+        st_w = o['status']
+    except Exception as e:                                         # noqa: BLE001
+        st_w = type(e).__name__
+    chk('T7x-4 머리의 비권위 진단 칸 (writer · runtime) 만 바꾼 저장본 → 적중 (대조하지 않는 칸 · 문서 = 비권위 진단) · 짓기 0 회', st_w == 'hit' and n[0] == 0,
+        (st_w, n))
+
+
+# ═════════════════════════ T16 (11-13 Q2 실행 환경 기록 · RCP-07 팔 audit 기록) ═════════════════════════
+@case('T16 실행 환경 기록 (머리 · 열쇠 아님) · 팔 audit 기록 (Q2 · RCP-07)')
+def t16():
+    if not need_cs('T16'):
+        return
+    import hashlib
+    rr = getattr(CS, 'runtime_record', None)
+    ar = getattr(CS, 'audit_record', None)
+    wa = getattr(CS, 'write_audit', None)
+    if not (callable(rr) and callable(ar) and callable(wa)):
+        chk('T16 cjunc_store 에 runtime_record · audit_record · write_audit 가 있다', False, '고치기 전 판 — 없음')
+        return
+    names = tuple(getattr(CS, 'RUNTIME_ENV_NAMES', ()))
+    rt = rr()
+    chk('T16a runtime_record — 칸 {python · numpy · scipy · env · numpy_simd} · env 칸 = RUNTIME_ENV_NAMES (OPENBLAS_CORETYPE · NPY_DISABLE_CPU_FEATURES · 스레드 '
+        '이름 포함) · 값 = 글 | None · 판 글자 = 이 프로세스',
+        isinstance(rt, dict) and set(rt) == {'python', 'numpy', 'scipy', 'env', 'numpy_simd'}
+        and {'OPENBLAS_CORETYPE', 'NPY_DISABLE_CPU_FEATURES', 'OPENBLAS_NUM_THREADS', 'OMP_NUM_THREADS', 'MKL_NUM_THREADS'} <= set(names)
+        and isinstance(rt.get('env'), dict) and set(rt['env']) == set(names) and all(v is None or isinstance(v, str) for v in rt['env'].values())
+        and rt.get('numpy') == np.__version__, rt)
+    old = {k: os.environ.get(k) for k in ('OPENBLAS_CORETYPE', 'OMP_NUM_THREADS')}
+    try:
+        os.environ['OPENBLAS_CORETYPE'] = 'Haswell'
+        os.environ.pop('OMP_NUM_THREADS', None)
+        rt2 = rr()
+    finally:
+        for k, v in old.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+    chk('T16b runtime_record 는 그때의 env 를 읽는다 (OPENBLAS_CORETYPE=Haswell → "Haswell" · 없는 이름 = None)',
+        rt2['env'].get('OPENBLAS_CORETYPE') == 'Haswell' and rt2['env'].get('OMP_NUM_THREADS') is None, rt2.get('env'))
+    inp = f1_inputs()
+    d = new_store_dir('t16')
+    st = mk_store(d)
+    reg1, o1 = st.get_or_build(build_of(inp), **inp)
+    p = os.path.join(d, o1['file'])
+    with zipfile.ZipFile(p) as z:
+        h = json.loads(z.read('header.json').decode('utf-8'))
+    fsha = hashlib.sha256(open(p, 'rb').read()).hexdigest()
+    chk('T16c 저장본 머리 runtime = runtime_record() (같은 프로세스) · 열쇠 칸 (key_parts) 에는 없음 (열쇠 아님 · R 동안 고정 계약의 기록)',
+        o1['status'] == 'built_written' and h.get('runtime') == rr() and 'runtime' not in h.get('key_parts', {}), (o1['status'], h.get('runtime')))
+    _r2, o2 = mk_store(d).get_or_build(build_of(inp), **inp)
+    a1, a2 = ar(o1, root=d), ar(o2, root=d)
+    want_keys = {'schema', 'status', 'key', 'file', 'file_sha256', 'why', 'seconds_read', 'seconds_build', 'seconds_write', 'bytes', 'runtime'}
+    chk('T16d audit_record — 짓고 씀 · 적중 둘 다 상태 · 열쇠 (64 hex) · 파일 이름 · 파일 sha256 (= 파일 독립 계산) · 실행 환경 (runtime_record) · 칸 집합 고정',
+        set(a1) == want_keys and set(a2) == want_keys and a1['status'] == 'built_written' and a2['status'] == 'hit'
+        and a1['key'] == a2['key'] == o1['key'] and re.fullmatch(r'[0-9a-f]{64}', a1['key'] or '') and a1['file'] == a2['file'] == o1['file']
+        and a1['file_sha256'] == a2['file_sha256'] == fsha and a1['runtime'] == rr() and a1['schema'] == a2['schema'], (a1, a2))
+    mfile = machine_file('none_t16', '')
+    st_off = CS.Store(d, machine_paths=(os.path.join(TD, 'nope_machine'), mfile))
+    _r3, o3 = st_off.get_or_build(build_of(inp), **inp)
+    a3 = ar(o3, root=d)
+    chk('T16e audit_record — 꺼짐 (기계 id 못 읽음) = 상태 disabled · 열쇠 · 파일 · 파일 sha256 None', a3['status'] == 'disabled' and a3['key'] is None
+        and a3['file'] is None and a3['file_sha256'] is None, a3)
+    outp = os.path.join(TD, 'drv', 'p_t16.json')
+    side = wa(outp, a2)
+    got = json.load(open(side, encoding='utf-8')) if isinstance(side, str) and os.path.exists(side) else None
+    chk('T16f write_audit — 곁 파일 = 출력과 같은 폴더의 cjstore_audit_<출력 이름> (p2_*.json 꼴 아님 · 결과 흔적 낱말 아님) · 내용 = 그 기록 (JSON)',
+        side == os.path.join(os.path.dirname(outp), 'cjstore_audit_' + os.path.basename(outp)) and got == a2
+        and not os.path.basename(side).startswith('p2_'), (side, got == a2))
 
 
 # ═════════════════════════ P — payload 끝-끝 ═════════════════════════
@@ -2215,6 +2400,23 @@ def t_payload():
         '끔 = 저장본 줄 없음', rc0 == rc1 == rc2 == 0 and b0 is not None and b0 == b1 == b2 and isinstance(sig, float) and sig > 0
         and len(files1) == 1 and store_files(sd) == files1 and '저장본' not in log0 and '새로 지어 저장' in log1 and '읽음' in log2,
         (rc0, rc1, rc2, b0 == b1, b1 == b2, sig, files1, [ln for ln in (log1 + log2).splitlines() if '저장본' in ln]))
+    #  ★ 11-13 RCP-07 (Codex 반박 1/2 §3 · Q7) — 팔마다 저장본 상태를 과학 payload 밖 곁 파일 (cjstore_audit_<출력 이름>) 에 — 끔 = 없음
+    import hashlib
+
+    def side(nm):
+        q = os.path.join(wd, 'cjstore_audit_' + nm)
+        try:
+            return json.load(open(q, encoding='utf-8'))
+        except (OSError, ValueError):
+            return None
+    s0_, s1_, s2_ = side('p_off.json'), side('p_on1.json'), side('p_on2.json')
+    fsha1 = hashlib.sha256(open(os.path.join(sd, files1[0]), 'rb').read()).hexdigest() if len(files1) == 1 else None
+    chk('P7 팔 audit 곁 파일 (RCP-07) — 끔 = 없음 · 켬 빗나감 = built_written · 켬 적중 = hit · 둘 다 열쇠 = 저장본 파일 이름의 열쇠 · 파일 sha256 = 파일 독립 계산 · '
+        '실행 환경 칸 · 팔 JSON 바이트 그대로 (P2)',
+        s0_ is None and isinstance(s1_, dict) and isinstance(s2_, dict) and s1_.get('status') == 'built_written' and s2_.get('status') == 'hit'
+        and s1_.get('file') == s2_.get('file') == (files1[0] if files1 else None) and s1_.get('key') == s2_.get('key')
+        and fsha1 is not None and s1_.get('file_sha256') == s2_.get('file_sha256') == fsha1 and isinstance(s1_.get('runtime'), dict),
+        (s0_, s1_, s2_, fsha1))
     if len(files1) == 1:
         sp = os.path.join(sd, files1[0])
         writable(sp)
@@ -2344,17 +2546,36 @@ def t_runner():
         NR.reset_ws(ws)
     chk('R1 발사 전 ABORT 열셋 (심볼릭 링크 둘 (RCP-06) · CJUNC=1 없이 · 조립만 · 상대 · 빈칸 · 개행 · 영문 아닌 글자 · 없는 폴더 · 정규화 안 된 꼴 넷 '
         '(2 회차 RCP2-02)) — rc ≠ 0 · 사유 글 · OUTDIR · payload 없음', not bad, bad)
+    def sides(r):
+        """★ 11-13 RCP-07 — OUTDIR 의 팔 audit 곁 파일 (cjstore_audit_<팔>) → {팔: 상태} (팔 JSON 옆 · 러너가 팔과 함께 옮긴다)."""
+        out = {}
+        for a_ in (r.arms or []):
+            q = os.path.join(r.outdir or '', 'cjstore_audit_' + a_)
+            if os.path.exists(q):
+                try:
+                    out[a_] = json.load(open(q, encoding='utf-8')).get('status')
+                except (OSError, ValueError):
+                    out[a_] = 'unreadable'
+        return out
     r0 = NR.run_runner(ws, NR.CJ_RT_ENV)
     arms0 = {a: open(os.path.join(r0.outdir, a), 'rb').read() for a in r0.arms} if r0.outdir else {}
     rcp0, od0 = r0.receipt_bytes, (os.path.basename(r0.outdir) if r0.outdir else None)
+    side0 = sides(r0)
     NR.reset_ws(ws)
     r1 = NR.run_runner(ws, dict(NR.CJ_RT_ENV, CJUNC_STORE=sd))
     arms1 = {a: open(os.path.join(r1.outdir, a), 'rb').read() for a in r1.arms} if r1.outdir else {}
     files1 = store_files(sd)
     argv1 = list(r1.argv.values())
+    side1 = sides(r1)
     NR.reset_ws(ws)
     r2 = NR.run_runner(ws, dict(NR.CJ_RT_ENV, CJUNC_STORE=sd))
     arms2 = {a: open(os.path.join(r2.outdir, a), 'rb').read() for a in r2.arms} if r2.outdir else {}
+    side2 = sides(r2)
+    chk('R3 팔 audit 곁 파일 (RCP-07) — 러너가 팔과 함께 OUTDIR 로 옮긴다 · 끔 = 없음 · 첫 켬 = 팔마다 built_written | hit (짓고 쓴 수 = 저장본 파일 수) · '
+        '둘째 = 팔마다 hit',
+        r0.arms and side0 == {} and sorted(side1) == sorted(r1.arms or []) and set(side1.values()) <= {'built_written', 'hit'}
+        and list(side1.values()).count('built_written') == len(files1) >= 1
+        and sorted(side2) == sorted(r2.arms or []) and set(side2.values()) == {'hit'}, (side0, side1, side2, r1.arms, files1))
     flag_ok = bool(argv1) and all(NR.opt(t, '--step3-cjunc-store') == sd for t in argv1) \
         and not any('--step3-cjunc-store' in t for t in r0.argv.values())
     chk('R2 켬 — rc 0 · payload 인자 --step3-cjunc-store <폴더> (끔 = 없음) · 팔 이름 · 팔 JSON 바이트 · 영수증 바이트 · OUTDIR 이름 = 끔과 같음 · '
@@ -2438,6 +2659,27 @@ def t_chain():
     chk('C5 규율 검사기 격리 목록 (_RUNNER_AXES) 에 CJUNC_STORE · CLI 회계 --step3-cjunc-store = mode (산출물 · 해 바이트 그대로)',
         'CJUNC_STORE' in CMD._RUNNER_AXES and RC.CLI_ACCOUNTING.get('--step3-cjunc-store') == ('mode', None),
         ('CJUNC_STORE' in CMD._RUNNER_AXES, RC.CLI_ACCOUNTING.get('--step3-cjunc-store')))
+    #  ★ 11-13 RCP-07 — 사슬이 런 폴더의 팔 audit 곁 파일을 읽어 요약에 팔별로 싣는다 (기록만 · 판정 무관 · 없음 · 못 읽음 = 사유 칸)
+    fa = getattr(RR, 'cjunc_store_arm_audit', None)
+    if fa is None:
+        chk('C6 사슬 cjunc_store_arm_audit (팔 audit 곁 파일 읽기 · RCP-07)', False, '고치기 전 판 — 없음')
+    else:
+        od = os.path.join(TD, 'c6_out')
+        os.makedirs(od)
+        good = {'schema': 'cjstore-audit-v1', 'status': 'hit', 'key': 'a' * 64, 'file': 'cjreg_' + 'a' * 64 + '.npz', 'file_sha256': 'b' * 64,
+                'why': None, 'seconds_read': 1.0, 'seconds_build': None, 'seconds_write': None, 'bytes': 10, 'runtime': {'numpy': '1'}}
+        with open(os.path.join(od, 'cjstore_audit_p2_x_a0.json'), 'w', encoding='utf-8') as f:
+            json.dump(good, f)
+        with open(os.path.join(od, 'cjstore_audit_p2_x_a1.json'), 'w', encoding='utf-8') as f:
+            f.write('{')
+        got = fa(od, ['p2_x_a0.json', 'p2_x_a1.json', 'p2_x_a2.json'])
+        want0 = {'arm': 'p2_x_a0.json', 'status': 'hit', 'key': 'a' * 64, 'store_file': 'cjreg_' + 'a' * 64 + '.npz', 'file_sha256': 'b' * 64,
+                 'why': None, 'problem': None}
+        chk('C6 사슬 cjunc_store_arm_audit — 팔마다 {arm · status · key · store_file · file_sha256 · why · problem} · 곁 파일 없음 = problem missing · '
+            '못 읽음 = problem unreadable (상태 None) · 차례 = 받은 팔 차례 (RCP-07)',
+            isinstance(got, list) and len(got) == 3 and got[0] == want0 and got[1].get('status') is None
+            and str(got[1].get('problem')).startswith('unreadable') and got[2].get('status') is None and got[2].get('problem') == 'missing'
+            and [g.get('arm') for g in got] == ['p2_x_a0.json', 'p2_x_a1.json', 'p2_x_a2.json'], got)
 
 
 def main():
