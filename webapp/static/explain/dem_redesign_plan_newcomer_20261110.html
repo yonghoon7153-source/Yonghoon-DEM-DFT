@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ko">
-<!-- 생성물: 손으로 고치지 않는다.  원문 docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md (sha256 3b5b9a86b8d9299a) 을 scripts/build_dem_redesign_plan.py 가 옮겼다.  고치려면 원문을 고친 뒤 --write.  시험 webapp/test_dem_redesign_plan_page.py -->
+<!-- 생성물: 손으로 고치지 않는다.  원문 docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md (sha256 7322d4d855da94aa) 을 scripts/build_dem_redesign_plan.py 가 옮겼다.  고치려면 원문을 고친 뒤 --write.  시험 webapp/test_dem_redesign_plan_page.py -->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -114,10 +114,10 @@ tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{
 <h1>DEM 재설계 (수영) 계획서</h1>
 <p class="subtitle">가압부터 탈압까지 한 모델로 계산하기</p>
 <p class="audience">처음 보는 분을 위한 설명</p>
-<p class="statusline">2026-11-10  ·  계획 문서  ·  계산 결과는 아직 없음  ·  외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중</p>
+<p class="statusline">2026-11-13  ·  계획 문서  ·  계산 결과는 아직 없음  ·  외부 검토 = 문서 잔여 종결 가능, 전체 HOLD</p>
 </header>
-<p class="status"><strong>지위</strong>: 계획 문서입니다.  아직 계산 결과는 없습니다.  실행 승인을 구하는 글이 아니라, 무엇을 어떤 순서로 확인할지를 미리 정해 두는 글입니다.  처음 보는 분이 읽을 수 있게 쉬운 말로 풀어 썼습니다.  자세한 근거와 숫자는 방향 메모 3.1 판에 있고, 두 글이 다르면 메모가 기준입니다.</p>
-<div class="oneline"><strong>한 줄로</strong>: 전극을 누르는 과정을 처음부터 끝까지 한 모델로 계산하려고 합니다.  큰 3D 계산을 새로 짜기 전에, 값싼 2D 시험으로 &quot;우리 계산에서 알갱이가 닿으면 서로 붙어 버리는 것이 문제의 뿌리인가&quot; 를 먼저 확인합니다.</div>
+<p class="status"><strong>지위</strong>: 계획 문서입니다.  아직 계산 결과는 없습니다.  처음 보는 분을 위한 설명이며, 가압부터 탈압까지 한 모델로 계산하려는 순서를 다룹니다.  기준은 메모 3.2 (고정 핀 5afa16488)입니다.  M32R-01–06 및 M32RF-01은 문서 범위 종결 가능으로 수용됐지만 전체 HOLD입니다.  원장 상태의 자동 승격이나 실제 실행 승인은 아닙니다.  자세한 규칙은 메모, 최신 판정은 문서 종결 수령 기록을 따릅니다.</p>
+<div class="oneline"><strong>한 줄로</strong>: 전극을 누르는 과정을 처음부터 끝까지 한 모델로 계산하려고 합니다.  큰 3D 계산을 짜기 전에 같은 2D 조건에서 접촉 표현을 바꾸면 응답이 얼마나 달라지는지 확인합니다.  이 차이를 3D 원인의 증명으로 쓰지는 않습니다.</div>
 <section id="s1">
 <h2><span class="no">1.</span> 무엇을 계산하려는가</h2>
 <ul>
@@ -160,7 +160,7 @@ tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{
 <p>기록을 다시 보면 이 지적이 맞습니다.</p>
 <ul>
 <li>MPM 은 이미 다 눌린 DEM 결과에서 출발합니다.  MPM 에 심는 재료의 양이 DEM 결과로 이미 정해져 있어서, MPM 이 새로 정하는 것은 판이 멈추는 높이 하나뿐입니다.  그래서 MPM 이 내는 기공률은 독립된 결과라고 하기 어렵습니다.</li>
-<li>MPM 안에서 AM 은 움직이지 않게 얼려 둡니다.  AM 이 하중을 얼마나 나눠 지는지를 MPM 이 스스로 계산하지 못하고 DEM 값을 빌려 옵니다.</li>
+<li>MPM 안에서 AM 은 움직이지 않게 얼려 둡니다.  얼린 AM 에도 반력이 생기므로 하중이 0 이라는 뜻은 아닙니다.  움직이는 AM 의 하중 분담을 새 모델에서 확인해야 합니다.</li>
 <li>압력을 뺀 뒤 전극이 얼마나 되돌아오는지는 지금 MPM 으로 계산할 수 없습니다.  판과 재료가 붙어 있어서 떨어지지 못하기 때문입니다.</li>
 <li>두 모델 모두 SE 를 실제보다 15–18 배 무르게 두어야 실험과 비슷하게 눌렸습니다.  이 값은 재료의 실제 성질이 아니라 모델의 빈 곳을 메우려고 맞춘 값입니다.</li>
 </ul>
@@ -168,9 +168,9 @@ tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{
 <section id="s4">
 <h2><span class="no">4.</span> 원인에 대한 가설: 알갱이가 닿으면 붙는다</h2>
 <ul>
-<li>우리 MPM 은 격자 한 칸에 속도를 하나만 둡니다.  그래서 두 알갱이가 같은 칸에 들어오면 그 순간부터 한 덩어리처럼 움직입니다.  미끄러지지도 떨어지지도 못합니다.</li>
+<li>우리 MPM 은 격자 노드에 속도를 하나만 둡니다.  그래서 두 알갱이가 같은 노드에 질량을 주면 그 순간부터 한 덩어리처럼 움직입니다.  미끄러지지도 떨어지지도 못합니다.</li>
 <li>실제 가루는 누르는 동안 알갱이끼리 미끄러지고 자리를 바꾸면서 빈틈을 메웁니다.  붙어 버린 가루는 그렇게 하지 못해 너무 뻣뻣해집니다.</li>
-<li>가설은 이렇습니다.  이 붙음 때문에 SE 를 실제보다 훨씬 무르게 두어야 했고, AM 을 얼려야 했고, 탈압도 계산하지 못했다.</li>
+<li>가설은 이렇습니다.  접촉 표현의 제한이 SE 를 무르게 둔 보정과 관련될 수 있다.  재료식과 접촉이 서로 영향을 주므로 하나의 원인으로 단정할 수는 없습니다.</li>
 <li>아직 가설입니다.  그래서 큰 계산을 새로 짜기 전에 이것부터 확인합니다.</li>
 </ul>
 </section>
@@ -195,79 +195,75 @@ tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{
 <p>이 논문들은 모두 2D 계산이거나 우리와 다른 재료입니다.  그래서 가설을 세우는 근거로만 쓰고, 논문의 숫자를 우리 전극에 그대로 옮기지 않습니다.</p>
 </section>
 <section id="s6">
-<h2><span class="no">6.</span> 계획: 싼 시험부터 차례로</h2>
+<h2><span class="no">6.</span> 계획은 작은 대조부터</h2>
 <div class="wrap">
 <table class="c3">
 <colgroup><col style="width:8.42%"><col style="width:61.38%"><col style="width:30.20%"></colgroup>
 <thead><tr><th scope="col">단계</th><th scope="col">하는 일</th><th scope="col">필요한 것</th></tr></thead>
 <tbody>
-<tr><td>0</td><td>기공률을 세는 방법, 볼 값, 합격선, 결과별 다음 길을 결과를 보기 전에 적어 둡니다</td><td>계산 없음</td></tr>
-<tr><td>1</td><td>알갱이마다 속도를 따로 두면 3D 에서 메모리가 얼마나 드는지 셉니다</td><td>일반 컴퓨터 · 며칠</td></tr>
-<tr><td>2</td><td>2D 코드 하나에 두 방식을 같이 넣습니다.  지금 방식 (붙음) 과 새 방식 (알갱이마다 속도) 입니다.  작은 시험으로 코드가 맞는지 먼저 확인합니다</td><td>일반 컴퓨터 · 3–4 주</td></tr>
-<tr><td>3</td><td>2D 에서 같은 가루, 같은 재료, 같은 속도로 누르면서 방식만 바꿉니다.  같은 정도로 눌렸을 때 드는 힘이 얼마나 다른지 봅니다</td><td>일반 컴퓨터 · 1–2 주</td></tr>
-<tr><td>4</td><td>3D 에서 순수 SE 만 느슨하게 붓고 눌러, 재료 값 하나를 실험 기준에 맞춥니다</td><td>GPU · 다른 급한 계산이 끝난 뒤</td></tr>
-<tr><td>5</td><td>3D 에서 AM 과 SE 를 섞어 누릅니다</td><td>GPU</td></tr>
-<tr><td>6</td><td>압력을 빼고 되돌아오는 양을 봅니다</td><td>GPU</td></tr>
-<tr><td>7</td><td>눌린 구조에서 이온과 전자가 흐르는 정도를 계산합니다</td><td>GPU</td></tr>
+<tr><td>0</td><td>볼 값과 정의, 충전 번호, 합격선, 실패·결측 처리를 결과 전에 등록합니다</td><td>아직 실행 승인 없음</td></tr>
+<tr><td>1</td><td>입자별 속도장의 메모리와 색칠 안전 조건을 셉니다</td><td>등록된 범위의 준비</td></tr>
+<tr><td>2</td><td>같은 코드에 속도장 하나인 S와 입자별 장인 F를 넣고 작은 시험으로 확인합니다.  두 방식 모두 일방향 판을 씁니다</td><td>등록된 단위 시험의 자격</td></tr>
+<tr><td>3</td><td>등록한 2D 조건에서 같은 출발 충전·재료·속도로 접촉 표현만 바꿔 판 응력을 비교합니다</td><td>수치 오차와 문헌 정합 확인</td></tr>
+<tr><td>4</td><td>3D 순수 SE를 느슨하게 붓고 재료값 하나를 랩 기준에 맞춥니다</td><td>다른 급한 계산 뒤 별도 승인</td></tr>
+<tr><td>5</td><td>AM과 SE를 함께 계산하고 복합 기공은 예측으로 냅니다</td><td>3D 자격</td></tr>
+<tr><td>6</td><td>압력을 빼고 되돌아오는 양을 봅니다</td><td>분리·탈압 자격</td></tr>
+<tr><td>7</td><td>구조와 수송을 연결합니다</td><td>앞 단계와 정의 확인</td></tr>
 </tbody>
 </table>
 </div>
-<p class="leadin"><strong>단계 3 의 결과에 따라 3D 를 다르게 짭니다.</strong></p>
+<p class="leadin"><strong>단계 3의 조건부 결과로 다음 길을 정합니다.</strong></p>
 <div class="wrap">
 <table class="keep c3">
 <colgroup><col style="width:27.70%"><col style="width:28.81%"><col style="width:43.50%"></colgroup>
 <thead><tr><th scope="col">2D 결과</th><th scope="col">뜻</th><th scope="col">3D 에서 하는 일</th></tr></thead>
 <tbody>
-<tr><td>두 방식의 힘이 뚜렷이 다르다</td><td>붙음이 결과를 크게 바꾼다</td><td>알갱이마다 속도를 두는 방식으로 짭니다</td></tr>
-<tr><td>두 방식의 힘이 비슷하다</td><td>이 조건에서는 붙음의 영향이 작다</td><td>AM 만 움직이는 단단한 물체로 바꾸는 더 간단한 방식으로 짭니다</td></tr>
-<tr><td>가르지 못했다</td><td>판단할 근거가 모자란다</td><td>간단한 방식으로 가되, 3D 에서 다시 확인합니다</td></tr>
-<tr><td>이상한 결과가 나왔다</td><td>코드가 틀렸을 수 있다</td><td>코드부터 점검하고 한 번 다시 합니다.  그래도 같으면 멈추고 보고합니다</td></tr>
+<tr><td>다름</td><td>등록한 2D 조건에서 응답 차이가 확인됨</td><td>입자별 장 방향을 검토하되 3D 원인 증명이라고 하지 않음</td></tr>
+<tr><td>같음</td><td>등록한 2D 조건과 오차 추정 가정 안에서 비슷함</td><td>움직이는 강체 AM과 접촉 부품으로 시작하고 필요하면 재대조</td></tr>
+<tr><td>못 가름</td><td>오차 구간·정합이 미정</td><td>차이가 없다고 쓰지 않고 보류 조건을 유지</td></tr>
+<tr><td>이상 신호</td><td>구현 조사 경보이며 오류의 증명은 아님</td><td>결함을 고친 뒤 문을 다시 통과하고 허용된 한 번 재시도, 계속되면 중단</td></tr>
 </tbody>
 </table>
 </div>
 <ul>
-<li>지금 초안의 기준은 세 군데를 재서 두 군데 이상에서 힘이 1.3 배 넘게 다르면 &quot;다르다&quot; 로 보는 것입니다.  이 기준은 외부 검토 지적에 따라 계산 오차까지 따지도록 고치는 중입니다 (8 절).</li>
-<li>MPM 으로는 안 되겠다는 판단이 서면 다른 방법으로 갑니다.  알갱이마다 유한요소로 푸는 방법이나 접촉 법칙을 바꾼 DEM 입니다.  이 판단은 2D 시험에서는 나오지 않고 3D 단계에서 합니다.</li>
-<li>2D 시험은 4–6 주로 어림합니다.  결과는 12 월 중순에서 말 사이로 봅니다.  둘 다 어림입니다.</li>
-<li>2D 는 GPU 를 쓰지 않습니다.  GPU 는 기한이 있는 다른 계산 (전극 계면 저항 계산) 에 먼저 씁니다.</li>
+<li>평균 힘이 1.3 배를 넘는다는 숫자 하나로 가르지 않습니다.  격자 사다리의 팔별 구간을 충전·점·시험 순서로 묶습니다.  숨은 느린 변화까지 막는 보편 수렴 보증은 없습니다.</li>
+<li>상한 중단으로 목표점에 못 닿으면 목표점 응력은 미확정입니다.  상한은 목표점의 한쪽 경계를 만들지 않습니다.  그 점은 중간, 해당 F 띠 점은 미정으로 두고 다른 점의 경보는 유지합니다.</li>
+<li>조밀 접촉 U6(c)는 U5(c)의 여덟 의무를 확인합니다.  위반이면 단계 3과 3D F 판정을 중단하고, 필수 등록이나 관측 누락도 보류합니다.  위반을 보고했다는 것만으로 통과하지 않습니다.</li>
+<li>줄인 상자와 최종 상자의 필수 비교에서 결측·실패를 제외하지 않습니다.  완전하지 않으면 F-비교미확정으로 두어 F 채택을 막습니다.  측정된 상자 효과와도 구별합니다.</li>
+<li>현재 MPM의 탈압 관측표 O7은 명시적 분리 법칙 없음입니다.  모든 되돌아옴이 0 이라는 뜻은 아닙니다.</li>
+<li>2D 4–6 주와 12 월 중순–말 결과는 기존 어림입니다.  착수나 완료를 확정한 일정이 아닙니다.  3D는 기한이 있는 다른 계산 뒤이며 실제 실행 승인과 자격은 따로 받습니다.</li>
 </ul>
 </section>
 <section id="s7">
 <h2><span class="no">7.</span> 무엇에 맞추는가</h2>
 <ul>
-<li>기준은 하나입니다.  순수 SE 가루만 300 MPa 로 눌렀을 때 기공률이 10–13 % 라는 연구실 기준입니다.</li>
-<li>이 기공률은 질량으로 셉니다.  펠릿의 질량을 부피로 나눈 밀도를, 빈틈이 전혀 없을 때의 밀도 (진밀도 1.64 g/cm³) 와 견줍니다.  계산에서도 같은 방법으로 셉니다.</li>
-<li>견주는 상태도 정해 둡니다.  300 MPa 로 누른 뒤 판을 고정하고 재료가 가라앉기를 기다린 상태입니다.</li>
-<li>맞추는 손잡이도 하나입니다.  SE 가 눌려 찌그러지기 시작하는 세기 (항복 세기) 입니다.  이 값을 바꿔 가며 기공률이 10–13 % 의 가운데인 11.5 % 가 되는 값을 찾습니다.</li>
-<li>AM 과 SE 를 섞은 전극의 기공률은 맞추지 않습니다.  위에서 정한 값으로 계산해 나오는 대로 봅니다.  다른 값이 나와도 됩니다.</li>
-<li>같은 재료를 다룬 실험 논문이 있습니다.  SE 가루를 누르며 기공률을 잰 논문 <a class="cite" href="#ref-8">[8]</a>, 압력을 뺄 때 되돌아오는 양을 잰 논문 <a class="cite" href="#ref-9">[9]</a>, 높은 압력까지 누른 논문 <a class="cite" href="#ref-10">[10]</a> 입니다.  이 자료에는 맞추지 않고, 결과가 나온 뒤 견주기만 합니다.  무엇을 견줄지는 결과를 보기 전에 적어 둡니다.</li>
-<li>DEM 과 MPM 을 서로 맞추지 않습니다.  각각 실험 기준에 따로 맞춘 뒤 견줍니다.  둘이 같게 나오면 서로를 뒷받침하고, 다르게 나오면 그 차이가 모델의 한계를 알려 줍니다.</li>
+<li>기준은 순수 SE를 300 MPa로 누른 뒤 판 고정 이완 끝에서 기공률 10–13 %라는 랩 표준입니다.  진밀도 1.64 g/cm³와 질량 기준은 고정합니다.  랩 측정 상태의 남은 한정도 함께 기록합니다.</li>
+<li>MPM은 느슨한 충전에서 재료량을 보존해 심습니다.  DEM 끝 상태를 그대로 심어 기공을 물려받는 절차와 구분합니다.</li>
+<li>단계 4에서는 항복 세기 하나로 11.5 %를 목표로 탐색합니다.  창에 닿음 자체는 물리 검증이 아니며 탐색 실패와 보류도 그대로 보고합니다.</li>
+<li>복합 기공은 추가로 맞추지 않습니다.  DEM 세대 2와 MPM도 외부 기준에 각각 맞추고 서로를 보정 대상으로 쓰지 않습니다.</li>
+<li>더 단순한 바닥 모델 M0도 적합 1 + 사전 고정 2입니다.  맞출 변수와 나머지 값·출처는 미정입니다.  출처 없는 선택은 따로 세며, 목록이 없으면 비교 실행을 열지 않습니다.</li>
+<li><a class="cite" href="#ref-8">[8]</a> Lee의 연속 가압 자료는 같은 곡선의 h150/h300 두께 비로 대조합니다.  예전 Heckel 기울기 비교는 거두었으며, 다이·속도·측정 상태의 차이는 남습니다.  <a class="cite" href="#ref-9">[9]</a> 회복 자료는 조성과 압력 이력이 다르고, <a class="cite" href="#ref-10">[10]</a> 격자 탄성은 분말 덩어리의 강성이 아닙니다.</li>
+<li>메모의 LA25 자료는 약 6 시간의 운전압 시험/사다리 뒤 Cu 포일을 제거하고 두께를 읽은 상태입니다.  최대 8 MPa EIS 사다리는 카드 해석입니다.  이 상태를 압밀 직후로 옮기지 않습니다.  문헌 값은 랩 표준을 바꾸는 근거가 아니라 상태를 구별한 대조 자료입니다.</li>
 </ul>
 </section>
 <section id="s8">
-<h2><span class="no">8.</span> 외부 검토 결과 (2026-11-10)</h2>
-<p>이 계획은 별도의 검토자에게 보내 틀린 곳을 찾게 했습니다.  우리는 이 검토를 Codex 반박 리뷰라고 부릅니다.</p>
+<h2><span class="no">8.</span> 외부 검토에서 확인한 범위</h2>
+<p>별도의 검토자가 계획과 수정 문서를 확인했습니다.  이 절은 2026-11-13의 문서 종결 수령을 반영합니다.</p>
 <ul>
-<li>결론: 방향은 맞다.  다만 판정 규칙 몇 개는 고쳐야 한다.  그 전에는 규칙을 확정하지 않는다.</li>
-<li>큰 지적 두 가지
-<ul>
-<li>2D 시험을 격자 크기 두 가지로만 돌려서는 결과가 굳었다고 할 수 없습니다.  격자를 더 촘촘히 하면 판정이 바뀔 수 있습니다.  계산 오차를 따로 추정해 합격선과 견주도록 고칩니다.</li>
-<li>2D 에서 &quot;붙음의 영향이 작다&quot; 고 나와도 3D 에서도 그렇다고 할 수 없습니다.  결론을 &quot;이 2D 조건에서는 이만큼 달랐다&quot; 로 좁히고, 3D 에서 필요하면 다시 확인합니다.</li>
-</ul>
-</li>
-<li>그 밖에 작은 지적 열한 가지가 있습니다.  대부분 규칙의 빈틈을 메우는 내용입니다.</li>
-<li>확인된 것: 메모의 산술과 큰 흐름은 검토자가 다시 계산해도 같았습니다.</li>
-<li>다음 할 일: 지적을 반영해 메모를 고치고 (3.2 판), 고친 부분만 다시 검토받습니다.</li>
+<li>M32R-01–06 및 M32RF-01은 문서 범위 종결 가능입니다.  새 지적은 없습니다.  전체 HOLD이며 원장 상태의 자동 승격이나 실행 승인은 아닙니다.</li>
+<li>목표점 미도달의 응력 하한을 만들던 문장, 조밀 접촉의 중단 규칙, 필수 비교 결측 처리, 분리 표현, 선택 수 회계, 문헌 측정 이력을 고쳤습니다.</li>
+<li>독립 확인에서 같은 15개 문서 회귀는 수정 전 1실패에서 수정 후 15/15가 됐고, 원 탐침도 rc1에서 rc0가 됐습니다.  작은 문서·산술 검사이며 실제 연구 결과는 아닙니다.</li>
+<li>DRD-01의 보편 수렴·물리 자격과 다른 원 지적의 남은 한정은 그대로입니다.  2D 결론은 등록한 2D 조건 안에서만 쓰고 3D 원인 결론으로 옮기지 않습니다.</li>
+<li>아직 실제 수치 선택, 결과 전 등록, 물리 자격, 운영 봉인, 실행 승인은 남아 있습니다.  메모 3.2의 고정 본문과 최신 종결 수령 기록이 자세한 기준입니다.</li>
 </ul>
 </section>
 <section id="s9">
 <h2><span class="no">9.</span> 지금 정해진 것</h2>
 <ul>
-<li>이 일은 [DEM 우선 (수영)] 이라는 이름으로 따로 진행합니다.  기존 DEM 계산은 그대로 계속합니다.</li>
-<li>단계 0–3 은 GPU 없이 먼저 시작합니다.  3D 는 다른 급한 계산이 끝난 뒤에 합니다.</li>
-<li>SE 알갱이가 찌그러지는 모양을 계산하는 것은 꼭 필요한 조건으로 둡니다.</li>
-<li>맞추는 기준은 순수 SE 의 10–13 % 하나입니다.</li>
-<li>상용 유한요소 프로그램은 쓰지 않습니다.</li>
+<li>이 일은 [DEM 우선 (수영)] 재설계 트랙이며 기존 [DEM 우선]과 따로 진행합니다.</li>
+<li>단계 0–3은 GPU 없이 준비하고 3D는 다른 급한 계산 뒤에 두는 순서입니다.  이 순서 결정이 실제 실행 승인은 아닙니다.</li>
+<li>SE 입자 형태 변형은 필수이고 기준은 순수 SE의 기공률 10–13 %입니다.  복합은 예측으로 냅니다.</li>
+<li>상용 유한요소 프로그램은 쓰지 않습니다.  다른 모델로 넘어갈 때도 등록된 비교와 판단 절차를 따릅니다.</li>
 </ul>
 </section>
 <section id="s10">
@@ -294,7 +290,7 @@ tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{
 <tr><td>진밀도</td><td>빈틈이 전혀 없을 때의 재료 밀도.  SE 는 1.64 g/cm³ 로 둡니다</td></tr>
 <tr><td>DEM (이산요소법)</td><td>알갱이를 단단한 공으로 보고 서로 미는 힘을 계산하는 방법</td></tr>
 <tr><td>MPM (물질점법)</td><td>재료를 작은 점들로 나누고 격자 위에서 변형을 계산하는 방법</td></tr>
-<tr><td>붙음</td><td>두 알갱이가 격자의 같은 칸에 들어오면 한 덩어리처럼 움직이는 것</td></tr>
+<tr><td>붙음</td><td>두 알갱이가 같은 격자 노드의 속도장을 공유해 한 덩어리처럼 움직이는 것</td></tr>
 <tr><td>연화</td><td>재료를 실제보다 무르게 두는 것.  모델의 빈 곳을 메우려고 맞춘 값입니다</td></tr>
 <tr><td>항복 세기</td><td>재료가 되돌아오지 않게 찌그러지기 시작하는 세기</td></tr>
 <tr><td>충전율</td><td>공간 가운데 재료가 차지한 비율.  1 에서 기공률을 뺀 값입니다</td></tr>
@@ -319,9 +315,9 @@ tr,.step,.finding,.box,.oneline,.sched,.refs li,.vline,.toc,table.keep,.fig,.eq{
 <tr id="ref-5"><td>5</td><td>M. Cárdenas-Barrantes, D. Cantor, J. Barés, M. Renouf, E. Azéma, Compaction of mixtures of rigid and highly deformable particles: A micromechanical model, Phys. Rev. E 102 (2020) 032904.  doi:10.1103/PhysRevE.102.032904</td><td>1저자가 고른 논문</td></tr>
 <tr id="ref-6"><td>6</td><td>M. Cárdenas-Barrantes, D. Cantor, J. Barés, M. Renouf, E. Azéma, A micro-mechanical compaction model for granular mix of soft and rigid particles, EPJ Web Conf. 249 (2021) 02008.  doi:10.1051/epjconf/202124902008</td><td>1저자가 고른 논문</td></tr>
 <tr id="ref-7"><td>7</td><td>M. Cárdenas-Barrantes, J. Barés, M. Renouf, É. Azéma, Experimental validation of a micromechanically based compaction law for mixtures of soft and hard grains, Phys. Rev. E 106 (2022) L022901.  doi:10.1103/PhysRevE.106.L022901</td><td>1저자가 고른 논문</td></tr>
-<tr id="ref-8"><td>8</td><td>S.-Y. Lee, J.-H. Han, H.-W. Gong, J.-P. Ahn, K.-W. Yi, Y.W. Cho, Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries, J. Mater. Chem. A 13 (2025) 6342–6346.  doi:10.1039/d4ta08604j</td><td>SE 가루를 누르며 기공률을 잰 실험</td></tr>
+<tr id="ref-8"><td>8</td><td>S.-Y. Lee, J.-H. Han, H.-W. Gong, J.-p. Ahn, K.-W. Yi, Y.W. Cho, Characterization of densification behavior and mechanical properties of solid electrolyte powders for all solid-state batteries, J. Mater. Chem. A 13 (2025) 6342–6346.  doi:10.1039/d4ta08604j</td><td>SE 가루를 누르며 기공률을 잰 실험</td></tr>
 <tr id="ref-9"><td>9</td><td>V. Miß, F. Lange, S. Staubitz, B. Roling, Experimental setup for in situ determination of conductivity-porosity-pressure relationships, ACS Appl. Mater. Interfaces 18 (2026) 32830–32836.  doi:10.1021/acsami.6c03789</td><td>압력을 뺄 때 되돌아오는 양을 잰 실험</td></tr>
-<tr id="ref-10"><td>10</td><td>O. Thompson, O. Korjus 외, High pressure densification investigation of Li3PS4 and Li6PS5Cl solid electrolytes using combined X-ray diffraction, X-ray absorption tomography and ionic measurement, Adv. Funct. Mater. 36 (2026) e75195</td><td>SE 를 높은 압력까지 누른 실험</td></tr>
+<tr id="ref-10"><td>10</td><td>O. Thompson, O. Korjus 외, High Pressure Densification Investigation of Li3PS4 and Li6PS5Cl Solid Electrolytes using Combine X-Ray Diffraction, X-Ray Absorption Tomography and Ionic Measurement (카드 PDF 파일 이름의 제목 · 원문 제목 대조 미확인), Adv. Funct. Mater. 36 (2026) e75195.  doi:10.1002/adfm.75195</td><td>SE 를 높은 압력까지 누른 실험</td></tr>
 </tbody>
 </table>
 </div>

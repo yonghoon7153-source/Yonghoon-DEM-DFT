@@ -13,7 +13,7 @@
   (b) 처음 보는 분 원문 docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md
                   → webapp/static/explain/dem_redesign_plan_newcomer_20261110.html
   (c) docx        정본 docs/reviews/dem_redesign_direction_20261109/DEM_redesign_plan_for_newcomers_20261110.docx
-                  (1저자가 올린 파일 그대로 · sha256 고정) · 빌더 scripts/build_dem_redesign_plan_docx.js 가 읽는
+                  (기존 형식을 보존해 메모 3.2로 재생성 · sha256 고정) · 빌더 scripts/build_dem_redesign_plan_docx.js 가 읽는
                   JSON = docs/reviews/dem_redesign_direction_20261109/plan_newcomer_docx_model.json
 
 이 시험이 지키는 것:
@@ -30,7 +30,7 @@
      일정 · 갈림 칩 (가) (나) (마) (라) (다) · 강조 / 경고 / "하지 않는 말" 상자 · 질문 표 (답 = 원문 "답:" 뒤 글) · Codex 판정 상자
      (DRD-01 · DRD-02) · 번호 서지 10 (litdb slug 10 · DOI) · 원문 줄 전수 포함
   ⑤ (b) docx 꼴: 제목 블록 네 줄 · 지위 · 한 줄로 · 절 12 · 표 6 (머리 행) · 용어 14 · 참고문헌 10 · 원고 줄 전수 포함
-  ⑥ docx 정본 = 올린 바이트 (sha256) · 형식 (A4 · 글꼴 · 제목 블록 · Heading1 12 · 목록 문단 46 · 표 6 · 음영 · 바닥글) ·
+  ⑥ docx 정본 = 재생성한 고정 바이트 (sha256) · 형식 (A4 · 글꼴 · 제목 블록 · Heading1 12 · 목록 문단 45 · 표 6 · 음영 · 바닥글) ·
      원고 줄이 정본 글에 전수 포함 (한 글자 바꾼 사본은 실패) · JSON 의 문단 순서 = 정본의 문단 순서
   ⑦ (a) ↔ (b) 서로 링크 · base.html 사이드바 링크 · 실제 앱이 두 경로를 200 · text/html · 파일과 같은 바이트로 서빙 ·
      렌더된 /seminar 에 링크가 보인다
@@ -77,9 +77,9 @@ OUT_PLAN = 'webapp/static/explain/dem_redesign_plan_20261110.html'
 OUT_NEW = 'webapp/static/explain/dem_redesign_plan_newcomer_20261110.html'
 OUT_MODEL = 'docs/reviews/dem_redesign_direction_20261109/plan_newcomer_docx_model.json'
 DOCX = 'docs/reviews/dem_redesign_direction_20261109/DEM_redesign_plan_for_newcomers_20261110.docx'
-#: 1저자가 11-10 에 올린 docx 그대로 (형식 기준 · 고치지 않는다).  원고가 바뀌어 빌더로 다시 만들어 정본을 바꾸면 이 값도 같이 바꾼다
+#: 1저자가 11-10 에 올린 docx 형식을 보존한 11-13 메모 3.2 재생성본.  원고가 바뀌어 빌더로 다시 만들어 정본을 바꾸면 이 값도 같이 바꾼다
 #: (절차 = scripts/build_dem_redesign_plan_docx.js 머리 주석).
-DOCX_SHA256 = '2d7a34d2d9c5bf78333f9f7e01aa6ac63663bd200065017991ab44d2c4e61b91'
+DOCX_SHA256 = '090a8e68a4bfc490c59343c5f462802bd8483105a68eb0b03be3b8ff42c13622'
 #: 원고에 수식이 있을 때만 생기는 생성물 (LaTeX → MathML · OMML 변환 캐시 · 원고 옆)
 NEW_MATH = SRC_NEW[:-3] + '_math.json'
 #: 수식 · 그림 고정물 (짧은 원고 조각 · 작은 PNG · 그 수식 캐시).  고정물로 만든 HTML · docx 는 커밋하지 않고 시험이 그때 만든다.
@@ -96,9 +96,9 @@ SHAPE = {
     'tables': 6,
     'glossary_rows': 14,
     'ref_rows': 10,
-    'dois': 7,
-    'docx_paragraphs': 212,     # 정본 본문의 글 있는 문단 (표 안 포함)
-    'docx_list_paragraphs': 46,
+    'dois': 8,
+    'docx_paragraphs': 211,     # 정본 본문의 글 있는 문단 (표 안 포함)
+    'docx_list_paragraphs': 45,
 }
 GEN = 'scripts/build_dem_redesign_plan.py'
 BUILDER = 'scripts/build_dem_redesign_plan_docx.js'
@@ -563,7 +563,7 @@ def docx_math_counts(path):
 
 #: 정본 docx 를 만든 docx 모듈 (npm) 의 판.  이 판에서는 빌더 출력의 XML 이 정본과 요소 · 속성까지 같다 (2026-11-10 확인: 본문 ·
 #: 스타일 · 번호 · 바닥글 · 설정이 바이트까지 같았다).  다른 판에서는 글 · 순서만 본다.
-DOCX_JS_VERSION = '9.7.1'
+DOCX_JS_VERSION = '9.6.1'
 _JS_DOCX_VERSION = ("const p=require('path'),fs=require('fs');const d=p.dirname(require.resolve('docx'));"
                     "process.stdout.write(JSON.parse(fs.readFileSync(p.join(d,'..','package.json'),'utf8')).version)")
 
@@ -663,7 +663,7 @@ def main():
     chk('원문 (a) briefing_ko.md 가 있고 마커 날짜가 첫 줄에 하나', bool(date_a) and plan_md.count('BRIEFING:UPDATED') == 1)
     chk('원고 (b) plan_newcomer_ko.md 가 있고 마커 날짜가 첫 줄에 하나', bool(date_b) and new_md.count('BRIEFING:UPDATED') == 1)
     chk('정본 docx 가 제자리에 있다', os.path.isfile(_p(DOCX)))
-    chk('정본 docx = 1저자가 올린 바이트 그대로 (sha256)', lambda: hashlib.sha256(_bytes(DOCX)).hexdigest() == DOCX_SHA256)
+    chk('정본 docx = 메모 3.2 재생성 고정 바이트 (sha256)', lambda: hashlib.sha256(_bytes(DOCX)).hexdigest() == DOCX_SHA256)
 
     print('── ① 생성기: --check · 결정적 · 원문이 바뀌면 출력이 바뀜 · 낯선 구성 거부')
     gen = None
@@ -747,7 +747,7 @@ def main():
 
         ra = None
         try:
-            ra = mutated(SRC_PLAN, '값싼 2D 시험', '값싼 2D 실험')
+            ra = mutated(SRC_PLAN, '값싼 2D 대조', '값싼 2D 실험')
         except Exception as e:      # noqa: BLE001
             print(f'        (사본 변이 실패: {type(e).__name__}: {e})')
         chk('briefing 한 글자 바꾼 사본 → --check rc 1', lambda: gmain(['--check'], root=ra) == 1)
@@ -806,7 +806,7 @@ def main():
             ('둘째 HTML 주석', SRC_NEW, '\n두 가지 계산 방법을', '\n<!-- 메모 -->\n\n두 가지 계산 방법을', lambda: ln('두 가지 계산 방법')),
             ('3 단 목록', SRC_NEW, '  - 활물질 (AM):', '    - 활물질 (AM):', lambda: ln('활물질 (AM):')),
             ('홀수 들여쓰기 목록', SRC_NEW, '  - 활물질 (AM):', ' - 활물질 (AM):', lambda: ln('활물질 (AM):')),
-            ('표 칸 수가 머리와 다름', SRC_NEW, '| 0 | 기공률을 세는 방법', '| 0 | 덤 | 기공률을 세는 방법', lambda: ln('| 0 | 기공률을 세는 방법')),
+            ('표 칸 수가 머리와 다름', SRC_NEW, '| 0 | 볼 값과 정의', '| 0 | 덤 | 볼 값과 정의', lambda: ln('| 0 | 볼 값과 정의')),
             ('표 구분 줄 없음', SRC_NEW, '|---|---|---|---|\n| DEM (이산요소법)', '| DEM (이산요소법)', lambda: ln('| DEM (이산요소법)') - 1),
             ('짝 없는 **', SRC_NEW, '두 가지 계산 방법을', '두 가지 **계산 방법을', lambda: ln('두 가지 계산 방법')),
             ('짝 없는 `', SRC_NEW, '두 가지 계산 방법을', '두 가지 `계산 방법을', lambda: ln('두 가지 계산 방법')),
@@ -818,8 +818,8 @@ def main():
             ('두 줄 문단', SRC_NEW, '두 가지 계산 방법을 이어서 썼습니다.\n', '두 가지 계산 방법을\n이어서 썼습니다.\n', lambda: ln('두 가지 계산 방법') + 1),
             ('번호 목록이 1 에서 시작하지 않음', SRC_NEW, '\n1. 지금 DEM 에서', '\n3. 지금 DEM 에서', lambda: ln('1. 지금 DEM 에서')),
             ('절 번호 건너뜀', SRC_NEW, '## 2. 지금까지는', '## 3. 지금까지는', lambda: ln('## 2. 지금까지는')),
-            ('마커 없음', SRC_NEW, '<!-- BRIEFING:UPDATED 2026-11-10 -->\n', '', lambda: 1),
-            ('마커 날짜 꼴이 다름', SRC_NEW, 'BRIEFING:UPDATED 2026-11-10', 'BRIEFING:UPDATED 11-10', lambda: 1),
+            ('마커 없음', SRC_NEW, '<!-- BRIEFING:UPDATED 2026-11-13 -->\n', '', lambda: 1),
+            ('마커 날짜 꼴이 다름', SRC_NEW, 'BRIEFING:UPDATED 2026-11-13', 'BRIEFING:UPDATED 11-10', lambda: 1),
             ('제목 (#) 둘', SRC_NEW, '\n**지위**:', '\n# 또 하나의 제목\n\n**지위**:', lambda: ln('**지위**:')),
             ('"한 줄로" 없음', SRC_NEW, '**한 줄로**: ', '**요약**: ', lambda: ln('**한 줄로**:')),
             ('탭 문자', SRC_NEW, '두 가지 계산 방법을', '두 가지\t계산 방법을', lambda: ln('두 가지 계산 방법')),
@@ -852,10 +852,10 @@ def main():
              lambda: ln('두 가지 계산 방법')),
             ('캡션 없는 그림', SRC_NEW, '\n두 가지 계산 방법을', '\n![](x.png)\n\n두 가지 계산 방법을', lambda: ln('두 가지 계산 방법'),
              {NEW_DIR + '/x.png': _bytes(FIX_PNG)}),
-            ('(a) 원문의 달러 기호 (수식은 처음 보는 분용 원고에서만 받는다)', SRC_PLAN, '값싼 2D 시험', '값싼 $x$ 2D 시험',
-             lambda: ln('값싼 2D 시험', plan_md)),
+            ('(a) 원문의 달러 기호 (수식은 처음 보는 분용 원고에서만 받는다)', SRC_PLAN, '값싼 2D 대조', '값싼 $x$ 2D 대조',
+             lambda: ln('값싼 2D 대조', plan_md)),
             ('(a) 단계 번호 건너뜀', SRC_PLAN, '- **단계 1 셈**', '- **단계 2 셈**', lambda: ln('- **단계 1 셈**', plan_md)),
-            ('(a) 질문에 "답:" 없음', SRC_PLAN, '  답: 권고대로 (예).', '  회신: 권고대로 (예).', lambda: ln('- **Q1.**', plan_md)),
+            ('(a) 질문에 "답:" 없음', SRC_PLAN, '  답: 권고대로 (순서 결정 · 실제 실행 승인과 별개).', '  회신: 권고대로 (순서 결정 · 실제 실행 승인과 별개).', lambda: ln('- **Q1.**', plan_md)),
             ('(a) 갈림 표에 모르는 칩', SRC_PLAN, '| (가) 같음 |', '| (바) 같음 |', lambda: ln('| (가) 같음 |', plan_md)),
             ('(a) 배지를 만들 지위 글이 없음', SRC_PLAN, '결과 0 건 · ', '', lambda: ln('**지위**:', plan_md)),
             ('(a) 계획서 꼴 절이 없음 (하지 않는 말)', SRC_PLAN, '## 6. 하지 않는 말', '## 6. 삼가는 말', lambda: None),
@@ -865,9 +865,9 @@ def main():
              lambda: ln('| # | 서지 | litdb 카드 (slug) |', plan_md)),
             ('(a) 참고문헌 번호가 차례가 아님', SRC_PLAN, '| 2 | S.G. Bardenhagen, J.E. Guilkey', '| 3 | S.G. Bardenhagen, J.E. Guilkey',
              lambda: ln('| 2 | S.G. Bardenhagen, J.E. Guilkey', plan_md)),
-            ('(a) 큰 지적 (P1) 줄이 ID 로 시작하지 않음', SRC_PLAN, '  - `DRD-01` 격자를', '  - 격자를', lambda: ln('  - `DRD-01` 격자를', plan_md)),
-            ('(a) 단계 줄 끝에 버려질 글 (":" 없이 덧붙은 글)', SRC_PLAN, '- **단계 7 구조 · 수송**.', '- **단계 7 구조 · 수송** 나중에.',
-             lambda: ln('- **단계 7 구조 · 수송**.', plan_md)),
+            ('(a) 큰 지적 (P1) 줄이 ID 로 시작하지 않음', SRC_PLAN, '  - `DRD-01` 보편 수렴과', '  - 보편 수렴과', lambda: ln('  - `DRD-01` 보편 수렴과', plan_md)),
+            ('(a) 단계 줄 끝에 버려질 글 (":" 없이 덧붙은 글)', SRC_PLAN, '- **단계 7 구조 · 수송** (앞 단계 뒤): 구조·접촉·수송의 공통 정의와 등록 자격을 확인한 뒤 연결한다.', '- **단계 7 구조 · 수송** 나중에.',
+             lambda: ln('- **단계 7 구조 · 수송** (앞 단계 뒤): 구조·접촉·수송의 공통 정의와 등록 자격을 확인한 뒤 연결한다.', plan_md)),
         ]
         for case in cases:
             name, rel, old, new, want = case[:5]
@@ -984,11 +984,11 @@ def main():
         '[DEM 우선 (수영)]' in _vis(cov) and '재설계 계획 브리핑 (쉬운 말 · 논문 기준)' in _vis(cov))
     chk(f'표지 머리: 날짜 = 원문 마커 날짜 ({date_a})', bool(date_a) and bool(re.search(r'<span class="date">%s</span>' % date_a, cov)))
     badges = [_vis(b) for b in re.findall(r'<span class="badge[^"]*">(.*?)</span>', cov, re.S)]
-    chk(f'표지 머리: 배지 셋 = 결과 0 건 · 실행 GO 요청 아님 · Codex 판정 = 방향 지지 · 규칙 수정 필요 (HOLD) (지금 {badges})',
-        badges == ['결과 0 건', '실행 GO 요청 아님', 'Codex 판정 = 방향 지지 · 규칙 수정 필요 (HOLD)'])
+    chk(f'표지 머리: 배지 셋 = 결과 0 건 · 실행 GO 요청 아님 · Codex 판정 = 문서 잔여 종결 가능 (HOLD) (지금 {badges})',
+        badges == ['결과 0 건', '실행 GO 요청 아님', 'Codex 판정 = 문서 잔여 종결 가능 (HOLD)'])
     status_src = next((s for s in plan_md.split('\n') if s.startswith('**지위**:')), '')
     chk('배지 글이 원문 "지위" 줄에서 나온다 (원문에 그 글이 있다)',
-        all(w in status_src for w in ('결과 0 건', '실행 GO 요청 아님', '방향 지지 · 규칙 수정 필요 (HOLD)')))
+        all(w in status_src for w in ('결과 0 건', '실행 GO 요청 아님', '문서 잔여 종결 가능 (HOLD)')))
     chk('"지위" 문단 (p.status) · "한 줄로" 요약 상자 (div.oneline)',
         bool(re.search(r'<p class="status"><strong>지위</strong>: ', src_a))
         and bool(re.search(r'<div class="oneline"><strong>한 줄로</strong>: 3D 를 새로 짜기 전에', src_a)))
@@ -1016,7 +1016,7 @@ def main():
         and bool(re.search(r'<li class="step key" id="step-3">', s3)) and s3.count('class="step key"') == 1)
     chk('§3 일정: 따로 띠 (div.sched) · [추정] 표지 · 원문 글',
         lambda: '[추정]' in _vis(re.search(r'<div class="sched">(.*?)</div>', s3, re.S).group(1))
-        and '2D 4–6 주를 CPU 로 (Rint 일정 그대로) · 단계 3 결과 12 월 중순–말 · 3D 는 R 런 뒤.'
+        and '2D 4–6 주 · 단계 3 결과 12 월 중순–말 · 3D 는 R 런 뒤라는 기존 어림을 보존한다.'
         in _vis(re.search(r'<div class="sched">(.*?)</div>', s3, re.S).group(1)))
     fork = re.search(r'<table class="fork">(.*?)</table>', s3, re.S)
     fk = fork.group(1) if fork else ''
@@ -1054,8 +1054,8 @@ def main():
             _cell(r, 'q') == _norm(m.group(1) + ' ' + _md_strip(m.group(2))) and _cell(r, 'rec') == _norm(_md_strip(m.group(3)))
             and _cell(r, 'ans') == _norm(_md_strip(m.group(4))) for m, (_n, r) in zip(q_src, qrows)))
     s9 = _section(src_a, 's9')
-    chk('§9 Codex 판정 상자 (div.verdict) · 판정 줄 (p.vline) = "방향은 지지한다 … HOLD 다"',
-        lambda: '방향은 지지한다.' in _vis(re.search(r'<p class="vline">(.*?)</p>', s9, re.S).group(1))
+    chk('§9 Codex 판정 상자 (div.verdict) · 판정 줄 (p.vline) = "문서 범위 종결 가능 … HOLD 다"',
+        lambda: '문서 범위 종결 가능' in _vis(re.search(r'<p class="vline">(.*?)</p>', s9, re.S).group(1))
         and 'HOLD 다.' in _vis(re.search(r'<p class="vline">(.*?)</p>', s9, re.S).group(1)) and '<div class="verdict">' in s9)
     finds = re.findall(r'<div class="finding" id="(drd-\d\d)">(.*?)</div>\s*(?=<div class="finding"|</div>)', s9, re.S)
     chk(f'§9 큰 지적 둘 = 눈에 띄는 카드 (div.finding · id drd-01 · drd-02 · P1 표지 · "고침" 줄) (지금 {[k for k, _b in finds]})',
@@ -1075,13 +1075,13 @@ def main():
     chk('litdb slug 10 개 (서로 다름 · 원문 그대로)', len(set(slugs)) == 10 and all(s in text_a for s in slugs)
         and bool(re.search(r'\.slug\{[^}]*font-family:[^;}]*monospace', css_a)))
     dois_a = md_dois(plan_md)
-    chk(f'원문의 DOI {len(dois_a)} 개가 글자로 남아 있다', len(dois_a) == 7 and all('doi:' + d in text_a for d in dois_a))
+    chk(f'원문의 DOI {len(dois_a)} 개가 글자로 남아 있다', len(dois_a) == 8 and all('doi:' + d in text_a for d in dois_a))
     s2 = _section(src_a, 's2')
     chk('§2 논문 표: 일곱 줄 · 첫 칸의 [n] 이 참고문헌 자리 (#ref-n) 로 가는 링크',
         re.findall(r'<a class="cite" href="#ref-(\d+)">\[(\d+)\]</a>', s2)[:7] == [(str(i), str(i)) for i in range(1, 8)]
         and len(re.findall(r'<tr>', s2)) >= 8)
     for w in ('진밀도 1.64', '10–13 %', '하지 않는 말', 'SELF-161', 'SELF-160', 'DRD-01', 'DRD-02', 'Q1.', 'Q2.', 'Q3.', 'Q4.', 'Q5.',
-              '11.5 %', '15.6 %', '13eb293cd'):
+              '11.5 %', 'M32RF-01', '5afa16488'):
         chk(f'원문 핵심이 남아 있다: "{w}"', w in plan_md and w in text_a)
     #  (a) 는 참고문헌 표를 번호 서지로 싣는다: 머리 행 ("# | 서지 | litdb 카드 (slug)") 은 따로 없고 셋째 칸 머리는 행마다 이름표다
     #  → 그 한 줄만 순서 검사에서 빼고, 이름표가 행마다 있는지는 따로 본다.
@@ -1108,7 +1108,7 @@ def main():
     chk('제목 블록 네 줄: 제목 · 부제 (원고 제목 줄에서 꼬리표를 뺀 글) · "처음 보는 분을 위한 설명" · 날짜 · 지위 줄',
         [_vis(x) for x in re.findall(r'<(?:h1|p)[^>]*>(.*?)</(?:h1|p)>', hd, re.S)]
         == [TITLE, '가압부터 탈압까지 한 모델로 계산하기', '처음 보는 분을 위한 설명',
-            f'{date_b} · 계획 문서 · 계산 결과는 아직 없음 · 외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중'])
+            f'{date_b} · 계획 문서 · 계산 결과는 아직 없음 · 외부 검토 = 문서 잔여 종결 가능, 전체 HOLD'])
     chk('제목 블록: 클래스 (subtitle · audience · statusline) · <h1> 하나뿐',
         all(f'<p class="{c}">' in hd for c in ('subtitle', 'audience', 'statusline')) and src_b.count('<h1') == 1)
     chk('"지위" 문단 (p.status) · "한 줄로" 상자 (div.oneline)',
@@ -1134,11 +1134,11 @@ def main():
         lambda: (lambda t: (t['--th'], t['--box'], t['--acc'], t['--ink'], t['--mut'], t['--line']))
         (dict((k, v.lower()) for k, v in _toks(_css_block(_css(src_b), r'(?m)^:root\{([^}]*)\}')).items()))
         == ('#e6edf3', '#eaf2fa', '#1f4e79', '#1f2933', '#5b6770', '#b8c4ce'))
-    s6b = _section(src_b, sid_b('계획: 싼 시험부터'))
-    chk('"계획: 싼 시험부터 차례로" 절: 단계 표 (단계 0–7) 와 결과별 갈림 표 (네 줄) · 사이의 굵은 문장',
+    s6b = _section(src_b, sid_b('계획은 작은 대조부터'))
+    chk('"계획은 작은 대조부터" 절: 단계 표 (단계 0–7) 와 결과별 갈림 표 (네 줄) · 사이의 굵은 문장',
         len(re.findall(r'<table', s6b)) == 2 and [_vis(x) for x in re.findall(r'<tr><td>(\d)</td>', s6b)] == [str(i) for i in range(8)]
-        and '단계 3 의 결과에 따라 3D 를 다르게 짭니다.' in _vis(s6b) and '두 방식의 힘이 뚜렷이 다르다' in _vis(s6b)
-        and '이상한 결과가 나왔다' in _vis(s6b))
+        and '단계 3의 조건부 결과로 다음 길을 정합니다.' in _vis(s6b) and '등록한 2D 조건에서 응답 차이가 확인됨' in _vis(s6b)
+        and '이상 신호' in _vis(s6b))
     gloss_src = md_table_after(new_md, '용어 풀이')[1:]
     s11 = _section(src_b, sid_b('용어 풀이'))
     chk(f'"용어 풀이" 절의 표 {n_gl} 행: 용어 · 뜻이 원고 그대로',
@@ -1188,7 +1188,7 @@ def main():
         == ('Malgun Gothic', 'Calibri', '21'))
     chk('정본: 제목 블록 네 줄 (제목 · 부제 · "처음 보는 분을 위한 설명" · 날짜 · 지위 줄)',
         paras[:4] == [TITLE, '가압부터 탈압까지 한 모델로 계산하기', '처음 보는 분을 위한 설명',
-                      f'{date_b}  ·  계획 문서  ·  계산 결과는 아직 없음  ·  외부 검토 = 방향은 맞음, 판정 규칙은 고치는 중'])
+                      f'{date_b}  ·  계획 문서  ·  계산 결과는 아직 없음  ·  외부 검토 = 문서 잔여 종결 가능, 전체 HOLD'])
     chk('정본: "지위:" 문단 · "한 줄로:" 상자 (음영 EAF2FA · 왼쪽 띠)',
         lambda: paras[4].startswith('지위: 계획 문서입니다.') and paras[5].startswith('한 줄로: 전극을 누르는 과정을')
         and [p for p in body.findall(W + 'p') if para_text(p).startswith('한 줄로')][0].find(W + 'pPr').find(W + 'shd').get(W + 'fill') == 'EAF2FA'

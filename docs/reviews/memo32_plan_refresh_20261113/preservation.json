@@ -1,0 +1,52 @@
+{
+  "base": "8687c9641ba06447cbc952f734341000d323e645",
+  "docx_before_sha256": "2d7a34d2d9c5bf78333f9f7e01aa6ac63663bd200065017991ab44d2c4e61b91",
+  "docx_after_sha256": "090a8e68a4bfc490c59343c5f462802bd8483105a68eb0b03be3b8ff42c13622",
+  "template_parts": {
+    "word/styles.xml": {
+      "equal": true,
+      "before_sha256": "1fb1904d3e8c5a55a8eead4604d1fbdfce3c04890a6995bcf70eadd69c6fc4f2",
+      "after_sha256": "1fb1904d3e8c5a55a8eead4604d1fbdfce3c04890a6995bcf70eadd69c6fc4f2"
+    },
+    "word/numbering.xml": {
+      "equal": true,
+      "before_sha256": "d1a10419f01862b0c58971ac63db14b6da0d442002086312699e8034d39f575e",
+      "after_sha256": "d1a10419f01862b0c58971ac63db14b6da0d442002086312699e8034d39f575e"
+    },
+    "word/settings.xml": {
+      "equal": true,
+      "before_sha256": "36b68f012adfd6d2f8faaebc8d101632d3529e9d9fd57d6ef92198841e96f09e",
+      "after_sha256": "36b68f012adfd6d2f8faaebc8d101632d3529e9d9fd57d6ef92198841e96f09e"
+    },
+    "word/footer1.xml": {
+      "equal": true,
+      "before_sha256": "5da3ef8b3ff484f3de299b35c11caf69190bc844d8219d090719d21907d5ffea",
+      "after_sha256": "5da3ef8b3ff484f3de299b35c11caf69190bc844d8219d090719d21907d5ffea"
+    },
+    "word/_rels/document.xml.rels": {
+      "equal": true,
+      "before_sha256": "3748d33a5567b95675f384b4ffbfb4d4be9e2c2090ebc756fe89e36005c736b4",
+      "after_sha256": "3748d33a5567b95675f384b4ffbfb4d4be9e2c2090ebc756fe89e36005c736b4"
+    }
+  },
+  "unchanged_files": {
+    "scripts/build_dem_redesign_plan_docx.js": true,
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md": true,
+    "webapp/templates/base.html": true,
+    "webapp/app.py": true,
+    "webapp/test_fixtures/dem_redesign_plan/fixture_ko.md": true,
+    "webapp/test_fixtures/dem_redesign_plan/fixture_ko_math.json": true
+  },
+  "changed_files": [
+    "docs/reviews/dem_redesign_direction_20261109/DEM_redesign_plan_for_newcomers_20261110.docx",
+    "docs/reviews/dem_redesign_direction_20261109/briefing_ko.md",
+    "docs/reviews/dem_redesign_direction_20261109/plan_newcomer_docx_model.json",
+    "docs/reviews/dem_redesign_direction_20261109/plan_newcomer_ko.md",
+    "scripts/build_dem_redesign_plan.py",
+    "webapp/static/explain/dem_redesign_plan_20261110.html",
+    "webapp/static/explain/dem_redesign_plan_newcomer_20261110.html",
+    "webapp/test_dem_redesign_plan_page.py"
+  ],
+  "protected_changes": [],
+  "scope": "template/source preservation; not research or deployment"
+}
