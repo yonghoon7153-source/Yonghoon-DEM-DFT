@@ -1,0 +1,35 @@
+{
+  "scope": "Deliberate weaknesses of a new synthetic model; not production defects",
+  "variants": [
+    {
+      "name": "eager_publication_before",
+      "old": "        trial = deepcopy(self._state)\n",
+      "new": "        trial = deepcopy(self._state)\n        self._state = trial  # Deliberately unsafe baseline: publish before completion.\n",
+      "purpose": "Publish the unfinished trial before any stage completes; deliberately unsafe baseline, not historical production source."
+    },
+    {
+      "name": "shallow_copy",
+      "old": "        trial = deepcopy(self._state)\n",
+      "new": "        trial = self._state.copy()\n",
+      "purpose": "Nested points and accumulator lists alias the committed parent."
+    },
+    {
+      "name": "erase_frame_prefix",
+      "old": "        trial = deepcopy(self._state)\n",
+      "new": "        trial = deepcopy(self._state)\n        trial['profiles'] = [0, 0, 0, 0]\n",
+      "purpose": "Erase contributions from already completed substeps."
+    },
+    {
+      "name": "protocol_motion_reset",
+      "old": "        trial = deepcopy(self._state)\n",
+      "new": "        trial = deepcopy(self._state)\n        for point in trial['points']:\n            point['v'] = 0\n            point['C'] = 0\n",
+      "purpose": "Reset motion markers as in a protocol transition instead of preserving a same-step parent."
+    },
+    {
+      "name": "skip_rod_velocity",
+      "old": "                point['v'] += 11\n",
+      "new": "                point['v'] += 0\n",
+      "purpose": "Publish corrected rod positions without the prescribed synthetic velocity update."
+    }
+  ]
+}
