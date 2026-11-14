@@ -1,0 +1,150 @@
+{
+  "results": {
+    "scope": "Finite synthetic record examples; not production TX qualification",
+    "fixture_sha256": "00c7574f61549e2999a0dc7b7836a9715acff4114ebee002da505b8cce1390ff",
+    "observations": [
+      {
+        "id": "OK_DISCARD",
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "id": "OK_CAPACITY_FAIL",
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "id": "OK_RETRY",
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "id": "OK_COMMIT",
+        "accepted": true,
+        "reasons": []
+      },
+      {
+        "id": "TX05_PARTIAL_DISCARD",
+        "accepted": false,
+        "reasons": [
+          "trial_not_cleared"
+        ]
+      },
+      {
+        "id": "TX06_STRESS_LEFT",
+        "accepted": false,
+        "reasons": [
+          "rollback_state_changed"
+        ]
+      },
+      {
+        "id": "TX07_CAPACITY_COMMIT",
+        "accepted": false,
+        "reasons": [
+          "capacity"
+        ]
+      },
+      {
+        "id": "TX08_PEAK_MAX_ONLY",
+        "accepted": false,
+        "reasons": [
+          "peak_accounting",
+          "memory_budget"
+        ]
+      },
+      {
+        "id": "TX09_RETRY_ADVANCES_TIME",
+        "accepted": false,
+        "reasons": [
+          "rollback_state_changed"
+        ]
+      },
+      {
+        "id": "TX10_RETRY_RESETS_COUNT",
+        "accepted": false,
+        "reasons": [
+          "retry_order"
+        ]
+      },
+      {
+        "id": "TX11_PARENT_CHANGED",
+        "accepted": false,
+        "reasons": [
+          "parent_changed"
+        ]
+      },
+      {
+        "id": "TX12_PHYSICS_INCOMPLETE",
+        "accepted": false,
+        "reasons": [
+          "physics_incomplete"
+        ]
+      }
+    ],
+    "valid_records": 4,
+    "invalid_records": 8,
+    "rollback_field_observations": [
+      "boundary_contact_history",
+      "deformation_stress_plastic",
+      "identity",
+      "mass_volume",
+      "phase",
+      "position_velocity",
+      "rigid_state",
+      "rng",
+      "step",
+      "time_tick"
+    ],
+    "weakened_guard_observations": [
+      {
+        "case": "TX05_PARTIAL_DISCARD",
+        "removed_guard": "trial_not_cleared",
+        "false_accept_detected": true
+      },
+      {
+        "case": "TX06_STRESS_LEFT",
+        "removed_guard": "rollback_state_changed",
+        "false_accept_detected": true
+      },
+      {
+        "case": "TX07_CAPACITY_COMMIT",
+        "removed_guard": "capacity",
+        "false_accept_detected": true
+      },
+      {
+        "case": "TX08_PEAK_MAX_ONLY",
+        "removed_guard": "peak_accounting",
+        "false_accept_detected": true
+      },
+      {
+        "case": "TX09_RETRY_ADVANCES_TIME",
+        "removed_guard": "rollback_state_changed",
+        "false_accept_detected": true
+      },
+      {
+        "case": "TX10_RETRY_RESETS_COUNT",
+        "removed_guard": "retry_order",
+        "false_accept_detected": true
+      },
+      {
+        "case": "TX11_PARENT_CHANGED",
+        "removed_guard": "parent_changed",
+        "false_accept_detected": true
+      },
+      {
+        "case": "TX12_PHYSICS_INCOMPLETE",
+        "removed_guard": "physics_incomplete",
+        "false_accept_detected": true
+      }
+    ],
+    "schema_observations": 7,
+    "solver_executed": false,
+    "production_TX_tests_executed": false,
+    "overall": "HOLD"
+  },
+  "rc": 0,
+  "checker_sha256": "e6af8a469b1daf0d3c81fdfe561da140b2ac3def66e451785b365e7e86e3a60c",
+  "stdout_sha256": "1fb0173bd1b173442f10f382f2242a22caf5074c954c29cd71fe3e9b74337b07",
+  "capture": "Recorded replay of same examples; not an additional unique test set",
+  "independent_review": false
+}
