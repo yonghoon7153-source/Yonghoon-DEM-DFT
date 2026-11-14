@@ -1,0 +1,123 @@
+{
+  "scope": "New synthetic integer model only; no physical solver execution",
+  "python": "3.12.14",
+  "candidate": {
+    "methods": 16,
+    "failures": 0,
+    "errors": 0,
+    "failed_methods": [],
+    "skipped": 0,
+    "model_sha256": "8a636801bad425481111c820d3af761bbcedcb1cad7ca087dd9bc7fbf44caa4e",
+    "tests_sha256": "5aa6b3d5eb77406ca080634e902325c82fb13cade8ece40ea35470c05d53498f",
+    "rc": 0,
+    "stdout_sha256": "b44664224a3f8a873bb8f7f044472d9bcba0f9737b5c5ffd5cbb37835bd0f749",
+    "stderr_sha256": "7fd1dde497129934df5f71b68ed4729b6dd66a5d7bba5fdabf816ea4409d9ff9"
+  },
+  "negative_models": {
+    "eager_publication_before": {
+      "methods": 16,
+      "failures": 30,
+      "errors": 0,
+      "failed_methods": [
+        "test_all_plain_failure_sites_and_explicit_retry",
+        "test_all_rod_failure_sites_and_explicit_retry",
+        "test_motion_and_wall_do_not_restart_on_failure",
+        "test_partial_host_update_is_not_published",
+        "test_partial_point_update_keeps_all_six_fields",
+        "test_previous_success_is_not_erased_on_later_failure",
+        "test_profile_prefix_known_answer"
+      ],
+      "skipped": 0,
+      "model_sha256": "4c12a357d7267e7f10c21e5027a2c1891b7dac24e4528a13be45a19d28ef10f8",
+      "tests_sha256": "5aa6b3d5eb77406ca080634e902325c82fb13cade8ece40ea35470c05d53498f",
+      "rc": 1,
+      "stdout_sha256": "184070ff788b2e61c757d67a8f48f3761383077a82ee5a0d434847c0298835d1",
+      "stderr_sha256": "79c88df3fad6fe3debba60da37d49d7650372633b1677d749f355b5258bf8265"
+    },
+    "shallow_copy": {
+      "methods": 16,
+      "failures": 30,
+      "errors": 0,
+      "failed_methods": [
+        "test_all_plain_failure_sites_and_explicit_retry",
+        "test_all_rod_failure_sites_and_explicit_retry",
+        "test_motion_and_wall_do_not_restart_on_failure",
+        "test_partial_host_update_is_not_published",
+        "test_partial_point_update_keeps_all_six_fields",
+        "test_previous_success_is_not_erased_on_later_failure",
+        "test_profile_prefix_known_answer"
+      ],
+      "skipped": 0,
+      "model_sha256": "0159b8ea4e853daab86b79095050a9d4db450fe25b079c2fdf75d0e4a345b940",
+      "tests_sha256": "5aa6b3d5eb77406ca080634e902325c82fb13cade8ece40ea35470c05d53498f",
+      "rc": 1,
+      "stdout_sha256": "9584c30733dc6c945db95a9fb2c5b76ef3461181b7e0be88f27da04fb0bf5bff",
+      "stderr_sha256": "767bae83721cff601b25883da643d573aeefe6dab91cbe55df5dce9e7c775cdf"
+    },
+    "erase_frame_prefix": {
+      "methods": 16,
+      "failures": 34,
+      "errors": 0,
+      "failed_methods": [
+        "test_all_plain_failure_sites_and_explicit_retry",
+        "test_all_rod_failure_sites_and_explicit_retry",
+        "test_exact_integer_sentinels_and_bool_rejection",
+        "test_previous_success_is_not_erased_on_later_failure",
+        "test_profile_prefix_known_answer",
+        "test_returned_snapshots_are_detached",
+        "test_success_with_rods",
+        "test_success_without_rods"
+      ],
+      "skipped": 0,
+      "model_sha256": "2b990e01f8a1f170ead5edc1148f4ea801b51ffe70109b217299b94553e68fd3",
+      "tests_sha256": "5aa6b3d5eb77406ca080634e902325c82fb13cade8ece40ea35470c05d53498f",
+      "rc": 1,
+      "stdout_sha256": "d70bca4f2c7064c5bdaa0f0aa2c1e8f82eaebe4347f2757b938afd191f484d7e",
+      "stderr_sha256": "a72c6bd7b0d8dca7209da1ed5c30a0de9d68c9dd0a3cbf23bcdb51c088b47b2d"
+    },
+    "protocol_motion_reset": {
+      "methods": 16,
+      "failures": 33,
+      "errors": 0,
+      "failed_methods": [
+        "test_all_plain_failure_sites_and_explicit_retry",
+        "test_all_rod_failure_sites_and_explicit_retry",
+        "test_motion_and_wall_do_not_restart_on_failure",
+        "test_previous_success_is_not_erased_on_later_failure",
+        "test_returned_snapshots_are_detached",
+        "test_success_with_rods",
+        "test_success_without_rods"
+      ],
+      "skipped": 0,
+      "model_sha256": "14a58231251cf98ab5ce05baf9074089ba3ee466fb8280cfd82ab1f2acb86533",
+      "tests_sha256": "5aa6b3d5eb77406ca080634e902325c82fb13cade8ece40ea35470c05d53498f",
+      "rc": 1,
+      "stdout_sha256": "22fe098b83d6ecc5a74514a9e4d8d1c79a9b2a4ae7b52b73315841b07db2c359",
+      "stderr_sha256": "5b88b0e2e561979af132287757f6c25a18ebeae55c312eb0f65afa3c6a2ba3cb"
+    },
+    "skip_rod_velocity": {
+      "methods": 16,
+      "failures": 24,
+      "errors": 0,
+      "failed_methods": [
+        "test_all_rod_failure_sites_and_explicit_retry",
+        "test_motion_and_wall_do_not_restart_on_failure",
+        "test_previous_success_is_not_erased_on_later_failure",
+        "test_success_with_rods"
+      ],
+      "skipped": 0,
+      "model_sha256": "1615fc528ac1b897857b7dad4a2c0cfdffa9c983ca706d4ad2d917b4c6961808",
+      "tests_sha256": "5aa6b3d5eb77406ca080634e902325c82fb13cade8ece40ea35470c05d53498f",
+      "rc": 1,
+      "stdout_sha256": "1c5505e395c714824a942c18a271b111a47a7cee17d7e77091642ff7ee936f35",
+      "stderr_sha256": "d5a9fdc1c8f49ed8d1a3bb4d164b4b73c182679e606128b05585007a96d21e68"
+    }
+  },
+  "same_test_bytes": true,
+  "baseline_is_historical_production": false,
+  "plain_failure_sites": 7,
+  "rod_failure_sites_including_plain": 11,
+  "no_automatic_retry": true,
+  "whole_HOLD": true,
+  "research_results": 0
+}
