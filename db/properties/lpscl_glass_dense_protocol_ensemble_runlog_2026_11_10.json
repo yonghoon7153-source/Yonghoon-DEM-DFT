@@ -183,5 +183,19 @@
   "감시_블록_v2 (지금 도는 하위 명령 · 경과 · CPU · 결과 파일 · GPU)": "watch -n 30 'O=$HOME/work/runs/li2s3_stage2_2026_11_10/readout_stage2; tmux has-session -t li2s3ro 2>/dev/null && echo \"(tmux 도는 중)\" || echo \"(tmux 끝)\"; for x in $(pgrep -f li2s3_stage2_readout.py); do case \"$(cat /proc/$x/comm 2>/dev/null)\" in python*) ps -o etime=,pcpu=,rss=,args= -p $x | awk \"{printf \\\"지금 %s · 경과 %s · CPU %s%% · RSS %d MiB\\n\\\", \\$6, \\$1, \\$2, \\$3/1024}\";; esac; done; ls -l --time-style=+%H:%M:%S $HOME/li2s3_stage2_verify_1114.json $O 2>/dev/null | cut -c1-150; tail -6 $HOME/li2s3_stage2_readout_1114.log | cut -c1-200; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader'",
   "다음": "'■ 판독 끝' → 로그 전체 회수 → W · 갈래 · cond550 자격 기록 (값 규율 그대로)",
   "by": "agent · 2026-11-14"
+ },
+ "판독_보류_2026_11_14": {
+  "근거": "사용자가 붙인 kgy 감시 화면 (esp-Z590-AORUS-MASTER · 2026-11-14 13:56:04) — 로그 끝 8 줄 + '(tmux 끝)'",
+  "결과": [
+   "verify rc 0 — 런은 valid (화면에 보인 것: B12 T700 (v1) · B12 T750 (v1) valid) · '판독 가능 상태: 아니오 (판정 보류 사유가 남아 있다)' → ~/li2s3_stage2_verify_1114.json",
+   "readout rc 3 — '판정 보류 — 끝나지 않았거나 검증 실패 런 0 개 · 큐 incomplete' → $B/readout_stage2/hold_li2s3_stage2_readout_hold_20261114T042807Z.json",
+   "pressure 안 함 (readout 이 0 이 아니다) · '■ 판독 끝'"
+  ],
+  "뜻": "도구가 카드대로 멈췄다 — 카드 개정_DZ 사후_검증_v1_런: 'invalid · incomplete 런이 하나라도 있거나 큐 끝 줄 (■ 큐 끝 · PHASE ladder) 이 없으면 W · 갈래 · cond550 자격을 아예 내지 않고 판정 보류' · 순수 v1 판독의 준비 조건 = 큐 로그 status valid (= 사다리 시작 줄 뒤에 '■ 큐 끝 · PHASE ladder' 줄) · 보류는 판독이 아니다 — 고정 출력 readout_stage2.json 은 안 생겼다 (판독 한 번은 아직 안 씀) · W · 갈래 · cond550 · 압력 · 수송값은 안 열렸다",
+  "확인한_것 (로컬)": "큐 실행기 run_stage2_kgy.sh 끝 줄 = say '■ 큐 끝 · PHASE $PHASE · 누적 … h' 뒤 exit 0 · 그 출력은 exec > >(tee -a stage2_kgy.log) 로만 파일에 간다 · 끝 줄 문자 (■ U+25A0 · · U+00B7) 는 도구 검색 문자열과 같다 · 11-14 13:09 진행 기록 (감시 화면) 에 적힌 큐 쪽 마지막 줄은 '✅ B seed12 T750 끝 · 5.0242 h · 누적 82.1650 / 160 h' 이고 '■ 큐 끝 · PHASE ladder' 줄은 없다 — 그 화면이 큐 로그의 끝 몇 줄이었는지는 기록에 없어 확인 블록으로 가른다",
+  "가설 (확인 전)": "큐 실행기가 끝 줄을 tee 로 보낸 직후 exit → tmux 창이 닫히며 tee 가 끝 줄을 파일에 쓰기 전에 끝났을 수 있다 — 아래 확인 블록 출력으로 가른다",
+  "확인_블록 (kgy · 읽기만 · 계산 안 함)": "B=$HOME/work/runs/li2s3_stage2_2026_11_10; H=$(ls -t $B/readout_stage2/hold_*.json | head -1)\necho \"== 큐 로그 끝 4 줄\"; tail -4 $B/stage2_kgy.log | cut -c1-220\necho \"== 줄 수 (사다리 시작 · 큐 끝 PHASE ladder · 런 끝 ✅)\"; echo \"  $(grep -ac '▶ li2s-3 2 단계 큐 시작 · PHASE ladder' $B/stage2_kgy.log) · $(grep -ac '■ 큐 끝 · PHASE ladder' $B/stage2_kgy.log) · $(grep -acE '✅ [AB] seed[0-9]+ T[0-9]+ 끝' $B/stage2_kgy.log)\"\necho \"== 장부 (런 · rc 0 · 마지막 줄)\"; awk -F'\\t' 'NR>1{n++; if($8==\"0\")z++} END{print \"  런 \" n+0 \" · rc 0 \" z+0}' $B/cost_ledger.tsv; tail -1 $B/cost_ledger.tsv | cut -c1-200\necho \"== 잠금 · 수정 시각\"; flock -n $B/.stage2.lock true && echo \"  큐 잠금 풀림\" || echo \"  큐 잠금 쥐어짐\"; stat -c '  %y · %n' $B/stage2_kgy.log $B/cost_ledger.tsv | cut -c1-160\necho \"== 보류 기록 (큐 부분만)\"; /home/kgy/apps/miniforge3/envs/uma/bin/python -c \"import json,sys; d=json.load(open(sys.argv[1])); print('  큐', d.get('queue_status'), d.get('queue_problems'), '· 보류 사유', d.get('hold_reasons'), '· valid 아닌 런', d.get('n_runs_not_valid'))\" \"$H\"; echo \"  $H\"",
+  "다음": "확인 블록 출력 → 끝 줄이 정말 없고 장부 16 행 rc 0 · 잠금 풀림이면 처리안 (결과 전 카드 개정 · 판독 도구 수정 · 대조 잡 재현 · 판독 허가 갱신) — li2s-3 트랙 결정은 '사용자 (위임 10-30)'",
+  "by": "agent · 2026-11-14"
  }
 }
