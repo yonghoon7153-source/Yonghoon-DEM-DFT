@@ -1,0 +1,52 @@
+{
+  "track": "nonrint",
+  "base": "ede6170502ca9f41635e6656234b99427e445924",
+  "tracked_changes": 0,
+  "new_files_checked": 9,
+  "self_manifest_excluded": true,
+  "new_files_are_in_scope": true,
+  "public_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "original_lhs_block_preserved": true,
+  "rint_q14_private_artifacts_preserved": 6,
+  "checked_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261114-0508_nonrint-contract-preparation.md",
+      "sha256": "77b8782e3955024a5a34eb4781f928539ffac91c120ade4fa2df53f17fa135bc"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/README.md",
+      "sha256": "bccf4bb91ef04e7428e4b5c7bce4adf34daf91bc96de92d5242bff65fa58224e"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/check_results.json",
+      "sha256": "868debce49607445c8fbf3cc79cc483b16bc67c628480122acc35f9fdaf7c8ef"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/dem_p2g_transaction_contract.md",
+      "sha256": "3a9c31c8fa215686953684f21ec8245dfa2566ef25f052a2dde4b2379c2dcfdc"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/dem_transaction_registration.json",
+      "sha256": "57b4684eff41ad91ee7340728e7abb2ea4227938eb45fd93c2949db7d0760b7c"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/lhs_o1_synthetic_check.md",
+      "sha256": "dd7bd09c782385a88031e287c18e10df2a7de3c906c313756fdddc9a4a3bc9ec"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/lhs_synthetic_results.json",
+      "sha256": "99b41beb775b3162370e92bfe16f888cb221bc4fff3285eb8503a00b0197448b"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/mixer_dependency_manifest.json",
+      "sha256": "6bf90e8175c7e8222940766e423b66f545a9ebf044e0ad7c75e71348c4a934b1"
+    },
+    {
+      "path": "docs/reviews/nonrint_contract_preparation_20261114/mixer_dependency_preparation.md",
+      "sha256": "f75ade0010897f04396450967163430b0f894b7065acfd9d74f410029d3102e4"
+    }
+  ],
+  "whole_HOLD": true,
+  "real_field_execution": false
+}

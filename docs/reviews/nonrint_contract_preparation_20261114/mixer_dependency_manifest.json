@@ -1,0 +1,461 @@
+{
+  "sources": [
+    {
+      "path": "dem_scripts/mixer_20260919/Back.stl",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 10790,
+      "sha256": "2e7b962d14ced968d8178456feaf2f6a4856edd4b151070c23a8ac1588a461e5",
+      "git_blob": "726a7f1e0771e3755eac937b82dad7293fe9ddcf"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Drum.stl",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 14310,
+      "sha256": "fe821a8ab6db0d94151e9d84bf19cc1fad77abb417cd640bf4577c2f87279730",
+      "git_blob": "7e3b6b153d86e103752ddf93e2ed583f945414c6"
+    },
+    {
+      "path": "dem_scripts/mixer_20260919/Front.stl",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 5990,
+      "sha256": "443f9c3c859b2562dc041cde2af712fdfc4ab0225032ebb9420267c781843c81",
+      "git_blob": "e77c287028084d2a229762f8f9cbe4ba0a8aeca0"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/launch_highbo.sh",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 53398,
+      "sha256": "ed469ffad993b321563cb35e3242d0223a132f251a0ed119588f02b5b106b6fb",
+      "git_blob": "41c1b16f52be7158b6052f38e34e49aa6ac426c1"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/launch_policy.json",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 5925,
+      "sha256": "08bdcb4fd4a9e4cceb3ee8872d0c8a32cbb599941c40eed8c4a9938569bbf12b",
+      "git_blob": "de98be0bdf398a499862cf2a1fb191a724efedd2"
+    },
+    {
+      "path": "dem_scripts/mixer_20260921/start_check.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 15039,
+      "sha256": "93fa907ec5098a2f8003e1a2f542dd4da7a2e128ee98f818b32aa0639f54ea40",
+      "git_blob": "958c52adf804c531e05a2ad3eb3b386c7bc53730"
+    },
+    {
+      "path": "scripts/check_contact_validity.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 162813,
+      "sha256": "738bf397821a94697069308c9d7ebe54b3dfb61bbb19bb2f0c7be6e6f6df60c1",
+      "git_blob": "21468adeb13e5f13973f6e145e06249fe2bdfde6"
+    },
+    {
+      "path": "scripts/make_mixer_deck.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 229640,
+      "sha256": "dc253bc8319077bc1e41635ae30ec588eb4a14c899db075e064192c4ef9cf6f7",
+      "git_blob": "82439cf3523342e16645eb27b51acf51936405f6"
+    },
+    {
+      "path": "scripts/make_mixer_resume.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 18906,
+      "sha256": "b0930cd7704fa2298578c147ccdb5f4e38780c867193a221783affc2cd82279e",
+      "git_blob": "7909d7fb4afee8e9e2b7c31b012854eadeb1db8d"
+    },
+    {
+      "path": "scripts/measure_bed_aspect.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 24677,
+      "sha256": "b3ab8d59561f0a28d920f0e81cb590ca98391a3b81410ca619bf97f0e63d7880",
+      "git_blob": "9daca2e7b8eca82d49c0c7b26efc56ae8d94c321"
+    },
+    {
+      "path": "scripts/measure_mixing_index.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 90471,
+      "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+      "git_blob": "7b45bc5862ab81840e82109d1fd9790264183e45"
+    },
+    {
+      "path": "scripts/mixer_deck_diff.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 135987,
+      "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+      "git_blob": "0cbc372dbbdc1c66e81db39c0ea13055a848511e"
+    },
+    {
+      "path": "scripts/mixer_deck_readback.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 127980,
+      "sha256": "791f72e96bd72d1ad118d347e5dbfdc5fd67e8b30e2ee602c6fbf7109f37091a",
+      "git_blob": "d2e0e796cd7750652fa3d3278275d1905e304e3a"
+    },
+    {
+      "path": "scripts/mixer_gate_reader_diff.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 19688,
+      "sha256": "3fdb1511cf3898add705bfef4216d9d2068d7489f08cdea0496a0cd8bc501f72",
+      "git_blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981"
+    },
+    {
+      "path": "scripts/mixer_restart_phase_test.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 70728,
+      "sha256": "d9093a2830e664be4dc4c4f73d5f58b0e87da29bc152ff873aaa599ee4bee24a",
+      "git_blob": "d11ee0702ea26d33847dc9ab8187ac96e31a6f2b"
+    },
+    {
+      "path": "scripts/mixer_smoke_blind.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 125451,
+      "sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+      "git_blob": "ef2e75f12f72dca2c82e2845ce7f58e5d27a3a91"
+    },
+    {
+      "path": "scripts/mixer_stage_gate.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 116574,
+      "sha256": "e62df852d6cdeb031a7d5ff6418eee2477f5e00df8fae91fdd7758f3cafb21f5",
+      "git_blob": "203a7aedc145b4170c267ff4de62a34548844251"
+    },
+    {
+      "path": "scripts/test_mixer_self170_canaries.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "bytes": 4939,
+      "sha256": "1ede720f62d942e0e808759d052a818010cad2a964bef56b159de6d1a88d6f37",
+      "git_blob": "fad49143f599766fc698285fdc950f3a769ac205"
+    }
+  ],
+  "static_scan": {
+    "scripts": [
+      "scripts/check_contact_validity.py",
+      "scripts/make_mixer_deck.py",
+      "scripts/make_mixer_resume.py",
+      "scripts/measure_bed_aspect.py",
+      "scripts/measure_mixing_index.py",
+      "scripts/mixer_deck_diff.py",
+      "scripts/mixer_deck_readback.py",
+      "scripts/mixer_gate_reader_diff.py",
+      "scripts/mixer_restart_phase_test.py",
+      "scripts/mixer_smoke_blind.py",
+      "scripts/mixer_stage_gate.py",
+      "scripts/test_mixer_self170_canaries.py"
+    ],
+    "edges": [
+      [
+        "scripts/mixer_smoke_blind.py",
+        64,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        65,
+        "scripts/check_contact_validity.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        66,
+        "scripts/mixer_deck_diff.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        67,
+        "scripts/mixer_restart_phase_test.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        68,
+        "scripts/mixer_stage_gate.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        248,
+        "scripts/mixer_deck_readback.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        1056,
+        "scripts/mixer_gate_reader_diff.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        1371,
+        "scripts/mixer_gate_reader_diff.py"
+      ],
+      [
+        "scripts/mixer_smoke_blind.py",
+        984,
+        "scripts/mixer_deck_readback.py"
+      ],
+      [
+        "scripts/mixer_deck_readback.py",
+        660,
+        "scripts/make_mixer_deck.py"
+      ],
+      [
+        "scripts/mixer_gate_reader_diff.py",
+        57,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_gate_reader_diff.py",
+        58,
+        "scripts/measure_bed_aspect.py"
+      ],
+      [
+        "scripts/mixer_gate_reader_diff.py",
+        59,
+        "scripts/mixer_deck_diff.py"
+      ],
+      [
+        "scripts/mixer_gate_reader_diff.py",
+        60,
+        "scripts/check_contact_validity.py"
+      ],
+      [
+        "scripts/mixer_gate_reader_diff.py",
+        61,
+        "scripts/mixer_restart_phase_test.py"
+      ],
+      [
+        "scripts/mixer_gate_reader_diff.py",
+        262,
+        "scripts/mixer_smoke_blind.py"
+      ],
+      [
+        "scripts/mixer_restart_phase_test.py",
+        56,
+        "scripts/make_mixer_resume.py"
+      ],
+      [
+        "scripts/mixer_restart_phase_test.py",
+        57,
+        "scripts/check_contact_validity.py"
+      ],
+      [
+        "scripts/mixer_restart_phase_test.py",
+        707,
+        "scripts/check_contact_validity.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        47,
+        "scripts/measure_bed_aspect.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        209,
+        "scripts/make_mixer_resume.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        246,
+        "scripts/make_mixer_resume.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        278,
+        "scripts/make_mixer_resume.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        376,
+        "scripts/make_mixer_resume.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        884,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        2148,
+        "scripts/mixer_deck_diff.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        2153,
+        "scripts/mixer_deck_readback.py"
+      ],
+      [
+        "scripts/check_contact_validity.py",
+        1609,
+        "scripts/mixer_deck_diff.py"
+      ],
+      [
+        "scripts/mixer_deck_diff.py",
+        64,
+        "scripts/make_mixer_resume.py"
+      ],
+      [
+        "scripts/mixer_deck_diff.py",
+        65,
+        "scripts/make_mixer_deck.py"
+      ],
+      [
+        "scripts/mixer_deck_diff.py",
+        66,
+        "scripts/make_mixer_deck.py"
+      ],
+      [
+        "scripts/mixer_deck_diff.py",
+        174,
+        "scripts/mixer_deck_readback.py"
+      ],
+      [
+        "scripts/mixer_deck_diff.py",
+        1809,
+        "scripts/mixer_deck_readback.py"
+      ],
+      [
+        "scripts/mixer_deck_diff.py",
+        1845,
+        "scripts/make_mixer_deck.py"
+      ],
+      [
+        "scripts/measure_mixing_index.py",
+        54,
+        "scripts/measure_bed_aspect.py"
+      ],
+      [
+        "scripts/measure_mixing_index.py",
+        1209,
+        "scripts/make_mixer_deck.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        57,
+        "scripts/mixer_deck_diff.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        473,
+        "scripts/mixer_smoke_blind.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        487,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        512,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        989,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        1003,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        1017,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        1034,
+        "scripts/measure_mixing_index.py"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        1093,
+        "scripts/measure_mixing_index.py"
+      ]
+    ],
+    "external": [
+      "__future__",
+      "argparse",
+      "ast",
+      "collections",
+      "contextlib",
+      "copy",
+      "datetime",
+      "difflib",
+      "getpass",
+      "glob",
+      "hashlib",
+      "importlib",
+      "io",
+      "itertools",
+      "json",
+      "math",
+      "numbers",
+      "numpy",
+      "os",
+      "pathlib",
+      "re",
+      "scipy",
+      "shutil",
+      "socket",
+      "struct",
+      "subprocess",
+      "sys",
+      "tempfile",
+      "time",
+      "traceback",
+      "types",
+      "unittest"
+    ],
+    "dynamic": [
+      [
+        "scripts/mixer_deck_readback.py",
+        882,
+        "_iu.spec_from_file_location('_cdr', os.path.join(_HERE, 'check_doc_refs.py'))"
+      ],
+      [
+        "scripts/make_mixer_deck.py",
+        3161,
+        "_iu.spec_from_file_location('_bf', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'make_mixer_baffles.py'))"
+      ],
+      [
+        "scripts/mixer_restart_phase_test.py",
+        576,
+        "importlib.util.spec_from_file_location('mmd', os.path.join(_SCR, 'make_mixer_deck.py'))"
+      ],
+      [
+        "scripts/mixer_deck_diff.py",
+        1009,
+        "importlib.util.spec_from_file_location('mmd', os.path.join(_HERE, 'make_mixer_deck.py'))"
+      ],
+      [
+        "scripts/make_mixer_resume.py",
+        211,
+        "importlib.util.spec_from_file_location('mmd', os.path.join(here, 'make_mixer_deck.py'))"
+      ],
+      [
+        "scripts/mixer_stage_gate.py",
+        1110,
+        "importlib.util.spec_from_file_location('mixer_start_check', os.path.join(LAUNCH_DIR, 'start_check.py'))"
+      ]
+    ]
+  },
+  "package": {
+    "zip": "self170_linux_source_preparation_087ba5eb9a8d_20261114.zip",
+    "bytes": 493589,
+    "sha256": "96e0790997389f21d815257eda2cb856bd50ed9fca1ddbb55e734d0e45796af1",
+    "members": 27,
+    "outer_hashes": 26,
+    "static_import_python_sources": 12,
+    "supplemental_assets": 6,
+    "source_blobs": 18,
+    "compile_python_sources": 13,
+    "extracted_gate_syntax": 1,
+    "rest_gate_local_imports_covered": true,
+    "unchanged_before_after_dependencies": 16,
+    "allowed_entrypoints": [
+      "scripts/test_mixer_self170_canaries.py",
+      "scripts/mixer_smoke_blind.py --selftest"
+    ],
+    "dynamic_all_modes_closure_proven": false,
+    "linux_runs": 0,
+    "field_runs": 0,
+    "overall": "HOLD"
+  }
+}

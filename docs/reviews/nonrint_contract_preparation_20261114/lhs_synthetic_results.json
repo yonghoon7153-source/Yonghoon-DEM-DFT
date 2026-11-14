@@ -1,0 +1,197 @@
+{
+  "source_sha256": "2026d61bb920599ca95870b62b8aee9ed3345f288da21ed4ff090a0064e0b8a3",
+  "shell_sha256": "a80d0cc4ed45f99c6073e8504bcdd9935c553afd9460627cbbb4bec103e7ef60",
+  "shell_version": "GNU bash, version 5.3.15(1)-release (x86_64-pc-cygwin)",
+  "scope": "Windows Git Bash: inner collector only plus unchanged full-block default rejection and syntax",
+  "syntax_rc": 0,
+  "case_count": 18,
+  "cases": [
+    {
+      "id": "01_full_default_closed",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f33b68d15848556e0961a6c77f5be7e1d802276ec5b7c6cf8ec91398dcd2228e",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "02_inner_normal",
+      "rc": 0,
+      "expected_rc": 0,
+      "stdout_bytes": 297,
+      "stdout_sha256": "e7a3090974f4a187c0f978430917b56379113c4e3ca81be24434376536452875",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "03_inner_empty_current_file",
+      "rc": 0,
+      "expected_rc": 0,
+      "stdout_bytes": 296,
+      "stdout_sha256": "1326e7665f71d5725dc3b374db8bdeb12f59a8ce5ecdbd9e0e87d97a63939a2c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "04_no_confirmation",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "05_outside_case",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "06_lower_case",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "07_parent_path",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "08_absolute_path",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "09_space_path",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "10_missing_file",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "11_directory",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "12_small_budget",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "13_noninteger_budget",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "14_long_budget",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "15_hash_failure",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "7fbcac6ee1418222b778e03c9ce8a15061da69f9ce23061a480d024b2349178a",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "16_date_failure",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": true,
+      "fixture_mutated_by_test_hook": false
+    },
+    {
+      "id": "17_size_change_between_hashes",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": false,
+      "fixture_mutated_by_test_hook": true
+    },
+    {
+      "id": "18_same_size_change_between_hashes",
+      "rc": 2,
+      "expected_rc": 2,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ce078532a69b54a30cb5b282819880b103df454eba2657d4402a783d18a8f5c1",
+      "source_unchanged": false,
+      "fixture_mutated_by_test_hook": true
+    }
+  ],
+  "inner_success_keys": 10,
+  "outer_appended_command_rc_not_success_run": true,
+  "actual_wsl_runs": 0,
+  "real_input_reads": 0,
+  "timeout_interrupt_symlink_race_qualification": false,
+  "source_modified": false,
+  "overall": "HOLD"
+}
