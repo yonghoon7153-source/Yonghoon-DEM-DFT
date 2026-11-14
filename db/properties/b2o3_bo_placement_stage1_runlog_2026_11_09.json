@@ -542,5 +542,18 @@
   "다음": "6 잡 끝 → read_sp (python3 $T/tools/doping/b2o3_bo_dft.py read_sp --readout_tool $R/src/tools/doping/b2o3_bo_readout.py --plan $C/dft_plan.json --out $C/sp_verdict.json) · 걸린 출력이 있으면 reject → 실행기 다시 · 그다음 k 탐침 (read_sp 가 kprobe 입력을 만든다)",
   "⛔": "판정은 read_sp 로만 — 6 잡이 다 끝나야 읽는다 (빠진 출력이 있으면 read_sp 가 멈춘다) · 단일점 순서를 'DFT 순위' 로 쓰지 않는다 (카드 금지 서술 · 단일점 순서는 G5 기록 · 가족 비교는 이온 이완 뒤)",
   "by": "agent · 2026-11-14"
+ },
+ "9단계_단일점_시작_2026_11_14": {
+  "근거": "사용자가 붙인 gabia 감시 화면 (kserver116-27 · 2026-11-14 13:26:22) — 블록 자체의 출력은 안 받았다 · tmux 는 && 사슬 맨 끝에서만 생기므로 앞 확인 (판 · 계획 지문 · 잡 6 · scf.out 없음 · 실행기 DRY_RUN 끝 줄 · GPU 조회) 은 다 통과했다",
+  "시작": "11-14 13:26:17 (gabia 시각) · tmux b2o3_s9sp · 첫 잡 sp_FB_1_cfg0040",
+  "실행기_줄": [
+   "점 6개 · mpirun = /data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun --oversubscribe -np 1 (ldd 에서 유도) · pw.x = /data/app… (화면에서 잘림)",
+   "VRAM 여유 48539 MiB (문턱 45000)",
+   "GPU 독점 확인 (다른 compute 프로세스 0)",
+   "electron_maxstep = 200 (설정 균일성 출력 줄)"
+  ],
+  "13:26:22": "sp_FB_1_cfg0040 SCF 반복 0 · 도는 중 · 나머지 5 대기 · GPU 1442 MiB · 0 % (시작 5 초 · 초기화 중)",
+  "다음": "6 잡 끝 (로그 '끝 — 완료 … · 실패 …') → read_sp 블록 · 실패 잡이 있으면 reject → 실행기 다시",
+  "by": "agent · 2026-11-14"
  }
 }

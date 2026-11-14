@@ -176,5 +176,12 @@
   "감시_블록": "watch -n 30 'tail -8 $HOME/li2s3_stage2_readout_1114.log | cut -c1-200; tmux has-session -t li2s3ro 2>/dev/null && echo \"(도는 중)\" || echo \"(tmux 끝)\"'",
   "블록_설명": "⓪ 판독 worktree ~/wt_li2s3_q2 를 대피 브랜치 끝으로 올린다 (지금 ab8af6ad 판 카드에는 '판독_허가_2단계' 키가 없다 — 그 뒤 커밋에서 들어갔다 · 판독 도구 파일은 ab8af6ad 와 같다 · 올리기 전 · 뒤 모두 깨끗해야) ① 도구 sha16 60a7ef3ce31d0bb2 · 카드 허가 키 · 대조 잡 v3 63fb4bb1 (판독 허가 조건 — 도구가 다시 본다) ② 큐 끝 (tmux 없음 · 큐 로그 끝 줄은 보여만 준다 — 끝 줄이 없으면 readout 이 판정 보류 3 으로 멈춘다) ③ 판독 기록이 아직 없음 (한 번) ④ tmux li2s3ro 안에서 verify (--out 새 이름) → readout (한 번) → readout 이 0 일 때만 pressure (GPU) — 로그 ~/li2s3_stage2_readout_1114.log · 결과 $B/readout_stage2/readout_stage2.json · pressure_stage2.json · git fetch 가 자격 증명을 물으면 블록이 한 줄 묶음이라 다음 줄을 잡아먹지 않는다",
   "by": "agent (위임 10-30) · 2026-11-14"
+ },
+ "판독_시작_2026_11_14": {
+  "근거": "사용자가 붙인 kgy 감시 화면 (esp-Z590-AORUS-MASTER · 2026-11-14 13:27:33) — '(도는 중)' · 로그 tail 비어 있음 · 블록 자체 출력은 안 받았다 · tmux li2s3ro 는 && 사슬 맨 끝에서만 생기므로 앞 확인 (worktree 올리기 · 판독 도구 60a7ef3ce31d0bb2 · 카드 판독 허가 키 · 대조 잡 v3 63fb4bb1e65a0509 · 큐 끝 · 판독 기록 없음 · tmux 없음) 은 다 통과했다",
+  "로그가_빈_이유": "tmux 명령이 표준출력을 파일로 돌렸고 판독 도구의 본 출력 print 는 flush 를 안 한다 (flush=True 는 selftest 줄뿐) → 파이썬 블록 버퍼라 하위 명령이 끝나거나 버퍼가 차야 로그에 나온다 · 빈 로그는 멈춤의 단서가 아니다 (CLAUDE.md '진행 신호는 시작한 것으로 본다')",
+  "감시_블록_v2 (지금 도는 하위 명령 · 경과 · CPU · 결과 파일 · GPU)": "watch -n 30 'O=$HOME/work/runs/li2s3_stage2_2026_11_10/readout_stage2; tmux has-session -t li2s3ro 2>/dev/null && echo \"(tmux 도는 중)\" || echo \"(tmux 끝)\"; for x in $(pgrep -f li2s3_stage2_readout.py); do case \"$(cat /proc/$x/comm 2>/dev/null)\" in python*) ps -o etime=,pcpu=,rss=,args= -p $x | awk \"{printf \\\"지금 %s · 경과 %s · CPU %s%% · RSS %d MiB\\n\\\", \\$6, \\$1, \\$2, \\$3/1024}\";; esac; done; ls -l --time-style=+%H:%M:%S $HOME/li2s3_stage2_verify_1114.json $O 2>/dev/null | cut -c1-150; tail -6 $HOME/li2s3_stage2_readout_1114.log | cut -c1-200; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader'",
+  "다음": "'■ 판독 끝' → 로그 전체 회수 → W · 갈래 · cond550 자격 기록 (값 규율 그대로)",
+  "by": "agent · 2026-11-14"
  }
 }
