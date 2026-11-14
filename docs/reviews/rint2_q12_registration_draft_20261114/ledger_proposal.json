@@ -1,0 +1,20 @@
+{
+  "proposal_only": true,
+  "apply_by": "Claude",
+  "actual_shared_ledger_changes": false,
+  "proposed_development_row": {
+    "topic": "Q12 explicit two-environment assembly comparison",
+    "state": "DRAFT_NOT_REGISTERED",
+    "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+    "registration_id": null,
+    "input_identity": null,
+    "environment_pair": null,
+    "result": null,
+    "expected": "separate graph and assembly-byte claims; require explicit DOF order on both sides for this proposed registration",
+    "incomplete_policy": "retain all required slots and missing counts; no positive claim for missing binding or arrays",
+    "author_registration_approval": null
+  },
+  "findings_state_changes": [],
+  "execution_GO": false,
+  "overall": "HOLD"
+}
