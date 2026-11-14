@@ -525,5 +525,13 @@
   "GPU (시작 안 함)": "여유 48,539 MiB · 사용 1 MiB · compute 프로세스 없음",
   "다음": "EK 발송 (kb/reviews/codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md · §4 채움) → EK 회신 → 사용자 개정 5 비준 (DY 확인 4 좁은 조건 해제 포함) → tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 bash $T/tools/doping/run_force_check_scf.sh $C/sp (T=$R/dft_src_v6 · C=$R/s9_v6)",
   "by": "agent · 2026-11-13"
+ },
+ "9단계_EK_회신_2026_11_14": {
+  "EK_발송_회신": "발송 (사용자 · 편지 기준 d49fec31 · 코드 46e21278) → 회신 2026-11-14 조건부 GO — kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md (원문 그대로)",
+  "판정": "조건부 GO (Codex EK · 2026-11-14) — 선언한 gabia/Linux 생성 · 판독 범위에서 EJ P2 해제 · 실행은 사용자 비준 뒤",
+  "남은_것": "① 생성 · 판독은 gabia/Linux 의 v6 (도구 0c3b7f51 · 계획 5224375fb9e9d8dc) ② 사용자 개정 5 비준 + 결정 기록 갱신 ③ 실행 직전 GPU 독점 · 여유 메모리 확인 통과 (실행기가 잡마다 다시 본다 · 앞서 기록한 여유 메모리 값으로 대신하지 않는다)",
+  "실행_폴더": "$R/s9_v6 (gabia v6 검사 때 만든 계획 · 입력 6 = v2–v5 와 바이트까지 같음 · 출력 0) · 도구 worktree $R/dft_src_v6 (46e212782)",
+  "다음": "사용자 개정 5 비준 → 결정 active 기록 → gabia 실행 블록 (판 · 계획 지문 · 출력 없음 · tmux 에서 GPU_EXCLUSIVE=1 MIN_FREE_MIB=45000 실행기)",
+  "by": "agent · 2026-11-14"
  }
 }

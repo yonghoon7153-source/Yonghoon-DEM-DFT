@@ -13114,6 +13114,7 @@
     "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_5_9단계_DFT_운영_2026_11_13 · v6)",
     "tools/doping/b2o3_bo_dft.py v6 sha256 0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b08cd0b (selftest 185/185 · 깨기 114/114 빨강 (도구 107 · 실행기 7) — tools/doping/b2o3_bo_dft_mutations.py 3090ec9f1686303f)",
     "tools/doping/run_force_check_scf.sh sha256 e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9 (_gpu_guard · selftest 24 통과 · 0 실패 · v3 그대로)",
+    "kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md (조건부 GO — gabia/Linux 범위 · v6 0c3b7f51 · Windows 짧은 경로명 P2 는 범위 밖)",
     "kb/reviews/codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md (NO-GO · P2 1 — v5 34ec73b6 · EI P1 · P3 닫힘 · DY 확인 4 해제 유지)",
     "kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md (NO-GO · P1 1 · P2 1 · P3 1 — v4 c8255d94)",
     "kb/reviews/codex_EH_reply_b2o3_dft_stage9_v3_2026_11_13.md (NO-GO · P1 2 · P2 2 — v3 f6105cfc)",
@@ -13171,6 +13172,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex EJ NO-GO (v5 6302f8a8 · P2 1 — 생성할 입력 쪽 링크로 판정이 입력을 덮음 · EI P1 · P3 닫힘 · DY 확인 4 해제 유지) → v6 고침 (도구 · 변이 도구 · 카드 문구 · 실행기 그대로) · 여전히 proposed · DFT 결과 0 건 · Codex EK 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-14",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EK 조건부 GO (v6 46e21278 · gabia/Linux 생성 · 판독 범위 · EJ P2 해제 · Windows 짧은 경로명 P2 는 카드 범위 밖으로 기록) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인"
     }
    ],
    "ratification": {
