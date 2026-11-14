@@ -13097,7 +13097,7 @@
    "title": "b2o3 B·O 배치 카드 개정 5 (결과 전) — 9 단계 DFT 운영값 · 탐침 발동 (세 가족 쌍) · 기준 셀 만들기 · 출력 결속 · EOS (E, P, V) 출력 파일 결속 (DY 확인 4) · 10 단계 고르기 기계화",
    "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_5_9단계_DFT_운영_2026_11_13' 이 개정 1 9_DFT · 10_고르기의 빈 운영값을 채운다: SCF (mixing plain 0.3 · electron_maxstep 200 · david · disk_io nowf · tprnfor · 이완만 tstress) · 유사포텐셜 파일 이름 · 단일점 대상 = 판 고정 판독기로 다시 낸 8 단계 성공 목록의 가족별 최저 둘 · UMA 기하 그대로 · 가족 대표 = 단일점 최저 · k 탐침 발동은 세 가족 쌍 모두 (0.05 변화 · 순서 · 0.10 경계) · 발동하면 4×2×1 새 판 · 기준 셀 = host 1×2×5 cellpar 를 V₀ 2436.33 으로 등방 스케일 · 이온 이완 bfgs forc 1.0d-3 · etot 1.0d-5 · nstep 200 · (E, P, V) 는 이완 출력에서 도구가 읽어 판 고정 eos_robust 로 · 출력 · 앞 단계 판정을 다시 내서 결속 · 누락 ≠ 실패 · 실패 잡이 있으면 판정 안 함 · EOS 생략일 때만 10 단계 고르기 · 생략 불가면 멈춤. v2 (Codex EF NO-GO 반영): 한 출력 = 한 실행 · 전자 수 = Σ 조성 × 가전자 (총전하 0) · PP Zval · k 점 좌표 · 가중치를 요청 격자와 정확히 대조 (nosym) · 출력의 BFGS 기준 · 문턱 · nstep · 마지막 힘 모든 성분 · 다시 결속 때 구조 · k 판 자격 재검사 · 판정 통째 대조 · EOS 보류면 안정성 · 전자구조 대상 null · 경로 계획 폴더 기준 · utf-8 LF · 실행기 GPU 확인 (시작 때만 보장) · reject 로 실패 출력 보존 · 판정 범위는 이 수렴 설정 · 고정 기준 셀 조건부. v3 (Codex EG NO-GO 반영): 블록 문법 = 한 계산 상태 (값은 마지막 묶음에서만 · 힘 원자 번호 1…nat · 최종 좌표 블록 하나) · QE 7.4.1 고정 · reject 는 계획 · 앞 판정을 다시 결속해 잡 목록을 얻고 단계 폴더 밖을 건드리지 않는다 · 계획의 8 단계 요약을 다시 낸 본 판독과 대조 · 실행기 조회 종료코드 확인. v4 (Codex EH NO-GO 반영): 출력의 숫자는 줄 단위로 토큰 전체가 유한한 숫자일 때만 읽는다 (NaN · Inf · 꼬리 글자 · 앞부분 판독 거부) · 마지막 응력 블록 3 행 × 6 · P = kbar 대각합/3 · 두 단위 일치 · 이완은 BFGS 기록 필수 · 판정 · 다음 잡 입력 · 이완 구조는 모든 검사 뒤에만 쓴다 (JSON allow_nan=False) · 블록 문법 통과 ≠ 같은 실행 인증 · 판 문자열 ≠ 바이너리 동일성. v5 (Codex EI NO-GO 반영): 이완 최종 좌표를 셀로 바꾼 구조도 기하가 유한 · 정칙이어야 한다 · 판정 · 계획 파일은 잡 · 구조 폴더 밖에만 · 출력은 LF 그대로만 · 쓰기 실패 범위를 나눠 적는다. v6 (Codex EJ NO-GO 반영): 이번에 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 가 서로 다 달라야 쓴다 (링크로 같은 파일을 가리키면 쓰기 전에 멈춘다).",
    "rationale": "개정 1 은 9 단계의 규칙 (단일점 · k 탐침 · 고정셀 이온 이완 · EOS 생략) 을 정했지만 운영값과 출력 결속이 비어 있었고, Codex DY 는 EOS 의 (E, P, V) 결과 파일 결속을 DFT 진입 전 조건으로 남겼다. DFT 결과를 하나도 보기 전에 운영값 · 도구 · 음성 시험을 고정한다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "DFT 결과 0 건 · 8 단계 · 8b 판독 (사유 ③) 은 봤다 — UMA 판정은 바꾸지 않는다",
@@ -13135,7 +13135,7 @@
     "machine": "gabia GPU · UMA 와 동시 금지"
    },
    "enforcement": "tools/doping/b2o3_bo_dft.py v6 — 판 고정 판독기 (872d91f7) 로 8 단계를 단계마다 다시 결속 · 구조 · k 판 자격 다시 검사 · 입력을 묶인 구조에서 다시 만들어 sha256 대조 · 출력 검사 (한 실행 · 전자 수 · Zval · k 격자 · 설정 · PP MD5 · 셀 · 처음 좌표 · 수렴 · BFGS 기준 · 힘 성분 · 응력 위치 · 부피) · 앞 단계 판정을 통째로 다시 내서 대조 · (E, P, V) 는 출력에서 · 판 고정 eos_robust · 10 단계 규칙 · EOS 보류면 대상 null · 실행기 _gpu_guard · 블록 문법 (한 계산 상태) · 힘 원자 번호 · QE 판 고정 · reject 다시 결속 · 8 단계 요약 대조 · 실행기 조회 종료코드 · 숫자 토큰 전체 · 유한 · 응력 본문 일관성 · BFGS 기록 필수 · 검사 뒤 쓰기 (JSON allow_nan=False) · 이완 구조 기하 검사 (변환 뒤) · 판정 경로 ≠ 잡 · 구조 폴더 · 쓸 파일 실제 경로 겹침 (링크)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-13",
@@ -13178,10 +13178,24 @@
      "state": "proposed",
      "by": "agent",
      "note": "Codex EK 조건부 GO (v6 46e21278 · gabia/Linux 생성 · 판독 범위 · EJ P2 해제 · Windows 짧은 경로명 P2 는 카드 범위 밖으로 기록) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인"
+    },
+    {
+     "at": "2026-11-14",
+     "state": "active",
+     "by": "사용자 (b2o3 UMA-MD (B₂O₃ 계산 쪽) · 1저자 = 사용자)",
+     "note": "비준 (결과 전) — 사용자 2026-11-14 (대피 세션 · AskUserQuestion): 'b2o3 9 단계 DFT: Codex EK 가 '조건부 GO' 를 줬어요 (gabia/Linux 에서 생성·판독하는 범위 — 남은 건 사용자 비준뿐). 카드 개정 5 (운영값 + 도구 v6 · 결정 D-2026-11-13-b2o3-bo-placement-amend5-dft · 지금 proposed) 를 비준할까요? 같이 들어가는 것: DY 확인 4 (EOS 의 (E,P,V) 결과 파일 결속) 좁은 조건 해제 · Windows 짧은 경로명 문제는 범위 밖으로 둠. 비준하면 결정이 active 가 되고 gabia GPU 단일점 6 개 실행 블록 (tmux · 실행기가 잡마다 GPU 독점·여유 45 GB 확인) 을 드려요.' 에 '비준 + 실행 블록 (Recommended)'"
     }
    ],
+   "_note": "active — 사용자 비준 2026-11-14 (개정 5 · 도구 v6 0c3b7f51 · Codex EK 조건부 GO 46e21278 뒤 · DFT 결과 0 건 · 결과 전) · 운영 범위 = gabia/Linux 생성 · 판독 · DY 확인 4 좁은 조건 (EOS (E, P, V) 결과 파일 결속) 해제 · Windows 짧은 경로명은 범위 밖",
    "ratification": {
-    "state": "proposed"
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-14T04:17:29Z",
+    "commit": "c0703da281bcb492f67a3fd929b90a48f187cf78",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-14 (대피 세션 · AskUserQuestion): 'b2o3 9 단계 DFT: Codex EK 가 '조건부 GO' 를 줬어요 (gabia/Linux 에서 생성·판독하는 범위 — 남은 건 사용자 비준뿐). 카드 개정 5 (운영값 + 도구 v6 · 결정 D-2026-11-13-b2o3-bo-placement-amend5-dft · 지금 proposed) 를 비준할까요? 같이 들어가는 것: DY 확인 4 (EOS 의 (E,P,V) 결과 파일 결속) 좁은 조건 해제 · Windows 짧은 경로명 문제는 범위 밖으로 둠. 비준하면 결정이 active 가 되고 gabia GPU 단일점 6 개 실행 블록 (tmux · 실행기가 잡마다 GPU 독점·여유 45 GB 확인) 을 드려요.' 에 '비준 + 실행 블록 (Recommended)'",
+    "decision_digest": "sha256:8420d193b536224d86de2ecb3bb32883f91d860a42214b3f93cc8bf01cd2ca04"
    }
   }
  ]
