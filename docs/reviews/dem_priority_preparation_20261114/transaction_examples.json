@@ -1,0 +1,746 @@
+{
+  "schema": "dem_transaction_worked_examples/1",
+  "scope": "Synthetic record semantics only; no solver",
+  "numerical_values": "dimensionless toy integers; not author thresholds",
+  "cases": [
+    {
+      "record": {
+        "id": "OK_DISCARD",
+        "action": "DISCARD",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": true,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": null
+      },
+      "expected_valid": true,
+      "expected_reason": null
+    },
+    {
+      "record": {
+        "id": "OK_CAPACITY_FAIL",
+        "action": "TECH_FAIL",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 3,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": "CAPACITY"
+      },
+      "expected_valid": true,
+      "expected_reason": null
+    },
+    {
+      "record": {
+        "id": "OK_RETRY",
+        "action": "RETRY",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 2,
+        "previous_attempt": 1,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": null
+      },
+      "expected_valid": true,
+      "expected_reason": null
+    },
+    {
+      "record": {
+        "id": "OK_COMMIT",
+        "action": "COMMIT",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 5,
+          "time_tick": 50,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:B",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "published": 1,
+        "failure_reason": null
+      },
+      "expected_valid": true,
+      "expected_reason": null
+    },
+    {
+      "record": {
+        "id": "TX05_PARTIAL_DISCARD",
+        "action": "DISCARD",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": true,
+        "grid_empty": false,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "trial_not_cleared"
+    },
+    {
+      "record": {
+        "id": "TX06_STRESS_LEFT",
+        "action": "DISCARD",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:failed-trial",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": true,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "rollback_state_changed"
+    },
+    {
+      "record": {
+        "id": "TX07_CAPACITY_COMMIT",
+        "action": "COMMIT",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 5,
+          "time_tick": 50,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:B",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 3,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "published": 1,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "capacity"
+    },
+    {
+      "record": {
+        "id": "TX08_PEAK_MAX_ONLY",
+        "action": "RETRY",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 2,
+        "previous_attempt": 1,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 4,
+        "budget": 8,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "peak_accounting"
+    },
+    {
+      "record": {
+        "id": "TX09_RETRY_ADVANCES_TIME",
+        "action": "RETRY",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 5,
+          "time_tick": 50,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 2,
+        "previous_attempt": 1,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "rollback_state_changed"
+    },
+    {
+      "record": {
+        "id": "TX10_RETRY_RESETS_COUNT",
+        "action": "RETRY",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 1,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [],
+        "published": 0,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "retry_order"
+    },
+    {
+      "record": {
+        "id": "TX11_PARENT_CHANGED",
+        "action": "COMMIT",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 5,
+          "time_tick": 50,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:B",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 10,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "published": 1,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "parent_changed"
+    },
+    {
+      "record": {
+        "id": "TX12_PHYSICS_INCOMPLETE",
+        "action": "COMMIT",
+        "before": {
+          "step": 4,
+          "time_tick": 40,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:A",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "after": {
+          "step": 5,
+          "time_tick": 50,
+          "identity": "point7:grain2;point8:grain3",
+          "mass_volume": "mv:A",
+          "position_velocity": "xv:A",
+          "deformation_stress_plastic": "fsp:B",
+          "rigid_state": "rigid:A",
+          "boundary_contact_history": "bc:A",
+          "rng": "rng:A",
+          "phase": "phase:A"
+        },
+        "collision": false,
+        "grid_empty": true,
+        "trial_empty": true,
+        "parent_version": 9,
+        "parent_seen": 9,
+        "attempt": 1,
+        "previous_attempt": 0,
+        "max_attempts": 2,
+        "target_step": 5,
+        "target_tick": 50,
+        "field_capacity": 2,
+        "required_fields": 2,
+        "live_bytes": {
+          "old": 3,
+          "new": 4,
+          "rollback": 2
+        },
+        "reported_peak": 9,
+        "budget": 10,
+        "required_physics": [
+          "constitutive",
+          "boundary",
+          "contact",
+          "g2p"
+        ],
+        "completed_physics": [
+          "constitutive",
+          "boundary",
+          "contact"
+        ],
+        "published": 1,
+        "failure_reason": null
+      },
+      "expected_valid": false,
+      "expected_reason": "physics_incomplete"
+    }
+  ]
+}

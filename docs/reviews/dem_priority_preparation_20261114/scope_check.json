@@ -1,0 +1,56 @@
+{
+  "track": "nonrint",
+  "base": "69db2eb8357571f8389e9dd1e3c9b52cfddcb705",
+  "tracked_changes": 0,
+  "new_files_checked": 10,
+  "self_manifest_excluded": true,
+  "new_files_are_in_scope": true,
+  "public_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "original_lhs_block_preserved": true,
+  "rint_q14_private_artifacts_preserved": 6,
+  "checked_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261114-0529_dem-priority-preparation.md",
+      "sha256": "8a7dd7aad94b30ff992c52ae1d224f31f866c70cdfc428ea012f9ee70da8ebc3"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/README.md",
+      "sha256": "c2ec960e7c526937224c24b418223b08af3934f9df7ede85a4550b0cdafc7aad"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/check_results.json",
+      "sha256": "89a2e55baaa79c3e727127fa9e1ba045ab3922ff9bfb96cf4a3197949fc59d2a"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/check_transaction_examples.py",
+      "sha256": "e6af8a469b1daf0d3c81fdfe561da140b2ac3def66e451785b365e7e86e3a60c"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/dem_transaction_examples.md",
+      "sha256": "85105ca475ed0626b86448499b812a117f4f8fea265122e422646dee1bc7ca0c"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/example_results.json",
+      "sha256": "ed3055aef2577df780ac5a504ccf81dd06be75ea2ef0d64b68634a04f7e1e775"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/lhs_o1_intake_examples.md",
+      "sha256": "a52daef12a53e62a774f265e3f23df7d00e8c5113d1ffad84e13ed03a56947ce"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/mixer_four_cell_receipt_plan.md",
+      "sha256": "896c0fd14c33ea4c91762bebcc9bc3fae56dbf286b1981f01cf0a3ffe90869cd"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/mixer_four_cell_template.json",
+      "sha256": "f2d5065ac79edeeee4cd3031d02b8566652c4e1c9c1aa4839b4497dc80a0ee22"
+    },
+    {
+      "path": "docs/reviews/dem_priority_preparation_20261114/transaction_examples.json",
+      "sha256": "00c7574f61549e2999a0dc7b7836a9715acff4114ebee002da505b8cce1390ff"
+    }
+  ],
+  "whole_HOLD": true,
+  "real_field_execution": false
+}
