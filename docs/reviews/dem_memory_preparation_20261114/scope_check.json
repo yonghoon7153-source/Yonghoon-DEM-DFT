@@ -1,0 +1,52 @@
+{
+  "track": "nonrint",
+  "base": "3456af3e00b4836eda561c40ee6941233de49c27",
+  "tracked_changes": 0,
+  "new_files_checked": 9,
+  "self_manifest_excluded": true,
+  "new_files_are_in_scope": true,
+  "public_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "original_lhs_block_preserved": true,
+  "rint_q14_private_artifacts_preserved": 6,
+  "checked_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261114-0543_dem-memory-preparation.md",
+      "sha256": "429eed09ed0405e60d07a36c4f4ee798c2862552e7390d60f265b8decd25ba44"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/README.md",
+      "sha256": "33e5cf38f24f3f0eae621181a71843187f0b069afab1c604f408eefdf268c05c"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/check_results.json",
+      "sha256": "a30edb0f8704d860342ec13737af82b9ede1877c510f3e2a4ce40647a8a5da54"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/memory_liveness.py",
+      "sha256": "1a7128aaf566920640faa158857eb678599f38bc581adfd1566a2f7a8031fe10"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/mixer_lhs_followup.md",
+      "sha256": "a2c9d2e1627fe9fea8a5017027cdef446328155b7d3208d0c891ec62471004a7"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/mixer_selected_process_sites.json",
+      "sha256": "3ee88199ae5dfef6820d4d5a6885f0a79f0d175d292c35806178a90f27a6b5e9"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/resource_intake_template.json",
+      "sha256": "d2e65be1b9d7d02b621a6467a62a536195894f4862c29d42197dad26bba39822"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/test_memory_liveness.py",
+      "sha256": "bb0d94b7d045e5eef1af938efc78cc782fc8ed97e63aeae6ecfc0916d3b3240d"
+    },
+    {
+      "path": "docs/reviews/dem_memory_preparation_20261114/test_results.json",
+      "sha256": "2098296e9cdc29bd8bfca18a6052a23aff55304b9960ca4bdf14a9f86a486d11"
+    }
+  ],
+  "whole_HOLD": true,
+  "real_field_execution": false
+}

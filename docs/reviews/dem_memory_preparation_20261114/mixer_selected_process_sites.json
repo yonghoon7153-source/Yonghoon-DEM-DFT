@@ -1,0 +1,28 @@
+{
+  "scope": "Two selected functions only; static inventory, not runtime closure",
+  "sources": [
+    {
+      "path": "scripts/mixer_smoke_blind.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+      "git_blob": "ef2e75f12f72dca2c82e2845ce7f58e5d27a3a91",
+      "function": "selftest",
+      "call_line": 1145,
+      "call": "subprocess.run([sys.executable, __file__, str(run2), '--ref', str(ref2), '--cert', str(cert2)],\n                           capture_output=True, text=True, encoding='utf-8')",
+      "selected_subprocess_sites": 1
+    },
+    {
+      "path": "scripts/mixer_gate_reader_diff.py",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "sha256": "3fdb1511cf3898add705bfef4216d9d2068d7489f08cdea0496a0cd8bc501f72",
+      "git_blob": "cc6c94e9e44cf3acecbb8d9e2271f5af9a747981",
+      "function": "build",
+      "call_line": 166,
+      "call": "subprocess.run([sys.executable, '-c', gate, str(cert), str(td), FIRST, str(binary), str(ROOT), *REST],\n                           capture_output=True, text=True, encoding='utf-8')",
+      "selected_subprocess_sites": 1
+    }
+  ],
+  "source_imports": 0,
+  "processes_executed": 0,
+  "whole_HOLD": true
+}
