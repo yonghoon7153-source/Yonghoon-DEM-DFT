@@ -1,0 +1,61 @@
+{
+  "python": "3.12.14",
+  "results": {
+    "before": {
+      "methods": 11,
+      "failures": 2,
+      "errors": 0,
+      "tests_sha256": "daa5a311474278a6f842df7b94c8714b0f7e289166bc204e0dfdd4c3ed595ab5",
+      "source_sha256": "4bc153958013b2d2f89381d1353d47b67a662258e6f50dde620242ade7977853",
+      "rc": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "81e7ed31566fa5df0d5f8a0c089aff520ea98f78311ae1298e382c27531caf64"
+    },
+    "candidate": {
+      "methods": 11,
+      "failures": 0,
+      "errors": 0,
+      "tests_sha256": "daa5a311474278a6f842df7b94c8714b0f7e289166bc204e0dfdd4c3ed595ab5",
+      "source_sha256": "35453bab3e84be673bc45092f6c97210bfc387a405ba82e33fb016305c7806e2",
+      "rc": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "10a96972c248019893e29f84a30e92a85dba6a75be97165eef354c7192b07f86"
+    },
+    "missing_return_reservation": {
+      "methods": 11,
+      "failures": 4,
+      "errors": 0,
+      "tests_sha256": "daa5a311474278a6f842df7b94c8714b0f7e289166bc204e0dfdd4c3ed595ab5",
+      "source_sha256": "3b938b8467048d73d312099c4fdea80ed893b00c9c0cd572c90d5a5414670f05",
+      "rc": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "6e32086564fc5801890b921dbb6e215922710590a30c23fe2f2d143f8316ab49"
+    },
+    "early_parent_release": {
+      "methods": 11,
+      "failures": 4,
+      "errors": 0,
+      "tests_sha256": "daa5a311474278a6f842df7b94c8714b0f7e289166bc204e0dfdd4c3ed595ab5",
+      "source_sha256": "80724c0c9be66071addef6898405c4a6a3a69163c54b459ec049de184c5c2324",
+      "rc": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "80cf682f5ebdb36a8b5cb70edfcda1509c0a4a544dd4edf2e538469af2710fed"
+    },
+    "ignore_retained_snapshot": {
+      "methods": 11,
+      "failures": 1,
+      "errors": 0,
+      "tests_sha256": "daa5a311474278a6f842df7b94c8714b0f7e289166bc204e0dfdd4c3ed595ab5",
+      "source_sha256": "179ca063aecefe43b691c3004ebd1ffd10bbdf74609a844fdc0f48762c22a193",
+      "rc": 1,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "b4ebbd8b8210e0203ee9f0f946f16e71c9662c11cd649d2cb724d9447c973d9d"
+    }
+  },
+  "same_test_bytes": true,
+  "initial_public_red_run_repeated_for_capture": true,
+  "initial_private_copy_setup_failed": true,
+  "setup_failure_was_not_a_test_error": true,
+  "historical_production_red": false,
+  "overall": "HOLD"
+}
