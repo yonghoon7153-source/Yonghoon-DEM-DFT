@@ -1,0 +1,48 @@
+{
+  "fixed_source_references": [
+    {
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "scripts/mixer_smoke_blind.py",
+      "bytes": 125163,
+      "sha256": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+      "git_blob": "83b78f1b595b61933f8855e6896ed6d532e927b2"
+    },
+    {
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "path": "scripts/mixer_smoke_blind.py",
+      "bytes": 125451,
+      "sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+      "git_blob": "ef2e75f12f72dca2c82e2845ce7f58e5d27a3a91"
+    },
+    {
+      "pin": "db5abe6b359abdc44b3c17bb91d984a5fee3a567",
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/stage1_census_design.md",
+      "bytes": 5777,
+      "sha256": "3699597bc9998b99b3e4b2dc92917e6940f1e6a36eec4dfd4f793696c4c8451b",
+      "git_blob": "c060f7d6723de74feeaa2aba4dadfc6c396b4360"
+    },
+    {
+      "pin": "db5abe6b359abdc44b3c17bb91d984a5fee3a567",
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/sf_design_preparation.md",
+      "bytes": 3819,
+      "sha256": "abcf76a4a5862ce7e19761b5e5fcb9522a2f2f68554fc2016959e1bea2ceab89",
+      "git_blob": "01038afee3c0ee3e385c9b96e04eeacb4efeb000"
+    },
+    {
+      "pin": "db5abe6b359abdc44b3c17bb91d984a5fee3a567",
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/registration_template.json",
+      "bytes": 3173,
+      "sha256": "bb0b07bc16b5ec5b2cbe73ae9dc009f56e3b294b2665cffab85434812becc6a4",
+      "git_blob": "e8644bbf69fb85c4486baadf5bbb8b6003bac130"
+    },
+    {
+      "pin": "0f7ea5ea5d3435e2416dbb5de8f92f21f1a8a24b",
+      "path": "docs/reviews/nonrint_first_link_20261109/lhs_current_identity_only_draft.md",
+      "bytes": 9482,
+      "sha256": "e699eab8b9019efba5395e7806e0fff13d1b03738c0eac34e0ac7ceb68d4796d",
+      "git_blob": "15c40919f52252de06ab4996d39e1eedd0b976c0"
+    }
+  ],
+  "lhs_private_ascii_block_sha256": "2026d61bb920599ca95870b62b8aee9ed3345f288da21ed4ff090a0064e0b8a3",
+  "lhs_block_executed": false
+}

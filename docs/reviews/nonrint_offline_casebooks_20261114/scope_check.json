@@ -1,0 +1,80 @@
+{
+  "track": "nonrint",
+  "base": "2a19696767c08c83a57814252151c3b004c93f4e",
+  "preexisting_tracked_changes": 0,
+  "new_files_checked": 16,
+  "new_files_are_in_declared_scope": true,
+  "public_private_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "q14_private_artifacts_preserved": 6,
+  "original_nsb_delivery_preserved": true,
+  "real_inputs_or_field_execution": 0,
+  "checked_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261114-0425_nsb-receipt-offline-casebooks.md",
+      "sha256": "9c239a5b404909d0816191eddd5a7b3877f0f22530dc72541f459e387c6deecc"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/README.md",
+      "sha256": "0f0e1c902a32f5390d709b040caf9b6fe00bb38a1e3a5be30c65d13c369bbb1d"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/check_results.json",
+      "sha256": "519e1993edd1296f130bf17943696a70fa4e606916326de2f3e6c4bc884bf7e1"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/dem_example_results.json",
+      "sha256": "045bdf0b903db67ebe589c3f088b5627de58c116c1d7975033cef0d470d57be6"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/dem_worked_examples.md",
+      "sha256": "6cc451f397c3cac758cbde6f4bceaa98a0cc2c503ebef1e318f1fba57fb74cdb"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/lhs_o1_receipt_plan.md",
+      "sha256": "3e6c06289a13ba888f6a534a14d4e47687fec1d673df949d76ddd08b3c759981"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/lhs_o1_receipt_template.json",
+      "sha256": "3ccbb95f222c01fd38c5525c3ebe8fc5122133a0f9f52652e8fddbac95f5d526"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/mixer_fixed_clock_copies.md",
+      "sha256": "c16b46971b1e00c3c92b820fa3ae74dd672147890f1e36d1be1b6e37417604b1"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/self170_clock_overlay.py.txt",
+      "sha256": "5a20ae50076b67f6539d3d42b594748a60c07d2f2ce630ce40fc3b67c33c4eea"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/self170_copy_manifest.json",
+      "sha256": "19a0dfc63bf23f7f92bc8605df880774f8e824825791e782c1af1fe31b857025"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/source_reference_map.json",
+      "sha256": "1531e74bcd54e049144141208f5728a570931b4ab814b7981c864a95618ef414"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/verify_dem_examples.py",
+      "sha256": "4fa27e3c5ecd5ae41b82d2ff3ed84a59dfa4f0a690a8d2b4359dbaed8446f6c5"
+    },
+    {
+      "path": "docs/reviews/nsb_recovered_verdict_receipt_20261114/README.md",
+      "sha256": "556fa3bd265885f8cbe599d7dda20990f2d7b3ab1d3d2f0b2ba2fd2d7a1d6a82"
+    },
+    {
+      "path": "docs/reviews/nsb_recovered_verdict_receipt_20261114/independent_verdict_20261110.md.txt",
+      "sha256": "7785ca3ef52368b9dbcfe6330e26f57d7a815ad643c078f336860dec43cdbc8e"
+    },
+    {
+      "path": "docs/reviews/nsb_recovered_verdict_receipt_20261114/intake_verification.json",
+      "sha256": "e71b57f62d0c48dae10fe5c51a718b5616f5d573bae84db66d6f716af64aa37c"
+    },
+    {
+      "path": "docs/reviews/nsb_recovered_verdict_receipt_20261114/ledger_proposal.json",
+      "sha256": "c2b511c3cab3bc736c4a430c986560c23533e8c4d0a9791512b7f027f381c4d2"
+    }
+  ],
+  "self_manifest_excluded": true,
+  "scan_does_not_claim_arbitrary_text_privacy_proof": true
+}

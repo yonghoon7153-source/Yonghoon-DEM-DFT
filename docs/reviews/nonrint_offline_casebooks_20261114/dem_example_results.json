@@ -1,0 +1,103 @@
+{
+  "rc": 0,
+  "source_sha256": "4fa27e3c5ecd5ae41b82d2ff3ed84a59dfa4f0a690a8d2b4359dbaed8446f6c5",
+  "environment": "Windows CPython 3.12.14",
+  "capture_sha256": "fa9c7eab933ab93d385d6f82374b6d78b6b657b9586502319cad9ef1a0e3c6d3",
+  "unique_design_observations": 12,
+  "repeat_captures_not_added": true,
+  "result": {
+    "scope": "DESIGN_ARITHMETIC_ONLY",
+    "observations": [
+      {
+        "id": "D01_ID",
+        "observed": 3,
+        "expected": 3,
+        "wrong_shortcut": 1
+      },
+      {
+        "id": "D02_TWO_BUDGETS",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D03_EQUALITY",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D04_ROTATION",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D05_DEFORMATION",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D06_PERIODIC",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D07_ORDER",
+        "observed": [
+          2,
+          3
+        ],
+        "expected": [
+          2,
+          3
+        ],
+        "wrong_shortcut": [
+          2,
+          2
+        ]
+      },
+      {
+        "id": "D08_COLLISION",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D09_CAPACITY",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D10_PEAK",
+        "observed": true,
+        "expected": true,
+        "wrong_shortcut": false
+      },
+      {
+        "id": "D11_INTERPOLATION",
+        "observed": "3/5",
+        "expected": "3/5",
+        "wrong_shortcut": "3/10"
+      },
+      {
+        "id": "D12_FINAL_SLIP",
+        "observed": false,
+        "expected": false,
+        "wrong_shortcut": true
+      }
+    ],
+    "observations_count": 12,
+    "production_regressions": 0,
+    "solver_runs": 0,
+    "field_runs": 0,
+    "real_inputs_read": 0,
+    "implementation_qualification": false,
+    "overall": "HOLD"
+  },
+  "production_old_to_new_test": false,
+  "independent_verdict": false
+}
