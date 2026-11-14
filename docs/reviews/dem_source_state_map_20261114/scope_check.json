@@ -1,0 +1,38 @@
+{
+  "base": "c438673b8dac3ce0a54dfcb0de00562a98e1ddf3",
+  "source_sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+  "tracked_changes": 0,
+  "new_files_checked": 5,
+  "self_manifest_excluded": true,
+  "new_files_are_in_scope": true,
+  "public_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "rint_worktree_unchanged": true,
+  "static_inventory_reproduction": "MATCH; 33 declarations; no solver import or execution",
+  "handoff_zip_or_prompt_created": false,
+  "checked_files": [
+    {
+      "path": "docs/reviews/dem_source_state_map_20261114/README.md",
+      "sha256": "92bb01664e20b460dfa97a05f078033b6e133876af5c54447c83f024c5a37124"
+    },
+    {
+      "path": "docs/reviews/dem_source_state_map_20261114/accumulator_example.json",
+      "sha256": "3f6c0d5a2a20841c81505b4b38d2417705aaa7cb2083cff80acbad81c9f1d2a1"
+    },
+    {
+      "path": "docs/reviews/dem_source_state_map_20261114/check_results.json",
+      "sha256": "62740567cd54409630f6b54d55ca42d29cd150c13774e95ecd98325f68581bf2"
+    },
+    {
+      "path": "docs/reviews/dem_source_state_map_20261114/inspect_source.py",
+      "sha256": "0ed38571ce084e8faa9121a13f1b430616adeef643c79046541e1e8b9ad5dc31"
+    },
+    {
+      "path": "docs/reviews/dem_source_state_map_20261114/source_state_inventory.json",
+      "sha256": "2bc9371d64d6814dd51cc34607e740dadcb8cc34e75658b9d4c35e6c8502ae41"
+    }
+  ],
+  "whole_HOLD": true,
+  "real_field_execution": false,
+  "real_values_read": false
+}

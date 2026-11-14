@@ -1,0 +1,695 @@
+{
+  "source_pin": "c438673b8dac3ce0a54dfcb0de00562a98e1ddf3",
+  "path": "scripts/mpm3d_compaction.py",
+  "source_sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+  "git_blob": "fb1bf65535135ecdb7acb87833b7acdb389e54db",
+  "source_bytes": 335832,
+  "inspection": "AST only; no module import or execution",
+  "fields": [
+    {
+      "name": "x",
+      "line": 2801,
+      "constructor": "ti.Vector.field",
+      "dtype": "ti.f32",
+      "components": 3,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 12,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "v",
+      "line": 2801,
+      "constructor": "ti.Vector.field",
+      "dtype": "ti.f32",
+      "components": 3,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 12,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "C",
+      "line": 2802,
+      "constructor": "ti.Matrix.field",
+      "dtype": "ti.f32",
+      "components": 9,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 36,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "F",
+      "line": 2802,
+      "constructor": "ti.Matrix.field",
+      "dtype": "ti.f32",
+      "components": 9,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 36,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "mu_p",
+      "line": 2803,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "la_p",
+      "line": 2803,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "yld_p",
+      "line": 2803,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "pvol_p",
+      "line": 2804,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "coh_p",
+      "line": 2805,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "dg_acc",
+      "line": 2806,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "eps_acc",
+      "line": 2807,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "n",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "n"
+    },
+    {
+      "name": "grid_v",
+      "line": 2808,
+      "constructor": "ti.Vector.field",
+      "dtype": "ti.f32",
+      "components": 3,
+      "scalar_bytes": 4,
+      "shape": "(n_grid, n_grid, nz)",
+      "bytes_per_element": 12,
+      "cardinality_symbol": "grid_nodes"
+    },
+    {
+      "name": "grid_m",
+      "line": 2808,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "(n_grid, n_grid, nz)",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "grid_nodes"
+    },
+    {
+      "name": "wall_z",
+      "line": 2809,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "()",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "scalar"
+    },
+    {
+      "name": "wall_vel",
+      "line": 2809,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "()",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "scalar"
+    },
+    {
+      "name": "szz",
+      "line": 2809,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "()",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "scalar"
+    },
+    {
+      "name": "wallf",
+      "line": 2810,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "()",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "scalar"
+    },
+    {
+      "name": "amf_dn",
+      "line": 2825,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "()",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "scalar"
+    },
+    {
+      "name": "amf_up",
+      "line": 2826,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "()",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "scalar"
+    },
+    {
+      "name": "amf_zdn",
+      "line": 2841,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "nz",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "nz"
+    },
+    {
+      "name": "amf_zup",
+      "line": 2842,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "nz",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "nz"
+    },
+    {
+      "name": "szz_zs",
+      "line": 2843,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "nz",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "nz"
+    },
+    {
+      "name": "szz_zn",
+      "line": 2844,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "nz",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "nz"
+    },
+    {
+      "name": "am_mask",
+      "line": 2847,
+      "constructor": "ti.field",
+      "dtype": "ti.i32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "(n_grid, n_grid, nz) if scaffold_on else (1, 1, 1)",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "mask_nodes"
+    },
+    {
+      "name": "am_near",
+      "line": 2848,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "(n_grid, n_grid, nz) if scaffold_on else (1, 1, 1)",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "mask_nodes"
+    },
+    {
+      "name": "rod_prev",
+      "line": 2903,
+      "constructor": "ti.field",
+      "dtype": "ti.i32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "rod_slots"
+    },
+    {
+      "name": "rod_next",
+      "line": 2903,
+      "constructor": "ti.field",
+      "dtype": "ti.i32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "rod_slots"
+    },
+    {
+      "name": "rod_rl",
+      "line": 2904,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "rod_slots"
+    },
+    {
+      "name": "rod_kfac",
+      "line": 2904,
+      "constructor": "ti.field",
+      "dtype": "ti.f32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "rod_slots"
+    },
+    {
+      "name": "rod_is",
+      "line": 2904,
+      "constructor": "ti.field",
+      "dtype": "ti.i32",
+      "components": 1,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 4,
+      "cardinality_symbol": "rod_slots"
+    },
+    {
+      "name": "rod_b0",
+      "line": 2905,
+      "constructor": "ti.Vector.field",
+      "dtype": "ti.f32",
+      "components": 3,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 12,
+      "cardinality_symbol": "rod_slots"
+    },
+    {
+      "name": "rod_dx",
+      "line": 2905,
+      "constructor": "ti.Vector.field",
+      "dtype": "ti.f32",
+      "components": 3,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 12,
+      "cardinality_symbol": "rod_slots"
+    },
+    {
+      "name": "x_pre",
+      "line": 2906,
+      "constructor": "ti.Vector.field",
+      "dtype": "ti.f32",
+      "components": 3,
+      "scalar_bytes": 4,
+      "shape": "_rn",
+      "bytes_per_element": 12,
+      "cardinality_symbol": "rod_slots"
+    }
+  ],
+  "kernel_assignment_sites": {
+    "load": {
+      "start": 2936,
+      "end": 2941,
+      "writes": {
+        "C": [
+          2940
+        ],
+        "F": [
+          2940
+        ],
+        "coh_p": [
+          2941
+        ],
+        "la_p": [
+          2941
+        ],
+        "mu_p": [
+          2941
+        ],
+        "pvol_p": [
+          2941
+        ],
+        "v": [
+          2939
+        ],
+        "x": [
+          2939
+        ],
+        "yld_p": [
+          2941
+        ]
+      }
+    },
+    "substep": {
+      "start": 2944,
+      "end": 3033,
+      "writes": {
+        "C": [
+          3017
+        ],
+        "F": [
+          3017,
+          3028
+        ],
+        "amf_dn": [
+          2948,
+          2985
+        ],
+        "amf_up": [
+          2948,
+          2988
+        ],
+        "amf_zdn": [
+          2986
+        ],
+        "amf_zup": [
+          2989
+        ],
+        "dg_acc": [
+          3026
+        ],
+        "eps_acc": [
+          3018
+        ],
+        "grid_m": [
+          2946,
+          2976
+        ],
+        "grid_v": [
+          2946,
+          2975,
+          2979,
+          2990,
+          2993,
+          2995,
+          2998,
+          3000,
+          3001,
+          3002,
+          3003
+        ],
+        "szz": [
+          2947,
+          2961
+        ],
+        "szz_zn": [
+          2966
+        ],
+        "szz_zs": [
+          2965
+        ],
+        "v": [
+          3017
+        ],
+        "wallf": [
+          2947,
+          2997
+        ],
+        "x": [
+          3030,
+          3032,
+          3033
+        ],
+        "x_pre": [
+          2951
+        ]
+      }
+    },
+    "rod_pass": {
+      "start": 3036,
+      "end": 3054,
+      "writes": {
+        "rod_dx": [
+          3038,
+          3045,
+          3051
+        ],
+        "x": [
+          3054
+        ]
+      }
+    },
+    "rod_setv": {
+      "start": 3057,
+      "end": 3060,
+      "writes": {
+        "v": [
+          3060
+        ]
+      }
+    }
+  },
+  "array_method_sites": [
+    {
+      "field": "am_mask",
+      "method": "from_numpy",
+      "line": 2872
+    },
+    {
+      "field": "am_near",
+      "method": "from_numpy",
+      "line": 2890
+    },
+    {
+      "field": "rod_prev",
+      "method": "from_numpy",
+      "line": 2930
+    },
+    {
+      "field": "rod_next",
+      "method": "from_numpy",
+      "line": 2930
+    },
+    {
+      "field": "rod_rl",
+      "method": "from_numpy",
+      "line": 2930
+    },
+    {
+      "field": "rod_b0",
+      "method": "from_numpy",
+      "line": 2931
+    },
+    {
+      "field": "rod_is",
+      "method": "from_numpy",
+      "line": 2931
+    },
+    {
+      "field": "rod_kfac",
+      "method": "from_numpy",
+      "line": 2931
+    },
+    {
+      "field": "F",
+      "method": "from_numpy",
+      "line": 3146
+    },
+    {
+      "field": "dg_acc",
+      "method": "from_numpy",
+      "line": 3147
+    },
+    {
+      "field": "eps_acc",
+      "method": "from_numpy",
+      "line": 3148
+    },
+    {
+      "field": "amf_zdn",
+      "method": "fill",
+      "line": 3232
+    },
+    {
+      "field": "amf_zup",
+      "method": "fill",
+      "line": 3232
+    },
+    {
+      "field": "szz_zs",
+      "method": "fill",
+      "line": 3232
+    },
+    {
+      "field": "szz_zn",
+      "method": "fill",
+      "line": 3232
+    },
+    {
+      "field": "amf_zdn",
+      "method": "to_numpy",
+      "line": 3254
+    },
+    {
+      "field": "amf_zup",
+      "method": "to_numpy",
+      "line": 3254
+    },
+    {
+      "field": "szz_zs",
+      "method": "to_numpy",
+      "line": 3255
+    },
+    {
+      "field": "x",
+      "method": "to_numpy",
+      "line": 3741
+    },
+    {
+      "field": "x",
+      "method": "to_numpy",
+      "line": 4050
+    },
+    {
+      "field": "dg_acc",
+      "method": "to_numpy",
+      "line": 4053
+    },
+    {
+      "field": "eps_acc",
+      "method": "to_numpy",
+      "line": 4058
+    },
+    {
+      "field": "x",
+      "method": "to_numpy",
+      "line": 4096
+    },
+    {
+      "field": "F",
+      "method": "to_numpy",
+      "line": 4096
+    },
+    {
+      "field": "v",
+      "method": "to_numpy",
+      "line": 4097
+    },
+    {
+      "field": "C",
+      "method": "to_numpy",
+      "line": 4097
+    },
+    {
+      "field": "mu_p",
+      "method": "to_numpy",
+      "line": 4098
+    },
+    {
+      "field": "la_p",
+      "method": "to_numpy",
+      "line": 4098
+    },
+    {
+      "field": "yld_p",
+      "method": "to_numpy",
+      "line": 4098
+    },
+    {
+      "field": "pvol_p",
+      "method": "to_numpy",
+      "line": 4099
+    },
+    {
+      "field": "coh_p",
+      "method": "to_numpy",
+      "line": 4099
+    },
+    {
+      "field": "dg_acc",
+      "method": "to_numpy",
+      "line": 4100
+    },
+    {
+      "field": "eps_acc",
+      "method": "to_numpy",
+      "line": 4100
+    },
+    {
+      "field": "rod_rl",
+      "method": "to_numpy",
+      "line": 4118
+    },
+    {
+      "field": "rod_b0",
+      "method": "to_numpy",
+      "line": 4119
+    }
+  ],
+  "declared_scalar_payload_coefficients": {
+    "n": 124,
+    "grid_nodes": 16,
+    "mask_nodes": 8,
+    "nz": 16,
+    "rod_slots": 56,
+    "scalar": 24
+  },
+  "substep_mentions_se_id_base": false,
+  "actual_memory_measured": false,
+  "production_changed": false,
+  "overall": "HOLD"
+}
