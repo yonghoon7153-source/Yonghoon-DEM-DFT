@@ -1,0 +1,46 @@
+{
+  "schema": "rint_q14_manual_receipt_draft/1",
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "status": "NOT_RECEIVED",
+  "stages": {
+    "S0_STORE": {
+      "actual_GO_reference": null,
+      "operator": null,
+      "supported_environment": null,
+      "start_utc": null,
+      "stop_deadline_utc": null,
+      "block_digest": null,
+      "actual_process_rc": null,
+      "output_manifest_digest": null,
+      "source_identity_receipt": null,
+      "complete_output_set": null,
+      "raw_field_evidence_refs": {},
+      "contradictions": [],
+      "missing": [],
+      "disposition": "NOT_RECEIVED",
+      "author_acceptance": null
+    },
+    "Q11": {
+      "actual_GO_reference": null,
+      "operator": null,
+      "supported_environment": null,
+      "start_utc": null,
+      "stop_deadline_utc": null,
+      "block_digest": null,
+      "actual_process_rc": null,
+      "output_manifest_digest": null,
+      "source_identity_receipt": null,
+      "complete_output_set": null,
+      "raw_field_evidence_refs": {},
+      "contradictions": [],
+      "missing": [],
+      "disposition": "NOT_RECEIVED",
+      "author_acceptance": null
+    }
+  },
+  "s0_plan_adoption_location": null,
+  "probe6_attempt3_GO": null,
+  "probe6_attempt4_GO": null,
+  "automatic_transition": false,
+  "overall": "HOLD"
+}
