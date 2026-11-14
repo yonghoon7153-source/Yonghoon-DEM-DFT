@@ -1,0 +1,23 @@
+{
+  "scope": "Intentional weaknesses of declared synthetic byte plans",
+  "variants": [
+    {
+      "name": "missing_return_reservation",
+      "old": "allocation('trial', 1, 6), allocation('returned', 2, 7)",
+      "new": "allocation('trial', 1, 6)",
+      "purpose": "Omit the returned copy from the declared lifetime plan."
+    },
+    {
+      "name": "early_parent_release",
+      "old": "allocation('old', 0, 4)",
+      "new": "allocation('old', 0, 2)",
+      "purpose": "Declare the parent released before the three-root observation."
+    },
+    {
+      "name": "ignore_retained_snapshot",
+      "old": "range(retained_copies)",
+      "new": "range(0)",
+      "purpose": "Omit caller-retained independent snapshots."
+    }
+  ]
+}

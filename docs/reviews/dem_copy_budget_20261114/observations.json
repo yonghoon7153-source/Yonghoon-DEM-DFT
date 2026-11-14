@@ -1,0 +1,421 @@
+{
+  "scope": "Top-level state roots and declared byte plans only",
+  "observations": [
+    {
+      "status": "COMPLETED_SYNTHETIC",
+      "rods": false,
+      "injected_site": null,
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        },
+        {
+          "copy_number": 2,
+          "live_state_roots": 3,
+          "source_is_committed": false,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": false,
+      "committed_trial_and_detached_return": true,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "COMPLETED_SYNTHETIC",
+      "rods": true,
+      "injected_site": null,
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        },
+        {
+          "copy_number": 2,
+          "live_state_roots": 3,
+          "source_is_committed": false,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": false,
+      "committed_trial_and_detached_return": true,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "trial_created",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "p2g",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "g2p_first",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "g2p_done",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "host_first",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "host_done",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "before_commit",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "rod_first",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "rod_positions",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "rod_velocity_first",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    },
+    {
+      "status": "INJECTED_FAILURE",
+      "rods": true,
+      "injected_site": "rod_done",
+      "copy_events": [
+        {
+          "copy_number": 1,
+          "live_state_roots": 2,
+          "source_is_committed": true,
+          "parent_still_current": true
+        }
+      ],
+      "parent_unchanged": true,
+      "committed_trial_and_detached_return": false,
+      "actual_memory_measured": false,
+      "physical_solver_imported": false,
+      "execution_go": false
+    }
+  ],
+  "plans": [
+    {
+      "name": "three_copies",
+      "plan": {
+        "schema": "synthetic_memory_liveness/1",
+        "units": "B",
+        "pools": {
+          "planned_arrays": {
+            "budget_bytes": 17
+          }
+        },
+        "allocations": [
+          {
+            "id": "old",
+            "pool": "planned_arrays",
+            "reserved_bytes": 6,
+            "used_bytes": 6,
+            "start": 0,
+            "end": 4
+          },
+          {
+            "id": "trial",
+            "pool": "planned_arrays",
+            "reserved_bytes": 6,
+            "used_bytes": 6,
+            "start": 1,
+            "end": 6
+          },
+          {
+            "id": "returned",
+            "pool": "planned_arrays",
+            "reserved_bytes": 6,
+            "used_bytes": 6,
+            "start": 2,
+            "end": 7
+          }
+        ],
+        "views": []
+      },
+      "account": {
+        "status": "SYNTHETIC_ARITHMETIC_ONLY",
+        "pools": {
+          "planned_arrays": {
+            "peak_bytes": 18,
+            "budget_bytes": 17,
+            "headroom_bytes": -1,
+            "over_budget": true,
+            "timeline": [
+              [
+                0,
+                6
+              ],
+              [
+                1,
+                12
+              ],
+              [
+                2,
+                18
+              ],
+              [
+                4,
+                12
+              ],
+              [
+                6,
+                6
+              ],
+              [
+                7,
+                0
+              ]
+            ]
+          }
+        },
+        "actual_resource_qualification": false,
+        "execution_go": false
+      }
+    },
+    {
+      "name": "retained_snapshot",
+      "plan": {
+        "schema": "synthetic_memory_liveness/1",
+        "units": "B",
+        "pools": {
+          "planned_arrays": {
+            "budget_bytes": 23
+          }
+        },
+        "allocations": [
+          {
+            "id": "old",
+            "pool": "planned_arrays",
+            "reserved_bytes": 6,
+            "used_bytes": 6,
+            "start": 0,
+            "end": 4
+          },
+          {
+            "id": "trial",
+            "pool": "planned_arrays",
+            "reserved_bytes": 6,
+            "used_bytes": 6,
+            "start": 1,
+            "end": 6
+          },
+          {
+            "id": "returned",
+            "pool": "planned_arrays",
+            "reserved_bytes": 6,
+            "used_bytes": 6,
+            "start": 2,
+            "end": 7
+          },
+          {
+            "id": "retained_0",
+            "pool": "planned_arrays",
+            "reserved_bytes": 6,
+            "used_bytes": 6,
+            "start": 0,
+            "end": 7
+          }
+        ],
+        "views": []
+      },
+      "account": {
+        "status": "SYNTHETIC_ARITHMETIC_ONLY",
+        "pools": {
+          "planned_arrays": {
+            "peak_bytes": 24,
+            "budget_bytes": 23,
+            "headroom_bytes": -1,
+            "over_budget": true,
+            "timeline": [
+              [
+                0,
+                12
+              ],
+              [
+                1,
+                18
+              ],
+              [
+                2,
+                24
+              ],
+              [
+                4,
+                18
+              ],
+              [
+                6,
+                12
+              ],
+              [
+                7,
+                0
+              ]
+            ]
+          }
+        },
+        "actual_resource_qualification": false,
+        "execution_go": false
+      }
+    }
+  ],
+  "no_raw_object_ids": true,
+  "actual_memory_measured": false,
+  "real_results": 0,
+  "overall": "HOLD"
+}

@@ -1,0 +1,58 @@
+{
+  "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+  "sources": [
+    {
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "path": "scripts/mixer_smoke_blind.py",
+      "bytes": 125451,
+      "sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+      "git_blob": "ef2e75f12f72dca2c82e2845ce7f58e5d27a3a91"
+    },
+    {
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "path": "dem_scripts/mixer_20260921/launch_highbo.sh",
+      "bytes": 53398,
+      "sha256": "ed469ffad993b321563cb35e3242d0223a132f251a0ed119588f02b5b106b6fb",
+      "git_blob": "41c1b16f52be7158b6052f38e34e49aa6ac426c1"
+    }
+  ],
+  "direct_wrapper_clock_sites": [
+    {
+      "function": "run_blind",
+      "line": 149,
+      "expression": "datetime.datetime.now(datetime.timezone.utc)"
+    },
+    {
+      "function": "_vault",
+      "line": 216,
+      "expression": "datetime.datetime.now(datetime.timezone.utc)"
+    },
+    {
+      "function": "run_contract_cert",
+      "line": 343,
+      "expression": "datetime.datetime.now(datetime.timezone.utc)"
+    },
+    {
+      "function": "e0_diag",
+      "line": 473,
+      "expression": "datetime.datetime.now(datetime.timezone.utc)"
+    },
+    {
+      "function": "_now",
+      "line": 549,
+      "expression": "datetime.datetime.now(datetime.timezone.utc)"
+    }
+  ],
+  "rest_block_sha256": "47e6d8d5ef620fb615716401740be31230ae530ff2d9e4072772e6bc096d7833",
+  "rest_direct_clock_sites": [],
+  "rest_imports": [
+    "import glob, hashlib, json, math, os, re, sys"
+  ],
+  "overlay_sha256": "5a20ae50076b67f6539d3d42b594748a60c07d2f2ce630ce40fc3b67c33c4eea",
+  "overlay_scope": "Wrapper datetime binding only; no global datetime module or OS clock replacement",
+  "whole_launcher_clock_scope_included": false,
+  "transitive_clock_coverage_proven": false,
+  "production_imported": false,
+  "processes_executed": 0,
+  "overall": "HOLD"
+}
