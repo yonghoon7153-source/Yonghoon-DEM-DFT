@@ -1,0 +1,67 @@
+{
+  "scope": "New synthetic planning calculator; no historical production red/green",
+  "python": "3.12.14",
+  "records": [
+    {
+      "case": "candidate",
+      "rc": 0,
+      "methods": 20,
+      "failures": 0,
+      "errors": 0,
+      "source_sha256": "1a7128aaf566920640faa158857eb678599f38bc581adfd1566a2f7a8031fe10",
+      "test_sha256": "bb0d94b7d045e5eef1af938efc78cc782fc8ed97e63aeae6ecfc0916d3b3240d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d02c3b02ca18885b08e23c16cbb0a2aff739d001ee8c436d161281c93e82aae9"
+    },
+    {
+      "case": "float_accumulation",
+      "rc": 1,
+      "methods": 20,
+      "failures": 1,
+      "errors": 0,
+      "source_sha256": "e63fe9fe615a2cbb1ee478b7d1ab57a4bf78bad2a088a23fe168794937512237",
+      "test_sha256": "bb0d94b7d045e5eef1af938efc78cc782fc8ed97e63aeae6ecfc0916d3b3240d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "6ea9e579ae752a6476ff975b908df02ebfd4739966e5d3953b02a5cea14f3eeb"
+    },
+    {
+      "case": "max_allocation_only",
+      "rc": 1,
+      "methods": 20,
+      "failures": 2,
+      "errors": 0,
+      "source_sha256": "c9c5a00d4938ebbe40ee5160440b01261a0c76dff4f4c71df2e5fc04991dfa59",
+      "test_sha256": "bb0d94b7d045e5eef1af938efc78cc782fc8ed97e63aeae6ecfc0916d3b3240d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "12e015ea5e7acd332674eb19529bca6b29c3faa72c877fc1f055c0332907c436"
+    },
+    {
+      "case": "used_instead_reserved",
+      "rc": 1,
+      "methods": 20,
+      "failures": 7,
+      "errors": 0,
+      "source_sha256": "405535c36d331642a8a6732915c706b8d476061f317217620b44e68d3defabe7",
+      "test_sha256": "bb0d94b7d045e5eef1af938efc78cc782fc8ed97e63aeae6ecfc0916d3b3240d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f1c4a0f3ebf268d17016b02c873188e020df5cc5ea79042237ba9a14af0dd0c8"
+    },
+    {
+      "case": "double_count_views",
+      "rc": 1,
+      "methods": 20,
+      "failures": 1,
+      "errors": 0,
+      "source_sha256": "64b7bf94e2870da0f1652cf1acccab04819b0d7072e61b85e32916ece58cee7b",
+      "test_sha256": "bb0d94b7d045e5eef1af938efc78cc782fc8ed97e63aeae6ecfc0916d3b3240d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "49b1f04654463772a90170a64e256a84ededd5c804fd982946149fadd56008e4"
+    }
+  ],
+  "mutants_detected": 4,
+  "original_source_preserved": true,
+  "real_data_read": false,
+  "field_runs": 0,
+  "actual_resource_qualification": false,
+  "overall": "HOLD"
+}

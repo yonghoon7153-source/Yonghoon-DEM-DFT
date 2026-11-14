@@ -1,0 +1,19 @@
+{
+  "schema": "dem_resource_intake_draft/1",
+  "status": "NOT_FROZEN_NOT_EXECUTABLE",
+  "production_code_pin": null,
+  "source_field_inventory": null,
+  "pool_definitions": null,
+  "capacity_sources": null,
+  "allocation_lifetimes": null,
+  "alias_ownership_evidence": null,
+  "release_completion_order": null,
+  "allocator_runtime_overhead": null,
+  "communication_and_io_buffers": null,
+  "completeness_review": null,
+  "actual_resource_limits": null,
+  "independent_review_pin": null,
+  "implementation_go": false,
+  "execution_go": false,
+  "overall": "HOLD"
+}
