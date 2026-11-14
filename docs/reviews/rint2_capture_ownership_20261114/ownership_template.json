@@ -1,0 +1,22 @@
+{
+  "schema": "q12_capture_ownership_options/1",
+  "status": "UNSELECTED",
+  "proposal": "OWN-Q1",
+  "options": [
+    "O1_SINGLE_OWNER_INTERVAL",
+    "O2_CONSISTENT_COPY",
+    "O3_PROVEN_IMMUTABLE_OBJECT"
+  ],
+  "selected_option": null,
+  "callsite": null,
+  "producer_writer_inventory": null,
+  "exception_ownership": null,
+  "alias_evidence": null,
+  "simultaneous_memory_manifest": null,
+  "timing_cost": null,
+  "capture_source_pin": null,
+  "actual_source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "tests_executed": 0,
+  "execution_go": false,
+  "overall": "HOLD"
+}

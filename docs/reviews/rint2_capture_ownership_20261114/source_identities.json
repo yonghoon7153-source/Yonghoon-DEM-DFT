@@ -1,0 +1,35 @@
+{
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "files": [
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/cjunc_asm_compare.py",
+      "bytes": 14390,
+      "sha256": "762723a5af60ee46d022d3a05f81f78cae6587ebc56f37673b9ed30b908ab6fc",
+      "git_blob": "49d3e8b6c2ff9ac7c8b8e3119fb6da6707d371fd"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/carbon_junction.py",
+      "bytes": 204952,
+      "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+      "git_blob": "12bd06bfc25f36eecb59b5d307de2e1595b29650"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/run_contract.py",
+      "bytes": 192905,
+      "sha256": "90d4bb4265e6dcef2de64c5ddcc61e91d8a2cba466524aa740a60f4dee642866",
+      "git_blob": "6e8bb7b27d956c1aa5dbfbd5f91aebe8a17d107c"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/ca_ext_svcf.py",
+      "bytes": 79695,
+      "sha256": "1ac218481b27e349fa2d101cb3fdd058aaa240b6e3ee65e88ec8b576409ea272",
+      "git_blob": "a9f26c1c35b575fbe8db6bf8cc273d5c278e4cfa"
+    }
+  ],
+  "source_read_only": true,
+  "actual_result_reads": 0
+}

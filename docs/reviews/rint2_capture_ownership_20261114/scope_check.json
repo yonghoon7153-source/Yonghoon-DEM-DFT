@@ -1,0 +1,36 @@
+{
+  "track": "rint",
+  "base": "97fee6ebbcece686285c869316d22a918408accd",
+  "tracked_changes": 0,
+  "new_files_checked": 5,
+  "self_manifest_excluded": true,
+  "new_files_are_in_scope": true,
+  "public_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "original_lhs_block_preserved": true,
+  "rint_q14_private_artifacts_preserved": 6,
+  "checked_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261114-0543_rint-capture-ownership.md",
+      "sha256": "a777b04661ea4bcc050c9f3fb5099cc6556d50b07acdd389f87e2fa76741cfde"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_ownership_20261114/check_results.json",
+      "sha256": "2e399aea5c10787f01a58dd1c97da62f5d54f8a7bc3749974dea5c6a45bb6b30"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_ownership_20261114/ownership_options.md",
+      "sha256": "b4f900b377bc0494392cf80b9778a812e257c25980552e511218d2dd48c093fb"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_ownership_20261114/ownership_template.json",
+      "sha256": "ec4228ac08ea22e050e3a13a12891855e3e71ec878186de207da8f806c69b64c"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_ownership_20261114/source_identities.json",
+      "sha256": "dade8a3eddde4c6228bf16293dca4c8ec4b90bea5242a705b8831242082ea7cb"
+    }
+  ],
+  "whole_HOLD": true,
+  "real_field_execution": false
+}
