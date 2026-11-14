@@ -1,0 +1,40 @@
+{
+  "track": "rint",
+  "base": "ef88be68b08e8b427a331bd6471c449616c0504d",
+  "tracked_changes": 0,
+  "new_files_checked": 6,
+  "self_manifest_excluded": true,
+  "new_files_are_in_scope": true,
+  "public_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "original_lhs_block_preserved": true,
+  "rint_q14_private_artifacts_preserved": 6,
+  "checked_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261114-0508_rint-q12-registration.md",
+      "sha256": "38727854bd6693f3a98f1de8cd74db819fbff4f1bea57adc321b9ffdc3448701"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_registration_draft_20261114/check_results.json",
+      "sha256": "e60fb3c9b274aed1e14e804a514b7f887d4a64a370afd637f692f7c478dff0e6"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_registration_draft_20261114/ledger_proposal.json",
+      "sha256": "b4a96921b1b9a098aeec96f8476d8c083134b0c1394cfd13bc4265a8fef79c9f"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_registration_draft_20261114/q12_preregistration.md",
+      "sha256": "acabd867e739cd5d4b5457e2f9e28c14981f140da65e54bd9f870beccc9510f7"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_registration_draft_20261114/registration_template.json",
+      "sha256": "f405777ba49b65cc17147e3e7c446f7a10d901ee3941522695744b7d14cd1864"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_registration_draft_20261114/source_identities.json",
+      "sha256": "dade8a3eddde4c6228bf16293dca4c8ec4b90bea5242a705b8831242082ea7cb"
+    }
+  ],
+  "whole_HOLD": true,
+  "real_field_execution": false
+}

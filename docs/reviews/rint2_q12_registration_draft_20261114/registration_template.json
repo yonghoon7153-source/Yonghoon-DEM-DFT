@@ -1,0 +1,69 @@
+{
+  "schema": "q12_development_registration_draft/1",
+  "status": "DRAFT_NOT_REGISTERED",
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "registration_id": null,
+  "registration_revision": null,
+  "author_registration_approval": null,
+  "preparation_direction_approved": "2026-11-13 Q1/Q3",
+  "proposal_only_explicit_dof_ids_both_sides": true,
+  "selected_environment_pair": null,
+  "supported_environment_contracts": [],
+  "geometry_slots": [
+    {
+      "slot": 1,
+      "kit": "SBE",
+      "origin": 0,
+      "geometry_key": null,
+      "input_chain_digest": null
+    },
+    {
+      "slot": 2,
+      "kit": "SBE",
+      "origin": 1,
+      "geometry_key": null,
+      "input_chain_digest": null
+    },
+    {
+      "slot": 3,
+      "kit": "SBE",
+      "origin": 2,
+      "geometry_key": null,
+      "input_chain_digest": null
+    },
+    {
+      "slot": 4,
+      "kit": "DBE",
+      "origin": 0,
+      "geometry_key": null,
+      "input_chain_digest": null
+    },
+    {
+      "slot": 5,
+      "kit": "DBE",
+      "origin": 1,
+      "geometry_key": null,
+      "input_chain_digest": null
+    },
+    {
+      "slot": 6,
+      "kit": "DBE",
+      "origin": 2,
+      "geometry_key": null,
+      "input_chain_digest": null
+    }
+  ],
+  "qa_independent_comparison_evidence": [],
+  "q12_pair_results": [],
+  "access_scope": null,
+  "capture_adapter_pin": null,
+  "capture_mode_contract": null,
+  "operator": null,
+  "resources": null,
+  "clock_start_stop": null,
+  "cost_breakdown": null,
+  "actual_execution_GO": false,
+  "actual_reseal_GO": false,
+  "solver_sigma_read": false,
+  "overall": "HOLD"
+}
