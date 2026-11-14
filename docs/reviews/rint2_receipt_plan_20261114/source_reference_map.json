@@ -1,0 +1,37 @@
+[
+  {
+    "pin": "54f8f0ace37c5dd439e36df2262df06732627b63",
+    "path": "docs/reviews/rint2_q14_finalpin_preparation_20261113/s0_preregistration.md",
+    "bytes": 4238,
+    "sha256": "b368646f80011d8c43e6ae7be5396130d33bf2de739f8eba578519f51b0a890b",
+    "git_blob": "b0f35d9780e6babf71bf05807195f9e184a32abc"
+  },
+  {
+    "pin": "54f8f0ace37c5dd439e36df2262df06732627b63",
+    "path": "docs/reviews/rint2_q14_finalpin_preparation_20261113/q11_consumption_matrix.md",
+    "bytes": 3417,
+    "sha256": "28d13a1491f92450608b111576e883aa107b165d72829e5eef63ec353ff1c8c7",
+    "git_blob": "83c18c2be9afb3d9d2b8238b58fd8eac16b68e42"
+  },
+  {
+    "pin": "54f8f0ace37c5dd439e36df2262df06732627b63",
+    "path": "docs/reviews/rint2_q14_finalpin_preparation_20261113/source_identities.json",
+    "bytes": 2670,
+    "sha256": "dbea8fe06e3a078d7627b9aaf60a2f0ca4683d0b637f494bcff7d7faac719a83",
+    "git_blob": "fbcf6e66f8b3760cf94799fda2c992b643ee82b0"
+  },
+  {
+    "pin": "54f8f0ace37c5dd439e36df2262df06732627b63",
+    "path": "docs/reviews/rint2_q14_finalpin_preparation_20261113/block_manifest.json",
+    "bytes": 2157,
+    "sha256": "4625a289d4a8ab0d7cf6ac3f609fc08c730339277ba861daad63dd38b9494ca9",
+    "git_blob": "b3e47a30d21c457136ab02b6116683e8758e899f"
+  },
+  {
+    "pin": "54f8f0ace37c5dd439e36df2262df06732627b63",
+    "path": "docs/reviews/rint2_q14_finalpin_preparation_20261113/operator_policy_decision.json",
+    "bytes": 842,
+    "sha256": "6a9dc0c723115a4730a022f043cc560ee45efbe75dfe99376f0ce327fd8d656d",
+    "git_blob": "709b9749e799f9ee71d6d63b5e7a1d1cdb3922be"
+  }
+]
