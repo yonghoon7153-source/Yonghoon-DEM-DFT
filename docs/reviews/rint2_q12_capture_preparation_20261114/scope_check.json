@@ -1,0 +1,36 @@
+{
+  "track": "rint",
+  "base": "fa8bbe954f3d1897c9cfc9572a7babf029b8f743",
+  "tracked_changes": 0,
+  "new_files_checked": 5,
+  "self_manifest_excluded": true,
+  "new_files_are_in_scope": true,
+  "public_path_address_scan": "PASS",
+  "production_shared_ledger_gate_seal_changes": 0,
+  "original_lhs_block_preserved": true,
+  "rint_q14_private_artifacts_preserved": 6,
+  "checked_files": [
+    {
+      "path": "docs/collab/codex_to_claude/20261114-0529_rint-q12-capture-preparation.md",
+      "sha256": "508271987caca397dbc31ca9c5bff7635b11b2634e460cb8b15ce718e636a26e"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_capture_preparation_20261114/capture_contract.md",
+      "sha256": "31f2e4a355f57df084f83505cda08e80347a0aaa0813fc64321a905c1d573378"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_capture_preparation_20261114/capture_template.json",
+      "sha256": "fc6105c77edbf0243ae349003b90a93dd540430015c5e363b7903c0079796c4a"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_capture_preparation_20261114/check_results.json",
+      "sha256": "96e93b3447a894f4a7bbe293aa0984447a60e158d7cb05d1c723104bdb9f02c2"
+    },
+    {
+      "path": "docs/reviews/rint2_q12_capture_preparation_20261114/source_identities.json",
+      "sha256": "dade8a3eddde4c6228bf16293dca4c8ec4b90bea5242a705b8831242082ea7cb"
+    }
+  ],
+  "whole_HOLD": true,
+  "real_field_execution": false
+}

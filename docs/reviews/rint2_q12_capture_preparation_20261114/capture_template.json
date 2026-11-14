@@ -1,0 +1,31 @@
+{
+  "schema": "q12_capture_adapter_plan/1",
+  "status": "DRAFT_NOT_IMPLEMENTED",
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "adapter_pin": null,
+  "callsite": null,
+  "source_object_ownership": null,
+  "capture_atomicity": null,
+  "mode": null,
+  "field_provenance_map": null,
+  "output_failure_contract": null,
+  "independent_build_proof": null,
+  "access_scope": null,
+  "memory_cost": null,
+  "time_cost": null,
+  "planned_cases": [
+    "CAP01",
+    "CAP02",
+    "CAP03",
+    "CAP04",
+    "CAP05",
+    "CAP06",
+    "CAP07",
+    "CAP08",
+    "CAP09",
+    "CAP10"
+  ],
+  "tests_executed": 0,
+  "actual_execution_GO": false,
+  "overall": "HOLD"
+}
