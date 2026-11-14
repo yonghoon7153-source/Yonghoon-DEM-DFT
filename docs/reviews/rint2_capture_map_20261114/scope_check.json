@@ -1,0 +1,27 @@
+{
+  "base": "f361c62b684bf69666bfc8edc043ba2a9b97777e",
+  "new_files_checked": 3,
+  "self_manifest_excluded": true,
+  "checked_files": [
+    {
+      "path": "docs/reviews/rint2_capture_map_20261114/README.md",
+      "sha256": "2d0491dc1613c06b2fd601c540d601344e7c8480cd3e13250a07cb37d792ccd1"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_map_20261114/check_results.json",
+      "sha256": "6a528e06f880eeaa88bed368f55377f8e3d216a3c41f26db64b417c6599539eb"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_map_20261114/source_map.json",
+      "sha256": "8f201f34c381f6deec15b76bffb48e36058bcceb4d27b9d8a1936e98876ab807"
+    }
+  ],
+  "tracked_changes": 0,
+  "production_shared_ledger_seal_gate_changes": 0,
+  "private_identifier_scan": "PASS",
+  "original_lhs_draft_preserved": true,
+  "rint_q14_blocks_preserved": true,
+  "handoff_prompt_or_zip_created": false,
+  "research_results": 0,
+  "overall": "HOLD"
+}

@@ -1,0 +1,27 @@
+{
+  "native_checks": [
+    {
+      "script": "check_doc_refs.py",
+      "rc": 1,
+      "stdout_sha256": "5a3f01aff5232c23d5ddff4c5c911a5ff48731cca5ab940b960c60fd17897b91",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "script": "check_review_findings.py",
+      "rc": 0,
+      "stdout_sha256": "66cd26cbdac537670510a2d26cea3852402868c526356596e05c9e13fd21d754",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "doc_refs_diagnostic": {
+    "native_rc": 1,
+    "sha_occurrences": 96,
+    "unmatched_after_slash_normalization": [],
+    "missing_paths_zero": true,
+    "note": "Native Windows failure retained; slash/exception-table diagnosis is not PASS."
+  },
+  "whole_gate_executed": false,
+  "research_or_field_execution": false,
+  "real_values_read": false,
+  "operational_reseal": false
+}

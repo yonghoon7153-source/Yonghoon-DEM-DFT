@@ -1,0 +1,161 @@
+{
+  "source_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+  "sources": [
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/carbon_junction.py",
+      "bytes": 204952,
+      "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+      "git_blob": "12bd06bfc25f36eecb59b5d307de2e1595b29650"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/cjunc_asm_compare.py",
+      "bytes": 14390,
+      "sha256": "762723a5af60ee46d022d3a05f81f78cae6587ebc56f37673b9ed30b908ab6fc",
+      "git_blob": "49d3e8b6c2ff9ac7c8b8e3119fb6da6707d371fd"
+    }
+  ],
+  "selected_functions": {
+    "_assemble": {
+      "start": 2670,
+      "end": 2819
+    },
+    "build": {
+      "start": 2652,
+      "end": 2668
+    },
+    "assembly_record": {
+      "start": 94,
+      "end": 145
+    },
+    "_arr": {
+      "start": 50,
+      "end": 57
+    }
+  },
+  "assemble_returns": [
+    {
+      "line": 2791,
+      "keys": [
+        "reason"
+      ]
+    },
+    {
+      "line": 2793,
+      "keys": [
+        "reason"
+      ]
+    },
+    {
+      "line": 2795,
+      "keys": [
+        "reason"
+      ]
+    },
+    {
+      "line": 2819,
+      "keys": [
+        "L",
+        "b",
+        "Ab",
+        "gb",
+        "At",
+        "gt",
+        "cb",
+        "ct",
+        "n_dof"
+      ]
+    }
+  ],
+  "original_dof_expression": [
+    {
+      "line": 2789,
+      "expression": "np.flatnonzero(kept)"
+    }
+  ],
+  "renumbering": [
+    {
+      "line": 2797,
+      "expression": "new[kept] = np.arange(n_kept)"
+    }
+  ],
+  "shared_sys_bindings": {
+    "line": 2817,
+    "bindings": {
+      "u": "u",
+      "v": "v",
+      "G": "G",
+      "CAT": "CAT",
+      "SA": "SA",
+      "SB": "SB",
+      "IA": "IA",
+      "IB": "IB",
+      "Ab": "Abn",
+      "gb": "gbn",
+      "At": "Atn",
+      "gt": "gtn",
+      "n": "n_kept"
+    }
+  },
+  "sequential_descriptors": [
+    {
+      "line": 141,
+      "argument": "L.data"
+    },
+    {
+      "line": 141,
+      "argument": "L.indices"
+    },
+    {
+      "line": 141,
+      "argument": "L.indptr"
+    },
+    {
+      "line": 142,
+      "argument": "o.get('b')"
+    },
+    {
+      "line": 143,
+      "argument": "o.get('Ab')"
+    },
+    {
+      "line": 143,
+      "argument": "o.get('gb')"
+    },
+    {
+      "line": 143,
+      "argument": "o.get('At')"
+    },
+    {
+      "line": 143,
+      "argument": "o.get('gt')"
+    },
+    {
+      "line": 144,
+      "argument": "ids.astype(np.int64)"
+    }
+  ],
+  "lexical_callsite_search": [
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/cjunc_asm_compare.py:94:def assembly_record(asm_out, graph_fp=None, dof_ids=None):",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_cjunc_asm_compare.py:87:    r1, r2 = AC.assembly_record(o1, f1, dof_ids=[0, 1]), AC.assembly_record(o2, f2, dof_ids=[0, 1])",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_cjunc_asm_compare.py:95:    c2 = AC.compare_assembly(r1, AC.assembly_record(o3, f3, dof_ids=[0, 1]))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_cjunc_asm_compare.py:99:    bad = {'조립 미완료 (조기 반환)': AC.assembly_record({'reason': 'no_through_component'}, f1),",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_cjunc_asm_compare.py:100:           'main 지문 null': AC.assembly_record(o1, None, dof_ids=[0, 1]),",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_cjunc_asm_compare.py:101:           '빈 그래프 지문': AC.assembly_record(o1, ef, dof_ids=[0, 1])}",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_cjunc_asm_compare.py:109:    c4 = AC.compare_assembly(r1, AC.assembly_record(o3, f3, dof_ids=[1, 0]))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_cjunc_asm_compare.py:110:    c5 = AC.compare_assembly(r1, AC.assembly_record(o3, f3))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:48:        a = AC.assembly_record(fixture(), 'a' * 64, [0, 1])",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:51:        result = AC.compare_assembly(a, AC.assembly_record(b, 'a' * 64, [0, 1]))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:60:                    self.rejected(AC.assembly_record(asm, 'a' * 64, [0, 1]))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:62:        self.rejected(AC.assembly_record(asm, 'a' * 64, [0, 1]))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:69:                self.rejected(AC.assembly_record(asm, 'a' * 64, [0, 1]))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:75:                self.rejected(AC.assembly_record(fixture(), 'a' * 64, ids))",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:78:        good = AC.assembly_record(fixture(), 'a' * 64, [0, 1])",
+    "64e4d213e8267bafaf3ae5af00a42996cefd3f33:scripts/test_rint_takeover_boundaries.py:88:        good = AC.assembly_record(fixture(), 'a' * 64, [0, 1])"
+  ],
+  "search_limit": "Exact spelling under tracked scripts/*.py; not dynamic-call closure",
+  "source_imported": false,
+  "assembly_executed": false,
+  "overall": "HOLD"
+}
