@@ -1,0 +1,38 @@
+{
+  "copies": [
+    {
+      "label": "before",
+      "pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "path": "scripts/mixer_smoke_blind.py",
+      "original_sha256": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+      "fixed_sha256": "2f14d01502ce4f4867432628924d64974843e06288c6eea49283209a10f0cbcc",
+      "original_bytes": 125163,
+      "fixed_bytes": 125836,
+      "removed_overlay_restores_original": true,
+      "ast_outside_overlay_equal": true,
+      "syntax_compile": "PASS",
+      "full_selftest_executed": false
+    },
+    {
+      "label": "candidate",
+      "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+      "path": "scripts/mixer_smoke_blind.py",
+      "original_sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+      "fixed_sha256": "fbd7fc34981d1218bea0cf187ee76f9e6e7212f790ac6a08ab7a8801fc8bd1fc",
+      "original_bytes": 125451,
+      "fixed_bytes": 126124,
+      "removed_overlay_restores_original": true,
+      "ast_outside_overlay_equal": true,
+      "syntax_compile": "PASS",
+      "full_selftest_executed": false
+    }
+  ],
+  "overlay_sha256": "5a20ae50076b67f6539d3d42b594748a60c07d2f2ce630ce40fc3b67c33c4eea",
+  "overlay_clock_only_observations": 3,
+  "repository_source_changed": false,
+  "linux_selftest_runs": 0,
+  "field_runs": 0,
+  "standalone_dependency_package": false,
+  "naive_time_semantics": "fixed UTC clock reading with tzinfo removed; no local-time-zone qualification",
+  "overall": "HOLD"
+}

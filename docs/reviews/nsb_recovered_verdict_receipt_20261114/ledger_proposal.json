@@ -1,0 +1,26 @@
+{
+  "proposal_only": true,
+  "apply_by": "Claude",
+  "entries": [
+    {
+      "id": "NSB-F01",
+      "proposed_action": "append_limited_independent_verdict_receipt_note",
+      "candidate": "c5aa7bb527c5cf0907651bae688bb97de206a8b6",
+      "note": "2026-11-14: 같은 핀의 11-10 독립 판정을 회수. 코드·소형 합성 계약 범위 한정 종결 가능. 후보269/269 및 보존 증거254/254 동일, 중복 시험0. 원장 상태 자동 승격 없음·전체 HOLD."
+    },
+    {
+      "id": "NSB-C01",
+      "proposed_action": "append_limited_independent_verdict_receipt_note",
+      "candidate": "c5aa7bb527c5cf0907651bae688bb97de206a8b6",
+      "note": "2026-11-14: 같은 핀의 11-10 독립 판정을 회수. 코드·소형 합성 계약 범위 한정 종결 가능. 후보269/269 및 보존 증거254/254 동일, 중복 시험0. 원장 상태 자동 승격 없음·전체 HOLD."
+    },
+    {
+      "id": "NSB-C02",
+      "proposed_action": "append_limited_independent_verdict_receipt_note",
+      "candidate": "c5aa7bb527c5cf0907651bae688bb97de206a8b6",
+      "note": "2026-11-14: 같은 핀의 11-10 독립 판정을 회수. 코드·소형 합성 계약 범위 한정 종결 가능. 후보269/269 및 보존 증거254/254 동일, 중복 시험0. 원장 상태 자동 승격 없음·전체 HOLD."
+    }
+  ],
+  "actual_state_mutation": false,
+  "overall": "HOLD"
+}

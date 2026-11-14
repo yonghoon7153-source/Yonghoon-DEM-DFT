@@ -1,0 +1,15 @@
+
+# SYNTHETIC CLOCK OVERLAY ONLY; not an operational source.
+import datetime as _self170_real_datetime
+class _Self170FixedDatetime(_self170_real_datetime.datetime):
+    @classmethod
+    def now(cls, tz=None):
+        instant = _self170_real_datetime.datetime(2026, 11, 12, 17, 35, 10, 964312,
+                    tzinfo=_self170_real_datetime.timezone.utc)
+        return instant.astimezone(tz) if tz is not None else instant.replace(tzinfo=None)
+class _Self170DatetimeModule:
+    datetime = _Self170FixedDatetime
+    timezone = _self170_real_datetime.timezone
+    timedelta = _self170_real_datetime.timedelta
+datetime = _Self170DatetimeModule
+# END SYNTHETIC CLOCK OVERLAY

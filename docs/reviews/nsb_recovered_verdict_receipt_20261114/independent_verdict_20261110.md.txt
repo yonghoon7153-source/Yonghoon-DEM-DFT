@@ -1,0 +1,101 @@
+# NSB-F01·C01·C02 수정 후보 — 한정 독립 재확인
+
+**판정: 세 ID 모두 이번 코드·소형 합성 계약 범위에서 닫힘 수용. 새 P1/P2/P3 없음. 전체 HOLD 유지.**
+
+고정 후보 `c5aa7bb527c5cf0907651bae688bb97de206a8b6`, 가지 `codex/nonrint-nsb-fixes-1110`, 비교 바탕 `a69095c7f1cc4908a14b93912d97cb93cc33eb64`. 원 판정의 나머지 수용 11단위·API 부분 수용 3단위는 다시 심사하지 않았다. 이 판정은 프로젝트 원장 변경이나 운영 승인 명령이 아니다.
+
+## 1. ID별 처분
+
+| ID | 처분 | 실제 확인 | 닫지 않는 것 |
+|---|---|---|---|
+| NSB-F01 / P2 | **한정 닫힘** | 원 int 보존, 혼합 int/float의 구간 순서·포함·차이, 정확 평균·ABS/REL 예산, 표시값과 판단 분리 | RMSE의 정확성 인증·모든 유한 입력의 출력 성공·CI 생성/참 coverage·실제 T5 자격 |
+| NSB-C01 / P2 | **한정 닫힘** | 표면 정수 차이·KE 한계 초과 거부, 정상 큰 상수/기존 float 의미 보존, 일관되게 봉인한 행렬 packet으로의 실패 전파 | 입력 전 float 반올림 복원·실측 정확도·엔진/P2 실제 자격 |
+| NSB-C02 / P2 | **한정 닫힘** | 분리·clear 뒤 완전 POST 1–3창과 등록된 4창 종료점 결속. 빈/분리 전/POST 없는/불완전 trace 배제 | 일반적인 모든 INCOMPLETE 원인 인증·실제 재개/현장 자격·추가 정량 정책 비준 |
+
+원 P2 세 건의 수정 수용 범위다. 실제 T0/T5/T11/T12/T13·숨은 이력/복원·물리 DEMP·원자료 열람·등록·운영 재봉인·전체 gate/CI·발사·배포·통합·원장 종결은 계속 미승인이다. D1 별도 판정과 T11/LIVE/S0의 과거 구현 전 red 순서 미충족도 그대로 남는다.
+
+## 2. 신원·변경 범위
+
+- 검토 폴더 **269파일**, 최상위 목록 **268/268 일치**. `SHA256SUMS` 자체 SHA256은 전달값 `fab68fe61c40994048880ed52d1db995707c0348176e24361f05f4c0f37b6ded`와 같다.
+- 첨부 `(2).zip`은 **1,064,927 B**, SHA256 `ac7370932d17a69c4e6a2470f72a48af8cfd117c97d974884bdd2b691915ff5e`. 디렉터리 항목 포함 336멤버 중 파일은 269개이며, 검토 폴더와 전부 바이트 동일하다. CRC·경로·중복/대소문자·symlink 검사 통과. 무압축 폴더와 첨부 ZIP을 다른 코드 후보로 취급하지 않았다.
+- 스냅샷 **24파일**의 길이·SHA256·Git blob을 재계산하고, 후보 핀의 GitHub 파일 blob과 **24/24 일치**를 확인했다. 실제 연구 실행 당시 소스 인증으로 확대하지 않는다.
+- 내부 T5 **85/85**, chain **152/152** 원시 목록의 길이·SHA와 정확한 파일 집합이 맞는다. 이 수와 외부 목록은 중첩하므로 더하지 않는다.
+- 변경된 계산 소스는 T5·P2·행렬 세 파일이다. 동봉 구본은 이전 독립 검토 소스와 바이트가 같다. 의존·기존 시험 **10파일**도 이전 검토본과 같으며, 신규 회귀 두 파일은 각각 old red와 candidate에서 같은 바이트다.
+- 검토 종료 뒤 원 폴더·scratch 사본 **269파일 전부 불변**을 확인했다. 후보 코드·운영 파일·원장은 고치지 않았다.
+
+근거: `review/input_verification.json`, `remote_blob_verification.json`, `source_preservation.json`, `source_changes.diff`, `verification_summary.json`.
+
+## 3. Q1 — T5 숫자·구간·평균·예산
+
+**수용.** `scripts/dem_gen2_t5_contract.py:45–52`는 내장 int/유한 float를 원값으로 반환한다. `:259–260`, `:283`은 손실성 변환 전 숫자로 순서·포함을 비교하고, `:284–287`은 각각의 원값을 Fraction으로 바꾼 뒤 차이·평균·최대오차를 계산한다. `:295–308`의 ABS/REL·coverage 판정도 정확한 유리수로 끝낸다.
+
+| 원 반례 또는 경계 | 후보 결과 |
+|---|---|
+| 구간 `[9007199254740993, 9007199254740992]` | `REJECTED` |
+| oracle `2**53+1`, 네 값·singleton 구간 `2**53` | covered **0/4**, mean bias **−1**, max error **1**, RMSE **1**, 두 toy 기준 false |
+| 정수 oracle와 float 값, 그 반대 | 차이 ±1 보존, 포함으로 승격되지 않음 |
+| 값 `[N,N,N,N+1]`, oracle 0, ABS 예산 N (`N=2**53`) | 표시 mean=N이지만 exact ratio=`[36028797018963969,4]`; **bias 기준 false** |
+| truth `2*N−1`, REL 예산 0.5 | 정확 예산 `N−0.5` 보존. 오차 N은 거부, N−1은 수용 |
+| 정상·실패·결측 혼합 | 계획 분모 4 보존. 독립 예에서 valid=2, covered=1, failed=1, missing=1, coverage=0.25, bias ratio=`[-1,2]` |
+
+추가로 signed porosity, 2^53/2^60 인접 정수·float·0.3/0.4·작은 값의 **84개 합성 조합**을 다른 exact oracle와 대조했다. 모두 일치했다. 이는 84개 고유 시험 메서드나 실제 기하 관측을 뜻하지 않는다.
+
+**표시 한계는 남지만 공개된 한계와 일치한다.** `:55–62`는 비정수 표시 float의 비영 underflow를, `:291–294`는 RMSE의 overflow/비영 0 표기를 거부한다. 예를 들어 오차가 네 번 모두 `1e308`이면 수학적 RMSE는 유한해도 중간 hypot가 범위를 벗어나 전체 `REJECTED`다. 이 동작은 `t5_fix.md` §2의 중간 float 범위 한정 안에 있다. `10**400`의 같은 값끼리 오차0은 통과했고, 최소 양의 float 하나를 네 번 평균하여 표시0이 되는 경우는 거부됐다.
+
+따라서 “정확한 판정과 ratio 보존”은 수용하지만 “RMSE도 exact”, “모든 유한 입력을 처리”, “표시 평균만 보고 재판정해도 됨”은 수용하지 않는다. 큰 JSON 정수를 다른 소비자가 손실 없이 읽는지도 이번 인증 대상이 아니다.
+
+## 4. Q2·Q3 — P2 수치 의미와 행렬 전파
+
+**수용.** `scripts/dem_gen2_p2_contract.py:61–67`의 수정이 원 int를 보존한다. 기존 `:393`, `:396`, `:402`, `:414–415`의 Fraction 비교가 이제 손실 전 값을 받는다.
+
+- POST 높이 `2**53` → `2**53+1`, 허용 `[1,1000]`: **`NOT_CONVERGED / TOY_SURFACE_DRIFT_BUDGET_EXCEEDED`**.
+- KE 한계 `[2**53,1]`, 관측 `2**53+1`: **`NOT_CONVERGED / TOY_KE_BUDGET_EXCEEDED`**.
+- 같은 큰 정수의 일정 높이와 한계에 정확히 같은 KE는 통과. 독립 확인에서는 양·음 `10**100` 좌표의 일정값/차이1도 구분했다.
+- 소스/계획 hash를 일관되게 갱신한 행렬의 수치 초과 packet은 **`REJECTED`**. 낡은 hash 불일치만으로 막힌 결과가 아니다. 후보 제공 회귀는 surface·KE 모두 확인했고, 추가 확인은 coarse/half 및 예정 음성의 numeric failure까지 포함했다.
+
+float는 본래의 이진 값이다. `float(2**53+1)`은 이미 `2**53`이므로 이를 입력한 높이 차이0 양성은 통과한다. 또 float `0.1`은 정확한 유리수 1/10보다 조금 크므로 KE 한계 `[1,10]`에서는 `NOT_CONVERGED`가 맞다. 정확히 표현되는 1/8 및 바로 위 float도 구분됐다. 소수 문자열의 의도를 복원하거나 허용오차를 새로 도입한 수정이 아니다.
+
+## 5. Q4 — 예정 음성의 도달 단계·종료점
+
+**수용.** `scripts/dem_gen2_qualification_matrix.py:242–254`는 P2 원입력을 재검사한 결과를 받고, 새 `:257–275`가 실제 반환된 second zero·clear·checked POST·post end를 묶는다. 호출자가 PASS 영수증을 만들어 넣는 방식이 아니다.
+
+| 원 trace의 도달 상태 | coarse·half 독립 결과 |
+|---|---|
+| 빈 trace, contact 하나, 두 zero까지, clear까지만 | 모두 `REJECTED` |
+| clear 뒤 완전 POST 1·2·3창 | `SYNTHETIC_MATRIX_CONSISTENT`; 부족 창 3·2·1 기록 |
+| 완전 POST 4창을 EXPECTED_NEGATIVE로 제출 | `REJECTED` |
+| sample 결손·미완전 window·재고 결손·접촉 재출현 | 모두 `REJECTED` |
+| POST KE·표면 변동 초과 | 모두 `REJECTED`; 부족 음성으로 숨기지 못함 |
+| 실패/완료 terminal 선언으로 같은 부분 trace 제출 | 전체 `INCOMPLETE`; 기대 음성 일치 아님 |
+
+coarse는 clear **144** + 4×16 = 계획 끝 **208**, half는 clear **288** + 4×32 = **416**이다. half 음성도 별도로 구성해 확인했으며, 고정 16 step을 잘못 재사용하지 않았다. 끝점을 일관되게 재해시하여 ±1 또는 ±32 step 옮겨도 거부됐다. 끝점이 마지막 관측보다 앞서면 기존 `PARTIAL_TRACE_EXCEEDS_PLANNED_END`가 먼저 발화하고, 나머지는 `EXPECTED_POST_BUDGET_MISMATCH`로 거부된다.
+
+허용된 음성도 `synthetic_case_complete=false`다. `negative_scope=POST_SHORTAGE_AFTER_SEPARATION_AND_CLEAR` 및 부족 창 진단은 합성 역할의 일치만 뜻한다. broad P2 reason을 유지하면서 이 소비자가 좁은 post 부족 범위를 추가로 확인하는 방식은 원 NSB-C02 최소 해결과 정합적이다. 1–3창 허용은 문서에 명시한 권고안 전제의 명료화 범위이며 실제 자격 정책의 추가 비준으로 쓰면 안 된다.
+
+## 6. Q5 — 회귀·가드·수령 범위 보존
+
+Windows CPython **3.12.14**, `-I -X utf8 -B`로 제공 runner를 읽은 뒤 실행했다. 다른 OS/Python·실제 엔진 자격은 미검토다.
+
+| 별도 실행 묶음 | 메서드 | 실패 | 오류 | rc |
+|---|---:|---:|---:|---:|
+| T5 새 경계 | 16 | 0 | 0 | 0 |
+| T5 기존 회귀 | 23 | 0 | 0 | 0 |
+| C01/C02 새 경계 | 11 | 0 | 0 | 0 |
+| P2 기존 회귀 | 29 | 0 | 0 | 0 |
+| 행렬 기존 회귀 | 25 | 0 | 0 | 0 |
+| T5 구본 + 같은 최종 새 시험 | 16 | 17 | 0 | 1 |
+| chain 구본 + 같은 새 시험 | 11 | 13 | 0 | 1 |
+
+T5 가드 약화 5종의 실패 수 **16·3·2·2·1**, chain 3종 **4·6·1**도 각각 오류0·rc1로 독립 재현했다. 최종5회와 구본/가드10회 모두 캡처된 source SHA·method/failure/error/rc와 일치한다. 기존 판정 replay의 “실패 기대가 맞아서 상위 rc0”을 후보 green으로 쓰지 않았다.
+
+별도 독립 경계 probe는 수정된 검토자 준비본에서 **8메서드·실패0·오류0**이다. 메서드·subtest·84조합·전후 반복·가드 종류를 합산해 고유 총수를 만들지 않는다. 입력 불변과 실제 권한 false/NOT_RUN도 확인했다. audit의 process/network 시도는 0이지만 이를 OS 전체 감사라고 부르지 않는다.
+
+검토자 첫 probe의 실패2는 숨기지 않았다. 하나는 공유 oracle를 바꾸고 첫 n 수준의 값만 바꿔 다른 n 수준이 표시 overflow로 올바르게 거부된 fixture 오류다. 다른 하나는 계획 끝을 관측 이전으로 줄였을 때 먼저 발화하는 기존 거부 사유를 잘못 예상한 오류다. 원 script/log를 보존하고 **후보·제공 시험을 바꾸지 않은 채** 별도 v2에서 준비/기대만 고쳐 8/8을 확인했다. `reviewer_probe_corrections.json`과 diff를 참조한다.
+
+작성측 준비 helper의 경로·tuple unpack 중단은 제공 기록대로 본 시험과 분리했다. 보존 로그와 같은 시험의 red/green 재현은 확인했지만, 독립 저장시각이나 과거 작성 순서를 새로 인증한 것은 아니다. 원 stderr가 없는 준비 중단을 복원했다고도 주장하지 않는다.
+
+## 7. 재현과 다음 경계
+
+`REPRODUCE_RECHECK.md`에 같은 고정 소스의 합성 시험·반례 경계 재현 명령을 적었다. 주요 결과는 `review/verification_summary.json`, 새 경계는 `review/independent_boundaries_v2/report.json`, 전후 원 로그는 `review/t5_new/`, `chain_new/`, `historical_runs/`에 있다. 최종 전달은 판정문·증거 폴더이며 이번에 추가 ZIP을 만들지 않았다.
+
+**이 세 ID의 좁은 수정 재확인은 수용한다. 전체 HOLD 해제, 실제 계산·값 열람·운영 재봉인·통합·원장 변경을 승인하지 않는다.**

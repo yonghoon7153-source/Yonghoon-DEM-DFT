@@ -1,0 +1,30 @@
+{
+  "schema": "lhs_o1_manual_receipt_draft/1",
+  "status": "NOT_RECEIVED",
+  "source_document_sha256": "e699eab8b9019efba5395e7806e0fff13d1b03738c0eac34e0ac7ceb68d4796d",
+  "author_confirmed_alias": null,
+  "declared_command_identity": null,
+  "output": {
+    "alias": null,
+    "kind": null,
+    "bytes": null,
+    "sha256": null,
+    "observed_utc": null,
+    "record_type": null,
+    "execution_identity_status": null,
+    "origin_execution_proven": null,
+    "value_access_go": null,
+    "whole_gate": null,
+    "command_rc": null
+  },
+  "actual_process_rc": null,
+  "raw_output_digest": null,
+  "received_utc": null,
+  "prior_observation_refs": [],
+  "actual_execution_identity": "NOT_ESTABLISHED",
+  "actual_canonical_segment": null,
+  "actual_A_or_C": null,
+  "freeze_status": "NOT_FROZEN",
+  "value_GO": null,
+  "overall": "HOLD"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate": "c5aa7bb527c5cf0907651bae688bb97de206a8b6",
+  "recovered_zip": "codex_nsb_c5aa7bb527c5_recovered_verdict_evidence_20261114.zip",
+  "bytes": 1984091,
+  "sha256": "11baf606e2c6129a6a8f5b09cf85bd1e2f96e8f63c24aa6fcb71bc251f2cfdea",
+  "zip_files": 528,
+  "outer_hashes": 527,
+  "prior_evidence_hashes": 254,
+  "prior_bundle_hashes": 268,
+  "original_bundle_equal_files": 269,
+  "snapshot_local_git_blobs": 24,
+  "crc_paths_duplicates_links": "PASS",
+  "original_verdict_sha256": "7785ca3ef52368b9dbcfe6330e26f57d7a815ad643c078f336860dec43cdbc8e",
+  "review_date": "2026-11-10",
+  "receipt_date": "2026-11-14",
+  "tests_rerun": 0,
+  "received_scope": "LIMITED_CLOSABLE_CODE_AND_SMALL_SYNTHETIC_CONTRACT",
+  "new_findings_at_original_review": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "overall": "HOLD",
+  "shared_ledger_changed": false,
+  "integration": false,
+  "research_or_field_execution": false
+}
