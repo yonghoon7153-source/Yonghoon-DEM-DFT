@@ -1,0 +1,12 @@
+{
+  "scope": "Synthetic accumulator arithmetic only",
+  "prefix": 2,
+  "failed_attempt": 3,
+  "successful_retry": 3,
+  "no_rollback": 8,
+  "reset_entire_frame": 3,
+  "restore_substep_prefix": 5,
+  "expected_reference": 5,
+  "source_executed": false,
+  "overall": "HOLD"
+}
