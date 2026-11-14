@@ -1,14 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-14 · managed-files: 624
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-14 · managed-files: 625
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 415건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 416건)
 - 2026-11-14 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-14 · `kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md` — EK 회신 — b2o3 9 단계 DFT 도구 v6: 조건부 GO (gabia/Linux 생성 · 판독 범위) · EJ P2 해제 · 실행은 사용자 비준 뒤 · Windows 짧은 경로명 (8.3) 과 긴 이름이 섞이면 같은 파일을 다르게 판단하는 별도 P2 (Linux 생산 경로 차단 사유 아님) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인 · 수령 2026-11-14 (사용자 붙여넣기) · 조건부 GO (gab…
+- 2026-11-14 · `kb/reviews/internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` — EL 프롬프트 (내부 반박 리뷰) — li2s-3 카드 개정 4: 큐 끝 줄 유실 인정이 '끝 줄 하나만 빠진 완료 큐' 만 받는가 (판독 보류 처리 · 결과 전) · 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전…
 - 2026-11-13 · `kb/reviews/codex_EF_prompt_b2o3_dft_stage9_tools_2026_11_13.md` — EF 프롬프트 — b2o3 B·O 배치 9 단계 DFT 도구 · 카드 개정 5 (결과 전): 출력 결속 · EOS (E, P, V) 결과 파일 결속 (DY 확인 4) · k 탐침 발동 범위 · 기준 셀 · 10 단계 고르기 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia 검사 결과 넣음 · 발송 (사…
 - 2026-11-13 · `kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md` — EF 회신 — b2o3 9 단계 DFT 도구 · 카드 개정 5: NO-GO (P0 0 · P1 6 · P2 6) · DY 확인 4 아직 해제 못 함 · 세 쌍 탐침 해석 찬성 · 기준 셀 조건부 수용 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
 - 2026-11-13 · `kb/reviews/codex_EG_prompt_b2o3_dft_stage9_v2_2026_11_13.md` — EG 프롬프트 — b2o3 9 단계 DFT 도구 v2 (Codex EF NO-GO 고침) 재확인: 한 출력 = 한 실행 · k 격자 대조 · 전자 수 · BFGS 기준 · 다시 결속 · EOS 보류 대상 null — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v2 검사 결과 넣음 (HEA…
@@ -26,7 +27,6 @@
 - 2026-11-10 · `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` — DZ 회신 — li2s-3 구조군 정의 · 본 시드 재사용 · 골격 게이트 · 2 단계 큐: NO-GO (P0 0 · P1 6 · P2 3) — 구조군 정의와 여섯 시드 재사용은 조건부 찬성 · 실행 · 재개 경로 결함과 보고량 조건이 남음 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
 - 2026-11-10 · `kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 프롬프트 — b2o3 B·O 배치: 파일럿 이완 에너지가 100 ps 까지 계속 내려간다 → 8 단계 (54 런 × 100 ps) 판독 전에 박은 어닐 시간 진단 (50 ps 프레임 이완 · 두 시점 가족 판독) 과 잠정 규칙이 충분한가 · 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종…
 - 2026-11-10 · `kb/reviews/codex_EA_reply_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 회신 — b2o3 어닐 시간 진단 (개정 3): 개정 3 문구 · 비교 규칙 그대로의 최종 판정은 보류 (P0 0 · P1 2 · P2 2) — D1 · D2 진단은 찬성 · 54 런은 계속 · 해제 조건 셋 (판정 사유 분리 · 성공 집합 불일치 처리 · 결과 공개 전 도구 결속 · 정상/음성 경로) · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
-- 2026-11-10 · `kb/reviews/codex_EB_prompt_li2s3_dz_fixes_2026_11_10.md` — EB 프롬프트 — li2s-3 회신 DZ 고침: 사후 검증 (v1 런) · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 판독 허가 문 · 압력 도구 · 대조 잡 — v1 런을 사후 검증으로 받아도 되는가 · 고친 큐 v2 를 추가 런 전으로 미뤄도 되는가 · Codex 토큰 없음 (사용자 2026-11-10) → 내부 반박 리…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (284)
+## reviews/ (285)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-14 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -453,6 +453,7 @@
 - `kb/reviews/internal_ED_reply_cascade_bundle2_card_2026_11_10.md` — ED 회신 (내부 반박 리뷰) — cascade 묶음 2 카드: 조건부 GO (P0 0 · P1 6 · P2 5) — ⑤ 반응물 회계가 스펙테이터 염 부피를 산물 쪽에만 넣는다 · 순위 기계 (R9 문장 · 축마다 다른 기준 집합 · 동률 폭 = 숨은 무게) · 표시 모름이 무리 A 를 덮는다 · ④ 전압 → 산물 대응 · 휘발 산물 · 규칙을 바꾸면서 '지킨다'  (2026-11-10 · 수령 2026-11-10 — 원문 그대로 (에이전트 최종 보고 · 저…)
 - `kb/reviews/internal_EE_prompt_li2s3_queue_v2_2026_11_10.md` — EE 프롬프트 (내부 반박 리뷰) — li2s-3 큐 v2 (재실행 · cond550) 와 판독 v2 경로: DZ 의 v1 반례를 막는가 · 섞인 판독 · cond550 연결 · 비용 · 정지가 결과 전에 잘 정의됐는가  (2026-11-10 · 발송 2026-11-10 — 내부 반박 리뷰 (큐 v2 를 쓴 에이전…)
 - `kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md` — EE 회신 (내부 반박 리뷰) — li2s-3 큐 v2 · 판독 v2 경로: 조건부 GO (P0 0 · P1 3 · P2 6) — DZ 반례는 막는다 · 결과를 본 뒤 사다리 런을 다시 굴려 최종 갈래를 바꾸는 길 · 환경변수 카드 · 원장 · PHASE 로 첫 런 한도를 피하는 길이 남음  (2026-11-10 · 회신 원문 (독립 리뷰 에이전트 · 2026-11-10) — 저장소 …)
+- `kb/reviews/internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` — EL 프롬프트 (내부 반박 리뷰) — li2s-3 카드 개정 4: 큐 끝 줄 유실 인정이 '끝 줄 하나만 빠진 완료 큐' 만 받는가 (판독 보류 처리 · 결과 전)  (2026-11-14 · 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전…)
 - `kb/reviews/internal_Z2_reply_polaron_S0_2026_09_03.md` — 회신 Z-2 — 폴라론 S0 내부 적대적 리뷰 2차 (NO-GO · P0 2 · P1 9)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_Z3_reply_polaron_S0_2026_09_03.md` — 회신 Z-3 — 폴라론 S0 내부 적대적 리뷰 3차 (NO-GO · P0 1 · P1 7)  (2026-09-03 · 회신반영)
 - `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)  (2026-09-03 · 회신반영)
