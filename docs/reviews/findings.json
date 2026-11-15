@@ -16867,7 +16867,7 @@
    "found_by": "메인 세션 (11-10 1저자 브리핑 준비 중 litdb 정본 papers/ 전수 검색 · INDEX 아님)",
    "opened_in": "docs/reviews/dem_redesign_direction_20261109/briefing_ko.md",
    "title": "[DEM 우선 (수영)] 방향 메모 3.1 판이 litdb 정본의 LPSCl 압밀 · 경도 카드 (lee2025_heckel_argyrodite_powder_densification_nanoindentation · miss2026_insitu_conductivity_porosity_pressure_compaction · thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography 등) 를 보지 않고 \"LPSCl 항복 · 경도 카드 없음\" · \"외부 기준은 점 하나\" 라고 적었다 · 사전 공격 세 번도 놓침",
-   "note": "메모 3.1 = 1저자가 11-10 그대로 Codex 반박 창에 발송 (리뷰 핀 13eb293cd · 판정 = 본 세션에서 받음) · 처분 = 판정 뒤 3.2 판에서 대조 항목 (σ_y* 비교 · 압력별 곡선 모양 · 탈압 크기 · 결과 전 등록) + 참고문헌 목록 · 기준 (순수 SE 10–13 % · 진밀도 1.64) · 손잡이 · 갈림 표 불변 · 교훈 = 사전 공격 지시서에 \"litdb papers/ 전수 검색 (INDEX 아님)\" 을 넣는다 (CLAUDE.md litdb 규칙과 같은 사고) · 11-10 Codex 판정 (DRD-01–13 · HOLD · 방향 지지) 반입 → 3.2 에서 DRD 최소 수정과 함께"
+   "note": "메모 3.1 = 1저자가 11-10 그대로 Codex 반박 창에 발송 (리뷰 핀 13eb293cd · 판정 = 본 세션에서 받음) · 처분 = 판정 뒤 3.2 판에서 대조 항목 (σ_y* 비교 · 압력별 곡선 모양 · 탈압 크기 · 결과 전 등록) + 참고문헌 목록 · 기준 (순수 SE 10–13 % · 진밀도 1.64) · 손잡이 · 갈림 표 불변 · 교훈 = 사전 공격 지시서에 \"litdb papers/ 전수 검색 (INDEX 아님)\" 을 넣는다 (CLAUDE.md litdb 규칙과 같은 사고) · 11-10 Codex 판정 (DRD-01–13 · HOLD · 방향 지지) 반입 → 3.2 에서 DRD 최소 수정과 함께 · 11-13 Codex 메모 3.2 재리뷰 = 부분 → 잔여 M32R-06 (Codex 실무 고침 · 문서 범위 한정 종결 가능 수령) · 이 항목은 open 유지 (자동 승격 없음 · 잔여 고친 쪽 = codex) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "SELF-162",
@@ -16887,67 +16887,127 @@
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "등급 일치는 응력비의 수렴이 아니다 — 12 · 16 셀 등급이 같으면 확정하는 규칙 (메모 3.1 단계 3) 이 R(n)=1.10+3.36/n 합성 반례 (12 셀 다름 · 16 셀 다름 · 24 셀 중간 · 극한 같음) 를 통과시킨다 · U6 은 F 기공만 제한",
-   "note": "최소 수정 = S · F 응력과 짝 ln R 의 수치 오차를 추정해 등급 경계와 견줌 · 구간이 경계를 가로지르거나 수렴 차수 미확인이면 중간/보류 · A 등급만 외삽하는 비대칭 제거 · 새 허용폭 숫자는 1저자 등록 (판정문 §3 DRD-01) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = S · F 응력과 짝 ln R 의 수치 오차를 추정해 등급 경계와 견줌 · 구간이 경계를 가로지르거나 수렴 차수 미확인이면 중간/보류 · A 등급만 외삽하는 비대칭 제거 · 새 허용폭 숫자는 1저자 등록 (판정문 §3 DRD-01) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS · 11-13 Codex 메모 3.2 재리뷰 = 부분 → 잔여 M32R-01 (Codex 실무 고침 · 문서 범위 한정 종결 가능 수령) · 이 항목은 open 유지 (자동 승격 없음 · 잔여 고친 쪽 = codex) · 남은 = 보편 수렴 · 물리 자격 (memo32_closure not_closed) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-02",
    "severity": "P1",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "같은 구성식의 효과는 S/F 비에서 자동 소거되지 않는다 — 2D (가) 음성 결과로 3D 의 F 대조를 생략하는 경로 (메모 3.1 단계 4 (4-ii) 는 (마) 에서만 F 를 다시 연다) 가 남는다",
-   "note": "최소 수정 = \"같은 구성식에서의 조건부 응답 차이\" 로 문구 축소 · (가) 에서도 실제 강성 실패 · 연화 필요가 나오면 같은 3D 조건 F 대조를 열거나 비용상 선택임을 밝히고 결론을 낮춤 · \"붙음이 주원인\" 대신 \"등록된 2D 조건에서 접촉 표현 변경이 응답을 바꿨다\" · 재배열 저해 주장 = 직접 관측 필요 (판정문 §3 DRD-02) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = \"같은 구성식에서의 조건부 응답 차이\" 로 문구 축소 · (가) 에서도 실제 강성 실패 · 연화 필요가 나오면 같은 3D 조건 F 대조를 열거나 비용상 선택임을 밝히고 결론을 낮춤 · \"붙음이 주원인\" 대신 \"등록된 2D 조건에서 접촉 표현 변경이 응답을 바꿨다\" · 재배열 저해 주장 = 직접 관측 필요 (판정문 §3 DRD-02) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-03",
    "severity": "P2",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "Φ 정의의 점별 OR (Φ_m 또는 Φ_d) 는 한 정의로 일관된 곡선이 없어도 NZ22 F 정합을 통과시킨다 · NZ22 원문 (Eq 4 · §4 · App 1 Eq 19) 은 현재 변형 부피 Φ_d 를 지지",
-   "note": "최소 수정 = NZ22 비교는 Φ_d 로 고정 · Φ_m 보고 · 한 정의가 곡선 전체를 통과해야 함 (판정문 §3 DRD-03) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = NZ22 비교는 Φ_d 로 고정 · Φ_m 보고 · 한 정의가 곡선 전체를 통과해야 함 (판정문 §3 DRD-03) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-04",
    "severity": "P2",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "단계 4 탐색 8 점이 재시도 뒤 모두 실패하면 출발점 (빈 집합 argmin) 과 보류 상태가 정의되지 않는다",
-   "note": "최소 수정 = 유효 탐색점 0 이면 그 팔은 보류 (판정문 §3 DRD-04) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 유효 탐색점 0 이면 그 팔은 보류 (판정문 §3 DRD-04) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-05",
    "severity": "P2",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "자격용 충전 ID 가 결과 전에 고정되지 않아 같은 자료가 충전 선택에 따라 (4-i) 또는 보류가 된다",
-   "note": "최소 수정 = 자격용 충전 ID · 선택 규칙 · σ_y* 최근접 거리 척도 · 동률 규칙을 결과 전 고정 (판정문 §3 DRD-05) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 자격용 충전 ID · 선택 규칙 · σ_y* 최근접 거리 척도 · 동률 규칙을 결과 전 고정 (판정문 §3 DRD-05) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-06",
    "severity": "P2",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "(마)+(4-ii) 뒤 다시 연 F 팔의 가로지름 선택이 자격 실패 (보류) 사용 금지와 충돌 — 재개 경로에 \"보류가 아니고\" 조건이 없다 (예 0.2204540769 GPa)",
-   "note": "최소 수정 = 재개 F 선택에도 자격 통과 · 보류 아님 명시 · F 쌍의 다른 팔 실패 · 강성 순서 경보 적용 여부 명시 (판정문 §3 DRD-06) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 재개 F 선택에도 자격 통과 · 보류 아님 명시 · F 쌍의 다른 팔 실패 · 강성 순서 경보 적용 여부 명시 (판정문 §3 DRD-06) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-07",
    "severity": "P2",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "전역 가압이 국소 이탈 없음이 아니다 — 압축 중에도 접촉이 풀리므로 이종 · 소성 접촉 분리 검산을 전부 탈압 단계로 미루면 단계 3 반력이 오염될 수 있다 · 3D 양방향 판 덮어쓰기와 2D 일방향은 판이 내려가는 중에도 다르다 (메모 3.1 의 \"누르기만 하므로 판정에 안 들어감\" 불성립)",
-   "note": "최소 수정 = 단계 3 전에 이종 · 소성 접촉의 국소 해제와 판 일방향 접촉 작은 시험 · 새 S/F 의 일방향 판을 기존 3D 생산 규약과 동일시하지 않음 (판정문 §3 DRD-07) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 단계 3 전에 이종 · 소성 접촉의 국소 해제와 판 일방향 접촉 작은 시험 · 새 S/F 의 일방향 판을 기존 3D 생산 규약과 동일시하지 않음 (판정문 §3 DRD-07) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-08",
@@ -16957,17 +17017,27 @@
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "다물체 노드의 총운동량 · 해상도 일치만으로는 마찰이 에너지를 만드는 오류 · 순서 의존을 막지 못한다 (합성 반례 운동에너지 1 → 1.21 · 운동량 0 유지)",
-   "note": "최소 수정 = 접촉쌍별 Coulomb · 분리 조건 · 접촉 일 · 에너지 · 색 순서 permutation · 선형 · 각운동량 시험 · 대칭 삼중 배치 하나로 조밀 다물체 수용 금지 (판정문 §3 DRD-08) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 접촉쌍별 Coulomb · 분리 조건 · 접촉 일 · 에너지 · 색 순서 permutation · 선형 · 각운동량 시험 · 대칭 삼중 배치 하나로 조밀 다물체 수용 금지 (판정문 §3 DRD-08) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS · 11-13 Codex 메모 3.2 재리뷰 = 부분 → 잔여 M32R-02 (Codex 실무 고침 · 문서 범위 한정 종결 가능 수령) · 이 항목은 open 유지 (자동 승격 없음 · 잔여 고친 쪽 = codex) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-09",
    "severity": "P2",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "판 이동량은 재색칠 전 입자 지지집합 이동의 안전 상한이 아니다 (상대 접근 2 셀 · 재배열 · 회전 미포함) · 압축 real_14 의 nearest-ID 분할 K 를 최악 경우라 부를 수 없다",
-   "note": "최소 수정 = 입자 · 지지집합별 이동 예산 · 변형 · 주기 경계를 포함한 안전 그래프 · 매 걸음 동색 공유 노드 검사 · 원 씨앗 ID 지지집합 계수 · 메모리 산술과 안전 K 인증 분리 (판정문 §3 DRD-09) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 입자 · 지지집합별 이동 예산 · 변형 · 주기 경계를 포함한 안전 그래프 · 매 걸음 동색 공유 노드 검사 · 원 씨앗 ID 지지집합 계수 · 메모리 산술과 안전 K 인증 분리 (판정문 §3 DRD-09) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-10",
@@ -16977,7 +17047,7 @@
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "후보별 맞춘 선택 집계에 F 의 접촉 마찰 (F-실제 2 · F-연화 3) 과 C′ (scripts/dem3d_plastic.py) 의 lock 분기 (beta_lock 0.06 · klock 8 · beta 0.30 이면 힘 비 51.7) 가 빠졌다",
-   "note": "최소 수정 = 후보별 모든 물리 · 경험 · 수치 선택과 출처 · 적합 자유도와 미출처 고정 선택 구분 · lock 분기 제거면 새 구현 범위로 명시 (판정문 §3 DRD-10) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 후보별 모든 물리 · 경험 · 수치 선택과 출처 · 적합 자유도와 미출처 고정 선택 구분 · lock 분기 제거면 새 구현 범위로 명시 (판정문 §3 DRD-10) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS · 11-13 Codex 메모 3.2 재리뷰 = 부분 → 잔여 M32R-05 (Codex 실무 고침 · 문서 범위 한정 종결 가능 수령) · 이 항목은 open 유지 (자동 승격 없음 · 잔여 고친 쪽 = codex) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-11",
@@ -16987,7 +17057,7 @@
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "고정 AM 의 구속 반력을 \"하중 0\" 으로 불렀다 — 노드 속도를 0 으로 만들며 뺀 운동량이 곧 구속 반력 (scripts/mpm3d_compaction.py 2983–2990)",
-   "note": "최소 수정 = \"고정 AM 은 구속 반력을 받지만 움직이는 AM–AM 하중 경로와 상 응력 분담 f_AM 을 독립 계산하지 않는다\" · f=0 팔은 f 를 빌리지 않을 뿐 · 같은 stencil 공유 = 영구 용접 단정 금지 (판정문 §3 DRD-11) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = \"고정 AM 은 구속 반력을 받지만 움직이는 AM–AM 하중 경로와 상 응력 분담 f_AM 을 독립 계산하지 않는다\" · f=0 팔은 f 를 빌리지 않을 뿐 · 같은 stencil 공유 = 영구 용접 단정 금지 (판정문 §3 DRD-11) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS · 11-13 Codex 메모 3.2 재리뷰 = 부분 → 잔여 M32R-04 (Codex 실무 고침 · 문서 범위 한정 종결 가능 수령) · 이 항목은 open 유지 (자동 승격 없음 · 잔여 고친 쪽 = codex) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-12",
@@ -16997,17 +17067,27 @@
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "작은 상자 한 점 · 한 충전의 자격이 최종 50 × 50 × 30 µm 세 충전 걷기를 인증하지 않는다 · F 만 25 µm 상자로 줄이면 접촉 표현과 상자 크기가 교락",
-   "note": "최소 수정 = 자격을 실제 확인한 상자 · 점 · 충전 범위로 한정 · F 축소 상자면 같은 상자 S 짝 비교 + S 크기 효과 별도 (판정문 §3 DRD-12) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = 자격을 실제 확인한 상자 · 점 · 충전 범위로 한정 · F 축소 상자면 같은 상자 S 짝 비교 + S 크기 효과 별도 (판정문 §3 DRD-12) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS · 11-13 Codex 메모 3.2 재리뷰 = 부분 → 잔여 M32R-03 (Codex 실무 고침 · 문서 범위 한정 종결 가능 수령) · 이 항목은 open 유지 (자동 승격 없음 · 잔여 고친 쪽 = codex) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "DRD-13",
    "severity": "P3",
-   "status": "open",
+   "status": "verified",
    "owner": "claude",
    "found_by": "codex 11-10 [DEM 우선 (수영)] 방향 메모 3.1 반박 리뷰 (리뷰 핀 13eb293cd · litdb 099116169 · 문서 · 소스 · 원문 대조 + 소형 합성 산술 · 연구 런 0)",
    "opened_in": "docs/reviews/codex_review_dem_redesign_direction_20261110.md",
    "title": "Zunker 2025 를 프리프린트로만 적었다 — 정식 출판 (Powder Technology 459, 120972 (2025) · doi 10.1016/j.powtec.2025.120972) 이 있다 (Codex 확인 · 우리 카드는 제공 프리프린트 기반)",
-   "note": "최소 수정 = \"읽은 제공본은 프리프린트 · 정식판 존재 · 본문 차이 미대조\" (판정문 §3 DRD-13) · 서지 숫자는 Codex 판정문 인용 (우리 원문 미확인) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS"
+   "note": "최소 수정 = \"읽은 제공본은 프리프린트 · 정식판 존재 · 본문 차이 미대조\" (판정문 §3 DRD-13) · 서지 숫자는 Codex 판정문 인용 (우리 원문 미확인) · 처분 = 메모 3.2 (본 세션 · docs/reviews/dem_redesign_direction_20261109/verdict_disposition_20261110.md) · 우리 환경 재현 = reproduce_review.py PASS",
+   "claimed_fixed_sha": "a0455e90b",
+   "evidence_tests": [
+    "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+    "docs/reviews/memo32_fixes_20261113/README.md"
+   ],
+   "verified_by": "codex",
+   "verified_sha": "62a48d08b",
+   "verified_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "verified_scope": "메모 3.2 문서 범위 한정 종결 가능 (Codex 반박 11-13 독립 재리뷰 · 요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b) — 물리 자격 · 수치 정책 · 등록 · 연구 실행 · 배포 아님 · 전체 HOLD",
+   "verification_note": "고침 = 메모 3.2 (Claude 대피 세션 · a0455e90b) · 원장 제안 docs/reviews/memo32_fixes_20261113/ledger_proposal.json existing_document_closure_possible · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "P6R-01",
@@ -17455,103 +17535,138 @@
   {
    "id": "SELF-170",
    "severity": "P3",
-   "status": "open",
-   "owner": "claude",
+   "status": "claimed_fixed",
+   "owner": "codex",
    "found_by": "게이트 조각 2 (126–183 · HEAD 3daa2c48a · 11-12 17:3x UTC · 대피 세션) 단계 182 fast 자기검사 전수 — scripts/mixer_smoke_blind.py --selftest ㉓ 한 건 실패 · 같은 HEAD 바로 다시 = 통과 · PYTHONHASHSEED 0–7 = 통과",
    "opened_in": "scripts/mixer_smoke_blind.py",
    "title": "믹서 selftest ⑮ · ⑯ · ㉓ 의 값 누출 검사가 기록 · 화면의 µs 타임스탬프 숫자와 글자로 겹치면 거짓 실패 (예: 바늘 '0.9643' ⊂ '…:10.964312Z' · 'HHMMSS.ffffff' 파일 이름)",
-   "note": "원인 재현 = 시계를 2026-11-12T17:35:10.964312Z 로 고정한 사본 → ⑮ ✗ · ㉓ ✗ (rc 1) · 고정 안 한 같은 사본 = 통과 · 어림 확률 (한 번) ⑮ ~1e-3 · ㉓ ~4e-5 · 판독 · 봉인 동작 무관 (selftest 문자열 검사만) · 고칠 방향 = 바늘 앞 글자가 숫자가 아닐 때만 누출로 셈 ((?<![0-9]) + 바늘 · 진짜 누출 '\"M\": 0.9643' · '-0.3929' · repr 앞자리는 그대로 잡힘) + 합성 문자열 시험 · 시계 고정 사본 전 ✗ → 뒤 ✓ · 오늘 고치지 않은 까닭 = mixer_smoke_blind.py sha256 = E0 진단 기록이 봉인하는 도구 (mixer_stage_gate.e0_record_tools · '기록 = 지금 리포 도구') · 믹서 E0 재봉인 (커밋 A · B) 대기 → 고침은 재봉인 묶음과 함께 (도구 해시를 한 번만 바꿈) · 게이트 처리 = 같은 HEAD 로 조각 2 다시 = 58/58 (거짓 실패 원인 재현 = flake 아님)"
+   "note": "원인 재현 = 시계를 2026-11-12T17:35:10.964312Z 로 고정한 사본 → ⑮ ✗ · ㉓ ✗ (rc 1) · 고정 안 한 같은 사본 = 통과 · 어림 확률 (한 번) ⑮ ~1e-3 · ㉓ ~4e-5 · 판독 · 봉인 동작 무관 (selftest 문자열 검사만) · 고칠 방향 = 바늘 앞 글자가 숫자가 아닐 때만 누출로 셈 ((?<![0-9]) + 바늘 · 진짜 누출 '\"M\": 0.9643' · '-0.3929' · repr 앞자리는 그대로 잡힘) + 합성 문자열 시험 · 시계 고정 사본 전 ✗ → 뒤 ✓ · 오늘 고치지 않은 까닭 = mixer_smoke_blind.py sha256 = E0 진단 기록이 봉인하는 도구 (mixer_stage_gate.e0_record_tools · '기록 = 지금 리포 도구') · 믹서 E0 재봉인 (커밋 A · B) 대기 → 고침은 재봉인 묶음과 함께 (도구 해시를 한 번만 바꿈) · 게이트 처리 = 같은 HEAD 로 조각 2 다시 = 58/58 (거짓 실패 원인 재현 = flake 아님) · 11-13 Codex 실무 고침 087ba5eb9 (반입 5c095b575 · 고정 바늘 앞 글자가 숫자일 때 누출로 세지 않음 · 합성 selftest 한정) · owner 를 codex 로 옮김 (고친 쪽) · 시험 11/11 (11-15 Linux 같음) · Linux 전체 · 시계 고정 전체 사본 확인 = 계획만 (2a1969676 · 69db2eb83 · 3456af3e0) · 독립 재확인 없음 · ⚠ mixer_smoke_blind.py sha256 이 바뀌어 mixer_stage_gate.e0_record_tools 가 묶는 도구 신원이 달라짐 = 옛 E0 기록으로 단계를 열지 못함 → E0 재봉인 A/B 때 반영 (계획대로 · 1저자 GO) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "5c095b575",
+   "evidence_tests": [
+    "scripts/test_mixer_self170_canaries.py",
+    "docs/reviews/mixer_self170_20261113/README.md"
+   ]
   },
   {
    "id": "RCPX-01",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
    "opened_in": "scripts/cjunc_store.py",
    "external_id": "RCPX-01",
    "title": "저장본 적중 반환 전 코드 칸을 다시 재지 않아, 시작 검사 뒤 (열쇠 셈 · 파일 읽기 중) 디스크 소스가 바뀌면 옛 원장을 hit 로 돌려준다",
-   "note": "고침 = get_or_build 적중 반환 직전 code_drift() 다시 셈 · 바뀌면 저장본을 쓰지 않고 새로 짓기 (status disabled · 사유 글) · 시험 T15n (열쇠 셈 도중 코드 파일 바꿈 → 고치기 전 hit (옛 원장 f24cbd ≠ 새 202eb9) → 뒤 disabled) · 변이 M1-01 잡힘 · 한정 = 한 번 더 재는 것이 임의 동시 변경을 원자적으로 막지는 않는다 (실행 소스 불변 전제 그대로 · 판정문 RCPX-01 최소 수정)",
-   "claimed_fixed_sha": "bbe468a7d02223f51bc20442f402d6a3cb2b3847",
+   "note": "고침 = get_or_build 적중 반환 직전 code_drift() 다시 셈 · 바뀌면 저장본을 쓰지 않고 새로 짓기 (status disabled · 사유 글) · 시험 T15n (열쇠 셈 도중 코드 파일 바꿈 → 고치기 전 hit (옛 원장 f24cbd ≠ 새 202eb9) → 뒤 disabled) · 변이 M1-01 잡힘 · 한정 = 한 번 더 재는 것이 임의 동시 변경을 원자적으로 막지는 않는다 (실행 소스 불변 전제 그대로 · 판정문 RCPX-01 최소 수정) · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 bbe468a7d → 새 8dcaa50a1)",
+   "claimed_fixed_sha": "8dcaa50a1",
    "evidence_tests": [
     "scripts/test_cjunc_store.py"
-   ]
+   ],
+   "verified_by": "codex",
+   "verified_sha": "250abf1a4",
+   "verified_in": "docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+   "verified_scope": "Codex 반박 1/2 고침 묶음 독립 재확인 (원 검토 핀 97d8831a8 = 반입 250abf1a4) — 해당 코드 · 문서 범위 한정 종결 가능 · 새 P1/P2 없음.  범위 밖 = 실제 POSIX 전체 suite · 두 기계 조립 · GPU · cuSPARSE · 연구 · 봉인 실행 · RCPX-01 다시 재기 = 틈 좁힘 (실행 중 동시 변경 부재 인증 아님) · 가중 그래프 같음 ≠ CSR 바이트 같음 · Q12 = 자기 기록 · 입력 ID 계약 한정 (물리 정답 · 진위 아님) · 전체 HOLD",
+   "verification_note": "2026-11-13 Codex 반박 독립 재확인 (Codex 실무 수령 · 원 판정문 = 리포 밖 원 ZIP · 리포 = 실무 수령 요약 received_verdict.md · 원장 제안 docs/reviews/rint2_rtr01_destination_audit_20261113/ledger_proposal.json prior_review_receipt.closable_limited) → 상태를 옮겼다 · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "RCPX-02",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
    "opened_in": "scripts/run_contract.py",
    "external_id": "RCPX-02",
    "title": "git 시험 고정물 env 가 부르는 쪽 GIT_TEMPLATE_DIR 를 남겨, git init 이 그 틀의 훅을 복사하고 고정물 commit 이 실행한다",
-   "note": "고침 = run_contract.git_fixture_env: GIT_TEMPLATE_DIR = 빈 전용 틀 · core.hooksPath = 빈 전용 폴더 (GIT_CONFIG_PARAMETERS) · GIT_QUARANTINE_PATH 뺌 · CEILING · NOSYSTEM · GLOBAL 그대로 · 생산 git 무변경 · 시험 G7f · g · h (고치기 전 훅 1 회씩 · rc 128 → 뒤 0 회 · rc 0) · 변이 M2-09–11 잡힘",
-   "claimed_fixed_sha": "b33347fc03788a650b2820e8c08b986cf3400630",
+   "note": "고침 = run_contract.git_fixture_env: GIT_TEMPLATE_DIR = 빈 전용 틀 · core.hooksPath = 빈 전용 폴더 (GIT_CONFIG_PARAMETERS) · GIT_QUARANTINE_PATH 뺌 · CEILING · NOSYSTEM · GLOBAL 그대로 · 생산 git 무변경 · 시험 G7f · g · h (고치기 전 훅 1 회씩 · rc 128 → 뒤 0 회 · rc 0) · 변이 M2-09–11 잡힘 · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 b33347fc0 → 새 02d41b1b8)",
+   "claimed_fixed_sha": "02d41b1b8",
    "evidence_tests": [
     "scripts/test_git_env_isolation.py"
-   ]
+   ],
+   "verified_by": "codex",
+   "verified_sha": "250abf1a4",
+   "verified_in": "docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+   "verified_scope": "Codex 반박 1/2 고침 묶음 독립 재확인 (원 검토 핀 97d8831a8 = 반입 250abf1a4) — 해당 코드 · 문서 범위 한정 종결 가능 · 새 P1/P2 없음.  범위 밖 = 실제 POSIX 전체 suite · 두 기계 조립 · GPU · cuSPARSE · 연구 · 봉인 실행 · RCPX-01 다시 재기 = 틈 좁힘 (실행 중 동시 변경 부재 인증 아님) · 가중 그래프 같음 ≠ CSR 바이트 같음 · Q12 = 자기 기록 · 입력 ID 계약 한정 (물리 정답 · 진위 아님) · 전체 HOLD",
+   "verification_note": "2026-11-13 Codex 반박 독립 재확인 (Codex 실무 수령 · 원 판정문 = 리포 밖 원 ZIP · 리포 = 실무 수령 요약 received_verdict.md · 원장 제안 docs/reviews/rint2_rtr01_destination_audit_20261113/ledger_proposal.json prior_review_receipt.closable_limited) → 상태를 옮겼다 · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "RCPX-03",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
    "opened_in": "docs/reviews/codex_rint2_codepkg_review_request_20261113.md",
    "external_id": "RCPX-03",
    "title": "Q12 두 기계 조립 대조 설계가 정규 가중 그래프 지문만으로 조립 행렬 (CSR) 비트 같음을 판정하려 했다 (병렬 간선 합산 차례 = 1 ulp 반례)",
-   "note": "고침 = 새 개발 설계 도구 scripts/cjunc_asm_compare.py (가중 그래프 같음 ↔ 조립 바이트 같음 = CSR 형식 · 모양 · data · indices · indptr · RHS · DOF 차례를 따로 · 미완료 · main null · 빈 그래프 = 양성 근거 아님 · 조립만 기록 = 가중 그래프 같음까지만) · 시험 K1a (판정문 반례 재현) · K1–K6 · 고치기 전 1/2 → 7/7 (3.11 · 3.8) · 변이 11/11 · 실제 두 기계 실행 없음 (1저자 결정 · 개발 탐침 원장 줄 먼저)",
-   "claimed_fixed_sha": "234a17524a97805b5b7b97d52249540c605f6a74",
+   "note": "고침 = 새 개발 설계 도구 scripts/cjunc_asm_compare.py (가중 그래프 같음 ↔ 조립 바이트 같음 = CSR 형식 · 모양 · data · indices · indptr · RHS · DOF 차례를 따로 · 미완료 · main null · 빈 그래프 = 양성 근거 아님 · 조립만 기록 = 가중 그래프 같음까지만) · 시험 K1a (판정문 반례 재현) · K1–K6 · 고치기 전 1/2 → 7/7 (3.11 · 3.8) · 변이 11/11 · 실제 두 기계 실행 없음 (1저자 결정 · 개발 탐침 원장 줄 먼저) · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 234a17524 → 새 8fc0b6a11)",
+   "claimed_fixed_sha": "8fc0b6a11",
    "evidence_tests": [
     "scripts/test_cjunc_asm_compare.py"
-   ]
+   ],
+   "verified_by": "codex",
+   "verified_sha": "250abf1a4",
+   "verified_in": "docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+   "verified_scope": "Codex 반박 1/2 고침 묶음 독립 재확인 (원 검토 핀 97d8831a8 = 반입 250abf1a4) — 해당 코드 · 문서 범위 한정 종결 가능 · 새 P1/P2 없음.  범위 밖 = 실제 POSIX 전체 suite · 두 기계 조립 · GPU · cuSPARSE · 연구 · 봉인 실행 · RCPX-01 다시 재기 = 틈 좁힘 (실행 중 동시 변경 부재 인증 아님) · 가중 그래프 같음 ≠ CSR 바이트 같음 · Q12 = 자기 기록 · 입력 ID 계약 한정 (물리 정답 · 진위 아님) · 전체 HOLD",
+   "verification_note": "2026-11-13 Codex 반박 독립 재확인 (Codex 실무 수령 · 원 판정문 = 리포 밖 원 ZIP · 리포 = 실무 수령 요약 received_verdict.md · 원장 제안 docs/reviews/rint2_rtr01_destination_audit_20261113/ledger_proposal.json prior_review_receipt.closable_limited) → 상태를 옮겼다 · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "RCPX-04",
    "severity": "P3",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
    "opened_in": "scripts/cjunc_store.py",
    "external_id": "RCPX-04",
    "title": "CRC 를 지난 배열 멤버 머리의 예상 밖 예외 (shape 2**100 → OverflowError) 가 어긋남 (StoreInconsistent) 으로 분류되지 않았다",
-   "note": "고침 = 배열 멤버 해석의 MemoryError 는 그대로 올리고 그 밖 예외는 StoreInconsistent (array) · 시험 T7x-1 · T7x-2 · 변이 M1-02 · M1-03 잡힘",
-   "claimed_fixed_sha": "bbe468a7d02223f51bc20442f402d6a3cb2b3847",
+   "note": "고침 = 배열 멤버 해석의 MemoryError 는 그대로 올리고 그 밖 예외는 StoreInconsistent (array) · 시험 T7x-1 · T7x-2 · 변이 M1-02 · M1-03 잡힘 · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 bbe468a7d → 새 8dcaa50a1)",
+   "claimed_fixed_sha": "8dcaa50a1",
    "evidence_tests": [
     "scripts/test_cjunc_store.py"
-   ]
+   ],
+   "verified_by": "codex",
+   "verified_sha": "250abf1a4",
+   "verified_in": "docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+   "verified_scope": "Codex 반박 1/2 고침 묶음 독립 재확인 (원 검토 핀 97d8831a8 = 반입 250abf1a4) — 해당 코드 · 문서 범위 한정 종결 가능 · 새 P1/P2 없음.  범위 밖 = 실제 POSIX 전체 suite · 두 기계 조립 · GPU · cuSPARSE · 연구 · 봉인 실행 · RCPX-01 다시 재기 = 틈 좁힘 (실행 중 동시 변경 부재 인증 아님) · 가중 그래프 같음 ≠ CSR 바이트 같음 · Q12 = 자기 기록 · 입력 ID 계약 한정 (물리 정답 · 진위 아님) · 전체 HOLD",
+   "verification_note": "2026-11-13 Codex 반박 독립 재확인 (Codex 실무 수령 · 원 판정문 = 리포 밖 원 ZIP · 리포 = 실무 수령 요약 received_verdict.md · 원장 제안 docs/reviews/rint2_rtr01_destination_audit_20261113/ledger_proposal.json prior_review_receipt.closable_limited) → 상태를 옮겼다 · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "RCPX-05",
    "severity": "P3",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
    "opened_in": "scripts/cjunc_store.py",
    "external_id": "RCPX-05",
    "title": "저장본 머리의 중복 칸 (key_parts · registry_fp) 만 고친 파일을 hit 로 받았다 (출처 진단 모순 · 계산 오염은 입증 안 됨)",
-   "note": "고침 = 머리 key_of(key_parts) = 머리 key · 머리 registry_fp = 복원 원장 fp 대조 → 어긋남 · 시험 T7x-3 (반례 둘 + key_parts 없음) · T7x-4 (비권위 칸 writer · runtime 은 hit 그대로) · 변이 M1-04 · M1-05 잡힘",
-   "claimed_fixed_sha": "bbe468a7d02223f51bc20442f402d6a3cb2b3847",
+   "note": "고침 = 머리 key_of(key_parts) = 머리 key · 머리 registry_fp = 복원 원장 fp 대조 → 어긋남 · 시험 T7x-3 (반례 둘 + key_parts 없음) · T7x-4 (비권위 칸 writer · runtime 은 hit 그대로) · 변이 M1-04 · M1-05 잡힘 · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 bbe468a7d → 새 8dcaa50a1)",
+   "claimed_fixed_sha": "8dcaa50a1",
    "evidence_tests": [
     "scripts/test_cjunc_store.py"
-   ]
+   ],
+   "verified_by": "codex",
+   "verified_sha": "250abf1a4",
+   "verified_in": "docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+   "verified_scope": "Codex 반박 1/2 고침 묶음 독립 재확인 (원 검토 핀 97d8831a8 = 반입 250abf1a4) — 해당 코드 · 문서 범위 한정 종결 가능 · 새 P1/P2 없음.  범위 밖 = 실제 POSIX 전체 suite · 두 기계 조립 · GPU · cuSPARSE · 연구 · 봉인 실행 · RCPX-01 다시 재기 = 틈 좁힘 (실행 중 동시 변경 부재 인증 아님) · 가중 그래프 같음 ≠ CSR 바이트 같음 · Q12 = 자기 기록 · 입력 ID 계약 한정 (물리 정답 · 진위 아님) · 전체 HOLD",
+   "verification_note": "2026-11-13 Codex 반박 독립 재확인 (Codex 실무 수령 · 원 판정문 = 리포 밖 원 ZIP · 리포 = 실무 수령 요약 received_verdict.md · 원장 제안 docs/reviews/rint2_rtr01_destination_audit_20261113/ledger_proposal.json prior_review_receipt.closable_limited) → 상태를 옮겼다 · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "RCPX-06",
    "severity": "P3",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "found_by": "Codex 반박 리뷰 1/2 (11-13 · 리뷰 핀 d3705e9d1 · 판정문 FINAL_REVIEW_RINT2_CODEPKG_d3705e9d1_20261113 · HOLD)",
    "opened_in": "docs/reviews/codex_rint2_codepkg_review_request_20261113.md",
    "external_id": "RCPX-06",
    "title": "\"입력 r 에 −0 이 없으면 A 꼴 ↔ C 꼴 전처리 비트 같음\" 은 충분조건이 아니다 (음의 유한 비정규 곱 underflow: diag [4,4] · r [−5e-324, 1] → A [+0, .25] · C [−0, .25])",
-   "note": "고침 = 문구 철회 · 범위 좁힘 (비트 같음 = 잰 입력 · 환경에서만 · 전처리 곱의 부호 있는 0 포함) · 기록 시험 G4d · G4e (보장 아님 · 이 가짜 산술 관찰: 끝 해 바이트 같음 · info 0 · 반복 2) · G4b 글 좁힘 · 정정 글 = 묶음 README (요청서는 고정 문서라 고치지 않음) · 생산 step3_sigma.py 무변경",
-   "claimed_fixed_sha": "4aca9ff046e860622b560219c20a223f4119fb57",
+   "note": "고침 = 문구 철회 · 범위 좁힘 (비트 같음 = 잰 입력 · 환경에서만 · 전처리 곱의 부호 있는 0 포함) · 기록 시험 G4d · G4e (보장 아님 · 이 가짜 산술 관찰: 끝 해 바이트 같음 · info 0 · 반복 2) · G4b 글 좁힘 · 정정 글 = 묶음 README (요청서는 고정 문서라 고치지 않음) · 생산 step3_sigma.py 무변경 · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 4aca9ff04 → 새 ba8408d80)",
+   "claimed_fixed_sha": "ba8408d80",
    "evidence_tests": [
     "scripts/test_step3_gpu_precond.py",
     "docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md"
-   ]
+   ],
+   "verified_by": "codex",
+   "verified_sha": "250abf1a4",
+   "verified_in": "docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+   "verified_scope": "Codex 반박 1/2 고침 묶음 독립 재확인 (원 검토 핀 97d8831a8 = 반입 250abf1a4) — 해당 코드 · 문서 범위 한정 종결 가능 · 새 P1/P2 없음.  범위 밖 = 실제 POSIX 전체 suite · 두 기계 조립 · GPU · cuSPARSE · 연구 · 봉인 실행 · RCPX-01 다시 재기 = 틈 좁힘 (실행 중 동시 변경 부재 인증 아님) · 가중 그래프 같음 ≠ CSR 바이트 같음 · Q12 = 자기 기록 · 입력 ID 계약 한정 (물리 정답 · 진위 아님) · 전체 HOLD",
+   "verification_note": "2026-11-13 Codex 반박 독립 재확인 (Codex 실무 수령 · 원 판정문 = 리포 밖 원 ZIP · 리포 = 실무 수령 요약 received_verdict.md · 원장 제안 docs/reviews/rint2_rtr01_destination_audit_20261113/ledger_proposal.json prior_review_receipt.closable_limited) → 상태를 옮겼다 · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")"
   },
   {
    "id": "SELF-180",
@@ -17561,8 +17676,8 @@
    "found_by": "1저자 전달 · Codex 반박 1/2 판정문 §7 (최종 ZIP extra/code_diff_codepin_to_pin.txt 117 B)",
    "opened_in": "docs/reviews/codex_rint2_codepkg_review_request_20261113.md",
    "title": "요청서 §9 의 \"code_diff 가 비었다\" 는 틀렸다 — 코드 핀 ↔ 리뷰 핀 사이 바뀐 것 = 감시 폴더의 S0 등록 README 한 파일 (+7 −2 · 문서) 이었다",
-   "note": "처리 = 정정 기록 (보낸 글은 1저자가 전달 때 정정 · 판정문 §7 정정 수용 · 신규 P3 중복 등재 안 함) · 요청서는 고정 문서라 고치지 않는다 · 정정 글 = 묶음 README (docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md) · 실제 코드 · 실행 블록 변경 0 · 교훈 = 전칭 (비었다 · 0) 은 diff 원문을 붙여 대조한다 (CLAUDE.md 사전 공격 ①)",
-   "claimed_fixed_sha": "4aca9ff046e860622b560219c20a223f4119fb57",
+   "note": "처리 = 정정 기록 (보낸 글은 1저자가 전달 때 정정 · 판정문 §7 정정 수용 · 신규 P3 중복 등재 안 함) · 요청서는 고정 문서라 고치지 않는다 · 정정 글 = 묶음 README (docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md) · 실제 코드 · 실행 블록 변경 0 · 교훈 = 전칭 (비었다 · 0) 은 diff 원문을 붙여 대조한다 (CLAUDE.md 사전 공격 ①) · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 4aca9ff04 → 새 ba8408d80)",
+   "claimed_fixed_sha": "ba8408d80",
    "evidence_tests": [
     "docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md"
    ]
@@ -17575,10 +17690,240 @@
    "found_by": "Codex 반박 1/2 판정문 §7 (GPU 소비 규칙 한정 · \"형제 모듈은 live scripts 경로에서 import\")",
    "opened_in": "docs/reviews/rint2_codepkg_20261113/q11_gpu_check_block_v8.txt",
    "title": "Q11 GPU 확인 블록 v7 이 se_material 을 핀이 아니라 live 작업 트리 ($Q11REPO/scripts) 에서 불러왔다 (출처 신원 · pycache 격리 빈틈) · 결과 전 소비 규칙 없음",
-   "note": "고침 = 블록 v8: se_material 을 핀에서 git show 로 새 폴더 (모듈 사본과 같은 폴더 · step3_sigma 는 제 폴더를 sys.path 맨 앞에 둔다) · sha 대조 · 불러온 자리 대조 · live 저장소 모듈 = 멈춤 (rc 2) · PYTHONDONTWRITEBYTECODE=1 · git 읽기 앞 GIT_DROP_SH + GIT_NO_REPLACE_OBJECTS=1 · result.json consume (identical · converged · backend_ok · short_iters_ok · source_ok · adopt) · 시험 G8a–l (v8 33/33 · 옛 v7 블록 23/32) · 변이 16/16 · 실제 GPU 실행 없음",
-   "claimed_fixed_sha": "57acfb0c8c74db6468ffc01baf7af23f079aa261",
+   "note": "고침 = 블록 v8: se_material 을 핀에서 git show 로 새 폴더 (모듈 사본과 같은 폴더 · step3_sigma 는 제 폴더를 sys.path 맨 앞에 둔다) · sha 대조 · 불러온 자리 대조 · live 저장소 모듈 = 멈춤 (rc 2) · PYTHONDONTWRITEBYTECODE=1 · git 읽기 앞 GIT_DROP_SH + GIT_NO_REPLACE_OBJECTS=1 · result.json consume (identical · converged · backend_ok · short_iters_ok · source_ok · adopt) · 시험 G8a–l (v8 33/33 · 옛 v7 블록 23/32) · 변이 16/16 · 실제 GPU 실행 없음 · 11-15 반입 SHA 갱신 (claimed_fixed_sha 원 57acfb0c8 → 새 d6af8e743)",
+   "claimed_fixed_sha": "d6af8e743",
    "evidence_tests": [
     "scripts/test_step3_gpu_precond.py"
+   ]
+  },
+  {
+   "id": "M32R-01",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 메모 3.2 독립 재리뷰 (요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b)",
+   "opened_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "title": "(DRD-01 잔여) 응력 경로 판정 — 상한 2.4 MPa · Φ .94 → 목표 .95 응력 .6 · 옛 하한 R ≥ 2.352 와 실제 .6 충돌 (단계 3 미도달 · 정합 · 목표점 미확정)",
+   "note": "Codex 실무 고침 9bbd365b2 (반입 d7b9ff0f2) → 재확인 (핀 9bbd365b2) = 부분 · 잔여 M32RF-01 → 고침 5afa16488 (반입 c18e84e2b) → 재확인 (핀 5afa16488 · memo32_closure) = M32R-01 · M32RF-01 문서 범위 한정 종결 가능 · 남은 = DRD-01 보편 수렴 · 물리 자격 · 수치 정책 · 등록 · 운영 재봉인 · 연구 실행 · 배포 (전체 HOLD) · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "c18e84e2b",
+   "evidence_tests": [
+    "docs/reviews/memo32_fixes_20261113/check_contract.py",
+    "docs/reviews/memo32_rule38_20261113/results.json"
+   ]
+  },
+  {
+   "id": "M32R-02",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 메모 3.2 독립 재리뷰 (요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b)",
+   "opened_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "title": "(DRD-08 잔여) U6(c) 보고 뒤 분기 없음 — 운동량 0 · 에너지 1→1.21 반례",
+   "note": "재확인 (핀 9bbd365b2 = 반입 d7b9ff0f2 · memo32_rule38) = 문서 범위 한정 종결 가능 · memo32_closure (핀 5afa16488) 에서 유지 · 새 P1/P2/P3 없음 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "d7b9ff0f2",
+   "evidence_tests": [
+    "docs/reviews/memo32_fixes_20261113/check_contract.py"
+   ]
+  },
+  {
+   "id": "M32R-03",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 메모 3.2 독립 재리뷰 (요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b)",
+   "opened_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "title": "(DRD-12 잔여) F 대조 필수 비교 완전성 — 추가 .12 GPa 실패를 빼면 .18 의 .8 %p 만으로 채택 가능",
+   "note": "재확인 (핀 9bbd365b2 = 반입 d7b9ff0f2 · memo32_rule38) = 문서 범위 한정 종결 가능 · memo32_closure (핀 5afa16488) 에서 유지 · 새 P1/P2/P3 없음 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "d7b9ff0f2",
+   "evidence_tests": [
+    "docs/reviews/memo32_fixes_20261113/check_contract.py"
+   ]
+  },
+  {
+   "id": "M32R-04",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 메모 3.2 독립 재리뷰 (요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b)",
+   "opened_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "title": "(DRD-11 잔여) 동일 stencil 에도 거리 .3→.6 가능 — 명시적 분리 법칙 없음",
+   "note": "재확인 (핀 9bbd365b2 = 반입 d7b9ff0f2 · memo32_rule38) = 문서 범위 한정 종결 가능 · memo32_closure (핀 5afa16488) 에서 유지 · 새 P1/P2/P3 없음 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "d7b9ff0f2",
+   "evidence_tests": [
+    "docs/reviews/memo32_fixes_20261113/check_contract.py"
+   ]
+  },
+  {
+   "id": "M32R-05",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 메모 3.2 독립 재리뷰 (요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b)",
+   "opened_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "title": "(DRD-10 잔여) 공통 적합 1 ↔ M0 적합 3 불일치",
+   "note": "재확인 (핀 9bbd365b2 = 반입 d7b9ff0f2 · memo32_rule38) = 문서 범위 한정 종결 가능 · memo32_closure (핀 5afa16488) 에서 유지 · 새 P1/P2/P3 없음 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "d7b9ff0f2",
+   "evidence_tests": [
+    "docs/reviews/memo32_fixes_20261113/check_contract.py"
+   ]
+  },
+  {
+   "id": "M32R-06",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 메모 3.2 독립 재리뷰 (요청 1e823a34c = 반입 62a48d08b · 원 메모 a0455e90b)",
+   "opened_in": "docs/reviews/memo32_fixes_20261113/README.md",
+   "title": "(SELF-161 잔여) LA25 2.4 % 에 측정 전 이력 (약 6 시간 작동압 · Cu 포일 제거 뒤 두께) 누락",
+   "note": "재확인 (핀 9bbd365b2 = 반입 d7b9ff0f2 · memo32_rule38) = 문서 범위 한정 종결 가능 · memo32_closure (핀 5afa16488) 에서 유지 · 새 P1/P2/P3 없음 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "d7b9ff0f2",
+   "evidence_tests": [
+    "docs/reviews/memo32_fixes_20261113/check_contract.py"
+   ]
+  },
+  {
+   "id": "M32RF-01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 M32R 재확인 (핀 9bbd365b2 = 반입 d7b9ff0f2)",
+   "opened_in": "docs/reviews/memo32_rule38_20261113/README.md",
+   "title": "(M32R-01 잔여 · 새 P1 아님) 메모 3.2 §6 38 번 잔존 cap 경계 문구와 직접 회귀 잔여",
+   "note": "재확인 (핀 5afa16488 = 반입 c18e84e2b · memo32_closure) = 문서 범위 한정 종결 가능 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "c18e84e2b",
+   "evidence_tests": [
+    "docs/reviews/memo32_rule38_20261113/results.json"
+   ]
+  },
+  {
+   "id": "M32P-01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 계획서 HTML · 처음 보는 분용 DOCX 3.2 검토 (핀 ce936985f = 반입 d4792f985)",
+   "opened_in": "docs/reviews/memo32_plan_fixes_20261113/README.md",
+   "title": "계획서 초심자판 §2–4 · §11 — 명시적 접촉 법칙 부재와 보간 운동 · 기하학적 분리 가능성을 구분하지 않음",
+   "note": "재확인 (핀 e2b74919b = 반입 6d2b31d56 · docs/reviews/memo32_plan_closure_20261113/codex_review_memo32_plan_fixes_20261113.md) = 전달 문서 범위 한정 종결 가능 · 새 지적 0 · 물리 · 실행 범위 미포함 · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "6d2b31d56",
+   "evidence_tests": [
+    "docs/reviews/memo32_plan_closure_20261113/FINAL_CHECKS.json",
+    "webapp/test_dem_redesign_plan_clarification.py"
+   ]
+  },
+  {
+   "id": "M32P-02",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 계획서 HTML · 처음 보는 분용 DOCX 3.2 검토 (핀 ce936985f = 반입 d4792f985)",
+   "opened_in": "docs/reviews/memo32_plan_fixes_20261113/README.md",
+   "title": "계획서 초심자판 §10 — 보정점 일치를 독립 검증처럼 읽힘 (§7 탐색 실패 · M0 선택 미정 보존 필요)",
+   "note": "재확인 (핀 e2b74919b = 반입 6d2b31d56) = 전달 문서 범위 한정 종결 가능 · 비차단 · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "6d2b31d56",
+   "evidence_tests": [
+    "docs/reviews/memo32_plan_closure_20261113/FINAL_CHECKS.json",
+    "webapp/test_dem_redesign_plan_clarification.py"
+   ]
+  },
+  {
+   "id": "NSB-F01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-10 비 Rint 상시 준비 묶음 독립 검토 (핀 a69095c7f = 반입 a0ed8d2c0 · 바탕 13eb293cd)",
+   "opened_in": "docs/reviews/nonrint_nsb_fixes_20261110/README.md",
+   "title": "T5 합성 계약 — 정수 원값 · 혼합 int/float 차이 · 평균 · ABS/REL 예산의 숫자 · 구간 대조가 불완전 (계획 분모 보존은 확인)",
+   "note": "11-10 독립 재확인 (핀 c5aa7bb52 = 반입 b4a2871b9) = 코드 · 소형 합성 계약 범위 한정 종결 가능 — 11-14 회수 수령 (ede617050 = 반입 6b51f12b8 · docs/reviews/nsb_recovered_verdict_receipt_20261114/) · 후보 269/269 · 보존 증거 254/254 동일 · 중복 시험 0 · 실제 T5/P2 자격 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "b4a2871b9",
+   "evidence_tests": [
+    "scripts/test_dem_gen2_t5_precision.py",
+    "scripts/test_dem_gen2_nsb_chain_regression.py"
+   ]
+  },
+  {
+   "id": "NSB-C01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-10 비 Rint 상시 준비 묶음 독립 검토 (핀 a69095c7f = 반입 a0ed8d2c0 · 바탕 13eb293cd)",
+   "opened_in": "docs/reviews/nonrint_nsb_fixes_20261110/README.md",
+   "title": "P2 소비자 계약 — 원 정수를 Fraction 전에 float 로 바꿈 (분리 순서 · 시간 구조와 수치 문턱 정확성은 별개)",
+   "note": "11-10 독립 재확인 (핀 c5aa7bb52 = 반입 b4a2871b9) = 코드 · 소형 합성 계약 범위 한정 종결 가능 — 11-14 회수 수령 (ede617050 = 반입 6b51f12b8 · docs/reviews/nsb_recovered_verdict_receipt_20261114/) · 후보 269/269 · 보존 증거 254/254 동일 · 중복 시험 0 · 실제 T5/P2 자격 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "b4a2871b9",
+   "evidence_tests": [
+    "scripts/test_dem_gen2_t5_precision.py",
+    "scripts/test_dem_gen2_nsb_chain_regression.py"
+   ]
+  },
+  {
+   "id": "NSB-C02",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-10 비 Rint 상시 준비 묶음 독립 검토 (핀 a69095c7f = 반입 a0ed8d2c0 · 바탕 13eb293cd)",
+   "opened_in": "docs/reviews/nonrint_nsb_fixes_20261110/README.md",
+   "title": "자격 행렬 — 예정 음성 (post 실패) 의 원인 구분 미충족 (검증된 두 zero · clear · 완전 POST 1–3 창 · 고정 4 창 종료 예산) + NSB-C01 전파",
+   "note": "11-10 독립 재확인 (핀 c5aa7bb52 = 반입 b4a2871b9) = 코드 · 소형 합성 계약 범위 한정 종결 가능 — 11-14 회수 수령 (ede617050 = 반입 6b51f12b8 · docs/reviews/nsb_recovered_verdict_receipt_20261114/) · 후보 269/269 · 보존 증거 254/254 동일 · 중복 시험 0 · 실제 T5/P2 자격 · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "b4a2871b9",
+   "evidence_tests": [
+    "scripts/test_dem_gen2_t5_precision.py",
+    "scripts/test_dem_gen2_nsb_chain_regression.py"
+   ]
+  },
+  {
+   "id": "RTA-01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 실무 내부 공격 11-13 (Codex 반박 아님 · Rint 고침 묶음 인계 점검)",
+   "opened_in": "docs/reviews/rint2_takeover_recheck_20261113/README.md",
+   "title": "Q12 비교 기록에 RHS/CSR 필드가 없거나 DOF 수 · 번호가 부적격이어도 같음 근거를 만들 수 있음",
+   "note": "외부 독립 재확인 (핀 97d8831a8 = 반입 250abf1a4 · 수령 요약 docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md) = 코드 · 문서 범위 한정 종결 가능 · 새 P1/P2 없음 · 범위 밖 = 두 기계 실제 조립 · 입력 진위 · 물리 · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "250abf1a4",
+   "evidence_tests": [
+    "scripts/test_rint_takeover_boundaries.py"
+   ]
+  },
+  {
+   "id": "RTA-02",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 실무 내부 공격 11-13 (Codex 반박 아님 · Rint 고침 묶음 인계 점검)",
+   "opened_in": "docs/reviews/rint2_takeover_recheck_20261113/README.md",
+   "title": "새 audit 생성 · 쓰기 실패 때 이전 canonical audit 이 남아 새 팔에 옮겨질 수 있음",
+   "note": "외부 재확인 (핀 97d8831a8) = 부분 · 잔여 RTR-01 (최종 폴더) → 648bb4990 재확인 = 최종 목적지 잔여 코드 범위 한정 종결 가능 (64e4d213e = 반입 dda148932 기록) · 전체 HOLD · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "250abf1a4",
+   "evidence_tests": [
+    "scripts/test_rint_takeover_boundaries.py"
+   ]
+  },
+  {
+   "id": "RTR-01",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 Rint 고침 묶음 독립 재확인 (핀 97d8831a8 = 반입 250abf1a4)",
+   "opened_in": "docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+   "title": "(RTA-02 잔여) 최종 OUTDIR 의 옛 audit 이 새 팔 기록으로 오인 — 새 audit 생성 실패 · 이동 실패 때",
+   "note": "고침 = 새 팔 게시 전 최종 폴더 옛 audit 을 고유 폴더로 퇴역 · 실패 = 게시 중단 · 시험 고치기 전 8 실패 → 10/10 (11-13 Claude 수령 재현 같음 · 11-15 Linux 10/10) · 재확인 (핀 648bb4990 = 반입 47f4cfb56) = 코드 범위 한정 종결 가능 (64e4d213e 기록) · 새 P1/P2 로 세지 않음 · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "47f4cfb56",
+   "evidence_tests": [
+    "scripts/test_rint_destination_audit.py"
+   ]
+  },
+  {
+   "id": "RTRR-01",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-13 RTR-01 재확인 (핀 648bb4990 = 반입 47f4cfb56) · 비차단",
+   "opened_in": "docs/reviews/rint2_rtr01_closure_20261113/README.md",
+   "title": "이동 오류가 늘 missing · 원본 보존을 뜻한다는 셸 주석 · README 문구 과장",
+   "note": "고침 = 셸 주석 5 줄 · README 2 줄 (실행 코드 변경 0 · 11-13 Claude diff 확인) · 재확인 없음 · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · 11-15 Claude 반입 (cherry-pick -x · 1저자 \"지금까지 쌓인거 진행해줘\")",
+   "claimed_fixed_sha": "dda148932",
+   "evidence_tests": [
+    "docs/reviews/rint2_rtr01_closure_20261113/check_results.json"
    ]
   }
  ]
