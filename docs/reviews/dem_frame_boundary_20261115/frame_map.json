@@ -1,0 +1,1035 @@
+{
+  "source": {
+    "pin": "36054ada01fd9092ec38dbe32a7a27e9802863ac",
+    "path": "scripts/mpm3d_compaction.py",
+    "bytes": 335832,
+    "sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+    "git_blob": "fb1bf65535135ecdb7acb87833b7acdb389e54db"
+  },
+  "scope": "static syntax only; no execution or complete alias/dataflow analysis",
+  "frame_range": [
+    3229,
+    3641
+  ],
+  "selected_setup_range": [
+    3169,
+    3228
+  ],
+  "setup_names_mutated_in_frame": [
+    {
+      "name": "_dsc_armed",
+      "setup_lines": [
+        3203
+      ],
+      "binding_write_lines": [
+        3458,
+        3485,
+        3502
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_left",
+      "setup_lines": [
+        3201
+      ],
+      "binding_write_lines": [
+        3458,
+        3485,
+        3500,
+        3509
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_probes",
+      "setup_lines": [
+        3201
+      ],
+      "binding_write_lines": [
+        3511
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_qs_last",
+      "setup_lines": [
+        3204
+      ],
+      "binding_write_lines": [
+        3513
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_qs_n",
+      "setup_lines": [
+        3204
+      ],
+      "binding_write_lines": [
+        3515
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_resumes",
+      "setup_lines": [
+        3208
+      ],
+      "binding_write_lines": [
+        3519
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_spread",
+      "setup_lines": [
+        3201
+      ],
+      "binding_write_lines": [
+        3511
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_tgt",
+      "setup_lines": [
+        3202
+      ],
+      "binding_write_lines": [
+        3449,
+        3478
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_dsc_win",
+      "setup_lines": [
+        3201
+      ],
+      "binding_write_lines": [
+        3458,
+        3485,
+        3520
+      ],
+      "method_mutation_lines": [
+        3504
+      ]
+    },
+    {
+      "name": "_geom_stop",
+      "setup_lines": [
+        3205
+      ],
+      "binding_write_lines": [
+        3452
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_p_settle",
+      "setup_lines": [
+        3196
+      ],
+      "binding_write_lines": [],
+      "method_mutation_lines": [
+        3281
+      ]
+    },
+    {
+      "name": "_p_tail",
+      "setup_lines": [
+        3196
+      ],
+      "binding_write_lines": [],
+      "method_mutation_lines": [
+        3264,
+        3266
+      ]
+    },
+    {
+      "name": "_probe_extended",
+      "setup_lines": [
+        3216
+      ],
+      "binding_write_lines": [
+        3346
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_probe_left",
+      "setup_lines": [
+        3197
+      ],
+      "binding_write_lines": [
+        3339,
+        3345,
+        3404
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_probe_win",
+      "setup_lines": [
+        3216
+      ],
+      "binding_write_lines": [
+        3354
+      ],
+      "method_mutation_lines": [
+        3340
+      ]
+    },
+    {
+      "name": "_probe_win_max",
+      "setup_lines": [
+        3216
+      ],
+      "binding_write_lines": [
+        3353
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_restart_floor_hit",
+      "setup_lines": [
+        3217
+      ],
+      "binding_write_lines": [
+        3537
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_settle_quasistatic",
+      "setup_lines": [
+        3215
+      ],
+      "binding_write_lines": [
+        3295,
+        3349
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_settle_spread_rel",
+      "setup_lines": [
+        3215
+      ],
+      "binding_write_lines": [
+        3296,
+        3350
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_srv_left",
+      "setup_lines": [
+        3219
+      ],
+      "binding_write_lines": [
+        3580,
+        3596,
+        3611,
+        3614
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_srv_probes",
+      "setup_lines": [
+        3219
+      ],
+      "binding_write_lines": [
+        3599
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_srv_spread",
+      "setup_lines": [
+        3219
+      ],
+      "binding_write_lines": [
+        3598
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_srv_win",
+      "setup_lines": [
+        3219
+      ],
+      "binding_write_lines": [
+        3612
+      ],
+      "method_mutation_lines": [
+        3581
+      ]
+    },
+    {
+      "name": "_unload",
+      "setup_lines": [
+        3193
+      ],
+      "binding_write_lines": [
+        3289
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_unload_cnt",
+      "setup_lines": [
+        3197
+      ],
+      "binding_write_lines": [
+        3362,
+        3365,
+        3367
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_unload_probes",
+      "setup_lines": [
+        3225
+      ],
+      "binding_write_lines": [
+        3356
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_unload_status",
+      "setup_lines": [
+        3194
+      ],
+      "binding_write_lines": [
+        3290,
+        3348,
+        3374,
+        3382,
+        3387,
+        3389
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_z_hi",
+      "setup_lines": [
+        3214
+      ],
+      "binding_write_lines": [
+        3364
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "_z_lo",
+      "setup_lines": [
+        3214
+      ],
+      "binding_write_lines": [
+        3362
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "am_skel",
+      "setup_lines": [
+        3170
+      ],
+      "binding_write_lines": [
+        3271
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "conv",
+      "setup_lines": [
+        3169
+      ],
+      "binding_write_lines": [
+        3563,
+        3602,
+        3604
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "p_end",
+      "setup_lines": [
+        3169
+      ],
+      "binding_write_lines": [
+        3616
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "por0",
+      "setup_lines": [
+        3169
+      ],
+      "binding_write_lines": [
+        3263
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "por_at_target",
+      "setup_lines": [
+        3169
+      ],
+      "binding_write_lines": [
+        3618
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "por_end",
+      "setup_lines": [
+        3169
+      ],
+      "binding_write_lines": [
+        3616
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "reach_cnt",
+      "setup_lines": [
+        3176
+      ],
+      "binding_write_lines": [
+        3480
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "reached",
+      "setup_lines": [
+        3169
+      ],
+      "binding_write_lines": [
+        3517,
+        3535,
+        3544
+      ],
+      "method_mutation_lines": []
+    },
+    {
+      "name": "relax",
+      "setup_lines": [
+        3169
+      ],
+      "binding_write_lines": [
+        3548
+      ],
+      "method_mutation_lines": []
+    }
+  ],
+  "all_frame_name_store_sites": {
+    "_": [
+      3233
+    ],
+    "_absorb_z": [
+      3254
+    ],
+    "_conv_need": [
+      3622
+    ],
+    "_dsc_armed": [
+      3458,
+      3485,
+      3502
+    ],
+    "_dsc_left": [
+      3458,
+      3485,
+      3500,
+      3509
+    ],
+    "_dsc_probes": [
+      3511
+    ],
+    "_dsc_qs_last": [
+      3513
+    ],
+    "_dsc_qs_n": [
+      3515
+    ],
+    "_dsc_resumes": [
+      3519
+    ],
+    "_dsc_spread": [
+      3511
+    ],
+    "_dsc_tgt": [
+      3449,
+      3478
+    ],
+    "_dsc_win": [
+      3458,
+      3485,
+      3520
+    ],
+    "_dz": [
+      3401
+    ],
+    "_fl": [
+      3606
+    ],
+    "_floor_z": [
+      3532
+    ],
+    "_geom_stop": [
+      3452
+    ],
+    "_kind": [
+      3399
+    ],
+    "_nrm": [
+      3253
+    ],
+    "_p0": [
+      3288
+    ],
+    "_phase": [
+      3627
+    ],
+    "_probe_extended": [
+      3346
+    ],
+    "_probe_left": [
+      3339,
+      3345,
+      3404
+    ],
+    "_probe_win": [
+      3354
+    ],
+    "_probe_win_max": [
+      3353
+    ],
+    "_qs": [
+      3583
+    ],
+    "_qs_ok": [
+      3294,
+      3343
+    ],
+    "_qs_spread": [
+      3294,
+      3343
+    ],
+    "_r": [
+      3236
+    ],
+    "_restart_floor_hit": [
+      3537
+    ],
+    "_settle_quasistatic": [
+      3295,
+      3349
+    ],
+    "_settle_spread_rel": [
+      3296,
+      3350
+    ],
+    "_slope": [
+      3592
+    ],
+    "_sp": [
+      3583
+    ],
+    "_sp_dsc": [
+      3506
+    ],
+    "_srv_left": [
+      3580,
+      3596,
+      3611,
+      3614
+    ],
+    "_srv_probes": [
+      3599
+    ],
+    "_srv_spread": [
+      3598
+    ],
+    "_srv_win": [
+      3612
+    ],
+    "_stable": [
+      3594
+    ],
+    "_step": [
+      3398
+    ],
+    "_trac_z": [
+      3255
+    ],
+    "_unload": [
+      3289
+    ],
+    "_unload_cnt": [
+      3362,
+      3365,
+      3367
+    ],
+    "_unload_probes": [
+      3356
+    ],
+    "_unload_status": [
+      3290,
+      3348,
+      3374,
+      3382,
+      3387,
+      3389
+    ],
+    "_v": [
+      3600
+    ],
+    "_v_dsc": [
+      3506
+    ],
+    "_v_ext": [
+      3593
+    ],
+    "_v_now": [
+      3591
+    ],
+    "_verdict": [
+      3355
+    ],
+    "_z_hi": [
+      3364
+    ],
+    "_z_lo": [
+      3362
+    ],
+    "_z_next": [
+      3399,
+      3533
+    ],
+    "am_dn": [
+      3245
+    ],
+    "am_jam": [
+      3432
+    ],
+    "am_net": [
+      3246
+    ],
+    "am_skel": [
+      3271
+    ],
+    "am_up": [
+      3245
+    ],
+    "amdn": [
+      3230,
+      3241
+    ],
+    "amup": [
+      3230,
+      3242
+    ],
+    "conv": [
+      3563,
+      3602,
+      3604
+    ],
+    "descend": [
+      3341,
+      3351,
+      3374,
+      3382,
+      3387,
+      3389,
+      3405,
+      3407,
+      3451,
+      3454,
+      3456,
+      3459,
+      3461,
+      3481,
+      3483,
+      3486,
+      3488
+    ],
+    "f_am_mpm": [
+      3249
+    ],
+    "frame": [
+      3229
+    ],
+    "guard": [
+      3477
+    ],
+    "hard_floor": [
+      3430
+    ],
+    "height": [
+      3260
+    ],
+    "p": [
+      3259
+    ],
+    "p_end": [
+      3616
+    ],
+    "por": [
+      3261
+    ],
+    "por0": [
+      3263
+    ],
+    "por_at_target": [
+      3618
+    ],
+    "por_end": [
+      3616
+    ],
+    "reach_cnt": [
+      3480
+    ],
+    "reached": [
+      3517,
+      3535,
+      3544
+    ],
+    "relax": [
+      3548
+    ],
+    "sacc": [
+      3230,
+      3239
+    ],
+    "sig_mean": [
+      3243
+    ],
+    "split": [
+      3250,
+      3256
+    ],
+    "step": [
+      3283,
+      3409,
+      3556,
+      3605
+    ],
+    "thick": [
+      3624
+    ],
+    "v": [
+      3308
+    ],
+    "wacc": [
+      3230,
+      3240
+    ],
+    "wallp": [
+      3244
+    ]
+  },
+  "direct_subscript_write_sites": [
+    {
+      "line": 3281,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3338,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3402,
+      "target": "wall_z[None]"
+    },
+    {
+      "line": 3403,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3499,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3535,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3541,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3542,
+      "target": "wall_z[None]"
+    },
+    {
+      "line": 3544,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3548,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3558,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3558,
+      "target": "wall_z[None]"
+    },
+    {
+      "line": 3560,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3560,
+      "target": "wall_z[None]"
+    },
+    {
+      "line": 3562,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3579,
+      "target": "wall_vel[None]"
+    },
+    {
+      "line": 3608,
+      "target": "wall_z[None]"
+    },
+    {
+      "line": 3610,
+      "target": "wall_z[None]"
+    },
+    {
+      "line": 3615,
+      "target": "wall_vel[None]"
+    }
+  ],
+  "direct_list_mutations": [
+    {
+      "line": 3264,
+      "end": 3264,
+      "function": "_p_tail.append"
+    },
+    {
+      "line": 3266,
+      "end": 3266,
+      "function": "_p_tail.pop"
+    },
+    {
+      "line": 3281,
+      "end": 3281,
+      "function": "_p_settle.append"
+    },
+    {
+      "line": 3340,
+      "end": 3340,
+      "function": "_probe_win.append"
+    },
+    {
+      "line": 3504,
+      "end": 3504,
+      "function": "_dsc_win.append"
+    },
+    {
+      "line": 3581,
+      "end": 3581,
+      "function": "_srv_win.append"
+    }
+  ],
+  "selected_field_calls": [
+    {
+      "line": 3232,
+      "end": 3232,
+      "function": "amf_zdn.fill"
+    },
+    {
+      "line": 3232,
+      "end": 3232,
+      "function": "amf_zup.fill"
+    },
+    {
+      "line": 3232,
+      "end": 3232,
+      "function": "szz_zn.fill"
+    },
+    {
+      "line": 3232,
+      "end": 3232,
+      "function": "szz_zs.fill"
+    },
+    {
+      "line": 3234,
+      "end": 3234,
+      "function": "substep"
+    },
+    {
+      "line": 3237,
+      "end": 3237,
+      "function": "rod_pass"
+    },
+    {
+      "line": 3238,
+      "end": 3238,
+      "function": "rod_setv"
+    }
+  ],
+  "frame_print_calls": [
+    {
+      "line": 3298,
+      "end": 3302,
+      "function": "print"
+    },
+    {
+      "line": 3369,
+      "end": 3372,
+      "function": "print"
+    },
+    {
+      "line": 3376,
+      "end": 3380,
+      "function": "print"
+    },
+    {
+      "line": 3390,
+      "end": 3392,
+      "function": "print"
+    },
+    {
+      "line": 3538,
+      "end": 3539,
+      "function": "print"
+    },
+    {
+      "line": 3551,
+      "end": 3551,
+      "function": "print"
+    },
+    {
+      "line": 3630,
+      "end": 3637,
+      "function": "print"
+    },
+    {
+      "line": 3640,
+      "end": 3640,
+      "function": "print"
+    }
+  ],
+  "frame_control_exits": [
+    {
+      "kind": "Raise",
+      "line": 3304,
+      "end": 3314
+    },
+    {
+      "kind": "Break",
+      "line": 3552,
+      "end": 3552
+    },
+    {
+      "kind": "Break",
+      "line": 3641,
+      "end": 3641
+    }
+  ],
+  "post_frame_raise_sites": [
+    {
+      "line": 3697,
+      "end": 3709
+    },
+    {
+      "line": 3723,
+      "end": 3733
+    },
+    {
+      "line": 4122,
+      "end": 4122
+    }
+  ],
+  "selected_post_frame_writes": [
+    {
+      "line": 4047,
+      "end": 4047,
+      "function": "_json.dump"
+    },
+    {
+      "line": 4050,
+      "end": 4050,
+      "function": "np.save"
+    },
+    {
+      "line": 4054,
+      "end": 4054,
+      "function": "np.save"
+    },
+    {
+      "line": 4059,
+      "end": 4059,
+      "function": "np.save"
+    },
+    {
+      "line": 4063,
+      "end": 4063,
+      "function": "np.save"
+    },
+    {
+      "line": 4068,
+      "end": 4068,
+      "function": "np.save"
+    },
+    {
+      "line": 4073,
+      "end": 4073,
+      "function": "np.save"
+    },
+    {
+      "line": 4076,
+      "end": 4076,
+      "function": "np.save"
+    },
+    {
+      "line": 4087,
+      "end": 4087,
+      "function": "np.save"
+    },
+    {
+      "line": 4174,
+      "end": 4174,
+      "function": "write_state_npz"
+    }
+  ],
+  "selected_post_frame_prints": [
+    {
+      "line": 3646,
+      "end": 3650,
+      "function": "print"
+    },
+    {
+      "line": 3662,
+      "end": 3664,
+      "function": "print"
+    },
+    {
+      "line": 3674,
+      "end": 3678,
+      "function": "print"
+    },
+    {
+      "line": 3680,
+      "end": 3682,
+      "function": "print"
+    }
+  ],
+  "interpretation": "Setup intersection is a candidate inventory, not a complete rollback closure."
+}
