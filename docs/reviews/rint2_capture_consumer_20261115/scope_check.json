@@ -1,0 +1,39 @@
+{
+  "base": "8704a2d725b885a8eb11505c9a9d76bab7937f9e",
+  "checked_files": [
+    {
+      "path": "docs/reviews/rint2_capture_consumer_20261115/README.md",
+      "sha256": "c224ac435ca7909f394fa4b264de6adebf09995588d5d0613443594c2d6080c6"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_consumer_20261115/check_results.json",
+      "sha256": "2d8edfd13bba288c91a3125cc775ea3a0162427f0863d0805d589c2a451f9664"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_consumer_20261115/consumer_map.json",
+      "sha256": "e577d05dee184756b94de868e9b6401a04d945626df5700372ee5b533e7a769e"
+    },
+    {
+      "path": "docs/reviews/rint2_capture_consumer_20261115/inspect_consumer.py",
+      "sha256": "41a8c269c41813598e1f855a4cb4d9acf8d6006bbc4fab876c8feadc908e55ea"
+    }
+  ],
+  "new_files_checked": 4,
+  "self_manifest_excluded": true,
+  "source_role": "Rint main consumer and producer return syntax",
+  "fixed_source_identity": "PASS",
+  "current_source_bytes_preserved": true,
+  "tracked_changes": 0,
+  "production_shared_ledger_seal_gate_changes": 0,
+  "private_identifier_scan": "PASS",
+  "original_lhs_draft_preserved": true,
+  "rint_q14_blocks_preserved": true,
+  "handoff_prompt_or_zip_created": false,
+  "source_imported_or_executed": false,
+  "new_runtime_or_physics_tests": 0,
+  "planned_cases_executed": 0,
+  "field_execution": false,
+  "actual_values_read": false,
+  "research_results": 0,
+  "overall": "HOLD"
+}

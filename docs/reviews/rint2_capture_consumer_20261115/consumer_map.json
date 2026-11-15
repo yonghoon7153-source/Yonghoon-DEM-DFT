@@ -1,0 +1,206 @@
+{
+  "sources": [
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/step3_sigma.py",
+      "bytes": 377520,
+      "sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+      "git_blob": "59b58f02f64fbbcaaaa3256fc57557be6d842e72"
+    },
+    {
+      "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "path": "scripts/carbon_junction.py",
+      "bytes": 204952,
+      "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+      "git_blob": "12bd06bfc25f36eecb59b5d307de2e1595b29650"
+    }
+  ],
+  "function": {
+    "name": "solve_sigma_z",
+    "range": [
+      1951,
+      2504
+    ]
+  },
+  "selected_region": [
+    2321,
+    2347
+  ],
+  "branches": [
+    {
+      "line": 2321,
+      "end": 2341,
+      "condition": "_cjs is not None",
+      "return_lines": [
+        2329,
+        2333
+      ]
+    },
+    {
+      "line": 2327,
+      "end": 2331,
+      "condition": "cjunc_graph_only",
+      "return_lines": [
+        2329
+      ]
+    },
+    {
+      "line": 2332,
+      "end": 2337,
+      "condition": "_cjb.get('reason')",
+      "return_lines": [
+        2333
+      ]
+    }
+  ],
+  "assignments": [
+    {
+      "line": 2324,
+      "targets": [
+        "_sv_on"
+      ],
+      "value": "_cjp.get('sv_counterfactual') is not None"
+    },
+    {
+      "line": 2325,
+      "targets": [
+        "_cjb"
+      ],
+      "value": "_cjs.build(_Ab, _gb, _At, _gt, _cb, _ct, graph_fp=True) if cjunc_graph_only or (CONV_CERT and _sv_on) else _cjs.build(_Ab, _gb, _At, _gt, _cb, _ct)"
+    },
+    {
+      "line": 2328,
+      "targets": [
+        "_cfg"
+      ],
+      "value": "_cjs.sv_graph_fps() if _sv_on else {'lower': None, 'upper': None}"
+    },
+    {
+      "line": 2338,
+      "targets": [
+        "(L, b, _Ab, _gb, _At, _gt)"
+      ],
+      "value": "(_cjb['L'], _cjb['b'], _cjb['Ab'], _cjb['gb'], _cjb['At'], _cjb['gt'])"
+    },
+    {
+      "line": 2339,
+      "targets": [
+        "(_cb, _ct)"
+      ],
+      "value": "(_cjb['cb'], _cjb['ct'])"
+    },
+    {
+      "line": 2340,
+      "targets": [
+        "n_dof"
+      ],
+      "value": "int(_cjb['n_dof'])"
+    },
+    {
+      "line": 2340,
+      "targets": [
+        "n_float"
+      ],
+      "value": "int(_cjs.stats['n_floating_dropped'])"
+    },
+    {
+      "line": 2341,
+      "targets": [
+        "n_through_dof"
+      ],
+      "value": "int(_cjs.stats['n_through_dof'])"
+    },
+    {
+      "line": 2341,
+      "targets": [
+        "n_plate_reachable_dof"
+      ],
+      "value": "n_dof"
+    },
+    {
+      "line": 2344,
+      "targets": [
+        "LAST_CG['iters']"
+      ],
+      "value": "None"
+    },
+    {
+      "line": 2345,
+      "targets": [
+        "(phi, info)"
+      ],
+      "value": "_solve_cg(L, b)"
+    },
+    {
+      "line": 2346,
+      "targets": [
+        "_it_main"
+      ],
+      "value": "LAST_CG.get('iters')"
+    },
+    {
+      "line": 2347,
+      "targets": [
+        "resid"
+      ],
+      "value": "float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))"
+    }
+  ],
+  "early_returns": [
+    {
+      "line": 2329,
+      "end": 2331,
+      "value": "{'graph_only': True, 'reason': _cjb.get('reason'), 'cjunc_graphs': {'rule': _cjm.CJUNC_GRAPH_FP_RULE, 'main': _cjs.graph_fp, 'lower': _cfg['lower'], 'upper': _cfg['upper']}, 'bind': _graph_bind()}"
+    },
+    {
+      "line": 2333,
+      "end": 2337,
+      "value": "_ret({'sigma_eff': 0.0, 'n_dof': int(_cjs.stats['n_plate_reachable_dof']), 'n_through_dof': int(_cjs.stats['n_through_dof']), 'n_floating_dropped': int(_cjs.stats['n_floating_dropped']), 'cg_info': 0, 'resid': 0.0, 'unconverged': False, 'reason': _cjb['reason'], 'periodic_xy': bool(periodic_xy), 'interface': _iface(False)})"
+    }
+  ],
+  "selected_solver_calls": [
+    {
+      "line": 2325,
+      "function": "_cjs.build"
+    },
+    {
+      "line": 2326,
+      "function": "_cjs.build"
+    },
+    {
+      "line": 2345,
+      "function": "_solve_cg"
+    },
+    {
+      "line": 2373,
+      "function": "_solve_cg"
+    },
+    {
+      "line": 2443,
+      "function": "_solve_cg"
+    },
+    {
+      "line": 2458,
+      "function": "_cjs.sv_counterfactual"
+    }
+  ],
+  "producer_original_order": {
+    "line": 2789,
+    "expression": "np.flatnonzero(kept)"
+  },
+  "producer_completed_return": {
+    "line": 2819,
+    "keys": [
+      "L",
+      "b",
+      "Ab",
+      "gb",
+      "At",
+      "gt",
+      "cb",
+      "ct",
+      "n_dof"
+    ]
+  },
+  "scope": "AST/source order only; no assembly, solve, values, call-graph closure or ownership proof"
+}
