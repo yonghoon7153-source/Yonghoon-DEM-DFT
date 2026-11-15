@@ -2706,6 +2706,33 @@ def _selftest_body():
         b = lost_end()
         edit_text(b / "stage2_kgy.log", edit_done(3, lambda ln: re.sub(r"누적 ([0-9.]+) /", "누적 99.9999 /", ln)))
         hold_ack("큐 ✅ 줄 누적이 장부 시간 누적합과 다르다 (리뷰 EL P2-3)", b, ack_for(b), "누적")
+        # 리뷰 EL 재확인 N-P2-1 — 시각 · 꼬리 검사의 하위 조건마다 그것만 걸리는 시험
+        FMT_ = "%Y-%m-%d %H:%M:%S"
+        b = lost_end()
+        edit_ledger(b, lambda rows: set_col(rows, 1, 4, lambda v: (_dt.datetime.strptime(v, FMT_) - _dt.timedelta(seconds=60)).strftime(FMT_)))
+        hold_ack("장부 첫 행의 시간 ≠ 끝 − 시작 (시작을 60 s 앞당김 · 앞 행이 없어 순서 · ✅ 시각은 그대로 · EL N-P2-1)", b, ack_for(b), "장부 시각")
+        b = lost_end()
+        rows_ = (b / "cost_ledger.tsv").read_text(encoding="utf-8").splitlines()
+        endL = _dt.datetime.strptime(rows_[-1].split("\t")[5], FMT_)
+        nd_ = len([1 for ln in (b / "stage2_kgy.log").read_text(encoding="utf-8").splitlines() if QUEUE_DONE_RE.match(ln)])
+        edit_text(b / "stage2_kgy.log", edit_done(nd_ - 1, lambda ln: "[" + (endL + _dt.timedelta(seconds=20)).strftime(FMT_) + "]" + ln[ln.index("]") + 1:]))
+        hold_ack("마지막 큐 ✅ 줄 시각이 장부 끝 + 10 s 보다 늦다 (다음 행이 없는 마지막 런 · EL N-P2-1)", b, ack_for(b), "큐 ✅ 줄 시각")
+        b = lost_end()
+        rows_ = (b / "cost_ledger.tsv").read_text(encoding="utf-8").splitlines()
+        end2 = _dt.datetime.strptime(rows_[3].split("\t")[5], FMT_)
+        t_new = _dt.datetime.strptime(rows_[4].split("\t")[4], FMT_) + _dt.timedelta(seconds=1)
+        chk(end2 <= t_new <= end2 + _dt.timedelta(seconds=10),
+            "[준비] (EL N-P2-1) 셋째 런 ✅ 줄을 '다음 행 시작 + 1 s' 로 옮겨도 장부 끝 + 10 s 안이다 (그 조건만 걸리게)")
+        edit_text(b / "stage2_kgy.log", edit_done(2, lambda ln: "[" + t_new.strftime(FMT_) + "]" + ln[ln.index("]") + 1:]))
+        hold_ack("큐 ✅ 줄 시각이 다음 행 시작보다 늦다 (끝 + 10 s 안 · EL N-P2-1)", b, ack_for(b), "큐 ✅ 줄 시각")
+        b = lost_end(); ack = ack_for(b)
+        edit_text(b / "stage2_kgy.log", lambda t: t + "[2026-11-14 05:00:00] ▶ li2s-3 2 단계 큐 시작 · PHASE cond550 · 온도 550 · 시드 11 12 · 계 A B · prod 6 ps\n"
+                  + "[2026-11-14 05:00:01] (뒤 호출의 다음 줄 · 시험)\n")
+        oT = rd_ack(b, ack)
+        qpT = [str(q) for q in (oT.get("queue_problems") or [])]
+        chk(oT.get("status") == "판정 보류" and not any("인정한 마지막 줄 뒤에" in q for q in qpT)
+            and any("사다리 블록 밖" in str(w) for w in (oT.get("hold_reasons") or [])),
+            "⛔음성: (개정 4 · EL N-P2-1) 꼬리 줄은 다음 큐 시작 줄 전까지만 — 뒤 호출의 줄은 꼬리 문제가 아니라 '사다리 블록 밖의 v1 호출' 보류 사유")
         b = lost_end()
         edit_text(b / "stage2_kgy.log", lambda t: t.replace("\n", "\r\n"))
         hold_ack("큐 로그가 CRLF (리뷰 EL P2-2 — LF 파일에서만 · 인정 값은 CRLF 파일로 냈다)", b, ack_for(b), "LF 밖의 줄 나눔")

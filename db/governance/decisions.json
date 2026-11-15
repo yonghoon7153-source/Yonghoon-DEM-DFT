@@ -13240,9 +13240,10 @@
    ],
    "supersedes": [],
    "evidence": [
-    "tools/ionic/li2s3_stage2_readout.py sha16 dbac08553db372b7 (selftest 200/200 · 변이 32)",
+    "tools/ionic/li2s3_stage2_readout.py sha16 8e1f16a49a2df8a3 (selftest 205/205 · 변이 36)",
     "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json 판독_보류_2026_11_14 (kgy 확인 블록 사실)",
-    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md (독립 리뷰 · 조건부 GO · P0 1 · P1 1 · P2 8)"
+    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md (독립 리뷰 · 조건부 GO · P0 1 · P1 1 · P2 8)",
+    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md — 재확인 회신 (2 차 · 2026-11-15) GO"
    ],
    "reopen_criteria": [
     "2 단계 결과를 연 뒤에는 이 규칙을 바꾸지 않는다"
@@ -13268,7 +13269,13 @@
      "at": "2026-11-15",
      "state": "proposed",
      "by": "agent",
-     "note": "내부 반박 리뷰 EL 조건부 GO (P0-1 장부 전체 지문 · P1-1 결정 칸 · P2 8) 반영 — 도구 34f2c734 → dbac08553db372b7 · EL 재확인 뒤 활성 (위임 10-30)"
+     "note": "내부 반박 리뷰 EL 조건부 GO (P0-1 장부 전체 지문 · P1-1 결정 칸 · P2 8) 반영 — 도구 34f2c734 → 8e1f16a49a2df8a3 · EL 재확인 뒤 활성 (위임 10-30)"
+    },
+    {
+     "at": "2026-11-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "EL 재확인 GO (도구 dbac0855) · N-P2-1 시험 넷 더함 → 도구 8e1f16a49a2df8a3 (selftest 205/205 · 변이 36) · kgy facts 문제 0 · 대조 잡 v6 same True 뒤 판독 허가 갱신과 함께 활성 (위임 10-30)"
     }
    ]
   }
