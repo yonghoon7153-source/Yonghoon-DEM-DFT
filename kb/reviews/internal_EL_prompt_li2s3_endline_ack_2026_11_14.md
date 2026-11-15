@@ -1,13 +1,13 @@
 ---
 title: "EL 프롬프트 (내부 반박 리뷰) — li2s-3 카드 개정 4: 큐 끝 줄 유실 인정이 '끝 줄 하나만 빠진 완료 큐' 만 받는가 (판독 보류 처리 · 결과 전)"
 date: 2026-11-14
-updated: 2026-11-14
+updated: 2026-11-15
 tags: [review, li2s, li2s3, glass, uma, md, queue, readout, internal, prompt, letter]
 letter: EL
 track: li2s
 channel: internal
 kind: prompt
-status: 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전트와 다른 독립 에이전트) · 회신은 `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` · 회신 전에는 개정 4 를 활성하지 않는다
+status: 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전트와 다른 독립 에이전트) · 회신은 `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` · 회신 전에는 개정 4 를 활성하지 않는다 · ✅ 회신 수령 2026-11-15 (조건부 GO · P0 1 · P1 1 · P2 8) → 고친 판 dbac08553db372b7
 confidence: medium
 verificationStatus: unverified
 explored: false

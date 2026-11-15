@@ -13223,7 +13223,7 @@
     ]
    },
    "title": "li2s-3 카드 개정 4 — 큐 끝 줄 유실 인정 (순수 v1 사다리 큐의 '■ 큐 끝 · PHASE ladder' 줄이 파일에 안 남은 경우 · 결과 전)",
-   "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 개정_4_큐_끝_줄_유실_2026_11_14 이 정의다: 끝 줄이 없을 때 판독 허가의 '큐_끝_줄_유실_인정' (필드 여섯) 과 블록 · 장부 sha256 · 명단 · 장부 rc 0 · prod · 시간 · 잠금이 모두 맞을 때만 그 줄을 사다리 블록 끝으로 받는다 · 이 결정 active 일 때만 (문지기) · 어긋나면 판정 보류 · 로그 · 장부를 고치지 않는다 · 판정 규칙 · 명단 · W 정의 그대로",
+   "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 개정_4_큐_끝_줄_유실_2026_11_14 이 정의다 (리뷰 EL 반영판): 끝 줄이 없을 때 판독 허가의 '큐_끝_줄_유실_인정' (필드 여섯 · 결정 칸 = 이 결정) 과 깨끗한 UTF-8 · LF · 블록 원 바이트 · 장부 머리 + 명단 행 sha256 · 꼬리 줄 없음 · 명단 · 장부 rc 0 · prod · 시간 · 시각 · 누적 · 잠금이 모두 맞을 때만 그 줄을 사다리 블록 끝으로 받는다 · 이 결정 active 일 때만 (문지기 · verify) · cond550 은 같은 판독 허가일 때만 · 어긋나면 판정 보류 · 로그 · 장부를 고치지 않는다 · 판정 규칙 · 명단 · W 정의 그대로",
    "rationale": "16 런은 다 끝났다 (큐 ✅ 16 · 장부 16 행 rc 0 · 잠금 풀림 · 런 valid) — 빠진 것은 큐 실행기가 tee 로만 보내는 끝 줄 하나다. 그 줄을 요구하는 규칙의 목적 (큐가 중간에 멈춘 런 묶음을 읽지 않는다) 은 남은 완료 기록의 상호 대조로 지키고, 인정은 그 파일 지문에 묶는다.",
    "decision_state": "proposed",
    "record_kind": "amendment",
@@ -13240,8 +13240,9 @@
    ],
    "supersedes": [],
    "evidence": [
-    "tools/ionic/li2s3_stage2_readout.py sha16 34f2c7340a442185 (selftest 179/179 · 변이 17)",
-    "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json 판독_보류_2026_11_14 (kgy 확인 블록 사실)"
+    "tools/ionic/li2s3_stage2_readout.py sha16 dbac08553db372b7 (selftest 200/200 · 변이 32)",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json 판독_보류_2026_11_14 (kgy 확인 블록 사실)",
+    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md (독립 리뷰 · 조건부 GO · P0 1 · P1 1 · P2 8)"
    ],
    "reopen_criteria": [
     "2 단계 결과를 연 뒤에는 이 규칙을 바꾸지 않는다"
@@ -13262,6 +13263,12 @@
      "state": "proposed",
      "by": "agent",
      "note": "11-14 판독 보류 (큐 끝 줄 없음 · 런 valid) 처리 — 도구 34f2c7340a442185 (결과 전) · 쓴 에이전트와 다른 독립 리뷰 EL 뒤 활성 (위임 10-30)"
+    },
+    {
+     "at": "2026-11-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "내부 반박 리뷰 EL 조건부 GO (P0-1 장부 전체 지문 · P1-1 결정 칸 · P2 8) 반영 — 도구 34f2c734 → dbac08553db372b7 · EL 재확인 뒤 활성 (위임 10-30)"
     }
    ]
   }
