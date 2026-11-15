@@ -442,3 +442,6 @@ post/c_40000.txt	external	ibb 잡 359243 OUT (리포 밖 · 받은 묶음 = docs
 ps_7_3_r45/input_ps_7_3_r45_r8.liggghts	external	ibb 7:3 원 런 덱 (리포 밖 · REG 151 행 · 쓴 격자 6×4×1 근거)	P1 내부 리뷰 기록이 인용하는 원 런 덱 (리포 파일 아님)
 EXT/screen.txt	generated	docs/data/ps45_unload_20261009/run_unload.sh (10:0 EXT 단계 화면 · 잡 폴더 안)	REG §15 가 인용하는 잡 폴더 상대 경로 (쓴 격자 grid 줄을 읽는 자리 · 리포 파일 아님)
 EXT2/screen.txt	generated	docs/data/ps45_unload_20261009/run_unload.sh (10:0 EXT2 단계 화면 · 잡 폴더 안)	REG §15 가 인용하는 잡 폴더 상대 경로 (리포 파일 아님)
+baseline/dem_gen2_live_contract.py	external	Codex 실무 11-10 작업 사본 (리포 밖 · sha256 미기록)	11-15 반입 · docs/reviews/dem_live_ra_contract_20261110/README.md 가 인용하는 red-green 비교용 baseline 사본 (리포 파일 아님 · 같은 코드 이력 = 반입 커밋)
+baseline/scripts/dem_gen2_s0_contract.py	external	Codex 실무 11-10 작업 사본 (리포 밖 · sha256 미기록)	11-15 반입 · docs/reviews/dem_s0_contract_20261110/README.md 가 인용하는 red-green 비교용 baseline 사본 (리포 파일 아님)
+review/chain/independent_regression_tests.py	external	Codex 반박 11-10 NSB 독립 판정 묶음 안 (리포 밖 · sha256 미기록)	11-15 반입 · docs/reviews/nonrint_nsb_fixes_20261110/chain_README.md 가 인용하는 독립 검토 측 회귀 파일 (리포 파일 아님)
