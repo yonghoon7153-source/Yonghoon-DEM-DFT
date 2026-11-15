@@ -1,0 +1,47 @@
+{
+  "base": "36054ada01fd9092ec38dbe32a7a27e9802863ac",
+  "checked_files": [
+    {
+      "path": "docs/reviews/dem_frame_boundary_20261115/README.md",
+      "sha256": "ef9cb198958d065d1230727409b6cb9f378ab9c3bdb37c1afa453dd4b3f01e48"
+    },
+    {
+      "path": "docs/reviews/dem_frame_boundary_20261115/check_results.json",
+      "sha256": "ae6a59d7d043e5ddd121650920d586a4b35cb059660034455c06991fbee1f72a"
+    },
+    {
+      "path": "docs/reviews/dem_frame_boundary_20261115/frame_map.json",
+      "sha256": "3a6c2c39c235613d1d1a1c12f56420ed0f0186b7e46dee5a79e064cd68d8503a"
+    },
+    {
+      "path": "docs/reviews/dem_frame_boundary_20261115/inspect_boundaries.py",
+      "sha256": "cdd8f69e5c96440b903479337a350f9f6ec4c3706d37da6bf7c2b1e27fd967b2"
+    },
+    {
+      "path": "docs/reviews/dem_frame_boundary_20261115/mixer_publication_map.json",
+      "sha256": "dd591eac9a2d942eb85bb602e18a936b8fab79350f00600234a7150a11f25797"
+    },
+    {
+      "path": "docs/reviews/dem_frame_boundary_20261115/other_tracks.md",
+      "sha256": "7780c8c3860d24caad8debaa5a256df1001a701032f4a85eb4b58394b849c772"
+    }
+  ],
+  "new_files_checked": 6,
+  "self_manifest_excluded": true,
+  "source_role": "DEM host/controller and mixer selected I/O syntax",
+  "fixed_source_identity": "PASS",
+  "current_source_bytes_preserved": true,
+  "tracked_changes": 0,
+  "production_shared_ledger_seal_gate_changes": 0,
+  "private_identifier_scan": "PASS",
+  "original_lhs_draft_preserved": true,
+  "rint_q14_blocks_preserved": true,
+  "handoff_prompt_or_zip_created": false,
+  "source_imported_or_executed": false,
+  "new_runtime_or_physics_tests": 0,
+  "planned_cases_executed": 0,
+  "field_execution": false,
+  "actual_values_read": false,
+  "research_results": 0,
+  "overall": "HOLD"
+}

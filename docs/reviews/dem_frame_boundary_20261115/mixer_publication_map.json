@@ -1,0 +1,291 @@
+{
+  "source": {
+    "pin": "087ba5eb9a8d1d2c363d265bacfe064116361c80",
+    "path": "scripts/mixer_smoke_blind.py",
+    "bytes": 125451,
+    "sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+    "git_blob": "ef2e75f12f72dca2c82e2845ce7f58e5d27a3a91"
+  },
+  "functions": {
+    "run_blind": {
+      "range": [
+        143,
+        208
+      ],
+      "selected_calls": [
+        {
+          "line": 147,
+          "end": 147,
+          "function": "vault.mkdir"
+        },
+        {
+          "line": 148,
+          "end": 148,
+          "function": "os.chmod"
+        },
+        {
+          "line": 161,
+          "end": 161,
+          "function": "_sha_file"
+        },
+        {
+          "line": 161,
+          "end": 161,
+          "function": "_sha_file"
+        },
+        {
+          "line": 166,
+          "end": 166,
+          "function": "os.open"
+        },
+        {
+          "line": 172,
+          "end": 172,
+          "function": "os.fdopen"
+        },
+        {
+          "line": 173,
+          "end": 173,
+          "function": "json.dump"
+        },
+        {
+          "line": 174,
+          "end": 174,
+          "function": "fh.write"
+        },
+        {
+          "line": 175,
+          "end": 175,
+          "function": "os.chmod"
+        },
+        {
+          "line": 176,
+          "end": 176,
+          "function": "_sha_file"
+        },
+        {
+          "line": 193,
+          "end": 193,
+          "function": "Path(cert).parent.mkdir"
+        },
+        {
+          "line": 195,
+          "end": 195,
+          "function": "Path(tmp).write_text"
+        },
+        {
+          "line": 196,
+          "end": 196,
+          "function": "os.replace"
+        },
+        {
+          "line": 205,
+          "end": 205,
+          "function": "(vault / 'blind_log.jsonl').open"
+        },
+        {
+          "line": 206,
+          "end": 206,
+          "function": "fh.write"
+        },
+        {
+          "line": 207,
+          "end": 207,
+          "function": "os.chmod"
+        }
+      ],
+      "handlers": [
+        {
+          "line": 156,
+          "exception": "SystemExit"
+        },
+        {
+          "line": 158,
+          "exception": "Exception"
+        },
+        {
+          "line": 168,
+          "exception": "FileExistsError"
+        },
+        {
+          "line": 185,
+          "exception": "(KeyError, TypeError)"
+        }
+      ],
+      "returns": [
+        {
+          "line": 208,
+          "end": 208
+        }
+      ]
+    },
+    "_vault": {
+      "range": [
+        211,
+        230
+      ],
+      "selected_calls": [
+        {
+          "line": 214,
+          "end": 214,
+          "function": "dirp.mkdir"
+        },
+        {
+          "line": 215,
+          "end": 215,
+          "function": "os.chmod"
+        },
+        {
+          "line": 220,
+          "end": 220,
+          "function": "os.open"
+        },
+        {
+          "line": 226,
+          "end": 226,
+          "function": "os.fdopen"
+        },
+        {
+          "line": 227,
+          "end": 227,
+          "function": "json.dump"
+        },
+        {
+          "line": 228,
+          "end": 228,
+          "function": "fh.write"
+        },
+        {
+          "line": 229,
+          "end": 229,
+          "function": "os.chmod"
+        },
+        {
+          "line": 230,
+          "end": 230,
+          "function": "_sha_file"
+        }
+      ],
+      "handlers": [
+        {
+          "line": 222,
+          "exception": "FileExistsError"
+        }
+      ],
+      "returns": [
+        {
+          "line": 230,
+          "end": 230
+        }
+      ]
+    },
+    "_blind_log": {
+      "range": [
+        233,
+        237
+      ],
+      "selected_calls": [
+        {
+          "line": 235,
+          "end": 235,
+          "function": "p.open"
+        },
+        {
+          "line": 236,
+          "end": 236,
+          "function": "fh.write"
+        },
+        {
+          "line": 237,
+          "end": 237,
+          "function": "os.chmod"
+        }
+      ],
+      "handlers": [],
+      "returns": []
+    },
+    "run_contract_cert": {
+      "range": [
+        313,
+        373
+      ],
+      "selected_calls": [
+        {
+          "line": 338,
+          "end": 342,
+          "function": "_vault"
+        },
+        {
+          "line": 339,
+          "end": 339,
+          "function": "_sha_file"
+        },
+        {
+          "line": 339,
+          "end": 339,
+          "function": "_sha_file"
+        },
+        {
+          "line": 340,
+          "end": 340,
+          "function": "_sha_file"
+        },
+        {
+          "line": 344,
+          "end": 344,
+          "function": "_sha_file"
+        },
+        {
+          "line": 363,
+          "end": 363,
+          "function": "_blind_log"
+        },
+        {
+          "line": 366,
+          "end": 366,
+          "function": "Path(cert).parent.mkdir"
+        },
+        {
+          "line": 368,
+          "end": 368,
+          "function": "Path(tmp).write_text"
+        },
+        {
+          "line": 369,
+          "end": 369,
+          "function": "os.replace"
+        },
+        {
+          "line": 372,
+          "end": 372,
+          "function": "_blind_log"
+        }
+      ],
+      "handlers": [
+        {
+          "line": 328,
+          "exception": "SystemExit"
+        },
+        {
+          "line": 330,
+          "exception": "Exception"
+        },
+        {
+          "line": 358,
+          "exception": "(KeyError, TypeError)"
+        }
+      ],
+      "returns": [
+        {
+          "line": 373,
+          "end": 373
+        },
+        {
+          "line": 364,
+          "end": 364
+        }
+      ]
+    }
+  },
+  "scope": "Four functions, source-order sites; not a call-graph, durability, race or runtime proof."
+}
