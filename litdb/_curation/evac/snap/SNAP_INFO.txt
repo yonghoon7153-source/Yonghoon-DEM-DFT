@@ -1,8 +1,7 @@
-2026-11-15 13:05:30 UTC
+2026-11-15 15:03:14 UTC
 rint_codepkg: HEAD 8b59b9618 · origin/claude/stoic-knuth-NObVQ 뒤 커밋 16
 rint_codepkg_unpushed.bundle: 161676 B
-main: HEAD d5cf6307f · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 74
-main_unpushed.bundle: 1337328 B
+main: HEAD d5cf6307f · origin/claude/sdcp-dem-manuscript-si-pqwtv8 뒤 커밋 0
 BRIEF_rereview_codepkg.md: 4333 B
 import_list.txt: 656 B
 BRIEF_review_codepkg.md: 4482 B
