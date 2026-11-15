@@ -342,6 +342,9 @@ run 'git_env_isolation (Rint ② 2 회차 RCP2-06 · git 환경 격리 · 일회
 #  ★ 2026-11-13 (Rint ② Codex 반박 1/2 RCPX-03 · Q12 설계) — 두 기계 조립 비교 도구 (가중 그래프 같음 ↔ 조립 바이트 같음 · 판정문 반례 = 실제
 #    `_assemble` 병렬 간선 차례 · CSR 1 ulp) · 실제 실행 없음 · CPU · 수 초.
 run 'cjunc_asm_compare (Rint ② Codex 반박 1/2 RCPX-03 · Q12 조립 비교 설계 · 시험 먼저)' python3 scripts/test_cjunc_asm_compare.py
+#  ★ 2026-11-15 (Rint ② RTR-01 · Codex 실무 648bb4990 · Q14 gate_proposal · Claude 반입) — 새 팔 게시 전 최종 폴더 옛 audit 퇴역
+#    (러너 조각 · 합성 파일 · 실제 실행 없음 · 수 초 · 11-15 Linux 10/10).
+run 'rint_destination_audit (Rint ② RTR-01 · 최종 폴더 옛 audit 퇴역 · 고치기 전 8 실패 → 10/10)' python3 scripts/test_rint_destination_audit.py
 #  ★ 2026-10-20 (Rint ② B6 · 설계 v1 §4-2 · §5-2 · §6 · §7 · 1저자 N1–N18 권고대로) — payload 의 탄소 접합 · SDCP 수정자 배선 · 조합 정책
 #    (face_alpha + cjunc = 거부 · face_alpha / cjunc + rtol = 허용) · 러너 다음 세대 손잡이 · 판정기 소비자 검사 (기본 끔 · 끄면 옛 경로 그대로):
 #    ca_ext_b6 = run_contract 등록 · payload 끝-끝 (고치기 전 1/50 · `--old-scripts DIR` = 끔 비트 대조 B) · 10-20 실측 50 s ·
