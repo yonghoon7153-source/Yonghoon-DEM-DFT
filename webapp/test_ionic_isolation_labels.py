@@ -148,7 +148,9 @@ def section_l():
     over = {k: [w for w in over_w if w in b] for k, b in tips.items() if any(w in b for w in over_w)}
     chk('L1 케이스 툴팁 넷 (활성 · 경로 고립 · 단절 · 무접촉) — 상단 2r 경계 띠 · SE 접촉 그래프 지표 · 실제 분리막 접촉 · 계면 저항 · 이온 전류는 '
         '계산하지 않는다 · 실제 도달 단정 없음', not lack and not over, f'빠진 말 {lack} · 단정 {over}')
-    badge = next((ln for ln in html.splitlines() if 'metrics.ionic_active_pct is defined' in ln and 'title=' in ln), '')
+    # ★ 11-15 반입 — 11-10 표시 경계 고침 (Codex ace5912fb) 이 배지 조건을 `'ionic_active_pct' in _nums` (유한 숫자만) 로 바꿨다 → 두 꼴을 다 찾는다 (title 글은 그대로)
+    badge = next((ln for ln in html.splitlines()
+                  if ('metrics.ionic_active_pct is defined' in ln or "'ionic_active_pct' in _nums" in ln) and 'title=' in ln), '')
     chk('L2 배지 (Ionic Active) title — 그래프 지표 한정어 · "전기화학적으로 dead" 단정 없음',
         bool(badge) and '그래프' in badge and 'dead' not in badge, badge[:200])
     plain = getattr(A, '_GRADE_PLAIN', {}).get('ionic_active_pct', '')

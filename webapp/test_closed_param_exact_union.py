@@ -150,7 +150,10 @@ def section_w():
     chk('W4 망 요약에 질량 보존 두께 · φ 행', any('mass-conserving' in l and 'Thickness' in l for l in labels)
         and any('mass-conserving' in l and 'φ_SE' in l for l in labels), repr(labels))
     sh = open(os.path.join(HERE, 'templates', 'single.html'), encoding='utf-8').read()
-    chk('W5 케이스 화면 배지가 정확 union 값을 그린다', re.search(r'metrics\.porosity_union_exact_pct is not none', sh) is not None)
+    # ★ 11-15 반입 — 11-10 표시 경계 고침 (Codex ace5912fb) 이 배지 조건을 `metrics.X is not none` 에서 `'X' in _nums` (유한 숫자만) 로 바꿨다.
+    #   뜻은 같다 (배지가 정확 union 값을 그린다) → 두 꼴을 다 받되, 조건이 실제 배지 줄 (<span class="badge") 에 붙어 있어야 한다.
+    chk('W5 케이스 화면 배지가 정확 union 값을 그린다',
+        re.search(r"(metrics\.porosity_union_exact_pct is not none|'porosity_union_exact_pct' in _nums)[^\n]*<span class=\"badge\"", sh) is not None)
     gh = open(os.path.join(HERE, 'templates', 'group.html'), encoding='utf-8').read()
     chk('W6 그룹 그림 체크박스 porosity_union_exact_pct', 'value="porosity_union_exact_pct"' in gh)
     chk('W7 그룹 표 툴팁 (정확 union · 질량 보존)', "'Porosity (union exact)'" in gh and '질량 보존' in gh)
