@@ -1,6 +1,6 @@
 # 양극 계면과 코팅
 
-전해질 · 계면 · 장 `se-cathode` · 논문 42편 · 읽기 카드 40편
+전해질 · 계면 · 장 `se-cathode` · 논문 43편 · 읽기 카드 41편
 
 > 양극 활물질과 전해질 사이의 반응, 코팅 물질 선정, 고전압 구동.
 
@@ -70,7 +70,7 @@
 4. Bong et al. 2023 (`bong2023_linbo3_thickness_uniformity_ncm523`) — LiNbO₃ 두께와 피복을 바꾼 황화물 풀셀 비교로 실험 쪽 기준점을 준다.
 5. Clausnitzer et al. 2024 (`clausnitzer2024_degradation_mechanisms_cathode_llzo`) — 막 Li 확산도 문턱을 내놓아 코팅의 수송 대가를 따지는 기준을 준다.
 
-## 이 장의 논문 (42편)
+## 이 장의 논문 (43편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -96,6 +96,7 @@
 | `wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite` | Wei et al. 2023 | Unraveling the LiNbO3 coating layer on battery performances of lithium argyrodite-based all-solid-state batteries under different cut-off voltages | LiNbO₃ 코팅은 3.9 V(vs Li-In)에서 이득이 가장 크고, 4.2 V에서는 LiCoO₂의 비가역 상전이가 열화를 지배해 코팅으로 막지 못한다. |
 | `zuo2022_chlorination_cathode_interface` | Zuo et al. 2023 | Impact of the Chlorination of Lithium Argyrodites on the Electrolyte/Cathode Interface in Solid‐State Batteries | Li₅.₅PS₄.₅Cl₁.₅는 Li₆PS₅Cl보다 더 많이 산화 분해되지만 NCM85 계면에서 고체 phosphate를 덜 만들어 정전압 홀드 중 저항 증가가 느리다. |
 | `cha2024_dualcompatible_halide_ncm_lpscl_interface` | Cha et al. 2024 | Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides | 할라이드 코팅의 성패는 이온전도도가 아니라 NCM과 LPSCl 양쪽과의 화학적 호환성이 가르고, LZC만 이를 만족한다. |
+| `chen2024_space_charge_layer_ncm_linbo3_lpscl` | Chen et al. 2024 | Elucidating and Minimizing the Space‐Charge Layer Effect between NCM Cathode and Li₆PS₅Cl for Sulfide‐Based Solid‐State Lithium Batteries | 600 °C로 열처리한 결정성 LiNbO₃ 코팅이 가장 오래 버텼지만, 원문이 내세운 공간전하층은 측정도 계산도 되지 않았다. |
 | `clausnitzer2024_degradation_mechanisms_cathode_llzo` | Clausnitzer et al. 2024 | Impact of degradation mechanisms at the cathode/electrolyte interface of garnet-based all-solid-state batteries | LCO\|LLZO 복합양극의 용량 손실은 옴 저항보다 계면 막 안의 낮은 Li 확산도가 지배한다. |
 | `hu2024_amorphous_lif_coating_lco_lpscl_interface` | Hu et al. 2024 | Impact of Amorphous LiF Coating Layers on Cathode‐Electrolyte Interfaces in Solid‐State Batteries | a-LiF 코팅은 두께에 따라 계면 부반응을 억제하지만 20 Å에서 Li 확산이 크게 줄어, 원문은 최적 두께를 약 1 nm로 제안했다. |
 | `liu2024_sc_ni90_sulfur_coating_sulfide_assb` | Liu et al. 2024 | High‐Capacity, Long‐Life Sulfide All‐Solid‐State Batteries with Single‐Crystal Ni‐Rich Layered Oxide Cathodes | 단결정 Ni90에 황 0.2 wt%로 만든 10–20 nm 황화물 피막이 55 °C 전고체 셀의 율속, 수명, 면용량을 모두 가장 크게 올렸다. |

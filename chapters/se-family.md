@@ -1,12 +1,12 @@
 # 다른 전해질 계열
 
-전해질 · 계면 · 장 `se-family` · 논문 16편 · 읽기 카드 16편
+전해질 · 계면 · 장 `se-family` · 논문 17편 · 읽기 카드 17편
 
 > 할라이드, 가넷 산화물, LGPS 계, 안티페로브스카이트, Na 계.
 
 ## 장 서문 — 전도도와 창의 헤드라인 값은 조건이 붙어야 성립한다
 
-*읽기 카드 16편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10*
+*읽기 카드 16편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 황화물, 할라이드, 가넷 산화물, 안티페로브스카이트, Na 계 전해질에서 무엇이 전도도와 안정성을 정하는지가 공통 질문이다. [근거: Kamaya et al. 2011 (`kamaya2011_lgps_lithium_superionic_conductor`); Ong et al. 2013 (`ong2013_lgps_family_substitution`); Schlem et al. 2020 (`schlem2020_li3mcl6_cation_site_disorder`); Anderson et al. 2024 (`anderson2024_llzo_comprehensive_dopant_screening`); Lin Li, …, Siwu Li\*, Chuang Yu\* 2026 (`li2026_na_sulfide_halide_interface_review`); Ziemke et al. 2026 (`ziemke2026_li3ocl_substitutional_defects`)]
 
@@ -72,7 +72,7 @@ Na 계에서는 황화물이 양극 쪽에서, 할라이드가 음극 쪽에서 
 4. Anderson et al. 2024 (`anderson2024_llzo_comprehensive_dopant_screening`) — 도펀트를 같은 조건에서 전수 측정한 사례라 계산 스크리닝 논문들을 읽을 기준이 된다.
 5. Lin Li, …, Siwu Li\*, Chuang Yu\* 2026 (`li2026_na_sulfide_halide_interface_review`) — 황화물과 할라이드가 반대 전극에서 무너진다는 계면 틀을 Na 계로 정리한다.
 
-## 이 장의 논문 (16편)
+## 이 장의 논문 (17편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -84,6 +84,7 @@ Na 계에서는 황화물이 양극 쪽에서, 할라이드가 음극 쪽에서 
 | `huang2022_li2sis3_anomalous_conductivity_bvse` | Huang et al. 2022 | Anomalously High Ionic Conductivity of Li₂SiS₃ -Type Conductors | 고립 edge-sharing 이량체로 이뤄진 n-Li₂SiS₃는 부분점유 Li 자리 덕에 298 K에서 2.4 mS/cm를 보인다. |
 | `anderson2024_llzo_comprehensive_dopant_screening` | Anderson et al. 2024 | Comprehensive Dopant Screening in Li₇La₃Zr₂O₁₂ Garnet Solid Electrolyte | LLZO에 59종을 세 자리씩 넣어 같은 조건으로 재자 입방상과 전도도는 올랐으나 안정성과 CCD는 따로 움직여 원문은 codoping을 제안했다. |
 | `kim2025_li3ycl6_new_crystal_structure` | Kim et al. 2025 | New crystal structure of Li₃YCl₆ : structural relationship and ionic conductivity for solid‐state electrolytes | Li₃YCl₆ 조성을 고정한 AIMD 비교에서 ccp 골격이 최하위였고, CSP로 찾은 2D 확산 골격 hcp_4가 가장 높은 σ를 냈다. |
+| `ahmed2026_co_substituted_llzto_sintering_atmosphere` | Ahmed et al. 2026 | The Impact of Cobalt Substitution on the Electrochemical Properties of Cubic Li 6.6 La₃Zr 1.6 Ta 0.4 O₁₂ Solid Electrolyte for All‐Solid‐State Li‐Ion Batteries | Ar 소결은 Co를 LLZTO 입자 안에 녹여 이온전도를 떨어뜨리고, 공기 소결은 Co를 LiCoO₂로 석출시켜 전자전도를 올린다. |
 | `gao2026_sib_electrolyte_ai_review` | Gao et al. 2026 | Accelerating Electrolyte Discovery for Sodium-Ion Battery Through Property-Based Frameworks and Artificial Intelligence | Na-ion 전해질을 물성 다섯 축으로 재배치하고 ML을 핵심 동력으로 놓은 로드맵 리뷰이며, 계산 내용은 모두 인용 연구에서 왔다. |
 | `li2026_na_sulfide_halide_interface_review` | Lin Li, …, Siwu Li\*, Chuang Yu\* 2026 | Interfacial Chemistry of Sulfide and Halide Solid Electrolytes in All Solid-State Sodium Batteries: From Single Electrolytes to Functionally Partitioned Architectures | 나트륨 전고체전지에서 황화물은 양극에서, 할라이드는 음극에서 분해되므로 기능을 서로 다른 상에 나눠 배치하자는 리뷰다. |
 | `meng2026_pvdf_li2zrf6_phase_ordering` | Meng et al. 2026 | Phase ordering and interfacial stabilization enabling high-performance PVDF-based solid-state lithium metal batteries | m-Li₂ZrF₆ 2 wt%가 격자정합으로 β-PVDF를 늘리고 셀 수명을 높이지만, 계면 상변환 기전은 증명되지 않았다. |

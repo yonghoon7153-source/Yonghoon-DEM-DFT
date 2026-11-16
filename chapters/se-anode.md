@@ -1,12 +1,12 @@
 # 음극 · 리튬 금속 계면
 
-전해질 · 계면 · 장 `se-anode` · 논문 23편 · 읽기 카드 23편
+전해질 · 계면 · 장 `se-anode` · 논문 23편 · 읽기 카드 21편
 
 > Li 금속과 전해질 사이의 계면층, 덴드라이트, 중간층 설계.
 
 ## 장 서문 — Li 계면 분해 산물은 모였으나 자기제한은 미결이다
 
-*읽기 카드 23편을 엮어 쓴 글 · 항목 30개 중 28개 검증 통과 · 2026-11-10*
+*읽기 카드 23편을 엮어 쓴 글 · 항목 30개 중 28개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 Li 금속과 황화물 전해질이 닿으면 Li₂S, Li₃P, LiCl이 생긴다는 데 계산과 실험이 대체로 모였다. [근거: Wang et al. 2022 (`wang2022_resistive_decomposing_interfaces_se_alkali_metal`); Chaney et al. 2024 (`chaney2024_two_step_sei_growth_argyrodite_li_metal`); Ji Seon Kim 2025 (`kim2026_li_argyrodite_sei_reactive_md`); Lai et al. 2025 (`lai2025_haml_li_metal_lpscl_interface_doping_seFO`); Luo et al. 2022 (`luo2022_cryotem_li_dendrite_sulfide_interphase`); Liu et al. 2023 (`liu2023_electron_redistribution_redox_resistible_mgf2`)]
 
@@ -90,9 +90,9 @@ h-BN 중간층 연구 두 편은 Li가 h-BN 위가 아니라 아래 틈에 쌓�
 | `lu2025_tailoring_cl_rich_anode_licl` | Lu et al. 2025 | Tailoring argyrodite electrolyte for enhanced interface compatibility with lithium anode | 4d 자리 Cl이 많은 Cl15는 스스로 분해해 전자 절연성 LiCl 계면층을 만들고 덴드라이트를 억제한다. |
 | `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament` | Pustorino et al. 2025 | Mechanical and Electronic Properties of Bulk and Surface Li₆PS₅Cl Argyrodite: First-Principles Insights on Li-Filament Resistance | LPSC는 탄성률과 파괴에너지가 낮고 PS₄ 종결 표면이 벌크만큼 절연적이라, Li 필라멘트가 균열을 뒤따르는 dry crack으로 자란다. |
 | `wang2025_electronic_localization_yo_argyrodite` | Wang et al. 2025 | Electronic Localization Enables Long‐Cycling Sulfides‐Based All‐Solid‐State Lithium Batteries | Li₆PS₅Cl에 Y/O를 5% 공치환하면 Li 금속 계면 분해가 줄어 수명이 늘지만, 전자 국재화 기전은 근거가 약하다. |
-| `ahn2026_cej_agno3_pvp_li3n_anodefree` | Kim, Kang, Lee, Shin, An, Lee 2026 | Electrochemical precursor conversion for coupled control of Li nucleation and transport in anode-free all-solid-state batteries | PVP로 잘게 분산한 AgNO₃를 첫 충전에 전환하면 고른 Ag–Li 자리와 Li₃N 계면상이 함께 생겨 수명이 늘어난다. |
+| `ahn2026_cej_agno3_pvp_li3n_anodefree` | Kim, Kang, Lee, Shin, An, Lee 2026 | Electrochemical precursor conversion for coupled control of Li nucleation and transport in anode-free all-solid-state batteries | (카드 없음) |
 | `burov2026_li_llzo_charge_transfer_mlmd` | Burov et al. 2026 | Charge-transfer mechanisms at Li/Ga-doped Li 7 La 3 Zr 2 O 12 (LLZO) interfaces from machine learning assisted molecular dynamics | 계면 횡단만 센 MLMD에서 Li\|Ga-LLZO 전하이동 장벽은 167 ± 18 meV이고, R_ct는 실측보다 훨씬 작은 하한값으로 나왔다. |
-| `kang2026_site_specific_customized_se_dendrite_tolerant_li_metal` | Kang et al. 2026 | Dendrite-tolerant fast-kinetics design for all-solid-state lithium-metal batteries via site-specific customized sulfide electrolytes | 양극, 분리막, Li 계면에 서로 다른 argyrodite를 배정하자 NCM811‖Li 풀셀이 1C 500 사이클을 단락 없이 돌았다. |
+| `kang2026_site_specific_customized_se_dendrite_tolerant_li_metal` | Kang et al. 2026 | Dendrite-tolerant fast-kinetics design for all-solid-state lithium-metal batteries via site-specific customized sulfide electrolytes | (카드 없음) |
 | `kim2026_iccf_molten_salt_sei_lpscl_sheet` | Kim et al. 2026 | Ion-conducting cavity filler enabling in-situ formation of SEI in sulfide-based solid electrolyte sheets for all-solid-state batteries | [EMIM][TFSI]에 LiTFSI와 FEC를 더한 충진재를 LPSCl 시트에 떨어뜨리면 전도도가 회복되고 음극에 LiF-rich SEI가 생긴다. |
 | `li2026_functionally_differentiated_interphase` | Li et al. 2026 | Functionally differentiated composite interphase enables stable sulfide-based all-solid-state lithium metal batteries | LiF, LiCl/LiBr, Li₃N을 차례로 습식 코팅한 Li 금속은 CCD와 수명이 크게 늘었지만, 층 분화 자체는 증명되지 않았다. |
 | `li2026_mci_vs_sei_na3ps4_na_mlip_md` | Li et al. 2026 | Distinguishing the mixed conduction interphase: a machine learning molecular dynamics study on the Na₃PS₄ /Na battery interface | MLIP-MD에서 Na₃PS₄‖Na 계면상은 감속하며 계속 자라고 세 표지가 MCI와 부합하지만, 전자 전도는 계산하지 않았다. |
