@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 341편 · 생성 2026-11-16
+> digest 342편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -217,7 +217,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (71편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (72편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -237,6 +237,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `frankenberg2024_dem_high_intensity_mixer_assb` | ASSB 복합양극을 고강도 믹서(high-intensity mixer) 로 만드는 공정을 DEM으로 — coarse-graining + force-scaling(접촉력 스케일링) + 3단계 보정으로 stressing condition을 추출하고, 그것을 미세구조·풀셀 용량에 연결 — Frankenberg (Powder T | DEM (Rocky 2023 R1, coarse-grained + force-scaling, 3-step c | 2026-06-26 | — |
 | `galvezaranda2025_paml_vgg16_dem_slurry_drying` | 건조(slurry drying) DEM 궤적을 predictor–corrector 로 쪼개다 — VGG16→Conv1D 가 프레임 한 칸(1,500,000 DEM step)을 건너뛰고 nDEM(5–10 k) 실제 DEM step 이 그것을 물리 위로 되돌린다, NMC111 96 % AM / 4 % CBD 학습 → 94/6 | PAML 하이브리드(predictor–corrector): per-particle VGG16→Conv1D 시 | 2026-09-11 | 🖼 13 |
 | `ge2022_xct_initial_structure_dem_calendering_nmc333` | X 선 CT (Ebner 2013) 로 잰 미압연 NMC333 양극의 입자 5106 개를 구로 바꿔 DEM 처음 구조로 — Edinburgh 탄소성-점착 접촉 법칙 (n 1.5) + Potyondy–Cundall 결합 (바인더 대리 · k_b 1.5 × 10¹⁴ N m⁻³ · σ_n 300 MPa) · 판 속도 0.01  | DEM (Altair EDEM 2021 · EEPA 탄소성-점착 접촉 + Potyondy–Cundall 결합 | 2026-11-16 | 🖼 84 |
+| `han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode` | 건식 PTFE 후막 흑연 음극 (흑연 : CB : PTFE = 96 : 1 : 3 · 14.4 mg/cm² · 92 µm · 1.55 g/cm³) 은 첫 리튬화 때 PTFE 가 ≈0.3–0.55 V (vs Li) 에서 환원 분해 (탈불소 → LiF + 탄소) 해 ICE 75.7 % · 비가역 107.6 mAh/g — 전해 | experiment (dry-process 건식 전극 PTFE binder 후막 흑연 음극 · planeta | 2026-11-16 | 🖼 65 |
 | `han2025_icep_conductive_elastic_binder` | 이온전도성 탄성 고분자(ICEP) 바인더로 초고로딩 NCM811 전극 — Han (Adv. Mater. 2025) | exp (+DFT 흡착) | 2026-07-08 | — |
 | `hare2026_dem_pept_dry_mixing_nmc622_eirich` | NMC 622 건식 혼합(dry mixing) 의 3D 유동을 PEPT 로 실측하고 그것으로 DEM 을 검증 — Eirich EL1 집약믹서, rotor tip-speed 10/20/30 m/s — Hare (Powder Technology 2026) | DEM (EDEM 2023, coarse-grained Hertz–Mindlin + JKR) + PEPT 실 | 2026-09-19 | 🖼 19 |
 | `hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf` | 건식 충격 블렌딩 (Nara · 13 000 rpm · 5 min) NCM523@Li₆PS₅Cl 코어–셸 복합 입자 + 도전재 — 아세틸렌 블랙 (일차 ≈35 nm) 은 SE 껍질 (100–1000 nm) 안으로 · VGCF (≈150 nm × ≈6 µm) 는 입자 밖으로 · 360 MPa 이온 차단 셀 EIS: 껍질만  | exp (건식 충격 블렌딩 dry process 코팅 · powder 코어–셸 복합 입자 · SEM/EDX  | 2026-11-16 | 🖼 43 |

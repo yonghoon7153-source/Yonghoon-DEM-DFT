@@ -610,3 +610,7 @@ hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf	design 
 #   ⚠ 크롭 47 장 = 도구 24 (다시 자름 15: SI 그림 15 장 전부 = 박힌 래스터 상자 · 그중 12 장은 도구 상자가 가로축 제목을 자르거나 두 단에 걸침) + 손 23 (식 3 · 근거 문단 20) + data_file_s1_extract.csv 56 행 — --inbox --run 으로 다시 뽑지 말 것
 kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells	quantifying_the_impact_of_cathode_composite_mixing_quality
 kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells	quantifying the impact of cathode composite mixing quality
+# ── 건식 PTFE 후막 흑연 음극의 첫 리튬화 PTFE 환원 분해 (0.3–0.55 V) 를 FEC 10 wt% 가 줄임 · 반쪽 셀 ICE 75.7 → 87.2 % · 1 사이클 뒤 나노압입 · SAICAS · 두께 · LFP 전셀 · 파우치 (Han · Noh · Chae … Song · Kwak · Choi, J. Energy Storage 96 (2024) 112693) — 자동 매칭 실패 (--inbox --only han2024 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 65 장 = 도구 23 (다시 자름 13: 본문 그림 2–6 = 단 폭 bbox 라 좌우 여백 과다 · SI 그림 S2 · S3 · S6 · S9 · S11 · S12 · S14 · S15 = 래스터 안 흰 여백) + 손 42 (패널 23 · 식 1 · 근거 문단 18) + digitized.csv 39 행 (래스터 축 틀 대응) — --inbox --run 으로 다시 뽑지 말 것
+han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode	mitigating_ptfe_decomposition_in_ultra_thick_dry-processed_anodes
+han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode	mitigating ptfe decomposition in ultra thick dry-processed anodes
