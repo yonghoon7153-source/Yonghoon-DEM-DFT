@@ -1,0 +1,66 @@
+{
+  "scope": "PROPOSAL_ONLY_NO_DECK_CHANGE",
+  "N0_deck_sha256": "adbbc8fa8f46730779fbf4f028f95a7aaf90c27ef2697c0dbe21a9ae1b5c6de3",
+  "N0_meta_sha256": "cc5b3e4d45cdc3859541b8dcc8b76c54dcdcec057fc40e130b5ba74c70752c90",
+  "deck_dt": 2.373e-07,
+  "deck_period": 0.782508,
+  "steps_per_rev_from_deck": 3297547.408343869,
+  "runs": [
+    1,
+    560606,
+    560606,
+    6595382
+  ],
+  "total_steps": 7716595,
+  "current_dump_every": 32976,
+  "current_frame_count": 234,
+  "current_t0": 1121184,
+  "current_last_frame": 7716384,
+  "bin1_frame_count": 100,
+  "bin1_first_last": [
+    4418784,
+    7683408
+  ],
+  "format": "12 columns, int id/type, 10 float fields %.17g",
+  "scenarios": [
+    {
+      "interval_steps": 1000,
+      "frames": 7716,
+      "interval_seconds": 0.0002373,
+      "degrees_per_frame": 0.10917204680335535,
+      "post_estimate_bytes_at_E0_mean": 177544430221.95895,
+      "post_bound_bytes": 200619950592,
+      "current_contract": false
+    },
+    {
+      "interval_steps": 32976,
+      "frames": 234,
+      "interval_seconds": 0.007825204799999999,
+      "degrees_per_frame": 3.6000574153874463,
+      "post_estimate_bytes_at_E0_mean": 5384317868.317574,
+      "post_bound_bytes": 6084119808,
+      "current_contract": true
+    },
+    {
+      "interval_steps": 65952,
+      "frames": 117,
+      "interval_seconds": 0.015650409599999998,
+      "degrees_per_frame": 7.200114830774893,
+      "post_estimate_bytes_at_E0_mean": 2692158934.158787,
+      "post_bound_bytes": 3042059904,
+      "current_contract": false
+    },
+    {
+      "interval_steps": 164880,
+      "frames": 46,
+      "interval_seconds": 0.039126023999999995,
+      "degrees_per_frame": 18.00028707693723,
+      "post_estimate_bytes_at_E0_mean": 1058455649.3273863,
+      "post_bound_bytes": 1196023552,
+      "current_contract": false
+    }
+  ],
+  "restart_reference_bytes": 115123769,
+  "estimate_not_rotation_measurement": true,
+  "recommendation": "Keep current 32976-step cadence and 17 significant digits for next fixed N0. Lossless compression after closure is the first storage option. Live compressed/binary or sparser dumps require source/reader/guard/package compatibility and separate review; none enabled here."
+}
