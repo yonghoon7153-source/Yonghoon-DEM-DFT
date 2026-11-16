@@ -594,3 +594,7 @@ strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation	impact of c
 #   ⚠ 크롭 40 장 = 도구 18 (다시 자름 12: 그림 1 · 2 = 서로 섞임 · 표 1 = 쪽 전체 · 표 2 = p.99 본문 · SI 그림 8 장 = 아래 잘림) + 손 22 (그래픽 초록 1 · SI 그림 S2 1 · 식 1 · 근거 문단 19) + digitized.csv 1046 행 — --inbox --run 으로 다시 뽑지 말 것
 nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch	toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety
 nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch	toward practical all-solid-state lithium-ion batteries with high energy density and safety
+# ── 황화물 유리 (75Li₂S·25P₂S₅) SE 입경 (d50 16 vs 3.8 µm) × NCM111 입경 (9.4 vs 5.3 µm) · 무탄소 75 : 25 wt · 330 MPa — 단면 SEM/EDX 분포 · NCM 균열 · 율속 (Sakuda · Takeuchi · Kobayashi, Solid State Ionics 285 (2016) 112–117) — 자동 매칭 실패 (slug ↔ 파일명 토큰 겹침 'electrode' · 'morphology' 둘뿐)
+#   ⚠ 크롭 35 장 = 도구 4 (다시 자름 4: 단 폭 여백 → 박힌 래스터 둘레 6 pt) + 손 31 (패널 12 · 근거 문단 19 · 식 0 = 원문에 식 없음) + digitized.csv 72 행 — --inbox --run 으로 다시 뽑지 말 것
+sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking	electrode_morphology_in_all-solid-state_lithium_secondary_batteries
+sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking	electrode morphology in all-solid-state lithium secondary batteries

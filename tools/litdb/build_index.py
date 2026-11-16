@@ -89,6 +89,8 @@ SIZE_EFFECT_SLUGS = frozenset({
     "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
     # 2026-11-12 — 같은 그룹 (Marburg) LWM 습식 분쇄 SE (D50 1.01 → 0.79 µm) · 복합 양극 τ_eff (= tau2 · 자기 펠릿 σ₀) 35.4 → 8.0 · 392 MPa 펠릿 공극 (80:20) 22.7 → 13.5 % — 펠릿 σ₂₅ 4.43 → 1.09 (정규화 함정)
     "koenig2023_wet_milling_se_ion_tortuosity_composite_cathode",
+    # 2026-11-16 — 황화물 유리 (75Li₂S·25P₂S₅) SE d50 16 vs 3.8 µm × NCM111 9.4 vs 5.3 µm (75 : 25 wt · 무탄소 · 330 MPa): 단면 분포 균질 · NCM–NCM 맞닿은 곳 균열 · 'D_SE < D_NCM' 규칙 (정성) · 고율 용량 (Sakuda 2016 SSI)
+    "sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking",
 })
 
 # 주제 묶음 — slug/제목에 이 낱말이 있으면 그 절로. 위에서부터 먼저 맞는 것.
