@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-15
-updated: 2026-11-15
+date: 2026-11-16
+updated: 2026-11-16
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-15
+verifiedAt: 2026-11-16
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
