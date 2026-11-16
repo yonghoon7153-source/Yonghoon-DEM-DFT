@@ -595,6 +595,7 @@ c = √(E/ρ) = √(142 × 10⁹ / 4750) ≈ 5,470 m s⁻¹ ⇒ Mach = 0.01/5470
 - ⬜ **파괴 판정의 크기 정규화 점검**: 우리 Auerbach 판정이 입경을 어떻게 쓰는지 확인하고, "큰 입자 우선 파괴" 를 **힘이 아니라 정규화 기준**으로 보고하는지 (§12 D7). 정본 대조 기준 = `wheatcroft2023_*` 의 σ_F = P_f/D² (§12 D7b) — 우리 DEM 접촉력 덤프에 같은 정규화를 걸어 **"어느 크기가 먼저 깨지나"** 를 문헌과 같은 척도로 낼 수 있다.
 - ⬜ (장기) **X-CT 기반 독립 초기구조** 경로 (§8 ⑤) — 실행 가능성 미정.
 - 🔗 **관련 카드 (2026-11-12 한 줄 추가)**: [`song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage`](song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage.md) — 자기 시료의 in situ CT (누른 채 · 화소 0.5 µm) 입자를 등가 구 942 개로 옮긴 결합 DEM · 위 '크기 정규화' 항목 (D7 · D7b) 이 요구한 판정을 실제로 쓴 논문 (σm = f_max/d² · 문턱 ≈200 MPa — 다만 근거는 인용 한 점 · 깨진 입자와의 수 대조 없음) · 다른 그룹 (BIT).
+- 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`ge2022_xct_initial_structure_dem_calendering_nmc333`](ge2022_xct_initial_structure_dem_calendering_nmc333.md) = 이 카드의 ref 18 (L38 · L54 · L96 · L139) 의 원문 카드 — 같은 Ebner 미압연 CT 에서 입자 5106 개를 구로 옮긴 EEPA (n 1.5) + Potyondy–Cundall 결합 DEM · 판 0.01 m s⁻¹ 은 원문에서 **가압만** (제하 단계 없음 — L139 의 '가압·제하 동일' 은 이 논문 자신의 절차이고 ref 18 은 속도에만 붙는다) · 공극은 AM 밖 부피 (CBD = 빈 곳 · 0 bar 0.628) 라 이 카드 0.432 (CBD 고체) 와 정의가 다르다 · 원문 표 1 NMC μ 0.25 · μr 0.01 · e 0.5 · E 144 GPa (이 논문 μ 0.12 · E 142).
 
 ---
 
