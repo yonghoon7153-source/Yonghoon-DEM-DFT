@@ -1,0 +1,25 @@
+{
+  "native_checks": [
+    {
+      "script": "check_doc_refs.py",
+      "rc": 1,
+      "stdout_sha256": "3c24ab8e28d5453be14713eadc0c96f3725acb7bb81702471afbd33d69a7cc7e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "script": "check_review_findings.py",
+      "rc": 0,
+      "stdout_sha256": "90b5ea24b91f5fcef16280ec6c7dc100838def5b9306100489d78e76456155a0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "doc_refs_diagnostic": {
+    "native_rc": 1,
+    "sha_occurrences": 96,
+    "unmatched_after_slash_normalization": [],
+    "missing_paths_zero": true,
+    "interpretation": "Windows slash difference against existing exception table; native result remains FAIL, not PASS"
+  },
+  "whole_gate_executed": false,
+  "initial_missing_archive_member_reference_corrected": true
+}

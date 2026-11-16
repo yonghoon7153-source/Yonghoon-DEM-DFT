@@ -1,0 +1,17 @@
+{
+  "modified_existing_files": [
+    "docs/reviews/codex_p1_g2c_ab_design_request_20261112.md",
+    "docs/reviews/dem_unloading_ps45_prereg_20261009.md",
+    "docs/reviews/p1_g2c_mpi_stage2_registration_20261112.md"
+  ],
+  "a_sections_1_14_bytes_preserved": true,
+  "a_15_5b_bytes_preserved": true,
+  "shared_ledger_or_code_changed": false,
+  "rint_changed": false,
+  "kit_or_seal_changed": false,
+  "personal_path_scan_scope": "added diff lines and new files only; historical unchanged prose is not rewritten",
+  "personal_path_scan_count": 12,
+  "personal_path_hits": [],
+  "research_results": 0,
+  "external_verdict_received": false
+}
