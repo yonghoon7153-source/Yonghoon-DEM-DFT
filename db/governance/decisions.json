@@ -13329,10 +13329,12 @@
    "evidence": [
     "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json",
     "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json (판독_끝_2026_11_16 · 판독_요약_2026_11_16)",
-    "kgy readout_stage2.json sha256 400354ff07f5b12930d60c971fe7e17786f168a5380d7fbe2ca6ed2808b51e0d · pressure_stage2.json sha256 91a9e2c63bc362ccb1e2fa78a3d7d0555060e54cd83d266445970116bf910c5e"
+    "kgy readout_stage2.json sha256 400354ff07f5b12930d60c971fe7e17786f168a5380d7fbe2ca6ed2808b51e0d · pressure_stage2.json sha256 91a9e2c63bc362ccb1e2fa78a3d7d0555060e54cd83d266445970116bf910c5e",
+    "사용자 수용 2026-11-16 — 마감 기록 '사용자_결정_2026_11_16' (커밋 ec59a51f)"
    ],
    "reopen_criteria": [
-    "⛔ 재개 조건 없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 보고량 카드 + 사용자 결정 (GPU)"
+    "⛔ 재개 조건 없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 보고량 카드 + 사용자 결정 (GPU)",
+    "⛔ li2s 계열 종료 (사용자 2026-11-16 '그래 li2s는 여기까지만 하자 · 더 하는거는 데이터 낭비일듯하다 · 잘 기록하고 닫아줘') — 새 li2s 카드 · 트랙 · 런을 제안하지 않는다 · 다시 열면 사용자가 명시적으로 새로 정한다 (위임 10-30 으로 열지 않는다)"
    ],
    "enforcement": "마감 기록의 허용 · 금지 서술 밖으로 쓰지 않는다 · D · σ · R · Ea 어떤 값도 없음 · 옛 li2s 트랙 · li2s-2 마감의 금지 서술은 그대로",
    "track": {
@@ -13354,18 +13356,24 @@
      "state": "active",
      "by": "사용자 (위임 10-30)",
      "note": "카드 7 닫는 조건 (결과 전 규칙 · 2026-11-10 '2 단계 |W| = 0 → 닫는다') 이 kgy 사다리 판독 (2026-11-16 10:58 KST · 판독 한 번 · W = []) 으로 채워져 마감 — 위임 10-30 ('li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼') · 사용자에게 보고 · 마감 기록 커밋 8244a265"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "수용 — 사용자 2026-11-16 '그래 li2s는 여기까지만 하자 · 더 하는거는 데이터 낭비일듯하다 · 잘 기록하고 닫아줘' · li2s 계열 (옛 li2s · li2s-2 · li2s-3) 종료 · 새 li2s 카드 제안 안 함 · 마감 기록 커밋 ec59a51f"
     }
    ],
-   "_note": "active — 트랙 마감 (2 단계 |W| = 0) · 위임 10-30",
+   "_note": "active — 트랙 마감 (2 단계 |W| = 0) · 사용자 수용 2026-11-16 · li2s 계열 종료",
    "ratification": {
     "state": "ratified",
     "role": "scientific_owner",
     "actor_id": "yonghoon7153@gmail.com",
-    "timestamp": "2026-11-16T04:13:57Z",
-    "commit": "8244a2659f2f8219d2849f582fae4eb5831f4ab9",
+    "timestamp": "2026-11-16T04:18:57Z",
+    "commit": "ec59a51fcf956d081fdd370083af4619fbc2d373",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
-    "근거_발화": "카드 7 닫는 조건 (결과 전 규칙 · 2026-11-10 '2 단계 |W| = 0 → 닫는다') 이 kgy 사다리 판독 (2026-11-16 10:58 KST · 판독 한 번 · W = []) 으로 채워져 마감 — 위임 10-30 ('li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼') · 사용자에게 보고 · 사용자 2026-11-16 판독 블록 실행 · 출력 붙여넣기",
-    "decision_digest": "sha256:d1a917c3519b46ccb9b1ee56a149e6836bc6a8a268b8a83e674a6d10d235b270"
+    "근거_발화": "사용자 2026-11-16 '그래 li2s는 여기까지만 하자 · 더 하는거는 데이터 낭비일듯하다 · 잘 기록하고 닫아줘' — 카드 7 닫는 조건 (결과 전 규칙) 이 kgy 사다리 판독 (W = []) 으로 채워진 마감을 수용하고 li2s 계열을 끝냄 (앞선 승인: 위임 10-30 · 커밋 8244a265)",
+    "decision_digest": "sha256:26ea6aec5f78c9793795c2af41bd7fe54366fa2d0118d940780df5b9f29c790a"
    }
   }
  ]
