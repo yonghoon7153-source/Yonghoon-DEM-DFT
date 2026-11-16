@@ -591,5 +591,13 @@
   "블록_설명": "① 판 지문 ② k 탐침 실행기 끝 · tmux 끝 · 탐침 판정 없음 ③ 단일점 판정 줄을 sp_verdict.json 에서 다시 찍기 (지난 블록 출력 대신) ④ read_kprobe (검사용 CPU 파이썬 — 출력 3 결속 · 탐침 판정 · 발동 안 하면 기준 셀 이완 입력 3) ⑤ 발동이면 여기서 멈춤 (카드: 6 단일점을 4×2×1 로 다시 — 다음 블록) ⑥ 이완 입력 지문 · calculation · tstress ⑦ 이완 실행기 DRY_RUN ⑧ GPU 지금 (참고) ⑨ tmux b2o3_s9rx (잡마다 GPU 독점 · 여유 45,000 MiB · 창은 끝나고 5 s 더)",
   "⛔": "단일점 순서를 'DFT 순위' 로 쓰지 않는다 · 가족 비교는 이온 이완 뒤 read_relax (압력 어림 · EOS 생략 판정 문장 같이)",
   "by": "agent · 2026-11-16"
+ },
+ "9단계_이완_시작_2026_11_16": {
+  "근거": "사용자가 붙인 gabia 감시 화면 (kserver116-27 · 2026-11-16 09:17:56) — 블록 출력은 안 받았다 · tmux b2o3_s9rx 는 && 사슬 맨 끝에서만 생기므로 read_kprobe 통과 · 탐침 발동 안 함 (발동이면 그 줄에서 멈춘다) · 이완 입력 3 · DRY_RUN 통과",
+  "시작": "11-16 09:17:51 (gabia 시각) · tmux b2o3_s9rx · 점 3 개 · mpirun np 1 · VRAM 여유 48539 MiB · GPU 독점 확인 · 첫 잡 rx_FB_cfg0040 (BFGS 걸음 0 · 도는 중) · rx_FP_cfg0015 · rx_Ffree_cfg0039 대기 · GPU 4232 MiB · 0 % (시작 5 초)",
+  "k_탐침": "발동 안 함 (사실 — 이완 입력이 써졌다) · 쌍별 변화 수치는 아직 못 받음 → 판정 줄 블록으로 회수",
+  "판정_줄_블록 (gabia · 읽기만 · 계산 안 함)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; C=$R/s9_v6\n$PY -c \"import json; v=json.load(open('$C/sp_verdict.json')); print('단일점 순서', v['order'], '· 최저–차점', round(v['gap_eV'], 3), 'eV/B2O3 · G5', '같음' if v['G5']['same_order'] else '다름'); print(' ', v['sentence_sp'][:400]); k=json.load(open('$C/kprobe_verdict.json')); print('k 탐침 발동', k['triggered'], '· k 점', k['nk']); [print('  ', p, '·', x) for p, x in k['pairs'].items()]; print('  why', k['why'])\"; ( cd $C && sha256sum sp_verdict.json kprobe_verdict.json | cut -c1-16,65- )",
+  "다음": "이완 3 끝 (실행기 '끝 — 완료 3') → read_relax (--prev kprobe_verdict.json --host modelc_V0_k663.xyz) · 압력 어림 · EOS 생략 판정 문장",
+  "by": "agent · 2026-11-16"
  }
 }
