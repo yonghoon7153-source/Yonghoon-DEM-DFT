@@ -500,6 +500,7 @@ LiOH + LiCl (2 : 1) 볼밀 → 350 °C · 6 h 용융 → 대기 급랭 → 글�
 - 후보 표의 이웃 (카드가 생기면 서로 가리킬 것): N-64 Hayashi 2025 (WIP 복합 양극 치밀화) · N-65 Swinkels 1983 (HIP 기전).
 - 같은 저자들의 후속 (정본 카드 없음 · 서지는 `benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem` L438 에 적힌 대로): M. Dixit, C. Beamer, R. Essehli, A. Bisht, R. Amin, M. Li, J. Sharma, T. Rabe, M. Balasubramanian, I. Belharouak, Isostatic pressing of multilayer pouch cells and its implications for battery manufacturing, Device 2 (2024) 100370 — 파우치 셀 등방 가압의 측정이 있을 원전 후보 (이 작업에서 보지 않았다 [미확인]).
 - 후보 표 N-64 의 카드 (2026-11-12 추가 · 이 논문을 [12] 로 인용): [`hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode`](hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode.md) — 슬러리 도포 NCM111 (LiNbO₃ 코팅) + Li₆PS₅Cl 시트의 WIP (600 MPa 하나 · 상온–190 °C · 유지 1 s–1 min) · 감압 뒤 싱크로트론 CT 의 기공 + 탄소 복셀 분율 0.19 → 0.057 (상온) → ≈0.04 (100 · 150 °C) · 압력 축 · 같은 압력의 단축 대조 없음.
+- 후보 표 N-65 의 카드 (2026-11-16 추가 · 참고 [30] 의 원문): [`swinkels1983_hip_densification_plastic_yield_creep_mechanisms`](swinkels1983_hip_densification_plastic_yield_creep_mechanisms.md) — 납 · 주석 · PMMA 분말의 열간 등방 가압 (실리콘 기름 · 1.38–13.79 MPa · 27–150 °C · 밀도 연속 측정) · 소성 항복 · 멱법칙 크리프 모델 (Arzt 1982 배위수 · 접촉 면적) · 위 L459 서지는 원문과 같다 · L215 의 '벽 마찰 없음 → 평균 밀도 · 균일성' 문장은 이 논문에 없다 (서론의 등방 모델 ↔ 금형 자료 한 줄뿐 — 그 카드 §0-1).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

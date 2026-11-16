@@ -1,0 +1,2095 @@
+{
+ "slug": "swinkels1983_hip_densification_plastic_yield_creep_mechanisms",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. A cross-sectional view of the hot-isostatic press. (journal p.1830)",
+   "rotated_deg": 0,
+   "bbox": [
+    86,
+    72,
+    455,
+    503
+   ],
+   "w": 1519,
+   "h": 1794,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.871,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Scanning micrographs of the lead powder showing (a) the irregular shape and (b) a lead particle after cleaning: the grain boundaries are now visible. (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    79,
+    268,
+    452
+   ],
+   "w": 891,
+   "h": 1551,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.415,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 3,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — lead powder, irregular shape (scale bar 150 µm) (panel crop · caption in fig_2.png) (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    79,
+    252,
+    238
+   ],
+   "w": 768,
+   "h": 654,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.232,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f2",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 3,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — a lead particle after cleaning, grain boundaries visible (scale bar 40 µm) (panel crop · caption in fig_2.png) (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    248,
+    252,
+    408
+   ],
+   "w": 777,
+   "h": 663,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.234,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f2",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. A scanning micrograph of the tin powder. (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    570,
+    268,
+    744
+   ],
+   "w": 725,
+   "h": 721,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.242,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 3,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. A scanning micrograph of the PMMA powder. (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    78,
+    486,
+    257
+   ],
+   "w": 788,
+   "h": 741,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.323,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 3,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. A typical density–time plot from the experimental data (circles). The full line is the empirical equation (2) fitted to the data. (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    528,
+    486,
+    742
+   ],
+   "w": 879,
+   "h": 889,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.947,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 4,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. A typical densification-rate vs density plot. The circles show the slope of the line joining adjacent points on Fig. 5; the full line is eqation (3). [sic] (journal p.1832)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    76,
+    268,
+    293
+   ],
+   "w": 885,
+   "h": 899,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.939,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 4,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. The density–time data for pressure sintering of lead at 100°C. (journal p.1832)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    547,
+    486,
+    743
+   ],
+   "w": 885,
+   "h": 813,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.916,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. The density–time data for pressure sintering of tin at 100°C. (journal p.1833)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    75,
+    268,
+    277
+   ],
+   "w": 885,
+   "h": 838,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.929,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 5,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. The densification-rate vs density for lead at 100°C. (journal p.1833)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    314,
+    268,
+    515
+   ],
+   "w": 846,
+   "h": 832,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.937,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 5,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. The densification-rate vs density for tin at 100°C. (journal p.1833)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    544,
+    268,
+    742
+   ],
+   "w": 844,
+   "h": 821,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.937,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 5,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. The pressure dependence of the densification-rate at constant density for lead at 100°C. (journal p.1833)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    76,
+    486,
+    286
+   ],
+   "w": 877,
+   "h": 869,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.94,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 5,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. The pressure dependence of the densification-rate at constant density for tin at 100°C. (journal p.1833)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    535,
+    486,
+    743
+   ],
+   "w": 878,
+   "h": 860,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.926,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 6,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Density–time plot for sintering of PMMA at 110°C and 0.7 MPa. Even at high densities the pores are cusped instead of rounded. (journal p.1834)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    79,
+    268,
+    393
+   ],
+   "w": 882,
+   "h": 1303,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.633,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 6,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Pore structure of lead after pressure sintering for 24 h at 150°C and 2.52 MPa (87.7% density). Note the cusped pore shapes. [Table 1: 87.7 % final at 150 °C is the 3.52 MPa row] (journal p.1834)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    541,
+    268,
+    745
+   ],
+   "w": 881,
+   "h": 844,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.365,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 6,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Pore structure of tin after pressure sintering for 24 h at 150°C and 2.07 MPa (87.6% density). Note the cusped pore shape. (journal p.1834)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    79,
+    486,
+    286
+   ],
+   "w": 885,
+   "h": 858,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.369,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 6,
+   "file": "fig_16.png",
+   "caption": "Fig. 16. Steady-state creep data for lead. (journal p.1834)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    297,
+    486,
+    513
+   ],
+   "w": 890,
+   "h": 894,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.941,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 6,
+   "file": "fig_17.png",
+   "caption": "Fig. 17. Steady-state creep data for tin. (journal p.1834)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    523,
+    486,
+    744
+   ],
+   "w": 810,
+   "h": 914,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.948,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 7,
+   "file": "fig_18.png",
+   "caption": "Fig. 18. The stage 1 model for pressure sintering. Each sphere indents the other. (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    543,
+    268,
+    744
+   ],
+   "w": 890,
+   "h": 834,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.939,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 7,
+   "file": "fig_19.png",
+   "caption": "Fig. 19. The stage 3 model for pressure sintering based on the creep of a thick spherical shell of inner radius ρ and outer radius b. (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    79,
+    486,
+    274
+   ],
+   "w": 880,
+   "h": 808,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.93,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 10,
+   "file": "fig_20.png",
+   "caption": "Fig. 20. Densification data for lead by plastic yielding (30 s density). Previous models [equations (6), (7) and (8)] are shown as broken lines. The full line shows the modified model [equation (23)]. The dash-dot line shows the modified model plus power-law creep for 20 s. (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    77,
+    266,
+    306
+   ],
+   "w": 883,
+   "h": 947,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.906,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f21",
+   "kind": "figure",
+   "label": "21",
+   "page": 10,
+   "file": "fig_21.png",
+   "caption": "Fig. 21. A similar plot to Fig. 20 for the densification data tin by plastic yielding (30 s density). (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    552,
+    266,
+    745
+   ],
+   "w": 878,
+   "h": 800,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.932,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f22",
+   "kind": "figure",
+   "label": "22",
+   "page": 10,
+   "file": "fig_22.png",
+   "caption": "Fig. 22. Densification data for lead when power-law creep is dominant, compared with the models of Section 4. (a) Densification-rate; (b) density. (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    78,
+    482,
+    442
+   ],
+   "w": 886,
+   "h": 1512,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.931,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f22a",
+   "kind": "figure",
+   "label": "22a",
+   "page": 10,
+   "file": "fig_22a.png",
+   "caption": "Fig. 22(a) — lead 150 °C 3.52 MPa: densification-rate (s⁻¹) vs relative density, Model (stages 1–3) vs Experimental (panel crop · caption in fig_22.png) (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    78,
+    482,
+    251
+   ],
+   "w": 865,
+   "h": 716,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.941,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f22",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f22b",
+   "kind": "figure",
+   "label": "22b",
+   "page": 10,
+   "file": "fig_22b.png",
+   "caption": "Fig. 22(b) — lead 150 °C 3.52 MPa: relative density vs time (s), Model vs Experimental (panel crop · caption in fig_22.png) (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    259,
+    482,
+    410
+   ],
+   "w": 860,
+   "h": 630,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.943,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f22",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f23",
+   "kind": "figure",
+   "label": "23",
+   "page": 11,
+   "file": "fig_23.png",
+   "caption": "Fig. 23. Densification data for tin when power-law creep is dominant, compared with the models of Section 4. (a) Densification-rate; (b) density. (journal p.1839)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    78,
+    268,
+    448
+   ],
+   "w": 892,
+   "h": 1539,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.924,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f23a",
+   "kind": "figure",
+   "label": "23a",
+   "page": 11,
+   "file": "fig_23a.png",
+   "caption": "Fig. 23(a) — tin 150 °C 3.10 MPa: densification-rate (s⁻¹) vs relative density, Model with boundary- and lattice-diffusion contributions vs Experimental (panel crop · caption in fig_23.png) (journal p.1839)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    78,
+    268,
+    253
+   ],
+   "w": 863,
+   "h": 727,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.917,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f23",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f23b",
+   "kind": "figure",
+   "label": "23b",
+   "page": 11,
+   "file": "fig_23b.png",
+   "caption": "Fig. 23(b) — tin 150 °C 3.10 MPa: relative density vs time (s), Model vs Experimental (panel crop · caption in fig_23.png) (journal p.1839)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    266,
+    268,
+    416
+   ],
+   "w": 852,
+   "h": 621,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.945,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f23",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f24",
+   "kind": "figure",
+   "label": "24",
+   "page": 11,
+   "file": "fig_24.png",
+   "caption": "Fig. 24. A section through 3 particles during plastic yielding and power-law creep, showing the shape of the pore. Compaction causes the radius of the curvature of the pore surface to increase from a to a₁. (journal p.1839)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    502,
+    486,
+    745
+   ],
+   "w": 882,
+   "h": 1007,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.937,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f25",
+   "kind": "figure",
+   "label": "25",
+   "page": 12,
+   "file": "fig_25.png",
+   "caption": "Fig. 25. Densification data for tin when power-law creep is dominant, compared with the new model of Section 6. (a) Densification-rate; (b) density. (journal p.1840)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    71,
+    264,
+    404
+   ],
+   "w": 885,
+   "h": 1387,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.928,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 21 개를 냈으나 전부 쪽 폭 전체 (2250 px · 두 단이 섞임) · 표는 쪽 높이 전체였고 Fig. 8 · 10 · 17 · 22 · 23 · 25 와 Table 1 은 빠졌다 (스캔 PDF — 쪽마다 300 dpi 1 비트 띠 이미지 · 사진은 8 비트 회색 · 숨은 OCR 층) → 300 dpi 쪽 렌더의 잉크 행 지도 (단별 · 2–5 pt 간격) 로 고른 상자를 300 dpi (= 원 래스터 해상도) 회색으로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 쪽 그림에서 옮겨 적음 (OCR 층 깨짐)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f25a",
+   "kind": "figure",
+   "label": "25a",
+   "page": 12,
+   "file": "fig_25a.png",
+   "caption": "Fig. 25(a) — tin 100 °C 10.5 MPa: densification rate (min⁻¹) vs Δ/Δ₀, initial stage (equation 24) and final stage (equation 16), model using chill cast data (panel crop · caption in fig_25.png) (journal p.1840)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    71,
+    264,
+    233.5
+   ],
+   "w": 748,
+   "h": 679,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.93,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f25",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f25b",
+   "kind": "figure",
+   "label": "25b",
+   "page": 12,
+   "file": "fig_25b.png",
+   "caption": "Fig. 25(b) — tin 100 °C 10.5 MPa: Δ/Δ₀ vs time (min), model using chill cast data vs data (panel crop · caption in fig_25.png) (journal p.1840)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    234.5,
+    264,
+    372.2
+   ],
+   "w": 757,
+   "h": 590,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.932,
+   "manual_crop": "2026-11-16 손 크롭 (패널) — 같은 쪽 · 같은 방법 · 패널 하나만 (패널 글자 (a)/(b) 포함 · 캡션은 전체 그림 파일에)",
+   "panel_of": "f25",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 · 패널 33 장 모음 5 장 (3 · 4 열) + fig_10 오른쪽 아래 모서리 원 크기 (10.48 MPa 글자 잘림 없음 — 괄호선은 원본 인쇄) 로 축 · 눈금 글자 · 범례 · 패널 글자 · 캡션 · 잘림 · 이웃 글 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Initial and final relative densities for pressure sintering of lead (journal p.1832)",
+   "rotated_deg": 0,
+   "bbox": [
+    53,
+    543,
+    268,
+    745
+   ],
+   "w": 890,
+   "h": 837,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.899,
+   "manual_crop": "2026-11-16 손 크롭 — 도구가 Table 2 · 3 을 쪽 높이 전체로 냈고 Table 1 은 빠졌다 → 제목 · 머리 · 줄 · 각주까지 한 장 (300 dpi · 사방 15 px) · 값은 카드가 쪽 그림 250 dpi 렌더에서 옮겨 적음 (OCR 층의 표 숫자는 깨져 있다)",
+   "viewed_how": "2026-11-16 litdb-curator — 표 3 장 모음 (3 열) 으로 제목 · 머리 · 마지막 행 · 각주 확인 (값은 250 dpi 원 렌더에서 따로 읽음)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Initial and final relative densities for pressure sintering of tin (journal p.1832)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    77,
+    487,
+    302
+   ],
+   "w": 887,
+   "h": 934,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.889,
+   "manual_crop": "2026-11-16 손 크롭 — 도구가 Table 2 · 3 을 쪽 높이 전체로 냈고 Table 1 은 빠졌다 → 제목 · 머리 · 줄 · 각주까지 한 장 (300 dpi · 사방 15 px) · 값은 카드가 쪽 그림 250 dpi 렌더에서 옮겨 적음 (OCR 층의 표 숫자는 깨져 있다)",
+   "viewed_how": "2026-11-16 litdb-curator — 표 3 장 모음 (3 열) 으로 제목 · 머리 · 마지막 행 · 각주 확인 (값은 250 dpi 원 렌더에서 따로 읽음)",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 9,
+   "file": "tab_3.png",
+   "caption": "Table 3. Material data (journal p.1837)",
+   "rotated_deg": 0,
+   "bbox": [
+    118,
+    74,
+    430,
+    393
+   ],
+   "w": 1245,
+   "h": 1319,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.912,
+   "manual_crop": "2026-11-16 손 크롭 — 도구가 Table 2 · 3 을 쪽 높이 전체로 냈고 Table 1 은 빠졌다 → 제목 · 머리 · 줄 · 각주까지 한 장 (300 dpi · 사방 15 px) · 값은 카드가 쪽 그림 250 dpi 렌더에서 옮겨 적음 (OCR 층의 표 숫자는 깨져 있다)",
+   "viewed_how": "2026-11-16 litdb-curator — 표 3 장 모음 (3 열) 으로 제목 · 머리 · 마지막 행 · 각주 확인 (값은 250 dpi 원 렌더에서 따로 읽음)",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "(1)",
+   "page": 1,
+   "file": "eq_01_relative_density_from_chamber_volume.png",
+   "caption": "Eq. (1) Δ/Δ₀ = (Δ_f/Δ₀)(V_f/V) — relative density from the chamber (piston) volume (journal p.1829)",
+   "rotated_deg": 0,
+   "bbox": [
+    330,
+    709,
+    486,
+    742
+   ],
+   "w": 547,
+   "h": 119,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.949,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "(2)",
+   "page": 3,
+   "file": "eq_02_empirical_density_time_fit.png",
+   "caption": "Eq. (2) (Δ/Δ₀ − C₁)/(C₂ − Δ/Δ₀) = k t^m — empirical density–time fit [16] (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    340,
+    303,
+    486,
+    358
+   ],
+   "w": 572,
+   "h": 229,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "(3)",
+   "page": 3,
+   "file": "eq_03_densification_rate_from_fit.png",
+   "caption": "Eq. (3) Δ̇/Δ₀ = m k (C₂ − Δ/Δ₀) t^(m−1) / (1 + k t^m) — rate from differentiating (2) (t^(m−1) printed raised after the bracket) (journal p.1831)",
+   "rotated_deg": 0,
+   "bbox": [
+    325,
+    407,
+    486,
+    451
+   ],
+   "w": 647,
+   "h": 181,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.944,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "(4)",
+   "page": 7,
+   "file": "eq_04_local_indentation_pressure_3sigma_y.png",
+   "caption": "Eq. (4) p₁ ≈ 3σ_y — neck grows until the local indentation pressure reaches 3× the tensile flow strength (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    138,
+    339,
+    266,
+    355
+   ],
+   "w": 529,
+   "h": 71,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.943,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "(5)",
+   "page": 7,
+   "file": "eq_05_stage1_density_neck_radius.png",
+   "caption": "Eq. (5) Δ/Δ₀ = (Δ_i/Δ₀)[1 + (3/2)(x/a)²] — constant co-ordination geometry: density vs neck radius x (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    112,
+    408,
+    266,
+    439
+   ],
+   "w": 639,
+   "h": 131,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.904,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "(6)",
+   "page": 7,
+   "file": "eq_06_stage1_plastic_yield_density_pressure.png",
+   "caption": "Eq. (6) Δ/Δ₀ = (Δ_i/Δ₀)(1 + p_e A_f / (2π n_f σ_y a²)) — stage-1 plastic-yield density vs external pressure (constant n_f) (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    108,
+    485,
+    266,
+    517
+   ],
+   "w": 657,
+   "h": 133,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.901,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "(7)",
+   "page": 7,
+   "file": "eq_07_stage3_spherical_shell_plastic_collapse.png",
+   "caption": "Eq. (7) p₃ > −(2/3) σ_y ln(1 − Δ/Δ₀) — final stage: plastic collapse of a thick spherical shell (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    324,
+    372,
+    482,
+    403
+   ],
+   "w": 655,
+   "h": 129,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.94,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "eu1",
+   "kind": "equation",
+   "label": "unnumbered (p₃ definition)",
+   "page": 7,
+   "file": "eq_u1_stage3_driving_pressure_p3.png",
+   "caption": "Unnumbered — p₃ = p_e − p_i + 2γ_s/ρ (driving pressure in the final stage; p_i internal gas pressure, ρ pore radius, γ_s surface energy) (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    337,
+    437,
+    416,
+    452
+   ],
+   "w": 326,
+   "h": 68,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.872,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "(8)",
+   "page": 7,
+   "file": "eq_08_stage2_cylindrical_shell_plastic_collapse.png",
+   "caption": "Eq. (8) p₂ > −(σ_y/√3) ln(1 − Δ/Δ₀) — intermediate stage: cylindrical shell (p₂ = p_e + γ_s/ρ, p_i = 0) (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    329,
+    537,
+    482,
+    569
+   ],
+   "w": 634,
+   "h": 138,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.936,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "(9)",
+   "page": 7,
+   "file": "eq_09_heckel_rate_form.png",
+   "caption": "Eq. (9) d(Δ/Δ₀)/d(p_e/σ_y) = K(1 − Δ/Δ₀) — Heckel [19, 20] first-order form (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    329,
+    664,
+    482,
+    694
+   ],
+   "w": 636,
+   "h": 127,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.902,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "(10)",
+   "page": 7,
+   "file": "eq_10_heckel_integrated.png",
+   "caption": "Eq. (10) ln[1/(1 − Δ/Δ₀)] = K₁ p_e/σ_y + K₂ — integrated Heckel (numerator printed '0_e') (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    318,
+    713,
+    482,
+    744
+   ],
+   "w": 682,
+   "h": 131,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.927,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "(11)",
+   "page": 8,
+   "file": "eq_11_viscous_flow_rate.png",
+   "caption": "Eq. (11) Δ̇/Δ₀ = (3p_e/4η)(1 − Δ/Δ₀) — Newtonian-viscous final stage (Murray et al. [21] after MacKenzie–Shuttleworth [22]) (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    121,
+    273,
+    268,
+    303
+   ],
+   "w": 607,
+   "h": 128,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.939,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "(12)",
+   "page": 8,
+   "file": "eq_12_viscous_flow_integrated.png",
+   "caption": "Eq. (12) ln[(1 − Δ/Δ₀)/(1 − Δ_i/Δ₀)] = −3p_e t/4η — integrated (printed 'p_e^t') (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    111,
+    330,
+    268,
+    361
+   ],
+   "w": 654,
+   "h": 131,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.915,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "(13)",
+   "page": 8,
+   "file": "eq_13_power_law_pressure_dependence.png",
+   "caption": "Eq. (13) Δ̇/Δ₀ ∝ p_eⁿ — Williams [24] power-law densification (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    143,
+    514,
+    269,
+    544
+   ],
+   "w": 523,
+   "h": 126,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.966,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "(14)",
+   "page": 8,
+   "file": "eq_14_power_law_creep_constitutive.png",
+   "caption": "Eq. (14) ε̇_ss = Aσⁿ — steady-state power-law creep (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    141,
+    639,
+    270,
+    654
+   ],
+   "w": 531,
+   "h": 67,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.953,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "(15)",
+   "page": 8,
+   "file": "eq_15_shell_outer_radius_mass_conservation.png",
+   "caption": "Eq. (15) Δ/Δ₀ = 1 − (ρ/b)³ — outer shell radius b from conservation of matter (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    131,
+    714,
+    270,
+    743
+   ],
+   "w": 577,
+   "h": 126,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.953,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "(16)",
+   "page": 8,
+   "file": "eq_16_stage3_power_law_creep_rate.png",
+   "caption": "Eq. (16) Δ̇/Δ₀ = A(Δ/Δ₀)(1 − Δ/Δ₀) / {2[1 − (1 − Δ/Δ₀)^(1/n)]ⁿ} · ((3/2n)p₃)ⁿ — final-stage power-law creep (Wilkinson–Ashby [8]) (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    304,
+    102,
+    486,
+    158
+   ],
+   "w": 745,
+   "h": 238,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.922,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "(17)",
+   "page": 8,
+   "file": "eq_17_stage2_power_law_creep_rate.png",
+   "caption": "Eq. (17) Δ̇/Δ₀ = √3 A(Δ/Δ₀)(1 − Δ/Δ₀) / [1 − (1 − Δ/Δ₀)^(1/n)]ⁿ · ((√3/n)p₂)ⁿ — intermediate-stage (cylindrical shell) [8] (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    304,
+    196,
+    486,
+    252
+   ],
+   "w": 743,
+   "h": 240,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.919,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "(18)",
+   "page": 8,
+   "file": "eq_18_stage1_power_law_creep_rate_wilkinson_ashby.png",
+   "caption": "Eq. (18) Δ̇/Δ₀ = (3/4π)(Δ/Δ₀)² (n_f A_f x/a³) A ((3/2n)(A_f/πx²) p_e)ⁿ — initial-stage creep (rigid hemispherical core, Wilkinson–Ashby [8]) (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    299,
+    378,
+    486,
+    409
+   ],
+   "w": 769,
+   "h": 134,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.893,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "(19)",
+   "page": 9,
+   "file": "eq_19_yield_stress_temperature.png",
+   "caption": "Eq. (19) σ_y = σ_y0[1 − (T − 300)C_T] — temperature dependence of yield stress (journal p.1837)",
+   "rotated_deg": 0,
+   "bbox": [
+    106,
+    458,
+    266,
+    474
+   ],
+   "w": 667,
+   "h": 72,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.903,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e20",
+   "kind": "equation",
+   "label": "(20)",
+   "page": 9,
+   "file": "eq_20_heckel_with_temperature_yield.png",
+   "caption": "Eq. (20) ln[1/(1 − Δ/Δ₀)] = K₁p_e/{σ_y0[1 − (T − 300)C_T]} + K₂ — (10) + (19) (journal p.1837)",
+   "rotated_deg": 0,
+   "bbox": [
+    82,
+    516,
+    266,
+    557
+   ],
+   "w": 770,
+   "h": 175,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.932,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e21",
+   "kind": "equation",
+   "label": "(21)",
+   "page": 10,
+   "file": "eq_21_contact_area_cusped_neck.png",
+   "caption": "Eq. (21) A_c = πx² = 3(Δ − Δ_i)/Δ₀ · a² — contact area for the cusp-like neck (from [35, 36]) (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    323,
+    506,
+    481,
+    534
+   ],
+   "w": 655,
+   "h": 122,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.937,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "(22)",
+   "page": 10,
+   "file": "eq_22_coordination_number_vs_density.png",
+   "caption": "Eq. (22) n_f = n_f,i + 9.5(Δ − Δ_i)/Δ₀ for Δ/Δ₀ < 0.85; = n_f,i + 2 + 9.5(Δ/Δ₀ − 0.85) + 881(Δ/Δ₀ − 0.85)³ for Δ/Δ₀ ≥ 0.85 (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    277,
+    552,
+    481,
+    634
+   ],
+   "w": 847,
+   "h": 344,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.935,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e23",
+   "kind": "equation",
+   "label": "(23)",
+   "page": 10,
+   "file": "eq_23_effective_contact_pressure.png",
+   "caption": "Eq. (23) p_eff = 4a²Δ₀ p_e / (x² n_f Δ) — effective pressure on a particle contact (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    337,
+    716,
+    481,
+    745
+   ],
+   "w": 597,
+   "h": 128,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.948,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e24",
+   "kind": "equation",
+   "label": "(24)",
+   "page": 11,
+   "file": "eq_24_stage1_power_law_creep_rate_new.png",
+   "caption": "Eq. (24) Δ̇/Δ₀ = 5.3(Δ/Δ₀)^(2/3)(Δ_i/Δ₀)^(1/3)(x/a) A (p_eff/3)ⁿ — new initial-stage power-law creep model (dimensional argument [37]) (journal p.1839)",
+   "rotated_deg": 0,
+   "bbox": [
+    300,
+    91,
+    484,
+    121
+   ],
+   "w": 764,
+   "h": 133,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.924,
+   "manual_crop": "2026-11-16 식 크롭 — 식 번호마다 한 장 (번호 없는 식 p₃ = p_e − p_i + 2γ_s/ρ 는 eq_u1 로 따로) · 잉크 행 지도로 위아래 경계를 고르고 앞 문장 낱말 ('by' 등) 이 든 가로 구간은 빼서 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 식 번호 포함",
+   "viewed_how": "2026-11-16 litdb-curator — 식 25 장 모음 2 장 (2 열 · 620 px) 으로 분수선 · 위첨자 · 아래첨자 · 점 (Δ̇) · 식 번호 · 이웃 줄 조각 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "본문 — Abstract — HIP of lead, tin, PMMA with continuous density measurement; plasticity and creep dominant; large discrepancies with previous models; improved models (journal p.1829)",
+   "rotated_deg": 0,
+   "bbox": [
+    86,
+    216,
+    456,
+    268
+   ],
+   "w": 1537,
+   "h": 214,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.783,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-intro-isostatic-vs-die",
+   "page": 1,
+   "file": "txt_p1_intro_isostatic_vs_die.png",
+   "caption": "본문 — Introduction ¶2 — most models apply to isostatic pressing while most data are die-pressing; creep and densification data needed for the same material (journal p.1829)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    540,
+    268,
+    696
+   ],
+   "w": 888,
+   "h": 656,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.76,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-press-continuous-density",
+   "page": 1,
+   "file": "txt_p1_press_continuous_density.png",
+   "caption": "본문 — 2.1 The press — two chambers, flexible bag, silicone oil, piston displacement by strain gauges → Δ/Δ₀ measured continuously (journal p.1829)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    505,
+    486,
+    710
+   ],
+   "w": 886,
+   "h": 869,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.77,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-density-definition-protocol",
+   "page": 2,
+   "file": "txt_p2_density_definition_protocol.png",
+   "caption": "본문 — Δ_f, Δ₀ definitions; heating ±0.5 °C; H₂ purge; ~30 s to reach pressure; 24 h hold; zero time at pressure; reproducibility ±2% (journal p.1830)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    521,
+    268,
+    745
+   ],
+   "w": 888,
+   "h": 1074,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.783,
+   "pieces": [
+    {
+     "page": 2,
+     "bbox": [
+      54,
+      521,
+      268,
+      745
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      270,
+      521,
+      486,
+      548
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-materials",
+   "page": 2,
+   "file": "txt_p2_materials.png",
+   "caption": "본문 — 2.2 Materials — lead, tin sieved to 100–200 µm; oxide removal; PMMA almost spherical 50–100 µm (journal p.1830)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    550,
+    486,
+    745
+   ],
+   "w": 889,
+   "h": 812,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.792,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-curve-fit-immersion",
+   "page": 3,
+   "file": "txt_p3_curve_fit_immersion.png",
+   "caption": "본문 — Eqs (2)–(3) used only for curve-fitting, no fundamental significance; final density by immersion [17] for calibration (journal p.1831 + journal p.1832)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    452,
+    486,
+    514
+   ],
+   "w": 884,
+   "h": 395,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.85,
+   "pieces": [
+    {
+     "page": 3,
+     "bbox": [
+      272,
+      452,
+      486,
+      514
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      54,
+      309,
+      268,
+      336
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-creep-specimens",
+   "page": 4,
+   "file": "txt_p4_creep_specimens.png",
+   "caption": "본문 — 2.4 Creep tests — compacts < 1% porosity by pressure sintering 30 min at 150 °C and 60 MPa; chill-cast specimens; compressive creep (journal p.1832)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    339,
+    268,
+    446
+   ],
+   "w": 886,
+   "h": 448,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.796,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-exponent-6p5",
+   "page": 4,
+   "file": "txt_p4_exponent_6p5.png",
+   "caption": "본문 — 3.1 Densification data — Tables 1–2; Figs 7–12; exponent 6.5 for lead and tin at 100 °C, agreeing with steady-state creep of cast samples (journal p.1832)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    476,
+    268,
+    517
+   ],
+   "w": 889,
+   "h": 638,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.787,
+   "pieces": [
+    {
+     "page": 4,
+     "bbox": [
+      54,
+      476,
+      268,
+      517
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      270,
+      321,
+      486,
+      425
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4-p5-pore-geometry-cusped",
+   "page": 4,
+   "file": "txt_p4_p5_pore_geometry_cusped.png",
+   "caption": "본문 — 3.2 Pore geometry — PMMA 110 °C 0.7 MPa: circular necks, no pore rounding, cusped pores, contact neighbours increase; rounding only when necks impinge (journal p.1832 + journal p.1833)",
+   "rotated_deg": 0,
+   "bbox": [
+    270,
+    428,
+    486,
+    525
+   ],
+   "w": 887,
+   "h": 822,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.798,
+   "pieces": [
+    {
+     "page": 4,
+     "bbox": [
+      270,
+      428,
+      486,
+      525
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      270,
+      316,
+      486,
+      410
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-models-scope-diffusion",
+   "page": 6,
+   "file": "txt_p6_models_scope_diffusion.png",
+   "caption": "본문 — 4. Models — plastic yielding, viscous flow, power-law creep reviewed; diffusional processes not significant here (journal p.1834)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    417,
+    268,
+    528
+   ],
+   "w": 882,
+   "h": 461,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.813,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-stages-plastic-yielding",
+   "page": 7,
+   "file": "txt_p7_stages_plastic_yielding.png",
+   "caption": "본문 — Initial/final/intermediate stage idealisations; 4.1 plastic yielding — perfectly plastic spheres, flat-punch slip-line solution [18], [5, 6] (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    75,
+    268,
+    336
+   ],
+   "w": 896,
+   "h": 1084,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.765,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7-definitions-sigma-y-af-nf",
+   "page": 7,
+   "file": "txt_p7_definitions_sigma_y_af_nf.png",
+   "caption": "본문 — σ_y = tensile flow strength; constant co-ordination geometry [5, 6]; A_f cell surface (roughly 4πa²); n_f co-ordination number; final stage = plastic collapse of thick shell [4] (journal p.1835)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    357,
+    268,
+    407
+   ],
+   "w": 892,
+   "h": 532,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.789,
+   "pieces": [
+    {
+     "page": 7,
+     "bbox": [
+      52,
+      357,
+      268,
+      407
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      270,
+      297,
+      486,
+      369
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-heckel-k1-three-halves",
+   "page": 8,
+   "file": "txt_p8_heckel_k1_three_halves.png",
+   "caption": "본문 — K₁ = 3/2 makes (10) almost identical with (7); low density form of (5); fits iron, copper, nickel, tungsten (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    75,
+    268,
+    179
+   ],
+   "w": 888,
+   "h": 433,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.813,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-wa-questionable-assumptions",
+   "page": 8,
+   "file": "txt_p8_wa_questionable_assumptions.png",
+   "caption": "본문 — Wilkinson–Ashby model: constant n_f (in reality increases) and rounded pore (remains cuspy, Matthews [34]) (journal p.1836)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    409,
+    488,
+    558
+   ],
+   "w": 886,
+   "h": 623,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.802,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x8c",
+   "kind": "text",
+   "label": "p8-p9-plastic-30s-regression",
+   "page": 8,
+   "file": "txt_p8_p9_plastic_30s_regression.png",
+   "caption": "본문 — 5 Analysis — agreement poor; 5.1 30 s density = plastic yielding only; published 300 K yield stress; K₁, K₂, C_T by linear regression; Figs 20–21 agreement poor (journal p.1836 + journal p.1837)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    569,
+    488,
+    744
+   ],
+   "w": 891,
+   "h": 1104,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.811,
+   "pieces": [
+    {
+     "page": 8,
+     "bbox": [
+      272,
+      569,
+      488,
+      744
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      54,
+      563,
+      266,
+      647
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-creep-two-orders",
+   "page": 9,
+   "file": "txt_p9_creep_two_orders.png",
+   "caption": "본문 — 5.2 Power-law creep — lead 150 °C 3.5 MPa, tin 150 °C 3.1 MPa; experimental rates about two orders of magnitude slower than models (journal p.1837)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    649,
+    266,
+    745
+   ],
+   "w": 890,
+   "h": 540,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.822,
+   "pieces": [
+    {
+     "page": 9,
+     "bbox": [
+      54,
+      649,
+      266,
+      745
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      272,
+      408,
+      486,
+      434
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9-p10-neck-geometry-coordination",
+   "page": 9,
+   "file": "txt_p9_p10_neck_geometry_coordination.png",
+   "caption": "본문 — 6.1 Neck geometry — diffusion rounds pores, plasticity/creep give cusps; free surface stays a sphere segment, effective radius grows, polyhedra at full density; n_f increases and contacts grow → effective pressure falls (journal p.1837 + journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    527,
+    486,
+    745
+   ],
+   "w": 888,
+   "h": 1609,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.798,
+   "pieces": [
+    {
+     "page": 9,
+     "bbox": [
+      272,
+      527,
+      486,
+      745
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      52,
+      320,
+      264,
+      481
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-initial-packing-values",
+   "page": 10,
+   "file": "txt_p10_initial_packing_values.png",
+   "caption": "본문 — 6.2 — contact area and n_f from dense random packing [35, 36] agree with model experiments; Δ_i/Δ₀ = 0.64, n_f,i = 7.3 (journal p.1838)",
+   "rotated_deg": 0,
+   "bbox": [
+    52,
+    484,
+    264,
+    536
+   ],
+   "w": 890,
+   "h": 768,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.836,
+   "pieces": [
+    {
+     "page": 10,
+     "bbox": [
+      52,
+      484,
+      264,
+      536
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      270,
+      455,
+      482,
+      504
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      270,
+      643,
+      482,
+      713
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-yield-model-30s-creep",
+   "page": 11,
+   "file": "txt_p11_yield_model_30s_creep.png",
+   "caption": "본문 — New yield model: p_eff ≥ 3σ_y; much better, but high-pressure densities underestimated; 30 s pressurisation, 20 s of power-law creep added (dash-dot) (journal p.1839)",
+   "rotated_deg": 0,
+   "bbox": [
+    54,
+    463,
+    268,
+    655
+   ],
+   "w": 892,
+   "h": 800,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.766,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x11b",
+   "kind": "text",
+   "label": "p11-p12-constraint-switchover-factor5",
+   "page": 11,
+   "file": "txt_p11_p12_constraint_switchover_factor5.png",
+   "caption": "본문 — Eq. (24) differs from (18); factor 1/3 constraint; chill-cast creep data; switch-over at Δ/Δ₀ ~ 0.95; rates within a factor of five, densities within 1% (journal p.1839 + journal p.1840)",
+   "rotated_deg": 0,
+   "bbox": [
+    272,
+    121,
+    486,
+    292
+   ],
+   "w": 888,
+   "h": 1222,
+   "dpi": 300,
+   "src": "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf",
+   "blank": 0.816,
+   "pieces": [
+    {
+     "page": 11,
+     "bbox": [
+      272,
+      121,
+      486,
+      292
+     ]
+    },
+    {
+     "page": 12,
+     "bbox": [
+      52,
+      411,
+      264,
+      527
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님 · 카드당 20 장) · 잉크 행 지도의 줄 경계에 여유를 두고 300 dpi 로 렌더 · 가장자리 이웃 줄 조각 띠 (높이 < 22 px) 제거 · 흰 여백 잘라 사방 15 px · 두 조각 이상 (단 · 쪽을 넘는 문단) 이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 글 20 장 모음 2 장 (4 열) 으로 첫 줄 · 끝 줄이 온전한 줄인지 · 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py --dry (2026-11-16) found 21 caption-anchored regions (Fig. 1–7 · 9 · 11–16 · 18–21 · 24 · Table 2–3), all full page width; it flagged f8 · f10 · f17 · f22 · f23 · t1 as number gaps and did not know Fig. 25 (last figure). All 25 figures + 3 tables are hand-cropped here (none from the tool). No supplementary information (1983 journal article).",
+ "note_manual": "2026-11-16 — scanned Acta metall. 31 (11) 1829–1840 (12 PDF pages = journal p.1829–1840; PDF page n = journal page 1828 + n). Every page is 26–28 one-bit image strips (2250 px wide = 300 dpi) plus 8-bit grey micrographs on PDF p.3 and p.6, with a hidden OCR layer that garbles numbers and symbols. Hand crops 81 = figures 25 + panels 8 (2a · 2b · 22a · 22b · 23a · 23b · 25a · 25b) + tables 3 + equations 25 (Eqs (1)–(24) one per number + eq_u1 for the unnumbered p₃ definition) + body-text evidence 20. Re-cut 0 (no crop needed a second render).",
+ "key_note": "manual keys: f<N> = Fig. N, f<N><panel> = panel crop (panel_of), t<N> = Table N, e<NN> = Eq. (NN), eu1 = unnumbered p₃ definition, x<PDF page><letter> = evidence paragraph (kind 'text'); page = PDF page (journal page = 1828 + page)"
+}

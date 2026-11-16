@@ -475,6 +475,7 @@ Tabor 와 같은 꼴 (경도로 쓰기):
 | `bouvard2000_hard_soft_powder_densification` | 경/연 혼합 압밀 리뷰 — 이종 입자 체제 구분 |
 
 ## 🔗 관련 카드
+- 같은 계보 · HIP 실험 (2026-11-16 카드): [`swinkels1983_hip_densification_plastic_yield_creep_mechanisms`](swinkels1983_hip_densification_plastic_yield_creep_mechanisms.md) — Swinkels · Wilkinson · Arzt · Ashby (Acta metall. 31, 1983) 의 참고 [36] = 이 논문 · 그 식 (21) · (22) · (23) = 이 카드 식 (18) · (16) · (21) (R = a = 1 로 같은 식) 에 p_eff ≥ 3σ_y 를 더해 납 · 주석 30 s 밀도 (등방 · 열간) 와 대조 · 그 참고 [37] = 이 카드 [15] 의 출판 서지 *Metall. Trans.* **14A**, 211 (1983) · 그 [35] = 이 카드 [8] (*Powder Metall.* In press) · 이 카드 §4-3 의 HIP 크리프 축척 √a/(aZ)ⁿ 는 그 식 (24) 의 x^(1−2n)·n_f^(−n) 과 같다.
 - 같은 축 (배위수 ↔ 상대밀도) 의 문헌 모음 (2026-11-16 카드): [`german2014_coordination_number_powder_densification`](german2014_coordination_number_powder_densification.md) — 113 쌍 맞춤 N_C = 2 + 11f² · 그 식 (4) 7.3 + 15.5 ΔL/L₀ = 이 카드 식 (4) 의 1 차 근사 (같은 Z₀ · C · 원문은 Jagota 1988 [29] 에 귀속) · 그 표 4 가 이 카드 [3] 청동 자료를 인쇄값으로 싣는다 (0.72 → 7.8 · 0.97 → 11.8 = 이 카드 Fig. 4 판독과 같음) · 그 [118] Fischmeister & Arzt, Powder Metall. 26 (1983) 82–88 = 이 카드 [8] 의 출판판 후보 [미확인].
 
 ## 🗨️ Q&A 로그

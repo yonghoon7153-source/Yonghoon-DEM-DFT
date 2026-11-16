@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 329편 · 생성 2026-11-16
+> digest 330편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -66,7 +66,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (83편)
+## 접촉역학 · 소성 (DEM 이론) (84편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -136,6 +136,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stallard2022_cathode_mechanical_properties_review` | LIB 양극재 기계물성 리뷰 — Berkovich indentation E·H 는 압흔 크기 ÷ 결정립 크기 (A_P^½/d) 로 접히고 0.1 을 넘으면 입계 파쇄로 떨어지며, 입자 인장강도는 H/3 보다 한 자릿수 이상 낮고, σ_F = K_IC/√(π·d/2) 로 다결정 NMC333 의 K_IC ≈ 0.05–0.3  | review (compilation of published experimental data: Berkovic | 2026-09-26 | 🖼 13 |
 | `stallard2022_nmc811_single_crystal_shear_strength_lithiation` | 단결정 NMC811 (1–3 µm) 의 기저면 분해 전단강도가 탈리튬화로 준다 — 캘린더링 안 한 다공 양극 층 (액체계 LIB) 을 경도 50–946 MPa 금속 기판 위에 놓고 Vickers indentation 으로 평균 압축 견인력 = 기판 경도 H 를 걸어, 뺀 뒤 SEM 으로 슬립 띠 · 균열 입자 분율 F(H | experiment (Vickers indentation of an uncalendered single-cr | 2026-11-12 | 🖼 51 |
 | `storakers1997_similarity_inelastic_contact` | 비탄성 접촉의 자기상사(similarity) 해석 — Storåkers, Biwa & Larsson (Int. J. Solids Struct. 1997) | continuum (self-similar inelastic single/pair contact theory | 2026-06-26 | 🖼 5 |
+| `swinkels1983_hip_densification_plastic_yield_creep_mechanisms` | 열간 등방 가압 (HIP) 의 치밀화 기전 — 납 · 주석 · PMMA 분말을 기름 압력 용기에서 누르며 밀도를 연속으로 잼 (납 3.52–10.35 · 주석 1.38–13.79 MPa · 27–150 °C · 24 h) · 첫 30 s = 소성 항복 · 그 뒤 = 멱법칙 크리프 (압력 지수 6.5) · 옛 모델 (배위수 | theory + exp (hot-isostatic pressing of lead · tin · PMMA po | 2026-11-16 | 🖼 81 |
 | `thakur2014_eepa_adhesive_elastoplastic_dem` | EEPA 점착 탄소성 접촉모델 (면적의존 점착) — 응집 분말의 미시역학 — Thakur (Granular Matter 2014) | DEM (contact-LAW theory + uniaxial calibration) | 2026-06-26 | 🖼 22 |
 | `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` | 초고압 (≈3.8 GPa) in situ 치밀화 — 비정질 Li₃PS₄ (LPS) 와 결정 Li₆PS₅Cl (LPSCl): 파리–에든버러 프레스 (UToPEC · 준등방 가압) 에서 X-선 흡수 밀도 · 단층촬영 (1.277 µm) · 에너지분산 XRD · 중성자 회절 + 실험실 EIS · 결합원자가 (BVEL) — 두  | experiment (in situ 고압 — PE 프레스 UToPEC · Beer–Lambert 흡수 밀도  | 2026-10-13 | 🖼 23 |
 | `thorntonning1998_adhesive_elastoplastic_contact` | 점착 탄소성 구의 stick/bounce — 항복압 캡(p_y) 접촉 LAW의 정의서 — Thornton & Ning (Powder Technology 1998) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 7 |
