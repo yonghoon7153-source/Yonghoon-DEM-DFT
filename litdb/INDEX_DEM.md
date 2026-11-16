@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 328편 · 생성 2026-11-16
+> digest 329편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -154,7 +154,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (51편)
+## 복합양극 미세구조 · percolation (52편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -177,6 +177,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `holzer2013_constrictivity_effective_transport_porous_layers` | The influence of constrictivity on the effective transport properties of porous layers in electrolysis and fuel cells — 협착을 두 양으로 나눈다: 기하 constriction factor β = (r_min/r_max)² ↔ 수 | exp + 3D image analysis (constrictivity β/δ 정의·측정 — FIB-SEM  | 2026-10-03 | 🖼 16 |
 | `islam2026_microstructure_resolved_impedance_lpscl_symmetric_cell` | Microstructure-Resolved Impedance Modeling of Solid-State Batteries — Li/Li₆PS₅Cl/Li 대칭셀의 phase-field 소결·SEI 미세구조를 COMSOL 옴익-전도 + Butler–Volmer + C_dl 임피던스 모델로 — Islam, Katsube, Ji | FEM (COMSOL Multiphysics 2D 옴익 전도 + Butler-Volmer + C_dl, 1  | 2026-09-22 | 🖼 11 |
 | `jung2023_single_crystal_ncm_morphology` | 필독 / 우리-랩 — Customizing the Morphology and Microstructure of Single-Crystalline Ni-rich Layered Cathode Materials for All-Solid-State Batteries — Jung et al. (Chem. Eng. J. 2023) | exp (morphology / electrochemistry / mechanical) | 2026-06-26 | 🖼 7 |
+| `kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity` | 나노 X 선 CT (복셀 16 nm · 분해능 50 nm) 로 재구성한 상용 LFP 양극에서 대표 체적 (REV 750 nm) 을 잘라 3D 미시 영역으로 두고 1D P2D 거시 영역과 매 시간 걸음 양방향으로 묶은 COMSOL 다중 스케일 모델 — 실 tortuosity (열전도 유사 · 전해질 2.2472 · 고체 1 | image-based multiscale continuum simulation (nano-XCT recons | 2026-11-16 | 🖼 59 |
 | `kato2018_thick_electrode_assb_cycle_tortuosity` | 600 µm 후막 전고체 전지의 율속 (용량–전류) 자료에서 이온 수송 tortuosity factor 를 뽑다 — Doyle–Newman ohmic-limit 반응대 식 (eq 4) · LiCoO₂ 양극 τ 2.47 (LGPS · Li₂S–P₂S₅ 유리 공유 가정) · 흑연 음극 τ 3.32 · 15.7 mAh cm⁻² | exp (율속 방전 자료 → Doyle–Newman ohmic-limit 반응대 식 (eq 4) 적합 → κ | 2026-10-03 | 🖼 17 |
 | `ketter2025_resistor_network_models_predict_transport_properties` | Using resistor network models to predict the transport properties of solid-state battery composites — Ketter (Nat. Commun. 2025) · voxel 저항망(RN)으로 NCM83–LPSCl 복합양극의 effective σ_ion | exp (EIS-TLM impedance · DC polarization · LFA thermal diffu | 2026-09-25 | 🖼 31 |
 | `kim2024_carbon_volumetric_occupation_se_domain` | 필독 / 우리-랩 — Accelerated Degradation of ASSBs Induced through Volumetric Occupation of the Carbon Additive in the SE Domain — Kim, Park, Kang, …, Lee, Sun, Cho (Adv. Funct. Mater. 2 | exp | 2026-06-26 | 🖼 5 |

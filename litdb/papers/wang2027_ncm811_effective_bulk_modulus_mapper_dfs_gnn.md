@@ -435,6 +435,7 @@ GIN (Graph Isomorphism Network) 층은 h_v ← MLP((1 + ε)·h_v + Σ_{u∈N(v)}
 - 참고 [26] 의 원전 (2026-11-12 카드): [`devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode`](devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode.md) — 138.73 ± 18.78 · 1.78 ± 0.35 GPa 는 원문 값 (NMC532 확정) · 둘 다 **targeted** (격자 분해 값은 123.02 · 4.40) · 1.78 = 따로 만든 61 % 다공 CB/PVDF 필름 (그 카드 §0-1).
 - 같은 그룹 (BIT · Chunwang He · Le Yang · Hao-Sen Chen) 의 캘린더링 논문 (2026-11-12 카드): [`song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage`](song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage.md) — NCM9055 양극의 in situ CT 압입 + CT 기반 등가 구 DEM (E_NCM 47 GPa · Lundkvist 2024 인용) · 입자 파괴 위험 = 명목 응력 f_max/d² ≈200 MPa.
 - 참고 [25] 의 원전 (2026-11-12 카드): [`devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte`](devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte.md) — 서지 = *Experimental Mechanics* (2019) 59:337–347 (온라인 2018-11-28 · 호 번호 인쇄 없음) · NMC532 응집체 113 · 소결 펠릿 200 GPa (85 nm · 건조) · **138.73 · 1.78 은 이 논문에 없다** ([26] 의 값).
+- 참고 [11] 의 원전 (2026-11-16 카드): [`kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity`](kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity.md) — 서지 = 원문 첫 쪽과 같음 · 나노 CT (16 nm 복셀) 재구성 LFP 양극의 REV 750 nm 3D 미시 ⇄ 1D P2D 거시 동시 결합 · 열전도 유사 tortuosity (전해질 2.2472 · 고체 1.7311) · 영상 → 유효 물성 · 압밀 · 역학 없음.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

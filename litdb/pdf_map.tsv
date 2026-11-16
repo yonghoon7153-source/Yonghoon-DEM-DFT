@@ -566,3 +566,7 @@ xu2023_dem_bonded_particle_fracture_calendering	computational model for predicti
 #   ⚠ 크롭 35 장 = 도구 8 (다시 자름 8: 머리글 줄 · 내려받기 도장 · 옆 단 글 · Fig. S3 팝업 아래 절반 잘림) + 손 27 (manual_crop: 패널 7 · Fig. S1 (캡션이 다음 쪽) · SI 식 1 · 표지 1 · 근거 문단 15 · 영상 정지 화면 2) + digitized.csv (42 행) · 영상 mp4 는 커밋하지 않음
 chouchane2021_innov_webapp_stochastic_generation_meshing	an_invitation_to_engage_with_computational_modeling
 chouchane2021_innov_webapp_stochastic_generation_meshing	an invitation to engage with computational modeling
+# ── 나노 X 선 CT (16 nm 복셀) 로 재구성한 상용 LFP 양극의 REV (750 nm) 3D 미시 ⇄ 1D P2D 거시 동시 결합 다중 스케일 COMSOL 모델 · 열전도 유사 tortuosity (Kashkooli · Farhad · Lee · Feng · Litster · Komini Babu · Zhu · Chen · J. Power Sources 307 (2016) 496–509) — litdb 2026-11-16 (후보 밖 · 68 번 파일 · 정독 115) · 카드 제목이 한국어라 손으로 · 밑줄 · 공백 두 꼴 · 조각은 본문 · SI 두 파일에 다 맞는다
+#   ⚠ 크롭 59 장 = 도구 15 (다시 자름 15: 그림 1–8 원 래스터 · 표 1 · 2 · 4 · 그림 S1 · S2 · S4 · S5) + 손 44 (manual_crop: 그래픽 초록 1 · 패널 8 · 그림 S3 · 표 3 · 식 14 · 근거 문단 19) + digitized.csv (106 행) · colorbar_extremes_printed.csv (36 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
+kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity	multiscale_modeling_of_lithium-ion_battery_electrodes
+kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity	multiscale modeling of lithium-ion battery electrodes
