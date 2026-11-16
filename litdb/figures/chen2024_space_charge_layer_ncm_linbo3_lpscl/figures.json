@@ -261,13 +261,20 @@
     84.0,
     369.8,
     514.7,
-    527.2
+    539.7
    ],
    "w": 1795,
-   "h": 657,
+   "h": 709,
    "dpi": 300,
    "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
-   "blank": 0.573
+   "blank": 0.591,
+   "bbox_extractor": [
+    84.0,
+    369.8,
+    514.7,
+    527.2
+   ],
+   "manual_crop": "2026-11-16 main session: re-rendered with the fixed extractor's bbox (extract_figures.page_blocks - caption top = first ink line). The x-axis tick labels and the axis title 'Distance (nm)' are PDF text below the image; the old crop cut them (bottom 527.2 -> 539.7). The graphics-only check that found S4/S9/S12/S14/S20/S22/S29/S33 did not see text labels, so S6 was missed then."
   },
   {
    "key": "fS7",

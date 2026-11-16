@@ -1,8 +1,9 @@
 <!-- digest 표준 양식 (paper-level STANDALONE). 깊이 기준 = papers/zuo2022_chlorination_cathode_interface.md
      2026-11-16 초판 — 본문 14 pp + SI 30 pp 전문. 크롭 46장 (그림 39 = 본문 6 + SI 33 · 표 7) 중 그림 15장 실독.
      fig_S21 은 도구가 놓쳤다 (그림은 SI p.16 아래 · 캡션은 p.17 위로 쪽이 갈림) → 손으로 잘라 figures.json 에 manual_crop 사유를 달았다.
-     2026-11-16 재크롭 (본 세션): SI 그림 8 장 (S4 · S9 · S12 · S14 · S20 · S22 · S29 · S33) 의 아래 ≈12–13 pt 가 잘려 있었다 (추출기가 캡션 블록 위 끝에서 멈춤 —
-     wei2026 SI 와 같은 결함) → 내장 이미지 아래 끝까지 다시 렌더 · 옛 bbox 는 figures.json `bbox_extractor` 로 보존. 이 8 장은 이 digest 가 실독한 그림이 아니다 (S20 은 쪽 렌더로 봄) — 판독 내용은 안 바뀐다.
+     2026-11-16 재크롭 (본 세션): SI 그림 9 장의 아래 ≈12–13 pt 가 잘려 있었다 (추출기가 캡션 블록 위 끝 — 공백 머리 줄 — 에서 멈춤 · wei2026 SI 와 같은 결함).
+     8 장 (S4 · S9 · S12 · S14 · S20 · S22 · S29 · S33) 은 그래픽이 크롭 밖으로 나간 것으로 찾았고, S6 은 축 제목 · 눈금 숫자가 **글자**라 그 측정이 놓쳤다 —
+     고친 추출기 (`extract_figures.page_blocks`) 의 bbox 와 비교해서 찾았다. 다시 렌더 · 옛 bbox 는 figures.json `bbox_extractor` 로 보존. 이 9 장은 이 digest 가 실독한 그림이 아니다 (S20 은 쪽 렌더로 봄) — 판독 내용은 안 바뀐다.
      이 digest 의 임무 둘: (1) Haruyama 2014 의 계면 Li 공공 형성에너지(E_v) 방법을 **아지로다이트 Li6PS5Cl (= 우리 comp1) + NCM622** 로
      옮긴 편으로서 그 계산을 감사한다 (2) 셀 창 1.9–3.6 V vs Li-In (논문 환산 2.5–4.2 V vs Li) 이 우리 작동창 2.5–4.25 V 와 같아서
      양극 계면·CEI 판단의 실험 사례로 정리한다.

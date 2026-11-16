@@ -116,11 +116,11 @@ Clamped-ion(원자 고정)은 argyrodite 탄성을 ~2.3× 과대평가(comp1 cla
 
 | 양 | 우리 상태 | 문헌(원전) 상태 |
 |---|---|---|
-| SCL **두께** (nm) | ⛔ 없음 | ⛔ **원전에도 없음** |
-| SCL **전위 프로파일** (V vs z) | ⛔ 없음 | ⛔ **원전에도 없음** |
-| 층별 **전하 적분** | ⛔ 없음 | ⛔ **원전에도 없음** |
-| **Debye 길이** | ⛔ 없음 | ⛔ **원전에도 없음** |
-| 계면 **Li 공공 형성에너지** (자리별) | 🟡 미계산 | ✅ 있음 — Haruyama 2014 `Table 1` 21 자리 |
+| SCL **두께** (nm) | ⛔ 없음 | ⛔ **원전에도 없음** · 아지로다이트판 Chen 2024 에도 없음 |
+| SCL **전위 프로파일** (V vs z) | ⛔ 없음 | ⛔ **원전에도 없음** · 아지로다이트판 Chen 2024 에도 없음 |
+| 층별 **전하 적분** | ⛔ 없음 | ⛔ **원전에도 없음** · 아지로다이트판 Chen 2024 에도 없음 |
+| **Debye 길이** | ⛔ 없음 | ⛔ **원전에도 없음** · 아지로다이트판 Chen 2024 에도 없음 |
+| 계면 **Li 공공 형성에너지** (자리별) | 🟡 미계산 | ✅ 있음 — Haruyama 2014 `Table 1` 21 자리 · Chen 2024 (*Adv. Energy Mater.* 14, 2304443) 9 자리 — Li₆PS₅Cl · NCM622 · LiNbO₃ · ⚠ LPSC 부분 비화학량론 (Li₃₈P₈S₃₈Cl₈ · 형식 정공 6 · *우리 산수*) · litdb comparison `J-77` |
 
 > ⛔ **"공간전하층을 계산했다" 고 쓰지 않는다.** 근거는 추측이 아니라 원전 실독이다 —
 > 황화물 SE|산화물 양극 SCL 의 원전인 **Haruyama 2014**(*Chem. Mater.* **26**, 4248)를
@@ -129,6 +129,9 @@ Clamped-ion(원자 고정)은 argyrodite 탄성을 ~2.3× 과대평가(comp1 cla
 > 저자들 자신이 못박는다 — *"long-range variation of the concentration needs to be analyzed
 > by methods involving the long-range electrostatic interaction."*
 > ⇒ SCL 은 **현상(phenomenon)의 원전**이지 **정량(quantification)의 원전이 아니다.**
+> 🆕 2026-11-16 — Haruyama 의 E_v 방법을 아지로다이트 (Li₆PS₅Cl | NCM622 · LiNbO₃ 코팅) 로 옮긴 **Chen 2024**
+> (*Adv. Energy Mater.* **14**, 2304443 · 본문 14 + SI 30 pp 전문 실독) 에도 위 네 양이 **없다** — 정전 퍼텐셜 프로파일 ·
+> 층별 전하 · 띠 정렬도 0 회다. 두 원전 모두 SCL 정량 0 (`litdb/papers/chen2024_space_charge_layer_ncm_linbo3_lpscl.md` · comparison `J-77`).
 > 인용할 때 쓸 수 있는 것은 *"그런 기전이 제안됐다"* 까지이고,
 > *"SCL 두께가 ~nm 로 알려져 있다"* 류는 **원전에 근거가 없다**.
 

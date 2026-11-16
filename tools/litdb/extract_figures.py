@@ -144,6 +144,55 @@ def text_blocks(page):
     return [b for b in page.get_text("blocks") if b[6] == 0 and b[4].strip()]
 
 
+def _ink_lines(page):
+    """쪽의 글줄 bbox — 공백뿐인 줄은 뺀다 (`tighten_caption_tops` 용)."""
+    out = []
+    for bl in page.get_text("dict")["blocks"]:
+        if bl.get("type", 0) != 0:
+            continue
+        for ln in bl.get("lines", []):
+            if "".join(s.get("text", "") for s in ln.get("spans", [])).strip():
+                out.append(fitz.Rect(ln["bbox"]))
+    return out
+
+
+def tighten_caption_tops(blocks, ink):
+    """캡션 블록의 위 끝 y 를 **첫 글줄의 위 끝**으로 내린다 — 공백뿐인 머리 줄을 뺀다.
+
+    ⚠ 왜 (2026-11-16 실측 · 사용자 '권고대로 하고'): 일부 SI (wei2026 *ACS Nano* SI · chen2024 *AEM* SI) 는
+      캡션 블록이 실제 'Fig. Sx' 줄보다 14–18 pt 위의 **빈 줄** (단 오른쪽 끝의 공백 글자 하나) 에서 시작한다.
+      `_side_rect(up=True)` 는 그림 영역 아래 끝을 '캡션 블록 위 끝 − 2' 로 자르므로, 그 빈 줄 높이만큼
+      그림 아래 (축 라벨 · 스케일 막대 · 값 라벨) 가 잘렸다 — 그래픽이 크롭 아래로 1 pt 넘게 나간 것
+      wei2026 SI 57 장 중 56 · chen2024 SI 33 장 중 8 (두 편은 손으로 다시 렌더했다 · figures.json `bbox_extractor`).
+    고치는 범위: **캡션 블록의 위 끝만**. 본문 블록과 캡션 아래 끝 (꼬리 빈 줄) 은 안 건드린다 —
+      아래 끝을 바꾸면 merge_caption 의 이어붙이기 간격 (14 pt) 이 바뀌어 다른 회귀가 난다. 위 끝은 내리기만 한다.
+    못 하는 것: 블록 bbox 안에서 글줄을 하나도 못 찾으면 (회전 캡션 등) 그대로 둔다 ·
+      블록 안에 다른 블록의 글줄 (그림 속 라벨) 이 겹쳐 있으면 그 줄을 첫 글줄로 보아 **덜** 내린다 (보수 쪽) ·
+      그림이 캡션 글줄 2 pt 안까지 내려오면 그 2 pt 는 여전히 잘린다 (`_side_rect` 의 여백 그대로).
+    """
+    out = []
+    for b in blocks:
+        if is_caption(b[4]):
+            x0, y0, x1, y1 = b[:4]
+            ys = [r.y0 for r in ink
+                  if x0 - 1 <= (r.x0 + r.x1) / 2 <= x1 + 1 and y0 - 1 <= (r.y0 + r.y1) / 2 <= y1 + 1]
+            if ys and min(ys) > y0 + 0.5:
+                b = (x0, min(ys)) + tuple(b[2:])
+        out.append(b)
+    return out
+
+
+def page_blocks(page):
+    """`text_blocks` + 캡션 위 끝 보정 (`tighten_caption_tops`). 캡션이 없는 쪽은 dict 추출을 안 한다.
+
+    그림 영역을 만드는 두 곳 (`extract` · `why`) 이 이것을 쓴다 — 한쪽만 고치면 `--why` 진단이 실제 크롭과 갈린다.
+    """
+    blocks = text_blocks(page)
+    if any(is_caption(b[4]) for b in blocks):
+        blocks = tighten_caption_tops(blocks, _ink_lines(page))
+    return blocks
+
+
 def merge_caption(blocks, cap, gap=14.0):
     """캡션이 여러 블록으로 쪼개진 경우 아래로 이어붙인다 → (합친 bbox, 합친 글).
 
@@ -672,7 +721,7 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
         si = bool(SI_TAG.search(Path(pdf_path).stem))
         for pno in range(doc.page_count):
             page = doc[pno]
-            blocks = text_blocks(page)
+            blocks = page_blocks(page)         # 캡션 위 끝 = 첫 글줄 (2026-11-16 · tighten_caption_tops)
             caps = [(b, is_caption(b[4])) for b in blocks]
             for b, h in caps:                  # 캡션 모양인데 떨어진 블록 — 번호 공백 보고에 쓴다 (조용히 버리지 않는다)
                 if h is None:
@@ -1354,7 +1403,7 @@ def why(slug, pdfs):
         print(f"\n##### {Path(pdf_path).name[:78]}  (SI 파일? {si_file})")
         for pno in range(doc.page_count):
             page = doc[pno]
-            blocks = text_blocks(page)
+            blocks = page_blocks(page)         # extract() 와 같은 블록 — 진단이 실제 크롭과 갈리지 않게
             caps = [(b, is_caption(b[4])) for b in blocks]
             for cap, hit in caps:
                 if not hit:
@@ -1827,8 +1876,11 @@ def selftest():
             d = fitz.open(); p = d.new_page(width=595, height=791); build(p)
             path = str(Path(td) / name); d.save(path); d.close()
             return path
+        # ⚠ 2026-11-16: keep_proportion=False — 40×40 정사각 픽스맵을 비율대로 넣으면 그림이 y 108.5–468.5 에만 그려져
+        #   아래 bbox[3] > 515 기대가 시험 재료 탓으로 실패했다 (PyMuPDF 2.1 · MuPDF 1.28.6 실측 · 도구 결함 아님).
         side = _doc("side.pdf", lambda p: (p.insert_textbox(fitz.Rect(51, 55, 162, 260), SIDE, fontsize=8),
-                                           p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix()),
+                                           p.insert_image(fitz.Rect(184, 58, 544, 519), pixmap=_pix(),
+                                                          keep_proportion=False),
                                            p.insert_textbox(fitz.Rect(51, 560, 292, 720), PROSE, fontsize=9)))
         m, _sk = extract([side], "side_test", dry=True)
         f13 = [f for f in m["figures"] if f["key"] == "f13"]
@@ -1872,6 +1924,42 @@ def selftest():
         chk("★추출 직후 번호 공백 보고: f1·f3 사이 f2 · 규칙에 떨어진 후보 문장('Figure 2 shows…')을 같이 싣는다",
             sorted(f["key"] for f in m["figures"]) == ["f1", "f3"] and "f2" in mk
             and mk["f2"]["near_miss"] and mk["f2"]["near_miss"][0]["text"].startswith("Figure 2 shows"))
+
+        # (e) 캡션 블록 머리의 공백 줄 (2026-11-16 · tighten_caption_tops) — wei2026 SI p.4 실측 꼴 그대로:
+        #     단 오른쪽 끝 (x 545) 의 굵은 Times 공백 한 칸이 캡션 블록을 15 pt 위로 늘렸고, 그만큼 그림 아래가 잘렸다.
+        def _blankhead(p):
+            p.insert_image(fitz.Rect(54, 100, 547, 452), pixmap=_pix())          # 그림이 공백 줄 높이 안까지 내려온다
+            p.insert_text((545.2, 455.0), " ", fontsize=10, fontname="tibo")
+            p.insert_text((54.0, 469.0), "Fig. S2: SQS configurations of twenty synthetic alloys.",
+                          fontsize=11, fontname="tiro")
+        bh = _doc("blankhead.pdf", _blankhead)
+        _GCACHE.clear()
+        dd = fitz.open(bh); pg = dd[0]
+        capr = [b for b in text_blocks(pg) if is_caption(b[4])]
+        capt = [b for b in page_blocks(pg) if is_caption(b[4])]
+        dd.close()
+        chk("재현 확인: 합성 캡션 블록이 실제 SI 처럼 공백 머리 줄을 품는다 (블록 위 끝 < 그림 아래 끝 452)",
+            len(capr) == 1 and capr[0][1] < 452.0 and capr[0][4].startswith(" \n"))
+        chk("★캡션 위 끝 = 첫 글줄 위 끝 (공백 머리 줄 제외) — 그림 아래 끝 + 2 보다 아래 · 나머지 칸은 그대로",
+            len(capt) == 1 and capt[0][1] > 454.0 and capt[0][2:] == capr[0][2:] and capt[0][0] == capr[0][0])
+        m, _sk = extract([bh], "blankhead_test", dry=True)
+        fs2 = [f for f in m["figures"] if f["key"] == "fS2"]
+        chk("★공백 머리 줄 캡션 → 그림 아래 끝 (452) 까지 자른다 (고치기 전 442.6 — 9 pt 잘림)",
+            len(fs2) == 1 and fs2[0]["bbox"][3] >= 452.0)
+        chk("⛔음성: 그래도 캡션 글줄은 크롭에 안 들어간다 (크롭 아래 끝 < 첫 글줄 위 끝)",
+            len(fs2) == 1 and len(capt) == 1 and fs2[0]["bbox"][3] < capt[0][1])
+        prose_b = (54.0, 444.6, 547.7, 472.1, " \nThe results of the synthetic alloys are shown here.", 0, 0)
+        cap_ok = (54.0, 458.9, 547.7, 472.1, "Fig. S3: A normal caption without a blank head line.", 1, 0)
+        cap_bh = (54.0, 444.6, 547.7, 472.1, " \nFig. S4: A caption with a blank head line.", 2, 0)
+        got = tighten_caption_tops([prose_b, cap_ok, cap_bh], [fitz.Rect(54.0, 458.9, 300.0, 472.1)])
+        chk("⛔음성: 캡션이 아닌 블록은 공백 머리 줄이 있어도 안 건드린다 (본문 경계는 그대로)", got[0] == prose_b)
+        chk("⛔음성: 공백 머리 줄 없는 캡션은 그대로 (같은 튜플)", got[1] == cap_ok)
+        chk("양성: 순수 함수 — 공백 머리 줄 캡션의 위 끝만 첫 글줄로 내린다",
+            got[2][1] == 458.9 and got[2][0] == cap_bh[0] and got[2][2:] == cap_bh[2:])
+        chk("⛔음성: 글줄이 블록 밖 (가운데가 단 밖) 이면 안 내린다",
+            tighten_caption_tops([cap_bh], [fitz.Rect(560.0, 458.9, 590.0, 472.1)])[0] == cap_bh)
+        chk("⛔음성: 위 끝은 내리기만 한다 — 첫 글줄이 블록 위 끝보다 위면 그대로",
+            tighten_caption_tops([cap_ok], [fitz.Rect(54.0, 457.0, 300.0, 470.0)])[0] == cap_ok)
 
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
