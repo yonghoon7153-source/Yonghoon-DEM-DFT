@@ -55,6 +55,7 @@ evidenceScope: multi-source-mixed
 ### p3 · 복합양극에서 SE 의 역할 (Joule 2018)
 - **설명**: SE 는 양극 안과 분리막에서 Li⁺ 경로다. 높은 σ → 이온 저항 · 분극 감소, 부족한 σ → 활물질 이용률 · 율속 제한. 배경 일반론이라 문제 없다.
 - **우리 데이터와 비교**: —
+- **litdb 근거 (11-16)**: 인용 [Joule 2018, 2, 1991] 은 litdb 에 없다 (확인 안 됨).
 - **추가로 필요한 것**: —
 
 ### p4 · 할로겐 리치 아지로다이트의 높은 σ
@@ -63,6 +64,11 @@ evidenceScope: multi-source-mixed
 - **우리 데이터와 비교**:
   - 우리 DFT 두 모델이 이 서술의 두 끝이다: comp1 = Li₆PS₅Cl (정렬 · Cl 은 4a 에만) · modelc = Li₅.₄PS₄.₄Cl₁.₆ (Li 빈자리 0.6/f.u. · P 배위로 세면 Cl 8 개 중 3 개가 4d — 화학량론이 강제한 최소 혼합 · 10-14 정정 · `db/compositions/modelc_v3.json`).
   - 두 조성의 수송 비교는 p8 (MD Ea 대조는 BLOCKED).
+- **litdb 근거 (11-16)**:
+  - **슬라이드 문장 (무질서 + Li 빈자리 → 평평한 지형 → 빠른 3D 확산) — litdb 가 지지**: `adeli2019` (Angew. Chem. 2019 · 중성자 + EIS + PFG · Fig. 2 · Table 1 봄) Li₅.₅PS₄.₅Cl₁.₅ Li 점유 실측 5.47/f.u. (빈자리) · σ 2.5 → 9.4 mS cm⁻¹ (냉간압축 · 실온) · 기전 = 정전 약화 + 빈자리 + 자리 무질서 — ⚠ x = 0.6 (modelc 조성) 은 550 °C 에서 LiCl 석출 · σ 3.3 · `feng2020` (Energy Storage Mater. 2020 · Fig. 2 봄) 소결 σ 7.1 → 16.1 → 17.3 mS cm⁻¹ (x 0 · 0.5 · 0.7) · AIMD Ea 0.41 → 0.16 eV · 저자 표현 'flatter energy landscape' (홉 수 검산 298 K · ν₀ 10¹³ s⁻¹ 가정: 0.41 eV → 1/Γ ≈ 0.85 µs · 0.18 eV → ≈ 0.11 ns) — ⚠ 단일 배열 AIMD 3 개 · 원문도 무질서와 결핍의 몫을 완전히 못 가른다 · `morgan2021` (Chem. Mater. 2021 · AIMD · Fig. 3 봄) S/X 반전 50 % 에서만 MSD 직선 — 'anion disorder … necessary prerequisite' (기전은 퍼콜레이션 · 협동 이동 · Li₆PS₅X 화학량론) · ⚠ `he2023` 리뷰의 'energy landscape rather than Li deficiency' 는 digest 가 원문보다 세다고 정정 — '빈자리가 아니라' 꼴로 쓰지 않는다.
+  - **발표자 말 (Cl 편극률 ↓ · 반지름 ↓ → E ↑ → 계면 형성 어려움) — 일부 지지 + 반대 근거**: E 상승 방향은 우리 그룹 논문의 **같은 논문 안 비교**로만 지지 — `lee2026_mechanical_halogen_argyrodite_drycoating` (ACS Nano 2026 · AFM-FS + 나노압입 · Fig. 3e 봄) Li₆PS₅Cl 8.0 → Li₅.₄ 계열 15.8–18.3 GPa · `kang2026_site_specific…` (ESM 2026 · Fig. S15 봄) 10.5 → 15.1 GPa · 편극률 기전은 `lee2026` Fig. S10 (봄) 의 **모식도 가설** (S²⁻ ≈10.2 Å³ 대 X⁻ 5.4–7.2 Å³ · 계산 · B/G 분리 없음) · **반경 논거는 litdb 가 반대**: `adeli2019` 'S²⁻ 170 pm ≈ Cl⁻ 167 pm' (격자 수축은 주로 Li 빈자리 몫) · `nosrati2026` 1.84 대 1.81 Å (≈2 %) · 편극률 → 연화의 실험 근거는 할라이드 종류 축뿐 (`kraft2017` Fig. 6a 봄 · Cl → Br₀.₅I₀.₅ 종파 음속 ≈1480 → ≈1130 m s⁻¹ figure-read ≈) · 'E ↑ → 계면 형성 어려움' 에는 반례: `lee2026` 건식 코팅에서 더 단단한 Li₅.₄ 계열이 NCM 에 더 잘 붙었다 (남은 SE 분율 0.094–0.122 대 0.193–0.246 · Table S1 은 digest 값) — 단 건식 코팅 공정이라 냉간 압축 복합양극과 다르다 (반례로만).
+  - **우리 점검 (B ↓ · G ↑) — litdb 근거 없음 + 경고 사례**: 할로겐 함량별로 B · G 를 나눈 실험 · DFT 가 litdb 에 없다 · `pustorino2025` (Chem. Mater. 2025 · PBE · Table 3 봄) 같은 Li₆PS₅Cl 에서 Li 배치만 48H → 48HR 로 바꿔도 B 29.5 → 19.9 (−33 %) · G 10.8 → 12.0 · E 29.0 → 29.9 GPa (저자 p.317 'Li 분포는 B 에 크다' · ⚠ digest 는 48HR 행 VRH 재현 안 됨 표시) ⇒ comp1 → modelc 의 B ↓ · G ↑ 를 '할로겐 효과' 로 말하려면 배치 앙상블이 먼저다 · Kim 2025 (ACS Mater. Lett. · UPE) 는 litdb 에 PDF 없음 (INDEX Excel 행만 · Li₆PS₅Cl E 21.29 · G 8.45 · B 14.82 → Li₅.₅PS₄.₅Cl₁.₅ E 21.59 · G 7.61 · B 14.34 GPa — G ↓ 이고 둘째 줄은 B · G 로 다시 낸 등방 E ≈19.4 와 안 맞음) → 원문 확인 전 인용 안 함.
+  - **우리 모델 (Cl 8 개 중 3 개가 4d) — Feng NMR 이 지지 · 중성자와 갈림**: 화학량론상 Cl 1.6/f.u. 이면 ≥ 0.6 은 4d (`feng2020` §3d) · `feng2020` Fig. 7d (봄) ³⁵Cl NMR 4d-Cl 0.05 → 0.40 (x 0 → 0.7 · figure-read ≈) → x 0.6 보간 ≈0.56–0.61/f.u. 대 modelc 0.60 · Cl 중 4d 몫 29–40 % 대 modelc 37.5 % ✓ · 반대: `adeli2019` Fig. 2 (봄) 중성자 Li₅.₅PS₄.₅Cl₁.₅ 4a = Cl 0.615 / S 0.385 — 4a 에 S 가 38.5 % 인데 우리 셀엔 4a-S 가 없다 · 'Li₆PS₅Cl 은 Cl 이 4a 에만' 은 이상화 (실측 4d-Cl: Kraft 중성자 ≈62 % · Feng X 선 36.7 % · ³⁵Cl NMR 5 % — 측정법마다 다르다).
 - **추가로 필요한 것**: —
 
 ### p5 · 조성이 결합 환경 · 기계적 물성도 바꾼다 (ESM 2023) `[P1-8]`
@@ -71,6 +77,7 @@ evidenceScope: multi-source-mixed
   - 우리 DFT 는 '바뀐다' 를 지지하지만 방향이 물성마다 다르다.
   - 부피 탄성 B₀ 는 comp1 26.23 → modelc 21.71 GPa 로 내려간다 (canonical · 같은 비교군 `b0-dft-bm3-v1`).
   - E_VRH 는 22.06 → 27.66 GPa 로 올라간다 — 설정이 달라 각주 비교만이고, 증가는 전단 G 에서만 온다 (p8).
+- **litdb 근거 (11-16)**: 인용 [ESM 2023, 59, 102787] = `yun2023_deciphering_degradation_halide_vs_sulfide` (우리 랩) — 내용은 Li₆PS₅Cl 대 Li₃InCl₆ (황화물 대 할라이드 · Fig. 4 봄 · AFM E 32.8 대 41.1 GPa) 라 '할로겐 리치 아지로다이트의 기계적 물성 변화' 의 직접 근거가 아니다 — 인용 자리를 맞춘다.
 - **추가로 필요한 것**: '기계적 물성' 을 어느 양 (E · B · G · 항복 · 부착) 으로 말하는지 처음부터 정한다.
 
 ### p6 · 이온전도도와 기계적 물성의 상호작용 `[P1-5]`
@@ -87,6 +94,7 @@ evidenceScope: multi-source-mixed
 - **우리 데이터와 비교**:
   - 우리 DFT E_VRH 도 같은 방향이다 (22.06 → 27.66 · 단 LPSCl1.6 · 설정 다름 · 각주 비교만). B₀ 는 반대 방향이다 (26.23 → 21.71).
   - AFM E (펠릿 표면 국소 압입) 와 DFT E_VRH (0 K 단결정 평균) 는 다른 양이다 — '둘 다 오른다' 까지.
+- **litdb 근거 (11-16)**: 같은 명목 Li₆PS₅Cl 의 AFM E 가 우리 그룹 논문끼리 32.8 (`yun2023`) · 8.0 (`lee2026`) · 10.5 GPa (`kang2026`) 로 4 배 갈린다 ⇒ 논문 간 E 값 비교는 뜻이 없고 **같은 논문 · 같은 측정 안의 비율**만 쓴다 (p7 · p10 의 E 도 같은 조건끼리만).
 - **추가로 필요한 것**:
   - ±0.3 은 분포 맞춤 중심값의 오차다 — 히스토그램 폭 (수 GPa) · 측정 점 수 · 펠릿 상대밀도를 같이.
   - 이 시료의 합성 경로 · 열처리 · 입도 — p9 · p10 과 같은 배치인지 (σ · E 가 쪽마다 다르다).
@@ -113,6 +121,7 @@ evidenceScope: multi-source-mixed
   - LPSCl1.6 의 Li–Cl 에는 4d 자리 Cl 이 섞여 있다 (P 배위로 세면 Cl 8 개 중 3 개 · 화학량론이 강제) — 평균 변화가 '같은 결합이 세졌다' 만은 아니다.
   - ⚠ per-bond 파일의 Cl 4a/4d 라벨 (7/1) 과 자리별 값은 10-14 에 정정된 Li 배위수 분류기에서 나왔다 — 자리를 다시 가른 뒤에야 자리별 비교에 쓴다.
   - **Li–Cl 길이**: `db/properties/bonds.json` 평균 2.607 → 2.532 Å (미등록). LPSCl 은 Cl 이 4a 에만 있는 정렬 셀이라 몇 값에 몰리고, LPSCl1.6 은 퍼진다.
+- **litdb 근거 (11-16)**: 단일 배치 DFT 의 B ↓ · G ↑ 는 Li 배치만 바꿔도 나올 수 있다 (`pustorino2025` Table 3 · 48H → 48HR B −33 % · G +11 %) ⇒ 'Li–Cl 결합 강화 → 모듈러스' 이전에 배치 앙상블이 먼저다 · B 와 G 가 반대로 가는 것을 설명한 문헌은 litdb 에 없다 (`nosrati2026` digest: '작고 덜 분극되면 단단' 규칙으로 E_VRH ↑ · B₀ ↓ 설명 불가).
 - **추가로 필요한 것**:
   - 'MLIP-MD (UMA)' 로 적는다.
   - Ea 숫자 비교를 빼고 '같은 온도에서 MSD 가 더 크다 (단일 시드 · 정성)' 로 낮추거나, 같은 셀 크기 · 다중 시드로 다시 돌린다. LPSCl1.6 쪽은 400 ps 다중 시드 정본 `md-ea-modelc-box331-400ps-gen2` 가 있고 LPSCl 짝은 없다.
