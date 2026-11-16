@@ -1,0 +1,100 @@
+{
+  "base": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+  "scope": "nonresult Git blob identity only; no import, qualification or operational seal",
+  "e0_tools": [
+    {
+      "role": "smoke_blind",
+      "path": "scripts/mixer_smoke_blind.py",
+      "base_pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "bytes": 125451,
+      "sha256": "8a7954c6f9ba5808180256a70a6eab999c83bb06fdf5a2367f208f44072fcf8b",
+      "git_blob": "ef2e75f12f72dca2c82e2845ce7f58e5d27a3a91",
+      "previous_pin": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+      "previous_sha256": "95b68412061939b6427ed07b65ca25b524366c46144a378db15b6cd65b30eb24",
+      "changed": true
+    },
+    {
+      "role": "checker",
+      "path": "scripts/check_contact_validity.py",
+      "base_pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "bytes": 162813,
+      "sha256": "738bf397821a94697069308c9d7ebe54b3dfb61bbb19bb2f0c7be6e6f6df60c1",
+      "git_blob": "21468adeb13e5f13973f6e145e06249fe2bdfde6",
+      "previous_pin": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+      "previous_sha256": "738bf397821a94697069308c9d7ebe54b3dfb61bbb19bb2f0c7be6e6f6df60c1",
+      "changed": false
+    },
+    {
+      "role": "reader",
+      "path": "scripts/measure_mixing_index.py",
+      "base_pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "bytes": 90471,
+      "sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+      "git_blob": "7b45bc5862ab81840e82109d1fd9790264183e45",
+      "previous_pin": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+      "previous_sha256": "4375ec56c39ac997b9eca4d0bf30feb8ded06456a722329550230c1e0867c31a",
+      "changed": false
+    },
+    {
+      "role": "deckdiff",
+      "path": "scripts/mixer_deck_diff.py",
+      "base_pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "bytes": 135987,
+      "sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+      "git_blob": "0cbc372dbbdc1c66e81db39c0ea13055a848511e",
+      "previous_pin": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+      "previous_sha256": "3642fd8bec56c6d55fbb602950338be248792bb4ea5d25ab95b981bc2fe335b3",
+      "changed": false
+    }
+  ],
+  "references": [
+    {
+      "path": "scripts/mixer_stage_gate.py",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "e62df852d6cdeb031a7d5ff6418eee2477f5e00df8fae91fdd7758f3cafb21f5",
+      "git_blob": "203a7aedc145b4170c267ff4de62a34548844251"
+    },
+    {
+      "path": "docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "1724056626d78db6477bf3bc3213447c94527ea1621ed10cbc6c30e25ca5aaf0",
+      "git_blob": "4a9c88a12013a73b7b5932015d76e34ed68c64bb"
+    },
+    {
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/stage0_registration.md",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "5c0efc65034cf46dcc08540cfed0cabd4f8577230589f68db3a3ff1c729ecf0f",
+      "git_blob": "69cae23dfabe41dac9b4eaed518038dd7be66969"
+    },
+    {
+      "path": "docs/reviews/dem_suyoung_stage01_20261113/registration_template.json",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "bb0b07bc16b5ec5b2cbe73ae9dc009f56e3b294b2665cffab85434812becc6a4",
+      "git_blob": "e8644bbf69fb85c4486baadf5bbb8b6003bac130"
+    },
+    {
+      "path": "docs/reviews/nonrint_offline_casebooks_20261114/lhs_o1_receipt_plan.md",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "3e6c06289a13ba888f6a534a14d4e47687fec1d673df949d76ddd08b3c759981",
+      "git_blob": "d7f08dd4f4b43fd196cdfea8ba5f82adc4492fc2"
+    },
+    {
+      "path": "docs/reviews/nonrint_first_link_20261109/lhs_current_identity_only_draft.md",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "e699eab8b9019efba5395e7806e0fff13d1b03738c0eac34e0ac7ceb68d4796d",
+      "git_blob": "15c40919f52252de06ab4996d39e1eedd0b976c0"
+    },
+    {
+      "path": "docs/reviews/mixer_precal_exploration_registration_draft_20261104.md",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "1e21ea3b8bee8eef87dd08d8ef395f434d73fe824ea429c347548de08530ab0c",
+      "git_blob": "7a76abd36c6725099b228d2ced115d42343f4673"
+    },
+    {
+      "path": "docs/reviews/mixer_d3_measurement_sop_draft_20261104.md",
+      "pin": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+      "sha256": "dde2857a41b847fbb1f1888588a6ddc0331aa71dfd08ad40f02618ce1bddcc38",
+      "git_blob": "9ac5165eb7eaf241147cf1ab13d782ac9747ccc8"
+    }
+  ]
+}

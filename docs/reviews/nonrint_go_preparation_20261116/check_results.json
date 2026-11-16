@@ -1,0 +1,24 @@
+{
+  "native_checks": [
+    {
+      "script": "check_doc_refs.py",
+      "rc": 1,
+      "stdout_sha256": "018e192d81cfa7ad18bcf628faf6e8f21fa8bf887fb8a8767e3713d386ed5f9b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "script": "check_review_findings.py",
+      "rc": 0,
+      "stdout_sha256": "90b5ea24b91f5fcef16280ec6c7dc100838def5b9306100489d78e76456155a0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "doc_refs_diagnostic": {
+    "native_rc": 1,
+    "sha_occurrences": 96,
+    "unmatched_after_slash_normalization": [],
+    "missing_paths_zero": true
+  },
+  "whole_gate_executed": false,
+  "native_failure_not_relabelled_as_pass": true
+}

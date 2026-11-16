@@ -1,0 +1,17 @@
+{
+  "scope": "document consistency and nonresult byte identity only",
+  "new_files_only": true,
+  "shared_code_or_ledger_changed": false,
+  "rint_files_changed": false,
+  "stage0_required_fields_null": 20,
+  "author_baseline_mapped": true,
+  "e0_tool_identities": 4,
+  "changed_e0_tools": [
+    "smoke_blind"
+  ],
+  "operational_seal_changed": false,
+  "qualification_tests": 0,
+  "research_results": 0,
+  "source_ref_hashes": 8,
+  "personal_path_hits": 0
+}
