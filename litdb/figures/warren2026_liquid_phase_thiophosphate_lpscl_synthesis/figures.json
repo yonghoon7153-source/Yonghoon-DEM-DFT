@@ -26,7 +26,32 @@
    "h": 963,
    "dpi": 300,
    "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.55
+   "blank": 0.55,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 In situ Raman spectroscopy of Li2S + P4S10 reactions in acetonitrile. Raman spectra track the solvothermal evolution of thiophosphate species under microwave heating. P4S10 remains spectrally stable up to 130 °C with conserved P]S and P–S vibrational bands (716 and 274 cm−1, panel (a)). Upon reaction with Li2S at 30 °C, both 1 : 1 and 2 : 1 molar mixtures show time-dependent spectral degradation (panels (b and c)). The 1 : 1 system retains the 716 cm−1 band longer, while the 2 : 1 reaction rapidly loses this feature. Final spectra highlight stoichiometric diﬀerences: the 1 : 1 reaction retains P]S and reveals new features (286, 572 cm−1; panel (d)), whereas the 2 : 1 reaction shows complete loss of P]S and new signals consistent with delocalized structures (686, 586, 480, and 316 cm−1; panel (e)), consistent with substantial reorganization of the phosphorus–sulfur bonding environm",
+   "rotated_deg": 0,
+   "bbox": [
+    86.0,
+    389.5,
+    509.0,
+    654.5
+   ],
+   "w": 1763,
+   "h": 1106,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.912,
+   "manual_crop": "2026-11-16 litdb-curator: tool produced no Fig. 2 (missing_labels f2, near_miss p4 caption). Fig. 2 is one raster (xref 22, 1736x1075 px) on main p.4 at (89.3,393.1)-(505.9,650.8) directly above its caption (y 659.4); no in-figure text outside the raster. Clip = raster + ~3 pt margin = (86.0,389.5)-(509.0,654.5), 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (manual crop)"
   },
   {
    "key": "f3",
@@ -46,7 +71,9 @@
    "h": 1199,
    "dpi": 300,
    "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.941
+   "blank": 0.941,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
   },
   {
    "key": "f4",
@@ -66,7 +93,9 @@
    "h": 858,
    "dpi": 300,
    "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.949
+   "blank": 0.949,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
   },
   {
    "key": "f5",
@@ -86,7 +115,9 @@
    "h": 983,
    "dpi": 300,
    "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.951
+   "blank": 0.951,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
   },
   {
    "key": "f6",
@@ -106,7 +137,9 @@
    "h": 1179,
    "dpi": 300,
    "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.801
+   "blank": 0.801,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
   },
   {
    "key": "f7",
@@ -126,7 +159,9 @@
    "h": 505,
    "dpi": 300,
    "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.269
+   "blank": 0.269,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
   },
   {
    "key": "fS1",
@@ -173,7 +208,7 @@
    "kind": "figure",
    "label": "S3",
    "page": 7,
-   "file": "fig_S3.png",
+   "file": null,
    "caption": "Figure S3. Stability analysis of 2Li2S-1P4S10 mixture in acetonitrile after 18 months.",
    "rotated_deg": 0,
    "bbox": [
@@ -186,7 +221,9 @@
    "h": 839,
    "dpi": 300,
    "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.949
+   "blank": 0.949,
+   "dup_of": "fig_S4.png",
+   "note": "2026-11-16 litdb-curator: SI p.7 holds ONE raster (xref 136) between the 'Figure S3.' caption (top, y 71.8) and the 'Figure S4.' caption (y 302.2); its content is Fig. S4 (31P MAS of P4S10 with 59.8707/54.5717/50.0028 ppm + 1Li2S-1P4S10 zoom with 56.3 ppm - matches the S4 caption and the text below it). The tool gave the same bbox and byte-identical PNG to fS3 and fS4. Fig. S3 (18-month stability) has NO graphic in the SI PDF (caption only) - the 18-month data are the bottom traces of main Fig. 3a-c. fig_S3.png deleted; fS4 keeps the graphic."
   },
   {
    "key": "fS4",
@@ -206,7 +243,9 @@
    "h": 839,
    "dpi": 300,
    "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.949
+   "blank": 0.949,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop; read via the byte-identical fig_S3.png before it was deleted)"
   },
   {
    "key": "fS5",
@@ -226,7 +265,32 @@
    "h": 1182,
    "dpi": 300,
    "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.956
+   "blank": 0.956,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 10,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Electronic structure of the reduced Li4PS4 radical (Li+ omitted for clarity). (a) Total electron density and (b) spin density isosurfaces (isovalue = 0.0001 e Å−3). In the spin density, positive density (blue) localizes on the sulfur atoms, indicating that the unpaired electron resides on the sulfur framework; the smaller opposite-sign density (red) at phosphorus reflects induced spin polarization rather than direct occupation. This localization indicates that one-electron reduction of the thiophosphate unit is sulfur- (ligand-) centered, consistent with the population analysis (Table S11) and the uniform P–S bond elongation. Electron density and spin density plots were generated with OrcaPlot, and the images were rendered in VESTA.",
+   "rotated_deg": 0,
+   "bbox": [
+    158.0,
+    468.5,
+    453.5,
+    625.5
+   ],
+   "w": 1232,
+   "h": 655,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.615,
+   "manual_crop": "2026-11-16 litdb-curator: tool skipped S6 as 'p11 그래픽 없음' - the caption sits at the top of SI p.11 but the graphic is the raster at the bottom of SI p.10 (xref 150, 697x364 px, (162.4,472.0)-(449.6,621.9)); page break between graphic and caption. Clip = raster + ~4 pt margin = SI p.10 (158.0,468.5)-(453.5,625.5), 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (manual crop)"
   },
   {
    "key": "fS7",
@@ -266,7 +330,9 @@
    "h": 1251,
    "dpi": 300,
    "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.855
+   "blank": 0.855,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
   },
   {
    "key": "fS9",
@@ -346,7 +412,9 @@
    "h": 1081,
    "dpi": 300,
    "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.947
+   "blank": 0.947,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (tool crop)"
   },
   {
    "key": "fS13",
@@ -449,6 +517,28 @@
    "blank": 0.923
   },
   {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Calculated isotropic shielding of respective references standards, calculated chemical shifts, experimental chemical shifts, and scaled chemical shifts.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    372.0,
+    530.0,
+    588.5
+   ],
+   "w": 1855,
+   "h": 903,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.909,
+   "manual_crop": "2026-11-16 litdb-curator: SI tables put the caption BELOW the table; tool looked above and found nothing (missing_labels tS1). Table S1 = vector grid on SI p.8 (rows y 375-544) + caption below (y 559.5-586.1). Clip SI p.8 (85.0,372.0)-(530.0,588.5); clip text verified against the PDF text layer",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
+  },
+  {
    "key": "tS2",
    "kind": "table",
    "label": "S2",
@@ -469,6 +559,166 @@
    "blank": 0.926
   },
   {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 10,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Formal oxidation-state reduction series for Li3PS4, Li4PS4, and Li3PS3. Charge/Mult gives the total charge and spin multiplicity of each neutral model; ⟨S2⟩ is the expectation value for the doublet (ideal value 0.75); P–S is the mean bond length; P/S % is the percentage of the total spin density on phosphorus and on sulfur.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    141.0,
+    530.0,
+    265.0
+   ],
+   "w": 1855,
+   "h": 518,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.882,
+   "manual_crop": "2026-11-16 litdb-curator: caption-below SI table missed by the tool. Table S3 grid on SI p.10 (y 144-207) + caption (y 222.1-262.5). Clip SI p.10 (85.0,141.0)-(530.0,265.0); clip text verified",
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (manual crop)",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 13,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Distribution of relaxation times (DRT) peak fitting results for the LPSC-Fast sample dried at 180 °C. The table lists the identified peaks (A and B) with their corresponding relaxation times τ(s), DRT intensity values γ(τ), and integrated areas (Ω), representing the resistive contributions. Peaks A and B are attributed to bulk and grain-boundary resistance, respectively, and were used to calculate the total ionic resistance.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    581.0,
+    531.0,
+    676.0
+   ],
+   "w": 1859,
+   "h": 554,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.913,
+   "pages": [
+    13,
+    14
+   ],
+   "pieces": [
+    {
+     "page": 13,
+     "clip": [
+      85.0,
+      581.0,
+      531.0,
+      676.0
+     ]
+    },
+    {
+     "page": 14,
+     "clip": [
+      85.0,
+      69.0,
+      531.0,
+      103.5
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 litdb-curator: caption-below SI table missed by the tool; table on SI p.13 (y 584-629) and its caption runs from p.13 (y 643.9) onto the top of p.14 (y 71.8-101.1). 2-piece vertical stack: SI p.13 (85,581)-(531,676) + SI p.14 (85,69)-(531,103.5); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 14,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Distribution of relaxation times (DRT) peak fitting results for the LPSC-Fast sample sintered at 550 °C. The table lists the identified peaks (A and B) with their corresponding relaxation times τ(s), DRT intensity values γ(τ), and integrated areas (Ω), representing resistive contributions. Peak A is assigned to the bulk electrolyte resistivity and peak B is assigned to the grain boundary resistivity between electrolyte particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    638.0,
+    531.0,
+    688.0
+   ],
+   "w": 1859,
+   "h": 489,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.899,
+   "pages": [
+    14,
+    15
+   ],
+   "pieces": [
+    {
+     "page": 14,
+     "clip": [
+      85.0,
+      638.0,
+      531.0,
+      688.0
+     ]
+    },
+    {
+     "page": 15,
+     "clip": [
+      85.0,
+      68.5,
+      531.0,
+      132.5
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 litdb-curator: caption-below SI table missed by the tool; table at the bottom of SI p.14 (y 641-686), caption at the top of SI p.15 (y 70.9-130.0). 2-piece stack: SI p.14 (85,638)-(531,688) + SI p.15 (85,68.5)-(531,132.5); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 16,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Extracted resistivity data from equivalent circuit model presented in Figure S9 for the SSE dried at 180C.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    391.0,
+    531.0,
+    463.5
+   ],
+   "w": 1859,
+   "h": 303,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.94,
+   "manual_crop": "2026-11-16 litdb-curator: caption-below SI table missed by the tool. SI p.16 table (y 394-433) + caption (y 448.2-461.1). Clip (85,391)-(531,463.5); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 17,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Extracted resistivity data from equivalent circuit model presented in Figure S18 for the SSE heat treated at 550C.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    376.0,
+    531.0,
+    462.0
+   ],
+   "w": 1859,
+   "h": 359,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.95,
+   "manual_crop": "2026-11-16 litdb-curator: caption-below SI table missed by the tool. SI p.17 table (y 379-418) + caption (y 433.1-459.7). Clip (85,376)-(531,462); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
+  },
+  {
    "key": "tS8",
    "kind": "table",
    "label": "S8",
@@ -477,36 +727,148 @@
    "caption": "Table S8. Comparison of resistivities obtained from DRT analysis and equivalent circuit fitting for solid-state electrolyte (SSE) samples processed at 180 °C and 550 °C. Peaks A and B from the DRT correspond to distinct relaxation processes and are assigned to bulk (R0) and grain boundary (R1) contributions, respectively. The total resistance (Rtotal) is computed as the sum of A and B. Good agreement is observed with the fitted values from equivalent circuit modeling.",
    "rotated_deg": 0,
    "bbox": [
+    85.0,
+    112.0,
+    531.0,
+    296.5
+   ],
+   "w": 1859,
+   "h": 770,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.917,
+   "bbox_extractor": [
     80.1,
     215.6,
     534.2,
     455.5
    ],
-   "w": 1893,
-   "h": 1000,
+   "page_extractor": 18,
+   "recrop": "2026-11-16 litdb-curator: tool crop was WRONG: it anchored below the 'Table S8.' caption (caption-below layout) and cropped caption S8 + body text + the Table S9 grid (old bbox kept in bbox_extractor). Re-cropped to the Table S8 grid (SI p.18 y 115-206) + its caption (y 220.6-294.0): clip (85,112)-(531,296.5); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
+  },
+  {
+   "key": "tS9",
+   "kind": "table",
+   "label": "S9",
+   "page": 18,
+   "file": "tab_S9.png",
+   "caption": "Table S9. Total resistance (Rtotal) and calculated ionic conductivity (σion) at 25 °C for solid-state electrolyte (SSE) pellets synthesized at 180 °C and 550 °C. Conductivities were computed from Rtotal using the measured pellet thickness and assuming a 0.2827 cm² electrode area.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    409.0,
+    531.0,
+    511.0
+   ],
+   "w": 1859,
+   "h": 426,
    "dpi": 300,
    "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.926
+   "blank": 0.92,
+   "manual_crop": "2026-11-16 litdb-curator: caption-below SI table missed by the tool (its region was swallowed by the wrong tS8 crop). SI p.18 table (y 412-450) + caption (y 465.6-508.7). Clip (85,409)-(531,511); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
   },
   {
    "key": "tS10",
    "kind": "table",
    "label": "S10",
-   "page": 20,
+   "page": 19,
    "file": "tab_S10.png",
    "caption": "Table S10. Indexed powder XRD reflections and calculated cubic lattice parameters for the Li6PS5Cl sample. The experimental 2θ peak positions were converted to interplanar spacings (d) using Bragg’s law, assuming Cu Kα radiation, and assigned to the cubic argyrodite Li6PS5Cl phase. The lattice parameter (a) was calculated for each reflection using the cubic relationship a = d(h2 + k2 + l2)1 2. The indexed reflections give an average lattice parameter of approximately a ≈ 9.85 Å, consistent with long-range diffraction from cubic argyrodite Li6PS5Cl.",
    "rotated_deg": 0,
    "bbox": [
+    85.0,
+    372.0,
+    531.0,
+    557.0
+   ],
+   "w": 1859,
+   "h": 1107,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.93,
+   "bbox_extractor": [
     85.1,
     146.2,
     522.2,
     184.4
    ],
-   "w": 1822,
-   "h": 160,
+   "page_extractor": 20,
+   "pages": [
+    19,
+    20
+   ],
+   "pieces": [
+    {
+     "page": 19,
+     "clip": [
+      85.0,
+      372.0,
+      531.0,
+      557.0
+     ]
+    },
+    {
+     "page": 20,
+     "clip": [
+      85.0,
+      69.0,
+      531.0,
+      146.5
+     ]
+    }
+   ],
+   "recrop": "2026-11-16 litdb-curator: tool crop was WRONG: old crop = SI p.20 (85.1,146.2)-(522.2,184.4), i.e. the 'Electron diffraction data.' heading area (5 kB, no table). The Table S10 grid is on SI p.19 (y 375-554) and its caption at the top of SI p.20 (y 71.8-144.2). 2-piece stack: SI p.19 (85,372)-(531,557) + SI p.20 (85,69)-(531,146.5); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image",
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (re-crop)"
+  },
+  {
+   "key": "tS11",
+   "kind": "table",
+   "label": "S11",
+   "page": 21,
+   "file": "tab_S11.png",
+   "caption": "Table S11. Comparison of bulk and local structural/compositional data for the liquid-phase Li6PS5Cl powder with reference Li6PS5Cl and Li3PO4 phases. Powder XRD indexing indicates that the bulk material retains long-range diffraction consistent with cubic argyrodite Li6PS5Cl, whereas local STEM–EDX and 4D-STEM electron diffraction tomography reveal oxygen-rich, sulfur/chlorine-depleted regions with an orthorhombic lattice. The local 4D-STEM-indexed cell differs from cubic Li6PS5Cl but shows metric similarity to orthorhombic Li3PO4, with smaller cell parameters than the literature values due to the shorter bonds because of oxygen deficiency, supporting the presence of localized phosphate-like domains that may contribute to the reduced effective ionic conductivity of the liquid-phase electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    610.0,
+    531.0,
+    678.0
+   ],
+   "w": 1859,
+   "h": 1991,
    "dpi": 300,
    "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
-   "blank": 0.984
+   "blank": 0.921,
+   "pages": [
+    21,
+    22
+   ],
+   "pieces": [
+    {
+     "page": 21,
+     "clip": [
+      85.0,
+      610.0,
+      531.0,
+      678.0
+     ]
+    },
+    {
+     "page": 22,
+     "clip": [
+      85.0,
+      69.0,
+      531.0,
+      475.5
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 litdb-curator: NOT in the tool's gap list (gap check stops at the highest label found = S10). Table S11 starts at the bottom of SI p.21 (header + Li6PS5Cl row, y 613-676) and continues on SI p.22 (y 71-349) with the caption below (y 363.8-472.9). 2-piece stack: SI p.21 (85,610)-(531,678) + SI p.22 (85,69)-(531,475.5); clip text verified",
+   "note": "text table - values in the digest are taken from the PDF text layer, not from this image"
   }
  ],
  "missing_labels": [
@@ -519,7 +881,8 @@
      "page": 4,
      "text": "Fig. 2 In situ Raman spectroscopy of Li2S + P4S10 reactions in acetonitrile. Raman spectra"
     }
-   ]
+   ],
+   "resolved": "manual_crop fig_2.png (2026-11-16 litdb-curator) - see figures[f2].manual_crop"
   },
   {
    "key": "fS6",
@@ -528,7 +891,8 @@
     "p2 그래픽 없음(img0/draw0)",
     "p11 그래픽 없음(img0/draw0)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop fig_S6.png (2026-11-16 litdb-curator) - see figures[fS6].manual_crop"
   },
   {
    "key": "tS1",
@@ -537,7 +901,8 @@
     "p2 영역 없음",
     "p8 영역 없음"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S1.png (2026-11-16 litdb-curator) - see figures[tS1].manual_crop"
   },
   {
    "key": "tS3",
@@ -546,7 +911,8 @@
     "p2 영역 없음",
     "p10 영역 없음"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S3.png (2026-11-16 litdb-curator) - see figures[tS3].manual_crop"
   },
   {
    "key": "tS4",
@@ -555,7 +921,8 @@
     "p3 영역 없음",
     "p13 거의 백지(0.999)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S4.png (2026-11-16 litdb-curator) - see figures[tS4].manual_crop"
   },
   {
    "key": "tS5",
@@ -564,7 +931,8 @@
     "p3 영역 없음",
     "p15 영역 없음"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S5.png (2026-11-16 litdb-curator) - see figures[tS5].manual_crop"
   },
   {
    "key": "tS6",
@@ -573,7 +941,8 @@
     "p3 영역 없음",
     "p16 영역 없음"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S6.png (2026-11-16 litdb-curator) - see figures[tS6].manual_crop"
   },
   {
    "key": "tS7",
@@ -582,7 +951,8 @@
     "p3 영역 없음",
     "p17 영역 없음"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S7.png (2026-11-16 litdb-curator) - see figures[tS7].manual_crop"
   },
   {
    "key": "tS9",
@@ -591,7 +961,25 @@
     "p3 영역 없음",
     "p18 거의 백지(1.000)"
    ],
-   "near_miss": []
+   "near_miss": [],
+   "resolved": "manual_crop tab_S9.png (2026-11-16 litdb-curator) - see figures[tS9].manual_crop"
+  },
+  {
+   "key": "tS11",
+   "why": "번호 공백 — 도구가 찾은 최대 번호 (S10) 위라 도구 목록에 안 올랐다 (2026-11-16 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "manual_crop tab_S11.png (2026-11-16 litdb-curator) - see figures[tS11].manual_crop"
+  },
+  {
+   "key": "fS3",
+   "why": "번호는 잡혔지만 크롭이 틀렸다 — SI p.7 의 그래픽 하나를 S3 · S4 둘 다에 붙였다 (바이트 동일). 그래픽은 S4 것이고 S3 은 PDF 에 그래픽이 없다 (캡션만) (2026-11-16 litdb-curator 추가)",
+   "skipped": [],
+   "near_miss": [],
+   "resolved": "no graphic in the SI PDF - fS3.file=None · dup_of fig_S4.png · fig_S3.png 삭제 (2026-11-16 litdb-curator)"
   }
+ ],
+ "manual_edits": [
+  "2026-11-16 litdb-curator: +f2 +fS6 (missed figures) · +tS1 +tS3 +tS4 +tS5 +tS6 +tS7 +tS9 +tS11 (caption-below SI tables) · re-crop tS8 tS10 (wrong regions) · fS3 → no graphic (fig_S3.png deleted, dup of S4) · viewed marks"
  ]
 }
