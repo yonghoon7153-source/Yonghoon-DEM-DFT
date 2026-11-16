@@ -474,5 +474,8 @@ Tabor 와 같은 꼴 (경도로 쓰기):
 | `gonzalez2012_nonlocal_contact_confined_granular` · `giannis2021_stress_based_multicontact_dem` · `varkey2026_multicontact_elastoplastic_dem` | 이웃 접촉 상호작용 (Arzt 가 "obvious limitation" 이라 한 것) 의 비국소·평균장 처리 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 혼합 압밀 리뷰 — 이종 입자 체제 구분 |
 
+## 🔗 관련 카드
+- 같은 축 (배위수 ↔ 상대밀도) 의 문헌 모음 (2026-11-16 카드): [`german2014_coordination_number_powder_densification`](german2014_coordination_number_powder_densification.md) — 113 쌍 맞춤 N_C = 2 + 11f² · 그 식 (4) 7.3 + 15.5 ΔL/L₀ = 이 카드 식 (4) 의 1 차 근사 (같은 Z₀ · C · 원문은 Jagota 1988 [29] 에 귀속) · 그 표 4 가 이 카드 [3] 청동 자료를 인쇄값으로 싣는다 (0.72 → 7.8 · 0.97 → 11.8 = 이 카드 Fig. 4 판독과 같음) · 그 [118] Fischmeister & Arzt, Powder Metall. 26 (1983) 82–88 = 이 카드 [8] 의 출판판 후보 [미확인].
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
