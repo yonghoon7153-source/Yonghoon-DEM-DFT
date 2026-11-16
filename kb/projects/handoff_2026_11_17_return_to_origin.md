@@ -156,6 +156,7 @@ friendly (claude/friendly-meitner-lldvar) 에 대피 세션 (claude/evac-2026-11
 다음 커밋 전에:
     git status --short     # 하던 카드 작업이 있으면 커밋하지 말고 git stash push -u -m "pre-pull-2026-11-17" → 받기 → git stash pop
     git fetch origin claude/friendly-meitner-lldvar && git merge --ff-only origin/claude/friendly-meitner-lldvar
+    git merge-base --is-ancestor 6a90650b4 HEAD && echo 대피커밋_들어옴    # 안 나오면 본 세션이 아직 안 들였다 — 사용자에게 알리고 본 세션 push 뒤 다시 받는다
     python3 tools/litdb/build_index.py --check > /tmp/litdb_check.txt; echo rc=$?          # rc=0
     ~/.venvs/litdb/bin/python3 tools/litdb/extract_figures.py --selftest | tail -1          # 117 통과 / 0 실패
 들어온 것 중 너와 겹치는 것:
