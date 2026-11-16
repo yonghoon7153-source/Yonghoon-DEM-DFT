@@ -2301,10 +2301,15 @@
   ]
  },
  "lyu2025_3d_dem_drying_calendering_lib": {
-  "figures": 10,
-  "generated": "2026-08-05",
+  "figures": 68,
+  "generated": "2026-11-16",
   "pdfs": [
-   "DEM 논문/28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf"
+   "DEM 논문/28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
+   "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "37bc0003-68-2._Sup4_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "5d959c56-68-2._Sup3_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "bdc317ef-68-2._Sup2_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "77021b35-68-2._Sup1_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4"
   ]
  },
  "lyu2026_two_layer_gradient_electrode_calendering_dem_fem": {

@@ -2,9 +2,14 @@
  "slug": "lyu2025_3d_dem_drying_calendering_lib",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-05",
+ "generated": "2026-11-16",
  "sources": [
-  "DEM 논문/28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf"
+  "DEM 논문/28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
+  "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+  "37bc0003-68-2._Sup4_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+  "5d959c56-68-2._Sup3_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+  "bdc317ef-68-2._Sup2_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+  "77021b35-68-2._Sup1_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4"
  ],
  "figures": [
   {
@@ -13,18 +18,28 @@
    "label": "1",
    "page": 3,
    "file": "fig_1.png",
-   "caption": "Fig. 1. (a) Schematic diagram of particles during bond-to-bond failure. (b) Linear parallel bond model diagram. (c) Linear contact bond model diagram. 3",
+   "caption": "Fig. 1. (a) Schematic diagram of particles during bond-to-bond failure. (b) Linear parallel bond model diagram. (c) Linear contact bond model diagram.",
    "bbox": [
+    118.1,
+    483.5,
+    477.2,
+    727.7
+   ],
+   "w": 1495,
+   "h": 1017,
+   "dpi": 300,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.84,
+   "caption_original_auto": "Fig. 1. (a) Schematic diagram of particles during bond-to-bond failure. (b) Linear parallel bond model diagram. (c) Linear contact bond model diagram. 3",
+   "caption_fix": "2026-11-16: auto caption had absorbed body text / the page number that follows the caption; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true,
+   "recrop": "re-cropped 2026-11-16 to the embedded raster (xref 38, bbox [119.6, 485.0, 475.7, 726.2] pt, p.3) +/-1.5 pt @300 dpi + white-border trim (8 px). Reason: the 2026-08-05 auto crop (bbox [46.1, 457.5, 563.7, 730.8]) included the body-text Eq. (17) line above the figure.",
+   "bbox_original_auto": [
     46.1,
     457.5,
     563.7,
     730.8
-   ],
-   "w": 2157,
-   "h": 1139,
-   "dpi": 300,
-   "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.9
+   ]
   },
   {
    "key": "f2",
@@ -43,7 +58,8 @@
    "h": 870,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.483
+   "blank": 0.483,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -51,7 +67,7 @@
    "label": "3",
    "page": 5,
    "file": "fig_3.png",
-   "caption": "Fig. 3. Comparison of porosity between DEM simulation and experiment [45] at different pressures. because, as the particle volume fraction increased, the effects of the particle contacts gradually increased, and the closer the particle is to the current collector, the greater the particle contact and smaller the ve- locity observed. Finally, all the particles remained static and a stable porous structure was formed at the end of the drying process (Fig. 4b3).",
+   "caption": "Fig. 3. Comparison of porosity between DEM simulation and experiment [45] at different pressures.",
    "bbox": [
     300.6,
     285.6,
@@ -62,7 +78,10 @@
    "h": 901,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.936
+   "blank": 0.936,
+   "caption_original_auto": "Fig. 3. Comparison of porosity between DEM simulation and experiment [45] at different pressures. because, as the particle volume fraction increased, the effects of the particle contacts gradually increased, and the closer the particle is to the current collector, the greater the particle contact and smaller the ve- locity observed. Finally, all the particles remained static and a stable porous structure was formed at the end of the drying process (Fig. 4b3).",
+   "caption_fix": "2026-11-16: auto caption had absorbed body text / the page number that follows the caption; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true
   },
   {
    "key": "f4",
@@ -70,7 +89,7 @@
    "label": "4",
    "page": 6,
    "file": "fig_4.png",
-   "caption": "Fig. 4. 3D structural evolution of RVE during drying process. (a1)–(a3) Macrostructure evolution. (b1)–(b3) Particle velocity field. (c1)–(c3) Evolution of the contact network (the contact bond generated between the AM particles is represented by a thick line segment, while the other is represented by a thin line segment). thickness direction in the 2D vertical section. During the drying process (Fig. 5b), the CBD particles in the 3D structure became denser in the interim state, reflecting an increase in the CBD volume fraction, and the distribution of the CBD particles in the thickness direction in the 2D vertical section was no longer uniform. Energy-dispersive x-ray spec- troscopy (EDS) experiments also demonstrated the existence of a binder concentration gradient in the thickness direction [18,21]. At the end of drying (Fig. 5c), the distribution of the CBD particles reached the high",
+   "caption": "Fig. 4. 3D structural evolution of RVE during drying process. (a1)–(a3) Macrostructure evolution. (b1)–(b3) Particle velocity field. (c1)–(c3) Evolution of the contact network (the contact bond generated between the AM particles is represented by a thick line segment, while the other is represented by a thin line segment).",
    "bbox": [
     31.6,
     49.4,
@@ -81,7 +100,10 @@
    "h": 1752,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.724
+   "blank": 0.724,
+   "caption_original_auto": "Fig. 4. 3D structural evolution of RVE during drying process. (a1)–(a3) Macrostructure evolution. (b1)–(b3) Particle velocity field. (c1)–(c3) Evolution of the contact network (the contact bond generated between the AM particles is represented by a thick line segment, while the other is represented by a thin line segment). thickness direction in the 2D vertical section. During the drying process (Fig. 5b), the CBD particles in the 3D structure became denser in the interim state, reflecting an increase in the CBD volume fraction, and the distribution of the CBD particles in the thickness direction in the 2D vertical section was no longer uniform. Energy-dispersive x-ray spec- troscopy (EDS) experiments also demonstrated the existence of a binder concentration gradient in the thickness direction [18,21]. At the end of drying (Fig. 5c), the distribution of the CBD particles reached the high",
+   "caption_fix": "2026-11-16: auto caption had absorbed body text / the page number that follows the caption; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true
   },
   {
    "key": "f5",
@@ -100,7 +122,8 @@
    "h": 955,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.693
+   "blank": 0.693,
+   "viewed": true
   },
   {
    "key": "f6",
@@ -108,7 +131,7 @@
    "label": "6",
    "page": 7,
    "file": "fig_6.png",
-   "caption": "Fig. 6. Evolution of coordination numbers during the drying process and three drying stages. have shown that using LDR in the middle of drying and HDR in the early and late stages of drying reduces the drying time while maintaining a high level of adhesion [19,20]. Qualitatively, the proposed three-stage drying scheme based on microscopic DEM simulation is consistent with the above proposed three-stage drying scheme based on macro- scopic experiment. Therefore, we speculate that both have the same intrinsic mechanism. This provides a way to bridge the microstructural and macrostructural properties of the electrodes. 3.3. 3D structural evolution of the RVE during calendering Fig. 7 shows the structural evolution of the RVE during the calen- dering process in different ways. Fig. 7a1-a3 show the evolution of the 3D and 2D macrostructures of the RVE during the calendering process. It must b",
+   "caption": "Fig. 6. Evolution of coordination numbers during the drying process and three drying stages.",
    "bbox": [
     31.6,
     306.4,
@@ -119,7 +142,10 @@
    "h": 1252,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.559
+   "blank": 0.559,
+   "caption_original_auto": "Fig. 6. Evolution of coordination numbers during the drying process and three drying stages. have shown that using LDR in the middle of drying and HDR in the early and late stages of drying reduces the drying time while maintaining a high level of adhesion [19,20]. Qualitatively, the proposed three-stage drying scheme based on microscopic DEM simulation is consistent with the above proposed three-stage drying scheme based on macro- scopic experiment. Therefore, we speculate that both have the same intrinsic mechanism. This provides a way to bridge the microstructural and macrostructural properties of the electrodes. 3.3. 3D structural evolution of the RVE during calendering Fig. 7 shows the structural evolution of the RVE during the calen- dering process in different ways. Fig. 7a1-a3 show the evolution of the 3D and 2D macrostructures of the RVE during the calendering process. It must b",
+   "caption_fix": "2026-11-16: auto caption had absorbed body text / the page number that follows the caption; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true
   },
   {
    "key": "f7",
@@ -138,7 +164,31 @@
    "h": 2128,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.786
+   "blank": 0.786,
+   "viewed": true
+  },
+  {
+   "key": "f7c",
+   "kind": "figure",
+   "label": "7c",
+   "page": 9,
+   "file": "fig_7c.png",
+   "caption": "Fig. 7. (continued). — panel (c) Coordination number evolution vs dimensionless time (insets show the 3D contact network of particles); full caption printed under Fig. 7 on p.8.",
+   "rotated_deg": 0,
+   "bbox": [
+    125.0,
+    53.9,
+    470.3,
+    340.9
+   ],
+   "w": 1437,
+   "h": 1194,
+   "dpi": 300,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.849,
+   "panel_of": "f7",
+   "manual_crop": "continuation page of Fig. 7 (p.9, embedded raster xref 143, bbox [126.5, 55.4, 468.8, 339.4] pt) cut by hand +/-1.5 pt @300 dpi + white-border trim (8 px) — the 2026-08-05 auto crop took only the p.8 part (a1–a3 + b) (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
   },
   {
    "key": "f8",
@@ -146,7 +196,7 @@
    "label": "8",
    "page": 9,
    "file": "fig_8.png",
-   "caption": "Fig. 8. Evolution of the number of contacts between the particles and the current collector during the calendering process (insets show the contact keys on the current collector). 9",
+   "caption": "Fig. 8. Evolution of the number of contacts between the particles and the current collector during the calendering process (insets show the contact keys on the current collector).",
    "bbox": [
     31.6,
     439.6,
@@ -157,7 +207,10 @@
    "h": 1175,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.767
+   "blank": 0.767,
+   "caption_original_auto": "Fig. 8. Evolution of the number of contacts between the particles and the current collector during the calendering process (insets show the contact keys on the current collector). 9",
+   "caption_fix": "2026-11-16: auto caption had absorbed body text / the page number that follows the caption; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true
   },
   {
    "key": "f9",
@@ -165,7 +218,7 @@
    "label": "9",
    "page": 10,
    "file": "fig_9.png",
-   "caption": "Fig. 9. Mechanical response of the RVE during calendering. (a) The average stress of RVE changes with time, and the average stress value is negative, indicating compressive stress. (Inset shows the 3D vector diagram of the contact force on particles). (b) Change of force on the current collector and pressure plate with time in RVE during the calendering process. 10",
+   "caption": "Fig. 9. Mechanical response of the RVE during calendering. (a) The average stress of RVE changes with time, and the average stress value is negative, indicating compressive stress. (Inset shows the 3D vector diagram of the contact force on particles). (b) Change of force on the current collector and pressure plate with time in RVE during the calendering process.",
    "bbox": [
     31.6,
     135.2,
@@ -176,7 +229,10 @@
    "h": 2403,
    "dpi": 300,
    "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.931
+   "blank": 0.931,
+   "caption_original_auto": "Fig. 9. Mechanical response of the RVE during calendering. (a) The average stress of RVE changes with time, and the average stress value is negative, indicating compressive stress. (Inset shows the 3D vector diagram of the contact force on particles). (b) Change of force on the current collector and pressure plate with time in RVE during the calendering process. 10",
+   "caption_fix": "2026-11-16: auto caption had absorbed body text / the page number that follows the caption; trimmed to the printed caption (old string kept in caption_original_auto).",
+   "viewed": true
   },
   {
    "key": "t1",
@@ -186,16 +242,1305 @@
    "file": "tab_1.png",
    "caption": "Table 1 Input parameters for particle characterization [45,49,50].",
    "bbox": [
+    36.0,
+    655.0,
+    290.5,
+    742.5
+   ],
+   "w": 1097,
+   "h": 389,
+   "dpi": 300,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.926,
+   "viewed": true,
+   "recrop": "re-cropped 2026-11-16 by hand: p.5 clip [36.0, 655.0, 290.5, 742.5] pt (title 'Table 1' + caption + rules + 5 rows) @300 dpi + ink trim (gray < 245) + 6 pt margin. Reason: the 2026-08-05 auto crop was the whole page 5 (bbox [32.6, 31.6, 563.3, 743.5]) with Fig. 2, Fig. 3 and body text.",
+   "bbox_original_auto": [
     32.6,
     31.6,
     563.3,
     743.5
+   ]
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_translational_motion.png",
+   "caption": "Eq. (1), PDF p.2 right column: m_i du_i/dt = F_c + F_i — translational equation of motion of particle i (F_c contact force between adjacent particles, F_i 'force exerted on the particle').",
+   "rotated_deg": 0,
+   "w": 1458,
+   "h": 161,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 630.0, 559.5, 658.1]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    630.0,
+    559.5,
+    658.1
+   ]
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_rotational_motion.png",
+   "caption": "Eq. (2), PDF p.2 right column: I_i dω_i/dt = F_t × R_i — rotational equation of motion (F_t tangential contact force, R_i particle radius, as printed).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 161,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 658.1, 559.5, 685.3]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    658.1,
+    559.5,
+    685.3
+   ]
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "file": "eq_03_contact_force_split.png",
+   "caption": "Eq. (3), PDF p.3 left column: F_c = F^l + F^d — F^l 'elastic (no tension) and friction behaviors', F^d 'energy dissipation during contact' [54,55].",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 114,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 87.0, 290.5, 104.6]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    87.0,
+    290.5,
+    104.6
+   ]
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 3,
+   "file": "eq_04_elastic_force_normal_shear.png",
+   "caption": "Eq. (4), PDF p.3 left column: F^l = −F^l_n n_c + F^l_s — normal / shear split of the elastic part (n_c unit normal of the contact plane).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 120,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 145.9, 290.5, 165.4]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    145.9,
+    290.5,
+    165.4
+   ]
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 3,
+   "file": "eq_05_dashpot_force_normal_shear.png",
+   "caption": "Eq. (5), PDF p.3 left column: F^d = −F^d_n n_c + F^d_s — normal / shear split of the dissipative part.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 120,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 165.4, 290.5, 186.5]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    165.4,
+    290.5,
+    186.5
+   ]
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 3,
+   "file": "eq_06_normal_force_increment_power_3_2_ref46.png",
+   "caption": "Eq. (6), PDF p.3 left column: F^l_n = (F^l_n)_0 − k_n (Δδ_n)^{3/2} — normal force updated from the value at the start of the time step with the 3/2 power of the normal displacement increment; the sentence before it reads 'The F^l_n is calculated as follows [46]:'.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 141,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 227.0, 290.5, 250.0]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    227.0,
+    290.5,
+    250.0
+   ]
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 3,
+   "file": "eq_07_shear_force_increment.png",
+   "caption": "Eq. (7), PDF p.3 left column: F^l_s = (F^l_s)_0 − k_s Δδ_s — linear incremental shear force.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 124,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 292.6, 290.5, 312.2]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    292.6,
+    290.5,
+    312.2
+   ]
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 3,
+   "file": "eq_08_normal_dashpot_force.png",
+   "caption": "Eq. (8), PDF p.3 left column: F^d_n = (2β_n √(m_c k_n)) δ̇_n — normal dashpot force; δ̇_n = normal velocity of the contact point; β_n 'coefficient of influence' (value not printed).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 146,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.977,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 355.8, 290.5, 377.0]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    355.8,
+    290.5,
+    377.0
+   ]
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 3,
+   "file": "eq_09_shear_dashpot_force.png",
+   "caption": "Eq. (9), PDF p.3 left column: F^d_s = (2β_s √(m_c k_s)) δ̇_s — shear dashpot force (k_s under the root, as printed).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 146,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.977,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 377.0, 290.5, 404.0]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    377.0,
+    290.5,
+    404.0
+   ]
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 3,
+   "file": "eq_10_effective_youngs_modulus.png",
+   "caption": "Eq. (10), PDF p.3 right column: 1/E* = (1 − ν_1)^2/E_1 + (1 − ν_2)^2/E_2 — effective Young's modulus AS PRINTED (squared (1 − ν), not the usual (1 − ν^2)).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 175,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.977,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 50.0, 559.5, 85.5]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    50.0,
+    559.5,
+    85.5
+   ]
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 3,
+   "file": "eq_11_effective_shear_modulus.png",
+   "caption": "Eq. (11), PDF p.3 right column: 1/G* = 2(2 − ν_1)(1 + ν_1)/E_1 + 2(2 − ν_2)(1 + ν_2)/E_2 — effective shear modulus.",
+   "rotated_deg": 0,
+   "w": 1459,
+   "h": 167,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 85.5, 559.5, 115.0]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    85.5,
+    559.5,
+    115.0
+   ]
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 3,
+   "file": "eq_12_effective_radius.png",
+   "caption": "Eq. (12), PDF p.3 right column: 1/R* = 1/R_1 + 1/R_2 — effective radius.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 164,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 115.0, 559.5, 143.6]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    115.0,
+    559.5,
+    143.6
+   ]
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 3,
+   "file": "eq_13_effective_mass.png",
+   "caption": "Eq. (13), PDF p.3 right column: m_c = m_1 × m_2/(m_1 + m_2) — effective mass used in the dashpot terms.",
+   "rotated_deg": 0,
+   "w": 1458,
+   "h": 156,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 143.6, 559.5, 172.8]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    143.6,
+    559.5,
+    172.8
+   ]
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 3,
+   "file": "eq_14_normal_stiffness_area_modulus_over_length.png",
+   "caption": "Eq. (14), PDF p.3 right column: k_n = A E*/L — normal stiffness from contact area A and centre distance L (card arithmetic: N/m units, so k_n (Δδ_n)^{3/2} in Eq. 6 does not give a force).",
+   "rotated_deg": 0,
+   "w": 1458,
+   "h": 116,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 172.8, 559.5, 192.5]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    172.8,
+    559.5,
+    192.5
+   ]
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 3,
+   "file": "eq_15_parallel_bond_force.png",
+   "caption": "Eq. (15), PDF p.3 right column: F̄ = −F̄_n n_c + F̄_s — linear parallel-bond force (F̄_n > 0 denotes tension).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 111,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 381.6, 559.5, 399.7]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    381.6,
+    559.5,
+    399.7
+   ]
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq16",
+   "page": 3,
+   "file": "eq_16_parallel_bond_moment.png",
+   "caption": "Eq. (16), PDF p.3 right column: M̄ = M̄_t n_c + M̄_b — parallel-bond moment (twisting + bending).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 111,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.972,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 399.7, 559.5, 420.2]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    399.7,
+    559.5,
+    420.2
+   ]
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "eq17",
+   "page": 3,
+   "file": "eq_17_bond_normal_force_increment.png",
+   "caption": "Eq. (17), PDF p.3 right column: F̄_n = (F̄_n)_0 + k̄_n Ā Δδ_n — bond normal force increment.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 120,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.975,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 451.0, 559.5, 478.0]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    451.0,
+    559.5,
+    478.0
+   ]
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq18",
+   "page": 4,
+   "file": "eq_18_bond_shear_force_increment.png",
+   "caption": "Eq. (18), PDF p.4 left column: F̄_s = (F̄_s)_0 − k̄_s Ā Δδ_s — bond shear force increment.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 120,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.974,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 49.0, 290.5, 74.3]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    49.0,
+    290.5,
+    74.3
+   ]
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "eq19",
+   "page": 4,
+   "file": "eq_19_bond_twisting_moment_increment.png",
+   "caption": "Eq. (19), PDF p.4 left column: M̄_t = (M̄_t)_0 − k̄_s J̄ Δθ_t — bond twisting moment increment (printed with lower-case j̄; J = polar moment of inertia of the bond cross-section).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 119,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.973,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 74.3, 290.5, 95.8]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    74.3,
+    290.5,
+    95.8
+   ]
+  },
+  {
+   "key": "e20",
+   "kind": "equation",
+   "label": "eq20",
+   "page": 4,
+   "file": "eq_20_bond_bending_moment_increment.png",
+   "caption": "Eq. (20), PDF p.4 left column: M̄_b = (M̄_b)_0 − k̄_b Ī Δθ_b — bond bending moment increment (k̄_b as printed; not defined in the text).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 119,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.968,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 95.8, 290.5, 117.0]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    95.8,
+    290.5,
+    117.0
+   ]
+  },
+  {
+   "key": "e21",
+   "kind": "equation",
+   "label": "eq21",
+   "page": 4,
+   "file": "eq_21_bond_max_normal_stress.png",
+   "caption": "Eq. (21), PDF p.4 left column: σ̄ = F̄_n/Ā + ‖M̄_b‖R̄/Ī — maximum normal stress of a parallel bond [51,52].",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 168,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 200.8, 290.5, 230.6]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    200.8,
+    290.5,
+    230.6
+   ]
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "eq22",
+   "page": 4,
+   "file": "eq_22_bond_max_shear_stress.png",
+   "caption": "Eq. (22), PDF p.4 left column: τ̄ = ‖F̄_s‖/Ā + |M̄_t|R̄/J̄ — maximum shear stress of a parallel bond [51,52].",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 167,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 230.6, 290.5, 260.3]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    230.6,
+    290.5,
+    260.3
+   ]
+  },
+  {
+   "key": "e23",
+   "kind": "equation",
+   "label": "eq23",
+   "page": 4,
+   "file": "eq_23_bond_formation_criterion_lambda.png",
+   "caption": "Eq. (23), PDF p.4 left column: ‖P_i − P_j‖ ≤ λ(R_i + R_j) — bond-generation criterion; λ = 1.67 [51].",
+   "rotated_deg": 0,
+   "w": 1454,
+   "h": 120,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.975,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 298.3, 290.5, 317.2]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    298.3,
+    290.5,
+    317.2
+   ]
+  },
+  {
+   "key": "e24",
+   "kind": "equation",
+   "label": "eq24",
+   "page": 4,
+   "file": "eq_24_coordination_number.png",
+   "caption": "Eq. (24), PDF p.4 left column: C_n = n_c^(b)/N_b — coordination number = total number of particle contacts / number of particles [45] (whether a contact is counted once or twice is not stated).",
+   "rotated_deg": 0,
+   "w": 1457,
+   "h": 172,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.988,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 526.0, 290.5, 555.2]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    526.0,
+    290.5,
+    555.2
+   ]
+  },
+  {
+   "key": "e25",
+   "kind": "equation",
+   "label": "eq25",
+   "page": 4,
+   "file": "eq_25_porosity_definition.png",
+   "caption": "Eq. (25), PDF p.4 left column: P = V_void/V_reg = (V_reg − V_mat)/V_reg = 1 − V_mat/V_reg — porosity in a measurement region [51] (region and overlap treatment not stated).",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 171,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.967,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [36.0, 647.5, 290.5, 676.2]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    36.0,
+    647.5,
+    290.5,
+    676.2
+   ]
+  },
+  {
+   "key": "e26",
+   "kind": "equation",
+   "label": "eq26",
+   "page": 4,
+   "file": "eq_26_average_stress_tensor.png",
+   "caption": "Eq. (26), PDF p.4 right column: σ̄ = −(1/V) Σ_{N_c} F^(c) ⊗ L^(c) — average (contact-virial) stress over measurement volume V, compression negative [49,57].",
+   "rotated_deg": 0,
+   "w": 1459,
+   "h": 178,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 50.0, 559.5, 86.1]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    50.0,
+    559.5,
+    86.1
+   ]
+  },
+  {
+   "key": "e27",
+   "kind": "equation",
+   "label": "eq27",
+   "page": 4,
+   "file": "eq_27_buoyancy_force.png",
+   "caption": "Eq. (27), PDF p.4 right column: F_b = (4/3)π R_i^3 ρ_liquid g — buoyancy of the fluid-substitution model [28].",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 159,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.981,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 340.8, 559.5, 367.7]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    340.8,
+    559.5,
+    367.7
+   ]
+  },
+  {
+   "key": "e28",
+   "kind": "equation",
+   "label": "eq28",
+   "page": 4,
+   "file": "eq_28_gravity_force.png",
+   "caption": "Eq. (28), PDF p.4 right column: F_g = (4/3)π R_i^3 ρ_solid g — gravity.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 158,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.981,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 367.7, 559.5, 396.1]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    367.7,
+    559.5,
+    396.1
+   ]
+  },
+  {
+   "key": "e29",
+   "kind": "equation",
+   "label": "eq29",
+   "page": 4,
+   "file": "eq_29_viscous_damping_force.png",
+   "caption": "Eq. (29), PDF p.4 right column: F_r = α × v — viscous damping force (α damping coefficient, value not printed; v particle velocity; 'not constant').",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 105,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.986,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — band = midlines to the neighbouring text lines / equation numbers of this equation (clip [305.0, 396.1, 559.5, 414.8]) → ink trim (gray < 245) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true,
+   "bbox": [
+    305.0,
+    396.1,
+    559.5,
+    414.8
+   ]
+  },
+  {
+   "key": "x02a",
+   "kind": "text",
+   "label": "p2-intro-lyu22-2d-drying-refs25-27-lippke28-hertz-mindlin-cbd-refs30-31",
+   "page": 2,
+   "file": "txt_p2_intro_lyu22_2d_drying_refs25_27_lippke28_hertz_mindlin_cbd_refs30_31.png",
+   "caption": "Evidence p.2 left column (Introduction): Lyu et al. [22] 2D DEM of drying; 'Compared with 2D models, three-dimensional (3D) models can better characterize ...'; Nikpour [25] · Lombardo [26] · Yao [27] as printed (list [25]–[27] = Lombardo · Yao · Nikpour); 'Compared to CGMD, DEM can more explicitly account for the CBD phase [26,28]'; Lippke [28] DEM drying with Hertz–Mindlin; Wolf [29] CFD–DEM; DEM drying models 'rarely explicitly consider' the CBD; CBD location [30]; AM and CBD 'require different contact models [31]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    94.4,
+    291.0,
+    439.6
    ],
-   "w": 2213,
-   "h": 2968,
-   "dpi": 300,
-   "src": "28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
-   "blank": 0.797
+   "w": 1464,
+   "h": 1969,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.835,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x02b",
+   "kind": "text",
+   "label": "p2-intro-refs44-53-gimenez-sonzogni-sun-xu-zhang-ge-ngandjong-random-initial-state",
+   "page": 2,
+   "file": "txt_p2_intro_refs44_53_gimenez_sonzogni_sun_xu_zhang_ge_ngandjong_random_initial_state.png",
+   "caption": "Evidence p.2 right column (Introduction): Giménez [44,45] DEM + nano-indentation, bond number; Sonzogni [46] calendering → microstructure and electronic properties, 'mostly vertical tensile contacts and horizontal compressive contacts'; Sun [47] finite element model; Xu [48] multiscale transport, 'The cell performance increased with increasing calendering'; Zhang [49,50] more contacts improve the conductive path; Ge [51,52] bonding model, inhomogeneous stress and anisotropy; Ngandjong [53] CBD and drying considered; 'randomly generated DEM models ... are inappropriate for calendering simulation analysis'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    49.3,
+    560.0,
+    408.3
+   ],
+   "w": 1463,
+   "h": 2028,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x03c",
+   "kind": "text",
+   "label": "p3-contact-force-elastic-no-tension-friction-dashpot-fln-ref46",
+   "page": 3,
+   "file": "txt_p3_contact_force_elastic_no_tension_friction_dashpot_fln_ref46.png",
+   "caption": "Evidence p.3 left column (§2.1.1): F^l = 'elastic (no tension) and friction behaviors', F^d = 'energy dissipation'; normal/shear split (Eqs. 4–5 inside the crop); 'The F^l_n is calculated as follows [46]:' (attribution line of Eq. 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    105.3,
+    291.0,
+    226.5
+   ],
+   "w": 1462,
+   "h": 683,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.92,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x03d",
+   "kind": "text",
+   "label": "p3-bond-model-binder-ref52-parallel-contact-popular-refs51-56",
+   "page": 3,
+   "file": "txt_p3_bond_model_binder_ref52_parallel_contact_popular_refs51_56.png",
+   "caption": "Evidence p.3 right column (§2.1.2): particles bond or separate many times; 'The bond model is used to describe the mechanical responses of the binder phase [52]'; linear parallel bond and linear contact bond 'are popular models for describing bond failure between particles [51,56]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    235.6,
+    560.0,
+    333.1
+   ],
+   "w": 1462,
+   "h": 574,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.862,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x04e",
+   "kind": "text",
+   "label": "p4-bond-generation-lambda-167-ref51-contact-bond-no-moment",
+   "page": 4,
+   "file": "txt_p4_bond_generation_lambda_167_ref51_contact_bond_no_moment.png",
+   "caption": "Evidence p.4 left column: bond generation (Eq. 23 inside the crop) with 'λ is 1.67 [51]'; 'When the effect of the parallel-bond moment M is not considered, the linear parallel-bond model degenerates into a linear contact-bond model'; 'different contact models must be selected based on the specific physical properties of the particles'.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    260.5,
+    291.0,
+    400.0
+   ],
+   "w": 1461,
+   "h": 790,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.881,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x04f",
+   "kind": "text",
+   "label": "p4-rve-psd-gaussian-13um-ref51-std061-cbd-22um-ref28-fluid-substitution",
+   "page": 4,
+   "file": "txt_p4_rve_psd_gaussian_13um_ref51_std061_cbd_22um_ref28_fluid_substitution.png",
+   "caption": "Evidence p.4 right column (§2.3.1): Gaussian AM diameters 'mean value of 13 μm [51] and standard deviation of 0.61' (no unit); CBD effective particles 2.2 μm [28]; 'assumed to be spherical for simple'; fluid-substitution model [28], 'also used in our previous work [22]'; buoyancy, gravity and viscous damping [28].",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    167.0,
+    560.0,
+    342.6
+   ],
+   "w": 1462,
+   "h": 984,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.849,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x04g",
+   "kind": "text",
+   "label": "p4-fr-not-constant-slurry-ref26-94-6-65pct-rve-200um",
+   "page": 4,
+   "file": "txt_p4_fr_not_constant_slurry_ref26_94_6_65pct_rve_200um.png",
+   "caption": "Evidence p.4 right column: Eqs. 27–29 symbols ('the Fr is affected by the particle velocity and is not constant'); case study [26]: NCM, carbon black, PVDF, NMP; AM:CBD 94:6 by weight, solid 65 % (mass of AM + CBD / slurry); RVE 200 × 200 × 200 μm; RVE before calendering = state at the end of drying; top pressure plate = roller.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    416.0,
+    560.0,
+    558.7
+   ],
+   "w": 1464,
+   "h": 808,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x04h",
+   "kind": "text",
+   "label": "p4-boundary-periodic-xy-free-top-drying-end-plate-001ms-ref51-contact-ref31",
+   "page": 4,
+   "file": "txt_p4_boundary_periodic_xy_free_top_drying_end_plate_001ms_ref51_contact_ref31.png",
+   "caption": "Evidence p.4 right column (§2.3.2): initial thickness = actual slurry thickness [11]; periodic x and y; bottom current collector, top free; 'The drying simulation ends when a stable structure is formed'; drying end = calendering input; plate moves down at 'a constant speed of 0.01 m/s [51]'; contact models chosen after CBD cohesion and AM–CBD adhesion strength [31].",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    562.5,
+    560.0,
+    746.4
+   ],
+   "w": 1465,
+   "h": 1040,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x05i",
+   "kind": "text",
+   "label": "p5-contact-assignment-pfc3d-500-validation-gimenez45",
+   "page": 5,
+   "file": "txt_p5_contact_assignment_pfc3d_500_validation_gimenez45.png",
+   "caption": "Evidence p.5 left column: linear contact bond = AM–AM and AM–collector; linear parallel bond = CBD–CBD, CBD–AM and CBD–collector; 'The computational software was PFC3D version 5.00'; Table 1; validation 'compared with the data of the electrode porosity data at different pressures measured by Giménez et al. [45]' (Fig. 3), 'in good agreement'.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    279.6,
+    291.0,
+    390.8
+   ],
+   "w": 1461,
+   "h": 632,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x06j",
+   "kind": "text",
+   "label": "p6-cbd-top-enrichment-eds-refs18-21-lower-adhesion",
+   "page": 6,
+   "file": "txt_p6_cbd_top_enrichment_eds_refs18_21_lower_adhesion.png",
+   "caption": "Evidence p.6 left column: CBD distribution becomes non-uniform during drying; EDS shows a binder gradient [18,21]; CBD enriched at the top at the end of drying ('This may be because CBD is more easily affected by solvents'); binder migration lowers the binder content at the coating–collector interface and reduces adhesion.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    500.7,
+    291.0,
+    685.1
+   ],
+   "w": 1464,
+   "h": 1029,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x07k",
+   "kind": "text",
+   "label": "p7-calendering-initial-state-drying-end-80um-rough-top",
+   "page": 7,
+   "file": "txt_p7_calendering_initial_state_drying_end_80um_rough_top.png",
+   "caption": "Evidence p.7 right column (§3.3): 'the initial state of calendering is the final state of the drying process (the thickness of RVE is 80 µm and the top is rough'; thickness decreases, top becomes smooth, packing becomes compact.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    649.1,
+    560.0,
+    738.8
+   ],
+   "w": 1464,
+   "h": 517,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x08l",
+   "kind": "text",
+   "label": "p8-thickness-80-40um-exp-40pct-754pct-refs32-33-video-s3",
+   "page": 8,
+   "file": "txt_p8_thickness_80_40um_exp_40pct_754pct_refs32_33_video_s3.png",
+   "caption": "Evidence p.8 left column: thickness reduced from 80 µm to 40 µm; experiments: thickness −40 % [32,33] with density +75.4 % [32]; 'a high degree of comparability'; video S3 = 3D structure during calendering.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    602.2,
+    291.0,
+    731.0
+   ],
+   "w": 1464,
+   "h": 740,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.853,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x08m",
+   "kind": "text",
+   "label": "p8-porosity-57-22-hg-57-20-ref32-rough-top-flat-start",
+   "page": 8,
+   "file": "txt_p8_porosity_57_22_hg_57_20_ref32_rough_top_flat_start.png",
+   "caption": "Evidence p.8 right column: porosity 'approximate initial value of 57 % to an approximate final value of 22 %'; mercury intrusion 57 % → 'about 20 %' [32]; no change at first because the rough top lets the plate touch only the higher points.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    602.2,
+    560.0,
+    744.2
+   ],
+   "w": 1461,
+   "h": 808,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x09n",
+   "kind": "text",
+   "label": "p9-cn-36-drying-end-decreased-slightly",
+   "page": 9,
+   "file": "txt_p9_cn_36_drying_end_decreased_slightly.png",
+   "caption": "Evidence p.9 right column: coordination number 3.6 at the start of calendering, 'which was the final value at the end of the drying process'; it 'decreased slightly in the early stage of calendering because the stability of the structure formed during the drying process' (continues on p.10).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    359.7,
+    560.0,
+    428.6
+   ],
+   "w": 1460,
+   "h": 400,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x10o",
+   "kind": "text",
+   "label": "p10-cn-max-83-ref38-video-s4-excessive-calendering-ionic-ref48",
+   "page": 10,
+   "file": "txt_p10_cn_max_83_ref38_video_s4_excessive_calendering_ionic_ref48.png",
+   "caption": "Evidence p.10 top band (both columns): '...was destroyed and the particles that were initially in contact with each other were now separated'; minimum then 'a maximum value of 8.3'; tighter networks give shorter electron paths [38]; video S4; 'light calendering results in reduced contact between particles, whereas excessive calendering leads to an increase in ionic resistance [48]'; only moderate calendering.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    48.5,
+    560.0,
+    126.5
+   ],
+   "w": 2955,
+   "h": 459,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.855,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), two-column band (both columns of the same paragraph), clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x11p",
+   "kind": "text",
+   "label": "p11-collector-contacts-897-2038-increase-230pct-ref38",
+   "page": 11,
+   "file": "txt_p11_collector_contacts_897_2038_increase_230pct_ref38.png",
+   "caption": "Evidence p.11 left column (§3.4): AM + CBD contacts with the current collector 897 → 2038, 'an increase of approximately 230 %' (card arithmetic: 2038/897 = 2.27, i.e. +127 %); adhesion up and interfacial resistance down [38].",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    80.7,
+    291.0,
+    244.2
+   ],
+   "w": 1461,
+   "h": 919,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x11q",
+   "kind": "text",
+   "label": "p11-stress-z-notable-periodic-xy-fracture-200mpa-ref57",
+   "page": 11,
+   "file": "txt_p11_stress_z_notable_periodic_xy_fracture_200mpa_ref57.png",
+   "caption": "Evidence p.11 left column (§3.5): 'Fig. 8a' as printed (= Fig. 9a); stress negligible and isotropic at first, then compressive stress increases linearly with a notable increase along z ('preferential thinning'); x–y equal by periodic boundaries; contact force mainly along the thickness; 'particle fracture occurred when the stress of the electrode reached 200 MPa [57]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    269.5,
+    291.0,
+    419.2
+   ],
+   "w": 1461,
+   "h": 866,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x11r",
+   "kind": "text",
+   "label": "p11-forces-exponential-equivalent-collector-greater-refs32-49-57",
+   "page": 11,
+   "file": "txt_p11_forces_exponential_equivalent_collector_greater_refs32_49_57.png",
+   "caption": "Evidence p.11 left column: plate and collector forces 'escalated exponentially from a baseline of zero, with their magnitudes remaining approximately equivalent'; stiffness rise; consistent with [32]; collector force slightly greater late (top instability); adhesion [49]; 'excessive stress can also precipitate particle degradation [49,57]'.",
+   "rotated_deg": 0,
+   "bbox": [
+    35.5,
+    419.2,
+    291.0,
+    642.2
+   ],
+   "w": 1461,
+   "h": 1272,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.833,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x11s",
+   "kind": "text",
+   "label": "p11-conclusions-1-4-future-electrochemical-thermal",
+   "page": 11,
+   "file": "txt_p11_conclusions_1_4_future_electrochemical_thermal.png",
+   "caption": "Evidence p.11 right column: Conclusions 1–4 (velocity gradient and AM-dominated network from the collector side; CBD top enrichment and three-stage drying; thickness, porosity down and coordination, collector contacts up; triaxial compression, thickness stress most significant, equal exponentially increasing forces) and future work ('can potentially be used to analyze ... electrochemical performance and thermal conductivity').",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    49.3,
+    560.0,
+    369.7
+   ],
+   "w": 1460,
+   "h": 1795,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "x12t",
+   "kind": "text",
+   "label": "p12-references-44-57-gimenez-to-stershic",
+   "page": 12,
+   "file": "txt_p12_references_44_57_gimenez_to_stershic.png",
+   "caption": "Reference list p.12 right column, entries [44]–[57] as printed (Giménez 2018 · 2019, Sonzogni 2024, Sun 2024, Xu 2024, Zhang 2022 · 2024, Ge 2022 · 2023, Ngandjong 2021, Lischka 2022, Becker 2021, So 2021, Stershic 2015).",
+   "rotated_deg": 0,
+   "bbox": [
+    304.5,
+    396.1,
+    560.0,
+    725.6
+   ],
+   "w": 1449,
+   "h": 1865,
+   "dpi": 400,
+   "src": "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), band from the first to the last text line of the quoted passage, clipped at the midline to the neighbouring lines → ink trim (gray < 245) → white canvas with a uniform 6 pt (33 px) margin; running head, page number, figure captions and neighbouring columns excluded (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v1_01",
+   "kind": "movie_frame",
+   "label": "Video S1 t=1 s",
+   "page": null,
+   "file": "vid_S1_t01s.png",
+   "caption": "Supplementary video S1 (paper numbering; inbox file 'Sup4'), t = 1 s: slurry state: AM (green) and CBD (red) dispersed over the full 200 µm box, collector (yellow) at the bottom.",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "37bc0003-68-2._Sup4_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.372,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 1 s; 29.97 fps, 471 frames, 15.72 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v1_15",
+   "kind": "movie_frame",
+   "label": "Video S1 t=15 s",
+   "page": null,
+   "file": "vid_S1_t15s.png",
+   "caption": "Supplementary video S1 (paper numbering; inbox file 'Sup4'), t = 15 s: dried bed: compact layer on the collector, CBD red particles visible on the top surface.",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "37bc0003-68-2._Sup4_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.375,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 15 s; 29.97 fps, 471 frames, 15.72 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v2_01",
+   "kind": "movie_frame",
+   "label": "Video S2 t=1 s",
+   "page": null,
+   "file": "vid_S2_t01s.png",
+   "caption": "Supplementary video S2 (paper numbering; inbox file 'Sup3'), t = 1 s: sparse, dispersed contact bonds (cf. Fig. 4c1).",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "5d959c56-68-2._Sup3_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.374,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 1 s; 29.97 fps, 726 frames, 24.22 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v2_23",
+   "kind": "movie_frame",
+   "label": "Video S2 t=23 s",
+   "page": null,
+   "file": "vid_S2_t23s.png",
+   "caption": "Supplementary video S2 (paper numbering; inbox file 'Sup3'), t = 23 s: dense stable contact network at the end of drying (cf. Fig. 4c3).",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "5d959c56-68-2._Sup3_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.375,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 23 s; 29.97 fps, 726 frames, 24.22 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v3_01",
+   "kind": "movie_frame",
+   "label": "Video S3 t=1 s",
+   "page": null,
+   "file": "vid_S3_t01s.png",
+   "caption": "Supplementary video S3 (paper numbering; inbox file 'Sup2'), t = 1 s: pressure plate above the rough top of the dried bed (initial state of calendering, cf. Fig. 7a1).",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "bdc317ef-68-2._Sup2_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.375,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 1 s; 29.97 fps, 652 frames, 21.76 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v3_21",
+   "kind": "movie_frame",
+   "label": "Video S3 t=21 s",
+   "page": null,
+   "file": "vid_S3_t21s.png",
+   "caption": "Supplementary video S3 (paper numbering; inbox file 'Sup2'), t = 21 s: thin compacted bed under the plate (cf. Fig. 7a3).",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "bdc317ef-68-2._Sup2_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.375,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 21 s; 29.97 fps, 652 frames, 21.76 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v4_01",
+   "kind": "movie_frame",
+   "label": "Video S4 t=1 s",
+   "page": null,
+   "file": "vid_S4_t01s.png",
+   "caption": "Supplementary video S4 (paper numbering; inbox file 'Sup1'), t = 1 s: contact network at the start of calendering (drying end state).",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "77021b35-68-2._Sup1_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.374,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 1 s; 29.97 fps, 704 frames, 23.49 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
+  },
+  {
+   "key": "v4_22",
+   "kind": "movie_frame",
+   "label": "Video S4 t=22 s",
+   "page": null,
+   "file": "vid_S4_t22s.png",
+   "caption": "Supplementary video S4 (paper numbering; inbox file 'Sup1'), t = 22 s: compressed, dense contact network at the end of calendering.",
+   "rotated_deg": 0,
+   "w": 565,
+   "h": 720,
+   "src": "77021b35-68-2._Sup1_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "blank": 0.374,
+   "manual_crop": "single frame extracted with ffmpeg (-ss 22 s; 29.97 fps, 704 frames, 23.49 s), black pillarbox side bars trimmed (columns 357–921 of 1280 kept), no other change (2026-11-16, litdb-curator (68-2 re-read))",
+   "viewed": true
   }
- ]
+ ],
+ "movies": [
+  {
+   "key": "mS1",
+   "kind": "movie",
+   "label": "Supplementary video S1 (inbox file Sup4)",
+   "file": null,
+   "src": "37bc0003-68-2._Sup4_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "duration_s": 15.72,
+   "fps": 29.97,
+   "size_px": [
+    1280,
+    720
+   ],
+   "n_frames": 471,
+   "audio": true,
+   "frames": [
+    "vid_S1_t01s.png",
+    "vid_S1_t15s.png"
+   ],
+   "caption": "3D structural evolution during drying (AM green + CBD red settle from the dispersed slurry onto the collector; CBD visible at the top of the dried bed) — matches the text 'The animation of 3D structural evolution during drying can be found in video S1' (p.5) [observed from stills]"
+  },
+  {
+   "key": "mS2",
+   "kind": "movie",
+   "label": "Supplementary video S2 (inbox file Sup3)",
+   "file": null,
+   "src": "5d959c56-68-2._Sup3_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "duration_s": 24.22,
+   "fps": 29.97,
+   "size_px": [
+    1280,
+    720
+   ],
+   "n_frames": 726,
+   "audio": true,
+   "frames": [
+    "vid_S2_t01s.png",
+    "vid_S2_t23s.png"
+   ],
+   "caption": "contact network during drying (sparse short bonds → dense network built from the collector side) — matches 'The real time change of the contact network can be found in video S2' (p.5) [observed]"
+  },
+  {
+   "key": "mS3",
+   "kind": "movie",
+   "label": "Supplementary video S3 (inbox file Sup2)",
+   "file": null,
+   "src": "bdc317ef-68-2._Sup2_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "duration_s": 21.76,
+   "fps": 29.97,
+   "size_px": [
+    1280,
+    720
+   ],
+   "n_frames": 652,
+   "audio": true,
+   "frames": [
+    "vid_S3_t01s.png",
+    "vid_S3_t21s.png"
+   ],
+   "caption": "3D structure during calendering (translucent pressure plate descends on the dried, rough-topped bed) — matches 'The animated evolution of the entire 3D structure during calendering is shown in video S3' (p.8) [observed]"
+  },
+  {
+   "key": "mS4",
+   "kind": "movie",
+   "label": "Supplementary video S4 (inbox file Sup1)",
+   "file": null,
+   "src": "77021b35-68-2._Sup1_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "duration_s": 23.49,
+   "fps": 29.97,
+   "size_px": [
+    1280,
+    720
+   ],
+   "n_frames": 704,
+   "audio": true,
+   "frames": [
+    "vid_S4_t01s.png",
+    "vid_S4_t22s.png"
+   ],
+   "caption": "contact network during calendering (thick drying-end network compressed into a thin dense network) — matches 'As shown in the insets in Fig. 7c and video S4, the RVE contact network became more complete' (p.10) [observed]"
+  }
+ ],
+ "key_note": "keys: f<N> = figure N (auto crop 2026-08-05; f1 and t1 re-cropped 2026-11-16; f7c = continuation page of Fig. 7 = panel c); t1 = Table 1; e<nn> = Eq. (nn), one crop per numbered equation (1–29); x<page><letter> = evidence paragraph (kind 'text'); v<S>_<t> = video frame (kind 'movie_frame'). Video numbering = the paper's S1–S4 (pp.5, 8, 10), matched by content: the inbox file names run in the opposite order (Sup4 = S1 drying 3D · Sup3 = S2 drying contact network · Sup2 = S3 calendering 3D · Sup1 = S4 calendering contact network) [observed from stills]. Audio streams exist in all four files (not inspected)."
 }

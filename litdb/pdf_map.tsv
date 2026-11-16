@@ -28,6 +28,9 @@ ngandjong2021_dem_calendering_digital_twin	15. investigating electrode calenderi
 sangros2019_dem_calendering_lib_electrode	numerical simulation of the behavior of lithium-ion battery electrodes
 schreiner2020_dem_calendering_lib	50. modeling of the calendering process
 lyu2025_3d_dem_drying_calendering_lib	three-dimensional discrete element simulation of electrode
+lyu2025_3d_dem_drying_calendering_lib	three-dimensional_discrete_element_simulation_of_electrode
+#   ↑ 2026-11-16 보강 (68-2 번 파일 · inbox 이름이 밑줄이라 옛 패턴 (빈칸) 이 맞지 않아 한 줄 더함 · 같은 조각이 Sup1–Sup4 mp4 이름에도 있다 — 그림 도구는 PDF 만 본다): 손 크롭 58 장 더함 = fig_7c (p.9 'Fig. 7 (continued)') · 식 29 (eq_*) · 근거 문단 20 (txt_*) · 영상 정지 8 (vid_S*) + 다시 자름 2 (fig_1 · tab_1) + digitized.csv · movies.
+#   [!] '--slug lyu2025_3d_dem_drying_calendering_lib --clean' 을 돌리면 이것도 모두 사라지고 fig_1 · tab_1 이 옛 (본문 섞인 · 쪽 전체) 크롭으로 돌아온다 ('--inbox --run --skip-done' 은 안전).
 sangros2020_lib_electrode_dem_mech_elec_ionic	mechanical, electrical, and ionic behavior of lithium-ion
 so2021_dem_mold_pressure_assb_coldpress	16. effect of mold pressure on compaction
 so2022_dem_compaction_coated_particles_assb	simulation of the compaction of an all-solid-state battery cathode
