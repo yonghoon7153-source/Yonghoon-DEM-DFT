@@ -74,5 +74,14 @@
   "3_판독": "tools/sei/extract_gap.py"
  },
  "8_비용": "kgy GPU · Li₂ZrO₃ 원시셀 (수십 원자 이하) · 수 시간 이내 어림 (재 본 적 없음)",
- "by": "claude (대피 세션 claude/evac-2026-11-12) · 2026-11-16"
+ "by": "claude (대피 세션 claude/evac-2026-11-12) · 2026-11-16",
+ "⏩_개정_1_2026_11_16_결과_전": {
+  "왜": "gabia 검사 (커밋 c826e1a81) 에서 카드 전제 하나가 비었다: SSSP json 이 gabia 에 없어 Zr 권장 컷오프를 파일로 확인하지 못했다. 기억값으로 정하지 않는다.",
+  "A1_Zr_PP": "Zr_pbe_v1.uspp.F.UPF (GBRV v1 · gabia /data/work/pseudo · md5 5db81b1e868ab7776c4564c113de050b) — Li sl · O n 0.1 md5 는 CEI 기록과 같다 (db/raw/hyeokju_lzo_s2a_2026_11_16/pseudo_check.txt).",
+  "A2_컷오프_탐침": "같은 체인을 90/720 Ry 로 한 번 더 돈다 (build_dft_inputs.py --ecut_min Zr=90,720 · 작업 폴더 ecut90). 60/480 과의 띠틈 차 |ΔE_g| ≤ 0.02 eV 면 60/480 값을 보고 · 넘으면 90/720 값을 보고하고 그 사실을 적는다 (결과 전 규칙 · 12 원자라 싸다).",
+  "A3_대조_잡": "P2O5 대조 잡 (5.186 eV · |Δ| ≤ 0.02 eV) 을 늘 먼저 돈다 — §4 G4 의 '판이 같으면 생략' 판단 단계를 없앤다 (더 엄격한 쪽). 실패하면 Li₂ZrO₃ 를 돌리지 않는다.",
+  "A4_구조_이름": "구조는 실행 폴더에 Li2ZrO3_mp-aaaaagdw.vasp 로 복사한다 (저장소 파일과 같은 바이트 · cmp 확인) — 전자 분류 레지스트리 키 li2zro3 (2026-11-16 declared insulator · 갭 단계를 여는 게이트일 뿐 값 주장 아님).",
+  "실행기": "db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh (점검 → 입력 두 벌 → tmux hjgap: 대조 잡 → 본 → 탐침) · 입력 생성은 이 판에서 시험함 (60/480 · 90/720 · nbnd 56 · 03_nscf_gap 있음)",
+  "상태": "proposed — 사용자 비준 대기. 실행기는 '잠정 실행' 으로 돌고, 판독은 비준 뒤."
+ }
 }

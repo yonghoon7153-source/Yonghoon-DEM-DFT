@@ -13652,6 +13652,57 @@
     }
    ],
    "_note": "proposed — 방향은 사용자 결정 ('UMA 검증부터 지금') · G1 · G2 문턱 승인 대기."
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap-amend1",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage2a.li2zro3_gap",
+   "slot": "hyeokju_lzo_stage2a_gap_amend1",
+   "applies_to": {
+    "systems": [
+     "li2zro3"
+    ],
+    "tasks": [
+     "band_gap",
+     "pdos"
+    ],
+    "methods": [
+     "qe-pbe__fixed-occ-nscf"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 2a 개정 1 (결과 전) — Zr PP (GBRV v1 · md5) · 컷오프 탐침 90/720 (|ΔE_g| ≤ 0.02 eV) · P2O5 대조 잡 늘 먼저 · 구조 이름 · 레지스트리 키",
+   "statement": "카드 db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json 의 ⏩_개정_1_2026_11_16_결과_전 이 정의다. 실행기 db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh.",
+   "rationale": "gabia 검사에서 SSSP json 을 못 찾아 Zr 권장 컷오프를 파일로 확인하지 못했다 — 기억값 대신 싼 탐침으로 받친다 (CLAUDE.md 재개 규칙).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json",
+   "amends": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap",
+   "evidence": [
+    "db/raw/hyeokju_lzo_s2a_2026_11_16/pseudo_check.txt",
+    "db/properties/hyeokju_lzo_s2a_structures_provenance_2026_11_16.json"
+   ],
+   "reopen_criteria": [
+    "|ΔE_g| > 0.02 eV 면 90/720 값을 보고 (규칙대로) — 더 올릴지는 사용자 결정"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-17",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "_note": "proposed — 사용자 비준 대기 · 실행기는 잠정 실행 (CEI 개정 1 선례와 같다)."
   }
  ]
 }

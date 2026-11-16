@@ -505,6 +505,20 @@
     "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들지 말지만 정한다 — 갭 값 주장이 아니다. 우리 결과가 나오면 measured 로 바꾼다 (카드 R2 · R3).",
     "scope": "D-2026-10-27-cei-product-gaps (+ 개정 1)"
    }
+  },
+  "li2zro3": {
+   "class": "insulator",
+   "evidence": "declared",
+   "basis": "Li⁺ · Zr⁴⁺ (d⁰) · O²⁻ 닫힌 껍질 산화물.",
+   "declared_2026_11_16": {
+    "formula": "Li2ZrO3",
+    "material_id": "mp-aaaaagdw",
+    "n_atoms": 12,
+    "spacegroup": "C2/c",
+    "structure": "db/structures/hyeokju_Li2ZrO3_mp-aaaaagdw.vasp",
+    "why_declared_not_measured": "우리 fixed-occ nscf 를 아직 안 돌렸다. 이 선언은 갭 단계 입력을 만들게 여는 게이트일 뿐, 갭 값 주장이 아니다.",
+    "scope": "[혁주] 2a (D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap). 이 선언이 여는 것은 03 (fixed-occ 갭) 입력 생성뿐이다."
+   }
   }
  },
  "provenance": {
@@ -524,6 +538,7 @@
   "2026-09-01": "li_metal / li_metal_bcc 를 declared → **measured** 로 승격. E_F 0.9437 eV 에서 DOS 0.48–1.06 states/eV (0 이 아님). 이 규칙(‘DOS 로 E_F 상태를 확인하기 전엔 NEB 을 안 건다’)은 Li3Nd 함정에서 나온 것이라 Li 금속처럼 자명해 보여도 예외를 두지 않았고, 실측 1잡으로 닫았다.",
   "2026-09-17": "§C 판별종 9상 등록 (insulator/declared) + nd2o3 다형 경고. 선언의 범위는 **03 갭 입력 생성 게이트**이지 갭 값이 아니다 — 미등록이면 build_dft_inputs 가 03 을 아예 안 만들어 캠페인이 조용히 비어 버린다. evidence=declared 를 고른 이유: 우리 nscf 를 아직 안 돌렸다. 7상은 MP 참조갭조차 없어 must_confirm 으로 남겼다.",
   "2026-09-17-b": "§C 9상의 must_confirm 해소 — MP 참조갭을 **공간군까지 맞춰** 채웠다 (db/properties/cei_gap_targets_matched_2026_09_17.json). ⚠ 조성만 맞추면 안 된다: P₂O₅ 는 MP 바닥상이 Pnma(4.853)인데 우리 표적은 Fdd2(5.202) 다. Nd₂O₃ 도 같은 형태(P-3m1 실측 vs Ia-3 표적). 이 값들은 MP PBE 이고 **우리 db 갭 표에 안 들어간다** — 검증 표적이다.",
-  "2026-10-27": "CEI 생성물 11 종 갭 카드 (D-2026-10-27-cei-product-gaps) — 9 종 declared 등록 (MP 갭 > 0 → insulator: li2so4 · scl · so2 · nip2o6 · mnp2o6 / = 0 → metal: cos2 · nis2 · mns2 · ni3s4) · li3po4 (β) 를 measured 로 등록 (sei_electronic.json 값이 있었는데 레지스트리에 빠져 있었다). 금속 선언 넷은 03 을 안 만들고 04 DOS 로 확인한다 (R3: E_F ± 0.05 eV 상태 0 이면 절연체로 다시 등록하고 03 만)."
+  "2026-10-27": "CEI 생성물 11 종 갭 카드 (D-2026-10-27-cei-product-gaps) — 9 종 declared 등록 (MP 갭 > 0 → insulator: li2so4 · scl · so2 · nip2o6 · mnp2o6 / = 0 → metal: cos2 · nis2 · mns2 · ni3s4) · li3po4 (β) 를 measured 로 등록 (sei_electronic.json 값이 있었는데 레지스트리에 빠져 있었다). 금속 선언 넷은 03 을 안 만들고 04 DOS 로 확인한다 (R3: E_F ± 0.05 eV 상태 0 이면 절연체로 다시 등록하고 03 만).",
+  "2026-11-16": "li2zro3 declared insulator ([혁주] 2a 갭 단계를 여는 게이트 · 값 주장 아님)"
  }
 }
