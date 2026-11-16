@@ -245,24 +245,24 @@
   "note": ""
  },
  "N-80": {
-  "nn": "",
+  "nn": "129",
   "pdf": "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf",
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: All-solid-state lithium secondary batteries using LiCoO2 particles with pulsed laser deposition coatings of Li2Sâ€“P2S5 solid electrolytes · Subject: Journal of Power Sources, 196 (2010) 6735-6741. 10.1016/j.jpowsour.2010.10.103 · Author: Atsushi Sakuda · DOI: 10.1016/j.jpowsour.2010.10.103 · PDF 7 쪽",
-  "model": "",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
   "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2010.10.103` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
  "N-81": {
-  "nn": "",
+  "nn": "130",
   "pdf": "f403a22c-81._Design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives_for_all-solid-state_lithium-ion_batteries.pdf",
   "si": [
    "81f219c1-81._Sup_Design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives_for_all-solid-state_lithium-ion_batteries.pdf"
   ],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Design of active-material/solid-electrolyte composite particles with conductive additives for all-solid-state lithium-ion batteries · Subject: Journal of Power Sources, 555 (2023) 232379. doi:10.1016/j.jpowsour.2022.232379 · Author: Eiji Hayakawa · DOI: 10.1016/j.jpowsour.2022.232379 · PDF 9 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2022.232379` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
