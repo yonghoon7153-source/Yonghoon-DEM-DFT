@@ -1,0 +1,14 @@
+loaded 67,922,681 SE pts from se_dump.npy
+  void (pore) cloud: 180,000 of 678,462 internal-pore voxels (below global top z=278/282; headspace+empty cols dropped; raw void 789,030)
+  SE surface: 238,158 triangles (n_vox=192, step=4)
+  SE strain points: 200,000  (total (vs seed): mean 0.0939 max 3.048 vmax98 1.1452)
+  SE morphology points: 200,000 (#4b 2D 단면 morphology)
+  SEED SE surface: 239,076 triangles  (loose void 16.2%)
+  econn: 100.0% AM connected to the collector (0 isolated; 3077 carbon clusters)
+  입력 digest 7d694e2d81385cc5 (6 파일) — CDXIJ-10 ③
+  STEP3: fid 의미 파일 로드 (fibre_kind.npy) — 경로 1,878,529 / 그룹 66,044,152 점
+  STEP3: per-fibril 직경 로드 (fibre_dia.npy) — 67,922,681 점
+  STEP3: 섬유 **선분 스탬프** ON — 도체점 1,878,529 · 섬유 50,348개
+  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…
+  STEP3: AM 접촉 브리지 반경 **고정** 0.48 µm (기본은 1.2·vox = 0.180) — 격자 수렴 시험용
+  STEP3: ★ SDCP **부피-보존 구 스탬프** Ø0.3 µm (d/vox = 2.00) — 점 스탬프는 참부피의 0.24배

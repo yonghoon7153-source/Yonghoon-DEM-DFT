@@ -1,0 +1,14 @@
+[probe6] 2026-11-16T06:53:44Z start - watcher for probe 6 (runner output goes to the log folder only)
+[probe6] 2026-11-16T06:54:26Z pre-launch: attempt 4, GPU memory in use 3981 MiB of 24576 MiB, disk free 287 GB (kit root) and 287 GB (log folder)
+[probe6] 2026-11-16T06:54:26Z runner started - maxiter 1500000, host RSS cap 44 GB, sampling every 10 s
+[probe6] 2026-11-16T06:54:26Z running - elapsed 0 s, stage before_step3, log lines 0, host RSS 0 GB, GPU used 3981 MiB
+[probe6] 2026-11-16T07:04:31Z running - elapsed 605 s, stage cg, log lines 32, host RSS 24 GB, GPU used 8357 MiB
+[probe6] 2026-11-16T07:14:34Z running - elapsed 1208 s, stage cg, log lines 32, host RSS 24 GB, GPU used 8355 MiB
+[probe6] 2026-11-16T07:24:38Z running - elapsed 1812 s, stage cg, log lines 32, host RSS 24 GB, GPU used 8349 MiB
+[probe6] 2026-11-16T07:34:42Z running - elapsed 2416 s, stage cg, log lines 32, host RSS 24 GB, GPU used 8345 MiB
+[probe6] 2026-11-16T07:44:46Z running - elapsed 3020 s, stage cg, log lines 32, host RSS 24 GB, GPU used 8345 MiB
+[probe6] 2026-11-16T07:54:49Z running - elapsed 3623 s, stage cg, log lines 32, host RSS 24 GB, GPU used 11313 MiB
+[probe6] 2026-11-16T08:04:53Z running - elapsed 4227 s, stage cg, log lines 32, host RSS 24 GB, GPU used 11305 MiB
+[probe6] 2026-11-16T08:14:58Z running - elapsed 4832 s, stage cg, log lines 32, host RSS 32 GB, GPU used 11301 MiB
+[probe6] 2026-11-16T08:16:38Z runner ended - rc 0, wall 4932 s
+[probe6] 2026-11-16T08:16:48Z report rc 0 (0 PROBE_OK, 3 not converged, 4 incomplete, 5 rejected)

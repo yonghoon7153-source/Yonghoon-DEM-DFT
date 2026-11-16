@@ -1,0 +1,90 @@
+{
+ "tool": "s0_store_probe v2 (2026-11-12 RCP-04 / RCP2-04)",
+ "python": "3.8.10",
+ "numpy": "1.24.4",
+ "scipy": "1.10.1",
+ "store_dir_name": "cjstore_s0probe_20261116T004809Z",
+ "module_sha256": {
+  "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+  "cjunc_store.py": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f"
+ },
+ "store_start": {
+  "code": {
+   "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+   "step3_sigma.py": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+   "fibre_segment_raster.py": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0",
+   "cjunc_store.py": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f"
+  },
+  "preloaded": [],
+  "error": null
+ },
+ "calls": [
+  {
+   "call": 1,
+   "seconds_build": 4011.155,
+   "thresholds": {
+    "L_par_um": "0.3",
+    "gap_tol": "2.0",
+    "r_f_um": "0.075",
+    "r_port_um": "0.3",
+    "r_ptfe_um": "0.124",
+    "r_sdcp_um": "0.15",
+    "s_min_um": "None",
+    "tol_P_um": "0.07381254285530132",
+    "tol_ff_um": "0.07381254285530132",
+    "tol_sj_um": "0.07381254285530132"
+   },
+   "n_instances": 117583,
+   "encode": {
+    "ok": true,
+    "seconds": 8.877,
+    "n_arrays": 470415,
+    "skeleton_bytes": 18307287,
+    "array_bytes": 1206285771
+   },
+   "write": {
+    "status": "built_written",
+    "why": null,
+    "file": "cjreg_45bbb136cd8ca6e76b9fe0bb33afb3b22f32c1841771af4bada2d78296e96c3c.npz",
+    "seconds_write": 120.095,
+    "bytes": 1340095705
+   },
+   "read": {
+    "status": "hit",
+    "why": null,
+    "seconds_read": 86.327,
+    "bytes": 1340095705
+   },
+   "same": {
+    "strict": true,
+    "registry_fp": true,
+    "object_is_new": true
+   },
+   "rss_kb": {
+    "before": {
+     "VmHWM": 8289788,
+     "VmRSS": 4896400
+    },
+    "after_write": {
+     "VmHWM": 5596156,
+     "VmRSS": 4902192
+    },
+    "after_read": {
+     "VmHWM": 5596156,
+     "VmRSS": 5389604
+    },
+    "after_gc": {
+     "VmHWM": 5596156,
+     "VmRSS": 4900332
+    }
+   },
+   "hwm_reset": true,
+   "store_files": [
+    "cjreg_45bbb136cd8ca6e76b9fe0bb33afb3b22f32c1841771af4bada2d78296e96c3c.npz"
+   ],
+   "code_drift": [],
+   "error": null,
+   "store_machine_id_read": true
+  }
+ ]
+}
