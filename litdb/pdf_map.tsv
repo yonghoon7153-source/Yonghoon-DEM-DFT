@@ -614,3 +614,7 @@ kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells	qu
 #   ⚠ 크롭 65 장 = 도구 23 (다시 자름 13: 본문 그림 2–6 = 단 폭 bbox 라 좌우 여백 과다 · SI 그림 S2 · S3 · S6 · S9 · S11 · S12 · S14 · S15 = 래스터 안 흰 여백) + 손 42 (패널 23 · 식 1 · 근거 문단 18) + digitized.csv 39 행 (래스터 축 틀 대응) — --inbox --run 으로 다시 뽑지 말 것
 han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode	mitigating_ptfe_decomposition_in_ultra_thick_dry-processed_anodes
 han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode	mitigating ptfe decomposition in ultra thick dry-processed anodes
+# ── 21 연구 그룹 실험실 간 전고체 펠릿 셀 재현성 (단결정 NMC 622 · Li₆PS₅Cl · In · 각자 조립 · 같은 전기화학 절차) (Puls · Nazmutdinova · Kalyk · … · Zeier · Vargas-Barbosa, Nat. Energy 9 (2024) 1310–1320) — 자동 매칭 실패 (--inbox --only puls2024 = 논문 0편 · 2026-11-16 확인 · SI 파일명엔 제목이 없어 MOESM1 조각을 따로 · 'SupZ' 는 SI_TAG 에 안 걸려 매칭표엔 '본문 후보 2개' 로 나온다 — SI 그림 · 표는 캡션 'Supplementary' 접두로 S 번호)
+#   ⚠ 크롭 92 장 = 도구 60 (다시 자름 39: 본문 그림 1 · 2 · 4 · 표 1 · SI 표 1 · 2 · 23 · SI 그림 32) + 손 32 (본문 그림 3 · SI 표 24 · 식 10 · 근거 문단 20) + source_data_cells_extract.csv 41 행 — --inbox --run 으로 다시 뽑지 말 것
+puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups	benchmarking_the_reproducibility_of_all-solid-state_battery
+puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups	41560_2024_1634_moesm1_esm
