@@ -1,0 +1,160 @@
+{
+  "label": "Codex 아님",
+  "scope": "independent document-only mutation; unchanged complete test class; three docs supplied in memory; history hash test still reads original history markdown",
+  "documents": {
+    "docs/reviews/dem_unloading_ps45_prereg_20261009.md": "2fd6cd67c604b67f718f13b38f60d336b99724b70812be451aa7c117e26f2b90",
+    "docs/reviews/p1_g2c_mpi_stage2_registration_20261112.md": "b66e0faaa3bbd84551a1ccb74d0e9190fcfcd14f708a20c3b78606f66fcd5c84",
+    "docs/reviews/codex_p1_g2c_ab_design_request_20261112.md": "bb8ba9e41e72694cabd0fbaae104c1ff24b3f434b2cc7ee1ffd0e3f66fdf39e2"
+  },
+  "results": [
+    {
+      "name": "baseline",
+      "document": null,
+      "before": "",
+      "after": "",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M01_concurrent_publication",
+      "document": "A",
+      "before": "동시 두 발행은 최대 한 개만 성공해야 한다.",
+      "after": "동시 두 발행은 두 개 모두 성공해도 된다.",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M02_id_acceptance",
+      "document": "A",
+      "before": "`9007199254740993` · `2.0000000000000001`은 두 열 각각 거부",
+      "after": "`9007199254740993` · `2.0000000000000001`은 두 열 각각 허용",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M03_binding_priority",
+      "document": "A",
+      "before": "SYNTAX_FAIL이 우선.",
+      "after": "UNCONFIRMED가 우선.",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M04_offscope_n_allowed",
+      "document": "B",
+      "before": "N 39900 등 그 밖은 attempt 줄 앞 rc 3 (reason=n_scope).",
+      "after": "N 39900 등 그 밖은 attempt 줄 앞 허용 (rc 3 아님; reason=n_scope 기록만).",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M05_ledger_override_allowed",
+      "document": "B",
+      "before": "우회 값은 reason=ledger_override,",
+      "after": "우회 값은 허용 (reason=ledger_override 기록만),",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M06_requeue_merge",
+      "document": "B",
+      "before": "정직한 복구라도 어긋남 → 그 NP 결론 없음;",
+      "after": "정직한 복구면 기존 시도로 합침;",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M07_global_threshold",
+      "document": "A",
+      "before": "전역 W ≤ **0.05** ∧",
+      "after": "전역 W ≤ **0.50** ∧",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M08_cell_threshold",
+      "document": "A",
+      "before": "쓴 격자 칸별 안쪽 W 최대 ≤ 0.5**",
+      "after": "쓴 격자 칸별 안쪽 W 최대 ≤ 0.9**",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "M09_pair_floor",
+      "document": "A",
+      "before": "칸마다 안쪽 하중 쌍 ≥ **100**",
+      "after": "칸마다 안쪽 하중 쌍 ≥ **10**",
+      "methods": 12,
+      "passed": true,
+      "failures": [],
+      "errors": []
+    },
+    {
+      "name": "C01_pair_fixture_rollback",
+      "document": "A",
+      "before": "쌍 덤프만 키움;",
+      "after": "쌍과 원자 덤프를 함께 키움;",
+      "methods": 12,
+      "passed": false,
+      "failures": [
+        "test_06_fixture_pair_only_growth (review_design.DesignRegression.test_06_fixture_pair_only_growth)"
+      ],
+      "errors": []
+    },
+    {
+      "name": "C02_atom_schema_rollback",
+      "document": "A",
+      "before": "omegaz radius f_history_zwall_bot[1] f_history_zwall_bot[2] f_history_zwall_bot[3] f_history_zwall_bot[4]",
+      "after": "omegaz radius",
+      "methods": 12,
+      "passed": false,
+      "failures": [
+        "test_08_observation_deck (review_design.DesignRegression.test_08_observation_deck)"
+      ],
+      "errors": []
+    },
+    {
+      "name": "C03_consumer_rollback",
+      "document": "A",
+      "before": "10–56 행 글자",
+      "after": "10–54 행 글자",
+      "methods": 12,
+      "passed": false,
+      "failures": [
+        "test_09_fixture_and_stage_rules (review_design.DesignRegression.test_09_fixture_and_stage_rules)"
+      ],
+      "errors": []
+    },
+    {
+      "name": "C04_float_order_rollback",
+      "document": "A",
+      "before": "float 변환 전 원 토큰을 검사",
+      "after": "float 변환 후 원 토큰을 검사",
+      "methods": 12,
+      "passed": false,
+      "failures": [
+        "test_03_raw_id_tokens (review_design.DesignRegression.test_03_raw_id_tokens)"
+      ],
+      "errors": []
+    }
+  ],
+  "research_runs": 0
+}
