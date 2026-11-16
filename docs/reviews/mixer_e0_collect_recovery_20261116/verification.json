@@ -1,0 +1,18 @@
+{
+  "tests": {
+    "methods": 10,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0,
+    "test_sha256": "6e709f7abe15bee6b5cb2bd3319ad1e5477aece4f91b9d35dfa0456b45d53631"
+  },
+  "block": {
+    "ascii": true,
+    "embedded_helper_equal": true,
+    "embedded_python_compile": true,
+    "sha256": "be8e40827c840961298ea87e9797d60da87edda141f3f7036a2b076b1d7b367b",
+    "original_controller_unchanged": true
+  },
+  "field_execution": 0,
+  "scope": "synthetic; scheduler/runtime/process inspection mocked in controller integration"
+}
