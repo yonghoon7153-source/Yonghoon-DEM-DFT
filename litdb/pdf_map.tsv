@@ -586,3 +586,7 @@ stershic2015_fabric_tensor_calendering_nmc_xct_dem	modeling the evolution of lit
 #   ⚠ 크롭 65 장 = 도구 12 (다시 자름 3: 표 1 = 쪽 전체 · 표 S1 = 그림 S1 c 섞임 · 그림 S1 = 패널 c 만 → SI 2 · 3 쪽 이어 붙임) + 손 53 (manual_crop: 그래픽 초록 1 · 패널 15 · 식 18 · 근거 문단 19) + digitized.csv 56 행 — --inbox --run 으로 다시 뽑지 말 것
 siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb	ac_impedance_analysis_of_ionic_and_electronic_conductivities
 siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb	ac impedance analysis of ionic and electronic conductivities
+# ── NCM622 2차 입자 크기 (d50 4.0 / 8.3 / 15.6 µm) × 탄소 없는 β-Li₃PS₄ 복합 양극 (7 : 3 wt) 의 용량 · 비활성 CAM · 부분 전도도 (Strauss · Bartsch · de Biasi · Kim · Janek · Hartmann · Brezesinski, ACS Energy Lett. 3 (2018) 992–996) — 자동 매칭 실패 (slug ↔ 파일명 토큰 겹침 'particle' · 'size' 둘뿐)
+#   ⚠ 크롭 43 장 = 도구 12 (다시 자름 3) + 손 31 (그래픽 초록 1 · 패널 14 · 식 2 · 근거 문단 14) + digitized.csv 75 행
+strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation	impact_of_cathode_material_particle_size_on_the_capacity
+strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation	impact of cathode material particle size on the capacity

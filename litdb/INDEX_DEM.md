@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 335편 · 생성 2026-11-16
+> digest 336편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -155,7 +155,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (54편)
+## 복합양극 미세구조 · percolation (55편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -205,6 +205,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb` | 황화물 유리 (75Li₂S·25P₂S₅) 전고체 전극 혼합층의 이온 · 전자 유효 전도도를 한 셀로 — 전자 저항이 있는 3 줄 전송선 모델 (TLM) 과 'electron-electron connection' (SUS \| 시료 \| SUS = Siroma 2015 의 T형) 의 물방울 (teardrop) 두 극한 (HFR | experiment + equivalent-circuit theory (AC impedance 10 mHz– | 2026-11-16 | 🖼 65 |
 | `so2022_dem_compaction_coated_particles_assb` | SE-코팅(core-shell) vs 입자-혼합 ASSB 양극의 DEM 냉간압밀 — tortuosity·AM damage·percolation + 코팅의 σ_e 차폐 — So (J. Power Sources 2022) | DEM | 2026-06-26 | 🖼 8 |
 | `song2025_porous_argyrodite_modulus_fracture_toughness` | 다공(porosity 13 %) Li₆PS₅Cl 펠릿의 벌크 영률 4.7 ± 1.1 GPa · 파괴인성 K_Ic 0.17 ± 0.03 MPa·m^½ — mm 스케일 외팔보 굽힘 + 컴팩트 인장(CT) + 시편별 Abaqus FE · 나노압입값(28 GPa · 0.69)의 ¼–⅙ — Song · Shi · Pakhare · | exp (cantilever beam-bending modulus + compact-tension fract | 2026-09-23 | 🖼 3 |
+| `strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation` | NCM622 2차 입자 크기 (d50 4.0 / 8.3 / 15.6 µm) 가 탄소 없는 β-Li₃PS₄ 복합 양극 (7 : 3 wt) 의 용량을 가른다 — 첫 충전 162 / 95 / 84 mAh g⁻¹ · ex situ XRD 비활성 CAM 2 / 27 / 31 % · DC 분극 전자 부분 전도도 ≈10⁻³ → ≈10 | experiment (carbon-free NCM622 : β-Li₃PS₄ = 7 : 3 wt powder  | 2026-11-16 | 🖼 43 |
 | `taufactor_tortuosity_factor_tomography_tool` | TauFactor — voxel 미세구조에서 정상상태 확산(Laplace)을 풀어 tortuosity FACTOR τ 를 직접 계산하는 오픈소스 MATLAB 툴 — Cooper (SoftwareX 2016) | tool (voxel Laplace-solve, post-processing) | 2026-06-26 | 🖼 8 |
 | `thorat2009_quantifying_tortuosity_porous_liion` | 다공 LIB 재료의 tortuosity 정량 — 분리막 (AC 임피던스 ↔ 분극-중단 일치 · Li 전극 계면저항 분리) + LiFePO₄ 활물질 막 τ = 1.8 ε^−0.53 (일반화 Bruggeman τ = γε^(1−α), α 1.53 · γ 1.8) — Thorat (J. Power Sources 2009) | exp (liquid-LIB tortuosity 측정 — polarization-interrupt (rest | 2026-10-03 | 🖼 12 |
 | `tjaden2018_tortuosity_review_calculation_approaches` | Tortuosity in electrochemical devices: a review of calculation approaches — τ·κ(=τ²)·N_M·Bruggeman 정의와 기하/flux/실험/상관식 계산법 분류 (우리 τ 명명 정본) — Tjaden (Int. Mater. Rev. 2018) | review (tortuosity 정의·계산법 — geometric vs flux-based · porosi | 2026-10-02 | 🖼 15 |
