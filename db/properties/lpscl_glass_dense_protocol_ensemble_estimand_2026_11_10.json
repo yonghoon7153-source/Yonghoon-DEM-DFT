@@ -520,5 +520,6 @@
   },
   "⛔_판독_허가_고정": "사다리 판독 뒤에는 판독_허가_2단계 (인정 포함 · 자유문 칸 포함) 를 고치지 않는다 — cond550 판독의 동결이 허가 정렬 JSON sha256 을 사다리 판독 기록과 대조한다 (EL P2-5 · N-P2-2)",
   "✅_활성": "2026-11-16 · 결정 D-2026-11-14-li2s3-queue-endline-lost-ack active (사용자 (위임 10-30) · 카드 커밋 e13ea178) · 판독 도구 8e1f16a4 · 대조 잡 v6 3792432a (same True) · 인정 = kgy endline_facts 값 (problems [] · valid · 16 런) → 절차 ⑤ readout · pressure 한 번"
- }
+ },
+ "✅_마감_2026_11_16": "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json (결정 D-2026-11-16-li2s3-dense-protocol-ensemble-closed) — 2 단계 |W| = 0 · 카드 7_닫힘_조건 그대로 · 재개 조건 없음"
 }

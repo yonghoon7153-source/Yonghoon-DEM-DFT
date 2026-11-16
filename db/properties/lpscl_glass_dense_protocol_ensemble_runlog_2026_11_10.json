@@ -345,5 +345,47 @@
   "아직_안_본_것": "readout_stage2.json 의 시드별 표 (C1 · C2 · 골격 · 제외 사유) · 세 층 수 · 출처 지문 — 마감 파일의 '계별 포함 · 제외 수와 사유' (DZ 카드 문구 [1]) 에 필요 → kgy 요약 (읽기만) 을 받는다",
   "다음": "kgy 요약 → 마감 파일 (허용 = S2 k = 0 + 구조군 문구 · 금지 · 재개 조건 없음) + 마감 결정 (위임 10-30)",
   "by": "agent (위임 10-30) · 2026-11-16"
+ },
+ "판독_요약_2026_11_16": {
+  "출처": "사용자 붙여넣기 2026-11-16 (kgy · readout_stage2.json 읽기만 요약 · 수송값 없음)",
+  "W · 갈래": "W [] · 닫는다 (S2 허용 문구 + 구조군 문구) · 잠정 False · cond550 False",
+  "측정_가능": {
+   "A_T600": false,
+   "A_T650": false,
+   "A_T700": true,
+   "A_T750": false,
+   "B_T600": false,
+   "B_T650": false,
+   "B_T700": false,
+   "B_T750": true
+  },
+  "시드별 (C1 · C2 최종 · 골격 · 측정 · 제외 사유)": [
+   "A11 600 True · 경계 · 구분 불가 · False · False · C2 경계 · 구분 불가",
+   "A11 650 True · 통과 · False · False · 골격 이동",
+   "A11 700 True · 통과 · True · True",
+   "A11 750 True · 통과 · False · False · 골격 이동",
+   "A12 600 True · 경계 · 구분 불가 · True · False · C2 경계 · 구분 불가",
+   "A12 650 True · 통과 · True · True",
+   "A12 700 True · 통과 · True · True",
+   "A12 750 True · 통과 · True · True",
+   "B11 600 True · 경계 · 구분 불가 · True · False · C2 경계 · 구분 불가",
+   "B11 650 True · 경계 · 구분 불가 · True · False · C2 경계 · 구분 불가",
+   "B11 700 True · 통과 · True · True",
+   "B11 750 True · 통과 · True · True",
+   "B12 600 True · 경계 · 구분 불가 · True · False · C2 경계 · 구분 불가",
+   "B12 650 True · 경계 · 구분 불가 · True · False · C2 경계 · 구분 불가",
+   "B12 700 True · 경계 · 구분 불가 · True · False · C2 경계 · 구분 불가",
+   "B12 750 True · 통과 · True · True"
+  ],
+  "세_층": "생성 후보군 6 · 포함 가능군 6 (제외 0) · 2 단계 시드 A11 · A12 · B11 · B12 · 최종 측정가능 온도별 — A_T600 [] · A_T650 [A12] · A_T700 [A11 · A12] · A_T750 [A12] · B_T600 [] · B_T650 [] · B_T700 [B11] · B_T750 [B11 · B12]",
+  "출처_지문": "도구 8e1f16a4 · glass_v2_readout 427a7649 · quench_ss_event 02d61d82 · msd_diffusive_check a6bbbc4d · melt_quench_uma 1ca75960 · 깨끗 True · 카드 9e6dd3ba (= 7a6aefa56 판 · 로컬 재계산 일치) · 규칙 ca3e3b61 · 허가 c62afb34 (= 7a6aefa56 판 · _permit_sha 로컬 일치) · 결정 셋 active · 큐 valid",
+  "⚠_요약_줄의_한계": "요약 줄이 맨 위 'end_line' 키를 봐서 null 이 찍혔다 — 끝 줄 인정은 판독 로그 '큐 끝 줄: 유실 인정 · … · 블록 끝 211 번째 줄' 로 확인",
+  "비용": "읽은 런 82.165 · 장부 전체 82.165 GPU-h",
+  "파일_sha256": {
+   "readout_stage2.json": "400354ff07f5b12930d60c971fe7e17786f168a5380d7fbe2ca6ed2808b51e0d",
+   "pressure_stage2.json": "91a9e2c63bc362ccb1e2fa78a3d7d0555060e54cd83d266445970116bf910c5e"
+  },
+  "다음": "마감 파일 db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json · 마감 결정 D-2026-11-16-li2s3-dense-protocol-ensemble-closed (위임 10-30)",
+  "by": "agent (위임 10-30) · 2026-11-16"
  }
 }
