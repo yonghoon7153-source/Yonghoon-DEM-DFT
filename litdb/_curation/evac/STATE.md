@@ -1,6 +1,16 @@
 # 대피 세션 (litdb 논문 에이전트 전용) 상태 메모 — 압축 · 재시작 뒤 먼저 읽는다
 
-갱신 2026-11-12 16:45 KST. 진행 상태의 정본 = 정본 가지 `litdb/_curation/status.tsv` (이 메모는 보조).
+갱신 2026-11-17 01:30 KST (맨 위 절) · 2026-11-12 16:45 KST (그 아래). 진행 상태의 정본 = 정본 가지 `litdb/_curation/status.tsv` (이 메모는 보조).
+
+## ★★★ 11-17 01 시 KST — litdb 일시 정지 (1저자: "litdb는 여기까지만 하고 다음주 일요일날 다시 하자" → "하던것까지만 해줘")
+
+- 이 세션 (대피) 의 몫 = **litdb 3 순위만**. 11-17 새벽부터 나머지 일은 전부 본 세션 (stoic) 이 한다 (복귀 인계 = 코드 가지 `docs/handoff_return_to_stoic_knuth_20261117.md`). pqwtv8 · stoic 에는 쓰지 않는다.
+- 이번 판 끝 = **N-76 – N-84** (9 편 · 정독 125 – 133 · status.tsv '끝'). '도는 중' 없음 · 트리 1 · 2 깨끗. 9 편 결과는 11-17 01 시에 채팅으로 한 번에 보고했다.
+- 다음 = **다음 주 일요일 N-85 부터** (날짜는 그때 1저자가 부른다). 트리 1 · 2 에 둘씩: `python3 -I <scratchpad>/tools/launch.py N-85 /home/user/litdb-canon tmp-litdb-evac` · `… launch.py N-86 /home/user/litdb-canon2 tmp-litdb-evac2` → 찍힌 지시문으로 litdb-curator (model opus) — 그 뒤는 아래 4 · 5 번 절차 그대로.
+- 2 시간 점검 예약 `trig_012x2QcKTmGMH6hGea8MgjGL` = **꺼 둠** (enabled false · 지우지 않음) → 재개할 때 다시 켠다 (update_trigger enabled true). 꺼 둔 동안 새 편을 띄우지 않는다.
+- 재개 뒤 남은 것: N-85 – N-129 (N-112 첫째 · 둘째 · N-114 카드 둘 · N-107 · N-124 · N-128 참고 저장소 = 대기열 메모대로) → 보강 N-148 · N-149 (맨 끝) → 3 순위 끝 보고 → 추가 필요 목록 (pick list · 낡은 줄 13) = 3 순위 다 끝난 뒤 (1저자 11-16).
+- N-79 의 wishlist (batch_128 n 절) = finish rc 1 로 빠졌던 것 → 11-17 손으로 더함.
+- 이번 판 카드 문제 (기록만 · 고치지 않음) = status.tsv 각 줄 메모 · 정독 batch_125 – 133 findings.
 
 ## ★★ 11-12 오후 — 본 세션 (stoic) 일을 전부 넘겨받음
 
