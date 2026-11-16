@@ -161,6 +161,38 @@ class DesignRegression(unittest.TestCase):
         self.assertIn("칸 하나라도", s)
         self.assertIn("새 등록", s)
 
+    def test_13_historical_and_synthetic_cell_expectations(self):
+        s = section(self.a, "### 15-10.")
+        cell_row = next(line for line in s.splitlines() if line.startswith("| 쓴 격자 칸별 막이"))
+        for token in ("역사 6×4·11×1 정직 B/C = UNCONFIRMED", "나머지 세 격자 = PASS",
+                      "모든 칸 N≥100인 새 합성 fixture", "VALUE_MISMATCH"):
+            self.assertIn(token, cell_row)
+        self.assertNotIn("샌드박스 다섯 격자 · 칸 최대 0.0604) → 통과해야", cell_row)
+        expected = {
+            "N99_EQUAL": "UNCONFIRMED", "N100_EQUAL": "PASS",
+            "N99_RESET_ONE": "UNCONFIRMED", "N100_RESET_ONE": "VALUE_MISMATCH",
+            "N99_VALID_OTHER": "VALUE_MISMATCH", "N99_GLOBAL": "VALUE_MISMATCH",
+        }
+        for name, status in expected.items():
+            row = next(line for line in s.splitlines() if line.startswith("| " + name + " |"))
+            self.assertEqual(row.split("|")[-2].strip(), status)
+        global_row = next(line for line in s.splitlines() if line.startswith("| 이력 소실 막이"))
+        self.assertIn("전역 W 단독 통과; 전체 판정은 칸 N 조건 포함", global_row)
+        self.assertIn("유효 N≥100", section(self.a, "### 15-8."))
+
+    def test_14_active_revision_scope_and_checks(self):
+        active = self.a[self.a.index("## 15."):]
+        self.assertNotIn("⛔ 개정 4 §15", active)
+        self.assertIn("⛔ 개정 5 §15", active)
+        scope = section(self.a, "### 15-13.")
+        self.assertNotIn("C12 중력 팔 (개정 5)", scope)
+        self.assertIn("C12 중력 팔 (별도 후속 개정)", scope)
+        row = next(line for line in self.q.splitlines() if line.startswith("- 리포 검사:"))
+        self.assertNotIn("이 요청서 커밋에서 실패 0", row)
+        for token in ("과거 작성 측 기록", "핀 미확인", "5ae5acdd5e77", "12/12",
+                      "참조 rc1", "96", "원장 rc0", "전체 gate 미실행"):
+            self.assertIn(token, row)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)

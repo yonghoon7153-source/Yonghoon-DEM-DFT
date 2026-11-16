@@ -1,0 +1,61 @@
+{
+  "scope": "document_contract_only",
+  "red": {
+    "methods": 14,
+    "failures": 2,
+    "errors": 0
+  },
+  "green": {
+    "methods": 14,
+    "failures": 0,
+    "errors": 0
+  },
+  "local_reversions": [
+    {
+      "name": "historical_pass",
+      "methods": 2,
+      "failures": 1,
+      "errors": 0,
+      "detected": true
+    },
+    {
+      "name": "N99_pass",
+      "methods": 2,
+      "failures": 1,
+      "errors": 0,
+      "detected": true
+    },
+    {
+      "name": "N99_reset_violation",
+      "methods": 2,
+      "failures": 1,
+      "errors": 0,
+      "detected": true
+    },
+    {
+      "name": "C12_revision5",
+      "methods": 2,
+      "failures": 1,
+      "errors": 0,
+      "detected": true
+    },
+    {
+      "name": "revision4",
+      "methods": 2,
+      "failures": 1,
+      "errors": 0,
+      "detected": true
+    },
+    {
+      "name": "whole_gate_claim",
+      "methods": 2,
+      "failures": 1,
+      "errors": 0,
+      "detected": true
+    }
+  ],
+  "independent_review": false,
+  "field_runs": 0,
+  "whole_gate_executed": false,
+  "historical_source_files_changed": false
+}
