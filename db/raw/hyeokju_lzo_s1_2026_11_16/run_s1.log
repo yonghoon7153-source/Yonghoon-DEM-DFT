@@ -1,0 +1,83 @@
+== 판 f1040768b · pymatgen 2026.4.16 · 시작 2026-11-16 23:52:15
+== ① 닫힌계 LPSCl · LZO × NCA (y 격자 20) 23:52:15
+종 2개 x 상대 20개 = 40 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/2139 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  94%|█████████▎| 2000/2139 [00:04<00:00, 474.12it/s]Retrieving ThermoDoc documents: 100%|██████████| 2139/2139 [00:08<00:00, 208.20it/s]Retrieving ThermoDoc documents: 100%|██████████| 2139/2139 [00:08<00:00, 247.06it/s]
+[mp_api] 2139 entries in Al-Cl-Co-Li-Ni-O-P-S
+[1/2] LPSCl      vs NCA721_y1.0 -0.3771 (0 V)  (26s)
+[1/2] LPSCl      vs NCA811_y1.0 -0.3892 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.9 -0.4050 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.9 -0.4193 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.8 -0.4382 (0 V)  (0s)
+[1/2] LPSCl      vs NCA811_y0.8 -0.4543 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.7 -0.4761 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.7 -0.4932 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.6 -0.5160 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.6 -0.5330 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.5 -0.5561 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.5 -0.5736 (0 V)  (0s)
+[1/2] LPSCl      vs NCA721_y0.4 -0.5994 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.4 -0.6184 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.3 -0.6425 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.3 -0.6596 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.2 -0.6808 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.2 -0.6957 (0 V)  (1s)
+[1/2] LPSCl      vs NCA721_y0.1 -0.7131 (0 V)  (1s)
+[1/2] LPSCl      vs NCA811_y0.1 -0.7269 (0 V)  (1s)
+Retrieving ThermoDoc documents:   0%|          | 0/1166 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:02<00:00, 577.94it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:02<00:00, 577.88it/s]
+[mp_api] 1166 entries in Al-Co-Li-Ni-O-Zr
+[2/2] LZO        vs NCA721_y1.0 -0.0000 (0 V)  [끝점 = 반응없음]  (8s)
+[2/2] LZO        vs NCA811_y1.0 -0.0000 (0 V)  [끝점 = 반응없음]  (0s)
+[2/2] LZO        vs NCA721_y0.9 -0.0050 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.9 -0.0050 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.8 -0.0090 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.8 -0.0082 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.7 -0.0119 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.7 -0.0109 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.6 -0.0147 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.6 -0.0134 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.5 -0.0176 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.5 -0.0164 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.4 -0.0205 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.4 -0.0194 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.3 -0.0239 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.3 -0.0220 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.2 -0.0278 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.2 -0.0254 (0 V)  (0s)
+[2/2] LZO        vs NCA721_y0.1 -0.0337 (0 V)  (0s)
+[2/2] LZO        vs NCA811_y0.1 -0.0297 (0 V)  (0s)
+
+→ db/properties/hyeokju_lzo_s1_closed_2026_11_16.jsonl
+== ② 닫힌계 LPSCl × LZO · 앵커 LCO 23:53:05
+[resume] 이미 끝난 (종,상대) 쌍 40개는 건너뛴다
+종 1개 x 상대 3개 = 3 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/382 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 382/382 [00:00<00:00, 8432758.57it/s]
+[mp_api] 382 entries in Cl-Li-O-P-S-Zr
+[1/1] LPSCl      vs LZO      -0.0922 (0 V)  (6s)
+Retrieving ThermoDoc documents:   0%|          | 0/1006 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3587.71it/s]Retrieving ThermoDoc documents: 100%|██████████| 1006/1006 [00:00<00:00, 3585.46it/s]
+[mp_api] 1006 entries in Cl-Co-Li-O-P-S
+[1/1] LPSCl      vs LCO_full -0.3227 (0 V)  (6s)
+[1/1] LPSCl      vs LCO_half -0.4549 (0 V)  (0s)
+
+→ db/properties/hyeokju_lzo_s1_closed_2026_11_16.jsonl
+== ③ 열린계 LPSCl · LZO × NCA721 · NCA811 23:53:20
+종 2개 x 상대 2개 = 4 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/2139 [00:00<?, ?it/s]Retrieving ThermoDoc documents:  94%|█████████▎| 2000/2139 [00:03<00:00, 505.28it/s]Retrieving ThermoDoc documents: 100%|██████████| 2139/2139 [00:05<00:00, 327.53it/s]Retrieving ThermoDoc documents: 100%|██████████| 2139/2139 [00:05<00:00, 363.38it/s]
+[mp_api] 2139 entries in Al-Cl-Co-Li-Ni-O-P-S
+[1/2] LPSCl      vs NCA721   -2.1438  ⛔끝점 6/26 — 계면량 아님(자체분해)  (42s)
+[1/2] LPSCl      vs NCA811   -2.1438  ⛔끝점 5/26 — 계면량 아님(자체분해)  (22s)
+Retrieving ThermoDoc documents:   0%|          | 0/1166 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:01<00:00, 587.09it/s]Retrieving ThermoDoc documents: 100%|██████████| 1166/1166 [00:01<00:00, 587.03it/s]
+[mp_api] 1166 entries in Al-Co-Li-Ni-O-Zr
+[2/2] LZO        vs NCA721   -0.7999  ⛔끝점 19/26 — 계면량 아님(자체분해)  (15s)
+[2/2] LZO        vs NCA811   -0.7999  ⛔끝점 19/26 — 계면량 아님(자체분해)  (7s)
+
+→ db/properties/hyeokju_lzo_s1_open_2026_11_16.jsonl
+== ④ 열린계 LPSCl × LZO 23:54:48
+[resume] 이미 끝난 (종,상대) 쌍 4개는 건너뛴다
+종 1개 x 상대 1개 = 1 쌍
+Retrieving ThermoDoc documents:   0%|          | 0/382 [00:00<?, ?it/s]Retrieving ThermoDoc documents: 100%|██████████| 382/382 [00:00<00:00, 8301679.42it/s]
+[mp_api] 382 entries in Cl-Li-O-P-S-Zr
+[1/1] LPSCl      vs LZO      -2.1438  ⛔끝점 9/26 — 계면량 아님(자체분해)  (10s)
+
+→ db/properties/hyeokju_lzo_s1_open_2026_11_16.jsonl
+== 줄 수 (기대: 닫힌계 43 · 열린계 5) 43 · 5
+✅ 끝 2026-11-16 23:55:00
