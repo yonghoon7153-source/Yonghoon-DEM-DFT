@@ -32,7 +32,7 @@
 
 ## 4. 정독 출력 (질문 a–n)
 
-`READING_BRIEF.md` 의 `batch_NN.tsv` · `batch_NN_findings.md` 꼴 그대로 · 자리 = 이 폴더 `reading/` (카드와 같은 커밋으로 push).  본 세션 출력 (NN 43–100) 은 본 세션 scratchpad 에 있다 — 본 세션이 나중에 이 폴더로 옮긴다.
+`READING_BRIEF.md` 의 `batch_NN.tsv` · `batch_NN_findings.md` 꼴 그대로 · 자리 = 이 폴더 `reading/` (카드와 같은 커밋으로 push).  본 세션 출력 (NN 43–100) 은 본 세션 scratchpad 에 있다 — 본 세션이 나중에 이 폴더로 옮긴다.  → 11-17 옮김 = 본 세션 배치 15 (43 · 45 · 46 · 48 · 49 · 50 · 51 · 55 · 60 · 61 · 64 · 65 · 66 · 75 · 76 · 그 n 절 = `wishlist.md` 본 세션 절) · 43–91 의 나머지 번호 = 대피 세션 출력 · 92–100 = 안 씀.
 
 ## 5. 추가로 필요한 논문 (두 세션 공통)
 
