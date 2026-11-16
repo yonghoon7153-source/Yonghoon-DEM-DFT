@@ -3,7 +3,7 @@
  "kind": "estimand",
  "record_kind": "estimand",
  "date": "2026-11-10",
- "status": "active — 사용자 (위임 10-30) 2026-11-10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble · 2 단계 발사 전 (수송 결과 0 건) · ⏸ **판독 보류** — 회신 DZ NO-GO (2026-11-10 · 개정_DZ_회신_2026_11_10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend1)",
+ "status": "closed — 2026-11-16 · 2 단계 |W| = 0 (카드 7 그대로) · 마감 기록 lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json · 결정 D-2026-11-16-li2s3-dense-protocol-ensemble-closed · 사용자 수용 + li2s 계열 종료 (2026-11-16 'li2s는 여기까지만 하자') | 옛 상태 문구: active — 사용자 (위임 10-30) 2026-11-10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble · 2 단계 발사 전 (수송 결과 0 건) · ⏸ **판독 보류** — 회신 DZ NO-GO (2026-11-10 · 개정_DZ_회신_2026_11_10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend1)",
  "citable": false,
  "results_seen": "부분 — '본_것' 만 봤다 (1 단계 시드 판정 · PS₄ 보존율 · 결함 꼴) · 수송 (MD) 은 0 건",
  "track": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송 · 새 카드) — 논문 1저자 = 외부 · 위임 10-30 (D-2026-10-30-li2s-first-author-confirmation-waived)",
