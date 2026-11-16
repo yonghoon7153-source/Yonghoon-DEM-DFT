@@ -124,7 +124,7 @@ def staircase_rows(prof, side):
     return keep, pts
 
 
-def plot(prof, name, side, out_png, title=None, contact_label="0 V: Li metal contact"):
+def plot(prof, name, side, out_png, title=None, contact_label="0 V: Li metal contact", group_below=None, group_label=None):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -149,21 +149,37 @@ def plot(prof, name, side, out_png, title=None, contact_label="0 V: Li metal con
     ax.plot([first["n0"], first["n1"]], [first["V"]] * 2, color=GAPLINE, lw=3.2, zorder=3)
     ax.text((first["n0"] + first["n1"]) / 2, first["V"] + 0.05, f"{first['V']:.2f} V", ha="center", va="bottom",
             fontsize=10.5, fontweight="bold", color=INK)
-    ax.text((first["n0"] + first["n1"]) / 2, first["V"] - 0.06, _mt(f"{name} + {first['n1']:g} Li → {first['end_products']}"),
-            ha="center", va="top", fontsize=9.5, color=INK)
-    narrow = [s for s in keep[1:] if (s["n1"] - s["n0"]) < 1.0]
-    wide = [s for s in keep[1:] if (s["n1"] - s["n0"]) >= 1.0]
-    for j, s in enumerate(narrow):
-        ly = edge - 0.30 - 0.17 * j
+    lab0 = _mt(f"{name} + {first['n1']:g} Li → {first['end_products']}")
+    fits = len(re.sub(r"\$_\{[^}]*\}\$", "x", lab0)) * 0.085 < (first["n1"] - first["n0"]) - 0.2
+    ax.text(first["n0"] + 0.12 if fits else first["n1"] + 0.15, first["V"] - 0.06, lab0,
+            ha="left", va="top", fontsize=9.5, color=INK)
+    rest = keep[1:]
+    grouped = [s for s in rest if group_below is not None and s["V"] < group_below]
+    rest = [s for s in rest if s not in grouped]
+    narrow = [s for s in rest if (s["n1"] - s["n0"]) < 1.0]
+    wide = [s for s in rest if (s["n1"] - s["n0"]) >= 1.0]
+    if grouped:
+        vlo, vhi = min(s["V"] for s in grouped), max(s["V"] for s in grouped)
+        bx = xmax + 0.28
+        ax.plot([bx, bx + 0.08, bx + 0.08, bx], [vhi, vhi, vlo, vlo], color=MUT, lw=1.0, clip_on=False)
+        ax.text(bx + 0.18, (vlo + vhi) / 2 + 0.06, _mt(f"{group_label or 'grouped steps'}\n{vlo:.2f}–{vhi:.2f} V"),
+                ha="left", va="center", fontsize=9, color=INK)
+    prev = None
+    for j, s in enumerate(sorted(narrow, key=lambda q: -q["V"])):
+        ly = s["V"] if prev is None else min(s["V"], prev - 0.17)
+        prev = ly
         lx = xmax + 0.35
         phase = re.sub(r"^[0-9.]+\s+", "", s["end_products"].split(" + ")[0])
         ax.annotate(_mt(f"{s['V']:.2f} V  → {phase}"), xy=((s["n0"] + s["n1"]) / 2, s["V"]),
                     xytext=(lx, ly), fontsize=9, color=INK, va="center",
                     arrowprops=dict(arrowstyle="-", color="#d1d5db", lw=0.8))
     for s in wide:
-        ax.text((s["n0"] + s["n1"]) / 2 - 0.1, s["V"] - 0.06, f"{s['V']:.2f} V", ha="center", va="top", fontsize=9.5, color=INK)
+        phase = re.sub(r"^[0-9.]+\s+", "", s["end_products"].split(" + ")[0])
+        low = s["V"] < 0.3
+        ax.text((s["n0"] + s["n1"]) / 2, s["V"] + (0.03 if low else -0.06), _mt(f"{s['V']:.2f} V  → {phase}"), ha="center",
+                va="bottom" if low else "top", fontsize=9.5, color=INK)
     ax.plot([end["n"]], [end["V"]], "o", color=INK, ms=5, zorder=4)
-    ax.annotate(_mt(f"{contact_label}\n{end['products']}"), xy=(end["n"], end["V"]), xytext=(xmax + 0.35, 0.22),
+    ax.annotate(_mt(f"{contact_label}\n{end['products']}"), xy=(end["n"], end["V"]), xytext=(xmax + (0.55 if grouped else 0.35), 0.06 if grouped else 0.22),
                 fontsize=9, color=INK, va="center", arrowprops=dict(arrowstyle="-", color="#d1d5db", lw=0.8))
     ax.set_xlim(min(0.0, xs[0]), xmax * 1.0 + 0.2)
     ax.set_ylim(0, ytop)
@@ -173,6 +189,112 @@ def plot(prof, name, side, out_png, title=None, contact_label="0 V: Li metal con
     Path(out_png).parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=300, bbox_inches="tight")
     plt.close(fig)
+
+
+def ag2s_grid_from_interface(inter, cathode="Ag", elab="LPSCl"):
+    """열린계 계면 결과 → 격자 전압마다 (Ag2S 가 최소 반응 산물에 있나, 끝점인가).
+    ⛔ 끝점 (자체 분해) 칸 · Ag2S 가 반응물 쪽에만 있는 칸은 'Ag2S 생성' 으로 세지 않는다."""
+    c = inter["results"][cathode]
+    rows = []
+    for V, rx in c["reactions"].items():
+        r = rx.get(elab)
+        deg = bool(c["endpoint_degenerate"][V].get(elab))
+        rhs = r.split("->", 1)[1] if isinstance(r, str) and "->" in r else ""
+        has = (not deg) and bool(re.search(r"(^|\s)Ag2S(\s|$)", rhs.replace("+", " ")))
+        e = c["by_voltage"][V].get(elab)
+        rows.append({"V": float(V), "ag2s_product": has, "endpoint": deg,
+                     "dE_meV_per_atom": None if e is None else round(e * 1000, 1), "reaction": r})
+    rows.sort(key=lambda d: d["V"])
+    yes = [d["V"] for d in rows if d["ag2s_product"]]
+    no_below = [d["V"] for d in rows if not d["ag2s_product"] and (not yes or d["V"] < min(yes))]
+    return {"rows": rows, "onset_grid_V": min(yes) if yes else None,
+            "last_without_V": max(no_below) if (yes and no_below) else None}
+
+
+def window_regions(ladders, se, ag2s, ag, inter=None):
+    """사다리 셋 (+ 열린계 격자) → 전위 지도 구간. 가장자리는 전부 사다리에서 다시 낸다."""
+    pse, p2s, pag = profile(rows_from_result(ladders[se])), profile(rows_from_result(ladders[ag2s])), profile(rows_from_result(ladders[ag]))
+    v_red, v_ox = pse["edge_reduction_V"], pse["edge_oxidation_V"]
+    v_ag2s, v_agli = p2s["edge_reduction_V"], pag["edge_reduction_V"]
+    if v_ox is None:
+        raise ValueError("SE 사다리에 산화 가장자리가 없다")
+    regs = [
+        ("Li6PS5Cl", "reduced by Li (Li2S + LiCl + P, then Li3P)", 0.0, v_red),
+        ("Li6PS5Cl", "stable", v_red, v_ox),
+        ("Li6PS5Cl", "oxidized", v_ox, None),
+        ("Ag2S", "reduced by Li to Li2S + Ag", 0.0, v_ag2s),
+        ("Ag2S", "stable", v_ag2s, None),
+        ("Ag metal next to Li6PS5Cl", "Li-Ag alloys", 0.0, v_agli),
+        ("Ag metal next to Li6PS5Cl", "Ag metal, no reaction", v_agli, v_ag2s),
+        ("Ag metal next to Li6PS5Cl", "Ag + Li6PS5Cl -> Ag2S + Li", v_ag2s, None)]
+    out = {"regions": [{"species": a, "region": b, "V_low": lo, "V_high": hi} for a, b, lo, hi in regs],
+           "V": {"se_reduction": v_red, "se_oxidation": v_ox, "ag2s_reduction": v_ag2s, "ag_lithiation": v_agli}}
+    if inter is not None:
+        out["grid"] = ag2s_grid_from_interface(inter)
+    return out
+
+
+def plot_window_map(wm, out_png, vmax=2.6, title=None):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.figures.house_style import INK, MUT, GAPLINE, apply_axes
+    rows = ["Li6PS5Cl", "Ag2S", "Ag metal next to Li6PS5Cl"]
+    ylab = {"Li6PS5Cl": "Li$_6$PS$_5$Cl", "Ag2S": "Ag$_2$S", "Ag metal next to Li6PS5Cl": "Ag next to\nLi$_6$PS$_5$Cl"}
+    accent_regions = {"stable", "Ag + Li6PS5Cl -> Ag2S + Li"}
+    fig, ax = plt.subplots(figsize=(8.2, 3.6))
+    for k, sp in enumerate(rows):
+        y = len(rows) - 1 - k
+        for r in [r for r in wm["regions"] if r["species"] == sp]:
+            lo, hi = r["V_low"], (r["V_high"] if r["V_high"] is not None else vmax)
+            acc = (sp != "Li6PS5Cl" and r["region"] in accent_regions)
+            light = r["region"] == "stable" or r["region"].startswith("Ag metal, no")
+            col = GAPLINE if acc else ("#e5e7eb" if light else "#9ca3af")
+            ax.barh(y, hi - lo, left=lo, height=0.56, color=col, alpha=0.85 if acc else 1.0, edgecolor="white", lw=1.2)
+            lab = _mt(r["region"].replace("->", "→").replace("Li-Ag", "Li–Ag"))
+            if hi - lo > 0.3:
+                ax.text((lo + hi) / 2, y, lab, ha="center", va="center", fontsize=7.8, color="white" if (acc or not light) else INK)
+        ax.text(-0.05, y, ylab[sp], ha="right", va="center", fontsize=10, color=INK)
+    v = wm["V"]
+    top = len(rows) - 0.55
+    ax.plot([v["ag2s_reduction"]] * 2, [-0.62, top + 0.25], color=GAPLINE, ls="--", lw=1.2, zorder=4)
+    ax.text(v["ag2s_reduction"] + 0.03, top + 0.18, f"{v['ag2s_reduction']:.2f} V", ha="left", va="center", fontsize=9.5,
+            color=GAPLINE, fontweight="bold")
+    ax.plot([0.01, v["ag_lithiation"]], [top + 0.18] * 2, color=MUT, lw=1.6, solid_capstyle="butt")
+    ax.text(v["ag_lithiation"] + 0.03, top + 0.18, f"Li / Li–Ag contact (≤ {v['ag_lithiation']:.2f} V)", ha="left",
+            va="center", fontsize=8.5, color=MUT)
+    g = wm.get("grid")
+    if g:
+        for d in g["rows"]:
+            ax.plot(d["V"], -0.47, "o", ms=5, mfc=INK if d["ag2s_product"] else "white", mec=INK, mew=1.0, zorder=5)
+        ax.text(0.01, -0.70, "open-Li grid (filled = Ag₂S among Ag + Li₆PS₅Cl reaction products)", ha="left", va="center",
+                fontsize=8, color=MUT)
+    ax.set_xlim(0, vmax)
+    ax.set_ylim(-0.85, top + 0.35)
+    ax.set_yticks([])
+    ax.spines["left"].set_visible(False)
+    apply_axes(ax, xlabel="Voltage vs Li/Li$^+$ (V)",
+               title=_mt(title or "Ag2S is stable next to Li6PS5Cl only above 1.91 V vs Li"), fontsize=11)
+    fig.tight_layout()
+    Path(out_png).parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_png, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
+def write_window_csv(wm, out_csv):
+    Path(out_csv).parent.mkdir(parents=True, exist_ok=True)
+    with open(out_csv, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["species", "region", "V_low_vs_Li_V", "V_high_vs_Li_V"])
+        for r in wm["regions"]:
+            w.writerow([r["species"], r["region"], r["V_low"], "" if r["V_high"] is None else r["V_high"]])
+        g = wm.get("grid")
+        if g:
+            w.writerow([])
+            w.writerow(["open_Li_grid_V", "Ag2S_in_min_reaction_products", "endpoint_self_decomposition", "dE_meV_per_atom", "reaction"])
+            for d in g["rows"]:
+                w.writerow([d["V"], d["ag2s_product"], d["endpoint"], "" if d["dE_meV_per_atom"] is None else d["dE_meV_per_atom"], d["reaction"]])
 
 
 def write_csv(pts, out_csv):
@@ -193,6 +315,28 @@ COMP1_FIXTURE = [[0.0, 8.0, "Li6PS5Cl + 8 Li -> Li3P + 5 Li2S + LiCl"],
                  [2.256, -2.0, "Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li"],
                  [2.385, -5.0, "Li6PS5Cl -> 0.5 P2S7 + LiCl + 1.5 S + 5 Li"],
                  [3.326, -6.0, "Li6PS5Cl -> 0.5 P2S7 + 0.5 S + SCl + 6 Li"]]
+
+
+AG2S_FIXTURE = [[1.914, 0.0, "Ag2S -> Ag2S"], [0.592, 2.0, "Ag2S + 2 Li -> Li2S + 2 Ag"],
+                [0.369, 2.6667, "Ag2S + 2.667 Li -> 0.6667 LiAg3 + Li2S"], [0.14, 4.0, "Ag2S + 4 Li -> 2 LiAg + Li2S"],
+                [0.072, 5.2, "Ag2S + 5.2 Li -> 0.4 Li8Ag5 + Li2S"], [0.0, 8.0, "Ag2S + 8 Li -> 2 Li3Ag + Li2S"]]
+AG_FIXTURE = [[0.592, 0.0, "Ag -> Ag"], [0.369, 0.3333, "Ag + 0.3333 Li -> 0.3333 LiAg3"], [0.14, 1.0, "Ag + Li -> LiAg"],
+              [0.072, 1.6, "Ag + 1.6 Li -> 0.2 Li8Ag5"], [0.0, 3.0, "Ag + 3 Li -> Li3Ag"]]
+
+
+def _iface_fixture():
+    def cell(V, rx, deg, e):
+        return V, rx, deg, e
+    cells = [cell("1.90", "Li6PS5Cl -> Li2S + Li3PS4 + LiCl", True, 0.0),
+             cell("2.00", "0.6667 Ag + 0.3333 Li6PS5Cl -> 0.6667 Li + 0.3333 Li3PS4 + 0.3333 Ag2S + 0.3333 LiCl", False, -0.019),
+             cell("1.50", "Li6PS5Cl + 5 Li -> P + 5 Li2S + LiCl", True, -0.155),
+             cell("2.10", "0.8333 Ag + 0.1667 Li6PS5Cl -> 0.8333 Li + 0.1667 Ag3PS4 + 0.1667 Ag2S + 0.1667 LiCl", False, -0.055)]
+    c = {"reactions": {}, "endpoint_degenerate": {}, "by_voltage": {}}
+    for V, rx, deg, e in cells:
+        c["reactions"][V] = {"LPSCl": rx}
+        c["endpoint_degenerate"][V] = {"LPSCl": deg}
+        c["by_voltage"][V] = {"LPSCl": e}
+    return {"results": {"Ag": c}}
 
 
 def selftest():
@@ -241,6 +385,25 @@ def selftest():
     chk("[음성] V_vs_Li 없는 profile (Li 를 안 연 결과) 은 멈춘다",
         raises(lambda: rows_from_result({"profile": [{"evolution_Li": 0, "reaction": "a -> b"}]})))
     chk("[음성] steps 도 profile 도 없으면 멈춘다", raises(lambda: rows_from_result({"reduction_limit_V": 1.242})))
+    lad = {"comp1": {"steps": COMP1_FIXTURE}, "Ag2S": {"steps": AG2S_FIXTURE}, "Ag": {"steps": AG_FIXTURE}}
+    wmap = window_regions(lad, "comp1", "Ag2S", "Ag", _iface_fixture())
+    chk("[양성] 전위 지도 가장자리 = SE 1.717 / 2.256 · Ag2S 1.914 · Li–Ag 0.592 (전부 사다리에서)",
+        wmap["V"] == {"se_reduction": 1.717, "se_oxidation": 2.256, "ag2s_reduction": 1.914, "ag_lithiation": 0.592})
+    chk("[양성] 열린계 격자: Ag2S 첫 등장 2.0 V · 그 아래 마지막 '없음' 1.9 V", wmap["grid"]["onset_grid_V"] == 2.0
+        and wmap["grid"]["last_without_V"] == 1.9)
+    fx2 = _iface_fixture()
+    fx2["results"]["Ag"]["reactions"]["1.80"] = {"LPSCl": "Ag2S + 2 Li -> Li2S + 2 Ag"}
+    fx2["results"]["Ag"]["endpoint_degenerate"]["1.80"] = {"LPSCl": False}
+    fx2["results"]["Ag"]["by_voltage"]["1.80"] = {"LPSCl": -0.076}
+    chk("[음성] Ag2S 가 반응물 쪽에만 있으면 '생성' 으로 세지 않는다", ag2s_grid_from_interface(fx2)["onset_grid_V"] == 2.0)
+    fx3 = _iface_fixture()
+    fx3["results"]["Ag"]["endpoint_degenerate"]["2.00"] = {"LPSCl": True}
+    chk("[음성] 끝점 (자체 분해) 칸은 Ag2S 가 있어도 세지 않는다", ag2s_grid_from_interface(fx3)["onset_grid_V"] == 2.1)
+    fx4 = _iface_fixture()
+    for V in ("2.00", "2.10"):
+        fx4["results"]["Ag"]["endpoint_degenerate"][V] = {"LPSCl": True}
+    g4 = ag2s_grid_from_interface(fx4)
+    chk("[음성] Ag2S 칸이 하나도 없으면 첫 등장은 None (0 으로 두지 않는다)", g4["onset_grid_V"] is None and g4["last_without_V"] is None)
     print(f"\nselftest: {ok} passed, {fail} failed")
     return 0 if fail == 0 else 1
 
@@ -255,9 +418,30 @@ def main():
     ap.add_argument("--out_png")
     ap.add_argument("--out_csv")
     ap.add_argument("--selftest", action="store_true", help="자체 점검 (음성 경로 포함)")
+    ap.add_argument("--window_map", nargs=3, metavar=("SE", "AG2S", "AG"),
+                    help="전위 지도 모드 — --esw 안의 세 라벨 (예: comp1 Ag2S Ag) · --interface 를 주면 열린계 격자 점을 얹는다")
+    ap.add_argument("--interface", help="interface_reactivity_v2.py 열린계 결과 JSON (cathodes 에 Ag · 전해질 라벨 LPSCl)")
+    ap.add_argument("--group_below", type=float, help="이 전위 아래 계단 (첫 계단 제외) 은 그림에서 묶음 하나로 표시 (CSV 에는 다 남는다)")
+    ap.add_argument("--group_label", help="--group_below 묶음 이름 (예: 'Li–Ag alloying')")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.window_map:
+        if not (a.esw and (a.out_png or a.out_csv)):
+            ap.error("--window_map 은 --esw 와 --out_png 또는 --out_csv 가 필요하다")
+        lad = json.loads(Path(a.esw).read_text(encoding="utf-8"))["results"]
+        inter = json.loads(Path(a.interface).read_text(encoding="utf-8")) if a.interface else None
+        se, s2, ag = a.window_map
+        wmap = window_regions(lad, se, s2, ag, inter)
+        print("전위 지도:", {k: round(v, 3) for k, v in wmap["V"].items()})
+        if wmap.get("grid"):
+            g = wmap["grid"]
+            print(f"  열린계 격자: Ag2S 첫 등장 {g['onset_grid_V']} V · 그 아래 마지막 '없음' {g['last_without_V']} V")
+        if a.out_csv:
+            write_window_csv(wmap, a.out_csv); print(f"→ {a.out_csv}")
+        if a.out_png:
+            plot_window_map(wmap, a.out_png, title=a.title); print(f"→ {a.out_png}")
+        return 0
     if not (a.esw and a.label and a.name and (a.out_png or a.out_csv)):
         ap.error("--esw --label --name 과 --out_png 또는 --out_csv 가 필요하다 (또는 --selftest)")
     d = json.loads(Path(a.esw).read_text(encoding="utf-8"))
@@ -275,7 +459,7 @@ def main():
         write_csv(pts, a.out_csv)
         print(f"→ {a.out_csv}")
     if a.out_png:
-        plot(prof, a.name, a.side, a.out_png, title=a.title)
+        plot(prof, a.name, a.side, a.out_png, title=a.title, group_below=a.group_below, group_label=a.group_label)
         print(f"→ {a.out_png}")
     return 0
 

@@ -3,7 +3,7 @@
  "kind": "estimand",
  "id": "sdi_agc_ag2s_window_2026_11_16",
  "제목": "SDI Ag–C 인터레이어 crack — Ag₂S 가 LPSCl · Li 옆에 설 수 있는 전위 창 (MP grand potential · 문서 Q2)",
- "status": "proposed — 결과 전 · 사용자 비준 대기 (결정 D-2026-11-16-sdi-agc-ag2s-window)",
+ "status": "proposed — 결과 기록됨 (결과_2026_11_16) · 사용자 명시 비준 대기 (블록 실행만으로 비준을 적지 않는다)",
  "written_on": "2026-11-16",
  "트랙": {
   "이름": "SDI 과제 (Ag–C 인터레이어 crack 부반응) · 논문 아님 · 결정 = 사용자",
@@ -63,10 +63,40 @@
  ],
  "9_비용": "gabia CPU · MP 조회 · 수 분 (QE · GPU 아님 — 검사가 아니라 MP 데이터 계산이라 GPU 규칙 밖)",
  "10_아직_안_된_것": [
-  "사용자 비준",
-  "gabia 실행 (블록 · 결과 JSON 은 대피 브랜치로 push)",
-  "그림 2 (Ag₂S · Ag 사다리) · 그림 3 (전압별 Ag | LPSCl 반응) → 문서 Q2 절",
-  "Q3 (MD) 할지 — Q2 결과 뒤 사용자 결정"
+  "사용자 명시 비준 (결정 D-2026-11-16-sdi-agc-ag2s-window)",
+  "Q3 (MD) 할지 — 사용자 결정"
  ],
- "by": "agent · 2026-11-16 · 대피 세션 claude/evac-2026-11-12"
+ "by": "agent · 2026-11-16 · 대피 세션 claude/evac-2026-11-12",
+ "결과_2026_11_16": {
+  "출처": "사용자 gabia 실행 → 커밋 2a6504dc8 (판 04de182b0 · 그림 도구 selftest 17) — sdi_agc_ag2s_ladder_2026_11_16.json · sdi_agc_ag_lpscl_open_2026_11_16.json · sdi_agc_ag_lpscl_closed_2026_11_16.jsonl",
+  "게이트": {
+   "G1_상_있음": "✓ Ag₂S · Ag · Li₂S 가 hull 위 (Ag–Cl–Li–P–S 160 엔트리)",
+   "G2_교과서_대조": "✓ V*(Ag₂S) 1.914 V — 교과서 어림 2.0 V 와 −0.09 V (±0.3 안)",
+   "G3_Q1_재현": "✓ 같은 실행의 Li₆PS₅Cl 사다리 1.717 · 1.242 · 1.177 · 0.932 · 0.870 V = Q1 과 같다",
+   "G4_끝점": "✓ 열린계 끝점 (자체 분해) 칸은 계면량으로 안 읽었다 — Ag 상대 계면 칸은 1.72 · 2.0 · 2.1 · 2.2 · 2.5 V 다섯"
+  },
+  "값": {
+   "V*_Ag2S": "1.914 V (Ag₂S + 2 Li → Li₂S + 2 Ag)",
+   "Li–Ag 합금": "0.592 (LiAg₃) · 0.369 (LiAg) · 0.140 (Li₈Ag₅) · 0.072 V (Li₃Ag)",
+   "열린계_Ag_계면_칸": [
+    "1.72 V −2.4 meV/atom → Ag₃P₁₁ + Li₂S + LiCl (환원 가장자리 바로 그 점 · 크기 작음)",
+    "2.00 V −19.0 meV/atom → Ag₂S + Li₃PS₄ + LiCl (+ Li 방출)",
+    "2.10 V −55.0 · 2.20 V −96.7 · 2.50 V −221.7 meV/atom → Ag₂S + Ag₃PS₄ + LiCl (+ Li 방출)"
+   ],
+   "열린계_Ag2S_상대": "1.0–1.9 V 는 Ag₂S 자체 환원 (끝점) · 2.0–2.1 V 는 반응 0 (Ag₂S 와 LPSCl 이 같이 선다)",
+   "닫힌계": "0 meV/atom — Ag + Li₆PS₅Cl 반응 없음 (끝점)",
+   "⚠_옛_키": "esw_grand_potential.py 의 reduction_limit_V 는 Ag₂S 0.592 · comp1 1.242 — 옛 규칙 값이라 쓰지 않았다 (가장자리 = 사다리의 Li 교환 0 행)"
+  },
+  "허용_문장_채움": [
+   "Materials Project 상 (GGA/GGA+U · 0 K) 의 grand potential 로는 Ag₂S 가 1.91 V 아래에서 Li 와 만나면 Li₂S + Ag 로 환원된다.",
+   "Li 열린계에서 Ag + Li₆PS₅Cl 의 최소 반응 산물에 Ag₂S 가 나오는 전위는 격자 점 기준 2.0 V 이상이다 (1.9 V 에서는 없다 · 경계는 Ag₂S 사다리의 1.91 V 와 맞는다 · 격자 끝 2.5 V 까지 나온다).",
+   "닫힌계 (Li 없이) Ag + Li₆PS₅Cl 의 최소 반응 에너지는 0 meV/atom 이다 (반응 없음)."
+  ],
+  "읽기_SDI_가설": "crack 의 Ag₂S 는 그 자리 전위가 1.91 V (vs Li) 이상일 때만 열역학적으로 설 수 있다. Li 나 Li–Ag (≤ 0.59 V) 가 닿는 곳에서는 Li₂S + Ag 로 돌아가며 Ag₂S 하나당 Li 2 개를 먹는다. Li 없이 Ag 와 LPSCl 이 닿기만 해서는 반응하지 않는다. 속도 · OCV 변화량은 이 계산이 말하지 않는다 (카드 금지).",
+  "그림": [
+   "docs/figures/sdi_agc/fig2_ag2s_li_uptake_profile.png + db/properties/sdi_agc_ag2s_li_uptake_profile_2026_11_16.csv",
+   "docs/figures/sdi_agc/fig3_ag_lpscl_window_map.png + db/properties/sdi_agc_ag_lpscl_window_map_2026_11_16.csv"
+  ],
+  "by": "agent · 2026-11-16"
+ }
 }

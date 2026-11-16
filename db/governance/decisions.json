@@ -13403,9 +13403,9 @@
    "rationale": "SDI 회의 의견 'crack 의 Ag₂S 가 OCV 를 바꾼다' 를 MD 전에 열역학으로 거른다 — 교과서 어림으로 Ag₂S 는 ≈ 2.0 V 아래에서 Li 에 환원되므로 Li 가 닿는 crack 에서는 버티기 어렵다는 가설을 우리 도구로 확인한다. 사용자 11-16 '이거 시뮬레이션 부터 … 계획 잡을 수 있나 · 명령어 필요하면 주고'.",
    "decision_state": "proposed",
    "record_kind": "estimand",
-   "results_seen": false,
+   "results_seen": true,
    "exploratory": true,
-   "results_seen_note": "MP 조회 0 · 계산 0 건 — Q1 은 원장 값 (esw_lis4excluded.json) 을 그림으로 옮긴 것뿐",
+   "results_seen_note": "11-16 사용자 gabia 실행 결과 (2a6504dc8) — G1–G4 통과 · 결과는 카드 '결과_2026_11_16' · 비준은 사용자 명시 대기 (블록 실행만으로 비준을 적지 않는다)",
    "card": "db/properties/sdi_agc_ag2s_window_card_2026_11_16.json",
    "evidence": [
     "db/properties/esw_lis4excluded.json",
