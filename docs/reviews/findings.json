@@ -17511,7 +17511,7 @@
    "found_by": "믹서 E0 자격 pilot 등록 초안 작업 (11-12 · 대피 세션 · 리포 같은 빌드 로그와 관측기 계약 대조) — 등록 초안 7-4",
    "opened_in": "scripts/mixer_precal_observe.py",
    "title": "믹서 first8 관측기 (mixer_precal_observe.py `_log_contract`) 가 같은 빌드 (LIGGGHTS-PUBLIC 3.8.0 · 3d5c00f) 의 실제 정상 로그 꼴 넷 — thermo 머리 `Step Atoms KinEng rke Volume` (c_ 없음) · Loop 줄 끝 `, finish time <ctime>` · 삽입 run thermo 표 안 fix insert/pack 보고 두 줄 · 덱 주석의 `ERROR:` 메아리 — 을 몰라 정상 E0 런도 관측 TECH 로 판정했을 것 (발사 전 · 실제 E0 로그로는 확인 전)",
-   "note": "결과 무관 (발사 전 · 실행 없음) · 고침 = 같은 빌드의 실제 꼴 넷만 허용 · 진짜 오류 (ERROR 줄 · 잘림 · 깨진 행 · Atoms 감소 · 잘못된 삽입 보고 · 표 구조) 는 그대로 TECH · 시험 먼저 34 중 28 → 43/43 (3.11 · 3.8) · 결함 62 꼴 TECH · 단일 가드 변이 25 생존 0 · 운영 봉인 · 정책 · launch · 비활성 후보 무변경 (관측기 sha256 df22dcf0 → bb2f3229 = 재봉인 후보는 리포 밖 · 재봉인 = 1저자 별도 승인 · Q-C) · 1저자 11-12 Q5 · Q-A–Q-E 권고대로 · 실제 NP20 로그 꼴 대조 (q9) = 첫 낱말 수준 · 내부 반박 리뷰 전",
+   "note": "결과 무관 (발사 전 · 실행 없음) · 고침 = 같은 빌드의 실제 꼴 넷만 허용 · 진짜 오류 (ERROR 줄 · 잘림 · 깨진 행 · Atoms 감소 · 잘못된 삽입 보고 · 표 구조) 는 그대로 TECH · 시험 먼저 34 중 28 → 43/43 (3.11 · 3.8) · 결함 62 꼴 TECH · 단일 가드 변이 25 생존 0 · 운영 봉인 · 정책 · launch · 비활성 후보 무변경 (관측기 sha256 df22dcf0 → bb2f3229 = 재봉인 후보는 리포 밖 · 재봉인 = 1저자 별도 승인 · Q-C) · 1저자 11-12 Q5 · Q-A–Q-E 권고대로 · 실제 NP20 로그 꼴 대조 (q9) = 첫 낱말 수준 · 내부 반박 리뷰 전 · 11-17 반입 ⑦ (13b91f298): E0 잡 366423 실제 반환에서 고정 관측기 OK (Codex 실무 판독 · docs/data/mixer_e0_pilot_20261116_return/README.md §3) = 실제 E0 로그로 확인 — verified 승격 아님 (독립 반박 판정 아님)",
    "claimed_fixed_sha": "f67c0cc928fc1ea99195b1ae95b46295a11b8774",
    "evidence_tests": [
     "scripts/test_mixer_precal_observe.py"
@@ -17981,6 +17981,16 @@
    "evidence_tests": [
     "docs/reviews/dem_redesign_direction_20261109/seminar_feedback_20261113.md"
    ]
+  },
+  {
+   "id": "MXE0-02",
+   "severity": "P2",
+   "status": "open",
+   "owner": "codex",
+   "found_by": "Codex 실무 E0 366423 수령 판독 (11-16 · 반입 ⑦ 13b91f298 · docs/data/mixer_e0_pilot_20261116_return/README.md)",
+   "opened_in": "docs/data/mixer_e0_pilot_20261116_return/README.md",
+   "title": "믹서 E0 잡 366423 (COMPLETED 0:0) 의 종료 직후 W9 런타임 신원 영수증이 없다 — 발사 전 · 지연 회수 (종료 + 9,362.118 s) 신원 일치만 확인 · 그것을 T9 로 쓰지 않는다 · 자격 수용 · 후속 GO 를 자동으로 올리지 않는다",
+   "note": "전체 반환 해시 (e0_full_result c9f4fb00… · report 64c3de37…) · 덤프 1,121 완결 · 고정 관측 OK 는 확인됨 · 10 분 감시가 08:31:38Z 뒤 끊김 (사후 S5 최대 20 s 로 진행 불명은 풀림) · 처분 = 별도 (1저자 · Codex 실무) · 1저자 11-17 '종료 직후 런타임 영수증 부재는 별도 처분 필요'"
   }
  ]
 }
