@@ -13225,7 +13225,7 @@
    "title": "li2s-3 카드 개정 4 — 큐 끝 줄 유실 인정 (순수 v1 사다리 큐의 '■ 큐 끝 · PHASE ladder' 줄이 파일에 안 남은 경우 · 결과 전)",
    "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 개정_4_큐_끝_줄_유실_2026_11_14 이 정의다 (리뷰 EL 반영판): 끝 줄이 없을 때 판독 허가의 '큐_끝_줄_유실_인정' (필드 여섯 · 결정 칸 = 이 결정) 과 깨끗한 UTF-8 · LF · 블록 원 바이트 · 장부 머리 + 명단 행 sha256 · 꼬리 줄 없음 · 명단 · 장부 rc 0 · prod · 시간 · 시각 · 누적 · 잠금이 모두 맞을 때만 그 줄을 사다리 블록 끝으로 받는다 · 이 결정 active 일 때만 (문지기 · verify) · cond550 은 같은 판독 허가일 때만 · 어긋나면 판정 보류 · 로그 · 장부를 고치지 않는다 · 판정 규칙 · 명단 · W 정의 그대로",
    "rationale": "16 런은 다 끝났다 (큐 ✅ 16 · 장부 16 행 rc 0 · 잠금 풀림 · 런 valid) — 빠진 것은 큐 실행기가 tee 로만 보내는 끝 줄 하나다. 그 줄을 요구하는 규칙의 목적 (큐가 중간에 멈춘 런 묶음을 읽지 않는다) 은 남은 완료 기록의 상호 대조로 지키고, 인정은 그 파일 지문에 묶는다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "2 단계 결과 0 건 — 11-14 readout 은 판정 보류 기록만 (수송값 · W 안 읽음)",
@@ -13243,7 +13243,10 @@
     "tools/ionic/li2s3_stage2_readout.py sha16 8e1f16a49a2df8a3 (selftest 205/205 · 변이 36)",
     "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json 판독_보류_2026_11_14 (kgy 확인 블록 사실)",
     "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md (독립 리뷰 · 조건부 GO · P0 1 · P1 1 · P2 8)",
-    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md — 재확인 회신 (2 차 · 2026-11-15) GO"
+    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md — 재확인 회신 (2 차 · 2026-11-15) GO",
+    "kgy 2026-11-16 블록 v6 — worktree 80d78d0df · 도구 8e1f16a4 · selftest PASS 205/205 · endline_facts problems [] · 큐_상태 valid · 명단 16 · 장부 뒤 행 0",
+    "kgy 2026-11-16 대조 잡 v6 — same = True · 차이 0 건 · /home/kgy/li2s3_control_job_v6.json sha256 3792432a4543abe58596a4cb9768d63d91448d10422f3205dc1523ee0d3c49e2",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 판독_허가_2단계 (카드 커밋 e13ea178 · 인정 = endline_facts 값 그대로)"
    ],
    "reopen_criteria": [
     "2 단계 결과를 연 뒤에는 이 규칙을 바꾸지 않는다"
@@ -13257,7 +13260,7 @@
     "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
    },
    "proposed_by": "claude-session-2026-11-14 (evac)",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-14",
@@ -13276,8 +13279,24 @@
      "state": "proposed",
      "by": "agent",
      "note": "EL 재확인 GO (도구 dbac0855) · N-P2-1 시험 넷 더함 → 도구 8e1f16a49a2df8a3 (selftest 205/205 · 변이 36) · kgy facts 문제 0 · 대조 잡 v6 same True 뒤 판독 허가 갱신과 함께 활성 (위임 10-30)"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "카드 커밋 e13ea178 (판독 허가 갱신 — 대조 잡 v6 · 인정 = kgy endline_facts 값) · 내부 반박 리뷰 EL (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)')"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T01:47:13Z",
+    "commit": "e13ea1784699c69de960f894f45df153189c2421",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "내부 반박 리뷰 EL (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · kgy 대조 잡 v6 same = True · endline_facts problems [] (2026-11-16) · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 사용자 2026-11-10 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐'",
+    "decision_digest": "sha256:3f3201342cb65320c1e97c73de652a848741951de818707d0a2f22f3ddf5dde6"
+   }
   }
  ]
 }
