@@ -1,0 +1,218 @@
+{
+  "schema": "nonrint_execution_release/1",
+  "scope": "LOCAL_SYNTHETIC_AND_PACKAGING_ONLY",
+  "field_execution": 0,
+  "research_execution": 0,
+  "new_field_results": 0,
+  "source_pins": {
+    "suyoung": "c759c4c7ab7abec2148e23fa231d004c1d4d0fec",
+    "mixer": "997aabe1b5a702e2f389007e3923018d778ce857"
+  },
+  "suyoung": {
+    "reviewed_bytes_preserved": true,
+    "prior_red": {
+      "label": "LOCAL_SYNTHETIC_REGRESSION_ONLY",
+      "source_name": "dem_suyoung_sf2d_dev.py",
+      "source_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "test_name": "test_dem_suyoung_shape_output.py",
+      "test_sha256": "f917673f01b148086def8aca5af7fb302adc80727f3270fa96f1cee0ad39f16f",
+      "baseline_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "methods": 14,
+      "failures": 16,
+      "errors": 0,
+      "skipped": 0,
+      "failure_methods": [
+        "local_regressions.ShapeOutput.test_01_initial_state_is_copied_and_identities_are_explicit",
+        "local_regressions.ShapeOutput.test_02_total_map_uses_increment_history_not_projected_elastic_F",
+        "local_regressions.ShapeOutput.test_03_poisoned_observer_does_not_feed_force_or_physical_state",
+        "local_regressions.ShapeOutput.test_04_frames_are_exact_observed_steps_not_interpolation",
+        "local_regressions.ShapeOutput.test_05_output_on_off_trace_and_final_240_mean_are_bit_identical",
+        "local_regressions.ShapeOutput.test_07_manifest_binds_every_frame_and_svg_uses_carried_quads",
+        "local_regressions.ShapeOutput.test_08_particle_id_change_is_rejected",
+        "local_regressions.ShapeOutput.test_09_missing_or_duplicate_step_is_rejected (seq=(2,))",
+        "local_regressions.ShapeOutput.test_09_missing_or_duplicate_step_is_rejected (seq=(1, 1))",
+        "local_regressions.ShapeOutput.test_10_incomplete_observer_cannot_claim_complete",
+        "local_regressions.ShapeOutput.test_11_existing_output_is_not_overwritten",
+        "local_regressions.ShapeOutput.test_12_nonfinite_or_inverted_total_map_is_rejected (bad=nan)",
+        "local_regressions.ShapeOutput.test_12_nonfinite_or_inverted_total_map_is_rejected (bad=-1.0)",
+        "local_regressions.ShapeOutput.test_13_cli_shape_output_and_no_false_completion_on_error",
+        "local_regressions.ShapeOutput.test_14_each_arm_has_a_separate_cli_for_external_600s_limit (arm='S')",
+        "local_regressions.ShapeOutput.test_14_each_arm_has_a_separate_cli_for_external_600s_limit (arm='F')"
+      ],
+      "error_methods": [],
+      "seconds": 3.312999999965541,
+      "rc": 1,
+      "field_execution": 0
+    },
+    "committed14": {
+      "label": "LOCAL_SYNTHETIC_REGRESSION_ONLY",
+      "source_name": "dem_suyoung_sf2d_dev.py",
+      "source_sha256": "d8f27472ce8a36978f139ffcf63102929d1ab64ab282be208e822e3a65749ea4",
+      "test_name": "test_dem_suyoung_shape_output.py",
+      "test_sha256": "f917673f01b148086def8aca5af7fb302adc80727f3270fa96f1cee0ad39f16f",
+      "baseline_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failure_methods": [],
+      "error_methods": [],
+      "seconds": 10.672000000020489,
+      "rc": 0,
+      "field_execution": 0
+    },
+    "committed9": {
+      "label": "LOCAL_SYNTHETIC_REGRESSION_ONLY",
+      "source_name": "dem_suyoung_sf2d_dev.py",
+      "source_sha256": "d8f27472ce8a36978f139ffcf63102929d1ab64ab282be208e822e3a65749ea4",
+      "test_name": "test_dem_suyoung_sf2d_dev.py",
+      "test_sha256": "a9b687e49c3f897dcecd5a1189f9fb9f577fe7c2f0e831634982640e9a5015e3",
+      "baseline_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "methods": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failure_methods": [],
+      "error_methods": [],
+      "seconds": 1.1869999999762513,
+      "rc": 0,
+      "field_execution": 0
+    }
+  },
+  "mixer": {
+    "red19": {
+      "methods": 19,
+      "failures": 3,
+      "errors": 2,
+      "skips": [
+        [
+          "pilot_tests.Pilot.test_collection_inventory_rejects_symlink",
+          "OS does not grant symlink creation"
+        ]
+      ],
+      "failure_methods": [
+        "pilot_tests.Pilot.test_explicit_author_scope_is_bound_to_approved_B_and_controller",
+        "pilot_tests.Pilot.test_live_preflight_timeout_never_retries_collection",
+        "pilot_tests.Pilot.test_watch_budget_does_not_cancel_or_submit"
+      ],
+      "error_methods": [
+        "pilot_tests.Pilot.test_approved_B_pin_disagreement_is_rejected_before_approval_files",
+        "pilot_tests.Pilot.test_terminal_truncated_rows_are_incomplete_not_index_errors (text='4')"
+      ],
+      "source_sha256": "7456b7604c764a4d8d2eb9feed9b67e12cb434e69b15cc7a0e58595a53d5171d",
+      "test_sha256": "e9437e84abdb5245d729422f72ddceaebbc0e86c2a47cd542c56b8d1df4375ce",
+      "python": "3.12.14",
+      "seconds": 0.06300000002374873,
+      "external_process_network_attempts": [],
+      "field_execution": 0,
+      "rc": 1
+    },
+    "green19": {
+      "methods": 19,
+      "failures": 0,
+      "errors": 0,
+      "skips": [
+        [
+          "pilot_tests.Pilot.test_collection_inventory_rejects_symlink",
+          "OS does not grant symlink creation"
+        ]
+      ],
+      "failure_methods": [],
+      "error_methods": [],
+      "source_sha256": "6cf21783228d4b33a75e7dc4c1be3b54c3299dcb842d94e36f2c996730562a94",
+      "test_sha256": "e9437e84abdb5245d729422f72ddceaebbc0e86c2a47cd542c56b8d1df4375ce",
+      "python": "3.12.14",
+      "seconds": 0.10899999999674037,
+      "external_process_network_attempts": [],
+      "field_execution": 0,
+      "rc": 0
+    },
+    "final_commit20": {
+      "methods": 20,
+      "failures": 0,
+      "errors": 0,
+      "skips": [
+        [
+          "pilot_tests.Pilot.test_collection_inventory_rejects_symlink",
+          "OS does not grant symlink creation"
+        ]
+      ],
+      "failure_methods": [],
+      "error_methods": [],
+      "source_sha256": "56f2d5ea366e55c987417bc7fea0f777598fb807f21de1887ae4aeea8af2a943",
+      "test_sha256": "bb2860caae06cda5eeb2014eeea94dc81e3b66bb37dbc0adc88cea445b81c452",
+      "python": "3.12.14",
+      "seconds": 2.2660000000032596,
+      "external_process_network_attempts": [],
+      "field_execution": 0,
+      "rc": 0
+    },
+    "approved_B": {
+      "approved_result_sha256": "6f7f407479af6282b9c8d4e83afa86645d4fda1506b29801be2165dcc2965737",
+      "B_source_pin": "8231f395cda98fed8dbbf5422ccda003b11a8da9",
+      "B_files": 283,
+      "assets": 40,
+      "B_bytes_unchanged": true,
+      "reseal_performed": false,
+      "field_execution": 0
+    },
+    "integration": "approved submit guard; fake scheduler; fixed POSIX runner-text bindings on Windows; second submission refused; approved B bytes unchanged",
+    "native_symlink": "SKIPPED_OS_PERMISSION",
+    "external_process_network_attempts": 0
+  },
+  "blocks": [
+    {
+      "block": "PASTE_SUYOUNG_SHAPE_WSL_CPU1_20261116.txt",
+      "python_heredocs": [
+        "VERIFY_SOURCE",
+        "JOIN_OUTPUT"
+      ],
+      "parsed": 2,
+      "bash_syntax_rc": 0,
+      "field_execution": 0
+    },
+    {
+      "block": "PASTE_MIXER_E0_IBB_ONE_ARM_20261116.txt",
+      "python_heredocs": [
+        "LOCAL_SPACE",
+        "VERIFY_PACKET",
+        "AUTHOR_GO",
+        "CHECK_RETURN_NAMES"
+      ],
+      "parsed": 4,
+      "bash_syntax_rc": 0,
+      "field_execution": 0
+    }
+  ],
+  "artifacts": [
+    {
+      "track": "suyoung",
+      "tar_name": "suyoung_shape_source_c759c4c7ab7a_20261116.tar.gz",
+      "tar_sha256": "5f941235d2fbc8b9da4ec1a43fb4573f2cb66d811de3d9e05b2b7cfb52982999",
+      "members": 4,
+      "manifest_hashes": 3,
+      "embedded_python_parsed": 2,
+      "block_sha256": "f6c8ac231cbaa5d51616e92b4d6205c2f7a14d5fa38416a05d9740195f1373ea",
+      "field_execution": 0
+    },
+    {
+      "track": "mixer",
+      "tar_name": "mixer_e0_pilot_source_997aabe1b5a7_20261116.tar.gz",
+      "tar_sha256": "0574850a7b292283e4640c488161c019b58c40ed6eb99fac77202ca566c7e6b2",
+      "members": 294,
+      "manifest_hashes": 293,
+      "embedded_python_parsed": 4,
+      "block_sha256": "62c2526263384a346ce134b9b5e766ebb8f45532fdd1c4acd72d4c33b9c6a0da",
+      "field_execution": 0
+    }
+  ],
+  "protected_source_changes": 0,
+  "shared_queue_changes": 0,
+  "independent_verdict": false
+}
