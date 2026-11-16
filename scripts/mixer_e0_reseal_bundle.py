@@ -22,6 +22,7 @@ IN = 'docs/reviews/mixer_inactive_preparation_20261109'
 F8 = 'docs/reviews/mixer_first8_launch_preparation_20261106'
 OBSERVER = 'scripts/mixer_precal_observe.py'
 SMOKE = 'scripts/mixer_smoke_blind.py'
+GATE_LAUNCHER = 'dem_scripts/mixer_20260921/launch_highbo.sh'
 CASES = tuple('PRECAL_R1_B%d_%s' % (b, r) for b in (1, 2, 3) for r in ('U', 'C')) + ('PRECAL_N0', 'PRECAL_E0')
 
 
@@ -62,6 +63,7 @@ def package_check(root):
     rows = manifest['files']
     names = [r['path'] for r in rows]
     require(len(names) == len(set(names)), 'duplicate package member')
+    require(GATE_LAUNCHER in names, 'missing runtime dependency: ' + GATE_LAUNCHER)
     for r in rows:
         p = PurePosixPath(r['path'])
         require(not p.is_absolute() and '..' not in p.parts and '\\' not in r['path'], 'unsafe member')
@@ -136,8 +138,9 @@ def stage_b(source, candidate, target, pin):
         row['sha256'] = sha((source / row['path']).read_bytes())
     put(f8 / 'source_seal.json', encode(seal))
     package = json.loads((source / 'PACKAGE_MANIFEST.json').read_bytes())
-    tool_rows = [r for r in package['files'] if r['path'].startswith('scripts/')]
+    tool_rows = [r for r in package['files'] if r['path'].startswith('scripts/') or r['path'] == GATE_LAUNCHER]
     require(any(r['path'] == SMOKE for r in tool_rows), 'SELF-170 source must be bound')
+    require(any(r['path'] == GATE_LAUNCHER for r in tool_rows), 'gate runtime dependency must be bound')
     put(f8 / 'e0_runtime_tool_identity.json', encode(dict(
         schema='e0_reseal_runtime_source_identity/1', source_pin=pin, files=tool_rows,
         relation='Supplemental exact tool identity; historical source_seal still has twelve rows',
@@ -158,7 +161,10 @@ def verify_b(target):
         digest, rel = line.split('  ', 1)
         require(sha((f8 / 'planned_assets' / rel).read_bytes()) == digest, 'asset checksum')
     for filename in ('source_seal.json', 'e0_runtime_tool_identity.json'):
-        for row in json.loads((f8 / filename).read_bytes())['files']:
+        rows = json.loads((f8 / filename).read_bytes())['files']
+        if filename == 'e0_runtime_tool_identity.json':
+            require({SMOKE, GATE_LAUNCHER}.issubset({r['path'] for r in rows}), 'missing runtime dependency binding')
+        for row in rows:
             require(sha((target / row['path']).read_bytes()) == row['sha256'], 'tool drift')
     return {'assets': 40, 'checksums': 40, 'bounded_dependencies': 12}
 

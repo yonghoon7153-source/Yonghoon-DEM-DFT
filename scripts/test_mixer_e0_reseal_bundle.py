@@ -8,6 +8,7 @@ import unittest
 spec = importlib.util.spec_from_file_location('reseal', Path(__file__).with_name('mixer_e0_reseal_bundle.py'))
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
+GATE = 'dem_scripts/mixer_20260921/launch_highbo.sh'
 
 
 class Reseal(unittest.TestCase):
@@ -32,6 +33,8 @@ class Reseal(unittest.TestCase):
     def package(self):
         m.put(self.src / 'a.txt', b'fixed')
         v = dict(source_pin='1'*40, files=[dict(path='a.txt', bytes=5, sha256=m.sha(b'fixed'))])
+        m.put(self.src / GATE, b'fixed gate')
+        v['files'].append(dict(path=GATE, bytes=10, sha256=m.sha(b'fixed gate')))
         m.put(self.src / 'PACKAGE_MANIFEST.json', m.encode(v))
         return v
 
@@ -54,7 +57,8 @@ class Reseal(unittest.TestCase):
             rows.append(dict(path=p,sha256=m.sha(raw)))
         m.put(f8/'source_seal.json',m.encode(dict(source_pin='2'*40,files=rows)))
         m.put(self.src/m.SMOKE,b'fixed SELF170')
-        m.put(self.src/'PACKAGE_MANIFEST.json',m.encode(dict(files=[dict(path=m.SMOKE,sha256=m.sha(b'fixed SELF170'),bytes=13)])))
+        m.put(self.src/GATE,b'fixed gate')
+        m.put(self.src/'PACKAGE_MANIFEST.json',m.encode(dict(files=[dict(path=m.SMOKE,sha256=m.sha(b'fixed SELF170'),bytes=13),dict(path=GATE,sha256=m.sha(b'fixed gate'),bytes=10)])))
         m.put(candidate/'candidate_asset_manifest.json',m.encode(dict(original_asset_generation_pin='2'*40,metadata_generation_source_pin='3'*40)))
         return candidate
 
@@ -101,6 +105,21 @@ class Reseal(unittest.TestCase):
     def test_self170_identity_rechecked(self):
         candidate=self.b_fixture(); target=self.root/'B'; m.stage_b(self.src,candidate,target,'4'*40)
         m.put(target/m.SMOKE,b'stale wrapper')
+        with self.assertRaisesRegex(ValueError,'tool drift'): m.verify_b(target)
+
+    def test_package_missing_gate_dependency_refused(self):
+        manifest=self.package()
+        (self.src/GATE).unlink()
+        manifest['files']=[r for r in manifest['files'] if r['path']!=GATE]
+        m.put(self.src/'PACKAGE_MANIFEST.json',m.encode(manifest))
+        with self.assertRaisesRegex(ValueError,'runtime dependency'): m.package_check(self.src)
+
+    def test_gate_dependency_bound_and_rechecked_in_B(self):
+        candidate=self.b_fixture(); target=self.root/'B'; m.stage_b(self.src,candidate,target,'4'*40)
+        identity=json.loads((target/m.F8/'e0_runtime_tool_identity.json').read_bytes())
+        self.assertIn(GATE,[r['path'] for r in identity['files']])
+        m.verify_b(target)
+        m.put(target/GATE,b'stale gate')
         with self.assertRaisesRegex(ValueError,'tool drift'): m.verify_b(target)
 
 
