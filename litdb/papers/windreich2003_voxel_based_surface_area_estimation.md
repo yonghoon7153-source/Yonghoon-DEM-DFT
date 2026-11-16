@@ -4,6 +4,7 @@
 > 그림 `14/14 육안 확인` (본문 Fig 1–13 · Table 1; **fig_8 손 크롭** = 도구가 Fig. 9 영역을 잘못 잡음 · **tab_1 재크롭** = 도구가 쪽 전체를 잘랐음 — `litdb/figures/windreich2003_…/figures.json` 의 `manual_crop` · `recrop` 사유) · 약칭 `[Windreich03]`
 > 수치 등급: **stated** = 본문·표 인쇄 · **figure-read ≈** = 그림 판독 (축 눈금 기준 · 판독 폭 명시) · **derived(ours)** = 우리 산수 (식 병기 · 인용 시 "우리 계산").  SI 없음 (원 논문에 부록 없음 — 본문 11 쪽 전부 확인).
 > 짝 카드 (같은 날 · 같은 질문): `lindblad2005_surface_area_weighted_local_configurations` (2×2×2 가중 — 이 카드의 MV 를 이어받아 개선) · `ziegel2010_surface_area_measure_digitizations` (최선 최악오차 3.98 % 증명) · `neumann2021_garnet_3d_structure_grain_boundaries_li_transport` (복셀 면에 입계 계면조건을 거는 전지 쪽 선례).
+> 🔗 관련 카드 (2026-11-16 · 원전): [`mullikin1993_surface_area_estimation_digitized_planes`](mullikin1993_surface_area_estimation_digitized_planes.md) — [9] 원문: S1–S3 가중 도출 (식 7–8 · 치우침 0 + MSE 최소) · S4–S6 = 공간 격자 값 차용 (도출 아님) · 구 시험 (표 1 · 그림 6–7) · 물체·배경 평균 → 상수 +0.527Δ² · 원기둥 물체 시험은 없다.
 
 ---
 

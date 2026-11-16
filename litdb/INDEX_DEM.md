@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 327편 · 생성 2026-11-16
+> digest 328편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -320,7 +320,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lee2023_sicspe_digitaltwin_assb` | Lee 2023 (Battery Energy 2, 20220061) — 디지털트윈 기반 SIC-SPE vs LPSCl 복합양극 구조·전기화학 분석 ★ DTBL 디지털트윈 계보의 가장 이른 논문(2023) + LPSCl 전극 구조지표 | DEM | 2026-07-28 | — |
 | `park2020_digitaltwin_assb_foundational` | Park 2020 (Adv. Energy Mater. 10, 2001563) — Digital-Twin-Driven All-Solid-State Battery: 물리·전기화학 거동 규명 ★ DTBL 디지털트윈 계보의 시조(FOUNDATIONAL ROOT, 2020) | FEM·digital-twin | 2026-07-28 | 🖼 26 |
 
-## 기타 (53편)
+## 기타 (54편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -359,6 +359,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `luan2025_graded_cathode_400whkg_pouch` | Luan 2025 (Adv. Funct. Mater. 36, e26239) — 이온/전자 flux 에 맞춘 전하운반체 공간분포로 만든 graded 복합양극 → 5 Ah 파우치 404 Wh/kg ★ 우리 Phase-5(층상 양극) + 백로그 A7(graded-z) 의 실험적 실현판 | exp + FEM (COMSOL phase-field) | 2026-08-11 | 🖼 7 |
 | `matsusaka2010_triboelectric_charging_powders_review` | Triboelectric charging of powders: A review — 분말은 손대는 공정마다 마찰 대전된다 · 전하 이동 기전 (전자 · 이온 · 물질) · 축전기 모형 Δq = k_c·C·V 와 전하 완화 (Paschen) 모형 이 반복 충돌에서 같은 지수식 q = q₀e^{−n/n₀} + q∞(1 − e^ | review (triboelectric / contact charging of powders: electro | 2026-10-13 | 🖼 92 |
 | `minnmann2022_designing_cathodes_solidstate` | Minnmann 2022 (Adv. Energy Mater. 12, 2201425) — "Designing Cathodes and Cathode Active Materials for Solid-State Batteries" (설계 Perspective) | DEM | 2026-07-28 | 🖼 7 |
+| `mullikin1993_surface_area_estimation_digitized_planes` | Surface area estimation of digitized planes — Mullikin & Verbeek (Bioimaging 1993) · 6-연결 표면 복셀 9 부류 넓이 가중의 원전: 무작위 방향 · 위치 평면에서 치우침 0 + 평균 제곱 오차 최소 (W₁ 0.8940 · W₂ 1.3409 · W₃ 1.5 | method (digital geometry — six-connected surface-voxel area  | 2026-11-16 | 🖼 52 |
 | `nadeem2023_gnn_mixing_index` | 입자 스케일 혼합도(mixedness)를 이웃 구성으로 재는 지표 — GNN (generalized nearest neighbor) mixing index: Godlieb 의 50:50 전용 이웃지표를 불균등 조성과 3종 이상으로 일반화하고, X-ray CT 로 잰 이성분 침대에서 Lacey(SD계)·MGMMI(위치계)와 | metric/method (X-ray CT 실험 + 혼합지표 정식화; DEM 없음) | 2026-09-19 | 🖼 9 |
 | `nase2001_granular_bond_collision_number_wet_cohesion` | 점착 분체의 두 무차원 수 — 입자 Bond 수 Bo_g = F_c/W (정지 더미 · 호퍼는 Bo_g ≈ 1 에서 급변) 와 충돌 수 Co = F_c/F_Bagnold (회전 드럼의 동적 안식각은 Bo_g 로는 전이가 안 보이고 Co 로 보면 전이) — 모세관 (액체 다리) 점착 · 유리구 0.5–10 mm · 실험 + | exp + DEM (particle dynamics with capillary liquid-bridge co | 2026-10-13 | 🖼 11 |
 | `neumann2021_garnet_3d_structure_grain_boundaries_li_transport` | Effect of the 3D Structure and Grain Boundaries on Lithium Transport in Garnet Solid Electrolytes — Neumann (ACS Appl. Energy Mater. 2021) · FIB-SEM 재구성 다공 LLCZNO 를 watershed 로 입자  | sim (3D microstructure-resolved continuum electrochemistry — | 2026-11-03 | 🖼 27 |
