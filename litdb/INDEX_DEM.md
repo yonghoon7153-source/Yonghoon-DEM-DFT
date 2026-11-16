@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 340편 · 생성 2026-11-16
+> digest 341편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -156,7 +156,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (55편)
+## 복합양극 미세구조 · percolation (56편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -186,6 +186,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kim2024_carbon_volumetric_occupation_se_domain` | 필독 / 우리-랩 — Accelerated Degradation of ASSBs Induced through Volumetric Occupation of the Carbon Additive in the SE Domain — Kim, Park, Kang, …, Lee, Sun, Cho (Adv. Funct. Mater. 2 | exp | 2026-06-26 | 🖼 5 |
 | `kim2026_a3d_air_electrode_microstructure_transport` | Kim 2026 (Journal of Power Sources 686, 240471) — 디지털트윈 미세구조(GeoDict) → 유효물성 → 1D 전기화학(COMSOL)으로 A3D 공기극 수송 설계 | FEM·digital-twin | 2026-07-28 | — |
 | `kim2026_pregranulation_ptfe_dry_nca_cathode_crack_delithiation` | PTFE 건식 후막 NCA 양극에서 탄소를 넣기 전에 NCA + PTFE 만 먼저 과립화 (PGP — Thinky 2000 rpm × 2 min × 5 회, ≈2 mm 과립) 하면 같은 혼합 · 반죽 · 캘린더링 뒤 PTFE 섬유가 가늘고 고르며 (< 20 vs 50–100 nm) 큰 NCA 2차 입자의 공정 균열이 줄었 | exp (PTFE 건식 후막 NCA 양극 · 조기 과립화 PGP · OM/SEM · BET · MCT · U | 2026-10-13 | 🖼 51 |
+| `kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells` | 같은 재료 · 같은 조립인데 펠릿 셀 용량이 왜 흩어지나 — 단결정 NCM82 : Li₆PS₅Cl : CNF = 70 : 30 : 1 복합 양극을 손 막자 (3 명 · 15 min) 와 미니 진동밀 (30 Hz · 30 min · ZrO₂ 5 mm 9 개 / 300 mg) 로 섞으면 9 셀 0.1 C 평균은 178.0 ↔ | experiment (전고체 펠릿 프레스 셀 · 복합 양극 혼합 = 손 막자 vs 미니 진동밀 Fritsch | 2026-11-16 | 🖼 47 |
 | `landesfeind2016_tortuosity_eis_electrodes_separators` | 전극·분리막 tortuosity 를 임피던스(EIS)로 측정 — 차단 전해질 대칭셀 + 전송선 모델(TLM-Q) · MacMullin 수 · Bruggeman 검증 — Landesfeind (J. Electrochem. Soc. 2016) | exp (EIS impedance — 분리막 HFR · 전극 차단 대칭셀 TLM-Q; liquid-LIB t | 2026-10-02 | 🖼 21 |
 | `landesfeind2018_tortuosity_impedance_vs_tomography` | 전극 tortuosity 의 임피던스 값 검증 — 일반 TLM 의 전자 저항 창 (R_El/R_Ion < 10⁻²) · 강구 충전 known-τ (1.56 vs Bruggeman 1.60–1.62) · 같은 코팅 X선 단층촬영 τ 의 약 2 배 (원인 = 미해상 바인더 · 탄소) — Landesfeind (J. Elect | exp (EIS 차단 대칭셀 TLM 검증 · 강구 known-τ · 같은 코팅 XTM τ 대조; liquid | 2026-10-03 | 🖼 7 |
 | `lee2026_unveiling_ptfe_dry_electrode_digital_twin` | PTFE 건식 양극의 구조적 이점을 FIB-SEM 3D 디지털 트윈으로 정량 — 0.2 wt% PTFE 가 LPSCl 을 NCM 위에 in situ 코팅 (NCM 표면 LPSCl 몫 35 → 59 %) · 상 분산 균질화 · 이온/전자 경로 개선 (기하 τ 2.16 → 1.75 · σ_ion 시뮬 +57 % / 실측 +6 | exp + voxel-sim (FIB-SEM 3D 재구성 · U-Net 분할 · GeoDict Conduct | 2026-10-13 | 🖼 36 |

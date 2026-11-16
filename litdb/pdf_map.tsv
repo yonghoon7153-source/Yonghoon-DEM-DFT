@@ -606,3 +606,7 @@ sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode	all-solid-state lithiu
 #   ⚠ 크롭 43 장 = 도구 12 (다시 자름 9: 그림 2 · 8 · 9 · 10 여백 · 그림 4 · 6 · 7 쪽 폭 · SI 그림 S2 축 이름 잘림 · 표 1 = 쪽 머리글 + 본문 두 단) + 손 31 (그래픽 초록 1 · SI 그림 S1 1 · 패널 9 · 근거 문단 20 · 식 0 = 원문에 번호 식 없음) + digitized.csv 332 행 (벡터 경로 좌표) — --inbox --run 으로 다시 뽑지 말 것
 hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf	design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives
 hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf	design of active-material/solid-electrolyte composite particles with conductive additives
+# ── 복합 양극 혼합 (손 막자 ↔ 미니 진동밀) · OCP 이완 정적 CAM 이용률 · 56 셀 실험실 내 재현성 (Kissel · Schosland · … · Janek, Adv. Energy Mater. 15 (2025) 2405405) — 자동 매칭 실패 (--inbox --only kissel2025 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 47 장 = 도구 24 (다시 자름 15: SI 그림 15 장 전부 = 박힌 래스터 상자 · 그중 12 장은 도구 상자가 가로축 제목을 자르거나 두 단에 걸침) + 손 23 (식 3 · 근거 문단 20) + data_file_s1_extract.csv 56 행 — --inbox --run 으로 다시 뽑지 말 것
+kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells	quantifying_the_impact_of_cathode_composite_mixing_quality
+kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells	quantifying the impact of cathode composite mixing quality
