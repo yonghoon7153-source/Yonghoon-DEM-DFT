@@ -475,6 +475,7 @@
 - **같은 제1 저자 · 같은 해 (2026-11-12 카드)**: [`benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode`](benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode.md) — 참고 [31] 의 원문 (ChemRxiv v1 프리프린트 · 2026-03-22 · 이 PDF 로는 ESM 서지 확인 안 됨) · 같은 FEM 식 꼴 (그 카드 식 (3)–(16) = 이 카드 §4-3 식 (12)–(24)) · 물성 표 = SI (그 PDF 에 없음) · 검증 = 전압 곡선만.
 - **같은 제1 저자 · 같은 해 (2026-11-12 카드)**: [`benhadjali2026_oneway_chemomech_stress_stack_pressure_3d_assb_cathode`](benhadjali2026_oneway_chemomech_stress_stack_pressure_3d_assb_cathode.md) — 참고 [30] 의 원문 (한 방향 결합 · AM = NMC811 ≈7 % · 적층압 9 ↔ 68 MPa · C/5–C/20 방전 한 번) · E · ν 는 그 SI 표 S2 에 있다 (SE 18.5 GPa · ν 0.3 = Li₂S–P₂S₅ 유리 원전 · NMC811 175 GPa · CBD 0.35 GPa · ν 0.4) — 이 논문 (NMC622) 의 FEM 이 같은 값을 썼는지는 [미확인].
 - 참고 [34] 의 원문 (2026-11-16 카드): [`silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem`](silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem.md) — 식 (6)·(7) = 스프링–감쇠 / Hertz (f = √(δ/d) · 단분산 d) + 저장 접선 변위 u_t 의 Coulomb 절단 · 표 I (k_n 2 × 10⁵ mg/d · k_t/k_n 2/7 · γ_t 0 · μ 0.5) · 원문은 법선 이력을 뺀 Walton–Braun 축소판 · LAMMPS 이름 · 다분산 R_eff 배율은 원문에 없음.
+- 참고 [38] 의 원문 (2026-11-16 카드): [`chouchane2021_innov_webapp_stochastic_generation_meshing`](chouchane2021_innov_webapp_stochastic_generation_meshing.md) — INNOV 웹 앱 (가져오기 · 확률적 생성 · 2019 복셀화 다상 메시 · .mphtxt 선택 내장) · 이 논문에 0.2 µm 없음 (해상도 = 사용자 선택) · 슬라이싱 규칙 · 수렴 = [미확인] (그 카드 §0-1).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

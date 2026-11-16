@@ -417,6 +417,7 @@
 - **τ · 수송 정의**: `landesfeind2016_tortuosity_eis_electrodes_separators` ([6]) · `landesfeind2018_tortuosity_impedance_vs_tomography` ([7]) · `aminchiang2016_nmc_electronic_ionic_transport_vs_li` ([34] · σ_AM 0.005 S/m 출처 계열).
 - **화학-기계 (이 논문이 뺀 축)**: `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` ([3]).
 - **같은 사슬 다음 편 (2026-11-12 카드)**: [`benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode`](benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode.md) — 같은 '20 % 압연' 구조 위 기계-전기화학 완전결합 (ChemRxiv 2026) · ⚠ 그 그림 2a 양극 44.6 µm · 40 × 40 µm ↔ 이 카드 표 S1 36.8 µm · 41 × 41 µm.
+- 참고 [27] 의 원문 (2026-11-16 카드): [`chouchane2021_innov_webapp_stochastic_generation_meshing`](chouchane2021_innov_webapp_stochastic_generation_meshing.md) — INNOV 웹 앱 · 구 좌표 가져오기 = AM + 반지름 일정 CBD 뿐 (SE 구 범주 없음) · 해상도 = 사용자 선택 · 슬라이싱 규칙 [미확인].
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
