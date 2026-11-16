@@ -1,0 +1,28 @@
+{
+  "red": {
+    "methods": 8,
+    "failures": 10,
+    "errors": 0,
+    "skipped": 0,
+    "source_test": "test_dem_suyoung_overlap.py",
+    "solver_execution": 0
+  },
+  "green": {
+    "methods": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_test": "test_dem_suyoung_overlap.py",
+    "solver_execution": 0
+  },
+  "execution": {
+    "external_attempts": [],
+    "new_solver_execution": 0,
+    "frames": 24
+  },
+  "input_archive_untouched": true,
+  "stored_frames": 24,
+  "new_physics_frames": 0,
+  "visual_check": "comparison and changed-label synthetic preview inspected; no clipping or missing labels observed",
+  "original_npz_not_committed": true
+}
