@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="ko">
+<!-- 11-16 · 1저자 요청: "이 내용 MPM으로 웹앱에 넣어줘용 잘 크롭해서" · "우리 누적되어 있던 Q 관련해서도 Q&A 형식으로 쌓아놓으면 좋을듯".
+     1 부 (1–6 절) = 1저자가 준 MPM 설명을 옮기고 문장만 다듬음 (그림 2 장 = 그 설명의 개념도를 잘라 씀 · mpm_basics_figs/).
+     2 부 (7–9 절) = 우리 MPM 작업에서 쌓인 질문과 답 — 답마다 날짜 · 근거 문서.  덧붙일 때도 같은 꼴로.
+     app.py 는 봉인 32 라 라우트 없이 정적 페이지로 둔다 · 사이드바 = templates/base.html · 시험 webapp/test_mpm_basics_page.py -->
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MPM 쉬운 설명 · 우리 MPM Q&amp;A</title>
+<style>
+:root{--bg:#eef2f6;--paper:#ffffff;--ink:#1f2933;--mut:#5b6770;--acc:#1f4e79;--line:#b8c4ce;--hair:#dce3ea;--th:#e6edf3;--box:#eaf2fa;--code:#eef2f6;--warn:#85570a;--warn-bg:#fff5dc;--warn-line:#d6a548;--qa:#f7f9fb;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#11161b;--paper:#1a2028;--ink:#e4e9ee;--mut:#a0acb8;--acc:#8fb8e3;--line:#3d4956;--hair:#2b343f;--th:#242f3b;--box:#1b2b3d;--code:#252e38;--warn:#e3b055;--warn-bg:#2c2414;--warn-line:#7d6126;--qa:#1e252e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11161b;--paper:#1a2028;--ink:#e4e9ee;--mut:#a0acb8;--acc:#8fb8e3;--line:#3d4956;--hair:#2b343f;--th:#242f3b;--box:#1b2b3d;--code:#252e38;--warn:#e3b055;--warn-bg:#2c2414;--warn-line:#7d6126;--qa:#1e252e;color-scheme:dark}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.75 "Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif;word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--acc)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+.top{max-width:880px;margin:0 auto;padding:16px 8px 0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 20px;font-size:.875rem}
+.top a{text-decoration:none}
+.top a:hover{text-decoration:underline}
+.sheet{max-width:880px;margin:12px auto 0;padding:52px 64px 56px;background:var(--paper);border:1px solid var(--hair);border-radius:10px;box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 32px rgba(15,23,42,.06)}
+.foot{max-width:880px;margin:0 auto;padding:14px 8px 44px;color:var(--mut);font-size:.78125rem;line-height:1.7}
+.foot p{margin:0}
+h1{margin:0;font-size:1.9375rem;line-height:1.25;letter-spacing:-.01em;color:var(--acc);text-wrap:balance}
+.subtitle{margin:6px 0 0;font-size:1.0625rem;line-height:1.5}
+.statusline{margin:8px 0 0;padding:0 0 12px;border-bottom:2px solid var(--acc);font-size:.8125rem;color:var(--mut)}
+.oneline{margin:18px 0 0;padding:13px 18px;border-left:5px solid var(--acc);border-radius:0 6px 6px 0;background:var(--box);font-size:1.03125rem;line-height:1.7}
+.toc{margin:18px 0 0;font-size:.9rem}
+.toc ol{margin:6px 0 0;padding-left:1.6em;columns:2;column-gap:32px}
+.toc li{margin:2px 0;break-inside:avoid}
+.part{margin:48px 0 0;padding:6px 0 0;border-top:1px solid var(--hair);font-size:.8125rem;font-weight:700;letter-spacing:.04em;color:var(--mut)}
+h2{margin:40px 0 12px;font-size:1.3125rem;line-height:1.4;color:var(--acc);text-wrap:balance}
+.part+h2{margin-top:10px}
+h3{margin:30px 0 10px;font-size:1.0625rem;line-height:1.45}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:1.35em}
+li{margin:5px 0}
+strong,b{font-weight:700}
+code{font-family:Consolas,"D2Coding",monospace;font-size:.86em;padding:1px 5px;border-radius:4px;background:var(--code);overflow-wrap:anywhere}
+.wrap{overflow-x:auto;margin:12px 0 16px}
+table{width:100%;border-collapse:collapse;font-size:.875rem;line-height:1.6}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top;text-align:left}
+th{background:var(--th);font-weight:700}
+.fig{margin:22px 0;text-align:center}
+.fig img{max-width:100%;height:auto;border-radius:6px;background:#fff;border:1px solid var(--hair)}
+.fig figcaption{margin-top:6px;font-size:.8125rem;line-height:1.6;color:var(--mut)}
+.box{margin:16px 0;padding:12px 18px;border-radius:6px;background:var(--box);border:1px solid var(--hair)}
+.box p{margin:6px 0}
+.box.warn{background:var(--warn-bg);border-color:var(--warn-line)}
+.box .bt{margin:0 0 4px;font-weight:700}
+.box.warn .bt{color:var(--warn)}
+.quote{margin:12px 0;padding:8px 16px;border-left:3px solid var(--line);color:var(--mut)}
+.eq{margin:14px 0;padding:10px 0;text-align:center;font-size:1.0625rem}
+.eq .lab{display:block;font-size:.8125rem;color:var(--mut)}
+.step{margin:18px 0 6px;font-weight:700}
+.qa-intro{color:var(--mut);font-size:.9rem}
+details.qa{margin:8px 0;border:1px solid var(--line);border-radius:6px;background:var(--qa)}
+details.qa>summary{cursor:pointer;padding:9px 14px 9px 12px;list-style:none;display:flex;gap:10px;align-items:baseline;line-height:1.55}
+details.qa>summary::-webkit-details-marker{display:none}
+details.qa>summary::before{content:"\25B8";color:var(--mut);flex:none}
+details.qa[open]>summary::before{content:"\25BE"}
+details.qa[open]>summary{border-bottom:1px solid var(--hair)}
+.qno{flex:none;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+.qt{flex:1 1 auto;font-weight:600}
+.qd{flex:none;font-size:.78125rem;color:var(--mut);font-variant-numeric:tabular-nums}
+.ans{padding:4px 16px 10px 34px}
+.ans p{margin:8px 0}
+.src{font-size:.8125rem;color:var(--mut)}
+.chg{font-size:.8125rem;color:var(--warn)}
+:target{scroll-margin-top:16px}
+@media (max-width:640px){
+body{font-size:.9375rem}
+.top{padding:12px 16px 0}
+.sheet{margin:10px 0 0;padding:28px 16px 34px;border-left:0;border-right:0;border-radius:0;box-shadow:none}
+.foot{padding:12px 16px 36px}
+h1{font-size:1.5625rem}
+.toc ol{columns:1}
+h2{margin-top:32px;font-size:1.1875rem}
+table{font-size:.84375rem}
+table.c2,table.c3{min-width:520px}
+table.c4{min-width:640px}
+details.qa>summary{flex-wrap:wrap}
+.qd{flex-basis:100%;padding-left:22px}
+.ans{padding:4px 12px 10px 14px}
+}
+@media print{
+body{background:#fff}
+.sheet{box-shadow:none;border:0;padding:0}
+.top{display:none}
+details.qa{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="이동">
+  <a href="/">&larr; DEM 웹앱으로</a>
+  <span><a href="/static/explain/rint_overview_20261021.html">Rint 설명</a> &middot; <a href="/static/explain/dem_redesign_plan_20261110.html">DEM 재설계 계획서 (수영)</a></span>
+</nav>
+<main class="sheet">
+<header>
+<h1>MPM (물질점법) 쉬운 설명</h1>
+<p class="subtitle">재료를 따라 움직이는 점 + 계산용 격자 — 그리고 우리 MPM 에서 쌓인 질문</p>
+<p class="statusline">2026-11-16 · 1 부 = MPM 일반 원리 (1저자가 받은 설명을 옮기고 문장만 다듬음 · 그림 2 장 = 원리 개념도) · 2 부 = 우리 MPM 작업에서 되풀이해 나온 질문과 답 (답마다 날짜 · 근거 문서 · 계속 덧붙임)</p>
+</header>
+<p class="oneline"><strong>MPM</strong> = Material Point Method, 우리말로 <strong>물질점법</strong>.  재료가 눌리거나 늘어나거나 흐를 때 재료의 각 부분이 어떻게 움직이고 변형되는지 계산하는 수치해석 방법이다.  핵심은 두 가지 — <strong>재료의 상태는 재료를 따라 움직이는 점에 기록</strong>하고, <strong>힘과 움직임은 따로 놓은 계산용 격자에서 계산</strong>한다.</p>
+
+<nav class="toc" aria-label="차례">
+<strong>차례</strong>
+<ol>
+<li><a href="#s1">물질점 — 작은 재료 영역의 대표점</a></li>
+<li><a href="#s2">격자는 왜 필요한가</a></li>
+<li><a href="#s3">점 → 격자 → 점 을 되풀이</a></li>
+<li><a href="#s4">따로 쓰는 이유 — 큰 변형</a></li>
+<li><a href="#s5">DEM 과 무엇이 다른가</a></li>
+<li><a href="#s6">전극 압착에 연결하면</a></li>
+<li><a href="#s7">우리 MPM 은 지금</a></li>
+<li><a href="#qa">우리 MPM Q&amp;A (쌓아 가는 곳)</a></li>
+<li><a href="#s9">더 읽을거리 · 출처 표기</a></li>
+</ol>
+</nav>
+
+<p class="part">1 부 · MPM 일반 원리</p>
+<h2 id="s1">1. 물질점은 작은 재료 영역을 대표하는 점</h2>
+<p>반죽 한 덩어리를 위에서 누르면 납작해지고 옆으로 퍼진다.  컴퓨터가 이 과정을 계산하려면 반죽의 여러 부분을 구별해서 따라가야 한다.</p>
+<p>그래서 반죽을 머릿속으로 작은 영역들로 나누고, 각 영역을 대표하는 점 하나씩을 정해 둔다.  그 점이 <strong>물질점 (material point)</strong> 이다.  각 점에는 자신이 대표하는 영역의 질량 · 위치 · 속도 · 부피 · 응력 같은 정보를 저장한다.</p>
+<figure class="fig">
+<img src="mpm_basics_figs/mpm_material_point_before_after.png" width="732" height="336" alt="누르기 전과 누른 뒤. 왼쪽은 하나의 연속된 재료를 작은 영역마다 대표점 하나로 나눈 그림이고, 점 A 와 A 가 대표하는 영역이 표시돼 있다. 오른쪽은 위에서 판으로 누른 뒤 재료가 납작하게 옆으로 퍼진 모습이며, 재료와 함께 이동한 같은 점 A 가 표시돼 있다.">
+<figcaption>그림 1. 누르기 전 · 누른 뒤의 같은 점 A — 물질점은 같은 재료 부분을 따라간다 (원리 설명용 개념도 · 해석 결과 아님)</figcaption>
+</figure>
+<p>눌리기 전의 A 와 눌린 뒤의 A 는 같은 재료 부분을 따라가는 점이다.  위치가 달라져도 "원래 이 부분이었구나" 를 계속 알 수 있다.  물질점 하나가 가진 기록을 일상적인 말로 바꾸면 다음과 같다.</p>
+<div class="wrap"><table class="c2">
+<thead><tr><th style="width:34%">물질점에 저장하는 정보</th><th>쉬운 의미</th></tr></thead>
+<tbody>
+<tr><td>위치</td><td>지금 이 재료 부분이 어디에 있는가?</td></tr>
+<tr><td>질량 · 부피</td><td>얼마나 많은 재료를 대표하고, 얼마만큼의 공간을 차지하는가?</td></tr>
+<tr><td>속도</td><td>어느 방향으로 얼마나 빠르게 움직이는가?</td></tr>
+<tr><td>응력</td><td>내부에서 얼마나 눌리거나 당겨지거나 밀리고 있는가?</td></tr>
+<tr><td>변형 상태 · 이력</td><td>얼마나 변형됐고, 이전에 어떤 변형을 겪었는가?</td></tr>
+</tbody>
+</table></div>
+<p>이 정보가 재료를 따라 움직이므로, "한 번 눌려서 영구적으로 찌그러진 부분" 의 이력도 계속 유지할 수 있다.</p>
+<div class="box warn">
+<p class="bt">꼭 구분할 것</p>
+<p>물질점 하나가 원자 하나나 실제 분말 입자 하나를 뜻하지는 않는다.  연속된 재료를 계산하려고 정한 대표점이므로, 실제 분말 입자 하나의 내부를 여러 물질점으로 나타낼 수 있다.  그림에서 점 사이에 공간이 보이더라도 그 공간이 곧 실제 기공은 아니다.</p>
+<p><strong>우리 MPM 에서는</strong> 기공률을 점 사이 틈으로 세지 않고, 판 높이와 고체 부피로 센다 — 기공률 = 1 − 고체 부피 / (면적 × 판 높이).  (아래 <a href="#q1">Q1</a> · <a href="#q12">Q12</a>)</p>
+</div>
+
+<h2 id="s2">2. 그러면 격자는 왜 필요할까</h2>
+<p>물질점으로 재료의 각 부분을 따라갈 수 있게 됐다.  이제는 이런 질문에 답해야 한다.</p>
+<p class="quote">"위에서 누르는 힘과 재료 내부의 저항을 고려하면, 다음 순간에 각 부분은 어느 방향으로 얼마나 움직일까?"</p>
+<p>MPM 은 이 계산을 위해 재료가 있는 공간에 모눈종이 같은 <strong>배경격자</strong>를 놓고, 격자 선이 만나는 교점들을 계산에 쓴다.  두 가지 역할을 구분하면 된다.</p>
+<ul>
+<li><strong>물질점</strong>: 재료와 함께 움직이면서 재료의 상태와 이력을 보관한다.</li>
+<li><strong>배경격자</strong>: 물질점에서 받은 정보로 힘 · 가속도 · 속도 등을 계산한다.</li>
+</ul>
+<p>배경격자는 재료 안에 들어 있는 실제 철망이나 결합 구조가 아니라 계산을 위한 공간 분할이다.  일반적인 MPM 은 규칙적인 격자를 되풀이해 쓰고, 물질점은 그 격자 사이를 이동한다.</p>
+<p>비유하면, 물질점은 각 재료 부분의 <strong>기록장</strong>이고 격자는 여러 기록을 모아 계산하는 <strong>임시 계산판</strong>이다.</p>
+
+<h2 id="s3">3. MPM 은 점 → 격자 → 점 을 되풀이한다</h2>
+<p>아래 그림에서 동그란 점 A 와 네모로 표시한 격자 교점을 구분해 보자.</p>
+<figure class="fig">
+<img src="mpm_basics_figs/mpm_p2g_g2p_cycle.png" width="700" height="639" alt="한 번의 계산 순서 네 칸. ① 점에서 격자로: 물질점 A 의 질량과 운동량을 주변 격자 교점 네 개에 나누어 모으고, A 는 제자리에 있다 (P2G). ② 격자에서 계산: 힘을 이용해 교점의 가속도와 속도를 계산한다. ③ 격자에서 점으로: 계산한 운동 정보를 점 A 로 돌려준다 (G2P). ④ 점과 재료 상태 갱신: 이전 A 에서 같은 A 가 새 위치로 움직이고, 격자는 같은 위치에서 다시 쓰며, 이력은 점에 남아 다시 ① 로 간다.">
+<figcaption>그림 2. 한 번의 계산 순서 ① → ④ (2 차원 선형 보간의 개념도 · 실제 해석 결과 아님)</figcaption>
+</figure>
+<p class="step">① 물질점의 정보를 격자에 모은다 — P2G (Particle to Grid)</p>
+<p>각 물질점이 가진 질량과 운동량 정보를 주변 격자 교점에 나누어 기록한다.  화살표는 정보 전달을 나타낸다 — 물질점 자체가 격자 교점에 달라붙거나 실제 재료가 네 조각으로 흩어지는 과정이 아니다.  그래서 첫 단계에서 A 는 제자리에 있다.  여러 물질점이 같은 교점에 정보를 보내면 그 교점은 정보를 합쳐 계산에 쓴다.</p>
+<p class="step">② 격자에서 힘과 움직임을 계산한다</p>
+<p>격자에서는 기본적으로 뉴턴의 운동법칙을 쓴다.</p>
+<p class="eq">질량 <i>m</i> × 가속도 <i>a</i> = 합력 <i>F</i><span class="lab">합력에는 밖에서 누르는 힘과 재료 내부에서 변형에 저항하는 힘이 함께 들어간다</span></p>
+<p>반죽을 누르는 상황이라면, 누르는 힘과 반죽 내부의 저항을 고려해 각 위치의 속도가 어떻게 달라질지 계산하는 것이다.</p>
+<p class="step">③ 계산 결과를 다시 물질점에 돌려준다 — G2P (Grid to Particle)</p>
+<p>격자에서 계산한 속도나 속도 변화를 주변 물질점에 돌려준다.  A 는 주변 격자 교점의 결과를 조합해 다음 순간에 자신이 어떻게 움직여야 하는지 얻는다.  전체 구조는 "물질점의 정보로 격자를 계산하고, 그 결과로 물질점을 갱신하는 것" 이다.</p>
+<p class="step">④ 점을 움직이고 재료 상태를 갱신한다</p>
+<p>그 결과에 따라 물질점의 위치와 속도가 바뀐다.  주변의 속도 차이에서 변형을 계산하고, 재료의 성질을 나타내는 식 (구성식) 으로 응력도 갱신한다.  그다음 격자의 임시 계산 정보를 비우고 다음 계산을 시작한다.  이미 움직인 물질점의 위치와 누적된 변형 이력은 그대로 남는다 — 격자 정보를 비운다고 눌린 재료가 원래 모양으로 돌아가지는 않는다.</p>
+<p>이 과정을 짧은 시간 간격으로 되풀이하면, 재료가 계속 눌리고 퍼지는 모습을 계산할 수 있다.</p>
+
+<h2 id="s4">4. 점과 격자를 따로 쓰는 이유 — 큰 변형</h2>
+<p>재료에 그물망을 붙여 놓고 같이 변형시킨다고 생각해 보자.  처음에는 반듯했던 그물망도 재료가 심하게 눌리고 늘어나면 납작해지거나 뒤틀린다.  재료를 따라 격자도 움직이는 일반적인 라그랑주 방식의 유한요소법 (FEM) 에서는 이런 격자의 심한 왜곡이 계산을 어렵게 만들 수 있다.</p>
+<p>MPM 에서는 재료를 따라가는 역할을 물질점이 맡고, 계산에는 규칙적인 배경격자를 재사용한다.  그래서 재료가 크게 변형돼도 계산격자가 계속 찌그러지는 문제를 피할 수 있다.</p>
+<p>다만 FEM 도 큰 변형을 계산할 수 있다 (재격자화 등).  문제의 변형 정도와 필요한 정확도에 따라 알맞은 방법이 달라진다.</p>
+
+<h2 id="s5">5. 우리가 쓰는 DEM 과는 무엇이 다를까</h2>
+<p>둘 다 화면에 많은 점이나 입자가 보일 수 있지만, 그 점이 무엇을 대표하느냐가 다르다.</p>
+<div class="wrap"><table class="c3">
+<thead><tr><th style="width:24%">구분</th><th>일반적인 구형 DEM</th><th>MPM</th></tr></thead>
+<tbody>
+<tr><td>하나의 계산 대상</td><td>크기와 지름을 가진 개별 입자</td><td>작은 재료 영역을 대표하는 물질점</td></tr>
+<tr><td>주로 따라가는 것</td><td>입자의 이동 · 회전, 입자 사이 접촉</td><td>재료 각 부분의 이동 · 변형 · 응력</td></tr>
+<tr><td>힘을 계산하는 기본 방식</td><td>입자 사이의 접촉력과 토크</td><td>재료의 응력에 따른 힘을 배경격자에서 계산</td></tr>
+<tr><td>실제 분말 입자 하나의 표현</td><td>구 하나 또는 여러 요소의 집합 등</td><td>입자 내부를 여러 물질점으로 나타낼 수 있음</td></tr>
+</tbody>
+</table></div>
+<p>전형적인 DEM 의 입자는 지름과 회전을 가진 유한한 크기의 입자이고, MPM 의 물질점은 연속체의 상태를 기록하는 계산점이다.</p>
+<p>분말을 누르는 상황으로 생각하면 더 쉽다.  입자들이 서로 자리를 바꾸는 모습과 입자 자체가 납작하게 변형되는 모습은 서로 다른 현상이다.  MPM 을 쓰면 하나의 입자 내부에도 여러 물질점을 두어, 그 입자 안의 각 부분이 어떻게 이동하고 변형되는지 나타낼 수 있다.  실제로 MPM 과 접촉 계산을 결합해 변형 가능한 입자 집합의 압축을 연구한 사례가 있다 (<a href="#s9">9 절</a>의 litdb 카드).</p>
+
+<h2 id="s6">6. 전극 압착에 연결하면</h2>
+<p>예를 들어, 고체전해질 (SE) 입자가 눌리면서 주변 활물질 (AM) 입자의 형태에 맞춰 변형되는 과정을 모델링하고 싶다고 하자.  MPM 관점에서는 SE 입자 내부를 여러 물질점으로 나타내고, 압착에 따라 각 부분이 어디로 이동하는지, 얼마나 변형되는지, 어느 부분에 응력이 모이는지를 계산하도록 구성할 수 있다.  이는 MPM 의 원리를 전극 문제에 연결한 모델링 예시이며, 앞의 입자 압축 연구가 곧바로 특정 배터리 재료를 검증한 것은 아니다.</p>
+<p>결과를 정하는 데는 재료의 성질을 나타내는 <strong>구성식</strong>도 필요하다.  쉽게 말해 다음과 같은 규칙이다.</p>
+<ul>
+<li>힘을 빼면 원래 모양으로 얼마나 돌아오는가?</li>
+<li>어느 정도 눌리면 영구적으로 변형되는가?</li>
+<li>변형이 커질수록 더 강하게 저항하는가?</li>
+</ul>
+<p>MPM 은 이런 재료법칙을 이용해 움직임과 변형을 계산하는 방법이다.  그래서 논문을 볼 때는 <strong>"MPM 을 썼다" 와 함께 "어떤 재료법칙과 접촉 조건을 넣었는가"</strong> 를 확인하면, 그 해석이 실제로 무엇을 설명하는지 알 수 있다.</p>
+
+<p class="part">2 부 · 우리 MPM</p>
+<h2 id="s7">7. 우리 MPM 은 지금</h2>
+<div class="wrap"><table class="c2">
+<thead><tr><th style="width:22%">항목</th><th>지금 (2026-11-16)</th></tr></thead>
+<tbody>
+<tr><td>코드</td><td>3D = <code>scripts/mpm3d_compaction.py</code> (MLS-MPM · GPU) · 2D 대조 = <code>scripts/mpm_dem_match.py</code></td></tr>
+<tr><td>SE 구성식</td><td>von Mises (J2) 소성 · E 1.53 GPa · ν 0.49 · σ_y 0.30 GPa (3D 기본값) — 왜 이 값인지 = <a href="#q5">Q5</a> – <a href="#q9">Q9</a></td></tr>
+<tr><td>AM</td><td>DEM 압밀이 끝난 위치에 고정한 장애물 (스캐폴드) · AM 에는 물질점이 없다 — <a href="#q7">Q7</a></td></tr>
+<tr><td>판 (플래튼)</td><td>위에서 내려와 목표 응력 300 MPa · 정지 규약 (servo · hold) 을 결과와 같이 적는다 — <a href="#q10">Q10</a> · <a href="#q11">Q11</a></td></tr>
+<tr><td>내는 것</td><td>SE 형상 변화 · 응력장 · 누적 소성 변형장 · 판 높이 (두께) · STEP3 복셀 전도도 (<a href="#q4">Q4</a>)</td></tr>
+<tr><td>DEM 의 몫</td><td>접촉망 전도도 (접촉마다 협착 저항) · 퍼콜레이션 · 배위수 · 파괴 · Furnas dip (<a href="#q16">Q16</a>)</td></tr>
+<tr><td>재설계</td><td>[DEM 우선 (수영)] — 가압부터 탈압까지 AM 과 SE 를 한 모델로 · 2D 시험 먼저 (<a href="#q20">Q20</a> – <a href="#q22">Q22</a>)</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="qa">8. 우리 MPM Q&amp;A (쌓아 가는 곳)</h2>
+<p class="qa-intro">우리 MPM 작업에서 되풀이해 나온 질문과 지금의 답이다.  질문을 누르면 답이 펼쳐진다.  답마다 날짜와 근거 문서를 붙였다.  새 질문은 해당 묶음 끝에 같은 꼴 (질문 · 답 · 날짜 · 근거) 로 덧붙이고, 답이 바뀌면 옛 답을 지우지 않고 '바뀜 (날짜)' 표지를 단다.</p>
+
+<h3 id="qa-a">가. 원리 · 우리 틀</h3>
+<details class="qa" id="q1"><summary><span class="qno">Q1</span><span class="qt">물질점 하나가 실제 분말 입자 하나인가요?</span><span class="qd">06-17</span></summary><div class="ans">
+<p>아니다.  물질점은 연속된 재료의 작은 영역을 대표하는 계산점이다.  우리 3D MPM 은 SE 입자 하나를 여러 물질점으로 채운다 — 512 격자 런에서 물질점이 약 1.15 × 10⁸ 개였다.  점 사이의 빈 공간도 기공이 아니다: 기공률은 판 높이와 고체 부피로 센다.</p>
+<p class="src">근거: CLAUDE.md "512 GRID-CONVERGENCE (2026-06-17)" · <code>scripts/mpm3d_compaction.py</code></p>
+</div></details>
+<details class="qa" id="q2"><summary><span class="qno">Q2</span><span class="qt">우리 MPM 에서는 입자 모양이 정말 바뀌나요?</span><span class="qd">06-08 · 06-22</span></summary><div class="ans">
+<p>바뀐다.  SE 를 von Mises (J2) 소성 연속체로 풀어, 입자가 납작해지고 빈 곳으로 흘러 들어간다.  2D 결과의 형상 (중심은 남고 경계가 평평해짐) 이 SEM 단면과 맞았다 (정성 비교).</p>
+<p>DEM 은 입자가 강체 구라 형상이 바뀌지 않고, 겹침을 소성의 대리로 쓴다.  문헌의 '탄소성 DEM' (예: Varkey 2026) 도 접촉 힘 법칙만 탄소성이고 입자는 구 그대로다.</p>
+<p class="src">근거: CLAUDE.md "MPM cap/champion (2026-06-07→08)" · <code>docs/lit_varkey2026_multicontact_dem.md</code></p>
+</div></details>
+<details class="qa" id="q3"><summary><span class="qno">Q3</span><span class="qt">DEM 과 MPM 을 서로에게 맞춰 보정하면 안 되나요?</span><span class="qd">06-07</span></summary><div class="ans">
+<p>안 된다.  둘을 각자 실험에 따로 보정한 뒤 비교한다.  맞으면 교차검증이고, 다르면 모델 한계를 숫자로 잰 것이다 — 둘 다 결과다.  한쪽을 다른 쪽에 맞추면 순환이다 (예: MPM σ_y 를 DEM Heckel 에서 뽑은 값에 맞추기).</p>
+<p class="src">근거: CLAUDE.md "DEM ↔ MPM Complementary Simulation Frame" [4] (2026-06-07 확정)</p>
+</div></details>
+<details class="qa" id="q4"><summary><span class="qno">Q4</span><span class="qt">MPM 도 전도도 (σ) 를 낼 수 있나요?</span><span class="qd">08-11 · 09-08</span></summary><div class="ans">
+<p>낸다.  STEP3 가 MPM 의 상 (phase) 격자 위에서 ∇·(σ∇φ) = 0 을 유한체적으로 풀어 이온 · 전자 · 열 전도도를 낸다 (08-11 정정 — 그 전에는 "MPM 은 σ 를 못 낸다" 고 잘못 적었다).</p>
+<p>다만 계면 저항 항이 0 이라, DEM 접촉망에서 접촉 협착을 뺀 가지 (CONTACT_FREE) 위에 있다.  그래서 두 σ 의 일치를 독립 교차검증으로 인용하지 않고, 절대값을 실험 옆에 둘 때는 '협착 미포함' 을 같이 적는다.  빠진 접촉 · 계면 저항을 복셀 계산에 넣는 일이 Rint 트랙이다 (사이드바 'Rint 설명').</p>
+<p class="src">근거: <code>docs/voxel_contact_free_gap.md</code> · 원장 CL-81 · <code>scripts/step3_sigma.py</code></p>
+</div></details>
+
+<h3 id="qa-b">나. 모델 설정 — 왜 이렇게 두었나</h3>
+<details class="qa" id="q5"><summary><span class="qno">Q5</span><span class="qt">SE 영률을 실제 값 대신 1.53 GPa 로 낮춘 이유는?</span><span class="qd">06-06</span></summary><div class="ans">
+<p>실제 SE 영률은 우리 DFT 22.06 GPa (문헌 22–24 GPa) 다.  그런데 연속체 MPM 은 분말 압밀의 입자 재배열 · 입계 미끄럼 · 미세 파괴를 담지 못한다.  실제 E (24 GPa) 로 두면 순수 SE 가 300 MPa 에서 기공 33–38 % 에 멈췄다 (너무 뻣뻣함).  낮춘 E 가 그 빠진 기전을 대신한다 — DEM 도 같은 이유로 18 배 낮춘다 (1.35 GPa).</p>
+<p>낮춘 E 는 물성이 아니라 보정값이다.  이 연화가 접촉 표현의 한계와 얼마나 관련되는지는 가설로 두고, 재설계 트랙이 2D 시험으로 가른다 (<a href="#q20">Q20</a>).  실제 E 에 부피 캡을 더하는 길은 실패했다 (<a href="#q17">Q17</a>).</p>
+<p class="src">근거: CLAUDE.md frame [2] · "E_eff CROSS-VALIDATED by independent true-plastic MPM (2026-06-06)" · <code>docs/reviews/dem_redesign_direction_20261109/briefing_ko.md</code> §1</p>
+</div></details>
+<details class="qa" id="q6"><summary><span class="qno">Q6</span><span class="qt">포아송비 ν 를 0.49 로 둔 이유는?</span><span class="qd">06-16</span></summary><div class="ans">
+<p>E 를 낮추면 부피 탄성률 K 까지 낮아진다 (ν 0.30 이면 K 1.27 GPa).  그러면 SE 가 부피로 짓눌려 기공률 0 % 까지 과압축됐다.  ν 0.49 이면 K = E / (3(1 − 2ν)) = 25.5 GPa 로 우리 DFT 체적탄성률 B₀ 26.23 GPa 와 −2.8 % 차이이고, 전단 탄성률만 무르다 (μ 0.51 GPa).  즉 연화는 전단에만 두고 부피는 실제에 가깝게 둔다 = 부피를 지키며 흐르는 소성 흐름.</p>
+<p class="src">근거: CLAUDE.md "3D MPM compaction — 3-fix calibration (2026-06-16)" · <code>docs/mpm3d_calibration.md</code></p>
+</div></details>
+<details class="qa" id="q7"><summary><span class="qno">Q7</span><span class="qt">AM (활물질) 은 왜 움직이지 않게 얼려 두나요?</span><span class="qd">06-26</span></summary><div class="ans">
+<p>네 가지 이유다.  ① AM 이 하중을 받치는 것은 강체 입자의 접촉망 현상이라 DEM 의 몫이다.  ② 움직이는 강체 AM 을 넣으면 힘 사슬이 SE 를 과하게 가려 기공이 36–41 % 로 남는다 (반대쪽 비물리).  ③ AM 을 물질로 넣으면 384 격자 이상에서 시간 간격 (CFL) · 메모리가 터진다.  ④ DEM 의 AM 위치가 이미 300 MPa 로 압밀된 골격이라 움직이면 그 골격에서 벗어난다.</p>
+<p>대가: AM 의 하중 분담이 빠진다 (<a href="#q10">Q10</a> · <a href="#q19">Q19</a>).</p>
+<p class="src">근거: <code>docs/mpm_scaffold_reliability_and_am_freeze.md</code></p>
+</div></details>
+<details class="qa" id="q8"><summary><span class="qno">Q8</span><span class="qt">2D 와 3D 의 σ_y 가 왜 다른가요 (2D 0.15 · 3D 0.30 GPa)?</span><span class="qd">06-16</span></summary><div class="ans">
+<p>3D 는 재료가 흐를 방향이 하나 더 있어 같은 압력에서 더 쉽게 치밀해진다.  그래서 같은 순수 SE 보정 표적 (300 MPa 에서 기공률 약 10 %) 에 닿으려면 3D 가 더 높은 σ_y 가 필요했다 — 기하의 차이이지 모델이 바뀐 것이 아니다.</p>
+<p class="chg">바뀜 (10-03): 그 10 % 표적의 외부 출처는 [미확인] 이다 (원장 CL-94) — 외부 실험 앵커가 아니라 우리 보정 표적이다.  재설계에서는 랩 표준 (순수 SE 10–13 %) 을 쓴다 (<a href="#q21">Q21</a>).</p>
+<p class="src">근거: <code>docs/mpm3d_calibration.md</code> · 원장 CL-94</p>
+</div></details>
+<details class="qa" id="q9"><summary><span class="qno">Q9</span><span class="qt">σ_y 0.30 GPa 를 문헌의 항복응력과 바로 비교해도 되나요?</span><span class="qd">11-10</span></summary><div class="ans">
+<p>그대로는 안 된다.  우리 <code>--sigma-y</code> 는 Hencky 편차 변형의 문턱이고 응력은 fixed-corotated 꼴로 계산한다.  그래서 σ_y 0.30 이면 연화 재료 (E 1.53 · ν 0.49) 의 일축 압축 항복이 0.318 GPa, 인장이 0.454 GPa 로 나온다.  흔히 적던 '문헌 범위 0.05–0.30 GPa' 도 출처 카드가 없다.  문헌 값 (예: 나노압입 경도 1.41 GPa) 과 견줄 때는 환산 규칙을 결과 전에 등록한다.</p>
+<p class="src">근거: 원장 SELF-160 · <code>docs/reviews/dem_redesign_direction_20261109/memo_v3_1.md</code> 부록 A · litdb <code>lee2025_heckel_argyrodite_powder_densification_nanoindentation</code></p>
+</div></details>
+
+<h3 id="qa-c">다. 결과 읽는 법 — 자주 틀린 것</h3>
+<details class="qa" id="q10"><summary><span class="qno">Q10</span><span class="qt">MPM 을 '진짜 300 MPa 에 닿을 때까지' 누르게 하면 되지 않나요?</span><span class="qd">08-12</span></summary><div class="ans">
+<p>이미 돌렸고 반증됐다 (사전등록 R1).  정직하게 목표까지 누르면 ε_sphere 기공률이 1.13 % — 실험 15.6 % 보다 14.5 %p 과압축이다.  그때의 해석은, 얼린 AM 이 하중을 제대로 나눠 지지 못하니 무른 SE 가 대부분을 지고 완전 치밀화로만 목표에 닿는다는 것이다.  그래서 프레임 늘리기 · 서보 전환 · 정지 기준 재설계는 해법이 아니고, AM 하중 분담 (<a href="#q19">Q19</a>) 이 먼저다.  이 질문이 세 번 되풀이돼 기록에 '하지 말 것' 으로 박혀 있다.</p>
+<p class="chg">한정 (11-13 브리핑): 얼린 AM 에도 반력이 생길 수 있어 'AM 하중 0' 이라고는 쓰지 않는다.</p>
+<p class="src">근거: <code>docs/reviews/fam_platen_prereg_20260812.md</code> §11 · 원장 CL-04 · CLAUDE.md "DO-NOT — MPM 을 진짜 300 MPa 에 닿게 만들려고 하지 말 것"</p>
+</div></details>
+<details class="qa" id="q11"><summary><span class="qno">Q11</span><span class="qt">결과의 final_stress 가 목표보다 작으면 '목표 미달' 인가요?</span><span class="qd">09-22</span></summary><div class="ans">
+<p>아니다.  hold 규약은 목표 응력에 닿는 순간 판을 고정하고 그 뒤 침대가 이완하므로, 마지막 응력이 목표보다 작은 것이 정상이다.  도달 여부는 <code>porosity_at_target_pct</code> · <code>settled_over_target</code> 에 값이 있는지 (None 이 아닌지) 로 본다.  <code>settled_over_target</code> (정착 응력 / 목표) 이 1 근처가 아닌 것도 정상이다 (real_14 0.021).  09-22 에 이것을 목표 미달로 잘못 읽어 멀쩡한 런을 실패로 보고한 적이 있다.</p>
+<p class="src">근거: CLAUDE.md DO-NOT 블록 · <code>scripts/mpm3d_compaction.py</code> (도달 판별 = 두 값의 None 여부)</p>
+</div></details>
+<details class="qa" id="q12"><summary><span class="qno">Q12</span><span class="qt">스캐폴드 MPM 의 기공률이 DEM 과 맞으면 검증된 것인가요?</span><span class="qd">08-12 · 10-13</span></summary><div class="ans">
+<p>아니다.  SE 씨앗이 DEM 압축이 끝난 좌표라 고체 부피가 상수이고, MPM 의 출력은 사실상 판 높이 하나다.  판이 DEM 높이 근처에 서면 기공률은 산술적으로 DEM 값을 돌려준다 — 그 일치는 순환이다.  반증할 수 있는 MPM 산출물은 응력으로 멈춘 <strong>두께</strong>다 (지금 등록 런의 값 = <a href="#q19">Q19</a>).</p>
+<p>기공률을 적을 때는 DEM 과 같은 관례 (ε_sphere) 로 통일한다.  MPM 관례와의 차이는 상수가 아니라 두께에 반비례한다 (<code>--se-dump</code> 경로 · real_14 두께 30.28 µm 에서 1.251 %p).</p>
+<p class="chg">바뀜 (10-13): 옛 비교 'MPM 30.7 µm ↔ DEM 30.28 µm' (06-16 · cell-fill · servo) 는 세대가 달라 쓰지 않는다 (1저자 10-13 Q2).</p>
+<p class="src">근거: <code>docs/mpm_platen_kinematic_stop_defect.md</code> (머리 정정 · §31) · CLAUDE.md "SE-DUMP scaffold" 절 정정</p>
+</div></details>
+<details class="qa" id="q13"><summary><span class="qno">Q13</span><span class="qt">격자는 얼마나 촘촘해야 MPM 응력을 믿을 수 있나요?</span><span class="qd">08-06</span></summary><div class="ans">
+<p>기준은 절대 격자 크기가 아니라 '채널 하나에 셀이 몇 개 들어가나' 다.  채널 폭 d_h = 빈 부피 / AM 표면적 이 셀 3.5 개 이상 (d_h/dx ≳ 3.5) 이면 남은 격자 의존이 약 4 % 다.  그보다 작으면 좁은 채널의 협착이 격자에서 사라져 SE 가 쉽게 통과하므로 SE 응력을 낮게 본다 → 결과를 하한으로 적는다.  런 전에 스캐폴드 파일만으로 (GPU 없이) 계산할 수 있다.  3.5 는 실용선이지 수렴 보장선이 아니다.</p>
+<p class="src">근거: <code>docs/se_curve_transfer_verdict_20260806.md</code> · <code>scripts/fit_dh_collapse.py</code></p>
+</div></details>
+<details class="qa" id="q14"><summary><span class="qno">Q14</span><span class="qt">판을 내리는 속도 (재하율) 가 결과를 바꾸나요?</span><span class="qd">08-06 · 09-22</span></summary><div class="ans">
+<p>같은 침대 · 같은 스트로크면 두께 · 기공률은 소수점까지 같고, 응력에만 나타난다 (Lee 침대 마하 0.03 → 0.01: 두께 121.703 µm · 기공률 15.525 % 같음 · 정착 응력비 0.6032 → 0.6577, +9.0 %).</p>
+<p>주의할 점: 기본 속도 규칙이 판 속도를 침대 높이에 비례시켜, 두께가 다른 침대끼리는 재료가 같아도 재하율이 다르다 (real_14 V/c_P 0.031 ↔ 113.9 µm 침대 0.105).  침대 사이 비교는 <code>--platen-mach</code> 로 마하수를 맞춘다.</p>
+<p class="src">근거: CLAUDE.md "MPM 재하율 함정 — 크로스-베드 비교 (2026-08-06)" · DO-NOT 블록 "2026-09-22 신규 실측"</p>
+</div></details>
+<details class="qa" id="q15"><summary><span class="qno">Q15</span><span class="qt">SE 가 AM 을 덮는 정도 (coverage) 는 어떤 값을 보고하나요?</span><span class="qd">06-21</span></summary><div class="ans">
+<p>같은 거리 띠 (Hertz 0.13 µm · Tabor 0.26 µm) 에서 두 값을 같이 본다 — 강체 구 기하 피복 (해석적 · 설정 무관) 과 소성 변형 피복 (모든 SE 물질점 · 표본 없음).  둘의 차이가 MPM 만 내는 소성 밀착분이다.  real_14 AM_P: 소성 52 / 74 % · 강체 46 / 70 %.</p>
+<p>격자 이웃 칸으로 세는 <code>coverage_AM_*_mpm_pct</code> (약 26 %) 는 격자 의존 미리보기라 보고하지 않는다.</p>
+<p class="src">근거: <code>docs/mpm_coverage_plastic_vs_rigid.md</code></p>
+</div></details>
+
+<h3 id="qa-d">라. MPM 이 못 하는 것 — DEM 의 몫</h3>
+<details class="qa" id="q16"><summary><span class="qno">Q16</span><span class="qt">MPM 이 AM 비율에 따른 기공률 최저점 (Furnas dip) 을 낼 수 있나요?</span><span class="qd">06-10</span></summary><div class="ans">
+<p>못 낸다.  연한 SE 에서 강체에 가까운 SE 까지 재료를 바꿔 봐도 dip 의 모양과 절대값을 함께 내는 설정이 없다.  dip 은 처음 강체 구들이 쌓이는 기하 (작은 SE 가 큰 AM 사이 틈을 메움) 에서 생기므로 DEM (또는 de Larrard 기하 모델) 의 몫이다.  처음에 'dip 이 같은 자리에 있다' 고 읽은 것은 두 곡선이 교차한 것을 잘못 읽은 것이었다.</p>
+<p class="src">근거: <code>docs/mpm_dem_wallP_crossvalidation.md</code> (CORRECTION 2) · <code>docs/mpm_dip_resolution_invariance.md</code></p>
+</div></details>
+<details class="qa" id="q17"><summary><span class="qno">Q17</span><span class="qt">부피 캡 (DPC) 같은 구성식을 넣으면 실제 E 로 실험 Heckel 곡선을 낼 수 있나요?</span><span class="qd">06-09</span></summary><div class="ans">
+<p>입자를 하나하나 푸는 MPM 에서는 아니다.  SE 는 고체라 (부피 탄성률 ≫ 300 MPa) 입자 자체의 부피가 줄지 않는다 — 부피 캡은 입자 부피를 줄여 오히려 더 압축했다 (300 MPa 에서 기공률 0.8 %).  밀도에 따라 굳는 두 방식 (전단 · 부피) 도 실패했다.  실험 Heckel 은 접촉망 현상이라 DEM 과 균질화 모델 (점 하나 = 기공을 가진 분말) 이 맡는다.  균질화 모델에서는 부피 캡이 맞다.</p>
+<p class="src">근거: <code>docs/mpm_dpc_cap_crosscheck.md</code></p>
+</div></details>
+<details class="qa" id="q18"><summary><span class="qno">Q18</span><span class="qt">한 침대에서 잰 SE 응답곡선 (기공률 → 응력) 을 다른 침대에 그대로 쓸 수 있나요?</span><span class="qd">08-06</span></summary><div class="ans">
+<p>아니다.  국소 SE 분율로 색인해도 같은 분율에서 침대 사이 응력이 2.8–3.8 배 다르다.  조성만 다른 다섯 침대는 채널 폭 d_h 로 하나의 선에 접힌다 (조성 효과는 실재).  다만 그 지수는 격자를 조일수록 가팔라져 하한으로만 적고 물리상수로 인용하지 않는다.</p>
+<p class="src">근거: <code>docs/se_curve_transfer_verdict_20260806.md</code></p>
+</div></details>
+
+<h3 id="qa-e">마. 지금 진행 중</h3>
+<details class="qa" id="q19"><summary><span class="qno">Q19</span><span class="qt">AM 하중 분담 (f) 을 넣으면 두께가 맞나요?</span><span class="qd">10-02 · 11-06</span></summary><div class="ans">
+<p>일부만 확인됐다.  AM 이 지는 하중 몫 f 를 판 서보 설정점에서 빼 주는 등록 실험 (FAM) 이다.  real_14 의 f 는 두 규약으로 뽑았다 — (a) AM–AM 접촉망만 0.6703 · (b) 상별 virial 0.8085.</p>
+<div class="wrap"><table class="c3">
+<thead><tr><th>팔 (real_14 · DEM 두께 30.28 µm)</th><th>MPM 두께</th><th>DEM 대비</th></tr></thead>
+<tbody>
+<tr><td>f = 0 (분담 없음)</td><td>25.842 µm</td><td>−14.7 % (사전등록 창 밖)</td></tr>
+<tr><td>f_(b) = 0.8085</td><td>29.491 µm</td><td>−2.6 % (사전등록 창 [29.37, 31.19] µm 안)</td></tr>
+<tr><td>f_(a) = 0.6703</td><td>— (3000 프레임에서도 수렴 못 함)</td><td>—</td></tr>
+</tbody>
+</table></div>
+<p>같은 f_(b) 런을 kgy (10-02) 와 gabia (11-04) 에서 돌려 저장 정밀도 0.001 µm 까지 같은 두께가 나왔다.  얇은 corner 침대 (DEM 19.15 µm) 의 f_(b) 런은 12.715 µm 로 크게 눌렸다 (기공률 0 은 0 으로 자른 값이라 완전 치밀화의 증거가 아니다).  f_(a) 가 수렴하지 못해 등록한 네 칸 · 순서 판정은 배정되지 않았다 — 값으로만 적는다.  §12-7 은 등록대로 마무리했고 추가 실행은 없다.</p>
+<p class="src">근거: <code>docs/reviews/fam_platen_prereg_20260812.md</code> §12-5 – §12-7 · <code>docs/data/fam_s127_gabia_20261106/README.md</code> · <code>docs/reviews/codex_review_fam_s127_results_20261106.md</code></p>
+</div></details>
+<details class="qa" id="q20"><summary><span class="qno">Q20</span><span class="qt">지금의 DEM → MPM 연결은 '결합' 인가요?</span><span class="qd">11-09</span></summary><div class="ans">
+<p>아니다 — DEM 이 끝낸 압밀 상태를 MPM 이 받아 SE 만 다시 누르는 후처리에 가깝다 (주간보고 피드백 11-09).  그래서 [DEM 우선 (수영)] 재설계 트랙이 생겼다: DEM 은 느슨한 초기 충전만 만들고, 가압부터 탈압까지 AM 과 SE 를 한 모델로 계산하는 길이다.</p>
+<p>3D 를 새로 짜기 전에, 같은 2D 코드 · 재료 · 출발 충전에서 <strong>속도장 하나 (S)</strong> 와 <strong>입자별 장 (F)</strong> 의 판 응력 차이부터 가른다.  2D 차이를 3D 연화의 원인 증명으로 쓰지 않는다.</p>
+<p class="src">근거: <code>docs/reviews/dem_redesign_direction_20261109/briefing_ko.md</code> · 메모 3.2 <code>docs/reviews/dem_redesign_direction_20261109/memo_v3_2.md</code> · 사이드바 'DEM 재설계 계획서 (수영)'</p>
+</div></details>
+<details class="qa" id="q21"><summary><span class="qno">Q21</span><span class="qt">재설계에서는 무엇에 맞추나요?</span><span class="qd">11-10</span></summary><div class="ans">
+<p>순수 SE 만 기준이다 — 랩 표준 진밀도 1.64 g/cm³ (고정 · 손잡이 아님) · 질량 기준 기공률 10–13 % (1저자 11-10 Q5).  맞추는 손잡이는 σ_y 하나다.  복합 전극 기공률은 다시 맞추지 않고 예측으로 보고한다.  DEM 과 MPM 도 같은 외부 기준에 각자 맞추고 서로를 맞춤 대상으로 쓰지 않는다 (<a href="#q3">Q3</a>).</p>
+<p class="src">근거: <code>docs/reviews/dem_redesign_direction_20261109/briefing_ko.md</code> §4 · §8</p>
+</div></details>
+<details class="qa" id="q22"><summary><span class="qno">Q22</span><span class="qt">이번 주 (11-16 – 11-22) MPM 계산은?</span><span class="qd">11-16</span></summary><div class="ans">
+<p>2D 첫 개발 계산이다 — 같은 코드에서 S 와 F 가 돌아가는지, 시간 · 메모리, 판 응력 비 첫 값 (CPU · 작은 격자 · '개발 자료' 표지 · 등록은 확인 계산 때).  담당 = Codex DEM 실무 창 (1저자 11-16 실행 우선 Q4).</p>
+<p class="src">근거: CLAUDE.md "★ 2026-11-16 — 실행 우선" 줄 · 쪽지 <code>docs/collab/claude_to_codex/20261116-0100_run-first.md</code></p>
+</div></details>
+
+<h3 id="qa-f">바. 1저자 결정 기록 (MPM 관련)</h3>
+<div class="wrap"><table class="c4">
+<thead><tr><th style="width:11%">날짜</th><th style="width:22%">무엇을</th><th>결정</th><th style="width:22%">근거</th></tr></thead>
+<tbody>
+<tr><td>06-07</td><td>DEM ↔ MPM 관계</td><td>서로 맞추지 않고 각자 실험에 보정 · DEM = 접촉망 수송 · MPM = 소성 역학 (보완 틀 확정)</td><td>CLAUDE.md frame</td></tr>
+<tr><td>09-28</td><td>FAM 봉인 전 셋</td><td>01 = 서보 수렴 두께 · R1 = f = 0 팔 다시 돌림 · 04b = §9 v2 유지</td><td>FAM 사전등록 §12-5</td></tr>
+<tr><td>09-30</td><td>FAM §12 봉인 · 기계</td><td>권고대로 · 기계 = kgy (v100 닫음)</td><td>FAM 사전등록 §12-5</td></tr>
+<tr><td>10-02</td><td>후속 등록 §12-6</td><td>f = 0 · f_(a) · 프레임 예산 3000</td><td>FAM 사전등록 §12-6</td></tr>
+<tr><td>10-13</td><td>세미나 덱 Q2</td><td>(가) 옛 30.7 µm 비교 삭제 (<a href="#q12">Q12</a>)</td><td>세미나 덱 수정 계획</td></tr>
+<tr><td>11-03</td><td>§12-7 Q1–Q13</td><td>권고대로 — gabia A6000 · 확인 런 → corner b → a → f = 0 · 기한 11-21</td><td>FAM 사전등록 §12-7</td></tr>
+<tr><td>11-06</td><td>§12-7 결과 수령 뒤</td><td>등록대로 마무리 · 추가 실행 없음 (Codex 결과 리뷰 · 원자료 확인 = 분류 조건부로 맞음)</td><td>FAM 원자료 README</td></tr>
+<tr><td>11-09</td><td>새 트랙</td><td>[DEM 우선 (수영)] = 재설계 트랙 · Claude 세션 담당</td><td>CLAUDE.md 11-09 줄</td></tr>
+<tr><td>11-10</td><td>재설계 Q1–Q5</td><td>Q1 단계 0–3 은 GPU 없이 · 3D 는 Rint ② R 런 뒤 / Q2 SE 형상 변형 필수 / Q3 SELF-160 은 문구만 / Q4 3.1 발송 뒤 3.2 반영 / Q5 순수 SE 만 기준 · 복합은 예측</td><td>브리핑 §8</td></tr>
+<tr><td>11-12</td><td>메모 3.2</td><td>권고대로 (바뀐 권고 Q6 · Q10 · Q13 = 메모 참조)</td><td>메모 3.2</td></tr>
+<tr><td>11-16</td><td>실행 우선 Q1–Q4</td><td>개발 계산은 리뷰 없이 바로 ('개발 자료') · 이번 주 MPM 2D 첫 개발 계산</td><td>CLAUDE.md 11-16 줄</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="s9">9. 더 읽을거리 · 출처 표기</h2>
+<p><strong>우리 litdb 정본 카드</strong> (원문 PDF 로 읽은 카드 · 브랜치 <code>claude/friendly-meitner-lldvar</code> 의 <code>litdb/papers/</code>):</p>
+<ul>
+<li><code>sulsky1994_mpm_particle_method_history_dependent_materials</code> — 이력 (소성) 을 물질점에 싣는 까닭 · MPM 원전 계열</li>
+<li><code>bardenhagen2000_mpm_granular_multibody_frictional_contact</code> — 입자마다 속도장을 나누는 접촉 (재설계 F 의 바탕)</li>
+<li><code>bardenhagen2001_mpm_improved_contact_granular_stress_waves</code> — 수직 견인력으로 분리 판정 · 3D 구 검증</li>
+<li><code>bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing</code> — GIMP 보간 (점이 셀 경계를 넘을 때)</li>
+<li><code>nezamabadi2022_mpm_cd_plastic_particle_compaction</code> — 입자별 격자 MPM + 접촉 풀이로 소성 원판 압밀 (2D)</li>
+<li><code>cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd</code> — 단단한 입자와 무른 입자 혼합 압밀 (2D)</li>
+<li><code>nguyen2017_mpm_bpm_deformable_particle_compaction</code> — 기공률 곡선만으로는 방법 차이를 가르기 어려움</li>
+<li><code>stomakhin2013_mpm_snow_elastoplastic</code> · <code>klar2016_dp_sand_animation</code> — 눈 (탄소성) · 모래 (Drucker–Prager) MPM</li>
+<li><code>devaucorbeil2020_mpm_after_25_years_review</code> — MPM 25 년 리뷰</li>
+<li><code>varkey2026_multicontact_elastoplastic_dem</code> — 탄소성 '접촉' DEM (입자는 구 그대로 · <a href="#q2">Q2</a>)</li>
+</ul>
+<p><strong>1 부 원 설명에 붙어 있던 출처 표기</strong> (사이트 이름만 · 우리가 원문을 열어 확인하지 않았다 — 인용으로 쓰지 않는다): math.unm.edu · Itasca Software 9.6 documentation · alexey.stomakhin.com · Learn MPM · CB-Geo · sciencedirect.com · LAMMPS documentation · White Rose Research Online.</p>
+</main>
+<footer class="foot">
+<p>만든 날 2026-11-16 · 이 파일 <code>webapp/static/explain/mpm_basics_20261116.html</code> · 그림 <code>webapp/static/explain/mpm_basics_figs/</code> · 시험 <code>webapp/test_mpm_basics_page.py</code></p>
+<p>Q&amp;A 를 덧붙일 때: 질문 · 답 · 날짜 · 근거 문서를 같이 · 답이 바뀌면 옛 답을 지우지 않고 '바뀜 (날짜)' 를 단다 · 철회된 수치는 원장 (<code>docs/reviews/claims.json</code>) 의 인용 금지 목록을 먼저 본다.</p>
+</footer>
+</body>
+</html>
