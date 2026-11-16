@@ -1,0 +1,21 @@
+{
+  "tests": {
+    "methods": 12,
+    "failures": 0,
+    "errors": 0,
+    "rc": 0,
+    "test_sha256": "396d2ad6c2952e438f048e77efe45efed727109b95ab3565ce90934016bd6c94"
+  },
+  "before": {
+    "methods": 12,
+    "failure_observations": 15,
+    "errors": 0,
+    "baseline": "RT additions absent; original 94-file kit unchanged"
+  },
+  "copy": {
+    "original_files_unchanged": 94,
+    "added_files": 13,
+    "operational_ready": false
+  },
+  "field_execution": 0
+}
