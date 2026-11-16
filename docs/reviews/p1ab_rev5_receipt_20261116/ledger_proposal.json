@@ -1,0 +1,13 @@
+{
+  "scope": "proposal_only",
+  "review_pin": "5ae5acdd5e77b86004e2a3603e4e963e7256413a",
+  "review_report": "docs/reviews/p1ab_rev5_receipt_20261116/REPORT.received.md",
+  "items": [
+    {"id": "P1AB5-01", "severity": "P2", "proposed_status": "claimed_fixed", "scope": "A document expectations only; historical N-insufficient cases are UNCONFIRMED; valid N100 synthetic cases separate"},
+    {"id": "P1AB5-02", "severity": "P3", "proposed_status": "claimed_fixed", "scope": "Active revision, C12 scope and check status wording only"}
+  ],
+  "B_implementation_design_go_received": true,
+  "verified_or_closed_requested": false,
+  "field_execution_performed": false,
+  "operational_seal_changed": false
+}

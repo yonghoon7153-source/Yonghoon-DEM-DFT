@@ -1,0 +1,16 @@
+{
+  "review_pin": "5ae5acdd5e77b86004e2a3603e4e963e7256413a",
+  "zip_name": "codex_p1ab_rev5_design_review_5ae5acdd5e77_evidence_20261116.zip",
+  "bytes": 891851,
+  "sha256": "364cbb00b4b65366b8b592b02b83416abe01b22b55c3e4234362fe1829c5c336",
+  "files": 75,
+  "checksum_lists": {
+    "input/SHA256SUMS": 54,
+    "SHA256SUMS": 74
+  },
+  "crc_path_duplicate_link_checks": "PASS",
+  "review_report_sha256": "b886b1c604b09a1997b4279564c635937dc88dd2106711342a40170533d1e975",
+  "review_code_executed": false,
+  "field_execution": false,
+  "originals_modified": false
+}

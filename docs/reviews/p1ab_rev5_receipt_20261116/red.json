@@ -1,0 +1,14 @@
+{
+  "scope": "design_document_contract_only",
+  "methods": 14,
+  "failures": 2,
+  "errors": 0,
+  "skipped": 0,
+  "research_results": 0,
+  "kit_implementation_verified": false,
+  "documents": {
+    "docs/reviews/dem_unloading_ps45_prereg_20261009.md": "2fd6cd67c604b67f718f13b38f60d336b99724b70812be451aa7c117e26f2b90",
+    "docs/reviews/p1_g2c_mpi_stage2_registration_20261112.md": "4a6bab9c2285fdbc6e55f2868592cb5d8702665df14a54a6945d5fedaed8c36f",
+    "docs/reviews/codex_p1_g2c_ab_design_request_20261112.md": "e4dfbe97e8d307e6093a89756c5d62db3353f2ea3f6367e36de8fd1348bf27e0"
+  }
+}

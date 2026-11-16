@@ -70,7 +70,7 @@
 | 마지막 확인 (11-12 밤) | 3 회차 고친 판 | PFA 11 닫힘 · P2 1 (PFA2-01 · 사전 멈춤 · 시작 안 한 잡이 결론을 지움) · P3 4 | 좁은 4 회차 고침 (그 다섯만) · `disposition4_AB.md` · 4회차 당시 재확인 없음 → 11-13 내부 5회차에서 확인 (Codex 아님); 외부 판정은 미수령 |
 
 - 숫자 · 전칭 대조: 회차마다 산술 스크립트로 다시 셈 (`rb_count.py` · `r2_cont_guard.py` · `r2_alt_metrics.py` · `f2_guard_power.py` · `pfa_w_check.py` · `f3_choice.py` · `f3_path_rule.py` · `r4_check.py` · 출력 같은 폴더).
-- 리포 검사: 문서 참조 (`scripts/check_doc_refs.py`) · 원장 자기일관 · 철회값 스윕 · 게이트 두 조각 (1–125 · 126–끝) = 이 요청서 커밋에서 실패 0 (push 조건).
+- 리포 검사: 과거 작성 측 기록 (11-12 작성, 당시 성공 귀속 핀 미확인; 이번에 재현·인증하지 않음)과 현행 결과를 분리한다. 고정 검토 핀 `5ae5acdd5e77`의 영수증 = 문서 회귀 12/12; native 참조 rc1 (기존 96); 원장 rc0; 전체 gate 미실행. 이번 문서 정정의 추가 회귀는 `p1ab_rev5_receipt_20261116/check_results.json`을 따른다.
 - 리뷰 기록의 홈 · 스크래치 경로는 자리표 (`<HOME>` · `<LUSTRE_HOME>` · `<SCRATCH>`) 로 가렸다.
 - 4 회차 고침 판의 sha256 앞 12 = A `67e8b4517bd1` · B `c7790aca3fa4` (리포 반입 전 스크래치 판 · 반입 때 머리 표지 · 경로만 바뀜).
 
