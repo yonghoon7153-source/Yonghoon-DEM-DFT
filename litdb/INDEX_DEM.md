@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 321편 · 생성 2026-11-12
+> digest 322편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -276,7 +276,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 13 |
 
-## 화학-기계 열화 · 계면 (25편)
+## 화학-기계 열화 · 계면 (26편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -291,6 +291,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `intergranular_cracking_nmc811_jmca2023` | Direct observations of electrochemically induced intergranular cracking in polycrystalline NMC811 particles — Parks et al. (J. Mater. Chem. A 2023) | exp (operando-style ex-situ X-ray nano-CT) + phase-field FEM | 2026-06-26 | 🖼 5 |
 | `kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review` | 전고체전지에서 역학의 결정적 역할 (Science 총설 · 자체 실험 · 계산 없음 · 숫자는 전부 2 차 인용) — 응력이 생기는 곳 (NMC 2 차 입자 부피 변화 3.3 → 7.8 % · 불균일 Li 석출 · 외부 가압) · 줄이는 길 (영 변형 양극 · 평탄 석출) · 풀리는 길 (Li 소성: 벌크 ≈1 MPa ↔ | review (Science Review — 자체 실험 · 계산 없음 · 2 차 인용만: Li metal l | 2026-11-12 | 🖼 31 |
 | `kang2025_toughened_bimodal_nca_lzo` | 필독 / 우리-랩 — Toughened Bimodal Cathodes for ASSBs via Controlled Interfacial Heterogeneity — Kang & Shin (ACS Appl. Mater. Interfaces 2025) | exp + FEM (electrochemo-mechanical) | 2026-06-26 | 🖼 6 |
+| `kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode` | Ag–C 층 + 다공 탄소나노섬유 (CNF) 층 2 층 음극 — operando 하중 셀 ΔP 가 양극 면적 용량에 비례 (2.3 / 3.5 / 4.9 mAh cm⁻² → 1.1 / 1.8 / 2.4 MPa · 몰드 스택 20 MPa) · CNF 20 µm 로 2.3 → 1.6 MPa · 2D 선형 탄성 FE (경계 변위 | experiment + 2D FEM (선형 탄성 · 평면 변형 · 경계 변위 처방) + 2D phase-fi | 2026-11-16 | 🖼 150 |
 | `kim2023_chemomech_failure_highstrain_anode` | 필독 / 우리-랩 — Chemo-mechanical Failure of Solid Composite Cathodes Accelerated by High-Strain Anodes — Kang & Shin (Energy Storage Materials 2023) | exp + FEM (electrochemo-mechanical) | 2026-06-26 | 🖼 6 |
 | `kim2025_impedance_decoupling_tlm_assb` | 필독 / 우리-랩 — Multiple-reaction kinetics of composite electrodes for sulfide-based ASSBs: Impedance decoupling (modified TLM) — Kim, Kang, Park, Lee (Electrochimica Acta 2025) | exp + equivalent-circuit modeling (modified TLM) | 2026-06-26 | 🖼 6 |
 | `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` | 리튬 전극 재료의 화학-기계 팽창 (chemo-mechanical expansion) — 단위 격자 부피 변화 ΔV/V₀ 모음 (NCM-111 · 523 · 622 · 811 · NCA · LCO · 그림 2a — NCM-811 은 x ≈ 0.15 에서 ≈ −6.5 %) · Li 부분 몰 부피 (partial molar  | experiment + linear-elastic continuum estimate (operando for | 2026-11-12 | 🖼 72 |

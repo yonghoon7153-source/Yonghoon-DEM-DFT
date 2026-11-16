@@ -415,6 +415,7 @@ VGCF 10 GPa 는 그런 보정 논리로 정해진 값이 **아니다** — 06-24
 - `lee2025_corolling_dryprocess_lpscl_ptfe` · `zhang2026_dryprocess_electrode_architecture_cell_level` · `matthews2024_ptfe_nanofibril_network` — 건식 전극의 VGCF–PTFE 섬유망.
 - `sun2026_dem_extrusion_recirculation_dry_electrode` — 섬유 해상도 실패 사례 (§H-7).
 - `song2025_porous_argyrodite_modulus_fracture_toughness` · `xu2017_nmc532_nanoindentation_modulus_hardness_toughness` — 다른 상(SE · AM) 의 탄성률 입력 앵커 (§8 ③ 의 강성 대비 계산에 쓰는 SE 쪽 값의 계열).
+- 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) — 같은 Pyrograf-III 계열 기상성장 CNF (PR-25-XT-PS · PR-25-XT-LHT) 를 SBR 1/3 과 EPD 로 쌓은 층 (18.5–19.6 µm · 기공 70–71 %) 의 압축: 5 MPa 에서 ≈5.6 % · 할선 ≈90 MPa [판독 · 카드 산술] — 단섬유 E 와 3 자릿수 차이 (망 · 결합제 · 기공).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -411,3 +411,5 @@ Li metal(3860 mAh/g, −3.04 V vs SHE)은 에너지밀도 최강이나 황화물
 - **chemo-mechanical coupling (cathode)**: CAM 부피변화 → SE microgap/균열 → 접촉손실·재반응. 연성 SE(황화물)가 수용 유리하나 cycling서 한계.
 - **phase-field / FEM**: 미세구조 strain/stress/crack 시간발전 모델링. 리뷰 Fig 11c(ref 39=우리그룹)·Fig 3b 등. 우리 DFT가 *못 보는* coupling 동역학을 잇는 다리.
 - **Feature Article**: Chem. Commun.의 초청 리뷰형 논문(저자 연구 중심으로 분야 조망). 자기인용 밀도 높음이 정상.
+
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) — 같은 1 저자 (Junhee Kang) · 같은 해 다른 논문 (Adv. Energy Mater. 2026 · e71816 · 이 리뷰를 ref [9] 로 인용): Ag–C 층 + 다공 CNF 층 2 층 음극 · operando 하중 셀 ΔP 1.1 / 1.8 / 2.4 MPa (NCM811 2.3 / 3.5 / 4.9 mAh cm⁻² · 스택 20 MPa · 45 °C) · CNF 20 µm 로 2.3 → 1.6 MPa · 2D 선형 탄성 FE (경계 변위 β·h_Li·f(x)) + 2D phase-field (Coble 크리프 점도).
