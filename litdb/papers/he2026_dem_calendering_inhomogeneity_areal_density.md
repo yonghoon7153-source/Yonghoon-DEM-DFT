@@ -696,6 +696,12 @@ Fig S1 코팅 치수 · Fig S2 산업 공정(슬러리/코팅/압연) · **Fig S
 
 > 🔗 **관련 카드 (2026-11-12 한 줄 추가)**: [`morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis`](morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis.md) = 이 카드가 쓴 EEPA 접촉 모델의 학위논문 원전 (Morrissey, Edinburgh 2013) — 법선 세 가지 (k₁δⁿ · k₂(δⁿ − δpⁿ) · −k_adhδ^X) · f_min = (3/2)πΔγa · 매개변수 (k₂ : k₁ · Δγ · X · n · κ_tm) 의 정의 · 항복점 없음 (p.77) · 하중 뺌 되돌아옴 손잡이 (그 카드 §3-5).
 
+> 🔗 **관련 카드 (2026-11-12 한 줄 추가)**: [`du2025_dem_fem_force_chain_collector_damage_calendering`](du2025_dem_fem_force_chain_collector_damage_calendering.md) = 위 N5 (L689 · 이 카드의 [41] Du 2025) 의 원문 카드 — 원문 표 1 은 입자–입자 접촉 8 줄뿐이고 **입자–Al (또는 입자–강철) 줄이 없다** (0.61 / 0.12 / 0.65 · JKR 1.5 J/m² 는 원문 19 쪽에 0 건 · f₀ = 10⁻⁵ N [88]) → 이 카드 L98 · L99 · L100 의 "[41]" 은 he2026 원문을 다시 봐야 한다 · 힘 사슬 정량은 접촉 쌍 수 · 직물 편차 · P(f) · 강한 사슬 **수** 몫 (21.49 → 9.73 %) 이고 **상별 · 쌍 종류별 하중 몫은 없다** → L368 · L689 의 "AM-AM 하중분담과 비교 가능" 은 원문으로 서지 않는다 (그 카드 §0-1 · §7-2).
+
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`xu2023_dem_bonded_particle_fracture_calendering`](xu2023_dem_bonded_particle_fracture_calendering.md) = 위 N6 (L690 · Xu 2023) 의 원문 카드 — 원문 첫 쪽 번호는 **e202300371** (DOI 10.1002/batt.202300371 · L690 의 e202300525 와 다름) · '>120 MPa → bond 파단 >10 %' 는 원문에서 **고른 2 차 입자 하나**에 대한 추측 기준 (*"we can speculate that in the model, secondary particle cracking occurs when the number of broken bonds is approximately above 10%, i.e., when the applied pressure is approximately above 120 MPa"* p.8) 이고, 전극 전체로는 50 · 100 · 150 MPa 에서 1.8 · 4.5 · 11.1 % 가 끊긴다 (10 % 통과 ≈144 MPa [판독]) — he2026 원문 참고문헌 목록과 번호 대조가 필요하다 (이 카드는 고치지 않음).
+
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`ge2022_xct_initial_structure_dem_calendering_nmc333`](ge2022_xct_initial_structure_dem_calendering_nmc333.md) = Ge 2022 (Powder Technol. 403, 117366 · EEPA + Potyondy–Cundall 결합 · X-CT 미압연 NMC333) 의 원문 카드 — 원문 표 1 의 입자–입자 값은 μ_s **0.25** ([16,20]) · μ_r **0.01** · e **0.5** 이고 **구름 0.014 · COR 0.25 · 표면에너지 8 J m⁻² · λp 0.96 · f₀ 1.5 × 10⁻⁵ N 은 원문 (10 쪽 · 본문 · 표 · 그림) 에 숫자로 없다** (λp · f₀ · k_adh 는 식 기호만) → 이 카드 L93–L98 · L262 의 "[39] Ge 2022" 는 he2026 원문 참고문헌 목록과 다시 대조해야 한다 (이 카드는 고치지 않음).
+
 ---
 
 ## 🗨️ Q&A 로그

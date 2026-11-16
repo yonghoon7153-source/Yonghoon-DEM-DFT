@@ -1,0 +1,73 @@
+# batch 122 — 정독 질문 a–n 의 근거 (한 편 · 2026-11-16 · N-68 · 대피 세션)
+
+대상: `sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811` — M. Sonzogni · J.-M. Vanson · Y. Reynier · S. Martinet · K. Ioannidou · F. Radjai, "Discrete modeling of the calendering process for positive electrodes of Li-ion batteries", *Powder Technol.* **442** (2024) 119891 · DOI 10.1016/j.powtec.2024.119891
+액체 LIB NMC811 양극 (96:2:2) 을 자체 DEM 코드 Rockable 로 — 강체 구 24 425 개 + 결합재 껍질 (R_p 0.34 µm) 응집-소성 접촉 법칙 · 실제 크기 회전 롤 (R_c 10 cm · 마찰 구동) · 간극 7 × 속도 4 = 28 런 · 실험 9 점 (두께 · 기공률 · 늘어남) 대조 · DEM 구조 위 FFT 전도.
+쪽 = 학술지 쪽 p.1–13 (PDF 쪽 = 인쇄 쪽) · SI 없음 · 판독 원자료 = `litdb/figures/sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811/digitized.csv` (883 행 · 그림 3–7 · 9 의 벡터 좌표) · 카드 절 번호는 그 카드의 § 를 가리킨다.
+
+## a — 순수 SE (LPSCl · 황화물) 의 압력별 기공 곡선
+이 배치에 없음 — SE 없음.  액체 LIB 복합 양극 (NMC + CBD) 의 롤 압연 뒤 기공만 있다 (→ i) = 랩 표준 (순수 SE 기공 10–13 % · 진밀도 1.64 g/cm³) 과 다른 문헌 값 · 다른 계 — 나란히만 둔다 (카드 §7-2).
+
+## b — 압력을 뺄 때 되돌아오는 양과 잰 방법
+- [b] sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811 | DEM 되돌아옴 = 목표 두께 감소율 C_r − 최종 C_f = 2.21–2.24 %p (C_r 13.79 %) → 3.46–3.68 %p (42.53 %) = 1.92–3.20 µm (× h_i 87 µm) = 간극의 2.6 → 6.0–6.4 % · 28 점 맞춤 C_f = 0.951 C_r − 1.70 · 속도 (0.5–5 m/min) 무관 · 원문 표현 *"linear with a shift of ≃2.5%"* (판독은 기울기 < 1 로 커진다) | 카드 §3-4 · 그림 5a · p.6 | [판독 · 벡터 · 카드 산술] | 액체 LIB · 롤 ≤ 130 MPa · 롤이 지나간 뒤 (뺀 뒤) 값 · 시드 반복 없음 (막대 = 한 런 5 구역)
+- [b] sonzogni2024_… | 실험 되돌아옴 = 측정 두께 − 목표 두께 = 1.5–4 µm (9 점 · 1–2 m/min · 지름 14 mm 원판 두께) · 측정 오차 정의 없음 | 카드 §3-1 · 표 1 · p.4 | [인쇄 · 카드 산술] | 압연 하중 · 간극 실측 미기재 (목표 = 간극으로 놓고 환산)
+- [b] sonzogni2024_… | 한 런의 시간 경과 (C_r 0.28 · 2 m/min): 기공률 최소 25.78 % (860 µs) → 끝 26.97 % (단계 ③ 이완 +1.19 %p) · 원문 *"Relaxation: The cylinder leaves the calendered zone, which freely relaxes with a small elastic rebound."* · *"Final state: A new stable state is reached with zero internal pressure and a porosity of 0.27."* | 카드 §3-3 · 그림 4a · p.6 | [판독 · 벡터 · 인쇄] | 그림 4 시간 축이 롤 접촉 길이 ÷ 속도 (66 ms) 보다 ≈ 90–120 배 짧다 [카드 산술 · §3-8] — 시간 배율 미기재
+- [b] sonzogni2024_… | 기전 (원문): 선형 제하 (식 7 · 제하 강성 = 코어 k₂) · *"The compression induces a high level of self-equilibrated forces … adhesion force increases with plastic surface area between particles. The elastic rebound is therefore mainly due to contacts between the cylinder and the particles."* · 크기 어림 f_a/(k₁d₅₀) = 1360 µN/(4.7 kN/m × 12.1 µm) = 2.4 % · 결론 *"as a result of contact plastic behavior and particle rearrangements, the elastic rebound is small, as in experiments"* | 카드 §3-4 · §4-7 (iv) · p.6–7 · p.10 | [인쇄] | 어림이 구–구 f_a 와 구–롤 k₁ 을 섞는다 (표 2 구–롤 k_p = γ = 0) [카드 산술]
+
+## c — 항복 · 경도 · 크리프 값과 정의
+- [c] sonzogni2024_… | 접촉 수준 항복만: 항복 겹침 δ_e = *"Rp + d50/100 = 0.40 μm"* (Giménez [10] 규칙 · 식대로면 0.461 µm · 반지름 1 % 면 0.4005 [카드 산술]) · 그 뒤 거듭제곱 경화 ζ 0.15 (구–구) · 0.275 (구–집전체) · 구–구 항복 힘 f(δ_e) = 8.65 mN [카드 산술] · σ_a = 결합재 항복 세기 (기호표 MPa · 값 없음) | 카드 §3-2 · §3-7 · 식 6 · 8 · p.3–4 · p.12 | [인쇄 · 카드 산술] | 일축 항복 세기 · 경도와 견줄 환산은 카드에 없음 · AM 물성 (E · 경도) 숫자 없음 · 크리프 없음
+
+## d — 단단한 입자와 무른 입자를 섞어 누를 때 단단한 입자의 하중 몫 · 재밍
+이 배치에 없음 — 무른 상 (CBD) 은 입자가 아니라 껍질 (하중 몫 계산 없음).  정성만:
+- [d] sonzogni2024_… | 압연 뒤 힘사슬 = *"Many vertical contacts are tensile whereas compressive contacts occur predominantly along the horizontal direction."* · Z⁻/Z ≈ 0.41–0.43 (C_r · 속도 무관) · 처음 접촉은 연직에서 ±45° | 카드 §3-5 · 그림 6 · 8 · p.9 | [인쇄 · 판독 · 벡터] | AM 만 (껍질 포함) · SE 없음
+
+## e — 점접촉 법칙이 큰 변형에서 깨지는 범위와 대안 · 맞춘 값의 수
+- [e] sonzogni2024_… | 대안 = 껍질 응집-소성 법칙 (식 4–13): 결합재 k₁ → 코어 k₂ (겹침 R_p 에서 꺾임) → 항복 δ_e 뒤 δ^ζ 경화 → 제하 k₂ 직선 → 당김 한계 f_p = −k_p min(δ_max, R_p) (넘으면 끊김) · 이동 Coulomb · *"This contact law is similar to that previously developed for plastic particles [33], but generalized here to a coated particle."* (Pasha 2014) | 카드 §4-2 · p.3–4 | [인쇄] | 점접촉이 깨지는 겹침 · 밀도 범위의 진술 없음 · 다접촉 보정 없음
+- [e] sonzogni2024_… | 맞춘 값 = 실험에 맞춘 것 2 (ζ 구–구 · 구–집전체 · 단축 압축 · 탈압 시험의 기공률 + 최종 높이 3 수준) · 문헌 규칙 1 (δ_e) · 조성 유도 1 (R_p) · 출처 없는 값 10 (k₁ · k₂ 세 접촉 · k_p · γ 0 아닌 넷) + ε_n · ν — 원문 *"all the parameters introduced in this model have physically clear experimental counter-parts and can therefore be calibrated by direct comparison with experiments"* 이지만 과정은 ζ 만 | 카드 §4-3 · 표 2 · 그림 3 · p.4 | [인쇄 · 카드 산술] | 표 2 자기 일관성 어긋남 셋 (γ ↔ k_p 1000 배 · k_t/k₂ ↔ 식 11 · δ_e 식 ↔ 값) [카드 산술 · §3-7]
+- [e] sonzogni2024_… | 겹침 어림: 롤 최대 응력 × d₅₀² ≈ 6.4–19 mN → 겹침 ≈ δ_e 의 2–3 배 (지름의 ≈ 7–10 %) | 카드 §3-7 · §8 C | [어림 · 가정 = 입자 단면당 접촉 하나] | 겹침 분포 실측 아님
+
+## f — MPM 의 접촉 · 다물체 · 강체 결합 방법과 해상도 규칙
+이 배치에 MPM 없음.  복셀 (수송) 해상도 쪽만:
+- [f] sonzogni2024_… | FFT 복셀 (0.5R_p)³ = (0.17 µm)³ (껍질 = 복셀 2 개) · 시료 200 × 200 × 50 µm³ (≈ 4.07 × 10⁸ 복셀) · 섞인 복셀 = 중심의 상 · 가장자리 = CBD · 오차 *"expected to be below 5% regarding the sensitivity analysis made in Ref. [3]"* (Ref. [3] = 생산 총설 · 수렴 시험 없음) · Wiener 상한으로 보면 격자 CBD 부피 ≥ 실제의 1.3–1.6 배 | 카드 §3-6 · §4-5 · §7-5 · p.9 | [인쇄 · 카드 산술 · 추론] | 액체 LIB · 역학 격자 아님
+
+## g — 2D 결과를 3D 로 옮길 때의 경고나 증거
+이 배치에 없음 — 3D 만 · 2D → 3D 진술 없음.
+
+## h — DEM 에서 FE · MPM 으로 넘긴 선례와 넘긴 시점
+이 배치에 없음 (역학 넘김 없음).  수송 쪽 넘김만:
+- [h] sonzogni2024_… | 롤이 지나간 뒤 (이완 끝) DEM 구조에서 200 × 200 × 50 µm³ 다섯 개를 떼어 복셀화 → FFT 균질화 (전자 · 이온) · 집전체 제외 (주기 조건) | 카드 §4-5 · p.9 | [인쇄] | 역학 · 소성 장을 넘기지 않음
+
+## i — 복합 양극의 압력별 기공
+- [i] sonzogni2024_… | (SE 아님 · NMC + CBD 껍질 · 액체 LIB) 롤 최대 응력 43.3–44.8 · 64.3–66.4 · 75.5–76.7 · 94.6–95.1 · 107.3–108.1 · 118.9–120.2 · 125.6–130.3 MPa 에서 롤이 지나간 뒤 기공률 34.2–34.6 · 31.2–31.6 · 29.2–29.3 · 26.8–27.5 · 25.6–25.7 · 24.8–25.0 · 23.0–23.5 % (네 속도) · 맞춤 ε = 9.5(σ_max + 140)^−0.53 − 0.26 (*"above which the fitting form of Eq. (16) is unphysical"* 212 MPa) · Heckel 꼴로 다시 읽으면 ln(1/ε) = 0.00449 σ + 0.873 · R² 0.989 · 1/K 223 MPa [카드 산술] | 카드 §3-4 · 그림 5c–d · 7 · 식 16 · p.8 | [판독 · 벡터 · 카드 산술] | 다른 재료 · 롤 최대 응력 (평판 평균 압력 아님) · 뺀 뒤 · 그림 7 ↔ 5c 속도 색 뒤바뀜
+- [i] sonzogni2024_… | 실험 (표 1): 목표 65 · 62.5 · 60 µm 에서 기공률 27.5–29.2 · 25.0–26.2 · 23.4–24.2 % (1–2 m/min · 질량 · 두께 · 성분 밀도 환산) · 처음 44.5 % | 카드 §3-1 · 표 1 · p.4 | [인쇄] | 압연 하중 미기재
+
+## j — 카드가 스스로 "아직 못 한다 · 한계" 라고 적은 것 가운데 가압 · 탈압 계산과 닿는 것
+- [j] sonzogni2024_… | (1) 맞춘 ζ (단축 시험의 기공 + 두께) 와 롤 검증 대상이 겹친다 → 기공 · 두께 일치는 독립 검증 아님 · 맞춤 밖 = 늘어남 (실험 속도 범위에서 DEM 속도 효과가 실험보다 작다) (2) 그림 4 시간 축 ≈ 90–120 배 어긋남 · 시간 배율 미기재 → 속도 효과의 물리 해석 보류 (3) 강체 구 · 결합재 고정 · 파쇄 없음 (4) 굴림 저항 0 · 강체 집전체 (5) 오차 막대 = 한 런 5 구역 | 카드 §0 한정어 · §11 · [미확인] 목록 | [카드 추론 · 카드 산술] | —
+
+## k — DEM 의 한계 (원문 문장 · 인용 서지 = Sonzogni et al. 2024, Powder Technol. 442, 119891)
+- [k] sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811 (M. Sonzogni, J.-M. Vanson, Y. Reynier, S. Martinet, K. Ioannidou, F. Radjai · 2024 · Powder Technol. 442, 119891) | 입자 = 강체: *"Each particle is considered as a rigid element with its own shape, size, mechanical properties, and degrees of freedom."* (p.2 · §2.1) · CBD 명시 비용: *"This approach implies, however, a high computational cost as it requires hundreds of small CBD particles for each active material particle. Computationally affordable models are based on the representation of active material as rigid particles while the CBD is taken into account through contact interactions between particles."* (p.2) | 카드 §4-7 (i) | [인쇄] | 겹침 · 밀도 상한의 수치 진술 없음
+- [k] sonzogni2024_… (같은 서지) | 평판 · 주기 경계: *"Since the horizontal cell dimensions are fixed, such a configuration is equivalent to uniaxial compression and cannot account for the free spreading of the material and its lateral extension during calendering. The shear stresses induced by friction with the cylinders are also neglected like in triaxial compression and the contact surface is assumed to be flat."* (p.2) · 응집: *"The use of irreversible cohesive force by some authors in this context implies irreversible loss of cohesion, which contradicts the chemo-physical nature of CBD."* (p.2) | 카드 §4-7 (i) · §7-3 | [인쇄] | 그 비판은 롤 압연 대상 — 다이 일축 냉간 압축엔 그 배치가 실제 공정
+- [k] sonzogni2024_… (같은 서지) | 결과 어긋남의 원인: *"This discrepancy reflects the rather crude assumption in simulations that the binding material does not deform and remains attached to the particles as a plastic layer. In reality, the binder is unevenly distributed in the pore space and deforms with compression [29]. Furthermore, at high pressure levels, the active particles may also deform and break, allowing the material to reach even lower levels of porosity."* (p.7) · 빠진 것: 굴림 저항 · 집전체 유연성 · 결합재 공간 분포 (p.11) | 카드 §4-7 (i) | [인쇄] | —
+
+## l — 소성변형이 왜 어려운가 · 우회 · 비용 (인용 서지 = Sonzogni et al. 2024)
+- [l] sonzogni2024_… (Sonzogni et al. 2024 · Powder Technol. 442, 119891) | 어려움: AM 은 *"relatively low yield strain and undergo damage and cracking under low compression [10]"* (p.3) · CBD 를 입자로 두면 AM 하나에 작은 CBD 수백 개 (p.2) · 우회: (a) CBD = 일정 두께 껍질 · *"an alternative mean-field approach that accounts for its mechanical behavior and binding effect without resorting to the computationally expensive approach based on its explicit representation"* (p.4) (b) AM 소성 = 항복 겹침 δ_e + 경화 ζ (c) 결합재 비가역 = 제하 강성 k₂ + 이력 당김 한계 — *"the plastic behavior and adhesion are combined into a single law with the adhesion force depending on the history of the contact"* (p.4) | 카드 §4-2 · §4-7 (ii) | [인쇄] | 형상 변형 · 결합재 이동 · 파쇄는 없다 (저자 '거친 가정')
+- [l] sonzogni2024_… (같은 서지) | 맞춘 값 2 (ζ · 단축 압축 · 탈압 시험 · 실험 기공 + 두께 3 수준 · 맞는 범위 0.12–0.17) · 검증 = 롤 실험 9 점 (두께 · 기공 · 늘어남) · 비용 = 숫자 없음 (*"Since performing this preliminary study on the complete calendaring model would require a relatively high computational cost, we used a uniaxial compression/decompression test"* p.4) · 24 425 구 · 28 런 | 카드 §4-3 · §4-4 | [인쇄] | 출처 없는 접촉 매개변수 10
+
+## m — 받아들일 통찰
+- [m] sonzogni2024_… | 무엇을: **직물 부호로 '단축 압축이 한 일' 을 자기 점검** — 같은 정의 (F = (1/N_c)Σnn · F′ = F − δ/3 · 공구 접촉 포함 / 제외 둘) 로 우리 DEM 압축의 F′zz 를 그린다 · 롤 압연에서는 0.0277 → 0.0107 (C_r 0.43 에서 0) 로 줄고, 단축 · 삼축 압축에서는 는다고 원문이 적는다 · 우리 쪽 어디에: 후보 D0 · 결과 전 대조 항목 · 왜: 카드 §3-5 · §7-3 · p.9 (새 런 0 · 기존 덤프) · 같은 날 정본 `stershic2015_fabric_tensor_calendering_nmc_xct_dem` = 압연 전극 CT 는 '수직 − · 수평 +' 인데 평판 헤르츠 구 DEM 은 그 방향을 못 낸다 → 이 논문 (롤 + 응집-소성) 은 같은 방향을 낸다 (정성)
+- [m] sonzogni2024_… | 무엇을: **복셀 σ 에 상별 표현 부피를 Wiener 상한으로 점검** — 얇은 도체 상 (복셀 몇 개 두께) 을 '가장자리 = 그 상' 규칙으로 찍으면 FFT σ 가 실제 부피의 병렬 상한을 넘는다 (여기 1.3–1.6 배) · 우리 쪽 어디에: 단계 7 · 흐름 밖: STEP3 복셀 σ · Rint ② 탄소 표현 · 왜: 카드 §3-6 · §7-5 (우리 CL-25 SDCP 표현 부피 4.31 → 0.238 배와 같은 종류)
+- [m] sonzogni2024_… | 무엇을: **속도 · 재하율 효과를 해석하기 전에 시간 축을 공정에 맞춰 본다** — 롤 접촉 길이 L_c = √(2R_cΔh) ÷ 속도 vs 그림의 통과 시간 (여기 66 ms ↔ 0.55–0.74 ms) · 시간 · 질량 배율을 값과 함께 적는다 · 우리 쪽 어디에: 후보 D0 · 단계 6 · 왜: 카드 §3-8 (우리 판 0.01 mm/s 준정적 규율과 같은 점검)
+- [m] sonzogni2024_… | 무엇을: **공구별 접촉 규칙 + 되돌아옴의 몫 기록** — 롤 (마찰 μ 0.4 구동 · 점착 0 · 소성 0) ↔ 집전체 (점착 γ 240 · ζ 0.275) 를 따로 두고, 되돌아옴을 공구 접촉 ↔ 침대 접촉 제하 경로로 나눠 적는다 (저자는 롤 접촉 f_a/k₁ 로 설명) · 우리 쪽 어디에: 후보 A′-0 · 조건 R2 · R4 · 단계 6 · 왜: 카드 §3-2 · §3-4 · §7-3
+
+## n — 논문 에이전트 후보 (이 논문이 인용했지만 정본에 카드 없음 · papers/ ls + grep 확인)
+- [n] M. Sonzogni, J.-M. Vanson, K. Ioannidou, Y. Reynier, S. Martinet, F. Radjai, Dynamic compaction of cohesive granular materials: Scaling behavior and bonding structures, Soft Matter (2024) http://dx.doi.org/10.1039/D3SM01116J. (원문 목록 [26] 그대로 · 권 · 쪽 없음) | 같은 코드 (Rockable) · 같은 그룹의 응집 입자 동적 압밀 척도 · 결합 구조 — 이 법칙 계열의 압밀 거동 (질문 e · l · 후보 C′) · 카드 §12 | litdb 확인: papers/ 에 sonzogni* = 이 카드뿐 · 'D3SM01116J' grep 0 · 'Dynamic compaction of cohesive' grep 0
+- [n] A. Lundkvist, P.-L. Larsson, E. Olsson, A discrete element analysis of the mechanical behaviour of a lithium-ion battery electrode active layer, Powder Technol. 425 (2023) 118574, http://dx.doi.org/10.1016/j.powtec.2023.118574. (원문 목록 [17] 그대로) | 접촉 법칙에 소성 성분을 넣어 AM 손상을 흉내 낸 전극 DEM (p.2 의 [10,11,17,18]) — 질문 e · l · 후보 C′ | litdb 확인: papers/ 에 lundkvist* 없음 · '118574' grep = xu2023_dem_bonded_particle_fracture_calendering (인용만) · 'Lundkvist' 이름은 여러 카드에 인용만
+- [n] R. Ge, A.M. Boyce, Y.S. Zhang, P.R. Shearing, D.J. Cumming, R.M. Smith, Discrete element method and electrochemical modelling of lithium ion cathode structures characterised by X-ray computed tomography, Chem. Eng. J. 465 (2023) 142749, http://dx.doi.org/10.1016/j.cej.2023.142749. (원문 목록 [21] 그대로) | '결합재 = 일정 인력 + 입자 탄소성' 계열 [19–21] 의 하나 · DEM 구조 → 전기화학 (질문 e · h · 후보 C′ · 단계 7) | litdb 확인: papers/ 의 ge20* = ge2022 (다른 논문) · '142749' grep = ge2022 · lyu2026 · song2025 · xu2023 (인용만)
+- [n] T. Calvet, J.-M. Vanson, R. Masson, A DEM/FFT approach to simulate the effective thermal conductivity of granular media, Int. J. Therm. Sci. 172 (2022) 107339. (원문 목록 [35] 그대로 · DOI 목록에 없음) | 복셀 중심 상 규칙 ('평균 추정') 의 출처 · 섞인 복셀의 상한 · 하한 대조 — 질문 f (복셀 해상도) · 단계 7 · 우리 STEP3 대조 · 카드 §4-5 · §7-5 | litdb 확인: papers/ 에 calvet* 없음 · '107339' grep 0 · 'DEM/FFT' grep 0
+- [n] N. Estrada, E. Azéma, F. Radjai, A. Taboada, Identification of rolling resistance as a shape parameter in sheared granular media, Batteries 84 (2011) 011306, http://dx.doi.org/10.1103/PhysRevE.84.011306. (원문 목록 [43] 그대로 · 학술지 이름 인쇄 'Batteries' ↔ DOI = Phys. Rev. E) | 구 입자의 모양 한계를 굴림 저항으로 대리하는 근거 — 질문 k (DEM 의 구 한계) · 후보 D0 · 카드 §4-3 · p.11 | litdb 확인: papers/ 에 estrada* 없음 · '011306' grep 0 · 'rolling resistance as a shape' grep 0 (ai2011_rolling_resistance_contact_models_dem 은 다른 논문)
+
+## 카드 문제
+가리킨 카드 `zhang2026_xct_dem_cathode_calendering_peel_calibration` 의 이 논문 2 차 인용에 **틀린 값은 없다** (숫자를 옮기지 않았고 L38 이 '읽지 않았다' 를 스스로 적음 · L97 *"Sonzogni (ref 21) 회전 롤 + 응집-소성 바인더 접촉법칙"* · L307 *"롤 곡률·전단(ref 21 Sonzogni 가 다룬 것)"* = 원문 초록 · §2.2–2.3 · 서론 p.2 와 같다 · zhang 원문 p.2 의 [21] 문장도 직접 대조해 맞음).  고치지 않고 기록만 한다.
+- `lyu2025_3d_dem_drying_calendering_lib` L22 *"Sonzogni [46](압연 DEM)"* = 원문과 같다 · lyu2025 원문 서론 p.2 의 [46] 문장 (전자 성질 · *"mostly vertical tensile contacts and horizontal compressive contacts"*) 도 이 논문 초록 · p.9 · 결론과 같다.
+- ⚠ **원문 (lyu2025) 의 인용 문제 · 카드 문제 아님**: lyu2025 원문 p.3 *"The F^l_n is calculated as follows [46]: F^l_n = (F^l_n)₀ − k_n(Δδ_n)^{3/2} (6)"* — 이 논문에는 그 식이 없다 (법선 법칙 = 구간 선형 + 거듭제곱 경화 ζ 0.15 · 식 4–7) · lyu2025 카드 L54 는 식 (6) 을 [46] 귀속 없이 옮겼다 (카드 결함 아님).
+- 서지: 후보 표 · 지시서 메모 (저자 여섯 · 제목 · Powder Technol. 442 (2024) 119891 · DOI) = 원문 첫 쪽 · 쪽 머리글 · zhang 원문 [21] · lyu 원문 [46] 과 같다 · 다른 점 없음.
+- 원문 안 어긋남 (카드 §11 · 원문 문제 · 카드 문제 아님): 식 (2) '1 −' 빠짐 · δ_e 식 (0.461) ↔ 값 (0.40) · 표 2 γ ↔ k_p 1000 배 · k_t/k₂ (구–집전체 · 구–롤) ↔ 식 (11) 불가 · 되돌아옴 어림의 f_a · k₁ 혼용 · 코어 접촉 겹침 R_p (두 껍질이면 2R_p) · '0.89' ↔ 0.861 · '212 MPa' ↔ 219 · 228 · 'Z 6.4' ↔ 6.27–6.34 · '≃30 %' ↔ +31 · +35 · +41 % · 식 (21) 0.51 ↔ 그린 선 0.561 · 식 (20) 0.27 이면 λ 9.0 mS/cm (표 4 와 맞지 않음) · 그림 7 ↔ 5c 속도 색 뒤바뀜 · 그림 4a 시작 40.6 % ↔ 본문 0.44 · 그림 4b 축 σ_max ↔ 캡션 'pressure' · 그림 4 시간 축 ↔ L_c/v (≈ 90–120 배) · 접선 문단 'δn will be cumulated' (δ_t) · Ref. [3] (생산 총설) 을 복셀 오차 근거로 · [23] (지반공학 충격 롤러) 를 전극 늘어남 근거로 · [43] 학술지 'Batteries' · 'Grenoble Alples' · 'independant' · 'calendaring'.

@@ -702,6 +702,7 @@ dt ← min(dt_mb, dt_diff)                                    (43)–(45)  # 밀
 - `bardenhagen2005_mpm_foam_densification_simulation` — 이 논문이 "큰 변형에 성공한 MPM" 의 근거로 든 ref. [31] (발포체 치밀화 · 같은 날 반입).  그 카드로 확인: 탄성 뼈대 · 붙는 (no-slip) 접촉 · 정량 검증은 꽉 찬 블록 해석해 1 건 (끝 오차 ≈ 5 %) · 준정적 판정은 절반 속도 런과의 눈 대조 — "성공" 의 범위는 거기까지다.
 - `bucci2017_chemomech_failure_assb_cycling_czm` (FEM + 응집 영역) · `tian2020_electrochemo_mechanical_stress_assb` (연속체 화학–역학 FEM) · `kim2023_chemomech_failure_highstrain_anode` (실험 + FEM) — 화학–역학 결합을 FEM 쪽에서 다룬 카드.
 - `stomakhin2013_mpm_snow_elastoplastic` — 우리 MPM 탄소성 갱신 (곱셈 꼴) 의 계보 — 이 논문의 덧셈 (속도) 꼴과 대비.
+- `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` — MPM 변종 문헌 [32–37] 가운데 GIMP 원전 (후보 표에서 ref. [37] 로 연결 · 가중 함수의 일반 꼴 식 19–20 · CPDI 의 앞 단계 · 2026-11-12 반입).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

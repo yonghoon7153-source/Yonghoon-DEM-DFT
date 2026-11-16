@@ -512,6 +512,7 @@ pristine 이차입자는 **E 142.5 ± 11.3 · H 8.6 ± 1.3 GPa · K_c 0.102 ± 0
 - `martinbouvard2003_dem_composite_cold_compaction` · `mesarovicfleck2000_dissimilar_elastoplastic_indentation` — 경질 AM ↔ 연질 SE 비대칭의 근거.
 - `aminchiang2016_nmc_electronic_ionic_transport_vs_li` · `wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni` — **CAM 고유 물성 앵커** 의 수송 쪽 짝.
 - `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` — 전극/입자 **유효** E_IT 5–6 GPa (다른 양, 비교 금지 사례).
+- [`devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte`](devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte.md) (2026-11-12 카드) — 같은 그룹 2019 *Exp. Mech.* ([Sedl26] 의 [27] · 이 논문을 [44] 로 인용): NMC532 응집체 113 · H 7.8 · K_c 0.104 (건조 Ar) · 소결 펠릿 200 · 14.0 · 0.298 — 이 논문의 K_c 짝 (0.102 · 0.309) 과 같은 자릿수 · 액체 속 응집체 K_c 0.212.
 
 ---
 

@@ -659,3 +659,5 @@ DFT energies."* (방어카드 각주 ᵇ 문구를 회신이 아니라 **본문*
 | 5 | Fig. 3 의 **0.1C / 0.5C** 확정 · Abstract **"%p"** 수정 | §11-B1, B2 |
 | 6 | `canonical_registry.json` 에 **0.118 / 0.287 등록** | §11-C6 |
 | 7 | (리비전 대비) **6층 243원자 2점 테스트** — kb C2·C3 동시 해결 | §15-3 |
+
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) — 같은 랩 · 같은 장치 (PEEK Ø 13 mm · LPSCl 0.15 g · 하중 셀 분해능 0.01 MPa · 스택 20 MPa · 45 °C · 2.5–4.25 V): NCM811 ‖ Li ΔP 1.1 / 1.8 / 2.4 MPa · Ag–C/CNF ΔP 2.3 → 1.6 MPa — 이 카드의 ΔP 3.0 / 2.8 / 2.5 MPa 와는 양극 (NCA ↔ NCM811) · 인터레이어 · 공압착 압력 (400 ↔ 450 MPa) 이 달라 같은 표에 넣지 않는다.

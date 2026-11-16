@@ -1,0 +1,2603 @@
+{
+ "slug": "nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Figure 1. One-dimensional view for the extent of S_r(ξ_p, n) around node i. The dashed lines delimit the five regions listed in Equation (19). The shape function for node i is nonzero only between −(2+l_p) and 2+l_p, which means it extends to the second neighbor grid cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    179.75,
+    67.5,
+    418.75,
+    143.32
+   ],
+   "w": 997,
+   "h": 321,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.954,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [89.8, 67.5, 508.6, 144.1] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "S_r 의 다섯 구간 (식 19) — 지원 ±(2 + l_p) = 둘째 이웃 셀까지 · ⚠ 노드 i+1 의 ξ 글자가 '-2' 로 인쇄 (아래 눈금 2-l_p · 2+l_p 와 맞추면 2) [렌더 확인]"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The solid lines show S_r(ξ_p, n) for n_i = 0, 1, and 2 with nodes located at the vertical, dotted lines. The dashed lines shows planar results for n_i from −1 to 2. The dotted red lines are calculations that do not truncate the particle domain for n_i = −1, 0, and 1. The result for n_i = −1 is just the tail singularity that is negative.",
+   "rotated_deg": 0,
+   "bbox": [
+    175.0,
+    66.25,
+    416.0,
+    223.95
+   ],
+   "w": 1005,
+   "h": 660,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.944,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [86.7, 65.9, 505.5, 226.1] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "축대칭 S_r (실선) ↔ 평면 (파선) — 차이는 축 근처에 몰림 · 자르지 않은 판 (점선 · 캡션은 'red' 인데 인쇄 색은 전부 검정 계열) 은 축에서 특이 · [판독] 실선이 식 (19)–(21) 과 0.003 안 · ⚠ y 눈금 글자 -0.2 · 0.2 · 0.8 은 실제 -0.25 · 0.25 · 0.75 자리 (한 자리 반올림)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The solid lines show dS_r(ξ_p, n) for n_i = 0, 1, and 2 with nodes located at the vertical, dotted lines. The dashed lines shows planar results for n_i from −1 to 2. The dotted red lines are calculations that do not truncate the particle domain for n_i = −1, 0, and 1. The result for n_i = −1 is just the tail singularity that rises from zero.",
+   "rotated_deg": 0,
+   "bbox": [
+    177.75,
+    66.25,
+    420.25,
+    220.5
+   ],
+   "w": 1012,
+   "h": 643,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.944,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [89.8, 65.9, 508.6, 222.1] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "dS_r — 자르면 축까지 ±1/2 로 평평 (식 25–26) · 자르지 않으면 특이 (점선) · y 글자 '-0.0' 인쇄"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Particle domain deformed into a parallelogram showing vectors d_1 and d_2, four corners, and four edges. The corners and edges are numbered in the counter clockwise direction from the lower-left corner.",
+   "rotated_deg": 0,
+   "bbox": [
+    205.25,
+    479.5,
+    386.25,
+    687.58
+   ],
+   "w": 755,
+   "h": 874,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.962,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [86.7, 422.4, 505.5, 689.0] included Eq. (33) printed above the figure; new box = ink bbox of the figure region + 6 pt (white canvas, uniform margins), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "CPDI 평행사변형 (d_1 · d_2 · 모서리 1–4 · 변 1–4 · 반시계) — 도구 크롭에 위쪽 식 (33) 이 섞여 다시 자름"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 15,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Relative volume (in %) in particles near the origin as a function of their initial radial particle position. The simulation was radial compression of a solid, flat disk with ΔR/R_0 = 0.6. These calculations used axisymmetric shape functions that were truncated (as recommended) or not truncated at r = 0.",
+   "rotated_deg": 0,
+   "bbox": [
+    179.5,
+    295.5,
+    420.25,
+    456.32
+   ],
+   "w": 1005,
+   "h": 675,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.938,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [89.8, 295.0, 508.6, 457.2] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "★ [판독 — 경로 좌표] J = 16 % 목표 · 축에서 첫 입자 (0.625 mm): uGIMP 안 자름 6.52 % · CPDI 안 자름 20.12 % ↔ 자름 16.31 · 16.48 % · 평균 J 가는 선 16.41 % · 입자 간격 1.25 mm = 셀 2.5 mm 의 절반 (방향당 2 개)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 15,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Relative volume (in %) in particles near the origin as a function of their initial particle position. The simulation was radial compression of a solid, flat disk with ΔR/R_0 = 0.6. These calculations compared use of truncated, axisymmetric uGIMP shape functions (dsahed line) to planar shape functions (solid lines). The planar shape functions used three different methods for boundary conditions at r = 0.",
+   "rotated_deg": 0,
+   "bbox": [
+    178.25,
+    507.25,
+    420.5,
+    667.08
+   ],
+   "w": 1011,
+   "h": 670,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.936,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [89.8, 506.8, 508.6, 667.9] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "★ [판독] 평면 형상 함수를 축대칭 코드에 넣은 첫 입자 J: 경계 처리 없음 23.33 % · BC 0 17.48 % · 거울 16.02 % ↔ 축대칭 자름 16.31 % · 거울 BC = '3D 계산의 값을 흉내' (p.142)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 16,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Average σ_rr = σ_θθ and σ_zz of all particles as a function of relative volume change (in %) (solid lines) compared to exact solution (dashed lines). The simulation was radial compression of a solid, flat disk.",
+   "rotated_deg": 0,
+   "bbox": [
+    175.5,
+    530.5,
+    416.75,
+    686.95
+   ],
+   "w": 1006,
+   "h": 655,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.948,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [86.7, 530.2, 505.5, 688.6] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "[판독] 평균 σ_rr = σ_θθ · σ_zz 가 해석해 (식 66–67) 와 선 굵기 안에서 겹침 · ⚠ 실선 끝 V/V0 ≈ 9.3 % (≈ 90.7 % 압축 · 끝 응력 -25.5 · +15.2 GPa ≈ 해석해 J 0.093) — 본문 'plotted up to 84% compression' 과 다름"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 17,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Particle σ_zz as function of their initial axial (z) distance to the loaded edge using either traction boundary conditions or particle force boundary conditions. The dotted, horiztonal line is the specified final stress of 1000 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    178.5,
+    66.25,
+    420.0,
+    221.7
+   ],
+   "w": 1007,
+   "h": 653,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.948,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [89.8, 65.8, 508.6, 223.1] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "★ [판독] 견인력 991.8–1004.1 MPa (지정 1000) · 입자 힘: 가장자리 입자 574.5 · 안쪽 1149.5–1203.1 MPa (+15–20 %) — 저자 설명 = 하중면 넓이 변화 (Poisson 반경 수축) · 입자 간격 1 mm = 셀 2 mm 의 절반"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 18,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Several views of the MPM simulation for tungsten penetrating into high hard steel armor at 10 μs, 30 μs, and 60 μs after impact. The colors show show equivalent stress. The bottom edge is the r = 0 line of axisymmetry.",
+   "rotated_deg": 0,
+   "bbox": [
+    179.7,
+    66.8,
+    412.5,
+    273.0
+   ],
+   "w": 971,
+   "h": 860,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.588,
+   "recrop": "2026-11-12 litdb-curator: re-cut to the embedded raster (xref 235, 920 × 809 px ≈ 300 dpi, placed at [185.7, 72.8, 406.5, 267.0]) ± 6 pt; the tool crop [86.7, 66.8, 505.5, 273.0] ran across the whole text column",
+   "native_dpi": 300,
+   "src_native": [
+    920,
+    809
+   ],
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "관통 10 · 30 · 60 µs 등가 응력 색 — 색 막대 없음 → 응력 값 판독 불가 · 아래 가장자리 = 축 r = 0 · 내장 래스터 920 × 809 px (≈ 300 dpi)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 19,
+   "file": "fig_10.png",
+   "caption": "Figure 10. The position of the nose and tail of the tungsten impactor as a function of time. The symbols are experimental results from Anderson et al. [21]. The lines are the axisymmetric MPM simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    178.5,
+    66.5,
+    420.0,
+    225.2
+   ],
+   "w": 1007,
+   "h": 665,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.953,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — the tool crop [89.8, 66.2, 508.6, 226.1] ran across the whole text column (~80 pt of white at each side); new box = ink bbox of the vector figure + 6 pt on all four sides (bottom gap to the caption kept, white canvas), 300 dpi",
+   "caption_fix": "2026-11-12 litdb-curator: the auto caption came from the text layer with broken math glyphs (Greek, minus, equals, Δ dropped or mapped to other letters, e.g. 'Sr.\\bp; n/', 'ni D \\u00021') → rewritten from the render, wording as printed (incl. the printed typos 'shows', 'dsahed', 'horiztonal', 'show show', and 'dotted red lines' although the print has no red)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "★ [판독] 코 · 꼬리 위치 실험 (기호 · Anderson 외 [21]) ↔ MPM (선): MPM − 실험 = 코 -0.08 – +0.05 cm · 꼬리 -0.11 – +0.13 cm · 100 µs 끝 코 4.76 · 꼬리 4.42 cm"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 17,
+   "file": "tab_1.png",
+   "caption": "Table I. Material properties used for the penetration simulation as reported by Anderson et al. [21]. The material models used a Johnson–Cook flow rule [19] and a Mie-Grüneisen pressure response [20].",
+   "rotated_deg": 0,
+   "bbox": [
+    183.0,
+    311.18,
+    415.5,
+    454.75
+   ],
+   "w": 970,
+   "h": 616,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.939,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 놓친 표 (로마 숫자 'Table I.' — 도구는 아라비아 숫자 라벨만 읽음) · 표 본체 (위 · 가운데 · 아래 줄 포함) · 캡션 글은 이 칸에 · 잉크 경계 + 6 pt (위는 캡션과의 틈 절반 + 흰 바탕 채움) · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "mpm_note_ko": "관통 재료 상수 — Anderson 외 [21] 의 값 그대로 (Johnson–Cook A · B · C · n · m · T_m + Mie–Grüneisen C_0 · S · γ_0 · 밀도 · 전단 계수) · 텅스텐 합금 · 고경도 장갑강 — 우리 재료 아님 · 맞춘 값 아님"
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_nodal_momentum_rate_force_sum.png",
+   "caption": "Equation (1), PDF p.2 (journal p.128), §2: dp_i/dt = f_i^(int) + f_i^(ext) + f_i^(b) + f_i^(s) — nodal momentum rate = internal + external + body + surface-traction forces",
+   "rotated_deg": 0,
+   "bbox": [
+    215.75,
+    355.4,
+    500.75,
+    390.85
+   ],
+   "w": 1640,
+   "h": 202,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_nodal_momentum_p2g.png",
+   "caption": "Equation (2), PDF p.2 (journal p.128), §2: p_i = Σ_p p_p S_ip — nodal momentum from particles with the axisymmetric GIMP shape function S_ip",
+   "rotated_deg": 0,
+   "bbox": [
+    260.25,
+    415.25,
+    500.75,
+    452.25
+   ],
+   "w": 1393,
+   "h": 207,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.982,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 2,
+   "file": "eq_03_internal_force_hoop_stress_term.png",
+   "caption": "Equation (3), PDF p.2 (journal p.128), §2: f_i^(int) = −Σ_p m_p [σ^(s)_rr,p σ^(s)_rz,p ; σ^(s)_rz,p σ^(s)_zz,p] G_ip − Σ_p m_p (σ^(s)_θθ,p, 0) T_ip — internal force from specific Cauchy stress σ^(s) — the extra hoop-stress term with the new function T_ip",
+   "rotated_deg": 0,
+   "bbox": [
+    161.0,
+    503.27,
+    500.75,
+    548.25
+   ],
+   "w": 1944,
+   "h": 253,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.955,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 2,
+   "file": "eq_04_external_and_body_forces.png",
+   "caption": "Equation (4), PDF p.2 (journal p.128), §2: f_i^(ext) = Σ_p F_p S_ip   and   f_i^(b) = Σ_p m_p b_p S_ip — external particle loads and body forces",
+   "rotated_deg": 0,
+   "bbox": [
+    181.5,
+    599.27,
+    500.75,
+    636.75
+   ],
+   "w": 1830,
+   "h": 211,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.966,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 2,
+   "file": "eq_05_surface_traction_force_per_radian.png",
+   "caption": "Equation (5), PDF p.2 (journal p.128), §2: f_i^(s) = (1/2π) ∫ T N_i(r,z) dS — surface-traction force (per radian) integrated over the object boundary",
+   "rotated_deg": 0,
+   "bbox": [
+    232.0,
+    676.4,
+    500.75,
+    713.25
+   ],
+   "w": 1550,
+   "h": 207,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 3,
+   "file": "eq_06_axisym_gimp_shape_function_Sip.png",
+   "caption": "Equation (6), PDF p.3 (journal p.129), §2: S_ip = (1/(A_p⟨r_p⟩)) ∫_Ωp r χ_p(r,z) N_i(r,z) dr dz — axisymmetric GIMP shape function — r-weighted average over the deformed particle domain",
+   "rotated_deg": 0,
+   "bbox": [
+    204.0,
+    98.78,
+    504.0,
+    132.85
+   ],
+   "w": 1723,
+   "h": 221,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.97,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 3,
+   "file": "eq_07_axisym_gimp_gradient_Gip.png",
+   "caption": "Equation (7), PDF p.3 (journal p.129), §2: G_ip = (1/(A_p⟨r_p⟩)) ∫_Ωp r χ_p(r,z) ∇N_i(r,z) dr dz — axisymmetric GIMP gradient function",
+   "rotated_deg": 0,
+   "bbox": [
+    202.5,
+    133.4,
+    504.0,
+    165.1
+   ],
+   "w": 1731,
+   "h": 221,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 3,
+   "file": "eq_08_axisym_gimp_hoop_function_Tip.png",
+   "caption": "Equation (8), PDF p.3 (journal p.129), §2: T_ip = (1/(A_p⟨r_p⟩)) ∫_Ωp χ_p(r,z) N_i(r,z) dr dz — new function T_ip (no r weight) used for the hoop terms",
+   "rotated_deg": 0,
+   "bbox": [
+    204.5,
+    165.65,
+    504.0,
+    197.85
+   ],
+   "w": 1720,
+   "h": 221,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.971,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 3,
+   "file": "eq_09_incremental_deformation_gradient_series.png",
+   "caption": "Equation (9), PDF p.3 (journal p.129), §2: dF = exp(Δt∇v) = I + ∇u + Σ_{k=2}^∞ (∇u)^k / k! — incremental deformation gradient; F^(n+1) = dF F^(n)",
+   "rotated_deg": 0,
+   "bbox": [
+    207.25,
+    281.9,
+    504.0,
+    323.73
+   ],
+   "w": 1705,
+   "h": 244,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 3,
+   "file": "eq_10_displacement_gradient_hoop_term.png",
+   "caption": "Equation (10), PDF p.3 (journal p.129), §2: ∇u = [[∂u_r/∂r, ∂u_r/∂z, 0], [∂u_z/∂r, ∂u_z/∂z, 0], [0, 0, du_r/r_p]] — displacement-gradient increment with the hoop term du_r/r_p",
+   "rotated_deg": 0,
+   "bbox": [
+    246.0,
+    405.65,
+    504.0,
+    461.23
+   ],
+   "w": 1490,
+   "h": 326,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.97,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 3,
+   "file": "eq_11_nodal_velocity.png",
+   "caption": "Equation (11), PDF p.3 (journal p.129), §2: v_i = p_i / Σ_p m_p S_ip — nodal velocity",
+   "rotated_deg": 0,
+   "bbox": [
+    277.75,
+    495.15,
+    504.0,
+    527.98
+   ],
+   "w": 1313,
+   "h": 207,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.977,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 3,
+   "file": "eq_12_ur_gradient_from_nodes.png",
+   "caption": "Equation (12), PDF p.3 (journal p.129), §2: (∂u_r/∂r, ∂u_r/∂z) = Δt Σ_i v_i,r G_ip — radial displacement gradient increment",
+   "rotated_deg": 0,
+   "bbox": [
+    233.0,
+    528.52,
+    504.0,
+    563.35
+   ],
+   "w": 1562,
+   "h": 230,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 3,
+   "file": "eq_13_uz_gradient_from_nodes.png",
+   "caption": "Equation (13), PDF p.3 (journal p.129), §2: (∂u_z/∂r, ∂u_z/∂z) = Δt Σ_i v_i,z G_ip — axial displacement gradient increment",
+   "rotated_deg": 0,
+   "bbox": [
+    232.25,
+    563.9,
+    504.0,
+    598.73
+   ],
+   "w": 1566,
+   "h": 231,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 3,
+   "file": "eq_14_hoop_strain_increment_Tip.png",
+   "caption": "Equation (14), PDF p.3 (journal p.129), §2: du_r/r_p = Δt Σ_i v_i,r T_ip — hoop strain increment from T_ip",
+   "rotated_deg": 0,
+   "bbox": [
+    268.25,
+    599.27,
+    504.0,
+    634.48
+   ],
+   "w": 1366,
+   "h": 229,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 4,
+   "file": "eq_15_dimensionless_node_coordinates.png",
+   "caption": "Equation (15), PDF p.4 (journal p.130), §2.1: ξ = 2(r − r_i)/Δr   and   η = 2(z − z_i)/Δz — dimensionless coordinates around node i (element = 2 × 2)",
+   "rotated_deg": 0,
+   "bbox": [
+    213.75,
+    247.28,
+    500.75,
+    277.98
+   ],
+   "w": 1651,
+   "h": 192,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq16",
+   "page": 4,
+   "file": "eq_16_ugimp_separable_shape_function.png",
+   "caption": "Equation (16), PDF p.4 (journal p.130), §2.1: S_ip = S_r(ξ_p, r_i) S_z(η_p) — uGIMP shape function = radial part × axial (planar) part",
+   "rotated_deg": 0,
+   "bbox": [
+    245.0,
+    312.27,
+    500.75,
+    335.1
+   ],
+   "w": 1477,
+   "h": 136,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "eq17",
+   "page": 4,
+   "file": "eq_17_ugimp_radial_shape_function_integral.png",
+   "caption": "Equation (17), PDF p.4 (journal p.130), §2.1: S_r(ξ_p, r_i) = (1/(W_p⟨r_p⟩)) ∫_{r_min}^{r_max} r N_i(r) dr = (1/(2l_p(ξ_p + 2n_i))) ∫_{ξ_p−l_p}^{ξ_p+l_p} (ξ + 2n_i) N_i(ξ) dξ — radial uGIMP shape function as an r-weighted integral (n_i = r_i/Δr)",
+   "rotated_deg": 0,
+   "bbox": [
+    112.25,
+    369.77,
+    500.75,
+    408.23
+   ],
+   "w": 2215,
+   "h": 234,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.955,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq18",
+   "page": 4,
+   "file": "eq_18_tent_grid_shape_function_dimensionless.png",
+   "caption": "Equation (18), PDF p.4 (journal p.130), §2.1: N_i(ξ) = (2 + ξ)/2 (−2 < ξ < 0) · (2 − ξ)/2 (0 ≤ ξ < 2) · 0 otherwise — linear tent grid shape function in dimensionless units",
+   "rotated_deg": 0,
+   "bbox": [
+    227.25,
+    442.27,
+    500.75,
+    516.23
+   ],
+   "w": 1576,
+   "h": 427,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "eq19",
+   "page": 4,
+   "file": "eq_19_ugimp_axisym_Sr_piecewise.png",
+   "caption": "Equation (19), PDF p.4 (journal p.130), §2.1: S_r(ξ_p, n_i) = five-region piecewise form (planar uGIMP + terms in 1/(2n_i + ξ_p)) · non-zero for |ξ_p| < 2 + l_p — closed-form axisymmetric uGIMP radial shape function (card check: equals the defining integral (17) to 1e-11)",
+   "rotated_deg": 0,
+   "bbox": [
+    113.5,
+    550.15,
+    500.75,
+    712.25
+   ],
+   "w": 2208,
+   "h": 910,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.959,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e20",
+   "kind": "equation",
+   "label": "eq20",
+   "page": 5,
+   "file": "eq_20_truncated_Sr_node_at_origin.png",
+   "caption": "Equation (20), PDF p.5 (journal p.131), §2.1: S_r^(0)(ξ_p) = (2/(ξ_p + l_p)²) ∫_0^{ξ_p+l_p} ξ N_i(ξ) dξ = {0 (ξ < 0); (3 − l_p − ξ_p)/3 (0 ≤ ξ_p < l_p); S_r(ξ_p, 0) otherwise} — node at r = 0 (n_i = 0) with the particle domain truncated at r = 0",
+   "rotated_deg": 0,
+   "bbox": [
+    147.75,
+    410.0,
+    504.0,
+    476.23
+   ],
+   "w": 2036,
+   "h": 369,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.966,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e21",
+   "kind": "equation",
+   "label": "eq21",
+   "page": 5,
+   "file": "eq_21_truncated_Sr_first_node.png",
+   "caption": "Equation (21), PDF p.5 (journal p.131), §2.1: S_r^(1)(ξ_p) = (2/(ξ_p + l_p + 2)²) ∫_{−2}^{ξ_p+l_p} (ξ + 2) N_i(ξ) dξ = {0 (ξ < −2); (2 + l_p + ξ_p)/3 (−2 ≤ ξ_p < −2 + l_p); S_r(ξ_p, 1) otherwise} — first node off the axis (n_i = 1) with truncation (equation number printed on its own line below)",
+   "rotated_deg": 0,
+   "bbox": [
+    103.5,
+    525.75,
+    504.0,
+    599.6
+   ],
+   "w": 2281,
+   "h": 445,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.97,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "eq22",
+   "page": 5,
+   "file": "eq_22_ugimp_gradient_separable.png",
+   "caption": "Equation (22), PDF p.5 (journal p.131), §2.1: G_ip = ((2/Δr) dS_r(ξ_p, r_i) S_z(η_p), (2/Δz) S_r(ξ_p, r_i) dS_z(η_p)) — uGIMP gradient function split into r and z parts",
+   "rotated_deg": 0,
+   "bbox": [
+    180.75,
+    678.77,
+    504.0,
+    717.0
+   ],
+   "w": 1852,
+   "h": 216,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e23",
+   "kind": "equation",
+   "label": "eq23",
+   "page": 6,
+   "file": "eq_23_ugimp_radial_gradient_integral.png",
+   "caption": "Equation (23), PDF p.6 (journal p.132), §2.1: dS_r(ξ_p, r_i) = (Δr/(2W_p⟨r_p⟩)) ∫ r dN_i(r)/dr dr = (1/(2l_p(ξ_p + 2n_i))) ∫_{ξ_p−l_p}^{ξ_p+l_p} (ξ + 2n_i) dN_i(ξ)/dξ dξ — radial gradient part as an r-weighted integral",
+   "rotated_deg": 0,
+   "bbox": [
+    98.75,
+    332.25,
+    500.75,
+    374.0
+   ],
+   "w": 2290,
+   "h": 233,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.948,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e24",
+   "kind": "equation",
+   "label": "eq24",
+   "page": 6,
+   "file": "eq_24_ugimp_axisym_dSr_piecewise.png",
+   "caption": "Equation (24), PDF p.6 (journal p.132), §2.1: dS_r(ξ_p, n_i) = six-case piecewise form (planar + terms in 1/(2n_i + ξ_p)) — closed-form radial gradient part (card check: equals (23) to 5e-6, quadrature limit)",
+   "rotated_deg": 0,
+   "bbox": [
+    114.25,
+    415.5,
+    500.75,
+    560.25
+   ],
+   "w": 2204,
+   "h": 805,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.964,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e25",
+   "kind": "equation",
+   "label": "eq25",
+   "page": 6,
+   "file": "eq_25_truncated_dSr_node_at_origin.png",
+   "caption": "Equation (25), PDF p.6 (journal p.132), §2.1: dS_r^(0)(ξ_p) = (2/(ξ_p + l_p)²) ∫_{ξ_p−l_p}^{ξ_p+l_p} ξ dN_i(ξ)/dξ dξ = {0 (ξ < 0); −1/2 (0 ≤ ξ_p < l_p); dS_r(ξ_p, 0) otherwise} — truncated gradient at the axis node — printed lower limit ξ_p − l_p; the printed result −1/2 needs lower limit 0 (card arithmetic)",
+   "rotated_deg": 0,
+   "bbox": [
+    135.5,
+    644.5,
+    500.75,
+    708.5
+   ],
+   "w": 2086,
+   "h": 357,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.963,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e26",
+   "kind": "equation",
+   "label": "eq26",
+   "page": 7,
+   "file": "eq_26_truncated_dSr_first_node.png",
+   "caption": "Equation (26), PDF p.7 (journal p.133), §2.1: dS_r^(1)(ξ_p) = (2/(ξ_p + l_p + 2)²) ∫_{−2}^{ξ_p+l_p} (ξ + 2) dN_i(ξ)/dξ dξ = {0 (ξ < −2); 1/2 (−2 < ξ_p < −2 + l_p); dS_r(ξ_p, 1) otherwise} — truncated gradient at the first node (number printed below the equation)",
+   "rotated_deg": 0,
+   "bbox": [
+    100.75,
+    303.75,
+    504.0,
+    371.23
+   ],
+   "w": 2297,
+   "h": 408,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e27",
+   "kind": "equation",
+   "label": "eq27",
+   "page": 7,
+   "file": "eq_27_ugimp_Tip_planar_over_rp.png",
+   "caption": "Equation (27), PDF p.7 (journal p.133), §2.1: T_ip = (2/(Δr(2n + ξ_p))) S_z(ξ_p) S_z(η_p) — uGIMP T_ip = planar uGIMP shape function divided by r_p ('2n' printed for 2n_i)",
+   "rotated_deg": 0,
+   "bbox": [
+    225.25,
+    452.75,
+    504.0,
+    491.25
+   ],
+   "w": 1605,
+   "h": 215,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.971,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e28",
+   "kind": "equation",
+   "label": "eq28",
+   "page": 7,
+   "file": "eq_28_truncated_Tip_node_at_origin.png",
+   "caption": "Equation (28), PDF p.7 (journal p.133), §2.1: T_ip^(0) = {0 (ξ < 0); (1/Δr)(4/(l_p + x_p) − 1) S_z(η_p) (0 < ξ_p < l_p); (2/(Δr ξ_p)) S_z(ξ_p) S_z(η_p) otherwise} — truncated T_ip at the axis node ('x_p' printed for ξ_p)",
+   "rotated_deg": 0,
+   "bbox": [
+    187.75,
+    524.75,
+    504.0,
+    608.5
+   ],
+   "w": 1813,
+   "h": 466,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.97,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e29",
+   "kind": "equation",
+   "label": "eq29",
+   "page": 7,
+   "file": "eq_29_truncated_Tip_first_node.png",
+   "caption": "Equation (29), PDF p.7 (journal p.133), §2.1: T_ip^(1) = {0 (ξ < −2); (1/Δr) S_z(η_p) (−2 < ξ_p < −2 + l_p); (2/(Δr(2 + ξ_p))) S_z(ξ_p) S_z(η_p) otherwise} — truncated T_ip at the first node",
+   "rotated_deg": 0,
+   "bbox": [
+    173.75,
+    635.0,
+    504.0,
+    717.75
+   ],
+   "w": 1891,
+   "h": 461,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e30",
+   "kind": "equation",
+   "label": "eq30",
+   "page": 8,
+   "file": "eq_30_cpdi_axisym_Sip_integral.png",
+   "caption": "Equation (30), PDF p.8 (journal p.134), §2.2: S_ip = (1/(A_p⟨r_p⟩)) ∫_Ωp r (Σ_{α=1}^4 M_α(r,z) N_i(r_p^(α))) dr dz — CPDI: N_i replaced by its interpolation from the four domain corners",
+   "rotated_deg": 0,
+   "bbox": [
+    182.75,
+    179.65,
+    500.75,
+    218.35
+   ],
+   "w": 1823,
+   "h": 250,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e31",
+   "kind": "equation",
+   "label": "eq31",
+   "page": 8,
+   "file": "eq_31_cpdi_domain_vectors_from_F.png",
+   "caption": "Equation (31), PDF p.8 (journal p.134), §2.2: d_1 = (F_rr Δr, F_zr Δz)/4   and   d_2 = (F_rz Δr, F_zz Δz)/4 — parallelogram half-vectors from the particle deformation gradient (as printed; equal to F·(Δr/4, 0) and F·(0, Δz/4) only when Δr = Δz)",
+   "rotated_deg": 0,
+   "bbox": [
+    160.5,
+    290.77,
+    500.75,
+    314.23
+   ],
+   "w": 1947,
+   "h": 133,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e32",
+   "kind": "equation",
+   "label": "eq32",
+   "page": 8,
+   "file": "eq_32_parallelogram_natural_coordinates.png",
+   "caption": "Equation (32), PDF p.8 (journal p.134), §2.2: (r, z) = r_p + ρ d_1 + ζ d_2 = (Σ_α r_α M_α(ρ,ζ), Σ_α z_α M_α(ρ,ζ)) — natural coordinates ρ, ζ ∈ [−1, 1] with four-node isoparametric M_α",
+   "rotated_deg": 0,
+   "bbox": [
+    159.0,
+    337.52,
+    500.75,
+    380.1
+   ],
+   "w": 1955,
+   "h": 249,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e33",
+   "kind": "equation",
+   "label": "eq33",
+   "page": 8,
+   "file": "eq_33_cpdi_Sip_parent_integral.png",
+   "caption": "Equation (33), PDF p.8 (journal p.134), §2.2: S_ip = (1/(A_p⟨r_p⟩)) ∫_{−1}^{1}∫_{−1}^{1} (Σ_α r_α M_α(ρ,ζ)) (Σ_α M_α(ρ,ζ) N_i(r_p^(α))) |J| dρ dζ — CPDI shape function in parallelogram coordinates",
+   "rotated_deg": 0,
+   "bbox": [
+    131.25,
+    426.77,
+    500.75,
+    470.5
+   ],
+   "w": 2109,
+   "h": 250,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.947,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e34",
+   "kind": "equation",
+   "label": "eq34",
+   "page": 9,
+   "file": "eq_34_jacobian.png",
+   "caption": "Equation (34), PDF p.9 (journal p.135), §2.2: J = [[d_1r, d_1z], [d_2r, d_2z]] — Jacobian of the parallelogram map (|J| = A_p/4)",
+   "rotated_deg": 0,
+   "bbox": [
+    262.0,
+    86.78,
+    504.0,
+    125.22
+   ],
+   "w": 1401,
+   "h": 214,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e35",
+   "kind": "equation",
+   "label": "eq35",
+   "page": 9,
+   "file": "eq_35_cpdi_axisym_Sip_closed_form.png",
+   "caption": "Equation (35), PDF p.9 (journal p.135), §2.2: S_ip = (1/4)[(1 − (d_1r + d_2r)/(3r_p)) N_i(r_p^(1)) + (1 + (d_1r − d_2r)/(3r_p)) N_i(r_p^(2)) + (1 + (d_1r + d_2r)/(3r_p)) N_i(r_p^(3)) + (1 − (d_1r − d_2r)/(3r_p)) N_i(r_p^(4))] — closed-form axisymmetric CPDI shape function (card check: equals the quadrature of (33) to 1e-16)",
+   "rotated_deg": 0,
+   "bbox": [
+    152.0,
+    150.9,
+    504.0,
+    223.72
+   ],
+   "w": 2012,
+   "h": 408,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e36",
+   "kind": "equation",
+   "label": "eq36",
+   "page": 9,
+   "file": "eq_36_cpdi_axisym_Gip_integral.png",
+   "caption": "Equation (36), PDF p.9 (journal p.135), §2.2: G_ip = (1/(A_p⟨r_p⟩)) ∫∫ (Σ_α r_α M_α) × (Σ_α J^{−1}(∂M_α/∂ρ, ∂M_α/∂ζ) N_i(r_p^(α))) |J| dρ dζ — CPDI gradient function in parallelogram coordinates",
+   "rotated_deg": 0,
+   "bbox": [
+    165.75,
+    271.4,
+    504.0,
+    354.35
+   ],
+   "w": 1936,
+   "h": 480,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e37",
+   "kind": "equation",
+   "label": "eq37",
+   "page": 9,
+   "file": "eq_37_cpdi_axisym_Gip_closed_form.png",
+   "caption": "Equation (37), PDF p.9 (journal p.135), §2.2: G_ip = (1/A_p)[ r-component: (d_1z − d_2z − β/(3r_p))N_i(r^(1)) + (d_1z + d_2z + β/(3r_p))N_i(r^(2)) − (d_1z − d_2z + β/(3r_p))N_i(r^(3)) − (d_1z + d_2z − β/(3r_p))N_i(r^(4)) , z-component: −(d_1r − d_2r)(1 − (d_1r + d_2r)/(3r_p))N_i(r^(1)) − (d_1r + d_2r)(1 + (d_1r − d_2r)/(3r_p))N_i(r^(2)) + (d_1r − d_2r)(1 + (d_1r + d_2r)/(3r_p))N_i(r^(3)) + (d_1r + d_2r)(1 − (d_1r − d_2r)/(3r_p))N_i(r^(4)) ] — closed-form axisymmetric CPDI gradient (card check: equals the quadrature of (36) to 3e-16)",
+   "rotated_deg": 0,
+   "bbox": [
+    100.25,
+    375.02,
+    504.0,
+    513.98
+   ],
+   "w": 2300,
+   "h": 784,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.952,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e38",
+   "kind": "equation",
+   "label": "eq38",
+   "page": 9,
+   "file": "eq_38_beta_definition.png",
+   "caption": "Equation (38), PDF p.9 (journal p.135), §2.2: β = d_1r d_1z − d_2r d_2z — auxiliary term in (37)",
+   "rotated_deg": 0,
+   "bbox": [
+    252.0,
+    542.75,
+    504.0,
+    566.75
+   ],
+   "w": 1456,
+   "h": 134,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e39",
+   "kind": "equation",
+   "label": "eq39",
+   "page": 9,
+   "file": "eq_39_cpdi_axisym_Tip.png",
+   "caption": "Equation (39), PDF p.9 (journal p.135), §2.2: T_ip = (1/(4r_p))[N_i(r_p^(1)) + N_i(r_p^(2)) + N_i(r_p^(3)) + N_i(r_p^(4))] — CPDI T_ip = planar CPDI shape function divided by r_p",
+   "rotated_deg": 0,
+   "bbox": [
+    168.0,
+    616.52,
+    504.0,
+    650.98
+   ],
+   "w": 1923,
+   "h": 214,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.956,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e40",
+   "kind": "equation",
+   "label": "eq40",
+   "page": 10,
+   "file": "eq_40_traction_edge1_line_integral.png",
+   "caption": "Equation (40), PDF p.10 (journal p.136), §3.1: f_ip,1^(s) = (1/2π)∫ T N_i(r,z) dS = T|d_1| ∫_{−1}^{1} (g(ρ)·(1,0)) (Σ_α M_α(ρ,−1) N_i(r_p^(α))) dρ — traction on edge 1 of the deformed domain as a line integral (dS = 2π r(ρ)|d_1| dρ)",
+   "rotated_deg": 0,
+   "bbox": [
+    100.75,
+    458.75,
+    500.75,
+    503.5
+   ],
+   "w": 2279,
+   "h": 250,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.953,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e41",
+   "kind": "equation",
+   "label": "eq41",
+   "page": 10,
+   "file": "eq_41_traction_edge1_cpdi.png",
+   "caption": "Equation (41), PDF p.10 (journal p.136), §3.1: f_ip,1^(s) = |d_1|[(r_px − d_2x − d_1x/3) N_i(r_p^(1)) + (r_px − d_2x + d_1x/3) N_i(r_p^(2))] T — axisymmetric traction force, edge 1",
+   "rotated_deg": 0,
+   "bbox": [
+    112.0,
+    536.75,
+    500.75,
+    575.5
+   ],
+   "w": 2216,
+   "h": 217,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e42",
+   "kind": "equation",
+   "label": "eq42",
+   "page": 10,
+   "file": "eq_42_traction_edge2_cpdi.png",
+   "caption": "Equation (42), PDF p.10 (journal p.136), §3.1: f_ip,2^(s) = |d_2|[(r_px + d_1x − d_2x/3) N_i(r_p^(2)) + (r_px + d_1x + d_2x/3) N_i(r_p^(3))] T — axisymmetric traction force, edge 2",
+   "rotated_deg": 0,
+   "bbox": [
+    112.0,
+    609.75,
+    500.75,
+    645.6
+   ],
+   "w": 2216,
+   "h": 216,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.95,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e43",
+   "kind": "equation",
+   "label": "eq43",
+   "page": 10,
+   "file": "eq_43_traction_edge3_cpdi.png",
+   "caption": "Equation (43), PDF p.10 (journal p.136), §3.1: f_ip,3^(s) = |d_1|[(r_px + d_2x + d_1x/3) N_i(r_p^(3)) + (r_px + d_2x − d_1x/3) N_i(r_p^(4))] T — axisymmetric traction force, edge 3",
+   "rotated_deg": 0,
+   "bbox": [
+    112.0,
+    646.15,
+    500.75,
+    679.1
+   ],
+   "w": 2216,
+   "h": 216,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.95,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e44",
+   "kind": "equation",
+   "label": "eq44",
+   "page": 10,
+   "file": "eq_44_traction_edge4_cpdi.png",
+   "caption": "Equation (44), PDF p.10 (journal p.136), §3.1: f_ip,4^(s) = |d_2|[(r_px − d_1x − d_2x/3) N_i(r_p^(1)) + (r_px − d_1x + d_2x/3) N_i(r_p^(4))] T — axisymmetric traction force, edge 4",
+   "rotated_deg": 0,
+   "bbox": [
+    112.0,
+    679.65,
+    500.75,
+    715.5
+   ],
+   "w": 2216,
+   "h": 216,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e45",
+   "kind": "equation",
+   "label": "eq45",
+   "page": 11,
+   "file": "eq_45_traction_edge1_ugimp.png",
+   "caption": "Equation (45), PDF p.11 (journal p.137), §3.1: f_ip,1^(s) = d_1x[(r_px − d_1x/3) N_i(r_p^(1)) + (r_px + d_1x/3) N_i(r_p^(2))] T — uGIMP form (d_1 = (l_pΔr/2, 0), d_2 = (0, l_pΔz/2)), edge 1",
+   "rotated_deg": 0,
+   "bbox": [
+    152.0,
+    125.75,
+    504.0,
+    161.47
+   ],
+   "w": 2012,
+   "h": 217,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.952,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e46",
+   "kind": "equation",
+   "label": "eq46",
+   "page": 11,
+   "file": "eq_46_traction_edge2_ugimp.png",
+   "caption": "Equation (46), PDF p.11 (journal p.137), §3.1: f_ip,2^(s) = d_2y(r_px + d_1x)[N_i(r_p^(2)) + N_i(r_p^(3))] T — uGIMP form, edge 2",
+   "rotated_deg": 0,
+   "bbox": [
+    152.0,
+    162.03,
+    504.0,
+    188.72
+   ],
+   "w": 2012,
+   "h": 181,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e47",
+   "kind": "equation",
+   "label": "eq47",
+   "page": 11,
+   "file": "eq_47_traction_edge3_ugimp.png",
+   "caption": "Equation (47), PDF p.11 (journal p.137), §3.1: f_ip,3^(s) = d_1x[(r_px + d_1x/3) N_i(r_p^(3)) + (r_px − d_1x/3) N_i(r_p^(4))] T — uGIMP form, edge 3",
+   "rotated_deg": 0,
+   "bbox": [
+    152.0,
+    189.28,
+    504.0,
+    222.35
+   ],
+   "w": 2012,
+   "h": 216,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.951,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e48",
+   "kind": "equation",
+   "label": "eq48",
+   "page": 11,
+   "file": "eq_48_traction_edge4_ugimp.png",
+   "caption": "Equation (48), PDF p.11 (journal p.137), §3.1: f_ip,4^(s) = d_2y(r_px − d_1x)[N_i(r_p^(1)) + N_i(r_p^(4))] T — uGIMP form, edge 4",
+   "rotated_deg": 0,
+   "bbox": [
+    152.0,
+    222.9,
+    504.0,
+    252.5
+   ],
+   "w": 2012,
+   "h": 181,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e49",
+   "kind": "equation",
+   "label": "eq49",
+   "page": 11,
+   "file": "eq_49_planar_traction_edge1_line_integral.png",
+   "caption": "Equation (49), PDF p.11 (journal p.137), §3.1: f_ip,1^(s) = ∫ T N_i(r,z) dS = T|d_1|B ∫_{−1}^{1} (Σ_α M_α(ρ,−1) N_i(x_p^(α))) dρ — planar counterpart (thickness B)",
+   "rotated_deg": 0,
+   "bbox": [
+    144.75,
+    365.75,
+    504.0,
+    410.5
+   ],
+   "w": 2052,
+   "h": 250,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.956,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e50",
+   "kind": "equation",
+   "label": "eq50",
+   "page": 11,
+   "file": "eq_50_planar_traction_edge1.png",
+   "caption": "Equation (50), PDF p.11 (journal p.137), §3.1: f_ip,1^(s) = |d_1|B[N_i(r_p^(1)) + N_i(r_p^(2))] T — planar traction force, edge 1",
+   "rotated_deg": 0,
+   "bbox": [
+    208.0,
+    457.75,
+    504.0,
+    487.48
+   ],
+   "w": 1701,
+   "h": 181,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e51",
+   "kind": "equation",
+   "label": "eq51",
+   "page": 11,
+   "file": "eq_51_planar_traction_edge2.png",
+   "caption": "Equation (51), PDF p.11 (journal p.137), §3.1: f_ip,2^(s) = |d_2|B[N_i(r_p^(2)) + N_i(r_p^(3))] T — planar traction force, edge 2",
+   "rotated_deg": 0,
+   "bbox": [
+    208.0,
+    488.02,
+    504.0,
+    514.98
+   ],
+   "w": 1701,
+   "h": 180,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e52",
+   "kind": "equation",
+   "label": "eq52",
+   "page": 11,
+   "file": "eq_52_planar_traction_edge3.png",
+   "caption": "Equation (52), PDF p.11 (journal p.137), §3.1: f_ip,3^(s) = |d_1|B[N_i(r_p^(3)) + N_i(r_p^(4))] T — planar traction force, edge 3",
+   "rotated_deg": 0,
+   "bbox": [
+    208.0,
+    515.52,
+    504.0,
+    542.48
+   ],
+   "w": 1701,
+   "h": 180,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e53",
+   "kind": "equation",
+   "label": "eq53",
+   "page": 11,
+   "file": "eq_53_planar_traction_edge4.png",
+   "caption": "Equation (53), PDF p.11 (journal p.137), §3.1: f_ip,4^(s) = |d_2|B[N_i(r_p^(1)) + N_i(r_p^(4))] T — planar traction force, edge 4",
+   "rotated_deg": 0,
+   "bbox": [
+    208.0,
+    543.02,
+    504.0,
+    572.75
+   ],
+   "w": 1701,
+   "h": 181,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e54",
+   "kind": "equation",
+   "label": "eq54",
+   "page": 12,
+   "file": "eq_54_contact_normal_volume_gradient.png",
+   "caption": "Equation (54), PDF p.12 (journal p.138), §3.3: ‖n_i,a‖ n_i,a = −∇V_a(x_i) = Σ_{p∈a} V_p G_ip — traditional contact normal from the volume gradient (fails in axisymmetry because V_p depends on r)",
+   "rotated_deg": 0,
+   "bbox": [
+    215.0,
+    684.77,
+    500.75,
+    721.0
+   ],
+   "w": 1644,
+   "h": 208,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e55",
+   "kind": "equation",
+   "label": "eq55",
+   "page": 13,
+   "file": "eq_55_contact_normal_area_gradient_axisym.png",
+   "caption": "Equation (55), PDF p.13 (journal p.139), §3.3: ‖n_i,a‖ n_i,a = −∇A_a(x_i) = Σ_{p∈a} A_p G_ip — axisymmetric contact normal from the r-z area gradient",
+   "rotated_deg": 0,
+   "bbox": [
+    216.75,
+    122.65,
+    504.0,
+    156.85
+   ],
+   "w": 1652,
+   "h": 207,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e56",
+   "kind": "equation",
+   "label": "eq56",
+   "page": 13,
+   "file": "eq_56_conduction_weak_form.png",
+   "caption": "Equation (56), PDF p.13 (journal p.139), §3.4: ∫_Ω (∇·k∇T + q(x) − ρC_p ∂T/∂t) w(x) dV — weak form for heat conduction",
+   "rotated_deg": 0,
+   "bbox": [
+    207.5,
+    420.77,
+    504.0,
+    455.85
+   ],
+   "w": 1704,
+   "h": 217,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.965,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e57",
+   "kind": "equation",
+   "label": "eq57",
+   "page": 13,
+   "file": "eq_57_conduction_divergence_theorem.png",
+   "caption": "Equation (57), PDF p.13 (journal p.139), §3.4: ∫_∂Ω (w(x)k∇T)·n̂ dS = ∫_Ω (∇w(x)·k∇T + q(x)w(x) − ρC_p w(x) ∂T/∂t) dV — after the divergence theorem (as printed — the q and ρC_p terms carry the opposite sign of (56) = 0; (58)–(60) follow the consistent signs, card arithmetic)",
+   "rotated_deg": 0,
+   "bbox": [
+    121.25,
+    500.65,
+    504.0,
+    535.73
+   ],
+   "w": 2183,
+   "h": 217,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.953,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e58",
+   "kind": "equation",
+   "label": "eq58",
+   "page": 13,
+   "file": "eq_58_nodal_temperature_rate.png",
+   "caption": "Equation (58), PDF p.13 (journal p.139), §3.4: M_i dT_i/dt = f_i^(g) + f_i^(s) + f_i^(e) — nodal heat balance",
+   "rotated_deg": 0,
+   "bbox": [
+    233.0,
+    580.27,
+    504.0,
+    612.73
+   ],
+   "w": 1562,
+   "h": 203,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.974,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e59",
+   "kind": "equation",
+   "label": "eq59",
+   "page": 13,
+   "file": "eq_59_nodal_heat_capacity_temperature.png",
+   "caption": "Equation (59), PDF p.13 (journal p.139), §3.4: M_i = Σ_p m_p C_p^(p) S_ip ,  T_i = (1/M_i) Σ_p m_p C_p^(p) T_p S_ip — nodal heat capacity and temperature",
+   "rotated_deg": 0,
+   "bbox": [
+    185.0,
+    631.4,
+    504.0,
+    671.0
+   ],
+   "w": 1829,
+   "h": 230,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.964,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e60",
+   "kind": "equation",
+   "label": "eq60",
+   "page": 13,
+   "file": "eq_60_conduction_flux_source_boundary_terms.png",
+   "caption": "Equation (60), PDF p.13 (journal p.139), §3.4: f_i^(g) = −Σ_p V_p k∇T_p · G_ip ,  f_i^(s) = Σ_p V_p q_p S_ip ,  f_i^(e) = ∫_∂Ω N_i(x) Φ dS — conduction, source and boundary-flux terms",
+   "rotated_deg": 0,
+   "bbox": [
+    111.25,
+    680.25,
+    504.0,
+    721.5
+   ],
+   "w": 2238,
+   "h": 230,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.961,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e61",
+   "kind": "equation",
+   "label": "eq61",
+   "page": 14,
+   "file": "eq_61_particle_temperature_gradient.png",
+   "caption": "Equation (61), PDF p.14 (journal p.140), §3.4: ∇T_p = Σ_i T_i G_ip — particle temperature gradient from nodal temperatures",
+   "rotated_deg": 0,
+   "bbox": [
+    254.75,
+    87.4,
+    500.75,
+    120.97
+   ],
+   "w": 1423,
+   "h": 203,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.979,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e62",
+   "kind": "equation",
+   "label": "eq62",
+   "page": 14,
+   "file": "eq_62_particle_temperature_update_rate.png",
+   "caption": "Equation (62), PDF p.14 (journal p.140), §3.4: T_p^(k+1) = T_p^(k) + Δt Σ_i (dT_i/dt) S_ip — particle temperature update by the nodal rate (not by extrapolating T_i — numerical conduction)",
+   "rotated_deg": 0,
+   "bbox": [
+    225.0,
+    154.9,
+    500.75,
+    192.85
+   ],
+   "w": 1588,
+   "h": 231,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e63",
+   "kind": "equation",
+   "label": "eq63",
+   "page": 14,
+   "file": "eq_63_radial_compression_deformation_gradient.png",
+   "caption": "Equation (63), PDF p.14 (journal p.140), §4.1: F = diag(1 + ε_rr, 1, 1 + ε_rr) — uniform radial compression of a solid disk restrained in z (ε_rr = −ΔR/R_0)",
+   "rotated_deg": 0,
+   "bbox": [
+    236.0,
+    422.15,
+    500.75,
+    483.1
+   ],
+   "w": 1527,
+   "h": 353,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.979,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e64",
+   "kind": "equation",
+   "label": "eq64",
+   "page": 14,
+   "file": "eq_64_neohookean_energy.png",
+   "caption": "Equation (64), PDF p.14 (journal p.140), §4.1: W = (K/2)[½(J² − 1) − ln J] + (G/2)(Ī_1 − 3) — Neo-Hookean strain energy of the verification material",
+   "rotated_deg": 0,
+   "bbox": [
+    202.25,
+    516.77,
+    500.75,
+    551.85
+   ],
+   "w": 1715,
+   "h": 217,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e65",
+   "kind": "equation",
+   "label": "eq65",
+   "page": 14,
+   "file": "eq_65_isochoric_first_invariant.png",
+   "caption": "Equation (65), PDF p.14 (journal p.140), §4.1: Ī_1 = (B_xx + B_yy + B_zz)/J^{2/3} — isochoric first invariant (B = FF^T)",
+   "rotated_deg": 0,
+   "bbox": [
+    242.75,
+    585.27,
+    500.75,
+    617.6
+   ],
+   "w": 1490,
+   "h": 202,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e66",
+   "kind": "equation",
+   "label": "eq66",
+   "page": 14,
+   "file": "eq_66_exact_sigma_rr_theta.png",
+   "caption": "Equation (66), PDF p.14 (journal p.140), §4.1: σ_rr = σ_θθ = ((J − 1)/J)((K/2)(J + 1) + G_1/(3J^{2/3})) — exact radial = hoop stress (G_1 printed — equals G of (64), card arithmetic)",
+   "rotated_deg": 0,
+   "bbox": [
+    194.75,
+    650.15,
+    500.75,
+    684.1
+   ],
+   "w": 1757,
+   "h": 217,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.963,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e67",
+   "kind": "equation",
+   "label": "eq67",
+   "page": 14,
+   "file": "eq_67_exact_sigma_zz.png",
+   "caption": "Equation (67), PDF p.14 (journal p.140), §4.1: σ_zz = ((J − 1)/J)((K/2)(J + 1) − 2G_1/(3J^{2/3})) — exact axial stress",
+   "rotated_deg": 0,
+   "bbox": [
+    223.25,
+    684.65,
+    500.75,
+    720.5
+   ],
+   "w": 1598,
+   "h": 216,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.962,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "eA1",
+   "kind": "equation",
+   "label": "eqA.1",
+   "page": 20,
+   "file": "eq_A1_planar_ugimp_Sz.png",
+   "caption": "Equation (A.1), PDF p.20 (journal p.146), Appendix A: S_z(η) = ((4 − l_p)l_p − η²)/(4l_p) (|η| < l_p) · (2 − |η|)/2 (l_p ≤ |η| < 2 − l_p) · (2 + l_p − |η|)²/(8l_p) (2 − l_p < |η| < 2 + l_p) · 0 — planar uGIMP shape function (from ref. [11]); with l_p = 1 it equals the quadratic B-spline (card arithmetic)",
+   "rotated_deg": 0,
+   "bbox": [
+    186.0,
+    120.53,
+    500.75,
+    224.0
+   ],
+   "w": 1805,
+   "h": 594,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "eA2",
+   "kind": "equation",
+   "label": "eqA.2",
+   "page": 20,
+   "file": "eq_A2_planar_ugimp_dSz.png",
+   "caption": "Equation (A.2), PDF p.20 (journal p.146), Appendix A: dS_z(η) = −η/(2l_p) (|η| < l_p) · −sgn(η)/2 (l_p ≤ ξ_p < 2 − l_p) · −sgn(η)(2 + l_p − |η|)/(4l_p) (2 − l_p ≤ ξ_p < 2 + l_p) · 0 — planar uGIMP gradient part (conditions printed with ξ_p for |η|)",
+   "rotated_deg": 0,
+   "bbox": [
+    173.0,
+    226.75,
+    500.75,
+    321.5
+   ],
+   "w": 1877,
+   "h": 528,
+   "dpi": 400,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 줄 + 식 번호 · 이웃 글줄 · 머리글 · 바닥글 · 오른쪽 내려받기 표지 없음 · 겹쳐 놓인 식은 흰 틈에서 가름 · 사방 7 pt (틈이 좁은 쪽은 흰 바탕으로 채움) · 400 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x01a",
+   "kind": "text",
+   "label": "p1-header-summary-received-keywords",
+   "page": 1,
+   "file": "txt_p1_header_summary_received_keywords.png",
+   "caption": "PDF p.1 (journal p.127): header (Int. J. Numer. Meth. Engng 2015; 101:127–147 · published online 1 October 2014 · DOI 10.1002/nme.4792) + title + authors + affiliations, and Summary + Received/Revised/Accepted + key words — two parts stacked",
+   "rotated_deg": 0,
+   "bbox": [
+    94.75,
+    37.0,
+    484.0,
+    207.75
+   ],
+   "w": 1738,
+   "h": 1426,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.893,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     94.75,
+     37.0,
+     484.0,
+     207.75
+    ],
+    [
+     95.0,
+     255.75,
+     503.75,
+     419.75
+    ]
+   ],
+   "pages": [
+    1,
+    1
+   ]
+  },
+  {
+   "key": "x01b",
+   "kind": "text",
+   "label": "p1-p2-only-axisym-mpm-dirac-artifacts",
+   "page": 1,
+   "file": "txt_p1_p2_only_axisym_mpm_dirac_artifacts.png",
+   "caption": "§1 p.127–128: axisymmetric scenarios (impact, cratering, rod penetration, shaped charge jet); Sulsky & Schreyer [12] = 'the first, and thus far, only' axisymmetric MPM; Dirac-delta MPM 'has serious element crossing artifacts and should not be used'; GIMP not available for axisymmetry; every extension must be re-examined — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    567.55,
+    503.75,
+    666.75
+   ],
+   "w": 1738,
+   "h": 641,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.841,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     567.55,
+     503.75,
+     666.75
+    ],
+    [
+     93.0,
+     66.0,
+     500.25,
+     105.33
+    ]
+   ],
+   "pages": [
+    1,
+    2
+   ]
+  },
+  {
+   "key": "x02a",
+   "kind": "text",
+   "label": "p2-key-changes-cylindrical-integration",
+   "page": 2,
+   "file": "txt_p2_key_changes_cylindrical_integration.png",
+   "caption": "§2 p.128: started from cartesian GIMP [11]; key changes = cylindrical volume integration + cylindrical coordinates in gradient evaluations",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    288.0,
+    500.5,
+    353.25
+   ],
+   "w": 1733,
+   "h": 272,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.855,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     288.0,
+     500.5,
+     353.25
+    ]
+   ]
+  },
+  {
+   "key": "x03a",
+   "kind": "text",
+   "label": "p3-dF-higher-order-terms-rotation",
+   "page": 3,
+   "file": "txt_p3_dF_higher_order_terms_rotation.png",
+   "caption": "§2 p.129: dF from the first two terms with sufficient resolution; k ≥ 2 terms needed with rotation (possible in penetration); Cayley–Hamilton",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    325.25,
+    503.5,
+    388.57
+   ],
+   "w": 1737,
+   "h": 281,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.839,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     325.25,
+     503.5,
+     388.57
+    ]
+   ]
+  },
+  {
+   "key": "x03b",
+   "kind": "text",
+   "label": "p3-p4-classic-recovered-main-differences",
+   "page": 3,
+   "file": "txt_p3_p4_classic_recovered_main_differences.png",
+   "caption": "§2 p.129–130: classic axisymmetric MPM recovered with χ = A_p δ(r_p); main differences planar ↔ axisymmetric GIMP (hoop term, mass per radian m_p = ρA_p⟨r_p⟩, du_r/r_p, r in the integrands, new T_ip); classic MPM could reuse planar shape functions, GIMP cannot — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    634.92,
+    503.5,
+    719.5
+   ],
+   "w": 1737,
+   "h": 766,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.851,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     634.92,
+     503.5,
+     719.5
+    ],
+    [
+     93.0,
+     66.0,
+     500.5,
+     157.0
+    ]
+   ],
+   "pages": [
+    3,
+    4
+   ]
+  },
+  {
+   "key": "x04a",
+   "kind": "text",
+   "label": "p4-ugimp-undeformed-domain-regular-grid",
+   "page": 4,
+   "file": "txt_p4_ugimp_undeformed_domain_regular_grid.png",
+   "caption": "§2.1 p.130: uGIMP = undeformed domain that translates with the particle; commonly used because deformed-domain integrals are numerically difficult; restricted to a regular Δr × Δz grid",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    180.43,
+    500.5,
+    246.5
+   ],
+   "w": 1733,
+   "h": 281,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.836,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     180.43,
+     500.5,
+     246.5
+    ]
+   ]
+  },
+  {
+   "key": "x05a",
+   "kind": "text",
+   "label": "p5-partition-of-unity-origin-truncation-fig2",
+   "page": 5,
+   "file": "txt_p5_partition_of_unity_origin_truncation_fig2.png",
+   "caption": "§2.1 p.131: support ±(2 + l_p); planar limit as n_i → ∞; partition of unity holds but domains within l_pΔr/2 of the axis cross r = 0 → singularities at ξ_p = −2n_i → truncation (n_i < 1 + l_p/2 and r_p < l_pΔr/2), nodes at r = 0, special cases n_i = −1, 0, 1 / Figure 2 description (singularities cancel in the sum but can reduce accuracy) — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    192.0,
+    503.75,
+    367.5
+   ],
+   "w": 1739,
+   "h": 1068,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.853,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     192.0,
+     503.75,
+     367.5
+    ],
+    [
+     95.0,
+     600.05,
+     504.0,
+     660.58
+    ]
+   ],
+   "pages": [
+    5,
+    5
+   ]
+  },
+  {
+   "key": "x08a",
+   "kind": "text",
+   "label": "p8-ugimp-50pct-strain-cpdi-deformed-domain",
+   "page": 8,
+   "file": "txt_p8_ugimp_50pct_strain_cpdi_deformed_domain.png",
+   "caption": "§2.2 p.134: uGIMP loses accuracy as the domain deforms — 'large-deformation tension tests are limited to about 50% strain'; deformed-domain integration easy in 1D, very difficult in 2D or 3D; CPDI [3]",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    101.67,
+    500.5,
+    179.07
+   ],
+   "w": 1733,
+   "h": 332,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.842,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     101.67,
+     500.5,
+     179.07
+    ]
+   ]
+  },
+  {
+   "key": "x09a",
+   "kind": "text",
+   "label": "p9-p10-cpdi-corner-cross-origin-shrink",
+   "page": 9,
+   "file": "txt_p9_p10_cpdi_corner_cross_origin_shrink.png",
+   "caption": "§2.2 p.135–136: corners may pass r = 0 in cruder calculations; uGIMP-style truncation not usable; shrink the parallelogram with s = r_p/|d_1r + d_2r| — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    651.5,
+    503.75,
+    719.5
+   ],
+   "w": 1738,
+   "h": 499,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.862,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     651.5,
+     503.75,
+     719.5
+    ],
+    [
+     93.0,
+     66.0,
+     500.5,
+     110.25
+    ]
+   ],
+   "pages": [
+    9,
+    10
+   ]
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-evaluate-all-extensions-traction-rarely-done",
+   "page": 10,
+   "file": "txt_p10_evaluate_all_extensions_traction_rarely_done.png",
+   "caption": "§3 + §3.1 p.136: crucial to evaluate a new form of MPM on all other MPM options; the surface-force term (5) is the most accurate way to apply tractions but rarely done; CPDI makes the deformed-edge integral tractable",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    160.75,
+    500.5,
+    384.57
+   ],
+   "w": 1733,
+   "h": 946,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.877,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     160.75,
+     500.5,
+     384.57
+    ]
+   ]
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-planar-thickness-3d-six-faces",
+   "page": 11,
+   "file": "txt_p11_planar_thickness_3d_six_faces.png",
+   "caption": "§3.1 p.137: no planar MPM traction results in the literature; planar ↔ axisymmetric differ by thickness B ↔ radial positions; 3D = integrate over the six faces — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    309.8,
+    503.75,
+    333.07
+   ],
+   "w": 1738,
+   "h": 415,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.882,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     309.8,
+     503.75,
+     333.07
+    ],
+    [
+     95.0,
+     584.25,
+     503.5,
+     640.95
+    ]
+   ],
+   "pages": [
+    11,
+    11
+   ]
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12-particle-forces-explicit-cracks-jintegral",
+   "page": 12,
+   "file": "txt_p12_particle_forces_explicit_cracks_jintegral.png",
+   "caption": "§3.1–3.2 p.138: particle forces → unphysical stress fluctuations, per-radian forces depend on r; CRAMP explicit cracks work unchanged; cohesive forces per radian; axisymmetric J integral 'in need of additional development'",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    66.0,
+    501.0,
+    486.75
+   ],
+   "w": 1735,
+   "h": 1754,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.85,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     66.0,
+     501.0,
+     486.75
+    ]
+   ]
+  },
+  {
+   "key": "x12b",
+   "kind": "text",
+   "label": "p12-p13-contact-normal-area-gradient-r0",
+   "page": 12,
+   "file": "txt_p12_p13_contact_normal_area_gradient_r0.png",
+   "caption": "§3.3 p.138–139: multimaterial-mode contact (stick, frictional [4–6], imperfect interfaces [17]); only the normal must change — volume gradient fails because V_p depends on r → area gradient; r-component of n = 0 at r = 0; compare areas; double nodal area at r = 0 — three parts",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    520.3,
+    500.5,
+    683.25
+   ],
+   "w": 1738,
+   "h": 1507,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.844,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 3 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     520.3,
+     500.5,
+     683.25
+    ],
+    [
+     95.0,
+     66.0,
+     503.5,
+     121.5
+    ],
+    [
+     95.0,
+     174.43,
+     503.75,
+     293.82
+    ]
+   ],
+   "pages": [
+    12,
+    13,
+    13
+   ]
+  },
+  {
+   "key": "x14a",
+   "kind": "text",
+   "label": "p14-conduction-no-extrapolation-diffusion",
+   "page": 14,
+   "file": "txt_p14_conduction_no_extrapolation_diffusion.png",
+   "caption": "§3.4 p.140: update T_p with the nodal rate, not by extrapolating T_i (numerical conduction); extrapolated T_i for constitutive laws; axisymmetric changes = S_ip, G_ip, per-radian mass/volume/flux; diffusion by substitution (k → D, T → μ)",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    194.0,
+    500.5,
+    334.5
+   ],
+   "w": 1733,
+   "h": 586,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.856,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     194.0,
+     500.5,
+     334.5
+    ]
+   ]
+  },
+  {
+   "key": "x15a",
+   "kind": "text",
+   "label": "p15-radial-compression-setup-classic-unstable",
+   "page": 15,
+   "file": "txt_p15_radial_compression_setup_classic_unstable.png",
+   "caption": "§4.1 p.141: five shape-function options; slow compression to ε_rr = −0.6 (J = 16 %); R_0 50 mm, thickness 10 mm, cells 2.5 × 2.5 mm, Neo-Hookean E 2300 MPa, ν 0.33 (K 2254.9, G 864.662 MPa); rigid particles at fixed velocity; classic axisymmetric MPM unstable (many element crossings)",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    71.25,
+    503.5,
+    283.5
+   ],
+   "w": 1737,
+   "h": 886,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.845,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     71.25,
+     503.5,
+     283.5
+    ]
+   ]
+  },
+  {
+   "key": "x16a",
+   "kind": "text",
+   "label": "p16-planar-shape-functions-extra-nodes-mirror",
+   "page": 16,
+   "file": "txt_p16_planar_shape_functions_extra_nodes_mirror.png",
+   "caption": "§4.1 p.142: planar shape functions in an axisymmetric code give poor results near the origin; extra ('ghost') nodes at r = −Δr; three BC treatments; mirror BC 'meant to mimic the value that node would have in a full three-dimensional simulation'; with truncation the extra nodes do not participate",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    66.0,
+    501.0,
+    492.57
+   ],
+   "w": 1735,
+   "h": 1794,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.828,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     66.0,
+     501.0,
+     492.57
+    ]
+   ]
+  },
+  {
+   "key": "x16b",
+   "kind": "text",
+   "label": "p16-p17-fig7-84-88-93pct-four-reasons",
+   "page": 16,
+   "file": "txt_p16_p17_fig7_84_88_93pct_four_reasons.png",
+   "caption": "§4.1 p.142–143: Fig. 7 calculations 'plotted up to 84% compression'; uGIMP broke down at 88 %, CPDI began to break down at about 93 %; four reasons for truncated axisymmetric shape functions — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    493.05,
+    501.0,
+    520.5
+   ],
+   "w": 1741,
+   "h": 992,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.848,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     493.05,
+     501.0,
+     520.5
+    ],
+    [
+     95.0,
+     460.5,
+     504.25,
+     659.75
+    ]
+   ],
+   "pages": [
+    16,
+    17
+   ]
+  },
+  {
+   "key": "x18a",
+   "kind": "text",
+   "label": "p18-traction-test-setup-cpdi-required",
+   "page": 18,
+   "file": "txt_p18_traction_test_setup_cpdi_required.png",
+   "caption": "§4.2 p.144: cylinder 40 mm × radius 10 mm, cells 2 × 2 mm; tension by linearly increasing stress to 1000 MPa at ~1 % of the wave speed; final strain about 50 %; F_p(t) = σ̇ r_p l_p Δr t; uGIMP not stable at 50 % tensile strain; 'CPDI is required for large strain calculations'",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    318.0,
+    500.5,
+    613.0
+   ],
+   "w": 1733,
+   "h": 1230,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.827,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     318.0,
+     500.5,
+     613.0
+    ]
+   ]
+  },
+  {
+   "key": "x18b",
+   "kind": "text",
+   "label": "p18-p19-penetration-setup-convergence-not-shown",
+   "page": 18,
+   "file": "txt_p18_p19_penetration_setup_convergence_not_shown.png",
+   "caption": "§4.3 p.144–145: tungsten-alloy rod Ø0.4 × 5.0 cm into armor steel Ø4.0 × 4.95 cm at 1.70 km/s; Johnson–Cook + Mie–Grüneisen (Table I · Anderson et al. [21]); Δr = Δz = 0.25 mm, four particles/cell; other resolutions 'not shown'; 'good agreement' with flash x-ray nose/tail data — two parts",
+   "rotated_deg": 0,
+   "bbox": [
+    93.0,
+    640.3,
+    500.5,
+    718.75
+   ],
+   "w": 1738,
+   "h": 791,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.842,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi · 2 토막을 30 px 틈 + 회색 선으로 위아래 이음",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     93.0,
+     640.3,
+     500.5,
+     718.75
+    ],
+    [
+     95.0,
+     260.0,
+     503.75,
+     363.0
+    ]
+   ],
+   "pages": [
+    18,
+    19
+   ]
+  },
+  {
+   "key": "x19a",
+   "kind": "text",
+   "label": "p19-conclusion-checklist",
+   "page": 19,
+   "file": "txt_p19_conclusion_checklist.png",
+   "caption": "§5 p.145: conclusion + nine-item check list for adding axisymmetric MPM to a planar or 3D code",
+   "rotated_deg": 0,
+   "bbox": [
+    95.0,
+    391.75,
+    503.75,
+    716.5
+   ],
+   "w": 1738,
+   "h": 1354,
+   "dpi": 300,
+   "src": "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf",
+   "blank": 0.864,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 인용한 문장 · 단 폭 · 위아래는 글줄 사이 잉크 틈에서 자름 · 300 dpi",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "parts_bbox": [
+    [
+     95.0,
+     391.75,
+     503.75,
+     716.5
+    ]
+   ]
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": [
+  {
+   "key": "t1",
+   "how": "hand crop p17 (tool: 'Table I.' uses a Roman numeral — tool reads Arabic labels only)"
+  }
+ ],
+ "note_manual": "2026-11-12 — Int. J. Numer. Meth. Engng 101(2) 127–147 (2015) · 21 PDF pages = journal pages 127–147 · no SI. Tool crops 10: all re-cut (recrop — fig_4 contained Eq. (33); the others ran across the whole text column; fig_9 = embedded raster ± 6 pt) · captions rewritten from the render (caption_fix). Hand table 1 (tab_1 · Roman 'Table I'). Equations 69 (eq_01 … eq_67 + eq_A1 · eq_A2 · one crop per equation number · 400 dpi · white canvas 7 pt). Evidence paragraphs 20 (txt_*). Total PNG 100. Readings of Figs. 2 · 5 · 6 · 7 · 8 · 10 = PDF vector-path coordinates (axes from frame corners / tick marks; Fig. 9 is the only raster). Reading table = digitized.csv (113 rows: Fig. 5 · 6 · 8 · 10 marker centres + Fig. 10 MPM line at the experiment times + Fig. 7 line end · columns figure, series, x_name, x, y_name, y, note).",
+ "key_note": "manual keys: e<NN> = equation (N) (eA1 · eA2 = Appendix A) · x<PDF page><letter> = evidence paragraph (kind 'text'); page = PDF page = journal page − 126"
+}

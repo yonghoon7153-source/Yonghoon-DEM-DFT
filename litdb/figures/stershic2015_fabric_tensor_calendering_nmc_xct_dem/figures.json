@@ -1,0 +1,1968 @@
+{
+ "slug": "stershic2015_fabric_tensor_calendering_nmc_xct_dem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf"
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-16) found every printed item: Fig. 1–8 and Tables 1–4 (11 pp; no supplementary material is announced — 'Supplementary' / 'Supporting' 0 hits in the text layer; 'Appendix' = the in-paper Appendices A and B) — 12 crops, all opened.  All 12 were re-cut: the 8 figures from their embedded native rasters (auto crops were cut to the column / page width with uneven side margins; auto caption text had broken symbol glyphs, replaced by the printed captions) and the 4 tables (auto box = whole page) at 400 dpi from the vector page.  Added by hand: the graphical abstract (1), 24 panel crops (Fig. 2a–d · 3a–c · 4a–c · 5a–b · 6a–f′ (rows with the column header stacked) · 7a–b (rows with header) · 8a–c), 11 equation crops (Eqs. 1, 2, 3, 4, the Eqs. 2–4 set, and 6 inline formulas: z = n_c/n_p, D^(k) relation, Δf, Φ_RCP, Parteli Φ, Kanatani λ) and 20 evidence-paragraph crops (kind 'text').  Every one of the 68 crops was opened and checked after cutting.  Read-outs: digitized.csv (24 rows: Fig. 5 left · Fig. 7 X-Z · Fig. 8 scale bars and cracked particles) from the native rasters (2026-11-16, litdb-curator)",
+ "note_manual": "Printed inconsistencies visible in the crops: (1) PSD 'polydispersity of δ = 0.6r̄' (p.542) vs 'polydispersity of 0.4' (p.545), both citing Chung [6]; (2) Φ_RCP = 0.637 + 0.0658δ + 0.0857Sδ² gives 0.681/0.689/0.689/0.687/0.687 with the printed inputs, the printed 0.678/0.686/0.686/0.684/0.684 are reproduced with a constant 0.634; (3) Parteli Φ = 0.64 − 0.99/(2r̄)^0.676 with r̄ = 6 μm gives 0.455, not the printed 0.38; (4) '0 bar … within 0.06–0.11' but 92 % wt differs by 0.12 (Table 3); (5) 'exceed 6 after 2000 bar' holds for 4 of 8 DEM runs (Table 4) and the f′ 92 % ratio 4.165 lies outside the tomography range 0.953–3.378 claimed 'well within'; (6) Eqs. (3)–(4) print N^(4)_ij for N^(4)_ijkl; Appendix B second-rank λ prints D_ij D_kl; (7) Table 3 headers say '% vol.' but values are fractions; (8) reference list: [11] J. Manuf. Sci. Eng. 136 (1966), [24] issue (4) vs URL '55.3.245', [26] and [31] without pages / year, [37] 'granlar'.",
+ "key_note": "manual keys: ga = graphical abstract; f<N><panel> = panel crop of Fig. N (panel_of; f6a–f6f2 = rows a–f′ of Fig. 6 with the header strip stacked; f7a/f7b = X-Z / X-Y rows with header); e<NN> = equation crop (kind 'equation'), ein_* = inline formula crop; x<page><letter> = evidence paragraph (kind 'text'; entries with 'parts' stack several column / page parts of one passage).  File names and 'page' use PDF pages (journal page = PDF page + 539).",
+ "figures": [
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "page": 1,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract (PDF p.1, unnumbered): Li-NMC tomography → contact approximations 'Voxel' · 'Spherical' · 'Ellipsoidal' and 'Size Distribution' → 'DEM' → 'Evolution Rose-Diagram' (± petals; same diagram as Fig. 4 right).",
+   "rotated_deg": 0,
+   "bbox": [
+    197.2,
+    300.9,
+    450.6,
+    402.9
+   ],
+   "w": 1102,
+   "h": 470,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.796,
+   "src_native": [
+    1056,
+    426
+   ],
+   "native_dpi": 300,
+   "manual_crop": "graphical abstract (no caption, not found by the caption-anchored tool) — cut from the embedded native raster (xref 795, 1056x426 px = 300 dpi): ink bounding box -> uniform 25 px white margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Illustration of ellipses in contact, showing branch vector from centroid to centroid (blue) and contact normal vector (red). (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    327.6,
+    66.7,
+    527.2,
+    159.0
+   ],
+   "w": 877,
+   "h": 431,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.932,
+   "auto_bbox": [
+    295.8,
+    60.7,
+    558.9,
+    165.0
+   ],
+   "src_native": [
+    832,
+    385
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 60, 832x385 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "중심 잇는 벡터 (파랑) ↔ 접촉 법선 (빨강) — 구는 둘이 같고 타원체는 다르다 (부록 A.2).",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. NMC 92% wt. 0 bar sample: (top-left) stacked raw tomography, showing zoom box; (top-right) meshed particles, zoomed; (bottom-left) spherical approximations to particles, zoomed; (bottom-right) ellipsoidal approximations to particles, zoomed. Note: colors indicate unique particles but do not correspond. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    131.9,
+    66.7,
+    473.2,
+    293.3
+   ],
+   "w": 1469,
+   "h": 989,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.386,
+   "auto_bbox": [
+    36.5,
+    60.7,
+    568.6,
+    299.3
+   ],
+   "src_native": [
+    1422,
+    945
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 75, 1422x945 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 4,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2 (top-left) — stacked raw tomography with the zoom box (NMC 92 % wt, 0 bar) (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 749,
+   "h": 499,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.506,
+   "src_native": [
+    1422,
+    945
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel 2a of Fig. 2 — cut from the embedded native raster (xref 75, 300 dpi, no resampling): panel box [0,0,722,480] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 4,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2 (top-right) — meshed particles, zoomed (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 730,
+   "h": 504,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.355,
+   "src_native": [
+    1422,
+    945
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel 2b of Fig. 2 — cut from the embedded native raster (xref 75, 300 dpi, no resampling): panel box [722,0,1422,480] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2c",
+   "kind": "figure",
+   "label": "2c",
+   "page": 4,
+   "file": "fig_2c.png",
+   "caption": "Fig. 2 (bottom-left) — spherical approximations to particles, zoomed (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 727,
+   "h": 497,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.343,
+   "src_native": [
+    1422,
+    945
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel 2c of Fig. 2 — cut from the embedded native raster (xref 75, 300 dpi, no resampling): panel box [0,480,710,945] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2d",
+   "kind": "figure",
+   "label": "2d",
+   "page": 4,
+   "file": "fig_2d.png",
+   "caption": "Fig. 2 (bottom-right) — ellipsoidal approximations to particles, zoomed (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 728,
+   "h": 495,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.355,
+   "src_native": [
+    1422,
+    945
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel 2d of Fig. 2 — cut from the embedded native raster (xref 75, 300 dpi, no resampling): panel box [710,480,1422,945] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. 90% wt. NMC, 0 bar data-set (voxel contact vector approximation): N(2) (left) and N(4) (center) fabric tensor rose diagrams; (right) comparison of F(2) (blue) and F(4) (red) fabric tensor approximations to data-set. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    34.9,
+    66.7,
+    550.8,
+    194.4
+   ],
+   "w": 2195,
+   "h": 579,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.811,
+   "auto_bbox": [
+    26.8,
+    60.7,
+    558.9,
+    199.8
+   ],
+   "src_native": [
+    2150,
+    533
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 96, 2150x533 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "90 % · 0 bar · 복셀: N⁽⁴⁾ = 수직이 적고 대각선이 많다 (원문 p.543) — 같은 자료의 타원체 중심 벡터 (Fig 4 왼) 와 반대 [카드 관찰 §3-6].",
+   "viewed": true
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 5,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3 (left) — moment tensor N(2) rose diagram, 90 % wt NMC, 0 bar, voxel contact vectors (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 701,
+   "h": 579,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.8,
+   "src_native": [
+    2150,
+    533
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel 3a of Fig. 3 — cut from the embedded native raster (xref 96, 300 dpi, no resampling): panel box [0,0,680,533] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 5,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3 (center) — moment tensor N(4) rose diagram (dimpled top and bottom: fewer vertical contacts) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 744,
+   "h": 576,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.786,
+   "src_native": [
+    2150,
+    533
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel 3b of Fig. 3 — cut from the embedded native raster (xref 96, 300 dpi, no resampling): panel box [680,0,1428,533] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 5,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3 (right) — fabric tensors F2 (blue) and F4 (red) overlaid (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 746,
+   "h": 577,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.844,
+   "src_native": [
+    2150,
+    533
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel 3c of Fig. 3 — cut from the embedded native raster (xref 96, 300 dpi, no resampling): panel box [1428,0,2150,533] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Example of fabric tensor analysis (90% wt. NMC, ellipsoidal approximation, branch vector). Fabric tensor of unloaded assembly F(4)_0 (left) is subtracted from fabric tensor of loaded assembly F(4)_2000 (center) to produce an evolution rose-diagram (right). Yellow to orange to red areas show positive change, green to teal to blue areas show negative change. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    94.4,
+    240.9,
+    491.3,
+    364.5
+   ],
+   "w": 1701,
+   "h": 564,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.851,
+   "auto_bbox": [
+    26.8,
+    234.9,
+    558.9,
+    370.5
+   ],
+   "src_native": [
+    1654,
+    516
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 97, 1654x516 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "★ Δf 정의 예시 — 90 % 타원체 중심 벡터: 0 bar F⁽⁴⁾ 는 수직으로 길고 2000 bar 는 둥글다 → Δf 수직 − · 수평 +.",
+   "viewed": true
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 5,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4 (left) — fabric tensor F(4)_0 of the unloaded (0 bar) assembly, 90 % wt NMC, ellipsoidal approximation, branch vector (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 496,
+   "h": 564,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.811,
+   "src_native": [
+    1654,
+    516
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel 4a of Fig. 4 — cut from the embedded native raster (xref 97, 300 dpi, no resampling): panel box [0,0,478,516] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 5,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4 (center) — fabric tensor F(4)_2000 of the loaded (2000 bar) assembly (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 723,
+   "h": 559,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.848,
+   "src_native": [
+    1654,
+    516
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel 4b of Fig. 4 — cut from the embedded native raster (xref 97, 300 dpi, no resampling): panel box [478,0,1199,516] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 5,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4 (right) — evolution rose-diagram Δf = f(F(4)_2000) − f(F(4)_0): '−' vertical petals, '+' lateral petals (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 486,
+   "h": 559,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.897,
+   "src_native": [
+    1654,
+    516
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel 4c of Fig. 4 — cut from the embedded native raster (xref 97, 300 dpi, no resampling): panel box [1199,0,1654,516] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (Left) Particle size distribution by diameter (fractional mass density q3) of ETHZ data-set [21]; (right) DEM simulation of 96% wt. NMC material at 300 bar, simulation domain measures 340 μm × 340 μm × 220 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    131.9,
+    66.7,
+    473.2,
+    193.8
+   ],
+   "w": 1467,
+   "h": 578,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.779,
+   "auto_bbox": [
+    36.5,
+    60.7,
+    568.6,
+    199.8
+   ],
+   "src_native": [
+    1422,
+    530
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 118, 1422x530 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "입도 q₃ 봉우리 ≈0.080–0.081 µm⁻¹ @ ≈8.4–9.7 µm · 범위 ≈0.7–46 µm [판독 · digitized.csv].",
+   "viewed": true
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 6,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5 (left) — particle size distribution by diameter (fractional mass density q3, μm⁻¹; log diameter axis) of the ETHZ data-set (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 673,
+   "h": 552,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.862,
+   "src_native": [
+    1422,
+    530
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel 5a of Fig. 5 — cut from the embedded native raster (xref 118, 300 dpi, no resampling): panel box [0,0,658,530] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 6,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5 (right) — DEM simulation of 96 % wt NMC at 300 bar (plate = dark plane; domain 340 × 340 × 220 μm) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 778,
+   "h": 578,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.698,
+   "src_native": [
+    1422,
+    530
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel 5b of Fig. 5 — cut from the embedded native raster (xref 118, 300 dpi, no resampling): panel box [658,0,1422,530] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Δf^(a,b) = f(F^(b)_2000) − f(F^(a)_0): Fabric tensor evolution rose-diagrams (yellow–orange–red is positive, green–teal–blue is negative); charting evolution of particle contacts from 0 bar to 2000 bar. Fabric tensor order indicated on each plot. Key: (a) Spherical, (b) Ellipsoidal (branch vector), (c) Ellipsoidal (contact normal), (d) Voxel (branch vector), (e) Voxel (contact normal), (f) DEM simulation (μNMC = 0.15), (f′) DEM simulation (μNMC = 0). (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    143.8,
+    66.7,
+    461.3,
+    697.3
+   ],
+   "w": 1369,
+   "h": 2674,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.905,
+   "auto_bbox": [
+    36.5,
+    60.7,
+    568.6,
+    703.0
+   ],
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 139, 1323x2628 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "★ CT 다섯 계열 (a–e) 모두 수직 − · 수평 + · DEM (f · f′) 은 작고 모양이 다르다 (90–94 % 수직 + · 수평 + · 대각선 −).",
+   "viewed": true
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 8,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6 row (a) Spherical — Δf^(4,4) for 90/92/94/96 % wt NMC, with the column-header strip stacked on top (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1369,
+   "h": 496,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.906,
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel 6a of Fig. 6 — cut from the embedded native raster (xref 139, 300 dpi, no resampling): header strip [0,0,1323,57] px and row box [0,57,1323,448] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 8,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6 row (b) Ellipsoidal (branch vector) — Δf^(4,4) ×4, header stacked (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1369,
+   "h": 447,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.9,
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel 6b of Fig. 6 — cut from the embedded native raster (xref 139, 300 dpi, no resampling): header strip [0,0,1323,57] px and row box [0,448,1323,790] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6c",
+   "kind": "figure",
+   "label": "6c",
+   "page": 8,
+   "file": "fig_6c.png",
+   "caption": "Fig. 6 row (c) Ellipsoidal (contact normal) — Δf^(4,4) ×4, header stacked (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1369,
+   "h": 495,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.829,
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel 6c of Fig. 6 — cut from the embedded native raster (xref 139, 300 dpi, no resampling): header strip [0,0,1323,57] px and row box [0,790,1323,1180] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6d",
+   "kind": "figure",
+   "label": "6d",
+   "page": 8,
+   "file": "fig_6d.png",
+   "caption": "Fig. 6 row (d) Voxel (branch vector) — Δf^(4,2) · ^(2,2) · ^(4,4) · ^(4,2), header stacked (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1369,
+   "h": 465,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.859,
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel 6d of Fig. 6 — cut from the embedded native raster (xref 139, 300 dpi, no resampling): header strip [0,0,1323,57] px and row box [0,1180,1323,1540] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6e",
+   "kind": "figure",
+   "label": "6e",
+   "page": 8,
+   "file": "fig_6e.png",
+   "caption": "Fig. 6 row (e) Voxel (contact normal) — Δf^(2,2) · ^(4,2) · ^(2,2) · ^(4,2), header stacked (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1369,
+   "h": 465,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.902,
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel 6e of Fig. 6 — cut from the embedded native raster (xref 139, 300 dpi, no resampling): header strip [0,0,1323,57] px and row box [0,1540,1323,1900] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6f",
+   "kind": "figure",
+   "label": "6f",
+   "page": 8,
+   "file": "fig_6f.png",
+   "caption": "Fig. 6 row (f) DEM simulation μNMC = 0.15 — Δf^(4,4) · ^(2,4) · ^(2,4) · ^(2,2), header stacked (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1369,
+   "h": 465,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.937,
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel 6f of Fig. 6 — cut from the embedded native raster (xref 139, 300 dpi, no resampling): header strip [0,0,1323,57] px and row box [0,1900,1323,2260] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6f2",
+   "kind": "figure",
+   "label": "6f′",
+   "page": 8,
+   "file": "fig_6f2.png",
+   "caption": "Fig. 6 row (f′) DEM simulation μNMC = 0 — Δf^(2,4) · ^(4,4) · ^(2,4) · ^(2,4), header stacked (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1369,
+   "h": 471,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.931,
+   "src_native": [
+    1323,
+    2628
+   ],
+   "native_dpi": 300,
+   "panel_of": "f6",
+   "manual_crop": "panel 6f′ of Fig. 6 — cut from the embedded native raster (xref 139, 300 dpi, no resampling): header strip [0,0,1323,57] px and row box [0,2260,1323,2628] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Δf^(a,b) = f(F^(b)_2000) − f(F^(a)_0): Close-up of Rose-Diagrams of DEM simulation (f: μk,NMC = 0.15) (yellow–orange–red is positive, green–teal–blue is negative). In this case, the magnitude of the density differences is so small that the color scale for these rose diagrams only varies from a yellow–green/chartreuse (positive) to a blue-green/viridian (negative). Note: scale varies per image to provide zoomed view. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    94.3,
+    66.7,
+    491.5,
+    208.7
+   ],
+   "w": 1696,
+   "h": 634,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.814,
+   "auto_bbox": [
+    26.8,
+    60.7,
+    558.8,
+    214.5
+   ],
+   "src_native": [
+    1655,
+    592
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 158, 1655x592 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "DEM 진화 꽃잎 끝 (X-Z · 축 단위): 90 % ≈0.25 · 92 % ≈0.17 · 94 % ≈0.14 · 96 % ≈0.045 [판독].",
+   "viewed": true
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 9,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7 X-Z (side view) row — DEM (f) close-up rose diagrams for 90/92/94/96 % wt NMC, axis ranges ±0.2 / ±0.1 / ±0.1 / ±0.04, header stacked (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 1696,
+   "h": 369,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.85,
+   "src_native": [
+    1655,
+    592
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel 7a of Fig. 7 — cut from the embedded native raster (xref 158, 300 dpi, no resampling): header strip [0,0,1655,59] px and row box [0,59,1655,323] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 9,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7 X-Y (top view) row — DEM (f) close-up rose diagrams, axis ranges ±0.2 / ±0.1 / ±0.1 / ±0.02, header stacked (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 1696,
+   "h": 370,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.797,
+   "src_native": [
+    1655,
+    592
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel 7b of Fig. 7 — cut from the embedded native raster (xref 158, 300 dpi, no resampling): header strip [0,0,1655,59] px and row box [0,323,1655,592] px stacked top to bottom (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. 92% wt. NMC, 2000 bar data-set, particle assembly illustrating particle fracture: (left) slice showing top view, each particle given a unique greyscale color for identification, and two selection for zoom; (center) lower selection, (right) upper selection. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    122.8,
+    272.7,
+    463.1,
+    385.9
+   ],
+   "w": 1466,
+   "h": 522,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.266,
+   "auto_bbox": [
+    26.8,
+    266.7,
+    558.9,
+    391.9
+   ],
+   "src_native": [
+    1418,
+    472
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the column / page width, so side margins were uneven; auto caption text had broken symbols, replaced by the printed caption), re-cut from the embedded native raster (xref 159, 1418x472 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) -> white canvas with a uniform 25 px (6 pt) margin; caption kept in this entry, not in the image (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "★ R7 정성 증거 — 금 간 입자 단면 ≈14–24 µm (아래 확대) · ≈30–33 µm (위 확대) [판독] · 통계 아님.",
+   "viewed": true
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 9,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8 (left) — top-view slice, 92 % wt NMC, 2000 bar, each particle a unique grey level, two yellow selection boxes, 100 μm bar (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 468,
+   "h": 520,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.27,
+   "src_native": [
+    1418,
+    472
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel 8a of Fig. 8 — cut from the embedded native raster (xref 159, 300 dpi, no resampling): panel box [0,0,442,472] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 9,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8 (center) — lower selection, 50 μm bar: particles with dark crack lines split into several grey labels (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 699,
+   "h": 517,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.252,
+   "src_native": [
+    1418,
+    472
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel 8b of Fig. 8 — cut from the embedded native raster (xref 159, 300 dpi, no resampling): panel box [442,0,1134,472] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8c",
+   "kind": "figure",
+   "label": "8c",
+   "page": 9,
+   "file": "fig_8c.png",
+   "caption": "Fig. 8 (right) — upper selection, 10 μm bar: two large particles broken into fragments (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 313,
+   "h": 522,
+   "dpi": 300,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.305,
+   "src_native": [
+    1418,
+    472
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel 8c of Fig. 8 — cut from the embedded native raster (xref 159, 300 dpi, no resampling): panel box [1134,0,1418,472] px (split lines placed in white gaps / between grid rows measured on the raster row / column ink profiles) -> ink bounding box -> white canvas with a uniform 25 px margin; panel label kept, caption excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Cathode matrix composition.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.5,
+    668.5,
+    286.5,
+    744.5
+   ],
+   "w": 1461,
+   "h": 461,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.95,
+   "auto_bbox": [
+    27.8,
+    42.8,
+    558.0,
+    748.8
+   ],
+   "recrop": "the auto crop was the whole page (auto box kept as auto_bbox; PyMuPDF table detection swallowed the page) — re-rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 7–8 pt table type): clip = caption top to the bottom rule of the table, column width -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 DEM simulation parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    237.5,
+    296.0,
+    330.5
+   ],
+   "w": 1462,
+   "h": 557,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.925,
+   "auto_bbox": [
+    37.5,
+    42.8,
+    567.6,
+    748.8
+   ],
+   "recrop": "the auto crop was the whole page (auto box kept as auto_bbox; PyMuPDF table detection swallowed the page) — re-rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 7–8 pt table type): clip = caption top to the bottom rule of the table, column width -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "E_NMC 113 GPa · μ 0.15 (출처 인용 없음) — du2025 [72] 의 142 GPa · ge2022 [20] 의 μ 0.25 와 다름 (§0-1).",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3 Volume fraction, Φ: observed volume fraction of NMC particles in tomography and DEM particle assembly.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    625.5,
+    296.0,
+    744.5
+   ],
+   "w": 1462,
+   "h": 700,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.925,
+   "auto_bbox": [
+    37.5,
+    42.8,
+    567.6,
+    748.8
+   ],
+   "recrop": "the auto crop was the whole page (auto box kept as auto_bbox; PyMuPDF table detection swallowed the page) — re-rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 7–8 pt table type): clip = caption top to the bottom rule of the table, column width -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "CT (압연 뒤) ↔ DEM (누른 채 · 겹친 부피 한 번) — 상태 · 연산자 다름 (§3-5).",
+   "viewed": true
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 7,
+   "file": "tab_4.png",
+   "caption": "Table 4 Average coordination number, z, at 0 bar and at 2000 bar. Key: (a) Spherical, (b) Ellipsoidal (branch vector), (c) Ellipsoidal (contact normal), (d) Voxel (branch vector), (e) Voxel (contact normal), (f) DEM simulation (μk,NMC = 0.15), (f′) DEM simulation (μk,NMC = 0).",
+   "rotated_deg": 0,
+   "bbox": [
+    30.5,
+    63.5,
+    286.5,
+    302.5
+   ],
+   "w": 1461,
+   "h": 1366,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.905,
+   "auto_bbox": [
+    27.8,
+    42.8,
+    558.0,
+    748.8
+   ],
+   "recrop": "the auto crop was the whole page (auto box kept as auto_bbox; PyMuPDF table detection swallowed the page) — re-rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 7–8 pt table type): clip = caption top to the bottom rule of the table, column width -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "mpm_note_ko": "z = n_c/n_p · 쌍 세기 [미확인] · DEM '>6' 은 8 런 중 4 (§3-4).",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_directional_distribution_expansion.png",
+   "caption": "Eq. (1), PDF p.3 (p.542) right column: f̂(n) ≈ f^(k)(n) = (1/4π)(F^(k)_{i1…ik} n_i1…n_ik) = (1/4π)(D^(0) + D^(2)_ij n_i n_j + D^(4)_ijkl n_i n_j n_k n_l + … + D^(k)_{i1…ik} n_i1…n_ik) — k-th order approximation of the directional distribution.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    619.5,
+    554.5,
+    688.5
+   ],
+   "w": 1463,
+   "h": 395,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.965,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 4,
+   "file": "eq_02_moment_tensors_first_kind_N.png",
+   "caption": "Eq. (2), PDF p.4 (p.543) left column: N^(0) = (1/N)Σ1 = 1, N^(2)_ij = (1/N)Σ_α n_i^α n_j^α, N^(4)_ijkl = (1/N)Σ_α n_i^α n_j^α n_k^α n_l^α — fabric tensors of the first kind (moment tensors of the N contact unit vectors).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    391.5,
+    295.5,
+    433.5
+   ],
+   "w": 1459,
+   "h": 276,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.957,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 4,
+   "file": "eq_03_fabric_tensors_second_kind_F.png",
+   "caption": "Eq. (3), PDF p.4 (p.543): F^(0) = N^(0) = 1, F^(2)_ij = (15/2)(N^(2)_ij − (1/5)δ_ij), F^(4)_ijkl = (315/8)(N^(4)_ij[sic: ijkl] − (2/3)δ_ij N^(2)_kl + (1/21)δ_ij δ_kl) — second kind (least-squares 'fabric tensor').",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    438.5,
+    295.5,
+    492.5
+   ],
+   "w": 1450,
+   "h": 310,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.957,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_deviatoric_tensors_third_kind_D.png",
+   "caption": "Eq. (4), PDF p.4 (p.543): D^(0) = 1, D^(2)_ij = (15/2)(N^(2)_ij − (1/3)δ_ij), D^(4)_ijkl = (315/8)(N^(4)_ij[sic] − (6/7)δ_ij N^(2)_kl + (3/35)δ_ij δ_kl) — third kind ('deviatoric tensor'); consistent with D^(k) = F^(k) − δ^(2)F^(k−2) (card arithmetic).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    497.5,
+    295.5,
+    551.5
+   ],
+   "w": 1450,
+   "h": 310,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.955,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e02_04",
+   "kind": "equation",
+   "label": "eq2-4",
+   "page": 4,
+   "file": "eq_02_04_tensor_set.png",
+   "caption": "Eqs. (2)–(4) together (PDF p.4 left column, contiguous) — first, second and third kind fabric tensors of rank 0, 2, 4, for pasting as one block.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    391.5,
+    295.5,
+    551.5
+   ],
+   "w": 1459,
+   "h": 934,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.958,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "ein_z",
+   "kind": "equation",
+   "label": "z (inline)",
+   "page": 3,
+   "file": "eq_in_p3_coordination_number_z.png",
+   "caption": "Inline, PDF p.3 (p.542) left column: 'The average coordination number of the assembly can be calculated as z = n_c/n_p where n_c is the number of contacts and n_p is the number of particles [37]' (whether a pair contact is counted once or twice is not stated).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    248.6,
+    286.0,
+    279.6
+   ],
+   "w": 1458,
+   "h": 227,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.865,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "ein_d",
+   "kind": "equation",
+   "label": "D(k) (inline)",
+   "page": 3,
+   "file": "eq_in_p3_third_kind_symmetry_normalisation.png",
+   "caption": "Inline, PDF p.3 (p.542) right column: D^(k) = F^(k) − δ^(2)F^(k−2) [37]; directional distributions of unit vectors are symmetric, f(n) = f(−n), and sum to one on a unit surface, ∮_Γ f(n)dΓ = 1 (Γ = unit circle in 2-D or unit sphere in 3-D — the crop ends before '2-D or unit sphere 3-D)').",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    438.5,
+    554.5,
+    500.6
+   ],
+   "w": 1460,
+   "h": 393,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.88,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "ein_df",
+   "kind": "equation",
+   "label": "Δf (inline)",
+   "page": 4,
+   "file": "eq_in_p4_density_difference_delta_f.png",
+   "caption": "Inline, PDF p.4 (p.543) right column: Δf^(a,b) = f(F^(b)_2000) − f(F^(a)_0) — density difference between two calendaring pressures; FTs are normalised by the number of contacts, so the zeroth-rank approximation is f^(0) = ∮f dΓ/∮dΓ = 1/4π and Δf averages to zero.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.0,
+    351.5,
+    564.0,
+    437.5
+   ],
+   "w": 1459,
+   "h": 522,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.871,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "ein_rcp",
+   "kind": "equation",
+   "label": "Φ_RCP (inline)",
+   "page": 6,
+   "file": "eq_in_p6_desmond_rcp_prediction.png",
+   "caption": "Inline, PDF p.6 (p.545) left column: Desmond et al. [9] Φ_RCP = 0.637 + 0.0658·δ + 0.0857·S·δ² (δ = polydispersity, S = skewness); Chung et al. [6] lognormal PSD, average radius 6 μm, polydispersity 0.4, S = 1.264 → Φ_RCP = 0.678; DEM assemblies δ = {0.443, 0.441, 0.438, 0.437}, S = {1.371, 1.353, 1.315, 1.316} → Φ_RCP = {0.686, 0.686, 0.684, 0.684} (the five printed values are reproduced with a constant 0.634, not the printed 0.637 — card arithmetic).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    391.6,
+    296.0,
+    527.6
+   ],
+   "w": 1465,
+   "h": 809,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.843,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "ein_par",
+   "kind": "equation",
+   "label": "Φ Parteli (inline)",
+   "page": 6,
+   "file": "eq_in_p6_parteli_packing_fraction.png",
+   "caption": "Inline, PDF p.6 (p.545) right column: Parteli et al. [31] empirical packing fraction of gravity-settled fine powders Φ = 0.64 − 0.99/(2r̄)^0.676 → 'an estimation of the pre-compacted volume fraction of Φ = 0.38, which well matches that observed' (r̄ = 6 μm gives 0.455 if r̄ is in μm — card arithmetic).",
+   "rotated_deg": 0,
+   "bbox": [
+    309.5,
+    311.6,
+    565.0,
+    373.0
+   ],
+   "w": 1459,
+   "h": 398,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.853,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "ein_lam",
+   "kind": "equation",
+   "label": "λ (inline, App. B)",
+   "page": 11,
+   "file": "eq_in_p11_kanatani_significance_statistic.png",
+   "caption": "Inline, PDF p.11 (p.550, Appendix B): Kanatani statistic λ tested against χ²_c — second rank λ = (2N/15)D^(2)_ij D^(2)_kl[sic] vs χ²_c(5, α); fourth rank λ = (8N/315)(D^(4)_ijkl D^(4)_ijkl − (8/11)D^(4)_ijkl D^(4)_ijkm D^(2)_lm) vs χ²_c(9, α) [18]; the paper uses the 99 % level (p.546).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.0,
+    160.6,
+    286.0,
+    239.0
+   ],
+   "w": 1460,
+   "h": 494,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.882,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 9 pt type) — clip = union of the text-layer line boxes of this equation (inline formulas: the lines carrying the formula and its defining sentence), checked so that no neighbouring line, running head or superscript of the next line enters -> ink trim (min RGB < 225) -> white canvas with a uniform 6 pt margin (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract_ft_tomography_dem_psd_insufficient.png",
+   "caption": "PDF p.1 (p.540) abstract: fabric tensor formalism applied to X-ray tomography of NMC positive electrodes at several compositions and consolidation pressures; 'These results do not follow the experimental trends, which indicates that the particle size distribution alone is not a sufficient measure for the electrode microstructures in DEM simulations.'",
+   "rotated_deg": 0,
+   "bbox": [
+    195.2,
+    444.5,
+    555.0,
+    589.6
+   ],
+   "w": 2045,
+   "h": 843,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.831,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 1,
+     "clip": [
+      195.2,
+      444.5,
+      555.0,
+      589.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-intro-dem-upscaling",
+   "page": 2,
+   "file": "txt_p2_intro_dem_upscaling_not_developed.png",
+   "caption": "PDF p.2 (p.541) left column: DEM (Cundall & Strack [8]) applied to electrode microstructures [6,7]; 'However, these models must be upscaled to the continuum scale in order to be of a practical use, and methods of scaling are yet to be developed for electrode structures.'",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    639.6,
+    296.0,
+    714.4
+   ],
+   "w": 1460,
+   "h": 459,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.844,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 2,
+     "clip": [
+      40.5,
+      639.6,
+      296.0,
+      714.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-experimental-data",
+   "page": 2,
+   "file": "txt_p2_experimental_data_srxtm_pressures_voxel370nm.png",
+   "caption": "PDF p.2 (p.541) right column (§2 Experimental data): Ebner et al. [13] SRXTM; electrodes 'earlier calendared at pressures of approximately 300, 600, and 2000 bar (30, 60, and 200 MPa, respectively) as well as uncalendared samples (0 bar, 0 MPa)'; 15 mm moulds, epoxy, 24 h at 55 °C under vacuum, 0.7 mm cylinders; ETHZ watershed segmentation [40]; public database [21]; slices ≈330 μm × 330 μm, voxels 370 nm.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.5,
+    451.4,
+    565.0,
+    693.5
+   ],
+   "w": 1460,
+   "h": 1380,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.841,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 2,
+     "clip": [
+      309.5,
+      451.4,
+      565.0,
+      693.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2-p3-materials-psd",
+   "page": 2,
+   "file": "txt_p2_p3_materials_spherical_lognormal_psd.png",
+   "caption": "PDF p.2 right column end → p.3 left column top (p.541–542), stacked: NMC from 3M, Super C65 (TIMCAL), Kynar 761 PVDF (Arkema); NMC selected for high sphericity; 'distributed log-normally in size with a mean radius of r̄ = 6 μm and a polydispersity of δ = 0.6r̄'; compositions in Table 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.5,
+    692.2,
+    565.0,
+    745.8
+   ],
+   "w": 1460,
+   "h": 577,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.856,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 2,
+     "clip": [
+      309.5,
+      692.2,
+      565.0,
+      745.8
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 3,
+     "clip": [
+      30.8,
+      62.4,
+      286.0,
+      107.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-contact-vectors",
+   "page": 3,
+   "file": "txt_p3_contact_vectors_voxel_26_directions_geometric.png",
+   "caption": "PDF p.3 (p.542) left column → right column, stacked: three contact-vector approximations; voxel contact 'only possible in 26 discrete directions' (3 × 3 × 3 cube, L∞ distance one voxel); branch vectors and averaged patch normals to mitigate voxelisation; spherical and ellipsoidal approximations independent of resolution (Fig. 2, Appendix A); FTs computed with MMTensor [27] in MATLAB.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.8,
+    456.9,
+    286.0,
+    646.6
+   ],
+   "w": 1462,
+   "h": 1680,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.834,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 3,
+     "clip": [
+      30.8,
+      456.9,
+      286.0,
+      646.6
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 3,
+     "clip": [
+      299.8,
+      206.0,
+      555.0,
+      312.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-dem-setup",
+   "page": 5,
+   "file": "txt_p5_dem_liggghts_gravity_settling_hertz.png",
+   "caption": "PDF p.5 (p.544) §4 DEM simulation, left column → right column top, stacked: LIGGGHTS [19,35]; particle gradation from the ETHZ data-set → polydisperse spheres settling under gravity; 'The Hertzian contact model with friction is used'; van der Waals, capillary and electrostatic forces assumed negligible.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.8,
+    427.5,
+    286.0,
+    742.8
+   ],
+   "w": 1465,
+   "h": 2095,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.845,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 5,
+     "clip": [
+      30.8,
+      427.5,
+      286.0,
+      742.8
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 5,
+     "clip": [
+      299.8,
+      427.4,
+      555.0,
+      481.3
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-dem-boundaries-plate",
+   "page": 5,
+   "file": "txt_p5_dem_boundaries_plate_pressure_levels.png",
+   "caption": "PDF p.5 (p.544) right column: aluminium bottom (current collector), steel top (roller), periodic sides [50]; downward-moving steel plate; 0 bar values measured after settling, before plate contact; 0 bar volume fraction 'within 0.06–0.11' of the tomography; contact lists assembled 'When each of the pressure levels is attained (0 bar, 300 bar, 600 bar, 2000 bar)'; Desmond polydispersity δ = std.dev./mean; RCP 0.64 / FCC-HCP 0.74.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.8,
+    479.7,
+    555.0,
+    742.8
+   ],
+   "w": 1461,
+   "h": 1506,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.834,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 5,
+     "clip": [
+      299.8,
+      479.7,
+      555.0,
+      742.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-volume-fraction-overlap",
+   "page": 6,
+   "file": "txt_p6_volume_fraction_overlap_exceeds_rcp.png",
+   "caption": "PDF p.6 (p.545) left column end → right column top, stacked: DEM volume fraction 'well under this limit when poured'; after 2000 bar 'exceeds this predicted limit by a small margin, which can be attributed to the particles overlapping'; 'measured with the overlapping volumes subtracted so that the volume is counted only once'; similar to random loose / dense packing of steel spheres (Brouwers [5]).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    516.6,
+    296.0,
+    601.1
+   ],
+   "w": 1465,
+   "h": 817,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.836,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 6,
+     "clip": [
+      40.5,
+      516.6,
+      296.0,
+      601.1
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 6,
+     "clip": [
+      309.5,
+      226.5,
+      565.0,
+      280.3
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-coordination-trend",
+   "page": 6,
+   "file": "txt_p6_coordination_number_trend_96_splitting.png",
+   "caption": "PDF p.6 (p.545) right column §5.1: z varies widely between methods; z2000 > z0 in general; the 96 % wt voxel data-set decreases — 'the number of particles increased more than the number of contacts, an indication of particle splitting.'",
+   "rotated_deg": 0,
+   "bbox": [
+    309.5,
+    493.2,
+    565.0,
+    630.7
+   ],
+   "w": 1462,
+   "h": 808,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.863,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 6,
+     "clip": [
+      309.5,
+      493.2,
+      565.0,
+      630.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6c",
+   "kind": "text",
+   "label": "p6-p7-coordination-low-dem",
+   "page": 6,
+   "file": "txt_p6_p7_coordination_low_watershed_dem_constant_particles.png",
+   "caption": "PDF p.6 right column end → p.7 left column (p.545–546), stacked: z 'significantly less than … other random packings of spherical particles, which tend to average 6–8'; segmentation adds void space; DEM 'average around 2 when unloaded, but exceed 6 after 2000 bar'; 'The higher z in the DEM simulation itself is not worrisome'; ratios z2000/z0 'fall well within the range'; constant particle number in DEM; 'at most one contact between each particle pair'.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.5,
+    629.2,
+    565.0,
+    745.8
+   ],
+   "w": 1465,
+   "h": 1864,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.831,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 6,
+     "clip": [
+      309.5,
+      629.2,
+      565.0,
+      745.8
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 7,
+     "clip": [
+      30.8,
+      326.2,
+      286.0,
+      536.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-ft-comparison",
+   "page": 7,
+   "file": "txt_p7_ft_comparison_chi2_lateral_trend.png",
+   "caption": "PDF p.7 (p.546) §5.2, left column → right column top, stacked: χ² test of Appendix B at the 99 % level; highest significant order used, e.g. Δf^(4,2); 'the overwhelming trend is that the spatial distribution of contacts decreases in the vertical direction and increases in the lateral direction as pressure increases … very likely, this is the true effect imparted on the cathode assembly by calendaring.'",
+   "rotated_deg": 0,
+   "bbox": [
+    30.8,
+    556.0,
+    286.0,
+    745.8
+   ],
+   "w": 1460,
+   "h": 1457,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.851,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 7,
+     "clip": [
+      30.8,
+      556.0,
+      286.0,
+      745.8
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 7,
+     "clip": [
+      299.8,
+      64.3,
+      555.0,
+      128.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7-dem-series-f-f0",
+   "page": 7,
+   "file": "txt_p7_dem_series_f_f0_friction_small_magnitude.png",
+   "caption": "PDF p.7 (p.546) right column: DEM series (f) μNMC = 0.15 and (f′) μNMC = 0 ('extremely well-lubricated assembly'); magnitude 'so small compared to those of the tomographic approximations'; 90–94 % 'positive distribution change in the vertical and lateral directions and a negative distribution change in diagonal directions'; 96 % reproduces the trend with 'extremely small' magnitude; friction 'insufficient to significantly change the character'.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.8,
+    127.1,
+    555.0,
+    400.6
+   ],
+   "w": 1464,
+   "h": 1555,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.833,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 7,
+     "clip": [
+      299.8,
+      127.1,
+      555.0,
+      400.6
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7c",
+   "kind": "text",
+   "label": "p7-dem-limited-utility",
+   "page": 7,
+   "file": "txt_p7_dem_contact_evolution_limited_utility.png",
+   "caption": "PDF p.7 (p.546) right column: 'the contact evolution observed in the DEM simulations … does not well represent the contact evolution observed in the imagery-based methods … The FT is a critical metric for accurate models of anisotropic phenomena, such as electronic transport … using a DEM model of this type has limited utility.'",
+   "rotated_deg": 0,
+   "bbox": [
+    299.8,
+    399.1,
+    555.0,
+    494.7
+   ],
+   "w": 1460,
+   "h": 576,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.844,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 7,
+     "clip": [
+      299.8,
+      399.1,
+      555.0,
+      494.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7d",
+   "kind": "text",
+   "label": "p7-dem-critique",
+   "page": 7,
+   "file": "txt_p7_dem_critique_initial_placement_multisphere.png",
+   "caption": "PDF p.7 (p.546) §5.3 DEM model critique: initial placement ('the exact particle positions could not be replicated') or compression of spherical particles; no adhesion / van der Waals [31]; multi-sphere method (already in LIGGGHTS [19]).",
+   "rotated_deg": 0,
+   "bbox": [
+    299.8,
+    503.6,
+    555.0,
+    724.9
+   ],
+   "w": 1461,
+   "h": 1274,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.85,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 7,
+     "clip": [
+      299.8,
+      503.6,
+      555.0,
+      724.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7e",
+   "kind": "text",
+   "label": "p7-p9-fracture-larger-particles",
+   "page": 7,
+   "file": "txt_p7_p9_fracture_larger_particles_more_contacts.png",
+   "caption": "★ PDF p.7 right column end → p.9 left column top (p.546–548), stacked: 'A critical model improvement would be to account for the effect of particle fracture'; mean fragment size and sphericity decrease with pressure (no numbers); 'larger particles are more likely to break than smaller particles under the same load [36]'; 'Larger particles, which tend to have more particle contacts, may be more likely to fracture …'; 'The tendency of larger particles to be more likely to fracture is evident in the NMC tomography.'",
+   "rotated_deg": 0,
+   "bbox": [
+    299.8,
+    723.3,
+    555.0,
+    745.8
+   ],
+   "w": 1463,
+   "h": 934,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.838,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 7,
+     "clip": [
+      299.8,
+      723.3,
+      555.0,
+      745.8
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 9,
+     "clip": [
+      30.8,
+      440.9,
+      286.0,
+      578.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-fracture-split-tradeoff",
+   "page": 9,
+   "file": "txt_p9_fracture_split_mass_conservation_tradeoff.png",
+   "caption": "PDF p.9 (p.548) left column: splitting a sphere once a stress criterion is met [24,26]; fragment PSD [36]; multi-sphere breakage [15]; 'a trade-off between conserving mass and having spatially disparate fragments' — Lobo-Guerrero [24] (mass not conserved) vs McDowell [26] (overlapping fragments → 'a false fissile energy').",
+   "rotated_deg": 0,
+   "bbox": [
+    30.8,
+    576.9,
+    286.0,
+    745.8
+   ],
+   "w": 1463,
+   "h": 983,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.841,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 9,
+     "clip": [
+      30.8,
+      576.9,
+      286.0,
+      745.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9-p10-conclusions",
+   "page": 9,
+   "file": "txt_p9_p10_conclusions_dem_falls_short_contact_size.png",
+   "caption": "§6 Conclusions, PDF p.9 right column → p.10 left column (p.548–549), stacked: contacts 'become increasingly lateral in proportion as the pressure increases'; 'the common discrete element method model for this problem falls short'; 'More accurate methods for particle shape representation and the models for interaction between the particles may be warranted'; future: contact size rather than existence, void space, damage tensors for continuum models.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.8,
+    440.9,
+    555.0,
+    745.8
+   ],
+   "w": 1464,
+   "h": 2320,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.839,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 9,
+     "clip": [
+      299.8,
+      440.9,
+      555.0,
+      745.8
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 10,
+     "clip": [
+      40.5,
+      64.3,
+      296.0,
+      170.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-appendix-a1",
+   "page": 10,
+   "file": "txt_p10_appendix_a1_sphere_overlap_proxy.png",
+   "caption": "PDF p.10 (p.549) Appendix A.1 Spherical approximation: spheres from centroid and volume; 'overlap of the spheres is a proxy for contact'; contact = centroid distance vs sum of radii; eccentricity and orientation lost.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    409.5,
+    296.0,
+    599.3
+   ],
+   "w": 1464,
+   "h": 1099,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.845,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 10,
+     "clip": [
+      40.5,
+      409.5,
+      296.0,
+      599.3
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x10b",
+   "kind": "text",
+   "label": "p10-appendix-a2",
+   "page": 10,
+   "file": "txt_p10_appendix_a2_ellipsoid_fit_contact_function.png",
+   "caption": "PDF p.10 (p.549) Appendix A.2 Ellipsoidal approximation, left column → right column, stacked: 'the particles deform in response to applied loads and the matrix around them'; powercrust surface [1,2], mesh simplification [16], least-squares ellipsoid [34], spherical fallback when the volume deviates; Perram–Wertheim / Donev contact function (μ ≤ 1 = contact); branch vector vs contact normal.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.5,
+    608.2,
+    296.0,
+    745.8
+   ],
+   "w": 1469,
+   "h": 2736,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.839,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 10,
+     "clip": [
+      40.5,
+      608.2,
+      296.0,
+      745.8
+     ]
+    },
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 10,
+     "clip": [
+      309.5,
+      64.2,
+      565.0,
+      411.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x10c",
+   "kind": "text",
+   "label": "p10-appendix-a3",
+   "page": 10,
+   "file": "txt_p10_appendix_a3_voxel_13_neighbours_watershed.png",
+   "caption": "PDF p.10 (p.549) Appendix A.3 Voxel-based method: 13 of the 26 neighbours checked per voxel; different non-background label = contact; 'the watershedding process tends to shrink particles … adding a minimal zone of void material between identified particles. This may decrease the occurrence of adjacent voxels of different particles'; centroidal vs averaged contact-surface vector.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.5,
+    420.0,
+    565.0,
+    703.9
+   ],
+   "w": 1468,
+   "h": 1622,
+   "dpi": 400,
+   "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+   "blank": 0.843,
+   "parts": [
+    {
+     "src": "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf",
+     "page": 10,
+     "clip": [
+      309.5,
+      420.0,
+      565.0,
+      703.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 9 pt type), clip = the paragraph's text-layer line boxes (band between the white gaps just outside the first and last line); multi-part passages (column / page breaks) stacked top to bottom with a 4 pt gap -> ink trim -> white canvas with a uniform 6 pt margin; running head, page number, figure captions and neighbouring paragraphs excluded (2026-11-16, litdb-curator)",
+   "viewed": true
+  }
+ ]
+}

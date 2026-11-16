@@ -528,6 +528,7 @@ Q = C₁₁ + C₁₂ + 2C₃₃ − 4C₁₃ · C² = (C₁₁ + C₁₂)C₃�
 - `song2025_porous_argyrodite_modulus_fracture_toughness` — SE 쪽 **벌크 E·K_Ic** — "나노 ↔ 벌크" 스케일 차의 SE 판.
 - `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` — 전극/입자 **유효** E_IT 5–6 GPa (다른 양, 비교 금지 사례).
 - `aminchiang2016_nmc_electronic_ionic_transport_vs_li` · `wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni` — CAM **고유** 물성 앵커의 수송 쪽 짝.
+- [`devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte`](devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte.md) (2026-11-12 카드) — **[23] 의 원문**: NMC532 소결 펠릿 E 200 · 201 · H 14.0 · 13.9 · K_c 0.298 · 0.291 (건조 · wet · 85 nm) · 응집체 113 · 7.8 · 0.104 — 이 카드의 *"재수록"* 200.81 ± 33.61 (N 25) · 14.29 ± 2.53 · 0.296 은 그 논문에 그대로는 없다 (펠릿 값과 근접).
 
 ---
 

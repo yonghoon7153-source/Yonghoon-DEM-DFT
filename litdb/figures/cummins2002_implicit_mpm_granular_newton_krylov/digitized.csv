@@ -1,0 +1,84 @@
+figure,series,x_name,x,y_name,y,note
+fig6_top,implicit (+) total energy,time (unit not printed; µs [card reading]),0.0,total energy (unit not printed),7.325e-09,"vector-path read from the PDF (PyMuPDF get_drawings): axis frame + major ticks calibrate x/y; implicit = '+' marker glyphs (centre = midpoint of the ~2.4 pt vertical bar), explicit = polyline vertices; value = median of markers (implicit) or max of polyline vertices (explicit) in a time bin; Fig. 6 top: log y, 1 decade = 34.91 pt, 1e-7 at y=98.07 pt, 1e-9 at 167.90 pt; x: 0->135.54, 3->300.60 pt; bin 0.1"
+fig6_top,implicit (+) total energy,time (unit not printed; µs [card reading]),0.5,total energy (unit not printed),7.505e-09,
+fig6_top,implicit (+) total energy,time (unit not printed; µs [card reading]),1.0,total energy (unit not printed),7.705e-09,
+fig6_top,implicit (+) total energy,time (unit not printed; µs [card reading]),1.5,total energy (unit not printed),7.899e-09,
+fig6_top,implicit (+) total energy,time (unit not printed; µs [card reading]),1.9,total energy (unit not printed),8.431e-09,
+fig6_top,implicit (+) total energy,time (unit not printed; µs [card reading]),2.0,total energy (unit not printed),8.495e-09,
+fig6_top,explicit (line) total energy,time,0.5,total energy,1.351e-08,same calibration; explicit overlaps implicit for t<0.35 (not separable)
+fig6_top,explicit (line) total energy,time,1.0,total energy,3.824e-08,
+fig6_top,explicit (line) total energy,time,1.8,total energy,9.386e-08,
+fig6_top,explicit (line) total energy,time,2.0,total energy,1.061e-07,
+fig6_mid,"explicit (line) elastic energy, local maxima",time,0.6,elastic energy,1.578e-08,"vector-path read from the PDF (PyMuPDF get_drawings): axis frame + major ticks calibrate x/y; implicit = '+' marker glyphs (centre = midpoint of the ~2.4 pt vertical bar), explicit = polyline vertices; value = median of markers (implicit) or max of polyline vertices (explicit) in a time bin; Fig. 6 middle: linear y, 0 -> 324.19 pt, 1e-7 -> 219.45 pt; bin 0.05; values = polyline max in bin (peaks after wall contacts)"
+fig6_mid,"explicit (line) elastic energy, local maxima",time,0.95,elastic energy,2.884e-08,
+fig6_mid,"explicit (line) elastic energy, local maxima",time,1.25,elastic energy,4.587e-08,
+fig6_mid,"explicit (line) elastic energy, local maxima",time,1.55,elastic energy,6.654e-08,
+fig6_mid,"explicit (line) elastic energy, local maxima",time,1.85,elastic energy,8.624e-08,
+fig6_mid,"explicit (line) elastic energy, local maxima",time,2.0,elastic energy,8.229e-08,
+fig6_mid,"implicit (+) elastic energy, baseline between contacts",time,0.35,elastic energy,8.125e-10,"marker median in bin (baseline between contact peaks; peak-top markers partly grouped with the polyline paths, so peaks are read by raster below)"
+fig6_mid,"implicit (+) elastic energy, baseline between contacts",time,0.95,elastic energy,1.288e-09,
+fig6_mid,"implicit (+) elastic energy, baseline between contacts",time,1.4,elastic energy,1.845e-09,
+fig6_mid,"implicit (+) elastic energy, baseline between contacts",time,1.8,elastic energy,2.613e-09,
+fig6_mid,"implicit (+) elastic energy, first contact peak",time,0.24,elastic energy,7.2e-09,"600 dpi raster of the panel: top of ink at t=0.24 = 315.49 pt -> 8.3e-9, minus marker half-height 1.2 pt (=1.15e-9) -> ~7.2e-9; later implicit peaks look similar by eye"
+fig6_bot,implicit (+) x-momentum plateau,time,0.4,x-momentum (unit not printed),1.414e-06,"vector-path read from the PDF (PyMuPDF get_drawings): axis frame + major ticks calibrate x/y; implicit = '+' marker glyphs (centre = midpoint of the ~2.4 pt vertical bar), explicit = polyline vertices; value = median of markers (implicit) or max of polyline vertices (explicit) in a time bin; Fig. 6 bottom: linear y, +4e-6 -> 375.64 pt, -4e-6 -> 480.38 pt; plateau values between wall contacts"
+fig6_bot,implicit (+) x-momentum plateau,time,0.8,x-momentum (unit not printed),-1.353e-06,
+fig6_bot,implicit (+) x-momentum plateau,time,1.3,x-momentum (unit not printed),1.3e-06,
+fig6_bot,implicit (+) x-momentum plateau,time,1.7,x-momentum (unit not printed),-1.275e-06,
+fig6_bot,explicit (line) x-momentum,time,0.05,x-momentum,-1.37e-06,explicit polyline at start (both schemes start from the same state)
+fig6_bot,explicit (line) x-momentum,time,0.45,x-momentum,1.51e-06,explicit plateau after 1st contact (bin max)
+fig6_bot,explicit (line) x-momentum,time,1.1,x-momentum,1.82e-06,explicit plateau after 3rd contact (bin max)
+fig6_bot,explicit (line) x-momentum,time,1.7,x-momentum,2.07e-06,explicit plateau after 5th contact (bin max)
+fig6_bot,explicit (line) x-momentum,time,,x-momentum,-2.164e-06,"explicit overall minimum (most negative plateau, late)"
+fig10,implicit (+) total energy,time (µs [card reading]),1.0,total energy (unit not printed),5.379e-07,"vector-path read from the PDF (PyMuPDF get_drawings): axis frame + major ticks calibrate x/y; implicit = '+' marker glyphs (centre = midpoint of the ~2.4 pt vertical bar), explicit = polyline vertices; value = median of markers (implicit) or max of polyline vertices (explicit) in a time bin; Fig. 10: linear y, 6.5e-7 -> 64.79 pt, 5.0e-7 -> 176.12 pt; x 0 -> 130.63, 60 -> 306.07 pt; markers after t~52 not separable from the polyline (overlap)"
+fig10,implicit (+) total energy,time (µs [card reading]),6.0,total energy (unit not printed),5.387e-07,
+fig10,implicit (+) total energy,time (µs [card reading]),20.0,total energy (unit not printed),5.363e-07,
+fig10,implicit (+) total energy,time (µs [card reading]),30.0,total energy (unit not printed),5.354e-07,
+fig10,implicit (+) total energy,time (µs [card reading]),40.0,total energy (unit not printed),5.35e-07,
+fig10,implicit (+) total energy,time (µs [card reading]),50.0,total energy (unit not printed),5.349e-07,
+fig10,explicit (line) total energy,time,2.5,total energy,5.439e-07,"600 dpi raster, top-most ink per column (frame inset 4 pt, legend rows masked, tick columns avoided); t=60 from the vector polyline end"
+fig10,explicit (line) total energy,time,6.0,total energy,5.547e-07,
+fig10,explicit (line) total energy,time,8.0,total energy,5.602e-07,
+fig10,explicit (line) total energy,time,9.0,total energy,5.615e-07,
+fig10,explicit (line) total energy,time,9.5,total energy,5.615e-07,
+fig10,explicit (line) total energy,time,11.0,total energy,5.612e-07,
+fig10,explicit (line) total energy,time,13.0,total energy,5.547e-07,
+fig10,explicit (line) total energy,time,16.0,total energy,5.512e-07,
+fig10,explicit (line) total energy,time,22.0,total energy,5.568e-07,
+fig10,explicit (line) total energy,time,27.0,total energy,5.597e-07,
+fig10,explicit (line) total energy,time,33.0,total energy,5.646e-07,
+fig10,explicit (line) total energy,time,43.0,total energy,5.727e-07,
+fig10,explicit (line) total energy,time,53.0,total energy,5.811e-07,
+fig10,explicit (line) total energy,time,57.5,total energy,5.848e-07,
+fig10,explicit (line) total energy,time,60.0,total energy,5.867e-07,
+fig14_top,implicit (+) total energy,"time (µs, printed in text)",1.0,total energy (unit not printed),2.225e-07,"vector-path read from the PDF (PyMuPDF get_drawings): axis frame + major ticks calibrate x/y; implicit = '+' marker glyphs (centre = midpoint of the ~2.4 pt vertical bar), explicit = polyline vertices; value = median of markers (implicit) or max of polyline vertices (explicit) in a time bin; Fig. 14 top: log y, 1e-5 -> 311.39 pt, 1e-8 -> 423.28 pt (37.29 pt/decade); x 0 -> 119.36, 40 -> 295.69 pt"
+fig14_top,implicit (+) total energy,"time (µs, printed in text)",2.0,total energy (unit not printed),2.301e-07,
+fig14_top,implicit (+) total energy,"time (µs, printed in text)",9.0,total energy (unit not printed),8.568e-08,
+fig14_top,implicit (+) total energy,"time (µs, printed in text)",12.0,total energy (unit not printed),1.408e-07,
+fig14_top,implicit (+) total energy,"time (µs, printed in text)",21.0,total energy (unit not printed),6.732e-08,
+fig14_top,implicit (+) total energy,"time (µs, printed in text)",28.0,total energy (unit not printed),1.512e-07,
+fig14_top,implicit (+) total energy,"time (µs, printed in text)",40.0,total energy (unit not printed),1.987e-07,
+fig14_top,explicit (line) total energy,time,1.0,total energy,6.076e-07,same calibration (bin max)
+fig14_top,explicit (line) total energy,time,10.0,total energy,2.358e-06,
+fig14_top,explicit (line) total energy,time,20.0,total energy,3.95e-06,
+fig14_top,explicit (line) total energy,time,30.0,total energy,5.581e-06,
+fig14_top,explicit (line) total energy,time,39.0,total energy,7e-06,
+fig14_bot,implicit (+) elastic energy,time,1.0,elastic energy (unit not printed),1.641e-08,"vector-path read from the PDF (PyMuPDF get_drawings): axis frame + major ticks calibrate x/y; implicit = '+' marker glyphs (centre = midpoint of the ~2.4 pt vertical bar), explicit = polyline vertices; value = median of markers (implicit) or max of polyline vertices (explicit) in a time bin; Fig. 14 bottom: log y, 1e-5 -> 478.36 pt, 1e-9 -> 590.25 pt (27.97 pt/decade)"
+fig14_bot,implicit (+) elastic energy,time,3.0,elastic energy (unit not printed),3.22e-09,
+fig14_bot,implicit (+) elastic energy,time,12.0,elastic energy (unit not printed),2.596e-08,
+fig14_bot,implicit (+) elastic energy,time,21.0,elastic energy (unit not printed),1.222e-09,
+fig14_bot,implicit (+) elastic energy,time,28.0,elastic energy (unit not printed),1.475e-08,
+fig14_bot,implicit (+) elastic energy,time,40.0,elastic energy (unit not printed),2.324e-09,
+fig14_bot,explicit (line) elastic energy,time,1.0,elastic energy,2.273e-07,same calibration (bin max)
+fig14_bot,explicit (line) elastic energy,time,10.0,elastic energy,1.416e-06,
+fig14_bot,explicit (line) elastic energy,time,20.0,elastic energy,2.409e-06,
+fig14_bot,explicit (line) elastic energy,time,30.0,elastic energy,3.439e-06,
+fig14_bot,explicit (line) elastic energy,time,40.0,elastic energy,4.467e-06,
+fig15,"implicit (+) mean, printed in the legend",—,,mean principal stress difference (MPa),25.55,"printed in the figure legend (""Implicit; mean=25.55"") — not a reading"
+fig15,"explicit (line) mean, printed in the legend",—,,mean principal stress difference (MPa),46.02,"printed in the figure legend (""Explicit; mean=46.02"") — not a reading; ratio 46.02/25.55 = 1.80 [card arithmetic] (text p.40: ""nearly twice"")"
+fig15,implicit (+) histogram peak,"principal stress difference (MPa, printed axis title)",11.7,area fraction (printed axis title),3.14e-02,"vector-path read from the PDF (PyMuPDF get_drawings): frame x 128.53->299.94 pt = 0->400 MPa, log y 164.87->56.09 pt = 1e-7->1e-1 (major ticks every 18.13 pt); implicit = '+' markers found as a 2.2-2.7 pt vertical stroke crossing a 2.2-2.7 pt horizontal stroke at its midpoint (99 data markers; the 4 legend markers removed); explicit = polyline vertices more than 1.45 pt away from any marker centre (legend line/text masked); y = upper envelope within ±1.5-1.9 MPa"
+fig15,implicit (+),"principal stress difference (MPa, printed axis title)",100,area fraction (printed axis title),6.5e-04,same calibration
+fig15,explicit (line),"principal stress difference (MPa, printed axis title)",100,area fraction (printed axis title),2.3e-03,same calibration
+fig15,implicit (+),"principal stress difference (MPa, printed axis title)",150,area fraction (printed axis title),1.7e-04,same calibration
+fig15,explicit (line),"principal stress difference (MPa, printed axis title)",150,area fraction (printed axis title),5.7e-04,same calibration
+fig15,implicit (+) last data marker,"principal stress difference (MPa, printed axis title)",341.8,area fraction (printed axis title),1.5e-06,same calibration; below the printed bound 2/sqrt(3) sigma_y = 346 MPa
+fig15,explicit (line) last vertex,"principal stress difference (MPa, printed axis title)",330.7,area fraction (printed axis title),1.1e-06,same calibration; explicit line lies above the implicit markers from ~25 to ~250-275 MPa and below them outside that range (read by eye on the 300 dpi crop + the envelopes above)

@@ -1,0 +1,1133 @@
+{
+ "slug": "chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf"
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-11-12 - Chandratilleke, Zhou, Yu, Bridgwater, Ind. Eng. Chem. Res. 49 (2010) 5467-5478 (issue 11; 12 pages, no SI). 'page' = PDF page (1-12); 'printed_page' = article page (5467-5478) - for a stitched crop, page/printed_page = the later piece. Figures are embedded rasters. Crops: 14 figures + Table 1 (the tool's 15 crops all re-cut: captions missing, Table 1 crop = whole page), 10 equation crops (Eqs 1-4 one per number + the six Table 1 rows, which carry no equation numbers), 20 evidence paragraphs (cited sentences only, CURATOR_BRIEF 2-1; nine stitched from two columns/pages) = 45; all viewed. Raster reads of Figs 4, 6, 7, 8, 9, 12, 13, 14 (marker blobs, pixel-column/row runs, colour masks; axis frame + tick calibrated, log axes on 12a, 13a, 14) -> digitized.csv.",
+ "key_note": "f<n> = Fig. n (caption included) / t1 = Table 1 / e<nn> = Eq. (n) / et1<a-f> = Table 1 row a-f (no equation numbers in the paper) / x<page><letter> = evidence paragraph (kind 'text'); file names txt_p<NN> use the PDF page",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Geometry of the mixer used in the simulation and (b) bed profile simulated at a blade speed of 20 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    608.7,
+    463.4,
+    754.1
+   ],
+   "w": 1799,
+   "h": 656,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.857,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "printed_page": 5469,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Instantaneous vector field of relative velocities of particles normalized by blade tip speed at three horizontal sections i, ii, and iii for four blade speeds. Row a is for 2 rpm at 130 s; row b is for 23.8 rpm at 55.3 s; row c is for 47.75 rpm at 27.5 s; and row d is for 100 rpm at 13.3 s; Z is measured from the bed bottom.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.4,
+    43.8,
+    547.6,
+    439.5
+   ],
+   "w": 1051,
+   "h": 1699,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.884,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "printed_page": 5470,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Normalized relative velocity fields in two cylindrical sections at r = 50 mm and r = 100 mm. Blade speeds and times (in rows) are, respectively, (a) 2 rpm and 130 s, (b) 23.8 rpm and 55.3 s, (c) 47.75 rpm and 27.5 s, and (d) 100 rpm and 13.3 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.4,
+    43.5,
+    283.6,
+    279.9
+   ],
+   "w": 1051,
+   "h": 1035,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.888,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "printed_page": 5470,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Coordination number (triangle) and porosity (square) as a function of blade speed. (in-figure labels: '5% gap' = triangles, '1% gap' = circles; porosity on the right axis)",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    43.4,
+    547.6,
+    206.8
+   ],
+   "w": 1050,
+   "h": 731,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.95,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "printed_page": 5471,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Mixing of dark and light gray particles initially arranged in the left and right halves of the mixer sliced at 37.5 mm height. Viewed from the top, when the blade rotates in anticlockwise direction at speeds of (i) 2, (ii) 47.7, and (iii) 100 rpm, with (a), (b), (c), and (d) representing elapsed time of mixing as indicated.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.4,
+    43.6,
+    283.6,
+    315.0
+   ],
+   "w": 1051,
+   "h": 1181,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.602,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "printed_page": 5472,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Mixing index as a function of time (a) and revolutions (b). Curves 1, 2, 3, and 4 represent blade speeds of 2, 9.55, 47.75, and 100 rpm, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    43.4,
+    547.6,
+    197.0
+   ],
+   "w": 2150,
+   "h": 690,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.949,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "printed_page": 5472,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Variation of coordination numbers as a function of number of blade revolutions at (a) 10 and (b) 100 rpm.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    216.1,
+    475.4,
+    368.5
+   ],
+   "w": 1849,
+   "h": 685,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.959,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "printed_page": 5473,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Effect of blade speed on the instaneous [sic] average B-W coordination number (CN): (a) B-W CN as a function of shaft revolutions and (b) fraction of B-W CN to total average CN as a function of shaft revolutions. Curves 1, 2, 3, and 4 correspond to blade speeds of 2, 9.55, 47.75, and 100 rpm, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    43.4,
+    547.6,
+    223.9
+   ],
+   "w": 2150,
+   "h": 802,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.945,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 8,
+   "printed_page": 5474,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Variation of (a) Vz/Vtheta and (b) Vr/Vtheta for particles in the outer cylindrical section (r > 80 mm) as a function of the circumferential position theta at the steady state, where Vr, Vz, and Vtheta are respectively the components in the radial, vertical, and circumferential directions of the average blade relative velocity of the particles in the localized section at theta. Curves 1, 2, and 3 correspond to the blade speeds of 9.55, 47.75, and 100 rpm, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    43.4,
+    547.6,
+    212.8
+   ],
+   "w": 2150,
+   "h": 756,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.94,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "printed_page": 5474,
+   "file": "fig_10.png",
+   "caption": "Figure 10. Normal force network in the horizontally sliced section of bed between Z = 0 and Z = 10 mm at four different blade speeds: (a) 2 rpm (at 5.24 rev); (b) 23.87 rpm (at 20.09 rev); (c) 47.75 rpm (at 21.88 rev); and (d) 100 rpm (at 21.66 rev). Color scale for the force, F: black, F < 0.03 N; blue, 0.03 N < F < 0.1 N; green, 0.1 N < F < 0.2 N; and red, F > 0.2 N.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    223.4,
+    547.6,
+    472.8
+   ],
+   "w": 2150,
+   "h": 1089,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.776,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 9,
+   "printed_page": 5475,
+   "file": "fig_11.png",
+   "caption": "Figure 11. Normal force network in the verticle [sic] section passing through the leading blade surface: (a) 2 rpm (at 5.24 rev); (b) 23.87 rpm (at 20.09 rev); (c) 47.75 rpm (at 21.88 rev); and (d) 100 rpm (at 21.66 rev). Color scale for the force, F: black, for F < 0.03 N; blue, for 0.03 N < F < 0.1 N; green, for 0.1 N < F < 0.2 N; and red, for F > 0.2 N.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    43.5,
+    547.4,
+    241.0
+   ],
+   "w": 2149,
+   "h": 873,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.848,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "printed_page": 5475,
+   "file": "fig_12.png",
+   "caption": "Figure 12. (a) Cumulative probability distributions of normal contact forces at different blade speeds: curves 1, 2, and 3 are for blade speeds of 2, 47.75, and 100 rpm, respectively. (b) Mean of the normal contact forces as a function of blade speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    261.2,
+    547.2,
+    434.5
+   ],
+   "w": 2148,
+   "h": 772,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.956,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 10,
+   "printed_page": 5476,
+   "file": "fig_13.png",
+   "caption": "Figure 13. (a) Cumulative probability distributions of tangential contact forces at different blade speeds. Curves 1, 2, and 3 are for blade speeds of 2, 47.75, and 100 rpm, respectively. (b) Mean of shear contact as a function of speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    43.4,
+    547.2,
+    216.0
+   ],
+   "w": 2148,
+   "h": 769,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.959,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 10,
+   "printed_page": 5476,
+   "file": "fig_14.png",
+   "caption": "Figure 14. Steady-state blade torque as a function of speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    235.1,
+    261.6,
+    398.5
+   ],
+   "w": 958,
+   "h": 731,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.963,
+   "recrop": "tool crop ended above the caption (caption missing) and kept a full-width white margin -> re-cut by hand (2026-11-12, litdb-curator) from text-layer/raster coordinates: embedded raster + caption (CURATOR_BRIEF 2-1), trimmed to the ink box + uniform 6 pt white margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "tab_1.png",
+   "caption": "Table 1. Formulas for Contact Forces and Torques (normal contact force, normal damping force, tangential contact force, tangential damping force, rotational torque, rolling friction torque; with associated definitions).",
+   "rotated_deg": 0,
+   "bbox": [
+    43.4,
+    43.4,
+    547.6,
+    254.8
+   ],
+   "w": 2151,
+   "h": 931,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.963,
+   "recrop": "tool crop covered the whole PDF page 2 (text columns and Fig 1 included, 2172 x 2999 px) -> re-cut by hand (2026-11-12, litdb-curator) to Table 1 only (title rule to last row), trimmed to the ink box + uniform 6 pt white margin, 300 dpi, vector text",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_01_translational_motion_newton.png",
+   "caption": "Eq. (1) p.5468: m_i dV_i/dt = m_i g + sum_{j=1..k_i} (F_c,ij + F_d,ij) - translational motion of particle i (gravity + elastic contact + viscous damping from the k_i contacting particles, blade and walls)",
+   "rotated_deg": 0,
+   "bbox": [
+    98.7,
+    414.5,
+    283.3,
+    443.5
+   ],
+   "w": 819,
+   "h": 171,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.96,
+   "manual_crop": "equation crop by hand (2026-11-12, litdb-curator): all strokes of the equation between the neighbouring prose rows, equation number included; trimmed to the ink box + uniform 6 pt margin, 300 dpi (crop re-read for the card transcription - the text layer scrambles fractions, exponents and prints '=' as ')')",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_02_rotational_motion_torques.png",
+   "caption": "Eq. (2) p.5468: I_i domega_i/dt = sum_{j=1..k_i} (T_ij + M_ij) - rotational motion (tangential-force torque + rolling friction torque)",
+   "rotated_deg": 0,
+   "bbox": [
+    116.7,
+    473.0,
+    283.3,
+    502.0
+   ],
+   "w": 744,
+   "h": 171,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.963,
+   "manual_crop": "equation crop by hand (2026-11-12, litdb-curator): all strokes of the equation between the neighbouring prose rows, equation number included; trimmed to the ink box + uniform 6 pt margin, 300 dpi (crop re-read for the card transcription - the text layer scrambles fractions, exponents and prints '=' as ')')",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 5,
+   "printed_page": 5471,
+   "file": "eq_03_lacey_mixing_index.png",
+   "caption": "Eq. (3) p.5471: M = (S0^2 - S^2)/(S0^2 - SR^2) - Lacey index; S0^2 = pq (fully segregated), SR^2 = pq/N (fully random, binomial, colour-only particles)",
+   "rotated_deg": 0,
+   "bbox": [
+    109.2,
+    498.9,
+    283.2,
+    510.4
+   ],
+   "w": 775,
+   "h": 98,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.956,
+   "manual_crop": "equation crop by hand (2026-11-12, litdb-curator): all strokes of the equation between the neighbouring prose rows, equation number included; trimmed to the ink box + uniform 6 pt margin, 300 dpi (crop re-read for the card transcription - the text layer scrambles fractions, exponents and prints '=' as ')')",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 5,
+   "printed_page": 5471,
+   "file": "eq_04_weighted_sample_variance_cells.png",
+   "caption": "Eq. (4) p.5471: S^2 = sum_{i=1..m} [ (N_i/N) (n_i/N_i - p)^2 ] - sample variance weighted by the particle number of cell i (m cells, N total particles, p = expected fraction)",
+   "rotated_deg": 0,
+   "bbox": [
+    117.0,
+    686.4,
+    283.3,
+    711.6
+   ],
+   "w": 743,
+   "h": 155,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.949,
+   "manual_crop": "equation crop by hand (2026-11-12, litdb-curator): all strokes of the equation between the neighbouring prose rows, equation number included; trimmed to the ink box + uniform 6 pt margin, 300 dpi (crop re-read for the card transcription - the text layer scrambles fractions, exponents and prints '=' as ')')",
+   "viewed": true
+  },
+  {
+   "key": "et1a",
+   "kind": "equation",
+   "label": "T1-normal",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_t1a_normal_contact_force_delta_n_3_2.png",
+   "caption": "Table 1 row 1 p.5468: normal contact force F_cn,ij = -E/(3(1-nu^2)) (2R_i)^(1/2) delta_n^(3/2) n_hat, n_hat = R_i/|R_i| - Hertz form for two equal spheres (= (4/3) E* sqrt(R*) delta_n^(3/2)); the softened E enters here",
+   "rotated_deg": 0,
+   "bbox": [
+    63.7,
+    72.2,
+    475.3,
+    91.9
+   ],
+   "w": 1765,
+   "h": 132,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.972,
+   "manual_crop": "Table 1 row cut by hand (2026-11-12, litdb-curator): the whole printed row (force name + formula + associated definition; the table has no equation numbers), between the neighbouring rows, trimmed to the ink box + uniform 6 pt margin, 300 dpi, vector text (re-read for the card transcription)",
+   "viewed": true
+  },
+  {
+   "key": "et1b",
+   "kind": "equation",
+   "label": "T1-normal-damping",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_t1b_normal_damping_force.png",
+   "caption": "Table 1 row 2 p.5468: normal damping F_dn,ij = -c_n ( 3 m_i E/(sqrt2 (1-nu^2)) (R delta_n)^(1/2) )^(1/2) (V_ij . n_hat) n_hat, V_ij = V_j - V_i + omega_j x R_j - omega_i x R_i - nonlinear viscous damping ~ delta_n^(1/4) (E enters again; R without subscript as printed)",
+   "rotated_deg": 0,
+   "bbox": [
+    63.7,
+    107.7,
+    523.1,
+    129.0
+   ],
+   "w": 1964,
+   "h": 139,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.961,
+   "manual_crop": "Table 1 row cut by hand (2026-11-12, litdb-curator): the whole printed row (force name + formula + associated definition; the table has no equation numbers), between the neighbouring rows, trimmed to the ink box + uniform 6 pt margin, 300 dpi, vector text (re-read for the card transcription)",
+   "viewed": true
+  },
+  {
+   "key": "et1c",
+   "kind": "equation",
+   "label": "T1-tangential",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_t1c_tangential_contact_force_delta_t_max.png",
+   "caption": "Table 1 row 3 p.5468: tangential contact force F_ct,ij = -(mu_s F_cn,ij/|delta_i|) [1 - {1 - min(|delta_t|, delta_t,max)/delta_t,max}^(3/2)] delta_t, delta_t,max = mu_s (2-nu)/(2(1-nu)) delta_n - Mindlin-Deresiewicz-type, capped at mu_s F_cn ('|delta_i|' as printed; read |delta_t|)",
+   "rotated_deg": 0,
+   "bbox": [
+    63.7,
+    142.9,
+    499.6,
+    163.7
+   ],
+   "w": 1866,
+   "h": 137,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.953,
+   "manual_crop": "Table 1 row cut by hand (2026-11-12, litdb-curator): the whole printed row (force name + formula + associated definition; the table has no equation numbers), between the neighbouring rows, trimmed to the ink box + uniform 6 pt margin, 300 dpi, vector text (re-read for the card transcription)",
+   "viewed": true
+  },
+  {
+   "key": "et1d",
+   "kind": "equation",
+   "label": "T1-tangential-damping",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_t1d_tangential_damping_force.png",
+   "caption": "Table 1 row 4 p.5468: tangential damping F_dt,ij = -c_t ( 6 m_i mu_s F_cn,ij sqrt(1 - delta_t/delta_t,max)/delta_t,max )^(1/2) V_t,ij, V_t,ij = (V_ij x n_hat) x n_hat",
+   "rotated_deg": 0,
+   "bbox": [
+    63.7,
+    178.4,
+    496.4,
+    201.5
+   ],
+   "w": 1853,
+   "h": 146,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.962,
+   "manual_crop": "Table 1 row cut by hand (2026-11-12, litdb-curator): the whole printed row (force name + formula + associated definition; the table has no equation numbers), between the neighbouring rows, trimmed to the ink box + uniform 6 pt margin, 300 dpi, vector text (re-read for the card transcription)",
+   "viewed": true
+  },
+  {
+   "key": "et1e",
+   "kind": "equation",
+   "label": "T1-torque",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_t1e_rotational_torque.png",
+   "caption": "Table 1 row 5 p.5468: rotational torque T_ij = R_i x (F_ct,ij + F_dt,ij)",
+   "rotated_deg": 0,
+   "bbox": [
+    63.5,
+    216.5,
+    311.6,
+    225.4
+   ],
+   "w": 1084,
+   "h": 87,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.958,
+   "manual_crop": "Table 1 row cut by hand (2026-11-12, litdb-curator): the whole printed row (force name + formula + associated definition; the table has no equation numbers), between the neighbouring rows, trimmed to the ink box + uniform 6 pt margin, 300 dpi, vector text (re-read for the card transcription)",
+   "viewed": true
+  },
+  {
+   "key": "et1f",
+   "kind": "equation",
+   "label": "T1-rolling",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "eq_t1f_rolling_friction_torque_mu_r_fcn.png",
+   "caption": "Table 1 row 6 p.5468: rolling friction torque M_ij = -mu_r F_cn,ij omega_hat_i, omega_hat_i = omega_i/|omega_i| - constant-magnitude directional torque, mu_r in m (5e-5 m)",
+   "rotated_deg": 0,
+   "bbox": [
+    63.5,
+    236.8,
+    476.8,
+    254.8
+   ],
+   "w": 1772,
+   "h": 125,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.977,
+   "manual_crop": "Table 1 row cut by hand (2026-11-12, litdb-curator): the whole printed row (force name + formula + associated definition; the table has no equation numbers), between the neighbouring rows, trimmed to the ink box + uniform 6 pt margin, 300 dpi, vector text (re-read for the card transcription)",
+   "viewed": true
+  },
+  {
+   "key": "x01a",
+   "kind": "text",
+   "label": "p1",
+   "page": 1,
+   "printed_page": 5467,
+   "file": "txt_p01_abstract_2_100rpm_forces_front_of_blade_cn_mixing.png",
+   "caption": "p5467 abstract: DEM of monosized spheres at blade speeds 2-100 rpm; recirculating flows in horizontal and cylindrical sections; recirculation in front of the blade seems to disappear at high speed (lower mixing rate); zone of large interparticle forces in front of the blade moves toward the walls (possible breakage); conventional index: slight reduction then slight improvement (toroidal motion); coordination number captures mixing",
+   "rotated_deg": 0,
+   "bbox": [
+    109.6,
+    147.9,
+    548.0,
+    300.1
+   ],
+   "w": 1877,
+   "h": 684,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.834,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x02a",
+   "kind": "text",
+   "label": "p2",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "txt_p02_dem_developed_previously_refs9_12_table1_review13.png",
+   "caption": "p5468 'The DEM model used here was developed previously' (refs 9, 12), Cundall-Strack plus rolling friction; Fc = normal + tangential elastic force, Fd = normal + tangential damping, T and M = torque and rolling friction torque; formulas in Table 1, 'commonly used as discussed in the recent review' (ref 13) (stitched: p.5468 left bottom + right top)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     43.6,
+     329.9,
+     284.3,
+     404.8
+    ],
+    [
+     307.6,
+     279.2,
+     547.6,
+     340.8
+    ]
+   ],
+   "w": 1053,
+   "h": 649,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi; non-adjacent pieces separated by a grey dashed line",
+   "viewed": true
+  },
+  {
+   "key": "x02b",
+   "kind": "text",
+   "label": "p2",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "txt_p02_mixer_0p249m_shaft_32mm_blades_40x10mm_no_clearance.png",
+   "caption": "p5468 geometry very similar to the PEPT study of Stewart et al. (ref 10): vertical cylinder inner diameter 0.249 m, shaft 0.032 m, two flat blades 0.04 m high x 0.010 m thick along a diameter, no clearance at the cylindrical wall or at the bottom",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    345.7,
+    547.8,
+    442.6
+   ],
+   "w": 1051,
+   "h": 454,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x02c",
+   "kind": "text",
+   "label": "p2",
+   "page": 2,
+   "printed_page": 5468,
+   "file": "txt_p02_glass_like_mu_r_5e-5m_mu_s_0p3_e_1e9_to_2p16e6_dt_5us.png",
+   "caption": "p5468 glass-bead-like spheres, walls and blades identical; mu_r 5e-5 m, mu_s 0.3, rho 2500 kg/m3, nu 0.3, c_n = c_t = 0.3; 'Young's modulus E, however, was reduced from 10^9 of real glass beads to 2.16 x 10^6 to reduce computational time' (refs 9, 12); time step 5e-6 s",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    445.7,
+    547.8,
+    564.5
+   ],
+   "w": 1051,
+   "h": 545,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x03a",
+   "kind": "text",
+   "label": "p3",
+   "page": 3,
+   "printed_page": 5469,
+   "file": "txt_p03_16000_spheres_5mm_settling_0p95s_bed_40mm_2_100rpm_tip_1p3.png",
+   "caption": "p5468-5469 random placement of 16 000 monosized 5 mm spheres without overlap, gravitational settling about 0.95 s, bed top ~ blade top (~40 mm); rotation right after settling; 2-100 rpm, 100 rpm = tip speed 1.3 m/s (~1/10 of a high-speed mixer); air drag neglected (stitched: p.5468 right bottom + p.5469 left top)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     307.6,
+     567.7,
+     547.6,
+     598.4
+    ],
+    [
+     43.6,
+     43.2,
+     283.8,
+     183.8
+    ]
+   ],
+   "w": 1051,
+   "h": 794,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.837,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x03b",
+   "kind": "text",
+   "label": "p3",
+   "page": 3,
+   "printed_page": 5469,
+   "file": "txt_p03_validated_against_pept_stewart_extension.png",
+   "caption": "p5469 'the proposed DEM approach has been validated against the PEPT measurements as detailed by Stewart et al.' (ref 10); this work = extension of refs 9, 10",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    186.0,
+    283.8,
+    238.6
+   ],
+   "w": 1051,
+   "h": 269,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.849,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x04a",
+   "kind": "text",
+   "label": "p4",
+   "page": 4,
+   "printed_page": 5470,
+   "file": "txt_p04_cn_gap_1_5pct_walls_included_porosity_0_to_blade_top.png",
+   "caption": "p5470 CN and porosity 'difficult to produce experimentally'; contact if gap < 1 % or 5 % of d; mean CN from the frequency distribution; contacts with blade and container surfaces included; porosity between bed bottom and blade top; CN falls and porosity rises with speed (bed volume increase)",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    294.7,
+    548.3,
+    655.4
+   ],
+   "w": 1053,
+   "h": 1553,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.834,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x05a",
+   "kind": "text",
+   "label": "p5",
+   "page": 5,
+   "printed_page": 5471,
+   "file": "txt_p05_s0_pq_sr_pq_over_n_binomial_not_for_sized_kristensen.png",
+   "caption": "p5471 Lacey index (eq 3): S0^2 = pq fully segregated, SR^2 = pq/N fully random; p roughly 0.5; SR^2 assumes colour-only particles with binomial position, 'not applicable to a binary mixture consisting of different sized particles' (Kristensen, ref 18)",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    521.1,
+    284.3,
+    674.5
+   ],
+   "w": 1053,
+   "h": 689,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x05b",
+   "kind": "text",
+   "label": "p5",
+   "page": 5,
+   "printed_page": 5471,
+   "file": "txt_p05_eq4_weighted_cells_5_annuli_21p7mm_80_segments_20mm.png",
+   "caption": "p5471 eq 4 = weighted average variance of n_i/N_i (sum N_i = N); cells = five annuli of 21.7 mm width, 6/11/16/21/26 equal segments inner to outer, 20 mm high from the bottom; size variation taken into account, 'the resulting mixing index is reliable' (stitched: p.5471 left bottom + right top)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     43.6,
+     723.7,
+     284.3,
+     754.4
+    ],
+    [
+     307.6,
+     43.2,
+     548.3,
+     251.0
+    ]
+   ],
+   "w": 1053,
+   "h": 1074,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x05c",
+   "kind": "text",
+   "label": "p5",
+   "page": 5,
+   "printed_page": 5471,
+   "file": "txt_p05_dt_50us_to_5us_max_54us_collapse_below_40rpm.png",
+   "caption": "p5471 previous work (refs 19, 20) below 40 rpm: M collapses into one curve versus revolutions; same conditions except time step 50 us before, 5 us now; maximum acceptable limit 54 us (refs 21, 22); 'A smaller time step can generate more reliable results'",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    257.2,
+    547.8,
+    376.5
+   ],
+   "w": 1051,
+   "h": 547,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.84,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x05d",
+   "kind": "text",
+   "label": "p5",
+   "page": 5,
+   "printed_page": 5471,
+   "file": "txt_p05_m1_four_rev_2rpm_six_rev_100rpm_no_collapse_diffusion.png",
+   "caption": "p5471 M = 1 reached sooner in time at higher speed; per revolution: four revolutions at 2 rpm vs six at 100 rpm; M does not collapse into a single curve; convection dominant but diffusion also plays a role",
+   "rotated_deg": 0,
+   "bbox": [
+    307.4,
+    378.9,
+    548.3,
+    586.5
+   ],
+   "w": 1054,
+   "h": 915,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x06a",
+   "kind": "text",
+   "label": "p6",
+   "page": 6,
+   "printed_page": 5472,
+   "file": "txt_p06_porosity_fewer_per_cell_s2_up_centrifugal_blades.png",
+   "caption": "p5471-5472 speed dependence of M possibly from porosity: fewer particles per cell -> S^2 up -> M down; also collision energy loss and centrifugal force (particles redistributed toward the wall); higher speed 'not a good practice' -> more blades, optimum number (stitched: p.5471 right bottom + p.5472 left)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     307.6,
+     590.9,
+     548.3,
+     754.4
+    ],
+    [
+     43.6,
+     382.4,
+     284.3,
+     611.2
+    ]
+   ],
+   "w": 1053,
+   "h": 1714,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.83,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x06b",
+   "kind": "text",
+   "label": "p6",
+   "page": 6,
+   "printed_page": 5472,
+   "file": "txt_p06_initial_cn_6_and_2_eight_vs_six_max14_gap_5pct.png",
+   "caption": "p5472 initially B-B, W-W ~6 and B-W, W-B ~2, 'about eight contacts under loose-packing', total average only slightly more than six; solid-angle maximum 14, CN > 12 possible because of the 5 % d gap allowance",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    492.9,
+    548.3,
+    622.5
+   ],
+   "w": 1053,
+   "h": 590,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.839,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x07a",
+   "kind": "text",
+   "label": "p7",
+   "page": 7,
+   "printed_page": 5473,
+   "file": "txt_p07_cn_ratio_100rpm_softer_particles_larger_e_fewer_contacts.png",
+   "caption": "p5473 steady CN-ratio rise at 100 rpm 'should have resulted from the use of the softer particles in this work'; larger Young's modulus -> fewer deformations and contacts, possibly lower B-W CN ratio; slow speed = better mixing per revolution",
+   "rotated_deg": 0,
+   "bbox": [
+    307.6,
+    268.9,
+    548.3,
+    463.3
+   ],
+   "w": 1053,
+   "h": 860,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.832,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x08a",
+   "kind": "text",
+   "label": "p8",
+   "page": 8,
+   "printed_page": 5474,
+   "file": "txt_p08_vr_vtheta_100rpm_froude_15p5_1p4_0p32_toroidal.png",
+   "caption": "p5473-5474 Vr/Vtheta minimum and maximum at 100 rpm; Nilpawar et al. (ref 25) toroidal motion at 312 rpm, D 285 mm, tip 4.65 m/s, Fr = D omega^2/(2g) 15.5; here Fr 1.4 at 100 rpm, 0.32 at 47.75 rpm -> centrifugal acceleration starts to overcome gravity (stitched: p.5473 right bottom + p.5474 left)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     307.6,
+     602.2,
+     548.3,
+     754.4
+    ],
+    [
+     43.6,
+     481.7,
+     283.6,
+     578.4
+    ]
+   ],
+   "w": 1053,
+   "h": 1117,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x09a",
+   "kind": "text",
+   "label": "p9",
+   "page": 9,
+   "printed_page": 5475,
+   "file": "txt_p09_normal_1e-4_0p3N_shear_1e-4_0p1N_breakage.png",
+   "caption": "p5475 normal forces 1e-4 to 0.3 N, shear 1e-4 to 0.1 N (2-100 rpm), distributions shift up with speed; 'By definition, the tangential force is proportional to the normal force'; large-force zone in front of the blade near the bottom, moving to the walls, 'possibly leading to particle breakage and severe attrition' (stitched: left bottom + right column)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     43.6,
+     624.7,
+     283.6,
+     754.5
+    ],
+    [
+     307.6,
+     448.4,
+     548.1,
+     633.2
+    ]
+   ],
+   "w": 1052,
+   "h": 1391,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10",
+   "page": 10,
+   "printed_page": 5476,
+   "file": "txt_p10_torque_fit_1p086_exp_0p0047w_zhou_1p1nm.png",
+   "caption": "p5475-5476 steady blade torque: Zhou et al. (ref 9) 1.1 N m at 10 rpm for identical conditions; asymptotic at low speed, exponential to 100 rpm; fit Gamma = 1.086 e^(0.0047 omega) (N m, rpm); 1.086 N m at zero speed = threshold torque (stitched: p.5475 right bottom + p.5476 left)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     307.6,
+     635.7,
+     547.6,
+     754.5
+    ],
+    [
+     43.6,
+     415.7,
+     283.8,
+     457.3
+    ]
+   ],
+   "w": 1051,
+   "h": 748,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.843,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x10b",
+   "kind": "text",
+   "label": "p10",
+   "page": 10,
+   "printed_page": 5476,
+   "file": "txt_p10_energy_27p6_vs_65p5J_58pct_33x_time.png",
+   "caption": "p5476 energy to M = 1 = torque x swept angle: 27.6 J (2 rpm, four rev) vs 65.5 J (100 rpm, six rev) - 58 % saving though mixing time x33; heat generation at higher speeds (stitched: left bottom + right top)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     43.6,
+     602.7,
+     283.6,
+     754.4
+    ],
+    [
+     307.6,
+     234.7,
+     547.6,
+     285.9
+    ]
+   ],
+   "w": 1050,
+   "h": 925,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11",
+   "page": 11,
+   "printed_page": 5477,
+   "file": "txt_p11_conclusion_f_size_cohesive_future.png",
+   "caption": "p5477 conclusion (f): DEM describes flow and force fields at the particle scale; extension to mixer geometry and operating conditions; 'Many of the effects due to particle size and cohesive force will also become equally accessible'",
+   "rotated_deg": 0,
+   "bbox": [
+    43.6,
+    175.1,
+    283.6,
+    260.8
+   ],
+   "w": 1050,
+   "h": 407,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "x11b",
+   "kind": "text",
+   "label": "p11",
+   "page": 11,
+   "printed_page": 5477,
+   "file": "txt_p11_nomenclature_e_pa_mi_ri_delta_t_max_mu_r_m.png",
+   "caption": "p5477 nomenclature excerpts: D vessel diameter; E Young's modulus, Pa; m_i mass of particle i; R_i position vector of contact point from the centre of particle i; delta_n, delta_t, delta_t,max (non-slip); mu_r rolling friction coefficient, m; mu_s (four excerpts, dashed separators)",
+   "rotated_deg": 0,
+   "bbox": [
+    [
+     43.4,
+     382.9,
+     155.9,
+     402.4
+    ],
+    [
+     43.6,
+     503.8,
+     143.0,
+     512.2
+    ],
+    [
+     43.8,
+     580.8,
+     283.8,
+     589.2
+    ],
+    [
+     307.1,
+     53.8,
+     547.4,
+     128.6
+    ]
+   ],
+   "w": 1051,
+   "h": 603,
+   "dpi": 300,
+   "src": "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf",
+   "blank": 0.91,
+   "manual_crop": "evidence paragraph cut by hand (2026-11-12, litdb-curator): whole printed rows from the row containing the first quoted words to the row containing the last, text-column width, trimmed to the ink box + uniform 6 pt margin, 300 dpi; non-adjacent pieces separated by a grey dashed line",
+   "viewed": true
+  }
+ ]
+}

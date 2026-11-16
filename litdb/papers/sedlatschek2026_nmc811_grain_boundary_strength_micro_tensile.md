@@ -496,6 +496,7 @@ ASSUMED-FORM 에 붙일 수 있는 **첫 정량 한정어**. ⚠ 리튬화 상�
 
 ## 🔗 관련 카드
 - 참고 [28] 의 원전 (2026-11-12 카드): [`devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode`](devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode.md) — "139 GPa · H 8.9" = targeted 138.73 ± 18.78 · 8.89 ± 1.86 (NMC532 이차입자 · 깊이 창 75–150 nm · ν 0.3 가정) · 같은 논문 격자 분해 입자 값 123.02 · 7.78 (그 카드 §0-1 · §3).
+- 참고 [27] 의 원전 (2026-11-12 카드): [`devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte`](devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte.md) — "113 GPa · H 7.8" = 그림 8 의 응집체 (as-received NMC532 이차입자 · PS 기지) **건조 · 85 nm · 평균** (± 미인쇄) · wet 108 · 7.8 · 같은 그림의 소결 펠릿 200 · 14.0 · 리튬화 · SOC 변화 없음.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

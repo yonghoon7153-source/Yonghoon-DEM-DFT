@@ -488,6 +488,7 @@ EDEM 의 JKR (접촉력 부분만 · 접촉 밖 vdW 없음) · 1 mm 입자 · 0.
 - 접촉 법칙 계보 (정본): `luding2008_cohesive_frictional_contact_models` · `thorntonning1998_adhesive_elastoplastic_contact` · `pasha2014_linear_elastoplastic_adhesive_contact` · `johnson1971_jkr_surface_energy_contact_elastic_solids` · `dmt1975_adhesion_contact_deformation` · `paulick2015_particle_contact_stiffness_two_particle_method`.
 - 접착 보정 · 흐름 (정본): `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` (이 학위논문 인용 · SJKR CED) · `coetzee2017_dem_calibration_review` · `alizadeh2018_dem_adhesion_calibration_segregation_heap` · `molerus1975_theory_of_yield_cohesive_powders`.
 - 하중 뺌 (정본): `kollenda2024_time_sensitivity_calendered_electrode_springback_storage` · `miss2026_insitu_conductivity_porosity_pressure_compaction`.
+- 큰 겹침 쪽 대비 (후보 C · 2026-11-12 출판본 보강): `zunker2025_dem_large_deformation_compaction` — MDR 접촉 다체 DEM 이 정제 가압 · 제하 · 잔류 반경응력을 상대밀도 축에서 실험과 대조 (EEPA 는 겹침 < 1 % 지름 전제 — 이 카드 후보 C 줄).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

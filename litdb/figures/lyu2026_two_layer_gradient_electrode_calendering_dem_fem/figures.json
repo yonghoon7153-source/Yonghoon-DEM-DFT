@@ -1,0 +1,1616 @@
+{
+ "slug": "lyu2026_two_layer_gradient_electrode_calendering_dem_fem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Calendering process and modeling framework. (a) Schematic of the electrode calendering process, in which the electrode coating is compressed by a roller. (b) Schematic of a two-layer gradient electrode, with small particles in the layer closest to the CC and large particles in the layer farthest from the CC. (c) DEM-based NCM cathode model, with RVE dimensions of 50 × 50 × 150 μm The layer closest to the CC consists of small particles, whereas the layer closest to the plate consists of large particles. (d) FEM-based half-cell model for discharge simulation, with RVE dimensions of 20 × 20 × 175 μm, where the cathode microstructure is imported from the DEM model.",
+   "rotated_deg": 0,
+   "w": 1645,
+   "h": 975,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.627,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    565.8,
+    281.9
+   ],
+   "src_native": [
+    1596,
+    925
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven; the auto caption also swallowed body text, replaced by the printed caption), re-cut from the embedded native raster (xref 45, 1596×925 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "공정 · 모델 틀: (a) 롤 캘린더 그림 (계산은 롤이 아니라 평판 하강) · (b) 이중층 모식 · (c) DEM RVE 50 × 50 × 150 µm (AM 파랑 · CBD 연두 · 판 · 집전체) · (d) FEM 반쪽 전지 20 × 20 × 175 µm (리튬 · 분리막 · 전해질+CBD 혼합상 · AM).  ⚠ 캡션 (b) · (c) 와 그림은 '집전체 쪽 작은 입자 · 판 쪽 큰 입자' (= C3 꼴) 인데 본문 §2.2 는 '큰 입자를 집전체 쪽' (= C2 꼴) 이라 적는다.  ⚠ 175 µm = 분리막 25 + 캘린더링 전 150 µm 과 같은 수 — 방전 계산 구조 (250 MPa 뒤 106–111 µm) 와 맞지 않는다 [카드 산술]."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. DEM model validation against experiments. (a–d) SEM cross-sectional images [37] and DEM models of four electrode structures: (a) single-layer small-particle electrode, (b) single-layer large-particle electrode, (c) two-layer electrode with large and small particles at the bottom and top, respectively, and (d) two-layer electrode with large and small particles at the top and bottom, respectively. The strong morphological agreement validates the DEM reconstruction. (e–f) Comparison between DEM simulations and experimental data [49]: (e) thin-electrode and (f) thick-electrode thicknesses and compression ratios as functions of the calendering pressure. Solid lines represent experimental data, whereas dashed lines represent simulation results. The close agreement validates the mechanical response of the DEM model.",
+   "rotated_deg": 0,
+   "w": 1848,
+   "h": 1953,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.602,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    566.0,
+    517.1
+   ],
+   "src_native": [
+    1800,
+    1904
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven; the auto caption also swallowed body text, replaced by the printed caption), re-cut from the embedded native raster (xref 75, 1800×1904 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "검증 둘: (a–d) Wood 2021 [37] SEM 단면 ↔ DEM 정면 투영 (정성) · (e · f) Ademmer 2022 [49] 실험 ↔ DEM 두께 · 압축률 (0 · 100 · 200 · 300 MPa).  ★ 판독: 얇은 전극 80 → DEM 54.2 / 실험 53.7 µm · 압축률 32.2 % (둘 다) · 두꺼운 전극 183 → DEM 110.6 / 실험 107.0 µm · 39.5 / 41.5 % · 100 MPa 에서는 두꺼운 쪽 압축률이 더 작다 (18.4 ↔ 23.0 %) — 본문 'consistently larger · ≈5 % higher at 300 MPa' 와 다르다 (차 7.2–9.3 %p) [판독 · 카드 산술 · digitized.csv].  범례 오자 'Experimentions'."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Structural evolution of the four electrodes during calendering: (a) C1, single-layer large-particle electrode, (b) C2, two-layer electrode with large and small particles at the bottom and top, respectively, (c) C3, two-layer electrode with large and small particles at the top and bottom, respectively, and (d) C4, single-layer small-particle electrode. (e) Electrode thickness as a function of the calendering pressure. (f) Compression ratio as a function of the calendering pressure. The electrode with large particles (C1) exhibits the highest compression ratio, whereas the electrode with small particles (C4) exhibits the lowest.",
+   "rotated_deg": 0,
+   "w": 1178,
+   "h": 2699,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.582,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    565.8,
+    696.0
+   ],
+   "src_native": [
+    1129,
+    2650
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 88, 1129×2650 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "네 구성 C1 (큰 입자 단층) · C2 (아래 큰 / 위 작은) · C3 (아래 작은 / 위 큰) · C4 (작은 단층) 의 150 µm → 250 MPa.  ★ 판독 (250 MPa): C1 106.4 µm · 29.1 % / C2 107.6 · 28.2 / C3 108.8 · 27.5 / C4 111.1 · 25.9 — (e) 와 (f) 가 0.1 %p 안에서 서로 맞는다.  ⚠ 행 (a)–(d) 의 그림이 캡션 순서와 다르다 [카드 관찰]: (a) 행은 작은 입자 단층 · (b) 행이 큰 입자 단층 · (c) 위 작은 / 아래 큰 · (d) 위 큰 / 아래 작은 — 50 MPa 렌더 높이비 0.967 · 0.842 · 0.925 · 0.938 이 (e) 의 C4 0.967 · C1 0.853 · C2 0.927 · C3 0.943 과 같은 순서."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Porosity and contact network evolution. (a,b) Evolution of porosity in the top and bottom layers of a two-layer electrode: (a) C2 (two-layer electrode with a large-particle bottom and small-particle top), (b) C3 (two-layer electrode with a large-particle top and small-particle bottom). For C2 and C3, the porosity of the larger-particle layer is always lower than that of the smaller-particle layer. (c–f) Evolution of the contact network and coordination number of two-layer particle-size gradient electrodes during calendering: (c) and (d) C2 (two-layer electrode with large-particle bottom/small-particle top), (e) and (f) C3 (two-layer electrode with large-particle top/small-particle bottom). The red line represents AM–AM contact, whereas the blue line represents AM–CBD and CBD–CBD contacts.",
+   "rotated_deg": 0,
+   "w": 1844,
+   "h": 1741,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.696,
+   "auto_bbox": [
+    31.6,
+    275.6,
+    565.8,
+    692.6
+   ],
+   "src_native": [
+    1794,
+    1693
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven; the auto caption also swallowed body text, replaced by the printed caption), re-cut from the embedded native raster (xref 93, 1794×1693 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이중층의 '압력 축' — 층별 기공률 (누른 채) · 접촉망 · AM 배위수.  판독: C2 위 (작은) 48.0 → 42.5 (100) → 29.0 % (250) · 아래 (큰) 48.0 → 31.0 → 27.3 % · 층간 차 최대 11.5 %p @100 MPa / C3 위 (큰) 48.0 → 33.5 → 26.5 · 아래 (작은) 48.0 → 41.7 → 28.8 % · 차 최대 8.2 %p @100 MPa · AM 배위수 C2 0.13 → 2.70 · C3 0.11 → 2.71 (본문 '0.15 → 2.7') [판독 · digitized.csv].  응력 · 힘 크기 지도는 없다 (접촉 위상 선 그림뿐)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Electrochemical performance of the particle-size-gradient electrode. (a–d) Spatial distribution of SOL in AM particles for C2 after discharge at 0.5C, 1C, 3C, and 5C, respectively. (e–h) Spatial distribution of SOL in AM particles for C3 after discharge at 0.5C, 1C, 3C, and 5C, respectively. The SOL is more uniform at lower rates but becomes heterogeneous at higher rates, with large particles showing lower lithiation. (i) Discharge voltage-specific capacity curves corresponding to C2 and C3. The specific capacity of C2 at high discharge rates is significantly higher than that of C3.",
+   "rotated_deg": 0,
+   "w": 796,
+   "h": 1518,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.712,
+   "auto_bbox": [
+    31.6,
+    300.9,
+    296.8,
+    663.9
+   ],
+   "src_native": [
+    746,
+    1468
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 111, 746×1468 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "DEM 캘린더링 구조 (구) 를 그대로 넣은 COMSOL 반쪽 전지 방전 (액체 전해질 · 2.8 V 끝).  판독 끝 용량 (mAh g⁻¹): C2 148.8 · 145.5 · 127.3 · 95.9 / C3 146.2 · 142.2 · 111.1 · 53.9 (0.5 · 1 · 3 · 5C) — 본문 149 · 146 · 98 · 54 (5C C2 는 그림 95.9 ↔ 본문 98) [판독].  색 막대 SOL 0.5–1 (그 아래는 0.5 색) · 초기 cp0/cp,max = 0.25 [카드 산술]."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Two-step calendering strategy for porosity gradient electrodes. (a) Single-layer uncalendared, (b) first calendering, (c) springback, (d) two-layer uncalendered, and (e) second calendering. This strategy produces a porosity gradient with higher porosity near the separator and lower porosity near the CC.",
+   "rotated_deg": 0,
+   "w": 1394,
+   "h": 859,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.475,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    563.7,
+    254.4
+   ],
+   "src_native": [
+    1346,
+    810
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 145, 1346×810 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 탈압 (springback) 이 DEM 안에 있다: 단층 (a) → 250 MPa (b) → 판 제거 · 되돌아옴 (c) → 새 층 얹기 (d) → 두 번째 캘린더링 (e).  되돌아옴 크기는 본문에 없다 — 렌더 높이 (집전체 윗면 기준) 판독: (a) 228 · (b) 165 · (c) 201 px → (c) = 64.4 µm (본문) 로 환산하면 누른 채 ≈52.9–54.3 µm → 탈압 뒤 +19–22 % 두께 회복 · 누른 채 기공 ≈26–28 % → 39.4 % [판독 · 렌더 · 투시 · 낮은 신뢰 · 카드 산술].  (d)/(c) 렌더비 2.174 ↔ (64.4 + 75)/64.4 = 2.165 로 환산 검산."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Microstructural evolution during the second calendering step. (a) 3D microstructure of the electrode as pressure increases. (b) Porosity evolution of the bottom and top layers as a function of the pressure. The top layer always retains a higher porosity than the bottom layer. (c) Thickness evolution of the two layers. The persistent porosity difference confirms the successful formation of a robust porosity gradient.",
+   "rotated_deg": 0,
+   "w": 1644,
+   "h": 1517,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.668,
+   "auto_bbox": [
+    31.6,
+    291.5,
+    566.0,
+    654.7
+   ],
+   "src_native": [
+    1595,
+    1469
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven; the auto caption also swallowed body text, replaced by the printed caption), re-cut from the embedded native raster (xref 148, 1595×1469 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두 번째 캘린더링 (0 → 150 MPa · 누른 채): 판독 위 (새 층) 48.0 → 46.2 → 44.1 → 41.6 % · 75.0 → 72.5 → 69.5 → 66.4 µm / 아래 (먼저 누른 층) 39.4 → 38.4 → 36.9 → 35.2 % · 64.4 → 63.3 → 62.0 → 60.5 µm [판독].  층 기공률 = 1 − (고체 두께)/(층 두께) 로 ±0.3 %p 안에서 재현 (고체 두께 39.0 µm = 0.52 × 75 = 0.606 × 64.4) [카드 산술] → 아래 층도 75 µm · 48 % 에서 출발했다고 읽힌다."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Electrochemical performance of porosity-gradient and uniform-porosity electrodes. (a–d) Spatial distribution of SOL in the AM particles for the gradient porosity electrode after discharge at 0.5C, 1C, 3C, and 5C, respectively. (e–h) Spatial distribution of SOL in AM particles for the uniform-porosity electrode after discharge at 0.5C, 1C, 3C, and 5C, respectively. (i) Discharge voltage-specific capacity curves for the porosity-gradient and uniform-porosity electrodes. The two-layer porosity-gradient electrodes exhibit a significantly higher specific capacity at high rates than the uniform-porosity electrode.",
+   "rotated_deg": 0,
+   "w": 796,
+   "h": 1458,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.74,
+   "auto_bbox": [
+    31.6,
+    49.4,
+    296.8,
+    397.8
+   ],
+   "src_native": [
+    746,
+    1408
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop was cut to the caption/column width, so side margins were uneven), re-cut from the embedded native raster (xref 158, 746×1408 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → white canvas with a uniform 6 pt (25 px) margin on all four sides; caption excluded (tool convention) (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두 단계 캘린더링 기공 경사 전극 ↔ 같은 두께 · 평균 기공의 균일 전극 (만든 법 미기재).  판독 끝 용량: 경사 148.5 · 146.7 · 139.8 · 119.4 / 균일 (겹침) · (겹침) · 129.1 · 96.1 mAh g⁻¹ (0.5 · 1 · 3 · 5C) — 본문 '≈148' · '~120 ↔ 97' [판독].  ⚠ 균일 5C 곡선만 청록 (범례는 녹색 + 흑색 점쇄선 표기)."
+  },
+  {
+   "key": "fC1",
+   "kind": "figure",
+   "label": "C1",
+   "page": 11,
+   "file": "fig_C1.png",
+   "caption": "Fig. C1. Particle size distribution of AM particles. Large particles have a mean radius of 6 μm, whereas small particles have a mean radius of 3 μm.",
+   "rotated_deg": 0,
+   "w": 1647,
+   "h": 1085,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.711,
+   "src_native": [
+    1600,
+    1037
+   ],
+   "native_dpi": 300,
+   "manual_crop": "appendix figure with a letter-prefixed label (Fig. C1) — the caption regex of tools/litdb/extract_figures.py takes arabic labels only, so it was not found; cut from the embedded native raster (xref 201, 1600×1037 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → uniform 25 px white margin; caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM 입경 분포 (반지름): 작은 μ_S = 3.0 µm · σ = 0.5 µm / 큰 μ_L = 6.0 µm · σ = 0.5 µm (그림 안 글자 [인쇄]) · 정규분포 꼭대기 0.8 = 1/(0.5√2π) [카드 산술].  CBD = 지름 2 µm 단일 크기 (본문)."
+  },
+  {
+   "key": "fC2",
+   "kind": "figure",
+   "label": "C2",
+   "page": 11,
+   "file": "fig_C2.png",
+   "caption": "Fig. C2. Microstructures of thin and thick electrodes before and after calendering. (a) Thin electrode (initial thickness: 80 μm) before and after calendering at 300 MPa. (b) Thick electrode (initial thickness: 183 μm) before and after calendering.",
+   "rotated_deg": 0,
+   "w": 1394,
+   "h": 797,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.651,
+   "src_native": [
+    1346,
+    748
+   ],
+   "native_dpi": 300,
+   "manual_crop": "appendix figure with a letter-prefixed label (Fig. C2) — the caption regex of tools/litdb/extract_figures.py takes arabic labels only, so it was not found; cut from the embedded native raster (xref 204, 1346×748 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → uniform 25 px white margin; caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "역학 검증용 RVE (Ademmer 2022 [49] 의 얇은 · 두꺼운 전극과 '재료 · 조성 · 두께 · 기공 · AM 입경 분포' 를 맞췄다는 본문) · 300 MPa 전후.  실험 쪽 원값 · 측정 상태 (누른 채 / 뺀 뒤) 는 이 논문에 없다 [미확인]."
+  },
+  {
+   "key": "fD1",
+   "kind": "figure",
+   "label": "D1",
+   "page": 12,
+   "file": "fig_D1.png",
+   "caption": "Fig. D1. Validation of the FEM electrochemical model. (a) Half-cell RVE constructed via the coupled DEM-FEM framework. (b) Comparison of simulated and experimental [59] specific capacity versus discharge rate.",
+   "rotated_deg": 0,
+   "w": 1395,
+   "h": 866,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.84,
+   "src_native": [
+    1346,
+    818
+   ],
+   "native_dpi": 300,
+   "manual_crop": "appendix figure with a letter-prefixed label (Fig. D1) — the caption regex of tools/litdb/extract_figures.py takes arabic labels only, so it was not found; cut from the embedded native raster (xref 213, 1346×818 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → uniform 25 px white margin; caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "FEM 검증 (Lu 2020 Joule [59] = 정본 lu2020 카드): 판독 계산 167.0 · 156.9 · 142.9 · 108.9 · 64.9 ↔ 실험 165.1 · 153.0 · 138.1 · 103.0 · 55.0 mAh g⁻¹ (0.2 · 0.5 · 1 · 2 · 3C) — 계산이 +1.2 → +18 % 높다 [판독 · 카드 산술].  ⚠ 본문은 'four discharge rates' 인데 그림은 다섯 율.  어느 Lu 전극 · 그림에서 옮긴 실험값인지 [미확인]."
+  },
+  {
+   "key": "fE1",
+   "kind": "figure",
+   "label": "E1",
+   "page": 12,
+   "file": "fig_E1.png",
+   "caption": "Fig. E1. Parameter sensitivity analysis. (a) 3D microstructure of a two-layer particle-size-gradient electrode, with small particles in the top layer and large particles in the bottom layer, along with the corresponding evolution of porosity in the top and bottom layers with different material properties, (b) AM Young’s modulus of 142 GPa, bond stiffness of 1.35e11 N/m3, (c) AM Young’s modulus of 75 GPa, bond stiffness of 1.35e11 N/m3, (d) AM Young’s modulus of 142 GPa, bond stiffness of 0.8e11 N/m3.",
+   "rotated_deg": 0,
+   "w": 1644,
+   "h": 1388,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.857,
+   "src_native": [
+    1596,
+    1339
+   ],
+   "native_dpi": 300,
+   "manual_crop": "appendix figure with a letter-prefixed label (Fig. E1) — the caption regex of tools/litdb/extract_figures.py takes arabic labels only, so it was not found; cut from the embedded native raster (xref 216, 1596×1339 px = 300 dpi, no resampling): ink bounding box (min RGB < 240) → uniform 25 px white margin; caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "민감도 (C2 꼴): (b) 기준 = 그림 4(a) 와 같은 점 (판독 차 ≤ 0.05 %p) · (c) E_AM 75 GPa → 250 MPa 위 26.2 · 아래 24.1 % (기준 29.0 · 27.3 보다 −2.8 · −3.2 %p) · (d) bond 0.8e11 → 27.7 · 25.4 % (−1.3 · −1.9 %p) [판독].  층 순서 (작은 입자 층이 더 성김) 는 셋 다 유지.  축 제목 오자 'Pressuer' (b · c)."
+  },
+  {
+   "key": "f2e",
+   "kind": "figure",
+   "label": "2e",
+   "page": 4,
+   "file": "fig_2e.png",
+   "caption": "Fig. 2(e) — thin electrode (initial 80 µm): electrode thickness [µm, left] and compression rate [% , right, red] vs calendering pressure (0–300 MPa); filled = simulations (dotted), open = experiments [49] (solid) (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 878,
+   "h": 715,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.88,
+   "src_native": [
+    1800,
+    1904
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel (e) of Fig. 2 — cut from the embedded native raster (xref 75, 300 dpi, no resampling): panel box [97, 1237, 926, 1904] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "얇은 전극: 두께 DEM 80 → 61.6 → 57.4 → 54.2 · 실험 80 → 61.0 → 57.2 → 53.7 µm / 압축률 DEM 23.0 · 28.2 · 32.3 · 실험 23.7 · 28.5 · 32.2 % (100 · 200 · 300 MPa) [판독].  ⚠ 실험 300 MPa 의 두께 (53.7 → 32.9 %) 와 압축률 (32.2 %) 이 0.6 %p 어긋난다 [카드 산술]."
+  },
+  {
+   "key": "f2f",
+   "kind": "figure",
+   "label": "2f",
+   "page": 4,
+   "file": "fig_2f.png",
+   "caption": "Fig. 2(f) — thick electrode (initial 183 µm): thickness and compression rate vs calendering pressure; filled = simulated, open = experimental [49] (panel of Fig. 2).",
+   "rotated_deg": 0,
+   "w": 898,
+   "h": 714,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.879,
+   "src_native": [
+    1800,
+    1904
+   ],
+   "native_dpi": 300,
+   "panel_of": "f2",
+   "manual_crop": "panel (f) of Fig. 2 — cut from the embedded native raster (xref 75, 300 dpi, no resampling): panel box [950, 1237, 1800, 1904] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두꺼운 전극: 두께 DEM 183 → 149.3 → 114.2 → 110.6 · 실험 183 → 151.1 → 116.1 → 107.0 µm / 압축률 DEM 18.4 · 37.6 · 39.5 · 실험 17.5 · 36.6 · 41.5 % [판독] — 두 축이 서로 맞는다 (±0.1 %p)."
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 5,
+   "file": "fig_3e.png",
+   "caption": "Fig. 3(e) — electrode thickness [µm] vs calendering pressure (0, 20, 50, 100, 150, 200, 250 MPa) for C1–C4 (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 604,
+   "h": 541,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.899,
+   "src_native": [
+    1129,
+    2650
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel (e) of Fig. 3 — cut from the embedded native raster (xref 88, 300 dpi, no resampling): panel box [0, 1976, 555, 2471] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독 두께 (µm): C1 150 · 145.0 · 127.8 · 119.1 · 112.6 · 109.5 · 106.4 / C2 150 · 146.5 · 139.0 · 124.1 · 114.6 · 110.7 · 107.6 / C3 150 · 146.5 · 141.4 · 125.0 · 115.8 · 110.9 · 108.8 / C4 150 · 147.9 · 145.2 · 126.6 · 117.9 · 113.7 · 111.1 (0 · 20 · 50 · 100 · 150 · 200 · 250 MPa) — 표지가 겹친 점은 가리지 않은 가장자리 + 표지 크기로 (digitized.csv 표지)."
+  },
+  {
+   "key": "f3f",
+   "kind": "figure",
+   "label": "3f",
+   "page": 5,
+   "file": "fig_3f.png",
+   "caption": "Fig. 3(f) — compression rate [%] vs calendering pressure for C1–C4 (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 588,
+   "h": 544,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.899,
+   "src_native": [
+    1129,
+    2650
+   ],
+   "native_dpi": 300,
+   "panel_of": "f3",
+   "manual_crop": "panel (f) of Fig. 3 — cut from the embedded native raster (xref 88, 300 dpi, no resampling): panel box [556, 1976, 1129, 2471] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독 압축률 (%): 250 MPa C1 29.1 · C2 28.2–28.3 · C3 27.5 · C4 25.9 · 50 MPa C1 14.8 · C2 7.3 · C3 5.7 · C4 3.1–3.2 — (e) 의 (150 − t)/1.5 와 ±0.1 %p."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 6,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — C2 (large-particle bottom / small-particle top): porosity [%] of the top and bottom layers vs pressure (0–250 MPa) (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 758,
+   "h": 598,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.895,
+   "src_native": [
+    1794,
+    1693
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel (a) of Fig. 4 — cut from the embedded native raster (xref 93, 300 dpi, no resampling): panel box [0, 0, 835, 551] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C2 층별 기공 (%): 위 48.0 · 47.0 · 46.2 · 42.5 · 34.4 · 30.7 · 29.0 / 아래 48.0 · 46.5 · 43.6 · 31.0 · 28.8 · 27.6 · 27.3 (0 · 20 · 50 · 100 · 150 · 200 · 250 MPa) [판독]."
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 6,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — C3 (large-particle top / small-particle bottom): porosity [%] of the top and bottom layers vs pressure (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 742,
+   "h": 599,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.892,
+   "src_native": [
+    1794,
+    1693
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel (b) of Fig. 4 — cut from the embedded native raster (xref 93, 300 dpi, no resampling): panel box [962, 0, 1655, 551] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C3 층별 기공 (%): 위 48.0 · 46.4 · 42.3 · 33.5 · 30.6 · 27.9 · 26.5 / 아래 48.0 · 46.8 · 45.1 · 41.7 · 33.0 · 30.7 · 28.8 [판독]."
+  },
+  {
+   "key": "f4d",
+   "kind": "figure",
+   "label": "4d",
+   "page": 6,
+   "file": "fig_4d.png",
+   "caption": "Fig. 4(d) — C2: coordination number of AM vs pressure (bars at 0, 20, 50, 100, 150, 200, 250 MPa) (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 681,
+   "h": 554,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.757,
+   "src_native": [
+    1794,
+    1693
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel (d) of Fig. 4 — cut from the embedded native raster (xref 93, 300 dpi, no resampling): panel box [1160, 613, 1794, 1119] px (split lines placed in white gaps measured on the raster row/column ink profiles); left of the y-axis title every non-dark pixel (saturated colour or min RGB > 110) and every dark speck smaller than 25 px was whitened — the neighbouring 3D contact-network render bleeds into this column (no white gap between the panels); the black panel label is kept → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C2 AM 배위수: 0.13 · 0.99 · 1.23 · 1.68 · 2.34 · 2.53 · 2.70 [판독 · 막대 윗면 · ±0.01] — 본문 '0.15 (uncalendered)'."
+  },
+  {
+   "key": "f4f",
+   "kind": "figure",
+   "label": "4f",
+   "page": 6,
+   "file": "fig_4f.png",
+   "caption": "Fig. 4(f) — C3: coordination number of AM vs pressure (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 676,
+   "h": 555,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.757,
+   "src_native": [
+    1794,
+    1693
+   ],
+   "native_dpi": 300,
+   "panel_of": "f4",
+   "manual_crop": "panel (f) of Fig. 4 — cut from the embedded native raster (xref 93, 300 dpi, no resampling): panel box [1160, 1134, 1794, 1640] px (split lines placed in white gaps measured on the raster row/column ink profiles); left of the y-axis title every non-dark pixel (saturated colour or min RGB > 110) and every dark speck smaller than 25 px was whitened — the neighbouring 3D contact-network render bleeds into this column (no white gap between the panels); the black panel label is kept → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "C3 AM 배위수: 0.11 · 0.95 · 1.26 · 1.66 · 2.24 · 2.56 · 2.71 [판독]."
+  },
+  {
+   "key": "f5i",
+   "kind": "figure",
+   "label": "5i",
+   "page": 7,
+   "file": "fig_5i.png",
+   "caption": "Fig. 5(i) — discharge voltage vs specific capacity [mAh g⁻¹] for C2 (solid) and C3 (dash-dot) at 0.5C, 1C, 3C and 5C (2.8 V cutoff) (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 670,
+   "h": 614,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.876,
+   "src_native": [
+    746,
+    1468
+   ],
+   "native_dpi": 300,
+   "panel_of": "f5",
+   "manual_crop": "panel (i) of Fig. 5 — cut from the embedded native raster (xref 111, 300 dpi, no resampling): panel box [0, 903, 746, 1468] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "끝 용량 판독 (2.8 V = 틀 아래): C2 148.8 · 145.5 · 127.3 · 95.9 / C3 146.2 · 142.2 · 111.1 · 53.9 mAh g⁻¹."
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 8,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — second calendering: porosity [%] of the top (new) and bottom (pre-calendered) layers vs pressure (0–150 MPa) (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 800,
+   "h": 703,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.91,
+   "src_native": [
+    1595,
+    1469
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel (b) of Fig. 7 — cut from the embedded native raster (xref 148, 300 dpi, no resampling): panel box [0, 812, 751, 1469] px (split lines placed in white gaps measured on the raster row/column ink profiles); above the plot frame every non-dark pixel (saturated colour or min RGB > 110) was whitened — the panel-(a) 3D render bleeds into these rows (no white gap between the panels); the black panel label and tick label are kept → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "위 48.0 · 46.2 · 44.1 · 41.6 / 아래 39.4 · 38.4 · 36.9 · 35.2 % (0 · 50 · 100 · 150 MPa) [판독]."
+  },
+  {
+   "key": "f7c",
+   "kind": "figure",
+   "label": "7c",
+   "page": 8,
+   "file": "fig_7c.png",
+   "caption": "Fig. 7(c) — second calendering: thickness [µm] of the top and bottom layers vs pressure (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 798,
+   "h": 703,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.907,
+   "src_native": [
+    1595,
+    1469
+   ],
+   "native_dpi": 300,
+   "panel_of": "f7",
+   "manual_crop": "panel (c) of Fig. 7 — cut from the embedded native raster (xref 148, 300 dpi, no resampling): panel box [833, 788, 1595, 1469] px (split lines placed in white gaps measured on the raster row/column ink profiles); above the plot frame every non-dark pixel (saturated colour or min RGB > 110) was whitened — the panel-(a) 3D render bleeds into these rows (no white gap between the panels); the black panel label and tick label are kept → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "위 75.0 · 72.5 · 69.5 · 66.4 / 아래 64.4 · 63.3 · 62.0 · 60.5 µm [판독] — 150 MPa 에서 위 층 −11.5 % · 아래 층 −6.0 % [카드 산술]."
+  },
+  {
+   "key": "f8i",
+   "kind": "figure",
+   "label": "8i",
+   "page": 9,
+   "file": "fig_8i.png",
+   "caption": "Fig. 8(i) — discharge voltage vs specific capacity for the porosity-gradient (solid) and uniform-porosity (dash-dot) electrodes at 0.5C, 1C, 3C and 5C (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 645,
+   "h": 587,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.888,
+   "src_native": [
+    746,
+    1408
+   ],
+   "native_dpi": 300,
+   "panel_of": "f8",
+   "manual_crop": "panel (i) of Fig. 8 — cut from the embedded native raster (xref 158, 300 dpi, no resampling): panel box [0, 866, 746, 1408] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "끝 용량 판독: 경사 148.5 · 146.7 · 139.8 · 119.4 / 균일 — · — · 129.1 · 96.1 mAh g⁻¹ (0.5 · 1C 는 두 곡선 겹침)."
+  },
+  {
+   "key": "fD1b",
+   "kind": "figure",
+   "label": "D1b",
+   "page": 12,
+   "file": "fig_D1b.png",
+   "caption": "Fig. D1(b) — specific capacity [mAh g⁻¹] vs C-rate (0.2, 0.5, 1.0, 2.0, 3.0), simulated vs experimental [59] (panel of Fig. D1).",
+   "rotated_deg": 0,
+   "w": 998,
+   "h": 866,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.928,
+   "src_native": [
+    1346,
+    818
+   ],
+   "native_dpi": 300,
+   "panel_of": "fD1",
+   "manual_crop": "panel (b) of Fig. D1 — cut from the embedded native raster (xref 213, 300 dpi, no resampling): panel box [396, 0, 1346, 818] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "계산 167.0 · 156.9 · 142.9 · 108.9 · 64.9 / 실험 165.1 · 153.0 · 138.1 · 103.0 · 55.0 mAh g⁻¹ [판독] — 가로축은 율을 같은 간격 범주로 놓았다."
+  },
+  {
+   "key": "fE1b",
+   "kind": "figure",
+   "label": "E1b",
+   "page": 12,
+   "file": "fig_E1b.png",
+   "caption": "Fig. E1(b) — reference parameters (AM E 142 GPa, bond stiffness 1.35e11 N/m3): porosity of the top and bottom layers vs pressure, with the shared legend (panel of Fig. E1).",
+   "rotated_deg": 0,
+   "w": 1067,
+   "h": 700,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.928,
+   "src_native": [
+    1596,
+    1339
+   ],
+   "native_dpi": 300,
+   "panel_of": "fE1",
+   "manual_crop": "panel (b) of Fig. E1 — cut from the embedded native raster (xref 216, 300 dpi, no resampling): panel box [577, 0, 1596, 669] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기준: 위 48.0 · 46.3 · 42.5 · 34.4 · 30.7 · 29.0 / 아래 48.0 · 43.5 · 31.0 · 28.8 · 27.6 · 27.3 % (0 · 50 · 100 · 150 · 200 · 250 MPa) = 그림 4(a) 와 같은 자료 [판독 대조]."
+  },
+  {
+   "key": "fE1c",
+   "kind": "figure",
+   "label": "E1c",
+   "page": 12,
+   "file": "fig_E1c.png",
+   "caption": "Fig. E1(c) — AM Young's modulus 75 GPa, bond stiffness 1.35e11 N/m3: porosity of the top and bottom layers vs pressure (panel of Fig. E1).",
+   "rotated_deg": 0,
+   "w": 753,
+   "h": 701,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.911,
+   "src_native": [
+    1596,
+    1339
+   ],
+   "native_dpi": 300,
+   "panel_of": "fE1",
+   "manual_crop": "panel (c) of Fig. E1 — cut from the embedded native raster (xref 216, 300 dpi, no resampling): panel box [0, 687, 704, 1339] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "E_AM 75 GPa: 위 48.0 · 43.1 · 40.0 · 32.4 · 28.9 · 26.2 / 아래 48.0 · 40.2 · 30.2 · 26.3 · 24.8 · 24.1 % [판독] (세로축 20–50 · 다른 둘은 25–50)."
+  },
+  {
+   "key": "fE1d",
+   "kind": "figure",
+   "label": "E1d",
+   "page": 12,
+   "file": "fig_E1d.png",
+   "caption": "Fig. E1(d) — AM Young's modulus 142 GPa, bond stiffness 0.8e11 N/m3: porosity of the top and bottom layers vs pressure (panel of Fig. E1).",
+   "rotated_deg": 0,
+   "w": 807,
+   "h": 700,
+   "dpi": 300,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.916,
+   "src_native": [
+    1596,
+    1339
+   ],
+   "native_dpi": 300,
+   "panel_of": "fE1",
+   "manual_crop": "panel (d) of Fig. E1 — cut from the embedded native raster (xref 216, 300 dpi, no resampling): panel box [837, 687, 1596, 1339] px (split lines placed in white gaps measured on the raster row/column ink profiles) → ink bounding box inside the box → white canvas with a uniform 6 pt (25 px) margin; panel label kept, caption excluded (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "bond 0.8e11: 위 48.0 · 40.1 · 36.5 · 31.8 · 29.0 · 27.7 / 아래 48.0 · 36.6 · 29.7 · 27.2 · 26.1 · 25.4 % [판독]."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 DEM model parameters for the calendering simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    349.0,
+    292.7,
+    437.5
+   ],
+   "w": 1461,
+   "h": 511,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.921,
+   "auto_bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py — both auto table crops were the same whole-page box ([32.6, 31.6, 563.3, 748.6] pt, identical files); re-rendered by hand from the vector page at 400 dpi (6.4 pt table type; tool default 300 dpi): clip [33.6, 349.0, 292.7, 437.5] pt = title + top rule … bottom rule (text-layer line boxes and the drawn rules) → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "DEM 입력: AM E 142 GPa [56,62] · CBD 0.76 GPa · ν 0.3 · 0.3 [69] · 밀도 4.75 · 2.2 g/cm³ · 마찰 0.25 · 0.25 [60] · bond 강성 1.35e11 N/m³ (CBD) [69].  bond 세기 · 감쇠 · 판 속도 · 시간 간격 · 입자 수는 표에 없다 [미확인]."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2 FEM model parameters for discharge process simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.6,
+    452.5,
+    292.7,
+    626.0
+   ],
+   "w": 1461,
+   "h": 984,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.957,
+   "auto_bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py — both auto table crops were the same whole-page box ([32.6, 31.6, 563.3, 748.6] pt, identical files); re-rendered by hand from the vector page at 400 dpi (6.4 pt table type; tool default 300 dpi): clip [33.6, 452.5, 292.7, 626.0] pt = title + top rule … bottom rule (text-layer line boxes and the drawn rules) → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "FEM 입력: D_p · σ_p = f(c_p/c_p,max) [70,71] · c_p,max 50061 · c_p0 12515 mol m⁻³ [72] · D_e · σ_e · t+ · 열역학 인자 = f(c_e) [66,73,74] · σ_c 375 S m⁻¹ [74] · α_a = α_c = 0.5 · T 293.15 K.  교환전류밀도 i0 (반응 상수) · 초기 전해질 농도 · OCP · 유효 물성 보정 (Bruggeman 등) 은 표에 없다 [미확인]."
+  },
+  {
+   "key": "eA1",
+   "kind": "equation",
+   "label": "eqA1",
+   "page": 10,
+   "file": "eq_A1_translational_motion.png",
+   "caption": "Eq. (A1), PDF p.10 (Appendix A): m_i dv_i/dt = Σ_j F_c,ij + m_i g — translational motion of particle i (Newton's second law).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    47.0,
+    561.0,
+    81.0
+   ],
+   "w": 2953,
+   "h": 183,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.989,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "DEM 병진 운동 (중력 포함).  입자 = 단단한 구."
+  },
+  {
+   "key": "eA2",
+   "kind": "equation",
+   "label": "eqA2",
+   "page": 10,
+   "file": "eq_A2_rotational_motion.png",
+   "caption": "Eq. (A2), PDF p.10: I_i dω_i/dt = Σ_j M_c,ij — rotational motion of particle i.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    81.5,
+    561.0,
+    112.5
+   ],
+   "w": 2954,
+   "h": 184,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.991,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "DEM 회전 운동."
+  },
+  {
+   "key": "eA3",
+   "kind": "equation",
+   "label": "eqA3",
+   "page": 10,
+   "file": "eq_A3_hertz_mindlin_spring_dashpot.png",
+   "caption": "Eq. (A3), PDF p.10: F_c = (k_n δ_n − γ_n v_n) + (k_t δ_t − γ_t v_t) — AM–AM contact, 'nonlinear Hertz–Mindlin model [69,85]' (stiffness k, relative displacement δ, damping γ, relative velocity v; n/t = normal/tangential).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    169.5,
+    561.0,
+    186.5
+   ],
+   "w": 2954,
+   "h": 111,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM–AM 접촉 = 비선형 Hertz–Mindlin (k 가 겹침에 따라 바뀌는 꼴 · k 식 · γ 값은 인쇄 없음 [미확인]) · 항복 · 소성 가지 없음 = 우리 D0 와 같은 '캡 없는' 층."
+  },
+  {
+   "key": "eA4",
+   "kind": "equation",
+   "label": "eqA4",
+   "page": 10,
+   "file": "eq_A4_pbm_max_tensile_stress_as_printed.png",
+   "caption": "Eq. (A4) as printed, PDF p.10: σ̄_max = F̄_n/A + M̄_t·R̄/J — maximum tensile stress on the parallel-bond periphery (CBD–CBD, CBD–AM bonds).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    262.0,
+    561.0,
+    290.5
+   ],
+   "w": 2954,
+   "h": 165,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "PBM 최대 인장 응력.  ⚠ 인쇄 = 비틀림 모멘트 M̄_t 와 극관성 J 를 수직 응력에 · 같은 그룹 2025 (정본 lyu2025 카드 L60 · 그 논문 식 21) 은 σ̄ = F̄_n/Ā + |M̄_b|R/I (굽힘 · I) — 짝이 바뀌어 인쇄됐다 [카드 대조]."
+  },
+  {
+   "key": "eA5",
+   "kind": "equation",
+   "label": "eqA5",
+   "page": 10,
+   "file": "eq_A5_pbm_max_shear_stress_as_printed.png",
+   "caption": "Eq. (A5) as printed, PDF p.10: τ̄_max = F̄_s/A + M̄_b·R̄/I — maximum shear stress on the bond periphery; bond failure by the Mohr–Coulomb criterion [84], after which the interaction reverts to a linear elastic contact.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    290.5,
+    561.0,
+    320.0
+   ],
+   "w": 2954,
+   "h": 164,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "PBM 최대 전단 응력 (인쇄 = 굽힘 M̄_b · I) ↔ 정본 lyu2025 식 22 τ̄ = |F̄_s|/Ā + |M̄_t|R/J [카드 대조].  파단 = Mohr–Coulomb · bond 세기 값 미인쇄 [미확인]."
+  },
+  {
+   "key": "eB1",
+   "kind": "equation",
+   "label": "eqB1",
+   "page": 10,
+   "file": "eq_B1_solid_diffusion.png",
+   "caption": "Eq. (B1), PDF p.10 (Appendix B): ∂c_p/∂t = ∇·(D_p ∇c_p) — lithium diffusion inside the AM particles [66].",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    444.0,
+    561.0,
+    474.0
+   ],
+   "w": 2954,
+   "h": 159,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.99,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자 안 Li 확산 (구 입자 3D 메시 안)."
+  },
+  {
+   "key": "eB2",
+   "kind": "equation",
+   "label": "eqB2",
+   "page": 10,
+   "file": "eq_B2_solid_charge_conservation.png",
+   "caption": "Eq. (B2), PDF p.10: ∇·(−σ_p ∇φ_p) = 0 — charge conservation within the AM particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    503.6,
+    561.0,
+    523.0
+   ],
+   "w": 2951,
+   "h": 121,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.989,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM 전자 전도 (σ_p = f(c_p) [71])."
+  },
+  {
+   "key": "eB3",
+   "kind": "equation",
+   "label": "eqB3",
+   "page": 10,
+   "file": "eq_B3_electrolyte_mass_balance.png",
+   "caption": "Eq. (B3), PDF p.10: ∂c_e/∂t = ∇·(D_e^eff ∇c_e − i_e t+/F) — lithium-ion diffusion and migration in the electrolyte [68,88].",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    556.6,
+    561.0,
+    585.5
+   ],
+   "w": 2954,
+   "h": 173,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.988,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전해질 물질 수지 (유효 확산 D_e^eff — 보정식 미인쇄 [미확인])."
+  },
+  {
+   "key": "eB4",
+   "kind": "equation",
+   "label": "eqB4",
+   "page": 10,
+   "file": "eq_B4_electrolyte_charge_conservation.png",
+   "caption": "Eq. (B4), PDF p.10: ∇·i_e = 0 — charge conservation in the electrolyte [89].",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    633.0,
+    561.0,
+    648.3
+   ],
+   "w": 2951,
+   "h": 108,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.993,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전해질 전하 보존."
+  },
+  {
+   "key": "eB5",
+   "kind": "equation",
+   "label": "eqB5",
+   "page": 10,
+   "file": "eq_B5_electrolyte_current_density.png",
+   "caption": "Eq. (B5), PDF p.10: i_e = (−σ_e^eff ∇φ_e) + 2σ_e^eff RT/F (1 + ∂lnf/∂lnc_e)(1 − t+) ∇ln c_e — electrolyte ionic current (concentrated-solution form).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    648.4,
+    561.0,
+    680.0
+   ],
+   "w": 2945,
+   "h": 177,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "농축 용액 이온 전류식."
+  },
+  {
+   "key": "eB6",
+   "kind": "equation",
+   "label": "eqB6",
+   "page": 10,
+   "file": "eq_B6_butler_volmer_as_printed.png",
+   "caption": "Eq. (B6) as printed, PDF p.10: i_BV = i_0 (exp(α_a F η/RT) − exp(α_c F η/RT)) — interfacial current density between AM and electrolyte (Butler–Volmer [74,90]); the cathodic exponent is printed without a minus sign.",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    717.0,
+    561.0,
+    746.0
+   ],
+   "w": 2952,
+   "h": 173,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 인쇄 그대로면 α_a = α_c = 0.5 (표 2) 에서 i_BV ≡ 0 (두 지수가 같다) [카드 산술] — 두 번째 지수의 음부호가 빠진 인쇄 오류 · i_0 값 미인쇄 [미확인]."
+  },
+  {
+   "key": "eB7",
+   "kind": "equation",
+   "label": "eqB7",
+   "page": 11,
+   "file": "eq_B7_cbd_charge_conservation.png",
+   "caption": "Eq. (B7), PDF p.11: ∇·(−σ_c^eff ∇φ_c) = 0 — charge conservation in the CBD (effective electrical conductivity σ_c^eff).",
+   "rotated_deg": 0,
+   "bbox": [
+    37.0,
+    74.3,
+    561.0,
+    94.5
+   ],
+   "w": 2951,
+   "h": 123,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.989,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8 pt type) — fixed band between the neighbouring text lines (text-layer line boxes), full column width so the right-aligned equation number is kept → ink trim → uniform 6 pt (33 px) white margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "CBD 전자 전도 (전해질과 혼합상 · σ_c 375 S m⁻¹)."
+  },
+  {
+   "key": "eA_set",
+   "kind": "equation",
+   "label": "eqA1-A5",
+   "page": 10,
+   "file": "eq_A1_A5_dem_set.png",
+   "caption": "Eqs. (A1)–(A5) stacked (DEM: motion, Hertz–Mindlin contact, parallel-bond stresses as printed), PDF p.10.",
+   "rotated_deg": 0,
+   "w": 2954,
+   "h": 703,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.987,
+   "parts": [
+    "eA1",
+    "eA2",
+    "eA3",
+    "eA4",
+    "eA5"
+   ],
+   "manual_crop": "stack of the single-equation crops eA1, eA2, eA3, eA4, eA5 (same 400 dpi renders, ink-trimmed, 40 px gaps, left-aligned) → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "보고서 DEM 절에 붙일 묶음 (A4 · A5 는 인쇄 그대로 — 짝 바뀜 표지)."
+  },
+  {
+   "key": "eB_set",
+   "kind": "equation",
+   "label": "eqB1-B7",
+   "page": 10,
+   "file": "eq_B1_B7_electrochem_set.png",
+   "caption": "Eqs. (B1)–(B7) stacked (half-cell electrochemistry: solid diffusion, solid / electrolyte / CBD charge conservation, electrolyte mass balance, concentrated-solution current, Butler–Volmer as printed), PDF p.10–11.",
+   "rotated_deg": 0,
+   "w": 2954,
+   "h": 878,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.983,
+   "parts": [
+    "eB1",
+    "eB2",
+    "eB3",
+    "eB4",
+    "eB5",
+    "eB6",
+    "eB7"
+   ],
+   "manual_crop": "stack of the single-equation crops eB1, eB2, eB3, eB4, eB5, eB6, eB7 (same 400 dpi renders, ink-trimmed, 40 px gaps, left-aligned) → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전기화학 묶음 (B6 는 인쇄 그대로 — 음부호 누락 표지)."
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract-first-time-validation",
+   "page": 1,
+   "file": "txt_p1_abstract_first_time_validation.png",
+   "caption": "PDF p.1 Abstract: 'a coupled discrete element method–finite element method framework is established for the first time' — 3D RVEs for two-layer gradient electrodes (calendering) and half-cells (discharge); 'Experimental validation confirms that the model accurately captures the structural evolution during calendering and electrochemical performance during discharge'; small AM near the separator + large near the CC → favourable gradient; two-step calendering → controllable porosity gradients.",
+   "rotated_deg": 0,
+   "w": 2043,
+   "h": 981,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.842,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    201.0,
+    286.0,
+    561.0,
+    453.5
+   ]
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-dem-fem-either-alone-insufficient",
+   "page": 2,
+   "file": "txt_p2_dem_fem_either_alone_insufficient.png",
+   "caption": "PDF p.2 left column (§1): 'the DEM is well-suited for simulating particle rearrangement [60,61] and contact evolution [62,63] during calendering, and the FEM is widely used to analyze electrochemical behavior … However, using either method alone is insufficient to capture both mechanical and electrochemical aspects'.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 750,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    36.5,
+    273.0,
+    292.0,
+    398.6
+   ]
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-coupling-strategy-handover",
+   "page": 2,
+   "file": "txt_p2_coupling_strategy_am_coordinates_radii_java.png",
+   "caption": "PDF p.2 right column (§2.1 DEM–FEM coupling strategy): 'the spatial coordinates and radii of all AM particles are exported from the DEM simulation' → 'in-house geometric reconstruction algorithm implemented in Java [68]' → 'spherical particle geometry' used directly as the cathode domain of the FEM model; 'Microstructural descriptors, including spatially resolved porosity gradients, are mapped onto the FEM mesh'.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 866,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    305.5,
+    147.6,
+    561.0,
+    294.2
+   ]
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2-rve-48pct-92-8-cbd-plate-pfc3d",
+   "page": 2,
+   "file": "txt_p2_rve_48pct_92_8_cbd_2um_plate_velocity_pfc3d.png",
+   "caption": "PDF p.2 right column (§2.2): initial porosity 48%; AM : CBD mass ratio 92:8 [49]; CBD particle diameter 2 μm; 'Large AM particles are placed near the CC side, and smaller particles are placed near the separator side'; top = calendering plate, bottom = CC; periodic x–y; CC fixed, 'a constant downward velocity to the top plate'; Table 1; PFC3D.",
+   "rotated_deg": 0,
+   "w": 1462,
+   "h": 1098,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.849,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    305.5,
+    304.7,
+    561.0,
+    493.1
+   ]
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2-halfcell-li-sep25-rates-comsol",
+   "page": 2,
+   "file": "txt_p2_halfcell_li_metal_sep25um_rates_cutoff_comsol.png",
+   "caption": "PDF p.2 right column (§2.3): DEM cathode imported as the positive electrode; lithium metal anode, copper foil as the CC; 'The electrolyte and CBD are treated as a mixed phase'; periodic x–y; separator 25 μm; 0.5C, 1C, 3C, 5C to 2.8 V; Table 2; COMSOL Multiphysics 6.2.",
+   "rotated_deg": 0,
+   "w": 1465,
+   "h": 749,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.862,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    305.5,
+    503.7,
+    561.0,
+    629.3
+   ]
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-mechanical-validation-80-54-183-110",
+   "page": 3,
+   "file": "txt_p3_mechanical_validation_80_54_183_110_5pct.png",
+   "caption": "PDF p.3 right column (§3.1.2): thickness and compression ratio vs calendering pressure compared with Ademmer et al. [49]; thin electrode 80 → 54 μm, thick 183 → 110 μm; 'the thick electrode exhibited a consistently larger compression ratio—approximately 5% higher than that of the thin electrode at 300 MPa'.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1039,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    305.5,
+    544.4,
+    561.0,
+    722.3
+   ]
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-electrochemical-validation-four-rates",
+   "page": 4,
+   "file": "txt_p4_electrochemical_validation_four_rates_lu.png",
+   "caption": "PDF p.4 left column (§3.1.3): FEM discharge capacity vs experimental data of Lu et al. [59] (Fig. D1); cathode 'consistent with the experimental cathode … in terms of thickness, porosity, material system, and NCM PSD'; 'The simulated specific capacity at four discharge rates shows excellent agreement'.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 749,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    36.5,
+    590.4,
+    292.0,
+    716.0
+   ]
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-p6-thickness-150-106-113-25-30",
+   "page": 4,
+   "file": "txt_p4_p6_thickness_150_to_106_113_um_25_30pct.png",
+   "caption": "PDF p.4 right column (§3.2.1) → p.6 left column top (one paragraph, stacked): 'All electrodes had an initial uncalendered thickness of 150 μm'; 'At 250 MPa, the final thicknesses fell within 106–113 μm, corresponding to compression ratios of approximately 25–30%'; 'The thickness reduction rate diminished gradually as the structure approached its minimum attainable thickness'.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 648,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.857,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) — 2 column/page parts stacked in reading order with 30 px gaps → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      305.5,
+      663.6,
+      561.0,
+      736.9
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      36.5,
+      53.3,
+      292.0,
+      84.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-large-particle-rearrangement",
+   "page": 6,
+   "file": "txt_p6_large_particle_rearrangement_dominant.png",
+   "caption": "PDF p.6 left column: C4 (small) retains the greatest thickness, C1 (large) the greatest compression; Liao et al. [75]; 'AM particle rearrangement driven by contact mechanics is the primary dominant mechanism leading to higher compression ratio of electrodes composed of larger particles'; 'larger particles can more easily overcome friction to achieve particle rearrangement [56,59]'.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 982,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.838,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    36.5,
+    84.7,
+    292.0,
+    252.1
+   ]
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-layer-porosity-48-max100-26-30",
+   "page": 6,
+   "file": "txt_p6_layer_porosity_48_max100_26_30_inversion.png",
+   "caption": "PDF p.6 left column end → right column (stacked): Figs. 4(a)–(b) — 'both layers exhibited 48% porosity'; 'The porosity difference reached a maximum near 100 MPa and then gradually decreased. The final porosity ranged from 26 to 30%'; small-particle layers remain more porous, large-particle layers become denser; trend unchanged for AM Young's modulus and CBD bond stiffness (Fig. E1).",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 1287,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) — 2 column/page parts stacked in reading order with 30 px gaps → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      36.5,
+      252.1,
+      292.0,
+      262.6
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      305.5,
+      53.3,
+      561.0,
+      262.6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-contact-network-cn-015-27",
+   "page": 7,
+   "file": "txt_p7_contact_network_cn_015_27.png",
+   "caption": "PDF p.7 left column: before calendering mostly CBD–CBD and CBD–AM contacts, few AM–AM; 'The AM coordination number increased from 0.15 (uncalendered) to 2.7 at 250 MPa for both designs'; small-particle layer denser contact network; 'a denser contact network enhances electrical conductivity' [17,56].",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 866,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    36.5,
+    53.3,
+    292.0,
+    199.8
+   ]
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7-sol-capacity-149-146-98-54",
+   "page": 7,
+   "file": "txt_p7_sol_capacity_149_146_98_54.png",
+   "caption": "PDF p.7 left → right column (§3.2.2, stacked): 0.5C 'maximum capacities of 149 mAh g⁻¹ (C2) and 146 mAh g⁻¹ (C3)'; 'At 5C, the C2 electrode retained a capacity of 98 mAh g⁻¹, whereas C3 dropped sharply to 54 mAh g⁻¹ … approximately twice the capacity of C3 at high rates'.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 997,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) — 2 column/page parts stacked in reading order with 30 px gaps → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      36.5,
+      210.2,
+      292.0,
+      283.5
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      305.5,
+      53.3,
+      561.0,
+      147.5
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x7c",
+   "kind": "text",
+   "label": "p7-two-step-250mpa-springback",
+   "page": 7,
+   "file": "txt_p7_two_step_250mpa_springback.png",
+   "caption": "PDF p.7 right column (§3.3.1): two-step calendering in DEM — single-layer uncalendered electrode 'subjected to a high-pressure calendering step at 250 MPa'; 'After pressure removal, partial elastic recovery (\"springback\") occurred (Fig. 6(c))'; second uncalendered layer added; second calendering.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 749,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.853,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    305.5,
+    367.8,
+    561.0,
+    493.4
+   ]
+  },
+  {
+   "key": "x7d",
+   "kind": "text",
+   "label": "p7-two-step-layers-394-644-48-75",
+   "page": 7,
+   "file": "txt_p7_two_step_layers_394_644_48_75.png",
+   "caption": "PDF p.7 right column: 'Initially, the bottom layer exhibited a porosity of 39.4% and a thickness of 64.4 μm, whereas the top layer had a porosity of 48% and a thickness of 75 μm'; top layer more pronounced thickness reduction; top layer always retains a higher porosity.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 798,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    305.5,
+    493.3,
+    561.0,
+    629.3
+   ]
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p7-p9-porosity-gradient-148-120-97",
+   "page": 7,
+   "file": "txt_p7_p9_porosity_gradient_control_148_120_97.png",
+   "caption": "PDF p.7 right column (§3.3.2) → p.8 left → p.8 right → p.9 left → p.9 right top (one paragraph, stacked): control electrode 'with the same total thickness and average porosity but with a uniform porosity distribution'; 0.5C and 1C 'approximately 148 mAh g⁻¹'; 5C gradient '~120 mAh g⁻¹, whereas the uniform-porosity electrode drops to 97 mAh g⁻¹'; consistent with Du et al. [43] and Han et al. [36].",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 2093,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) — 5 column/page parts stacked in reading order with 30 px gaps → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      305.5,
+      639.7,
+      561.0,
+      744.4
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      36.5,
+      699.3,
+      292.0,
+      741.1
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      305.5,
+      699.3,
+      561.0,
+      741.1
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      36.5,
+      490.2,
+      292.0,
+      647.3
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      305.5,
+      53.3,
+      561.0,
+      63.8
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-conclusions-first-time-70pct",
+   "page": 9,
+   "file": "txt_p9_conclusions_first_time_70pct_future.png",
+   "caption": "PDF p.9 right column (§4 Conclusions): 'a coupled DEM–FEM framework was developed for the first time'; C2-type placement 'delivering >70% higher capacity at 5C'; two-step calendering tunable porosity gradients; 'Future work can build upon this framework to systematically quantify the effects of actual calendering process parameters on electrode properties'.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 1970,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.849,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    305.5,
+    75.4,
+    561.0,
+    420.6
+   ]
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-contact-law-hertz-mindlin-pbm",
+   "page": 10,
+   "file": "txt_p10_contact_law_hertz_mindlin_pbm.png",
+   "caption": "PDF p.10 (Appendix A, stacked): 'The contact between AM particles follows the nonlinear Hertz–Mindlin model [69,85]'; 'Cohesive interactions between carbon binder domain (CBD) particles and between CBD and AM particles are modeled using the parallel bond model (PBM) [82,86,87]' — uniform cylindrical bond, constant normal and shear stiffness.",
+   "rotated_deg": 0,
+   "w": 2955,
+   "h": 406,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.894,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) — 2 column/page parts stacked in reading order with 30 px gaps → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 10,
+     "bbox": [
+      36.5,
+      147.0,
+      561.0,
+      168.5
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      36.5,
+      219.2,
+      561.0,
+      261.2
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x10b",
+   "kind": "text",
+   "label": "p10-pbm-failure-limitation",
+   "page": 10,
+   "file": "txt_p10_pbm_bond_failure_limitation.png",
+   "caption": "PDF p.10 (Appendix A): symbol definitions of Eqs. (A4)–(A5); 'Bond failure is determined using the Mohr–Coulomb criterion [84]. Once a bond fails, the interaction reverts to a linear elastic contact. Moreover, the application of the PBM model ignores the viscoelastic and adhesive properties introduced by the binder in actual electrodes, which may influence the microstructural evolution of the electrodes'.",
+   "rotated_deg": 0,
+   "w": 2954,
+   "h": 382,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.874,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    36.5,
+    328.0,
+    561.0,
+    389.9
+   ]
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-appendix-c-ademmer-300mpa",
+   "page": 11,
+   "file": "txt_p11_appendix_c_ademmer_300mpa.png",
+   "caption": "PDF p.11 (Appendix C): thin and thick electrode RVEs 'consistent with those measured by Ademmer et al. [49] via synchrotron radiation tomography' (material system, composition, thickness, porosity, AM PSD); 'applying 300 MPa pressure to the RVE also aligns with the experimental data'.",
+   "rotated_deg": 0,
+   "w": 2955,
+   "h": 274,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.886,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    36.5,
+    444.3,
+    561.0,
+    486.2
+   ]
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12-appendix-e-sensitivity-inversion",
+   "page": 12,
+   "file": "txt_p12_appendix_e_sensitivity_inversion.png",
+   "caption": "PDF p.12 (Appendix E): sensitivity to AM Young's modulus and CBD bond stiffness; 'In all cases, the final porosity of the large-particle layer is consistently lower than that of the small-particle layer'; 'the observed porosity inversion phenomenon is robust within a reasonable range of material parameters'.",
+   "rotated_deg": 0,
+   "w": 2954,
+   "h": 343,
+   "dpi": 400,
+   "src": "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (text-layer line boxes; the paragraph only, not the whole page) → ink trim → uniform 33 px margin (2026-11-12, litdb-curator)",
+   "viewed": true,
+   "bbox": [
+    36.5,
+    313.1,
+    561.0,
+    365.5
+   ]
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-12) found Fig. 1–8 and Tables 1–2 (14 pp; no supplementary material — Appendices A–E are inside the article).  All 8 figures were re-cut from their embedded native rasters (uneven side margins; the auto captions of Fig. 1, 2, 4 and 7 had swallowed body text and were replaced by the printed captions).  Both auto table crops were the same whole-page box → re-rendered by hand from the vector page.  The tool missed the appendix figures Fig. C1, C2, D1, E1 (letter-prefixed labels — the caption regex takes arabic labels only) → cut by hand from their native rasters.  Added by hand: 16 panel crops of the digitized plots (Fig. 2e–f · 3e–f · 4a · 4b · 4d · 4f · 5i · 7b · 7c · 8i · D1b · E1b–d), 12 equation crops (A1–A5 · B1–B7) + 2 stacked sets, 20 evidence-paragraph crops.  No graphical abstract in the PDF.",
+ "note_manual": "Printed inconsistencies visible in the crops: Fig. 1(b)–(c) captions and drawings put the small particles at the CC and the large ones at the plate, while §2.2 says 'Large AM particles are placed near the CC side'; the four 3D rows of Fig. 3(a)–(d) do not follow the caption order (by particle size and the 50 MPa render-height ratio the rows read C4, C1, C2, C3 — card observation); Eqs. (A4)–(A5) pair the twisting moment with J in the tensile stress and the bending moment with I in the shear stress (the same group's 2025 paper pairs bending/I with tension and twisting/J with shear); Eq. (B6) Butler–Volmer is printed without the minus sign of the cathodic exponent (with α_a = α_c = 0.5 the printed form gives zero current); §3.1.3 says 'four discharge rates' but Fig. D1(b) has five; Fig. 2(e) legend 'Experimentions'; Fig. E1(b)–(c) axis 'Pressuer'; Fig. 6(a) caption 'uncalendared'; text 'calendaring' (§2.2); the 5C uniform-porosity curve in Fig. 8(i) is drawn teal while the legend shows green; Fig. 1(d) half-cell height 175 μm = 25 μm separator + 150 μm uncalendered cathode (not the 106–111 μm calendered thickness).",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of); fC1 · fC2 · fD1 · fE1 = appendix figures; eA1–eA5 · eB1–eB7 = equation crops (kind 'equation'), eA_set · eB_set = stacked sets; x<page><letter> = evidence paragraph (kind 'text'; x4b · x6b · x7b · x8a · x10a stack several column/page parts of one paragraph, listed in 'parts')"
+}

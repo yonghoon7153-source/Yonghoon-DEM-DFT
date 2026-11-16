@@ -504,3 +504,5 @@
 - ✅ "In O-substituted argyrodites, the P K-edge white line near 2147 eV is slightly higher than in the O-free material (*eScience*, 6, 100502 (2026))." — 관측만.
 - ⛔ 문장 24 의 기전 ("increase in unoccupied P states induced by the higher electronegativity of O") 을 [43] 으로 인용하지 않는다 — [43] 에 없다.
 - ⛔ 우리 Bader · COHP 를 이 기전의 계산 근거로 붙이지 않는다 — 우리 바닥상태 그림은 '2147 eV 에서 빈 상태↑' 와 다른 말이다 (`park2026_oxygen_induced_li_intercage_conduction.md` §7b).
+
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) — 같은 1 저자 (Junhee Kang) · Tae Young Lee 공저 · 같은 랩 Li 음극 논문: Ag–C/CNF 2 층 음극 · PEEK 몰드 Ø 13 mm · 스택 20 MPa · operando 하중 셀 ΔP (면적 용량 2.3 / 3.5 / 4.9 mAh cm⁻² → 1.1 / 1.8 / 2.4 MPa).

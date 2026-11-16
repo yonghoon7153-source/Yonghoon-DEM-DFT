@@ -738,6 +738,7 @@ Shi 는 **우리가 못 갖던 *모델→실험 닫힌 검증*** 을 제공: **�
 
 ## 🔗 관련 카드
 - SI 참고 `[2]` 의 원전 (2026-11-12 카드): [`devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode`](devasconcelos2016_grid_indentation_nmc532_cbpvdf_composite_electrode.md) — 원문에 **E 177.5 · σ_y 12.6 · ρ 4.85 없음** (NMC532 targeted E 138.73 · H 8.89 · 격자 123.02 · 7.78 · 이론 밀도 4.77 mg/mm³ · ν 0.3 은 압입 해석 가정값) ⇒ 이 카드의 "귀속 오류 공산" 확정 (그 카드 §0-1).
+- 본문 [22] 의 원문 (2026-11-16 카드): [`silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem`](silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem.md) — 원문 식 (6)·(7) 은 감쇠에 m_eff · 접선 스프링 = 저장 변위 u_t (−k_t u_t) · 단분산 √(δ/d) 배율 (이 카드 §4 의 SI 식과 세 곳 다름 — 그 SI 인쇄 그대로).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

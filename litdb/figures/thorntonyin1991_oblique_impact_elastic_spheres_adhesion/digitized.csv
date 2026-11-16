@@ -1,0 +1,249 @@
+figure,panel,series,x,y,x_unit,y_unit,method,note
+6,,linear KE (remaining fraction),0,1.0,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,linear KE (remaining fraction),10,0.99,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg markers merged: read by eye
+6,,linear KE (remaining fraction),20,0.949,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg markers merged: read by eye
+6,,linear KE (remaining fraction),30,0.864,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg markers merged: read by eye
+6,,linear KE (remaining fraction),40,0.74,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,linear KE (remaining fraction),50,0.613,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,linear KE (remaining fraction),60,0.54,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,linear KE (remaining fraction),70,0.61,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,linear KE (remaining fraction),80,0.782,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,linear KE (remaining fraction),90,0.998,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,rotational KE (gained fraction),0,0,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,rotational KE (gained fraction),10,0.003,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg low values merged with neighbours: read by eye (approx.)
+6,,rotational KE (gained fraction),20,0.018,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg low values merged with neighbours: read by eye (approx.)
+6,,rotational KE (gained fraction),30,0.065,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg low values merged with neighbours: read by eye (approx.)
+6,,rotational KE (gained fraction),40,0.166,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,rotational KE (gained fraction),50,0.261,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,rotational KE (gained fraction),60,0.28,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,rotational KE (gained fraction),70,0.145,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,rotational KE (gained fraction),80,0.041,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,rotational KE (gained fraction),90,0,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,energy dissipated (fraction),0,0,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,energy dissipated (fraction),10,0.008,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg: by eye (approx.)
+6,,energy dissipated (fraction),20,0.033,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg: by eye (approx.)
+6,,energy dissipated (fraction),30,0.068,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",10-30 deg: by eye (approx.)
+6,,energy dissipated (fraction),40,0.097,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,energy dissipated (fraction),50,0.135,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,energy dissipated (fraction),60,0.191,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,energy dissipated (fraction),70,0.247,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,energy dissipated (fraction),80,0.191,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+6,,energy dissipated (fraction),90,0,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),0,0.989,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),10,0.98,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),20,0.952,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),25,0.762,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),30,0.8,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),35,0.78,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),40,0.73,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),50,0.616,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),60,0.519,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),70,0.463,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),80,0.526,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,linear KE (remaining fraction),85,0.567,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),0,0.0,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",~0 (marker on axis)
+17,,rotational KE (gained fraction),10,0.0,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),20,0.001,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),25,0.02,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),30,0.033,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),35,0.072,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),40,0.108,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),50,0.211,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),60,0.282,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),70,0.298,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),80,0.184,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,rotational KE (gained fraction),85,0.151,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),0,0.009,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",0 deg: 0.007-0.011 (marker overlaps axis; mid value)
+17,,energy dissipated (fraction),10,0.021,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),20,0.051,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),25,0.207,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),30,0.166,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),35,0.152,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),40,0.152,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),50,0.171,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),60,0.197,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),70,0.244,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),80,0.292,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+17,,energy dissipated (fraction),85,0.281,deg,fraction of initial KE,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,6,5.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,8,7.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,10,8.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,12,10.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,14,11.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,16,12.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,18,14.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,20,15.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,25,19.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,30,21.5,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,35,24.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,40,27.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,45,30.5,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,50,35.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,55,40.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,60,47.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,65,55.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,70,64.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,75,71.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,80,78.5,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,85,84.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,rebound angle of particle centroid,90,89.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,6,2.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,8,3.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,10,4.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,14,4.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",peak (approx. 14 deg)
+8,,angle of reflection of contact patch,18,4.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,20,3.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,25,1.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,30,-4.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,35,-11.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,40,-18.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,45,-20.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,50,-28.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,55,-31.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,60,-30.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,65,-16.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,70,16.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,80,72.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+8,,angle of reflection of contact patch,90,90.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",approx.
+8,,angle of reflection of contact patch,26-67,<0,deg,deg,interpolated zero crossings,negative range (card arithmetic: linear interpolation between markers)
+15,a,angle of reflection of contact patch - with adhesion,2,-1.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,4,-3.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,6,-5.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,8,-7.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,10,-9.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,12,-11.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,14,-13.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,16,-15.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,18,-16.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,20,-18.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,22,-19.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,24,-9.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,26,-3.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,27,-0.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",approx. x
+15,a,angle of reflection of contact patch - with adhesion,30,0.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",approx.
+15,a,angle of reflection of contact patch - with adhesion,35,-2.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,40,-8.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,45,-15.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,50,-22.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,55,-28.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,60,-32.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",merged markers (approx.)
+15,a,angle of reflection of contact patch - with adhesion,65,-36.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,70,-39.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",minimum
+15,a,angle of reflection of contact patch - with adhesion,75,-32.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,80,11.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,85,63.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - with adhesion,90,89.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,2,1.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,4,2.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,6,3.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,8,3.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,10,4.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,12,4.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,14,4.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,16,4.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,18,4.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,20,3.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,25,1.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,30,-4.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,35,-11.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,40,-18.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,45,-21.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,50,-29.5,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,55,-32.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,60,-32.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",merged markers (approx.)
+15,a,angle of reflection of contact patch - no adhesion,65,-16.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,70,17.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,a,angle of reflection of contact patch - no adhesion,80,72.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,2,-1.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,4,-3.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,6,-5.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,8,-7.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,10,-9.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,12,-11.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,14,-13.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,16,-15.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,18,-17.1,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,20,-18.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,25,11.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - with adhesion,40,28.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",from ~30 deg on the no-adhesion curve within a few deg
+15,b,rebound angle of particle centroid - with adhesion,70,60.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,2,1.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,4,3.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,6,5.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,8,6.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,10,8.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,12,9.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,14,11.3,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,16,12.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,18,14.2,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,20,15.6,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,25,18.7,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,30,20.8,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",approx.
+15,b,rebound angle of particle centroid - no adhesion,70,64.0,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,85,84.4,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+15,b,rebound angle of particle centroid - no adhesion,90,89.9,deg (impact angle),deg,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+12,a,P = 10 mN: peel end Tc (arrow),13,1.78,nm,mN,by eye on 300 dpi crop with calibrated grid overlay,by eye at arrow
+12,a,P = 10 mN: sliding plateau,40.4,3.55,nm,mN,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",last marker
+12,b,P = 0: peel end Tc (marker),4.75,0.1713,nm,mN,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+12,b,P = 0: sliding plateau,>4.75,0.0667-0.0672,nm,mN,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",plateau after drop
+12,b,P = 0: initial slope,0,0.041,nm,mN,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",mN/nm (slope)
+11,,peel (Tc/Pc),1,2.53,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),1,1.16,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,peel (Tc/Pc),2,3.05,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),2,1.44,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,peel (Tc/Pc),5,4.26,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),5,2.46,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,peel (Tc/Pc),10,5.69,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),10,4.2,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,peel (Tc/Pc),15,6.9,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),15,5.88,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,peel (Tc/Pc),20,7.84,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),20,7.61,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,peel (Tc/Pc),25,8.73,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),25,9.29,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,peel (Tc/Pc),29.5,9.45,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,slide (Tc/Pc),29.5,10.88,P/Pc,Tc/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",
+11,,crossing (peel = slide),21-23,8.0-8.3,P/Pc,Tc/Pc,by eye on 300 dpi crop with calibrated grid overlay,eq 45 with chi 6.72 gives 23.85 / 9.05 (card arithmetic; Fig 11 parameters not stated)
+13,,experiment (Briscoe & Kremnitzer [20]),10.4,4.2,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.2; points at P/Pc < 10 overlap the lines (not separated)
+13,,experiment (Briscoe & Kremnitzer [20]),12.9,4.9,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.2; points at P/Pc < 10 overlap the lines (not separated)
+13,,experiment (Briscoe & Kremnitzer [20]),14.5,5.4,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.2; points at P/Pc < 10 overlap the lines (not separated)
+13,,experiment (Briscoe & Kremnitzer [20]),16.9,5.9,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.2; points at P/Pc < 10 overlap the lines (not separated)
+13,,experiment (Briscoe & Kremnitzer [20]),18.7,7.0,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.2; points at P/Pc < 10 overlap the lines (not separated)
+13,,experiment (Briscoe & Kremnitzer [20]),21.4,8.05,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.2; points at P/Pc < 10 overlap the lines (not separated)
+13,,experiment (Briscoe & Kremnitzer [20]),23.5,9.1,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.2; points at P/Pc < 10 overlap the lines (not separated)
+14,,experiment (Briscoe & Kremnitzer [20]),-1.0,0.0,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),-0.8,0.14,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),-0.76,0.24,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),-0.57,0.48,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),-0.4,0.48,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",uncertain (overlaps line)
+14,,experiment (Briscoe & Kremnitzer [20]),-0.13,0.62,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),0.0,0.59,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),0.12,0.77,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),0.26,0.86,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),0.44,0.95,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),0.73,0.78,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),0.75,1.17,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+14,,experiment (Briscoe & Kremnitzer [20]),1.65,1.19,P/Pc,T/Pc,"auto: tick calibration (300 dpi scan) + marker centroid (small-hole fill, distance transform), checked on overlay",+-0.03
+4,a,theta 15 deg: max normal force,P_max,2.03,-,mN,by eye on 300 dpi crop with calibrated grid overlay,
+4,a,theta 30 deg: max normal force,P_max,1.78,-,mN,by eye on 300 dpi crop with calibrated grid overlay,
+4,a,theta 45 deg: max normal force,P_max,1.4,-,mN,by eye on 300 dpi crop with calibrated grid overlay,
+4,a,theta 15 deg: T range,T_min..T_max,-0.17..0.25,-,mN,by eye on 300 dpi crop with calibrated grid overlay,
+4,a,theta 30 deg: T range,T_min..T_max,-0.24..0.45,-,mN,by eye on 300 dpi crop with calibrated grid overlay,
+4,a,theta 45 deg: T range,T_min..T_max,-0.15..0.48,-,mN,by eye on 300 dpi crop with calibrated grid overlay,approx.
+4,a,theta 45-75 deg: initial path slope T/P,slope,0.35 (0.48/1.37),-,-,by eye on 300 dpi crop with calibrated grid overlay,= mu (rigid-body sliding from start)
+5,a-c,initial kinetic energy,t=0,0.0277,us,nJ,by eye on 300 dpi crop with calibrated grid overlay,card arithmetic gives 0.02775 nJ
+5,a,theta 30: contact duration / final KE,1.0,0.0241,us,nJ,by eye on 300 dpi crop with calibrated grid overlay,
+5,b,theta 60: contact duration / final KE,1.1,0.015,us,nJ,by eye on 300 dpi crop with calibrated grid overlay,rotational final ~0.0079 nJ; tangential wd ~0.0055 nJ
+5,c,theta 80: contact duration / final KE,1.33,0.0213,us,nJ,by eye on 300 dpi crop with calibrated grid overlay,
+16,a,"theta 15 (adhesion): peak (P, T)",2.07,0.53,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,"mean slope start->peak ~0.25 (0.53/2.07); text p.13: initial dT/dN almost constant, slightly greater than tan theta (tan15 = 0.268)"
+16,a-e,start of impact with adhesion,-0.08,0,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,normal force at first contact ~ -0.08 mN (card arithmetic -8Pc/9 = -0.0838 mN)
+16,b,theta 30 (adhesion): peel point then drop,0.6,0.45,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,
+16,b,theta 30 (adhesion): peel point then drop,0.65,0.28,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,after drop = mu(P+2Pc)
+16,b,theta 30 (adhesion): peel point then drop,1.45,0.49,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,peak T
+16,b,theta 30 (adhesion): peel point then drop,1.85,,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,P_max
+16,b,theta 30 (adhesion): peel point then drop,,-0.31,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,min T
+16,d,theta 60 (adhesion): peak,1.0,0.41,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,= mu(1.0+0.188) = 0.416 (card arithmetic)
+16,e,theta 75 (adhesion): sliding line end,0,0.065,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,
+16,e,theta 75 (adhesion): sliding line end,0.49,0.238,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,
+16,e,theta 75 (no adhesion): sliding line end,0,0,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,
+16,e,theta 75 (no adhesion): sliding line end,0.42,0.147,mN,mN,by eye on 300 dpi crop with calibrated grid overlay,

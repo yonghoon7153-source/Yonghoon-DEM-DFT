@@ -4,6 +4,7 @@
 > 그림 `18/18 육안 확인` (본문 Fig 1–15 · Table 1–3; **fig_7 재크롭** = 본문 식 줄 섞임 · **tab_1–3 재크롭** = 도구가 쪽 전체를 잘랐음) · 약칭 `[Lindblad05]`
 > 수치 등급: **stated** · **figure-read ≈** (판독 폭 명시) · **derived(ours)** (식 병기) · **pilot(ours)** = 이 카드 작성 중 scratch 스크립트로 1 회 계산한 값 (리포 코드 아님 · 인용 전에 §적용 후보 가-1 진단으로 다시 낼 것).  SI 없음 (본문 12 쪽 전부 확인).
 > 짝 카드: `windreich2003_voxel_based_surface_area_estimation` (이 논문이 개선한 MV 추정기) · `ziegel2010_surface_area_measure_digitizations` (이 논문의 가중치를 점근 최악오차 7.3 % 로 평가하고 3.98 % 가 최선임을 증명) · `ketter2025_…` §7-6 (계단이 계면 면적을 부풀린다는 경고) · `neumann2021_…` (복셀 면 입계 조건).
+> 🔗 관련 카드 (2026-11-16 · 원전): [`mullikin1993_surface_area_estimation_digitized_planes`](mullikin1993_surface_area_estimation_digitized_planes.md) — [8] 원문 (6-이웃 9 부류 · W 0.8940 · 1.3409 · 1.5879 · 평면 CV 2.33 % · 표본 세기 −16.8 % · 1.2031) · 면 세기 1.5 배의 두 번째 근거 (식 8a · 공간 격자 = 노출 면 × 2/3 · 구 1.5 × (1 − 1.06Δ²/4πr²)) · §7-3 pilot "MV 물체" 열 = 그 논문 그림 6 직선과 r/h ≥ 5 에서 0.0005 안.
 
 ---
 

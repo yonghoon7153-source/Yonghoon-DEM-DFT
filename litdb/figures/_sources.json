@@ -31,6 +31,13 @@
    "/root/.claude/uploads/82ea256b-12bc-5a75-994e-7718d79c71ba/3f3c5dbd-Graphical_Abstract_CEJ.docx"
   ]
  },
+ "ai2011_rolling_resistance_contact_models_dem": {
+  "figures": 67,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "247fb88f-19._Assessment_of_rolling_resistance_models_in_discrete_element_simulations.pdf"
+  ]
+ },
  "alabdali2023_cgmd_wet_manufacturing_ssb_cathode": {
   "figures": 11,
   "generated": "2026-08-19",
@@ -177,6 +184,13 @@
    "59a087ce-7._An_improved_contact_algorithm_for_the_material_point_method_and_application_to_stress_propagation_in_granular_material.pdf"
   ]
  },
+ "bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing": {
+  "figures": 78,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "43049b95-16._The_generalized_interpolation_material_point_method.pdf"
+  ]
+ },
  "bardenhagen2005_mpm_foam_densification_simulation": {
   "figures": 17,
   "generated": "2026-11-11",
@@ -227,6 +241,21 @@
    "9da350e2-18_Sup_zip/1-s2.0-S0378775324020846-mmc1.docx (SI docx; tables rendered after LibreOffice PDF conversion, figures from word/media)"
   ]
  },
+ "benhadjali2026_fully_coupled_chemomech_stress_3d_assb_cathode": {
+  "figures": 55,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "6eece8ca-17._Fully_coupled_mechano-electrochemical_modeling_of_3D-resolved_microstructures_for_solid_state_batteries_manufactured_by_wet_processing.pdf"
+  ]
+ },
+ "benhadjali2026_oneway_chemomech_stress_stack_pressure_3d_assb_cathode": {
+  "figures": 61,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "a98c4bc8-42._A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf",
+   "c4b1864d-42._Sup_A_New_Three_Dimensional_Microstructure_Resolved_Model_to_Assess_Mechanical_Stress_in_Solid_State_Battery_Electrodes.pdf"
+  ]
+ },
  "benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem": {
   "figures": 11,
   "generated": "2026-11-06",
@@ -274,6 +303,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/21. Discrete element simulations with Liggghts.pdf"
+  ]
+ },
+ "brodu2015_multiple_contact_dem_dense_granular": {
+  "figures": 28,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "338bf74e-30._Multiple-contact_discrete-element_model_for_simulating_dense_granular_media.pdf"
   ]
  },
  "bucci2017_chemomech_failure_assb_cycling_czm": {
@@ -370,6 +406,13 @@
    "★ 랩실 논문/05. Stabilizing the interface between high-Ni oxide cathode and Li6PS5Cl for all-solid-state batteries via dual-compatible halides.pdf"
   ]
  },
+ "chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer": {
+  "figures": 45,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "c37e391c-32._Effect_of_blade_speed_on_granular_flow_and_mixing_in_a_cylindrical_mixer.pdf"
+  ]
+ },
  "chandratilleke2012_particle_scale_mixing_index": {
   "figures": 21,
   "generated": "2026-10-13",
@@ -429,6 +472,13 @@
    "29b611c5-75._Discovering_MultiCompositional_LiArgyrodite_SolidState_Electrolytes_via_Experimental_Active_Learning.pdf"
   ]
  },
+ "choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition": {
+  "figures": 8,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "16c72166-14._Quantitative_Analysis_of_Microstructures_and_Reaction_Interfaces_on_Composite_Cathodes_in_All-Solid-State_Batteries_Using_a_ThreeDimensional_Reconstruction_Technique.pdf"
+  ]
+ },
  "choi2025_mlip_cu_taxn_interfacial_adhesion": {
   "figures": 15,
   "generated": "2026-08-05",
@@ -444,12 +494,36 @@
    "DFT 먹인 논문/28. Sup) Dry-Crafted Charge-Conductive ZrO2−x Cathode Shell Coating for High-Performance Sulfide-Based Solid-State Batteries.pdf"
   ]
  },
+ "chouchane2019_innov_voxelization_multiphase_meshing": {
+  "figures": 29,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "3bba10e2-43._A_versatile_and_efficient_voxelization-based_meshing_algorithm_of_multiple_phases.pdf",
+   "b4ad2a77-43._Sup_A_versatile_and_efficient_voxelization-based_meshing_algorithm_of_multiple_phases.pdf"
+  ]
+ },
+ "chouchane2021_innov_webapp_stochastic_generation_meshing": {
+  "figures": 35,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "757279e0-73._An_invitation_to_engage_with_computational_modeling_user_friendly_tool_for_in_silico_battery_component_generation_and_meshing.pdf",
+   "db426f79-73._Sup1_An_invitation_to_engage_with_computational_modeling_user_friendly_tool_for_in_silico_battery_component_generation_and_meshing.pdf",
+   "12e928d3-73._Sup2_An_invitation_to_engage_with_computational_modeling_user_friendly_tool_for_in_silico_battery_component_generation_and_meshing.mp4"
+  ]
+ },
  "clausnitzer2024_degradation_mechanisms_cathode_llzo": {
   "figures": 17,
   "generated": "2026-09-22",
   "pdfs": [
    "654e8db5-18._Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf",
    "a4da61d2-18._Sup_Impact_of_degradation_mechanisms_at_the_cathodeelectrolyte_interface_of_garnet-based_all-solid-state_batteries.pdf"
+  ]
+ },
+ "clemmer2024_bpm_elastic_grain_compaction_beyond_jamming": {
+  "figures": 46,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "c5736bb1-51._A_soft_departure_from_jamming_the_compaction_of_deformable_granular_matter_under_high_pressures.pdf"
   ]
  },
  "cooper2017_simulated_impedance_diffusion_porous_media": {
@@ -496,6 +570,21 @@
   "pdfs": [
    "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
    "c13446ce-64SUP1.PDF"
+  ]
+ },
+ "cummins2002_implicit_mpm_granular_newton_krylov": {
+  "figures": 168,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "58d437e1-39._An_implicit_particle-in-cell_method_for_granular_materials.pdf"
+  ]
+ },
+ "dang2019_nmc111_secondary_particle_flat_punch_fracture_strength": {
+  "figures": 27,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "ceb387e9-10._Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf",
+   "5d30a24f-10._Sup_Communication_Fracture_Behavior_of_Single_LiNi0.33Mn0.33Co0.33O2_Particles_Studied_by_Flat_Punch_Indentation.pdf"
   ]
  },
  "deiseroth2008_li6ps5x_argyrodite_high_li_mobility": {
@@ -563,6 +652,23 @@
    "ee82444d-23._Grid_indentation_analysis_of_mechanical_properties_of_composite_electrodes_in_Li-ion_batteries.pdf"
   ]
  },
+ "devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte": {
+  "figures": 63,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "74921154-24._SupZ_09_11340_2018_451_MOESM1_ESM.docx (SI docx — Table S1; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_08_11340_2018_451_MOESM2_ESM.docx (SI docx — Table S2; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_07_11340_2018_451_MOESM3_ESM.docx (SI docx — Fig. S1; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_06_11340_2018_451_MOESM4_ESM.docx (SI docx — Fig. S2; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_05_11340_2018_451_MOESM5_ESM.docx (SI docx — Fig. S3; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_04_11340_2018_451_MOESM6_ESM.docx (SI docx — Fig. S4; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_03_11340_2018_451_MOESM7_ESM.docx (SI docx — Fig. S5; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_02_11340_2018_451_MOESM8_ESM.docx (SI docx — Fig. S6; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_01_11340_2018_451_MOESM9_ESM.docx (SI docx — Fig. S7; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)",
+   "74921154-24._SupZ_00_11340_2018_451_MOESM10_ESM.docx (SI docx — Fig. S8; cropped from a LibreOffice PDF conversion, OMML math restored from word/document.xml)"
+  ]
+ },
  "deysher2022_transport_mechanical_aspects_assb_review": {
   "figures": 6,
   "generated": "2026-08-05",
@@ -575,6 +681,14 @@
   "generated": "2026-10-13",
   "pdfs": [
    "7. Evaluation of deformation behavior and fast elastic recovery of lithium‐ion battery cathodes via direct roll‐gap detection during calendering.pdf"
+  ]
+ },
+ "dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review": {
+  "figures": 53,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "b3434fa4-63._The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf",
+   "b480dd6c-63._Sup1_The_role_of_isostatic_pressing_in_large-scale_production_of_solid-state_batteries.pdf"
   ]
  },
  "dmt1975_adhesion_contact_deformation": {
@@ -615,6 +729,13 @@
    "e2319ab9-19._Sup_High-energy_and_long-cycling_all-solid-state_lithium-ion_batteries_with_Li-and_Mn-rich_layered_oxide_cathodes_and_sulfide_electrolytes.pdf"
   ]
  },
+ "du2025_dem_fem_force_chain_collector_damage_calendering": {
+  "figures": 70,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "82656eb1-27._Force_chain-induced_collector_damage_in_calendering_A_DEM-FEM_study.pdf"
+  ]
+ },
  "duquesnoy2020_calendering_ml_mesostructure_generator": {
   "figures": 12,
   "generated": "2026-09-03",
@@ -643,6 +764,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/12. Hopping models for ion conduction in noncrystals.pdf"
+  ]
+ },
+ "ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation": {
+  "figures": 44,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "98fa83d5-66._X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf",
+   "5fbf21b9-66._Sup_X-Ray_Tomography_of_Porous_Transition_Metal_Oxide_Based_Lithium_Ion_Battery_Electrodes.pdf"
   ]
  },
  "egermann1983_ordered_vs_interactive_mixture_nomenclature": {
@@ -823,11 +952,25 @@
    "72c25f8c-40._Surface_Structure_Morphology_and_Stability_of_LiNi13Mn13Co13O2_Cathode_Material.pdf"
   ]
  },
+ "ge2022_xct_initial_structure_dem_calendering_nmc333": {
+  "figures": 84,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "d0538a1f-67._Discrete_element_method_DEM_analysis_of_lithium_ion_battery_electrode_structures_from_X-ray_tomography-the_effect_of_calendering_conditions.pdf"
+  ]
+ },
  "geldart2006_powder_flowability_angle_of_repose_tester": {
   "figures": 12,
   "generated": "2026-10-13",
   "pdfs": [
    "5a6475a4-44._Characterization_of_powder_flowability_using_measurement_of_angle_of_repose.pdf"
+  ]
+ },
+ "german2014_coordination_number_powder_densification": {
+  "figures": 43,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "bf68a0e2-74._Coordination_number_changes_during_powder_densification.pdf"
   ]
  },
  "gilgonzalez2022_synergistic_cl_constricted_esw": {
@@ -852,6 +995,13 @@
    "295b265a-81._Uncertainty_in_the_era_of_machine_learning_for_atomistic_modeling.pdf"
   ]
  },
+ "greenwood1966_constriction_resistance_microcontact_cluster_real_area": {
+  "figures": 39,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "32d38dce-46._Constriction_resistance_and_the_real_area_of_contact.pdf"
+  ]
+ },
  "grey1969_hausner_ratio_metal_powders": {
   "figures": 13,
   "generated": "2026-10-13",
@@ -874,6 +1024,13 @@
    "940e56ed-4._Sup_FeCo_codoping_and_sulfur-vacancy_engineering_regulating_Li2S_electrocrystallization_in_practical_lithium-sulfur_pouch_cells.pdf"
   ]
  },
+ "guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison": {
+  "figures": 53,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "d52f189c-38._Implicit_time_integration_for_the_material_point_method_Quantitative_and_algorithmic_comparisons_with_the_finite_element_method.pdf"
+  ]
+ },
  "guo2025_kinetic_cathode_se_interface": {
   "figures": 7,
   "generated": "2026-09-22",
@@ -881,6 +1038,13 @@
    "126. JMaterChemA_2025_Guo_Kinetic_analysis_cathode_SE_interface_ASSB_MAIN.pdf",
    "126. Sup1) JMaterChemA_2025_Guo_Kinetic_analysis_SI.pdf",
    "126. Sup2) JMaterChemA_2025_Guo_Kinetic_analysis_SI.pdf"
+  ]
+ },
+ "haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem": {
+  "figures": 65,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "6f747056-48._On_the_adhesive_JKR_contact_and_rolling_models_for_reduced_particle_stiffness_discrete_element_simulations.pdf"
   ]
  },
  "hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd": {
@@ -913,6 +1077,13 @@
    "7b151525-02._DEM_simulations_and_PEPT_measurements_of_the_dynamics_of_dry_mixing_NMC_622_cathode_material_in_an_Eirich_mixer.pdf"
   ]
  },
+ "harthong2009_high_density_compaction_dem_voronoi_contact_law": {
+  "figures": 46,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "44663ddf-29._Modeling_of_high-density_compaction_of_granular_materials_by_the_discrete_element_method.pdf"
+  ]
+ },
  "haruyama2014_space_charge_layer_oxide_cathode_sulfide_se": {
   "figures": 17,
   "generated": "2026-09-22",
@@ -927,6 +1098,21 @@
   "pdfs": [
    "10. ACSAMI_2017_Haruyama_Cation_mixing_Co_diffusion_LCO_LPS_MAIN.pdf",
    "10. Sup) ACSAMI_2017_Haruyama_Cation_mixing_LCO_LPS_SI.pdf"
+  ]
+ },
+ "hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf": {
+  "figures": 43,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "f403a22c-81._Design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives_for_all-solid-state_lithium-ion_batteries.pdf",
+   "81f219c1-81._Sup_Design_of_active-materialsolid-electrolyte_composite_particles_with_conductive_additives_for_all-solid-state_lithium-ion_batteries.pdf"
+  ]
+ },
+ "hayashi2025_wip_temperature_void_xct_wet_process_ncm111_lpscl_cathode": {
+  "figures": 36,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "87762e6f-64._Application_of_Warm_Isostatic_Pressing_to_Densification_of_All_Solid-State_Composite_Cathode_Electrodes_in_All_Solid-State_Lithium-Ion_Batteries.pdf"
   ]
  },
  "he2018_statistical_variances_diffusional_aimd": {
@@ -967,6 +1153,14 @@
    "6. Sup) Evaluating densification effects on sulfide-based electrolytes to examine an application in scalable solid-state battery manufacturing.pdf"
   ]
  },
+ "heenan2020_nmc811_calendering_defects_cycling_cracking_multiscale_xct": {
+  "figures": 16,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "bff6b9b1-20._Identifying_the_origins_of_microstructural_defects_such_as_cracking_within_Ni_rich_NMC811_cathode_particles_for_lithium_ion_batteries.pdf",
+   "623d3067-20._Sup_Identifying_the_origins_of_microstructural_defects_such_as_cracking_within_Ni_rich_NMC811_cathode_particles_for_lithium_ion_batteries.pdf"
+  ]
+ },
  "hersey1975_ordered_mixing_concept": {
   "figures": 1,
   "generated": "2026-10-13",
@@ -987,6 +1181,13 @@
   "pdfs": [
    "e02a571e-21._Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf",
    "7fb09899-21._Sup2_Overcoming_binder_limitations_of_sheet-type_solid-state_cathodes_using_a_solvent-free_dry-film_approach.pdf"
+  ]
+ },
+ "hiramatsu1966_tensile_strength_irregular_piece_sphere_point_load": {
+  "figures": 46,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "cda474af-11._Determination_of_the_tensile_strength_of_rock_by_a_compression_test_of_an_irregular_test_piece.pdf"
   ]
  },
  "hlushkou2018_void_space_ion_transport_assb_cathode": {
@@ -1284,6 +1485,13 @@
    "a8e0b114-65._Perforalysts.pdf"
   ]
  },
+ "kalnaus2023_ssb_critical_role_of_mechanics_stress_relief_review": {
+  "figures": 31,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "f2e9af10-5._Solid-state_batteries_The_critical_role_of_mechanics.pdf"
+  ]
+ },
  "kamaya2011_lgps_lithium_superionic_conductor": {
   "figures": 6,
   "generated": "2026-11-10",
@@ -1340,6 +1548,22 @@
    "86130ab7-12._Sup_Dendrite-tolerant_fast-kinetics_design_for_all-solid-state_lithium-metal_batteries_via_site-specific_customized_sulfide_electrolytes.pdf"
   ]
  },
+ "kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode": {
+  "figures": 44,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "0a342b1c-Stress-Regulated_Li_Plating_in_Hybrid_Ag_CarbonCarbon_Nanofiber_Anodes_for_Durable_All-Solid-State_Batteries.pdf",
+   "1dbda7de-Sup_Stress-Regulated_Li_Plating_in_Hybrid_Ag_CarbonCarbon_Nanofiber_Anodes_for_Durable_All-Solid-State_Batteries.pdf"
+  ]
+ },
+ "kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity": {
+  "figures": 59,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "340d3f0b-68._Multiscale_modeling_of_lithium-ion_battery_electrodes_based_on_nano-scale_X-ray_computed_tomography.pdf",
+   "f45fee9b-68._Sup_Multiscale_modeling_of_lithium-ion_battery_electrodes_based_on_nano-scale_X-ray_computed_tomography.pdf"
+  ]
+ },
  "kato2016_high_power_assb_lsipscl_superionic": {
   "figures": 24,
   "generated": "2026-11-10",
@@ -1369,6 +1593,14 @@
   "generated": "2026-10-13",
   "pdfs": [
    "040ad7d4-25._Parametric_study_of_dry_coating_process_of_electrode_particle_with_model_material_of_sulfide_solid_electrolytes_for_all-solid-state_battery.pdf"
+  ]
+ },
+ "kawaguchi2018_dry_coating_model_se_particle_powtec": {
+  "figures": 38,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "a54945c2-2._Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf",
+   "6810887d-2._Sup_Dry_coating_of_electrode_particle_with_model_particle_of_sulfide_solid_electrolytes_for_all-solid-state_secondary_battery.pdf"
   ]
  },
  "kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps": {
@@ -1561,6 +1793,14 @@
   "pdfs": [
    "29688ace-3._Disrupting_the_crack-delithiation_feedback_loop_in_dry-processed_high-nickel_cathodes_through_early-stage_granule_engineering.pdf",
    "48cae2e4-3._Sup_Disrupting_the_crack-delithiation_feedback_loop_in_dry-processed_high-nickel_cathodes_through_early-stage_granule_engineering.pdf"
+  ]
+ },
+ "kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells": {
+  "figures": 47,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf"
   ]
  },
  "kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable": {
@@ -2041,6 +2281,13 @@
    "4. Sup1) ACSAMI_2024_Lomeli_Predicting_reactivity_SI.pdf"
   ]
  },
+ "lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior": {
+  "figures": 40,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "a7be108b-47._DEM_speedup_Stiffness_effects_on_behavior_of_bulk_material.pdf"
+  ]
+ },
  "lu2020_insitu_nanoct_calendering_microstructural_evolution": {
   "figures": 92,
   "generated": "2026-11-12",
@@ -2102,10 +2349,22 @@
   ]
  },
  "lyu2025_3d_dem_drying_calendering_lib": {
-  "figures": 10,
-  "generated": "2026-08-05",
+  "figures": 68,
+  "generated": "2026-11-16",
   "pdfs": [
-   "DEM 논문/28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf"
+   "DEM 논문/28. Three-dimensional discrete element simulation of electrode structural evolution in lithium-ion batteries during drying and calendering.pdf",
+   "e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf",
+   "37bc0003-68-2._Sup4_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "5d959c56-68-2._Sup3_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "bdc317ef-68-2._Sup2_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4",
+   "77021b35-68-2._Sup1_Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.mp4"
+  ]
+ },
+ "lyu2026_two_layer_gradient_electrode_calendering_dem_fem": {
+  "figures": 64,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "cda04b06-41._Calendering_behavior_of_two-layer_electrodes_A_coupled_DEM_FEM_framework.pdf"
   ]
  },
  "ma2024_sb_doping_lpsc_conductivity": {
@@ -2304,6 +2563,13 @@
    "27. Detection of binder gradients using impedance spectroscopy and their influence on the tortuosity of Li-ion battery graphite electrodes.pdf"
   ]
  },
+ "morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem": {
+  "figures": 63,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "dacdd31a-49._Computer_simulation_of_the_effect_of_contact_stiffness_and_adhesion_on_the_fluidization_behaviour_of_powders.pdf"
+  ]
+ },
  "morgan2021_anion_disorder_superionic_mechanism_li6ps5x": {
   "figures": 18,
   "generated": "2026-09-22",
@@ -2330,6 +2596,13 @@
    "c247bf09-53._Sup2_Hard_and_soft_electrons_and_holes.pdf"
   ]
  },
+ "mullikin1993_surface_area_estimation_digitized_planes": {
+  "figures": 52,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "d24c923d-75._Surface_area_estimation_of_digitized_planes.pdf"
+  ]
+ },
  "mun2025_dry_electrode_technology_assb_review": {
   "figures": 8,
   "generated": "2026-08-05",
@@ -2352,12 +2625,27 @@
    "801db51f-05._A_particle_scale_mixing_measurement_method_using_a_generalized_nearest_neighbor_mixing_index.pdf"
   ]
  },
+ "nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions": {
+  "figures": 100,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "65b015d3-35._Axisymmetric_form_of_the_generalized_interpolation_material_point_method.pdf"
+  ]
+ },
  "nakamura2020_dry_coating_ncm_li3ps4_core_shell": {
   "figures": 10,
   "generated": "2026-10-13",
   "pdfs": [
    "7d0ecf0f-24._Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf",
    "5f74c477-24._Sup_Dry_coating_of_active_material_particles_with_sulfide_solid_electrolytes_for_an_all-solid-state_lithium_battery.pdf"
+  ]
+ },
+ "nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch": {
+  "figures": 40,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "eb3344c8-78._Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf",
+   "e0e497c9-78._Sup_Toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety_Comparative_study_for_electrodes_fabricated_by_dry-_and_slurry-mixing_processes.pdf"
   ]
  },
  "nam2026_primer_layer_dry_electrode_collector": {
@@ -2794,6 +3082,13 @@
    "4ac47ba6-42._DEM_parameter_calibration_of_cohesive_bulk_materials_using_a_simple_angle_of_repose_test.pdf"
   ]
  },
+ "sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability": {
+  "figures": 87,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "fa9d76bf-15._A_convected_particle_domain_interpolation_technique_to_extend_applicability_of_the_material_point_method_for_problems_involving_massive_deformations.pdf"
+  ]
+ },
  "sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps": {
   "figures": 58,
   "generated": "2026-11-12",
@@ -2802,11 +3097,25 @@
    "699ac537-44._Sup_Pressure_dependence_on_the_three-dimensional_structure_of_a_composite_electrode_in_an_all-solid-state_battery.pdf"
   ]
  },
+ "sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode": {
+  "figures": 26,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "daddb051-80._All-solid-state_lithium_secondary_batteries_using_LiCoO2_particles_with_pulsed_laser_deposition_coatings_of_Li2S_P2S5_solid_electrolytes.pdf"
+  ]
+ },
  "sakuda2013_sulfide_mechanical_property": {
   "figures": 5,
   "generated": "2026-08-05",
   "pdfs": [
    "건식전극 논문/05. Sulfide Solid Electrolyte with Favorable Mechanical Property for All-Solid-State Lithium Battery.pdf"
+  ]
+ },
+ "sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking": {
+  "figures": 35,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "12b131e6-79._Electrode_morphology_in_all-solid-state_lithium_secondary_batteries_consisting_of_LiNi13Co13Mn13O2_and_Li2S-P2S5_solid_electrolytes.pdf"
   ]
  },
  "sangros2019_dem_calendering_lib_electrode": {
@@ -2944,11 +3253,26 @@
    "74. Sup) Shin2026_BH4_Reorientation_Li_Transport_Li6PS5X.pdf"
   ]
  },
+ "silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem": {
+  "figures": 63,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "ba72a247-71._Granular_flow_down_an_inclined_plane_Bagnold_scaling_and_rheology.pdf"
+  ]
+ },
  "siroma2015_transmission_line_model_porous_electrode_impedance": {
   "figures": 16,
   "generated": "2026-10-03",
   "pdfs": [
    "7. Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes.pdf"
+  ]
+ },
+ "siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb": {
+  "figures": 65,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "e958c227-76._AC_impedance_analysis_of_ionic_and_electronic_conductivities_in_electrode_mixture_layers_for_an_all-solid-state_lithium-ion_battery.pdf",
+   "781a0ada-76._Sup_AC_impedance_analysis_of_ionic_and_electronic_conductivities_in_electrode_mixture_layers_for_an_all-solid-state_lithium-ion_battery.pdf"
   ]
  },
  "sjolin2023_accelerated_workflow_antiperovskite_sse": {
@@ -3009,6 +3333,13 @@
    "852c4bbf-3._Investigation_of_the_Mechanical_Properties_of_Porous_Argyrodite_Sulfide_Electrolytes_for_All-Solid-State_Batteries.pdf"
   ]
  },
+ "sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811": {
+  "figures": 76,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "26d1df58-68-3._Discrete_modeling_of_the_calendering_process_for_positive_electrodes_of_Li-ion_batteries.pdf"
+  ]
+ },
  "spencer2022_review_tco_band_structure_oxides": {
   "figures": 33,
   "generated": "2026-08-05",
@@ -3031,12 +3362,48 @@
    "2e77cdde-PIIS2542435122001398.pdf"
   ]
  },
+ "stallard2022_nmc811_single_crystal_shear_strength_lithiation": {
+  "figures": 51,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "58b8e04a-12._Effect_of_lithiation_upon_the_shear_strength_of_NMC811_single_crystals.pdf",
+   "188d6013-12._Sup_Effect_of_lithiation_upon_the_shear_strength_of_NMC811_single_crystals.pdf"
+  ]
+ },
  "stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity": {
   "figures": 28,
   "generated": "2026-10-30",
   "pdfs": [
    "ff909173-6._Lithiation_gradients_and_tortuosity_factors_in_thick_NMC111-argyrodite_solid-state_cathodes.pdf",
    "f8ebd243-6._Sup_Lithiation_gradients_and_tortuosity_factors_in_thick_NMC111-argyrodite_solid-state_cathodes.pdf"
+  ]
+ },
+ "steffen2008_mpm_implementation_choices_gimp_bspline_boundary": {
+  "figures": 74,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "421c3148-36._Examination_and_analysis_of_implementation_choices_within_the_material_point_method_MPM.pdf"
+  ]
+ },
+ "steffen2010_mpm_space_time_error_balance_moving_mesh": {
+  "figures": 179,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "f66711ce-37._Decoupling_and_balancing_of_space_and_time_errors_in_the_material_point_method_MPM.pdf"
+  ]
+ },
+ "stershic2015_fabric_tensor_calendering_nmc_xct_dem": {
+  "figures": 68,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "16526032-69._Modeling_the_evolution_of_lithium-ion_particle_contact_distributions_using_a_fabric_tensor_approach.pdf"
+  ]
+ },
+ "stewart2001_dem_pept_bladed_mixer_detailed_comparison": {
+  "figures": 49,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "323da842-45._Simulated_and_measured_flow_of_granules_in_a_bladed_mixer_a_detailed_comparison.pdf"
   ]
  },
  "stomakhin2013_mpm_snow_elastoplastic": {
@@ -3051,6 +3418,21 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/06. Similarity analysis of inelastic contact.pdf"
+  ]
+ },
+ "strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation": {
+  "figures": 43,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "b10f8cff-77._Impact_of_cathode_material_particle_size_on_the_capacity_of_bulk-type_all-solid-state_batteries.pdf",
+   "b0965bf7-77._Sup_Impact_of_cathode_material_particle_size_on_the_capacity_of_bulk-type_all-solid-state_batteries.pdf"
+  ]
+ },
+ "sulsky1994_mpm_particle_method_history_dependent_materials": {
+  "figures": 68,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "79001f63-40._A_particle_method_for_history-dependent_materials.pdf"
   ]
  },
  "sun2026_dem_extrusion_recirculation_dry_electrode": {
@@ -3073,6 +3455,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/15. Computationally-Guided Development of Sulfide Solid Electrolyte Powder Coatings for Enhanced Stability and Performance of Solid-State Batteries.pdf"
+  ]
+ },
+ "swinkels1983_hip_densification_plastic_yield_creep_mechanisms": {
+  "figures": 81,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "c9bde523-65._Mechanisms_of_hot-isostatic_pressing.pdf"
   ]
  },
  "tabakovic2026_mechanical_stress_eis_ica_drt_dfn": {
@@ -3137,6 +3526,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf"
+  ]
+ },
+ "thorntonyin1991_oblique_impact_elastic_spheres_adhesion": {
+  "figures": 90,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "8eb4154e-33._Impact_of_elastic_spheres_with_and_without_adhesion.pdf"
   ]
  },
  "tian2020_electrochemo_mechanical_stress_assb": {
@@ -3254,6 +3650,13 @@
   "generated": "2026-11-10",
   "pdfs": [
    "aee63143-12._Soft-grain_compression_Beyond_the_jamming_point.pdf"
+  ]
+ },
+ "walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem": {
+  "figures": 47,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf"
   ]
  },
  "wang2015_graphite_cleavage_energy": {
@@ -3418,6 +3821,13 @@
    "dbaf65dc-Sup_Data-Driven_Atomic_Interplay_Modulation_Enables_Dual-Functional_High-Entropy_Alloy_Mediator_for_Li_S_Batteries.pdf"
   ]
  },
+ "wensrich2012_rolling_friction_shape_contact_eccentricity_dem": {
+  "figures": 52,
+  "generated": "2026-11-13",
+  "pdfs": [
+   "c81b04fd-50._Rolling_friction_as_a_technique_for_modelling_particle_shape_in_DEM.pdf"
+  ]
+ },
  "wet_processing_resolved_am_ssb_cathode_manufacturing": {
   "figures": 8,
   "generated": "2026-08-05",
@@ -3529,6 +3939,14 @@
    "12b057a2-Xu_2017_J._Electrochem._Soc._164_A3333.pdf"
   ]
  },
+ "xu2023_dem_bonded_particle_fracture_calendering": {
+  "figures": 61,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf"
+  ]
+ },
  "xu2023_realistic_am_shape_cgmd_calendering": {
   "figures": 7,
   "generated": "2026-09-11",
@@ -3578,6 +3996,14 @@
   "generated": "2026-08-25",
   "pdfs": [
    "e7ac4cb0-2026.08.18__________.pdf"
+  ]
+ },
+ "yano2023_eepa_bimodal_size_plasticity_compression_dem": {
+  "figures": 70,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "4090b479-26._Compression_properties_of_bimodal_powders_with_different_plasticities_in_the_elastoplastic_powder_compression_process_A_numerical_analysis.pdf",
+   "798457d1-26._Sup_Compression_properties_of_bimodal_powders_with_different_plasticities_in_the_elastoplastic_powder_compression_process_A_numerical_analysis.pdf"
   ]
  },
  "yano2024_eepa_binary_mixture_plasticity_compression_dem": {
@@ -3703,10 +4129,11 @@
   ]
  },
  "zhang2026_xct_dem_cathode_calendering_peel_calibration": {
-  "figures": 13,
-  "generated": "2026-09-26",
+  "figures": 62,
+  "generated": "2026-11-16",
   "pdfs": [
-   "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf"
+   "2fa0a4ea-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf",
+   "b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf"
   ]
  },
  "zhao2021_hecs_descriptors_argyrodite_activation_energy": {
@@ -3786,6 +4213,15 @@
   "generated": "2026-09-22",
   "pdfs": [
    "122. arXiv_2609.12300_2026_Ziemke_Ab_initio_substitutional_defects_Li3OCl_MAIN.pdf"
+  ]
+ },
+ "zunker2025_dem_large_deformation_compaction": {
+  "figures": 195,
+  "generated": "2026-11-12",
+  "pdfs": [
+   "1-s2.0-S0032591025003675-main.pdf",
+   "1-s2.0-S0032591025003675-mmc1.mp4",
+   "1-s2.0-S0032591025003675-mmc2.mp4"
   ]
  },
  "zuo2022_chlorination_cathode_interface": {

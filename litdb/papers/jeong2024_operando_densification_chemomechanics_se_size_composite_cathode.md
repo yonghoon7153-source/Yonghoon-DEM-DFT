@@ -381,6 +381,7 @@ XCT (또는 그와 같은 미세구조) → 직접 수치 모사 (Naik 2022) 로
 - 복합 양극 기공 · 압력: `minnmann2024_microstructure_porosity_visualization` · `minnmann2021_jes_charge_transport_bottlenecks` · `miss2026_insitu_conductivity_porosity_pressure_compaction` · `miss2026_pressure_tortuosity_composite_cathode_coating` · `lee2025_heckel_argyrodite_powder_densification_nanoindentation`.
 - 화학–역학 리뷰: `li2026_electrochemomechanical_coupling_asslmb_review`.
 - 참고 [22] 의 원전 (2026-11-12 카드): [`sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps`](sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps.md) — LGPS + NCM111 복합 양극 누른 채 CT 0–100 MPa · 접촉 분율 ↔ R_ct (그 카드 §0-1 이 이 카드의 [22] 인용 문장을 대조).
+- 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) — 같은 부류의 SE 선형 탄성 입력 (이 카드 E 22 · ν 0.27 ↔ 그 카드 E 22.1 · ν 0.33) · 그 논문의 FE 경계 변위 처방 인용 [31] 과 SI [S3] 가 같은 Naik · Hatzell · Mukherjee 계열 · 음극 쪽 operando 하중 셀 ΔP (스택 20 MPa).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

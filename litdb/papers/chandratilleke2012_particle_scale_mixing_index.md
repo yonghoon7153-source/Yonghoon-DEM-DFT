@@ -321,6 +321,7 @@ DEM **혼합 통계 · 지표 설계** 만.  점착 · 압축 · 전달 · 형�
 - 점착 혼합 실험: [`jarray2019_cohesion_driven_mixing_segregation_drum`](jarray2019_cohesion_driven_mixing_segregation_drum.md) (본문 ref 52 로 이 논문 인용).
 - 건식 혼합 DEM: [`hare2026_dem_pept_dry_mixing_nmc622_eirich`](hare2026_dem_pept_dry_mixing_nmc622_eirich.md) · [`lischka2025_dem_eirich_intensive_mixer_dry_mixing`](lischka2025_dem_eirich_intensive_mixer_dry_mixing.md) · [`otani2025_dem_se_dispersion_aggregation_compression`](otani2025_dem_se_dispersion_aggregation_compression.md).
 - 배위수 · 충전: [`mcgeary1961_bimodal_sphere_packing`](mcgeary1961_bimodal_sphere_packing.md).
+- DEM 방법 원문 (이 논문 ref 18): [`chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer`](chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer.md) (같은 제1 저자 · 같은 믹서 계열 · Table 1 힘 · 토크 식 · 날 속도 2–100 rpm).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

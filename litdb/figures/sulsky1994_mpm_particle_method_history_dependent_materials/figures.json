@@ -1,0 +1,1730 @@
+{
+ "slug": "sulsky1994_mpm_particle_method_history_dependent_materials",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "79001f63-40._A_particle_method_for_history-dependent_materials.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "journal_page": 182,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Sketch of typical computational grid and material elements. (a) Initial configuration, (b) final configuration.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.1,
+    583.3,
+    525.0,
+    736.4
+   ],
+   "w": 2059,
+   "h": 639,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.906,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — 도구 크롭 [0.0, 576.9, 562.0, 714.8] 은 쪽 전체 폭 띠였고 캡션 (p.182 716.8–730.2 pt) 이 잘림 (이 PDF 는 쪽마다 한 장의 1-bit 스캔 + OCR 글자 층이라 도구의 기하 검증이 그림 영역을 못 가른다) · 새 크롭 = 손으로 정한 영역 안의 잉크 경계 + 6 pt · 영역 밖 흰색 · 300 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 10,
+   "journal_page": 188,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Notched cylinder subjected to rigid body rotation. (a) Initial configuration of material points and grid (top view), (b) surface after one revolution.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.6,
+    40.7,
+    529.8,
+    572.6
+   ],
+   "w": 2081,
+   "h": 2217,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.945,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 캡션을 못 잡음 — OCR 이 'Fig, 2,' (Fig 뒤 쉼표) 로 읽어 캡션 정규식이 키워드를 놓침 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 300 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 11,
+   "journal_page": 189,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Energy plots for vibrating solid-elastic cylinder. (a) h = 0.8 cm and s = 0.2 µs, (b) h = 0. cm and s = 0.1 µs, (c) h = 0.2 cm and s = 0.05 µs. [h as printed — Table 1 gives 0.08 / 0.04 / 0.02 cm]",
+   "rotated_deg": 0,
+   "bbox": [
+    28.0,
+    38.3,
+    528.2,
+    395.9
+   ],
+   "w": 2780,
+   "h": 1988,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.928,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — 도구 크롭 [0.0, 319.1, 562.0, 369.0] 은 쪽 전체 폭 띠였고 아래 두 패널 (b)(c) 의 가로축 띠 50 pt 만 (그림 대부분과 캡션이 빠짐) (이 PDF 는 쪽마다 한 장의 1-bit 스캔 + OCR 글자 층이라 도구의 기하 검증이 그림 영역을 못 가른다) · 새 크롭 = 손으로 정한 영역 안의 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 11,
+   "journal_page": 189,
+   "file": "tab_1.png",
+   "caption": "Table 1. Results of convergence study for vibrating solid cylinder (s µs 0.2 / 0.1 / 0.05 · sω^e 0.35 / 0.17 / 0.087 · h cm 0.08 / 0.04 / 0.02 · ω^d 0.97 / 0.99 / 1.00 · γ 0.121 / 0.0126 / 0.0041)",
+   "rotated_deg": 0,
+   "bbox": [
+    20.2,
+    626.3,
+    522.3,
+    734.8
+   ],
+   "w": 2790,
+   "h": 604,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.939,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 표를 내지 않음 (표 머리 'Table 1' 이 표 위에 있고 표가 선 · 글자뿐) · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 12,
+   "journal_page": 190,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Positions of disks at various times for elastic impact. (a) t = 1.0, (b) t = 1.5, (c) t = 2.0, (d) t = 2.5.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.1,
+    46.7,
+    486.6,
+    466.7
+   ],
+   "w": 1749,
+   "h": 1751,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.974,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — 도구 크롭 [0.0, 39.0, 562.0, 447.3] 은 쪽 전체 폭 띠였고 캡션 (449–462 pt) 이 잘림 (이 PDF 는 쪽마다 한 장의 1-bit 스캔 + OCR 글자 층이라 도구의 기하 검증이 그림 영역을 못 가른다) · 새 크롭 = 손으로 정한 영역 안의 잉크 경계 + 6 pt · 영역 밖 흰색 · 300 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 12,
+   "journal_page": 190,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Energy and momentum plots for elastic impact. (a) Energy as a function of time, (b) momentum as a function of time.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    561.8,
+    526.0,
+    740.3
+   ],
+   "w": 2077,
+   "h": 745,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.96,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — 도구 크롭 [0.0, 535.7, 562.0, 720.2] 은 쪽 전체 폭 띠였고 캡션 (722–735 pt) 이 잘림 (이 PDF 는 쪽마다 한 장의 1-bit 스캔 + OCR 글자 층이라 도구의 기하 검증이 그림 영역을 못 가른다) · 새 크롭 = 손으로 정한 영역 안의 잉크 경계 + 6 pt · 영역 밖 흰색 · 300 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "journal_page": 192,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Elastic impact of a bar on a layer (particle plots). (a) t = 0.0, (b) t = 1.0, (c) t = 2.0, (d) t = 3.0, (e) t = 4.0, (f) t = 5.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.7,
+    46.7,
+    527.4,
+    655.4
+   ],
+   "w": 2075,
+   "h": 2537,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 캡션을 못 잡음 — OCR 'Fig, 6,' (Fig 뒤 쉼표) · 잉크 경계 + 6 pt · 영역 밖 흰색 · 300 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 15,
+   "journal_page": 193,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Elastic impact of a bar on a layer (velocity plots). (a) t = 0.0, (b) t = 1.0, (c) t = 2.0, (d) t = 3.0, (e) t = 4.0, (f) t = 5.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.2,
+    43.7,
+    526.4,
+    559.7
+   ],
+   "w": 2774,
+   "h": 2868,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.99,
+   "manual_crop": "2026-11-12 수동 크롭 — 도구가 '거의 백지 (0.992)' 로 제외 — 듬성한 속도 화살표 그림 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 16,
+   "journal_page": 194,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Energy and momentum plots for elastic-plastic impact. (a) Energy as a function of time, (b) momentum as a function of time.",
+   "rotated_deg": 0,
+   "bbox": [
+    28.2,
+    49.8,
+    527.9,
+    234.6
+   ],
+   "w": 2083,
+   "h": 771,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.964,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — 도구 크롭 [0.0, 37.2, 562.0, 207.3] 은 쪽 전체 폭 띠였고 캡션 (209–232 pt) 이 잘림 (이 PDF 는 쪽마다 한 장의 1-bit 스캔 + OCR 글자 층이라 도구의 기하 검증이 그림 영역을 못 가른다) · 새 크롭 = 손으로 정한 영역 안의 잉크 경계 + 6 pt · 영역 밖 흰색 · 300 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 16,
+   "journal_page": 194,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Impact of disks composed of different materials. (a) t = 0.5, (b) t = 1.0, (c) t = 1.5, (d) t = 2.0.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.4,
+    296.2,
+    476.1,
+    739.8
+   ],
+   "w": 1687,
+   "h": 1849,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.971,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — 도구 크롭 [0.0, 286.2, 562.0, 719.0] 은 쪽 전체 폭 띠였고 캡션 (721–734 pt) 이 잘림 (이 PDF 는 쪽마다 한 장의 1-bit 스캔 + OCR 글자 층이라 도구의 기하 검증이 그림 영역을 못 가른다) · 새 크롭 = 손으로 정한 영역 안의 잉크 경계 + 6 pt · 영역 밖 흰색 · 300 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 17,
+   "journal_page": 195,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Energy and momentum plots for impact of elastic and plastic disks. (a) Energy as a function of time, (b) momentum as a function of time for elastic disk, (c) momentum as a function of time for elastic-plastic disk.",
+   "rotated_deg": 0,
+   "bbox": [
+    27.7,
+    43.3,
+    527.8,
+    401.8
+   ],
+   "w": 2780,
+   "h": 1993,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.966,
+   "recrop": "2026-11-12 litdb-curator: re-cut by hand — 도구 크롭 [0.0, 66.0, 562.0, 371.1] 은 쪽 전체 폭 띠였고 맨 위 '(a)' 와 캡션 (373–396 pt) 이 잘림 (이 PDF 는 쪽마다 한 장의 1-bit 스캔 + OCR 글자 층이라 도구의 기하 검증이 그림 영역을 못 가른다) · 새 크롭 = 손으로 정한 영역 안의 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (= 이 쪽의 스캔 원 해상도)"
+  },
+  {
+   "key": "e2_01",
+   "kind": "equation",
+   "label": "eq2.1",
+   "page": 2,
+   "journal_page": 180,
+   "file": "eq_2_01_velocity_gradient_rate_of_deformation_vorticity.png",
+   "caption": "Equation (2.1), PDF p.2 (journal p.180), §2: L = v∇ = D + W — velocity gradient = rate of deformation D (symmetric) + vorticity W (skew); W appears in no later equation",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    441.4,
+    528.3,
+    466.8
+   ],
+   "w": 2628,
+   "h": 142,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_02",
+   "kind": "equation",
+   "label": "eq2.2",
+   "page": 2,
+   "journal_page": 180,
+   "file": "eq_2_02_tangent_modulus_stress_rate.png",
+   "caption": "Equation (2.2), PDF p.2 (journal p.180), §2: σ̇ = T : ė — fourth-order tangent modulus T (small-deformation rate form, ė = D)",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    539.4,
+    527.4,
+    565.8
+   ],
+   "w": 2622,
+   "h": 148,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.986,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_03",
+   "kind": "equation",
+   "label": "eq2.3",
+   "page": 2,
+   "journal_page": 180,
+   "file": "eq_2_03_elastic_plastic_strain_split.png",
+   "caption": "Equation (2.3), PDF p.2 (journal p.180), §2: e = e^e + e^p — additive elastic–plastic strain split",
+   "rotated_deg": 0,
+   "bbox": [
+    54.1,
+    596.9,
+    527.4,
+    624.7
+   ],
+   "w": 2630,
+   "h": 155,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.987,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_04",
+   "kind": "equation",
+   "label": "eq2.4",
+   "page": 2,
+   "journal_page": 180,
+   "file": "eq_2_04_plastic_flow_rule_evolution_function.png",
+   "caption": "Equation (2.4), PDF p.2 (journal p.180), §2: ė^p = λ̇ M — plastic strain rate with evolution function M; λ̇ from consistency ḟ = 0 (f < 0 elastic, f = 0 yielding, f > 0 not permitted)",
+   "rotated_deg": 0,
+   "bbox": [
+    54.1,
+    642.4,
+    526.9,
+    671.6
+   ],
+   "w": 2628,
+   "h": 164,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.986,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_05",
+   "kind": "equation",
+   "label": "eq2.5",
+   "page": 3,
+   "journal_page": 181,
+   "file": "eq_2_05_elastoplastic_tangent_modulus_hardening.png",
+   "caption": "Equation (2.5), PDF p.3 (journal p.181), §2: T = T^E − (1/A)(T^E:M)⊗(N:T^E), A = N:T^E:M − H — elastoplastic tangent (N = ∂f/∂σ; H > 0 hardening, 0 perfect plasticity, < 0 softening)",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    37.9,
+    529.8,
+    91.6
+   ],
+   "w": 2639,
+   "h": 299,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.975,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_06",
+   "kind": "equation",
+   "label": "eq2.6",
+   "page": 3,
+   "journal_page": 181,
+   "file": "eq_2_06_specific_stress_definition.png",
+   "caption": "Equation (2.6), PDF p.3 (journal p.181), §2: ρσ^s = σ — specific stress (stress per unit mass)",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    153.4,
+    529.3,
+    176.9
+   ],
+   "w": 2633,
+   "h": 131,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.985,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_07",
+   "kind": "equation",
+   "label": "eq2.7",
+   "page": 3,
+   "journal_page": 181,
+   "file": "eq_2_07_specific_tangent_modulus_rate_form.png",
+   "caption": "Equation (2.7), PDF p.3 (journal p.181), §2: σ̇^s = T^s : ė — specific tangent modulus",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    216.4,
+    529.3,
+    239.4
+   ],
+   "w": 2630,
+   "h": 128,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.984,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_08",
+   "kind": "equation",
+   "label": "eq2.8",
+   "page": 3,
+   "journal_page": 181,
+   "file": "eq_2_08_specific_modulus_constant_density.png",
+   "caption": "Equation (2.8), PDF p.3 (journal p.181), §2: ρT^s = T — mass density taken constant for small deformations",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    263.4,
+    528.8,
+    286.9
+   ],
+   "w": 2630,
+   "h": 131,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.985,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e2_09",
+   "kind": "equation",
+   "label": "eq2.9",
+   "page": 3,
+   "journal_page": 181,
+   "file": "eq_2_09_equation_of_motion_specific_stress.png",
+   "caption": "Equation (2.9), PDF p.3 (journal p.181), §2: (ρσ^s)·∇ + ρb = ρa, a = v̇ — equation of motion (stress Eulerian in x, velocity Lagrangian in X⁰ → no convection term)",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    310.4,
+    528.8,
+    334.8
+   ],
+   "w": 2630,
+   "h": 137,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_01",
+   "kind": "equation",
+   "label": "eq3.1",
+   "page": 3,
+   "journal_page": 181,
+   "file": "eq_3_01_governing_equation_system.png",
+   "caption": "Equation (3.1), PDF p.3 (journal p.181), §3: governing set: momentum · specific-stress rate σ̇^s = T^s:ė · strain rate ė = ½[(v∇) + (v∇)^T]",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    616.4,
+    529.3,
+    680.7
+   ],
+   "w": 2630,
+   "h": 358,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_02",
+   "kind": "equation",
+   "label": "eq3.2",
+   "page": 4,
+   "journal_page": 182,
+   "file": "eq_3_02_mixed_weak_form_three_equations.png",
+   "caption": "Equation (3.2), PDF p.4 (journal p.182), §3: mixed weak form over the current configuration Ω — momentum (weights w, traction τ on ∂Ω) + constitutive (ρW) + strain-rate (ρW*) equations",
+   "rotated_deg": 0,
+   "bbox": [
+    53.6,
+    45.8,
+    526.4,
+    144.7
+   ],
+   "w": 2628,
+   "h": 550,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.968,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_03",
+   "kind": "equation",
+   "label": "eq3.3",
+   "page": 4,
+   "journal_page": 182,
+   "file": "eq_3_03_piecewise_constant_stress_strain_on_subdomains.png",
+   "caption": "Equation (3.3), PDF p.4 (journal p.182), §3: σ^s = Σ σ^s_P U_P, e = Σ e_P U_P — piecewise-constant basis U_P on material subdomains Ω_P (U_I(X_J) = δ_IJ)",
+   "rotated_deg": 0,
+   "bbox": [
+    54.6,
+    353.4,
+    526.4,
+    393.7
+   ],
+   "w": 2622,
+   "h": 225,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.975,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_04",
+   "kind": "equation",
+   "label": "eq3.4",
+   "page": 4,
+   "journal_page": 182,
+   "file": "eq_3_04_dirac_delta_point_mass_density.png",
+   "caption": "Equation (3.4), PDF p.4 (journal p.182), §3: ρ = Σ M_P δ[x − X_P] — Dirac point masses at the material points",
+   "rotated_deg": 0,
+   "bbox": [
+    54.6,
+    433.8,
+    526.4,
+    473.7
+   ],
+   "w": 2622,
+   "h": 222,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.98,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_05",
+   "kind": "equation",
+   "label": "eq3.5",
+   "page": 4,
+   "journal_page": 182,
+   "file": "eq_3_05_constitutive_and_strain_rate_at_material_points.png",
+   "caption": "Equation (3.5), PDF p.4 (journal p.182), §3: σ̇^s_P = T^s(X_P) : ė_P, ė_P = ½[(v∇) + (v∇)^T]_{X_P} — constitutive and strain-rate equations evaluated at the material points",
+   "rotated_deg": 0,
+   "bbox": [
+    54.6,
+    500.9,
+    526.4,
+    546.5
+   ],
+   "w": 2622,
+   "h": 254,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_06",
+   "kind": "equation",
+   "label": "eq3.6",
+   "page": 5,
+   "journal_page": 183,
+   "file": "eq_3_06_grid_nodal_basis_w_v_a.png",
+   "caption": "Equation (3.6), PDF p.5 (journal p.183), §3: w, v, a = Σ_i (·)_i N_i(x) — conventional finite-element nodal basis on the grid",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    130.4,
+    529.8,
+    169.2
+   ],
+   "w": 2633,
+   "h": 217,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.953,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_07",
+   "kind": "equation",
+   "label": "eq3.7",
+   "page": 5,
+   "journal_page": 183,
+   "file": "eq_3_07_mapping_matrix_S_gradient_G.png",
+   "caption": "Equation (3.7), PDF p.5 (journal p.183), §3: S_Pi = N_i(X_P), G_Pi = N_i∇|_{X_P} — mapping matrix (entries ≥ 0, row sum 1) and gradient matrix at the current point positions",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    249.9,
+    529.3,
+    294.5
+   ],
+   "w": 2630,
+   "h": 249,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.982,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_08",
+   "kind": "equation",
+   "label": "eq3.8",
+   "page": 5,
+   "journal_page": 183,
+   "file": "eq_3_08_grid_consistent_mass_matrix.png",
+   "caption": "Equation (3.8), PDF p.5 (journal p.183), §3: ∫ρw·a dV = Σ w_i m_ij · a_j, m_ij = Σ_P M_P S^T_iP S_Pj — consistent grid mass matrix built from point masses",
+   "rotated_deg": 0,
+   "bbox": [
+    56.5,
+    324.4,
+    529.8,
+    366.6
+   ],
+   "w": 2631,
+   "h": 235,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.961,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_09",
+   "kind": "equation",
+   "label": "eq3.9",
+   "page": 5,
+   "journal_page": 183,
+   "file": "eq_3_09_internal_force_from_point_stress.png",
+   "caption": "Equation (3.9), PDF p.5 (journal p.183), §3: ∫ρσ^s : w∇ dV = −Σ w_i · f_i^int, f_i^int = −Σ_P G^T_iP M_P · σ^s_P — internal nodal force from point stresses",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    359.1,
+    529.8,
+    399.4
+   ],
+   "w": 2633,
+   "h": 224,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_10",
+   "kind": "equation",
+   "label": "eq3.10",
+   "page": 5,
+   "journal_page": 183,
+   "file": "eq_3_10_body_force_and_traction_nodal.png",
+   "caption": "Equation (3.10), PDF p.5 (journal p.183), §3: b_i = Σ_P S^T_iP M_P b_P, τ̂_i = ∫_∂Ω N_i τ dS — nodal body force and surface traction",
+   "rotated_deg": 0,
+   "bbox": [
+    56.5,
+    455.9,
+    529.8,
+    529.8
+   ],
+   "w": 2631,
+   "h": 412,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.961,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_11",
+   "kind": "equation",
+   "label": "eq3.11",
+   "page": 5,
+   "journal_page": 183,
+   "file": "eq_3_11_external_force_vector.png",
+   "caption": "Equation (3.11), PDF p.5 (journal p.183), §3: f_i^ext = b_i + τ̂_i — external nodal force",
+   "rotated_deg": 0,
+   "bbox": [
+    56.5,
+    572.9,
+    530.2,
+    600.7
+   ],
+   "w": 2633,
+   "h": 156,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.983,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e3_12",
+   "kind": "equation",
+   "label": "eq3.12",
+   "page": 5,
+   "journal_page": 183,
+   "file": "eq_3_12_discrete_equation_of_motion_grid.png",
+   "caption": "Equation (3.12), PDF p.5 (journal p.183), §3: Σ_j m_ij a_j = f_i^int + f_i^ext, i = 1…n — discrete equation of motion on the grid",
+   "rotated_deg": 0,
+   "bbox": [
+    56.5,
+    643.3,
+    530.7,
+    683.2
+   ],
+   "w": 2636,
+   "h": 222,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.976,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e4_01",
+   "kind": "equation",
+   "label": "eq4.1",
+   "page": 6,
+   "journal_page": 184,
+   "file": "eq_4_01_grid_to_point_velocity_map.png",
+   "caption": "Equation (4.1), PDF p.6 (journal p.184), §4: v_P = Σ_i v_i N_i(X_P) — grid → material-point velocity (single-valued, continuous)",
+   "rotated_deg": 0,
+   "bbox": [
+    53.6,
+    476.8,
+    526.4,
+    515.2
+   ],
+   "w": 2628,
+   "h": 214,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.983,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e4_02",
+   "kind": "equation",
+   "label": "eq4.2",
+   "page": 6,
+   "journal_page": 184,
+   "file": "eq_4_02_mapping_matrix_form.png",
+   "caption": "Equation (4.2), PDF p.6 (journal p.184), §4: {V} = [S]{v} — matrix form, one component",
+   "rotated_deg": 0,
+   "bbox": [
+    53.6,
+    596.9,
+    525.4,
+    624.2
+   ],
+   "w": 2623,
+   "h": 152,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.981,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e4_03",
+   "kind": "equation",
+   "label": "eq4.3",
+   "page": 7,
+   "journal_page": 185,
+   "file": "eq_4_03_weighted_least_squares_point_to_grid.png",
+   "caption": "Equation (4.3), PDF p.7 (journal p.185), §4: [m]{v} = [S]^T[M_D]{V} — point → grid velocity by mass-weighted least squares (FLIP); the diagonal [m] is used in practice",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    66.8,
+    530.2,
+    93.7
+   ],
+   "w": 2635,
+   "h": 150,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e5_01",
+   "kind": "equation",
+   "label": "eq5.1",
+   "page": 7,
+   "journal_page": 185,
+   "file": "eq_5_01_material_region_inequalities.png",
+   "caption": "Equation (5.1), PDF p.7 (journal p.185), §5: g_α(X⁰_P) ≤ 0 — analytic inequalities that define each material region (trial points kept if they satisfy them)",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    336.4,
+    529.3,
+    362.3
+   ],
+   "w": 2630,
+   "h": 145,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.981,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e6_01",
+   "kind": "equation",
+   "label": "eq6.1",
+   "page": 8,
+   "journal_page": 186,
+   "file": "eq_6_01_step1_grid_acceleration_lumped.png",
+   "caption": "Equation (6.1), PDF p.8 (journal p.186), §6: Step 1: [m_D]^k{a}^k = {f^int}^k + {f^ext}^k — grid acceleration with the lumped (diagonal) mass",
+   "rotated_deg": 0,
+   "bbox": [
+    91.0,
+    149.4,
+    529.2,
+    175.3
+   ],
+   "w": 2436,
+   "h": 145,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.966,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e6_02",
+   "kind": "equation",
+   "label": "eq6.2",
+   "page": 8,
+   "journal_page": 186,
+   "file": "eq_6_02_step2_grid_velocity_explicit.png",
+   "caption": "Equation (6.2), PDF p.8 (journal p.186), §6: Step 2: {v*}^{k+1} = {v}^k + s{a}^k — explicit grid velocity update (time step s)",
+   "rotated_deg": 0,
+   "bbox": [
+    92.0,
+    210.4,
+    528.8,
+    235.8
+   ],
+   "w": 2428,
+   "h": 142,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e6_03",
+   "kind": "equation",
+   "label": "eq6.3",
+   "page": 8,
+   "journal_page": 186,
+   "file": "eq_6_03_step6_map_velocity_acceleration_to_points.png",
+   "caption": "Equation (6.3), PDF p.8 (journal p.186), §6: Step 6: {V*}^{k+1} = [S]^k{v}^{k+1}, {A}^k = [S]^k{a}^k — map velocity and acceleration to the points (right side printed {v}^{k+1}; Step 2 calls the updated grid velocity {v*}^{k+1})",
+   "rotated_deg": 0,
+   "bbox": [
+    91.5,
+    348.4,
+    528.3,
+    374.3
+   ],
+   "w": 2427,
+   "h": 145,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.955,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e6_04",
+   "kind": "equation",
+   "label": "eq6.4",
+   "page": 8,
+   "journal_page": 186,
+   "file": "eq_6_04_step7_point_position_velocity_update.png",
+   "caption": "Equation (6.4), PDF p.8 (journal p.186), §6: Step 7: {X}^{k+1} = {X}^k + s{V*}^{k+1}, {V}^{k+1} = {V}^k + s{A}^k — position from the interpolated grid velocity, point velocity by the interpolated acceleration (FLIP increment)",
+   "rotated_deg": 0,
+   "bbox": [
+    91.5,
+    412.4,
+    527.8,
+    438.8
+   ],
+   "w": 2425,
+   "h": 148,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.948,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e6_05",
+   "kind": "equation",
+   "label": "eq6.5",
+   "page": 8,
+   "journal_page": 186,
+   "file": "eq_6_05_step8_new_mapping_gradient_matrices.png",
+   "caption": "Equation (6.5), PDF p.8 (journal p.186), §6: Step 8: [S]^{k+1} = {N}(X^{k+1}), [G]^{k+1} = {N}∇|_{X^{k+1}} — new mapping and gradient matrices at the new positions",
+   "rotated_deg": 0,
+   "bbox": [
+    90.5,
+    463.4,
+    527.3,
+    489.8
+   ],
+   "w": 2428,
+   "h": 147,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.95,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e6_06",
+   "kind": "equation",
+   "label": "eq6.6",
+   "page": 8,
+   "journal_page": 186,
+   "file": "eq_6_06_step10_consistent_mass_update.png",
+   "caption": "Equation (6.6), PDF p.8 (journal p.186), §6: Step 10: [m]^{k+1} = [S^T]^{k+1}[M_D][S]^{k+1} — consistent grid mass update (row sums → [m_D]^{k+1})",
+   "rotated_deg": 0,
+   "bbox": [
+    90.0,
+    539.9,
+    527.3,
+    567.2
+   ],
+   "w": 2430,
+   "h": 153,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.962,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e6_07",
+   "kind": "equation",
+   "label": "eq6.7",
+   "page": 8,
+   "journal_page": 186,
+   "file": "eq_6_07_step11_map_back_to_grid_velocity.png",
+   "caption": "Equation (6.7), PDF p.8 (journal p.186), §6: Step 11: [m_D]^{k+1}{v}^{k+1} = [S^T]^{k+1}[M_D]{V^{k+1}} — map back to grid velocity (lumped form of 4.3)",
+   "rotated_deg": 0,
+   "bbox": [
+    89.6,
+    603.9,
+    526.8,
+    631.7
+   ],
+   "w": 2430,
+   "h": 156,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e7_01",
+   "kind": "equation",
+   "label": "eq7.1",
+   "page": 9,
+   "journal_page": 187,
+   "file": "eq_7_01_rotation_test_continuity_equation.png",
+   "caption": "Equation (7.1), PDF p.9 (journal p.187), §7: dΨ/dt ≡ ∂Ψ/∂t + v·(Ψ∇) = −Ψ(v·∇) — continuity equation of a non-diffusive scalar (rotation test)",
+   "rotated_deg": 0,
+   "bbox": [
+    55.0,
+    120.4,
+    529.8,
+    155.4
+   ],
+   "w": 2639,
+   "h": 196,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.967,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e7_02",
+   "kind": "equation",
+   "label": "eq7.2",
+   "page": 9,
+   "journal_page": 187,
+   "file": "eq_7_02_rigid_rotation_velocity_field.png",
+   "caption": "Equation (7.2), PDF p.9 (journal p.187), §7: v(x,t) = Ωk × (x − x_c) — prescribed rigid-body rotation (divergence free)",
+   "rotated_deg": 0,
+   "bbox": [
+    56.0,
+    217.9,
+    529.8,
+    242.8
+   ],
+   "w": 2633,
+   "h": 139,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e7_03",
+   "kind": "equation",
+   "label": "eq7.3",
+   "page": 9,
+   "journal_page": 187,
+   "file": "eq_7_03_prescribed_grid_velocity_time_centered.png",
+   "caption": "Equation (7.3), PDF p.9 (journal p.187), §7: {v*}^{k+1} = Ωk × (x^{k+1/2} − x_c) — prescribed grid velocity at the time-centred position (replaces Step 2 in the rotation test)",
+   "rotated_deg": 0,
+   "bbox": [
+    57.4,
+    435.4,
+    530.2,
+    461.8
+   ],
+   "w": 2627,
+   "h": 148,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e7_04",
+   "kind": "equation",
+   "label": "eq7.4",
+   "page": 9,
+   "journal_page": 187,
+   "file": "eq_7_04_rotation_test_position_update.png",
+   "caption": "Equation (7.4), PDF p.9 (journal p.187), §7: {x}^{k+1} = {x}^k + s{v*}^{k+1} — rotation-test position update",
+   "rotated_deg": 0,
+   "bbox": [
+    57.4,
+    472.9,
+    530.2,
+    500.3
+   ],
+   "w": 2627,
+   "h": 153,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "e7_05",
+   "kind": "equation",
+   "label": "eq7.5",
+   "page": 13,
+   "journal_page": 191,
+   "file": "eq_7_05_von_mises_yield_linear_hardening.png",
+   "caption": "Equation (7.5), PDF p.13 (journal p.191), §7: f = σ̄ − H, H = c1 + c2 ē — von Mises yield with linear hardening (σ̄ = (3/2 σ^d:σ^d)^{1/2}, ē = ∫(2/3 ė^p:ė^p)^{1/2} dt; c1 = 100 (0.1E), c2 = 400)",
+   "rotated_deg": 0,
+   "bbox": [
+    56.5,
+    387.9,
+    529.8,
+    413.8
+   ],
+   "w": 2631,
+   "h": 145,
+   "dpi": 400,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.975,
+   "manual_crop": "2026-11-12 수동 식 크롭 — 식 덩어리 하나 (식 번호 포함 · 여러 줄 식은 한 장 · 이웃 문단 제외) · 영역 = 잉크 줄 윤곽에서 정함 · 잉크 경계 + 6 pt · 영역 밖 흰색 · 400 dpi (홀수 쪽 = 스캔 원 해상도 · 짝수 쪽 원 해상도 300)"
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract-history-dependent-material-points",
+   "page": 1,
+   "journal_page": 179,
+   "file": "txt_p1_abstract_history_dependent_material_points.png",
+   "caption": "Abstract p.179: history-dependent constitutive equations → material points must be followed (hard in a Eulerian scheme); purely Lagrangian → severe mesh distortion, ill-conditioned element stiffness, mesh lockup/entanglement; remeshing → interpolation of history variables introduces errors; particles = material points + fixed Eulerian grid; 2D examples; no-slip impact with no special algorithm",
+   "rotated_deg": 0,
+   "bbox": [
+    28.8,
+    278.0,
+    529.4,
+    429.7
+   ],
+   "w": 2086,
+   "h": 632,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.768,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-pic-flip-lineage",
+   "page": 1,
+   "journal_page": 179,
+   "file": "txt_p1_pic_flip_lineage.png",
+   "caption": "p.179: classical PIC = mass and position only (partially Lagrangian) → FLIP 'full-particle' (momentum, energy) [2,3] → consistent mass conserves kinetic energy [4]; cost of inverting a new mass matrix each step vs small step + diagonal mass",
+   "rotated_deg": 0,
+   "bbox": [
+    29.3,
+    468.7,
+    529.7,
+    625.5
+   ],
+   "w": 2085,
+   "h": 653,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.777,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-p2-flip-no-slip-constitutive-at-material-points",
+   "page": 1,
+   "journal_page": 179,
+   "file": "txt_p1_p2_flip_no_slip_constitutive_at_material_points.png",
+   "caption": "p.179–180: Sulsky–Brackbill [5] extended FLIP to elastic bodies; single-valued positions → no interpenetration → non-slipping contact; FLIP so far history-independent with constitutive at grid nodes → here the constitutive equation is invoked at the material points so plastic strain and hardening parameters stay with each point; FE-consistent weak form (symmetric tangent); stiffness matrix never computed",
+   "rotated_deg": 0,
+   "bbox": [
+    29.8,
+    612.0,
+    529.4,
+    664.6
+   ],
+   "w": 2083,
+   "h": 891,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.829,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 2 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 1,
+     "journal_page": 179,
+     "bbox": [
+      29.8,
+      612.0,
+      529.4,
+      664.6
+     ]
+    },
+    {
+     "page": 2,
+     "journal_page": 180,
+     "bbox": [
+      31.2,
+      39.3,
+      531.1,
+      190.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-small-deformation-strain-measure",
+   "page": 2,
+   "journal_page": 180,
+   "file": "txt_p2_small_deformation_strain_measure.png",
+   "caption": "p.180: formulation limited to small deformations although large translations are allowed; strain e with ė = D used for computational convenience, 'no correspondence with physical measurements'",
+   "rotated_deg": 0,
+   "bbox": [
+    30.7,
+    328.4,
+    529.4,
+    389.9
+   ],
+   "w": 2080,
+   "h": 568,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.853,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 2 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 2,
+     "journal_page": 180,
+     "bbox": [
+      30.7,
+      328.4,
+      529.4,
+      389.9
+     ]
+    },
+    {
+     "page": 2,
+     "journal_page": 180,
+     "bbox": [
+      29.3,
+      464.1,
+      528.5,
+      529.1
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-lagrangian-eulerian-split-updated-lagrangian",
+   "page": 3,
+   "journal_page": 181,
+   "file": "txt_p3_lagrangian_eulerian_split_updated_lagrangian.png",
+   "caption": "p.181: specific stress Eulerian (x, t), velocity Lagrangian (X⁰, t) → no convection term; convection handled in a separate mapping step (basis of ALE [6,7]); updated- vs fully-Lagrangian definitions",
+   "rotated_deg": 0,
+   "bbox": [
+    28.8,
+    333.3,
+    529.4,
+    540.4
+   ],
+   "w": 2086,
+   "h": 863,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.799,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-momentum-on-grid-material-subdomains",
+   "page": 4,
+   "journal_page": 182,
+   "file": "txt_p4_momentum_on_grid_material_subdomains.png",
+   "caption": "p.182: momentum solved on the grid, constitutive + strain-rate equations at the material points ('simplifies the treatment of history-dependent variables'); subdomains Ω_P with reference point X_P and mass M_P; subdomain shapes unknown, points tracked",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    166.6,
+    527.0,
+    318.0
+   ],
+   "w": 2080,
+   "h": 631,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.814,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-mapping-matrix-stochastic-gradient",
+   "page": 5,
+   "journal_page": 183,
+   "file": "txt_p5_mapping_matrix_stochastic_gradient.png",
+   "caption": "p.183: mapping matrix [S] = nodal basis at the current point positions ('stochastic matrix': entries ≥ 0, row sum 1); gradient vectors G_Pi",
+   "rotated_deg": 0,
+   "bbox": [
+    29.3,
+    165.8,
+    530.4,
+    251.4
+   ],
+   "w": 2088,
+   "h": 357,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.824,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-four-differences-from-fem",
+   "page": 6,
+   "journal_page": 184,
+   "file": "txt_p6_four_differences_from_fem.png",
+   "caption": "p.184: four differences from FEM — mass matrix varies with time (diagonal = row sum), gradient/stress/strain at points that move between elements, point masses in the force vectors, specific stress",
+   "rotated_deg": 0,
+   "bbox": [
+    29.5,
+    66.7,
+    529.7,
+    192.7
+   ],
+   "w": 2084,
+   "h": 525,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.809,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6-convective-phase-fixed-grid",
+   "page": 6,
+   "journal_page": 184,
+   "file": "txt_p6_convective_phase_fixed_grid.png",
+   "caption": "p.184: grid chosen for convenience (kept fixed); points cross grid lines; Lagrangian step then transfer to points ('transport material properties assigned to them without error'); in Section 7 information is mapped to a uniform Eulerian grid at the start of each step",
+   "rotated_deg": 0,
+   "bbox": [
+    28.8,
+    236.9,
+    528.7,
+    466.4
+   ],
+   "w": 2083,
+   "h": 956,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.799,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-conservation-lumped-mass-dissipation",
+   "page": 7,
+   "journal_page": 185,
+   "file": "txt_p7_conservation_lumped_mass_dissipation.png",
+   "caption": "p.185: diagonal grid mass used to obtain {v}; Burgess et al. [4]: the mapping conserves kinetic energy, linear and angular momentum; kinetic energy only with the consistent mass; a diagonal mass gives some kinetic-energy dissipation [2–4]",
+   "rotated_deg": 0,
+   "bbox": [
+    29.3,
+    91.3,
+    531.1,
+    217.5
+   ],
+   "w": 2091,
+   "h": 526,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.831,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7-material-point-generation-partial-mass",
+   "page": 7,
+   "journal_page": 185,
+   "file": "txt_p7_material_point_generation_partial_mass.png",
+   "caption": "p.185: points per element from trial points inside g_α ≤ 0; mass from density and points per cell; no partial masses for cells cut by a material boundary — to be assessed by a convergence study in points per cell; 'remarkably general and easy to implement'",
+   "rotated_deg": 0,
+   "bbox": [
+    29.0,
+    400.1,
+    529.7,
+    593.1
+   ],
+   "w": 2086,
+   "h": 804,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.801,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-steps-3-5-history-variables",
+   "page": 8,
+   "journal_page": 186,
+   "file": "txt_p8_steps_3_5_history_variables.png",
+   "caption": "p.186 Steps 3–5: velocity gradient [G]^k{v*}^{k+1} at the points (nine combinations in 3D), strain rate as in (3.5), stress increment from the constitutive subroutine; history variables (plastic strain, hardening parameters) updated per material point",
+   "rotated_deg": 0,
+   "bbox": [
+    46.2,
+    236.7,
+    529.3,
+    337.1
+   ],
+   "w": 2013,
+   "h": 418,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.851,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-rotation-test-setup-result",
+   "page": 9,
+   "journal_page": 187,
+   "file": "txt_p9_rotation_test_setup_result.png",
+   "caption": "p.187: notched cylinder radius 0.15, height 4.0, domain 1.0, Ω = 0.1, 51 nodes per direction, s = 0.1, 628 steps per revolution, 4 points per element; error only from the grid→point velocity map and time integration; uniform translation is exact",
+   "rotated_deg": 0,
+   "bbox": [
+    29.5,
+    300.8,
+    531.1,
+    415.0
+   ],
+   "w": 2090,
+   "h": 1116,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.821,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 2 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 9,
+     "journal_page": 187,
+     "bbox": [
+      29.5,
+      300.8,
+      531.1,
+      415.0
+     ]
+    },
+    {
+     "page": 9,
+     "journal_page": 187,
+     "bbox": [
+      30.7,
+      517.9,
+      531.8,
+      661.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9-p11-cylinder-setup-dispersion-dissipation",
+   "page": 9,
+   "journal_page": 187,
+   "file": "txt_p9_p11_cylinder_setup_dispersion_dissipation.png",
+   "caption": "p.187–189: copper cylinder R = 0.6 cm, ρ = 8.92 kg/m³ (as printed), E = 126 GPa, ν = 0.35; ω^e = 1.73×10⁶ 'Hz' (plane strain); 2 % radial strain; 4 points/element; s = 0.2 µs (ω^e s = 0.35), h = 0.80 cm = 0.133R (as printed); predicted 1.68×10⁶; ω^d = 0.97; E = E0 exp(−γωt/2π), γ = 0.121; Table 1; difference from [4,5] = constitutive at the points",
+   "rotated_deg": 0,
+   "bbox": [
+    31.4,
+    683.3,
+    532.1,
+    738.0
+   ],
+   "w": 2086,
+   "h": 1185,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.841,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 3 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 9,
+     "journal_page": 187,
+     "bbox": [
+      31.4,
+      683.3,
+      532.1,
+      738.0
+     ]
+    },
+    {
+     "page": 10,
+     "journal_page": 188,
+     "bbox": [
+      30.5,
+      584.3,
+      530.2,
+      740.5
+     ]
+    },
+    {
+     "page": 11,
+     "journal_page": 189,
+     "bbox": [
+      26.6,
+      397.7,
+      527.0,
+      451.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-elastic-disk-impact-setup",
+   "page": 11,
+   "journal_page": 189,
+   "file": "txt_p11_elastic_disk_impact_setup.png",
+   "caption": "p.189: two identical elastic disks, E = 1000, ν = 0.3, ρ = 1000; initial velocities ±(0.1, 0.1); square elements h = 0.05; s = 0.001; no error for uniform translation; plane strain; rebound",
+   "rotated_deg": 0,
+   "bbox": [
+    23.0,
+    476.1,
+    525.4,
+    609.3
+   ],
+   "w": 2093,
+   "h": 555,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.805,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x12a",
+   "kind": "text",
+   "label": "p12-p13-elastic-impact-energy-dissipation",
+   "page": 12,
+   "journal_page": 190,
+   "file": "txt_p12_p13_elastic_impact_energy_dissipation.png",
+   "caption": "p.190–191: kinetic energy decreases during impact and is mostly recovered; strain energy small but not zero after impact (several modes); total energy decreases slightly = numerical dissipation",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    475.2,
+    527.0,
+    538.1
+   ],
+   "w": 2087,
+   "h": 453,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.843,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 2 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 12,
+     "journal_page": 190,
+     "bbox": [
+      27.8,
+      475.2,
+      527.0,
+      538.1
+     ]
+    },
+    {
+     "page": 13,
+     "journal_page": 191,
+     "bbox": [
+      28.8,
+      40.7,
+      529.7,
+      76.7
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x13a",
+   "kind": "text",
+   "label": "p13-inelastic-impact-vonmises-residual-strain",
+   "page": 13,
+   "journal_page": 191,
+   "file": "txt_p13_inelastic_impact_vonmises_residual_strain.png",
+   "caption": "p.191: von Mises + linear hardening (7.5), c1 = 100 (0.1E), c2 = 400; part of each disk flattened and permanently distorted; less separation; large dissipation; elastic strain energy never zero — residual plastic strains keep the elastic strain (and stress) non-zero 'even in the unloaded condition'",
+   "rotated_deg": 0,
+   "bbox": [
+    29.8,
+    341.8,
+    530.6,
+    578.4
+   ],
+   "w": 2087,
+   "h": 986,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.823,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi"
+  },
+  {
+   "key": "x15a",
+   "kind": "text",
+   "label": "p15-p17-conclusion-cost-no-remesh",
+   "page": 15,
+   "journal_page": 193,
+   "file": "txt_p15_p17_conclusion_cost_no_remesh.png",
+   "caption": "p.193–195 conclusion: grid = updated Lagrangian → no convective diffusion; interpolation of history variables not required; weak-form symmetry retained; additional cost = maps between points and grid; benefit = no mesh distortion, no remeshing",
+   "rotated_deg": 0,
+   "bbox": [
+    25.9,
+    672.5,
+    526.8,
+    735.3
+   ],
+   "w": 2087,
+   "h": 704,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.852,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 3 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 15,
+     "journal_page": 193,
+     "bbox": [
+      25.9,
+      672.5,
+      526.8,
+      735.3
+     ]
+    },
+    {
+     "page": 16,
+     "journal_page": 194,
+     "bbox": [
+      27.4,
+      239.8,
+      527.3,
+      289.2
+     ]
+    },
+    {
+     "page": 17,
+     "journal_page": 195,
+     "bbox": [
+      26.9,
+      412.9,
+      527.0,
+      449.9
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x17a",
+   "kind": "text",
+   "label": "p17-mixed-cells-single-valued-no-slip",
+   "page": 17,
+   "journal_page": 195,
+   "file": "txt_p17_mixed_cells_single_valued_no_slip.png",
+   "caption": "p.195: automatic treatment of 'mixed cells' (the constitutive equation of each material point, whatever the number or kind of points in an element); single-valued velocity in any element → no sliding along the impact surface; no slideline algorithm → efficient",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    439.2,
+    527.3,
+    540.9
+   ],
+   "w": 2086,
+   "h": 783,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.821,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 2 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 17,
+     "journal_page": 195,
+     "bbox": [
+      26.6,
+      439.2,
+      527.3,
+      540.9
+     ]
+    },
+    {
+     "page": 17,
+     "journal_page": 195,
+     "bbox": [
+      26.2,
+      608.1,
+      526.8,
+      684.4
+     ]
+    }
+   ]
+  },
+  {
+   "key": "x17b",
+   "kind": "text",
+   "label": "p17-p18-open-points-locking-hourglassing",
+   "page": 17,
+   "journal_page": 195,
+   "file": "txt_p17_p18_open_points_locking_hourglassing.png",
+   "caption": "p.195–196: open points — boundary conditions, relaxation of the no-slip condition, more or fewer points per element, the failure zone when softening occurs; no locking or hourglassing seen, but no detailed analysis of typical cells",
+   "rotated_deg": 0,
+   "bbox": [
+    25.9,
+    673.1,
+    526.8,
+    736.5
+   ],
+   "w": 2087,
+   "h": 620,
+   "dpi": 300,
+   "src": "79001f63-40._A_particle_method_for_history-dependent_materials.pdf",
+   "blank": 0.839,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 · 문단 경계 = 줄 사이 잉크 최소 행 · 경계를 걸친 글자는 잉크 덩어리 중심으로 판정 (내림 · 올림 획 보존) · 300 dpi · 2 조각을 위아래로 이음 (10 pt 틈)",
+   "parts": [
+    {
+     "page": 17,
+     "journal_page": 195,
+     "bbox": [
+      25.9,
+      673.1,
+      526.8,
+      736.5
+     ]
+    },
+    {
+     "page": 18,
+     "journal_page": 196,
+     "bbox": [
+      27.6,
+      43.2,
+      528.2,
+      118.8
+     ]
+    }
+   ]
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": [
+  {
+   "key": "f2",
+   "how": "hand crop p10 (tool: OCR read the caption as 'Fig, 2,' — keyword followed by a comma)"
+  },
+  {
+   "key": "f6",
+   "how": "hand crop p14 (tool: OCR 'Fig, 6,')"
+  },
+  {
+   "key": "f7",
+   "how": "hand crop p15 (tool: excluded as near-blank 0.992 — sparse velocity-arrow plot)"
+  },
+  {
+   "key": "t1",
+   "how": "hand crop p11 (tool returned no table)"
+  }
+ ],
+ "note_manual": "2026-11-12 — Comput. Methods Appl. Mech. Engrg. 118 (1994) 179–196 · scanned PDF (Acrobat 3.0 Capture: one 1-bit page image per page — odd pages 400 dpi, even pages 300 dpi — plus an OCR text layer whose equations are garbled) · 18 PDF pages = journal pages 179–196 (journal page = PDF page + 178) · no SI · DOI not printed. Tool crops 7 (f1 · f3 · f4 · f5 · f8 · f9 · f10): all re-cut (full-page-width bands; captions or most of the figure missing). Hand crops: figures 2 · 6 · 7, Table 1. Equations 37 = every numbered equation (2.1)–(7.5), one crop per number, 400 dpi. Evidence paragraphs 20 (txt_*, 300 dpi; 7 of them stacked from 2–3 pieces across pages/paragraphs). Total PNG 68. Readings of Figs. 3 · 4 · 5 · 8 · 10 = raster pixels of the native-resolution page render (tick marks found next to the axis lines; Fig. 3 by a 2-D affine fit because that scan is rotated ≈1–2°) — table = digitized.csv (141 rows). All 68 crops opened (Read).",
+ "key_note": "keys: f<N> = Figure N · t1 = Table 1 · e<sec>_<NN> = Equation (sec.N) · x<PDF page><letter> = evidence paragraph (kind 'text'); page = PDF page (journal page = page + 178, also stored as journal_page)",
+ "figures_count_by_kind": {
+  "figure": 10,
+  "table": 1,
+  "equation": 37,
+  "text": 20
+ }
+}

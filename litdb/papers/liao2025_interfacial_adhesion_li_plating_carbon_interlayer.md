@@ -310,3 +310,5 @@ Fig. 1b,c 의 "공동 → 밀착" 은 우리 MPM 의 **소성 vs 강체 coverage
 
 ### 13-5. W_ad 대비 배수 (트랙 문서 §1 의 W_ad 범위 사용)
 - Γ(400 MPa) 41 J m⁻² ÷ 화학결합 W_ad 상한 5 J m⁻² ≈ **8배 이상**; ÷ 물리흡착 0.3 J m⁻² ≈ **140배**. ⇒ 실용 Γ 의 대부분이 소산·면적·맞물림 몫이라는 정성 결론의 산술 근거 (W_ad 는 이 논문이 재지 않았다).
+
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) — 탄소 인터레이어의 붙음 ↔ Li 석출 위치를 다른 계에서: Ag–C 층 (450 MPa 공압착) 은 SE 쪽에 붙어 SUS 박이 떨어지고, Ag–C 없이 다공 CNF 층만 두면 SE/CNF 접촉 부족으로 Li 가 계면에 ≈26 µm 층으로 모인다 (박리 인성 · 접착 정량은 없음).

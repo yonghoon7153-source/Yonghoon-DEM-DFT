@@ -1,0 +1,183 @@
+figure,series,x_name,x,y_name,y,note
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e4,avg_contact_force_N,0.2588,"raster xref 17 (1046x857 px); x ticks 1e4..1e11 at 148.0..963.0 px (116.43 px/decade); y ticks 1e2,1e1,1e0,1e-1 at 173.0/319.5/466.0/612.5 px (146.5 px/decade); marker centre = midpoint of the dark run in the 3 px column at the tick (diamond 25 px, cross 7 px, square 17 px tall); least-squares log-log slope over 7 decades = +0.401 (d16) / +0.400 (d8) / +0.400 (d4)"
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e5,avg_contact_force_N,0.6491,
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e6,avg_contact_force_N,1.641,
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e7,avg_contact_force_N,4.115,
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e8,avg_contact_force_N,10.32,
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e9,avg_contact_force_N,26.08,
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e10,avg_contact_force_N,65.42,
+fig1,d = 16 mm (diamond),shear_modulus_G_Pa,1e11,avg_contact_force_N,165.4,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e4,avg_contact_force_N,0.06491,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e5,avg_contact_force_N,0.1641,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e6,avg_contact_force_N,0.4115,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e7,avg_contact_force_N,1.04,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e8,avg_contact_force_N,2.608,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e9,avg_contact_force_N,6.491,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e10,avg_contact_force_N,16.41,
+fig1,d = 8 mm (cross),shear_modulus_G_Pa,1e11,avg_contact_force_N,41.15,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e4,avg_contact_force_N,0.01628,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e5,avg_contact_force_N,0.04082,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e6,avg_contact_force_N,0.1024,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e7,avg_contact_force_N,0.2568,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e8,avg_contact_force_N,0.6491,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e9,avg_contact_force_N,1.628,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e10,avg_contact_force_N,4.115,
+fig1,d = 4 mm (square),shear_modulus_G_Pa,1e11,avg_contact_force_N,10.32,
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e4,total_contact_time_s,0.01831,raster xref 18 (1046x855 px); x ticks 1e4..1e11 at 150.0..963.0 px; y ticks 1e-2..1e-5 at 171.0/318.0/464.0/610.5 px; same column method (square at 1e4 split by the line -> two runs averaged); least-squares slope = -0.399 (d16) / -0.399 (d8) / -0.399 (d4)
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e5,total_contact_time_s,0.007245,
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e6,total_contact_time_s,0.002912,
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e7,total_contact_time_s,0.001152,
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e8,total_contact_time_s,0.0004666,
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e9,total_contact_time_s,0.0001846,
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e10,total_contact_time_s,7.36e-05,
+fig2,d = 16 mm (diamond),shear_modulus_G_Pa,1e11,total_contact_time_s,2.912e-05,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e4,total_contact_time_s,0.009029,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e5,total_contact_time_s,0.003628,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e6,total_contact_time_s,0.001447,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e7,total_contact_time_s,0.0005769,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e8,total_contact_time_s,0.0002337,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e9,total_contact_time_s,9.244e-05,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e10,total_contact_time_s,3.657e-05,
+fig2,d = 8 mm (cross),shear_modulus_G_Pa,1e11,total_contact_time_s,1.47e-05,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e4,total_contact_time_s,0.004593,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e5,total_contact_time_s,0.001831,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e6,total_contact_time_s,0.0007303,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e7,total_contact_time_s,0.0002912,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e8,total_contact_time_s,0.0001161,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e9,total_contact_time_s,4.629e-05,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e10,total_contact_time_s,1.846e-05,
+fig2,d = 4 mm (square),shear_modulus_G_Pa,1e11,total_contact_time_s,7.36e-06,
+fig6,G = 1e8 Pa velocity max,time_s,0.2848,cube_velocity_m_s,0.4533,"raster xref 60 (1046x838 px); x ticks 0.5..3.0 s at 254.5/411.5/568.0/725.5/881.5/1038.5 px (313.6 px/s, t0 at 97.7 px); y ticks 1.0..-0.8 m/s at 15.0..682.0 px (370.6 px per m/s, v=0 at 386.0 px); extremum = top (max) / bottom (min) edge of the 3 px trace in a +-6 px window (so |v| is biased high by ~1.5 px = 0.004 m/s); before 0.24 s the trace sits on the frame at -1 m/s (falling block, 'vertical velocity limited to 1 m/s'); falling segment 0.2848->0.3772 s fits -9.98 m/s^2 (free flight) [card arithmetic]"
+fig6,G = 1e8 Pa velocity min,time_s,0.3772,cube_velocity_m_s,-0.4479,
+fig6,G = 1e8 Pa velocity max,time_s,0.4283,cube_velocity_m_s,0.2590,
+fig6,G = 1e8 Pa velocity min,time_s,0.4888,cube_velocity_m_s,-0.2402,
+fig6,G = 1e8 Pa velocity max,time_s,0.5271,cube_velocity_m_s,0.1673,
+fig6,G = 1e8 Pa velocity min,time_s,0.5781,cube_velocity_m_s,-0.1430,
+fig6,G = 1e8 Pa velocity max,time_s,0.6196,cube_velocity_m_s,0.0971,
+fig6,G = 1e8 Pa velocity min,time_s,0.6738,cube_velocity_m_s,-0.0836,
+fig6,G = 1e8 Pa velocity max,time_s,0.7121,cube_velocity_m_s,0.0621,
+fig6,G = 1e8 Pa velocity min,time_s,0.7535,cube_velocity_m_s,-0.0486,
+fig6,G = 1e8 Pa velocity max,time_s,0.7982,cube_velocity_m_s,0.0405,
+fig6,G = 1e8 Pa velocity min,time_s,0.8364,cube_velocity_m_s,-0.0324,
+fig6,G = 1e8 Pa velocity max,time_s,0.8811,cube_velocity_m_s,0.0270,
+fig6,G = 1e8 Pa velocity min,time_s,0.9225,cube_velocity_m_s,-0.0216,
+fig6,G = 1e8 Pa velocity max,time_s,0.9672,cube_velocity_m_s,0.0189,
+fig6,G = 1e8 Pa velocity max,time_s,1.0437,cube_velocity_m_s,0.0135,
+fig6,G = 1e8 Pa velocity min,time_s,1.0883,cube_velocity_m_s,-0.0108,
+fig6,G = 1e8 Pa velocity max,time_s,1.1298,cube_velocity_m_s,0.0108,
+fig7,bulk stiffness (filled square),shear_modulus_G_Pa,1e5,bulk_stiffness_N_m,7.51e+03,"raster xref 58 (1046x816 px); x ticks 1e6/1e8/1e10 at 371.0/638.0/904.5 px (133.4 px/decade; 1e4 = left frame 104.25, 1e11 = right frame 1038); y ticks 1e7..1e4 at 165.5/306.0/447.0/588.0 px (140.83 px/decade); filled squares found after a 9x9 binary opening (removes the fit line); centre = mean of the square pixels; least-squares log-log slope of the 7 points = 0.591 (1e5-1e10 only: 0.565) [card arithmetic] -- the printed text calls it a 'linear correlation' x at log10 G = 5.003"
+fig7,bulk stiffness (filled square),shear_modulus_G_Pa,1e6,bulk_stiffness_N_m,2.12e+04,x at log10 G = 6.003
+fig7,bulk stiffness (filled square),shear_modulus_G_Pa,1e7,bulk_stiffness_N_m,7.98e+04,x at log10 G = 7.000
+fig7,bulk stiffness (filled square),shear_modulus_G_Pa,1e8,bulk_stiffness_N_m,3e+05,x at log10 G = 8.001
+fig7,bulk stiffness (filled square),shear_modulus_G_Pa,1e9,bulk_stiffness_N_m,1.25e+06,x at log10 G = 8.998
+fig7,bulk stiffness (filled square),shear_modulus_G_Pa,1e10,bulk_stiffness_N_m,4.52e+06,x at log10 G = 10.003
+fig7,bulk stiffness (filled square),shear_modulus_G_Pa,1e11,bulk_stiffness_N_m,2.76e+07,x at log10 G = 11.003
+fig8,G = 1e5 Pa (open circle),collision,1,bulk_restitution_coefficient,0.721,"raster xref 59 (1046x828 px); x = collision 1..6 at 249.0/393.5/538.5 px (ticks 4-6 hidden by the legend -> 104.25 + 144.75 k); y ticks 1.0..0.1 at 13.5..679.5 px (740 px per unit, 0 at 753.5); each marker found by binary template matching against a 1-px dilated image (template = isolated instance of the same symbol), score >= 0.97; overlapping symbols (collision 1 x/hexagram, 2 +/hexagram and circle/diamond/triangle, 3 +/triangle/diamond/hexagram, 4 dot/diamond/triangle, 5-6 dot/+ and x/hexagram and diamond/triangle) read +-0.01"
+fig8,G = 1e5 Pa (open circle),collision,2,bulk_restitution_coefficient,0.878,
+fig8,G = 1e5 Pa (open circle),collision,3,bulk_restitution_coefficient,0.891,
+fig8,G = 1e5 Pa (open circle),collision,4,bulk_restitution_coefficient,0.897,
+fig8,G = 1e5 Pa (open circle),collision,5,bulk_restitution_coefficient,0.899,
+fig8,G = 1e5 Pa (open circle),collision,6,bulk_restitution_coefficient,0.906,
+fig8,G = 1e6 Pa (open square),collision,1,bulk_restitution_coefficient,0.663,
+fig8,G = 1e6 Pa (open square),collision,2,bulk_restitution_coefficient,0.745,
+fig8,G = 1e6 Pa (open square),collision,3,bulk_restitution_coefficient,0.813,
+fig8,G = 1e6 Pa (open square),collision,4,bulk_restitution_coefficient,0.834,
+fig8,G = 1e6 Pa (open square),collision,5,bulk_restitution_coefficient,0.843,
+fig8,G = 1e6 Pa (open square),collision,6,bulk_restitution_coefficient,0.849,
+fig8,G = 1e7 Pa (x),collision,1,bulk_restitution_coefficient,0.622,
+fig8,G = 1e7 Pa (x),collision,2,bulk_restitution_coefficient,0.584,
+fig8,G = 1e7 Pa (x),collision,3,bulk_restitution_coefficient,0.625,
+fig8,G = 1e7 Pa (x),collision,4,bulk_restitution_coefficient,0.686,
+fig8,G = 1e7 Pa (x),collision,5,bulk_restitution_coefficient,0.726,
+fig8,G = 1e7 Pa (x),collision,6,bulk_restitution_coefficient,0.739,
+fig8,G = 1e8 Pa (small dot),collision,1,bulk_restitution_coefficient,0.572,
+fig8,G = 1e8 Pa (small dot),collision,2,bulk_restitution_coefficient,0.643,
+fig8,G = 1e8 Pa (small dot),collision,3,bulk_restitution_coefficient,0.572,
+fig8,G = 1e8 Pa (small dot),collision,4,bulk_restitution_coefficient,0.618,
+fig8,G = 1e8 Pa (small dot),collision,5,bulk_restitution_coefficient,0.655,
+fig8,G = 1e8 Pa (small dot),collision,6,bulk_restitution_coefficient,0.620,
+fig8,G = 1e9 Pa (+),collision,1,bulk_restitution_coefficient,0.389,
+fig8,G = 1e9 Pa (+),collision,2,bulk_restitution_coefficient,0.690,
+fig8,G = 1e9 Pa (+),collision,3,bulk_restitution_coefficient,0.672,
+fig8,G = 1e9 Pa (+),collision,4,bulk_restitution_coefficient,0.502,
+fig8,G = 1e9 Pa (+),collision,5,bulk_restitution_coefficient,0.671,
+fig8,G = 1e9 Pa (+),collision,6,bulk_restitution_coefficient,0.616,
+fig8,G = 1e10 Pa (diamond),collision,1,bulk_restitution_coefficient,0.275,
+fig8,G = 1e10 Pa (diamond),collision,2,bulk_restitution_coefficient,0.859,
+fig8,G = 1e10 Pa (diamond),collision,3,bulk_restitution_coefficient,0.739,
+fig8,G = 1e10 Pa (diamond),collision,4,bulk_restitution_coefficient,0.637,
+fig8,G = 1e10 Pa (diamond),collision,5,bulk_restitution_coefficient,0.570,
+fig8,G = 1e10 Pa (diamond),collision,6,bulk_restitution_coefficient,0.555,
+fig8,G = 1e11 Pa (triangle),collision,1,bulk_restitution_coefficient,0.311,
+fig8,G = 1e11 Pa (triangle),collision,2,bulk_restitution_coefficient,0.849,
+fig8,G = 1e11 Pa (triangle),collision,3,bulk_restitution_coefficient,0.703,
+fig8,G = 1e11 Pa (triangle),collision,4,bulk_restitution_coefficient,0.630,
+fig8,G = 1e11 Pa (triangle),collision,5,bulk_restitution_coefficient,0.557,
+fig8,G = 1e11 Pa (triangle),collision,6,bulk_restitution_coefficient,0.557,
+fig8,G = 1e6 Pa + C_R = 0.01 (hexagram),collision,1,bulk_restitution_coefficient,0.618,
+fig8,G = 1e6 Pa + C_R = 0.01 (hexagram),collision,2,bulk_restitution_coefficient,0.698,
+fig8,G = 1e6 Pa + C_R = 0.01 (hexagram),collision,3,bulk_restitution_coefficient,0.729,
+fig8,G = 1e6 Pa + C_R = 0.01 (hexagram),collision,4,bulk_restitution_coefficient,0.737,
+fig8,G = 1e6 Pa + C_R = 0.01 (hexagram),collision,5,bulk_restitution_coefficient,0.744,
+fig8,G = 1e6 Pa + C_R = 0.01 (hexagram),collision,6,bulk_restitution_coefficient,0.744,
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,3.445,AoR_deg,13.04,"raster xref 75 (2150x807 px, both panels); panel (a) x ticks 1e4/1e6/1e8/1e10 at 289.0/487.0/685.5/884.0 px (99.17 px/decade; 1e2 = left frame 90.7, 1e11 = right frame 983); left y ticks 0..35 deg at 715.56..21.81 px (19.82 px/deg); right y ticks 0..2 % at 715.56..21.81 px (346.9 px per %); AoR = midpoint of the error-bar caps (blue), cross-checked with the x-marker arms (agree within 0.05 deg); overlap = circle fit to the green ring. !! markers sit at log10 G_plot = n + 0.445 (n = 3..10) on the printed ticks, i.e. half-way between decades -- the text (no influence 1e7-1e11 Pa, 0.34 % at 1e7) matches these 8 points if they are G = 1e4..1e11 Pa (shift 0.555 decade) [card interpretation, cause not stated in the paper] | caps 12.29-13.80 deg (meaning of the bar not stated)"
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,4.443,AoR_deg,23.89,caps 22.53-25.25 deg (meaning of the bar not stated)
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,5.442,AoR_deg,27.50,caps 27.22-27.78 deg (meaning of the bar not stated)
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,6.450,AoR_deg,28.63,caps 27.68-29.59 deg (meaning of the bar not stated)
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,7.448,AoR_deg,28.38,caps 27.93-28.84 deg (meaning of the bar not stated)
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,8.447,AoR_deg,28.73,caps 28.03-29.44 deg (meaning of the bar not stated)
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,9.445,AoR_deg,28.03,caps 27.02-29.04 deg (meaning of the bar not stated)
+fig9a,"angle of repose (blue x, error bar)",log10_G_plot,10.443,AoR_deg,28.08,caps 27.42-28.73 deg (meaning of the bar not stated)
+fig9a,normal overlap / particle radius (green circle),log10_G_plot,5.445,overlap_pct_of_radius,1.4949,circle r 8.0 px
+fig9a,normal overlap / particle radius (green circle),log10_G_plot,6.447,overlap_pct_of_radius,0.3417,circle r 8.1 px
+fig9a,normal overlap / particle radius (green circle),log10_G_plot,7.448,overlap_pct_of_radius,0.0759,circle r 8.1 px
+fig9a,normal overlap / particle radius (green circle),log10_G_plot,8.444,overlap_pct_of_radius,0.0164,circle r 8.0 px
+fig9a,normal overlap / particle radius (green circle),log10_G_plot,9.446,overlap_pct_of_radius,0.0030,circle r 8.2 px
+fig9a,normal overlap / particle radius (green circle),log10_G_plot,10.447,overlap_pct_of_radius,0.0002,circle r 8.0 px
+fig9a,normal overlap / particle radius (green circle),log10_G_plot,4.443,overlap_pct_of_radius,5.3,"NOT a marker: the dotted segment leaving the 1.49 % circle exits the frame top at x ~420 px; extending that straight segment (dy/dx 13.3 px/px) to the next AoR column x = 333 px gives ~5.3 % [extrapolation, off-scale point]"
+fig9b,bulk density (black x),log10_G_plot,3.444,bulk_density_kg_m3,2653,"panel (b) x ticks 1e4/1e6/1e8/1e10 at 1368/1591/1814/2037 px (111.5 px/decade; 1e3 = left frame 1256, 1e11 = right frame 2149); y ticks 0..3500 kg/m3 at 715.41..11.13 px (0.2012 px per kg/m3); x markers = connected components of dark (<110) pixels, centroid; the '(b)' label and legend frame excluded; same half-decade offset as (a) | solid fraction vs particle density 2470 = 1.074 [card arithmetic]"
+fig9b,bulk density (black x),log10_G_plot,4.446,bulk_density_kg_m3,1837,solid fraction vs particle density 2470 = 0.744 [card arithmetic]
+fig9b,bulk density (black x),log10_G_plot,5.448,bulk_density_kg_m3,1473,solid fraction vs particle density 2470 = 0.596 [card arithmetic]
+fig9b,bulk density (black x),log10_G_plot,6.444,bulk_density_kg_m3,1421,solid fraction vs particle density 2470 = 0.575 [card arithmetic]
+fig9b,bulk density (black x),log10_G_plot,7.448,bulk_density_kg_m3,1408,solid fraction vs particle density 2470 = 0.570 [card arithmetic]
+fig9b,bulk density (black x),log10_G_plot,8.448,bulk_density_kg_m3,1379,solid fraction vs particle density 2470 = 0.558 [card arithmetic]
+fig9b,bulk density (black x),log10_G_plot,9.449,bulk_density_kg_m3,1409,solid fraction vs particle density 2470 = 0.570 [card arithmetic]
+fig9b,bulk density (black x),log10_G_plot,10.451,bulk_density_kg_m3,1407,solid fraction vs particle density 2470 = 0.570 [card arithmetic]
+fig10,G = 1e5 Pa (green),depth_mm,20,penetration_work_J,0.08,"raster xref 76 (1046x839 px); x ticks 20..60 mm at 387.5/531.5/678.0/824.5/971.5 px (14.667 px/mm, 0 at 91.5, right frame 1044.5 = 65 mm); y ticks 0..20 J at 756.5..15.5 px (37.05 px/J); each coloured curve traced from the right frame leftwards (nearest run within 12 px of the previous column; legend box excluded); value = mean of the trace centre in +-2 px columns; below ~2 J the six curves, their markers and error bars overlap -> +-0.15 J there (e.g. red 1.05 > black 0.88 at 20 mm is within that band); the paper reports no numbers for this figure"
+fig10,G = 1e5 Pa (green),depth_mm,30,penetration_work_J,0.30,
+fig10,G = 1e5 Pa (green),depth_mm,40,penetration_work_J,0.54,
+fig10,G = 1e5 Pa (green),depth_mm,50,penetration_work_J,0.86,
+fig10,G = 1e5 Pa (green),depth_mm,60,penetration_work_J,1.31,
+fig10,G = 1e5 Pa (green),depth_mm,63.99,penetration_work_J,1.50,last traced column inside the frame (curve end)
+fig10,G = 1e6 Pa (cyan),depth_mm,20,penetration_work_J,0.21,
+fig10,G = 1e6 Pa (cyan),depth_mm,30,penetration_work_J,0.52,
+fig10,G = 1e6 Pa (cyan),depth_mm,40,penetration_work_J,1.03,
+fig10,G = 1e6 Pa (cyan),depth_mm,50,penetration_work_J,1.78,
+fig10,G = 1e6 Pa (cyan),depth_mm,60,penetration_work_J,2.71,
+fig10,G = 1e6 Pa (cyan),depth_mm,64.67,penetration_work_J,3.18,last traced column inside the frame (curve end)
+fig10,G = 1e7 Pa (blue),depth_mm,20,penetration_work_J,0.38,
+fig10,G = 1e7 Pa (blue),depth_mm,30,penetration_work_J,0.96,
+fig10,G = 1e7 Pa (blue),depth_mm,40,penetration_work_J,1.80,
+fig10,G = 1e7 Pa (blue),depth_mm,50,penetration_work_J,3.03,
+fig10,G = 1e7 Pa (blue),depth_mm,60,penetration_work_J,4.89,
+fig10,G = 1e7 Pa (blue),depth_mm,64.67,penetration_work_J,5.98,last traced column inside the frame (curve end)
+fig10,G = 1e8 Pa (magenta),depth_mm,20,penetration_work_J,0.73,
+fig10,G = 1e8 Pa (magenta),depth_mm,30,penetration_work_J,1.83,
+fig10,G = 1e8 Pa (magenta),depth_mm,40,penetration_work_J,3.47,
+fig10,G = 1e8 Pa (magenta),depth_mm,50,penetration_work_J,6.02,
+fig10,G = 1e8 Pa (magenta),depth_mm,60,penetration_work_J,9.31,
+fig10,G = 1e8 Pa (magenta),depth_mm,64.67,penetration_work_J,11.23,last traced column inside the frame (curve end)
+fig10,G = 1e9 Pa (red),depth_mm,20,penetration_work_J,1.05,
+fig10,G = 1e9 Pa (red),depth_mm,30,penetration_work_J,1.92,
+fig10,G = 1e9 Pa (red),depth_mm,40,penetration_work_J,3.60,
+fig10,G = 1e9 Pa (red),depth_mm,50,penetration_work_J,6.39,
+fig10,G = 1e9 Pa (red),depth_mm,60,penetration_work_J,10.58,
+fig10,G = 1e9 Pa (red),depth_mm,64.67,penetration_work_J,13.36,last traced column inside the frame (curve end)
+fig10,G = 1e10 Pa (black),depth_mm,20,penetration_work_J,0.88,
+fig10,G = 1e10 Pa (black),depth_mm,30,penetration_work_J,2.05,
+fig10,G = 1e10 Pa (black),depth_mm,40,penetration_work_J,3.85,
+fig10,G = 1e10 Pa (black),depth_mm,50,penetration_work_J,6.98,
+fig10,G = 1e10 Pa (black),depth_mm,60,penetration_work_J,11.14,
+fig10,G = 1e10 Pa (black),depth_mm,64.67,penetration_work_J,14.16,last traced column inside the frame (curve end)
+fig10,G = 1e10 Pa (black) error bar,depth_mm,63.17,penetration_work_J_bar_bottom_top,11.75-13.94,vertical error-bar run (longest same-colour vertical run in x 990-1035 px); bar read as the confidence interval of the mean of 10 repeats (text p.111 discusses CIs; the caption does not define the bars) [card interpretation]
+fig10,G = 1e8 Pa (magenta) error bar,depth_mm,63.17,penetration_work_J_bar_bottom_top,9.49-11.73,vertical error-bar run (longest same-colour vertical run in x 990-1035 px); bar read as the confidence interval of the mean of 10 repeats (text p.111 discusses CIs; the caption does not define the bars) [card interpretation]

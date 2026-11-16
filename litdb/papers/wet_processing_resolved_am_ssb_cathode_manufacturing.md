@@ -522,6 +522,8 @@ Fig 7 의 크기 서열(SE–Pore 11.5 ≫ AM–Pore 5.7)을 저자는 **부피*
 
 절대압(MPa)·응력 판독 · Heckel / P_y · 배위수 Z · roll 속도 · Langevin 온도 · 시뮬 시간·타임스텝 · **입자 개수** · AM 2차입자 개수/1차 구 개수 · 슬러리 점도(보정 **안 함**, 자인) · **GeoDict voxel 크기** · **상별 σ 절대값**(AM 이온? SE 전자? pore?) · **τ 계산값** · σ_thermal · 재료 E/σ_y/ν 의 *재료* 값(쌍-유효 E 만 SI) · 반복 횟수(오차막대는 "standard error", Fig 8 만 *"simulation repetitions"* 라고 명시) · fracture · 전기화학 사이클링.
 
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`xu2023_dem_bonded_particle_fracture_calendering`](xu2023_dem_bonded_particle_fracture_calendering.md) = 위 ref [38] (L45 · L239 · L477 · Xu, Paredes-Goyes 2023) 의 원문 카드 — *Batteries & Supercaps* 6 (2023) e202300371 · 액체 LIB NMC111 2 차 입자를 1.59 µm 1 차 구 + 끊어지는 결합 (BPM) 으로 묶은 LIGGGHTS 압연 DEM (0–157.7 MPa · 압축 + 이완 · 끊긴 결합 1.8 · 4.5 · 11.1 % @ 50 · 100 · 150 MPa) · 수송 계산 없음.
+
 ---
 
 ## 🗨️ Q&A 로그

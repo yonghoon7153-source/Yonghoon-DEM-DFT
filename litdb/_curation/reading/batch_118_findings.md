@@ -1,0 +1,69 @@
+# batch 118 — 정독 질문 a–n 의 근거 (한 편 · 2026-11-16 · N-66 · 대피 세션)
+
+대상: `ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation` — M. Ebner · F. Geldmacher · F. Marone · M. Stampanoni · V. Wood, "X-Ray Tomography of Porous, Transition Metal Oxide Based Lithium Ion Battery Electrodes", *Adv. Energy Mater.* **3** (2013) 845–850 (Communication) · DOI 10.1002/aenm.201200932 · 원자료 공개 DOI 10.5905/ethz-iis-1
+NMC111 액체 LIB 양극 16 개 (NMC : C65 : PVDF = 96:2:2 · 94:3:3 · 92:4:4 · 90:5:5 × 롤 압연 0 · ≈300 · ≈600 · ≈2000 bar) 를 TOMCAT 싱크로트론 단층촬영 (28 keV · 복셀 0.37 µm) 으로 찍고, 전역 문턱 이진화 → 거리 변환 + 3D 워터셰드 → 구형 가정 병합 (식 S6–S8) 으로 입자마다 번호 · 복셀 수 · 경계 상자 · 중심을 붙여 회색조 · 이진 · 표지 영상 · 입자 표 · 반쪽 셀 율 자료를 공개한 논문 — zhang2026 이 0 bar 데이터에서 100 × 100 × 75 µm³ 를 잘라 등가 구 DEM 을 시작한 원전 (후보 표 N-66).  기공률은 NMC 복셀 분율 + 탄소 · 바인더 질량 환산 (식 1) 이고 그림에만 있다 · tortuosity 는 계산하지 않았다.
+쪽 = 학술지 쪽 p.845–850 (PDF 쪽 = 학술지 쪽 − 844) · SI p.1–11 = PDF 쪽 (원고 쪽 번호 = SI 쪽 − 1) · 판독 원자료 = `litdb/figures/ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation/digitized.csv` (155 행 · 그림 3a 두 패널 · 3b · 2a · S6 두께 · zhang2026 그림 4c 교차 확인 행).
+
+## a — 순수 SE (LPSCl · 황화물) 의 압력별 기공 곡선
+이 배치에 없음 — SE 없음.  LIB 복합 양극 (AM + 탄소 · 바인더) 의 압연 뒤 기공만 있다 (→ i) = 랩 표준 (순수 SE 기공 10–13 % · 진밀도 1.64 g/cm³) 과 다른 문헌 값 · 다른 계 (액체가 채울 기공) — 나란히만 둔다 (카드 §7-2).
+
+## b — 압력을 뺄 때 되돌아오는 양과 잰 방법
+이 배치에 없음 — 영상 · 기공 모두 롤 압연이 **끝난 뒤** (하중 뺀 뒤 · 에폭시 함침) 에만 잼 · 누른 채 값 · 압연 중 두께 기록이 없어 되돌아옴을 가를 수 없다 (카드 §4-1).
+
+## c — 항복 · 경도 · 크리프 값과 정의
+이 배치에 없음.
+
+## d — 단단한 입자와 무른 입자를 섞어 누를 때 단단한 입자의 하중 몫 · 재밍
+- [d] ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation | 정성만: *"This suggests that the packing density of the hard transition metal oxide materials limits the compressibility of the electrodes. When the NMC particles can no longer redistribute under compression, they absorb the force and crack."* — 단단한 AM 골격의 재배열이 막히는 지점에서 하중을 AM 이 지고 깨진다 · 그 근처 φ_NMC ≈ 0.59–0.63 (≈2000 bar · 식 1 과 그림 3a 판독으로 φ = (1 − ε)/(1 + f) [카드 산술]) | 카드 §3-7 · §7-4 · p.847 · 그림 1i–j | [인쇄 · 카드 산술] | 하중 몫 · 힘 · 파쇄 수 없음 · 무른 상 = 탄소 · 바인더 (SE 아님) · 롤 · 뺀 뒤
+
+## e — 점접촉 법칙이 큰 변형에서 깨지는 범위와 대안
+이 배치에 없음 — 계산 (접촉 법칙) 이 없다.
+
+## f — MPM 의 접촉 · 다물체 · 강체 결합 방법과 해상도 규칙
+이 배치에 MPM 없음.  영상 해상도 · 분할 쪽 근거만 (계산 격자 규칙 아님):
+- [f] ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation | 복셀 0.37 µm (CCD 7.4 µm ÷ 20× [카드 산술 · 인쇄 값 0.37 과 같음]) · NMC D50 ≈ 11.7 µm = 지름당 ≈32 복셀 · D10 ≈ 6.3 µm = 17 복셀 · 가장 작은 예 입자 12 복셀 = 등가 지름 1.05 µm ≈ 3 복셀 [카드 산술] — 이 해상도에서 영상 PSD 가 레이저 회절과 겹친다 (*"does not over-count significantly"*) | 카드 §3-2 · §3-4 · p.846–847 · 그림 2a · SI p.3 | [인쇄 · 판독 · 카드 산술] | 해상도 수렴 시험 없음 · 탄소 · 바인더 · 에폭시는 구분 불가
+- [f] ebner2013_… | 분할 오차 추정 = PSD 대조 하나 · 병합 문턱 th_min 0.25 · th_sum 0.06 · th_prox 0.6 은 *"systematically varied to find a good compromise between under- and over-segmentation"* 뒤 16 개 모두 고정 · 문턱 하나 (16 개 합친 히스토그램 두 정규분포 기대값 평균) | 카드 §3-3 · SI p.3 · p.5–7 | [인쇄] | 문턱 민감도 · 과분할 / 미분할 수 [미확인]
+
+## g — 2D 결과를 3D 로 옮길 때의 경고나 증거
+- [g] ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation (Ebner et al. 2013 · Adv. Energy Mater. 3, 845–850) | *"Two-dimensional (2D) models can resolve spatial distribution of the electrochemical fields to some extent, but are prone to introduce errors, such as the closed porosity for systems near the two dimensional percolation threshold proposed by García et al. [10]"* — 2D 의 닫힌 기공 함정 (원전 = 그 논문 [10]) | 카드 §4-3 (iii) · p.845 | [인쇄] | 논문 자신은 2D ↔ 3D 를 계산으로 견주지 않았다 (측정은 3D · SI 그림 S7 은 3D 를 2D 로 투영한 기공 지도)
+
+## h — DEM 에서 FE · MPM 으로 넘긴 선례와 넘긴 시점
+이 배치에 없음 — DEM · FE · MPM 넘김이 없다.  반대 방향 (실측 영상 → DEM 출발 상태) 의 **데이터 원전** 일 뿐 (zhang2026 이 0 bar 입자 표를 등가 구로 바꿔 씀 · 카드 §7-3 · 질문 m).
+
+## i — 복합 양극 (AM + SE) 의 압력별 기공
+- [i] ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation | (SE 아님 · AM + 탄소 · 바인더) 압연 뒤 기공 ε (식 1 · 0 · ≈300 · ≈600 · ≈2000 bar): 96:2:2 **0.425 · 0.413 · 0.352 · 0.310** · 94:3:3 0.456 · 0.445 · 0.406 · 0.310 · 92:4:4 0.476 · 0.423 · 0.436 · 0.261 · 90:5:5 0.477 · 0.498 · 0.443 · 0.252 · 2000/0 비 0.73 · 0.68 · 0.55 · 0.53 [카드 산술] — 본문의 *"porosity decrease by a factor of two"* 는 4–5 wt% 에서만 | 카드 §3-5 · 그림 3a · p.847–849 | [판독 ±0.002 · 두 패널 일치] | 액체 LIB · 롤 압연 (선압 → bar 환산 'approximately') · 뺀 뒤 · 에폭시 · 질량 환산 연산자 (탄소 · 바인더를 꽉 찬 고체로 = 그 안 나노 기공은 기공) · 단조 아님 (90:5:5 300 > 0 bar · 92:4:4 600 > 300 bar)
+- [i] ebner2013_… | 정의: ε = 1 − φ_NMC − φ_NMC·x/(100 − 2x)·(ρ_NMC/ρ_CB + ρ_NMC/ρ_PVDF) · φ_NMC = 이진 데이터 가운데 부분 부피의 NMC 분율 · ρ 4.7 · 2 · 1.78 g/cm³ · x = 탄소 · 바인더 각각 wt% → φ_NMC 0 bar 0.521 · 0.470 · 0.431 · 0.409 → 2000 bar 0.625 · 0.595 · 0.607 · 0.586 (96 · 94 · 92 · 90 wt%) [카드 산술] | 카드 §3-5 · p.849 식 (1) | [인쇄 · 카드 산술] | 부분 부피 크기 [미확인] · ρ_NMC 4.7 출처 미인용 (NMC111 값 — 우리 NCM811 · LPSCl 값 아님)
+- [i] ebner2013_… | 질량 점검: 입자 중심 범위 두께 (SI 그림 S6 벡터 칸 · 96 wt% 120 · 126 · 114 · 106 µm · 90 wt% 64 · 74 · 64 · 71.5 µm) × φ_NMC = 96:2:2 62.5 · 67.0 · 66.9 · 66.3 µm (평균의 −5 / +2 %) · 94:3:3 −4 / +6 % 는 한 코팅을 누른 것과 맞고 92:4:4 · 90:5:5 는 최대 1.6 배 → **16 개는 서로 다른 시료** · 압연 4 점은 한 시료의 궤적이 아니다 | 카드 §3-6 · SI p.10 | [판독 · 벡터 · 카드 산술] | 두께 = 입자 중심 범위 (전극 두께보다 대략 작은 입자 반지름만큼 작다) · 원문에 두께 · 로딩 없음
+- [i] ebner2013_… | 교차 (같은 자료 · 다른 논문): Ge 2022 가 이 공개 자료 90:5:5 로 그린 CT 'AM 밖 부피' 0.599 · 0.611 · 0.559 · 0.419 (ge2022 카드 §3-3 · 그쪽 그림 7 판독) ↔ 이 카드 1 − φ_NMC (식 1 · 그림 3a) 0.591 · 0.607 · 0.564 · 0.414 — 차 ≤ 0.009 · 300 bar > 0 bar 비단조도 같다 → 비단조는 자료의 성질 | 카드 §3-5 | [판독 · 카드 산술] | 두 쪽 다 그림 판독 · Ge 의 부분 영역 크기 [미확인]
+- [i] ebner2013_… | 교차: zhang2026 그림 4c 'Experiment' (판독 0.424 · 0.412 (본문) · 0.359 · 0.310 @ 0 · 30 · 60 · 200 MPa) ↔ Ebner 96:2:2 — 세 점 판독 차 ≤ 0.001 · 600 bar 만 −0.007 | 카드 §3-8 · 두 원문 그림 판독 | [판독] | zhang 원문이 그 계열의 출처 (자체 측정 / Ebner) 를 가르지 않는다
+
+## j — 카드가 스스로 "아직 못 한다 · 한계" 라고 적은 것 가운데 가압 · 탈압 계산과 닿는 것
+- [j] ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation | 가압 · 탈압 계산 0 · 측정 상태 = 압연 뒤만 (카드 §4-1 · §4-3 (iv)) · 압력 = 롤 선압 36.3 · 72.5 · 241.6 N/mm 의 'approximately' 환산 (선압 ÷ 압력 = 1.21 mm 세 점 같음 [카드 산술] · 환산법 · 롤 속도 · 간극 [미확인]) · 16 개 = 서로 다른 시료 → 같은 입자 궤적 없음 · 파쇄 입자 수 · 분율 [미확인] | 카드 §3-1 · §11 · [미확인] 목록 | [인쇄 · 카드 산술 · 미확인] | 원문이 스스로 적은 한계는 영상 쪽 (탄소 · 바인더 · 에폭시 구분 불가 · p.847) 뿐
+
+## k — DEM 의 한계 (원문 문장 · 인용 서지 = Ebner et al. 2013, Adv. Energy Mater. 3, 845–850)
+- [k] ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation (M. Ebner, F. Geldmacher, F. Marone, M. Stampanoni, V. Wood · 2013 · Adv. Energy Mater. 3, 845–850) | **말 없음** — DEM 을 쓰지 않는다.  가장 가까운 문장 (생성 미세구조 비판 · p.845): *"The simulation community, despite significant advances in computation over the past decades, must rely on simplified pictures of porous electrode microstructure or computer generated microstructures that bear an as-of-yet unquantified relationship to real battery microstructures."* · *"electrode geometries used in 3D simulations are most often computer-generated and thus their representation of real porous electrodes is questionable."* · *"Goldin et al. simulated highly symmetric arrangements of monodisperse spheres, Wang et al. used a collision algorithm to simulate random packing and Awarke et al. modeled compression of spheroid particles featuring a distribution of particle sizes."* | 카드 §4-3 (i) · p.845 | [인쇄] | DEM 접촉 · 겹침 · 상대밀도 한계에 대한 수치는 없다 — '생성 충전 (구 · 충돌 · 압축) 이 실물과 정량 대조되지 않았다' 는 비판만
+
+## l — 소성변형이 왜 어려운가 · 우회 · 비용 (인용 서지 = Ebner et al. 2013)
+- [l] ebner2013_… (Ebner et al. 2013 · Adv. Energy Mater. 3, 845–850) | 해당 없음 — 계산이 없고 'plastic' · 'deform' 은 본문 · SI 에 0 회.  재료 쪽 정성만: NMC 는 *"hard transition metal oxide materials"* 로 압연에서 소성 변형이 아니라 **깨진다** (*"When the NMC particles can no longer redistribute under compression, they absorb the force and crack"* · p.847) · 우회 · 맞춘 값 · 비용 = 해당 없음 | 카드 §4-3 (ii) · §3-7 | [인쇄] | 소성이 어려운 이유의 근거로 인용하지 않는다 (AM 이 단단해 소성 대신 파쇄한다는 관찰로만) · ⚠ song2025 원문은 [29] (= 이 논문) 을 *"plastic deformation and breakage"* 의 근거로 든다 — 이 논문에는 breakage 만 있다 (카드 문제 절)
+
+## m — 받아들일 통찰
+- [m] ebner2013_… | 무엇을: **영상 출발 상태로 압밀을 검증할 때 '같은 시료' 를 먼저 점검** — 압연 단계 사이 NMC 등가 두께 t·φ_AM 이 보존되는지 (이 데이터에서 96:2:2 · 94:3:3 은 ±6 % 안 · 92:4:4 · 90:5:5 는 1.6 배) · 안 맞으면 궤적 대조가 아니라 통계 대조로만 · 우리 쪽 어디에: 단계 5 · 단계 0 · 결과 전 대조 항목 · 왜: 카드 §3-6 · §9-1 (ex situ 영상은 에폭시 함침 · 선반 가공으로 시료가 소모된다 [카드 추론])
+- [m] ebner2013_… | 무엇을: **영상 기공 연산자를 값 옆에** — 해상 안 되는 상 (탄소 · 바인더) 을 질량비 · 진밀도로 꽉 찬 고체로 더하는지 (식 1 = 그 안 나노 기공은 기공) · 이진화 문턱 하나를 전 시료에 같게 (두 정규분포 기대값 평균) · 해상도 0.37 µm · 우리 쪽 어디에: 단계 0 · 흐름 밖: 우리 복셀 · DEM 기공을 영상 기공과 견줄 때의 표기 · 왜: 카드 §3-2 · §3-5 · lu2020 카드의 문턱 ±10 % → 기공 0.288–0.353 과 같은 함정
+- [m] ebner2013_… | 무엇을: **벽 옆 작은 입자 몰림을 결과 전 대조 항목으로** — 실측: 집전체 옆 (16 개 전부) · 압연 뒤 위 표면에서 PSD 가 작은 쪽으로 · 시작 거리 ≈ 평균 입경 · 거리–지름 선형 (z 2 µm 칸 · 입자 중심 + 부피 등가 지름) → 우리 DEM 침대 (바닥 벽 · 판) 의 z 별 PSD 를 같은 꼴로 그려 견준다 · 우리 쪽 어디에: 후보 D0 · 결과 전 대조 항목 · 왜: 카드 §3-6 · 그림 2b · S6 · p.847
+- [m] ebner2013_… | 무엇을: **문헌 DEM 검증을 읽을 때 '초기 구조와 검증 표적이 같은 데이터 계열인가' 를 본다** — zhang2026 의 'Experiment' 기공은 이 논문 96:2:2 영상 기공과 세 점이 판독 차 ≤ 0.001 · 초기 구조도 이 데이터 (0 bar) → 독립 검증이 아닐 수 있다 [카드 추론] · 우리 쪽 어디에: 흐름 밖: 문헌 DEM 검증 등급 읽기 · 단계 5 · 왜: 카드 §3-8 · §9-5
+
+## n — 논문 에이전트 후보 (이 논문이 인용했지만 정본에 카드 없음 · papers/ ls + grep 확인)
+- [n] P. R. Shearing, L. E. Howard, P. S. Jorgensen, N. P. Brandon, S. J. Harris, Electrochem. Commun. 2010, 12, 374. (원문 목록 [1] 그대로 · 서지 일부만 — 제목 · DOI 목록에 없음) | 영상 부피 규칙 — 흑연 전극 43 × 348 × 478 µm³ 에서 비표면적은 43 × 60 × 60 µm³ 로 되지만 기공 · tortuosity 는 전체 부피가 필요 (이 논문 p.846 의 인용 문장) · 단계 0 · U6 · 카드 §12 | litdb 확인: papers/ 에 shearing* 없음 · '12, 374' grep 0 (Shearing 이름은 다른 논문 공저자로 여러 카드에 있음)
+- [n] B. Vijayaraghavan, D. R. Ely, Y.-M. Chiang, R. García-García, R. E. García, J. Electrochem. Soc. 2012, 159, A548. (원문 목록 [7] 그대로 · 서지 일부만) | 이 논문이 tortuosity 계산에 쓰라고 한 방법 (*"for computer generated microstructures"* · p.848) + Bruggeman 타당성 의문 [6, 7] (p.845) — 단계 7 · 비교 문서 J 절 · 카드 §0 ⑥ · §12 | litdb 확인: papers/ 에 vijayaraghavan* 없음 · '159, A548' grep = `devasconcelos2016_…` (인용만) · 이름 grep = `froboese2019_…` · `sangros2020_…` · `tjaden2018_…` (인용만)
+- [n] R. E. García, Y.-M. Chiang, W. C. Carter, P. Limthongkul, C. M. Bishop, J. Electrochem. Soc. 2005, 152, A255. (원문 목록 [10] 그대로 · 서지 일부만) | 2D 모델의 닫힌 기공 (2D 퍼콜레이션 문턱) 함정의 원전 — 질문 g · 단계 2–3 · 카드 §4-3 (iii) | litdb 확인: papers/ 의 garcia* = garcia2017 (다른 논문) · '152, A255' grep 0 · 'Limthongkul' grep 0
+- [n] A. Awarke, M. Wittler, S. Pischinger, J. Bockstette, J. Electrochem. Soc. 2012, 159, A798. (원문 목록 [13] 그대로 · 서지 일부만) | 크기 분포 회전타원체를 압축해 만든 생성 전극 (이 논문이 든 생성 미세구조의 예) — 질문 k · 후보 D0 · 단계 5 · 카드 §4-3 (i) | litdb 확인: papers/ 에 awarke* 없음 · '159, A798' grep 0 · 'Awarke' grep 0
+- [n] B. Münch, P. Gasser, L. Holzer, R. Flatt, J. Am. Ceram. Soc. 2006, 89, 2586. (원문 목록 [22] 그대로 · 서지 일부만) | 영상 PSD ↔ 레이저 회절 비교 문장 (p.847) 에 붙은 인용 — 영상 → 입자 표 방법을 거슬러 볼 자리 · 단계 0 · 단계 5 · 카드 §12 | litdb 확인: papers/ 에 munch* · muench* 없음 · '89, 2586' grep 0 ('Münch' 이름은 다른 논문으로 holzer2013 등에 있음)
+
+## 카드 문제
+가리킨 카드 `zhang2026_xct_dem_cathode_calendering_peel_calibration` 의 이 논문 2 차 인용에 **틀린 값은 없다** (숫자를 옮기지 않았고 L38 이 '읽지 않았다' 를 스스로 적음 · L50 · L63 · L100 · L265 · L299 · L329 의 서술 = 원문과 같음 · zhang 원문의 인용 네 문장도 직접 대조해 맞음).  아래는 고치지 않고 기록만 한다.
+- 보탬 후보 (zhang2026 카드): L465 *"Ebner 2013 의 전극 (조성 미기재 [미확인])"* → 원문 조성 넷 (NMC : C65 : PVDF = 96:2:2 · 94:3:3 · 92:4:4 · 90:5:5 · p.849 · SI p.2) · zhang 의 NMC : CBD = 96 : 4 와 PVDF : CB = 50 : 50 가정은 Ebner 96:2:2 와 수치가 같다 (어느 파일을 썼는지는 zhang 원문에 없음) / L466 *"0/30/60/200 MPa … 같은지 [미확인]"* → Ebner 명목 0 · ≈300 · ≈600 · ≈2000 bar = 0 · 30 · 60 · 200 MPa 와 같다 (다만 80 mm 롤 · 선압 36.3 · 72.5 · 241.6 N/mm · '6 cycles' ↔ zhang DEM 평판 한 번 · p.849) / L313 · L465 (Fig 4c 'Experiment' 출처) → Ebner 그림 3a 96:2:2 와 세 점 판독 차 ≤ 0.001 · 600 bar −0.007 (출처 확정은 아님) / L148–149 (D 값 = 반지름 해석) → Ebner 지름 PSD D10/D50/D90 ≈ 6.3/11.7/22.8 µm [판독 + 카드 산술] 와 ≤ 8 % — 해석을 받친다 / L64 (*"DEM 구조와 실험 전극이 다른 전극"*) → 맞지만 조성 · 집전체 · 건조 조건은 같은 계열 (혼합 8 h ↔ 5 분 + ≤ 3 h · 원판 12 ↔ 13 mm 는 다름) / L265 (RVE 100 × 100 × 75 µm³) → 96 wt% 계열 입자 중심 범위 두께 106–126 µm [판독 · S6] 라 75 µm 높이는 전극 두께 전체가 아니다 [카드 추론].
+- 보탬 후보 (`ge2022_xct_initial_structure_dem_calendering_nmc333` · push 직전 rebase 로 들어온 같은 날 카드 · 틀린 값 없음): L81 · L410 *"Ebner 실험의 압연 방식 · 장비 · 속도 · '≈300 · 600 · 2000 bar' 의 정의 (선하중 환산인가)"* [미확인] → 원문 = 상온 · 지름 80 mm 롤 · 압력을 높여 가며 '6 cycles' · 선압 36.3 · 72.5 · 241.6 N/mm → *"pressures of approximately 300, 600, and 2000 bar"* (선하중 환산이 맞다 · 환산법 · 속도는 원문에도 없음 · p.849) / L387 서지 ([12] · 3 (7) (2013) 845–850) = 원문과 같음 / L35 · L69 의 조성 90 : 5 : 5 = 원문 데이터셋 `NMC_90wt_*` 와 같음 / §3-3 의 CT 칸 (0.599 · 0.611 · 0.559 · 0.419) = 이 카드의 식 1 환산 1 − φ_NMC 와 차 ≤ 0.009 (맞음) / L191 (Fig 1c 입도가 부분 영역인지 전체인지 [미확인]) → Ebner 그림 2a 의 전체 표지 PSD 는 ≈ 50 µm 까지 (q3 > 0 · [판독]) — 그쪽 32–41 µm 점과는 어긋나지 않지만 가르는 근거는 아니다.
+- `landesfeind2018_tortuosity_impedance_vs_tomography` L53 · L30 · L394: *"Refs 2 · 11 = Ebner (XTM τ 원 논문)"* · ref 2 가 *"XTM τ 의 식 · 척도 (tau2 인지) · 계산 ε 정의"* 를 닫으리라 기대 → ref 2 (= 이 논문) 에는 **τ 계산 · 식이 없다** (결론의 '할 수 있다' 뿐 · p.848) · 닫는 것은 영상 ε 정의 (식 1) 하나 · 이 논문 복셀 0.37 µm ↔ 그 카드의 XTM 325 nm = 다른 촬영 → τ 방법은 그 카드 ref 11 (Ebner 2014 AEM 4) 쪽 몫으로 읽힌다 [카드 추론 · 2014 원문 미열람].
+- `song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage` L36 · L324 · L539: Song 원문이 [29] (= 이 논문) 을 *"the plastic deformation and breakage of the particles"* 의 근거로 든다 (카드는 원문대로 옮김 — 카드 결함 아님) → 이 논문에는 **파쇄 (breakage) 만** 있고 'plastic' · 'deform' 은 본문 · SI 0 회 = Song 원문 쪽의 귀속 차이 (Song PDF 는 이번에 보지 않음).
+- 서지: 후보 표 · 지시서 메모 (저자 다섯 · 제목 · Adv. Energy Mater. 3 (2013) 845–850 · DOI) = 원문 첫 쪽 · 쪽 머리글과 같다 · 7 호는 내려받기 머리글에서만 · 다른 점 없음.
+- 원문 안 어긋남 (카드 §11 · 원문 문제 · 카드 문제 아님): 본문 *"> 80% at 5C"* ↔ 그림 3b 5C CC 69–72 % (> 80 % 는 2C) · *"factor of two"* ↔ 4–5 wt% 에서만 · q3 축 단위 µm⁻¹ ↔ log₁₀ d 적분 1 · 그림 3 ↔ S4 마커 엇갈림 · 그림 3b 삽입 2.4–4.4 V ↔ 차단 2.3 · 4.3 V · SI 식 번호 (S6) 부터 · SI p.3 'binarized' ↔ 표지 영상 뜻 · 오타 (soruce · oft · Compresssion · calendaring · Merk · ULTRA-DURRAX · Phyisk · regionprobs).

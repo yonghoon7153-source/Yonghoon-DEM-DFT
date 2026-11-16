@@ -1,0 +1,1675 @@
+{
+ "slug": "devasconcelos2019_insitu_nanoindentation_nmc532_liquid_electrolyte",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-12",
+ "sources": [
+  "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+  "74921154-24._SupZ_07_11340_2018_451_MOESM3_ESM.docx",
+  "74921154-24._SupZ_06_11340_2018_451_MOESM4_ESM.docx",
+  "74921154-24._SupZ_05_11340_2018_451_MOESM5_ESM.docx",
+  "74921154-24._SupZ_04_11340_2018_451_MOESM6_ESM.docx",
+  "74921154-24._SupZ_03_11340_2018_451_MOESM7_ESM.docx",
+  "74921154-24._SupZ_02_11340_2018_451_MOESM8_ESM.docx",
+  "74921154-24._SupZ_01_11340_2018_451_MOESM9_ESM.docx",
+  "74921154-24._SupZ_00_11340_2018_451_MOESM10_ESM.docx",
+  "74921154-24._SupZ_09_11340_2018_451_MOESM1_ESM.docx",
+  "74921154-24._SupZ_08_11340_2018_451_MOESM2_ESM.docx"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Sketch of the mechanical behavior of a composite electrode in the liquid electrolyte. Compared to the dry state, the polymeric matrix swells in the volume and softens in the mechanical properties, while the liquid bridging at the interface of the primary particles enhances the interfacial strength",
+   "rotated_deg": 0,
+   "bbox": [
+    300.1,
+    502.4,
+    550.3,
+    665.5
+   ],
+   "w": 1043,
+   "h": 680,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.482,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened and kept — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Systematic procedure for the determination of the fracture toughness. (a) Load as a function of indentation depth and (b) corresponding reduced stiffness distribution showing the Q3 + 3IQR threshold used to characterize a pop-in",
+   "rotated_deg": 0,
+   "bbox": [
+    231.9,
+    532.5,
+    544.8,
+    714.8
+   ],
+   "w": 1325,
+   "h": 766,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.927,
+   "manual_crop": "2026-11-12 수동 그림 크롭 (도구가 놓침 — 캡션이 그림 오른쪽 옆 · missing_labels f2) — clip 231.9–544.8 × 532.5–714.8 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f2a",
+   "kind": "figure",
+   "label": "2a",
+   "page": 4,
+   "file": "fig_2a.png",
+   "caption": "Fig. 2(a) — one cube-corner test: reduced stiffness S̄ (red, left axis 0–100; grey = below h_min) and load (blue, right axis 0–3.0 mN) vs tip displacement 0–400 nm · h_min arrow · pop-in at ≈150 nm (red arrow) · h_t (dashed extrapolation) · h_x · h_m · P · Q3 + 3IQR line",
+   "rotated_deg": 0,
+   "bbox": [
+    231.9,
+    532.5,
+    441.2,
+    714.8
+   ],
+   "w": 892,
+   "h": 766,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.933,
+   "panel_of": "f2",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 231.9–441.2 × 532.5–714.8 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f2b",
+   "kind": "figure",
+   "label": "2b",
+   "page": 4,
+   "file": "fig_2b.png",
+   "caption": "Fig. 2(b) — distribution of S̄ for the test in (a): box 25–75 % · whiskers = range within 3IQR · median · mean · Q3 + 3IQR dashed line (≈16) · points above it = pop-ins",
+   "rotated_deg": 0,
+   "bbox": [
+    446.6,
+    535.5,
+    544.8,
+    699.7
+   ],
+   "w": 431,
+   "h": 705,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.906,
+   "panel_of": "f2",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 446.6–544.8 × 535.5–699.7 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 The comparisons of (a) volume, (b) elastic modulus, and (c) hardness of the PVDF binder under dry and wet conditions. (d) Elastic modulus and (e) hardness of the CB/PVDF conductive matrix as a function of the nominal porosity. Dry measurements are shown in red and wet measurements are shown in blue. The error bars represent the standard deviation",
+   "rotated_deg": 0,
+   "bbox": [
+    176.8,
+    409.2,
+    545.0,
+    714.8
+   ],
+   "w": 1553,
+   "h": 1293,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.886,
+   "recrop": "2026-11-12 다시 자름 — tool clip 228.6–525.5 × 441.9–557.6 pt kept only part of the top row (panels d · e and the y-axis titles cut) · caption hyphenation cleaned — re-cut · clip 176.8–545.0 × 409.2–714.8 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 5,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — PVDF volume [% of dry] dry ↔ wet (bar ± SD)",
+   "rotated_deg": 0,
+   "bbox": [
+    181.7,
+    409.2,
+    299.2,
+    552.4
+   ],
+   "w": 511,
+   "h": 617,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.781,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 181.7–299.2 × 409.2–552.4 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 5,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — PVDF elastic modulus [GPa] dry ↔ wet",
+   "rotated_deg": 0,
+   "bbox": [
+    303.2,
+    409.2,
+    414.7,
+    552.4
+   ],
+   "w": 486,
+   "h": 617,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.837,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 303.2–414.7 × 409.2–552.4 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 5,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3(c) — PVDF hardness [GPa] dry ↔ wet",
+   "rotated_deg": 0,
+   "bbox": [
+    421.1,
+    409.2,
+    536.0,
+    552.4
+   ],
+   "w": 501,
+   "h": 617,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.829,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 421.1–536.0 × 409.2–552.4 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3d",
+   "kind": "figure",
+   "label": "3d",
+   "page": 5,
+   "file": "fig_3d.png",
+   "caption": "Fig. 3(d) — CB/PVDF elastic modulus [GPa] vs nominal porosity [%] (3.8 · 27.5 · 50.8 %), dry (filled red) ↔ wet (open blue)",
+   "rotated_deg": 0,
+   "bbox": [
+    176.8,
+    562.3,
+    356.9,
+    714.8
+   ],
+   "w": 770,
+   "h": 655,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.943,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 176.8–356.9 × 562.3–714.8 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 5,
+   "file": "fig_3e.png",
+   "caption": "Fig. 3(e) — CB/PVDF hardness [GPa] vs nominal porosity [%], dry ↔ wet",
+   "rotated_deg": 0,
+   "bbox": [
+    364.0,
+    562.3,
+    545.0,
+    714.8
+   ],
+   "w": 773,
+   "h": 655,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.941,
+   "panel_of": "f3",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 364.0–545.0 × 562.3–714.8 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 SEM image of the NMC532 (a) sintered pellet and (b) as-received secondary particles. (c) XRD profiles in comparison with the reference pattern [58]",
+   "rotated_deg": 0,
+   "bbox": [
+    231.7,
+    415.7,
+    545.1,
+    714.6
+   ],
+   "w": 1328,
+   "h": 1268,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.542,
+   "manual_crop": "2026-11-12 수동 그림 크롭 (도구가 놓침 — missing_labels f4) — clip 231.7–545.1 × 415.7–714.6 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "note": "caption cites [58] (Chung 2003, PVDF-HFP polymer electrolyte) but the text cites the XRD reference pattern as [61] (Gu 2015, Li1+xNi0.5Co0.2Mn0.3O2) — printed as is"
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 6,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — SEM, NMC532 sintered pellet (scale bar 5 µm; grains 3–10 µm per text)",
+   "rotated_deg": 0,
+   "bbox": [
+    232.7,
+    416.8,
+    388.2,
+    548.5
+   ],
+   "w": 676,
+   "h": 578,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.094,
+   "panel_of": "f4",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 232.7–388.2 × 416.8–548.5 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 6,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — SEM, as-received NMC532 secondary particle (scale bar 5 µm; primary particles 0.1–1 µm per text)",
+   "rotated_deg": 0,
+   "bbox": [
+    389.0,
+    416.8,
+    543.6,
+    548.5
+   ],
+   "w": 673,
+   "h": 578,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.094,
+   "panel_of": "f4",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 389.0–543.6 × 416.8–548.5 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 6,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — XRD, normalized intensity vs 2θ 10–80°: sintered pellet · as-received powder · reference pattern",
+   "rotated_deg": 0,
+   "bbox": [
+    241.6,
+    555.0,
+    535.6,
+    714.6
+   ],
+   "w": 1244,
+   "h": 686,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.934,
+   "panel_of": "f4",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 241.6–535.6 × 555.0–714.6 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Elastic modulus (blue) and hardness (red) of polystyrene in dry condition (filled square), submerged in 1 M LiPF6-PC electrolyte for 1 h (open square), and submerged in the electrolyte for 6 days (open circle). The error bars represent the standard deviation",
+   "rotated_deg": 0,
+   "bbox": [
+    77.8,
+    53.5,
+    263.1,
+    207.3
+   ],
+   "w": 792,
+   "h": 660,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.913,
+   "recrop": "2026-11-12 다시 자름 — tool clip started at y 72.7 pt — the top of the plot frame (y ≈ 53.5 pt) and the legend were cut — re-cut · clip 77.8–263.1 × 53.5–207.3 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 SEM images of the polished NMC agglomerates in a polystyrene matrix (a) and sintered pellet (b). The residual impressions at the pre-selected sites are shown after removal of the indenter",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    585.1,
+    295.2,
+    685.4
+   ],
+   "w": 1043,
+   "h": 419,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.168,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened and kept — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) Load-displacement curves and (b) elastic modulus as a function of the indentation depth for NMC particles and pellet. The shaded areas in (b) represent the standard deviation",
+   "rotated_deg": 0,
+   "bbox": [
+    231.7,
+    55.0,
+    545.1,
+    180.2
+   ],
+   "w": 1325,
+   "h": 541,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.892,
+   "manual_crop": "2026-11-12 수동 그림 크롭 (도구가 놓침 — missing_labels f7 · 캡션이 그림 아래 다른 단) — clip 231.7–545.1 × 55.0–180.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 8,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(a) — load [mN] 0–45 vs indentation depth [nm] 0–600: pellet · particle (one Berkovich test each, to ≈500 nm)",
+   "rotated_deg": 0,
+   "bbox": [
+    231.7,
+    55.0,
+    385.0,
+    180.2
+   ],
+   "w": 658,
+   "h": 541,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.927,
+   "panel_of": "f7",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 231.7–385.0 × 55.0–180.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 8,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — elastic modulus [GPa] 0–250 vs indentation depth [nm] 0–500: pellet · particle mean with SD band · dashed line = selected depth 85 nm",
+   "rotated_deg": 0,
+   "bbox": [
+    390.4,
+    55.0,
+    545.1,
+    180.2
+   ],
+   "w": 664,
+   "h": 541,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.856,
+   "panel_of": "f7",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 390.4–545.1 × 55.0–180.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8 (a) Elastic modulus, (b) hardness, and (c) fracture toughness of NMC agglomerate and sintered pellet in dry (red box) and wet (blue box) environment",
+   "rotated_deg": 0,
+   "bbox": [
+    177.8,
+    549.1,
+    545.1,
+    714.7
+   ],
+   "w": 1553,
+   "h": 710,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.913,
+   "manual_crop": "2026-11-12 수동 그림 크롭 (도구가 놓침 — missing_labels f8 · 캡션이 그림 옆) — clip 177.8–545.1 × 549.1–714.7 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 8,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8(a) — elastic modulus [GPa] box plots, agglomerate · pellet, dry · wet; labels = means 113 · 108 · 200 · 201",
+   "rotated_deg": 0,
+   "bbox": [
+    177.8,
+    549.1,
+    331.0,
+    714.7
+   ],
+   "w": 666,
+   "h": 710,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.927,
+   "panel_of": "f8",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 177.8–331.0 × 549.1–714.7 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 8,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8(b) — hardness [GPa] box plots; labels = means 7.8 · 7.8 · 14.0 · 13.9",
+   "rotated_deg": 0,
+   "bbox": [
+    329.2,
+    549.1,
+    435.4,
+    714.7
+   ],
+   "w": 472,
+   "h": 710,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.922,
+   "panel_of": "f8",
+   "manual_crop": "2026-11-12 수동 패널 크롭 (a 3.6 × 12 pt white-out at x 433.4–437.0, y 704–716 pt removes the glyph 'F' of panel (c)'s axis title that falls inside the clip) — clip 329.2–435.4 × 549.1–714.7 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f8c",
+   "kind": "figure",
+   "label": "8c",
+   "page": 8,
+   "file": "fig_8c.png",
+   "caption": "Fig. 8(c) — fracture toughness [MPa m^1/2] box plots; labels = means 0.104 · 0.212 · 0.298 · 0.291",
+   "rotated_deg": 0,
+   "bbox": [
+    433.8,
+    549.1,
+    545.1,
+    714.7
+   ],
+   "w": 488,
+   "h": 710,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.887,
+   "panel_of": "f8",
+   "manual_crop": "2026-11-12 수동 패널 크롭 — clip 433.8–545.1 × 549.1–714.7 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9 Schematic illustration of physical interactions between the primary particles in dry (a) and wet (b) conditions",
+   "rotated_deg": 0,
+   "bbox": [
+    50.8,
+    53.8,
+    289.1,
+    169.0
+   ],
+   "w": 1015,
+   "h": 499,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.407,
+   "recrop": "2026-11-12 다시 자름 — tool clip 45.0–295.2 × 65.7–171.3 pt cut the panel labels (a) (b) at the top, and the tool caption ran on into the body text below the caption (removed) — re-cut · clip 50.8–289.1 × 53.8–169.0 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Reduced stiffness of individual tests for (a) dry NMC particles, (b) wet NMC particles, (c) dry NMC pellet and (b) wet NMC pellet. The red line indicates the median and the bottom and top edges of the blue box indicate the 25th (Q1) and 75th (Q3) percentiles, respectively. The blue whiskers extend to S̄ > Q3+3IQR and S̄ < Q1-3IQR, and data points outside this range are considered outliers (pop-in's) and indicated by the red plus symbol.",
+   "rotated_deg": 0,
+   "bbox": [
+    119.5,
+    75.5,
+    497.4,
+    362.1
+   ],
+   "w": 1533,
+   "h": 1209,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_07_11340_2018_451_MOESM3_ESM.docx → LibreOffice PDF (74921154-24._SupZ_07_11340_2018_451_MOESM3_ESM.pdf, p.1)",
+   "blank": 0.958,
+   "manual_crop": "2026-11-12 수동 SI 그림 크롭 (도구가 놓침 — EMF 4 장, missing_labels fS1) — clip 119.5–497.4 × 75.5–362.1 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)",
+   "note": "OMML math in the docx caption (Q1 · Q3 · S̄ · h_min · Q3+3IQR) is not rendered by the LibreOffice conversion — restored from word/document.xml (m:t runs) · caption labels the 4th panel '(b)' again (figure shows (d)) · test numbers = 19 · 25 · 19 · 21"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 1,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Elastic modulus (a) and hardness (b) of PVDF film under dry and wet condition as a function of the indentation depth. The shaded areas represent the standard deviations.",
+   "rotated_deg": 0,
+   "bbox": [
+    132.4,
+    97.0,
+    479.6,
+    242.6
+   ],
+   "w": 1430,
+   "h": 598,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_06_11340_2018_451_MOESM4_ESM.docx → LibreOffice PDF (74921154-24._SupZ_06_11340_2018_451_MOESM4_ESM.pdf, p.1)",
+   "blank": 0.724,
+   "recrop": "2026-11-12 다시 자름 — tool clip 66.1–549.1 × 91.8–247.8 pt = page-width box with wide, uneven white margins — re-cut · clip 132.4–479.6 × 97.0–242.6 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 1,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Elastic modulus and hardness of CB/PVDF film of different porosities under dry (a, c) and wet condition (b, d) as a function of the indentation depth. The shaded areas represent the standard deviations.",
+   "rotated_deg": 0,
+   "bbox": [
+    146.1,
+    75.4,
+    465.6,
+    351.3
+   ],
+   "w": 1347,
+   "h": 1166,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_05_11340_2018_451_MOESM5_ESM.docx → LibreOffice PDF (74921154-24._SupZ_05_11340_2018_451_MOESM5_ESM.pdf, p.1)",
+   "blank": 0.871,
+   "recrop": "2026-11-12 다시 자름 — tool clip 66.1–549.1 × 70.2–356.5 pt = page-width box with wide, uneven white margins — re-cut · clip 146.1–465.6 × 75.4–351.3 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 1,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Sensitivity of fracture toughness measurements on user-defined h_min. The ratio of valid (kept) number of tests to the total number of tests for each configuration is indicated by the green square symbol (right y-axis).",
+   "rotated_deg": 0,
+   "bbox": [
+    86.9,
+    73.2,
+    520.2,
+    404.6
+   ],
+   "w": 1825,
+   "h": 1393,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_04_11340_2018_451_MOESM6_ESM.docx → LibreOffice PDF (74921154-24._SupZ_04_11340_2018_451_MOESM6_ESM.pdf, p.1)",
+   "blank": 0.956,
+   "recrop": "2026-11-12 다시 자름 — tool clip 66.7–548.5 × 68.0–409.8 pt = page-width box with wide, uneven white margins — re-cut · clip 86.9–520.2 × 73.2–404.6 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)",
+   "note": "OMML math in the docx caption (Q1 · Q3 · S̄ · h_min · Q3+3IQR) is not rendered by the LibreOffice conversion — restored from word/document.xml (m:t runs)"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 1,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Test results for dry NMC pellet as a function of indentation depth. The right y axis shows the load (orange line). (a) A pop-in is detected when the reduced stiffness (blue straight line) is larger than the Q3+3IQR cut-off (blue dashed line). (b) The first five data points following the pop-in (green line) are used for the calculation of the fracture toughness (blue circle).",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    71.7,
+    572.9,
+    639.4
+   ],
+   "w": 1947,
+   "h": 2366,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_03_11340_2018_451_MOESM7_ESM.docx → LibreOffice PDF (74921154-24._SupZ_03_11340_2018_451_MOESM7_ESM.pdf, p.1)",
+   "blank": 0.916,
+   "recrop": "2026-11-12 다시 자름 — tool clip 66.1–578.1 × 66.5–640.2 pt = page-width box with wide, uneven white margins — re-cut · clip 71.3–572.9 × 71.7–639.4 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)",
+   "note": "OMML math in the docx caption (Q1 · Q3 · S̄ · h_min · Q3+3IQR) is not rendered by the LibreOffice conversion — restored from word/document.xml (m:t runs)"
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 1,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Test results for wet NMC pellet as a function of indentation depth. The right y axis shows the load (orange line). (a) A pop-in is detected when the reduced stiffness (blue straight line) is larger than the Q3+3IQR cut-off (blue dashed line). (b) The first five data points following the pop-in (green line) are used for the calculation of the fracture toughness (blue circle).",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    71.7,
+    571.6,
+    617.0
+   ],
+   "w": 1901,
+   "h": 2273,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_02_11340_2018_451_MOESM8_ESM.docx → LibreOffice PDF (74921154-24._SupZ_02_11340_2018_451_MOESM8_ESM.pdf, p.1)",
+   "blank": 0.912,
+   "recrop": "2026-11-12 다시 자름 — tool clip 66.1–576.8 × 66.5–618.4 pt = page-width box with wide, uneven white margins — re-cut · clip 71.3–571.6 × 71.7–617.0 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)",
+   "note": "OMML math in the docx caption (Q1 · Q3 · S̄ · h_min · Q3+3IQR) is not rendered by the LibreOffice conversion — restored from word/document.xml (m:t runs)"
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 1,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Test results for dry NMC particles as a function of indentation depth. The right y axis shows the load (orange line). (a) A pop-in is detected when the reduced stiffness (blue straight line) is larger than the Q3+3IQR cut-off (blue dashed line). (b) The first five data points following the pop-in (green line) are used for the calculation of the fracture toughness (blue circle).",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    71.7,
+    559.3,
+    617.6
+   ],
+   "w": 1861,
+   "h": 2274,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_01_11340_2018_451_MOESM9_ESM.docx → LibreOffice PDF (74921154-24._SupZ_01_11340_2018_451_MOESM9_ESM.pdf, p.1)",
+   "blank": 0.91,
+   "recrop": "2026-11-12 다시 자름 — tool clip 66.1–564.5 × 66.5–622.8 pt = page-width box with wide, uneven white margins — re-cut · clip 71.3–559.3 × 71.7–617.6 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)",
+   "note": "OMML math in the docx caption (Q1 · Q3 · S̄ · h_min · Q3+3IQR) is not rendered by the LibreOffice conversion — restored from word/document.xml (m:t runs)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 1,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Test results for wet NMC particles as a function of indentation depth. The right y axis shows the load (orange line). (a) A pop-in is detected when the reduced stiffness (blue straight line) is larger than the Q3+3IQR cut-off (blue dashed line). (b) The first five data points following the pop-in (green line) are used for the calculation of the fracture toughness (blue circle).",
+   "rotated_deg": 0,
+   "bbox": [
+    71.3,
+    71.7,
+    556.0,
+    608.2
+   ],
+   "w": 1858,
+   "h": 2236,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_00_11340_2018_451_MOESM10_ESM.docx → LibreOffice PDF (74921154-24._SupZ_00_11340_2018_451_MOESM10_ESM.pdf, p.1)",
+   "blank": 0.897,
+   "recrop": "2026-11-12 다시 자름 — tool clip 66.1–561.2 × 66.5–613.4 pt = page-width box with wide, uneven white margins — re-cut · clip 71.3–556.0 × 71.7–608.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)",
+   "note": "OMML math in the docx caption (Q1 · Q3 · S̄ · h_min · Q3+3IQR) is not rendered by the LibreOffice conversion — restored from word/document.xml (m:t runs)"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 1,
+   "file": "tab_S1.png",
+   "caption": "Table S1. CB/PVDF porosity estimation. The values correspond to the average of a minimum of three measurements and the theoretical densities of PVDF and CB are assumed 1.49 g/cm3, and 1.90 g/cm3.",
+   "rotated_deg": 0,
+   "bbox": [
+    71.2,
+    123.4,
+    541.1,
+    259.3
+   ],
+   "w": 1978,
+   "h": 580,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_09_11340_2018_451_MOESM1_ESM.docx → LibreOffice PDF (74921154-24._SupZ_09_11340_2018_451_MOESM1_ESM.pdf, p.1)",
+   "blank": 0.901,
+   "recrop": "2026-11-12 다시 자름 — tool clip 67.1–545.3 × 68.5–263.1 pt included the docx header 'Supplementary Information' and the tool put the whole table text into the caption (caption cleaned) — re-cut · clip 71.2–541.1 × 123.4–259.3 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened, then re-cut and the new crop opened — complete, nothing clipped, no neighbouring text)",
+   "note": "column units 'Initial thickness' · 'Compressed thickness' = [µm] (OMML in the docx; rendered as '[' only) · ⚠ caption ρ_PVDF 1.49 ↔ main text 1.45 g/cm3 — the table's theoretical volumes reproduce with 1.45 (card §14)"
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 1,
+   "file": "tab_S2.png",
+   "caption": "Table S2. PVDF volume expansion after 1 hour soaked in the electrolyte. Values correspond to the average of a minimum of three measurements.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.1,
+    67.5,
+    539.0,
+    182.9
+   ],
+   "w": 1967,
+   "h": 482,
+   "dpi": 300,
+   "src": "74921154-24._SupZ_08_11340_2018_451_MOESM2_ESM.docx → LibreOffice PDF (74921154-24._SupZ_08_11340_2018_451_MOESM2_ESM.pdf, p.1)",
+   "blank": 0.899,
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (tool crop opened and kept — complete, nothing clipped, no neighbouring text)",
+   "note": "tool caption cleaned (whole table text removed) · 'Dry thickness' · 'Wet thickness' = [µm] (OMML; rendered as '[' only)"
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_01_porosity_cbpvdf_film.png",
+   "caption": "Equation (1), PDF p.3 (journal p.339): porosity of the CB/PVDF films ε = [V_m − (w_m/2)(1/ρ_PVDF + 1/ρ_CB)]/V_m (50:50 wt%) — V_m measured volume, w_m measured weight, ρ_PVDF 1.45 g/cm3, ρ_CB 1.90 g/cm3 (text below; Table S1 caption says 1.49)",
+   "rotated_deg": 0,
+   "bbox": [
+    50.2,
+    668.0,
+    289.9,
+    714.7
+   ],
+   "w": 1016,
+   "h": 180,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.964,
+   "manual_crop": "2026-11-12 수동 식 크롭 — clip 50.2–289.9 × 668.0–714.7 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "file": "eq_02_hardness_oliver_pharr.png",
+   "caption": "Equation (2), PDF p.3 (journal p.339): H = P/A (Oliver–Pharr [45]; P load, A contact area from the experimentally calibrated area function)",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    288.2,
+    545.0,
+    313.4
+   ],
+   "w": 1018,
+   "h": 112,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.986,
+   "manual_crop": "2026-11-12 수동 식 크롭 — clip 305.3–545.0 × 288.2–313.4 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "file": "eq_03_reduced_modulus_contact_stiffness.png",
+   "caption": "Equation (3), PDF p.3 (journal p.339): 2β√A_c/(S√π) = (1−ν²)/E + (1−ν_i²)/E_i — β 1.034 (Berkovich), E_i 1141 GPa, ν_i 0.07, S = CSM contact stiffness (2 nm, 45 Hz), ν assumed 0.3 (NMC) · 0.4 (PVDF, CB/PVDF)",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    337.3,
+    545.0,
+    370.9
+   ],
+   "w": 1017,
+   "h": 130,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.963,
+   "manual_crop": "2026-11-12 수동 식 크롭 — clip 305.3–545.0 × 337.3–370.9 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 3,
+   "file": "eq_04_indentation_toughness_lawn_anstis.png",
+   "caption": "Equation (4), PDF p.3 (journal p.339): K_c = α (E/H)^{1/2} P/c^{3/2} — radial half-penny crack (Lawn et al. [46] · 'Antis' et al. [47] as printed); α 0.036 for cube corner [48] (definitions on p.4)",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    679.6,
+    545.0,
+    712.2
+   ],
+   "w": 1018,
+   "h": 141,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-12 수동 식 크롭 — clip 305.3–545.0 × 679.6–712.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_crack_length_from_popin_field.png",
+   "caption": "Equation (5), PDF p.4 (journal p.340) with its definitions: crack length from the pop-in (Field et al. [53]) c = √2 h_m + (Q E′/H − √2) h_x — E′ plane-strain modulus, Q 4.55 (cube corner), h_m measured tip displacement, h_x = h_m − h_t, h_t extrapolated displacement without pop-in; E′ and H from the Berkovich tests",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1021,
+   "h": 567,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.887,
+   "parts": [
+    [
+     4,
+     50.2,
+     435.5,
+     289.9,
+     467.9
+    ],
+    [
+     4,
+     50.2,
+     478.6,
+     289.9,
+     518.8
+    ],
+    [
+     4,
+     305.3,
+     57.6,
+     545.1,
+     106.9
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 식 크롭 — 3 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_reduced_stiffness_popin_detector.png",
+   "caption": "Equation (6), PDF p.4 (journal p.340): reduced stiffness S̄ = S/S1 (Morris et al. [54]) — S continuously measured contact stiffness, S1 instantaneous slope of the loading curve; pop-in = S̄ above Q3 + 3IQR",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    232.7,
+    545.0,
+    259.0
+   ],
+   "w": 1017,
+   "h": 120,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.987,
+   "manual_crop": "2026-11-12 수동 식 크롭 — clip 305.3–545.0 × 232.7–259.0 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 8,
+   "file": "eq_07_rumpf_agglomerate_tensile_strength.png",
+   "caption": "Equation (7), PDF p.8 (journal p.344) with its definition line: Rumpf agglomerate tensile strength σ_t = nF = 1.1 ((1−ε)/ε)(1/D²) F — n contacts per unit cross-section area, F binding force (uniform spheres)",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1022,
+   "h": 262,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.917,
+   "parts": [
+    [
+     8,
+     50.2,
+     431.4,
+     289.9,
+     464.4
+    ],
+    [
+     8,
+     50.2,
+     476.2,
+     290.0,
+     500.6
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 식 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 8,
+   "file": "eq_08_rumpf_capillary_liquid_bridge.png",
+   "caption": "Equation (8), PDF p.8 (journal p.344) with its definitions: σ_t = 6S ((1−ε)/ε)(γ/D) cosθ — S liquid saturation, ε void fraction, D surface-average primary-particle diameter, γ surface tension, θ contact angle (PC 41.1 mN/m, θ 0, S 0.95, ε 0.028 → ~16 MPa in the text)",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1020,
+   "h": 301,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.9,
+   "parts": [
+    [
+     8,
+     305.3,
+     368.5,
+     545.0,
+     393.6
+    ],
+    [
+     8,
+     305.3,
+     401.0,
+     545.0,
+     437.8
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 식 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq_inline_LEFM",
+   "page": 8,
+   "file": "eq_09_lefm_interfacial_kic_inline.png",
+   "caption": "Inline (unnumbered) equation, PDF p.8 (journal p.344): K_IC = σ_t √(πa)/Y with half crack length a = 1 µm and half-penny surface crack Y = 0.64 → +0.044 MPa m^1/2 (sentence continues on p.9)",
+   "rotated_deg": 0,
+   "bbox": [
+    305.4,
+    488.5,
+    545.1,
+    525.5
+   ],
+   "w": 1021,
+   "h": 172,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.853,
+   "manual_crop": "2026-11-12 수동 식 크롭 — clip 305.4–545.1 × 488.5–525.5 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1_cathode_strain_intergranular",
+   "page": 1,
+   "file": "txt_p1_cathode_strain_intergranular.png",
+   "caption": "PDF p.1 (journal p.337): cathodes ~5 % volumetric strain; NMC inter- and intragranular failure; 'meatball' secondary particles = agglomerate of anisotropic primary particles, vulnerable to intergranular fracture",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    502.1,
+    545.1,
+    712.9
+   ],
+   "w": 1021,
+   "h": 896,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.826,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.1 × 502.1–712.9 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2_nmc532_scope_first_time",
+   "page": 2,
+   "file": "txt_p2_nmc532_scope_first_time.png",
+   "caption": "PDF p.2: scope — commercial LiNi0.5Mn0.3Co0.2O2 (NMC532) electrode constituents, dry vs wet; 'For the first time' electrolyte role in the fracture strength of NMC secondary particles (capillary hypothesis); conductive-matrix porosity; 'will feed the parametric input of chemomechanical models'",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    57.9,
+    545.1,
+    281.2
+   ],
+   "w": 1025,
+   "h": 948,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.838,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.1 × 57.9–281.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2_p3_sample_prep_polish",
+   "page": 2,
+   "file": "txt_p2_p3_sample_prep_polish.png",
+   "caption": "PDF p.2–3: NMC samples — MTI NMC532 powder; PS matrix (PVDF softens in electrolyte [43]); PS heated ~245 °C, powder pressed in; pellet = ball-milled submicron powder, ~1 g, 13 mm die, 5 tons, sintered 1000 °C 10 h; XRD; polish 0.05 µm colloidal silica ~30 min, vacuum 80 °C overnight, roughness ~4 nm [44]",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1025,
+   "h": 1965,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.833,
+   "parts": [
+    [
+     2,
+     305.3,
+     332.0,
+     545.1,
+     493.1
+    ],
+    [
+     3,
+     50.2,
+     57.9,
+     290.0,
+     355.9
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3_pvdf_cbpvdf_films",
+   "page": 3,
+   "file": "txt_p3_pvdf_cbpvdf_films.png",
+   "caption": "PDF p.3: PVDF (HSV900, MW 600,000) 6 wt% in NMP; CB (Super P) : PVDF 50:50 wt%; films ~45 µm (PVDF) · 400 µm (CB/PVDF); micrometer 1 µm · balance 0.1 mg; densities 1.43 · 0.80 g/cm3; rolling press → porosity 50.8 · 27.5 · 3.8 %; Eq. 1 definitions ρ_PVDF 1.45 · ρ_CB 1.90",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1021,
+   "h": 1444,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.837,
+   "parts": [
+    [
+     3,
+     50.2,
+     369.1,
+     290.0,
+     667.2
+    ],
+    [
+     3,
+     305.3,
+     57.6,
+     545.1,
+     94.4
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3_glovebox_electrolyte_soak",
+   "page": 3,
+   "file": "txt_p3_glovebox_electrolyte_soak.png",
+   "caption": "PDF p.3: Keysight G200 in an Ar glovebox (O2, H2O < 0.5 ppm); wet = sample immersed in a stainless-steel coin-cell case; 1 h soak before testing; 1 M LiPF6 in PC (nonvolatile); Ar/electrolyte do not compromise accuracy [42]",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    107.6,
+    545.1,
+    256.3
+   ],
+   "w": 1022,
+   "h": 638,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.841,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.1 × 107.6–256.3 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3_oliver_pharr_settings_targeted",
+   "page": 3,
+   "file": "txt_p3_oliver_pharr_settings_targeted.png",
+   "caption": "PDF p.3: β 1.034 · E_i 1141 GPa · ν_i 0.07 · CSM 2 nm / 45 Hz · ν = 0.3 (NMC) / 0.4 (PVDF, CB/PVDF) assumed · Ṗ/P 0.05 s⁻¹ · max depth 500 nm (NMC) / 2000 nm (films) · grid 200 µm spacing on films · targeted indents at the centre of NMC particles ≥ 15 µm",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    379.6,
+    545.2,
+    616.3
+   ],
+   "w": 1025,
+   "h": 1004,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.834,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.2 × 379.6–616.3 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x3d",
+   "kind": "text",
+   "label": "p3_p4_cube_corner_kc_effective",
+   "page": 3,
+   "file": "txt_p3_p4_cube_corner_kc_effective.png",
+   "caption": "PDF p.3–4: K_c by cube-corner indentation — Lawn et al. [46] / 'Antis' et al. [47] radial half-penny crack (Eq. 4); α 0.036 for cube corner [48]; indenter orientation vs microstructure and crystal anisotropy can change α / deviate from the half-penny shape and overestimate K_c [47, 49–51] → Eq. 4 kept as an 'effective' toughness for the dry ↔ wet comparison (crack pattern assumed unchanged)",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1022,
+   "h": 1030,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.837,
+   "parts": [
+    [
+     3,
+     305.3,
+     616.8,
+     545.0,
+     666.1
+    ],
+    [
+     4,
+     50.2,
+     57.6,
+     290.0,
+     243.8
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4_popin_field_method",
+   "page": 4,
+   "file": "txt_p4_popin_field_method.png",
+   "caption": "PDF p.4: cube corner (centerline-to-face 35.3°) lowers the cracking load [52] → small volumes such as NMC secondary particles; low-load cracks are small and hard to image → Field et al. [53] crack length from the load–displacement curve; pop-in = sudden tip penetration with half-penny cracks; extra displacement h_x ↔ crack length c",
+   "rotated_deg": 0,
+   "bbox": [
+    50.2,
+    244.7,
+    290.0,
+    431.2
+   ],
+   "w": 1025,
+   "h": 792,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.833,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 50.2–290.0 × 244.7–431.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4_hmin_100nm",
+   "page": 4,
+   "file": "txt_p4_hmin_100nm.png",
+   "caption": "PDF p.4: irregular shallow curve (incl. elasto-plastic pop-in [55]) → threshold h_min below which cracking is assumed absent; 'We choose hmin = 100 nm'; sensitivity tested later",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    368.8,
+    545.2,
+    455.1
+   ],
+   "w": 1021,
+   "h": 377,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.834,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.2 × 368.8–455.1 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5_outliers_crack_length_discard",
+   "page": 5,
+   "file": "txt_p5_outliers_crack_length_discard.png",
+   "caption": "PDF p.5: outliers above Q3 + 3IQR = pop-ins (Fig. S1); quadratic fit before the first pop-in → h_t; c from Eq. 5 for the first five points; Eq. 5 validity for NMC [44]; mean crack ~1 µm ≪ particle radius ~10 µm; 'only 6% of the total number of tests were automatically discarded' (h_x < 0 or no pop-in)",
+   "rotated_deg": 0,
+   "bbox": [
+    50.2,
+    57.6,
+    290.0,
+    393.3
+   ],
+   "w": 1026,
+   "h": 1407,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.837,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 50.2–290.0 × 57.6–393.3 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5_p6_pvdf_cbpvdf_swelling",
+   "page": 5,
+   "file": "txt_p5_p6_pvdf_cbpvdf_swelling.png",
+   "caption": "PDF p.5–6: electrolyte uptake → ~30 % volume strain of PVDF; CB/PVDF: dense film +30 % vs porous (50 %) +15 %; swollen binder occupies pores (ion transport); opposite to the literature swelling-ratio trend [58]",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1025,
+   "h": 926,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.839,
+   "parts": [
+    [
+     5,
+     305.3,
+     219.8,
+     545.1,
+     393.3
+    ],
+    [
+     6,
+     50.2,
+     57.9,
+     289.9,
+     94.4
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6_binder_matrix_moduli_wet",
+   "page": 6,
+   "file": "txt_p6_binder_matrix_moduli_wet.png",
+   "caption": "PDF p.6: films thick enough (50 · 185–420 µm) — no substrate effect (Figs. S2 · S3); PVDF dry 590 MPa ≈ tensile 400–650 MPa [56, 59]; wet E and H −~50 %; CB/PVDF '2.5–2 GPa' ≈ 4× PVDF; both fall with porosity; wet CB/PVDF −80 % +; wet PVDF ≈ CB/PVDF",
+   "rotated_deg": 0,
+   "bbox": [
+    50.2,
+    94.9,
+    290.0,
+    405.7
+   ],
+   "w": 1022,
+   "h": 1311,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.831,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 50.2–290.0 × 94.9–405.7 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x6b",
+   "kind": "text",
+   "label": "p6_grain_size_ps_matrix",
+   "page": 6,
+   "file": "txt_p6_grain_size_ps_matrix.png",
+   "caption": "PDF p.6: two configurations — pellet grains 3–10 µm (Fig. 4a) vs as-received primary particles 0.1–1 µm (Fig. 4b); pellet XRD matches the reference [61] (Fig. 4c); PS matrix E 3.8 GPa · H 0.25 GPa unchanged in the electrolyte (Fig. 5) → dry ↔ wet changes attributed to the NMC particles alone",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    95.3,
+    545.1,
+    281.2
+   ],
+   "w": 1021,
+   "h": 792,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.83,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.1 × 95.3–281.2 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x6c",
+   "kind": "text",
+   "label": "p6_p7_within_vs_across_intrinsic",
+   "page": 6,
+   "file": "txt_p6_p7_within_vs_across_intrinsic.png",
+   "caption": "PDF p.6–7: at a suitable depth — within a single grain (pellet) vs across primary-particle interfaces (as-received powder); pellet ≈ intrinsic bulk NMC; secondary particles depend on packing, porosity and inter-particle interactions",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1021,
+   "h": 563,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.842,
+   "parts": [
+    [
+     6,
+     305.3,
+     344.3,
+     545.1,
+     405.7
+    ],
+    [
+     7,
+     50.2,
+     268.3,
+     290.0,
+     329.7
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7_min15_depth_85nm",
+   "page": 7,
+   "file": "txt_p7_min15_depth_85nm.png",
+   "caption": "PDF p.7: ≥ 15 indents per configuration (E, H); modulus falls with depth = substrate effect + deep-indentation damage [62, 63]; matrix-independent if far from the interface and depth ≪ particle radius 8–10 µm [44]; selected depth 85 nm (lowest depth with negligible roughness and accurate area function / contact detection)",
+   "rotated_deg": 0,
+   "bbox": [
+    50.2,
+    330.6,
+    290.0,
+    566.3
+   ],
+   "w": 1021,
+   "h": 1000,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.834,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 50.2–290.0 × 330.6–566.3 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7_agglomerate_lower_kendall",
+   "page": 7,
+   "file": "txt_p7_agglomerate_lower_kendall.png",
+   "caption": "PDF p.7: Fig. 8 box-plot legend (grey circles = indents, box 25–75 %, white line = median, labels & white squares = averages); agglomerate < pellet — weak primary-particle interfaces; Kendall [64]: inter-particle contacts add compliance; modulus depends on packing ratio, primary diameter, interfacial energy; synthesis matters [65, 66]",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    57.9,
+    545.1,
+    306.1
+   ],
+   "w": 1025,
+   "h": 1052,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.833,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.1 × 57.9–306.1 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x7c",
+   "kind": "text",
+   "label": "p7_no_difference_kc_ttest_hmin",
+   "page": 7,
+   "file": "txt_p7_no_difference_kc_ttest_hmin.png",
+   "caption": "PDF p.7: 'no apparent difference' in E and H dry vs wet; pellets mostly unchanged; agglomerate K_c 0.104 → 0.212 MPa m^1/2, standard t-test p = 0.007; h_min 50 · 150 nm (Fig. S4) same trend, 100 nm = fewest discarded tests and least spread; per-test details Figs. S5–S8; cracks along primary-particle interfaces influenced by liquid penetration; larger wet spread = heterogeneous liquid saturation (not seen for pellets)",
+   "rotated_deg": 0,
+   "bbox": [
+    305.3,
+    307.0,
+    545.2,
+    621.4
+   ],
+   "w": 1025,
+   "h": 1328,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.833,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 305.3–545.2 × 307.0–621.4 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8_p9_capillary_estimate",
+   "page": 8,
+   "file": "txt_p8_p9_capillary_estimate.png",
+   "caption": "PDF p.8–9: (… the result 'suggests otherwise' than lubrication) wetted agglomerate has negative capillary pressure that draws electrolyte into the channels between primary particles (Fig. 9b); capillary forces > van der Waals, < solid bridges; Eq. 8 with definitions; PC γ 41.1 mN/m [70], θ 0, S 0.95, ε 0.028 [71] → ~16 MPa; p.9: ΔK +0.044 MPa m^1/2 vs measured median 0.085 / mean 0.108 MPa m^1/2",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1025,
+   "h": 1329,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.858,
+   "parts": [
+    [
+     8,
+     305.3,
+     244.6,
+     545.2,
+     487.6
+    ],
+    [
+     9,
+     50.2,
+     204.2,
+     290.0,
+     267.8
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9_model_caveats",
+   "page": 9,
+   "file": "txt_p9_model_caveats.png",
+   "caption": "PDF p.9: idealized uniform spheres vs polydisperse irregular primaries; Rumpf may largely underestimate granular strength [64]; other mechanisms possible (LiPF6 decomposition products, e.g. SiOx → SiOyFz on Si [29]; a solid surface layer as nano-filler); 'Further experiments are necessary'",
+   "rotated_deg": 0,
+   "bbox": [
+    50.2,
+    268.7,
+    290.0,
+    491.9
+   ],
+   "w": 1021,
+   "h": 948,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.825,
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — clip 50.2–290.0 × 268.7–491.9 pt · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9_conclusions",
+   "page": 9,
+   "file": "txt_p9_conclusions.png",
+   "caption": "PDF p.9: conclusions — in-situ indentation in an inert environment; no apparent dry/wet difference of E and H for agglomerate and pellet; pellet toughness unchanged, agglomerate interfacial strength enhanced in electrolyte (capillary); PVDF +30 % volume, −~50 % E and H; CB/PVDF −80 %+",
+   "rotated_deg": 0,
+   "bbox": null,
+   "w": 1022,
+   "h": 1608,
+   "dpi": 300,
+   "src": "bc731081-24._In-situ_nanoindentation_measurement_of_local_mechanical_behavior_of_a_Li-ion_battery_cathode_in_liquid_electrolyte.pdf",
+   "blank": 0.841,
+   "parts": [
+    [
+     9,
+     50.2,
+     514.3,
+     290.0,
+     717.0
+    ],
+    [
+     9,
+     305.3,
+     57.9,
+     545.1,
+     231.3
+    ]
+   ],
+   "manual_crop": "2026-11-12 수동 근거 문단 크롭 — 2 parts (see parts, stacked top→bottom) · trimmed to content · 300 dpi · even 14 px white margin (padding added as pixels, clip not enlarged)",
+   "viewed": true,
+   "viewed_how": "2026-11-12 litdb-curator: Read (opened and checked — complete, nothing clipped, no neighbouring text)"
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p4 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "f4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p6 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "f7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": []
+  },
+  {
+   "key": "f8",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [
+    {
+     "page": 7,
+     "text": "Figure 8 shows the elastic modulus, hardness and fracture toughness of NMC sintered pellet"
+    }
+   ]
+  },
+  {
+   "key": "fS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p1 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  }
+ ],
+ "missing_labels_resolved": [
+  {
+   "key": "f2",
+   "how": "manual crop fig_2 (+ panels 2a · 2b) — caption sits beside the figure (side caption)"
+  },
+  {
+   "key": "f4",
+   "how": "manual crop fig_4 (+ panels 4a · 4b · 4c) — side caption"
+  },
+  {
+   "key": "f7",
+   "how": "manual crop fig_7 (+ panels 7a · 7b) — side caption"
+  },
+  {
+   "key": "f8",
+   "how": "manual crop fig_8 (+ panels 8a · 8b · 8c) — side caption"
+  },
+  {
+   "key": "fS1",
+   "how": "manual crop fig_S1 from the LibreOffice PDF of MOESM3 (4 EMF images — the tool saw no graphics on the docx page)"
+  }
+ ],
+ "note_manual": "2026-11-12 — published version (Experimental Mechanics (2019) 59:337–347 · online 28 Nov 2018; 11 PDF pages) + ESM = 10 docx (Figs. S1–S8 · Tables S1–S2; one item per docx). SI docx were converted to PDF with LibreOffice (headless, isolated profile) only to render crops — the converted PDFs stay in the scratch area (not in inbox); OMML math (Q1 · Q3 · S̄ · h_min · µm units) is lost in that render and was restored from word/document.xml into the captions/notes. Tool crops 14 (Figs. 1 · 3 · 5 · 6 · 9 · S2–S8 · Tables S1 · S2): kept 3 (f1 · f6 · tS2 — tS2 caption cleaned) · re-cut 11 (f3 truncated · f5 top cut · f9 labels cut + caption ran into body text · S2–S8 page-width margins · tS1 header + caption = whole table). Missing labels 5 (Figs. 2 · 4 · 7 · 8 side captions · S1) → manual figure crops 5. Hand crops 49 = figures 5 + panels 15 (2a 2b · 3a–3e · 4a 4b 4c · 7a 7b · 8a 8b 8c) + equations 9 (Eqs. 1–8 + inline LEFM) + evidence paragraphs 20. Total 63 crops, all opened with Read. Vector reading (PyMuPDF get_drawings): Fig. 3 · 5 · 7 · 8 (main) and Fig. S4 (LibreOffice PDF) → digitized.csv; Figs. 4 · 6 = SEM rasters; Fig. 2 = one illustrative test (not digitized).",
+ "key_note": "manual keys: f<N><panel> = panel crop of Fig. N (panel_of) · e0N = Eq. (N) (kind 'equation'; e09 = unnumbered inline LEFM) · x<PDF page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' [page, x0, y0, x1, y1], stacked top→bottom) · SI entries: page = page 1 of the LibreOffice PDF of that docx; src names the docx; main text page = PDF page = journal page 336 + page"
+}

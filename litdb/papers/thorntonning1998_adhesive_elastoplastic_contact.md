@@ -370,5 +370,8 @@ LAW 기반**에 서게 된다(거기에 우리 MPM 형상소성·σ 삼중항이
 
 **없음** (SI 없는 본문 9쪽 단독 논문; 사용자 지시: PDF만 복사, SI 없음).
 
+## 🔗 관련 카드
+- 같은 그룹 · 다른 논문 (1991 · 탄성 구 비스듬한 충돌 · Mindlin–Deresiewicz 증분 접선 · JKR 접착 위 벗김 → 미끄럼 기준 T = μ(P + 2Pc)): [`thorntonyin1991_oblique_impact_elastic_spheres_adhesion`](thorntonyin1991_oblique_impact_elastic_spheres_adhesion.md)
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

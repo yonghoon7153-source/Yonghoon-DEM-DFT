@@ -1,0 +1,256 @@
+# Q11 GPU 확인 블록 (초안 7 판 · 11-12 · 조수 · 돌리지 않음 · 1저자가 kgy · gabia 에서 붙여 넣는다 · 킷 없음 · σ 없음)
+# 무엇: 생산 함수 scripts/step3_sigma.py _solve_cg 를 두 커밋 (옛 11a794674 = A 꼴 dia_matrix 전처리 · 새 = 코드 묶음 커밋 = C 꼴 벡터 곱 연산자)
+#   에서 같은 합성 SPD 계 (298^3 = 26,463,592 미지수 · 벤치와 같은 짜임 · 전도도 10^-1..10^1) 에 돌려 견준다 —
+#   대조 (옛·옛 / 새·새 200 반복) · 짧게 (옛·새 200 반복) · 주 풀이 (0 에서 생산 정지 rtol 1e-12 까지 · 증서 켬 = callback) ·
+#   이어 풀기 (같은 x0 = 옛 주 해 · rtol 1e-14 = 증서 ⓒ 바닥).
+# 결과 전 기대 (먼저 적음): 다섯 짝 모두 해 바이트 · info · 반복 수 · LAST_BACKEND 같음 · 새 꼴이 반복당 빠름 (합성 벤치 A / C = 3.40 gabia ·
+#   3.79 kgy).  다르면 그대로 보고 (시험을 고치지 않는다).  시간 어림 = 주 풀이 반복 수에 달림 (조수 CPU 어림 = 아래 자리표 메모).
+# 자리표 (7 판 · 11-12 2 회차 고침 + 같은 부류 셋 + 3 회차 좁은 고침 (재확인 2 RCP3-01–05 · Codex 아님) 뒤 · 본 세션이 반입 뒤 다시 본다):
+#   Q11PIN = 코드 묶음 끝 커밋 = 지금은 작업 트리 (/home/user/rint-codepkg) 의 8b59b9618 (서명 없음 · push 없음).  2 회차 · 같은 부류 셋 · 3 회차는
+#     step3_sigma.py 를 바꾸지 않았다 (새 모듈 sha256 = 4 판 값 그대로 · git show | sha256sum 으로 다시 셈).  본 세션이 반입하며
+#     서명 · cherry-pick 하면 sha 가 바뀐다 -> 그 40 자리로 바꾼다 (안 바꾸면 블록이 "commits not in Q11REPO" 로 서고 아무것도 돌리지 않는다).
+#     새 모듈 sha256 관문 값 (맨 끝 줄 --new-sha) 과 내용이 같은 커밋이면 어느 것이든 된다 (94765bed3 · 0ac6edf3c · 609d78ca4 · ea3b13b89 · 8b59b9618 다 같은 파일).
+#   Q11REPO = 그 커밋을 fetch 한 리포 체크아웃.  아래 값 = kgy 의 기준 체크아웃 자리 (근거 = 리포
+#     docs/reviews/rint2_probe6_prep_20261110/KGY_BLOCK.md 의 BASE 줄).  gabia 의 자리는 [미확인] - 본 세션이 채운다.  블록은 fetch 하지 않는다
+#     (1저자가 먼저 git fetch).  두 모듈 파일만 git show 로 꺼낸다 - 형제 모듈 se_material 은 Q11REPO 작업 트리의 판에서 읽는다 (풀이 함수와 무관).
+#   두 모듈 sha256 (맨 끝 줄) = 옛 8d428ff5... = 11a794674 의 scripts/step3_sigma.py · 새 859310da... = 94765bed3 · 0ac6edf3c · 609d78ca4 · ea3b13b89 · 8b59b9618 의 같은 파일
+#     (3 판의 새 45d645a2... = f17ea8c6b 판 = 리뷰 고침 전 · 이제 쓰지 않는다 · git show | sha256sum 으로 다시 확인).
+#     파일 내용 기준이라 반입으로 커밋 sha 가 바뀌어도 그대로다 (반입 때 step3_sigma.py 를 손대면 다시 센다).
+# 관문: 새 폴더 (~/q11check_<이름표>_<UTC>) · 스크립트 md5 · 두 커밋 있음 · 두 모듈 sha256 · venv (~/dem-venv) · 시간 상한 5400 s ·
+#   쓰는 곳 = 그 새 폴더뿐 (CuPy 캐시 포함).  느낌표 · 탭 · CR 없음.
+# 돌려 받을 것: ~/q11check_<이름표>_<UTC>/result.json · check.log
+Q11L=kgy
+Q11REPO="$HOME/dem-mt"
+Q11PIN=8b59b9618500910865983b238fee44d46400922e
+Q11D="$HOME/q11check_${Q11L}_$(date -u +%Y%m%dT%H%M%SZ)"; Q11OK=0; mkdir "$Q11D" 2>/dev/null && Q11OK=1 && cat > "$Q11D/q11_gpu_check.py" <<'Q11_CHECK_EOF'
+# -*- coding: utf-8 -*-
+"""Q11 GPU check (no kit, no sigma) - draft 2026-11-12 (Rint 2, preconditioner representation only).
+
+Runs the PRODUCTION function scripts/step3_sigma.py _solve_cg from two commits on the same synthetic SPD system:
+    old = commit 11a794674  (A form: M = cupyx.scipy.sparse.diags(1/diag), a dia_matrix)
+    new = the code-package commit (C form: M = LinearOperator(matvec: (1/diag) * r), same Jacobi numbers)
+Expectation written BEFORE any result (the purpose of the check):
+    every pair below is bit-identical (solution bytes, info, iteration count, LAST_BACKEND), and the new form is faster per
+    iteration (synthetic bench 2026-11-12: A / C = 3.40 gabia, 3.79 kgy).  Anything else = report, do not "fix" the check.
+Pairs:
+    control  old vs old and new vs new, fixed 200 iterations (run-to-run determinism of this machine)
+    short    old vs new, fixed 200 iterations
+    main     old vs new, from zero to convergence at the production stop rule (rtol 1e-12, callback on = CONV_CERT)
+    resolve  old vs new, from the SAME start (the old main solution) at the certificate re-solve rtol (1e-14) - the x0 path
+Writes only inside --out.  No kit, no repository file is changed (the two module files are copies the block made with git show).
+Python 3.8 compatible.  --backend numpy = small CPU flow check (scipy path of the same function), not the GPU check.
+"""
+import argparse
+import hashlib
+import importlib.util
+import json
+import os
+import sys
+import time
+
+import numpy as np
+from scipy import sparse
+
+SCHEMA = 'q11-gpu-check-v1'
+
+
+def log(msg, fh):
+    line = '[q11] ' + msg
+    print(line, flush=True)
+    fh.write(line + '\n')
+    fh.flush()
+
+
+def sha_file(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        h.update(f.read())
+    return h.hexdigest()
+
+
+def build_system(n_side, seed, logc):
+    """Synthetic SPD graph Laplacian on an n_side^3 grid + plate couplings (the 2026-11-11 bench construction; edge
+    conductances log-uniform 10^-logc .. 10^logc).  -> scipy CSR L (float64, canonical), rhs b."""
+    nx = ny = nz = int(n_side)
+    n = nx * ny * nz
+    rng = np.random.default_rng(seed)
+
+    def cond(k):
+        return np.power(10.0, rng.uniform(-logc, logc, size=k))
+
+    gz = cond(n - 1)
+    gz[(np.arange(n - 1, dtype=np.int64) % nz) == nz - 1] = 0.0
+    gy = cond(n - nz)
+    gy[((np.arange(n - nz, dtype=np.int64) // nz) % ny) == ny - 1] = 0.0
+    gx = cond(n - ny * nz)
+    diag = np.zeros(n, np.float64)
+    diag[:-1] += gz
+    diag[1:] += gz
+    diag[:n - nz] += gy
+    diag[nz:] += gy
+    diag[:n - ny * nz] += gx
+    diag[ny * nz:] += gx
+    bot = np.arange(0, n, nz, dtype=np.int64)
+    top = bot + (nz - 1)
+    gb, gt = cond(nx * ny), cond(nx * ny)
+    diag[bot] += gb
+    diag[top] += gt
+    b = np.zeros(n, np.float64)
+    b[bot] = gb
+    L = sparse.diags([diag, -gz, -gz, -gy, -gy, -gx, -gx], [0, 1, -1, nz, -nz, ny * nz, -ny * nz],
+                     shape=(n, n), format='csr', dtype=np.float64)
+    L.sum_duplicates()
+    return L, b
+
+
+def load(path, name):
+    spec = importlib.util.spec_from_file_location(name, path)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def configure(m, backend, maxiter):
+    m.GPU_SOLVE = (backend == 'cupy')
+    m.REQUIRE_GPU = (backend == 'cupy')
+    m.CONV_CERT = True
+    m.AMG_SOLVE = False
+    m.CG_MAXITER = int(maxiter)
+
+
+def make_sync(backend):
+    if backend == 'cupy':
+        import cupy as cp
+
+        def sync():
+            cp.cuda.Device(0).synchronize()
+        return sync
+    return lambda: None
+
+
+def run(m, L, b, x0, rtol, maxiter, sync):
+    m.CG_MAXITER = int(maxiter)
+    sync()
+    t0 = time.perf_counter()
+    x, info = m._solve_cg(L, b, x0=x0, rtol=rtol)
+    sync()
+    dt = time.perf_counter() - t0
+    it = m.LAST_CG.get('iters')
+    x = np.asarray(x)
+    return {'x': x, 'info': int(info), 'iters': (None if it is None else int(it)), 'seconds': round(dt, 3),
+            'per_iter_s': (round(dt / it, 6) if it else None), 'backend': dict(m.LAST_BACKEND),
+            'x_sha256': hashlib.sha256(np.ascontiguousarray(x).tobytes()).hexdigest()}
+
+
+def compare(a, b):
+    xa, xb = a['x'], b['x']
+    same_bytes = xa.dtype == xb.dtype and xa.shape == xb.shape and xa.tobytes() == xb.tobytes()
+    diff = np.abs(xa - xb) if xa.shape == xb.shape else None
+    n_val = None if diff is None else int(np.count_nonzero(np.logical_not(xa == xb)))
+    return {'bytes_identical': bool(same_bytes), 'value_differ_count': n_val,
+            'max_abs_diff': (None if diff is None or diff.size == 0 else float(diff.max())),
+            'info_same': a['info'] == b['info'], 'iters_same': a['iters'] == b['iters'], 'backend_same': a['backend'] == b['backend']}
+
+
+def pub(r):
+    return {k: v for k, v in r.items() if not k == 'x'}
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--old', required=True)
+    ap.add_argument('--new', required=True)
+    ap.add_argument('--old-sha', default='')
+    ap.add_argument('--new-sha', default='')
+    ap.add_argument('--scripts', required=True, help='repository scripts folder (the modules import se_material from there)')
+    ap.add_argument('--out', required=True)
+    ap.add_argument('--label', default='x')
+    ap.add_argument('--backend', choices=('cupy', 'numpy'), default='cupy')
+    ap.add_argument('--n-side', type=int, default=298)
+    ap.add_argument('--logc', type=float, default=1.0)
+    ap.add_argument('--seed', type=int, default=20261112)
+    ap.add_argument('--rtol', type=float, default=1e-12)
+    ap.add_argument('--rtol-resolve', type=float, default=1e-14)
+    ap.add_argument('--maxiter', type=int, default=60000)
+    ap.add_argument('--short-iters', type=int, default=200)
+    a = ap.parse_args(argv)
+    os.makedirs(a.out, exist_ok=True)
+    fh = open(os.path.join(a.out, 'check.log'), 'w', encoding='utf-8')
+    res = {'schema': SCHEMA, 'label': a.label, 'backend': a.backend, 'args': {k: v for k, v in vars(a).items() if k not in ('out', 'scripts')},
+           'expect': 'all pairs bit-identical; new faster per iteration', 'error': None}
+
+    def save():
+        with open(os.path.join(a.out, 'result.json'), 'w', encoding='utf-8') as f:
+            json.dump(res, f, indent=1, sort_keys=True)
+    try:
+        so, sn = sha_file(a.old), sha_file(a.new)
+        res['files'] = {'old_sha256': so, 'new_sha256': sn}
+        if (a.old_sha and not so == a.old_sha) or (a.new_sha and not sn == a.new_sha):
+            raise SystemExit('module file sha256 differs from the block (wrong commit copied) - nothing run')
+        if a.scripts not in sys.path:
+            sys.path.insert(0, a.scripts)
+        old, new = load(a.old, 's3_old_q11'), load(a.new, 's3_new_q11')
+        for m in (old, new):
+            configure(m, a.backend, a.maxiter)
+        sync = make_sync(a.backend)
+        if a.backend == 'cupy':
+            import cupy as cp
+            res['env'] = {'python': sys.version.split()[0], 'numpy': np.__version__, 'cupy': cp.__version__,
+                          'gpu': cp.cuda.runtime.getDeviceProperties(0)['name'].decode('ascii', 'replace')}
+        else:
+            import scipy
+            res['env'] = {'python': sys.version.split()[0], 'numpy': np.__version__, 'scipy': scipy.__version__}
+        t0 = time.perf_counter()
+        L, b = build_system(a.n_side, a.seed, a.logc)
+        log(f'built: n {L.shape[0]}, nnz {L.nnz} in {time.perf_counter() - t0:.1f} s (logc {a.logc})', fh)
+        res['system'] = {'n': int(L.shape[0]), 'nnz': int(L.nnz)}
+        tiny = 1e-300                                         # fixed-iteration runs: a stop rule nothing reaches
+        c_oo = compare(run(old, L, b, None, tiny, a.short_iters, sync), run(old, L, b, None, tiny, a.short_iters, sync))
+        c_nn = compare(run(new, L, b, None, tiny, a.short_iters, sync), run(new, L, b, None, tiny, a.short_iters, sync))
+        so_ = run(old, L, b, None, tiny, a.short_iters, sync)
+        sn_ = run(new, L, b, None, tiny, a.short_iters, sync)
+        c_on = compare(so_, sn_)
+        res['control_old_old'], res['control_new_new'], res['short_old_new'] = c_oo, c_nn, c_on
+        log(f'control old vs old ({a.short_iters} it): {c_oo}', fh)
+        log(f'control new vs new ({a.short_iters} it): {c_nn}', fh)
+        log(f'short old vs new ({a.short_iters} it): {c_on} - per iteration old {so_["per_iter_s"]} s, new {sn_["per_iter_s"]} s', fh)
+        save()
+        mo = run(old, L, b, None, a.rtol, a.maxiter, sync)
+        log(f'main old: info {mo["info"]}, iterations {mo["iters"]}, {mo["seconds"]} s ({mo["per_iter_s"]} s per iteration)', fh)
+        res['main_old'] = pub(mo)
+        save()
+        mn = run(new, L, b, None, a.rtol, a.maxiter, sync)
+        log(f'main new: info {mn["info"]}, iterations {mn["iters"]}, {mn["seconds"]} s ({mn["per_iter_s"]} s per iteration)', fh)
+        res['main_new'] = pub(mn)
+        res['main_old_new'] = compare(mo, mn)
+        log(f'main old vs new: {res["main_old_new"]}', fh)
+        save()
+        x0 = mo['x']
+        ro = run(old, L, b, x0, a.rtol_resolve, a.maxiter, sync)
+        rn = run(new, L, b, x0, a.rtol_resolve, a.maxiter, sync)
+        res['resolve_old'], res['resolve_new'] = pub(ro), pub(rn)
+        res['resolve_old_new'] = compare(ro, rn)
+        log(f'resolve (x0 = old main solution, rtol {a.rtol_resolve}): old info {ro["info"]} it {ro["iters"]}, new info {rn["info"]} '
+            f'it {rn["iters"]} - {res["resolve_old_new"]}', fh)
+        pairs = [res[k] for k in ('control_old_old', 'control_new_new', 'short_old_new', 'main_old_new', 'resolve_old_new')]
+        res['all_identical'] = all(p['bytes_identical'] and p['info_same'] and p['iters_same'] and p['backend_same'] for p in pairs)
+        res['speed_ratio_main'] = (round(mo['per_iter_s'] / mn['per_iter_s'], 3) if mo['per_iter_s'] and mn['per_iter_s'] else None)
+        log(f'DONE label {a.label}: all pairs identical = {res["all_identical"]}, main per-iteration ratio old / new = {res["speed_ratio_main"]}', fh)
+        save()
+        return 0
+    except SystemExit as e:
+        res['error'] = str(e)
+        log('STOP: ' + str(e), fh)
+        save()
+        return 2
+    except Exception as e:                                   # noqa: BLE001 - record and stop
+        res['error'] = f'{type(e).__name__}: {e}'[:400]
+        log('ERROR ' + res['error'], fh)
+        save()
+        return 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())
+Q11_CHECK_EOF
+if [ "$Q11OK" = 1 ] && [ "$(md5sum < "$Q11D/q11_gpu_check.py" | cut -c1-32)" = acfeb4b4e1515d6aa7d46ddaf67e6e68 ]; then ( case "$Q11PIN" in ""|*[^0-9a-f]*) echo "[q11] STOP: Q11PIN not filled (40 hex)"; exit 2;; esac; [ "${#Q11PIN}" = 40 ] || { echo "[q11] STOP: Q11PIN not 40 hex"; exit 2; }; git -C "$Q11REPO" cat-file -e "11a794674^{commit}" && git -C "$Q11REPO" cat-file -e "${Q11PIN}^{commit}" || { echo "[q11] STOP: commits not in Q11REPO (git fetch first)"; exit 2; }; git -C "$Q11REPO" show "11a794674:scripts/step3_sigma.py" > "$Q11D/s3_old.py" && git -C "$Q11REPO" show "${Q11PIN}:scripts/step3_sigma.py" > "$Q11D/s3_new.py" || { echo "[q11] STOP: git show failed"; exit 2; }; [ -f "$HOME/dem-venv/bin/activate" ] || { echo "[q11] STOP: venv not found (only the script file was written)"; exit 2; }; . "$HOME/dem-venv/bin/activate" && CUPY_CACHE_DIR="$Q11D/cupy_cache" timeout 5400 python3 "$Q11D/q11_gpu_check.py" --label "$Q11L" --out "$Q11D" --old "$Q11D/s3_old.py" --new "$Q11D/s3_new.py" --old-sha 8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec --new-sha 859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a --scripts "$Q11REPO/scripts"; echo "[q11] rc $? - send back ~/${Q11D#$HOME/}/result.json and check.log" ); else echo "[q11] paste broken (md5 differs) or the new folder could not be made - nothing run"; fi

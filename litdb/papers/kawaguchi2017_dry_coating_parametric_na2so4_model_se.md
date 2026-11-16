@@ -249,6 +249,7 @@ NCM + 분쇄 Na₂SO₄ → 막자 30 min 예비 혼합 → Hybridizer (선속�
 - SE 건식 코팅: `lee2026_lpscl_coating_thickness_ncm811` · `lee2026_mechanical_halogen_argyrodite_drycoating` (1저자 공저) · `kim2025_conductive_agent_se_coating_cathode` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `choi2026_bzox_dry_zro2x_nmc_shell_coating`.
 - 혼합 장치 DEM: `frankenberg2024_dem_high_intensity_mixer_assb` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing` · `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `jadidi2023_dem_batch_solid_mixers_review`.
 - SE 기계 물성: `sakuda2013_sulfide_mechanical_property`.
+- 이 논문의 ref 18 (모델 물질 선정 · 기전 원전 · 2026-11-12 카드): `kawaguchi2018_dry_coating_model_se_particle_powtec` — 압입 수치는 그 논문 SI 에 있다 (압분 펠릿 · Berkovich: 상대 잔류 깊이 0.80 (75Li₂S·25P₂S₅) ↔ 0.94 (Na₂SO₄) · 하중 기울기 6.06 ↔ 6.79 ×10⁻² N^0.5/µm — 경도 · 영률 값은 없다) · 이 논문 Run 3 과 명목상 같은 조건 (16,000 rpm · 5 min · 70 : 30) 을 그 논문은 '연속 막 ≈0.5 µm' 로 적는다.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -717,5 +717,8 @@ AM_P 비중: 입자의 0.108 %  vs  접촉의 11.6 % (11,810/101,913)      ⇒ �
 
 ---
 
+## 🔗 관련 카드
+- [40] German 2014 의 원문 (2026-11-16 카드): [`german2014_coordination_number_powder_densification`](german2014_coordination_number_powder_densification.md) — 평균 배위수 N_C = 2 + 11f² (문헌 113 쌍) · 상대밀도 1 %p 당 0.12–0.20 [그 카드 산술] · 점착 · 마찰 ↑ → 밀도 · Z 함께 ↓ (p.369) — 부분 Z_ij · E_XY 영향은 원문에 없다 (§8-③ 대조는 그 카드 §0-1).
+
 ## 🗨️ Q&A 로그
 <!-- 후속 질문·답변을 여기에 누적 -->

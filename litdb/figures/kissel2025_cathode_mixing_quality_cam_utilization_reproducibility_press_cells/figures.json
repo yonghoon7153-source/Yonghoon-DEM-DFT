@@ -1,0 +1,1319 @@
+{
+ "slug": "kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+  "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Exemplary voltage proﬁle overtime during the electrochemical benchmarking protocol employed for all cells in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.5,
+    487.7,
+    304.7
+   ],
+   "w": 1847,
+   "h": 977,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.405,
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Discharge capacities achieved at diﬀerent C-rates for a) individual cells and b) average per batch. Each batch was hand-ground for 15 min by a diﬀerent person.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    526.9,
+    552.9,
+    700.9
+   ],
+   "w": 2118,
+   "h": 726,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.82,
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Discharge capacities achieved at diﬀerent C-rates: a) individual cells and b) average per batch. Each batch was machine-mixed with the same parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.0,
+    245.7
+   ],
+   "w": 2118,
+   "h": 728,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.815,
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Violin plots of anode contributions to the resistance of all cells investigated in this study (Data File S1, Supporting Information) for which the individual anode preparation or the cell assembly protocol (pressing the whole cell at 375 MPa) was applied. Start and End refer to the begin- ning and end of the electrochemical benchmarking protocol.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    77.0,
+    297.8,
+    252.7
+   ],
+   "w": 1055,
+   "h": 734,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.879,
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Cell assembly protocol that was established during this study. The success of cathode composite preparation strongly depends on the speciﬁc materials, composition, and mixing process parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.7,
+    550.0,
+    221.3
+   ],
+   "w": 2118,
+   "h": 629,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.766,
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Correlation between capacities and CAM utilization, with the speciﬁc capacity calculated a) with respect to the total mass of active material in the cathode, mCAM,tot, and b) with respect to the actual electrochemically active mass, mCAM,act.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    524.2,
+    550.1,
+    700.1
+   ],
+   "w": 2118,
+   "h": 733,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.84,
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Figure 7. a) Correlation between active speciﬁc discharge capacities, calculated with respect to the active mass, and the areal cell resistance extracted from the impedance at 3.1 V vs. In/InLi. b) Individual impedance contributions versus the CAM utilization.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.9,
+    552.9,
+    263.7
+   ],
+   "w": 2118,
+   "h": 804,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.897,
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Active speciﬁc capacities, calculated with respect to the actual electrochemically active mass, versus CAM utilization for the composites using a diﬀerent conductive additive (poor electrode design). The shaded areas indicate the mean values and standard deviations (normal range) of capacity variation depicted in Figure 6b.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.1,
+    71.1,
+    550.1,
+    251.7
+   ],
+   "w": 1055,
+   "h": 753,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.835,
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Factors inﬂuencing the measurable capacity of solid-state cells. The CAM utilization signiﬁcantly aﬀects the capacities and needs to be diﬀerentiated from other contributions.",
+   "rotated_deg": 0,
+   "bbox": [
+    299.9,
+    70.5,
+    552.9,
+    218.7
+   ],
+   "w": 1055,
+   "h": 619,
+   "dpi": 300,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.733,
+   "viewed": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Influence of cathode loading on the achievable capacities. The specific capacities are referred to the total CAM mass. The same com- posite batch has been used (batch 6).",
+   "rotated_deg": 0,
+   "bbox": [
+    77.6,
+    70.8,
+    290.2,
+    233.5
+   ],
+   "w": 887,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.893,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [70.2, 64.8, 300.7, 222.7] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 60) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Influence of prepressing the cell for different times on the anode contribution to the resistance. The prepressing time has no influ- ence.",
+   "rotated_deg": 0,
+   "bbox": [
+    304.2,
+    70.8,
+    516.7,
+    233.5
+   ],
+   "w": 887,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.93,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [64.8, 64.8, 527.2, 222.7] spanned both SI columns (Fig. S1 included) and stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 62) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Specific discharge capacities ob- tained for a liquid cell during the benchmarking.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    313.4,
+    288.8,
+    476.1
+   ],
+   "w": 887,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.934,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [70.2, 307.4, 298.0, 465.2] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 61) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Quasi-OCP curve (0.02C) of a lith- ium-ion battery cell with the same CAM taken as reference for active mass determination.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    313.4,
+    512.6,
+    476.1
+   ],
+   "w": 886,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.942,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [64.8, 307.4, 527.9, 465.2] spanned both SI columns (Fig. S3 included) and stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 63) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 3,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Correlation plot between the gross specific capacity measured at the end of the benchmarking program and CAM utilization.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    541.4,
+    288.8,
+    704.1
+   ],
+   "w": 887,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.924,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [70.2, 535.4, 297.9, 693.3] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 65) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 3,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Linear regression results for the CAM utilization and active specific capacities at different C-rates.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.0,
+    541.4,
+    512.6,
+    704.1
+   ],
+   "w": 886,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.883,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [294.0, 535.4, 521.9, 693.3] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 64) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 4,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Exemplary Nyquist plot recorded at 3.1 V vs. In/InLi and corresponding equivalent cir- cuit for the impedance fitting. Black circles represent the measured data which were recorded in a frequency range from 10 kHz to 10 mHz. The colored semicircles for the cathode- and anode-related contributions, RCathode and RAnode, represent a guide-to-the-eye.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    70.9,
+    507.2,
+    264.5
+   ],
+   "w": 1797,
+   "h": 807,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.9,
+   "src_native": [
+    1316,
+    591
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [70.2, 64.9, 520.6, 253.5] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 70) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 4,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Correlation plot between the gross specific discharge capacities and the areal full cell resistance extracted from the impedance at 3.1 V vs. In/InLi.",
+   "rotated_deg": 0,
+   "bbox": [
+    120.9,
+    378.4,
+    473.9,
+    648.6
+   ],
+   "w": 1472,
+   "h": 1127,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.907,
+   "src_native": [
+    980,
+    750
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [64.8, 372.4, 516.6, 637.8] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 69) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 5,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. SEM (GeminiSEM 560, Carl Zeiss Microscopy, Oberkochen, Germany) images of the two different CNF types. For CNF type 1 fibers are visible while microstructure of CNF type 2 is domi- nated by spherical and agglomerated entities and fibers appear to be disrupted.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    70.8,
+    525.6,
+    204.8
+   ],
+   "w": 1874,
+   "h": 559,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.193,
+   "src_native": [
+    1374,
+    410
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [70.2, 64.8, 531.6, 203.3] ended 1.5 pt above the raster bottom (scale bars intact); re-cut only to keep the SI set uniform; new box = embedded raster bbox (xref 74) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 5,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Violin plots of the areal full cell re- sistances extracted from the impedance measured at 3.1 V vs. In/InLi for all tested cells of the three composite types.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.2,
+    281.5,
+    288.8,
+    444.2
+   ],
+   "w": 887,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.906,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [70.2, 275.5, 300.7, 448.4] was complete (raster + ~6 pt margin); re-cut to the raster box only to keep the SI set uniform (content unchanged); new box = embedded raster bbox (xref 76) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 5,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Comparison of representative dQ/dV plots for the three different composite types.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.9,
+    281.5,
+    515.4,
+    444.2
+   ],
+   "w": 887,
+   "h": 679,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.897,
+   "src_native": [
+    590,
+    451
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [296.9, 275.5, 527.5, 448.4] was complete; re-cut to the raster box only to keep the SI set uniform (content unchanged); new box = embedded raster bbox (xref 75) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 6,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Mean gross specific discharge ca- pacities for different composite batches, calcu- lated with respect to the total CAM mass in the cathode, all using CNF type 2. The standard de- viations are calculated based on at least three cells that have been built.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.2,
+    70.8,
+    291.8,
+    241.3
+   ],
+   "w": 886,
+   "h": 711,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.685,
+   "src_native": [
+    590,
+    473
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [73.2, 64.8, 300.8, 246.1] was complete; re-cut to the raster box only to keep the SI set uniform (content unchanged); new box = embedded raster bbox (xref 89) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 6,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Active specific capacities, versus CAM utilization for the composites using CNF type 2 (poor electrode design). The shaded areas indicate the mean values and standard devia- tions (normal range) of capacities achieved for cells with a good electron design using CNF type 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    303.0,
+    70.8,
+    515.6,
+    241.3
+   ],
+   "w": 887,
+   "h": 711,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.785,
+   "src_native": [
+    590,
+    473
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [297.0, 64.8, 524.9, 230.9] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 88) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 7,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Influence of the vibration frequency during milling on the achievable discharge ca- pacities. The specific capacities are referred to the total CAM mass.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.6,
+    70.8,
+    290.2,
+    241.3
+   ],
+   "w": 887,
+   "h": 711,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.617,
+   "src_native": [
+    590,
+    473
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [70.2, 64.8, 300.6, 230.9] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 95) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 7,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Influence of the milling media size on the achievable discharge capacities. The specific capacities are referred to the total CAM mass.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.8,
+    70.8,
+    515.3,
+    241.3
+   ],
+   "w": 887,
+   "h": 711,
+   "dpi": 300,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "blank": 0.561,
+   "src_native": [
+    590,
+    473
+   ],
+   "recrop": "2026-11-16 litdb-curator: re-cut by hand — the tool box [296.8, 64.8, 527.3, 230.9] stopped ~10–11 pt above the bottom of the embedded raster (x-axis title cut off: the caption block starts with an empty line inside the figure area); new box = embedded raster bbox (xref 94) exactly, 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_gross_specific_capacity_q_cam.png",
+   "caption": "Equation (1), PDF p.4 left: gross specific capacity q_CAM = Q/(m_CC·x_AM) — measured charge Q referred to the total CAM mass m_CAM,tot = composite cathode mass m_CC × CAM mass fraction x_AM ('as a standard approach').",
+   "rotated_deg": 0,
+   "w": 1409,
+   "h": 540,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "bbox": [
+    47.0,
+    327.0,
+    290.0,
+    417.9
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (text layer is clean; the card transcribes the equation from it); defining/connecting sentences kept; multi-part stacked with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 4,
+   "file": "eq_02_error_propagation_delta_q_cam.png",
+   "caption": "Equation (2), PDF p.4 left: Gaussian error propagation for q_CAM with Δm_CC = 0.1 mg (weighing + loss when filling, ref. [52]), Δx_AM = 0.0005 (weighing in the powders), ΔQ assumed negligible; with Q = 1.5 mAh, m = 12 mg, x = 0.6931 → Δq_CAM = 1.5 mAh g−1 ('always a possible error of at least 1–2 mAh g−1').",
+   "rotated_deg": 0,
+   "w": 1410,
+   "h": 1155,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "bbox": [
+    47.0,
+    420.0,
+    290.0,
+    623.2
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (text layer is clean; the card transcribes the equation from it); defining/connecting sentences kept; multi-part stacked with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 11,
+   "file": "eq_03_active_mass_ocp_relaxation_q_measured_over_q_actual.png",
+   "caption": "Equation (3), PDF p.11 Experimental 'Active Mass Determination' (adapted from [40]): charge at 0.1C to 3.1 V vs In/InLi, hold 3 h, relax 4 h → V1; charge at 0.05C to 3.4 V, relax 4 h → V2; q_actual = capacity of the liquid-cell quasi-OCP curve (second charge at 0.02C, Fig. S4) between V1 and V2; m_CAM,act = Q_measured/q_actual (3); CAM utilization = m_CAM,act/m_CAM,tot; all SSB cells referred to the same (not fully optimized) liquid reference cell.",
+   "rotated_deg": 0,
+   "w": 1409,
+   "h": 1353,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 11,
+     "bbox": [
+      49.8,
+      702.4,
+      292.8,
+      723.6
+     ]
+    },
+    {
+     "page": 11,
+     "bbox": [
+      304.9,
+      73.8,
+      548.0,
+      286.6
+     ]
+    }
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (text layer is clean; the card transcribes the equation from it); defining/connecting sentences kept; multi-part stacked with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract_mixing_reproducibility_static_kinetic.png",
+   "caption": "PDF p.1 abstract: reference system LiNi0.82Mn0.07Co0.11O2 / Li6PS5Cl / carbon nanofibers / In–Li foil; hand mortaring vs mini vibrating mill; mixing critical for reproducibility; open-circuit relaxation method quantifies active-mass utilization in situ; 'static and kinetic capacity losses'.",
+   "rotated_deg": 0,
+   "w": 1801,
+   "h": 1414,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "bbox": [
+    58.8,
+    232.2,
+    380.0,
+    482.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-benchmark-protocol",
+   "page": 2,
+   "file": "txt_p2_benchmark_protocol_70_30_1_three_cells.png",
+   "caption": "PDF p.2 left+right: constants of the intra-laboratory study (same NCM82, Li6PS5Cl, CNF batches, 70:30:1 wt, In–Li foils, glovebox, pressure set-up, protocol); no extended C-rate/long-term cycling (chemo-mechanics); 6 h rest → formation 0.1C → OCP-relaxation utilization + impedance at 3.1 V vs In/InLi → 1.9–3.7 V, 3×0.1C, 5×0.3C, 5×1.0C, 1×0.1C → utilization + impedance again; three cells per batch.",
+   "rotated_deg": 0,
+   "w": 1410,
+   "h": 2293,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      47.0,
+      685.9,
+      290.0,
+      725.3
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      302.0,
+      73.0,
+      545.0,
+      439.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-p3-hand-ground",
+   "page": 2,
+   "file": "txt_p2_p3_hand_ground_162_188_cv.png",
+   "caption": "PDF p.2 right + p.3 left: three hand-ground batches by three persons; 162–188 mAh g−1; batch 1 (187.0 ± 0.8) vs batch 2 (166.9 ± 3.8) mAh g−1 at 0.1C; batch 3 'higher variance between 2.2 to 5.9 mAh g−1' (the workbook's CV in %); nine cells 178.0/162.6/133.3 mAh g−1, SD 9.0/9.7/10.8, CV 5.1/5.6/8.1 %.",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 1685,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      302.0,
+      568.4,
+      545.0,
+      723.8
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      49.8,
+      334.7,
+      292.8,
+      469.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-p4-machine-made",
+   "page": 3,
+   "file": "txt_p3_p4_machine_made_30hz_nine_balls_cv.png",
+   "caption": "PDF p.3 left+right + p.4 left: mini vibrating mill 30 Hz, 30 min, nine ZrO2 balls (5 mm) per 300 mg; nine cells 179.5/164.9/138.5 mAh g−1, SD 2.4/3.0/4.3, CV 1.4/1.8/3.1 %; batches 5 and 6 each one low 1C outlier; 'reproducible'.",
+   "rotated_deg": 0,
+   "w": 1404,
+   "h": 1483,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      49.8,
+      469.4,
+      292.8,
+      515.3
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      304.9,
+      335.9,
+      548.0,
+      515.3
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      47.0,
+      280.1,
+      290.0,
+      305.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-loading-12-15mg",
+   "page": 4,
+   "file": "txt_p4_cathode_loading_12_vs_15_mg.png",
+   "caption": "PDF p.4 left+right: standard 12 mg composite (≈2 mAh cm−2) vs 15 mg (≈2.5 mAh cm−2, 25 % thicker) — no detrimental effect (Fig. S1); 15 mg adopted in the protocol for homogeneous distribution.",
+   "rotated_deg": 0,
+   "w": 1404,
+   "h": 830,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      47.0,
+      623.2,
+      290.0,
+      723.8
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      302.0,
+      281.1,
+      545.0,
+      319.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-p5-anode-separator",
+   "page": 4,
+   "file": "txt_p4_p5_anode_40_80_375_mpa_separator_700um.png",
+   "caption": "PDF p.4 right + p.5 left: In/Li anode — individual preparation (≈40 MPa, then ≈80 MPa stack) 1.4–14.4 Ω cm², (6.3 ± 2.8) → end (5.3 ± 3.8) Ω cm²; whole cell pressed at 375 MPa → (2.5 ± 1.0) → end (3.9 ± 1.5) Ω cm²; separator ≈700 µm (80 mg Li6PS5Cl), cell electronically isolated during pressing; ≈60 MPa pre-pressing had no impact (Fig. S2).",
+   "rotated_deg": 0,
+   "w": 1410,
+   "h": 2539,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      302.0,
+      357.1,
+      545.0,
+      723.8
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      49.8,
+      310.7,
+      292.8,
+      393.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-cell-assembly-protocol",
+   "page": 5,
+   "file": "txt_p5_cell_assembly_protocol_375mpa_3min_80mpa.png",
+   "caption": "PDF p.5 left+right: cell assembly protocol — PEEK inlet Ø 10 mm, polished steel rods; 80 mg SE separator (≈700 µm) hand-pressed; 15 mg composite spread + hand-pressed; In foil 100 µm Ø 9 mm + Li foil 100 µm Ø 6 mm (n(In):n(Li) = 1.86); 20 µm steel plate; 375 MPa for 3 min at RT (current collectors isolated); steel frame, four 12 mm bolts, 10 Nm ≈ 80 MPa stack; 25 °C; ≥ 3 h OCV (1.9–2.2 V vs In/InLi); capacity variations below 5 %.",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 2414,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      49.8,
+      521.5,
+      292.8,
+      723.8
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      304.9,
+      72.5,
+      548.0,
+      297.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-p6-gross-vs-active",
+   "page": 5,
+   "file": "txt_p5_p6_gross_vs_active_specific_capacity.png",
+   "caption": "PDF p.5 right + p.6 left: 'gross specific capacity' (whole weighed CAM, Eq. 1) vs 'active specific capacity' (electronically and ionically connected CAM); CAM utilization = active-to-gross mass ratio.",
+   "rotated_deg": 0,
+   "w": 1410,
+   "h": 952,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      304.9,
+      623.2,
+      548.0,
+      723.9
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      47.0,
+      258.2,
+      290.0,
+      316.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-p7-ocp-utilization-correlation",
+   "page": 6,
+   "file": "txt_p6_p7_ocp_relaxation_util_74_95_r095.png",
+   "caption": "PDF p.6 left+right + p.7 left: XRD/Rietveld active mass (Bartsch [53]) is ex situ; OCP-relaxation method of Conforto et al. [40] (active-mass loss during cycling) used for in-situ, on-the-fly initial utilization; utilization 74–95 % at identical composition; gross capacity vs utilization r = 0.95 / R² = 0.90 (0.1C), 0.89/0.80 (0.3C), 0.73/0.53 (1C); also for the last 0.1C cycle (Fig. S5).",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 2948,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      47.0,
+      316.0,
+      290.0,
+      515.3
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      302.0,
+      259.2,
+      545.0,
+      515.3
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      49.8,
+      299.4,
+      292.8,
+      359.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-active-capacity-effective-crate",
+   "page": 7,
+   "file": "txt_p7_active_capacity_201_effective_crate.png",
+   "caption": "PDF p.7 left+right: active specific capacity at 0.1C (201.4 ± 3.0) mAh g−1 ≈ LIB cell (Fig. S3); differences attributed to error propagation (Eq. 2); 0.3C (184.2 ± 4.9), 1C (151.5 ± 9.5) mAh g−1; effective vs nominal C-rate [54]; r = 0.19 / 0.27 for Fig. 6b (Fig. S6).",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 2292,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      49.8,
+      359.9,
+      292.8,
+      723.5
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      304.9,
+      303.0,
+      548.0,
+      337.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7-eis-simplified-no-tlm",
+   "page": 7,
+   "file": "txt_p7_eis_simplified_circuit_no_tlm.png",
+   "caption": "PDF p.7 right: tortuosity reduces effective conductivities; partial conductivities need symmetric cells / three-electrode cells / TLM — 'not possible in this study' (device upper-frequency limit); R-(RQ)-(RQ)-P fit at 3.1 V read as separator/cathode/anode; active capacity vs areal cell resistance r = −0.17 (0.1C) … −0.48 (1C).",
+   "rotated_deg": 0,
+   "w": 1404,
+   "h": 1516,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "bbox": [
+    304.9,
+    337.9,
+    548.0,
+    601.0
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7c",
+   "kind": "text",
+   "label": "p7-p8-utilization-vs-interface-area",
+   "page": 7,
+   "file": "txt_p7_p8_util_vs_interface_area_no_direct_link.png",
+   "caption": "PDF p.7 right + p.8 left: utilization vs separator (R² = 0.02), anode (R² = 0.01), cathode (r = −0.17) resistance — no correlation; one (RQ) element cannot separate active-surface and transport contributions; 'no direct connection between the CAM utilization and the microscopic active interface area' (a particle can stay active after partial contact loss).",
+   "rotated_deg": 0,
+   "w": 1404,
+   "h": 1867,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      304.9,
+      633.8,
+      548.0,
+      723.5
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      47.0,
+      69.4,
+      290.0,
+      305.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-cnf-type2-static-property",
+   "page": 8,
+   "file": "txt_p8_cnf_type2_75p6_vs_89p8_static_property.png",
+   "caption": "PDF p.8 left+right: second CNF product batch (type 2: spherical/agglomerated entities, disrupted fibers, Fig. S9); utilization 75.6 % vs 89.8 % (type 1) on average; active capacities reduced by up to 40 % (0.1C) and 90 % (1C) — kinetic limitation (Figs. S10, S11); 'the CAM utilization is a static property and only differentiates between connected and unconnected CAM particles'; 80 wt% CAM with type 2 improves (Figs. S10–S13).",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 2657,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      47.0,
+      623.2,
+      290.0,
+      723.9
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      302.0,
+      324.2,
+      545.0,
+      688.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-primary-secondary-degree-of-mixing",
+   "page": 9,
+   "file": "txt_p9_primary_secondary_degree_of_mixing.png",
+   "caption": "PDF p.9 left: two degrees of mixing — primary = how many particles are electrochemically active, quantified by the CAM utilization (static; upper limit at all C-rates; insulating CAM coatings can lower it too); secondary = how tortuous the transport pathways are, quantifiable by effective conductivities [44]; low tortuosity → better kinetics at elevated C-rates; effective C-rates [54].",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 2308,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "bbox": [
+    49.8,
+    192.7,
+    292.8,
+    601.3
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x9b",
+   "kind": "text",
+   "label": "p9-se-comparison-thought-experiment",
+   "page": 9,
+   "file": "txt_p9_se_comparison_psd_adhesion_mechanics.png",
+   "caption": "PDF p.9 left+right: thought experiment — ranking SEs by gross capacity can misinterpret data; SE particle-size mean and width, particle adhesion forces and mechanical characteristics influence mixing quality and microstructure; residual pores; normalise to active specific capacities.",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 1986,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 9,
+     "bbox": [
+      49.8,
+      601.3,
+      292.8,
+      723.9
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      304.9,
+      260.5,
+      548.0,
+      485.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x9c",
+   "kind": "text",
+   "label": "p9-p10-static-vs-kinetic-loss",
+   "page": 9,
+   "file": "txt_p9_p10_static_vs_kinetic_loss_recommend_initial_util.png",
+   "caption": "PDF p.9 right + p.10 left: capacity losses = (static) active-mass loss (in-situ quantifiable; initial: insufficient mixing, poor electrode design — mass and size ratios, conductive additives; too high porosities avoided by sufficient densification and compatible particle mechanics) + kinetic loss; recommend quantifying the initial utilization after a formation cycle.",
+   "rotated_deg": 0,
+   "w": 1404,
+   "h": 1500,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 9,
+     "bbox": [
+      304.9,
+      532.0,
+      548.0,
+      723.9
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      47.0,
+      73.0,
+      290.0,
+      140.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x10a",
+   "kind": "text",
+   "label": "p10-contact-loss-categories",
+   "page": 10,
+   "file": "txt_p10_contact_loss_categories_i_iv.png",
+   "caption": "PDF p.10 left: chemo-mechanical contact-loss categories — i) complete electronic contact loss → inactive particle; ii) complete ionic contact loss (Li still diffuses into connected CAM particles); iii) partial ionic and iv) partial electronic contact loss — ii–iv statically active but kinetically limited.",
+   "rotated_deg": 0,
+   "w": 1404,
+   "h": 1028,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "bbox": [
+    47.0,
+    140.8,
+    290.0,
+    316.1
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x10b",
+   "kind": "text",
+   "label": "p10-mixing-process-simulation",
+   "page": 10,
+   "file": "txt_p10_mixing_process_simulation_stress_number.png",
+   "caption": "PDF p.10 left+right: many mill parameters (frequency, time, media, filling level); optimised parameters not transferable between materials; machine mixing recommended; lab-scale devices as model systems for mixing simulations (stress-intensity distribution, stress number [63]; [35,64,65]); insulating binder still a challenge.",
+   "rotated_deg": 0,
+   "w": 1405,
+   "h": 2342,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 10,
+     "bbox": [
+      47.0,
+      642.1,
+      290.0,
+      723.9
+     ]
+    },
+    {
+     "page": 10,
+     "bbox": [
+      302.0,
+      73.0,
+      545.0,
+      406.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x11a",
+   "kind": "text",
+   "label": "p11-materials-lib-reference",
+   "page": 11,
+   "file": "txt_p11_materials_psd_lib_reference_203mpa.png",
+   "caption": "PDF p.11 left: single-crystalline NCM82 d10/d50/d90 = 1.7/3.3/6.1 µm (MSE Supplies); Li6PS5Cl 'Argyrodite-CSMP' d10/d50/d90 = 0.44/0.79/1.82 µm (Posco JK); CNF type 1 (719781) / type 2 (719811), Sigma-Aldrich; 70:30:1; Pulverisette 23; separator 'Argyrodite-CMP5'; In Ø 9 mm/100 µm, Li Ø 6 mm/100 µm; glovebox O2, H2O < 1.0 ppm; 'no cell was built that was not working at all'; LIB reference electrode 96:2:2, 203 MPa, ≈10 mg cm−2.",
+   "rotated_deg": 0,
+   "w": 1404,
+   "h": 1688,
+   "dpi": 400,
+   "src": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "bbox": [
+    49.8,
+    131.4,
+    292.8,
+    427.9
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xS6a",
+   "kind": "text",
+   "label": "si-p6-p7-mixing-parameter-study",
+   "page": 6,
+   "file": "txt_si_p6_p7_mixing_parameter_study_20hz_3mm_balls.png",
+   "caption": "SI p.6–7 Section S1: mill parameters (frequency, time, media); 30 min, 5 mm balls: 20 Hz gives the highest capacities with the smallest variation (only for 30 min); higher frequencies presumably degrade particles, mainly the SE; default 3 balls (5 mm) per 100 mg; 3 mm balls 'keeping the total volume of the milling balls constant' → 28 balls per 300 mg; one batch worse, another better (caking, ball surfaces, jar filling); optimisation 'was not the goal of this work'.",
+   "rotated_deg": 0,
+   "w": 2594,
+   "h": 3866,
+   "dpi": 400,
+   "src": "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      69.8,
+      373.2,
+      528.5,
+      693.5
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      69.8,
+      318.2,
+      528.5,
+      690.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi — column rectangle from the text-layer line boxes of the first/last line, top/bottom halfway into the gap to the neighbouring line → ink trim → uniform 6 pt white margin; multi-part paragraphs stacked top-to-bottom with a light-grey rule (2026-11-16, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "note_manual": "2026-11-16 litdb-curator: tool run (main 9 + SI 15 figures, captions from the text layer); all 15 SI figures re-cut to their embedded-raster boxes (12 tool boxes cut the x-axis title or spanned two SI columns; see 'recrop'); + 3 equation crops (Eqs. 1–3) + 20 evidence-paragraph crops (txt_*). No table in main text or SI. Full-page renders: none.",
+ "data_file": "supplementary workbook (Sup2 .xlsx, 1 sheet 'Tabelle1', 17 batches / 56 cells) read with openpyxl read-only — not committed; per-cell extract used by the card = data_file_s1_extract.csv (+ card-arithmetic active capacities and a Fig. 6a pixel check)."
+}

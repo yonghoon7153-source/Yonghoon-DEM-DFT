@@ -434,6 +434,7 @@ NCM622 : Li₆PS₅Cl = 70 : 30 wt% 복합체에서 LPSCl 몫을 **원 분말 (D
 - 순수 SE 입도: `faka2026_particle_size_consolidation_strain_lpscl`.
 - 이종 접촉 소성비의 출처 (같은 그룹 · ref 51): `yano2024_eepa_binary_mixture_plasticity_compression_dem` — 규칙 λp* = 1 − E₁*/E₂* 는 있고 **0.619 는 없다** (그 논문 값 = NCM–Li₃PS₄ 0.60 · 이 카드 표 2 입력으로 같은 규칙이면 0.601) · f₀ = −(8/3)πγR\* (그 논문 식 26) · 그 논문 표 2 f₀ −1.05 × 10⁻⁵ N (단분산 50 µm).
 - EEPA 원전 (학위논문): `morrissey2013_eepa_elastoplastic_adhesion_dem_iron_ore_fines_thesis` — λp = 그 학위논문의 C_p = δp/δ = 1 − k₁/k₂ (식 6.1 · n = 1 에서만 정확) · δp = C_p^(1/n) δ (식 4.19) · slope / tensile exponent · tangential stiff multiplier = n · X · κ_tm · 0.619 는 그 학위논문에 없다.
+- f₀ 설정의 출처 (같은 그룹 · ref 48): `yano2023_eepa_bimodal_size_plasticity_compression_dem` — f₀ = −(8/3)πγR\* (그 논문 SI 식 S4 · JKR 0 겹침 · γ 0.1 J/m²) · 그 논문 표 2 의 크기 이원 (지름 50 · 12.5 µm) f₀ −1.05 × 10⁻⁵ · −4.19 × 10⁻⁶ · −2.62 × 10⁻⁶ N (R\* 12.5 · 5 · 3.125 µm) = 이 카드 표 3 의 세 값과 같은 수 · NCM λp 0.38 (Cheng 2017) 같음 · 0.642 · 0.619 · LPSCl 은 없다 (그 논문 SE 쪽 = Li₃PS₄ 0.7).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -272,6 +272,7 @@ R1 은 SOC · 입도 무관 (≈22–25 Ω) · R2 는 SOC > 20 % 에서 L_SE 가
 - 탄소 포함 σ_e 비교군: `lee2025_corolling_dryprocess_lpscl_ptfe` · `kim2024_carbon_volumetric_occupation_se_domain` · 접촉 · 피복: `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` · `lee2024_shear_force_dry_process_cathode_coverage`.
 - 같은 주제 태그 (size_effect): `lei2026_se_particle_size_effects_review` · `stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity`.
 - 같은 묶음 (10-30 스테이징 · 다른 에이전트 · 제목만 확인): `yadav2021_lpscl_sieved_psd_impedance_tortuosity` (큰 PSD 쪽 결과 — 지도 순위 4) · `lin2025_submicron_lpscl_cathode_li_kinetics` (서브 µm LPSCl 양극의 동역학 — 이 논문의 S_SE 와 같은 크기대) · `tron2023_rational_cathode_composite_optimization_lpscl` (LPSCl 입도를 다른 설계 변수와 함께) · `yano2026_se_psd_width_ionic_tortuosity_dem` · `calpa2019_small_li7p3s11_liquid_phase_composite_cathode`.
+- 이름이 비슷한 다른 저자의 카드 (이 논문 = Shunsuke Kawaguchi · LIBTEC): `kawaguchi2018_dry_coating_model_se_particle_powtec` (2026-11-12 카드) · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` 는 Takashi Kawaguchi (오사카부립대 · 공립대 — 건식 코팅) 의 논문이다 (같은 그룹 아님).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
