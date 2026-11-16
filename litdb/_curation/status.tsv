@@ -85,9 +85,9 @@ N-78	대피	끝	nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_
 N-79	대피	끝	sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking · 364e78ab4	정독 128 · 끝 (트리 2) · SE d50 16 vs 3.8 µm · NCM111 9.4 vs 5.3 µm · 330 MPa · 2.6 mA/cm² 상대 용량 0.31 vs 0.61 [판독] · finish 확인 = build_index.py SIZE_EFFECT_SLUGS 한 줄 (koenig2023 · jeong2024 와 같은 관례) + siroma2016 관련 카드 줄 → 손 마무리
 N-80	대피	끝	sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode · 7db21b8f5	정독 129 · 끝 (트리 1 · 정독 129) · PLD 80Li2S·20P2S5 막만 15·35·65 mAh/g · 막 + SE 10 wt% = 95 (SE 30 wt% 와 같음) · 계면 ca. 850 vs 300 Ω · 카드 문제 = kawaguchi2017 L234 · L114 · kawaguchi2023 L87 · L284 (한정)
 N-81	대피	끝	hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf · 79aad7527	정독 130 · 끝 (트리 2 · 정독 130) · 탄소 없는 껍질 CP σ_e 1.36e-6 vs 막자 2.84e-5 S/cm (×1/21 [판독]) · AB 만 껍질 안 · VGCF σ_e ×17.6 인데 2 C 30.7 · SE 37–46 % 벽 손실 [카드 산술] · 카드 문제 = kawaguchi2023 L288 · frankenberg2025 L363
-N-82	대피	도는 중		PDF 받음 (+SI 1 · 그 밖 1) · Kissel 2025 Adv Energy Mater 15 · 시작 11-16 23:33 KST
+N-82	대피	끝	kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells · c66e65410	정독 131 · 끝 (트리 1 · 정독 131) · OCP 이완 정적 CAM 이용률 74–95 % · 0.1 C gross 용량과 r 0.95 (workbook 38 셀 재계산 0.971) · active 201.4 ± 3.0 mAh/g · 막자 ↔ 진동밀 0.1 C CV 5.1 ↔ 1.4 % · 이용률 89.0 ± 4.0 ↔ 89.0 ± 1.2 % · 카드 문제 = frankenberg2025 L232 (2 차 혼합도 정의) · kissel2026 L247 (휴지 3 · 5 h ↔ 4 · 4 h · 경미)
 N-83	대피	도는 중		PDF 받음 (+SI 1) · Han 2024 J Energy Storage 96 112693 · 시작 11-17 00:12 KST
-N-84	대피	차례 기다림		PDF 받음 (+SI 1 · 그 밖 6) · Puls 2024 Nat Energy 9 1310
+N-84	대피	도는 중		PDF 받음 (+SI 1 · 그 밖 6) · Puls 2024 Nat Energy 9 1310 · 시작 11-17 00:17 KST
 N-85	대피	차례 기다림		PDF 받음 (+SI 1) · Zhang 2021 Nano Lett 21 5233
 N-86	대피	차례 기다림		PDF 받음 · Kim 2013 J Power Sources 244 476
 N-87	대피	차례 기다림		PDF 받음 · Hayakawa 2022 Adv Powder Technol 33 103705
