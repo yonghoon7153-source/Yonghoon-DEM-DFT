@@ -1,0 +1,533 @@
+{
+  "schema": "g2cp_mpi_development_receipt_v1",
+  "source_pin": "c559766bb506bab45e1c22099e640cac7a442aed",
+  "runs": [
+    {
+      "job_id": 366257,
+      "np": 2,
+      "N": 200,
+      "label": "DEVELOPMENT_ONLY",
+      "source_pin": "c559766bb506bab45e1c22099e640cac7a442aed",
+      "archive": {
+        "name": "g2cp_np2_n200_result.tar.gz",
+        "bytes": 1033217,
+        "sha256": "de07abc580062e38b88bf51ba086a96e2028058d5784a2941a40e04e4904955f",
+        "regular_files": 107
+      },
+      "screen": {
+        "name": "g2cp_np2_n200_screen.txt",
+        "bytes": 1136,
+        "sha256": "0437881499b4678c3c873c07e8a8527d2fa60987e420a2de53a0cf876c663e01"
+      },
+      "source_checksums": {
+        "listed": 25,
+        "rehashed": 25,
+        "external_identity_only": 0
+      },
+      "source_pin_blobs_equal": 24,
+      "inputs_md5": {
+        "listed": 21,
+        "rehashed": 20,
+        "external_identity_only": 1
+      },
+      "outputs_md5": {
+        "listed": 45,
+        "rehashed": 45,
+        "external_identity_only": 0
+      },
+      "runner_rc": 0,
+      "arm_rc_zero": 9,
+      "grid": [
+        2,
+        1,
+        1
+      ],
+      "grid_confirmed_logs": 9,
+      "scheduler": {
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "elapsed": "00:00:23",
+        "allocated_cpus": 2,
+        "start_local_reported": "2026-11-16T13:57:12",
+        "end_local_reported": "2026-11-16T13:57:35"
+      },
+      "job_detail_snapshot": {
+        "Requeue": "0",
+        "Restarts": "0",
+        "ExitCode": "0:0"
+      },
+      "independent_requeue_history": "NOT_ESTABLISHED",
+      "stop_files": 0,
+      "identity": {
+        "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+        "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+        "mpirun_md5": "f82b94117b38ca9a5062ffe71d53b22a",
+        "mpirun_version": "mpirun (Open MPI) 5.0.10",
+        "np": "2",
+        "procs_grid": "2 1 1",
+        "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+      },
+      "registered_conclusions_adoptable": false,
+      "compare_rc_as_run": null,
+      "compare_as_run": "SKIPPED_DRY200",
+      "author_relayed_claude_readback": {
+        "da": "PASS",
+        "ra": "PASS",
+        "pairs": 0,
+        "discriminating": false
+      },
+      "intake_comparator_rerun": false,
+      "hash_checks_scope": "source SHA list and outputs MD5 lists only; source list is not a full result archive manifest"
+    },
+    {
+      "job_id": 366261,
+      "np": 4,
+      "N": 200,
+      "label": "DEVELOPMENT_ONLY",
+      "source_pin": "c559766bb506bab45e1c22099e640cac7a442aed",
+      "archive": {
+        "name": "g2cp_np4_n200_result.tar.gz",
+        "bytes": 1033482,
+        "sha256": "ff7b84cc227f795429685fc00805a1e39ba313592b8bcd1f7568a29f54b6f648",
+        "regular_files": 107
+      },
+      "screen": {
+        "name": "g2cp_np4_n200_screen.txt",
+        "bytes": 1325,
+        "sha256": "1f3e053bea61b2baed5ae96104d01417cc9ae33248214a2c074bceef7521cc9e"
+      },
+      "source_checksums": {
+        "listed": 25,
+        "rehashed": 25,
+        "external_identity_only": 0
+      },
+      "source_pin_blobs_equal": 24,
+      "inputs_md5": {
+        "listed": 21,
+        "rehashed": 20,
+        "external_identity_only": 1
+      },
+      "outputs_md5": {
+        "listed": 45,
+        "rehashed": 45,
+        "external_identity_only": 0
+      },
+      "runner_rc": 0,
+      "arm_rc_zero": 9,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "grid_confirmed_logs": 9,
+      "scheduler": {
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "elapsed": "00:00:20",
+        "allocated_cpus": 4,
+        "start_local_reported": "2026-11-16T14:17:52",
+        "end_local_reported": "2026-11-16T14:18:12"
+      },
+      "job_detail_snapshot": {
+        "Requeue": "0",
+        "Restarts": "0",
+        "ExitCode": "0:0"
+      },
+      "independent_requeue_history": "NOT_ESTABLISHED",
+      "stop_files": 0,
+      "identity": {
+        "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+        "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+        "mpirun_md5": "f82b94117b38ca9a5062ffe71d53b22a",
+        "mpirun_version": "mpirun (Open MPI) 5.0.10",
+        "np": "4",
+        "procs_grid": "2 2 1",
+        "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+      },
+      "registered_conclusions_adoptable": false,
+      "compare_rc_as_run": null,
+      "compare_as_run": "SKIPPED_DRY200",
+      "author_relayed_claude_readback": {
+        "da": "PASS",
+        "ra": "PASS",
+        "pairs": 0,
+        "discriminating": false
+      },
+      "intake_comparator_rerun": false,
+      "hash_checks_scope": "source SHA list and outputs MD5 lists only; source list is not a full result archive manifest"
+    },
+    {
+      "job_id": 366288,
+      "np": 2,
+      "N": 40000,
+      "label": "DEVELOPMENT_ONLY",
+      "source_pin": "c559766bb506bab45e1c22099e640cac7a442aed",
+      "archive": {
+        "name": "g2cp_np2_n40000_result.tar.gz",
+        "bytes": 11549132,
+        "sha256": "3ed248e28709b4cea377715908f54de933e0f0eec9fa0ea49f9ae8e4ca3f57d0",
+        "regular_files": 89
+      },
+      "screen": {
+        "name": "g2cp_np2_n40000_screen.txt",
+        "bytes": 1463,
+        "sha256": "5dbdad8dfb3c783a5d52383fe1c759d1788a21b2c40a043d34f0d0755a85f56d"
+      },
+      "source_checksums": {
+        "listed": 25,
+        "rehashed": 25,
+        "external_identity_only": 0
+      },
+      "source_pin_blobs_equal": 24,
+      "inputs_md5": {
+        "listed": 21,
+        "rehashed": 20,
+        "external_identity_only": 1
+      },
+      "outputs_md5": {
+        "listed": 25,
+        "rehashed": 25,
+        "external_identity_only": 0
+      },
+      "runner_rc": 0,
+      "arm_rc_zero": 9,
+      "grid": [
+        2,
+        1,
+        1
+      ],
+      "grid_confirmed_logs": 9,
+      "scheduler": {
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "elapsed": "00:00:41",
+        "allocated_cpus": 2,
+        "start_local_reported": "2026-11-16T14:43:33",
+        "end_local_reported": "2026-11-16T14:44:14"
+      },
+      "job_detail_snapshot": {
+        "Requeue": "0",
+        "Restarts": "0",
+        "ExitCode": "0:0"
+      },
+      "independent_requeue_history": "NOT_ESTABLISHED",
+      "stop_files": 0,
+      "identity": {
+        "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+        "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+        "mpirun_md5": "f82b94117b38ca9a5062ffe71d53b22a",
+        "mpirun_version": "mpirun (Open MPI) 5.0.10",
+        "np": "2",
+        "procs_grid": "2 1 1",
+        "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+      },
+      "registered_conclusions_adoptable": false,
+      "compare_rc_as_run": 0,
+      "compare_json_sha256": "70d00fecede3910aaa787c606aeb515d7d1628e63d395ecd670d4646761e39df",
+      "comparator_md5": "7ff543eba8aa9eabda0f80bb3c649fe2",
+      "adoption_pending": [
+        "independent requeue history",
+        "first content decision and attempt accounting",
+        "field qualification"
+      ],
+      "run_gate": true,
+      "deck_gate": true,
+      "mpi_gate": true,
+      "judgment": {
+        "다": {
+          "status": "PASS",
+          "why": [],
+          "mode": "g2cp",
+          "n_ref": 3144,
+          "n_test": 3144,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "n_bit_equal": 3144,
+          "first_bad": [],
+          "discriminating_frac": 1.0,
+          "shear_nonzero_frac": 1.0,
+          "n_periodic": 446
+        },
+        "라": {
+          "status": "PASS",
+          "why": [],
+          "mode": "g2cp",
+          "n_ref": 3144,
+          "n_test": 3144,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "n_bit_equal": 3144,
+          "first_bad": [],
+          "discriminating_frac": 1.0,
+          "shear_nonzero_frac": 1.0,
+          "n_periodic": 446
+        }
+      },
+      "predictions": {
+        "다-값": "맞음",
+        "라-값": "맞음",
+        "마-2": "맞음",
+        "마-3": "틀림",
+        "마-3p": "맞음"
+      },
+      "mpi": {
+        "np": 2,
+        "n_rb": 41,
+        "counts": {
+          "same": 2657,
+          "rank_boundary": 41,
+          "periodic": 446,
+          "ambiguous": 0
+        }
+      },
+      "ma3p_observations": {
+        "same_all_differ": 0,
+        "all_nonforce_differ": 0,
+        "rank_force_differ": 41,
+        "periodic_force_differ": 446
+      },
+      "continuous_C": {
+        "judge_kit26": "FAIL",
+        "n_mismatch": 484,
+        "n_pairs_force_differ": 487,
+        "by_group": {
+          "pos": 0,
+          "flag": 0,
+          "force": 487,
+          "force_normal": 487,
+          "force_tangential": 487,
+          "torque": 487,
+          "deltaMax": 0,
+          "shear": 0,
+          "contactArea": 0,
+          "delta": 0,
+          "contactPoint": 0
+        }
+      },
+      "boundary_intake_count": {
+        "internal_rank_boundary_all": 155,
+        "internal_rank_boundary_flag1": 114,
+        "internal_rank_boundary_flag0": 41,
+        "all_flag1": 446,
+        "periodic_minimum_image_pairs": 332
+      },
+      "hash_checks_scope": "source SHA list and outputs MD5 lists only; source list is not a full result archive manifest"
+    },
+    {
+      "job_id": 366290,
+      "np": 4,
+      "N": 40000,
+      "label": "DEVELOPMENT_ONLY",
+      "source_pin": "c559766bb506bab45e1c22099e640cac7a442aed",
+      "archive": {
+        "name": "g2cp_np4_n40000_result.tar.gz",
+        "bytes": 11326033,
+        "sha256": "06ec3800abbb41d188ef05ad674f1ed9d23d9daafc399c2d2e30492283b27ba6",
+        "regular_files": 89
+      },
+      "screen": {
+        "name": "g2cp_np4_n40000_screen.txt",
+        "bytes": 1463,
+        "sha256": "b3cdebfc1529aefe2d4ce69c7d48c1eb824aaa1f20a3a40d00c7c7928139ca60"
+      },
+      "source_checksums": {
+        "listed": 25,
+        "rehashed": 25,
+        "external_identity_only": 0
+      },
+      "source_pin_blobs_equal": 24,
+      "inputs_md5": {
+        "listed": 21,
+        "rehashed": 20,
+        "external_identity_only": 1
+      },
+      "outputs_md5": {
+        "listed": 25,
+        "rehashed": 25,
+        "external_identity_only": 0
+      },
+      "runner_rc": 0,
+      "arm_rc_zero": 9,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "grid_confirmed_logs": 9,
+      "scheduler": {
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "elapsed": "00:00:38",
+        "allocated_cpus": 4,
+        "start_local_reported": "2026-11-16T14:44:20",
+        "end_local_reported": "2026-11-16T14:44:58"
+      },
+      "job_detail_snapshot": {
+        "Requeue": "0",
+        "Restarts": "0",
+        "ExitCode": "0:0"
+      },
+      "independent_requeue_history": "NOT_ESTABLISHED",
+      "stop_files": 0,
+      "identity": {
+        "lmp_md5": "0c0daccc2a190d1cf219305bf5286d06",
+        "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+        "mpirun_md5": "f82b94117b38ca9a5062ffe71d53b22a",
+        "mpirun_version": "mpirun (Open MPI) 5.0.10",
+        "np": "4",
+        "procs_grid": "2 2 1",
+        "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+      },
+      "registered_conclusions_adoptable": false,
+      "compare_rc_as_run": 0,
+      "compare_json_sha256": "568429e39d58b84c3364763cfed5ca8f59da497687e2215840a98bf4d01f3a0b",
+      "comparator_md5": "7ff543eba8aa9eabda0f80bb3c649fe2",
+      "adoption_pending": [
+        "independent requeue history",
+        "first content decision and attempt accounting",
+        "field qualification"
+      ],
+      "run_gate": true,
+      "deck_gate": true,
+      "mpi_gate": true,
+      "judgment": {
+        "다": {
+          "status": "PASS",
+          "why": [],
+          "mode": "g2cp",
+          "n_ref": 3103,
+          "n_test": 3103,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "n_bit_equal": 3103,
+          "first_bad": [],
+          "discriminating_frac": 1.0,
+          "shear_nonzero_frac": 1.0,
+          "n_periodic": 570
+        },
+        "라": {
+          "status": "PASS",
+          "why": [],
+          "mode": "g2cp",
+          "n_ref": 3103,
+          "n_test": 3103,
+          "n_mismatch": 0,
+          "missing": [],
+          "extra": [],
+          "n_dup_consistent": 0,
+          "dup_conflicts": [],
+          "n_bit_equal": 3103,
+          "first_bad": [],
+          "discriminating_frac": 1.0,
+          "shear_nonzero_frac": 1.0,
+          "n_periodic": 570
+        }
+      },
+      "predictions": {
+        "다-값": "맞음",
+        "라-값": "맞음",
+        "마-2": "맞음",
+        "마-3": "틀림",
+        "마-3p": "맞음"
+      },
+      "mpi": {
+        "np": 4,
+        "n_rb": 95,
+        "counts": {
+          "same": 2438,
+          "rank_boundary": 95,
+          "periodic": 570,
+          "ambiguous": 0
+        }
+      },
+      "ma3p_observations": {
+        "same_all_differ": 0,
+        "all_nonforce_differ": 0,
+        "rank_force_differ": 95,
+        "periodic_force_differ": 570
+      },
+      "continuous_C": {
+        "judge_kit26": "FAIL",
+        "n_mismatch": 658,
+        "n_pairs_force_differ": 665,
+        "by_group": {
+          "pos": 0,
+          "flag": 0,
+          "force": 665,
+          "force_normal": 665,
+          "force_tangential": 665,
+          "torque": 665,
+          "deltaMax": 0,
+          "shear": 0,
+          "contactArea": 0,
+          "delta": 0,
+          "contactPoint": 0
+        }
+      },
+      "boundary_intake_count": {
+        "internal_rank_boundary_all": 331,
+        "internal_rank_boundary_flag1": 236,
+        "internal_rank_boundary_flag0": 95,
+        "all_flag1": 570,
+        "periodic_minimum_image_pairs": 334
+      },
+      "hash_checks_scope": "source SHA list and outputs MD5 lists only; source list is not a full result archive manifest"
+    }
+  ],
+  "ledger_received_rows": [
+    {
+      "kind": "attempt",
+      "utc": "2026-11-16T04:57:19Z",
+      "slurm_job": "366257",
+      "np": "2",
+      "n": "200",
+      "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+    },
+    {
+      "kind": "attempt",
+      "utc": "2026-11-16T05:17:55Z",
+      "slurm_job": "366261",
+      "np": "4",
+      "n": "200",
+      "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+    },
+    {
+      "kind": "attempt",
+      "utc": "2026-11-16T05:43:36Z",
+      "slurm_job": "366288",
+      "np": "2",
+      "n": "40000",
+      "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+    },
+    {
+      "kind": "attempt",
+      "utc": "2026-11-16T05:44:23Z",
+      "slurm_job": "366290",
+      "np": "4",
+      "n": "40000",
+      "provenance": "c559766bb506bab45e1c22099e640cac7a442aed"
+    }
+  ],
+  "ledger_prefix_counts": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "returned_four_jobs_overlap": false,
+  "scheduler_population_complete": false,
+  "same_np_comparison_only": true,
+  "registered_conclusions_adoptable": false,
+  "new_engine_or_scheduler_execution": false,
+  "comparator_rerun_in_this_receipt": false,
+  "boundary_count_scope": "read-only arithmetic of returned A atom/pair dumps; minimum-image x/y crossings excluded from internal boundary count; not a new physical qualification"
+}
