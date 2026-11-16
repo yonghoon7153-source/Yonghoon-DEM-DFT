@@ -274,5 +274,32 @@
   "결과_열람": "없음 — 10-14 대조 계 시드 1 3 기록의 재현 일치만 (값은 화면에 안 나옴)",
   "다음": "endline_facts 출력 (problems [] · 큐_상태 valid · 사다리 블록 마지막 줄 · 블록 sha256 · 장부 sha256) 을 받는다 → 판독 허가 갱신 (대조 잡 v6 경로 · sha256 · 인정 = facts 값 + by · 근거 · 언제_읽나) → 개정 4 결정 활성 (위임 10-30) → readout · pressure 한 번",
   "by": "agent (위임 10-30) · 2026-11-16"
+ },
+ "판독_허가_갱신_2026_11_16": {
+  "무엇": "카드 '판독_허가_2단계' 를 개정 4 절차 ④ 대로 바꿨다 — 대조 잡 v6 출력 · sha256 · 큐_끝_줄_유실_인정 (kgy endline_facts 값 그대로 + by · 근거) · 언제_읽나 · EL_회신",
+  "endline_facts_원문 (사용자 붙여넣기 2026-11-16 · kgy · worktree 80d78d0df)": {
+   "problems": [],
+   "사다리_시작_줄": 1,
+   "결정": "D-2026-11-14-li2s3-queue-endline-lost-ack",
+   "사다리_블록_마지막_줄": "[2026-11-14 03:27:12] ✅ B seed12 T750 끝 · 5.0242 h · 누적 82.1650 / 160 h",
+   "사다리_블록_sha256": "9ba80508292a2358d2807a1ecf93b3d8c6b4c90087dcab093906a44a03f69d28",
+   "장부_sha256": "9ca1a7ddf57efbf38be8a329f549340f59fb49cb3ee57b5b05d953ee7f1e3de7",
+   "마지막_줄_번호": 211,
+   "명단_런": 16,
+   "장부_뒤_행": 0,
+   "큐_상태": "valid"
+  },
+  "앞_허가 (대체됨 · 도구 60a7ef3c 판에서만 서던 것)": {
+   "근거": "대조 잡 v3 (kgy 2026-11-11 · worktree ~/wt_li2s3_q2 = ab8af6ad · 판독 도구 sha16 60a7ef3ce31d0bb2 · 큐 v2 62580ea1744fef5c) 가 10-14 대조 계 판독 (kgy 시드 1 · 3 × 두 계) 을 그대로 재현했다 (control rc 0 · same = True · 차이 0 건) — 판독 도구를 고친 뒤 과거 마감부터 재현 (CLAUDE.md 상시 절차 · 회신 CX). 리뷰 EB (NO-GO → 고침) · EE (큐 v2 조건부 GO → 고침 · 재확인) 반영 · 개정 3 active (56dd69e0).",
+   "by": "사용자 (위임 10-30) — agent 가 정함 · 2026-11-11",
+   "EB_회신": "kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md",
+   "EE_회신": "kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md",
+   "대조_잡_출력": "/home/kgy/li2s3_control_job_v3.json",
+   "대조_잡_sha256": "63fb4bb1e65a0509a574d4f66bbb171bd5ca93cc582aa7bc06df75a7eec6fb66",
+   "판독기가_다시_보는_것": "판독 시점에 대조 잡 출력 sha256 = 이 값 · kind li2s3_stage2_control/v2 · same True · 깨끗한 작업 트리 · 도구 sha16 = 판독 시점 판 (permit_problems) — 도구가 바뀌면 이 허가는 서지 않는다 (대조 잡을 다시)",
+   "언제_읽나": "16 런이 다 끝나고 큐 끝 줄이 찍힌 뒤 readout · pressure 를 한 번 (카드 개정 3 · v1 큐는 다시 치지 않는다) — 진행 신호 말고 수송값은 그 전까지 안 연다"
+  },
+  "다음": "결정 D-2026-11-14-li2s3-queue-endline-lost-ack 활성 (위임 10-30 · 승인 commit = 이 카드 커밋) → kgy 판독 블록 (verify → readout → pressure 한 번)",
+  "by": "agent (위임 10-30) · 2026-11-16"
  }
 }

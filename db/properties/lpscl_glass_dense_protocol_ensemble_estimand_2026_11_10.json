@@ -430,14 +430,23 @@
   "✅_활성": "2026-11-10 · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble-amend3 active (사용자 (위임 10-30) · 카드 커밋 40cde57e) · 큐 v2 62580ea1 · 판독 60a7ef3c"
  },
  "판독_허가_2단계": {
-  "근거": "대조 잡 v3 (kgy 2026-11-11 · worktree ~/wt_li2s3_q2 = ab8af6ad · 판독 도구 sha16 60a7ef3ce31d0bb2 · 큐 v2 62580ea1744fef5c) 가 10-14 대조 계 판독 (kgy 시드 1 · 3 × 두 계) 을 그대로 재현했다 (control rc 0 · same = True · 차이 0 건) — 판독 도구를 고친 뒤 과거 마감부터 재현 (CLAUDE.md 상시 절차 · 회신 CX). 리뷰 EB (NO-GO → 고침) · EE (큐 v2 조건부 GO → 고침 · 재확인) 반영 · 개정 3 active (56dd69e0).",
-  "by": "사용자 (위임 10-30) — agent 가 정함 · 2026-11-11",
+  "근거": "대조 잡 v6 (kgy 2026-11-16 10:32 시작 · worktree ~/wt_li2s3_q2 = 80d78d0df · 판독 도구 sha16 8e1f16a49a2df8a3 · selftest PASS 205/205) 가 10-14 대조 계 판독 (kgy 시드 1 · 3 × 두 계) 을 그대로 재현했다 (control rc 0 · same = True · 차이 0 건) — 판독 도구를 고친 뒤 과거 마감부터 재현 (CLAUDE.md 상시 절차 · 회신 CX). 리뷰 EB · EE (개정 3) · EL (개정 4 — 조건부 GO → 고침 → 재확인 GO) 반영. 앞 허가 (대조 잡 v3 · 63fb4bb1 · 도구 60a7ef3c) 는 도구가 바뀌어 서지 않는다 — 이 허가로 바꾼다 (앞 값은 런로그 '판독_허가_갱신_2026_11_16').",
+  "by": "사용자 (위임 10-30) — agent 가 정함 · 2026-11-16",
   "EB_회신": "kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md",
   "EE_회신": "kb/reviews/internal_EE_reply_li2s3_queue_v2_2026_11_10.md",
-  "대조_잡_출력": "/home/kgy/li2s3_control_job_v3.json",
-  "대조_잡_sha256": "63fb4bb1e65a0509a574d4f66bbb171bd5ca93cc582aa7bc06df75a7eec6fb66",
-  "판독기가_다시_보는_것": "판독 시점에 대조 잡 출력 sha256 = 이 값 · kind li2s3_stage2_control/v2 · same True · 깨끗한 작업 트리 · 도구 sha16 = 판독 시점 판 (permit_problems) — 도구가 바뀌면 이 허가는 서지 않는다 (대조 잡을 다시)",
-  "언제_읽나": "16 런이 다 끝나고 큐 끝 줄이 찍힌 뒤 readout · pressure 를 한 번 (카드 개정 3 · v1 큐는 다시 치지 않는다) — 진행 신호 말고 수송값은 그 전까지 안 연다"
+  "EL_회신": "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md",
+  "대조_잡_출력": "/home/kgy/li2s3_control_job_v6.json",
+  "대조_잡_sha256": "3792432a4543abe58596a4cb9768d63d91448d10422f3205dc1523ee0d3c49e2",
+  "판독기가_다시_보는_것": "판독 시점에 대조 잡 출력 sha256 = 이 값 · kind li2s3_stage2_control/v2 · same True · 깨끗한 작업 트리 · 도구 sha16 = 판독 시점 판 (permit_problems) · 인정 여섯 칸 + 그 결정이 개정 4 결정이고 active · 사다리 블록 마지막 줄 · 블록 sha256 · 장부 sha256 을 kgy 실물과 다시 대조 (endline_ack_check — 어긋나면 큐 문제 → 판정 보류) — 도구가 바뀌면 이 허가는 서지 않는다 (대조 잡을 다시)",
+  "언제_읽나": "개정 4 결정 D-2026-11-14-li2s3-queue-endline-lost-ack 이 active 가 된 뒤 readout · pressure 를 한 번 — 큐 끝 줄 대신 아래 '큐_끝_줄_유실_인정' 으로 큐 완료를 확인한다 · v1 큐는 다시 치지 않는다 · 수송값은 그 전까지 안 연다 · 사다리 판독 뒤에는 이 허가 (인정 · 자유문 칸 포함) 를 고치지 않는다 (개정 4 ⛔_판독_허가_고정)",
+  "큐_끝_줄_유실_인정": {
+   "결정": "D-2026-11-14-li2s3-queue-endline-lost-ack",
+   "by": "사용자 (위임 10-30) — agent 가 정함 · 2026-11-16",
+   "근거": "kgy endline_facts (2026-11-16 · worktree ~/wt_li2s3_q2 = 80d78d0df · 판독 도구 8e1f16a49a2df8a3 · 읽기만) — problems [] · 큐_상태 valid · 명단_런 16 · 장부_뒤_행 0 · 사다리_시작_줄 1 · 마지막_줄_번호 211. 11-14 보류 진단 (✅ 16 · 장부 16 행 rc 0 · 잠금 풀림 · 런 valid · 끝 줄 하나만 없음 — 큐 실행기가 tee 로만 보내는 줄이 tmux 창과 함께 유실된 것으로 판단 · EL P2-8) 과 같다. 아래 세 값은 그 출력 그대로다",
+   "사다리_블록_마지막_줄": "[2026-11-14 03:27:12] ✅ B seed12 T750 끝 · 5.0242 h · 누적 82.1650 / 160 h",
+   "사다리_블록_sha256": "9ba80508292a2358d2807a1ecf93b3d8c6b4c90087dcab093906a44a03f69d28",
+   "장부_sha256": "9ca1a7ddf57efbf38be8a329f549340f59fb49cb3ee57b5b05d953ee7f1e3de7"
+  }
  },
  "⏩_개정_4": "2026-11-14 — 판독 보류 (큐 로그에 '■ 큐 끝 · PHASE ladder' 줄 없음) 의 처리: 큐 끝 줄 유실 인정 (결과 전) · 리뷰 EL 조건부 GO (11-15) → P0 · P1 · P2 고침 · 도구 8e1f16a49a2df8a3 · 결정 D-2026-11-14-li2s3-queue-endline-lost-ack proposed (EL 재확인 뒤 활성) → '개정_4_큐_끝_줄_유실_2026_11_14'",
  "개정_4_큐_끝_줄_유실_2026_11_14": {
