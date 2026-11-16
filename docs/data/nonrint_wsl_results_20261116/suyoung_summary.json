@@ -1,0 +1,58 @@
+{
+  "status": "DEVELOPMENT_COMPLETE",
+  "label": "DEVELOPMENT_DATA_ONLY",
+  "arms": {
+    "S": {
+      "arm": "S",
+      "steps_completed": 1200,
+      "seconds": 3.858487844991032,
+      "end": {
+        "step": 1200,
+        "time_code": 0.6,
+        "top_code": 0.7100000000000001,
+        "pair_node_projections": 0,
+        "degenerate_normals": 0,
+        "residual_closing": 0.0,
+        "plate_pressure": 0.031106690132023575,
+        "mass": 0.2705078125,
+        "kinetic_energy": 0.0015053757288788952,
+        "material_points": 1108,
+        "fields": 1,
+        "reference_solid_area": 0.2705078125,
+        "current_solid_area": 0.26502317186611923
+      },
+      "tail_mean_plate_pressure": 0.037259880840594665,
+      "tail_window_steps": 240,
+      "max_contact_residual_closing": 0.0
+    },
+    "F": {
+      "arm": "F",
+      "steps_completed": 1200,
+      "seconds": 4.4296653409837745,
+      "end": {
+        "step": 1200,
+        "time_code": 0.6,
+        "top_code": 0.7100000000000001,
+        "pair_node_projections": 33,
+        "degenerate_normals": 0,
+        "residual_closing": 2.0328790734103208e-20,
+        "plate_pressure": 0.02204471321044573,
+        "mass": 0.2705078125,
+        "kinetic_energy": 0.0008364742000877765,
+        "material_points": 1108,
+        "fields": 4,
+        "reference_solid_area": 0.2705078125,
+        "current_solid_area": 0.26965621409563234
+      },
+      "tail_mean_plate_pressure": 0.015089755359032205,
+      "tail_window_steps": 240,
+      "max_contact_residual_closing": 8.673617379884035e-18
+    }
+  },
+  "peak_process_rss_bytes": 37380096,
+  "memory_scope": "process high-water mark including both sequential arms; not per-arm incremental memory",
+  "plate_stress_ratio_S_over_F": 2.469217025330513,
+  "ratio_status": "AVAILABLE",
+  "registered_conclusions_adoptable": false,
+  "error": null
+}

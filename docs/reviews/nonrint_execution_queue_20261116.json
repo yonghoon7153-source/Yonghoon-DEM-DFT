@@ -4,7 +4,6 @@
   "field_operator": "author",
   "pqwtv8_code_intake": "after attempt4 DONE",
   "document_only_intake": "may precede DONE",
-  "source_pin_new": "ad7c1f826525d86166d65ad3c50ef82bce7e46fc",
   "source_pin_g2cp": "c559766bb506bab45e1c22099e640cac7a442aed",
   "items": [
     {
@@ -31,44 +30,61 @@
     },
     {
       "track": "G2cp NP4 N200",
-      "status": "BLOCK_READY_AUTHOR_EXECUTES",
+      "status": "AUTHOR_REPORTED_SEQUENTIAL_QUEUE_IN_PROGRESS",
       "order": 1,
       "block": "PASTE_G2CP_NP4_N200_1116.txt",
       "sha256": "1b9b8ce7e49902c0027878920600444703fc19329607d798a0f74f816ca95f9c"
     },
     {
       "track": "G2cp NP2 N40000",
-      "status": "BLOCK_READY_AUTHOR_EXECUTES",
+      "status": "AUTHOR_REPORTED_SEQUENTIAL_QUEUE_IN_PROGRESS",
       "order": 2,
       "block": "PASTE_G2CP_NP2_N40000_1116.txt",
       "sha256": "f67f4474dd33f8a16bd6ea2609570c7266dabf2e0d968c8cb52d3032e0fa229f"
     },
     {
       "track": "G2cp NP4 N40000",
-      "status": "BLOCK_READY_AUTHOR_EXECUTES",
+      "status": "AUTHOR_REPORTED_SEQUENTIAL_QUEUE_IN_PROGRESS",
       "order": 3,
       "block": "PASTE_G2CP_NP4_N40000_1116.txt",
       "sha256": "546d8ee4970e716f90598759aa7b6286f3e611ad3d75749f1d427a9007348f79"
     },
     {
       "track": "Mixer E0 A/B",
-      "status": "WSL_BLOCK_READY",
-      "block": "PASTE_MIXER_E0_RESEAL_AB_WSL_20261116.txt",
-      "sha256": "8fb7bff3530aba872a97c9584d54beee7599aff67209a4ac8766ecc48c87b885",
-      "source_package_sha256": "059d900b576aebc8838a03d66ea64fe65b5af78278a47da3a7d36196109592a9",
-      "linux_checks_received": false,
-      "pilot_launch_block": "next after AB receipt; no automatic submission"
+      "status": "V1_INCOMPLETE_V2_BLOCK_READY",
+      "block": "PASTE_MIXER_E0_RESEAL_AB_WSL_20261116_V2.txt",
+      "sha256": "c525e7024798c176817b98d782a6e7507386701e17c7ff0c80e08020af385aae",
+      "source_package_sha256": "cc4d0fb9b7095cbdb8393768b7828b289e0c0e1d5e935b661b1a80c6a8f76e47",
+      "linux_checks_received": true,
+      "pilot_launch_block": "next after AB receipt; no automatic submission",
+      "linux_checks_completed": false,
+      "command_rc_v1": 1,
+      "expected_checks_v1": 6,
+      "attempted_checks_v1": 7
     },
     {
       "track": "Suyoung 2D S/F",
-      "status": "WSL_CPU_BLOCK_READY",
-      "block": "PASTE_DEM_SUYOUNG_SF2D_CPU_20261116.txt",
-      "sha256": "7ae2475aee5b75a1532e6222303350d3827dc9f34bed0f3610940272587c7a3b",
+      "status": "DEVELOPMENT_COMPLETE_RECEIVED",
+      "block": "PASTE_DEM_SUYOUNG_SF2D_CPU_20261116_V2.txt",
+      "sha256": "667bbf68c566a730e2f80bdaab35499a2a5625c2b4ae2984951ab8e5c1b3525d",
       "source_package_sha256": "b170d311d9c4a35ed07abf6f7a53b34c0918a58eb187415bf822dfaea4461716",
       "label": "DEVELOPMENT_DATA_ONLY",
-      "field_results_received": 0
+      "field_results_received": 1,
+      "rerun_required": false,
+      "ratio_S_over_F": 2.469217025330513
     }
   ],
   "serial_jobs": true,
-  "automatic_retry": false
+  "automatic_retry": false,
+  "source_pins": {
+    "mixer": "8231f395cda98fed8dbbf5422ccda003b11a8da9",
+    "suyoung": "ad7c1f826525d86166d65ad3c50ef82bce7e46fc"
+  },
+  "followup_receipt": "docs/data/nonrint_wsl_results_20261116/receipt_verification.json",
+  "delivery_v2": {
+    "file": "nonrint_wsl_blocks_v2_20261116.zip",
+    "sha256": "f679d0de76ef62dc205debf4c23248f9a86e2626baf077d7590c06dc5217ab91",
+    "files": 6,
+    "checksum_entries": 5
+  }
 }

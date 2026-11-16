@@ -1,0 +1,16 @@
+{
+  "old_gate_read": "FileNotFoundError reproduced",
+  "new_gate_read": "PASS: same original function read and parsed embedded gate, not executed",
+  "added": [
+    "dem_scripts/mixer_20260921/launch_highbo.sh"
+  ],
+  "changed": [
+    "PACKAGE_MANIFEST.json",
+    "scripts/mixer_e0_reseal_bundle.py",
+    "scripts/test_mixer_e0_reseal_bundle.py"
+  ],
+  "preserved": 270,
+  "new_total": 274,
+  "zip_checksums": 5,
+  "field_calls": 0
+}

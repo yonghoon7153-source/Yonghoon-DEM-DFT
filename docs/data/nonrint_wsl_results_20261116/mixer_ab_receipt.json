@@ -1,0 +1,56 @@
+{
+  "source_pin": "ad7c1f826525d86166d65ad3c50ef82bce7e46fc",
+  "status": "INCOMPLETE",
+  "deployment_performed": false,
+  "submission_authorized": false,
+  "research_results": 0,
+  "checks": [
+    {
+      "label": "A_build",
+      "rc": 0,
+      "expected_rc": 0,
+      "seconds": 0.414,
+      "log_sha256": "742a734672ffd0da7d735eb42f85cccf21e9ab23a0f3184e878d939d9a43b49c"
+    },
+    {
+      "label": "A_verify",
+      "rc": 0,
+      "expected_rc": 0,
+      "seconds": 0.365,
+      "log_sha256": "c1a03bc722fdf1ef72d5520699b2af9584b151f23b4daa00e68031d0205d9b12"
+    },
+    {
+      "label": "A_old",
+      "rc": 1,
+      "expected_rc": 1,
+      "seconds": 0.164,
+      "log_sha256": "13aa65552c3cf85ec50195d08c25cbf15e94ad0e565a8650a13b92899874ee04"
+    },
+    {
+      "label": "A_preparation-tests",
+      "rc": 0,
+      "expected_rc": 0,
+      "seconds": 0.414,
+      "log_sha256": "0ba62c780ca9a6234d56efc38883912392b459065d7312bf258e5959183bad75"
+    },
+    {
+      "label": "B_validate8",
+      "rc": 0,
+      "expected_rc": 0,
+      "seconds": 0.114,
+      "log_sha256": "f9a7bc22cd8c6485cd4ff05e62e45ec354bc51d6a04f2140a2542dbefd52cf25"
+    },
+    {
+      "label": "self170",
+      "rc": 0,
+      "expected_rc": 0,
+      "seconds": 0.064,
+      "log_sha256": "f9aac7cc2538346d634d66aafd133c408a2ad802bfd809739abac98c870fea32"
+    }
+  ],
+  "B_integrity": {
+    "assets": 40,
+    "checksums": 40,
+    "bounded_dependencies": 12
+  }
+}
