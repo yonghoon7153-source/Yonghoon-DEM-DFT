@@ -171,8 +171,125 @@ def step(state,arm,grid,dt,top,wall_v,friction):
     return diagnostic
 
 
-def run_arm(arm,grid,steps,dt,speed,friction,output,wall_limit):
+class ShapeObserver:
+    """Passive kinematic output. Never supplies input to stress, contact or step.
+
+    F_total transports the APIC affine increment without plastic projection.
+    Its affine material squares are a rendering approximation, not an exact
+    union/porosity estimator. The force state F remains the elastic state.
+    """
+    def __init__(self, output, arm, state, grid, steps, dt, speed, every):
+        if arm not in ('S', 'F') or type(every) is not int or every < 1:
+            raise ValueError('shape arm/interval')
+        self.root = output/(arm+'_shape')
+        self.root.mkdir(exist_ok=False)
+        self.arm, self.grid, self.steps = arm, grid, steps
+        self.dt, self.speed, self.every = dt, speed, every
+        self.X = state['x'].copy()
+        self.ids = state['ids'].copy()
+        self.point_ids = np.arange(len(self.ids), dtype='<i8')
+        self.F_total = np.tile(np.eye(2), (len(self.ids), 1, 1))
+        self.last_step, self.frames, self.pressures = 0, [], []
+        self.finished = False
+        with (self.root/'pressure_all.jsonl').open('x', encoding='utf-8'):
+            pass
+        self.save_frame(state, 0)
+
+    @staticmethod
+    def file_record(path):
+        raw = path.read_bytes()
+        return dict(path=path.name, bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest())
+
+    def save_frame(self, state, i):
+        n = len(self.ids)
+        top = TOP0-self.speed*self.dt*i
+        arrays = dict(X=self.X, x=state['x'], v=state['v'],
+                      point_id=self.point_ids, particle_id=self.ids,
+                      F_total=self.F_total, F_elastic=state['F'],
+                      reference_area=np.full(n, (.5/self.grid)**2),
+                      mass=np.full(n, RHO*(.5/self.grid)**2),
+                      step=np.asarray(i, dtype='<i8'), time_code=np.asarray(self.dt*i),
+                      top_code=np.asarray(top))
+        arrays = {key: np.asarray(value, dtype='<i8' if key in ('point_id', 'particle_id', 'step') else '<f8')
+                  for key, value in arrays.items()}
+        if any(not np.isfinite(value).all() for value in arrays.values()):
+            raise ValueError('nonfinite shape frame')
+        npz = self.root/('frame_%06d.npz' % i)
+        with npz.open('xb') as stream:
+            np.savez(stream, **arrays)
+        svg = self.root/('frame_%06d.svg' % i)
+        offsets = .25/self.grid*np.array([[-1., -1.], [1., -1.], [1., 1.], [-1., 1.]])
+        quads = state['x'][:, None, :]+np.einsum('nij,kj->nki', self.F_total, offsets)
+        colors = ('#2563eb', '#f97316', '#16a34a', '#9333ea')
+        lines = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 840">',
+                 '<rect width="800" height="840" fill="white"/>',
+                 '<text x="32" y="30" font-family="sans-serif" font-size="18">'
+                 +self.arm+' | actual step '+str(i)+' | t='+repr(self.dt*i)+'</text>',
+                 '<text x="32" y="56" font-family="sans-serif" font-size="14">'
+                 'Affine material cells; normalized 2D units</text>',
+                 '<g transform="translate(40 800) scale(720 -720)">',
+                 '<rect x="0" y="0" width="1" height="1" fill="none" stroke="#cbd5e1" stroke-width="0.001"/>']
+        for pid, disk, quad in zip(self.point_ids, self.ids, quads):
+            points = ' '.join(repr(float(x))+','+repr(float(y)) for x, y in quad)
+            lines.append('<polygon data-point-id="%d" data-particle-id="%d" points="%s" fill="%s" fill-opacity="0.65" stroke="%s" stroke-width="0.00025"/>'
+                         % (pid, disk, points, colors[int(disk) % len(colors)], colors[int(disk) % len(colors)]))
+        for x1, y1, x2, y2 in ((LEFT, FLOOR, RIGHT, FLOOR), (LEFT, FLOOR, LEFT, TOP0),
+                                 (RIGHT, FLOOR, RIGHT, TOP0), (LEFT, top, RIGHT, top)):
+            lines.append('<line x1="%s" y1="%s" x2="%s" y2="%s" stroke="#334155" stroke-width="0.003"/>' % (x1, y1, x2, y2))
+        lines.extend(['</g>', '</svg>'])
+        with svg.open('x', encoding='utf-8', newline='\n') as stream:
+            stream.write('\n'.join(lines)+'\n')
+        self.frames.append(dict(step=i, time_code=self.dt*i, top_code=top,
+                                phase='INITIAL' if i == 0 else 'COMPRESSION',
+                                npz=self.file_record(npz), svg=self.file_record(svg),
+                                material_cell_sum_area=float((.5/self.grid)**2*np.linalg.det(self.F_total).sum()),
+                                geometric_union_area=None, overlap_area=None))
+
+    def after_step(self, state, i, diagnostic):
+        if self.finished or type(i) is not int or i != self.last_step+1 or i > self.steps:
+            raise ValueError('shape step sequence')
+        if not np.array_equal(state['ids'], self.ids) or state['x'].shape != self.X.shape:
+            raise ValueError('shape particle/point identity')
+        # Read the completed physical update. No write to state, even on error.
+        total = (np.eye(2)[None, :, :]+self.dt*state['C']) @ self.F_total
+        if not np.isfinite(total).all() or np.any(np.linalg.det(total) <= 0):
+            raise ValueError('invalid shape total map')
+        pressure = diagnostic['plate_pressure']
+        if not math.isfinite(pressure):
+            raise ValueError('nonfinite shape pressure')
+        self.F_total = total
+        with (self.root/'pressure_all.jsonl').open('a', encoding='utf-8') as stream:
+            stream.write(json.dumps(dict(step=i, time_code=self.dt*i, plate_pressure=pressure), allow_nan=False)+'\n')
+        self.pressures.append(pressure)
+        if i == 1 or i % self.every == 0 or i == self.steps:
+            self.save_frame(state, i)
+        self.last_step = i
+
+    def finish(self):
+        if self.finished or self.last_step != self.steps or len(self.pressures) != self.steps:
+            raise ValueError('incomplete or already finalized shape output')
+        tail = self.pressures[-max(1, self.steps//5):]
+        manifest = dict(schema='suyoung_shape_v1', status='SHAPE_OUTPUT_COMPLETE',
+                        label='DEVELOPMENT_DATA_ONLY', arm=self.arm, grid=self.grid,
+                        steps=self.steps, dt=self.dt, frame_interval_steps=self.every,
+                        point_count=len(self.ids), particle_ids=sorted(set(map(int, self.ids))),
+                        material_cell_edge_code=.5/self.grid,
+                        renderer='x + F_total @ reference square offsets; no temporal interpolation or hull fill',
+                        area_scope='sum of nominal material cells, not geometric union; overlap/porosity not measured',
+                        source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                        tail_window_steps=len(tail), tail_mean_plate_pressure=float(np.mean(tail)),
+                        pressure=self.file_record(self.root/'pressure_all.jsonl'), frames=self.frames)
+        with (self.root/'MANIFEST.json').open('x', encoding='utf-8') as stream:
+            stream.write(json.dumps(manifest, indent=2, allow_nan=False)+'\n')
+        files = sorted(p for p in self.root.iterdir() if p.is_file())
+        with (self.root/'SHA256SUMS').open('x', encoding='ascii') as stream:
+            stream.write(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in files))
+        self.finished = True
+
+
+def run_arm(arm,grid,steps,dt,speed,friction,output,wall_limit,shape_every=None):
     state=initial_state(grid);start=time.monotonic();records=[];tail=[];max_residual=0.0
+    observer=ShapeObserver(output,arm,state,grid,steps,dt,speed,shape_every) if shape_every is not None else None
     every=max(1,steps//50)
     with (output/(arm+'_trace.jsonl')).open('x',encoding='utf-8') as f:
         for i in range(1,steps+1):
@@ -185,6 +302,10 @@ def run_arm(arm,grid,steps,dt,speed,friction,output,wall_limit):
             if i==1 or i%every==0 or i==steps:
                 row=dict(step=i,time_code=dt*i,top_code=top,**value)
                 f.write(json.dumps(row,allow_nan=False)+'\n');f.flush();records.append(row)
+            if observer is not None:observer.after_step(state,i,value)
+    if observer is not None:
+        observer.finish()
+        if time.monotonic()-start>wall_limit:raise TimeoutError('arm wall-clock budget including output')
     return dict(arm=arm,steps_completed=steps,seconds=time.monotonic()-start,
                 end=records[-1],tail_mean_plate_pressure=float(np.mean(tail)),
                 tail_window_steps=len(tail),max_contact_residual_closing=max_residual)
@@ -203,11 +324,15 @@ def main(argv=None):
     ap.add_argument('--wall-speed',type=float,default=.15)
     ap.add_argument('--friction',type=float,default=.20)
     ap.add_argument('--arm-seconds',type=float,default=600)
+    ap.add_argument('--arm',choices=('both','S','F'),default='both')
+    ap.add_argument('--shape-output',action='store_true')
+    ap.add_argument('--shape-every',type=int,default=120)
     args=ap.parse_args(argv)
     if not 16<=args.grid<=64 or not 1<=args.steps<=5000:ap.error('small CPU development bounds')
     if not all(math.isfinite(v) for v in (args.dt,args.wall_speed,args.friction,args.arm_seconds)):ap.error('finite parameters required')
     if not 0<args.dt<=.0005 or not 0<args.wall_speed<=.2 or not 0<=args.friction<=1 or not 1<=args.arm_seconds<=1800:ap.error('development parameter bound')
     if TOP0-args.steps*args.dt*args.wall_speed<=FLOOR+.25:ap.error('development travel bound')
+    if args.shape_output and not 1<=args.shape_every<=args.steps:ap.error('shape interval within step range')
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     src=Path(__file__).read_bytes();x,ids=seed_disks(args.grid)
     manifest=dict(label='DEVELOPMENT_DATA_ONLY',units='normalized 2D code units; not MPa',
@@ -219,11 +344,16 @@ def main(argv=None):
         threads={k:os.environ.get(k) for k in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS')},
         registered_conclusions_adoptable=False,physical_qualification=False,
         limitations=['support-node contact may occur before geometric contact','sequential multi-body projection has finite residual/order effects','small normalized development material; no physical calibration','no unloading or grid/dt convergence qualification'])
+    if args.shape_output:manifest.update(shape_output=True,shape_every=args.shape_every)
+    if args.arm!='both':manifest.update(arm_selection=args.arm)
     (out/'INPUT.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
     results={};status='INCOMPLETE';error=None
     try:
-        for arm in ('S','F'):
-            results[arm]=run_arm(arm,args.grid,args.steps,args.dt,args.wall_speed,args.friction,out,args.arm_seconds)
+        for arm in (('S','F') if args.arm=='both' else (args.arm,)):
+            if args.shape_output:
+                results[arm]=run_arm(arm,args.grid,args.steps,args.dt,args.wall_speed,args.friction,out,args.arm_seconds,shape_every=args.shape_every)
+            else:
+                results[arm]=run_arm(arm,args.grid,args.steps,args.dt,args.wall_speed,args.friction,out,args.arm_seconds)
         status='DEVELOPMENT_COMPLETE'
     except Exception as exc:
         error=type(exc).__name__+': '+str(exc)
@@ -232,11 +362,12 @@ def main(argv=None):
         import resource
         if sys.platform.startswith('linux'):peak=int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)*1024
     except ImportError:pass
-    q=ratio(results['S']['tail_mean_plate_pressure'],results['F']['tail_mean_plate_pressure']) if status=='DEVELOPMENT_COMPLETE' else None
+    q=ratio(results['S']['tail_mean_plate_pressure'],results['F']['tail_mean_plate_pressure']) if status=='DEVELOPMENT_COMPLETE' and args.arm=='both' else None
     summary=dict(status=status,label='DEVELOPMENT_DATA_ONLY',arms=results,peak_process_rss_bytes=peak,
                  memory_scope='process high-water mark including both sequential arms; not per-arm incremental memory',
                  plate_stress_ratio_S_over_F=q,ratio_status='AVAILABLE' if q is not None else 'UNAVAILABLE_OR_ZERO_DENOMINATOR',
                  registered_conclusions_adoptable=False,error=error)
+    if args.arm!='both' and status=='DEVELOPMENT_COMPLETE':summary['ratio_status']='SINGLE_ARM_ONLY'
     (out/'SUMMARY.json').write_text(json.dumps(summary,indent=2,allow_nan=False)+'\n',encoding='utf-8')
     print(json.dumps(summary,allow_nan=False))
     return 0 if status=='DEVELOPMENT_COMPLETE' else 2
