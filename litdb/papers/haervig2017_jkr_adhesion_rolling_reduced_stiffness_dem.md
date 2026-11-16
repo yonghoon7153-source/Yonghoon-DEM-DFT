@@ -322,6 +322,7 @@
 - 구름 저항: `ai2011_rolling_resistance_contact_models_dem`.
 - 연화 · 보정 인식론: `paulick2015_elastic_particle_properties_dem_review` · `vanlew2015_modifying_youngs_modulus_distribution` · `coetzee2017_dem_calibration_review` · `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer`.
 - 접착 보정 · 혼합 DEM: `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing` · `deng2021_mechanical_surface_energy_tester_bond_number` · `jarray2019_cohesion_driven_mixing_segregation_drum` · `boschpadros2014_dem_liggghts_msc_thesis` (LIGGGHTS SJKR 구현).
+- 참고 [30] 의 원문 (2026-11-16 카드): `silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem` — *"δt ~ t_col/50"* (p.4) · 식 (10)·(11) ε · t_col · 표 I 로 t_col/δt 49.7 [그 카드 산술] · 서지 = Phys. Rev. E **64**, 051302 (2001).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

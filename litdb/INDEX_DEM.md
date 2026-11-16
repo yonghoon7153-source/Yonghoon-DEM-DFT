@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 322편 · 생성 2026-11-16
+> digest 323편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -66,7 +66,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (80편)
+## 접촉역학 · 소성 (DEM 이론) (81편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -130,6 +130,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `roessler2019_dem_cohesive_aor_cylinder_lift_calibration` | LIGGGHTS SJKR 의 cohesionEnergyDensity (CED) 를 원통 인양 시험으로 보정 — 점착 분말 (젖은 모래 9.5 wt% 수분) 은 안식각이 40–84° 로 재현되지 않으니, 대신 기둥이 서 있다 → 볼록하게 휜다 → 무너진다 의 상 전이와 슬라이스별 지름 (상대 굽힘) 을 기준으로 · 상 전이 | DEM (LIGGGHTS 3.01, Hertz–Mindlin + simplified JKR cohesion  | 2026-10-13 | 🖼 20 |
 | `schreiner2020_dem_calendering_lib` | LIB 전극 calendering(압연)을 DEM으로 — NMC622 양극 · EDEM(상용) + EEPA 탄소성 접촉 + Bonding(Potyondy–Cundall) · 3-모듈 "USER TOOL"(공정 파라미터 예측) — Schreiner·Klinger·Reinhart (Procedia CIRP 2020, 짧은 학 | DEM (EDEM 상용, EEPA+Bonding; 나노압입 보정 + 공정 USER TOOL) | 2026-06-27 | 🖼 6 |
 | `sharma2023_nmc_single_crystal_anisotropic_nanoindentation` | 단결정 NMC622 결정립을 EBSD 방위와 짝지어 나노압입 → 이방 탄성상수 C_ij 6개 역산 (VRH: E 140.16 GPa · ν 0.253) + 소결 펠릿 NMC111/532/622/811 의 압입탄성률 M · 경도 H · 압입인성 K_c — Sharma, Meng, Wu, de Vasconcelos, Li,  | exp (EBSD-correlated Berkovich CSM nanoindentation + Vlassak | 2026-09-26 | 🖼 12 |
+| `silbert2001_chute_flow_bagnold_spring_dashpot_hertz_dem` | 경사면 중력 흐름 (chute flow) 의 2D · 3D DEM — `gran/hooke/history` · `gran/hertz/history` 로 인용되는 접촉력 꼴의 원문 (법선 스프링–감쇠 × f(δ/d) = 1 · √(δ/d) · 접선 탄성 변위 이력 u_t · Coulomb 절단 · k_t/k_n 2/7 ·  | DEM (자체 MD 코드 · contact law 원문 · 2D 원판 + 3D 구 · 단분산 · Model  | 2026-11-16 | 🖼 63 |
 | `so2022_dem_contact_model_assb_compaction_sintering` | ASSB 전극 압밀·소결 DEM을 위한 접촉모델 (탄성+소성+점탄성 + 소결 + 면적/스프링 인자) — So (MethodsX 2022) | DEM | 2026-06-26 | 🖼 10 |
 | `stallard2022_cathode_mechanical_properties_review` | LIB 양극재 기계물성 리뷰 — Berkovich indentation E·H 는 압흔 크기 ÷ 결정립 크기 (A_P^½/d) 로 접히고 0.1 을 넘으면 입계 파쇄로 떨어지며, 입자 인장강도는 H/3 보다 한 자릿수 이상 낮고, σ_F = K_IC/√(π·d/2) 로 다결정 NMC333 의 K_IC ≈ 0.05–0.3  | review (compilation of published experimental data: Berkovic | 2026-09-26 | 🖼 13 |
 | `stallard2022_nmc811_single_crystal_shear_strength_lithiation` | 단결정 NMC811 (1–3 µm) 의 기저면 분해 전단강도가 탈리튬화로 준다 — 캘린더링 안 한 다공 양극 층 (액체계 LIB) 을 경도 50–946 MPa 금속 기판 위에 놓고 Vickers indentation 으로 평균 압축 견인력 = 기판 경도 H 를 걸어, 뺀 뒤 SEM 으로 슬립 띠 · 균열 입자 분율 F(H | experiment (Vickers indentation of an uncalendered single-cr | 2026-11-12 | 🖼 51 |

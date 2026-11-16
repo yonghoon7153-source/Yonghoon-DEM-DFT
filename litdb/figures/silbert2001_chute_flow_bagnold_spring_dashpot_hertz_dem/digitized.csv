@@ -1,0 +1,95 @@
+figure,series,x,x_unit,y,y_unit,note
+Fig. 12,L2 (2D linear spring; filled circle),18.00,deg,0.814,phi (area fraction),fig_12.png (native raster xref 36 300 dpi re-cut; frame x 120-765 y 15-625 px); x ticks [155.0 290.5 426.0 562.0 697.0] px = [18 20 22 24 26] deg; y ticks [102.0 276.0 450.5] px = [0.8 0.7 0.6]; marker centre = centroid after hole fill + 9x9 px opening
+Fig. 12,L2 (2D linear spring; filled circle),19.00,deg,0.802,phi (area fraction),same calibration
+Fig. 12,L2 (2D linear spring; filled circle),20.00,deg,0.789,phi (area fraction),same calibration
+Fig. 12,L2 (2D linear spring; filled circle),20.99,deg,0.771,phi (area fraction),same calibration
+Fig. 12,L2 (2D linear spring; filled circle),22.01,deg,0.747,phi (area fraction),same calibration
+Fig. 12,L2 (2D linear spring; filled circle),23.00,deg,0.709,phi (area fraction),same calibration
+Fig. 12,L3 (3D linear spring; filled square),19.99,deg,0.591,phi (volume fraction),filled squares located by 9x9 opening without hole fill (open H3 diamond overlaps at this angle)
+Fig. 12,L3 (3D linear spring; filled square),20.99,deg,0.586,phi (volume fraction),same
+Fig. 12,L3 (3D linear spring; filled square),22.00,deg,0.579,phi (volume fraction),same (H3 diamond overlaps)
+Fig. 12,L3 (3D linear spring; filled square),23.00,deg,0.573,phi (volume fraction),same
+Fig. 12,L3 (3D linear spring; filled square),24.00,deg,0.567,phi (volume fraction),same (H3 diamond overlaps)
+Fig. 12,L3 (3D linear spring; filled square),25.00,deg,0.561,phi (volume fraction),same
+Fig. 12,L3 (3D linear spring; filled square),26.00,deg,0.555,phi (volume fraction),same
+Fig. 12,H3 (3D Hertz; open diamond),26.00,deg,0.531,phi (volume fraction),hollow marker; at 20 22 24 deg H3 overlaps L3 (merged centroids 0.590 0.580 0.566) - not separable within ~0.005
+Fig. 18,L2 (filled circle),18.00,deg,0.080,A_Bag,fig_18.png (xref 51 300 dpi; frame x 168-797 y 25-419 px); x ticks [232.0 357.0 483.0 609.0 734.0] px = [18 20 22 24 26] deg; y ticks [123.5 221.0 320.0] px = [0.3 0.2 0.1]
+Fig. 18,L2 (filled circle),19.00,deg,0.130,A_Bag,same
+Fig. 18,L2 (filled circle),20.00,deg,0.175,A_Bag,same
+Fig. 18,L2 (filled circle),21.01,deg,0.225,A_Bag,same
+Fig. 18,L2 (filled circle),22.01,deg,0.280,A_Bag,same
+Fig. 18,L2 (filled circle),23.00,deg,0.355,A_Bag,same
+Fig. 18,L3 (filled square),20.00,deg,0.041,A_Bag,filled square by opening without hole fill; H3 diamond overlaps below
+Fig. 18,L3 (filled square),22.01,deg,0.115,A_Bag,same
+Fig. 18,L3 (filled square),24.01,deg,0.207,A_Bag,same
+Fig. 18,L3 (filled square),26.00,deg,0.256,A_Bag,same
+Fig. 18,H3 (open diamond),26.00,deg,0.370,A_Bag,hollow marker centroid
+Fig. 18,H3 (open diamond),20.00,deg,0.024,A_Bag,overlapping L3 square: centre = bottom edge of merged blob minus half diamond size (8 px); +-0.005
+Fig. 18,H3 (open diamond),22.00,deg,0.105,A_Bag,same method; +-0.005
+Fig. 18,H3 (open diamond),24.00,deg,0.201,A_Bag,same method; +-0.005
+Fig. 20,3D L3 H=40 (solid line),20,deg,3.23,Z_c,fig_20.png (xref 56 300 dpi; frame x 121-755 y 24-551 px); x ticks [248.5 374.5 502.0 628.5] px = [20 22 24 26] deg; y ticks [155.5 286.5 419.0] px = [3.0 2.0 1.0]; value = middle of the dark run in column x(theta) (3 px wide)
+Fig. 20,3D L3 H=40 (solid line),21,deg,2.52,Z_c,same
+Fig. 20,3D L3 H=40 (solid line),22,deg,1.93,Z_c,same
+Fig. 20,3D L3 H=40 (solid line),23,deg,1.66,Z_c,same
+Fig. 20,3D L3 H=40 (solid line),24,deg,1.23,Z_c,same
+Fig. 20,3D L3 H=40 (solid line),25,deg,1.09,Z_c,same
+Fig. 20,3D L3 H=40 (solid line),26,deg,0.91,Z_c,same
+Fig. 20,3D L3 H=40 (solid line),27,deg,0.66,Z_c,same
+Fig. 20,3D L3 H=40 (solid line),27.84,deg,0.51,Z_c,last clean column before the right-frame ticks (28 deg = frame)
+Fig. 20,2D L2 H=100 (dashed line),19,deg,0.90,Z_c,same calibration
+Fig. 20,2D L2 H=100 (dashed line),20,deg,0.70,Z_c,same
+Fig. 20,2D L2 H=100 (dashed line),21,deg,0.53,Z_c,same
+Fig. 20,2D L2 H=100 (dashed line),22,deg,0.41,Z_c,same
+Fig. 20,2D L2 H=100 (dashed line),23,deg,0.31,Z_c,same
+Fig. 16,L2 (filled circle),19.01,deg,0.0336,chi,fig_16.png (xref 46 300 dpi; frame x 121-766 y 24-509 px); x ticks [273.5 426.0 577.0 728.5] px = [20 22 24 26] deg; y ticks [121.0 218.0 315.0 411.5] px = [0.04 0.02 0.00 -0.02]
+Fig. 16,L2 (filled circle),22.00,deg,0.0398,chi,same
+Fig. 16,L2 (filled circle),23.01,deg,0.0043,chi,same
+Fig. 16,L2 and L2 eps=0.82 overlapping,20.00,deg,0.054,chi,circle and diamond overlap at 20 deg; at 21 deg both near 0.053-0.057 (merged blob with line segments - not separated)
+Fig. 16,L2 eps=0.82 (filled diamond),19.01,deg,0.0387,chi,same calibration
+Fig. 16,L2 eps=0.82 (filled diamond),22.00,deg,0.0525,chi,same
+Fig. 16,L2 eps=0.82 (filled diamond),24.00,deg,0.0274,chi,same
+Fig. 16,L2 eps=0.82 (filled diamond),26.00,deg,-0.0193,chi,same
+Fig. 16,L3 (filled square),20.00,deg,0.0152,chi,same
+Fig. 16,L3 (filled square),20.99,deg,0.0067,chi,same
+Fig. 16,L3 (filled square),22.01,deg,0.0005,chi,same
+Fig. 16,L3 (filled square),23.00,deg,-0.0079,chi,same
+Fig. 16,L3 (filled square),24.00,deg,-0.0107,chi,same
+Fig. 16,L3 (filled square),25.00,deg,-0.0251,chi,same
+Fig. 16,L3 (filled square),26.00,deg,-0.0310,chi,same
+Fig. 16,H3 (open diamond),20.01,deg,0.0278,chi,same
+Fig. 16,H3 (open diamond),22.00,deg,0.0079,chi,same
+Fig. 16,H3 (open diamond),24.00,deg,-0.0060,chi,same
+Fig. 16,H3 (open diamond),26.00,deg,-0.0260,chi,same
+Fig. 11,bulk plateau lowest line (assigned k_n=2e4 dash-dot by line style),25,z (d),0.782,phi,fig_11.png (xref 35 300 dpi; frame x 115-752; upper panel y 15-316; x ticks [327.0 540.0] px = [20 40]; phi ticks [58.0 144.0 230.0] px = [0.8 0.7 0.6]); same at z=32.5; assignment by line style = low confidence
+Fig. 11,bulk plateau middle line,25,z (d),0.789,phi,same (k_n 2e5 or 2e6)
+Fig. 11,bulk plateau upper line,25,z (d),0.794,phi,same (k_n 2e5 or 2e6)
+Fig. 11,v_x near free surface k_n=2e4 (dash-dot),54.6,z (d),29.1,v_x (sqrt(g d)),lower panel y 316-618; v ticks [413.0 515.0] px = [20 10]; 0 at 617 px
+Fig. 11,v_x near free surface k_n=2e5 (solid),49.0,z (d),24.2,v_x (sqrt(g d)),same
+Fig. 11,v_x near free surface k_n=2e6 (dotted),52.4,z (d),23.7,v_x (sqrt(g d)),same
+Fig. 19,3D (mu=0.50; H3 at 24 deg per caption),20.1,H,3.63,<v^2>^1/2 (sqrt(g d)),fig_19.png (xref 52 300 dpi; log-log frame x 134-751 px = 10^0-10^3; y 34.5-547.5 px = 10^3-10^-1); filled markers by 7x7 opening; log-log slope of 7 points = 1.55 (card arithmetic)
+Fig. 19,3D (mu=0.50),29.7,H,7.01,<v^2>^1/2,same
+Fig. 19,3D (mu=0.50),40.0,H,9.99,<v^2>^1/2,same
+Fig. 19,3D (mu=0.50),50.0,H,14.26,<v^2>^1/2,same
+Fig. 19,3D (mu=0.50),79.6,H,29.9,<v^2>^1/2,same
+Fig. 19,3D (mu=0.50),99.3,H,43.3,<v^2>^1/2,same
+Fig. 19,3D (mu=0.50),198.8,H,127.5,<v^2>^1/2,same
+Fig. 9b,v_x at z=40.6 mu=0.15 (solid),40.6,z (d),28.3,v_x (sqrt(g d)),fig_9.png panel (b) (xref 30 300 dpi; frame x 883-1505; v panel y 201-386; x ticks [1020.5 1159.5 1297.5 1436.5] px = [10 20 30 40]; v ticks [258.5 321.5] px = [20 10]); curve reaches the panel top (29.1) - may be clipped
+Fig. 9b,v_x at z=40.6 mu=0.25 (dashed),40.6,z (d),17.5,v_x (sqrt(g d)),same
+Fig. 9b,v_x at z=40.6 mu=0.50 (dotted),40.6,z (d),8.3,v_x (sqrt(g d)),same
+Fig. 9b,v_x at z=40.6 mu=1.00 (dash-dot),40.6,z (d),4.4,v_x (sqrt(g d)),same
+Fig. 9b,bulk phi range over mu 0.15-1.0,30,z (d),0.573-0.581,phi,phi panel y 17-201; ticks [53.0 127.5] px = [0.6 0.5]
+Fig. 5,<z^2> at t=19.8 theta=23 deg,19.8,t (sqrt(d/g)),3.55,<z^2> (d^2),fig_5.png (xref 23 300 dpi; frame x 166-801 = t 0-20; y ticks [175.5 326.0 478.0] px = [3 2 1]); D_z = <z^2>/(2t) = 0.090 (card arithmetic)
+Fig. 5,<z^2> at t=19.8 theta=22 deg,19.8,t (sqrt(d/g)),2.82,<z^2> (d^2),same; D_z = 0.071
+Fig. 5,<z^2> at t=19.8 theta=21 deg,19.8,t (sqrt(d/g)),1.96,<z^2> (d^2),same; D_z = 0.049
+Fig. 2a,2D L2 H=50 boundary,17.0 / 17.5 / 23.0 / 24.0,deg,no flow / first stable / last stable / first unstable,state,fig_2.png panel (a) x ticks [236.0 341.5 447.0 552.5 658.5] px = [18 20 22 24 26] deg; markers: open square = no flow; filled circle = stable; open diamond = unstable
+Fig. 2b,3D L3 H=40 boundary,19.0 / 20.0 / 27.0 / 27.5,deg,no flow / first stable / last stable / first unstable,state,fig_2.png panel (b) x ticks [978 1063 1148 1233 1318 1403 1488] px = [18-30 step 2] deg
+Fig. 2b,3D L3 H=5 boundary,23.0 / 24.5 / 29.5 / 30.0,deg,no flow / first stable / last stable / first unstable,state,same; '+' (hysteretic) markers near the no-flow/stable boundary at H 5-20 are merged with neighbours in the detector
+Fig. 15b,sigma_xx = sigma_zz (overlapping solid + dash-dot) L3 H=40 22 deg,3.0,z (d),35.2,sigma (mg/d^2),fig_15.png panel (b) (xref 45 300 dpi; frame x 133-765 y 364-624 px); x ticks [273.0 414.0 554.5 694.5] px = [10 20 30 40]; y ticks [428.0 494.0 559.0] px = [30 20 10]; value = middle of the dark run in the column
+Fig. 15b,sigma_xx = sigma_zz,10.0,z (d),29.0,sigma (mg/d^2),same
+Fig. 15b,sigma_xx = sigma_zz,20.0,z (d),19.5,sigma (mg/d^2),same
+Fig. 15b,sigma_xx = sigma_zz,30.0,z (d),10.1,sigma (mg/d^2),same; straight line z 3-30 slope 0.93 per d -> zero at z ~41
+Fig. 15b,sigma_yy (dashed),3.0,z (d),29.9,sigma (mg/d^2),same; sigma_yy/sigma_xx = 0.85
+Fig. 15b,sigma_yy (dashed),10.0,z (d),24.8,sigma (mg/d^2),same; ratio 0.86
+Fig. 15b,sigma_yy (dashed),20.0,z (d),16.6,sigma (mg/d^2),same; ratio 0.85
+Fig. 15b,sigma_xz (dotted),3.0,z (d),14.2,sigma (mg/d^2),same; sigma_xz/sigma_zz = 0.40 = tan 22 deg (Eq. 16)
+Fig. 15b,sigma_xz (dotted),10.0,z (d),11.7,sigma (mg/d^2),same; ratio 0.40
