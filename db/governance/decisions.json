@@ -13297,6 +13297,76 @@
     "근거_발화": "내부 반박 리뷰 EL (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · kgy 대조 잡 v6 same = True · endline_facts problems [] (2026-11-16) · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 사용자 2026-11-10 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐'",
     "decision_digest": "sha256:3f3201342cb65320c1e97c73de652a848741951de818707d0a2f22f3ddf5dde6"
    }
+  },
+  {
+   "id": "D-2026-11-16-li2s3-dense-protocol-ensemble-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "li2s3_dense_glass_protocol_ensemble_closure",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ]
+   },
+   "title": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송 · 조밀 프로토콜 앙상블) — 2 단계 |W| = 0 으로 닫는다: A 700 K · B 750 K 만 측정 가능 (겹침 0) · 재개 조건 없음 (카드 7 그대로 · 위임 10-30)",
+   "statement": "마감 기록 db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json — 카드 7 의 닫는 조건 (2 단계 |W| = 0) 이 2026-11-16 10:58 KST kgy 사다리 판독 (한 번 · 도구 8e1f16a4 · worktree 7a6aefa56) 으로 채워졌다: W = [] (A 는 700 K · B 는 750 K 에서만 두 시드 모두 측정 가능) · 갈래 '닫는다 (S2 허용 문구 + 구조군 문구)' · cond550 자격 False. 허용 문장은 li2s-2 카드 1a S2_창_없음 문구 ([k] = 0) + 구조군 꼬리표 · 회신 DZ 카드 문구 [0] · 계별 포함 · 제외 (C1 16/16 · C2 경계 · 구분 불가 7 · 골격 이동 2) · 큐 끝 줄 인정 뿐 · D · R(T) · Ea 값 없음 · 재개 조건 없음 (새 질문은 새 카드). 비용 82.165 / 160 GPU-h.",
+   "rationale": "닫는 조건은 결과 전 (2026-11-10 카드 7) 에 박혀 있었고 판독이 그것을 채웠다 — 판단으로 닫지 않는다 (마감 규율 · 재해석 안 함)",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json",
+   "record": "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json",
+   "depends_on": [
+    "D-2026-11-10-li2s3-dense-protocol-ensemble",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend1",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend2",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend3",
+    "D-2026-11-14-li2s3-queue-endline-lost-ack",
+    "D-2026-10-30-li2s-first-author-confirmation-waived"
+   ],
+   "evidence": [
+    "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json (판독_끝_2026_11_16 · 판독_요약_2026_11_16)",
+    "kgy readout_stage2.json sha256 400354ff07f5b12930d60c971fe7e17786f168a5380d7fbe2ca6ed2808b51e0d · pressure_stage2.json sha256 91a9e2c63bc362ccb1e2fa78a3d7d0555060e54cd83d266445970116bf910c5e"
+   ],
+   "reopen_criteria": [
+    "⛔ 재개 조건 없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 보고량 카드 + 사용자 결정 (GPU)"
+   ],
+   "enforcement": "마감 기록의 허용 · 금지 서술 밖으로 쓰지 않는다 · D · σ · R · Ea 어떤 값도 없음 · 옛 li2s 트랙 · li2s-2 마감의 금지 서술은 그대로",
+   "track": {
+    "name": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송)",
+    "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "카드 7 닫는 조건 (결과 전 규칙 · 2026-11-10 '2 단계 |W| = 0 → 닫는다') 이 kgy 사다리 판독 (2026-11-16 10:58 KST · 판독 한 번 · W = []) 으로 채워져 마감 — 위임 10-30 ('li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼') · 사용자에게 보고 · 마감 기록 커밋 8244a265"
+    }
+   ],
+   "_note": "active — 트랙 마감 (2 단계 |W| = 0) · 위임 10-30",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T04:13:57Z",
+    "commit": "8244a2659f2f8219d2849f582fae4eb5831f4ab9",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "카드 7 닫는 조건 (결과 전 규칙 · 2026-11-10 '2 단계 |W| = 0 → 닫는다') 이 kgy 사다리 판독 (2026-11-16 10:58 KST · 판독 한 번 · W = []) 으로 채워져 마감 — 위임 10-30 ('li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼') · 사용자에게 보고 · 사용자 2026-11-16 판독 블록 실행 · 출력 붙여넣기",
+    "decision_digest": "sha256:d1a917c3519b46ccb9b1ee56a149e6836bc6a8a268b8a83e674a6d10d235b270"
+   }
   }
  ]
 }
