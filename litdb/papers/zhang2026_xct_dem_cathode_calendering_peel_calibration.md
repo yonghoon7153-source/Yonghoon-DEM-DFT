@@ -596,6 +596,7 @@ c = √(E/ρ) = √(142 × 10⁹ / 4750) ≈ 5,470 m s⁻¹ ⇒ Mach = 0.01/5470
 - ⬜ (장기) **X-CT 기반 독립 초기구조** 경로 (§8 ⑤) — 실행 가능성 미정.
 - 🔗 **관련 카드 (2026-11-12 한 줄 추가)**: [`song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage`](song2025_insitu_ct_dem_cathode_calendering_nominal_stress_breakage.md) — 자기 시료의 in situ CT (누른 채 · 화소 0.5 µm) 입자를 등가 구 942 개로 옮긴 결합 DEM · 위 '크기 정규화' 항목 (D7 · D7b) 이 요구한 판정을 실제로 쓴 논문 (σm = f_max/d² · 문턱 ≈200 MPa — 다만 근거는 인용 한 점 · 깨진 입자와의 수 대조 없음) · 다른 그룹 (BIT).
 - 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`ge2022_xct_initial_structure_dem_calendering_nmc333`](ge2022_xct_initial_structure_dem_calendering_nmc333.md) = 이 카드의 ref 18 (L38 · L54 · L96 · L139) 의 원문 카드 — 같은 Ebner 미압연 CT 에서 입자 5106 개를 구로 옮긴 EEPA (n 1.5) + Potyondy–Cundall 결합 DEM · 판 0.01 m s⁻¹ 은 원문에서 **가압만** (제하 단계 없음 — L139 의 '가압·제하 동일' 은 이 논문 자신의 절차이고 ref 18 은 속도에만 붙는다) · 공극은 AM 밖 부피 (CBD = 빈 곳 · 0 bar 0.628) 라 이 카드 0.432 (CBD 고체) 와 정의가 다르다 · 원문 표 1 NMC μ 0.25 · μr 0.01 · e 0.5 · E 144 GPa (이 논문 μ 0.12 · E 142).
+- 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`stershic2015_fabric_tensor_calendering_nmc_xct_dem`](stershic2015_fabric_tensor_calendering_nmc_xct_dem.md) = 이 카드의 ref 30 (L38 · L222) 의 원문 카드 — 원문에 있는 것은 '큰 입자는 접촉이 많은 경향 (서술 · 교과서 [36])' · 'X-CT 에서 큰 입자 파쇄가 보인다 (정성 · Fig 8 한 장 · 원 관측 Ebner 2013)' 까지이고, L222 의 '힘이 커서' 와 Zhang 원문 같은 문단의 '작은 입자는 재배열 · 미끄럼으로 푼다' 는 그 원문에 없다 (그 카드 §0-1).
 
 ---
 

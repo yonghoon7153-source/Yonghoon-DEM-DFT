@@ -1,0 +1,25 @@
+figure,panel,quantity,value,unit,label,method,note
+Fig5,left (fig_5a),axis calibration log10 d,1 um @ x=257.3 px; 10 um @ x=433.3 px; 100 um @ x=610.0 px,native px of xref 118 (300 dpi),calibration,tick marks on the native raster (gridview at 1.5x; native = display/1.5),one decade = 176.3 px
+Fig5,left (fig_5a),axis calibration q3,0 @ y=457.3 px; 0.09 @ y=34.7 px,native px of xref 118,calibration,tick marks on the native raster,0.01 um^-1 = 46.96 px
+Fig5,left (fig_5a),tallest bar centre diameter,9.7,um,[판독],bar centre x=431.7 px -> log10 d=0.989,q3 top y=78.7 px -> 0.0806 um^-1
+Fig5,left (fig_5a),second-tallest bar centre diameter,8.4,um,[판독],bar centre x=420.7 px -> log10 d=0.927,q3 top y=81.3 px -> 0.0801 um^-1
+Fig5,left (fig_5a),peak q3,0.080-0.081,um^-1,[판독],two tallest bars,mass (volume) weighted density per um on a log diameter axis
+Fig5,left (fig_5a),smallest non-zero bar diameter,0.7,um,[판독],first visible bar x=232.7 px,height ~0 (only outline visible)
+Fig5,left (fig_5a),largest non-zero bar diameter,46,um,[판독],last bar centre x=550.7 px,right edge x=554.7 px -> 48.6 um
+Fig7,X-Z 90 % (fig_7a),vertical (+) lobe tip,0.25,axis units,[판독],z ticks 0.2/0.1/0/-0.1/-0.2 read on the native raster; lobe tip above the 0.2 tick,top and bottom lobes 0.25-0.26; plotted quantity = density difference in the paper's plot units (normalisation not printed)
+Fig7,X-Z 90 % (fig_7a),lateral (+) lobe tip,0.22,axis units,[판독],x ticks -0.2/0/0.2,left and right tips symmetric within 0.01
+Fig7,X-Z 90 % (fig_7a),diagonal (-) lobe tip radius,0.2,axis units,[판독],dx 0.14 and dz 0.17 at the tip,radius = sqrt(dx^2+dz^2)
+Fig7,X-Z 92 % (fig_7a),vertical (+) lobe tip,0.17,axis units,[판독],z ticks 0.1/0/-0.1 (0.1 = 66.5 display px),top and bottom tips equal within 0.01
+Fig7,X-Z 92 % (fig_7a),lateral (+) lobe tip,0.13,axis units,[판독],x ticks -0.1/0/0.1,
+Fig7,X-Z 94 % (fig_7a),vertical (+) lobe tip,0.11,axis units,[판독],z ticks 0.1/0/-0.1,
+Fig7,X-Z 94 % (fig_7a),lateral (+) lobe tip,0.14,axis units,[판독],x ticks -0.1/0/0.1,left 0.138 / right 0.144
+Fig7,X-Z 96 % (fig_7a),vertical (-) lobe tip,0.045,axis units,[판독],z ticks 0.04/0.02/0/-0.02/-0.04,top and bottom tips equal within 0.003
+Fig7,X-Z 96 % (fig_7a),lateral (+) lobe tip,0.026-0.034,axis units,[판독],x ticks -0.04/0/0.04,left 0.026 / right 0.034
+Fig8,top view (fig_8a),scale bar 100 um,125,native px,[판독],white-run length on rows 391-398 of xref 159,1.25 px/um -> panel width 420 px = 336 um (cf. 330 um slices p.541)
+Fig8,lower selection (fig_8b),scale bar 50 um,302,native px,[판독],white-run length on rows 386-404 of xref 159,6.04 px/um
+Fig8,upper selection (fig_8c),scale bar 10 um,48,native px,[판독],white-run length on rows 394-405 of xref 159,4.8 px/um
+Fig8,lower selection (fig_8b),cracked particle A (top-left; dark crack line) extent,23.5 x 21.2,um,[판독],outer extent 142 x 128 native px read on a 25 px grid,section of one 2D slice; true diameter >= section; +-1.5 um
+Fig8,lower selection (fig_8b),cracked particle B (right; dark slit) extent,19.9 x 20.4,um,[판독],outer extent 120 x 123 native px,+-1.5 um
+Fig8,lower selection (fig_8b),cracked particle C (centre; vertical slit) extent,13.7 x 16.6,um,[판독],outer extent 83 x 100 native px,+-1.5 um
+Fig8,upper selection (fig_8c),cracked particle E (top; three fragments) extent,31.9 x 33.3,um,[판독],outer extent 153 x 160 native px,+-2 um
+Fig8,upper selection (fig_8c),cracked particle F (bottom; fragments) extent,30.2 x 33.3,um,[판독],outer extent 145 x 160 native px,+-2 um
