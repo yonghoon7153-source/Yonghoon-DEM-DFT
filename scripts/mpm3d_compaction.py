@@ -574,10 +574,10 @@ def parse_args(argv):
                     help='CSV of fixed AM (type,x,y,z,r in LIGGGHTS 0..0.05 units): AM become a fixed '
                          'grid obstacle and only SE is the MPM filler (real skeleton, no RSA AM, light)')
     ap.add_argument('--save-se', default='', help='write final SE point positions (npy) for morphology')
-    ap.add_argument('--save-dg', default='', help='write accumulated plastic strain Σdg per SE point '
-                    '(npy, SAME order as --save-se) → colour the morphology slice by plastic strain')
-    ap.add_argument('--save-eps', default='', help='write accumulated TOTAL equivalent strain per SE point '
-                    '(vs the seed sphere, INCL elastic compression — shows the confined interior too; npy)')
+    ap.add_argument('--save-dg', default='', help='write cumulative plastic correction Σdg per SE point '
+                    '(npy, SAME order as --save-se) → colour the morphology slice by plastic correction')
+    ap.add_argument('--save-eps', default='', help='write cumulative deformation integral ||D|| dt per SE point '
+                    '(includes elastic motion, not displacement or equivalent strain; npy)')
     ap.add_argument('--save-phase', default='', help='write per-point phase (1=SE, 0=AM) npy, SAME order as '
                     '--save-se → composite viz can colour SE by strain and draw AM grey')
     ap.add_argument('--save-fibre', default='', help='write per-point fibre id npy (-1 = SE/SuperP, ≥0 = a '
@@ -2243,11 +2243,11 @@ def main(argv):
             bulk_rho = bulk_density_g_cm3(am_solid, se_solid, bed_vol, args.dens_gen)
         print(f"  [load-state] restored {n:,} material points from {args.load_state}  "
               f"(fab target={_sm.get('target_gpa')} GPa protocol={_sm.get('protocol')} "
-              f"wall_z={_sm.get('wall_z')} · plastic history F/Σdg/ε KEPT · v,C zeroed = quasi-static restart)")
+              f"wall_z={_sm.get('wall_z')} · elastic F, x and histories Σdg/ε KEPT · v,C zeroed = quasi-static restart)")
         print(f"  [load-state] Σdg(saved) mean={float(np.mean(_sa['dg_acc'])):.4f} "
               f"max={float(np.max(_sa['dg_acc'])):.4f}   ‖F−I‖ mean="
               f"{float(np.mean(np.linalg.norm(_sa['F'].reshape(-1, 3, 3) - np.eye(3), axis=(1, 2)))):.5f} "
-              f"(0 ⇒ pristine/no memory)")
+              f"(0 ⇒ elastic reference; x and accumulated history retained)")
         if args.se_dump or args.add_recipe:
             print("  [load-state] note: --se-dump / --se-frac / --add-recipe are IGNORED here — the SE (and any "
                   "additive) points come from the state file.  They still matter for stage ①.")
@@ -2803,7 +2803,7 @@ def main(argv):
     mu_p = ti.field(ti.f32, n); la_p = ti.field(ti.f32, n); yld_p = ti.field(ti.f32, n)
     pvol_p = ti.field(ti.f32, n)                                # per-point volume (= mass, ρ=1)
     coh_p = ti.field(ti.f32, n)                                 # per-point cohesion (PTFE binder ≫ SE)
-    dg_acc = ti.field(ti.f32, n)                                # accumulated plastic strain Σdg per point
+    dg_acc = ti.field(ti.f32, n)                                # cumulative plastic correction Σdg per point
     eps_acc = ti.field(ti.f32, n)                               # accumulated TOTAL strain (vs seed, incl elastic) per point
     grid_v = ti.Vector.field(3, ti.f32, (n_grid, n_grid, nz)); grid_m = ti.field(ti.f32, (n_grid, n_grid, nz))
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
@@ -3015,7 +3015,7 @@ def main(argv):
                 gv = grid_v[node]
                 nv += wt * gv; nc += 4 * inv_dx * wt * gv.outer_product(dpos)
             v[p] = nv; C[p] = nc; F[p] = (ti.Matrix.identity(ti.f32, 3) + dt * nc) @ F[p]
-            eps_acc[p] += (0.5 * (nc + nc.transpose())).norm() * dt   # total strain increment (vs seed, incl elastic)
+            eps_acc[p] += (0.5 * (nc + nc.transpose())).norm() * dt   # cumulative ||D|| dt, including elastic motion
             U, sig, V = ti.svd(F[p])
             e = ti.Vector([ti.log(ti.max(sig[0, 0], 1e-4)), ti.log(ti.max(sig[1, 1], 1e-4)),
                            ti.log(ti.max(sig[2, 2], 1e-4))])
@@ -3023,7 +3023,7 @@ def main(argv):
             d = e - ti.Vector([tr, tr, tr]); dn = d.norm() + 1e-9
             dg = dn - yld_p[p] / (2 * mu_p[p])
             if dg > 0:
-                dg_acc[p] += dg                                 # accumulate plastic strain (morphology colour)
+                dg_acc[p] += dg                                 # accumulate plastic correction (morphology colour)
                 e = (d - dg * d / dn) + ti.Vector([tr, tr, tr])
                 F[p] = U @ ti.Matrix([[ti.exp(e[0]), 0, 0], [0, ti.exp(e[1]), 0],
                                       [0, 0, ti.exp(e[2])]]) @ V.transpose()
@@ -3259,6 +3259,12 @@ def main(argv):
         p = wallp if args.readout == 'wallP' else sig_mean   # servo signal
         height = wall_z[None] - FLOOR
         por = max(0.0, 1.0 - solid_vol / (area * height)) * 100.0
+        # Observation only: keep the original por expression and its consumers unchanged.
+        _por_raw_pct_obs = (1.0 - solid_vol / (area * height)) * 100.0
+        _por_clipped_obs = _por_raw_pct_obs < 0.0
+        if _por_clipped_obs:
+            print(f"POROSITY_OBSERVATION frame={frame} raw_pct={_por_raw_pct_obs:.17g} "
+                  f"clipped=True reported_pct={por:.17g}", flush=True)
         if frame == 0:
             por0 = por
         _p_tail.append(p)
@@ -4051,13 +4057,13 @@ def main(argv):
         print(f"  saved SE morphology → {args.save_se} ({n} pts)")
     if args.save_dg:
         dgn = dg_acc.to_numpy()
-        np.save(args.save_dg, dgn)                          # accumulated plastic strain (same order)
-        print(f"  saved plastic strain Σdg → {args.save_dg} ({n} pts, "
+        np.save(args.save_dg, dgn)                          # cumulative plastic correction (same order)
+        print(f"  saved cumulative plastic correction Σdg → {args.save_dg} ({n} pts, "
               f"mean {float(dgn.mean()):.3f} max {float(dgn.max()):.3f})")
     if args.save_eps:
         en = eps_acc.to_numpy()
-        np.save(args.save_eps, en)                          # accumulated TOTAL strain vs seed (same order)
-        print(f"  saved total strain (vs seed) → {args.save_eps} ({n} pts, "
+        np.save(args.save_eps, en)                          # cumulative deformation integral (same order)
+        print(f"  saved cumulative deformation ∫‖D‖dt → {args.save_eps} ({n} pts, "
               f"mean {float(en.mean()):.3f} max {float(en.max()):.3f})")
     if args.save_phase:
         np.save(args.save_phase, phase_np)                  # 1 SE · 2 VGCF · 3 SuperP · 4 PTFE (0 AM)

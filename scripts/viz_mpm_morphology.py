@@ -115,10 +115,10 @@ def main():
                     help='zoom window width (µm) — the SE-shape scatter panel; smaller = more zoom (0=full only)')
     ap.add_argument('--zoom-at', default='', help='zoom centre "cx,cz" µm (default: densest SE)')
     ap.add_argument('--se-dump', default='', help='seed-centre CSV (se_scaffold.csv) → colour SE points by grain')
-    ap.add_argument('--dg', default='', help='accumulated plastic strain npy (mpm3d --save-dg) → colour the SE '
+    ap.add_argument('--dg', default='', help='cumulative plastic correction npy (mpm3d --save-dg) → colour the SE '
                     'points by Σdg (afmhot, like the champion morphology); takes priority over grain colour')
-    ap.add_argument('--eps', default='', help='accumulated TOTAL strain npy (mpm3d --save-eps) — deformation vs the '
-                    'seed sphere (incl elastic); PREFERRED over --dg (use for the loose→dense demo)')
+    ap.add_argument('--eps', default='', help='cumulative deformation integral ||D|| dt npy (mpm3d --save-eps) — '
+                    'includes elastic motion; not displacement from seed; PREFERRED over --dg')
     ap.add_argument('--dg-vmax', type=float, default=0.0,
                     help='fix the Σdg colour max (0=auto: 98th pct of non-zero strain) — tune contrast')
     ap.add_argument('--hide-am', action='store_true', help='do not draw AM in the zoom (SE shape only)')
@@ -143,8 +143,8 @@ def main():
 
     m = np.abs(se[:, 1] - a.y) < half
     slab = se[m]; sx, sz = slab[:, 0], slab[:, 2]
-    strain_npy = a.eps or a.dg                                  # TOTAL (vs seed) preferred over PLASTIC
-    field_label = 'total strain ε (vs seed)' if a.eps else 'plastic strain Σdg'
+    strain_npy = a.eps or a.dg                                  # deformation-path integral preferred over plastic correction
+    field_label = 'cumulative deformation ∫‖D‖dt' if a.eps else 'cumulative plastic correction Σdg'
     dg_slab = np.load(strain_npy).astype(np.float64)[m] if strain_npy else None
     phase_slab = np.load(a.phase).astype(np.int8)[m] if a.phase else None  # 1=SE, 0=AM (composite)
     dg_vmax = 1.0
@@ -158,6 +158,7 @@ def main():
                     a.se_min_count, a.denoise, a.contact_um)
     por = 100.0 * (lab == 0).mean(); se_f = 100.0 * ((lab == 3) | (lab == 4)).mean()
     am_f = 100.0 * ((lab == 1) | (lab == 2)).mean(); ct_f = 100.0 * (lab == 4).mean()
+    print('AM fraction uses the supplied scaffold raster; without --scaffold, AM geometry is not represented.')
     ext_full = [0, (x1 - x0) * UM_BOX, 0, (z1 - z0) * UM_BOX]
 
     if a.zoom_w <= 0:
@@ -166,9 +167,9 @@ def main():
                   extent=ext_full, aspect='equal')
         ax.set_xlabel('x (µm)'); ax.set_ylabel('z (µm, compaction ↓)')
         ax.set_title(f'MPM SE plastic morphology — x-z slice @ y={a.y:.2f}\n'
-                     f'AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
+                     f'raster area: AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
         plt.tight_layout(); plt.savefig(a.out, dpi=150)
-        print(f'saved {a.out}   AM {am_f:.1f}% / SE {se_f:.1f}% / void {por:.1f}% / contact {ct_f:.1f}%')
+        print(f'saved {a.out}   raster area: AM {am_f:.1f}% / SE {se_f:.1f}% / void {por:.1f}% / contact {ct_f:.1f}%')
         return
 
     # ── zoom window (box units) ──────────────────────────────────────────────
@@ -189,7 +190,7 @@ def main():
     Pw = slab[win]                                              # SE material points in the zoom
     xu = (Pw[:, 0] - zx0) * UM_BOX; zu = (Pw[:, 2] - zz0) * UM_BOX
 
-    # colour priority: plastic strain Σdg (--dg, the continuous field — like the champion
+    # colour priority: cumulative plastic correction Σdg (--dg, the continuous field — like the champion
     # image, smooth dark-core→bright-rim) > grain (--se-dump, blocky on the gridded points)
     # > flat SE.  (the gridded look of grain-colour is the voxel-seeded SE lattice.)
     dgw, pc = None, COLORS[3]
@@ -218,7 +219,7 @@ def main():
     axf.add_patch(mpatches.Rectangle(((zx0 - x0) * UM_BOX, (zz0 - z0) * UM_BOX),
                   (zx1 - zx0) * UM_BOX, (zz1 - zz0) * UM_BOX, fill=False, ec='#06b6d4', lw=2))
     axf.set_xlabel('x (µm)'); axf.set_ylabel('z (µm, compaction ↓)')
-    axf.set_title(f'full — AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
+    axf.set_title(f'full — raster area: AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
 
     axz.set_facecolor('white')
     if phase_slab is not None and dgw is not None:             # composite: AM grey + SE strain
@@ -249,7 +250,7 @@ def main():
 
     plt.tight_layout(); plt.savefig(a.out, dpi=150)
     print(f'saved {a.out}   zoom {a.zoom_w:.0f}µm @ ({(cx_b-x0)*UM_BOX:.1f},{(cz_b-z0)*UM_BOX:.1f})µm · '
-          f'{len(Pw):,} SE pts · AM {am_f:.1f}%/SE {se_f:.1f}%/void {por:.1f}%')
+          f'{len(Pw):,} SE pts · raster area: AM {am_f:.1f}%/SE {se_f:.1f}%/void {por:.1f}%')
 
 
 if __name__ == '__main__':

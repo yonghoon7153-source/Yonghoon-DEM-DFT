@@ -5,7 +5,7 @@ Self-contained depiction of "real LPSCl 2D compaction behaviour": resolved
 grains (AM_P 12 : AM_S 4 : SE 1) compressed by a servo wall, SE = champion
 softened-J2 plastic (E=1.53/σ_y=0.15, work-hardening), AM rigid.  Saves three
 snapshots (loose → mid → compacted) with particles coloured by accumulated
-plastic strain Σdg → shows core-preserved + boundary-flattening (the SEM match).
+cumulative plastic correction Σdg → shows core-preserved + boundary-flattening (the SEM match).
 
 Run (uma GPU):  python3 mpm2d_morphology.py [n_grid=320] [arch=gpu] [AM=82] [P:S=7:3]
   e.g. sharp:   python3 mpm2d_morphology.py 512 gpu 82 7:3
@@ -167,7 +167,7 @@ def main():
     for k, (por, xpos, ep) in enumerate(snaps):
         ax = axs[k]
         am_m = ph == 0; ams_m = ph == 1; se_m = ph == 2
-        # AM grey skeleton, SE coloured by plastic strain
+        # AM grey skeleton, SE coloured by cumulative plastic correction
         ax.scatter(xpos[am_m, 0], xpos[am_m, 1], s=0.5, c='#888888')
         ax.scatter(xpos[ams_m, 0], xpos[ams_m, 1], s=0.5, c='#bbbbbb')
         sc = ax.scatter(xpos[se_m, 0], xpos[se_m, 1], s=0.5, c=ep[se_m], cmap='hot', vmin=0, vmax=vmax)
@@ -175,7 +175,7 @@ def main():
         ax.set_aspect('equal'); ax.axis('off')
         lab = labels[k] if k < len(labels) else f'snap{k}'
         ax.set_title(f'{lab}\nporosity {por*100:.0f}%', fontsize=10)
-    fig.colorbar(sc, ax=axs.tolist(), shrink=0.7, label='SE accumulated plastic strain Σdg')
+    fig.colorbar(sc, ax=axs.tolist(), shrink=0.7, label='SE cumulative plastic correction Σdg')
     fig.suptitle(f'champion MPM morphology (line-ga) — AM {AM_WT:.0f}wt% P:S {PP}:{SS}, '
                  f'E=1.53/sy=0.15/nu={NU_SE} (n_grid={n_grid})\n'
                  'AM rigid (grey) - SE plastic (hot=more flow) -> core-preserved + boundary-flattening',
