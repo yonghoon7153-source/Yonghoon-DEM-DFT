@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 338편 · 생성 2026-11-16
+> digest 339편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -291,7 +291,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
 | `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 62 |
 
-## 화학-기계 열화 · 계면 (26편)
+## 화학-기계 열화 · 계면 (27편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -312,6 +312,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` | 리튬 전극 재료의 화학-기계 팽창 (chemo-mechanical expansion) — 단위 격자 부피 변화 ΔV/V₀ 모음 (NCM-111 · 523 · 622 · 811 · NCA · LCO · 그림 2a — NCM-811 은 x ≈ 0.15 에서 ≈ −6.5 %) · Li 부분 몰 부피 (partial molar  | experiment + linear-elastic continuum estimate (operando for | 2026-11-12 | 🖼 72 |
 | `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` | 우리-랩 (Jong-Won Lee 그룹) — Model-informed design of microcrack-tolerant cathodes for fast-charging lithium-ion batteries — 3D 전기화학-역학 시뮬레이션이 지목한 "분리막 쪽 큰 다결정(LPC, ~12 µm) 입자의 균열" 을 소 | exp (LIB 액체계 CR2032 풀셀·반쪽셀 + FIB-SEM·nanoindentation·XRD·XPS | 2026-09-22 | 🖼 29 |
 | `li2026_electrochemomechanical_coupling_asslmb_review` | 전고체 리튬금속전지 (ASSLMB) 의 전기-화학-기계 결합 리뷰 — 응력의 출처 (양극 부피변화 · 복합양극 부조화 · Li 석출/박리 · 적층압 · 열) → 전기화학 영향 → 파괴 양식 → 측정법 → 완화 전략 → AI · ⚠ 표 3 의 Li₆PS₅Cl E = 4.7 GPa 는 13 % 다공 펠릿값 · 표 3 인용 번 | review (전기-화학-기계 결합 · 전고체 Li 금속전지 · 측정 + 연속체/해석/위상장 모델 정리 —  | 2026-10-13 | 🖼 17 |
+| `sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode` | LiCoO₂ 입자에 PLD 로 80Li₂S·20P₂S₅ SE 막 (40 min ≈ 50–70 nm ≈ 1 wt% · 120 min ≈ 3 wt%) 을 입히면 SE 입자 없이도 전극이 충방전된다 — 막만으로 15 · 35 · 65 mAh/g (10 · 40 · 120 min · 0.13 mA/cm²) · 200 °C 1 h | experiment (PLD 박막 코팅 + 진동 유동화 · In / 80Li₂S·20P₂S₅ 유리-세라믹 / | 2026-11-16 | 🖼 26 |
 | `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` | 다결정 NMC811 2차입자의 입계 인장강도 745 MPa (Weibull, n = 3) · 인장 영률 165 ± 7 GPa · 나노압입 영률 138 ± 24 GPa (n = 29) — FIB push-to-pull 미세인장 + SEM-DIC, 입계(intercrystalline) cracking 지배 — Sedlatsc | exp (micromechanics: FIB push-to-pull micro-tensile + SEM-DI | 2026-09-25 | 🖼 8 |
 | `siroma2015_transmission_line_model_porous_electrode_impedance` | 다공 전극 전송선 모델 (TML/TLM) 임피던스 해석해 전집 — Z형 · T형 · E형 · 범용 연결 × 경계조건 변형 + TML-Y 변환 (★ Minnmann 2021 EIS-TLM 식 [1] 의 원전 · de Levie R/3 계열과 관통형의 위상 구분) — Siroma (Electrochim. Acta 2015) | theory (analytic impedance solutions — EIS transmission-line | 2026-10-03 | 🖼 16 |
 | `so2021_dem_fabrication_degradation_ductile_particles` | frame[5] 사이클 열화 DEM — Simulation of Fabrication and Degradation of All-Solid-State Batteries with Ductile Particles — So, Inoue, Hirate, Nunoshita, Ishikawa, Tsuge (J. Electrochem. | DEM (소성 ductile-particle contact model + 2-step fabrication→ | 2026-06-26 | 🖼 10 |

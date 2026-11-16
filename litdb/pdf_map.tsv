@@ -598,3 +598,7 @@ nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch	toward pra
 #   ⚠ 크롭 35 장 = 도구 4 (다시 자름 4: 단 폭 여백 → 박힌 래스터 둘레 6 pt) + 손 31 (패널 12 · 근거 문단 19 · 식 0 = 원문에 식 없음) + digitized.csv 72 행 — --inbox --run 으로 다시 뽑지 말 것
 sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking	electrode_morphology_in_all-solid-state_lithium_secondary_batteries
 sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking	electrode morphology in all-solid-state lithium secondary batteries
+# ── LiCoO₂ (LiNbO₃ 선코팅) 위 PLD 80Li₂S·20P₂S₅ 막 · SE 입자 없이 / 10 wt% 더해 In 반쪽 셀 · EIS 계면 저항 · 압분 단면 TEM (Sakuda · Hayashi · Ohtomo · Hama · Tatsumisago, J. Power Sources 196 (2011) 6735–6741) — 자동 매칭 실패 (--inbox --only sakuda2011 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 26 장 = 도구 6 (다시 자름 2: 그림 7 = 위 테두리 잘림 · 표 1 = 쪽 전체) + 손 20 (그림 4 · 5 · 8 = 벡터 그림을 도구가 '그래픽 없음' 으로 버림 · 근거 문단 17) + digitized.csv 2292 행 — --inbox --run 으로 다시 뽑지 말 것
+sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode	all-solid-state_lithium_secondary_batteries_using_licoo2_particles_with_pulsed_laser_deposition
+sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode	all-solid-state lithium secondary batteries using licoo2 particles with pulsed laser deposition
