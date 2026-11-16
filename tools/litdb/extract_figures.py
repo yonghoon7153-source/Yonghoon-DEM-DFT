@@ -93,6 +93,12 @@ VERBS = re.compile(
 #   **대문자·숫자·여는 괄호**가 오면 캡션으로 받는다. `Figure 3 a shows …`(소문자 동사)·`Fig. 5 a–c show …`
 #   (범위)·`Fig. 2 a and b …` 는 여전히 본문이다 (--selftest 음성).
 PANEL_RE = re.compile(r"^[a-z][).]?\s+[A-Z0-9(]")
+# ⛔⛔ 2026-11-16 실측 (liu2026 Adv. Funct. Mater. SI · In³⁺ 치환 LSPS) — `Figure S3␣␣In 3d XPS …` 가 통째로 탈락했다.
+#   번호 뒤 구분자가 공백이라 VERBS 판별로 갔고, VERBS 는 re.I 라 **원소 기호 `In`** 을 전치사 `in` 으로 읽었다.
+#   `Fig. 3 In situ Raman …` (Springer · Nature 꼴) 도 같은 길로 샌다. 소문자 `in` 은 바로 위 `rest[:1].islower()` 가
+#   이미 본문으로 떨구므로, **대문자로 시작하는 `In`** 만 본문 표지에서 뺀다 (VERBS 의 다른 낱말 And · We · This … 는 그대로).
+#   ⚠ 남는 위험: 구두점 없이 `Figure 3 In …` 으로 시작하는 본문 문단 — 문법상 드물고, 그림은 ② 기하 검증이 한 번 더 거른다.
+ELEMENT_IN = re.compile(r"In\b")                # 대소문자 구분 (re.I 아님) — 'In 3d' · 'In-doped' · 'In situ'
 
 
 def is_caption(text):
@@ -109,8 +115,8 @@ def is_caption(text):
         pass
     elif PANEL_RE.match(rest):                 # "Fig. 12 a Schematic …" → 캡션 (위 PANEL_RE 주석)
         pass
-    elif rest[:1].islower() or VERBS.match(rest):
-        return None                            # "Figure 3 shows ..." → 본문
+    elif rest[:1].islower() or (VERBS.match(rest) and not ELEMENT_IN.match(rest)):
+        return None                            # "Figure 3 shows ..." → 본문 ('In 3d' · 'In situ' 는 캡션 · 위 ELEMENT_IN 주석)
     if len(t) < 12:                            # "Figure 1" 만 있는 상호참조 조각
         return None
     label = m.group("label")
@@ -272,6 +278,71 @@ def table_rect(page, cap, tables, stop_y=1e9, margin=5.0):
     for t in hit[1:]:
         u |= t
     u |= fitz.Rect(x0, y0, x1, y1)              # 표는 캡션까지 넣어야 스스로 설명된다
+    return (fitz.Rect(u.x0 - margin, u.y0 - margin,
+                      u.x1 + margin, u.y1 + margin) & page.rect)
+
+
+# ⛔⛔ 2026-11-16 실측 (warren2026 J. Mater. Chem. A SI) — 표 캡션이 표 **아래**에 붙는 양식이라 표 11 장 중 10 장이
+#   빠지거나 엉뚱하게 잘렸다 (캡션 아래만 보니 본문이나 **다음 표 격자**가 들어왔다: tab_S8 = S8 캡션 + 본문 + S9 격자).
+#   로컬 6 편 실측: 표 바로 위 (≤ 20 pt) 에 붙은 캡션은 warren SI 만 8 개 (간격 15.1–15.2 pt) · 나머지는 바로 아래 (5–34 pt)
+#   또는 앞 표와 38 pt 이상 떨어져 있었다. 그래서 **문서 단위 다수결**로 양식을 정하고, 아래 캡션 문서만 위를 본다.
+TABLE_ADJ_GAP = 20.0                            # pt — 표 끝 ↔ 캡션 끝 간격이 이 안이면 '붙어 있다'
+
+
+def table_caption_below(pages, gap=TABLE_ADJ_GAP):
+    """문서 하나의 표 캡션이 표 **아래**에 붙는 양식인가 (다수결) → (caption_below, n_above, n_below).
+
+    pages = [(caps, tabs), …] — caps 는 [(block, is_caption 결과), …] · tabs 는 그 쪽의 표 bbox 목록
+    (extract 첫 바퀴의 값 그대로 · PDF 없이 시험할 수 있다). 표 캡션마다 같은 단 (가로 겹침 > 0.30) 의 표가
+    캡션 바로 **위**에 붙어 있으면 n_above, 바로 **아래**에 붙어 있으면 n_below 를 센다.
+    n_above ≥ 2 이고 n_below 보다 많을 때만 True — 아니면 종전 (캡션 아래) 그대로다.
+
+    ⛔ 못 하는 것: 한 PDF 안에서 양식이 섞이면 (본문 표는 위 캡션 · 부록 표는 아래 캡션) 다수 쪽 하나로 간다 ·
+      표 검출이 안 된 쪽 (표 0 개) 은 세지 않는다 · 표 캡션이 하나뿐인 문서는 늘 종전대로 간다.
+    """
+    n_above = n_below = 0
+    for caps, tabs in pages:
+        for b, h in caps:
+            if not (h and h[0] == "table"):
+                continue
+            x0, y0, x1, y1 = b[:4]
+            band = [t for t in tabs if band_overlap((x0, x1), (t[0], t[2])) > 0.30]
+            if any(-2.0 <= y0 - t[3] <= gap for t in band):
+                n_above += 1
+            if any(-2.0 <= t[1] - y1 <= gap for t in band):
+                n_below += 1
+    return (n_above >= 2 and n_above > n_below), n_above, n_below
+
+
+def _owned_by_caption_below(t, blocks, gap=2 * TABLE_ADJ_GAP):
+    """표 t 바로 아래 (gap 안 · 같은 단) 에 **표 캡션**이 붙어 있으면 True — 아래 캡션 문서에서 그 표는 그 캡션의 몫이다."""
+    x0, _y0, x1, y1 = t[:4]
+    for b in blocks:
+        h = is_caption(b[4])
+        if h and h[0] == "table" and -2.0 <= b[1] - y1 <= gap \
+                and band_overlap((x0, x1), (b[0], b[2])) > 0.30:
+            return True
+    return False
+
+
+def table_rect_above(page, cap, tables, start_y=-1e9, margin=5.0):
+    """아래 캡션 문서 (table_caption_below 가 True) 의 표 영역 — 캡션 **위**의 표들 합집합 + 캡션.
+
+    start_y = 같은 쪽 같은 단에서 이 캡션 위에 있는 **다른 캡션의 아래 끝** — 그 위는 앞 표의 몫이라 끊는다
+    (warren SI p18: S8 · S9 두 표가 한 쪽에 있다). table_rect 의 stop_y 를 위아래로 뒤집은 것이다.
+    ⛔ 못 하는 것: 표가 앞 쪽에서 시작해 이 쪽으로 이어지면 이 쪽 조각만 잡는다 (두 쪽 이어붙이기는 손 크롭) ·
+      표 검출이 안 되면 None (그때 region_for 가 캡션 위 영역으로 떨어진다).
+    """
+    x0, y0, x1, y1 = cap[:4]
+    hit = [fitz.Rect(t) for t in tables]
+    hit = [t for t in hit if t.y1 <= y0 + 2 and t.y0 >= start_y - 2
+           and band_overlap((x0, x1), (t.x0, t.x1)) > 0.30]
+    if not hit:
+        return None
+    u = fitz.Rect(hit[0])
+    for t in hit[1:]:
+        u |= t
+    u |= fitz.Rect(x0, y0, x1, y1)              # 캡션까지 넣는다 (table_rect 와 같다)
     return (fitz.Rect(u.x0 - margin, u.y0 - margin,
                       u.x1 + margin, u.y1 + margin) & page.rect)
 
@@ -472,18 +543,32 @@ def _fname_prefix(kind):
     return {"table": "tab", "scheme": "sch"}.get(kind, "fig")
 
 
-def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9):
+def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9,
+               cap_below=False, start_y=-1e9):
     """캡션 블록 → (잘라낼 사각형, 이미지수, 벡터수).
 
     figure/scheme 는 캡션 **위**가 기본. ⚠ SI 는 캡션을 그림 **위**에 두는 쪽이 많다
     (실측: Zhou 2026 SI 의 Fig S1/S2/S12 는 캡션이 쪽 맨 위 y=76 이고 그림이 그 아래).
     위가 비면 아래로 한 번 더 본다 — 표는 처음부터 아래.
+    단 cap_below (문서가 표 캡션을 표 아래에 붙이는 양식 · table_caption_below) 면 표는 **위**를 본다 (2026-11-16).
     """
     if kind == "table" and caption_rotation(page, cap) == 90:
         # 누운 표는 쪽 전체를 잡는다. 표가 쪽을 거의 다 채우므로 잘라내다 잘릴 위험이
         # 옆띠를 계산하는 것보다 크다. 방향은 렌더 뒤 PIL 로 세운다.
         pr = page.rect
         return (fitz.Rect(pr.x0 + 6, pr.y0 + 6, pr.x1 - 6, pr.y1 - 6), 1, 0)
+    if kind == "table" and cap_below:
+        r = table_rect_above(page, cap, tables, start_y)
+        if r is not None and r.height >= 36:
+            return r, 1, 0
+        # 아래 캡션 문서 안에도 위 캡션 표가 섞인다 (warren SI Table S2 — 캡션 400–413 · 표 427–521 · 위는 Fig. S5 캡션).
+        #   위에 표가 없을 때만 아래를 보되, 바로 아래에 **다른 표 캡션이 붙은 표**는 그 캡션 몫이라 뺀다
+        #   (S8 캡션 아래의 S9 격자 — 종전 tab_S8 크롭에 딸려 들어온 그 표).
+        free = [t for t in tables if not _owned_by_caption_below(t, blocks)]
+        r = table_rect(page, cap, free, stop_y)
+        if r is not None and r.height >= 36:
+            return r, 1, 0
+        return _side_rect(page, cap, blocks, up=True)   # 아래 캡션 문서에서 막연히 아래를 보면 본문 · 다음 표가 들어온다
     if kind == "table":
         r = table_rect(page, cap, tables, stop_y)
         if r is not None and r.height >= 36:
@@ -710,7 +795,7 @@ def missing_labels(found_keys, near, skipped):
 def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             maxpx=1500, relto=None):
     out_dir = OUT_ROOT / slug
-    found, seen, skipped, near = [], {}, [], []
+    found, seen, skipped, near, votes = [], {}, [], [], []
     for pdf_path in pdf_paths:
         _GCACHE.clear()                        # 문서마다 비운다 (위 주석 참고)
         doc = fitz.open(pdf_path)
@@ -719,6 +804,9 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
         #   논문 11편의 **본문 그림이 통째로 S 번호**로 붙었다(kraft2017 본문 8장 → SI 8장).
         #   SI_TAG 하나만 쓴다 — 매칭 쪽과 판정이 갈리면 이런 사고가 또 난다.
         si = bool(SI_TAG.search(Path(pdf_path).stem))
+        # 첫 바퀴 (2026-11-16): 쪽마다 블록 · 캡션 · 표를 먼저 다 모은다 — 표 캡션이 표 위/아래 어느 쪽에 붙는
+        #   양식인지 **문서 단위 다수결** (table_caption_below) 로 정한 뒤 자른다. 표 검출은 여기서 한 번만 한다.
+        pre = []
         for pno in range(doc.page_count):
             page = doc[pno]
             blocks = page_blocks(page)         # 캡션 위 끝 = 첫 글줄 (2026-11-16 · tighten_caption_tops)
@@ -739,6 +827,12 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                         tabs = ()
                     if tabs:
                         break
+            pre.append((blocks, caps, tabs))
+        cap_below, n_above, n_below = table_caption_below([(c, t) for _b, c, t in pre])
+        votes.append({"src": Path(pdf_path).name, "above_adjacent": n_above,
+                      "below_adjacent": n_below, "caption_below": cap_below})
+        for pno, (blocks, caps, tabs) in enumerate(pre):
+            page = doc[pno]
             for cap, hit in caps:
                 if not hit:
                     continue
@@ -751,8 +845,13 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                 stop_y = min([b[1] for b, h in caps
                               if h and b[1] > cr.y1 + 1
                               and band_overlap((cr.x0, cr.x1), (b[0], b[2])) > 0.30] or [1e9])
+                # 같은 쪽에서 이 캡션 **위**에 있는 캡션의 아래 끝 — 아래 캡션 문서의 표 크롭 위 한계 (table_rect_above)
+                start_y = max([b[3] for b, h in caps
+                               if h and b[3] < cr.y0 - 1
+                               and band_overlap((cr.x0, cr.x1), (b[0], b[2])) > 0.30] or [-1e9])
                 rect, n_img, n_draw = region_for(page, tuple(cr), kind, blocks, tabs,
-                                                 min_draw=min_draw, stop_y=stop_y)
+                                                 min_draw=min_draw, stop_y=stop_y,
+                                                 cap_below=cap_below, start_y=start_y)
                 if rect is None:
                     skipped.append((key, pno + 1, "영역 없음"))
                     continue
@@ -809,7 +908,9 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
             "sources": [_relto(p, relto) for p in pdf_paths],
             "figures": found,
             # 번호 공백·떨어진 캡션 후보 (2026-09-27) — 빈 목록이 정상. 있으면 손 크롭(manual_crop) 대상 후보다.
-            "missing_labels": missing_labels({r["key"] for r in found}, near, skipped)}
+            "missing_labels": missing_labels({r["key"] for r in found}, near, skipped),
+            # PDF 마다 표 캡션 양식 다수결 (2026-11-16) — caption_below 가 True 인 파일만 표를 캡션 **위**에서 잘랐다.
+            "table_caption_vote": votes}
     if not dry:
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "figures.json").write_text(
@@ -1960,6 +2061,120 @@ def selftest():
             tighten_caption_tops([cap_bh], [fitz.Rect(560.0, 458.9, 590.0, 472.1)])[0] == cap_bh)
         chk("⛔음성: 위 끝은 내리기만 한다 — 첫 글줄이 블록 위 끝보다 위면 그대로",
             tighten_caption_tops([cap_ok], [fitz.Rect(54.0, 457.0, 300.0, 470.0)])[0] == cap_ok)
+
+        # (f) 원소 기호 'In' 캡션 (2026-11-16 · liu2026 SI Fig. S3 · warren2026 Fig. 2 — 종전 탈락)
+        for txt, want, why in (
+            ("Figure S3  In 3d XPS spectra of the Li metal surface after cycling", True, "★원소 기호 In (liu2026 SI 실측)"),
+            ("Fig. 3 In situ Raman spectra of the precursor solution over time", True, "★'In situ' 캡션 (Springer · Nature 꼴)"),
+            ("Figure 4 In-doped samples were annealed at 500 °C for 2 h", True, "★'In-doped' 캡션"),
+            ("Figure 3 in the main text compares the two compositions directly", False, "⛔음성: 소문자 in 은 여전히 본문"),
+            ("Figure 2 And the corresponding EDS maps are shown in the inset", False, "⛔음성: 대문자 And 는 여전히 본문 (VERBS 그대로)"),
+            ("Figure 4 We compare the cycling of the two cells in detail here", False, "⛔음성: 대문자 We 는 여전히 본문"),
+            ("Figure 5 Into the cathode we add carbon additive for this test", True, "Into 는 VERBS 낱말이 아니다 (종전과 같음)"),
+        ):
+            chk(f"캡션판정 {why}", (is_caption(txt) is not None) == want)
+
+        # (g) 표 캡션이 표 아래에 붙는 문서 (2026-11-16 · warren2026 SI) — 다수결 · 위 영역 · 몫 판정
+        def cap(y0, y1, lab, kind="Table", x0=85.0, x1=530.0):
+            t = f"{kind} {lab}. A synthetic {kind.lower()} caption for the vote test."
+            return ((x0, y0, x1, y1, t, 0, 0), is_caption(t))
+        below_doc = [([cap(300, 312, "S1")], [(85, 150, 530, 285)]),          # 표 끝 285 → 캡션 300 (15 pt)
+                     ([cap(400, 412, "S2")], [(85, 250, 530, 385)]),
+                     ([cap(200, 212, "S3")], [(85, 60, 530, 185)])]
+        chk("★다수결: 표 바로 위 (15 pt) 에 붙은 표 캡션 3 개 → 아래 캡션 문서", table_caption_below(below_doc) == (True, 3, 0))
+        above_doc = [([cap(140, 152, "S1")], [(85, 50, 530, 95), (85, 162, 530, 300)]),   # 앞 표와 45 pt · 자기 표 10 pt
+                     ([cap(140, 152, "S2")], [(85, 162, 530, 300)]),
+                     ([cap(140, 152, "S3")], [(85, 165, 530, 300)])]
+        chk("⛔음성: 표가 캡션 바로 아래 (10–13 pt) · 앞 표는 45 pt 위 → 종전대로 (아래 캡션 아님)",
+            table_caption_below(above_doc) == (False, 0, 3))
+        chk("⛔음성: 위 붙음 1 개뿐이면 바꾸지 않는다 (≥ 2 · 과반)", table_caption_below(below_doc[:1])[0] is False)
+        chk("⛔음성: 위 붙음 = 아래 붙음 (2 대 2) 이면 바꾸지 않는다",
+            table_caption_below(below_doc[:2] + above_doc[1:3])[0] is False)
+        chk("⛔음성: 그림 캡션은 세지 않는다 (표 위에 붙은 Figure 캡션 3 개)",
+            table_caption_below([([cap(300, 312, f"S{i}", kind="Figure")], [(85, 150, 530, 285)])
+                                 for i in (1, 2, 3)]) == (False, 0, 0))
+        chk("⛔음성: 다른 단 (가로 겹침 없음) 의 표는 세지 않는다",
+            table_caption_below([([cap(300, 312, f"S{i}", x0=85, x1=290)], [(310, 150, 530, 285)])
+                                 for i in (1, 2, 3)]) == (False, 0, 0))
+        tp = fitz.open(); tpg = tp.new_page(width=595, height=842)
+        r = table_rect_above(tpg, (85, 600, 530, 612), [(85, 100, 530, 280), (85, 420, 530, 585), (85, 640, 530, 760)],
+                             start_y=300.0)
+        chk("★위 영역: 이 캡션과 위 캡션 (아래 끝 300) 사이의 표만 + 캡션 — 그 위 표 · 아래 표는 안 붙인다",
+            r is not None and 410 < r.y0 < 420 and 612 < r.y1 < 620)
+        chk("⛔음성: 캡션 위에 표가 없으면 None", table_rect_above(tpg, (85, 600, 530, 612), [(85, 640, 530, 760)]) is None)
+        tp.close()
+        own_blocks = [(85.0, 300.0, 530.0, 312.0, "Table S9. The caption that owns the grid right above it.", 0, 0)]
+        chk("★몫 판정: 표 바로 아래 (15 pt) 에 표 캡션 → 그 캡션의 표", _owned_by_caption_below((85, 150, 530, 285), own_blocks))
+        chk("⛔음성: 바로 아래가 표 캡션이 아닌 제목이면 주인 없음",
+            not _owned_by_caption_below((85, 150, 530, 285),
+                                        [(85.0, 300.0, 530.0, 312.0, "Reduction series and spin-density analysis", 0, 0)]))
+
+        # (h) 합성 PDF 로 extract 경로 전체 (첫 바퀴 다수결 → 위 영역 · 섞인 위 캡션 표 · 몫 · 종전 문서 불변)
+        def _grid(p, y0, y1, x0=100, x1=500):
+            # ⚠ 칸마다 글자가 있어야 PyMuPDF 가 표로 잡는다 — 2×2 칸에 글자 하나면 lines · text 둘 다 0 개였다 (2026-11-16 실측)
+            nr, nc = 4, 3
+            xs = [x0 + (x1 - x0) * i / nc for i in range(nc + 1)]
+            ys = [y0 + (y1 - y0) * j / nr for j in range(nr + 1)]
+            sh = p.new_shape()
+            for y in ys:
+                sh.draw_line((x0, y), (x1, y))
+            for x in xs:
+                sh.draw_line((x, y0), (x, y1))
+            sh.finish(color=(0, 0, 0), width=0.8)
+            sh.commit()
+            words = (("Compound", "Calc (ppm)", "Exp (ppm)"), ("P4S10", "236.4", "56.8"),
+                     ("P4S3", "251.8", "64.6"), ("H3PO4", "304.7", "0.0"))
+            for j in range(nr):
+                for i in range(nc):
+                    p.insert_text((xs[i] + 5, ys[j] + (y1 - y0) / nr / 2 + 3), words[j][i], fontsize=9)
+
+        def _cap(p, y, lab):
+            p.insert_textbox(fitz.Rect(100, y, 500, y + 26), f"Table {lab}. Calculated shielding of the reference "
+                                                             f"standards used for scaling (synthetic).", fontsize=9)
+
+        def _mdoc(name, builds):
+            d = fitz.open()
+            for b in builds:
+                b(d.new_page(width=595, height=842))
+            path = str(Path(td) / name); d.save(path); d.close()
+            return path
+
+        bdoc = _mdoc("capbelow.pdf", [
+            lambda p: (_grid(p, 120, 260), _cap(p, 272, "S1")),
+            lambda p: (_grid(p, 100, 220), _cap(p, 232, "S2"),                    # 한 쪽에 표 둘 (start_y)
+                       _grid(p, 330, 470), _cap(p, 482, "S3")),
+            lambda p: (p.insert_textbox(fitz.Rect(100, 90, 500, 150), PROSE, fontsize=9),
+                       _cap(p, 160, "S4"), _grid(p, 200, 330),                    # 섞인 위 캡션 표 (warren S2 꼴)
+                       p.insert_textbox(fitz.Rect(100, 360, 500, 380), "Reduction series and spin-density "
+                                                                          "analysis", fontsize=10)),
+            lambda p: (p.insert_textbox(fitz.Rect(100, 90, 500, 170), PROSE, fontsize=9),
+                       _cap(p, 176, "S5"),                                         # 자기 표가 검출 안 된 캡션
+                       _grid(p, 240, 380), _cap(p, 392, "S6")),
+        ])
+        m, sk = extract([bdoc], "capbelow_test", dry=True)
+        got = {f["key"]: f for f in m["figures"]}
+        vote = m["table_caption_vote"][0]
+        chk("★합성 아래 캡션 문서: 다수결 caption_below=True (위 붙음 ≥ 2 · 아래 붙음보다 많다)",
+            vote["caption_below"] is True and vote["above_adjacent"] >= 3)
+        chk("★tS1: 캡션 **위** 격자 (120–260) + 캡션 — 종전처럼 캡션 아래를 자르지 않는다",
+            "tS1" in got and got["tS1"]["bbox"][1] < 125 and 284 < got["tS1"]["bbox"][3] < 300)   # 캡션 블록 272–284.4 (한 줄)
+        chk("★tS3: 같은 쪽 위 캡션 (S2 · 아래 끝 ≈258) 위의 격자는 안 붙인다 (start_y)",
+            "tS3" in got and got["tS3"]["bbox"][1] > 300 and got["tS3"]["bbox"][3] > 482)
+        chk("★tS4: 아래 캡션 문서 안의 **위 캡션 표** (warren S2 꼴) 도 잡는다 — 위에 표가 없으면 아래 표",
+            "tS4" in got and got["tS4"]["bbox"][1] < 165 and got["tS4"]["bbox"][3] > 325)
+        chk("⛔음성: tS5 (자기 표 미검출) 는 아래 격자 (S6 몫 · 바로 아래에 S6 캡션) 를 가져가지 않는다",
+            "tS5" not in got or got["tS5"]["bbox"][3] < 245)
+        chk("★tS6: 그 격자는 제 주인 (S6) 에게 간다", "tS6" in got and got["tS6"]["bbox"][1] < 245)
+        adoc = _mdoc("capabove.pdf", [
+            lambda p: (_cap(p, 100, "S1"), _grid(p, 138, 278)),
+            lambda p: (_cap(p, 100, "S2"), _grid(p, 138, 278)),
+            lambda p: (_cap(p, 100, "S3"), _grid(p, 138, 278)),
+        ])
+        m, sk = extract([adoc], "capabove_test", dry=True)
+        got = {f["key"]: f for f in m["figures"]}
+        chk("⛔음성: 위 캡션 문서는 다수결 False · 종전처럼 캡션 아래 격자를 자른다 (tS1–S3)",
+            m["table_caption_vote"][0]["caption_below"] is False
+            and all(k in got and got[k]["bbox"][1] < 105 and got[k]["bbox"][3] > 275 for k in ("tS1", "tS2", "tS3")))
 
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
