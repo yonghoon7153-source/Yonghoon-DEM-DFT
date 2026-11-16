@@ -1,0 +1,21 @@
+{
+  "schema": "lhs_o1_current_identity_receipt/1",
+  "received_file": "lhs_o1_20261116.txt",
+  "received_container_bytes": 6031,
+  "received_container_sha256": "27446e01f55357b3a283f47446d997b2efdc2a1e991607ebab95d8da01365e92",
+  "json_handling": "exact UTF-8 JSON object slice; terminal wrapper excluded",
+  "json_bytes": 6017,
+  "json_sha256": "9c3d1aedebcd54a1265f224017cea8a61876eb0ae38f920172c63b9b2a86ceb1",
+  "expected_cases": 30,
+  "received_cases": 30,
+  "cohort_deck_hash_matches": 30,
+  "cohort_path": "docs/data/area_s2_cohort.tsv",
+  "cohort_sha256": "32f00daa8394188d1e72531fd7fda1a8b47a9c279be76311ae7f2afa024b2809",
+  "execution_identity_status": "NOT_ESTABLISHED",
+  "origin_execution_proven": false,
+  "research_results": 0,
+  "operator_reported_rc": 0,
+  "operator_reported_command_rc": 0,
+  "case_specific_basename": "input_<case>.liggghts",
+  "automatic_retry": false
+}

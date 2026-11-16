@@ -1,0 +1,74 @@
+{
+  "schema": "nonrint_author_execution_queue/1",
+  "date": "2026-11-16",
+  "field_operator": "author",
+  "pqwtv8_code_intake": "after attempt4 DONE",
+  "document_only_intake": "may precede DONE",
+  "source_pin_new": "ad7c1f826525d86166d65ad3c50ef82bce7e46fc",
+  "source_pin_g2cp": "c559766bb506bab45e1c22099e640cac7a442aed",
+  "items": [
+    {
+      "track": "LHS O1 WSL30",
+      "status": "RECEIVED_CURRENT_IDENTITIES",
+      "cases": 30,
+      "cohort_hash_matches": 30,
+      "execution_identity_status": "NOT_ESTABLISHED",
+      "evidence": "docs/data/lhs_o1_current_identity_20261116/receipt.json"
+    },
+    {
+      "track": "G2cp NP2 N200",
+      "status": "AUTHOR_REPORTED_COMPLETE",
+      "job_id": "366257",
+      "seconds": 23,
+      "arms": 9,
+      "grid_2_1_1_arms": 9,
+      "runner_rc": 0,
+      "claude_reported_comparator_rc": 0,
+      "comparison_pair_count": 0,
+      "interpretation": "dry run without discrimination; no physical contact pass",
+      "return_sha256_prefix": "de07abc5",
+      "independent_archive_check_here": false
+    },
+    {
+      "track": "G2cp NP4 N200",
+      "status": "BLOCK_READY_AUTHOR_EXECUTES",
+      "order": 1,
+      "block": "PASTE_G2CP_NP4_N200_1116.txt",
+      "sha256": "1b9b8ce7e49902c0027878920600444703fc19329607d798a0f74f816ca95f9c"
+    },
+    {
+      "track": "G2cp NP2 N40000",
+      "status": "BLOCK_READY_AUTHOR_EXECUTES",
+      "order": 2,
+      "block": "PASTE_G2CP_NP2_N40000_1116.txt",
+      "sha256": "f67f4474dd33f8a16bd6ea2609570c7266dabf2e0d968c8cb52d3032e0fa229f"
+    },
+    {
+      "track": "G2cp NP4 N40000",
+      "status": "BLOCK_READY_AUTHOR_EXECUTES",
+      "order": 3,
+      "block": "PASTE_G2CP_NP4_N40000_1116.txt",
+      "sha256": "546d8ee4970e716f90598759aa7b6286f3e611ad3d75749f1d427a9007348f79"
+    },
+    {
+      "track": "Mixer E0 A/B",
+      "status": "WSL_BLOCK_READY",
+      "block": "PASTE_MIXER_E0_RESEAL_AB_WSL_20261116.txt",
+      "sha256": "8fb7bff3530aba872a97c9584d54beee7599aff67209a4ac8766ecc48c87b885",
+      "source_package_sha256": "059d900b576aebc8838a03d66ea64fe65b5af78278a47da3a7d36196109592a9",
+      "linux_checks_received": false,
+      "pilot_launch_block": "next after AB receipt; no automatic submission"
+    },
+    {
+      "track": "Suyoung 2D S/F",
+      "status": "WSL_CPU_BLOCK_READY",
+      "block": "PASTE_DEM_SUYOUNG_SF2D_CPU_20261116.txt",
+      "sha256": "7ae2475aee5b75a1532e6222303350d3827dc9f34bed0f3610940272587c7a3b",
+      "source_package_sha256": "b170d311d9c4a35ed07abf6f7a53b34c0918a58eb187415bf822dfaea4461716",
+      "label": "DEVELOPMENT_DATA_ONLY",
+      "field_results_received": 0
+    }
+  ],
+  "serial_jobs": true,
+  "automatic_retry": false
+}
