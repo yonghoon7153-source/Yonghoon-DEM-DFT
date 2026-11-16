@@ -1,0 +1,33 @@
+{
+  "schema": "nonrint_external_artifacts/1",
+  "suyoung": {
+    "execution_pin": "c759c4c7ab7abec2148e23fa231d004c1d4d0fec",
+    "base": "f1b9d002fdd844d6b4be089b73322051e8b312df",
+    "source_tar": "suyoung_shape_source_c759c4c7ab7a_20261116.tar.gz",
+    "source_tar_bytes": 12007,
+    "source_tar_sha256": "5f941235d2fbc8b9da4ec1a43fb4573f2cb66d811de3d9e05b2b7cfb52982999",
+    "block_name": "PASTE_SUYOUNG_SHAPE_WSL_CPU1_20261116.txt",
+    "block_sha256": "f6c8ac231cbaa5d51616e92b4d6205c2f7a14d5fa38416a05d9740195f1373ea",
+    "source_members": 4,
+    "working_tree_overrides": false
+  },
+  "mixer": {
+    "controller_pin": "997aabe1b5a702e2f389007e3923018d778ce857",
+    "approved_B_pin": "8231f395cda98fed8dbbf5422ccda003b11a8da9",
+    "approved_return_sha256": "6f7f407479af6282b9c8d4e83afa86645d4fda1506b29801be2165dcc2965737",
+    "approved_B_files": 283,
+    "source_tar": {
+      "name": "mixer_e0_pilot_source_997aabe1b5a7_20261116.tar.gz",
+      "bytes": 5072803,
+      "sha256": "0574850a7b292283e4640c488161c019b58c40ed6eb99fac77202ca566c7e6b2"
+    },
+    "block": {
+      "name": "PASTE_MIXER_E0_IBB_ONE_ARM_20261116.txt",
+      "sha256": "62c2526263384a346ce134b9b5e766ebb8f45532fdd1c4acd72d4c33b9c6a0da"
+    },
+    "field_execution": 0,
+    "author_launch_go": "REQUIRED_AT_USE",
+    "automatic_retry": 0
+  },
+  "private_blocks_in_repo": false
+}
