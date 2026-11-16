@@ -1,0 +1,4 @@
+LOCAL_RETURN_DIR=<WSL_RETURN_DIR>
+SSH_RC=0 HASH_RC=0
+RETURN_DIR=<WSL_RETURN_DIR>
+Return the four files. Do not rerun any G2c-prime calculation.

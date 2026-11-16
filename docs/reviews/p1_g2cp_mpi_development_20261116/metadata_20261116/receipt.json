@@ -1,0 +1,182 @@
+{
+  "schema": "g2cp_metadata_receipt_v1",
+  "zip": {
+    "name": "g2cp_mpi_metadata_20261116.zip",
+    "bytes": 2631,
+    "sha256": "d5290cc1386a87d86e2898417b9bc6975346f13d5c7cdf04111dee433dc59a61",
+    "files": 5,
+    "crc": "PASS"
+  },
+  "raw_files": [
+    {
+      "member": "g2cp_mpi_metadata_20261116_oxEhJ0/metadata.txt",
+      "bytes": 5692,
+      "sha256": "bdaf29d215aeea6b94fea2773461c4920ae20268b01c1c7cd7f5c15a02dd0c46"
+    },
+    {
+      "member": "g2cp_mpi_metadata_20261116_oxEhJ0/ssh.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "member": "g2cp_mpi_metadata_20261116_oxEhJ0/collection_rc.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "member": "g2cp_mpi_metadata_20261116_oxEhJ0/SHA256SUMS",
+      "bytes": 240,
+      "sha256": "9decaaf70062b096b1b1a7d05f2a9222cc895cb4206314f35c46e63fdbdc7015"
+    },
+    {
+      "member": "g2cp_meta_screen.txt",
+      "bytes": 252,
+      "sha256": "beba3dab4bb086e19b902e7e985b90a7b829f5157aa68f38427ed39242d55340"
+    }
+  ],
+  "loose_bytes_equal": 5,
+  "input_checksums": {
+    "listed": 3,
+    "passed": 3
+  },
+  "observed_utc": "2026-11-16T06:09:36Z",
+  "collection_rc": 0,
+  "ssh_stderr_bytes": 0,
+  "slurm_version": "22.05.2",
+  "selected_fields": [
+    "JobIDRaw",
+    "JobName",
+    "State",
+    "ExitCode",
+    "Submit",
+    "Start",
+    "End",
+    "Elapsed",
+    "AllocCPUS",
+    "DBIndex",
+    "Cluster"
+  ],
+  "requeue_counter_field": "UNAVAILABLE",
+  "duplicate_rows_observed": 0,
+  "named_population_equals_known_jobs": true,
+  "population_rows": [
+    {
+      "JobIDRaw": "366257",
+      "JobName": "g2cp_mpi2",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Submit": "2026-11-16T13:57:11",
+      "Start": "2026-11-16T13:57:12",
+      "End": "2026-11-16T13:57:35",
+      "Elapsed": "00:00:23",
+      "AllocCPUS": "2",
+      "DBIndex": "697382",
+      "Cluster": "ibb-cluster"
+    },
+    {
+      "JobIDRaw": "366261",
+      "JobName": "g2cp_mpi4",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Submit": "2026-11-16T14:17:52",
+      "Start": "2026-11-16T14:17:52",
+      "End": "2026-11-16T14:18:12",
+      "Elapsed": "00:00:20",
+      "AllocCPUS": "4",
+      "DBIndex": "697390",
+      "Cluster": "ibb-cluster"
+    },
+    {
+      "JobIDRaw": "366288",
+      "JobName": "g2cp_mpi2",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Submit": "2026-11-16T14:43:32",
+      "Start": "2026-11-16T14:43:33",
+      "End": "2026-11-16T14:44:14",
+      "Elapsed": "00:00:41",
+      "AllocCPUS": "2",
+      "DBIndex": "697443",
+      "Cluster": "ibb-cluster"
+    },
+    {
+      "JobIDRaw": "366290",
+      "JobName": "g2cp_mpi4",
+      "State": "COMPLETED",
+      "ExitCode": "0:0",
+      "Submit": "2026-11-16T14:44:20",
+      "Start": "2026-11-16T14:44:20",
+      "End": "2026-11-16T14:44:58",
+      "Elapsed": "00:00:38",
+      "AllocCPUS": "4",
+      "DBIndex": "697447",
+      "Cluster": "ibb-cluster"
+    }
+  ],
+  "query_scope": {
+    "names": [
+      "g2cp_mpi2",
+      "g2cp_mpi4"
+    ],
+    "from_local": "2026-11-12T00:00:00",
+    "until_local": "2026-11-17T00:00:00",
+    "observed_local": "2026-11-16T15:09:36+09:00",
+    "duplicates_requested": true
+  },
+  "ledger_raw_sha256": "4161092bfa79127294854b495afac45a8722643dcd6127df958b910cfcd72834",
+  "ledger_changed_while_reading": false,
+  "ledger_rows": 4,
+  "unknown_jobs_in_returned_population": [],
+  "scontrol_after_completion_rc": {
+    "366257": 1,
+    "366261": 1,
+    "366288": 1,
+    "366290": 1
+  },
+  "current_named_queue_rows": 0,
+  "history_audit": "COMPLETE_FOR_RETURNED_ACCOUNTING_SCOPE",
+  "independent_retention_completeness": "NOT_ESTABLISHED",
+  "scontrol_expiry_explanation": "consistent with removal from controller memory; exact cause not established by returned error alone",
+  "redactions": [
+    {
+      "member": "metadata.txt",
+      "job_id": "366257",
+      "field": "out",
+      "replacement": "out=<OUTPUT:366257>",
+      "count": 1
+    },
+    {
+      "member": "metadata.txt",
+      "job_id": "366261",
+      "field": "out",
+      "replacement": "out=<OUTPUT:366261>",
+      "count": 1
+    },
+    {
+      "member": "metadata.txt",
+      "job_id": "366288",
+      "field": "out",
+      "replacement": "out=<OUTPUT:366288>",
+      "count": 1
+    },
+    {
+      "member": "metadata.txt",
+      "job_id": "366290",
+      "field": "out",
+      "replacement": "out=<OUTPUT:366290>",
+      "count": 1
+    },
+    {
+      "member": "g2cp_meta_screen.txt",
+      "fields": [
+        "LOCAL_RETURN_DIR",
+        "RETURN_DIR"
+      ],
+      "replacement": "<WSL_RETURN_DIR>",
+      "count": 2
+    }
+  ],
+  "raw_hash_semantics": "LEDGER_SHA256 labels and raw_files hashes refer to unredacted originals, not redacted text",
+  "registered_conclusions_adoptable": false,
+  "engine_runs_in_this_intake": 0
+}

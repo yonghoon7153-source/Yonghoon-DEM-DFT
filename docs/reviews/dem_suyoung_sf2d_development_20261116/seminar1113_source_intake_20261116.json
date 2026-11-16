@@ -1,0 +1,26 @@
+{
+  "source": "author-provided Claude feedback and work requests",
+  "files": [
+    {
+      "name": "seminar_feedback_20261113.md",
+      "bytes": 5623,
+      "sha256": "f591c467dea92dd8dae6696df84c9c0a579774488c03c58af9a83919481d0473"
+    },
+    {
+      "name": "CODEX_SUYOUNG_SEMINAR1113_1116.txt",
+      "bytes": 2600,
+      "sha256": "e53a774516431a2d3c9f2337285a69986d84255c3835cf51b40be34f7b2220f5"
+    },
+    {
+      "name": "CODEX_G2CP_METADATA_RETURN_1116.txt",
+      "bytes": 1018,
+      "sha256": "66162df5e11ca8c8d7b4bf3b775f54240061714007a23b63cacc4425509175df"
+    }
+  ],
+  "reserved_claude_destination": "docs/reviews/dem_redesign_direction_20261109/seminar_feedback_20261113.md",
+  "reserved_destination_created_here": false,
+  "claude_md_modified": false,
+  "primary_seminar_pdf_or_recording_read_here": false,
+  "author_correction_20261116": "50kg stress already uses Love-Weber; no recheck, recalculation or redraw requested",
+  "new_engine_runs": 0
+}
