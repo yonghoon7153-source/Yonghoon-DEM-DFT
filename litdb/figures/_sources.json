@@ -14,6 +14,14 @@
    "118. Applicability Domain of Universal Machine Learning Interatomic Potentials at Solid-State Battery Interfaces.pdf"
   ]
  },
+ "ahmed2026_co_substituted_llzto_sintering_atmosphere": {
+  "figures": 19,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf"
+  ]
+ },
  "ahn2026_cej_agno3_pvp_li3n_anodefree": {
   "figures": 24,
   "generated": "2026-09-07",
@@ -390,6 +398,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/52. Percolation micro-model to predict the effective properties of the composites.pdf"
+  ]
+ },
+ "chen2024_space_charge_layer_ncm_linbo3_lpscl": {
+  "figures": 46,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf"
   ]
  },
  "chibwe2020_nnsi_segregation_index": {
@@ -3368,6 +3384,14 @@
   "pdfs": [
    "131. ElectrochimActa_2023_Wei_LiNbO3_coating_LCO_argyrodite_cutoff_voltages_MAIN.pdf",
    "131. Sup) ElectrochimActa_2023_Wei_LiNbO3_coating_SI.docx"
+  ]
+ },
+ "wei2026_data_driven_hea_mediator_lis": {
+  "figures": 74,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "542ff474-Data-Driven_Atomic_Interplay_Modulation_Enables_Dual-Functional_High-Entropy_Alloy_Mediator_for_Li_S_Batteries.pdf",
+   "dbaf65dc-Sup_Data-Driven_Atomic_Interplay_Modulation_Enables_Dual-Functional_High-Entropy_Alloy_Mediator_for_Li_S_Batteries.pdf"
   ]
  },
  "wet_processing_resolved_am_ssb_cathode_manufacturing": {

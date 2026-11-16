@@ -1,0 +1,393 @@
+{
+ "slug": "ahmed2026_co_substituted_llzto_sintering_atmosphere",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+  "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 (a) X-ray diffraction (XRD) patterns of Co0.1 :LLZTO samples sintered in different temperatures in air (b) Weight percentage of LiCoO2 and Li0.5 La2 Co0.5 O4 secondary phases in air-sintered samples as a function of sintering temperatures, based on Rietveld refinement (c) Lattice parameters refined using the cubic Ia-3d space group for the air-sintered samples at different temperatures.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.2,
+    568.2,
+    312.3
+   ],
+   "w": 2170,
+   "h": 1156,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.874
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 (a) Schematic illustration of the sintering procedures used to prepare air- and Ar-sintered Cox :LLZTO samples. (b) Images of Cox :LLZTO pellets after sintering in air (khaki) and Ar (blue) atmospheres across varying Co concentrations in addition to the relative density measured using the Archimedes method. (c) XRD patterns of Cox :LLZTO sintered in air, (d) XRD patterns of Cox :LLZTO sintered in Ar. For both a zoom-in of the range 42◦≤ 2 Θ ≤ 50◦is shown. (e) Weight fraction (wt.%) of the LiCoO2 secondary phase as a function of Co concentration obtained from Rietveld refinement. (f) Refined lattice parameter a as a function of Co concentration.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    34.8,
+    568.2,
+    585.3
+   ],
+   "w": 2170,
+   "h": 2294,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 (a, d) SEM images and EDS elemental maps of samples with varying Co concentrations sintered in air (a) and Ar (d). (b, e) EDS and Raman maps of the selected regions in air-sintered (b) and Ar-sintered (e). The selected regions are marked in white squares in EDS maps of Co0.1 :LLZTO samples in (a) and (d). (c, f) Corresponding Raman spectra showing cubic LLZTO with LCO and La–Co-rich phases in air-sintered samples (c), and cubic LLZTO with La–Co-rich phases in Ar-sintered samples (f).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.3,
+    568.2,
+    507.3
+   ],
+   "w": 2170,
+   "h": 1967,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.556
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 EDS-analysis of Co0.1 :LLZTO samples sintered in air and Ar. Representative measurement positions on (a) air- and (b) Ar-sintered samples with corresponding quantification tables in (c) and (d). (e) Overlaid ED-spectra from the two measurement points. (f) Kernel density estimates (KDEs) of elemental composition across 26 measurement points per sample.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.5,
+    568.1,
+    522.3
+   ],
+   "w": 2169,
+   "h": 2029,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.588
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 (a) and (b) Cox :LLZTO Raman spectra of samples sintered in air and Ar atmospheres respectively. (c) Raman spectra of air-sintered Co0.1 :LLZTO acquired using 532 nm and 785 nm excitation wavelengths. (d) and (e) show Raman maps of the Ar-sintered Co0.1 :LLZTO, before and after an additional 2 h of sintering in air, respectively. (f) Corresponding Raman spectra extracted from the mapped regions shown in (d) and (e).",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.1,
+    568.1,
+    425.3
+   ],
+   "w": 2170,
+   "h": 1626,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.795
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 (a) Nyquist plots of air- and Ar-sintered LLZTO and Co0.1 :LLZTO. (b) Temperature-dependent total conductivity of Cox :LLZTO samples sintered in air and (c) in Ar. (d) DC electronic conductivity of air-sintered Cox :LLZTO samples and (e) Ar-sintered Cox :LLZTO samples measured as a function of applied voltage at 25◦C. (f) Total conductivity (closed circles) and DC electronic conductivity (open circles) by applying 4 V bias at 25◦C as a function of Co concentration for air- and Ar-sintered Cox :LLZTO samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.2,
+    278.3
+   ],
+   "w": 2170,
+   "h": 1015,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Lattice parameter of Co-substituted LLZTO calculated with the empirical formula of Strocka et al. [3] for Co3+ on the Li, Zr, and La sites and for Co2+ on the Li site, as a function of the Co content x. Empirical formulas exist in the literature that allow the lattice parameter of garnets to be calculated from the ionic radii [1] of the ions on the different structural sites.[2] We tested them and found that the formula of Strocka et al. [3] gives the best agreement with the crystallographic data (.cif files) of Kataoka et al. [4] for LLZTO. Figure S1 shows that for Co2+ as well as Co3+ on the Li site essentially no change of the lattice parameter is expected. Even for Co3+ on the Zr site the change is small for x ≤ 0.1.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    89.8,
+    533.6,
+    343.6
+   ],
+   "w": 1954,
+   "h": 1058,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: (a) EBSD orientation maps of the air- and argon-sintered samples. (b,c) Grain size distributions extracted from the EBSD data for Co contents x = 0.005, 0.03, and 0.1, shown for the air-sintered samples in (b) and the corresponding Ar-sintered samples in (c).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.9,
+    532.9,
+    237.0
+   ],
+   "w": 1951,
+   "h": 718,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.546
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Representative electron micrographs of (a) the air-sintered sample and (b) the Ar-sintered sample. The corresponding pore segmentation mask is shown directly beneath the electron image, where the segmented regions identify the pore phase used for quantitative porosity and pore-mean area analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    532.7,
+    394.0
+   ],
+   "w": 1950,
+   "h": 1372,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.69
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Nyquist plots and fits of LLZTO sintered in (a) air, (b) Ar and (c) Co0.1:LLZTO in air at 970 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    530.5,
+    400.9
+   ],
+   "w": 1941,
+   "h": 1401,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: DFT calculated density of states (DOS) for the lowest-energy Co substitution configurations at the different cation sites in LLZO, using the SCAN functional.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    530.7,
+    436.5
+   ],
+   "w": 1942,
+   "h": 1549,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: I-t curves for air-sintered Cox:LLZTO.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    507.5,
+    530.5,
+    713.3
+   ],
+   "w": 1941,
+   "h": 859,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: I-t curves for Ar-sintered Cox:LLZTO.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    122.2,
+    533.7,
+    329.7
+   ],
+   "w": 1954,
+   "h": 865,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: DC electronic conductivity at 25 °C and 4 V (left axis) and LiCoO₂ weight fraction from Rietveld refinement (right axis) of the air-sintered Co_x:LLZTO samples as a function of the nominal Co content x.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    356.2,
+    511.3,
+    582.3
+   ],
+   "w": 1861,
+   "h": 943,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 8,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Co content of the LLZTO grain interiors from SEM-EDS point analysis (filled symbols, left axis; ten measurement points per sample) together with (a) the total conductivity and (b) the electronic conductivity at 25 °C and 4 V (open symbols, right axis).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    64.8,
+    532.8,
+    568.1
+   ],
+   "w": 1951,
+   "h": 2098,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "TABLE 1 DFT-predicted formation energies and lattice parameters for Co substitution at different cation sites in LLZO. As described in the Experimental section, a reduced primitive cell was employed to compare the relative formation energies of Co substitution. Charge neutrality was maintained by adjusting the Li stoichiometry through the formation of either Li interstitials or Li vacancies in the vicinity of the Co dopant, depending on the substitution site. Multiple local atomic configurations were evaluated to identify the lowest-energy structure. The corresponding Co defect formation energies and relaxed lattice parameters for Co occupying the different cation sites are summarized here. Formation energy (eV/Co Lattice Parameters Volume (Å3 ) a (Å) b (Å) c (Å) α (◦) β (◦) γ (◦) Co occupancy atom) Co2 + at Li site − 0.92 11.281 11.291 11.295 110.16 108.96 109.42 1105.70 Co3 + at Li sit",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    36.8,
+    567.2,
+    216.3
+   ],
+   "w": 2162,
+   "h": 749,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "TABLE 2 Co content inside the LLZTO grains, as determined by SEM-EDS spot analysis (15 kV, ten grains per sample, mean ± standard deviation). Air: Co in grains (at%) Ar: Co in grains (at%) Nominal x 0.005 Not detected Not detected 0.01 Not detected Not detected 0.03 0.05 ± 0.03 0.12 ± 0.02 0.05 0.10 ± 0.03 0.32 ± 0.06 0.1 0.09 ± 0.02 0.42 ± 0.04",
+   "rotated_deg": 0,
+   "bbox": [
+    48.6,
+    36.8,
+    306.0,
+    188.0
+   ],
+   "w": 1074,
+   "h": 631,
+   "dpi": 300,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 11,
+   "file": "tab_3.png",
+   "caption": "TABLE 3 Total conductivity ( σtotal ) and DC electronic conductivity ( σe ) at 25◦C, activation energy, and relative density by Archimedes method of Cox :LLZTO samples as a function of Co concentration ( x )",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.3,
+    793.4
+   ],
+   "w": 2286,
+   "h": 2998,
+   "dpi": 274,
+   "src": "b5d79baf-The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table S1. (a) Charge-balanced compositions of Co-substituted LLZTO (Li₆.₆La₃Zr₁.₆Ta₀.₄O₁₂), showing the possible valence states and positions of Co, and the cubic LLZO unit cell used in the DFT calculations (one Co atom per four formula units, x = 0.25). (b) The expected Co content upon complete incorporation, calculated based on all atoms as well as the elements detectable by EDS (excluding Li), as a function of the nominal x-value. (a) Compositions Co valence / Composition (experimental, Charge compensation DFT cell (cubic LLZO, site LLZTO) per Co x = 0.25) Co2+ on Li Li6.6−2xCoxLa3Zr1.6Ta0.4O12 1 Li+ replaced + 1 Li Li6.5Co0.25La3Zr2O12 vacancy Co3+ on Li Li6.6−3xCoxLa3Zr1.6Ta0.4O12 1 Li+ replaced + 2 Li Li6.25Co0.25La3Zr2O12 vacancies Co3+ on Zr Li6.6+xCoxLa3Zr1.6−xTa0.4O12 1 Li interstitial Li7.25Co0.25La3Zr1.75O12 Co3+ on La Li6.6CoxLa3−xZr1.6Ta0.4O12 none Li7Co0.25La2.75Zr2O12 Co3",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    95.2,
+    556.3,
+    523.0
+   ],
+   "w": 2045,
+   "h": 1784,
+   "dpi": 300,
+   "src": "841a6a25-Sup_The_Impact_of_Cobalt_Substitution_on_the_Electrochemical_Properties_of_Cubic_Li6._6La3Zr1._6Ta0._4O12_Solid_Electrolyte_for_All_Solid_State_Li_Ion_Batteries.pdf",
+   "blank": 0.912
+  }
+ ],
+ "missing_labels": []
+}

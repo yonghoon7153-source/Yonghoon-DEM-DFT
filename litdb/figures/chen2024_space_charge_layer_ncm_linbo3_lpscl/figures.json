@@ -1,0 +1,1029 @@
+{
+ "slug": "chen2024_space_charge_layer_ncm_linbo3_lpscl",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+  "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. a) Schematic diagram for the synthesis process of Bare NCM and NCM@LNO treated at 600 °C companied with corresponding b,c) TEM images, d) HTERM images, and e) EDS elemental mapping. f–h) XPS spectra and curve ﬁtting for Nb 3d, O 1s, and Ni 2p of NCM@LNO treated at 300 °C (II), 600 °C (III) and 850 °C (IV) respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.7,
+    552.9,
+    587.7
+   ],
+   "w": 2118,
+   "h": 2155,
+   "dpi": 300,
+   "src": "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.527,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) Crystal structure of LPSC accompanied with views along b) c axis, c) a axis, and d) c axis. e) EIS proﬁles and f) Arrhenius plot of LPSC electrolyte. g) schematic diagram of BEF at cathodic interface with various surface modiﬁcation methods in ASSLB. h–l) XPS spectra and curve ﬁtting for S 2p of composite cathodes using NCM@LNO treated at 300 °C/600 °C/850 °C respectively with bare NCM and bare NCM treated at 600 °C as references. And the depth positions are selected to be 0 nm (left) and <3 nm (right) from NCM/LPSC interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.7,
+    552.9,
+    425.7
+   ],
+   "w": 2118,
+   "h": 1480,
+   "dpi": 300,
+   "src": "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.475,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Optimized interface structures, calculated Li-vacancy formation energies (Ev(Lii)) and projected density of states (PDOSs) of a–c) NCM(110)/LNO(1̄10), d–f) NCM(110)/LPSC(100), and g–i) LNO(1̄10)/LPSC(100) heterojunctions. And the Fermi level is represented by the ver- tical dashed line.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.6,
+    550.0,
+    547.7
+   ],
+   "w": 2118,
+   "h": 1989,
+   "dpi": 300,
+   "src": "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.629,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) Schematic diagram of ASSLB model. b) Nyquist plots of NCM@LNO-600/LPSC/Li-In (cyan) and NCM@LNO-850/LPSC/Li-In (orange) ASSLB after cycling. The denoted equivalent circuit R(RC)(RC) was adopted as a model for the simulated spectra (solid lines) to ﬁt the experimental result (open circles) accompanied with corresponding c) Bode plots. And the Nyquist plots before cycling (dashed lines) were presented as reference. CV curves at scan rate from 0.05 to 1.0 mV s−1 for d) NCM@LNO-600, e) NCM@LNO-850 cathodes accompanied with f) b-values comparison. CV curves of capacitive current distinguished from total current at 0.5 mV s−1 for g) NCM@LNO-600 and h) NCM@LNO-850 samples accompanied with i) the corresponding capacitive contribution ratio. series of CV tests at scan rates from 0.05 mV to 1.0 mV s−1 shown in Figure 4d,e. Generally, the total storage process can be divided into two p",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.2,
+    550.1,
+    538.7
+   ],
+   "w": 2118,
+   "h": 1953,
+   "dpi": 300,
+   "src": "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.783,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. a) Schematic diagram of SCL-induced failure mechanism of NCM/LPSC interface via the operando Raman cell set up. Contour plots of operando Raman spectra obtained on b–d) Li-In/LPSC/NCM@LNO-300, f–h) Li-In/LPSC/NCM@LNO-600, j–l) Li-In/LPSC/NCM@LNO-850 ASSLB accompanied with corresponding evolution process of the characteristic peak positions at ≈420 cm−1 during e,i,m) the initial charge/discharge cycle at 0.1C, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.3,
+    552.9,
+    567.8
+   ],
+   "w": 2118,
+   "h": 2074,
+   "dpi": 300,
+   "src": "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.659,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6. a) The initial charge–discharge curves at 0.05C, b) rate performance, and d) cycling performance of NCM@LNO-300, NCM@LNO-600, and NCM@LNO-850 ASSLB at RT. e) XPS spectra and curve ﬁtting for S 2p and P 2p of composite cathodes in NCM@LNO-300, NCM@LNO-600 and NCM@LNO-850 ASSLB after cycling. And the depth position is selected to be NCM/LPSC interface. c) Chemical degradation process at cathodic interface during cycling. f) Galvanostatic cycling performance in reported literature compared with our work.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    482.7
+   ],
+   "w": 2118,
+   "h": 1718,
+   "dpi": 300,
+   "src": "e57c17f4-Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.699,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. (a) XRD patterns of bare NCM (I) and NCM@LNO treated at 300oC (II), 600oC (III) and 850oC (IV) respectively. (b) XRD patterns of bare NCM treated at 300oC (red), 600oC (cyan) and 850oC (orange) respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.3,
+    508.1,
+    401.3
+   ],
+   "w": 1768,
+   "h": 1381,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.895
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM observation (a) Bare NCM and NCM@LNO treated at (b) 300oC, (c)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    540.9,
+    513.6,
+    741.7
+   ],
+   "w": 1791,
+   "h": 838,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.5
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Chemical composition and structural characterization of NCM@LNO treated at 300oC: (a, b) TEM images and (c) HTERM image.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.5,
+    514.3,
+    296.5
+   ],
+   "w": 1793,
+   "h": 943,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.484,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Chemical composition and structural characterization of NCM@LNO treated at 850oC: (a, b) TEM images and (c) HTERM image.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    377.4,
+    514.7,
+    515.4
+   ],
+   "w": 1795,
+   "h": 576,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.165,
+   "bbox_extractor": [
+    84.0,
+    377.4,
+    514.7,
+    502.2
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Chemical composition and structural characterization of Bare NCM: (a, b) TEM images, (c) HTERM image and (d) corresponding EDS elemental mapping.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.3,
+    514.0,
+    304.6
+   ],
+   "w": 1792,
+   "h": 965,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.199
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. EDS elemental mapping of NCM@LNO-850 sample through linear scan mode.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    369.8,
+    514.7,
+    527.2
+   ],
+   "w": 1795,
+   "h": 657,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.573
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. XPS spectra for (a) Co 2p and (b) Mn 2p of NCM@LNO treated at 300oC (labeled as @LNO-300), 600oC (labeled as @LNO-600) and 850oC (labeled as @LNO- 850) respectively. XPS depth profiling spectra for (c) Co 2p, (d) Mn 2p and (e) Nb 3d of NCM@LNO-600 cathode. The etching depths are around 30 nm and 60 nm, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.7,
+    514.4,
+    382.3
+   ],
+   "w": 1794,
+   "h": 1286,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. XRD pattern of LPSC with reference.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    544.6,
+    450.6,
+    737.4
+   ],
+   "w": 1528,
+   "h": 804,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. SEM&EDS images of LPSC electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    116.8,
+    465.4,
+    364.7
+   ],
+   "w": 1590,
+   "h": 1034,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.315,
+   "bbox_extractor": [
+    84.0,
+    116.8,
+    465.4,
+    351.7
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. SEM&EDS images of composite cathodes using NCM@LNO treated at 300oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    416.6,
+    514.1,
+    573.4
+   ],
+   "w": 1792,
+   "h": 655,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.416
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. SEM&EDS images of composite cathodes using NCM@LNO treated at 600oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.5,
+    514.1,
+    228.8
+   ],
+   "w": 1792,
+   "h": 661,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.424
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 10,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. SEM&EDS images of composite cathodes using NCM@LNO treated at 850oC. Description: As shown in Figure 2a-d, the unit cell of LPSC is composed of a face- centered cubic lattice by Cl atom with octahedral sites occupied by PS43− tetrahedral. The half of Li+ sites remain unoccupied and such vacancies facilitate the rapid diffusion of Li+, which accounts for its excellent ionic conductivity at room temperature (RT).[11] Accordingly, the argyrodite-type structure aforementioned is confirmed through X-ray diffraction (Figure S8). The calculated ionic conductivity of LPSC at RT is 2.995×10−3 S cm−1 through Electrochemical impedance spectroscopy (EIS) measurement (Figure 2e). After further linear fitting in Figure 2f and Table S3, the activation energy of 0.259 eV is acquired, which is consistent to result of reported literatures.[12] As seen in Figure S9, the SEM observation of LPSC ",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    315.7,
+    514.7,
+    446.7
+   ],
+   "w": 1795,
+   "h": 547,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.299,
+   "bbox_extractor": [
+    84.0,
+    315.7,
+    514.7,
+    433.8
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. XPS spectra and curve fitting at (a1-e1) cathode/electrolyte interface and (a2-e2) subsurface within LPSC for P 2p of composite cathodes using NCM@LNO treated at 300oC/600oC/850oC respectively with bare NCM and bare NCM treated at",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    141.5,
+    514.2,
+    694.8
+   ],
+   "w": 1793,
+   "h": 2306,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.861
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. XPS spectra for Ni 2p, Co 2p and Mn 2p of composite cathodes using NCM@LNO treated at 300oC (Green line)/600oC (Orange line)/850oC (Cyan line) respectively. And the depth position is selected to be NCM/LPSC interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    94.7,
+    514.4,
+    242.4
+   ],
+   "w": 1794,
+   "h": 616,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.819,
+   "bbox_extractor": [
+    84.0,
+    94.7,
+    514.4,
+    229.3
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 12,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Li7NMR spectra comparison of composite cathodes based on NCM@LNO treated at 300oC, 600oC and 850oC. Description: Li7NMR was carried out to access the spontaneous lithium-ion transport between the NCM@LNO cathode and LPSC electrolyte39. The width of the peak represents the capability of Li+ transfer across the interface, where SCL should be dominant.[6] The detailed results of the LNO modified samples are compared in Figure S15, and NCM@LNO-600 sample delivers the widest peak among them, which discloses that the lithium-ion exchange rate of NCM@LNO-600 sample exhibits a little higher than that of NCM@LNO-300 and NCM@LNO-850 samples.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    357.1,
+    514.4,
+    534.7
+   ],
+   "w": 1794,
+   "h": 740,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.926,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 13,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. The detailed interface structures of (a) NCM(110)/LNO(1 1̅ 0), (b) NCM(110)/LPSC(100) and (c) LNO(1 1̅ 0)/LPSC(100) heterojunctions for DFT calculation accompanied with bonding structures in the vicinity of the intermediate regions. Description: In the vicinity of the intermediate region in NCM(110)/LNO(1 1̅ 0) interface (Figure S16a), the typical MnO6, CoO6, NiO6 octahedrons in NCM and NbO6 octahedrons in LNO maintain relatively stable lattice structures with ordered distribution, and no heterogeneous polyhedrons are generated. At the same time, the",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.9,
+    514.4,
+    588.9
+   ],
+   "w": 1794,
+   "h": 2163,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.722,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 14,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. (a) Nyquist plots and (b) enlarged EIS spectra for Bare NCM, NCM@LNO-300, NCM@LNO-600 and NCM@LNO-850 cathodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    422.4,
+    514.0,
+    679.8
+   ],
+   "w": 1792,
+   "h": 1073,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 15,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. (a) Nyquist plots and fit curve of Bare NCM/LPSC/Li-In ASSLB after cycling with the Nyquist plot before cycling as reference (dashed line), accompanied with corresponding Bode plots.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    119.4,
+    514.3,
+    305.4
+   ],
+   "w": 1794,
+   "h": 776,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.942,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 15,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. (a) Nyquist plot and fit curve of NCM@LNO-300/LPSC/Li-In ASSLB after cycling with the Nyquist plot before cycling as reference (dashed line), accompanied with (b) corresponding Bode plots.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    422.6,
+    514.3,
+    610.5
+   ],
+   "w": 1794,
+   "h": 783,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.926,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 16,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. (a) CV curves at scan rate from 0.05 mV/s to 1.0 mV/s for Bare NCM accompanied with (c) b-values. (b) CV curves of capacitive current distinguished from total current at 0.5 mV/s for Bare cathode accompanied with the corresponding capacitive contribution ratio.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.8,
+    514.1,
+    398.0
+   ],
+   "w": 1793,
+   "h": 1377,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.872,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read via SI p.16 page render (same content as crop)",
+   "bbox_extractor": [
+    84.0,
+    67.8,
+    514.1,
+    385.3
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 16,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. (a) Discharge curves at various rates, (b) hysteresis voltage, (c) cycling performance, (d) differential capacity curves at the initial cycle at 0.05C and (e) working voltage of Li-In/LPSC/NCM ASSLBs using the Bare NCM, NCM@LNO-300, NCM@LNO-600 and NCM@LNO-850 cathodes, correspondingly.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    538.0,
+    509.6,
+    775.5
+   ],
+   "w": 1774,
+   "h": 991,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "manual_crop": "2026-11-16 litdb-curator: tool reported fS21 as a number gap ('p17 그래픽 없음(img0/draw0)') - the figure image sits at the bottom of SI p.16 (raster xref 102, bbox 90.0,544.3,503.6,769.7) and its caption starts at the top of p.17 (page break between image and caption); clip = raster bbox + ~6 pt margin",
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (manual crop)"
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 18,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. (a) Differential capacity curves at the initial cycle at 0.05C, (b) working voltage, (c) hysteresis voltage and (d) cycling performance of Li-In/LPSC/NCM ASSLB using the Bare NCM cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    258.7,
+    514.7,
+    640.6
+   ],
+   "w": 1795,
+   "h": 1593,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.922,
+   "bbox_extractor": [
+    84.0,
+    258.7,
+    514.7,
+    627.6
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 19,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Raman spectra of pure LPSC and Li2S.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    115.4,
+    429.3,
+    293.7
+   ],
+   "w": 1439,
+   "h": 744,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 19,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. The characteristic peak positions in Operando Raman spectra at around 195 cm−1, 270 cm−1 and 570 cm−1 during the initial charge/discharge cycle at 0.1C accompanied with corresponding charge-discharge curve on Li-In/LPSC/NCM@LNO- 300 ASSLB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    357.1,
+    514.3,
+    613.0
+   ],
+   "w": 1793,
+   "h": 1067,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 20,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. The characteristic peak positions in Operando Raman spectra at around 195 cm−1, 270 cm−1 and 570 cm−1 during the initial charge/discharge cycle at 0.1C accompanied with corresponding charge-discharge curve on Li-In/LPSC/NCM@LNO- 600 ASSLB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    97.1,
+    514.3,
+    343.3
+   ],
+   "w": 1793,
+   "h": 1027,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 21,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. The characteristic peak positions in Operando Raman spectra at around 195 cm−1, 270 cm−1 and 570 cm−1 during the initial charge/discharge cycle at 0.1C accompanied with corresponding charge-discharge curve on Li-In/LPSC/NCM@LNO- 850 ASSLB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    204.9,
+    514.3,
+    609.5
+   ],
+   "w": 1793,
+   "h": 1687,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 21,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. The characteristic peaks positions of coated NCM cathodes in Operando Raman spectra at around 600 cm-1 for Eg(Mn) peaks during the initial charge/discharge cycle at 0.1C of Li-In/LPSC/NCM@LNO-600 (cyan line) and Li- In/LPSC/NCM@LNO-300 (green line) ASSLBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    204.9,
+    514.4,
+    609.5
+   ],
+   "w": 1794,
+   "h": 1687,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 22,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. Cycling performance over 1.9-3.6 V vs Li+/Li-In at 1C for NCM@LNO- 600 ASSLB after activation at 0.1C for three cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    142.8,
+    511.6,
+    313.2
+   ],
+   "w": 1782,
+   "h": 712,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 22,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. Charge-discharge curves over 1.9-3.9V vs Li+/Li-In at 0.1C for NCM@LNO-600 ASSLB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    371.5,
+    514.7,
+    562.0
+   ],
+   "w": 1795,
+   "h": 795,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.947,
+   "bbox_extractor": [
+    84.0,
+    371.5,
+    514.7,
+    549.6
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 23,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. Cycling performance over 1.9-3.9V vs Li+/Li-In at 0.2C for NCM@LNO- 600 ASSLB after activation at 0.1C for three cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.4,
+    511.6,
+    244.2
+   ],
+   "w": 1782,
+   "h": 721,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.898,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 23,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. GITT potential curves of NCM@LNO-300, NCM@LNO-600 and NCM@LNO-850 ASSLB during charging and discharging at 60oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    337.4,
+    514.4,
+    539.6
+   ],
+   "w": 1794,
+   "h": 844,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 24,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. The Li+ diffusion coefficients of NCM@LNO-300, NCM@LNO-600 and NCM@LNO-850 ASSLB during (a) delithiation and (b) lithiation at 60 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.2,
+    514.4,
+    274.0
+   ],
+   "w": 1794,
+   "h": 842,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.871,
+   "viewed": true,
+   "viewed_how": "2026-11-16 litdb-curator: Read (crop PNG)"
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 24,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. XPS spectra for Co 2p and Mn 2p of composite cathodes in NCM@LNO- 300, NCM@LNO-600 and NCM@LNO-850 ASSLB after cycling. And the depth position is selected to be NCM/LPSC interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    363.1,
+    514.7,
+    539.8
+   ],
+   "w": 1795,
+   "h": 738,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.905,
+   "bbox_extractor": [
+    84.0,
+    363.1,
+    514.7,
+    526.8
+   ],
+   "manual_crop": "2026-11-16 main session (same method as wei2026 fix_si_crops.py): extractor cut the bottom ~12 pt of every SI figure (each SI caption block starts with a blank line ~12-15 pt above the real 'Fig. Sx:' line) - re-rendered with bottom = embedded image bottom (stops before the caption text line); top extended to the image top only when no text sits between"
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 24,
+   "file": "tab_S1.png",
+   "caption": "Table S1. The intensity of (003)/ (104) peaks in XRD patterns of NCM samples. Samples I(003) [a. u.] I(104) [a. u.] I(003)/I(104) Bare 2547 1473 1.72 NCM@LNO-300 2043 1360 1.50 NCM@LNO-600 2448 1473 1.66",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    630.3,
+    500.5,
+    767.9
+   ],
+   "w": 1732,
+   "h": 574,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 25,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Summary of ionic conductivity at RT of mainstream inorganic solid electrolyte at present. System Composition Ea [eV] σSSE [mS cm−1] Oxide (NASICON) Li1.4Al0.4Ti1.6(PO4)3[14] - 1.12 Li1.5Al0.5Ge1.5(PO4)3[15] 0.29 2.25 LiTi2(PO4)3-0.2Li3BO3[16] 0.37 0.3 Oxide (LISICON) Li3.53(Ge0.75P0.25)0.7V0.3O4[17] 0.43 0.051 Li10.42Ge1.5P1.5Cl0.08O11.92[18] 0.39 0.037 Oxide (Perovskite) Li3/8Sr7/16Ta3/4Hf1/4O3[19] 0.36 0.38 Li0.25La0.583TiO3[20] 0.28 0.453 Oxide (Anti-perovskites) Li3OCl[21] 0.26 0.85 Oxide (Garnets) Li7La3Zr2O12[22] 0.34 0.3 Li6.55Ga0.15La3Zr2O12[23] 0.3 1.3 Li6.5La3Zr1.5Ta0.5O12[24] 0.395 2.1 Sulfide (Argyrodite) Li6PS5Cl[12] 0.33 3.5 Li5.5PS4.5Cl1.5[25] 0.29 9.4 Sulfide (thio-LISICON) Li9.54Si1.74P1.44S11.7Cl0.3[26] - 25 Li10GeP2S12[27] 0.249 12",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    163.4,
+    512.9,
+    635.4
+   ],
+   "w": 1784,
+   "h": 1968,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 25,
+   "file": "tab_S3.png",
+   "caption": "Table S3. The temperature-dependent EIS measurements of LPSC pellet. Temperature [K] RSSE [Ω] RSSE RSSE σSSE [mS cm−1]",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    632.7,
+    502.2,
+    760.9
+   ],
+   "w": 1739,
+   "h": 535,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 26,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Detailed information of batteries based on NCM@LNO-300, NCM@LNO-600 and NCM@LNO-850. Capacity @1st cycle [mAh g−1] Cathode Capacity @3rd cycle [mAh g−1] Capacity 5th/35th cycle [mAh g−1] Capacity 36th/71st cycle [mAh g−1] 0.05C 0.1C 0.2C 0.5C Bare NCM 123.2 112.2 102.2/95.4 70.3/36.0 NCM@LNO-300 157.7 146.7 132.5/127.2 100.4/68.3 NCM@LNO-600 171.3 161.7 149.2/142.1 117.4/108.1 NCM@LNO-850 157.9 155.3 148.7/147.1 134.1/71.9 The rate measurements of the NCM|LPSC|Li-In ASSLB with Bare-NCM, NCM@LNO-300, NCM@LNO-600 and NCM@LNO-850 cathodes respectively were carried out over 1.9-3.6V with the current procedure as 0.05C (2 cycles)-0.1C (2 cycles)-0.2C (31 cycles)-0.5C (36 cycles).",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    195.1,
+    513.4,
+    537.9
+   ],
+   "w": 1786,
+   "h": 1430,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 26,
+   "file": "tab_S5.png",
+   "caption": "Table S5. Resistance and capacitance data used for the fitting of EIS spectra. Samples Rg [Ω] Rgb [Ω] RCT [Ω] Rtotal [Ω]",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    534.3,
+    491.5,
+    699.2
+   ],
+   "w": 1695,
+   "h": 688,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 27,
+   "file": "tab_S6.png",
+   "caption": "Table S6. Raman peaks assignment of LPSC electrolyte within composite cathodes in ASSLB with Li2S as reference. Frequency Assignment Compound ref ~195 cm−1 PS43− LPSC [28] ~270 cm−1 def(S-P-S) in PS43− LPSC [28] ~570 cm−1 PS43− LPSC [28] ~372 cm−1 T2g phonon mode Li2S [28]",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    68.6,
+    513.2,
+    257.1
+   ],
+   "w": 1785,
+   "h": 787,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 27,
+   "file": "tab_S7.png",
+   "caption": "Table S7. battery performances based on coating modified oxide cathodes and sulfide electrolytes Initial discharge capacity cathode/electrolyte Working voltage Cycling [V vs Li+/Li]/Rate performance [mAh g−1] NCM811@Li₃BO₃/LGPS[29] 2.5-4.3/0.1C 126 91.3% (20 cycles) NCM811/LPSC[30] 2.5-4.0/0.05C 111.7 89.7% (100 cycles) NCM811@Li3PO4/LGPS[31] 2.7-4.5/0.1C 170.6 77.9% (100 cycles) NCM622@LNO/LPSBr[32] 3.0-4.4/0.2C 164.6 45.5% (70 cycles) NCM622/LPSC[33] 2.6-4.2/0.02C 106.6 86.8% (10 cycles) NCM622/LPSC[34] 2.6-4.3/0.1C 128.9 69.7% (100 cycles) NCM622/LPSC[35] 2.6-4.3/0.1C ~170 ~88% (35 cycles) NCM523@LNTO/LGPS[36] 2.5-4.4/0.1C 152 70.3% (200 cycles) NMC111@Li6PS5Br/Li3PS4 glass[11a] 2.5-4.4/0.05C 154 ~86.5% (30 cycles) NMC111@LPSC/80Li2S20P2S5[37] 2.6-4.4/0.13C 45 91.7% (10 cycles) 2.6-4.4/0.13 140 80% (25 cycles) NCM111@LPSC//80Li2S-20P2S5[38] mA cm–2 2.6-4.4/0.13 109 79.8% (10 cycles) N",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    254.6,
+    512.9,
+    746.6
+   ],
+   "w": 1784,
+   "h": 2052,
+   "dpi": 300,
+   "src": "9c2a20d3-Sup_Elucidating_and_Minimizing_the_Space_Charge_Layer_Effect_between_NCM_Cathode_and_Li6PS5Cl_for_Sulfide_Based_Solid_State_Lithium_Batteries.pdf",
+   "blank": 0.941
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS21",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p17 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": [],
+   "resolved": "manual_crop fig_S21.png (2026-11-16, litdb-curator) - see figures[fS21].manual_crop"
+  }
+ ]
+}
