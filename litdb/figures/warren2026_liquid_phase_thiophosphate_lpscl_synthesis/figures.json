@@ -1,0 +1,597 @@
+{
+ "slug": "warren2026_liquid_phase_thiophosphate_lpscl_synthesis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+  "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Previously reported interpreted solution-phase mechanisms for LPS formation. The schemes illustrate the principal thiophosphate structures proposed in (a) Calpa et al., (b) Wang et al., and (c) Purga- torio et al. as the system evolves from P4S10 toward (d) P2S7 4−+ PS4 3−. Lithium ions and explicit additions of Li2S are omitted for clarity.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    445.9,
+    298.0,
+    676.8
+   ],
+   "w": 1090,
+   "h": 963,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.55
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 31P and 7Li NMR spectra of thiophosphate reaction products. Panel (a) displays 31P NMR spectra of unﬁltered reaction mixtures, from top to bottom: 1 : 1 Li2S : P4S10 after 2 days, 1 : 1 after 31 days, 2 : 1 after 2 days, 2 : 1 after 31 days, and 2 : 1 after 18 months. Panel (b) presents the corresponding 7Li NMR spectra in the same order. Panel (c) shows expanded regions of the 31P spectra highlighting the observed multiplet splittings for the main resonances. The broken x axis is used only to separate signals for visual clarity; splitting distances are therefore not intended for direct comparison across windows. The 31P observation frequency was 161.9 MHz, and the extracted J values are reported in Hz. Spectra were acquired without 1H decoupling.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    332.1
+   ],
+   "w": 2177,
+   "h": 1199,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Proposed structural evolution of the Li2S + P4S10 system in acetonitrile up to 2Li2S : 1P4S10 stoichiometry. The schematics show representative candidate structures consistent with the evolution of the thiophosphate framework during reaction and aging. Isomer backbones are highlighted in green and blue for identiﬁcation. Early-stage species are depicted as more open or weakly reorganized structures, while continued rearrangement favors more symmetric candidates. Structures D and E are shown as possible interconverting isomeric forms, with structure E representing the candidate most consistent with the long-time spectroscopic observations; the ﬁnal panel depicts relaxation of the ring form of E. All structures are drawn with lithium and overall charge balance. The schematics are intended for illustrative purposes only; optimized geometries, shielding tensors, energies, and vibratio",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    250.3
+   ],
+   "w": 2177,
+   "h": 858,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Formally reduced thiophosphate structures considered as possible redox-coupled products. Starting from the P4S10 cage (B) and Li2S, formal reduction generates partially reduced intermediates (CR, formally 2P5+ + 2P4+) and fully reduced isomers. Structures Dr, Er, and Fr are formally 4P4+ interconverting forms; structure Gr, which contains P–P bonds, is formally 4P4+. The connectivity dependence of the formal phosphorus oxidation state (P4+ without P–P bonds versus P4+ with them) illustrates that formal oxidation states are bookkeeping constructs rather than descriptors of the physical electronic structure. These structures are rejected as candidates for the observed solution species and are presented to illustrate possible redox chemistries.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    298.1,
+    280.2
+   ],
+   "w": 1090,
+   "h": 983,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.951
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 10,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Rapid reaction of LPSC using stable thiophosphate intermediate. Photographs show the reaction precursors—Li2S in ethanol, LiCl in ethanol, and the thiophosphate intermediate in ACN—prior to mixing (a), and the resulting color change to bluish green after mixing (b). Raman spectroscopy of the 180 °C dried product reveals LPSC-relevant vibrational feature at 426 cm−1 corresponding to PS4 3−(c). XRD patterns (d) of dried and sintered samples are consistent with formation of an LPSC-type argyrodite phase, matching ICSD #418191. Impedance spectroscopy shows high resistance in the dried sample due to grain boundaries (e), while the sintered sample exhibits high ionic conductivity (∼1 mS cm−1) (f).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    327.2
+   ],
+   "w": 2177,
+   "h": 1179,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.801
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 STEM-EDX elemental analysis of a particle present in the liquid- phase Li6PS5Cl powder. Elemental maps show phosphorus in blue, sulfur in yellow, and oxygen in red. The P, S, and O signals are spatially distributed across the particle. Quantitative EDX analysis of the agglomerated particles give atomic fractions of 81.70% O, 15.10% P, 2.82% S, and 0.37% Cl, consistent with an oxygen-rich, sulfur/chlorine- depleted agglomerate.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.3,
+    535.9,
+    558.8,
+    656.9
+   ],
+   "w": 1091,
+   "h": 505,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.269
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Proposed reaction mechanism of Li₂S and P₂S₅ in acetonitrile by Wang et al. The mechanistic pathway presented by Wang et al. involves the stepwise degradation of P₄S₁₀ via nucleophilic attack by Li₂S in acetonitrile, leading to the formation of polyphosphate-like intermediates. The proposed transformations were primarily derived from in situ Raman spectroscopy, with identification of intermediate species based on characteristic vibrational modes and temporal signal evolution. Although not all signals were explicitly assigned, the framework suggests a progression from cage-like P₄S₁₀ to lower- symmetry thiophosphate chains and rings through lithium-mediated cleavage and rearrangement.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    293.6,
+    535.2,
+    491.5
+   ],
+   "w": 1901,
+   "h": 825,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 6,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Proposed reaction mechanism of Li₂S and P₂S₅ in acetonitrile by Calpa et al. Calpa et al. propose a liquid-phase reaction mechanism for the formation of thiophosphate anions during synthesis of sulfide solid electrolytes. Their interpretation is based primarily on ex situ Raman spectroscopy, supplemented by ³¹P NMR, and DFT calculations of vibrational modes. The mechanism suggests progressive cleavage of P–S bonds in P₂S₅ by Li₂S, leading to the formation of linear and branched thiophosphate species with varying chain lengths, such as P₂S₇⁴⁻ and P₃S₉³⁻. Unlike Wang et al., this model emphasizes a more heterogeneous distribution of solution-phase species, without assigning a dominant structural motif.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    64.8,
+    535.2,
+    214.1
+   ],
+   "w": 1901,
+   "h": 623,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.965
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Stability analysis of 2Li2S-1P4S10 mixture in acetonitrile after 18 months.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    92.6,
+    427.0,
+    293.5
+   ],
+   "w": 1451,
+   "h": 839,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. 31P MAS of P4S10 and zoomed in spectra of 1Li2S-1P4S10 in acetonitrile",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    92.6,
+    427.0,
+    293.5
+   ],
+   "w": 1451,
+   "h": 839,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Linear-regression (R2) and root mean squared error (RMSE) of the scaled-calculated 31P chemical shifts versus the experimentally observed chemical shifts with respect to H3PO4.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    64.9,
+    524.3,
+    348.4
+   ],
+   "w": 1856,
+   "h": 1182,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 13,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. This figure shows the DRT analysis of the EIS data for the LPSC-Fast sample dried at 180 °C. Panel (a) displays the Nyquist plot comparing the experimental impedance data with the DRT model fit, and panel (b) shows the residuals for both the real and imaginary components. The middle panels present the Bode phase angle (c) and magnitude (d) plots. Panel (e) illustrates the DRT distribution γ(τ) versus relaxation time τ, with peaks labeled, and the panel (f) panel shows the integrated response γ(τ)/τ versus τ.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    64.9,
+    535.2,
+    364.9
+   ],
+   "w": 1901,
+   "h": 1251,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 14,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. This figure shows the DRT analysis of the EIS data for the LPSC-Fast sample sintered at 550 °C. Panel (a) displays the Nyquist plot comparing the experimental impedance data with the DRT model fit, and panel (b) shows the residuals for both the real and imaginary components. The middle panels present the Bode phase angle (c) and magnitude (d) plots. Panel (e) illustrates the DRT distribution γ(τ) versus relaxation time τ, with peaks labeled, and the panel (f) shows the integrated response γ(τ)/τ versus τ.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    153.4,
+    535.2,
+    453.4
+   ],
+   "w": 1901,
+   "h": 1251,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 15,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Equivalent circuit used to model the electrochemical behavior of solid-state electrolytes (SSEs). The circuit consists of R0, which represents the bulk resistivity or charge-transfer resistivity, R1, which represents the resistivity of the grain boundary, CPE1, representing the capacitance of the grain boundary, and CPE2, representing the electrode polarization. This circuit is commonly employed to fit experimental data in SSE studies.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    227.6,
+    535.2,
+    308.3
+   ],
+   "w": 1901,
+   "h": 337,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.981
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 16,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Model fit data from electrochemical impedance spectroscopy (EIS) measurements of the solid-state electrolyte (SSE) dried at 180°C. (a) Nyquist plot with model fit. (b) Bode magnitude plot with model fit. (c) Bode phase angle plot with model fit. (d) Residuals in percentage for Zreal and -Zim, showing the deviation between the model and experimental data.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    64.8,
+    535.2,
+    268.8
+   ],
+   "w": 1901,
+   "h": 851,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 17,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Model fit data from electrochemical impedance spectroscopy (EIS) measurements of the solid-state electrolyte (SSE) dried at 550°C. (a) Nyquist plot with model fit. (b) Bode magnitude plot with model fit. (c) Bode phase angle plot with model fit. (d) Residuals in percentage for Zreal and -Zim, showing the deviation between the model and experimental data.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    64.8,
+    535.2,
+    268.8
+   ],
+   "w": 1901,
+   "h": 851,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. XRD pattern of LPSC powder after 550 °C, with identified peaks matching indexed Li6PS5Cl (solid lines), and possible Li2S or Li3PO4 reflections (dotted lines).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    66.1,
+    532.5,
+    325.4
+   ],
+   "w": 1890,
+   "h": 1081,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 20,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. (a) a frame of 4D STEM tomography and (b) one diffraction pattern of the selected particle (highlighted by purple) in the specific orientation corresponding to the image in (a).",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    314.6,
+    532.4,
+    501.4
+   ],
+   "w": 1890,
+   "h": 780,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.278
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 21,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Reciprocal sections obtained from the reciprocal lattice of the indicated particle in the 4D STEM tomography data corresponding to Figure S13.",
+   "rotated_deg": 0,
+   "bbox": [
+    79.1,
+    64.9,
+    507.1,
+    458.6
+   ],
+   "w": 1784,
+   "h": 1641,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.75
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 Calculated and experimental 31P d for chemical structures in Fig. 4a Calc. d (scaled)/ppm Corrected/ppm Exp. d/ppm Molecule Atom Cb Pa 84.8 75.2 74.2 Pb 88.0 78.7 74.2 Pc 95.4 86.6 91.2 Pd 95.5 86.7 91.2 D Pa 73.7 63.3 62.6 Pb 97 88.4 85.1 Pc 97.7 89.1 85.1 Pd 115 107.8 128.4 E Pa 97.4 88.8 86.5 Pb 97.5 88.9 86.5 Pc 97.4 88.9 86.5 Pd 97.4 88.9 86.5 a Scaled: combined calibration d = −0.906 × s + 282.1 (organic + P–S references). Corrected: empirical rescaling of the scaled values, dcorr = 1.077 × dscaled −16.1, regressed on the candidate shis excluding the 128.4 ppm resonance—self-consistent, not an independent validation (see text). Calculated 31P shis should be regarded as estimates; systematic errors of ca. 10–40 ppm have been reported for 31P shielding calculations of P–S species,29,30 and calibration is further limited by the scarcity of thiophosphate references characteri",
+   "rotated_deg": 0,
+   "bbox": [
+    298.3,
+    419.7,
+    557.8,
+    732.2
+   ],
+   "w": 1083,
+   "h": 1303,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Calculated and experimental IR/Raman vibrational frequen- cies (cm−1) for chemical structures in Fig. 4a Exp. n (cm−1) Calc. n (cm−1) Mode Strength (exp.) Regime 716 714 P]S stretch S P4S10 686 676 P–S stretch M 2 : 1 586 587 Asym. P–S–P stretch M 2 : 1 572 580 P–S/P–S–P stretch M 1 : 1 & 2 : 1 480 467 Framework P–S M 2 : 1 316 329 P–S deformation M 2 : 1 286 287 P–S–P bend M 1 : 1 274 279 P–S–P bend S P4S10 190 202 Cage/ring deformation",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    513.2,
+    297.0,
+    680.4
+   ],
+   "w": 1082,
+   "h": 698,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 11,
+   "file": "tab_3.png",
+   "caption": "Table 3 Comparison of bulk and local structural characterization of the synthesized electrolyte Technique Key observation Interpretation Powder XRD Cubic LPSC-like phase, a z 9.85 Å Conrms dominant long-range argyrodite-like LPSC formation STEM-EDX O-rich, S/Cl-depleted region: O 81.70 at%, P 15.10 at%, S 2.82 at%, Cl 0.37 at% Reveals local oxygen-rich chemical heterogeneity inconsistent with homogeneous LPSC 3D ED taken from 4D-STEM tomography Orthorhombic local cell: a = 4.836(4) Å, b = 5.775(4) Å, c = 9.886(8) Å, V = 275.9(4) Å3 Indicates a Li3PO4-like/lithium oxyphosphate- like local domain",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    44.0,
+    553.0,
+    161.4
+   ],
+   "w": 2149,
+   "h": 490,
+   "dpi": 300,
+   "src": "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 9,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Single Point Energies (see attached output files)",
+   "rotated_deg": 0,
+   "bbox": [
+    80.1,
+    395.0,
+    388.4,
+    525.8
+   ],
+   "w": 1286,
+   "h": 547,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 18,
+   "file": "tab_S8.png",
+   "caption": "Table S8. Comparison of resistivities obtained from DRT analysis and equivalent circuit fitting for solid-state electrolyte (SSE) samples processed at 180 °C and 550 °C. Peaks A and B from the DRT correspond to distinct relaxation processes and are assigned to bulk (R0) and grain boundary (R1) contributions, respectively. The total resistance (Rtotal) is computed as the sum of A and B. Good agreement is observed with the fitted values from equivalent circuit modeling.",
+   "rotated_deg": 0,
+   "bbox": [
+    80.1,
+    215.6,
+    534.2,
+    455.5
+   ],
+   "w": 1893,
+   "h": 1000,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "tS10",
+   "kind": "table",
+   "label": "S10",
+   "page": 20,
+   "file": "tab_S10.png",
+   "caption": "Table S10. Indexed powder XRD reflections and calculated cubic lattice parameters for the Li6PS5Cl sample. The experimental 2θ peak positions were converted to interplanar spacings (d) using Bragg’s law, assuming Cu Kα radiation, and assigned to the cubic argyrodite Li6PS5Cl phase. The lattice parameter (a) was calculated for each reflection using the cubic relationship a = d(h2 + k2 + l2)1 2. The indexed reflections give an average lattice parameter of approximately a ≈ 9.85 Å, consistent with long-range diffraction from cubic argyrodite Li6PS5Cl.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.1,
+    146.2,
+    522.2,
+    184.4
+   ],
+   "w": 1822,
+   "h": 160,
+   "dpi": 300,
+   "src": "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "blank": 0.984
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "f2",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [
+    {
+     "page": 4,
+     "text": "Fig. 2 In situ Raman spectroscopy of Li2S + P4S10 reactions in acetonitrile. Raman spectra"
+    }
+   ]
+  },
+  {
+   "key": "fS6",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p2 그래픽 없음(img0/draw0)",
+    "p11 그래픽 없음(img0/draw0)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "tS1",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p2 영역 없음",
+    "p8 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "tS3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p2 영역 없음",
+    "p10 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "tS4",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 영역 없음",
+    "p13 거의 백지(0.999)"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "tS5",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 영역 없음",
+    "p15 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "tS6",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 영역 없음",
+    "p16 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "tS7",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 영역 없음",
+    "p17 영역 없음"
+   ],
+   "near_miss": []
+  },
+  {
+   "key": "tS9",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [
+    "p3 영역 없음",
+    "p18 거의 백지(1.000)"
+   ],
+   "near_miss": []
+  }
+ ]
+}

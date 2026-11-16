@@ -1,0 +1,785 @@
+{
+ "slug": "liu2026_in_substituted_li10snp2s12_electronic_structure",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+  "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Structural and morphological characterization of Li10 + 2x SnP2 − x Inx S12 (x = 0, 0.05, 0.1, 0.15, 0.2). (a) Schematic illustration of the synthesis process. (b) XRD patterns of Li10 + 2x SnP2 − x Inx S12 . (c) Enlarged XRD patterns of the Li10 + 2x SnP2 − x Inx S12 SSEs in the 2 𝜃range from 14◦to 35◦. (d) Raman spectra of Li10 + 2x SnP2 − x Inx S12 . (e) XRD patterns and corresponding Rietveld refinements of Li10.2 SnP1.9 In0.1 S12 (LSPS-In). (f) S 2p XPS spectra of LSPS-In and LSPS. (g) Formation energies of In substitution at the Wyckoff 4d and 2a sites. (h) TEM image and corresponding EDS mappings of LSPS-In. (i) HRTEM image of region 1 marked in Figure 1h for LSPS-In.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.0,
+    568.2,
+    571.3
+   ],
+   "w": 2170,
+   "h": 2236,
+   "dpi": 300,
+   "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Li+ conduction properties of Li10 + 2x SnP2 − x Inx S12 . (a) Nyquist plots and (b) ionic conductivities at 25◦C. (c) Direct-current polarization curves. (d) Nyquist plots and (e) ionic conductivities at − 15◦C. (f) Nyquist plots of LSPS-In at different temperatures (25◦C-90◦C). (g) Arrhenius plots of the temperature-dependent ionic conductivities. (h) Ionic conductivity of LSPS and LSPS-In before and after air exposure. (i) CV curves of LSPS and LSPS-In in the voltage range of − 0.5 to 5 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.1,
+    470.3
+   ],
+   "w": 2170,
+   "h": 1812,
+   "dpi": 300,
+   "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Electrochemical behavior and post-cycling interfacial characterization of Li symmetric cells. CCD tests of (a) Li/LSPS/Li and (b) Li/LSPS-In/Li cells. (c) Long-term Li plating/stripping performance at 0.1 mA cm− 2 and 25◦C, with enlarged voltage profiles shown in the insets. Depth- resolved S 2p, P 2p, and Sn 3d XPS spectra of the electrolyte-contacting Li metal surfaces recovered from (d–f) Li/LSPS-In/Li and (g–i) Li/LSPS/Li cells after 100 h of cycling at 0.1 mA cm− 2 , collected at sputtering depths of 0, 60, 150, and 300 nm.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    568.2,
+    456.3
+   ],
+   "w": 2170,
+   "h": 1754,
+   "dpi": 300,
+   "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Li+ migration barriers, electronic structures, and solid-state NMR analyses of LSPS-In and LSPS. (a) Representative Li+ migration trajectories between two Li1 sites at the 16 h Wyckoff position, evaluated using the CI-NEB method for LSPS and LSPS-In, and (b) corresponding migration energy profiles. Band structures and DOS of (c) LSPS-In and (f) LSPS. Differential charge density maps of (d) LSPS-In and (g) LSPS. (e) 31 P and (h) 7 Li solid-state NMR spectra of LSPS-In and LSPS.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.7,
+    568.2,
+    465.3
+   ],
+   "w": 2170,
+   "h": 1791,
+   "dpi": 300,
+   "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.7
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance of ASSBs and Li metal batteries at 25◦C. (a) Rate performance of NCM83@B2 O3 /Li-In batteries. (b) Cycling performance of NCM83@B2 O3 /Li-In batteries at 1 C. (c) Long term cycling performance of NCM83@B2 O3 /LSPS-In/Li-In battery at 5 C. (d) Comparison of initial capacity, cycling performance, and capacity retention with reported Ni-rich cathode/sulfide electrolyte ASSBs. (e) Rate performance of NCM83@B2 O3 /Li batteries. (f) Cycling stability of NCM83@B2 O3 /Li batteries at 0.5 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.6,
+    35.6,
+    568.0,
+    374.6
+   ],
+   "w": 2169,
+   "h": 1413,
+   "dpi": 300,
+   "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 8,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 Low-speed-scan XRD patterns and Rietveld refinements of Li10SnP2S12 (LSPS).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    74.3,
+    505.1,
+    278.3
+   ],
+   "w": 1755,
+   "h": 851,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 9,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 Li 1s, P 2p, and Sn 3d XPS spectra of (a-c) LSPS and (d-f) Li10.2SnP1.9In0.1S12",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.3,
+    514.4,
+    338.1
+   ],
+   "w": 1794,
+   "h": 1116,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.833
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 11,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 SEM images of (a) LSPS-In and (b) LSPS. TEM images of (c) LSPS-In and (d) LSPS. (e) HRTEM image of region 2 marked in Figure S4d. (f) Corresponding EDS elemental mappings of LSPS. Elemental contents obtained from EDX survey analyses of (g) LSPS-In and (h) LSPS.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.0,
+    514.4,
+    478.9
+   ],
+   "w": 1794,
+   "h": 1705,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.366
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 12,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 Nyquist plots of (a) LSPS and (b) Li10.4SnP1.8In0.2S12 (x= 0.2) collected at",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.1,
+    514.4,
+    226.8
+   ],
+   "w": 1794,
+   "h": 642,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 13,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 Critical current density (CCD) tests of Li symmetric cells using Li10+2xSnP2−xInxS12 electrolytes with (a) x= 0.05 and (b) x= 0.15 at 25°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.2,
+    514.2,
+    246.3
+   ],
+   "w": 1793,
+   "h": 739,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.817
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 14,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 Nyquist plots of LSPS and LSPS-In Li symmetric cells (a) immediately after",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.1,
+    514.3,
+    226.8
+   ],
+   "w": 1794,
+   "h": 642,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 15,
+   "file": "fig_S8.png",
+   "caption": "Figure S8 Corresponding voltage profiles of LSPS and LSPS-In Li symmetric cells (a)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.4,
+    514.4,
+    196.8
+   ],
+   "w": 1794,
+   "h": 523,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Figure S9 Comparison of Li symmetric cell cycling stability with previously reported sulfide solid electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.2,
+    514.1,
+    278.3
+   ],
+   "w": 1792,
+   "h": 876,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "Figure S10 Cycling performance of Li/LSPS/Li and Li/LSPS-In/Li cells at a current density of 0.2 mA cm−2, 25°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    96.5,
+    514.4,
+    250.2
+   ],
+   "w": 1794,
+   "h": 641,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.818
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Figure S11 Nyquist plots of Li/LSPS/Li and Li/LSPS-In/Li symmetric cells after 100 h of cycling at 0.1 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.1,
+    514.4,
+    226.8
+   ],
+   "w": 1794,
+   "h": 642,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 19,
+   "file": "fig_S12.png",
+   "caption": "Figure S12 Cross-sectional SEM images, corresponding EDS mappings, and EDX-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.9,
+    511.6,
+    276.3
+   ],
+   "w": 1782,
+   "h": 861,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.2
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 20,
+   "file": "fig_S13.png",
+   "caption": "Figure S13 Depth-resolved Li 1s and In 3d XPS spectra of the electrolyte-contacting Li metal surfaces recovered from Li/LSPS/Li and Li/LSPS-In/Li symmetric cells after 100 h of cycling at 0.1 mA cm−2, collected at sputtering depths of 0, 60, 150, and 300 nm, respectively. Li 1s spectra of (a) Li/LSPS-In/Li and (b) Li/LSPS/Li cells. (c) In 3d spectra of the Li/LSPS-In/Li cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.9,
+    514.4,
+    199.9
+   ],
+   "w": 1794,
+   "h": 547,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.755
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 21,
+   "file": "fig_S14.png",
+   "caption": "Figure S14 (a) XRD patterns of the prepared Li10+xSn1-xInxP2S12. (b) Nyquist plots and",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.2,
+    514.3,
+    202.0
+   ],
+   "w": 1794,
+   "h": 567,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.823
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 22,
+   "file": "fig_S15.png",
+   "caption": "Figure S15 Schematic diagram for the redox reaction in LSPS and LSPS-In.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.1,
+    466.9,
+    226.8
+   ],
+   "w": 1596,
+   "h": 642,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.799
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 23,
+   "file": "fig_S16.png",
+   "caption": "Figure S16 The schematic diagram of the ASSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.8,
+    385.0,
+    248.8
+   ],
+   "w": 1255,
+   "h": 759,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.738
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 24,
+   "file": "fig_S17.png",
+   "caption": "Figure S17 (a) XRD patterns of bare NCM83 and NCM83@B2O3. (b) B 1s XPS spectra of bare NCM83 and NCM83@B2O3.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.9,
+    514.3,
+    215.9
+   ],
+   "w": 1793,
+   "h": 617,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 25,
+   "file": "fig_S18.png",
+   "caption": "Figure S18 SEM, TEM, and HRTEM images of (a–c) NCM83@B2O3 and (d–f) bare NCM83.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.8,
+    514.3,
+    247.1
+   ],
+   "w": 1794,
+   "h": 752,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.469
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 26,
+   "file": "fig_S19.png",
+   "caption": "Figure S19 (a) Cross-section and (b) top-view of the composite cathode electrode sheet.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.3,
+    514.4,
+    201.5
+   ],
+   "w": 1794,
+   "h": 560,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.315
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 27,
+   "file": "fig_S20.png",
+   "caption": "Figure S20 Charge/discharge profiles: (a) NCM83@B2O3/LSPS-In/Li-In and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.0,
+    514.4,
+    261.2
+   ],
+   "w": 1794,
+   "h": 798,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.829
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 28,
+   "file": "fig_S21.png",
+   "caption": "Figure S21 Electrochemical performance of ASSBs employing bare NCM83 cathodes and Li-In alloy anodes at 25°C. (a) Rate performance and Coulombic efficiencies of",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.2,
+    514.1,
+    196.5
+   ],
+   "w": 1793,
+   "h": 519,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.797
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 29,
+   "file": "fig_S22.png",
+   "caption": "Figure S22 Charge/discharge profiles: (a) NCM83@B2O3/LSPS-In/Li-In and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.4,
+    514.4,
+    367.9
+   ],
+   "w": 1794,
+   "h": 1232,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 30,
+   "file": "fig_S23.png",
+   "caption": "Figure S23 The impedance spectra of the NCM83@B2O3/Li-In batteries (a) before",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.1,
+    514.2,
+    226.8
+   ],
+   "w": 1793,
+   "h": 642,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 31,
+   "file": "fig_S24.png",
+   "caption": "Figure S24 Electrochemical performance of NCM83@B2O3/Li-In batteries at 1 C and 55°C. (a) Cycling performance of batteries using LSPS-In and LSPS electrolytes. Charge/discharge profiles of (b) the LSPS-In-based and (c) the LSPS-based batteries. Corresponding dQ/dV curves of (d) the LSPS-In-based and (e) the LSPS-based batteries. The charge-discharge profiles of the LSPS-In-based battery remain highly overlapped from the 1st to the 400th cycle with limited polarization growth while the LSPS-based battery shows pronounced polarization increase and capacity fading. Consistently, dQ/dV analysis shows well-defined redox peaks with a small peak shift of 0.012 V for the LSPS-In-based battery after 400 cycles, in contrast to severe peak broadening and a larger peak shift of 0.106 V for the LSPS-based battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.8,
+    595.2,
+    509.0
+   ],
+   "w": 2130,
+   "h": 1822,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.893
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 32,
+   "file": "fig_S25.png",
+   "caption": "Figure S25 Charge/discharge profiles: (a) NCM83@B2O3/LSPS-In/Li and (b) NCM83@B2O3/LSPS/Li batteries at different rates, 25°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.2,
+    514.3,
+    246.4
+   ],
+   "w": 1794,
+   "h": 739,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.841
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 33,
+   "file": "fig_S26.png",
+   "caption": "Figure S26 Charge/discharge profiles during long-term cycling: (a) NCM83@B2O3/LSPS-In/Li and (b) NCM83@B2O3/LSPS/Li batteries at selected cycle numbers at 25°C.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.8,
+    514.3,
+    244.3
+   ],
+   "w": 1793,
+   "h": 724,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 34,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Rietveld refinement results for the XRD pattern of Li10.2SnP1.9In0.1S12 sample at 25℃. Atomic position Wyckoff site x y z Occ. Ueq Li1 16h 0.4870 0.5300 0.9190 0.51 0.091 Li2 16h 0.1940 0.5590 0.8170 0.31 0.090 Li3 4d 1/4 1/4 0.8330 1.00 0.077 Li4 4c 1/4 3/4 0.9930 0.82 0.086 P1 2a 3/4 1/4 3/4 1.00 0.032 P2 4d 1/4 1/4 1.0549 0.45 0.044 Sn 4d = x(P2) = y(P2) = z(P2) 0.50 = U(P2) In 4d = x(P2) = y(P2) = z(P2) 0.05 = U(P2) S1 8g 0.5650 1/4 0.8426 1.00 0.045 S2 8g 1/4 0.4721 0.6597 1.00 0.054 S3 8g 1/4 0.4592 0.9575 1.00 0.047 Note: It should be noted that the refinement of the lithium position is not too accurate due to the low X-ray form factor for lithium.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.4,
+    513.4,
+    372.8
+   ],
+   "w": 1786,
+   "h": 1253,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 35,
+   "file": "tab_S2.png",
+   "caption": "Table S2 Rietveld refinement results for the XRD pattern of Li10SnP2S12 sample at 25℃. Atomic position Wyckoff site x y z Occ. Ueq Li1 16h 0.49125 0.55400 0.97503 0.50 0.090 Li2 16h 0.42842 0.47896 0.77137 0.30 0.089 Li3 4d 1/4 1/4 0.84706 1.00 0.077 Li4 4c 1/4 3/4 0.89778 0.80 0.086 P1 2a 3/4 1/4 3/4 1.00 0.032 P2 4d 1/4 1/4 1.06369 0.50 0.044 Sn 4d = x(P2) = y(P2) = z(P2) 0.50 = U(P2) S1 8g 0.5616 1/4 0.84150 1.00 0.045 S2 8g 1/4 0.46600 0.66100 1.00 0.054 S3 8g 1/4 0.45690 0.95230 1.00 0.047 Note: It should be noted that the refinement of the lithium position is not too accurate due to the low X-ray form factor for lithium.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.4,
+    516.3,
+    333.9
+   ],
+   "w": 1798,
+   "h": 1091,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 36,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Lattice parameters and refinement data of Li10SnP2S12 and Li10.2SnP1.9In0.1S12. Compound Li10SnP2S12 Li10.2SnP1.9In0.1S12 Space Group P 42/n m c P 42/n m c α = β = γ (°) 90 90 a = b (Å) 8.7407 8.7509 c (Å) 12.7902 12.8090 Volume (Å3) 977.1691 980.8909 Rwp (%) 1.93 2.71 Rp (%) 1.37 1.94 Rexp (%) 0.82 0.81",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.4,
+    513.4,
+    243.4
+   ],
+   "w": 1786,
+   "h": 714,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 37,
+   "file": "tab_S4.png",
+   "caption": "Table S4 The formation energies of Li10.2SnP1.9In0.1S12 at different Wyckoff sites. Materials Edefect/eV Etotal/eV （0-Li10SnP2S12） EP/eV EIn/eV Eform/eV 1-In (4d) -439.99 -440.83 -5.55 -2.76 3.63",
+   "rotated_deg": 0,
+   "bbox": [
+    97.3,
+    72.4,
+    500.9,
+    190.3
+   ],
+   "w": 1683,
+   "h": 492,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 38,
+   "file": "tab_S5.png",
+   "caption": "Table S5 Performance comparison of sulfide electrolytes reported in previous works. Electrolytes Current density (mA cm-2) Time (h) References Li9.9SnP2S11.9Cl0.1 0.05 350 [5] Li10SnP1.8Sb0.2S12 0.1 280 [6] Li10SnP1.96Nb0.04S11.9O0.1 0.1 170 [7] Li10Sn0.95P2S11.4O0.5 0.1 105 [8] Li/MLD/Li10SnP2S12 0.1 167 [9] Li/Pyr13TFSI/Li10SnP2S12 0.115 350 [10] Li9.98Ge0.99Sn0.01P2S11.98F0.02 0.1 900 [11] Li-PAN/Li10GeP2S12 0.1 200 [12] Li10.2SnP1.9In0.1S12 0.2 400 This work Li10.2SnP1.9In0.1S12 0.1 1100 This work",
+   "rotated_deg": 0,
+   "bbox": [
+    87.9,
+    72.4,
+    510.3,
+    315.7
+   ],
+   "w": 1761,
+   "h": 1015,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 39,
+   "file": "tab_S6.png",
+   "caption": "Table S6 Integrated S 2p peak areas of the interfacial reduction product Li2S and their relative contributions to the total fitted S 2p peak area at sputtering depths of 0, 60, and 150 nm. Li/LSPS-In/Li cell Li/LSPS/Li cell Ar+ sputtering Li2S peak area Li2S peak area depth Integrated area Relative area Integrated area Relative area (cps·eV) (%) (cps·eV) (%) 0 nm 10.2 0.1 3130.9 26.6 60 nm 2041.8 18.1 7301.7 59.9 150 nm 718.4 58.6 1271.7 81.2",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.4,
+    513.4,
+    294.7
+   ],
+   "w": 1786,
+   "h": 928,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 40,
+   "file": "tab_S7.png",
+   "caption": "Table S7 Comparison of capacity and cycling performance. Specific",
+   "rotated_deg": 0,
+   "bbox": [
+    91.0,
+    72.4,
+    508.2,
+    382.7
+   ],
+   "w": 1739,
+   "h": 1294,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "tS8",
+   "kind": "table",
+   "label": "S8",
+   "page": 41,
+   "file": "tab_S8.png",
+   "caption": "Table S8 Electrochemical performance comparison of all-solid-state lithium metal batteries with NCM cathodes and sulfide electrolytes. Specific Capacity Cathode Electrolytes Rate Cycle capacity retention Ref. (C) number (mAh g-1) (%) NCM622 LiI-Li3PS4 0.1 170.1 40 74.3 [22] NCM811 P(PEGDE)/p-LGPS 0.2 203.7 200 70.7 [23] NCM83 LPSC1.5-MgClO 0.1 191 200 82 [24] NCM811 LPSC/LPSC@PDOL 0.1 194.1 100 74.5 [25] NCM811 Li6.2Ge0.1P0.9S4.8O0.2Cl 0.5 135.1 300 86 [26] NCM811 2Li-OPA@LPSClBr 0.3 160 100 85.2 [27] NCM85 DA–LPSCl 0.2 ~176.5 300 81 [28] NCM811@LiNbO3 5LBH–LPSCl 0.5 148 400 83 [29] NCM83@B2O3 Li10.2SnP1.9In0.1S12 0.5 176.87 500 75.4 This work",
+   "rotated_deg": 0,
+   "bbox": [
+    91.8,
+    72.4,
+    510.3,
+    321.1
+   ],
+   "w": 1745,
+   "h": 1037,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.916
+  }
+ ],
+ "missing_labels": [
+  {
+   "key": "fS3",
+   "why": "번호 공백 — 이 번호가 추출되지 않았다",
+   "skipped": [],
+   "near_miss": [
+    {
+     "page": 10,
+     "text": "Figure S3 In 3d XPS spectra of LSPS (top) and LSPS-In (bottom)."
+    }
+   ]
+  }
+ ]
+}

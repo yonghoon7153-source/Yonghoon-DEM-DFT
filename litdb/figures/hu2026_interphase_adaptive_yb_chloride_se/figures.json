@@ -1,0 +1,933 @@
+{
+ "slug": "hu2026_interphase_adaptive_yb_chloride_se",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "8c37a6e7-Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+  "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Structural characterization of electrolyte materials. (a) Schematic comparison of traditional composite cathode versus this work for ASSLBs. (b) X-ray diffraction (XRD) pattern of the prepared LYZC and the corresponding Rietveld refinement results. (c) XRD pattern of the prepared LYZC@CH and the corresponding Rietveld refinement results. (d) Electrochemical impedance spectroscopy (EIS) plots of LYZC@CH at 30 °C, with the inset showing DC polarization plots of LYZC@CH under an applied voltage of 1 V. (e) Arrhenius plots of LYZC and LYZC@ CH electrolytes. (f) Selected-area electron diffraction (SAED) image; (g) high-resolution transmission electron microscopy (HRTEM) image; and (h) electron energy loss spectroscopy (EELS) core loss spectrum of LYZC@CH. (i) 3D visualization of TOF SIMS depth profiles collected for CH−and C2H−on the LYZC@CH electrolyte. (j) Cyclic voltammetry (CV) ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    548.8
+   ],
+   "w": 2151,
+   "h": 2061,
+   "dpi": 300,
+   "src": "8c37a6e7-Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.602
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical performance of all-solid-state lithium batteries paired with Ni83 cathode using chloride solid-state electrolyte. (a) Charge−discharge curves of LYZC and LYZC@CH. (b) Long-cycle performance graph of LYZC and LYZC@CH ASSLBs at a current density of 1 C with an Ni83 loading of 5.73 mg·cm−2. Differential capacity curves of all-solid-state batteries: (c) LYZC@CH and (d) LYZC, this figure corresponds to the charging process of Ni83. (e) Corresponding rate performance of LYZC and LYZC@CH all-solid-state batteries at different current densities. (f) Long-cycle performance graph of LYZC@CH all-solid-state batteries at a current density of 5C with an Ni83 loading of 5.73 mg·cm−2. (g) Long-cycle performance graph of the LYZC@CH all-solid-state battery at 30 °C, a current density of 1 C, and a high voltage of 4.5 V with an Ni83 loading of 5.73 mg·cm−2. (h) Chart of literatu",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    474.4
+   ],
+   "w": 2151,
+   "h": 1751,
+   "dpi": 300,
+   "src": "8c37a6e7-Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Transport Kinetics analysis. (a) Visualization of the minimum energy pathways for lithium ion migration in LYZC and LYZC@CH, respectively. (b) Calculated diffusion energy spectra of a single lithium ion migrating along the [100] direction in LYZC and LYZC@CH, obtained via the NEB method. (c) Three-dimensional visualization of lithium intercalation and flux distribution maps of active particles in LYZC and LYZC@CH composite cathodes at different time nodes. (d) In situ EIS test of LYZC@CH during the first cycle. (e) Distribution of relaxation times (DRT) calculated from EIS data at different voltages. (f) Two-dimensional (2D) intensity contour map corresponding to the charge− discharge-dependent DRT curves in Figure (e) For LYZC@CH. (g) In situ EIS test of LYZC during the first cycle. (h) DRT calculated from EIS data at different voltages. (i) 2D intensity contour map correspond",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    537.8
+   ],
+   "w": 2151,
+   "h": 2015,
+   "dpi": 300,
+   "src": "8c37a6e7-Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.759
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Mechanical properties of the electrolyte and interfacial chemistry. (a) Nanoindentation curves of LYZC and LYZC@CH. (b) FIB-SEM images of the LYZC and LYZC@CH ASSLBs before cycling. (c) 3D volume-rendered images from CT scans, where the blue regions represent the voids between composite cathode particles. (d) Stress distribution of cathode active particles based on LYZC and LYZC@CH. For LYZC: (e) HRTEM image; (f) SAED image of Area I in (e); and (g) HAADF-STEM image and corresponding EDS elemental mapping. For LYZC@CH: (h) HRTEM image; (i) SAED image of Area II in (h); and (j) HAADF-STEM image and corresponding EDS elemental mapping. The postcycling characterizations correspond to the discharged state of the cells after activation at 0.1 C and 400 cycles at 1 C. V (vs Li+/Li). Meanwhile, LYZC-based cell exhibits pronounced increase in RSSE/cathode and Rct at high voltages (>4.1",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    474.9
+   ],
+   "w": 2151,
+   "h": 1753,
+   "dpi": 300,
+   "src": "8c37a6e7-Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.639
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Practicality and universality tests. A stack pressure of 30 MPa was applied to ensure sufficient interfacial contact during electrochemical testing. For LYZC@CH: (a) charge−discharge curves at 0 °C. (b) Long-cycle performance graph of the LYZC@CH all-solid-state battery at 0 °C and a current density of 1 C with an Ni83 loading of 5.73 mg·cm−2. (c) Long-cycle performance graph of the LYZC@CH all-solid-state battery at 30 °C, a current density of 1 C, and a high voltage of 4.7 V with an Ni83 loading of 5.73 mg·cm−2. (d) Differential capacity curves of all-solid-state batteries for LYZC@CH in high voltage of 4.7 V. (e) Charge−discharge curves at 30 °C with an Ni83 loading of 13.76 mg·cm−2. (f) Long-cycle performance graph of LYZC@CH all-solid-state battery at a current density of 1 C with an Ni83 loading of 13.76 mg·cm−2. (g) Digital photograph of the cathode prepared by stirring ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    464.1
+   ],
+   "w": 2151,
+   "h": 1708,
+   "dpi": 300,
+   "src": "8c37a6e7-Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Electrochemical Impedance Spectroscopy (EIS) plots of Li3-xYb1-xZrxCl6 (0.2",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    511.3,
+    483.5
+   ],
+   "w": 1781,
+   "h": 1740,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Arrhenius plots of Li3-xYb1-xZrxCl6 (0.2≤x≤0.8).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.9,
+    399.8,
+    279.9
+   ],
+   "w": 1316,
+   "h": 889,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Electrochemical performance tests of ASSLBs with LYZC electrolyte,",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.9,
+    514.3,
+    492.9
+   ],
+   "w": 1793,
+   "h": 1755,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 7,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. (a) Schematic illustration of the preparation process for LYZC@CH. (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.3,
+    514.3,
+    168.3
+   ],
+   "w": 1793,
+   "h": 414,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.707
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 8,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. (a)EIS plots of LYZC@CH at different temperatures (0 °C-90 °C). (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.5,
+    514.3,
+    263.7
+   ],
+   "w": 1793,
+   "h": 818,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. SEM image at a scale of 1 μm: (a) LYZC; (c) LYZC@CH. (b、d) Particle size",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    531.9,
+    339.6
+   ],
+   "w": 1867,
+   "h": 1125,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.629
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 10,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. SEM image and corresponding EDS mapping images of Cl, Zr, and Yb",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.4,
+    514.3,
+    246.2
+   ],
+   "w": 1793,
+   "h": 737,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.314
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Microscopic Morphology Characterization of LYZC Electrolyte. (a) TEM",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.5,
+    514.3,
+    215.9
+   ],
+   "w": 1793,
+   "h": 615,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.2
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. TEM image of LYZC@CH Electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.3,
+    363.4,
+    197.5
+   ],
+   "w": 1165,
+   "h": 526,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.632
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. XPS spectra of the LYZC and LYZC@CH electrolytes. (a) C 1s; (b) Yb",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.0,
+    514.3,
+    242.6
+   ],
+   "w": 1793,
+   "h": 707,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 14,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. TOF-SIMS depth profiles collected on the LYZC@CH electrolyte. 3D",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.2,
+    514.3,
+    371.2
+   ],
+   "w": 1793,
+   "h": 1259,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.837
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 15,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Simulation models and corresponding energies. (a) TMB molecules",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.2,
+    514.3,
+    228.0
+   ],
+   "w": 1793,
+   "h": 654,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.878
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 16,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. SEM images of the Ni83 cathode at different magnification scales. (a) 10",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.9,
+    514.3,
+    357.7
+   ],
+   "w": 1793,
+   "h": 1213,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.334
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 17,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Schematic diagram of the all-solid-state battery assembly.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.6,
+    474.0,
+    260.6
+   ],
+   "w": 1626,
+   "h": 792,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.812
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 18,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. The effects of different stacking pressures on the cycling performance of",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.8,
+    526.0,
+    322.3
+   ],
+   "w": 1842,
+   "h": 1049,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.831
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 20,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. To verify whether the performance difference is caused by the electrolyte",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.8,
+    514.3,
+    358.0
+   ],
+   "w": 1793,
+   "h": 1214,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 22,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. Charge-discharge curves of all-solid-state batteries at different current",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.0,
+    514.3,
+    242.6
+   ],
+   "w": 1793,
+   "h": 707,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.853
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 23,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Electrochemical performance test plots of the Ni83-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.1,
+    511.3,
+    245.1
+   ],
+   "w": 1781,
+   "h": 731,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.741
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 24,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Morphological characterization of the composite cathode. (a) SEM image",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    68.7,
+    514.3,
+    309.3
+   ],
+   "w": 1793,
+   "h": 1003,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.185
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 25,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. Ionic conductivity and electronic conductivity diagrams of the composite",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.9,
+    514.3,
+    212.2
+   ],
+   "w": 1793,
+   "h": 590,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 26,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. (a) GITT curve of LYZC and LYZC@CH. (b) Lithium-ion diffusion",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.7,
+    514.3,
+    241.9
+   ],
+   "w": 1793,
+   "h": 701,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 27,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. Differential capacity curves of all-solid-state batteries at first cycle.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.3,
+    478.5,
+    296.1
+   ],
+   "w": 1644,
+   "h": 958,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 28,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. Interface stability during cycling for cathodes composed of ternary",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.5,
+    514.3,
+    464.5
+   ],
+   "w": 1793,
+   "h": 1647,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.912
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 29,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Hardness vs. Young’s modulus plot for LYZC and LYZC@CH. the",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    83.2,
+    514.3,
+    228.9
+   ],
+   "w": 1793,
+   "h": 608,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 30,
+   "file": "fig_S25.png",
+   "caption": "Figure S25 Surface SEM images of cold-pressed electrolytes under 380 MPa at",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.4,
+    514.3,
+    217.2
+   ],
+   "w": 1793,
+   "h": 630,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.311
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 31,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Cross-sectional SEM images of the ASSLBs before cycling. (a) Ni83-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.3,
+    511.3,
+    296.1
+   ],
+   "w": 1781,
+   "h": 958,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.342
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 32,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. FIB-SEM images of the ASSLBs before cycling. (a) FIB-SEM image of",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.0,
+    514.3,
+    308.2
+   ],
+   "w": 1793,
+   "h": 998,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.244
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 33,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. (a) Nano-CT characterization process of Ni83-LYZC composite cathode;",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.3,
+    514.3,
+    339.9
+   ],
+   "w": 1793,
+   "h": 1129,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.594
+  },
+  {
+   "key": "fS29",
+   "kind": "figure",
+   "label": "S29",
+   "page": 34,
+   "file": "fig_S29.png",
+   "caption": "Figure S29. Quantitative porosity analysis from XCT reconstruction.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.6,
+    426.3,
+    213.1
+   ],
+   "w": 1427,
+   "h": 594,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS30",
+   "kind": "figure",
+   "label": "S30",
+   "page": 35,
+   "file": "fig_S30.png",
+   "caption": "Figure S30. Morphological images of composite cathodes after 400 charge-discharge",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    311.3
+   ],
+   "w": 1793,
+   "h": 1023,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.136
+  },
+  {
+   "key": "fS31",
+   "kind": "figure",
+   "label": "S31",
+   "page": 36,
+   "file": "fig_S31.png",
+   "caption": "Figure S31. 3D visualization of TOF-SIMS depth profiles collected on the Ni83-",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.7,
+    511.3,
+    338.5
+   ],
+   "w": 1781,
+   "h": 1117,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 37,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. XRD patterns for cathodes composed of ternary materials mixed with",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    72.3,
+    551.2,
+    258.9
+   ],
+   "w": 1947,
+   "h": 778,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.891
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 38,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. Raman spectra for cathodes composed of ternary materials mixed with",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.6,
+    514.3,
+    242.0
+   ],
+   "w": 1793,
+   "h": 703,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.916
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 39,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. Charge-discharge curves at 30°C and a voltage of 4.7 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.2,
+    425.2,
+    213.8
+   ],
+   "w": 1422,
+   "h": 600,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 40,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Crystallographic Data and Rietveld Refinement Results of LYZC.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.9,
+    475.6,
+    422.9
+   ],
+   "w": 1628,
+   "h": 1452,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.955
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 41,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Summary of Ionic Conductivity for Li3-xYb1-xZrxCl6 (0.2 ≤x ≤0.8),",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.9,
+    513.3,
+    296.3
+   ],
+   "w": 1785,
+   "h": 923,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.96
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 42,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Crystallographic Data and Rietveld Refinement Results of LYZC@CH.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.9,
+    489.0,
+    464.1
+   ],
+   "w": 1684,
+   "h": 1623,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 43,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Performance comparison with previously reported high-nickel cathodes in",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.9,
+    513.3,
+    572.0
+   ],
+   "w": 1785,
+   "h": 2073,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 44,
+   "file": "tab_S5.png",
+   "caption": "Table S5. EIS fitting data. The DRT spectra were integrated and fitted to extract specific",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.9,
+    513.3,
+    538.9
+   ],
+   "w": 1785,
+   "h": 1935,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 45,
+   "file": "tab_S6.png",
+   "caption": "Table S6. EIS fitting data. The DRT spectra were integrated and fitted to extract specific",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.9,
+    513.3,
+    469.4
+   ],
+   "w": 1785,
+   "h": 1645,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 46,
+   "file": "tab_S7.png",
+   "caption": "Table S7. EIS fitting data. The DRT spectra were integrated and fitted to extract specific",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    74.9,
+    513.3,
+    581.2
+   ],
+   "w": 1785,
+   "h": 2111,
+   "dpi": 300,
+   "src": "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "blank": 0.979
+  }
+ ],
+ "missing_labels": []
+}

@@ -1042,6 +1042,14 @@
    "a6a95804-97._Foundationmodel_surrogates_enable_dataefficient_active_learning_for_materials_discovery.pdf"
   ]
  },
+ "hu2026_interphase_adaptive_yb_chloride_se": {
+  "figures": 46,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "8c37a6e7-Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf",
+   "93cf29b6-Sup_Interphase-Adaptive_Chloride_Solid_Electrolyte_Enables_High-Performance_All-Solid-State_Lithium_Batteries.pdf"
+  ]
+ },
  "huang2022_li2sis3_anomalous_conductivity_bvse": {
   "figures": 11,
   "generated": "2026-08-05",
@@ -1999,6 +2007,14 @@
   "generated": "2026-09-09",
   "pdfs": [
    "d32d0af1-93._Finetuning_universal_machinelearned_interatomic_potentials_A_Tutorial_on_methods_and_applications.pdf"
+  ]
+ },
+ "liu2026_in_substituted_li10snp2s12_electronic_structure": {
+  "figures": 38,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf"
   ]
  },
  "liu2026_li4sns4_mediator_low_barrier_li2s": {
@@ -3376,6 +3392,14 @@
   "generated": "2026-10-27",
   "pdfs": [
    "b999dbe2-16._Accelerating_NCM811_cathode_effective_bulk-modulus_prediction_for_lithium-ion_batteries_A_geometry-reduction-based_graph_neural_network.pdf"
+  ]
+ },
+ "warren2026_liquid_phase_thiophosphate_lpscl_synthesis": {
+  "figures": 25,
+  "generated": "2026-11-16",
+  "pdfs": [
+   "e726492b-Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf",
+   "e726492b-Sup_Stable_liquid-phase_thiophosphate_enables_rapid_reaction_time_for_Li6PS5Cl_sulfide_electrolytes.pdf"
   ]
  },
  "wei2023_linbo3_coating_cutoff_voltage_lco_argyrodite": {
