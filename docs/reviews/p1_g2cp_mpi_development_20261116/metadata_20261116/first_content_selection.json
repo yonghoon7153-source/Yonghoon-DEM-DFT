@@ -1,0 +1,77 @@
+{
+  "schema": "g2cp_first_content_record_v1",
+  "record_kind": "MANUAL_AUDITED_SIDECAR_NOT_A_PRODUCTION_CONSUMER",
+  "metadata_raw_sha256": "bdaf29d215aeea6b94fea2773461c4920ae20268b01c1c7cd7f5c15a02dd0c46",
+  "ledger_raw_sha256": "4161092bfa79127294854b495afac45a8722643dcd6127df958b910cfcd72834",
+  "source_receipt_sha256": "4f56cd4c3dccb2d0e8d9c0539d73a915359d5bae3c3a92aa60218e504b2f64ef",
+  "observation_cutoff_utc": "2026-11-16T06:09:36Z",
+  "choices": [
+    {
+      "np": 2,
+      "selected_job_id": 366288,
+      "N": 40000,
+      "observed_attempt_ordinal": 1,
+      "returned_content_attempts": 1,
+      "returned_dry_attempts": 1,
+      "content_decision_frozen": true,
+      "repeat_for_better_result_allowed": false,
+      "registered_attempt_cap": 2,
+      "cap_unused_count": 1,
+      "cap_unused_count_is_rerun_permission": false,
+      "source_pin": "c559766bb506bab45e1c22099e640cac7a442aed",
+      "archive_sha256": "3ed248e28709b4cea377715908f54de933e0f0eec9fa0ea49f9ae8e4ca3f57d0",
+      "original_compare_json_sha256": "70d00fecede3910aaa787c606aeb515d7d1628e63d395ecd670d4646761e39df",
+      "comparator_md5": "7ff543eba8aa9eabda0f80bb3c649fe2",
+      "gate_fields_observed": {
+        "run_gate": true,
+        "deck_gate": true,
+        "mpi_gate": true
+      },
+      "judgment_fields_observed": {
+        "다": "PASS",
+        "라": "PASS"
+      },
+      "adoption_pending": [
+        "independent requeue history",
+        "first content decision and attempt accounting",
+        "field qualification"
+      ],
+      "registered_conclusions_adoptable": false
+    },
+    {
+      "np": 4,
+      "selected_job_id": 366290,
+      "N": 40000,
+      "observed_attempt_ordinal": 1,
+      "returned_content_attempts": 1,
+      "returned_dry_attempts": 1,
+      "content_decision_frozen": true,
+      "repeat_for_better_result_allowed": false,
+      "registered_attempt_cap": 2,
+      "cap_unused_count": 1,
+      "cap_unused_count_is_rerun_permission": false,
+      "source_pin": "c559766bb506bab45e1c22099e640cac7a442aed",
+      "archive_sha256": "06ec3800abbb41d188ef05ad674f1ed9d23d9daafc399c2d2e30492283b27ba6",
+      "original_compare_json_sha256": "568429e39d58b84c3364763cfed5ca8f59da497687e2215840a98bf4d01f3a0b",
+      "comparator_md5": "7ff543eba8aa9eabda0f80bb3c649fe2",
+      "gate_fields_observed": {
+        "run_gate": true,
+        "deck_gate": true,
+        "mpi_gate": true
+      },
+      "judgment_fields_observed": {
+        "다": "PASS",
+        "라": "PASS"
+      },
+      "adoption_pending": [
+        "independent requeue history",
+        "first content decision and attempt accounting",
+        "field qualification"
+      ],
+      "registered_conclusions_adoptable": false
+    }
+  ],
+  "future_or_hidden_attempts_certified_absent": false,
+  "automatic_attempt_consumer_qualified": false,
+  "registered_conclusions_adoptable": false
+}

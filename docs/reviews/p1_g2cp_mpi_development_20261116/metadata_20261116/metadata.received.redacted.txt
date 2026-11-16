@@ -1,0 +1,89 @@
+SCOPE=G2CP_MPI_METADATA_ONLY
+NEW_COMPUTE=0
+REGISTERED_CONCLUSIONS_ADOPTABLE=false
+OBSERVATION_UTC=2026-11-16T06:09:36Z
+OBSERVATION_LOCAL=2026-11-16T15:09:36+0900
+
+BEGIN sacct_version UTC=2026-11-16T06:09:36Z
+slurm 22.05.2
+END sacct_version rc=0 UTC=2026-11-16T06:09:36Z
+
+BEGIN sacct_helpformat
+Account             AdminComment        AllocCPUS           AllocNodes         
+AllocTRES           AssocID             AveCPU              AveCPUFreq         
+AveDiskRead         AveDiskWrite        AvePages            AveRSS             
+AveVMSize           BlockID             Cluster             Comment            
+Constraints         Container           ConsumedEnergy      ConsumedEnergyRaw  
+CPUTime             CPUTimeRAW          DBIndex             DerivedExitCode    
+Elapsed             ElapsedRaw          Eligible            End                
+ExitCode            Flags               GID                 Group              
+JobID               JobIDRaw            JobName             Layout             
+MaxDiskRead         MaxDiskReadNode     MaxDiskReadTask     MaxDiskWrite       
+MaxDiskWriteNode    MaxDiskWriteTask    MaxPages            MaxPagesNode       
+MaxPagesTask        MaxRSS              MaxRSSNode          MaxRSSTask         
+MaxVMSize           MaxVMSizeNode       MaxVMSizeTask       McsLabel           
+MinCPU              MinCPUNode          MinCPUTask          NCPUS              
+NNodes              NodeList            NTasks              Priority           
+Partition           QOS                 QOSRAW              Reason             
+ReqCPUFreq          ReqCPUFreqMin       ReqCPUFreqMax       ReqCPUFreqGov      
+ReqCPUS             ReqMem              ReqNodes            ReqTRES            
+Reservation         ReservationId       Reserved            ResvCPU            
+ResvCPURAW          Start               State               Submit             
+SubmitLine          Suspended           SystemCPU           SystemComment      
+Timelimit           TimelimitRaw        TotalCPU            TRESUsageInAve     
+TRESUsageInMax      TRESUsageInMaxNode  TRESUsageInMaxTask  TRESUsageInMin     
+TRESUsageInMinNode  TRESUsageInMinTask  TRESUsageInTot      TRESUsageOutAve    
+TRESUsageOutMax     TRESUsageOutMaxNode TRESUsageOutMaxTask TRESUsageOutMin    
+TRESUsageOutMinNode TRESUsageOutMinTask TRESUsageOutTot     UID                
+User                UserCPU             WCKey               WCKeyID            
+WorkDir            
+END sacct_helpformat rc=0
+SELECTED_FORMAT=JobIDRaw,JobName,State,ExitCode,Submit,Start,End,Elapsed,AllocCPUS,DBIndex,Cluster
+REQUEUE_FIELD=unavailable
+
+BEGIN named_population UTC=2026-11-16T06:09:36Z
+366257|g2cp_mpi2|COMPLETED|0:0|2026-11-16T13:57:11|2026-11-16T13:57:12|2026-11-16T13:57:35|00:00:23|2|697382|ibb-cluster
+366261|g2cp_mpi4|COMPLETED|0:0|2026-11-16T14:17:52|2026-11-16T14:17:52|2026-11-16T14:18:12|00:00:20|4|697390|ibb-cluster
+366288|g2cp_mpi2|COMPLETED|0:0|2026-11-16T14:43:32|2026-11-16T14:43:33|2026-11-16T14:44:14|00:00:41|2|697443|ibb-cluster
+366290|g2cp_mpi4|COMPLETED|0:0|2026-11-16T14:44:20|2026-11-16T14:44:20|2026-11-16T14:44:58|00:00:38|4|697447|ibb-cluster
+END named_population rc=0 UTC=2026-11-16T06:09:37Z
+
+BEGIN known_jobs UTC=2026-11-16T06:09:37Z
+366257|g2cp_mpi2|COMPLETED|0:0|2026-11-16T13:57:11|2026-11-16T13:57:12|2026-11-16T13:57:35|00:00:23|2|697382|ibb-cluster
+366261|g2cp_mpi4|COMPLETED|0:0|2026-11-16T14:17:52|2026-11-16T14:17:52|2026-11-16T14:18:12|00:00:20|4|697390|ibb-cluster
+366288|g2cp_mpi2|COMPLETED|0:0|2026-11-16T14:43:32|2026-11-16T14:43:33|2026-11-16T14:44:14|00:00:41|2|697443|ibb-cluster
+366290|g2cp_mpi4|COMPLETED|0:0|2026-11-16T14:44:20|2026-11-16T14:44:20|2026-11-16T14:44:58|00:00:38|4|697447|ibb-cluster
+END known_jobs rc=0 UTC=2026-11-16T06:09:37Z
+
+BEGIN scontrol_version UTC=2026-11-16T06:09:37Z
+slurm 22.05.2
+END scontrol_version rc=0 UTC=2026-11-16T06:09:37Z
+
+BEGIN scontrol_366257 UTC=2026-11-16T06:09:37Z
+slurm_load_jobs error: Invalid job id specified
+END scontrol_366257 rc=1 UTC=2026-11-16T06:09:37Z
+
+BEGIN scontrol_366261 UTC=2026-11-16T06:09:37Z
+slurm_load_jobs error: Invalid job id specified
+END scontrol_366261 rc=1 UTC=2026-11-16T06:09:37Z
+
+BEGIN scontrol_366288 UTC=2026-11-16T06:09:37Z
+slurm_load_jobs error: Invalid job id specified
+END scontrol_366288 rc=1 UTC=2026-11-16T06:09:37Z
+
+BEGIN scontrol_366290 UTC=2026-11-16T06:09:37Z
+slurm_load_jobs error: Invalid job id specified
+END scontrol_366290 rc=1 UTC=2026-11-16T06:09:37Z
+
+BEGIN current_named_queue UTC=2026-11-16T06:09:37Z
+END current_named_queue rc=0 UTC=2026-11-16T06:09:37Z
+
+BEGIN entire_ledger UTC=2026-11-16T06:09:37Z
+kind=attempt utc=2026-11-16T04:57:19Z slurm_job=366257 np=2 n=200 out=<OUTPUT:366257> provenance=c559766bb506bab45e1c22099e640cac7a442aed
+kind=attempt utc=2026-11-16T05:17:55Z slurm_job=366261 np=4 n=200 out=<OUTPUT:366261> provenance=c559766bb506bab45e1c22099e640cac7a442aed
+kind=attempt utc=2026-11-16T05:43:36Z slurm_job=366288 np=2 n=40000 out=<OUTPUT:366288> provenance=c559766bb506bab45e1c22099e640cac7a442aed
+kind=attempt utc=2026-11-16T05:44:23Z slurm_job=366290 np=4 n=40000 out=<OUTPUT:366290> provenance=c559766bb506bab45e1c22099e640cac7a442aed
+END entire_ledger rc=0 UTC=2026-11-16T06:09:37Z
+LEDGER_SHA256_BEFORE=4161092bfa79127294854b495afac45a8722643dcd6127df958b910cfcd72834
+LEDGER_SHA256_AFTER=4161092bfa79127294854b495afac45a8722643dcd6127df958b910cfcd72834
+READ_ONLY_COLLECTION_RC=0
