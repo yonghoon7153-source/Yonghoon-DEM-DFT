@@ -285,7 +285,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` | 건식 황화물 양극의 혼합 공정 비교 — 연속 트윈스크류 압출 (≈300 kJ/kg · 100 °C 혼련 · 수 분) vs 고전단 배치 메카노퓨전 (Picoline Nobilta 3000 rpm 45 min · 총 7,140 kJ/kg): 소립 NCM85 (D50 3.8 µm) 82 wt% · LPSCl 15.5 · C65 | exp (트윈스크류 압출 혼합 vs 고전단 배치 mixer 메카노퓨전 · SEM/EDX · XRD/Rietv | 2026-10-27 | 🖼 17 |
 | `xu2023_dem_bonded_particle_fracture_calendering` | NMC111 2 차 입자를 1.59 µm 1 차 구의 결합 입자 모델 (BPM · Potyondy–Cundall 결합 파단) 로 묶은 LIGGGHTS 캘린더링 DEM — 결합 강도 법선 0.1 · 접선 0.038 GPa · 전극 전체 끊긴 결합 1.8 · 4.5 · 11.1 % (50 · 100 · 150 MPa) · 고 | DEM (LIGGGHTS 수정판 · 결합 입자 모델 BPM · 헤르츠 + SJKR 점착) + 실험 (나노 X | 2026-11-16 | 🖼 61 |
 | `xu2023_realistic_am_shape_cgmd_calendering` | XCT 로 뜬 실제 3D 형상의 NMC 2차입자로 LIB 전극 제조(슬러리→건조→압연)를 다시 돌리다 — Franco 그룹 ARTISTIC 의 "구(球) 근사 탈출" 1호 — Xu (J. Power Sources 2023) | CGMD/DEM (LAMMPS, Lennard-Jones + JKR; 슬러리·건조·압연) + µ-XCT 실험 | 2026-09-11 | 🖼 7 |
-| `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 13 |
+| `zhang2026_xct_dem_cathode_calendering_peel_calibration` | X-CT 실구조(Ebner 2013)를 초기형상으로 쓴 DEM 으로 NMC111 양극 캘린더링 — 박리(실은 수직 인장) 시험으로 입자–집전체 bond 강도 보정 · 30/60/200 MPa 가압–제하 · 힘사슬·응력텐서·집전체 매립·체적에너지밀도 — Zhang·Gao·Xiao·Ding (JOM 2026) | DEM (Hertz–Mindlin + linear parallel bond · 코드 미명시 · X-CT 초기 | 2026-09-26 | 🖼 62 |
 
 ## 화학-기계 열화 · 계면 (26편)
 

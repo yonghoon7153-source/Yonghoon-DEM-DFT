@@ -278,6 +278,7 @@ zhang2026_xct_dem_cathode_calendering_peel_calibration	tomography-based
 #   Table I 은 **로마숫자 라벨이라 추출 0건** → 5쪽(1-based) clip (314.9, 543.5, 558.0, 659.0) pt = 윗 굵은 괘선 + 캡션 … 아래 괘선, 수동.
 #   [!] '--slug zhang2026_xct_dem_cathode_calendering_peel_calibration --clean' 을 돌리면 쪽 너비 크롭이 돌아오고 tab_1.png 가 사라진다.
 #       ('--inbox --run --skip-done' 은 안전.)
+#   ↑ 2026-11-16 보강 (68-1 번 파일 = 같은 판 · 그림 래스터 xref 12 개 같음 · 패턴 'tomography-based' 가 새 파일 이름에도 맞는다): 손 크롭 49 장 더함 = 식 25 (eq_*) · 근거 문단 20 (txt_*) · 패널 4 (fig_2d · 3b · 4b · 4c) + digitized.csv — '--clean' 이면 이것도 모두 사라진다.
 qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode	bilayer_cathode_for_graded
 qin2026_bilayer_cathode_cgmd_dem_graded_thick_electrode	bilayer cathode for graded
 #   ↑ 2026-09-27. 자동 매칭 실패 실측 (`--inbox --inbox_dir` 시험: 논문 0편 · 짝 못 찾음 2) — 카드 제목이 한국어라 토큰이 안 겹친다.
