@@ -11,7 +11,7 @@
 | 일반 소비자 | 현 네 런은 수동 결속 sidecar만 있음 | 입력 계약·실패 사례 작성; 구현·실행0 |
 | 실패 경로 | 정상 런4건으로 신호·짧은쓰기·재큐를 시험하지 않았음 | 아래 실험 없는 명세만. 현장 자격 통과로 올리지 않음 |
 
-근거: `docs/reviews/p1_g2c_mpi_stage2_registration_20261112.md` §§5·7–9; 같은 트랙 `metadata_20261116/first_content_selection.json`, `field_qualification_matrix.md`, `receipt.json`; 수령 바탕 `1540b8a431f1b43143fafb2c346fd312012a749c`. 결론을 통과시키려고 실행 핀·대조기·원 결과의 셀을 바꾸지 않는다.
+근거: `docs/reviews/p1_g2c_mpi_stage2_registration_20261112.md` §§5·7–9; 같은 트랙 `docs/reviews/p1_g2cp_mpi_development_20261116/metadata_20261116/first_content_selection.json`, `field_qualification_matrix.md`, `receipt.json`; 수령 바탕 `1540b8a431f1b43143fafb2c346fd312012a749c`. 결론을 통과시키려고 실행 핀·대조기·원 결과의 셀을 바꾸지 않는다.
 
 ## 2. 세 잔여의 닫는 길
 
