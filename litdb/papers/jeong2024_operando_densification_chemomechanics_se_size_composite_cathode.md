@@ -382,6 +382,7 @@ XCT (또는 그와 같은 미세구조) → 직접 수치 모사 (Naik 2022) 로
 - 화학–역학 리뷰: `li2026_electrochemomechanical_coupling_asslmb_review`.
 - 참고 [22] 의 원전 (2026-11-12 카드): [`sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps`](sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps.md) — LGPS + NCM111 복합 양극 누른 채 CT 0–100 MPa · 접촉 분율 ↔ R_ct (그 카드 §0-1 이 이 카드의 [22] 인용 문장을 대조).
 - 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode`](kang2026_stress_regulated_li_plating_ag_c_cnf_hybrid_anode.md) — 같은 부류의 SE 선형 탄성 입력 (이 카드 E 22 · ν 0.27 ↔ 그 카드 E 22.1 · ν 0.33) · 그 논문의 FE 경계 변위 처방 인용 [31] 과 SI [S3] 가 같은 Naik · Hatzell · Mukherjee 계열 · 음극 쪽 operando 하중 셀 ΔP (스택 20 MPa).
+- 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups`](puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups.md) — 같은 해 (2024) 이 카드의 Min-Gi Jeong · Hatzell · Vishnugopi · Mukherjee 가 공저자로 든 21 그룹 실험실 간 재현성 연구 (Nat. Energy 9, 1310 · 같은 MSE Li₆PS₅Cl D50 ≈1 µm · 단결정 NMC 622 · In–Li · 각자 조립 → 0.1 C 첫 방전 21–143 mAh g⁻¹ · 세 벌 보고 권고 · 그룹 문자와 랩의 짝은 원문 비공개).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

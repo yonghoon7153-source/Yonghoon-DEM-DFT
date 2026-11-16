@@ -194,5 +194,7 @@
 - **무탄소(carbon-free) 복합** — 도전제 없는 셀(분해반응 회피 목적).  우리 production(VGCF/SuperP+PTFE) 과 다름 → CBD·바인더 효과(Lee2025/Bielefeld2020/Hong)는 이 논문에 없음.
 - **시뮬은 보조(τ 만)** — 이 논문의 flux/RW τ(GeoDict/Pytrax)는 *실측 재구성 위* 의 후처리지 *예측 압밀 모델* 아님.  우리 DEM(공정-예측)·MPM(소성)과 *방법 범주가 다름*(그들 = 측정구조의 τ; 우리 = 구조 자체를 예측).
 
+> 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups`](puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups.md) — 같은 해 (2024) Philip Minnmann · Janek 이 공저자로 든 21 그룹 실험실 간 재현성 연구 (Nat. Energy 9, 1310 · Li₆PS₅Cl + 단결정 NMC 622 · 무탄소 70 : 30 · In–Li · 각자 조립 → 0.1 C 첫 방전 21–143 mAh g⁻¹ · 압력 이력이 미세구조를 바꾼다는 진술 (측정 없음) · 그룹 문자와 랩의 짝은 원문 비공개).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
