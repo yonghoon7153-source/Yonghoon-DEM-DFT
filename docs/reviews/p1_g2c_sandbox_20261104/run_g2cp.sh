@@ -26,8 +26,26 @@
 #     <팔>/post · <팔>/rst · outputs.md5 · (멈추면) STOP.txt.  이 폴더 (덱) 에는 아무것도 쓰지 않는다.
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
+MPI=${G2CP_NP+x}; NP=1; PX=1; PY=1; MPIRUN=''; MPIVER=''; PROV=''
+REASON=preflight
+ledger() {
+  [ -n "${HOME:-}" ] && [ ! -L "$HOME/g2cp_mpi_ledger.txt" ] || return 1
+  printf '%s\n' "$1" >> "$HOME/g2cp_mpi_ledger.txt"
+}
 TPID=''; HT=''; O=''; PHASE=pre; CUR='(팔 밖)'
-die0() { [ -n "$HT" ] && rm -rf "$HT"; echo "⛔ 실행 전 멈춤 (rc 3 · 아무 팔도 안 돎): $*" >&2; exit 3; }
+die0() {
+  [ -n "$HT" ] && rm -rf "$HT"
+  if [ -n "$MPI" ]; then
+    if [[ "${SLURM_JOB_ID:-}" =~ ^[0-9]+$ ]]; then
+      local record_np=invalid record_n=invalid
+      [[ "${G2CP_NP:-}" =~ ^[0-9]+$ ]] && record_np=$G2CP_NP
+      [[ "${N:-}" =~ ^[0-9]+$ ]] && record_n=$N
+      ledger "kind=prestop utc=$(date -u +%FT%TZ) slurm_job=$SLURM_JOB_ID np=$record_np n=$record_n reason=$REASON" || REASON=ledger_write
+    fi
+    echo "G2CP_PRESTOP rc=3 reason=$REASON" >&2
+  fi
+  echo "⛔ 실행 전 멈춤 (rc 3 · 아무 팔도 안 돎): $*" >&2; exit 3
+}
 ischild() {   # $1 = 이 셸이 띄운 직접 자식인가 (숫자 · > 1 · 자기 · 부모 아님 · /proc 있으면 PPid = 이 셸)
   local p=$1
   [[ "$p" =~ ^[0-9]+$ ]] && [ "$p" -gt 1 ] && [ "$p" != "$$" ] && [ "$p" != "$PPID" ] || return 1
@@ -47,7 +65,7 @@ onsig() {
   trap '' INT TERM HUP
   reap
   [ "$PHASE" = pre ] && die0 "신호 $1 — 사람이 멈춤 (팔 시작 전)"
-  echo "$CUR 신호 $1" >> "$O/rc.txt"
+  [ -d "$O" ] && echo "$CUR 신호 $1" >> "$O/rc.txt"
   stop "신호 $1 ($CUR 중) — 사람이 멈춤 · 도는 LIGGGHTS 에 TERM (30 s 뒤 KILL) · 다시 돌리지 말고 보고 (새 빈 폴더 · 1저자 승인 뒤)"
 }
 trap 'onsig INT' INT
@@ -58,6 +76,32 @@ trap 'onsig HUP' HUP
 N=$1; O=$2
 [[ "$N" =~ ^[1-9][0-9]{0,8}$ ]] || die0 "N='$N' — 양의 정수 (ASCII 숫자 · 9 자리 안) 가 아니다"
 (( N >= 200 && N % 100 == 0 )) || die0 "N=$N — 200 이상 · 100 의 배수여야 한다 (R 덱 덤프 주기 100 → setup 덤프가 step N 에 나와야 한다)"
+if [ -n "$MPI" ]; then
+  REASON=np; case "$G2CP_NP" in 2) NP=2; PX=2; PY=1;; 4) NP=4; PX=2; PY=2;; *) die0 'NP must be 2 or 4';; esac
+  REASON=n_scope; case "$N" in 200|40000) :;; *) die0 'MPI N must be 200 or 40000';; esac
+  REASON=slurm_job; [[ "${SLURM_JOB_ID:-}" =~ ^[0-9]+$ ]] || die0 'SLURM job required'
+  REASON=slurm_ntasks; [ "${SLURM_NTASKS:-}" = "$NP" ] || die0 'SLURM tasks differ'
+  REASON=ledger_override; [ "${G2CP_LEDGER-$HOME/g2cp_mpi_ledger.txt}" = "$HOME/g2cp_mpi_ledger.txt" ] || die0 'fixed ledger required'
+  REASON=provenance
+  [ -n "${SLURM_SUBMIT_DIR:-}" ] && [ -f "$SLURM_SUBMIT_DIR/PROVENANCE.txt" ] || die0 'PROVENANCE missing'
+  IFS= read -r PROVLINE < "$SLURM_SUBMIT_DIR/PROVENANCE.txt"
+  [[ "$PROVLINE" =~ ^pin\ ([0-9a-f]{40})$ ]] || die0 'invalid provenance pin'
+  PROV=${BASH_REMATCH[1]}
+  REASON=mpirun
+  MPIRUN=${G2CP_MPIRUN:-$(command -v mpirun)}
+  [ -f "$MPIRUN" ] && [ -x "$MPIRUN" ] || die0 'mpirun unavailable'
+  MPIRUN=$(readlink -f -- "$MPIRUN") || die0 'mpirun realpath'
+  MPIVER=$(timeout -k 5 15 "$MPIRUN" --version 2>&1) || die0 'mpirun version failed'
+  MPIVER=${MPIVER%%$'\n'*}
+  REASON=wrapper
+  for deck in A A2 R BW; do
+    [ -f "$HERE/MP$deck.liggghts" ] || die0 'missing wrapper'
+    actual=$(grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$HERE/MP$deck.liggghts")
+    expected=$(printf 'processors ${PX} ${PY} 1\ninclude %s.liggghts' "$deck")
+    [ "$actual" = "$expected" ] || die0 'wrapper shape'
+  done
+  REASON=preflight
+fi
 for t in nice timeout md5sum sha256sum mktemp stat find sort xargs grep awk cut head tr date ls readlink dirname; do
   command -v "$t" > /dev/null 2>&1 || die0 "도구 없음: $t"
 done
@@ -137,9 +181,15 @@ if [ -e "$O" ]; then
   [ -d "$O" ] || die0 "OUT='$O' — 폴더가 아니다"
   [ -z "$(ls -A "$O")" ] || die0 "OUT='$O' — 비어 있지 않다 (덮어쓰지 않는다)"
 fi
-stop() { echo "$*" > "$O/STOP.txt"; echo "⛔ 실행 중 멈춤 (rc 4 · 남은 팔 안 돎): $*" >&2; exit 4; }
-mkdir -p "$O" || die0 "OUT='$O' — 만들 수 없다"
-O=$(cd "$O" && pwd) || die0 "OUT='$O' — 들어갈 수 없다"
+stop() { [ -d "$O" ] && echo "$*" > "$O/STOP.txt"; echo "⛔ 실행 중 멈춤 (rc 4 · 남은 팔 안 돎): $*" >&2; exit 4; }
+if [ -n "$MPI" ]; then
+  REASON=out_record; [[ "$RO" != *[[:space:]]* ]] || die0 'MPI ledger requires an OUT without whitespace'
+  REASON=ledger_write
+  ledger "kind=attempt utc=$(date -u +%FT%TZ) slurm_job=$SLURM_JOB_ID np=$NP n=$N out=$RO provenance=$PROV" || die0 'cannot append attempt'
+  PHASE=run
+fi
+mkdir -p "$O" || { [ -n "$MPI" ] && stop 'OUT create after attempt'; die0 "OUT='$O' — 만들 수 없다"; }
+O=$(cd "$O" && pwd) || { [ -n "$MPI" ] && stop 'OUT chdir after attempt'; die0 "OUT='$O' — 들어갈 수 없다"; }
 PHASE=run
 {
   echo "lmp_path $LMPABS"
@@ -153,6 +203,18 @@ PHASE=run
   echo "uname $(uname -srm 2>/dev/null || echo '알 수 없음')"
   echo "git_head $GH"
   echo "N $N"
+  if [ -n "$MPI" ]; then
+    echo "np $NP"
+    echo "procs_grid $PX $PY 1"
+    echo "mpirun_path $MPIRUN"
+    echo "mpirun_realpath $(readlink -f "$MPIRUN")"
+    echo "mpirun_md5 $(md5sum < "$MPIRUN" | cut -d' ' -f1)"
+    echo "mpirun_version $MPIVER"
+    echo 'mpirun_flags --oversubscribe --bind-to none'
+    echo "slurm_job_id $SLURM_JOB_ID"
+    echo "slurm_ntasks $SLURM_NTASKS"
+    echo "provenance $PROV"
+  fi
   echo "timeouts long=$TL short=$TS"
   echo "date_utc $(date -u +%FT%TZ)"
 } > "$O/lmp_identity.txt"
@@ -168,7 +230,7 @@ else
   : > "$O/lmp_libs.md5"
 fi
 cd "$HERE" || stop "cd $HERE 실패"
-{ ( cd "$(dirname "$LMPABS")" && md5sum "$(basename "$LMPABS")" ); md5sum *.inc *.liggghts run_arms.sh run_g2cp.sh compare.py compare_g2cp.py test_g2cp.py; } > "$O/inputs.md5" 2>/dev/null \
+{ ( cd "$(dirname "$LMPABS")" && md5sum "$(basename "$LMPABS")" ); md5sum *.inc *.liggghts run_arms.sh run_g2cp.sh compare.py compare_g2cp.py test_g2cp.py g2cp_mpi.py test_g2cp_mpi.py; } > "$O/inputs.md5" 2>/dev/null \
   || stop "inputs.md5 쓰기 실패"
 for a in A A2 B B2 C BW BR CW CR; do mkdir -p "$O/$a/post" "$O/$a/rst" || stop "mkdir $a"; done
 
@@ -176,7 +238,15 @@ go() {   # go 팔 한도 lmp-인자… — 배경 + wait (사람 멈춤 신호�
   local arm=$1 lim=$2; shift 2
   local t0 rc; t0=$(date +%s)
   CUR=$arm
-  nice -n 19 timeout -k 30 "$lim" "$LMPABS" -log "$O/$arm/log.txt" "$@" > "$O/$arm/out.txt" 2>&1 &
+  local -a launch extra args
+  launch=("$LMPABS"); extra=(); args=("$@")
+  if [ -n "$MPI" ]; then
+    launch=("$MPIRUN" --oversubscribe --bind-to none -np "$NP" "$LMPABS")
+    extra=(-var PX "$PX" -var PY "$PY")
+    [ "${args[0]}" = -in ] || stop 'unexpected internal argument shape'
+    args[1]="MP${args[1]}"
+  fi
+  nice -n 19 timeout -k 30 "$lim" "${launch[@]}" -log "$O/$arm/log.txt" "${extra[@]}" "${args[@]}" > "$O/$arm/out.txt" 2>&1 &
   TPID=$!
   wait "$TPID"
   rc=$?
@@ -187,6 +257,12 @@ go() {   # go 팔 한도 lmp-인자… — 배경 + wait (사람 멈춤 신호�
   [ "$rc" -eq 0 ] || stop "$arm rc $rc"
   if grep -q '^ERROR' "$O/$arm/log.txt" "$O/$arm/out.txt" 2> /dev/null; then stop "$arm 로그 · 화면에 ERROR 줄"; fi
   grep -q 'Loop time of' "$O/$arm/log.txt" 2> /dev/null || stop "$arm 로그에 'Loop time of' 없음 (run 이 끝나지 않았다)"
+  if [ -n "$MPI" ]; then
+    awk -v np="$NP" -v px="$PX" -v py="$PY" '
+      /^Loop time of / {loops++; found=0; for(i=1;i<NF;i++) if($i=="on" && $(i+2)=="procs") {found=1; if($(i+1)!=np) bad=1} if(!found) bad=1}
+      /MPI processor grid/ {grids++; if(NF!=8 || $1!=px || $2!="by" || $3!=py || $4!="by" || $5!=1 || $6!="MPI" || $7!="processor" || $8!="grid") bad=1}
+      END {exit !(loops>0 && grids==1 && !bad)}' "$O/$arm/log.txt" || stop "$arm MPI log identity mismatch"
+  fi
 }
 need() {   # need 팔 파일…
   local arm=$1; shift
