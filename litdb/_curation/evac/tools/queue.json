@@ -235,12 +235,12 @@
   "note": ""
  },
  "N-79": {
-  "nn": "",
+  "nn": "128",
   "pdf": "12b131e6-79._Electrode_morphology_in_all-solid-state_lithium_secondary_batteries_consisting_of_LiNi13Co13Mn13O2_and_Li2S-P2S5_solid_electrolytes.pdf",
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Electrode morphology in all-solid-state lithium secondary batteries consisting of LiNi1/3Co1/3Mn1/3O2 and Li2S-P2S5 solid electrolytes · Subject:  · Author:  · DOI: 10.1016/j.ssi.2015.09.010 · PDF 6 쪽",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1016/j.ssi.2015.09.010` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
