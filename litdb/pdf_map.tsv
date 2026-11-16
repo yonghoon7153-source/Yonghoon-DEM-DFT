@@ -590,3 +590,7 @@ siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_
 #   ⚠ 크롭 43 장 = 도구 12 (다시 자름 3) + 손 31 (그래픽 초록 1 · 패널 14 · 식 2 · 근거 문단 14) + digitized.csv 75 행
 strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation	impact_of_cathode_material_particle_size_on_the_capacity
 strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation	impact of cathode material particle size on the capacity
+# ── 같은 NCM622 · Li₆PS₅Cl · C65 조성에서 무바인더 막자 손혼합 ('건식 혼합') 펠릿 ↔ NBR · 자일렌 슬러리 시트 · GITT 피복률 · 건식 볼밀 예비 혼합 · NCM622/흑연 파우치 전셀 (Nam · Oh · Jung · Jung, J. Power Sources 375 (2018) 93–101) — 자동 매칭 실패 (--inbox --only nam2018 = 논문 0편 · 2026-11-16 확인)
+#   ⚠ 크롭 40 장 = 도구 18 (다시 자름 12: 그림 1 · 2 = 서로 섞임 · 표 1 = 쪽 전체 · 표 2 = p.99 본문 · SI 그림 8 장 = 아래 잘림) + 손 22 (그래픽 초록 1 · SI 그림 S2 1 · 식 1 · 근거 문단 19) + digitized.csv 1046 행 — --inbox --run 으로 다시 뽑지 말 것
+nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch	toward_practical_all-solid-state_lithium-ion_batteries_with_high_energy_density_and_safety
+nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch	toward practical all-solid-state lithium-ion batteries with high energy density and safety
