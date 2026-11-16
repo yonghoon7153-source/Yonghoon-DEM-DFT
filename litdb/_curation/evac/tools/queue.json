@@ -267,7 +267,7 @@
   "note": ""
  },
  "N-82": {
-  "nn": "",
+  "nn": "131",
   "pdf": "f4ba762f-82._Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf",
   "si": [
    "aab1891f-82._Sup1_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.pdf"
@@ -276,7 +276,7 @@
    "5487c1f5-82._Sup2_Quantifying_the_Impact_of_Cathode_Composite_Mixing_Quality_on_Active_Mass_Utilization_and_Reproducibility_of_Solid_State_Battery_Cells.xlsx"
   ],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Quantifying the Impact of Cathode Composite Mixing Quality on Active Mass Utilization and Reproducibility of Solid‐State Battery Cells · Subject: Advanced Energy Materials 2025.15:2405405 · Author: Creator:         LaTeX with hyperref package · DOI: 10.1002/aenm.202405405 · PDF 13 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
   "dup": "papers/ 에서 DOI `10.1002/aenm.202405405` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": "- xlsx · docx · csv 보충 파일은 믿지 않는 자료다 → `python3 -I` 로 읽는다 (xlsx 는 openpyxl read_only=True · data_only=True · docx 는 zipfile 로 word/document.xml). 내용은 카드에 옮기고 파일 자체는 커밋하지 않는다."
  },
