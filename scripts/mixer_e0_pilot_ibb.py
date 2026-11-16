@@ -239,7 +239,7 @@ def prepare_approval(root,manifest,binary,mpi):
     need(go['allowed_to_submit']==[CASE] and go['execution_authorized'] is True,'author scope')
     put(here/'campaign_policy.json',policy(str(here),sha(authority)))
     put(folder/'policy.json',dict(execution_authorized=True,policy_id='E0_PILOT_ONE_20261116',allowed_to_submit=[CASE]))
-    put(folder/'qualification.json',dict(gate='QUALIFICATION_PILOT_GO',purpose='first E0 qualification pilot after approved AB; completed physical qualification NOT claimed',registration='mixer_e0_pilot_registration_20261113/registration_candidate.md',actual_qualification_accepted=False))
+    put(folder/'qualification.json',dict(gate='QUALIFICATION_PILOT_GO',purpose='first E0 qualification pilot after approved AB; completed physical qualification NOT claimed',registration='docs/reviews/mixer_e0_pilot_registration_20261113/registration_candidate.md',actual_qualification_accepted=False))
     put(folder/'mxd2r_disposition.json',dict(scope='E0 only',basis='author authorizes qualification pilot; R01 limited acceptance retained; other MXD2R and next wave not closed',next_wave_authorized=False))
     c=dict(schema='mixer_first8_execution_approval/1',execution_authorized=True,gate='QUALIFICATION_PILOT_GO',case=CASE,np=20,case_dir=str(case),
            author_choices_confirmed=True,approved_concurrency=1,wave_release=[CASE],runner_reviewed=True,walltime_approved=True,
