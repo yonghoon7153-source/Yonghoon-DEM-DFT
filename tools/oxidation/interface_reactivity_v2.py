@@ -637,6 +637,7 @@ def run_batch(a):
 
     todo = sorted(forms)[: a.limit] if a.limit else sorted(forms)
     _sgc = {}                       # --record_volumes 공간군 캐시 (엔트리 id · 원자 수 · 부피 열쇠 — 기록용)
+    _pdc = {}                       # chemsys → (엔트리 · PhaseDiagram · μ_Li) — 같은 chemsys 를 쌍마다 다시 받지 않는다
     print(f"종 {len(todo)}개 x 상대 {len(a.cathodes)}개 = {len(todo) * len(a.cathodes)} 쌍")
     for i, sp in enumerate(todo, 1):
         for cat in a.cathodes:
@@ -656,9 +657,10 @@ def run_batch(a):
                 elems = set(Composition(forms[sp]).elements) | set(Composition(cstr).elements)
                 elems.add(Element("Li"))
                 chem = sorted(e.symbol for e in elems)
-                entries = get_entries(chem)
-                pd = PhaseDiagram(entries)
-                mu0 = li_metal_mu(entries)
+                if tuple(chem) not in _pdc:  # 2026-11-16 [혁주] 1 단계: 양극 Li 함량 격자 20 쌍이 chemsys 하나 — 조회 · 상도는 한 번
+                    _ents = get_entries(chem)
+                    _pdc[tuple(chem)] = (_ents, PhaseDiagram(_ents), li_metal_mu(_ents))
+                entries, pd, mu0 = _pdc[tuple(chem)]
                 rec = {"species": sp, "formula": forms[sp], "cathode": clab,
                        "cathode_formula": cstr, "chemsys": chem,
                        "mode": "closed_0V" if a.closed else "grand_potential",
@@ -1683,6 +1685,32 @@ def _selftest_bundle2(chk):
         and on["HOST"]["reaction"] == off["HOST"]["reaction"] == H and on["Li2S"]["volumes"]["ok"]
         and on["Li2S"]["volumes"]["products"] == on["HOST"]["volumes"]["products"],
         "[양성] run_batch 배선: --record_volumes 를 켜면 'volumes' 하나만 더한다 · 끄면 행 열쇠가 축 ③ 판과 같다 · Li2S 설계 (= 호스트 조성) 의 산물 부피가 호스트와 같다")
+    # ── run_batch 조회 캐시 (2026-11-16) — 같은 chemsys 는 한 번 · 다른 chemsys 는 따로 ─────────────────
+    def _batch_calls(only, cathodes):
+        calls = []
+        g["get_entries"] = lambda els: (calls.append(tuple(sorted(els))), _toy_lpscl_entries())[1]
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                o = os.path.join(td, "cache.jsonl")
+                ns = types.SimpleNamespace(batch_from=True, only=only, out=o, resume=False, limit=None, closed=True,
+                                           record_kinks=False, record_volumes=False, cathodes=cathodes, voltages=[2.5])
+                _so = sys.stdout
+                sys.stdout = open(os.devnull, "w")
+                try:
+                    run_batch(ns)
+                finally:
+                    sys.stdout.close()
+                    sys.stdout = _so
+                return calls, [json.loads(ln) for ln in open(o, encoding="utf-8")]
+        finally:
+            g["get_entries"] = real
+    c1, r1 = _batch_calls(["HOST:Li6PS5Cl", "Li2S:Cl4Li24P4S20"], ["Li:Li", "Li2S:Li2S"])
+    chk(len(r1) == 4 and len(c1) == 1 and all("error" not in r for r in r1)
+        and len({r["dE_eV_per_atom"] for r in r1 if r["cathode"] == "Li"}) == 1,
+        "[양성] run_batch 캐시: 같은 chemsys 의 쌍 넷이 MP 조회 한 번을 나눠 쓴다 · 같은 조성 두 이름의 값이 같다")
+    c2, r2 = _batch_calls(["HOST:Li6PS5Cl", "OX:Li2O"], ["Li:Li"])
+    chk(len(c2) == 2 and len(set(c2)) == 2 and len(r2) == 2,
+        "[⛔음성] run_batch 캐시: chemsys 가 다르면 따로 조회한다 (Li–P–S–Cl 과 Li–O 를 한 상도로 섞지 않는다)")
     # ── 정확한 계수 (kink_terms) — 같은 반응도 정규화가 다르면 4 유효숫자 문자열의 반올림이 다르다 ───────────
     kh, kl = on["HOST"]["volumes"]["kink_terms"], on["Li2S"]["volumes"]["kink_terms"]
     th, tl = kh.get(on["HOST"]["reaction"], {}).get("terms"), kl.get(on["Li2S"]["reaction"], {}).get("terms")

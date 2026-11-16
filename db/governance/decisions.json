@@ -13452,6 +13452,206 @@
     "근거_발화": "사용자 2026-11-16 AskUserQuestion 'SDI Q2 카드 결정 D-2026-11-16-sdi-agc-ag2s-window (…) 를 사용자 승인 (active) 으로 기록할까요?' → '승인 (active 로 기록)' — gabia 결과 (2a6504dc8 · G1–G4 통과 · 카드 결과_2026_11_16) 를 본 뒤",
     "decision_digest": "sha256:a9b61266e208ac116b4cbab264411902471790f1cc9221b05d2b7683234d8ccf"
    }
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-stage1-reactivity",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage1.mp_interface_reactivity",
+   "slot": "hyeokju_lzo_stage1_reactivity",
+   "applies_to": {
+    "systems": [
+     "nca_lzo_lpscl_interface"
+    ],
+    "tasks": [
+     "interface_reaction_closed",
+     "interface_reaction_open_li"
+    ],
+    "methods": [
+     "mp-gga-ggau__interfacial-reactivity"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 1 단계 — LZO 코팅 NCA | Li₆PS₅Cl 계면 반응성 (MP 상 · 닫힌계 혼합 곡선 × 양극 Li 함량 + Li 열린계 × 전압) — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
+   "statement": "카드 db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json 이 정의다: interface_reactivity_v2.py 닫힌계 (use_hull_energy · kink 전부) 로 LPSCl–NCA_y · LZO–NCA_y · LPSCl–LZO (y = 1.0 … 0.1 · NCA721 · NCA811 이름 추정 조성 · LZO = Li₂ZrO₃) 와 열린계 2.5–5.0 V. 게이트 G1–G6 · 앵커 LPSCl×LCO (cascade 값 ±5 meV/atom) · 3.8 / 4.4 V 라벨은 혁주 자료 (G5) 뒤에만.",
+   "rationale": "혁주 요청 1 단계 (벌크 에너지 기반 반응성 먼저) 를 우리 cascade M6 · NCM 축 규약 그대로 잰다. 사용자 11-16 '이것도 [혁주] section으로 정의하고 관련해서 dft, md 관련해서 진행해보자'.",
+   "decision_state": "active",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json",
+   "evidence": [
+    "db/properties/cathode_reactivity_verdict.json",
+    "db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json"
+   ],
+   "reopen_criteria": [
+    "혁주의 정확한 조성이 이름 추정과 어느 전이금속 분율이든 0.02 넘게 다르면 그 조성으로 다시 돌린다 (같은 카드의 개정 · 이번 실행 값은 서술에 안 쓴다).",
+    "LZO 가 Li₂ZrO₃ 가 아니라는 자료가 오면 그 조성으로 LZO 쌍만 다시 돌린다.",
+    "G5 띠가 y 격자점을 하나도 안 품으면 (띠 폭 < 0.1) 그 띠 안에 두 점을 더 돌린다.",
+    "'전압 · y 점을 더 찍었다' 는 판정을 바꾸는 사유가 아니다."
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "_note": "active — 사용자 비준 2026-11-16 (결과 전). 실행은 gabia CPU (MP 조회) 블록.",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] 1단계 카드 … 를 승인하고 지금 돌릴까요?' → '승인 · 지금 돌림' · 1저자: AskUserQuestion '[혁주] 트랙 … 1저자를 어떻게 적을까요?' → '혁주 (사용자는 계산 담당)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T14:48:09Z",
+    "commit": "e7b77637ea8a206448034f3ecaa66487385a7e1e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-16 AskUserQuestion '[혁주] 1단계 카드 (db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json) 를 승인하고 지금 돌릴까요? …' → '승인 · 지금 돌림 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:c28a31746de14752439ef9af6bc685d2fafde18278caf7927c636c6f026aa97b"
+   }
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage2a.li2zro3_gap",
+   "slot": "hyeokju_lzo_stage2a_gap",
+   "applies_to": {
+    "systems": [
+     "li2zro3"
+    ],
+    "tasks": [
+     "band_gap",
+     "pdos"
+    ],
+    "methods": [
+     "qe-pbe__fixed-occ-nscf"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 2a 단계 — Li₂ZrO₃ 띠틈 (fixed-occ nscf · PBE) · DOS/PDOS · CEI 생성물 띠틈 체인 · vc-relax 허락 — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
+   "statement": "카드 db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json 이 정의다: CEI 생성물 띠틈 체인 (D-2026-10-27-cei-product-gaps · -amend1) 을 Li₂ZrO₃ 에 그대로 — 구조 --pick (관측 중 E_hull 최저) · vc-relax (사용자 허락) · 비자성 · U 없음 · PP = CEI 세트 Li · O + Zr SSSP efficiency (검사 블록이 기록 · 못 찾으면 멈춤) · 60/480 Ry (Zr 권장이 높으면 그 상만) · 보고량 E_g(PBE) fixed-occ nscf 고유값 + PDOS · MP 갭 대조는 기록만.",
+   "rationale": "혁주 요청 2 단계의 LZO 기본 계산 (1 단계와 병행 가능) · 사용자 11-16 AskUserQuestion 'PBE 체인으로 병행'.",
+   "decision_state": "active",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json",
+   "evidence": [
+    "db/properties/cei_product_gap_card_2026_10_27.json"
+   ],
+   "reopen_criteria": [
+    "혁주가 LZO 가 Li₂ZrO₃ 가 아니라고 하면 그 조성의 관측 결정으로 같은 체인 (새 카드 아님 · 개정)",
+    "생성물 1–2 개는 1 단계 결과 뒤 개정으로 더한다 (같은 체인 · 같은 PP 규칙)"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] 2단계 Li₂ZrO₃ 띠틈 · DOS/PDOS 를 1단계와 병행할까요? (CEI 생성물 띠틈과 같은 체인 · vc-relax 허락 필요 · Zr PP 새로)' → 'PBE 체인으로 병행 (vc-relax 허락 · kgy GPU · 작은 셀)'"
+    }
+   ],
+   "_note": "active — 사용자 방향 승인 2026-11-16 (결과 전). 첫 블록은 gabia 검사 (구조 · Zr PP) · 실행은 kgy GPU (검사 뒤).",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T14:48:09Z",
+    "commit": "e7b77637ea8a206448034f3ecaa66487385a7e1e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-16 AskUserQuestion '[혁주] 2단계 Li₂ZrO₃ 띠틈 · DOS/PDOS 를 1단계와 병행할까요? CEI 생성물 띠틈과 같은 체인 (MP 구조 vc-relax → fixed-occ nscf) 이라 비-argyrodite 결정 vc-relax 허락이 필요하고, Zr PP 는 새로 정해야 해요. PBE 는 띠틈을 과소평가해요.' → 'PBE 체인으로 병행 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:3efb6c93a4dce8551e098a807aa60bac4e3270d742c386cbce6f74ecd67fce9c"
+   }
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-md",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.md.uma_validation_then_interface",
+   "slot": "hyeokju_lzo_md",
+   "applies_to": {
+    "systems": [
+     "li2zro3",
+     "li2zro3_lpscl_interface"
+    ],
+    "tasks": [
+     "mlip_validation",
+     "interface_md"
+    ],
+    "methods": [
+     "uma-s-1p1-omat",
+     "qe-pbe__single-point"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] MD — UMA 검증 (MD-0) 먼저 → 1 단계가 고른 계면 MD (MD-1) — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
+   "statement": "카드 db/properties/hyeokju_lzo_md_card_2026_11_16.json 이 정의다: MD-0 = Li₂ZrO₃ 벌크 · Li₂ZrO₃ | Li₆PS₅Cl 계면 UMA NVT 600 K 스냅숏 각 5 장의 UMA 대 QE PBE 힘 · 상대 에너지 비교 · G1 (힘 MAE ≤ 0.10 · 원소별 ≤ 0.15 eV/Å) · G2 (상대 에너지 RMSE ≤ 5 meV/atom) — 둘 다 넘어야 MD-1 (결과 전 개정).",
+   "rationale": "혁주 1 단계의 명시적 계면 · AIMD 자리 · 사용자 11-16 AskUserQuestion 'UMA 검증부터 지금'.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+   "evidence": [],
+   "reopen_criteria": [
+    "G1 · G2 를 못 넘으면 MD-1 없음 — 다르게 하려면 사용자 결정"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "_note": "proposed — 방향은 사용자 결정 ('UMA 검증부터 지금') · G1 · G2 문턱 승인 대기."
   }
  ]
 }
