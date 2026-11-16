@@ -26,7 +26,8 @@
    "h": 2236,
    "dpi": 300,
    "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.672
+   "blank": 0.672,
+   "viewed": true
   },
   {
    "key": "f2",
@@ -46,7 +47,8 @@
    "h": 1812,
    "dpi": 300,
    "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.833
+   "blank": 0.833,
+   "viewed": true
   },
   {
    "key": "f3",
@@ -66,7 +68,8 @@
    "h": 1754,
    "dpi": 300,
    "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.833
+   "blank": 0.833,
+   "viewed": true
   },
   {
    "key": "f4",
@@ -86,7 +89,8 @@
    "h": 1791,
    "dpi": 300,
    "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.7
+   "blank": 0.7,
+   "viewed": true
   },
   {
    "key": "f5",
@@ -106,7 +110,8 @@
    "h": 1413,
    "dpi": 300,
    "src": "455fb339-Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.878
+   "blank": 0.878,
+   "viewed": true
   },
   {
    "key": "fS1",
@@ -126,7 +131,8 @@
    "h": 851,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.921
+   "blank": 0.921,
+   "viewed": false
   },
   {
    "key": "fS2",
@@ -146,7 +152,30 @@
    "h": 1116,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.833
+   "blank": 0.833,
+   "viewed": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 10,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 In 3d XPS spectra of LSPS (top) and LSPS-In (bottom).",
+   "rotated_deg": 0,
+   "bbox": [
+    196.6,
+    72.2,
+    398.5,
+    274.6
+   ],
+   "w": 842,
+   "h": 845,
+   "dpi": 300,
+   "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
+   "blank": 0.862,
+   "manual_crop": "2026-11-16 litdb-curator: tool listed fS3 as a number gap with a near-miss caption on SI p.10 (skipped = []). Why missed: is_caption() rejects 'Figure S3  In 3d XPS spectra ...' because the label separator is whitespace and VERBS (case-insensitive) matches the element symbol 'In' as the preposition 'in' (body cross-reference rule) - any caption that starts with 'In' (element, or 'In situ') after a bare space hits this. Figure = one embedded raster (650x652 px, xref 55) at (198.6, 74.2, 396.5, 272.6) pt directly above its caption (y 284.1); no vector drawings or text spans outside it on the page. clip = raster bbox + 2 pt, page.get_pixmap(dpi=300) + the tool's _shrink(); axis titles and tick labels are inside the raster (checked by viewing).",
+   "viewed": true
   },
   {
    "key": "fS4",
@@ -166,7 +195,8 @@
    "h": 1705,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.366
+   "blank": 0.366,
+   "viewed": true
   },
   {
    "key": "fS5",
@@ -186,7 +216,8 @@
    "h": 642,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.873
+   "blank": 0.873,
+   "viewed": true
   },
   {
    "key": "fS6",
@@ -206,7 +237,8 @@
    "h": 739,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.817
+   "blank": 0.817,
+   "viewed": true
   },
   {
    "key": "fS7",
@@ -226,7 +258,8 @@
    "h": 642,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.918
+   "blank": 0.918,
+   "viewed": true
   },
   {
    "key": "fS8",
@@ -246,7 +279,8 @@
    "h": 523,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.887
+   "blank": 0.887,
+   "viewed": false
   },
   {
    "key": "fS9",
@@ -266,7 +300,8 @@
    "h": 876,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.839
+   "blank": 0.839,
+   "viewed": false
   },
   {
    "key": "fS10",
@@ -286,7 +321,8 @@
    "h": 641,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.818
+   "blank": 0.818,
+   "viewed": false
   },
   {
    "key": "fS11",
@@ -306,7 +342,8 @@
    "h": 642,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.947
+   "blank": 0.947,
+   "viewed": true
   },
   {
    "key": "fS12",
@@ -326,7 +363,8 @@
    "h": 861,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.2
+   "blank": 0.2,
+   "viewed": true
   },
   {
    "key": "fS13",
@@ -346,7 +384,8 @@
    "h": 547,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.755
+   "blank": 0.755,
+   "viewed": true
   },
   {
    "key": "fS14",
@@ -366,7 +405,8 @@
    "h": 567,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.823
+   "blank": 0.823,
+   "viewed": true
   },
   {
    "key": "fS15",
@@ -386,7 +426,8 @@
    "h": 642,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.799
+   "blank": 0.799,
+   "viewed": true
   },
   {
    "key": "fS16",
@@ -406,7 +447,8 @@
    "h": 759,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.738
+   "blank": 0.738,
+   "viewed": false
   },
   {
    "key": "fS17",
@@ -426,7 +468,8 @@
    "h": 617,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.872
+   "blank": 0.872,
+   "viewed": false
   },
   {
    "key": "fS18",
@@ -446,7 +489,8 @@
    "h": 752,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.469
+   "blank": 0.469,
+   "viewed": false
   },
   {
    "key": "fS19",
@@ -466,7 +510,8 @@
    "h": 560,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.315
+   "blank": 0.315,
+   "viewed": false
   },
   {
    "key": "fS20",
@@ -486,7 +531,8 @@
    "h": 798,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.829
+   "blank": 0.829,
+   "viewed": false
   },
   {
    "key": "fS21",
@@ -506,7 +552,8 @@
    "h": 519,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.797
+   "blank": 0.797,
+   "viewed": false
   },
   {
    "key": "fS22",
@@ -526,7 +573,8 @@
    "h": 1232,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.873
+   "blank": 0.873,
+   "viewed": false
   },
   {
    "key": "fS23",
@@ -546,7 +594,8 @@
    "h": 642,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.918
+   "blank": 0.918,
+   "viewed": false
   },
   {
    "key": "fS24",
@@ -566,7 +615,8 @@
    "h": 1822,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.893
+   "blank": 0.893,
+   "viewed": false
   },
   {
    "key": "fS25",
@@ -586,7 +636,8 @@
    "h": 739,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.841
+   "blank": 0.841,
+   "viewed": false
   },
   {
    "key": "fS26",
@@ -606,7 +657,8 @@
    "h": 724,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.837
+   "blank": 0.837,
+   "viewed": false
   },
   {
    "key": "tS1",
@@ -626,7 +678,8 @@
    "h": 1253,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.921
+   "blank": 0.921,
+   "viewed": false
   },
   {
    "key": "tS2",
@@ -646,7 +699,8 @@
    "h": 1091,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.913
+   "blank": 0.913,
+   "viewed": false
   },
   {
    "key": "tS3",
@@ -666,7 +720,8 @@
    "h": 714,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.919
+   "blank": 0.919,
+   "viewed": false
   },
   {
    "key": "tS4",
@@ -686,7 +741,8 @@
    "h": 492,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.921
+   "blank": 0.921,
+   "viewed": false
   },
   {
    "key": "tS5",
@@ -706,7 +762,8 @@
    "h": 1015,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.939
+   "blank": 0.939,
+   "viewed": false
   },
   {
    "key": "tS6",
@@ -726,7 +783,8 @@
    "h": 928,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.918
+   "blank": 0.918,
+   "viewed": false
   },
   {
    "key": "tS7",
@@ -746,7 +804,8 @@
    "h": 1294,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.93
+   "blank": 0.93,
+   "viewed": false
   },
   {
    "key": "tS8",
@@ -766,7 +825,8 @@
    "h": 1037,
    "dpi": 300,
    "src": "4e330fc1-Sup_Modulating_Electronic_Structure_of_Li10._2SnP1._9In0._1S12_Electrolyte_via_Partial_In3_Substitution_Enables_Long_Cycling_All_Solid_State_Batteries.pdf",
-   "blank": 0.916
+   "blank": 0.916,
+   "viewed": false
   }
  ],
  "missing_labels": [
@@ -779,7 +839,8 @@
      "page": 10,
      "text": "Figure S3 In 3d XPS spectra of LSPS (top) and LSPS-In (bottom)."
     }
-   ]
+   ],
+   "resolved": "manual_crop fig_S3.png (2026-11-16, litdb-curator) - see figures[fS3].manual_crop"
   }
  ]
 }
