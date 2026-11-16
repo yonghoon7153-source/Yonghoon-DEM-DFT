@@ -1,0 +1,18 @@
+{
+  "archive_sha256": "9ffb684739e6dc83fd3c45dde067bac07a00bb4b487a9d33212147286a926fca",
+  "archive_bytes": 3953172,
+  "files": 79,
+  "checks": [
+    {
+      "manifest": "F/F_shape/SHA256SUMS",
+      "hashes": 26
+    },
+    {
+      "manifest": "S/S_shape/SHA256SUMS",
+      "hashes": 26
+    }
+  ],
+  "source_pin": "c759c4c7ab7abec2148e23fa231d004c1d4d0fec",
+  "existing_ratio": 2.469217025330513,
+  "input_archive_unchanged": true
+}
