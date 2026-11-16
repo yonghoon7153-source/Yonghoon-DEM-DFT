@@ -7,7 +7,7 @@
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 418건)
-- 2026-11-16 · `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 논리 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑 · 검토 완료 · 전달 여부는 사용자 몫
+- 2026-11-16 · `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 쪽별 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑 · 검토 완료 · 전달 여부는 사용자 몫
 - 2026-11-15 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-15 · `kb/reviews/internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` — EL 프롬프트 (내부 반박 리뷰) — li2s-3 카드 개정 4: 큐 끝 줄 유실 인정이 '끝 줄 하나만 빠진 완료 큐' 만 받는가 (판독 보류 처리 · 결과 전) · 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전…
 - 2026-11-14 · `kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md` — EK 회신 — b2o3 9 단계 DFT 도구 v6: 조건부 GO (gabia/Linux 생성 · 판독 범위) · EJ P2 해제 · 실행은 사용자 비준 뒤 · Windows 짧은 경로명 (8.3) 과 긴 이름이 섞이면 같은 파일을 다르게 판단하는 별도 P2 (Linux 생산 경로 차단 사유 아님) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인 · 수령 2026-11-14 (사용자 붙여넣기) · 조건부 GO (gab…
@@ -650,7 +650,7 @@
 - `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별)  (2026-10-16 · 진행)
 - `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용)  (2026-10-12 · 진행)
 - `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` — 연구세미나 2026-10-16 — cascade 1부 대본 쉬운 판 (1–15쪽 · 노트 칸 붙여넣기용)  (2026-10-16 · 진행)
-- `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 논리 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑  (2026-11-16 · 검토 완료 · 전달 여부는 사용자 몫)
+- `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 쪽별 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑  (2026-11-16 · 검토 완료 · 전달 여부는 사용자 몫)
 - `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌  (2026-10-12 · 진행)
 - `kb/seminars/cascade_content_edit_directive_2026_08_11.md` — Cascade 세미나 내용 편집 지시서 — 기준본 24장 (Codex 편집용)
 - `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12)  (2026-10-12 · 진행)
