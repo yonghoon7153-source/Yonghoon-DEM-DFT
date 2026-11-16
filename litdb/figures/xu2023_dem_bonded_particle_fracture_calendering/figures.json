@@ -1,0 +1,1779 @@
+{
+ "slug": "xu2023_dem_bonded_particle_fracture_calendering",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+  "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+  "a9851e22-70._Sup2_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+  "2d36e924-70._Sup3_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+  "9307e61b-70._Sup4_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Nano XCT. Virtual slices and 3D renderings of the electrode, a) before calendering; b) calendered under 150 MPa. The individual particles are selected and presented in 3D. In the 3D renderings, the surfaces of the particles and the nano cracking are indicated in turquoise and violet, respectively. Particles 2 and 5 are sectioned to reveal internal structures. Scale bars: 5 μm.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.3,
+    555.9,
+    523.6,
+    710.2
+   ],
+   "w": 1947,
+   "h": 693,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.363,
+   "auto_bbox": [
+    40.8,
+    548.7,
+    554.5,
+    717.6
+   ],
+   "src_native": [
+    1256,
+    429
+   ],
+   "native_dpi": 197,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 51, native 1256×429 px ≈ 197 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "나노 XCT (TXM · 복셀 41 nm) 가상 단면 + 3D — (a) 압연 전 입자 1–3: 합성 기공만 · 균열 없음 / (b) 150 MPa 압연 입자 4–6: 보라 = 나노 균열 (2 · 5 는 잘라 내부 표시). 80 MPa 는 그림 S1 (거의 온전). 균열의 정량은 없다 (작은 부피). 조건 R7 의 실험 쪽 정성 근거."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Computational workflow. In the simulation box, the black refers to the CBD particles and the rest colors indicate the different secondary AM particles. In the scheme for the calendering process, the bonds in the secondary particle were presented with the same color as the particle.",
+   "rotated_deg": 0,
+   "bbox": [
+    88.7,
+    546.8,
+    507.1,
+    719.4
+   ],
+   "w": 1793,
+   "h": 769,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.688,
+   "auto_bbox": [
+    40.8,
+    537.0,
+    525.8,
+    726.6
+   ],
+   "src_native": [
+    1297,
+    550
+   ],
+   "native_dpi": 223,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 70, native 1297×550 px ≈ 223 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "계산 흐름 — 마이크로 XCT (PETRA III P05 · 0.64 µm, 앞 논문 [44]) 로 뜬 실형상 2 차 입자 + PSD → 슬러리 · 건조 (LAMMPS, [44]) → 캘린더링 (LIGGGHTS + BPM). 검정 = CBD 구 (1.16 µm), 나머지 색 = 2 차 입자. 결합 구조도 같은 색."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The electrodes and bonds evolution during the calendering process of a maximum pressure of 150 MPa. The presented structure is the structure under the pressure of a) uncalendered, b) calendered under 9.2 MPa, c) 20.1 MPa, d) 50.9 MPa, and e) 146.8 MPa during the compression process. In the electrode structure, black indicates the CBD and the rest of the colors represent the different AM secondary particles. In the bond structure, blue indicates the bonds that will break during this compression, while purple indicates bonds that remain intact throughout.",
+   "rotated_deg": 0,
+   "bbox": [
+    74.9,
+    67.3,
+    520.3,
+    313.5
+   ],
+   "w": 1906,
+   "h": 1076,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.494,
+   "auto_bbox": [
+    0.0,
+    41.8,
+    595.3,
+    320.3
+   ],
+   "src_native": [
+    1413,
+    781
+   ],
+   "native_dpi": 227,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins; the auto box also took the full page width with the running-head rule and the vertical download stamp), re-cut by rendering the embedded raster's rectangle (xref 73, native 1413×781 px ≈ 227 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "40 % 압축 한 번의 단계 (0 · 10 · 20 · 30 · 40 %) — 위 = 입자, 아래 = 결합 (하늘색 = 이번 압축에서 끊길 결합 · 보라 = 끝까지 남는 결합). 캡션 압력 9.2 · 20.1 · 50.9 · 146.8 MPa ↔ 본문 14.2 · 50.3 · 98.7 · 157.7 MPa (같은 10–40 %) — 서로 다르다 (카드 §11)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Mechanical and porosity validation. a) Comparison of porosity between model results and experimental values at different calendering pressures. Blue: experimental values; red: porosity calculated based on theoretical material volume; orange: porosity calculated based on microstructure meshing. b) Pressure and proportion of bond breakage vs. upper plane displacement (reduced thickness). Green: normalized number of bonds; blue: pressure applied to the electrode when it reaches the corresponding compression degree during the calendering process; red: pressure on the electrode during the relaxation process. Red points and blue points corresponding to the same ‘compression degree’ value indicate that the upper plane is in the same position under these conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    102.4,
+    378.8,
+    492.6,
+    515.1
+   ],
+   "w": 1676,
+   "h": 618,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.88,
+   "auto_bbox": [
+    40.8,
+    372.8,
+    550.1,
+    522.7
+   ],
+   "src_native": [
+    1415,
+    496
+   ],
+   "native_dpi": 259,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 74, native 1415×496 px ≈ 259 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(a) 기공률–최대 압력: 실험 (파랑) ↔ 모의 두 연산자 (빨강 = 이론 물질 부피 · 주황 = 입자 메시). (b) 40 % 런의 압력–압축도 (파랑 압축 · 빨강 이완) + 전극 전체 정규화 결합 수 (초록). 판독 값 = digitized.csv."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Study of a selected individual particle with a high ratio of bond breaks and its possible cracks. a) Cross-sectional diagram of the volume. The position of the studied particles within the electrode is indicated. b) The pressure applied on the simulated electrode and the number of bonds break of this individual particle. c) Particle shape evolution during the calendering. d) The change of the bonds within the selected particle during the calendering. The blue indicates the bonds that will break during this compression, while purple indicates bonds that remain intact throughout.",
+   "rotated_deg": 0,
+   "bbox": [
+    102.1,
+    452.9,
+    493.5,
+    702.8
+   ],
+   "w": 1681,
+   "h": 1091,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.671,
+   "auto_bbox": [
+    40.8,
+    446.5,
+    554.3,
+    708.6
+   ],
+   "src_native": [
+    1240,
+    792
+   ],
+   "native_dpi": 228,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 77, native 1240×792 px ≈ 228 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "고른 입자 하나 (등가 지름 11.96 µm · 1 차 입자 426 · 결합 1748 · 아래-가운데) — (b) 압력 · 이 입자의 결합 수, (c) 형상, (d) 결합. 120 MPa 넘어서야 뚜렷한 파단 · 40 % 뒤 17 % 끊김. '10 % ↔ 120 MPa' 추측의 출처."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: 2D slice image from nano XCT of the electrode calendered under 80 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    217.5,
+    160.1,
+    393.7,
+    348.8
+   ],
+   "w": 784,
+   "h": 836,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.165,
+   "auto_bbox": [
+    66.0,
+    131.5,
+    503.4,
+    360.0
+   ],
+   "src_native": [
+    509,
+    535
+   ],
+   "native_dpi": 197,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 33, native 509×535 px ≈ 197 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "나노 XCT 단면 — 80 MPa 압연. 본문: 이 압력에서는 입자가 '비교적 온전' (p.3). 단 이 단면에도 큰 입자 안에 갈라진 틈이 보인다 [관찰 — 합성 기공인지 균열인지 원문은 가르지 않는다]."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: 2D slice images from micro XCT of the electrode (a) before calendering and calendered under (b) 100 MPa, (c) 120 MPa and (d) 150 MPa. (e) The electrodes were segmented into two phases: macro pores and AM. (f) The porosities and the tortuosity factors are presented.",
+   "rotated_deg": 0,
+   "bbox": [
+    88.7,
+    427.4,
+    522.9,
+    607.4
+   ],
+   "w": 1859,
+   "h": 800,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.597,
+   "auto_bbox": [
+    67.8,
+    421.4,
+    546.8,
+    615.3
+   ],
+   "src_native": [
+    1205,
+    498
+   ],
+   "native_dpi": 197,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 34, native 1205×498 px ≈ 197 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "마이크로 XCT — (a)–(d) 0 · 100 · 120 · 150 MPa 전극 단면, (e) 두 상 분할 (매크로 기공 · AM), (f) 기공률 · tortuosity factor. 표 1 (질량 · 두께 기공률 · 0 · 80 · 150 MPa) 과 다른 측정 · 다른 압력 집합."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: The relation between bond fractures and bond strength parameter values was investigated. In this study, all the other parameters used in the simulations were kept constant.",
+   "rotated_deg": 0,
+   "bbox": [
+    167.9,
+    384.8,
+    421.8,
+    569.6
+   ],
+   "w": 1108,
+   "h": 820,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.959,
+   "auto_bbox": [
+    71.3,
+    353.4,
+    543.3,
+    581.2
+   ],
+   "src_native": [
+    880,
+    660
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins; the raster has a soft mask (black where transparent), so this crop is a page render (transparency composited on white)), re-cut by rendering the embedded raster's rectangle (xref 44, native 880×660 px ≈ 220 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 강도 매개변수 연구 — x = 'Sigma value' (0.1–1.0 ×10⁶ · 단위 인쇄 없음) · y = 끊기지 않은 결합 몫. 시험 조건 (압축도 · 압력) 인쇄 없음. 표 S3 의 σ_B^n 0.1 GPa 와 자릿수 · 단위가 맞지 않는다 [미확인]."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: (a) Definition of the spring back degree; (b) The relationship between electrode spring back degree and the pressure applied in the calendering simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.5,
+    90.2,
+    536.4,
+    261.1
+   ],
+   "w": 1962,
+   "h": 762,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.853,
+   "auto_bbox": [
+    66.0,
+    87.0,
+    545.9,
+    268.4
+   ],
+   "src_native": [
+    1430,
+    541
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins; the first tool-style clip also caught the descenders of the section heading above, re-cut 1 pt lower), re-cut by rendering the embedded raster's rectangle (xref 65, native 1430×541 px ≈ 220 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "되돌아옴 — (a) 정의 '되돌아옴 정도 = h₂/h₁ × 100 %' (h₁ 압축 · h₂ 되돌아옴) (b) 최대 압력 12.5 · 40 · 80 · 120 · 157.7 MPa 에서 31.2 · 37.7 · 36.3 · 33.0 · 32.6 % [판독]. 압력 높을수록 낮아짐 (첫 점만 예외 = 재배열 지배)."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Number of bond breaks in AM particles of different sizes after 10 % compression.",
+   "rotated_deg": 0,
+   "bbox": [
+    174.2,
+    360.6,
+    441.4,
+    552.9
+   ],
+   "w": 1163,
+   "h": 851,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.922,
+   "auto_bbox": [
+    94.4,
+    343.4,
+    520.3,
+    562.4
+   ],
+   "src_native": [
+    777,
+    566
+   ],
+   "native_dpi": 197,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 66, native 777×566 px ≈ 197 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "10 % 압축 뒤 2 차 입자 지름별 끊긴 결합 수 — 큰 입자 (8.5 · 10.2 · 11.0 µm → 51 · 57 · 93) 에 몰린다 [판독]. 그림의 가장 큰 x ≈ 11.0 µm (그림 5 의 11.96 µm 입자는 안 보인다 [관찰])."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Study of selected individual particles from the current collector side. (a) Cross-sectional diagram of the volume. The position of the studied particles within the electrode is indicated. (b) The pressure applied on the simulated electrode and number of bonds break of this individual particle. (c) Particle shape evolution during the calendering. (d) The change of the bonds within the selected particles during the calendering. The blue indicates the bonds that will break during this compression, while purple indicates bonds that remain intact throughout.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.3,
+    106.2,
+    534.9,
+    399.5
+   ],
+   "w": 1965,
+   "h": 1272,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.685,
+   "auto_bbox": [
+    66.0,
+    66.5,
+    547.4,
+    413.2
+   ],
+   "src_native": [
+    1262,
+    846
+   ],
+   "native_dpi": 194,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 74, native 1262×846 px ≈ 194 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "집전체 쪽 입자 — 5 % (≈3 MPa) 부터 끊김 · 40 % 에 남은 결합 ≈54 % [판독] · 75 MPa 에서 뚜렷한 변형 (본문). 집전체가 변위 · 회전을 막는다는 해석."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Study of a selected individual particle from the electrode. (a) Cross-sectional diagram of the volume. The position of the studied particle within the electrode is indicated. (b) The pressure applied on the simulated electrode and number of bonds break of this individual particle. (c) Particle shape evolution during the calendering. (d) The change of the bonds within the selected particles during the calendering. The blue indicates the bonds that will break during this compression, while purple indicates bonds that remain intact throughout.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.4,
+    78.2,
+    539.2,
+    374.4
+   ],
+   "w": 1991,
+   "h": 1284,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.665,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    547.2,
+    389.7
+   ],
+   "src_native": [
+    1252,
+    834
+   ],
+   "native_dpi": 193,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins), re-cut by rendering the embedded raster's rectangle (xref 78, native 1252×834 px ≈ 193 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "윗면 쪽 입자 — 37 % 까지 99 % 이상 · 40 % 에 ≈91.4 % 남음 (끊김 < 10 %) [판독]."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: The electrode is divided in three identical volumes Number of bonds among AM particles in the top (green), the middle (red) and the bottom (blue) part of the electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    170.3,
+    102.0,
+    441.5,
+    301.7
+   ],
+   "w": 1180,
+   "h": 882,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.913,
+   "auto_bbox": [
+    72.2,
+    87.5,
+    542.5,
+    315.5
+   ],
+   "src_native": [
+    880,
+    660
+   ],
+   "native_dpi": 220,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; the auto crop had uneven side margins; the raster has a soft mask (black where transparent), so this crop is a page render (transparency composited on white)), re-cut by rendering the embedded raster's rectangle (xref 82, native 880×660 px ≈ 220 dpi) at 300 dpi → ink bounding box (min RGB < 240) → white canvas with a uniform 25 px margin on all four sides; caption excluded (tool convention) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전극을 세 겹 (아래 · 가운데 · 위) 으로 나눈 AM 결합 수 — 처음 ≈13,420 · 12,680 · 12,370 → 40 % 에 ≈11,100 · 11,730 · 11,160 [판독] (합 38,470 → 33,990 · 11.6 % 끊김 [카드 산술]). 아래 (집전체 쪽) 가 가장 많이 · 가장 일찍 끊김."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. The experimental information of the electrodes. Roll gap [μm] / Corresponding pressure [MPa] / Mass [mg] / Thickness [μm] / Porosity [%]: – / 0 / 22.37 ± 0.29 / 99.03 ± 0.87 / 47.97 ± 0.87; 21 / 80 / 22.97 ± 0.11 / 79.67 ± 0.06 / 27.75 ± 0.23; 6 / 150 / 22.30 ± 0.68 / 75.4 ± 0.79 / 25.17 ± 1.2.",
+   "rotated_deg": 0,
+   "bbox": [
+    46.3,
+    442.5,
+    291.1,
+    532.1
+   ],
+   "w": 1410,
+   "h": 548,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.796,
+   "auto_bbox": [
+    41.8,
+    14.0,
+    589.2,
+    830.1
+   ],
+   "recrop": "tool crop took the whole page (2008×2993 px); re-cut at 400 dpi to the table frame (vector rules 46.3–291.0 × 442.6–532.1 pt, caption band included) with a uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실험 전극 (NMC111 : C65 : PVdF = 96 : 2 : 2 · Al 22.5 µm) — 롤 간격 → 압력 (공식 환산) · 질량 · 두께 · 기공률. ★ 두께에서 Al 22.5 µm 를 빼야 세 줄의 질량 · 두께 · 기공률이 1.3 % 안에서 맞는다 (안 빼면 9.8 % 어긋남) [카드 산술 · 추론]. 압연 뒤 (하중 뺀 뒤) 값."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 3,
+   "file": "tab_S1.png",
+   "caption": "SI Table 1: The Young’s modulus and Poisson's ratio values used for the materials. Young’s modulus (GPa): NMC 5 · CBD 2 · Aluminum 69 · Stainless steel 200; Poisson's ratio: 0.3 · 0.45 · 0.3 · 0.3.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.2,
+    96.0,
+    540.3,
+    171.0
+   ],
+   "w": 2651,
+   "h": 467,
+   "dpi": 400,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.914,
+   "auto_bbox": [
+    67.0,
+    89.0,
+    545.4,
+    355.6
+   ],
+   "recrop": "tool crop held SI Tables 1–3 plus the next heading in one image (67.0–545.4 × 89.0–355.6 pt); split into one crop per table at 400 dpi (caption + grid; clip ends on the grid's bottom rule, before the next caption) with a uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "입자 물성 — NMC E 5 GPa (최대 압력에 맞춘 값 · 같은 그룹 앞 논문 135 GPa · Ngandjong 200 GPa 의 1/27–1/40) · ν 0.3 / CBD 2 GPa · 0.45 / Al 69 / 스테인리스 (롤) 200 GPa."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 3,
+   "file": "tab_S2.png",
+   "caption": "SI Table 2: The cohesion energy density value used for the interacted material particles (no unit printed). NMC–NMC 5e5 · NMC–CBD 2e5 · NMC–Al 0 · NMC–stainless steel 5e5; CBD–CBD 1e5 · CBD–Al 0 · CBD–stainless steel 3e5; Al–stainless steel 0.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.2,
+    173.8,
+    540.3,
+    263.1
+   ],
+   "w": 2651,
+   "h": 546,
+   "dpi": 400,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.92,
+   "manual_crop": "not recognised as a separate caption by the tool (it sat inside the tool's merged SI-table crop); cut by hand at 400 dpi between the SI Table 2 caption and the bottom rule of its grid (171.25–263.15 pt) with a uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SJKR 점착 에너지 밀도 (단위 인쇄 없음) — AM–AM 5e5 · AM–CBD 2e5 · CBD–CBD 1e5 · 롤 (스테인리스) 과 5e5 · 3e5 · 집전체 (Al) 와 0."
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 3,
+   "file": "tab_S3.png",
+   "caption": "SI Table 3: The parameters used for bonds. Young’s modulus 10 GPa · Elastic modulus 3.84 GPa · σ_B^n 0.1 GPa · σ_B^t 0.038 GPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.2,
+    265.8,
+    543.4,
+    316.8
+   ],
+   "w": 2668,
+   "h": 333,
+   "dpi": 400,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.924,
+   "manual_crop": "not recognised as a separate caption by the tool; cut by hand at 400 dpi from the SI Table 3 caption to the bottom rule of its grid (263.15–318.0 pt) with a uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 매개변수 — E_b 10 GPa (본문 '입자 값과 같게' 와 다름 · 입자 5 GPa) · 'Elastic modulus' 3.84 GPa = 10/(2×1.3) 전단 탄성률 [카드 산술] · 강도 법선 0.1 · 접선 0.038 GPa (비 0.38 = G/E · 본문 'σ_cn = σ_ct' 와 다름)."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 6,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — porosity [%] vs pressure [MPa]: experiment (blue), simulation from theoretical material volume (red), simulation from microstructure meshing (orange); simulated porosity taken after relaxation.",
+   "rotated_deg": 0,
+   "bbox": [
+    102.4,
+    378.8,
+    283.6,
+    514.6
+   ],
+   "w": 805,
+   "h": 616,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.927,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from fig_4.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독 (digitized.csv): 실험 0 · 80 · 120 · 150 MPa → 48.0 · 28.6 · 27.8 · 25.2 % / 모의 (빨강) 0 · 12.4 · 40 · 80 · 120 · 157.6 MPa → 50.0 · 44.4 · 42.3 · 38.1 · 32.7 · 29.2 %. 80 MPa 에서 모의 − 실험 ≈ +9.5 %p."
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 6,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — pressure [MPa] vs compression degree [%] for the 40 % run (blue: compression, red: relaxation) and normalized bond number [%] (green).",
+   "rotated_deg": 0,
+   "bbox": [
+    284.8,
+    378.8,
+    492.6,
+    515.1
+   ],
+   "w": 916,
+   "h": 618,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.843,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from fig_4.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독: 10 · 20 · 30 % → 13.9 · 50.9 · 99.7 MPa · 이완에서 판 하중이 ≈26–27 % 에서 0 (되돌아옴 ≈13 %p = 변위의 ≈33 %) · 결합 98.2 · 95.5 · 88.9 % (20 · 30 · 39 %) · 이완 중 ≈88.1 % 그대로."
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 7,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — pressure on the simulated electrode (blue) and normalized bond number of the selected particle (green) vs compression degree; magenta points = snapshot pressures of Fig. 5(c,d).",
+   "rotated_deg": 0,
+   "bbox": [
+    282.8,
+    452.9,
+    492.1,
+    580.3
+   ],
+   "w": 922,
+   "h": 581,
+   "dpi": 300,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.885,
+   "panel_of": "f5",
+   "manual_crop": "panel cut from fig_5.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독: 스냅숏 25 · 50 · 75 · 100 · 125 · 150 MPa ↔ 12.8 · 19.9 · 25.3 · 30.1 · 35.1 · 39.3 %. 입자 결합 96.5 % (32 %) → 89.3 % (35 %) → 83.5 % (38–40 %) — 90 % 선을 ≈34.6 % (≈122 MPa) 에서 넘는다."
+  },
+  {
+   "key": "fS2f",
+   "kind": "figure",
+   "label": "S2f",
+   "page": 2,
+   "file": "fig_S2f.png",
+   "caption": "Fig. S2(f) — micro-XCT porosity [%] (red) and tortuosity factor (green) vs calendering pressure [MPa].",
+   "rotated_deg": 0,
+   "bbox": [
+    313.8,
+    483.1,
+    502.5,
+    607.4
+   ],
+   "w": 836,
+   "h": 568,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.929,
+   "panel_of": "fS2",
+   "manual_crop": "panel cut from fig_S2.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독: 기공률 0 · 100 · 120 · 150 MPa → 51.1 · 26.2 · 23.5 · 21.4 % · tortuosity factor 1.53 · 4.00 · 5.84 · 7.82 (계산법 인쇄 없음)."
+  },
+  {
+   "key": "fS4a",
+   "kind": "figure",
+   "label": "S4a",
+   "page": 4,
+   "file": "fig_S4a.png",
+   "caption": "Fig. S4(a) — definition of the spring back degree: h1 compressed thickness, h2 spring back thickness, spring back degree = h2/h1 × 100%.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.5,
+    92.6,
+    292.1,
+    239.2
+   ],
+   "w": 944,
+   "h": 661,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.707,
+   "panel_of": "fS4",
+   "manual_crop": "panel cut from fig_S4.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "되돌아옴 정도의 정의 그림 (식 대신) — 그림에서 h₁ 은 처음 윗면 → 압축 윗면 (변위), h₂ 는 압축 윗면 → 되돌아온 윗면 [관찰]."
+  },
+  {
+   "key": "fS4b",
+   "kind": "figure",
+   "label": "S4b",
+   "page": 4,
+   "file": "fig_S4b.png",
+   "caption": "Fig. S4(b) — spring back degree [%] vs pressure applied in the calendering simulation [MPa].",
+   "rotated_deg": 0,
+   "bbox": [
+    296.6,
+    90.2,
+    536.4,
+    261.1
+   ],
+   "w": 1049,
+   "h": 762,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.951,
+   "panel_of": "fS4",
+   "manual_crop": "panel cut from fig_S4.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독: 12.5 · 40.0 · 80.0 · 120.0 · 157.7 MPa → 31.2 · 37.7 · 36.3 · 33.0 · 32.6 %."
+  },
+  {
+   "key": "fS6b",
+   "kind": "figure",
+   "label": "S6b",
+   "page": 5,
+   "file": "fig_S6b.png",
+   "caption": "Fig. S6(b) — pressure (blue) and normalized bond number of the particle near the current collector (green) vs compression degree.",
+   "rotated_deg": 0,
+   "bbox": [
+    287.5,
+    106.2,
+    534.9,
+    257.2
+   ],
+   "w": 1081,
+   "h": 679,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.86,
+   "panel_of": "fS6",
+   "manual_crop": "panel cut from fig_S6.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독: 남은 결합 99.2 (5 %) · 94.1 (10 %) · 85.1 (20 %) · 67.7 (30 %) · 54.0 % (39.7 %)."
+  },
+  {
+   "key": "fS7b",
+   "kind": "figure",
+   "label": "S7b",
+   "page": 6,
+   "file": "fig_S7b.png",
+   "caption": "Fig. S7(b) — pressure (blue) and normalized bond number of the particle near the top surface (green) vs compression degree.",
+   "rotated_deg": 0,
+   "bbox": [
+    287.7,
+    78.2,
+    538.8,
+    226.0
+   ],
+   "w": 1096,
+   "h": 666,
+   "dpi": 300,
+   "src": "5ac5df35-70._Sup1_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.863,
+   "panel_of": "fS7",
+   "manual_crop": "panel cut from fig_S7.png (300 dpi page render of the embedded raster): split on a white gap between panels (column profile), then ink bounding box + uniform 25 px margin; panel label and axis titles kept with their own panel (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "판독: 37 % 까지 ≥ 99.2 % · 38 % 96.5 % · 39.7 % 91.4 %."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_normal_hertz_damped.png",
+   "caption": "Eq. (1), PDF p.4 left column: F_E^n = k_n δ n − γ_n v_r^n — normal elastic (Hertzian) contact force with viscous damping.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    479.0,
+    292.8,
+    498.7
+   ],
+   "w": 1387,
+   "h": 102,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.974,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — band between the neighbouring text lines (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "법선 접촉 — 헤르츠 탄성 + 점성 감쇠. k_n · γ_n 은 E_p · Po_p · e_p 로 '추정' (식 인쇄 없음 · e_p 값 인쇄 없음)."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 4,
+   "file": "eq_02_tangential_coulomb_capped.png",
+   "caption": "Eq. (2), PDF p.4: F_E^t = −min(μ_t |F_E^n|, |−k_t S_t − γ_t v_r^t|) t — tangential spring–dashpot capped by Coulomb friction (S_t = accumulated tangential displacement).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    498.8,
+    292.8,
+    521.5
+   ],
+   "w": 1387,
+   "h": 112,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.953,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — band between the neighbouring text lines (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "접선 — 누적 접선 변위 스프링 + 감쇠, 쿨롱 상한 μ_t (값 인쇄 없음)."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 4,
+   "file": "eq_03_sjkr_cohesion.png",
+   "caption": "Eq. (3), PDF p.4: F_C = −c_CED A_COH n — simplified JKR (SJKR) cohesion: cohesion energy density × sphere–sphere contact area.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    682.0,
+    292.8,
+    706.0
+   ],
+   "w": 1387,
+   "h": 98,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.974,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — band between the neighbouring text lines (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SJKR 점착 — 2 차 입자 · CBD 사이 + (안정성 때문에) 같은 2 차 입자의 1 차 입자 사이에도. c_CED = 표 S2 (단위 인쇄 없음)."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 4,
+   "file": "eq_04_bond_normal_force_increment.png",
+   "caption": "Eq. (4), PDF p.4 right column: ΔF_B^n = (E_b A_b / l_b) v_r^n Δt — normal incremental bond force (bonded-particle model, after ref. [52]).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    108.0,
+    550.8,
+    140.0
+   ],
+   "w": 1387,
+   "h": 159,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.978,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — band between the neighbouring text lines (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 법선 힘 증분 — 원기둥 결합 (단면 A_b · 길이 l_b) 의 축 강성 E_b A_b/l_b × 상대 법선 속도 × Δt. A_b (결합 반지름) · l_b 값 인쇄 없음."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 4,
+   "file": "eq_05_bond_tangential_force_increment.png",
+   "caption": "Eq. (5), PDF p.4: ΔF_B^t = ((E_b / 2(1 + Po_b)) A_b / l_b) v_r^t Δt — tangential incremental bond force with the bond shear modulus E_b/2(1+Po_b).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    144.0,
+    550.8,
+    175.0
+   ],
+   "w": 1387,
+   "h": 163,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.966,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — band between the neighbouring text lines (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 접선 힘 증분 — 전단 탄성률 E_b/(2(1+Po_b)) (표 S3 의 3.84 GPa 와 같은 식)."
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 4,
+   "file": "eq_06_bond_max_normal_stress.png",
+   "caption": "Eq. (6), PDF p.4: σ_B^n = −|F_B^n| / A_b + |M_B^t| R_min / I — maximum normal stress at the bond from beam theory (printed with an absolute value after the minus sign).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    318.5,
+    550.8,
+    354.3
+   ],
+   "w": 1387,
+   "h": 171,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.971,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — band between the neighbouring text lines (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 최대 법선 응력 (보 이론) — 굽힘 모멘트 항이 인장을 만든다. 인쇄 그대로 −|F_B^n| (법선력 부호가 늘 응력을 줄이는 꼴) — 원전 [51] 과 대조 [미확인]."
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 4,
+   "file": "eq_07_bond_max_shear_stress.png",
+   "caption": "Eq. (7), PDF p.4: σ_B^t = |F_B^t| / A_b + |M_B^n| R_min / J — maximum shear stress at the bond (R_min = smaller particle radius; I, J = moment and polar moment of inertia of the bond cross-section).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    354.6,
+    550.8,
+    390.0
+   ],
+   "w": 1387,
+   "h": 171,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.973,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — band between the neighbouring text lines (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 최대 전단 응력 — 비틀림 모멘트 항 포함. 파단: σ_B^n ≥ σ_B^cn 또는 σ_B^t ≥ σ_B^ct (본문 줄글 · 묶음 크롭 e4_7 에 있음)."
+  },
+  {
+   "key": "e1_3",
+   "kind": "equation",
+   "label": "eq1-3",
+   "page": 4,
+   "file": "eq_01_03_contact_set_with_symbols.png",
+   "caption": "Eqs. (1)–(3) with the surrounding definitions, PDF p.4 left column (from 'The new position of each particle … gravity') to the start of the right column ('… bonded-particle model (BPM) … following:'), stacked top to bottom for pasting.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    411.7,
+    550.8,
+    748.8
+   ],
+   "w": 1404,
+   "h": 2092,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.886,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — several column parts stacked top→bottom (16 px gap) with the symbol definitions (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "보고서용 — 접촉 (헤르츠 + 감쇠 + 쿨롱) · SJKR 식과 기호 정의 한 장.",
+   "parts": [
+    [
+     4,
+     44.5,
+     411.7,
+     292.8,
+     748.8
+    ],
+    [
+     4,
+     302.5,
+     63.9,
+     550.8,
+     100.9
+    ]
+   ]
+  },
+  {
+   "key": "e4_7",
+   "kind": "equation",
+   "label": "eq4-7",
+   "page": 4,
+   "file": "eq_04_07_bond_set_failure_criterion_with_symbols.png",
+   "caption": "Eqs. (4)–(7) with the bond definitions, the calibration sentence (E_b, Po_b = particle values; E_p, Po_p fitted to the maximum calendering pressure), the beam-theory stresses and the failure criterion (σ_B^n ≥ σ_B^cn or σ_B^t ≥ σ_B^ct; 'σ_B^cn = σ_B^ct'), PDF p.4 right column 63.9–568.6 pt.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    63.9,
+    550.8,
+    568.6
+   ],
+   "w": 1406,
+   "h": 2829,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.897,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; ~9 pt type) — several column parts stacked top→bottom (16 px gap) with the symbol definitions (text-layer line boxes), ink bounding box + uniform 25 px margin; equation number kept (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "보고서용 — 결합 입자 모델 (BPM) 식 · 매개변수 규칙 · 파단 기준 한 장.",
+   "parts": [
+    [
+     4,
+     302.5,
+     63.9,
+     550.8,
+     568.6
+    ]
+   ]
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract_first_dem_fracture_claim.png",
+   "caption": "Abstract (p.1): ex situ X-ray nano tomography shows AM cracking due to calendering pressure; 3D DEM with bonded connections using real AM shapes; 'the changes of the applied pressure and porosity are consistent with the experimental values'; 'Our model is the first of its kind that can predict the fracture of the secondary particles along the calendering process.'",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    186.5,
+    554.3,
+    325.5
+   ],
+   "w": 2885,
+   "h": 807,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.078,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "초록 — '최초' 주장 · '압력 · 기공률이 실험과 일치' 주장 (카드 §11 이 판독으로 대조)."
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-p2-motivation",
+   "page": 1,
+   "file": "txt_p1_p2_intro_cracking_calendering_motivation.png",
+   "caption": "Introduction (p.1 right → p.2 left): Sim et al. [13] cracking and fusion of high-nickel cathodes during calendering (SEM); AM cracking can deteriorate connectivity; most studies focus on cracking during cycling; Huttner et al. [15] NMC622 cracks/breakage during calendering → larger surface area, moisture uptake.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    639.6,
+    550.8,
+    748.6
+   ],
+   "w": 1403,
+   "h": 1225,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "동기 — 압연 중 AM 균열의 실험 문헌 ([13] Sim · [15] Huttner).",
+   "parts": [
+    [
+     1,
+     302.5,
+     639.6,
+     550.8,
+     748.6
+    ],
+    [
+     2,
+     44.5,
+     63.9,
+     292.8,
+     172.9
+    ]
+   ]
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-prior-dem",
+   "page": 2,
+   "file": "txt_p2_intro_prior_calendering_dem_bond_models.png",
+   "caption": "Introduction (p.2): prior calendering DEM — Sangrós Giménez [27] (AM only), Srivastava [28], Nikpour [29,30], Ge [31,32] (XCT initial structures, binder as a bond model between AM particles), Lippke [33], Wang [34] (bond model; mechanical integrity), Asylbekov [35] (CFD-DEM CB breakage), Lundkvist [36] (unloaded stiffness from the viscoelastic binder); 'All these works (except references [28,29]) do not account for an explicit representation of the carbon-binder domain phase'; ARTISTIC digital twin [37–43].",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    459.7,
+    292.8,
+    748.6
+   ],
+   "w": 1404,
+   "h": 2548,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.845,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "선행 압연 DEM 목록 — 결합 모델은 '바인더' 표현 (Ge · Wang) 에 쓰였고, 이 논문은 결합을 2 차 입자 '안' 1 차 입자 사이에 쓴다.",
+   "parts": [
+    [
+     2,
+     44.5,
+     459.7,
+     292.8,
+     748.6
+    ],
+    [
+     2,
+     302.5,
+     63.9,
+     550.8,
+     232.8
+    ]
+   ]
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-sample",
+   "page": 2,
+   "file": "txt_p2_sample_preparation_nmc111_9622_calender_pressure.png",
+   "caption": "Experimental (p.2): NMC111 (Umicore) : C65 : PVdF 5130 = 96 : 2 : 2 (wt), NMP, Dispermat 2 h at 25 °C, comma coater on 22.5 μm Al, ovens 85/95 °C; lap-press calender BPN250, 0.54 m/min, 60 °C, various roll gaps; 'The calendering pressures were obtained from a calculation by using the roll gaps and the thickness of the electrode, which was calibrated by measuring the applied force … force sensor film' [7]; XCT samples cut by laser microdissector.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    447.7,
+    550.8,
+    707.6
+   ],
+   "w": 1406,
+   "h": 1468,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실험 전극 · 압연 조건 · 압력 = 롤 간격과 두께에서 공식으로 계산 (센서 필름으로 보정) — 판 압력을 잰 것이 아니다."
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-nanoxct",
+   "page": 3,
+   "file": "txt_p3_nanoxct_txm_41nm_weka_segmentation.png",
+   "caption": "X-ray nano computed tomography (p.3): ANATOMIX (SOLEIL) TXM, absorption mode, 8.327 keV; 500 projections over 180° (500 ms) or 1000 over 360° (500 ms, 15 μm offset); PyHST2; smoothing; 'The pixel size of the TXM and voxel size in the reconstructed volumes was 41 nm'; non-local means + unsharp mask; Trainable Weka random-forest segmentation (FIJI).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    63.9,
+    292.8,
+    344.2
+   ],
+   "w": 1406,
+   "h": 1573,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.85,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "나노 XCT 사양 — 복셀 41 nm · 분할 = 랜덤 포레스트."
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-results-rollgap",
+   "page": 3,
+   "file": "txt_p3_results_rollgap_pressure_formula_cracks_150mpa.png",
+   "caption": "Results (p.3): electrode 114 μm calendered between roll gaps of 21 μm and 6 μm; in-house formula relates the pre-calendering gap and the uncalendered thickness to the applied pressure; gap increases during calendering; 'the particles remained relatively intact at 80 MPa. At a pressure of 150 MPa, the particles showed obvious cracks.'",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    87.8,
+    550.8,
+    328.8
+   ],
+   "w": 1404,
+   "h": 1353,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.852,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "실험 판정 — 80 MPa 온전 · 150 MPa 뚜렷한 균열 (정성). '114 µm' 는 표 1 의 99.03 µm 와 다르다."
+  },
+  {
+   "key": "x3c",
+   "kind": "text",
+   "label": "p3-p4-not-quantified",
+   "page": 3,
+   "file": "txt_p3_p4_three_phase_cracks_not_quantified_no_operando.png",
+   "caption": "Results (p.3 → p.4): three-phase segmentation (AM, macro pores, nano-cracks), voxel 41×41×41 nm³, Avizo 9.4; 'The cracks are not evenly distributed or exist in every secondary particle. However, due to the small size of our electrode volume, the cracks could not be accurately quantified.'; micro-XCT porosity/tortuosity in Fig. S2; 'it is difficult to obtain in operando the mechanical behavior of particles under each pressure'.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    327.8,
+    550.8,
+    532.7
+   ],
+   "w": 1406,
+   "h": 1759,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.846,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "균열 정량 없음 (부피가 작다) · 누른 채 측정 없음 — 모델의 동기.",
+   "parts": [
+    [
+     3,
+     302.5,
+     327.8,
+     550.8,
+     532.7
+    ],
+    [
+     4,
+     44.5,
+     63.9,
+     292.8,
+     172.9
+    ]
+   ]
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-methods",
+   "page": 4,
+   "file": "txt_p4_methods_cbd_116um_27pct_real_shape_periodic.png",
+   "caption": "Methods (p.4): DEM [50] with explicit CBD; 'The CBD domain is represented by spherical particles with a diameter of 1.16 μm with a nanoporosity of 27%'; secondary AM particles of realistic shape from X-ray microcomputed tomography and the experimental PSD [39][44], composed of spherical primary particles; rolls and current collector = top and bottom planes; periodic boundary parallel to the planes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    243.8,
+    292.8,
+    412.7
+   ],
+   "w": 1404,
+   "h": 962,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "모델 구성 — CBD 구 1.16 µm (나노 기공 27 %) · 실형상 2 차 입자 = 1 차 구 응집 · 위 · 아래 판 · 옆 주기 경계."
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-bond-props-calibration",
+   "page": 4,
+   "file": "txt_p4_bond_props_equal_particle_calibrated_max_pressure.png",
+   "caption": "Methods (p.4): 'In order to decrease the free parameters, these two bond properties are set to the same value as the particle parameters. The latter (Ep, Pop) are straightforwardly calibrated by fitting the maximum pressure during calendering.'",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    183.8,
+    550.8,
+    268.8
+   ],
+   "w": 1403,
+   "h": 497,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.869,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "맞춘 값 = E_p (· Po_p) 하나 — 맞춘 대상 = 압연 최대 압력. 결합 E · ν 는 입자 값과 같게 (본문) ↔ 표 S3 은 10 GPa (입자 5)."
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4-failure-criterion",
+   "page": 4,
+   "file": "txt_p4_failure_criterion_strength_parametric_sjkr_primaries.png",
+   "caption": "Methods (p.4): BPM failure criteria (σ_B^n ≥ σ_B^cn or σ_B^t ≥ σ_B^ct); 'For normal and shear breakage to be possible, σ_B^cn = σ_B^ct'; 'This strength value at the bond level should be found by calibration. Here, as a first DEM model for the fracture of NMC particles, a simple parametric study is performed' (Fig. S3); 'the addition of cohesion (SJKR) between primary particles in our simulations was required to ensure the stability of the secondary particle. This limitation will be further investigated in future work.'",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    435.7,
+    550.8,
+    640.6
+   ],
+   "w": 1404,
+   "h": 1163,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.851,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "파단 기준 · 강도는 보정 안 함 (매개변수 연구만) · 1 차 입자 사이 SJKR 추가 = 저자가 적은 한계."
+  },
+  {
+   "key": "x4d",
+   "kind": "text",
+   "label": "p4-p5-initial-structure",
+   "page": 4,
+   "file": "txt_p4_p5_initial_structure_microxct_064um_bonds_in_contact.png",
+   "caption": "Methods (p.4 → p.5): initial microstructure = drying result of [44]; real shapes extracted from micro-scale XCT at PETRA III P05, pixel size 0.64 μm; 'Bonds are created between AM primary particles (of the same secondary particle) that are in contact in the initial microstructure.'",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    639.6,
+    550.8,
+    748.6
+   ],
+   "w": 1403,
+   "h": 949,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.858,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "형상 출처 = 마이크로 XCT (0.64 µm · [44]) — 나노 XCT 아님. 결합 = 처음 접촉한 같은 2 차 입자의 1 차 입자 쌍.",
+   "parts": [
+    [
+     4,
+     302.5,
+     639.6,
+     550.8,
+     748.6
+    ],
+    [
+     5,
+     44.5,
+     63.9,
+     292.8,
+     124.9
+    ]
+   ]
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-code-cost",
+   "page": 5,
+   "file": "txt_p5_liggghts_bpm_no_bond_damping_speed_timestep_cost.png",
+   "caption": "Methods (p.5): slurry and drying in LAMMPS [54]; calendering in LIGGGHTS [55] modified version [56] with BPM; 'we do not consider damping for the bonds'; top plane 0.01 m/s (experimental line speed 0.009 m/s; negligible influence on pressures verified); timestep 0.01 ns (around 1.5% of Rayleigh time); 2 to 9 days per run on 28 cores Intel Xeon E5-2680 v4 @ 2.40 GHz, 1 node, 128 GB (MatriCS).",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    123.9,
+    292.8,
+    304.8
+   ],
+   "w": 1406,
+   "h": 1025,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.853,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "코드 · 속도 · 시간 간격 · 비용 (2–9 일 × 28 코어)."
+  },
+  {
+   "key": "x5b",
+   "kind": "text",
+   "label": "p5-parameterization",
+   "page": 5,
+   "file": "txt_p5_parameterization_two_step_pressures_10_40pct.png",
+   "caption": "Results (p.5): 'The parameterization of the model is performed by pressure-porosity curves resulting from experimental results as shown in Table 1. The maximum pressure during calendering is recorded in the simulation, while the porosity is calculated from the electrodes after relaxation.'; two steps — compression to a given displacement, then the upper plane moves back to the original location at the same velocity; 14.2, 50.3, 98.7 and 157.7 MPa correspond to 10, 20, 30 and 40% thickness reduction.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    351.8,
+    292.8,
+    520.7
+   ],
+   "w": 1406,
+   "h": 1158,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "프로토콜 (누르기 → 같은 속도로 되돌리기) · 기공률은 이완 뒤 · 10–40 % 의 압력 (본문 값).",
+   "parts": [
+    [
+     5,
+     44.5,
+     351.8,
+     292.8,
+     520.7
+    ],
+    [
+     5,
+     302.5,
+     63.9,
+     550.8,
+     100.9
+    ]
+   ]
+  },
+  {
+   "key": "x5c",
+   "kind": "text",
+   "label": "p5-coarse-grained",
+   "page": 5,
+   "file": "txt_p5_coarse_grained_primary_159um_bonds_first_dem.png",
+   "caption": "Results (p.5): CBD nanoporosity 27% [57]; 'Although the real primary particle crystal shape is not spherical and the size is smaller than the primary particle size within the model, here, we perform a coarse-grained simulation with primary spherical particles of 1.59 μm diameter to simulate the AM mechanical behavior against the strain.'; bonds break at the failure criteria; 'this is the first time that DEM simulations have been used to predict the effect of the calendering process on secondary particle fracture.'",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    99.9,
+    550.8,
+    376.8
+   ],
+   "w": 1404,
+   "h": 1564,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.847,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "DEM 한계 진술 — 1 차 입자 = 1.59 µm 구 (실제는 더 작고 비구형) · 조대화 모의."
+  },
+  {
+   "key": "x5d",
+   "kind": "text",
+   "label": "p5-p6-porosity-methods",
+   "page": 5,
+   "file": "txt_p5_p6_porosity_two_methods_overlap_pressure_910um2.png",
+   "caption": "Results (p.5 → p.6): porosity from the volume after relaxation; orange = meshing from particle coordinates and radii, red = theoretical material volume; 'The difference comes from the overlapping appearing after the calendering between the primary particles of AM, resulting in a higher simulation error under high calendering pressures.'; 'reasonable agreement'; pressure = contact force / contact surface area with the upper plane, 'the latter of which is 910 μm2'.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    375.7,
+    550.8,
+    520.7
+   ],
+   "w": 1406,
+   "h": 1683,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기공 연산자 둘 · 겹침이 오차 · 압력 = 판 접촉력 ÷ 910 µm².",
+   "parts": [
+    [
+     5,
+     302.5,
+     375.7,
+     550.8,
+     520.7
+    ],
+    [
+     6,
+     44.5,
+     603.6,
+     292.8,
+     748.6
+    ],
+    [
+     6,
+     302.5,
+     602.5,
+     550.8,
+     616.6
+    ]
+   ]
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-p7-springback-limits",
+   "page": 6,
+   "file": "txt_p6_p7_springback_rearrangement_elastic_limit_bond_fractions.png",
+   "caption": "Results (p.6 → p.7): spring back = 'fast elastic recovery' [58]; higher maximum pressure → lower spring back degree (Fig. S4), except the first point (10%) governed by particle rearrangement; 157.7 MPa run: porosity 26.72% at maximum pressure → 29.12% after spring back vs experimental 25.16% at 150 MPa; 'This may be due to the inability of the simulation to capture the plastic behavior exhibited by the electrode during this process since we use an elastic contact model.'; ≈1.8, 4.5 and 11.1% of bonds broken at 50, 100 and 150 MPa; relaxation accounts for 3% of all bond fractures.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    602.5,
+    550.8,
+    748.6
+   ],
+   "w": 1406,
+   "h": 2768,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.849,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ DEM 한계 문장 (탄성 접촉 → 소성 못 잡음) · 되돌아옴 · 결합 파단 몫 1.8 · 4.5 · 11.1 %.",
+   "parts": [
+    [
+     6,
+     302.5,
+     602.5,
+     550.8,
+     748.6
+    ],
+    [
+     7,
+     44.5,
+     60.1,
+     292.8,
+     412.7
+    ]
+   ]
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-p8-120mpa-10pct",
+   "page": 7,
+   "file": "txt_p7_p8_selected_particle_120mpa_10pct_speculation.png",
+   "caption": "Results (p.7 → p.8): cracks mostly in bigger particles at 10% (Fig. S5) [15]; 'Since the nano-fracture we observe is smaller than the scale of our model, we are not able to observe the fracture of the secondary particle from the simulation results.'; selected particle 11.96 μm, 426 primary particles, 1748 bonds; noticeable breakage only above 120 MPa, 17% broken after 40%; 'we can speculate that in the model, secondary particle cracking occurs when the number of broken bonds is approximately above 10%, i.e., when the applied pressure is approximately above 120 MPa.'; breakage not uniform; not linear with thickness reduction.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    63.9,
+    550.8,
+    424.7
+   ],
+   "w": 1404,
+   "h": 2825,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.841,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ '120 MPa · 10 %' 의 원문 정의 (고른 입자 하나 · 추측) + 규모 한계 문장.",
+   "parts": [
+    [
+     7,
+     302.5,
+     63.9,
+     550.8,
+     424.7
+    ],
+    [
+     8,
+     44.5,
+     63.9,
+     292.8,
+     208.9
+    ]
+   ]
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-regions-qualitative",
+   "page": 8,
+   "file": "txt_p8_collector_top_regions_qualitative_scale_limits.png",
+   "caption": "Results (p.8): particles near the current collector break earlier (below 10 MPa) and deform noticeably at 75 MPa; particles near the top surface break less (<10% of bonds); bottom region has the most bond breaks (Fig. S8); breakage starts just after calendering begins; cracks favoured where curvature is higher [60]; 'These observations are qualitative'; 'due to the scale limitation, we cannot observe the fracture and the reintegration of the material due to the binder after the fracture generation'.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    207.8,
+    292.8,
+    616.6
+   ],
+   "w": 1406,
+   "h": 2296,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.844,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "위치 의존 (집전체 쪽 먼저 · 많이) · '정성' 고백 · 규모 한계."
+  },
+  {
+   "key": "x8b",
+   "kind": "text",
+   "label": "p8-conclusions",
+   "page": 8,
+   "file": "txt_p8_conclusions_0_157mpa_bond_criteria_future_fem.png",
+   "caption": "Conclusions (p.8): single formulation, 0–157 MPa; porosity in reasonable agreement; bond breakage not linear in applied force; 'With the increase of the pressure and the decrease of the electrode porosity, the source of the microstructural change in the electrode changes from the movement of particles to the deformation and fracture of particles.'; criteria of bond breakage numbers calibrated against XCT; microstructures to be passed to an FEM simulator for electrochemistry.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.5,
+    637.6,
+    292.8,
+    748.6
+   ],
+   "w": 1406,
+   "h": 2567,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.854,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결론 — 재배열 → 변형 · 파괴 전이 · 다음 = FEM 전기화학 (수송 계산은 없다).",
+   "parts": [
+    [
+     8,
+     44.5,
+     637.6,
+     292.8,
+     748.6
+    ],
+    [
+     8,
+     302.5,
+     63.9,
+     550.8,
+     412.7
+    ]
+   ]
+  },
+  {
+   "key": "x8c",
+   "kind": "text",
+   "label": "p8-si-videos",
+   "page": 8,
+   "file": "txt_p8_supporting_information_three_videos.png",
+   "caption": "Supporting Information list (p.8): SI PDF; 'A video showing particle details (MP4)'; 'A video showing structure change during the calendering simulation (MP4)'; 'A video showing bonds change during the calendering simulation (MP4)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    302.5,
+    433.7,
+    550.8,
+    556.7
+   ],
+   "w": 1406,
+   "h": 703,
+   "dpi": 400,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.904,
+   "manual_crop": "evidence paragraph rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — only the cited paragraph (text-layer line boxes ± 2 pt), ink bounding box per part, parts stacked top→bottom (16 px gap), uniform 25 px margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "보충 영상 세 편의 원문 설명 (영상 파일 이름 ↔ 내용은 카드 §5 표)."
+  },
+  {
+   "key": "v2_0",
+   "kind": "movie_frame",
+   "label": "Video S2 t=0 s",
+   "page": null,
+   "file": "vid_S2_t00s.png",
+   "caption": "Supplementary video (inbox 'Sup2', 41.7 s, 1024×768, 10 fps) — bond network of the secondary particles (bonds coloured like their particle), t = 0 s: uncalendered electrode, upper plane on top. Matches 'A video showing bonds change during the calendering simulation' by content.",
+   "rotated_deg": 0,
+   "w": 1024,
+   "h": 768,
+   "src": "a9851e22-70._Sup2_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "manual_crop": "single frame extracted with ffmpeg (select n=0; 10 fps, 418 frames), no other change (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "영상 S2 = 결합 변화 (본문 세 번째 영상 설명과 내용 일치 [관찰]) — 처음."
+  },
+  {
+   "key": "v2_21",
+   "kind": "movie_frame",
+   "label": "Video S2 t=21 s",
+   "page": null,
+   "file": "vid_S2_t21s.png",
+   "caption": "Supplementary video 'Sup2', t = 21.0 s: near maximum compression (upper plane lowest in the 3-s frame series); bond network compressed.",
+   "rotated_deg": 0,
+   "w": 1024,
+   "h": 768,
+   "src": "a9851e22-70._Sup2_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "manual_crop": "single frame extracted with ffmpeg (select n=210; 10 fps, 418 frames), no other change (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "영상 S2 — 최대 압축 근처 (3 초 간격 표본에서 판이 가장 낮은 칸 [관찰])."
+  },
+  {
+   "key": "v3_21",
+   "kind": "movie_frame",
+   "label": "Video S3 t=21 s",
+   "page": null,
+   "file": "vid_S3_t21s.png",
+   "caption": "Supplementary video (inbox 'Sup3', 41.7 s, 1024×768, 10 fps) — particle structure (primaries coloured by secondary particle, CBD black) during calendering, t = 21.0 s near maximum compression. Matches 'A video showing structure change during the calendering simulation' by content.",
+   "rotated_deg": 0,
+   "w": 1024,
+   "h": 768,
+   "src": "2d36e924-70._Sup3_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "manual_crop": "single frame extracted with ffmpeg (select n=210; 10 fps, 418 frames), no other change (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "영상 S3 = 구조 변화 — 최대 압축 근처."
+  },
+  {
+   "key": "v3_41",
+   "kind": "movie_frame",
+   "label": "Video S3 t=41.5 s",
+   "page": null,
+   "file": "vid_S3_t41s.png",
+   "caption": "Supplementary video 'Sup3', t = 41.5 s: after relaxation — upper plane back at the top of the box, bed sprung back but thinner than at t = 0 (contact with the plane lost at ≈28–30 s in the 3-s frame series).",
+   "rotated_deg": 0,
+   "w": 1024,
+   "h": 768,
+   "src": "2d36e924-70._Sup3_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "manual_crop": "single frame extracted with ffmpeg (select n=415; 10 fps, 418 frames), no other change (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "영상 S3 — 이완 끝: 판은 처음 자리 · 침대는 되돌아왔으나 처음보다 얇다 [관찰]."
+  },
+  {
+   "key": "v4_4",
+   "kind": "movie_frame",
+   "label": "Video S4 t=4 s",
+   "page": null,
+   "file": "vid_S4_t04s.png",
+   "caption": "Supplementary video (inbox 'Sup4', 17.0 s, 1728×720, 25 fps, silent audio track −91 dB) — nano-XCT rendering of one calendered secondary particle (turquoise surface, violet nano-cracks, 5 μm bar) rotating, t = 4.0 s. Matches 'A video showing particle details' by content.",
+   "rotated_deg": 0,
+   "w": 860,
+   "h": 720,
+   "src": "9307e61b-70._Sup4_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "manual_crop": "single frame extracted with ffmpeg (select n=100; 25 fps, 425 frames), black pillarbox bars removed (x 434–1293 of 1728 kept, full height 720) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "영상 S4 = 입자 상세 (나노 XCT · 그림 1b 와 같은 표현) — 회전 중."
+  },
+  {
+   "key": "v4_16",
+   "kind": "movie_frame",
+   "label": "Video S4 t=16.8 s",
+   "page": null,
+   "file": "vid_S4_t16s.png",
+   "caption": "Supplementary video 'Sup4', t = 16.8 s: the same particle sectioned (cut-away) to show internal nano-cracks (second half of the video repeats the rotation with the section).",
+   "rotated_deg": 0,
+   "w": 860,
+   "h": 720,
+   "src": "9307e61b-70._Sup4_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "manual_crop": "single frame extracted with ffmpeg (select n=420; 25 fps, 425 frames), black pillarbox bars removed (x 434–1293 of 1728 kept, full height 720) (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "영상 S4 — 단면 (내부 균열)."
+  },
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "cover",
+   "page": 1,
+   "file": "ga_cover_feature.png",
+   "caption": "Cover Feature thumbnail printed beside the title (Batteries & Supercaps 12/2023 cover: 'A. A. Franco and co-workers, Computational Model for Predicting Particle Fracture During Electrode Calendering') — artwork, no data.",
+   "rotated_deg": 0,
+   "bbox": [
+    13.0,
+    87.2,
+    41.4,
+    124.4
+   ],
+   "w": 877,
+   "h": 1138,
+   "dpi": null,
+   "src": "d8b9e078-70._Computational_model_for_predicting_particle_fracture_during_electrode_calendering.pdf",
+   "blank": 0.109,
+   "src_native": [
+    827,
+    1088
+   ],
+   "manual_crop": "embedded raster extracted at native resolution (xref 100, 827×1088 px; printed as a 28 × 37 pt thumbnail, so no page render) + uniform 25 px white margin (2026-11-16, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "표지 그림 (12/2023 · Cover Feature) — 자료 없음 · 1 차 입자 결합 개념도."
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-16) found Fig. 1–5, Fig. S1–S8, Table 1 and SI Table 1 (15 crops, all opened). SI Tables 2 and 3 were inside the tool's merged SI-table crop and are cut by hand (tS2, tS3). All 13 figure crops and Table 1 / SI Table 1 were re-cut (uneven margins; Fig. 3 also had the running-head rule and the vertical download stamp; Table 1 was the whole page; SI Table 1 held three tables). The main paper has no other numbered items; the SI has no tables other than SI Tables 1–3 (printed as 'Table 1–3' in the SI, keyed S1–S3 here).",
+ "note_manual": "Printed inconsistencies visible in the crops: Fig. 3 caption pressures (9.2 · 20.1 · 50.9 · 146.8 MPa) ≠ text pressures for the same 10–40 % stages (14.2 · 50.3 · 98.7 · 157.7 MPa; Fig. 4b agrees with the text); Fig. 4a experimental point at 80 MPa (≈28.6 %) ≠ Table 1 (27.75 %) and a 120 MPa point (≈27.8 %) has no Table 1 row; SI Table 3 bond E 10 GPa ≠ text 'same value as the particle' (NMC 5 GPa) and σ_B^t 0.038 ≠ σ_B^n 0.1 GPa although the text requires σ_B^cn = σ_B^ct; Fig. S3 'Sigma value' 0.1–1.0 ×10^6 has no unit and does not reach Table 3's 0.1 GPa; Eq. (6) printed as −|F_B^n|/A_b; text 'electrode of a thickness of 114 μm' ≠ Table 1 99.03 μm.",
+ "key_note": "keys: f<N> = figure N · fS<N> = SI figure; f<N><panel> = panel (panel_of); t1 = Table 1 · tS1–tS3 = SI Tables 1–3; e<n> = Eq. (n), e1_3 / e4_7 = stacked equation sets with definitions; x<page><letter> = evidence paragraph (kind 'text', multi-part ones list 'parts' [page, x0, y0, x1, y1]); v<video>_<t> = video frame (kind 'movie_frame'); ga = cover feature thumbnail. Video numbering = inbox file names (Sup2 · Sup3 · Sup4); the paper lists three videos without numbers.",
+ "movies": [
+  {
+   "key": "mS2",
+   "kind": "movie",
+   "label": "Supplementary video (inbox Sup2)",
+   "file": null,
+   "src": "a9851e22-70._Sup2_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "duration_s": 41.7,
+   "fps": 10,
+   "size_px": [
+    1024,
+    768
+   ],
+   "n_frames": 418,
+   "audio": false,
+   "frames": [
+    "vid_S2_t00s.png",
+    "vid_S2_t21s.png"
+   ],
+   "caption": "bond network during calendering (compression ≈0–21 s → relaxation ≈21–41.7 s) — matches 'A video showing bonds change during the calendering simulation (MP4)' [observed]"
+  },
+  {
+   "key": "mS3",
+   "kind": "movie",
+   "label": "Supplementary video (inbox Sup3)",
+   "file": null,
+   "src": "2d36e924-70._Sup3_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "duration_s": 41.7,
+   "fps": 10,
+   "size_px": [
+    1024,
+    768
+   ],
+   "n_frames": 418,
+   "audio": false,
+   "frames": [
+    "vid_S3_t21s.png",
+    "vid_S3_t41s.png"
+   ],
+   "caption": "particle structure during calendering, same run and timing as Sup2 — matches 'A video showing structure change during the calendering simulation (MP4)' [observed]"
+  },
+  {
+   "key": "mS4",
+   "kind": "movie",
+   "label": "Supplementary video (inbox Sup4)",
+   "file": null,
+   "src": "9307e61b-70._Sup4_Computational_model_for_predicting_particle_fracture_during_electrode_calendering.mp4",
+   "duration_s": 17.0,
+   "fps": 25,
+   "size_px": [
+    1728,
+    720
+   ],
+   "n_frames": 425,
+   "audio": "aac track, silent (mean/max −91 dB)",
+   "frames": [
+    "vid_S4_t04s.png",
+    "vid_S4_t16s.png"
+   ],
+   "caption": "nano-XCT rendering of one calendered secondary particle with nano-cracks, rotation then sectioned rotation — matches 'A video showing particle details (MP4)' [observed]"
+  }
+ ]
+}

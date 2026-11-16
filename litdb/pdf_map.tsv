@@ -558,3 +558,7 @@ morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem	co
 #   ⚠ 크롭 46 장 = 도구 15 (다시 자름 3: fig_5 · fig_11 · fig_16 위 회색 쪽 줄) + 손 31 (manual_crop: Fig. 3 (도구가 놓침 — 캡션 'Fig. 3' 이 다른 span) · 식 10 · 근거 글 20) + digitized.csv (275 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 clemmer2024_bpm_elastic_grain_compaction_beyond_jamming	a_soft_departure_from_jamming_the_compaction_of_deformable
 clemmer2024_bpm_elastic_grain_compaction_beyond_jamming	a soft departure from jamming the compaction of deformable
+# ── 결합 입자 모델 (BPM · LIGGGHTS 수정판 · 1.59 µm 1 차 구 응집체) 로 NMC111 2 차 입자 결합 파단을 계산한 압연 DEM (액체 LIB · 0–157.7 MPa · 압축 + 이완) — 같은 1 저자 · 같은 해 `xu2023_realistic_am_shape_cgmd_calendering` 과 다른 논문
+#   ⚠ 크롭 61 장 = 도구 15 (다시 자름 15: 그림 13 · 표 1 · SI 표 1 — 그림 S3 · S8 은 투명 마스크라 쪽 렌더로) + 손 46 (manual_crop: SI 표 2 · 3 · 패널 8 · 식 9 · 근거 문단 20 · 영상 정지 화면 6 · 표지 1) · 영상 mp4 셋은 커밋하지 않음
+xu2023_dem_bonded_particle_fracture_calendering	computational_model_for_predicting_particle_fracture
+xu2023_dem_bonded_particle_fracture_calendering	computational model for predicting particle fracture
