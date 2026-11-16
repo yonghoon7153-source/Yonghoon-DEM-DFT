@@ -82,9 +82,9 @@ N-69	대피	차례 기다림		PDF 받음 · Stershic–Simunovic–Nanda 2015 J 
 N-76	대피	끝	siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb · caafbb390	정독 125 · 끝 (트리 1 · 정독 125 = kang2026 과 같은 번호 · batch_125 에 두 편) · 표 S1 σ_ion · σ_e 세 조성 · AC σ_e ÷ DC 0.99–1.00 · 카드 문제 넷 (jung2019 · kaiser2018 · bong2023 · siroma2015 문구)
 N-77	대피	끝	strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation · 3e7cd25e0	정독 126 · 끝 (트리 2 · 정독 126) · NCM622 d50 4.0→8.3→15.6 µm 첫 충전 162→95→84 mAh/g · 비활성 2→27→31 % · 전자 σ 8.8e-4→1.4e-6 [판독] · 이온 σ 크기 무관 · 카드 문제 넷 (hippauf2019 · kawaguchi2023 · minnmann2022 · cronau2022)
 N-78	대피	끝	nam2018_dry_vs_slurry_mixed_electrode_binder_coverage_premixing_pouch · 474f9da42	정독 127 · 끝 (트리 1 · 정독 127) · GITT SE 피복률 건식→슬러리 25.2→17.5 (70 wt%) · 15.4→14.0 (80) · 12.9→5.8 (85) · 예비 혼합 5.8→9.4 % · 첫 방전 95→127 · 카드 문제 셋 (hippauf2019 L274 · L103 · doux2020 L329)
-N-79	대피	도는 중		PDF 받음 · Sakuda 2016 Solid State Ionics 285 112 · 시작 11-16 22:46 KST
+N-79	대피	끝	sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking · 364e78ab4	정독 128 · 끝 (트리 2) · SE d50 16 vs 3.8 µm · NCM111 9.4 vs 5.3 µm · 330 MPa · 2.6 mA/cm² 상대 용량 0.31 vs 0.61 [판독] · finish 확인 = build_index.py SIZE_EFFECT_SLUGS 한 줄 (koenig2023 · jeong2024 와 같은 관례) + siroma2016 관련 카드 줄 → 손 마무리
 N-80	대피	도는 중		PDF 받음 · Sakuda 2011 J Power Sources 196 6735 (PDF 문서 정보의 연도가 표와 한 해 다름 — 에이전트가 첫 쪽에서 확인) · 시작 11-16 23:02 KST
-N-81	대피	차례 기다림		PDF 받음 (+SI 1) · Hayakawa 2023 J Power Sources 555 232379
+N-81	대피	도는 중		PDF 받음 (+SI 1) · Hayakawa 2023 J Power Sources 555 232379 · 트리 2 · 11-16 23:4x KST 시작 (3 순위 오버나잇)
 N-82	대피	차례 기다림		PDF 받음 (+SI 1 · 그 밖 1) · Kissel 2025 Adv Energy Mater 15
 N-83	대피	차례 기다림		PDF 받음 (+SI 1) · Han 2024 J Energy Storage 96 112693
 N-84	대피	차례 기다림		PDF 받음 (+SI 1 · 그 밖 6) · Puls 2024 Nat Energy 9 1310
