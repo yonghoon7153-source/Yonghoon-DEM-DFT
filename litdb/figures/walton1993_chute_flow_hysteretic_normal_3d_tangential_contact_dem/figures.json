@@ -1,0 +1,1252 @@
+{
+ "slug": "walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-16",
+ "sources": [
+  "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figs. 1.1–1.6 (page 242 block = Figs. 1.1–1.3 + the shared caption). (a) Velocity; (b) density profiles; and (c) partial configurations of simulation calculations of assemblies of 1 mm diameter spheres on a frictional plane inclined 17° from the horizontal. Solid lines are instantaneous profiles, dotted lines are cumulative time average profiles. Each row is for a different flow depth (N/σ² = 1.24, 2.5, 5, 10, 20, 40 for Figs. 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, respectively). Note the non-shearing and crystalline regions in the deeper flows. (See text for discussion.)",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    70,
+    503,
+    678
+   ],
+   "w": 1912,
+   "h": 2516,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.922,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f1continued",
+   "kind": "figure",
+   "label": "1 (continued)",
+   "page": 5,
+   "file": "fig_1_cont.png",
+   "caption": "Figs. 1.1–1.6 (Continued). Page 243 block = Figs. 1.4 ('435 chute 17deg, n=501, n/A=10, fmu=0.4, elast=0.85', time = 1.0000E+01), 1.5 ('437 chute 17deg, n=500, n/A=20, fmu=0.4, elast=0.85', time = 6.0) and 1.6 ('436 chute 17deg, n=1000, n/A=40, fmu=0.4, elast=0.85', time = 2.75). Panels (a) velocity, (b) packing fraction, (c) whole calculational cell (1.5, 1.6).",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    54,
+    470,
+    652
+   ],
+   "w": 1697,
+   "h": 2485,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.935,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정) · page 5 (p.243) 스캔은 ≈1.0–1.5° 기울어 있다 (축 맞춤 실측) — 기울기는 고치지 않았다",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f1_1",
+   "kind": "figure",
+   "label": "1.1",
+   "page": 4,
+   "file": "fig_1_1.png",
+   "caption": "Fig. 1.1 (row 1 of Figs. 1.1–1.6) — printed panel title '432 chute 17deg, n=63, n/A=1.24, fmu=0.4, elast=0.85', 'time= 2.0000E+01'. (a) velocity (m/s) vs height (diameters); (b) packing fraction vs height; (c) partial configuration. Shared caption on p.242 (fig_1.png).",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    72,
+    460,
+    248.5
+   ],
+   "w": 1726,
+   "h": 729,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.92,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f1_2",
+   "kind": "figure",
+   "label": "1.2",
+   "page": 4,
+   "file": "fig_1_2.png",
+   "caption": "Fig. 1.2 — printed title '433 chute 17deg, n=125, n/A=2.5, fmu=0.4, elast=0.85', 'time= 8.0000E+00'. (a) velocity; (b) packing fraction (axis 0–0.50); (c) partial configuration. Shared caption on p.242.",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    262,
+    460,
+    440.5
+   ],
+   "w": 1723,
+   "h": 734,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.915,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f1_3",
+   "kind": "figure",
+   "label": "1.3",
+   "page": 4,
+   "file": "fig_1_3.png",
+   "caption": "Fig. 1.3 — printed title '434 chute 17deg, n=250, n/A=5, fmu=0.4, elast=0.85', 'time= 1.0000E+01'. (a) velocity (solid = instantaneous, dotted = cumulative time average); (b) packing fraction (axis 0–0.60, maximum inside the flow); (c) partial configuration. Shared caption on p.242.",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    459,
+    460,
+    634.6
+   ],
+   "w": 1722,
+   "h": 724,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.906,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f1_4",
+   "kind": "figure",
+   "label": "1.4",
+   "page": 5,
+   "file": "fig_1_4.png",
+   "caption": "Fig. 1.4 — printed title '435 chute 17deg, n=501, n/A=10, fmu=0.4, elast=0.85', 'time= 1.0000E+01'. (a) velocity (plug over a thin shearing layer); (b) packing fraction (axis 0–0.8); (c) partial configuration (crystalline layers). Shared caption on p.242.",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    55,
+    470,
+    242
+   ],
+   "w": 1667,
+   "h": 783,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.919,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정) · page 5 (p.243) 스캔은 ≈1.0–1.5° 기울어 있다 (축 맞춤 실측) — 기울기는 고치지 않았다",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f1_5",
+   "kind": "figure",
+   "label": "1.5",
+   "page": 5,
+   "file": "fig_1_5.png",
+   "caption": "Fig. 1.5 — printed title '437 chute 17deg, n=500, n/A=20, fmu=0.4, elast=0.85', 'time= 6.0'. (a) velocity; (b) packing fraction; (c) entire calculational cell. Shared caption on p.242.",
+   "rotated_deg": 0,
+   "bbox": [
+    38,
+    254,
+    470,
+    442
+   ],
+   "w": 1495,
+   "h": 785,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.926,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정) · page 5 (p.243) 스캔은 ≈1.0–1.5° 기울어 있다 (축 맞춤 실측) — 기울기는 고치지 않았다",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f1_6",
+   "kind": "figure",
+   "label": "1.6",
+   "page": 5,
+   "file": "fig_1_6.png",
+   "caption": "Fig. 1.6 — printed title '436 chute 17deg, n=1000, n/A=40, fmu=0.4, elast=0.85', 'time= 2.75'. (a) velocity; (b) packing fraction (≈0.72–0.73 near the bottom, ≈0.6 in the middle [read]); (c) entire calculational cell. Shared caption on p.242.",
+   "rotated_deg": 0,
+   "bbox": [
+    34,
+    453,
+    470,
+    641.2
+   ],
+   "w": 1509,
+   "h": 787,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.933,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정) · page 5 (p.243) 스캔은 ≈1.0–1.5° 기울어 있다 (축 맞춤 실측) — 기울기는 고치지 않았다 · 아래쪽 x 축 제목 'Packing Fraction' 을 살리려고 띠를 641.2 pt 까지 내리고, 왼쪽 아래에 걸린 'Figs. 1.1–1.6 (Continued).' 글자 조각 (34–140 × 636.4–641.2 pt) 만 흰색 처리",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Mean velocity versus flow depth for simulations of gravity flow of 1 mm diameter spheres on a 17°, frictional, inclined plane. Legend (as printed): □ e = 0.6, μ = 0.4, K = 100 · ○ e = 0.85, μ = 0.4, K = 100 · ⊕ e = 0.85, μ = 0.4, K = 10000 · ● e = 0.85, μ = 0.4, K = 1000 · ■ e = 0.95, μ = 0.4, K = 100+ · ⊞ e = 0.85, μ = 1.0, K = 100. x = particles per unit area N/σ²; y = mean flow velocity (m/s).",
+   "rotated_deg": 0,
+   "bbox": [
+    279,
+    76,
+    504,
+    268
+   ],
+   "w": 925,
+   "h": 782,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.928,
+   "manual_crop": "2026-11-16 손 크롭 — 도구 (extract_figures.py --dry) 가 0 개를 냈다 (스캔 PDF · 쪽마다 한 장짜리 1 비트 래스터 300 dpi · f1 '거의 백지' · f2 '영역 없음' 으로 제외) → 원 래스터 해상도 그대로 300 dpi 로 렌더 · 흰 여백 잘라 사방 15 px · 캡션 = 인쇄 글자를 옮겨 적음 (텍스트 층 OCR 깨짐 정정)",
+   "viewed_how": "2026-11-16 litdb-curator — 그림 9 장 모음 (2 · 3 열) + fig_1_6 아래 띠 원 크기 열람으로 축 · 눈금 글자 · 범례 · 패널 글자 · 잘림 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq-lf-v",
+   "page": 2,
+   "file": "eq_01_leapfrog_translational_velocity.png",
+   "caption": "p.240 (unnumbered): ẋ^{n+1/2} = ẋ^{n−1/2} + (F_x^n/m + g_x)Δt — leap-frog velocity update ('velocity,'; same form for y, z)",
+   "rotated_deg": 0,
+   "bbox": [
+    282,
+    117,
+    440,
+    171
+   ],
+   "w": 640,
+   "h": 212,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.96,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq-lf-x",
+   "page": 2,
+   "file": "eq_02_leapfrog_position.png",
+   "caption": "p.240 (unnumbered): x^{n+1} = x^n + ẋ^{n+1/2}Δt — leap-frog position update ('position,')",
+   "rotated_deg": 0,
+   "bbox": [
+    282,
+    173,
+    400,
+    208.5
+   ],
+   "w": 448,
+   "h": 141,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.945,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq-lf-w",
+   "page": 2,
+   "file": "eq_03_leapfrog_angular_velocity.png",
+   "caption": "p.240 (unnumbered): ω̇_x^{n+1/2} = ω̇_x^{n−1/2} + (N_x^n/I_0)Δt — 'angular velocity,' (symbol printed with an over-dot)",
+   "rotated_deg": 0,
+   "bbox": [
+    282,
+    209,
+    410,
+    264
+   ],
+   "w": 506,
+   "h": 220,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.945,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq-FN",
+   "page": 2,
+   "file": "eq_04_normal_force_k1_loading_k2_unloading.png",
+   "caption": "p.240 (unnumbered): F_N = K₁α for loading; K₂(α − α₀) for unloading — the WB hysteretic normal force (α = overlap; K₂ > K₁; α₀ = overlap where the unloading force is set to zero)",
+   "rotated_deg": 0,
+   "bbox": [
+    282,
+    531,
+    450,
+    566
+   ],
+   "w": 687,
+   "h": 145,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.92,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq-e",
+   "page": 2,
+   "file": "eq_05_restitution_e_sqrt_k1_over_k2.png",
+   "caption": "p.240 (inline): 'given by e = √(K₁/K₂), independent of the relative [velocity of impact]' — constant coefficient of restitution of the WB normal model",
+   "rotated_deg": 0,
+   "bbox": [
+    282,
+    640.6,
+    502,
+    655.2
+   ],
+   "w": 919,
+   "h": 83,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.887,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 3,
+   "file": "eq_06_eq1_tangential_stiffness_kt.png",
+   "caption": "Eq. (1), p.241: K_T = K₀(1 − (T − T*)/(μF_N − T*))^γ for T increasing; K_T = K₀(1 − (T* − T)/(μF_N + T*))^γ for T decreasing — effective tangential stiffness parallel to the existing friction force",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    378,
+    265,
+    464
+   ],
+   "w": 920,
+   "h": 366,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.949,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq-kij",
+   "page": 3,
+   "file": "eq_07_contact_unit_normal_kij.png",
+   "caption": "p.241 (inline): k̂_ij = (r_j − r_i)/|r_j − r_i| — unit vector from the centre of sphere I toward J = contact normal",
+   "rotated_deg": 0,
+   "bbox": [
+    283,
+    127.4,
+    503,
+    175.8
+   ],
+   "w": 927,
+   "h": 228,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.87,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px · 위아래 이웃 줄 조각 제거",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq-T0",
+   "page": 3,
+   "file": "eq_08_project_old_friction_onto_tangent_plane.png",
+   "caption": "p.241 (unnumbered): T₀ = k̂_ij × T_old × k̂_ij = T_old − k̂_ij(k̂_ij · T_old) — previous friction force projected onto the current tangent plane",
+   "rotated_deg": 0,
+   "bbox": [
+    284,
+    243,
+    440,
+    286
+   ],
+   "w": 462,
+   "h": 188,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.933,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq-Tstart",
+   "page": 3,
+   "file": "eq_09_rescale_starting_friction_magnitude.png",
+   "caption": "p.241 (unnumbered): T = |T_old/T₀| T₀ — projected force renormalised to the old magnitude ('starting' friction force)",
+   "rotated_deg": 0,
+   "bbox": [
+    284,
+    355,
+    420,
+    377
+   ],
+   "w": 336,
+   "h": 74,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.91,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq-that",
+   "page": 3,
+   "file": "eq_10_unit_vector_t_hat.png",
+   "caption": "p.241 (inline): t̂ = T/|T| — unit vector of the 'starting' friction force",
+   "rotated_deg": 0,
+   "bbox": [
+    284,
+    381.2,
+    503,
+    418.6
+   ],
+   "w": 924,
+   "h": 168,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.885,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq-ds",
+   "page": 3,
+   "file": "eq_11_relative_surface_displacement_ds.png",
+   "caption": "p.241 (unnumbered): Δs^{n−1/2} = [k̂_ij × (v_j^{n−1/2} − v_i^{n−1/2}) × k̂_ij + r_i(ω_i^{n−1/2} × k̂_ij) + r_j(ω_j^{n−1/2} × k̂_ij)]Δt ≈ Δr_ij − k̂_ij(k̂_ij · Δr_ij) + [r_i(ω_i × k̂_ij) + r_j(ω_j × k̂_ij)]Δt — relative surface displacement projected onto the tangent plane",
+   "rotated_deg": 0,
+   "bbox": [
+    284,
+    457,
+    503,
+    578.5
+   ],
+   "w": 923,
+   "h": 501,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq-dspar",
+   "page": 6,
+   "file": "eq_12_parallel_displacement_ds_par.png",
+   "caption": "p.244 (unnumbered): Δs_∥ = (Δs^{n−1/2} · t̂) t̂ — displacement parallel to the 'old' friction force",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    109,
+    150,
+    125
+   ],
+   "w": 404,
+   "h": 81,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.926,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq-dsperp",
+   "page": 6,
+   "file": "eq_13_perpendicular_displacement_ds_perp.png",
+   "caption": "p.244 (unnumbered): Δs_⊥ = Δs^{n−1/2} − Δs_∥ — displacement perpendicular to it",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    151,
+    155,
+    167.5
+   ],
+   "w": 426,
+   "h": 82,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.936,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq-Tstar",
+   "page": 6,
+   "file": "eq_14_turning_point_scaling_with_normal_force.png",
+   "caption": "p.244 (unnumbered): T*′ = T*|F_N^n/F_N^{n−1}| — remembered turning point scaled in proportion to the normal-force change",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    302,
+    150,
+    320
+   ],
+   "w": 414,
+   "h": 83,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.925,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq-Tpar",
+   "page": 6,
+   "file": "eq_15_parallel_force_increment_t_par.png",
+   "caption": "p.244 (unnumbered): T_∥ = T + K_T Δs_∥ — parallel component with K_T from Eq. (1) using T*′",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    389,
+    130,
+    409
+   ],
+   "w": 330,
+   "h": 78,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.918,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq-reversal",
+   "page": 6,
+   "file": "eq_16_reversal_rule_t_star_sign_flip.png",
+   "caption": "p.244 (rule in text): if Δs^{n−1/2}·t̂ < 0 and T + (Δs^{n−1/2}·t̂)K_T < 0 simultaneously, T_∥ has reversed and T* is replaced by −T* for the next step",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    412.8,
+    264,
+    499.2
+   ],
+   "w": 920,
+   "h": 376,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.844,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "eq-Tperp",
+   "page": 6,
+   "file": "eq_17_perpendicular_force_k0_ds_perp.png",
+   "caption": "p.244 (unnumbered): T_⊥ = K₀Δs_⊥ — perpendicular displacement treated as new displacement with stiffness K₀",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    586.5,
+    120,
+    602.5
+   ],
+   "w": 289,
+   "h": 70,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.922,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq-Tsum",
+   "page": 6,
+   "file": "eq_18_tangential_force_vector_sum.png",
+   "caption": "p.244 (unnumbered): T′ = T_∥ + T_⊥ — tentative tangential force (then scaled back to the friction limit μF_N if exceeded, p.244 right column)",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    637.5,
+    115,
+    653
+   ],
+   "w": 275,
+   "h": 75,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.931,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "eq-units",
+   "page": 7,
+   "file": "eq_19_nondimensional_units_v_star_k_star.png",
+   "caption": "p.245 (inline): t* = t√(g/σ); l* = l/σ; m* = m/m_p; v* = v/√(gσ) ≈ 10.1v; K* = Kσ/mg ≈ 68.4K — natural non-dimensional units",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    271.8,
+    265,
+    358.2
+   ],
+   "w": 925,
+   "h": 372,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.852,
+   "manual_crop": "2026-11-16 식 크롭 — 원문에 번호가 붙은 식은 (1) 하나뿐이라 나머지는 인쇄 순서대로 번호를 매겼다 (파일 이름 eq_NN) · 텍스트 층 줄 상자 사이의 띠를 300 dpi (원 스캔 해상도) 로 렌더 · 잉크 경계로 잘라 사방 15 px · 위아래 이웃 줄 조각 제거",
+   "viewed_how": "2026-11-16 litdb-curator — 식 모음 2 장 (10 · 9 식) 으로 분수선 · 첨자 · 근호 · 식 번호 (1) · 이웃 줄 조각 없음 확인 (eq_07 은 조각 제거 뒤 원 크기 재열람)",
+   "viewed": true
+  },
+  {
+   "key": "x239_abstract",
+   "kind": "text",
+   "label": "p239_abstract",
+   "page": 1,
+   "file": "txt_p239_abstract_hysteretic_losses_17deg_regimes.png",
+   "caption": "PDF p.1 (journal p.239) abstract: molecular-dynamics-like simulations; nearly-rigid particles; 'Energy losses … occur only via displacement-dependent hysteretic loading/unloading paths and sliding friction'; 17° incline; μ < tan θ → unbounded acceleration; μ ≫ tan θ (e.g. factor 2) → arrested flow.",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    253.6,
+    504,
+    356
+   ],
+   "w": 1820,
+   "h": 437,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.805,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x239_setup",
+   "kind": "text",
+   "label": "p239_setup",
+   "page": 1,
+   "file": "txt_p239_setup_periodic_bed_initial_state_steady.png",
+   "caption": "PDF p.1, §1 (two pieces: left column + right column top): periodic on four sides, frictional bottom plane, free top; spheres placed randomly with initial solids packing ≤ 0.4, small random velocities + initial mean velocity; gravity tilted; steady state then time averages; no side walls; particles per unit area fixed.",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    414.6,
+    266,
+    608.2
+   ],
+   "w": 927,
+   "h": 1714,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.819,
+   "pieces": [
+    {
+     "page": 1,
+     "bbox": [
+      45,
+      414.6,
+      266,
+      608.2
+     ]
+    },
+    {
+     "page": 1,
+     "bbox": [
+      283.5,
+      391,
+      505,
+      597.2
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x240_validation",
+   "kind": "text",
+   "label": "p240_validation",
+   "page": 2,
+   "file": "txt_p240_validation_experiments_couette_kinetic.png",
+   "caption": "PDF p.2 left column: model ↔ 2D chute experiments (Drake 1988; 1992), Couette stresses (Savage & Sayed 1984; Campbell 1986; Walton 1990), kinetic theory without friction (Lun et al. 1984 …) — 'give us confidence'.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    198.6,
+    264,
+    466
+   ],
+   "w": 921,
+   "h": 1119,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.833,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x240_method",
+   "kind": "text",
+   "label": "p240_method",
+   "page": 2,
+   "file": "txt_p240_numerical_method_wb_3d_leapfrog.png",
+   "caption": "PDF p.2 §2 (two pieces): 'straight forward extension to 3-dimensions of the 2-dimensional contact force models and integration equations of Walton and Braun (1986), (WB model)'; leap-frog for 6 degrees of freedom; spherical → only angular velocity needed.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    511.2,
+    264,
+    656
+   ],
+   "w": 923,
+   "h": 806,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.83,
+   "pieces": [
+    {
+     "page": 2,
+     "bbox": [
+      44,
+      511.2,
+      264,
+      656
+     ]
+    },
+    {
+     "page": 2,
+     "bbox": [
+      282.5,
+      79,
+      503,
+      117.2
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x240_symbols",
+   "kind": "text",
+   "label": "p240_symbols",
+   "page": 2,
+   "file": "txt_p240_symbols_orientation_quaternion.png",
+   "caption": "PDF p.2 right column: symbol definitions for the finite-difference equations; orientations not needed for forces; quaternion method (Evans 1977) 'in anticipation of utilizing non-spherical particles in future calculations'.",
+   "rotated_deg": 0,
+   "bbox": [
+    282,
+    261.5,
+    503,
+    467.6
+   ],
+   "w": 927,
+   "h": 868,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.828,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x240_p241_normal",
+   "kind": "text",
+   "label": "p240_p241_normal",
+   "page": 2,
+   "file": "txt_p240_p241_normal_force_alpha0_restitution_fe_evidence.png",
+   "caption": "PDF p.2 §2.1 + p.3 top (two pieces): normal force 'identical to the WB model'; α = overlap; K₂ > K₁; α₀ = overlap where the unloading force is zero 'due to inelastic deformation of the surfaces'; e = √(K₁/K₂) independent of impact velocity; evidence and FE calculations in Walton (1992).",
+   "rotated_deg": 0,
+   "bbox": [
+    282,
+    502.8,
+    503,
+    655.2
+   ],
+   "w": 926,
+   "h": 845,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.866,
+   "pieces": [
+    {
+     "page": 2,
+     "bbox": [
+      282,
+      502.8,
+      503,
+      655.2
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      44,
+      79.5,
+      264,
+      117.6
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x241_tangential",
+   "kind": "text",
+   "label": "p241_tangential",
+   "page": 3,
+   "file": "txt_p241_tangential_mindlin_parallel_perpendicular.png",
+   "caption": "PDF p.3 §2.2: 2D surface extension of WB's 1D approximation to Mindlin (1949); stiffness decreases with tangential displacement to zero at full sliding; parallel and perpendicular displacements treated separately, combined vectorially, checked against μF_N.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    164.4,
+    266,
+    370.2
+   ],
+   "w": 930,
+   "h": 868,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.835,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x241_eq1_symbols",
+   "kind": "text",
+   "label": "p241_eq1_symbols",
+   "page": 3,
+   "file": "txt_p241_eq1_symbols_gamma_plastic.png",
+   "caption": "PDF p.3 below Eq. (1): K₀ initial tangential stiffness; T* starts at zero, set to T at each increasing↔decreasing change; γ often 1/3 (Mindlin-like); 'A value of 1 or 2 for γ more closely mimics … plastic deformation in the contact region (Drake and Walton, 1992)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    474.7,
+    266,
+    620
+   ],
+   "w": 927,
+   "h": 614,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.826,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x241_small_disp",
+   "kind": "text",
+   "label": "p241_small_disp",
+   "page": 3,
+   "file": "txt_p241_small_displacement_assumption.png",
+   "caption": "PDF p.3 (two pieces): normal direction changes continuously during a contact; 'The simulation model assumes that the displacements from one time step to the next are relatively small'.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    618.2,
+    266,
+    655.6
+   ],
+   "w": 925,
+   "h": 355,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.844,
+   "pieces": [
+    {
+     "page": 3,
+     "bbox": [
+      44,
+      618.2,
+      266,
+      655.6
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      283.5,
+      78.6,
+      503,
+      116.5
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x244_parallel",
+   "kind": "text",
+   "label": "p244_parallel",
+   "page": 6,
+   "file": "txt_p244_parallel_wb_positive_t_normal_force_scaling.png",
+   "caption": "PDF p.6 left column: parallel part treated almost identically with the 1D WB model except T always positive; T* scaled in proportion to the normal-force change.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    175,
+    264,
+    297.6
+   ],
+   "w": 923,
+   "h": 521,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.858,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x244_perpendicular",
+   "kind": "text",
+   "label": "p244_perpendicular",
+   "page": 6,
+   "file": "txt_p244_perpendicular_no_preexisting_strain.png",
+   "caption": "PDF p.6 left column: perpendicular displacement assumed to have no pre-existing surface strain → new displacement with stiffness K₀.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    497.2,
+    264,
+    583.2
+   ],
+   "w": 922,
+   "h": 369,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.854,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x244_limit_truball",
+   "kind": "text",
+   "label": "p244_limit_truball",
+   "page": 6,
+   "file": "txt_p244_friction_limit_linear_truball_check.png",
+   "caption": "PDF p.6 right column: tangential force scaled back to the friction limit μF_N; 'When the exponent, γ, is set to zero, the model becomes linear' — checked against Cundall and Strack's TRUBALL linear 2D model, 'essentially identical results' (Trent and Walton, 1987).",
+   "rotated_deg": 0,
+   "bbox": [
+    282.5,
+    78.1,
+    502,
+    248
+   ],
+   "w": 922,
+   "h": 716,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.841,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x244_results",
+   "kind": "text",
+   "label": "p244_results",
+   "page": 6,
+   "file": "txt_p244_p245_results_flow_regimes.png",
+   "caption": "PDF p.6 §3 + p.7 first line (two pieces): μ < tan θ → unbounded acceleration; 0.5 per σ² → accelerate; 1–2 per unit area → slower steady flows; shallow (< 5) monotonically increasing velocity; deeper → non-shearing region over a thin shearing layer; < 2.5 → decreasing density; deepest → uniform (random close packed or crystal) non-shearing region over a lower-density shearing region.",
+   "rotated_deg": 0,
+   "bbox": [
+    282.5,
+    294.1,
+    502,
+    653.6
+   ],
+   "w": 925,
+   "h": 1609,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.828,
+   "pieces": [
+    {
+     "page": 6,
+     "bbox": [
+      282.5,
+      294.1,
+      502,
+      653.6
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      44,
+      80.3,
+      264,
+      94.2
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x245_parameters",
+   "kind": "text",
+   "label": "p245_parameters",
+   "page": 7,
+   "file": "txt_p245_parameters_e085_mu04_d1mm_mass_units.png",
+   "caption": "PDF p.7 left column: Figs. 1.1–1.6 use e = 0.85, interparticle μ = 0.4 and the same μ with the plane; d = 1 mm, m = 1.492 × 10⁻⁶ kg, g = 9.8 m/s², MKS units; non-dimensional units (t*, l*, m*, v* ≈ 10.1v, K* ≈ 68.4K).",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    80.3,
+    265,
+    358.2
+   ],
+   "w": 929,
+   "h": 1173,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.825,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x245_crystals",
+   "kind": "text",
+   "label": "p245_crystals",
+   "page": 7,
+   "file": "txt_p245_crystals_monodisperse_smooth_small_cell.png",
+   "caption": "PDF p.7 left column: crystalline non-shearing regions for depths 10, 20, 40 probably more pronounced than in a physical test — identical sizes, perfectly smooth (frictional) plane, small cell 'only 5 or 10 particles across'.",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    355.8,
+    266,
+    573
+   ],
+   "w": 927,
+   "h": 917,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.821,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x245_2d_3d",
+   "kind": "text",
+   "label": "p245_2d_3d",
+   "page": 7,
+   "file": "txt_p245_crystals_2d_more_than_3d.png",
+   "caption": "PDF p.7 (two pieces): 'The propensity to form crystalline regions is much more pronounced in two-dimensions than in three' (Walton & Braun 1986; Zhang & Campbell 1992 Couette).",
+   "rotated_deg": 0,
+   "bbox": [
+    45,
+    571.1,
+    266,
+    655.8
+   ],
+   "w": 925,
+   "h": 551,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.837,
+   "pieces": [
+    {
+     "page": 7,
+     "bbox": [
+      45,
+      571.1,
+      266,
+      655.8
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      283.5,
+      283.3,
+      504,
+      321.5
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x245_elastic",
+   "kind": "text",
+   "label": "p245_elastic",
+   "page": 7,
+   "file": "txt_p245_p246_elastic_slower_deeper_shearing.png",
+   "caption": "PDF p.7 right column + p.8 top (two pieces): Fig. 2 discussion — more elastic particles flow slower and have a deeper shearing layer; energy dissipation tied to the depth of shearing; deep assemblies flow faster.",
+   "rotated_deg": 0,
+   "bbox": [
+    283.5,
+    319.3,
+    504,
+    656
+   ],
+   "w": 928,
+   "h": 1909,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.825,
+   "pieces": [
+    {
+     "page": 7,
+     "bbox": [
+      283.5,
+      319.3,
+      504,
+      656
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      44,
+      78.1,
+      265,
+      188.8
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x246_stiffness",
+   "kind": "text",
+   "label": "p246_stiffness",
+   "page": 8,
+   "file": "txt_p246_stiffness_sensitivity_overlap_half_to_5pct.png",
+   "caption": "PDF p.8 left column: 'An unanticipated finding is the pronounced sensitivity of the velocity and character of the deeper flows to the effective stiffness' — soft particles: static overlaps ≈ one half of one percent of a diameter (depth 40), dynamic up to 5 % in the lower shearing layer; stiffness ×10–×100 → deeper shearing layer and lower velocity for depths > 10; shallow flows (< 5 per σ²) relatively insensitive (dynamic overlaps ≈ 0.5 %).",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    186.8,
+    265,
+    526.5
+   ],
+   "w": 924,
+   "h": 1425,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.828,
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  },
+  {
+   "key": "x246_vs_experiment",
+   "kind": "text",
+   "label": "p246_vs_experiment",
+   "page": 8,
+   "file": "txt_p246_differ_from_experiments_flat_incline.png",
+   "caption": "PDF p.8 (two pieces): flows differ qualitatively from the experiments of Johnson et al. (1990); unclear whether the perfectly flat incline is the reason; roughness to be introduced; theory comparisons anticipated.",
+   "rotated_deg": 0,
+   "bbox": [
+    44,
+    524.3,
+    266,
+    657
+   ],
+   "w": 923,
+   "h": 899,
+   "dpi": 300,
+   "src": "0ccc9050-72._Numerical_simulation_of_inclined_chute_flows_of_monodisperse_inelastic_frictional_spheres.pdf",
+   "blank": 0.839,
+   "pieces": [
+    {
+     "page": 8,
+     "bbox": [
+      44,
+      524.3,
+      266,
+      657
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      282.5,
+      78.8,
+      503,
+      153
+     ]
+    }
+   ],
+   "manual_crop": "2026-11-16 손 크롭 — 카드가 숫자 · 정의 · 단정의 근거로 인용한 문단만 (쪽 전체 아님) · 텍스트 층 줄 상자 사이로 자름 · 300 dpi · 가장자리 이웃 줄 조각 띠 제거 · 흰 여백 잘라 사방 15 px · 두 조각이면 위아래로 이어 붙임 (사이 24 px)",
+   "viewed_how": "2026-11-16 litdb-curator — 첫 줄 · 끝 줄 띠 모음 2 장 (19 장 · 조각마다) 으로 이웃 줄 · 쪽 머리글 · 쪽 번호 섞임 없음 확인",
+   "viewed": true
+  }
+ ]
+}

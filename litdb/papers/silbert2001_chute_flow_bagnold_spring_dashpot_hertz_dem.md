@@ -514,6 +514,7 @@
 - 접촉 법칙 계보 · 우리 덱: `luding2008_cohesive_frictional_contact_models` (hooke/hysteresis 정의서 · Walton–Braun 대체판) · `ai2011_rolling_resistance_contact_models_dem` (우리 덱의 cdt 표기) · `shenouda2020_dem_metal_powder_am_liggghts_tutorial` (덱 줄) · `thorntonning1998_adhesive_elastoplastic_contact` (C′) · `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` (LAMMPS gran/hertz/history 를 쓰는 전지 DEM).
 - 강성 낮추기 · 보정: `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior` · `morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem` · `paulick2015_elastic_particle_properties_dem_review` · `coetzee2017_dem_calibration_review` · `haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem`.
 - 조밀 · 다접촉: `brodu2015_multiple_contact_dem_dense_granular` (같은 그룹 Silbert 2002 인용) · `clemmer2024_bpm_elastic_grain_compaction_beyond_jamming`.
+- 참고 [23] 의 원문 (2026-11-16 카드): [`walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem`](walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem.md) — WB 이력 법선의 3D 판 + 2D 면 증분 접선 (T* 기억 · 평행 / 수직 분해 · 뒤집힘이면 −T*) = 위 p.4 *"…as does Walton [23]"* 의 대상 · 깊은 흐름의 강성 민감 (무른 구 동적 겹침 ≤5 % of d · p.246).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
