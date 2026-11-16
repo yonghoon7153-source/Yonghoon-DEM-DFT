@@ -1,0 +1,35 @@
+{
+  "label": "DEVELOPMENT_DATA_ONLY",
+  "units": "normalized 2D code units; not MPa",
+  "source_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+  "python": "3.12.3",
+  "numpy": "2.5.2",
+  "grid": 32,
+  "steps": 1200,
+  "dt": 0.0005,
+  "wall_speed": 0.15,
+  "friction": 0.2,
+  "material": {
+    "E": 1.0,
+    "nu": 0.3,
+    "yield_stress": 0.02,
+    "rho": 1.0
+  },
+  "arm_seconds": 600.0,
+  "initial_points": 1108,
+  "disk_count": 4,
+  "initial_state_sha256": "f303a504bc018c9274ee893350442bed558a6a33ae76cc2b1c09b49f1fbade10",
+  "threads": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "registered_conclusions_adoptable": false,
+  "physical_qualification": false,
+  "limitations": [
+    "support-node contact may occur before geometric contact",
+    "sequential multi-body projection has finite residual/order effects",
+    "small normalized development material; no physical calibration",
+    "no unloading or grid/dt convergence qualification"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "mixer": {
+    "received_archive": "mixer_e0_reseal_result.tar.gz",
+    "bytes": 9356805,
+    "sha256": "32d309bc11a806bf30777e4d3c30def4d8b6d02613198c8dd988d44b3f64229a",
+    "files": 695,
+    "gzip_and_tar_read": "PASS",
+    "source_pin": "ad7c1f826525d86166d65ad3c50ef82bce7e46fc",
+    "source_manifest_files": 272,
+    "source_manifest_match": true,
+    "operator": "author",
+    "packaging_status": "original shell tar returned 1; archive read and checked on receipt",
+    "command_rc": 1,
+    "attempted_checks": 7,
+    "expected_outcomes": 6,
+    "failed_check": "smoke_blind",
+    "failure": "FileNotFoundError: missing packaged launcher",
+    "missing_member": "dem_scripts/mixer_20260921/launch_highbo.sh",
+    "remaining_checks": "not run",
+    "research_results": 0
+  },
+  "suyoung": {
+    "received_archive": "suyoung_sf2d_result.tar.gz",
+    "bytes": 15484,
+    "sha256": "daec108bcc9de71f6acc39706cb2ad490fecfc45d336bb9e070004ab0030284c",
+    "files": 13,
+    "gzip_and_tar_read": "PASS",
+    "source_pin": "ad7c1f826525d86166d65ad3c50ef82bce7e46fc",
+    "source_manifest_files": 3,
+    "source_manifest_match": true,
+    "operator": "author",
+    "packaging_status": "original shell tar returned 1; archive read and checked on receipt",
+    "command_rc": 0,
+    "status": "DEVELOPMENT_COMPLETE",
+    "trace_rows": {
+      "S": 51,
+      "F": 51
+    },
+    "reported_completed_steps_per_arm": 1200,
+    "tail_mean_window_steps": 240,
+    "recomputed_ratio_from_summary": 2.469217025330513,
+    "ratio_check": "PASS",
+    "tail_means_independently_recomputed": false,
+    "trace_scope": "sampled every 24 steps plus first/final; full 240-step mean not reconstructible",
+    "source_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+    "rerun_required": false
+  }
+}
