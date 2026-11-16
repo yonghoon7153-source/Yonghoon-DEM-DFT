@@ -13630,7 +13630,7 @@
    "title": "[혁주] MD — UMA 검증 (MD-0) 먼저 → 1 단계가 고른 계면 MD (MD-1) — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
    "statement": "카드 db/properties/hyeokju_lzo_md_card_2026_11_16.json 이 정의다: MD-0 = Li₂ZrO₃ 벌크 · Li₂ZrO₃ | Li₆PS₅Cl 계면 UMA NVT 600 K 스냅숏 각 5 장의 UMA 대 QE PBE 힘 · 상대 에너지 비교 · G1 (힘 MAE ≤ 0.10 · 원소별 ≤ 0.15 eV/Å) · G2 (상대 에너지 RMSE ≤ 5 meV/atom) — 둘 다 넘어야 MD-1 (결과 전 개정).",
    "rationale": "혁주 1 단계의 명시적 계면 · AIMD 자리 · 사용자 11-16 AskUserQuestion 'UMA 검증부터 지금'.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -13651,7 +13651,31 @@
      "session": "대피 세션 claude/evac-2026-11-12"
     }
    ],
-   "_note": "proposed — 방향은 사용자 결정 ('UMA 검증부터 지금') · G1 · G2 문턱 승인 대기."
+   "_note": "active — 사용자 비준 2026-11-17 (본 세션 복귀 뒤 AskUserQuestion · 결과 전) · 방향은 11-16 사용자 결정 ('UMA 검증부터 지금') · 다음 = MD-0 (계면 셀은 메모리 프로브 먼저) · 11-17 채팅 '승인' 은 대피 세션에서 원장에 못 적혔다 (세션 권한 검사).",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전 · 대피 세션)"
+    },
+    {
+     "at": "2026-11-17",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] MD 카드 (UMA 검증 MD-0 먼저 · 결과 전) 의 통과 문턱을 비준할까요? G1 힘: 전체 MAE ≤ 0.10 eV/Å 이고 원소별 (Zr · O · P · S) MAE ≤ 0.15 eV/Å · G2 에너지: 스냅숏 상대 에너지 RMSE ≤ 5 meV/atom. 둘 다 넘어야 계면 MD (MD-1) 로 가고, 하나라도 못 넘으면 MD-1 없음' → '비준 — 이 문턱 그대로 (Recommended)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T16:24:42Z",
+    "commit": "f1040768bed3fe8e4b601b0810825ee915c733c8",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] MD 카드 (UMA 검증 MD-0 먼저 · 결과 전) 의 통과 문턱을 비준할까요? G1 힘: 전체 MAE ≤ 0.10 eV/Å 이고 원소별 (Zr · O · P · S) MAE ≤ 0.15 eV/Å · G2 에너지: 스냅숏 상대 에너지 RMSE ≤ 5 meV/atom. 둘 다 넘어야 계면 MD (MD-1) 로 가고, 하나라도 못 넘으면 MD-1 없음' → '비준 — 이 문턱 그대로 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:78073a950dc3ff101a381f417f2a202051cb4fdc29195c6dfce8073b0f0153a8"
+   }
   },
   {
    "id": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap-amend1",
@@ -13677,7 +13701,7 @@
    "title": "[혁주] 2a 개정 1 (결과 전) — Zr PP (GBRV v1 · md5) · 컷오프 탐침 90/720 (|ΔE_g| ≤ 0.02 eV) · P2O5 대조 잡 늘 먼저 · 구조 이름 · 레지스트리 키",
    "statement": "카드 db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json 의 ⏩_개정_1_2026_11_16_결과_전 이 정의다. 실행기 db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh.",
    "rationale": "gabia 검사에서 SSSP json 을 못 찾아 Zr 권장 컷오프를 파일로 확인하지 못했다 — 기억값 대신 싼 탐침으로 받친다 (CLAUDE.md 재개 규칙).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -13702,7 +13726,31 @@
      "session": "대피 세션 claude/evac-2026-11-12"
     }
    ],
-   "_note": "proposed — 사용자 비준 대기 · 실행기는 잠정 실행 (CEI 개정 1 선례와 같다)."
+   "_note": "active — 사용자 비준 2026-11-17 (본 세션 복귀 뒤 AskUserQuestion · 결과 전) · 실행기는 11-17 00:12 부터 잠정 실행으로 돌았다 (CEI 개정 1 선례) · 판독은 이 비준 뒤 · 11-17 채팅 '승인' 은 대피 세션에서 원장에 못 적혔다 (세션 권한 검사).",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전 · 대피 세션)"
+    },
+    {
+     "at": "2026-11-17",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] 2a 개정 1 (결과 전 · kgy 에서 지금 '잠정 실행' 중) 을 비준할까요? 내용: Zr PP = GBRV v1 (md5 고정) · 컷오프 탐침으로 90/720 Ry 를 한 번 더 돌려 60/480 과의 띠틈 차 |ΔE_g| ≤ 0.02 eV 면 60/480 값을, 넘으면 90/720 값을 보고 · P₂O₅ 대조 잡을 늘 먼저 돌리고 실패하면 Li₂ZrO₃ 는 안 돌림' → '비준 — 카드 그대로 (Recommended)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T16:24:42Z",
+    "commit": "dbacec12e928dee6dd22924693aa0ced4f9f0375",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] 2a 개정 1 (결과 전 · kgy 에서 지금 '잠정 실행' 중) 을 비준할까요? 내용: Zr PP = GBRV v1 (md5 고정) · 컷오프 탐침으로 90/720 Ry 를 한 번 더 돌려 60/480 과의 띠틈 차 |ΔE_g| ≤ 0.02 eV 면 60/480 값을, 넘으면 90/720 값을 보고 · P₂O₅ 대조 잡을 늘 먼저 돌리고 실패하면 Li₂ZrO₃ 는 안 돌림' → '비준 — 카드 그대로 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:b998390534b22526b8707b745c6ee56c3153f06760be94f5ea322a4a14a69abe"
+   }
   }
  ]
 }
