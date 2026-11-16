@@ -1,0 +1,20 @@
+{
+  "viz_mpm_morphology.py": {
+    "calculation_ast": "e2ce1e1bd10c54f471d5d0f8666d8fcf745b5225be6a120b8e41acc840f0ed17",
+    "dict_and_subscript_keys": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "before_worktree_sha256": "17a493981b8fcb1531437aba32e3e2e22bd6a51046e628ec2c2cb6d780142901",
+    "base_git_blob_sha256": "17a493981b8fcb1531437aba32e3e2e22bd6a51046e628ec2c2cb6d780142901"
+  },
+  "mpm2d_morphology.py": {
+    "calculation_ast": "0b0d8a69de8364df85c57c56a8605f664087dee7ab27571b7d31b629fda4527b",
+    "dict_and_subscript_keys": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "before_worktree_sha256": "3267b912feb01767cd52470ebff8113f92eee867b05058937bf2fcadd93d65c4",
+    "base_git_blob_sha256": "3267b912feb01767cd52470ebff8113f92eee867b05058937bf2fcadd93d65c4"
+  },
+  "mpm3d_compaction.py": {
+    "calculation_ast": "fdd3fc5b2c43a7aba74911fabe09143cb9d0d68dc4ff8ccd9661d88841238398",
+    "dict_and_subscript_keys": "9e6d875e265d969d4d5040b37665d9cf0f606e4de83fb8ca832bda320d8013c4",
+    "before_worktree_sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+    "base_git_blob_sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd"
+  }
+}

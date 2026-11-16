@@ -1,0 +1,29 @@
+{
+  "base": "fd7995b29d4e7b0621cac1658edfbaf734c22ff9",
+  "red": {
+    "methods": 8,
+    "failures": 6,
+    "errors": 0,
+    "field_execution": 0
+  },
+  "green": {
+    "methods": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_test": "test_mpm_observation_labels.py",
+    "solver_execution": 0
+  },
+  "existing_keys_preserved": true,
+  "normalized_calculation_ast_preserved": true,
+  "web_changes_only": [
+    "Q23",
+    "Q24",
+    "Q25",
+    "Q26"
+  ],
+  "web_outside_Q23_Q26_unchanged": true,
+  "synthetic_renderer_preview": true,
+  "solver_execution": 0,
+  "shared_state_schema_changes": 0
+}
