@@ -446,3 +446,9 @@ baseline/dem_gen2_live_contract.py	external	Codex 실무 11-10 작업 사본 (�
 baseline/scripts/dem_gen2_s0_contract.py	external	Codex 실무 11-10 작업 사본 (리포 밖 · sha256 미기록)	11-15 반입 · docs/reviews/dem_s0_contract_20261110/README.md 가 인용하는 red-green 비교용 baseline 사본 (리포 파일 아님)
 review/chain/independent_regression_tests.py	external	Codex 반박 11-10 NSB 독립 판정 묶음 안 (리포 밖 · sha256 미기록)	11-15 반입 · docs/reviews/nonrint_nsb_fixes_20261110/chain_README.md 가 인용하는 독립 검토 측 회귀 파일 (리포 파일 아님)
 REV/check_results.json	external	Codex 반박 11-16 P1 A/B 개정 5 독립 판정 묶음 안 (리포 밖 · sha256 미기록)	11-16 반입 · docs/reviews/p1ab_rev5_receipt_20261116/REPORT.received.md 가 인용하는 독립 검토 측 검사 기록 (리포 파일 아님)
+docs/reviews/mixer_e0_reseal_blocks_20261116/README.md	cross_branch	origin/codex/suyoung-seminar-g2cp-meta-1116	11-16 Codex 문서 커밋 반입 (scripts/ 0) · 이 경로를 만드는 Codex 커밋 (9aa6b7427 · ad7c1f826 · 8231f395c) 은 scripts/ 를 바꿔 Rint ⑥ 시도 4 DONE 뒤 반입 · 그때 이 줄을 지운다
+docs/reviews/dem_suyoung_sf2d_development_20261116/README.md	cross_branch	origin/codex/suyoung-seminar-g2cp-meta-1116	11-16 Codex 문서 커밋 반입 (scripts/ 0) · 이 경로를 만드는 Codex 커밋 (9aa6b7427 · ad7c1f826 · 8231f395c) 은 scripts/ 를 바꿔 Rint ⑥ 시도 4 DONE 뒤 반입 · 그때 이 줄을 지운다
+scripts/mixer_e0_reseal_bundle.py	cross_branch	origin/codex/suyoung-seminar-g2cp-meta-1116	11-16 Codex 문서 커밋 반입 (scripts/ 0) · 이 경로를 만드는 Codex 커밋 (9aa6b7427 · ad7c1f826 · 8231f395c) 은 scripts/ 를 바꿔 Rint ⑥ 시도 4 DONE 뒤 반입 · 그때 이 줄을 지운다
+scripts/dem_suyoung_sf2d_dev.py	cross_branch	origin/codex/suyoung-seminar-g2cp-meta-1116	11-16 Codex 문서 커밋 반입 (scripts/ 0) · 이 경로를 만드는 Codex 커밋 (9aa6b7427 · ad7c1f826 · 8231f395c) 은 scripts/ 를 바꿔 Rint ⑥ 시도 4 DONE 뒤 반입 · 그때 이 줄을 지운다
+scripts/mixer_e0_pilot_ibb.py	absent	-	11-16 반입한 Codex 쪽지 20261116-0603 이 가리키는 E0 1 팔 발사 도구 · 아직 어느 가지에도 없다 (Codex 준비 중 · scripts/ 동결 = Rint ⑥ 시도 4 DONE 뒤)
+scripts/test_mixer_e0_pilot_ibb.py	absent	-	같은 쪽지 · 위 도구의 시험 · 아직 어느 가지에도 없다

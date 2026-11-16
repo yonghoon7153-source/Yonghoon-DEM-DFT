@@ -190,8 +190,12 @@ details.qa{break-inside:avoid}
 <tr><td>주로 따라가는 것</td><td>입자의 이동 · 회전, 입자 사이 접촉</td><td>재료 각 부분의 이동 · 변형 · 응력</td></tr>
 <tr><td>힘을 계산하는 기본 방식</td><td>입자 사이의 접촉력과 토크</td><td>재료의 응력에 따른 힘을 배경격자에서 계산</td></tr>
 <tr><td>실제 분말 입자 하나의 표현</td><td>구 하나 또는 여러 요소의 집합 등</td><td>입자 내부를 여러 물질점으로 나타낼 수 있음</td></tr>
+<tr><td>같은 대상을 계속 추적하나</td><td>예 — 같은 입자 번호 (위치 · 속도 · 각속도를 이어서 갱신)</td><td>예 — 같은 물질점 (위치 · 속도 · 변형 상태를 이어서 갱신)</td></tr>
+<tr><td>과거 정보</td><td>입자 상태 + 모델에 따른 접촉 이력 (예: 접촉마다 누적 접선변위)</td><td>물질점 상태 + 재료 변형 이력 (소성 구성식이 있을 때)</td></tr>
+<tr><td>입자 내부 위치별 소성변형</td><td>구 하나로는 직접 풀지 않음 (탄소성 접촉 모델도 모양은 구)</td><td>소성 구성식과 해상도가 있으면 풀 수 있음</td></tr>
 </tbody>
 </table></div>
+<p>두 방법 모두 "힘 계산 → 운동방정식 적분 → 이동 → 다시 힘 계산" 을 되풀이한다.  "DEM 은 정보가 재료를 따라 움직이지 않는다" 는 틀린 말이다 — DEM 도 같은 입자를 계속 추적하고, 우리 LIGGGHTS 덱은 접촉마다 누적된 접선변위 (접선 이력) 를 저장한다 (재시작에서 이 이력이 이어지는지를 보는 일이 G2c′ 다 · <a href="#q29">Q29</a>).  진짜 차이는 <strong>입자 내부를 무엇으로 나타내느냐</strong>다.</p>
 <p>전형적인 DEM 의 입자는 지름과 회전을 가진 유한한 크기의 입자이고, MPM 의 물질점은 연속체의 상태를 기록하는 계산점이다.</p>
 <p>분말을 누르는 상황으로 생각하면 더 쉽다.  입자들이 서로 자리를 바꾸는 모습과 입자 자체가 납작하게 변형되는 모습은 서로 다른 현상이다.  MPM 을 쓰면 하나의 입자 내부에도 여러 물질점을 두어, 그 입자 안의 각 부분이 어떻게 이동하고 변형되는지 나타낼 수 있다.  실제로 MPM 과 접촉 계산을 결합해 변형 가능한 입자 집합의 압축을 연구한 사례가 있다 (<a href="#s9">9 절</a>의 litdb 카드).</p>
 
@@ -341,7 +345,40 @@ details.qa{break-inside:avoid}
 <p class="src">근거: CLAUDE.md "★ 2026-11-16 — 실행 우선" 줄 · 쪽지 <code>docs/collab/claude_to_codex/20261116-0100_run-first.md</code></p>
 </div></details>
 
-<h3 id="qa-f">바. 1저자 결정 기록 (MPM 관련)</h3>
+<h3 id="qa-g">바. 그림 읽기 · 기본 (11-16 · 외부 리뷰를 코드로 대조)</h3>
+<details class="qa" id="q23"><summary><span class="qno">Q23</span><span class="qt">그림의 'total strain ε (vs seed)' 는 무엇인가요?</span><span class="qd">11-16</span></summary><div class="ans">
+<p><strong>누적 변형량 ∫‖sym ∇v‖dt</strong> 다.  매 순간 변형률 속도의 크기를 계산 시작부터 더한다 — 탄성 변형도 들어가고, 모양이 되돌아와도 줄지 않으며, 초기 위치 대비 변위도 아니다.  색 상한 18 은 "1800 % 늘었다" 가 아니다.</p><p>라벨은 "누적 변형량" 으로 고친다 (scripts/ 동결이 풀린 뒤).</p>
+<p class="src">근거: <code>scripts/mpm3d_compaction.py</code> (eps_acc) · <code>scripts/viz_mpm_morphology.py</code> 147 행</p>
+</div></details>
+<details class="qa" id="q24"><summary><span class="qno">Q24</span><span class="qt">Σdg (plastic strain) 는 무엇인가요?</span><span class="qd">11-16</span></summary><div class="ans">
+<p><strong>누적 소성 보정량</strong>이다.  매 단계 편차 로그 (Hencky) 변형이 문턱 σ_y/2μ 를 넘은 만큼을 되돌리고 그 양을 더한다.  표준 von Mises 등가 소성변형률의 정규화가 아니다.</p><p>ε 와 정의가 달라 빼거나 나누어 "탄성분 · 소성 비율" 을 만들지 않는다.  그림마다 색 상한이 다르다 (0.047 · 0.8 · 1.4 · 17).  연화 유효 모델이라 SE 결정 내부의 소성변형률 지도가 아니라 <strong>보정된 유효 SE 의 비가역 변형 분포</strong>다.</p>
+<p class="src">근거: <code>scripts/mpm3d_compaction.py</code> (항복 되돌림) · <code>scripts/mpm2d_morphology.py</code></p>
+</div></details>
+<details class="qa" id="q25"><summary><span class="qno">Q25</span><span class="qt">변형 이력은 어디에 남고, 재시작하면 무엇이 이어지나요?</span><span class="qd">11-16</span></summary><div class="ans">
+<p>영구 형상 = 물질점 위치 x · F = 소성 보정 뒤의 <strong>탄성 상태</strong> · Σdg · ε = 이력.  재시작 (<code>--load-state</code>) 은 x · F · Σdg · ε 를 이어받고 속도 v · APIC C 만 0 으로 둔다 (준정적 재시작).</p><p>로그의 "‖F−I‖ = 0 ⇒ pristine/no memory" 는 틀린 문구다 — 제하 뒤 F ≈ I 여도 x 와 Σdg 에 이력이 남는다 (고칠 것).</p>
+<p class="src">근거: <code>scripts/mpm3d_compaction.py</code> 2246 · 2250 행</p>
+</div></details>
+<details class="qa" id="q26"><summary><span class="qno">Q26</span><span class="qt">그림의 'porosity 0.0 %' · 'AM 0 %' · 'void %' 는 어떻게 읽나요?</span><span class="qd">11-16</span></summary><div class="ans">
+<p>솔버 공극률 = 1 − (고정 고체부피) / (면적 × 판 높이) 이고 0 에서 잘린다 (max(0, …)) — 0 % 에는 음수를 자른 경우가 섞인다.</p><p>6 월 2D 그림의 "porosity 0.0 %" · "ε 0.0 % (pmax 0.45)" 는 그 시기 2D 하네스에서 목표 압력에 못 닿았을 때의 기본값일 수 있다 (06-08 기록: 450 · 600 MPa 판독 0.0 = 미도달 기본값 · 순수 SE 300 MPa 실제 판독 11.4 %) — 실제 0 % 로 읽지 않는다.</p><p>그림 패널의 "AM · SE · void %" 는 그 단면의 물질점 장부라 솔버 공극률과 다르다.  scaffold 런의 "AM 0 %" 는 AM 이 격자 장애물이라 <strong>물질점이 없다</strong>는 뜻이다 (AM 이 사라진 것이 아니다).</p>
+<p class="src">근거: <code>scripts/mpm3d_compaction.py</code> 3261 행 · <code>scripts/viz_mpm_morphology.py</code> 221 행 · CLAUDE.md MPM cap/champion 절</p>
+</div></details>
+<details class="qa" id="q27"><summary><span class="qno">Q27</span><span class="qt">2D 그림의 'elastic cap' · 'yielded' · 'plastic-dom' 은 무엇인가요?</span><span class="qd">11-16</span></summary><div class="ans">
+<p>elastic cap = <strong>σ_y/2μ</strong> = 편차 로그변형 문턱이다.  ν 0.3 이면 1.3·σ_y/E 이고, 세 그림 값 0.271 · 0.081 · 0.042 가 이 식과 넷째 자리까지 같다.  "27.1 % 까지 탄성 압축" 이 아니다.</p><p>yielded · plastic-dom 은 각각 Σdg &gt; 0 · Σdg &gt; elastic cap 인 점의 비율로 보인다 [추정 · 그 2D 스크립트는 리포 밖 (uma)].</p><p>σ_y 가 높을수록 소성이 접촉 가장자리에 몰리고 (E 1.44 / σ_y 0.30: 평균 Σdg 0.168 · 26 %), 낮을수록 안쪽까지 퍼진다 (1.56 / 0.05: 0.557 · 99 %) — E 도 함께 바뀐 비교라 σ_y 만의 효과라 하지 않는다.  챔피언 1.53 / 0.15 는 그 중간 꼴 (가운데 보존 + 가장자리 납작) 이 SEM 단면과 맞아 골랐다.</p>
+<p class="src">근거: 6 월 2D 보정 그림 (리포 밖) · CLAUDE.md MPM cap/champion 절</p>
+</div></details>
+<details class="qa" id="q28"><summary><span class="qno">Q28</span><span class="qt">첨가제 런에서는 무엇이 달라지나요?</span><span class="qd">11-16</span></summary><div class="ans">
+<p><code>--add-recipe</code> 가 있으면 coh 를 0 으로 줘도 0.02 로 켜지고, 밀도 세대 (<code>--dens-gen</code>) 가 첨가제 개수 · 부피 환산에 들어간다.  첨가제 없는 런에서만 "coh 0 · 밀도 = 보고용" 이 맞다.</p>
+<p class="src">근거: <code>scripts/mpm3d_compaction.py</code> 1910 · 1793 행</p>
+</div></details>
+<details class="qa" id="q29"><summary><span class="qno">Q29</span><span class="qt">DEM 은 이력을 기억하지 못하나요? (DEM 과 MPM 의 진짜 차이)</span><span class="qd">11-16</span></summary><div class="ans">
+<p>기억한다.  DEM 도 같은 입자 번호를 계속 추적하고 위치 · 속도 · 각속도를 이어서 갱신하며, 우리 덱은 접촉마다 누적 접선변위 (접선 이력) 를 저장한다 — G2c′ 가 재시작에서 바로 이 이력을 검사한다.  두 방법 모두 "힘 → 적분 → 이동 → 다시 힘" 을 되풀이한다.</p><p>차이는 입자 내부의 표현이다.  구 하나로 나타내는 DEM 은 입자 안 위치별 응력 · 소성변형을 직접 풀지 않고 (탄소성 접촉 모델도 모양은 구), MPM 은 입자 하나를 여러 물질점으로 나눠 위치별 상태를 따로 기억한다 (소성 구성식이 있을 때).  그래서 단면에서 DEM 은 원이 남고 MPM 은 변형된 모양이 보인다 (11-13 연구세미나 교수님 지적).</p>
+<p class="src">근거: <code>docs/reviews/p1_g2c_source_check_20261104.md</code> · <a href="#s5">5 절</a> 표</p>
+</div></details>
+<details class="qa" id="q30"><summary><span class="qno">Q30</span><span class="qt">50kg 과제의 입자 응력 그림은 무엇으로 계산했나요?</span><span class="qd">11-16</span></summary><div class="ans">
+<p><strong>Love–Weber 입자 응력</strong>이다 (접촉력 × 접촉점 가지 벡터 · 벽에 닿은 입자 제외).  D2 침대 중앙값 AM 335 · SE 126 MPa · p90 561 · 266 MPa 가 덱 색 범위 0–600 · 0–300 MPa 와 맞는다.</p><p>원장 LHS-29 (LIGGGHTS stress/atom 50/50 분할) 는 옛 LHS 수확 열의 문제이고 50kg 그림과 무관하다.</p>
+<p class="src">근거: <code>docs/50kg/report_y4/draft2/run_draft2_metrics.py</code> (calc_love_weber_stress) · <code>docs/50kg/report_y4/meeting_20261104/tools/compile_values_kg50.py</code> 49 행</p>
+</div></details>
+<h3 id="qa-f">사. 1저자 결정 기록 (MPM 관련)</h3>
 <div class="wrap"><table class="c4">
 <thead><tr><th style="width:11%">날짜</th><th style="width:22%">무엇을</th><th>결정</th><th style="width:22%">근거</th></tr></thead>
 <tbody>
@@ -356,6 +393,8 @@ details.qa{break-inside:avoid}
 <tr><td>11-10</td><td>재설계 Q1–Q5</td><td>Q1 단계 0–3 은 GPU 없이 · 3D 는 Rint ② R 런 뒤 / Q2 SE 형상 변형 필수 / Q3 SELF-160 은 문구만 / Q4 3.1 발송 뒤 3.2 반영 / Q5 순수 SE 만 기준 · 복합은 예측</td><td>브리핑 §8</td></tr>
 <tr><td>11-12</td><td>메모 3.2</td><td>권고대로 (바뀐 권고 Q6 · Q10 · Q13 = 메모 참조)</td><td>메모 3.2</td></tr>
 <tr><td>11-16</td><td>실행 우선 Q1–Q4</td><td>개발 계산은 리뷰 없이 바로 ('개발 자료') · 이번 주 MPM 2D 첫 개발 계산</td><td>CLAUDE.md 11-16 줄</td></tr>
+<tr><td>11-16</td><td>11-13 연구세미나 피드백</td><td>[DEM 우선 (수영)] 완료 기준 = 단면에 원이 남지 않게 (소성으로 공극 채움 · 한 모델) · 논문 그림은 MPM 으로, 먼저 재설계를 발전 · 유효 영률 기준 1.35 는 재설계 뒤 바뀌고 실측 영률은 그 기준에서 비율로</td><td>세미나 통합 문서</td></tr>
+<tr><td>11-16</td><td>tortuosity 그림</td><td>값 = 수송 tortuosity (막대 그래프) · 그림 = 기하 최단 경로 + 그 그림의 기하 τ · 값에 맞춘 경로는 그리지 않음</td><td>세미나 통합 문서 §3</td></tr>
 </tbody>
 </table></div>
 
