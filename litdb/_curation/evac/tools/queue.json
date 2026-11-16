@@ -199,26 +199,26 @@
   "note": "- 의도 = 후보 C′ 류 · 단계 5: zhang2026_xct 카드가 옮긴 '회전 롤 + 응집-소성 바인더 접촉법칙' (L97) · '롤 곡률 · 전단을 다룬 것' (L307) 이 원문과 같은지 대조. lyu2025 원문 서론의 [46] 문장 ('… microstructure and electronic properties … The bonding structure induced by calendering involves mostly vertical tensile contacts and horizontal compressive contacts') 도 원문 결과와 대조.\n- **접촉 법칙 (활물질 ↔ CBD 를 함께 다루는 법칙 · 탄소성 · 응집 · 하중 / 제하 가지) 의 식을 번호별로 따로 자르고**, 매개변수 표 (맞춘 값 · 맞춘 대상 · 물성인지 보정값인지) · 롤 기하 (지름 · 간극 · 속도) · 입자 수 · 2D / 3D · 주기 경계 · 계산 비용 · 검증 (실험 대조가 있는지) 을 표로.\n- 압연 속도 → 전극 늘어남 · 내부 이방성 (fabric) · 되돌아옴 (롤 통과 뒤 두께 회복) · 기공률 · 전자 전도 결과를 값 · 그림 번호와 함께. 우리 쪽 대조 자리 = 일축 평판 압축 (플래튼) ↔ 회전 롤의 전단 · 조건 R2 (미끄럼 · 분리) · R4 (탈압 · 되돌아옴) · 후보 C′ (항복 캡 탄소성 접촉).\n- DEM 한계 · 소성을 접촉 법칙에 넣는 어려움에 대한 원문 문장을 따옴표로 (질문 k · l).\n- 인용한 쪽 원문 두 편이 같은 inbox 에 있다 (새 카드를 만들지 않는다 · 대조용): zhang2026 = `litdb/inbox/b73aa282-68-1._Investigation_into_Microstructural_and_Mechanical_Evolution_During_Lithium-Ion_Battery_Cathode_Calendering_via_X-ray_Tomography-Based_Discrete_Element_Method.pdf` · lyu2025 = `litdb/inbox/e896e74a-68-2._Three-dimensional_discrete_element_simulation_of_electrode_structural_evolution_in_lithium-ion_batteries_during_drying_and_calendering.pdf`. 두 정본 카드 (zhang2026_xct_dem_cathode_calendering_peel_calibration · lyu2025_3d_dem_drying_calendering_lib) 에는 '🔗 관련 카드' 한 줄씩만 더한다."
  },
  "N-76": {
-  "nn": "",
+  "nn": "125",
   "pdf": "e958c227-76._AC_impedance_analysis_of_ionic_and_electronic_conductivities_in_electrode_mixture_layers_for_an_all-solid-state_lithium-ion_battery.pdf",
   "si": [
    "781a0ada-76._Sup_AC_impedance_analysis_of_ionic_and_electronic_conductivities_in_electrode_mixture_layers_for_an_all-solid-state_lithium-ion_battery.pdf"
   ],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: AC impedance analysis of ionic and electronic conductivities in electrode mixture layers for an all-solid-state lithium-ion battery · Subject: Journal of Power Sources, 316 (2016) 215-223. doi:10.1016/j.jpowsour.2016.03.059 · Author: Zyun Siroma · DOI: 10.1016/j.jpowsour.2016.03.059 · PDF 9 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2016.03.059` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
  "N-77": {
-  "nn": "",
+  "nn": "126",
   "pdf": "b10f8cff-77._Impact_of_cathode_material_particle_size_on_the_capacity_of_bulk-type_all-solid-state_batteries.pdf",
   "si": [
    "b0965bf7-77._Sup_Impact_of_cathode_material_particle_size_on_the_capacity_of_bulk-type_all-solid-state_batteries.pdf"
   ],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: nz8b00275 1..5 · Subject:  · Author:  · DOI: 10.1021/acsenergylett.8b00275 · PDF 5 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1021/acsenergylett.8b00275` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
