@@ -1,0 +1,181 @@
+{
+  "schema": "g2cp_failure_cases_spec_v1",
+  "status": "EXPECTED_ONLY_NOT_EXECUTED",
+  "source_registration": "docs/reviews/p1_g2c_mpi_stage2_registration_20261112.md sections5,7,8,9",
+  "original_jobs_frozen": {
+    "NP2": 366288,
+    "NP4": 366290
+  },
+  "new_jobs": 0,
+  "registered_conclusions_adoptable": false,
+  "cases": [
+    {
+      "id": "C01",
+      "category": "normal_four_records",
+      "input_description": "Two dry and one content per NP; coherent provenance and OUTs",
+      "expected": "select original first content, keep adoption false; no rerun",
+      "executed": false
+    },
+    {
+      "id": "C02",
+      "category": "pending_cancelled",
+      "input_description": "Start Unknown/None, CANCELLED, no ledger row",
+      "expected": "excluded before start",
+      "executed": false
+    },
+    {
+      "id": "C03",
+      "category": "prestop_rc3",
+      "input_description": "ExitCode 3:0, zero attempt, coherent optional prestop row",
+      "expected": "excluded, preserve reason",
+      "executed": false
+    },
+    {
+      "id": "C04",
+      "category": "rc3_after_attempt",
+      "input_description": "ExitCode 3:0 plus attempt row",
+      "expected": "mismatch; no conclusion",
+      "executed": false
+    },
+    {
+      "id": "C05",
+      "category": "technical_attempt",
+      "input_description": "rc4, one attempt, all NOT_COMPUTED, partial OUT accounted for",
+      "expected": "count one technical attempt; no content selection; no automatic retry",
+      "executed": false
+    },
+    {
+      "id": "C06",
+      "category": "technical_then_content",
+      "input_description": "Two distinct attempts, first all NOT_COMPUTED, second content, identical fixed sources",
+      "expected": "select second as first content; attempt count2; hypothetical only",
+      "executed": false
+    },
+    {
+      "id": "C07",
+      "category": "mixed_content",
+      "input_description": "One content cell and another NOT_COMPUTED",
+      "expected": "freeze this first content attempt; missing required cell means no corresponding conclusion",
+      "executed": false
+    },
+    {
+      "id": "C08",
+      "category": "first_failure",
+      "input_description": "First content FAIL or wrong prediction",
+      "expected": "freeze; no same-registration retry for a better outcome",
+      "executed": false
+    },
+    {
+      "id": "C09",
+      "category": "content_then_content",
+      "input_description": "Later content after first content, even different folder",
+      "expected": "violation; never replace first selected attempt",
+      "executed": false
+    },
+    {
+      "id": "C10",
+      "category": "third_attempt",
+      "input_description": "Three N40000 attempts for same NP",
+      "expected": "over cap; new registration required; no conclusion",
+      "executed": false
+    },
+    {
+      "id": "C11",
+      "category": "missing_out",
+      "input_description": "An attempt in ledger has no returned OUT/failure evidence",
+      "expected": "mismatch; missing evidence not silently dropped",
+      "executed": false
+    },
+    {
+      "id": "C12",
+      "category": "double_attempt_same_job",
+      "input_description": "Same job has two attempt rows",
+      "expected": "mismatch even if honest recovery; do not deduplicate",
+      "executed": false
+    },
+    {
+      "id": "C13",
+      "category": "unmatched_ledger",
+      "input_description": "Ledger job absent from returned scheduler population",
+      "expected": "unresolved; no conclusion",
+      "executed": false
+    },
+    {
+      "id": "C14",
+      "category": "unmatched_started_job",
+      "input_description": "Started non-rc3 scheduler job absent from attempt ledger",
+      "expected": "mismatch; no conclusion",
+      "executed": false
+    },
+    {
+      "id": "C15",
+      "category": "still_running",
+      "input_description": "Matching PENDING/RUNNING job at collection",
+      "expected": "incomplete collection; no final qualification",
+      "executed": false
+    },
+    {
+      "id": "C16",
+      "category": "wrong_N_or_NP",
+      "input_description": "attempt N39900 or NP3 or ledger NP differs from scheduler name",
+      "expected": "mismatch; no conclusion",
+      "executed": false
+    },
+    {
+      "id": "C17",
+      "category": "prestop_with_rc4",
+      "input_description": "prestop-only row with ExitCode4:0",
+      "expected": "mismatch, not a counted clean preflight",
+      "executed": false
+    },
+    {
+      "id": "C18",
+      "category": "partial_or_duplicate_line",
+      "input_description": "Torn/malformed ledger line, conflicting fields or exact repeated line",
+      "expected": "reject rather than repair or drop",
+      "executed": false
+    },
+    {
+      "id": "C19",
+      "category": "source_mix",
+      "input_description": "Source pin/deck/runner/comparator/binary/MPI identity differs across selected NP records",
+      "expected": "mixing gate fails; no partial conclusion",
+      "executed": false
+    },
+    {
+      "id": "C20",
+      "category": "requeue_history_gap",
+      "input_description": "No restart-count field; expired live record; bounded -D population",
+      "expected": "bounded evidence only; do not assert universal absence",
+      "executed": false
+    },
+    {
+      "id": "C21",
+      "category": "multiple_accounting_records",
+      "input_description": "Same cluster/job with distinct DBIndex or inconsistent chronology",
+      "expected": "retain both records; ambiguity/requeue investigation; not normal merged record",
+      "executed": false
+    },
+    {
+      "id": "C22",
+      "category": "requeued_before_append",
+      "input_description": "Accounting or operator record shows requeue before first attempt",
+      "expected": "independent history required; single ledger row is insufficient",
+      "executed": false
+    },
+    {
+      "id": "C23",
+      "category": "realpath_alias",
+      "input_description": "OUT alias maps to different actual file or mapping is not established",
+      "expected": "binding unresolved; do not use path spelling as proof",
+      "executed": false
+    },
+    {
+      "id": "C24",
+      "category": "post_stop_changes",
+      "input_description": "Files change after STOP or retrieval hash differs from fixed return",
+      "expected": "retain evidence, no complete-result promotion",
+      "executed": false
+    }
+  ]
+}

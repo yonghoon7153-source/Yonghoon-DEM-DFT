@@ -1,0 +1,138 @@
+{
+  "schema": "suyoung_local_shape_preparation_v1",
+  "base": "1540b8a431f1b43143fafb2c346fd312012a749c",
+  "status": "LOCAL_CODE_ONLY_DOCS_DELIVERY",
+  "field_execution": 0,
+  "research_execution": 0,
+  "new_field_results": 0,
+  "operating_reseal": 0,
+  "production_source_pin": null,
+  "pending_sources": [
+    {
+      "path": "scripts/dem_suyoung_sf2d_dev.py",
+      "bytes": 21010,
+      "sha256": "d8f27472ce8a36978f139ffcf63102929d1ab64ab282be208e822e3a65749ea4",
+      "committed": false,
+      "pushed": false,
+      "publish_after": "AUTHOR_ATTEMPT4_DONE_NOTIFICATION"
+    },
+    {
+      "path": "scripts/test_dem_suyoung_shape_output.py",
+      "bytes": 12703,
+      "sha256": "f917673f01b148086def8aca5af7fb302adc80727f3270fa96f1cee0ad39f16f",
+      "committed": false,
+      "pushed": false,
+      "publish_after": "AUTHOR_ATTEMPT4_DONE_NOTIFICATION"
+    }
+  ],
+  "original_source_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+  "preserved_kernel_function_asts": [
+    "seed_disks",
+    "stencil",
+    "stress",
+    "plastic_project",
+    "pair_impulse",
+    "contact",
+    "boundary",
+    "initial_state",
+    "step",
+    "ratio"
+  ],
+  "tests": {
+    "old14": {
+      "label": "LOCAL_SYNTHETIC_REGRESSION_ONLY",
+      "source_name": "dem_suyoung_sf2d_dev.py",
+      "source_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "test_name": "test_dem_suyoung_shape_output.py",
+      "test_sha256": "f917673f01b148086def8aca5af7fb302adc80727f3270fa96f1cee0ad39f16f",
+      "baseline_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "methods": 14,
+      "failures": 16,
+      "errors": 0,
+      "skipped": 0,
+      "failure_methods": [
+        "local_regressions.ShapeOutput.test_01_initial_state_is_copied_and_identities_are_explicit",
+        "local_regressions.ShapeOutput.test_02_total_map_uses_increment_history_not_projected_elastic_F",
+        "local_regressions.ShapeOutput.test_03_poisoned_observer_does_not_feed_force_or_physical_state",
+        "local_regressions.ShapeOutput.test_04_frames_are_exact_observed_steps_not_interpolation",
+        "local_regressions.ShapeOutput.test_05_output_on_off_trace_and_final_240_mean_are_bit_identical",
+        "local_regressions.ShapeOutput.test_07_manifest_binds_every_frame_and_svg_uses_carried_quads",
+        "local_regressions.ShapeOutput.test_08_particle_id_change_is_rejected",
+        "local_regressions.ShapeOutput.test_09_missing_or_duplicate_step_is_rejected (seq=(2,))",
+        "local_regressions.ShapeOutput.test_09_missing_or_duplicate_step_is_rejected (seq=(1, 1))",
+        "local_regressions.ShapeOutput.test_10_incomplete_observer_cannot_claim_complete",
+        "local_regressions.ShapeOutput.test_11_existing_output_is_not_overwritten",
+        "local_regressions.ShapeOutput.test_12_nonfinite_or_inverted_total_map_is_rejected (bad=nan)",
+        "local_regressions.ShapeOutput.test_12_nonfinite_or_inverted_total_map_is_rejected (bad=-1.0)",
+        "local_regressions.ShapeOutput.test_13_cli_shape_output_and_no_false_completion_on_error",
+        "local_regressions.ShapeOutput.test_14_each_arm_has_a_separate_cli_for_external_600s_limit (arm='S')",
+        "local_regressions.ShapeOutput.test_14_each_arm_has_a_separate_cli_for_external_600s_limit (arm='F')"
+      ],
+      "error_methods": [],
+      "seconds": 3.312999999965541,
+      "rc": 1,
+      "field_execution": 0
+    },
+    "new14": {
+      "label": "LOCAL_SYNTHETIC_REGRESSION_ONLY",
+      "source_name": "dem_suyoung_sf2d_dev.py",
+      "source_sha256": "d8f27472ce8a36978f139ffcf63102929d1ab64ab282be208e822e3a65749ea4",
+      "test_name": "test_dem_suyoung_shape_output.py",
+      "test_sha256": "f917673f01b148086def8aca5af7fb302adc80727f3270fa96f1cee0ad39f16f",
+      "baseline_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failure_methods": [],
+      "error_methods": [],
+      "seconds": 10.420999999972992,
+      "rc": 0,
+      "field_execution": 0
+    },
+    "existing9": {
+      "label": "LOCAL_SYNTHETIC_REGRESSION_ONLY",
+      "source_name": "dem_suyoung_sf2d_dev.py",
+      "source_sha256": "d8f27472ce8a36978f139ffcf63102929d1ab64ab282be208e822e3a65749ea4",
+      "test_name": "test_dem_suyoung_sf2d_dev.py",
+      "test_sha256": "a9b687e49c3f897dcecd5a1189f9fb9f577fe7c2f0e831634982640e9a5015e3",
+      "baseline_sha256": "797ee4ff0ba7d4f6e47b6710883638784c7cc13d60de9e81f7834e487458b4f4",
+      "python": "3.12.14",
+      "numpy": "2.3.5",
+      "methods": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "failure_methods": [],
+      "error_methods": [],
+      "seconds": 1.1559999999590218,
+      "rc": 0,
+      "field_execution": 0
+    }
+  },
+  "test_order": [
+    "13 methods written, original red, observer implementation, green",
+    "output error assertion added, same source red/green repeated",
+    "single-arm method written, current CLI red, single-arm implementation",
+    "same final 14 methods original/candidate and original 9 regressions"
+  ],
+  "preparation_incident": "One local log redirection path was wrong; no test result counted. Corrected command retained separately.",
+  "draft": {
+    "ascii": true,
+    "embedded_python_ast": "PASS_NOT_EXECUTED",
+    "release_bound": false,
+    "source_pin": null,
+    "source_tar_sha256": null,
+    "shell_syntax": "SEE_HANDOFF_NOTE"
+  },
+  "limitations": [
+    "Windows Python3.12.14 NumPy2.3.5 only; not author WSL qualification",
+    "SVG numeric vertices and hashes checked; visual rendering of field results pending",
+    "affine nominal material cells, union/overlap/porosity not measured",
+    "no unloading, full gate or independent rebuttal review"
+  ]
+}

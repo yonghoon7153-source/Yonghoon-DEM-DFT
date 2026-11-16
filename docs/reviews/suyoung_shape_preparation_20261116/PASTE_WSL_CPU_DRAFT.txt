@@ -1,0 +1,133 @@
+(
+set -u
+# DRAFT ONLY. Bind a committed source pin after attempt 4 DONE.
+# Author-run WSL CPU1. Synthetic development data; no automatic retry.
+# Existing project venv with numpy required; no installation in this block.
+# SOURCE_BUNDLE, PYTHON and WORK_PARENT are local author bindings.
+RELEASE_BOUND='NO'
+PIN='UNBOUND_AFTER_ATTEMPT4_DONE'
+EXPECTED='UNBOUND_SOURCE_TAR_SHA256'
+if [ "$RELEASE_BOUND" != 'YES' ]; then
+  printf 'DRAFT_ONLY: source pin and package are not bound; nothing run\n'
+  exit 2
+fi
+: "${SOURCE_BUNDLE:?bind the fixed source tar}"
+: "${PYTHON:?bind Python in the existing project venv}"
+: "${WORK_PARENT:?bind an existing writable working directory}"
+[ -x "$PYTHON" ] && [ -d "$WORK_PARENT" ] && [ -w "$WORK_PARENT" ] || exit 2
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
+for tool in timeout sha256sum tar mktemp; do
+  command -v "$tool" >/dev/null || { printf 'STOP: missing %s\n' "$tool"; exit 2; }
+done
+"$PYTHON" -I -X utf8 -B -c 'import sys,numpy; print("PYTHON",sys.version.split()[0],"NUMPY",numpy.__version__)' || exit 2
+got=$(sha256sum -- "$SOURCE_BUNDLE") || exit 2
+[ "${got%% *}" = "$EXPECTED" ] || { printf 'STOP: source package SHA256\n'; exit 2; }
+umask 077
+work=$(mktemp -d "$WORK_PARENT/suyoung_shape_XXXXXX") || exit 2
+"$PYTHON" -I -X utf8 -B - "$SOURCE_BUNDLE" "$work" "$PIN" <<'VERIFY_SOURCE'
+import hashlib,json,re,sys,tarfile
+from pathlib import Path,PurePosixPath
+bundle,work,pin=Path(sys.argv[1]),Path(sys.argv[2]),sys.argv[3]
+if not re.fullmatch(r'[0-9a-f]{40}',pin): raise ValueError('unbound pin')
+def rel(name):
+    p=PurePosixPath(name)
+    if not name or '\\' in name or ':' in name or p.is_absolute() or '..' in p.parts or '.' in name.split('/') or '' in name.split('/'):
+        raise ValueError('package path')
+    return p
+with tarfile.open(bundle) as tar:
+    members=tar.getmembers(); seen=set()
+    if len(members)>100 or sum(m.size for m in members)>134217728: raise ValueError('package bounds')
+    for m in members:
+        p=rel(m.name)
+        if not m.isfile() or p.parts[0]!='source' or m.name in seen: raise ValueError('member type or duplicate')
+        seen.add(m.name); target=work/p; target.parent.mkdir(parents=True,exist_ok=True)
+        with target.open('xb') as stream: stream.write(tar.extractfile(m).read())
+manifest=json.loads((work/'source/PACKAGE_MANIFEST.json').read_bytes())
+if manifest['source_pin']!=pin or manifest.get('working_tree_overrides') is not False: raise ValueError('source identity')
+expected={'PACKAGE_MANIFEST.json'}
+for row in manifest['files']:
+    p=rel(row['path'])
+    if row['path'] in expected: raise ValueError('duplicate manifest member')
+    expected.add(row['path']); raw=(work/'source'/p).read_bytes()
+    if len(raw)!=row['bytes'] or hashlib.sha256(raw).hexdigest()!=row['sha256']: raise ValueError('source hash')
+actual={p.relative_to(work/'source').as_posix() for p in (work/'source').rglob('*') if p.is_file()}
+if actual!=expected: raise ValueError('source set')
+print('FIXED_SOURCE_OK pin='+pin)
+VERIFY_SOURCE
+unpack_rc=$?
+[ "$unpack_rc" -eq 0 ] || { printf 'STOP: unpack rc=%s\n' "$unpack_rc"; exit "$unpack_rc"; }
+printf '%s\n' "$PIN" > "$work/PIN.txt"
+date -u +%FT%TZ > "$work/start_utc.txt"
+run_rc=0
+for arm in S F; do
+  # TERM at 600 s, forced cleanup after 10 s. No scheduler or MPI.
+  date -u +%FT%TZ > "$work/${arm}_start_utc.txt"
+  timeout --signal=TERM --kill-after=10s 600s "$PYTHON" -I -X utf8 -B \
+    "$work/source/scripts/dem_suyoung_sf2d_dev.py" --arm "$arm" \
+    --output "$work/$arm" --grid 32 --steps 1200 --dt 0.0005 \
+    --wall-speed 0.15 --friction 0.20 --arm-seconds 600 \
+    --shape-output --shape-every 120 > "$work/${arm}.stdout" 2> "$work/${arm}.stderr"
+  arm_rc=$?
+  printf '%s_rc=%s\n' "$arm" "$arm_rc" | tee "$work/${arm}_rc.txt"
+  date -u +%FT%TZ > "$work/${arm}_end_utc.txt"
+  tail -n 3 -- "$work/${arm}.stdout"
+  if [ "$arm_rc" -ne 0 ]; then
+    run_rc=$arm_rc
+    tail -n 12 -- "$work/${arm}.stderr"
+    printf 'INCOMPLETE: next arm not started; no automatic retry\n'
+    break
+  fi
+done
+if [ "$run_rc" -eq 0 ]; then
+  "$PYTHON" -I -X utf8 -B - "$work" <<'JOIN_OUTPUT'
+import hashlib,json,math,sys
+from pathlib import Path
+import numpy as np
+root=Path(sys.argv[1]); arms={}; inputs=[]
+source_sha=hashlib.sha256((root/'source/scripts/dem_suyoung_sf2d_dev.py').read_bytes()).hexdigest()
+for arm in ('S','F'):
+    out=root/arm; inp=json.loads((out/'INPUT.json').read_bytes()); inputs.append(inp)
+    summary=json.loads((out/'SUMMARY.json').read_bytes())
+    shape=out/(arm+'_shape'); manifest=json.loads((shape/'MANIFEST.json').read_bytes())
+    if inp['source_sha256']!=source_sha or manifest['source_sha256']!=source_sha: raise ValueError('source binding')
+    if summary['status']!='DEVELOPMENT_COMPLETE' or list(summary['arms'])!=[arm]: raise ValueError('arm incomplete')
+    if manifest['status']!='SHAPE_OUTPUT_COMPLETE' or manifest['steps']!=1200: raise ValueError('shape incomplete')
+    if [r['step'] for r in manifest['frames']]!=[0,1]+list(range(120,1201,120)): raise ValueError('frame times')
+    names=set()
+    for line in (shape/'SHA256SUMS').read_text().splitlines():
+        digest,name=line.split('  ',1)
+        if Path(name).name!=name or name in names: raise ValueError('output list')
+        names.add(name)
+        if hashlib.sha256((shape/name).read_bytes()).hexdigest()!=digest: raise ValueError('output hash')
+    if names!={p.name for p in shape.iterdir() if p.is_file() and p.name!='SHA256SUMS'}: raise ValueError('output set')
+    pressure=[json.loads(row) for row in (shape/'pressure_all.jsonl').read_text().splitlines()]
+    if [r['step'] for r in pressure]!=list(range(1,1201)): raise ValueError('pressure sequence')
+    mean=float(np.mean([r['plate_pressure'] for r in pressure[-240:]]))
+    result=summary['arms'][arm]
+    if result['tail_window_steps']!=240 or mean.hex()!=result['tail_mean_plate_pressure'].hex() or mean.hex()!=manifest['tail_mean_plate_pressure'].hex(): raise ValueError('mean mismatch')
+    arms[arm]=result
+for key in ('grid','steps','dt','wall_speed','friction','material','initial_state_sha256','shape_every','numpy','python','threads'):
+    if inputs[0][key]!=inputs[1][key]: raise ValueError('S/F input mismatch: '+key)
+s,f=(arms[a]['tail_mean_plate_pressure'] for a in ('S','F'))
+ratio=s/f if math.isfinite(s) and math.isfinite(f) and f>1e-12 else None
+result=dict(status='DEVELOPMENT_COMPLETE',label='DEVELOPMENT_DATA_ONLY',source_pin=(root/'PIN.txt').read_text().strip(),
+            source_sha256=source_sha,arms=arms,plate_stress_ratio_S_over_F=ratio,
+            registered_conclusions_adoptable=False,shape_output='actual frames; affine material cells, no union porosity estimate')
+with (root/'COMBINED_SUMMARY.json').open('x',encoding='utf8') as stream: stream.write(json.dumps(result,indent=2,allow_nan=False)+'\n')
+print(json.dumps(result,allow_nan=False))
+JOIN_OUTPUT
+  run_rc=$?
+fi
+printf 'command_rc=%s\n' "$run_rc" | tee "$work/command_rc.txt"
+date -u +%FT%TZ > "$work/end_utc.txt"
+return_dir=$(mktemp -d "$WORK_PARENT/suyoung_return_XXXXXX") || exit 2
+archive="$return_dir/result.tar.gz"
+# Archive is outside work: no self-inclusion or changed-as-read suppression.
+tar -C "$work" -czf "$archive" .
+archive_rc=$?
+printf 'archive_rc=%s\n' "$archive_rc"
+[ "$archive_rc" -eq 0 ] || { printf 'STOP: retain incomplete archive and work\n'; exit 2; }
+sha256sum -- "$archive" || exit 2
+printf 'Return archive and SHA256: %s\n' "$archive"
+exit "$run_rc"
+)

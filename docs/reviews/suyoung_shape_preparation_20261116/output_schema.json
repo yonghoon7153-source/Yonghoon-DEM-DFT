@@ -1,0 +1,149 @@
+{
+  "schema": "suyoung_shape_v1_spec",
+  "status": "LOCAL_IMPLEMENTED_NOT_COMMITTED",
+  "artifact_layout": [
+    "PIN.txt",
+    "source/PACKAGE_MANIFEST.json",
+    "S/INPUT.json",
+    "S/SUMMARY.json",
+    "S/S_trace.jsonl",
+    "S/S_shape/frame_NNNNNN.npz",
+    "S/S_shape/frame_NNNNNN.svg",
+    "S/S_shape/pressure_all.jsonl",
+    "S/S_shape/MANIFEST.json",
+    "S/S_shape/SHA256SUMS",
+    "F/same_layout_with_F",
+    "S.stdout",
+    "S.stderr",
+    "S_rc.txt",
+    "F.stdout",
+    "F.stderr",
+    "F_rc.txt",
+    "start_utc.txt",
+    "end_utc.txt",
+    "command_rc.txt",
+    "COMBINED_SUMMARY.json (both successful only)"
+  ],
+  "arrays": {
+    "X": {
+      "dtype": "<f8",
+      "shape": [
+        "points",
+        2
+      ],
+      "meaning": "immutable reference coordinates"
+    },
+    "x": {
+      "dtype": "<f8",
+      "shape": [
+        "points",
+        2
+      ],
+      "meaning": "actual material coordinates at recorded step"
+    },
+    "v": {
+      "dtype": "<f8",
+      "shape": [
+        "points",
+        2
+      ]
+    },
+    "point_id": {
+      "dtype": "<i8",
+      "shape": [
+        "points"
+      ],
+      "meaning": "persistent original material-point row, no split/reorder in this kernel"
+    },
+    "particle_id": {
+      "dtype": "<i8",
+      "shape": [
+        "points"
+      ],
+      "values": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "F_total": {
+      "dtype": "<f8",
+      "shape": [
+        "points",
+        2,
+        2
+      ],
+      "meaning": "passive accumulated APIC affine map, no stress feedback"
+    },
+    "F_elastic": {
+      "dtype": "<f8",
+      "shape": [
+        "points",
+        2,
+        2
+      ],
+      "meaning": "constitutive projected F"
+    },
+    "reference_area": {
+      "dtype": "<f8",
+      "shape": [
+        "points"
+      ],
+      "value": "(0.5/grid)^2"
+    },
+    "mass": {
+      "dtype": "<f8",
+      "shape": [
+        "points"
+      ],
+      "value": "rho * reference_area"
+    },
+    "step": {
+      "dtype": "<i8",
+      "shape": []
+    },
+    "time_code": {
+      "dtype": "<f8",
+      "shape": [],
+      "value": "dt * step; no interpolation"
+    },
+    "top_code": {
+      "dtype": "<f8",
+      "shape": [],
+      "value": "TOP0 - speed * dt * step"
+    }
+  },
+  "standard_frames": [
+    0,
+    1,
+    120,
+    240,
+    360,
+    480,
+    600,
+    720,
+    840,
+    960,
+    1080,
+    1200
+  ],
+  "pressure_rows": {
+    "count": 1200,
+    "tail_count": 240,
+    "same_mean_algorithm": "numpy.mean over original Python float values"
+  },
+  "format_rules": [
+    "NPZ numeric arrays only; load with allow_pickle=False",
+    "float arrays/scalars little-endian float64, IDs/step little-endian int64",
+    "archive container-byte determinism not claimed; compare array/trace bytes for physical parity",
+    "frame NPZ/SVG each bound by bytes+SHA256 in MANIFEST; SHA256SUMS includes MANIFEST",
+    "missing/failed output is INCOMPLETE; no synthetic replacement frame"
+  ],
+  "area_fields": {
+    "material_cell_sum_area": "sum reference_area * det(F_total), not geometric union",
+    "geometric_union_area": null,
+    "overlap_area": null,
+    "porosity": "NOT_ESTIMATED"
+  }
+}
