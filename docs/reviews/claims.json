@@ -2439,7 +2439,8 @@
    "allowed_in": [
     "docs/data/prereg_v2/raw_sigma.json",
     "docs/data/rint2_s0_sbe_20261108/files/sdcp/ca1_s0_sbe_20261106_memfix/s0_stage1_kit_SBE_vgcf100.json",
-    "docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json"
+    "docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json",
+    "docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/s0_stage1_kit_SBE_vgcf100.json"
    ]
   },
   {
@@ -2473,7 +2474,8 @@
    "allowed_in": [
     "docs/data/prereg_v2/raw_sigma.json",
     "docs/data/rint2_s0_sbe_20261108/files/sdcp/ca1_s0_sbe_20261106_memfix/s0_stage1_kit_SBE_vgcf100.json",
-    "docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json"
+    "docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json",
+    "docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/s0_stage1_kit_SBE_vgcf100.json"
    ]
   },
   {
