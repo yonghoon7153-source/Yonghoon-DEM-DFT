@@ -17953,6 +17953,26 @@
    "evidence_tests": [
     "docs/reviews/p1ab_rev5_receipt_20261116/check_results.json"
    ]
+  },
+  {
+   "id": "SELF-182",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "자기 점검 (11-16 밤 · 1저자 질문 '후막 표를 전혀 못 믿나' 뒤 표 README · 진행 기록 대조)",
+   "opened_in": "docs/data/th_comsol_handover_20261106/README.md",
+   "title": "11-16 저녁 1저자에게 11-06 후막 COMSOL 인계표의 tortuosity 열을 '기하 최단경로 (analyze_contacts.py:840)' 라고 잘못 답했다 — 실제는 웹앱 Hertz 열 수송 tortuosity tau2 (표 README 4 줄 · 진행 기록 1347 줄 · 값 셋째 자리 = 기하 τ 코드의 둘째 자리 반올림과 다름) · 1저자가 그 말을 믿고 '기하로 준 것 같다' 고 함 · 같은 문장이 Codex 실무 프롬프트 초안 (4 절판) 에도 들어감",
+   "note": "고침 = 1저자에게 정정 (11-16 밤 채팅) · Codex 실무 '하나로 정리' 프롬프트에 철회 문장 · 표 README 머리 표지 (tortuosity = 수송 그대로 맞음 · 숫자 무변경) · 다시 뽑는 까닭은 tortuosity 종류가 아니라 탈압 전 · 시드 1 · 두께 경향 (DEMP-01 추정) · 막는 법 = 표 열의 정의는 코드에서 추정하기 전에 그 표의 README · 진행 기록부터 본다 (규율 ④ 부류) · claimed_fixed = 다음 커밋"
+  },
+  {
+   "id": "SELF-183",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "1저자 지적 (11-16 밤 · '처음 넣은 동그라미 모양 남는건 DEM 결과를 잘랐으니까 당연히 동그라미 모양이 생기는거지')",
+   "opened_in": "docs/reviews/dem_redesign_direction_20261109/seminar_feedback_20261113.md",
+   "title": "주간보고 재설계 장 설명 · 종합 대본에서 '단면에 동그라미가 남는다' 를 DEM → MPM 후처리의 결과로 연결했다 — 11-13 교수님 말씀은 발표 속 DEM 결과 (단단한 공) 의 단면 · 지금 MPM 후처리 단면 모양은 확인한 적 없음",
+   "note": "고침 = 1저자에게 정정 · 대본 첫 문단 교체 (채팅) · 세미나 피드백 §1 '읽는 법' 줄 · CLAUDE.md [DEM 우선 (수영)] 줄 괄호 · 후처리 한계는 따로 셋 (다 눌린 DEM 상태 출발 · AM 고정 · SE 속도장 하나) · 막는 법 = 녹취 인용은 그 말이 가리킨 대상 (어느 그림 · 어느 계산) 까지 같이 적는다 · claimed_fixed = 다음 커밋"
   }
  ]
 }

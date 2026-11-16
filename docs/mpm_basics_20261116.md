@@ -13,24 +13,24 @@
 | AM (scaffold) | 격자 장애물 (속도 0) · 물질점 없음 | AM–AM 접촉망 하중 전달은 계산하지 않음 |
 
 ## 2. 그림 색의 뜻
-- `total strain ε (vs seed)` = **누적 변형량 ∫‖sym ∇v‖dt** — 탄성 포함 · 되돌아와도 줄지 않음 · 초기 대비 변위 아님 (라벨 고칠 것 · `viz_mpm_morphology.py:147`).
+- `total strain ε (vs seed)` = **누적 변형량 ∫‖sym ∇v‖dt** — 탄성 포함 · 되돌아와도 줄지 않음 · 초기 대비 변위 아님 (✅ 라벨 고침 11-16 · Codex 반입 `95f8f9e0f` = cumulative deformation ∫‖D‖dt · 누산값 · 계산식 그대로).
 - `Σdg` = **누적 소성 보정량** (Hencky 편차 문턱 초과분 누적) — 표준 등가 소성변형률 정규화 아님 · 지금 움직임이 아니라 이력.
 - ε 와 Σdg 는 서로 다른 정의라 빼거나 나누어 "탄성분 · 소성 비율" 을 만들지 않는다 · 그림마다 색 상한이 다르다 (0.047 ↔ 17–18).
 - 연화 유효 모델이라 Σdg = SE 결정 내부 소성변형률 지도가 아니라 **보정된 유효 SE 의 비가역 변형 분포**.
 
 ## 3. 상태 · 기억
 - x = 영구 형상 · F = 소성 보정 뒤 **탄성 상태** · Σdg · ε = 이력 · 재시작 = x · F · Σdg · ε 유지, v · C = 0 (`:2246`).
-- 로그 "‖F−I‖ = 0 ⇒ pristine/no memory" 는 틀린 문구 (`:2250` · 고칠 것).
+- 로그 "‖F−I‖ = 0 ⇒ pristine/no memory" 는 틀린 문구였다 — ✅ 고침 11-16 (Codex 반입 `95f8f9e0f` · "탄성 기준 상태 · 위치 x 와 이력은 유지" 로 정정 · 계산 무변경).
 
 ## 4. 공극률 · 그림 숫자
 - 솔버 공극률 = 1 − (고정 고체부피) / (면적 × 판 높이) · `max(0, …)` 로 잘림 (`:3261`) → 0 % 에는 음수를 자른 경우가 섞인다 (2D vis 그림의 "porosity 0.0%" 도 이 꼴 확인 전 해석 금지).
-- 그림 패널의 "AM · SE · void %" = 그 단면의 물질점 장부 (`viz_mpm_morphology.py:221`) — scaffold 런의 "AM 0 %" = AM 물질점이 없다는 뜻 (AM 이 사라진 것 아님) · void % ≠ 솔버 공극률.
+- 그림 패널의 "AM · SE · void %" = 그리기 명령의 `--scaffold` 와 SE 점으로 만든 **단면 래스터 면적 분율** (`viz_mpm_morphology.py` build_lab · 정정 11-16 · Codex 반입 `95f8f9e0f`) — 물질점 장부가 아니다 · `--scaffold` 를 빼고 그리면 AM 기하가 들어가지 않아 "AM 0 %" 가 된다 · 그 숫자로 AM 물질점 수 · 부재를 추론하지 않는다 · void % ≠ 솔버 공극률.
 
 ## 5. 그림 13 장의 출처
 | 그림 | 출처 · 조건 |
 |---|---|
 | morph_dg | 3D scaffold (real_14 꼴 · AM 59 % · SE 32 % 칸) · `viz_mpm_morphology.py` · Σdg (상한 0.047) |
-| composite · loose_dense · loose_dense_3d | 3D (AM 물질점 0 % 표기 = scaffold 장애물) · ε (상한 17.5 · 18.2) · Σdg (17.2) |
+| composite · loose_dense · loose_dense_3d | 3D (옛 그림 "AM 0 %" = 그때 그리기 옵션 미확인 · 제목 분모 = 단면 래스터 면적 · 정정 11-16) · ε (상한 17.5 · 18.2) · Σdg (17.2) |
 | mpm2d_morphology_AM82_n320_nu0.30 | 2D 챔피언 (E 1.53 · σ_y 0.15 · ν 0.30 · n 320) · `mpm2d_morphology.py` · 기공 50 → 40 → 22 → 1 % |
 | vis_ · viszoom_E*_sy* (8 장) | 6 월 2D E · σ_y 보정 (uma 쪽 · 리포 밖 스크립트) · viszoom_E1.53_sy0.15 = SEM 꼴 일치 그림 (CLAUDE.md MPM cap/champion 절) |
 
