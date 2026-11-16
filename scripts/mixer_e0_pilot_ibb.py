@@ -135,6 +135,19 @@ def terminal(text,jid):
     r=rows[0];state=r[1].split()[0].rstrip('+')
     return dict(job_id=jid,state=state,exit_code=r[2],raw=r) if len(r)>=3 and state in TERMINAL else None
 
+def squeue_reports_absent(reply):
+    """One-job query after controller purge; absence is not job completion.
+
+    Do not suppress transport/permission errors, extra diagnostics, nonempty
+    stdout, or another return code. Terminal state must still come from sacct.
+    """
+    return reply.returncode==1 and not reply.stdout.strip() and reply.stderr.strip() in {
+        'Invalid job id specified',
+        'slurm_load_jobs error: Invalid job id specified',
+        'squeue: error: Invalid job id specified',
+    }
+
+
 def policy(install,authority_sha):
     return dict(schema='mixer_first8_campaign/1',campaign_id='mixer_precal_first8_20261106',execution_authorized=True,install_root=install,max_concurrency=1,np=20,cpu_cap=60,author_go_sha256=authority_sha)
 
@@ -289,7 +302,13 @@ def wait_job(root,case,jid):
     state={};last_watch=0;last_status=None;missing_since=None;monitor_start=time.monotonic()
     while True:
         need(time.monotonic()-monitor_start<=WATCH_LIMIT_SECONDS,'monitor budget reached; job not cancelled; author reconciliation required')
-        q=command(['squeue','-h','-j',jid,'-o','%i|%T'],30);need(q.returncode==0,'squeue watch failed; no cancellation or retry')
+        q=command(['squeue','-h','-j',jid,'-o','%i|%T'],30)
+        purged=squeue_reports_absent(q)
+        need(q.returncode==0 or purged,'squeue watch failed; no cancellation or retry')
+        if purged:
+            put(root/'evidence'/('squeue_absent_%d.json'%time.time_ns()),
+                dict(job_id=jid,state='ABSENT',reason='SQUEUE_INVALID_JOB_ID',returncode=q.returncode,
+                     stdout=q.stdout,stderr=q.stderr,terminal_confirmed=False))
         rows=[l.split('|') for l in q.stdout.splitlines() if l.strip()]
         need(all(len(r)==2 and r[0]==jid for r in rows),'unexpected job query')
         status=rows[0][1] if rows else 'ABSENT'

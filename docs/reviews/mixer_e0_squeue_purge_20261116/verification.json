@@ -1,0 +1,37 @@
+{
+  "before_sha256": "56f2d5ea366e55c987417bc7fea0f777598fb807f21de1887ae4aeea8af2a943",
+  "after_sha256": "dc31f871701cab595905d99fad1cd9377f02e24989b48c1175732e92ec82107e",
+  "new_test_sha256": "1eb33219a1640ab65e37ca47e83c85a03e289d88a493b9c6319f3b38ad40fc2f",
+  "tests": {
+    "new_methods": 12,
+    "before_failure_observations": 12,
+    "before_errors": 0,
+    "after_pass": 12,
+    "existing_methods": 20,
+    "existing_pass": 19,
+    "existing_skip": 1,
+    "existing_failures": 0
+  },
+  "implementation_AST": {
+    "changed_existing_functions": [
+      "wait_job"
+    ],
+    "added_functions": [
+      "squeue_reports_absent"
+    ],
+    "unchanged_existing_functions": 27
+  },
+  "received_txt": {
+    "sha256": "9aaf0cae17fb298a8ca56fb642b2dc101b9b1df326c19dc8b714395bffcf6adc",
+    "bytes": 15630,
+    "embedded_fixed_files_unchanged": {
+      "PY_HELPER": "98ac01f5ef780513dd1a137842cc8912e388ebc2705c331cd109e8f1705279c5",
+      "SH_WORKER": "b6083765ca78f4142947528995a9099bb9710ad40496dfd3c41ae977b0b1ec09"
+    }
+  },
+  "field_access": 0,
+  "scheduler_calls": 0,
+  "submission": 0,
+  "cancellation": 0,
+  "scope": "synthetic regression; no actual Slurm qualification"
+}
