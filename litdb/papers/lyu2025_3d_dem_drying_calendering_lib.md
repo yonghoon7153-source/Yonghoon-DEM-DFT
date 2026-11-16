@@ -246,6 +246,7 @@
 - **NCM811 + 액체전해질** — CAM은 우리와 같으나(E 142≈우리 140) **전해질·이온위상이 다름**. AM PSD = **Gaussian std 0.61 = 거의 단분산** → **bimodal/Furnas dip 안 다룸**(우리 12:4:1과 다름). 절대 porosity·σ 전이 금지.
 - **응력·porosity·힘 값 일부 digitized**(Fig 7b/9a/9b 그래프에서 읽음) → **추세만(±)**. **stated**: porosity 57→22 %, 두께 80/60/40 µm, 배위수(3.6 start·8.3 max), 입자-집전체 접촉(897/1087/2038), 입자파쇄 200 MPa, Table 1(E·ρ·ν·마찰), AM PSD(13 µm·std 0.61), CBD 2.2 µm, 조성 94:6·65 wt%, bond λ=1.67, plate 0.01 m/s. **σ_zz/σ_xx/압연력 절대값은 digitized**(Fig 9 그래프).
 - **검증 = 압연 porosity 1개 + Hg + 파쇄 + EDS 정성** — Sangrós(σ_el 4-point·접착 pull-off·porosity)·Ngandjong(indentation+porosity 2개 동시 + discharge + EIS)보다 *검증 descriptor 적음*. σ_e/σ_ion 실측 검증 없음(정성이라).
+- 🔗 **관련 카드 (2026-11-16 한 줄 추가)**: [`sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811`](sonzogni2024_dem_rotating_roll_calendering_binder_coated_nmc811.md) = 이 카드 L22 의 'Sonzogni [46] (압연 DEM)' 원문 카드 — lyu2025 원문 서론의 [46] 문장 (전자 성질 · 수직 인장 / 수평 압축 접촉) 은 그 원문과 같다 · 다만 lyu2025 원문 식 (6) F^l_n = (F^l_n)₀ − k_n(Δδ_n)^(3/2) 에 붙은 [46] 은 그 원문에 없는 식이다 (그쪽 법선 법칙 = 구간 선형 + 거듭제곱 경화 ζ 0.15) — 이 카드 L54 는 귀속 없이 옮겼다.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
