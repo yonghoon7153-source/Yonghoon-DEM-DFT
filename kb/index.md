@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-15 · managed-files: 626
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-16 · managed-files: 627
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 417건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 418건)
+- 2026-11-16 · `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 논리 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑 · 검토 완료 · 전달 여부는 사용자 몫
 - 2026-11-15 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-15 · `kb/reviews/internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` — EL 프롬프트 (내부 반박 리뷰) — li2s-3 카드 개정 4: 큐 끝 줄 유실 인정이 '끝 줄 하나만 빠진 완료 큐' 만 받는가 (판독 보류 처리 · 결과 전) · 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전…
 - 2026-11-14 · `kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md` — EK 회신 — b2o3 9 단계 DFT 도구 v6: 조건부 GO (gabia/Linux 생성 · 판독 범위) · EJ P2 해제 · 실행은 사용자 비준 뒤 · Windows 짧은 경로명 (8.3) 과 긴 이름이 섞이면 같은 파일을 다르게 판단하는 별도 P2 (Linux 생산 경로 차단 사유 아님) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인 · 수령 2026-11-14 (사용자 붙여넣기) · 조건부 GO (gab…
@@ -26,7 +27,6 @@
 - 2026-11-11 · `kb/projects/handoff_2026_11_11_token_limit.md` — 토큰 한도 인계 (2026-11-11 오후) — 같은 브랜치 friendly · 돌고 있는 것 둘 (gabia b2o3 8 단계 · kgy li2s-3 2 단계) · 다음 행동 · 사용자 결정 대기 · 인계 — 다음 세션이 이 카드부터 읽는다
 - 2026-11-10 · `kb/reviews/codex_DZ_prompt_li2s3_ensemble_definition_2026_11_10.md` — DZ 프롬프트 — li2s-3: li2s-2 가 1 단계에서 닫힌 뒤 시드 포함 규칙 하나 (PS₄ = 1.0 선택 → 기록만) 를 바꾸고 본 시드 여섯을 다시 쓰는 새 카드 — 구조군 정의 · 사후 변경 · 골격 게이트 읽기 · 2 단계 큐 · 발송 완료 · 회신 수령 2026-11-10 **NO-GO** (`c…
 - 2026-11-10 · `kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md` — DZ 회신 — li2s-3 구조군 정의 · 본 시드 재사용 · 골격 게이트 · 2 단계 큐: NO-GO (P0 0 · P1 6 · P2 3) — 구조군 정의와 여섯 시드 재사용은 조건부 찬성 · 실행 · 재개 경로 결함과 보고량 조건이 남음 · 원문 보존 (사용자 붙여넣기 2026-11-10) · 반영 = 카드 …
-- 2026-11-10 · `kb/reviews/codex_EA_prompt_b2o3_anneal_time_diagnostic_2026_11_10.md` — EA 프롬프트 — b2o3 B·O 배치: 파일럿 이완 에너지가 100 ps 까지 계속 내려간다 → 8 단계 (54 런 × 100 ps) 판독 전에 박은 어닐 시간 진단 (50 ps 프레임 이완 · 두 시점 가족 판독) 과 잠정 규칙이 충분한가 · 발송 완료 · 회신 수령 2026-11-10 (개정 3 그대로의 최종…
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -640,7 +640,7 @@
 - `kb/literature_db/pustorino_2025_lpscl_li_ordering_mechanical.md` — Pustorino et al. 2025 — LPSCl Li ordering → 기계적/전자 물성
 - `kb/literature_db/sundar_2025_lpscl_coating.md` — 📄 Sundar et al. 2025 — Computationally-Guided LPSCl Oxide Coating
 
-## seminars/ (31)
+## seminars/ (32)
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_README.md` — Research Seminar — Cascade final package
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_defense_QA_ko.md` — Research Seminar — Cascade Defense Q&A
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_script_ko.md` — Research Seminar — Cascade final speaker script
@@ -650,6 +650,7 @@
 - `kb/seminars/Research_Seminar_2026_10_13_cascade_script_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 발표 대본 (장별)  (2026-10-16 · 진행)
 - `kb/seminars/Research_Seminar_2026_10_13_cascade_storyline_ko.md` — 연구세미나 2026-10-13 — cascade 진행 브리핑 스토리라인 (대본 준비용)  (2026-10-12 · 진행)
 - `kb/seminars/Research_Seminar_2026_10_16_cascade_script_plain_ko.md` — 연구세미나 2026-10-16 — cascade 1부 대본 쉬운 판 (1–15쪽 · 노트 칸 붙여넣기용)  (2026-10-16 · 진행)
+- `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 논리 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑  (2026-11-16 · 검토 완료 · 전달 여부는 사용자 몫)
 - `kb/seminars/cascade_briefing_2026_10_direction.md` — cascade 진행 브리핑 (2026-10) — 08-18 덱 판정 · 13장 구성 · 현재 상황 · 방향 · 참고문헌  (2026-10-12 · 진행)
 - `kb/seminars/cascade_content_edit_directive_2026_08_11.md` — Cascade 세미나 내용 편집 지시서 — 기준본 24장 (Codex 편집용)
 - `kb/seminars/cascade_db_reading_2026_10_12.md` — cascade 원장 정독 — 단계별 커버리지 · 9월 재건 · 세미나 덱 정정 (2026-10-12)  (2026-10-12 · 진행)
@@ -689,4 +690,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 532개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 538개 (정본 목록: litdb/INDEX.md)
