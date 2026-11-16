@@ -3,7 +3,7 @@
  "kind": "estimand",
  "id": "sdi_agc_ag2s_window_2026_11_16",
  "제목": "SDI Ag–C 인터레이어 crack — Ag₂S 가 LPSCl · Li 옆에 설 수 있는 전위 창 (MP grand potential · 문서 Q2)",
- "status": "proposed — 결과 기록됨 (결과_2026_11_16) · 사용자 명시 비준 대기 (블록 실행만으로 비준을 적지 않는다)",
+ "status": "active — 사용자 비준 2026-11-16 (결과를 본 뒤 명시 승인 · 결정 D-2026-11-16-sdi-agc-ag2s-window)",
  "written_on": "2026-11-16",
  "트랙": {
   "이름": "SDI 과제 (Ag–C 인터레이어 crack 부반응) · 논문 아님 · 결정 = 사용자",
@@ -98,5 +98,10 @@
    "docs/figures/sdi_agc/fig3_ag_lpscl_window_map.png + db/properties/sdi_agc_ag_lpscl_window_map_2026_11_16.csv"
   ],
   "by": "agent · 2026-11-16"
+ },
+ "⏩_메모_2026_11_16_Q3_MD_보류": {
+  "사용자": "2026-11-16 '권고대로 하고' (Q3 MD 를 지금은 안 돌린다는 권고에 대한 답)",
+  "왜": "MD 는 조성이 고정된 닫힌계라 Q2 의 닫힌계 반응 0 (Ag + Li₆PS₅Cl) 조건을 다시 보는 셈이다. 1.91 V 위 상황을 보려면 Li 를 뺀 모델이 따로 있어야 한다.",
+  "다시_꺼낼_때": "새 카드로 — 질문부터 정한다 (crack 국소 전위 · Li 결핍 조건 등 SDI 쪽 근거가 있을 때). 이 메모는 Q3 를 닫는 마감 기록이 아니다."
  }
 }

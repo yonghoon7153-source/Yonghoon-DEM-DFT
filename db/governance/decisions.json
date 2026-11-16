@@ -13401,11 +13401,11 @@
    "title": "SDI Ag–C 인터레이어 crack — Ag₂S 가 LPSCl · Li 옆에 설 수 있는 전위 창 (MP grand potential · Ag₂S · Ag 사다리 · Ag|Li₆PS₅Cl 열린계 · 닫힌계) — 트랙 SDI 과제 · 결정 = 사용자",
    "statement": "카드 db/properties/sdi_agc_ag2s_window_card_2026_11_16.json. (a) V*(Ag₂S) = esw_grand_potential.py profile (Ag–Li–P–S–Cl · LiS4 SCl3 Li5PS4Cl2 뺌) 을 plot_li_uptake_profile.py 규칙으로 읽은 첫 Li 흡수 평탄 · reduction_limit_V 키는 쓰지 않는다 (b) interface_reactivity_v2.py 열린계 0–2.5 V 최소 kink 산물 · 끝점 퇴화 칸은 계면량 아님 (c) 닫힌계 --closed --only 최소 반응 에너지. 게이트 G1 상 있음 · G2 교과서 2.0 V ±0.3 기록 · G3 Q1 사다리 1 mV 재현 · G4 끝점.",
    "rationale": "SDI 회의 의견 'crack 의 Ag₂S 가 OCV 를 바꾼다' 를 MD 전에 열역학으로 거른다 — 교과서 어림으로 Ag₂S 는 ≈ 2.0 V 아래에서 Li 에 환원되므로 Li 가 닿는 crack 에서는 버티기 어렵다는 가설을 우리 도구로 확인한다. 사용자 11-16 '이거 시뮬레이션 부터 … 계획 잡을 수 있나 · 명령어 필요하면 주고'.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": true,
    "exploratory": true,
-   "results_seen_note": "11-16 사용자 gabia 실행 결과 (2a6504dc8) — G1–G4 통과 · 결과는 카드 '결과_2026_11_16' · 비준은 사용자 명시 대기 (블록 실행만으로 비준을 적지 않는다)",
+   "results_seen_note": "11-16 사용자 gabia 실행 결과 (2a6504dc8) — G1–G4 통과 · 결과는 카드 '결과_2026_11_16' · 사용자가 결과를 본 뒤 명시 승인 (11-16 AskUserQuestion '승인 (active 로 기록)') — 블록 실행만으로는 비준을 적지 않았다",
    "card": "db/properties/sdi_agc_ag2s_window_card_2026_11_16.json",
    "evidence": [
     "db/properties/esw_lis4excluded.json",
@@ -13427,7 +13427,31 @@
      "date": "2026-11-16"
     }
    ],
-   "_note": "proposed — 사용자 비준 대기. 실행은 gabia CPU (MP 조회 · 수 분) 블록을 사용자가 붙여넣을 때."
+   "_note": "active — 사용자 비준 2026-11-16 (결과를 본 뒤 · 명시 승인). Q3 MD 는 사용자 11-16 '권고대로' 로 보류 (카드 메모).",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전) · 사용자 gabia 실행 2a6504dc8 · 결과 기록 358ca5a9e"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion 'SDI Q2 카드 결정 … 사용자 승인 (active) 으로 기록할까요?' → '승인 (active 로 기록)' · 결과 (G1–G4 통과) 를 본 뒤의 승인"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T14:25:00Z",
+    "commit": "358ca5a9e986f80e841096259d0b6571b4965e3d",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-16 AskUserQuestion 'SDI Q2 카드 결정 D-2026-11-16-sdi-agc-ag2s-window (…) 를 사용자 승인 (active) 으로 기록할까요?' → '승인 (active 로 기록)' — gabia 결과 (2a6504dc8 · G1–G4 통과 · 카드 결과_2026_11_16) 를 본 뒤",
+    "decision_digest": "sha256:a9b61266e208ac116b4cbab264411902471790f1cc9221b05d2b7683234d8ccf"
+   }
   }
  ]
 }
