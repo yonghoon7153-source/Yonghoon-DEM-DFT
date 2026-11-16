@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 334편 · 생성 2026-11-16
+> digest 335편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -155,7 +155,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (53편)
+## 복합양극 미세구조 · percolation (54편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -202,6 +202,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `reisacher2023_percolation_sulfide_carbon_matrix` | #27 (★ 우리 EXACT SE) — Percolation Behavior of a Sulfide Electrolyte–Carbon Additive Matrix for Composite Cathodes in All-Solid-State Batteries — Reisacher, Kaya, Knoblauch (Batteri | exp | 2026-06-26 | 🖼 8 |
 | `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps` | NCM111 (LiNbO₃ 코팅) + LGPS (Li₁₀GeP₂S₁₂) + 아세틸렌 블랙 1 : 1 : 0.1 wt% 복합 양극을 지름 1 mm 셀에서 누른 채 싱크로트론 X 선 CT (복셀 ≈0.5 µm) 로 0 · 6 · 12 · 50 · 100 MPa 단계마다 본 미세구조 (microstructure) — 복합 양극 | experiment (operando cell: synchrotron X-ray CT under monito | 2026-11-12 | 🖼 58 |
 | `sangros2020_dem_electrical_conductive_paths_assb` | ASSB(폴리머 SSB) 복합 양극의 전자 전도경로를 DEM으로 — A* 경로탐색 + 실린더-저항 등가회로 + percolation, LFP+CB+PEO — Sangrós Giménez (Chem. Eng. Technol. 2020) | DEM (LIGGGHTS) + A* 경로탐색 + 등가회로 σ + skeleton τ | 2026-06-26 | 🖼 12 |
+| `siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb` | 황화물 유리 (75Li₂S·25P₂S₅) 전고체 전극 혼합층의 이온 · 전자 유효 전도도를 한 셀로 — 전자 저항이 있는 3 줄 전송선 모델 (TLM) 과 'electron-electron connection' (SUS \| 시료 \| SUS = Siroma 2015 의 T형) 의 물방울 (teardrop) 두 극한 (HFR | experiment + equivalent-circuit theory (AC impedance 10 mHz– | 2026-11-16 | 🖼 65 |
 | `so2022_dem_compaction_coated_particles_assb` | SE-코팅(core-shell) vs 입자-혼합 ASSB 양극의 DEM 냉간압밀 — tortuosity·AM damage·percolation + 코팅의 σ_e 차폐 — So (J. Power Sources 2022) | DEM | 2026-06-26 | 🖼 8 |
 | `song2025_porous_argyrodite_modulus_fracture_toughness` | 다공(porosity 13 %) Li₆PS₅Cl 펠릿의 벌크 영률 4.7 ± 1.1 GPa · 파괴인성 K_Ic 0.17 ± 0.03 MPa·m^½ — mm 스케일 외팔보 굽힘 + 컴팩트 인장(CT) + 시편별 Abaqus FE · 나노압입값(28 GPa · 0.69)의 ¼–⅙ — Song · Shi · Pakhare · | exp (cantilever beam-bending modulus + compact-tension fract | 2026-09-23 | 🖼 3 |
 | `taufactor_tortuosity_factor_tomography_tool` | TauFactor — voxel 미세구조에서 정상상태 확산(Laplace)을 풀어 tortuosity FACTOR τ 를 직접 계산하는 오픈소스 MATLAB 툴 — Cooper (SoftwareX 2016) | tool (voxel Laplace-solve, post-processing) | 2026-06-26 | 🖼 8 |

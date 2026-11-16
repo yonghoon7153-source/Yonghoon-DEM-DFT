@@ -582,3 +582,7 @@ ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation	transition 
 #   ⚠ 크롭 68 장 = 도구 12 (다시 자름 12: 그림 8 = 박힌 원 래스터 · 표 4 = 쪽 전체 → 400 dpi) + 손 56 (그래픽 초록 1 · 패널 24 · 식 11 · 근거 문단 20) + digitized.csv 24 행
 stershic2015_fabric_tensor_calendering_nmc_xct_dem	modeling_the_evolution_of_lithium-ion_particle_contact_distributions
 stershic2015_fabric_tensor_calendering_nmc_xct_dem	modeling the evolution of lithium-ion particle contact distributions
+# ── 황화물 유리 (75Li₂S·25P₂S₅) 전극 혼합층 (NCM523 LiNbO₃ · 흑연) 의 이온 · 전자 유효 전도도 — 세 줄 TLM · electron-electron (T형) 연결의 물방울 두 끝 (Siroma · Sato · Takeuchi · Nagai · Ota · Ioroi, J. Power Sources 316 (2016) 215–223) — 자동 매칭 실패 (slug 를 연결형 낱말로 지어 파일명 토큰과 안 겹침)
+#   ⚠ 크롭 65 장 = 도구 12 (다시 자름 3: 표 1 = 쪽 전체 · 표 S1 = 그림 S1 c 섞임 · 그림 S1 = 패널 c 만 → SI 2 · 3 쪽 이어 붙임) + 손 53 (manual_crop: 그래픽 초록 1 · 패널 15 · 식 18 · 근거 문단 19) + digitized.csv 56 행 — --inbox --run 으로 다시 뽑지 말 것
+siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb	ac_impedance_analysis_of_ionic_and_electronic_conductivities
+siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb	ac impedance analysis of ionic and electronic conductivities
