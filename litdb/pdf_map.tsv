@@ -570,3 +570,7 @@ chouchane2021_innov_webapp_stochastic_generation_meshing	an invitation to engage
 #   ⚠ 크롭 59 장 = 도구 15 (다시 자름 15: 그림 1–8 원 래스터 · 표 1 · 2 · 4 · 그림 S1 · S2 · S4 · S5) + 손 44 (manual_crop: 그래픽 초록 1 · 패널 8 · 그림 S3 · 표 3 · 식 14 · 근거 문단 19) + digitized.csv (106 행) · colorbar_extremes_printed.csv (36 행) — figures.json 표지가 있어 이 slug 의 --clean 은 손작업 가드에 막힌다 (--force_clean 이면 손 크롭이 지워진다)
 kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity	multiscale_modeling_of_lithium-ion_battery_electrodes
 kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity	multiscale modeling of lithium-ion battery electrodes
+# ── 싱크로트론 X 선 단층촬영 (TOMCAT · 복셀 0.37 µm) 으로 본 NMC111 액체 LIB 양극 16 개 (탄소 · 바인더 각 2–5 wt% × 롤 0 · 300 · 600 · 2000 bar) 의 입자 분할 · 공개 데이터 (Ebner · Geldmacher · Marone · Stampanoni · Wood · Adv. Energy Mater. 3 (2013) 845–850 · 정독 118 · 후보 N-66)
+#   ⚠ 크롭 44 장 = 도구 8 (다시 자름 8: 그림 1–3 여백 · 그림 S1 본문 줄 섞임 · 라벨 잘림 · S4 아래 줄 잘림 · S5 · S6 캡션 줄 섞임 · S6 · S7 빨간 틀 · S7 머리글) + 손 36 (manual_crop: 패널 9 · 표 S2 · S3 · 식 5 · 근거 문단 20) + digitized.csv (155 행)
+ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation	x-ray_tomography_of_porous_transition_metal_oxide
+ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation	transition metal oxide based lithium ion battery electrodes

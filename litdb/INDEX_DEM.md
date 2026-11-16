@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 331편 · 생성 2026-11-16
+> digest 332편 · 생성 2026-11-16
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -155,7 +155,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (52편)
+## 복합양극 미세구조 · percolation (53편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -171,6 +171,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `cronk2026_lis_positive_electrode_geometry_fem` | 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026) | FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLA | 2026-09-03 | 🖼 50 |
 | `doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density` | 단결정 NMC83 (LiNbO₃ 코팅 · D50 3.4 µm) + 자체 밀링 Li₆PS₅Cl (1–5 µm) + Super C65 = 70 : 27.5 : 2.5 wt% 복합 양극을 500 MPa · 상온에서 분리막 분말과 한 번에 눌러 상대밀도 ≈ 0.90 (porosity ≈ 10 %) · 입자 파쇄 없음 — 같은 공 | exp (cold-pressed composite cathode 500 MPa RT · SEM cross-s | 2026-11-10 | 🖼 29 |
 | `duquesnoy2020_calendering_ml_mesostructure_generator` | 캘린더링(압연)을 "porosity 를 입력으로 받는" 확률적 전극 생성기 + TauFactor + SISSO 로 — 실험 54셀 → 8,800 in-silico 전극 → 해석식 — Duquesnoy (J. Power Sources 2020) | hybrid (exp 54-electrode 다항회귀 → MATLAB voxel 확률생성기 → TauFact | 2026-09-03 | 🖼 12 |
+| `ebner2013_srxtm_nmc_cathode_microstructure_open_dataset_segmentation` | 싱크로트론 X 선 단층촬영 (SRXTM · 복셀 0.37 µm) 으로 본 NMC111 액체 LIB 양극 16 개 (탄소 · 바인더 각 2–5 wt% × 롤 압연 0 · 300 · 600 · 2000 bar) 의 입자 분할 · 공개 데이터 — 기공률 0.43–0.48 → 0.25–0.31 [판독] · 경계의 작은 입자 몰림 | experiment + image analysis (SRXTM synchrotron tomography ·  | 2026-11-16 | 🖼 44 |
 | `froboese2019_microstructure_ionic_conductivity_assb_electrode` | ASSB 전극 미세구조 ↔ 이온전도도 실측 — 고분자 SE (PEO:LiTFSI:SiO₂) + 비활성 유리구 모델 전극에서 "AM" 입경 4 종 × 부피분율 0–60 % 스윕, 기공률 · tortuosity (= τ², Eq 15) · Bruggeman τ = γφ^(1−α) 맞춤 · Li 계면저항 — Froboese ( | exp (EIS — Li/모델 전극/Li 대칭 코인셀, 80 °C; 고분자 SE + 비활성 유리구 모델 전극 | 2026-10-03 | 🖼 19 |
 | `galvezaranda2024_time_dependent_dl_calendering_microstructure` | 압연(calendering) DEM 궤적을 1D-CNN 시간-surrogate 로 대체하다 — 3 프레임 lag → 다음 프레임 3D 복셀 미세구조, NMC111 96 % / CBD 4 %, CD 20–50 % — Galvez-Aranda / Le Dinh / Vijay / Zanotto / Franco (Advanced | DL 시간-surrogate(1D-CNN, TensorFlow/Keras) on DEM 압연 궤적 + Geo | 2026-09-11 | 🖼 13 |
 | `hamann2026_llzo_bilayer_porosity_asr_dendrite_ccd` | Effects of LLZO Microstructure Porosity, LLZO/Li-Metal Interfacial Polarization Resistance, and Applied Areal Current Density on Li-Metal Dendrite Formation in LLZO Bilayer Symmetr | FDM voxel electrochemistry (steady/uniform-state Poisson in  | 2026-09-29 | 🖼 22 |
