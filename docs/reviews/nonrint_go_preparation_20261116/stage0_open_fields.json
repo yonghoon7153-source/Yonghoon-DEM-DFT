@@ -1,0 +1,57 @@
+{
+  "schema": "nonrint-stage0-open-fields-v1",
+  "base": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+  "status": "DRAFT_NOT_FROZEN",
+  "whole_hold": true,
+  "author_scope": {
+    "stages": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "gpu": false,
+    "pure_se_reference": {
+      "porosity_fraction": [
+        0.1,
+        0.13
+      ],
+      "true_density": 1.64,
+      "density_unit": "g/cm3",
+      "apply_to_composite": false,
+      "apply_as_all_2d_target": false
+    }
+  },
+  "research_results": 0,
+  "execution_go": false,
+  "operational_reseal": false,
+  "source_registration": "docs/reviews/dem_suyoung_stage01_20261113/registration_template.json",
+  "open_fields": {
+    "packing_manifest": null,
+    "seeds": null,
+    "generator_pin": null,
+    "material_contact_boundary_profile": null,
+    "particle_id_contract": null,
+    "area_and_unit_depth_contract": null,
+    "readout_state_contract": null,
+    "numerical_profile_with_units_sources": null,
+    "qualification_pin": null,
+    "cpu_installation_alias": null,
+    "threads": null,
+    "memory_bound": null,
+    "time_bound": null,
+    "operator": null,
+    "start_stop_utc": null,
+    "return_artifacts_contract": null,
+    "data_access_scope": null,
+    "independent_review": null,
+    "freeze_record": null,
+    "author_execution_go": null
+  },
+  "drd01": {
+    "status_from_base": "open",
+    "requested_closure_scope": "registered 2D classification procedure and original counterexample only; external decision required",
+    "universal_convergence_proven": false,
+    "physical_qualification": false
+  }
+}
