@@ -1,0 +1,2 @@
+processors ${PX} ${PY} 1
+include A2.liggghts

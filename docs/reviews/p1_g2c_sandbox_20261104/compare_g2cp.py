@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import decimal
 import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -49,6 +50,9 @@ import statistics
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+_mpi_spec = importlib.util.spec_from_file_location('g2cp_mpi', os.path.join(HERE, 'g2cp_mpi.py'))
+_mpi = importlib.util.module_from_spec(_mpi_spec)
+_mpi_spec.loader.exec_module(_mpi)
 EPS = 2.0 ** -52
 REL = 1e-5            # 등록 허용폭 (메모 §3 · 키트 g2c_compare rel) — 바꾸지 않는다
 MARGIN = 1e-9         # 바 — 고착 · 미끄럼 분류 여유 (결과 전 고정)
@@ -1327,6 +1331,19 @@ def _finish(res, O, rc):
     return res, rc
 
 
+def parallel_gate(O):
+    try:
+        with open(os.path.join(O,'lmp_identity.txt'),encoding='utf-8') as f: identity=f.read()
+        logs={}
+        for arm in ARMS:
+            p=os.path.join(O,arm,'log.txt')
+            if os.path.isfile(p):
+                with open(p,encoding='utf-8',errors='replace') as f: logs[arm]=f.read()
+        return _mpi.check_identity(identity,logs)
+    except OSError as exc:
+        return dict(ok=False,np=None,why=[type(exc).__name__])
+
+
 def compare_all(O, N, here=HERE, ref=None):
     """→ (결과 dict, rc) · OUT 이 실행기 출력일 때만 OUT/compare_g2cp.json 을 쓴다 (G2CPR-11)."""
     ref = ref if ref is not None else os.path.join(here, 'run_40000')
@@ -1334,6 +1351,8 @@ def compare_all(O, N, here=HERE, ref=None):
                thresholds=dict(REL=REL, MARGIN=MARGIN, E_REL=E_REL, E_ABS_K=E_ABS_K, ULP_K=ULP_K, CIRCLE_REL=CIRCLE_REL),
                memo='docs/reviews/p1_g2c_compare_definition_20261105.md §0 (11-10 개정 · 결과 전 · 1저자 비준 11-10)')
     P = res['predictions']
+    res['comparator_md5'] = md5(__file__)
+    res['mpi_helper_sha256'] = sha256(os.path.join(HERE,'g2cp_mpi.py'))
     if not os.path.isdir(O):
         P['입력'] = dict(status='계산 못 함', why=[f'OUT 없음: {O}'])
         return res, 2
@@ -1362,14 +1381,32 @@ def compare_all(O, N, here=HERE, ref=None):
         res['reports'] = dict(note=what + ' — 보고 안 함')
         return _finish(res, O, 2)
 
+    mg = parallel_gate(O)
+    res['mpi_gate'] = mg
+    if mg.get('np') in (2,4):
+        res['development_only'] = True
+        res['registered_conclusions_adoptable'] = False
+        res['adoption_pending'] = ['independent requeue history', 'first content decision and attempt accounting', 'field qualification']
+    if not mg['ok']:
+        res['predictions'] = {k: dict(status='계산 못 함',why=list(mg['why'])) for k in ORDER}
+        res['judgment'] = {k: dict(status='NOT_COMPUTED',technical_failure=True,why=list(mg['why'])) for k in ('다','라')}
+        return _finish(res,O,2)
+
     def guard(name, fn):
         try:
             return fn()
         except Exception as e:   # noqa: BLE001 — 한 예측의 예외 = 그 예측 '계산 못 함' (다른 예측은 그대로)
             return dict(status='계산 못 함', why=[f'{name}: {type(e).__name__}: {e}'])
 
-    P['가'] = guard('가', lambda: pred_ga(O, N, ref, ident))
+    P['가'] = (dict(status='해당 없음',why=['MPI: serial reference is outside same-NP comparison'])
+               if mg['np'] != 1 else guard('가', lambda: pred_ga(O, N, ref, ident)))
     gate = deck_gate(O, here)
+    if mg['np'] != 1:
+        table,duplicates,junk=md5_table(os.path.join(O,'inputs.md5'))
+        for name in ('MPA.liggghts','MPA2.liggghts','MPR.liggghts','MPBW.liggghts','g2cp_mpi.py'):
+            if name in duplicates or table.get(name)!=md5(os.path.join(here,name)):
+                gate['why'].append('MPI input identity: '+name);gate['ok']=False
+            gate.setdefault('checked',[]).append(name)
     res['deck_gate'] = gate
     if gate['ok']:
         _compare_registered(res, O, N, here, guard)
@@ -1381,8 +1418,9 @@ def compare_all(O, N, here=HERE, ref=None):
                                         note='등록 덱 아님 — 등록 판정 (§3) 은 등록 실험에만 (→ UNCONFIRMED)')
         res['exceptions'] = dict(note='등록 덱 아님 — 판독 안 함')
         res['reports'] = dict(note='등록 덱 아님 — 보고 안 함')
-    P['라-재현나'] = guard('라-재현나', lambda: pred_ra_repro_b(O, N, ref, ident))
-    res['predictions'] = P = {k: P[k] for k in ORDER if k in P}
+    P['라-재현나'] = (dict(status='해당 없음',why=['MPI: serial reference is outside same-NP comparison'])
+                      if mg['np'] != 1 else guard('라-재현나', lambda: pred_ra_repro_b(O, N, ref, ident)))
+    res['predictions'] = P = {k: P[k] for k in ORDER + ('마-3p',) if k in P}
     rc = 2 if any(isinstance(v, dict) and v.get('status') == '계산 못 함' for v in P.values()) else 0
     return _finish(res, O, rc)
 
@@ -1414,6 +1452,11 @@ def _compare_registered(res, O, N, here, guard):
     if 'status' in ma:          # 예외 — 세 칸 모두 '계산 못 함'
         ma = {k: dict(ma) for k in ('마-1', '마-2', '마-3')}
     P.update(ma)
+    if res['mpi_gate']['np'] != 1:
+        P['마-3p'] = guard('마-3p',lambda: _mpi.pred_ma3p(D['C'],AN,AT['A'],res['mpi_gate']['np'],_cmp_groups,[g for g,_ in _groups(LAYOUT[30])]))
+        res['mpi'] = dict(np=res['mpi_gate']['np'],n_rb=P['마-3p'].get('n_rb'),counts=P['마-3p'].get('counts'))
+        if res['mpi']['n_rb']==0:
+            P['마-3'].update(status='해당 없음',why=['MPI rank-boundary pairs absent'])
     if mat is None:
         P['바'] = dict(status='계산 못 함', why=['덱 물성 읽기 실패: ' + res['material'].get('error', '')])
     else:

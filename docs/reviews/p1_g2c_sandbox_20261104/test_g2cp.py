@@ -352,7 +352,7 @@ def fmt_atoms(step, rows, box=BOXB, tokfmt='%.17g'):
 
 def wtxt(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with open(path, 'w') as f:
+    with open(path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(text)
 
 
@@ -377,6 +377,7 @@ def write_fixture(root, N=NSTEP, bed=None, lmp_md5='0' * 32, mutate=None):
     arows = bed.atom_rows()
     for arm in ARMS:
         rows = bed.rows(arm)
+        wtxt(os.path.join(root,arm,'log.txt'), '  1 by 1 by 1 MPI processor grid\nLoop time of 0.01 on 1 procs for 0 steps\n')
         if mutate:
             rows = mutate(arm, 'c', rows)
         wtxt(os.path.join(root, arm, 'post', 'c_%d.txt' % N), fmt_local(N, rows))
@@ -389,9 +390,9 @@ def write_fixture(root, N=NSTEP, bed=None, lmp_md5='0' * 32, mutate=None):
             wtxt(os.path.join(root, arm, 'rst', 'restart_cmd.bin'), 'FAKE_RESTART kind=cmd step=%d\n' % N)
         if arm in ('BW', 'CW'):
             wtxt(os.path.join(root, arm, 'rst', 'restart_rt.bin'), 'FAKE_RESTART kind=rt src=%s step=%d\n' % (arm, N))
-    with open(os.path.join(root, 'lmp_identity.txt'), 'w') as f:
+    with open(os.path.join(root, 'lmp_identity.txt'), 'w', encoding='utf-8', newline='\n') as f:
         f.write('lmp_path /fake/lmp\nlmp_md5 %s\nlmp_sha256 %s\nlmp_banner LIGGGHTS (가짜)\nN %d\n' % (lmp_md5, '0' * 64, N))
-    with open(os.path.join(root, 'inputs.md5'), 'w') as f:
+    with open(os.path.join(root, 'inputs.md5'), 'w', encoding='utf-8', newline='\n') as f:
         f.write('%s  lmp\n' % lmp_md5)
         for d in DECKS7 + ('BW.liggghts',):
             p = os.path.join(HERE, d)
@@ -404,9 +405,9 @@ def write_fixture(root, N=NSTEP, bed=None, lmp_md5='0' * 32, mutate=None):
             if os.path.isdir(d):
                 for fn in sorted(os.listdir(d)):
                     lines.append('%s  %s/%s/%s' % (md5f(os.path.join(d, fn)), arm, sub, fn))
-    with open(os.path.join(root, 'outputs.md5'), 'w') as f:
+    with open(os.path.join(root, 'outputs.md5'), 'w', encoding='utf-8', newline='\n') as f:
         f.write('\n'.join(lines) + '\n')
-    with open(os.path.join(root, 'rc.txt'), 'w') as f:      # 실행기가 팔마다 한 줄 (`<팔> rc <rc> sec <초>`) — 끝난 실행 = 아홉 줄 rc 0 (G2CPR2-01)
+    with open(os.path.join(root, 'rc.txt'), 'w', encoding='utf-8', newline='\n') as f:      # 실행기가 팔마다 한 줄 (`<팔> rc <rc> sec <초>`) — 끝난 실행 = 아홉 줄 rc 0 (G2CPR2-01)
         f.write(rc_lines())
     return bed
 
@@ -1024,7 +1025,7 @@ def t14_ga_applicability():
     ref = os.path.join(d, 'ref')
     os.makedirs(ref)
     lm = 'f' * 32
-    with open(os.path.join(ref, 'inputs.md5'), 'w') as f:
+    with open(os.path.join(ref, 'inputs.md5'), 'w', encoding='utf-8', newline='\n') as f:
         f.write('%s  lmp_serialnovtk\n' % lm)
         for dk in DECKS7:
             f.write('%s  %s\n' % (md5f(os.path.join(HERE, dk)), dk))
@@ -1032,7 +1033,7 @@ def t14_ga_applicability():
     names += ['%s/post/c_%d.txt' % (a, NSTEP) for a in ('A', 'A2', 'B', 'B2', 'C')]
     names += ['A/post/cpre_%d.txt' % (NSTEP - 1), 'A2/post/cpre_%d.txt' % (NSTEP - 1)]
     names += ['%s/post/atom_%d.txt' % (a, NSTEP) for a in ('A', 'A2', 'B', 'B2', 'C')]
-    with open(os.path.join(ref, 'outputs.md5'), 'w') as f:
+    with open(os.path.join(ref, 'outputs.md5'), 'w', encoding='utf-8', newline='\n') as f:
         for n in names:
             f.write('%s  %s\n' % (md5f(os.path.join(O, n)), n))
     r, _ = c.compare_all(O, NSTEP, here=HERE, ref=ref)
@@ -1061,7 +1062,7 @@ def _rewrite_outputs(O):
             if os.path.isdir(dd):
                 for fn in sorted(os.listdir(dd)):
                     lines.append('%s  %s/%s/%s' % (md5f(os.path.join(dd, fn)), arm, sub, fn))
-    with open(os.path.join(O, 'outputs.md5'), 'w') as f:
+    with open(os.path.join(O, 'outputs.md5'), 'w', encoding='utf-8', newline='\n') as f:
         f.write('\n'.join(lines) + '\n')
 
 
@@ -1086,12 +1087,12 @@ def t15_wall_scale():
 @test
 def t16_cli_rc():
     d = tmpdir()
-    p = subprocess.run([sys.executable, '-I', os.path.join(HERE, CMPFILE), os.path.join(d, 'none'), str(NSTEP)],
+    p = subprocess.run([sys.executable, '-I', '-X', 'utf8', os.path.join(HERE, CMPFILE), os.path.join(d, 'none'), str(NSTEP)],
                        capture_output=True, text=True, timeout=120)
     t = T()
     t.ok('없는 OUT → rc 2', p.returncode == 2, (p.returncode, p.stderr[-300:]))
     O = _full(d)
-    p = subprocess.run([sys.executable, '-I', os.path.join(HERE, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
+    p = subprocess.run([sys.executable, '-I', '-X', 'utf8', os.path.join(HERE, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
     t.ok('정상 → rc 0', p.returncode == 0, (p.returncode, p.stderr[-500:]))
     t.ok('화면에 예측 줄', '다-값' in p.stdout and '바' in p.stdout, p.stdout[-300:])
     t.ok('화면에 완료 문 지남 줄 (G2CPR2-01)', [ln for ln in p.stdout.splitlines() if ln.startswith('완료 문 ')] == ['완료 문 지남'], p.stdout[-300:])
@@ -1187,6 +1188,7 @@ for sub, key in (('post', 'POST'), ('rst', 'RST')):
             shutil.copy(os.path.join(src, fn), os.path.join(var[key], fn))
 with open(args['-log'], 'w') as f:
     f.write('LIGGGHTS (Version LIGGGHTS-PUBLIC 3.8.0, git commit 3d5c00f · 가짜 lmp)\n')
+    f.write('  1 by 1 by 1 MPI processor grid\n')
     if at('error'):
         f.write('ERROR: 가짜 오류\n')
     if not at('noloop'):
@@ -1489,7 +1491,7 @@ def t29_runner_then_compare():
     O = os.path.join(d, 'O')
     rc, out, err = run_runner(S, [str(NSTEP), O], env)
     t.ok('실행기 rc 0', rc == 0, (rc, err[-300:]))
-    p = subprocess.run([sys.executable, '-I', os.path.join(S, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
+    p = subprocess.run([sys.executable, '-I', '-X', 'utf8', os.path.join(S, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
     t.ok('대조기 rc 0', p.returncode == 0, (p.returncode, p.stderr[-500:]))
     j = os.path.join(O, 'compare_g2cp.json')
     if os.path.exists(j):
@@ -2046,7 +2048,7 @@ def t40_compare_completion_gate():
     rc, out, err = run_runner(S, [str(NSTEP), O], env)
     t.ok('실행기 error:CR → rc 4 · STOP.txt', rc == 4 and os.path.exists(os.path.join(O, 'STOP.txt')), (rc, err[-300:]))
     t.ok('실행기 error:CR → CR 덤프는 다 있음 (판독하면 맞음으로 나올 꼴)', os.path.exists(os.path.join(O, 'CR', 'post', 'c_%d.txt' % NSTEP)))
-    p = subprocess.run([sys.executable, '-I', os.path.join(S, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
+    p = subprocess.run([sys.executable, '-I', '-X', 'utf8', os.path.join(S, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
     t.ok('멈춘 실행기 출력 → 대조기 CLI rc 2', p.returncode == 2, (p.returncode, p.stdout[-300:], p.stderr[-300:]))
     gl = [ln for ln in p.stdout.splitlines() if ln.startswith('완료 문 ')]      # 예측 줄의 사유 글자와 섞이지 않게 줄 머리로 가른다
     t.ok('멈춘 실행기 출력 → 화면에 완료 문 막힘 줄 하나 (사유에 STOP.txt)',
@@ -2289,7 +2291,7 @@ def t43_completion_gate_outputs_md5():
         if name.startswith('F1 '):
             jp = os.path.join(O, 'compare_g2cp.json')
             t.ok('F1 → JSON 에도 완료 문 막힘 (JSON 만 봐도 가른다)', os.path.exists(jp) and (json.load(open(jp)).get('run_gate') or {}).get('ok') is False)
-            p = subprocess.run([sys.executable, '-I', os.path.join(HERE, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
+            p = subprocess.run([sys.executable, '-I', '-X', 'utf8', os.path.join(HERE, CMPFILE), O, str(NSTEP)], capture_output=True, text=True, timeout=300)
             gl = [ln for ln in p.stdout.splitlines() if ln.startswith('완료 문 ')]
             t.ok('F1 → 대조기 CLI rc 2 · 화면에 완료 문 막힘 줄 하나 (끝난 그대로가 아님 · outputs.md5)',
                  p.returncode == 2 and len(gl) == 1 and gl[0].startswith('완료 문 막힘 — 실행기 출력이 끝난 그대로가 아니다') and 'outputs.md5' in gl[0],
@@ -2326,7 +2328,7 @@ def t43_completion_gate_outputs_md5():
     shutil.copytree(O, O2, copy_function=shutil.copy)
     js = []
     for X in (O, O2):
-        p = subprocess.run([sys.executable, '-I', os.path.join(S, CMPFILE), X, str(NSTEP)], capture_output=True, text=True, timeout=300)
+        p = subprocess.run([sys.executable, '-I', '-X', 'utf8', os.path.join(S, CMPFILE), X, str(NSTEP)], capture_output=True, text=True, timeout=300)
         gl = [ln for ln in p.stdout.splitlines() if ln.startswith('완료 문 ')]
         t.ok('P2 %s → 대조기 CLI rc 0 · 완료 문 지남' % ('원래 OUT' if X == O else '복사한 OUT'), p.returncode == 0 and gl == ['완료 문 지남'],
              (p.returncode, gl, p.stdout[-300:], p.stderr[-300:]))

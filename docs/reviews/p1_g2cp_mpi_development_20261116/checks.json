@@ -1,0 +1,79 @@
+{
+  "base": "d5cf6307fd5165732e31d9cb5e1044f42aea1a0e",
+  "scope": "development_fake_runner_and_synthetic_comparison",
+  "mpi_before": {
+    "methods": 10,
+    "failures": 16,
+    "errors": 0,
+    "real_engine": false,
+    "real_mpi": false
+  },
+  "mpi_after": {
+    "methods": 10,
+    "failures": 0,
+    "errors": 0,
+    "real_engine": false,
+    "real_mpi": false
+  },
+  "serial_methods_passed": [
+    "t01_material_from_decks",
+    "t02_kt_formula",
+    "t03_read_local_normalizes",
+    "t04_read_local_problems",
+    "t05_value_vs_bytes",
+    "t06_judgment_rules",
+    "t07_judgment_matches_kit",
+    "t08_atoms_compare",
+    "t09_ba_projection_positive",
+    "t10_ba_old_chain_negative",
+    "t11_ba_kt_negative",
+    "t12_end_to_end_positive",
+    "t13_end_to_end_negatives",
+    "t14_ga_applicability",
+    "t15_wall_scale",
+    "t16_cli_rc",
+    "t17_ma_sets",
+    "t20_bw_deck_shape",
+    "t30_memo_registration_text",
+    "t32_cohesion_guard_full_set",
+    "t33_value_needs_17g_form",
+    "t34_registered_deck_gate",
+    "t35_empty_and_atom_id_mismatch",
+    "t36_exc2_sets_and_orientation",
+    "t37_identity_unknown_is_not_computed",
+    "t42_round2_notation"
+  ],
+  "serial_environment_incomplete": [
+    {
+      "name": "t39_compare_out_guard",
+      "reason": "Windows symlink privilege unavailable"
+    }
+  ],
+  "preserved_decks_sha256": {
+    "head.inc": "992763b9a69bcd8cf242032f9369cf11dd3c3346ea5ff6a066149621d686868d",
+    "mat.inc": "b8446cafa5708060ec27f31a2d02fe5b0e3ec2f7fabd967a492a0b52cf156f89",
+    "fresh.inc": "66b34ae439c3c8cb0582dd2e76216fe90d1c590968dac45e9b30d457d15e53b3",
+    "outA.inc": "7c8448309db73a40ff9d24da098daf560e9f984af9d00c1fc6ce13eb22b0caba",
+    "A.liggghts": "ce35084aa87b40732497e89f426a11f1c13ecaaaf4037af2fb54f6c1c07af4f2",
+    "A2.liggghts": "e932f488e3ce4ecd3705ec49737ee356e6b83b2cffe36d0453a5e3b4b0e2b036",
+    "R.liggghts": "1432a722ec185deccb9994852c9fe2a33a6451fa3593b9f3e1207c3a704e8026",
+    "BW.liggghts": "5a7cabf5cdf661ad6e6c3af42a428f46275fc4176bf84d34bc7e3f9d706b5ea5"
+  },
+  "source_sha256": {
+    "compare.py": "5d574f48cbd184a77e110cafa4dc4705b6e5062b37f0c3cc4fe4177fdfcf2f1a",
+    "compare_g2cp.py": "d21cc396c5ce60df86ba856d2efbf6a1ef16773a35d8998c598f9be9f5c82150",
+    "diag_periodic_shear.py": "efd0044e808fee22c93d5266424a50b666771234aa60efc62210b550d340f917",
+    "g2cp_mpi.py": "2fcd2111b073caba9d836be57c90471a55c54733c0a6ae0698998badb74afd89",
+    "MPA.liggghts": "6eb318e1ba995cbe7b7d3741de2b9297b896ca064a075f03c900b6e2ac1fa3c0",
+    "MPA2.liggghts": "9aee4d3d5cf8034795d417a991156e481f43f4869f0fb635a55d16fc9200b1be",
+    "MPBW.liggghts": "ef73971432d889b02e90970dad3cbe273c639ceed59f1b3f58c881f6c3b0bd43",
+    "MPR.liggghts": "4e6a0ac27413f4f8eda7ef675f07ac4691976624fb02fe165294b16852a30e76",
+    "run_arms.sh": "a4bed12ae7216e518d1fb860a77bff8382129d19f245488908dae677797f4f22",
+    "run_g2cp.sh": "2f2b2117a9787f32d22248609e64db2ea02edc42bec3b49cbc212aede3e2d2c9",
+    "test_g2cp.py": "a88a56b7eefc6d33469237b1cb53526e0420113eb81b4dc441a90a5cac3c380e",
+    "test_g2cp_mpi.py": "fb0bea50122f877f1df699bff68036a85b37017268da5b5fbfb1720da2c33fd9"
+  },
+  "whole_gate_run": false,
+  "field_execution": false,
+  "registered_conclusions_adoptable": false
+}
