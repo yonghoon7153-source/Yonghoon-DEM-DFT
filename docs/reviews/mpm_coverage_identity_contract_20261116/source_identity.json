@@ -1,0 +1,78 @@
+{
+  "status": "READ_ONLY_SOURCE_IDENTITY",
+  "base_commit": "a690397586970fc02c2ec31aa7cde3d68a10636d",
+  "authority": "author-relayed Claude reply 2026-11-16; canonical memo sections 4-1,4-3,5",
+  "production_test_executions": 0,
+  "field_executions": 0,
+  "files": [
+    {
+      "path": "docs/reviews/mpm_coverage_interface_design_memo_20261103.md",
+      "base_commit": "a690397586970fc02c2ec31aa7cde3d68a10636d",
+      "bytes": 26900,
+      "sha256": "c261925b99eb7a34d02bcd43638ee3d230c0a17478893652ace1a4e8c9e25dfd",
+      "git_blob": "56d65071169bc67b17fbb17890413ecd87de5788",
+      "read_only": true,
+      "import_executed": false
+    },
+    {
+      "path": "scripts/step3_sigma.py",
+      "base_commit": "a690397586970fc02c2ec31aa7cde3d68a10636d",
+      "bytes": 377520,
+      "sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+      "git_blob": "59b58f02f64fbbcaaaa3256fc57557be6d842e72",
+      "read_only": true,
+      "import_executed": false,
+      "reference_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "reference_sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+      "same_bytes_as_reference": true
+    },
+    {
+      "path": "scripts/lens_geometry.py",
+      "base_commit": "a690397586970fc02c2ec31aa7cde3d68a10636d",
+      "bytes": 5907,
+      "sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+      "git_blob": "53a20c31554740957c21a0fa52362df0b000cc97",
+      "read_only": true,
+      "import_executed": false,
+      "reference_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "reference_sha256": "891ac67f8b6c1b4c7978b5e806800ae74f5c8791928d6ece19a29e5f3b212b77",
+      "same_bytes_as_reference": true
+    },
+    {
+      "path": "scripts/plastic_coverage.py",
+      "base_commit": "a690397586970fc02c2ec31aa7cde3d68a10636d",
+      "bytes": 89422,
+      "sha256": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348",
+      "git_blob": "fd522fa8104ecc26397192a6cc3df4198d62a6f8",
+      "read_only": true,
+      "import_executed": false,
+      "reference_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "reference_sha256": "cce27a34c0bf2e4f5c122e43d983aa3414a825ab461a00abd408dba02e151348",
+      "same_bytes_as_reference": true
+    },
+    {
+      "path": "scripts/dem_analysis_core.py",
+      "base_commit": "a690397586970fc02c2ec31aa7cde3d68a10636d",
+      "bytes": 102925,
+      "sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "git_blob": "629fb278118161e1ba1abcb00db0bcaa0f2cf1b6",
+      "read_only": true,
+      "import_executed": false,
+      "reference_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "reference_sha256": "39fb19cb7eb962f11fe88546fa0ad93c4a9074846be13d15b27c2eae44fb620f",
+      "same_bytes_as_reference": true
+    },
+    {
+      "path": "scripts/mpm3d_compaction.py",
+      "base_commit": "a690397586970fc02c2ec31aa7cde3d68a10636d",
+      "bytes": 335832,
+      "sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+      "git_blob": "fb1bf65535135ecdb7acb87833b7acdb389e54db",
+      "read_only": true,
+      "import_executed": false,
+      "reference_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "reference_sha256": "b8bb85278b09e4232c933a868d332eb544b981b75e7367c82ce98b54cce17bdd",
+      "same_bytes_as_reference": true
+    }
+  ]
+}

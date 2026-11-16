@@ -1,0 +1,443 @@
+{
+  "schema": "nonrint_coverage_identity_synthetic_inputs_v1",
+  "status": "PREPARED_NOT_EXECUTED",
+  "production_schema": false,
+  "source": "mpm_coverage_interface_design_memo_20261103.md sections 4-1, 4-3, 5",
+  "research_result_count": 0,
+  "test_execution_count": 0,
+  "notation": {
+    "rational_strings": "exact toy expectations, not production numeric parsing",
+    "canonical_rank": "supplied synthetic canonical-key ordering, never input row or production ID encoding",
+    "coverage_unit": "fraction"
+  },
+  "cases": [
+    {
+      "id": "namespace",
+      "input": [
+        {
+          "namespace": "AM",
+          "id": 7
+        },
+        {
+          "namespace": "SE",
+          "id": 7
+        },
+        {
+          "namespace": "carbon",
+          "fid": 7,
+          "branch": 2
+        }
+      ],
+      "expected": {
+        "distinct_identities": 3
+      }
+    },
+    {
+      "id": "power_radius",
+      "input": {
+        "cell": [
+          "4/5",
+          "0",
+          "0"
+        ],
+        "spheres": [
+          {
+            "se_id": 29,
+            "c": [
+              "0",
+              "0",
+              "0"
+            ],
+            "r": "1"
+          },
+          {
+            "se_id": 17,
+            "c": [
+              "1",
+              "0",
+              "0"
+            ],
+            "r": "1/2"
+          }
+        ]
+      },
+      "expected": {
+        "claimants": [
+          29,
+          17
+        ],
+        "power": {
+          "17": "-21/100",
+          "29": "-9/25"
+        },
+        "owner": 29,
+        "nearest_centre": 17
+      }
+    },
+    {
+      "id": "no_claimant",
+      "input": {
+        "cell": [
+          "3",
+          "0",
+          "0"
+        ],
+        "spheres": [
+          {
+            "se_id": 29,
+            "c": [
+              "0",
+              "0",
+              "0"
+            ],
+            "r": "1"
+          },
+          {
+            "se_id": 17,
+            "c": [
+              "1",
+              "0",
+              "0"
+            ],
+            "r": "1/2"
+          }
+        ]
+      },
+      "expected": {
+        "claimants": [],
+        "owner": null
+      }
+    },
+    {
+      "id": "epsilon_set",
+      "input": {
+        "epsilon": "1",
+        "claimants": [
+          {
+            "se_id": 31,
+            "p": "0",
+            "canonical_rank": 3
+          },
+          {
+            "se_id": 29,
+            "p": "3/4",
+            "canonical_rank": 2
+          },
+          {
+            "se_id": 17,
+            "p": "3/2",
+            "canonical_rank": 1
+          }
+        ]
+      },
+      "expected": {
+        "band": [
+          31,
+          29
+        ],
+        "owner": 29
+      },
+      "note": "toy normalized power/epsilon, not production tolerance"
+    },
+    {
+      "id": "periodic_xy",
+      "input": {
+        "box": [
+          "10",
+          "10",
+          "10"
+        ],
+        "periodic": [
+          true,
+          true,
+          false
+        ],
+        "sphere": {
+          "se_id": 29,
+          "c": [
+            "1/10",
+            "1/10",
+            "5"
+          ],
+          "r": "1/2"
+        },
+        "cell": [
+          "99/10",
+          "99/10",
+          "5"
+        ]
+      },
+      "expected": {
+        "minimum_image_distance_squared": "2/25",
+        "power": "-17/100",
+        "owner": 29
+      }
+    },
+    {
+      "id": "nonperiodic_z",
+      "input": {
+        "box": [
+          "10",
+          "10",
+          "10"
+        ],
+        "periodic": [
+          true,
+          true,
+          false
+        ],
+        "sphere": {
+          "se_id": 29,
+          "c": [
+            "5",
+            "5",
+            "1/10"
+          ],
+          "r": "1/2"
+        },
+        "cell": [
+          "5",
+          "5",
+          "99/10"
+        ]
+      },
+      "expected": {
+        "distance_squared": "2401/25",
+        "claimants": [],
+        "owner": null
+      }
+    },
+    {
+      "id": "permutation",
+      "input": {
+        "source_case": "epsilon_set",
+        "row_orders": [
+          [
+            31,
+            29,
+            17
+          ],
+          [
+            17,
+            29,
+            31
+          ],
+          [
+            29,
+            31,
+            17
+          ],
+          [
+            31,
+            17,
+            29
+          ],
+          [
+            29,
+            17,
+            31
+          ],
+          [
+            17,
+            31,
+            29
+          ]
+        ]
+      },
+      "expected": {
+        "owner_each": 29
+      },
+      "note": "claimants and canonical keys held fixed"
+    },
+    {
+      "id": "cloning",
+      "input": {
+        "seed_cell_owner": {
+          "namespace": "SE",
+          "id": 29
+        },
+        "clone_count": 8
+      },
+      "expected": {
+        "point_ids": [
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29,
+          29
+        ]
+      }
+    },
+    {
+      "id": "majority",
+      "input": {
+        "transported_point_ids": [
+          29,
+          29,
+          29,
+          29,
+          29,
+          17,
+          17,
+          17
+        ]
+      },
+      "expected": {
+        "owner": 29
+      }
+    },
+    {
+      "id": "majority_tie",
+      "input": {
+        "transported_point_ids": [
+          29,
+          17,
+          29,
+          17,
+          29,
+          17,
+          29,
+          17
+        ],
+        "canonical_ranks": {
+          "17": 2,
+          "29": 1
+        }
+      },
+      "expected": {
+        "owner": 29
+      }
+    },
+    {
+      "id": "occupancy",
+      "input": {
+        "reference_points_per_cell": 8,
+        "counts": [
+          3,
+          4
+        ],
+        "threshold": "1/2"
+      },
+      "expected": {
+        "occupied": [
+          false,
+          true
+        ]
+      }
+    },
+    {
+      "id": "free_surface_union",
+      "input": {
+        "surface_units": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "am_occluded": [
+          0,
+          1
+        ],
+        "outside": [
+          1,
+          2
+        ],
+        "se_covered": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "expected": {
+        "free": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "covered_free": [
+          3,
+          4
+        ],
+        "C0": "2/5"
+      }
+    },
+    {
+      "id": "empty_free_surface",
+      "input": {
+        "surface_units": [
+          0,
+          1
+        ],
+        "am_occluded": [
+          0
+        ],
+        "outside": [
+          1
+        ],
+        "se_covered": [
+          0
+        ]
+      },
+      "expected": {
+        "C0": null,
+        "reason": "free_surface_empty"
+      }
+    },
+    {
+      "id": "baseline_triplet",
+      "input": {
+        "C_rigid": "1/5",
+        "C_seed": "1/4",
+        "C_end": "2/5",
+        "unit": "fraction",
+        "same_phase_band_denominator_estimator": true
+      },
+      "expected": {
+        "plastic_increment": "3/20",
+        "seed_bias": "1/20",
+        "undeformed_end_equal_seed_increment": "0"
+      }
+    },
+    {
+      "id": "missing_phase",
+      "input": {
+        "absent_am_phase": {
+          "present": false
+        },
+        "present_uncovered_am_phase": {
+          "present": true,
+          "free_surface_units": 5,
+          "covered_units": 0
+        }
+      },
+      "expected": {
+        "absent_C0": null,
+        "present_uncovered_C0": "0"
+      }
+    },
+    {
+      "id": "split_undefined",
+      "input": {
+        "operation": "split_material_point",
+        "existing_identity": {
+          "namespace": "SE",
+          "id": 29
+        }
+      },
+      "expected": {
+        "contract_status": "UNSPECIFIED",
+        "split_rule": null
+      }
+    }
+  ]
+}
