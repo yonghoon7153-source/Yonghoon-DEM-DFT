@@ -17925,6 +17925,34 @@
    "evidence_tests": [
     "docs/reviews/rint2_rtr01_closure_20261113/check_results.json"
    ]
+  },
+  {
+   "id": "P1AB5-01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-16 P1 A/B 개정 5 독립 설계 판정 (리뷰 핀 5ae5acdd5e77 = 반입 f7440d964) · B 구현 설계 GO · 새 P1 없음",
+   "opened_in": "docs/reviews/p1ab_rev5_receipt_20261116/REPORT.received.md",
+   "title": "A 기대 표 — 역사 N 부족 자료 (6×4 · 11×1) 의 PASS 기대가 모순 → UNCONFIRMED 로 구분 (N≥100 합성 fixture 의 PASS · VALUE_MISMATCH 기대와 분리)",
+   "note": "고침 = Codex 8ced70fb6 (반입 9c9f6bd70) 문서만 · 같은 14 메서드 고치기 전 새 2 실패 → 14/14 · 국소 되돌림 6 검출 = 작성 측 회귀 (독립 재확인 아님) · 제안 = docs/reviews/p1ab_rev5_receipt_20261116/ledger_proposal.json (claimed_fixed 만 · verified · closed 요청 없음) · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · B 개발 착수를 막지 않음 (1저자 11-16 Q2 · 알려진 문서 잔여) · 11-16 Claude 반입 (cherry-pick -x · 1저자 '반입' 통합 인계)",
+   "claimed_fixed_sha": "9c9f6bd70",
+   "evidence_tests": [
+    "docs/reviews/p1ab_rev5_receipt_20261116/check_results.json"
+   ]
+  },
+  {
+   "id": "P1AB5-02",
+   "severity": "P3",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 11-16 P1 A/B 개정 5 독립 설계 판정 (리뷰 핀 5ae5acdd5e77 = 반입 f7440d964) · B 구현 설계 GO · 새 P1 없음",
+   "opened_in": "docs/reviews/p1ab_rev5_receipt_20261116/REPORT.received.md",
+   "title": "A 현행 판 표지 · C12 후속 범위 · 전체 검사 기록 문구 잔존",
+   "note": "고침 = Codex 8ced70fb6 (반입 9c9f6bd70) 문서만 · 같은 14 메서드 고치기 전 새 2 실패 → 14/14 · 국소 되돌림 6 검출 = 작성 측 회귀 (독립 재확인 아님) · 제안 = docs/reviews/p1ab_rev5_receipt_20261116/ledger_proposal.json (claimed_fixed 만 · verified · closed 요청 없음) · owner codex 라 verified 로 올리지 않음 (구현자 = 검증자 actor 같음 · 규약) · B 개발 착수를 막지 않음 (1저자 11-16 Q2 · 알려진 문서 잔여) · 11-16 Claude 반입 (cherry-pick -x · 1저자 '반입' 통합 인계)",
+   "claimed_fixed_sha": "9c9f6bd70",
+   "evidence_tests": [
+    "docs/reviews/p1ab_rev5_receipt_20261116/check_results.json"
+   ]
   }
  ]
 }
