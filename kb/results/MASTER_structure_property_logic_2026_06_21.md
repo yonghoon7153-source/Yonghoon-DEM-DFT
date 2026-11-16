@@ -1,3 +1,41 @@
+> # 🔎 6 월 덱 두 판의 지금 유효성 (배너 2026-11-16)
+>
+> 이 문서로 만든 덱이 두 판 있다 — **06-22 pptx (27 장 · 우리 판)** 과 **06-23 PDF (24 쪽 · 사수 수정판)**.
+> 아래 판정은 11-16 원장 · litdb 기준이고 **PDF 쪽 번호**로 적는다 (괄호 = pptx 장).
+> ✅ 그대로 유효 · ⚠ 조건부 (표현 · 단서를 고쳐야 함) · ⛔ 지금은 못 씀. 금지 값은 여기 다시 적지 않는다 (위치만).
+>
+> **사수 판에서 바뀐 것 (pptx → PDF)**
+> - 빠진 장 — s8 PMF F* · s23 자리별 PDOS (free S²⁻ 가 가장 얕다) · s24 CDD · s25 UPS 대 DFT · s26 ESW 개념도
+> - 빠진 문장 — s5 '1.41 × 3.2 ≈ 4' · s6 단서 ('새 채널은 BVS 가 큰 덜 유리한 자리 · 정적 채널만으론 σ↑ 를 설명 못 함') 와 8.75 → 7.4 % ·
+>   s10 '조성이 아니라 disorder 가 결정' · s12 'Li 공공 → Coulomb 응집 약화 → bulk 연화' · s21 N(EF) 행 ·
+>   s27 '산화 onset = S²⁻ → S₂²⁻ · free S 가 먼저' 와 '> 3.3 V PCl₅ 단계' · s2 문헌 DFT 기계값 (→ '--')
+> - 새로 들어온 것 — p3 계산 descriptor 개요 · p6 MSD 단독 장 · p13–14 VRH 식 · p16 |ICOHP| 막대그림 · p18–19 '다른 원소 치환 때 활용' 주석 ·
+>   p21 '절대값 사용 불가 · 진공 도입 확인 예정' · **p22 'LPSC1.6 산화 안정성 저하 = S VBM 상대 이동'** · p24 Liu 2023 Angew · p2 BML 실험 Ea (LPSCl)
+> - 고친 라벨 — p7 'Accessible sites' → 'Li 개수' (✅ 사수 쪽이 맞다 — 5×5×5 셀의 Li 원자 수 3000 / 2700)
+>
+> | PDF 쪽 (pptx) | 내용 | 판정 | 이유 |
+> |---|---|---|---|
+> | p2 (s2) | 문헌 · BML 요약표 | ⛔ / ⚠ | DFT σ 열은 MLIP-MD 상온 외삽 절대값 (인용 금지) · DFT Ea 열은 단일 시드 계간 대조 (`HZ-cross-system-Ea` BLOCKED · LPSCl 값 HOLD) · 'DFT' 가 아니라 MLIP-MD · E 는 설정이 달라 각주 비교만 (`HZ-elastic-cross-composition`) · 띠틈 ✅ · 문헌 값은 방법 표시 없이 우리 값과 한 줄에 두지 않는다 |
+> | p3 (새) | 계산 descriptor 개요 | ✅ (⚠ 1) | ELF · Bader 는 p18–19 스스로 '결합 특성 불변' 이라 '(원인)' 보다 '(대조)' |
+> | p5 (s4–5) | Arrhenius · D 표 · σ(300 K) | ⛔ | 'AIMD' → MLIP-MD (UMA · 07-27 정정) · 단일 시드 계간 Ea · D 대조 BLOCKED · σ 절대값 금지 (Nernst–Einstein · Haven 1 = 상한) · ×4 분해 줄이 빠진 건 ✅ |
+> | p6 (s4) | MSD | ⚠ / ⛔ | 식 ✅ · 'LPSCl1.6 MSD 증가' 는 같은 단일 시드 계간 대조 (비율은 멀티시드 판정만) · 기울기 창을 적는다 (규약 2–50 ps) |
+> | p7 (s6) | Li 자리 BVS 분포 | ✅ 표 · ⚠ 해석 | 표는 Li 자리 BVS 분포라 '채널' 이 아니다 · 상대 비교만 (S · Cl R0 출처 미기록 → Li BVS ≈ 1.7) · pptx 단서를 빼고 'percolated network → 이동 용이' 로 세졌는데 이 표는 연결성을 재지 않는다 · '부피 15 % 감소' 는 옛 정의 (저-BVSE ≤ 0.30 채널) 라 원장 정의 (원래 주기셀 · above-min iso) 와 같이 쓰지 않는다 |
+> | p8 (s7) | Li 밀도 · 케이지 연결 | ⚠ | 'AIMD' → MLIP-MD · 'LPSCl 케이지 고립' 은 완전 정렬 comp1 모델의 성질 (실제 Li₆PS₅Cl 의 S/Cl 무질서는 측정법에 따라 5–62 % · litdb `feng2020` · `kraft2017`) → '정렬 대 무질서 모델' 대조로 |
+> | p9 (s9) | Voronoi std | ✅ 관찰 · ⚠ 주석 | comp1 은 정렬 모델이라 std 0.00 은 구성상 당연 → 'F-43m 등가 자리의 직접 증거' 는 순환 |
+> | p10 (s10) | 무질서 맞춘 Ea | ⚠ (⛔ 1 행) | '기존' 행은 p5 와 같은 BLOCKED 값 · 조절 값은 원장 미등록 (06-09 앙상블 · d 0.5 · n 3 · β 게이트 평가 안 됨) · '비슷한 Ea' 까지 — '결정학적 disorder 정도에 따라 Ea 차이 유도' 는 아직 인과 주장 |
+> | p12 (s12) | EOS · B₀ | ✅ | canonical (`b0-dft-bm3-v1` · 같은 비교군) · 기전 문장이 빠진 건 ✅ (Li 배치만 바꿔도 B −33 % · litdb `pustorino2025`) |
+> | p13 (s13) | E · B · G VRH · ν · Zener A | ⚠ / ⛔ | E · G 는 각주 비교만 · **Zener A 증가 ⛔** — 세 쌍 값 (comp1 1.14 / 0.75 / 0.92 · modelc 1.44 / 2.25 / 0.50) 의 산포가 차이보다 크다 (elastic.json) |
+> | p14 (s14) | Cij · C44 +72 % | ⚠ | modelc C44 13.7 은 세 값 17.8 / 18.4 / 4.85 의 평균 · 2× 셀 검사 회색 (11-03 마감) → 전단 증가 미확인 |
+> | p15–16 (s15–16) | ICOHP | ✅ 평균 · ⛔ 자리 분할 | 평균 \|ICOHP\| 막대 (`b2o3_icohp.json` 의 modelc 값과 일치) 는 유효 · 4a Cl 90 % / 4d Cl 10 % 와 자리별 값은 10-14 에 정정된 Li 배위 분류기 산물 — P 배위로 세면 4d Cl 3/8 → 다시 가른 뒤에 |
+> | p17 (s17) | 결합 길이 | ✅ 평균 · ⛔ 자리별 | 4a / 4d 길이 · Cl Voronoi 는 같은 분류기 문제 |
+> | p18–19 (s19 · s18) | ELF · Bader | ✅ | 'ICOHP · 길이 변화는 순수 geometry 때문' 은 맞는 방향의 추론까지 |
+> | p21 (s21) | DOS · 띠틈 | ✅ (문구 ⚠) | 띠틈 canonical (fixed-occ nscf) · 결론 맞음 · 문구 두 곳: 주기 bulk DFT 는 진공 준위가 없고 기준이 셀 평균 전위라 셀끼리 절대값이 안 맞는다 ('Evacuum 임의 설정' 이 아님) · 절연체 EF 는 smearing 점유가 갭 안에 놓는 값 ('DOS edge 에서 도출' 이 아님) |
+> | **p22 (s22)** | PDOS 표 + **새 문장** | 표 ✅ · **문장 ⛔** | 'LPSC1.6 산화 안정성 저하 = S VBM 상대 이동' 은 ① p21 이 못 쓴다고 한 절대 VBM 을 쓰고 ② p23 · 우리 ESW (두 조성 산화 onset 같음) 와 어긋나고 ③ 덱 p2 에도 실험 저하 근거가 약하다 (BML LPSCl 칸 비어 있음 · 문헌 1.95 대 1.9 V) |
+> | p23 (s27) | grand-potential ESW | ⛔ / ⚠ | **'환원 한계 1.24 V' ⛔** (`HZ-esw-reduction-limit-label` · off-by-one) — 1.24 V 는 아직 Li 를 흡수하는 첫 환원 평탄이고 아래 가장자리는 1.717 V (= 표의 'OCV 자가분해') · 산화 2.14 V ⚠ — LiS₄ 가 든 상집합 값 (LiS₄ · SCl₃ · Li₅PS₄Cl₂ 를 뺀 지금 상집합은 2.256 V · 문헌 2.01 V 와의 차는 미해결) → 판을 적는다 · '두 조성 차이 없음' ✅ · 열 이름 comp1 / modelC → 조성 이름 |
+> | p24 (새) | Liu 2023 Angew (MgF₂ 공도핑) | ✅ | litdb `liu2023_electron_redistribution_redox_resistible_mgf2` (DOI 10.1002/anie.202302655) · Li 금속 쪽 (환원) 이야기 · 그 논문 PDOS 'gap' 은 smearing 0.2 eV PDOS 추정치 (digest) |
+>
+> p1 · p4 · p11 · p20 은 표지 · 장 표지다. ⛔ 아래 09-09 배너와 본문은 지우지 않는다 (kb/SCHEMA.md Update Policy).
+
 > # ⛔ σ "4배" · 절대 σ · 조성 간 Ea 대조는 **인용 금지** (배너 2026-09-09)
 >
 > 이 카드는 comp1↔modelc 의 **σ 비(~4×)와 절대 σ(3.35 → 13.96 mS/cm)** 를 헤드라인으로 쓴다.

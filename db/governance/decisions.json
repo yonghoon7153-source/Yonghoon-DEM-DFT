@@ -13073,6 +13073,636 @@
     "근거_발화": "사용자 2026-11-11 (이 세션 · AskUserQuestion): cascade 묶음 2 마감 (커밋 7f785e9e · 판독 막는 게이트 전부 통과 · 선택 As2S3 · BaO · Na2O · SiO2 · SrCl2 · SrO · 카드 §9 닫는 조건 충족) '비준 — 묶음 2 마감 (Recommended)'",
     "decision_digest": "sha256:dad7d20f307e991c8cbff27d3cef50068a514c4a34d5d0c9ef49875349b9c511"
    }
+  },
+  {
+   "id": "D-2026-11-13-b2o3-bo-placement-amend5-dft",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "b2o3.bo_placement.dft_stage9",
+   "slot": "b2o3_bo_placement_dft_stage9_amend5",
+   "applies_to": {
+    "systems": [
+     "lpscl16_b2o3_modelc20"
+    ],
+    "tasks": [
+     "dopant_o_placement_family"
+    ],
+    "methods": [
+     "qe-uspp-paw__pbe-scf-fixedcell-relax"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "b2o3 B·O 배치 카드 개정 5 (결과 전) — 9 단계 DFT 운영값 · 탐침 발동 (세 가족 쌍) · 기준 셀 만들기 · 출력 결속 · EOS (E, P, V) 출력 파일 결속 (DY 확인 4) · 10 단계 고르기 기계화",
+   "statement": "카드 db/properties/b2o3_bo_placement_estimand_2026_11_09.json '개정_5_9단계_DFT_운영_2026_11_13' 이 개정 1 9_DFT · 10_고르기의 빈 운영값을 채운다: SCF (mixing plain 0.3 · electron_maxstep 200 · david · disk_io nowf · tprnfor · 이완만 tstress) · 유사포텐셜 파일 이름 · 단일점 대상 = 판 고정 판독기로 다시 낸 8 단계 성공 목록의 가족별 최저 둘 · UMA 기하 그대로 · 가족 대표 = 단일점 최저 · k 탐침 발동은 세 가족 쌍 모두 (0.05 변화 · 순서 · 0.10 경계) · 발동하면 4×2×1 새 판 · 기준 셀 = host 1×2×5 cellpar 를 V₀ 2436.33 으로 등방 스케일 · 이온 이완 bfgs forc 1.0d-3 · etot 1.0d-5 · nstep 200 · (E, P, V) 는 이완 출력에서 도구가 읽어 판 고정 eos_robust 로 · 출력 · 앞 단계 판정을 다시 내서 결속 · 누락 ≠ 실패 · 실패 잡이 있으면 판정 안 함 · EOS 생략일 때만 10 단계 고르기 · 생략 불가면 멈춤. v2 (Codex EF NO-GO 반영): 한 출력 = 한 실행 · 전자 수 = Σ 조성 × 가전자 (총전하 0) · PP Zval · k 점 좌표 · 가중치를 요청 격자와 정확히 대조 (nosym) · 출력의 BFGS 기준 · 문턱 · nstep · 마지막 힘 모든 성분 · 다시 결속 때 구조 · k 판 자격 재검사 · 판정 통째 대조 · EOS 보류면 안정성 · 전자구조 대상 null · 경로 계획 폴더 기준 · utf-8 LF · 실행기 GPU 확인 (시작 때만 보장) · reject 로 실패 출력 보존 · 판정 범위는 이 수렴 설정 · 고정 기준 셀 조건부. v3 (Codex EG NO-GO 반영): 블록 문법 = 한 계산 상태 (값은 마지막 묶음에서만 · 힘 원자 번호 1…nat · 최종 좌표 블록 하나) · QE 7.4.1 고정 · reject 는 계획 · 앞 판정을 다시 결속해 잡 목록을 얻고 단계 폴더 밖을 건드리지 않는다 · 계획의 8 단계 요약을 다시 낸 본 판독과 대조 · 실행기 조회 종료코드 확인. v4 (Codex EH NO-GO 반영): 출력의 숫자는 줄 단위로 토큰 전체가 유한한 숫자일 때만 읽는다 (NaN · Inf · 꼬리 글자 · 앞부분 판독 거부) · 마지막 응력 블록 3 행 × 6 · P = kbar 대각합/3 · 두 단위 일치 · 이완은 BFGS 기록 필수 · 판정 · 다음 잡 입력 · 이완 구조는 모든 검사 뒤에만 쓴다 (JSON allow_nan=False) · 블록 문법 통과 ≠ 같은 실행 인증 · 판 문자열 ≠ 바이너리 동일성. v5 (Codex EI NO-GO 반영): 이완 최종 좌표를 셀로 바꾼 구조도 기하가 유한 · 정칙이어야 한다 · 판정 · 계획 파일은 잡 · 구조 폴더 밖에만 · 출력은 LF 그대로만 · 쓰기 실패 범위를 나눠 적는다. v6 (Codex EJ NO-GO 반영): 이번에 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 가 서로 다 달라야 쓴다 (링크로 같은 파일을 가리키면 쓰기 전에 멈춘다).",
+   "rationale": "개정 1 은 9 단계의 규칙 (단일점 · k 탐침 · 고정셀 이온 이완 · EOS 생략) 을 정했지만 운영값과 출력 결속이 비어 있었고, Codex DY 는 EOS 의 (E, P, V) 결과 파일 결속을 DFT 진입 전 조건으로 남겼다. DFT 결과를 하나도 보기 전에 운영값 · 도구 · 음성 시험을 고정한다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "DFT 결과 0 건 · 8 단계 · 8b 판독 (사유 ③) 은 봤다 — UMA 판정은 바꾸지 않는다",
+   "card": "db/properties/b2o3_bo_placement_estimand_2026_11_09.json",
+   "record": "db/properties/b2o3_bo_placement_stage1_runlog_2026_11_09.json",
+   "amends": "D-2026-11-09-b2o3-bo-placement-amend1",
+   "depends_on": [
+    "D-2026-11-09-b2o3-bo-placement-amend1",
+    "D-2026-11-10-b2o3-bo-placement-amend4-ea",
+    "D-2026-11-09-cell-construction-protocol-v1"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "db/properties/b2o3_bo_placement_estimand_2026_11_09.json (개정_5_9단계_DFT_운영_2026_11_13 · v6)",
+    "tools/doping/b2o3_bo_dft.py v6 sha256 0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b08cd0b (selftest 185/185 · 깨기 114/114 빨강 (도구 107 · 실행기 7) — tools/doping/b2o3_bo_dft_mutations.py 3090ec9f1686303f)",
+    "tools/doping/run_force_check_scf.sh sha256 e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9 (_gpu_guard · selftest 24 통과 · 0 실패 · v3 그대로)",
+    "kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md (조건부 GO — gabia/Linux 범위 · v6 0c3b7f51 · Windows 짧은 경로명 P2 는 범위 밖)",
+    "kb/reviews/codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md (NO-GO · P2 1 — v5 34ec73b6 · EI P1 · P3 닫힘 · DY 확인 4 해제 유지)",
+    "kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md (NO-GO · P1 1 · P2 1 · P3 1 — v4 c8255d94)",
+    "kb/reviews/codex_EH_reply_b2o3_dft_stage9_v3_2026_11_13.md (NO-GO · P1 2 · P2 2 — v3 f6105cfc)",
+    "kb/reviews/codex_EG_reply_b2o3_dft_stage9_v2_2026_11_13.md (NO-GO · P1 2 · P2 4 — v2 4e865e5c)",
+    "kb/reviews/codex_EF_reply_b2o3_dft_stage9_tools_2026_11_13.md (NO-GO · P1 6 · P2 6 — v1 559f0152)",
+    "kb/reviews/codex_DY_reply_cell_construction_v1_3_release_2026_11_09.md (확인 4 — EOS 결과 파일 결속은 DFT 진입 전)"
+   ],
+   "reopen_criteria": [
+    "DFT 결과 (단일점 · 탐침 · 이완) 를 연 뒤에는 이 운영값을 바꾸지 않는다 — 바꿔야 하면 새 개정 · 새 폴더"
+   ],
+   "track": {
+    "name": "b2o3 UMA-MD (B₂O₃ 계산 쪽)",
+    "first_author": "사용자"
+   },
+   "proposed_by": "claude-session-2026-11-12 (evac)",
+   "cost_cap": {
+    "dft_GPU_h": "상한 60 (개정 1 그대로 · 어림 20–45 · 발동 시 + 단일점 6)",
+    "machine": "gabia GPU · UMA 와 동시 금지"
+   },
+   "enforcement": "tools/doping/b2o3_bo_dft.py v6 — 판 고정 판독기 (872d91f7) 로 8 단계를 단계마다 다시 결속 · 구조 · k 판 자격 다시 검사 · 입력을 묶인 구조에서 다시 만들어 sha256 대조 · 출력 검사 (한 실행 · 전자 수 · Zval · k 격자 · 설정 · PP MD5 · 셀 · 처음 좌표 · 수렴 · BFGS 기준 · 힘 성분 · 응력 위치 · 부피) · 앞 단계 판정을 통째로 다시 내서 대조 · (E, P, V) 는 출력에서 · 판 고정 eos_robust · 10 단계 규칙 · EOS 보류면 대상 null · 실행기 _gpu_guard · 블록 문법 (한 계산 상태) · 힘 원자 번호 · QE 판 고정 · reject 다시 결속 · 8 단계 요약 대조 · 실행기 조회 종료코드 · 숫자 토큰 전체 · 유한 · 응력 본문 일관성 · BFGS 기록 필수 · 검사 뒤 쓰기 (JSON allow_nan=False) · 이완 구조 기하 검사 (변환 뒤) · 판정 경로 ≠ 잡 · 구조 폴더 · 쓸 파일 실제 경로 겹침 (링크)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "사용자 2026-11-13 'ㅇㅇ ㄱㄱ' (9 단계 DFT 준비 · 도구 뒤 Codex 확인 권고에 동의) — 도구 · 개정을 DFT 결과 전에 커밋 · Codex EF 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EF NO-GO (v1 4b95dedb · P1 6 · P2 6) → v2 고침 (도구 · 실행기 · 카드 문구) · 여전히 proposed · DFT 결과 0 건 · Codex EG 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EG NO-GO (v2 328cf95b · P1 2 · P2 4) → v3 고침 (도구 · 실행기 · 변이 도구 · 카드 문구) · 여전히 proposed · DFT 결과 0 건 · Codex EH 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EH NO-GO (v3 f6b9d3a6 · P1 2 · P2 2) → v4 고침 (도구 · 변이 도구 · 카드 문구 · 실행기 그대로) · 여전히 proposed · DFT 결과 0 건 · Codex EI 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EI NO-GO (v4 67cca09c · P1 1 · P2 1 · P3 1 · EH 네 지적 닫힘 · DY 확인 4 좁은 조건 해제 가능) → v5 고침 (도구 · 변이 도구 · 카드 문구 · 실행기 그대로) · 여전히 proposed · DFT 결과 0 건 · Codex EJ 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-13",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EJ NO-GO (v5 6302f8a8 · P2 1 — 생성할 입력 쪽 링크로 판정이 입력을 덮음 · EI P1 · P3 닫힘 · DY 확인 4 해제 유지) → v6 고침 (도구 · 변이 도구 · 카드 문구 · 실행기 그대로) · 여전히 proposed · DFT 결과 0 건 · Codex EK 뒤 사용자 비준"
+    },
+    {
+     "at": "2026-11-14",
+     "state": "proposed",
+     "by": "agent",
+     "note": "Codex EK 조건부 GO (v6 46e21278 · gabia/Linux 생성 · 판독 범위 · EJ P2 해제 · Windows 짧은 경로명 P2 는 카드 범위 밖으로 기록) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인"
+    },
+    {
+     "at": "2026-11-14",
+     "state": "active",
+     "by": "사용자 (b2o3 UMA-MD (B₂O₃ 계산 쪽) · 1저자 = 사용자)",
+     "note": "비준 (결과 전) — 사용자 2026-11-14 (대피 세션 · AskUserQuestion): 'b2o3 9 단계 DFT: Codex EK 가 '조건부 GO' 를 줬어요 (gabia/Linux 에서 생성·판독하는 범위 — 남은 건 사용자 비준뿐). 카드 개정 5 (운영값 + 도구 v6 · 결정 D-2026-11-13-b2o3-bo-placement-amend5-dft · 지금 proposed) 를 비준할까요? 같이 들어가는 것: DY 확인 4 (EOS 의 (E,P,V) 결과 파일 결속) 좁은 조건 해제 · Windows 짧은 경로명 문제는 범위 밖으로 둠. 비준하면 결정이 active 가 되고 gabia GPU 단일점 6 개 실행 블록 (tmux · 실행기가 잡마다 GPU 독점·여유 45 GB 확인) 을 드려요.' 에 '비준 + 실행 블록 (Recommended)'"
+    }
+   ],
+   "_note": "active — 사용자 비준 2026-11-14 (개정 5 · 도구 v6 0c3b7f51 · Codex EK 조건부 GO 46e21278 뒤 · DFT 결과 0 건 · 결과 전) · 운영 범위 = gabia/Linux 생성 · 판독 · DY 확인 4 좁은 조건 (EOS (E, P, V) 결과 파일 결속) 해제 · Windows 짧은 경로명은 범위 밖",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-14T04:17:29Z",
+    "commit": "c0703da281bcb492f67a3fd929b90a48f187cf78",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-14 (대피 세션 · AskUserQuestion): 'b2o3 9 단계 DFT: Codex EK 가 '조건부 GO' 를 줬어요 (gabia/Linux 에서 생성·판독하는 범위 — 남은 건 사용자 비준뿐). 카드 개정 5 (운영값 + 도구 v6 · 결정 D-2026-11-13-b2o3-bo-placement-amend5-dft · 지금 proposed) 를 비준할까요? 같이 들어가는 것: DY 확인 4 (EOS 의 (E,P,V) 결과 파일 결속) 좁은 조건 해제 · Windows 짧은 경로명 문제는 범위 밖으로 둠. 비준하면 결정이 active 가 되고 gabia GPU 단일점 6 개 실행 블록 (tmux · 실행기가 잡마다 GPU 독점·여유 45 GB 확인) 을 드려요.' 에 '비준 + 실행 블록 (Recommended)'",
+    "decision_digest": "sha256:8420d193b536224d86de2ecb3bb32883f91d860a42214b3f93cc8bf01cd2ca04"
+   }
+  },
+  {
+   "id": "D-2026-11-14-li2s3-queue-endline-lost-ack",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "li2s.glass.transport.dense",
+   "slot": "li2s3_dense_glass_protocol_ensemble_amend4_endline_ack",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ],
+    "tasks": [
+     "md_diffusion_window",
+     "diffusion_ratio",
+     "activation_energy_difference"
+    ],
+    "methods": [
+     "uma-s-1p1-omat-turbo",
+     "langevin_nvt"
+    ],
+    "use_cases": [
+     "manuscript_relative_only"
+    ]
+   },
+   "title": "li2s-3 카드 개정 4 — 큐 끝 줄 유실 인정 (순수 v1 사다리 큐의 '■ 큐 끝 · PHASE ladder' 줄이 파일에 안 남은 경우 · 결과 전)",
+   "statement": "카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 의 개정_4_큐_끝_줄_유실_2026_11_14 이 정의다 (리뷰 EL 반영판): 끝 줄이 없을 때 판독 허가의 '큐_끝_줄_유실_인정' (필드 여섯 · 결정 칸 = 이 결정) 과 깨끗한 UTF-8 · LF · 블록 원 바이트 · 장부 머리 + 명단 행 sha256 · 꼬리 줄 없음 · 명단 · 장부 rc 0 · prod · 시간 · 시각 · 누적 · 잠금이 모두 맞을 때만 그 줄을 사다리 블록 끝으로 받는다 · 이 결정 active 일 때만 (문지기 · verify) · cond550 은 같은 판독 허가일 때만 · 어긋나면 판정 보류 · 로그 · 장부를 고치지 않는다 · 판정 규칙 · 명단 · W 정의 그대로",
+   "rationale": "16 런은 다 끝났다 (큐 ✅ 16 · 장부 16 행 rc 0 · 잠금 풀림 · 런 valid) — 빠진 것은 큐 실행기가 tee 로만 보내는 끝 줄 하나다. 그 줄을 요구하는 규칙의 목적 (큐가 중간에 멈춘 런 묶음을 읽지 않는다) 은 남은 완료 기록의 상호 대조로 지키고, 인정은 그 파일 지문에 묶는다.",
+   "decision_state": "active",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "2 단계 결과 0 건 — 11-14 readout 은 판정 보류 기록만 (수송값 · W 안 읽음)",
+   "card": "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json",
+   "record": "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json",
+   "amends": "D-2026-11-10-li2s3-dense-protocol-ensemble-amend3",
+   "depends_on": [
+    "D-2026-11-10-li2s3-dense-protocol-ensemble",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend1",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend2",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend3"
+   ],
+   "supersedes": [],
+   "evidence": [
+    "tools/ionic/li2s3_stage2_readout.py sha16 8e1f16a49a2df8a3 (selftest 205/205 · 변이 36)",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json 판독_보류_2026_11_14 (kgy 확인 블록 사실)",
+    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md (독립 리뷰 · 조건부 GO · P0 1 · P1 1 · P2 8)",
+    "kb/reviews/internal_EL_reply_li2s3_endline_ack_2026_11_14.md — 재확인 회신 (2 차 · 2026-11-15) GO",
+    "kgy 2026-11-16 블록 v6 — worktree 80d78d0df · 도구 8e1f16a4 · selftest PASS 205/205 · endline_facts problems [] · 큐_상태 valid · 명단 16 · 장부 뒤 행 0",
+    "kgy 2026-11-16 대조 잡 v6 — same = True · 차이 0 건 · /home/kgy/li2s3_control_job_v6.json sha256 3792432a4543abe58596a4cb9768d63d91448d10422f3205dc1523ee0d3c49e2",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json 판독_허가_2단계 (카드 커밋 e13ea178 · 인정 = endline_facts 값 그대로)"
+   ],
+   "reopen_criteria": [
+    "2 단계 결과를 연 뒤에는 이 규칙을 바꾸지 않는다"
+   ],
+   "enforcement": "판독 도구가 끝 줄이 없을 때 판독 허가의 인정과 블록 · 장부 sha256 · 명단 · 장부 · 잠금을 대조하고 (어긋나면 큐 문제 → 판정 보류) readout · pressure 문지기가 이 결정 active 와 인정 필드를 건다 · 출력에 queue.end_line · decisions 를 남긴다",
+   "cost_cap": {
+    "GPU_h": "변화 없음 (판독만 · 2 단계 상한 160 그대로)"
+   },
+   "track": {
+    "name": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송)",
+    "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
+   },
+   "proposed_by": "claude-session-2026-11-14 (evac)",
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-14",
+     "state": "proposed",
+     "by": "agent",
+     "note": "11-14 판독 보류 (큐 끝 줄 없음 · 런 valid) 처리 — 도구 34f2c7340a442185 (결과 전) · 쓴 에이전트와 다른 독립 리뷰 EL 뒤 활성 (위임 10-30)"
+    },
+    {
+     "at": "2026-11-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "내부 반박 리뷰 EL 조건부 GO (P0-1 장부 전체 지문 · P1-1 결정 칸 · P2 8) 반영 — 도구 34f2c734 → 8e1f16a49a2df8a3 · EL 재확인 뒤 활성 (위임 10-30)"
+    },
+    {
+     "at": "2026-11-15",
+     "state": "proposed",
+     "by": "agent",
+     "note": "EL 재확인 GO (도구 dbac0855) · N-P2-1 시험 넷 더함 → 도구 8e1f16a49a2df8a3 (selftest 205/205 · 변이 36) · kgy facts 문제 0 · 대조 잡 v6 same True 뒤 판독 허가 갱신과 함께 활성 (위임 10-30)"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "카드 커밋 e13ea178 (판독 허가 갱신 — 대조 잡 v6 · 인정 = kgy endline_facts 값) · 내부 반박 리뷰 EL (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)')"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T01:47:13Z",
+    "commit": "e13ea1784699c69de960f894f45df153189c2421",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "내부 반박 리뷰 EL (독립 에이전트 · 조건부 GO → 고친 판 재확인 GO) 를 결과 전에 반영 · kgy 대조 잡 v6 same = True · endline_facts problems [] (2026-11-16) · 위임 2026-10-30 'li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼' (원장 '사용자 (위임 10-30)') · 사용자 2026-11-10 'ㄴㄴ 이제 codex 토큰 없어서 당분간 못해 너가 반박 리뷰를 에이전트 사용해서 활용해봐'",
+    "decision_digest": "sha256:3f3201342cb65320c1e97c73de652a848741951de818707d0a2f22f3ddf5dde6"
+   }
+  },
+  {
+   "id": "D-2026-11-16-li2s3-dense-protocol-ensemble-closed",
+   "schema_version": 2,
+   "kind": "closure",
+   "scope": null,
+   "slot": "li2s3_dense_glass_protocol_ensemble_closure",
+   "applies_to": {
+    "systems": [
+     "a_li4ps4cl_glass_dense",
+     "a_li3ps4_glass_dense"
+    ]
+   },
+   "title": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송 · 조밀 프로토콜 앙상블) — 2 단계 |W| = 0 으로 닫는다: A 700 K · B 750 K 만 측정 가능 (겹침 0) · 재개 조건 없음 (카드 7 그대로 · 위임 10-30)",
+   "statement": "마감 기록 db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json — 카드 7 의 닫는 조건 (2 단계 |W| = 0) 이 2026-11-16 10:58 KST kgy 사다리 판독 (한 번 · 도구 8e1f16a4 · worktree 7a6aefa56) 으로 채워졌다: W = [] (A 는 700 K · B 는 750 K 에서만 두 시드 모두 측정 가능) · 갈래 '닫는다 (S2 허용 문구 + 구조군 문구)' · cond550 자격 False. 허용 문장은 li2s-2 카드 1a S2_창_없음 문구 ([k] = 0) + 구조군 꼬리표 · 회신 DZ 카드 문구 [0] · 계별 포함 · 제외 (C1 16/16 · C2 경계 · 구분 불가 7 · 골격 이동 2) · 큐 끝 줄 인정 뿐 · D · R(T) · Ea 값 없음 · 재개 조건 없음 (새 질문은 새 카드). 비용 82.165 / 160 GPU-h.",
+   "rationale": "닫는 조건은 결과 전 (2026-11-10 카드 7) 에 박혀 있었고 판독이 그것을 채웠다 — 판단으로 닫지 않는다 (마감 규율 · 재해석 안 함)",
+   "decision_state": "active",
+   "record_kind": "closure",
+   "results_seen": true,
+   "card": "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json",
+   "record": "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json",
+   "depends_on": [
+    "D-2026-11-10-li2s3-dense-protocol-ensemble",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend1",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend2",
+    "D-2026-11-10-li2s3-dense-protocol-ensemble-amend3",
+    "D-2026-11-14-li2s3-queue-endline-lost-ack",
+    "D-2026-10-30-li2s-first-author-confirmation-waived"
+   ],
+   "evidence": [
+    "db/properties/lpscl_glass_dense_protocol_ensemble_closed_2026_11_16.json",
+    "db/properties/lpscl_glass_dense_protocol_ensemble_runlog_2026_11_10.json (판독_끝_2026_11_16 · 판독_요약_2026_11_16)",
+    "kgy readout_stage2.json sha256 400354ff07f5b12930d60c971fe7e17786f168a5380d7fbe2ca6ed2808b51e0d · pressure_stage2.json sha256 91a9e2c63bc362ccb1e2fa78a3d7d0555060e54cd83d266445970116bf910c5e",
+    "사용자 수용 2026-11-16 — 마감 기록 '사용자_결정_2026_11_16' (커밋 ec59a51f)"
+   ],
+   "reopen_criteria": [
+    "⛔ 재개 조건 없음 — 셀 키움 · 긴 런 · D3 · 다른 온도 · 다른 밀도는 새 보고량 카드 + 사용자 결정 (GPU)",
+    "⛔ li2s 계열 종료 (사용자 2026-11-16 '그래 li2s는 여기까지만 하자 · 더 하는거는 데이터 낭비일듯하다 · 잘 기록하고 닫아줘') — 새 li2s 카드 · 트랙 · 런을 제안하지 않는다 · 다시 열면 사용자가 명시적으로 새로 정한다 (위임 10-30 으로 열지 않는다)"
+   ],
+   "enforcement": "마감 기록의 허용 · 금지 서술 밖으로 쓰지 않는다 · D · σ · R · Ea 어떤 값도 없음 · 옛 li2s 트랙 · li2s-2 마감의 금지 서술은 그대로",
+   "track": {
+    "name": "li2s-3 (LPSCl@Li₂S 계면상 유리 수송)",
+    "first_author": "외부 (위임 10-30 — 원장 '사용자 (위임 10-30)')"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "status": "active",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자 (위임 10-30)",
+     "note": "카드 7 닫는 조건 (결과 전 규칙 · 2026-11-10 '2 단계 |W| = 0 → 닫는다') 이 kgy 사다리 판독 (2026-11-16 10:58 KST · 판독 한 번 · W = []) 으로 채워져 마감 — 위임 10-30 ('li2s (lpscl@li2s)는 이제 제1저자 확인안받고 원하는데로 해도돼') · 사용자에게 보고 · 마감 기록 커밋 8244a265"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "수용 — 사용자 2026-11-16 '그래 li2s는 여기까지만 하자 · 더 하는거는 데이터 낭비일듯하다 · 잘 기록하고 닫아줘' · li2s 계열 (옛 li2s · li2s-2 · li2s-3) 종료 · 새 li2s 카드 제안 안 함 · 마감 기록 커밋 ec59a51f"
+    }
+   ],
+   "_note": "active — 트랙 마감 (2 단계 |W| = 0) · 사용자 수용 2026-11-16 · li2s 계열 종료",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T04:18:57Z",
+    "commit": "ec59a51fcf956d081fdd370083af4619fbc2d373",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-16 '그래 li2s는 여기까지만 하자 · 더 하는거는 데이터 낭비일듯하다 · 잘 기록하고 닫아줘' — 카드 7 닫는 조건 (결과 전 규칙) 이 kgy 사다리 판독 (W = []) 으로 채워진 마감을 수용하고 li2s 계열을 끝냄 (앞선 승인: 위임 10-30 · 커밋 8244a265)",
+    "decision_digest": "sha256:26ea6aec5f78c9793795c2af41bd7fe54366fa2d0118d940780df5b9f29c790a"
+   }
+  },
+  {
+   "id": "D-2026-11-16-sdi-agc-ag2s-window",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "sdi_agc.ag2s_window.mp_grand_potential",
+   "slot": "sdi_agc_ag2s_window",
+   "applies_to": {
+    "systems": [
+     "li6ps5cl_ag_interface"
+    ],
+    "tasks": [
+     "grand_potential_ladder",
+     "interface_reaction_open_li",
+     "interface_reaction_closed"
+    ],
+    "methods": [
+     "mp-gga-ggau__grand-potential"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "SDI Ag–C 인터레이어 crack — Ag₂S 가 LPSCl · Li 옆에 설 수 있는 전위 창 (MP grand potential · Ag₂S · Ag 사다리 · Ag|Li₆PS₅Cl 열린계 · 닫힌계) — 트랙 SDI 과제 · 결정 = 사용자",
+   "statement": "카드 db/properties/sdi_agc_ag2s_window_card_2026_11_16.json. (a) V*(Ag₂S) = esw_grand_potential.py profile (Ag–Li–P–S–Cl · LiS4 SCl3 Li5PS4Cl2 뺌) 을 plot_li_uptake_profile.py 규칙으로 읽은 첫 Li 흡수 평탄 · reduction_limit_V 키는 쓰지 않는다 (b) interface_reactivity_v2.py 열린계 0–2.5 V 최소 kink 산물 · 끝점 퇴화 칸은 계면량 아님 (c) 닫힌계 --closed --only 최소 반응 에너지. 게이트 G1 상 있음 · G2 교과서 2.0 V ±0.3 기록 · G3 Q1 사다리 1 mV 재현 · G4 끝점.",
+   "rationale": "SDI 회의 의견 'crack 의 Ag₂S 가 OCV 를 바꾼다' 를 MD 전에 열역학으로 거른다 — 교과서 어림으로 Ag₂S 는 ≈ 2.0 V 아래에서 Li 에 환원되므로 Li 가 닿는 crack 에서는 버티기 어렵다는 가설을 우리 도구로 확인한다. 사용자 11-16 '이거 시뮬레이션 부터 … 계획 잡을 수 있나 · 명령어 필요하면 주고'.",
+   "decision_state": "active",
+   "record_kind": "estimand",
+   "results_seen": true,
+   "exploratory": true,
+   "results_seen_note": "11-16 사용자 gabia 실행 결과 (2a6504dc8) — G1–G4 통과 · 결과는 카드 '결과_2026_11_16' · 사용자가 결과를 본 뒤 명시 승인 (11-16 AskUserQuestion '승인 (active 로 기록)') — 블록 실행만으로는 비준을 적지 않았다",
+   "card": "db/properties/sdi_agc_ag2s_window_card_2026_11_16.json",
+   "evidence": [
+    "db/properties/esw_lis4excluded.json",
+    "db/properties/sdi_agc_lpscl_li_uptake_profile_2026_11_16.csv"
+   ],
+   "reopen_criteria": [
+    "G3 (Q1 재현) 이 떨어지면 판을 맞추기 전에는 판정하지 않는다 — 계속할지는 사용자",
+    "상집합 판을 바꾸려면 새 카드",
+    "'전압 점을 더 찍었다' 는 재개 사유가 아니다"
+   ],
+   "track": {
+    "name": "SDI 과제 (Ag–C 인터레이어)",
+    "first_author": "해당 없음 (과제 · 논문 아님) — 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16"
+    }
+   ],
+   "_note": "active — 사용자 비준 2026-11-16 (결과를 본 뒤 · 명시 승인). Q3 MD 는 사용자 11-16 '권고대로' 로 보류 (카드 메모).",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전) · 사용자 gabia 실행 2a6504dc8 · 결과 기록 358ca5a9e"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion 'SDI Q2 카드 결정 … 사용자 승인 (active) 으로 기록할까요?' → '승인 (active 로 기록)' · 결과 (G1–G4 통과) 를 본 뒤의 승인"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T14:25:00Z",
+    "commit": "358ca5a9e986f80e841096259d0b6571b4965e3d",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-16 AskUserQuestion 'SDI Q2 카드 결정 D-2026-11-16-sdi-agc-ag2s-window (…) 를 사용자 승인 (active) 으로 기록할까요?' → '승인 (active 로 기록)' — gabia 결과 (2a6504dc8 · G1–G4 통과 · 카드 결과_2026_11_16) 를 본 뒤",
+    "decision_digest": "sha256:a9b61266e208ac116b4cbab264411902471790f1cc9221b05d2b7683234d8ccf"
+   }
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-stage1-reactivity",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage1.mp_interface_reactivity",
+   "slot": "hyeokju_lzo_stage1_reactivity",
+   "applies_to": {
+    "systems": [
+     "nca_lzo_lpscl_interface"
+    ],
+    "tasks": [
+     "interface_reaction_closed",
+     "interface_reaction_open_li"
+    ],
+    "methods": [
+     "mp-gga-ggau__interfacial-reactivity"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 1 단계 — LZO 코팅 NCA | Li₆PS₅Cl 계면 반응성 (MP 상 · 닫힌계 혼합 곡선 × 양극 Li 함량 + Li 열린계 × 전압) — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
+   "statement": "카드 db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json 이 정의다: interface_reactivity_v2.py 닫힌계 (use_hull_energy · kink 전부) 로 LPSCl–NCA_y · LZO–NCA_y · LPSCl–LZO (y = 1.0 … 0.1 · NCA721 · NCA811 이름 추정 조성 · LZO = Li₂ZrO₃) 와 열린계 2.5–5.0 V. 게이트 G1–G6 · 앵커 LPSCl×LCO (cascade 값 ±5 meV/atom) · 3.8 / 4.4 V 라벨은 혁주 자료 (G5) 뒤에만.",
+   "rationale": "혁주 요청 1 단계 (벌크 에너지 기반 반응성 먼저) 를 우리 cascade M6 · NCM 축 규약 그대로 잰다. 사용자 11-16 '이것도 [혁주] section으로 정의하고 관련해서 dft, md 관련해서 진행해보자'.",
+   "decision_state": "active",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json",
+   "evidence": [
+    "db/properties/cathode_reactivity_verdict.json",
+    "db/properties/cascade_axis_ncm_interface_estimand_2026_11_04.json"
+   ],
+   "reopen_criteria": [
+    "혁주의 정확한 조성이 이름 추정과 어느 전이금속 분율이든 0.02 넘게 다르면 그 조성으로 다시 돌린다 (같은 카드의 개정 · 이번 실행 값은 서술에 안 쓴다).",
+    "LZO 가 Li₂ZrO₃ 가 아니라는 자료가 오면 그 조성으로 LZO 쌍만 다시 돌린다.",
+    "G5 띠가 y 격자점을 하나도 안 품으면 (띠 폭 < 0.1) 그 띠 안에 두 점을 더 돌린다.",
+    "'전압 · y 점을 더 찍었다' 는 판정을 바꾸는 사유가 아니다."
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "_note": "active — 사용자 비준 2026-11-16 (결과 전). 실행은 gabia CPU (MP 조회) 블록.",
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] 1단계 카드 … 를 승인하고 지금 돌릴까요?' → '승인 · 지금 돌림' · 1저자: AskUserQuestion '[혁주] 트랙 … 1저자를 어떻게 적을까요?' → '혁주 (사용자는 계산 담당)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T14:48:09Z",
+    "commit": "e7b77637ea8a206448034f3ecaa66487385a7e1e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-16 AskUserQuestion '[혁주] 1단계 카드 (db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json) 를 승인하고 지금 돌릴까요? …' → '승인 · 지금 돌림 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:c28a31746de14752439ef9af6bc685d2fafde18278caf7927c636c6f026aa97b"
+   }
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage2a.li2zro3_gap",
+   "slot": "hyeokju_lzo_stage2a_gap",
+   "applies_to": {
+    "systems": [
+     "li2zro3"
+    ],
+    "tasks": [
+     "band_gap",
+     "pdos"
+    ],
+    "methods": [
+     "qe-pbe__fixed-occ-nscf"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 2a 단계 — Li₂ZrO₃ 띠틈 (fixed-occ nscf · PBE) · DOS/PDOS · CEI 생성물 띠틈 체인 · vc-relax 허락 — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
+   "statement": "카드 db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json 이 정의다: CEI 생성물 띠틈 체인 (D-2026-10-27-cei-product-gaps · -amend1) 을 Li₂ZrO₃ 에 그대로 — 구조 --pick (관측 중 E_hull 최저) · vc-relax (사용자 허락) · 비자성 · U 없음 · PP = CEI 세트 Li · O + Zr SSSP efficiency (검사 블록이 기록 · 못 찾으면 멈춤) · 60/480 Ry (Zr 권장이 높으면 그 상만) · 보고량 E_g(PBE) fixed-occ nscf 고유값 + PDOS · MP 갭 대조는 기록만.",
+   "rationale": "혁주 요청 2 단계의 LZO 기본 계산 (1 단계와 병행 가능) · 사용자 11-16 AskUserQuestion 'PBE 체인으로 병행'.",
+   "decision_state": "active",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json",
+   "evidence": [
+    "db/properties/cei_product_gap_card_2026_10_27.json"
+   ],
+   "reopen_criteria": [
+    "혁주가 LZO 가 Li₂ZrO₃ 가 아니라고 하면 그 조성의 관측 결정으로 같은 체인 (새 카드 아님 · 개정)",
+    "생성물 1–2 개는 1 단계 결과 뒤 개정으로 더한다 (같은 체인 · 같은 PP 규칙)"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "status_history": [
+    {
+     "at": "2026-11-16",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-16",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] 2단계 Li₂ZrO₃ 띠틈 · DOS/PDOS 를 1단계와 병행할까요? (CEI 생성물 띠틈과 같은 체인 · vc-relax 허락 필요 · Zr PP 새로)' → 'PBE 체인으로 병행 (vc-relax 허락 · kgy GPU · 작은 셀)'"
+    }
+   ],
+   "_note": "active — 사용자 방향 승인 2026-11-16 (결과 전). 첫 블록은 gabia 검사 (구조 · Zr PP) · 실행은 kgy GPU (검사 뒤).",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-16T14:48:09Z",
+    "commit": "e7b77637ea8a206448034f3ecaa66487385a7e1e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-16 AskUserQuestion '[혁주] 2단계 Li₂ZrO₃ 띠틈 · DOS/PDOS 를 1단계와 병행할까요? CEI 생성물 띠틈과 같은 체인 (MP 구조 vc-relax → fixed-occ nscf) 이라 비-argyrodite 결정 vc-relax 허락이 필요하고, Zr PP 는 새로 정해야 해요. PBE 는 띠틈을 과소평가해요.' → 'PBE 체인으로 병행 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:3efb6c93a4dce8551e098a807aa60bac4e3270d742c386cbce6f74ecd67fce9c"
+   }
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-md",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.md.uma_validation_then_interface",
+   "slot": "hyeokju_lzo_md",
+   "applies_to": {
+    "systems": [
+     "li2zro3",
+     "li2zro3_lpscl_interface"
+    ],
+    "tasks": [
+     "mlip_validation",
+     "interface_md"
+    ],
+    "methods": [
+     "uma-s-1p1-omat",
+     "qe-pbe__single-point"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] MD — UMA 검증 (MD-0) 먼저 → 1 단계가 고른 계면 MD (MD-1) — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
+   "statement": "카드 db/properties/hyeokju_lzo_md_card_2026_11_16.json 이 정의다: MD-0 = Li₂ZrO₃ 벌크 · Li₂ZrO₃ | Li₆PS₅Cl 계면 UMA NVT 600 K 스냅숏 각 5 장의 UMA 대 QE PBE 힘 · 상대 에너지 비교 · G1 (힘 MAE ≤ 0.10 · 원소별 ≤ 0.15 eV/Å) · G2 (상대 에너지 RMSE ≤ 5 meV/atom) — 둘 다 넘어야 MD-1 (결과 전 개정).",
+   "rationale": "혁주 1 단계의 명시적 계면 · AIMD 자리 · 사용자 11-16 AskUserQuestion 'UMA 검증부터 지금'.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+   "evidence": [],
+   "reopen_criteria": [
+    "G1 · G2 를 못 넘으면 MD-1 없음 — 다르게 하려면 사용자 결정"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-16",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "_note": "proposed — 방향은 사용자 결정 ('UMA 검증부터 지금') · G1 · G2 문턱 승인 대기."
+  },
+  {
+   "id": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap-amend1",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage2a.li2zro3_gap",
+   "slot": "hyeokju_lzo_stage2a_gap_amend1",
+   "applies_to": {
+    "systems": [
+     "li2zro3"
+    ],
+    "tasks": [
+     "band_gap",
+     "pdos"
+    ],
+    "methods": [
+     "qe-pbe__fixed-occ-nscf"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 2a 개정 1 (결과 전) — Zr PP (GBRV v1 · md5) · 컷오프 탐침 90/720 (|ΔE_g| ≤ 0.02 eV) · P2O5 대조 잡 늘 먼저 · 구조 이름 · 레지스트리 키",
+   "statement": "카드 db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json 의 ⏩_개정_1_2026_11_16_결과_전 이 정의다. 실행기 db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh.",
+   "rationale": "gabia 검사에서 SSSP json 을 못 찾아 Zr 권장 컷오프를 파일로 확인하지 못했다 — 기억값 대신 싼 탐침으로 받친다 (CLAUDE.md 재개 규칙).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json",
+   "amends": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap",
+   "evidence": [
+    "db/raw/hyeokju_lzo_s2a_2026_11_16/pseudo_check.txt",
+    "db/properties/hyeokju_lzo_s2a_structures_provenance_2026_11_16.json"
+   ],
+   "reopen_criteria": [
+    "|ΔE_g| > 0.02 eV 면 90/720 값을 보고 (규칙대로) — 더 올릴지는 사용자 결정"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-17",
+     "session": "대피 세션 claude/evac-2026-11-12"
+    }
+   ],
+   "_note": "proposed — 사용자 비준 대기 · 실행기는 잠정 실행 (CEI 개정 1 선례와 같다)."
   }
  ]
 }

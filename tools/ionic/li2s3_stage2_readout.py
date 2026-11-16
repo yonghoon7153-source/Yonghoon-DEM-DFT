@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """li2s-3 2 단계 판독 — v1 런 사후 검증 · 궤적 유효성 · 골격 기록 ⓐ–ⓒ · 측정 가능 온도 창 W
-(카드 개정 DZ · 내부 반박 리뷰 EB · EE 의 P0 · P1 · P2 고침 · 결과 전 커밋 · 2026-11-10).
+(카드 개정 DZ · 내부 반박 리뷰 EB · EE 의 P0 · P1 · P2 고침 · 결과 전 커밋 · 2026-11-10 ·
+ 카드 개정 4 — 큐 끝 줄 유실 인정 · 2026-11-14 · 결과 전).
 
 카드 db/properties/lpscl_glass_dense_protocol_ensemble_estimand_2026_11_10.json · 결정 D-2026-11-10-li2s3-dense-protocol-ensemble (+ -amend1)
 리뷰 kb/reviews/codex_DZ_reply_li2s3_ensemble_definition_2026_11_10.md · kb/reviews/internal_EB_reply_li2s3_dz_fixes_2026_11_10.md ·
@@ -19,6 +20,9 @@
            끝 기록 <BASE>/readout_stage2/pressure_stage2.json (있으면 거부) · 판정에 안 씀 (두 계 ⟨P⟩ 차 > 1 GPa 경고)
   control  대조 잡 — 10-14 대조 계 판독 기록의 kgy 시드 (1 · 3) 만 · 루트 run_meta 의 라벨 · 난수가 그 대조 계일 때만 ·
            같은 읽기 경로 (궤적 유효성 → read_run → skeleton_gate) 로 기록 행을 재현하는가 · --out (덮지 않는다)
+  endline_facts  읽기만 (파일을 안 쓴다) — 큐 로그에 '■ 큐 끝 · PHASE ladder' 줄이 없을 때 카드 '큐_끝_줄_유실_인정' 에 넣을
+           사실 (결정 · 사다리 블록 마지막 줄 · 블록 sha256 · 장부 앞부분 sha256) 과, 그 사실로 큐 기록 전체를 돌린 상태 · 문제 목록을
+           찍는다 (문제 0 이면 0 · 아니면 1 · 장부에 명단 밖 행이 이미 있어도 문제)
 
 사후 검증 (런마다 — 하나라도 어긋나면 invalid · 끝나지 않았으면 incomplete)
   ① 실행 기록 — 러너 로그 <BASE>/<계>/queue_kgy.log 에서 그 런의 호출 블록 ('▶ v2 큐 시작 · T:S:prod') 이 정확히 하나이고
@@ -29,6 +33,15 @@
      '문지기 ✓ — 카드 <결정> (active) · 러너 sha16 <카드>' · '판 — … · repo … · BASE <원래 BASE> · PHASE ladder' ·
      '■ 큐 끝 · PHASE ladder' — 사다리 블록 (첫 시작 줄 ~ 첫 끝 줄) 안에서만 본다. 큐 줄이 어긋나면 그 큐의 런이 모두 invalid ·
      큐 끝 줄이 없으면 판정 보류 · 블록 밖의 v1 호출 (뒤에 다시 띄움 · PHASE cond550) 은 런을 무효로 만들지 않고 따로 보류 사유.
+     카드 개정 4 (2026-11-14 · 결과 전 · 리뷰 EL 반영): 끝 줄이 없고 판독 허가에 '큐_끝_줄_유실_인정' {결정 (= ENDLINE_ACK_DECISION) ·
+     by · 근거 · 사다리_블록_마지막_줄 · 사다리_블록_sha256 · 장부_sha256} 이 있으면 그 줄을 블록 끝으로 받는다 — 큐 로그 · 장부
+     앞부분이 깨끗한 UTF-8 · LF · 그 줄이 시작 뒤에 한 번 · 블록 바이트 (시작 줄 맨 앞 ~ 그 줄 LF) sha256 = 인정 · 그 줄 뒤 (다음 큐
+     시작 줄 전까지) 줄 없음 · 그 줄 = 명단 마지막 런 (돌림 순서 온도 → 시드 → 계) 의 큐 '✅ … 끝 · h · 누적' 줄 · 블록의 큐 ✅ 줄 =
+     명단 (순서 그대로 · 하나씩) · 장부는 머리 + 앞 명단 행만 묶는다 (v2 큐가 뒤에 이어 쓴 행은 인정 밖) — 그 sha256 = 인정 · 머리 줄 ·
+     앞 행 = 명단 (돌림 순서 · 하나씩) · rc 0 · prod = 카드 · 시간 = 큐 ✅ 줄 시간 · 시각 (시작 ≤ 끝 · 시간 = 끝 − 시작 ± 3 s · 앞 행 끝 ≤
+     다음 행 시작) · ✅ 줄 시각 (장부 끝 ≤ ✅ ≤ 끝 + 10 s · 다음 행 시작 전) · ✅ 줄 누적 = 장부 시간 누적합 · 큐 잠금 풀림 (+ readout ·
+     pressure 문지기에서 그 결정 active · verify 의 판독 가능 상태에도). 하나라도 어긋나면 큐 문제 (런 모두 invalid → 판정 보류) ·
+     인정이 있는데 끝 줄도 있으면 큐 문제 (인정 뒤에 로그가 바뀌었다). 출력에 판독 허가 sha256 (cond550 동결이 같은지 본다).
   ② 설정 — run_meta = 카드 (T · prod · equilib · seed · 원자 수 · supercell · 창 · save_traj · 모델 · 요청 모드 ·
      **실제 모드 turbo** · 라벨 · v0_xyz = <원래 BASE>/<계>/init/seed<S>_final.xyz — 원래 BASE 기준이라 옮긴 사본에서도 읽는다) ·
      ensemble_results.json 끝 요약 (실제 모드 turbo · task omat · 모델 · 온도 · prod · equilib · 원자 수 · 라벨)
@@ -50,6 +63,8 @@
   기계_판독_값.{decision · md_driver_sha16 · md_runner_sha16 · inputs_sha256 · inclusion.min_pair_excl_PS_A_gt} · 입력_2026_11_10.시드
 판독 허가 (카드 '판독_허가_2단계'): {근거 · by · EB_회신 (kb/reviews/ 아래 파일 · 저장소 기준 경로) · 대조_잡_출력 (경로) ·
   대조_잡_sha256} — 대조 잡 출력이 kind li2s3_stage2_control/v2 · same = True · 깨끗한 작업 트리 · 도구 sha16 이 지금 판과 같아야 한다
+  · (있으면) 큐_끝_줄_유실_인정 — 필드 여섯이 다 차 있고 결정 칸 = ENDLINE_ACK_DECISION 이어야 하며 (아니면 거부) 그 결정이 원장에서
+    active 여야 한다 (아니면 거부) · cond550 판독은 사다리 판독 때와 같은 판독 허가 (정렬 JSON sha256) 일 때만
 
 v2 런 (고친 큐 run_stage2_kgy_v2.sh — cond550 · rerun) — 런 폴더에 exec_v2_start.json 이 있으면 그 런은 v2 로 읽는다:
   ①·⑥·⑦ 의 증거가 러너 로그 대신 실행 기록이다 (큐 · 드라이버 sha16 = 카드 · 카드 값 · 입력 sha256 · 명령 인수 = 카드에서 만든
@@ -72,6 +87,8 @@ v2 런 (고친 큐 run_stage2_kgy_v2.sh — cond550 · rerun) — 런 폴더에 
     변경은 못 본다 (잔여 위험).
   · 골격 판정은 생산 첫 프레임 대비다 — 담금질 결함이 준비 구간 · 생산 구간 전체에서 보존됐다고 말하지 않는다 (ⓐ–ⓒ 는 기록만).
   · 검증 실패 · 미완은 수송 게이트 미통과가 아니다 — W 밖으로 세지 않고 판정 보류만 한다 (처리는 카드 · 사용자 결정).
+  · 끝 줄 유실 인정은 끝 줄이 **왜** 없는지 (tee · tmux 창 닫힘 등) 를 증명하지 않는다 — 남은 완료 기록 (블록의 큐 ✅ 줄 = 명단 ·
+    장부 rc 0 · 장부 시간 = ✅ 줄 시간 · 잠금 풀림) 이 서로 맞는지와 인정 뒤에 로그 · 장부가 안 바뀌었는지만 본다 (그 판단은 카드 결정이 진다).
   · 비용은 러너 · 큐 벽시계다 (GPU 대기가 섞인다). Li 의 프레임 간 이동은 상한 검사에만 쓰고 기록하지 않는다 (수송 값 아님 원칙).
   · v2 큐 판은 카드 queue_v2.sha16 하나로만 받는다 — 큐를 고쳐 카드가 새 sha16 을 고정하면 옛 판으로 돈 v2 런은 invalid 다 (카드 결정).
   · v2 런의 옮겨 남긴 옛 폴더 (T<T>.superseded_*) 는 읽지 않는다 (기록만) · 멈춤 · 비용 정함 기록은 출력에 싣고 풀리지 않은 멈춤만
@@ -108,6 +125,17 @@ CARD = REPO / "db" / "properties" / "lpscl_glass_dense_protocol_ensemble_estiman
 DECISIONS = REPO / "db" / "governance" / "decisions.json"
 NEED_ACTIVE = ("D-2026-11-10-li2s3-dense-protocol-ensemble", "D-2026-11-10-li2s3-dense-protocol-ensemble-amend1")
 READ_PERMIT_KEY = "판독_허가_2단계"
+#: 카드 개정 4 (2026-11-14 · 결과 전) — 순수 v1 큐의 '■ 큐 끝 · PHASE ladder' 줄이 파일에 안 남았을 때의 인정 (판독 허가 안 · 결정 하나)
+ENDLINE_ACK_KEY = "큐_끝_줄_유실_인정"
+ENDLINE_ACK_FIELDS = ("결정", "by", "근거", "사다리_블록_마지막_줄", "사다리_블록_sha256", "장부_sha256")
+LADDER_START, LADDER_END = "▶ li2s-3 2 단계 큐 시작 · PHASE ladder · ", "■ 큐 끝 · PHASE ladder"
+#: v1 큐 (run_stage2_kgy.sh) 가 런마다 찍는 줄 — say "✅ $x seed$sd T$T 끝 · $h h · 누적 $(cum_h) / $CAP_H h" (h = 장부 hours 와 같은 값)
+QUEUE_DONE_RE = re.compile(r"^\[([0-9-]+ [0-9:]+)\] ✅ (\S+) seed(\d+) T(\d+) 끝 · ([0-9.]+) h · 누적 ([0-9.]+) / ([0-9.]+) h$")
+LEDGER_HEAD = "system\tT_K\tseed\tprod_ps\tstart\tend\thours\trc"
+#: 인정을 받는 결정 하나 (리뷰 EL P1-1 — 인정 칸에 다른 active 결정을 적어도 문지기가 서지 않게 · NEED_ACTIVE 와 같은 꼴)
+ENDLINE_ACK_DECISION = "D-2026-11-14-li2s3-queue-endline-lost-ack"
+#: str.splitlines 가 LF 말고도 줄을 나누는 문자 — 있으면 줄 번호가 셸 (grep -n · sed -n) 과 갈라진다 (리뷰 EL P2-2 · 인정은 LF 파일에서만)
+_SPLIT_ONLY = ("\r", "\x0b", "\x0c", "\x1c", "\x1d", "\x1e", "\x85", "\u2028", "\u2029")
 N_BOOT = 400                      # 10-14 대조 계 판독과 같은 값 (σ 가 n_boot 에 달려 있다)
 BIND_TOL_A = 1e-6
 STAGE2_KEYS = ("systems", "seeds", "temperatures_K", "prod_ps", "equilib_ps", "vseed_offset", "n_atoms", "save_fs", "dt_fs",
@@ -348,20 +376,29 @@ def queue_record(base, cv) -> dict:
     시작 줄 하나 · 문지기 줄 하나 · 판 줄 하나 · 큐 끝 줄. 블록 밖의 v1 호출 (뒤에 다시 띄움 · PHASE cond550 등) 은 런을 무효로 만들지
     않고 따로 보류 사유로 적는다 (other_invocations · 리뷰 EE P2-6)."""
     p = pathlib.Path(base) / "stage2_kgy.log"
-    rec = {"log": str(p), "problems": [], "complete": False, "base_original": None, "other_invocations": []}
+    rec = {"log": str(p), "problems": [], "complete": False, "base_original": None, "other_invocations": [], "end_line": None}
     try:
         lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
     except OSError:
         rec["problems"].append("큐 로그 stage2_kgy.log 가 없다 — 실행 기록으로 결속할 수 없다")
         rec["status"] = "invalid"
         return rec
-    starts = [i for i, ln in enumerate(lines) if "▶ li2s-3 2 단계 큐 시작 · PHASE ladder · " in ln]
+    starts = [i for i, ln in enumerate(lines) if LADDER_START in ln]
     if not starts:
         rec["problems"].append("PHASE ladder 큐 시작 줄이 0 개 (하나여야)")
         rec["status"] = "invalid"
         return rec
     s0 = starts[0]
-    e0 = next((i for i in range(s0, len(lines)) if "■ 큐 끝 · PHASE ladder" in lines[i]), None)
+    e0 = next((i for i in range(s0, len(lines)) if LADDER_END in lines[i]), None)
+    rec["end_line"] = None if e0 is None else {"kind": "끝 줄", "줄_번호": e0 + 1}
+    pmt = cv.get("read_permit") if isinstance(cv.get("read_permit"), dict) else {}
+    if ENDLINE_ACK_KEY in pmt:                   # 카드 개정 4 — 끝 줄이 없을 때만 인정을 쓴다
+        if e0 is not None:
+            rec["problems"].append(f"끝 줄 유실 인정: 카드에 '{ENDLINE_ACK_KEY}' 가 있는데 큐 로그에 '{LADDER_END}' 줄이 있다 "
+                                   "(인정 뒤에 큐 로그가 바뀌었다 — 사람이 본다)")
+        else:
+            e0, rec["end_line"], ack_probs = endline_ack_check(base, cv, lines, s0, pmt[ENDLINE_ACK_KEY])
+            rec["problems"].extend(f"끝 줄 유실 인정: {q}" for q in ack_probs)
     stop_at = len(lines) if e0 is None else e0 + 1
     inner = [i for i in starts if i < stop_at]
     if len(inner) != 1:
@@ -401,6 +438,217 @@ def queue_record(base, cv) -> dict:
     rec["complete"] = e0 is not None
     rec["status"] = "invalid" if rec["problems"] else ("valid" if rec["complete"] else "incomplete")
     return rec
+
+
+def ladder_roster(cv) -> list:
+    """v1 큐의 돌림 순서 — run_stage2_kgy.sh 의 `for T in $TEMPS; do for sd in $SEEDS; do for x in $SYSTEMS` (온도 → 시드 → 계)."""
+    return [(x, sd, T) for T in cv["temperatures"] for sd in cv["seeds"] for x in cv["systems"]]
+
+
+def _lf_text(raw: bytes, what: str):
+    """깨끗한 UTF-8 · LF 인가 — 맞으면 (text.split('\n'), None) · 아니면 (None, 문제). 인정은 이런 파일에서만 쓴다 (리뷰 EL P2-2):
+    깨진 바이트는 errors=replace 로 같은 글자가 되고 CR · U+2028 · \x1c 는 줄 번호를 셸과 갈라 놓는다."""
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as e:
+        return None, f"{what} 가 UTF-8 이 아니다 ({e.start} 번째 바이트) — 인정은 깨끗한 UTF-8 · LF 파일에서만"
+    bad = sorted({repr(c) for c in _SPLIT_ONLY if c in text})
+    if bad:
+        return None, f"{what} 에 LF 밖의 줄 나눔 · 제어 문자 {bad} 가 있다 — 인정은 LF 파일에서만 (줄 번호 · 지문이 셸과 갈라진다)"
+    return text.split("\n"), None
+
+
+def _block_bytes(lf_lines, s0, L) -> bytes:
+    """사다리 블록 바이트 — 시작 줄 맨 앞 ~ 인정한 마지막 줄 끝 (그 뒤 LF 포함 · 파일 끝이면 없이). 깨끗한 LF 파일의 원 바이트와 같다."""
+    return ("\n".join(lf_lines[s0:L + 1]) + ("\n" if L + 1 < len(lf_lines) else "")).encode("utf-8")
+
+
+def _ledger_head(raw: bytes, n: int):
+    """장부의 머리 줄 + 앞 n 행 (사다리 v1 런) — v2 큐가 뒤에 이어 쓴 행 (cond550 · rerun · charge) 은 인정 밖 (리뷰 EL P0-1 · v2 런은
+    실행 기록으로 결속). 반환 (그 부분 바이트, 그 부분 줄 [머리 + 행] 또는 None, 뒤 행 수, 문제)."""
+    parts = raw.split(b"\n")
+    head = b"\n".join(parts[:1 + n]) + (b"\n" if len(parts) > 1 + n else b"")
+    extra = sum(1 for p in parts[1 + n:] if p.strip())
+    ls, why = _lf_text(head, "장부 앞부분 (머리 + 명단 행)")
+    return head, (ls[:1 + n] if ls is not None else None), extra, why
+
+
+def _fnum(x):
+    try:
+        return float(x)
+    except (TypeError, ValueError):
+        return float("nan")
+
+
+def endline_ack_check(base, cv, lines, s0, ack):
+    """카드 개정 4 — '■ 큐 끝 · PHASE ladder' 줄이 없을 때 판독 허가의 '큐_끝_줄_유실_인정' 과 대조한다 (리뷰 EL 반영판).
+    큐 로그 (깨끗한 UTF-8 · LF): 인정한 마지막 줄이 시작 뒤에 한 번 · 블록 바이트 (시작 줄 ~ 그 줄 LF) sha256 = 인정 · 그 줄 뒤 (다음 큐
+    시작 줄 전까지) 빈 줄 밖의 줄 없음 · 그 줄 = 명단 마지막 런의 큐 '✅ … 끝' 줄 · 블록의 큐 ✅ 줄 = 명단 (돌림 순서 · 하나씩).
+    장부 (머리 + 앞 명단 행만 · 뒤 행은 v2 몫): sha256 = 인정 · 머리 줄 · 앞 행 = 명단 (돌림 순서 · 하나씩) · rc 0 · prod = 카드 ·
+    시간 = 큐 ✅ 줄 시간 · 시각 (시작 ≤ 끝 · 시간 = 끝 − 시작 ± 3 s · 앞 행 끝 ≤ 다음 행 시작) · 큐 ✅ 줄 시각 (장부 끝 ≤ ✅ ≤ 끝 + 10 s ·
+    다음 행 시작 전) · ✅ 줄 누적 = 장부 시간 누적합 (± 1e-4 h). 인정의 결정 = ENDLINE_ACK_DECISION · 큐 잠금 풀림.
+    반환 (블록 끝 줄 번호 (0 부터) 또는 None, 기록, 문제). 결정이 원장에서 active 인지는 여기서 안 본다 (readout · pressure 문지기 _gate)."""
+    info = {"kind": "끝 줄 유실 인정", "결정": ack.get("결정") if isinstance(ack, dict) else None}
+    if not isinstance(ack, dict):
+        return None, info, [f"'{ENDLINE_ACK_KEY}' 가 dict 가 아니다"]
+    miss = [k for k in ENDLINE_ACK_FIELDS if not str(ack.get(k) or "").strip()]
+    if miss:
+        return None, info, [f"'{ENDLINE_ACK_KEY}' 의 {miss} 가 비었다"]
+    probs = []
+    if ack["결정"] != ENDLINE_ACK_DECISION:
+        probs.append(f"인정의 결정 {ack['결정']!r} 이 개정 4 결정 {ENDLINE_ACK_DECISION} 이 아니다")
+    base = pathlib.Path(base)
+    try:
+        raw = (base / "stage2_kgy.log").read_bytes()
+    except OSError:
+        return None, info, probs + ["큐 로그 stage2_kgy.log 를 못 읽었다"]
+    lf, why = _lf_text(raw, "큐 로그")
+    if why:
+        return None, info, probs + [why]
+    last = ack["사다리_블록_마지막_줄"]
+    idx = [i for i in range(s0, len(lf)) if lf[i] == last]
+    if len(idx) != 1:
+        return None, info, probs + [f"인정한 마지막 줄이 사다리 시작 뒤에 {len(idx)} 번 (한 번이어야)"]
+    L = idx[0]
+    block = lf[s0:L + 1]
+    nxt = next((i for i in range(L + 1, len(lf)) if "▶ li2s-3 2 단계 큐 시작 · PHASE " in lf[i]), len(lf))
+    tail = [ln for ln in lf[L + 1:nxt] if ln.strip()]
+    info.update(마지막_줄=last, 마지막_줄_번호=L + 1, 사다리_블록_sha256=hashlib.sha256(_block_bytes(lf, s0, L)).hexdigest(),
+                머리_줄=sum(1 for ln in lf[:s0] if ln.strip()), 꼬리_줄=len(tail), 꼬리_줄_앞=[ln[:120] for ln in tail[:3]])
+    if info["사다리_블록_sha256"] != ack["사다리_블록_sha256"]:
+        probs.append("사다리 블록 sha256 ≠ 인정 (인정 뒤에 큐 로그가 바뀌었다)")
+    if tail:
+        probs.append(f"인정한 마지막 줄 뒤에 (다음 큐 시작 줄 전까지) 줄 {len(tail)} 개 — 큐가 그 줄로 끝나지 않았다 · 첫 줄 {tail[0][:80]!r}")
+    roster = ladder_roster(cv)
+    m = QUEUE_DONE_RE.match(last)
+    if not m or (m.group(2), int(m.group(3)), int(m.group(4))) != roster[-1]:
+        probs.append(f"인정한 마지막 줄이 명단 마지막 런 {roster[-1]} 의 큐 '✅ … 끝' 줄이 아니다")
+    done = [d for d in (QUEUE_DONE_RE.match(ln) for ln in block) if d]
+    dkeys = [(d.group(2), int(d.group(3)), int(d.group(4))) for d in done]
+    if dkeys != roster:
+        probs.append(f"사다리 블록의 큐 ✅ 줄 {len(done)} 개가 명단 {len(roster)} 런 (돌림 순서 · 하나씩) 과 다르다")
+    try:
+        lraw = (base / "cost_ledger.tsv").read_bytes()
+    except OSError:
+        return None, info, probs + ["장부 cost_ledger.tsv 가 없다"]
+    head, hl, extra, lwhy = _ledger_head(lraw, len(roster))
+    info.update(장부_sha256=hashlib.sha256(head).hexdigest(), 장부_뒤_행=extra)
+    if info["장부_sha256"] != ack["장부_sha256"]:
+        probs.append("장부 앞부분 (머리 + 명단 행) sha256 ≠ 인정 (인정 뒤에 장부 앞부분이 바뀌었다)")
+    if lwhy:
+        return None, info, probs + [lwhy]
+    if hl[0] != LEDGER_HEAD:
+        probs.append("장부 머리 줄이 v1 큐 꼴이 아니다")
+    seq, parsed = [], []
+    for r in (x.split("\t") for x in hl[1:] if x.strip()):
+        try:
+            k = (r[0], int(r[2]), int(r[1])) if len(r) == 8 else None
+        except ValueError:
+            k = None
+        seq.append(k)
+        if k is not None:
+            parsed.append((k, r))
+    if seq != roster:
+        probs.append(f"장부 앞 {len(seq)} 행이 명단 {len(roster)} 런 (돌림 순서 · 하나씩) 과 다르다")
+    bad_rc = [k for k, r in parsed if r[7].strip() != "0"]
+    if bad_rc:
+        probs.append(f"장부 rc ≠ 0 인 행 {bad_rc[:4]}")
+    bad_prod = [k for k, r in parsed if not _num_eq(r[3], cv["prod_ps"])]
+    if bad_prod:
+        probs.append(f"장부 prod ≠ 카드 {cv['prod_ps']:g} 인 행 {bad_prod[:4]}")
+    hrs = {k: d.group(5) for k, d in zip(dkeys, done)}
+    bad_h = [k for k, r in parsed if k in hrs and r[6].strip() != hrs[k]]
+    if bad_h:
+        probs.append(f"장부 시간 ≠ 큐 ✅ 줄 시간 인 행 {bad_h[:4]}")
+    fmt = "%Y-%m-%d %H:%M:%S"                                 # 리뷰 EL P2-3 — 순서 · 시각 · 누적의 상호 대조
+    try:
+        se = [(_dt.datetime.strptime(r[4], fmt), _dt.datetime.strptime(r[5], fmt), float(r[6])) for _, r in parsed]
+        ts = {k: _dt.datetime.strptime(d.group(1), fmt) for k, d in zip(dkeys, done)}
+    except (ValueError, IndexError):
+        se, ts = None, None
+        probs.append("장부 · 큐 ✅ 줄 시각 (또는 시간) 을 못 읽었다")
+    if se is not None:
+        bad_t = [parsed[i][0] for i, (s_, e_, h_) in enumerate(se)
+                 if s_ > e_ or abs(h_ * 3600 - (e_ - s_).total_seconds()) > 3 or (i and se[i - 1][1] > s_)]
+        if bad_t:
+            probs.append(f"장부 시각 (시작 ≤ 끝 · 시간 = 끝 − 시작 ± 3 s · 앞 행 끝 ≤ 다음 행 시작) 이 맞지 않는 행 {bad_t[:4]}")
+        bad_ts = []
+        for i, (k, _) in enumerate(parsed):
+            t = ts.get(k)
+            if t is None:
+                continue
+            if not (se[i][1] <= t <= se[i][1] + _dt.timedelta(seconds=10)) or (i + 1 < len(se) and t > se[i + 1][0]):
+                bad_ts.append(k)
+        if bad_ts:
+            probs.append(f"큐 ✅ 줄 시각 (장부 끝 ≤ ✅ ≤ 끝 + 10 s · 다음 행 시작 전) 이 맞지 않는 런 {bad_ts[:4]}")
+    run_sum, csum = 0.0, {}
+    for k, r in parsed:
+        run_sum += _fnum(r[6])
+        csum.setdefault(k, run_sum)
+    bad_c = [k for k, d in zip(dkeys, done) if k in csum and not abs(_fnum(d.group(6)) - csum[k]) <= 1e-4]
+    if bad_c:
+        probs.append(f"큐 ✅ 줄 누적 ≠ 장부 시간 누적합 (± 1e-4 h) 인 런 {bad_c[:4]}")
+    if not queue_lock_free(base):
+        probs.append("큐 잠금이 쥐어져 있다 — 큐 · 드라이버가 돌고 있다")
+    info["검사"] = ("깨끗한 LF · 마지막 줄 한 번 · 블록 바이트 · 장부 앞부분 sha256 · 꼬리 줄 없음 · 마지막 줄 = 명단 마지막 런 ✅ · 블록 ✅ = 명단 · "
+                  "장부 머리 · 앞 행 = 명단 · rc 0 · prod · 시간 = ✅ · 시각 · ✅ 시각 · 누적 · 결정 = 개정 4 · 잠금 풀림")
+    return (None if probs else L), info, probs
+
+
+def endline_ack_state(qrec, decisions):
+    """인정으로 받은 큐면 개정 4 결정의 원장 상태 · 아니면 None — verify 도 '판독 가능 상태' 에 건다 (리뷰 EL P2-6)."""
+    if ((qrec.get("end_line") or {}).get("kind")) != "끝 줄 유실 인정":
+        return None
+    return decision_states(decisions, ids=(ENDLINE_ACK_DECISION,)).get(ENDLINE_ACK_DECISION)
+
+
+def _permit_sha(cv):
+    """판독 허가 (인정 포함) 의 정렬 JSON sha256 — 사다리 판독 기록에 싣고 cond550 동결이 같은지 본다 (리뷰 EL P2-5)."""
+    p = cv.get("read_permit")
+    return None if p is None else hashlib.sha256(json.dumps(p, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+
+
+def endline_facts(base, cv) -> dict:
+    """읽기만 — 큐 로그에 '■ 큐 끝 · PHASE ladder' 줄이 없을 때 카드 '큐_끝_줄_유실_인정' 에 넣을 사실을 낸다 (파일을 쓰지 않는다).
+    마지막 줄 후보 = 사다리 시작 뒤 마지막 비지 않은 줄 · 그 사실로 만든 인정으로 queue_record 를 통째로 돌려 (시작 · 문지기 · 판 줄 포함
+    · 리뷰 EL P2-7) 큐 상태와 문제 목록을 같이 싣는다 · 장부에 명단 밖 행이 이미 있으면 문제 (인정은 그 전에 낸다). 결정 · by · 근거는 사람 몫."""
+    base = pathlib.Path(base)
+    out = {"kind": "li2s3_stage2_endline_facts/v2", "base": str(base.resolve()), "problems": []}
+    try:
+        raw = (base / "stage2_kgy.log").read_bytes()
+    except OSError:
+        out["problems"].append("큐 로그 stage2_kgy.log 가 없다")
+        return out
+    lf, why = _lf_text(raw, "큐 로그")
+    if why:
+        out["problems"].append(why)
+        return out
+    starts = [i for i, ln in enumerate(lf) if LADDER_START in ln]
+    out["사다리_시작_줄"] = len(starts)
+    if len(starts) != 1:
+        out["problems"].append(f"PHASE ladder 큐 시작 줄이 {len(starts)} 개 (하나여야)")
+        return out
+    s0 = starts[0]
+    if any(LADDER_END in lf[i] for i in range(s0, len(lf))):
+        out["problems"].append(f"큐 로그에 '{LADDER_END}' 끝 줄이 있다 — 인정이 필요 없다")
+        return out
+    cand = next((i for i in range(len(lf) - 1, s0 - 1, -1) if lf[i].strip()), s0)
+    n = len(ladder_roster(cv))
+    led = base / "cost_ledger.tsv"
+    head, _, extra, _ = _ledger_head(led.read_bytes() if led.is_file() else b"", n)
+    probe = {"결정": ENDLINE_ACK_DECISION, "by": "(사실 보기)", "근거": "(사실 보기)", "사다리_블록_마지막_줄": lf[cand],
+             "사다리_블록_sha256": hashlib.sha256(_block_bytes(lf, s0, cand)).hexdigest(),
+             "장부_sha256": hashlib.sha256(head).hexdigest() if led.is_file() else "(장부 없음)"}
+    q = queue_record(base, dict(cv, read_permit={ENDLINE_ACK_KEY: probe}))
+    probs = list(q["problems"])
+    if q["status"] != "valid" and not probs:
+        probs.append(f"큐 상태 {q['status']}")
+    if extra:
+        probs.append(f"장부에 명단 밖 행이 이미 {extra} 개 — 인정은 장부가 머리 + 명단 행뿐일 때 낸다 (사람이 본다)")
+    out.update({k: probe[k] for k in ("결정", "사다리_블록_마지막_줄", "사다리_블록_sha256", "장부_sha256")}, 마지막_줄_번호=cand + 1,
+               명단_런=n, 장부_뒤_행=extra, 큐_상태=q["status"], problems=probs,
+               note=f"문제 0 이면 위 넷을 카드 판독 허가의 '{ENDLINE_ACK_KEY}' 에 넣고 by · 근거를 사람이 채운다 (결정은 {ENDLINE_ACK_DECISION} 고정 · 카드 개정 4)")
+    return out
 
 
 def runner_blocks(log_path):
@@ -1297,6 +1545,13 @@ def permit_problems(cv, prov, repo=REPO) -> list:
         return [f"카드에 '{READ_PERMIT_KEY}' 가 없다 — 2 단계 판독 보류 중"]
     repo = pathlib.Path(repo)
     probs = [f"'{k}' 가 비었다" for k in ("근거", "by") if not p.get(k)]
+    if ENDLINE_ACK_KEY in p:                      # 카드 개정 4 — 인정은 필드 여섯이 다 차 있어야
+        a_ = p.get(ENDLINE_ACK_KEY)
+        miss = [k for k in ENDLINE_ACK_FIELDS if not (isinstance(a_, dict) and str(a_.get(k) or "").strip())]
+        if miss:
+            probs.append(f"'{ENDLINE_ACK_KEY}' 의 {miss} 가 비었다 (카드 개정 4)")
+        elif a_.get("결정") != ENDLINE_ACK_DECISION:
+            probs.append(f"'{ENDLINE_ACK_KEY}' 의 결정 {a_.get('결정')!r} 이 개정 4 결정 {ENDLINE_ACK_DECISION} 이 아니다 (리뷰 EL P1-1)")
     eb = p.get("EB_회신")
     if not eb or not str(eb).startswith("kb/reviews/") or not (repo / str(eb)).is_file():
         probs.append(f"'EB_회신' {eb!r} 이 kb/reviews/ 아래 있는 파일이 아니다")
@@ -1339,6 +1594,12 @@ def _gate(base, card, decisions, require_permit, prov, out_name, permit_repo=REP
         pp = permit_problems(cv, prov, repo=permit_repo)
         if pp:
             raise Refused(f"⛔ 판독 허가 '{READ_PERMIT_KEY}' 가 조건을 못 채웠다 — " + " · ".join(pp) + " (판독 보류 · 카드 개정 DZ · 리뷰 EB)")
+    pmt = cv.get("read_permit") if isinstance(cv.get("read_permit"), dict) else {}
+    if ENDLINE_ACK_KEY in pmt:                    # 카드 개정 4 — 인정의 결정이 지금 원장에서 active 여야
+        ds = decision_states(decisions, ids=(ENDLINE_ACK_DECISION,)).get(ENDLINE_ACK_DECISION)   # 리뷰 EL P1-1 — 칸에 적힌 id 가 아니라 그 결정
+        if ds != "active":
+            raise Refused(f"⛔ 판독 허가의 '{ENDLINE_ACK_KEY}' 결정 {ENDLINE_ACK_DECISION} 이 active 가 아니다 ({ds!r}) — 판독하지 않는다 (카드 개정 4)")
+        st = dict(st, **{ENDLINE_ACK_DECISION: ds})
     if not prov.get("tree_clean"):
         raise Refused(f"⛔ 도구 작업 트리가 깨끗하지 않다 {(prov.get('dirty_tracked') or [])[:5]} — 커밋한 판으로만 판독한다")
     od = pathlib.Path(base) / OUT_DIRNAME
@@ -1373,6 +1634,8 @@ def _cond550_freeze(lad, base, cv, prov):
         probs.append("판독 도구 sha16 ≠ 사다리 판독 때")
     if lad.get("rules_sha256") != cv["rules_sha256"]:
         probs.append("카드 기계_판독_값 해시 ≠ 사다리 판독 때 (기록에 없으면 고친 도구로 낸 사다리 판독이 아니다)")
+    if lad.get("read_permit_sha256") != _permit_sha(cv):
+        probs.append("판독 허가 (인정 포함) 가 사다리 판독 때와 다르다 (리뷰 EL P2-5 — 사다리 판독 뒤에 허가를 바꿀 까닭은 없다)")
     want = {f"{r.get('system')}{r.get('seed')}_T{r.get('T_K')}": ((r.get("fingerprint") or {}).get("files"), r.get("T_K"))
             for r in (lad.get("rows") or [])}
     keys = {f"{s}{sd}_T{T}" for s in cv["systems"] for sd in cv["seeds"] for T in cv["temperatures"]}
@@ -1395,8 +1658,9 @@ def _common(base, cv, prov, st, qrec, worktree, phase="ladder", ready=None):
     return {"card_sha256": cv["card_sha256"], "card": cv["card_path"], "rules_sha256": cv["rules_sha256"], "decisions": st,
             "provenance": prov, "base_now": str(pathlib.Path(base).resolve()), "base_original": qrec.get("base_original"),
             "queue": {k: qrec.get(k) for k in ("status", "complete", "start", "gatekeep", "versions", "repo_head", "problems",
-                                               "other_invocations")},
-            "worktree_code": worktree_code(worktree), "phase": phase, "ready": ready, "verify_map": VERIFY_MAP}
+                                               "other_invocations", "end_line")},
+            "worktree_code": worktree_code(worktree), "phase": phase, "ready": ready, "verify_map": VERIFY_MAP,
+            "read_permit_sha256": _permit_sha(cv)}
 
 
 def _hold(kind, od, common, qrec, runs):
@@ -2287,6 +2551,229 @@ def _selftest_body():
             (tdir_of(b, "B", 11, 650) / "msd.json").unlink(),
             edit_text(b / "B" / "queue_kgy.log", lambda t: "\n".join(ln for ln in t.splitlines() if "✅ T650 seed11 끝" not in ln)))[0])
         hold_case("사다리 블록 뒤의 v1 호출 (리뷰 EE P2-6 — 런은 valid · 따로 보류 사유)", lambda b: edit_text(b / "stage2_kgy.log", lambda t: t + LATE))
+
+        # ── 카드 개정 4 (2026-11-14 · 결과 전 · 리뷰 EL 반영): 큐 끝 줄 유실 인정 ──
+        def lost_end(b=None):
+            b = clone(b8) if b is None else b
+            edit_text(b / "stage2_kgy.log", lambda t: "".join(ln + "\n" for ln in t.splitlines() if LADDER_END not in ln))
+            return b
+
+        def ack_for(b, last=None, did=ENDLINE_ACK_DECISION):
+            """인정 값을 도구와 따로 낸다 — 원 바이트를 바이트 위치로 자른다 (블록 = 시작 줄 맨 앞 ~ 마지막 줄 LF · 장부 = 앞 1 + 명단 줄)."""
+            raw = (b / "stage2_kgy.log").read_bytes()
+            rp = raw.split(b"\n")                           # 원 바이트에서 LF 로만 나눈다 (깨진 바이트 · 다른 줄 나눔이 있어도 바이트 위치가 맞게)
+            s0_ = next(i for i, x in enumerate(rp) if LADDER_START.encode("utf-8") in x)
+            if last is None:
+                L_ = next(i for i in range(len(rp) - 1, s0_ - 1, -1) if rp[i].strip())
+                last = rp[L_].decode("utf-8", errors="replace")
+            else:
+                L_ = next(i for i in range(s0_, len(rp)) if rp[i] == last.encode("utf-8"))
+            off = sum(len(x) + 1 for x in rp[:s0_])
+            end = min(sum(len(x) + 1 for x in rp[:L_ + 1]), len(raw))
+            head = b"".join((b / "cost_ledger.tsv").read_bytes().splitlines(keepends=True)[:1 + len(ladder_roster(cv8))])
+            return {"결정": did, "by": "selftest", "근거": "시험 — 큐 끝 줄이 파일에 안 남음", "사다리_블록_마지막_줄": last,
+                    "사다리_블록_sha256": hashlib.sha256(raw[off:end]).hexdigest(), "장부_sha256": hashlib.sha256(head).hexdigest()}
+
+        def dec_file(name, state):
+            p = td / name
+            p.write_text(json.dumps({"decisions": [{"id": i, "decision_state": "active"} for i in NEED_ACTIVE]
+                                     + ([{"id": ENDLINE_ACK_DECISION, "decision_state": state}] if state else [])}))
+            return p
+        dec_ack, dec_ack_p = dec_file("dec_ack.json", "active"), dec_file("dec_ack_p.json", "proposed")
+        n_ack = [0]
+
+        def card_ack(ack, **k):
+            n_ack[0] += 1
+            return _st_card(td / f"card_ack{n_ack[0]}.json", sha, defects, ["A", "B"], [11, 12], [600, 650], 3.0,
+                            permit=dict(permit, **{ENDLINE_ACK_KEY: ack}), **k)
+
+        def rd_ack(b, ack, **k):
+            return readout(b, WT, card=card_ack(ack), decisions=k.pop("decisions", dec_ack), read_run=allpass, prov=prov_ok,
+                           permit_repo=prepo, **k)
+
+        def hold_ack(label, b, ack, why):
+            """보류 + 그 검사의 이유 (why) 가 큐 문제에 있어야 한다 — 다른 검사가 대신 막아 준 보류는 이 시험의 통과가 아니다."""
+            o = rd_ack(b, ack)
+            qp = [str(q) for q in (o.get("queue_problems") or [])]
+            chk(o.get("status") == "판정 보류" and "W" not in o and not (b / OUT_DIRNAME / READOUT_NAME).exists()
+                and any(q.startswith("끝 줄 유실 인정") and why in q for q in qp),
+                f"⛔음성: (개정 4) {label} → 판정 보류 · 이유 '{why}' (판독 한 번을 안 쓴다)")
+
+        def edit_ledger(b, fn):
+            edit_text(b / "cost_ledger.tsv", lambda t: "".join(r + "\n" for r in fn(t.splitlines())))
+
+        def set_col(rows, i, col, val):
+            r = rows[i].split("\t")
+            r[col] = val(r[col]) if callable(val) else val
+            rows[i] = "\t".join(r)
+            return rows
+
+        def edit_done(i, fn):                                 # 큐 ✅ 줄 i 번째를 바꾼다
+            def f_(t):
+                ls = t.splitlines()
+                j = [n_ for n_, ln in enumerate(ls) if QUEUE_DONE_RE.match(ln)][i]
+                ls[j] = fn(ls[j])
+                return "".join(ln + "\n" for ln in ls)
+            return f_
+
+        bA = lost_end()
+        ackA = ack_for(bA)
+        oA = rd_ack(bA, ackA)
+        elA = (oA.get("queue") or {}).get("end_line") or {}
+        chk(oA.get("status") == "판독" and "W" in oA and oA["queue"]["status"] == "valid" and elA.get("kind") == "끝 줄 유실 인정"
+            and elA.get("결정") == ENDLINE_ACK_DECISION and elA.get("사다리_블록_sha256") == ackA["사다리_블록_sha256"]
+            and elA.get("장부_sha256") == ackA["장부_sha256"] and elA.get("꼬리_줄") == 0 and elA.get("장부_뒤_행") == 0
+            and (oA.get("decisions") or {}).get(ENDLINE_ACK_DECISION) == "active" and oA.get("read_permit_sha256")
+            and (bA / OUT_DIRNAME / READOUT_NAME).is_file(),
+            "[양성] (개정 4) 끝 줄 유실 + 인정 (블록 바이트 · 장부 앞부분 sha256 · 명단 · rc 0 · 시각 · 누적 · 잠금 · 결정 active) → 판독 · "
+            "출력에 인정 · 결정 · 판독 허가 sha256")
+        fA = endline_facts(lost_end(), cv8)
+        chk(fA["problems"] == [] and fA.get("큐_상태") == "valid" and fA.get("결정") == ENDLINE_ACK_DECISION
+            and all(fA.get(k) == ackA[k] for k in ("사다리_블록_마지막_줄", "사다리_블록_sha256", "장부_sha256")),
+            "[양성] (개정 4) endline_facts — 인정에 넣을 사실 = 따로 낸 값 (바이트 위치로 자른 블록 · 장부 앞 1 + 명단 줄) · 큐 상태 valid · 문제 0")
+        chk(any("끝 줄이 있다" in q for q in endline_facts(clone(b8), cv8)["problems"]),
+            "⛔음성: (개정 4) endline_facts — 큐 로그에 끝 줄이 있으면 '인정이 필요 없다' 로 찍는다")
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", lambda t: t.replace(f"러너 sha16 {cv8['md_runner_sha16']} ·", "러너 sha16 0000000000000000 ·", 1))
+        fG = endline_facts(b, cv8)
+        chk(fG.get("큐_상태") == "invalid" and any("문지기" in q for q in fG["problems"]),
+            "⛔음성: (개정 4 · 리뷰 EL P2-7) endline_facts 가 큐 기록 전체를 본다 — 문지기 러너 sha16 이 다르면 문제")
+        b = lost_end()
+        edit_text(b / "cost_ledger.tsv", lambda t: t + "A\t550\t11\t3\t2026-11-14 04:00:00\t2026-11-14 04:01:00\t0.0167\t0\n")
+        chk(any("명단 밖 행" in q for q in endline_facts(b, cv8)["problems"]),
+            "⛔음성: (개정 4) endline_facts — 장부에 명단 밖 행이 이미 있으면 문제 (인정은 장부가 머리 + 명단 행뿐일 때)")
+        b = lost_end(); ack = ack_for(b)
+        edit_text(b / "cost_ledger.tsv", lambda t: t + "A\t550\t11\t3\t2026-11-14 04:00:00\t2026-11-14 04:01:00\t0.0167\t0\n"
+                  + "charge:A:11:550:v2\tx\ty\tz\ta\tb\t0.0010\t0\n")
+        oX = rd_ack(b, ack)
+        chk(oX.get("status") == "판독" and ((oX.get("queue") or {}).get("end_line") or {}).get("장부_뒤_행") == 2,
+            "[양성] (개정 4 · 리뷰 EL P0-1) 인정 뒤에 장부에 행이 이어 붙어도 (v2 큐 몫) 인정은 머리 + 명단 행만 묶는다 → 판독 · 뒤 행 2 기록")
+
+        def tail_space(t):
+            ls = t.splitlines()
+            i = next(i for i, ln in enumerate(ls) if LADDER_START in ln)
+            ls[i] += " "
+            return "".join(ln + "\n" for ln in ls)
+        b = lost_end(); ack = ack_for(b)
+        edit_text(b / "stage2_kgy.log", tail_space)
+        hold_ack("인정 뒤 큐 로그가 바뀜 (사다리 블록 sha256 ≠ 인정 · 파서는 그대로 읽는다)", b, ack, "사다리 블록 sha256 ≠ 인정")
+        b = lost_end(); ack = ack_for(b)
+        edit_ledger(b, lambda rows: set_col(rows, 1, 3, lambda v: v + ".0"))
+        hold_ack("인정 뒤 장부 앞부분이 바뀜 (장부 sha256 ≠ 인정 · prod 는 같은 수 '….0' · 다른 검사는 그대로)", b, ack, "장부 앞부분 (머리 + 명단 행) sha256 ≠ 인정")
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", lambda t: t + "[2026-11-14 00:00:00] (메모 줄)\n")
+        hold_ack("인정한 마지막 줄이 명단 마지막 런의 큐 ✅ 줄이 아니다 (뒤에 다른 줄 · 블록 ✅ 는 명단 그대로)", b, ack_for(b), "명단 마지막 런")
+        b = lost_end(); ack = ack_for(b)
+        edit_text(b / "stage2_kgy.log", lambda t: t + "[2026-11-14 03:27:13] ⛔ B seed12 T650 러너 종료 4 — 큐를 멈춘다\n")
+        hold_ack("인정한 마지막 줄 뒤에 줄이 있다 (리뷰 EL P2-1 — 블록 · 장부 지문은 그대로)", b, ack, "인정한 마지막 줄 뒤에")
+
+        def dup_done(t):
+            ls = t.splitlines()
+            i = [j for j, ln in enumerate(ls) if QUEUE_DONE_RE.match(ln)][2]
+            ls.insert(i + 1, ls[i])
+            return "".join(ln + "\n" for ln in ls)
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", dup_done)
+        hold_ack("사다리 블록의 큐 ✅ 줄이 명단과 다르다 (가운데 한 줄 두 번 · 마지막 줄은 그대로)", b, ack_for(b), "사다리 블록의 큐 ✅ 줄")
+        b = lost_end()
+        edit_ledger(b, lambda rows: set_col(rows, 2, 2, "13"))
+        hold_ack("장부 앞 행이 명단과 다르다 (한 행의 시드가 명단 밖 · 행 수는 같다)", b, ack_for(b), "행이 명단")
+        b = lost_end()
+        edit_ledger(b, lambda rows: rows[:3] + rows[4:])
+        hold_ack("장부 행이 명단보다 하나 적다", b, ack_for(b), "행이 명단")
+        b = lost_end()
+        edit_ledger(b, lambda rows: [rows[0], rows[2], rows[1]] + rows[3:])
+        hold_ack("장부 행 순서가 명단 (돌림 순서) 과 다르다 (두 행 맞바꿈)", b, ack_for(b), "행이 명단")
+        b = lost_end()
+        edit_ledger(b, lambda rows: [rows[0].replace("system\t", "sys\t", 1)] + rows[1:])
+        hold_ack("장부 머리 줄이 v1 큐 꼴이 아니다", b, ack_for(b), "장부 머리 줄")
+        b = lost_end()
+        edit_ledger(b, lambda rows: set_col(rows, 2, 7, "1"))
+        hold_ack("장부 한 행의 rc ≠ 0", b, ack_for(b), "rc ≠ 0")
+        b = lost_end()
+        edit_ledger(b, lambda rows: set_col(rows, 2, 3, "4"))
+        hold_ack("장부 한 행의 prod ≠ 카드", b, ack_for(b), "prod ≠ 카드")
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", edit_done(2, lambda ln: re.sub(r"끝 · ([0-9.]+) h", lambda m_: f"끝 · {float(m_.group(1)) + 0.0002:.4f} h", ln)))
+        hold_ack("큐 ✅ 줄 시간 ≠ 그 런의 장부 시간 (✅ 줄 쪽을 바꿈 · 누적 · 시각은 그대로)", b, ack_for(b), "장부 시간 ≠ 큐 ✅ 줄 시간")
+        b = lost_end()
+        edit_ledger(b, lambda rows: set_col(rows, 3, 4, lambda v: (_dt.datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
+                                                                     + _dt.timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")))
+        hold_ack("장부 한 행의 시작이 끝보다 늦다 (리뷰 EL P2-3 — 시각)", b, ack_for(b), "장부 시각")
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", edit_done(3, lambda ln: "[2025-01-01 00:00:00]" + ln[ln.index("]") + 1:]))
+        hold_ack("큐 ✅ 줄 시각이 장부 끝 시각과 안 맞다 (2025 년 · 리뷰 EL P2-3)", b, ack_for(b), "큐 ✅ 줄 시각")
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", edit_done(3, lambda ln: re.sub(r"누적 ([0-9.]+) /", "누적 99.9999 /", ln)))
+        hold_ack("큐 ✅ 줄 누적이 장부 시간 누적합과 다르다 (리뷰 EL P2-3)", b, ack_for(b), "누적")
+        # 리뷰 EL 재확인 N-P2-1 — 시각 · 꼬리 검사의 하위 조건마다 그것만 걸리는 시험
+        FMT_ = "%Y-%m-%d %H:%M:%S"
+        b = lost_end()
+        edit_ledger(b, lambda rows: set_col(rows, 1, 4, lambda v: (_dt.datetime.strptime(v, FMT_) - _dt.timedelta(seconds=60)).strftime(FMT_)))
+        hold_ack("장부 첫 행의 시간 ≠ 끝 − 시작 (시작을 60 s 앞당김 · 앞 행이 없어 순서 · ✅ 시각은 그대로 · EL N-P2-1)", b, ack_for(b), "장부 시각")
+        b = lost_end()
+        rows_ = (b / "cost_ledger.tsv").read_text(encoding="utf-8").splitlines()
+        endL = _dt.datetime.strptime(rows_[-1].split("\t")[5], FMT_)
+        nd_ = len([1 for ln in (b / "stage2_kgy.log").read_text(encoding="utf-8").splitlines() if QUEUE_DONE_RE.match(ln)])
+        edit_text(b / "stage2_kgy.log", edit_done(nd_ - 1, lambda ln: "[" + (endL + _dt.timedelta(seconds=20)).strftime(FMT_) + "]" + ln[ln.index("]") + 1:]))
+        hold_ack("마지막 큐 ✅ 줄 시각이 장부 끝 + 10 s 보다 늦다 (다음 행이 없는 마지막 런 · EL N-P2-1)", b, ack_for(b), "큐 ✅ 줄 시각")
+        b = lost_end()
+        rows_ = (b / "cost_ledger.tsv").read_text(encoding="utf-8").splitlines()
+        end2 = _dt.datetime.strptime(rows_[3].split("\t")[5], FMT_)
+        t_new = _dt.datetime.strptime(rows_[4].split("\t")[4], FMT_) + _dt.timedelta(seconds=1)
+        chk(end2 <= t_new <= end2 + _dt.timedelta(seconds=10),
+            "[준비] (EL N-P2-1) 셋째 런 ✅ 줄을 '다음 행 시작 + 1 s' 로 옮겨도 장부 끝 + 10 s 안이다 (그 조건만 걸리게)")
+        edit_text(b / "stage2_kgy.log", edit_done(2, lambda ln: "[" + t_new.strftime(FMT_) + "]" + ln[ln.index("]") + 1:]))
+        hold_ack("큐 ✅ 줄 시각이 다음 행 시작보다 늦다 (끝 + 10 s 안 · EL N-P2-1)", b, ack_for(b), "큐 ✅ 줄 시각")
+        b = lost_end(); ack = ack_for(b)
+        edit_text(b / "stage2_kgy.log", lambda t: t + "[2026-11-14 05:00:00] ▶ li2s-3 2 단계 큐 시작 · PHASE cond550 · 온도 550 · 시드 11 12 · 계 A B · prod 6 ps\n"
+                  + "[2026-11-14 05:00:01] (뒤 호출의 다음 줄 · 시험)\n")
+        oT = rd_ack(b, ack)
+        qpT = [str(q) for q in (oT.get("queue_problems") or [])]
+        chk(oT.get("status") == "판정 보류" and not any("인정한 마지막 줄 뒤에" in q for q in qpT)
+            and any("사다리 블록 밖" in str(w) for w in (oT.get("hold_reasons") or [])),
+            "⛔음성: (개정 4 · EL N-P2-1) 꼬리 줄은 다음 큐 시작 줄 전까지만 — 뒤 호출의 줄은 꼬리 문제가 아니라 '사다리 블록 밖의 v1 호출' 보류 사유")
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", lambda t: t.replace("\n", "\r\n"))
+        hold_ack("큐 로그가 CRLF (리뷰 EL P2-2 — LF 파일에서만 · 인정 값은 CRLF 파일로 냈다)", b, ack_for(b), "LF 밖의 줄 나눔")
+        b = lost_end()
+        (b / "stage2_kgy.log").write_bytes(b"[2026-11-10 00:00:00] DRY_RUN \xff\n" + (b / "stage2_kgy.log").read_bytes())
+        hold_ack("큐 로그에 깨진 바이트 (리뷰 EL P2-2 — UTF-8 파일에서만 · 시작 줄 앞 · 블록 지문은 그대로)", b, ack_for(b), "UTF-8 이 아니다")
+        b = lost_end()
+        edit_text(b / "stage2_kgy.log", lambda t: t.replace("dt = ", "dt =\u2028 ", 1))
+        hold_ack("큐 로그 블록 안 러너 줄에 U+2028 (리뷰 EL P2-2 — LF 밖 줄 나눔 · 다른 검사는 그대로)", b, ack_for(b), "LF 밖의 줄 나눔")
+        b = lost_end(); ack = ack_for(b)
+        edit_text(b / "stage2_kgy.log", lambda t: t + ack["사다리_블록_마지막_줄"] + "\n")
+        hold_ack("인정한 마지막 줄이 사다리 시작 뒤에 두 번", b, ack, "번 (한 번이어야)")
+        hold_ack("인정이 있는데 큐 로그에 끝 줄이 있다 (인정 뒤에 로그가 바뀌었다)", clone(b8), ack_for(lost_end()), "가 있는데 큐 로그에")
+        import fcntl as _fc
+        b = lost_end(); ack = ack_for(b)
+        (b / ".stage2.lock").touch()
+        fdl = os.open(str(b / ".stage2.lock"), os.O_RDONLY)
+        _fc.flock(fdl, _fc.LOCK_EX)
+        try:
+            chk(refuses("큐 잠금", rd_ack, b, ack) and not (b / OUT_DIRNAME / READOUT_NAME).exists(),
+                "⛔음성: (개정 4) 큐 잠금이 쥐어져 있으면 인정이 서지 않는다 → 판독 안 함 (보류 기록도 안 쓰고 거부)")
+        finally:
+            _fc.flock(fdl, _fc.LOCK_UN)
+            os.close(fdl)
+        b = lost_end()
+        chk(refuses("큐_끝_줄_유실_인정", rd_ack, b, dict(ack_for(b), by="")) and not (b / OUT_DIRNAME / READOUT_NAME).exists(),
+            "⛔음성: (개정 4) 인정 필드가 비었다 (by) → 판독 허가가 서지 않는다 (거부)")
+        chk(refuses("개정 4 결정", rd_ack, b, ack_for(b, did=NEED_ACTIVE[0])) and not (b / OUT_DIRNAME / READOUT_NAME).exists(),
+            "⛔음성: (개정 4 · 리뷰 EL P1-1) 인정 결정 칸에 다른 active 결정 (카드 본 결정) → 거부")
+        chk(refuses("active 가 아니다", rd_ack, b, ack_for(b), decisions=dec_ack_p) and not (b / OUT_DIRNAME / READOUT_NAME).exists(),
+            "⛔음성: (개정 4) 개정 4 결정이 원장에서 proposed → 거부 (판독하지 않는다)")
+        chk(refuses("active 가 아니다", rd_ack, b, ack_for(b), decisions=dec), "⛔음성: (개정 4) 개정 4 결정이 원장에 없다 → 거부")
+        chk(refuses("active 가 아니다", pressure, b, WT, card=card_ack(ack_for(b)), decisions=dec_ack_p, prov=prov_ok, permit_repo=prepo),
+            "⛔음성: (개정 4 · 리뷰 EL P2-4) pressure 도 같은 문지기 — 개정 4 결정 proposed → 거부")
+        qW = queue_record(b, card_values(card_ack(ack_for(b, did=NEED_ACTIVE[0]))))
+        chk(qW["status"] == "invalid" and any("개정 4 결정" in q for q in qW["problems"]),
+            "⛔음성: (개정 4 · 리뷰 EL P1-1) 문지기 없는 길 (verify) 에서도 인정 결정 칸이 개정 4 결정이 아니면 큐 문제")
+        qA = queue_record(lost_end(), card_values(card_ack(ackA)))
+        chk(endline_ack_state(qA, dec_ack_p) == "proposed" and endline_ack_state(qA, dec_ack) == "active"
+            and endline_ack_state(queue_record(clone(b8), cv8), dec_ack) is None,
+            "[양성] (개정 4 · 리뷰 EL P2-6) 인정으로 받은 큐면 개정 4 결정 상태를 낸다 (verify 의 판독 가능 상태에 건다) · 끝 줄 있는 큐는 None")
         bHf = clone(b8)
         (tdir_of(bHf, "A", 12, 650) / "msd.json").unlink()
         edit_text(bHf / "A" / "queue_kgy.log", lambda t: "\n".join(ln for ln in t.splitlines() if "✅ T650 seed12 끝" not in ln))
@@ -2483,6 +2970,34 @@ def _selftest_body():
             and oC["cost_h_total"] is not None and oC["ready"]["mixed"] is True,
             "[양성 v2] cond550 판독 ('끝난 뒤 한 번 더'): 550 + 사다리 → W [550, 600, 650] · 갈래 확정 (잠정 아님) · 사다리 판독 결속 · 고정 경로")
         chk(refuses("이미 있다", rd_v, bW, allpass, phase="cond550"), "⛔음성: cond550 판독도 한 번 (고정 출력 경로가 있으면 거부)")
+        # ── 카드 개정 4 + 실제 v2 큐 PHASE=cond550 (리뷰 EL P0-1 · P2-5) ──
+        decva = td / "decva.json"
+        decva.write_text(json.dumps({"decisions": [{"id": i, "decision_state": "active"} for i in NEED_ACTIVE + (QD, ENDLINE_ACK_DECISION)]}))
+        bAv = lost_end()
+        card8va = card_ack(ack_for(bAv), extra=v2x)
+        oAv = readout(bAv, WT, card=card8va, decisions=decva, read_run=allpass, prov=prov_ok, permit_repo=prepo)
+        rcA, lgA = _st_q2(td, bAv, card8va, decva, "cond550", READOUT_RECORD=str(oAv.get("out_path", "")),
+                          READOUT_SHA256=_sha(oAv["out_path"]) if oAv.get("out_path") else "")
+        if rcA != 0:
+            print(lgA[-2500:])
+        bAv0 = clone(bAv)
+        _, runsAv = verify_all(bAv, card_values(card8va), WT, phase="cond550")
+        nled = len([x for x in (bAv / "cost_ledger.tsv").read_text().splitlines()[1:] if x.strip()])
+        try:
+            oCAv = readout(bAv, WT, card=card8va, decisions=decva, read_run=allpass, prov=prov_ok, permit_repo=prepo, phase="cond550")
+        except SystemExit as e:                             # 거부도 시험 결과로 받는다 (selftest 가 멈추지 않게)
+            oCAv = {"status": f"거부 — {e}"}
+        chk(oAv.get("status") == "판독" and oAv.get("cond550_eligible") is True and rcA == 0 and nled > 8 and len(runsAv) == 12
+            and all(v["status"] == "valid" for v in runsAv.values()) and oCAv.get("status") == "판독"
+            and ((oCAv.get("queue") or {}).get("end_line") or {}).get("장부_뒤_행") == nled - 8,
+            f"[양성] (개정 4 · 리뷰 EL P0-1) 인정 + 실제 v2 큐 PHASE=cond550 (장부 8 → {nled} 행) → v1 런 그대로 valid · cond550 판독 '판독' "
+            f"(장부는 머리 + 명단 행만 묶는다)")
+        for k_, v_ in runsAv.items():
+            if v_["status"] != "valid":
+                print(f"     {k_}: {v_['status']} — {'; '.join(v_['reasons'])[:240]}")
+        chk(refuses("판독 허가", readout, clone(bAv0), WT, card=card8v, decisions=decva, read_run=allpass, prov=prov_ok,
+                    permit_repo=prepo, phase="cond550"),
+            "⛔음성: (개정 4 · 리뷰 EL P2-5) 사다리 판독 뒤 카드의 판독 허가가 바뀌면 (인정을 뺌) cond550 판독 거부 (동결)")
         oC2 = rd_v(clone(bW0), fake_rr_for(lambda s, sd, T: {"C2": "미통과"} if (s, sd, T) == ("B", 12, 550) else {}), phase="cond550")
         chk(oC2["W"] == [600, 650] and oC2["measurable"]["B_T550"] is False and not oC2["branch_provisional"],
             "⛔음성: cond550 판독에서 B12 550 K 미통과 → 550 K 는 W 밖 · W [600, 650] (갈래 확정)")
@@ -2786,6 +3301,21 @@ def _selftest_body():
                 and vj2["ready"]["mixed"] is True and vj2["verify_map"] == VERIFY_MAP
                 and sum(1 for r in vj2["runs"] if r.get("queue_version") == "v2") == 5,
                 "[양성] 명령줄 verify --phase cond550: v1 · v2 런을 함께 (12 런 · v2 5) · 대응표 · 판독 가능 상태")
+            bVa = lost_end()
+            SELF.CARD, SELF.DECISIONS = card_ack(ack_for(bVa)), dec_ack_p
+            vout3 = td / "verify_cli_ack.json"
+            rc6 = main(["verify", "--base", str(bVa), "--worktree", str(WT), "--out", str(vout3)])
+            vj3 = json.loads(vout3.read_text(encoding="utf-8")) if vout3.is_file() else {}
+            SELF.DECISIONS = dec_ack
+            vout4 = td / "verify_cli_ack2.json"
+            rc7 = main(["verify", "--base", str(bVa), "--worktree", str(WT), "--out", str(vout4)])
+            vj4 = json.loads(vout4.read_text(encoding="utf-8")) if vout4.is_file() else {}
+            chk(rc6 == 0 and vj3.get("판독_가능_상태") is False and (((vj3.get("queue") or {}).get("end_line")) or {}).get("결정_상태") == "proposed"
+                and rc7 == 0 and vj4.get("판독_가능_상태") is True and (((vj4.get("queue") or {}).get("end_line")) or {}).get("결정_상태") == "active",
+                "⛔음성: (개정 4 · 리뷰 EL P2-6) 명령줄 verify — 개정 4 결정이 proposed 면 판독 가능 상태 False · 결정 상태 기록 (active 면 True)")
+            rc8 = main(["endline_facts", "--base", str(bVa)])
+            rc9 = main(["endline_facts", "--base", str(b8)])
+            chk(rc8 == 0 and rc9 == 1, f"[양성] (개정 4) 명령줄 endline_facts — 끝 줄 없는 깨끗한 큐 0 · 끝 줄 있는 큐 1 ({rc8} · {rc9})")
         finally:
             SELF.CARD, SELF.DECISIONS, SELF.readout = saved
     print(f"selftest {'PASS' if not fails else 'FAIL'} — {n_ok}/{n_ok + len(fails)} ({time.time() - t0:.0f} s)")
@@ -2809,6 +3339,8 @@ def main(argv=None):
     pc = sub.add_parser("control")
     pc.add_argument("--root_a", required=True); pc.add_argument("--root_b", required=True)
     pc.add_argument("--seeds", type=int, nargs="+", default=[1, 3]); pc.add_argument("--out", required=True)
+    pf = sub.add_parser("endline_facts", help="읽기만 — 큐 끝 줄이 없을 때 카드 인정에 넣을 사실 (카드 개정 4)")
+    pf.add_argument("--base", required=True)
     A = ap.parse_args(argv)
     try:
         if A.cmd == "verify":
@@ -2817,12 +3349,19 @@ def main(argv=None):
             cv, prov = card_values(CARD), provenance(REPO)
             qrec, runs = verify_all(A.base, cv, A.worktree, phase=A.phase)
             print(f"큐: {qrec['status']}" + (f" — {'; '.join(qrec['problems'])[:200]}" if qrec["problems"] else ""))
+            ack_st = endline_ack_state(qrec, DECISIONS)
+            if ack_st is not None:
+                qrec["end_line"]["결정_상태"] = ack_st
+                print(f"큐 끝 줄: 유실 인정 · 결정 {ENDLINE_ACK_DECISION} (원장 {ack_st!r}) · 블록 끝 "
+                      f"{qrec['end_line'].get('마지막_줄_번호')} 번째 줄" + ("" if ack_st == "active" else " — readout · pressure 는 거부"))
             for (s, sd, T), v in runs.items():
                 print(f"{s}{sd} T{T} ({v.get('queue_version')}): {v['status']}" + (f" — {'; '.join(v['reasons'])[:160]}" if v["reasons"] else ""))
             ready, rinfo = ready_state(A.base, qrec, runs)
+            if ack_st is not None and ack_st != "active":            # 리뷰 EL P2-6
+                ready = False
             out = {"kind": "li2s3_stage2_verify/v2", "card_sha256": cv["card_sha256"], "provenance": prov, "phase": A.phase,
                    "queue": {k: qrec.get(k) for k in ("status", "complete", "start", "gatekeep", "versions", "repo_head", "base_original", "problems",
-                                                      "other_invocations")},
+                                                      "other_invocations", "end_line")},
                    "worktree_code": worktree_code(A.worktree), "runs": [_public(v) for v in runs.values()], "판독_가능_상태": ready,
                    "ready": rinfo, "verify_map": VERIFY_MAP,
                    "⚠": "사후 검증만 — 수송 · 골격 값은 안 읽었다 · 판독 가능 상태 = 계획 런이 모두 끝 · 모두 valid · "
@@ -2830,6 +3369,10 @@ def main(argv=None):
             _write_new(A.out, out)
             print(f"판독 가능 상태: {'예' if ready else '아니오 (판정 보류 사유가 남아 있다)'} -> {A.out}")
             return 0
+        if A.cmd == "endline_facts":
+            o = endline_facts(A.base, card_values(CARD))
+            print(json.dumps(o, ensure_ascii=False, indent=1))
+            return 0 if o["problems"] == [] else 1
         if A.cmd == "readout":
             o = readout(A.base, A.worktree, card=CARD, decisions=DECISIONS, permit_repo=REPO, phase=A.phase)
             if o["status"] == "판정 보류":
