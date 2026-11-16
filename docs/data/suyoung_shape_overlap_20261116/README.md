@@ -48,4 +48,4 @@ python -I -B scripts/dem_suyoung_overlap.py --input INPUT_COPY --out NEW_ANALYSI
 python -I -B scripts/test_dem_suyoung_overlap.py
 ```
 
-원 압축물·원 로그·원 NPZ는 리포에 넣지 않는다. 인계 ZIP의 별도 재현 입력에는 NPZ/manifest 사본만 제공한다. 결과 요약은 개발 자료이며 원장/등록/운영 봉인·실제 실행 승인 변경0.
+원 압축물·원 로그·원 NPZ는 리포에 넣지 않는다. 인계 ZIP의 별도 재현 입력에는 형상 폴더 사본(NPZ·SVG·압력 기록·manifest·내부 해시 목록)을 제공해 내부 목록도 전부 대조할 수 있게 한다. 분석 수치는 NPZ에서만 계산하며 그림·압력 기록은 계산 입력으로 쓰지 않는다. 엔진/셸 원 로그는 전달 ZIP에서도 제외한다. 결과 요약은 개발 자료이며 원장/등록/운영 봉인·실제 실행 승인 변경0.
