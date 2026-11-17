@@ -1,0 +1,172 @@
+{
+  "schema": "rt_assembly_validation_v1",
+  "base": "845fa26721de8827b8f572a7beaf7a61c4b1cd42",
+  "branch": "codex/dem-rt-fixture-runner-1117",
+  "final": {
+    "windows": {
+      "rc": 0,
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 5,
+      "sha256": "f3edecf084ea102f01346beeb23d8729c0239ebfd56c56b385720a571874357a"
+    },
+    "linux": {
+      "rc": 0,
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "ce1a4709ba30ca0c9dfab5472ea559c5d709ffb87bd1ba5e9f5887b2417ca80a"
+    }
+  },
+  "runs_external": {
+    "doc_refs.log": {
+      "sha256": "e7a38f8488f97ec6ea37add92798033d74551758a2bb23655744097b9f961ce7",
+      "methods": null,
+      "failures": 0,
+      "errors": 0,
+      "skipped_observations": 0,
+      "status": "see_check"
+    },
+    "hash_read_red.log": {
+      "sha256": "2316912a49273f806d873ef3ee7314823f0e5304fd65eed1b2355ce92f14cd5a",
+      "methods": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped_observations": 0,
+      "status": "FAILED"
+    },
+    "linux_final.log": {
+      "sha256": "6bbf61b828c609def8c07a19e3099f625b3ba997fd42bb2a3b8b624a1c221752",
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped_observations": 0,
+      "status": "OK"
+    },
+    "linux_initial.log": {
+      "sha256": "077e384a4deae4c8dbcf033b43d5bd3b44f2a6856634185fef6ceb3c7c329822",
+      "methods": 12,
+      "failures": 1,
+      "errors": 0,
+      "skipped_observations": 0,
+      "status": "FAILED"
+    },
+    "linux_release.log": {
+      "sha256": "ce1a4709ba30ca0c9dfab5472ea559c5d709ffb87bd1ba5e9f5887b2417ca80a",
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped_observations": 0,
+      "status": "OK"
+    },
+    "red_initial.log": {
+      "sha256": "c46fecd564d544fd083bace32d265c2f52c9ff5346bdfdeec9b64308c53a5b15",
+      "methods": 12,
+      "failures": 12,
+      "errors": 0,
+      "skipped_observations": 0,
+      "status": "FAILED"
+    },
+    "review_findings.log": {
+      "sha256": "7d1e7ba6e8326c806e798717fd3d52f9c09ced48c5c678d519e2686f109ed5a0",
+      "methods": null,
+      "failures": 0,
+      "errors": 0,
+      "skipped_observations": 0,
+      "status": "see_check"
+    },
+    "windows_final.log": {
+      "sha256": "48d6775c3606bdfecc5f756d5b54c0bb54af3a2385d08c53ad32845391a0ce73",
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped_observations": 5,
+      "status": "OK"
+    },
+    "windows_initial.log": {
+      "sha256": "76f83f797202e4707581b5c107cab725e583d5c317e80a5683ba39957cde9def",
+      "methods": 12,
+      "failures": 1,
+      "errors": 0,
+      "skipped_observations": 10,
+      "status": "FAILED"
+    },
+    "windows_release.log": {
+      "sha256": "f3edecf084ea102f01346beeb23d8729c0239ebfd56c56b385720a571874357a",
+      "methods": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped_observations": 5,
+      "status": "OK"
+    }
+  },
+  "source_sha256": {
+    "prepare_assembly.py": "8ee184ed4f32af864398389923ae5902b09aabef3a49362329b948c31a4ce8d3",
+    "rt_dispatch.py": "1ab0428ab98139b4ec27e8b52971f691a8f143497b1ba63d1ff80007f7230154",
+    "rt_fixture_flow.sh": "3489a12c85d9386b7fa063f2901aeab182ae72886af9036dfecde9458bf85ec0",
+    "rt_prerequisites.sh": "257ec624c460490c01b7c3443292f93adea96c56d7d0bc99055f317ccaf506e7",
+    "test_rt_assembly.py": "0a5ef3798d8b753b91fa242826c3578d1407d4c0261f1538695ccf9483217c20"
+  },
+  "preserved_base_blobs": {
+    "docs/data/ps45_unload_20261009": 94,
+    "docs/reviews/p1_rt_deck_preparation_20261116": 5,
+    "docs/reviews/p1_rt_runner_preparation_20261117": 15,
+    "docs/reviews/p1_rt_numeric_preparation_20261117": 7,
+    "docs/reviews/p1_rt_consumer_preparation_20261117": 14
+  },
+  "prepared_files": 128,
+  "previous_preserved": 122,
+  "hash_lists": {
+    "RT_ASSEMBLY_SHA256SUMS": 127,
+    "SHA256SUMS": 76,
+    "history_test/RT_CANDIDATE_SHA256SUMS": 6,
+    "history_test/RT_HISTORY_SNAPSHOT_SHA256SUMS": 23,
+    "history_test/SHA256SUMS": 15
+  },
+  "generated_layer": {
+    "schema": "rt_assembly_candidate_v1",
+    "operational_kit_ready": false,
+    "runner_entry_closed": true,
+    "engine_runs": 0,
+    "previous_files_preserved": 122,
+    "history_original_sha256": "c74d7da71b3426b812776e0060f7f72c9dcbc1d24e31af15062fe7f4c610bf02",
+    "new_sources": {
+      "history_test/run_history_rt_candidate.sh": "ad4b9aab0416fdf4c756f2e44be4049ae78690861df38056abf206b7a4233d9d",
+      "run_unload_rt_candidate.sh": "8d845a5526aa3921b509fa1df0db511efab6b5e1a41635109821855307a4083d",
+      "rt_dispatch.py": "1ab0428ab98139b4ec27e8b52971f691a8f143497b1ba63d1ff80007f7230154"
+    },
+    "history_snapshot_files": 23,
+    "dispatch": "rev5 only for restore and certificate gate",
+    "remaining": [
+      "complete kit preseal review",
+      "operational identities/qualification",
+      "author field GO"
+    ]
+  },
+  "red_scope": "Initial12 fail12 missing assembly; same12 first implementation1 preservation failure; later hash-error regression1 failure; final14. Not historical field defects.",
+  "platform_scope": "Full mock copy/stages/archive/reader/prereq: local Linux. Windows9 pass,5 Linux-only methods skipped.",
+  "notes": [
+    "No engine or real MPI executable used; fake-mpirun invokes only local Python synthetic fixture writer.",
+    "Tests remove the immediate guard only in isolated synthetic copies and recompute their local candidate list.",
+    "Committed/generated delivery candidates keep the guard unchanged.",
+    "Original history function ResourceWarning preserved.",
+    "Initial Windows10 skips were subtest observations; final5 are method-level skips. Do not sum counts."
+  ],
+  "field_runs": 0,
+  "research_value_reads": 0,
+  "reseals": 0,
+  "operational_go": false,
+  "full_gate": false,
+  "doc_refs": {
+    "rc": 0,
+    "log_sha256": "e7a38f8488f97ec6ea37add92798033d74551758a2bb23655744097b9f961ce7",
+    "platform": "Windows Python3.12.14"
+  },
+  "review_findings": {
+    "rc": 0,
+    "log_sha256": "7d1e7ba6e8326c806e798717fd3d52f9c09ced48c5c678d519e2686f109ed5a0",
+    "platform": "Windows Python3.12.14"
+  }
+}
