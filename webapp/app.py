@@ -1507,6 +1507,39 @@ def li2s_pipeline_page():
                            nb=D.li2s_neb_branch())
 
 
+#: 계면 부반응 통합 보고 (2026-11-17 · 사용자 *'SDI, 혁주 html을 통합해서 같이 한 페이지'* → *'아직 추가 안됐는데?'*).
+#:   보고서는 그 자체로 완결된 HTML 이다 (자기 CSS · 그림 5 장 내장) — 웹앱 CSS 와 변수 이름 (--bg · --accent) 이 겹쳐서
+#:   본문에 섞지 않고 iframe 으로 띄운다. 원본 파일은 `docs/collab/` 에 있고 화면은 **읽기만** 한다.
+#:   ⚠ 보고서 라우트는 인자 없는 GET 이라 `test_v3_surfaces` 의 정의역 자동 열거가 그대로 결속 검사를 건다 (새 표면 = 음성시험 대상).
+INTERFACE_THERMO_REL = "docs/collab/sulfide_se_interface_thermo_2026_11_17.html"
+#: 사례 A 단독 보고 — 11-16 에 보낸 판 (sha256 68b00ef4… · 사용자 업로드와 같음). 화면은 링크만 준다.
+INTERFACE_THERMO_SENT_A = "docs/collab/agc_interlayer_crack_calc_2026_11_16.html"
+
+
+@app.route("/interface-thermo")
+def interface_thermo_page():
+    """계면 부반응 — 열역학 계산 (MP) 통합 보고. ⛔ 못 하는 것: 보고서 내용을 판정하지 않는다 · 원장과 맞는지 다시 재지 않는다
+    (값의 근거는 각 카드 · 결정 원장이다). 파일이 없으면 빈 화면이 아니라 '못 읽었다' 를 말한다."""
+    p = D.ROOT / INTERFACE_THERMO_REL
+    info = {"ok": p.is_file(), "rel": INTERFACE_THERMO_REL, "sent_a": INTERFACE_THERMO_SENT_A,
+            "sent_a_ok": (D.ROOT / INTERFACE_THERMO_SENT_A).is_file()}
+    if info["ok"]:
+        import hashlib as _h
+        b = p.read_bytes()
+        info["sha16"] = _h.sha256(b).hexdigest()[:16]
+        info["kb"] = round(len(b) / 1024)
+    return render_template("interface_thermo.html", active="ithermo", it=info)
+
+
+@app.route("/interface-thermo/report")
+def interface_thermo_report():
+    """보고서 원본 HTML 을 그대로 낸다 (iframe 안 · 새 탭 보기)."""
+    p = D.ROOT / INTERFACE_THERMO_REL
+    if not p.is_file():
+        abort(404)
+    return send_from_directory(p.parent, p.name, mimetype="text/html")
+
+
 @app.route("/adhesion")
 def adhesion_pipeline_page():
     """점착 파이프라인 — DFT → DEM (→ COMSOL) 을 **원장 하나로 누적**한다.

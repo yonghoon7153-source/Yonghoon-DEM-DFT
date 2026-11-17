@@ -124,6 +124,13 @@ SECTIONS: list[dict] = [
         {"url": "/adhesion", "label": "점착 파이프라인 (DFT→DEM)", "icon": "🔗", "active": "adhesion",
          "sub": "W_ad · SE|SE 대조 · Ag–C 인터레이어 → DEM JKR (w = W) · 원장 누적",
          "camp": "wad", "kw": "adhesion 점착 wad w_ad w_sep 벽개 cleavage sese 대칭 슬랩 ag 은 graphite 흑연 dem jkr comsol 파이프라인 pipeline"},
+        # 2026-11-17 — 사례 둘 (Ag–C crack · LZO 코팅 NCA) 을 한 보고로 묶은 화면. 배지는 두 트랙 결정의 합:
+        #   'ag2s' = Ag–C 전위 창 결정 id 토큰 ('agc' 는 점착 트랙의 Ag–흑연 W_ad 까지 세서 안 쓴다) · 'hyeokju' = LZO 트랙.
+        {"url": "/interface-thermo", "label": "계면 부반응 (열역학)", "icon": "🌡️", "active": "ithermo",
+         "sub": "Ag–C 인터레이어 crack · LZO 코팅 NCA 양극 — Materials Project 열역학 통합 보고",
+         "camp": ["ag2s", "hyeokju"],
+         "kw": "interface thermo 계면 부반응 열역학 mp materials project grand potential 혼합 반응에너지 ag-c agc 인터레이어 crack ag2s 은 "
+               "lzo li2zro3 nca 코팅 양극 혁주 hyeokju 0 v 띠틈"},
         {"url": "/composition/modelc_nd_doped", "label": "Nd/O 공치환", "icon": "🧬",
          "sub": "Nd₂O₃-LPSCl · DFT 재채점 중",
          "camp": "nd", "kw": "nd ndo 공치환 neodymium"},
@@ -314,7 +321,12 @@ def sidebar(D=None, root=None) -> list:
             row = dict(it)
             camp = row.pop("camp", None)
             if camp:
-                st = campaign_status(camp, root=root)
+                # 슬러그 하나 또는 목록 (여러 트랙을 한 화면에 묶은 항목 — 결정 · 카드 수를 더한다)
+                st = {"decisions": 0, "cards": 0}
+                for slug in (camp if isinstance(camp, (list, tuple)) else [camp]):
+                    one = campaign_status(slug, root=root)
+                    st["decisions"] += one["decisions"]
+                    st["cards"] += one["cards"]
                 # 없으면 배지도 없다 (0 으로 찍지 않는다)
                 bits = []
                 if st["decisions"]:
