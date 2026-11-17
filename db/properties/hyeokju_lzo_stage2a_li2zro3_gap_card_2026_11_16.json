@@ -83,5 +83,32 @@
   "A4_구조_이름": "구조는 실행 폴더에 Li2ZrO3_mp-aaaaagdw.vasp 로 복사한다 (저장소 파일과 같은 바이트 · cmp 확인) — 전자 분류 레지스트리 키 li2zro3 (2026-11-16 declared insulator · 갭 단계를 여는 게이트일 뿐 값 주장 아님).",
   "실행기": "db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh (점검 → 입력 두 벌 → tmux hjgap: 대조 잡 → 본 → 탐침) · 입력 생성은 이 판에서 시험함 (60/480 · 90/720 · nbnd 56 · 03_nscf_gap 있음)",
   "상태": "proposed — 사용자 비준 대기. 실행기는 '잠정 실행' 으로 돌고, 판독은 비준 뒤."
+ },
+ "결과_2026_11_17": {
+  "실행": "kgy 2026-11-17 00:12:54–04:11:57 · worktree ~/wt_hj2a (dbacec12e) · tmux hjgap · 대조 잡 → 본 60/480 → 탐침 90/720 · 원자료 db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_1117 (144 파일 · SHA256SUMS · 회수 커밋 8ffb6b4b)",
+  "판독_조건": "개정 1 (D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap-amend1) 사용자 비준 2026-11-17 (AskUserQuestion · 결과 전) 뒤에 읽었다 — 판독은 카드 §2 · §4 · 개정 1 만",
+  "게이트": {
+   "G1_PP": "✓ Zr GBRV v1 (md5 5db81b1e…) · Li · O md5 = CEI 기록 (db/raw/hyeokju_lzo_s2a_2026_11_16/pseudo_check.txt · 개정 1 A1)",
+   "A3_대조_잡": "✓ P2O5 5.1865 eV · 기준 5.186 · Δ 0.0005 ≤ 0.02 · nk 304 (main/control_gate.json pass true) — 그래서 Li₂ZrO₃ 를 돌렸다",
+   "G3_수렴": "✓ vc-relax — 기하 승계 도구 (tools/sei/splice_relaxed.py · --allow_unconverged 없이 호출) 가 'Begin final coordinates' 를 02–04 입력에 승계했다 (run.log '기하 승계 → 02_scf.in' · 02_scf.in 에 carried-from-unconverged 표지 없음) · 셀 부피 120.756 → 123.869 Å³ (+2.58 %) · 90/720 은 124.269 Å³ (+2.91 %) · nscf 의 highest occupied / lowest unoccupied 줄 = 고유값 판독 (gap.json qe_check '일치')",
+   "A2_컷오프_탐침": "60/480 3.9345 eV · 90/720 3.9387 eV · |ΔE_g| 0.0042 ≤ 0.02 → **60/480 값을 보고한다** (결과 전 규칙)",
+   "G5_MP_대조_기록만": "MP band_gap 3.7336 eV (es_calc_type 'GGA NSCF Line' · GGA · 구조 출처 기록) — 우리 값보다 0.20 eV 작다 · 같은 GGA 근사지만 MP 는 경로 (line) 띠 · 우리는 균일 k 격자 fixed-occ nscf · 게이트 아님"
+  },
+  "보고량": {
+   "E_g_PBE_eV": 3.9345,
+   "VBM_eV": 6.742,
+   "CBM_eV": 10.6765,
+   "nk": 452,
+   "컷오프_Ry": "60/480",
+   "방법": "fixed-occupation nscf eigenvalues (DOS 문턱 판독 아님)"
+  },
+  "PDOS": "main 판 projwfc pdos_atm 합 — VBM 아래 1 eV 창의 93 % 가 O p · CBM 위 1 eV 창의 82 % 가 Zr d (15 % O p) · 띠 가장자리 성분을 가르는 창이다 (그림용 −8..0 eV 창의 평균류 지표가 아니다)",
+  "허용_문장_채움": [
+   "우리 PBE (fixed-occ nscf) 기준 Li₂ZrO₃ 띠틈은 3.93 eV 이고 VBM 은 O 2p · CBM 은 Zr 4d 가 주로 만든다 (PDOS — 띠 가장자리 1 eV 창에서 O p 93 % · Zr d 82 %).",
+   "같은 체인 (fixed-occ nscf · 같은 PP 규칙) 의 생성물 Li₃PO₄ (5.93 eV) · LiCl (6.26 eV) 보다 좁다 (상대 · PBE 끼리 · db/raw/cei_product_gap_2026_10_27/kgy_results_1102)."
+  ],
+  "말하지_않을_것": "카드 §5b 그대로 — 띠틈으로 산화 안정 전압 · 보호 효과 · 누설전류를 말하지 않는다 · PBE 값을 실험 띠틈 · 문헌 그림 값과 같은 축에 놓지 않는다",
+  "남은_것": "DOS/PDOS 그림 (−8..0 eV 창 · 하우스 스타일 · Origin CSV) · 생성물 1–2 개 띠틈은 개정으로 (카드 4b · 같은 체인)",
+  "by": "claude · 2026-11-17"
  }
 }
