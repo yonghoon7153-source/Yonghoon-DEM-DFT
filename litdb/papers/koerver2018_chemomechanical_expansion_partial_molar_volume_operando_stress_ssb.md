@@ -407,6 +407,7 @@ NCM · NCA 는 충전 때 줄고 (Ni 많을수록 크게 · NCM-811 ≈ −6.5 %
 - 이 논문을 인용한 정본 카드: `jung2019_cathode_electrolyte_chemical_reaction_sulfide_assb` · `benhadjali2026_wip_vs_cup_pressing_assb_cathode_dem` · `barai2021_delamination_cathode_llzo_multiscale` · `doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density` · `tian2020_electrochemo_mechanical_stress_assb` · `park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics` · `nolan2018_computation_accelerated_design_review`.
 - 화학-기계 · 사이클 응력: `bucci2017_chemomech_failure_assb_cycling_czm` · `kim2023_chemomech_failure_highstrain_anode` · `lee2026_microcrack_tolerant_bilayer_cathode_chemomech_fastcharging` · `kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review`.
 - 탄성 상수: `deng2016_elastic_superionic_electrolytes_dft` · `sakuda2013_sulfide_mechanical_property`.
+- ref 30 (Tian & Qi 2017) 의 정본 카드 (2026-11-17): `tian2017_contact_area_loss_assb_simulation` — 그 원문 10 쪽에 'tighten' · 'sufficient' 0 회 · 원문 결론은 '거칠어진 계면은 같은 압력에서 접촉이 줄고 (≈20 MPa · γ ≈0.70 → 0.49) 더 높은 압력 (≈60 MPa) 이면 되찾는다' (탄성 · 무점착 Persson · 용량 회복은 계산 아님) → 이 카드 §3-7 ③ · L358 · §12 ref 30 의 문장은 'Koerver 가 Tian & Qi 를 그렇게 읽었다' 로 인용한다 (그 카드 §0-1).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
