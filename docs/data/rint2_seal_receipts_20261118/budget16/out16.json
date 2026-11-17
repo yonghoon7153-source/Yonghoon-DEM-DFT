@@ -1,0 +1,1105 @@
+{
+ "label": "추정 — 실측 SBE 한 점 (시도 3 · 4) + 가정 (s · r · m · gabia 속도 · 사다리 12 점 · 넘침 없음) · DBE 는 재지 않았다",
+ "components_s": {
+  "PRE": 101,
+  "OTHER": 416,
+  "READ": 88,
+  "SAVE": 30,
+  "GPU_MAIN": 2913,
+  "GPU_RES": 925,
+  "CERT_CPU": 459,
+  "GPU": 3838,
+  "FIXED": 547,
+  "GFIX": 517,
+  "BUILD_EXTRA": 4135,
+  "CJ_NOSTORE": 4040,
+  "FP_S": 240.0,
+  "HIT_ARM": 4932,
+  "BUILD_ARM_model": 9067,
+  "BUILD_ARM_measured_a3": 9045
+ },
+ "obs_split": {
+  "a4": {
+   "gpu_main_s": 2913,
+   "gap_cpu_s": 0,
+   "gpu_resolve_s": 925,
+   "post_cpu_s": 459
+  },
+  "a3": {
+   "gpu_main_s": 2914,
+   "gap_cpu_s": 40,
+   "gpu_resolve_s": 926,
+   "post_cpu_s": 378
+  },
+  "a2": {
+   "gpu_main_s": 13245,
+   "gap_cpu_s": 30,
+   "gpu_resolve_s": 4095,
+   "post_cpu_s": 378
+  }
+ },
+ "per_iter_s": {
+  "a4_main": 0.010483,
+  "a4_resolve": 0.010949,
+  "a3_main": 0.010486,
+  "a3_resolve": 0.010961,
+  "a2_main": 0.047664,
+  "a2_resolve": 0.04847,
+  "ratio_a2_over_a4_main": 4.547,
+  "ratio_a2_over_a3_main": 4.545,
+  "q11_real_ratio": 4.447,
+  "bench_kgy_A_over_C": [
+   3.795,
+   3.794
+  ],
+  "contention_residual_a2a3_over_q11": 1.022
+ },
+ "machine_ratio": {
+  "gabia_over_kgy_C": 1.456,
+  "gabia_over_kgy_A": 1.303
+ },
+ "store": {
+  "a3_minus_a4_wall": 4113,
+  "build_extra_cjunc": 4135,
+  "s0_build_encode_write": 4140.1,
+  "a3_cjunc_minus_s0_sum": 82.9,
+  "a4_cjunc_minus_s0_read": 1.7
+ },
+ "arm_vs_a2": {
+  "a2_wall": 22345,
+  "a4_wall": 4932,
+  "ratio": 4.53,
+  "a3_wall": 9045,
+  "ratio_a2_a3": 2.47
+ },
+ "shares_a4": {
+  "PRE": 2.0,
+  "OTHER": 8.4,
+  "READ": 1.8,
+  "GPU_MAIN": 59.1,
+  "GPU_RES": 18.8,
+  "CERT_CPU": 9.3,
+  "SAVE": 0.6
+ },
+ "f0_equal_two": {
+  "s1.0": [
+   141.5,
+   165.6
+  ],
+  "s1.0_r0.5": [
+   88.2,
+   100.3
+  ],
+  "s1.0_r2": [
+   248.0,
+   296.3
+  ],
+  "s1.5": [
+   108.3,
+   126.2
+  ],
+  "s1.5_r0.5": [
+   67.5,
+   76.5
+  ],
+  "s1.5_r2": [
+   189.8,
+   225.5
+  ],
+  "s2.0": [
+   91.7,
+   106.4
+  ],
+  "s2.0_r0.5": [
+   57.2,
+   64.6
+  ],
+  "s2.0_r2": [
+   160.7,
+   190.2
+  ]
+ },
+ "main_arm_gpu146": [
+  {
+   "s": 1.0,
+   "sim_h": [
+    191.6,
+    216.1
+   ],
+   "days": [
+    8.0,
+    9.0
+   ],
+   "split_lo_hi": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "ladder_h": [
+    35.0,
+    46.1
+   ],
+   "post_merge_verdict_h": 90.7,
+   "post_all_h": 136.1,
+   "to_reverify_h": [
+    327.6,
+    352.1
+   ],
+   "cal_lo": {
+    "end_if_start_1120": "11-27 23시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 72.4,
+     "latest_start": "11-23 00시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 192.4,
+     "latest_start": "11-28 00시"
+    }
+   },
+   "cal_hi": {
+    "end_if_start_1120": "11-29 00시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 47.9,
+     "latest_start": "11-21 23시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 167.9,
+     "latest_start": "11-26 23시"
+    }
+   }
+  },
+  {
+   "s": 1.5,
+   "sim_h": [
+    150.5,
+    167.7
+   ],
+   "days": [
+    6.3,
+    7.0
+   ],
+   "split_lo_hi": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "ladder_h": [
+    26.8,
+    34.2
+   ],
+   "post_merge_verdict_h": 90.7,
+   "post_all_h": 136.1,
+   "to_reverify_h": [
+    286.5,
+    303.8
+   ],
+   "cal_lo": {
+    "end_if_start_1120": "11-26 06시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 113.5,
+     "latest_start": "11-24 17시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 233.5,
+     "latest_start": "11-29 17시"
+    }
+   },
+   "cal_hi": {
+    "end_if_start_1120": "11-26 23시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 96.3,
+     "latest_start": "11-24 00시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 216.3,
+     "latest_start": "11-29 00시"
+    }
+   }
+  },
+  {
+   "s": 2.0,
+   "sim_h": [
+    130.0,
+    143.5
+   ],
+   "days": [
+    5.4,
+    6.0
+   ],
+   "split_lo_hi": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "ladder_h": [
+    22.7,
+    28.3
+   ],
+   "post_merge_verdict_h": 90.7,
+   "post_all_h": 136.1,
+   "to_reverify_h": [
+    266.0,
+    279.6
+   ],
+   "cal_lo": {
+    "end_if_start_1120": "11-25 09시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 134.0,
+     "latest_start": "11-25 14시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 254.0,
+     "latest_start": "11-30 14시"
+    }
+   },
+   "cal_hi": {
+    "end_if_start_1120": "11-25 23시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 120.5,
+     "latest_start": "11-25 00시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 240.5,
+     "latest_start": "11-30 00시"
+    }
+   }
+  }
+ ],
+ "main_solve_gpu146": [
+  {
+   "s": 1.0,
+   "sim_h": [
+    160.6,
+    185.1
+   ],
+   "days": [
+    6.7,
+    7.7
+   ],
+   "split_lo_hi": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "ladder_h": [
+    35.0,
+    46.1
+   ],
+   "post_merge_verdict_h": 32.0,
+   "post_all_h": 48.0,
+   "to_reverify_h": [
+    208.6,
+    233.1
+   ],
+   "cal_lo": {
+    "end_if_start_1120": "11-26 16시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 103.4,
+     "latest_start": "11-24 07시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 223.4,
+     "latest_start": "11-29 07시"
+    }
+   },
+   "cal_hi": {
+    "end_if_start_1120": "11-27 17시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 78.9,
+     "latest_start": "11-23 06시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 198.9,
+     "latest_start": "11-28 06시"
+    }
+   }
+  },
+  {
+   "s": 1.5,
+   "sim_h": [
+    119.6,
+    136.8
+   ],
+   "days": [
+    5.0,
+    5.7
+   ],
+   "split_lo_hi": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "ladder_h": [
+    26.8,
+    34.2
+   ],
+   "post_merge_verdict_h": 32.0,
+   "post_all_h": 48.0,
+   "to_reverify_h": [
+    167.5,
+    184.7
+   ],
+   "cal_lo": {
+    "end_if_start_1120": "11-24 23시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 144.4,
+     "latest_start": "11-26 00시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 264.4,
+     "latest_start": "12-01 00시"
+    }
+   },
+   "cal_hi": {
+    "end_if_start_1120": "11-25 16시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 127.2,
+     "latest_start": "11-25 07시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 247.2,
+     "latest_start": "11-30 07시"
+    }
+   }
+  },
+  {
+   "s": 2.0,
+   "sim_h": [
+    99.0,
+    112.6
+   ],
+   "days": [
+    4.1,
+    4.7
+   ],
+   "split_lo_hi": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "ladder_h": [
+    22.7,
+    28.3
+   ],
+   "post_merge_verdict_h": 32.0,
+   "post_all_h": 48.0,
+   "to_reverify_h": [
+    147.0,
+    160.5
+   ],
+   "cal_lo": {
+    "end_if_start_1120": "11-24 03시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 165.0,
+     "latest_start": "11-26 20시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 285.0,
+     "latest_start": "12-01 20시"
+    }
+   },
+   "cal_hi": {
+    "end_if_start_1120": "11-24 16시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 151.4,
+     "latest_start": "11-26 07시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 271.4,
+     "latest_start": "12-01 07시"
+    }
+   }
+  }
+ ],
+ "sens": {
+  "기준 (gabia GPU 1.456 · CPU 1 · r 등록 · m 1 · 팔 전체)": {
+   "sim_h": [
+    191.6,
+    216.1
+   ],
+   "split": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "post_all_h": 136.1,
+   "cal_hi": {
+    "end_if_start_1120": "11-29 00시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 47.9,
+     "latest_start": "11-21 23시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 167.9,
+     "latest_start": "11-26 23시"
+    }
+   }
+  },
+  "두 기계 같음 (2 판 가정)": {
+   "sim_h": [
+    161.1,
+    182.1
+   ],
+   "split": [
+    [
+     6,
+     6
+    ],
+    [
+     6,
+     6
+    ]
+   ],
+   "post_all_h": 136.1,
+   "cal_hi": {
+    "end_if_start_1120": "11-27 14시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 81.9,
+     "latest_start": "11-23 09시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 201.9,
+     "latest_start": "11-28 09시"
+    }
+   }
+  },
+  "gabia CPU 2 배": {
+   "sim_h": [
+    221.4,
+    249.4
+   ],
+   "split": [
+    [
+     8,
+     4
+    ],
+    [
+     8,
+     4
+    ]
+   ],
+   "post_all_h": 136.1,
+   "cal_hi": {
+    "end_if_start_1120": "11-30 09시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 14.6,
+     "latest_start": "11-20 14시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 134.6,
+     "latest_start": "11-25 14시"
+    }
+   }
+  },
+  "DBE 비 반 (1.467)": {
+   "sim_h": [
+    119.1,
+    131.3
+   ],
+   "split": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "post_all_h": 69.2,
+   "cal_hi": {
+    "end_if_start_1120": "11-25 11시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 132.7,
+     "latest_start": "11-25 12시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 252.7,
+     "latest_start": "11-30 12시"
+    }
+   }
+  },
+  "DBE 비 두 배 (5.866)": {
+   "sim_h": [
+    336.6,
+    385.6
+   ],
+   "split": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "post_all_h": 269.7,
+   "cal_hi": {
+    "end_if_start_1120": "12-06 01시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -121.6,
+     "latest_start": "11-14 22시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": -1.6,
+     "latest_start": "11-19 22시"
+    }
+   }
+  },
+  "m 0.5": {
+   "sim_h": [
+    130.0,
+    143.5
+   ],
+   "split": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "post_all_h": 136.1,
+   "cal_hi": {
+    "end_if_start_1120": "11-25 23시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": 120.5,
+     "latest_start": "11-25 00시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 240.5,
+     "latest_start": "11-30 00시"
+    }
+   }
+  },
+  "m 2": {
+   "sim_h": [
+    314.8,
+    361.2
+   ],
+   "split": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "post_all_h": 136.1,
+   "cal_hi": {
+    "end_if_start_1120": "12-05 01시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -97.2,
+     "latest_start": "11-15 22시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 22.8,
+     "latest_start": "11-20 22시"
+    }
+   }
+  },
+  "DBE 비 두 배 · m 2": {
+   "sim_h": [
+    547.4,
+    640.1
+   ],
+   "split": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "post_all_h": 269.7,
+   "cal_hi": {
+    "end_if_start_1120": "12-16 16시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -376.1,
+     "latest_start": "11-04 07시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": -256.1,
+     "latest_start": "11-09 07시"
+    }
+   }
+  },
+  "풀이에만 · DBE 비 두 배": {
+   "sim_h": [
+    258.7,
+    307.7
+   ],
+   "split": [
+    [
+     7,
+     5
+    ],
+    [
+     7,
+     5
+    ]
+   ],
+   "post_all_h": 48.0,
+   "cal_hi": {
+    "end_if_start_1120": "12-02 19시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -43.7,
+     "latest_start": "11-18 04시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 76.3,
+     "latest_start": "11-23 04시"
+    }
+   }
+  }
+ },
+ "stage_s1_reg_arm": {
+  "kgy": {
+   "ladder_19_arms_h": 35.0,
+   "ladder_origin8_extra_h": 16.7,
+   "unit_first_hi_h": 32.9,
+   "unit_hit_lo_h": 19.3,
+   "unit_hit_hi_h": 22.8,
+   "point_first_8_arms_h": 49.0,
+   "point_hit_8_arms_h": 32.1,
+   "graph_only_run_h": 3.8,
+   "merge_12_graph_only_h": 45.4,
+   "dbe_arm_hit_h": 4.0,
+   "sbe_arm_hit_h": 1.4,
+   "dbe_build_extra_h": 3.4
+  },
+  "gabia": {
+   "ladder_19_arms_h": 46.1,
+   "ladder_origin8_extra_h": 20.6,
+   "unit_first_hi_h": 40.1,
+   "unit_hit_lo_h": 25.0,
+   "unit_hit_hi_h": 30.0,
+   "point_first_8_arms_h": 60.4,
+   "point_hit_8_arms_h": 43.6,
+   "graph_only_run_h": 3.8,
+   "merge_12_graph_only_h": 45.4,
+   "dbe_arm_hit_h": 5.4,
+   "sbe_arm_hit_h": 1.9,
+   "dbe_build_extra_h": 3.4
+  }
+ },
+ "stage_s1_x2_arm": {
+  "kgy": {
+   "ladder_19_arms_h": 35.0,
+   "ladder_origin8_extra_h": 16.7,
+   "unit_first_hi_h": 65.8,
+   "unit_hit_lo_h": 38.6,
+   "unit_hit_hi_h": 45.6,
+   "point_first_8_arms_h": 98.0,
+   "point_hit_8_arms_h": 64.3,
+   "graph_only_run_h": 7.5,
+   "merge_12_graph_only_h": 89.9,
+   "dbe_arm_hit_h": 8.0,
+   "sbe_arm_hit_h": 1.4,
+   "dbe_build_extra_h": 6.7
+  },
+  "gabia": {
+   "ladder_19_arms_h": 46.1,
+   "ladder_origin8_extra_h": 20.6,
+   "unit_first_hi_h": 80.1,
+   "unit_hit_lo_h": 50.0,
+   "unit_hit_hi_h": 59.9,
+   "point_first_8_arms_h": 120.8,
+   "point_hit_8_arms_h": 87.1,
+   "graph_only_run_h": 7.5,
+   "merge_12_graph_only_h": 89.9,
+   "dbe_arm_hit_h": 10.9,
+   "sbe_arm_hit_h": 1.9,
+   "dbe_build_extra_h": 6.7
+  }
+ },
+ "stage_s1_reg_solve": {
+  "kgy": {
+   "ladder_19_arms_h": 35.0,
+   "ladder_origin8_extra_h": 16.7,
+   "unit_first_hi_h": 22.8,
+   "unit_hit_lo_h": 15.9,
+   "unit_hit_hi_h": 19.4,
+   "point_first_8_arms_h": 35.2,
+   "point_hit_8_arms_h": 29.4,
+   "graph_only_run_h": 1.3,
+   "merge_12_graph_only_h": 16.0,
+   "dbe_arm_hit_h": 3.7,
+   "sbe_arm_hit_h": 1.4,
+   "dbe_build_extra_h": 1.1
+  },
+  "gabia": {
+   "ladder_19_arms_h": 46.1,
+   "ladder_origin8_extra_h": 20.6,
+   "unit_first_hi_h": 29.9,
+   "unit_hit_lo_h": 21.6,
+   "unit_hit_hi_h": 26.5,
+   "point_first_8_arms_h": 46.6,
+   "point_hit_8_arms_h": 40.8,
+   "graph_only_run_h": 1.3,
+   "merge_12_graph_only_h": 16.0,
+   "dbe_arm_hit_h": 5.1,
+   "sbe_arm_hit_h": 1.9,
+   "dbe_build_extra_h": 1.1
+  }
+ },
+ "overflow": {
+  "s1 · r 등록 · 팔 전체": {
+   "n_kgy": 2,
+   "points_s": 81.1,
+   "final_merge_s": 45.4,
+   "point_first_kgy_s": 49.0,
+   "point_first_gabia_s": 60.4,
+   "point_hit_kgy_s": 32.1,
+   "point_hit_gabia_s": 43.6
+  },
+  "s1 · r 등록 · 풀이에만": {
+   "n_kgy": 2,
+   "points_s": 64.6,
+   "final_merge_s": 16.0,
+   "point_first_kgy_s": 35.2,
+   "point_first_gabia_s": 46.6,
+   "point_hit_kgy_s": 29.4,
+   "point_hit_gabia_s": 40.8
+  },
+  "s1 · r 두 배 · 팔 전체": {
+   "n_kgy": 2,
+   "points_s": 162.3,
+   "final_merge_s": 89.9,
+   "point_first_kgy_s": 98.0,
+   "point_first_gabia_s": 120.8,
+   "point_hit_kgy_s": 64.3,
+   "point_hit_gabia_s": 87.1
+  }
+ },
+ "maxiter": [
+  {
+   "maxiter": 3000000,
+   "x_sbe_main": 10.8,
+   "one_solve_to_cap_h_kgy": 8.7,
+   "one_solve_to_cap_h_gabia": 12.7,
+   "main_plus_resolve_to_cap_h_kgy": 17.5,
+   "main_plus_resolve_to_cap_h_gabia": 25.4
+  },
+  {
+   "maxiter": 4000000,
+   "x_sbe_main": 14.39,
+   "one_solve_to_cap_h_kgy": 11.6,
+   "one_solve_to_cap_h_gabia": 17.0,
+   "main_plus_resolve_to_cap_h_kgy": 23.3,
+   "main_plus_resolve_to_cap_h_gabia": 33.9
+  },
+  {
+   "maxiter": 5000000,
+   "x_sbe_main": 17.99,
+   "one_solve_to_cap_h_kgy": 14.6,
+   "one_solve_to_cap_h_gabia": 21.2,
+   "main_plus_resolve_to_cap_h_kgy": 29.1,
+   "main_plus_resolve_to_cap_h_gabia": 42.4
+  },
+  {
+   "maxiter": 6000000,
+   "x_sbe_main": 21.59,
+   "one_solve_to_cap_h_kgy": 17.5,
+   "one_solve_to_cap_h_gabia": 25.4,
+   "main_plus_resolve_to_cap_h_kgy": 34.9,
+   "main_plus_resolve_to_cap_h_gabia": 50.9
+  }
+ ],
+ "start_assumed_kst": "2026-11-20 00:00",
+ "split66_s1_reg_arm_h": [
+  206.5,
+  236.0
+ ],
+ "stage_s1_reg_m2_arm": {
+  "kgy": {
+   "ladder_19_arms_h": 59.5,
+   "ladder_origin8_extra_h": 25.2,
+   "unit_first_hi_h": 48.6,
+   "unit_hit_lo_h": 31.8,
+   "unit_hit_hi_h": 38.5,
+   "point_first_8_arms_h": 74.0,
+   "point_hit_8_arms_h": 57.2,
+   "graph_only_run_h": 3.8,
+   "merge_12_graph_only_h": 45.4,
+   "dbe_arm_hit_h": 7.1,
+   "sbe_arm_hit_h": 2.4,
+   "dbe_build_extra_h": 3.4
+  },
+  "gabia": {
+   "ladder_19_arms_h": 81.8,
+   "ladder_origin8_extra_h": 33.0,
+   "unit_first_hi_h": 62.8,
+   "unit_hit_lo_h": 43.2,
+   "unit_hit_hi_h": 52.7,
+   "point_first_8_arms_h": 96.8,
+   "point_hit_8_arms_h": 80.0,
+   "graph_only_run_h": 3.8,
+   "merge_12_graph_only_h": 45.4,
+   "dbe_arm_hit_h": 10.0,
+   "sbe_arm_hit_h": 3.4,
+   "dbe_build_extra_h": 3.4
+  }
+ },
+ "stage_s1_x2_m2_arm": {
+  "kgy": {
+   "ladder_19_arms_h": 59.5,
+   "ladder_origin8_extra_h": 25.2,
+   "unit_first_hi_h": 97.1,
+   "unit_hit_lo_h": 63.6,
+   "unit_hit_hi_h": 76.9,
+   "point_first_8_arms_h": 148.0,
+   "point_hit_8_arms_h": 114.3,
+   "graph_only_run_h": 7.5,
+   "merge_12_graph_only_h": 89.9,
+   "dbe_arm_hit_h": 14.3,
+   "sbe_arm_hit_h": 2.4,
+   "dbe_build_extra_h": 6.7
+  },
+  "gabia": {
+   "ladder_19_arms_h": 81.8,
+   "ladder_origin8_extra_h": 33.0,
+   "unit_first_hi_h": 125.6,
+   "unit_hit_lo_h": 86.4,
+   "unit_hit_hi_h": 105.4,
+   "point_first_8_arms_h": 193.6,
+   "point_hit_8_arms_h": 159.9,
+   "graph_only_run_h": 7.5,
+   "merge_12_graph_only_h": 89.9,
+   "dbe_arm_hit_h": 20.0,
+   "sbe_arm_hit_h": 3.4,
+   "dbe_build_extra_h": 6.7
+  }
+ },
+ "overflow_gpu_end": {
+  "arm_s1_reg": {
+   "first_merge_h": 45.4,
+   "points_h": 81.1,
+   "gpu_end_add_h": 126.5,
+   "gpu_end_hi_with_overflow_h": 342.6,
+   "cal": {
+    "end_if_start_1120": "12-04 06시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -78.6,
+     "latest_start": "11-16 17시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 41.4,
+     "latest_start": "11-21 17시"
+    }
+   }
+  },
+  "solve_s1_reg": {
+   "first_merge_h": 16.0,
+   "points_h": 64.6,
+   "gpu_end_add_h": 80.6,
+   "gpu_end_hi_with_overflow_h": 265.7,
+   "cal": {
+    "end_if_start_1120": "12-01 01시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -1.7,
+     "latest_start": "11-19 22시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 118.3,
+     "latest_start": "11-24 22시"
+    }
+   }
+  },
+  "arm_s1_x2": {
+   "first_merge_h": 89.9,
+   "points_h": 162.3,
+   "gpu_end_add_h": 252.2,
+   "gpu_end_hi_with_overflow_h": 637.7,
+   "cal": {
+    "end_if_start_1120": "12-16 13시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -373.7,
+     "latest_start": "11-04 10시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": -253.7,
+     "latest_start": "11-09 10시"
+    }
+   }
+  }
+ },
+ "reverify_cal": {
+  "arm_s1": {
+   "verdict_h": [
+    282.3,
+    306.8
+   ],
+   "reverify_h": [
+    327.6,
+    352.1
+   ],
+   "reverify_end_if_start_1120": [
+    "12-03 15시",
+    "12-04 16시"
+   ]
+  },
+  "solve_s1": {
+   "verdict_h": [
+    192.6,
+    217.1
+   ],
+   "reverify_h": [
+    208.6,
+    233.1
+   ],
+   "reverify_end_if_start_1120": [
+    "11-28 16시",
+    "11-29 17시"
+   ]
+  },
+  "arm_s2": {
+   "verdict_h": [
+    220.7,
+    234.2
+   ],
+   "reverify_h": [
+    266.0,
+    279.6
+   ],
+   "reverify_end_if_start_1120": [
+    "12-01 02시",
+    "12-01 15시"
+   ]
+  },
+  "solve_s2": {
+   "verdict_h": [
+    131.0,
+    144.6
+   ],
+   "reverify_h": [
+    147.0,
+    160.5
+   ],
+   "reverify_end_if_start_1120": [
+    "11-26 02시",
+    "11-26 16시"
+   ]
+  }
+ },
+ "kgy_wait_for_gabia_ladder_h": 11.1,
+ "fallback": {
+  "arm_s1": {
+   "one_machine_kgy_h": [
+    308.6,
+    350.6
+   ],
+   "one_machine_cal_hi": {
+    "end_if_start_1120": "12-04 14시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -86.6,
+     "latest_start": "11-16 09시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 33.4,
+     "latest_start": "11-21 09시"
+    }
+   },
+   "no_split_predict_on_kgy_h": [
+    288.3,
+    330.3
+   ],
+   "no_split_cal_hi": {
+    "end_if_start_1120": "12-03 18시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -66.3,
+     "latest_start": "11-17 05시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 53.7,
+     "latest_start": "11-22 05시"
+    }
+   }
+  },
+  "solve_s1": {
+   "one_machine_kgy_h": [
+    260.3,
+    302.3
+   ],
+   "one_machine_cal_hi": {
+    "end_if_start_1120": "12-02 14시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -38.3,
+     "latest_start": "11-18 09시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 81.7,
+     "latest_start": "11-23 09시"
+    }
+   },
+   "no_split_predict_on_kgy_h": [
+    240.0,
+    282.0
+   ],
+   "no_split_cal_hi": {
+    "end_if_start_1120": "12-01 17시",
+    "12-01 00:00 (= 11-30 24:00 · 옛 기준)": {
+     "slack_h": -18.0,
+     "latest_start": "11-19 06시"
+    },
+    "12-06 00:00 (= 12-05 24:00 · \"12 월 초\" 가정)": {
+     "slack_h": 102.0,
+     "latest_start": "11-24 06시"
+    }
+   }
+  }
+ },
+ "s0_stage2_guess_h": [
+  1.5,
+  4.5
+ ],
+ "gabia_sbe_hit_arm_s": 6682,
+ "gabia_sbe_build_arm_s": 10817,
+ "kgy_dbe_hit_arm_arm_mode_s": 14465,
+ "kgy_dbe_hit_arm_solve_mode_s": 13238,
+ "kgy_dbe_build_extra_arm_mode_s": 12127,
+ "graph_only_arm_mode_s": 13605,
+ "graph_only_solve_mode_s": 4797
+}

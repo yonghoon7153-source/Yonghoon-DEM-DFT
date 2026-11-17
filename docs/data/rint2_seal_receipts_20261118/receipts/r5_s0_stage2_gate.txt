@@ -1,0 +1,6 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:01:33Z · S0 단계 2 관문 verify_plan_commit (r_doc 봉인본 · 기본)
+HEAD 29643188524f4fe31f81db5eb252edaa8cbbef7c
+r_doc = 봉인본 → 통과 · S0 sha256 6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520 · R 계획 결합 {'path': 'docs/data/rint2_r_plan_20261118/ca1_plan.json', 'sha256': 'd8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8', 's_min_um': 0.0, 'tol_ff_um': 0.07381254285530132, 'len_law': 'len_scaled_v0', 'unreg_law': 'cut', 'step3_rtol': 1e-12, 'checked': 'S0 row exact · R row (registration_plan_hash) · R plan sha256 · load_plan · tol_ff = S0 tol_ff · len_law'}
+r_doc = 기본 (원본 자리) → 거부 · S0Error 등록 R 문서 (docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md @ 29643188524f) 의 "| S0 계획 해시 |" 끝 칸 ≠ 계획 sha256 6346d9ed5fda248b… — §2-1 개정 커밋이 아니다 (★ 10-21 — 줄 밖 · 다른 칸에 적힌 해시는 세지 않는다)
+결과 기대대로 (봉인본 = 통과 · 기본 = 거부)
+rc=0

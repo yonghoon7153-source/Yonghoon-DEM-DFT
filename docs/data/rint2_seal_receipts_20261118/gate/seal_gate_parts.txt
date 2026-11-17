@@ -1,0 +1,9 @@
+HEAD=29643188524f4fe31f81db5eb252edaa8cbbef7c start=2026-11-17T16:19:59Z (봉인 커밋 · 진짜 · 디스크 정리 뒤 다시)
+CHECK_ALL_PART range=1-120 total=188 ran=120 fail=0
+exit=0
+HEAD=29643188524f4fe31f81db5eb252edaa8cbbef7c start=2026-11-17T17:12:28Z (봉인 커밋 · 진짜)
+CHECK_ALL_PART range=121-138 total=188 ran=18 fail=0
+exit=0
+HEAD=29643188524f4fe31f81db5eb252edaa8cbbef7c start=2026-11-17T17:54:15Z (봉인 커밋 · 진짜)
+CHECK_ALL_PART range=139-188 total=188 ran=50 fail=0
+exit=0

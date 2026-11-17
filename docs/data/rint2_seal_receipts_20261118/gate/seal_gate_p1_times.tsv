@@ -1,0 +1,120 @@
+1	0	ok	run_contract          --selftest
+2	1163	ok	check_review_findings   --selftest
+3	76	ok	check_method_discipline --selftest
+4	5	ok	check_all 나누기 (CHECK_ALL_RANGE · LIST · TIMES)
+5	2	ok	sdcp_gain_verdict       --selftest
+6	0	ok	sdcp_phase_ledger_match --selftest
+7	0	ok	porosity_filter_axes    --selftest
+8	0	ok	sr01_stamp_compare     --selftest
+9	1	ok	mpm_webapp_payload     --selftest-temperature
+10	1	ok	step3_sigma            --selftest
+11	0	ok	step3_sigma            --selftest-rint
+12	0	ok	repair_focus_top       --selftest
+13	8	ok	webapp_env_audit       --selftest
+14	0	ok	type_map_resolve       --selftest
+15	0	ok	type_map_unknown_sweep --selftest
+16	1	ok	gen_plots  --selftest-descriptions
+17	1	ok	gen_plots  --selftest-fits
+18	1	ok	eis_drt_ica            --selftest
+19	0	ok	se_net_diagnostics     --selftest
+20	0	ok	grade_engine          --selftest
+21	1	ok	constriction_deleted  --selftest
+22	0	ok	gen_plots  --selftest-temp
+23	18	ok	reduce_arm_payloads     --selftest
+24	0	ok	bridge_grid_verdict    --selftest
+25	0	ok	ion_r_verdict          --selftest
+26	1	ok	plot_cbd_contacts       --selftest
+27	1	ok	plot_sigma_e_bars       --selftest
+28	0	ok	colorbar_fit (JS 문법)
+29	0	ok	colorbar_fit (라벨 폭)
+30	0	ok	lhs_perc_extract       --selftest
+31	7	ok	lhs_descriptor_harvest --selftest
+32	4	ok	lhs_perc_fit           --selftest
+33	0	ok	hetero_transcript      --selftest
+34	0	ok	make_heckel_manifest   --selftest
+35	1	ok	oat_sensitivity        --selftest
+36	0	ok	build_methods_docx     --selftest
+37	0	ok	check_cohort_packages  --selftest
+38	0	ok	mutation_sweep (문법 — 배터리 자신이 도는가)
+39	32	ok	check_review_findings   (원장 자기일관 · 철회값 스윕 = 위 selftest 21)
+40	30	ok	check_method_discipline (규칙 A~M + claims 원장)
+41	12	ok	webapp: pipeline_provenance
+42	1	ok	webapp: predictor_ui
+43	1	ok	webapp: security_phase_a
+44	0	ok	webapp: seminar_page
+45	1	ok	webapp: worklog_page
+46	0	ok	webapp: worklog_weekly_20261101 (주간보고 10-26 ~ 11-01 · /worklog 목록 · 본문 숫자 · 사이드바 · 모르는 이름 · 경로 탈출 404 · 봉인 app.py 무변경 · 11-01)
+47	1	ok	webapp: worklog_weekly_20261109 (주간보고 11-02 ~ 11-09 · /worklog 목록 · 본문 숫자 · 용훈 포메이션 트랙 순서 · 인용 금지 · 모델 이름 · 주소 없음 · 경로 탈출 404 · 봉인 app.py 무변경 · 11-09)
+48	1	ok	webapp: mixer_devlog_page
+49	0	ok	webapp: closed_param_labels
+50	11	ok	webapp: closed_param_values
+51	1	ok	webapp: closed_param_groupview
+52	0	ok	webapp: cf_full_labels
+53	7	ok	webapp: tortuosity_all
+54	3	ok	webapp: closed_param_exact_union
+55	0	ok	webapp: coverage_handover_scope
+56	1	ok	webapp: am_isolation_labels
+57	0	ok	webapp: percolation_labels
+58	1	ok	webapp: ionic_isolation_labels
+59	0	ok	webapp: mixer_bed_view
+60	1	ok	webapp: png_transparent_export
+61	104	ok	mixer launcher (완주 판정 · 덮어쓰기 가드)
+62	19	ok	mixer D2 소비자 (합성 덱 · 결속 검증 · unittest)
+63	1	ok	mixer 생성기 seed (삽입 seed 범위 · 소수 · 텍스트 생성만 · unittest)
+64	1	ok	mixer D3 후보 판독기 (합성 계약 · unittest)
+65	1	ok	mixer 보정 전 첫8 준비 (합성 덱 · unittest)
+66	4	ok	mixer 보정 전 관측 연결 (합성 프레임 · unittest)
+67	22	ok	ULPRI ul_reader         --selftest (언로딩 판독기)
+68	0	ok	ULPRI ul_gates          --selftest (관문)
+69	53	ok	ULPRI ul_runner_test    --selftest (러너 모의 · 가짜 lmp)
+70	2	ok	ULPRI make_unload_decks --check (덱 = 생성 결과)
+71	2	ok	ULPRI seal_kit          --check (봉인 · 활성 규칙)
+72	28	ok	G2c′ 샌드박스 대조기 · 실행기 (합성 침대 · 가짜 lmp · 시험 먼저)
+73	2	ok	webapp: launcher (포트 선점)
+74	4	ok	webapp: temp_pressure
+75	1	ok	webapp: ledger_view
+76	0	ok	webapp: meta_json_robust
+77	4	ok	webapp: atoms_only_viewer
+78	14	ok	webapp: atoms_only_porosity
+79	3	ok	webapp: dem_pore_path_view
+80	2	ok	webapp: tau_paths_view
+81	1	ok	webapp: force_chain_view
+82	6	ok	webapp: viewer_coordination
+83	4	ok	webapp: viewer_am_contacts
+84	8	ok	webapp: network_current_view
+85	4	ok	webapp: net_current_density
+86	17	ok	webapp: viewer_load_view
+87	7	ok	webapp: viewer_lw_pnorm
+88	0	ok	webapp: je_definition_label
+89	0	ok	webapp: rint_scope_labels
+90	1	ok	webapp: tau_labels
+91	1	ok	webapp: tau_handover_status
+92	1	ok	webapp: stress_lw_labels
+93	0	ok	webapp: constriction_power
+94	0	ok	webapp: s567_labels
+95	2	ok	webapp: tau_grade_unify
+96	3	ok	webapp: network_handover_chain
+97	3	ok	webapp: l214r03_display
+98	3	ok	webapp: web09_accepted_refresh
+99	1	ok	webapp: single_null_metrics
+100	1	ok	webapp: psi_generation_stamp
+101	3	ok	webapp: gen2_publication_handover
+102	9	ok	g2_network_reread --selftest
+103	1	ok	webapp: gen2_stamp_record
+104	1	ok	webapp: hetero_transcript
+105	0	ok	webapp: emod
+106	1	ok	webapp: rint_explainer (Rint 설명 정적 페이지 + 사이드바 링크 · 봉인 app.py 무변경 · 10-21)
+107	2	ok	webapp: dem_redesign_plan (DEM 재설계 계획서 정적 페이지 둘 · 생성기 --check 바이트 같음 · 낯선 구성 rc 2 · docx 정본 sha256 · 원문 줄 전수 포함 · 수식 · 그림 고정물 (MathML · OMML · data URI) · 사이드바 · 라우트 없이 정적 (app.py 는 봉인) · 11-10)
+108	1	ok	webapp: dem_method_figs (2D DEM 방법 그림 정적 페이지 · 사이드바 · 내려받기 = docs 원본 바이트 · ../ 404 · 봉인 app.py 무변경 · 11-02)
+109	0	ok	sync_dem_method_figs_to_webapp --check (웹앱 그림 사본 = docs/50kg/report_y4/figs/p0_dem_method 바이트 같음)
+110	1	ok	webapp: mpm_lab_cmp_absent_phase (MPM lab 비교표 · 없는 상 = — · 참 0 유지 · 10-21)
+111	27	ok	rint_receipts (요청 ↔ 적용 영수증 · AST 변이 4)
+112	1	ok	siteq C02b 자식 rc (RR6-01 · 11-10)
+113	338	ok	rint probe6 reader (σ 비열람 판독기 · 시험 먼저)
+114	6	ok	rint_g2_am_iface (①′ AM–AM 계약 v3.1 · 반례 먼저)
+115	60	ok	ptfe_face_alpha (Rint ② S1 · 시험 먼저)
+116	1	ok	webapp: ca_ext_labels (S1 표지 · 봉인 밖 템플릿)
+117	92	ok	carbon_junction (Rint ② S2 · S3 · 시험 먼저)
+118	7	ok	step3_gpu_precond (Rint ② Q11 GPU 전처리 C 꼴 · 가짜 cupy · 시험 먼저)
+119	130	ok	cjunc_store (Rint ② Q2 탄소 접합 원장 저장본 · 시험 먼저)
+120	720	ok	cjunc_store_e2e (Rint ② Q2 저장본 사슬 끝-끝 · 켬 ↔ 끔 바이트 같음 · 실제 러너 · CPU · 7–10 분)

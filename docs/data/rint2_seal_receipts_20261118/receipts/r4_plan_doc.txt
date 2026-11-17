@@ -1,0 +1,5 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:01:40Z · plan-doc --check-doc (봉인본 · 기본)
+PLAN_DOC_SAME — 등록 docs/reviews/rint2_seal_20261118/registration_R_sealed.md 의 계획 숫자 블록 = 계획 docs/data/rint2_r_plan_20261118/ca1_plan.json 에서 생성한 블록 (정확히)
+rc=0
+멈춤 [PLAN_DOC_MISMATCH] 등록 R 의 계획 숫자 블록 ≠ 계획 JSON 에서 생성한 블록 (없음 · 둘 · 값 다름 · 표지 하나만 · ★ 10-27 묶음 C1a · 판정문 C6 #30) — 계획 숫자 블록 표지 시작 0 · 끝 0 개 (각 1 이어야 · 봉인 때 `--stage plan-doc --plan <계획>` 출력을 그대로 붙인다 · 봉인 전 = R 진입 없음)
+rc=3 (기본 = 원본 자리 · 기대 3)

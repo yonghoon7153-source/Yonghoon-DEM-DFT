@@ -1,0 +1,18 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:01:42Z · 다섯 경계 · 파일
+# 핀 64e4d213e826 → 봉인 꼴 HEAD · 바뀐 파일 60 (A 새 56 · M 고침 4 · D 지움 0)
+| 상태 | 자리 (폴더는 묶음) | 파일 수 | 다섯 경로 밖 | CODE_FILES 20 · S0 일곱 밖 | 규율 검사 입력 밖 |
+|---|---|---|---|---|---|
+| A | `docs/data/rint2_probe6_a3_20261116` | 13 | 밖 | 밖 | 밖 |
+| A | `docs/data/rint2_probe6_a4_20261116` | 13 | 밖 | 밖 | 밖 |
+| A | `docs/data/rint2_r_plan_20261118` | 1 | 밖 | 밖 | 밖 |
+| A | `docs/data/rint2_s0_sbe_20261116` | 14 | 밖 | 밖 | 밖 |
+| M | `docs/reviews/claims.json` | 1 | 밖 | 밖 | **안** |
+| M | `docs/reviews/rint2_dev_probe_ledger_20261026.md` | 1 | 밖 | 밖 | 밖 |
+| M | `docs/reviews/rint2_kgy_commands_20261020.md` | 1 | 밖 | 밖 | 밖 |
+| A | `docs/reviews/rint2_q14_finalpin_preparation_20261113` | 2 | 밖 | 밖 | 밖 |
+| A | `docs/reviews/rint2_seal_20261118` | 13 | 밖 | 밖 | 밖 |
+| M | `docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md` | 1 | 밖 | 밖 | 밖 |
+git diff --quiet 64e4d213e826 HEAD -- <다섯 경로> → rc 0 (같음 = 원장 §2 같은 핀)
+CODE_FILES 20 · S0 일곱 7 · 다섯 경로 · CODE_FILES · S0 일곱 안의 바뀐 파일: 없음
+규율 검사 입력 안의 바뀐 파일: ['M docs/reviews/claims.json'] (→ 그 판으로 규율 검사를 직접 돌려 본다)
+rc=0

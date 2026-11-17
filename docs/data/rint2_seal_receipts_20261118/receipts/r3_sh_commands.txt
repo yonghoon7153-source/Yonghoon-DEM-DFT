@@ -1,0 +1,21 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:01:41Z · sh 사슬 명령 인자 대조
+# 봉인본 docs/reviews/rint2_seal_20261118/registration_R_sealed.md · 가짜 홈 = <가짜 홈> · 기대 셈 sealed=13+1,kgy=14+1 · 저장본 ~/ca1_cjstore (Q4) · 사다리 기계 {'P0': 'kgy', 'P1': 'gabia'} (Q6)
+sealed: sh 블록 사슬 명령 13 · S0 명령 1 · 계약 꼴 (bash) 사슬 7 · S0 2 · 그 밖 울타리 0 · 도구 이름이 인자로만 나온 줄 0 · 못 읽은 줄 0 · --registration 값 ['<가짜 홈>/dem-ca1/docs/reviews/rint2_seal_20261118/registration_R_sealed.md'] · S0 --r-doc 값 ['docs/reviews/rint2_seal_20261118/registration_R_sealed.md']
+kgy: sh 블록 사슬 명령 14 · S0 명령 1 · 계약 꼴 (bash) 사슬 13 · S0 3 · 그 밖 울타리 0 · 도구 이름이 인자로만 나온 줄 3 · 못 읽은 줄 0 · --registration 값 ['<가짜 홈>/dem-ca1/docs/reviews/rint2_seal_20261118/registration_R_sealed.md'] · S0 --r-doc 값 ['docs/reviews/rint2_seal_20261118/registration_R_sealed.md']
+orig: sh 블록 사슬 명령 0 · S0 명령 0 · 계약 꼴 (bash) 사슬 7 · S0 2 · 그 밖 울타리 0 · 도구 이름이 인자로만 나온 줄 0 · 못 읽은 줄 0 · --registration 값 [] · S0 --r-doc 값 []
+  ladder       봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--attempt', '--cjunc-store', '--law', '--ledger', '--max-hours', '--out', '--plan', '--registration', '--root', '--runner', '--s0-plan', '--s0-stage1-report', '--s0-stage2-report', '--stage', '--target']
+  ladder_dry   봉인본 0 집합 · kgy 1 집합 · 두 문서 같음 None · 인자 ['--cjunc-store', '--dry-run', '--law', '--max-hours', '--out', '--plan', '--registration', '--root', '--runner', '--s0-plan', '--s0-stage1-report', '--s0-stage2-report', '--stage', '--target']
+  ledger_add   봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--add', '--ledger', '--ledger-target', '--plan', '--registration', '--root', '--runner', '--stage']
+  ledger_init  봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--init', '--ledger', '--plan', '--registration', '--stage']
+  merge        봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--kit', '--ladders', '--ledger', '--max-hours', '--merge', '--out', '--registration', '--root', '--runner', '--stage']
+  merge_x      봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--expand', '--kit', '--ladders', '--ledger', '--max-hours', '--merge', '--out', '--registration', '--root', '--runner', '--stage']
+  plan-doc     봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--check-doc', '--plan', '--registration', '--stage']
+  point        봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--attempt', '--cjunc-store', '--expand', '--kit', '--ladders', '--ledger', '--max-hours', '--out', '--point', '--registration', '--root', '--runner', '--stage']
+  recover      봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--ledger', '--out', '--registration', '--stage']
+  reverify     봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--registration', '--reverify', '--root', '--stage']
+  s0-2         봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--kit', '--out', '--plan-path', '--r-doc', '--r-plan-path', '--stage', '--threshold-commit']
+  unit         봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--attempt', '--cjunc-store', '--kit', '--ladders', '--ledger', '--max-hours', '--out', '--registration', '--root', '--runner', '--stage', '--unit']
+  verdict      봉인본 1 집합 · kgy 1 집합 · 두 문서 같음 True · 인자 ['--ledger', '--out', '--registration', '--root', '--runs', '--stage']
+한 문서에만 있는 종류 ['ladder_dry'] (허용 = ['ladder_dry'])
+문제 없음
+rc=0

@@ -1,0 +1,12 @@
+# 첫 다시 띄움 (재시작 뒤 · 디스크 정리 전) — 1-120 조각 fail · 원인 = 디스크 가득 (/ 99 % · 687 MB 남음) · 저장본 쓰기 built_write_skipped · 봉인 내용 무관 · 이 판은 판정에 쓰지 않는다
+HEAD=29643188524f4fe31f81db5eb252edaa8cbbef7c start=2026-11-17T15:25:30Z (봉인 커밋 · 진짜 · 재시작 뒤 다시)
+CHECK_ALL_PART range=1-120 total=188 ran=120 fail=1
+113	339	fail	rint probe6 reader (σ 비열람 판독기 · 시험 먼저)
+119	128	fail	cjunc_store (Rint ② Q2 탄소 접합 원장 저장본 · 시험 먼저)
+120	698	fail	cjunc_store_e2e (Rint ② Q2 저장본 사슬 끝-끝 · 켬 ↔ 끔 바이트 같음 · 실제 러너 · CPU · 7–10 분)
+  ✗ rint probe6 reader (σ 비열람 판독기 · 시험 먼저)
+  ✗ cjunc_store (Rint ② Q2 탄소 접합 원장 저장본 · 시험 먼저)
+  ✗ cjunc_store_e2e (Rint ② Q2 저장본 사슬 끝-끝 · 켬 ↔ 끔 바이트 같음 · 실제 러너 · CPU · 7–10 분)
+✗ 이 부분에 실패가 있다 (단계 1–120 / 전체 188) — 고치고 다시
+# 그 전 판 (컨테이너 재시작으로 2 단계에서 끊김 · 판정 없음)
+HEAD=29643188524f4fe31f81db5eb252edaa8cbbef7c start=2026-11-17T15:03:23Z (봉인 커밋 · 진짜)

@@ -1,0 +1,26 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:02:34Z · 문서 참조 (원격 추적 ref 156)
+문서 2089개 · 커밋 13576개 · SHA 예외 89건
+
+⚠ 리포 밖 1차 증거 14건에 sha256 이 없다 — 그 값을 인용하기 전에 해당 기계에서 받아 적을 것 (오류 아님)
+  docs/data/mpm_dem_match.csv — sha256 없음 (위치만: 사용자 WSL `~/work/mpm/` (sha256 미기록))
+  post_lhs00_110/atom_2980000.liggghts — sha256 없음 (위치만: ibb `~/dem_test/post_lhs00_110/` (sha256 미기록))
+  post_lhs00_000/atom_2425000.liggghts — sha256 없음 (위치만: ibb `~/dem_test/post_lhs00_000/` (sha256 미기록))
+  Mixer/input.liggghts — sha256 없음 (위치만: 사용자 Windows `F:\DEM\examples\LIGGGHTS\Tutorials_public\Mixer\` (LIGGGHTS-PUBLIC 동봉 예제, sha256 미기록))
+  lhs_coverage_reverify_evidence_20260930/prior_audit_results.json — sha256 없음 (위치만: 사용자 Windows Codex 작업 공간 C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/ (같은 내용의 리포 사본 = docs/reviews/codex_lhs_coverage_reverify_evidence_20260930/prior_audit_results.json))
+  lhs_coverage_review_20260930/baseline/scripts/lhs_descriptor_harvest.py — sha256 없음 (위치만: 사용자 Windows Codex 작업 공간 C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/ (첫 리뷰의 기준 사본 · 우리 쪽 = 커밋 2e57dff90 의 같은 파일))
+  evidence/audit_results.json — sha256 없음 (위치만: 사용자 Windows Codex 작업 공간 C:/Users/Administrator/Documents/Codex/2026-08-24/claude-stoic-knuth-nobvq-x20/mixer_highbo_round10_review_20260930/ (같은 내용의 리포 사본 = docs/reviews/codex_review_mixer_highbo_round10_evidence_20260930/evidence/audit_results.json))
+  comsol/BDM_UG.txt — sha256 없음 (위치만: https://doc.comsol.com/5.6/doc/com.comsol.help.battery/BatteryDesignModuleUsersGuide.pdf)
+  out/status.json — sha256 없음 (위치만: 위치: 1저자 WSL ~/net194_11fcf91e8/cases/<case>/out/status.json (194 케이스 · 리포 미반입 · sha256 미기록 — merge 가 읽어 docs/data/lhs_network194_11fcf91e8/merged/{lhs,lhsx}/status.json 로 합친 것은 커밋됨))
+  evidence/seal_paths.json — sha256 없음 (위치만: 위치: 사용자 Windows Codex 작업 공간 — ZIP codex_gen2_network_reverify2_20261007.zip (판정문 머리 반입 표지 · 아직 리포 미반입 · sha256 미기록 — 받으면 docs/reviews/codex_gen2_network_reverify2_evidence_20261007/ 로))
+  evidence/dependency_gap.json — sha256 없음 (위치만: 위치: 사용자 Windows Codex 작업 공간 — ZIP codex_gen2_network_reverify2_20261007.zip (판정문 머리 반입 표지 · 아직 리포 미반입 · sha256 미기록 — 받으면 docs/reviews/codex_gen2_network_reverify2_evidence_20261007/ 로))
+  evidence/branch_policy.json — sha256 없음 (위치만: 위치: 사용자 Windows Codex 작업 공간 — ZIP codex_gen2_network_reverify2_20261007.zip (판정문 머리 반입 표지 · 아직 리포 미반입 · sha256 미기록 — 받으면 docs/reviews/codex_gen2_network_reverify2_evidence_20261007/ 로))
+  post/c_40000.txt — sha256 없음 (위치만: ibb 잡 359243 OUT (리포 밖 · 받은 묶음 = docs/reviews/p1_g2c_sandbox_20261104/run_ibb_40000_20261112/README.md))
+  ps_7_3_r45/input_ps_7_3_r45_r8.liggghts — sha256 없음 (위치만: ibb 7:3 원 런 덱 (리포 밖 · REG 151 행 · 쓴 격자 6×4×1 근거))
+  ⛔ 없는 경로   0
+  ⛔ 없는 커밋   0
+  · 다른 브랜치 48  (litdb/·kb/ — 정상)
+  · 판단 보류   5027  (오류로 세지 않는다)
+  · 등재 예외   622  (docs/reviews/doc_refs_allowlist.tsv)
+
+✓ 깨진 참조 없음
+rc=0

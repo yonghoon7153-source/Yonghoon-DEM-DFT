@@ -1,0 +1,16 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:01:41Z · 사슬 함수 (final)
+load_plan sha256 d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8 · plan_form_problems []
+봉인본 registration_plan_hash: ok · d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8
+봉인본 registration_s0_hash: ok · 6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520
+원본 자리 registration_plan_hash: stop · PLAN_HASH_UNREGISTERED: §2-1 계획 해시 칸 = '⬜' — 개정 커밋 (숫자 + 계획 해시 · 결과 0 건) 전에는 σ 런 없음
+원본 자리 registration_s0_hash: stop · S0_PLAN_HASH_UNREGISTERED: §2-1 S0 계획 해시 칸 = '⬜' — 개정 커밋 (숫자 + 계획 해시 · 결과 0 건) 전에는 σ 런 없음
+봉인본 plan_doc_problem None
+원본 자리 plan_doc_problem 계획 숫자 블록 표지 시작 0 · 끝 0 개 (각 1 이어야 · 봉인 때 `--stage plan-doc --plan <계획>` 출력을 그대로 붙인다 · 봉인 전
+봉인본 check_plan_registered: ok · ['path', 'plan_hash', 'sha256']
+원본 자리 check_plan_registered: stop · PLAN_HASH_UNREGISTERED: §2-1 계획 해시 칸 = '⬜' — 개정 커밋 (숫자 + 계획 해시 · 결과 0 건) 전에는 σ 런 없음
+봉인본 load_s0_plan (S0 해시 줄 · 두 계획 대조): ok · 6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520
+plans_cross_problems []
+plan_env {'CJUNC_LEN_LAW': 'len_scaled_v0', 'CJUNC_UNREG_LAW': 'cut', 'CJUNC_S_MIN_UM': '0.0', 'CJUNC_TOL_FF_UM': '0.07381254285530132', 'STEP3_RTOL': '1e-12', 'P2_EXTRA': '--step3-maxiter 5000000'}
+require_plan_numbers (봉인 계획): ok · None
+결과 final OK
+rc=0

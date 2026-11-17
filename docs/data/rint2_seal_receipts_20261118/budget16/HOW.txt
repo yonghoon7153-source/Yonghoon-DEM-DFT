@@ -1,0 +1,5 @@
+# 사다리 점 셈 바꾸기 (Codex 2/2 §7-1) — 모형 = time_budget_v3_stoic.py (stoic b3481336c:docs/reviews/rint2_time_reestimate_20261111/v3/work/time_budget_v3.py 와 같은 바이트 · blob 5289b6024470d877f6f5270b700354926efb282c)
+# 70 줄 한 줄만 바꿔 세 판을 돌렸다 (사본은 리포에 두지 않는다 · 아래 sed 로 다시 만든다):
+#   13 점 = sed 's/^LADDER_ARMS = 12 + 4 + 2 + 1 /LADDER_ARMS = 13 + 4 + 2 + 1 /' time_budget_v3_stoic.py > tb13.py
+#   16 점 = sed 's/^LADDER_ARMS = 12 + 4 + 2 + 1 /LADDER_ARMS = 16 + 4 + 2 + 1 /' time_budget_v3_stoic.py > tb16.py
+# 출력 = python3 -I tbNN.py --json > outNN.json (12 점 = 원본 그대로 · out12.json = 3 판 리포 time_budget_v3.json 과 바이트 같음) · 비교 = python3 -I cmp_budget.py <이 폴더>

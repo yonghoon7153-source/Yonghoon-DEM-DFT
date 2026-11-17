@@ -1,0 +1,8 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:03:12Z · 도구 다시 만들기 · 바이트 대조
+make_sealed_copy: 봉인본 docs/reviews/rint2_seal_20261118/registration_R_sealed.md sha256 bcc0c118ce3f20999673dabdc6ab5e636f5ad81ccdca890665f8229a180e3ccd · 계획 d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8 · 블록 d67a0dfa2e9725ef… · 조각 16 + 표지 1 + 명령 5 · 남은 자리표 34 개 (허용 목록 안) · final (--final · 결과 전 등록 넷 채움 = 핀 사슬 require_plan_numbers 통과) → <scratch>/rint/seal_final_20261118/rebuild_receipt/out
+rc=0
+같음 docs/data/rint2_r_plan_20261118/ca1_plan.json
+같음 docs/reviews/rint2_kgy_commands_20261020.md
+같음 docs/reviews/rint2_seal_20261118/registration_R_sealed.md
+같음 docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+같음 _manifest.json

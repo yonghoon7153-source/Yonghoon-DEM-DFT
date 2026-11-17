@@ -1,0 +1,8 @@
+# 봉인 커밋 29643188524f4fe31f81db5eb252edaa8cbbef7c · 나무 d92f0c8dacc5b4c9c6772b7b589673af826a4734 · Python 3.11.18 · 2026-11-17T15:03:13Z · sha256 (봉인 파일)
+d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8  docs/data/rint2_r_plan_20261118/ca1_plan.json
+bcc0c118ce3f20999673dabdc6ab5e636f5ad81ccdca890665f8229a180e3ccd  docs/reviews/rint2_seal_20261118/registration_R_sealed.md
+eda9d541c78b16c6b74520971f2f31965920d4a61875720651da1525bbdd69a7  docs/reviews/rint2_kgy_commands_20261020.md
+dcdd1d3726284ce54c11ddfe4d727318b12329ee4afc82e91330803a46cfc67a  docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+776020b8c97e9c1f63245f1766181df138db40675a87036cef5c17067fedb31a  docs/reviews/rint2_seal_20261118/README.md
+error: gpg.ssh.allowedSignersFile needs to be configured and exist for ssh signature verification
+29643188524f4fe31f81db5eb252edaa8cbbef7c N  2026-11-18 00:01:18 +0900

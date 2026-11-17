@@ -1,0 +1,18 @@
+121	33	ok	git_env_isolation (Rint ② 2 회차 RCP2-06 · git 환경 격리 · 일회용 저장소)
+122	0	ok	cjunc_asm_compare (Rint ② Codex 반박 1/2 RCPX-03 · Q12 조립 비교 설계 · 시험 먼저)
+123	45	ok	ca_ext_b6 (Rint ② B6 payload 배선 · 조합 정책 · 시험 먼저)
+124	116	ok	ca_ext_runner (Rint ② B6 러너 다음 세대 손잡이 · 시험 먼저)
+125	30	ok	ca_ext_verdict (Rint ② B6 판정기 소비자 검사 · 시험 먼저)
+126	30	ok	ca_ext_z1 (Rint ② Z1 러너 · 판정기 굳히기 · 시험 먼저)
+127	511	ok	rint_r_chain (Rint ② R 런 사슬 · 사다리 · 예측 · 판정 · 가짜 러너 · 시험 먼저)
+128	0	ok	rint_first_result (Rint ② 첫 풀이 끝 표지 감싸개 · 묶음 C2b · 시험 먼저)
+129	27	ok	ca_ext_z3 (Rint ② Z3 face_alpha + 탄소 접합 한 런 · 극한 런 · ARM_LIST · sid_off · CG 반복 수 · 시험 먼저)
+130	914	ok	rint_r_chain_e2e (Rint ② R 사슬 · 실제 러너 끝-끝 · 픽스처 킷 · CPU)
+131	482	ok	rint_r_chain_e2e12 (Rint ② R 사슬 · 12 단위 합성 끝-끝 + 이동 대조 · 실제 러너 · 픽스처 킷 · CPU)
+132	15	ok	step3_target_cert (STEP3 목표량 증서 ⓓ · RCA-07 · 13 · 해 상태 · 빠른 판 · 시험 먼저)
+133	90	ok	step3_conv_cert (STEP3 수렴 증서 A/B/C · 봉인 표 · 10-21 실측 115–124 s 로 게이트에 넣음)
+134	9	ok	ca_s0_census (Rint ② S0 표현 원장 · 시험 먼저)
+135	184	ok	resume_ckpt (재개 도구 · 가짜 SLURM)
+136	0	ok	kg50_d3_cell_verdict   --selftest
+137	3	ok	kg50_q5_branches      --selftest
+138	5	ok	kg50_q5_verdict       --selftest
