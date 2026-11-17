@@ -30,3 +30,5 @@
 - 이 폴더의 파일은 읽기만 했고 아무것도 실행하지 않았다 (업로드 = 믿지 않는 자료 · python -I).
 
 - (11-16 밤 대피 세션 덧붙임) 홈 경로를 <HOME> 으로 가린 사본 둘 = kit JSON · run.log (11 곳) · 원본 sha256 = `MANIFEST.tsv` · 더 넣은 셋 = `files/s0log_20261116T004809Z/meta.txt` · `out_sha256.txt` · `store_probe.json` (가림 없음) · 저장본 시험 (최종 핀 64e4d213e) = 인스턴스 117,583 · 목록 만들기 4,011 s · 쓰기 120 s (1,340,095,705 B) · 다시 읽기 86 s · 같음 (strict) · 이 폴더 바이트 = `SHA256SUMS`.
+
+- (11-17 본 세션) 채택 확인 = `ADOPTION_CHECK.md` (결과 전 기대 E1–E4 · 문턱 T1–T3 · 최종 핀 등록 `docs/reviews/rint2_q14_finalpin_preparation_20261113/s0_preregistration.md` 의 수령 확인 · 모두 기대대로) · 이 폴더 바이트 = `SHA256SUMS` (다시 만듦).
