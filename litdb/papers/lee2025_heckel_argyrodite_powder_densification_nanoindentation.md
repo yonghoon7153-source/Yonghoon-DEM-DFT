@@ -257,6 +257,7 @@ Li₆PS₅Br < Li₆PS₅Cl < BH₄ 치환 순으로 K ↑ (= 항복 응력 ↓)
 - SE 탄성 · 파괴: `deng2016_elastic_superionic_electrolytes_dft` · `song2025_porous_argyrodite_modulus_fracture_toughness` · `torii2025_lpscl_mechanical_anisotropy_dft` · `pustorino2025_lpscl_bulk_surface_mechanical_electronic_li_filament` · `fan2026_sulfide_assb_stability_review_ECERD2600097`.
 - 결정밀도 출처: `adeli2019_halide_substitution_boosting_argyrodite`.
 - 압밀 이론: `arzt1982_particle_coordination_densification_spheres` · `bouvard2000_hard_soft_powder_densification` · `zunker2025_dem_large_deformation_compaction`.
+- 같은 Ø8 mm 다이 in-die Heckel (약학 이원 혼합 · 2026-11-17): `berkenkemper2023_compressibility_descriptors_binary_mixtures_deformation` — 300 MPa 한 번 · Py HPC ≈16 · MCC 85 · DCP ≈470 (*"does not correspond to the actual value"* — 최대 압력 부족) · 가압 중 ↔ 뺀 뒤 기공 3–8 %p · HPC 가압 중 음수 기공 (가역 탄성 [72]) · 혼합 Py 는 변형 거동이 다르면 비선형.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

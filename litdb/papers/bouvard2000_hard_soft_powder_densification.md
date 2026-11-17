@@ -116,5 +116,8 @@
 - **전달 없음**: σ_ionic/e/thermal·coverage·Z·Heckel·tortuosity 전부 n/a. 이 논문은 **압밀·패킹·percolation 전용** → 우리 전달 삼중항과는 비교 불가, 압밀·dip 쪽만.
 - **형상 축은 우리 한계를 비춤**: 각질>구형 방해(Fig 5·6)는 **우리 DEM·MPM 둘 다 구만 써서 못 보는 축** — 이 논문을 인용해 "비구형 효과는 future work"임을 정직하게 명시(Varkey 2026·Bazzoun 2026도 동일 자인).
 
+## 🔗 관련 카드
+- 이 논문을 [34] 로 인용한 약학 이원 혼합 실험 (2026-11-17): `berkenkemper2023_compressibility_descriptors_binary_mixtures_deformation` — 소성–취성 · 취성–취성 혼합에서 기공 · Heckel Py 가 **무른 쪽 지배** 로 선형 규칙 아래 (*"This again argues for Jetzer's [32] approach rather than the formed skeleton theory of less deformable material"* p.9) — 이 카드의 골격 가설 반대 쪽 증거 (단 '단단한' DCP 는 깨지는 응집체 · 크기비 0.5–0.6).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

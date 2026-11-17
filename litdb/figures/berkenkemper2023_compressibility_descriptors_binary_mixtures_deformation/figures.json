@@ -1,0 +1,2204 @@
+{
+ "slug": "berkenkemper2023_compressibility_descriptors_binary_mixtures_deformation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-17",
+ "sources": [
+  "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf"
+ ],
+ "figures": [
+  {
+   "key": "ga",
+   "kind": "figure",
+   "label": "GA",
+   "page": 1,
+   "page_printed": 1,
+   "file": "fig_GA.png",
+   "caption": "Graphical abstract (p.1, unnumbered): binary mixtures (two coloured powders) → direct compression in a die → tablet characterization → compressibility descriptors (punch force P · in-die volume change ΔV) — no data.",
+   "rotated_deg": 0,
+   "w": 1378,
+   "h": 534,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.809,
+   "bbox": [
+    202.0,
+    299.8,
+    520.7,
+    415.9
+   ],
+   "src_native": [
+    1328,
+    484
+   ],
+   "native_dpi": 300,
+   "manual_crop": "graphical abstract (no caption — not found by the caption-anchored tool) — cut from the embedded native raster (xref 1007, 1328×484 px = 300 dpi, no resampling): ink box → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "그래픽 초록 = 실험 흐름 (혼합 → 다이 직접 압축 → 정제 측정 → 압축 서술자) · 숫자 없음."
+  },
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "page_printed": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "w": 2216,
+   "h": 2761,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.958,
+   "caption_auto": "Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "auto_bbox": [
+    31.6,
+    49.9,
+    565.8,
+    685.0
+   ],
+   "bbox": [
+    37.6,
+    55.9,
+    559.8,
+    708.3
+   ],
+   "src_native": [
+    1805,
+    2602
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; caption not included, 300 dpi re-render of the 300 dpi embedded raster = resampled) — re-cut: region = embedded raster bbox ∪ caption lines rendered at 300 dpi, the native raster (xref 121, 1805×2602 px = 300 dpi, no resampling) pasted over its rendered copy at (179, 0) px; caption included (CURATOR_BRIEF 2-1); ink trim → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "out-of-die 기공 ε · in-die 탄성 회복 ER · 인장강도 TS (300 MPa 한 압력) vs 조성 + 선형 혼합 규칙 (무게 · 부피) — MCC_HPC 기공은 거의 선형 · DCP 두 혼합은 선 아래 (더 치밀) · 85 % (w/w) 에서 순물질보다 낮은 얕은 극소 [판독]."
+  },
+  {
+   "key": "f1A",
+   "kind": "figure",
+   "label": "1A",
+   "page": 5,
+   "page_printed": 5,
+   "file": "fig_1A.png",
+   "caption": "Fig. 1A — (A) out-of-die porosity ε / % vs weight fraction / % (MCC_HPC black, MCC_DCP brown, TA_DCP blue; dashed = linear mixing rule) (panel of Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 834,
+   "h": 854,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.949,
+   "panel_of": "f1",
+   "manual_crop": "panel A of Fig. 1 — the tool makes no panel crops; cut from the embedded native raster (xref 121, 300 dpi, no resampling): white-gutter split, box [0, 0, 834, 910] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 78, 786, 882] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1B",
+   "kind": "figure",
+   "label": "1B",
+   "page": 5,
+   "page_printed": 5,
+   "file": "fig_1B.png",
+   "caption": "Fig. 1B — (B) ε / % vs volume fraction / % (legend in this panel) (panel of Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 970,
+   "h": 922,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.942,
+   "panel_of": "f1",
+   "manual_crop": "panel B of Fig. 1 — the tool makes no panel crops; cut from the embedded native raster (xref 121, 300 dpi, no resampling): white-gutter split, box [834, 0, 1805, 905] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [883, 2, 1803, 874] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1C",
+   "kind": "figure",
+   "label": "1C",
+   "page": 5,
+   "page_printed": 5,
+   "file": "fig_1C.png",
+   "caption": "Fig. 1C — (C) elastic recovery ER / % vs weight fraction (panel of Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 834,
+   "h": 855,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.951,
+   "panel_of": "f1",
+   "manual_crop": "panel C of Fig. 1 — the tool makes no panel crops; cut from the embedded native raster (xref 121, 300 dpi, no resampling): white-gutter split, box [0, 910, 834, 1769] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 937, 786, 1742] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1D",
+   "kind": "figure",
+   "label": "1D",
+   "page": 5,
+   "page_printed": 5,
+   "file": "fig_1D.png",
+   "caption": "Fig. 1D — (D) ER / % vs volume fraction (panel of Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 833,
+   "h": 846,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.951,
+   "panel_of": "f1",
+   "manual_crop": "panel D of Fig. 1 — the tool makes no panel crops; cut from the embedded native raster (xref 121, 300 dpi, no resampling): white-gutter split, box [834, 905, 1805, 1765] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [883, 938, 1666, 1734] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1E",
+   "kind": "figure",
+   "label": "1E",
+   "page": 5,
+   "page_printed": 5,
+   "file": "fig_1E.png",
+   "caption": "Fig. 1E — (E) tensile strength TS / MPa vs weight fraction (panel of Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 834,
+   "h": 853,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.948,
+   "panel_of": "f1",
+   "manual_crop": "panel E of Fig. 1 — the tool makes no panel crops; cut from the embedded native raster (xref 121, 300 dpi, no resampling): white-gutter split, box [0, 1769, 834, 2602] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 1797, 786, 2600] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1F",
+   "kind": "figure",
+   "label": "1F",
+   "page": 5,
+   "page_printed": 5,
+   "file": "fig_1F.png",
+   "caption": "Fig. 1F — (F) TS / MPa vs volume fraction (panel of Fig. 1. Tablet properties with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 833,
+   "h": 846,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.948,
+   "panel_of": "f1",
+   "manual_crop": "panel F of Fig. 1 — the tool makes no panel crops; cut from the embedded native raster (xref 121, 300 dpi, no resampling): white-gutter split, box [834, 1765, 1805, 2602] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [883, 1797, 1666, 2593] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "page_printed": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Single force-displacement curves of MCC_DCP mixture (70:30, n = 6) (A), force-displacement curves of MCC_DCP (B, n = 1), MCC_HPC (C, n = 1) and TA_DCP (D, n = 1), legends giving the proportion of MCC or TA respectively (w/w).",
+   "rotated_deg": 0,
+   "w": 2216,
+   "h": 1629,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.895,
+   "caption_auto": "Fig. 2. Single force-displacement curves of MCC_DCP mixture (70:30, n = 6) (A), force-displacement curves of MCC_DCP (B, n = 1), MCC_HPC (C, n = 1) and TA_DCP (D, n = 1), legends giving the proportion of MCC or TA respectively (w/w). 6",
+   "auto_bbox": [
+    31.6,
+    357.7,
+    565.7,
+    721.3
+   ],
+   "bbox": [
+    37.6,
+    363.7,
+    559.7,
+    744.5
+   ],
+   "src_native": [
+    2129,
+    1471
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; caption not included, 300 dpi re-render of the 300 dpi embedded raster = resampled) — re-cut: region = embedded raster bbox ∪ caption lines rendered at 300 dpi, the native raster (xref 128, 2129×1471 px = 300 dpi, no resampling) pasted over its rendered copy at (17, 0) px; caption included (CURATOR_BRIEF 2-1); ink trim → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "펀치 간격–힘 곡선 (가압 + 제하) · A = 에너지 E1 · E2 · E3 의 면적 정의 · 순물질 최소 간격 DCP 1.760 · MCC 2.525 · HPC 3.108 · TA 2.688 mm [판독] → 200 mg · Ø8 mm 가압 중 기공 20.6 · 1.2 · −6.0 · 3.6 % [카드 산술]."
+  },
+  {
+   "key": "f2A",
+   "kind": "figure",
+   "label": "2A",
+   "page": 6,
+   "page_printed": 6,
+   "file": "fig_2A.png",
+   "caption": "Fig. 2A — (A) six single F–D curves of MCC_DCP 70:30 with the areas E1, E2, E3 (upper punch force / N vs distance between punches / mm) (panel of Fig. 2. Single force-displacement curves of MCC_DCP mixture (70:30, n = 6) (A), force-displacement curves of MCC_DCP (B, n = 1), MCC_HPC (C, n = 1) and TA_DCP (D, n = 1), legends giving the proportion of MCC or TA respectively (w/w).)",
+   "rotated_deg": 0,
+   "w": 1096,
+   "h": 787,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.944,
+   "panel_of": "f2",
+   "manual_crop": "panel A of Fig. 2 — the tool makes no panel crops; cut from the embedded native raster (xref 128, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[0, 250, 704], [250, 800, 751], [800, 1063, 747]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 2, 1048, 739] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2B",
+   "kind": "figure",
+   "label": "2B",
+   "page": 6,
+   "page_printed": 6,
+   "file": "fig_2B.png",
+   "caption": "Fig. 2B — (B) MCC_DCP F–D curves, MCC_0 … MCC_100 (n = 1) (panel of Fig. 2. Single force-displacement curves of MCC_DCP mixture (70:30, n = 6) (A), force-displacement curves of MCC_DCP (B, n = 1), MCC_HPC (C, n = 1) and TA_DCP (D, n = 1), legends giving the proportion of MCC or TA respectively (w/w).)",
+   "rotated_deg": 0,
+   "w": 1094,
+   "h": 787,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.873,
+   "panel_of": "f2",
+   "manual_crop": "panel B of Fig. 2 — the tool makes no panel crops; cut from the embedded native raster (xref 128, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[1063, 1300, 705], [1300, 1800, 756], [1800, 2129, 756]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [1083, 2, 2127, 739] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2C",
+   "kind": "figure",
+   "label": "2C",
+   "page": 6,
+   "page_printed": 6,
+   "file": "fig_2C.png",
+   "caption": "Fig. 2C — (C) MCC_HPC F–D curves (n = 1) (panel of Fig. 2. Single force-displacement curves of MCC_DCP mixture (70:30, n = 6) (A), force-displacement curves of MCC_DCP (B, n = 1), MCC_HPC (C, n = 1) and TA_DCP (D, n = 1), legends giving the proportion of MCC or TA respectively (w/w).)",
+   "rotated_deg": 0,
+   "w": 1094,
+   "h": 788,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.89,
+   "panel_of": "f2",
+   "manual_crop": "panel C of Fig. 2 — the tool makes no panel crops; cut from the embedded native raster (xref 128, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[0, 250, 704], [250, 800, 751], [800, 1063, 747]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [4, 731, 1048, 1469] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2D",
+   "kind": "figure",
+   "label": "2D",
+   "page": 6,
+   "page_printed": 6,
+   "file": "fig_2D.png",
+   "caption": "Fig. 2D — (D) TA_DCP F–D curves, TA_0 … TA_100 (n = 1) (panel of Fig. 2. Single force-displacement curves of MCC_DCP mixture (70:30, n = 6) (A), force-displacement curves of MCC_DCP (B, n = 1), MCC_HPC (C, n = 1) and TA_DCP (D, n = 1), legends giving the proportion of MCC or TA respectively (w/w).)",
+   "rotated_deg": 0,
+   "w": 1098,
+   "h": 787,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.88,
+   "panel_of": "f2",
+   "manual_crop": "panel D of Fig. 2 — the tool makes no panel crops; cut from the embedded native raster (xref 128, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[1063, 1300, 705], [1300, 1800, 756], [1800, 2129, 756]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [1079, 732, 2127, 1469] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "page_printed": 7,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "w": 2216,
+   "h": 2761,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.958,
+   "caption_auto": "Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "auto_bbox": [
+    31.6,
+    49.9,
+    565.8,
+    685.0
+   ],
+   "bbox": [
+    37.6,
+    55.9,
+    559.8,
+    708.3
+   ],
+   "src_native": [
+    2105,
+    2602
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; caption not included, 300 dpi re-render of the 300 dpi embedded raster = resampled) — re-cut: region = embedded raster bbox ∪ caption lines rendered at 300 dpi, the native raster (xref 150, 2105×2602 px = 300 dpi, no resampling) pasted over its rendered copy at (29, 0) px; caption included (CURATOR_BRIEF 2-1); ink trim → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "E1 · E2 · E3 vs 조성 — 셋 다 거의 선형 (원문) · E3 ↔ ER r 0.991."
+  },
+  {
+   "key": "f3A",
+   "kind": "figure",
+   "label": "3A",
+   "page": 7,
+   "page_printed": 7,
+   "file": "fig_3A.png",
+   "caption": "Fig. 3A — (A) E1 / J vs weight fraction (panel of Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 832,
+   "h": 865,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.95,
+   "panel_of": "f3",
+   "manual_crop": "panel A of Fig. 3 — the tool makes no panel crops; cut from the embedded native raster (xref 150, 300 dpi, no resampling): white-gutter split, box [0, 0, 836, 908] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [10, 73, 792, 888] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3B",
+   "kind": "figure",
+   "label": "3B",
+   "page": 7,
+   "page_printed": 7,
+   "file": "fig_3B.png",
+   "caption": "Fig. 3B — (B) E1 / J vs volume fraction (legend in this panel) (panel of Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 1264,
+   "h": 927,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.956,
+   "panel_of": "f3",
+   "manual_crop": "panel B of Fig. 3 — the tool makes no panel crops; cut from the embedded native raster (xref 150, 300 dpi, no resampling): white-gutter split, box [836, 0, 2105, 905] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [889, 2, 2103, 879] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3C",
+   "kind": "figure",
+   "label": "3C",
+   "page": 7,
+   "page_printed": 7,
+   "file": "fig_3C.png",
+   "caption": "Fig. 3C — (C) E2 / J vs weight fraction (panel of Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 815,
+   "h": 864,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.949,
+   "panel_of": "f3",
+   "manual_crop": "panel C of Fig. 3 — the tool makes no panel crops; cut from the embedded native raster (xref 150, 300 dpi, no resampling): white-gutter split, box [0, 908, 836, 1765] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [27, 930, 792, 1744] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3D",
+   "kind": "figure",
+   "label": "3D",
+   "page": 7,
+   "page_printed": 7,
+   "file": "fig_3D.png",
+   "caption": "Fig. 3D — (D) E2 / J vs volume fraction (panel of Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 814,
+   "h": 856,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.949,
+   "panel_of": "f3",
+   "manual_crop": "panel D of Fig. 3 — the tool makes no panel crops; cut from the embedded native raster (xref 150, 300 dpi, no resampling): white-gutter split, box [836, 905, 2105, 1761] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [906, 930, 1670, 1736] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3E",
+   "kind": "figure",
+   "label": "3E",
+   "page": 7,
+   "page_printed": 7,
+   "file": "fig_3E.png",
+   "caption": "Fig. 3E — (E) E3 / J vs weight fraction (panel of Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 840,
+   "h": 864,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.951,
+   "panel_of": "f3",
+   "manual_crop": "panel E of Fig. 3 — the tool makes no panel crops; cut from the embedded native raster (xref 150, 300 dpi, no resampling): white-gutter split, box [0, 1765, 836, 2602] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 1786, 792, 2600] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3F",
+   "kind": "figure",
+   "label": "3F",
+   "page": 7,
+   "page_printed": 7,
+   "file": "fig_3F.png",
+   "caption": "Fig. 3F — (F) E3 / J vs volume fraction (panel of Fig. 3. Energy parameters of F–D curves with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 840,
+   "h": 857,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.95,
+   "panel_of": "f3",
+   "manual_crop": "panel F of Fig. 3 — the tool makes no panel crops; cut from the embedded native raster (xref 150, 300 dpi, no resampling): white-gutter split, box [836, 1761, 2105, 2602] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [880, 1786, 1670, 2593] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Single curves from Heckel analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).",
+   "rotated_deg": 0,
+   "w": 1095,
+   "h": 1962,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.914,
+   "caption_auto": "Fig. 4. Single curves from Heckel analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1). Heckel analysis for the three material combinations with the negative natural logarithm of porosity (−lnε) against the compression pressure. The linear region of Heckel plot is analyzed after the first curvature where rearrangement processes take place. The following linear region is terminated by the second curvature, which is mainly caused by elastic deformation under pressure. The linear part in between the two curva­ tures is used for the linear regression. With increasing fraction of MCC, the slope of the linear region is increasing, which corresponds to a lower Py value (Fig. 4A). A lower Py value is correlated with higher plasticity as well as a lower resistance against deformation. The shape of the curve is only changing slightly with increasing M",
+   "auto_bbox": [
+    31.6,
+    50.5,
+    297.0,
+    494.0
+   ],
+   "bbox": [
+    37.6,
+    56.5,
+    290.8,
+    517.3
+   ],
+   "src_native": [
+    1019,
+    1804
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; caption not included, 300 dpi re-render of the 300 dpi embedded raster = resampled) — re-cut: region = embedded raster bbox ∪ caption lines rendered at 300 dpi, the native raster (xref 161, 1019×1804 px = 300 dpi, no resampling) pasted over its rendered copy at (13, 0) px; caption included (CURATOR_BRIEF 2-1); ink trim → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "in-die Heckel −lnε vs P (n = 1) — HPC 는 ≈62 MPa 에서 축 밖 (−lnε > 8 = ε < 0.03 %) · 끝 (≈297 MPa) DCP 20.7 · TA 3.15 · MCC 0.95 % [판독 · 카드 산술]."
+  },
+  {
+   "key": "f4A",
+   "kind": "figure",
+   "label": "4A",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_4A.png",
+   "caption": "Fig. 4A — (A) MCC_DCP in-die Heckel −lnε vs compression pressure / MPa (n = 1) (panel of Fig. 4. Single curves from Heckel analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1065,
+   "h": 638,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.915,
+   "panel_of": "f4",
+   "manual_crop": "panel A of Fig. 4 — the tool makes no panel crops; cut from the embedded native raster (xref 161, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 599], [300, 620, 605], [620, 805, 601], [805, 1019, 585]], [[0, 300, 1205], [300, 620, 1223], [620, 805, 1220], [805, 1019, 1192]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 2, 1017, 590] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4B",
+   "kind": "figure",
+   "label": "4B",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_4B.png",
+   "caption": "Fig. 4B — (B) MCC_HPC (curves leave the axis at −lnε = 8) (panel of Fig. 4. Single curves from Heckel analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1063,
+   "h": 639,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.915,
+   "panel_of": "f4",
+   "manual_crop": "panel B of Fig. 4 — the tool makes no panel crops; cut from the embedded native raster (xref 161, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 599], [300, 620, 605], [620, 805, 601], [805, 1019, 585]], [[0, 300, 1205], [300, 620, 1223], [620, 805, 1220], [805, 1019, 1192]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 608, 1015, 1197] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4C",
+   "kind": "figure",
+   "label": "4C",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_4C.png",
+   "caption": "Fig. 4C — (C) TA_DCP (panel of Fig. 4. Single curves from Heckel analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1036,
+   "h": 638,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.918,
+   "panel_of": "f4",
+   "manual_crop": "panel C of Fig. 4 — the tool makes no panel crops; cut from the embedded native raster (xref 161, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 599], [300, 620, 605], [620, 805, 601], [805, 1019, 585]], [[0, 300, 1205], [300, 620, 1223], [620, 805, 1220], [805, 1019, 1192]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 1214, 988, 1802] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Single curves from Compressibility analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).",
+   "rotated_deg": 0,
+   "w": 1094,
+   "h": 1928,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.914,
+   "caption_auto": "Fig. 5. Single curves from Compressibility analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).",
+   "auto_bbox": [
+    300.6,
+    286.0,
+    565.8,
+    721.3
+   ],
+   "bbox": [
+    306.6,
+    292.0,
+    559.8,
+    744.5
+   ],
+   "src_native": [
+    1019,
+    1769
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; caption not included, 300 dpi re-render of the 300 dpi embedded raster = resampled) — re-cut: region = embedded raster bbox ∪ caption lines rendered at 300 dpi, the native raster (xref 158, 1019×1769 px = 300 dpi, no resampling) pasted over its rendered copy at (13, 0) px; caption included (CURATOR_BRIEF 2-1); ink trim → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "in-die lnSF vs lnCP — HPC lnSF > 0 (고체 분율 > 1 = 음수 기공 −6.7 %) [판독] · K = 이 기울기의 역수 (그림 7C 값과 맞음 [카드 산술])."
+  },
+  {
+   "key": "f5A",
+   "kind": "figure",
+   "label": "5A",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_5A.png",
+   "caption": "Fig. 5A — (A) MCC_DCP in-die compressibility lnSF vs lnCP (n = 1) (panel of Fig. 5. Single curves from Compressibility analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1060,
+   "h": 639,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.922,
+   "panel_of": "f5",
+   "manual_crop": "panel A of Fig. 5 — the tool makes no panel crops; cut from the embedded native raster (xref 158, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 567], [300, 620, 630], [620, 805, 599], [805, 1019, 567]], [[0, 300, 1156], [300, 620, 1227], [620, 805, 1170], [805, 1019, 1166]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 2, 1012, 591] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5B",
+   "kind": "figure",
+   "label": "5B",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_5B.png",
+   "caption": "Fig. 5B — (B) MCC_HPC (lnSF > 0 at high pressure) (panel of Fig. 5. Single curves from Compressibility analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1065,
+   "h": 640,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.912,
+   "panel_of": "f5",
+   "manual_crop": "panel B of Fig. 5 — the tool makes no panel crops; cut from the embedded native raster (xref 158, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 567], [300, 620, 630], [620, 805, 599], [805, 1019, 567]], [[0, 300, 1156], [300, 620, 1227], [620, 805, 1170], [805, 1019, 1166]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 589, 1017, 1179] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5C",
+   "kind": "figure",
+   "label": "5C",
+   "page": 8,
+   "page_printed": 8,
+   "file": "fig_5C.png",
+   "caption": "Fig. 5C — (C) TA_DCP (panel of Fig. 5. Single curves from Compressibility analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1038,
+   "h": 639,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.92,
+   "panel_of": "f5",
+   "manual_crop": "panel C of Fig. 5 — the tool makes no panel crops; cut from the embedded native raster (xref 158, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 567], [300, 620, 630], [620, 805, 599], [805, 1019, 567]], [[0, 300, 1156], [300, 620, 1227], [620, 805, 1170], [805, 1019, 1166]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 1178, 990, 1767] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "page_printed": 9,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Single curves from Walker analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).",
+   "rotated_deg": 0,
+   "w": 1095,
+   "h": 1980,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.911,
+   "bbox": [
+    37.6,
+    279.5,
+    290.8,
+    744.5
+   ],
+   "src_native": [
+    1019,
+    1821
+   ],
+   "native_dpi": 300,
+   "manual_crop": "not found by the tool (number gap: the caption 'Fig. 6. …' shares one text block with the right-column body text 'Gentis and Betz [28] …', so the block does not start with 'Fig.') — cut by hand: region = embedded raster bbox [40.7, 279.5, 285.3, 716.6] pt ∪ caption lines [37.6, 723.3, 290.8, 744.5] pt (left column only) rendered at 300 dpi, native raster (xref 178, 1019×1821 px = 300 dpi) pasted over its rendered copy; caption included; ink trim → uniform 25 px margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "in-die Walker V′/V0 vs logCP — HPC 가 1 아래로 (0.936) [판독] · ≈1 MPa 시작값 MCC 3.11 · DCP 2.01 · TA 1.90 · HPC 2.04."
+  },
+  {
+   "key": "f6A",
+   "kind": "figure",
+   "label": "6A",
+   "page": 9,
+   "page_printed": 9,
+   "file": "fig_6A.png",
+   "caption": "Fig. 6A — (A) MCC_DCP in-die Walker V′/V0 vs logCP (n = 1) (panel of Fig. 6. Single curves from Walker analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1065,
+   "h": 661,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.92,
+   "panel_of": "f6",
+   "manual_crop": "panel A of Fig. 6 — the tool makes no panel crops; cut from the embedded native raster (xref 178, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 580], [300, 620, 676], [620, 805, 648], [805, 1019, 585]], [[0, 300, 1184], [300, 620, 1274], [620, 805, 1250], [805, 1019, 1200]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 2, 1017, 613] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6B",
+   "kind": "figure",
+   "label": "6B",
+   "page": 9,
+   "page_printed": 9,
+   "file": "fig_6B.png",
+   "caption": "Fig. 6B — (B) MCC_HPC (V′/V0 below 1 at high pressure) (panel of Fig. 6. Single curves from Walker analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1065,
+   "h": 662,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.91,
+   "panel_of": "f6",
+   "manual_crop": "panel B of Fig. 6 — the tool makes no panel crops; cut from the embedded native raster (xref 178, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 580], [300, 620, 676], [620, 805, 648], [805, 1019, 585]], [[0, 300, 1184], [300, 620, 1274], [620, 805, 1250], [805, 1019, 1200]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 604, 1017, 1216] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6C",
+   "kind": "figure",
+   "label": "6C",
+   "page": 9,
+   "page_printed": 9,
+   "file": "fig_6C.png",
+   "caption": "Fig. 6C — (C) TA_DCP (panel of Fig. 6. Single curves from Walker analysis for MCC_DCP (A), MCC_HPC (B) and TA_DCP (C) with increasing fraction of MCC and TA (n = 1).)",
+   "rotated_deg": 0,
+   "w": 1045,
+   "h": 661,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.917,
+   "panel_of": "f6",
+   "manual_crop": "panel C of Fig. 6 — the tool makes no panel crops; cut from the embedded native raster (xref 178, 300 dpi, no resampling): stepped row boundaries per x band (y-axis labels | axis-title zone | right plot zone | legend), each at the middle of the white run between the upper panel's last ink and the lower panel's first ink in that band: [[[0, 300, 580], [300, 620, 676], [620, 805, 648], [805, 1019, 585]], [[0, 300, 1184], [300, 620, 1274], [620, 805, 1250], [805, 1019, 1200]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 1208, 997, 1819] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "page_printed": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "w": 2215,
+   "h": 2761,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.956,
+   "caption_auto": "Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "auto_bbox": [
+    31.6,
+    49.9,
+    565.8,
+    685.0
+   ],
+   "bbox": [
+    37.6,
+    55.9,
+    559.8,
+    708.3
+   ],
+   "src_native": [
+    1835,
+    2602
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; caption not included, 300 dpi re-render of the 300 dpi embedded raster = resampled) — re-cut: region = embedded raster bbox ∪ caption lines rendered at 300 dpi, the native raster (xref 203, 1835×2602 px = 300 dpi, no resampling) pasted over its rendered copy at (165, 0) px; caption included (CURATOR_BRIEF 2-1); ink trim → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "★ 서술자 Py · K · W vs 조성 — Py 는 소성/소성 (MCC_HPC) 만 선형 · DCP 혼합은 선 아래 · K · W 는 거의 선형 (원문 · 이 카드 선형성 표 §3-6)."
+  },
+  {
+   "key": "f7A",
+   "kind": "figure",
+   "label": "7A",
+   "page": 10,
+   "page_printed": 10,
+   "file": "fig_7A.png",
+   "caption": "Fig. 7A — (A) Heckel yield pressure Py / MPa vs weight fraction (panel of Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 867,
+   "h": 854,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.947,
+   "panel_of": "f7",
+   "manual_crop": "panel A of Fig. 7 — the tool makes no panel crops; cut from the embedded native raster (xref 203, 300 dpi, no resampling): white-gutter split, box [0, 0, 860, 897] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [12, 62, 829, 866] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7B",
+   "kind": "figure",
+   "label": "7B",
+   "page": 10,
+   "page_printed": 10,
+   "file": "fig_7B.png",
+   "caption": "Fig. 7B — (B) Py / MPa vs volume fraction (legend in this panel) (panel of Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 982,
+   "h": 906,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.937,
+   "panel_of": "f7",
+   "manual_crop": "panel B of Fig. 7 — the tool makes no panel crops; cut from the embedded native raster (xref 203, 300 dpi, no resampling): white-gutter split, box [860, 0, 1835, 893] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [901, 2, 1833, 858] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7C",
+   "kind": "figure",
+   "label": "7C",
+   "page": 10,
+   "page_printed": 10,
+   "file": "fig_7C.png",
+   "caption": "Fig. 7C — (C) compressibility constant K vs weight fraction (panel of Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 841,
+   "h": 856,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.953,
+   "panel_of": "f7",
+   "manual_crop": "panel C of Fig. 7 — the tool makes no panel crops; cut from the embedded native raster (xref 203, 300 dpi, no resampling): white-gutter split, box [0, 897, 860, 1765] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [38, 928, 829, 1734] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7D",
+   "kind": "figure",
+   "label": "7D",
+   "page": 10,
+   "page_printed": 10,
+   "file": "fig_7D.png",
+   "caption": "Fig. 7D — (D) K vs volume fraction (panel of Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 841,
+   "h": 847,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.951,
+   "panel_of": "f7",
+   "manual_crop": "panel D of Fig. 7 — the tool makes no panel crops; cut from the embedded native raster (xref 203, 300 dpi, no resampling): white-gutter split, box [860, 893, 1835, 1761] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [927, 929, 1718, 1726] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7E",
+   "kind": "figure",
+   "label": "7E",
+   "page": 10,
+   "page_printed": 10,
+   "file": "fig_7E.png",
+   "caption": "Fig. 7E — (E) Walker W vs weight fraction (panel of Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 877,
+   "h": 854,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.951,
+   "panel_of": "f7",
+   "manual_crop": "panel E of Fig. 7 — the tool makes no panel crops; cut from the embedded native raster (xref 203, 300 dpi, no resampling): white-gutter split, box [0, 1765, 860, 2602] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 1796, 829, 2600] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7F",
+   "kind": "figure",
+   "label": "7F",
+   "page": 10,
+   "page_printed": 10,
+   "file": "fig_7F.png",
+   "caption": "Fig. 7F — (F) W vs volume fraction (panel of Fig. 7. Compressibility descriptors of Heckel, Compressibility and Walker analysis with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 877,
+   "h": 847,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.95,
+   "panel_of": "f7",
+   "manual_crop": "panel F of Fig. 7 — the tool makes no panel crops; cut from the embedded native raster (xref 203, 300 dpi, no resampling): white-gutter split, box [860, 1761, 1835, 2602] px; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [891, 1796, 1718, 2593] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "w": 2216,
+   "h": 2799,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.949,
+   "caption_auto": "Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6). (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "auto_bbox": [
+    31.6,
+    49.9,
+    565.8,
+    684.4
+   ],
+   "bbox": [
+    37.6,
+    55.9,
+    559.8,
+    717.9
+   ],
+   "src_native": [
+    1840,
+    2602
+   ],
+   "native_dpi": 300,
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; caption not included, 300 dpi re-render of the 300 dpi embedded raster = resampled) — re-cut: region = embedded raster bbox ∪ caption lines rendered at 300 dpi, the native raster (xref 230, 1840×2602 px = 300 dpi, no resampling) pasted over its rendered copy at (163, 0) px; caption included (CURATOR_BRIEF 2-1); ink trim → uniform 25 px (6 pt) white margin (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "Cp · Pf · ab · C⁻¹ vs 조성 — ab 세 혼합 모두 선형 (Table 3 의 a/b⁻¹ 와 판독이 25 조성 중 24 에서 ±0.0002 MPa⁻¹ 안 · 순수 MCC 0.00044) · Cp 비선형 · Pf 는 MCC_DCP 점이 TA_DCP 점 바로 뒤 · ⚠ B · F 축 제목 'Weight fraction' (점은 부피 분율 자리)."
+  },
+  {
+   "key": "f8A",
+   "kind": "figure",
+   "label": "8A",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8A.png",
+   "caption": "Fig. 8A — (A) compressibility parameter Cp / Pa/J*kg⁻¹ vs weight fraction (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 857,
+   "h": 674,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.938,
+   "panel_of": "f8",
+   "manual_crop": "panel A of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[0, 250, 690], [250, 700, 748], [700, 851, 728]], [[0, 250, 1316], [250, 700, 1382], [700, 851, 1316]], [[0, 250, 1943], [250, 700, 1995], [700, 851, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [18, 96, 825, 720] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8B",
+   "kind": "figure",
+   "label": "8B",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8B.png",
+   "caption": "Fig. 8B — (B) Cp vs volume fraction — printed x-axis title 'Weight fraction / %' (sic; points sit at the volume fractions, legend in this panel) (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 994,
+   "h": 768,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.934,
+   "panel_of": "f8",
+   "manual_crop": "panel B of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[851, 1100, 690], [1100, 1550, 748], [1550, 1840, 728]], [[851, 1100, 1316], [1100, 1550, 1378], [1550, 1840, 1316]], [[851, 1100, 1943], [1100, 1550, 1995], [1550, 1840, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [894, 2, 1838, 720] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8C",
+   "kind": "figure",
+   "label": "8C",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8C.png",
+   "caption": "Fig. 8C — (C) plasticity factor Pf / % vs weight fraction (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 851,
+   "h": 675,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.953,
+   "panel_of": "f8",
+   "manual_crop": "panel C of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[0, 250, 690], [250, 700, 748], [700, 851, 728]], [[0, 250, 1316], [250, 700, 1382], [700, 851, 1316]], [[0, 250, 1943], [250, 700, 1995], [700, 851, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [24, 722, 825, 1347] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8D",
+   "kind": "figure",
+   "label": "8D",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8D.png",
+   "caption": "Fig. 8D — (D) Pf / % vs volume fraction (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 851,
+   "h": 666,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.952,
+   "panel_of": "f8",
+   "manual_crop": "panel D of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[851, 1100, 690], [1100, 1550, 748], [1550, 1840, 728]], [[851, 1100, 1316], [1100, 1550, 1378], [1550, 1840, 1316]], [[851, 1100, 1943], [1100, 1550, 1995], [1550, 1840, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [900, 723, 1701, 1339] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8E",
+   "kind": "figure",
+   "label": "8E",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8E.png",
+   "caption": "Fig. 8E — (E) Kawakita ab / MPa⁻¹ vs weight fraction (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 865,
+   "h": 675,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.944,
+   "panel_of": "f8",
+   "manual_crop": "panel E of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[0, 250, 690], [250, 700, 748], [700, 851, 728]], [[0, 250, 1316], [250, 700, 1382], [700, 851, 1316]], [[0, 250, 1943], [250, 700, 1995], [700, 851, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [10, 1349, 825, 1974] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8F",
+   "kind": "figure",
+   "label": "8F",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8F.png",
+   "caption": "Fig. 8F — (F) ab vs volume fraction — printed x-axis title 'Weight fraction / %' (sic) (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 865,
+   "h": 675,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.943,
+   "panel_of": "f8",
+   "manual_crop": "panel F of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[851, 1100, 690], [1100, 1550, 748], [1550, 1840, 728]], [[851, 1100, 1316], [1100, 1550, 1378], [1550, 1840, 1316]], [[851, 1100, 1943], [1100, 1550, 1995], [1550, 1840, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [886, 1349, 1701, 1974] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8G",
+   "kind": "figure",
+   "label": "8G",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8G.png",
+   "caption": "Fig. 8G — (G) Kuentz–Leuenberger C⁻¹ / MPa vs weight fraction (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 873,
+   "h": 674,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.942,
+   "panel_of": "f8",
+   "manual_crop": "panel G of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[0, 250, 690], [250, 700, 748], [700, 851, 728]], [[0, 250, 1316], [250, 700, 1382], [700, 851, 1316]], [[0, 250, 1943], [250, 700, 1995], [700, 851, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [2, 1976, 825, 2600] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8H",
+   "kind": "figure",
+   "label": "8H",
+   "page": 12,
+   "page_printed": 12,
+   "file": "fig_8H.png",
+   "caption": "Fig. 8H — (H) C⁻¹ / MPa vs volume fraction (panel of Fig. 8. Compressibility parameter (Cp), plasticity factor (Pf), rearrangement index of Kawakita (ab) and plasticity parameter of Kuentz-Leuenberger analysis (C-1) with increasing weight or volume fraction of MCC (black, brown) and TA (blue) (x‾ ± sd, n = 6).)",
+   "rotated_deg": 0,
+   "w": 873,
+   "h": 667,
+   "dpi": 300,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.941,
+   "panel_of": "f8",
+   "manual_crop": "panel H of Fig. 8 — the tool makes no panel crops; cut from the embedded native raster (xref 230, 300 dpi, no resampling): stepped row boundaries per x band (the panel above's x-axis title sits only in the centre band): [[[851, 1100, 690], [1100, 1550, 748], [1550, 1840, 728]], [[851, 1100, 1316], [1100, 1550, 1378], [1550, 1840, 1316]], [[851, 1100, 1943], [1100, 1550, 1995], [1550, 1840, 1943]]]; pixels outside the panel's own region filled with the raster background (254); ink trim → uniform 25 px margin; ink box in raster px [878, 1976, 1701, 2593] (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "page_printed": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Applied compression analyses with equation and corresponding compression parameter.",
+   "rotated_deg": 0,
+   "w": 1465,
+   "h": 1797,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.923,
+   "caption_auto": "Table 1 Applied compression analyses with equation and corresponding compression parameter.",
+   "auto_bbox": [
+    32.6,
+    31.6,
+    564.7,
+    748.0
+   ],
+   "bbox": [
+    304.0,
+    418.8,
+    561.5,
+    752.7
+   ],
+   "manual_crop": "the tool's table crop was the whole page (bbox [32.6, 31.6, 564.7, 748.0] pt = running head, the table and the neighbouring column's body text) — cut by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt table type): clip edges at the middle of the white gap just outside the caption and the bottom rule / abbreviation footnote, ink trim → uniform 6 pt white margin; caption kept (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "여덟 압축 분석 식 (Heckel · KL · Kawakita · Walker · Compressibility · E2 · Cp · Pf) + 약어 — ⚠ Compressibility 식 (K = 기울기) ↔ 그림 7C 의 K = 기울기의 역수 · Walker 식 (−W) ↔ 그림 7E 의 W < 0 (§3-8)."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "page_printed": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Measured values of particle size distribution and particle density for the pure excipients (x‾ ± sd, n = 3).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 754,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.936,
+   "caption_auto": "Table 2 Measured values of particle size distribution and particle density for the pure excipients (x‾ ± sd, n = 3). x50 μm x90 μm Material x10 μm ρp mg/mm3 DCP 34.2 ± 0.17 2.849 ± 0.004 HPC 28.8 ± 0. …",
+   "auto_bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "bbox": [
+    33.0,
+    44.5,
+    292.0,
+    189.4
+   ],
+   "manual_crop": "the tool's table crop was the whole page (bbox [32.6, 31.6, 563.3, 748.6] pt = running head, the table and the neighbouring column's body text) — cut by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt table type): clip edges at the middle of the white gap just outside the caption and the bottom rule, ink trim → uniform 6 pt white margin; caption kept (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "입도 x10 / x50 / x90 (µm) · He 피크노미터 입자 밀도 ρp (mg/mm³ = g/cm³): DCP 62.0 µm · 2.849 · HPC 80.9 · 1.208 · MCC 102.3 · 1.595 · TA 124.0 · 1.535 — HPC · MCC 밀도는 물 때문에 약간 과대 (원문)."
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 13,
+   "page_printed": 13,
+   "file": "tab_3.png",
+   "caption": "Table 3 Mean values (x‾, n = 6) of Kawakita parameters a and b−1.",
+   "rotated_deg": 0,
+   "w": 1462,
+   "h": 1821,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.954,
+   "caption_auto": "Table 3 Mean values (x‾, n = 6) of Kawakita parameters a and b−1. Mixture Mixing ratio a b−1 % (w/w) – MPa MCC_DCP 0:100 0.46 59.198 15:85 0.577 29.559 30:70 0.618 20.277 40:60 0.657 15.535 40:60 0.66 …",
+   "auto_bbox": [
+    32.6,
+    31.6,
+    562.7,
+    748.4
+   ],
+   "bbox": [
+    303.0,
+    44.5,
+    561.0,
+    381.3
+   ],
+   "manual_crop": "the tool's table crop was the whole page (bbox [32.6, 31.6, 562.7, 748.4] pt = running head, the table and the neighbouring column's body text) — cut by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt table type): clip edges at the middle of the white gap just outside the caption and the bottom rule, ink trim → uniform 6 pt white margin; caption kept (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "viewed_how": "2026-11-17 litdb-curator: opened every crop — whole-figure Read of fig_1–fig_8, fig_GA and the three tables; labelled QA sheets of all 39 panels (0.27–0.42 scale) plus full-size fig_6B / fig_6 / fig_GA; all 12 equations (0.5 scale + eq_01, eq_T1b full size); all 20 text crops as top/bottom edge strips (0.5) plus x13 full size",
+   "mpm_note_ko": "Kawakita a · b⁻¹ (n = 6) 전 조성 — ab = a/b⁻¹ 는 그림 8E 판독과 25 조성 중 24 에서 ±0.0002 MPa⁻¹ 안 (순수 MCC 0.00044) [카드 산술] · 두 번 찍은 네 조성 (MCC_DCP 40:60 · MCC_HPC 15:85 · TA_DCP 15:85 · 30:70) 이 두 줄씩."
+  },
+  {
+   "key": "eeq1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "page_printed": 2,
+   "file": "eq_01_harmonic_mean_particle_density_mixture.png",
+   "caption": "Eq. (1), p.2: ρ̄harm = Σᵢ ωᵢ / Σᵢ (ωᵢ/ρᵢ) — weighted harmonic mean particle density of a mixture (ωᵢ mass, ρᵢ particle density of component i; linear mixing rule for density [17,41]).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 185,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.984,
+   "bbox": [
+    304.0,
+    691.8,
+    561.5,
+    723.7
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; equation number kept (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeq2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_02_tensile_strength_diametral.png",
+   "caption": "Eq. (2), p.3: σ = 2·CF / (π·d·h) — diametral tensile strength (CF crushing force, d · h out-of-die diameter · height).",
+   "rotated_deg": 0,
+   "w": 1457,
+   "h": 160,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.985,
+   "bbox": [
+    35.0,
+    338.7,
+    292.0,
+    363.3
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; equation number kept (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeq3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_03_elastic_recovery_in_die.png",
+   "caption": "Eq. (3), p.3: ER = (rth_id − th_id) / th_id × 100 % — in-die elastic recovery (rth_id in-die recovery thickness, th_id in-die thickness at maximum compression pressure).",
+   "rotated_deg": 0,
+   "w": 1458,
+   "h": 165,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.978,
+   "bbox": [
+    35.0,
+    398.3,
+    292.0,
+    428.0
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; equation number kept (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeq4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_04_out_of_die_porosity.png",
+   "caption": "Eq. (4), p.3: ε = (1 − ρt/ρp) × 100 % — out-of-die tablet porosity (ρt from out-of-die geometry and mass, ρp He-pycnometry particle density).",
+   "rotated_deg": 0,
+   "w": 1457,
+   "h": 178,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.984,
+   "bbox": [
+    35.0,
+    462.2,
+    292.0,
+    491.5
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; equation number kept (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1a",
+   "kind": "equation",
+   "label": "T1-Heckel",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1a_heckel.png",
+   "caption": "Table 1 row, p.3 — Heckel: −ln(ε) = (1/Py)·P + a → descriptor Py (yield pressure).",
+   "rotated_deg": 0,
+   "w": 1106,
+   "h": 150,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.98,
+   "bbox": [
+    304.0,
+    482.6,
+    561.5,
+    500.3
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1b",
+   "kind": "equation",
+   "label": "T1-KL",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1b_kuentz_leuenberger_modified_heckel.png",
+   "caption": "Table 1 row, p.3 — Kuentz–Leuenberger (KL, modified Heckel): P = C⁻¹·[ρc − ρ − (1 − ρc)·ln((1 − ρ)/(1 − ρc))] → C⁻¹ (plasticity parameter; ρc critical relative density).",
+   "rotated_deg": 0,
+   "w": 1126,
+   "h": 205,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.978,
+   "bbox": [
+    304.0,
+    500.3,
+    561.5,
+    526.2
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1c",
+   "kind": "equation",
+   "label": "T1-Kawakita",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1c_kawakita.png",
+   "caption": "Table 1 row, p.3 — Kawakita: P/C1 = 1/(ab) + P/a → a (maximum degree of compression), b⁻¹ (pressure to reach a/2), ab (rearrangement parameter); C1 = relative volume reduction.",
+   "rotated_deg": 0,
+   "w": 1219,
+   "h": 151,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.976,
+   "bbox": [
+    304.0,
+    526.2,
+    561.5,
+    543.0
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1d",
+   "kind": "equation",
+   "label": "T1-Walker",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1d_walker.png",
+   "caption": "Table 1 row, p.3 — Walker: V′/V0 = −W·log(P) + V1 → W (compressibility index; V′ volume under pressure, V0 volume at zero porosity) — ⚠ Fig. 7E/F plots W < 0 (= the slope itself).",
+   "rotated_deg": 0,
+   "w": 1108,
+   "h": 153,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.976,
+   "bbox": [
+    304.0,
+    542.9,
+    561.5,
+    560.7
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1e",
+   "kind": "equation",
+   "label": "T1-Compressibility",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1e_compressibility_johanson.png",
+   "caption": "Table 1 row, p.3 — Compressibility (Johanson [39,46]): ln(1 − ε) = K·ln(P) + A → K (compressibility constant) — ⚠ Fig. 7C/D K (3.8–8.8) = reciprocal of the lnSF–lnCP slope read from Fig. 5 (card §3-8).",
+   "rotated_deg": 0,
+   "w": 1096,
+   "h": 101,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.953,
+   "bbox": [
+    304.0,
+    560.7,
+    561.5,
+    569.4
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1f",
+   "kind": "equation",
+   "label": "T1-E2",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1f_fd_net_work_E2.png",
+   "caption": "Table 1 row, p.3 — F–D curve: E2 = ∫ from xmax to xmin of Fc(x)dx − ∫ from xmin to x0d of Fd(x)dx → E2 (net work of compression).",
+   "rotated_deg": 0,
+   "w": 1106,
+   "h": 192,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.971,
+   "bbox": [
+    304.0,
+    569.4,
+    561.5,
+    594.8
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1g",
+   "kind": "equation",
+   "label": "T1-Cp",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1g_fd_compressibility_parameter_Cp.png",
+   "caption": "Table 1 row, p.3 — F–D curve: Cp = σ / (E2/m) → Cp (compressibility parameter; σ tensile strength, m tablet mass).",
+   "rotated_deg": 0,
+   "w": 1111,
+   "h": 176,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.984,
+   "bbox": [
+    304.0,
+    594.7,
+    561.5,
+    616.9
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "eeqT1h",
+   "kind": "equation",
+   "label": "T1-Pf",
+   "page": 3,
+   "page_printed": 3,
+   "file": "eq_T1h_fd_plasticity_factor_Pf.png",
+   "caption": "Table 1 row, p.3 — F–D curve: Pf = E2 / (E2 + E3) → Pf (plasticity factor).",
+   "rotated_deg": 0,
+   "w": 1107,
+   "h": 145,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.977,
+   "bbox": [
+    304.0,
+    616.9,
+    561.5,
+    633.8
+   ],
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 6.4–8 pt type) — band between the middle of the white rows just outside the equation's ink (text-layer line boxes as the core), ink trim → uniform 6 pt white margin; whole Table 1 row (analysis name · equation · descriptor) — the table's equations are unnumbered (2026-11-17, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x01",
+   "kind": "text",
+   "label": "p1_doi_received_revised_accepted_online",
+   "page": 1,
+   "page_printed": 1,
+   "file": "txt_p1_doi_received_revised_accepted_online.png",
+   "caption": "p.1 (foot): 'https://doi.org/10.1016/j.powtec.2023.118571 · Received 21 December 2022; Received in revised form 14 March 2023; Accepted 14 April 2023' + 'Available online 18 April 2023 · 0032-5910/© 2023 Elsevier B.V.' — bibliographic evidence.",
+   "rotated_deg": 0,
+   "w": 1777,
+   "h": 373,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.94,
+   "bbox": [
+    35.0,
+    692.2,
+    562.0,
+    716.6
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.1 [35.0, 692.2, 562.0, 716.6] + PDF p.1 [35.0, 716.6, 562.0, 739.6] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     1,
+     [
+      35.0,
+      692.2,
+      562.0,
+      716.6
+     ]
+    ],
+    [
+     1,
+     [
+      35.0,
+      716.6,
+      562.0,
+      739.6
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x02",
+   "kind": "text",
+   "label": "p1_abstract_K_W_ab_linear_with_composition",
+   "page": 1,
+   "page_printed": 1,
+   "file": "txt_p1_abstract_K_W_ab_linear_with_composition.png",
+   "caption": "p.1 abstract: 'Compressibility analysis, Walker equation and rearrangement index of Kawakita analysis showed promising results. A linear relationship between the compression parameter and the composition of the binary mixture was found for the three parameters.'",
+   "rotated_deg": 0,
+   "w": 2044,
+   "h": 265,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.875,
+   "bbox": [
+    200.0,
+    542.9,
+    562.0,
+    585.0
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     1,
+     [
+      200.0,
+      542.9,
+      562.0,
+      585.0
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x03",
+   "kind": "text",
+   "label": "p2_mechanisms_jetzer_network_bouvard_skeleton_ilkka",
+   "page": 2,
+   "page_printed": 2,
+   "file": "txt_p2_mechanisms_jetzer_network_bouvard_skeleton_ilkka.png",
+   "caption": "p.2: competing volume-reduction mechanisms in binary mixtures — the more ductile material deforms first and builds a network around the less deformable one (Jetzer [32,33]) vs a skeleton of the less deformable material hindering the soft one at low pressure (Bouvard [34], also [20,25]) vs a distinct dominance of the less deformable substance (Ilkka & Paronen [24]); particle size also matters [35,36].",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1090,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.86,
+   "bbox": [
+    35.0,
+    681.2,
+    293.5,
+    748.0
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.2 [35.0, 681.2, 293.5, 748.0] + PDF p.2 [304.0, 47.8, 562.0, 158.1] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     2,
+     [
+      35.0,
+      681.2,
+      293.5,
+      748.0
+     ]
+    ],
+    [
+     2,
+     [
+      304.0,
+      47.8,
+      562.0,
+      158.1
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x04",
+   "kind": "text",
+   "label": "p2_linear_mixing_rule_weight_vs_volume_density",
+   "page": 2,
+   "page_printed": 2,
+   "file": "txt_p2_linear_mixing_rule_weight_vs_volume_density.png",
+   "caption": "p.2: linear mixing rules on weight [22] or volume [23] fraction gave good results; mixtures of materials with significantly different density should rather use the volume fraction [24], which may be advantageous in general for a three-dimensional tablet [25].",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 575,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.847,
+   "bbox": [
+    35.0,
+    409.2,
+    293.5,
+    503.4
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     2,
+     [
+      35.0,
+      409.2,
+      293.5,
+      503.4
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x05",
+   "kind": "text",
+   "label": "p3_ratios_turbula_styl_one_8mm_3mm_s_15kN_300MPa_n6",
+   "page": 3,
+   "page_printed": 3,
+   "file": "txt_p3_ratios_turbula_styl_one_8mm_3mm_s_15kN_300MPa_n6.png",
+   "caption": "p.3 §2.2.2: ratios '0:100, 15:85, 30:70, 40:60, 50:50, 60:40, 30:70, 85:15 and 100:0 (w/w)' (sic — 70:30 printed as 30:70) · 50 g, Turbula 15 min · MCC_DCP / MCC_HPC / TA_DCP · STYL'One Evo, 8 mm round flat-faced EuroD tooling, 3 mm/s, 10 kHz · MgSt on the die by brush · 200 mg manual fill · 15 kN = 300 MPa · n = 6 (four mixtures twice, n = 12).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1271,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.844,
+   "bbox": [
+    35.0,
+    64.0,
+    293.5,
+    287.8
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     3,
+     [
+      35.0,
+      64.0,
+      293.5,
+      287.8
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x06",
+   "kind": "text",
+   "label": "p3_in_die_kawakita_kl_walker_pearson_0p999_0p993",
+   "page": 3,
+   "page_printed": 3,
+   "file": "txt_p3_in_die_kawakita_kl_walker_pearson_0p999_0p993.png",
+   "caption": "p.3 §2.2.4: Kawakita, Kuentz–Leuenberger and Walker were postulated as out-of-die analyses but applied in-die; out-of-die in-house data of the same four grades correlate with in-die (Pearson 0.999 KL, 0.993 Walker).",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1088,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.859,
+   "bbox": [
+    35.0,
+    607.8,
+    293.5,
+    747.8
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.3 [35.0, 607.8, 293.5, 747.8] + PDF p.3 [304.0, 47.8, 562.0, 84.9] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     3,
+     [
+      35.0,
+      607.8,
+      293.5,
+      747.8
+     ]
+    ],
+    [
+     3,
+     [
+      304.0,
+      47.8,
+      562.0,
+      84.9
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x07",
+   "kind": "text",
+   "label": "p3_p4_pycnometry_density_overestimated_water_4pct",
+   "page": 3,
+   "page_printed": 3,
+   "file": "txt_p3_p4_pycnometry_density_overestimated_water_4pct.png",
+   "caption": "p.3–4: He-pycnometry particle densities of HPC and MCC 'slightly overestimated' (water content > 4 % vs < 0.5 % for DCP and TA; water leaving into the gas phase) — error assumed not to affect the main interpretation; densities used as measured.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 799,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.866,
+   "bbox": [
+    304.0,
+    231.4,
+    562.0,
+    283.6
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.3 [304.0, 231.4, 562.0, 283.6] + PDF p.4 [35.0, 189.1, 293.5, 261.6] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     3,
+     [
+      304.0,
+      231.4,
+      562.0,
+      283.6
+     ]
+    ],
+    [
+     4,
+     [
+      35.0,
+      189.1,
+      293.5,
+      261.6
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x08",
+   "kind": "text",
+   "label": "p4_porosity_negative_deviation_jetzer_percolation_70pct",
+   "page": 4,
+   "page_printed": 4,
+   "file": "txt_p4_porosity_negative_deviation_jetzer_percolation_70pct.png",
+   "caption": "p.4: DCP mixtures deviate from the predicted porosity in the negative direction (densified more than expected), less with volume fraction; MCC and TA dominate from ≈30 % (w/w) (Jetzer's network presumption) · no marked porosity change above 70 % → percolation threshold of MCC and TA 'might lay in this range'.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1040,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.837,
+   "bbox": [
+    35.0,
+    441.3,
+    293.5,
+    619.1
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     4,
+     [
+      35.0,
+      441.3,
+      293.5,
+      619.1
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x09",
+   "kind": "text",
+   "label": "p4_mcc_hpc_below_10pct_mcc_dcp_ts_max_70pct_void_filling",
+   "page": 4,
+   "page_printed": 4,
+   "file": "txt_p4_mcc_hpc_below_10pct_mcc_dcp_ts_max_70pct_void_filling.png",
+   "caption": "p.4: 'As the porosity of the MCC_HPC mixtures is lower than 10 % in all cases' (void-filling argument not weighed) · MCC_DCP tensile strength above the mixing rule, maximum at 70 % MCC (cf. 75:25 in [3]) — DCP fills voids by fragmentation.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 924,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.846,
+   "bbox": [
+    304.0,
+    356.9,
+    562.0,
+    513.9
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     4,
+     [
+      304.0,
+      356.9,
+      562.0,
+      513.9
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x10",
+   "kind": "text",
+   "label": "p6_E2_resistance_to_deformation_E3_ER_r0p991",
+   "page": 6,
+   "page_printed": 6,
+   "file": "txt_p6_E2_resistance_to_deformation_E3_ER_r0p991.png",
+   "caption": "p.6: E2 = energy to permanently deform (plastic flow or fragmentation), not plasticity alone (HPC, most plastic, has the smallest E2) · E3 tracks elastic recovery (correlation coefficient 0.991, adjusted R² 0.981).",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 1021,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.874,
+   "bbox": [
+    35.0,
+    294.2,
+    293.5,
+    350.9
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.6 [35.0, 294.2, 293.5, 350.9] + PDF p.6 [304.0, 47.8, 562.0, 157.4] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     6,
+     [
+      35.0,
+      294.2,
+      293.5,
+      350.9
+     ]
+    ],
+    [
+     6,
+     [
+      304.0,
+      47.8,
+      562.0,
+      157.4
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x11",
+   "kind": "text",
+   "label": "p6_energy_parameters_near_linear_fem_unnecessary",
+   "page": 6,
+   "page_printed": 6,
+   "file": "txt_p6_energy_parameters_near_linear_fem_unnecessary.png",
+   "caption": "p.6: energy parameters almost linear in composition for all combinations; largest relative deviation for E3 · FEM prediction of F–D curves (van der Haven et al. [70]) 'seems unnecessary' because pure-material data suffice.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 807,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.84,
+   "bbox": [
+    304.0,
+    157.4,
+    562.0,
+    298.2
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     6,
+     [
+      304.0,
+      157.4,
+      562.0,
+      298.2
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x12",
+   "kind": "text",
+   "label": "p8_heckel_second_curvature_negative_porosity_elastic",
+   "page": 8,
+   "page_printed": 8,
+   "file": "txt_p8_heckel_second_curvature_negative_porosity_elastic.png",
+   "caption": "p.8: Heckel linear region between the first (rearrangement) and second (elastic deformation under pressure) curvature · Py ↓ with MCC fraction · Heckel 'not suitable to describe volume changes at low porosity' (Ilkka & Paronen [24]) · 'a porosity decrease up to negative porosity values is reversible elastic deformation of the material under pressure [72]' · 15 % HPC already shows the second curvature (HPC highest ER).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1495,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.852,
+   "bbox": [
+    35.0,
+    550.2,
+    293.5,
+    742.5
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.8 [35.0, 550.2, 293.5, 742.5] + PDF p.8 [304.0, 47.8, 562.0, 105.9] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     8,
+     [
+      35.0,
+      550.2,
+      293.5,
+      742.5
+     ]
+    ],
+    [
+     8,
+     [
+      304.0,
+      47.8,
+      562.0,
+      105.9
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x13",
+   "kind": "text",
+   "label": "p8_p9_compressibility_two_linear_regions_dcp_50MPa",
+   "page": 8,
+   "page_printed": 8,
+   "file": "txt_p8_p9_compressibility_two_linear_regions_dcp_50MPa.png",
+   "caption": "p.8–9: compressibility analysis (lnSF vs lnCP) fitted before the plateau of maximum solid fraction · DCP shows two linear sections (agglomerate fragmentation, then primary particles) — the second, used for K, starts at ≈50 MPa · HPC reaches constant porosity at lower pressure · DCP, TA and their mixtures show no plateau.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1728,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.847,
+   "bbox": [
+    304.0,
+    105.9,
+    562.0,
+    277.3
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.8 [304.0, 105.9, 562.0, 277.3] + PDF p.9 [35.0, 47.8, 293.5, 168.6] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     8,
+     [
+      304.0,
+      105.9,
+      562.0,
+      277.3
+     ]
+    ],
+    [
+     9,
+     [
+      35.0,
+      47.8,
+      293.5,
+      168.6
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x14",
+   "kind": "text",
+   "label": "p9_walker_10MPa_threshold_dcp_30MPa_hpc_fill",
+   "page": 9,
+   "page_printed": 9,
+   "file": "txt_p9_walker_10MPa_threshold_dcp_30MPa_hpc_fill.png",
+   "caption": "p.9: Walker (V′/V0 vs logCP; V0 = zero-porosity volume from particle density) regressed above 10 MPa (lowered for HPC) · DCP linear region not before ≈30 MPa · HPC: die filled at the maximum dosage height, so its true initial volume ratio is probably higher than measured.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1437,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.847,
+   "bbox": [
+    35.0,
+    168.6,
+    293.5,
+    266.9
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.9 [35.0, 168.6, 293.5, 266.9] + PDF p.9 [304.0, 47.8, 562.0, 189.6] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     9,
+     [
+      35.0,
+      168.6,
+      293.5,
+      266.9
+     ]
+    ],
+    [
+     9,
+     [
+      304.0,
+      47.8,
+      562.0,
+      189.6
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x15",
+   "kind": "text",
+   "label": "p9_heckel_py_linear_ductile_16_85_nonlinear_others",
+   "page": 9,
+   "page_printed": 9,
+   "file": "txt_p9_heckel_py_linear_ductile_16_85_nonlinear_others.png",
+   "caption": "p.9 §3.3.3.1: Py linear in composition for the two ductile materials (HPC ≈16 MPa, MCC 85 MPa) · for MCC_DCP and TA_DCP Py deviates negatively from both mixing rules — MCC and TA dominate already at low fraction (Jetzer's approach rather than the skeleton theory).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1214,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.844,
+   "bbox": [
+    304.0,
+    284.7,
+    562.0,
+    493.9
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     9,
+     [
+      304.0,
+      284.7,
+      562.0,
+      493.9
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x16",
+   "kind": "text",
+   "label": "p9_p11_dcp_py_470_not_actual_gentis_betz",
+   "page": 9,
+   "page_printed": 9,
+   "file": "txt_p9_p11_dcp_py_470_not_actual_gentis_betz.png",
+   "caption": "p.9–11: Heckel order HPC > MCC > TA > DCP · DCP Py ≈470 MPa 'does not correspond to the actual value' — 300 MPa is insufficient for a material with high resistance to deformation [40] · Gentis & Betz [28]: neither Heckel nor modified Heckel suits mixtures (insufficient linearity) — confirmed for very different deformation behaviour.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 972,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.861,
+   "bbox": [
+    304.0,
+    629.2,
+    562.0,
+    738.4
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.9 [304.0, 629.2, 562.0, 738.4] + PDF p.11 [35.0, 47.8, 293.5, 99.5] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     9,
+     [
+      304.0,
+      629.2,
+      562.0,
+      738.4
+     ]
+    ],
+    [
+     11,
+     [
+      35.0,
+      47.8,
+      293.5,
+      99.5
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x17",
+   "kind": "text",
+   "label": "p11_K_linear_density_order_in_die",
+   "page": 11,
+   "page_printed": 11,
+   "file": "txt_p11_K_linear_density_order_in_die.png",
+   "caption": "p.11 §3.3.3.2: K linear for MCC_HPC and TA_DCP; MCC_DCP deviations small and smaller with volume fraction (density difference) · K more robust to tableting pressure than Py · order MCC > HPC > DCP > TA (differs from Heckel; K also reflects fragmentation) · in-die: non-destructive, no intact tablet needed.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1563,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.839,
+   "bbox": [
+    35.0,
+    101.1,
+    293.5,
+    382.8
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     11,
+     [
+      35.0,
+      101.1,
+      293.5,
+      382.8
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x18",
+   "kind": "text",
+   "label": "p11_walker_W_linear_higher_pressure_pf_not_recommended",
+   "page": 11,
+   "page_printed": 11,
+   "file": "txt_p11_walker_W_linear_higher_pressure_pf_not_recommended.png",
+   "caption": "p.11: W sorts like K · DCP needs ≈50 MPa to reach the linear range · 'Experiments at a higher compression pressure would be beneficial' · W linear with only slight deviations → candidate predictive model, ternary/multi-component suggested · Pf (and E2) 'not recommended' for plasticity — MCC_DCP and TA_DCP give identical Pf.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 2133,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.848,
+   "bbox": [
+    35.0,
+    384.6,
+    293.5,
+    666.3
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.11 [35.0, 384.6, 293.5, 666.3] + PDF p.11 [304.0, 450.9, 562.0, 538.6] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     11,
+     [
+      35.0,
+      384.6,
+      293.5,
+      666.3
+     ]
+    ],
+    [
+     11,
+     [
+      304.0,
+      450.9,
+      562.0,
+      538.6
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x19",
+   "kind": "text",
+   "label": "p11_p13_kawakita_a_linear_vs_nonlinear_ab_linear_heckel_density_error",
+   "page": 11,
+   "page_printed": 11,
+   "file": "txt_p11_p13_kawakita_a_linear_vs_nonlinear_ab_linear_heckel_density_error.png",
+   "caption": "p.11 + p.13: 'A good linear relationship was found for the parameter a, while b−1 was non-linear in general' vs p.13 'although a is non-linear at least for MCC_DCP and b−1 for both DCP combinations' · ab linear for all three combinations; order HPC > MCC > TA > DCP · 'Heckel analysis is highly susceptible to errors in density determination' — Kawakita uses the current in-die volume.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1312,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.856,
+   "bbox": [
+    304.0,
+    567.1,
+    562.0,
+    640.4
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.11 [304.0, 567.1, 562.0, 640.4] + PDF p.13 [35.0, 188.7, 293.5, 329.4] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     11,
+     [
+      304.0,
+      567.1,
+      562.0,
+      640.4
+     ]
+    ],
+    [
+     13,
+     [
+      35.0,
+      188.7,
+      293.5,
+      329.4
+     ]
+    ]
+   ]
+  },
+  {
+   "key": "x20",
+   "kind": "text",
+   "label": "p13_kl_r0p970_slope3p8_c140_mixing_rule_conclusion",
+   "page": 13,
+   "page_printed": 13,
+   "file": "txt_p13_kl_r0p970_slope3p8_c140_mixing_rule_conclusion.png",
+   "caption": "p.13: C⁻¹ (KL) vs Py correlation coefficient 0.970, slope 3.8 (literature: 2–4× higher) — no advantage over Heckel · weight vs volume fraction 'only a minor influence', volume slightly better for DCP blends · Conclusion: K, W and ab promising; ab a useful alternative to Heckel (Heckel lacks linearity and thus predictability); Pf and E2 unsuitable for plasticity; a single parameter does not suffice.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1807,
+   "dpi": 400,
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "blank": 0.865,
+   "bbox": [
+    35.0,
+    330.1,
+    293.5,
+    420.8
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), clip edges at the middle of the inter-line gap just outside the first and last wanted line (text-layer line boxes), ink trim → white canvas with a uniform 6 pt margin; running head, page number and neighbouring paragraphs excluded; stacked from PDF p.13 [35.0, 330.1, 293.5, 420.8] + PDF p.13 [35.0, 517.2, 293.5, 734.1] (10 pt white gap) (2026-11-17, litdb-curator)",
+   "viewed": true,
+   "pieces": [
+    [
+     13,
+     [
+      35.0,
+      330.1,
+      293.5,
+      420.8
+     ]
+    ],
+    [
+     13,
+     [
+      35.0,
+      517.2,
+      293.5,
+      734.1
+     ]
+    ]
+   ]
+  }
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-17; selftest 117/0 on PyMuPDF 1.28.2) found Fig. 1–5, 7, 8 and Table 1–3 and reported a number gap at Fig. 6 (15-pp PDF = printed pp. 1–15; no supplementary material is announced — 'Data will be made available on request', p.13; one graphical abstract on p.1).  Fig. 6 was cut by hand (its caption shares a text block with the right-column body text); all eight figure crops were re-cut so the caption is inside (native 300 dpi raster pasted over the rendered copy); the tool's three table crops were whole pages and were replaced by 400 dpi hand crops; graphical abstract, 39 panel crops (every lettered panel of Fig. 1–8), 12 equation crops (Eq. 1–4 = all numbered equations + the eight unnumbered equations of Table 1, one per row) and 20 evidence-paragraph crops were cut by hand.  Every one of the 83 crops was opened and checked; re-cut after checking: Fig. 2 and Fig. 8 panels (QA sheet: each lower panel carried the upper panel's x-axis title → stepped per-band boundaries, 12 crops), Fig. 4–6 panels (centre-band boundary rows 553 / 566 sat above the axis title → four x bands; masked area then refilled with the raster background 254 after the full-size view of fig_6B, 9 crops), Tables 2–3 (clip ended at 177.2 / 369.2 pt above the bottom rule → core band widened to the rule, 2 crops); tool crops replaced: 7 figures (caption missing) + 3 tables (whole page).  Read-outs: digitized.csv (349 rows: Fig. 1, 2, 3, 4, 5, 6, 7, 8) from the native rasters (2026-11-17, litdb-curator)",
+ "note_manual": "Printed inconsistencies visible in the crops (not corrected): p.3 ratio list '0:100, 15:85, 30:70, 40:60, 50:50, 60:40, 30:70, 85:15 and 100:0' (the seventh is 70:30, as in Table 3 and the figures) · Table 1 Compressibility row 'ln(1 − ε) = K * ln(P) + A' makes K the slope (≈0.11–0.25 from Fig. 5), but Fig. 7C/D plot K = 3.83–8.84, the reciprocal of that slope (DCP slope 0.141 above ≈50 MPa → 1/7.06 vs K 7.14; TA 0.110 → 1/9.1 vs 8.84; MCC 0.254 → 1/3.95 vs 3.83 [read from the native raster]) · Table 1 Walker row 'V′/V0 = − W*log(P) + V1' makes W positive for a falling curve, Fig. 7E/F plot W = −0.33 … −1.17 (the slope itself) · Fig. 8B and 8F x-axis titles read 'Weight fraction / %' although their points sit at the volume fractions (8D, 8H read 'Volume fraction / %') · p.11 'A good linear relationship was found for the parameter a' vs p.13 'although a is non-linear at least for MCC_DCP' · Table 1 abbreviations 'puches' (punches) · E1 is drawn in Fig. 2A and plotted in Fig. 3A/B but defined nowhere in the text; E3 enters Pf (Table 1) but is not in the abbreviation list · Walker linear range of DCP 'not beginning until at least 30 MPa' (p.9) vs 'about 50 MPa is needed to reach the linear range' (p.11) · figure captions 'MCC (black, brown) and TA (blue)' name two materials for three series (legend MCC_HPC black · MCC_DCP brown · TA_DCP blue).",
+ "key_note": "manual keys: ga = graphical abstract; f<N><panel> = panel crop of Fig. N (panel_of; capital panel letters as printed); t1–t3 = Tables (hand crops replacing the tool's whole-page crops); eeq1–eeq4 = Eq. (1)–(4); eeqT1a–eeqT1h = the eight unnumbered Table 1 equations (Heckel · KL · Kawakita · Walker · Compressibility · E2 · Cp · Pf), one Table 1 row each; x01–x20 = evidence paragraphs (kind 'text'; file names carry the printed page, PDF page = printed page here; x01 · x03 · x06 · x07 · x10 · x12 · x13 · x14 · x16 · x18 · x19 · x20 stack two page/column parts, listed in 'pieces').  digitized.csv = native-raster read-outs — marker cores (distance transform on the legend colour), end points at x = 0 / 100, targeted windows, pure-material curve ends (legend colours of the darkest / brightest curve) and F–D peaks; axis = least-squares line through the outward tick marks and their printed labels (residual ≤ 0.1 % of the axis range); method per row; check = Fig. 8E ab vs Table 3 a/b⁻¹ within ±0.0002 MPa⁻¹ (≤ 0.1 % of the axis range) for 24 of 25 compositions (pure MCC 0.00044 — its marker core is partly hidden by the two dashed lines ending there).",
+ "table_caption_vote": [
+  {
+   "src": "Berkenkemper_Klinken_Kleinebudde_2023_PowderTechnol424_118571_compressibility_descriptors_binary_mixtures.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ]
+}
