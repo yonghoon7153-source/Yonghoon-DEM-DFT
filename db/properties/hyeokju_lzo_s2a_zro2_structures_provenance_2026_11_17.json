@@ -1,0 +1,493 @@
+{
+ "ZrO2": {
+  "formula": "ZrO2",
+  "label": "ZrO2",
+  "rule": "observed_lowest_e_hull",
+  "pick": {
+   "material_id": "mp-aaaaaefy",
+   "formula": "ZrO2",
+   "spacegroup": "P2_1/c",
+   "spacegroup_number": 14,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 12,
+   "band_gap_MP_eV": 3.5322,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaeljxx",
+    "setyawan_curtarolo": "aaabvylm",
+    "hinuma": "aaaeurpc",
+    "latimer_munro": "aaafdgia",
+    "dos": "aaaezqdn",
+    "electronic_structure": "aaafdgia",
+    "magnetism": "aaaeljxx",
+    "dielectric": "aaacmyzt",
+    "energy": "aaaeljxx"
+   },
+   "es_task": "aaafdgia",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "hull_entry": {
+   "material_id": "mp-aaaaaefy",
+   "formula": "ZrO2",
+   "spacegroup": "P2_1/c",
+   "spacegroup_number": 14,
+   "e_above_hull": 0.0,
+   "theoretical": false,
+   "nsites": 12,
+   "band_gap_MP_eV": 3.5322,
+   "ordering": "Unknown",
+   "total_magnetization": 0.0,
+   "origins": {
+    "structure": "aaaeljxx",
+    "setyawan_curtarolo": "aaabvylm",
+    "hinuma": "aaaeurpc",
+    "latimer_munro": "aaafdgia",
+    "dos": "aaaezqdn",
+    "electronic_structure": "aaafdgia",
+    "magnetism": "aaaeljxx",
+    "dielectric": "aaacmyzt",
+    "energy": "aaaeljxx"
+   },
+   "es_task": "aaafdgia",
+   "es_calc_type": "GGA NSCF Line",
+   "es_functional": "GGA"
+  },
+  "same_as_hull": true,
+  "n_candidates": 20,
+  "candidates": [
+   {
+    "material_id": "mp-aaaaaefy",
+    "formula": "ZrO2",
+    "spacegroup": "P2_1/c",
+    "spacegroup_number": 14,
+    "e_above_hull": 0.0,
+    "theoretical": false,
+    "nsites": 12,
+    "band_gap_MP_eV": 3.5322,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeljxx",
+     "setyawan_curtarolo": "aaabvylm",
+     "hinuma": "aaaeurpc",
+     "latimer_munro": "aaafdgia",
+     "dos": "aaaezqdn",
+     "electronic_structure": "aaafdgia",
+     "magnetism": "aaaeljxx",
+     "dielectric": "aaacmyzt",
+     "energy": "aaaeljxx"
+    },
+    "es_task": "aaafdgia",
+    "es_calc_type": "GGA NSCF Line",
+    "es_functional": "GGA"
+   },
+   {
+    "material_id": "mp-aaabsens",
+    "formula": "ZrO2",
+    "spacegroup": "Pbca",
+    "spacegroup_number": 61,
+    "e_above_hull": 0.0095,
+    "theoretical": true,
+    "nsites": 24,
+    "band_gap_MP_eV": 3.4629,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaemovq",
+     "setyawan_curtarolo": "aaabtehv",
+     "electronic_structure": "aaabtehv",
+     "magnetism": "aaaemovq",
+     "energy": "aaaemovq"
+    }
+   },
+   {
+    "material_id": "mp-aaacpsqk",
+    "formula": "ZrO2",
+    "spacegroup": "Pbca",
+    "spacegroup_number": 61,
+    "e_above_hull": 0.0133,
+    "theoretical": false,
+    "nsites": 24,
+    "band_gap_MP_eV": 3.5794,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaelunv",
+     "setyawan_curtarolo": "aaadmdvs",
+     "hinuma": "aaaetnds",
+     "latimer_munro": "aaafbowc",
+     "dos": "aaadrfnx",
+     "electronic_structure": "aaafbowc",
+     "magnetism": "aaaelunv",
+     "energy": "aaaelunv"
+    }
+   },
+   {
+    "material_id": "mp-aaabfrjx",
+    "formula": "ZrO2",
+    "spacegroup": "Pca2_1",
+    "spacegroup_number": 29,
+    "e_above_hull": 0.0167,
+    "theoretical": false,
+    "nsites": 12,
+    "band_gap_MP_eV": 3.7025,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaelage",
+     "setyawan_curtarolo": "aaabneit",
+     "hinuma": "aaaetzmu",
+     "latimer_munro": "aaafxdqz",
+     "dos": "aaaezpiq",
+     "electronic_structure": "aaafxdqz",
+     "magnetism": "aaaelage",
+     "dielectric": "aaacllib",
+     "piezoelectric": "aaacllib",
+     "energy": "aaaelage"
+    }
+   },
+   {
+    "material_id": "mp-aaaaadva",
+    "formula": "ZrO2",
+    "spacegroup": "P4_2/nmc",
+    "spacegroup_number": 137,
+    "e_above_hull": 0.0271,
+    "theoretical": false,
+    "nsites": 6,
+    "band_gap_MP_eV": 3.8825,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeltfv",
+     "setyawan_curtarolo": "aaacjafm",
+     "hinuma": "aaaeurkj",
+     "latimer_munro": "aaafsrje",
+     "dos": "aaafaoxs",
+     "electronic_structure": "aaafsrje",
+     "magnetism": "aaaeltfv",
+     "energy": "aaaeltfv"
+    }
+   },
+   {
+    "material_id": "mp-aaabqyzx",
+    "formula": "ZrO2",
+    "spacegroup": "Pnma",
+    "spacegroup_number": 62,
+    "e_above_hull": 0.028,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 3.9596,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaekwqa",
+     "setyawan_curtarolo": "aaadmhrl",
+     "hinuma": "aaaepldw",
+     "latimer_munro": "aaafazok",
+     "dos": "aaadullf",
+     "electronic_structure": "aaafazok",
+     "magnetism": "aaaekwqa",
+     "energy": "aaaekwqa"
+    }
+   },
+   {
+    "material_id": "mp-aaabqzzr",
+    "formula": "ZrO2",
+    "spacegroup": "Pnma",
+    "spacegroup_number": 62,
+    "e_above_hull": 0.0288,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 3.2113,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaelvxs",
+     "setyawan_curtarolo": "aaadmhid",
+     "hinuma": "aaaeplcb",
+     "latimer_munro": "aaafazlq",
+     "dos": "aaadvdlc",
+     "electronic_structure": "aaafazlq",
+     "magnetism": "aaaelvxs",
+     "energy": "aaaelvxs"
+    }
+   },
+   {
+    "material_id": "mp-aaabsdus",
+    "formula": "ZrO2",
+    "spacegroup": "P4/n",
+    "spacegroup_number": 85,
+    "e_above_hull": 0.0473,
+    "theoretical": true,
+    "nsites": 30,
+    "band_gap_MP_eV": 3.3166,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeijjf",
+     "setyawan_curtarolo": "aaabtdsg",
+     "electronic_structure": "aaabtdsg",
+     "magnetism": "aaaeijjf",
+     "energy": "aaaeijjf"
+    }
+   },
+   {
+    "material_id": "mp-aaabqxzn",
+    "formula": "ZrO2",
+    "spacegroup": "I4_1/amd",
+    "spacegroup_number": 141,
+    "e_above_hull": 0.0482,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 3.7263,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaelisw",
+     "setyawan_curtarolo": "aaadopwf",
+     "hinuma": "aaaeoydx",
+     "latimer_munro": "aaafbkin",
+     "dos": "aaadwczr",
+     "electronic_structure": "aaafbkin",
+     "magnetism": "aaaelisw",
+     "energy": "aaaelisw"
+    }
+   },
+   {
+    "material_id": "mp-aaaaacif",
+    "formula": "ZrO2",
+    "spacegroup": "Fm-3m",
+    "spacegroup_number": 225,
+    "e_above_hull": 0.0557,
+    "theoretical": false,
+    "nsites": 3,
+    "band_gap_MP_eV": 3.124,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaelqtj",
+     "setyawan_curtarolo": "aaacilfs",
+     "hinuma": "aaaemzqc",
+     "latimer_munro": "aaafsbiv",
+     "dos": "aaadrzef",
+     "electronic_structure": "aaafsbiv",
+     "magnetism": "aaaelqtj",
+     "energy": "aaaelqtj"
+    }
+   },
+   {
+    "material_id": "mp-aaabseop",
+    "formula": "ZrO2",
+    "spacegroup": "Pbca",
+    "spacegroup_number": 61,
+    "e_above_hull": 0.0609,
+    "theoretical": true,
+    "nsites": 24,
+    "band_gap_MP_eV": 3.5895,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaekmzt",
+     "setyawan_curtarolo": "aaabxcxr",
+     "electronic_structure": "aaabxcxr",
+     "magnetism": "aaaekmzt",
+     "energy": "aaaekmzt"
+    }
+   },
+   {
+    "material_id": "mp-aaabsdur",
+    "formula": "ZrO2",
+    "spacegroup": "P4_2/mnm",
+    "spacegroup_number": 136,
+    "e_above_hull": 0.0627,
+    "theoretical": true,
+    "nsites": 6,
+    "band_gap_MP_eV": 3.4354,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaekvnj",
+     "setyawan_curtarolo": "aaabtehw",
+     "hinuma": "aaaeoycp",
+     "latimer_munro": "aaafbirc",
+     "dos": "aaadvzye",
+     "electronic_structure": "aaafbirc",
+     "magnetism": "aaaekvnj",
+     "energy": "aaaekvnj"
+    }
+   },
+   {
+    "material_id": "mp-aaabsdxk",
+    "formula": "ZrO2",
+    "spacegroup": "Pbcn",
+    "spacegroup_number": 60,
+    "e_above_hull": 0.0627,
+    "theoretical": true,
+    "nsites": 36,
+    "band_gap_MP_eV": 3.576,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeijdo",
+     "setyawan_curtarolo": "aaabtely",
+     "electronic_structure": "aaabtely",
+     "magnetism": "aaaeijdo",
+     "energy": "aaaeijdo"
+    }
+   },
+   {
+    "material_id": "mp-aaabsena",
+    "formula": "ZrO2",
+    "spacegroup": "Pnma",
+    "spacegroup_number": 62,
+    "e_above_hull": 0.0883,
+    "theoretical": true,
+    "nsites": 24,
+    "band_gap_MP_eV": 3.6134,
+    "ordering": "NM",
+    "total_magnetization": 0.0037303,
+    "origins": {
+     "structure": "aaacylkf",
+     "electronic_structure": "aaacylkf",
+     "magnetism": "aaacylkf",
+     "energy": "aaacylkf"
+    }
+   },
+   {
+    "material_id": "mp-aaabraab",
+    "formula": "ZrO2",
+    "spacegroup": "C2/m",
+    "spacegroup_number": 12,
+    "e_above_hull": 0.0911,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 4.1835,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeklov",
+     "setyawan_curtarolo": "aaabwyhl",
+     "hinuma": "aaaeplru",
+     "latimer_munro": "aaafaxzw",
+     "dos": "aaadvccw",
+     "electronic_structure": "aaafaxzw",
+     "magnetism": "aaaeklov",
+     "dielectric": "aaaclomy",
+     "energy": "aaaeklov"
+    }
+   },
+   {
+    "material_id": "mp-aaaaablb",
+    "formula": "ZrO2",
+    "spacegroup": "Pnma",
+    "spacegroup_number": 62,
+    "e_above_hull": 0.1031,
+    "theoretical": false,
+    "nsites": 12,
+    "band_gap_MP_eV": 2.8591,
+    "ordering": "NM",
+    "total_magnetization": 4.86e-05,
+    "origins": {
+     "structure": "aaadcoll",
+     "setyawan_curtarolo": "aaabndvj",
+     "hinuma": "aaaeusdg",
+     "latimer_munro": "aaafscmn",
+     "dos": "aaaezlrp",
+     "electronic_structure": "aaafscmn",
+     "magnetism": "aaadcoll",
+     "energy": "aaadcoll"
+    }
+   },
+   {
+    "material_id": "mp-aaabqymn",
+    "formula": "ZrO2",
+    "spacegroup": "Pnma",
+    "spacegroup_number": 62,
+    "e_above_hull": 0.1135,
+    "theoretical": true,
+    "nsites": 12,
+    "band_gap_MP_eV": 3.4061,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeijgr",
+     "setyawan_curtarolo": "aaabwyog",
+     "hinuma": "aaaemxgu",
+     "dos": "aaadvemf",
+     "electronic_structure": "aaaemxgu",
+     "magnetism": "aaaeijgr",
+     "dielectric": "aaacloux",
+     "energy": "aaaeijgr"
+    }
+   },
+   {
+    "material_id": "mp-aaabsdvr",
+    "formula": "ZrO2",
+    "spacegroup": "C2/m",
+    "spacegroup_number": 12,
+    "e_above_hull": 0.1305,
+    "theoretical": true,
+    "nsites": 9,
+    "band_gap_MP_eV": 3.825,
+    "ordering": "Unknown",
+    "total_magnetization": 0.0,
+    "origins": {
+     "structure": "aaaeijmv",
+     "setyawan_curtarolo": "aaadohlt",
+     "hinuma": "aaaepfmy",
+     "latimer_munro": "aaafbbks",
+     "dos": "aaadvqjy",
+     "electronic_structure": "aaafbbks",
+     "magnetism": "aaaeijmv",
+     "energy": "aaaeijmv"
+    }
+   },
+   {
+    "material_id": "mp-aaacswew",
+    "formula": "ZrO2",
+    "spacegroup": "P1",
+    "spacegroup_number": 1,
+    "e_above_hull": 0.2227,
+    "theoretical": true,
+    "nsites": 90,
+    "band_gap_MP_eV": 2.9114,
+    "ordering": "NM",
+    "total_magnetization": 0.0008921,
+    "origins": {
+     "structure": "aaaeaygc",
+     "electronic_structure": "aaaeaygc",
+     "magnetism": "aaaeaygc",
+     "energy": "aaaeaygc"
+    }
+   },
+   {
+    "material_id": "mp-aaackqlk",
+    "formula": "ZrO2",
+    "spacegroup": "Pmm2",
+    "spacegroup_number": 25,
+    "e_above_hull": 0.6057,
+    "theoretical": true,
+    "nsites": 72,
+    "band_gap_MP_eV": 0.0,
+    "ordering": "FM",
+    "total_magnetization": 1.8661064,
+    "origins": {
+     "structure": "aaaebcsp",
+     "electronic_structure": "aaaebcsp",
+     "magnetism": "aaaebcsp",
+     "energy": "aaaebcsp"
+    }
+   }
+  ],
+  "files": [
+   "db/structures/hyeokju_ZrO2_mp-aaaaaefy.vasp",
+   "db/structures/hyeokju_ZrO2_mp-aaaaaefy.cif"
+  ],
+  "nsites_written": 12,
+  "source": "Materials Project (mp_api · use_document_model=False)",
+  "fetched": "2026-11-17"
+ }
+}

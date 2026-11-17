@@ -1,0 +1,149 @@
+{
+  "method": "grand-potential element profile via PhaseDiagram.get_element_profile (Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; **Li opened**.",
+  "open_element": "Li",
+  "elements": [
+    "Li",
+    "La",
+    "Zr",
+    "O"
+  ],
+  "landmarks": {
+    "Li->Li2O": null,
+    "Li2S->Li2SO4": null,
+    "Li3PS4->Li3PO4": null
+  },
+  "excluded_phases": [
+    "LiO8"
+  ],
+  "mu_Li_ref_eV": -1.9089,
+  "axis_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
+  "results": {
+    "LZO": {
+      "composition": "Li2ZrO3",
+      "label": "LZO",
+      "open_element": "Li",
+      "n_Li_nominal": 2.0,
+      "mu_Li_ref_eV": -1.9089,
+      "meaning": {
+        "uptake": "환원 (cathodic) — Li 를 받아들인다",
+        "release": "산화 (anodic) — Li 를 내놓는다",
+        "axis": "V_vs_Li"
+      },
+      "uptake_onset_rxn": "Li2ZrO3 + 0.5263 Li -> 0.4211 Li6Zr2O7 + 0.05263 Zr3O",
+      "release_onset_rxn": "Li2ZrO3 -> ZrO2 + 0.5 O2 + 2 Li",
+      "neutral_rxn": "Li2ZrO3 -> Li2ZrO3",
+      "profile": [
+        {
+          "mu_Li_eV": -1.9089,
+          "dmu_Li_eV": 0.0,
+          "evolution_Li": 3.5,
+          "reaction": "Li2ZrO3 + 3.5 Li -> 0.25 Zr4O + 2.75 Li2O",
+          "V_vs_Li": 0.0
+        },
+        {
+          "mu_Li_eV": -1.9447,
+          "dmu_Li_eV": -0.0358,
+          "evolution_Li": 3.3333,
+          "reaction": "Li2ZrO3 + 3.333 Li -> 0.3333 Zr3O + 2.667 Li2O",
+          "V_vs_Li": 0.036
+        },
+        {
+          "mu_Li_eV": -1.9554,
+          "dmu_Li_eV": -0.0465,
+          "evolution_Li": 0.5263,
+          "reaction": "Li2ZrO3 + 0.5263 Li -> 0.4211 Li6Zr2O7 + 0.05263 Zr3O",
+          "V_vs_Li": 0.046
+        },
+        {
+          "mu_Li_eV": -2.2536,
+          "dmu_Li_eV": -0.3446,
+          "evolution_Li": -0.0,
+          "reaction": "Li2ZrO3 -> Li2ZrO3",
+          "V_vs_Li": 0.345
+        },
+        {
+          "mu_Li_eV": -5.3091,
+          "dmu_Li_eV": -3.4002,
+          "evolution_Li": -2.0,
+          "reaction": "Li2ZrO3 -> ZrO2 + 0.5 O2 + 2 Li",
+          "V_vs_Li": 3.4
+        }
+      ],
+      "uptake_onset_mu_eV": -1.9554,
+      "release_onset_mu_eV": -5.3091,
+      "neutral_mu_eV": -2.2536,
+      "reduction_limit_V": 0.046,
+      "oxidation_limit_V": 3.4,
+      "ocv_self_decomposition_V": 0.345,
+      "ocv_self_decomposition_rxn": "Li2ZrO3 -> Li2ZrO3",
+      "oxidation_onset_rxn": "Li2ZrO3 -> ZrO2 + 0.5 O2 + 2 Li"
+    },
+    "LLZO": {
+      "composition": "Li7La3Zr2O12",
+      "label": "LLZO",
+      "open_element": "Li",
+      "n_Li_nominal": 7.0,
+      "mu_Li_ref_eV": -1.9089,
+      "meaning": {
+        "uptake": "환원 (cathodic) — Li 를 받아들인다",
+        "release": "산화 (anodic) — Li 를 내놓는다",
+        "axis": "V_vs_Li"
+      },
+      "uptake_onset_rxn": "Li7La3Zr2O12 + 6.667 Li -> 0.6667 Zr3O + 6.833 Li2O + 1.5 La2O3",
+      "release_onset_rxn": "Li7La3Zr2O12 -> Li6Zr2O7 + 0.25 Li2O2 + 1.5 La2O3 + 0.5 Li",
+      "neutral_rxn": "Li7La3Zr2O12 -> Li6Zr2O7 + 0.5 Li2O + 1.5 La2O3",
+      "profile": [
+        {
+          "mu_Li_eV": -1.9089,
+          "dmu_Li_eV": 0.0,
+          "evolution_Li": 7.0,
+          "reaction": "Li7La3Zr2O12 + 7 Li -> 0.5 Zr4O + 7 Li2O + 1.5 La2O3",
+          "V_vs_Li": 0.0
+        },
+        {
+          "mu_Li_eV": -1.9447,
+          "dmu_Li_eV": -0.0358,
+          "evolution_Li": 6.6667,
+          "reaction": "Li7La3Zr2O12 + 6.667 Li -> 0.6667 Zr3O + 6.833 Li2O + 1.5 La2O3",
+          "V_vs_Li": 0.036
+        },
+        {
+          "mu_Li_eV": -1.9554,
+          "dmu_Li_eV": -0.0465,
+          "evolution_Li": 0.0,
+          "reaction": "Li7La3Zr2O12 -> Li6Zr2O7 + 0.5 Li2O + 1.5 La2O3",
+          "V_vs_Li": 0.046
+        },
+        {
+          "mu_Li_eV": -4.7934,
+          "dmu_Li_eV": -2.8845,
+          "evolution_Li": -0.5,
+          "reaction": "Li7La3Zr2O12 -> Li6Zr2O7 + 0.25 Li2O2 + 1.5 La2O3 + 0.5 Li",
+          "V_vs_Li": 2.884
+        },
+        {
+          "mu_Li_eV": -5.0583,
+          "dmu_Li_eV": -3.1494,
+          "evolution_Li": -3.5,
+          "reaction": "Li7La3Zr2O12 -> 1.75 Li2O2 + La2Zr2O7 + 0.5 La2O3 + 3.5 Li",
+          "V_vs_Li": 3.149
+        },
+        {
+          "mu_Li_eV": -5.2093,
+          "dmu_Li_eV": -3.3003,
+          "evolution_Li": -7.0,
+          "reaction": "Li7La3Zr2O12 -> La2Zr2O7 + 0.5 La2O3 + 1.75 O2 + 7 Li",
+          "V_vs_Li": 3.3
+        }
+      ],
+      "uptake_onset_mu_eV": -1.9447,
+      "release_onset_mu_eV": -4.7934,
+      "neutral_mu_eV": -1.9554,
+      "reduction_limit_V": 0.036,
+      "oxidation_limit_V": 2.884,
+      "ocv_self_decomposition_V": 0.046,
+      "ocv_self_decomposition_rxn": "Li7La3Zr2O12 -> Li6Zr2O7 + 0.5 Li2O + 1.5 La2O3",
+      "oxidation_onset_rxn": "Li7La3Zr2O12 -> Li6Zr2O7 + 0.25 Li2O2 + 1.5 La2O3 + 0.5 Li"
+    }
+  }
+}
