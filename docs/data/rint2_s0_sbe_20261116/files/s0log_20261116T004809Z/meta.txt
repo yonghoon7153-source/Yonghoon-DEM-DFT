@@ -1,0 +1,9 @@
+pin=64e4d213e8267bafaf3ae5af00a42996cefd3f33
+probe=1
+tag=q14final
+kit=kit_SBE_vgcf100
+out=ca1_s0_sbe_20261116T004809Z_q14final
+store=cjstore_s0probe_20261116T004809Z
+start_utc=20261116T004809Z
+operator_stop_utc=2026-11-16T05:48:08Z
+end_utc=20261116T022056Z

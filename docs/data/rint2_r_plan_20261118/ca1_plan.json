@@ -1,0 +1,31 @@
+{
+ "calib_rj_ratio_max": "none",
+ "exec_policy": {
+  "adoption": "first_not_pre_result_v1",
+  "allowed_machines": [
+   "kgy",
+   "gabia",
+   "v100"
+  ],
+  "attempt_dir": "attempt_<n>",
+  "env_unit": {
+   "numpy": "1.24.4",
+   "python_minor": "3.8",
+   "scipy": "1.10.1"
+  },
+  "max_attempts": 8,
+  "max_hours": 168,
+  "retry_rule": "pre_result_only_v1",
+  "same_config": "plan_code_bed_env_v1"
+ },
+ "len_law": "len_scaled_v0",
+ "max_ladder_points": 16,
+ "p2_extra": "--step3-maxiter 5000000",
+ "s_min_um": 0.0,
+ "schema": "rint-r-plan-v3",
+ "step3_rtol": 1e-12,
+ "sv_cf_scope": "all3",
+ "sv_cf_threshold": 1.5745499360744093,
+ "tol_ff_um": 0.07381254285530132,
+ "unreg_law": "cut"
+}

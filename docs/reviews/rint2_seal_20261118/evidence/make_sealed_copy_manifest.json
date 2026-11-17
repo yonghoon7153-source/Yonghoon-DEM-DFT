@@ -1,0 +1,265 @@
+{
+ "block_sha256": "d67a0dfa2e9725efa33ac3e9f7222e79ac706fd4c3a80d2a58849f77b258ddde",
+ "checks": {
+  "marked.plan_doc_problem (블록 없음 = 문제)": true,
+  "marked.registration_plan_hash = PLAN_HASH_UNREGISTERED": true,
+  "marked: 블록 표지 시작 · 끝 = 0 · 0": true,
+  "marked: 자리 줄 글자 = 1 줄": true,
+  "marked: 해시 줄 둘 = 1 · 1": true,
+  "sealed.plan_doc_problem None": true,
+  "sealed.registration_plan_hash = 계획 sha256": true,
+  "sealed.registration_s0_hash = S0 계획 sha256": true,
+  "sealed: 블록 표지 시작 · 끝 = 1 · 1": true,
+  "sealed: 자리 줄 글자 = 1 줄": true,
+  "sealed: 해시 줄 둘 = 1 · 1": true
+ },
+ "fragments": {
+  "cmd": [
+   {
+    "id": "K-05",
+    "inserted": 2,
+    "kind": "after",
+    "line": 425
+   },
+   {
+    "id": "K-01",
+    "inserted": 4,
+    "kind": "after",
+    "line": 480
+   },
+   {
+    "id": "K-02",
+    "inserted": 3,
+    "kind": "after",
+    "line": 486
+   },
+   {
+    "id": "K-03",
+    "inserted": 245,
+    "kind": "before",
+    "line": 564
+   },
+   {
+    "id": "K-04",
+    "inserted": 2,
+    "kind": "after",
+    "line": 590
+   }
+  ],
+  "marked": [
+   {
+    "id": "R-MARK",
+    "inserted": 1,
+    "kind": "after",
+    "line": 1
+   }
+  ],
+  "sealed": [
+   {
+    "id": "R-00",
+    "inserted": 9,
+    "kind": "after",
+    "line": 1
+   },
+   {
+    "id": "R-01",
+    "inserted": 0,
+    "kind": "last",
+    "line": 72,
+    "old_last_cell": "⬜"
+   },
+   {
+    "id": "R-02",
+    "inserted": 0,
+    "kind": "last",
+    "line": 73,
+    "old_last_cell": "⬜"
+   },
+   {
+    "id": "R-03",
+    "inserted": 0,
+    "kind": "last",
+    "line": 76,
+    "old_last_cell": "⬜"
+   },
+   {
+    "id": "R-04",
+    "inserted": 0,
+    "kind": "last",
+    "line": 77,
+    "old_last_cell": "긴 접촉 수 · L_c 분포 · s 분포 · s_min = ⬜ (§2-1b)"
+   },
+   {
+    "id": "R-05",
+    "inserted": 0,
+    "kind": "mid+last",
+    "line": 80,
+    "old_last_cell": "⬜"
+   },
+   {
+    "id": "R-06",
+    "inserted": 0,
+    "kind": "mid+last",
+    "line": 81,
+    "old_last_cell": "⬜"
+   },
+   {
+    "id": "R-07",
+    "inserted": 25,
+    "kind": "after",
+    "line": 83
+   },
+   {
+    "id": "R-08",
+    "inserted": 1,
+    "kind": "after",
+    "line": 334
+   },
+   {
+    "id": "R-09",
+    "inserted": 4,
+    "kind": "after",
+    "line": 391
+   },
+   {
+    "id": "R-10",
+    "inserted": 84,
+    "kind": "after",
+    "line": 458
+   },
+   {
+    "id": "R-11",
+    "inserted": 1,
+    "kind": "after",
+    "line": 590
+   },
+   {
+    "id": "R-12",
+    "inserted": 1,
+    "kind": "after",
+    "line": 601
+   },
+   {
+    "id": "R-13",
+    "inserted": 33,
+    "kind": "after",
+    "line": 660
+   },
+   {
+    "id": "R-14",
+    "inserted": 1,
+    "kind": "after",
+    "line": 674
+   },
+   {
+    "id": "R-15",
+    "inserted": 3,
+    "kind": "after",
+    "line": 696
+   }
+  ]
+ },
+ "inputs": {
+  "chain": {
+   "bytes": 670211,
+   "sha256": "5fbc1c3417f17eba9bc9e569a9dad28f569ed1eedb64f8fcdd725492854de78b"
+  },
+  "cmd": {
+   "bytes": 79983,
+   "sha256": "0fe96bb83bf0795a4f1f18e2e1968ba8dacbad3f8ace84f97828d407703fe983"
+  },
+  "cmd_ins": {
+   "bytes": 37720,
+   "sha256": "db54057a3b244805c19bb702a74351602c1377c85bf32d906fd4e2c9af5c17a5"
+  },
+  "plan": {
+   "bytes": 682,
+   "sha256": "d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8"
+  },
+  "reg": {
+   "bytes": 301281,
+   "sha256": "219b63514d8c594d1f96bf7ce610ff9e9bc59dd3482616883475e36fee112bf2"
+  },
+  "reg_ins": {
+   "bytes": 44495,
+   "sha256": "14c909d2c4fb7375d85a0c47382674e42309c74141d2f86e56a80f87dbf3bec2"
+  },
+  "s0": {
+   "bytes": 1485,
+   "sha256": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520"
+  }
+ },
+ "outputs": {
+  "docs/data/rint2_r_plan_20261118/ca1_plan.json": {
+   "bytes": 682,
+   "lines": 30,
+   "sha256": "d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8"
+  },
+  "docs/reviews/rint2_kgy_commands_20261020.md": {
+   "bytes": 115083,
+   "lines": 859,
+   "sha256": "eda9d541c78b16c6b74520971f2f31965920d4a61875720651da1525bbdd69a7"
+  },
+  "docs/reviews/rint2_seal_20261118/registration_R_sealed.md": {
+   "bytes": 339524,
+   "lines": 909,
+   "sha256": "bcc0c118ce3f20999673dabdc6ab5e636f5ad81ccdca890665f8229a180e3ccd"
+  },
+  "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md": {
+   "bytes": 301757,
+   "lines": 748,
+   "sha256": "dcdd1d3726284ce54c11ddfe4d727318b12329ee4afc82e91330803a46cfc67a"
+  }
+ },
+ "pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+ "plan_checks": {
+  "결과 전 등록 넷 (require_plan_numbers)": "통과 (--final)",
+  "계획 바이트 = Q3 꼴 (indent 1 · sort_keys · ASCII · 끝 줄바꿈 없음)": true,
+  "두 계획 대조 plans_cross_problems(계획, S0 계획) = []": true
+ },
+ "plan_rel": "docs/data/rint2_r_plan_20261118/ca1_plan.json",
+ "plan_sha256": "d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8",
+ "remaining_placeholders_in_fragments": [
+  "<HOME>",
+  "<P0 채택 번호>",
+  "<P1 채택 번호>",
+  "<R 역할>",
+  "<T_DBE>",
+  "<T_first>",
+  "<T_hit>",
+  "<UTC 시각>",
+  "<c>",
+  "<ladder:P0 항목 번호>",
+  "<n>",
+  "<point:P0_c0_R_j0 항목 번호>",
+  "<predict 항목 번호>",
+  "<unit:P0_c0_R_j0 항목 번호>",
+  "<…>",
+  "<가지>",
+  "<그 시도 폴더>",
+  "<기계>",
+  "<기존 트리>",
+  "<날짜>",
+  "<넘김 기록 시각>",
+  "<넘김 기록의 원장 끝 커밋>",
+  "<묶음>",
+  "<받는>",
+  "<법칙>",
+  "<보낸>",
+  "<봉인 커밋>",
+  "<시도 번호>",
+  "<시도 폴더>",
+  "<열쇠>",
+  "<원장 가지>",
+  "<이름>",
+  "<팔>",
+  "<확인한 것 · 한 줄>"
+ ],
+ "s0_plan_sha256": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520",
+ "schema": "rint2-seal-copy-v2",
+ "seal_branch": "claude/rint2-seal-20261118",
+ "seal_date": "20261118",
+ "seal_status": "final (--final · 결과 전 등록 넷 채움 = 핀 사슬 require_plan_numbers 통과)",
+ "sealed_rel": "docs/reviews/rint2_seal_20261118/registration_R_sealed.md",
+ "tool_sha256": "f923dede1112d6aad8cd60ed18e78125c5b6258bf17b68c4ab3441b93b747b36"
+}
