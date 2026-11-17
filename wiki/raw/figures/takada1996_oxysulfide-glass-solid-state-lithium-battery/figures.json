@@ -1,0 +1,378 @@
+{
+ "slug": "takada1996_oxysulfide-glass-solid-state-lithium-battery",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Electric conductivity and cyclic voltammogram of 0.01 Li,PO,-0.63 Li,S-0.36 SiS,.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    397.1,
+    540.0,
+    638.4
+   ],
+   "w": 1500,
+   "h": 672,
+   "dpi": 200,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf",
+   "blank": 0.937,
+   "note": "봤다. ⚠ 자동 크롭 = 쪽 전폭(x 0–540 pt) · 자기 캡션 빠짐(영역이 캡션 위 638 pt 에서 끝) — 스캔본이라 쪽마다 1비트 띠 이미지 26 장(2250×115 px · 300 dpi)이 쪽 전폭을 덮어 기하 검증이 단을 못 가른다 · 내용 = 그림 1(왼쪽 단) + 오른쪽 단 본문 끝 + 그림 2 와 그 캡션 첫 줄 → 단독은 fig_1_manual_p3.png. caption 칸 = OCR(Acrobat 3.0 Capture) 그대로('Li,PO,' · 'SiS,') — 정본 캡션은 수동 항목."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Stability of the glass against lithium metal. Change in the impedance of the cell, Li-glass-Li and DSC curves of the mixture of Li and the glass are indicated.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    445.3,
+    540.0,
+    628.6
+   ],
+   "w": 1500,
+   "h": 511,
+   "dpi": 200,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf",
+   "blank": 0.947,
+   "note": "봤다. ⚠ 자동 크롭 = 쪽 전폭 · 자기 캡션 빠짐 — 내용 = 그림 1 아래 절반(왼쪽) + 그림 2(오른쪽) → 단독은 fig_2_manual_p3.png."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Cyclic coulopotentiogram of LixCoO,.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    490.8,
+    540.0,
+    647.4
+   ],
+   "w": 1500,
+   "h": 436,
+   "dpi": 200,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf",
+   "blank": 0.925,
+   "note": "봤다. ⚠ 자동 크롭 = 쪽 전폭 · 자기 캡션 빠짐 — 내용 = 그림 3(위 축 잘림 · 왼쪽) + 그림 5 아래 절반과 그 캡션(오른쪽) · caption 칸 OCR('LixCoO,') → 단독은 fig_3_manual_p4.png."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Coulometric titration curve of In-Liz",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    26.0,
+    540.0,
+    265.0
+   ],
+   "w": 1500,
+   "h": 665,
+   "dpi": 200,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf",
+   "blank": 0.926,
+   "note": "봤다. ⚠ 자동 크롭 = 쪽 전폭 · 자기 캡션 빠짐 — 내용 = 쪽 머리('880 K. Takada et al. / Solid State Ionics 86–88 (1996) 877–882' — OCR 층의 'Takuda' 는 오인식) + 왼쪽 단 본문(3.2 절 첫 문단) + 그림 4 · caption 칸 OCR('In-Liz') → 단독은 fig_4_manual_p4.png."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Change in electrical charges of cathodic and anodic reactions during the cycling is also indicated in the figure. In the composition range of 0 I x 2 0.9, the potential was almost constant and the electrochemical reaction was reversible. This result shows that In-Li, is a good candidate for a negative electrode material, with a specific capacity of 180 mAh/g.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    396.4,
+    540.0,
+    627.2
+   ],
+   "w": 1500,
+   "h": 642,
+   "dpi": 200,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf",
+   "blank": 0.929,
+   "note": "봤다. ⚠⚠ 오탐 — caption 칸이 본문 문단(p. 880 오른쪽 단 'Fig. 5. Change in electrical charges of cathodic and anodic reactions during the cycling is also indicated in the figure. …')이고 진짜 캡션('Fig. 5. Cyclic coulopotentiogram of In–Lix. …')은 '중복(작은 쪽)' 으로 버려졌다 · 크롭 영역 = p. 4 아래 절반 전폭 — 왼쪽 본문 끝 + 그림 3(아래 축 잘림) + 그림 5(캡션 없음) → 그림 5 단독은 fig_5_manual_p4.png. 파일은 지우지 않음(선례 — 104호 tab_1)."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. High rate capability for discharging of the battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    68.2,
+    540.0,
+    264.1
+   ],
+   "w": 1500,
+   "h": 545,
+   "dpi": 200,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf",
+   "blank": 0.909,
+   "note": "봤다. ⚠ 자동 크롭 = 쪽 전폭 · 자기 캡션 빠짐 — 내용 = 왼쪽 단 본문(3.3 절) + 그림 7 → 단독은 fig_7_manual_p5.png."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 6,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Current decay of the battery charged at a constant voltage of 3.7 V. layer of the ground solid electrolyte and one of the mixture of LiCoO, and ground solid electrolyte, were sealed in a battery case with the dimensions of 20 mm in diameter and 1.6 mm in thickness. Fig. 10 shows the charge-discharge curves of the coin-type cell. The battery has a capacity of 14 mAh (ca. 100 mWh/cm3) and its operating voltage is 3.2 V. The",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    67.4,
+    540.0,
+    242.0
+   ],
+   "w": 1500,
+   "h": 486,
+   "dpi": 200,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf",
+   "blank": 0.933,
+   "note": "봤다. ⚠ 자동 크롭 = 쪽 전폭 · 자기 캡션 빠짐 — 내용 = 그림 9 + 오른쪽 단 본문(VL2020 문장 · 4. Conclusion) · caption 칸에 본문 문단 섞임(OCR — 'layer of the ground solid electrolyte … operating voltage is 3.2 V. The') → 단독은 fig_9_manual_p6.png."
+  },
+  {
+   "key": "f1m",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1_manual_p3.png",
+   "bbox": [
+    38,
+    400,
+    264,
+    664
+   ],
+   "w": 629,
+   "h": 734,
+   "caption": "Fig. 1. Electric conductivity and cyclic voltammogram of 0.01 Li3PO4–0.63 Li2S–0.36 SiS2.",
+   "note": "수동 — p. 3(인쇄 879) 왼쪽 단 200 dpi 회색조(원본 스캔 300 dpi 1비트). 봤다(600 dpi 렌더 · 축 눈금 화소 보정). CV: 'Voltage / V' −1 → 10 V(눈금 1 V · 인쇄 '0 · 5 · 10') · 10 µA 막대 · Li 석출/용해 봉우리(≈0 V)만 · 0.5–10 V 사이 기저선 굴곡 ≲0.5 µA(막대 120 px 대비 ≲5 px) · 본문 'up to almost 10 V vs. Li'. 인셋 Arrhenius 점 6 [도표·화소 — 십년 209 px · 1000/T 476 px/단위]: 231 °C 0.15 · 178 °C 0.098 · 122 °C 0.031 · 85 °C 0.014 · 62 °C 0.0064 · **28 °C 1.8×10⁻³ S cm⁻¹** ↔ 본문 '1.4×10⁻³ S/cm at ambient temperature'(그림의 어느 점과도 같지 않음 — [재현·가정] 저온 두 점 Ea ≈0.32 eV 로 외삽하면 1.4×10⁻³ ↔ ≈22 °C). 위 온도 축(300 · 200 · 150 · 100 · 50 · 20 °C)은 1000/T 축과 맞음 ✅.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2_manual_p3.png",
+   "bbox": [
+    281,
+    450,
+    502,
+    663
+   ],
+   "w": 615,
+   "h": 592,
+   "caption": "Fig. 2. Stability of the glass against lithium metal. Change in the impedance of the cell, Li–glass–Li and DSC curves of the mixture of Li and the glass are indicated.",
+   "note": "수동 — p. 3 오른쪽 단 200 dpi. 봤다(600 dpi · 화소 보정 — 십년 262 px · 0.687 px/h). Li|glass|Li 셀(50 °C 보관 · 25 °C 측정)의 '전도도' [도표·화소]: 시작 ≈2.0×10⁻⁴(25–50 h ≈2.2) → 400–550 h ≈2.6×10⁻⁴ → 마지막 점 ≈1360 h **≈1.6×10⁻⁴ S cm⁻¹**(정점 대비 −37 % · 시작 대비 −18 … −25 %) ↔ 본문 'No significant change' · 값 자체가 본문 · 그림 1 의 1.4–1.8×10⁻³ 의 약 1/7–1/9(분말 압착 펠릿 · 셀 임피던스에서 계산 — 계면 몫 분리 · 두께 미인쇄). DSC 인셋은 **사선 오프셋(waterfall) 축 둘** — 뒤 축(2nd scan)이 ≈17 °C 왼쪽 · 위로 밀려 그려짐(점선 원근선) · 각자 축으로 읽으면 흡열 ≈182–184 °C · 발열 ≈171–172 °C 두 스캔 같음(Li 녹는점 근처 · 본문 'reproduced').",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3_manual_p4.png",
+   "bbox": [
+    40,
+    452,
+    262,
+    662
+   ],
+   "w": 617,
+   "h": 584,
+   "caption": "Fig. 3. Cyclic coulopotentiogram of LixCoO2.",
+   "note": "수동 — p. 4(인쇄 880) 왼쪽 단 200 dpi. 봤다(600 dpi · 345 px/V · 2066 px/x). LiCoO₂ | glass | Li 박(64 µA cm⁻²) — x 축 = 통과 전하로 계산한 Li 조성(인쇄) · 위 축 mAh g⁻¹ 은 x = 0.5 에서 0(x 1.0 ↔ 137.4 — 이론 0.5 Li 와 맞음 ✅). [도표·화소] 첫 충전 x 1.0 → **0.514**(≈4.45 V · ≈133 mAh g⁻¹) · 첫 방전 → **0.881**(2.5 V 차단 · ≈100 mAh g⁻¹ · CE ≈75 %) · 2 · 3 번째 방전 끝 0.863 · 0.856 · 충전 끝 ≈0.55(≈4.42 V) → [재현 — x 가 누적 전하라는 인쇄 문장에 기댐] CE ≈95 % · ≈98 %(본문 'almost 100%, except for the first cycle'). 충전 평탄 3.95–4.05 V(x 0.75–0.98) · 방전 ≈3.85 V. 상 · 하한 전압 본문 미인쇄(그림 2.5 V · ≈4.45 V).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f4m",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4_manual_p4.png",
+   "bbox": [
+    281,
+    76,
+    502,
+    280
+   ],
+   "w": 615,
+   "h": 567,
+   "caption": "Fig. 4. Coulometric titration curve of In–Lix.",
+   "note": "수동 — p. 4 오른쪽 단 200 dpi. ★★★★ 봤다(300 dpi 원본 해상도 · 화소 판독 — y 752.9 px/V(1 px ≈1.3 mV · 눈금 잔차 ≤1.4 px ≈1.8 mV) · x 207.2 px/단위(1 px ≈0.005)). In 박 24 mg | glass | Li 박 · 50 µA × 4 h 펄스 · 2 h 휴지 뒤 OCV(인쇄) · 축 'Voltage / V'(기준 표기 0 — Li 박 상대극 2전극). [도표·화소] **평탄 0.6256(x 0.05) → 0.6250(0.40) → 0.6233(0.55–0.65) → 0.6215(0.75) → 0.6197(0.80) → 0.6161 V(0.85)** = ≈4.8–46 at% 에서 ≈9 mV 처짐 · 0.585(x 0.905 · 47.5 at%) · 0.476(0.935 · 48.3 at%) · 0.356(≈0.96 · 49 at%) · 0.357–0.347 V(x ≈0.96–1.09 · 49–52 at%) · 0.338(1.115) → 0.123 V(1.543 · 61 at%) 기울기 · 0.110 → 0.071 V(61.5–69 at%) · 끝 0.043 V(x 2.36 · 70 at%). 점 간격 Δx 0.0357 = [재현] 50 µA × 4 h ÷ (24 mg × 233.4 mAh g⁻¹) ✅ · 위 축 mAh g⁻¹ 는 x 1 ↔ 233.3(이론 233.4) ✅ · 위 축 0 이 아래 축 0 보다 4 px(≈0.02) 오른쪽(도안 오차). 평탄 수치(0.6 · 0.62) 본문 · 캡션 인쇄 0 — 이 그림에만 있다.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5_manual_p4.png",
+   "bbox": [
+    281,
+    405,
+    502,
+    663
+   ],
+   "w": 615,
+   "h": 717,
+   "caption": "Fig. 5. Cyclic coulopotentiogram of In–Lix. ● And ○ indicate the electrical charge of the cathodic and anodic reactions, respectively. · Indicates the coulombic efficiency of each cycle.",
+   "note": "수동 — p. 4 오른쪽 단 200 dpi(자동 f5 는 오탐). ★★★ 봤다(300 dpi · 조각별 선형 보정 — 0.5 V 당 119–124 px · 스캔 왜곡 ±2.5 %). 3전극: WE In 박 17 mg · **RE = SE 층에 묻은 Ag 선** · CE = Li 조각 붙인 In 박 · 27 µA cm⁻² · 기록 = WE–RE 전압(인쇄) — **Ag 선의 Li 대비 전위 미인쇄**. 위 축 'Δx in In–Li x+Δx' ↔ 아래 축 mAh g⁻¹(Δx 1 ↔ 233.1 ✅). [도표·화소] 음극(리튬화) 평탄 ≈0.57–0.62 V · 양극(탈리튬) ≈0.72–0.78 V(vs Ag 선) · 1st 는 Q 0 → ≈212 리튬화 · ≈212 → ≈29 탈리튬(끝에 ≈2 V 급등) · 2nd · 10th 는 0 ↔ ≈185. 인셋: 1 사이클 ● ≈211 · ○ ≈183 mAh g⁻¹ · 효율 ≈87 % · 2–23 사이클 ●○ ≈183 → ≈189 · 효율 ≈99–100 %. 본문 '0 ≤ x ≤ 0.9 almost constant' = 1st 리튬화 끝 Δx ≈0.91 과 맞음 · '180 mAh/g' = Δx ≈0.77.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6_manual_p5.png",
+   "bbox": [
+    40,
+    415,
+    263,
+    664
+   ],
+   "w": 620,
+   "h": 693,
+   "caption": "Fig. 6. Cycling performance of the battery, In–Lix–Li1−xCoO2. Charge–discharge curves indicated in the figure were obtained at the 1st, 10th and 100th cycles. Change in electrical charges of charge and discharge and coulombic efficiency are also indicated in the small figure, with the symbols, ●, ○ and · respectively.",
+   "note": "수동 — p. 5(인쇄 881) 왼쪽 단 200 dpi(자동 '영역 없음' 제외). ★★★ 봤다(600 dpi · 본판 292.9 px/V · 258.4 px/mAh · 인셋 208.8 px/mAh · 4.36 px/% · 5.75 px/사이클). In 박 ≈70 mg | glass | LCO : SE 2 : 3 91 mg · 127 µA cm⁻² · 2.7–3.7 V(인쇄). [도표·화소] **1st 충전 ≈4.48 mAh(3.72 V) · 1st 방전 ≈2.7 mAh — 인셋 1 사이클 효율 점 ≈61.5 %**(본문 'coulombic efficiency of almost 100%' · 'no degradation' 은 2 사이클 이후) · 10th 충전 ≈2.93–2.99 · 방전 ≈2.93 mAh · 100th 방전 ≈2.8–2.85 · 인셋 ●○ ≈2.8–3.3 mAh(사이클 ≈18–20 ≈3.3 둔덕 · ≈75 ≈2.65 골) · 효율 ≈100 %(115 사이클). [재현] LCO 36.4 mg 기준 1st 충전 ≈123 · 가역 ≈80 mAh g⁻¹ · In 70 mg 이론 16.3 mAh(x 1) ↔ 1st 충전 4.48 mAh = x ≈0.27(평탄 창 안).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f7m",
+   "kind": "figure",
+   "label": "7",
+   "page": 5,
+   "file": "fig_7_manual_p5.png",
+   "bbox": [
+    281,
+    74,
+    502,
+    279
+   ],
+   "w": 615,
+   "h": 570,
+   "caption": "Fig. 7. High rate capability for discharging of the battery.",
+   "note": "수동 — p. 5 오른쪽 단 200 dpi. ★★★ 봤다(600 dpi · 본판 307.6 px/V · 346 px/mAh · 인셋 ≈262 px/decade · ≈262 px/V). ⚠ **본판 곡선 4 개 ↔ 이름표 5 개** — 1 · 2 mAh 값을 인셋과 맞추면 본판 = 127 · 510 · 764 · 1020 µA cm⁻² 이고 **255 곡선 없음**(1 mAh 에서 3.24 · 2.85 · 2.75 · 2.46 V ↔ 인셋 3.24 · [3.09] · 2.87 · 2.76 · 2.45). [도표·화소] 인셋 ○ 1 mAh 3.24 · 3.09 · 2.87 · 2.76 · 2.45 V · ● 2 mAh 3.14 · 2.83 · 2.47 · 2.29 · 1.94 V(127 · 255 · 510 · 764 · 1020) → [재현] 127–764 직선 기울기 **−0.63 · −1.10 V/decade**(잔차 ≤26 mV · 선형-in-i 적합보다 rms 작음) · α_eff(n 1 · 25 °C) 0.094 · 0.054 · 1020 점은 외삽선 아래 0.21–0.23 V. 127 µA cm⁻² 끝 ≈2.7 mAh(2.68 V).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f8m",
+   "kind": "figure",
+   "label": "8",
+   "page": 5,
+   "file": "fig_8_manual_p5.png",
+   "bbox": [
+    281,
+    288,
+    502,
+    471
+   ],
+   "w": 615,
+   "h": 509,
+   "caption": "Fig. 8. High rate capability for charging of the battery.",
+   "note": "수동 — p. 5 오른쪽 단 200 dpi(자동 '영역 없음' 제외). 봤다(600 dpi). 충전 2.8 mAh 까지(가로축 mAh — 실험 절 '2.8 mAh g⁻¹' 은 단위 어긋남 · 그림은 mAh) → 127 µA cm⁻² 방전. ⚠ **충전 곡선 4 개 ↔ 이름표 5 개**(1020 · 764 · 510 · 255 · 127) — 끝 전압 ≈4.61 · 4.08 · 3.90 · 3.72 V(2.8 mAh) · 어느 것이 빠졌는지 그림만으로 확정 불가(이름표 위치로는 764). 방전 넷 겹침 · 끝 ≈2.78–2.87 mAh(≈2.7 V) → CE ≈99–102 %(본문 '100%, even when the cell voltage exceeded 4.5 V').",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f9m",
+   "kind": "figure",
+   "label": "9",
+   "page": 6,
+   "file": "fig_9_manual_p6.png",
+   "bbox": [
+    40,
+    70,
+    262,
+    267
+   ],
+   "w": 617,
+   "h": 548,
+   "caption": "Fig. 9. Current decay of the battery charged at a constant voltage of 3.7 V.",
+   "note": "수동 — p. 6(인쇄 882) 왼쪽 단 200 dpi. 봤다(600 dpi · 1.176 px per µA cm⁻² · 4.124 px/h). 선형 축 0–900 µA cm⁻² · 0–250 h. [도표·화소] ≈780–800(2–3 h) · 497(5 h) · 219(10 h) · 111(15 h) · 60(20 h) · 20(30 h) · 7(50 h) · ≥60 h 는 기저선과 구별 불가(분해능 ≈0.9 µA cm⁻²/px) ⇒ 본문 'below 10⁻⁸ A/cm² after 200 h'(= 0.01 µA cm⁻²)는 **이 그림으로 확인 불가**. [재현·가정] 곡선 적분(t ≥1.8 h) ≈5.7 mAh cm⁻² × 0.785 cm² ≈4.5 mAh(0–1.8 h 축선에 가림) — 그림 6 가역 ≈3 mAh 보다 큼 · 시험 전 셀 상태 미인쇄. 3.7 V = 사이클 상한과 같은 값(과충전 조건 아님).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  },
+  {
+   "key": "f10m",
+   "kind": "figure",
+   "label": "10",
+   "page": 6,
+   "file": "fig_10_manual_p6.png",
+   "bbox": [
+    40,
+    368,
+    262,
+    521
+   ],
+   "w": 617,
+   "h": 426,
+   "caption": "Fig. 10. Charge–discharge curve of a coin-type battery.",
+   "note": "수동 — p. 6 왼쪽 단 200 dpi(자동 '거의 백지' 제외 — 방전 곡선이 점선 · 가는 선). 봤다(600 dpi · 225.7 px/V · 64.7 px/mAh). ∅20 mm × 1.6 mm 코인(인쇄) · 전류 · 온도 · 차단 미인쇄. [도표·화소] 충전 3.42 → 3.73 V(≈14.6 mAh) · 방전 3.34(0.5 mAh) · 3.19(3) · 3.00(8) · 2.87(11) · 2.65(13) · 2.0 V(≈14.8 mAh) → [재현] 평균 방전 전압 ≈2.98 V · 에너지 ≈44 mWh ÷ 0.503 cm³ ≈88 mWh cm⁻³(인쇄 14 mAh × 3.2 V 로도 89) ↔ 인쇄 'ca. 100 mWh/cm³' · 'operating voltage 3.2 V'(곡선은 Q ≈3 mAh 에서 3.2 V 를 지남).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "60428de0-103._Solid_state_lithium_battery_with_oxysulfide_glass.pdf"
+  }
+ ]
+}
