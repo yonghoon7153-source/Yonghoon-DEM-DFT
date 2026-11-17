@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, dem-mpm, research]
-sources: [raw/papers/neumann2020_interfacial-effects-thiophosphate-assb-model.md, raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/kim2017_infiltration-solution-processable-se-conventional-electrodes.md, raw/papers/neumann2020_interfacial-effects-thiophosphate-assb-model.md, raw/papers/bielefeld2023_useful-models-ssb-simplicity-perspective.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/jiao2023_electro-chemo-mechanical-se-modulus-conductivity-intergranular-czm.md, raw/papers/schlautmann2023_lpscl-particle-size-distribution-composite-transport.md, raw/papers/shi2020_particle-size-ratio-cathode-utilization-assb.md, raw/papers/davis2021_operando-microscopy-graphite-lpscl-composite-current-focusing.md, raw/papers/naik2022_kinetics-vs-transport-ssb-cathode-mesoscale-regime-map.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/chen2013_sofc-miec-composite-electrode-percolation-theory.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/bielefeld2020_effective-ionic-conductivity-binder-composite-cathode.md, raw/papers/bielefeld2022_voids-kinetics-morphology-composite-cathode-fem.md, raw/papers/hlushkou2018_void-space-ion-transport-composite-cathode.md, raw/papers/bielefeld2019_microstructural-modeling-assb-composite-cathode.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/rahman2024_sbms-rul-solid-state-batteries.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -621,6 +621,16 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - `[도표·벡터]` σ_x,eff 0.173 · 0.171 · 0.135 · 0.043(42 · 30 · 11 · 1 % — 본문 'almost 60%' ↔ −74.9 %) · 표준 전극의 30 % 는 재구성의 집전체 쪽 복셀 잘라내기에 달림.
 - ⚠ σ(χ) 는 액체 셀 측정([40] Noh · [41] Amin — 제목 기준 NMC333 · 523)의 적합이고 시험 실험 0.
 
+## ★★ 65호가 [21] 로 · 86호가 [15] 로 · 93호가 [68] 로 가리킨 '용액 SE 침투 전극' — 연결 분율은 없고, GITT 피복률은 위임된 곱이며, 공극 6.3–8.0 % 는 770 MPa · 겉보기 밀도의 계산값이다 (2026-11-17 추가, `assb` 112호)
+
+`raw/papers/kim2017_infiltration-solution-processable-se-conventional-electrodes.md` (Kim D.H. … Jung Y.S. 2017 *Nano Lett.* 17, 3013 — LCO(LiNbO₃) : PVDF : Super P 96:2:2 · 97:1:2 · 98:1:1 · 흑연 : PVDF 95:5 · 92:8 · 침투 SE 11–12 · 21 wt% · 770 MPa · ∅13 mm · 5차 묶음 #8).
+
+- **`θ` 는 없다** — 연결 분율 계산 · 측정 0(`percolat*` 5 회 = 서술). 단면 FESEM/EDXS · HRTEM 은 사이클 전 정성(분율 0).
+- **GITT "surface coverage" 56 · 61 · 65 %** — 식 · `D` · BET · 펄스가 [8] 위임(곱 축퇴 처방 아흔다섯 번째 적용 — 위임 배정) · `θ₀` 로도 면적으로도 옮기지 않는다 · 같은 지면 조성 셋의 순서(피복률 최고 98:1:1 ↔ 율 최고 97:1:2)가 어긋난다.
+- **바인더 명제의 원문** — `[인쇄]` "free from insulating polymeric binders"(Mixture1) · "ionically insulating property of PVDF"(Mixture2) · "ionic blocking by the NBR binder"(Mixture3) — 65호 "partially block contacts" 의 같은 연구실 선행 · 이 편의 바인더 효과는 첫 충전 −35.6 · 방전 −16(첫 충전 상한이 막지 못하는 꼴 — 정적 몫일 수 있음 · 65호 바인더 쌍 상한 ≈0–42 % 와 다름).
+- **부피 분율** `[재현]`: 표 1 SE vol%(26 · 27 · 27 · 22 · 23)는 식 S1 밀도 · wt% 로 **고상 기준**과 가깝다(25.8 · 24.3 · 26.4 · 22.1 · 22.1) · 본문 '29–34 vol %(SE + 공극)' 는 기준 혼합(같은 기준이면 27.7–31.2) · 흑연 행 공극은 ρ_C 2.0 에 매달린다(`[재현·외부 값]` 2.26 이면 ≈15 %).
+- ⇒ 이 페이지 규율에 붙는 것(`[해석]`): (1) 침투 · 코팅 공정 쌍은 첫 충전 상한을 먼저(86 · 112호) (2) GITT 피복률은 상수 출처와 함께만 (3) vol% 는 분모(고상 ↔ 공극 포함)를 같이.
+
 ## 이 페이지가 주장하지 않는 것
 
 - `θ_AM` 이 접촉 손실의 **올바른** 모형이라고 주장하지 않는다. 원문의 `θ` 는 접촉 저항을
@@ -648,6 +658,7 @@ state-of-charge estimation, and overall battery health monitoring [5, 6]**" 다.
 - ★ **2026-09-29 (86호)**: **86호 코팅 쌍의 `θ₀` 차가 0 이라고 단정하지 않는다** — 첫 충전 등가는 CV 몫(종료 조건 미인쇄) · 기생 전하(bare CE 결손) · 셀 산포(3–5 %) 위의 상한이다; "피복률" 을 틀린 값이라고도 하지 않는다 — `D` 가 없어 재현 불가하다는 것까지다.
 - ★ **2026-09-29 (87호)**: **"≈50 vol%" 가 73호(42 %)와 모순이라고 하지 않는다** — 기준(공극 포함 ↔ 고상)에 따라 같은 크기라는 산술(42/0.86 = 48.8)까지이고, 이 종설이 어느 기준을 뜻했는지는 인쇄되지 않았다. 1호 "3–5 µm" 가 틀렸다고도 하지 않는다 — 모형 값이 "experimental" 이름표로 옮겨졌다는 것까지다.
 - 93호의 회고를 1호 판정의 새 근거로 쓰지 않는다 — 회고 문장의 조건 · 기준을 복원한 것까지이고, "68 vol%" 문장의 1호 원문 존재는 1호 digest 전사 기준이다. VGCF 두 점은 73호 digest 의 `[도표]` 전사다.
+- ★ **2026-11-17 (112호)**: **112호 침투 전극의 공극 6.3–8.0 % 를 측정된 void 로 쓰지 않는다** — 질량 · 두께 · 겉보기 밀도의 계산값(식 S1 · 770 MPa · 셀 밖 전극)이고 흑연 행은 밀도 가정에 매달린다. GITT 피복률 56–65 % 도 `θ₀` 로 옮기지 않는다(위임된 곱).
 
 ## 관련
 - [[assb-apparent-capacity-decomposition]] — 이 곱에 **셋째 항 `η(i)`** 를 더한다. 반례와 분리 시험.

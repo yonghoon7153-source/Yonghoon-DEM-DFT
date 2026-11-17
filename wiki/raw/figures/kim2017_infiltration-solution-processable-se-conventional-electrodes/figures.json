@@ -1,0 +1,497 @@
+{
+ "slug": "kim2017_infiltration-solution-processable-se-conventional-electrodes",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "7ed0fa37-107._Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+  "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic diagram illustrating the inﬁltration of conven- tional LIB composite electrodes with solution-processable SEs. The photographs in the panels show the LiCoO2 electrodes before and after the inﬁltration of EtOH-solution processed Li6PS5Cl (LPSCl). A photograph of LPSCl-dissolved EtOH solution is also shown. Polymeric binders (PVDF) are not shown in the diagram for simplicity.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    306.5,
+    365.5
+   ],
+   "w": 701,
+   "h": 841,
+   "dpi": 200,
+   "src": "7ed0fa37-107._Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.527,
+   "note": "봤다(p. 3 · 래스터 · 크롭 온전). 도식 셋 — Conventional LIB electrodes(검은 전극 사진) → '1. Infiltration of SE solution (dipping) 2. HT (180 °C) under vacuum'(Li₆PS₅Cl/EtOH 용액 병 사진 — 검붉은 갈색) → SE-infiltrated electrodes(노란 SE 막이 입자 표면을 감싼 도식 · 회색 전극 사진) → 'Densification by cold-pressing' → Electrodes for ASLBs(입자 사이를 SE 가 채운 도식 + 가압 몰드). 수치 0 — 도식은 '노출 표면 전부 피복' 을 그렸고 접촉 분율은 그리지 않는다."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Characterization of SE (LPSCl)-inﬁltrated LiCoO2 (LCO) and graphite (Gr) electrodes. (a) Raman spectra and (b) XRD patterns of LCO and Gr electrodes before and after the inﬁltration of solution-processed LPSCl. Signatures from LiCoO2 (A1g and Eg modes) and graphite (D and G bands) are shown in panel a. (c) Cross-sectional FESEM image of the LPSCl-inﬁltrated LCO electrode and its corresponding EDXS elemental maps. (d) HRTEM image of FIB-cross-sectioned LPSCl-inﬁltrated LCO electrode and its corresponding EDXS elemental maps. (GITT) analysis,8 was 61% (Figure S11 and Table 1). This value is two times higher than that of the conventional dry- mixed electrode (31%) reported in our previous work, in which no binders were used.8 The capacity of the Mixture2 electrode was also lower (118 mA h g−1) than that for the Mixture1 electrode, which is attributed to the ionically insulating pr",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    513.1
+   ],
+   "w": 1434,
+   "h": 1251,
+   "dpi": 200,
+   "src": "7ed0fa37-107._Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.495,
+   "note": "봤다(p. 4 · 래스터 · 크롭 온전). (a) Raman — LCO 전극에도 G · D 띠(Super P) · A1g ≈595 · Eg ≈485 cm⁻¹ · LPSCl-LCO/Gr 에 ♦ ≈423 cm⁻¹ (b) XRD — * Li₆PS₅Cl(≈15.5 · 18 · 25.5 · 30 · 31.5°) · & LiCoO₂ · # 흑연 · ^ Be 창 (c) 단면 FESEM(20 µm 막대) + Co · S 지도 — S 가 입자 사이 망 · 정량 0 (d) FIB 단면 HRTEM(2 µm · 100 nm) + Co · S 지도 — 계면 한 자리 · 정성. 판정 입력 아님(접촉 분율 · 공극 · 균열 정량 0)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Electrochemical characterization of all-solid-state LCO/Li−In and Gr/Li−In half-cells employing the LPSCl-inﬁltrated electrodes at 30 °C. First- and second-cycle charge−discharge voltage proﬁles of (a) LCO and (b) Gr electrodes at 0.14 mA cm−2 (∼0.1C) for liquid-electrolyte and all- solid-state cells. The result for the LCO electrode, which was an all-solid-state cell without inﬁltration of the SE, is shown in the inset of a). Rate performances of c) LCO and d) Gr electrodes in all-solid-state cells. The numbers indicate the current densities in mA cm−2. The current densities for charge and discharge were the same. Nyquist plots for (e) LCO and (f) Gr electrodes in all-solid-state cells. The compositions of electrodes in terms of the weight ratio of active material/PVDF/Super P are shown in panels c−f. densities (mA cm−2), respectively, varied by electrode composition (LCO/PVDF",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    563.5
+   ],
+   "w": 1434,
+   "h": 1391,
+   "dpi": 200,
+   "src": "7ed0fa37-107._Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.911,
+   "note": "봤다(p. 5 · 래스터 2092×2035 ≈300 dpi · 300 dpi 렌더 화소 판독). (a) LE 첫 충전 끝 ≈155.8 · 첫 방전 ≈151(표 S2 151) · 둘째 ≈154(본문 154) · SE 첫 충전 ≈165.7 · 방전 141.2 → 첫 CE ≈85 %(본문 · 표 S2 76.6 % 와 어긋남 — D) · 인셋(침투 없는 LCO) 충전 ≈18.5 · 방전 ≈3.3 (b) Gr SE 첫 리튬화 ≈452 · 탈리튬화 ≈366(본문 364) · LE 탈리튬화 ≈313 (c) LCO 율 97:1:2 > 98:1:1 ≳ 96:2:2(0.70: ≈90 · 66 · 62 · 1.4: ≈50 · 41 · 37 mAh g⁻¹) (d) Gr 율 95:5:0 ≫ 92:8:0 · 축 오자 'Capaciaty' (e) LCO Nyquist — 첫 호 97:1:2 가 가장 큼(≈21 → ≈139 Ω · 꼭대기 −Z″ ≈30.4) ↔ 96:2:2 · 98:1:1(≈25 → ≈108–113 · ≈21.5 · ≈23) — 율 순서와 반대(본문 'agrees well' 확인 안 됨 — D) (f) Gr Nyquist — 95:5:0 호 작음(≈23.5 → 35 Ω) · 율과 같은 방향."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Electrochemical performances of LCO/Gr ASLBs employing LPSCl-inﬁltrated electrodes at 30 and 100 °C. Initial charge−discharge voltage proﬁles of LCO/Gr ASLB at 0.1C (0.14 mA cm−2) and 30 °C using (a) a conventional thick (∼600 μm) SE layer (2.0−4.3 V) and (b) a thin (∼70 μm) SE−NW composite ﬁlm (2.0−4.2 V). (c) Charge−discharge voltage proﬁles at diﬀerent C-rates and (d) cycling performance at 6C for LCO/Gr ASLB at 100 °C (2.0−4.2 V). LCO/Gr ASLB exhibited a reversible capacity of 117 mA h gLCO cell showed 97.4% capacity retention after 50 cycles (Figure S13). The poorer cycling stability of LCO in the all-solid-state cell than in the LE cell is not surprising because LCO suﬀers from interfacial stability problem in contact with sulﬁde SEs, which could be explained by chemical reactions or interatomic diﬀusion35,36,38 or by the space charge layer theory.43 In this regard, a con",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    395.1
+   ],
+   "w": 1434,
+   "h": 923,
+   "dpi": 200,
+   "src": "7ed0fa37-107._Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.917,
+   "note": "봤다(p. 6 · 래스터 2094×1333 · 300 dpi 렌더 화소). (a) 완전지 30 °C 첫 충전 끝 ≈195.9 · 방전 ≈117.6 mAh g⁻¹_LCO → 첫 CE ≈60 %(인쇄 0) · 둘째 충전 ≈125 (b) SE–NW 박막 첫 충전 ≈160 · 방전 ≈94 (c) 100 °C 1 · 6 · 12 · 24 · 60 C ≈116 · 101 · 86 · 65 · 28 (d) 100 °C 6 C 100 사이클 ≈100 → ≈81.5(본문 82 %) · 74 사이클 근처 튐 하나."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Photographs of a) LPSCl dissolved in EtOH and b) solution-processed LPSCl powders (Sol-LPSCl).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    190.1,
+    510.1,
+    495.3
+   ],
+   "w": 1234,
+   "h": 848,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.483,
+   "note": "봤다(축소판). 사진 둘(EtOH 용액 · Sol-LPSCl 분말). ⚠ 자동 크롭 바닥 12.5 pt 잘림(그림 래스터 507.8 pt ↔ 크롭 495.3 pt — Word SI 의 그림 래스터가 캡션 블록과 겹침) — 잘린 것은 사진 (b) 아래 가장자리(바탕 · 병 바닥)뿐이라 수동 크롭 안 함(렌더 확인)."
+  },
+  {
+   "key": "fS2m",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2_manual_p7.png",
+   "caption": "Figure S2. a) XRD patterns of LPSCl prepared by ball-milling (BM-LPSCl), solution-processing using EtOH (Sol-LPSCl) with different heat-treatment temperatures, and ball-milled Sol-LPSCl heat-treated at 180 oC (BM-Sol-LPSCl). b) Raman spectra of BM-LPSCl and Sol-LPSCl (heat- treated at 180 oC). The Bragg position for the argyrodite Li6PS5Cl is marked in a).27",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    548.6,
+    630.0
+   ],
+   "w": 1341,
+   "h": 1567,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.925,
+   "manual": true,
+   "note": "수동 — SI p. 7 렌더 200 dpi bbox (66.1, 65.9, 548.6, 630.0) · 자동 fS2(바닥 615.6 pt)가 그림 래스터(바닥 628.2 pt)의 아래 12.6 pt — (b) x 축 이름 'Raman shift (cm⁻¹)' · 눈금 글자 — 를 잘라 대체(자동 PNG 는 용량 때문에 지움 — 이 크롭의 부분집합). 캡션 글자는 ≈637 pt 부터라 영역 밖. 봤다(축소판): (a) BM · Sol(80 · 180 · 400 · 550 °C) · BM-Sol XRD (b) Raman 423 cm⁻¹ — 우리 축 밖(재료 확인)."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Arrhenius plots of the Li+ ionic conductivity for BM-LPSCl and Sol-LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    184.9,
+    510.2,
+    531.2
+   ],
+   "w": 1235,
+   "h": 963,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.953,
+   "note": "봤다(축소판). Arrhenius 25–60 °C — BM-LPSCl ≈10⁻³ S cm⁻¹ 위 · Sol-LPSCl 그 아래(표 S1 σ30 1.0 · 0.19 mS cm⁻¹ 과 같은 방향). 판정 입력 아님."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. TGA profiles of BM-LPSCl, Sol-LPSCl, and BM-Sol-LPSCl under Ar. The heat- treatment temperatures for preparing Sol-LPSCl are shown. The ionic conductivities are shown in Table S1.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    89.6,
+    538.2,
+    375.1
+   ],
+   "w": 1312,
+   "h": 793,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.934,
+   "note": "봤다(축소판). TGA 25–400 °C — Sol-LPSCl 180 °C 무게 손실 가장 큼(400 °C 에서 ≈9 % — figure-read) · 유기 잔류물 서술의 근거. 판정 입력 아님."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Photograph of an LPSCl-infiltrated LCO electrode used for the bending test. The diameter of the rod is 10 mm.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    256.3,
+    525.2,
+    459.8
+   ],
+   "w": 1276,
+   "h": 566,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.475,
+   "note": "봤다(축소판). 굽힘 시험 사진(∅10 mm 막대) — 정량 0."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. XRD patterns of a) LCO and b) Gr electrodes before and after infiltration with LPSCl. Enlarged views of the main peaks of LiCoO2 and graphite are shown in the insets. The graphs in Figures 2b are views of Figures S6a, b enlarged in the y-axis.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.9,
+    232.4,
+    545.8,
+    485.6
+   ],
+   "w": 1333,
+   "h": 704,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.921,
+   "note": "봤다(축소판). 전극 XRD 전 · 후(주 봉우리 확대 인셋) — 그림 2b 의 원 데이터. 판정 입력 아님."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. FESEM images of a cross-sectioned LPSCl-infiltrated LCO electrode and its corresponding EDXS elemental maps in a) low and b) high magnification.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    65.9,
+    585.1,
+    647.3
+   ],
+   "w": 1082,
+   "h": 1212,
+   "dpi": 150,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.457,
+   "note": "봤다(p. 12 · 원 래스터 300 dpi · 크롭 200 dpi · 고배율 판 400 dpi 렌더 확대). LPSCl 침투 LCO 단면(770 MPa 치밀화 · 사이클 전) (a) 저배율 20 µm + Co · O · S · Cl · Al (b) 고배율 10 µm + Co · O · S · Cl — S · Cl 이 입자 사이 망. ⚠ (b) SEM 에 입자 가장자리를 따라 얇은 검은 띠(틈으로 보임)와 입자 안을 가르는 선이 몇 곳 — 원문 논의 0 · 이온 밀링 artifact 와 실제 틈을 이 영상만으로 못 가른다(`[해석]`). 분율 · 정량 0. 이 편에서 가장 큰 파일(1.6 MB — 잡음 많은 EDXS 색 지도). · 용량 — 150 dpi 재크롭(2026-11-17 호출자 결정 · 같은 bbox · 1443×1615 @200 dpi 1,620,590 B → 1082×1212 @150 dpi 1,003,339 B)"
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. FESEM images of a cross-sectioned LPSCl-infiltrated Gr electrode and its corresponding EDXS elemental maps in a) low and b) high magnification.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    585.1,
+    658.0
+   ],
+   "w": 1082,
+   "h": 1234,
+   "dpi": 150,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.555,
+   "note": "봤다(p. 13). LPSCl 침투 Gr 단면(770 MPa · 사이클 전) (a) 20 µm + C · S · Cl · Ni (b) 10 µm + C · S · Cl — S 는 흐릿하게 퍼짐 · 집전체(Ni) 쪽 경계에 S 띠 · 본문 'even distribution' 은 정성 · 정량 0 · 흑연 판 사이 검은 틈 몇 곳(`[해석]`). · 용량 — 150 dpi 재크롭(2026-11-17 호출자 결정 · 같은 bbox · 1443×1645 @200 dpi 1,355,058 B → 1082×1234 @150 dpi 840,991 B)"
+  },
+  {
+   "key": "fS9m",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9_manual_p14.png",
+   "caption": "Figure S9. First-cycle charge-discharge voltage profiles of all-solid-state LCO/Li-In cells employing the cold- and hot-pressed LPSCl-infiltrated LCO electrodes at 0.14 mA cm-2 (0.1C) and 30 oC. The temperature for the hot-pressing was 150 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    113.5,
+    536.4,
+    350.0
+   ],
+   "w": 1307,
+   "h": 658,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.936,
+   "manual": true,
+   "note": "수동 — SI p. 14 렌더 200 dpi bbox (66.1, 113.5, 536.4, 350.0) · 자동 fS9(바닥 337.6 pt)가 그림 래스터(바닥 349.0 pt) 아래 11.4 pt — x 축 이름 'Capacity (mA h g⁻¹)' · 눈금 글자 — 를 잘라 대체(자동 PNG 는 지움). 캡션 글자 ≈353 pt 부터. 봤다: 냉간(770 MPa) ↔ 열간(460 MPa · 150 °C) 첫 사이클 — 충전 끝 ≈166 ↔ ≈173 · 방전 끝 둘 다 ≈141(열간 곡선이 방전 후반 일찍 처짐 — figure-read) — 열간의 '무시할 공극' 이 용량을 올리지 않는다(`[해석]`)."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. First- and second-cycle charge-discharge voltage profiles of LCO/Li-In all-solid- state cells at 0.14 mA cm-2 and 30 oC, employing a) LPSCl-infiltrated electrode, b) electrode prepared by manual mixing of LCO, SE, and Super P, c) electrode prepared by manual mixing of LCO, SE, PVDF, and Super P, and d) electrode prepared from a slurry consisting of LCO, SE, NBR, and Super P in xylene. Compositions of the electrodes are shown in Table S2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    549.1,
+    580.8
+   ],
+   "w": 1343,
+   "h": 1431,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.92,
+   "note": "봤다(p. 15 · 300 dpi 렌더 화소 판독 — 6.15 px/(mAh g⁻¹)). 첫 충전 끝: 침투 164.3 · Mixture1 179.6 · Mixture2 144.0 · Mixture3 39.9 mAh g⁻¹ ↔ 첫 방전(표 S2) 141 · 135 · 119 · 14 → CE 85.8 · 75.2 · 82.6 · 35.1 % — 표 S2 75.1 · 82.5 · 35.4 와 맞고 **침투 76.6 % 만 안 맞음**(D) · 첫 충전 상한 검사의 입력(침투 < Mixture1)."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. Transient discharge voltage profile obtained from GITT measurements for an LPSCl-infiltrated LCO electrode with a composition of 97:1:2 in an all-solid-state cell at 30 oC. An enlarged view is shown in the inset, in which the steady-state voltage change (∆ES) and the transient voltage change (∆Et) values used for obtaining the interfacial contact area are illustrated. Constant current of 0.70 mA cm-2 (0.5C) was applied for 60 s, followed by resting for 2 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    148.7,
+    547.1,
+    434.5
+   ],
+   "w": 1337,
+   "h": 794,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.912,
+   "note": "봤다(p. 16 · 300 · 450 dpi 렌더 화소 판독). GITT 방전 0.5 C(0.70 mA cm⁻²) 60 s / 2 h · 4.3 V 에서 시작 · CCV 가 3.0 V 에 닿아 ≈96.6 mAh g⁻¹ 에서 끝(0.1 C 141 의 ≈68 %) · QOCV 끝 ≈3.91 V. 인셋(31–33 mAh g⁻¹): QOCV 4.0151 → 4.0101 V(ΔEs ≈5.0 mV) · 과도 3.9549 → 3.9097 V(ΔEt ≈45.2 mV) · ΔEs/ΔEt ≈0.111(±0.01 · 눈금 3.58–3.68 px/mV) · 펄스당 1.17 mAh g⁻¹(`[재현]` 0.70 mA cm⁻² × 60 s ÷ 10 mg cm⁻²). 피복률 61 % 에 쓴 펄스 · D · BET 미인쇄."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Cycling performances of all-solid-state LCO/Li-In and Gr/Li-In half-cells employing LPSCl-infiltrated a) bare and Al2O3 coated LCO and b) Gr electrodes at 30 oC. The voltage ranges for LCO and Gr electrodes were 3.0–4.3 V and 0.005–2.0 V (vs. Li/Li+), respectively. The LCO and graphite electrodes were charged/discharged at 0.14 mA cm-2 (~0.1C) for the first cycle and the first two cycles, respectively, before cycling at 0.28 mA cm-2 or 0.70 mA cm-2. The SE-infiltrated Al2O3 coated LCO electrode was prepared by three cycles of ALD prior to the SE-infiltration.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    127.3,
+    549.1,
+    556.9
+   ],
+   "w": 1343,
+   "h": 1194,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.925,
+   "note": "봤다(p. 17 · 400 dpi 렌더 화소 판독 — 4.80 px/(mAh g⁻¹) · 표지 중심). (a) LCO 1 사이클(0.14 mA cm⁻²) bare ≈140.5 · ALD ≈132.2 · 0.70 mA cm⁻² bare 사이클 2 → 3 → 50 = 75.7 → 80.9 → 67.1 · ALD 57.5 → 61.9 → 56.5 · 0.28 mA cm⁻² 118.3 → 114.7 → 86.6 → **인쇄 88.6 · 98.1 % = 사이클 2 기준**(본문 '3rd cycle' 이면 82.9 · 91.2 %) · 0.28 곡선(50 사이클 −27 %)은 본문 0 회 (b) Gr 0.28 mA cm⁻² ≈320(3) → ≈275(100) — 86 %(본문 86.1 ✅)."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Cycling performance of LCO electrode (without SE-infiltration) in LE cell at 30 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    65.9,
+    549.5,
+    287.4
+   ],
+   "w": 1344,
+   "h": 616,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.947,
+   "note": "봤다. LE LCO 0.14(1–2) → 0.70 mA cm⁻²(3–50) ≈143.5 → ≈140 — 97.4 %(3 사이클 기준 ✅)."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 19,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Results for the 0.4LiI-0.6Li4SnS4-infiltrated LCO electrodes. a) Photograph of the as-prepared 0.4LiI-0.6Li4SnS4-infiltrated LCO electrode. b) First- and second-cycle charge- discharge voltage profiles of the 0.4LiI-0.6Li4SnS4-infiltrated LCO electrode for all-solid-state LCO/Li-In cell at 0.14 mA cm-2 (0.1C) and 30 oC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    137.3,
+    536.6,
+    614.2
+   ],
+   "w": 1308,
+   "h": 1325,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.726,
+   "note": "봤다(축소판). 0.4LiI–0.6Li₄SnS₄ 침투 LCO 사진 · 첫 충전 ≈180 · 방전 ≈110–112(본문 112) — 우리 축 밖."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 20,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Photograph of the Al foil exposed to the 0.4LiI-0.6Li4SnS4-dissolved MeOH solution for 5 h at room temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    113.5,
+    511.0,
+    249.1
+   ],
+   "w": 1237,
+   "h": 377,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.651,
+   "note": "봤다(축소판). MeOH 용액에 5 h 담근 Al 박 — 부식 반점. 정량 0."
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. a) Rate and b) cycling performances of LCO/Gr ASLBs employing the LPSCl- infiltrated electrodes at 30 oC. The discharge C-rates are shown in a. The C-rate for charge and discharge was the same in b. 1C corresponds with 1.4 mA cm-2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.1,
+    89.6,
+    535.4,
+    561.5
+   ],
+   "w": 1305,
+   "h": 1311,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.93,
+   "note": "봤다. 완전지 30 °C (a) 0.1 C 첫 두 사이클 ≈111 · 108(같은 율) / ≈107 · 104(0.1 C 충전) — 그림 4a(117)와 다른 셀로 읽힘(`[해석]`) · 1 C ≈56 ↔ ≈87.5(본문 51.4 · 81.7 % 근사 ✅) (b) 0.5 C 80 사이클 ≈74.6 → ≈71.5(본문 95.9 % ✅)."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. Characteristics of LCO and Gr Electrodes for the Inﬁltration of SE (LPSCl) porosity (%) fraction of SE after SE inﬁltration before cold- after cold- electrode compositiona before SE inﬁltration",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    617.7,
+    569.4,
+    745.6
+   ],
+   "w": 1428,
+   "h": 357,
+   "dpi": 200,
+   "src": "7ed0fa37-107._Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.601,
+   "note": "표 — 이미지로 안 읽음 · 텍스트 층이 정본(PDF p. 3). 크롭 확인(축소판): 다섯 행 · 각주 a · b('Obtained by GITT analysis') 온전."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 22,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Li+ ionic conductivities at 30 oC for BM-LPSCl, Sol-LPSCl heat-treated at different temperatures, and BM-Sol-LPSCl. Sample name Heat-treatment temperature [oC] σ30 [mS cm-1] BM-LPSCl - 1.0 80 0.010 180 0.19 400 0.43 550 1.0 BM-Sol-LPSCla) 180 0.59 a) Prepared by ball-milling Sol-LPSCl heat-treated at 180 oC Sol-LPSCl",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    64.9,
+    533.4,
+    209.9
+   ],
+   "w": 1296,
+   "h": 404,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.911,
+   "note": "표 — 텍스트 층 정본(SI p. 22). 크롭 확인(축소판) 온전."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 23,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Electrochemical performances of LCO and Gr electrodes for all-solid-state cells and liquid-electrolyte cells. Electrode Compositiona Qb [mA h g-1] CEc [%] SE-infiltrated LCO : LPSCl : PVDF : super P = 86.3 : 11.0 : 0.9 : 1.8 141 76.6 Mixture1 LCO : LPSCl : super P = 87.1 : 11.1 : 1.8 (= 86.3 : 11.0 : 1.8) 135 75.1 Mixture2 LCO : LPSCl : PVDF: super P = 86.3 : 11.0 : 0.9 : 1.8 119 82.5 LCO",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    66.8,
+    535.5,
+    363.7
+   ],
+   "w": 1302,
+   "h": 826,
+   "dpi": 200,
+   "src": "16f05eab-107._Sup_Infiltration_of_solution-processable_solid_electrolytes_into_conventional_Li-ion-battery_electrodes_for_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.94,
+   "note": "표 — 텍스트 층 정본(SI p. 23). 크롭 확인(축소판) 온전."
+  }
+ ]
+}
