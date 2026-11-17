@@ -8,6 +8,15 @@
   - **figure + 구조 분석 모두 이 파일 사용**
 - `lpscl_F43m_24G_canonical.cif` — idealized F-43m (P 정확히 특수위치). figure용으로 깔끔하나
   V0 아님(a=10.249). 필요시 V0로 스케일해 사용 (paper_figures/comp1_V0_cubic.cif가 그 결과).
+  ⛔ **2026-11-17 실측 — 이 파일의 음이온 배치는 물리적으로 불가능하다. 쓰기 전에 이 줄을 본다.** Cl 이 4d (0.75,0.75,0.75) 에 있는데
+  거기는 PS₄ 꼭짓점 S 넷에서 **2.36 Å** 인 빈 사면체 구멍 (Morgan 2021 type 3) 이다 (S–Cl 최소 2.356 Å · 3 Å 안 16 쌍).
+  Li 24g 6 개가 2.33 Å 로 둘러싼 케이지 가운데 4c (0.25,0.25,0.25) 는 **비어 있다**. 자유 음이온 자리는 4a + 4c 여야 한다 —
+  그렇게 고친 음이온 격자는 Delaunay 사면체가 정확히 **136** (= Morgan Table 1 의 4+16+48+4+16+48) · 이 파일 그대로는 179.
+  추정 원인 (확인 안 함): PS₄ S x = 0.617 관례 (케이지 = 4c) 와 x = 0.383 관례 (케이지 = 4d) 를 섞었다. 4c·4d 는 둘 다 P 에서 4.44 Å 라
+  P 거리로는 못 가른다 (11-17 에 내가 그걸로 갈라 'Morgan 100 % 뒤바뀐 배열' 이라고 잘못 말했다).
+  같은 배치를 줄인 `paper_figures/comp1_V0_cubic.cif` 도 S–Cl 2.31 Å. DFT 정본 `comp1_V0_k444.cif` 는 S–Cl 3.66 Å 로 멀쩡하다.
+  cascade 설계 base 로 쓰였고 09-12 에 UMA '가짜 basin' 으로 정본에서 내려왔다 (`db/properties/cascade_reanchor_comp1k444_2026_09_12.json`) —
+  그때 최소거리 점검 (`cascade_base_strain_2026_09_12.json` §2) 은 Li–Li · Li–S · Li–Cl · S–S 만 쟀고 **S–Cl 이 없었다**.
 - ❌ `lpscl_relaxed_conv_52atoms.cif.BROKEN_PS4_dissociated` — **사용 금지**.
   conventional-cell 변환 사고로 PS₄ 해리 (각 P가 S 1~2개만 ≤2.5Å, 나머지 4.3Å). k-mesh 무관, CIF 변환 버그.
 
