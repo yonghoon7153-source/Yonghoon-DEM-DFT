@@ -1,0 +1,602 @@
+{
+ "slug": "zhang2017_carbon-additives-lgps-ssb-decomposition",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+  "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. First charge−discharge curves of SSBs (In/LGPS/c-LCO) with various types of carbon additives in the composite cathodes (a−e) and without carbon additives (f). The right column shows a magniﬁcation of the range of 0−6 mAh/g during the 1st charge. Independent of the carbon type, an additional process is observed in the presence of carbon, which is reﬂected by the appearance of a slope before approaching the plateau of the active material at 3.3 V vs In/InLi. In comparison, without carbon, the plateau is immediately reached at the beginning of the galvanostatic charge. The appearance of the slope prior to the plateau evidence side reactions brought on by the inclusion of carbon additives. All tests were carried out at a current density of 115 μA/cm2, corresponding to approximately 0.1C. acetylene black, together with LGPS as the working electrode, a signiﬁcant oxidation current wa",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    501.6
+   ],
+   "w": 1434,
+   "h": 1219,
+   "dpi": 200,
+   "src": "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.864,
+   "note": "봤다. 첫 충·방전(0.1 C · 115 µA cm⁻² · 2.0–3.6 V vs In/InLi) 여섯 판(a Ketjen · b Graphite · c Denka · d C65 · e SPLi 각 5.7 wt% · f 0 wt%) + 오른쪽 0–6 mAh g⁻¹ 확대. [도표] 경사 끝(3.3 V 평탄 도달) ≈3.5–4 · ≈1.2 · ≈1.2 · ≈3.5–4 · ≈4.5–5 · ≈0 mAh g⁻¹ · 방전 끝 ≈90 · 92 · 94 · 103 · 111 · 123(표 S1 과 열 대응 확인). 연분홍 띠 0–≈7 mAh g⁻¹."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electrochemical impedance spectra of the SSBs (In/LGPS/ LCO) containing C65 in various weight ratios. Compared to the impedance spectrum of the carbon-free SSB (red), the total impedance increases even with only 1.9 wt % of C65 added to the composite cathode. Further increases in the impedance are observed, when the mass fraction of C65 is further increased. For the cell containing 5.7 wt % C65, the contribution in the low-frequency regime cannot be distinguished. The increase of impedance with increasing mass fraction of C65 indicates the occurrence of side reactions associated with the carbon containing cathode/SE interface. The high-frequency region is shown in the magniﬁed insertion.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    129.7,
+    306.5,
+    269.6
+   ],
+   "w": 701,
+   "h": 389,
+   "dpi": 200,
+   "src": "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.883,
+   "note": "봤다. C65 0 · 1.9 · 3.8 · 5.7 wt% Nyquist(첫 충전 뒤). [도표] 최소점 ≈46/60(0 wt% 두 호) · ≈160 · ≈185 Ω · 5.7 wt% 는 최소점 없이 ≈235 Ω 까지 · 꼭짓점 −Im ≈40 · ≈50 · ≈65 Ω · 표지 ~100 Hz · ~1 Hz · 삽입도 HF 절편 ≈13–14 Ω. 0 wt% 곡선 = 63호(zhang2017_interfacial…) 그림 S4 삽입도 코팅 LCO 곡선과 모양 · 끝점(≈72 Ω · −Im ≈17) 같음 [해석]."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Top: Electrochemical impedance spectrum (Nyquist plot) of the SSB (In/LGPS/LCO) after the 1st charge at 0.1C. With 5.7 wt % C65 in the composite cathode (blue), after the 1st charge at 0.1 C. The total impedance is much higher than in the carbon-free SSB (red). An equivalent circuit R(RQ)(RQ)(RQ)Q was used for the ﬁtting of the spectrum, where Q represents a constant phase element (CPE). The (R1-CPE1) in the midfrequency range (∼500 Hz) can be attributed to the interfacial charge transfer between LiCoO2 and the solid electrolyte. The (R3-CPE3) in the low-frequency range can be attributed to the In/SE interface. The (R2-CPE2) in the midlow- frequency range (∼100 Hz) shows a large resistance of 154 Ohm with a capacitance of 0.14 μF, which may stem from the carbon-containing SE/cathode interface. The CPE4 represents the Warburg impedance, indicating the solid-state diﬀusion proces",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    63.2,
+    570.5,
+    313.2
+   ],
+   "w": 701,
+   "h": 696,
+   "dpi": 200,
+   "src": "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.868,
+   "note": "봤다. 위: 0 · 5.7 wt% C65 Nyquist + 회로 R_SE(R1Q1)(R2Q2)(R3Q3)Q4 · 표지 132 kHz · 500 Hz · 82 Hz(R2 꼭짓점 · 본문 '~100 Hz') · 2 Hz(최소점 뒤 꼬리) · 음영 R_SE · R1 · R2 · R3. 아래: Bode — 위상 최소 0 wt% ≈−17°(log f ≈3.2) ↔ 5.7 wt% ≈−45°(log f ≈2.3) · log|Z| 10 mHz ≈1.88 ↔ ≈2.37. 캡션 R2 '0.14 µF' ↔ 본문 '14.1 µF' ↔ 표 S3 1.4×10⁻⁵ F(캡션 자릿수 오기)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. XPS detail spectra of (I) pristine LGPS, (II) carbon-free composite cathode after the 100th charge and (III) 5.7 wt % C65-containing cathode after the 100th charge from the SSB using LiCoO2 as the active material and LGPS as the solid electrolyte. Compared to the pristine LGPS, which shows only one major doublet for all three signals, the cycled cathode shows apparent peak broadening and complex signals in both the carbon-free and carbon-containing samples. By ﬁtting the S 2p spectrum, signals could be assigned to ﬁve distinct areas from low to high binding energy; namely, (P/Ge)−S, A, B, −S−S−, and SOx. From A to SOx, the oxidation state of S increases. A and B are referred to as disordered P−S species containing PS- and GeS2-like species, respectively, and they are supported by the peak broadening of P 2p and Ge 3d. −S−S−at 163.9 eV/164.6 eV corresponds well with elemental s",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    266.7
+   ],
+   "w": 1434,
+   "h": 566,
+   "dpi": 200,
+   "src": "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.839,
+   "note": "봤다. XPS S 2p · P 2p · Ge 3d — I c-LCO/LGPS 70:30(캡션은 'pristine LGPS') · II 무탄소 100번째 충전 뒤 · III 5.7 wt% C65 100번째 충전 뒤. 성분 표지 (P/Ge)–S · A · B · –S–S– · SOx / (PS4)3− · C · D · Ge 3p / (GeS4)4− · E · F · Ta 4f · O 2s. III 에서 –S–S–(노랑) 최대 · (P/Ge)–S 작음 — 표 S5 상대 조성(10 · 9 · 19 · 45 · 8 · 10 %)과 같은 방향. I 의 P 2p 에 작은 C 어깨(표 S5 8 %) — 본문 'single chemical state' 와 어긋남(경미)."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Long-cycle performance of model SSB with 5.7 wt % of C65 additives and a carbon-free SSB. The cell with carbon show decreased cycle stability compared to the carbon-free SSB, as indicated by the rapid capacity fading and lower Coulombic eﬃciencies. The rise-and- fall of the Coulombic eﬃciency suggest irreversibility and Li+ loss, which are due to side reactions induced by the carbon additives.",
+   "rotated_deg": 0,
+   "bbox": [
+    318.5,
+    305.7,
+    570.5,
+    442.5
+   ],
+   "w": 701,
+   "h": 381,
+   "dpi": 200,
+   "src": "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.892,
+   "note": "봤다 + 원본 래스터(xref 196 · 833×520) 화소 판독 — 축 틀 x 101–751 px(0–100 사이클) · 왼축 틀 10–452.5 px(350–0 mAh g⁻¹) · 오른축 눈금 44 px = 100 % · 452.5 px = 94 %(틀 위 끝 = 100.5 %). 무탄소(파랑) 용량 1 · 2 · 10 · 50 · 99 · 100 사이클 ≈135.7 · 125.4 · 116.7 · 113.5 · 104.4 · ≈106.3 · CE 3–90 사이클 값이 63호 그림 9 셀 C 화소 판독(63호 digest)과 ±0.02 %p 안에서 같다(15 점 중 14 — 사이클 30 은 범례 겹침) ⇒ 같은 자료. C65(회색) 1 · 2 · 50 · 99 사이클 ≈121.4 · 108.8 · 77.1 · 39.9 · CE 최고 ≈99.47(25–40 사이클) → ≈98.5(99). 첫 점 = 표 S1 첫 충전값 ⇒ 그린 것은 충전 용량으로 읽힘."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Direct comparison of the ﬁrst charge curves of carbon-free (blue) and carbon-containing (red) SSBs and a schematic representation of situations that occur on the cathode/SE interface of the SSB during charge processes (insertion). The presence of carbon leads to an additional slope during the ﬁrst charge. Compared to the case without carbon, a growing overpotential directly results in capacity loss. The presence of carbon facilitates oxidation processes by providing suﬃcient electronic percolation paths toward the current collector. As a result, S0 becomes the dominant decomposed products accumulated at the interface. Without carbon, the oxidation processes occur only at places that lack the coating layers. The oxidation reactions are kinetically limited, and less S0 is formed.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    164.2,
+    306.5,
+    320.4
+   ],
+   "w": 701,
+   "h": 435,
+   "dpi": 200,
+   "src": "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.698,
+   "note": "봤다. 첫 충전 곡선 무탄소(파랑) ↔ 탄소(빨강) + 계면 도식 삽입. 'additional slope'(0–≈5 mAh g⁻¹) · 'growing overpotential'(같은 첫 충전 안 ≈60–135 mAh g⁻¹ 빗금) · 'capacity loss' 화살(≈122 ↔ ≈136 mAh g⁻¹) — 사이클 축 아님. 삽입: 코팅층 · 코팅 없는 자리의 decomposed SE · 탄소 둘레 decomposed SE · R–CPE 기호."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Comparison of cell potential at 50% of 1st charge capacity in SSBs with different kinds of carbon additives.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    86.7,
+    533.9,
+    491.4
+   ],
+   "w": 1303,
+   "h": 1125,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.956,
+   "note": "봤다. 첫 충전 50 % 지점 전위 — No carbon ≈3.338 · C65 ≈3.357 · SPLi ≈3.362 · Denka ≈3.366 · Graphite ≈3.369 · Ketjen ≈3.378 V [도표](가로축 범주 순서 = 값 순서)."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Comparison of 1st cycles of SSBs with NH3 or H2 treated carbon as additives.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.1,
+    530.7,
+    473.1
+   ],
+   "w": 1294,
+   "h": 1135,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.858,
+   "note": "봤다. 표면 처리 탄소 첫 사이클 다섯(SPLi 진공 · SPLi NH3 · SPLi H2 · Denka H2 · Denka NH3 — 800 °C 12 h · 진공 판은 본문 미언급). 경사 전부 남음(끝 ≈4 · ≈2.5 · ≈5 · ≈2.2 · ≈2 mAh g⁻¹). 충전/방전 끝 [도표] ≈120/94 · ≈123/103 · ≈125/94 · ≈113/87 · ≈135/117(Denka NH3 = 무탄소 첫 사이클에 가장 가까움)."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Charge/discharge curves of SSBs with Bare LiCoO2 as active materials, with and without carbon additives.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    515.8,
+    525.3,
+    664.6
+   ],
+   "w": 1279,
+   "h": 415,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.886,
+   "note": "봤다. 비코팅 LCO — 무탄소 충전 ≈53 · 방전 ≈39 mAh g⁻¹ · 경사 ≈1 mAh g⁻¹ 이하(확대판) / C65 5.7 wt% 충전 ≈64 · 방전 ≈42 · 경사 ≈4–4.5 [도표] — 비코팅에서는 탄소가 첫 사이클 용량을 줄이지 않는다(본문 논의 0)."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Bode plots and data fits of the SSBs (In/LGPS/c-LiCoO2) containing C65 in various weight ratios. The corresponding Nyquist plots are shown in Figure 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.1,
+    533.9,
+    396.3
+   ],
+   "w": 1303,
+   "h": 921,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.892,
+   "note": "봤다. C65 0 · 1.9 · 3.8 · 5.7 wt% Bode + 적합 점선. 위상 최소 ≈−16.5°(log f ≈3.2) · ≈−37° · ≈−37°(≈2.5) · ≈−43.5°(≈2.35) [도표]. 왼축 위상 · 오른축 log|Z|(그림 3 과 축 배치 반대)."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Alpha values obtained by the fitting EIS spectra of different SSBs with increasing carbon content. In all the carbon-contained SSBs, high alpha 2 values (~ 0.9) are obtained, due to the less depressed form of obtained semicircles. The alpha value (0 < α < 1) indicates the deviation of the constant phase element (CPE) from ideal capacitor behavior. The closer to 1, the less the CPE deviates from an ideal capacitance, leading to a less depressed semicircle. The alpha values obtained from the fitting are plotted against carbon content in Figure S5. The α2 value corresponds to the semicircle referring to carbon-involved interfaces. In all the carbon-containing SSBs, high α2 values are obtained and less depressed semicircles are observed.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.1,
+    533.9,
+    359.8
+   ],
+   "w": 1303,
+   "h": 820,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.964,
+   "note": "봤다. α1 0.7 → 0.4 → 0.4 → 0.5 · α2 0.88 · 0.91 · 0.90(탄소 셀만) · α3 0.8 · 0.79 · 0.72 · 0.8 (0 · 1.9 · 3.8 · 5.7 wt%) — 'less depressed' 는 무탄소에 없는 α2 를 근거로 함 · 같은 과정 α1 은 탄소로 오히려 작아짐."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Comparison of EIS results of SSBs with NH3 or H2 treated carbon as additives. The spectra were recorded after the 1st charge for all tested SSBs.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.1,
+    530.7,
+    321.1
+   ],
+   "w": 1294,
+   "h": 713,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.902,
+   "note": "봤다. 표면 처리 탄소 넷 Nyquist(첫 충전 뒤) — 최소점 [도표] SPLi NH3 ≈150–175 · SPLi H2 ≈235 · Denka NH3 ≈110(둘째 호 ≈160) · Denka H2 ≈175(둘째 호 ≈230) Ω · 진공 판 없음 · 적합표 없음."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Comparison of EIS spectra of SSBs with different carbon additives. All spectra were recorded after the 1st charge.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    377.3,
+    523.0,
+    627.6
+   ],
+   "w": 1272,
+   "h": 696,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.917,
+   "note": "봤다. 탄소 종류 넷 Nyquist(5.7 wt% 로 읽힘 — 함량 미표기) — 최소점 [도표] Denka ≈145(둘째 호 ≈210) · SPLi ≈187 · Graphite ≈235 · Ketjen ≈305 Ω — 표 S2 Rtotal 199 · 188 · 230 · 301 과 열 대응(표 S2 캡션의 'Figure S5' 는 이 그림으로 읽힘)."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Comparison of EIS spectra of SSBs with bare LiCoO2 as active materials, with and without carbon additives.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.1,
+    513.3,
+    282.3
+   ],
+   "w": 1245,
+   "h": 605,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.927,
+   "note": "봤다. 비코팅 LCO 무탄소 최소점 ≈415 Ω(꼭짓점 ≈155) ↔ C65 5.7 wt% ≈1015 Ω(꼭짓점 ≈420) [도표] · 적합 0 · 측정 상태 캡션 미표기."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 7,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: a). Charge-discharge curves of the In/LGPS/C65-LGPS polarization cell (1-5 cycles are shown). b). Differential capacity plot of the first five cycles shown in a). The capacity is calculated based on the weight of LGPS in the C65-LGPS composite (i.e. 7.5 mg). The electrochemical activity of C-LGPS composite is evidenced by the successful cycling of a In/LGPS/C65-LGPS polarization cell, as shown in Figure S9. During the first charge, a semi- plateau starts from 2.0 V vs. In/InLi. The semi-plateau refers to a peak occurring in the differential capacity plot, as shown in Figure S9 b). With increasing cycle numbers, the charge plateau is becoming less pronounced, i.e. the cell voltage increases linearly with increasing capacity. Thus, the oxidation of LGPS in the first charge has a distinct character as the following charge processes: there may exist a two-phase equilibrium in the ",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    384.7,
+    533.9,
+    563.1
+   ],
+   "w": 1303,
+   "h": 497,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.536,
+   "note": "봤다. In/LGPS/C65-LGPS(25:75) 분극 셀 1–5 사이클 — 첫 충전 ≈28 · 이후 ≈17–18.5 mAh g⁻¹(LGPS 7.5 mg 기준) · 첫 방전 ≈23 · 이후 ≈16.5–18.5 · 충전 상한 2.9 V · 방전 평탄 ≈1.47 V(vs In/InLi) · dQ/dE 충전 봉 ≈2.25 V(0.5 → ≈0.2) · 방전 봉 ≈1.45–1.47 V."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 8,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: a). Nyquist plots of the In/LGPS/C65-LGPS polarization cell, recorded after the charging. b). Magnified plot of the high frequency area in a). c). Nyquist plots recorded after discharge. d). Magnified plot of the high frequency area in c).",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    344.2,
+    533.9,
+    603.4
+   ],
+   "w": 1303,
+   "h": 721,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.89,
+   "note": "봤다. 분극 셀 EIS — (a) 충전 뒤 1–5: 첫 호 ≈13 kΩ(꼭짓점 ≈4.5 kΩ · 1 Hz) → 이후 ≈11–12 kΩ(작아짐) · 표지 5.7 · 1 · 0.1 · 0.01 Hz (b) 13 MHz 절편 ≈15 Ω (c) 방전 뒤: 호 없이 기울어진 직선(차단) · 삽입 'Before cycle' 직선 (d) 17 kHz · HF ≈15–20 Ω."
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 9,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Cyclic voltammogram of the In/LGPS/C65-LGPS polarization cell. An obvious reduction peak is observed at 1.3 V vs. In/InLi, which may relate to the reaction of the Li-S component contained in LGPS. The decomposition of LGPS propagates further with increasing cycle number, but with decreasing current density. X-ray diffraction of composite cathode before and after cycling",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    65.1,
+    533.9,
+    334.6
+   ],
+   "w": 1303,
+   "h": 750,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.952,
+   "note": "봤다. 분극 셀 CV — 범례 'cycle 6-8'(본문 방법 0.01 mV s⁻¹ · 0.8–2.9 V) · 환원 봉 ≈1.37 V(캡션 '1.3 V') −0.045 → −0.038 mA cm⁻² · 산화 계단 ≈1.8 V · 넓은 봉 ≈2.4 V 0.014 → ≈0.009 mA cm⁻²(사이클마다 감소)."
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 10,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: X-ray diffraction diagrams of a composite cathode containing 5.7 wt% SPLi as additive before (blue) and after 100 cycles (orange). Unidentified reflections have been observed, as marked by stars. Long-cycle performance of carbon-containing SSBs",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    161.1,
+    533.9,
+    434.2
+   ],
+   "w": 1303,
+   "h": 760,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.856,
+   "note": "⚠ 오크롭 — 캡션(SI p. 10 머리)의 아래 그림(= 그림 S13 장기 사이클, 머리글 없는 판)을 잡았다. 실제 그림 S12(XRD)는 SI p. 9 아래(71.3–523.5 × 449.1–769.5 pt) → 수동 fig_S12_manual_p9.png 로 대체(봤다). 캡션 필드에 다음 절 머리글 'Long-cycle performance of carbon-containing SSBs' 섞임. 이 파일 내용 = fig_S13 과 같은 그림."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 10,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Long-cycle performance of SSBs with NH3 or H2 treated carbon (5.7 wt%) as additives.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    116.8,
+    515.6,
+    434.2
+   ],
+   "w": 1252,
+   "h": 883,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.864,
+   "note": "봤다. 표면 처리 탄소 5.7 wt% 장기 사이클 — 100 사이클 용량 [도표] SPLi NH3 ≈65 · SPLi 진공 ≈62 · Denka H2 ≈42 · SPLi H2 ≈38 · Denka NH3 ≈17(첫 점 ≈134 으로 가장 높았던 셀이 가장 낮게 끝남) · Denka NH3 CE ≈96.2 %(≈18 사이클)까지 내려갔다 회복. 오른축 라벨에 % 없음."
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 10,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Long-cycle performance of SSBs with 5.7 wt% of different carbon additives. All cells with carbon show decreased cycling stability compared to the carbon-free SSB, as S-­‐10",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    468.7,
+    533.9,
+    746.2
+   ],
+   "w": 1303,
+   "h": 771,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.841,
+   "note": "봤다. 탄소 종류 다섯(5.7 wt%) + 0 wt% 장기 사이클 — 100 사이클 용량 [도표] 0 wt% ≈106 · Graphite ≈87(≈15 사이클 뒤 거의 평탄 → 약간 상승) · SPLi ≈66 · Ketjen ≈54 · Denka ≈48 · C65 ≈40 · CE: Graphite · Ketjen 점 일부 100 % 초과(≈100.3–100.4) · Denka ≈98.9 %(45–60 사이클) 골."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 11,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Survey spectra of XPS characterizations for carbon-containing/free cathode after cycling and fresh c- LiCoO2/LGPS composite.",
+   "rotated_deg": 0,
+   "bbox": [
+    65.3,
+    139.8,
+    532.9,
+    455.5
+   ],
+   "w": 1300,
+   "h": 878,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.731,
+   "note": "봤다. XPS 서베이 — c-LCO/LGPS 신품 · 무탄소 100번째 충전 뒤 · C65 100번째 충전 뒤. C65 시료 C 1s 가 압도적 · Co 2p 는 신품에서 뚜렷 · 띠 색 c-LCO / LGPS / Carbon. 정량 0."
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 11,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Summarized 1st cycle capacity (at 0.1C) as well as Coulombic efficiency of SSB with various carbons as additives and without carbon (as reference). Graphite Ketjen C65 Carbon Denka free 1st charge capacity / mAhg-1 113 125 110 113 120 135 1st discharge capacity / mAhg-1 94 112 92 90 103 123 black SPLi black 1st cycle Coulombic efficiency / % 83 90 84 80 86 91",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    537.1,
+    529.9,
+    723.6
+   ],
+   "w": 1288,
+   "h": 520,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.714,
+   "note": "이미지로 열지 않음 — 텍스트 층으로 읽음. 열 대응은 그림 1 방전 끝 [도표] 여섯과 대조 ✅ · CE = 방전/충전 여섯 모두 반올림 안에서 맞음."
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 12,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Resistance and capacitance data used for the fitting of EIS spectra shown in Figure S5. Denka black SPLi Graphite Ketjen black RSE (Ω) 13 13 16 20 R1 (Ω) 40 35 42 40 CPE1 (S s-α) 1.5 · 10-3 1.2 · 10-3 4.8 · 10-4 1.6 · 10-4 α1 0.4 0.5 0.5 0.6 C1 (F) 3.2 · 10-5 3.4 · 10-5 8.1 · 10-6 7.2 · 10-6 R2 (Ω) 96 100 142 211 CPE2 (S s-α) 1.8 · 10-5 2.8 · 10-5 1.5 · 10-5 2.6 · 10-5",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    66.4,
+    530.2,
+    358.9
+   ],
+   "w": 1289,
+   "h": 814,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.893,
+   "note": "이미지로 열지 않음 — 텍스트 층. 저항 합 = Rtotal 넷 모두 맞음 · 열 대응은 그림 S7 최소점과 대조 ✅ · 탄소 함량 미표기 · 캡션 'Figure S5' 는 그림 S7 로 읽힘."
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 12,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Resistance and capacitance data used for the fitting of EIS spectra shown in Figure 3. Model cell (5.7 wt% Model cell (carbon- free) RSE (Ω) 14.5 17.8 R1 (Ω) 18.4 28.2 CPE1 (S s-α) 4.2 · 10-4 9.3 · 10-5 α1 0.5 0.7 C1 (F) 7.1 · 10-6 7.1 · 10-6 R2 (Ω) 154 - CPE2 (S s-α) 2.5 · 10-5 - α2 0.9 - C2 (F) 1.4 · 10-5 - R3 (Ω) 33.3 13.7 CPE3 (S s-α) 0.003 0.01 α3 0.8 0.8 C3 (F) 1.3 · 10-3 7.6 · 10-3 Rtotal (Ω) 220.2 59.7 C65)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    371.7,
+    530.2,
+    691.8
+   ],
+   "w": 1289,
+   "h": 890,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.888,
+   "note": "이미지로 열지 않음 — 텍스트 층. 무탄소 열 = 63호 표 S1(R_MF 28.15 · Q 9.28×10⁻⁵ · α 0.70 · C 7.05 µF · R_LF 13.68 · C 7.64 mF · R_SE,bulk 14.7 + R_HF 3.12 = 17.82)과 인쇄 자릿수까지 같음 [재현] · C65 C2 1.4×10⁻⁵ F(그림 3 캡션 '0.14 µF' 오기)."
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 13,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Resistance and capacitance data used for the fitting of EIS spectra shown in Figure 2. Model cell_1.9 wt% C65 Model cell_3.8 wt% C65 RSE (Ω) 14 13 R1 (Ω) 15 22 CPE1 (S s-α) 2.3 · 10-3 1.7 · 10-3 α1 0.4 0.4 C1 (F) 1.8 · 10-5 1.8 · 10-5 R2 (Ω) 91 121 CPE2 (S s-α) 3.6 · 10-5 2.5 · 10-5 α2 0.88 0.91 C2 (F) 1.63 · 10-5 1.41 · 10-5 R3 (Ω) 35 56 CPE3(S s-α) 3.2 · 10-3 3.9 · 10-3 α3 0.79 0.72 C3 (F) 1.8 · 10-3 2.2 · 10-3 Rtotal (Ω) 155 212",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    66.4,
+    530.2,
+    372.4
+   ],
+   "w": 1289,
+   "h": 851,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.919,
+   "note": "이미지로 열지 않음 — 텍스트 층. 1.9 · 3.8 wt% R2 91 · 121 Ω · Rtotal 155 · 212(합 맞음)."
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 14,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Fitting parameters used for the ex situ XPS analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.3,
+    66.4,
+    529.7,
+    390.0
+   ],
+   "w": 1288,
+   "h": 900,
+   "dpi": 200,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf",
+   "blank": 0.784,
+   "note": "이미지로 열지 않음 — 텍스트 층. XPS 성분 결합에너지 · FWHM · 상대 조성(시료 셋 · 합 100–101 %). 본문은 'Table S4' 로 가리킴(표 번호 오기)."
+  },
+  {
+   "key": "fS12m",
+   "kind": "figure",
+   "label": "S12",
+   "page": 9,
+   "file": "fig_S12_manual_p9.png",
+   "bbox": [
+    65,
+    445,
+    530,
+    773
+   ],
+   "w": 1293,
+   "h": 912,
+   "caption": "Figure S12: X-ray diffraction diagrams of a composite cathode containing 5.7 wt% SPLi as additive before (blue) and after 100 cycles (orange). Unidentified reflections have been observed, as marked by stars.",
+   "note": "수동 — SI p. 9 렌더 200 dpi(그림만 · 캡션은 다음 쪽 머리). 자동 fS12 가 캡션 아래 그림(S13)을 잡아 대체. 봤다: Composite (fresh) 파랑 ↔ (100 cycles) 주황 · 표지 LiCoO2 * · LGPS ○ · 미동정 반사 ★ 넷(≈33 · ≈54.3 · ≈59 · ≈64.8° 2θ [도표]) · 가로축 10–75°(방법 '10−80°') · SPLi 셀(XPS · EIS 는 C65 셀 — 시료 다름).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "747fbc72-105._Sup_The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf"
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "bbox": [
+    329,
+    254,
+    557.5,
+    385
+   ],
+   "w": 636,
+   "h": 365,
+   "caption": "Abstract (TOC) graphic — 첫 충전 곡선 도식(눈금 없는 Cell voltage–Capacity) + 계면 삽입도(캡션 없음 · 수동 크롭)",
+   "note": "수동 — 본문 p. 1 초록 옆 래스터(xref 58 · 935×529) · 200 dpi. 봤다: 그림 6 과 같은 도식(additional slope · growing overpotential · capacity loss · decomposed SE · carbon · R–CPE)에서 축 숫자만 뺀 판.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "6a41fe78-105._The_Detrimental_Effects_of_Carbon_Additives_in_Li10GeP2S12-Based_Solid-State_Batteries.pdf"
+  }
+ ]
+}

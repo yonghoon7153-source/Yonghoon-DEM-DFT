@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/zhang2017_carbon-additives-lgps-ssb-decomposition.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -1293,6 +1293,24 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 ### 3. 이 편이 이 페이지에 **안 준 것**
 
 실측 · 압력 계측 · 구속 형식 · 압력 이력 · 요구치 · 단락 · 창의 위 벽. 창의 값은 움직이지 않았다 — 움직인 것은 **12호 다리 하나의 판정(❌)** 과 **모형 압력 → 접촉 값의 층위 표기**(1제곱 식 · 빌린 입력 · 척도 하나)다.
+
+## ★ 2026-11-17 (`assb` 110호 Zhang W. 2017 *ACS AMI* 35888, **실험 · 63호와 같은 장치 · In \| LGPS \| 코팅 LCO**) — **같은 토크에 처음 MPa 가 붙는다: "10 N m torque (∼70 MPa)" — 환산 · 계측 0**
+
+`raw/papers/zhang2017_carbon-additives-lgps-ssb-decomposition.md`.
+
+### 1. 요구치 — 인쇄 0
+
+운전 `MPa` 1 회 · 요구치 · 문턱 0 ⇒ 띠 · 확인된 원전 0 그대로.
+
+### 2. 운전 압력 — 토크 + 명목 MPa
+
+- `[인쇄]` "the cell casing was subjected to a constant pressure from a screw of an aluminum framework with 10 N m torque (∼70 MPa)" — 63호의 같은 장치 · 같은 토크(63호 `MPa` 0 회)에 **이 편이 처음 MPa 를 붙였다** · 환산 방법 · 하중계 0 · 63호 절 `[재현]` 42–106 MPa(K 0.15–0.25 · M8–M12 가정) 범위 안 · 23 · 64호 "approximately 70 MPa" 와 같은 수.
+- 제조 `[재현]` 1 t → 124.9 · 3.5 t → 437 · 1.5 t → 187 MPa(∅10 mm 위).
+- ⚠ "constant pressure" ↔ 나사 고정 = 변위 구속(62호 같은 모델 셀은 운전 중 ≈1–1.3 MPa 변동 — 63호 절).
+
+### 3. 이 편이 이 페이지에 **안 준 것**
+
+요구치 · 계측 · 스윕 · 압력 → 용량. 계보 한 줄: 22호 55 MPa · 23호 5 kN(64) / ≈70 · 62호 ≈61.8(그림 축) · 63호 10 N·m · **110호 10 N m(∼70 MPa)**.
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 

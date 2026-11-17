@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/neumann2020_interfacial-effects-thiophosphate-assb-model.md, raw/papers/ruess2020_ncm-cracking-kinetics-liquid-vs-solid-electrolyte.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/firouz2020_hammerstein-wiener-multisine-bla-nonlinearity-assb.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
+sources: [raw/papers/zhang2017_carbon-additives-lgps-ssb-decomposition.md, raw/papers/neumann2020_interfacial-effects-thiophosphate-assb-model.md, raw/papers/ruess2020_ncm-cracking-kinetics-liquid-vs-solid-electrolyte.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/firouz2020_hammerstein-wiener-multisine-bla-nonlinearity-assb.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -82,6 +82,7 @@ evidenceScope: multi-source-primary
 | **106호 Tian & Qi 2017** (모형 · 2017 — 계보 첫 정량 접촉 손실 모형) | 서론이 계면 저항 두 원인을 "chemical effect and physical contact.3" 으로 나누고 물리(접촉)만 모형화 · 동역학 항은 γ·k_pos 곱(식 17)이라 화학 열화(k_pos ↓)와 접촉 손실(γ ↓)이 과전압으로 같은 꼴 | ❌ 측정 0 — 가르는 것은 '최악의 경우 물질 손실' 가정이 붙인 용량 채널(식 18)뿐(배정이 정의로 정해짐) |
 | **107호 Ruess 2020 *JES*** (NCM811 LEB ↔ ASSB(Li₆PS₅Cl · In/InLi · 무탄소) · 첫 사이클 · 같은 연구망 — 23 · 64호 계열 · 38 · 56호 공저 원전) | **저자 스스로 가른다**: `[인쇄]` "since D̃^{s-i}_Li clearly does not show such difference between charge and discharge, we conclude that the irreversible reaction is not related to contact loss, but is rather caused by the formation of a high-impedance insulating layer at the interface" — 계면층 쪽 원전 인용 [10](= 23호) · [15] · [76] · 절연층 [52] | ✅ `R`(그림 4b) × Warburg 겉보기 D(그림 4a) 같은 전위 — 우리 재현이 배정을 수로 지지(면적 ≤8 % · j₀ ×0.40–0.61) · ⚠ `C` 0 · 셀 수 미인쇄 · 첫 사이클 · 겉보기 D 정의식 지수 1(Z_W 로는 2) |
 | **109호 Neumann 2020 *ACS AMI*** (5차 묶음 #5 · DLR + JLU Giessen(23 · 64 · 97호 계열 Janek) · 3D 해상 모형 + 자기 실험 · β-Li₃PS₄ \| 무탄소 NMC622 \| Li 금속 · [28] = 64호 · [48] = 97호 · 23호 인용 0) | 같은 첫 사이클 손실을 **한 지면에서 두 기구로** — 4.2.1 `[인쇄]` "a stabilization at the electrode/solid electrolyte and active material/solid electrolyte interfaces" ↔ 4.4.2 `[인쇄]` "27% of the theoretical capacity is lost due to contact loss of active material particles (particle delamination).28,56" — [28] = 64호 'explain' 을 '접촉 손실로 잃었다' 로 굳힘(이 편 27 % = 첫 충전의 27.3 % · 이론의 24.0 % `[재현]`) · 모형으로 박리(표면 비활성)를 돌리고 `[인쇄]` "the formation of passivating phases has a similar influence on the impedance as the loss of particle contact area … Complementary measurement techniques are needed" — **모형 편이 두 기구의 임피던스 축퇴를 인쇄** | ❌ `C` 0(그림 12 주파수 0 · C_DL 면적 기준 미인쇄) · 계면층 모형 실행 0 · `[재현·가정]` 3D 박리 호 증가는 균일 곱의 1/5–1/19 → 같은 11 사이클 호에 '면적' 배정 크기가 모형 꼴 의존 |
+| **110호 Zhang W. 2017 *ACS AMI* 35888** (5차 묶음 #6 · 63호와 같은 연구실 · 같은 셀 장치 · In \| LGPS \| LiNb₀.₅Ta₀.₅O₃ 코팅 LCO · 탄소 다섯 종 5.7 wt% · C65 0–5.7 wt% · 64 · 75 · 77호가 '탄소 → SE 분해' 의 원전으로 지목) | **계면층 단독** — S⁰ · 다황화물 축적이 "isolates the Li+ conduction pathways" → 저항 · 과전압 → 용량 손실 · 탄소 효과를 **곱 밖의 새 직렬 RC(R2)** 에 두고 R1(LCO \| SE)은 그대로 · 접촉 손실은 조건법 한 문장("may … leading to local contact losses" — [15] = 62호, 62호도 추론) · `interphase` 0 회 | ⚠ `R`·`C` **함량 축 한 시점**(표 S2–S4 · 첫 충전 뒤) — 우리 1단계: R2 ×1.69 · C2 ×0.86 → **저항형**(전제 위) · R1 정체의 C1 일치는 α 반올림 안(`[재현]` 3.2 ↔ 7.1 µF) · 면적 손잡이(탄소 BET ×260)는 R2 와 무관 · ⚠ **무탄소 대조가 63호 자료와 수치 일치**(표 S3 ↔ 63호 표 S1 · 그림 5 ↔ 63호 그림 9 셀 C) · 셀 하나씩 · 시간 축 0 |
 
 ⇒ `[해석]` **원전이 "expected · suspect · suggests" 로 쓴 접촉 손실이 인용을 거치며 평서문이 되고, 원전 자신의 SI 는 EIS 창 안에서
 그 면적 변화를 보지 못한다.** 계면층 쪽은 XPS 라는 화학 증거가 있고 SI 궤적도 그쪽이다.
@@ -94,11 +95,13 @@ evidenceScope: multi-source-primary
 → **2026-11-17 (106호)**: 계보 첫 정량 접촉 손실 모형(Tian · Qi 2017 · 모형 편 · 실험 0)이 서론에서 계면 저항의 두 원인을 "chemical effect and physical contact" 로 나누고 **물리(접촉)만** 모형화한다. 그러나 그 모형 안에서 두 기구는 동역학 앞 인자의 곱 γ·k_pos(식 17)로 과전압에서 같은 꼴이고, 둘을 가르는 것은 '최악의 경우 물질 손실' 정의가 붙인 용량 채널(식 18)뿐이다 — 배정이 측정이 아니라 **정의로** 정해진다(`[해석]` · 대수는 [[assb-lampe-contact-product-degeneracy]] 여든아홉 번째 적용).
 → **2026-11-17 (107호)**: 같은 연구망(23 · 64호 계열)의 2020 편에서 **처음으로 저자 자신이** 두 번째 전기화학 채널(Warburg 겉보기 D 의 충/방 가역성)로 계면층 ↔ 접촉 손실을 가른다 — 이 페이지 계보 표 안에서는 첫 표본(정성 · 첫 사이클 · 셀 하나). 106호(모형)가 배정을 정의(용량 채널)로 정한 것과 달리 이 편은 측정 채널로 정했다. 같은 지면이 액체셀 균열(면적 증가) 서사에 같은 겹침을 걸지 않았고, 우리가 걸면 면적 하나로 닫히지 않는다.
 → **2026-11-17 (109호)**: 같은 연구망(Janek — 23 · 64 · 97호)과 DLR 의 **모형 + 실험** 편에서 사슬이 한 단계 더 간다 — 23호 'combination'(나누지 않음) → 64호 'explain' → **109호 'lost due to contact loss of active material particles'** → 53호(Ren · Danner 2023 — 이 편을 [32] 로) 'capacity fade'. 그런데 같은 편의 모형은 표면 박리로 저율 용량을 깎지 못하고(0.1 C +2.0 % `[도표·벡터]`), 박리 임피던스가 부동태 상과 같은 꼴이라 가를 수 없다고 스스로 인쇄한다 — 배정은 인용, 모형은 축퇴 인정. 같은 연구망 · 같은 해의 107호(Ruess 2020)는 첫 사이클 비가역을 Warburg 겉보기 D 의 충/방 가역성으로 '접촉 손실 아님 · 절연층' 이라 갈랐다 — 재료가 달라(NCM811 \| Li₆PS₅Cl ↔ NMC622 \| β-Li₃PS₄) 직접 모순은 아니지만, 같은 계열의 두 2020 편이 첫 사이클 손실을 반대 기구에 둔다(측정 채널 ↔ 인용 · `[해석]`).
+→ **2026-11-17 (110호)**: 같은 연구실의 탄소 대조 편이 '병치' 대신 **계면층 단독**을 택한다 — 탄소 효과를 CAM \| SE 호가 아닌 새 직렬 호(곱 밖 — 정의 표 셋째 행 자리)에 두고, 접촉 손실은 조건법 한 문장으로 미룬다. 지면의 `R`·`C` 로 걸면 함량 축에서 저항형이지만(전제 위 · 첫 충전 뒤 한 점), 대조 셀이 앞 편(63호) 자료와 수치로 겹쳐 '탄소 한 노브' 대조로 읽을 수 없다 — 100 사이클 감쇠의 배정은 이 편으로 닫히지 않는다.
 
 ## 무엇을 재면 가를 수 있나 (처방)
 
 1. **`R` 과 `C` 를 상태축(OCV·사이클) 위 연속으로 같이 인쇄** — 16호 처방 1단계. 23호가 계보 첫 연속 사례. ★ **2026-09-28 두 번째 = 63호** — 한 충전 안 10 점에서 구간별(면적형 ↔ 화학형) 판정이 갈린다 · 조건: CPE α 를 SOC 별로 인쇄(63호는 안 했다).
    ★ **2026-09-28 세 번째 = 64호 — 첫 사이클 축**: 같은 SOC 두 점(충 · 방)을 25 사이클 — **노화분(사이클 축)과 가역분(충 ÷ 방)을 같은 호에서 따로** 분류한다. 조건: 아래 6 · 7 먼저, CPE α 인쇄(64호도 안 했다).
+   ★ **2026-11-17 함량 축 판 = 110호** — 시간 축이 아니라 **첨가제 함량 축**(셀 사이)에서 같은 판정을 건다: 새 호 R2 91 → 121 → 154 Ω · C2 16.3 → 14.1 → 14 µF(저항형). 조건: 셀 사이 비교면 대조 셀 출처(처방 11) · CPE α 를 두 자리 이상 인쇄(110호는 한 자리 — C1 환산 3.2 ↔ 7.1 µF).
 2. **무전류 기계 이완 대조를 같은 셀에서** — XPS 로 화학 불변을 확인하고 `R·C` 가 보존되는지 본다(전제의 양성 대조).
 3. **첫 충전 뒤 · 첫 방전 뒤 SEM(또는 단층촬영)을 같은 조건으로** — 틈이 재리튬화에서 닫히는지(23호 G7 공백).
 4. **격자 `V(x)` 곡선을 같은 지면에** — `ΔR` 급등 전위창이 격자 수축 구간과 겹치는지 떨어지는지(시점 판별).
@@ -112,6 +115,7 @@ evidenceScope: multi-source-primary
    ★ **2026-10-02 (90호)** — 시간분해 EIS 를 calendar 는 유지 전위(고 SOC) · cycle 은 1C 방전 끝(30 분 휴지 · 사이클마다 표류)에서 재고, RPT 비교는 한 셀 스펙트럼을 여섯 셀 공통 기준선으로 쓴다 — 자기 셀 기준이면 cycle 저주파 Re 는 −40 · −30 · −4 Ω(`[도표·화소]` S4 · `[데이터]`). 상태 · 기준 셀을 값 옆에 적어야 하는 표본.
 9. ★ **상태 이름표 대조** (2026-09-29, 84호) — `R`(그림)과 `C`(표)를 상태 이름표로 짝지어 1단계를 걸기 전에, 막대 값을 다른 그림(사이클 궤적 · 대칭 셀 궤적)의 같은 상태와 대조한다. 84호는 그림 4b '1st discharge' 가 그림 4c · 2c 의 10 사이클과 성분별 ±3 Ω·cm² 로 같고, 그 대조 여부에 따라 노화 판독이 계면층(화학형) ↔ 접촉 면적(면적형)으로 뒤집힌다.
 10. ★ **Warburg 면적 채널을 `R` 과 같은 전위에서** (2026-11-17, 107호) — 정전류 이완(또는 EIS 저주파) 겉보기 D 와 `R_ct` 를 같은 SOC 충 · 방(또는 사이클 전후)에서 같이 인쇄하면 `R·√D` 가 면적을 약분한다 — `C ∝ 면적` 전제 없이. 조건: D̃ 불변 · W 를 같은 곡선 정의로 · 반무한 창 확인(t_pol 쓸기) · 겉보기 D 의 면적 지수 표기(107호 인쇄 1 ↔ 2).
+11. ★ **대조 셀 출처 확인** (2026-11-17, 110호) — '첨가제 · 코팅 유무' 대조를 판정 입력으로 쓰기 전에 대조 셀이 같은 배치 · 같은 시점 · 같은 음극 구성(Li 저장고)인지, 앞 편 자료(적합값 · 곡선)와 수치로 겹치는지 본다. 110호 무탄소 대조는 63호 표 S1 · 그림 9 셀 C 와 수치 일치(인쇄 자릿수 · CE ±0.02 %p) — 63호 장기 셀은 Li 박 1:60(저장고 차이 가능성).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -129,6 +133,7 @@ evidenceScope: multi-source-primary
   → **2026-10-02 (92호)**: 실험 **열한 편** · `R`·`C` 입력 **다섯 편 그대로**(92호는 대역 4 mHz–1 Hz 가 계면 호 아래 · `C` 0) — 92호는 재료 교체 대조(셀 하나씩 · 신품)이고, 그 비선형 진폭 채널은 두 기구를 가르지 못한다(`[재현·가정]` · `[해석]`).
   → **2026-11-17 (107호)**: 실험 **열두 편** · `R`·`C` 입력 **다섯 편 그대로**(107호는 `R` + Warburg 겉보기 D — `C` 0) — 107호는 두 번째 면적 채널(Warburg)로 저자 자신이 가른 첫 표본이다.
   → **2026-11-17 (109호)**: 실험 **열세 편** · `R`·`C` 입력 **다섯 편 그대로**(109호는 실측 EIS 두 상태이나 `C` · 주파수 0) — 109호는 모형으로 두 기구의 임피던스 축퇴를 인쇄했을 뿐 가르지 않았다.
+  → **2026-11-17 (110호)**: 실험 **열네 편** · `R`·`C` 입력 **다섯 편 그대로** — 권고: 110호를 여섯째로 셀지(저자 `C` 인쇄 ✅ · 그러나 함량 축 셀 사이 · 첫 충전 뒤 한 시점 · 무탄소 대조가 63호 자료와 수치 일치) — 판단 대기 (13 편 뒤 §3-b 일괄) · 110호는 첨가제 다섯 종 · 함량 넷 · 셀 하나씩이다.
 - **63호 셀에서 접촉 손실이 없었다고 주장하지 않는다** (2026-09-28) — 앞 절반의 면적형 감소는 오히려 면적 쪽 서명이다; 주장은 "뒤 절반의 ×2 는 면적형이 아니다(전제 위)" 까지다.
 - **64호의 가역 면적형(4.6 V)을 접촉 호흡의 측정으로 주장하지 않는다** (2026-09-28) — τ 비 1.10–1.24 는 전제 · CPE 환산 · 로그 축 판독 위다. 그리고 **집전체 쪽 층이 셀 저항에 기여하지 않는다고 하지 않는다** — Li⁺ 차단 계면이라는 물리에서 그 경로를 묻는 것까지다.
 - **84호 셀의 노화를 계면층으로도 접촉 손실로도 배정하지 않는다** (2026-09-29) — 1단계 판독이 상태 이름표 해석에 따라 뒤집히고(τ ×1.94 ↔ ×0.85), Q · n 미인쇄 · 창 밖 과정 · 셀 하나씩이다. 저자도 두 기구를 한 R3 에 병치했다.
@@ -138,6 +143,7 @@ evidenceScope: multi-source-primary
 - **92호 셀 2 의 비선형을 계면층으로도 접촉 손실로도 배정하지 않는다** (2026-10-02) — 저자 배정은 "전하이동(H) · 물질전달(W)" 이고 그 근거인 블록 모양은 정규화 · 구조 의존이다; 재료 교체가 벌크 전도도 · 접촉 · 계면 화학을 함께 바꿨을 수 있고, `R`·`C` · 온도 · 대칭셀이 없다. 실험 편 수(열한) · `R`·`C` 입력 편 수(다섯)만 센다.
 - **107호 ASSB 의 첫 사이클 저항 증가를 계면층으로 확정하지 않는다** (2026-11-17) — 저자 배정과 우리 재현(면적 ≤8 %)이 같은 방향이라는 것까지이고, D̃ 불변 · W · 반무한 창 · 셀 하나 · 첫 사이클 위다. `C` 는 지면에 없다. 실험 편 수(열두) · `R`·`C` 입력 편 수(다섯)만 센다.
 - **109호의 첫 사이클 27 % 를 계면층으로도 접촉 손실로도 배정하지 않는다** (2026-11-17) — 같은 지면이 두 기구로 배정했고, 모형 박리는 저율 용량을 깎지 못하며, 계면층 모형 실행 · 사후 분석 · `C` 가 없다.
+- **110호 셀의 감쇠를 계면층으로 확정하지 않는다** (2026-11-17) — 함량 축 저항형은 첫 충전 뒤 한 점 · 셀 사이 · α 민감 · 전제 위이고, 100 사이클 뒤 `R`·`C` 가 지면에 없으며, 대조 셀이 앞 편(63호) 자료와 수치로 겹친다(다른 배치 · 저장고 차이 가능성). 저자도 접촉 손실을 조건법으로 남겼다.
 
 ## 관련
 
