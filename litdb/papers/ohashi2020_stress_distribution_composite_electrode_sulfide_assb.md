@@ -366,6 +366,7 @@ LGPS 분말 (< 40 µm) + ZrO₂ (< 150 µm) 섞음 (혼합 방법 · 시간 [미
 - 강성이 다른 두 성분 압축 (DEM · 하중 몫 안 잼): `yano2024_eepa_binary_mixture_plasticity_compression_dem`.
 - 탄성 상수: `deng2016_elastic_superionic_electrolytes_dft` · AM 영률: `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` (표 1 · LCO · NCM111) · `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` (NMC811 · CL-90 교체 출처).
 - 미세구조 → σ: `hlushkou2018_void_space_ion_transport_assb_cathode` · `froboese2019_microstructure_ionic_conductivity_assb_electrode` · `bielefeld2020_effective_ionic_conductivity_binder`.
+- 이 논문의 ref [7] (2026-11-17 카드): `tian2017_contact_area_loss_assb_simulation` — §12 [7] 행의 '없음 (위시 W-1117-3 차례)' 는 이제 이 카드 · 1-D 박막 셀 (Li | LiPON-like | LiCoO₂) 접촉 인자 γ → 용량 · Persson 탄성 접촉 압력 → 접촉 비율 (LGPS–TiS₂ 압분 계면 19 MPa ≈40 % · 230 MPa ≈95 % — 인쇄 식 26 꼴에 묶인 값 · 그 카드 §3-5).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

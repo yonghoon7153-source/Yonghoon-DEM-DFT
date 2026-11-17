@@ -612,6 +612,8 @@
 | 57 | Santhanagopalan et al., *J. Phys. Chem. Lett.* 5, 298 (2014) | 계면층 약 50 nm 의 실험 근거 | 카드 없음 |
 | 71 | Herbert et al., *Thin Solid Films* 520, 413 (2011) | LiPON 박막 나노압입 → E · ν | 카드 없음 |
 
+- ref [24] 의 정본 카드 (2026-11-17): `tian2017_contact_area_loss_assb_simulation` — 같은 그룹 앞 논문 · 1-D Newman 박막 셀 (Li | LiPON-like Li₃PO₄ | LiCoO₂) 에 접촉 인자 γ (교환 전류 · 계면 원천) → 3.8 V 용량 손실 기울기 ≈1 (최악 가정) · Persson 탄성 접촉 압력 → 접촉 비율 (그림 곡선 = 인쇄 식 26 꼴 · 그 카드 §3-5) · 위 표의 ref 28 (Talin 2016) · 57 (Santhanagopalan 2014) 는 그 논문의 ref 30 · 12 와 같은 논문.
+
 ---
 
 ## 🗨️ Q&A 로그

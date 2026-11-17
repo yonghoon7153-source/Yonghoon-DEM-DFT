@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 345편 · 생성 2026-11-17
+> digest 346편 · 생성 2026-11-17
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -67,7 +67,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (84편)
+## 접촉역학 · 소성 (DEM 이론) (85편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -142,6 +142,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` | 초고압 (≈3.8 GPa) in situ 치밀화 — 비정질 Li₃PS₄ (LPS) 와 결정 Li₆PS₅Cl (LPSCl): 파리–에든버러 프레스 (UToPEC · 준등방 가압) 에서 X-선 흡수 밀도 · 단층촬영 (1.277 µm) · 에너지분산 XRD · 중성자 회절 + 실험실 EIS · 결합원자가 (BVEL) — 두  | experiment (in situ 고압 — PE 프레스 UToPEC · Beer–Lambert 흡수 밀도  | 2026-10-13 | 🖼 23 |
 | `thorntonning1998_adhesive_elastoplastic_contact` | 점착 탄소성 구의 stick/bounce — 항복압 캡(p_y) 접촉 LAW의 정의서 — Thornton & Ning (Powder Technology 1998) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 7 |
 | `thorntonyin1991_oblique_impact_elastic_spheres_adhesion` | 탄성 구 두 개의 비스듬한 충돌 — 접착 없으면 Hertz + Mindlin–Deresiewicz 증분 접선 법칙, 접착 (JKR) 이면 '벗겨진 뒤 미끄러진다' 는 새 미끄럼 기준 T = μ(P + 2Pc) — Thornton & Yin (Powder Technology 1991) | DEM (contact-LAW theory: Hertz normal + Mindlin-Deresiewicz  | 2026-11-12 | 🖼 90 |
+| `tian2017_contact_area_loss_assb_simulation` | 접촉 면적 손실 → 방전 용량 (1-D Newman 전기화학 · Li \| LiPON-like Li₃PO₄ 1500 nm \| LiCoO₂ 320 nm 박막 셀 · 접촉 인자 γ = A/A₀ 1 → 0.75 · 0.1–20 C) 과 압력 → 실접촉 면적 (Persson 다척도 탄성 접촉 · 무점착 · 박막 Li₃PO₄–LiC | continuum — 1-D Newman-type electrochemical FEM (Li / LiPON- | 2026-11-17 | 🖼 67 |
 | `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` | 냉간분무(cold spray) 양극 복합분말 증착을 탄소성(elastoplastic) 결합구 DEM 으로 — NMC622 단일입자 충돌: 기판 항복응력이 지배 · 사선 충돌은 증착을 죽인다 · PVDF 최소량 문턱 · 입자만 한 크레이터만 돕는다 — Tovar et al. (Surf. Coat. Technol. 2026, | DEM (elastoplastic bonded-sphere, single-particle impact) +  | 2026-11-02 | 🖼 36 |
 | `vanlew2015_modifying_youngs_modulus_distribution` | 단일 pebble 압쇄실험의 E 분포로 DEM 입자별 Young률을 수정 (Hertz 접촉) — Van Lew (Fusion Eng. Des. 2015) | DEM (Hertz 접촉 + 단일입자 압쇄실험 → 입자별 E) | 2026-08-25 | 🖼 5 |
 | `varkey2026_multicontact_elastoplastic_dem` | 응력기반 multi-contact 탄소성 모델로 SE separator·양극 압밀 DEM — Varkey (Adv. Powder Tech. 2026) | DEM | 2026-06-23 | — |
