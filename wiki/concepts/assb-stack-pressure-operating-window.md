@@ -2,10 +2,10 @@
 title: ASSB 스택 압력의 작동 창 — 아래는 접촉 손실, 위는 단락
 description: "Stack pressure in ASSBs is a two-sided constraint: too low gives interfacial contact loss, too high drives Li creep into electrolyte pores and shorts the cell. Doux 2020 gives the first measured pressure sweeps (P→impedance, P→time-to-short, P→overpotential) and a hard upper bound"
 created: 2026-09-16
-updated: 2026-10-03
+updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -340,6 +340,9 @@ modelling**."
 > ⚠ **2026-09-29 다섯째 주석 (88호 Li M. 2025 = 13호 [35])**: 열었다 — 13호 `<5` 의 **마지막 인용 다리도 비었다**. "5 MPa" 0 · 요구치 · 문턱 압력 인쇄 0 · 압력은 "necessary" · "essential" 로만 적히고, 운전 값은 460 MPa(조립 명목 · 정변위 · 계측 0)다.
 > `[재현]` 이 편 그림 5 안 식에 5 MPa 를 넣으면 임계 크기 0.150 µm — 액체 무압 문턱과 같다(13호와 반대 쪽 함축 · 모형 위). 13호 다리 셋([23] 59호 · [45] 60호 · [35] 88호) 모두 빔 ⇒
 > **아홉 편 · 여섯 값 · 띠 0.1–5 MPa · 확인된 원전 0 그대로** · 빈 다리 넷 · 남은 열린 다리 셋(12 · 39 · 61)(아래 §88호).
+>
+> ⚠ **2026-11-17 여섯째 주석 (106호 Tian & Qi 2017 = 12호 [60] 의 한쪽)**: 열었다 — 12호 "the optimal charging performance could be obtained under medium compressive pressures (0.4–1 MPa)" 는 **이 편 지면에 없다** — `MPa` 8 회는 전부 19 · 20 · 60 · 228/230(모형 처방 예 · 재인용 실험) · 충전 계산 0 · γ(σ) 단조라 최적 0 · `[도표·화소]` 그림 6a 에서 0.4 · 1 MPa = 접촉 0.113 · 0.177.
+> 12호 가닥의 남은 다리는 Shao 2022 *Energy* 239 하나 ⇒ **아홉 편 · 여섯 값 · 띠 0.1–5 MPa · 확인된 원전 0 그대로** · 빈 다리 다섯 · 남은 열린 다리 셋(12 → Shao 2022 · 39 · 61)(아래 §106호).
 
 ★ 그리고 `[도표]` **Fig. 2 가 본문에 없는 클래스별 창 다섯을 준다** (레이더 축 라벨):
 **Oxides ≥30 MPa · Sulfides 5–20 · Halides 2–10 · Polymers "No or compliant" · Composites
@@ -1260,6 +1263,37 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 
 실측 · 외부 압력 스윕 · 압력 → 접촉 · 저항 · 용량 · 단락 · 사이클 중 압력 이력의 측정 · 요구치. 창의 값은 움직이지 않았다 — 움직인 것은 **모형 압력 값의 정체 표기**(출력 반력 · SE 강성 지배 · 면내 응력과의 분리)다.
 
+## ★★ 2026-11-17 (`assb` 106호 Tian · Qi 2017 *J. Electrochem. Soc.* 164, E3512, **모형 · 1D Newman 박막 Li \| Li₃PO₄ \| LiCoO₂ + 접촉 면적비 γ + Persson 다척도 탄성 무접착 접촉(필름 Li₃PO₄/LiCoO₂ · 벌크 LGPS/TiS₂) · 실험 0**) — **창의 값은 움직이지 않는다: 12호 `0.4–1 MPa` 의 원전 후보 다리 하나가 빈다 — 이 편의 압력은 19 · 20 · 60 · 228/230 MPa(모형 사상 · 재인용 실험)이고, 압력 → 접촉 곡선(그림 6)은 같은 편 식 (22)–(23) 과 지수가 다른 인쇄 식 (26) 위에 선다**
+
+`raw/papers/tian2017_contact-area-loss-assb-simulation.md` (원장 L173 · 12 · 81 · 94 · 97 · 98 · 99 · 100 · 104 · 105호 지목 · 5차 묶음 #2).
+
+### 1. 요구치 — 인쇄 0 ⇒ 12호 가닥의 Tian & Qi 다리 빔
+
+- `[인쇄]` `MPa` 8 회 = 19 · 228(서론 — Li 2016 재인용) · 19 · 230(결과 — 같은 실험) · 20 · 60(필름 처방 예). '요구 · 필요 압력' 문장은 모형 예("increasing the contract pressure to 60 MPa will recover the contact area to 70% again") 하나 · 충전 계산 0 · γ(σ) 단조(최적 0).
+- `[도표·화소]` 그림 6a 에서 0.4 · 1 MPa = 접촉 0.113 · 0.177 — 12호 "the optimal charging performance could be obtained under medium compressive pressures (0.4–1 MPa)" 는 이 편 지면에 없다.
+
+| 편 | 요구치 | 원전 상태(106호 뒤) |
+|---|---|---|
+| 8호 | < ≈1 MPa | → 81호의 재인용 |
+| **12호** | **0.4–1 MPa** | **Tian & Qi 2017 = 106호 ❌**(값 · 충전 · 최적 0) · Shao 2022 *Energy* 239 미열람 — **열린 다리(하나 남음)** |
+| 13호 | < 5 MPa | 다리 셋 모두 빔(88호 뒤 그대로) |
+| 25 · 33 · 59호 | ≤ 5 · < 2 / ≤ 2 · < 0.1 MPa | 인용 0 |
+| 39호 | 1 MPa | Wang 2021 *Joule* 미열람 — 열린 다리 |
+| 61호 | 1.0 MPa range · 1 MPa sufficient | Sharafi 2016 · Wang & Sakamoto 2018 미열람 — 열린 다리 |
+| 81호 | < 1 MPa | 초록 · 인용 0 — 출처 없음 |
+
+⇒ **확인된 원전 0 그대로 · 빈 다리 다섯(8 → 81 · 13 → 59 · 13 → 60 · 13 → 88 · 12 → 106) · 남은 열린 다리 셋(12 → Shao 2022 · 39 · 61).** 106호는 값을 더하지 않는다.
+
+### 2. ★★ 압력 → 접촉 사상의 층위 (§3-b (태)(해)(이))
+
+- `[인쇄]` σ₀ = 계면에 거는 평균 압력("σ0 represents the applied pressure") — 셀 스택 압력과 같은 축으로 놓고 벌크(입자 압착) 셀의 제조 · 운전 압력(Li 2016 19 · 230 MPa)과 바로 대조 · 입자 수준 접촉 응력 사상 0(§3-b (태)) · 구속 형식 · 압력 이력 0(정적 경계값).
+- `[도표·화소]` 그림 6 다섯 곡선 = erf(√(σ/s))(지수 0.498–0.500) — 인쇄 식 (26)(1제곱) · 인쇄 입력으로 곡선 사이 비 0.03–0.2 % · 같은 편 식 (22)–(23) 은 제곱 → `[재현·가정]` 제곱이면 같은 입력에서 필름 20 MPa 1.4 % · 벌크 19 MPa 1.4 % · 230 MPa 16.9 %(C(q) 관례에 따라 9.0 · 8.8 · 82 %) ↔ 그림 0.683 · 0.447 · 0.961.
+- 입력 층위: C(q) = 다른 시료(Flys [47])의 AFM 스펙트럼을 rms 로 대응("Currently, C(q) is not available for all-solid-state battery electrode and solid-electrolyte surface yet") · 탄성값 = 다른 재료 문헌값 · 관측 척도 ξ ≈2700 = 1 C 확산 길이 하나(율마다 달라야 할 척도 — `[재현·가정]` 같은 논리면 필름 20 MPa 접촉 0.954(0.1 C) ↔ 0.305(20 C)).
+
+### 3. 이 편이 이 페이지에 **안 준 것**
+
+실측 · 압력 계측 · 구속 형식 · 압력 이력 · 요구치 · 단락 · 창의 위 벽. 창의 값은 움직이지 않았다 — 움직인 것은 **12호 다리 하나의 판정(❌)** 과 **모형 압력 → 접촉 값의 층위 표기**(1제곱 식 · 빌린 입력 · 척도 하나)다.
+
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
 1. **점당 셀 1 개, 오차 막대 0.** 압력–수명 6 점 전부 N=1 이다.
@@ -1317,6 +1351,7 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 - **94호의 50 / 60 / 70 MPa 를 운전 압력 창의 실측 표본으로 옮기지 않는다** (2026-10-02) — 모형 예압(t = 0 · 스프링 강성 가정)이고, 압력 효과는 단순 기하 세 점 · 0.1 C · 첫 충전의 율 조건부 결손이며, 반 사이클 압력 표류(+13 / +53 / −58 MPa)는 우리 `[재현·가정]` 이다.
 - **97호의 "60 ± 8 MPa" · 계측 61–65.5 MPa 를 63 · 90호 셀의 운전 압력으로 옮기지 않는다** (2026-10-02) — 같은 연구망 · 같은 10 Nm 이지만 바깥틀을 늘린 개조판(로드셀 장착)이고 셀 구성이 다르다. 그리고 **OCV–압력 램프의 압력(≈49–235 · "143")을 운전 압력 창의 표본으로 세지 않는다** — 무전류 열역학 측정의 설정값이다.
 - **103호의 "0.6 MPa" 를 운전 압력 · 요구치 · 창의 표본으로 옮기지 않는다** (2026-10-03) — 정변위 셸 구속의 반력(모형 출력)이고 외부 압력 입력 0 · 크기는 고분자형 SE 강성 하나가 정한다; 무기 SE 반사실(−60 … −127 MPa)은 인쇄 식 위 `[재현·가정]` 이다.
+- **106호의 압력 → 접촉 값(20 MPa 70 % · 19 → 230 MPa 45 → 96 %)을 창 · 요구치 · 합성 truth 의 접촉 면적으로 옮기지 않는다** (2026-11-17) — 인쇄 식 (26)(1제곱 — 같은 편 식 22–23 과 어긋남) · 다른 시료의 C(q) · 1 C 척도 하나 위의 모형 값이고, 제곱 꼴 반사실(1–17 %)은 `[재현·가정]` 이다.
 
 ## 관련
 - [[assb-pressure-reapplication-separation-test]] — `P↑` 분리 연산자. **이 페이지가 그 상한을 준다.**

@@ -1,0 +1,200 @@
+{
+ "slug": "tian2017_contact-area-loss-assb-simulation",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Representation of this 1-D model. (a) The considered concepts and (b) the contact between cathode and solid electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.8,
+    480.4,
+    542.2
+   ],
+   "w": 1252,
+   "h": 1338,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.946,
+   "note": "자동 — 봤다. (a) Li | Li3PO4 1500 nm | LiCoO2 320 nm (x = 0 · 1500 · 1820 nm) · 'measure φs' · 음극 Li0 ↔ Li+ + e- · 양극 Li1-xCoO2 + xLi+ + e- ↔ LiCoO2 · (b) 접촉 A ↔ 단면 A0 · 붉은 빗금 = 'loss of material'(표면 근처 초승달 꼴 — 식 (18) 은 기둥 전체 (1-γ) 를 잃는 꼴). 잘림 0."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. (a) Schematic of the interfacial contact for bulk-type and ﬁlm-type batteries, and the contact area observed at different length scale. (b) Logarithm relationship between power spectrum and wave number at different RMS roughness.47 Only the self-afﬁne region is shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    61.1,
+    555.2,
+    551.2
+   ],
+   "w": 1463,
+   "h": 1363,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.819,
+   "note": "자동 — 봤다. (a) 벌크형 · 필름형 도식 + 배율 증가 삽도 · (b) log C(q) ↔ log q(4.5–7.5 구간만) · 표지 'm = -3.08, I = -8.11'(벌크) · 'm = -2.77, I = -11.35'(필름). 화소: 붉은 선 m -3.076 · I -8.62(표지 -8.11 은 오기 — 본문 · 그림 6b -8.61) · 파란 선 m -2.63 · I -11.94(표지 -2.77 · -11.35 와 다름 — 끝점이 붉은 선과 만나게 그려짐). 잘림 0."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. The effect of the contact area on the concentration of Li at elec- trolyte/cathode interface (x = 1500 nm) at different discharge time. (a) 1 C-rate (b) 10 C-rate. (c) The open circuit voltage of LiCoO2 at different amount of inserted Li.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.5,
+    556.0,
+    691.4
+   ],
+   "w": 721,
+   "h": 1754,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.916,
+   "note": "자동 — 봤다. (a) 1 C · (b) 10 C 계면 C_Lis(t) γ 1–0.75 여섯 · (c) LiCoO2 OCV(1.0–2.33×10^4 mol m-3). 화소: 2.30×10^4 도달 1 C 3458 · 3107 · 2738 · 2425 · 2132 · 1838 s(비 ≈γ²) · 10 C 327 · 309 · 288 · — · 266 · 246 s(비 ≈γ) · 포화 뒤에도 곡선이 평탄하게 이어짐(정지 조건 미적용). 잘림 0."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Discharge curves at (a) γ = 1 and different C-rate, (b) C-rate = 1 and different γ, (c) C-rate = 10 and different contact factor, γ.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    60.4,
+    555.2,
+    696.4
+   ],
+   "w": 721,
+   "h": 1768,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.905,
+   "note": "자동 — 봤다. (a) γ = 1 · 0.1–20 C · (b) 1 C · γ 1–0.75 · (c) 10 C · γ 1–0.75 · 점선 'Critical Capacity' Q 7.65 µAh cm-2. 화소(3.80 V): (b) 9.50 · 9.02 · 8.53 · 8.06 · 7.56 · 7.11 · (c) 8.91 · 8.43 · 7.95 · 7.48 · 7.01 · 6.53. 잘림 0."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The relationship between the discharging capacity and the loss of contact area at cutoff voltage of (a) 3.8 V and (b) 4.0 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    60.3,
+    289.0,
+    485.4
+   ],
+   "w": 720,
+   "h": 1182,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.904,
+   "note": "자동 — 봤다. 남은 용량(%) ↔ γ(가로축 이름 'Loss of Contact Area (γ)') · (a) 3.8 V · (b) 4.0 V 차단 · 율 다섯. 화소(원본 래스터 · 표지 열 중앙값 — 0.1 C 검정은 눈): (a) γ 1 → 0.75 0.1 C 100 → ≈75 · 1 C 99.27 → 74.46 · 5 C 97.18 → 72.23 · 10 C 93.48 → 68.38 · 20 C 86.84 → 61.62 · (b) 34.23 → 25.86 · 34.28 → 25.89 · 29.67 → 21.74 · 26.52 → 18.96 · 18.30 → 11.66. 잘림 0."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. The relationship between the ratio of real contact area to the maxi- mum contact area (A/A0) and the applied external pressure (σ) for the interface of (a) ﬁlm-type and (b) bulk-type battery.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    60.9,
+    556.0,
+    488.4
+   ],
+   "w": 721,
+   "h": 1188,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "blank": 0.868,
+   "note": "자동 — 봤다. A/A0 ↔ σ — (a) 필름 Li3PO4–LiCoO2 0–200 MPa 곡선 다섯(m -2.77 … -2.97 · I -11.35 … -9.35) + 점 A · B · C · (b) 벌크 LGPS–TiS2 0–500 MPa 다섯(m -3.08 … -3.28 · I -8.61 … -6.61). 화소(원본 래스터 300 dpi JPEG): 다섯 곡선 모두 erf(√(σ/s)) — 자유 지수 0.498–0.500 · 잔차 rms 0.0011–0.0020 · s = 39.9 · 64.4 · 103.6 MPa(필름 앞 셋) · 107.8 · 473 MPa(벌크 검정 · 초록). 잘림 0."
+  },
+  {
+   "key": "t1m",
+   "kind": "table",
+   "label": "I",
+   "page": 5,
+   "file": "tab_1_manual_p5.png",
+   "bbox": [
+    35,
+    66,
+    552,
+    178
+   ],
+   "caption": "Table I. The conditions and dependent variables in this model.",
+   "note": "수동 — p. 5 렌더 200 dpi(두 단 폭 표). 자동 누락 — 표 캡션 'Table I.'(로마 숫자) 미인식으로 크로퍼가 표를 하나도 잡지 않음. 봤다. 경계 ipos = 'controled value' · Φs,neg = 0 · Eeq,neg = 0 (Ground) / 초기 x = 0.5 (C_Lis/C_Li,max) · Φs,pos = 4 · Φep = 0 / 정지 'When C_Lis = C_Li,max (at the interface of positive electrode/electrolyte)' / 풀이 변수 넷.",
+   "w": 1437,
+   "h": 312,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "rotated_deg": 0,
+   "manual": true
+  },
+  {
+   "key": "t2m",
+   "kind": "table",
+   "label": "II",
+   "page": 5,
+   "file": "tab_2_manual_p5.png",
+   "bbox": [
+    35,
+    495,
+    285,
+    756
+   ],
+   "caption": "Table II. The parameters used in this model, which have been fitted to experimental data.15",
+   "note": "수동 — p. 5 왼쪽 단 렌더 200 dpi. 자동 누락(로마 숫자 캡션). 봤다. 여덟 행 — C_Li,total 6.01×10^4(지수 '4' 가 참고문헌 4 링크 R4 로 조판됨) · C_Li,max/min 23300/11650 · D_Li+ 9×10^-16 · D_Lis 1.76×10^-15 · δ 0.18 · kd/kr 2.13×10^-5/9×10^-9 (둘 다 'mol/(m2·s)') · kpos/kneg 5.1×10^-4/0.01 (mol/(m2·s)) · αpos/αneg 0.6/0.5.",
+   "w": 695,
+   "h": 725,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "rotated_deg": 0,
+   "manual": true
+  },
+  {
+   "key": "t3m",
+   "kind": "table",
+   "label": "III",
+   "page": 7,
+   "file": "tab_3_manual_p7.png",
+   "bbox": [
+    35,
+    66,
+    285,
+    140
+   ],
+   "caption": "Table III. Elastic properties for solid electrolyte and cathode materials.",
+   "note": "수동 — p. 7 왼쪽 단 렌더 200 dpi. 자동 누락(로마 숫자 캡션). 봤다. 텍스트 층에서 위첨자 인용 번호가 값에 붙어 추출됨('103.436' = 103.4 + [36] · '17137' = 171 + [37] · '0.269' = 0.2 + [69] 등) — 렌더로 확인: Li3PO4 103.4 GPa · 0.26 [36] · LiCoO2 171 GPa [37] · 0.2 [69] · LGPS 21.7 GPa · 0.37 [67] · TiS2 228 GPa · 0.11 [68].",
+   "w": 695,
+   "h": 206,
+   "dpi": 200,
+   "src": "1d50b8b2-101._Simulation_of_the_effect_of_contact_area_loss_in_all-solid-state_Li-ion_batteries.pdf",
+   "rotated_deg": 0,
+   "manual": true
+  }
+ ]
+}

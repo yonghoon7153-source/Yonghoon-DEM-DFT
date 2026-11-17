@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/barai2021_cathode-llzo-delamination-lattice-spring-capacity-fade.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/barai2021_cathode-llzo-delamination-lattice-spring-capacity-fade.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -429,6 +429,16 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - ★ **율 연산자의 문턱**: `[재현·대수]` NMC(i₀ 0.2 A m⁻² · 1–7 A m⁻² → i/i₀ 5–35)에서 박리 몫 Δη ≈ (2RT/F)·ln(A₀/A_f) 는 전류와 무관 — 그림 8(a) 분율로 86.8 · 49.0 · 55.4 · 44.1 mV · 감쇠 ×1.14 / 전류 ×7. 위 §"율 연산자와의 짝" 처방 ①(저율로 `η` 를 먼저 죽인다)은 **Tafel 영역 안에서는 성립하지 않는다** — `[재현·가정]` d 0.82 면 선형 문턱 ≈0.036 A m⁻²(100 nm 판 · ρ 4.75 g cm⁻³ 외부 값 → ≈0.4 C 상당) · C/10 이면 Δη ≈4.8 mV(1 A m⁻² 의 1/18). ⇒ 설계 조건에 **'율 단계의 i/i₀(남은 면적 기준)'** 를 적어야 율 무관 결손이 `θ_AM` · `Q_material` 로 잘못 넘어가지 않는다(`[해석]` — 실셀 i₀ · 접촉 분포는 지면 밖).
 - 비가역 끝의 함의: 이 모형에서는 압력을 되돌려도(구성상 손잡이 0) 끊긴 요소가 다시 붙지 않는다 — 실측의 '재가압 부분 회복'(4호 300 MPa 등)이 가역 `φ` 몫인지 비가역 몫인지는 두 모형(94 · 105호) 사이 어딘가에서 정해진다(`[해석]`).
 
+## ★ 106호(Tian · Qi 2017 *JES*)가 붙인 것 — **이 연산자의 모형 쪽 첫 판(1D Newman + Persson): 기억 없는 탄성 접촉이라 압력은 구성상 가역이고, 접촉 손실을 물질 손실로 정의했으므로 이 모형에서 '압력으로 돌아오는 것' 은 LAM_PE 까지다 — 97호가 옮긴 'not sufficient' 와 반대 방향** (2026-11-17)
+
+`raw/papers/tian2017_contact-area-loss-assb-simulation.md` (원장 L173 · 5차 묶음 #2 · 모형 편 · 실험 0).
+
+- **법칙**: `[인쇄]` "the contact is considered to be elastic without adhesion" · P(σ, ξ) = 0 (σ < 0 · σ → ∞) · 이력 · 손상 변수 0 ⇒ **구성상 완전 가역**(94호와 같은 '기억 없는 끝' · 1D 판).
+- **되돌림 경로**: `[인쇄]` "if the initial condition for the film-type battery is under 20 MPa, as starting from point A … the contact area is around 70%. After cycling, it may decrease to point B … to get the original contact area and the capacity back, it needs to follow the pink line, for instance, increasing the contract pressure to 60 MPa will recover the contact area to 70% again" · `[도표·화소]` A (22.3 MPa · 0.705) → B (22.6 · 0.490) → C (57.4 · 0.708) · `[해석]` 같은 압력 재가압이면 B 에 머문다(문장 0) — **97호(Koerver 2018)의 "re-tightening a cell is not sufficient to recover capacity fade due to contact loss" 는 이 편 명제와 반대 방향**('더 높은 압력이면 회복').
+- **무엇을 되돌리나(D5)**: 압력은 γ 하나만 움직이고(OCV · i₀ 응력 의존 0), γ 는 '최악의 경우 물질 손실' 로 정의돼 용량 채널에 들어간다 → **이 모형에서 압력은 정의상 LAM_PE 까지 되돌린다** — 실측 쪽 경고 1(부분 회복 · 4호)과 정반대 끝의 가정이다.
+- **설계 조건 대조**: D1(압력 계측) — 모형 · 이력 0 · D4(구속 형식) — 정적 경계값(정하중 · 정변위 구분 0) · Li 2016 [26](이 편이 비교한 남의 실험 — 제조 × 운전 압력 19 ↔ 228 MPa 로 읽힘)은 **제조 압력 ↔ 운전 압력의 이력 효과**를 줄 수 있는 실측 후보(미열람 · 원장 신규 ★★) — 기억 없는 모형은 그 차이를 못 낸다.
+- ⚠ 그림 6 의 압력 → 접촉 값은 인쇄 식 (26)(1제곱) 위에 있다 — 같은 편 식 (22)–(23)(제곱)을 따르면 같은 입력에서 20 → 60 MPa 의 접촉이 1.4 → 4.3 % 다(`[재현·가정]`). 회복 '크기' 를 이 연산자의 모형 기준값으로 쓰지 않는다.
+
 ## 이 페이지가 주장하지 않는 것
 
 - **원문의 식이 아니다.** Shi 2020 은 `ΔQ_mech` 를 정의하지도, 10.4 % 와 60 %p 를
@@ -449,6 +459,7 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 - **89호의 계단 회복을 이 연산자의 가압 분기 값으로 쓰지 않는다** (2026-09-29, 89호) — 운전 압력 · 구속 · 사건 기록이 지면에 없고, 회복의 원인(휴지 · 온도 · 재조임)을 가를 수 없다.
 - **94호의 예압 비교(+7.6 %p)를 이 연산자의 실측 값이나 `θ_AM` 회복으로 쓰지 않는다** (2026-10-02, 94호) — 모형(기억 없는 접촉 법칙) · 셀 사이 예압 비교이고, 회복분은 `[재현·가정]` 으로 `η(i)` 경로(입자 안 남은 Li)다; 이 연산자의 "율 먼저" 순서가 왜 필요한지의 forward 표본까지다.
 - **105호의 Tafel 대수(박리 몫이 율 무관 · 선형 문턱 ≈0.036 A m⁻²)를 실셀 율 단계의 설계 값으로 쓰지 않는다** (2026-11-17, 105호) — 이 편 인쇄 i₀(0.2 A m⁻² — R_ct 산술의 ×1.93 포함) · 대칭 BV · 균일 계면 전류 · ρ 가정 위의 `[재현·대수]` · `[재현·가정]` 이고, 압력 연산자의 성분(재가압 · 감압)은 이 편에 0 이다.
+- **106호의 A → B → C(20 → 60 MPa · 0.70 → 0.49 → 0.71)를 이 연산자의 가압 분기 값이나 θ_AM 회복으로 쓰지 않는다** (2026-11-17, 106호) — 기억 없는 탄성 모형 · 손으로 고른 거칠기 단계 · 1제곱 식 (26) 위의 접촉 비이고, 용량 회복은 계산 0 이다.
 
 ## 관련
 - [[assb-stack-pressure-operating-window]] — **이 연산자의 사용 조건**: 압력의 2 측 구속과 상한(5호 Doux 2020).
