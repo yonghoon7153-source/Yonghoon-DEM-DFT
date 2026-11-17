@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/han2021_single-vs-polycrystalline-nca-sulfide-halide-se.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/barai2021_cathode-llzo-delamination-lattice-spring-capacity-fade.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/jung2020_ni-rich-compliant-microstructure-ncm-assb.md, raw/papers/han2021_single-vs-polycrystalline-nca-sulfide-halide-se.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/barai2021_cathode-llzo-delamination-lattice-spring-capacity-fade.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -442,6 +442,13 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 ## ★ 113호(Han 2021 *Adv. Energy Mater.*)가 붙인 것 — **D1 '전극 몫' 의 설계 해법 표본: 영변형 LTO 상대극으로 양극(과 SE 부반응) 몫만 잰다 — 되돌림 분기는 0** (2026-11-17)
 
 `raw/papers/han2021_single-vs-polycrystalline-nca-sulfide-halide-se.md` — `[인쇄]` "operando electrochemical pressiometry measurements using zero-strain Li4Ti5O12 counter electrodes" — 62호 절 (iii) 전극 몫(평탄 · 합금 상대극이면 신호의 ≈90–95 % 가 상대극)을 **설계로** 끈 셀이다(§3-b (하) ③). 그러나 ΔP 는 첫 충전만 · 기저 · 구속 형식 미인쇄 · 압력 조작(되돌림 · 쓸기) 0 ⇒ 연산자 쪽 변화 0. 같은 지면에서 Li⁺ 불활성 호스트(RuO₂/LPSX)가 SE 부반응도 압력을 낸다는 것을 보여([[assb-operando-pressure-signal-attribution]] 113호 주석), D1 신고 항목에 'SE 항' 이 하나 더 붙을 자리다(`[해석]`).
+
+## ★ 114호(Jung S.H. · Kim U.-H. · … · Jung Y.S. · Sun Y.-K. 2020 *Adv. Energy Mater.*)가 붙인 것 — **'율 먼저' 의 실측 판(첫 사이클 · 온도 동반): 0.05 C CCCV · 70 °C 회수가 결손 차의 89 % 를 지우고, 압력 단계는 없다** (2026-11-17)
+
+`raw/papers/jung2020_ni-rich-compliant-microstructure-ncm-assb.md` (38 · 87 · 94 · 107 · 113호 지목 · 5차 묶음 #10 · 실험).
+
+- ① 단계(η 를 먼저 죽인다)를 원전이 '부반응 배제' 목적으로 돌렸다 — 회수 31 · 6 mAh g⁻¹ · 불회수 차 ≤3 · (003) 위치 · 폭 회복(표 S5 · S6). ⚠ 율 · 온도 · CV 셋 동시 · 다른 셀 · 첫 사이클만 — 설계 조건에 **'같은 셀 순서'** 와 **'온도를 쓰면 SE · 계면 변화 확인'** 을 붙일 재료(§3-b (두) · 근거 표시만).
+- ② 단계(압력 되돌림) 0 · 운전 압력 명목('≈70 · ≈7 MPa') · 저자 가설은 외부 단축 압력이 균열을 돕는 쪽 · operando ΔP 는 LTO 셀 첫 사이클 하나씩(113호와 같은 영변형 상대극 설계 — 한 해 앞 판). 연산자 쪽 변화 0.
 
 ## 이 페이지가 주장하지 않는 것
 

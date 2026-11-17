@@ -1,0 +1,538 @@
+{
+ "slug": "jung2020_ni-rich-compliant-microstructure-ncm-assb",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+  "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Comparative electrochemical characterization of NCA80 and FCG75 in liquid electrolyte (LE) cells and all-solid-state half-cells at 30 °C. Cross-sectional SEM images of a) NCA80 and b) FCG75 particles. The average particle sizes are also shown in each panel. First-cycle charge–discharge voltage profiles for c) LE cells (NCA80/Li and FCG75/Li), d) all-solid-state cells (NCA80/Li-In and FCG75/Li-In), and e,f) their corresponding rate per- formances. g) Cycling performances at 0.5 C and h) the corresponding discharge voltage profiles at different cycle numbers (1, 50, 100, 150, 200) for NCA80/Li-In and FCG75/Li-In all-solid-state cells. Nyquist plots for NCA80/Li-In and FCG75/Li-In all-solid-state cells at i) 2nd and j) 100th cycles. The cells discharged to 3.8 V (vs Li/Li+) at each cycle were subjected to the electrochemical impedance spectroscopy (EIS) measurements. © 2019 WILEY-",
+   "rotated_deg": 0,
+   "bbox": [
+    44.9,
+    64.9,
+    555.1,
+    666.0
+   ],
+   "w": 1064,
+   "h": 1253,
+   "dpi": 150,
+   "src": "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.767,
+   "note": "봤다(p. 3 · SEM a·b = JPEG 조각 · c–j = 벡터 경로 — `[도표·벡터]`). (a) NCA80 D50 9.8 µm 무작위 등축 1차 입자 · (b) FCG75 D50 9.5 µm 방사 막대. (d) SE 첫 사이클 충전 ≈219 · ≈229 · 방전 156 · 194 mAh g⁻¹ · 화살표 '28.8 %' · '15.1 %'(= 100 − CE). (f) SE 율(벡터): FCG75 194.2 · 194.2 · 172.5→171.1(0.5 C) · 154.9→154.5(1 C) · 132.3→131.6(2 C) · 18 번째 0.1 C 193.7 / NCA80 156.3 · 152.2 · 123.8→119.6 · 99.4→98.2 · 68.9→68.7 · 145.9. (g) 0.5 C 200 사이클(벡터): FCG75 169.8 → 134.1(79.0 %) · NCA80 135.2 → 63.5(46.9 %) — 유지율 기준 = 첫 0.5 C 사이클(0.1 C 156 · 194 아님). (h) 1 · 50 · 100 · 150 · 200 번째 방전. (i) 패널 표지 '2nd'(본문 '1st' — D) · (j) '100th'. 잘림 0. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1418×1671 · 828,974 B → 524,507 B)"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. a) First-cycle charge–discharge voltage profiles of NCA80 and FCG75 in all-solid-state cells charged at 0.1 C and 30 °C and discharged at 0.05 C with a limiting current of 0.01 C at 70 °C. b) Ex situ XRD patterns showing (003) peaks for NCA80 and FCG75 at different SOCs for the electrodes in all-solid-state cells at 30 or 70 °C. The corresponding charge–discharge voltage profiles at 0.1 C are displayed in the left panel. The discharge voltage profiles at 0.05 C and 70 °C and the resulting XRD patterns are shown in dashed lines. Note the larger peak shift to negative angle after discharge of NCA80 relative to that of FCG75, compared with the peaks for the pristine samples when discharged at 30 °C. Also, note the dramatic recovery of the peak position for NCA80 when discharged at 70 °C, compared with the pristine sample. The peak position and FWHM values for the ex situ XRD data ",
+   "rotated_deg": 0,
+   "bbox": [
+    224.8,
+    65.5,
+    552.3,
+    437.2
+   ],
+   "w": 911,
+   "h": 1034,
+   "dpi": 200,
+   "src": "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.89,
+   "note": "봤다(p. 4 · 벡터 — `[도표·벡터]`). (a) 0.1 C · 30 °C 충전 → 0.05 C · 70 °C CCCV(0.01 C) 방전: 끝 NCA80 ≈188 · FCG75 ≈200 mAh g⁻¹(표 S5 187 · 200) · CC 가 3.0 V 에 닿는 곳 ≈179.7 · ≈196.9 → CV 몫 ≈8 · ≈3 · 충전 끝 ≈219 · ≈230(표 S5 의 A 229 는 30 °C 셀 값으로 읽힘) · 화살표 '14.5 %' · '13.2 %'. (b) (003) 봉우리 넷씩 + 용량–전압 경로(30 °C 실선 · 70 °C 점선) · 노란 띠 = 신품 ↔ 30 °C 방전 이동. 잘림 0."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Electrochemo-mechanical characterization of NCA80 and FCG75 electrodes for all-solid-state cells. a) Lattice parameters and volumetric strain ((Vfinal − Vinitial)/Vinitial) for NCA80 and FCG75 as a function of SOC (x in Li1−xMO2), obtained by the analysis of in situ XRD measurements of LE cells. The corresponding in situ XRD data are shown in Figure S8, Supporting Information. Cross-sectional SEM images of NCA80 electrodes b) before cycling and after c) first charge to 4.3 V (vs Li/Li+) and d) the subsequent discharge to 3.0 V (vs Li/Li+). e–g) The corresponding images for FCG75 electrodes. Cross-sectional SEM images of h) NCA80 and i) FCG75 electrodes after 100 cycles. j) Schematic illustration of pressure moni- toring NCM/Li4Ti5O12 all-solid-state cells and k) the corresponding operando electrochemical pressiometry profiles for FCG75 and NCA80 during first charge–discharge at",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.4,
+    493.5
+   ],
+   "w": 1065,
+   "h": 894,
+   "dpi": 150,
+   "src": "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.371,
+   "note": "봤다(p. 5 · 단일 JPEG 2050×1739 — `[도표·화소]`). (a) LE in situ XRD c · a · 부피 변형률 vs x — 4.1 V 세로선 NCA80 x ≈0.66 · FCG75 ≈0.62 · 4.3 V ≈0.745 · 가로선 −1.8 · −1.9 · −3.4 · −4.2 % ✅ · x ≤0.6 에서 FCG75 가 더 수축(x 0.5: −1.42 ↔ −0.88 %) · 0.6–0.7 에서 교차. (b)–(i) 단면 SEM 상태 넷 × 재료 둘 · 한 시야씩 · 축척 b 10 µm · h 인셋 1 µm 뿐 · c 노란 화살표 · f 하늘색 화살표 · h 인셋 녹색 화살표(설명 0 — D). (j) 압력 셀 모식. (k) ΔP(보정 잔차 ≤0.002 MPa): 충전 끝 NCA80 −0.146(≈210 mAh g⁻¹) · FCG75 −0.298(≈232) · 방전 끝 +0.116(≈156.5) · +0.067(≈197) MPa · NCA80 충전 중 −0.028(50–75) → −0.005(150 mAh g⁻¹) 되오름(같은 구간 격자 수축) · FCG75 단조 감소. 잘림 0. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1418×1191 · 2,121,296 B → 1,342,472 B)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Ex situ TEM results of NCA80 and FCG75 for all-solid-state cells cycled 100 times. Low and high magnification ex situ TEM images for a) surface and b) core regions of the secondary particle for NCA80 and their corresponding SAED patterns. c,d) The corresponding results for FCG75. Structural information deduced from the SAED patterns is also shown in each panel. LIBs the formation of a rock-salt phase in which Li+ transport is impeded is associated with the reduction of unstable Ni4+ to Ni2+ facilitated by the decomposition of LEs.[51,65,66] Based on the observed formation of rock-salt phase only in the region in contact with the SE (Li6PS5Cl), it is suggested that, similar to the case of LE cells, the reduction of Ni4+ to Ni2+ would induce",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    64.9,
+    555.3,
+    391.6
+   ],
+   "w": 1064,
+   "h": 681,
+   "dpi": 150,
+   "src": "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.092,
+   "note": "봤다(p. 7 · JPEG). 100 사이클 뒤 TEM — 표면(a · c) 'i' = 암염(FFT 'Rocksalt') · 속(b · d) 층상 · 축척 500 · 200 nm · 5 nm. 암염 두께(≈3 ↔ 13–15 nm)는 본문 값 — 그림에서 재지 않음. 잘림 0. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1418×908 · 1,433,723 B → 999,683 B)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Ex situ XPS results of NCA80 and FCG75 for all-solid-state cells. a) S 2p and b) P 2p XPS signals for pristine Li6PS5Cl and electrodes cycled for 100 times. The relative area ratio for the Li6PS5Cl-derived oxidized species for c) NCA80 and d) FCG75 after different cycle numbers (1 or 100) and upper cutoff voltages (4.1 or 4.3 V vs Li/Li+). Note that all the cycled electrodes were discharged to 3.0 V (vs Li/Li+) prior to the measurements regardless of the upper cutoff voltages. The ex situ XPS data after one cycle and the fitted results are provided in Figure S15 and Table S7, Supporting Information, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.0,
+    474.4,
+    555.1,
+    669.0
+   ],
+   "w": 1417,
+   "h": 542,
+   "dpi": 200,
+   "src": "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.902,
+   "note": "봤다(p. 7 · 벡터 + 텍스트 층). S 2p · P 2p(100 사이클) · (c)(d) 상대 면적비 — 표 S7 과 같은 값(P-[S]n-P NCA80 1.6 · 1.1 · 6.3 ↔ FCG75 0.8 · 1.1 · 3.7 · PO₄³⁻ 0.5 · 0.6 · 4.7 ↔ 0.3 · 0.4 · 1.6). 잘림 0."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Highlights of the performance of FCG75 for ASLBs. Comparison of a) first-cycle discharge capacity and b) cycling performance with those of various NCM electrodes for ASLBs at room temperature, varied by Ni content. The vertical gray bars in (a) indicate the capacities of the LE cells. First two-cycle charge–discharge voltage profiles for FCG75/Li ASLBs c) at 30 °C and d) at 70 °C. The cycling performance of FCG75/Li ASLBs at 30 °C is also shown in (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    45.2,
+    64.9,
+    555.3,
+    312.3
+   ],
+   "w": 1418,
+   "h": 688,
+   "dpi": 200,
+   "src": "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.885,
+   "note": "봤다(p. 9 · Flate 래스터). (a) 문헌 첫 방전 ↔ Ni 함량(회색 막대 = LE) · (b) 문헌 사이클 — 'This work FCG75/Li (0.2C)' 곡선 200 사이클까지(본문은 '84.2 % after 100 cycles') · (c) FCG75/Li 30 °C 0.2 C 첫 두 사이클 ≈220/≈180 · (d) 70 °C 0.05 C ≈236/≈207 `[도표]`. 조건 섞인 비교(표 S1). 잘림 0."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Schematic illustrating the different microstructural and interfacial evolutions in the NCA80 and FCG75 electrodes in all-solid-state cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.2,
+    388.3,
+    551.2,
+    707.0
+   ],
+   "w": 1055,
+   "h": 665,
+   "dpi": 150,
+   "src": "b257dc48-109._Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.541,
+   "note": "봤다(p. 9 · JPEG). 모식 — NCA80 충전 확대 원: 'Randomly oriented grains → Longer Li⁺ pathway'(녹색 경로) · **'Ionically loosened / isolated' — 빨간 원 하나 · 라벨 하나 · 사선** · FCG75: 'Radially oriented grains → Shorter Li⁺ pathway' · 'Intact ionic contacts' · 부반응 상자 'NCA80 > FCG75 · Ni⁴⁺ + Li₆PS₅Cl → Ni²⁺(Spinel phase · Rock-salt phase) + Oxidized species(P-[S]n-P / P₂S₅ · SO₄²⁻ / PO₄³⁻)' — 'Spinel' 은 본문 · TEM 에 0(D). 자료 0. 87호 그림 7c 재수록 라벨과 글자 같음. 잘림 0. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1407×886 · 925,067 B → 687,351 B)"
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Comparative electrochemical performances of NCM with varying Ni contents in liquid electrolyte cells and all-solid-state cells at 30 °C. a) Discharge capacities and CEs at the first cycle and b) the corresponding cycling performances for liquid electrolyte cells. The corresponding results for all-solid-state cells are shown in (c) and (d).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    532.4,
+    369.5
+   ],
+   "w": 1299,
+   "h": 946,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.891,
+   "note": "봤다(SI p. 4 · Flate). LE ↔ SE 첫 방전 · CE vs Ni 함량(NCM333 · 523 · 622 · 811 · 900505) · 100 사이클 — SE 용량 ≈140 · 135 · 148 · 142 · 190(표 S2 와 같음) · SE CE ≈74 · 69 · 73 · 68 · 78 % `[도표]` · NCA80 · FCG75 는 그림에 없음(표 S2 에만). ⚠ 아래 ≈8 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 틀 아래 — 판독 영향 없음."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. SEM images of as-prepared a) NCA80 and b) FCG75 at different magnifications displaying uniform spherical morphology. Cross-sectional SEM images of c) NCA80 and d) FCG75 at different magnifications. Each particle is composed of nano-sized primary particles. The particle size distribution for e) NCA80 and f) FCG75. Diameter ( m) Diameter ( m)",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    532.6,
+    451.7
+   ],
+   "w": 975,
+   "h": 881,
+   "dpi": 150,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.547,
+   "note": "봤다(SI p. 5 · JPEG 조각). (a)(b) 구형 2차 입자 · (c)(d) 단면 등축 ↔ 방사 · (e)(f) D10/D50/D90 7.5/9.8/12.8 ↔ 7.2/9.5/12.5 µm(텍스트 층과 같음). ⚠ 아래 ≈12 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 가로축 제목 — 판독 영향 없음. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1300×1174 · 758,671 B → 457,287 B)"
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. Nitrogen isothermal adsorption-desorption curves for a) NCA80 and b) FCG75, and c) their corresponding pore size distributions.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    331.2
+   ],
+   "w": 1294,
+   "h": 839,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.94,
+   "note": "봤다(SI p. 6 · Flate). 그림 안 글자 'Surface Area: 0.2350 m² g⁻¹'(NCA80) ↔ '0.3923'(FCG75) · 총 공극 0.000434 ↔ 0.000547 cc g⁻¹ — ×1.67(본문 'sharing common … surface areas' — D). ⚠ 아래 ≈12 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — (c) 가로축 제목 — 판독 영향 없음."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Observed and calculated powder X-ray Rietveld refinement profiles for a) NCA80 and b) FCG75.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    442.1,
+    531.2,
+    576.6
+   ],
+   "w": 1296,
+   "h": 375,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.923,
+   "note": "봤다(SI p. 6). Rietveld 두 판 — 그림 가로축 10–130°(방법 '10° and 110°' — D). ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 축 제목."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. EPMA composition profiles of a) NCA80 and b) FCG75 particles. The Ni-rich particle center and the Mn-rich outer surface are clearly revealed by the EPMA line scans in (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    203.9
+   ],
+   "w": 1294,
+   "h": 486,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.932,
+   "note": "봤다(SI p. 7 · Flate). EPMA — NCA80 Ni ≈80 · Co ≈16 · Al ≈4.5 % 평탄 · FCG75 Ni 85 → 70 % · Mn 7 → 19 · Co 7 → 9.5(가로 0–5) `[도표]`. ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 가로축 제목(거리 단위)이 잘림 — 표면 Ni ≈70 % 는 본문 값으로 씀."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Nominal voltages during charge and discharge for NCA80/Li-In and FCG75/Li-In all-solid-state cells at 30 °C. The corresponding cycling performances are shown in Figure 1g.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    321.1,
+    532.3,
+    535.2
+   ],
+   "w": 1299,
+   "h": 596,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.949,
+   "note": "봤다(SI p. 7 · Flate · `[도표·화소]`). 평균 전압(사이클 ≈3 · 50 · 100 · 150 · 200): NCA80 충전 3.97 · 4.23 · 4.28 · 4.30 · 4.30 / 방전 3.75 · 3.39 · 3.29 · 3.24 · 3.22 · FCG75 3.91 · 3.99 · 4.08 · 4.10 · 4.10 / 3.85 · 3.76 · 3.64 · 3.61 · 3.61 V — NCA80 평균 충전 = 상한 4.3 V(150 사이클 뒤). ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 가로축 제목."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Equivalent circuit model for fitting the EIS data in Figure 2i, j. The fitted results are shown in Table S4.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    97.1
+   ],
+   "w": 1294,
+   "h": 189,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.954,
+   "note": "봤다(SI p. 8). R1–(R2‖CPE2)–(R3‖CPE3)–W1(Wo) · 캡션 'EIS data in Figure 2i, j'(EIS 는 그림 1i, j — D) · CPE 값 표 0. ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — CPE 기호 아랫부분."
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. In situ XRD profiles for a) NCA80/Li and b) FCG75/Li LE cells during the first charge from open circuit voltage to 4.5 V at 0.05C and 25 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    194.2,
+    519.9,
+    460.3
+   ],
+   "w": 1265,
+   "h": 740,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.842,
+   "note": "봤다(SI p. 8). LE in situ XRD — 첫 충전 OCV → 4.5 V · 0.05 C · 25 °C · (003) ≈18.8 → ≈18.35 → ≈19.05(NCA80) · ≈18.9°(FCG75) `[도표]`. ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 축 제목."
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. a) First charge-discharge voltage profiles of NCA80/Li-In and FCG75/Li-In all- solid-state cells at 0.1C and 30 °C. The upper cutoff voltages for the upper and lower panels are 4.3 and 4.1 V (vs. Li/Li+), respectively. b) The corresponding cycling performances at 0.5C with an upper cutoff voltage of 4.1 V (vs. Li/Li+).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    471.2
+   ],
+   "w": 1294,
+   "h": 1228,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.951,
+   "note": "봤다(SI p. 9 · Flate 953×1346 · `[도표·화소]` 눈금 보정). (a) 3.0–4.3 V: NCA80 219.7/156.3 · FCG75 228.9/194.7 mAh g⁻¹(표 S5 와 ±1) · **3.0–4.1 V: NCA80 189.8/132.7(CE 69.9 %) · FCG75 179.6/146.5(81.6 %)** — 첫 사이클 결손 차 24.0 = 4.3 V 차 29.2 의 82 %(본문 미언급). (b) 0.5 C · 4.1 V: NCA80 ≈113.1 → ≈99.8 · FCG75 ≈118.2 → ≈104.3(인쇄 88.6 · 88.2 %). ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — (b) 가로축 제목."
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. a) Cross-sectional SEM image of the NCA80 electrodes in all-solid-state cells after 100 cycles. b) SEM image of the collected NCA80 electrodes in all-solid-state cells after 100 cycles and c) the corresponding EDXS elemental maps.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    531.4,
+    306.8
+   ],
+   "w": 973,
+   "h": 579,
+   "dpi": 150,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.507,
+   "note": "봤다(SI p. 10 · JPEG 150 dpi 원본). (a) NCA80 100 사이클 단면 — 1차 입자로 흩어짐 · (b) 수거물 = 가루 · (c) EDXS 원소 지도. ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 아래 줄 원소 지도 끝 · 원소 이름(Ni · Co · Al) 일부 — 판독 영향 작음 · 용량 목표(≤8 MB) 때문에 수동 재크롭 안 함. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1296×772 · 526,335 B → 418,752 B)"
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. a) Cross-sectional SEM image of the FCG75 electrodes in all-solid-state cells after 100 cycles. b) SEM image of the collected FCG75 electrodes in all-solid-state cells after 100 cycles and c) the corresponding EDXS elemental maps.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    403.9,
+    529.3,
+    636.7
+   ],
+   "w": 968,
+   "h": 486,
+   "dpi": 150,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.433,
+   "note": "봤다(SI p. 10 · JPEG). (a) FCG75 100 사이클 단면 — 입자 둘레 틈 · 속 공극 · (b) 수거물 = 깨진 펠릿 · (c) EDXS. ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — fS10 과 같음(Ni · Co · Mn 이름 일부) — 수동 재크롭 안 함. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1291×648 · 642,739 B → 479,823 B)"
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 11,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Full width at half maximum (FWHM) for the (003) peaks for NCA80 and FCG75 at different voltages during charge and discharge at 30 or 70 oC for all-solid-state cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    539.6,
+    375.1
+   ],
+   "w": 1319,
+   "h": 961,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.965,
+   "note": "봤다(SI p. 11 · Flate). (003) FWHM — 표 S6 과 같음(NCA80 0.15 → 0.25 → 0.20(30 °C) · 0.16(70 °C) · FCG75 0.28 → 0.50 → 0.27(둘 다)). ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — '1st cycling' 글자."
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Mosaic scanning TEM image of cross-sectioned cathode particles of a) NCA80 and b) FCG75 after 100 cycles in Figure 4a-d. The core and surface regions of the secondary particles are indicated by circles and rectangles, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    430.9,
+    533.4,
+    619.2
+   ],
+   "w": 977,
+   "h": 393,
+   "dpi": 150,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.192,
+   "note": "봤다(SI p. 11 · JPEG 150 dpi). 100 사이클 뒤 모자이크 STEM — NCA80 입계가 입자 전체에서 벌어짐(외형은 유지) · FCG75 방사 막대 유지 · 중심부 공극 · 노란 네모 = 표면 · 주황 원 = 속(그림 4 시료 자리). ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — 그림 아래 띠 · 축척 '1 µm' 둘 → 수동 fig_S13_manual_p11.png 로 보충. 용량 — 150 dpi 재렌더(2단계 호출자 결정 · 같은 bbox · 같은 이름 · 원래 200 dpi 1302×525 · 407,257 B → 340,076 B)"
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 12,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Ex situ XPS results of a) NCA80 and b) FCG75 electrodes. Transition metal signals of Ni, Co, and Mn for the electrodes before and after 100 cycles are shown. Note the slight positive shift of the Ni peaks after cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.5,
+    415.2
+   ],
+   "w": 1294,
+   "h": 1073,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.929,
+   "note": "봤다(SI p. 12). Ni 2p · Co 2p · Mn 2p 신품 ↔ 100 사이클 — Ni 2p₃/₂ 노란 띠 기준 약간 양의 이동 · Co · Mn 변화 없음. ⚠ 아래 ≈12 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — (b) 가로축 제목."
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 13,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Ex situ XPS results of NCA80 and FCG75 electrodes for all-solid-state cells after the first cycle (discharge to 3.0 V) for the case of charging to a) 4.1 V and b) 4.3 V (vs. Li/Li+). Table S1. Performance characteristics of layered LiMO2 cathode for all-solid-state batteries.a First discharge Voltage Fraction of Cathode Initial Current Operating Temperature Electrode mass Loading Coating material Range (V vs. Li/Li+) Active material Ref. active material CE (%) density (mA cm-2) Note capacity (mA h g-1) (mg cm-2) (°C) (wt%) This work FCG75 X 194.2 84.9 0.15 (1st cycle) 0.77 (subsequent cycles) 30 3.0-4.3 11.3 68 S1 NCA801505 Li4Ti5O12 150 - 0.50 RT 2.1-4.2 19.1 70",
+   "rotated_deg": 0,
+   "bbox": [
+    64.8,
+    29.4,
+    530.9,
+    535.5
+   ],
+   "w": 1295,
+   "h": 1407,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.918,
+   "note": "봤다(SI p. 13). 첫 사이클(4.1 · 4.3 V 충전 → 3.0 V 방전) S 2p · P 2p — 두 재료 산화종 비슷(표 S7). ⚠ 아래 ≈13 pt 잘림(캡션 블록 윗변이 그림 아래와 겹침 — SI 15 그림 공통 · 추출기 쪽 원인) — (b) 가로축 제목."
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 15,
+   "file": "tab_S3.png",
+   "caption": "Table S3. Structural parameters determined by powder X-ray Rietveld refinement for NCA80 and FCG75. LiMO2 ahex (Å) chex (Å) V (Å3) zox a Rp Rwp 2 Li[Ni0.80Co0.16Al0.04]O 2 (NCA80) 2.86456 (3) 14.18273 (1) 100.787 (2) 0.24148 (8) 1.09 1.63 2.65 Li[Ni0.75Co0.10Mn0.15]O2 (FCG75) 2.87322 (3) 14.21820 (3) 101.651 (3) 0.24246 (9) 2.21 2.93 2.01 a Atomic coordinate for oxygen ions Table S4. Fitted EIS results for NCA80 and FCG75 electrodes in all-solid-state cells at 30 °C using the equivalent circuit in Figure S7. Sample Cycle number R1 () R2 () R3 () 2 6.0 0.7 39.6 10 5.9 0.9 107.2 100 5.9 0.9 597.7 FCG75 2 5.9 0.7 2.6 NCA80 14",
+   "rotated_deg": 0,
+   "bbox": [
+    65.0,
+    487.7,
+    530.6,
+    811.2
+   ],
+   "w": 1294,
+   "h": 900,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.944,
+   "note": "이미지 안 봄 — 텍스트 층으로 대조(추출기 지침): a 2.86456 · 2.87322 Å · c 14.18273 · 14.21820 Å · V 100.787 · 101.651 Å³ · z_ox 0.24148 · 0.24246 · Rp / Rwp / χ² 1.09 / 1.63 / 2.65 · 2.21 / 2.93 / 2.01."
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 16,
+   "file": "tab_S7.png",
+   "caption": "Table S7. Fitted XPS results for pristine Li6PS5Cl and the cycled NCA80 and FCG75 electrodes in Figure 5. The numbers are the signal areas with respect to the one for Li6PS5Cl. S 2p P 2p Cycle Sample 2- Li6PS5Cl P2S5 P-[S]n-P PO4 3- Li6PS5Cl P2S5 P-[S]n-P SO4 NCA80 1 1.0 1.6 0.19 1 0.1 0.3 0.5 1st (3.0-4.1V) FCG75 1 0.5 0.8 0.13 1 0.1 0.2 0.3 NCA80 1 0.4 1.1 0.14 1 0.2 0.3 0.6 1st (3.0-4.3V) FCG75 1 0.8 1.1 0.18 1 0.3 0.2 0.4 NCA80 1 0.8 6.3 0.9 1 0.7 9.1 4.7 100th (3.0-4.3V) FCG75 1 1 3.7 0.4 1 0.7 5.3 1.6",
+   "rotated_deg": 0,
+   "bbox": [
+    65.8,
+    404.1,
+    532.1,
+    642.1
+   ],
+   "w": 1297,
+   "h": 662,
+   "dpi": 200,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "blank": 0.934,
+   "note": "이미지 안 봄 — 텍스트 층으로 대조(그림 5c · d 와 같은 값 · S 2p 의 SO₄²⁻ · P 2p 의 PO₄³⁻)."
+  },
+  {
+   "key": "fS13m",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13_manual_p11.png",
+   "caption": "Figure S13. Mosaic scanning TEM image of cross-sectioned cathode particles of a) NCA80 and b) FCG75 after 100 cycles in Figure 4a-d. The core and surface regions of the secondary particles are indicated by circles and rectangles, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.9,
+    429.6,
+    517.2,
+    632.6
+   ],
+   "w": 916,
+   "h": 423,
+   "dpi": 150,
+   "src": "cb8f99f3-109._Sup_Ni_rich_layered_cathode_materials_with_electrochemo_mechanically_compliant_microstructures_for_all_solid_state_Li_batteries.pdf",
+   "manual": true,
+   "blank": null,
+   "note": "수동 — SI p. 11 그림 이미지 경계(xref 129 · 915×422 JPEG = 원본 150 dpi) 를 150 dpi 그대로 렌더(업샘플 0 · 356 KB). 자동판 아래 12.6 pt 잘림(축척 '1 µm' 포함) 보충. 봤다 — 내용은 자동판 노트와 같음."
+  }
+ ]
+}

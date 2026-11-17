@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/han2021_single-vs-polycrystalline-nca-sulfide-halide-se.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811.md, raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
+sources: [raw/papers/jung2020_ni-rich-compliant-microstructure-ncm-assb.md, raw/papers/han2021_single-vs-polycrystalline-nca-sulfide-halide-se.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/li2020_synchrotron-operando-depth-profiling-soc-gradients-thick-nmc811.md, raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/park2021_fictitious-phase-separation-electro-autocatalysis-layered-oxides.md, raw/papers/ishidzu2016_ncm-ni-fraction-lattice-volume-change-cycle-fade.md, raw/papers/kondrakov2017_ncm111-ncm811-lattice-strain-particle-shrinkage-cracking.md, raw/papers/kondrakov2017_ncm811-charge-transfer-lattice-collapse-xrd-xas-dft.md, raw/papers/debiasi2017_ncm-ni-content-operando-xrd-lattice-volume-energy-density.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -197,6 +197,14 @@ evidenceScope: multi-source-primary
 
 1. ★★ **SOC 지표 인용 · c(x) 교정 0.** `[인쇄]` (003) 이동 = SOC 지표([76] Ghanty 2015 · [77] Li J. · Dahn 2015) · "(003) peaks became broader and more asymmetric after cycling, which is indicative of largely varied SOCs of NCA particles in the electrodes.[78]"(= Bartsch 2019) — 봉우리 분해 · 분율 · c ↔ x 눈금 0. 100 사이클 ex situ 값은 해체 뒤(Li 원천 0)라 '못 돌아온 Li' 를 본다(η + θ).
 2. ★ **격자 층위 끝값.** `[도표·화소]` 그림 S24d in situ(≈1 MPa · 0.05 C · 4.3 V vs Li) 부피 ≈101.1 → ≈95.0 Å³(−6.0 % · P/LYC) · ≈101.0 → ≈95.2(−5.7 % · P/LPSX) — 69호 NCM811 4.3 V + 1 h −5.0…−5.1 % 보다 크다(Ni 88 % NCA · 조성 · 셀 · 율 다름).
+
+## 114호 절 (2026-11-17) — 하류 사용: LE in situ c(x) 를 ASSB ex situ (003) 방전 끝에 옮겨 x 를 읽음 · 교정 원전 아님 · 율 · 온도가 방전 끝 x 를 ×2 바꾼다
+
+> 114호 = Jung S.H. · Kim U.-H. · … · Jung Y.S. · Sun Y.-K. 2020 *Adv. Energy Mater.* 10, 1903360(5차 묶음 #10) — 교정 원전이 아니라 **LE in situ 격자 곡선의 하류 사용** 표본. `raw/papers/jung2020_ni-rich-compliant-microstructure-ncm-assb.md`.
+
+1. ★★ **교정 곡선의 층위.** `[인쇄]` 그림 3a(본문은 'Figure 2a' 로 부름 — 114호 D4) = LE 파우치 Li 반쪽 in situ XRD(0.05 C = 9 mA g⁻¹ · 25 °C · 그림 S8)의 c · a · 부피 변형률 vs x — x 축은 전하 계수 쪽(이 페이지 경고와 같은 축). ASSB(30 °C) 셀에도 같은 c(x) 를 가정한다(114호 G9 · D16).
+2. ★★ **방전 끝 x 읽기(`[재현·가정]`).** 표 S6 (003) → Bragg c → 그림 3a c(x)(`[도표·화소]` 판독 표) 보간: NCA80 30 °C 방전 ≈0.26 · 70 °C 회수 방전(다른 셀) ≈0.12 ↔ 쿨롱 x 0.23 · 0.12 · FCG75 ≈0.10 · ≈0.08 ↔ 0.13 · 0.11. ⚠ FCG75 신품 c 오프셋 +0.03 Å(Rietveld 대비) · 구배 조성의 넓은 봉우리 · 판독 폭 ±0.03 — 읽기 쪽 기준(§3-b (므) — 근거 표시만): 율 · 온도가 방전 끝 x 를 ×2 바꾼다.
+3. ★ **격자 층위 끝값.** `[도표·화소]` 그림 3a 4.3 V 부피 변형률 NCA80 −4.2 · FCG75 −3.4 %(가로선 인쇄 ✅) · x ≤0.6 에서는 FCG75 가 더 수축(x 0.5 −0.88 ↔ −1.42 %) · 4.1 V −1.9 · −1.8 % — SI 압력 추정의 입력(LE 격자 층위 → 전극 층위 사슬 미인쇄 · §3-b (죠)).
 
 ## 이 위키에서의 적용
 
