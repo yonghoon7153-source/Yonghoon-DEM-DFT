@@ -490,6 +490,7 @@ EDEM 의 JKR (접촉력 부분만 · 접촉 밖 vdW 없음) · 1 mm 입자 · 0.
 - 하중 뺌 (정본): `kollenda2024_time_sensitivity_calendered_electrode_springback_storage` · `miss2026_insitu_conductivity_porosity_pressure_compaction`.
 - 같은 그룹 · 같은 꼴 K0 시험기의 앞 논문 (정본 · 2026-11-17): `chung2008_dem_parameters_bulk_behaviour_confined_compression` — 이 학위논문 참고문헌의 Chung & Ooi '(2007)' (인쇄 호 = 26 (1) 83–96 · 2008) · 유리구슬 · 옥수수 구속 압축 (≤ ≈61 kPa · 싣기만) · 강성 ÷100 · ÷10⁴ 에 벌크 강성 직접 · 벽 하중 전달 부차 · 하중 뺌 없음.
 - 큰 겹침 쪽 대비 (후보 C · 2026-11-12 출판본 보강): `zunker2025_dem_large_deformation_compaction` — MDR 접촉 다체 DEM 이 정제 가압 · 제하 · 잔류 반경응력을 상대밀도 축에서 실험과 대조 (EEPA 는 겹침 < 1 % 지름 전제 — 이 카드 후보 C 줄).
+- 그림 3.7 · p.48 · p.77 의 원문 (2026-11-17 카드 · 위시 n 줄): [`vuquoc1999_elastoplastic_normal_contact_force_displacement_model`](vuquoc1999_elastoplastic_normal_contact_force_displacement_model.md) — 그림 3.7 = 원문 그림 16 (같은 범례 · e 0.7372 · 0.7541 · 0.5641 · P_max 1500 · 1495 · 770.5 N) · 원문이 FEA 와 견준 '선형' 은 Thornton (1997) 직선 소성 가지 하나 (L249 의 'linear models' 보다 좁다 · Walton–Braun · 대시포트는 다른 이유로 비판) · 이 학위논문의 'Vu-Quoc and Zhang 1999b' 꼬리표는 그 원문 자신의 목록에서는 접선판 (submitted) 이다.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

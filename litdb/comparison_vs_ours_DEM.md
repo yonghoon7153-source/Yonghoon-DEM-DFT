@@ -3338,6 +3338,11 @@
 > · 우리 쪽 [카드 산술 · 같은 양 아님]: [Ohashi20] 보다 같은 분율에서 SE 몫이 더 작다 (22 % 0.73 ↔ 19 % 0.88 · 52 % 0.49 ↔ 55 % 0.61 — 원인 가를 수 없음) · 우리 φ_AM ≈0.62 는 범위 (≤ 52 %) 밖 → 보간 · 외삽하지 않는다 · 52 % 의 [0.77, 0.78] 이 DEM 300 MPa 상별 virial 0.794 · AM–AM 0.675 옆에 있다는 것 이상을 말하지 않는다 (E 대비 7.9 ↔ 104 · 400 ↔ 300 MPa · 결합 탄성 ↔ 연화 강구 · frame [4]) · 쓸 자리 = 후보 A · A′ 의 결과 전 대조 (하중 몫을 두 한계 꼴로 보고) · 단계 3 의 시험 거리: 원문 *"Because nylon and SE are continuous in a FEM, the increase in the strain of the SE induces an increase in the strain of an adjacent nylon"* (p.6) — 결합 가정이 무른 상 응력을 올리는 사슬 → 입자별 장 (분리 · 미끄럼) 이 그 크기를 가른다.
 > · E 축 · 소성 쪽: E_SE 25.3 (치밀 결정) 한 값 — 같은 그룹 압분체 할선 25–250 MPa (`kodama2020_…`) · 0.3 GPa ([Ohashi20]) 로 보면 나일론 2 GPa 는 SE 보다 단단하다 → 'LYA 에서 SE 로 응력 집중' 은 E_SE 선택에 묶임 [카드 추론] · 압밀 · 형상 · 접촉 · 탈압 0 — 저자: *"SE particles must undergo plastic deformation (crushing) to be densified"* (p.4) 인데 계산은 선형 탄성 · 모형 선택 이유 = 해상도뿐 (*"applicable for low resolution dataset"*, p.3) · DEM 한계 진술 없음.
 
+> 2026-11-17 추가 — `vuquoc1999_elastoplastic_normal_contact_force_displacement_model` [VQZ99] (Vu-Quoc · Zhang, Proc. R. Soc. Lond. A 455, 4013–4044, 1999 · 단일 접촉 · ABAQUS 5.4 축대칭 탄성–완전소성 알루미늄 합금 구 (R 0.1 m · E 70 GPa · ν 0.3 · σ_Y 100 MPa) ↔ 마찰 없는 강체 평판 · P ≤ 1500 N (P/P_Y ≤ 41) · 다입자 · 압밀 · SE · NCM 0) — **'탄소성 접촉 DEM' 도 입자는 구 · 소성은 접촉 반지름과 곡률 보정 안에만 (접촉 법칙 층)**: a^ep = a^e (Hertz) + a^p · a^p = C_a⟨P − P_Y⟩ (식 2.3 · 2.5) · 곡률 R*_p = C_R R* · C_R = 1 + K_c⟨P − P_Y⟩ (식 3.3 · 3.6) · 2α = (a^ep)²/(C_R R*) (식 3.4) → 뉴턴으로 P (식 3.15) · 제하 = a^p · C_R 를 P_max 값에 고정한 Hertz (식 3.19–3.22) · 맞춘 상수 2 (C_a 2.33 × 10⁻⁷ m/N — 인쇄 단위 'N m⁻¹' 은 오기 · K_c 2.69 × 10⁻⁴ N⁻¹) = 같은 FEA 에서 뽑고 같은 FEA 로 비교 (표본 밖 검증 아님).
+> · ★ Thornton (1997) 의 압력 캡 1.61σ_Y + 직선 소성 가지는 같은 변위에서 FEA 힘의 51–56 % (770.5 · 559.6 N ↔ 1500 · 1000 N · *"much too soft"* p.4034) · e 22–24 % 낮음 · 잔류 변위 35–47 % 큼 [카드 산술] — 결손 = 넓어진 접촉 (a²/Rα 1.3–1.4 · 곡률 평평해짐) × 높은 평균압 (FEA 1.9–2.3σ_Y [판독 그림 11] · 꼭대기 2.25 × 10⁸ N m⁻² [인쇄]) 이 거의 반반 [그 카드 §3-5] — 다접촉이 아니라 **단일 접촉에서 이미** 생기는 오차 (Varkey SI 의 'Thornton–Ning 단독은 FEM 보다 무르다' 와 같은 방향 · 재료 · 크기 다름).
+> · 원문 DEM 쪽 한계 문장: 대시포트 = *"There is no solid basis for obtaining the coefficient of the dashpot"* · *"primitive NFD model for DEM simulations"* (p.4019) · Walton–Braun = *"e is not a material property"* (p.4017) · Thornton = *"there was no validation of the theory proposed in Thornton (1997) until now"* (각주 p.4019) · 상수 = *"One should not use these values for other examples without verifying their validity"* (p.4030) — 입자 형상 · 조밀 영역 · 접촉 독립 가정에 대한 말은 없다.
+> · 우리 쪽 [카드 산술]: 이 FEA 의 겹침 ÷ 지름 ≤ 1.6 × 10⁻⁴ (a/R ≤ 0.015) ↔ 우리 SE ≈ 7.4–11 % (≈ 470–700 배 · α/α_Y ≈ 80 – 4 × 10³) — 법칙 · 상수를 우리 깊이에 옮길 근거 없음 · MPM 고유 (형상 소성 · 공극 메움) 에는 아무것도 주지 않는다 · 쓸 자리 = 단일 접촉 단위 시험 (U1 · U3 · U5) 의 해석 기준 (P–α 적재 + 제하 · 잔류 · e(v)) · 재구현 `tools/litdb/vuquoc1999_nfd_reproduce.py` (원문 인쇄값 15 개 재현) · Remark 4.2 *"it is not sufficient to use the coefficient of restitution to compare the accuracy of NFD models"* (p.4040) = 한 숫자 (e · 300 MPa 기공률 한 점) 맞춤 ≠ 법칙 검증.
+
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
 > stiffer → floor 21/37 %); **Kim 2025 (할라이드 Li₂ZrCl₆ LZC) = 할라이드 *계면 kinetics*** (bulk σ 0.51 < LPSCl
@@ -4183,6 +4188,11 @@
   그대로**인 반면 **우리 E_eff 는 측정 물성 자리를 덮어써 하위 계산(Hertz 접촉반경·k_n·k_t·파속·timestep·Stage-E 입력)
   전체를 오염**시킨다. ⇒ 우리 연화의 진짜 약점은 "경험적"이 아니라 **"물성 자리를 점유한다"** 는 것이고, 그걸 없애는
   것은 **경로 A** 다.
+  ★ **Vu-Quoc · Zhang 1999 (`vuquoc1999_elastoplastic_normal_contact_force_displacement_model`) = 그 '자유변수 0' 의 대가를 단일 접촉에서 잰 자료**: 같은 탄성–완전소성 구의
+  축대칭 FEA 에 비해 Thornton (1997) 꼴 p_y = 1.61σ_Y 캡 + 직선 가지는 힘을 **51–56 %** 만 낸다 (P/P_Y 27–41 · 그 카드 §3-4) — 결손 =
+  넓어진 접촉 (곡률 평평해짐 ×1.3–1.4) × 높은 평균압 (1.9–2.3σ_Y) [그 카드 §3-5 · 카드 산술].  FEA 를 따르려면 맞춘 상수 2 개 (C_a · K_c ·
+  재료 · 크기마다) 가 든다 · 그 FEA 범위는 겹침 ÷ 지름 ≤ 1.6 × 10⁻⁴ (우리 SE 깊이의 1/470–1/700) ⇒ 경로 A 를 고르면 우리 깊이의
+  단일 접촉 P–α (FEA 또는 MPM 단일 입자 U1) 를 먼저 잰다 — 캡 값 · 꼴 둘 다 그 깊이에서는 원문 근거가 없다.
 - **비구형 입자**(Bouvard 각질 inclusion이 압밀 더 방해; Martin–Bouvard truncated sphere = SHAPE flow 없음) —
   우리 DEM·MPM 둘 다 구만 = 23년째 문헌 공통 한계(M&B2003→Varkey2026→Bazzoun2026), frame[5] 일관 확증.
 - **Storåkers 소성 접촉면적** A=2πc(m)²rh (Martin–Bouvard, c(m) 0.5→1.45) — 우리 Stage-E(Tabor+volume)와 A/B 비교 거리.

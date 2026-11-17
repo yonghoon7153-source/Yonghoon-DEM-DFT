@@ -372,6 +372,7 @@ LAW 기반**에 서게 된다(거기에 우리 MPM 형상소성·σ 삼중항이
 
 ## 🔗 관련 카드
 - 같은 그룹 · 다른 논문 (1991 · 탄성 구 비스듬한 충돌 · Mindlin–Deresiewicz 증분 접선 · JKR 접착 위 벗김 → 미끄럼 기준 T = μ(P + 2Pc)): [`thorntonyin1991_oblique_impact_elastic_spheres_adhesion`](thorntonyin1991_oblique_impact_elastic_spheres_adhesion.md)
+- 이 법칙의 점착 없는 짝 (Thornton 1997 · p_y = 1.61σ_Y 캡 + 직선 소성 가지) 을 FEA 로 평가한 카드 (2026-11-17): [`vuquoc1999_elastoplastic_normal_contact_force_displacement_model`](vuquoc1999_elastoplastic_normal_contact_force_displacement_model.md) — 탄성–완전소성 Al 구 ↔ 강체 평판 축대칭 FEA (P/P_Y ≤ 41) 대비 같은 변위에서 힘 51–56 % (*"much too soft"*) · 결손 = 넓어진 접촉 × 높은 평균압 (1.9–2.3σ_Y) · 그 카드의 Thornton 제하 재현은 이 카드 eq28 의 R_p* 를 빌렸다 (그 논문에 R_p* 식이 인쇄돼 있지 않음).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
