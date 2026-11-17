@@ -1,0 +1,77 @@
+{
+  "schema": "doc_refs_separator_fix_verification_v1",
+  "base": "5a04acd15ee35ef218264c00a59f1b19c8aea2d1",
+  "sources": {
+    "baseline_sha256": "d3793817526505fa079b1b7ccc0a0ad05204a5f22a544d80a68c8e9b20778f38",
+    "tests_first_sha256": "ec6c993dd387c498ca2d529edf5aa24f05790a8952de119cabd9de326683fd64",
+    "candidate_sha256": "01f663282c74f4b77cd2f3a0ef6520d5c801ab30f1bd30391a48b309c364798b"
+  },
+  "production_change_one_line": true,
+  "same_final_tests_red_green": true,
+  "windows": {
+    "baseline": {
+      "sha256": "d8395c613dbaf82942162b24fa7ea036ae775c92378b7cb52637d71fff2bedb3",
+      "selftest_summary": "check_doc_refs selftest: 50/50 PASS"
+    },
+    "red": {
+      "sha256": "c780cf6efa25d26f3ed795b9f849a53e73dea5711e970bb6236f8bef42fc06cf",
+      "selftest_summary": "check_doc_refs selftest: 51/53 PASS"
+    },
+    "green": {
+      "sha256": "9d84c9d48b1c5c57fb8f547db8375786299e0ceb3ac27cec181a4282b159eebe",
+      "selftest_summary": "check_doc_refs selftest: 53/53 PASS"
+    },
+    "full_before_windows.log": {
+      "sha256": "518121a339a29a24d05ec8e29fddf6c9d17b48e1dde890d2f5413723874c0b1a",
+      "missing_commits": 96,
+      "rc": 1
+    },
+    "full_after_windows.log": {
+      "sha256": "b27f7e2e68df4a549f786afcb6f3c21346bc80c83929fd3d5ce372798d976ec7",
+      "missing_commits": 0,
+      "rc": 0
+    }
+  },
+  "linux": {
+    "selftest_baseline": {
+      "rc": 0,
+      "log_sha256": "864614eec3a8ae3030cb2f592e4ecde3695a1775494372427abb0d9d05795ab8",
+      "source_sha256": "d3793817526505fa079b1b7ccc0a0ad05204a5f22a544d80a68c8e9b20778f38",
+      "summary": "check_doc_refs selftest: 50/50 PASS"
+    },
+    "selftest_tests_first": {
+      "rc": 1,
+      "log_sha256": "df3d06fa0f44a2ce21856a78c674e4514c69b1608c1fbcf03afb2b19c404861f",
+      "source_sha256": "ec6c993dd387c498ca2d529edf5aa24f05790a8952de119cabd9de326683fd64",
+      "summary": "check_doc_refs selftest: 51/53 PASS"
+    },
+    "selftest_candidate": {
+      "rc": 0,
+      "log_sha256": "174269023cfea9901e01309ec5d3fd789d8a7ace61a1fc3435b3e0abb646c6a7",
+      "source_sha256": "01f663282c74f4b77cd2f3a0ef6520d5c801ab30f1bd30391a48b309c364798b",
+      "summary": "check_doc_refs selftest: 53/53 PASS"
+    },
+    "full_before": {
+      "rc": 0,
+      "log_sha256": "8d3c08a24a182bb5c244447c61879da44014e2bcfaf7316feea947e9ad61d46f",
+      "source_sha256": "d3793817526505fa079b1b7ccc0a0ad05204a5f22a544d80a68c8e9b20778f38"
+    },
+    "full_after": {
+      "rc": 0,
+      "log_sha256": "8d3c08a24a182bb5c244447c61879da44014e2bcfaf7316feea947e9ad61d46f",
+      "source_sha256": "01f663282c74f4b77cd2f3a0ef6520d5c801ab30f1bd30391a48b309c364798b"
+    },
+    "full_output_bytes_identical": true,
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "python": "3.12.3",
+    "research_runs": 0,
+    "field_access": false,
+    "git_metadata_read_only": true,
+    "selftests_isolated_git": true
+  },
+  "research_runs": 0,
+  "field_access": false,
+  "operational_reseal": false,
+  "whole_gate_run": false,
+  "scope": "Document checker and synthetic selftests only; full Linux output parity checked before adding handoff documents."
+}
