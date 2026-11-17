@@ -193,5 +193,8 @@
 - **digitized 값**(완전소성 endpoint A/A_c≈205·P/P_c≈534·p/Y=2.8, CEB/Zhao 편차 %)은 Fig7·8·9에서 읽은 **추세값**(±) — stated 천이수(ω/ω_c 1/6/68/110, eq5–8 계수)와 구분. (단 eq6·8을 110에 직접 대입하면 205/530/2.79로 stated와 일치 — fit 자체는 정확.)
 - ⚠ **KE = 단접촉 SHAPE 소성(우리 MPM 부류)이지 DEM 패킹 모델 아님** — "KE로 porosity/dip을 본다"는 과대해석 금지. 그건 DEM/de Larrard 영역(frame[5]).
 
+## 🔗 관련 카드
+- 같은 문제 (탄성–완전소성 구 ↔ 마찰 없는 강체 평판) 를 DEM 접촉 법칙으로 접은 카드 (2026-11-17): [`vuquoc1999_elastoplastic_normal_contact_force_displacement_model`](vuquoc1999_elastoplastic_normal_contact_force_displacement_model.md) — ABAQUS 5.4 축대칭 (Al 합금 · E/σ_Y 700 · α/α_Y ≤ 14) · 이 카드의 eq6 · eq8 이 그 FEA 를 같은 깊이에서 다시 낸다 (힘 521 · 1002 · 1488 N ↔ 500 · 1000 · 1500 N · 평균압 2.00 · 2.12 · 2.20 Y ↔ FEA 1.88–2.27 · 그 카드 §3-4b) · 그 논문의 항복 시작 A_Y(0.3) ≈ 1.61 = 이 카드 K·H 1.616 Y.
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

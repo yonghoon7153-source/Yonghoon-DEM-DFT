@@ -904,6 +904,7 @@ Fig 7e 는 **초기 패킹이 다른 침대들을 같은 축에 놓기 위한** 
 | `mesarovicfleck2000_dissimilar_elastoplastic_indentation` | 이 논문 ref **[54]** — 무차원 재료 규약의 출처 중 하나.  우리 AM-freeze scaffold 정당화 근거이기도 함 |
 | `storakers1997_similarity_inelastic_contact` | 이 논문 ref **[23]** — "DEM requires a plastic-contact law" 의 그 법칙 |
 | `kogutetsion2002_ep_sphere_rigid_flat` · `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | **단일접촉 FE 기준선**.  Demirtas 는 그 **다중접촉 확장**에 해당 |
+| `vuquoc1999_elastoplastic_normal_contact_force_displacement_model` | ⚠ 이 논문 ref **[24]** (Vu-Quoc 2001) 와 **다른 논문** — 같은 저자의 1999 법선판 (단일 접촉 FEA → DEM 법칙 · Thornton 1997 캡은 힘 ½) · 위 단일접촉 FE 기준선과 같은 자리 (그 카드 §3-4b 가 KE 식과 대조) |
 | `devaucorbeil2020_mpm_after_25_years_review` | MPM 쪽 대응 리뷰 — MPFEM↔MPM 비교(§7-B)의 MPM 측 근거 |
 | `stomakhin2013_mpm_snow_elastoplastic` · `klar2016_dp_sand_animation` | 우리 J2 계보 (항복면 box → cone → cylinder) |
 | `bazzoun2026_dem_fem_rnm_ionic` | **전달 축**의 대응 카드 — 이 카드(역학)와 **축이 다르다**.  Bazzoun 은 σ_ion 실험 앵커, Demirtas 는 σ 0건 |

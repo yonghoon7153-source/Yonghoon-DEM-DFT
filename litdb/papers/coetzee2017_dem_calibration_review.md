@@ -1019,6 +1019,7 @@ Li [189]/Franco [196] 규칙(보정 응력 = 응용 응력)을 300 MPa 에서는
 | `thorntonning1998_adhesive_elastoplastic_contact` · `thakur2014_eepa_adhesive_elastoplastic_dem` · `storakers1997_similarity_inelastic_contact` | 소성 접촉법칙 정의서들 (Coetzee 범위 밖) |
 | `so2022_dem_contact_model_assb_compaction_sintering` · `so2021_dem_mold_pressure_assb_coldpress` | 고압 냉간압축 DEM — Coetzee 의 저응력 카탈로그와 대비 |
 | `boschpadros2014_dem_liggghts_msc_thesis` · `shenouda2020_dem_metal_powder_am_liggghts_tutorial` | LIGGGHTS 규약·입력값 계보 |
+| `chung2008_dem_parameters_bulk_behaviour_confined_compression` | **직접 측정 학파의 구속 압축 검증 예** (2026-11-17) — 입자 E · μ · e 를 입자 수준에서 재고 PFC3D 로 실험과 대조 · 강성 ÷100 · ÷10⁴ 에 벌크 강성은 직접 · 벽 하중 전달은 부차 (≤ ≈61 kPa).  ⚠ 이 카드 §7 표의 Chung & Ooi [161] (구형 캡 로드 관입) 과는 다른 논문 (그 논문엔 관입 시험이 없다) |
 
 ---
 

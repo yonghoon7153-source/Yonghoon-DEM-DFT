@@ -515,6 +515,7 @@
 - 강성 낮추기 · 보정: `lommen2014_dem_speedup_contact_stiffness_reduction_bulk_behavior` · `morenoatanasio2007_contact_stiffness_surface_energy_fluidization_cohesive_dem` · `paulick2015_elastic_particle_properties_dem_review` · `coetzee2017_dem_calibration_review` · `haervig2017_jkr_adhesion_rolling_reduced_stiffness_dem`.
 - 조밀 · 다접촉: `brodu2015_multiple_contact_dem_dense_granular` (같은 그룹 Silbert 2002 인용) · `clemmer2024_bpm_elastic_grain_compaction_beyond_jamming`.
 - 참고 [23] 의 원문 (2026-11-16 카드): [`walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem`](walton1993_chute_flow_hysteretic_normal_3d_tangential_contact_dem.md) — WB 이력 법선의 3D 판 + 2D 면 증분 접선 (T* 기억 · 평행 / 수직 분해 · 뒤집힘이면 −T*) = 위 p.4 *"…as does Walton [23]"* 의 대상 · 깊은 흐름의 강성 민감 (무른 구 동적 겹침 ≤5 % of d · p.246).
+- 참고 [31] 의 같은 저자 짝 (2026-11-17 카드): [`vuquoc1999_elastoplastic_normal_contact_force_displacement_model`](vuquoc1999_elastoplastic_normal_contact_force_displacement_model.md) (Proc. R. Soc. Lond. A 455, 1999 · 법선 탄소성판) — 그 원문 참고문헌이 'Vu-Quoc & Zhang 1999a … tangential force–displacement model … Mech. Mater. 31, 235–269' 를 적어 [31] 쪽 서지와 맞는다 ([32] Vemuri 외의 원문은 [미확인]).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
