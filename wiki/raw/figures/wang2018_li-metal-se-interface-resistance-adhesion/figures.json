@@ -1,0 +1,142 @@
+{
+ "slug": "wang2018_li-metal-se-interface-resistance-adhesion",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "99b64266-112._Correlating_the_interface_resistance_and_surface_adhesion_of_the_Li_metal-solid_electrolyte_interface.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of the tensile testing set-up for measuring the interfacial strength of Li on LLZO. The set-up is contained in an Ar-ﬁlled glovebox.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.8,
+    294.7,
+    321.6
+   ],
+   "w": 732,
+   "h": 753,
+   "dpi": 200,
+   "src": "99b64266-112._Correlating_the_interface_resistance_and_surface_adhesion_of_the_Li_metal-solid_electrolyte_interface.pdf",
+   "blank": 0.68,
+   "note": "봤다(p. 3 · 원본 래스터 xref 33 · 714×1080 JPEG · 자동 크롭 정상 — 캡션은 크롭 밖 p. 3 y 323.6–339.1 pt). 왼쪽 모식: 강철 핀 둘(아래 가로 막대 '12.7mm') 사이 Li | LLZO | Li 원판 · 위아래 σ 화살표 · 원판이 핀보다 넓게 그려짐(축척 아님) · 오른쪽 사진: Instron 인장 지그의 두 핀과 시편(붉은 상자 · 점선으로 모식과 연결). 접착제 · 정렬 방법은 본문만(acrylic based adhesive · 한쪽 접착 → 두 핀을 지그에 정렬 → 다른 쪽 접착). 캡션 필드: 'Ar-ﬁlled' 합자 하나. 내려받기 각인 0."
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2_manual_p4.png",
+   "bbox": [
+    34,
+    52,
+    560,
+    257
+   ],
+   "w": 1462,
+   "h": 570,
+   "caption": "Fig. 2. (a) Impedance spectra for representative Li-LLZO-Li cells with high Rint and low Rint. The inset shows the spectrum for a low Rint cell. (b) The equivalent circuit schematic used for modeling of the impedance spectra. (c) Summary of fitted data for the representative spectra shown in (a).",
+   "note": "수동 — p. 4 렌더 200 dpi bbox (34, 52, 560, 257) — 그림 2(a)(b)(c) + 오른쪽 옆 캡션. 자동 f2 는 이 캡션에 그림 5 그래프(bbox 319–564 × 268–414 pt)를 붙인 오표지 · 자동 f3 · f5 는 p. 4 위 절반의 그림 2 · 3 · 5 를 한 장으로 문 과대 — 셋 다 지움(오표지 또는 이 수동 넷의 부분집합). 봤다(원본 래스터 xref 36 · 1541×822 JPEG · 축 눈금 화소 보정 — 주 패널 x 124.0 px/1000 Ω·cm² · 삽도 x 56.4 px/100 Ω·cm²). (a) 고 R_int 스펙트럼: 주 호 꼭짓점 ≈(2,500, 1,740) Ω·cm² 에 'R_int, 1.9kHz' 화살표 · 저주파 끝 마지막 표지 ≈4,720 Ω·cm² · 0–450 에 bulk + GB 작은 호 / 삽도(저 R_int): 호 0 → ≈430 Ω·cm² · 꼭짓점 ≈(175, 166) · 오른쪽 어깨 ≈300–420 · 'R_int, 12Hz' 화살표 = 저주파 끝 점 무리(꼭짓점 아님). (b) R_bulk‖CPE_bulk — R_GB‖CPE_GB — R_int‖CPE_int 직렬. (c) 저 R_int: R_bulk 264 Ω·cm² · α 1 · Q 0.8×10⁻¹¹ F · R_gb 66 · α 1 · Q 2.9×10⁻⁸ · R_int 14 · α 0.74 · Q_int 9.1×10⁻⁵ F / 고 R_int: 323 · 1 · 0.9×10⁻¹¹ · 180 · 0.98 · 1.4×10⁻⁸ · 4768 · 0.9 · 1.0×10⁻⁶. ⚠ 표 합 344 ↔ 삽도 끝 ≈430 · 5,271 ↔ 주 패널 끝 ≈4,720 Ω·cm²(D) · 저 R_int Q_int 9.1×10⁻⁵ F 는 본문 계면 판정 기준 '∼10⁻⁶ F' 의 ≈91 배(D) · Q 는 F(면적 정규화 없음) ↔ R 은 Ω·cm². 그림의 Ω·cm² 표기는 래스터 안 글자 — 본문 · 캡션의 Ω 는 PDF 에서 빠짐.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "99b64266-112._Correlating_the_interface_resistance_and_surface_adhesion_of_the_Li_metal-solid_electrolyte_interface.pdf"
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3_manual_p4.png",
+   "bbox": [
+    34,
+    270,
+    292,
+    457
+   ],
+   "w": 718,
+   "h": 520,
+   "caption": "Fig. 3. Representative stress-strain curves for a Li-LLZO-Li cell with high Rint (330 k·cm2), a cell with intermediate Rint (446 ·cm2), a cell with low Rint (7.2 ·cm2), and a single Li foil. The profile of the Li foil is almost identical to the profile of the low Rint sample.",
+   "note": "수동 — p. 4 렌더 200 dpi bbox (34, 270, 292, 457) — 그림 3 + 아래 캡션(캡션의 Ω 는 원문 PDF 에서 빠짐 — 글리프 0 · 'k·cm2' 그대로 옮김). 자동 f3 은 그림 2 · 3 · 5 를 한 장으로 문 과대 — 지움. 봤다(원본 래스터 xref 37 · 891×582 JPEG · 눈금 화소 보정 y 50.9 px/MPa · x 1247.5 px/단위 변형 · 잔차 ≤0.025 MPa · ≤0.0005). 범례 넷 — Low R_int 긴 파선 · Mid R_int 잔 점(범례 6 점) · High R_int 굵은 점(범례 5 점) · Li Foil 실선. [도표·화소] Li 박 꼭대기 ≈7.5 MPa @ 변형 ≈0.25(인쇄 UTS 8.0) · 저 R_int(7.2 Ω·cm²) ≈7.6–7.7 MPa @ ≈0.27 · 중 R_int(446 Ω·cm²) ≈4.1–4.2 MPa @ ≈0.11–0.12 → 2.6 MPa @ 0.137 · 고 R_int(330 kΩ·cm²) ≈2.6 MPa(묶음에서 갈라지는 점 ±0.2) @ ≈0.075 → 굵은 점 셋 2.32 · 2.02 · 1.72 MPa(수직 낙하). Li 박 기울기: 변형 0–0.05 ≈42 MPa(= 0.04 GPa) · 0.05–0.10 ≈36 · 0.10–0.15 ≈33 · 0.15–0.20 ≈28 — 인쇄 E 3.4 GPa 의 ≈1/80(D) · 2.0 MPa(변형 ≈0.05)에 꺾임 표지 0. 꼬리 변형 0.35–0.6 에서 ≈2 → ≈0.8 MPa(목 줄기 · 컵 & 원뿔 — 본문). 변형의 정의(어느 길이로 나눴나) 미인쇄.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "99b64266-112._Correlating_the_interface_resistance_and_surface_adhesion_of_the_Li_metal-solid_electrolyte_interface.pdf"
+  },
+  {
+   "key": "f4m",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4_manual_p4.png",
+   "bbox": [
+    34,
+    477,
+    560,
+    742
+   ],
+   "w": 1462,
+   "h": 737,
+   "caption": "Fig. 4. Optical microscope images of a sample where the mode of failure of the cell is caused by (a) the failure of the Li metal, (b) complete separation of the Li from the LLZO, and (c) a mix of separation and Li failure. SEM images of (d) the fracture surface of the yielded Li on the surface of a low Rint sample and (e) the LLZO surface of a high Rint sample after the separation of the Li from the surface.",
+   "note": "수동 — p. 4 렌더 200 dpi bbox (34, 477, 560, 742) — 그림 4(a)–(e) + 오른쪽 옆 캡션. 자동 제외 '그래픽 없음(img0/draw0)' — 오른쪽 옆 캡션(x 367.6–557.7 pt)이라 캡션 위 · 아래만 찾음. 봤다(원본 래스터 xref 38 · 1328×1073 JPEG). (a) Li 파단 — 두 쪽 모두 딤플 Li(컵 & 원뿔) · LLZO 쪽 바깥 흰 테두리 노출 (b) 완전 분리 — 왼쪽 금색 Li 박(긁힌 자국 · 매끈) · 오른쪽 흰 LLZO 원판(가는 고리 꼴 Li 잔여) (c) 섞임 — 딤플 Li + 구멍 · LLZO 쪽 고리 꼴 Li 띠와 맨 면 (d) SEM 저 R_int Li 파면(1 mm 막대 · 그물 능선 칸 ≈0.5–1.3 mm `[도표]`) — 'LLZO' 화살표 둘이 어두운 면을 가리킴(본문은 이 표지를 설명 안 함) (e) SEM 고 R_int LLZO 면(40 µm 막대) — 'Li' 잔여 조각 수 µm · 'LLZO'. [도표·화소] 6.35 mm 막대 153 px → LLZO 원판 ≈12.1–12.4 mm · Li 박 ≈8.9–9.1 mm(≈0.64 cm² — 본문에 면적 0).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "99b64266-112._Correlating_the_interface_resistance_and_surface_adhesion_of_the_Li_metal-solid_electrolyte_interface.pdf"
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5_manual_p4.png",
+   "bbox": [
+    303,
+    270,
+    560,
+    453
+   ],
+   "w": 715,
+   "h": 509,
+   "caption": "Fig. 5. The relationship between the logarithm of the interfacial resistance, Rint, and σadh of the Li-LLZO-Li cell. Markers indicate the observed failure mechanism for each sample. The experimentally determined ultimate tensile strength of the Li metal is indicated by a dashed line.",
+   "note": "수동 — p. 4 렌더 200 dpi bbox (303, 270, 560, 453) — 그림 5 + 아래 캡션. 자동 f2 가 이 그래프를 그림 2 캡션에 붙였고(오표지) 자동 f5 는 그림 2 · 3 · 5 를 한 장으로 문 과대 — 둘 다 지움. 봤다(원본 래스터 xref 39 · 891×561 JPEG · x 14.39 kPa/px · y 76.5 px/decade · 눈금 보정 잔차 ≤9 kPa · <0.001 decade · 표지 형판 맞춤 — 속 빈 원 · 채운 삼각 · ×). 표지 17 = ○ 완전 분리 10 · ▲ 분리 + 항복 4 · × Li 항복 3(범례 셋 제외). [도표·화소] (σ_adh kPa, R_int Ω·cm²) ○ (1188, 3.28×10⁵) · (1325, 9.3×10⁴) · (1627, 1.85×10⁵) · (2447, 1.13×10⁴) · (2519, 2.2×10³) · (2922, 1.13×10⁴) · (3166, 232) · (3195, 508) · (3310, 5.6×10³) · (4980, 37) / ▲ (5462, 450) · (6548, 46) · (6735, 27) · (7138, 27) / × (7642, 6.9) · (7958, 6.7) · (8088, 18.5) · 붉은 파선 = 8,000 kPa(열 713.5 px = 눈금 8,000) · 추세선 = 멱함수 log₁₀R = −5.39·log₁₀σ(kPa) + 22.1(선 추적 rms 0.005 decade · 지수 꼴은 rms 0.27 — 식 · 종류 · R² 미인쇄 · 17 점 멱 맞춤 지수 −5.41). ⚠ 최고 R_int 점 σ ≈1.19 MPa ↔ 초록 · 결론 '1.1 kPa'(×10³ — D) · ○ 가 5,000 Ω·cm² 아래에도 넷(37 · 232 · 508 · 2,220) ↔ 본문 '> ∼5000 Ω·cm² 에서 깨끗한 분리'(D) · 세로축 이름 'log(R_int)' 인데 눈금은 R_int 값 · 단위 미표기 · 준비 경로(손 압착 · 전처리 · 열처리 + 전처리) 표지 0.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "99b64266-112._Correlating_the_interface_resistance_and_surface_adhesion_of_the_Li_metal-solid_electrolyte_interface.pdf"
+  },
+  {
+   "key": "fTOCm",
+   "kind": "figure",
+   "label": "TOC",
+   "page": 1,
+   "file": "fig_TOC_manual_p1.png",
+   "bbox": [
+    200,
+    262,
+    360,
+    388
+   ],
+   "w": 445,
+   "h": 351,
+   "caption": "Graphical abstract — log(Rint) vs σadh (kPa) with two inset fracture-surface photographs (no caption).",
+   "note": "수동 — p. 1 렌더 200 dpi bbox (200, 262, 360, 388) — 'GRAPHICAL ABSTRACT'(그림 번호 · 캡션 없음 — 자동 대상 아님 · 원본 래스터 xref 298 · 608×401 JPEG). 봤다: 그림 5 와 같은 자리의 17 점을 모두 ○ 로(파단 기구 구분 0 · 붉은 파선 0) + 삽도 둘 — 왼쪽(≈9.3×10⁴ Ω·cm² · ≈1.3 MPa 점을 가리킴) 금색 Li 박 + 흰 LLZO(그림 4(b) 꼴) · 오른쪽(≈18.5 Ω·cm² · ≈8.1 MPa 점) Li 덮인 원판 둘(그림 4(a) 꼴) · 세로 'log(R_int)' 1–1,000,000 · 가로 σ_adh (kPa) 0–10,000 · 추세선 같음.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "99b64266-112._Correlating_the_interface_resistance_and_surface_adhesion_of_the_Li_metal-solid_electrolyte_interface.pdf"
+  }
+ ]
+}

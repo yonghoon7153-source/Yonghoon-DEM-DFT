@@ -5,7 +5,7 @@ created: 2026-09-28
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/kasemchainan2019_critical-stripping-current-void-dendrite-li-anode.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md]
+sources: [raw/papers/wang2018_li-metal-se-interface-resistance-adhesion.md, raw/papers/kasemchainan2019_critical-stripping-current-void-dendrite-li-anode.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -17,7 +17,7 @@ evidenceScope: single-source
 
 > `assb` 축의 개념 페이지. 닻은 [[assb-contact-loss-vs-lampe]], 압력 창은 [[assb-stack-pressure-operating-window]].
 > 수치의 원전은 **한 편**(`assb` 61호 Masias · Felten · Garcia-Mendez · Wolfenstine · Sakamoto 2019, *J. Mater. Sci.* 54, 2585 —
-> `raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md`)이다. 그래서 `evidenceScope: single-source` · `confidence: low`.
+> `raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md`)이다 — 117호 Wang · Sakamoto 2018(2026-11-17)은 대조 값만 더한다. 그래서 `evidenceScope: single-source` · `confidence: low`.
 > 이 페이지가 하는 일은 **압력 계보의 값들을 Li 의 눈금 위에 놓는 것**이고, Li 의 성질을 새로 주장하는 것이 아니다.
 
 ## 정의 — 원전이 인쇄한 값 (`[인쇄]`, 실온 ≈26 °C = 0.66 `T/Tm`, 다결정 벌크 원통 12.7 mm)
@@ -69,11 +69,14 @@ evidenceScope: single-source
 | [[assb-stack-pressure-operating-window]] §정의 | "Li 가 항복강도(≈0.8 MPa)를 넘어 크리프하고" | 위와 같음 | ❌ 정정 — "creep 속도가 σ^6.56 로 커져 항복 근처에서 1 % 변형이 초 단위" |
 | 21호 Sedlmeier 2023 ref 49 | 원통 펠릿에서 Li 가 In 가장자리 · 벽 사이로 분리막 쪽에 기어드는 Li creep | 펠릿 · In · 분리막 0; Fig. 10a–c 모식("no hydrostatic pressure in Li" → Li 가 옆으로 흐름) | ✅ 재료 전제 · ⚠ 기하 명제는 21호 자신의 것 |
 | 21호 Li\|Li 셀 3 MPa "Li creep 방지" | | 3 MPa = 항복 ≈4× · σ/G 1.06×10⁻³ | `[해석]` 압력이 막은 것이 아니라 분리막 두께(네 장)로 막은 것 |
-| 46호 Schlenker 2020 ref 51 → Wang & Sakamoto 2018 | "Li 항복 2 MPa" | 같은 실험실 1 년 뒤 0.73–0.81 | ⚠ 2.5× — Wang 2018 미열람; 46호 논증(Li 경도로는 44 MPa 까지의 계면 임피던스 감소를 설명 못 함)은 항복이 낮을수록 강해진다 |
+| 46호 Schlenker 2020 ref 51 → Wang & Sakamoto 2018 | "Li 항복 2 MPa" | 같은 실험실 1 년 뒤 0.73–0.81 | ⚠ 2.5× — ~~Wang 2018 미열람~~ **117호 열람(2026-11-17): 2.0 MPa ✅ 인쇄**("measured" · 같은 지면 "higher than previous reports for polycrystalline Li (0.41–0.89 MPa) … which may be due to the degree of cold-working") · 그림 3 꺾임 0 · E 3.4 GPa ↔ 그림 초기 기울기 ≈0.04 GPa · 시편 = ≈170 °C 전처리 박 · 핀 접착 인장 · 정의 미인쇄 → 같은 양이 아닐 수 있다(`[해석]`); 46호 논증(Li 경도로는 44 MPa 까지의 계면 임피던스 감소를 설명 못 함)은 항복이 낮을수록 강해진다 |
 | 14호 · 5호 → LePage 2019 | "10 MPa 는 Li creep 을 일으키기에 충분" | 10 MPa = 항복 13× · breakdown 영역 | ✅ 방향(a fortiori) — LePage 미열람 |
-| 61호 자신 → [9] Sharafi 2016 · [10] Wang & Sakamoto 2018 | "stack pressures in the 1.0 MPa range are necessary to achieve low and stable cell resistance" | 같은 지면: "How much compressive stress is not known … We believe 1 MPa was sufficient" | ⚠ 요구치와 미지가 같은 지면 — 계보 "≈1 MPa" 의 가장 이른 인쇄(2018); 원전 둘 미열람 |
+| 61호 자신 → [9] Sharafi 2016 · [10] Wang & Sakamoto 2018 | "stack pressures in the 1.0 MPa range are necessary to achieve low and stable cell resistance" | 같은 지면: "How much compressive stress is not known … We believe 1 MPa was sufficient" | ⚠ 요구치와 미지가 같은 지면 — 계보 "≈1 MPa" 의 가장 이른 인쇄(2018); ~~원전 둘 미열람~~ **[10] = 117호 ❌(2026-11-17 — 요구치 0 · `pressur*` 0 · '∼1 MPa' = ≈170 °C · 4 h 제조 전처리 · 절차 [11] = [9] 인용) · [9] 미열람** |
 | 111호 Kasemchainan 2019 ref 38(이 원전) + ref 36(Wang · Wolfenstine · Sakamoto 2019 *Electrochim. Acta* — 미열람) | "the pressures of 3 and 7 MPa are above the yield strength of Li, 0.81 MPa" · 0.5 MPa "below the yield strength of Li metal, 0.81 MPa" | 0.73–0.81 · 압축 0.81 ± 0.10 | ✅ 값(ref 38) · ⚠ 같은 값에 ref 36 도 붙음(D6) · 3 · 7 MPa = σ/G 1.06 · 2.47×10⁻³(breakdown 위) · 0.5 = 1.8×10⁻⁴(측정 구간) |
 | 111호 — "creep rather than Li diffusion is the dominant mechanism transporting Li to the interface" · "Li deformation/creep is expected to be relatively slow" | 압력 두 점의 CCS 괄호 차((0.2, 1.0] → (1.0, 2.0] mA cm⁻²) | 이 원전에 셀 · 채움 실험 0 | ⚠ 이 원전으로 판정 불가 — 3 · 7 MPa 는 멱법칙 외삽 무효 영역 · 0.5 MPa 의 '변형 부재'("the absence of deformation made it a challenge to even form a cell") ↔ 인장 멱법칙 1 % 변형 ≈86 s(`[재현·가정]` 0.6 MPa 26 s 에서 외삽) — 적용 5(박 형상비 · 마찰)의 실례로 읽힌다 |
+| 117호 Wang & Sakamoto 2018 자신 | Li 항복 2.0 · UTS 8.0 MPa · E 3.4 GPa(같은 전처리를 거친 750 µm 박 하나 · 핀 접착 인장 · 1 mm min⁻¹) | 이 원전 0.73–0.81 MPa · 7.82 GPa(음향) · 0.43 GPa(응력–변형 기울기) | ⚠ 같은 양인지 미정 — `[도표·화소]` 그림 3 초기 기울기 ≈0.04 GPa · 2.0 MPa 꺾임 0 · 정의 미인쇄 · 같은 지면이 "higher than previous reports for polycrystalline Li (0.41–0.89 MPa)" 라 적고 냉간 가공을 후보로 듦 · 같은 실험실 뒤 지면은 0.8 쪽(61호 · 111호가 [36] Wang · Wolfenstine · Sakamoto 2019 — 미열람 — 에도 단 0.81) |
+
+⚠ **2026-11-17 (117호)**: 이 편 '∼1 MPa' 는 ≈170 °C(Li 녹는점 180.5 °C 의 상동 온도 ≈0.98 `[재현·외부 값]`)에서 4 h 건 제조 전처리 하중이다 — 실온 눈금(§왜 중요한가 표)의 1 MPa 줄에 넣지 않는다. 절차의 원전은 [11] Sharafi 2016(= 61호 [9] · 미열람).
 
 ⚠ **2026-09-29 (81호 Xu 2024 *Adv. Energy Mater.* — 종설 · 1차 측정 0) 주석 — 이 눈금에 대조 넷.** 81호는 이 원전을 [68] 로 인용하되 Li 연성 문장("[66–68]")에만 붙이고 수치를 옮기지 않는다.
 같은 지면의 다른 Li 값을 이 페이지 눈금과 맞대면:
@@ -112,8 +115,9 @@ evidenceScope: single-source
 - **멱법칙 외삽값(1 % 변형 시간)을 셀의 값으로 쓰지 않는다** — 벌크 · 인장 · AR 4 · 실온 · 단조 하중의 외삽이고, 0.28 MPa 아래는 하한 · 2.83 MPa 위는 무효다.
 - **압축 표(0.8–2.4 MPa)의 값을 Li 의 creep 속도로 쓰지 않는다** — 응력 순서가 역전된 장치 값이다.
 - **계보의 값들이 틀렸다고 하지 않는다** — 서로 다른 물리 영역의 값이라는 것까지.
-- **Doux 2020 · Wang & Sakamoto 2018 의 원문 어구를 확인했다고 하지 않는다** — 5호 · 46호 digest 문장 기준이다.
-- **"≈1 MPa 가닥 = Sakamoto 실험실 한 뿌리" 는 가설이다** — 원전 넷(Sharafi 2016 · Wang 2018 · Masias 2019 · Wang 2021) 중 열어 본 것이 Masias 뿐이다.
+- **Doux 2020 · ~~Wang & Sakamoto 2018~~ 의 원문 어구를 확인했다고 하지 않는다** — 5호 · 46호 digest 문장 기준이다. (2026-11-17: Wang & Sakamoto 2018 은 117호에서 원문 확인.)
+- **"≈1 MPa 가닥 = Sakamoto 실험실 한 뿌리" 는 가설이다** — 원전 넷(Sharafi 2016 · Wang 2018 · Masias 2019 · Wang 2021) 중 열어 본 것이 ~~Masias 뿐이다~~ Masias · Wang 2018(117호) 둘이고, Wang 2018 에는 요구치가 없다('∼1 MPa' = [11] 절차의 전처리 — 2026-11-17).
+- **117호의 Li 항복 2.0 MPa 를 이 원전 값(0.73–0.81)의 반증으로 쓰지 않는다** (2026-11-17) — 시편(≈170 °C 전처리를 거친 750 µm 박) · 시험 기하(핀 접착 인장) · 정의(미인쇄)가 달라 같은 양이 아닐 수 있고(`[해석]`), 그 지면의 그림 3 도 2.0 MPa 를 받치지 않는다.
 
 ## 관련
 - [[assb-stack-pressure-operating-window]] — 이 눈금이 놓이는 창. §정의의 "항복을 넘어 creep" 정정은 61호 절.
