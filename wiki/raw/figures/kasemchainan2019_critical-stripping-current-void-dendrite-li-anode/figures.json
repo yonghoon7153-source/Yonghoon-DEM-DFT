@@ -1,0 +1,418 @@
+{
+ "slug": "kasemchainan2019_critical-stripping-current-void-dendrite-li-anode",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+  "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Cell schematic and voltage versus charge passed for three-electrode cells on Li metal plating and stripping at the Li/Li6PS5Cl interface. a, Three-electrode cell schematic (WE, working electrode; RE, reference electrode; CE, counter electrode); b, 3 MPa–1.0 mA cm−2; c, 7 MPa–1.0 mA cm−2; d, 7 MPa–2.0 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.8,
+    66.5,
+    550.9,
+    366.7
+   ],
+   "w": 1429,
+   "h": 835,
+   "dpi": 200,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.872,
+   "note": "봤다 — ⚠ 윗부분 잘림(패널 글자 a · b · 'Pressure' 화살 글자 · 140 mV 위 여백 · 자동 bbox y 66.5 부터) → 전체는 fig_1_manual_p2.png. 판독은 수동판 + 벡터."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | SEM cross-sections of the Li metal/Li6PS5Cl interface. a, 1.0 mA cm−2–3 MPa; pristine, end of first plating, first stripping, sixth stripping and seventh plating. b, 1.0 mA cm−2–7 MPa; end of 100th stripping. c, 2.0 mA cm−2–7 MPa; end of first plating, first stripping, ninth plating and ninth stripping.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    64.6,
+    299.2,
+    519.1
+   ],
+   "w": 731,
+   "h": 1263,
+   "dpi": 200,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.195,
+   "note": "봤다 — ⚠ 윗부분 잘림(패널 글자 a · 검정 틀 윗변 — 'a' 는 y 52.3–62.6 pt) → fig_2_manual_p3.png. SEM 래스터 두 장(xref 46 · 47, 300 dpi) — 200 dpi 렌더. (a) 3 MPa · 1.0 mA cm⁻²: 신품 · 첫 도금 · 첫 박리 · 6 번째 박리(계면 어두운 띠) · 7 번째 도금(Li 안 렌즈꼴 occluded void + 붉은 틀 삽도 'Li dendrite') · (b) 7 MPa · 1.0: 100 번째 박리 · (c) 7 MPa · 2.0: 첫 도금 · 첫 박리 · 9 번째 도금 · 9 번째 박리('Li dendrites' 화살). 눈금 10 µm · 수치 0 · 상태마다 다른 셀(파괴 단면 — 지면 명시 0)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | In situ X-ray computed tomography images of the Li metal/ Li6PS5Cl interface of a cycled Li metal/Li6PS5Cl/Li metal cell. a–c, Current density of 1.0 mA cm−2 and capacity of 1.0 mAh cm−2 (3 MPa): after the first stripping (a), after the third stripping (b) and after the fifth stripping (c). The white pixels at the Li metal/Li6PS5Cl interface reveal the accumulation of voids (low X-ray attenuation) with increasing cycle number.",
+   "rotated_deg": 0,
+   "bbox": [
+    297.6,
+    48.2,
+    558.4,
+    118.3
+   ],
+   "w": 726,
+   "h": 196,
+   "dpi": 200,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.4,
+   "note": "봤다 — 자동판 정합(패널 a–c · 눈금 50 µm) · 단 래스터(xref 48–50 · 각 ≈326×195 px · 301 dpi)를 200 dpi 로 내려 화소가 뭉개짐 → 원본 해상도판 fig_3_manual_p3.png(300 dpi). 3 MPa · 1.0 mA cm⁻² · 1.0 mAh cm⁻² · 1 · 3 · 5 번째 박리 뒤 · 흰 화소 = 저감쇠(void). [재현·화소] 눈금 막대 12.9–13.0 pt = 50 µm → 인쇄 래스터 ≈0.92 µm/px(시야 폭 ≈300 µm) · 계면 띠(행 10–26) 흰 화소(RGB 최소 > 220) 열 점유율 0.14 → 0.24 → 0.55(임계 200: 0.18 → 0.28 → 0.60 · 235: 0.11 → 0.11 → 0.49) — 논문 수치 아님 · 보셀 크기 · 컬러맵 · 단면 위치 미인쇄."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Voltage versus charge passed for three-electrode Li/Li6PS5Cl cells at different pressures and current densities. a, Plating at 3 MPa. b, Plating at 7 MPa. c, Stripping at 3 MPa. d, Stripping at 7 MPa.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.3,
+    66.9,
+    551.0,
+    338.0
+   ],
+   "w": 1431,
+   "h": 754,
+   "dpi": 200,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.945,
+   "note": "봤다 — ⚠ 윗부분 잘림(패널 a · b 글자 · 60 mV 눈금 · 범례 첫 줄 '1.0 mA cm⁻²') → fig_5_manual_p5.png."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 | Voltage versus charge passed for two-electrode Li/Li6PS5Cl/Li cells cycled at different pressures and current densities. a, 3 MPa–0.2 mA cm−2. b, 3 MPa–1.0 mA cm−2. c, 7 MPa–1.0 mA cm−2. d, 7 MPa–2.0 mA cm−2.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.2,
+    609.6,
+    552.1,
+    668.4
+   ],
+   "w": 1434,
+   "h": 164,
+   "dpi": 200,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.923,
+   "note": "봤다 — ⚠ 대부분 누락(자동 bbox y 609.6–668.4 pt = 아래 두 판의 아래 띠만) → fig_6_manual_p5.png 이 그림 6 전체."
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 | Powder X-ray Diffraction (PXRD) of Li6PS5Cl: after sintering at 300 ˚C 14 indicates Li6PS5Cl cubic phase.32 15",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    311.9,
+    532.4,
+    721.1
+   ],
+   "w": 1377,
+   "h": 1137,
+   "dpi": 200,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.962,
+   "note": "봤다(SI p. 1 · 래스터 1378×906 · 220 dpi) — 자동판이 위의 전자우편 줄 · 'Supplementary Information' 머리까지 잡음(과대 · 판독 지장 없음). PXRD 'Li6PS5Cl powder' 15–60° · ★ 표지 열둘 · 표지 없는 봉우리 눈에 안 띔(`[도표]`) · Methods '10° to 70°' ↔ 그림 15–60° · 범례 'powder' ↔ 캡션 'after sintering at 300 ˚C'."
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 | AC Impedance data from the cell Li / Li6PS5Cl / Li: (a) Nyquist plot at -1°C with the equivalent circuit 2 (note that this equivalent circuit was also used to fit all room temperature EIS data), and b) the time-dependence 3 plot of the interfacial resistances of the cell (the SEI and charge transfer) at 25°C. 4 5",
+   "rotated_deg": 0,
+   "bbox": [
+    42.4,
+    66.0,
+    532.6,
+    248.2
+   ],
+   "w": 1363,
+   "h": 507,
+   "dpi": 200,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.948,
+   "note": "봤다(SI p. 2 · 래스터 1391×516). (a) −1 °C Nyquist · 등가회로 R0(Bulk) – R1‖CPE1(Grain Boundary) – R2‖CPE2(SEI) – R3‖CPE3(Charge transfer) · 자료 Z′ ≈13–78 Ω cm² · 최저점 ≈70 (`[도표]`) · (b) 25 °C R_SEI+CT ≈6.1 → ≈8.4(≈85 h) → ≈9.3 Ω cm²(≈170 · ≈262 h) — 본문 '100 h 안 최종의 10 % 이내' 와 정합(`[도표]`) · 2전극 대칭(두 계면 합) · 압력 미인쇄 · 적합값 표 0."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3.png",
+   "caption": "Figure S3 | XPS spectra of the Li6PS5Cl pellet surface: P 2p a) pristine b) exposed to Li metal for 250 h, S 2p 2 c) pristine d) exposed to Li metal for 250 h, Cl 2p e) pristine f) exposed to Li metal for 250 h. 3 4",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    408.3,
+    595.3,
+    586.3
+   ],
+   "w": 1654,
+   "h": 495,
+   "dpi": 200,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.951,
+   "note": "봤다 — ⚠ 자동판은 (e) · (f) Cl 2p 만(bbox y 408–586 pt) → 전체 a–f 는 fig_S3_manual_p3.png."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 4,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 | Voltage vs time for a 3-electrode cell, the voltage of the Li working and counter electrodes were 2 collected simultaneously at a current density of 1.0 mA·cm-2, capacity of 1.0 mAh·cm-2 on each ½ cycle, pressure 3 3 MPa. 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    66.0,
+    531.8,
+    246.1
+   ],
+   "w": 1376,
+   "h": 501,
+   "dpi": 200,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.931,
+   "note": "봤다(SI p. 4 · 래스터 1339×510). 3 MPa · 1.0 mA cm⁻² · 1.0 mAh cm⁻² · 3전극 · WE(금색) · CE(파랑) 동시 기록 · 0–11.5 h · 반 사이클 넷 × 둘. [도표·화소] 반 사이클 ≈1.01–1.07 h · 반 사이클 사이 휴지 ≈0.34–0.43 h(0 mV) — Methods 에 휴지 0 · [도표] WE 박리 ≈13 → ≈16–18 mV · CE 박리 ≈12 → ≈20–22 mV · 도금 ≈−14 … −12 — 같은 조건 그림 1b 4 번째 박리 끝 39.6 mV(`[도표·벡터]`)와 다른 셀 궤적."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 5,
+   "file": "fig_S5.png",
+   "caption": "Figure S5 | Cycling under 4 MPa pressure, (a) Voltage vs charge passed for a 3-electrode cell, Li metal plating 2 and stripping at the Li / Li6PS5Cl interface at a current density of 1.0 mA·cm-2 (b) SEM cross-section of the Li / 3 Li6PS5Cl interface after the final stripping. 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    66.0,
+    532.0,
+    206.2
+   ],
+   "w": 1376,
+   "h": 390,
+   "dpi": 200,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.617,
+   "note": "봤다(SI p. 5 · 래스터 1380×389). ⚠ 캡션 'Cycling under 4 MPa pressure' ↔ 그림 안 범례 '0.5 MPa' · 'WE vs reference' · '1.0 mA·cm-2' · '3 electrode' ↔ 본문 0.5 MPa — 캡션 오기로 읽힘. (a) 세 사이클 — 첫 도금 ≈−45 → ≈−25 mV · 박리 끝 ≈80–100 mV · 셋째 사이클 ≈+15 / ≈−30 … −15 (`[도표]`) · (b) 마지막 박리 뒤 SEM(눈금 20 µm) — 계면 틈."
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6 | AC Impedance data measured from Li / Li6PS5Cl / Li, (a) cycled at 1.0 mA·cm-2 at 3 MPa for 7 cycles 2 and (b) cycled at 1.0 mA·cm-2 at 7 MPa for 100 cycles. The impedance increases in (a) but not in (b) in accord with 3 the data in Fig. 7, where the former showed an increase in polarisation but not the latter. 4 5 6 7 8 9 10 11 12 13",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    66.0,
+    532.0,
+    242.3
+   ],
+   "w": 1376,
+   "h": 491,
+   "dpi": 200,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.936,
+   "note": "봤다(SI p. 6 · 래스터 1378×498). 2전극 · 1.0 mA cm⁻² · (a) 3 MPa 1 · 2–5 · 6 · 7 사이클 — 호 낮은 주파수 끝 ≈27 → ≈30 · ≈37 → ≈49 → ≈54 Ω cm² · 1 MHz 끝 ≈14–17 (`[도표]` — 계면 호 ≈13 → ≈38) · (b) 7 MPa 사이클 전 · 50 · 100 — 겹침 · 끝 ≈14.5 · 1 MHz 끝 ≈10.5–12 (`[도표]`). ⚠ 캡션 'in accord with the data in Fig. 7' ↔ 본문 그림 6. 측정 상태(어느 반 사이클 뒤 · 휴지) · 적합값 미인쇄."
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7 | Voltage vs charge passed for Na / Na’’Alumina cells, (a) 3-electrode cell, stripping at current 3 densities of 0.2, 0.5, 1.0 and 1.5 mA·cm-2 at 4 MPa pressure, (b) 2-electrode cell cycled at 0.1 mA·cm-2 and 4 4 MPa for 100 cycles (below critical current for stripping) and (c) 2-electrode cell cycled at 1.5 mA·cm-2 and 4 MPa 5 for 20 cycles (above critical current for stripping) showing increasing polarisation and short-circuiting. Note that the 6 polarisation was limited to 3 V. 7 8 9 10 11 12 13 14 15 16 17 18",
+   "rotated_deg": 0,
+   "bbox": [
+    36.7,
+    66.0,
+    532.6,
+    456.5
+   ],
+   "w": 1378,
+   "h": 1086,
+   "dpi": 200,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf",
+   "blank": 0.935,
+   "note": "봤다(SI p. 7 · 래스터 1330×1056). Na | Na-β″-alumina · 4 MPa · (a) 3전극 박리 0.2 · 0.5 · 1.0 · 1.5 mA cm⁻²(2 mAh cm⁻² 까지 · 1.0 ≈0.095 → ≈0.19 V · 1.5 ≈0.11 → ≈0.275 V `[도표]`) · (b) 2전극 0.1 mA cm⁻² 100 사이클 ±≈0.01 V · (c) 1.5 mA cm⁻² 20 사이클 — 19 번째 3 V 상한 · 20 번째 단락 · 가로축 0–0.5 mAh cm⁻²(반 사이클 0.5 — Methods 의 1.0 은 Li)."
+  },
+  {
+   "key": "f1m",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1_manual_p2.png",
+   "bbox": [
+    36,
+    47,
+    552,
+    367
+   ],
+   "w": 1434,
+   "h": 890,
+   "caption": "Fig. 1 | Cell schematic and voltage versus charge passed for three-electrode cells on Li metal plating and stripping at the Li/Li6PS5Cl interface. a, Three-electrode cell schematic (WE, working electrode; RE, reference electrode; CE, counter electrode); b, 3 MPa–1.0 mA cm−2; c, 7 MPa–1.0 mA cm−2; d, 7 MPa–2.0 mA cm−2.",
+   "note": "수동 — p. 2 렌더 200 dpi(자동판 윗부분 잘림 보충). 봤다 + 벡터 경로 판독(`[도표·벡터]` — 눈금 글자 중심 선형 보정). (a) WE · RE(∅0.5 mm Li — WE 옆 같은 면) · CE · 위아래 압력 화살 · 평면도. (b) 3 MPa · 1.0: 박리는 오른쪽 → 왼쪽(x = 0 이 박리 끝) · 박리 끝 18.6 · 24.4 · 30.4 · 39.6 · 57.8 · 102.3 · 132.4 mV(1–7 사이클 · 파랑 다섯은 크기 순 배정 — 범례 '2nd–6th' 묶음) · 박리 시작 7.3–12.5 · 첫 도금 −10.3 → −13.2(중앙 −13.1) · 도금 시작점 −16.3 … −27.6(사이클 ↑) · 8 번째 도금 0.431 mAh cm⁻² 에서 −15.8 → −3.4 mV(단락). (c) 7 MPa · 1.0: 100 사이클 ±8.5–9.3 mV. (d) 7 MPa · 2.0: 박리 끝 22.4 · 24.7 · 29.1 · 33.9 · 36.0 · 37.6(1 · 2–3 · 4 · 6 · 9) · 도금 중앙 −19.3 → −12.9(9) · 10 번째 −39.6 → −3.9 · 파랑 묶음 첫 하위 경로 = 1 사이클 복사(겹쳐 그림).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+  },
+  {
+   "key": "f2m",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2_manual_p3.png",
+   "bbox": [
+    40,
+    48,
+    299,
+    520
+   ],
+   "w": 720,
+   "h": 1312,
+   "caption": "Fig. 2 | SEM cross-sections of the Li metal/Li6PS5Cl interface. a, 1.0 mA cm−2–3 MPa; pristine, end of first plating, first stripping, sixth stripping and seventh plating. b, 1.0 mA cm−2–7 MPa; end of 100th stripping. c, 2.0 mA cm−2–7 MPa; end of first plating, first stripping, ninth plating and ninth stripping.",
+   "note": "수동 — p. 3 렌더 200 dpi(패널 a 글자 · 틀 윗변 포함 — 위 · 아래 띠를 따로 열어 확인). 내용 판독은 자동판과 같음(fig_2.png 노트). SEM 원 래스터 300 dpi(사용자 용량 지시로 200 dpi 유지).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+  },
+  {
+   "key": "f3m",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3_manual_p3.png",
+   "bbox": [
+    300,
+    50,
+    556,
+    116
+   ],
+   "w": 1067,
+   "h": 276,
+   "caption": "Fig. 3 | In situ X-ray computed tomography images of the Li metal/Li6PS5Cl interface of a cycled Li metal/Li6PS5Cl/Li metal cell. a–c, Current density of 1.0 mA cm−2 and capacity of 1.0 mAh cm−2 (3 MPa): after the first stripping (a), after the third stripping (b) and after the fifth stripping (c). The white pixels at the Li metal/Li6PS5Cl interface reveal the accumulation of voids (low X-ray attenuation) with increasing cycle number.",
+   "note": "수동 — p. 3 렌더 300 dpi(원 래스터 xref 48 · 50 · 49 ≈301 dpi 를 뭉개지 않게 — 이 한 장만 200 dpi 지시의 예외, 507 KB). 봤다. 같은 셀 세 시점 · 흰 화소 띠가 a(점 몇 개) → b(부분 선) → c(거의 전폭 끊긴 사슬). 화소 점유율은 fig_3.png 노트([재현·화소]).",
+   "manual": true,
+   "dpi": 300,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+  },
+  {
+   "key": "f4m",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4_manual_p4.png",
+   "bbox": [
+    36,
+    50,
+    299,
+    402
+   ],
+   "w": 731,
+   "h": 979,
+   "caption": "Fig. 4 | Schematic of Li metal/Li6PS5Cl interface cycled at an overall current density above the CCS. Sequence from pristine to after several strippings and platings of Li metal: voids form on stripping; lateral growth of a thin Li film across the electrolyte surface (nucleating where void edges meet the electrolyte) on subsequent plating results in low plating polarization and formation of occluded voids. Some voids are eliminated on plating, but the occluded voids reopen on subsequent stripping leading to accumulation of voiding and increasing loss of contact with cycling. This increases stripping polarization and results in dendrites on plating.",
+   "note": "수동 — p. 4 렌더 200 dpi(그림 + 아래 캡션). 자동 제외 '영역 없음'. 봤다 — 모식 여섯 칸(Pristine → After several strippings(Void formation) → Early in the subsequent plating(Lateral Li growth · Initial dendrite propagation) → Middle of the plating → End of plating(Occluded voids) → After further stripping(Increase in contact loss upon further void growth)) · 자료점 0 · 삼중 경계 도금은 이 모식의 명제(직접 영상 0).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5_manual_p5.png",
+   "bbox": [
+    36,
+    47,
+    552,
+    341
+   ],
+   "w": 1434,
+   "h": 818,
+   "caption": "Fig. 5 | Voltage versus charge passed for three-electrode Li/Li6PS5Cl cells at different pressures and current densities. a, Plating at 3 MPa. b, Plating at 7 MPa. c, Stripping at 3 MPa. d, Stripping at 7 MPa.",
+   "note": "수동 — p. 5 렌더 200 dpi(자동판 윗부분 잘림 보충). 봤다 + `[도표·벡터]`. (a) 3 MPa 도금 1.0 −12.8 → −11.0 · 2.0 ≈−26.3 … −27.4 · 3.0 −40.4 → −19.6 · 4.0 −52.9 → 0.35 에서 −28.5 → −12.6 · 0.501 에서 −12.3 → −0.9(단락) · 0.565 끝. (b) 7 MPa 1.0 −8.6 · 2.0 −19.0 … −19.6(★ 그림 1d 첫 도금과 수치 일치(같은 자료로 읽힘) — median |Δ| 0.036 mV · max 0.055) · 3.0 −35.9 → −20.4 · 4.0 −52.3 → −8.8. (c) 3 MPa 박리 0.1 ≈1.0(0.92 끝) · 0.2 ≈2.5(1.78 끝) · 0.5 5.5 → 8.3 · 1.0 14.2 → 22.3(1.0) → 25 mV 1.15 · 30 1.27 · 60 1.50(축 상한 — 벡터는 1.81 mAh cm⁻² 187.8 mV 까지 이어짐). (d) 7 MPa 0.1 ≈1.2 · 0.2 ≈2.4 · 0.5 4.3 → 6.4 · 1.0 9.6 → 14.5 · 1.5 13.5 → 19.0(1.0) → 28.7(2.07) · 2.0 17.4 → 24.7(1.0) → 32.7(1.5) → 51.9(2.0).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6_manual_p5.png",
+   "bbox": [
+    36,
+    380,
+    552,
+    671
+   ],
+   "w": 1434,
+   "h": 809,
+   "caption": "Fig. 6 | Voltage versus charge passed for two-electrode Li/Li6PS5Cl/Li cells cycled at different pressures and current densities. a, 3 MPa–0.2 mA cm−2. b, 3 MPa–1.0 mA cm−2. c, 7 MPa–1.0 mA cm−2. d, 7 MPa–2.0 mA cm−2.",
+   "note": "수동 — p. 5 렌더 200 dpi(자동판은 아래 띠만). 봤다 + `[도표·벡터]`. 2전극 — 두 반쪽 모두 한 전극이 박리라 양 방향이 다 자람. (a) 3 MPa · 0.2: 100 사이클 +6.2 … +7.4 / −6.6 … −7.6 mV. (b) 3 MPa · 1.0: 위(←) 끝 35.4 · 43.8 · 49.0 · 58.1 · 67.9 · 100.4 · 110.2 / 아래(→) 끝 −38.8 · −47.2 · −57.0 · −68.1 · −74.6 · −137.7 · −168.2(축 −160 밖) · 8 번째 −29.7 → −8.9(단락). (c) 7 MPa · 1.0: 100 사이클 ±17.6–18.5. (d) 7 MPa · 2.0: 위 끝 41.4 · 42.7 · 43.1 · 47.1 · 51.6 · 61.0 · 63.0 · 72.8(9) · 10 번째 아래 −68.2 → −1.8(단락) · 파랑 · 초록 경로에 같은 하위 경로 두 벌(9 번째 도금).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "ffe343f3-106._Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+  },
+  {
+   "key": "fS3m",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3_manual_p3.png",
+   "bbox": [
+    66,
+    66,
+    530,
+    594
+   ],
+   "w": 1290,
+   "h": 1467,
+   "caption": "Figure S3 | XPS spectra of the Li6PS5Cl pellet surface: P 2p a) pristine b) exposed to Li metal for 250 h, S 2p c) pristine d) exposed to Li metal for 250 h, Cl 2p e) pristine f) exposed to Li metal for 250 h.",
+   "note": "수동 — SI p. 3 렌더 200 dpi(벡터 798 경로 · 자동판은 e · f 만). 봤다(아래 축 띠를 따로 열어 확인). P 2p: 접촉 뒤 'reduced P' · 'Li3P' 작은 성분 · S 2p: 'Li2S' 성분이 Li6PS5Cl 주성분과 같은 자릿수 · 'PS' 작은 성분(신품에도 Li2S · PS 작게) · Cl 2p: 변화 작음 · 정량(at%) 0 · Li 를 칼로 떼어 낸 면.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8399f8f4-106._Sup_Critical_stripping_current_leads_to_dendrite_formation_on_plating_in_lithium_anode_solid_electrolyte_cells.pdf"
+  }
+ ]
+}

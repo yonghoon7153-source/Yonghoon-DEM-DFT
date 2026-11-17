@@ -2,10 +2,10 @@
 title: Li 금속의 항복 · creep 과 스택 압력 계보 — 벌크 실측이 0.1–5 MPa 띠에 놓는 눈금
 description: "Bulk polycrystalline Li at room temperature (Masias 2019): E 7.82 / G 2.83 GPa, yield 0.73–0.81 MPa, tensile power-law creep n = 6.56 measured below yield (0.2–0.6 MPa). Laid over the ASSB operating-pressure lineage (0.1–5 MPa) the band crosses diffusional creep, power-law creep, yield and power-law breakdown - a x50 pressure band is a 6–11 decade creep-rate band"
 created: 2026-09-28
-updated: 2026-09-29
+updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md]
+sources: [raw/papers/kasemchainan2019_critical-stripping-current-void-dendrite-li-anode.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/sedlmeier2023_micro-reference-electrode-assb-pouch-inli-anode.md, raw/papers/schlenker2020_li6ps5cl-li-metal-lifetime-three-electrode.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -72,6 +72,8 @@ evidenceScope: single-source
 | 46호 Schlenker 2020 ref 51 → Wang & Sakamoto 2018 | "Li 항복 2 MPa" | 같은 실험실 1 년 뒤 0.73–0.81 | ⚠ 2.5× — Wang 2018 미열람; 46호 논증(Li 경도로는 44 MPa 까지의 계면 임피던스 감소를 설명 못 함)은 항복이 낮을수록 강해진다 |
 | 14호 · 5호 → LePage 2019 | "10 MPa 는 Li creep 을 일으키기에 충분" | 10 MPa = 항복 13× · breakdown 영역 | ✅ 방향(a fortiori) — LePage 미열람 |
 | 61호 자신 → [9] Sharafi 2016 · [10] Wang & Sakamoto 2018 | "stack pressures in the 1.0 MPa range are necessary to achieve low and stable cell resistance" | 같은 지면: "How much compressive stress is not known … We believe 1 MPa was sufficient" | ⚠ 요구치와 미지가 같은 지면 — 계보 "≈1 MPa" 의 가장 이른 인쇄(2018); 원전 둘 미열람 |
+| 111호 Kasemchainan 2019 ref 38(이 원전) + ref 36(Wang · Wolfenstine · Sakamoto 2019 *Electrochim. Acta* — 미열람) | "the pressures of 3 and 7 MPa are above the yield strength of Li, 0.81 MPa" · 0.5 MPa "below the yield strength of Li metal, 0.81 MPa" | 0.73–0.81 · 압축 0.81 ± 0.10 | ✅ 값(ref 38) · ⚠ 같은 값에 ref 36 도 붙음(D6) · 3 · 7 MPa = σ/G 1.06 · 2.47×10⁻³(breakdown 위) · 0.5 = 1.8×10⁻⁴(측정 구간) |
+| 111호 — "creep rather than Li diffusion is the dominant mechanism transporting Li to the interface" · "Li deformation/creep is expected to be relatively slow" | 압력 두 점의 CCS 괄호 차((0.2, 1.0] → (1.0, 2.0] mA cm⁻²) | 이 원전에 셀 · 채움 실험 0 | ⚠ 이 원전으로 판정 불가 — 3 · 7 MPa 는 멱법칙 외삽 무효 영역 · 0.5 MPa 의 '변형 부재'("the absence of deformation made it a challenge to even form a cell") ↔ 인장 멱법칙 1 % 변형 ≈86 s(`[재현·가정]` 0.6 MPa 26 s 에서 외삽) — 적용 5(박 형상비 · 마찰)의 실례로 읽힌다 |
 
 ⚠ **2026-09-29 (81호 Xu 2024 *Adv. Energy Mater.* — 종설 · 1차 측정 0) 주석 — 이 눈금에 대조 넷.** 81호는 이 원전을 [68] 로 인용하되 Li 연성 문장("[66–68]")에만 붙이고 수치를 옮기지 않는다.
 같은 지면의 다른 Li 값을 이 페이지 눈금과 맞대면:
@@ -90,6 +92,7 @@ evidenceScope: single-source
 
 1. **압력 값에 영역을 붙인다** — 계보 · 합성 truth · 이식판의 운전 압력을 적을 때 `< 0.28`(확산) · `0.28–2.83`(멱법칙 · 항복 포함) · `> 2.83 MPa`(breakdown) 을 괄호로 붙인다(카드 새 제약 1, 61호).
 2. **"Li creep 이 계면을 채운다" 는 감도 구조까지만** — 원전이 준 것은 `n` 하나다. 채움 실험 · `Qc` · 입도 · 접착 계수는 0(카드 새 제약 2).
+   (2026-11-17 111호) 셀 수준의 '채움 경쟁' 실측 — 박리 플럭스 > 보충이면 void(CCS) · 압력 두 점(3 → 7 MPa)에서 문턱 괄호가 한 칸 오름 · 출발 접촉(단일 도금 1.0 mA cm⁻² ≈11.5 ↔ ≈8.7 mV `[도표·벡터]`)과 교락 — 여기서도 감도 구조(압력 ↑ → 문턱 ↑)까지만이다.
 3. **압력을 걸고 잰 시각을 적는다** — 음극 계면의 압력 응답은 σ^6.56 의 시간 상수(0.2 MPa ≈14 h · 1 MPa ≈1 s, 1 % 변형 · 외삽). [[assb-pressure-reapplication-separation-test]] D1 에 유지 시간 ·
    회복 시간 곡선을 붙이고, **회복의 시간 상수로 음극/양극 몫을 가르는 것**을 제안으로 둔다(실측 0).
 4. **3 항 분해에서의 자리** — [[assb-apparent-capacity-decomposition]] 의 `η(i, P)` 음극 몫에 시간 의존을 준다. 양극 `θ_AM` · [[assb-lampe-contact-product-degeneracy]] 의 곱에는 직접 닿지 않는다.

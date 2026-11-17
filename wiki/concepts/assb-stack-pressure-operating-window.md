@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/zhang2017_carbon-additives-lgps-ssb-decomposition.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
+sources: [raw/papers/kasemchainan2019_critical-stripping-current-void-dendrite-li-anode.md, raw/papers/zhang2017_carbon-additives-lgps-ssb-decomposition.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/shao2022_thin-film-assb-mechano-electrochemical-stress-partial-molar-volume.md, raw/papers/koerver2018_chemo-mechanical-expansion-molar-volume-ocv-pressure-stress.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/wang2024_fast-kinetics-hierarchical-catholyte-anode-design-ssb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/okasinski2020_edxrd-profiling-coin-cell-uneven-compression-lateral-gradients.md, raw/papers/minnmann2021_charge-transport-bottlenecks-tlm-ncm622-lpscl.md, raw/papers/nam2018_dry-vs-slurry-mixed-electrodes-binder-gitt-coverage.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/oh2025_mgsigr-overcharge-low-np-ratio-low-pressure-assb.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/zhang2025_low-pressure-assb-challenges-strategies-review.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/spencerjolly2023_ag-graphite-interlayer-structural-changes.md, raw/papers/li2026_safety-aware-bms-active-intelligence.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/zheng2026_assb-grid-realistic-appraisal.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/yanev2024_li-in-alloy-anode-kinetic-limitations.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/zhou2025_tailored-cathode-microstructure-low-pressure-assb.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -1311,6 +1311,47 @@ Lee [45] **개방 회로 이완 30 → 27.6(LPSC) · 24.8 MPa(LSPS) / 20 h**(`[�
 ### 3. 이 편이 이 페이지에 **안 준 것**
 
 요구치 · 계측 · 스윕 · 압력 → 용량. 계보 한 줄: 22호 55 MPa · 23호 5 kN(64) / ≈70 · 62호 ≈61.8(그림 축) · 63호 10 N·m · **110호 10 N m(∼70 MPa)**.
+
+## ★★★ 2026-11-17 (`assb` 111호 Kasemchainan 2019 *Nat. Mater.* 18, 1105, **실험 · Li \| Li₆PS₅Cl \| Li 3전극 · 2전극 · 운전 3 · 7 MPa + SI 0.5 MPa**) — **아래 벽이 전류 밀도의 함수가 된다: 임계 박리 전류 CCS(P)**
+
+`raw/papers/kasemchainan2019_critical-stripping-current-void-dendrite-li-anode.md`.
+
+### 1. 요구치 — 인쇄 0
+
+`[인쇄]` "Considerable pressure may be required to achieve even modest power densities in solid-state cells" · "Cycling at higher current density requires higher pressure to suppress formation of voids" — 정성 · 수치 요구치 0 ⇒ 띠 · 확인된 원전 0 그대로.
+
+### 2. ★★ 운전 압력 — 스프링 클램프 · 로드셀 설정 · 계측, 면적 기준 0 (§3-b (캐)(해))
+
+- `[인쇄]` "Two different pressures (3 and 7 MPa) were applied to the pouch cells via spring clamps. The applied pressure was set and measured using a piezoelectric load cell (OMEGA)." + 본문 0.5 MPa 셀(SI S5 — ⚠ 캡션 '4 MPa' ↔ 그림 범례 '0.5 MPa' · Methods 목록 밖) · Na 셀 4 MPa(S7 캡션 — Methods 는 "as for the Li/Li6PS5Cl/Li cells").
+- ⚠ 힘 ÷ 어느 면적인지 미인쇄 — Li WE ∅2 mm(3.14 mm²) ↔ SE ∅5 mm(19.63 mm²) · `[재현·가정]` SE 면적 기준이면 Li 에 걸린 압력은 ×5.9–6.25(3 → ≈18 · 7 → ≈41–44 MPa) · Li 면적 기준이면 지면 값 그대로. 운전 중 압력 기록 0.
+
+### 3. ★★★ 압력 → 임계 전류 (괄호 · `[재현]`)
+
+| | 3 MPa | 7 MPa |
+|---|---|---|
+| CCS(박리) | (0.2, 1.0] mA cm⁻² | (1.0, 2.0] mA cm⁻² |
+| CCP(도금) | (2.0, 3.0] | (2.0, 3.0] |
+| 1.0 mA cm⁻² · 1 mAh cm⁻² 사이클(3전극) | 박리 끝 18.6 → 132.4 mV · 8 사이클 단락(`[도표·벡터]`) | 100 사이클 ±8.5–9.3 mV |
+| 2전극 EIS 계면 호(다른 셀) | ≈13 → ≈38 Ω cm²(7 사이클 `[도표]`) | ≈2.5–4 평탄(100 사이클) |
+
+- 조건: Li 40 µm · 1.0 mAh cm⁻²(`[재현]` ≈4.85 µm) · 시험 온도 미인쇄 · 셀 수 0. 판정 기준 인쇄 0 — 기준(×2 ↔ 30 mV)에 따라 7 MPa 괄호가 (1.0, 1.5] ↔ (1.5, 2.0](그림 5d 벡터 — `[재현·가정]`). ⚠ 초록의 '0.2 · 1.0' 은 괄호의 아래 끝(시험한 최대 안정)이고 본문 'CCS thresholds 1.0 · 2.0' 은 위 끝이다.
+- `[해석]` **아래 벽 P_min(j)**: P_min(0.2) ≤ 3 MPa · P_min(1.0) ∈ (3, 7] · P_min(2.0) > 7 MPa(지면 압력 · Li \| Li₆PS₅Cl · 1 mAh cm⁻²). 창의 아래 벽은 압력 하나가 아니라 **압력 × 전류 밀도의 경계**로 읽힌다.
+- 0.5 MPa(항복 0.73–0.81 아래): "the absence of deformation made it a challenge to even form a cell" · 첫 사이클부터 분극 감소 · 빠른 고장 · SEM "very severe detachment".
+- 5호(Doux) '5 MPa · 75 µA cm⁻² · no voids' 는 이 틀과 정합한다(`[해석]` 0.075 < 3 MPa 안정 0.2 mA cm⁻²).
+
+### 4. ⚠ 5호 digest 의 이 편 인용 셋 — 이 편 지면과 대조 (raw 불변 — 여기에만 적는다)
+
+- 5호 :406 "문헌(ref 26 Kasemchainan 2019)이 **3.5 및 7 MPa** 에서 탈리 중 void" ↔ 이 편 3 · 7 MPa(+ 0.5) · '3.5' 0 회 · 7 MPa void 는 2.0 mA cm⁻² 에서만 — Doux 원문 대조 전까지 출처(Doux 인쇄 ↔ 5호 전사) 미정.
+- 5호 D7 괄호 "(문헌의 탈리 void 는 서브-µm 포함)" — 이 편 void 크기 인쇄 0 · 자기 in situ XCT(인쇄 래스터 ≈0.92 µm/px `[재현]`)가 누적 void 를 봤다 → 이 편에 근거 0.
+- 5호 D8 "그 논문은 부동태화가 아니라 탈리 void/임계전류 논문" — 이 편 지면에 "kinetically stable interfacial impedance"(XPS Li₂S 지배 + R_SEI+CT 100 h 안 10 % 이내) — Doux 인용을 받치는 문장이 있다(낱말 `passivat*` 는 0 회).
+
+### 5. 61호 눈금으로
+
+0.5 = σ/G 1.8×10⁻⁴(항복 아래 · 인장 creep 측정 구간 0.2–0.6) · 3 = 1.06×10⁻³ · 7 = 2.47×10⁻³(둘 다 breakdown 2.83 MPa 위 — 61호가 멱법칙 외삽 무효로 적은 영역) · 이 편 "Li deformation/creep is expected to be relatively slow" 와 61호 외삽은 같은 눈금으로 비교되지 않는다([[li-metal-yield-creep-vs-stack-pressure]] 111호 줄).
+
+### 6. 이 편이 이 페이지에 **안 준 것**
+
+위 벽(고압 단락) · 압력 셋 이상의 스윕 · 같은 셀 압력 바꾸기 · 이력 · 운전 중 압력 · 온도 · 반복 · `θ(P)` 의 분율 · 양극. 계보 한 줄: **111호 3 · 7 MPa(스프링 클램프 · 로드셀 설정 · 계측 · 면적 기준 미인쇄) + 0.5 MPa(SI · 캡션 4)**.
 
 ## 경고 (전부 원문이 준 한계에서 나온다)
 
