@@ -146,6 +146,7 @@ def run_protocol(atoms, calc, *, label, out_dir=".", freeze_idx=None, schedule=(
         log["rng_path"]["schedule_velocities"] = _mb(atoms, schedule[0][1], rng)
         for kind, T0, T1, ps in schedule:
             n = int(round(ps * 1000.0 / schedule_dt_fs))
+            print(f"  [{label}] 일정 {kind} {T0:.0f}→{T1:.0f} K · {ps} ps ({n} 스텝) 시작", flush=True)
             dyn, path = _langevin(atoms, schedule_dt_fs, T0, friction, rng)
             log["rng_path"]["schedule_langevin"] = path
             p0 = atoms.get_positions().copy()
@@ -168,6 +169,7 @@ def run_protocol(atoms, calc, *, label, out_dir=".", freeze_idx=None, schedule=(
                                             for el in msd_elements if ((sym == el) & free).any()}
                 st["msd_n_atoms"] = {el: int(((sym == el) & free).sum()) for el in msd_elements}
             log["stages"].append(st)
+            print(f"  [{label}] 일정 {kind} 끝 · 평균 T {st['T_inst_mean_K']:.0f} K · 목표 끝 {st['T_target_last_K']:.0f} K", flush=True)
         write(os.path.join(out_dir, f"{label}_schedule_end.xyz"), atoms)
     if release and fi:
         atoms.set_constraint()
@@ -176,6 +178,7 @@ def run_protocol(atoms, calc, *, label, out_dir=".", freeze_idx=None, schedule=(
     log["rng_path"]["nvt_velocities"] = _mb(atoms, temperature, rng)
     dyn, path = _langevin(atoms, dt_fs, temperature, friction, rng)
     log["rng_path"]["nvt_langevin"] = path
+    print(f"  [{label}] NVT {temperature:.0f} K 평형 {equilib_ps} ps 시작 (고정 {log['frozen_during_nvt']})", flush=True)
     dyn.run(int(round(equilib_ps * 1000.0 / dt_fs)))
 
     def snap(k):
@@ -186,9 +189,12 @@ def run_protocol(atoms, calc, *, label, out_dir=".", freeze_idx=None, schedule=(
         return c
 
     frames = [snap(0)]
+    per_ps = max(1, int(round(1000.0 / save_fs)))
     for k in range(1, n_save + 1):
         dyn.run(save_int)
         frames.append(snap(k))
+        if k % per_ps == 0:
+            print(f"  [{label}] 생산 {frames[-1].info['t_prod_ps']:.1f} / {prod_ps} ps · T {frames[-1].info['T_inst_K']:.0f} K", flush=True)
     write(os.path.join(out_dir, f"{label}_traj.xyz"), frames, format="extxyz")
     log["frames"] = {"n": len(frames), "t_prod_ps_first": frames[0].info["t_prod_ps"],
                      "t_prod_ps_last": frames[-1].info["t_prod_ps"], "save_fs": save_fs,
