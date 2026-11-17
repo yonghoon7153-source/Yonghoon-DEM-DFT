@@ -1,6 +1,6 @@
 # 양극 계면과 코팅
 
-전해질 · 계면 · 장 `se-cathode` · 논문 43편 · 읽기 카드 41편
+전해질 · 계면 · 장 `se-cathode` · 논문 44편 · 읽기 카드 42편
 
 > 양극 활물질과 전해질 사이의 반응, 코팅 물질 선정, 고전압 구동.
 
@@ -70,7 +70,7 @@
 4. Bong et al. 2023 (`bong2023_linbo3_thickness_uniformity_ncm523`) — LiNbO₃ 두께와 피복을 바꾼 황화물 풀셀 비교로 실험 쪽 기준점을 준다.
 5. Clausnitzer et al. 2024 (`clausnitzer2024_degradation_mechanisms_cathode_llzo`) — 막 Li 확산도 문턱을 내놓아 코팅의 수송 대가를 따지는 기준을 준다.
 
-## 이 장의 논문 (43편)
+## 이 장의 논문 (44편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -108,6 +108,7 @@
 | `qian2025_lipo2f2_coating_stable_cei` | Qian et al. 2025 | Engineering Stable Decomposition Products on Cathode Surfaces to Enable High Voltage All‐Solid‐State Batteries | 분해산물이 안정한 LiPO₂F₂를 NCM85에 용액 코팅하면 LiF와 LiPₓOᵧF_z 계면층이 생겨 Li₆PS₅Cl 산화가 억제되고 수명이 는다. |
 | `son2025_fivevolt_assb` | Son et al. 2025 | Five-volt-class high-capacity all-solid-state lithium batteries | LiCl–4Li₂TiF₆ 불소계 차폐층은 황화물, 할라이드, LiNbO₃가 버티지 못하는 5 V급 LNMO 양극을 안정하게 구동시킨다. |
 | `choi2026_bzox_dry_zro2x_nmc_shell_coating` | Choi et al. 2026 | Dry‐Crafted Charge‐Conductive ZrO₂ − x Cathode Shell Coating for High‐Performance Sulfide‐Based Solid‐State Batteries | 건식 코팅한 black ZrO₂₋ₓ 셸은 NMC811의 전하 수송을 보존하면서 LPSCl 계면 부반응을 억제해 초기 CE를 69.6에서 77.5 %로 올렸다. |
+| `hu2026_interphase_adaptive_yb_chloride_se` | Hu et al. 2026 | Interphase-Adaptive Chloride Solid Electrolyte Enables High-Performance All-Solid-State Lithium Batteries | 약 4 nm 탄화수소층을 입힌 LYZC@CH를 쓰면 전해질 10 wt% 복합양극의 1 C 400회 유지율이 61.92 %에서 90.67 %로 오른다. |
 | `jang2026_halide_se_interfacial_stability_highv_na` | Jang et al. 2026 | Interfacial Stability and Design Strategies for Halide Solid Electrolytes in High‐Voltage All‐Solid‐State Sodium‐Ion Batteries | Na 할라이드 7종은 산화 창이 넓지만 양극과의 상호 분해 구동력이 작지 않고, NaB₃O₅ 같은 코팅이 그 구동력을 크게 낮춘다. |
 | `kawaguchi2026_se_size_soc_dependent_cathode_resistance` | Kawaguchi et al. 2026 | Interface Engineering in Sulfide‐Based All‐Solid‐State Batteries: Insights from Resistance Analysis | (카드 없음) |
 | `kim2026_hts_li3sc2po43_coating_midni_ncm` | Kim et al. 2026 | High-throughput discovery of Li3Sc2(PO4)3 as a protective coating for stabilizing mid-Ni NCM interfaces in all-solid-state batteries | 계면 열역학으로 좁힌 8종 가운데 Li가 실제로 움직인 Li₃Sc₂(PO₄)₃가 mid-Ni NCM523 코팅으로 뽑혔다. |

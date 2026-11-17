@@ -1,6 +1,6 @@
 # MPM과 연속체 모형
 
-전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 20편 · 읽기 카드 9편
+전극 미세구조 · 공정 · 장 `dem-mpm` · 논문 20편 · 읽기 카드 15편
 
 > 물질점법과 연속체 구성 모형.
 
@@ -75,18 +75,18 @@
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
-| `sulsky1994_mpm_particle_method_history_dependent_materials` | Sulsky · Chen · Schreyer 1994 | A particle method for history-dependent materials | (카드 없음) |
+| `sulsky1994_mpm_particle_method_history_dependent_materials` | Sulsky · Chen · Schreyer 1994 | A particle method for history-dependent materials | 소성 변형률과 경화 변수는 물질점이 끝까지 싣고 운동량은 매 걸음 다시 까는 격자에서 다루어, 재격자화와 접촉 알고리즘 없이 2D 탄소성 충돌을 푼다. |
 | `bardenhagen2000_mpm_granular_multibody_frictional_contact` | Bardenhagen, Brackbill & Sulsky 2000 | The material-point method for granular materials | (카드 없음) |
 | `bardenhagen2001_mpm_improved_contact_granular_stress_waves` | Bardenhagen, Guilkey 외 4인 2001 | An improved contact algorithm for the material point method and application to stress propagation in granular material | (카드 없음) |
 | `cummins2002_implicit_mpm_granular_newton_krylov` | Cummins · Brackbill 2002 | An Implicit Particle-in-Cell Method for Granular Materials | θ 암시 판과 행렬 없는 Newton–Krylov로 푼 입상체 MPM은 걸음 크기와 무관하게 L2 안정하고 명시 도약의 에너지 증가를 없앤다. |
-| `guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison` | Guilkey · Weiss 2003 | Implicit time integration for the material point method: Quantitative and algorithmic comparisons with the finite element method | (카드 없음) |
+| `guilkey2003_implicit_mpm_newton_quasistatic_fem_comparison` | Guilkey · Weiss 2003 | Implicit time integration for the material point method: Quantitative and algorithmic comparisons with the finite element method | 격자 변위 증분을 Newton으로 푸는 암시 MPM은 빌릿 압축에서 FE와 2.1–2.5 % 차로 맞지만 걸음당 계산 시간이 309배 든다. |
 | `bardenhagen2004_mpm_gimp_generalized_interpolation_cell_crossing` | Bardenhagen, Kober 2004 | The generalized interpolation material point method | 원문은 셀 넘김 잡음 때문에 물질점 방법(MPM)을 무한소 변형에만 쓰고, 유한 변형에는 더 매끈한 GIMP 보간을 쓰라고 결론짓는다. |
 | `bardenhagen2005_mpm_foam_densification_simulation` | Bardenhagen et al. 2005 | Insight into the physics of foam densification via numerical simulation | (카드 없음) |
-| `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | Steffen · Wallstedt · Guilkey · Kirby · Berzins 2008 | Examination and analysis of implementation choices within the material point method MPM | (카드 없음) |
-| `steffen2010_mpm_space_time_error_balance_moving_mesh` | Steffen et al. 2010 | Decoupling and balancing of space and time errors in the material point method (MPM) | (카드 없음) |
-| `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | Sadeghirad et al. 2011 | A convected particle domain interpolation technique to extend applicability of the material point method for problems involving massive deformations | (카드 없음) |
+| `steffen2008_mpm_implementation_choices_gimp_bspline_boundary` | Steffen · Wallstedt · Guilkey · Kirby · Berzins 2008 | Examination and analysis of implementation choices within the material point method MPM | 매끈한 기저는 적분 오차를 2차로 낮추지만, 매끈함 길이가 입자 폭보다 짧거나 경계 밖 노드에 Dirichlet을 걸면 1차로 떨어진다. |
+| `steffen2010_mpm_space_time_error_balance_moving_mesh` | Steffen et al. 2010 | Decoupling and balancing of space and time errors in the material point method (MPM) | 명시 물질점법(MPM)에서 공간과 시간 오차가 같아지는 시간 간격은 안정 한계보다 훨씬 커서, 안정 한계 근처 시간 간격이면 충분하다. |
+| `sadeghirad2011_mpm_cpdi_convected_particle_domain_extension_instability` | Sadeghirad et al. 2011 | A convected particle domain interpolation technique to extend applicability of the material point method for problems involving massive deformations | 입자 영역을 전체 F로 평행사변형으로 실어 나르는 CPDI는 2D 자중 막대에서 다른 세 MPM 변종이 끊긴 하중에도 이어졌다. |
 | `stomakhin2013_mpm_snow_elastoplastic` | Stomakhin et al. 2013 | A material point method for snow simulation | F = F_E·F_P 곱분해와 특이값 클램프 return mapping을 쓴 MPM이 하나의 구성식으로 눈의 흐름, 뭉침, 파쇄를 재현한다. |
-| `nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions` | Nairn · Guilkey 2015 | Axisymmetric form of the generalized interpolation material point method | (카드 없음) |
+| `nairn2015_mpm_axisymmetric_gimp_cpdi_shape_functions` | Nairn · Guilkey 2015 | Axisymmetric form of the generalized interpolation material point method | GIMP를 원통 좌표로 다시 유도하면 r 가중 형상 함수와 후프 항이 생기고, 축에서 영역을 잘라야 축 근처 입자의 J가 고르게 나온다. |
 | `klar2016_dp_sand_animation` | Klár et al. 2016 | Drucker-prager elastoplasticity for sand animation | 점착 없는 Drucker-Prager 원뿔을 Hencky 변형률 공간에서 부피를 보존하며 사영하면 MPM으로 모래의 흐름과 붕괴를 재현할 수 있다. |
 | `gritton2017_mpm_chemomechanical_coupling_silicon_anode` | Gritton et al. 2017 | Using the material point method to model chemical/mechanical coupling in the deformation of a silicon anode | (카드 없음) |
 | `homel2017_mpm_field_gradient_partitioning_fracture_self_contact` | Homel · Herbold 2017 | Field‐gradient partitioning for fracture and frictional contact in the material point method | 손상장 기울기로 노드마다 물질을 두 속도장에 나누면 알갱이 수와 무관하게 파괴 뒤 마찰 접촉과 자기 접촉을 다룰 수 있다. |

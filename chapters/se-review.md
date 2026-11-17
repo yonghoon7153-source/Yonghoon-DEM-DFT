@@ -1,12 +1,12 @@
 # 분야 지도와 리뷰
 
-전해질 · 계면 · 장 `se-review` · 논문 17편 · 읽기 카드 17편
+전해질 · 계면 · 장 `se-review` · 논문 18편 · 읽기 카드 18편
 
 > 분야 전체를 한 번에 잡는 리뷰와 필독 문헌.
 
 ## 장 서문 — 고체전해질의 병목은 전도도에서 계면으로 옮겨 갔다
 
-*읽기 카드 17편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10*
+*읽기 카드 17편을 엮어 쓴 글 · 항목 30개 중 30개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 고체전해질 연구의 병목이 bulk 전도도에서 계면과 역학으로 옮겨 갔다는 판단에 리뷰들이 모인다. [근거: Famprikis et al. 2019 (`famprikis2019_fundamentals_inorganic_sse`); Xiao et al. 2020 (`xiao2020_interface_stability_ssb_review`); Kim et al. 2021 (`kim2021_review_oxide_sulfide_se_interfaces`); Liang et al. 2026 (`liang2026_interface_bottleneck_solid_state_batteries`)]
 
@@ -72,7 +72,7 @@ MLIP는 계산 규모를 넓히지만, 학습 범함수의 편향과 검증 방�
 4. He et al. 2023 (`he2023_halogen_chemistry_solid_electrolytes`) — argyrodite의 4a/4d 무질서와 Cl 과잉 기전을 가장 자세히 다루고, 본문과 SI가 어긋나는 수치 사례도 보여 준다.
 5. Wu et al. 2026 (`wu2026_ml_driven_electrolyte_interface_design_review`) — MLIP 정확도 대역과 계면 판정의 세 갈래를 정리해 계산 쪽 최근 쟁점으로 이어 준다.
 
-## 이 장의 논문 (17편)
+## 이 장의 논문 (18편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -81,6 +81,7 @@ MLIP는 계산 규모를 넓히지만, 학습 범함수의 편향과 검증 방�
 | `famprikis2019_fundamentals_inorganic_sse` | Famprikis et al. 2019 | Fundamentals of inorganic solid-state electrolytes for batteries | 상온 전도도는 액체 수준에 이르렀고, 남은 과제는 다중스케일 수송, 계면 안정성, 역학, 공정이라고 정리한 리뷰다. |
 | `he2019_dft_for_battery_materials_review` | He et al. 2019 | Density Functional Theory for Battery Materials | 배터리 재료 DFT를 다섯 축으로 정리하고, 에너지 계산에는 PBE보다 SCAN이나 HSE06을 권한다. |
 | `bai2020_argyrodite_review_progress` | Bai et al. 2020 | Research progress in Li-argyrodite-based solid-state electrolytes | Li₆PS₅X는 전도도와 연성의 균형이 좋지만, 수분, 고전압 산화, 합성 편차의 약점은 다중 치환과 공정 최적화로 함께 풀어야 한다. |
+| `banerjee2020_interfaces_interphases_assb_review` | Banerjee et al. 2020 | Interfaces and Interphases in All-Solid-State Batteries with Inorganic Solid Electrolytes | 황화물 ASSB의 병목을 계면으로 진단하고, 양극과 음극 계면 문제와 코팅 선정 요건을 341편의 문헌으로 정리한 리뷰다. |
 | `xiao2020_interface_stability_ssb_review` | Xiao et al. 2020 | Understanding interface stability in solid-state batteries | 계면 안정성은 네 층의 계산 모델로 상한과 하한을 괄호쳐야 하며, 2015–2019년 실험이 그 예측을 상 수준에서 거의 따라잡았다. |
 | `kim2021_review_oxide_sulfide_se_interfaces` | Kim et al. 2021 | Solid‐State Li–Metal Batteries: Challenges and Horizons of Oxide and Sulfide Solid Electrolytes and Their Interfaces | 고체전해질 자체 성능은 충분히 올라왔고, 전고체 Li 금속 전지의 성패는 양극과 음극 계면의 분해와 dendrite 제어에 달려 있다. |
 | `he2023_halogen_chemistry_solid_electrolytes` | He et al. 2023 | Halogen chemistry of solid electrolytes in all-solid-state batteries | 할로겐 고체전해질 100년 계보를 정리하고, argyrodite의 빠른 전도를 4a/4d 자리 S²⁻/X⁻ 무질서로 설명한 개관 리뷰다. |

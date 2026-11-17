@@ -1,6 +1,6 @@
 # 다른 전해질 계열
 
-전해질 · 계면 · 장 `se-family` · 논문 17편 · 읽기 카드 17편
+전해질 · 계면 · 장 `se-family` · 논문 18편 · 읽기 카드 18편
 
 > 할라이드, 가넷 산화물, LGPS 계, 안티페로브스카이트, Na 계.
 
@@ -72,7 +72,7 @@ Na 계에서는 황화물이 양극 쪽에서, 할라이드가 음극 쪽에서 
 4. Anderson et al. 2024 (`anderson2024_llzo_comprehensive_dopant_screening`) — 도펀트를 같은 조건에서 전수 측정한 사례라 계산 스크리닝 논문들을 읽을 기준이 된다.
 5. Lin Li, …, Siwu Li\*, Chuang Yu\* 2026 (`li2026_na_sulfide_halide_interface_review`) — 황화물과 할라이드가 반대 전극에서 무너진다는 계면 틀을 Na 계로 정리한다.
 
-## 이 장의 논문 (17편)
+## 이 장의 논문 (18편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -87,6 +87,7 @@ Na 계에서는 황화물이 양극 쪽에서, 할라이드가 음극 쪽에서 
 | `ahmed2026_co_substituted_llzto_sintering_atmosphere` | Ahmed et al. 2026 | The Impact of Cobalt Substitution on the Electrochemical Properties of Cubic Li 6.6 La₃Zr 1.6 Ta 0.4 O₁₂ Solid Electrolyte for All‐Solid‐State Li‐Ion Batteries | Ar 소결은 Co를 LLZTO 입자 안에 녹여 이온전도를 떨어뜨리고, 공기 소결은 Co를 LiCoO₂로 석출시켜 전자전도를 올린다. |
 | `gao2026_sib_electrolyte_ai_review` | Gao et al. 2026 | Accelerating Electrolyte Discovery for Sodium-Ion Battery Through Property-Based Frameworks and Artificial Intelligence | Na-ion 전해질을 물성 다섯 축으로 재배치하고 ML을 핵심 동력으로 놓은 로드맵 리뷰이며, 계산 내용은 모두 인용 연구에서 왔다. |
 | `li2026_na_sulfide_halide_interface_review` | Lin Li, …, Siwu Li\*, Chuang Yu\* 2026 | Interfacial Chemistry of Sulfide and Halide Solid Electrolytes in All Solid-State Sodium Batteries: From Single Electrolytes to Functionally Partitioned Architectures | 나트륨 전고체전지에서 황화물은 양극에서, 할라이드는 음극에서 분해되므로 기능을 서로 다른 상에 나눠 배치하자는 리뷰다. |
+| `liu2026_in_substituted_li10snp2s12_electronic_structure` | Liu et al. 2026 | Modulating Electronic Structure of Li 10.2 SnP 1.9 In 0.1 S₁₂ Electrolyte via Partial In³⁺ Substitution Enables Long Cycling All‐Solid‐State Batteries | P 자리 일부를 In³⁺로 바꾼 Li₁₀SnP₂S₁₂는 Li 금속 계면 분해가 줄고 Li 대칭셀 수명이 132 h에서 1100 h 이상으로 늘었다. |
 | `meng2026_pvdf_li2zrf6_phase_ordering` | Meng et al. 2026 | Phase ordering and interfacial stabilization enabling high-performance PVDF-based solid-state lithium metal batteries | m-Li₂ZrF₆ 2 wt%가 격자정합으로 β-PVDF를 늘리고 셀 수명을 높이지만, 계면 상변환 기전은 증명되지 않았다. |
 | `park2026_llzo_li13si4_dopant_interface_thermal_battery` | Park et al. 2026 | Dopant-controlled early-stage stability of LLZO/Li13Si4 interfaces for thermal batteries | 773 K, 8 ps AIMD에서 Ta 도핑 LLZO 계면의 접착 감소가 가장 작았다. 다만 차이는 시간 요동 안에 있어 정성 경향에 그친다. |
 | `ren2026_li2zrcl6_low_ion_potential_doping` | Ren et al. 2026 | Regulation of the Lattice dynamics of Li2ZrCl6 solid electrolytes via low-ion-potential element doping for all-solid-state batteries | 저-이온퍼텐셜 희토류 치환이 Li를 늘려 전도도를 올렸다고 보고하지만, 서술자와 계산 근거는 약한 프리프린트다 |

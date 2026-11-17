@@ -1,6 +1,6 @@
 # 복합양극 미세구조
 
-전극 미세구조 · 공정 · 장 `dem-micro` · 논문 83편 · 읽기 카드 71편
+전극 미세구조 · 공정 · 장 `dem-micro` · 논문 81편 · 읽기 카드 76편
 
 > 공극률, 굴곡도, 이온 · 전자 경로의 연결성.
 
@@ -78,11 +78,12 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 4. Bielefeld et al. 2019 (`bielefeld2020_effective_ionic_conductivity_binder`) — Bielefeld et al. 2019의 유효 이온전도도 편으로, 접촉 저항 없는 연속체 계산이 조성과 바인더에 어떻게 반응하는지 보여 준다.
 5. Bazzoun et al. 2026 (`bazzoun2026_dem_fem_rnm_ionic`) — DEM 구조 위 RNM 계산을 같은 소재계의 EIS 실측과 맞대어 계산과 실측의 거리를 보여 준다.
 
-## 이 장의 논문 (83편)
+## 이 장의 논문 (81편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
 | `greenwood1966_constriction_resistance_microcontact_cluster_real_area` | Greenwood 1966 | Constriction resistance and the real area of contact | 미세접촉 군집의 협착 저항은 평행 항에 군집 크기가 정하는 상호작용 항을 더한 값이라, 저항으로는 실접촉 면적의 상한만 알 수 있다. |
+| `mullikin1993_surface_area_estimation_digitized_planes` | Mullikin 1993 | Surface area estimation of digitized planes | 무작위 방향 평면에서 치우침 0, 평균 제곱 오차 최소로 정한 세 가중은 넓이 변동계수 2.33 %로 공간 격자보다 네 배 넘게 정밀하다. |
 | `fuhrer2000_crossed_nanotube_junctions` | Fuhrer et al. 2000 | Crossed Nanotube Junctions | 교차 SWCNT의 금속–금속 접합은 약 200 kΩ이고 금속–반도체 접합은 Schottky 장벽 때문에 두 자릿수 덜 통한다. |
 | `endo2001_vgcf_basic_properties_battery_applications` | Endo et al. 2001 | Vapor-grown carbon fibers (VGCFs) | 서브마이크론 VGCF는 흑연화하면 단섬유 저항률이 1×10⁻⁴ Ω cm로 낮아지지만, 압분체의 저항률은 충전밀도와 섬유 간 접촉에 크게 좌우된다. |
 | `li2007_tunneling_resistance_cnt_composites` | Li et al. 2007 | Dominant role of tunneling resistance in the electrical conductivity of carbon nanotube–based composites | 교차 CNT 사이 절연막의 터널 저항은 막 두께에 지수적으로 커지고, 이 접촉 저항이 복합체 망의 전도도를 정한다. |
@@ -96,9 +97,9 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 | `wiedenmann2013_pore_structure_ion_conductivity_ceramic_diaphragms` | Wiedenmann et al. 2013 | Three‐dimensional pore structure and ion conductivity of porous ceramic diaphragms | 단층촬영으로 잰 기공률, 기하 굴곡도, 협착 인자만으로 KOH 함침 격막의 EIS 전도도를 맞춤 없이 예측했다. |
 | `siroma2015_transmission_line_model_porous_electrode_impedance` | Siroma et al. 2015 | Mathematical solutions of comprehensive variations of a transmission-line model of the theoretical impedance of porous electrodes | 다공 전극 전송선 모델을 Z, T, E, 범용형으로 잇는 모든 경계조건의 임피던스 해를 모으고, 다층용 TML-Y 변환을 유도했다. |
 | `aminchiang2016_nmc_electronic_ionic_transport_vs_li` | Amin · Chiang 2016 | Characterization of Electronic and Ionic Transport in Li₁₋xNi0.33Mn0.33Co0.33O₂(NMC₃₃₃) and Li₁₋xNi0.50Mn0.20Co0.30O₂(NMC₅₂₃) as a Function of Li Content | 첨가제 없는 NMC 소결 펠릿에서 전자전도도는 탈리튬화와 함께 크게 오르고, 화학확산은 언제나 Li 이온 수송이 제한한다. |
-| `kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity` | Kashkooli et al. 2016 | Multiscale modeling of lithium-ion battery electrodes based on nano-scale X-ray computed tomography | (카드 없음) |
+| `kashkooli2016_nanoxct_lfp_multiscale_rev_tortuosity` | Kashkooli et al. 2016 | Multiscale modeling of lithium-ion battery electrodes based on nano-scale X-ray computed tomography | 영상에서 낸 tortuosity와 비표면적을 넣은 다중 스케일 모델이 P2D보다 고율 방전 곡선을 실측에 가깝게 맞춘다. |
 | `landesfeind2016_tortuosity_eis_electrodes_separators` | Landesfeind et al. 2016 | Tortuosity Determination of Battery Electrodes and Separators by Impedance Spectroscopy | 차단 조건 EIS로 잰 effective tortuosity τ=ε·N_M은 분리막과 전극 모두 구형 Bruggeman 값보다 크다. |
-| `siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb` | Siroma et al. 2016 | AC impedance analysis of ionic and electronic conductivities in electrode mixture layers for an all-solid-state lithium-ion battery | (카드 없음) |
+| `siroma2016_ac_impedance_tlm_electron_electron_connection_effective_conductivity_assb` | Siroma et al. 2016 | AC impedance analysis of ionic and electronic conductivities in electrode mixture layers for an all-solid-state lithium-ion battery | 전자 전도도가 비교적 낮은 전극 혼합층은 두 집전체 사이에서 잰 임피던스의 물방울 두 끝에서 이온과 전자 유효 전도도를 함께 얻는다. |
 | `taufactor_tortuosity_factor_tomography_tool` | Cooper et al. 2016 | TauFactor: An open-source application for calculating tortuosity factors from tomographic data | TauFactor는 분할된 voxel 미세구조에서 ∇²C=0을 직접 풀어 τ = ε·D/D_eff를 빠르고 재현성 있게 계산하는 오픈소스 툴이다. |
 | `asano2017_ncm111_li3ps4_composite_electronic_ionic_conductivity` | Asano et al. 2017 | Electronic and Ionic Conductivities of LiNi1/3Mn1/3Co1/3O₂-Li₃PS₄Positive Composite Electrodes for All-Solid-State Lithium Batteries | 충전 전 복합 양극은 이온 전도도가 전자 전도도보다 높고, 충전하면 전자 전도도가 크게 오르며, 원문은 율 특성을 이온 전도가 제한한다고 결론짓는다. |
 | `cooper2017_simulated_impedance_diffusion_porous_media` | Cooper et al. 2017 | Simulated impedance of diffusion in porous media | 복셀 구조의 확산 임피던스를 주파수 영역에서 직접 풀면 개방계 저주파 절편은 τ/ε이고, 스펙트럼 모양은 구조에 따라 갈린다. |
@@ -110,7 +111,7 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 | `landesfeind2018_tortuosity_impedance_vs_tomography` | Landesfeind et al. 2018 | Tortuosity of Battery Electrodes: Validation of Impedance-Derived Values and Critical Comparison with 3D Tomography | EIS 굴곡도는 강구 충전에서 Bruggeman과 맞았고, 같은 코팅의 단층촬영값보다 ~2배 커 미해상 바인더와 탄소가 원인으로 지목됐다. |
 | `morasch2018_binder_gradient_impedance_tortuosity` | Morasch et al. 2018 | Detection of Binder Gradients Using Impedance Spectroscopy and Their Influence on the Tortuosity of Li-Ion Battery Graphite Electrodes | 같은 총 이온 저항이라도 고저항층이 분리막 쪽이면 차단 EIS의 겉보기 τ가 커지고, 집전체 쪽이면 작아진다. |
 | `pouraghajan2018_tortuosity_polarization_interrupt_vs_blocking_electrolyte` | Pouraghajan et al. 2018 | Quantifying Tortuosity of Porous Li-Ion Battery Electrodes: Comparing Polarization-Interrupt and Blocking-Electrolyte Methods | 상용 LIB 전극 넷에서 두 측정법의 τ는 불확도 안에서 맞았고, 큰 차이는 박리 팽창에서 왔다. |
-| `strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation` | Strauss et al. 2018 | Impact of Cathode Material Particle Size on the Capacity of Bulk-Type All-Solid-State Batteries | (카드 없음) |
+| `strauss2018_cam_particle_size_inactive_ncm622_electronic_percolation` | Strauss et al. 2018 | Impact of Cathode Material Particle Size on the Capacity of Bulk-Type All-Solid-State Batteries | 탄소 없는 NCM622와 β-Li₃PS₄ 복합 양극에서는 2차 입자가 작을수록 입자 사이 전자 경로가 이어져 비활성 입자가 줄고 용량이 커진다. |
 | `tjaden2018_tortuosity_review_calculation_approaches` | Tjaden et al. 2018 | Tortuosity in electrochemical devices: a review of calculation approaches | 굴곡도는 τ와 τ²가 섞여 쓰이고 계산법마다 값이 체계적으로 달라, 거듭제곱과 계산 계열을 구분해야 한다. |
 | `wang2018_lco_nmc_electronic_ionic_conductivity_vs_ni` | Wang et al. 2018 | Separating electronic and ionic conductivity in mix-conducting layered lithium transition-metal oxides | 치밀 펠릿의 σ_e는 Ni가 늘수록 커지지만, Ni-rich NMC의 큰 σ_i 주장은 검토 측 점검을 통과하지 못한다. |
 | `banerjee2019_tunneling_tlm_parallel_nanoscale_contacts` | Banerjee et al. 2019 | A Two Dimensional Tunneling Resistance Transmission Line Model for Nanoscale Parallel Electrical Contacts | 나란한 겹침 접촉을 터널 전류와 결합한 전송선 모형으로 풀면 접촉 저항은 간극에 지수적으로 오르고 긴 겹침에서 포화한다. |
@@ -119,7 +120,6 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 | `chouchane2019_innov_voxelization_multiphase_meshing` | Chouchane et al. 2019 | A Versatile and Efficient Voxelization-Based Meshing Algorithm of Multiple Phases | INNOV는 예시 전극의 다상 체적 메시를 4.48 s에 만들고 상별 부피 오차를 2 % 아래로 지켰다. |
 | `froboese2019_microstructure_ionic_conductivity_assb_electrode` | Froboese et al. 2019 | Effect of Microstructure on the Ionic Conductivity of an All Solid-State Battery Electrode | 비활성 유리구 모델 전극에서 분율이 40 %를 넘으면 작은 입경일수록 기공이 늘고 이온전도도가 더 떨어진다. |
 | `park2019_electrode_design_methodology_assb_3d` | Park et al. 2019 | Electrode design methodology for all-solid-state batteries: 3D structural analysis and performance prediction | 복셀 구조 해석에서 LSTP를 30에서 20 wt%로 줄이면 이온 MacMullin 수가 178에서 28,556으로 뛴다. |
-| `lu2020_insitu_nanoct_calendering_microstructural_evolution` | Lu et al. 2020 | Microstructural Evolution of Battery Electrodes During Calendering | (카드 없음) |
 | `nakamura2020_dry_coating_ncm_li3ps4_core_shell` | Nakamura et al. 2020 | Dry coating of active material particles with sulfide solid electrolytes for an all-solid-state lithium battery | (카드 없음) |
 | `nguyen2020_electrode_tortuosity_factor` | Nguyen et al. 2020 | The electrode tortuosity factor: why the conventional tortuosity factor is not well suited for quantifying transport in porous Li-ion battery electrodes and what to use instead | 이온은 고/액 계면까지만 가면 되므로 관통 flux로 정한 τ 대신 차단 대칭셀 임피던스로 정한 τ_e를 P2D에 쓰라고 원문은 권한다. |
 | `sangros2020_dem_electrical_conductive_paths_assb` | Sangrós Giménez et al. 2020 | Modeling the Electrical Conductive Paths within All‐Solid‐State Battery Electrodes | DEM 구조에서 A* 경로탐색과 실린더 저항 회로로 구한 전자전도도는 percolation 이론보다 실측에 가깝고, CB가 늘면 이온 전도는 준다. |
@@ -140,15 +140,13 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 | `interfacial_impedance_formulation_assb_cathode` | Choi et al. 2024 | Formulating Interfacial Impedances for Designing High-Energy and High-Power All-Solid-State Battery Cathodes | 복합 양극의 낮은 이온전도는 SE 입계 저항 때문이고, 입경에 따른 입계 저항과 전하전달 저항의 trade-off는 bimodal CAM으로 풀린다. |
 | `kim2024_carbon_volumetric_occupation_se_domain` | Kim et al. 2024 | Accelerated Degradation of All‐Solid‐State Batteries Induced through Volumetric Occupation of the Carbon Additive in the Solid Electrolyte Domain | 도전 carbon은 SE 도메인을 부피로 점유해 Li⁺ 경로를 막고 SE 산화분해를 촉매하며, 섬유형 carbon이 이를 줄인다. |
 | `nisar2024_dem_effective_electrical_conductivity_sps` | Nisar et al. 2024 | Discrete element model for effective electrical conductivity of spark plasma sintered porous materials | 부피보존 neck 반경과 neck 내부 입계 저항을 넣은 DEM 저항망이 SPS 소결 NiAl의 실측 전기전도도와 근사 일치했다. |
-| `puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups` | Puls et al. 2024 | Benchmarking the reproducibility of all-solid-state battery cell performance | (카드 없음) |
 | `bazzoun2025_dem_parameter_sensitivity_assb_cathode` | Bazzoun et al. 2025 | Parameter sensitivity analysis and calibration of a discrete element model for optimizing all-solid-state-battery cathode microstructures | 강체구 DEM에서 μ_CAM-SE가 percolation과 공극률에 가장 민감했고, 모델은 고-CAM 로딩에서 실험과 어긋났다. |
 | `huang2025_dem_lbm_heat_conduction_composite_cathode` | Huang et al. 2025 | Modelling heat conduction in 3D composite cathode microstructures of all-solid-state batteries | DEM으로 만든 LCO/LLZO 복합 양극에서 LBM으로 구한 유효 열전도도는 공극률, 체적비, 입자크기에 좌우되고 굴곡도도 무시할 수 없다. |
 | `ketter2025_resistor_network_models_predict_transport_properties` | Ketter et al. 2025 | Using resistor network models to predict the transport properties of solid-state battery composites | voxel 저항망은 NCM83–LPSCl 복합양극의 σ와 κ 조성 의존을 따라가지만 이온 문턱 근처에서는 σ_ion을 크게 과대 예측한다. |
 | `kim2025_conductive_agent_se_coating_cathode` | Kim et al. 2025 | Impact of Conductive Agents in Sulfide Electrolyte Coating on Cathode Active Materials for Composite Electrodes in All‐Solid‐State Batteries | SE 코팅 중 넣은 0D Super P는 코팅층에 응집해 전자전도를 떨어뜨리고, 1D VGCF는 전자경로를 만들어 성능을 지킨다. |
 | `kim2025_impedance_decoupling_tlm_assb` | Kim et al. 2025 | Multiple-reaction kinetics of composite electrodes for sulfide-based all-solid-state batteries: Impedance decoupling | 두 경계조건을 둔 modified TLM과 대칭셀, 3-전극 풀셀 EIS로 NCM811/LPSCl 복합 양극의 여러 반응 저항을 분리했다. |
-| `kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells` | Kissel et al. 2025 | Quantifying the Impact of Cathode Composite Mixing Quality on Active Mass Utilization and Reproducibility of Solid‐State Battery Cells | (카드 없음) |
 | `luan2025_graded_cathode_400whkg_pouch` | Luan et al. 2025 | Electrode Engineering Strategy for 400 Wh kg −1 All‐Solid‐State Pouch Cells: Spatial Optimization of Charge Carriers Based on Electron and Ion Transport Flux | 조성 총량을 고정한 채 SE를 분리막쪽에 몰면 두꺼운 황화물 양극의 용량과 율특성이 오르고, 이를 건식 파우치로 옮겼다. |
-| `park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics` | Park et al. 2025 | Chemo-Mechanical Behavior and Stability of High-Loading Cathodes in Solid-State Batteries | (카드 없음) |
+| `park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics` | Park et al. 2025 | Chemo-Mechanical Behavior and Stability of High-Loading Cathodes in Solid-State Batteries | NCM 비율을 높이면 NCM 입자끼리의 연결이 늘어 방전 중 고응력 면적과 입자 균열이 커지고 수명이 짧아진다. |
 | `song2025_electrochemo_mechanical_microelectrode_ees` | Song et al. 2025 | A microstructural electrochemo-mechanical model of high-nickel composite electrodes towards digital twins to bridge the particle and electrode-level characterizations | FIB-SEM으로 재구성한 NMC711 복합양극에 성분별 고유물성을 넣으면 셀 전압이 재현되고, 셀의 과전압은 세 가지 메커니즘으로 설명된다. |
 | `bazzoun2026_dem_fem_rnm_ionic` | Bazzoun et al. 2026 | Integration of DEM-based microstructure generation with FEM and RNM simulations for evaluating ionic conductivity in composite cathodes of all-solid-state batteries | DEM으로 만든 Li₆PS₅Cl/NMC811 양극 구조에서 FEM과 RNM이 이온전도도의 조성, 압력 추세를 내고 EIS로 검증된다. |
 | `cronk2026_lis_positive_electrode_geometry_fem` | Cronk et al. 2026 | A highly utilized and practical lithium-sulfur positive electrode enabled in all-solid-state batteries | S 입경을 마이크론으로 맞추고 1-step 밀링으로 계면상을 만들면 LPSCl 기반 Li–S 전고체 양극의 이용률과 수명이 함께 오른다. |
