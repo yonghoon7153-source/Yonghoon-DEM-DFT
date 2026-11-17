@@ -277,7 +277,9 @@ def preflight_pseudos(species, pseudo_dir, pp_names=None):
 def snapshots_from_traj(traj, times_ps, save_fs, out_dir, label, seed,
                         pseudo_dir, ecutwfc=52, ecutrho=520, pp_names=None,
                         mixing_mode='plain', mixing_beta=0.2, electron_maxstep=100,
-                        mixing_ndim=8, occupations=None, smearing='gaussian', degauss=0.01):
+                        mixing_ndim=8, occupations=None, smearing='gaussian', degauss=0.01,
+                        kpoints='gamma',
+                        card="db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json"):
     """궤적에서 카드 규칙대로 프레임을 뽑아 frame.xyz + scf.in + 대조 해시를 쓴다.
 
     ⛔ 2026-09-14 — 기본 smearing 이 **`mv`(cold)였다.** 형제 함수 `scf_from_xyz` 는
@@ -288,7 +290,13 @@ def snapshots_from_traj(traj, times_ps, save_fs, out_dir, label, seed,
 
     ⚠ `occupations=None` → **`fixed`** 다. 절연체로 **선언된** 구조에만 맞다. 융체·고온
       스냅샷처럼 갭이 닫힐 수 있는 프레임에는 호출부가 `occupations='smearing'` 을 줘야 한다
-      — 이 함수는 온도를 모르므로 대신 판단하지 않는다."""
+      — 이 함수는 온도를 모르므로 대신 판단하지 않는다.
+
+    ⭐ 2026-11-17 ([혁주] MD-0) — `kpoints` (기본 'gamma' = 종전 동작) · `card` (원장에 적을 카드 ·
+      기본 = 종전 b2o3 카드) 를 받는다. 종전에는 k 를 Γ 로 박았고 원장의 card · dft.occupations 를
+      늘 b2o3 · 'fixed' 로 적었다 (smearing 으로 돌려도) — 이제 실제 값을 적는다.
+      CLI 의 --from_traj 경로는 --pp 를 안 넘겨서 **기본 USPP 세트 이름**으로 입력을 썼다 (PP 폴더에
+      그 파일이 있으면 엉뚱한 PP 로 조용히 돈다) — 이제 넘긴다."""
     from ase.io import read as _read, write as _write
     out_dir = Path(out_dir)
     idxs = [frame_index_for_time(t, save_fs) for t in times_ps]
@@ -308,7 +316,7 @@ def snapshots_from_traj(traj, times_ps, save_fs, out_dir, label, seed,
         w.mkdir(parents=True, exist_ok=True)
         _write(str(w / "frame.xyz"), a, format="extxyz")
         (w / "scf.in").write_text(generate_pwin(
-            a, tag, ecutwfc, ecutrho, kpoints='gamma', pseudo_dir=pseudo_dir,
+            a, tag, ecutwfc, ecutrho, kpoints=kpoints, pseudo_dir=pseudo_dir,
             pp_names=pp, calculation='scf', nosym=True,
             occupations=(occupations or 'fixed'),
             mixing_mode=mixing_mode, mixing_beta=mixing_beta,
@@ -318,17 +326,18 @@ def snapshots_from_traj(traj, times_ps, save_fs, out_dir, label, seed,
                      "n_atoms": len(a), "coord_sha256": coord_digest(a),
                      "cell": [[float(x) for x in r] for r in a.cell.array],
                      "path": str(w)})
-    man = {"card": "db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json",
+    man = {"card": str(card),
            "scf_settings": {"mixing_mode": mixing_mode, "mixing_beta": mixing_beta,
                             "electron_maxstep": electron_maxstep,
                             "occupations": (occupations or "fixed"), "mixing_ndim": mixing_ndim,
-                            "smearing": smearing, "degauss": degauss, "kpoints": "gamma",
+                            "smearing": smearing, "degauss": degauss, "kpoints": str(kpoints),
                             "⚠": "전 점이 같아야 한다 — 다르면 계 간 비교가 아니라 설정 간 비교다"},
            "label": label, "seed": seed, "traj": str(traj),
            "n_frames_in_traj": n, "save_fs": float(save_fs),
            "규칙": "index = round(t_ps*1000/save_fs), 0-기준 — 사람이 고르지 않는다",
-           "dft": {"code": "QE 7.4.1", "calculation": "scf", "kpoints": "gamma",
-                   "occupations": "fixed", "ecutwfc": ecutwfc, "ecutrho": ecutrho,
+           "dft": {"code": "QE 7.4.1", "calculation": "scf", "kpoints": str(kpoints),
+                   "occupations": (occupations or "fixed"), "ecutwfc": ecutwfc, "ecutrho": ecutrho,
+                   "pp_names": {el: pp.get(el) for el in sorted(set(frames[0].get_chemical_symbols()))},
                    "conv_thr": "1.0d-8", "tprnfor": True, "nosym": True},
            "pseudos": pseudos, "snapshots": recs,
            "⛔_이_파일이_보증하지_않는_것": "pw.x 수렴 · UMA 힘 계산 · 유사포텐셜의 물리적 적합성"}
@@ -704,6 +713,32 @@ def _selftest():
             "스냅샷 2개 · index 규칙 적용")
         chk((d / "out" / "lbl_s2_t0ps" / "scf.in").is_file(), "scf.in 생성")
         chk(m["snapshots"][0]["coord_sha256"] == coord_digest(a1), "좌표 해시가 frame 과 일치")
+        # ⑫ 2026-11-17 — --pp 이름 · k · 점유 · 카드가 입력과 원장에 실제로 들어가는가 (종전엔 Γ · 'fixed' · b2o3 카드로 박혔다)
+        (d / "pp" / "Li.psl.UPF").write_bytes(b"y")
+        _m2 = snapshots_from_traj(tr, [0.1], 100, d / "outk", "lbk", "s1", d / "pp",
+                                  pp_names={"Li": "Li.psl.UPF"}, kpoints="2 2 2",
+                                  occupations="smearing", card="db/properties/x_card.json")
+        _t2 = (d / "outk" / "lbk_s1_t0ps" / "scf.in").read_text()
+        chk("Li.psl.UPF" in _t2 and "li_pbe_v1.4" not in _t2, "⑫ pp_names 가 scf.in 의 ATOMIC_SPECIES 로 간다")
+        chk("K_POINTS automatic" in _t2 and "2 2 2 0 0 0" in _t2, "⑫ kpoints '2 2 2' 가 scf.in 으로 간다")
+        chk(_m2["dft"]["kpoints"] == "2 2 2" and _m2["scf_settings"]["kpoints"] == "2 2 2"
+            and _m2["dft"]["occupations"] == "smearing" and _m2["card"] == "db/properties/x_card.json"
+            and _m2["dft"]["pp_names"] == {"Li": "Li.psl.UPF"},
+            "⑫ 원장에 실제 k · 점유 · 카드 · PP 이름을 적는다")
+        chk("K_POINTS gamma" in (d / "out" / "lbl_s2_t0ps" / "scf.in").read_text()
+            and m["dft"]["kpoints"] == "gamma", "⑫ 기본은 종전 그대로 Γ")
+        _pa = _build_parser().parse_args(["--from_traj", "t.xyz", "--out", "o", "--label", "l", "--seed", "s"])
+        chk(_pa.traj_kpoints == "gamma", "⑫ CLI --traj_kpoints 기본 = gamma (종전 동작)")
+        # CLI 경로는 **실제로 돌려서** 본다 — 소스 글자를 찾으면 이 시험 줄 자신이 걸린다 (2026-11-17 헛시험)
+        import subprocess as _sp
+        _r = _sp.run([sys.executable, str(Path(__file__).resolve()), "--from_traj", str(tr), "--out", str(d / "outc"),
+                      "--label", "lc", "--seed", "s1", "--pseudo_dir", str(d / "pp"), "--times_ps", "0.1",
+                      "--save_fs", "100", "--pp", "Li=Li.psl.UPF", "--traj_kpoints", "2 2 2"],
+                     capture_output=True, text=True)
+        _t3 = (d / "outc" / "lc_s1_t0ps" / "scf.in")
+        _t3 = _t3.read_text() if _t3.is_file() else ""
+        chk(_r.returncode == 0 and "Li.psl.UPF" in _t3 and "2 2 2 0 0 0" in _t3,
+            f"⑫ CLI --from_traj 가 --pp · --traj_kpoints 를 scf.in 까지 넘긴다 (종전엔 --pp 를 버렸다 · rc {_r.returncode})")
         # ⑪ 2026-09-14 — 형제 함수·CLI 와 기본 smearing 이 갈리면 **함수 직접 호출 경로만** 위험해진다
         import inspect as _ins
         _fd = _ins.signature(snapshots_from_traj).parameters["smearing"].default
@@ -1064,6 +1099,10 @@ def _build_parser():
     p.add_argument('--label'); p.add_argument('--seed')
     p.add_argument('--times_ps', nargs='+', type=float, default=[10, 20, 30, 40, 50])
     p.add_argument('--save_fs', type=float, default=100.0)
+    p.add_argument('--traj_kpoints', default='gamma',
+                  help="--from_traj 의 k (기본 gamma = 종전 동작 · 예 '2 2 2'). ⚠ --kpoints 는 다른 경로용이다")
+    p.add_argument('--traj_card', default='db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json',
+                  help='--from_traj 원장 (SNAPSHOTS json) 에 적을 카드 경로 (기본 = 종전 b2o3 카드)')
     p.add_argument('--pseudo_dir', default='/home/kgy/work/pseudo')
     p.add_argument('--selftest', action='store_true')
     p.add_argument('--collect', action='store_true',
@@ -1196,8 +1235,11 @@ def main():
                                   electron_maxstep=args.electron_maxstep,
                                   mixing_ndim=args.mixing_ndim,
                                   occupations=args.occupations,
-                                  smearing=args.smearing, degauss=args.degauss)
-        print(f"✓ {args.label}/{args.seed}: 스냅샷 {len(man['snapshots'])}개 → {args.out}")
+                                  smearing=args.smearing, degauss=args.degauss,
+                                  pp_names=_kv(args.pp), kpoints=args.traj_kpoints,
+                                  card=args.traj_card)
+        print(f"✓ {args.label}/{args.seed}: 스냅샷 {len(man['snapshots'])}개 → {args.out}"
+              f"  (k {args.traj_kpoints} · PP {man['dft']['pp_names']})")
         for r in man['snapshots']:
             print(f"    {r['tag']}  frame {r['frame_index']}  n={r['n_atoms']}  {r['coord_sha256'][:12]}")
         return

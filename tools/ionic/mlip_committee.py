@@ -745,6 +745,176 @@ def cmd_force_contrast(a):
           + f"  · 문턱 ≥{hi} / ≤{lo}\n판정: {txt}\n→ {a.out}")
 
 
+# ── md0_check — [혁주] MD-0: UMA 대 QE PBE 힘 · 상대 에너지 (모델마다 G1 · G2) ─────────────────────
+#   카드: db/properties/hyeokju_lzo_md_card_2026_11_16.json  ⏩_개정_1_2026_11_17_MD0_실행_결과_전 (기계_판독_값)
+#   왜 여기인가 — force_stats (성분 정의) · get_calc (엔진 로딩) 이 이미 여기 있다. 힘 통계 정의를 두 곳에 두지 않는다.
+#   ⛔ 이 명령이 못 하는 것
+#     · 문턱을 스스로 정하지 않는다 — 카드 개정의 기계_판독_값에서만 읽는다 · 개정이 active 가 아니면 거부한다
+#     · DFT 가 옳다고 증명하지 않는다 (기준으로 가정) · 순간 힘이 맞아도 긴 동역학이 맞다는 뜻이 아니다
+#     · 실패한 점을 빼고 판정하지 않는다 — collect_results 가 하나라도 실패하면 판정하지 않는다 (G3) ·
+#       장 수가 카드의 스냅숏 수와 다르면 판정하지 않는다
+#     · k 탐침이 발동한 모델을 Γ 프레임으로 판정하지 않는다 · 탐침이 없는 모델도 판정하지 않는다
+MD0_CARD = "db/properties/hyeokju_lzo_md_card_2026_11_16.json"
+MD0_AMEND = "⏩_개정_1_2026_11_17_MD0_실행_결과_전"
+MD0_KEYS = ("G1_force_MAE_overall_eV_per_A_max", "G1_force_MAE_per_element_eV_per_A_max", "G1_gated_elements",
+            "G2_rel_energy_RMSE_meV_per_atom_max", "k_probe_force_MAE_eV_per_A_max", "snapshot_times_prod_ps",
+            "save_fs", "models")
+
+
+def md0_load_card(path=MD0_CARD, amend=MD0_AMEND):
+    """카드 개정의 기계_판독_값 → dict. 개정이 없거나 active 가 아니거나 열쇠가 빠지면 SystemExit."""
+    c = json.loads(Path(path).read_text(encoding="utf-8"))
+    if amend not in c:
+        sys.exit(f"⛔ 카드에 {amend} 가 없다 — 판정하지 않는다")
+    a = c[amend]
+    if not str(a.get("상태", "")).startswith("active"):
+        sys.exit(f"⛔ MD-0 개정이 active 가 아니다 ({str(a.get('상태'))[:40]!r}) — 판정하지 않는다")
+    th = a.get("기계_판독_값") or {}
+    miss = [k for k in MD0_KEYS if k not in th]
+    if miss:
+        sys.exit(f"⛔ 기계_판독_값에 {miss} 가 없다 — 숫자를 지어내지 않는다")
+    return th
+
+
+def md0_metrics(ref_F, pred_F, ref_E, pred_E, symbols):
+    """한 모델의 프레임들 → 성분 MAE (전체 · 원소별) · 상대 에너지 RMSE [meV/atom] (방법마다 자기 평균을 뺀 뒤)."""
+    if not (len(ref_F) == len(pred_F) == len(ref_E) == len(pred_E)) or not ref_F:
+        raise ValueError("⛔ 프레임 수가 안 맞거나 0 이다")
+    R = np.concatenate([np.asarray(f, float) for f in ref_F])
+    P = np.concatenate([np.asarray(f, float) for f in pred_F])
+    sym = np.tile(np.asarray(symbols), len(ref_F))
+    if len(sym) != len(R):
+        raise ValueError("⛔ 원소열 길이가 힘 배열과 안 맞다")
+    d = np.abs(P - R)
+    eR, eP = np.asarray(ref_E, float), np.asarray(pred_E, float)
+    rel = (eP - eP.mean()) - (eR - eR.mean())
+    n = len(symbols)
+    return {"n_frames": len(ref_F), "n_atoms": n, "force_MAE_eV_per_A": float(d.mean()),
+            "force_MAE_by_element_eV_per_A": {el: float(d[sym == el].mean()) for el in sorted(set(symbols))},
+            "rel_energy_RMSE_meV_per_atom": float(np.sqrt((rel ** 2).mean()) / n * 1000.0),
+            "component_stats": force_stats(R, P)}
+
+
+def md0_verdict(m, th):
+    """G1 (전체 · 문턱 원소별) · G2 → 통과 여부. 문턱 원소가 모델에 없으면 그 원소는 판정에서 빠진다 (기록)."""
+    g1_all = m["force_MAE_eV_per_A"] <= th["G1_force_MAE_overall_eV_per_A_max"]
+    byel = m["force_MAE_by_element_eV_per_A"]
+    gated = {el: byel[el] <= th["G1_force_MAE_per_element_eV_per_A_max"] for el in th["G1_gated_elements"] if el in byel}
+    g2 = m["rel_energy_RMSE_meV_per_atom"] <= th["G2_rel_energy_RMSE_meV_per_atom_max"]
+    g1 = bool(g1_all and all(gated.values()))
+    return {"G1_overall": bool(g1_all), "G1_gated_by_element": gated,
+            "G1_gated_absent": [el for el in th["G1_gated_elements"] if el not in byel],
+            "G1": g1, "G2": bool(g2), "pass": bool(g1 and g2)}
+
+
+def md0_kpoints_of(scf_in_text):
+    """scf.in 의 K_POINTS → 'gamma' 또는 'n n n' (못 읽으면 ValueError)."""
+    lines = scf_in_text.splitlines()
+    for i, ln in enumerate(lines):
+        if ln.strip().upper().startswith("K_POINTS"):
+            if "gamma" in ln.lower():
+                return "gamma"
+            g = lines[i + 1].split()
+            return " ".join(g[:3])
+    raise ValueError("⛔ scf.in 에 K_POINTS 가 없다")
+
+
+def md0_kprobe_rule(mae, th, model_kpts):
+    """k 탐침 규칙 → (fired, ok, why). 발동했으면 모델 프레임이 Γ 가 아니어야 하고, 안 했으면 Γ 여야 한다."""
+    fired = mae > th["k_probe_force_MAE_eV_per_A_max"]
+    kp = set(model_kpts)
+    if fired:
+        ok = "gamma" not in kp and len(kp) == 1
+        why = "k 탐침 발동 — 그 k 로 다시 돈 5 장으로 판정한다" + ("" if ok else f" (지금 프레임 k = {sorted(kp)})")
+    else:
+        ok = kp == {"gamma"}
+        why = "k 탐침 미발동 — Γ 프레임으로 판정한다" + ("" if ok else f" (지금 프레임 k = {sorted(kp)})")
+    return fired, ok, why
+
+
+def md0_times_ok(times, th):
+    want = sorted(float(t) for t in th["snapshot_times_prod_ps"])
+    return sorted(round(float(t), 6) for t in times) == want
+
+
+def _md0_qe_run(d):
+    """QE 단일점 폴더 하나 (scf.in · scf.out) → (k, 원소, 좌표, 힘). 미수렴 · 미완료면 SystemExit."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.doping.generate_dft_inputs import parse_pw_out, parse_pw_in_positions
+    d = Path(d)
+    txt_in = (d / "scf.in").read_text()
+    _c, syms, cart = parse_pw_in_positions(txt_in)
+    e, F, fl = parse_pw_out((d / "scf.out").read_text(errors="ignore"))
+    if not (fl["converged"] and fl["job_done"]):
+        sys.exit(f"⛔ {d}: 미수렴 · 미완료 {fl} — 판정하지 않는다")
+    return md0_kpoints_of(txt_in), syms, np.asarray(cart, float), np.asarray(F, float)
+
+
+def cmd_md0_check(a):
+    from ase.io import read as _read
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.doping.generate_dft_inputs import collect_results
+    th = md0_load_card(a.card)
+    probes = {}
+    for spec in a.kprobe:
+        name, rest = spec.split("=", 1)
+        gdir, kdir = rest.split(",", 1)
+        kg, sg, xg, Fg = _md0_qe_run(gdir)
+        kk, sk, xk, Fk = _md0_qe_run(kdir)
+        if kg != "gamma" or kk == "gamma":
+            sys.exit(f"⛔ {name}: k 탐침은 (Γ 폴더, k 폴더) 짝이어야 한다 (지금 {kg} · {kk})")
+        if sg != sk or xg.shape != xk.shape or float(np.abs(xg - xk).max()) > 1e-5:
+            sys.exit(f"⛔ {name}: k 탐침 두 폴더의 원자 배치가 다르다 — 같은 스냅숏이어야 한다")
+        probes[name] = {"gamma_dir": gdir, "k_dir": kdir, "k": kk, "force_MAE_eV_per_A": float(np.abs(Fk - Fg).mean())}
+    calc = get_calc(a.engine, a.device)
+    out = {"card": a.card, "amend": MD0_AMEND, "thresholds": th, "engine": a.engine, "models": {}, "kprobe": probes}
+    for spec in a.model:
+        name, rest = spec.split("=", 1)
+        outdir, label, seed = rest.split(":")
+        if name not in th["models"]:
+            sys.exit(f"⛔ 모델 {name!r} 는 카드 models {th['models']} 에 없다")
+        if name not in probes:
+            sys.exit(f"⛔ {name}: k 탐침이 없다 — 카드는 모델마다 하나를 요구한다 · 판정하지 않는다")
+        try:
+            res = collect_results(outdir, label, seed)
+        except Exception as e:
+            sys.exit(f"⛔ {name}: G3 — 회수 실패 ({e}) · 판정하지 않는다 (빠진 점으로 판정하지 않는다)")
+        times = [r["time_ps"] for r in res["points"]]
+        if not md0_times_ok(times, th):
+            sys.exit(f"⛔ {name}: 스냅숏 시각 {sorted(times)} ≠ 카드 {th['snapshot_times_prod_ps']} — 판정하지 않는다")
+        man = json.loads((Path(outdir) / f"SNAPSHOTS_{label}_{seed}.json").read_text(encoding="utf-8"))
+        kpts = [md0_kpoints_of((Path(r["path"]) / "scf.in").read_text()) for r in man["snapshots"]]
+        fired, ok, why = md0_kprobe_rule(probes[name]["force_MAE_eV_per_A"], th, kpts)
+        probes[name].update({"fired": bool(fired), "rule": why})
+        if not ok:
+            sys.exit(f"⛔ {name}: {why} — 판정하지 않는다")
+        frames = _read(str(Path(outdir) / f"labeled_{label}_{seed}.xyz"), index=":")
+        syms = frames[0].get_chemical_symbols()
+        rF, pF, rE, pE = [], [], [], []
+        for at in frames:
+            if at.get_chemical_symbols() != syms:
+                sys.exit(f"⛔ {name}: 프레임마다 원소열이 다르다")
+            rF.append(np.asarray(at.get_forces(), float)); rE.append(float(at.get_potential_energy()))
+            b = at.copy(); b.calc = calc
+            pF.append(np.asarray(b.get_forces(), float)); pE.append(float(b.get_potential_energy()))
+        m = md0_metrics(rF, pF, rE, pE, syms)
+        out["models"][name] = {"metrics": m, "verdict": md0_verdict(m, th), "times_ps": sorted(times),
+                               "kpoints": sorted(set(kpts)), "dft_results": str(Path(outdir) / f"RESULTS_{label}_{seed}.json")}
+        v = out["models"][name]["verdict"]
+        print(f"  {name}: 힘 MAE {m['force_MAE_eV_per_A']:.4f} eV/Å · 원소별 "
+              + " · ".join(f"{k} {x:.3f}" for k, x in m["force_MAE_by_element_eV_per_A"].items())
+              + f" · 상대 E RMSE {m['rel_energy_RMSE_meV_per_atom']:.2f} meV/atom → G1 {v['G1']} · G2 {v['G2']} · {'통과' if v['pass'] else '불통과'}")
+    missing = [n for n in th["models"] if n not in out["models"]]
+    if missing:
+        sys.exit(f"⛔ 카드의 모델 {missing} 이 빠졌다 — 판정하지 않는다")
+    allpass = all(out["models"][n]["verdict"]["pass"] for n in th["models"])
+    out["MD1"] = ("두 모델 다 통과 → MD-1 결과 전 개정으로 (카드 §4)" if allpass
+                  else "하나라도 불통과 → MD-1 없음 (사용자 결정으로만 다르게 · 카드 §4)")
+    out["⛔"] = "문턱은 카드 개정의 기계_판독_값에서 읽었다 — 이 도구가 정하지 않는다 · 순간 힘 대조이지 동역학 검증이 아니다"
+    Path(a.out).write_text(json.dumps(out, ensure_ascii=False, indent=1))
+    print(f"\n★ {out['MD1']}\n→ {a.out}")
+
+
 def cmd_selftest(a=None):
     bad, n_run = [], [0]
     def chk(c, msg):
@@ -892,6 +1062,57 @@ def cmd_selftest(a=None):
     chk(force_stats(_ref, _p2)["softening_slope"] > _e2["S"]["softening_slope"],
         "⛔음성: 전체 softening 은 한 원소의 무름을 **가린다** — 그래서 원소별이 필요하다")
 
+    # ── md0_check 조각 (2026-11-17) ────────────────────────────────────────
+    _th = {"G1_force_MAE_overall_eV_per_A_max": 0.10, "G1_force_MAE_per_element_eV_per_A_max": 0.15,
+           "G1_gated_elements": ["Zr", "O", "P", "S"], "G2_rel_energy_RMSE_meV_per_atom_max": 5.0,
+           "k_probe_force_MAE_eV_per_A_max": 0.02, "snapshot_times_prod_ps": [1, 2, 3, 4, 5], "save_fs": 100,
+           "models": ["a", "b"]}
+    _sy = ["Zr", "O", "O"]
+    _rF = [np.zeros((3, 3)), np.ones((3, 3))]
+    _pF = [f + 0.05 for f in _rF]
+    _m = md0_metrics(_rF, _pF, [0.0, 1.0], [0.5, 1.5], _sy)
+    chk(abs(_m["force_MAE_eV_per_A"] - 0.05) < 1e-12 and abs(_m["force_MAE_by_element_eV_per_A"]["Zr"] - 0.05) < 1e-12,
+        "md0: 성분 MAE (전체 · 원소별) = 0.05")
+    chk(abs(_m["rel_energy_RMSE_meV_per_atom"]) < 1e-9, "md0: 에너지 기준 차 (상수) 는 상대 에너지에서 지워진다")
+    _m2 = md0_metrics(_rF, _pF, [0.0, 1.0], [0.5, 1.7], _sy)
+    chk(abs(_m2["rel_energy_RMSE_meV_per_atom"] - 100.0 / 3) < 1e-6, "md0: 상대 에너지 RMSE = 0.1 eV / 3 원자 = 33.3 meV/atom")
+    chk(md0_verdict(_m, _th)["pass"] and not md0_verdict(_m2, _th)["pass"], "md0: G2 통과 · ⛔ 불통과를 가른다")
+    _pF3 = [f + np.array([[0.2] * 3, [0.0] * 3, [0.0] * 3]) for f in _rF]       # Zr 만 0.2 → 전체 0.067
+    _v3 = md0_verdict(md0_metrics(_rF, _pF3, [0, 1], [0, 1], _sy), _th)
+    chk(_v3["G1_overall"] and not _v3["G1_gated_by_element"]["Zr"] and not _v3["pass"],
+        "md0: ⛔ 전체 MAE 는 통과해도 문턱 원소 (Zr) 하나가 넘으면 불통과")
+    _sy4 = ["Li", "O", "O"]
+    _pF4 = [f + np.array([[0.24] * 3, [0.0] * 3, [0.0] * 3]) for f in _rF]     # Li 만 0.24 (> 0.15) → 전체 0.08 (경계에서 뗌)
+    _v4 = md0_verdict(md0_metrics(_rF, _pF4, [0, 1], [0, 1], _sy4), _th)
+    chk(_v4["G1_overall"] and _v4["pass"] and "Li" not in _v4["G1_gated_by_element"],
+        "md0: 문턱 밖 원소 (Li) 는 기록만 — 판정에 안 들어간다")
+    chk(md0_kpoints_of("K_POINTS gamma\n") == "gamma" and md0_kpoints_of("K_POINTS automatic\n  2 2 1 0 0 0\n") == "2 2 1",
+        "md0: scf.in K_POINTS 읽기 (gamma · 격자)")
+    chk(md0_kprobe_rule(0.01, _th, ["gamma"] * 5)[1] and not md0_kprobe_rule(0.01, _th, ["gamma"] * 4 + ["2 2 2"])[1],
+        "md0: 탐침 미발동 → Γ 프레임만 받는다")
+    chk(md0_kprobe_rule(0.05, _th, ["2 2 2"] * 5)[1] and not md0_kprobe_rule(0.05, _th, ["gamma"] * 5)[1],
+        "md0: ⛔ 탐침 발동 → Γ 프레임으로는 판정하지 않는다")
+    chk(md0_times_ok([1, 2, 3, 4, 5], _th) and not md0_times_ok([1, 2, 3, 4], _th) and not md0_times_ok([0, 1, 2, 3, 4], _th),
+        "md0: ⛔ 스냅숏 시각이 카드와 다르면 (4 장 · 어긋남) 판정하지 않는다")
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _d:
+        _cp = Path(_d) / "c.json"
+        _cp.write_text(json.dumps({MD0_AMEND: {"상태": "proposed", "기계_판독_값": _th}}, ensure_ascii=False))
+        try:
+            md0_load_card(str(_cp)); chk(False, "md0: ⛔ proposed 개정을 받으면 안 된다")
+        except SystemExit:
+            chk(True, "md0: ⛔ 개정이 active 가 아니면 거부")
+        _cp.write_text(json.dumps({MD0_AMEND: {"상태": "active", "기계_판독_값": {k: v for k, v in _th.items() if k != "save_fs"}}},
+                                  ensure_ascii=False))
+        try:
+            md0_load_card(str(_cp)); chk(False, "md0: ⛔ 열쇠가 빠진 값을 받으면 안 된다")
+        except SystemExit:
+            chk(True, "md0: ⛔ 기계_판독_값 열쇠가 빠지면 거부")
+    _real = Path(__file__).resolve().parents[2] / MD0_CARD
+    if _real.is_file():
+        _rt = md0_load_card(str(_real))
+        chk(_rt["G1_force_MAE_overall_eV_per_A_max"] == 0.10 and _rt["G2_rel_energy_RMSE_meV_per_atom_max"] == 5.0
+            and _rt["G1_gated_elements"] == ["Zr", "O", "P", "S"], "md0: 실제 카드 (active) 의 문턱을 읽는다")
     print(f"selftest {'PASS' if not bad else 'FAIL'} — {n_run[0] - len(bad)} ok, {len(bad)} bad")
     return 1 if bad else 0
 
@@ -924,6 +1145,11 @@ def main():
     fc.add_argument("--exclude", nargs="+", default=["Li"], help="골격에서 뺄 원소")
     fc.add_argument("--card", default="db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json")
     fc.add_argument("--out", required=True); fc.set_defaults(fn=cmd_force_contrast)
+    m0 = sub.add_parser("md0_check", help="[혁주] MD-0: 모델마다 UMA 대 DFT 힘 MAE · 상대 에너지 RMSE (문턱은 카드 개정에서 읽는다)")
+    m0.add_argument("--model", nargs="+", required=True, help="이름=<from_traj 폴더>:<label>:<seed> (이름 = 카드 models)")
+    m0.add_argument("--kprobe", nargs="+", required=True, help="이름=<Γ 단일점 폴더>,<k 단일점 폴더>")
+    m0.add_argument("--card", default=MD0_CARD); m0.add_argument("--engine", default="uma"); m0.add_argument("--device", default="cpu")
+    m0.add_argument("--out", required=True); m0.set_defaults(fn=cmd_md0_check)
     i = sub.add_parser("info", help="엔진 배선(cutoff·층 수·유효 수용영역)")
     i.add_argument("--engines", nargs="+", default=["uma"],
                    choices=["uma", "mace", "sevennet"])
