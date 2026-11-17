@@ -5,7 +5,7 @@ created: 2026-09-16
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/jung2020_ni-rich-compliant-microstructure-ncm-assb.md, raw/papers/han2021_single-vs-polycrystalline-nca-sulfide-halide-se.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/barai2021_cathode-llzo-delamination-lattice-spring-capacity-fade.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
+sources: [raw/papers/shao2022_coupled-electrochemical-mechanical-contact-loss-pressure-assb.md, raw/papers/jung2020_ni-rich-compliant-microstructure-ncm-assb.md, raw/papers/han2021_single-vs-polycrystalline-nca-sulfide-halide-se.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/barai2021_cathode-llzo-delamination-lattice-spring-capacity-fade.md, raw/papers/schmidt2024_nitsche-contact-delamination-resolved-ssb-cathode.md, raw/papers/zhang2024_all-electrochem-active-si-li21si5-anode-assb.md, raw/papers/li2025_si-anode-fracture-size-threshold-stack-pressure-assb.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/xu2024_pressure-effects-countermeasures-ssb-review.md, raw/papers/zhang2017_in-situ-pressure-electrochemical-expansion-assb.md, raw/papers/masias2019_elastic-plastic-creep-mechanical-properties-lithium-metal.md, raw/papers/zhang2025_pressure-free-si-li21si5-double-layer-anode-assb.md, raw/papers/li2025_stack-pressure-critical-importance-perspective.md, raw/papers/sakka2022_pressure-3d-structure-composite-cathode-xct.md, raw/papers/shi2020_mechanical-degradation-assb-cathode.md, raw/papers/doux2020_stack-pressure-room-temperature-assb-li-metal.md, raw/papers/clausnitzer2023_optimizing-composite-cathode-structure-resolved.md, raw/papers/liu2024_grain-level-chemo-mechanics-composite-cathode-degradation.md, raw/papers/lee2020_ag-c-anode-free-assb.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/oh2025_maxwell-protocol-nondestructive-assb-health.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -449,6 +449,15 @@ Li₂₁Si₅/Si–Li₂₁Si₅ 이중층 음극 ‖ Li₆PS₅Cl ‖ Li₃InCl
 
 - ① 단계(η 를 먼저 죽인다)를 원전이 '부반응 배제' 목적으로 돌렸다 — 회수 31 · 6 mAh g⁻¹ · 불회수 차 ≤3 · (003) 위치 · 폭 회복(표 S5 · S6). ⚠ 율 · 온도 · CV 셋 동시 · 다른 셀 · 첫 사이클만 — 설계 조건에 **'같은 셀 순서'** 와 **'온도를 쓰면 SE · 계면 변화 확인'** 을 붙일 재료(§3-b (두) · 근거 표시만).
 - ② 단계(압력 되돌림) 0 · 운전 압력 명목('≈70 · ≈7 MPa') · 저자 가설은 외부 단축 압력이 균열을 돕는 쪽 · operando ΔP 는 LTO 셀 첫 사이클 하나씩(113호와 같은 영변형 상대극 설계 — 한 해 앞 판). 연산자 쪽 변화 0.
+
+## ★ 116호(Shao · Liu · Shao · Sang · Chen 2022 *Energy*)가 붙인 것 — **모형의 '압력 → 접촉 회복' 은 탄성 · 무이력 Persson 사상의 귀결이고, 실험은 조립 15 MPa 뒤 0.1 · 0.4 · 2 MPa 셋(이력 · 되돌림 인쇄 0)이다**
+
+`raw/papers/shao2022_coupled-electrochemical-mechanical-contact-loss-pressure-assb.md` (12 · 94 · 103호 지목 · 5차 묶음 #12 · 모형 + 실험).
+
+- ① 단계(η 를 먼저 죽인다) 0 — 율 하나(모형 0.1 mA ≈7.3 C · 실험 0.03 C) · 휴지 0.
+- ② 단계(압력 되돌림) 0 — 압력마다 다른 셀로 읽힘(셀 수 미인쇄) · 같은 셀 재가압 0 · 그림 9 '사이클 → void → 압력 회복' 은 모식.
+- 설계 조건 D4(구속 형식): 지그 = 볼트 + 로드셀 + 스프링 셋(그림 4(a) — 본문 0 · 정하중형으로 읽힘 `[해석]`) · 모형 = 경계 수직 하중 + 면내 변형 0 · 압력 이력: 조립 "pressed for 2 s under 15 MPa" 뒤 시험 — 모형 κ(σ₀) 는 현재 σ₀ 만(무이력).
+- `[재현·대수]` 모형에서 압력은 0.4 MPa 아래 κ_x1 · κ_x2 를 함께(s 0.0777 ↔ 0.0769 MPa) 움직이고 위에서는 V^r 열 상수 이동(16.8 µV/MPa)만 — θ-전용 조작이 아니다(합성 truth R4).
 
 ## 이 페이지가 주장하지 않는 것
 
