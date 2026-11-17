@@ -1,0 +1,123 @@
+{
+  "schema": "rt_runner_preparation_verification_v1",
+  "base_commit": "716c59f9afe18d88674712835d870fa3cb5b68eb",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Windows",
+    "shell": "Git Bash (explicit RT_BASH for final runner pair)"
+  },
+  "tests": {
+    "binding_red_final.log": {
+      "methods": 20,
+      "failures": 36,
+      "errors": 0,
+      "skipped": 1,
+      "rc": 1,
+      "raw_sha256": "1c9db6b766777ab9381369e62f02bd0e5ee3fdfbc6b0b84cdfd521e69a669deb",
+      "shared_log_sha256": "7a550801dc77cef7f7f4f3ebb535bf1547e454dc035189ae157fdff416a73f7e",
+      "shared_log": "docs/reviews/p1_rt_runner_preparation_20261117/evidence/binding_red_final.log"
+    },
+    "binding_green_final.log": {
+      "methods": 20,
+      "passed": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1,
+      "rc": 0,
+      "raw_sha256": "fd16e4b663b8d72aa75498e854a0e2eb51748dff3c19df2e37244e1d79a0c13e",
+      "shared_log_sha256": "b3a7aefc207b8d622804732443400d21939821008dfcec9bfb1f96451162d345",
+      "shared_log": "docs/reviews/p1_rt_runner_preparation_20261117/evidence/binding_green_final.log"
+    },
+    "runner_red_final_v2.log": {
+      "methods": 12,
+      "failures": 19,
+      "errors": 0,
+      "skipped": 0,
+      "rc": 1,
+      "raw_sha256": "c84877d9baa457a91a9a12633a859a0a0479866c216554209cda992d3d9a8e3b",
+      "shared_log_sha256": "e672fcd34250f341ac985783096259e49886fd9361335d094b3d7b3bb6c3cc1c",
+      "shared_log": "docs/reviews/p1_rt_runner_preparation_20261117/evidence/runner_red_verified.log"
+    },
+    "runner_green_final_v2.log": {
+      "methods": 12,
+      "passed": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rc": 0,
+      "raw_sha256": "a6a7723ccab32270a185951f37fe779d601bcf6b2da4d4def440b9357a266eef",
+      "shared_log_sha256": "9cfcc426d1d2242b2ec661cdca985a3d8f1c6be0788958ff12df7b0662f0963d",
+      "shared_log": "docs/reviews/p1_rt_runner_preparation_20261117/evidence/runner_green_verified.log"
+    },
+    "deck_regression.log": {
+      "methods": 12,
+      "passed": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "rc": 0,
+      "raw_sha256": "75fdb4eba68ff4b0941708988234fe8c54ec9fa73332f14e868574fd928f6a51",
+      "shared_log_sha256": "038c900c858e504de4180e8655b633089d571f297a1cdaf10204090e793c2dc9",
+      "shared_log": "docs/reviews/p1_rt_runner_preparation_20261117/evidence/deck_regression.log"
+    }
+  },
+  "engine_runs": 0,
+  "field_commands": 0,
+  "research_values_read": false,
+  "operational_kit_ready": false,
+  "source_files_git_blob_equal": 94,
+  "source_files_copy_equal": 94,
+  "rt_deck_additions_equal": 13,
+  "prepared_files": 111,
+  "prepared_layer": {
+    "schema": "rt_runner_layer_v1",
+    "operational_kit_ready": false,
+    "engine_runs": 0,
+    "historical_source_files_preserved": 94,
+    "rt_deck_additions": 13,
+    "new_files": {
+      "run_unload_rt_dev.sh": "0ec60e850490564ff96d332bf27677ddde68237521a03d91627101eb3931fefa",
+      "rt_binding.py": "1ca527f6800660dd400e18b0af02a80cdd4225d82231eb2d82e9ee1dee05ced6"
+    },
+    "original_runner_sha256": "da9a6e7509a2f85cd0e845c1cbe72f1f214f7f92a380a14c26548f04d738c26e",
+    "historical_seals_modified": false,
+    "remaining": [
+      "30-column numeric comparison and continuity guards",
+      "20-check RT fixture reader and prerequisite",
+      "atomic publish-new and read-only restore integration",
+      "new operational seal and author field fixture"
+    ]
+  },
+  "source_manifest_sha256": "7c078d85d6d48e956468fcce398f41bd9a099debded7d12eb295408b59350c2b",
+  "sources": {
+    "docs/reviews/p1_rt_runner_preparation_20261117/before/binding_unimplemented.py": "e0d669759d2792be0c953c94f9f853e159c3a0c88ffa5e2e033f7bcdac0af555",
+    "docs/reviews/p1_rt_runner_preparation_20261117/before/runner_unchanged.py": "0dee48954759c662643d9de16baebdb672f323a92161889637695a4edcbee31a",
+    "docs/reviews/p1_rt_runner_preparation_20261117/prepare_rt_runner.py": "2eb0bda47d81a50706ff6ae7e74b49d88ca7e927dd5f8a535b87bdfe47ede2f3",
+    "docs/reviews/p1_rt_runner_preparation_20261117/rt_binding.py": "1ca527f6800660dd400e18b0af02a80cdd4225d82231eb2d82e9ee1dee05ced6",
+    "docs/reviews/p1_rt_runner_preparation_20261117/rt_bridge.sh": "7294931b01ad2de97f888ea61a2296f0046a323bad6c66d934100e7f2ee5df68",
+    "docs/reviews/p1_rt_runner_preparation_20261117/test_rt_binding.py": "4d23bc38206b1bb1d32b9f88370431aeaf8cbcc438c346449070f639b3df02d7",
+    "docs/reviews/p1_rt_runner_preparation_20261117/test_rt_runner.py": "8cc89bcef5dcc572a15d6350467a25aaafbf3caa6684ab62f1ea641ad7854738"
+  },
+  "scope": "Local author checks. No independent verdict, physical qualification, operational source seal, or field GO.",
+  "shared_log_transformations": [
+    "local roots replaced with placeholders",
+    "CRLF normalized to LF",
+    "trailing whitespace stripped; final LF retained"
+  ],
+  "preparation_events": [
+    "restricted Bash launch rejected",
+    "default temp path hash-character conflicted with synthetic comment parsing",
+    "mock sha256sum argument -- handling corrected",
+    "Windows shell cwd cleanup contention; cleanup-only retry, no test retry",
+    "native Bash absolute-path spelling mismatch; full-entry and syntax checks use stdin"
+  ],
+  "skip": "One real directory symlink check unavailable in this Windows permission context; not counted as pass.",
+  "doc_refs": {
+    "rc": 1,
+    "missing_paths": 0,
+    "missing_commits": 96,
+    "new_document_findings": 0,
+    "raw_log_sha256": "cbfa48036fc1b1b0619ab9000cfa19b423859ccf18a7c98e3e97c22ee4ca10ca",
+    "scope": "Known local remote-tracking ref gap remains; not a full pass. Claude intake rechecks; checker unchanged."
+  }
+}

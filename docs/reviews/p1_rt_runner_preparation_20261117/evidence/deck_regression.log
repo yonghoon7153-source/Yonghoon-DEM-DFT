@@ -1,0 +1,17 @@
+test_30_columns_precision_and_order (__main__.RTDecks.test_30_columns_precision_and_order) ... ok
+test_all_heads_and_parameters_are_R_bytes (__main__.RTDecks.test_all_heads_and_parameters_are_R_bytes) ... ok
+test_exactly_one_read_and_no_balance (__main__.RTDecks.test_exactly_one_read_and_no_balance) ... ok
+test_fixture_and_production_same_rt_body (__main__.RTDecks.test_fixture_and_production_same_rt_body) ... ok
+test_fixture_head_matches_each_R_semantically (__main__.RTDecks.test_fixture_head_matches_each_R_semantically) ... ok
+test_fixture_parameters_come_from_history_table (__main__.RTDecks.test_fixture_parameters_come_from_history_table) ... ok
+test_no_source_mutation (__main__.RTDecks.test_no_source_mutation) ... ok
+test_only_restart_write_differs_between_RT_commands (__main__.RTDecks.test_only_restart_write_differs_between_RT_commands) ... ok
+test_reject_mutated_fixture_and_production (__main__.RTDecks.test_reject_mutated_fixture_and_production) ... ok
+test_single_wall_compute_and_no_live_dump_at_write (__main__.RTDecks.test_single_wall_compute_and_no_live_dump_at_write) ... ok
+test_ten_production_two_fixture_and_one_table (__main__.RTDecks.test_ten_production_two_fixture_and_one_table) ... ok
+test_ten_zero_RJ_default_3600000 (__main__.RTDecks.test_ten_zero_RJ_default_3600000) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.485s
+
+OK
