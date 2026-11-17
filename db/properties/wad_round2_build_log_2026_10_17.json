@@ -487,5 +487,15 @@
   "보낸_것": "단계 1–4 해제 파일 db/raw/wad_round2_vasp_2026_10_22/release_R2-REL-2026-10-26.tsv (sha256 앞 16 d4f757b9794ed4f1 · 클라우드 대조 10-27) + 메일 (업체가 RELEASE_SHA256 로 확인)",
   "⏭": "단계 1–4 반송 (round2_return.tgz + .sha256) → sha 대조 → --check (등록부 pp_registry_round2_2026_10_26.json · sha 999aa2da…) → --collect (UMA ④ = db/raw/wad_p2small_uma_sp_2026_10_17 · 등록부) · 은 V5 G5 집계는 DEM 회신 10 과 같이 · ⛔ W 값은 결과 기록에만",
   "by": "agent · 2026-10-27"
+ },
+ "⑨_중간_반송_2026_11_17": {
+  "받음": "사용자 업로드 2026-11-17 76d50c41-wad_round2_interim_2026-11-17.zip (건엽 · 메신저 '그 중간에 계산 실패한거 있어서 · 업데이트 해서 주시면 됩니당') → INTERIM_REPORT_2026-11-17.md · round2_return.tgz (33,384,722 B · 261 구성원 · sha256 117c85a623a9d5a56d484a16fe3ff5d4d2f92563884948457644b10d930816b6 · 업체 sha 파일과 일치) · 보관 db/raw/wad_round2_vasp_2026_10_22/interim_return_2026_11_17/",
+  "업체_보고_요지": "mirae 64core.q@n38 1 노드 · 64 랭크 · NCORE 4 · KPAR 2 · SGE 131170 · 11-10 15:39:38 → 11-17 11:18:19 KST (qdel · 운영자 중단) · 19 잡 중 13 완료 (단계 1 4 · 단계 2 9 · 전부 단 0 수렴) · 단계 3 첫 잡 P2S_S_A_optB88_bound 단 0 SCF_NOT_CONVERGED (NELM 200 · 35.8 h) → r1 ⓐ 30 스텝에서 발산 → 34 스텝에서 중단 · 누적 226.8 h (+6.9) / 전체 상한 1430 h · VASP 5.4.4.18Apr17-6-g9f103f2a35 · pp54 · 커널 b3c9452a… (등록부와 일치) · INCAR · POSCAR · KPOINTS 수정 없음 · 손 재실행 없음",
+  "업체_표기_정정": "killed.json 의 cancel_utc '2026-11-17T11:18:19Z' 는 KST 값에 Z 를 붙인 업체 스크립트 실수 — 실제 UTC 는 2026-11-17T02:18:19Z (recorded_utc 02:19:27Z 쪽이 맞다 · 업체 보고서 §5 ② · env.txt 에 정정) · 러너가 재기록을 막아 파일은 그대로 · wall_s 24,759 · osz_rows 34 · sched_job_id 는 정확",
+  "검사": "반송 안 MANIFEST.sha256 = 보낸 묶음 714324cc… · tools/wad/build_round2_vasp_package.py --check (등록부 999aa2da…) rc 3 (반송 미완) — 탄소 PBE+D3 15 OK · C–C optB88 2 OK (파일럿) · P2S_S_A_optB88_bound INCOMPLETE_ATTEMPT {0: SCF_NOT_CONVERGED · r1A: INCOMPLETE_ATTEMPT} · MISSING 5 (S_A optB88 far · Li_A optB88 bound/far · C–C pbed3 bound/far) · 은 a4 SCF_NOT_CONVERGED (개정 4 로 이미 종료) — check_interim_2026_11_17.txt",
+  "W_집계": "하지 않았다 — 카드: 반송 다 온 뒤 --collect 한 번 · 업체 보고서의 TOTEN · bound−far 차 표는 참고용으로만 있다 (여기 옮기지 않는다)",
+  "사용자_결정": "D-2026-11-17-wad-round2-interim-stage4-optb88-closed (active · AskUserQuestion) — ① 단계 4 지금 (STAGES=4) ② optB88 4 잡 닫기 (δ_XC+vdW 미완료 · 카드 §4b · §4d)",
+  "다음": "사용자가 업체에 지시 → 단계 4 반송 (누적 묶음 = 최종) → sha256sum -c → --check → --collect (W 집계 한 번) · optB88 셋은 이 결정으로 '닫힘'",
+  "by": "claude · 2026-11-17"
  }
 }

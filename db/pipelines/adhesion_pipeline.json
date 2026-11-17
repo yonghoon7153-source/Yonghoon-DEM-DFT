@@ -1638,9 +1638,15 @@
    "date": "2026-10-27",
    "stage": "dft",
    "text": "단계 1–4 **해제 파일 발송** (사용자 'wad는 보냈어' · sha256 d4f757b9…) → ⏭ 반송 → `--check` (등록부) → `--collect` (W 집계 한 번) · 은 V5 G5 집계와 DEM 회신 10 은 그 뒤 같이. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-11-17",
+   "stage": "dft",
+   "text": "외주 2차 **중간 반송** (업체 운영자 중단 11-17 11:18 KST) — 19 잡 중 13 완료 (단계 1 · 2 전부 단 0 수렴) · 단계 3 optB88 첫 잡 (S_A bound · 398 원자) 단 0 미수렴 · r1 ⓐ 발산 → 사용자 결정 `D-2026-11-17-wad-round2-interim-stage4-optb88-closed`: 단계 4 (C–C PBE+D3 2 잡) 지금 · optB88 4 잡 닫기 (δ_XC+vdW 미완료 · G5_C 영향 없음) · `--check` rc 3 (반송 미완 · 탄소 15 OK). W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [
-  "D-2026-09-23-gabia-gpu-exception-sese"
+  "D-2026-09-23-gabia-gpu-exception-sese",
+  "D-2026-11-17-wad-round2-interim-stage4-optb88-closed"
  ]
 }

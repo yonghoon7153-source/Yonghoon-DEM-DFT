@@ -13977,6 +13977,92 @@
     "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] MD-0 실행 개정 1 을 비준할까요? (결과 전 · 아직 UMA · DFT 아무것도 안 돌렸어요) ① 벌크 = B144 (MP 셀 · 144 원자). ② 계면 = LPSCl (001) li_outer 2 층 46 원자 (문헌상 가장 안정한 종결) + Li₂ZrO₃ 16 f.u. 무작위 배치. LPSCl 을 고정한 채 2500 K 10 ps → 600 K 까지 19 ps 선형 담금질 뒤 고정을 풀어요 (142 원자 · 주기 샌드위치). 스냅숏 = 600 K 에서 평형 1 ps 를 버리고 생산 1–5 ps 에서 모델마다 5 장. DFT = 2a 와 같은 PP · 60/480 · Γ + 모델마다 k 탐침 1 장 (힘 차 > 0.02 eV/Å 면 그 k 로 다시). 판정 = 모델마다 G1 (힘 MAE ≤ 0.10 · Zr · O · P · S ≤ 0.15 eV/Å) 과 G2 (상대 에너지 RMSE ≤ 5 meV/atom). 두 모델 다 통과해야 MD-1 로 가요. kgy 에서 UMA 는 ZrO₂ 잡 옆에서 돌리고, DFT 12 점은 ZrO₂ 가 끝난 뒤에 돌려요.' → '비준 — 개정 그대로 (Recommended)' — 결과 전",
     "decision_digest": "sha256:9ef65a5d9ecb0cedc619d8e1e8ceb30aa6fb7a96319b71235827cfb65e2976de"
    }
+  },
+  {
+   "id": "D-2026-11-17-wad-round2-interim-stage4-optb88-closed",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "adhesion.wad_lpscl_agc.p2small_carbon",
+   "slot": "wad_round2_stage3_optb88_closure",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "graphite"
+    ],
+    "tasks": [
+     "wad_p2small_vasp"
+    ],
+    "methods": [
+     "vasp_optb88_vdw",
+     "vasp_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "W_ad 외주 2차 — 중간 반송 (11-17) 뒤: 단계 4 (C–C PBE+D3 2 잡) 는 지금 돌리고 단계 3 optB88 4 잡은 닫는다 (δ_XC+vdW 미완료)",
+   "statement": "① 업체가 STAGES=4 로 단계 4 (CC_S33_AB_pbed3_bound · far) 만 돌린다 — 해제 파일 R2-REL-2026-10-26 의 단계 4 상한 24 h 안 · 묶음 · 입력 수정 없음. ② 단계 3 optB88 4 잡 (P2S_S_A_optB88_bound · far · P2S_Li_A_optB88_bound · far) 은 이번 묶음에서 닫는다: S_A bound 는 단 0 SCF_NOT_CONVERGED 다음 r1 ⓐ 가 운영자 중단 (qdel) 이라 카드 §4b 의 ⓐ 자격 미달 → 사다리 끝 · 값 없음 · 나머지 셋은 돌리지 않는다 (값 없음). 새 처방 · INCAR.rX · 묶음 v6 없음. ③ 카드 §4d 대로 δ_XC+vdW (S_A · Li_A 두 표본) 만 미완료 — G5_C (탄소 PBE+D3 15 잡) 와 ②′ C–C 는 영향 없음. ④ 단계 4 반송 (누적 묶음) 이 이번 묶음의 최종 반송이다 · W 집계 (--collect) 는 그 뒤 한 번 (카드 규칙) · 거기서 optB88 셋의 MISSING 은 이 결정을 근거로 '닫힘 (사용자 결정 · 값 없음)' 으로 적는다.",
+   "rationale": "단 0: 200 스텝 미수렴 (−2278.62 eV 근방을 맴돌다 주기적으로 수 eV–수백 eV 튐 · 35.8 h) · r1 ⓐ (LDIPOL 끔 · LWAVE 켬): 30 스텝에서 발산 → 쌍극 보정 탓이 아님 · 같은 기하 PBE+D3 는 37 스텝 수렴 · 12 원자 C–C optB88 은 수렴 (커널 · GGA=BO 설정은 작동) → 큰 진공 슬랩 + vdW-DF 비국소 항 + Davidson 조합의 불안정으로 보임 (운영자 소견). 사다리 끝까지 가면 이 잡 하나 ≈ 200 h 로 단계 3 상한 279 h 의 대부분 · 카드 §4b '사다리 뒤에는 다른 설정으로 더 돌리지 않는다 · 분모 고정 (그 질문만 미완료)' · S_A bound 가 값이 없어 S_A 쌍은 어차피 못 채운다. 사용자 결정 (아래 근거_발화).",
+   "decision_state": "active",
+   "record_kind": "prospective",
+   "results_seen": false,
+   "results_seen_note": "업체 중간 보고서의 상태표 (잡별 TOTEN · bound−far 차 · 참고용) 는 보고서에 있다 — 우리 도구로 W 를 집계하지 않았다 (카드: 반송 다 온 뒤 한 번) · 이 결정은 그 값에 기대지 않는다 · 닫는 질문 (δ_XC+vdW) 의 값은 0 건이다",
+   "card": "db/properties/wad_p2small_vasp_card_2026_10_15.json",
+   "record": "db/properties/wad_round2_build_log_2026_10_17.json ⑨_중간_반송_2026_11_17",
+   "depends_on": [
+    "D-2026-10-15-wad-p2small-vasp-card"
+   ],
+   "supersedes": [],
+   "amends": null,
+   "evidence": [
+    "db/raw/wad_round2_vasp_2026_10_22/interim_return_2026_11_17/round2_return.tgz (sha256 117c85a623a9d5a56d484a16fe3ff5d4d2f92563884948457644b10d930816b6 · 업체 sha 파일과 일치 · 안의 MANIFEST.sha256 = 보낸 묶음 714324cc…)",
+    "db/raw/wad_round2_vasp_2026_10_22/interim_return_2026_11_17/INTERIM_REPORT_2026-11-17.md (sha256 8d0c80aad9f99a901fb76894c88d255db0329be7deeeb1f9f57dbf89779e1fcd)",
+    "db/raw/wad_round2_vasp_2026_10_22/interim_return_2026_11_17/check_interim_2026_11_17.txt (sha256 7f23a19538908d6c5be0fbba403a180feb83314cbc7300f0db12decd4c2290dd · --check rc 3 = 반송 미완 · 탄소 PBE+D3 15 OK · C–C optB88 2 OK · S_A optB88 bound INCOMPLETE_ATTEMPT · MISSING 5 · 은 a4 SCF_NOT_CONVERGED (개정 4 로 이미 종료))",
+    "사용자 업로드 zip sha256 5104a978f3fe770f3a5a4c4882e52f12423c062b000ca3f2d3db75766cb5fd50"
+   ],
+   "reopen_criteria": [
+    "새 1저자 결정 + 결과 전 개정 (새 SCF 처방 · 묶음 v6 · Codex 재리뷰) 으로만 — 업체 소견의 후보 (ALGO All/Damped · AMIX 0.1/BMIX 0.01/AMIN 0.01 처음부터 · NELMDL −12 · PBE+D3 WAVECAR 출발 · ICHARG 12 비자기일관 비교) 는 그때의 출발점일 뿐이다",
+    "단계 4 반송에서 공통 환경 고장 (빌드 · PP · 커널) 이 나오면 전체 정지 (카드 §4d) — 이 결정과 따로"
+   ],
+   "enforcement": "업체 지시 (STAGES=4 · optB88 4 잡 닫힘) · 우리 검사기 --check 는 optB88 셋을 MISSING · S_A bound 를 INCOMPLETE_ATTEMPT 로 보인다 → collect 때 이 결정 id 로 '닫힘 (사용자 결정 · 값 없음)' 라벨 · δ_XC+vdW 허용 문장 (카드 §5) 은 쓰지 않는다 · W 값은 결정 제목/문장·화면에 싣지 않는다",
+   "track": {
+    "name": "W_ad 외주 2차 (LPSCl|흑연 작은 모델 · VASP)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-17",
+     "session": "본 세션 claude/friendly-meitner-lldvar"
+    }
+   ],
+   "status": "active",
+   "_note": "active — 사용자 결정 2026-11-17 (AskUserQuestion) · 다음 = 업체에 지시 (사용자 발송) → 단계 4 반송 → --check → --collect (W 집계 한 번)",
+   "status_history": [
+    {
+     "at": "2026-11-17",
+     "state": "proposed",
+     "by": "claude",
+     "note": "중간 반송 검사 뒤 선택지 정리 (업체 보고서 §6 A–D · 카드 §4b · §4d)"
+    },
+    {
+     "at": "2026-11-17",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion (2026-11-17 · 이 세션) — ① 'W_ad 2차 중간 반송 (건엽 · 11-17): 단계 4 의 흑연 C–C PBE+D3 2 잡을 업체에 지금 돌리게 할까요? 업체 보고서의 '안 B' 이고 수 분이면 끝나요.' → '지금 돌림 (Recommended)' · ② 'W_ad 2차 단계 3 의 optB88 4 잡 (S_A · Li_A 의 bound/far · 398/362 원자) 은 어떻게 할까요? 첫 잡 S_A bound 가 200 스텝 동안 수렴하지 못했고, 사다리 r1 ⓐ (쌍극 보정 끔) 는 30 스텝에서 발산해서 운영자가 멈췄어요. 카드 규칙상 이 잡은 '값 없음' 이에요. 카드 §4d 에 따르면 optB88 실패는 함수 민감도 δ_XC+vdW 만 미완료로 만들고, 주 판정 G5_C (PBE+D3 15 잡 모두 OK) 와는 상관없어요.' → '닫기 (Recommended)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-17T11:23:54Z",
+    "commit": "89a838ca924e4c729c88b9107a49a222bc3d49ac",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion (2026-11-17 · 이 세션) — ① 'W_ad 2차 중간 반송 (건엽 · 11-17): 단계 4 의 흑연 C–C PBE+D3 2 잡을 업체에 지금 돌리게 할까요? 업체 보고서의 '안 B' 이고 수 분이면 끝나요.' → '지금 돌림 (Recommended)' · ② 'W_ad 2차 단계 3 의 optB88 4 잡 (S_A · Li_A 의 bound/far · 398/362 원자) 은 어떻게 할까요? 첫 잡 S_A bound 가 200 스텝 동안 수렴하지 못했고, 사다리 r1 ⓐ (쌍극 보정 끔) 는 30 스텝에서 발산해서 운영자가 멈췄어요. 카드 규칙상 이 잡은 '값 없음' 이에요. 카드 §4d 에 따르면 optB88 실패는 함수 민감도 δ_XC+vdW 만 미완료로 만들고, 주 판정 G5_C (PBE+D3 15 잡 모두 OK) 와는 상관없어요.' → '닫기 (Recommended)'",
+    "decision_digest": "sha256:4295225a4863f54b3aaca41d8b1fca7f9f1f6a344d1bac0d643acecadd22336f"
+   }
   }
  ]
 }
