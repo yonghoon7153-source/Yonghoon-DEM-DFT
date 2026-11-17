@@ -4,7 +4,7 @@
   "date": "2026-11-17",
   "트랙": "[혁주] LZO 코팅 양극 계면 — 1저자 = 혁주 · 사용자 = 계산 담당",
   "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json (⏩_개정_1_2026_11_17_MD0_실행_결과_전 · D-2026-11-17-hyeokju-lzo-md0-exec-amend1 active)",
-  "status": "UMA · kgy DFT 11 점 끝 → DFT 회수 대기 · gabia 계면 k 탐침 1 점 대기 (b2o3 이완 뒤) · 판정 (md0_check) 전",
+  "status": "UMA · kgy DFT 11 점 끝 · 회수 (1f5cce90) → gabia 계면 k 탐침 1 점 대기 (b2o3 이완 뒤) → kgy 에서 md0_check",
   "UMA_kgy": {
     "기계": "kgy (RTX 3090) · tmux hjmd0 · worktree ~/wt_hj_md0 = 768c833f · R=/home/kgy/work/runs/hj_md0_1117",
     "시작_끝": "벌크 11-17 13:33:39 → 13:42:56 · 계면 13:42:56 → 15:10:08",
@@ -87,6 +87,13 @@
     "계면_시작_VRAM": "17:05:36 여유 20,275 MiB (문턱 14,000)",
     "결과_열람": "없음 — 힘 · 에너지는 md0_check 가 계면 k 탐침까지 받은 뒤 한 번에 읽는다 (도구가 모델마다 k 탐침을 요구한다)",
     "다음": "kgy DFT 회수 블록 (push · tmp/ 는 빼고 scf.in · scf.out · frame.xyz · SNAPSHOTS · 로그) → b2o3 9 단계 이완이 끝나면 gabia 계면 k 탐침 1 점 → md0_check",
+    "by": "agent · 2026-11-17"
+  },
+  "DFT_kgy_회수_2026_11_17": {
+    "회수": "db/raw/hyeokju_lzo_md0_2026_11_17/dft_kgy_1117/ · 커밋 1f5cce90 · 파일 39 · 944 KB (QE tmp/ 뺌) · SHA256SUMS 대조 통과 (이 세션)",
+    "점검": "scf.out 11 개 모두 'convergence has been achieved' 1 · 'JOB DONE' 1 — 힘 · 에너지 값은 안 읽었다",
+    "러너_시간": "벌크 Γ 5 점 20 분 · 벌크 k 2×2×2 1 점 60 분 · 계면 Γ 5 점 28 분",
+    "⚠_판정을_돌릴_곳": "SNAPSHOTS_*.json 이 점 폴더를 kgy 절대경로 (/home/kgy/work/runs/hj_md0_1117/dft/…) 로 적고, collect_results · md0_check 가 그 경로를 그대로 읽는다 ⇒ md0_check 는 kgy 에서 돌린다 (uma env). gabia 계면 k 결과는 kgy 로 가져와 --kprobe 의 k 폴더로 준다 (kgy → gabia scp 됨 · 10-30 실측).",
     "by": "agent · 2026-11-17"
   }
 }
