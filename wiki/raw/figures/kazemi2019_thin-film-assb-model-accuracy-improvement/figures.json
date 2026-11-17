@@ -1,0 +1,203 @@
+{
+ "slug": "kazemi2019_thin-film-assb-model-accuracy-improvement",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Scanning Electron Microscopy image of a Li/LIPO/LiCoO2 solid state battery and schematic layout for modeling planar all-solid-state cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    294.7,
+    389.2
+   ],
+   "w": 732,
+   "h": 941,
+   "dpi": 200,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf",
+   "blank": 0.653,
+   "note": "봤다(p. 2 · 원본 래스터 JPEG 1034×1373 회색조). 위 = SEM 단면(이름표 Li · LIPO · LiCoO₂ · 축척 막대 0) · 아래 = 1D 모식(Negative electrode: Li anode | LIPO/LIPON electrolyte | LiCoO₂ cathode · y 축 0 · L · L+M · 방전/충전 Li⁺ 화살). [도표·화소] SEM 열 평균 밝기로 띠 폭 LIPO ≈228 · LiCoO₂ ≈264 px(비 ≈1.2 · 경계 ±15 px) ↔ 모의 셀 DNN 320/1500 nm = 0.21 · NDB 1.8/1.0 µm = 1.8 — 어느 쪽 셀도 아님(91호 그림 1a 예시 SEM 의 비 ≈0.97 과 같은 자릿수 — 91호 digest 전사 · 화소 대조 0). 캡션 필드 깨끗."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Estimation of diffusion coefficient for different LiCoO2 cells by EIS measurements (a) and the suggested phase-transitions diagram (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    206.5,
+    563.7,
+    491.6
+   ],
+   "w": 732,
+   "h": 793,
+   "dpi": 200,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf",
+   "blank": 0.877,
+   "note": "봤다(p. 3 · 원본 래스터 JPEG 951×1152). 위 판 = D vs x(로그 10⁻¹⁶–10⁻¹⁰ · 범례 Dokko (EIS) · Tang (EIS) · Jang (PITT) · 이름표 'particle' · 'RF film (110)' · 'PLD film (003)' · 세로 점선 x 0.8 · ≈0.935 · ≈0.99) · 아래 판 = 제안 D(x) 꺾은선 모식(Phase II · Phase I + Phase II = two-phase coexistence · Phase I · 경계 ≈0.8 · ≈0.95 · 세로 축 눈금 0). ⚠ 캡션 '(a) … by EIS measurements' ↔ 범례 Jang (PITT) · 판 글자 (a)(b) 인쇄 0. [도표](눈 판독 ±0.2 decade) Dokko ≈5×10⁻¹²(x 0.5) → ≈1×10⁻¹²(0.8) → ≈3×10⁻¹⁴(0.94) → ≈2–4×10⁻¹³(0.97–0.99) · Jang ≈1.8×10⁻¹⁴ → ≈5×10⁻¹⁵(0.5–0.7) · Tang ≈1.5×10⁻¹⁵(0.53) → ≈3×10⁻¹⁶(0.78) → ≈1×10⁻¹⁶(0.94) → ≈5×10⁻¹⁶(0.97–0.99) — 같은 x 에서 세 계열이 4–5 자릿수 갈림. 캡션 필드 깨끗."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. EMF and experimental voltage discharge curves for DNN (a) and NDB (b) cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    120.9,
+    51.0,
+    474.4,
+    208.5
+   ],
+   "w": 983,
+   "h": 439,
+   "dpi": 200,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf",
+   "blank": 0.864,
+   "note": "봤다(p. 4 · 원본 래스터 JPEG 1423×620 · 축 틀 · 눈금 이름표 화소 보정 · 끝 용량 = 3.00–3.04 V 띠의 색 화소). (a) DNN: EMF 검정 · 32 µA cm⁻²(3C) 초록 · 128(13C) 빨강 · 512(51C) 파랑 / (b) NDB: EMF · 100(0.8C) · 1000(8C) · 5000(42C) µA cm⁻². [도표·화소] 3.0 V 끝 (a) EMF ≈10.05 · 3C ≈9.97 · 13C ≈9.78 · 51C ≈9.13 µAh cm⁻²(91호 그림 3 의 10.10 · 9.95 · 9.76 · 9.17 과 같은 자료로 읽힘 — 91호 digest 전사) · (b) EMF ≈117.1 · 0.8C ≈113.6 · 8C ≈95.4 · 42C ≈79.0 µAh cm⁻². 율 이름표의 반올림이 두 판에서 다름(I/Q_EMF 3.18 → '3C' · 12.7 → '13C' · 50.9 → '51C' ↔ 0.85 → '0.8C' · 8.5 → '8C' · 42.7 → '42C'). 캡션 필드 깨끗."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) Discharge voltage vs capacity profiles for DNN experiment, experimental data – black dots, simulation model – solid green lines, (b) Discharge voltage vs capacity profiles for NDB experiment, ex- perimental data – black dots, simulation model with diffusion coefficient taken from DNN fit – blue lines, simulation model with fitted diffusion coefficient – solid green lines. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    120.9,
+    51.0,
+    563.7,
+    211.8
+   ],
+   "w": 1231,
+   "h": 448,
+   "dpi": 200,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf",
+   "blank": 0.893,
+   "note": "⚠ 오크롭 — 자동 bbox(120.9–563.7 × 51.0–211.8 pt)가 같은 쪽 위의 그림 3 을 잡았다(이 파일 내용 = 그림 3 + 오른쪽 여백). 실제 그림 4 는 p. 4 가운데(37.6–379.1 × 235.0–385.5 pt · 오른쪽 옆 캡션 390–558 pt) → 수동 fig_4_manual_p4.png 로 대체(봤다). 캡션 필드는 그림 4 캡션 그대로(깨끗)."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Diffusivity of Li in LiCoO2 measured with different techniques.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.6,
+    51.6,
+    556.7,
+    197.4
+   ],
+   "w": 710,
+   "h": 406,
+   "dpi": 200,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf",
+   "blank": 0.909,
+   "note": "봤다(자동 · 표 단독 · 텍스트 층과 대조 ✅). 행 [12]–[17] 의 확산계수 범위(m² s⁻¹) · [17] 행 '(003) Thin Film 0.32 µm · (101) 1.60 µm' — PITT 1.6×10⁻¹⁷ · 1.8×10⁻¹⁵ · GITT 1.9×10⁻¹⁷ · 3.2×10⁻¹⁵ · EIS 1.6×10⁻¹⁴ · 6.0×10⁻¹³ ↔ 102호 digest 전사(Xie 2008: (003) 0.31 µm · (104) 1.35 µm · cm² s⁻¹ · EIS (104) 최대 6.0×10⁻⁹ · EIS (003) 최대 1.6×10⁻¹⁰) — 수는 ×10⁻⁴ 환산과 맞고 배향 · 두께 이름표가 다름. 캡션 필드 깨끗."
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Sets of parameters used in simulations. Parameter Unit DNN NDB c0 mol m−3 60,100 62,000 δ – 0.04 0.04 kd s−1 9.0·10−7 9.0·10−7 kr m3 mol−1 s−1 9.0·10−9 9.0·10−9 DLi+ m s−2 6.0·10−15 22.0·10−15 Dn− m s−2 6.0·10−17 22.0·10−17 LiCoO2 mol m−3 23,300 48,760 c max LiCoO2 mol m−3 11,650 24,380 c 0 αLiCoO2 – 0.6 0.6 αLi – 0.5 0.5 DLi m s−2 x = 0.50 8.5 · 10−14 x = 0.50 2.0 · 10−13 x = 0.80 2.5 · 10−14 x = 0.80 6.0 · 10−14",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    400.3,
+    287.7,
+    575.7
+   ],
+   "w": 710,
+   "h": 489,
+   "dpi": 200,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf",
+   "blank": 0.937,
+   "note": "봤다(자동 · 표 단독 · 텍스트 층과 대조 ✅). DNN · NDB 두 열 · 이름 열하나(D_Li 는 x 0.50 · 0.80 · 0.95 · 1.00 마디 넷) · D 셋의 단위 'm s⁻²'(오식 — m² s⁻¹) · k₁ˢ · k₂ˢ · T · A · 두께 행 0 · 각주 0. ⚠ 캡션 필드에 표 본문 텍스트가 섞임(크로퍼가 표 머리 뒤 글을 캡션으로 이어 잡음 — 내용 손상 0)."
+  },
+  {
+   "key": "f4m",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4_manual_p4.png",
+   "bbox": [
+    31,
+    227,
+    563,
+    391
+   ],
+   "w": 1478,
+   "h": 457,
+   "caption": "Fig. 4. (a) Discharge voltage vs capacity profiles for DNN experiment, experimental data – black dots, simulation model – solid green lines, (b) Discharge voltage vs capacity profiles for NDB experiment, experimental data – black dots, simulation model with diffusion coefficient taken from DNN fit – blue lines, simulation model with fitted diffusion coefficient – solid green lines. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "note": "수동 — p. 4 렌더 200 dpi(그림 + 오른쪽 옆 캡션). 자동 f4 는 그림 3 을 잡은 오크롭. 봤다(원본 래스터 xref 209 · JPEG 1423×627 · 축 틀 · 눈금 이름표 화소 보정 · 끝 용량 = 3.04–3.10 V 띠의 색 화소). (a) DNN 3C · 13C · 51C — 실험(검정 점선) ↔ 모의(초록 실선) · (b) NDB 0.8C · 8C · 42C. [도표·화소] 모의 끝 (a) 9.95 · 9.74 · 8.69 ↔ 실험(그림 3a) 9.97 · 9.78 · 9.13 µAh cm⁻²(51C 모의/실험 0.952) · (b) 113.7 · 95.4 · 72.6 ↔ 113.6 · 95.4 · 79.0(42C 0.919) · 42C 평탄에서 모의가 30–80 mV 낮음(Q 10–60) · 51C(a) 평탄 ±15 mV 뒤 모의는 ≈8.2 까지 평탄 → 8.69 수직 낙하 ↔ 실험은 ≈7.5 부터 완만히 9.13. ⚠ 캡션의 'diffusion coefficient taken from DNN fit – blue lines' 가 그림 4(b) 에 없다(범례 Experiment · Simulation 둘 · 파란 선 0).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf"
+  },
+  {
+   "key": "f5m",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5_manual_p4.png",
+   "bbox": [
+    31,
+    585,
+    563,
+    750
+   ],
+   "w": 1478,
+   "h": 459,
+   "caption": "Fig. 5. (a) Behavior of diffusion coefficient for DNN set of parameters (red line) in comparison with available experimental measurements (grey lines and dots) and suggested modification of diffusion coefficient formulation to apply in NDB dataset modeling (green line). Blue line represents average constant diffusion coefficient. (b) NDB improvements in predicting discharge curves: experimental (dotted lines), simulated with diffusion coefficient taken from DNN (red lines) and the best fit (green lines) which corresponds to the diffusion coefficient formulation shown in Fig. 5a (green line). Simulations with constant diffusion coefficient are shown by blue lines. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "note": "수동 — p. 4 렌더 200 dpi(그림 + 오른쪽 옆 캡션). 자동 '영역 없음' 제외(옆 캡션 · 같은 쪽 그림 셋). 봤다(원본 래스터 xref 210 · JPEG 1423×533 · (a) 로그 축 바깥 눈금 66.5 px/decade · (b) 눈금 보정 61 px/0.2 V · 90.25 px/20 µAh cm⁻²). (a) D vs x: Experiments(회색 = 그림 2 계열) · Const_D NDB(하늘색) · D(x) DNN(빨강) · D(x) NDB(초록). [도표·화소] 하늘색 1.27×10⁻¹⁴(본문 1.3×10⁻¹⁴) · 빨강 8.3×10⁻¹⁴(0.5) · 6.4(0.6) · 4.5(0.7) · 2.4×10⁻¹⁴(0.8) · 1.7×10⁻¹⁴(0.85) · 8.3×10⁻¹⁵(0.9) · 최소 ≈7×10⁻¹⁶ @x 0.955 · 4.1×10⁻¹⁵(0.98) · 6.3×10⁻¹⁵(0.995) — 마디 사이 D 에 선형(로그 축에서 휨) = 표 2 DNN 꺾은선 ✅ · 초록 2.2×10⁻¹³(0.5) · 1.65(0.6) · 1.15(0.7) · 6.5×10⁻¹⁴(0.8) · 최소 ≈2.5×10⁻¹⁵ @0.952 · 8.9×10⁻¹⁵(0.98) — 표 2 NDB 마디보다 +8–10 %(판독 폭 경계). (b) NDB 끝 용량(3.08–3.14 V 띠): Const_D 30.3 · 93.0 · 114.0 / DNN D(x) 50.7 · 84.0 · 108.7 / NDB D(x) 72.8 · 95.6 · ≈114.7 / 실험 ≈78.7 · ≈95.9 · (≈114)(42C · 8C · 0.8C) — 8C · 0.8C 에서 상수 D(0.975 · 1.00)가 DNN D(x)(0.88 · 0.96)보다 실험에 가깝다 · Q 5 의 42C 전압 실험 3.767 · 초록 3.745 · 빨강 3.653 · 하늘색 3.532 V. ⚠ 그림 4(b) 와 색 대응이 다름(4b 캡션 파랑 = DNN D · 5b 빨강 = DNN D · 파랑 = 상수 D).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf"
+  },
+  {
+   "key": "f6m",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6_manual_p5.png",
+   "bbox": [
+    31,
+    49,
+    563,
+    303
+   ],
+   "w": 1478,
+   "h": 706,
+   "caption": "Fig. 6. (a) Behavior of lithium concentration profiles across the thin-film battery for DNN set of parameters (bottom plot) and diffusion coefficient in cobalt oxide electrode as function of position (top inset). Three colored lines refer to three subsequent moments of time, corresponding to begin of discharging (red line), middle and end of discharging (blue and green lines accordingly), 51C rate is applied. (b) The same electrochemical plots reproduced according to NDB set of parameters are comparable C-rate. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "note": "수동 — p. 5 렌더 200 dpi(그림 + 오른쪽 옆 캡션). 자동 '그래픽 없음(img0/draw0)' 제외(옆 캡션). 봤다(원본 래스터 xref 244 · JPEG 1423×1002 · 아래 판 좌 · 우 축 이름표 화소 보정). (a) DNN · 'LiPO : 1500 nm · LCO : 320 nm' · t = 0.01 · 30.0 · 60 s · (b) NDB · 'LiPON : 1000 nm · LCO : 1800 nm' · t = 0.01 · 20.0 · 40.0 s · 위 삽도 = D(x) vs 위치(로그 · 위치 눈금 0). [도표·화소] 전해질 기준선 ≈2400(a) · ≈2400(b)(δc₀ 2404 · 2480 `[재현]`) · (a) 전해질 경계 30 s ≈2650 · ≈2100 · 60 s ≈2775 · ≈2015 · LCO 평균 11,540 → 16,473 → 21,333 mol m⁻³ = 512 µA cm⁻² × t ÷ (F · 320 nm) 와 2 % 안(−0.8 · −1.6 % — `[재현]`) · (b) LCO 평균 24,156 → 31,202 → 37,855(→ 6.12 · 5.95 mA cm⁻²) · 전해질 c(0) ≈3680 · ≈4280(인쇄 표로 재풀이하면 5.0–5.5 mA cm⁻² — `[재현]`) — (b) 의 율은 캡션 'comparable C-rate' 뿐(실험 최고 5 mA cm⁻²). 본문 'the end (red)' ↔ 캡션 · 그림 초록.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "14f8f316-110._Modeling_of_all-solid-state_thin-film_Li-ion_batteries_Accuracy_improvement.pdf"
+  }
+ ]
+}
