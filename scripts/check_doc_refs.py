@@ -282,7 +282,7 @@ def walk_docs(root: str):
         for r, _d, fs in os.walk(os.path.join(root, base)):
             for f in fs:
                 if f.endswith('.md'):
-                    yield os.path.relpath(os.path.join(r, f), root)
+                    yield os.path.relpath(os.path.join(r, f), root).replace('\\', '/')
     for f in ('CLAUDE.md', 'README.md'):
         if os.path.exists(os.path.join(root, f)):
             yield f
@@ -457,6 +457,36 @@ def _selftest():
         g['bad_sha'] == ['feedface'], str(g))
     g = scan_text(txt, root, shas, shorts, exceptions=exc, rel='docs/other.md')
     chk('★★ P1-03 다른 문서에서는 같은 SHA 도 면제 안 된다',
+        sorted(g['bad_sha']) == ['deadbeef', 'feedface'], str(g))
+
+    # Windows walk_docs 경로도 예외표와 같은 '/' 문서 식별자를 써야 한다.
+    # 실제 OS와 무관하게 Windows/POSIX relpath를 각각 주입한다.
+    from unittest.mock import patch
+    os.makedirs(os.path.join(root, 'docs'), exist_ok=True)
+    open(os.path.join(root, 'docs', 'x.md'), 'w').write('x\n')
+    open(os.path.join(root, 'docs', 'other.md'), 'w').write('other\n')
+    native_relpath = os.path.relpath
+
+    def _windows_relpath(*args, **kwargs):
+        return native_relpath(*args, **kwargs).replace('/', '\\')
+
+    def _posix_relpath(*args, **kwargs):
+        return native_relpath(*args, **kwargs).replace('\\', '/')
+
+    with patch.object(os.path, 'relpath', _windows_relpath):
+        windows_docs = sorted(walk_docs(root))
+    with patch.object(os.path, 'relpath', _posix_relpath):
+        posix_docs = sorted(walk_docs(root))
+    windows_doc = next(p for p in windows_docs if p.endswith('x.md'))
+    g = scan_text(txt, root, shas, shorts, exceptions=exc, rel=windows_doc)
+    chk('Windows 상대 경로는 슬래시 정규화 뒤 정확한 (문서, SHA) 예외만 적용',
+        windows_doc == doc and g['bad_sha'] == ['feedface'], str((windows_doc, g)))
+    chk('POSIX 문서 목록 보존 및 Windows 목록과 일치',
+        posix_docs == ['docs/other.md', 'docs/x.md'] and windows_docs == posix_docs,
+        str((windows_docs, posix_docs)))
+    other_doc = next(p for p in windows_docs if p.endswith('other.md'))
+    g = scan_text(txt, root, shas, shorts, exceptions=exc, rel=other_doc)
+    chk('Windows 다른 문서의 같은 SHA와 미등재 SHA는 계속 거부',
         sorted(g['bad_sha']) == ['deadbeef', 'feedface'], str(g))
 
     #  ══ 등재 자체의 자기검사 ════════════════════════════════════════════
