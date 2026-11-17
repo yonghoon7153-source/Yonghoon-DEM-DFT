@@ -2,7 +2,7 @@
 title: 기준전극 기반 half-cell 분해 DMA
 description: "In-situ reference electrode DMA: LAM from DVA feature spacing, LLI from lateral offset — no optimizer, and what it costs"
 created: 2026-09-10
-updated: 2026-09-29
+updated: 2026-11-17
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/papers/natterer2026_re-halfcell-anode-potential-aging.md, raw/papers/buchberger2015_graphite-nmc111-aging-xrd-ca-li-loss-pgaa-impedance.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
@@ -127,6 +127,8 @@ x_ref = 0.109 (1 C — 표 I)  또는  0.084 (0.1 C ICL — 표 III, 인쇄 없�
 **이 위키에서의 적용 (`[해석]`)** — (i) "적합 없는 외부 LLI 근거" 의 **모양**은 여기도 선다: 최적화가 없으니 [[fitting-degeneracy]] 의 골짜기 통로는 없다. 대신 불확실성이 **영점 규약(기준 상태)과 방전 끝 한계 전극**으로 옮겨 간다 —
 위 "축퇴가 사라지는 것이 아니라 불확실성이 이동한다" 의 둘째 표본. (ii) 합성 truth 의 LLI(순환 재고)와 이런 실측 LLI 를 대조할 때는 **정의(A · B · C)와 기준을 값 옆에** 적는다 — 경미 열화에서는 정의 차가 신호보다 크다.
 (iii) "LLI ≈ 용량 손실" 은 방전 끝 재고 한계 + 저장소 소진 뒤에만 선다(60 °C 셀 92–94 % · 25 °C 셀 48–49 %). ⚠ 액체 NMC111 · 한 연구실 · 조건당 두 셀 — 우리 수치(정본 artifact + `degradation-degeneracy/docs/RESULTS*.md`)와 대조하지 않았다.
+
+**규약 (2026-11-17 원장 §3-b (브)(츠))** — 실측 LLI 를 옮기거나 합성 truth LLI 와 맞댈 때 ① **정의**(A 용량 유효 · B 양극 결손 · C 재고 손실) ② **영점 · 기준**(0.1 C ICL · 율 보정 · 형성 저장소 · 방전 끝 한계 전극) ③ **CE 결손을 LLI 로 세기 전에** 구조 채널 · 회수 시험(정전위 · 저율 · 온도)으로 `η` 저장 몫을 대조한다(79 · 107 · 114호 — 결손의 절반 안팎이 회수) ④ **음극 Li 저장고 셀은 A ↔ C 가 갈린다**(89 · 90호 — 저장고 셀의 ICE · CE 는 LLI 게이지가 아니다 · (게)). 위 (ii) 를 `[해석]` 적용에서 이 규약으로 올린다.
 
 ## 관련
 - [[fitting-degeneracy]]

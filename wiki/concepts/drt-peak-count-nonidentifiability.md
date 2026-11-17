@@ -2,7 +2,7 @@
 title: DRT 봉우리 개수는 데이터가 정하지 않는다 — 상태·조작·장비·정규화의 함수
 description: "The number of resolvable DRT peaks (and hence the order of any equivalent circuit fitted downstream) is not determined by the impedance data alone: it moves with cycle number, with interventions, with the measurement wiring, and with the unreported regularization strength"
 created: 2026-09-22
-updated: 2026-10-02
+updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research, eis]
 sources: [raw/papers/lu2022_nondestructive-eis-lumped-dfne-parameter-estimation.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/yu2024_drt-time-resolved-aging-sulfide-assb-fullcell.md, raw/papers/vadhva2021_eis-for-assb-theory-methods.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kouhestani2022_phm-solid-state-batteries-perspective.md, raw/papers/ramanayagam2026_stack-pressure-three-electrode-assb-impedance.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/yoshida2024_four-electrode-assb-cell-li-transport.md]
@@ -291,7 +291,7 @@ NMC622 \| Li₆PS₅Cl \| Li 금속 · 네 구성(Li\|Li · Li\|In · NMC\|Li ·
 - **γ 정규화 미인쇄.** 축 단위 "Ω·decade⁻¹"(면적 정규화 · 로그 밑 미인쇄) · 오프셋 · 축척("scale 1:2 / 1:3") 캡션 없음. `[재현]` 그림 2e 는 "Ω·cm² per decade" 또는 "Ω per ln τ" 해석에서 같은 상태 적합 합과 맞고, 그림 5c 는 같은 스펙트럼 5a 와 "Ω per decade(면적 정규화 없음)" 해석에서만 맞는다 — **두 그림이 한 정규화로 함께 맞지 않는다** ⇒ 봉우리 **크기**를 그림 사이에서 비교하지 않는다(판독 · 가정 위).
 - **두 전극 CT 가 같은 τ 에 겹친다고 문장으로 인쇄한다.** `[인쇄]` "The signals for both cells are within the same relaxation time for the (RQ)1, (RQ)2, and (RQ)3 processes" — 11호 추가 경보 (1)(P4 음극 · P5 양극 CT 를 ≈10 Hz 에 겹쳐 그림)의 문장판이고, 11호처럼 **설계**(대칭 셀 빼기 · 상대극 교체)로 가른다.
 
-⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **6 · 84호 Orue Mendizabal — 측정 창 밖(저주파) 봉우리와 그림 사이 τ 띠가 이름표를 흔든다.** 체크리스트에 "봉우리 τ 가 τ_max = 1/(2π f_min) 안인가" 를 칸으로 올릴지는 **결정하지 않았다**(84호 digest 새 판단 거리 2).
+⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **6 · 84호 Orue Mendizabal — 측정 창 밖(저주파) 봉우리와 그림 사이 τ 띠가 이름표를 흔든다.** 체크리스트에 "봉우리 τ 가 τ_max = 1/(2π f_min) 안인가" 를 칸으로 올릴지는 **결정하지 않았다**(84호 digest 새 판단 거리 2 → ✅ 2026-11-17 §3-b (피) · 아래 체크리스트 C6).
 ⚠ 이 편의 **가장 단단한 배정**은 DRT 모양이 아니라 **전류 방향 연산자**다 — Li\|SE R2 가 한 스텝 안에서 자라고 역전류에서 초깃값 쪽으로 돌아간다(`[도표·화소]` 그림 2c). 개수 · 모양이 흔들려도 이름을 붙이는 다른 채널이 있다는 것이 이 경보의 반대쪽 단서다.
 
 ## ★★★ 일곱 번째 경보 — **λ 를 고르지 않는 역변환 위에서도 이름표는 τ 창이 정한다 · 지배 봉우리가 다른 이름의 창으로 넘어가도 연속성이 이름을 유지한다 · 같은 τ 대역에 정전용량이 세 자릿수 다른 두 요소가 산다** (2026-10-02, `assb` 90호)
@@ -326,13 +326,13 @@ Panasonic 25 Ah 각형 흑연//NMC 하나 · 25 °C · 19 SOC · 100 kHz–0.1 m
 - **창 밖.** 그림 6(a) 극대 2.6×10³ · 9.4×10³ s · 그림 15(d) 실셀 ≈10⁴ s — 표 III 격자(최저 0.1 mHz)면 τ_max = 1/(2π f_min) ≈1.6×10³ s 밖(DRT τ 격자 미인쇄 — 조건부) · 이름은 "electrolyte and solid-diffusion" 묶음(여섯 · 일곱 번째 경보에 이은 셋째 표본 — 다만 이 편은 그 봉우리에 전극 이름을 주지 않는다).
 - **λ.** `[인쇄]` "where λ is a user-selected regularization parameter" — 값 · 선택 규칙 0 · 51호(λ 미인쇄 · 51호 G2)와 같은 공백.
 
-⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **8 · 96호 Lu — 배정을 '측정' 아닌 '가정' 으로 두고 DRT 를 초기값에만 쓰면, 최종 적합이 그 배정을 뒤집어도 지면에 드러나지 않는다(초기 ↔ 최종 비교를 독자가 해야 보인다).** 체크리스트에 "배정 연산자 · 최종 적합의 배정 유지" 를 칸으로 올릴지는 **결정하지 않았다**(새 판단 거리 — 글자는 호출자).
+⇒ ★★ `[해석]` 다섯 번째 경보의 층 표에 한 줄을 더하면: **8 · 96호 Lu — 배정을 '측정' 아닌 '가정' 으로 두고 DRT 를 초기값에만 쓰면, 최종 적합이 그 배정을 뒤집어도 지면에 드러나지 않는다(초기 ↔ 최종 비교를 독자가 해야 보인다).** 체크리스트에 "배정 연산자 · 최종 적합의 배정 유지" 를 칸으로 올린다 — ✅ 2026-11-17 §3-b (캬) · 아래 체크리스트 C8.
 
 ## 이 위키에서의 적용
 
 ### 1. 진단 — "개수를 쟀는가" 를 묻는 체크리스트
 
-EIS/DRT 를 쓴 논문을 받을 때 **이 다섯 개를 먼저 찾는다.** 없으면 "없다" 고 적는다.
+EIS/DRT 를 쓴 논문을 받을 때 **이 여덟 개를 먼저 찾는다**(C6–C8 은 2026-11-17 §3-b 일괄로 올림). 없으면 "없다" 고 적는다.
 
 | # | 질문 | 11호 | 10호 |
 |---|---|---|---|
@@ -341,6 +341,9 @@ EIS/DRT 를 쓴 논문을 받을 때 **이 다섯 개를 먼저 찾는다.** 없
 | C3 | **DRT 불확실성** (Bayesian DRT · 오차막대 · 봉우리 폭) | ❌ 0 회 | ⚠ 원 논문으로 넘김 |
 | C4 | **개수 선택 규칙** (AIC 등) | ❌ 0 회 | ✅ 명명, 미적용 |
 | C5 | **반복/산포** (같은 셀·같은 조건 재측정) | ⚠ **1 점** (Fig. S3, 배선 교체 — 본인은 이렇게 부르지 않는다) | ⚠ 삼중 측정 **권고** |
+| C6 | **봉우리 τ 가 측정 창 안인가** — τ_max = 1/(2π f_min) · τ_min = 1/(2π f_max) 밖이면 '창 밖(외삽)' · 배정 · 크기 인용에서 뺀다(84 · 90호 · 2026-11-17 §3-b (피)) | — | — |
+| C7 | **측정 상태가 시계열 동안 고정됐나 · 비교 기준선이 같은 셀인가** — 유지 전위 · 방전 끝 · SOC · 휴지(90호 ↔ 11호 반대 끝 · 2026-11-17 §3-b (베)) | — | — |
+| C8 | **배정 연산자**(τ 순서 가정 · 대칭셀 · 3전극 · 온도 · 구성 교체) + **최종 적합이 배정을 유지했나**(초기 ↔ 최종 전극별 C · R 순서 — 96호 · 2026-11-17 §3-b (캬)) | — | — |
 
 ★★ **2026-09-22 추가 — 16호(Ramanayagam 2026)가 C1 을 처음으로 통과한다.**
 
