@@ -3,7 +3,7 @@
  "kind": "estimand",
  "id": "hyeokju_lzo_md_2026_11_16",
  "제목": "[혁주] MD — UMA 검증 (MD-0 · Li₂ZrO₃ 와 Li₂ZrO₃ | Li₆PS₅Cl) 먼저 → 1 단계가 고른 계면 MD (MD-1)",
- "status": "proposed — 사용자 방향 결정 2026-11-16 ('UMA 검증부터 지금') · G1 · G2 문턱 승인 대기",
+ "status": "active — 사용자 비준 2026-11-17 (MD 문턱 · 결과 전) · ⏩ 개정 1 (MD-0 실행) active 2026-11-17",
  "written_on": "2026-11-16",
  "트랙": {
   "이름": "[혁주] LZO 코팅 양극 계면",
@@ -61,7 +61,7 @@
  "by": "claude (대피 세션 claude/evac-2026-11-12) · 2026-11-16",
  "⏩_개정_1_2026_11_17_MD0_실행_결과_전": {
   "왜": "카드 MD0_스냅숏 ② (주기 · 변형 ≤ 3 %) 를 적힌 그대로는 만들 수 없다 — 가장 작은 정합 계면 401 Å² ≈ 600 원자 (db/properties/hyeokju_lzo_md0_interface_match_scan_2026_11_17.json) · 사용자 2026-11-17 AskUserQuestion: 계면 = '비정질 LZO 층' · 벌크 = 'B144' · 계면 크기 = 'I148 급 · kgy' (메모리 프로브 db/properties/hyeokju_lzo_md0_memory_probe_2026_11_17.json 뒤)",
-  "상태": "proposed — 사용자 비준 전 · 결과 없음 (UMA · DFT 아무것도 안 돌았다)",
+  "상태": "active — 사용자 비준 2026-11-17 (결과 전 · AskUserQuestion 'MD-0 실행 개정 1 을 비준할까요?' → '비준 — 개정 그대로') · 결과 없음",
   "A_벌크": {
    "구조": "db/structures/hyeokju_Li2ZrO3_sc144_mp-aaaaagdw.vasp (144 원자 · MP 셀 · 이완 안 함 · 출처 db/properties/hyeokju_lzo_md0_bulk_structures_2026_11_17.json)",
    "UMA": "uma-s-1p1 · omat · Langevin NVT 600 K · dt 2 fs · friction 0.02 /fs (CLAUDE.md MLIP-MD 규약) · 이완 없음 · 속도 시드 20261117 · 평형 1 ps (버림) + 생산 5 ps · 저장 100 fs"

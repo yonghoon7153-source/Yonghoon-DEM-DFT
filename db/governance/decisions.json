@@ -13923,7 +13923,7 @@
    "title": "[혁주] MD-0 실행 개정 1 (결과 전) — 계면 = LPSCl (001) li_outer 2 층 + 비정질 Li₂ZrO₃ 16 f.u. (142 원자) · 벌크 = B144 · 스냅숏 · DFT 설정 · k 탐침 · md0_check 판독",
    "statement": "카드 db/properties/hyeokju_lzo_md_card_2026_11_16.json 의 ⏩_개정_1_2026_11_17_MD0_실행_결과_전 이 정의다 (기계_판독_값 포함). 도구 셋은 결과 전에 커밋한다.",
    "rationale": "정합 계면 (≤ 3 %) 최소 401 Å² ≈ 600 원자라 GPU 한 장 DFT 불가 (ZSL 탐색) · 사용자 2026-11-17 AskUserQuestion '비정질 LZO 층' · 'B144' · 'I148 급 · kgy' (메모리 프로브 뒤).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -13952,15 +13952,31 @@
      "session": "본 세션 claude/friendly-meitner-lldvar"
     }
    ],
-   "_note": "proposed — 사용자 비준 대기 (AskUserQuestion) · 결과 없음",
+   "_note": "active — 사용자 비준 2026-11-17 (AskUserQuestion · 결과 전) · 다음 = 결과 전 도구 셋 (run_li_interface_md 일정 · 샌드위치 빌더 · md0_check) 커밋 → kgy UMA → ZrO₂ 끝난 뒤 DFT 12 점",
    "status_history": [
     {
      "at": "2026-11-17",
      "state": "proposed",
      "by": "claude",
      "note": "카드 개정 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-17",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] MD-0 실행 개정 1 을 비준할까요? (결과 전 · 아직 UMA · DFT 아무것도 안 돌렸어요) ① 벌크 = B144 (MP 셀 · 144 원자). ② 계면 = LPSCl (001) li_outer 2 층 46 원자 (문헌상 가장 안정한 종결) + Li₂ZrO₃ 16 f.u. 무작위 배치. LPSCl 을 고정한 채 2500 K 10 ps → 600 K 까지 19 ps 선형 담금질 뒤 고정을 풀어요 (142 원자 · 주기 샌드위치). 스냅숏 = 600 K 에서 평형 1 ps 를 버리고 생산 1–5 ps 에서 모델마다 5 장. DFT = 2a 와 같은 PP · 60/480 · Γ + 모델마다 k 탐침 1 장 (힘 차 > 0.02 eV/Å 면 그 k 로 다시). 판정 = 모델마다 G1 (힘 MAE ≤ 0.10 · Zr · O · P · S ≤ 0.15 eV/Å) 과 G2 (상대 에너지 RMSE ≤ 5 meV/atom). 두 모델 다 통과해야 MD-1 로 가요. kgy 에서 UMA 는 ZrO₂ 잡 옆에서 돌리고, DFT 12 점은 ZrO₂ 가 끝난 뒤에 돌려요.' → '비준 — 개정 그대로 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-17T04:08:53Z",
+    "commit": "802f55cd34240355687dfd65936b8db2bafd999e",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] MD-0 실행 개정 1 을 비준할까요? (결과 전 · 아직 UMA · DFT 아무것도 안 돌렸어요) ① 벌크 = B144 (MP 셀 · 144 원자). ② 계면 = LPSCl (001) li_outer 2 층 46 원자 (문헌상 가장 안정한 종결) + Li₂ZrO₃ 16 f.u. 무작위 배치. LPSCl 을 고정한 채 2500 K 10 ps → 600 K 까지 19 ps 선형 담금질 뒤 고정을 풀어요 (142 원자 · 주기 샌드위치). 스냅숏 = 600 K 에서 평형 1 ps 를 버리고 생산 1–5 ps 에서 모델마다 5 장. DFT = 2a 와 같은 PP · 60/480 · Γ + 모델마다 k 탐침 1 장 (힘 차 > 0.02 eV/Å 면 그 k 로 다시). 판정 = 모델마다 G1 (힘 MAE ≤ 0.10 · Zr · O · P · S ≤ 0.15 eV/Å) 과 G2 (상대 에너지 RMSE ≤ 5 meV/atom). 두 모델 다 통과해야 MD-1 로 가요. kgy 에서 UMA 는 ZrO₂ 잡 옆에서 돌리고, DFT 12 점은 ZrO₂ 가 끝난 뒤에 돌려요.' → '비준 — 개정 그대로 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:9ef65a5d9ecb0cedc619d8e1e8ceb30aa6fb7a96319b71235827cfb65e2976de"
+   }
   }
  ]
 }
