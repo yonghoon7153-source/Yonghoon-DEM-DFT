@@ -12,6 +12,8 @@
 #   ③ tmux hjgap: 대조 잡 P2O5 → control_gate (|Δ| ≤ 0.02 eV) → 통과면 본 → 탐침
 #
 # Env: W (worktree · 필수 · 도는 동안 지우지 말 것) · R (/home/kgy/work/runs/hj_s2a_1116)
+#      STRUCT · TAG · REGKEY (기본 = Li₂ZrO₃ · 2026-11-17 개정 2 ZrO₂ 를 같은 실행기로 돌리려고 연 자리) ·
+#      EXTRA_DECISION (비우면 안 본다 · 주면 그 결정도 active 또는 proposed 여야 시작 · proposed 면 '잠정 실행' 줄)
 #      PW (/home/kgy/apps/qe-7.4.1-gpu/bin/pw.x) · PY (uma python · 입력 생성기용 ase) · MIN_FREE_MIB (8000) · DRY_RUN (0)
 # ⛔ 못 하는 것: 결과를 판독하지 않는다 (회수 뒤 카드 §2 · 개정 1 규칙) · 다른 pw.x 잡은 모른다 (VRAM 대기만) ·
 #    Zr PP 를 받아 오지 않는다 (블록이 gabia 에서 scp) · 이미 있는 $R/<폴더> 를 덮지 않는다 (이어 돌리기).
@@ -29,8 +31,10 @@ MD5_CEI=$W/db/raw/cei_product_gap_2026_10_27/pseudo_md5.txt
 PP_CEI=$W/db/inputs/cei_product_gap_2026_10_27/pseudo
 CTRL=P2O5_mp-aaaaadqi
 CTRL_SRC=$W/db/inputs/cei_product_gap_2026_10_27/work/$CTRL
-STRUCT=$W/db/structures/hyeokju_Li2ZrO3_mp-aaaaagdw.vasp
-TAG=Li2ZrO3_mp-aaaaagdw
+STRUCT=${STRUCT:-$W/db/structures/hyeokju_Li2ZrO3_mp-aaaaagdw.vasp}
+TAG=${TAG:-Li2ZrO3_mp-aaaaagdw}
+REGKEY=${REGKEY:-li2zro3}
+EXTRA_DECISION=${EXTRA_DECISION:-}
 ZR=Zr_pbe_v1.uspp.F.UPF; ZR_MD5=5db81b1e868ab7776c4564c113de050b
 PPS=(Li.pbe-sl-kjpaw_psl.1.0.0.UPF O.pbe-n-kjpaw_psl.0.1.UPF P.pbe-n-kjpaw_psl.1.0.0.UPF)
 ts(){ date '+%m-%d %H:%M:%S'; }
@@ -53,22 +57,25 @@ zg=$(md5sum < "$R/pseudo/$ZR" 2>/dev/null | cut -d' ' -f1)
 grep -aqi "<PP_CHI" "$R/pseudo/$ZR" 2>/dev/null && ok "Zr PP 원자 파동함수 있음 (PDOS)" || echo "  ⚠ Zr PP 에 PP_CHI 가 없다 — Zr PDOS 가 빠질 수 있다"
 [ -f "$STRUCT" ] && ok "구조 $(basename "$STRUCT")" || no "구조 없음: $STRUCT"
 [ -f "$CTRL_SRC/02_scf.in" ] && ok "대조 잡 입력 $CTRL" || no "대조 잡 입력 없음: $CTRL_SRC"
-st=$(python3 - "$W/db/governance/decisions.json" <<'PY'
+st=$(python3 - "$W/db/governance/decisions.json" "$EXTRA_DECISION" <<'PY'
 import json, sys
 d = {x["id"]: x for x in json.load(open(sys.argv[1]))["decisions"]}
 a = d.get("D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap", {}).get("decision_state")
 b = d.get("D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap-amend1", {}).get("decision_state")
-print(f"{a}|{b}")
+c = d.get(sys.argv[2], {}).get("decision_state") if sys.argv[2] else "-"
+print(f"{a}|{b}|{c}")
 PY
 )
 case "$st" in
-  active\|active) ok "결정 active · 개정 1 active";;
-  active\|proposed) echo "  ⚠ 개정 1 은 proposed — **잠정 실행** (사용자 비준 대기 · 결과는 비준 뒤 판독)";;
-  *) no "결정 상태 $st — 본 결정이 active 여야 시작한다";;
+  active\|active\|-) ok "결정 active · 개정 1 active";;
+  active\|active\|active) ok "결정 active · 개정 1 active · $EXTRA_DECISION active";;
+  active\|active\|proposed) echo "  ⚠ $EXTRA_DECISION 은 proposed — **잠정 실행** (사용자 비준 대기 · 결과는 비준 뒤 판독)";;
+  active\|proposed\|-) echo "  ⚠ 개정 1 은 proposed — **잠정 실행** (사용자 비준 대기 · 결과는 비준 뒤 판독)";;
+  *) no "결정 상태 $st — 본 결정 · 개정 1 이 active 여야 하고, EXTRA_DECISION 을 줬으면 그것도 원장에 있어야 시작한다";;
 esac
-python3 - "$W/db/properties/sei_electronic_class.json" <<'PY' && ok "레지스트리 li2zro3 = insulator" || no "레지스트리에 li2zro3 insulator 가 없다 — 갭 단계가 안 만들어진다"
+python3 - "$W/db/properties/sei_electronic_class.json" "$REGKEY" <<'PY' && ok "레지스트리 $REGKEY = insulator" || no "레지스트리에 $REGKEY insulator 가 없다 — 갭 단계가 안 만들어진다"
 import json, sys
-r = json.load(open(sys.argv[1]))["results"].get("li2zro3", {})
+r = json.load(open(sys.argv[1]))["results"].get(sys.argv[2], {})
 sys.exit(0 if r.get("class") == "insulator" else 1)
 PY
 bash "$W/tools/sei/run_sei_dft.sh" --selftest >/dev/null 2>&1 && ok "run_sei_dft.sh selftest" || no "run_sei_dft.sh selftest 실패"

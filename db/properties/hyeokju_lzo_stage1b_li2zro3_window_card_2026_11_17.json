@@ -1,0 +1,61 @@
+{
+ "schema": "estimand_card/v1",
+ "kind": "estimand",
+ "id": "hyeokju_lzo_stage1b_li2zro3_window_2026_11_17",
+ "제목": "[혁주] 1b — Li₂ZrO₃ (LZO) 자체의 열역학 안정 창 (MP grand potential · Li 열린계 · V vs Li/Li⁺)",
+ "status": "active — 사용자 비준 2026-11-17 (결과 전 · AskUserQuestion '[혁주] 1b 카드를 비준할까요?' → '비준 — 카드 그대로')",
+ "written_on": "2026-11-17",
+ "트랙": {
+  "이름": "[혁주] LZO 코팅 양극 계면",
+  "1저자": "혁주 (사용자 확인 2026-11-16)",
+  "결정": "계산 쪽 결정 = 사용자"
+ },
+ "⚠_결과_보기_전에_썼다": true,
+ "⚠_이미_본_신호": "1 단계 열린계 LZO 쌍의 끝점 칸에서 Li₂ZrO₃ 자체 분해 신호를 봤다 (3.4–3.5 V 사이 · 카드 밖 관찰 · 값으로 안 씀 · 1 단계 카드 결과_2026_11_16 '카드_밖_관찰_기록만'). 이 카드는 그 신호 때문에 쓴다 — 그래서 '아무것도 안 보고 정한' 카드는 아니다. 순수 Li₂ZrO₃ 창 값은 아직 안 냈다.",
+ "1_무엇을_원하는가": "혁주 셀의 화성 상한 (3.8 · 4.4 V vs Li/Li⁺ — 사용자 11-17 확인) 에서 코팅 물질 Li₂ZrO₃ 자체가 열역학적으로 안정한지. 답은 Li₂ZrO₃ 의 환원 한계 · 산화 한계와 그 사이 창이다.",
+ "1c_답하지_않는_것": [
+  "코팅이 반응을 막는지 · 보호 효과 · 속도 · 생성량",
+  "O₂ 가 실제로 나오는지 · 얼마나",
+  "띠틈 · 전자 전도도와의 관계 (띠틈 ≠ 안정 전압)",
+  "실험 CV 창과 같은 값인지"
+ ],
+ "2_재는_양": {
+  "R1_창": "환원 (cathodic) 한계 · 산화 (anodic) 한계 [V vs Li/Li⁺] — esw_grand_potential.py (PhaseDiagram.get_element_profile · Li 열림 · MP GGA/GGA+U MP2020 hull · 0 K) · 정의는 도구 docstring 그대로",
+  "R2_사다리": "전 구간 계단 (V · 받거나 내놓는 Li 수 · 분해 반응) — 산화 쪽은 O 산화 산물 (Li₂O₂ · O₂ 등) 이 무엇인지까지",
+  "R3_혁주_전압_대비": "3.8 · 4.4 V 가 R1 창 안인지 밖인지 (판정이 아니라 위치)"
+ },
+ "3_잘_정의되는가": "Li₂ZrO₃ 는 MP 에 관측 상 (C2/c · e_above_hull 0) 이 있다 · 조성 하나 · Li 하나만 연다 · 0 K · 상태 선택 문제 없음 (닫힌 껍질 산화물). ⚠ 산화 쪽 사다리에 MP 의 의심 상 LiO8 이 끼일 수 있다 (6 월 LLZO 사다리 실측) → §4 G2 규칙.",
+ "4_게이트_결과_보기_전에": {
+  "G0_데이터": "gabia uma env (mp_api · pymatgen) · MP 조회 entry 수 · μ_Li(metal) 를 로그에 남긴다",
+  "G1_기준_재현": "같은 실행 (같은 hull · --elements Li La Zr O) 에서 LLZO (Li7La3Zr2O12) 창을 다시 내 6 월 기록 tools/oxidation/esw_llzo_result.txt (환원 0.04 · 산화 2.88 V) 과 |Δ| ≤ 0.02 V 인지 본다. 넘으면 멈추지 않는다 — 'MP 데이터가 6 월 기록과 달라졌다' 를 값 옆에 같이 적는다 (정의는 지금 hull 이다)",
+  "G2_의심_상": "늘 두 판을 돈다: (a) 모든 상 · (b) --exclude_phases LiO8. **보고값 = (b)** (사례 A Ag–C 의 의심 상 제외 관례와 같은 꼴) · 두 판의 한계가 다르면 둘 다 기록한다",
+  "G3_끝": "사다리가 0 V 와 O₂ 방출 끝 (Li 를 다 내놓음) 까지 닿았는지 — 중간에 끊기면 그 끝 전압까지만 말한다"
+ },
+ "4b_재개_규칙_결과_전에": [
+  "혁주가 LZO 가 Li₂ZrO₃ 가 아니라고 하면 그 조성으로 같은 도구 (개정)",
+  "다른 hull (r2SCAN 등) 로 바꾸지 않는다 — 바꾸려면 새 카드"
+ ],
+ "5a_나오면_말할_수_있는_것": [
+  "MP (GGA/GGA+U · 0 K) grand-potential 기준 Li₂ZrO₃ 는 … V (vs Li/Li⁺) 아래에서 환원 분해하고 … V 위에서 산화 분해한다 (산화 첫 계단 산물 …).",
+  "혁주 셀의 화성 상한 3.8 · 4.4 V (vs Li/Li⁺) 는 이 창의 [안 / 밖] 이다 (열역학 위치)."
+ ],
+ "5b_나와도_말하지_않을_것": [
+  "'LZO 코팅이 4.4 V 에서 분해된다 / 보호하지 못한다' (실제 · 속도 · 생성량)",
+  "O₂ 방출량",
+  "띠틈과 같은 축에 놓기",
+  "실험 CV 창과 같은 값이라고 하기",
+  "LiO8 계단의 값",
+  "LLZO 와 견줘 '더 좋은 코팅' 이라고 하기"
+ ],
+ "6_규약_대조_30초": [
+  "tools/oxidation/esw_llzo_result.txt (2026-06-23 · 같은 도구 · Zr–O 계)",
+  "1 단계 카드 결과_2026_11_16 (열린계 LZO 쌍 · 카드 밖 관찰)",
+  "CLAUDE.md 양극 쪽 판단 규칙 (작동창 · grand-potential 산화 개시)"
+ ],
+ "7_도구_실행": "gabia: uma python tools/oxidation/esw_grand_potential.py --target 'Li2ZrO3:LZO' 'Li7La3Zr2O12:LLZO' --elements Li La Zr O --out (a) · 같은 명령 + --exclude_phases LiO8 --out (b) → db/raw/hyeokju_lzo_s1b_2026_11_17/ (json · log · SHA256SUMS)",
+ "8_비용": "gabia CPU · MP 조회 한 번 (La–Li–O–Zr · 6 월 실측 143 entry) · 몇 분 · GPU 안 씀 (b2o3 9 단계 이완 옆 가능)",
+ "9_사용자가_정할_것": [
+  "— (11-17 비준)"
+ ],
+ "by": "claude · 2026-11-17"
+}

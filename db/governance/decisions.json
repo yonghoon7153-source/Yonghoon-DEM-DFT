@@ -13751,6 +13751,105 @@
     "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] 2a 개정 1 (결과 전 · kgy 에서 지금 '잠정 실행' 중) 을 비준할까요? 내용: Zr PP = GBRV v1 (md5 고정) · 컷오프 탐침으로 90/720 Ry 를 한 번 더 돌려 60/480 과의 띠틈 차 |ΔE_g| ≤ 0.02 eV 면 60/480 값을, 넘으면 90/720 값을 보고 · P₂O₅ 대조 잡을 늘 먼저 돌리고 실패하면 Li₂ZrO₃ 는 안 돌림' → '비준 — 카드 그대로 (Recommended)' — 결과 전",
     "decision_digest": "sha256:b998390534b22526b8707b745c6ee56c3153f06760be94f5ea322a4a14a69abe"
    }
+  },
+  {
+   "id": "D-2026-11-17-hyeokju-lzo-stage1b-li2zro3-window",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage1b.li2zro3_window",
+   "slot": "hyeokju_lzo_stage1b_window",
+   "applies_to": {
+    "systems": [
+     "li2zro3"
+    ],
+    "tasks": [
+     "electrochemical_stability_window"
+    ],
+    "methods": [
+     "mp-gga__grand-potential"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 1b — Li₂ZrO₃ 자체 열역학 안정 창 (MP grand potential · V vs Li/Li⁺) · LLZO 기준 재현 · LiO8 뺀 판 보고 — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
+   "statement": "카드 db/properties/hyeokju_lzo_stage1b_li2zro3_window_card_2026_11_17.json 이 정의다: esw_grand_potential.py (Li 열림 · MP GGA/GGA+U hull · 0 K) 로 Li₂ZrO₃ 의 환원 · 산화 한계와 사다리를 낸다 · 같은 실행에서 LLZO 를 다시 내 6 월 기록 (0.04 · 2.88 V) 과 |Δ| ≤ 0.02 V 인지 본다 (넘으면 그 사실을 같이 적는다) · 늘 두 판 (모든 상 · LiO8 뺌) 을 돌고 LiO8 뺀 판을 보고한다 · 혁주 셀 3.8 · 4.4 V (vs Li/Li⁺) 의 위치를 말한다 (보호 · 속도 · 생성량 아님).",
+   "rationale": "사용자 2026-11-17 '권고대로 ㄱㄱ' — 1 단계 열린계의 카드 밖 신호 (LZO 자체 분해) 를 정식 보고량으로.",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage1b_li2zro3_window_card_2026_11_17.json",
+   "evidence": [
+    "tools/oxidation/esw_llzo_result.txt",
+    "db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json"
+   ],
+   "reopen_criteria": [
+    "혁주가 LZO 조성이 Li₂ZrO₃ 가 아니라고 하면 그 조성으로 같은 도구 (개정)"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-17",
+     "session": "본 세션 claude/friendly-meitner-lldvar"
+    }
+   ],
+   "_note": "proposed — 사용자 방향 결정 11-17 '권고대로 ㄱㄱ' · 비준 대기 (결과 전)."
+  },
+  {
+   "id": "D-2026-11-17-hyeokju-lzo-stage2a-amend2-zro2",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.stage2a.li2zro3_gap",
+   "slot": "hyeokju_lzo_stage2a_gap_amend2",
+   "applies_to": {
+    "systems": [
+     "zro2"
+    ],
+    "tasks": [
+     "band_gap",
+     "pdos"
+    ],
+    "methods": [
+     "qe-pbe__fixed-occ-nscf"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] 2a 개정 2 (결과 전) — 생성물 ZrO₂ 띠틈 · 같은 체인 (개정 1 규칙 · P₂O₅ 대조 잡 먼저 · 컷오프 탐침) · vc-relax 사용자 허락",
+   "statement": "카드 db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json 의 ⏩_개정_2_2026_11_17_결과_전 이 정의다. 실행기 db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh (env 로 ZrO₂).",
+   "rationale": "카드 §4b 재개 규칙 (생성물 1–2 개 개정) · 사용자 2026-11-17 '권고대로 ㄱㄱ' (권고 = ZrO₂ 하나).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json",
+   "amends": "D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap",
+   "evidence": [
+    "db/properties/cei_product_gap_card_2026_10_27.json"
+   ],
+   "reopen_criteria": [
+    "생성물을 더 넣으려면 다음 개정 (같은 체인)"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-17",
+     "session": "본 세션 claude/friendly-meitner-lldvar"
+    }
+   ],
+   "_note": "proposed — 사용자 방향 결정 11-17 '권고대로 ㄱㄱ' · 비준 대기 (결과 전 · vc-relax 허락 포함)."
   }
  ]
 }

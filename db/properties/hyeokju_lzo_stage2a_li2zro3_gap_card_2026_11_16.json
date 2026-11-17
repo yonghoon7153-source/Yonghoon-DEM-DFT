@@ -110,5 +110,16 @@
   "말하지_않을_것": "카드 §5b 그대로 — 띠틈으로 산화 안정 전압 · 보호 효과 · 누설전류를 말하지 않는다 · PBE 값을 실험 띠틈 · 문헌 그림 값과 같은 축에 놓지 않는다",
   "남은_것": "DOS/PDOS 그림 (−8..0 eV 창 · 하우스 스타일 · Origin CSV) · 생성물 1–2 개 띠틈은 개정으로 (카드 4b · 같은 체인)",
   "by": "claude · 2026-11-17"
+ },
+ "⏩_개정_2_2026_11_17_결과_전": {
+  "왜": "카드 §4b 재개 규칙 '생성물 1–2 개는 1 단계 결과 뒤 개정으로 더한다 (같은 체인 · 같은 PP 규칙)' — 사용자 2026-11-17 '권고대로 ㄱㄱ' (권고: ZrO₂ 하나 · LZO–LPSCl 산물 · XPS Zr 3d 로 LZO 와 가를 대상). Li₃PO₄ · LiCl · Li₂SO₄ 는 CEI 띠틈 체인에 같은 방법 값이 이미 있어 새로 안 돈다 (db/raw/cei_product_gap_2026_10_27/kgy_results_1102).",
+  "B1_구조": "ZrO₂ — MP 관측 상 중 E_hull 최저 (fetch_sei_structures.py --pick ZrO2 --with_es_origin --prefix hyeokju_ · 출처 기록 db/properties/hyeokju_lzo_s2a_zro2_structures_provenance_2026_11_17.json · gabia) · 구조 파일 db/structures/hyeokju_ZrO2_<mp-id>.vasp",
+  "B2_체인": "개정 1 과 같다 — Zr GBRV v1 (md5 5db81b1e…) · Li · O 는 CEI 세트 · 60/480 본 + 90/720 탐침 (|ΔE_g| ≤ 0.02 eV 면 60/480 보고 · 넘으면 90/720) · P₂O₅ 대조 잡 늘 먼저 (실패하면 ZrO₂ 를 안 돌린다) · vc-relax (비-argyrodite 결정 · 사용자 허락 필요 — CLAUDE.md 이완 규칙)",
+  "B3_레지스트리": "전자 분류 레지스트리 키 zro2 를 declared insulator 로 넣는다 (Zr⁴⁺ d⁰ · O²⁻ 닫힌 껍질 · 갭 단계 입력을 여는 게이트일 뿐 값 주장 아님) — 구조 받은 뒤",
+  "B4_보고": "E_g(PBE) fixed-occ nscf · PDOS (VBM · CBM 성분) · Li₂ZrO₃ (3.93 eV) 와 상대 (넓다 / 좁다) · MP 갭은 기록만",
+  "B5_말하지_않을_것": "카드 §5b 그대로 + ZrO₂ 띠틈으로 'ZrO₂ 가 생기면 전자를 막는다' 를 말하지 않는다 (생성 여부 · 양 · 연결은 이 카드 밖)",
+  "실행기": "db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh 를 그대로 쓴다 — STRUCT · TAG · REGKEY · EXTRA_DECISION 을 env 로 덮는다 (기본값 = Li₂ZrO₃ · 개정 1 판과 같은 동작) · 실행 폴더 R=/home/kgy/work/runs/hj_s2a_zro2_1117 (새 폴더 · 대조 잡 다시)",
+  "상태": "active — 사용자 비준 2026-11-17 (결과 전 · AskUserQuestion '[혁주] 2a 개정 2 를 비준할까요?' → '비준 + vc-relax 허락')",
+  "by": "claude · 2026-11-17"
  }
 }
