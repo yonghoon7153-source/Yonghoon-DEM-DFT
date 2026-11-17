@@ -1,0 +1,80 @@
+[11-17 00:12:54] 시작 · commit dbacec12e928dee6dd22924693aa0ced4f9f0375
+[00:12:54] ═══ P2O5_mp-aaaaadqi ═══
+[00:12:54]   ✓ 메모리 프리플라이트: 여유 50 GB ≥ 8 GB · 14 원자
+[00:12:54]   ✓ VRAM 여유 20055 MiB ≥ 8000 — 01_vcrelax.in
+[00:12:54]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[00:59:12]   ✓ VRAM 여유 20179 MiB ≥ 8000 — 02_scf.in
+[00:59:12]   ▶ 02_scf.in
+  P2O5_mp-aaaaadqi           ⏭ 스핀분극 계가 아니다
+[01:02:05]   ✓ VRAM 여유 20207 MiB ≥ 8000 — 03_nscf_gap.in
+[01:02:05]   ▶ 03_nscf_gap.in
+  VBM 1.431 · CBM 6.617 · **gap 5.187 eV** (절연체)
+    (전자 80 · 점유 밴드 40 · nbnd 62 · 블록 304)
+[01:26:08]   ✓ VRAM 여유 20115 MiB ≥ 8000 — 04_nscf_dos.in
+[01:26:08]   ▶ 04_nscf_dos.in
+[01:29:56]   ▶ 05_dos.in
+[01:30:01]   ▶ 06_projwfc.in
+[01:30:16]   ✅ 완료 → /home/kgy/work/runs/hj_s2a_1116/main/P2O5_mp-aaaaadqi
+[01:30:16] ═══ 결산 ═══
+  상                               VBM      CBM   gap(eV)  판정
+  P2O5_mp-aaaaadqi              1.431    6.617     5.187  절연체
+
+  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.
+  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.
+  P2O5_mp-aaaaadqi       기준 5.1860 · 지금 5.1865 · Δ 0.0005 · nk 304 → 통과
+  대조 잡 ✅ 통과
+[01:30:16] ═══ Li2ZrO3_mp-aaaaagdw ═══
+[01:30:16]   ✓ 메모리 프리플라이트: 여유 50 GB ≥ 8 GB · 12 원자
+[01:30:16]   ✓ VRAM 여유 20121 MiB ≥ 8000 — 01_vcrelax.in
+[01:30:16]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[02:06:36]   ✓ VRAM 여유 20107 MiB ≥ 8000 — 02_scf.in
+[02:06:36]   ▶ 02_scf.in
+  Li2ZrO3_mp-aaaaagdw        ⏭ 스핀분극 계가 아니다
+[02:10:28]   ✓ VRAM 여유 20089 MiB ≥ 8000 — 03_nscf_gap.in
+[02:10:28]   ▶ 03_nscf_gap.in
+  VBM 6.742 · CBM 10.677 · **gap 3.935 eV** (절연체)
+    (전자 72 · 점유 밴드 36 · nbnd 56 · 블록 452)
+[02:37:39]   ✓ VRAM 여유 20087 MiB ≥ 8000 — 04_nscf_dos.in
+[02:37:39]   ▶ 04_nscf_dos.in
+[02:41:49]   ▶ 05_dos.in
+[02:41:53]   ▶ 06_projwfc.in
+[02:42:10]   ✅ 완료 → /home/kgy/work/runs/hj_s2a_1116/main/Li2ZrO3_mp-aaaaagdw
+[02:42:10] ═══ 결산 ═══
+  상                               VBM      CBM   gap(eV)  판정
+  Li2ZrO3_mp-aaaaagdw           6.742   10.677     3.935  절연체
+  P2O5_mp-aaaaadqi              1.431    6.617     5.187  절연체
+
+  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.
+  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.
+[02:42:10] ═══ Li2ZrO3_mp-aaaaagdw ═══
+[02:42:10]   ✓ 메모리 프리플라이트: 여유 50 GB ≥ 8 GB · 12 원자
+[02:42:10]   ✓ VRAM 여유 20113 MiB ≥ 8000 — 01_vcrelax.in
+[02:42:10]   ▶ 01_vcrelax.in
+  기하 승계 → 02_scf.in
+  기하 승계 → 03_nscf_gap.in
+  기하 승계 → 04_nscf_dos.in
+[03:27:49]   ✓ VRAM 여유 20171 MiB ≥ 8000 — 02_scf.in
+[03:27:49]   ▶ 02_scf.in
+  Li2ZrO3_mp-aaaaagdw        ⏭ 스핀분극 계가 아니다
+[03:32:36]   ✓ VRAM 여유 20183 MiB ≥ 8000 — 03_nscf_gap.in
+[03:32:36]   ▶ 03_nscf_gap.in
+  VBM 6.703 · CBM 10.642 · **gap 3.939 eV** (절연체)
+    (전자 72 · 점유 밴드 36 · nbnd 56 · 블록 452)
+[04:06:19]   ✓ VRAM 여유 20129 MiB ≥ 8000 — 04_nscf_dos.in
+[04:06:19]   ▶ 04_nscf_dos.in
+[04:11:26]   ▶ 05_dos.in
+[04:11:32]   ▶ 06_projwfc.in
+[04:11:57]   ✅ 완료 → /home/kgy/work/runs/hj_s2a_1116/ecut90/Li2ZrO3_mp-aaaaagdw
+[04:11:57] ═══ 결산 ═══
+  상                               VBM      CBM   gap(eV)  판정
+  Li2ZrO3_mp-aaaaagdw           6.703   10.642     3.939  절연체
+
+  ⚠ PBE 갭은 이 계열에서 30-50% 과소평가된다 — 실험값과 나란히 놓지 말 것.
+  ⚠ 갭은 fixed-occ nscf 고유값이다. DOS 문턱 판독 금지.
+[11-17 04:11:57] 끝

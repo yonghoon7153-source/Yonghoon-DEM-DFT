@@ -1,0 +1,55 @@
+&CONTROL
+    calculation     = 'vc-relax'
+    prefix          = 'Li2ZrO3_mp-aaaaagdw'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/hj_s2a_1116/pseudo'
+    tprnfor         = .true.
+    tstress         = .true.
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 12
+    ntyp            = 3
+    ecutwfc         = 90.0
+    ecutrho         = 720.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+&IONS
+/
+&CELL
+    cell_dofree     = 'all'
+/
+
+ATOMIC_SPECIES
+  Li     6.940  Li.pbe-sl-kjpaw_psl.1.0.0.UPF
+  O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
+  Zr    91.224  Zr_pbe_v1.uspp.F.UPF
+
+CELL_PARAMETERS angstrom
+      5.1461529100    -0.0338225400    -1.0242388900
+     -2.7452626700     4.3528809300    -1.0242388900
+      0.0335854300     0.0604180800     5.3845153900
+
+ATOMIC_POSITIONS angstrom
+  Li      3.1048445851     1.1206778908     0.3218899575
+  Li     -0.6703689151     3.2587985792     3.0141476525
+  Li      0.6103797207     2.5073084093     0.3218899575
+  Li      1.8240959493     1.8721680607     3.0141476525
+  Zr     -2.0163665757     3.9674719219     0.3218899575
+  Zr      4.4508422457     0.4120045481     3.0141476525
+  O      -1.3726313350     2.1764404650    -0.5121194450
+  O       1.2780012146     3.7090684823     3.7483440184
+  O       2.4587680613     3.0131564855     1.0560863234
+  O       1.1564744554     0.6704079877    -0.4123064084
+  O      -0.0242923913     1.3663199845     2.2799512866
+  O       2.5898691700     0.0132977700     2.1801382500
+
+K_POINTS automatic
+  5 5 5 0 0 0
