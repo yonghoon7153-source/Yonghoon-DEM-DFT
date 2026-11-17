@@ -130,5 +130,38 @@
   "도구": "fig_sei_dos_pdos.py 에 --raw 판을 붙였다 (db 갭 표를 거치지 않음 · selftest 15 통과 · 깨 본 7 개 다 잡음 · 기본 SEI 경로 출력은 고치기 전 판과 바이트 같다) · Zr 색 #36508f 를 house_style 에 더했다 (dataviz 검증 PASS)",
   "다음": "ZrO₂ (개정 2) 가 끝나면 같은 명령에 폴더 하나를 더 주어 두 패널 그림으로 다시 낸다",
   "by": "claude · 2026-11-17"
+ },
+ "결과_개정_2_ZrO2_2026_11_17": {
+  "실행": "kgy 2026-11-17 10:45:55–13:43:04 · worktree ~/wt_hj2a_zro2 (7cc23702) · tmux hjzro2 · 대조 잡 → 본 60/480 → 탐침 90/720 · 원자료 db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_zro2_1117 (148 파일 · SHA256SUMS · 회수 커밋 77b9d592)",
+  "판독_조건": "개정 2 (D-2026-11-17-hyeokju-lzo-stage2a-amend2-zro2) 사용자 비준 2026-11-17 (결과 전) 뒤에 읽었다 — 판독은 개정 2 B2 · B4 · B5 만",
+  "게이트": {
+   "대조_잡": "✓ P₂O₅ 5.1864 eV · 기준 5.186 · Δ 0.0004 ≤ 0.02 (main/control_gate.json pass true) — 그래서 ZrO₂ 를 돌렸다",
+   "PP": "✓ Zr GBRV v1 (md5 5db81b1e… · 실행기 ① 점검) · Li · O · P = CEI 세트 md5 · 실행기의 'PP_CHI 없음' 경고는 오경보였다 (GBRV = UPF v1 · 원자 파동함수는 <PP_PSWFC> · Zr PDOS 36 파일 나옴 · 실행기 고침 2ff7edc6)",
+   "수렴": "✓ vc-relax — 기하 승계 (02 · 03 · 04 입력) · 02_scf.in 에 carried-from-unconverged 표지 없음 · 셀 부피 141.668 → 143.586 Å³ (+1.35 %, 60/480) · 144.059 Å³ (+1.69 %, 90/720) · gap.json qe_check '일치'",
+   "컷오프_탐침": "60/480 3.6247 eV · 90/720 3.6572 eV · |ΔE_g| 0.0325 > 0.02 → **90/720 값을 보고한다** (개정 2 B2 · 결과 전 규칙) — Li₂ZrO₃ (Δ 0.0042) 와 달리 탐침이 걸렸다",
+   "MP_대조_기록만": "MP band_gap 3.5322 eV (mp-aaaaaefy · es 'GGA NSCF Line') — 우리 값보다 0.13 eV 작다 (Li₂ZrO₃ 도 같은 방향 0.20 · 경로 띠 대 균일 k 격자) · 게이트 아님"
+  },
+  "보고량": {
+   "E_g_PBE_eV": 3.6572,
+   "VBM_eV": 10.2523,
+   "CBM_eV": 13.9095,
+   "nk": 185,
+   "컷오프_Ry": "90/720 (탐침 발동)",
+   "방법": "fixed-occupation nscf eigenvalues (DOS 문턱 판독 아님)"
+  },
+  "PDOS": "보고판 (90/720) projwfc pdos_atm 합 — VBM 아래 1 eV 창의 93 % 가 O p (Zr d 5 %) · CBM 위 1 eV 창의 86 % 가 Zr d (O p 11 %) · 띠 가장자리 성분을 가르는 창이다 (그림용 −8..0 eV 창의 평균류 지표가 아니다)",
+  "허용_문장_채움": [
+   "우리 PBE (fixed-occ nscf · 90/720) 기준 단사정 ZrO₂ (P2₁/c) 띠틈은 3.66 eV 이고 VBM 은 O 2p · CBM 은 Zr 4d 가 주로 만든다 (띠 가장자리 1 eV 창 O p 93 % · Zr d 86 %).",
+   "같은 체인의 Li₂ZrO₃ (3.93 eV) 보다 0.28 eV 좁다 (상대 · PBE 끼리 · 같은 90/720 끼리도 0.28 eV)."
+  ],
+  "말하지_않을_것_다시": "카드 §5b 그대로 + 개정 2 B5 — ZrO₂ 띠틈으로 'ZrO₂ 가 생기면 전자를 막는다' 를 말하지 않는다 (생성 여부 · 양 · 연결은 이 카드 밖) · PBE 절대값을 실험 띠틈과 나란히 놓지 않는다",
+  "by": "claude · 2026-11-17"
+ },
+ "⏩_그림_2_두_패널_2026_11_17": {
+  "그림": "docs/figures/hyeokju_lzo/fig_s2a_lzo_zro2_dos_pdos.png — Li₂ZrO₃ (보고판 60/480) · ZrO₂ (보고판 90/720) 두 패널 · 노란 띠 = 각자 gap.json 고유값 (3.93 · 3.66 eV) · 부제목 둘째 줄에 패널별 컷오프",
+  "Origin_CSV": "db/properties/hyeokju_lzo_s2a_lzo_zro2_dos_pdos_origin.csv — 그린 그대로 · 열 Li2ZrO3/ZrO2 total DOS + 원소별 PDOS · 머리 줄에 패널마다 VBM · CBM · 띠틈 · 원자료 폴더 · DOS 단계 완주 확인 (각자 run.log)",
+  "만든_명령": "python3 tools/figures/fig_sei_dos_pdos.py --raw db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_1117/main/Li2ZrO3_mp-aaaaagdw db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_zro2_1117/ecut90/ZrO2_mp-aaaaaefy --run_log db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_1117/run.log db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_zro2_1117/run.log --out docs/figures/hyeokju_lzo/fig_s2a_lzo_zro2_dos_pdos.png --csv hyeokju_lzo_s2a_lzo_zro2_dos_pdos_origin.csv --title 'Li₂ZrO₃ coating and ZrO₂ product — DOS / PDOS' --note 'Cutoffs: Li2ZrO3 60/480 Ry; ZrO2 90/720 Ry (cutoff probe exceeded 0.02 eV).'",
+  "도구": "fig_sei_dos_pdos.py --run_log 가 폴더마다 하나를 받는다 (pair_run_logs · 수가 안 맞으면 거부) · --note 는 부제목 둘째 줄 (한 줄에 몰면 그림 폭을 넘어 잘렸다) · selftest 17 통과",
+  "by": "claude · 2026-11-17"
  }
 }

@@ -154,6 +154,17 @@ def load_raw(d, run_log=None):
     return E, tot, by_el, g
 
 
+def pair_run_logs(raw, run_logs):
+    """--raw 폴더마다 run.log 를 짝짓는다 — 없으면 None · 하나면 전부 · 폴더 수와 같으면 차례로 · 그 밖은 거부."""
+    if not run_logs:
+        return [None] * len(raw)
+    if len(run_logs) == 1:
+        return list(run_logs) * len(raw)
+    if len(run_logs) == len(raw):
+        return list(run_logs)
+    raise SystemExit(f"⛔ --run_log 는 하나 또는 --raw 폴더 수 ({len(raw)}) 만큼이어야 한다 (지금 {len(run_logs)})")
+
+
 def smooth(E, y, sig=SIG_EV):
     dE = float(np.median(np.diff(E)))
     n = max(1.0, sig / max(dE, 1e-9))
@@ -214,8 +225,10 @@ def figure(tags, out, title, sub, xlim, csvname, data=None):
     fig.text(0.012, 0.5, "DOS  (states / eV)", rotation=90, va="center",
              fontsize=12, color=INK)
     axs[0].set_title(title, fontsize=13, color=INK, pad=12)
-    fig.text(0.5, 0.985, sub, ha="center", va="top", fontsize=8.6, color=MUT)
-    fig.tight_layout(rect=[0.035, 0.0, 1, 0.972])
+    # 부제목이 여러 줄이면 (\n) 줄마다 위 여백을 늘린다 — 한 줄에 몰아 쓰면 그림 폭을 넘어 양 끝이 잘린다 (2026-11-17 두 패널 판)
+    nl = sub.count("\n") + 1
+    fig.text(0.5, 0.985, sub, ha="center", va="top", fontsize=8.6, color=MUT, linespacing=1.35)
+    fig.tight_layout(rect=[0.035, 0.0, 1, 0.972 - 0.034 * (nl - 1) * 3.12 / fig.get_figheight()])
     os.makedirs(os.path.dirname(out), exist_ok=True)
     fig.savefig(out, dpi=300); plt.close(fig)
     print(f"  → {out}")
@@ -360,6 +373,9 @@ def selftest():
             ["E_minus_VBM_eV", "X_DOS_states_per_eV", "X_A_PDOS_states_per_eV", "X_B_PDOS_states_per_eV"])
         chk("양성: CSV 머리에 완주 'NOT checked' 가 적힌다 (run.log 안 준 판)", any("NOT checked" in ln for ln in lines[:4]))
         chk("양성: PNG 가 생겼다", os.path.getsize(png) > 1000)
+        chk("양성: run.log 짝 — 없음 · 하나 (전부) · 폴더마다", pair_run_logs(["a", "b"], None) == [None, None]
+            and pair_run_logs(["a", "b"], ["x"]) == ["x", "x"] and pair_run_logs(["a", "b"], ["x", "y"]) == ["x", "y"])
+        chk("⛔음성: run.log 수가 폴더 수와 안 맞으면 거부", refused(lambda: pair_run_logs(["a", "b", "c"], ["x", "y"])) is not None)
     finally:
         shutil.rmtree(root, ignore_errors=True)
     n_ok = sum(res); n_bad = len(res) - n_ok
@@ -373,7 +389,8 @@ def main():
                     help="Nd 계 3종을 별도 파일로 (진단용 — 인용 금지 표식이 붙는다)")
     ap.add_argument("--raw", nargs="+", metavar="DIR",
                     help="회수한 QE 작업 폴더 (gap.json · *.dos · *.pdos_atm#*) — db 를 거치지 않고 바로 그린다")
-    ap.add_argument("--run_log", help="--raw 판: DOS 단계 완주를 확인할 run.log (안 주면 패널에 '확인 안 함' 표식)")
+    ap.add_argument("--run_log", nargs="+", help="--raw 판: DOS 단계 완주를 확인할 run.log — 하나 (전부) 또는 --raw 폴더마다 하나 (안 주면 패널에 '확인 안 함' 표식)")
+    ap.add_argument("--note", default="", help="--raw 판: 부제목 끝에 붙일 영어 한 줄 (예: 패널별 컷오프)")
     ap.add_argument("--out", help="--raw 판: PNG 경로")
     ap.add_argument("--csv", help="--raw 판: db/properties 안의 Origin CSV 파일 이름")
     ap.add_argument("--title", default="DOS / PDOS", help="--raw 판: 그림 제목 (영어)")
@@ -387,15 +404,15 @@ def main():
         if not (a.out and a.csv):
             sys.exit("⛔ --raw 판은 --out 과 --csv 가 둘 다 필요하다")
         data = {}
-        for d in a.raw:
+        for d, rl in zip(a.raw, pair_run_logs(a.raw, a.run_log)):
             t = os.path.basename(os.path.normpath(d))
             if t in data:
                 sys.exit(f"⛔ 같은 태그가 두 번: {t}")
-            data[t] = load_raw(d, a.run_log)
+            data[t] = load_raw(d, rl)
         tags = list(data)
         figure(tags, a.out, a.title,
                "Gap band (yellow) = fixed-occupation nscf eigenvalues, not a DOS threshold. "
-               "QE/PBE; wide gaps underestimated 30–50%.",
+               "QE/PBE; wide gaps underestimated 30–50%." + (f"\n{a.note}" if a.note else ""),
                tuple(a.xlim), a.csv, data=data)
         print("\n⚠ 갭은 fixed-occ nscf 고유값이 정본이다 — 이 곡선에서 문턱을 읽지 말 것.")
         return 0
