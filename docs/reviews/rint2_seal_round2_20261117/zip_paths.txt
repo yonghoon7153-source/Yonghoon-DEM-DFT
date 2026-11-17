@@ -1,0 +1,18 @@
+# Codex 2/2 요청 ZIP 의 repo/ (리뷰 핀 blob 그대로 · build_zip.py --paths)
+docs/reviews/codex_rint2_seal_round2_request_20261117.md
+docs/reviews/rint2_seal_round2_20261117
+docs/data/rint2_probe6_a3_20261116
+docs/data/rint2_probe6_a4_20261116
+docs/data/rint2_s0_sbe_20261116
+docs/data/rint2_q11_gpu_check_kgy_20261116
+docs/reviews/rint2_time_reestimate_20261111/README.md
+docs/reviews/rint2_time_reestimate_20261111/v3
+docs/reviews/rint2_dev_probe_ledger_20261026.md
+docs/reviews/findings.json
+docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md
+docs/reviews/rint2_kgy_commands_20261020.md
+docs/reviews/rint2_s0_store_probe_20261112/README.md
+docs/reviews/rint2_q14_finalpin_preparation_20261113
+docs/reviews/codex_rint2_codepkg_review_request_20261113.md
+docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md
+docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md
