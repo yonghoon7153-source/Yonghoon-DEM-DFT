@@ -1,6 +1,8 @@
 # 내부 반박 리뷰 1 회차 — Rint ② R 런 시간 다시 어림 3 판 + 봉인 숫자 결정 (11-17 · 독립 조수 · **Codex 아님**)
 
-- 대상 = `README_3pan_draft.md` (§3-0 – §3-8 · §3-6b) · `numbers_sources.tsv` · `work/time_budget_v3.py` (+ `.json`) · 2 판 `docs/reviews/rint2_time_reestimate_20261111/README.md` · `time_budget_v2.py`.
+> (11-17 반입 때 본 세션이 고친 것: 리뷰 글의 `work/time_budget_v3.*` 상대 경로를 리포 경로로 바꿈 · 그 밖은 리뷰 조수 글 그대로.)
+
+- 대상 = `README_3pan_draft.md` (§3-0 – §3-8 · §3-6b) · `numbers_sources.tsv` · `docs/reviews/rint2_time_reestimate_20261111/v3/work/time_budget_v3.py` (+ `.json`) · 2 판 `docs/reviews/rint2_time_reestimate_20261111/README.md` · `time_budget_v2.py`.
 - 읽은 판 = 리포 HEAD `716c59f9a` (작업 트리 게이트 두 줄 수정 = 무관) + 최종 코드 핀 `64e4d213e` (`git show` 로만).  고친 사람 설명 없이 문서 · 코드 · 자료만 봤다.
 - 규칙: 리포 쓰기 0 · git = show · diff · grep · log · ls-tree · merge-base 만 · 스크립트 = 이 폴더 복사본 · `python3 -I` · 신호 · kill 0 · 바깥 접속 0 · **σ 값 열람 0** (반복 수 · 잔차 · 시간 · 메모리 · 크기만).
 - 이 폴더의 파일: `v3_rerun.json` (산술 재실행) · `arith_rerun.txt` (재실행 · 보조 스크립트 · 리뷰 감도 출력) · `probe_r.py` (리뷰 감도 스크립트) · `chain_pin.py` · `runner_pin.sh` · `cjunc_store_pin.py` · `payload_pin.py` (= `git show 64e4d213e:<경로>` 사본 · 줄 번호 근거) · `diff_list_head.txt` (42 파일).
@@ -104,7 +106,7 @@
 
 ### R3-09 · P3 — §3-1 표 "└ 나머지 (래스터 · 조립) 427 · 444 · 416" 이 face_alpha 를 두 번 센다
 
-- 초안 `:42–44`: 아들 줄 셋 (탄소 접합 4,040 · face_alpha 31 · 나머지 427) 의 합 = 4,498 ≠ 부모 4,467 (시도 3 · 4 도 32 · 33 s 초과).  427 = 63 줄 − 55 줄 = face_alpha 포함 (TSV 정의 · `work/time_budget_v3.py:52` 주석 "416 (래스터 · face_alpha 33 · 조립)").  모형 값은 맞다 (표 꼴만).
+- 초안 `:42–44`: 아들 줄 셋 (탄소 접합 4,040 · face_alpha 31 · 나머지 427) 의 합 = 4,498 ≠ 부모 4,467 (시도 3 · 4 도 32 · 33 s 초과).  427 = 63 줄 − 55 줄 = face_alpha 포함 (TSV 정의 · `docs/reviews/rint2_time_reestimate_20261111/v3/work/time_budget_v3.py:52` 주석 "416 (래스터 · face_alpha 33 · 조립)").  모형 값은 맞다 (표 꼴만).
 - 고칠 말: "└ 나머지 (face_alpha 포함 · 래스터 · 조립)" 로 이름 바꾸고 face_alpha 를 그 아래 줄로 내리거나, 나머지 = 396 · 412 · 383 으로.
 
 ### R3-10 · P3 — §3-2 규칙 6 의 사슬 줄 번호가 2 판 커밋 (`68bd2b183`) 의 것이다
@@ -164,7 +166,7 @@
 
 | 대조 | 결과 |
 |---|---|
-| `time_budget_v3.py --json` (복사본 · `python3 -I`) ↔ `work/time_budget_v3.json` | 바이트 같음 · 키 차이 0 (21,434 B) |
+| `time_budget_v3.py --json` (복사본 · `python3 -I`) ↔ `docs/reviews/rint2_time_reestimate_20261111/v3/work/time_budget_v3.json` | 바이트 같음 · 키 차이 0 (21,434 B) |
 | 초안 표 값 ↔ JSON (§3-3 (1) – (7) · §3-4 단계 표 · maxiter 표 · 감도 11 줄 · 넘침 셋 · 판정 넷 · 대피 둘 · 달력 · 여유 · 늦어도 시작) | 같음 (다름 = R3-11 의 1 s 하나) |
 | 보조 스크립트 셋 (`verify_hand` · `timeline_check` · `store_off_check`) | 55.5 h · 242.1–284.1 h · 10.1 h · 15.9–19.4 h · 6,915.5 · 4.338 · 8.676 · 17.35 · 1.037 · 1.244 · 1.659 · 8.0 / 10.4 · 38.7 · 49.6 · 47.0 · 5.3 / 6.5 · 24.0 · 31.7 · 29.2 · 저장본 끔 259.1–283.6 · 190.2–214.7 · 요일 (11-17 화 · 11-20 금 · 12-05 토) = 초안 값 |
 | 손 셈 | 5,000,000 × 0.0105 ÷ 3600 = 14.58 h (0.010483 → 14.56) · × 1.456 = 21.2 h · 168 ÷ 60.4 = 2.78 · ÷ 120.8 = 1.39 · ÷ 96.8 = 1.74 · ÷ 193.6 = 0.87 · 0.017917 ÷ ((0.012310 + 0.012301) ÷ 2) = 1.456 · 2,578 ÷ 879 = 2.933 · 704 ÷ 3,054 × 30,000 = 6,916 → 4.34 · 8.68 · 4,223 − 88 = 4,135 · 384 − 208.7 = 175.3 · 264 − 153.2 = 110.8 — 모두 같음 |
