@@ -1,0 +1,376 @@
+{
+ "slug": "ruess2020_ncm-cracking-kinetics-liquid-vs-solid-electrolyte",
+ "dpi": 200,
+ "maxpx": 2000,
+ "generated": "2026-11-17",
+ "sources": [
+  "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+  "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Exemplary representation of a galvanostatic polarization and relaxation measurement. (b) Concentration gradient of mobile component i inside a particulate solid solution electrode after applying a galvanostatic discharging current for the polarization time t . pol Calculated via Eq. 21 in Ref. 43.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    289.1,
+    468.4
+   ],
+   "w": 720,
+   "h": 1133,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.927,
+   "note": "봤다(PDF p. 3 · 래스터 xref 330 667×1099 JPEG). (a) 정전류 분극 t_pol → 개방 이완 t 도식(축 수치 0) · (b) 입자 표면 → 중심 c_i(x,t) 세 곡선 t_pol < τ/4 · ≈ τ/4 · > τ/4 — 캡션 'Calculated via Eq. 21 in Ref. 43'. 도식 — 판독 값 없음."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Schematic setup of electrochemical cells and general equivalent circuit for ﬁtting the EIS measurements. The respective impedance elements are color coded so that they can be easily recognized in Fig. 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    614.1,
+    290.0,
+    726.9
+   ],
+   "w": 721,
+   "h": 315,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.351,
+   "note": "봤다(p. 5 · xref 50 667×280). CC(stainless steel) | SSEl_Li(NCM) | electrolyte(solid or liquid) | M_Li(Li or InLi) | CC(s. s.) · 회로: R0 —(R_hf‖C_hf)—[C_dl ‖ (R_ct — Z_D,i(W) — C_int)]— Z_D,LE(W) —(R_a‖C_a). 색 = 그림 3 의 성분 색. 값 0."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Figure 3. EIS data (circles) of (a) LEB and (b) ASSB cells obtained at around 4 V vs Li+/Li and ﬁtted (lines) with the equivalent circuit shown in Fig. 2. One data point per decade in frequency is shown as a ﬁlled square. The respective contributions of the different circuit elements are highlighted for clarity.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    248.7
+   ],
+   "w": 721,
+   "h": 522,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.765,
+   "note": "봤다(p. 6 · xref 234 667×489 · 화소 판독). Nyquist 절대 Ω(면적 정규화 아님). (a) LEB ≈4 V: R0 ≈0–4 · R_hf 호 ≈4–34 · R_ct–C_dl(회색) ≈33.8–37.8 Ω(≈4 Ω) · R_a ≈38–46 · Z_D,LE ≈46–50 · 1 mHz 점 ≈56 Ω. (b) ASSB ≈4 V: R0 ≈0–40 · R_hf ≈40–78 · R_ct–C_dl(회색) 기저 현 ≈78.8–202.3 Ω(y −Im 2.9 Ω) → 외삽 지름 ≈127 Ω · 봉우리 −Im ≈43 Ω(SI-2c 충전 4.0 V ≈40 ↔ SI-2d 방전 ≈70 → 충전 가지로 읽힘) · 10 mHz ≈225 Ω. [재현] 127 Ω × BET 명목 면적 16.8 cm²(8.4 mg_NCM × 0.2 m² g⁻¹) = 2.13×10³ Ω cm² ↔ 그림 4b ASSB 충전 4.0 V 2.2×10³ — 기하 0.785 cm² 면 ×22 어긋남(그림 4b 의 cm² = BET 명목 면적으로 읽힘 · 인쇄 0). LEB: 4.0 Ω × 28 cm² = 112 ↔ 4b ≈198–224(×1.8–2.0) · 기하 1.13 cm² 면 ×44–50."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) The apparent diffusion coefﬁcient DLi",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    60.9,
+    518.7,
+    476.3
+   ],
+   "w": 1358,
+   "h": 1155,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.857,
+   "note": "봤다(p. 7 · xref 344 1214×1122 JPEG · 눈금 화소 보정: (a) x 616.7 px/V · y 74.2 px/decade · (b) x 616 px/V · y 123.7 px/decade · 잔차 ≤0.5 px · 열린 원 표지 = 고리 검출 · 짙은/옅은 = 충전/방전). ⚠ 캡션 필드가 첨자 줄바꿈에서 잘림('…coefficient DLi'). (a) D̃^{s-i}(cm² s⁻¹): ASSB 충전 3.61 V 7.4e-14 · 3.71 2.2e-12 · 3.78 3.2e-12 · 3.91 5.1e-12 · 4.04 3.0e-12 · 4.16 2.7e-12 · 4.22 1.5e-13 / ASSB 방전 3.80 4.5e-12 · 3.90 6.3e-12 · 4.01 3.9e-12 / LEB 충전 3.61 2.5e-13 · 3.71 5.9e-12 · 3.80 4.0e-11 · 3.90 2.2e-10 · 4.13 4.8e-10 · 4.26 4.5e-12 / LEB 방전 3.61 V 1.1e-11 · 3.67–3.75 1.0–1.3e-10 · 3.77–3.86 1.8–2.9e-10 · 3.96–4.00 6.4–6.6e-10 · 4.18 9.3e-11(윗틀 근처 — 고리 점수 낮음 0.53–0.62). (b) R_ct(Ω cm²): ASSB 충전 3.60 1.59e4 → 최소 3.80 V 1.76e3 → 4.22 1.52e4 · ASSB 방전 3.86 3.47e3(최소) · 3.80 3.50e3 · LEB 충전 3.58 5.86e4 → 3.71 7.67e3 → 3.80 420 → 3.94–4.13 ≈197–199 → 4.26 1.66e3 · LEB 방전 ≈223–254(3.77–4.10). (c) 도식 — 액체: 'large active interface area · small effective particle size · fast kinetics' ↔ 고체: 'small … · large … · slow kinetics'. 공유 A 닫힘 검사(digest §(b)) 의 입력."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Cross-sectional SEM images of (a) a pristine NCM secondary particle and an NCM particle after the ﬁrst cycle charging step in a (b) LEB or (c) ASSB cathode composite. Arrows highlight cracks inside the secondary particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    61.0,
+    290.0,
+    720.1
+   ],
+   "w": 721,
+   "h": 1832,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.249,
+   "note": "봤다(p. 8 · xref 545 583×1800 · Separation 색공간(회색 SEM) · 5 µm 막대 화소: (a) 231 px · (b)(c) 316 px). (a) 신품 2차 입자 단면 — 조밀 · 1차 입자 경계만 · 지름 ≈11.5 µm (b) LEB 첫 충전 뒤 — 화살표 넷 · 1차 입자 경계 균열 · ≈8.3 µm (c) ASSB 첫 충전 뒤 — 화살표 하나(가장자리) · 주변 SE 입자 · ≈6.5 µm `[도표·화소]`(입자 폭 = 회색 띠 분할 — 이웃 입자와 붙을 수 있음). 조건당 영상 하나 · 균열 정량 0 · 입자 선택 규칙 미인쇄 · 신품 입자 반경 ≈5.8 µm 는 'average radius ∼3 µm' 의 ≈2 배."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "Figure 6. (a) Relationship between tapp and tpol for ASSB (green), LEB (blue) and TF-LEB (purple) and the prediction relation t = t4 app pol in case of semi-inﬁnite diffusion only (straight line) from Eqs. 5 and 6. Dashed lines are provided as a guide to the eye. The inset shows the measurements for the ASSB at longer t . pol (b) DLi",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    60.9,
+    557.1,
+    451.0
+   ],
+   "w": 721,
+   "h": 1084,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.926,
+   "note": "봤다(p. 9 · xref 590 667×1055 · 화소 판독: x 22.3 px/h · y 4.49 px/h · inset x 1.62 px/h · y 0.477 px/h). (a) τ_app ↔ t_pol: ASSB 1/2/3/5/10/20 h → 6.3/11.1/14.1/22.6/38.4/72.1 h(4·t_pol 선 대비 +58/+38/+17/+13/−4/−10 %) · inset 50 → 164 · 100 → 210 h · LEB 2/5/10/20 → 3.7/9.9/14.6/19.7 h · TF-LEB 0.27/0.61/0.96/2.0/3.05/4.94/6.97/9.97 → 1.6/2.3/3.4/6.1/6.5/7.5/7.8/7.6 h(평탄 ≈7.6 — 본문 '≈8 h'). (b) TF-LEB D̃^f 10⁻¹⁴–10⁻¹³ 로그: ≈2.1(3.59 V) · 4.4(3.69) · 2.3(3.76 — 극소) · 3.7(3.82) · 4.6(3.91) · 2.8(4.05) ×10⁻¹⁴ `[도표]` · W(검정 · 오른 축 4–40 로그) ≈13–37 · inset D^self ≈1.4e-16(3.59) → ≈1.7–2.7e-15(≥3.69 V). 축 이름 'D^self' ↔ 본문 'D^f_Li'."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Figure 7. First-cycle galvanostatic charge and discharge proﬁles with 20 mA gNCM −1 in the range between 2.6–4.3 V vs Li+/Li for a LEB (blue) and a ASSB (green) The corresponding speciﬁc discharge capacity for the ﬁrst 20 cycles is shown in the inset.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    502.7,
+    290.0,
+    717.6
+   ],
+   "w": 721,
+   "h": 598,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.891,
+   "note": "봤다(p. 10 · xref 122 667×565 · 화소 판독: x 2.536 px/(mAh g⁻¹) · y 250 px/V). 20 mA g⁻¹ · 2.6–4.3 V(vs Li) 첫 사이클: ASSB 충전 끝 186.3 · 방전 끝 x 52.3 → 방전 134.0 · CE 71.9 % ✅(72) · LEB 충전 끝 207.2 · 방전 끝 x 34.1 · 곡선 시작 x ≈3.0 → 방전 173.1 · CE 83.5 %(0 기준) / 84.8 %(3.0 기준) ↔ 인쇄 85 %. ASSB 충전 4.2 V 통과 ≈171–174 mAh g⁻¹(56호 0.1 C 실험 ≈172 와 같은 자리). 4.2 V 평탄: LEB 만. inset(0–20 사이클 · 21 점씩): LEB 173.1 → 167.3(−3.4 %) · ASSB ≈126.9 → ≈113(−11 %) — ASSB 첫 점이 본 그림 134.0 보다 −5 %."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Figure 8. (a) Potentiostatic discharge at 2.6 V vs Li+/Li following galvano- static discharge at various currents for LEB (blue) and ASSB (green) samples. The charging current was kept constant at 4 mA gNCM −1. (b) Charge and discharge capacities for the ASSB sample shown in (a). The capacity recovered during the potentiostatic discharge is shown as a black arrow and the galvanostatic discharge current is indicated. The irreversible capacity loss is the difference between the charge capacity and total (sum of galvanostatic and potentiostatic) discharge capacity.",
+   "rotated_deg": 0,
+   "bbox": [
+    298.0,
+    251.8,
+    557.1,
+    680.2
+   ],
+   "w": 721,
+   "h": 1191,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.778,
+   "note": "봤다(p. 10 · xref 117 667×1162 · (b) 막대 색 경계 화소 판독 · 4.315 px/(mAh g⁻¹) · 범례 견본(x 383–420)과 겹치는 3 번 막대는 왼쪽 열만). (a) 2.6 V 정전위 24 h 전류 감쇠 — 방전 전류 4–200 mA g⁻¹ · 충전 4 mA g⁻¹ 고정 · ASSB 24 h 끝 ≈0.4 mA g⁻¹ · LEB ≈0.05–0.15. (b) ASSB 사이클 1–5(방전 4 · 6 · 10 · 14 · 20 mA g⁻¹): Q_ch 194.2 · 166.6 · 161.1 · 156.2 · 153.0 / 갈바노 방전 152.5 · 139.5 · 127.2 · 117.4 · 106.8 / 총(+정전위) 173.1 · 163.8 · 158.3 · 154.1 · 151.3 → 비가역 21.1 · 2.8 · 2.8 · 2.1 · 1.6 · 회복/결손 0.49 · 0.90 · 0.92 · 0.95 · 0.96 · CE_tot 89.1 %(인쇄 89 ✅) · 다음 충전 결손 Q_tot(n) − Q_ch(n+1) 6.5 · 2.7 · 2.1 · 1.1. ⚠ 율 = 사이클 순서(교락) · 인쇄 '<20 mAh g⁻¹' ↔ 21.1."
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 11,
+   "file": "fig_9.png",
+   "caption": "Figure 9. Double-logarithmic plot of the discharge time td and the galvanostatic discharge current for LEB (blue) and ASSB (green) samples. Regimes of ﬁnite or semi-inﬁnite diffusion control are indicated.",
+   "rotated_deg": 0,
+   "bbox": [
+    30.9,
+    60.9,
+    290.0,
+    268.0
+   ],
+   "w": 721,
+   "h": 576,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.877,
+   "note": "봤다(p. 11 · xref 311 667×542 · 로그–로그 화소 판독: x 218.5 px/decade · y 141.7 px/decade · 채운 사각 = 침식 후 연결 성분). LEB t_d(h) @ 4/6/10/14/20/40/60/100/140 mA g⁻¹: 45.5 · 29.8 · 17.5 · 12.5 · 8.58 · 4.14 · 2.69 · 1.52 · 1.01 (I·t_d 182 → 141) · ASSB: 36.2 · 22.1 · 12.0 · 7.91 · 5.03 · 2.00 · 1.04 · 0.383 · 0.162 (145 → 23). 기울기 LEB 4→20 −1.03 · 40→140 −1.13 · ASSB 4→20 −1.23 · 40→140 −2.02 · 100→140 −2.54. ASSB I·t_d 는 그림 8b 갈바노 방전보다 −5 ~ −6 %(같은 전류 다섯). 도식 입자(주황 = 확산층) 넷."
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 9,
+   "file": "sch_1.png",
+   "caption": "Scheme 1. Illustration of diffusion pathways and surface areas relevant for the calculation of DLi",
+   "rotated_deg": 0,
+   "bbox": [
+    30.0,
+    580.9,
+    488.7,
+    735.9
+   ],
+   "w": 1275,
+   "h": 432,
+   "dpi": 200,
+   "src": "b5b26fe4-102._Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf",
+   "blank": 0.394,
+   "note": "봤다(p. 9 · xref 591 1046×399). ASSB(녹색 · 왼쪽): 'real surface ≈ assumed surface' · 실제 경로 'around void/crack' · 'across grain boundary'(가정 경로보다 김) · 입자 안 균열/공극(옅은 회색)은 SE 로 안 채워짐 / LEB(파랑 · 오른쪽): 'new surface due to cracking'(굵은 파란 선) · 실제 표면 ≫ 가정 표면 · 실제 경로 짧음. 도식 — 수치 0."
+  },
+  {
+   "key": "fS1m",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1_manual_p2.png",
+   "bbox": [
+    66,
+    66,
+    529,
+    338
+   ],
+   "w": 1287,
+   "h": 756,
+   "caption": "Figure SI-1. (a) Relaxation of VOC of an ASSB cell at around 3.9 V vs. Li+/Li at T = 25 °C after a galvanostatic current pulse for 100 h either for a charging pulse with current I or a discharging pulse with current –I. (b) Corrected potential relaxation VOC corr(I,t) and self-discharge f(V,t) derived from (a) via equation (9). Please note that both functions are plotted as their doubled values as it is the direct outcome of equation (9).",
+   "note": "수동 — SI p. 2 렌더 200 dpi(그림 + 캡션) · 자동 미검출(캡션 'Figure SI-N.' 형식 — SI 0). 봤다(원본 래스터 xref 4 1259×487 Flate). (a) ±I 100 h 펄스 뒤 V_OC 이완 둘(눈금 막대 10 mV · 0–96 h · 절대 축 수치 0). (b) 2f(V,t)(빨강) · 2V_OC^corr(검정) · 식 [5] 적합(파랑 ≈12–40 h) · 주석 '1.6 mV/d'(두 배 값 곡선 위 → f ≈0.8 mV d⁻¹ 로 읽힘 — 주석이 두 배 값인지 미표기) · 눈금 막대 20 mV. 셀 하나 · 사이클 미표기. 38호 'few mV per day(ref 19)' 의 자리.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+  },
+  {
+   "key": "fS2m",
+   "kind": "figure",
+   "label": "S2",
+   "page": 2,
+   "file": "fig_S2_manual_p2.png",
+   "bbox": [
+    66,
+    354,
+    529,
+    788
+   ],
+   "w": 1287,
+   "h": 1206,
+   "caption": "Figure SI-2. Bode plots of EIS measurements of (a, b) LEB or (c, d) ASSB cells measured at various potentials at T = 25 °C during (a, c) charge or (b, d) discharge in the first cycle. The evolution of the impedance associated with charge transfer at the NCM|electrolyte interface is indicated.",
+   "note": "수동 — SI p. 2 렌더 200 dpi. 봤다(xref 5 1259×1025 Flate). −Im(Z)(Ω, 절대) ↔ 주파수 · 점 = 측정 · 선 = 적합 · 3.6–4.2 V(충전) / 4.1–3.6 V(방전). `[도표]` 눈 판독: (a) LEB 충전 R_ct 봉우리 3.6 V ≈330 Ω @ ≈0.07 Hz → 3.7 ≈125 → ≥3.9 V 사라짐(1–10 Hz 어깨) · (b) LEB 방전 3.6 V ≈55 Ω · (c) ASSB 충전 R_ct 봉우리 4.2 V ≈260 Ω @ ≈70 Hz · 3.6 ≈100 · 3.8–4.0 ≈37–40 · (d) ASSB 방전 3.6 ≈130 · 3.7–4.1 ≈70–110 — 방전이 충전보다 큼(그림 4b 와 같은 방향). 기울기 −1/2 삼각형 표시. 그림 3b(봉우리 ≈43 Ω)는 (c) 4.0 V 와 같은 자리로 읽힘.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+  },
+  {
+   "key": "fS3m",
+   "kind": "figure",
+   "label": "S3",
+   "page": 3,
+   "file": "fig_S3_manual_p3.png",
+   "bbox": [
+    66,
+    66,
+    529,
+    313
+   ],
+   "w": 1287,
+   "h": 687,
+   "caption": "Figure SI-3. (a) Open-circuit potential of an LEB cell plotted versus lithium content in the NCM811 electrode. (b) Enhancement factor W of NCM811 as obtained from an LEB (blue) and ASSB cell (green) during charge (dark colors) or discharge (light colors) in the first cycle.",
+   "note": "수동 — SI p. 3 렌더 200 dpi. 봤다(xref 8 1259×506 Flate · 화소 판독: (a) x 441.5 px/단위 · y 445 px/V · (b) x 552.5 px/V · y 8.9 px/W). (a) **LEB 셀** OCP — x 0.20(4.23 V) → 0.97(3.55 V) · 점 ≈26 · 곡선 추적 기울기 −dE/dx: 3.77 V(x ≈0.62) 0.59–0.71 V · x 0.66(3.75 V) 0.48–0.55 V · 3.80 V(x 0.58) 0.87–0.89 · 전 구간 최소 ≈0.43(x ≈0.89 · 3.61 V) — 0.38 V 는 창 ±0.03 어디에도 없음. (b) W: LEB 충전 3.77 V ≈13.5 · 3.78 12.9 · 3.90 25.3 · 4.01 18.6 / LEB 방전 3.77 16.0 · 3.91 28.0 / ASSB 충전 3.78 14.2 · 3.80 13.3 · 3.90 23.5 · 4.01 17.5 · 4.11 15.8 · 4.22 8.6 / 측정 간 최대 ≈×2(3.6–3.67 V). W_ASSB/W_LEB(충전) 0.78–1.10. ⚠ ASSB OCV–x 곡선 자체는 인쇄 0.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+  },
+  {
+   "key": "fS4m",
+   "kind": "figure",
+   "label": "S4",
+   "page": 3,
+   "file": "fig_S4_manual_p3.png",
+   "bbox": [
+    66,
+    356,
+    529,
+    673
+   ],
+   "w": 1287,
+   "h": 882,
+   "caption": "Figure SI-4. Comparison of D̃Li s-i obtained from ASSB cell data (NCM-811 cathode, T = 25 °C) measured by the galvanostatic polarization and relaxation technique (empty circles) or EIS (filled circles). D̃Li s-i is the chemical diffusion coefficient of lithium in NCM evaluated at conditions of semi-infinite diffusion.",
+   "note": "수동 — SI p. 3 렌더 200 dpi. 봤다(xref 9 872×698 Flate · 화소 판독: x 790 px/V · y 159.2 px/decade · 빈 원 = 고리 · 채운 원 = 침식 성분 · 같은 전위 짝 23). ASSB(충전으로 읽힘) GITT/EIS 비 0.44–2.17: 3.62–3.78 V GITT 가 큼(×1.39–2.17) · 3.80–4.11 V EIS 가 큼(×0.55–0.88) · 4.16–4.19 ×1.5 · 4.22 ×0.44. 봉우리 GITT 5.8e-12(3.94 V) · EIS 6.4e-12(3.94 V). 본문 'perfect agreement' 와 어긋남(×2 대).",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+  },
+  {
+   "key": "fS5m",
+   "kind": "figure",
+   "label": "S5",
+   "page": 4,
+   "file": "fig_S5_manual_p4.png",
+   "bbox": [
+    66,
+    66,
+    529,
+    478
+   ],
+   "w": 1287,
+   "h": 1145,
+   "caption": "Figure SI-5. (a) Scanning electron microscopy images of the NCM powder and (b) size distribution of NCM secondary particles derived from (a).",
+   "note": "수동 — SI p. 4 렌더 200 dpi. 봤다(xref 13 669×1009 JPEG). (a) 분말 SEM(10 µm 막대 · 구형 2차 입자 · 크기 혼재) (b) 반경 히스토그램(로그 축 1–10 µm · 10^0.1 간격 칸 7) `[도표]` 개수 5 · 2 · 14 · 15 · 22 · 10 · 11 = 79 · 정규 맞춤 봉우리 ≈3.2 µm · `[재현]` 개수 평균 반경 ≈3.4 µm · 부피 가중 ≈4.6 µm(큰 칸 5.0–6.3 µm 가 부피 ≈45 %). 본문 'average … radius of ∼3 µm' = 개수 기준으로 읽힘.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+  },
+  {
+   "key": "fS6m",
+   "kind": "figure",
+   "label": "S6",
+   "page": 5,
+   "file": "fig_S6_manual_p5.png",
+   "bbox": [
+    66,
+    66,
+    529,
+    756
+   ],
+   "w": 1287,
+   "h": 1917,
+   "caption": "Figure SI-6. Corrected potential relaxation following a galvanostatic current pulse of 4 mA/gNCM with various polarization times tpol at a potential of around 3.9 V vs. Li+/Li at T = 25 °C for an (a) ASSB, (b) LEB or (c) TF-LEB cell. The data points are fitted with the function VOC corr(I,t) = c - 2a√t + 2bt. The apparent relaxation time can be obtained via τapp = (2a/2b)2. … (d) EIS measurement (circles) of the TF-LEB sample at 3.9 V vs. Li+/Li fitted with the equivalent circuit depicted in Figure 2 (line). … use the parameter 2a from (d) instead for the calculation of τapp. …",
+   "note": "수동 — SI p. 5 렌더 200 dpi. 봤다(xref 17 1242×1379 Flate). 인쇄 적합값: (a) ASSB t_pol 60 min 2a 0.13 mV/√s · 2b 1.19 µV/s / 10 h 0.11 · 0.30 / 50 h 0.12 · 0.15 (b) LEB 60 min 0.034 · 0.31 / 3 h 0.036 · 0.21 / 10 h 0.036 · 0.14 (c) TF-LEB 40 min 0.09 · 0.53 / 3 h 0.14 · 0.21 / 10 h 0.21 · 0.19 (d) TF-LEB Nyquist(0–3500 Ω · 두 호) 'Z_W = 125 Ω/√s → 2a (200 nA) = 0.05 mV/√s'. `[재현]` (2a/2b)²: ASSB 3.3 · 37.3 · 177.8 h ↔ 그림 6a 6.3 · 38.4 · 164 / LEB 3.3 · 8.2 · 18.4 ↔ 6a ? · ≈8 · 14.6 / TF-LEB (0.05/2b)² 15.7(3 h) · 19.2(10 h) ↔ 6a 6.5 · 7.6. 0.05 = 2·I·Z_W(식 5 꼴이면 (2/√π)·I·Z_W = 0.028) · 200 nA ↔ 4 mA g⁻¹ × 180 µg = 720 nA.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+  },
+  {
+   "key": "fS7m",
+   "kind": "figure",
+   "label": "S7",
+   "page": 6,
+   "file": "fig_S7_manual_p6.png",
+   "bbox": [
+    66,
+    66,
+    529,
+    399
+   ],
+   "w": 1287,
+   "h": 926,
+   "caption": "Figure SI-7. XRD pattern of a thin-film NCM-333 sample measured in Bragg-Brentano geometry with Cu-Kα radiation. The intensity ratios of the reflexes confirm the absence of a preferential orientation in the film.",
+   "note": "수동 — SI p. 6 렌더 200 dpi. 봤다(xref 21 932×745 Flate). LiNi0.33Co0.33Mn0.33O2 박막 · 2θ 10–90° · 지수 (003) ≈18.7 · (101) ≈36.8 · (006) ≈38.3 · (104) ≈44.6 · (015) ≈48.7 · (107) ≈58.7 · (018)/(110) ≈64.6/65.1 · (113) ≈68.2 `[도표]` · I(003)/I(104) ≈1.5(눈 판독) · 기판 봉우리 표기 0 · 기판 물질 미인쇄.",
+   "manual": true,
+   "dpi": 200,
+   "rotated_deg": 0,
+   "blank": null,
+   "src": "8f1a9106-102._Sup_Influence_of_NCM_particle_cracking_on_kinetics_of_lithium-ion_batteries_with_liquid_or_solid_electrolyte.pdf"
+  }
+ ]
+}

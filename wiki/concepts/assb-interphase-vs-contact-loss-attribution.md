@@ -5,7 +5,7 @@ created: 2026-09-23
 updated: 2026-11-17
 type: concept
 tags: [assb, battery, degradation, research]
-sources: [raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/firouz2020_hammerstein-wiener-multisine-bla-nonlinearity-assb.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
+sources: [raw/papers/ruess2020_ncm-cracking-kinetics-liquid-vs-solid-electrolyte.md, raw/papers/tian2017_contact-area-loss-assb-simulation.md, raw/papers/firouz2020_hammerstein-wiener-multisine-bla-nonlinearity-assb.md, raw/papers/truong2025_calendar-vs-cycle-aging-protocols-drt-assb.md, raw/papers/minnmann2022_designing-cathodes-cam-ssb-perspective.md, raw/papers/kim2023_argyrodite-coated-ncm-normal-pressure-assb.md, raw/papers/oruemendizabal2023_multiconfiguration-geis-drt-nmc622-lpscl-li-interfaces.md, raw/papers/koerver2017_redox-active-interphase-cutoff-voltage-ncm811-lps.md, raw/papers/zhang2017_interfacial-eis-cathode-composition-lco-lgps-assb.md, raw/papers/koerver2017_capacity-fade-interphase-chemomechanical-ncm811-lps.md, raw/papers/strauss2018_cathode-particle-size-inactive-fraction-assb.md, raw/papers/fukunishi2023_ncm523-three-electrode-impedance-degradation.md, raw/papers/huo2025_assb-cathode-lampe-coupled-aging-model.md, raw/papers/stavola2023_lithiation-gradients-tortuosity-thick-nmc111-argyrodite.md, raw/papers/ren2023_oxide-ssb-composite-cathode-architecture-perspective.md]
 confidence: low
 explored: false
 verificationStatus: unverified
@@ -47,6 +47,7 @@ evidenceScope: multi-source-primary
 | **유효 전도도 `σ_eff`**(차단 셀 EIS ↔ operando 역적합) | 입자 표면 층은 전극 척도 `σ_eff` 를 크게 안 바꾼다(`[추론]`) | **부분** 접촉 손실(점 접촉 감소)이 `σ_eff ↓` — 원전 이름은 "굴곡도 진화"(24호) | ⚠ `ε`·압력·모델과 곱 — [[assb-tortuosity-factor-effective-conductivity-split]] |
 | ★ **충 ↔ 방 가역 차**(같은 사이클 두 SOC, 64호) | 산화환원 계면층: 층 저항이 산화 상태를 따라 오르내린다 — `C` 불변 · `R` 비만 변함(저항형) | 가역 접촉 호흡: 충전 수축이 접촉을 줄였다 방전에 되돌린다 — `C` 가 `1/R` 을 따라감(면적형) | ✅ **전제 위** — 64호 5.0 V 저항형(τ ×2.2–2.4) · 4.6 V 면적형 쪽(τ ×1.10–1.24). ⚠ CAM 고유 `R_ct(SOC)` 가 세 번째 후보(64호 4.0 V 부호 반대) |
 | ★ **깊이 XPS**(Ar⁺ 식각, 64호) | 산화종 분율이 깊이에 따라 줄고 평탄이 남는다 — **위치**(집전체 쪽 ↔ 복합체 안)의 정성 | 변화 없음 | 존재 · 위치만 — 식각 속도 미인쇄라 **두께 nm 0**, 신품 · 무전류 식각 대조가 없으면 평탄 몫이 산화인지 인공물인지 미정 |
+| ★ **Warburg 면적 채널 — 같은 SOC 두 점(충 · 방)의 겉보기 D**(107호) | 겉보기 D 불변(면적 그대로) · `R` 만 ↑ | 겉보기 D ∝ A² ↓ · `R` ∝ 1/A ↑ — 함께 | ✅ **전제 위**(D̃ 불변 · W 같은 정의 · 반무한 창) — `C ∝ 면적` 전제를 쓰지 않는 두 번째 면적 채널. 107호 ASSB 첫 사이클: R ×1.68–2.01 ↔ D ×0.85–1.56 → 화학형(면적 ≤8 %) · ⚠ 같은 겹침이 액체셀 균열에서는 한 면적으로 안 닫힘(면적 몫 로그 41–54 %) |
 
 ## 원전(23호)이 한 일 — 채널 분담 + 시간 분할 배정
 
@@ -79,6 +80,7 @@ evidenceScope: multi-source-primary
 | **90호 Truong 2025 *J. Mater. Chem. A*** (2026-10-02 사용자 공급 · NCM83 : Li₆PS₅Cl 7 : 3 \| Li₆PS₅Cl \| In/InLi · 48 h 정전위 유지 ↔ ≈48 h 1C · 시간분해 DRT(hybrid-drt) · Univ. Münster · FZ Jülich(교신 Zeier — 23 · 64호(JLU Giessen)의 공저자) · 예치 원자료) | calendar 성장을 `[인쇄]` "irreversible loss of cyclable lithium into building up resistive cathode–electrolyte interphase layer" 로 읽고 같은 문단에 "cracking or contact loss due to volume expansion from overcharging" 을 **병치** · 서두는 "the increased cathode–electrolyte interfacial resistance may also be contributed by the contact loss between them"[27](= 23호) · 이름은 한 봉우리(P_C) | ⚠ 저자 `C` 0 — 예치 DRT 로 **우리 `[재현]` C_eff**: calendar 지배 봉우리 τ ×5.7–35 · R ×4.2–27.6 동안 **C 1.6–2.5 µF 평탄 → 저항형(계면층 쪽 · 전제 위)** · cycle P_C1 R ↓ · C ↑(면적 증가형 서명 또는 상태 표류) · 사후 분석 0 · 셀 하나씩 · 유지 중 스펙트럼은 고 SOC 상태 효과 포함 |
 | **92호 Firouz 2020 *J. Energy Storage*** (4차 묶음 파일 52 · LiNbO₃ 코팅 LCO ‖ 흑연 코인셀 둘 · 양극층 SE 교체 Li₂S-P₂S₅ 유리 ↔ γ-Li₃PS₄ · 다중정현 BLA + 블록 지향 · 60 ℃ · 셀 하나씩 · VUB + Toyota Motor Europe) | 두 기구 어느 쪽도 아닌 **셋째 이름(양극층 벌크 전도도)** 을 같은 지면에서 "boundary resistance between solid electrolyte and active material" · "different materials in the interface of cathode active material and solid electrolyte" 로도 부르고(벌크 ↔ 계면 병치), 비선형을 "charge-transfer limit(H) · mass-transfer limit(W)" 로 배정 — 근거는 블록 모양(정규화 · 구조 의존) · 초록은 "faults in the electrode-electrolyte interface" 검출을 주장 | ❌ 대역 4 mHz–1 Hz(계면 호 아래) · `C` 0 · 온도 · 진폭 하나 · 셀 하나씩 · `[해석]` 고정 전류 진폭 비선형도는 두 기구 모두에서 같은 방향(국소 I/(A·j₀) ↑) — 가르는 채널이 아니다 |
 | **106호 Tian & Qi 2017** (모형 · 2017 — 계보 첫 정량 접촉 손실 모형) | 서론이 계면 저항 두 원인을 "chemical effect and physical contact.3" 으로 나누고 물리(접촉)만 모형화 · 동역학 항은 γ·k_pos 곱(식 17)이라 화학 열화(k_pos ↓)와 접촉 손실(γ ↓)이 과전압으로 같은 꼴 | ❌ 측정 0 — 가르는 것은 '최악의 경우 물질 손실' 가정이 붙인 용량 채널(식 18)뿐(배정이 정의로 정해짐) |
+| **107호 Ruess 2020 *JES*** (NCM811 LEB ↔ ASSB(Li₆PS₅Cl · In/InLi · 무탄소) · 첫 사이클 · 같은 연구망 — 23 · 64호 계열 · 38 · 56호 공저 원전) | **저자 스스로 가른다**: `[인쇄]` "since D̃^{s-i}_Li clearly does not show such difference between charge and discharge, we conclude that the irreversible reaction is not related to contact loss, but is rather caused by the formation of a high-impedance insulating layer at the interface" — 계면층 쪽 원전 인용 [10](= 23호) · [15] · [76] · 절연층 [52] | ✅ `R`(그림 4b) × Warburg 겉보기 D(그림 4a) 같은 전위 — 우리 재현이 배정을 수로 지지(면적 ≤8 % · j₀ ×0.40–0.61) · ⚠ `C` 0 · 셀 수 미인쇄 · 첫 사이클 · 겉보기 D 정의식 지수 1(Z_W 로는 2) |
 
 ⇒ `[해석]` **원전이 "expected · suspect · suggests" 로 쓴 접촉 손실이 인용을 거치며 평서문이 되고, 원전 자신의 SI 는 EIS 창 안에서
 그 면적 변화를 보지 못한다.** 계면층 쪽은 XPS 라는 화학 증거가 있고 SI 궤적도 그쪽이다.
@@ -89,6 +91,7 @@ evidenceScope: multi-source-primary
 → **2026-10-02 (90호)**: 같은 계열(Zeier — 23 · 64호 공저자)의 정전위 유지 노화에서 같은 병치가 반복된다 — 한 봉우리(P_C) 아래 계면층 · 균열 · 접촉 손실을 함께 두고 가르지 않는다. 저자 `C` 는 0 이지만 예치된 시간분해 DRT 에서 우리가 C_eff 를 내면 유지 48 h 동안 지배 봉우리의 `C` 가 평탄해(1.6–2.5 µF) **노화분은 저항형** — 23 · 64호(사이클 축 노화분)와 같은 방향이다(전제 위 · 고 SOC 상태 효과 미분리 · 위치 귀속은 τ 문헌 가정).
 → **2026-10-02 (92호)**: 다른 계열(VUB + Toyota)의 재료 교체 대조에서 **셋째 이름**이 붙는다 — 양극층 SE 를 바꾼 조작을 지면이 전도도 · 경계 저항 · 계면으로 번갈아 부르고, 결과(비선형 왜곡 ↑)를 "계면 고장 검출" 로 읽는다. 그러나 그 비선형도는 고정 전류 진폭에서 활성 면적당 분극의 단조 함수라(`[재현·가정]` BV 상대 왜곡 ∝ (R_ct·I)²) 계면층 · 접촉 손실 · 수송 저하를 같은 방향으로 본다 — **두 기구를 가르는 채널 목록에 비선형 진폭 채널을 넣지 않는 근거**(가르는 입력 0).
 → **2026-11-17 (106호)**: 계보 첫 정량 접촉 손실 모형(Tian · Qi 2017 · 모형 편 · 실험 0)이 서론에서 계면 저항의 두 원인을 "chemical effect and physical contact" 로 나누고 **물리(접촉)만** 모형화한다. 그러나 그 모형 안에서 두 기구는 동역학 앞 인자의 곱 γ·k_pos(식 17)로 과전압에서 같은 꼴이고, 둘을 가르는 것은 '최악의 경우 물질 손실' 정의가 붙인 용량 채널(식 18)뿐이다 — 배정이 측정이 아니라 **정의로** 정해진다(`[해석]` · 대수는 [[assb-lampe-contact-product-degeneracy]] 여든아홉 번째 적용).
+→ **2026-11-17 (107호)**: 같은 연구망(23 · 64호 계열)의 2020 편에서 **처음으로 저자 자신이** 두 번째 전기화학 채널(Warburg 겉보기 D 의 충/방 가역성)로 계면층 ↔ 접촉 손실을 가른다 — 이 페이지 계보 표 안에서는 첫 표본(정성 · 첫 사이클 · 셀 하나). 106호(모형)가 배정을 정의(용량 채널)로 정한 것과 달리 이 편은 측정 채널로 정했다. 같은 지면이 액체셀 균열(면적 증가) 서사에 같은 겹침을 걸지 않았고, 우리가 걸면 면적 하나로 닫히지 않는다.
 
 ## 무엇을 재면 가를 수 있나 (처방)
 
@@ -106,6 +109,7 @@ evidenceScope: multi-source-primary
 8. ★ **휴지 시간 · SOC 고정** (2026-09-28, 64호) — EIS 직후 ↔ 24 h 휴지 뒤 양극 호가 `[도표]` ×1.3–1.9 다르고, 충 ↔ 방이 ×0.2–2.5 다르다. `R(N)` 을 노화 축으로 쓰려면 둘을 고정하고 값 옆에 적는다.
    ★ **2026-10-02 (90호)** — 시간분해 EIS 를 calendar 는 유지 전위(고 SOC) · cycle 은 1C 방전 끝(30 분 휴지 · 사이클마다 표류)에서 재고, RPT 비교는 한 셀 스펙트럼을 여섯 셀 공통 기준선으로 쓴다 — 자기 셀 기준이면 cycle 저주파 Re 는 −40 · −30 · −4 Ω(`[도표·화소]` S4 · `[데이터]`). 상태 · 기준 셀을 값 옆에 적어야 하는 표본.
 9. ★ **상태 이름표 대조** (2026-09-29, 84호) — `R`(그림)과 `C`(표)를 상태 이름표로 짝지어 1단계를 걸기 전에, 막대 값을 다른 그림(사이클 궤적 · 대칭 셀 궤적)의 같은 상태와 대조한다. 84호는 그림 4b '1st discharge' 가 그림 4c · 2c 의 10 사이클과 성분별 ±3 Ω·cm² 로 같고, 그 대조 여부에 따라 노화 판독이 계면층(화학형) ↔ 접촉 면적(면적형)으로 뒤집힌다.
+10. ★ **Warburg 면적 채널을 `R` 과 같은 전위에서** (2026-11-17, 107호) — 정전류 이완(또는 EIS 저주파) 겉보기 D 와 `R_ct` 를 같은 SOC 충 · 방(또는 사이클 전후)에서 같이 인쇄하면 `R·√D` 가 면적을 약분한다 — `C ∝ 면적` 전제 없이. 조건: D̃ 불변 · W 를 같은 곡선 정의로 · 반무한 창 확인(t_pol 쓸기) · 겉보기 D 의 면적 지수 표기(107호 인쇄 1 ↔ 2).
 
 ## 이 페이지가 주장하지 않는 것
 
@@ -121,6 +125,7 @@ evidenceScope: multi-source-primary
   → **2026-09-29 (86호)**: 실험 **아홉 편** · `R`·`C` 입력 **다섯 편 그대로**(86호는 `R` 만 · CPE 0) — 86호는 코팅 쌍(n = 1 · 산포 3–5 %)과 첫 충전 등가를 준다.
   → **2026-10-02 (90호)**: 실험 **열 편** · `R`·`C` 입력 **다섯 편 그대로**(90호는 저자 `C` 0 — 예치 DRT 로 우리가 C_eff 를 낸 첫 편) — 90호는 컷오프 다섯 × 노화 둘 · 셀 하나씩 · 사후 분석 0 이다.
   → **2026-10-02 (92호)**: 실험 **열한 편** · `R`·`C` 입력 **다섯 편 그대로**(92호는 대역 4 mHz–1 Hz 가 계면 호 아래 · `C` 0) — 92호는 재료 교체 대조(셀 하나씩 · 신품)이고, 그 비선형 진폭 채널은 두 기구를 가르지 못한다(`[재현·가정]` · `[해석]`).
+  → **2026-11-17 (107호)**: 실험 **열두 편** · `R`·`C` 입력 **다섯 편 그대로**(107호는 `R` + Warburg 겉보기 D — `C` 0) — 107호는 두 번째 면적 채널(Warburg)로 저자 자신이 가른 첫 표본이다.
 - **63호 셀에서 접촉 손실이 없었다고 주장하지 않는다** (2026-09-28) — 앞 절반의 면적형 감소는 오히려 면적 쪽 서명이다; 주장은 "뒤 절반의 ×2 는 면적형이 아니다(전제 위)" 까지다.
 - **64호의 가역 면적형(4.6 V)을 접촉 호흡의 측정으로 주장하지 않는다** (2026-09-28) — τ 비 1.10–1.24 는 전제 · CPE 환산 · 로그 축 판독 위다. 그리고 **집전체 쪽 층이 셀 저항에 기여하지 않는다고 하지 않는다** — Li⁺ 차단 계면이라는 물리에서 그 경로를 묻는 것까지다.
 - **84호 셀의 노화를 계면층으로도 접촉 손실로도 배정하지 않는다** (2026-09-29) — 1단계 판독이 상태 이름표 해석에 따라 뒤집히고(τ ×1.94 ↔ ×0.85), Q · n 미인쇄 · 창 밖 과정 · 셀 하나씩이다. 저자도 두 기구를 한 R3 에 병치했다.
@@ -128,6 +133,7 @@ evidenceScope: multi-source-primary
 - **87호(종설)의 저항 어휘를 두 기구 중 어느 쪽의 근거로도 쓰지 않는다** (2026-09-29) — 1차 자료 0 이고, "한 이름 아래 병치" 가 설계 어휘에서도 반복된다는 표본까지다. 실험 편 수(아홉) · `R`·`C` 입력 편 수(다섯)는 그대로다.
 - **90호 calendar 셀의 노화를 계면층으로 확정하지 않는다** (2026-10-02) — C_eff 평탄은 우리 판독(골–골 적분 · 창 경계 ±≈30 % · 전제 `C ∝ 면적` · 기하 면적)이고, 유지 중 스펙트럼은 고 SOC 상태 효과를 포함하며, 면적 대조 · 온도 · 3전극 · 사후 분석이 없다. 저자도 계면층 · 균열 · 접촉 손실을 한 P_C 에 병치했다.
 - **92호 셀 2 의 비선형을 계면층으로도 접촉 손실로도 배정하지 않는다** (2026-10-02) — 저자 배정은 "전하이동(H) · 물질전달(W)" 이고 그 근거인 블록 모양은 정규화 · 구조 의존이다; 재료 교체가 벌크 전도도 · 접촉 · 계면 화학을 함께 바꿨을 수 있고, `R`·`C` · 온도 · 대칭셀이 없다. 실험 편 수(열한) · `R`·`C` 입력 편 수(다섯)만 센다.
+- **107호 ASSB 의 첫 사이클 저항 증가를 계면층으로 확정하지 않는다** (2026-11-17) — 저자 배정과 우리 재현(면적 ≤8 %)이 같은 방향이라는 것까지이고, D̃ 불변 · W · 반무한 창 · 셀 하나 · 첫 사이클 위다. `C` 는 지면에 없다. 실험 편 수(열두) · `R`·`C` 입력 편 수(다섯)만 센다.
 
 ## 관련
 
