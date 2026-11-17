@@ -1,0 +1,51 @@
+# 산술 재실행 (review1 · python3 -I · 복사본)
+## time_budget_v3.py --json ↔ work/time_budget_v3.json
+identical
+## verify_hand · timeline_check · store_off_check
+one-machine ladders h 55.5
+predict stage kgy h 242.1 284.1
+first unit extra h 10.1
+solve unit kgy 15.9 19.4
+old-gen SBE iters est 6915.520628683693 ratio lo 4.3380681818181825 hi 8.676136363636365
+x2 17.35227272727273 5M margin 1.0369278401562534 6M 1.2443134081875042 4M x 1.6590845442500055
+2pan post ratios 0.08254676505920713 0.09699536196813875 0.21237145528201937 0.24554134390199964 3pan 0.27011817670230726 0.3133159268929504 0.6521322472448491 0.738870792616721
+a2/a3 per iter 4.545298558682224 4.546858908341916
+shares 0.2410109431995831 0.1875506893755069 0.304028644943052
+a3-a4 split diff gap/post 40 81
+arm s 1.0 first5 kgy/gabia h 8.0 10.4 ladders_done h 38.7 first DBE corner (kgy) done h 49.6 corner arm h 10.9
+arm s 2.0 first5 kgy/gabia h 5.3 6.5 ladders_done h 24.0 first DBE corner (kgy) done h 31.7 corner arm h 7.8
+solve s 1.0 first5 kgy/gabia h 8.0 10.4 ladders_done h 38.7 first DBE corner (kgy) done h 47.0 corner arm h 8.3
+solve s 2.0 first5 kgy/gabia h 5.3 6.5 ladders_done h 24.0 first DBE corner (kgy) done h 29.2 corner arm h 5.2
+ladder point add kgy/gabia h 1.4 1.9
+store_on  arm sim_h 184.2 208.7 split 7 7 ladder_gabia_h 38.7
+store_on  solve sim_h 153.2 177.7 split 7 7 ladder_gabia_h 38.7
+store_off arm sim_h 259.1 283.6 split 7 7 ladder_gabia_h 56.1
+store_off solve sim_h 190.2 214.7 split 7 7 ladder_gabia_h 56.1
+2026-11-17 Tue
+2026-11-20 Fri
+2026-11-27 Fri
+2026-11-28 Sat
+2026-12-01 Tue
+2026-12-05 Sat
+2026-12-06 Sun
+## probe_r (리뷰 감도 · 168 h 경계 · maxiter 범위)
+r 2.933 arm   GPU end 184.2-208.7 h split 7/5  slack1205 175.3  point8 kgy 49.0 gabia 60.4  unit_first kgy 32.9 gabia 40.1 merge12 45.4
+r 2.933 solve GPU end 153.2-177.7 h split 7/5  slack1205 206.3  point8 kgy 35.2 gabia 46.6  unit_first kgy 22.8 gabia 29.9 merge12 16.0
+r 3.420 arm   GPU end 208.2-236.8 h split 7/5  slack1205 147.2  point8 kgy 57.1 gabia 70.4  unit_first kgy 38.4 gabia 46.7 merge12 52.7
+r 3.420 solve GPU end 169.5-198.1 h split 7/5  slack1205 185.9  point8 kgy 39.8 gabia 53.1  unit_first kgy 25.7 gabia 34.0 merge12 16.0
+r 4.340 arm   GPU end 253.7-290.0 h split 7/5  slack1205 94.0  point8 kgy 72.5 gabia 89.4  unit_first kgy 48.7 gabia 59.3 merge12 66.7
+r 4.340 solve GPU end 200.2-236.5 h split 7/5  slack1205 147.5  point8 kgy 48.6 gabia 65.5  unit_first kgy 31.2 gabia 41.8 merge12 16.0
+r 5.866 arm   GPU end 329.1-378.2 h split 7/5  slack1205 5.8  point8 kgy 98.0 gabia 120.8  unit_first kgy 65.8 gabia 80.1 merge12 89.9
+r 5.866 solve GPU end 251.2-300.3 h split 7/5  slack1205 83.7  point8 kgy 63.2 gabia 86.0  unit_first kgy 40.3 gabia 54.6 merge12 16.0
+r 8.680 arm   GPU end 468.2-540.8 h split 7/5  slack1205 -156.8  point8 kgy 145.0 gabia 178.7  unit_first kgy 97.4 gabia 118.5 merge12 132.6
+r 8.680 solve GPU end 345.3-417.8 h split 7/5  slack1205 -33.8  point8 kgy 90.0 gabia 123.8  unit_first kgy 57.1 gabia 78.2 merge12 16.0
+arm kgy max r for point8 <=168h: 10.06
+arm gabia max r for point8 <=168h: 8.16
+solve kgy max r for point8 <=168h: 16.84
+solve gabia max r for point8 <=168h: 11.97
+kgy x 12.0 point8 (solve mode, converged just under cap) = 121.7 h
+kgy x 17.35 point8 (solve mode, converged just under cap) = 172.8 h
+kgy x 17.99 point8 (solve mode, converged just under cap) = 178.9 h
+gabia x 12.0 point8 (solve mode, converged just under cap) = 168.4 h
+gabia x 17.35 point8 (solve mode, converged just under cap) = 240.3 h
+gabia x 17.99 point8 (solve mode, converged just under cap) = 248.9 h
