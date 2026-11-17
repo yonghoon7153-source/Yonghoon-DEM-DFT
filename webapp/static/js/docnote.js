@@ -34,6 +34,16 @@
  *   [◂ 펴기] 로 되돌린다. 메모 · 형광펜은 그대로다 (감출 뿐 지우지 않는다).
  *   ⛔ 못 하는 것: 상태는 **보는 사람 브라우저에만** 기억한다 (localStorage · 막혀 있으면 이번 화면에서만) —
  *     다른 기기 · 다른 사람과 맞추지 않는다. 접힌 채 오른쪽 클릭으로 새 메모를 열면 펴진다 (숨은 초안을 만들지 않는다).
+ *
+ * 본문이 iframe 안에 있을 때 (2026-11-17 · /interface-thermo · 사용자 '여기서도 메모랑 하이라이트' → '기존 포멧 가져와')
+ *   bodyEl 이 **같은 출처 iframe** 의 문서에 있어도 된다 (그 화면의 보고서는 자기 CSS 를 가진 완결 HTML 이라
+ *   웹앱 본문에 못 섞는다). 여백 (카드) 은 늘 hostEl 쪽 — 이 창 — 문서에 그리고, **본문 쪽 일만** 본문의 문서로 한다:
+ *   글 찾기 · 칠하기 · 선택 · 오른쪽 클릭 · Esc. 카드 높이는 iframe 의 위치를 더해 맞춘다 (topOf).
+ *   본문에 칠하는 표시 (형광펜 · 메모 자리 · 반짝임) 의 CSS 는 이 창 style.css 에서 골라 iframe 문서에 옮긴다 (shareBodyCss).
+ *   같은 문서 (논문 · 개념 · 문헌 모달) 에서는 전과 똑같이 돈다.
+ *   ⛔ 못 하는 것: iframe 은 **한 겹만** (iframe 안의 iframe 은 좌표가 틀린다) · 같은 출처만 ·
+ *     iframe 이 **안쪽으로 굴러가면** 카드가 안 따라간다 — 띄우는 쪽이 iframe 높이를 내용에 맞춰 안쪽 스크롤을 없앤다 ·
+ *     iframe 이 다시 읽히면 (새 문서) 띄우는 쪽이 다시 단다 (여기서는 옛 문서를 못 알아챈다).
  */
 (function (global) {
   "use strict";
@@ -81,6 +91,64 @@
   function wrapSel(ta, mk) { return NF().wrapSel(ta, mk); }
   function norm(s) { return String(s == null ? "" : s).replace(/\s+/g, " ").trim(); }
 
+  /* ── 본문의 문서 · 창 (iframe 이면 그쪽 · 머리 주석 '본문이 iframe 안에 있을 때') ── */
+
+  function bwin(d) { return (d && d.defaultView) || global; }
+
+  /* 본문 원소의 위쪽 좌표를 **이 창 (여백) 기준**으로. 같은 문서면 getBoundingClientRect 그대로다.
+   * iframe 안이면 그 iframe 의 내용 상자 위치 (테두리 · 안쪽 여백 포함) 를 더한다 — 한 겹만. */
+  function topOf(el) {
+    var t = el.getBoundingClientRect().top;
+    var w = el.ownerDocument && el.ownerDocument.defaultView;
+    var f = w && w !== global ? w.frameElement : null;
+    if (f) {
+      t += f.getBoundingClientRect().top + f.clientTop
+         + (parseFloat(global.getComputedStyle(f).paddingTop) || 0);
+    }
+    return t;
+  }
+
+  /* 본문 쪽 표시 규칙만 iframe 문서에 옮긴다 — 형광펜 (mark.dn-pen*) · 메모 자리 (mark.dn-hl · .dn-anch*) ·
+   * 반짝임 (.dn-flash · @keyframes dnflash) · 펜 켬 커서 (body.dn-pen-on). 다크 모드 @media 도 그대로 따라간다.
+   * 왜 고르나: style.css 를 통째로 넣으면 보고서 자기 CSS 와 변수 이름 (--bg 등) · 원소 규칙이 겹쳐 둘 다 깨진다.
+   * 왜 사본 파일이 아닌가: 집은 style.css 하나다 — 두 벌이면 한쪽만 고쳐진다 (이 파일 위 ⛔⛔ 2026-08-28 과 같은 병).
+   * ⛔ 못 하는 것: 다른 출처 스타일시트 (글꼴 CDN) 는 브라우저가 못 읽게 막아 건너뛴다 · 고른 규칙이 0 개면
+   *   칠은 되지만 브라우저 기본 <mark> 노랑으로만 보인다 (색 구분 · 메모 자리 막대 · 반짝임 없음 — 2026-11-17 일부러 빼 보고 실측)
+   *   → 콘솔에 알리고 개수를 cur.bodyCssN 에 남긴다 (시험은 iframe 문서에 옮겨진 규칙 수와 칠한 색을 본다). */
+  var BODY_CSS = /mark\.dn-|\.dn-anch|\.dn-flash|dn-pen-on/;
+  function bodyRules(list, out) {
+    [].forEach.call(list || [], function (r) {
+      if (r.type === 1) {                                  // CSSStyleRule
+        if (BODY_CSS.test(r.selectorText || "")) out.push(r.cssText);
+      } else if (r.type === 4) {                           // CSSMediaRule — 안쪽만 골라 같은 조건으로 감싼다
+        var inner = bodyRules(r.cssRules, []);
+        if (inner.length) out.push("@media " + (r.conditionText || r.media.mediaText) + "{" + inner.join("\n") + "}");
+      } else if (r.type === 7 && /^dn/.test(r.name || "")) {   // CSSKeyframesRule (dnflash)
+        out.push(r.cssText);
+      }
+    });
+    return out;
+  }
+  function shareBodyCss(d) {
+    var old = d.getElementById("dn-body-css");
+    if (old) return old._dnN || 0;
+    var out = [];
+    [].forEach.call(document.styleSheets, function (ss) {
+      var rules;
+      try { rules = ss.cssRules; } catch (_) { return; }  // 다른 출처 — 못 읽는다
+      bodyRules(rules, out);
+    });
+    var st = d.createElement("style");
+    st.id = "dn-body-css";
+    st.textContent = out.join("\n");
+    st._dnN = out.length;
+    (d.head || d.documentElement).appendChild(st);
+    if (!out.length && global.console) {
+      global.console.warn("docnote: 본문 쪽 표시 규칙을 이 창 CSS 에서 못 찾았다 — iframe 안 형광펜 · 메모 자리가 기본 <mark> 모양으로만 보인다");
+    }
+    return out.length;
+  }
+
   /* ── 본문 쪽: 형광펜 ───────────────────────────────────────────────────── */
 
   function blockList() {
@@ -95,15 +163,16 @@
    *   호출부가 문단 표시로 넘어간다 (예외를 삼키지 말고 null 로 알린다). */
   function wrapFirst(block, needle, cls, minLen) {
     if (!needle || needle.length < (minLen == null ? 4 : minLen)) return null;
-    var w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, null), n;
+    var od = block.ownerDocument || document;     // 본문의 문서 (iframe 이면 그쪽)
+    var w = od.createTreeWalker(block, NodeFilter.SHOW_TEXT, null), n;
     while ((n = w.nextNode())) {
       if (n.parentNode && n.parentNode.closest &&
           n.parentNode.closest("mark.dn-hl,mark.dn-pen")) continue;
       var i = n.nodeValue.indexOf(needle);
       if (i < 0) continue;
-      var r = document.createRange();
+      var r = od.createRange();
       r.setStart(n, i); r.setEnd(n, i + needle.length);
-      var mk = document.createElement("mark");
+      var mk = od.createElement("mark");
       mk.className = cls || "dn-hl";
       try { r.surroundContents(mk); } catch (_) { return null; }
       return mk;
@@ -235,6 +304,7 @@
    *   메모를 다는 길은 그대로다: 본문 오른쪽 클릭 → openDraft 가 여백을 연다. */
   function syncOn() {
     if (!cur || !cur.host) return;
+    var was = [cur.host.classList.contains("dnote-on"), cur.host.classList.contains("dnote-folded")].join();
     var on = cur.notes.length > 0 || !!cur.draftEl;
     cur.host.classList.toggle("dnote-on", on);
     // 접기 — 초안이 열려 있으면 접지 않는다 (숨은 초안 금지 · openDraft 가 펴 둔다)
@@ -245,6 +315,13 @@
       b.setAttribute("aria-expanded", f ? "false" : "true");
       b.textContent = f ? "◂ 펴기" : "접기 ▸";
       b.title = f ? "메모 여백 펴기 (메모 " + cur.notes.length + " 개)" : "메모 여백 접기 — 본문이 넓어진다 (메모는 그대로)";
+    }
+    /* 여백이 열리거나 접히면 본문 칸 폭이 바뀐다 — host 에 **그 자리에서** 알린다 (2026-11-17 · /interface-thermo).
+     * 띄우는 쪽이 폭에 딸린 것 (iframe 높이) 을 카드 배치 · ?note= 굴리기 **전에** 다시 맞추게 한다. 다음 그림 차례
+     * (ResizeObserver) 까지 기다리면 그사이 딥링크 굴리기가 아직 짧은 iframe 의 안쪽을 굴려서, 높이를 맞추는 순간
+     * 자리가 밀렸다 (1440px 창 실측 — 메모 자리가 화면 가운데가 아니라 아래 끝 873/900). 듣는 쪽이 없으면 아무 일도 없다. */
+    if ([on, f].join() !== was && global.CustomEvent) {
+      cur.host.dispatchEvent(new CustomEvent("dnote:toggle", { detail: { on: on, folded: f } }));
     }
   }
 
@@ -286,8 +363,9 @@
     var stale = false;
     var rows = cards.map(function (c) {
       var el = c.dataset.nid ? cur.map[c.dataset.nid] : cur.draftEl;
-      if (el && !document.contains(el)) { stale = true; el = null; }
-      var t = el ? el.getBoundingClientRect().top - gr.top : 0;
+      // ⚠ 자기 문서에 아직 있나를 본다 — 본문이 iframe 이면 이 창 document 가 아니다 (2026-11-17).
+      if (el && !(el.ownerDocument || document).contains(el)) { stale = true; el = null; }
+      var t = el ? topOf(el) - gr.top : 0;      // topOf = 이 창 기준 (iframe 위치 포함)
       return { c: c, t: t };
     });
     // ⚠ 고치는 중에는 다시 그리지 않는다 — render() 가 여백을 통째로 새로 그려서
@@ -474,7 +552,8 @@
   function paintText(block, needle, cls, hid, at) {
     if (!needle || needle.length < 2) return false;
     var nodes = [], full = "", map = [];
-    var w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, null), n;
+    var od = block.ownerDocument || document;     // 본문의 문서 (iframe 이면 그쪽)
+    var w = od.createTreeWalker(block, NodeFilter.SHOW_TEXT, null), n;
     while ((n = w.nextNode())) {
       if (n.parentNode && n.parentNode.closest &&
           n.parentNode.closest("mark.dn-hl,mark.dn-pen")) continue;
@@ -501,7 +580,7 @@
       var t = g.n;
       if (g.e < t.nodeValue.length) t.splitText(g.e);
       if (g.s > 0) t = t.splitText(g.s);
-      var mk = document.createElement("mark");
+      var mk = od.createElement("mark");
       mk.className = cls;
       if (hid) mk.dataset.hid = hid;
       mk.title = "형광펜 " + (at || "") + " — 펜 켜고 누르면 지워요";
@@ -564,6 +643,9 @@
               + (miss ? "\n⚠ " + miss + "개는 본문에서 자리를 못 찾았어요 "
                         + "(문단을 가로질러 고르면 그래요 — 한 문단 안에서 다시 칠해 주세요)" : "");
     document.body.classList.toggle("dn-pen-on", on);
+    // 본문이 iframe 이면 그 문서 body 에도 — 칠한 곳 커서 · 점선 (body.dn-pen-on mark.dn-pen) 은 그쪽 CSS 가 본다
+    var fb = cur && cur.frameDoc && cur.frameDoc.body;
+    if (fb) fb.classList.toggle("dn-pen-on", on);
   }
 
   global.docnotePenToggle = function () {
@@ -622,7 +704,8 @@
 
   /* 오른쪽 클릭한 자리 → (고른 글 있으면 그 글, 없으면 문단 앞머리) */
   function anchorFor(block) {
-    var s = global.getSelection && global.getSelection();
+    var bw = bwin(block.ownerDocument);          // 고른 글은 **본문의 창** 선택이다 (iframe 이면 그쪽)
+    var s = bw.getSelection && bw.getSelection();
     if (s && !s.isCollapsed && s.rangeCount) {
       var t = norm(s.toString());
       // 고른 글이 이 문단 안에 있을 때만 인정 — 딴 데 남은 선택을 끌어오지 않는다
@@ -660,6 +743,15 @@
     cur = { body: bodyEl, rel: rel, host: hostEl, gut: gut,
             notes: [], map: {}, draftEl: null, draftAnchor: "",
             pens: [], penOn: false, penColor: "yellow" };
+    /* 본문이 iframe 안이면 (머리 주석) — 오른쪽 클릭 · Esc 는 그 문서에서 나고, 칠할 표시의 CSS 는 그 문서에 있어야 한다.
+     * ⚠ CSS 를 먼저 옮긴다: 아래 load() 가 그리는 형광펜이 처음부터 보이게. */
+    var bd = bodyEl.ownerDocument;
+    if (bd && bd !== document) {
+      cur.frameDoc = bd;
+      cur.bodyCssN = shareBodyCss(bd);
+      bd.addEventListener("contextmenu", onContext);
+      bd.addEventListener("keydown", onEsc, true);
+    }
     gut.innerHTML = '<div class="dn-h">📝 메모</div>';
     load();
     loadPens();
@@ -668,7 +760,7 @@
     //   — 읽다가 실수로 칠하는 사고를 막으려고 **기본은 꺼짐**이다.
     bodyEl.addEventListener("mouseup", function () {
       if (!cur || !cur.penOn) return;
-      var sel = global.getSelection();
+      var sel = bwin(bodyEl.ownerDocument).getSelection();   // 본문의 창 선택 (iframe 이면 그쪽)
       if (!sel || sel.isCollapsed) return;
       var t = norm(String(sel));
       if (t.length < 2) return;
@@ -685,8 +777,10 @@
       delPen(m.dataset.hid);
     }, true);
     // 본문 높이가 바뀌면(그림 로딩·표 접힘) 카드 자리도 따라가야 한다
-    if (global.ResizeObserver) {
-      cur.ro = new ResizeObserver(function () { layout(); });
+    //   ⚠ 관찰자는 **본문의 창** 것을 쓴다 — iframe 안 원소는 그 문서의 렌더 갱신에서 잰다 (같은 문서면 이 창 것이다).
+    var RO = bwin(bd).ResizeObserver || global.ResizeObserver;
+    if (RO) {
+      cur.ro = new RO(function () { layout(); });
       cur.ro.observe(bodyEl);
     }
   };
@@ -695,6 +789,11 @@
     if (!cur) return;
     if (cur.ro) cur.ro.disconnect();
     clearHl();
+    if (cur.frameDoc) {                     // iframe 문서에 건 것을 거둔다 (옮긴 CSS 는 남긴다 — 다시 달면 그대로 쓴다)
+      cur.frameDoc.removeEventListener("contextmenu", onContext);
+      cur.frameDoc.removeEventListener("keydown", onEsc, true);
+      if (cur.frameDoc.body) cur.frameDoc.body.classList.remove("dn-pen-on");
+    }
     if (cur.host) { cur.host.classList.remove("dnote-on"); cur.host.classList.remove("dnote-folded"); }
     if (cur.gut && cur.gut.parentNode) cur.gut.parentNode.removeChild(cur.gut);
     cur = null;
@@ -707,7 +806,9 @@
 
   /* ── 이벤트 (문서에 한 번만) ───────────────────────────────────────────── */
 
-  document.addEventListener("contextmenu", function (e) {
+  /* 오른쪽 클릭 · Esc 는 이름 붙인 함수다 — 본문이 iframe 이면 mount 가 그 문서에도 같은 함수를 걸고
+   * unmount 가 거둔다 (이 창 document 에는 늘 한 번 걸려 있다). */
+  function onContext(e) {
     if (!cur) return;
     if (!cur.body.contains(e.target)) return;
     var block = e.target.closest && e.target.closest(BLOCKS);
@@ -715,7 +816,8 @@
     if (block.closest(".figstrip") || block.closest(".figpane")) return;  // 그림은 💬 담당
     e.preventDefault();
     openDraft(block, anchorFor(block));
-  });
+  }
+  document.addEventListener("contextmenu", onContext);
 
   document.addEventListener("click", function (e) {
     if (!cur) return;
@@ -769,13 +871,14 @@
 
   /* Esc 는 **모달보다 먼저** 잡는다 — 초안을 쓰다 Esc 를 누르면 모달이 닫혀 글이
    * 통째로 날아갔다. capture 단계에서 초안만 접고 전파를 끊는다. */
-  document.addEventListener("keydown", function (e) {
+  function onEsc(e) {
     if (!cur || e.key !== "Escape") return;
     if (cur.gut && cur.gut.querySelector(".dn-draft")) {
       e.stopPropagation(); e.preventDefault(); killDraft(); return;
     }
     if (editing()) { e.stopPropagation(); e.preventDefault(); closeEdit(); }
-  }, true);
+  }
+  document.addEventListener("keydown", onEsc, true);
 
   document.addEventListener("input", function (e) {
     if (!cur) return;

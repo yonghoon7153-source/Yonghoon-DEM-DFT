@@ -1509,9 +1509,11 @@ def li2s_pipeline_page():
 
 #: 계면 부반응 통합 보고 (2026-11-17 · 사용자 *'SDI, 혁주 html을 통합해서 같이 한 페이지'* → *'아직 추가 안됐는데?'*).
 #:   보고서는 그 자체로 완결된 HTML 이다 (자기 CSS · 그림 5 장 내장) — 웹앱 CSS 와 변수 이름 (--bg · --accent) 이 겹쳐서
-#:   본문에 섞지 않고 iframe 으로 띄운다. 원본 파일은 `docs/collab/` 에 있고 화면은 **읽기만** 한다.
+#:   본문에 섞지 않고 iframe 으로 띄운다. 원본 파일은 `docs/collab/` 에 있고 화면은 그 파일을 **읽기만** 한다 (메모는 메모 창고에 따로).
 #:   ⚠ 보고서 라우트는 인자 없는 GET 이라 `test_v3_surfaces` 의 정의역 자동 열거가 그대로 결속 검사를 건다 (새 표면 = 음성시험 대상).
-INTERFACE_THERMO_REL = "docs/collab/sulfide_se_interface_thermo_2026_11_17.html"
+#:   여백 메모 · 형광펜 (2026-11-17) 은 화면 (interface_thermo.html) 이 docnote.js 로 iframe 본문에 단다 — 보고서 라우트는
+#:   **원본 그대로** 낸다 (보낸 판이라 화면이 sha256 을 싣는다 · 시험이 바이트 동일을 본다). 경로의 집은 data.py 다 (메모 딥링크 표).
+INTERFACE_THERMO_REL = D.INTERFACE_THERMO_REL
 #: 사례 A 단독 보고 — 11-16 에 보낸 판 (sha256 68b00ef4… · 사용자 업로드와 같음). 화면은 링크만 준다.
 INTERFACE_THERMO_SENT_A = "docs/collab/agc_interlayer_crack_calc_2026_11_16.html"
 

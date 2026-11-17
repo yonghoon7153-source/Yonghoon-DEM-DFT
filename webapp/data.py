@@ -7480,11 +7480,25 @@ def comment_all() -> list[dict]:
     return out
 
 
+#: 계면 부반응 통합 보고 (2026-11-17) — /interface-thermo 가 iframe 으로 띄우는 파일. app.INTERFACE_THERMO_REL 이 이 값을 쓴다
+#:   (여기가 집이다: comment_origin 이 app 을 못 부른다 — 순환 import).
+INTERFACE_THERMO_REL = "docs/collab/sulfide_se_interface_thermo_2026_11_17.html"
+
+#: 화면이 통째로 띄우고 **그 화면에서 여백 메모를 다는** repo 파일 → 그 화면 (2026-11-17 · /interface-thermo).
+#:   ⛔ 이 표가 없으면 그 메모는 '파일' 로 잡혀 /files?q=… 로 간다 — /notes 의 딥링크 `?note=` 가 갤러리에서 헛돈다.
+#:   ⚠ 메모를 **달 수 있는가** 는 여기서 안 정한다 (safe_note_target 이 정한다 · docs/ 는 원래 된다). 여기는 '어디로 데려가나' 만.
+_NOTE_PAGES = {
+    INTERFACE_THERMO_REL: {"kind": "보고", "where": "계면 부반응 (열역학)", "url": "/interface-thermo"},
+}
+
+
 def comment_origin(rel: str) -> dict:
     """rel → {kind, where, url}. 코멘트가 **어디에 달렸는지**의 단일 출처.
 
-    kind: '논문' (digest 본문·그림) · '개념' (kb/concepts) · '파일' (그 밖)
+    kind: '논문' (digest 본문·그림) · '개념' (kb/concepts) · '보고' (_NOTE_PAGES — 화면이 띄우는 파일) · '파일' (그 밖)
     """
+    if rel in _NOTE_PAGES:
+        return dict(_NOTE_PAGES[rel])
     seg = (rel or "").split("/")
     if rel.startswith("litdb/figures/") and len(seg) == 4:
         return {"kind": "논문", "where": seg[2], "url": f"/literature?open={seg[2]}"}
