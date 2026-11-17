@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 344편 · 생성 2026-11-17
+> digest 345편 · 생성 2026-11-17
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -336,7 +336,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lee2023_sicspe_digitaltwin_assb` | Lee 2023 (Battery Energy 2, 20220061) — 디지털트윈 기반 SIC-SPE vs LPSCl 복합양극 구조·전기화학 분석 ★ DTBL 디지털트윈 계보의 가장 이른 논문(2023) + LPSCl 전극 구조지표 | DEM | 2026-07-28 | — |
 | `park2020_digitaltwin_assb_foundational` | Park 2020 (Adv. Energy Mater. 10, 2001563) — Digital-Twin-Driven All-Solid-State Battery: 물리·전기화학 거동 규명 ★ DTBL 디지털트윈 계보의 시조(FOUNDATIONAL ROOT, 2020) | FEM·digital-twin | 2026-07-28 | 🖼 26 |
 
-## 기타 (54편)
+## 기타 (55편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -381,6 +381,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `neumann2021_garnet_3d_structure_grain_boundaries_li_transport` | Effect of the 3D Structure and Grain Boundaries on Lithium Transport in Garnet Solid Electrolytes — Neumann (ACS Appl. Energy Mater. 2021) · FIB-SEM 재구성 다공 LLCZNO 를 watershed 로 입자  | sim (3D microstructure-resolved continuum electrochemistry — | 2026-11-03 | 🖼 27 |
 | `nirmalraj2009_swcnt_network_junction_resistance` | Electrical Connectivity in Single-Walled Carbon Nanotube Networks — Nirmalraj (Nano Lett. 2009) · 전도성 AFM 으로 SWCNT 망의 접합 저항을 하나씩 잰 실측 — 단일 튜브 접합 평균 98 kΩ → 큰 다발 (7–14 nm) 2.7 MΩ ·  | exp (conductive-AFM junction resistance mapping of sparse SW | 2026-11-03 | 🖼 9 |
 | `oh2026_carbon_coating_siox_ion_electron_balance` | Oh 2026 (Journal of Power Sources 689, 240698) — SiOx 탄소코팅 두께가 이온/전자 수송 BALANCE + 균일분산을 결정 | FEM·digital-twin | 2026-07-28 | — |
+| `ohashi2021_am_youngs_modulus_ion_transport_voxel_fem_ct` | 활물질 영률이 황화물 SE 의 이온 수송 · 포화 압력을 바꾼다 — Li₅.₅PS₄.₅Br₁.₅ + 지르코니아 (200 GPa · 단단한 활물질 대리) / 나일론 (2 GPa · 무른 활물질 대리) 모형 복합체를 0 → ≈400 MPa 누른 채 EIS · 400 MPa 누른 채 X 선 CT (복셀 5 × 5 × 6 µm) | experiment + image-based voxel FEM (linear-elastic stress, V | 2026-11-17 | 🖼 36 |
 | `otani2023_ionic_conductivity_path_resistance_separation_model` | 황화물 복합양극의 이온전도 저하 인자를 셋으로 가르고 (공극 우회 · 입자 접촉 면적 · 계면 접촉 저항) "경로 저항 계수" 곱 모형으로 예측 — 순수 LPSCl 층은 Bruggeman β = 4 (공극 30 % 에서 경로 저항 ≈3 = 경로 ≈1.2 × 접촉 면적 ≈2.5 · 격자 부정합 저항은 무시 가능) · 복합  | exp + 해석 모형 (LPSCl 층 · NCM523 복합 공극률 열 EIS · 2D SEM 무작위 행보 경 | 2026-10-13 | 🖼 7 |
 | `pan2026_thesis_rate_capable_energy_dense_cathode_composites` | 액체 LIB 양극 복합체의 수송을 세 층위로 손본 CMU 박사학위논문 — ① NCM811 2 층 기공 구배 (캘린더한 조밀 하층 + 분무 다공 상층 · μCT 0.5 µm + OpenPNM) ② Co-free LMR 에 SWCNT + 그래핀 혼성 도전재 (전극 밀도 1.1–2.7 g/cm³ · GITT-EIS-DRT ·  | thesis · exp (액체 전해질 LIB 양극 · Li 금속 반쪽셀 · 습식 PVDF/NMP 슬러리 ·  | 2026-10-13 | 🖼 45 |
 | `park2019_electrode_design_methodology_assb_3d` | 전고체 전극 설계 방법론 — GeoDict 복셀 3D 구조 (GrainGeo) → 접촉면적 (PoroDict) · 유효전도도 · MacMullin 수 N_m = τ/ε (ConductoDict FVM) → COMSOL P2D 성능 예측 (흑연 NG + 산화물 LSTP 음극 · 실험 없음) — Park (Energy Sto | sim (GeoDict voxel microstructure → ConductoDict FVM · MacMu | 2026-10-03 | 🖼 16 |

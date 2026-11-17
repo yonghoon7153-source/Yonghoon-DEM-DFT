@@ -316,6 +316,7 @@
 - σ 측정 · 적층압: `cronau2021_stack_pressure_ionic_conductivity` · `doux2020_stack_pressure_assb` · `schneider2023_particle_size_pressure_transport`.
 - 바인더 · 되튐: `diener2022_roll_gap_springback_calendering` (ref 56) · `hong2026_cbd_viscoelasticity_springback` · `bielefeld2020_effective_ionic_conductivity_binder` · `cao2026_dual_binder_18um_sulfide_electrolyte_film` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin`.
 - ref 61 원문 카드 (2026-11-17): `ohashi2020_stress_distribution_composite_electrode_sulfide_assb` — LGPS + ZrO₂ (활물질 대리) 의 선형 탄성 복셀 FEM 응력 → 국소 σ · ⚠ L305 의 'CL-90 … 이 논문을 잘못 기억한 것인지는 [미확인]' 에 대한 답 = 그 논문에 **NCM 경도 · NCM 영률 · LPSCl 영률이 없다** (입력 = LGPS 21.7 / 0.3 GPa · ν 0.37 · ZrO₂ 200 GPa · ν 0.30) — 그 카드 §0-1 · §3-6.
+- ref 61 의 같은 그룹 후속 (2026-11-17 카드): `ohashi2021_am_youngs_modulus_ion_transport_voxel_fem_ct` (J. Power Sources 483 (2021) 229212) — 활물질 영률 (지르코니아 200 ↔ 나일론 2 GPa 대리) 이 Li₅.₅PS₄.₅Br₁.₅ 의 σ(P) · 포화 압력 (≈250 · 순수 ≈300 · ≈350 → > 400 MPa) 을 바꾼다 · 이 논문에도 CL-90 세 값 (NCM 경도 · NCM 영률 · LPSCl 영률) 이 없다 — 그 카드 §3-9.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
