@@ -1,0 +1,468 @@
+{
+  "schema": "rt_consumer_validation_v1",
+  "parent": "5d8e628ab80b66cbfddf8a8d7404dad2da1282d7",
+  "branch": "codex/dem-rt-numeric-1117",
+  "base": "b3481336c8bb8c3d0db008df9df78e56c87392ef",
+  "scope": "synthetic only; no field, engine, MPI, research values, reseal or GO",
+  "platforms": {
+    "win": {
+      "python": "3.12.14",
+      "platform": "win",
+      "tests": {
+        "contract": {
+          "rc": 0,
+          "methods": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "3dcf212d003e47931dcdc145f4af7cba1b5fe5d291db7f489a7d9e7d6c31120d"
+        },
+        "publish": {
+          "rc": 0,
+          "methods": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "f9a2552c90c8140ce378d71c5e33787cc069f6961bad3d53ceb96e83b39e891e"
+        },
+        "fixture": {
+          "rc": 0,
+          "methods": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "4f64e8eeaa8dcca9021e28aba95c9cf1eedacce093bf1c7a81ece8643cef2aea"
+        },
+        "prereq": {
+          "rc": 0,
+          "methods": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "7f94aff08b07b2f158ff7829fe44be9b2db5c4dbc81c6d8ea7a04bf29f825dc9"
+        },
+        "restore": {
+          "rc": 0,
+          "methods": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "f36a0004279d5f6550e8de1688893cc55cb299b2c42eea123877c4e979627520"
+        }
+      }
+    },
+    "linux": {
+      "python": "3.12.3",
+      "platform": "linux",
+      "tests": {
+        "contract": {
+          "rc": 0,
+          "methods": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "a214a133c58d81e70912fca57afb099a073e81b1ded25776c4a32f6199d109bc"
+        },
+        "publish": {
+          "rc": 0,
+          "methods": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "df0740a5e4327708fd4a2ba6d8c118ed0094ba5ff5d3966dfe86795cd8a3ef50"
+        },
+        "fixture": {
+          "rc": 0,
+          "methods": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "35b4b35c8c69407f2b59f151361cc5be0d6075d4037fd629e31ec9b4df79f124"
+        },
+        "prereq": {
+          "rc": 0,
+          "methods": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "7105e54e46d8586327a5641d3738952feaf8c7296e7ae0fa2ba961e90868b5fd"
+        },
+        "restore": {
+          "rc": 0,
+          "methods": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "log_sha256": "77babad47d866bf51294451346f6334c2cda00be05d48bc1a23b8e66e1862693"
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "prepare_consumer.py": "789799377b4c562ef939f25abbb13c0d122b546801a33045cd91e1105165f839",
+    "rt_contract.py": "d92b1de8a8522a796c66facbad45380c1f35ce76d8cd5a651f731dd84de37267",
+    "rt_fixture_prereq.py": "c1655fb2f2b24f3327457da81173718c5273510eb4299d3085fe8bf1cbc3a1cc",
+    "rt_grammar_core.py": "2be0571ddac44a305d3efb88dd772bc66131b3f03c5e6a854d5665d2eb17be0e",
+    "rt_publish.py": "54d934876e8a94d27b2c444ca32b89b61806b6cfd3ecb72a3f1820f3640d6f5b",
+    "rt_restore.py": "961284c9d86682f20e62ac6ae89f7e2c355a42477dfcbf5fa9326d2617247ed6",
+    "test_rt_contract.py": "e3a1aa1f97100bae7f0b6c7b30fbb73d0366147f0a248590ab21a2b64f1262fa",
+    "test_rt_fixture.py": "75b749ea44ffbdd793a69f02fe9a61b7c8b615e68a64ee36cd5f17b01f2c5fde",
+    "test_rt_prereq.py": "66fe2d337a717da228879e70e4887a6d392fd6b30633f6e62ec973af701c48f8",
+    "test_rt_publish.py": "c1b896b1da966a3814c9a564b1652539b25e653d7248721b23264e858acce571",
+    "test_rt_restore.py": "186b659a4af2abc8d4770f79a4dec5fdd89b06bebcffaf38f96d73abb9a49bb9"
+  },
+  "runs_external_raw_logs": {
+    "contract_green.log": {
+      "sha256": "7da5e9a86003f7082170fcaab9d8ea62319ecd9286538cc6c250d267b614fd05",
+      "methods": 18,
+      "failures": 12,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "contract_green2.log": {
+      "sha256": "fa53305c9c31be667c729ca814b740407e6c51c880d5db0353c85bf93dbae3c6",
+      "methods": 18,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "contract_red.log": {
+      "sha256": "295d390cccc2abdcd43dc9822f4016067c313e229df7d481f5c65f1c549c7bcb",
+      "methods": 18,
+      "failures": 18,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "final_linux_contract.log": {
+      "sha256": "a214a133c58d81e70912fca57afb099a073e81b1ded25776c4a32f6199d109bc",
+      "methods": 20,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_linux_fixture.log": {
+      "sha256": "35b4b35c8c69407f2b59f151361cc5be0d6075d4037fd629e31ec9b4df79f124",
+      "methods": 9,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_linux_prereq.log": {
+      "sha256": "7105e54e46d8586327a5641d3738952feaf8c7296e7ae0fa2ba961e90868b5fd",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_linux_publish.log": {
+      "sha256": "df0740a5e4327708fd4a2ba6d8c118ed0094ba5ff5d3966dfe86795cd8a3ef50",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_linux_restore.log": {
+      "sha256": "77babad47d866bf51294451346f6334c2cda00be05d48bc1a23b8e66e1862693",
+      "methods": 7,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_win_contract.log": {
+      "sha256": "3dcf212d003e47931dcdc145f4af7cba1b5fe5d291db7f489a7d9e7d6c31120d",
+      "methods": 20,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_win_fixture.log": {
+      "sha256": "4f64e8eeaa8dcca9021e28aba95c9cf1eedacce093bf1c7a81ece8643cef2aea",
+      "methods": 9,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_win_prereq.log": {
+      "sha256": "7f94aff08b07b2f158ff7829fe44be9b2db5c4dbc81c6d8ea7a04bf29f825dc9",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_win_publish.log": {
+      "sha256": "f9a2552c90c8140ce378d71c5e33787cc069f6961bad3d53ceb96e83b39e891e",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "final_win_restore.log": {
+      "sha256": "f36a0004279d5f6550e8de1688893cc55cb299b2c42eea123877c4e979627520",
+      "methods": 7,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "fixture_green.log": {
+      "sha256": "9979dc572a50ca3c50bbc37c5cb490ac7717a8bd0d5d20923bb5e6a56f2560be",
+      "methods": 9,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "fixture_lexical_red.log": {
+      "sha256": "66047fe3650039367fb1316e059bb1f5943cd70bbda7c513414b396a1f32128f",
+      "methods": 9,
+      "failures": 1,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "fixture_red.log": {
+      "sha256": "ebfd8036d03fa50c678cd0e32c739ae25048487b550adcb20cfec5cfb0153e08",
+      "methods": 9,
+      "failures": 9,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "linux_contract.log": {
+      "sha256": "5a4f2ffa9b148493e0db313747fd7690f590258523d6e4aea8ab2c19435450f4",
+      "methods": 18,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "linux_doc_refs.log": {
+      "sha256": "6c2bc3cd5d97ce8cf4f49745edb12ae68029b51c33f37686d6e1aab06b1c834d",
+      "methods": null,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "not_unittest"
+    },
+    "linux_fixture.log": {
+      "sha256": "16038858f732fc7fe4ee0615c4dbff4a85316be38d5099e2e1a1ca3c178f7f8c",
+      "methods": 9,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "linux_prereq.log": {
+      "sha256": "f91dfb19525838ed577f39afb8c9b0ad2d04fa2011541621ee032a7846a81467",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "linux_publish.log": {
+      "sha256": "d454c844f0911352dd7c4ffdcd5b86e711562ca5c953ad288f8a4b50bd7fe484",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "linux_restore.log": {
+      "sha256": "58b71968e5db3e6b29158bff9929c2a5346466eaeabd89d39993853aa4ac7a62",
+      "methods": 6,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "prereq_green.log": {
+      "sha256": "9c907772424a6af48f07068d21f1b222364802659de021d2503890ccd112bec9",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "prereq_green2.log": {
+      "sha256": "621724f66ead2ca4b9737390fcea55c9739f97043a817c4f9caec4f3b3a8edc5",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "prereq_red.log": {
+      "sha256": "b839ba00343a4a36730d932dd68a6f577d23242c0ce50b2de36a278eb83d2e58",
+      "methods": 8,
+      "failures": 8,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "publish_fd_red.log": {
+      "sha256": "a25af735d685d58402df0df57c689921dfee720f524bcb15e746ecbee9977b8a",
+      "methods": 7,
+      "failures": 0,
+      "errors": 3,
+      "test_status": "FAILED"
+    },
+    "publish_green.log": {
+      "sha256": "10678c9288c849182a3e0379de6f1800c3b69cf63a05ad4501a444400ca7c83c",
+      "methods": 6,
+      "failures": 0,
+      "errors": 2,
+      "test_status": "FAILED"
+    },
+    "publish_green2.log": {
+      "sha256": "14d14d6557b66ef378454e2ec7d3aeea7ed8edbefb897163bebd3f5a278d3b0b",
+      "methods": 7,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "publish_red.log": {
+      "sha256": "af438de03df6883d6dd3a4e6cbcdbef5142621b511bd3118cdde68409f2f9f18",
+      "methods": 6,
+      "failures": 6,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "receipt_red.log": {
+      "sha256": "424216a37bf4212bd6ea0bc4b7a13d42b29dc0d3048266ac3b81eccaabaecc79",
+      "methods": 1,
+      "failures": 1,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "restore_green.log": {
+      "sha256": "376f6879a0062369f6dadb8bfbb8fa0b13333e4b71322fdf8d3b19b43eab92e8",
+      "methods": 5,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "restore_initial.log": {
+      "sha256": "bc647f5ef2ec65dccba0f834afbe9b1f2a599e05a9587b2ed21c830394276f1b",
+      "methods": 5,
+      "failures": 2,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "skip_order_red.log": {
+      "sha256": "f587c62e1d4332336b5c968526a7b96295fd4cd07c7e8bd224a83c597006488a",
+      "methods": 2,
+      "failures": 2,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "source_priority_red.log": {
+      "sha256": "74ff0830b4647d2949c9f59b970aa183ea5f073c953fc6423e5cdb9cbfb93948",
+      "methods": 1,
+      "failures": 0,
+      "errors": 1,
+      "test_status": "FAILED"
+    },
+    "source_priority_red2.log": {
+      "sha256": "59c8946bc5aef1ecc21437d0d1469d6ded6d68cfbcf825fcc9d011e46cb932bb",
+      "methods": 1,
+      "failures": 4,
+      "errors": 2,
+      "test_status": "FAILED"
+    },
+    "source_priority_red3.log": {
+      "sha256": "aa65859669cbc493aac35c7cee32c506e43f114aca2378ba27e1ccaaa8129678",
+      "methods": 1,
+      "failures": 6,
+      "errors": 0,
+      "test_status": "FAILED"
+    },
+    "win_contract.log": {
+      "sha256": "e50f95c36c6a5e6b786564ad1d90cf3bb3176143a5f3751a8adfa321bc5221f8",
+      "methods": 18,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "win_fixture.log": {
+      "sha256": "bae26063439100554b2e8072f0337eaee4b77f4a42dbcb43f622377273b4b859",
+      "methods": 9,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "win_prereq.log": {
+      "sha256": "e95235c19a397b6458d94a5f56a9134a066bd5bebeec298f754bf345713768a1",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "win_publish.log": {
+      "sha256": "f237509d82041a4afdc0c1acd373af4355a171b379534d427d3f89cfc4ba6a14",
+      "methods": 8,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    },
+    "win_restore.log": {
+      "sha256": "f228250c680dd3f21e229b98325ea3f4814a9d5b99631f98844f94554cfddab8",
+      "methods": 6,
+      "failures": 0,
+      "errors": 0,
+      "test_status": "OK"
+    }
+  },
+  "preservation_parent_blobs": {
+    "docs/data/ps45_unload_20261009": 94,
+    "docs/reviews/p1_rt_deck_preparation_20261116": 5,
+    "docs/reviews/p1_rt_runner_preparation_20261117": 15,
+    "docs/reviews/p1_rt_numeric_preparation_20261117": 7
+  },
+  "prepared_copy": {
+    "prior_files": 113,
+    "new_files": 122,
+    "prior_unchanged": 113,
+    "new_layer": {
+      "schema": "rt_consumer_layer_v1",
+      "operational_kit_ready": false,
+      "engine_runs": 0,
+      "added_sha256": {
+        "rt_contract.py": "d92b1de8a8522a796c66facbad45380c1f35ce76d8cd5a651f731dd84de37267",
+        "rt_publish.py": "54d934876e8a94d27b2c444ca32b89b61806b6cfd3ecb72a3f1820f3640d6f5b",
+        "rt_restore.py": "961284c9d86682f20e62ac6ae89f7e2c355a42477dfcbf5fa9326d2617247ed6",
+        "rt_fixture_prereq.py": "c1655fb2f2b24f3327457da81173718c5273510eb4299d3085fe8bf1cbc3a1cc",
+        "history_test/read_rt_grammar.py": "b58dbd74d73dbe8fb046e83ad78d266c3bb207cd04410c6a599e3a610d28a9a4",
+        "history_test/rt_fixture_contract.json": "beccf12064aeb7183e37e246a6a36a2f29668bbcbf828dc1e16c11619855f140"
+      },
+      "runner_entry_closed": true,
+      "historical_files_preserved": 94
+    },
+    "fixture_identities": {
+      "in.hist_producer.liggghts": "bc42a3ad71d5e02f6f21181bed09109dccfa60ad67a5d4a6b3d47f9c472fd70d",
+      "in.hist_rt1.liggghts": "a636f26fb6564aa436b82a8a582845a305d34aaeb60ec20c5cb39669e2a8414f",
+      "in.hist_rt2.liggghts": "fd8aab409ed0419e8d00f35ebaf60db61cf63207ff1fb67b0756bff86cfbc1b0",
+      "plate_hist.stl": "5bc74ec7726723ec8e2bbc3dc10fafd639e6175f83a0e0047ca35a44ee7aa65d",
+      "read_rt_grammar.py": "b58dbd74d73dbe8fb046e83ad78d266c3bb207cd04410c6a599e3a610d28a9a4",
+      "rt_fixture_contract.json": "beccf12064aeb7183e37e246a6a36a2f29668bbcbf828dc1e16c11619855f140"
+    }
+  },
+  "doc_refs": {
+    "platform": "local Linux",
+    "broken_paths": 0,
+    "broken_commits": 0,
+    "log_sha256": "6c2bc3cd5d97ce8cf4f49745edb12ae68029b51c33f37686d6e1aab06b1c834d"
+  },
+  "counts_note": "Method, subtest, negative observation and platform repetition counts are not added.",
+  "red_scope": {
+    "contract": "initial stub:18 methods/18 failures; later skip-order:2 methods/2 failures",
+    "publish": "initial stub:6/6 failures; fd ownership regression in intermediate7 methods/errors3 includes2 platform link errors and1 ownership error",
+    "fixture": "prepare stub:9/9 failures; lexical producer token:9 methods/1 failure",
+    "prereq": "missing shipped candidate hash list:8/8 failures; not a claim all prereq code was written after this run",
+    "restore": "receipt duplication1 failure; source priority1 method/6 subtest failures; earlier setup error1 and assertion errors2 retained"
+  },
+  "warnings": [
+    "Original history reader ResourceWarning retained; original source not modified.",
+    "Initial Windows temporary path contained #; fixtures moved to explicit clean temp directory.",
+    "Windows hardlink tests required local test permission; WSL launch denied in restricted environment then allowed.",
+    "Initial synthetic legacy fixture omitted original G3 row; corrected synthetic fixture only.",
+    "After-publication error can leave complete certificate; nonzero return and no retry/overwrite.",
+    "No power-loss/directory-fsync or field filesystem qualification."
+  ],
+  "operational_kit_ready": false,
+  "runner_entry_closed": true,
+  "full_gate_run": false,
+  "remaining": [
+    "fixture runner stage/copy orchestration",
+    "prepared runner consumer/prereq wiring",
+    "complete kit independent preseal review",
+    "author field fixture/precount/launch decisions"
+  ]
+}
