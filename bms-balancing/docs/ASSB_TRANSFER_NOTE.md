@@ -654,19 +654,24 @@ mothership 특칙). **셋이 안 모이면 태그를 만들지 말고 닻 한 �
 
 | # | 원장 §1 행 (2026-11-17 줄) | ★ · 지목 (호) | 논문 | 상태 |
 |---|---|---|---|---|
-| 1 | L17 | ★★★★ · 4 (53 · 75 · 83 · 94) | Barai · … · Srinivasan 2021 — *Chem. Mater.* 33, 5527 | 요청 |
-| 2 | L173 | ★★★ · 8 (12 · 81 · 94 · 97 · 98 · 99 · 100 · 104) | Tian H.-K. · Qi Y. 2017 — *J. Electrochem. Soc.* 164, E3512 | 요청 |
-| 3 | L388 | ★★★ · 7 (18 · 29 · 38 · 56 · 82 · 87 · 93) | Ruess 외 2020 — *J. Electrochem. Soc.* 167, 100532 | 요청 |
-| 4 | L439 | ★★★ · 5 (20 · 42 · 62 · 63 · 71) | Takada · Aotani · Iwamoto · Kondo 1996 — *Solid State Ionics* 86–88, 877 | 요청 |
-| 5 | L376 | ★★★ · 5 (27 · 53 · 56 · 73 · 94) | Neumann 외 2020 — *ACS Appl. Mater. Interfaces* 12, 9277 | 요청 |
-| 6 | L84 | ★★★ · 5 (64 · 48 · 75 · 77 · 97) | Zhang W. · Leichtweiss · Culver · Koerver · Das · Weber · Zeier · Janek 2017 — *ACS Appl. Mater. Interfaces* 9, 35888–35896 | 요청 |
-| 7 | L446 | ★★★ · 4 (46 · 48 · 75 · 94) | Kasemchainan · … · Bruce 2019 — *Nat. Mater.* 18, 1105 | 요청 |
-| 8 | L89 | ★★★ · 3 (65 · 86 · 93) | Kim · Oh · Park · Choi · Nam · Lee · Lee · Jung 2017 — *Nano Lett.* 17, 3013–3020 | 요청 |
+| 1 | L17 | ★★★★ · 4 (53 · 75 · 83 · 94) | Barai · … · Srinivasan 2021 — *Chem. Mater.* 33, 5527 | 도착 11-17 · 사용자 파일 100 · 본문 `ed45bcee` `75f07352cb0706a4` (15 p · 4,587,614 B) · SI `7afb4d94` `698bde5ed05db070` (25 p · 2,068,023 B) → **105호** |
+| 2 | L173 | ★★★ · 8 (12 · 81 · 94 · 97 · 98 · 99 · 100 · 104) | Tian H.-K. · Qi Y. 2017 — *J. Electrochem. Soc.* 164, E3512 | 도착 11-17 · 사용자 파일 101 · 본문 `1d50b8b2` `f81ad929a23278d8` (11 p · 1,701,000 B) · SI 파일 없음 (보충 유무는 흡수 때 대조) → **106호** |
+| 3 | L388 | ★★★ · 7 (18 · 29 · 38 · 56 · 82 · 87 · 93) | Ruess 외 2020 — *J. Electrochem. Soc.* 167, 100532 | 도착 11-17 · 사용자 파일 102 · 본문 `b5b26fe4` `b60755d5c9809b66` (12 p · 1,840,149 B) · SI `8f1a9106` `c60875706cc292df` (6 p · 1,229,820 B) → **107호** |
+| 4 | L439 | ★★★ · 5 (20 · 42 · 62 · 63 · 71) | Takada · Aotani · Iwamoto · Kondo 1996 — *Solid State Ionics* 86–88, 877 | 도착 11-17 · 사용자 파일 103 · 본문 `60428de0` `9b9ba31616c647ef` (6 p · 519,052 B) · SI 파일 없음 → **108호** |
+| 5 | L376 | ★★★ · 5 (27 · 53 · 56 · 73 · 94) | Neumann 외 2020 — *ACS Appl. Mater. Interfaces* 12, 9277 | 도착 11-17 · 사용자 파일 104 · 본문 `458725e0` `b288640b08d00146` (15 p · 13,254,166 B) · SI `1859a097` `84a965cc9552d035` (9 p · 4,010,881 B) → **109호** |
+| 6 | L84 | ★★★ · 5 (64 · 48 · 75 · 77 · 97) | Zhang W. · Leichtweiss · Culver · Koerver · Das · Weber · Zeier · Janek 2017 — *ACS Appl. Mater. Interfaces* 9, 35888–35896 | 도착 11-17 · 사용자 파일 105 · 본문 `6a41fe78` `b0e7af5202a83301` (9 p · 2,759,410 B) · SI `747fbc72` `4866a00ec5a8c1f3` (14 p · 11,138,124 B) → **110호** |
+| 7 | L446 | ★★★ · 4 (46 · 48 · 75 · 94) | Kasemchainan · … · Bruce 2019 — *Nat. Mater.* 18, 1105 | 도착 11-17 · 사용자 파일 106 · 본문 `ffe343f3` `62cc0e913ae7907d` (8 p · 5,489,840 B) · SI `8399f8f4` `c22d45d527d053f2` (7 p · 1,178,965 B) → **111호** |
+| 8 | L89 | ★★★ · 3 (65 · 86 · 93) | Kim · Oh · Park · Choi · Nam · Lee · Lee · Jung 2017 — *Nano Lett.* 17, 3013–3020 | 도착 11-17 · 사용자 파일 107 · 본문 `7ed0fa37` `5e544088d7fd36a1` (8 p · 3,977,081 B) · SI `16f05eab` `df27c5f3daa6d664` (24 p · 2,741,171 B) · 동영상 `036a75eb` `3c82c88b7c07772a` (AVI · 1,078,426 B — 보지 않음, 60호 선례) → **112호** |
 | 9 | L218 | ★★★ · 3 (9 · 38 · 87) | Han Y. · Jung S.H. · Kwak H. · Jun S. · Kwak H.H. · Lee J.H. · Hong S.-T. · Jung Y.S. 2021 — *Adv. Energy Mater.* 11, 2100126 | 요청 |
 | 10 | L219 | ★★★ · 3 (38 · 87 · 94) | Jung S.H. · Kim U.-H. · Kim J.-H. · Jun S. · Yoon C.S. · Jung Y.S. · Sun Y.-K. 2020 — *Adv. Energy Mater.* 10, 1903360 | 요청 |
 | 11 | L229 | ★★★ · 3 (98 · 100 · 104) | Kazemi N. · Danilov D.L. · Haverkate L. · Dudney N.J. · Unnikrishnan S. · Notten P.H.L. 2019 — "Modeling of all-solid-state thin-film Li-ion batteries: accuracy improvement", *Solid State Ionics* 334, 111–116 | 요청 |
 | 12 | L308 | ★★★ · 3 (12 · 94 · 103) | Shao Y.-q. · Liu H.-l. · Shao X.-d. · Sang L. · Chen Z.-t. 2022 — *Energy* 239, 121929 (⚠ 103호 Shao 2022 *J. Electrochem. Soc.* 169, 080529 와 다른 편) | 요청 |
 | 13 | L450 | ★★★ · 3 (46 · 61 · 94) | Wang · Sakamoto 2018 — *J. Power Sources* 377, 7 (원장 §3-b (거) 에 직접 닿음) | 요청 |
+
+⚠ **사용자 파일 번호(100~)는 `assb` 호 번호와 다르다.** 100–104호는 이미 Deng 2021 · Danilov & Notten 2008 · Xie 2008 ·
+Shao 2022 *JES* · Ansah 2021 이다. 이 묶음은 파일 100 = 105호 · 101 = 106호 · 102 = 107호 · 103 = 108호 · 104 = 109호 ·
+105 = 110호 … (대응의 정본은 위 상태 칸). 도착 접두사 = 세션 업로드 파일 이름 앞 8 자 · 해시 = sha256 앞 16 자 (§6-3-j 형식).
+처리 순서 = 사용자 파일 번호 순 (같은 메시지에 여러 편이 함께 왔을 때 — 첨부 나열 순서가 아니라 사용자가 붙인 번호를 따른다).
 
 ### 6-3-c. ⚠ 30 번의 보충 데이터 ZIP — **30 번 에이전트에게 반드시 넘길 것**
 
