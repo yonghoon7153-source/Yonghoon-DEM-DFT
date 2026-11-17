@@ -362,6 +362,7 @@ LGPS 분말 (< 40 µm) + ZrO₂ (< 150 µm) 섞음 (혼합 방법 · 시간 [미
 ## 🔗 관련 카드
 - 이 논문을 인용한 카드: `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps` (ref 24 · §0-1) · `heck2026_densification_sulfide_se_binder_scalable` (ref 61 · CL-90 표지) · `kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation` (§12 끝 '같은 그룹 · 이 논문이 인용하지 않은 후속' 줄).
 - 같은 그룹 앞 논문 (이 논문 [17]): `kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation` (순수 황화물 누른 채 CT · 복셀 FV ↔ EIS).  같은 그룹 후속 Ohashi · Kodama · Horikawa · Hirai, J. Power Sources 483 (2021) 229212 (sakka2022 ref 25) = 정본 카드 없음 (11-17 기준).
+- 이 논문을 [17] 로 인용한 같은 그룹 후속 (2026-11-17 카드): `ohashi2021_am_youngs_modulus_ion_transport_voxel_fem_ct` — 위 줄의 '정본 카드 없음' 인 483 권 229212 는 이제 이 카드 · 같은 VOXELCON 복셀 FEM 을 400 MPa · 지르코니아 + 나일론 (E 대비 7.9 · 0.079) · E_SE 25.3 GPa 한 값으로 · 이온 수송 계산 없음 · 단단한 상 몫 아래 한계 0.43 · 0.64 · 0.77 (22 · 39 · 52 vol%) ↔ 이 카드 0.29 · 0.62 · 0.73 · 0.84 — 그 카드 §3-10.
 - 강성이 다른 두 성분 압축 (DEM · 하중 몫 안 잼): `yano2024_eepa_binary_mixture_plasticity_compression_dem`.
 - 탄성 상수: `deng2016_elastic_superionic_electrolytes_dft` · AM 영률: `koerver2018_chemomechanical_expansion_partial_molar_volume_operando_stress_ssb` (표 1 · LCO · NCM111) · `sedlatschek2026_nmc811_grain_boundary_strength_micro_tensile` (NMC811 · CL-90 교체 출처).
 - 미세구조 → σ: `hlushkou2018_void_space_ion_transport_assb_cathode` · `froboese2019_microstructure_ionic_conductivity_assb_electrode` · `bielefeld2020_effective_ionic_conductivity_binder`.

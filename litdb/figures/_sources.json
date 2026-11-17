@@ -2805,6 +2805,13 @@
    "Stress_distribution_in_the_composite_electrodes_of_sulfide_all-solid-state_lithium-ion_batteries.pdf"
   ]
  },
+ "ohashi2021_am_youngs_modulus_ion_transport_voxel_fem_ct": {
+  "figures": 36,
+  "generated": "2026-11-17",
+  "pdfs": [
+   "Effect_of_Youngs_modulus_of_active_materials_on_ion_transport_through_solid_electrolyte_in_all-solid-state_lithium-ion_battery.pdf"
+  ]
+ },
  "ohno2020_interlab_ionic_conductivity_argyrodite": {
   "figures": 32,
   "generated": "2026-09-25",
