@@ -59,7 +59,7 @@ strict · registry_fp 참	다시 읽은 원장 = 지은 원장	docs/data/rint2_s
 82.9 s	시도 3 탄소 접합 칸 − S0 합 (몫 미확인)	산술: 4223−4140.1	미확인
 1.7 s	시도 4 탄소 접합 칸 − S0 다시 읽기 (계획 · 대조 몫 추정)	산술: 88−86.327	추정
 4.545 · 4.547 (4.55)	주 풀이 반복당 시도 2 ÷ 시도 3 · 시도 4	산술: 0.047664/0.010486 · 0.047664/0.010483	관찰
-4.447	Q11 실침대 옛 ÷ 새 반복당 (621 반복 · S0 와 같은 기계 · 참고값)	docs/session_20260923_progress.md:1474 · docs/session_20260923_progress.md:1479	관찰
+4.447	Q11 합성 계 옛 ÷ 새 주 풀이 반복당 (n 26,463,592 · 2,631 반복 · S0 와 같은 기계 · 참고값 · 11-17 고침 = "실침대 · 621 반복" 은 틀림)	docs/data/rint2_q11_gpu_check_kgy_20261116/check.log · docs/session_20260923_progress.md:1474 · docs/session_20260923_progress.md:1479	실측
 621	Q11 다시 풀기 반복 수	docs/session_20260923_progress.md:1474	관찰
 1.022 (2 %)	4.545 ÷ 4.447 — 11-11 ↔ 11-16 다른 부하 차의 CG 몫 어림	산술: 4.545/4.447	추정
 3.795 · 3.794 (3.79)	합성 벤치 kgy A ÷ C (busy · alone)	docs/reviews/rint2_time_reestimate_20261111/bench/results_20261112/README.md:13 · docs/reviews/rint2_time_reestimate_20261111/bench/results_20261112/README.md:14 · 산술 0.046712/0.012310 · 0.046674/0.012301	실측

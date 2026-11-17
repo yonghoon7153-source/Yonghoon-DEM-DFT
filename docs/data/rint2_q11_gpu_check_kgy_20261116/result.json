@@ -1,0 +1,235 @@
+{
+ "all_identical": true,
+ "args": {
+  "backend": "cupy",
+  "label": "kgy",
+  "logc": 1.0,
+  "maxiter": 60000,
+  "n_side": 298,
+  "new": "<HOME>/q11check_kgy_q14_20261116T010735Z/s3_new.py",
+  "new_sha": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+  "old": "<HOME>/q11check_kgy_q14_20261116T010735Z/s3_old.py",
+  "old_sha": "8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec",
+  "rtol": 1e-12,
+  "rtol_resolve": 1e-14,
+  "se_sha": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c",
+  "seed": 20261112,
+  "short_iters": 200
+ },
+ "backend": "cupy",
+ "consume": {
+  "adopt": true,
+  "backend_ok": true,
+  "converged": true,
+  "identical": true,
+  "rule": "adopt only if: backend cupy; the five pairs bit-identical (solution bytes, info, iterations, LAST_BACKEND); main and resolve runs (old and new) info 0 with finite solutions; every run used gpu + jacobi with no fallback; the six fixed-iteration runs ran exactly short_iters iterations (info = short_iters). Equality is not convergence: all_identical true alone is not adoption. The process rc is not the verdict.",
+  "short_iters_ok": true,
+  "source_ok": true,
+  "why": []
+ },
+ "consume_rule": "adopt only if: backend cupy; the five pairs bit-identical (solution bytes, info, iterations, LAST_BACKEND); main and resolve runs (old and new) info 0 with finite solutions; every run used gpu + jacobi with no fallback; the six fixed-iteration runs ran exactly short_iters iterations (info = short_iters). Equality is not convergence: all_identical true alone is not adoption. The process rc is not the verdict.",
+ "control_new_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "control_old_old": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "env": {
+  "cupy": "12.3.0",
+  "gpu": "NVIDIA GeForce RTX 3090",
+  "numpy": "1.24.4",
+  "python": "3.8.10"
+ },
+ "error": null,
+ "expect": "all pairs bit-identical; new faster per iteration",
+ "files": {
+  "loaded_from_forbid_dir_end": [],
+  "new_sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+  "old_sha256": "8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec",
+  "se_material_from_scripts": true,
+  "se_material_sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+ },
+ "label": "kgy",
+ "main_new": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "finite": true,
+  "info": 0,
+  "iters": 2631,
+  "per_iter_s": 0.010934,
+  "seconds": 28.766,
+  "x_sha256": "64f21eae1572ef3d62eb62df581b69b994a25eb8c2c10c9c3b005027dc639650"
+ },
+ "main_old": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "finite": true,
+  "info": 0,
+  "iters": 2631,
+  "per_iter_s": 0.048628,
+  "seconds": 127.939,
+  "x_sha256": "64f21eae1572ef3d62eb62df581b69b994a25eb8c2c10c9c3b005027dc639650"
+ },
+ "main_old_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "resolve_new": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "finite": true,
+  "info": 0,
+  "iters": 621,
+  "per_iter_s": 0.012961,
+  "seconds": 8.049,
+  "x_sha256": "b0132b4e1e6cc35fa8432c4bb7e0a723ad7c8ffd48ec03b4c617d71ea2b051c5"
+ },
+ "resolve_old": {
+  "backend": {
+   "fallback_reason": null,
+   "precond": "jacobi",
+   "requested": "gpu",
+   "used": "gpu"
+  },
+  "finite": true,
+  "info": 0,
+  "iters": 621,
+  "per_iter_s": 0.051659,
+  "seconds": 32.08,
+  "x_sha256": "b0132b4e1e6cc35fa8432c4bb7e0a723ad7c8ffd48ec03b4c617d71ea2b051c5"
+ },
+ "resolve_old_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "schema": "q11-gpu-check-v2",
+ "short_old_new": {
+  "backend_same": true,
+  "bytes_identical": true,
+  "info_same": true,
+  "iters_same": true,
+  "max_abs_diff": 0.0,
+  "value_differ_count": 0
+ },
+ "short_runs": {
+  "new_1": {
+   "backend": {
+    "fallback_reason": null,
+    "precond": "jacobi",
+    "requested": "gpu",
+    "used": "gpu"
+   },
+   "finite": true,
+   "info": 200,
+   "iters": 200,
+   "per_iter_s": 0.01727,
+   "seconds": 3.454,
+   "x_sha256": "52bc67746adbbdef6fc281f86e8c6b1890ac8bd1a135ab4d351b8ac15a4e476d"
+  },
+  "new_2": {
+   "backend": {
+    "fallback_reason": null,
+    "precond": "jacobi",
+    "requested": "gpu",
+    "used": "gpu"
+   },
+   "finite": true,
+   "info": 200,
+   "iters": 200,
+   "per_iter_s": 0.017704,
+   "seconds": 3.541,
+   "x_sha256": "52bc67746adbbdef6fc281f86e8c6b1890ac8bd1a135ab4d351b8ac15a4e476d"
+  },
+  "new_3": {
+   "backend": {
+    "fallback_reason": null,
+    "precond": "jacobi",
+    "requested": "gpu",
+    "used": "gpu"
+   },
+   "finite": true,
+   "info": 200,
+   "iters": 200,
+   "per_iter_s": 0.017326,
+   "seconds": 3.465,
+   "x_sha256": "52bc67746adbbdef6fc281f86e8c6b1890ac8bd1a135ab4d351b8ac15a4e476d"
+  },
+  "old_1": {
+   "backend": {
+    "fallback_reason": null,
+    "precond": "jacobi",
+    "requested": "gpu",
+    "used": "gpu"
+   },
+   "finite": true,
+   "info": 200,
+   "iters": 200,
+   "per_iter_s": 0.094189,
+   "seconds": 18.838,
+   "x_sha256": "52bc67746adbbdef6fc281f86e8c6b1890ac8bd1a135ab4d351b8ac15a4e476d"
+  },
+  "old_2": {
+   "backend": {
+    "fallback_reason": null,
+    "precond": "jacobi",
+    "requested": "gpu",
+    "used": "gpu"
+   },
+   "finite": true,
+   "info": 200,
+   "iters": 200,
+   "per_iter_s": 0.05505,
+   "seconds": 11.01,
+   "x_sha256": "52bc67746adbbdef6fc281f86e8c6b1890ac8bd1a135ab4d351b8ac15a4e476d"
+  },
+  "old_3": {
+   "backend": {
+    "fallback_reason": null,
+    "precond": "jacobi",
+    "requested": "gpu",
+    "used": "gpu"
+   },
+   "finite": true,
+   "info": 200,
+   "iters": 200,
+   "per_iter_s": 0.054892,
+   "seconds": 10.978,
+   "x_sha256": "52bc67746adbbdef6fc281f86e8c6b1890ac8bd1a135ab4d351b8ac15a4e476d"
+  }
+ },
+ "speed_ratio_main": 4.447,
+ "system": {
+  "n": 26463592,
+  "nnz": 184712320
+ }
+}

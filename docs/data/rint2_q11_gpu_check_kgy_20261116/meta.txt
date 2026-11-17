@@ -1,0 +1,8 @@
+pin=64e4d213e8267bafaf3ae5af00a42996cefd3f33
+stage=Q11
+start_utc=20261116T010735Z
+operator_stop_utc=2026-11-16T04:07:34Z
+harness_md5=4eb8a6c3ed2da1039e6b0988f63db906
+timeout_seconds=5400
+harness_rc=0
+end_utc=20261116T011159Z
