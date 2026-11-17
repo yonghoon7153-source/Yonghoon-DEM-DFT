@@ -178,6 +178,11 @@ jobs:
       - name: 믹서 보정 전 관측 연결 (합성 프레임) (regression)
         run: python scripts/test_mixer_precal_observe.py
 
+      # ★ 2026-11-17 (반입 ⑦ · 1저자 11-17) — 믹서 E0 감시의 squeue 단일 잡 부재 (purged) 처리 · 모의 scheduler · 시간만 (check_all.sh 에도 같이).
+      #   이웃 스텝과 같은 `python <경로>` 꼴 (CI 의존 폐포 · 위 D2 주석).
+      - name: 믹서 E0 squeue 부재 (purged 잡) (regression)
+        run: python scripts/test_mixer_e0_squeue_absent.py
+
       # ★ 2026-10-27 (non-Rint 통합 대응표 §6 3) — 언로딩 키트 (ULPRI) 직접 검사 다섯 (check_all.sh 에도 같이).
       #   키트는 scripts/ · webapp/ 밖이라 등재 드라이버가 안 돈다 → 이름으로 건다.  꼴 = 키트 README · 인계 색인 §6 그대로 `-I`
       #   (봉인 키트 · 표준 라이브러리 + 같은 폴더 모듈 · 러너 모의 = bash + 가짜 mpirun · lmp · 임시 폴더 · LIGGGHTS 없음).
