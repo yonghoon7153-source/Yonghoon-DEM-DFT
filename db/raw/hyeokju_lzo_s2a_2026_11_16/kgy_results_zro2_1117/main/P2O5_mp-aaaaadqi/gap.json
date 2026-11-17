@@ -1,0 +1,22 @@
+{
+  "tag": "P2O5_mp-aaaaadqi",
+  "vbm": 1.4308,
+  "cbm": 6.6172,
+  "gap": 5.186400000000001,
+  "verdict": "절연체",
+  "nelec": 80.0,
+  "nbnd": 62,
+  "nk": 304,
+  "spin_polarized": false,
+  "total_magnetization_bohr": 0.0,
+  "n_occ_up": 40,
+  "n_occ_dn": 40,
+  "occ_source": "no spin",
+  "qe_homo": 1.4308,
+  "qe_lumo": 6.6172,
+  "qe_check": "일치",
+  "edges_by_spin": null,
+  "n_occ_bands": 40,
+  "method": "fixed-occupation nscf eigenvalues (NOT DOS threshold)",
+  "warning": "PBE gap; systematically 30-50% underestimated for wide-gap insulators"
+}

@@ -1,0 +1,54 @@
+&CONTROL
+    calculation     = 'vc-relax'
+    prefix          = 'ZrO2_mp-aaaaaefy'
+    outdir          = './tmp'
+    pseudo_dir      = '/home/kgy/work/runs/hj_s2a_zro2_1117/pseudo'
+    tprnfor         = .true.
+    tstress         = .true.
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 12
+    ntyp            = 2
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+/
+&ELECTRONS
+    conv_thr        = 1.0d-8
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+&IONS
+/
+&CELL
+    cell_dofree     = 'all'
+/
+
+ATOMIC_SPECIES
+  O     15.999  O.pbe-n-kjpaw_psl.0.1.UPF
+  Zr    91.224  Zr_pbe_v1.uspp.F.UPF
+
+CELL_PARAMETERS angstrom
+      5.0850790200     0.0000000000    -0.8399773700
+      0.0000000000     5.2281087200     0.0000000000
+     -0.0053239900     0.0000000000     5.3296935000
+
+ATOMIC_POSITIONS angstrom
+  Zr      3.6758169621     5.0077618699     3.6047186669
+  Zr      3.6784789571     2.8344012101     0.9398719169
+  Zr      1.4012760729     2.3937075099     3.5498442131
+  Zr      1.4039380679     0.2203468501     0.8849974631
+  O       0.3474386673     0.8693720565     4.4392116418
+  O       0.3501006623     1.7446823035     1.7743648918
+  O       2.8002236982     1.3458220471    -0.3485406292
+  O       2.2821933268     3.9598764071     2.1734100092
+  O       2.7975617032     1.2682323129     2.3163061208
+  O       2.2795313318     3.8822866729     4.8382567592
+  O       4.7296543677     3.4834264165     2.7153512382
+  O       4.7323163627     4.3587366635     0.0505044882
+
+K_POINTS automatic
+  5 5 4 0 0 0
