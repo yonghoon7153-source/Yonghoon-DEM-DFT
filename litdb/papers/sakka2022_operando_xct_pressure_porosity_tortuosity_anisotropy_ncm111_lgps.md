@@ -394,6 +394,7 @@ SE 경로의 기하 tortuosity 는 50 MPa 까지 줄지만 100 MPa 에서 다시
 - 복합 양극 CT · 기공: `park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics` · `jeong2024_operando_densification_chemomechanics_se_size_composite_cathode` · `minnmann2024_microstructure_porosity_visualization` · `doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density`.
 - 누른 채 황화물 CT: `kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation` · `korjus2025_lpscl_densification_multiscale_insitu_xct_eis_qens`.
 - 압력 · tortuosity: `miss2026_pressure_tortuosity_composite_cathode_coating` · `doux2020_pressure_effects_sulfide_se_jmca` · `doux2020_stack_pressure_assb`.
+- ref 24 원문 카드 (2026-11-17): `ohashi2020_stress_distribution_composite_electrode_sulfide_assb` — L136 · L363 의 'NCM 이 먼저 눌린다' 의 근거는 **ZrO₂ 대리** 복셀 FEM 계산 (NCM 없음 · SE 평균 MPS 66 MPa @42 vol% · 인가 100 MPa) · 'strain … reduces the contact between the AM and SE' 내용은 그 논문에 **없다** (refs 18 · 24 중 18 쪽일 수 있음) — 그 카드 §0-1.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

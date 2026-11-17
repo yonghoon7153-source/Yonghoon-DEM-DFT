@@ -382,6 +382,7 @@ PEEK 원통 (X 선 창) 안 분말을 위 · 아래 스테인리스 집전체가
 
 ## 🔗 관련 카드
 - 이 논문을 인용한 카드: `otani2023_ionic_conductivity_path_resistance_separation_model` (ref 22) · `yadav2021_lpscl_sieved_psd_impedance_tortuosity` (ref 5) · `faka2026_particle_size_consolidation_strain_lpscl` (ref 12).
+- 이 논문을 [17] 로 인용한 같은 그룹 후속 (2026-11-17 카드): `ohashi2020_stress_distribution_composite_electrode_sulfide_assb` — 같은 계열 복셀 전도 계산 (절차 = 이 논문) 에 **복셀 FEM 응력 → 국소 σ** 를 더한 LGPS + ZrO₂ 복합체 판 · 기하만 넣은 복셀 σ ÷ 실측 1.72–4.71 (19–67 vol% · 100 MPa) = 이 논문 순수 Li₆PS₅Br 의 1.07 (104 MPa) 보다 크다 · §12 끝 줄 '정본 카드 없음' 의 228437 은 이제 이 카드.
 - 압밀 · 회복 실측 (황화물 SE): `doux2020_pressure_effects_sulfide_se_jmca` · `miss2026_insitu_conductivity_porosity_pressure_compaction` · `lee2025_heckel_argyrodite_powder_densification_nanoindentation` · `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` · `heck2026_densification_sulfide_se_binder_scalable` · `var2026_sulfide_se_mechanical_properties_local_indentation_pellet` · `sakuda2013_sulfide_mechanical_property`.
 - 영상 기반 수송 · tortuosity: `taufactor_tortuosity_factor_tomography_tool` · `landesfeind2018_tortuosity_impedance_vs_tomography` · `hlushkou2018_void_space_ion_transport_assb_cathode` · `minnmann2024_microstructure_porosity_visualization`.
 - 접촉 저항 · 경로 분리: `otani2023_ionic_conductivity_path_resistance_separation_model` · `so2021_dem_mold_pressure_assb_coldpress` (otani2023 의 ref 7).

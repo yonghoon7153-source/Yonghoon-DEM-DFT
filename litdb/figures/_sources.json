@@ -2798,6 +2798,13 @@
    "oh2026_kecs_cell_polarization.pdf"
   ]
  },
+ "ohashi2020_stress_distribution_composite_electrode_sulfide_assb": {
+  "figures": 9,
+  "generated": "2026-11-17",
+  "pdfs": [
+   "Stress_distribution_in_the_composite_electrodes_of_sulfide_all-solid-state_lithium-ion_batteries.pdf"
+  ]
+ },
  "ohno2020_interlab_ionic_conductivity_argyrodite": {
   "figures": 32,
   "generated": "2026-09-25",
