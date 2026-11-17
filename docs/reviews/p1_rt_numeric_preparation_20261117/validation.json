@@ -1,0 +1,149 @@
+{
+  "base": "b3481336c8bb8c3d0db008df9df78e56c87392ef",
+  "branch": "codex/dem-rt-numeric-1117",
+  "windows_python": "3.12.14",
+  "scope": "synthetic input and copies only; field/engine/research/actual values: zero",
+  "runs": {
+    "red_initial.log": {
+      "methods": 34,
+      "failures": 68,
+      "errors": 0,
+      "log_sha256": "e6f8d92304ad6be2f595fa5b69b26889fcca08c68a49cc3c9295c6ce3810f866",
+      "rc": 1
+    },
+    "green_initial.log": {
+      "methods": 34,
+      "failures": 0,
+      "errors": 1,
+      "log_sha256": "4c113af9b22fc969a003e83470a96447fab9a5dbe670648f58a95d4678d42885",
+      "rc": 1
+    },
+    "report_contract_red.log": {
+      "methods": 37,
+      "failures": 3,
+      "errors": 0,
+      "log_sha256": "28340464cacc443e0030f15a89f7bb0ce60d984f9fba587bb9cd2ea3aa0a3cd6",
+      "rc": 1
+    },
+    "red_final_contract.log": {
+      "methods": 37,
+      "failures": 71,
+      "errors": 0,
+      "log_sha256": "b4fe111c4bc5f1b3b341f623bf46e7d8979396d16dc9bc705ec5aac13b9a4e6c",
+      "rc": 1
+    },
+    "report_red_final_contract.log": {
+      "methods": 37,
+      "failures": 3,
+      "errors": 0,
+      "log_sha256": "75fcda01d555ac03a5bd582f4f4fb1859e1ec02cf119061accf379da40d860b5",
+      "rc": 1
+    },
+    "green_numeric.log": {
+      "methods": 37,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "9055d4ef9c60b0936f5dc84fe8744fc3539c5484e91553c59a1341056f02c7c0",
+      "rc": 0
+    },
+    "layer_red.log": {
+      "methods": 5,
+      "failures": 4,
+      "errors": 0,
+      "log_sha256": "b983c14873bd6c93f5197ca95944aa6357947dd24d576d8db166fe2f951539b5",
+      "rc": 1
+    },
+    "layer_green.log": {
+      "methods": 5,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "b4ff2d608fd8e7de45810f92effc6bc97bfce702cbc7431ed63bea206719b266",
+      "rc": 0
+    },
+    "linux_numeric.log": {
+      "methods": 37,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "53b1a6e2ae3e94e1552404821f7caafc9d3177cad9f6f7221616d2eb31a8f927",
+      "rc": 0
+    },
+    "linux_layer.log": {
+      "methods": 5,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "68e7400dea485e19d3b04c7332cb73a1f6c3783c4ad52b4164ebe29527bcfd3d",
+      "rc": 0
+    },
+    "linux_runner.log": {
+      "methods": 12,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "5ede279aa49bfe92c45b53f8702c1819c68f5aed9fe9708503238bb46e7ba812",
+      "rc": 0
+    },
+    "linux_binding.log": {
+      "methods": 20,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "86d6d468e2775dd616358346cd62344cd9ed0aef05515b9d8e65691b4b4d7803",
+      "rc": 0
+    },
+    "linux_decks.log": {
+      "methods": 12,
+      "failures": 0,
+      "errors": 0,
+      "log_sha256": "0d9e596de05ff610e9e03e0d671affbba7a6e549f8e48d6eb801e180808aa68a",
+      "rc": 0
+    }
+  },
+  "preservation": {
+    "docs/data/ps45_unload_20261009": {
+      "tracked_files": 94,
+      "base_blob_byte_equal": true
+    },
+    "docs/reviews/p1_rt_deck_preparation_20261116": {
+      "tracked_files": 5,
+      "base_blob_byte_equal": true
+    },
+    "docs/reviews/p1_rt_runner_preparation_20261117": {
+      "tracked_files": 15,
+      "base_blob_byte_equal": true
+    }
+  },
+  "copy_layer": {
+    "historical_files": 94,
+    "previous_layer_files": 111,
+    "new_layer_files": 113,
+    "all_previous_bytes_equal": true,
+    "operational_kit_ready": false
+  },
+  "differential": {
+    "method_count": 1,
+    "synthetic_cases": 31,
+    "all_legacy_common_column_statuses_equal": true
+  },
+  "first_green_note": "one report-key naming error; renamed test expectation to n_exact_compared_pairs; not a numeric threshold change",
+  "warnings": "legacy ul_lib.py open/read ResourceWarning in differential test; old source unchanged",
+  "not_done": [
+    "field execution",
+    "operational seal",
+    "full gate",
+    "independent review",
+    "restoration certificate integration"
+  ],
+  "source_sha256": {
+    "prepare_numeric.py": "246e1311319f3e2f084dd6ba23880f9e080eec619fe4780d6a8cd6c160dcb99d",
+    "rt_numeric.py": "5c29bd81c9be0863f8ebe4479f143afa124873e682118b879873b9ec65ba2739",
+    "test_numeric_layer.py": "fcdfd6ca5035699fe94db7356297499484dbc117f91888c1c219b3b56762e991",
+    "test_rt_numeric.py": "06425715a131a4830054545785ff2dc64947f461c996258a6ad619bca7dadd8a"
+  },
+  "document_check": {
+    "platform": "local Linux",
+    "rc": 0,
+    "missing_paths": 0,
+    "missing_commits": 0,
+    "checker_modified": false,
+    "full_gate": false,
+    "log_sha256": "3d25d7b02bacbe070fc3c5440887d743f98e9f4cd6969f05593e1a442026749a"
+  }
+}
