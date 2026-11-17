@@ -1,0 +1,98 @@
+{
+ "제목": "[혁주] MD-0 ① Li₂ZrO₃ 벌크 초격자 후보 (UMA NVT · QE 단일점 힘 대조용) — 크기는 메모리 프로브 뒤 사용자",
+ "written_on": "2026-11-17",
+ "출처_구조": {
+  "path": "db/structures/hyeokju_Li2ZrO3_mp-aaaaagdw.vasp",
+  "sha256": "c09c6fa14074aec4cc490d86b0c377385c29864ae97977e15a9f392a791e4ab9",
+  "material_id": "mp-aaaaagdw",
+  "spacegroup": "C2/c",
+  "n_atoms": 12
+ },
+ "만든_법": "ase 3.29.0 · ase.build.find_optimal_cell_shape(prim.cell, N, 'sc') → make_supercell(prim, P) · 원자 순서 = make_supercell 그대로 · 좌표 · 셀은 MP 그대로 (이완 안 함)",
+ "후보": {
+  "sc96": {
+   "P": [
+    [
+     2,
+     0,
+     0
+    ],
+    [
+     0,
+     2,
+     0
+    ],
+    [
+     1,
+     1,
+     2
+    ]
+   ],
+   "n_atoms": 96,
+   "formula": "Li32O48Zr16",
+   "cellpar": [
+    10.494,
+    10.494,
+    10.092,
+    86.081,
+    86.081,
+    118.709
+   ],
+   "volume_A3": 966.04,
+   "perp_widths_A": [
+    9.14,
+    9.14,
+    10.0
+   ],
+   "min_image_A": 4.57,
+   "files": [
+    "db/structures/hyeokju_Li2ZrO3_sc96_mp-aaaaagdw.vasp",
+    "db/structures/hyeokju_Li2ZrO3_sc96_mp-aaaaagdw.xyz"
+   ],
+   "sha256_vasp": "85e593f6c2c2c893e34248799d6471cc52b0fc8ec8d6b9fb68b94b563ec87e16"
+  },
+  "sc144": {
+   "P": [
+    [
+     2,
+     0,
+     1
+    ],
+    [
+     1,
+     2,
+     2
+    ],
+    [
+     -1,
+     -2,
+     1
+    ]
+   ],
+   "n_atoms": 144,
+   "formula": "Li48O72Zr24",
+   "cellpar": [
+    10.851,
+    11.689,
+    12.076,
+    94.362,
+    75.785,
+    79.668
+   ],
+   "volume_A3": 1449.07,
+   "perp_widths_A": [
+    10.3,
+    11.41,
+    11.61
+   ],
+   "min_image_A": 5.15,
+   "files": [
+    "db/structures/hyeokju_Li2ZrO3_sc144_mp-aaaaagdw.vasp",
+    "db/structures/hyeokju_Li2ZrO3_sc144_mp-aaaaagdw.xyz"
+   ],
+   "sha256_vasp": "46f102985391f712f00fc9218c7f60230d8ade3170923377a9bad1dda29bc2bf"
+  }
+ },
+ "⚠_최소상": "두 후보 다 최소상 (너비/2) 이 UMA 컷오프 6 Å 보다 작다 (4.6 · 5.2 Å) — 결정이라 주기 상은 물리적이다 (유리의 유한 크기 문제와 다르다) · UMA 와 DFT 가 같은 주기 셀을 보므로 힘 대조는 같은 셀끼리다",
+ "⛔_이_기록이_정하지_않는_것": "어느 크기를 쓸지 (메모리 프로브 뒤 사용자 · 카드 §9) · k 점 (Γ + 탐침 하나 — MD-0 실행 개정에서) · UMA 궤적 길이"
+}
