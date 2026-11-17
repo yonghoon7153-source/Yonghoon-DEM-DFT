@@ -126,5 +126,14 @@
    "tools/ionic/mlip_committee.py md0_check — 위 판독 (음성 시험 포함)"
   ],
   "by": "claude · 2026-11-17"
+ },
+ "⏩_개정_1_운영_메모_2026_11_17": {
+  "무엇": "계면 k 탐침 (비준된 2×2×1 · t = 1 ps 스냅숏 1 장) 만 gabia 에서 돌린다 — 보고량 · k 격자 · 문턱은 개정 1 그대로 (이건 기계 자리만 바꾼다)",
+  "왜": "메모리 견적 (db/properties/hyeokju_lzo_md0_memory_probe_2026_11_17.json k_탐침_3_회차): 계면 2×2×1 은 24.7 GB · disk_io='high' 로도 20.3 GB 라 kgy (24.6 GB · 남이 쓰는 ~4 GB) 에 안 든다",
+  "사용자_결정": "2026-11-17 AskUserQuestion '계면 k 탐침을 어떻게 할까요?' → '그 한 장만 gabia (Recommended)'",
+  "어떻게": "b2o3 9 단계 이완이 끝나 gabia GPU 가 비면 (UMA 없을 때 · GPU_EXCLUSIVE=1) disk_io='high' 로 한 장 · 그 스냅숏의 Γ 짝은 kgy Γ 결과를 쓴다 (같은 QE 7.4.1 GPU · 기계 차 수치 잡음은 문턱 0.02 eV/Å 보다 몇 자리 작다)",
+  "벌크_k_탐침": "kgy · disk_io='high' (13.2 GB) — 실행 설정이라 결과는 같다 · 실행 기록에 적는다",
+  "판정_순서": "Γ 10 장 + 벌크 k 탐침은 ZrO₂ 띠틈이 끝난 뒤 kgy · 계면 판정 (md0_check) 은 gabia 한 장을 기다린다",
+  "by": "claude · 2026-11-17"
  }
 }
