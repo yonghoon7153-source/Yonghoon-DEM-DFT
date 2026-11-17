@@ -311,6 +311,8 @@
     `Estimated max dynamical RAM` 만 보고 죽인다. `ESPRESSO_TMPDIR` 이 입력의 `outdir` 을 덮으므로
     **라이브 잡의 `.save` 가 안 다친다**. 2026-09-19 에 이 프로브가 값어치를 했다 —
     바로 죽였으면 LOBSTER 는 죽고 재시작은 segfault 였다.
+    ⚠ **견적 줄만 보고 끊는 프로브는 `GFORTRAN_UNBUFFERED_PRECONNECTED=y` 를 준다** (2026-11-17 gabia) — gfortran 이 파일로 가는 출력을 버퍼에 모아서,
+    견적 줄이 버퍼에 남은 채 끊으면 **빈칸**이 된다 (1 회차 B144 · I148 · I200 빈칸 → 2 회차 후보마다 2–3 초). SSH 끊김에 대비해 tmux 안에서 돌린다.
 - **Materials Project REST 조회**: ⛔ **403 을 키 문제로 읽지 마라 — Cloudflare 가 UA 를 막는다**
   (2026-09-21 gabia 실측). `urllib` 기본 UA 로 치면 `error 1010 · browser_signature_banned` 로
   **무키 요청도 똑같이 403** 이다. 키는 멀쩡했다(32자 신 API 키).
