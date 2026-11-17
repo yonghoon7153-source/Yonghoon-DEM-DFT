@@ -13898,6 +13898,69 @@
     "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] 2a 개정 2 를 비준할까요? (결과 전) — 생성물 ZrO₂ 의 PBE 띠틈 · PDOS 를 Li₂ZrO₃ 와 같은 체인으로 (MP 관측 구조 중 E_hull 최저 · vc-relax · 60/480 + 90/720 탐침 |ΔE_g| ≤ 0.02 eV · P₂O₅ 대조 잡 먼저). ZrO₂ 는 비-argyrodite 결정이라 CLAUDE.md 이완 규칙상 vc-relax 1 잡에 허락이 필요해요.' → '비준 + vc-relax 허락 (Recommended)' — 결과 전",
     "decision_digest": "sha256:e4f5f2117f854030ea23a063814a97f6cf5cc27b748e00c4aefe29eb2ba72760"
    }
+  },
+  {
+   "id": "D-2026-11-17-hyeokju-lzo-md0-exec-amend1",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.md.uma_validation_then_interface",
+   "slot": "hyeokju_lzo_md0_exec_amend1",
+   "applies_to": {
+    "systems": [
+     "li2zro3",
+     "lpscl_li2zro3_interface"
+    ],
+    "tasks": [
+     "mlip_force_validation"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__vs__qe-pbe"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] MD-0 실행 개정 1 (결과 전) — 계면 = LPSCl (001) li_outer 2 층 + 비정질 Li₂ZrO₃ 16 f.u. (142 원자) · 벌크 = B144 · 스냅숏 · DFT 설정 · k 탐침 · md0_check 판독",
+   "statement": "카드 db/properties/hyeokju_lzo_md_card_2026_11_16.json 의 ⏩_개정_1_2026_11_17_MD0_실행_결과_전 이 정의다 (기계_판독_값 포함). 도구 셋은 결과 전에 커밋한다.",
+   "rationale": "정합 계면 (≤ 3 %) 최소 401 Å² ≈ 600 원자라 GPU 한 장 DFT 불가 (ZSL 탐색) · 사용자 2026-11-17 AskUserQuestion '비정질 LZO 층' · 'B144' · 'I148 급 · kgy' (메모리 프로브 뒤).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+   "amends": "D-2026-11-16-hyeokju-lzo-md",
+   "evidence": [
+    "db/properties/hyeokju_lzo_md0_interface_match_scan_2026_11_17.json",
+    "db/properties/hyeokju_lzo_md0_memory_probe_2026_11_17.json",
+    "db/properties/hyeokju_lzo_md0_bulk_structures_2026_11_17.json",
+    "db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json"
+   ],
+   "reopen_criteria": [
+    "G1 · G2 둘 다 통과 → MD-1 결과 전 개정 (카드 §4)",
+    "하나라도 불통과 → MD-1 없음 (사용자 결정으로만 다르게)",
+    "혁주 결정성 자료가 '결정' 이면 계면 모델을 다시 정할지 사용자 결정"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-17",
+     "session": "본 세션 claude/friendly-meitner-lldvar"
+    }
+   ],
+   "_note": "proposed — 사용자 비준 대기 (AskUserQuestion) · 결과 없음",
+   "status_history": [
+    {
+     "at": "2026-11-17",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 개정 · 결정 작성 (결과 전)"
+    }
+   ]
   }
  ]
 }
