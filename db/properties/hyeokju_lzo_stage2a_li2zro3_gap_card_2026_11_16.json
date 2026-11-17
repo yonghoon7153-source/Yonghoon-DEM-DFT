@@ -121,5 +121,14 @@
   "실행기": "db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh 를 그대로 쓴다 — STRUCT · TAG · REGKEY · EXTRA_DECISION 을 env 로 덮는다 (기본값 = Li₂ZrO₃ · 개정 1 판과 같은 동작) · 실행 폴더 R=/home/kgy/work/runs/hj_s2a_zro2_1117 (새 폴더 · 대조 잡 다시)",
   "상태": "active — 사용자 비준 2026-11-17 (결과 전 · AskUserQuestion '[혁주] 2a 개정 2 를 비준할까요?' → '비준 + vc-relax 허락')",
   "by": "claude · 2026-11-17"
+ },
+ "⏩_그림_2026_11_17": {
+  "그림": "docs/figures/hyeokju_lzo/fig_s2a_li2zro3_dos_pdos.png (300 dpi · 영어 라벨 · SEI 띠틈 그림과 같은 꼴 · E − E_VBM −8..10 eV)",
+  "Origin_CSV": "db/properties/hyeokju_lzo_s2a_li2zro3_dos_pdos_origin.csv — 그린 그대로 (가우시안 0.10 eV · 0.01 eV 격자) · 열 E_minus_VBM_eV · Li2ZrO3_DOS · Li2ZrO3_Li/O/Zr_PDOS (states/eV) · 머리 줄에 VBM · CBM · 띠틈 · 원자료 폴더 · DOS 단계 완주 확인",
+  "만든_명령": "python3 tools/figures/fig_sei_dos_pdos.py --raw db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_1117/main/Li2ZrO3_mp-aaaaagdw --run_log db/raw/hyeokju_lzo_s2a_2026_11_16/kgy_results_1117/run.log --out docs/figures/hyeokju_lzo/fig_s2a_li2zro3_dos_pdos.png --csv hyeokju_lzo_s2a_li2zro3_dos_pdos_origin.csv --title 'Li₂ZrO₃ (LZO coating) — DOS / PDOS'",
+  "읽는_법": "노란 띠 = gap.json 의 VBM · CBM (fixed-occ nscf 고유값 3.9345 eV) — 곡선 문턱에서 읽은 값이 아니다 · 본 판 (60/480) 의 04–06 단계 곡선 (run.log '✅ 완료 → …/main/Li2ZrO3_mp-aaaaagdw' 확인) · 채움 = 원소별 PDOS (projwfc ldos 합 · 투영 손실 때문에 total 보다 작다)",
+  "도구": "fig_sei_dos_pdos.py 에 --raw 판을 붙였다 (db 갭 표를 거치지 않음 · selftest 15 통과 · 깨 본 7 개 다 잡음 · 기본 SEI 경로 출력은 고치기 전 판과 바이트 같다) · Zr 색 #36508f 를 house_style 에 더했다 (dataviz 검증 PASS)",
+  "다음": "ZrO₂ (개정 2) 가 끝나면 같은 명령에 폴더 하나를 더 주어 두 패널 그림으로 다시 낸다",
+  "by": "claude · 2026-11-17"
  }
 }

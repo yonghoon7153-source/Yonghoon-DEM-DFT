@@ -29,6 +29,11 @@ ELEM = {
     # Br 은 comp2~comp5 에서 쓰는데 팔레트에 없어 각 도구가 제멋대로 골라 왔다
     #   (plot_dos.py 는 #A0522D sienna 를 써서 S 와 겹쳤다). 어두운 갈색으로 고정한다.
     "Br": "#7c2d12",  # orange-900
+    # Zr 은 [혁주] LZO (Li₂ZrO₃ 코팅) 트랙에서 처음 나왔다 (2026-11-17). 같이 나오는 원소 = Li · O (+ 계면 그림의 P · S · Cl).
+    #   dataviz validate_palette.js 로 쟀다 (밝은 면 · Machado 2009): Li·Zr·O 세 색 전 항목 PASS (CVD 최소 11.3 · 정상 20.8 ·
+    #   L 0.443) · Zr 대 P 15.0/18.7 · S 20.4/27.8 · Cl 32.0/33.3 (CVD/정상 ΔE×100). 간극선 #2563eb 와 정상 14.8 이라
+    #   간극선은 점선 · Zr 은 채움으로만 쓴다 (같은 꼴로 겹쳐 그리지 않는다).
+    "Zr": "#36508f",  # steel navy
 }
 
 # system colors for cross-system comparisons
