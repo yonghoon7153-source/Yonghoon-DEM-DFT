@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 348편 · 생성 2026-11-17
+> digest 349편 · 생성 2026-11-17
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -67,7 +67,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (87편)
+## 접촉역학 · 소성 (DEM 이론) (88편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -79,6 +79,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `bares2021_soft_rigid_mix_experiment_dic_proceedings` | 무른 (초탄성 실리콘) + 단단한 (PVC) 2D 원기둥 혼합의 일축 단계 압축 실험 — 학회 발표문 (Powders & Grains 2021) · 2022 혼합 실험 (Letter) 과 같은 장치 · 같은 재료의 앞 판 · κ 0.5 한 실험의 응력 · 배위수 · 특정 접촉 길이 (specific contact leng | experiment 2D (초탄성 실리콘 + PVC 강체 이분산 원기둥 96 개 혼합 · 일축 단계 압축 ( | 2026-11-10 | 🖼 9 |
 | `begat2004_cohesive_adhesive_balance_afm_colloid_probe` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations I: Direct Quantification by Atomic Force Microscopy — AFM 콜로이드 탐침 한 개를 "자기 물질" 결정면과 "상대 물질" 결정면에 번갈아 대어 떼는 힘의 비 (C | experiment (AFM colloid-probe pull-off forces on engineered  | 2026-10-13 | 🖼 13 |
 | `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` | The Cohesive-Adhesive Balances in Dry Powder Inhaler Formulations II: Influence on Fine Particle Delivery Characteristics — Part I 의 AFM 응집 · 접착 비를 환산 혼합 계수 Λ₁₂ = F^ad₁₂ / F^co₁₁ ( | experiment (dry powder inhaler blends — cohesive-adhesive ba | 2026-10-13 | 🖼 15 |
+| `berkenkemper2023_compressibility_descriptors_binary_mixtures_deformation` | 변형 거동이 다른 이원 분말 혼합의 압축 서술자 (densification · linear mixing rule) — 약학 부형제 넷 (소성: MCC · HPC / 취성: 유당 TA · 무수 인산수소칼슘 DCP) 의 세 혼합 (소성–소성 MCC_HPC · 소성–취성 MCC_DCP · 취성–취성 TA_DCP) 을 0–100 | experiment (compaction simulator STYL'One Evo, 8 mm round fl | 2026-11-17 | 🖼 83 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
 | `brodu2015_multiple_contact_dem_dense_granular` | 같은 알의 다른 접촉이 만든 탄성 변위를 겹침에 더하는 다접촉 DEM (MC-DEM · Giannis 가 'MC-strain' 이라 부른 것) — 하이드로겔 514 알 3D 접촉력 실측과 다섯 정식화 대조 — Brodu, Dijksman & Behringer (Phys. Rev. E 2015) | DEM (contact-LAW theory, non-binary multi-contact, displacem | 2026-11-12 | 🖼 28 |
 | `cantor2020_compaction_model_highly_deformable_particles` | 매우 무른 (초탄성) 원판 집합의 2D 등방 압밀과 미시역학 압밀 식의 원전 — non-smooth contact dynamics (NSCD) + 입자별 FE (원판 1500 개 × 삼각형 92 개, LMGC90) · 입자 간 마찰 0–0.8 · 압밀 식 P(φ) = (Zφ/2π) × 단일 입자 상자 법칙 · 체적탄성률  | NSCD+FEM 2D 다입자 (LMGC90 — neo-Hookean 비압축 FE 원판 1500 개 × 삼각형 | 2026-11-10 | 🖼 20 |
