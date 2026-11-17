@@ -1,0 +1,43 @@
+{
+  "fields": [
+    {
+      "n_dof": 26529223,
+      "cg_iters": 277885,
+      "cert_iters": 277885,
+      "cert_resolve_iters": 84485,
+      "cg_resid": 1.051897409283346e-12,
+      "cert_imbalance": 9.63612197866382e-07,
+      "cert_ok": true,
+      "cert_pass_a": true,
+      "cert_pass_b": true,
+      "cert_pass_c": true,
+      "cert_pass_d": true,
+      "cert_status": "POSITIVE_SOLVED",
+      "code_matches_pin": true,
+      "bed_inputs_match_s0": true,
+      "tol_ff_matches_s0": true
+    },
+    {
+      "n_dof": 26529223,
+      "cg_iters": 277885,
+      "cert_iters": 277885,
+      "cert_resolve_iters": 84485,
+      "cg_resid": 1.051897409283346e-12,
+      "cert_imbalance": 9.63612197866382e-07,
+      "cert_ok": true,
+      "cert_pass_a": true,
+      "cert_pass_b": true,
+      "cert_pass_c": true,
+      "cert_pass_d": true,
+      "cert_status": "POSITIVE_SOLVED",
+      "code_matches_pin": true,
+      "bed_inputs_match_s0": true,
+      "tol_ff_matches_s0": true
+    }
+  ],
+  "equal_selected_fields": true,
+  "arm_hash_record_identical": true,
+  "arm_hash_record": "97278b664504a16c3cc43c15ec19a0b7967960f0333088c6a8c18fbe6e99810c",
+  "arm_bytes_available_in_bundle": false,
+  "limits": "Original arm JSON deliberately absent. Equality independently verifies receipt hash records, not original arm bytes."
+}

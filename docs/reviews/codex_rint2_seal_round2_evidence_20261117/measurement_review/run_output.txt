@@ -1,0 +1,35 @@
+{
+  "hash_pass": 40,
+  "hash_total": 40,
+  "model_json_equal": true,
+  "base_arm": {
+    "range": [
+      {
+        "hours": 184.15747846093353,
+        "kgy_units": 7
+      },
+      {
+        "hours": 208.66249110156042,
+        "kgy_units": 7
+      }
+    ],
+    "overflow_first_kgy_h": 48.988028694223225,
+    "overflow_first_gabia_h": 60.39489094571421,
+    "post_all_h": 136.0512627986348
+  },
+  "maxiter_5M": {
+    "cap": 5000000,
+    "one_kgy_h": 14.559380079289394,
+    "one_gabia_h": 21.198684562238675,
+    "main_plus_resolve_kgy_h": 29.765892740971612,
+    "main_plus_resolve_gabia_h": 43.33960426150813,
+    "author_model": {
+      "maxiter": 5000000,
+      "x_sbe_main": 17.99,
+      "one_solve_to_cap_h_kgy": 14.6,
+      "one_solve_to_cap_h_gabia": 21.2,
+      "main_plus_resolve_to_cap_h_kgy": 29.1,
+      "main_plus_resolve_to_cap_h_gabia": 42.4
+    }
+  }
+}

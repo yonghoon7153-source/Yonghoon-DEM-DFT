@@ -1,0 +1,55 @@
+{
+  "read_only": true,
+  "checks": {
+    "candidate_parent_is_code_pin": true,
+    "all_solver_boundary_paths_identical": true,
+    "CODE_FILES_20_identical": true,
+    "S0_SAME_FILES_7_identical": true,
+    "claims_status_content_unchanged": true,
+    "claims_top_level_keys_unchanged": true,
+    "claims_all_non_ban_keys_unchanged": true,
+    "ban_entry_count_unchanged": true,
+    "ban_nonallow_fields_unchanged_7": true,
+    "ban_nonallow_fields_unchanged_12": true,
+    "exact_two_allowances_changed": true,
+    "only_literal_1113_1116_S0_paths_added": true,
+    "claims_declared_stoic_blob": true,
+    "q14_blob_matches_submitted_block_manifest.json": true,
+    "q14_bytes_match_review_zip_block_manifest.json": true,
+    "q14_blob_matches_submitted_s0_preregistration.md": true,
+    "q14_bytes_match_review_zip_s0_preregistration.md": true,
+    "stoic_ref_docs/reviews/rint2_time_reestimate_20261111/README.md": true,
+    "stoic_ref_docs/reviews/rint2_time_reestimate_20261111/v3": true
+  },
+  "unverified": [],
+  "changed_count": 83,
+  "status_counts": {
+    "A": 79,
+    "M": 4,
+    "D": 0
+  },
+  "ban_allowance_changes": [
+    {
+      "index": 7,
+      "added": [
+        "docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json",
+        "docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/s0_stage1_kit_SBE_vgcf100.json"
+      ],
+      "removed": []
+    },
+    {
+      "index": 12,
+      "added": [
+        "docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json",
+        "docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/s0_stage1_kit_SBE_vgcf100.json"
+      ],
+      "removed": []
+    }
+  ],
+  "candidate_claims_blob": "3f83245436d927dc534880fa32a958bc99ce7ddf",
+  "q14_blobs": {
+    "block_manifest.json": "b3e47a30d21c457136ab02b6116683e8758e899f",
+    "s0_preregistration.md": "b0f35d9780e6babf71bf05807195f9e184a32abc"
+  },
+  "overall": "PASS"
+}

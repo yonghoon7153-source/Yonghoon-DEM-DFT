@@ -1,0 +1,268 @@
+{
+  "test_only": true,
+  "checks": {
+    "output_hash:docs/data/rint2_r_plan_20261120/ca1_plan.json": true,
+    "output_bytes:docs/data/rint2_r_plan_20261120/ca1_plan.json": true,
+    "output_hash:docs/reviews/rint2_kgy_commands_20261020.md": true,
+    "output_bytes:docs/reviews/rint2_kgy_commands_20261020.md": true,
+    "output_hash:docs/reviews/rint2_seal_20261120/registration_R_sealed.md": true,
+    "output_bytes:docs/reviews/rint2_seal_20261120/registration_R_sealed.md": true,
+    "output_hash:docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md": true,
+    "output_bytes:docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md": true,
+    "maker_hash": true,
+    "input_hash:reg": true,
+    "input_hash:cmd": true,
+    "input_hash:reg_ins": true,
+    "input_hash:cmd_ins": true,
+    "input_hash:plan": true,
+    "input_hash:s0": true,
+    "marked_is_original_plus_one_line": true,
+    "canonical_plan": true,
+    "candidate_four_null": true,
+    "known_tolerances_match": true,
+    "known_policy_values": true,
+    "sealed:command1:--registration": true,
+    "sealed:command2:--r-doc": true,
+    "sealed:command3:--registration": true,
+    "sealed:command4:--registration": true,
+    "sealed:command5:--registration": true,
+    "sealed:command6:--registration": true,
+    "sealed:command7:--registration": true,
+    "sealed:command8:--registration": true,
+    "sealed:command9:--registration": true,
+    "sealed:command10:--registration": true,
+    "sealed:command11:--registration": true,
+    "sealed:command12:--registration": true,
+    "sealed:command13:--registration": true,
+    "sealed:command14:--registration": true,
+    "sealed_command_count": true,
+    "commands:command1:--registration": true,
+    "commands:command2:--r-doc": true,
+    "commands:command3:--registration": true,
+    "commands:command4:--registration": true,
+    "commands:command5:--registration": true,
+    "commands:command6:--registration": true,
+    "commands:command7:--registration": true,
+    "commands:command8:--registration": true,
+    "commands:command9:--registration": true,
+    "commands:command10:--registration": true,
+    "commands:command11:--registration": true,
+    "commands:command12:--registration": true,
+    "commands:command13:--registration": true,
+    "commands:command14:--registration": true,
+    "commands:command15:--registration": true,
+    "commands_command_count": true,
+    "original_command_count": true
+  },
+  "commands": {
+    "sealed": [
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 7,
+        "tool": "rint_r_chain",
+        "stage": "plan-doc",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 10,
+        "tool": "ca_s0_census",
+        "stage": "2",
+        "registration": "docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 14,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 17,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 18,
+        "tool": "rint_r_chain",
+        "stage": "ladder",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 22,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 23,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 26,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 29,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 30,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 31,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 34,
+        "tool": "rint_r_chain",
+        "stage": "verdict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 35,
+        "tool": "rint_r_chain",
+        "stage": "verdict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 507,
+        "logical_block_line": 38,
+        "tool": "rint_r_chain",
+        "stage": "recover",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      }
+    ],
+    "commands": [
+      {
+        "block_start_physical_line": 606,
+        "logical_block_line": 17,
+        "tool": "rint_r_chain",
+        "stage": "plan-doc",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 640,
+        "logical_block_line": 7,
+        "tool": "ca_s0_census",
+        "stage": "2",
+        "registration": "docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 659,
+        "logical_block_line": 3,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 668,
+        "logical_block_line": 3,
+        "tool": "rint_r_chain",
+        "stage": "ladder",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 668,
+        "logical_block_line": 4,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 668,
+        "logical_block_line": 5,
+        "tool": "rint_r_chain",
+        "stage": "ladder",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 668,
+        "logical_block_line": 9,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 668,
+        "logical_block_line": 10,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 772,
+        "logical_block_line": 3,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 772,
+        "logical_block_line": 6,
+        "tool": "rint_r_chain",
+        "stage": "ledger",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 772,
+        "logical_block_line": 7,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 772,
+        "logical_block_line": 9,
+        "tool": "rint_r_chain",
+        "stage": "predict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 772,
+        "logical_block_line": 12,
+        "tool": "rint_r_chain",
+        "stage": "verdict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 772,
+        "logical_block_line": 13,
+        "tool": "rint_r_chain",
+        "stage": "verdict",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      },
+      {
+        "block_start_physical_line": 772,
+        "logical_block_line": 15,
+        "tool": "rint_r_chain",
+        "stage": "recover",
+        "registration": "~/dem-ca1/docs/reviews/rint2_seal_20261120/registration_R_sealed.md"
+      }
+    ],
+    "original": []
+  },
+  "overall": "PASS"
+}

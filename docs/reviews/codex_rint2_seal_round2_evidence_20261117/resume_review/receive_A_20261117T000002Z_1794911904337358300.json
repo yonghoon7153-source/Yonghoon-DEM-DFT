@@ -1,0 +1,10 @@
+{
+  "script": "cd ~/sdcp && umask 022\nT=20261117T000002Z; FROM=B; TO=A; BR=main; RB=~/sdcp/ca1_relay/${T}_${FROM}_to_${TO}.bundle\nsha256sum \"$RB\"                                                     # = 넘김 기록\ngit bundle list-heads \"$RB\" | grep \"refs/heads/$BR\"                 # 커밋 = 넘김 기록의 원장 끝 커밋\nif [ -d ca1_ledger.parked ]; then git -C ca1_ledger.parked -c pull.rebase=false pull -q --ff-only \"$RB\" \"$BR\" && mv ca1_ledger.parked ca1_ledger; else git clone -q -b \"$BR\" \"$RB\" ca1_ledger; fi\ntest \"$(git -C ca1_ledger rev-parse HEAD)\" = d827d05342402879aa8c7299afa7ecf000652e1b && echo RECV_OK   # RECV_OK 가 없으면 멈추고 1저자 (사슬을 띄우지 않는다)",
+  "result": {
+    "rc": 0,
+    "recv_ok": true,
+    "command_rc": 128,
+    "stderr": "fatal: destination path '<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\resume_review\\work_1794911902741945500\\A\\sdcp\\ca1_ledger' already exists and is not an empty directory.",
+    "method": "native Git; document control-flow translation; no Bash or flock"
+  }
+}

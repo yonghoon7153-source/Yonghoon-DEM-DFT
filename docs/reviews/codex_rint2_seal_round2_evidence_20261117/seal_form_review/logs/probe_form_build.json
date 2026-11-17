@@ -1,0 +1,91 @@
+{
+  "test_only": true,
+  "scope": "No engine, kit, result JSON, live host, or real seal. Input/source immutable.",
+  "platform_note": "Windows stdout is forced to LF only for the unmodified chain plan-doc subprocess; synthetic calls otherwise use shipped code.",
+  "cases": [
+    {
+      "case": "candidate same inputs => exact supplied output bytes, twice",
+      "expected": "PASS",
+      "actual": "PASS",
+      "pass": true
+    },
+    {
+      "case": "--final with four null fields",
+      "expected": "PLAN_NUMBER_UNREGISTERED",
+      "actual": "Fail: --final: PLAN_NUMBER_UNREGISTERED — R 계획 칸 ['max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope'] = null (⬜ 결과 전 등록 · 1저자 · §10 개정 · 숫자를 사슬이 고르지 않는다)",
+      "pass": true
+    },
+    {
+      "case": "four fixture values + --final build and parser match",
+      "expected": "PASS",
+      "actual": "PASS",
+      "pass": true
+    },
+    {
+      "case": "marked original plan hash remains unregistered",
+      "expected": "PLAN_HASH_UNREGISTERED",
+      "actual": "PLAN_HASH_UNREGISTERED",
+      "pass": true
+    },
+    {
+      "case": "marked original S0 hash remains unregistered",
+      "expected": "S0_PLAN_HASH_UNREGISTERED",
+      "actual": "S0_PLAN_HASH_UNREGISTERED",
+      "pass": true
+    },
+    {
+      "case": "wrong tolerance plan rejected before output",
+      "expected": "두 계획 대조",
+      "actual": "Fail: 두 계획 대조 (핀 사슬 plans_cross_problems · 계획 ↔ S0 계획) 문제: ['R 계획 tol_ff_um ↔ S0 values_um.tol_ff: 0.07 ≠ 0.07381254285530132']",
+      "pass": true
+    },
+    {
+      "case": "unknown length-law rejected before output",
+      "expected": "두 계획 대조",
+      "actual": "Fail: 두 계획 대조 (핀 사슬 plans_cross_problems · 계획 ↔ S0 계획) 문제: [\"R 계획 len_law 'len_scaled_v9' ≠ 등록 v0 길이 법칙 'len_scaled_v0'\"]",
+      "pass": true
+    },
+    {
+      "case": "SV threshold below one rejected",
+      "expected": "PLAN_INVALID",
+      "actual": "Fail: 사슬 plan-doc rc 3 · 멈춤 [PLAN_INVALID] 계획 파일 꼴이 틀렸다 — sv_cf_threshold 0.5 (유한 ≥ 1 · 비 G_full/G_cut ≥ 1 · null = ⬜)\n ",
+      "pass": true
+    },
+    {
+      "case": "calendar-invalid seal date rejected",
+      "expected": "달력 날짜",
+      "actual": "Fail: --seal-date = 달력 날짜 (YYYYMMDD) · '20260230'",
+      "pass": true
+    },
+    {
+      "case": "Git-invalid branch rejected",
+      "expected": "git 가지 이름",
+      "actual": "Fail: --seal-branch 글자 · git 가지 이름 규칙 · 'bad//ref'",
+      "pass": true
+    },
+    {
+      "case": "final copied plan to another path => byte-identical files",
+      "expected": "PASS",
+      "actual": "PASS",
+      "pass": true
+    }
+  ],
+  "local_test_versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "candidate_output_sha256": {
+    "docs/reviews/rint2_seal_20261120/registration_R_sealed.md": "3787864a25c4c4da519d25b81e6f276201c24cb8665de515ef36f2ed69d62270",
+    "docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md": "1cf4a7b44b7fc324c9aa80d0dcef2b861792f87be347e356bcd84af6cb4dbaa4",
+    "docs/reviews/rint2_kgy_commands_20261020.md": "bef29b6b4ca7fcfee6f7a3811e80b3d84b31bc4d3f807e663acda195bd41a753",
+    "docs/data/rint2_r_plan_20261120/ca1_plan.json": "f09b3efbe50d104d7e294a6b3dce8bda5214d267a4fecfc99b7e50023396d3c4"
+  },
+  "fixture_values_NOT_registration_decision": {
+    "max_ladder_points": 12,
+    "calib_rj_ratio_max": "none",
+    "sv_cf_threshold": 2.0,
+    "sv_cf_scope": "all3"
+  },
+  "overall": "PASS"
+}

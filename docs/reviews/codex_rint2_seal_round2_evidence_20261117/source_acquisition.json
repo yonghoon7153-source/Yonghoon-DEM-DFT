@@ -1,0 +1,55 @@
+[
+  {
+    "argv": [
+      "git",
+      "--git-dir=<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\objects.git",
+      "bundle",
+      "verify",
+      "<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\input\\extra\\seal_candidate_v2_1\\seal_form_G2_20261117.bundle"
+    ],
+    "rc": 0,
+    "stdout": "The bundle contains this ref:\nc80d700bdd5915da82f77f839cb96ed4a5a6582e refs/heads/seal-form-scratch\nThe bundle requires this ref:\n64e4d213e8267bafaf3ae5af00a42996cefd3f33 \nThe bundle uses this hash algorithm: sha1\n",
+    "stderr": "<WINHOME>/Documents/Codex/rint2_seal_round2_review_20261117/input/extra/seal_candidate_v2_1/seal_form_G2_20261117.bundle is okay\n"
+  },
+  {
+    "argv": [
+      "git",
+      "--git-dir=<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\objects.git",
+      "fetch",
+      "--no-tags",
+      "<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\input\\extra\\seal_candidate_v2_1\\seal_form_G2_20261117.bundle",
+      "refs/heads/seal-form-scratch:refs/heads/review-candidate"
+    ],
+    "rc": 0,
+    "stdout": "",
+    "stderr": "From <WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\input\\extra\\seal_candidate_v2_1\\seal_form_G2_20261117.bundle\n * [new branch]          seal-form-scratch -> review-candidate\n"
+  },
+  {
+    "argv": [
+      "git",
+      "--git-dir=<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\objects.git",
+      "show",
+      "-s",
+      "--format=%H %P %T",
+      "review-candidate"
+    ],
+    "rc": 0,
+    "stdout": "c80d700bdd5915da82f77f839cb96ed4a5a6582e 64e4d213e8267bafaf3ae5af00a42996cefd3f33 a1d59be825f9356d1d7a6c15ee5b02d56a21617c\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "git",
+      "--git-dir=<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\objects.git",
+      "diff",
+      "--stat",
+      "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "review-candidate",
+      "--",
+      "scripts/"
+    ],
+    "rc": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "baseline_commit": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+  "hash_checks": [
+    {
+      "path": "MANIFEST.tsv",
+      "expected": "a0f58bfe16b4e8715e150d4ad1cdf7282ee277a6b843bdfb9e86943b13c4042b",
+      "actual": "a0f58bfe16b4e8715e150d4ad1cdf7282ee277a6b843bdfb9e86943b13c4042b",
+      "ok": true
+    },
+    {
+      "path": "NPZ_SHA256.txt",
+      "expected": "f3ad18e4216074b500add456cc934e65e419cc09ae5a5ce1d9e87dab887d6a6b",
+      "actual": "f3ad18e4216074b500add456cc934e65e419cc09ae5a5ce1d9e87dab887d6a6b",
+      "ok": true
+    },
+    {
+      "path": "files/ca1_s0_sbe_20261113T014726Z_q2q11/cjunc_plan.json",
+      "expected": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+      "actual": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+      "ok": true
+    },
+    {
+      "path": "files/ca1_s0_sbe_20261113T014726Z_q2q11/cjunc_plan.sha256",
+      "expected": "4923e88eeb92d63caedf8cf06de927816a281b6dafbb217761fa941bdcb1fadc",
+      "actual": "4923e88eeb92d63caedf8cf06de927816a281b6dafbb217761fa941bdcb1fadc",
+      "ok": true
+    },
+    {
+      "path": "files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json",
+      "expected": "6c80bbe64ff1ddc48a11410237cc73bdad833e8d2fa9365ea5a8383645a7f230",
+      "actual": "6c80bbe64ff1ddc48a11410237cc73bdad833e8d2fa9365ea5a8383645a7f230",
+      "ok": true
+    }
+  ],
+  "field_counts": {
+    "atomic": {
+      "old_fields": 469,
+      "new_fields": 469,
+      "difference_count": 6
+    },
+    "objects": {
+      "old_fields": 242641,
+      "new_fields": 242641,
+      "difference_count": 7
+    },
+    "all": {
+      "old_fields": 242667,
+      "new_fields": 242667,
+      "difference_count": 7
+    },
+    "metadata": {
+      "old_fields": 508,
+      "new_fields": 508,
+      "difference_count": 7
+    }
+  },
+  "changed_fields_all": [
+    "code.file_digests[0].sha256",
+    "code.file_digests[2].sha256",
+    "code.git_head",
+    "code.tool_sha256",
+    "elapsed_s",
+    "inputs.payload_argv_sha256",
+    "plan.sha256"
+  ],
+  "plan_changed_fields": [
+    "source.tool_sha256"
+  ],
+  "NPZ_hash_records_equal": true
+}

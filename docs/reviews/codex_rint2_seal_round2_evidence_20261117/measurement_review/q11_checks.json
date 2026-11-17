@@ -1,0 +1,79 @@
+{
+  "pair_checks": {
+    "control_old_old": {
+      "backend_same": true,
+      "bytes_identical": true,
+      "info_same": true,
+      "iters_same": true,
+      "max_abs_diff": 0.0,
+      "value_differ_count": 0
+    },
+    "control_new_new": {
+      "backend_same": true,
+      "bytes_identical": true,
+      "info_same": true,
+      "iters_same": true,
+      "max_abs_diff": 0.0,
+      "value_differ_count": 0
+    },
+    "short_old_new": {
+      "backend_same": true,
+      "bytes_identical": true,
+      "info_same": true,
+      "iters_same": true,
+      "max_abs_diff": 0.0,
+      "value_differ_count": 0
+    },
+    "main_old_new": {
+      "backend_same": true,
+      "bytes_identical": true,
+      "info_same": true,
+      "iters_same": true,
+      "max_abs_diff": 0.0,
+      "value_differ_count": 0
+    },
+    "resolve_old_new": {
+      "backend_same": true,
+      "bytes_identical": true,
+      "info_same": true,
+      "iters_same": true,
+      "max_abs_diff": 0.0,
+      "value_differ_count": 0
+    }
+  },
+  "consume": {
+    "adopt": true,
+    "backend_ok": true,
+    "converged": true,
+    "identical": true,
+    "rule": "adopt only if: backend cupy; the five pairs bit-identical (solution bytes, info, iterations, LAST_BACKEND); main and resolve runs (old and new) info 0 with finite solutions; every run used gpu + jacobi with no fallback; the six fixed-iteration runs ran exactly short_iters iterations (info = short_iters). Equality is not convergence: all_identical true alone is not adoption. The process rc is not the verdict.",
+    "short_iters_ok": true,
+    "source_ok": true,
+    "why": []
+  },
+  "system": {
+    "n": 26463592,
+    "nnz": 184712320
+  },
+  "main_iters": [
+    2631,
+    2631
+  ],
+  "resolve_iters": [
+    621,
+    621
+  ],
+  "short_runs_exact_200": true,
+  "all_runs_gpu_jacobi": true,
+  "main_hash_same": true,
+  "resolve_hash_same": true,
+  "ratio_from_displayed_per_iter": 4.447411743186391,
+  "ratio_from_displayed_seconds": 4.4475770006257385,
+  "files": {
+    "loaded_from_forbid_dir_end": [],
+    "new_sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+    "old_sha256": "8d428ff5c6c214ea3479faae662341b88fa255982d69b180eaff660cda95f2ec",
+    "se_material_from_scripts": true,
+    "se_material_sha256": "767a6a383d4581274b07ee79146a53fbe118f1f6eb0acb9ec0a5af21c9c9930c"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "candidate": "<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\candidate_source",
+  "paths": [
+    "/scripts/",
+    "/docs/reviews/rint2_seal_20261120/",
+    "/docs/data/rint2_r_plan_20261120/",
+    "/docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md",
+    "/docs/reviews/rint2_kgy_commands_20261020.md",
+    "/docs/reviews/rint2_dev_probe_ledger_20261026.md",
+    "/docs/reviews/rint2_s0_store_probe_20261112/",
+    "/docs/data/rint2_s0_sbe_20261116/",
+    "/docs/reviews/rint2_q14_finalpin_preparation_20261113/",
+    "/docs/reviews/claims.json"
+  ],
+  "rc": 0,
+  "stderr": "HEAD is now at c80d700bd scratch seal-form commit G2 (seal candidate v2.1 \u00b7 internal rebuttal review fixes \u00b7 README/evidence with G2a results \u00b7 NOT for push)\n"
+}

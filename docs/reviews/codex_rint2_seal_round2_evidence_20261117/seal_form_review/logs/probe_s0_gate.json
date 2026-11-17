@@ -1,0 +1,53 @@
+{
+  "test_only": true,
+  "note": "Tiny synthetic Git history, not an R seal. Four final values are test fixtures from probe_form_build.py.",
+  "cases": [
+    {
+      "case": "candidate + sealed r_doc rejects four null",
+      "expected": "PLAN_NUMBER_UNREGISTERED",
+      "actual": "REJECT: R 런 계획 파일 docs/data/rint2_r_plan_20261120/ca1_plan.json — PLAN_NUMBER_UNREGISTERED: R 계획 칸 ['max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope'] = null (⬜ 결과 전 등록 · 1저자 · §10 개정 · 숫자를 사슬이 고르지 않는다)",
+      "pass": true,
+      "info": null
+    },
+    {
+      "case": "candidate + original default rejects blank S0 hash",
+      "expected": "끝 칸 ≠ 계획 sha256",
+      "actual": "REJECT: 등록 R 문서 (docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md @ 72bb0da3d8ae) 의 \"| S0 계획 해시 |\" 끝 칸 ≠ 계획 sha256 6346d9ed5fda248b… — §2-1 개정 커밋이 아니다 (★ 10-21 — 줄 밖 · 다른 칸에 적힌 해시는 세지 않는다)",
+      "pass": true,
+      "info": null
+    },
+    {
+      "case": "fixture final + sealed r_doc accepted",
+      "expected": "PASS",
+      "actual": "PASS",
+      "pass": true,
+      "info": {
+        "plan_hash": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520",
+        "commit": "4fa697905bd60151dbca438c3f9c1be926214a3d",
+        "R_plan_hash": "9e6ee8528688ab98d2bf227f1bac8569504dd41dcb787f722159efd70466d06a"
+      }
+    },
+    {
+      "case": "fixture final + original default rejects blank S0 hash",
+      "expected": "끝 칸 ≠ 계획 sha256",
+      "actual": "REJECT: 등록 R 문서 (docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md @ 4fa697905bd6) 의 \"| S0 계획 해시 |\" 끝 칸 ≠ 계획 sha256 6346d9ed5fda248b… — §2-1 개정 커밋이 아니다 (★ 10-21 — 줄 밖 · 다른 칸에 적힌 해시는 세지 않는다)",
+      "pass": true,
+      "info": null
+    },
+    {
+      "case": "candidate ancestor still rejects when HEAD is fixture final",
+      "expected": "PLAN_NUMBER_UNREGISTERED",
+      "actual": "REJECT: R 런 계획 파일 docs/data/rint2_r_plan_20261120/ca1_plan.json — PLAN_NUMBER_UNREGISTERED: R 계획 칸 ['max_ladder_points', 'calib_rj_ratio_max', 'sv_cf_threshold', 'sv_cf_scope'] = null (⬜ 결과 전 등록 · 1저자 · §10 개정 · 숫자를 사슬이 고르지 않는다)",
+      "pass": true,
+      "info": null
+    },
+    {
+      "case": "different plan committed without rehash rejects",
+      "expected": "≠ 등록 \"| 계획 해시 |\"",
+      "actual": "REJECT: R 런 계획 파일 docs/data/rint2_r_plan_20261120/ca1_plan.json sha256 33052b2b4a9161ab… ≠ 등록 \"| 계획 해시 |\" 9e6ee8528688ab98… (같은 커밋)",
+      "pass": true,
+      "info": null
+    }
+  ],
+  "overall": "PASS"
+}

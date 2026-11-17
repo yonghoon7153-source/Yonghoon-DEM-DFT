@@ -1,0 +1,277 @@
+{
+  "hash_checks_pass": 40,
+  "hash_checks_total": 40,
+  "author_model_reproduces_stored_json": true,
+  "independent_model": {
+    "base_arm": {
+      "range": [
+        {
+          "hours": 184.15747846093353,
+          "kgy_units": 7
+        },
+        {
+          "hours": 208.66249110156042,
+          "kgy_units": 7
+        }
+      ],
+      "overflow_first_kgy_h": 48.988028694223225,
+      "overflow_first_gabia_h": 60.39489094571421,
+      "post_all_h": 136.0512627986348
+    },
+    "base_solve": {
+      "range": [
+        {
+          "hours": 153.2104866141379,
+          "kgy_units": 7
+        },
+        {
+          "hours": 177.71549925476486,
+          "kgy_units": 7
+        }
+      ],
+      "overflow_first_kgy_h": 35.15989539881178,
+      "overflow_first_gabia_h": 46.56675765030276,
+      "post_all_h": 47.97
+    },
+    "double_r": {
+      "range": [
+        {
+          "hours": 329.1353542035704,
+          "kgy_units": 7
+        },
+        {
+          "hours": 378.14537948482416,
+          "kgy_units": 7
+        }
+      ],
+      "overflow_first_kgy_h": 97.97605738844645,
+      "overflow_first_gabia_h": 120.78978189142842,
+      "post_all_h": 269.7025255972696
+    },
+    "double_m": {
+      "range": [
+        {
+          "hours": 301.200367426228,
+          "kgy_units": 7
+        },
+        {
+          "hours": 347.5927988508267,
+          "kgy_units": 7
+        }
+      ],
+      "overflow_first_kgy_h": 74.00222159019086,
+      "overflow_first_gabia_h": 96.81594609317283,
+      "post_all_h": 136.0512627986348
+    },
+    "double_r_and_m": {
+      "range": [
+        {
+          "hours": 533.7279183047515,
+          "kgy_units": 7
+        },
+        {
+          "hours": 626.5127811539488,
+          "kgy_units": 7
+        }
+      ],
+      "overflow_first_kgy_h": 148.0044431803817,
+      "overflow_first_gabia_h": 193.63189218634565,
+      "post_all_h": 269.7025255972696
+    }
+  },
+  "maxiter_table_independent": [
+    {
+      "cap": 3000000,
+      "one_kgy_h": 8.735628047573636,
+      "one_gabia_h": 12.719210737343206,
+      "main_plus_resolve_kgy_h": 17.85953564458297,
+      "main_plus_resolve_gabia_h": 26.00376255690488,
+      "author_model": {
+        "maxiter": 3000000,
+        "x_sbe_main": 10.8,
+        "one_solve_to_cap_h_kgy": 8.7,
+        "one_solve_to_cap_h_gabia": 12.7,
+        "main_plus_resolve_to_cap_h_kgy": 17.5,
+        "main_plus_resolve_to_cap_h_gabia": 25.4
+      }
+    },
+    {
+      "cap": 4000000,
+      "one_kgy_h": 11.647504063431516,
+      "one_gabia_h": 16.958947649790943,
+      "main_plus_resolve_kgy_h": 23.81271419277729,
+      "main_plus_resolve_gabia_h": 34.6716834092065,
+      "author_model": {
+        "maxiter": 4000000,
+        "x_sbe_main": 14.39,
+        "one_solve_to_cap_h_kgy": 11.6,
+        "one_solve_to_cap_h_gabia": 17.0,
+        "main_plus_resolve_to_cap_h_kgy": 23.3,
+        "main_plus_resolve_to_cap_h_gabia": 33.9
+      }
+    },
+    {
+      "cap": 5000000,
+      "one_kgy_h": 14.559380079289394,
+      "one_gabia_h": 21.198684562238675,
+      "main_plus_resolve_kgy_h": 29.765892740971612,
+      "main_plus_resolve_gabia_h": 43.33960426150813,
+      "author_model": {
+        "maxiter": 5000000,
+        "x_sbe_main": 17.99,
+        "one_solve_to_cap_h_kgy": 14.6,
+        "one_solve_to_cap_h_gabia": 21.2,
+        "main_plus_resolve_to_cap_h_kgy": 29.1,
+        "main_plus_resolve_to_cap_h_gabia": 42.4
+      }
+    },
+    {
+      "cap": 6000000,
+      "one_kgy_h": 17.47125609514727,
+      "one_gabia_h": 25.43842147468641,
+      "main_plus_resolve_kgy_h": 35.71907128916594,
+      "main_plus_resolve_gabia_h": 52.00752511380976,
+      "author_model": {
+        "maxiter": 6000000,
+        "x_sbe_main": 21.59,
+        "one_solve_to_cap_h_kgy": 17.5,
+        "one_solve_to_cap_h_gabia": 25.4,
+        "main_plus_resolve_to_cap_h_kgy": 34.9,
+        "main_plus_resolve_to_cap_h_gabia": 50.9
+      }
+    }
+  ],
+  "cap_to_SBE": 17.993054680893174,
+  "legacy_ratio_interval": [
+    4.338068181818182,
+    8.676136363636363
+  ],
+  "legacy_upper_times2_to_cap_margin": 1.0369278401562536,
+  "hours_112": 112.0,
+  "attempts_remaining_after_four_pre_result_and_one_adopted": 3,
+  "limit": "Independent review only; author internal review counts are not independent verification.",
+  "overflow_operating_formula_vs_time_model": [
+    {
+      "r_model": 2.9328782707622296,
+      "machine": "kgy",
+      "SV_upper_solves": 0,
+      "T_first_s": 9067,
+      "T_hit_s": 4932,
+      "T_DBE_corner_s": 39194.98521046643,
+      "r_defined_by_candidate": 4.322817382868251,
+      "rule_prediction_h": 72.20425890256966,
+      "eight_arm_model_h": 48.988028694223225,
+      "rule_assigns": true,
+      "model_under_112": true
+    },
+    {
+      "r_model": 2.9328782707622296,
+      "machine": "kgy",
+      "SV_upper_solves": 1,
+      "T_first_s": 9067,
+      "T_hit_s": 4932,
+      "T_DBE_corner_s": 51797.56313993173,
+      "r_defined_by_candidate": 5.712756494974273,
+      "rule_prediction_h": 95.42048911091611,
+      "eight_arm_model_h": 48.988028694223225,
+      "rule_assigns": true,
+      "model_under_112": true
+    },
+    {
+      "r_model": 2.9328782707622296,
+      "machine": "gabia",
+      "SV_upper_solves": 0,
+      "T_first_s": 10817.18788346674,
+      "T_hit_s": 6682.187883466741,
+      "T_DBE_corner_s": 49461.161236808315,
+      "r_defined_by_candidate": 4.572460215136504,
+      "rule_prediction_h": 94.15775581269394,
+      "eight_arm_model_h": 60.39489094571421,
+      "rule_assigns": true,
+      "model_under_112": true
+    },
+    {
+      "r_model": 2.9328782707622296,
+      "machine": "gabia",
+      "SV_upper_solves": 1,
+      "T_first_s": 10817.18788346674,
+      "T_hit_s": 6682.187883466741,
+      "T_DBE_corner_s": 67196.82717944455,
+      "r_defined_by_candidate": 6.212042159510777,
+      "rule_prediction_h": 127.92062067967366,
+      "eight_arm_model_h": 60.39489094571421,
+      "rule_assigns": false,
+      "model_under_112": true
+    },
+    {
+      "r_model": 4.0,
+      "machine": "kgy",
+      "SV_upper_solves": 0,
+      "T_first_s": 9067,
+      "T_hit_s": 4932,
+      "T_DBE_corner_s": 53456.0,
+      "r_defined_by_candidate": 5.895665600529393,
+      "rule_prediction_h": 98.47563006262025,
+      "eight_arm_model_h": 66.81222222222222,
+      "rule_assigns": true,
+      "model_under_112": true
+    },
+    {
+      "r_model": 4.0,
+      "machine": "kgy",
+      "SV_upper_solves": 1,
+      "T_first_s": 9067,
+      "T_hit_s": 4932,
+      "T_DBE_corner_s": 70644.0,
+      "r_defined_by_candidate": 7.791331201058784,
+      "rule_prediction_h": 130.13903790301825,
+      "eight_arm_model_h": 66.81222222222222,
+      "rule_assigns": false,
+      "model_under_112": true
+    },
+    {
+      "r_model": 4.0,
+      "machine": "gabia",
+      "SV_upper_solves": 0,
+      "T_first_s": 10817.18788346674,
+      "T_hit_s": 6682.187883466741,
+      "T_DBE_corner_s": 67457.50306773392,
+      "r_defined_by_candidate": 6.236140464088421,
+      "rule_prediction_h": 128.41686169023737,
+      "eight_arm_model_h": 82.3694478530377,
+      "rule_assigns": false,
+      "model_under_112": true
+    },
+    {
+      "r_model": 4.0,
+      "machine": "gabia",
+      "SV_upper_solves": 1,
+      "T_first_s": 10817.18788346674,
+      "T_hit_s": 6682.187883466741,
+      "T_DBE_corner_s": 91646.2546016009,
+      "r_defined_by_candidate": 8.472280928176843,
+      "rule_prediction_h": 174.46427552743708,
+      "eight_arm_model_h": 82.3694478530377,
+      "rule_assigns": false,
+      "model_under_112": true
+    }
+  ],
+  "RCA11_scalar_synthetic_only": {
+    "distance_um": 0.18,
+    "fibre_radius_um": 0.075,
+    "recomputed_from_spacing": [
+      {
+        "spacing_um": 0.1,
+        "u": 0.05,
+        "contact": true
+      },
+      {
+        "spacing_um": 0.02,
+        "u": 0.01,
+        "contact": false
+      }
+    ],
+    "fixed_tol_contact": true,
+    "interpretation": "Fixed registered input and tolerance remove this R re-selection freedom; they do not prove physical sampling invariance."
+  }
+}

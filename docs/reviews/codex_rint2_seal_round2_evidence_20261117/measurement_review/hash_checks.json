@@ -1,0 +1,282 @@
+[
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "probe6_report.json",
+    "expected": "ae5030bf0b6e6c09052f6d5e7153925401911449ad41da348b9509636fea77da",
+    "actual": "ae5030bf0b6e6c09052f6d5e7153925401911449ad41da348b9509636fea77da",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "probe6_screen.txt",
+    "expected": "17e09a852576880920d7e036e2086767a01b67fc7ab1e38e1aac4884c15f9e7e",
+    "actual": "17e09a852576880920d7e036e2086767a01b67fc7ab1e38e1aac4884c15f9e7e",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "runner_filtered.log",
+    "expected": "de268a469f3e414a59b16a69c7f2adca3162bebca787f117246e977685f4b519",
+    "actual": "de268a469f3e414a59b16a69c7f2adca3162bebca787f117246e977685f4b519",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "env.txt",
+    "expected": "ae7dde05718b6870cb0fa129ad892ff8404d91b83a9fe4de34223e7a811ae5d8",
+    "actual": "ae7dde05718b6870cb0fa129ad892ff8404d91b83a9fe4de34223e7a811ae5d8",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "meta.txt",
+    "expected": "1b8a0c6eec993808abf1af60165cff1e84c57be00db66c4eae0f5248f6103095",
+    "actual": "1b8a0c6eec993808abf1af60165cff1e84c57be00db66c4eae0f5248f6103095",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "command.txt",
+    "expected": "11dc8499e81760f3f1537d2888f8bfd7fac6c3b4034e72054e1b32e49e6b88a7",
+    "actual": "11dc8499e81760f3f1537d2888f8bfd7fac6c3b4034e72054e1b32e49e6b88a7",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "samples.tsv",
+    "expected": "e0bb8107c9b77d89944b02db9d06716291e53eeedbb51e9c047343292ab55e0b",
+    "actual": "e0bb8107c9b77d89944b02db9d06716291e53eeedbb51e9c047343292ab55e0b",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "status.log",
+    "expected": "8286c8256f435aa4b5c733d6fd1c8745d7bea5c3f799c03385b3bdb8244303e5",
+    "actual": "8286c8256f435aa4b5c733d6fd1c8745d7bea5c3f799c03385b3bdb8244303e5",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "probe6_reader.err",
+    "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "time_v.txt",
+    "expected": "81efe3e2aeedebae7107261897523346ec43d0d82fecf0e6e81711b1ce05c685",
+    "actual": "81efe3e2aeedebae7107261897523346ec43d0d82fecf0e6e81711b1ce05c685",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a3_20261116",
+    "path": "arm_time_v.txt",
+    "expected": "3c8324db621832279d9fc1cca96355a607e000626332c4c294290fee49e62fd6",
+    "actual": "3c8324db621832279d9fc1cca96355a607e000626332c4c294290fee49e62fd6",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "probe6_report.json",
+    "expected": "8c08a29c943454fe99847339bf3927a79f619f2c2f83dffd73b3c6d6fb531a40",
+    "actual": "8c08a29c943454fe99847339bf3927a79f619f2c2f83dffd73b3c6d6fb531a40",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "probe6_screen.txt",
+    "expected": "f003ad4446e7a2b133cd659bdaf166315b117be4c95b8c62296c637a98955684",
+    "actual": "f003ad4446e7a2b133cd659bdaf166315b117be4c95b8c62296c637a98955684",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "runner_filtered.log",
+    "expected": "5465a03f01c11021520d5a1fbe7404784b6304ae4f847a373f5aa83fb5a2eb2c",
+    "actual": "5465a03f01c11021520d5a1fbe7404784b6304ae4f847a373f5aa83fb5a2eb2c",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "env.txt",
+    "expected": "ae7dde05718b6870cb0fa129ad892ff8404d91b83a9fe4de34223e7a811ae5d8",
+    "actual": "ae7dde05718b6870cb0fa129ad892ff8404d91b83a9fe4de34223e7a811ae5d8",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "meta.txt",
+    "expected": "e7fe9aad4d0c311107d784bc8232b04184e5ffe19483b7bf69cc7b32c516ce3d",
+    "actual": "e7fe9aad4d0c311107d784bc8232b04184e5ffe19483b7bf69cc7b32c516ce3d",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "command.txt",
+    "expected": "3aa7e8fb28422e07d2f58507996af834aecf73c27b52c28ff52eef86340f096f",
+    "actual": "3aa7e8fb28422e07d2f58507996af834aecf73c27b52c28ff52eef86340f096f",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "samples.tsv",
+    "expected": "bd199f0ab6b1211a9992a591453a29d63174e02fc730281f8551ebd0f160587c",
+    "actual": "bd199f0ab6b1211a9992a591453a29d63174e02fc730281f8551ebd0f160587c",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "status.log",
+    "expected": "6dcc21e74daaed46bff28d29eacc50742676f867f7497995fb7bd56cc8f7f88c",
+    "actual": "6dcc21e74daaed46bff28d29eacc50742676f867f7497995fb7bd56cc8f7f88c",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "probe6_reader.err",
+    "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "time_v.txt",
+    "expected": "a32bbc1c6857a8253b0ec77088416ec5f19f9aad044bb25b1602c49653c9be17",
+    "actual": "a32bbc1c6857a8253b0ec77088416ec5f19f9aad044bb25b1602c49653c9be17",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_probe6_a4_20261116",
+    "path": "arm_time_v.txt",
+    "expected": "9e22b4ea847a7773f4e5cc56d154469eb76fc377f1a6b62a631315afe86f5c9e",
+    "actual": "9e22b4ea847a7773f4e5cc56d154469eb76fc377f1a6b62a631315afe86f5c9e",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "ADOPTION_CHECK.md",
+    "expected": "b3e10ddb54dd09c705a04888c5cddac1b0842d90210e526b3d04bbf9c6a515ac",
+    "actual": "b3e10ddb54dd09c705a04888c5cddac1b0842d90210e526b3d04bbf9c6a515ac",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "MANIFEST.tsv",
+    "expected": "d49d2e87c7a135875fb8a8687d372053cf4d37a5846e5700b1b83335a0742b2b",
+    "actual": "d49d2e87c7a135875fb8a8687d372053cf4d37a5846e5700b1b83335a0742b2b",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "NPZ_SHA256.txt",
+    "expected": "1aa5c8328d869164a94b7e8318b1b1f81817693e95f98e11a94188f7845fc515",
+    "actual": "1aa5c8328d869164a94b7e8318b1b1f81817693e95f98e11a94188f7845fc515",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "README.md",
+    "expected": "880526fdc928fba2f129db00023a09bb9a12fa326eda57ebce1b395411b0b897",
+    "actual": "880526fdc928fba2f129db00023a09bb9a12fa326eda57ebce1b395411b0b897",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/ca1_s0_sbe_20261116T004809Z_q14final/cjunc_plan.json",
+    "expected": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520",
+    "actual": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/ca1_s0_sbe_20261116T004809Z_q14final/cjunc_plan.sha256",
+    "expected": "7f75b41618633e986e9da317793f160cbed521db6d25c7da61fc3c088fe2d51c",
+    "actual": "7f75b41618633e986e9da317793f160cbed521db6d25c7da61fc3c088fe2d51c",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/ca1_s0_sbe_20261116T004809Z_q14final/payload_capture_kit_SBE_vgcf100.log",
+    "expected": "bc3e425f3a871ba9ce5c4c814013828798b1a0895d9a93bbd26b97bd82f1c96f",
+    "actual": "bc3e425f3a871ba9ce5c4c814013828798b1a0895d9a93bbd26b97bd82f1c96f",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/ca1_s0_sbe_20261116T004809Z_q14final/s0_stage1_kit_SBE_vgcf100.json",
+    "expected": "9c9afe513434f3c9175a00a9c3ef480148c57b4ee841d67f20d4c2b6c49a7d9e",
+    "actual": "9c9afe513434f3c9175a00a9c3ef480148c57b4ee841d67f20d4c2b6c49a7d9e",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/s0log_20261116T004809Z/meta.txt",
+    "expected": "09f1dc70e39090bb7a9d8a42e54458b27e4529f78dcd51f19f6602edeef8702f",
+    "actual": "09f1dc70e39090bb7a9d8a42e54458b27e4529f78dcd51f19f6602edeef8702f",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/s0log_20261116T004809Z/out_sha256.txt",
+    "expected": "bf60bf63c8a660ee687b346767f94034d1a87d1df9cf22c6a7fdecb55ffc94b5",
+    "actual": "bf60bf63c8a660ee687b346767f94034d1a87d1df9cf22c6a7fdecb55ffc94b5",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/s0log_20261116T004809Z/rss.log",
+    "expected": "447c76efdd3e395020bffbc4c515f8fcfa020c485ccefa9f6d149d81a960c3a1",
+    "actual": "447c76efdd3e395020bffbc4c515f8fcfa020c485ccefa9f6d149d81a960c3a1",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/s0log_20261116T004809Z/run.log",
+    "expected": "c34ea4b7a8a507ee9d03a8f59fac97d1c917d45dfcfcba641666537ef3506685",
+    "actual": "c34ea4b7a8a507ee9d03a8f59fac97d1c917d45dfcfcba641666537ef3506685",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_s0_sbe_20261116",
+    "path": "files/s0log_20261116T004809Z/store_probe.json",
+    "expected": "acb571be255dca884c2ab74f50d6130f76037f033d8e11fc9109011604d07b32",
+    "actual": "acb571be255dca884c2ab74f50d6130f76037f033d8e11fc9109011604d07b32",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_q11_gpu_check_kgy_20261116",
+    "path": "README.md",
+    "expected": "abd391b813b4313d39054e52c01029b603675ea155d4a29f83ca071c9e040e30",
+    "actual": "abd391b813b4313d39054e52c01029b603675ea155d4a29f83ca071c9e040e30",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_q11_gpu_check_kgy_20261116",
+    "path": "ORIGINAL_SHA256.txt",
+    "expected": "28c2ca53543be884ace51cfe0041cb7f242e09f9aeada6cb3c2fdd48bb8d2b61",
+    "actual": "28c2ca53543be884ace51cfe0041cb7f242e09f9aeada6cb3c2fdd48bb8d2b61",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_q11_gpu_check_kgy_20261116",
+    "path": "check.log",
+    "expected": "d8a136a235fc9e049e74bae8cb90b0329b295c8bd5deb217a7fd7b5ee6861876",
+    "actual": "d8a136a235fc9e049e74bae8cb90b0329b295c8bd5deb217a7fd7b5ee6861876",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_q11_gpu_check_kgy_20261116",
+    "path": "meta.txt",
+    "expected": "70c49c588cdb2fccc5618451c5a44f3f2ac02e2d1e12247b553557ffaea4200d",
+    "actual": "70c49c588cdb2fccc5618451c5a44f3f2ac02e2d1e12247b553557ffaea4200d",
+    "ok": true
+  },
+  {
+    "dataset": "rint2_q11_gpu_check_kgy_20261116",
+    "path": "result.json",
+    "expected": "6aac3e426d0ef71692267205b2bfde053d7a4617787fe8448e17526515dc3f24",
+    "actual": "6aac3e426d0ef71692267205b2bfde053d7a4617787fe8448e17526515dc3f24",
+    "ok": true
+  }
+]

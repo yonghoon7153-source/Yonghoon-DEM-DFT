@@ -1,0 +1,15 @@
+{
+  "input": {
+    "pin": "f40d005acce19b6c363e5c10c8668ec081b56f2e",
+    "manifest_rows": 371,
+    "files": 373,
+    "input_bytes": "PASS",
+    "zip_sha256": "7da8e749ed0954d5777bffd0d16f86ce490e2b15ed371077f3174a88e1503f88",
+    "crc": "PASS",
+    "original_vs_extracted": "ALL_BYTES_SAME"
+  },
+  "candidate_tracked_diff": "EMPTY",
+  "candidate_untracked": "EMPTY",
+  "remote_repo_blobs": "84/84",
+  "note": "No operational repository, ledger, or seal written."
+}

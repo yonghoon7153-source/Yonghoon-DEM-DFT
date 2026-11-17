@@ -1,0 +1,10 @@
+{
+  "script": "cd ~/sdcp && umask 022\nT=20261117T000001Z; FROM=A; TO=B; BR=main; RB=~/sdcp/ca1_relay/${T}_${FROM}_to_${TO}.bundle\nsha256sum \"$RB\"                                                     # = 넘김 기록\ngit bundle list-heads \"$RB\" | grep \"refs/heads/$BR\"                 # 커밋 = 넘김 기록의 원장 끝 커밋\nif [ -d ca1_ledger.parked ]; then git -C ca1_ledger.parked -c pull.rebase=false pull -q --ff-only \"$RB\" \"$BR\" && mv ca1_ledger.parked ca1_ledger; else git clone -q -b \"$BR\" \"$RB\" ca1_ledger; fi\ntest \"$(git -C ca1_ledger rev-parse HEAD)\" = ff6f163c2ef23c63d630e667888b8cf95f0581d6 && echo RECV_OK   # RECV_OK 가 없으면 멈추고 1저자 (사슬을 띄우지 않는다)",
+  "result": {
+    "rc": 0,
+    "recv_ok": true,
+    "command_rc": 0,
+    "stderr": "",
+    "method": "native Git; document control-flow translation; no Bash or flock"
+  }
+}

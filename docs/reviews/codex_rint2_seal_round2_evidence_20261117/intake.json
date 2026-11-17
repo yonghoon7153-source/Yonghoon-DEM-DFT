@@ -1,0 +1,15 @@
+{
+  "source_zip": "<WINHOME>\\Downloads\\codex_rint2_seal_round2_f40d005ac_20261117.zip",
+  "sha256": "7da8e749ed0954d5777bffd0d16f86ce490e2b15ed371077f3174a88e1503f88",
+  "bytes": 13280385,
+  "files": 373,
+  "manifest_entries": 371,
+  "unlisted": [
+    "PIN.txt",
+    "ZIP_MANIFEST.tsv"
+  ],
+  "crc": "PASS",
+  "path_safety": "PASS",
+  "manifest_bytes_hash_blob": "PASS",
+  "remote_commit_tree_verified": false
+}

@@ -1,0 +1,21 @@
+{"case": "source_pin", "expected": "exact supplied blob", "actual": "4c52a8f9c2740ccc3874d0fcb7f9acb97a477829", "passed": true, "kind": "provenance"}
+{"case": "same_boot_parent_False", "expected": "allow only confirmed dead; operator cannot bypass live/unknown", "actual": {"held": false, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+{"case": "same_boot_parent_True", "expected": "allow only confirmed dead; operator cannot bypass live/unknown", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+{"case": "same_boot_parent_None", "expected": "allow only confirmed dead; operator cannot bypass live/unknown", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+{"case": "reboot_unconfirmed", "expected": "hold without operator; allow only after scoped operator confirmation", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+Traceback (most recent call last):
+  File "<WINHOME>\Documents\Codex\rint2_seal_round2_review_20261117\resume_review\review_resume.py", line 144, in <module>
+    append('A','synthetic header')
+  File "<WINHOME>\Documents\Codex\rint2_seal_round2_review_20261117\resume_review\review_resume.py", line 125, in append
+    git(led(x),'add','rint_r_attempts.jsonl')
+  File "<WINHOME>\Documents\Codex\rint2_seal_round2_review_20261117\resume_review\review_resume.py", line 41, in git
+{"case": "reboot_confirmed", "expected": "hold without operator; allow only after scoped operator confirmation", "actual": {"held": false, "operator_used": true}, "passed": true, "kind": "exact_guard"}
+{"case": "different_machine", "expected": "hold", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+{"case": "moved_attempt_guard", "expected": "one rejection and no ledger append", "actual": {"bad": 1, "operator_used": 0, "append_calls": 0, "diagnostic": "recover attempt_1: 시작 기록의 바탕 <WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\resume_review\\work_1794911814800198800\\original ≠ 이 폴더의 바탕 <WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\resume_review\\work_1794911814800198800\\moved — 다른 바탕 · 다른 기계 · 사본 · 손 고침의 시도 폴더: 결과 줄 · 원장 무변경 (사람이 본다 · ★ 11-02 PC7-01)"}, "passed": true, "kind": "exact_guard"}
+{"case": "moved_digest", "expected": "same bytes keep same evidence digest; recovery still rejects new base", "actual": {"original": "a57c9b08df18a8d9fc96f136c49ee2e08931af2ede16eddbc0595b54e906c002", "moved": "a57c9b08df18a8d9fc96f136c49ee2e08931af2ede16eddbc0595b54e906c002"}, "passed": true, "kind": "exact_guard"}
+{"case": "twelve_units", "expected": "all 12 units exactly once", "actual": {"count": 12, "unique": 12, "missing": []}, "passed": true, "kind": "document"}
+    return subprocess.run(['git', '-c', 'core.autocrlf=false', '-c', 'user.name=synthetic-review',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\dependencies\python\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', '-c', 'core.autocrlf=false', '-c', 'user.name=synthetic-review', '-c', 'user.email=review@example.invalid', '-C', '<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\resume_review\\work_1794911814800198800\\A\\sdcp\\ca1_ledger', 'add', 'rint_r_attempts.jsonl']' returned non-zero exit status 128.

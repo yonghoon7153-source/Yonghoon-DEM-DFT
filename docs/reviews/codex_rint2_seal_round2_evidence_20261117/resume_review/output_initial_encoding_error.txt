@@ -1,0 +1,13 @@
+{"case": "source_pin", "expected": "exact supplied blob", "actual": "4c52a8f9c2740ccc3874d0fcb7f9acb97a477829", "passed": true, "kind": "provenance"}
+{"case": "same_boot_parent_False", "expected": "allow only confirmed dead; operator cannot bypass live/unknown", "actual": {"held": false, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+{"case": "same_boot_parent_True", "expected": "allow only confirmed dead; operator cannot bypass live/unknown", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+{"case": "same_boot_parent_None", "expected": "allow only confirmed dead; operator cannot bypass live/unknown", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+{"case": "reboot_unconfirmed", "expected": "hold without operator; allow only after scoped operator confirmation", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+Traceback (most recent call last):
+{"case": "reboot_confirmed", "expected": "hold without operator; allow only after scoped operator confirmation", "actual": {"held": false, "operator_used": true}, "passed": true, "kind": "exact_guard"}
+{"case": "different_machine", "expected": "hold", "actual": {"held": true, "operator_used": false}, "passed": true, "kind": "exact_guard"}
+  File "<WINHOME>\Documents\Codex\rint2_seal_round2_review_20261117\resume_review\review_resume.py", line 90, in <module>
+    record('moved_attempt_guard', 'one rejection and no ledger append',
+  File "<WINHOME>\Documents\Codex\rint2_seal_round2_review_20261117\resume_review\review_resume.py", line 36, in record
+    print(json.dumps(row, ensure_ascii=False))
+UnicodeEncodeError: 'cp949' codec can't encode character '\u2014' in position 412: illegal multibyte sequence

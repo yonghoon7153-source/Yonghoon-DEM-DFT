@@ -1,0 +1,410 @@
+{
+  "baseline_commit": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787",
+  "extracted_raw_blobs": [
+    {
+      "source": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787:docs/data/rint2_s0_sbe_20261113/SHA256SUMS",
+      "bytes": 1377,
+      "sha256": "28e5ddb31213e60619e8d08f1ac01fbcb8b8a7119b1a9548864fa9519b5b43c0",
+      "git_blob": "fbbb7fd700f111c426c4a68b94e3cdb729f5345c"
+    },
+    {
+      "source": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787:docs/data/rint2_s0_sbe_20261113/NPZ_SHA256.txt",
+      "bytes": 286,
+      "sha256": "f3ad18e4216074b500add456cc934e65e419cc09ae5a5ce1d9e87dab887d6a6b",
+      "git_blob": "65727cd5585b0e27553e6459518076ec68e34017"
+    },
+    {
+      "source": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787:docs/data/rint2_s0_sbe_20261113/MANIFEST.tsv",
+      "bytes": 1847,
+      "sha256": "a0f58bfe16b4e8715e150d4ad1cdf7282ee277a6b843bdfb9e86943b13c4042b",
+      "git_blob": "f0616029069096946768f4ad3232f152b191e610"
+    },
+    {
+      "source": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787:docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/cjunc_plan.json",
+      "bytes": 1485,
+      "sha256": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+      "git_blob": "5e9d16a200a6a2696e5035d3830d77d8f52bd804"
+    },
+    {
+      "source": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787:docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/cjunc_plan.sha256",
+      "bytes": 82,
+      "sha256": "4923e88eeb92d63caedf8cf06de927816a281b6dafbb217761fa941bdcb1fadc",
+      "git_blob": "29637a4d06f37663d6e4cd62460f131aa52c9645"
+    },
+    {
+      "source": "6bf70fe4a1471410d2a5de6ed4d2606827f4d787:docs/data/rint2_s0_sbe_20261113/files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json",
+      "bytes": 6286644,
+      "sha256": "6c80bbe64ff1ddc48a11410237cc73bdad833e8d2fa9365ea5a8383645a7f230",
+      "git_blob": "097a00aaf5c3e7df742a5c7b7b90f0035ef781f6"
+    }
+  ],
+  "baseline_SHA256SUMS_checks": [
+    {
+      "path": "MANIFEST.tsv",
+      "expected": "a0f58bfe16b4e8715e150d4ad1cdf7282ee277a6b843bdfb9e86943b13c4042b",
+      "actual": "a0f58bfe16b4e8715e150d4ad1cdf7282ee277a6b843bdfb9e86943b13c4042b",
+      "ok": true
+    },
+    {
+      "path": "NPZ_SHA256.txt",
+      "expected": "f3ad18e4216074b500add456cc934e65e419cc09ae5a5ce1d9e87dab887d6a6b",
+      "actual": "f3ad18e4216074b500add456cc934e65e419cc09ae5a5ce1d9e87dab887d6a6b",
+      "ok": true
+    },
+    {
+      "path": "files/ca1_s0_sbe_20261113T014726Z_q2q11/cjunc_plan.json",
+      "expected": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+      "actual": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+      "ok": true
+    },
+    {
+      "path": "files/ca1_s0_sbe_20261113T014726Z_q2q11/cjunc_plan.sha256",
+      "expected": "4923e88eeb92d63caedf8cf06de927816a281b6dafbb217761fa941bdcb1fadc",
+      "actual": "4923e88eeb92d63caedf8cf06de927816a281b6dafbb217761fa941bdcb1fadc",
+      "ok": true
+    },
+    {
+      "path": "files/ca1_s0_sbe_20261113T014726Z_q2q11/s0_stage1_kit_SBE_vgcf100.json",
+      "expected": "6c80bbe64ff1ddc48a11410237cc73bdad833e8d2fa9365ea5a8383645a7f230",
+      "actual": "6c80bbe64ff1ddc48a11410237cc73bdad833e8d2fa9365ea5a8383645a7f230",
+      "ok": true
+    }
+  ],
+  "comparisons": {
+    "atomic": {
+      "old_fields": 469,
+      "new_fields": 469,
+      "difference_count": 6,
+      "differences": [
+        {
+          "field": "code.file_digests",
+          "old": [
+            {
+              "file": "ca_s0_census.py",
+              "sha256": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b"
+            },
+            {
+              "file": "step3_sigma.py",
+              "sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a"
+            },
+            {
+              "file": "mpm_webapp_payload.py",
+              "sha256": "9bad445b8322e8b080429d9af6e38cf185b01e740e68b9e5846b4b2290ed6885"
+            },
+            {
+              "file": "fibre_segment_raster.py",
+              "sha256": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+            },
+            {
+              "file": "sr01_stamp_compare.py",
+              "sha256": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66"
+            },
+            {
+              "file": "carbon_junction.py",
+              "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb"
+            },
+            {
+              "file": "ptfe_face_alpha.py",
+              "sha256": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e"
+            }
+          ],
+          "new": [
+            {
+              "file": "ca_s0_census.py",
+              "sha256": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+            },
+            {
+              "file": "step3_sigma.py",
+              "sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a"
+            },
+            {
+              "file": "mpm_webapp_payload.py",
+              "sha256": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+            },
+            {
+              "file": "fibre_segment_raster.py",
+              "sha256": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+            },
+            {
+              "file": "sr01_stamp_compare.py",
+              "sha256": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66"
+            },
+            {
+              "file": "carbon_junction.py",
+              "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb"
+            },
+            {
+              "file": "ptfe_face_alpha.py",
+              "sha256": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e"
+            }
+          ]
+        },
+        {
+          "field": "code.git_head",
+          "old": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+          "new": "64e4d213e8267bafaf3ae5af00a42996cefd3f33"
+        },
+        {
+          "field": "code.tool_sha256",
+          "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "field": "elapsed_s",
+          "old": 5575.0,
+          "new": 5562.2
+        },
+        {
+          "field": "inputs.payload_argv_sha256",
+          "old": "2f50b0239d52259253a1bd918f28d91b2d02db3d14587169e127d7d50bec8b61",
+          "new": "d3fe16209d7dac6f40a0b29bc1ab69a418d5209563a7d70f01d7295229255001"
+        },
+        {
+          "field": "plan.sha256",
+          "old": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+          "new": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520"
+        }
+      ]
+    },
+    "objects": {
+      "old_fields": 242641,
+      "new_fields": 242641,
+      "difference_count": 7,
+      "differences": [
+        {
+          "field": "code.file_digests[0].sha256",
+          "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "field": "code.file_digests[2].sha256",
+          "old": "9bad445b8322e8b080429d9af6e38cf185b01e740e68b9e5846b4b2290ed6885",
+          "new": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+        },
+        {
+          "field": "code.git_head",
+          "old": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+          "new": "64e4d213e8267bafaf3ae5af00a42996cefd3f33"
+        },
+        {
+          "field": "code.tool_sha256",
+          "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "field": "elapsed_s",
+          "old": 5575.0,
+          "new": 5562.2
+        },
+        {
+          "field": "inputs.payload_argv_sha256",
+          "old": "2f50b0239d52259253a1bd918f28d91b2d02db3d14587169e127d7d50bec8b61",
+          "new": "d3fe16209d7dac6f40a0b29bc1ab69a418d5209563a7d70f01d7295229255001"
+        },
+        {
+          "field": "plan.sha256",
+          "old": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+          "new": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520"
+        }
+      ]
+    },
+    "all": {
+      "old_fields": 242667,
+      "new_fields": 242667,
+      "difference_count": 7,
+      "differences": [
+        {
+          "field": "code.file_digests[0].sha256",
+          "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "field": "code.file_digests[2].sha256",
+          "old": "9bad445b8322e8b080429d9af6e38cf185b01e740e68b9e5846b4b2290ed6885",
+          "new": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+        },
+        {
+          "field": "code.git_head",
+          "old": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+          "new": "64e4d213e8267bafaf3ae5af00a42996cefd3f33"
+        },
+        {
+          "field": "code.tool_sha256",
+          "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "field": "elapsed_s",
+          "old": 5575.0,
+          "new": 5562.2
+        },
+        {
+          "field": "inputs.payload_argv_sha256",
+          "old": "2f50b0239d52259253a1bd918f28d91b2d02db3d14587169e127d7d50bec8b61",
+          "new": "d3fe16209d7dac6f40a0b29bc1ab69a418d5209563a7d70f01d7295229255001"
+        },
+        {
+          "field": "plan.sha256",
+          "old": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+          "new": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520"
+        }
+      ]
+    },
+    "metadata": {
+      "old_fields": 508,
+      "new_fields": 508,
+      "difference_count": 7,
+      "differences": [
+        {
+          "field": "code.file_digests[0].sha256",
+          "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "field": "code.file_digests[2].sha256",
+          "old": "9bad445b8322e8b080429d9af6e38cf185b01e740e68b9e5846b4b2290ed6885",
+          "new": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+        },
+        {
+          "field": "code.git_head",
+          "old": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+          "new": "64e4d213e8267bafaf3ae5af00a42996cefd3f33"
+        },
+        {
+          "field": "code.tool_sha256",
+          "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "field": "elapsed_s",
+          "old": 5575.0,
+          "new": 5562.2
+        },
+        {
+          "field": "inputs.payload_argv_sha256",
+          "old": "2f50b0239d52259253a1bd918f28d91b2d02db3d14587169e127d7d50bec8b61",
+          "new": "d3fe16209d7dac6f40a0b29bc1ab69a418d5209563a7d70f01d7295229255001"
+        },
+        {
+          "field": "plan.sha256",
+          "old": "80a6c0b20d1a19b3809a11ae58494cd0f34b76566b2c49271dbdabab208e2f89",
+          "new": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520"
+        }
+      ]
+    }
+  },
+  "plan_differences": [
+    {
+      "field": "source.tool_sha256",
+      "old": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+      "new": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+    }
+  ],
+  "NPZ_hash_records_equal": true,
+  "NPZ_hash_records": {
+    "s0_junctions_kit_SBE_vgcf100.npz": "a1d435792c60e75919cf69836b09121dec7187158b277ec85826f9104191ec6e",
+    "s0_instances_kit_SBE_vgcf100.npz": "7fc40335a233c159da36df8bb9acc790dcfdb47ed035cb7771877234894e97bb"
+  },
+  "NPZ_bytes_opened": false,
+  "old_new_code_attribution": [
+    {
+      "which": "old",
+      "code_pin": "56f4cfbb1d26371007b460a992d4cfc1ef68e950",
+      "file_digests": [
+        {
+          "file": "ca_s0_census.py",
+          "ok": true,
+          "actual": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b",
+          "record": "4c2de9782fba0c1dd7bdf98999cc18472e0192ec77a4dd555ba0b1076999c36b"
+        },
+        {
+          "file": "step3_sigma.py",
+          "ok": true,
+          "actual": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+          "record": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a"
+        },
+        {
+          "file": "mpm_webapp_payload.py",
+          "ok": true,
+          "actual": "9bad445b8322e8b080429d9af6e38cf185b01e740e68b9e5846b4b2290ed6885",
+          "record": "9bad445b8322e8b080429d9af6e38cf185b01e740e68b9e5846b4b2290ed6885"
+        },
+        {
+          "file": "fibre_segment_raster.py",
+          "ok": true,
+          "actual": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0",
+          "record": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+        },
+        {
+          "file": "sr01_stamp_compare.py",
+          "ok": true,
+          "actual": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66",
+          "record": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66"
+        },
+        {
+          "file": "carbon_junction.py",
+          "ok": true,
+          "actual": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+          "record": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb"
+        },
+        {
+          "file": "ptfe_face_alpha.py",
+          "ok": true,
+          "actual": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e",
+          "record": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e"
+        }
+      ],
+      "tool_sha_matches_census": true
+    },
+    {
+      "which": "new",
+      "code_pin": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+      "file_digests": [
+        {
+          "file": "ca_s0_census.py",
+          "ok": true,
+          "actual": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163",
+          "record": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+        },
+        {
+          "file": "step3_sigma.py",
+          "ok": true,
+          "actual": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+          "record": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a"
+        },
+        {
+          "file": "mpm_webapp_payload.py",
+          "ok": true,
+          "actual": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a",
+          "record": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+        },
+        {
+          "file": "fibre_segment_raster.py",
+          "ok": true,
+          "actual": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0",
+          "record": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+        },
+        {
+          "file": "sr01_stamp_compare.py",
+          "ok": true,
+          "actual": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66",
+          "record": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66"
+        },
+        {
+          "file": "carbon_junction.py",
+          "ok": true,
+          "actual": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+          "record": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb"
+        },
+        {
+          "file": "ptfe_face_alpha.py",
+          "ok": true,
+          "actual": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e",
+          "record": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e"
+        }
+      ],
+      "tool_sha_matches_census": true
+    }
+  ],
+  "settings_and_input_fields_unchanged_except_argv": true
+}

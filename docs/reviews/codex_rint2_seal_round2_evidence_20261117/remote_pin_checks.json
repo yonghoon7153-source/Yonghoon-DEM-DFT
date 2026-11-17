@@ -1,0 +1,682 @@
+{
+  "review_pin": "f40d005acce19b6c363e5c10c8668ec081b56f2e",
+  "tree": "24dedb9662dbb6e06fa0ecfffda348a955fa4fda",
+  "method": "GitHub GET commit and non-truncated subtree metadata; no repository writes",
+  "repo_entries": [
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/README.md",
+      "expected_blob": "6c02c553869ce0cf457cc3dd00c981552e4669c9",
+      "remote_blob": "6c02c553869ce0cf457cc3dd00c981552e4669c9",
+      "expected_bytes": 2269,
+      "remote_bytes": 2269,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/SHA256SUMS",
+      "expected_blob": "793691c58e73df188799d0120cf8f21c2f9c883a",
+      "remote_blob": "793691c58e73df188799d0120cf8f21c2f9c883a",
+      "expected_bytes": 879,
+      "remote_bytes": 879,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/arm_time_v.txt",
+      "expected_blob": "e9bac5bc40ea959a8ebb04fcf179777d328a0257",
+      "remote_blob": "e9bac5bc40ea959a8ebb04fcf179777d328a0257",
+      "expected_bytes": 116,
+      "remote_bytes": 116,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/command.txt",
+      "expected_blob": "839f4d7bc3e4f378a6b601f106ca351844570f74",
+      "remote_blob": "839f4d7bc3e4f378a6b601f106ca351844570f74",
+      "expected_bytes": 595,
+      "remote_bytes": 595,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/env.txt",
+      "expected_blob": "a5ba081994f84a18e6ab5b391a25273e41bbf459",
+      "remote_blob": "a5ba081994f84a18e6ab5b391a25273e41bbf459",
+      "expected_bytes": 395,
+      "remote_bytes": 395,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/meta.txt",
+      "expected_blob": "ce69cbb7bbcb922c6f22b33e8c2477523d2d49e4",
+      "remote_blob": "ce69cbb7bbcb922c6f22b33e8c2477523d2d49e4",
+      "expected_bytes": 1591,
+      "remote_bytes": 1591,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/probe6_reader.err",
+      "expected_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "expected_bytes": 0,
+      "remote_bytes": 0,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/probe6_report.json",
+      "expected_blob": "2ee5b731b2c5469d5af2d16c00871eff6cc03444",
+      "remote_blob": "2ee5b731b2c5469d5af2d16c00871eff6cc03444",
+      "expected_bytes": 9237,
+      "remote_bytes": 9237,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/probe6_screen.txt",
+      "expected_blob": "de51e720d28ed28445701be44e837ddb6b18ad2b",
+      "remote_blob": "de51e720d28ed28445701be44e837ddb6b18ad2b",
+      "expected_bytes": 10041,
+      "remote_bytes": 10041,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/runner_filtered.log",
+      "expected_blob": "c241953fbf553efca800fa1bad3d74f0ce2fb616",
+      "remote_blob": "c241953fbf553efca800fa1bad3d74f0ce2fb616",
+      "expected_bytes": 893,
+      "remote_bytes": 893,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/samples.tsv",
+      "expected_blob": "2f60d4a0d21c2f1e8eb91d4cd701c0edd2c87893",
+      "remote_blob": "2f60d4a0d21c2f1e8eb91d4cd701c0edd2c87893",
+      "expected_bytes": 43292,
+      "remote_bytes": 43292,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/status.log",
+      "expected_blob": "7017ff7e4de644f416c1ac7ae0f45a93b8c9abf0",
+      "remote_blob": "7017ff7e4de644f416c1ac7ae0f45a93b8c9abf0",
+      "expected_bytes": 2250,
+      "remote_bytes": 2250,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a3_20261116/time_v.txt",
+      "expected_blob": "d93c002628682ea0e868cbe673b5ce0a32457fb1",
+      "remote_blob": "d93c002628682ea0e868cbe673b5ce0a32457fb1",
+      "expected_bytes": 116,
+      "remote_bytes": 116,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/README.md",
+      "expected_blob": "455ef33a90b8e47f89a1b5fdb937f1ac58a76dc6",
+      "remote_blob": "455ef33a90b8e47f89a1b5fdb937f1ac58a76dc6",
+      "expected_bytes": 2308,
+      "remote_bytes": 2308,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/SHA256SUMS",
+      "expected_blob": "638f5453718e6a81595d2c733dfffc6f9267cde4",
+      "remote_blob": "638f5453718e6a81595d2c733dfffc6f9267cde4",
+      "expected_bytes": 879,
+      "remote_bytes": 879,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/arm_time_v.txt",
+      "expected_blob": "713e6d0670eb451cbfb510966e5e814424f9f662",
+      "remote_blob": "713e6d0670eb451cbfb510966e5e814424f9f662",
+      "expected_bytes": 116,
+      "remote_bytes": 116,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/command.txt",
+      "expected_blob": "037093ac5412ac30610822c357960d1ecd664788",
+      "remote_blob": "037093ac5412ac30610822c357960d1ecd664788",
+      "expected_bytes": 595,
+      "remote_bytes": 595,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/env.txt",
+      "expected_blob": "a5ba081994f84a18e6ab5b391a25273e41bbf459",
+      "remote_blob": "a5ba081994f84a18e6ab5b391a25273e41bbf459",
+      "expected_bytes": 395,
+      "remote_bytes": 395,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/meta.txt",
+      "expected_blob": "5345fc45a75e7f7a12f9cf4984107512bd5f269c",
+      "remote_blob": "5345fc45a75e7f7a12f9cf4984107512bd5f269c",
+      "expected_bytes": 1754,
+      "remote_bytes": 1754,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/probe6_reader.err",
+      "expected_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "remote_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "expected_bytes": 0,
+      "remote_bytes": 0,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/probe6_report.json",
+      "expected_blob": "4859770ae56a1e105a7ee3a8a3350ba18993346f",
+      "remote_blob": "4859770ae56a1e105a7ee3a8a3350ba18993346f",
+      "expected_bytes": 9393,
+      "remote_bytes": 9393,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/probe6_screen.txt",
+      "expected_blob": "0696183ca60c90498228ac0df7e9e0899efa6467",
+      "remote_blob": "0696183ca60c90498228ac0df7e9e0899efa6467",
+      "expected_bytes": 10205,
+      "remote_bytes": 10205,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/runner_filtered.log",
+      "expected_blob": "05df89774d6420aeb96271bca1e6a45fb4bff1e7",
+      "remote_blob": "05df89774d6420aeb96271bca1e6a45fb4bff1e7",
+      "expected_bytes": 891,
+      "remote_bytes": 891,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/samples.tsv",
+      "expected_blob": "4315817695cb18a62afb29e1f099928ff903c52c",
+      "remote_blob": "4315817695cb18a62afb29e1f099928ff903c52c",
+      "expected_bytes": 23742,
+      "remote_bytes": 23742,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/status.log",
+      "expected_blob": "0424dfeec847fab51ece11d0b1044fbdc0f3db2d",
+      "remote_blob": "0424dfeec847fab51ece11d0b1044fbdc0f3db2d",
+      "expected_bytes": 1546,
+      "remote_bytes": 1546,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_probe6_a4_20261116/time_v.txt",
+      "expected_blob": "7de42ebd6cb0b5ef04cac777dea0643c03f50c1c",
+      "remote_blob": "7de42ebd6cb0b5ef04cac777dea0643c03f50c1c",
+      "expected_bytes": 116,
+      "remote_bytes": 116,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_q11_gpu_check_kgy_20261116/ORIGINAL_SHA256.txt",
+      "expected_blob": "ad98ebbe28a2809468f479d1d1fe77d5501650c2",
+      "remote_blob": "ad98ebbe28a2809468f479d1d1fe77d5501650c2",
+      "expected_bytes": 4733,
+      "remote_bytes": 4733,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_q11_gpu_check_kgy_20261116/README.md",
+      "expected_blob": "1b630a0c05a55c3223f699fcc19139ad8c1662ec",
+      "remote_blob": "1b630a0c05a55c3223f699fcc19139ad8c1662ec",
+      "expected_bytes": 3372,
+      "remote_bytes": 3372,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_q11_gpu_check_kgy_20261116/SHA256SUMS",
+      "expected_blob": "e8d95f0f5d5074f637e68d3b2c287b35d5da74b8",
+      "remote_blob": "e8d95f0f5d5074f637e68d3b2c287b35d5da74b8",
+      "expected_bytes": 391,
+      "remote_bytes": 391,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_q11_gpu_check_kgy_20261116/check.log",
+      "expected_blob": "69d53625de97fa8c7edfe55343685563504b3782",
+      "remote_blob": "69d53625de97fa8c7edfe55343685563504b3782",
+      "expected_bytes": 1361,
+      "remote_bytes": 1361,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_q11_gpu_check_kgy_20261116/meta.txt",
+      "expected_blob": "a245b53ed4f16049ea4a4d3c5ca5ac17bcb13a98",
+      "remote_blob": "a245b53ed4f16049ea4a4d3c5ca5ac17bcb13a98",
+      "expected_bytes": 225,
+      "remote_bytes": 225,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_q11_gpu_check_kgy_20261116/result.json",
+      "expected_blob": "381b3ad8048b5a0e4f72158d32404eaa3324a485",
+      "remote_blob": "381b3ad8048b5a0e4f72158d32404eaa3324a485",
+      "expected_bytes": 6285,
+      "remote_bytes": 6285,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/ADOPTION_CHECK.md",
+      "expected_blob": "979df2fa63394e7c94c37522cc0fccc5f85bc1be",
+      "remote_blob": "979df2fa63394e7c94c37522cc0fccc5f85bc1be",
+      "expected_bytes": 5569,
+      "remote_bytes": 5569,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/MANIFEST.tsv",
+      "expected_blob": "7d97d836522f750408555bcbf33bb8e4d7c52e90",
+      "remote_blob": "7d97d836522f750408555bcbf33bb8e4d7c52e90",
+      "expected_bytes": 1865,
+      "remote_bytes": 1865,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/NPZ_SHA256.txt",
+      "expected_blob": "bd2a15b5118995942c9dc06820e0586eb9f0838e",
+      "remote_blob": "bd2a15b5118995942c9dc06820e0586eb9f0838e",
+      "expected_bytes": 292,
+      "remote_bytes": 292,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/README.md",
+      "expected_blob": "bbe5462ddb9f846a24645683053af8c0bc6e9457",
+      "remote_blob": "bbe5462ddb9f846a24645683053af8c0bc6e9457",
+      "expected_bytes": 2944,
+      "remote_bytes": 2944,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/SHA256SUMS",
+      "expected_blob": "4ea42543b3944be93c5f6b2dff9149fc750d32f7",
+      "remote_blob": "4ea42543b3944be93c5f6b2dff9149fc750d32f7",
+      "expected_bytes": 1389,
+      "remote_bytes": 1389,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/cjunc_plan.json",
+      "expected_blob": "51f7e1b0bac4a69b74a166deb9839acc73fec80b",
+      "remote_blob": "51f7e1b0bac4a69b74a166deb9839acc73fec80b",
+      "expected_bytes": 1485,
+      "remote_bytes": 1485,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/cjunc_plan.sha256",
+      "expected_blob": "348a8cef6bdc80503bc3b6ce56a72615a5b665a1",
+      "remote_blob": "348a8cef6bdc80503bc3b6ce56a72615a5b665a1",
+      "expected_bytes": 82,
+      "remote_bytes": 82,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/payload_capture_kit_SBE_vgcf100.log",
+      "expected_blob": "f030f43da4684a9f96e134ccad8b373a9f891855",
+      "remote_blob": "f030f43da4684a9f96e134ccad8b373a9f891855",
+      "expected_bytes": 1168,
+      "remote_bytes": 1168,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/ca1_s0_sbe_20261116T004809Z_q14final/s0_stage1_kit_SBE_vgcf100.json",
+      "expected_blob": "9fcc7b8f2fbedd5a7eb8154a1119a329e2c618a8",
+      "remote_blob": "9fcc7b8f2fbedd5a7eb8154a1119a329e2c618a8",
+      "expected_bytes": 6286644,
+      "remote_bytes": 6286644,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/s0log_20261116T004809Z/meta.txt",
+      "expected_blob": "f8d1d5c479b558683c9a8315400200ce688e88f0",
+      "remote_blob": "f8d1d5c479b558683c9a8315400200ce688e88f0",
+      "expected_bytes": 257,
+      "remote_bytes": 257,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/s0log_20261116T004809Z/out_sha256.txt",
+      "expected_blob": "22122107179a2279f487b7883880eaa727960543",
+      "remote_blob": "22122107179a2279f487b7883880eaa727960543",
+      "expected_bytes": 563,
+      "remote_bytes": 563,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/s0log_20261116T004809Z/rss.log",
+      "expected_blob": "a703069d959b624866881121e712e712dd4bd969",
+      "remote_blob": "a703069d959b624866881121e712e712dd4bd969",
+      "expected_bytes": 14236,
+      "remote_bytes": 14236,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/s0log_20261116T004809Z/run.log",
+      "expected_blob": "40310414559ed2e1437fa0456f971619cddb5019",
+      "remote_blob": "40310414559ed2e1437fa0456f971619cddb5019",
+      "expected_bytes": 2394,
+      "remote_bytes": 2394,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/data/rint2_s0_sbe_20261116/files/s0log_20261116T004809Z/store_probe.json",
+      "expected_blob": "a24602360c93d51aa9229556864fe43faecae235",
+      "remote_blob": "a24602360c93d51aa9229556864fe43faecae235",
+      "expected_bytes": 2287,
+      "remote_bytes": 2287,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_rint2_codepkg_review_request_20261113.md",
+      "expected_blob": "649f32f4e646d940f34f13446fefb0896cabb171",
+      "remote_blob": "649f32f4e646d940f34f13446fefb0896cabb171",
+      "expected_bytes": 41747,
+      "remote_bytes": 41747,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/codex_rint2_seal_round2_request_20261117.md",
+      "expected_blob": "b83927153950de4032be6813063a596417d6cfe2",
+      "remote_blob": "b83927153950de4032be6813063a596417d6cfe2",
+      "expected_bytes": 19724,
+      "remote_bytes": 19724,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/findings.json",
+      "expected_blob": "9aeb4a9f6658b1570193b1f0f428f84fae4afb13",
+      "remote_blob": "9aeb4a9f6658b1570193b1f0f428f84fae4afb13",
+      "expected_bytes": 2893523,
+      "remote_bytes": 2893523,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_codepkg_20261113/codex_rebuttal1_fixes_README.md",
+      "expected_blob": "ffac23602fb6ff499be28ea7791e7e8f8b7ba21f",
+      "remote_blob": "ffac23602fb6ff499be28ea7791e7e8f8b7ba21f",
+      "expected_bytes": 27582,
+      "remote_bytes": 27582,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_dev_probe_ledger_20261026.md",
+      "expected_blob": "979db41a03e550df278270149390c3f8f7c7fcd0",
+      "remote_blob": "979db41a03e550df278270149390c3f8f7c7fcd0",
+      "expected_bytes": 31953,
+      "remote_bytes": 31953,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_kgy_commands_20261020.md",
+      "expected_blob": "e9a34eb744771ad36246098d3bac8f0823cc222f",
+      "remote_blob": "e9a34eb744771ad36246098d3bac8f0823cc222f",
+      "expected_bytes": 79983,
+      "remote_bytes": 79983,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/README.md",
+      "expected_blob": "add546342b66d99432328843475774a062bd547b",
+      "remote_blob": "add546342b66d99432328843475774a062bd547b",
+      "expected_bytes": 6718,
+      "remote_bytes": 6718,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/block_manifest.json",
+      "expected_blob": "b3e47a30d21c457136ab02b6116683e8758e899f",
+      "remote_blob": "b3e47a30d21c457136ab02b6116683e8758e899f",
+      "expected_bytes": 2157,
+      "remote_bytes": 2157,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/check_results.json",
+      "expected_blob": "3089e90891bb2a639e502893d434b5db869acbd9",
+      "remote_blob": "3089e90891bb2a639e502893d434b5db869acbd9",
+      "expected_bytes": 925,
+      "remote_bytes": 925,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/checks.json",
+      "expected_blob": "52223f8397be43493db9debae70a9175b09b6719",
+      "remote_blob": "52223f8397be43493db9debae70a9175b09b6719",
+      "expected_bytes": 9891,
+      "remote_bytes": 9891,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/execution_intake_form.json",
+      "expected_blob": "f82c728876e80350361402d676642c0b81b92ca1",
+      "remote_blob": "f82c728876e80350361402d676642c0b81b92ca1",
+      "expected_bytes": 961,
+      "remote_bytes": 961,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/gate_addition_proposal.md",
+      "expected_blob": "86b322dbf81b21c2c92fd4578fa55667b80190b0",
+      "remote_blob": "86b322dbf81b21c2c92fd4578fa55667b80190b0",
+      "expected_bytes": 1454,
+      "remote_bytes": 1454,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/ledger_proposal.json",
+      "expected_blob": "7209148597f2af04cbb45176c88e81aa684e34df",
+      "remote_blob": "7209148597f2af04cbb45176c88e81aa684e34df",
+      "expected_bytes": 1234,
+      "remote_bytes": 1234,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/operator_policy_checks.json",
+      "expected_blob": "6e267b96af47c2d85422c5d807e6bc2c64947a19",
+      "remote_blob": "6e267b96af47c2d85422c5d807e6bc2c64947a19",
+      "expected_bytes": 925,
+      "remote_bytes": 925,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/operator_policy_decision.json",
+      "expected_blob": "709b9749e799f9ee71d6d63b5e7a1d1cdb3922be",
+      "remote_blob": "709b9749e799f9ee71d6d63b5e7a1d1cdb3922be",
+      "expected_bytes": 842,
+      "remote_bytes": 842,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/q11_consumption_matrix.md",
+      "expected_blob": "83c18c2be9afb3d9d2b8238b58fd8eac16b68e42",
+      "remote_blob": "83c18c2be9afb3d9d2b8238b58fd8eac16b68e42",
+      "expected_bytes": 3417,
+      "remote_bytes": 3417,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/s0_preregistration.md",
+      "expected_blob": "b0f35d9780e6babf71bf05807195f9e184a32abc",
+      "remote_blob": "b0f35d9780e6babf71bf05807195f9e184a32abc",
+      "expected_bytes": 4238,
+      "remote_bytes": 4238,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_q14_finalpin_preparation_20261113/source_identities.json",
+      "expected_blob": "fbcf6e66f8b3760cf94799fda2c992b643ee82b0",
+      "remote_blob": "fbcf6e66f8b3760cf94799fda2c992b643ee82b0",
+      "expected_bytes": 2670,
+      "remote_bytes": 2670,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_rtr01_destination_audit_20261113/received_verdict.md",
+      "expected_blob": "0ab6e09bcaf856c9f94de8d12723717f0bfe8ae7",
+      "remote_blob": "0ab6e09bcaf856c9f94de8d12723717f0bfe8ae7",
+      "expected_bytes": 2000,
+      "remote_bytes": 2000,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_s0_store_probe_20261112/README.md",
+      "expected_blob": "4004f53bd8fe3d93bc92213885050eadad8815b9",
+      "remote_blob": "4004f53bd8fe3d93bc92213885050eadad8815b9",
+      "expected_bytes": 7971,
+      "remote_bytes": 7971,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_seal_round2_20261117/README.md",
+      "expected_blob": "f520b316279b818d9029243ba39951d18879366e",
+      "remote_blob": "f520b316279b818d9029243ba39951d18879366e",
+      "expected_bytes": 1701,
+      "remote_bytes": 1701,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_seal_round2_20261117/build_zip.py",
+      "expected_blob": "b541a398dc9c09951fdce3537d65a0ed78fa926e",
+      "remote_blob": "b541a398dc9c09951fdce3537d65a0ed78fa926e",
+      "expected_bytes": 4925,
+      "remote_bytes": 4925,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_seal_round2_20261117/seal_round2_records_20261117.tgz",
+      "expected_blob": "5591385cf87e73460495193f664dff39dd660e6a",
+      "remote_blob": "5591385cf87e73460495193f664dff39dd660e6a",
+      "expected_bytes": 6800618,
+      "remote_bytes": 6800618,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_seal_round2_20261117/zip_paths.txt",
+      "expected_blob": "5ea947f184060d6fcd87272e28ddcacecbc7a634",
+      "remote_blob": "5ea947f184060d6fcd87272e28ddcacecbc7a634",
+      "expected_bytes": 920,
+      "remote_bytes": 920,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/README.md",
+      "expected_blob": "8e4781ac4e89b5968e788ed21d486824ed3fcf45",
+      "remote_blob": "8e4781ac4e89b5968e788ed21d486824ed3fcf45",
+      "expected_bytes": 119589,
+      "remote_bytes": 119589,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/numbers_sources.tsv",
+      "expected_blob": "a848a70ec56628851d4708a3233c77d1a96f4bc1",
+      "remote_blob": "a848a70ec56628851d4708a3233c77d1a96f4bc1",
+      "expected_bytes": 35920,
+      "remote_bytes": 35920,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/review3_internal_20261117/REVIEW.md",
+      "expected_blob": "bf1661e172e764eb08c57af1a94af5b08dda9c19",
+      "remote_blob": "bf1661e172e764eb08c57af1a94af5b08dda9c19",
+      "expected_bytes": 38801,
+      "remote_bytes": 38801,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/review3_internal_20261117/arith_rerun.txt",
+      "expected_blob": "907bdc3d5b436e9a581e0da33ff2046ed3ec0b39",
+      "remote_blob": "907bdc3d5b436e9a581e0da33ff2046ed3ec0b39",
+      "expected_bytes": 3628,
+      "remote_bytes": 3628,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/review3_internal_20261117/probe_r.py",
+      "expected_blob": "b11e8dd6972ef7b177b957167ad914a44be9efe3",
+      "remote_blob": "b11e8dd6972ef7b177b957167ad914a44be9efe3",
+      "expected_bytes": 1839,
+      "remote_bytes": 1839,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/_samples_scan.py",
+      "expected_blob": "c3d558942a469e9fe6a28fd1dde8ea5d12216aa6",
+      "remote_blob": "c3d558942a469e9fe6a28fd1dde8ea5d12216aa6",
+      "expected_bytes": 2573,
+      "remote_bytes": 2573,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/boundary_r.py",
+      "expected_blob": "8744dd34d7092320d862fb27bc6b93ec2af55e88",
+      "remote_blob": "8744dd34d7092320d862fb27bc6b93ec2af55e88",
+      "expected_bytes": 660,
+      "remote_bytes": 660,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/cpu_check.py",
+      "expected_blob": "8b0cf22a77b2db003ff4213ef12740a384f00d32",
+      "remote_blob": "8b0cf22a77b2db003ff4213ef12740a384f00d32",
+      "expected_bytes": 519,
+      "remote_bytes": 519,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/store_off_check.py",
+      "expected_blob": "392659f6f3255291e7114540f4e5b5cd15ffda5a",
+      "remote_blob": "392659f6f3255291e7114540f4e5b5cd15ffda5a",
+      "expected_bytes": 951,
+      "remote_bytes": 951,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/time_budget_v3.json",
+      "expected_blob": "decc9cb7d1a7a50a71067cfa222b7733267bef67",
+      "remote_blob": "decc9cb7d1a7a50a71067cfa222b7733267bef67",
+      "expected_bytes": 21434,
+      "remote_bytes": 21434,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/time_budget_v3.py",
+      "expected_blob": "5289b6024470d877f6f5270b700354926efb282c",
+      "remote_blob": "5289b6024470d877f6f5270b700354926efb282c",
+      "expected_bytes": 26269,
+      "remote_bytes": 26269,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/timeline_check.py",
+      "expected_blob": "c0d8e652c71b9c9eae9228c33c7031ece2c3b16d",
+      "remote_blob": "c0d8e652c71b9c9eae9228c33c7031ece2c3b16d",
+      "expected_bytes": 1247,
+      "remote_bytes": 1247,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint2_time_reestimate_20261111/v3/work/verify_hand.py",
+      "expected_blob": "fd67af36bf2b3e4b241c109067dbd84af24b10f9",
+      "remote_blob": "fd67af36bf2b3e4b241c109067dbd84af24b10f9",
+      "expected_bytes": 1204,
+      "remote_bytes": 1204,
+      "pass": true
+    },
+    {
+      "path": "repo/docs/reviews/rint_carbon_additive_registration_R_draft_20261020.md",
+      "expected_blob": "91158ccf288f0c5de27d8802962c9315f2fe7400",
+      "remote_blob": "91158ccf288f0c5de27d8802962c9315f2fe7400",
+      "expected_bytes": 301281,
+      "remote_bytes": 301281,
+      "pass": true
+    }
+  ],
+  "passed": 84,
+  "source_zip_pin_check": "MATCH",
+  "remote_branch_tip_not_claimed": true
+}

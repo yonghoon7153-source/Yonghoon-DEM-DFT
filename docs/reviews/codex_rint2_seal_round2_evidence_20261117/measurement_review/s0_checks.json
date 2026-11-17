@@ -1,0 +1,141 @@
+{
+  "plan_hash": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520",
+  "plan_hash_declaration_matches": true,
+  "u": 0.07381254285530132,
+  "spacing_median_over_2": 0.07381254285530132,
+  "tol_ff_rule_ok": true,
+  "tol_P_sj_equal_ff": true,
+  "input_roles": [
+    "fibre",
+    "fibre_dia",
+    "fibre_kind",
+    "metrics_json",
+    "phase",
+    "scaffold",
+    "se"
+  ],
+  "calls": 1,
+  "n_instances": 117583,
+  "kit_n_instances": 117583,
+  "store_start": {
+    "code": {
+      "carbon_junction.py": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb",
+      "step3_sigma.py": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a",
+      "fibre_segment_raster.py": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0",
+      "cjunc_store.py": "01e8558f990e6e5a919bbd4316a57017311aa61b7e8b8bf1d390d702211b245f"
+    },
+    "preloaded": [],
+    "error": null
+  },
+  "write_status": "built_written",
+  "read_status": "hit",
+  "same": {
+    "strict": true,
+    "registry_fp": true,
+    "object_is_new": true
+  },
+  "code_drift": [],
+  "error": null,
+  "T1": {
+    "write_s": 120.095,
+    "read_s": 86.327,
+    "read_build_ratio": 0.021521731271915444,
+    "pass": true
+  },
+  "T2": {
+    "hwm_reset": true,
+    "increment_GiB": 0.6673393249511719,
+    "pass": true
+  },
+  "T3": {
+    "bytes": 1340095705,
+    "GiB": 1.2480613822117448,
+    "pass": true
+  },
+  "rss_rc_lines": [
+    "rc=0"
+  ],
+  "kit_code": {
+    "tool": "s0-b3-registry-v1",
+    "tool_sha256": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163",
+    "file_digests": [
+      {
+        "file": "ca_s0_census.py",
+        "sha256": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163"
+      },
+      {
+        "file": "step3_sigma.py",
+        "sha256": "859310dafac800dc75ecbae36702cb8aab185660abc6675fe4d8b02fc21b459a"
+      },
+      {
+        "file": "mpm_webapp_payload.py",
+        "sha256": "237eaaa0850938fc7ebfc651ebf3ae063fe6f75c4b73c7b09bde1f75d444c61a"
+      },
+      {
+        "file": "fibre_segment_raster.py",
+        "sha256": "e2e94d3b955bfdb87446be03a2134d57546714d20ab3e460fd2c4edfd0eab0f0"
+      },
+      {
+        "file": "sr01_stamp_compare.py",
+        "sha256": "d66e2f1680a69b5b7882b4a5d32e21d15609fc2cecec58924a4af61093661b66"
+      },
+      {
+        "file": "carbon_junction.py",
+        "sha256": "679dbc383c0ae399c33be0102be76a7b1f3db9c93f16dff4eff4b5f7031791cb"
+      },
+      {
+        "file": "ptfe_face_alpha.py",
+        "sha256": "c052dbfe772de497b4f63a85b1cc9182c24c324c23464e69498b4e2246b8046e"
+      }
+    ],
+    "git_head": "64e4d213e8267bafaf3ae5af00a42996cefd3f33",
+    "git_dirty": false,
+    "python": "3.8.10",
+    "numpy": "1.24.4",
+    "scipy": "1.10.1"
+  },
+  "kit_top_keys": [
+    "census_preview",
+    "code",
+    "elapsed_s",
+    "inputs",
+    "junction_census",
+    "kit",
+    "ledger",
+    "notes",
+    "plan",
+    "raster",
+    "schema",
+    "stage",
+    "sv_census",
+    "threshold_inputs",
+    "thresholds_used",
+    "tool"
+  ],
+  "output_receipt_vs_original_manifest": [
+    {
+      "name": "cjunc_plan.json",
+      "ok": true
+    },
+    {
+      "name": "cjunc_plan.sha256",
+      "ok": true
+    },
+    {
+      "name": "payload_capture_kit_SBE_vgcf100.log",
+      "ok": true
+    },
+    {
+      "name": "s0_instances_kit_SBE_vgcf100.npz",
+      "ok": true
+    },
+    {
+      "name": "s0_junctions_kit_SBE_vgcf100.npz",
+      "ok": true
+    },
+    {
+      "name": "s0_stage1_kit_SBE_vgcf100.json",
+      "ok": true
+    }
+  ]
+}

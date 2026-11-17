@@ -1,0 +1,10 @@
+{
+  "script": "cd ~/sdcp && umask 022\nT=20261117T000004Z; FROM=A; TO=B; BR=main; RB=~/sdcp/ca1_relay/${T}_${FROM}_to_${TO}.bundle\nsha256sum \"$RB\"                                                     # = 넘김 기록\ngit bundle list-heads \"$RB\" | grep \"refs/heads/$BR\"                 # 커밋 = 넘김 기록의 원장 끝 커밋\nif [ -d ca1_ledger.parked ]; then git -C ca1_ledger.parked -c pull.rebase=false pull -q --ff-only \"$RB\" \"$BR\" && mv ca1_ledger.parked ca1_ledger; else git clone -q -b \"$BR\" \"$RB\" ca1_ledger; fi\ntest \"$(git -C ca1_ledger rev-parse HEAD)\" = d0879d0a343faef904060942efb459af4d34d35e && echo RECV_OK   # RECV_OK 가 없으면 멈추고 1저자 (사슬을 띄우지 않는다)",
+  "result": {
+    "rc": 1,
+    "recv_ok": false,
+    "command_rc": 128,
+    "stderr": "hint: Diverging branches can't be fast-forwarded, you need to either:\nhint:\nhint: \tgit merge --no-ff\nhint:\nhint: or:\nhint:\nhint: \tgit rebase\nhint:\nhint: Disable this message with \"git config set advice.diverging false\"\nfatal: Not possible to fast-forward, aborting.\nfatal: cannot change to '<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\resume_review\\work_1794911992623657500\\B\\sdcp\\ca1_ledger': No such file or directory",
+    "method": "native Git; document control-flow translation; no Bash or flock"
+  }
+}

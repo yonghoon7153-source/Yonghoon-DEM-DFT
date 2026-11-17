@@ -1,0 +1,101 @@
+{
+  "prepared_only": true,
+  "source_repo_read_only": "<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\objects.git",
+  "object_alternate_read_only": "<WINHOME>\\Documents\\Codex\\rint2_seal_round2_review_20261117\\objects.git\\objects",
+  "candidate": "c80d700bdd5915da82f77f839cb96ed4a5a6582e",
+  "scripts_identity": {
+    "measurement_review/verify_measurements.py": {
+      "source_sha256": "93e5fb7454ce4148e5eb8d1866faebb40cd11397c8458ac4bbaae73e2a45f733",
+      "copy_sha256": "93e5fb7454ce4148e5eb8d1866faebb40cd11397c8458ac4bbaae73e2a45f733"
+    },
+    "measurement_review/verify_e4_baseline.py": {
+      "source_sha256": "e0751a6614002ca4af246e8d6e10fc0e2ce518311efc5a27c37b9e99f76d9c03",
+      "copy_sha256": "e0751a6614002ca4af246e8d6e10fc0e2ce518311efc5a27c37b9e99f76d9c03"
+    },
+    "seal_form_review/scripts/audit_supplied_form.py": {
+      "source_sha256": "9ba1d7c15c077074f166b58783e27afe1e8baa4bd2e2b0a26f6fc80da70b27c6",
+      "copy_sha256": "9ba1d7c15c077074f166b58783e27afe1e8baa4bd2e2b0a26f6fc80da70b27c6"
+    },
+    "seal_form_review/scripts/audit_pin_boundary.py": {
+      "source_sha256": "f3b8a3609b8e7d03c1c6d72d3dbb16f187d727dab8d988620bfcb12da2484579",
+      "copy_sha256": "f3b8a3609b8e7d03c1c6d72d3dbb16f187d727dab8d988620bfcb12da2484579"
+    },
+    "seal_form_review/scripts/probe_form_build.py": {
+      "source_sha256": "9ca9275a68ccc9711df16bb9241fd5081cedb51e8dbcda36b01fa34b81c968d9",
+      "copy_sha256": "9ca9275a68ccc9711df16bb9241fd5081cedb51e8dbcda36b01fa34b81c968d9"
+    },
+    "seal_form_review/scripts/probe_s0_gate.py": {
+      "source_sha256": "11659464246c10dca21dac860b116bf8d5a86d1611c0432b2a88c96b75b774bf",
+      "copy_sha256": "11659464246c10dca21dac860b116bf8d5a86d1611c0432b2a88c96b75b774bf"
+    },
+    "resume_review/review_resume.py": {
+      "source_sha256": "99fd0829bb1a39a501aeed1b889fb2db030ec27b457d48d625bbcf2582b6d43a",
+      "copy_sha256": "99fd0829bb1a39a501aeed1b889fb2db030ec27b457d48d625bbcf2582b6d43a"
+    }
+  },
+  "python": "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+  "review_commands": [
+    [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+      "-I",
+      "-B",
+      "-X",
+      "utf8",
+      "<WINHOME>\\Documents\\Codex\\rint2_reproduction_prepare_test2_20261117\\measurement_review\\verify_measurements.py"
+    ],
+    [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+      "-I",
+      "-B",
+      "-X",
+      "utf8",
+      "<WINHOME>\\Documents\\Codex\\rint2_reproduction_prepare_test2_20261117\\measurement_review\\verify_e4_baseline.py"
+    ],
+    [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+      "-I",
+      "-B",
+      "-X",
+      "utf8",
+      "<WINHOME>\\Documents\\Codex\\rint2_reproduction_prepare_test2_20261117\\seal_form_review\\scripts\\audit_supplied_form.py"
+    ],
+    [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+      "-I",
+      "-B",
+      "-X",
+      "utf8",
+      "<WINHOME>\\Documents\\Codex\\rint2_reproduction_prepare_test2_20261117\\seal_form_review\\scripts\\audit_pin_boundary.py"
+    ],
+    [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+      "-I",
+      "-B",
+      "-X",
+      "utf8",
+      "<WINHOME>\\Documents\\Codex\\rint2_reproduction_prepare_test2_20261117\\seal_form_review\\scripts\\probe_form_build.py"
+    ],
+    [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+      "-I",
+      "-B",
+      "-X",
+      "utf8",
+      "<WINHOME>\\Documents\\Codex\\rint2_reproduction_prepare_test2_20261117\\seal_form_review\\scripts\\probe_s0_gate.py"
+    ],
+    [
+      "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt\\dependencies\\python\\python.exe",
+      "-I",
+      "-B",
+      "-X",
+      "utf8",
+      "<WINHOME>\\Documents\\Codex\\rint2_reproduction_prepare_test2_20261117\\resume_review\\review_resume.py"
+    ]
+  ],
+  "notes": [
+    "No tests or engine executed.",
+    "Global numpy/scipy must already be installed for this interpreter.",
+    "Original logs preserved under reference_evidence; new tests write only in the new root.",
+    "Keep source object store available; alternates are intentionally not a full repository archive."
+  ]
+}
