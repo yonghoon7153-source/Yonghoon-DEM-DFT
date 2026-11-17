@@ -13775,7 +13775,7 @@
    "title": "[혁주] 1b — Li₂ZrO₃ 자체 열역학 안정 창 (MP grand potential · V vs Li/Li⁺) · LLZO 기준 재현 · LiO8 뺀 판 보고 — 트랙 [혁주] · 1저자 = 혁주 · 계산 쪽 결정 = 사용자",
    "statement": "카드 db/properties/hyeokju_lzo_stage1b_li2zro3_window_card_2026_11_17.json 이 정의다: esw_grand_potential.py (Li 열림 · MP GGA/GGA+U hull · 0 K) 로 Li₂ZrO₃ 의 환원 · 산화 한계와 사다리를 낸다 · 같은 실행에서 LLZO 를 다시 내 6 월 기록 (0.04 · 2.88 V) 과 |Δ| ≤ 0.02 V 인지 본다 (넘으면 그 사실을 같이 적는다) · 늘 두 판 (모든 상 · LiO8 뺌) 을 돌고 LiO8 뺀 판을 보고한다 · 혁주 셀 3.8 · 4.4 V (vs Li/Li⁺) 의 위치를 말한다 (보호 · 속도 · 생성량 아님).",
    "rationale": "사용자 2026-11-17 '권고대로 ㄱㄱ' — 1 단계 열린계의 카드 밖 신호 (LZO 자체 분해) 를 정식 보고량으로.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -13799,7 +13799,31 @@
      "session": "본 세션 claude/friendly-meitner-lldvar"
     }
    ],
-   "_note": "proposed — 사용자 방향 결정 11-17 '권고대로 ㄱㄱ' · 비준 대기 (결과 전)."
+   "_note": "active — 사용자 비준 2026-11-17 (AskUserQuestion · 결과 전) · 첫 블록은 gabia CPU (MP 조회 · 두 판 + LLZO 재현).",
+   "status_history": [
+    {
+     "at": "2026-11-17",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-17",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] 1b 카드를 비준할까요? (결과 전) — Li₂ZrO₃ 자체의 열역학 안정 창 (MP grand potential · V vs Li/Li⁺) 을 기존 도구 esw_grand_potential.py 로 gabia CPU 에서 몇 분 돌려요. 규칙: 같은 실행에서 LLZO 를 다시 내 6월 기록 (0.04 · 2.88 V) 과 0.02 V 안인지 보고 (넘으면 그 사실을 같이 적음), MP 의 의심 상 LiO8 을 뺀 판을 보고값으로 하며 (두 판 다 기록), 혁주 셀 3.8 · 4.4 V 가 창 안인지 밖인지 위치만 말해요 (보호 효과 · 속도 · 생성량은 안 말함).' → '비준 — 카드 그대로 (Recommended)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-17T01:05:21Z",
+    "commit": "cf0d21a4a9556d856b1777863707478e5b85be90",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] 1b 카드를 비준할까요? (결과 전) — Li₂ZrO₃ 자체의 열역학 안정 창 (MP grand potential · V vs Li/Li⁺) 을 기존 도구 esw_grand_potential.py 로 gabia CPU 에서 몇 분 돌려요. 규칙: 같은 실행에서 LLZO 를 다시 내 6월 기록 (0.04 · 2.88 V) 과 0.02 V 안인지 보고 (넘으면 그 사실을 같이 적음), MP 의 의심 상 LiO8 을 뺀 판을 보고값으로 하며 (두 판 다 기록), 혁주 셀 3.8 · 4.4 V 가 창 안인지 밖인지 위치만 말해요 (보호 효과 · 속도 · 생성량은 안 말함).' → '비준 — 카드 그대로 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:7ace4c6a51fceeeadd013e4c075987d527fe29800a2168fd3e9a2ee7e95aa199"
+   }
   },
   {
    "id": "D-2026-11-17-hyeokju-lzo-stage2a-amend2-zro2",
@@ -13825,7 +13849,7 @@
    "title": "[혁주] 2a 개정 2 (결과 전) — 생성물 ZrO₂ 띠틈 · 같은 체인 (개정 1 규칙 · P₂O₅ 대조 잡 먼저 · 컷오프 탐침) · vc-relax 사용자 허락",
    "statement": "카드 db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json 의 ⏩_개정_2_2026_11_17_결과_전 이 정의다. 실행기 db/inputs/hyeokju_lzo_s2a_2026_11_16/run_kgy.sh (env 로 ZrO₂).",
    "rationale": "카드 §4b 재개 규칙 (생성물 1–2 개 개정) · 사용자 2026-11-17 '권고대로 ㄱㄱ' (권고 = ZrO₂ 하나).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -13849,7 +13873,31 @@
      "session": "본 세션 claude/friendly-meitner-lldvar"
     }
    ],
-   "_note": "proposed — 사용자 방향 결정 11-17 '권고대로 ㄱㄱ' · 비준 대기 (결과 전 · vc-relax 허락 포함)."
+   "_note": "active — 사용자 비준 2026-11-17 (AskUserQuestion · 결과 전 · vc-relax 1 잡 허락) · 순서 = gabia 구조 받기 → 레지스트리 zro2 → kgy 실행.",
+   "status_history": [
+    {
+     "at": "2026-11-17",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-17",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] 2a 개정 2 를 비준할까요? (결과 전) — 생성물 ZrO₂ 의 PBE 띠틈 · PDOS 를 Li₂ZrO₃ 와 같은 체인으로 (MP 관측 구조 중 E_hull 최저 · vc-relax · 60/480 + 90/720 탐침 |ΔE_g| ≤ 0.02 eV · P₂O₅ 대조 잡 먼저). ZrO₂ 는 비-argyrodite 결정이라 CLAUDE.md 이완 규칙상 vc-relax 1 잡에 허락이 필요해요.' → '비준 + vc-relax 허락 (Recommended)'"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-17T01:05:21Z",
+    "commit": "cf0d21a4a9556d856b1777863707478e5b85be90",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-17 AskUserQuestion '[혁주] 2a 개정 2 를 비준할까요? (결과 전) — 생성물 ZrO₂ 의 PBE 띠틈 · PDOS 를 Li₂ZrO₃ 와 같은 체인으로 (MP 관측 구조 중 E_hull 최저 · vc-relax · 60/480 + 90/720 탐침 |ΔE_g| ≤ 0.02 eV · P₂O₅ 대조 잡 먼저). ZrO₂ 는 비-argyrodite 결정이라 CLAUDE.md 이완 규칙상 vc-relax 1 잡에 허락이 필요해요.' → '비준 + vc-relax 허락 (Recommended)' — 결과 전",
+    "decision_digest": "sha256:e4f5f2117f854030ea23a063814a97f6cf5cc27b748e00c4aefe29eb2ba72760"
+   }
   }
  ]
 }
