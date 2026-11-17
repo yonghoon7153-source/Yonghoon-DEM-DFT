@@ -22,8 +22,8 @@ Usage (from tier_cascade.sh Stage 11):
   python3 tools/doping/run_cathode_interface.py \\
       --ranking $OUT/06_rerank/post_anneal_ranking.json \\
       --anneal_dir $OUT/04_anneal/ \\
-      --baselines comp1=db/structures/lpscl_F43m_24G_canonical.cif \\
-                  comp3=db/structures/lpscl_F43m_24G_canonical.cif \\
+      --baselines comp1=db/structures/comp1_V0_k444.cif \\
+                  comp3=db/structures/comp3_v2_V0_UMA.xyz \\
       --out $OUT/11_cathode_interface/ --top 5 --n_seeds 5
 """
 import argparse
@@ -36,6 +36,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent))
 from _provenance import get_provenance
+from substitute_struct import refuse_unphysical_base   # 2026-11-17 할로젠–S 접촉 관문
 
 
 # v6 protocol constants (verbatim from adhesion_v6_anneal_test.py)
@@ -233,6 +234,8 @@ def main():
     p.add_argument('--baselines', nargs='+', default=[],
                    help='Baseline SEs as label=path/to/cif (multiple). '
                         'Run alongside winners for Δ_Wad reference.')
+    p.add_argument('--allow_unphysical_base', action='store_true',
+                   help='할로젠–S < 3 Å 기준 구조를 경고만 하고 계속 (봉인된 옛 기록 재현용)')
     p.add_argument('--out', required=True)
     p.add_argument('--top', type=int, default=5)
     p.add_argument('--n_seeds', type=int, default=5,
@@ -278,6 +281,7 @@ def main():
             continue
         print(f"  Baseline {label} — loading {path}")
         se = read(path)
+        refuse_unphysical_base(se, f"baseline {label}={path}", allow=args.allow_unphysical_base)
         try:
             res = run_one_se(se, label, ncm_cache, seeds, calc_factory,
                              out / 'baselines')

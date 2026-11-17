@@ -22,7 +22,7 @@ Usage:
   python3 tools/doping/predict_best_site.py \\
       --predictor_dir runs/tier_.../predictor/ \\
       --compound Nd2O3 --top 3 \\
-      --verify --base db/structures/lpscl_F43m_24G_canonical.cif \\
+      --verify --base db/structures/comp1_V0_k444.cif \\
       --out_dir runs/site_pred_Nd2O3/
 """
 import argparse
@@ -228,6 +228,10 @@ def main():
     if args.verify:
         if not args.base or not args.out_dir:
             raise SystemExit("--verify requires --base and --out_dir")
+        # ⛔ 2026-11-17 — base 의 할로젠–S 접촉 (substitute_compound 도 막지만 top-k 를 돌기 전에 멈춘다)
+        from ase.io import read as _read_base
+        from substitute_struct import refuse_unphysical_base
+        refuse_unphysical_base(_read_base(args.base), f"--base {args.base}")
         print(f"\n=== Verify top-{args.top} via MLIP substitute + UMA relax ===")
         top_k = df_sorted.head(args.top)
         for i, (_, r) in enumerate(top_k.iterrows(), 1):

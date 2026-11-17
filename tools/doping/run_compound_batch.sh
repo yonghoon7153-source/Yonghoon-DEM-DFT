@@ -15,7 +15,7 @@
 #
 # Usage:
 #   bash tools/doping/run_compound_batch.sh \
-#       db/structures/lpscl_F43m_24G_canonical.cif \
+#       db/structures/comp1_V0_k444.cif \
 #       runs/doping_v3_2026_05_15 \
 #       [N_SEEDS=3] [SUPERCELL=1,1,1] [EXOTIC=0]
 

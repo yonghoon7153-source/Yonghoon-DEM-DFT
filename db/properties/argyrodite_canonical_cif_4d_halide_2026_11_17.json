@@ -1,0 +1,83 @@
+{
+  "schema": "observation/v1",
+  "record_kind": "observation",
+  "date": "2026-11-17",
+  "status": "observation — 결정 아님 · 구조 파일 결함과 처리 기록",
+  "results_seen": true,
+  "제목": "정본 F-43m CIF (lpscl_F43m_24G_canonical) 는 Cl 을 4d 구멍에 적었다 — S–Cl 2.36 Å · Li 케이지 가운데 4c 는 비어 있다",
+  "0_어쩌다_나왔나": "사용자 질문 (16e 자리 · 일곱 번째 Li) 에 답하려고 정본 CIF 의 대각선 자리를 셌다. 처음엔 P 와의 거리 (4.44 / 5.12 Å) 로 4c·4d 를 갈라 'Morgan 100 % 뒤바뀐 배열' 이라고 잘못 말했다 — 4c·4d 는 둘 다 P 에서 4.44 Å 라 P 거리로는 못 가른다. 모든 원자쌍 최소거리를 다시 재다가 S–Cl 2.356 Å 이 나왔다.",
+  "1_결함": {
+    "파일": "db/structures/lpscl_F43m_24G_canonical.cif (a 10.2493 Å · 52 원자 · md5 57e24e164d1b0fec4cc397a9903c689b)",
+    "잰_값": {
+      "S–Cl_최소_A": 2.356,
+      "S–Cl_3A_안_쌍": 16,
+      "P–S_A": 2.082,
+      "Li–S_최소_A": 2.401,
+      "Li–Cl_최소_A": 2.797,
+      "Li_2.6A_안에_있는_Cl": 0
+    },
+    "배치": "P 4b · PS₄ S 16e x = 0.6173 (꼭짓점이 4d 를 향한다) · 자유 S 4a · Cl 4d (0.75, 0.75, 0.75)… · Li 24g x = 0.0229 (4c 를 둘러싼다)",
+    "읽는_법": "4d 는 PS₄ 네 개의 꼭짓점 S 가 2.36 Å 로 둘러싼 빈 사면체 구멍 (Morgan 2021 type 3) 이다 — 음이온이 들어갈 수 없다. Li 24g 여섯 개가 2.33 Å 로 둘러싼 케이지 가운데 4c (0.25, 0.25, 0.25) 는 비어 있다.",
+    "검증": "자유 음이온을 4a + 케이지 자리에 놓은 음이온 격자는 Delaunay 사면체가 정확히 136 개 (= Morgan Table 1 의 4+16+48+4+16+48 · 사면체 조밀 충전). 이 파일 그대로는 179–183 개 (축퇴라 유일하지 않다)."
+  },
+  "2_원인_추정_확인_안_함": "좌표 관례 둘을 섞은 꼴이다. PS₄ S 를 x = 0.617 로 쓰면 케이지 = 4c · 빈 구멍 = 4d 이고, x = 0.383 으로 쓰면 케이지 = 4d · 빈 구멍 = 4c 다 (반전으로 4c ↔ 4d · 4a·4b 는 제자리). 파이프라인 자리 이름이 'Cl_4d' (tools/doping/site_preference.py HOST_SITES) 라 Cl 은 x = 0.383 관례의 케이지 이름을 쓰고, S·Li 좌표는 x = 0.617 관례에서 온 것으로 보인다. 만든 날짜 · 도구는 못 찾았다 (이 클론의 git 기록이 10-20 커밋에서 끊긴다).",
+  "3_물려받은_파일": {
+    "훑은_범위": "레포 구조 파일 2,270 개 (.cif · .vasp · .xyz · .extxyz · .cube · .xsf · POSCAR · CONTCAR · 20 MB 이하 · 첫 프레임) 에서 할로젠–S < 2.8 Å 을 찾았다 — db/raw/argyrodite_canonical_fix_2026_11_17/sweep_halide_s_contacts.py · 걸린 것 11 개",
+    "진짜_사본": [
+      "paper_figures/comp1_V0_cubic.cif · .xyz (V0 로 줄인 사본 · S–Cl 2.311 Å)",
+      "paper_figures/lpscl_primitive_1fu.cif (1 f.u. 원시 셀 · 2.356 Å)",
+      "db/structures/lpscl_b2o3_scheme_F43m.cif (B₂O₃ 도식용 · Li24P2B2S17O3Cl4 · S–Cl · O–Cl 2.356 Å)"
+    ],
+    "가짜로_걸린_것": {
+      "db/structures/hyeokju_md0_2026_11_17/comp1_001_li_outer_L2.vasp": "진공 없는 슬랩 파일 (c = 두께 8.20 Å) 이라 z 경계 너머로 잰 값이다 — xy 만 주기로 보면 3.663 Å. 이 슬랩으로 만든 MD-0 계면 I142_liouter_aLZO16_init 은 3.663 Å (comp1_V0_k444 에서 자른 것).",
+      "db/properties/bvse_b2o3/b2o3_paper3_bvse_Bcentered.cube · _boundary.cube": "표시용 상자 (주기 셀 아님) — 최소상 없이 재면 3.63 / 3.67 Å",
+      "db/structures/lpsocl_cubic_approx.vasp": "표시용 큐빅 근사 상자 (tools/package_lpsocl.py '표시용 — 정량 인용 금지') — 최소상 없이 3.69 Å",
+      "db/structures/cei_gap_tm/SCl_mp-aaaabpoq.cif · .vasp": "분자 결정 S₂Cl₂ 의 실제 S–Cl 결합 2.09 Å"
+    }
+  },
+  "4_그림": {
+    "레포_안": "그림 스크립트 · .vesta · 문서 가운데 정본과 사본 넷을 읽는 것은 없다 (rg). STRUCTURES_NOTE 만 comp1_V0_cubic 을 '그림용' 으로 가리켰다. docs/figures/bv_structure_panels_comp1.png (cascade 세미나 덱이 쓴다) 은 comp1_V0_k444.cif 를 읽는다 (tools/figures/fig_bv_path_profile.py SYSTEMS) — 멀쩡하다.",
+    "레포_밖": "VESTA 로 직접 열어 그린 구조 그림이 있는지는 레포에서 알 수 없다 — 사용자만 안다. 이 사본으로 그린 그림이면 Cl 자리가 틀린 그림이다."
+  },
+  "5_한_일": {
+    "정본은_그대로": "db/structures/lpscl_F43m_24G_canonical.cif 는 경로 · 바이트를 그대로 둔다. 도구 13 개 · 기록 약 20 개가 이 경로를 가리키고, cascade 기록 (dissolution_energy.HOST_H1_CIF · cascade_dissolution run_gabia.sh 의 md5 대조 · uma_* · baseline_rerun) 이 md5 로 출처를 대조한다. 이름을 바꾸거나 고쳐 쓰면 봉인된 기록의 출처가 끊긴다.",
+    "고친_파일": {
+      "db/structures/lpscl_F43m_24G_ideal_Clcage_2026_11_17.cif": "정본을 고친 판 (a 10.2493 · 이상화 좌표 · 이완 안 함)",
+      "paper_figures/comp1_V0_cubic_Clcage_2026_11_17.cif · .vasp · .xyz": "V0 (a 10.0551) 사본을 고친 판 — 그림용",
+      "paper_figures/lpscl_primitive_1fu_Clcage_2026_11_17.cif · .vasp": "원시 셀",
+      "db/structures/lpscl_b2o3_scheme_F43m_Clcage_2026_11_17.cif": "B₂O₃ 도식용"
+    },
+    "고친_방법": "할로젠은 그대로 두고 나머지 원자를 P (4b) 를 중심으로 반전한다 (r → 2 r_P − r). 4a·4b 는 제자리 · 16e x → 1 − x · Li 24g 도 반전 ⇒ Cl 이 Li 케이지 가운데가 된다 (옛 좌표계에서 Cl 을 4d → 4c 로 옮긴 것과 같은 구조). 파이프라인 자리 이름 (P_4b · S_16e · S_4a · Cl_4d · Li_24g) 이 고친 파일에서는 문자 그대로 맞다. 스크립트 = db/raw/argyrodite_canonical_fix_2026_11_17/make_fixed.py (다시 돌리면 바이트까지 같다).",
+    "고친_뒤_잰_값": "S–Cl 최소 4.227 Å (V0 판 4.147) · 각 Cl 을 Li 여섯 개가 2.33 Å (V0 판 2.28) 로 둘러싼다 · P–S 2.082 Å · 음이온 Delaunay 사면체 136 개 (V0 판도 136) — fix_checks.json",
+    "고친_배치의_뜻": "모든 Cl 이 케이지 자리 · 자유 S 가 4a 인 정렬 모형 하나다 (Morgan / de Klerk 표기로는 Cl 4c · S 4a = site inversion 100 %). 실제 Li₆PS₅Cl 의 S/Cl 무질서를 대표하지 않는다 — 실험은 Cl 이 케이지 자리를 더 많이 차지하는 무질서다 (litdb morgan2021 digest: Rayavarapu 중성자 Cl 4a:4c ≈ 3:7).",
+    "이름을_바꾼_사본": "paper_figures/comp1_V0_cubic.cif · .xyz · paper_figures/lpscl_primitive_1fu.cif · db/structures/lpscl_b2o3_scheme_F43m.cif → *.BROKEN_Cl_in_4d_hole (선례: lpscl_relaxed_conv_52atoms.cif.BROKEN_PS4_dissociated). 읽는 곳이 없어서 깨지는 것이 없다.",
+    "관문": {
+      "함수": "tools/doping/substitute_struct.py::halide_s_contacts · refuse_unphysical_base — 할로젠–S < 3.0 Å 면 SystemExit. 이름이 아니라 거리로 막는다.",
+      "건_곳": [
+        "substitute_compound.py --base (새 플래그 --allow_unphysical_base = 봉인된 옛 기록 재현용)",
+        "run_cathode_interface.py --baselines (같은 플래그)",
+        "preflight.py --base (section base_halide_s_contacts)",
+        "predict_best_site.py --verify --base"
+      ],
+      "기본값_변경": "tier_cascade.sh 의 NCM_BASELINE_COMP1 기본값을 정본에서 db/structures/comp1_V0_k444.cif 로 바꿨다 (옆 기준들도 V0 · 09-12 재앵커의 정본 host). 사용법 예시 (substitute_compound · run_cathode_interface · preflight · predict_best_site · run_compound_batch · tier_cascade) 도 comp1_V0_k444 로 바꿨다.",
+      "시험": "substitute_compound --selftest ⭕ 36 · ⛔ 0 (음성: 깨진 정본 16 쌍 · 2.356 Å · SystemExit · 양성: 고친 파일 · comp1_V0_k444 · 부모 자리 지도 시험은 고친 파일로 옮김) · 관문을 일부러 두 번 깨서 (cutoff 0 · 거부 안 함) 빨간불 2 · 1 을 본 뒤 되돌림 · substitute_struct --selftest 13 / 0 · convention_check 0 위반",
+      "못_하는_것": "다른 결함 (Li 겹침 · PS₄ 해리 · 음이온끼리 일반) 은 안 본다 · 표시용 상자와 진공 없는 슬랩 파일은 가짜로 걸린다 (주기 벌크 셀에만 쓴다) · 옛 배치 스크립트 (master_batch_105 / 273 · run_dualx_highx · run_as2s3_recover) 는 고치지 않았다 — 다시 돌리면 substitute_compound 관문에서 멈춘다 · static_b_geom_gabia.sh 는 정본을 일부러 연구 대상으로 읽는 진단이라 그대로 둔다 · uma_relax_check 시험은 정본으로 rattle 재현만 본다 (물리 무관) — 그대로 둔다"
+    }
+  },
+  "6_cascade_와의_연결": {
+    "이미_있던_기록": "09-12 cascade_base_strain: UMA 가 이 base 를 +33.4 % 부풀렸다 (ρ 1.656 → 1.241) · '가짜 basin' 으로 정본에서 내려왔다 (cascade_reanchor_comp1k444_2026_09_12). 10-14 dissolution: 1단계 baseline 을 정본에서 다시 냈고 '1단계 구조 결함 (canonical 기하 상속 = 감사 ①)' 은 고치지 않는다 · 값은 데모 (인용 금지).",
+    "이번에_보탠_것": "09-12 최소거리 점검은 Li–Li · Li–S · Li–Cl · S–S 만 쟀고 S–Cl 이 없었다. Cl 이 PS₄ 꼭짓점 S 넷에 2.36 Å 로 박힌 배치가 그 팽창과 감사 ① 의 원인 후보다.",
+    "아직_열린_것": "27.478 Å³/atom 기하가 DFT 에서도 고에너지인지 (가짜 basin 확정) 는 이 관찰로 답이 안 된다 (cascade_reanchor 의 'DFT 단일점 필요' 그대로). cascade 설계 (v22 / v23) 가 이 base 에서 만들어졌다는 것은 이미 감사 ① 범위다 — 이 관찰로 다시 열지 않는다."
+  },
+  "7_곁에서_본_것_확인_안_함": "DFT 정본 comp1_V0_k444.cif 는 멀쩡하다 (S–Cl 3.66 Å). 다만 이상 F-43m 그림 (케이지 자리 하나 + 4a 하나) 과 바로 맞지 않는다: 자유 S 는 P 네 개 (4.14 ×2 · 4.59 ×2 Å) · Li 여섯 개 (2.35–2.38 Å), Cl 은 P 하나 4.24 + 둘 5.09 Å · Li 여섯 개 (2.43 ×2 · 2.70 ×4 Å). litdb deiseroth2008 digest 의 'all-4a (Cl 전부 X 형 자리 = 우리 comp1 배열)' 과 맞는지는 따로 본다.",
+  "허용_서술": [
+    "정본 F-43m CIF (lpscl_F43m_24G_canonical) 는 Cl 이 PS₄ 꼭짓점 사이 4d 구멍에 있는, 물리적으로 불가능한 배치였다 (S–Cl 2.36 Å).",
+    "이 배치가 09-12 UMA 팽창과 cascade 감사 ① 의 원인 후보다."
+  ],
+  "금지_서술": [
+    "cascade 1단계 값이 이 결함 때문에 틀렸다 (확정) — 원인 후보일 뿐 DFT 확인이 없다.",
+    "고친 파일이 Li₆PS₅Cl 의 실제 배치다 — 정렬 모형 하나일 뿐이다.",
+    "comp1_V0_k444 는 Morgan 0 % (또는 100 %) 배열이다 — 확인 안 했다."
+  ],
+  "근거_파일": "db/raw/argyrodite_canonical_fix_2026_11_17/ (make_fixed.py · fix_checks.json · sweep_halide_s_contacts.py · sweep_halide_s_contacts_result.json · SHA256SUMS)"
+}

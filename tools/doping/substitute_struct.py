@@ -95,6 +95,51 @@ def find_host_indices_for_site(atoms: Atoms, site_name: str,
         return [host_idx[i] for i, b in enumerate(bonded) if b]
     return [host_idx[i] for i, b in enumerate(bonded) if not b]
 
+# ── 할로젠–S 접촉 관문 (2026-11-17) ───────────────────────────────────────────
+#: 할로젠–S 가 이보다 가까우면 아지로다이트 호스트가 아니다. 실제 계는 3.3 Å 위다 (comp1_V0_k444 3.66 Å) —
+#: S–Cl 공유결합 (S₂Cl₂ 2.09 Å) 은 분자 결정에만 있다.
+HALIDE_S_MIN_A = 3.0
+
+
+def halide_s_contacts(atoms: Atoms, cutoff: float = HALIDE_S_MIN_A) -> list:
+    """할로젠 (Cl · Br · I)–S 쌍 중 ``cutoff`` Å 보다 가까운 것 ``[(i_X, i_S, d)]`` (주기 셀이면 최소상).
+
+    왜: ``db/structures/lpscl_F43m_24G_canonical.cif`` 는 Cl 을 4d 에 적었는데, 거기는 PS₄ 꼭짓점 S 넷에서
+    2.36 Å 인 빈 사면체 구멍이다 (Li 케이지 가운데 4c 는 비어 있다 · STRUCTURES_NOTE 2026-11-17).
+    cascade 설계 base 로 쓰였다. 파일 이름으로 막지 않고 거리를 재서 막는다.
+    ⛔ 못 하는 것: 다른 결함 (Li 겹침 · PS₄ 해리 · 음이온끼리 일반) 은 안 본다 ·
+      표시용 상자 (주기 셀이 아님) 와 진공 없는 슬랩 파일은 최소상 때문에 **가짜로 걸린다** — 주기 벌크 셀에만 쓴다.
+    """
+    s = np.array(atoms.get_chemical_symbols())
+    i_x = np.where(np.isin(s, ('Cl', 'Br', 'I')))[0]
+    i_s = np.where(s == 'S')[0]
+    if not len(i_x) or not len(i_s):
+        return []
+    mic = bool(atoms.pbc.any() and atoms.cell.rank == 3)
+    out = []
+    for i in i_x:
+        d = atoms.get_distances(int(i), i_s, mic=mic)
+        out += [(int(i), int(j), float(dj)) for j, dj in zip(i_s, d) if dj < cutoff]
+    return out
+
+
+def refuse_unphysical_base(atoms: Atoms, label: str, allow: bool = False) -> None:
+    """호스트 · 기준 구조로 쓰기 전에 할로젠–S 접촉을 잰다. 걸리면 SystemExit.
+
+    ``allow=True`` 는 경고만 하고 계속한다 — 봉인된 옛 기록을 재현할 때만 쓴다 (새 설계에 쓰지 않는다).
+    """
+    bad = halide_s_contacts(atoms)
+    if not bad:
+        return
+    msg = (f"⛔ {label}: 할로젠–S {len(bad)} 쌍이 {HALIDE_S_MIN_A} Å 안 (최소 {min(b[2] for b in bad):.2f} Å) — "
+           f"물리적으로 불가능한 배치다.\n"
+           f"   정본 F-43m CIF 결함과 같은 꼴이다: Cl 이 PS₄ 꼭짓점 사이 4d 구멍에 있다 (db/structures/STRUCTURES_NOTE.md 2026-11-17).\n"
+           f"   새 작업은 db/structures/comp1_V0_k444.cif (DFT V0) 나 db/structures/lpscl_F43m_24G_ideal_Clcage_2026_11_17.cif (이상화 · 이완 안 함) 를 쓴다.")
+    if allow:
+        print(msg.replace('⛔', '⚠', 1) + "\n   --allow_unphysical_base: 옛 기록 재현용으로만 계속한다.")
+        return
+    raise SystemExit(msg)
+
 
 def select_substitution_sites(host_indices: list[int], n_sub: int,
                               method: str = 'first', seed: int = 42,

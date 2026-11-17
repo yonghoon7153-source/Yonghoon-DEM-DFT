@@ -53,6 +53,7 @@ import element_effects as ee  # noqa: E402
 RESERVOIR_FORMULAS = tuple(ee.RESERVOIRS)                      # Li2S · LiCl · Li3PS4
 HOST_H2 = ('HOST__comp1_V0_k444', 'db/structures/comp1_V0_k444.cif')   # DFT k444 평형 Li24P4S20Cl4 (UMA 부피 +0.06 %)
 HOST_H1_CIF = 'db/structures/lpscl_F43m_24G_canonical.cif'    # 1단계 baseline 의 출처 (md5 57e24e164d1b…)
+#   ⛔ 2026-11-17: 이 파일은 Cl 이 4d 구멍 (PS₄ S 넷에서 2.36 Å) — 1단계 baseline 결함 (감사 ①) 의 원인 후보 · STRUCTURES_NOTE. 출처 대조용이라 경로는 그대로 둔다.
 STAGE1_ROOTS = ('/data/work/runs/multi_category_2026_05_26_v23', '/data/work/runs/as2s3_recover')
 VALENCE = {'Li': 1, 'P': 5, 'S': -2, 'Cl': -1}
 FIELDS = ['material_id', 'formula_pretty', 'energy_above_hull', 'theoretical', 'nsites', 'symmetry', 'deprecated', 'structure']

@@ -10,7 +10,7 @@ kb/methodology/doping_pipeline_critical_review.md before you waste a week:
 
 Usage:
   python3 tools/doping/preflight.py \\
-      --base db/structures/lpscl_F43m_24G_canonical.cif \\
+      --base db/structures/comp1_V0_k444.cif \\
       --out runs/preflight_$(date +%F)/
 
 Exits with code 0 if everything passes, ≥1 with details otherwise.
@@ -260,6 +260,14 @@ def main():
 
     ok, msg = check_tools(Path(__file__).parent)
     section('tools_present', ok, msg if not ok else 'all 6 tools OK')
+
+    # ⛔ 2026-11-17 — base 의 할로젠–S 접촉 (정본 F-43m CIF 는 Cl 이 4d 구멍 · STRUCTURES_NOTE)
+    from ase.io import read as _read_base
+    from substitute_struct import halide_s_contacts
+    _bc = halide_s_contacts(_read_base(args.base))
+    section('base_halide_s_contacts', not _bc,
+            'halide–S ≥ 3 Å' if not _bc else
+            f'할로젠–S {len(_bc)} 쌍 < 3 Å (최소 {min(b[2] for b in _bc):.2f} Å) — 물리적으로 불가능한 base')
 
     ok, msg = check_disk_space(out)
     section('disk_space', ok, msg)

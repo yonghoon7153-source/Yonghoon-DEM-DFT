@@ -17,6 +17,15 @@
   같은 배치를 줄인 `paper_figures/comp1_V0_cubic.cif` 도 S–Cl 2.31 Å. DFT 정본 `comp1_V0_k444.cif` 는 S–Cl 3.66 Å 로 멀쩡하다.
   cascade 설계 base 로 쓰였고 09-12 에 UMA '가짜 basin' 으로 정본에서 내려왔다 (`db/properties/cascade_reanchor_comp1k444_2026_09_12.json`) —
   그때 최소거리 점검 (`cascade_base_strain_2026_09_12.json` §2) 은 Li–Li · Li–S · Li–Cl · S–S 만 쟀고 **S–Cl 이 없었다**.
+  ⏩ **처리 (2026-11-17 · 사용자 '권고대로')** — 이 파일은 경로 · 바이트 그대로 둔다 (도구 13 · 기록 약 20 이 가리키고 cascade 기록이 md5 로 출처를 대조한다).
+  · 고친 판 = `lpscl_F43m_24G_ideal_Clcage_2026_11_17.cif` (할로젠만 두고 나머지를 P 중심으로 반전 → Cl 이 Li 케이지 가운데 · S–Cl 4.23 Å ·
+    음이온 사면체 136 · 이상화 좌표 · 이완 안 함 · 모든 Cl 이 케이지 자리인 정렬 모형 하나라 실제 S/Cl 무질서를 대표하지 않는다).
+  · 그림용 V0 판 = `paper_figures/comp1_V0_cubic_Clcage_2026_11_17.{cif,vasp,xyz}` · 원시 셀 · B₂O₃ 도식도 같은 이름 꼴로 고쳤다.
+  · 깨진 사본 넷 (`paper_figures/comp1_V0_cubic.{cif,xyz}` · `paper_figures/lpscl_primitive_1fu.cif` · `lpscl_b2o3_scheme_F43m.cif`) 은
+    `*.BROKEN_Cl_in_4d_hole` 로 이름을 바꿨다 (읽는 곳 없음). 위 줄의 'paper_figures/comp1_V0_cubic.cif 가 그 결과' 는 그 사본이다.
+  · 새 작업이 이 배치를 못 집게 `tools/doping/substitute_struct.py::refuse_unphysical_base` (할로젠–S < 3 Å 면 멈춤) 를
+    substitute_compound · run_cathode_interface · preflight · predict_best_site 에 걸었다 (옛 기록 재현은 `--allow_unphysical_base`).
+  · 기록 `db/properties/argyrodite_canonical_cif_4d_halide_2026_11_17.json` · 근거 `db/raw/argyrodite_canonical_fix_2026_11_17/`.
 - ❌ `lpscl_relaxed_conv_52atoms.cif.BROKEN_PS4_dissociated` — **사용 금지**.
   conventional-cell 변환 사고로 PS₄ 해리 (각 P가 S 1~2개만 ≤2.5Å, 나머지 4.3Å). k-mesh 무관, CIF 변환 버그.
 

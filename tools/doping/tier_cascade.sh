@@ -24,7 +24,7 @@
 #
 # Usage:
 #   bash tools/doping/tier_cascade.sh \
-#       db/structures/lpscl_F43m_24G_canonical.cif \
+#       db/structures/comp1_V0_k444.cif \
 #       runs/tier_$(date +%F) \
 #       [N_SEEDS=5] [SUPERCELL=1,1,1] [EXOTIC=0]
 #
@@ -317,7 +317,8 @@ fi
 #   NCM_BASELINE_MODELC  : Li5.4PS4.4Cl1.6 (Cl-only Li5.4, DFT-EOS V0)
 # To disable a baseline: NCM_BASELINE_COMP5="" bash tier_cascade.sh ...
 TOP_K_NCM="${TOP_K_NCM:-5}"
-NCM_BASELINE_COMP1="${NCM_BASELINE_COMP1:-db/structures/lpscl_F43m_24G_canonical.cif}"
+# ⛔ 2026-11-17: 기본값을 깨진 정본 F-43m CIF (Cl 이 4d 구멍 · STRUCTURES_NOTE) 에서 DFT V0 로 바꿨다 — 옆 기준들도 V0 다.
+NCM_BASELINE_COMP1="${NCM_BASELINE_COMP1:-db/structures/comp1_V0_k444.cif}"
 NCM_BASELINE_COMP2="${NCM_BASELINE_COMP2:-db/structures/comp2_V0.cif}"
 NCM_BASELINE_COMP3="${NCM_BASELINE_COMP3:-db/structures/comp3_v2_V0_UMA.xyz}"
 NCM_BASELINE_COMP4="${NCM_BASELINE_COMP4:-db/structures/comp4_v2_V0_UMA.xyz}"

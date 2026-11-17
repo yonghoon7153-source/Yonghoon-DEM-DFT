@@ -28,7 +28,7 @@ Type C — Aliovalent cation + halide co-doping:
 Usage:
   # Type A — Nd2O3 5 mol% (Nd→Li_24g, O→S_16e)
   python3 substitute_compound.py \\
-      --base db/structures/lpscl_F43m_24G_canonical.cif \\
+      --base db/structures/comp1_V0_k444.cif \\
       --compound Nd2O3 --x_compound 0.05 \\
       --cation_site Li_24g --anion_site S_16e \\
       --out runs/doping_compound/nd2o3_005/
@@ -64,6 +64,7 @@ from _provenance import get_provenance
 from substitute_struct import (
     find_host_indices, find_host_indices_for_site,
     select_substitution_sites, SITE_TO_HOST,
+    halide_s_contacts, refuse_unphysical_base,      # 2026-11-17 할로젠–S 접촉 관문
 )
 
 
@@ -766,7 +767,7 @@ def _selftest() -> int:
         print(("  ⭕ " if c else "  ⛔ ") + m); ok += bool(c); bad += (not c)
 
     base = _read(str(Path(__file__).resolve().parents[2]
-                     / 'db/structures/lpscl_F43m_24G_canonical.cif'))
+                     / 'db/structures/lpscl_F43m_24G_ideal_Clcage_2026_11_17.cif'))   # 2026-11-17: 깨진 정본 대신
     pm = build_parent_site_map(base)
     chk(pm['counts'] == {'Cl_4d': 4, 'Li_any': 24, 'P_4b': 4, 'S_16e': 16, 'S_4a': 4},
         f"부모 지도 동결: {pm['counts']}")
@@ -976,6 +977,25 @@ def _selftest() -> int:
     except S1ContractError:
         chk(True, "⛔음성: 컷오프 0.5 Å → 부모 없음으로 거부 (추측하지 않는다)")
 
+
+    # ⛔음성 ⑤ (2026-11-17) 할로젠–S 접촉 관문 — 정본 F-43m CIF 는 Cl 이 4d 구멍 (PS₄ S 넷에서 2.36 Å)
+    _root = Path(__file__).resolve().parents[2]
+    _broken = _read(str(_root / 'db/structures/lpscl_F43m_24G_canonical.cif'))
+    _bc = halide_s_contacts(_broken)
+    _bmin = min(b[2] for b in _bc) if _bc else float('nan')
+    chk(len(_bc) == 16 and abs(_bmin - 2.356) < 0.01,
+        f"⛔음성: 깨진 정본 CIF 의 할로젠–S < 3 Å 쌍 16 · 최소 2.356 Å (잰 값 {len(_bc)} 쌍 · {_bmin:.3f} Å)")
+    try:
+        refuse_unphysical_base(_broken, 'selftest 깨진 정본')
+        chk(False, "⛔음성: 깨진 정본을 base 로 주면 시작하지 않는다")
+    except SystemExit as e:
+        chk('4d' in str(e) and 'comp1_V0_k444' in str(e),
+            "⛔음성: 깨진 정본 → SystemExit (이유와 쓸 경로를 같이 말한다)")
+    refuse_unphysical_base(_broken, 'selftest 옛 기록 재현', allow=True)   # 경고만 — 예외면 시험이 여기서 죽는다
+    chk(True, "allow=True (옛 기록 재현) 는 경고만 하고 계속한다")
+    for _p in ('db/structures/lpscl_F43m_24G_ideal_Clcage_2026_11_17.cif', 'db/structures/comp1_V0_k444.cif'):
+        chk(halide_s_contacts(_read(str(_root / _p))) == [], f"⭕양성: {_p.split('/')[-1]} 할로젠–S 접촉 없음")
+
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -987,6 +1007,8 @@ def main():
     if '--selftest' in sys.argv:
         raise SystemExit(_selftest())
     parser.add_argument('--base', required=True, help='LPSCl base structure')
+    parser.add_argument('--allow_unphysical_base', action='store_true',
+                        help='할로젠–S < 3 Å base 를 경고만 하고 계속 (봉인된 옛 기록 재현용 · 새 설계에 쓰지 않는다)')
     parser.add_argument('--out', required=True, help='Output directory')
     parser.add_argument('--supercell', nargs=3, type=int, default=[1, 1, 1],
                        metavar=('NX', 'NY', 'NZ'),
@@ -1112,6 +1134,8 @@ def main():
             "이중 / high-entropy co-doping)")
 
     base = read(args.base)
+    # ⛔ 2026-11-17 — base 의 할로젠–S 접촉을 잰다 (정본 F-43m CIF 는 Cl 이 4d 구멍 · 이름이 아니라 거리로 막는다)
+    refuse_unphysical_base(base, f"--base {args.base}", allow=args.allow_unphysical_base)
     if args.supercell != [1, 1, 1]:
         base = base.repeat(args.supercell)
         # Scale n_fu by the supercell multiplier
