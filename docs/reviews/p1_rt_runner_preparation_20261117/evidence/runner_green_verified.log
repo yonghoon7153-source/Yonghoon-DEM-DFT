@@ -1,0 +1,17 @@
+test_RT1_failed_after_writing_restart_never_starts_RT2 (__main__.RTRunner.test_RT1_failed_after_writing_restart_never_starts_RT2) ... ok
+test_RT2_failure_blocks_UK (__main__.RTRunner.test_RT2_failure_blocks_UK) ... ok
+test_R_UN_Ut0_failures_skip_both_RT (__main__.RTRunner.test_R_UN_Ut0_failures_skip_both_RT) ... ok
+test_g0_failure_skips_both_RT_and_UK (__main__.RTRunner.test_g0_failure_skips_both_RT_and_UK) ... ok
+test_generated_candidate_closed_until_reader_integration (__main__.RTRunner.test_generated_candidate_closed_until_reader_integration) ... ok
+test_hash_failure_or_between_stage_change_rejects_RT2 (__main__.RTRunner.test_hash_failure_or_between_stage_change_rejects_RT2) ... ok
+test_manifest_job_dir_is_recorded_and_stage_function_unchanged (__main__.RTRunner.test_manifest_job_dir_is_recorded_and_stage_function_unchanged) ... ok
+test_missing_binary_or_marker_rejects_RT2 (__main__.RTRunner.test_missing_binary_or_marker_rejects_RT2) ... ok
+test_normal_order_and_same_checkpoint_binding (__main__.RTRunner.test_normal_order_and_same_checkpoint_binding) ... ok
+test_restore_publish_new_only_after_stage_attempts (__main__.RTRunner.test_restore_publish_new_only_after_stage_attempts) ... ok
+test_runner_shell_syntax (__main__.RTRunner.test_runner_shell_syntax) ... ok
+test_ten_zero_RJ_no_UK_but_RJ2_has_UK (__main__.RTRunner.test_ten_zero_RJ_no_UK_but_RJ2_has_UK) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 3.628s
+
+OK

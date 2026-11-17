@@ -1,0 +1,441 @@
+test_actual_file_hash_changed (__main__.Binding.test_actual_file_hash_changed) ... FAIL
+test_comments_unexpanded_command_and_inline_comment (__main__.Binding.test_comments_unexpanded_command_and_inline_comment) ... FAIL
+test_declared_technical_failure_has_priority (__main__.Binding.test_declared_technical_failure_has_priority) ... FAIL
+test_double_slash_honest_spelling_passes (__main__.Binding.test_double_slash_honest_spelling_passes) ... FAIL
+test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) ...
+  test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) (key=0) ... FAIL
+  test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) (key=1) ... FAIL
+  test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) (key=2) ... FAIL
+test_existing_certificates_never_written (__main__.Binding.test_existing_certificates_never_written) ... FAIL
+test_fixture_ckpt_and_log_layout (__main__.Binding.test_fixture_ckpt_and_log_layout) ... FAIL
+test_literal_spelling_required_even_same_resolved_file (__main__.Binding.test_literal_spelling_required_even_same_resolved_file) ... FAIL
+test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) ...
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='', index=1) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='', index=2) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5F8CDDFDD8D4AD531100CEADE86D0DA5AB89BC862261C9BB168E0EED3CC6DAC9', index=1) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5F8CDDFDD8D4AD531100CEADE86D0DA5AB89BC862261C9BB168E0EED3CC6DAC9', index=2) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac', index=1) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac', index=2) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac90', index=1) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac90', index=2) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', index=1) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', index=2) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac9 extra=1', index=1) ... FAIL
+  test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac9 extra=1', index=2) ... FAIL
+test_malformed_log_command_beats_missing_binary (__main__.Binding.test_malformed_log_command_beats_missing_binary) ... FAIL
+test_missing_binary_does_not_mask_duplicate_or_hash_conflict (__main__.Binding.test_missing_binary_does_not_mask_duplicate_or_hash_conflict) ... FAIL
+test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) ...
+  test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) (key=0) ... FAIL
+  test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) (key=1) ... FAIL
+  test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) (key=2) ... FAIL
+test_missing_expansion_is_unconfirmed (__main__.Binding.test_missing_expansion_is_unconfirmed) ... FAIL
+test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) ...
+  test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) (file='rt.bin') ... FAIL
+  test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) (file='log_screen.liggghts') ... FAIL
+  test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) (file='run_manifest.txt') ... FAIL
+test_missing_job_key_does_not_mask_cross_record_conflict (__main__.Binding.test_missing_job_key_does_not_mask_cross_record_conflict) ... FAIL
+test_normal_records_and_input_bytes_unchanged (__main__.Binding.test_normal_records_and_input_bytes_unchanged) ... FAIL
+test_other_job_and_renamed_job_are_syntax_fail (__main__.Binding.test_other_job_and_renamed_job_are_syntax_fail) ... FAIL
+test_real_root_alias_and_both_sides_resolve (__main__.Binding.test_real_root_alias_and_both_sides_resolve) ... skipped 'directory symlink unavailable: OSError'
+test_two_expanded_log_commands_are_syntax_fail (__main__.Binding.test_two_expanded_log_commands_are_syntax_fail) ... FAIL
+test_whitespace_or_empty_path_is_syntax_fail (__main__.Binding.test_whitespace_or_empty_path_is_syntax_fail) ... FAIL
+
+======================================================================
+FAIL: test_actual_file_hash_changed (__main__.Binding.test_actual_file_hash_changed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 87, in test_actual_file_hash_changed
+    self.binary.write_bytes(b'changed restart');self.check('SYNTAX_FAIL')
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_comments_unexpanded_command_and_inline_comment (__main__.Binding.test_comments_unexpanded_command_and_inline_comment)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 36, in test_comments_unexpanded_command_and_inline_comment
+    self.write();self.check()
+                 ^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_declared_technical_failure_has_priority (__main__.Binding.test_declared_technical_failure_has_priority)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 100, in test_declared_technical_failure_has_priority
+    self.binary.unlink();self.check('SYNTAX_FAIL',technical_ok=False)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_double_slash_honest_spelling_passes (__main__.Binding.test_double_slash_honest_spelling_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 73, in test_double_slash_honest_spelling_passes
+    self.log='read_restart '+literal+'/RT1/rt.bin\n';self.write();self.check()
+                                                                  ^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) (key=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 41, in test_duplicate_each_key_even_identical
+    self.rows=original+[original[i]];self.write();self.check('SYNTAX_FAIL')
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) (key=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 41, in test_duplicate_each_key_even_identical
+    self.rows=original+[original[i]];self.write();self.check('SYNTAX_FAIL')
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) (key=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 41, in test_duplicate_each_key_even_identical
+    self.rows=original+[original[i]];self.write();self.check('SYNTAX_FAIL')
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_existing_certificates_never_written (__main__.Binding.test_existing_certificates_never_written)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 91, in test_existing_certificates_never_written
+    self.check();self.binary.unlink();self.check('UNCONFIRMED')
+    ^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_fixture_ckpt_and_log_layout (__main__.Binding.test_fixture_ckpt_and_log_layout)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 96, in test_fixture_ckpt_and_log_layout
+    self.check(log_name='log.liggghts',require_ckpt=True)
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_literal_spelling_required_even_same_resolved_file (__main__.Binding.test_literal_spelling_required_even_same_resolved_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 69, in test_literal_spelling_required_even_same_resolved_file
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='', index=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='', index=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5F8CDDFDD8D4AD531100CEADE86D0DA5AB89BC862261C9BB168E0EED3CC6DAC9', index=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5F8CDDFDD8D4AD531100CEADE86D0DA5AB89BC862261C9BB168E0EED3CC6DAC9', index=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac', index=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac', index=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac90', index=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac90', index=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', index=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', index=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac9 extra=1', index=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) (value='5f8cddfdd8d4ad531100ceade86d0da5ab89bc862261c9bb168e0eed3cc6dac9 extra=1', index=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 48, in test_malformed_hashes_and_extra_tokens
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_malformed_log_command_beats_missing_binary (__main__.Binding.test_malformed_log_command_beats_missing_binary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 83, in test_malformed_log_command_beats_missing_binary
+    self.binary.unlink();self.log='read_restart '+self.path+' unexpected\n';self.write();self.check('SYNTAX_FAIL')
+                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_binary_does_not_mask_duplicate_or_hash_conflict (__main__.Binding.test_missing_binary_does_not_mask_duplicate_or_hash_conflict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 59, in test_missing_binary_does_not_mask_duplicate_or_hash_conflict
+    self.binary.unlink();self.rows.append(self.rows[0]);self.write();self.check('SYNTAX_FAIL')
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) (key=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 53, in test_missing_each_record_is_unconfirmed
+    self.rows=original[:i]+original[i+1:];self.write();self.check('UNCONFIRMED')
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) (key=1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 53, in test_missing_each_record_is_unconfirmed
+    self.rows=original[:i]+original[i+1:];self.write();self.check('UNCONFIRMED')
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) (key=2)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 53, in test_missing_each_record_is_unconfirmed
+    self.rows=original[:i]+original[i+1:];self.write();self.check('UNCONFIRMED')
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_expansion_is_unconfirmed (__main__.Binding.test_missing_expansion_is_unconfirmed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 85, in test_missing_expansion_is_unconfirmed
+    self.log='#read_restart '+self.path+'\nread_restart ${ckpt}\n';self.write();self.check('UNCONFIRMED')
+                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) (file='rt.bin')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 57, in test_missing_files_are_unconfirmed_without_contradiction
+    b=p.read_bytes();p.unlink();self.check('UNCONFIRMED');p.write_bytes(b)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) (file='log_screen.liggghts')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 57, in test_missing_files_are_unconfirmed_without_contradiction
+    b=p.read_bytes();p.unlink();self.check('UNCONFIRMED');p.write_bytes(b)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) (file='run_manifest.txt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 57, in test_missing_files_are_unconfirmed_without_contradiction
+    b=p.read_bytes();p.unlink();self.check('UNCONFIRMED');p.write_bytes(b)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_missing_job_key_does_not_mask_cross_record_conflict (__main__.Binding.test_missing_job_key_does_not_mask_cross_record_conflict)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 64, in test_missing_job_key_does_not_mask_cross_record_conflict
+    self.write();self.check('SYNTAX_FAIL')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_normal_records_and_input_bytes_unchanged (__main__.Binding.test_normal_records_and_input_bytes_unchanged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 32, in test_normal_records_and_input_bytes_unchanged
+    r=self.check();self.assertFalse(r['physical_qualification']);self.assertFalse(r['certificate_published'])
+      ^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_other_job_and_renamed_job_are_syntax_fail (__main__.Binding.test_other_job_and_renamed_job_are_syntax_fail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 66, in test_other_job_and_renamed_job_are_syntax_fail
+    renamed=self.job.with_name('RJ.try1');self.job.rename(renamed);self.check('SYNTAX_FAIL',job=renamed)
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_two_expanded_log_commands_are_syntax_fail (__main__.Binding.test_two_expanded_log_commands_are_syntax_fail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 81, in test_two_expanded_log_commands_are_syntax_fail
+    self.log+='read_restart '+self.path+'\n';self.write();self.check('SYNTAX_FAIL')
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+======================================================================
+FAIL: test_whitespace_or_empty_path_is_syntax_fail (__main__.Binding.test_whitespace_or_empty_path_is_syntax_fail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 104, in test_whitespace_or_empty_path_is_syntax_fail
+    self.rows=[line]+original[1:];self.write();self.check('SYNTAX_FAIL')
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<REPO>\docs\reviews\p1_rt_runner_preparation_20261117\test_rt_binding.py", line 28, in check
+    self.assertTrue(callable(getattr(m,'check_binding',None)),'RT binding parser is not implemented')
+AssertionError: False is not true : RT binding parser is not implemented
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.118s
+
+FAILED (failures=36, skipped=1)

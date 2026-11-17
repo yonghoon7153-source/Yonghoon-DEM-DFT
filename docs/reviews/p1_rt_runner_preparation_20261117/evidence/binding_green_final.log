@@ -1,0 +1,25 @@
+test_actual_file_hash_changed (__main__.Binding.test_actual_file_hash_changed) ... ok
+test_comments_unexpanded_command_and_inline_comment (__main__.Binding.test_comments_unexpanded_command_and_inline_comment) ... ok
+test_declared_technical_failure_has_priority (__main__.Binding.test_declared_technical_failure_has_priority) ... ok
+test_double_slash_honest_spelling_passes (__main__.Binding.test_double_slash_honest_spelling_passes) ... ok
+test_duplicate_each_key_even_identical (__main__.Binding.test_duplicate_each_key_even_identical) ... ok
+test_existing_certificates_never_written (__main__.Binding.test_existing_certificates_never_written) ... ok
+test_fixture_ckpt_and_log_layout (__main__.Binding.test_fixture_ckpt_and_log_layout) ... ok
+test_literal_spelling_required_even_same_resolved_file (__main__.Binding.test_literal_spelling_required_even_same_resolved_file) ... ok
+test_malformed_hashes_and_extra_tokens (__main__.Binding.test_malformed_hashes_and_extra_tokens) ... ok
+test_malformed_log_command_beats_missing_binary (__main__.Binding.test_malformed_log_command_beats_missing_binary) ... ok
+test_missing_binary_does_not_mask_duplicate_or_hash_conflict (__main__.Binding.test_missing_binary_does_not_mask_duplicate_or_hash_conflict) ... ok
+test_missing_each_record_is_unconfirmed (__main__.Binding.test_missing_each_record_is_unconfirmed) ... ok
+test_missing_expansion_is_unconfirmed (__main__.Binding.test_missing_expansion_is_unconfirmed) ... ok
+test_missing_files_are_unconfirmed_without_contradiction (__main__.Binding.test_missing_files_are_unconfirmed_without_contradiction) ... ok
+test_missing_job_key_does_not_mask_cross_record_conflict (__main__.Binding.test_missing_job_key_does_not_mask_cross_record_conflict) ... ok
+test_normal_records_and_input_bytes_unchanged (__main__.Binding.test_normal_records_and_input_bytes_unchanged) ... ok
+test_other_job_and_renamed_job_are_syntax_fail (__main__.Binding.test_other_job_and_renamed_job_are_syntax_fail) ... ok
+test_real_root_alias_and_both_sides_resolve (__main__.Binding.test_real_root_alias_and_both_sides_resolve) ... skipped 'directory symlink unavailable: OSError'
+test_two_expanded_log_commands_are_syntax_fail (__main__.Binding.test_two_expanded_log_commands_are_syntax_fail) ... ok
+test_whitespace_or_empty_path_is_syntax_fail (__main__.Binding.test_whitespace_or_empty_path_is_syntax_fail) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.455s
+
+OK (skipped=1)
