@@ -54,7 +54,8 @@ for f in "${PPS[@]}"; do
 done
 zg=$(md5sum < "$R/pseudo/$ZR" 2>/dev/null | cut -d' ' -f1)
 [ "$zg" = "$ZR_MD5" ] && ok "$ZR md5 = gabia 검사값" || no "$R/pseudo/$ZR 가 없거나 md5 ($zg) ≠ $ZR_MD5 — gabia 에서 scp"
-grep -aqi "<PP_CHI" "$R/pseudo/$ZR" 2>/dev/null && ok "Zr PP 원자 파동함수 있음 (PDOS)" || echo "  ⚠ Zr PP 에 PP_CHI 가 없다 — Zr PDOS 가 빠질 수 있다"
+# 원자 파동함수 = UPF v2 <PP_CHI.n> 또는 UPF v1 <PP_PSWFC> (GBRV 는 v1 이다 — 2026-11-17 ZrO₂ 실행 때 v2 태그만 봐서 오경보가 났다)
+grep -aqiE "<PP_CHI|<PP_PSWFC>" "$R/pseudo/$ZR" 2>/dev/null && ok "Zr PP 원자 파동함수 있음 (PP_CHI 또는 PP_PSWFC · PDOS)" || echo "  ⚠ Zr PP 에 원자 파동함수 (PP_CHI · PP_PSWFC) 가 없다 — Zr PDOS 가 빠질 수 있다"
 [ -f "$STRUCT" ] && ok "구조 $(basename "$STRUCT")" || no "구조 없음: $STRUCT"
 [ -f "$CTRL_SRC/02_scf.in" ] && ok "대조 잡 입력 $CTRL" || no "대조 잡 입력 없음: $CTRL_SRC"
 st=$(python3 - "$W/db/governance/decisions.json" "$EXTRA_DECISION" <<'PY'
