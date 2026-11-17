@@ -599,5 +599,17 @@
   "판정_줄_블록 (gabia · 읽기만 · 계산 안 함)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; C=$R/s9_v6\n$PY -c \"import json; v=json.load(open('$C/sp_verdict.json')); print('단일점 순서', v['order'], '· 최저–차점', round(v['gap_eV'], 3), 'eV/B2O3 · G5', '같음' if v['G5']['same_order'] else '다름'); print(' ', v['sentence_sp'][:400]); k=json.load(open('$C/kprobe_verdict.json')); print('k 탐침 발동', k['triggered'], '· k 점', k['nk']); [print('  ', p, '·', x) for p, x in k['pairs'].items()]; print('  why', k['why'])\"; ( cd $C && sha256sum sp_verdict.json kprobe_verdict.json | cut -c1-16,65- )",
   "다음": "이완 3 끝 (실행기 '끝 — 완료 3') → read_relax (--prev kprobe_verdict.json --host modelc_V0_k663.xyz) · 압력 어림 · EOS 생략 판정 문장",
   "by": "agent · 2026-11-16"
+ },
+ "9단계_이완_진행_2026_11_17_0916": {
+  "근거": "사용자가 붙인 gabia 감시 화면 (kserver116-27 · 2026-11-17 09:16:14) — 실행기 로그 끝 줄 · 잡별 BFGS 걸음 · nvidia-smi",
+  "rx_FB_cfg0040": "✓ 끝 11-17 00:43:50 · 925 분 · BFGS 걸음 57 · BFGS 수렴 · JOB DONE",
+  "다음_잡_시작": "00:43:50 VRAM 여유 48539 MiB (문턱 45000) · GPU 독점 확인 (다른 compute 프로세스 0)",
+  "rx_Ffree_cfg0039": "도는 중 — 09:16 에 BFGS 걸음 29 (00:43:50 시작 · 걸음당 ≈ 17.7 분)",
+  "rx_FP_cfg0015": "대기 — 실행기가 잡 폴더를 정렬해 도는 순서로 보여 마지막이다 (대소문자 안 가린 정렬이면 rx_FB · rx_Ffree · rx_FP · 계획의 FAM 순서 F_B · F_P · F_free 와 다를 뿐 건너뛴 것이 아니다 · 설정은 셋 다 같다) — ⚠ 정렬 탓이라는 건 감시 줄에서 추론한 것이다 (실행기 코드로는 확인 안 함)",
+  "GPU": "35190 MiB · 100 % (잡 하나)",
+  "어림": "Ffree 가 FB 만큼 (≈ 57 걸음) 걸리면 ≈ 11-17 17:30 끝 · 그 뒤 FP (걸음 수 모름 · FB 만큼이면 ≈ 15 h) → 셋 다 ≈ 11-18 아침",
+  "결과_열람": "없음 — 에너지 · 압력은 read_relax 가 세 출력을 결속한 뒤에만 읽는다",
+  "다음": "이완 3 끝 (실행기 '끝 — 완료 3') → read_relax (--prev kprobe_verdict.json --host modelc_V0_k663.xyz) · 압력 어림 · EOS 생략 판정 문장",
+  "by": "agent · 2026-11-17"
  }
 }
