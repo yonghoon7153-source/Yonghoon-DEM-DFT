@@ -315,6 +315,7 @@
 - 같은 축 (치밀화 · in-die / out-of-die · 감압): `faka2026_particle_size_consolidation_strain_lpscl` · `thompson2026_high_pressure_densification_lps_lpscl_xrd_tomography` · `lee2025_heckel_argyrodite_powder_densification_nanoindentation` · `miss2026_insitu_conductivity_porosity_pressure_compaction`.
 - σ 측정 · 적층압: `cronau2021_stack_pressure_ionic_conductivity` · `doux2020_stack_pressure_assb` · `schneider2023_particle_size_pressure_transport`.
 - 바인더 · 되튐: `diener2022_roll_gap_springback_calendering` (ref 56) · `hong2026_cbd_viscoelasticity_springback` · `bielefeld2020_effective_ionic_conductivity_binder` · `cao2026_dual_binder_18um_sulfide_electrolyte_film` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin`.
+- ref 61 원문 카드 (2026-11-17): `ohashi2020_stress_distribution_composite_electrode_sulfide_assb` — LGPS + ZrO₂ (활물질 대리) 의 선형 탄성 복셀 FEM 응력 → 국소 σ · ⚠ L305 의 'CL-90 … 이 논문을 잘못 기억한 것인지는 [미확인]' 에 대한 답 = 그 논문에 **NCM 경도 · NCM 영률 · LPSCl 영률이 없다** (입력 = LGPS 21.7 / 0.3 GPa · ν 0.37 · ZrO₂ 200 GPa · ν 0.30) — 그 카드 §0-1 · §3-6.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

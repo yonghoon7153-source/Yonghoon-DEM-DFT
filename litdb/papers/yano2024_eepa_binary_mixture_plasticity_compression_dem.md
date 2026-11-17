@@ -528,6 +528,7 @@ EEPA 접촉 법칙의 소성비 λp 만 다른 두 종의 단분산 구 (λp 0.3
 - 하중 뺌 (정본): `miss2026_insitu_conductivity_porosity_pressure_compaction` · `kollenda2024_time_sensitivity_calendered_electrode_springback_storage`.
 - 같은 300 MPa 급 가압 → 제하 의 큰 겹침 DEM (후보 C · 단일 재료): `zunker2025_dem_large_deformation_compaction` (출판본 2026-11-12 보강 — 축 정점 297.5 MPa · 잔류 반경응력 31 MPa 를 실험과 같은 상대밀도 축에서 대조 · '다른 재료 성질' 은 future work).
 - 같은 그룹 짝 (이 논문 ref [22] · 후보 N-26): `yano2023_eepa_bimodal_size_plasticity_compression_dem` — **크기 이원** (50 / 12.5 µm · 같은 NCM 물성 · E 71 GPa 절반) · λp 를 계산마다 모든 접촉 같게 (0 · 0.38 · 0.5 · 0.7) · 400 MPa → 0.02 s 유지 → 제하 · λp ↑ 에 Ep/Ee ↑ (그 논문 그림 6b) · 소성이 작은 입자 최적 몫을 0.3 → 0.5 로 옮긴다 · f₀ = −(8/3)πγR\* 유도 (그 논문 SI 식 S4).
+- 강성이 다른 두 상의 **하중 몫** (이 논문이 재지 않은 것) 의 연속체 값 (2026-11-17): `ohashi2020_stress_distribution_composite_electrode_sulfide_assb` — 선형 탄성 복셀 FEM (ZrO₂ 200 / LGPS 21.7 GPa · 100 MPa) · SE 평균 MPS 87.7 → 48.9 MPa (ZrO₂ 19 → 67 vol%) [판독] · 단단한 상 축하중 몫 ≥ 0.29 → 0.84 [그 카드 산술] — 값 전이 금지 (재료 · 모델 · 소성 다름).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
