@@ -75,7 +75,7 @@ PTFE 0.5 wt% 양극에서는 co-rolled와 freestanding의 전달이 거의 같�
 | 양극 σ_e (PTFE 함량별) | 34 / 4.5 / 0.011 mS/cm | PTFE 0.5/2/5 wt%, VGCF망 | L33 |
 | SSE 층 σ_ionic | 1.04 (co-rolled) / 1.29 (freestanding) mS/cm | LPSCl:PTFE 100:0.1 | L36 |
 | 저압 사이클 용량 유지 | 2 MPa서 >80% 유지 500 cyc | LiIn‖LPSCl‖NCM, 0.5 C | L45 |
-| stack 비에너지 | 310 Wh kg⁻¹ | pouch, 5 mAh cm⁻², 5 MPa | L44 |
+| stack specific energy | 310 Wh kg⁻¹ | pouch, 5 mAh cm⁻², 5 MPa | L44 |
 | PTFE storage modulus 감소 | 67% 감소 | DMA 1 Hz, 30에서 120 °C | L42 |
 
 ### 읽을 때 조심할 것

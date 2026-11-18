@@ -6,7 +6,7 @@
 
 ## 장 서문 — 음이온 자리 무질서가 아지로다이트 전도를 켠다
 
-*읽기 카드 24편을 엮어 쓴 글 · 항목 30개 중 29개 검증 통과 · 2026-11-10*
+*읽기 카드 24편을 엮어 쓴 글 · 항목 30개 중 29개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 아지로다이트에서 할로젠 조성, 이종 원소 치환, 자리 무질서가 Li 전도도와 계면, 대기 안정성을 어떻게 바꾸는지가 질문이다. 할로젠과 S²⁻가 두 음이온 자리에 섞여 앉아야 케이지 사이 점프가 켜진다는 데는 구조, 계산, 실험이 모였다. [근거: Deiseroth et al. 2008 (`deiseroth2008_li6ps5x_argyrodite_high_li_mobility`); de Klerk et al. 2016 (`deklerk2016_diffusion_site_disorder_argyrodite`); Kraft et al. 2017 (`kraft2017_lattice_polarizability_argyrodite_Li6PS5X`); Adeli et al. 2019 (`adeli2019_halide_substitution_boosting_argyrodite`)]
 

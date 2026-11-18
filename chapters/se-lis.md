@@ -6,7 +6,7 @@
 
 ## 장 서문 — 계면을 만든 공정이 성능을 올렸으나 원인은 아직 갈리지 않았다
 
-*읽기 카드 8편을 엮어 쓴 글 · 항목 29개 중 29개 검증 통과 · 2026-11-10*
+*읽기 카드 8편을 엮어 쓴 글 · 항목 29개 중 29개 검증 통과 · 2026-11-10 · 낡음: 그 뒤 이 장의 카드가 바뀌었다 (센서가 자정 뒤 다시 쓴다)*
 
 전고체 Li–S 양극에서 황 전환은 활물질, 탄소, 고체 전해질이 만나는 계면에 묶인 고체 반응이 된다. 여러 논문이 혼합 공정, 혼합전도체, 분자 매개체로 이 계면을 넓혀 이용률과 첫 충전 전위를 개선했다고 보고했다. [근거: Wu et al. 2026 (`wu2026_asslsb_li2s_reaction_mechanisms_engineering_review`); Wang et al. 2025 (`wang2025_miec_tis2_lps_three_phase_interface_lis_assb`); Lee et al. 2025 (`lee2025_halide_segregation_uhs_mixing_li_chalcogen_assb`); Cronk et al. 2026 (`cronk2026_lis_cathode_interphase_chemistry`); Liu et al. 2026 (`liu2026_li4sns4_mediator_low_barrier_li2s`); Zhang et al. 2026 (`zhang2026_anode_free_asslsb_li2s_pi3_na_current_collector`)]
 
