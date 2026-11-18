@@ -1,0 +1,32 @@
+(
+set -eu
+@ACCESS@
+pin='@PIN@'
+expected='@SHA@'
+packet=rt_fixture_np6_1118.tar.gz
+remote=rt_fixture_np6_1118_@SHORT@
+downloads=$(wslpath "$(cmd.exe /c 'echo %USERPROFILE%' 2>/dev/null | tr -d '\r' | tail -n 1)")/Downloads
+source_file=
+for dir in "$PWD" "$downloads" "$downloads/rt_fixture_np6_1118"; do
+  if [ -f "$dir/$packet" ]; then source_file="$dir/$packet"; break; fi
+done
+[ -n "$source_file" ] || { echo "Place $packet in Downloads or current directory"; exit 2; }
+digest=$(sha256sum -- "$source_file")
+[ "${digest%% *}" = "$expected" ] || { echo 'STOP: source packet hash'; exit 2; }
+ssh -p "$IBBP" "$IBB" "umask 077 && mkdir -- '$remote'" || { echo 'STOP: remote setup; use collect-only for an existing submission'; exit 2; }
+scp -P "$IBBP" -- "$source_file" "$IBB:$remote/$packet"
+ssh -p "$IBBP" "$IBB" "bash -s -- '$remote' '$pin' '$expected'" <<'RT_SUBMIT'
+set -eu
+umask 077
+cd -- "$HOME/$1"
+printf '%s  %s\n' "$3" rt_fixture_np6_1118.tar.gz | sha256sum -c -
+tar -xzf rt_fixture_np6_1118.tar.gz
+[ "$(cat packet/PIN.txt)" = "$2" ]
+(cd packet && sha256sum -c SHA256SUMS)
+printf '%s\n' "$2" > SOURCE_PIN
+sbatch --parsable packet/job.sh > submission.txt
+id=$(cut -d ';' -f1 submission.txt)
+[[ "$id" =~ ^[0-9]+$ ]] || { echo 'STOP: ambiguous job ID; do not submit again'; exit 2; }
+printf 'RT_SUBMITTED job=%s label=DEVELOPMENT_DATA_ONLY tasks=6 wall=01:00:00\n' "$id"
+RT_SUBMIT
+)

@@ -1,0 +1,33 @@
+(
+set -eu
+@ACCESS@
+remote=rt_fixture_np6_1118_@SHORT@
+# Retrieval only. Rerun just this block after PENDING or RUNNING.
+status=$(ssh -p "$IBBP" "$IBB" "bash -s -- '$remote'" <<'RT_STATUS'
+set -eu
+cd -- "$HOME/$1"
+id=$(cut -d ';' -f1 submission.txt)
+[[ "$id" =~ ^[0-9]+$ ]]
+rows=$(sacct -n -P -j "$id" -o JobIDRaw,State,ExitCode)
+row=$(awk -F '|' -v job="$id" '$1==job {print; n++} END {if(n!=1) exit 1}' <<<"$rows") || { echo 'Accounting pending; collect later' >&2; exit 2; }
+printf '%s\n' "$row" >&2
+IFS='|' read -r job state code extra <<< "$row"
+case "$state" in COMPLETED|FAILED|CANCELLED*|TIMEOUT|OUT_OF_MEMORY|NODE_FAIL|PREEMPTED|BOOT_FAIL|DEADLINE) ;; *) echo 'Not terminal; collect later' >&2; exit 2;; esac
+[ -s SHA256SUMS ] && [ -s rt_development_return.tar.gz ] || { echo 'Incomplete return; keep remote logs' >&2; cat worker_rc.txt >&2 2>/dev/null || :; tail -n 4 "job_${id}.err" >&2 2>/dev/null || :; exit 2; }
+cat worker_rc.txt >&2
+tail -n 3 fixture_screen.txt >&2
+printf '%s\n' "$row"
+RT_STATUS
+)
+downloads=$(wslpath "$(cmd.exe /c 'echo %USERPROFILE%' 2>/dev/null | tr -d '\r' | tail -n 1)")/Downloads
+dest=$(mktemp -d "$downloads/rt_np6_return_XXXXXX")
+for name in rt_development_return.tar.gz SHA256SUMS worker_rc.txt; do scp -P "$IBBP" "$IBB:$remote/$name" "$dest/$name"; done
+cd "$dest"
+grep -Exq '[0-9a-f]{64}  rt_development_return.tar.gz' SHA256SUMS
+[ "$(wc -l < SHA256SUMS)" -eq 1 ]
+sha256sum -c SHA256SUMS
+printf '%s\n' "$status" > scheduler.txt
+cat worker_rc.txt
+printf 'RETURN_DIR=%s\n' "$dest"
+[[ "$status" == *'|COMPLETED|0:0'* ]] && grep -Fxq FIXTURE_RC=0 worker_rc.txt
+)
