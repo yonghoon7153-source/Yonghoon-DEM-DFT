@@ -2,9 +2,11 @@
  "slug": "schneider2023_particle_size_pressure_transport",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-05",
+ "generated": "2026-11-18",
+ "generated_main": "2026-08-05",
  "sources": [
-  "DEM 논문/34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf"
+  "DEM 논문/34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+  "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf"
  ],
  "figures": [
   {
@@ -120,6 +122,1555 @@
    "dpi": 300,
    "src": "34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
    "blank": 0.68
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: (a) XRD pattern of tetragonal Li7SiPS8 (t-Li7SiPS8) for the <50 um and >50 um fractions measured in Debye-Scherrer (capillary) geometry. (b) Zoomed-in XRD pattern.",
+   "rotated_deg": 0,
+   "bbox": [
+    114.8,
+    227.6,
+    497.2,
+    428.5
+   ],
+   "w": 1594,
+   "h": 838,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.925,
+   "auto_bbox": [
+    66.0,
+    225.6,
+    546.0,
+    430.5
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 69, 2546×1312 px over [118.8, 231.6, 493.2, 424.5] pt ≈ 489.6 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    2546,
+    1312
+   ]
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Flowchart of particle size and morphology analysis used in this study. Processes are displayed as rectangular boxes, decisions as diamond boxes.",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    95.7,
+    484.3,
+    658.9
+   ],
+   "w": 1486,
+   "h": 2348,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.143,
+   "auto_bbox": [
+    66.0,
+    83.6,
+    546.0,
+    669.5
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 81, 1479×2267 px over [118.8, 89.6, 493.2, 663.5] pt ≈ 284.4 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    1479,
+    2267
+   ]
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 7,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: (a) Original SEM image, (b) after applying Gaussian blur ﬁlter, (c) binary mask after thresholding. Black and white parts denote the background and ROI. (d) Separated particles after applying distance transform watershed algorithm, (e) Colored mask showing the individual particles, and (f) False-color SEM image by merging (a) and (e).",
+   "rotated_deg": 0,
+   "bbox": [
+    113.0,
+    126.9,
+    499.4,
+    597.4
+   ],
+   "w": 1611,
+   "h": 1962,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.388,
+   "auto_bbox": [
+    66.0,
+    114.1,
+    546.1,
+    610.2
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 94, 2480×2850 px over [95.4, 120.1, 516.6, 604.2] pt ≈ 423.9 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    2480,
+    2850
+   ]
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 8,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: False-color SEM images of < 50 µm t-Li7SiPS8 particles. A total number of 3475 particles were measured.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.0,
+    258.7,
+    535.0,
+    373.5
+   ],
+   "w": 1910,
+   "h": 480,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.144,
+   "auto_bbox": [
+    66.0,
+    223.9,
+    546.0,
+    383.1
+   ],
+   "recrop": "2026-11-18 다시 자름 — body-text line \"particles compared to the respective largest ones.\" above the panels → embedded raster (xref 110, 3507×911 px over [72.0, 255.5, 540.0, 377.1] pt ≈ 539.5 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3507,
+    911
+   ]
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 9,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: (a)-(e) False-color SEM images of > 50 µm t-Li7SiPS8 particles. (f) SEM image of a t-Li7SiPS8 particle showing the rough surface morphology observed on large particles. A total number of 5118 particles were measured.",
+   "rotated_deg": 0,
+   "bbox": [
+    78.8,
+    93.0,
+    532.9,
+    325.8
+   ],
+   "w": 1893,
+   "h": 971,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.128,
+   "auto_bbox": [
+    66.0,
+    82.4,
+    546.1,
+    336.4
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 121, 3507×1814 px over [72.0, 88.4, 540.0, 330.4] pt ≈ 539.5 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3507,
+    1814
+   ]
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 9,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Cumulative volume percent as a function of particle size for the <50 µm sieving fraction of t-Li7SiPS8. The distribution curve for the SEM image analyis is calculated from the number-based distribution of Feret diameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    194.0,
+    430.8,
+    411.9,
+    648.5
+   ],
+   "w": 909,
+   "h": 909,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.946,
+   "auto_bbox": [
+    66.0,
+    420.5,
+    546.0,
+    656.3
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only (column-wide white sides) → embedded raster (xref 116, 1873×1791 px over [189.0, 426.5, 423.0, 650.3] pt ≈ 576.3 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    1873,
+    1791
+   ]
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: 2D scatterplot of particle shape, convexity and solidity, with respective marginal histograms to show the data marker density. The associated sphericity (a) and feret diameter (b) is represented by a color code as the marker inﬁll color. 2D-representations of four particles are depicted as ﬁlled outlines. The data was measured on the <50 µm sieving fraction.",
+   "rotated_deg": 0,
+   "bbox": [
+    73.4,
+    264.5,
+    539.0,
+    461.9
+   ],
+   "w": 1941,
+   "h": 823,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.772,
+   "auto_bbox": [
+    66.0,
+    236.0,
+    546.1,
+    466.7
+   ],
+   "recrop": "2026-11-18 다시 자름 — body-text line \"as in the smaller PSD sample.\" above the panels → embedded raster (xref 140, 3507×1462 px over [72.0, 265.7, 540.0, 460.7] pt ≈ 539.5 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3507,
+    1462
+   ]
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: 2D scatterplot of particle shape, convexity and solidity, with respective marginal histograms to show the data marker density. The associated sphericity (a) and feret diameter (b) is represented by a color code as the marker inﬁll color. 2D-representations of four particles are depicted as ﬁlled outlines. The data was measured on the >50 µm sieving fraction.",
+   "rotated_deg": 0,
+   "bbox": [
+    70.2,
+    70.9,
+    537.5,
+    270.9
+   ],
+   "w": 1948,
+   "h": 834,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.799,
+   "auto_bbox": [
+    66.0,
+    66.0,
+    546.1,
+    275.7
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 149, 3507×1482 px over [72.0, 72.0, 540.0, 269.7] pt ≈ 539.5 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3507,
+    1482
+   ]
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 16,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: (a) Schematic Heckel plot with the 4 distinctive regimes dominated by particle rearrangement (I), particle plastic deformation (II), compact elastic deformation (III), and compact elastic recovery (IV). The orange, dotted line represents the linear regime of the Heckel plot. (b) Scheme of irreversible plastic deformation by shifting along a (lattice) plane. (c) Scheme of reversible elastic deformation by compressing the unit cell. (d) Heckel plots of < 50 µm (orange) and > 50 µm (blue) t-Li7SiPS8 samples. Hollow and ﬁlled data markers represent ”out of die” and ”in die” data, respectively. ”Out of die” data was extracted from stack (constant) pressure experiments at 10 MPa, ”in die” data was extracted at pelletizing (variable) pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.7,
+    111.0,
+    535.4,
+    282.5
+   ],
+   "w": 1929,
+   "h": 716,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.759,
+   "auto_bbox": [
+    66.0,
+    64.5,
+    546.1,
+    290.6
+   ],
+   "recrop": "2026-11-18 다시 자름 — section heading \"Pellet densification of t-Li7SiPS8\" above the panels → embedded raster (xref 173, 5038×1884 px over [72.0, 109.6, 540.0, 284.6] pt ≈ 775.1 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    5038,
+    1884
+   ]
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 17,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: SEM images of t-Li7SiPS8. (a) Broken cross-section of the pellet, (b) surface of the pellet, (c) broken cross-section close to the pellet’s surface and (d) in the middle of the pellet.",
+   "rotated_deg": 0,
+   "bbox": [
+    149.9,
+    293.4,
+    462.1,
+    588.4
+   ],
+   "w": 1302,
+   "h": 1230,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.197,
+   "auto_bbox": [
+    66.0,
+    259.9,
+    546.0,
+    598.7
+   ],
+   "recrop": "2026-11-18 다시 자름 — body-text line \"internal stress.\" above the panels → embedded raster (xref 182, 2480×2475 px over [153.9, 289.2, 458.1, 592.7] pt ≈ 587.0 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    2480,
+    2475
+   ]
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 18,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Nyquist plots of t-Li7SiPS8 at low (a) and high (b) pelleting pressures. The circle and triangle data markers represent the < 50 and > 50 µm particle size fractions, while the ﬁll color represents the pelleting pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    111.7,
+    111.8,
+    502.1,
+    321.9
+   ],
+   "w": 1627,
+   "h": 876,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.892,
+   "auto_bbox": [
+    66.0,
+    68.6,
+    546.0,
+    330.4
+   ],
+   "recrop": "2026-11-18 다시 자름 — section heading \"Nyquist plots\" above the panels → embedded raster (xref 191, 3327×1810 px over [107.1, 107.9, 504.9, 324.4] pt ≈ 602.2 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3327,
+    1810
+   ]
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 21,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: (a) 31P MAS NMR spectra of pristine and pressed t-Li7SiPS8 of diﬀerent particle size fractions. Peaks attributed to crystalline t-Li7SiPS8 and to the amorphous side phase are depicted in orange and blue, respectively. The ﬁt is displayed as an orange, dashed line. The measured data is depicted as a dark gray line. (b) Full width half maximum (FWHM) of 31P MAS NMR t-Li7SiPS8 peaks.",
+   "rotated_deg": 0,
+   "bbox": [
+    126.3,
+    111.9,
+    489.6,
+    612.1
+   ],
+   "w": 1515,
+   "h": 2085,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.859,
+   "auto_bbox": [
+    66.0,
+    66.7,
+    546.0,
+    623.8
+   ],
+   "recrop": "2026-11-18 다시 자름 — section heading \"31P-NMR of pristine and pressed t-Li7SiPS8\" above the panels → embedded raster (xref 219, 3196×4352 px over [118.8, 107.9, 493.2, 617.8] pt ≈ 614.6 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3196,
+    4352
+   ]
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 22,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Contact surface as a function of the pelletizing pressure.",
+   "rotated_deg": 0,
+   "bbox": [
+    185.0,
+    101.6,
+    427.0,
+    338.4
+   ],
+   "w": 1010,
+   "h": 988,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.952,
+   "auto_bbox": [
+    66.0,
+    68.6,
+    488.2,
+    340.8
+   ],
+   "recrop": "2026-11-18 다시 자름 — section heading \"Discrete element method simulation\" above the plot → embedded raster (xref 227, 924×905 px over [189.0, 105.6, 423.0, 334.8] pt ≈ 284.3 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    924,
+    905
+   ]
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 27,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Sketches of normal as well as tangential contact laws applied to the particle pair i, j. (a) Schematic of the spring-dashpot model applied as normal contact law. (b) Schematic of Coulomb’s law of friction applied as tangential contact law.",
+   "rotated_deg": 0,
+   "bbox": [
+    128.1,
+    100.5,
+    482.5,
+    278.1
+   ],
+   "w": 1478,
+   "h": 741,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.963,
+   "auto_bbox": [
+    66.0,
+    94.2,
+    546.1,
+    284.7
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 263, 4247×2025 px over [118.8, 100.2, 493.2, 278.7] pt ≈ 816.7 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    4247,
+    2025
+   ]
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 33,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Structural models of t-Li7SiPS8 that have been used for DFT and AIMD sim- ulations. For clarity, only PS4 3– (purple) and SiS4 4– (blue) tetrahedra are shown. Planes have been added as a guide to the eyes and indicate layers that are occupied by the same type of tetrahedra.",
+   "rotated_deg": 0,
+   "bbox": [
+    114.8,
+    104.6,
+    496.8,
+    399.7
+   ],
+   "w": 1593,
+   "h": 1231,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.68,
+   "auto_bbox": [
+    66.0,
+    68.6,
+    546.0,
+    401.7
+   ],
+   "recrop": "2026-11-18 다시 자름 — section heading \"Structural Models for DFT/AIMD simulations\" above the panels → embedded raster (xref 292, 3159×2422 px over [118.8, 108.6, 493.2, 395.7] pt ≈ 607.5 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3159,
+    2422
+   ]
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 35,
+   "file": "fig_S16.png",
+   "caption": "Figure S16: (a) Averaged total Mean squared displacement (MSD) of lithium from AIMD simulations at diﬀerent temperatures, in comparison to the individual spatial contributions of the (b) z, (c) x, and (d) y directions. The x, y, and z directions align with the crystallographic a, b, and c direction.",
+   "rotated_deg": 0,
+   "bbox": [
+    157.8,
+    92.6,
+    455.6,
+    382.8
+   ],
+   "w": 1242,
+   "h": 1210,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.8,
+   "auto_bbox": [
+    66.0,
+    83.4,
+    546.1,
+    388.0
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 309, 2827×2719 px over [153.9, 89.4, 458.1, 382.0] pt ≈ 669.1 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    2827,
+    2719
+   ]
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 35,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: Mean squared displacement (MSD) of lithium at MD simulation temperatures of (a) 500 K, (b) 700 K, and (c) 900 K. The x, y, and z directions align with the crystallographic a, b, and c direction.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.4,
+    497.7,
+    532.9,
+    649.7
+   ],
+   "w": 1899,
+   "h": 635,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.823,
+   "auto_bbox": [
+    66.0,
+    488.5,
+    546.0,
+    655.3
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 304, 4185×1384 px over [72.0, 494.5, 540.0, 649.3] pt ≈ 643.8 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    4185,
+    1384
+   ]
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 36,
+   "file": "fig_S18.png",
+   "caption": "Figure S18: Arrhenius plot of the total lithium tracer diﬀusion coeﬃcient (diamond, light gray), and its individual contributions along the crystallographic a, b and c directions.",
+   "rotated_deg": 0,
+   "bbox": [
+    195.4,
+    265.8,
+    426.6,
+    495.6
+   ],
+   "w": 964,
+   "h": 959,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.933,
+   "auto_bbox": [
+    66.0,
+    255.2,
+    546.1,
+    498.0
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only (faint corner marks) → embedded raster (xref 317, 3010×2969 px over [189.0, 261.2, 423.0, 492.0] pt ≈ 926.2 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    3010,
+    2969
+   ]
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 40,
+   "file": "fig_S19.png",
+   "caption": "Figure S19: Relative density of pellets prepared from Li6.6P0.4Ge0.6PS5I, Li6PS5Cl, Li6PS5Br0.75I0.25, Li6PS5Br0.25I0.75, and Li6PS5I at diﬀerent pressures. The data was ex- tracted from the ESI of Ohno et al.S49 The average density and the standard deviation is shown as a horizontal dashed line and light orange region, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    170.6,
+    240.8,
+    447.5,
+    492.4
+   ],
+   "w": 1155,
+   "h": 1049,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.819,
+   "auto_bbox": [
+    66.0,
+    229.5,
+    546.0,
+    494.8
+   ],
+   "recrop": "2026-11-18 다시 자름 — margins only → embedded raster (xref 337, 2147×1937 px over [165.6, 235.5, 446.4, 488.8] pt ≈ 550.5 dpi) trimmed to its dark-pixel bounds + 4 pt, clamped off neighbouring text lines · 300 dpi",
+   "viewed": true,
+   "src_native": [
+    2147,
+    1937
+   ]
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 10,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Volume based size distribution parameters for t-Li7SiPS8 particle size fractions obtained by sieving. The volume based distribution was calculated from the Feret diameter.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    145.8,
+    544.0,
+    261.5
+   ],
+   "w": 1984,
+   "h": 483,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.944,
+   "auto_bbox": [
+    67.0,
+    69.6,
+    545.0,
+    396.5
+   ],
+   "recrop": "2026-11-18 다시 자름 — tool crop was the whole page block (intro paragraph + Table S1 + Table S2; tS1 and tS2 byte-identical) → title line(s) + table rules, margins ≈ 4 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 10,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Number based size distribution parameters for t-Li7SiPS8 particle size fractions obtained by sieving.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    283.6,
+    544.0,
+    399.3
+   ],
+   "w": 1984,
+   "h": 483,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.957,
+   "auto_bbox": [
+    67.0,
+    69.6,
+    545.0,
+    396.5
+   ],
+   "recrop": "2026-11-18 다시 자름 — tool crop was the whole page block (identical to tS1) → title line(s) + table rules, margins ≈ 4 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 14,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Dimensional parameters from SEM image analysis using the MorphologyS2 plugin particles8 for ImageJ.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    251.4,
+    544.0,
+    537.5
+   ],
+   "w": 1984,
+   "h": 1193,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.939,
+   "auto_bbox": [
+    67.0,
+    249.4,
+    545.0,
+    532.4
+   ],
+   "recrop": "2026-11-18 다시 자름 — bottom rule (533.5 pt) cut off → title line(s) + table rules, margins ≈ 4 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 15,
+   "file": "tab_S4.png",
+   "caption": "Table S4: Dimensionless parametersS4 from SEM image analysis using the MorphologyS2 plugin particles8 for ImageJ.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    178.5,
+    544.0,
+    610.5
+   ],
+   "w": 1984,
+   "h": 1801,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.946,
+   "auto_bbox": [
+    67.0,
+    176.5,
+    544.5,
+    600.7
+   ],
+   "recrop": "2026-11-18 다시 자름 — bottom rule (606.5 pt) cut off → title line(s) + table rules, margins ≈ 4 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 29,
+   "file": "tab_S5.png",
+   "caption": "Table S5: Parameters used for the DEM simulations.",
+   "rotated_deg": 90,
+   "bbox": [
+    88.0,
+    64.0,
+    524.3,
+    724.0
+   ],
+   "w": 2751,
+   "h": 1819,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.93,
+   "auto_bbox": [
+    6.0,
+    6.0,
+    606.0,
+    786.0
+   ],
+   "recrop": "2026-11-18 다시 자름 — tool crop was the whole sideways page incl. the page number \"S-28\" and wide margins → title line(s) + table rules, margins ≈ 4 pt · sideways table rendered then rotated upright (tool convention) · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 37,
+   "file": "tab_S6.png",
+   "caption": "Table S6: Averaged stiﬀness tensor Cij (all entries in GPa) of t-Li7SiPS8, obtained from the stiﬀness tensors of four structural models of t-Li7SiPS8 with diﬀerent PS4 3–/SiS4 4– arrange- ments. With partially occupied sites, the space group of t-Li7SiPS8 is P42/nmc.S15 Hence, the entries of Cij that are put in brackets are expected to vanish. The explicit distribution of PS4 3–/SiS4 4– tetrahedra as well as the distribution of Li ions, however, formally lower the symmetry of the structural models in almost all cases. As a result, several entries in Cij become non-zero. These entries, however, are all below 1 GPa and therefore negligibly low compared to the proper entries of a tetragonal system with P42/nmc space group.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    249.8,
+    544.0,
+    479.5
+   ],
+   "w": 1984,
+   "h": 958,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.915,
+   "auto_bbox": [
+    67.0,
+    69.6,
+    545.0,
+    480.5
+   ],
+   "recrop": "2026-11-18 다시 자름 — section heading \"Elastic properties\" + its paragraph above the caption → title line(s) + table rules, margins ≈ 4 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "tS7",
+   "kind": "table",
+   "label": "S7",
+   "page": 38,
+   "file": "tab_S7.png",
+   "caption": "Table S7: Calculated bulk modulus (B), Young’s modulus (E), shear modulus (G), Poisson’s ration (ν), and Pugh’s ratio (G/B) of selected argyrodite and LGPS-type thiophosphate ion conductors based on the Reuss-Voigt-Hill approach. The values are taken from the references in column Ref. †The value in brackets was obtained from ﬁtting energy-volume curves to the Birch-Murnaghan equation of state.",
+   "rotated_deg": 0,
+   "bbox": [
+    68.0,
+    267.8,
+    544.0,
+    525.5
+   ],
+   "w": 1984,
+   "h": 1075,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.917,
+   "auto_bbox": [
+    67.0,
+    265.8,
+    545.1,
+    522.7
+   ],
+   "recrop": "2026-11-18 다시 자름 — bottom rule touching the crop edge (no margin) → title line(s) + table rules, margins ≈ 4 pt · 300 dpi",
+   "viewed": true
+  },
+  {
+   "key": "eS1",
+   "kind": "equation",
+   "label": "eqS1",
+   "page": 19,
+   "file": "eq_S01_arrhenius_sigmaT.png",
+   "caption": "Eq. (S1), SI p.S-18 (PDF p.19): σT = σ0·exp(−ΔG/(kB·T)) — Arrhenius form of the ionic conductivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    267.8,
+    237.4,
+    544.0,
+    261.4
+   ],
+   "w": 1536,
+   "h": 135,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.979,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "Arrhenius 꼴",
+   "viewed": true
+  },
+  {
+   "key": "eS2",
+   "kind": "equation",
+   "label": "eqS2",
+   "page": 19,
+   "file": "eq_S02_gibbs_from_sigma.png",
+   "caption": "Eq. (S2), SI p.S-18: ΔG = kB·T·(ln(σ0)_{T,Ni} − ln(σ)_{T,Ni}) — Eq. (S1) solved for ΔG at constant T and Ni (the ln T term of Eq. S1 is not written).",
+   "rotated_deg": 0,
+   "bbox": [
+    212.2,
+    401.5,
+    544.0,
+    422.5
+   ],
+   "w": 1845,
+   "h": 118,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "σ 로 쓴 ΔG",
+   "viewed": true
+  },
+  {
+   "key": "eS3",
+   "kind": "equation",
+   "label": "eqS3",
+   "page": 19,
+   "file": "eq_S03_prefactor_sigma0.png",
+   "caption": "Eq. (S3), SI p.S-18: σ0 = z·n·q²·r²·ν0/kB — geometric factor z, carrier density n, charge q, jump distance r, attempt frequency ν0.",
+   "rotated_deg": 0,
+   "bbox": [
+    263.5,
+    479.8,
+    544.0,
+    516.1
+   ],
+   "w": 1560,
+   "h": 203,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.978,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "σ₀ 의 구성",
+   "viewed": true
+  },
+  {
+   "key": "eS4",
+   "kind": "equation",
+   "label": "eqS4",
+   "page": 19,
+   "file": "eq_S04_gibbs_jump_distance_attempt_freq.png",
+   "caption": "Eq. (S4), SI p.S-18: ΔG = kB·T·(ln(r)_{T,Ni} + ln(ν0)_{T,Ni} − ln(σ)_{T,Ni}) — z, n, q assumed pressure-independent; printed ln(r) although Eq. (S3) has r² (card: should be 2 ln r; constants dropped).",
+   "rotated_deg": 0,
+   "bbox": [
+    186.6,
+    648.0,
+    544.0,
+    669.1
+   ],
+   "w": 1987,
+   "h": 118,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.95,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "ΔG = 도약 거리 · 시도 진동수 · σ (인쇄 ln r)",
+   "viewed": true
+  },
+  {
+   "key": "eS5",
+   "kind": "equation",
+   "label": "eqS5",
+   "page": 20,
+   "file": "eq_S05_activation_volume_definition.png",
+   "caption": "Eq. (S5), SI p.S-19: (∂ΔG/∂p)_{T,Ni} = ΔV — definition of the activation volume.",
+   "rotated_deg": 0,
+   "bbox": [
+    252.4,
+    135.6,
+    544.0,
+    173.1
+   ],
+   "w": 1621,
+   "h": 209,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.975,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "활성화 부피 정의",
+   "viewed": true
+  },
+  {
+   "key": "eS6",
+   "kind": "equation",
+   "label": "eqS6",
+   "page": 20,
+   "file": "eq_S06_activation_volume_full.png",
+   "caption": "Eq. (S6), SI p.S-19: ΔV = kB·T·((∂ln σ0/∂p)_{T,Ni} − (∂ln σ/∂p)_{T,Ni}).",
+   "rotated_deg": 0,
+   "bbox": [
+    181.0,
+    210.8,
+    544.0,
+    252.4
+   ],
+   "w": 2018,
+   "h": 232,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "ΔV 전체 식",
+   "viewed": true
+  },
+  {
+   "key": "eS7",
+   "kind": "equation",
+   "label": "eqS7",
+   "page": 20,
+   "file": "eq_S07_activation_volume_compressibility_gruneisen.png",
+   "caption": "Eq. (S7), SI p.S-19: ΔV = kB·T·(β(γ − 2/3) − (∂ln σ/∂p)_{T,Ni}) — prefactor term via compressibility β and Grüneisen constant γ (cubic crystal; refs S7–S10).",
+   "rotated_deg": 0,
+   "bbox": [
+    191.5,
+    398.0,
+    544.0,
+    439.5
+   ],
+   "w": 1960,
+   "h": 231,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.963,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "입방정 보정 β(γ − 2/3)",
+   "viewed": true
+  },
+  {
+   "key": "eS8",
+   "kind": "equation",
+   "label": "eqS8",
+   "page": 26,
+   "file": "eq_S08_dem_linear_momentum.png",
+   "caption": "Eq. (S8), SI p.S-25 (PDF p.26): (m r̈_G)^i = m^i g + Σ_j (f_CN^ij + f_CT^ij) — linear momentum of rigid sphere i; m = 4/3 π r³ ρ.",
+   "rotated_deg": 0,
+   "bbox": [
+    214.0,
+    522.9,
+    544.0,
+    559.0
+   ],
+   "w": 1835,
+   "h": 201,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.969,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "강체 구 병진 운동량",
+   "viewed": true
+  },
+  {
+   "key": "eS9",
+   "kind": "equation",
+   "label": "eqS9",
+   "page": 26,
+   "file": "eq_S09_dem_angular_momentum.png",
+   "caption": "Eq. (S9), SI p.S-25: (I_G ω̇)^i = Σ_j (r_CG^ij × f_CT^ij) — angular momentum; I_G = 0.4 m r².",
+   "rotated_deg": 0,
+   "bbox": [
+    216.3,
+    560.3,
+    544.0,
+    596.1
+   ],
+   "w": 1822,
+   "h": 200,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.973,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "강체 구 회전 운동량",
+   "viewed": true
+  },
+  {
+   "key": "eS10",
+   "kind": "equation",
+   "label": "eqS10",
+   "page": 27,
+   "file": "eq_S10_normal_spring_dashpot.png",
+   "caption": "Eq. (S10), SI p.S-26 (PDF p.27): f_CN^ij = min(0, k_N g_N + d_N ġ_N) n for g_N ≤ 0, 0 for g_N > 0 — linear spring-dashpot normal force with tension cut-off; g_N = ‖r_G^j − r_G^i‖ − (r^j + r^i), n = (r_G^j − r_G^i)/‖r_G^j − r_G^i‖.",
+   "rotated_deg": 0,
+   "bbox": [
+    191.6,
+    410.8,
+    544.0,
+    475.4
+   ],
+   "w": 1959,
+   "h": 360,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.975,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "선형 스프링–대시포트 법선력 · 인력 차단",
+   "viewed": true
+  },
+  {
+   "key": "eS11",
+   "kind": "equation",
+   "label": "eqS11",
+   "page": 27,
+   "file": "eq_S11_normal_damping_from_cor.png",
+   "caption": "Eq. (S11), SI p.S-26: d_N = 2·abs(ln c_COR)·sqrt(k_N m_eff/((ln c_COR)² + π²)), m_eff = m_i m_j/(m_i + m_j) — damping from the coefficient of restitution (c_COR 0.1 → damping ratio 0.59, card arithmetic).",
+   "rotated_deg": 0,
+   "bbox": [
+    207.8,
+    618.8,
+    544.0,
+    659.2
+   ],
+   "w": 1869,
+   "h": 226,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.957,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "반발 계수 → 법선 감쇠",
+   "viewed": true
+  },
+  {
+   "key": "eS12",
+   "kind": "equation",
+   "label": "eqS12",
+   "page": 28,
+   "file": "eq_S12_tangential_coulomb_friction.png",
+   "caption": "Eq. (S12), SI p.S-27 (PDF p.28): f_CT^ij = min(μ‖f_CN^ij‖, ‖k_T g_T + d_T ġ_T‖) t_T for g_N ≤ 0, 0 for g_N > 0 — Coulomb friction cap on a tangential spring-dashpot; d_T = d_N, k_T = (1 − ν)/(1 − 0.5ν) k_N (= 0.82 k_N at ν 0.3).",
+   "rotated_deg": 0,
+   "bbox": [
+    166.4,
+    103.3,
+    544.0,
+    167.9
+   ],
+   "w": 2099,
+   "h": 360,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.972,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "Coulomb 상한 접선력",
+   "viewed": true
+  },
+  {
+   "key": "eS13",
+   "kind": "equation",
+   "label": "eqS13",
+   "page": 28,
+   "file": "eq_S13_tangential_gap_rate.png",
+   "caption": "Eq. (S13), SI p.S-27: ġ_T = (I − n⊗n^T)(v_G^i − v_G^j) + ω^i × r_CG^ij − ω^j × r_CG^ji — the tangential gap g_T is a history variable obtained by numerical integration.",
+   "rotated_deg": 0,
+   "bbox": [
+    162.5,
+    267.6,
+    544.0,
+    293.7
+   ],
+   "w": 2121,
+   "h": 146,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.955,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "접선 틈 속도 (이력 변수)",
+   "viewed": true
+  },
+  {
+   "key": "eS14",
+   "kind": "equation",
+   "label": "eqS14",
+   "page": 28,
+   "file": "eq_S14_tangent_unit_vector.png",
+   "caption": "Eq. (S14), SI p.S-27: t_T = −(k_T g_T + d_T ġ_T)/‖k_T g_T + d_T ġ_T‖ — tangential unit vector.",
+   "rotated_deg": 0,
+   "bbox": [
+    241.9,
+    399.6,
+    544.0,
+    435.8
+   ],
+   "w": 1680,
+   "h": 202,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.958,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "접선 단위 벡터",
+   "viewed": true
+  },
+  {
+   "key": "eS15",
+   "kind": "equation",
+   "label": "eqS15",
+   "page": 30,
+   "file": "eq_S15_fv_effective_conductivity.png",
+   "caption": "Eq. (S15), SI p.S-29 (PDF p.30): σ_eff,i = l_i · j/U — FV effective conductivity from the steady-state mean current density j at U = 1 V over pellet thickness l_i (voxel 1 µm, BEST); normalized to σ_eff,max.",
+   "rotated_deg": 0,
+   "bbox": [
+    270.3,
+    322.4,
+    544.0,
+    356.6
+   ],
+   "w": 1522,
+   "h": 191,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.985,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "FV 유효 전도도",
+   "viewed": true
+  },
+  {
+   "key": "eS16",
+   "kind": "equation",
+   "label": "eqS16",
+   "page": 30,
+   "file": "eq_S16_bulk_sigma_activation_volume_pressure.png",
+   "caption": "Eq. (S16), SI p.S-29: σ_i = exp(ln σ_ref − ΔV/(kB·T)·(p_i − p_ref)) — bulk conductivity reduced with pressure through the activation volume (SI: from the simplified expression, \"equation (4) in main publication\"); at 1.4 cm³/mol and 298 K the factor is exp(−0.565 Δp[GPa]) (card arithmetic).",
+   "rotated_deg": 0,
+   "bbox": [
+    246.2,
+    628.0,
+    544.0,
+    652.8
+   ],
+   "w": 1656,
+   "h": 139,
+   "dpi": 400,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "blank": 0.974,
+   "manual_crop": "2026-11-18 수동 식 크롭 — text-layer line boxes of the display equation and its number at the right margin, margins limited by the neighbouring text lines · 400 dpi",
+   "note_ko": "ΔV 로 압력에 따라 줄인 bulk σ",
+   "viewed": true
+  },
+  {
+   "key": "xS2a",
+   "kind": "text",
+   "label": "pS2-xrd-domain-size-not-feasible",
+   "page": 3,
+   "file": "txt_S2_xrd_domain_size_not_feasible.png",
+   "caption": "SI p.S-2 (PDF p.3): instrumental broadening (STOE StadiP) is of the same order as the sample FWHM; Si NIST 640d reference; \"Although, a precise domain size determination by XRD is not feasible, the slightly larger FWHM of the <50 um sample indicates slightly smaller domain sizes compared to the >50 um sample.\"",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    558.3,
+    544,
+    695.8
+   ],
+   "w": 1984,
+   "h": 574,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "XRD 로 결정자 크기 정량 불가 · <50 µm 가 조금 작다",
+   "viewed": true
+  },
+  {
+   "key": "xS15a",
+   "kind": "text",
+   "label": "pS15-S16-pellet-recovery",
+   "page": 16,
+   "file": "txt_S15_S16_pellet_recovery_cracks_ejection.png",
+   "caption": "SI p.S-15 – S-16 (PDF p.16–17) in two parts: \"Comment on pellet recovery\" — cracks introduced upon release may increase the tortuosity; stress builds up on the die walls; wall friction on ejection; \"most often the pellet broke into many pieces\"; slower ejection helped; for some non-thiophosphate conductors a lower compaction pressure gave a more stable pellet (\"large elastic recovery … building up internal stress\").",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    580.4,
+    544,
+    725.6
+   ],
+   "w": 1984,
+   "h": 1494,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi · parts stacked top→bottom with a 16 px gap",
+   "note_ko": "탈압 금 · 벽 응력 · 빼다 깨짐",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 16,
+     "bbox": [
+      68,
+      580.4,
+      544,
+      725.6
+     ]
+    },
+    {
+     "page": 17,
+     "bbox": [
+      68,
+      71.6,
+      544,
+      280.8
+     ]
+    }
+   ]
+  },
+  {
+   "key": "xS21a",
+   "kind": "text",
+   "label": "pS21-dem-perfect-spheres-roughness",
+   "page": 22,
+   "file": "txt_S21_dem_perfect_spheres_roughness_constriction.png",
+   "caption": "SI p.S-21 (PDF p.22): \"In the DEM simulation the compaction of perfect spheres attributed with friction effects, form the pellet. The solid electrolyte powder, however, consists of particles that are far from spherical.\" — roughness raises friction (agglomerates) and introduces current constriction at contacts at low pressure (Fleig, S11–S13); contact surface increases with compression (Fig. S13).",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    384.7,
+    544,
+    617.9
+   ],
+   "w": 1984,
+   "h": 973,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "저자의 DEM 한계 문장",
+   "viewed": true
+  },
+  {
+   "key": "xS22a",
+   "kind": "text",
+   "label": "pS22-synthesis-sieving",
+   "page": 23,
+   "file": "txt_S22_synthesis_sieving_fractions.png",
+   "caption": "SI p.S-22 (PDF p.23): synthesis (Li2S 99.98 %, red P 99 %, sublimed S + 5 wt% S excess; 10 g; PM 200, 24 h 500 rpm; 525 °C 100 h in sealed quartz ampules) — no Si source listed as printed; sieving with a 50 µm mesh on a vortex mixer; the >50 µm fraction has more particles below 50 µm by number but is volume-dominated by >50 µm.",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    144.8,
+    544,
+    593.1
+   ],
+   "w": 1984,
+   "h": 1869,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "합성 · 체 (Si 원료 누락 그대로)",
+   "viewed": true
+  },
+  {
+   "key": "xS23a",
+   "kind": "text",
+   "label": "pS23-gas-pycnometer-density",
+   "page": 24,
+   "file": "txt_S23_gas_pycnometer_density_2008_vs_1923.png",
+   "caption": "SI p.S-23 (PDF p.24): He pycnometer (AccuPyc II 1340, 10 purges, 10 runs); average of four samples = reference density for relative pellet density: 2.008(6) g cm−3 vs crystallographic 1.923(9) g cm−3 — \"by 4.4 % larger … This difference is small and might originate from measurement and weighting uncertainties.\"",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    211.8,
+    544,
+    502.3
+   ],
+   "w": 1984,
+   "h": 1211,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "진밀도 2.008 vs 1.923",
+   "viewed": true
+  },
+  {
+   "key": "xS24a",
+   "kind": "text",
+   "label": "pS24-variable-pressure-cell",
+   "page": 25,
+   "file": "txt_S24_variable_pressure_cell.png",
+   "caption": "SI p.S-24 (PDF p.25): CompreCell (rhd instruments) — insulating Al2O3 cylinder in a stainless-steel liner, 6 mm hard-metal pistons as electrodes, 50 mg sieved powder, double O-ring; CompreDrive press (force monitored, actively controlled); pellet thickness from the motor position; a reference run without sample subtracts setup deformation; Julabo Presto A40 thermostat.",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    140.1,
+    544,
+    478.4
+   ],
+   "w": 1984,
+   "h": 1411,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "가변 압력 셀 · 두께 측정",
+   "viewed": true
+  },
+  {
+   "key": "xS24b",
+   "kind": "text",
+   "label": "pS24-S25-eis-r-cpe",
+   "page": 25,
+   "file": "txt_S24_S25_eis_conditions_fit_r_cpe.png",
+   "caption": "SI p.S-24 – S-25 (PDF p.25–26) in two parts: EIS at 25 °C, 1 MHz–100 Hz, VRMS 10 mV, 100 Ω load-short calibration, RelaxIS 3, Kramers–Kronig test, proportional weighting, fitted mostly 1 MHz–1 kHz; error bars from thickness uncertainty and fitting error; \"an equivalent circuit composed of a resistor in series with a constant phase element, accounting for the ionic resistance and the polarization spike\".",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    505.0,
+    544,
+    723.8
+   ],
+   "w": 1984,
+   "h": 1303,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi · parts stacked top→bottom with a 16 px gap",
+   "note_ko": "EIS 조건 · 등가 회로 R + CPE",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 25,
+     "bbox": [
+      68,
+      505.0,
+      544,
+      723.8
+     ]
+    },
+    {
+     "page": 26,
+     "bbox": [
+      68,
+      71.6,
+      544,
+      161.3
+     ]
+    }
+   ]
+  },
+  {
+   "key": "xS25a",
+   "kind": "text",
+   "label": "pS25-dem-purpose-rigid-spheres",
+   "page": 26,
+   "file": "txt_S25_dem_purpose_rigid_spheres.png",
+   "caption": "SI p.S-25 (PDF p.26): \"DEM and FV Simulation\" — DEM used \"to verify the hypothesis that powder compaction is indeed the dominant effect in this pressure regime\"; based on previous additive-manufacturing work (S18, S19); Cundall–Strack DEM \"where the particles are described as rigid spheres\".",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    187.7,
+    544,
+    502.1
+   ],
+   "w": 1984,
+   "h": 1311,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "DEM 의 목적 · 강체 구",
+   "viewed": true
+  },
+  {
+   "key": "xS29a",
+   "kind": "text",
+   "label": "pS29-fv-voxel-best",
+   "page": 30,
+   "file": "txt_S29_fv_voxel_1um_best_setup.png",
+   "caption": "SI p.S-29 (PDF p.30): FV on the DEM microstructures — voxel structures with 1 µm voxels from particle positions and diameters; BEST (S27, S28); steady-state current j at U = 1 V; Poisson equation for the electrolyte phase; mean current density at the boundary → Eq. (S15).",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    71.6,
+    544,
+    304.7
+   ],
+   "w": 1984,
+   "h": 972,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "복셀 1 µm · BEST · U = 1 V",
+   "viewed": true
+  },
+  {
+   "key": "xS29b",
+   "kind": "text",
+   "label": "pS29-fv-normalization-dV",
+   "page": 30,
+   "file": "txt_S29_fv_normalization_activation_volume.png",
+   "caption": "SI p.S-29: computed conductivities normalized to σ_eff,max; bulk conductivity reduced with pressure via the activation volume (Eq. S16, \"equation (4) in main publication\") for each pressure level \"corresponding to a certain pellet thickness\"; Fig. 6b values \"do not depend on the assumed bulk conductivity but only on the geometric properties of the pellet microstructure\".",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    398.1,
+    544,
+    607.3
+   ],
+   "w": 1984,
+   "h": 873,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "정규화 · 압력 = 두께 대응 · ΔV",
+   "viewed": true
+  },
+  {
+   "key": "xS29c",
+   "kind": "text",
+   "label": "pS29-S30-fv-no-gb",
+   "page": 30,
+   "file": "txt_S29_S30_fv_homogeneous_no_gb_resistance.png",
+   "caption": "SI p.S-29 – S-30 (PDF p.30–31) in two parts: \"In the FV-simulations the electrolyte material was treated as a homogeneous phase without any additional grain boundary resistances between individual particles.\"",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    700.6,
+    544,
+    718.6
+   ],
+   "w": 1984,
+   "h": 168,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi · parts stacked top→bottom with a 16 px gap",
+   "note_ko": "FV 계면 (입계) 저항 0",
+   "viewed": true,
+   "parts": [
+    {
+     "page": 30,
+     "bbox": [
+      68,
+      700.6,
+      544,
+      718.6
+     ]
+    },
+    {
+     "page": 31,
+     "bbox": [
+      68,
+      71.6,
+      544,
+      89.6
+     ]
+    }
+   ]
+  },
+  {
+   "key": "xS33a",
+   "kind": "text",
+   "label": "pS33-aimd-anisotropy-limits",
+   "page": 34,
+   "file": "txt_S33_aimd_anisotropy_barriers_limits.png",
+   "caption": "SI p.S-33 (PDF p.34): LGPS anisotropy literature; bond-valence barrier 0.22 eV (1D, c) and 0.28 eV (3D); AIMD D along c ≈ 4× a/b (agrees with single-crystal LGPS impedance [001]/[110]); barriers ≈155 meV (a/b) vs 127(13) meV (c), 136(13) meV total; lower than measured — \"shortcomings of extracting activation barriers from AIMD simulations at high temperatures\"; \"the simulations represent the single crystal properties and do not consider grain boundiers or (amorphous) side phases.\"",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    71.6,
+    544,
+    503.7
+   ],
+   "w": 1984,
+   "h": 1801,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "AIMD 이방성 · 장벽 · 한계",
+   "viewed": true
+  },
+  {
+   "key": "xS38a",
+   "kind": "text",
+   "label": "pS38-metadata-density",
+   "page": 39,
+   "file": "txt_S38_metadata_density_not_pressure.png",
+   "caption": "SI p.S-38 (PDF p.39): Ohno et al. interlaboratory metadata (Fig. S19) — no positive trend of pellet density with pelletizing pressure; density fluctuates around ~85 % with outliers > 100 % and < 70 %; \"applied pelletizing pressure is not an appropriate descriptor of the achievable pellet density\".",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    69.7,
+    544,
+    384.2
+   ],
+   "w": 1984,
+   "h": 1311,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "압력은 펠릿 밀도의 descriptor 가 아니다",
+   "viewed": true
+  },
+  {
+   "key": "xS38b",
+   "kind": "text",
+   "label": "pS38-pugh-similar-densification",
+   "page": 39,
+   "file": "txt_S38_pugh_ductile_similar_densification.png",
+   "caption": "SI p.S-38: B, E and G/B of argyrodites (Li6PS5Cl) and LGPS comparable (Table S7) → \"we expect similar high pressure densification behavior of the two classes of materials. Both materials meet Pugh's criterion for a ductile material (B/G < 0.5)\" — as printed; the Table S7 column is G/B.",
+   "rotated_deg": 0,
+   "bbox": [
+    68,
+    390.1,
+    544,
+    503.7
+   ],
+   "w": 1984,
+   "h": 474,
+   "dpi": 300,
+   "src": "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf",
+   "manual_crop": "2026-11-18 근거 문단 크롭 — the paragraph the card cites (not the whole page) · 300 dpi",
+   "note_ko": "비슷한 치밀화 기대 · Pugh (인쇄 B/G)",
+   "viewed": true
   }
- ]
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "SI: tools/litdb/extract_figures.py extract() run on the SI PDF alone into a scratch OUT_ROOT (2026-11-18, so the 6 main-text entries were not overwritten — the main PDF was not available) found Figure S1–S19 + Table S1–S7, missing_labels [] · every one of the 26 was re-cut (see recrop) · SI equations (1)–(16) and 14 evidence paragraphs cut by hand · main-text entries f1–f6 kept byte-identical (main PDF not re-read)",
+ "note_manual": "2026-11-18 SI 반입 (litdb-curator): SI = 46 PDF pages (page 1 = publisher cover \"Supporting Information for Adv. Energy Mater., DOI: 10.1002/aenm.202203873\", page n+1 = printed S-n). Crops added 56 = figures 19 + tables 7 + equations 16 + text 14; all opened after rendering. Figures = embedded rasters (native 270–775 dpi) rendered at 300 dpi; equations 400 dpi. Read-outs (S9d, S12b, S13, S19, S6) in si_digitized.csv with the method per row.",
+ "key_note": "main keys f1–f6 = main-text Figures 1–6 (2026-08-05, unchanged) · fS<N>/tS<N> = SI Figure/Table S<N> · eS<N> = SI Eq. (<N>) (this card calls them Eq. S<N>) · xS<page><letter> = SI evidence paragraph (kind \"text\", page = printed SI page; multi-part ones list \"parts\" with PDF page numbers and boxes) · \"page\" fields are PDF page numbers",
+ "digitized": {
+  "file": "si_digitized.csv",
+  "rows": 88,
+  "method": "rendered SI rasters (400–600 dpi); axes from frame lines / ticks / dotted reference lines; markers = colour-mask or dark connected components; values are [판독] trend/size-sense only"
+ }
 }

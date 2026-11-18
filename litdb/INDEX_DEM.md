@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 349편 · 생성 2026-11-17
+> digest 349편 · 생성 2026-11-18
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -31,7 +31,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `park2020_dimension_controlled_se_percolation_contact_area` | 치수 제어 산화물 고체전해질 (0D 구 · 1D 원기둥 · 2D 판) 을 넣은 전고체 전극 — 퍼콜레이션 경로 · specific contact area · 유효 이온전도도 (GeoDict 복셀 가상 전극 → COMSOL P2D) — Park (Chem. Eng. J. 2020) | voxel-sim (GeoDict 확률 배치 · PoroDict 접촉면적 · ConductoDict Ohm  | 2026-10-03 | 🖼 17 |
 | `sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking` | 황화물 유리 SE (75Li₂S·25P₂S₅) 입경 (d50 16 vs 3.8 µm) × NCM111 입경 (9.4 vs 5.3 µm) 이 무탄소 복합 양극 (NCM : SE = 75 : 25 wt · 330 MPa 상온 성형) 의 단면 형태 · NCM 균열 · 율속에 주는 영향 — 작은 SE 를 1 분 진탕 (vorte | experiment (laser-diffraction PSD · Ar-ion cross-section pol | 2026-11-16 | 🖼 35 |
 | `schlautmann2023_se_particle_size_composite_transport` | Impact of the Solid Electrolyte Particle Size Distribution in Sulfide-Based Solid-State Battery Composites — Schlautmann et al. (Adv. Energy Mater. 2023, 13, 2302309) · 무탄소 NCM811/ | exp + GeoDict voxel flux sim (EIS-TLM impedance · DC polariz | 2026-09-23 | 🖼 32 |
-| `schneider2023_particle_size_pressure_transport` | 입자크기·압력이 빠른 이온전도체 t-Li₇SiPS₈ 의 수송물성에 미치는 영향 — DEM 압밀 + Heckel + FVA σ — Schneider (Adv. Energy Mater. 2023) | DEM+FVA(continuum) + exp(EIS) + AIMD | 2026-06-26 | 🖼 6 |
+| `schneider2023_particle_size_pressure_transport` | 입자크기·압력이 빠른 이온전도체 t-Li₇SiPS₈ 의 수송물성에 미치는 영향 — DEM 압밀 + Heckel + FVA σ — Schneider (Adv. Energy Mater. 2023) | DEM+FVA(continuum) + exp(EIS) + AIMD · SI 46쪽 반영 11-18 | 2026-06-26 | 🖼 62 |
 | `shi2019_high_am_loading_particle_size_assb` | 입자 크기비 λ=D_CAM/D_SE 로 고-CAM 로딩(>50 vol%) 달성 — 우리와 같은 LIGGGHTS DEM + Hertz 로 "작은 SE + 큰 CAM"을 모델+실험 동시 증명 — Shi (Ceder 그룹, Adv. Energy Mater. 2019/2020) | mixed (DEM-LIGGGHTS modeling + experiment) | 2026-06-26 | 🖼 12 |
 | `stavola2023_thick_nmc111_lpscl_lithiation_gradient_tortuosity` | 후막 (≈110 µm) 무탄소 NMC111–Li₆PS₅Cl 복합양극의 두께 방향 리튬화 기울기 — operando 에너지분산 X 선 회절 (EDXRD) 20 µm 층 깊이 분석 · 차단셀 EIS-TLM 유효 전도도 · tortuosity factor (τ²) · COMSOL 맞춤: CAM 70 ↔ 80 wt% 사이에서 반 | exp + continuum model (operando EDXRD depth profiling 20 µm  | 2026-10-30 | 🖼 28 |
 | `tailored_cathode_microstructure_low_pressure_assb` | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for ASSBs — Zhou et al. (ACS Energy Lett. 2025) |  | 2026-06-26 | 🖼 5 |
