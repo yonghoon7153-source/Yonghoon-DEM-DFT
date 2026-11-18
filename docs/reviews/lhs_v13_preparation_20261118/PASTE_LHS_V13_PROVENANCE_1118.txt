@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# WSL Bash; 1 CPU, no network. Input is the author's prior knowledge only.
+# Save as TXT, then run: bash PASTE_LHS_V13_PROVENANCE_1118.txt
+# Return the one JSON object printed below. No study files are opened.
+(
+set -eu
+umask 077
+if ! command -v python3 >/dev/null; then printf '%s\n' 'python3 required' >&2; exit 2; fi
+printf '%s\n' 'Known prior source: O2 (done-record provenance), O3 (existing archive), NONE_KNOWN or UNKNOWN?' >&2
+IFS= read -r kind </dev/tty
+case "$kind" in O2|O3|NONE_KNOWN|UNKNOWN) ;; *) printf '%s\n' 'invalid kind' >&2; exit 2;; esac
+alias_id=UNKNOWN
+case_range=UNKNOWN
+case "$kind" in
+  O2|O3)
+    printf '%s\n' 'Source alias only (ASCII letters, digits, dash or underscore; no path or account; UNKNOWN allowed):' >&2
+    IFS= read -r alias_id </dev/tty
+    printf '%s\n' 'Cases covered (100-129, single ID, comma-separated ranges, or UNKNOWN):' >&2
+    IFS= read -r case_range </dev/tty
+    ;;
+esac
+outdir=$(mktemp -d)
+python3 -I -X utf8 -B - "$kind" "$alias_id" "$case_range" "$outdir" <<'PY'
+import hashlib
+import json
+import re
+import sys
+from pathlib import Path
+
+kind, alias, coverage, work = sys.argv[1:]
+if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", alias):
+    sys.exit("Invalid source alias")
+ids = set()
+if coverage != "UNKNOWN":
+    for group in coverage.split(","):
+        match = re.fullmatch(r"(1[012][0-9])(?:-(1[012][0-9]))?", group)
+        if not match:
+            sys.exit("Invalid WSL30 case range")
+        first = int(match[1])
+        last = int(match[2] or match[1])
+        if not 100 <= first <= last <= 129:
+            sys.exit("Invalid WSL30 case order")
+        ids.update(range(first, last + 1))
+obj = {
+    "schema": "lhs_v13_author_source_lead/1",
+    "source_kind": kind, "source_alias": alias, "reported_cases_known": bool(ids),
+    "reported_case_aliases": ["lhs00_" + str(i) for i in sorted(ids)],
+    "execution_identity": "NOT_ESTABLISHED", "source_verified": False,
+    "canonical_log_selected": False, "value_access_authorized_by_this_record": False,
+}
+data = (json.dumps(obj, sort_keys=True, separators=(",", ":")) + "\n").encode("ascii")
+path = Path(work) / "lhs_v13_author_source_lead.json"
+with path.open("xb") as stream:
+    stream.write(data)
+print("RESPONSE_JSON")
+sys.stdout.flush()
+sys.stdout.buffer.write(data)
+sys.stdout.flush()
+print("SHA256", hashlib.sha256(data).hexdigest())
+print("RETURN_FILE", path)
+PY
+)
