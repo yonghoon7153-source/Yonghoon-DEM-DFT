@@ -17983,6 +17983,26 @@
    ]
   },
   {
+   "id": "SELF-184",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "본 세션 (11-18 · S0 단계 2 첫 시도 거부 원인 판독 뒤)",
+   "opened_in": "docs/data/rint2_s0_dbe_20261118/README.md",
+   "title": "봉인 뒤 두 기계 현장 확인 목록에 S0 단계 2 의 둘째 킷 (옛 kit_DBE · S0 표현 대조 전용) 을 넣지 않았다 — 그 킷의 latest_run 이 v100 절대 경로 (kgy 에서 죽은 링크) 인 것을 발사 약 4 h 뒤 첫 시도 거부로 알았다",
+   "note": "영향 = 시간 (첫 시도 04:54 → 06:53 새 침대 census 뒤 거부 · 두 번째 시도 09:27 → 13:36) · 값 · 판정 무관 (새 침대 보고 두 시도 결정적 = docs/data/rint2_s0_dbe_20261118/DETERMINISM.json) · 두 번째 시도는 두 킷 사전 점검 (kit_input_record = census 입력 단계) 을 먼저 돌렸다 · 막는 법 = 현장 확인 목록을 실행 명령의 입력 경로 전부 (--kit 마다 latest_run 해석까지) 에서 만든다 · 닫는 조건 = 다음 현장 실행 (R 단위 단계) 확인 목록에 그 꼴을 적용한 커밋 → claimed_fixed"
+  },
+  {
+   "id": "S0FR-01",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "본 세션 (11-18 · kgy S0 단계 2 첫 시도 거부 · 봉인 커밋 29643188524f 코드 대조)",
+   "opened_in": "docs/data/rint2_s0_dbe_20261118/README.md",
+   "title": "S0 census find_run_dir 는 킷의 latest_run 이 죽은 링크여도 '있음' (os.path.lexists) 으로 읽어 그 경로로 간다 — 러너 run_arm 은 [ -e ] (죽은 링크 = 없음) 뒤 se_dump.npy 가 든 마지막 run_* 를 골라, docstring '러너와 같은 규칙' 과 달리 같은 킷에서 두 도구가 다른 런을 가리킬 수 있다",
+   "note": "자리 (봉인 커밋 29643188524f) = scripts/ca_s0_census.py 1008–1017 (lexists 1012) ↔ scripts/sdcp_gain_vox015_8arm.sh run_arm 752–757 ([ -e ] 755) · 실측 = 옛 kit_DBE (latest_run → v100 절대 경로) · S0 = 거부 (se_dump.npy 없음 · rc 2 · fail-closed · 틀린 결과 수용 없음) · 러너 = 08-27 런 · 처분 = 봉인 코드라 고치지 않음 · 우회 = 보기 폴더 (latest_run 만 러너 규칙 런 · 원본 쓰기 0) · 1저자 11-18 Q2 수용 (이탈 = 옛 킷 경로만) · 다음 봉인 세대에서 고칠지 = 1저자"
+  },
+  {
    "id": "MXE0-02",
    "severity": "P2",
    "status": "open",

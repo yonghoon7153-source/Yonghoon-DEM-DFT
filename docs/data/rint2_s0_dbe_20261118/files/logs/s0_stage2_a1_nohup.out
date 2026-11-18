@@ -1,0 +1,5 @@
+nohup: ignoring input
+3.8.10 1.24.4 1.10.1
+SAME_VERSION_OK
+[S0] ⛔ 거부 — <V100_HOME>/sdcp/kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260812_211730_76402: se_dump.npy 없음
+rc=2

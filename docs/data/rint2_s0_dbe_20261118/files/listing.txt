@@ -1,0 +1,39 @@
+2026-11-18T13:49:01+09:00
+ca1_s0_dbe:
+total 117584
+drwxr-xr-x   2 <USER> <USER>     4096 2026-11-18 13:36:50.102521454 +0900 .
+drwxrwxr-x 110 <USER> <USER>    12288 2026-11-18 09:27:45.846405074 +0900 ..
+-rw-r--r--   1 <USER> <USER>     1169 2026-11-18 11:27:51.352895188 +0900 payload_capture_kit_DBE.log
+-rw-r--r--   1 <USER> <USER>     1166 2026-11-18 09:28:49.641964901 +0900 payload_capture_kit_DBE_sdcp1um_vgcf100.log
+-rw-r--r--   1 <USER> <USER> 29824517 2026-11-18 13:36:50.102521454 +0900 s0_instances_kit_DBE.npz
+-rw-r--r--   1 <USER> <USER> 29874180 2026-11-18 11:26:45.885361245 +0900 s0_instances_kit_DBE_sdcp1um_vgcf100.npz
+-rw-r--r--   1 <USER> <USER> 24030301 2026-11-18 13:36:50.138521221 +0900 s0_junctions_kit_DBE.npz
+-rw-r--r--   1 <USER> <USER> 24073318 2026-11-18 11:26:45.917361012 +0900 s0_junctions_kit_DBE_sdcp1um_vgcf100.npz
+-rw-r--r--   1 <USER> <USER>  6276317 2026-11-18 13:36:50.070521661 +0900 s0_stage2_kit_DBE.json
+-rw-r--r--   1 <USER> <USER>  6289510 2026-11-18 11:26:45.841361565 +0900 s0_stage2_kit_DBE_sdcp1um_vgcf100.json
+
+ca1_s0_dbe_a1:
+total 58852
+drwxr-xr-x   2 <USER> <USER>     4096 2026-11-18 06:53:44.243985867 +0900 .
+drwxrwxr-x 110 <USER> <USER>    12288 2026-11-18 09:27:45.846405074 +0900 ..
+-rw-r--r--   1 <USER> <USER>     1166 2026-11-18 04:55:55.763349837 +0900 payload_capture_kit_DBE_sdcp1um_vgcf100.log
+-rw-r--r--   1 <USER> <USER> 29874180 2026-11-18 06:53:44.243985867 +0900 s0_instances_kit_DBE_sdcp1um_vgcf100.npz
+-rw-r--r--   1 <USER> <USER> 24073318 2026-11-18 06:53:44.279985811 +0900 s0_junctions_kit_DBE_sdcp1um_vgcf100.npz
+-rw-r--r--   1 <USER> <USER>  6289510 2026-11-18 06:53:44.195985943 +0900 s0_stage2_kit_DBE_sdcp1um_vgcf100.json
+
+s0view_20261118/kit_DBE:
+total 20
+drwxrwxr-x 2 <USER> <USER> 4096 2026-11-18 09:27:42.166431356 +0900 .
+drwxrwxr-x 3 <USER> <USER> 4096 2026-11-18 09:21:10.279869487 +0900 ..
+lrwxrwxrwx 1 <USER> <USER>   38 2026-11-18 09:21:10.283869478 +0900 am_scaffold.csv -> <HOME>/sdcp/kit_DBE/am_scaffold.csv
+lrwxrwxrwx 1 <USER> <USER>   44 2026-11-18 09:21:10.283869478 +0900 fracture_scaffold.csv -> <HOME>/sdcp/kit_DBE/fracture_scaffold.csv
+lrwxrwxrwx 1 <USER> <USER>   33 2026-11-18 09:21:10.283869478 +0900 harvest.sh -> <HOME>/sdcp/kit_DBE/harvest.sh
+lrwxrwxrwx 1 <USER> <USER>   72 2026-11-18 09:27:42.166431356 +0900 latest_run -> <HOME>/sdcp/kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260827_150029_3687585
+lrwxrwxrwx 1 <USER> <USER>   37 2026-11-18 09:21:10.283869478 +0900 mpm_input.json -> <HOME>/sdcp/kit_DBE/mpm_input.json
+lrwxrwxrwx 1 <USER> <USER>   40 2026-11-18 09:21:10.283869478 +0900 run_a1_anchors.sh -> <HOME>/sdcp/kit_DBE/run_a1_anchors.sh
+lrwxrwxrwx 1 <USER> <USER>   33 2026-11-18 09:21:10.283869478 +0900 run_mpm.sh -> <HOME>/sdcp/kit_DBE/run_mpm.sh
+lrwxrwxrwx 1 <USER> <USER>   70 2026-11-18 09:21:10.283869478 +0900 run_VGCF3_PTFE0.5_SDCP0.5_20260812_211730_76402 -> <HOME>/sdcp/kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260812_211730_76402
+lrwxrwxrwx 1 <USER> <USER>   72 2026-11-18 09:21:10.283869478 +0900 run_VGCF3_PTFE0.5_SDCP0.5_20260827_150029_3687585 -> <HOME>/sdcp/kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260827_150029_3687585
+lrwxrwxrwx 1 <USER> <USER>   38 2026-11-18 09:21:10.283869478 +0900 se_scaffold.csv -> <HOME>/sdcp/kit_DBE/se_scaffold.csv
+원본 latest_run -> <V100_HOME>/sdcp/kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260812_211730_76402
+29643188524f4fe31f81db5eb252edaa8cbbef7c

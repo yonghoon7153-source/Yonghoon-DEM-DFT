@@ -1,0 +1,17 @@
+# Rint ② R 시작 기록 — kgy P0 시도 1 · gabia P1 시도 2 (20261118)
+
+- 1저자 11-18 Q1 = R GO (S0 단계 2 뒤 · `docs/data/rint2_s0_dbe_20261118/`) · 흐름 = 봉인 커밋 `29643188524f` 판 `docs/reviews/rint2_kgy_commands_20261020.md` §3-1b (3)(4)(5) (stoic 판에는 이 절이 없다 · 봉인 가지 `claude/rint2-seal-20261118`) · 실행 트리 = 봉인 커밋 `29643188524f` (두 기계).
+- 화면 = 1저자가 붙여 준 출력을 가린 사본 (`kgy_R_start_screen.txt` · `gabia_R_start_screen.txt` · 홈 → `<HOME>` · 주소 · 셸 머리 줄 · scp · 비밀번호 줄 뺌).  스크립트 = 실행한 판 그대로 (`scripts/` · md5 = 붙여넣기 게이트 값).
+
+| 단계 | kgy (14:0x KST) | gabia (14:1x KST) |
+|---|---|---|
+| 0. 확인 (읽기만) | 실행 트리 29643188524f · 세 해시 기대대로 (R 계획 `d8595a52…` · 새 DBE S0 보고 `e6989481…` · S0 단계 1 보고 `c9307cfc…`) · RTX 3090 · 드라이버 560.35.03 · 시작 전 사용 3,610 MiB (다른 프로세스 · [미확인]) | 같음 · RTX A6000 · 595.58.03 · 시작 전 사용 35,162 MiB (QE pw.x · 다른 일 · 누구 일인지 [미확인] · 1저자 = 그대로 두고 첫 팔 시간으로 판단) |
+| 원장 | (3) `LEDGER_INIT` · 커밋 `15352f8e7f91a44aa0fa649ee8a03197804bd81f` · 가지 master | (5) `RECV_OK` (묶음 sha256 · 끝 커밋 대조) |
+| dry-run | 사다리 P0 첫 다섯 env (RJ inf · 0 · 1e4 · 1e6 · 1e8 · s_min 0.0 · tol_ff 0.07381254285530132 · face_alpha · maxiter 5,000,000 · rtol 1e-12 · σ 표시 없음) | 사다리 P1 같은 꼴 (`CJUNC_PTFE_JLAW=P1`) |
+| 시도 | `ATTEMPT_ADDED n=1 target=ladder:P0 machine=kgy commit=9234384f1a6256d1e2ba73d6f213fd8b7887f4bd` → `START_OK 시도 1` | `ATTEMPT_ADDED n=2 target=ladder:P1 machine=gabia commit=db71fe19685d072f5a7216d1b51706964489f10d` → `START_OK 시도 2` |
+| 원장 넘김 | `PARKED_OK` · 기록 `20261118T050239Z` kgy → gabia · 가지 master · 끝 커밋 `bcff6b0235a39ec799ef18f733b1599bfdb50463` · 묶음 sha256 `fa63d348cd7065f86d695b1bae9a6d99bbe46536ba60c9471782190c84eb7d63` · flock | 원장 = gabia 에 둔다 (먼저 끝난 기계가 받는다 · §3-1b (6)) |
+
+- 감시 = `scripts/rwatch.sh` (읽기만 · 파일 수 · 프로세스 · GPU · σ 를 열지 않는다) · 시간 = `scripts/rtimes.sh` (L 폴더 첫 파일 → `p2_*.json` 초).
+- 1저자 11-18 규칙 (권고대로): gabia 첫 정상 점 런 (L03 · 접합 저장본을 만든다) 이 3 판 어림 T_first 10,817 s 의 1.5 배 (16,226 s) 를 넘으면 QE 를 사다리 끝까지 멈추거나 단위 배정을 kgy 쪽으로 옮긴다 (배정 = 봉인 밖) · 참고 = kgy 의 같은 1.5 배 값 13,600 s (T_first 9,067 s · 규칙은 gabia QE 판단용).
+- 다음 = 먼저 끝난 사다리 → 원장 받기 + recover (§3-1b (6) 5–6) → 채택 사다리 폴더 서로 옮김 → 단위 (첫 배정 kgy 7 · gabia 5) → 합치기 · 넘침 점 (112 h 규칙) · 판정.  원장 없이 끝난 사슬의 rc 3 = 정상 (§3-1b (6)).
+- 이 폴더 바이트 = `SHA256SUMS`.

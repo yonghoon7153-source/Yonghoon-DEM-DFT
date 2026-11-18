@@ -1,0 +1,911 @@
+{
+ "schema": "ca-s0-census-v4",
+ "stage": 2,
+ "tool": "s0-b3-registry-v1",
+ "kit": {
+  "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100",
+  "name": "kit_DBE_sdcp1um_vgcf100",
+  "run_dir": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195",
+  "run_dir_name": "run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195",
+  "kit_scripts_realpath": "<HOME>/dem-anchor1019b/scripts",
+  "run_complete_marker": true
+ },
+ "code": {
+  "tool": "s0-b3-registry-v1",
+  "tool_sha256": "97b54a4948c1d5999f24944781cd80b0aad36462bf6179b9b68a922ab40d7163",
+  "file_digests": {
+   "_list_omitted": true,
+   "len": 7
+  },
+  "git_head": "29643188524f4fe31f81db5eb252edaa8cbbef7c",
+  "git_dirty": false,
+  "python": "3.8.10",
+  "numpy": "1.24.4",
+  "scipy": "1.10.1"
+ },
+ "inputs": {
+  "files": {
+   "se": {
+    "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195/se_dump.npy",
+    "sha256": "6e3086cbad13aeb3451a38152ec9714ea2d68f8d9286a2a3ed81ecb7e8a29d6a",
+    "bytes": 815036792
+   },
+   "phase": {
+    "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195/phase.npy",
+    "sha256": "a8fb690478b08b912f30cee4588eb2f37480477330df54c8f13d3cae69c005de",
+    "bytes": 67919850
+   },
+   "fibre": {
+    "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195/fibre.npy",
+    "sha256": "11c5d7ba763e0eb906caf0149859a98839fdec862d6b5ceaa598f9227ced5bcd",
+    "bytes": 271679016
+   },
+   "fibre_kind": {
+    "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195/fibre_kind.npy",
+    "sha256": "06895bb89bfcd787aecce0eccebc8eddab4095181671c3dd0743498e6fdeaadc",
+    "bytes": 67919850
+   },
+   "metrics_json": {
+    "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195/mpm_metrics.json",
+    "sha256": "e10ff90e7f62c4319a96c3b4e68abc0d16e31bffc7235bc70e9e922404f5f91e",
+    "bytes": 5274
+   },
+   "scaffold": {
+    "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/am_scaffold.csv",
+    "sha256": "6184147f573f021dc56b113fc4341cf0a355ed86e671befe7acb84eb36a3712e",
+    "bytes": 49645
+   },
+   "fibre_dia": {
+    "path": "<HOME>/sdcp/kit_DBE_sdcp1um_vgcf100/run_VGCF3_PTFE0.5_SDCP0.5_20261023_213224_2924195/fibre_dia.npy",
+    "sha256": "a6de4fdf374c7c38442f4556c53c8d4164dd3022433538f3816e96b27f0d29a4",
+    "bytes": 271679016
+   }
+  },
+  "counts": {
+   "points_by_phase": {
+    "1": 66044152,
+    "2": 1643483,
+    "4": 115555,
+    "5": 116532
+   },
+   "fids_by_phase": {
+    "2": 48055,
+    "4": 1138
+   },
+   "vgcf_points_outside_box": 47
+  },
+  "metrics": {
+   "um_box_um": 54.3478,
+   "thickness_um": 72.534,
+   "E_anchor": "ADD_E_SET_20260926_VGCF100GPa",
+   "porosity_settled_pct": 7.368,
+   "porosity_at_target_pct": 7.368,
+   "vol_um3": {
+    "VGCF": 8515.72,
+    "PTFE": 1290.26,
+    "SDCP": 2183.52
+   }
+  },
+  "payload_argv_sha256": "436324134cef213f999b59927855a9644fed3fa87246f37eba7f3befc1059bf4",
+  "vgcf_rel_dia": 1.0,
+  "settings_sha256": "c900e4b5a4d5b62f496c6e7d5125316705145e7bf0e9ff5f1df1e494d310ea15"
+ },
+ "raster": {
+  "convention": {
+   "vox_um": 0.15,
+   "bridge_um": 0.48,
+   "sdcp_sphere_d_um": 0.3,
+   "ptfe_stamp_captured": "centerline",
+   "fibre_stamp": "segment",
+   "origin_shift_um": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fid_gap_tol": 2.0,
+   "off_grid": "captured inputs minus PTFE rows (= ptfe_stamp off · face_alpha sid grid)"
+  },
+  "grid_shape": [
+   334,
+   334,
+   490
+  ],
+  "box_lo_um": [
+   -0.0,
+   -0.0,
+   -0.0
+  ],
+  "box_hi_um": [
+   49.999976,
+   49.999976,
+   73.3826279
+  ],
+  "cells_by_sid": {
+   "prod": {
+    "0": 6468098,
+    "1": 24136873,
+    "3": 2248732,
+    "5": 386730,
+    "6": 21260683,
+    "7": 161324
+   },
+   "off": {
+    "0": 6493729,
+    "1": 24142110,
+    "3": 2261514,
+    "5": 388910,
+    "6": 21376177
+   },
+   "nosdcp": {
+    "0": 6539430,
+    "1": 24159540,
+    "3": 2277779,
+    "6": 21524367,
+    "7": 161324
+   },
+   "off_nosdcp": {
+    "0": 6565451,
+    "1": 24164828,
+    "3": 2290726,
+    "6": 21641435
+   }
+  },
+  "sid_off_fp": "a16396e3611522eccef1b35018229c24"
+ },
+ "ledger": {
+  "volume_ratio": {
+   "prod": {
+    "VGCF": 0.8912306299408622,
+    "SDCP": 0.5977567185095625,
+    "PTFE": 0.4219835537023545
+   },
+   "off": {
+    "VGCF": 0.8962964670045515,
+    "SDCP": 0.6011262777533523,
+    "PTFE": 0.0
+   }
+  },
+  "ptfe_cover": {
+   "prod_sid7_cells_by_off_sid": {
+    "0": 25631,
+    "1": 5237,
+    "3": 12782,
+    "5": 2180,
+    "6": 115494
+   },
+   "ptfe_path_cells_by_off_sid": {
+    "0": 25631,
+    "1": 5237,
+    "3": 12782,
+    "5": 2180,
+    "6": 115494
+   },
+   "carbon_sdcp_cells_covered": 14962
+  },
+  "ptfe_cut": {
+   "paths_total": 48055,
+   "paths_with_ptfe_cells": 6687,
+   "paths_cut": 6128,
+   "extra_components": 8197,
+   "paths_component_lost": 26,
+   "cells_removed": 13528
+  },
+  "sdcp_cover": {
+   "prod": {
+    "0": 71332,
+    "1": 22667,
+    "3": 29047,
+    "6": 263684
+   },
+   "off": {
+    "0": 71722,
+    "1": 22718,
+    "3": 29212,
+    "6": 265258
+   }
+  },
+  "sdcp_stretch": {
+   "off": {
+    "n_runs": 15522,
+    "cells_total": 30463,
+    "fibres_affected": 9493,
+    "run_cells_hist": {
+     "1": 7625,
+     "2": 3874,
+     "3": 2283,
+     "4": 976,
+     "5": 442,
+     "6": 185,
+     "7": 100,
+     "8": 22,
+     "9": 10,
+     "10": 4,
+     "11": 1
+    },
+    "length_um_cellcount_x_vox": 4569.45,
+    "axial_3_5_faces": 29946
+   },
+   "prod": {
+    "n_runs": 15494,
+    "cells_total": 30287,
+    "fibres_affected": 9475,
+    "run_cells_hist": {
+     "1": 7644,
+     "2": 3867,
+     "3": 2270,
+     "4": 967,
+     "5": 434,
+     "6": 179,
+     "7": 98,
+     "8": 20,
+     "9": 10,
+     "10": 4,
+     "11": 1
+    },
+    "length_um_cellcount_x_vox": 4543.05,
+    "axial_3_5_faces": 29676
+   }
+  },
+  "sdcp_via": {
+   "off": {
+    "n_components": 11656,
+    "n_bridging": 5050,
+    "n_fid_pairs": 25847,
+    "max_fibres_per_component": 13
+   },
+   "prod": {
+    "n_components": 12015,
+    "n_bridging": 5069,
+    "n_fid_pairs": 25561,
+    "max_fibres_per_component": 13
+   }
+  },
+  "crossing_cells": {
+   "all": {
+    "ge2": 91231,
+    "ge3": 2558
+   },
+   "off_sid3": {
+    "ge2": 90030,
+    "ge3": 2520
+   },
+   "prod_sid3": {
+    "ge2": 89480,
+    "ge3": 2504
+   }
+  },
+  "capsule": {
+   "volume_ratio": 0.6327195927416049,
+   "f11_band": [
+    0.5,
+    2.0
+   ],
+   "in_band": true,
+   "n_pieces": 5388,
+   "r_P_um": 0.124,
+   "definition": "per piece: sum(segment length x pi r_P^2) + one sphere 4/3 pi r_P^3; overlaps not subtracted"
+  },
+  "alpha": {
+   "status": "computed",
+   "function": "ptfe_face_alpha.build_capsules · build_plan · plan_face_summary · volume_record · ptfe_point_cell_census",
+   "operator": "s1-face-alpha-v1",
+   "K": 8,
+   "dia_law": "rope",
+   "grid": "off",
+   "eligible_sids": {
+    "electronic": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     8
+    ],
+    "ionic": [
+     5,
+     6,
+     8
+    ]
+   },
+   "eligibility_rule": "channel cells = sid with positive entries of the production table functions (electronic_sigma_table / ionic_sigma_table) at unit values; alpha is face geometry (capsule over face quadrature) and does not depend on the magnitudes",
+   "capsules": {
+    "n_paths": 1138,
+    "n_pieces": 5388,
+    "n_point_pieces": 512,
+    "n_segments": 110679,
+    "volume_um3": 816.3727817307899,
+    "dia_classes": {
+     "rope": 1138,
+     "fibre": 0
+    },
+    "volume_basis": "nominal_tube_v1"
+   },
+   "volume": {
+    "capsule_um3": 816.3727817307899,
+    "true_um3": 1290.26,
+    "ratio": 0.6327195927416102,
+    "band": [
+     0.5,
+     2.0
+    ],
+    "status": "in_band",
+    "capsule_nominal_um3": 816.3727817307899,
+    "capsule_union_um3": null,
+    "capsule_union_status": "not_computed_v0",
+    "capsule_volume_basis": "nominal_tube_v1",
+    "ratio_basis": "capsule_nominal_um3"
+   },
+   "faces": {
+    "electronic": {
+     "n_rows": 8784,
+     "n_cut_rows": 451,
+     "by_class": {
+      "AM_S|AM_S": {
+       "n_alpha_lt1": 259,
+       "n_alpha0": 8,
+       "blocked_area_um2": 2.1005859375
+      },
+      "AM_S|SDCP": {
+       "n_alpha_lt1": 1146,
+       "n_alpha0": 30,
+       "blocked_area_um2": 9.748476562499988
+      },
+      "AM_S|VGCF": {
+       "n_alpha_lt1": 5747,
+       "n_alpha0": 305,
+       "blocked_area_um2": 52.52730468750081
+      },
+      "VGCF|SDCP": {
+       "n_alpha_lt1": 1632,
+       "n_alpha0": 108,
+       "blocked_area_um2": 16.316015625000016
+      }
+     },
+     "alpha_zero_faces": 451,
+     "alpha_zero_open_at_refine": 113,
+     "alpha_refine_K": 16
+    },
+    "ionic": {
+     "n_rows": 937857,
+     "n_cut_rows": 73656,
+     "by_class": {
+      "SDCP|SE": {
+       "n_alpha_lt1": 14292,
+       "n_alpha0": 1112,
+       "blocked_area_um2": 145.7325000000006
+      },
+      "SE|SE": {
+       "n_alpha_lt1": 923565,
+       "n_alpha0": 72544,
+       "blocked_area_um2": 9489.630585937064
+      }
+     },
+     "alpha_zero_faces": 73656,
+     "alpha_zero_open_at_refine": 16516,
+     "alpha_refine_K": 16
+    }
+   },
+   "off_grid_ptfe_point_cells": {
+    "0": 17068,
+    "1": 3709,
+    "3": 8433,
+    "5": 1441,
+    "6": 75527
+   },
+   "plate_rule": "v0-not-applied",
+   "note": "raster-only (솔브 없음) · S1 판정 런의 payload 는 같은 함수로 런의 σ 표를 써서 ca_ext.ptfe_face 에 싣는다"
+  }
+ },
+ "threshold_inputs": {
+  "u_um": 0.07381217137167545,
+  "spacing_median_um": 0.1476243427433509,
+  "n_spacings": 1544422,
+  "spacing_p10_um": 0.14588919206935383,
+  "spacing_p90_um": 0.15548702233184358,
+  "spacing_max_um": 5.314415724994268,
+  "rule": "median of within-piece consecutive VGCF path point spacings of the stage-1 (SBE) bed, divided by 2 (pieces = the gap rule of step3_sigma._fibre_segment_ijk with gap_tol; the gap jumps are excluded)",
+  "used_for_plan": false
+ },
+ "thresholds_used": {
+  "tol_ff_um": 0.07381254285530132,
+  "L_par_um": 0.3,
+  "r_port_um": 0.3,
+  "tol_P_um": 0.07381254285530132,
+  "tol_sj_um": 0.07381254285530132,
+  "tol_fs_um": 0.0,
+  "r_f_um": 0.075
+ },
+ "plan": {
+  "sha256": "6346d9ed5fda248b89d1e28dbcb35c90d67264f060be345673c7da63f9924520",
+  "source": "commit:29643188524f4fe31f81db5eb252edaa8cbbef7c",
+  "r_plan": {
+   "path": "docs/data/rint2_r_plan_20261118/ca1_plan.json",
+   "sha256": "d8595a52b67f361d02329eb3fefd1472ebb3b8276305134b34e6190376c2abf8",
+   "s_min_um": 0.0,
+   "tol_ff_um": 0.07381254285530132,
+   "len_law": "len_scaled_v0",
+   "unreg_law": "cut",
+   "step3_rtol": 1e-12,
+   "checked": "S0 row exact · R row (registration_plan_hash) · R plan sha256 · load_plan · tol_ff = S0 tol_ff · len_law"
+  }
+ },
+ "junction_census": {
+  "status": "registry",
+  "function": "carbon_junction.cjunc_registry",
+  "verdict_use": "판정 · 보고의 instance census 판 (B3 · 길이 법칙 v0 · 설계 §2 ① · §4-1 끝) — 기하만 · 솔브 없음",
+  "model": "r3-carbon-junction-port-v3",
+  "schema": "cjunc-v2",
+  "len_law": "len_scaled_v0",
+  "grid": "off",
+  "grid_definition": "captured production inputs minus PTFE rows (= ptfe_stamp off · face_alpha sid grid); the registry gets every phase (PTFE paths = P-junc cover · SDCP points = proximity)",
+  "s_min_status": "not_applied — S0 계획 (cjunc_plan.json) 에 s_min 칸이 없어 원장을 s_min None 으로 부른다 (거르지 않음 · 자기 후보 전부 + 후보마다 s = s_min 근거 · s_min 숫자 = 등록 R §2-1 · 이 도구는 고르지 않는다)",
+  "thresholds": {
+   "r_f_um": 0.075,
+   "tol_ff_um": 0.07381254285530132,
+   "L_par_um": 0.3,
+   "r_port_um": 0.3,
+   "gap_tol": 2.0,
+   "tol_P_um": 0.07381254285530132,
+   "tol_sj_um": 0.07381254285530132,
+   "r_ptfe_um": 0.124,
+   "r_sdcp_um": 0.15,
+   "s_min_um": null
+  },
+  "rules": {
+   "lc": "touch_len_max_v1",
+   "port": "nearest_cell_centre_any_liveness_within_rport_no_relocation_eps_band_tie_lex_ijk_branch_dist_v3",
+   "footprint": "owner_cells_within_D_plus_half_diag_v1",
+   "self": "same_piece_centreline_pairs_d_le_D_floor_s_gt_D_and_halfpi_d_s_ge_s_min_v3",
+   "owner": "nearest_centreline_eps_band_point_dir_lex_v1",
+   "eps_d2_um2": 1e-09,
+   "lpar_rtol": 1e-09,
+   "len_law": "len_scaled_v0",
+   "self_lc": "touch_len_max_junction_pairs_v2",
+   "self_s": "arc_at_closest_points_piece_cyclic_v2",
+   "dist": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+   "branch": "membership_cell_fid_traversal_branch_v1",
+   "order": "canonical_first_last_then_point_sequence_lex_v2",
+   "cp": "nearest_pairs_eps_band_lexmin_midpoint_v1",
+   "piece": "piece_is_fibre_closed_path_seam_continuous_v1",
+   "sv_cf": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1"
+  },
+  "rejection_codes": [
+   "self_s_min_missing"
+  ],
+  "census": {
+   "n_vgcf_fibres": 48055,
+   "n_pieces": 99061,
+   "n_segments": 1553665,
+   "n_positions": 2385430,
+   "n_live_positions": 2354967,
+   "n_cross_cells": 90832,
+   "n_kway_cells_ge3": 2567,
+   "n_instances": 117575,
+   "n_instances_distinct": 117575,
+   "n_instances_self": 0,
+   "n_realized": 115438,
+   "n_unrealized_by_reason": {
+    "covered_SDCP": 2137
+   },
+   "n_port_ties": 104,
+   "n_port_displaced": 0,
+   "port_relation": {
+    "same_cell": 31864,
+    "face": 42454,
+    "edge": 29978,
+    "corner": 6925,
+    "apart": 4217
+   },
+   "n_cut_site_faces": 209259,
+   "n_unreg_faces": 22988,
+   "n_cut_self_faces": 0,
+   "n_vx_faces_by_sid": {
+    "void": 1449949,
+    "AM_S": 565013,
+    "SDCP": 83463,
+    "SE": 6563478
+   },
+   "owner_tie_noncanonical": 0,
+   "n_faces_multi_site": 186,
+   "surface_gap_um": {
+    "min": -0.14999863237900896,
+    "median": -0.029064838604324364,
+    "max": 0.07381023668717052
+   },
+   "Lc_um": {
+    "min": 0.0,
+    "median": 0.1897577608008015,
+    "p90": 0.3751929273368194,
+    "p99": 0.7718672799226634,
+    "max": 4.573136184987908
+   },
+   "len_mult": {
+    "sum": 128491.27051797573,
+    "max": 15.24378728329303,
+    "n_gt1": 30261
+   },
+   "n_long_distinct": 30261,
+   "n_long_self": 0,
+   "self_dk_min": null,
+   "n_sdcp_bridging_components": 5050,
+   "n_sdcp_bridged_fid_pairs": 25847,
+   "self_filter": "off_s_min_missing",
+   "n_self_candidates": 0,
+   "n_self_kept": 0,
+   "n_self_filtered": 0,
+   "n_self_s_undefined": 0,
+   "n_self_fused_faces": 1463,
+   "n_self_revisits_path_only": 848,
+   "n_self_revisits_path_broken": 5,
+   "self_s_um": null,
+   "n_revisit_pairs": 853,
+   "n_revisit_cells": 853,
+   "n_revisit_fibres": 807,
+   "revisit_s_um": {
+    "n": 853,
+    "min": 9.573993423783733e-05,
+    "median": 0.04538941442681965,
+    "max": 0.18886469112818727
+   },
+   "n_subedges": 151571,
+   "n_subedges_long": 64257,
+   "n_subedges_ptfe_cov": 6045,
+   "n_instances_ptfe_partial": 664,
+   "n_subedges_sdcp_near": 4542,
+   "n_subedges_unrealized": 2830,
+   "subedge_rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+   "n_sdcp_components_touching": 8007,
+   "n_bridging_components": 5010,
+   "n_sv_faces_cut_rows": 11563,
+   "n_sv_faces_kept_self": 9712,
+   "n_unsplit_bridging_components": 2436,
+   "sv_cf_rule": "sdcp_component_owner_groups_same_piece_continuity_or_covered_through_cut_nonpassing_v1",
+   "n_instances_same_fid_pieces": 0,
+   "n_piece_cell_meets": 0,
+   "n_ring_pieces": 0,
+   "n_closed_paths_joined": 0,
+   "n_seam_alias": 0,
+   "piece_rule": "piece_is_fibre_closed_path_seam_continuous_v1"
+  },
+  "n_instances": 117575,
+  "n_long": 30261,
+  "n_long_distinct": 30261,
+  "n_long_self": 0,
+  "Lc_um": {
+   "n": 117575,
+   "min": 0.0,
+   "p10": 0.0,
+   "p50": 0.1897577608008015,
+   "p90": 0.3751929273368194,
+   "max": 4.573136184987908,
+   "mean": 0.18356064343294193
+  },
+  "Lc_distinct_um": {
+   "n": 117575,
+   "min": 0.0,
+   "p10": 0.0,
+   "p50": 0.1897577608008015,
+   "p90": 0.3751929273368194,
+   "max": 4.573136184987908,
+   "mean": 0.18356064343294193
+  },
+  "Lc_self_um": {
+   "n": 0
+  },
+  "len_mult_sum": 128491.27051797573,
+  "len_mult_sum_realized": 126178.33695560443,
+  "len_mult_max": 15.24378728329303,
+  "n_mult_gt1": 30261,
+  "self_s_um": {
+   "n": 0
+  },
+  "port_search_um": {
+   "n": 115438,
+   "min": 0.0047564178481072465,
+   "p10": 0.06030873117649466,
+   "p50": 0.08332824091324417,
+   "p90": 0.10298867162928312,
+   "max": 0.12848969952832653,
+   "mean": 0.08238463169743644
+  },
+  "n_ptfe_cov": 4674,
+  "n_sdcp_near": 3472,
+  "revisit": {
+   "n_pairs": 853,
+   "n_cells": 853,
+   "n_fibres": 807,
+   "s_um": {
+    "n": 853,
+    "min": 9.573993423783733e-05,
+    "median": 0.04538941442681965,
+    "max": 0.18886469112818727
+   },
+   "n_path_only": 848,
+   "rule": "membership_cell_fid_traversal_branch_v1",
+   "meaning": "같은 조각이 같은 셀을 비연속으로 다시 지난 가지 쌍 (가지마다 따로 · 합치지 않음 · RCA-03 · 고리 이음매 별칭 제외) — s = 그 쌍의 경로 호 간격 (쌍마다 · ★ 10-21)"
+  },
+  "n_port_ties": 104,
+  "subedges": {
+   "n": 151571,
+   "n_long": 64257,
+   "n_ptfe_cov": 6045,
+   "n_instances_ptfe_partial": 664,
+   "n_sdcp_near": 4542,
+   "n_unrealized": 2830,
+   "rule": "ceil_Lc_over_Lpar_equal_split_midpoints_nearest_port_v0",
+   "k_per_instance": {
+    "n": 117575,
+    "min": 1.0,
+    "p10": 1.0,
+    "p50": 1.0,
+    "p90": 2.0,
+    "max": 16.0,
+    "mean": 1.2891431001488411
+   }
+  },
+  "self_candidates": [],
+  "long_contacts": {
+   "_list_omitted": true,
+   "len": 30261
+  },
+  "arrays_file": "s0_junctions_kit_DBE_sdcp1um_vgcf100.npz"
+ },
+ "sv_census": {
+  "status": "sealed",
+  "function": "carbon_junction.cjunc_registry (_sv_split) · 문턱 = ca_ext_cjunc.registry_thresholds",
+  "grid": "off",
+  "s_min_um": 0.0,
+  "tol_ff_um": 0.07381254285530132,
+  "thresholds": {
+   "r_f_um": 0.075,
+   "tol_ff_um": 0.07381254285530132,
+   "L_par_um": 0.3,
+   "r_port_um": 0.3,
+   "s_min_um": 0.0,
+   "gap_tol": 2.0,
+   "tol_P_um": 0.07381254285530132,
+   "tol_sj_um": 0.07381254285530132,
+   "r_ptfe_um": 0.124,
+   "r_sdcp_um": 0.15
+  },
+  "census_keys": [
+   "n_unsplit_bridging_components",
+   "n_bridging_components",
+   "n_sdcp_components_touching"
+  ],
+  "census": {
+   "n_unsplit_bridging_components": 2436,
+   "n_bridging_components": 5010,
+   "n_sdcp_components_touching": 8007
+  },
+  "fp": {
+   "sid": "a16396e3611522eccef1b35018229c24",
+   "registry": "a2bf352ea833c66882aa0e3138cfe99c"
+  },
+  "fp_use": "record_only — 사슬 대조 = census 세 칸 · 지문은 기록만 (끝 증서 그래프 지문을 붙일 자리 · 지금 대조 안 함)"
+ },
+ "census_preview": {
+  "status": "b0_preview",
+  "verdict_use": "forbidden — 판정 · 보고의 instance census 는 B3 cjunc_registry 와 같은 함수로만 (설계 §2 ① · §4-1)",
+  "vv": {
+   "n_instances": 117062,
+   "n_self": 0,
+   "n_long": {
+    "touch": 30268,
+    "band": 86409
+   },
+   "n_long_vv_only": {
+    "touch": 30268,
+    "band": 86409
+   },
+   "lc_definition": {
+    "touch": "length along the centreline where d <= r_fi + r_fj (surfaces touch or interpenetrate)",
+    "band": "length along the centreline where d <= r_fi + r_fj + tol_ff (the detection threshold)",
+    "L": "max over the two fibres; union over partner segments; long = L > L_par (strict)"
+   },
+   "thr_um": 0.22381254285530133,
+   "n_segments": 1553665,
+   "n_rows": 1231075,
+   "gap_um": {
+    "n": 117062,
+    "min": -0.14999863237900896,
+    "p10": -0.1239931632005184,
+    "p50": -0.029468271104618013,
+    "p90": 0.05431763381262977,
+    "max": 0.07381023668717052,
+    "mean": -0.03235977721628224
+   },
+   "L_touch_um": {
+    "n": 117062,
+    "min": 0.0,
+    "p10": 0.0,
+    "p50": 0.19115202531074915,
+    "p90": 0.3756457838210572,
+    "max": 4.5731361849879075,
+    "mean": 0.18436020708099873
+   },
+   "L_band_um": {
+    "n": 117062,
+    "min": 0.0,
+    "p10": 0.17473914170267651,
+    "p50": 0.4172601481098187,
+    "p90": 0.6303568870940183,
+    "max": 5.842710407655739,
+    "mean": 0.4193111420023319
+   },
+   "theta_deg": {
+    "n": 115066,
+    "min": 0.2763842179777567,
+    "p10": 31.785018699987525,
+    "p50": 63.596587515856704,
+    "p90": 85.08490438209742,
+    "max": 89.9999196897412,
+    "mean": 60.71665541555332
+   },
+   "theta_hist_deg": {
+    "00-10": 790,
+    "10-30": 9208,
+    "30-60": 40696,
+    "60-90": 64372
+   },
+   "penetrating": 74448,
+   "location": {
+    "interior": 116916,
+    "near_bottom_plate": 122,
+    "near_top_plate": 24
+   }
+  },
+  "ports": {
+   "off": {
+    "status_counts": {
+     "covered:SDCP→searched": 2828,
+     "covered:SDCP→unrealized": 230,
+     "direct": 231066
+    },
+    "relation_counts": {
+     "apart": 4619,
+     "edge": 30381,
+     "face": 42597,
+     "same": 32113,
+     "vertex": 7128
+    },
+    "dist_um": {
+     "n": 233894,
+     "min": 0.0014808447890828625,
+     "p10": 0.04329472970037728,
+     "p50": 0.07412063391849974,
+     "p90": 0.09868110966434744,
+     "max": 0.29982890042099175,
+     "mean": 0.07289845223352129
+    }
+   },
+   "prod": {
+    "status_counts": {
+     "covered:PTFE→searched": 1395,
+     "covered:PTFE→unrealized": 42,
+     "covered:SDCP→searched": 2804,
+     "covered:SDCP→unrealized": 232,
+     "direct": 229651
+    },
+    "relation_counts": {
+     "apart": 4735,
+     "edge": 30435,
+     "face": 42344,
+     "same": 32052,
+     "vertex": 7228
+    },
+    "dist_um": {
+     "n": 233850,
+     "min": 0.0014808447890828625,
+     "p10": 0.043372458849453864,
+     "p50": 0.07427528371137959,
+     "p90": 0.09913346860765644,
+     "max": 0.29982890042099175,
+     "mean": 0.0732579195786771
+    }
+   }
+  },
+  "ptfe_proximity": {
+   "excess_um": {
+    "n": 82530,
+    "min": -0.19724956202480656,
+    "p10": 0.1754065552828491,
+    "p50": 0.8505583803819244,
+    "p90": 1.5650652117945036,
+    "max": 1.8008949688767821,
+    "mean": 0.8592253347544621
+   },
+   "n_covered_tolP": 4660,
+   "n_beyond_cutoff": 34532,
+   "cutoff_um": 2.0,
+   "r_P_um": 0.124
+  },
+  "sdcp_proximity": {
+   "excess_um": {
+    "n": 117062,
+    "min": -0.13443105225978852,
+    "p10": 0.32663952476185937,
+    "p50": 1.109296648309026,
+    "p90": 2.033097159705004,
+    "max": 4.490498845131646,
+    "mean": 1.1547461888577926
+   },
+   "n_near_tolsj": 3458,
+   "r_s_um": 0.15
+  },
+  "volume_connected": {
+   "k_cells": 2,
+   "n_with_ports": 116838,
+   "n_connected": 2785,
+   "frac_connected": 0.023836423081531694,
+   "depth_counts": {
+    "1": 1789,
+    "2": 996
+   }
+  },
+  "va": {
+   "n_instances": 68589,
+   "n_pairs": 68333,
+   "gap_um": {
+    "n": 68589,
+    "min": -2.474152963926745,
+    "p10": -0.14709126033840336,
+    "p50": -0.07390075576405479,
+    "p90": -0.016642742642874332,
+    "max": -5.905710191808633e-06,
+    "mean": -0.08507872162207386
+   },
+   "tol_fs_um": 0.0
+  },
+  "sv": {
+   "n_pairs": 80166,
+   "n_instances": 80166,
+   "n_particles_touching": 57639,
+   "n_particles_ge2_fibres": 17826,
+   "gap_um": {
+    "n": 80166,
+    "min": -0.2248165467529764,
+    "p10": -0.13093862465807732,
+    "p50": -0.013401547382379739,
+    "p90": 0.05857680592607557,
+    "max": 0.07380850153807038,
+    "mean": -0.025734080687117977
+   }
+  },
+  "sa": {
+   "n_pairs": 40255,
+   "n_particles_touching": 38473
+  },
+  "junction_spacing": {
+   "lj_um": {
+    "n": 45098,
+    "min": 0.0,
+    "p10": 0.5421483102660927,
+    "p50": 0.9827834325505234,
+    "p90": 2.0704437100541306,
+    "max": 10.066322283020966,
+    "mean": 1.1982850078992964
+   },
+   "fibres_without_instance": 2957,
+   "fibres_total": 48055
+  }
+ },
+ "notes": [
+  "접합 census 판정 · 보고 판 = junction_census (B3 carbon_junction.cjunc_registry 그대로 · off 격자 · 계획 문턱 · s_min 안 씀 (S0 계획에 칸 없음) = 거르지 않음 · 후보별 배열 = s0_junctions_<킷>.npz) · census_preview = B0 미리보기 (판정 · 보고에 쓰지 않는다)",
+  "자기 (같은 가닥) 후보 = 원장 규칙 (★ 10-21 Q-B: 같은 조각 중심선 쌍 d ≤ D · 바닥 s > D 그리고 s > (π/2)·d · 후보 무리마다 접점 쌍의 경로 호 길이 s — s_min None 이라 바닥 쌍 전부 · 그 L_c = 바닥 쌍의 닿음 (s_min 이 줄일 수 있다)) — s_min 을 정하는 근거 · s_min 숫자는 등록 R §2-1 개정 (이 도구는 고르지 않는다) · 같은 fid 의 끊긴 조각 = 서로 다른 섬유 규칙 (자기 후보 아님)",
+  "접촉 길이 L_c = 설계 §1-2 #13 (1저자 10-20 밤 Q17) touch — 두 가닥 각각에서 중심선 거리 ≤ r_fi + r_fj 인 구간 길이의 최댓값 (판정 · 보고 판 junction_census = cjunc_registry 규칙 touch_len_max_v1 · 길이 법칙 len_scaled_v0) · census_preview 의 두 판 (touch · band = d ≤ 검출 문턱 r_fi + r_fj + tol_ff 인 중심선 길이) 은 비교용 · band 판에서는 수직 스침도 2√(thr² − (2r_f)²) = 0.335 µm > L_par 0.30 (tol_ff 0.075 일 때)",
+  "instance = 관통 포함 기하 근접 — MPM 은 섬유 접촉 역학을 풀지 않는다 · 중심선 위치 = MPM 점 간격만큼 불확도",
+  "자기 접촉 (미리보기 정의) = 같은 fid · 선분 번호 차 ≥ 2 · d ≤ thr · 두 최근접점의 호 길이 차 > (π/2)·thr",
+  "포트 (미리보기 정의) = 최근접점이 든 셀이 그 fid 경로 셀이고 sid 3 이면 직접 · 아니면 그 fid 경로 셀 중 sid 3 · 최근접점 ↔ 셀 중심 유클리드 거리 ≤ r_port · 동률 = 경로 열 번호 작은 셀 · 없으면 미실현",
+  "VA (J2b) 문턱 tol_fs = 0 — 설계 · 계획에 숫자 없음 · J2b 판정문 예시 (경계 = r_f + R_AM)",
+  "조각 규칙 = step3_sigma._fibre_segment_ijk 의 gap_tol 규칙 — 이 도구의 세 줄 사본은 섬유마다 생산 함수 셀과 실행 때 대조 (다르면 거부)",
+  "off 격자 = 잡은 생산 입력에서 PTFE (phase 4) 행을 뺀 raster = ptfe_stamp off 의 _cond_ph · face_alpha 의 sid 격자",
+  "캡슐 부피 (F11) = 조각마다 Σ 선분 길이 × π r_P² + 구 하나 (4/3 π r_P³) · 겹침 미차감 · r_P = Ø0.248 / 2"
+ ],
+ "elapsed_s": 7139.1,
+ "_summary_of": {
+  "file": "a2/s0_stage2_kit_DBE_sdcp1um_vgcf100.json",
+  "sha256_redacted_copy_not_committed": "7d8a0ed2db5dc7c0fde37bc79d2fdc8334e8140f0998fb5512d6e29da4e964b3",
+  "rule": "긴 목록 (원소 20 넘음 · 또는 dict/list 원소) = 길이만 · 나머지 칸 = 가린 사본 그대로"
+ }
+}

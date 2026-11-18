@@ -1,0 +1,42 @@
+{
+ "what": "새 DBE 침대 보고 · 시도 1 (ca1_s0_dbe_a1) ↔ 시도 2 (ca1_s0_dbe) · kgy 원본 바이트",
+ "kgy_sha256_pairs": [
+  {
+   "file": "payload_capture_kit_DBE_sdcp1um_vgcf100.log",
+   "attempt1_sha256": "e13aed34abaceefd3f14a729980e7dffbece9d5e48e578d88e999957049b4a6e",
+   "attempt2_sha256": "e13aed34abaceefd3f14a729980e7dffbece9d5e48e578d88e999957049b4a6e",
+   "same": true
+  },
+  {
+   "file": "s0_instances_kit_DBE_sdcp1um_vgcf100.npz",
+   "attempt1_sha256": "a11fb38fc653dac1ff3296f5906de37673d31eb82ce4b779576e75cceb4de85c",
+   "attempt2_sha256": "a11fb38fc653dac1ff3296f5906de37673d31eb82ce4b779576e75cceb4de85c",
+   "same": true
+  },
+  {
+   "file": "s0_junctions_kit_DBE_sdcp1um_vgcf100.npz",
+   "attempt1_sha256": "f058b6e953da8575ffd19ec7cdfaf214ba0354bc2ae1fc0214fe4652c4c0cc94",
+   "attempt2_sha256": "f058b6e953da8575ffd19ec7cdfaf214ba0354bc2ae1fc0214fe4652c4c0cc94",
+   "same": true
+  },
+  {
+   "file": "s0_stage2_kit_DBE_sdcp1um_vgcf100.json",
+   "attempt1_sha256": "c7a772c3475e279624d9c3ab30a6fcdb94b10a27417d497d70bf2c7ef1964439",
+   "attempt2_sha256": "e69894817ea9aded81ff8484d7fff4eea51cb950bcde613e984811fba7ee568b",
+   "same": false
+  }
+ ],
+ "json_leaf_differences": [
+  {
+   "path": "/elapsed_s",
+   "attempt1": 7140.9,
+   "attempt2": 7139.1
+  }
+ ],
+ "n_json_leaf_differences": 1,
+ "bundle_sha_check": {
+  "a1_json": true,
+  "a2_json": true,
+  "a2_old_json": true
+ }
+}
