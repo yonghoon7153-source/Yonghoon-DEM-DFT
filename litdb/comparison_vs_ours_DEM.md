@@ -1242,6 +1242,12 @@
 > · 우리 쪽: 복합 (AM + SE) 기공을 순물질 기공의 선형 보간으로 예측하지 않는다 (변형 거동이 크게 다르면 끝점 차의 수십 % 벗어남 · 분율은 부피로 — NCM/LPSCl 밀도비 ≈2.9 [카드 산술]) · 순수 SE 기공을 랩 표준 (10–13 % · 1.64 g/cm³) 옆에 놓을 때 '가압 중 / 뺀 뒤' 표지 · DEM 순수 SE 의 ε_sphere 음수는 실험에서도 (다른 원인 — 진밀도 분모 · 가역 탄성) 나오는 꼴 → 경고 칸으로 [카드 해석] · Heckel Py: 최대 압력이 Py 근처면 재료 값이 아니다 (DCP ≈470 MPa @300 MPa · 원문 p.9) → 300 MPa 까지의 순수 LPSCl Heckel (`lee2025_heckel_argyrodite_powder_densification_nanoindentation` in-die 294–344 MPa [다른 카드]) 에 같은 경고.
 > · ⛔ 값 전이 금지 (약학 분말 · 300 MPa 한 압력 · x50 62–124 µm · '취성' DCP = 깨지는 응집체) — 랩 표준과 같은 축이 아니다 · Jetzer '무른 쪽 지배' 결론을 단단한 탄성 AM 이 다수인 우리 계에 그대로 옮기지 않는다 (Bouvard 골격 쪽이 살아 있을 수 있다 [카드 추론]).
 
+> 2026-11-18 보강 (SI 반입) — `schneider2023_particle_size_pressure_transport` [Schn23] (C. Schneider · … · B. V. Lotsch, Adv. Energy Mater. 13 (2023) 2203873 · SI 46 쪽 · 실험 (CompreCell Ø6 mm · 50 mg · 0.01–1.7 GPa) + 강체 구 DEM + 복셀 FV + AIMD · LGPS 형 t-Li₇SiPS₈ **단일상** 펠릿 · 체 분율 둘 (부피 D50 35 · 138 µm)) — **같은 장치에서 '누른 채 (in die)' 와 '누른 뒤 10 MPa (out of die)' 상대밀도를 잰 황화물 SE Heckel (SI 그림 S9d) + DEM 이 그 두께를 실험에서 받는 설계.**
+> · 값 [판독 · `figures/…/si_digitized.csv` · 분모 = 비중병 2.008 g/cm³]: 1.7 GPa 96.5 → 92.8 % (<50 µm) · 91.7 → 89.0 % (>50 µm) = 회복 3.7 · 2.7 %p · 0.3 GPa 81.5 · 79.5 % (in / out 이 마커 크기 안) · in die P_y = 1/K 는 맞춤 구간 0.5–1.0 / 0.6–1.4 / 1.0–1.7 GPa 에 0.80 / 0.94 / 0.97 GPa (<50 µm) [판독 산술] (본문 0.95(3)).
+> · DEM (SI 표 S5 · 식 S8 – S14): 선형 스프링–대시포트 + Coulomb · 소성 · 점착 없음 · k_N 0.01 N/m (*"we are not interested in the resulting global reaction force"*) · μ 1.0 (*"middle of the range"*) · c_COR 0.1 · 압력 = 두께에 대응시킨 이름 (*"For each pressure level p_i corresponding to a certain pellet thickness"*, p.S-29) ⇒ 그들 DEM 은 압밀을 예측하지 않는다 [카드 해석] · 9591 구의 면적 질량은 실험과 0.7 % 안 [카드 산술].
+> · 우리 쪽: 랩 표준 (순수 SE 10–13 % · 1.64 g/cm³) 과 다른 문헌 값 — 판정 · 맞춤에 안 쓴다 · 가져올 것 = ① 가압 중 / 뺀 뒤 (뺀 뒤 적층압 값과 함께) 표지 ② P_y 는 맞춤 구간과 함께 ③ 진밀도 분모 표지 (비중병 2.008 ↔ 결정학 1.923 = 4.4 % → 95 % 가 99 %) ④ '두께를 받는 DEM' ↔ '압력에서 기공을 내는 DEM (우리)' 구분 — 그들의 DEM/FV 일치를 압밀 검증으로 인용하지 않는다.
+> · ⛔ 값 전이 금지 (t-Li₇SiPS₈ · 수십 µm 체 분율 · GPa 영역) · 우리 300 MPa 근처의 회복 크기는 이 그림으로 못 가른다 (두 값이 겹친다).
+
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 
 > ⭐ **2026-11-10 추가 — [Kato16] 후막 · 셀 수준 지표의 *정의 사례* 넷 (`papers/kato2016_high_power_assb_lsipscl_superionic.md` §3d · §3g · §3i · §7g — DFT 트랙 digest · LGPS 형 SE · 우리 DEM 기준값은 이 브랜치에 아직 없다).**
@@ -2298,6 +2304,11 @@
 > 2026-11-17 추가 — `tian2017_contact_area_loss_assb_simulation` [Tian17] (H.-K. Tian · Y. Qi, J. Electrochem. Soc. 164 (2017) E3512–E3521 · 1-D Newman 전기화학 FEM + Persson 탄성 접촉 · 입자 · 실험 없음) — **접촉 손실을 전기화학에 넣는 두 갈래 꼴**: 반응 면적 (교환 전류 i₀ ∝ γ = A/A₀) + 닿지 않은 LiCoO₂ 는 못 쓴다 (계면 원천 ∝ 1/γ · 원문 스스로 최악 가정) · Li | LiPON-like 1500 nm | LiCoO₂ 320 nm 박막 셀 · 1 C γ 0.8 → 용량 −20 % · 10 C γ < 0.85 → 80 % 아래 [인쇄 p.8] · 3.8 V 기울기 ≈1 (가정의 결과) · 4.0 V −0.34 → −0.26 [인쇄] (같은 율 · 같은 차단의 γ = 1 기준이면 상대 손실 24.8 → 36.2 % / 접촉 −25 % [카드 산술]) · *"the current density at the solid-electrolyte side of the interface is not affected by the loss of contact area"* (p.5) → **협착 (Holm · 퍼짐) 항 없음**.
 > · 우리 쪽 [카드 해석]: 반응 면적 꼴 = 우리 A10 사이클 접촉 원장의 반응면 R_ct 몫과 같은 자리 · '닿지 않은 물질 → 용량' 갈래는 그 원장에 없다 · 우리 접촉망의 Holm 협착은 이 논문에 없다 → 같은 접촉 손실이라도 수송 (협착) 벌점과 반응 · 물질 벌점을 따로 적는다 · 접촉 비율은 관찰 척도와 함께 정의한다 (원문 = 1 C Li 확산 길이 √(4Dt) 3.6 µm ↔ 우리 피복 띠 0.14 µm · 26 배 [카드 산술]) · 재료 (LiCoO₂ · Li₃PO₄ · LGPS · TiS₂) · 1-D · 값 전이 0.
 
+
+> 2026-11-18 보강 (SI 반입) — `schneider2023_particle_size_pressure_transport` [Schn23] — **복셀 FV (1 µm · BEST · U = 1 V) 가 '계면 저항 0' 가지라는 원문 문장 + 그 가지가 저압에서 실험보다 높게 나온 대조 한 건.**
+> · 원문: *"the electrolyte material was treated as a homogeneous phase without any additional grain boundary resistances between individual particles"* (SI p.S-29 – S-30) · σ_eff = l · j / U (식 S15) · σ_eff,max 로 정규화 · bulk σ 는 ΔV 로 압력에 따라 줄임 (식 S16 · 1.4 cm³/mol · 298 K 에서 exp(−0.565 Δp[GPa]) [카드 산술]).
+> · EIS 회로 = 저항 + CPE 하나 (p.S-25 · Nyquist 그림 S11 에 반원 없음) — 입계를 따로 재지 않았다 ⇒ 본문의 '작은 입자 → 입계 많음 → σ↓' 는 저자 해석 (디커플링 안 됨).
+> · 우리 쪽: 우리 복셀 FV (STEP3) 와 같은 CONTACT_FREE 가지 (원장 `CL-81`) 의 외부 사례 — 정규화 σ 만이라 절대 배수는 못 준다 · 누른 채 잰 실험 σ 와 견줄 때 bulk σ 의 가역 압력 감소 (이 재료 0.3 GPa 에서 −16 %) 를 표지 · LPSCl ΔV 는 이 논문에 없다 · 이 논문을 `Cronau(r_SE)` 의 근거로 쓰지 않는다 (원장 `SELF-51`).
 
 ### B-Rint ② 문헌 — 탄소 접합 · 복셀 표면적 · 전하 채널 계면 (2026-11-03 신설 · 9 편)
 

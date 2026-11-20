@@ -3223,10 +3223,11 @@
   ]
  },
  "schneider2023_particle_size_pressure_transport": {
-  "figures": 6,
-  "generated": "2026-08-05",
+  "figures": 62,
+  "generated": "2026-11-18",
   "pdfs": [
-   "DEM 논문/34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf"
+   "DEM 논문/34. Advanced Energy Materials - 2023 - Schneider - Effect of Particle Size and Pressure on the Transport Properties of the Fast.pdf",
+   "34._Sup_Advanced_Energy_Materials_-_2023_-_Schneider_-_Effect_of_Particle_Size_and_Pressure_on_the_Transport_Properties_of_the_Fast.pdf"
   ]
  },
  "schreiner2020_dem_calendering_lib": {
