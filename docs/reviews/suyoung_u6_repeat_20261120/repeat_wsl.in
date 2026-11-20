@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+(
+set -euo pipefail
+umask 077
+# WSL CPU 0. One F12 and one F16, serial, under the first-run budgets.
+[ "$#" = 1 ] && [ "$1" = GO_REPEAT_F12_F16_ONCE ] || { echo 'Usage: bash THIS.txt GO_REPEAT_F12_F16_ONCE'; exit 2; }
+solver=00f0a1758349079a10d9c3fe9d1424620117dd27
+release=@PIN@
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[ -x "$py" ] || { echo 'Project WSL venv unavailable'; exit 2; }
+for cmd in base64 tar sha256sum timeout taskset mktemp; do command -v "$cmd" >/dev/null; done
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+export BLIS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1
+"$py" -I -B -c 'import os,sys,numpy; print(sys.version,numpy.__version__,flush=True); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" and 0 in os.sched_getaffinity(0) else "first-run environment mismatch")'
+work=$(mktemp -d "$HOME/suyoung_repeat_XXXXXXXX")
+ret=$(mktemp -d "$PWD/suyoung_repeat_return_XXXXXXXX")
+echo "RETURN_DIRECTORY=$ret"
+mkdir "$work/src" "$work/run"
+base64 -d > "$work/source.tar.gz" <<'REPEAT_DATA'
+@DATA@
+REPEAT_DATA
+printf '%s  %s\n' '@TAR_SHA@' "$work/source.tar.gz" | sha256sum -c -
+tar -xzf "$work/source.tar.gz" -C "$work/src"
+(cd "$work/src" && sha256sum -c SHA256SUMS)
+cp "$work/src/SHA256SUMS" "$work/run/SOURCE_SHA256SUMS"
+printf 'release=%s\nsolver=%s\nsource_tar=%s\ncpu=0\n' "$release" "$solver" '@TAR_SHA@' > "$work/run/origin.txt"
+"$py" -I -B -c 'import sys,numpy,platform; print(sys.version,numpy.__version__,platform.platform(),sep="\n")' >> "$work/run/origin.txt"
+once="$HOME/suyoung_1120_repeat_f12_f16_01"
+mkdir -- "$once" || { echo 'Existing attempt. No automatic retry.'; exit 2; }
+printf 'work=%s\nreturn=%s\nrelease=%s\n' "$work" "$ret" "$release" > "$once/receipt.txt"
+pack() {
+    rc=$?
+    trap - EXIT INT TERM HUP
+    printf 'COMMAND_RC=%s\n' "$rc" | tee "$work/run/screen.txt"
+    archive="$ret/suyoung_repeat_result.tar.gz"
+    tar -czf "$archive" -C "$work" run || { echo "ARCHIVE_FAILED WORK=$work"; exit 3; }
+    cp "$work/run/screen.txt" "$ret/screen.txt"
+    (cd "$ret" && sha256sum suyoung_repeat_result.tar.gz screen.txt > SHA256SUMS && sha256sum -c SHA256SUMS && cat SHA256SUMS) || exit 3
+    echo "RETURN_DIRECTORY=$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+for n in 12 16; do
+    limit=590
+    [ "$n" = 12 ] || limit=1190
+    rc=0
+    timeout --signal=TERM --kill-after=10s "${limit}s" taskset -c 0 "$py" -I -B "$work/src/repeat_readback.py" arm "$work/run/F$n" --cells "$n" > "$work/run/F$n.log" 2>&1 || rc=$?
+    printf '%s\n' "$rc" > "$work/run/rc_$n.txt"
+    echo "F${n}_RC=$rc"
+    case "$rc" in 130|143) exit "$rc";; esac
+done
+taskset -c 0 "$py" -I -B "$work/src/repeat_readback.py" compare "$work/run"
+)
