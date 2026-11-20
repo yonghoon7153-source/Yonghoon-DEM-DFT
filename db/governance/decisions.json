@@ -14233,6 +14233,72 @@
     "근거_발화": "AskUserQuestion 답 (2026-11-20 · 이 세션): 'W_ad 은 e70 far 재시도 개정 5 v2 (커밋 3d15b068) 를 비준할까요?' → '비준 — v2 그대로 (Recommended)'",
     "decision_digest": "sha256:7ff99493bf8ddc679f3bcde71404ed61b7332994fba03c678f1dadb3ff541c60"
    }
+  },
+  {
+   "id": "D-2026-11-20-wad-aprime-v5-e70-a5-interp1",
+   "schema_version": 2,
+   "kind": "amendment",
+   "scope": "adhesion.wad_lpscl_agc.aprime_pilot",
+   "slot": "wad_aprime_v5_e70_a5_interp1",
+   "applies_to": {
+    "systems": [
+     "comp1",
+     "ag111"
+    ],
+    "tasks": [
+     "wad_aprime_pilot"
+    ],
+    "methods": [
+     "vasp_pbe_d3bj"
+    ],
+    "use_cases": [
+     "internal"
+    ]
+   },
+   "title": "W_ad V5 개정 5 해석 1 — 다음 단은 앞 단이 확인된 미수렴 · 실행 실패 (전자 스텝 ≥ 1) 로 끝났을 때만 · 스텝 0 은 멈추고 같은 단 다시 · 재시작 미이행 · 미확인 · 설정 위반은 멈추고 1저자",
+   "statement": "개정 5 (D-2026-11-20-wad-aprime-v5-e70-a5-retry) 의 'c2: c1 이 주 기준 OK 가 아니면 자동' 을 같은 개정의 결과별_처리 '재시작_미이행 … 더 돌리지 않는다' 와 개정 4 의 다음_단_자격 (SCF_NOT_CONVERGED · RUN_FAILED 만) · 0 스텝 인프라 중단 (같은 단 다시) 에 맞춰 읽는다 — A5 → c1 · c1 → c2 의 자동 진행은 앞 단이 SCF_NOT_CONVERGED 또는 전자 반복행 ≥ 1 인 RUN_FAILED (끊김 기록 포함) 로 끝났을 때만 · 전자 반복행 0 이면 멈추고 0 스텝 기록 (--infra-abort) 뒤 같은 단 · RESTART_NOT_HONOURED · SCF_UNVERIFIED · 설정·무결성 위반이면 멈추고 1저자 검토 · A5 가 행은 있는데 자격 미달이면 개정 5 그대로 (⓪ 이 확인돼 있으면 ⓪ 에서 c1 · c2 · 아니면 닫는다). 개정 파일은 봉인 그대로 둔다.",
+   "rationale": "내부 독립 리뷰 EM (2026-11-20 · NO-GO) 이 VASP_CMD 오타 하나로 A5 · c1 · c2 가 몇 초 만에 다 소모되는 것을 재현 (P1-2) · 개정 5 의 일반 조항 ('주 기준 OK 가 아니면 자동') 과 특정 조항 ('재시작 미이행 … 더 돌리지 않는다') · 개정 4 다음 단 자격이 어긋나 보이는 자리라 1저자에게 물었다.",
+   "decision_state": "proposed",
+   "record_kind": "amendment",
+   "results_seen": false,
+   "results_seen_note": "a5 결과 0 건 — 러너 · 검사기의 단계 진행 흐름만 정한다 (값 · 문턱 · 채택 순서는 개정 5 그대로)",
+   "card": "db/properties/wad_aprime_pilot_prereg_v5_amendment_5_e70_retry_2026_11_20.json",
+   "record": "kb/reviews/internal_EM_reply_wad_a5_package_2026_11_20.md",
+   "depends_on": [
+    "D-2026-11-20-wad-aprime-v5-e70-a5-retry"
+   ],
+   "supersedes": [],
+   "amends": "D-2026-11-20-wad-aprime-v5-e70-a5-retry",
+   "evidence": [
+    "kb/reviews/internal_EM_reply_wad_a5_package_2026_11_20.md (P1-2 · 재현)",
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_5_e70_retry_2026_11_20.json (결과별_처리 · 사다리_a5)",
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_4_e70_rerun_2026_10_15.json (다음_단_자격 · 0_스텝_중단)"
+   ],
+   "reopen_criteria": [
+    "① 이 해석은 a5 한 잡에만 — 다른 사다리로 넘어가지 않는다"
+   ],
+   "enforcement": "a5 러너 (run_a5.sh) 와 검사기 (build_a5 --check) 가 같은 규칙 · selftest 음성 경로 (스텝 0 · 재시작 미이행 · 미확인 · 설정 위반에서 다음 단을 안 띄운다) · 돌연변이로 빨간불 확인 · 업체 발송 전 다시 검토",
+   "track": {
+    "name": "W_ad (DEM 협업)",
+    "first_author": "사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-20",
+     "session": "본 세션 claude/friendly-meitner-lldvar"
+    }
+   ],
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-11-20",
+     "state": "proposed",
+     "by": "claude",
+     "note": "EM P1-2 질문 · 사용자 답을 받아 적음 (다음 커밋에서 비준 블록)"
+    }
+   ]
   }
  ]
 }
