@@ -229,11 +229,61 @@ class Preseal(unittest.TestCase):
         def accepts(selected):
             (job/"run_manifest.txt").write_text("\n".join(selected)+"\n")
             return restore.job_restored(self.site,"ps_7_3_r45","RJ",self.kit)
-        self.assertTrue(accepts(lines))
+        self.assertFalse(accepts(lines))
         for i in range(len(lines)):
             self.assertFalse(accepts(lines[:i]+lines[i+1:]),lines[i])
         self.assertFalse(accepts(lines+["rt_grammar_prereq=PASS"]))
         self.assertFalse(accepts(lines[:-1]+["end=fixture fails=0 reader_rc=2"]))
+
+    def test_digest_binds_exclusive_publication_to_same_completed_job(self):
+        m=self.module()
+        restore=load("fresh_certificate_consumer",self.kit/"rt_restore_a5.py")
+        from test_rt_contract import BASE,job_fixture
+        bed="ps_7_3_r45"
+        original,reference,rows=job_fixture(self.site,bed=bed)
+        report=restore.C.evaluate(original,bed=bed,step=2000,atoms=800,reference_contact=reference,
+            grid_text="2 by 2 by 1 MPI processor grid\non 4 procs",grid=(2,2,1),written_np=4,
+            legacy_checks=BASE,job_kind="RJ")
+        self.assertEqual(report["status"],"RESTORED")
+        job=self.site/bed/"RJ";job.mkdir(parents=True)
+        manifest=job/"run_manifest.txt";cert=job/"restore_verdict.json"
+        sums=sha((self.kit/"A5_SHA256SUMS").read_bytes())
+        prefix=("bed="+bed+"\njob=RJ\nnp=6\nresume=0\ngate=ALLOW\njob_dir="+str(job)+
+                "\nstart=2026-11-20T00:01:00Z\nsums_sha256="+sums+"\nlmp_sha256="+m.LMP+
+                "\ngrammar_prereq=PASS\nrt_grammar_prereq=PASS\norig_grid_prereq=PASS"+
+                "\nrt_grammar_verdict_sha256="+m.ANCHORS["a3_return.json"]+
+                "\na3_readback_reader_sha256="+m.ANCHORS["a3_corrected_reader.py"]+
+                "\na4_historical_sha256="+m.ANCHORS["a4_continuity.json"]+"\n").encode()
+        end=b"reader_restore_rc=0\nend=fixture fails=0 reader_rc=0\n"
+        manifest.write_bytes(prefix)
+        def accepts():
+            return restore.job_restored(self.site,bed,"RJ",self.kit)
+        with patch.object(restore,"restore",return_value=report),contextlib.redirect_stdout(io.StringIO()):
+            result=restore.main([str(self.site),bed,"--kit",str(self.kit),"--publish-new"])
+        self.assertEqual(result,0)
+        record=manifest.read_bytes();issued=cert.read_bytes();h=sha(issued).encode()
+        self.assertIn(b"a5_certificate_sha256="+h+b"\n",record)
+        self.assertFalse(accepts())
+        manifest.write_bytes(record+end);self.assertTrue(accepts())
+        document=json.loads(issued)
+        for key in ("G2cp","cont_R","cont_RT1","rt_binding","rt_post_list","g0"):
+            altered=json.loads(issued);del altered["checks"][key]
+            raw=json.dumps(altered).encode();cert.write_bytes(raw)
+            manifest.write_bytes(record.replace(h,sha(raw).encode())+end)
+            self.assertFalse(accepts(),key)
+        subset={k:document[k] for k in ("schema","restore_rule","status","bed","job")}
+        for bad in (subset,{**document,"certificate_published":False}, {**document,"job":"RJ2"}):
+            raw=json.dumps(bad).encode();cert.write_bytes(raw)
+            manifest.write_bytes(record.replace(h,sha(raw).encode())+end);self.assertFalse(accepts())
+        cert.write_bytes(issued+b" ");manifest.write_bytes(record+end);self.assertFalse(accepts())
+        cert.write_bytes(issued)
+        for rec in (record.replace(b"00:01",b"00:02")+end,record+end+end,record+end.replace(b"rc=0",b"rc=2"),
+                    record+end+b"extra=1\n",record+record[len(prefix):]+end,record+end.replace(b"reader_restore_rc=0\n",b"")):
+            manifest.write_bytes(rec);self.assertFalse(accepts())
+        manifest.write_bytes(record+end)
+        with patch.object(restore,"restore",return_value=report),contextlib.redirect_stderr(io.StringIO()):
+            self.assertNotEqual(restore.main([str(self.site),bed,"--kit",str(self.kit),"--publish-new"]),0)
+        self.assertEqual(cert.read_bytes(),issued);self.assertEqual(manifest.read_bytes(),record+end)
 
     @unittest.skipUnless(os.name=="posix","full runner test uses POSIX executable mode")
     def test_real_preflight_no_job_write_positive_and_changed_deck_negative(self):
