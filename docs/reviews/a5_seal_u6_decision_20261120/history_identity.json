@@ -1,0 +1,91 @@
+{
+  "scope": "preserved historical bytes and registered inputs",
+  "history_return": {
+    "repository_path": "docs/reviews/dem_unloading_history_test_20261014/hist_20261014_094731.report.tgz",
+    "length": 66910,
+    "sha256": "be0acbd7841d0922604eee8aa31524fcddbe179a8240f937b317432dbebb0ca0",
+    "members": {
+      "hist_20261014_094731/history_verdict.json": {
+        "length": 3851,
+        "sha256": "313158c6696332cf7b7ad60e904e556db9a994bf41fd5bb1fc806f562eb72c55"
+      },
+      "hist_20261014_094731/run_manifest.txt": {
+        "length": 531,
+        "sha256": "a2501b490899b8b19710847e3295db9d8c11bad9f97a1b4a303dbe1cd0f13fba"
+      },
+      "kit_20261014_094731/SHA256SUMS": {
+        "length": 1253,
+        "sha256": "241277b20aaccb8d1ab73c79fb9e0758138a3bed64751add98f7849b44697bf6"
+      }
+    }
+  },
+  "separate_grammar_return": {
+    "repository_path": "docs/reviews/dem_unloading_grammar_fixture_runs_20261015/raw/gram_20261015_030225.report.tgz",
+    "length": 32067,
+    "sha256": "f47a4cea6a4c2de1b3300bab8d6b620fcb98106ee418691a3d05da46f7c677fc",
+    "members": {
+      "gram_20261015_030225/grammar_verdict.json": {
+        "length": 1021,
+        "sha256": "c19a5aa620bfc58d7593059f5d8c5a51012da7b6774ed2c54902dd7a02efcdbb"
+      }
+    }
+  },
+  "registered_submit_reference": "docs/reviews/codex_p1_preflight_complete_20261026/submit-one-rj.plan.sh",
+  "history_receipt": {
+    "job": 283122,
+    "repo_head": "f9edcc41674bfef2c72bcb803511050845008d09",
+    "np": 6,
+    "H2_np": 4,
+    "lmp_sha256": "ee2d77261bac9e7fa4e9311c8709e74bf7583a13225a5bc35a791bef9be60a3f",
+    "lmp_size_in_historical_submit_reference": 9180024,
+    "schema": "ps45_unload_history_verdict_v1",
+    "exit_code": 0,
+    "H0_to_H5": [
+      "PASS",
+      "PASS",
+      "PASS",
+      "PASS",
+      "PASS",
+      "PASS"
+    ],
+    "SYN": "PASS",
+    "force_timing": "PASS",
+    "plate_fn_sign": -1
+  },
+  "production_inputs": {
+    "ckpt": {
+      "basename": "restart_compress_3200000.bin",
+      "length": 81154383,
+      "sha256": "0aa6e41a2330ae7825a715b8d98da6b708c37cb4093d3ab0f8fe2c2653ca3730"
+    },
+    "atom": {
+      "basename": "atom_3200000.liggghts",
+      "length": 21430748,
+      "sha256": "2da106f8470a60c7d3b85894025007d6a5decdffb249b22e0a2ce67d08bbdd9e"
+    },
+    "contact": {
+      "basename": "contact_3200000.liggghts",
+      "length": 149687008,
+      "sha256": "53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c"
+    },
+    "mesh": {
+      "basename": "mesh_3200000.stl",
+      "length": 349,
+      "sha256": "c25296a6d4d6b185be3c1c0ff98543dbfdb710c281403111c7fae2b9bde2b820"
+    },
+    "original_log": {
+      "basename": "output_ps_7_3_r45_r8_220537.out",
+      "length": 127049,
+      "sha256": "35e28690eb9b45c989d7526205a1b168b23041cd1cce6afb12a020deb5096c49"
+    },
+    "writer_deck": {
+      "basename": "input_ps_7_3_r45_r8.liggghts",
+      "length": 5916,
+      "sha256": "097658aa640f798b53da4c40a9d101632b8faaee6f80f4d1d2667591eef8d9cd"
+    }
+  },
+  "six_input_bytes": 252405453,
+  "current_site_history_and_manifest": "AWAITING_AUTHOR_FIELD_CONFIRMATION",
+  "fresh_output_namespace": "AWAITING_AUTHOR_FIELD_CONFIRMATION",
+  "operational_launch_performed": false
+}

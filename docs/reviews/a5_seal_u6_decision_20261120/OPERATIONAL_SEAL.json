@@ -1,0 +1,41 @@
+{
+  "decision_date": "2026-11-20",
+  "authority": "first_author",
+  "disposition": "OPERATIONALLY_SEALED",
+  "scope": {
+    "bed": "ps_7_3_r45",
+    "job": "RJ",
+    "mpi_ranks": 6,
+    "entrypoint": "run_unload_a5_candidate.sh",
+    "entrypoint_sha256": "4aecae42ca5463400aee2426b45e4ed21a314381f7a779bb302ee33fa3e94d6d"
+  },
+  "reviewed_source_commit": "9fd6aa9d3bee52f95dfed507a953da3d985544bb",
+  "kit": {
+    "total_regular_files": 143,
+    "manifest_members": 142,
+    "manifest_name": "A5_SHA256SUMS",
+    "manifest_sha256": "26bdbdc05ba3f6c71a0b042ebd13adb64b38271c1889a894898a4ccf55322f1d",
+    "unchanged_archive": "fixed_kit_9fd6aa9d3bee.zip",
+    "archive_sha256": "d8074dfd86d227d80bc3188fa8817a7af7b22b333caa3c22292ce62b10650920",
+    "archive_bytes": 753535
+  },
+  "independent_recheck": {
+    "finding": "A5R-01",
+    "disposition": "CLOSABLE_LIMITED",
+    "evidence_zip_sha256": "a0aa667feb2faea7ec9880507ad8c2876ef2db352c0065f9289f2c513c209a87",
+    "review_input_zip_sha256": "4152065b644793805883dfeca108cfb2cee2c7f145116afc950566a046020375",
+    "exact_kit_member_bytes_verified": 143
+  },
+  "field_preflight": {
+    "receipt_sha256": "18b11352c8b20070d33320b099a64fa9fac3c782f28c97023ccb4f9a72fba909",
+    "return_for_pin": "9fd6aa9d3bee52f95dfed507a953da3d985544bb",
+    "status": "PREFLIGHT_PASS",
+    "A3_files": 45,
+    "A3_checks": 20,
+    "A4_inputs": 3
+  },
+  "legacy_scheduler_wrapper_preserved_as_history_only": "run_unload_ibb.sbatch",
+  "external_submit_wrapper_qualified": false,
+  "new_rj_submission_authorized": false,
+  "redeployment_performed": false
+}
