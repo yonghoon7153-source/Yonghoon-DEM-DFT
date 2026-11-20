@@ -1,0 +1,49 @@
+(
+set -eu
+@ACCESS@
+umask 077
+downloads=$(wslpath "$(powershell.exe -NoProfile -Command '[Console]::Write((New-Object -ComObject Shell.Application).NameSpace("shell:Downloads").Self.Path)' | tr -d '\r')")
+result=$(mktemp -d "$downloads/rt_367546_readback_XXXXXX")
+printf 'RETURN_DIR=%s\n' "$result"
+cd "$result"
+# One SSH readback; stdout and stderr stay separate. No job is submitted.
+rc=0
+ssh -p "$IBBP" "$IBB" 'bash -c '\''source "$HOME/.bashrc" >&2 && conda activate myenv >&2 && exec python3 -I -B -'\''' > readback.json 2> remote_stderr.txt <<'RT_PY' || rc=$?
+import base64, hashlib, json, sys, zlib
+bundle = zlib.decompress(base64.b64decode(b"""@PAYLOAD@"""))
+if hashlib.sha256(bundle).hexdigest() != '@PAYLOAD_SHA@':
+    raise SystemExit('STOP: readback payload identity')
+data = json.loads(bundle)
+scope = {'__name__': 'rt_readback'}
+exec(compile(data['driver'], '<rt-readback-driver>', 'exec'), scope)
+sys.exit(scope['main'](data['evidence'], data['reader'].encode('utf8'), data['pin']))
+RT_PY
+printf 'SSH_RC=%s\n' "$rc" > command_rc.txt
+cat command_rc.txt
+if [ -s remote_stderr.txt ]; then tail -n 5 remote_stderr.txt >&2; fi
+audit=0
+python3 -I -B - "$rc" <<'RT_LOCAL' || audit=$?
+import json, sys
+try:
+    with open('readback.json', encoding='utf8') as stream: r=json.load(stream)
+except (OSError, ValueError) as exc:
+    print('READBACK_INCOMPLETE:', exc)
+    sys.exit(2)
+c = r.get('checks', {})
+print('job=%s status=%s checks=%s/%s binding=%s' % (r.get('job'),r.get('status'),sum(v is True for v in c.values()),len(c),r.get('binding_status')))
+if r.get('error'): print(r['error'])
+if c: print('failed_checks=' + ','.join(k for k,v in c.items() if v is not True))
+valid = (sys.argv[1]=='0' and r.get('job')=='367546' and r.get('readback_pin')=='@PIN@'
+         and r.get('reader_sha256')=='@READER_SHA@'
+         and r.get('status')=='PASS' and r.get('inputs_verified_before_after')==45
+         and r.get('reader_rc')==0 and r.get('binding_status')=='PASS'
+         and len(c)==20 and all(v is True for v in c.values()))
+sys.exit(0 if valid else 2)
+RT_LOCAL
+printf 'READBACK_CHECK_RC=%s\n' "$audit" >> command_rc.txt
+tar -czf rt_367546_readback.tar.gz -- readback.json command_rc.txt remote_stderr.txt
+sha256sum -- rt_367546_readback.tar.gz | tee SHA256SUMS
+sha256sum -c SHA256SUMS
+printf 'RETURN_DIR=%s\n' "$result"
+exit "$audit"
+)
