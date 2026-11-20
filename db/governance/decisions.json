@@ -14087,7 +14087,7 @@
    "title": "[혁주] MD-1 개정 2 (결과 전) — LPSCl Li 바깥 | 비정질 Li₂ZrO₃ (142 원자 · MD-0 꼴) · 담금질 시드 3 · 600 K · 1 ns · P–O < 1.8 · Zr–S < 2.9 Å 1 ps 지속 사건 · 시드 2/3 이면 개시 관측",
    "statement": "카드 db/properties/hyeokju_lzo_md_card_2026_11_16.json 의 ⏩_개정_2_2026_11_20_MD1_결과_전 이 정의다 (기계_판독_값 포함). 실행기 · 판독 도구 · 시작 구조 셋은 결과 전에 커밋한다.",
    "rationale": "카드 §4 — MD-0 두 모델 통과 (11-20) → MD-1 결과 전 개정 · 계면은 §1 규칙대로 1 단계가 구동력을 준 LZO|LPSCl (−92 meV/atom) · 사용자 2026-11-20 '권고대로 해줘' (브리핑 권고안).",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "estimand",
    "results_seen": false,
    "exploratory": true,
@@ -14116,15 +14116,31 @@
      "session": "본 세션 claude/friendly-meitner-lldvar"
     }
    ],
-   "_note": "proposed — 카드 개정 2 · 시작 구조 3 · 실행기 --stream_traj · 판독 도구 (결과 전) → 사용자 비준 → kgy 세 시드 동시",
+   "_note": "active — 사용자 비준 2026-11-20 (AskUserQuestion · 결과 전) · 다음 = kgy 세 시드 동시 (worktree b82adcb4 이후 판)",
    "status_history": [
     {
      "at": "2026-11-20",
      "state": "proposed",
      "by": "claude",
      "note": "카드 개정 · 결정 작성 (결과 전)"
+    },
+    {
+     "at": "2026-11-20",
+     "state": "active",
+     "by": "사용자",
+     "note": "승인 — AskUserQuestion '[혁주] MD-1 개정 2 를 비준할까요? (결과 전 · MD-1 은 아직 하나도 안 돌았어요) ① 계면: MD-0 에서 검증한 꼴 그대로예요 — LPSCl Li 바깥 2 층 46 원자 + 비정질 Li₂ZrO₃ 96 원자 (142 원자 · 샌드위치). 비정질 블록만 새로 무작위 배치한 시작 구조 3 개예요 (시드 20261121 · 22 · 23). ② 절차: MD-0 과 같아요 — 슬랩을 고정한 채 2500 K 10 ps → 600 K 까지 19 ps 담금질 → 고정을 풀고 600 K 평형 1 ps → 생산 1 ns (저장 0.1 ps · 끊겨도 앞부분이 남게 스트림 저장). kgy 에서 세 시드를 동시에 돌려요. ③ 판정: P–O < 1.8 Å · Zr–S < 2.9 Å 결합이 같은 원자 쌍에서 1 ps 이상 이어지면 '지속 결합 사건'. 사건이 있는 시드가 3 개 중 2 개 이상이면 '개시 관측', 1 개면 '시드 하나에서만', 0 개면 '관측창 안 개시 없음' (관측창: P–O ≈ 0.60 eV · Zr–S ≈ 0.68 eV, 검출 63 %). ④ 무결성: 1 ns 완주 · 평균 T 600 ± 15 K 등. 실패한 시드는 한 번만 다시 돌려요. ⑤ 쓰지 않는 말: 반응 속도 · 생성량 · 보호 효과 · 45 °C 실제 계면 · '안정하다'.' → '비준 — 개정 그대로 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-20T05:27:15Z",
+    "commit": "b82adcb4dd4061d0f45619a8d229ea9baad6bbde",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "사용자 2026-11-20 AskUserQuestion '[혁주] MD-1 개정 2 를 비준할까요? (결과 전 · MD-1 은 아직 하나도 안 돌았어요) ① 계면: MD-0 에서 검증한 꼴 그대로예요 — LPSCl Li 바깥 2 층 46 원자 + 비정질 Li₂ZrO₃ 96 원자 (142 원자 · 샌드위치). 비정질 블록만 새로 무작위 배치한 시작 구조 3 개예요 (시드 20261121 · 22 · 23). ② 절차: MD-0 과 같아요 — 슬랩을 고정한 채 2500 K 10 ps → 600 K 까지 19 ps 담금질 → 고정을 풀고 600 K 평형 1 ps → 생산 1 ns (저장 0.1 ps · 끊겨도 앞부분이 남게 스트림 저장). kgy 에서 세 시드를 동시에 돌려요. ③ 판정: P–O < 1.8 Å · Zr–S < 2.9 Å 결합이 같은 원자 쌍에서 1 ps 이상 이어지면 '지속 결합 사건'. 사건이 있는 시드가 3 개 중 2 개 이상이면 '개시 관측', 1 개면 '시드 하나에서만', 0 개면 '관측창 안 개시 없음' (관측창: P–O ≈ 0.60 eV · Zr–S ≈ 0.68 eV, 검출 63 %). ④ 무결성: 1 ns 완주 · 평균 T 600 ± 15 K 등. 실패한 시드는 한 번만 다시 돌려요. ⑤ 쓰지 않는 말: 반응 속도 · 생성량 · 보호 효과 · 45 °C 실제 계면 · '안정하다'.' → '비준 — 개정 그대로 (Recommended)'",
+    "decision_digest": "sha256:338b79d211fd4af231d689680c547f02d3a3cfb9762995b071d99f8ebb873ac7"
+   }
   }
  ]
 }
