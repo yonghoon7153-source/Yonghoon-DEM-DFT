@@ -18035,6 +18035,26 @@
    "opened_in": "docs/data/rint2_r_start_20261118/scripts/rtimes.sh",
    "title": "내 감시 도구 rtimes.sh 의 '끝' = 런 폴더의 가장 이른 p2 JSON 시각이라 팔 여럿 런 (end_origin · origin · origin8) 은 첫 팔 끝을 런 끝으로 찍는다 — 11-19 19 시 L15 origin8 이 '끝 18:17' 로 보였지만 도는 중이었고, 그 전의 내 어림 (kgy 빠르면 2–4 h) 도 틀렸다",
    "note": "영향 = 감시 · 시간 어림 (사슬 · 값 · 원장 무관) · 기록된 도구 사본은 바꾸지 않는다 (실행한 판 그대로) · README 끝 절에 읽는 법 한정어 · 고칠 판 = 다음 감시 도구 (팔 여럿 런은 launch 의 팔 수만큼 p2 JSON 이 찼는지 · 가장 늦은 p2 JSON) · 닫는 조건 = 고친 감시 도구를 쓰는 커밋"
+  },
+  {
+   "id": "A5R-01",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "codex",
+   "found_by": "codex 반박 창 11-20 A5 봉인 직전 독립 검토 (리뷰 핀 a230b908546f)",
+   "opened_in": "docs/reviews/p1_rt_a5r01_intake_20261120/FINAL_REVIEW_P1_A5_PRESEAL_a230b908546f_20261120.md",
+   "title": "kebase 완료 기록 쓰기 실패가 전파되지 않고, 누락된 완료 영수증도 다음 관문이 허용함 (A5 7:3 RJ 증서 소비자 · 판정문 §3)",
+   "claimed_fixed_sha": "b5597f0e0",
+   "verified_sha": null,
+   "evidence_tests": [
+    "docs/reviews/p1_rt_a5r01_20261120/test_a5r01.py",
+    "docs/reviews/p1_rt_a5r01_20261120/replay_before.json",
+    "docs/reviews/p1_rt_a5r01_20261120/replay_after.json"
+   ],
+   "supersedes": [],
+   "decision_note": "Codex 실무 고침 9fd6aa9d3 (반입 ⑰ = stoic b5597f0e0 · 11-20 1저자 \"반입해야되는거 있음 진행해\") — 완료 영수증 쓰기 실패 전파 · 발행 해시 뒤 restore=0 · kebase=0 · 필요 시 select=0 · end (실패 0 · reader_rc 0) 각 한 번 순서대로 · 마지막 LF 검사. 원 독립 탐침 재생 rc1 → rc0 (정상만 허용 · 누락 · 중복 · 모순 거부 4/4) · 합성 회귀 11/11 · 공유 기록 제안 docs/reviews/p1_rt_a5r01_20261120/ledger_proposal.json · docs/reviews/p1_rt_a5r01_closure_20261120/ledger_proposal.json. 11-20 Claude Linux: 깨끗한 언로딩 키트 폴더 사본으로 조립한 143 파일 키트 (A5_SHA256SUMS sha256 26bdbdc05ba3… = 1저자 ibb 사전 점검 고정 키트) 로 test_a5r01 통과 (게이트 단계 69).",
+   "verification_note": "독립 Codex 반박 창 재확인 (수정 핀 9fd6aa9d3bee) = CLOSABLE_LIMITED — 완료 영수증 쓰기 실패 전파 · 완전한 발행 뒤 영수증 소비 범위 · kebase · end 쓰기 실패 = 각각 rc2 · 후속 관문이 두 영수증 모두 거부 · 새 지적 0 · 이 지적 때문의 A5 봉인 후보 HOLD 해제 근거. 운영 봉인 · 새 RJ 발사 · 현장 자격 · 물리 판정 GO 아님. verified 전환에는 원장의 독립 검증자 조건이 따로 필요하다 (두 Codex 창의 독립성을 owner/verified_by 로 표현할 수 없다 — 검증자를 지어 넣지 않는다).",
+   "verified_in": "docs/reviews/p1_rt_a5r01_intake_20261120/FINAL_REVIEW_A5R01_9fd6aa9d3bee_20261120.md"
   }
  ]
 }
