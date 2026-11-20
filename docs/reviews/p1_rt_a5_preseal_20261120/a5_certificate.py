@@ -23,7 +23,7 @@ def checked_prefix(prefix, job, kit):
     if not prefix.endswith(b"\n") or MARK in prefix:
         raise ValueError("invalid or previously issued manifest")
     lines = prefix.decode("utf8").splitlines()
-    if any(line.startswith(("end=", "reader_restore_rc=")) for line in lines):
+    if any(line.startswith(("end=", "reader_")) for line in lines):
         raise ValueError("completed or repeated attempt")
     expected = {"bed":"ps_7_3_r45", "job":"RJ", "np":"6", "resume":"0", "gate":"ALLOW",
                 "sums_sha256":digest((kit/"A5_SHA256SUMS").read_bytes()), "lmp_sha256":LMP,
@@ -37,6 +37,10 @@ def checked_prefix(prefix, job, kit):
     if not recorded.is_absolute() or recorded.resolve(strict=True)!=job or job.name!="RJ" or job.parent.name!="ps_7_3_r45":
         raise ValueError("wrong production job path")
     unique(lines,"start")
+    selection = [line for line in lines if line.startswith("a5_select_required=")]
+    if selection not in ([], ["a5_select_required=1"]):
+        raise ValueError("invalid select obligation")
+    return bool(selection)
 
 def checked_result(report):
     if any(report.get(k)!=v for k,v in {"schema":"rt_restore_candidate_v1","restore_rule":"rev5_g2cp",
@@ -100,11 +104,13 @@ def admits(job, kit):
         if receipt.count(MARK)!=1:
             return False
         prefix,tail=receipt.split(MARK)
-        checked_prefix(prefix,job,kit)
-        tail=tail.decode("utf8").splitlines()
-        return (tail[0]==digest(raw) and report.get("a5_receipt_prefix_sha256")==digest(prefix) and
-                tail[1]=="reader_restore_rc=0" and unique(tail,"reader_restore_rc")=="0" and
-                tail[-1].startswith("end=") and unique(tail,"end") and
-                re.fullmatch(r"end=\S+ fails=0 reader_rc=0",tail[-1]) is not None)
+        needs_select = checked_prefix(prefix,job,kit)
+        required = [digest(raw).encode("ascii"), b"reader_restore_rc=0", b"reader_kebase_rc=0"]
+        if needs_select:
+            required.append(b"reader_select_rc=0")
+        rows = tail.split(b"\n")
+        return (report.get("a5_receipt_prefix_sha256") == digest(prefix)
+                and rows[:-2] == required and rows[-1] == b""
+                and re.fullmatch(rb"end=\S+ fails=0 reader_rc=0", rows[-2]) is not None)
     except (OSError,ValueError,UnicodeError,KeyError,TypeError,IndexError,AttributeError):
         return False

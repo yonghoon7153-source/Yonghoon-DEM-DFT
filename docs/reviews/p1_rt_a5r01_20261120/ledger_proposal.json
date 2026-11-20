@@ -1,0 +1,17 @@
+{
+  "scope": "proposal_only",
+  "review_pin": "a230b908546f7851da0dad2b80adfc6d866c4dd9",
+  "review_report_sha256": "6fc8a0f6d721440f40ba61a88d8fd8770099d10a3fe2425dd98ba40254a74f54",
+  "items": [
+    {
+      "id": "A5R-01",
+      "severity": "P2",
+      "proposed_status": "claimed_fixed",
+      "scope": "A5 RJ completion receipt append failure propagation and exact post-publication reader records; independent recheck pending"
+    }
+  ],
+  "verified_or_closed_requested": false,
+  "seal_candidate_status": "HOLD_PENDING_RECHECK",
+  "field_execution_performed": false,
+  "operational_seal_changed": false
+}

@@ -254,7 +254,7 @@ class Preseal(unittest.TestCase):
                 "\nrt_grammar_verdict_sha256="+m.ANCHORS["a3_return.json"]+
                 "\na3_readback_reader_sha256="+m.ANCHORS["a3_corrected_reader.py"]+
                 "\na4_historical_sha256="+m.ANCHORS["a4_continuity.json"]+"\n").encode()
-        end=b"reader_restore_rc=0\nend=fixture fails=0 reader_rc=0\n"
+        end=b"reader_restore_rc=0\nreader_kebase_rc=0\nend=fixture fails=0 reader_rc=0\n"
         manifest.write_bytes(prefix)
         def accepts():
             return restore.job_restored(self.site,bed,"RJ",self.kit)
