@@ -1,0 +1,58 @@
+{
+  "schema": "A5_first_go_pre_dispatch_intake/v1",
+  "prior_author_package_sha256": "8ab95c25f8453e10136910d188f2c67fd035e5a5f207c6dcc06639d89918749a",
+  "archive": {
+    "bytes": 2697,
+    "sha256": "753bd33da5dc803bde77c758f137f13bec4340e0c8ae6bdc3086edf8935aa2a8",
+    "regular_files": 11,
+    "encrypted": false,
+    "crc_and_member_names_valid": true,
+    "dispatch_manifest_rows_verified": 4,
+    "return_manifest_rows_verified": 5
+  },
+  "dispatch": {
+    "ssh_rc": 2,
+    "command_rc": 2,
+    "stdout_bytes": 0,
+    "stderr_line": "HOLD_OR_INCOMPLETE=wrong login context",
+    "stopped_before_controller": true
+  },
+  "readonly": {
+    "observed_utc": "2026-11-20T11:58:51.941199+00:00",
+    "ssh_rc": 0,
+    "command_rc": 0,
+    "status": "NO_DISPATCH_FOUND",
+    "job_id": null,
+    "runner_rc": null,
+    "sacct": null,
+    "launch_requested_by_collection": false,
+    "inner_archive_bytes": 472,
+    "inner_archive_sha256": "d63ce874238ddc9212d90c94ceeeeabe6d7f2459c7f850b41ececa65461f34f3",
+    "inner_payload_rows_verified": 1,
+    "return_json_sha256": "19f6cf23665c3b038e70940c1d89917da54aef9233d92ce6ac9764dc58087cc8",
+    "screen_equivalent_to_return_json": true
+  },
+  "author_observations_not_transcribed_in_the_return": {
+    "login_host_matches": true,
+    "only_prior_blocked_variable_present": "BASH_ENV",
+    "slurm_prefixed_present": false,
+    "sbatch_prefixed_present": false,
+    "slurm_conf_present": false,
+    "dispatch_and_new_root_absent_by_separate_listing": true,
+    "scheduler_test_only": "RESPONDED",
+    "prediction_as_displayed": "2026-11-27T21:59:18",
+    "timestamp_timezone_in_report": "UNSPECIFIED",
+    "user_limit": "NONE_REPORTED",
+    "group_limit": "NONE_REPORTED",
+    "project_id": 0,
+    "filesystem_available_kib": 120651565420
+  },
+  "outcome": {
+    "author_go_invocations": 1,
+    "known_submissions": 0,
+    "dispatch_slot_consumed": false,
+    "one_new_rj_job_remaining": 1,
+    "previous_job_preserved": "323957",
+    "field_actions_by_intake": 0
+  }
+}

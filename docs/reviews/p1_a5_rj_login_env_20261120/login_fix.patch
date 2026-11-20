@@ -1,0 +1,31 @@
+diff --git a/author_packet/a5_boot.py b/author_packet/a5_boot.py
+--- a/author_packet/a5_boot.py
++++ b/author_packet/a5_boot.py
+@@ -5,2 +5,3 @@
+ def main():
++    os.environ.pop("BASH_ENV", None)
+     if len(sys.argv)!=4 or sys.argv[1]!="GO_NEW_A5_RJ_ONCE":
+@@ -12,3 +13,3 @@
+         raise ValueError("effective quota unknown or insufficient")
+-    if socket.gethostname().split(".")[0]!="ibb-master" or any(k.startswith(("SBATCH_","SLURM_")) or k in ("BASH_ENV","ENV") for k in os.environ):
++    if socket.gethostname().split(".")[0]!="ibb-master" or any(k.startswith(("SBATCH_","SLURM_")) or k == "ENV" for k in os.environ):
+         raise ValueError("wrong login context")
+@@ -17,4 +18,4 @@
+     if stat.f_bavail*stat.f_frsize<int(reserve): raise ValueError("filesystem below budget")
+-    data=sys.stdin.buffer.read(733351+1)
+-    if len(data)!=733351 or hashlib.sha256(data).hexdigest()!="8c04667491b4f3009582cc02c2bc6c8a3ed20cfe3c3e948a91b25a5d5f57eb32":
++    data=sys.stdin.buffer.read(733362+1)
++    if len(data)!=733362 or hashlib.sha256(data).hexdigest()!="7eaab059442c2216ced003ed557ebd0ba1a050a6d70a11332018f4ded3e80a5d":
+         raise ValueError("incomplete delivery")
+diff --git a/build_payload/RJ_ONE_SUBMIT.py b/build_payload/RJ_ONE_SUBMIT.py
+--- a/build_payload/RJ_ONE_SUBMIT.py
++++ b/build_payload/RJ_ONE_SUBMIT.py
+@@ -120,2 +120,3 @@
+ def main():
++    os.environ.pop("BASH_ENV", None)
+     here=Path(__file__).resolve().parent
+@@ -124,3 +125,3 @@
+     need(dispatch_location(Path(__file__),home),"dispatch location")
+-    need(not any(k.startswith(("SBATCH_","SLURM_")) or k in ("BASH_ENV","ENV") for k in os.environ),"scheduler injection/active allocation")
++    need(not any(k.startswith(("SBATCH_","SLURM_")) or k == "ENV" for k in os.environ),"scheduler injection/active allocation")
+     for n,d in (("site_receipt.json",SITE_SHA),("rj_site.py",SITE_PROGRAM_SHA),("RJ_A5_NP6.sbatch",WORKER_SHA),("fixed_kit_9fd6aa9d3bee.zip",KIT_SHA)):
