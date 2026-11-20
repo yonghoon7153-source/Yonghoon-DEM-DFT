@@ -46,7 +46,7 @@
       "build_v5_vasp_package.py": "daf9b990029be38017266f7802dc0e1fc98e7436c84f5d76724e9d0976ca1eb4",
       "build_round2_vasp_package.py": "9dc2f98dd44232fba4f3e6068f2e625d67e10713fe4e2a03f7f1621bfbf85358"
     },
-    "돌연변이_재실행": "도는 중 (주 브랜치 · V5 보탬 뒤)"
+    "돌연변이_재실행": "22/22 빨간불 (주 브랜치 28ef1ea3 · V5 보탬 뒤 · build_a5 --mutants) + G5 라벨 연결을 지운 수동 돌연변이 1/1 빨간불 · a5 selftest 67/67 다시"
   },
   "③_남은_것": [
     "발송 전 독립 리뷰 한 번 (개정 5 '만들_것')",
