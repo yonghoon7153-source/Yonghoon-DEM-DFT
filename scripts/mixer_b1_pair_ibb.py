@@ -1,14 +1,18 @@
 """Author-operated B1 rotation pair, with separate serial releases in one installation."""
 import argparse
+from contextlib import contextmanager
+import json
 import math
 import os
 from pathlib import Path
 import re
 import runpy
 import shutil
+import stat
 import subprocess
 import sys
 import tarfile
+import tempfile
 import time
 
 HERE = Path(__file__).resolve().parent
@@ -197,16 +201,51 @@ def prepare(root,role,token,pin,runtime):
     put(ap,approval)
     return submit,ap
 
+@contextmanager
+def collection_lease(ctx):
+    # All writers use one persistent inode. Process exit releases its lease.
+    flags = os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0)
+    fd = os.open(str(ctx / "collection.flock"), flags, 0o600)
+    try:
+        need(stat.S_ISREG(os.fstat(fd).st_mode), "collection lease is not a regular file")
+        if os.name == "nt":  # Windows runs local contract tests.
+            import msvcrt
+            try:
+                msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+            except PermissionError as error:
+                raise BlockingIOError("active collector") from error
+        else:
+            import fcntl
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        yield
+    finally:
+        os.close(fd)
+
+def publish_return(ctx, record):
+    # An interrupted writer may leave its private temp file; observers use only return.json.
+    fd, name = tempfile.mkstemp(prefix=".return-", suffix=".tmp", dir=str(ctx))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as out:
+            json.dump(record, out, indent=2, ensure_ascii=False, allow_nan=False)
+            out.write("\n")
+            out.flush()
+            os.fsync(out.fileno())
+        os.link(name, ctx / "return.json")  # exclusive: also refuses an existing symlink
+        if os.name == "posix":
+            parent = os.open(str(ctx), os.O_RDONLY | os.O_DIRECTORY)
+            try:
+                os.fsync(parent)
+            finally:
+                os.close(parent)
+    finally:
+        os.unlink(name)
+
 def collect(root,role,jid,acct,runtime,live,pin):
     terminal=base["terminal"](acct,jid)
     need(terminal is not None,"not accounted terminal")
     ctx=root/"arms"/role
-    lock=ctx/"collection.lock"
-    lock.mkdir()
-    try:
+    with collection_lease(ctx):
         return collect_terminal(root,role,jid,acct,runtime,live,pin,terminal)
-    finally:
-        lock.rmdir()
 
 def collect_terminal(root,role,jid,acct,runtime,live,pin,terminal):
     ctx=root/"arms"/role
@@ -250,7 +289,7 @@ def collect_terminal(root,role,jid,acct,runtime,live,pin,terminal):
     with (out/"SHA256SUMS").open("x",encoding="ascii") as f:
         for name,digest in hashes.items():
             f.write(digest+"  "+name+"\n")
-    put(ctx/"return.json",dict(rec,directory=attempt,archive_hashes=hashes))
+    publish_return(ctx,dict(rec,directory=attempt,archive_hashes=hashes))
     print("JOB_ID=%s RUNNER_RC=%s F=%d W9=%s RETURN_READY=%s"%
           (jid,rec["runner_rc"],len(names),w9,str(ready).upper()),flush=True)
     return 0 if ready else 1
