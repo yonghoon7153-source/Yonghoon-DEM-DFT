@@ -43,7 +43,7 @@ class PilotChecks(unittest.TestCase):
 
     def test_decision_uses_phi_only(self):
         def arm(n, phi):
-            return dict(status='TARGET_BRACKETED', cells=n, phi_m=phi, protocol='development-mode-1')
+            return dict(status='TARGET_BRACKETED', cells=n, phi_m=phi, protocol=u.PROTOCOL)
         self.assertEqual(u.assess(arm(12, .8), arm(16, .803)), 'WITHIN_DEVELOPMENT_BAND')
         self.assertEqual(u.assess(arm(12, .8), arm(16, .81)), 'OUTSIDE_DEVELOPMENT_BAND')
         self.assertEqual(u.assess(arm(12, .8), arm(12, .803)), 'INCOMPLETE')
