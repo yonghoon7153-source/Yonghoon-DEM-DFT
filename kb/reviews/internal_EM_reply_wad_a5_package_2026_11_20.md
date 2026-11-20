@@ -1,4 +1,7 @@
 ---
+title: "EM 회신 — a5 묶음 독립 리뷰 (NO-GO · P0 2 · P1 4)"
+tags: [review, internal, wad, vasp, a5]
+status: 회신 수령 2026-11-20 · NO-GO · 고침 진행
 letter: EM
 date: 2026-11-20
 kind: internal independent review (reply)

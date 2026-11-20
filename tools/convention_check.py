@@ -247,6 +247,20 @@ def _required_flags(py: Path):
     return out
 
 
+#: 셸 호출 필수 인자 면제 — (sh 경로, 도구 경로, 플래그) 셋 단위로만 끈다 (파일 통째로 덮지 않는다).
+#:   ⛔ 사유 없이 넣지 않는다. 정적 검사는 도구 안 **하위 파서**의 required=True 도 전체 필수로 읽는다.
+_MD1_SUBPARSER_WHY = ("--out_json 은 [혁주] MD-1 하위 모드 (--md1 · --md1_ensemble) 파서에서만 필수다 · 이 러너들이 부르는 옛 경로 "
+                      "(legacy_main · --out CSV) 는 그대로다 (2026-11-20 · MD-1 판독 도구는 결과 전 sha 를 박아 둬서 도구 대신 여기서 끈다)")
+SHELL_FLAG_EXEMPT = {
+    ("tools/oxidation/run_lpsocl_interface.sh", "tools/oxidation/analyze_interface_decomp.py", "--out_json"):
+        _MD1_SUBPARSER_WHY,
+    ("tools/oxidation/interface_md_kisti.sh", "tools/oxidation/analyze_interface_decomp.py", "--out_json"):
+        _MD1_SUBPARSER_WHY,
+    ("tools/oxidation/run_interface_campaign.sh", "tools/oxidation/analyze_interface_decomp.py", "--out_json"):
+        _MD1_SUBPARSER_WHY,
+}
+
+
 def check_shell_calls(root=None):
     """tools/**/*.sh 안의 `python3 tools/x.py …` 호출이 x.py 의 필수 인자를 다 넘기나.
 
@@ -281,7 +295,8 @@ def check_shell_calls(root=None):
                 j += 1
                 chunk += " " + lines[j]
             req = _required_flags(tool)
-            miss = sorted(f for f in req if f not in chunk)
+            miss = sorted(f for f in req if f not in chunk
+                          and (str(sh.relative_to(base)), m.group(1), f) not in SHELL_FLAG_EXEMPT)
             if miss:
                 bad.append((f"{sh.relative_to(base)}:{i+1}", m.group(1), miss))
             i = j + 1

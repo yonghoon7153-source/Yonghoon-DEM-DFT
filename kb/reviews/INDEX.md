@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-11-16
-updated: 2026-11-16
+date: 2026-11-20
+updated: 2026-11-20
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-11-16
+verifiedAt: 2026-11-20
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -164,7 +164,7 @@ evidenceScope: multi-source-primary
 | EJ | 2026-11-13 | `codex_EJ_prompt_b2o3_dft_stage9_v5_2026_11_13.md` | `codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md` | 작성 2026-11-13 · gabia v5 검사 결과 넣음 (selftest 182/182 · prepare s9_v5 · 입력 6 = v2–v4 바이트 같음) · 발송 2026-11-13 (사용자) → 회신 NO-GO (codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md) · 코드 기준 커밋 6302f8a8 (브랜치 claude/evac-2026-11-12 · 도구 sha256 34ec73b6 · 실행기 e2d6f728 · 변이 도구 bf50ee3d) · 앞 편지 EI (NO-GO · v4 67cca09c) | 같은 라벨 · 주제 토큰 일치 ['b2o3', 'dft', 'stage9', 'v5'] |
 | EK | 2026-11-13 | `codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md` | `codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md` | 작성 2026-11-13 · gabia v6 검사 결과 넣음 (HEAD 46e212782 · selftest 185/185 · prepare s9_v6 · 입력 6 = v2–v5 바이트 같음) · 발송 (사용자) → 회신 2026-11-14 조건부 GO (codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md) · 코드 기준 커밋 46e21278 (브랜치 claude/evac-2026-11-12 · 도구 sha256 0c3b7f51 · 실행기 e2d6f728 · 변이 도구 3090ec9f) · 앞 편지 EJ (NO-GO · v5 6302f8a8) | 같은 라벨 · 주제 토큰 일치 ['b2o3', 'dft', 'stage9', 'v6'] |
 | EL | 2026-11-14 | `internal_EL_prompt_li2s3_endline_ack_2026_11_14.md` | `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` | 작성 2026-11-14 — 내부 반박 리뷰 (개정 4 를 쓴 에이전트와 다른 독립 에이전트) · 회신은 `internal_EL_reply_li2s3_endline_ack_2026_11_14.md` · 회신 전에는 개정 4 를 활성하지 않는다 · ✅ 회신 수령 2026-11-15 (조건부 GO · P0 1 · P1 1 · P2 8) → 고친 판 (dbac0855) → 재확인 GO 2026-11-15 → N-P2-1 시험 더한 판 8e1f16a49a2df8a3 | 회신 본문의 `요청:` 역링크 |
-| EM | 2026-11-20 | `internal_EM_prompt_wad_a5_package_2026_11_20.md` | `internal_EM_reply_wad_a5_package_2026_11_20.md` | 작성 · 회신 수령 2026-11-20 — 내부 독립 리뷰 (도구를 만든 갈래 에이전트 · 주 세션과 다른 새 에이전트) · W_ad 은 e70 far 재시도 a5 묶음 발송 전 · **NO-GO** (P0 2 · P1 4 · P2 · P3) → 사용자 결정 해석 1 (`D-2026-11-20-wad-aprime-v5-e70-a5-interp1`) · 고침 진행 |
+| EM | 2026-11-20 | `internal_EM_prompt_wad_a5_package_2026_11_20.md` | `internal_EM_reply_wad_a5_package_2026_11_20.md` | 발송 · 회신 수령 2026-11-20 | 같은 라벨 · 주제 토큰 일치 ['a5', 'package', 'wad'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 

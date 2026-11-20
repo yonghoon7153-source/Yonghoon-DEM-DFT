@@ -1,4 +1,7 @@
 ---
+title: "EM 프롬프트 — 은 e70 far 재시도 a5 묶음 발송 전 독립 리뷰"
+tags: [review, internal, wad, vasp, a5]
+status: 발송 · 회신 수령 2026-11-20
 letter: EM
 date: 2026-11-20
 kind: internal independent review (prompt)
