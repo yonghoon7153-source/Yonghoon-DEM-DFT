@@ -16,3 +16,5 @@
 - 판단 양식과 근거는 `docs/reviews/mixer_b1_pair_20261120/wave_decision.md`, `docs/reviews/mixer_e0_pilot_registration_20261113/received/e0_pilot_registration_draft.md.txt` §12, `docs/reviews/mixer_rotation_n0_20261118/README.md`, `docs/reviews/nonrint_go_returns_20261120/n0/README.md`다. 두 팔의 비교는 같은 관측기와 E0 기준을 사용하고, 초기 N0 미세 격자의 AM 보존 69.44%를 함께 적는다.
 
 오프라인 검증은 `scripts/test_mixer_b1_pair_ibb.py` 7개 메서드의 구현 전 7실패 → 구현 뒤 7/7을 확인했다. 별도의 Ubuntu 통합 확인에서는 원배포 B 283파일과 11-20 수령 N0 포인터를 풀고 승인·러너 생성과 고정 제출기를 실제 경로로 호출했다. 현장 사전 점검·스케줄러·계산 결과만 합성 자료로 대체했다. U·C 모의 제출 각 1, 공유 예약 2, 두 팔의 반환 해시 4/4. 과학 결과나 ibb 계산은 이 시험에서 만들지 않았다. 재현 진입점은 `docs/reviews/mixer_b1_pair_20261120/check_deployment.py`다.
+
+수집은 팔마다 같은 파일의 커널 잠금을 사용한다. 수집 프로세스가 tar 작성 중 종료되면 커널이 잠금을 해제한다. 회수 전용은 종료가 확인된 원 job을 새 반환 폴더로 수집하며 앞의 부분 tar는 보존한다. 최종 포인터는 임시 JSON을 완전히 써서 fsync한 뒤 배타적 링크로 발행한다. 이미 발행된 포인터는 보존한다. `scripts/test_mixer_b1_collection_commit.py`를 전후 같은 3메서드로 실행해 Linux에서 2실패·1오류 → 3/3을 확인했다. 이 중 한 메서드는 같은 수집기를 전체 tar 작성 도중 SIGKILL하고 원 격리 폴더에서 같은 모의 job의 회수·부분 파일 보존·RECOVERY_ONLY를 확인한다. Windows에서는 POSIX 전용 한 메서드를 건너뛰고 2/2, 기존 회귀 7/7 통과다.

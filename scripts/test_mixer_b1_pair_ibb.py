@@ -78,12 +78,9 @@ class PairTests(unittest.TestCase):
             self.b.put(self.root/name,{})
         for name in ("campaign_policy.json","approvals/"+case_name+"/approval.json","admission/"+case_name+".reservation.json","admission/"+case_name+".submission.json"):
             self.b.put(self.root/"B"/self.b.F8/name,{})
-        lock=ctx/"collection.lock"
-        lock.mkdir()
-        with self.assertRaises(FileExistsError):
+        with self.b.collection_lease(ctx), self.assertRaises(BlockingIOError):
             self.b.collect(self.root,"U","41","41|COMPLETED|0:0|",(0,0,0),False,"a"*40)
         self.assertFalse((ctx/"return.json").exists())
-        lock.rmdir()
         with patch.dict(self.b.base, runtime=lambda *args: {"matches":True}), patch.object(self.b.time,"time",return_value=137.):
             self.assertEqual(self.b.collect(self.root,"U","41","41|COMPLETED|0:0|", (0,0,0),False,"a"*40),0)
         record=self.b.read(ctx/"return.json")
