@@ -185,9 +185,9 @@ jobs:
 
       # ★ 2026-11-20 (반입 ⑬ · 1저자 11-18 Q1) — 반입 ⑫ · ⑬ 새 시험 아홉 (unittest · check_all.sh 에도 같이).
       #   이웃 스텝과 같은 `python <경로>` 꼴.  test_dem_suyoung_shape_output.py = 기준 소스 환경변수가 필요해 뺀다.
-      - name: 반입 ⑫ · ⑬ 새 시험 아홉 (regression)
+      - name: 반입 ⑫ · ⑬ · ⑭ 새 시험 열하나 (regression)
         run: |
-          for t in docs/reviews/p1_rt_fixture_development_20261118/test_release.py docs/reviews/p1_rt_fixture_readback_20261118/test_readback.py docs/reviews/p1_rt_fixture_readback_20261118/test_reader.py scripts/test_lhs_v13_frame_scope.py scripts/test_mixer_rotation_n0_ibb.py scripts/test_mpm_coverage_c0.py scripts/test_mpm_coverage_seed.py scripts/test_suyoung_u6_first_dev.py scripts/test_suyoung_contact_direction.py; do python "$t" || exit 1; done
+          for t in docs/reviews/p1_rt_fixture_development_20261118/test_release.py docs/reviews/p1_rt_fixture_readback_20261118/test_readback.py docs/reviews/p1_rt_fixture_readback_20261118/test_reader.py scripts/test_lhs_v13_frame_scope.py scripts/test_mixer_rotation_n0_ibb.py scripts/test_mpm_coverage_c0.py scripts/test_mpm_coverage_seed.py scripts/test_suyoung_u6_first_dev.py scripts/test_suyoung_contact_direction.py docs/reviews/mixer_n0_return_20261120/test_readback.py docs/reviews/suyoung_u6_nodal_return_20261120/test_f16_only.py; do python "$t" || exit 1; done
 
       # ★ 2026-10-27 (non-Rint 통합 대응표 §6 3) — 언로딩 키트 (ULPRI) 직접 검사 다섯 (check_all.sh 에도 같이).
       #   키트는 scripts/ · webapp/ 밖이라 등재 드라이버가 안 돈다 → 이름으로 건다.  꼴 = 키트 README · 인계 색인 §6 그대로 `-I`
