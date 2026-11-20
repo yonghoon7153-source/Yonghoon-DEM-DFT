@@ -14258,7 +14258,7 @@
    "title": "W_ad V5 개정 5 해석 1 — 다음 단은 앞 단이 확인된 미수렴 · 실행 실패 (전자 스텝 ≥ 1) 로 끝났을 때만 · 스텝 0 은 멈추고 같은 단 다시 · 재시작 미이행 · 미확인 · 설정 위반은 멈추고 1저자",
    "statement": "개정 5 (D-2026-11-20-wad-aprime-v5-e70-a5-retry) 의 'c2: c1 이 주 기준 OK 가 아니면 자동' 을 같은 개정의 결과별_처리 '재시작_미이행 … 더 돌리지 않는다' 와 개정 4 의 다음_단_자격 (SCF_NOT_CONVERGED · RUN_FAILED 만) · 0 스텝 인프라 중단 (같은 단 다시) 에 맞춰 읽는다 — A5 → c1 · c1 → c2 의 자동 진행은 앞 단이 SCF_NOT_CONVERGED 또는 전자 반복행 ≥ 1 인 RUN_FAILED (끊김 기록 포함) 로 끝났을 때만 · 전자 반복행 0 이면 멈추고 0 스텝 기록 (--infra-abort) 뒤 같은 단 · RESTART_NOT_HONOURED · SCF_UNVERIFIED · 설정·무결성 위반이면 멈추고 1저자 검토 · A5 가 행은 있는데 자격 미달이면 개정 5 그대로 (⓪ 이 확인돼 있으면 ⓪ 에서 c1 · c2 · 아니면 닫는다). 개정 파일은 봉인 그대로 둔다.",
    "rationale": "내부 독립 리뷰 EM (2026-11-20 · NO-GO) 이 VASP_CMD 오타 하나로 A5 · c1 · c2 가 몇 초 만에 다 소모되는 것을 재현 (P1-2) · 개정 5 의 일반 조항 ('주 기준 OK 가 아니면 자동') 과 특정 조항 ('재시작 미이행 … 더 돌리지 않는다') · 개정 4 다음 단 자격이 어긋나 보이는 자리라 1저자에게 물었다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": false,
    "results_seen_note": "a5 결과 0 건 — 러너 · 검사기의 단계 진행 흐름만 정한다 (값 · 문턱 · 채택 순서는 개정 5 그대로)",
@@ -14290,15 +14290,31 @@
      "session": "본 세션 claude/friendly-meitner-lldvar"
     }
    ],
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-20",
      "state": "proposed",
      "by": "claude",
      "note": "EM P1-2 질문 · 사용자 답을 받아 적음 (다음 커밋에서 비준 블록)"
+    },
+    {
+     "at": "2026-11-20",
+     "state": "active",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "비준 — AskUserQuestion 답 (2026-11-20 · 이 세션): '은 a5 재시도 — c1 이 VASP 가 아예 안 돈 경우 (전자 스텝 0) · 파동함수 재시작 미이행 · SCF 미확인으로 끝났을 때 c2 를 자동으로 띄울까요?' → '멈추고 1저자에게 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-20T11:57:15Z",
+    "commit": "e374d7fd0ce70ee4bb8a0512309424156612ea73",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-11-20 · 이 세션): '은 a5 재시도 — c1 이 VASP 가 아예 안 돈 경우 (전자 스텝 0) · 파동함수 재시작 미이행 · SCF 미확인으로 끝났을 때 c2 를 자동으로 띄울까요?' → '멈추고 1저자에게 (Recommended)'",
+    "decision_digest": "sha256:4e0e8688cbf1b5465fd7d5080fd6b07257af6172b3009dbb69b1a9303486a638"
+   }
   }
  ]
 }
