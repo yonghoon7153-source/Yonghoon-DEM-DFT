@@ -1,0 +1,23 @@
+{
+  "scope": "proposal_only",
+  "items": [
+    {
+      "id": "A5R-01",
+      "severity": "P2",
+      "review_pin": "9fd6aa9d3bee52f95dfed507a953da3d985544bb",
+      "independent_disposition": "CLOSABLE_LIMITED",
+      "scope": "A5 RJ journal write failure propagation and consumption of a complete post-publication receipt",
+      "recommendation": "Record independent limited closure support and resolve this finding's seal-candidate hold under the intake ledger convention."
+    }
+  ],
+  "review_report_sha256": "4cb3f9043219e9bb44b4b3a5edb0465c719932cff4fde806e99520798ba0e3dc",
+  "new_findings": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "shared_ledger_modified": false,
+  "operational_seal_issued": false,
+  "field_preflight_executed_by_receiver": false,
+  "field_launch_approved": false
+}
