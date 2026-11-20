@@ -1,0 +1,46 @@
+{
+  "12": {
+    "result": {
+      "protocol": "development-mode-1-nodal-gradient",
+      "label": "DEVELOPMENT_ONLY",
+      "status": "TARGET_BRACKETED",
+      "cells": 12,
+      "disks": 49,
+      "points": 21609,
+      "dt": 0.001497578010986372,
+      "steps_attempted": 4984,
+      "phi_m": 0.990030971727746,
+      "contact": "shared_node_approach",
+      "friction": 0.5,
+      "wall_speed": 0.01996548746349992,
+      "target_E": 0.12,
+      "elapsed_s": 315.2947280369699,
+      "qualified": false
+    },
+    "result_file_sha256": "17ba7c13bb857fb399c004933a1f0fd85a54cd8f32e0847d4852c46aa4b87cc0",
+    "trace_sha256": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89",
+    "archive_sha256": "1d5dc027de0d847021c0d5dee216a7bc16897384f825ec0a87777cc29792f9d7"
+  },
+  "16": {
+    "result": {
+      "protocol": "development-mode-1-nodal-gradient",
+      "label": "DEVELOPMENT_ONLY",
+      "status": "TARGET_BRACKETED",
+      "cells": 16,
+      "disks": 49,
+      "points": 39053,
+      "dt": 0.0011231835082397789,
+      "steps_attempted": 6521,
+      "phi_m": 0.9850740317357705,
+      "contact": "shared_node_approach",
+      "friction": 0.5,
+      "wall_speed": 0.01996548746349992,
+      "target_E": 0.12,
+      "elapsed_s": 736.5375012489967,
+      "qualified": false
+    },
+    "result_file_sha256": "68258f97e4c23c3694d5c1196d796889fecf91718c85b1e0b0156134f2ea7f59",
+    "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de",
+    "archive_sha256": "1210ceba9e1022a6611c35d110f3d84f0fd7b305dfea8065f242742ae0f5b55b"
+  }
+}
