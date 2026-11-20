@@ -1,7 +1,7 @@
 ---
 title: "[혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획"
 date: 2026-11-16
-updated: 2026-11-17
+updated: 2026-11-20
 tags: [hyeokju, LZO, Li2ZrO3, NCA, LPSCl, interface-reactivity, band-gap, MLIP-MD]
 status: 진행 — 1 단계 · 2a active (사용자 승인 11-16) · MD proposed (문턱 승인 대기) · 혁주 자료 대기 (조성 · 전압 기준 · 충전 용량)
 confidence: medium
@@ -42,7 +42,7 @@ evidenceScope: single-source
 |---|---|---|---|
 | 1 열역학 | `db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json` · `D-2026-11-16-hyeokju-lzo-stage1-reactivity` (**active** 11-16) | 닫힌계 혼합 곡선 (양극 Li 함량 y = 1.0 … 0.1) + Li 열린계 (2.5–5.0 V) · 대조 NCA–LPSCl · 앵커 LPSCl×LCO | gabia CPU · MP 조회 |
 | 2a 전자구조 | `db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json` · `D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap` (**active** 11-16 · vc-relax 허락) | Li₂ZrO₃ fixed-occ nscf 띠틈 + DOS/PDOS · CEI 생성물 띠틈 체인 | kgy GPU · 작은 셀 |
-| MD | `db/properties/hyeokju_lzo_md_card_2026_11_16.json` · `D-2026-11-16-hyeokju-lzo-md` (proposed · G1 · G2 문턱 승인 대기) | UMA 검증 (DFT 단일점 대조) → 1 단계가 고른 계면 MD | kgy GPU |
+| MD | `db/properties/hyeokju_lzo_md_card_2026_11_16.json` · `D-2026-11-16-hyeokju-lzo-md` · 개정 1 `D-2026-11-17-hyeokju-lzo-md0-exec-amend1` (active) · ⏩ **MD-0 통과 (11-20 · 두 모델 G1 · G2 · k 탐침 미발동)** | UMA 검증 (DFT 단일점 대조) → 1 단계가 고른 계면 MD (MD-1 = 결과 전 개정 · 사용자 결정) | kgy GPU (계면 k 탐침 1 점은 gabia) |
 
 ### 혁주 자료가 오기 전과 뒤
 

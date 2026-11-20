@@ -4,7 +4,7 @@
   "date": "2026-11-17",
   "트랙": "[혁주] LZO 코팅 양극 계면 — 1저자 = 혁주 · 사용자 = 계산 담당",
   "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json (⏩_개정_1_2026_11_17_MD0_실행_결과_전 · D-2026-11-17-hyeokju-lzo-md0-exec-amend1 active)",
-  "status": "UMA · kgy DFT 11 점 · gabia 계면 k 탐침 끝 (11-20 13:40 · DEM python3 와 GPU 같이) → kgy 회수 + md0_check 블록 줌",
+  "status": "✅ MD-0 끝 (11-20) — 두 모델 G1 · G2 통과 · k 탐침 둘 다 미발동 → 카드 §4 'MD-1 결과 전 개정으로' (사용자 결정 대기)",
   "UMA_kgy": {
     "기계": "kgy (RTX 3090) · tmux hjmd0 · worktree ~/wt_hj_md0 = 768c833f · R=/home/kgy/work/runs/hj_md0_1117",
     "시작_끝": "벌크 11-17 13:33:39 → 13:42:56 · 계면 13:42:56 → 15:10:08",
@@ -78,8 +78,7 @@
     "곁": "다른 프로그램이 kgy GPU 를 약 4 GB 쓰고 있었다 (프로세스 목록은 kgy 에서 막혀 있다) — 점마다 여유를 다시 잰다"
   },
   "남은_것": [
-    "gabia 계면 k 탐침 1 점 — 블록 줌 (11-20 · gabia_계면_k탐침_블록_2026_11_20)",
-    "k 탐침 결과를 kgy 로 → md0_check (G1 힘 MAE · G2 상대 에너지 RMSE · k 탐침) 판정 기록"
+    "MD-1 결과 전 개정 (사용자 결정 · 카드 §4)"
   ],
   "DFT_kgy_끝_2026_11_17": {
     "근거": "사용자가 붙인 kgy 감시 화면 (2026-11-17 18:19:00) — dft_run.log 끝 줄",
@@ -160,6 +159,118 @@
     "kgy_블록 (회수 · md0_check · push · 사용자가 붙여넣는다)": "R=/home/kgy/work/runs/hj_md0_1117; W=$HOME/wt_hj_md0; M=/home/kgy/Yonghoon-DEM-DFT; RW=$HOME/wt_hj_md0_check; PY=/home/kgy/apps/miniforge3/envs/uma/bin/python; G=root@121.78.116.27; GR=/data/work/runs/hj_md0k_1120; K=$R/dft/iface_k; D=db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120\n( echo \"== 자리 (k 탐침 자리 · 판정 파일 · 회수 worktree 없음 · 판 768c833f · 도구 지문)\" && [ ! -e $K ] && [ ! -e $R/md0_verdict.json ] && [ ! -e $RW ] && git -C $W rev-parse HEAD | grep -q '^768c833f' \\\n && ( cd $W && printf '%s\\n' \"d553394070e6bdcb81b12728f7865e0eb636c78c6ddd892cdef3419c05dd8b6c  tools/ionic/mlip_committee.py\" \"758e05ca4191448c99626e6f1356f1a987ce76b4b3a80a7e8c0d7b53a770ce83  tools/doping/generate_dft_inputs.py\" | sha256sum -c - ) \\\n && echo \"== gabia k 탐침 가져오기 (scf.in · scf.out · frame.xyz · SNAPSHOTS · 실행기 로그 — tmp/ 빼고)\" && mkdir -p $K/ifacek_s1_t1ps \\\n && scp -q $G:$GR/dft/iface_k/ifacek_s1_t1ps/scf.in $G:$GR/dft/iface_k/ifacek_s1_t1ps/scf.out $G:$GR/dft/iface_k/ifacek_s1_t1ps/frame.xyz $K/ifacek_s1_t1ps/ && scp -q $G:$GR/dft/iface_k/SNAPSHOTS_ifacek_s1.json $K/ && scp -q $G:$GR/run.log $K/gabia_run.log \\\n && echo \"== 양쪽 sha256 대조 (gabia 에서 잰 값 → kgy 사본)\" && ssh $G \"cd $GR/dft/iface_k && sha256sum ifacek_s1_t1ps/scf.in ifacek_s1_t1ps/scf.out ifacek_s1_t1ps/frame.xyz SNAPSHOTS_ifacek_s1.json\" | ( cd $K && sha256sum -c - ) \\\n && echo \"== 출력 · 입력 대조 (수렴 1 · JOB DONE 1 · k 점 4 · kgy 계면 t = 1 ps 와 종·셀·좌표 블록 같음)\" && [ \"$(grep -ac 'convergence has been achieved' $K/ifacek_s1_t1ps/scf.out)\" = 1 ] && [ \"$(grep -ac 'JOB DONE' $K/ifacek_s1_t1ps/scf.out)\" = 1 ] && grep -a \"number of k points\" $K/ifacek_s1_t1ps/scf.out | head -1 | grep -q \"points= *4 \" \\\n && cmp <(sed -n '/^ATOMIC_SPECIES/,/^K_POINTS/{/^K_POINTS/!p}' $R/dft/iface/iface_s1_t1ps/scf.in) <(sed -n '/^ATOMIC_SPECIES/,/^K_POINTS/{/^K_POINTS/!p}' $K/ifacek_s1_t1ps/scf.in) && echo \"  ✓ 같음\" \\\n && echo \"== md0_check (검사용 CPU 파이썬 · UMA 힘만 · QE 아님 · 모델 둘 · k 탐침 둘)\" \\\n && { O=$(cd $W && $PY tools/ionic/mlip_committee.py md0_check --model bulk_B144=$R/dft/bulk:bulk:s1 interface_I142_liouter_aLZO16=$R/dft/iface:iface:s1 --kprobe bulk_B144=$R/dft/bulk/bulk_s1_t1ps,$R/dft/bulk_k/bulkk_s1_t1ps interface_I142_liouter_aLZO16=$R/dft/iface/iface_s1_t1ps,$K/ifacek_s1_t1ps --out $R/md0_verdict.json 2>&1); rc=$?; printf '%s\\n' \"$O\" > $R/md0_check.log; printf '%s\\n' \"$O\" | grep -av \"Warning\\|warn(\" | tail -8 | cut -c1-300; [ \"$rc\" = 0 ]; } \\\n && echo \"== k 탐침 · 판정 요약\" && $PY -c \"import json; v=json.load(open('$R/md0_verdict.json')); [print('  k 탐침', n, '· 힘 MAE', round(p['force_MAE_eV_per_A'], 4), 'eV/Å · k', p['k'], '· 발동', p.get('fired')) for n, p in v['kprobe'].items()]; [print('  ', n, '· G1', m['verdict']['G1'], '· G2', m['verdict']['G2'], '· 통과', m['verdict']['pass']) for n, m in v['models'].items()]; print('  ★', v['MD1'])\" \\\n && echo \"== 회수 (push · 판정 · 로그 · k 탐침 원본 · collect 산출물)\" && git -C $M fetch -q origin claude/friendly-meitner-lldvar && git -C $M worktree add -q --detach $RW FETCH_HEAD && mkdir -p $RW/$D/kprobe_gabia/ifacek_s1_t1ps $RW/$D/collect \\\n && cp $K/ifacek_s1_t1ps/scf.in $K/ifacek_s1_t1ps/scf.out $K/ifacek_s1_t1ps/frame.xyz $RW/$D/kprobe_gabia/ifacek_s1_t1ps/ && cp $K/SNAPSHOTS_ifacek_s1.json $K/gabia_run.log $RW/$D/kprobe_gabia/ && cp $R/md0_verdict.json $R/md0_check.log $RW/$D/ \\\n && cp $R/dft/bulk/RESULTS_bulk_s1.json $R/dft/bulk/labeled_bulk_s1.xyz $R/dft/iface/RESULTS_iface_s1.json $R/dft/iface/labeled_iface_s1.xyz $RW/$D/collect/ \\\n && ( cd $RW/$D && find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS && echo \"  ✓ 파일 $(wc -l < SHA256SUMS) · $(du -sh . | cut -f1)\" ) \\\n && git -C $RW add $D && git -C $RW commit -q -m \"[혁주] MD-0: gabia interface k-probe (2x2x1) retrieved to kgy and md0_check run (both models)\" -m \"$(printf 'Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\\nClaude-Session: https://claude.ai/code/session_01QtbBQvJTvwH5CtkzA6CTzs')\" \\\n && git -C $RW fetch -q origin claude/friendly-meitner-lldvar && git -C $RW merge -q --no-edit FETCH_HEAD && echo \"✓ 커밋 $(git -C $RW rev-parse --short HEAD) — 이제 push (Password = GitHub 토큰)\" && git -C $RW push origin HEAD:claude/friendly-meitner-lldvar && git -C $M worktree remove $RW && echo \"✓ push · 회수 worktree 정리\" \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
     "블록_설명": "① 자리 · 판 768c833f · 도구 지문 (mlip_committee d5533940 · generate_dft_inputs 758e05ca) ② gabia 에서 scf.in · scf.out · frame.xyz · SNAPSHOTS · 실행기 로그만 scp (tmp/ 파동함수 빼고) ③ gabia 에서 잰 sha256 으로 kgy 사본 대조 ④ 수렴 1 · JOB DONE 1 · k 점 4 · kgy 계면 Γ t = 1 ps 와 종·셀·좌표 블록 같음 ⑤ md0_check (CPU UMA · 모델 bulk_B144 · interface_I142_liouter_aLZO16 · k 탐침 벌크 Γ/2×2×2 · 계면 Γ/2×2×1) → $R/md0_verdict.json · 로그 $R/md0_check.log ⑥ 요약 (k 탐침 MAE · 발동 · G1 · G2 · MD1) ⑦ 회수 worktree → db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/ (판정 · 로그 · k 탐침 원본 · collect 산출물 RESULTS · labeled) → push (맨 끝 · 정리는 push 성공에 걸림)",
     "카드_대조": "768c833f 의 카드 개정 1 블록 = HEAD 와 같음 (기계_판독_값 · 상태 active) — md0_check 가 읽는 문턱이 같다 (이 세션 git show 대조)",
+    "by": "agent · 2026-11-20"
+  },
+  "MD0_판정_2026_11_20": {
+    "근거": "사용자가 붙인 kgy 블록 출력 (2026-11-20) · 회수 커밋 8db9bf74 → db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/ (파일 11 · 356 KB · SHA256SUMS 대조 통과 · 이 세션)",
+    "통과한_점검": "도구 지문 (mlip_committee d5533940 · generate_dft_inputs 758e05ca) · gabia → kgy sha256 4/4 · 수렴 1 · JOB DONE 1 · k 점 4 · kgy 계면 Γ t = 1 ps 와 종·셀·좌표 블록 같음",
+    "문턱 (카드 개정 1 기계_판독_값 · 결과 전)": {
+      "G1_force_MAE_overall_eV_per_A_max": 0.1,
+      "G1_force_MAE_per_element_eV_per_A_max": 0.15,
+      "G1_gated_elements": [
+        "Zr",
+        "O",
+        "P",
+        "S"
+      ],
+      "G2_rel_energy_RMSE_meV_per_atom_max": 5.0,
+      "k_probe_force_MAE_eV_per_A_max": 0.02,
+      "snapshot_times_prod_ps": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "save_fs": 100,
+      "models": [
+        "bulk_B144",
+        "interface_I142_liouter_aLZO16"
+      ]
+    },
+    "k_탐침": {
+      "bulk_B144": {
+        "k": "2 2 2",
+        "Γ_대_k_힘_MAE_eV_per_A": 0.0079,
+        "발동": false,
+        "규칙": "k 탐침 미발동 — Γ 프레임으로 판정한다"
+      },
+      "interface_I142_liouter_aLZO16": {
+        "k": "2 2 1",
+        "Γ_대_k_힘_MAE_eV_per_A": 0.007,
+        "발동": false,
+        "규칙": "k 탐침 미발동 — Γ 프레임으로 판정한다"
+      }
+    },
+    "모델": {
+      "bulk_B144": {
+        "힘_MAE_eV_per_A": 0.0261,
+        "원소별_MAE_eV_per_A": {
+          "Li": 0.0102,
+          "O": 0.0347,
+          "Zr": 0.0323
+        },
+        "상대_E_RMSE_meV_per_atom": 0.322,
+        "장": 5,
+        "k": "Γ",
+        "판정": {
+          "G1_overall": true,
+          "G1_gated_by_element": {
+            "Zr": true,
+            "O": true
+          },
+          "G1_gated_absent": [
+            "P",
+            "S"
+          ],
+          "G1": true,
+          "G2": true,
+          "pass": true
+        }
+      },
+      "interface_I142_liouter_aLZO16": {
+        "힘_MAE_eV_per_A": 0.0306,
+        "원소별_MAE_eV_per_A": {
+          "Cl": 0.0132,
+          "Li": 0.0146,
+          "O": 0.0341,
+          "P": 0.0385,
+          "S": 0.051,
+          "Zr": 0.0513
+        },
+        "상대_E_RMSE_meV_per_atom": 0.476,
+        "장": 5,
+        "k": "Γ",
+        "판정": {
+          "G1_overall": true,
+          "G1_gated_by_element": {
+            "Zr": true,
+            "O": true,
+            "P": true,
+            "S": true
+          },
+          "G1_gated_absent": [],
+          "G1": true,
+          "G2": true,
+          "pass": true
+        }
+      }
+    },
+    "판정": "두 모델 다 통과 → MD-1 결과 전 개정으로 (카드 §4)",
+    "파일": {
+      "verdict": "db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/md0_verdict.json (sha256 eb05ff2b824410b7e405495b726b8fbcf138b604eb09253ba028c18b5d53390a)",
+      "log": "db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/md0_check.log",
+      "k_탐침_원본": "db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/kprobe_gabia/",
+      "collect": "db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/collect/ (RESULTS · labeled — 벌크 · 계면)"
+    },
+    "허용_서술": "「UMA (uma-s-1p1 · omat) 의 순간 힘 · 상대 에너지가 이 두 모델 (결정 Li₂ZrO₃ sc144 600 K · LPSCl li_outer|비정질 LZO 샌드위치 142 원자 600 K) 의 t = 1–5 ps 스냅숏 다섯 장씩에서 QE PBE 단일점과 카드 문턱 안에서 맞았다 (Γ 판정 · k 탐침 미발동).」",
+    "금지_서술": [
+      "긴 동역학 (확산 · 반응 속도) 이 맞다는 검증 — 순간 힘 대조다 (카드 ⛔)",
+      "다른 조성 · 다른 계면 (NCA 쪽 · 결정 LZO 계면) 으로 넓히기",
+      "DFT 가 옳다는 증명 (DFT 를 기준으로 가정)",
+      "비정질 블록을 비정질 LZO 의 대표 구조로 (19 ps 식힘 · 무작위 시작)"
+    ],
+    "다음": "카드 §4 — MD-1 결과 전 개정 (1 단계가 고른 계면 MD · 보고량 · 게이트 · 비용) 을 쓰고 사용자 비준 → 실행. ⚠ 카드 원문 §4 의 'G1 · G2 제안값 · 사용자 승인 대기' 문구는 개정 1 (11-17 비준) 이 문턱을 확정했다",
     "by": "agent · 2026-11-20"
   }
 }

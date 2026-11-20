@@ -135,5 +135,12 @@
   "벌크_k_탐침": "kgy · disk_io='high' (13.2 GB) — 실행 설정이라 결과는 같다 · 실행 기록에 적는다",
   "판정_순서": "Γ 10 장 + 벌크 k 탐침은 ZrO₂ 띠틈이 끝난 뒤 kgy · 계면 판정 (md0_check) 은 gabia 한 장을 기다린다",
   "by": "claude · 2026-11-17"
+ },
+ "⏩_2026_11_20_MD0_판정": {
+  "결과": "두 모델 다 통과 — bulk_B144 힘 MAE 0.0261 · 상대 E RMSE 0.322 meV/atom · interface_I142_liouter_aLZO16 힘 MAE 0.0306 · 상대 E RMSE 0.476 meV/atom (문턱 0.10 · 원소 0.15 · 5 meV/atom) · k 탐침 미발동 (벌크 2×2×2 · 계면 2×2×1 · 문턱 0.02)",
+  "기록": "db/properties/hyeokju_lzo_md0_runlog_2026_11_17.json MD0_판정_2026_11_20 · 원자료 db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/",
+  "다음": "§4 판정대로 MD-1 결과 전 개정 (사용자 결정)",
+  "원문은_봉인": "이 카드 원문 절은 고치지 않는다 — 이 키가 위에 얹힌 기록이다",
+  "by": "claude · 2026-11-20"
  }
 }
