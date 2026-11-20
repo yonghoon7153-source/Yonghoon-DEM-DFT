@@ -18,7 +18,9 @@ on:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # 20 → 120 (1저자 11-20): 11-16 ~ 20 의 실행 8 회가 전부 20 분에 끊겨 (8 번째 스텝 = 철회값 전수 스윕)
+    # 9 번째 스텝부터 CI 에서 돈 적이 없었다.  선택 스텝을 줄이지 않고 시간만 늘린다.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
