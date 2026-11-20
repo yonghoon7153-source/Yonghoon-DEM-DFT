@@ -1,0 +1,67 @@
+{
+  "decision_date": "2026-11-20",
+  "decision_by": "first_author",
+  "scope": "Suyeong U6(b) and U6(c) development comparisons",
+  "setting": {
+    "id": 1,
+    "cell_size_gap_correction": false,
+    "distance_based_contact_detection": false,
+    "F_contact": "shared_node_approach",
+    "F_friction": 0.5
+  },
+  "basis": {
+    "source_receipt": "docs/reviews/nonrint_returns_cd_20261120/repeat/author_comparison.json",
+    "solver_pin": "00f0a1758349079a10d9c3fe9d1424620117dd27",
+    "F_phi_m_at_1p2_MPa": {
+      "F12": 0.990030971727746,
+      "F16": 0.9850740317357705
+    },
+    "repeat_abs_grid_delta": 0.004956939991975551,
+    "development_band": 0.005,
+    "repeat_band_margin": 0.00004306000802444931,
+    "trace_identical_per_resolution": true,
+    "historical_selected_setting": null,
+    "historical_u6_qualified": false
+  },
+  "development_plan": {
+    "U6b": {
+      "arms": [
+        "S",
+        "F"
+      ],
+      "cells_per_diameter": [
+        8,
+        12,
+        16,
+        24
+      ],
+      "candidate_phi_m": [
+        0.84,
+        0.9,
+        0.95
+      ],
+      "required_reach": "both arms at all four resolutions within 1.2 MPa",
+      "ln_R": "report only",
+      "no_common_target": "report before stage 3"
+    },
+    "U6c": {
+      "scope": "nodes with at least three bodies",
+      "required_U5c": [
+        "1",
+        "2",
+        "2_prime",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "missing_protocol_or_observation": "HOLD",
+      "any_violation_exceeding_registered_tolerance": "FAIL",
+      "alternate_setting_on_failure": false
+    }
+  },
+  "seed_or_initial_layout_sensitivity": "UNMEASURED",
+  "u6_qualification": "NOT_ESTABLISHED",
+  "fresh_research_runs": 0
+}
