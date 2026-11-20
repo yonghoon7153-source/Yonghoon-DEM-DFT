@@ -1,0 +1,42 @@
+{
+  "codex_send_1120c.zip": {
+    "bytes": 2491882,
+    "sha256": "c9c4c26b90caea13c29dba521bdf7158ecd17da60fbebf21e231a744cd70c40a",
+    "returned_json": [
+      {
+        "file": "repeat/author_comparison.json",
+        "bytes": 1192,
+        "sha256": "9c98e35eaaeccd2c29023ebfa22df5da07955a107c617fa98d9a7c86428db8df",
+        "tar_file": "suyoung_repeat_result.tar.gz",
+        "tar_sha256": "05b23fc1e6ebf617119051601bd5b0c3ccb6857454fd02204c1686f85a2132ad",
+        "tar_member": "run/comparison.json"
+      },
+      {
+        "file": "shape/author_comparison.json",
+        "bytes": 1139,
+        "sha256": "4f32b23450c3faa84fa43471bd1934999e27a8c5ab99196b55165950f588b7b1",
+        "tar_file": "suyoung_shape_cycle_result.tar.gz",
+        "tar_sha256": "efe83ce7dd7f26e1cbd8576b4d4dbe7083dd9edb1a38e23015d58c34da809e71",
+        "tar_member": "run/data/comparison.json"
+      }
+    ],
+    "manifest_verified_counts": [
+      2,
+      2
+    ]
+  },
+  "codex_send_1120d.zip": {
+    "bytes": 1185,
+    "sha256": "6e9bd9cebdc0d55487abdba39257274953fee5b7b499f04fb9842390dbd5a5cb",
+    "returned_json": [
+      {
+        "file": "a5/author_receipt.json",
+        "bytes": 369,
+        "sha256": "18b11352c8b20070d33320b099a64fa9fac3c782f28c97023ccb4f9a72fba909"
+      }
+    ],
+    "manifest_verified_counts": [
+      3
+    ]
+  }
+}
