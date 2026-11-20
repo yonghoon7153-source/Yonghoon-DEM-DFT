@@ -148,7 +148,9 @@ def step(state,arm,grid,dt,top,wall_v,friction):
         idx=(field,nodes[:,q]);wt=w[:,q]
         np.add.at(mass,idx,wt*pm)
         np.add.at(momentum,idx,wt[:,None]*(pm*v+np.einsum('nij,nj->ni',affine,offset[:,q])))
-        np.add.at(gradient,idx,pm*grad[:,q])
+        # stencil differentiates with respect to the point. The nodal mass
+        # gradient used to orient contact differentiates with respect to the node.
+        np.add.at(gradient,idx,-pm*grad[:,q])
     if not np.isclose(mass.sum(),pm*len(x),rtol=1e-12,atol=1e-15):raise ValueError('P2G mass mismatch')
     gv=np.divide(momentum,mass[:,:,None],out=np.zeros_like(momentum),where=mass[:,:,None]>0)
     ij=np.indices((grid+1,grid+1)).reshape(2,-1).T;coords=ij/grid

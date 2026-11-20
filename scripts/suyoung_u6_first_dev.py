@@ -34,7 +34,7 @@ WIDTH = math.sqrt(49 * math.pi * (DIAMETER / 2)**2 / .78)
 LO = .15
 TARGET = .12
 WALL_SPEED = .034 * math.sqrt(model.MU)
-PROTOCOL = 'development-mode-1'
+PROTOCOL = 'development-mode-1-nodal-gradient'
 
 
 def seed(cells):
@@ -131,7 +131,8 @@ def advance(x, v, affine, elastic, ids, volume, grid, dt, lid):
     if abs(float(mass.sum()) - float(volume.sum())) > 1e-12:
         raise ArithmeticError("mass mismatch")
     mom = np.column_stack([collect(momentum[:, :, k]) for k in range(2)])
-    grad = np.column_stack([collect(volume[:, None]*gradient[:, :, k]) for k in range(2)])
+    # For W(node - point), the nodal gradient is minus the point gradient.
+    grad = np.column_stack([collect(-volume[:, None]*gradient[:, :, k]) for k in range(2)])
     gv = np.divide(mom, mass[:, None], out=np.zeros_like(mom), where=mass[:, None] > 0.)
     node = key % nn
     xy = np.column_stack(np.divmod(node, grid + 1)) / grid
