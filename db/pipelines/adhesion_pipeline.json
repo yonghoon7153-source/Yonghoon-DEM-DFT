@@ -1,7 +1,7 @@
 {
  "schema": "adhesion_pipeline/1",
  "title": "점착 파이프라인 — DFT → DEM (→ COMSOL)",
- "updated": "2026-10-27",
+ "updated": "2026-11-20",
  "purpose": "Ag–C 인터레이어·SE 계면의 점착일(W)을 DFT 에서 재서 DEM(JKR 접촉)으로 넘기는 흐름을 **한 곳에 누적**한다. 새 사실은 `log` 에 한 줄씩 덧붙이고, 상태가 바뀌면 해당 항목만 고친다.",
  "⛔_이_원장이_하지_않는_것": [
   "판정 전 물리값(W·γ)은 싣지 않는다 — 결과는 판정이 끝난 뒤 기록 파일에 따로 남기고 여기서는 경로만 건다 (인용 방지).",
@@ -1643,6 +1643,11 @@
    "date": "2026-11-17",
    "stage": "dft",
    "text": "외주 2차 **중간 반송** (업체 운영자 중단 11-17 11:18 KST) — 19 잡 중 13 완료 (단계 1 · 2 전부 단 0 수렴) · 단계 3 optB88 첫 잡 (S_A bound · 398 원자) 단 0 미수렴 · r1 ⓐ 발산 → 사용자 결정 `D-2026-11-17-wad-round2-interim-stage4-optb88-closed`: 단계 4 (C–C PBE+D3 2 잡) 지금 · optB88 4 잡 닫기 (δ_XC+vdW 미완료 · G5_C 영향 없음) · `--check` rc 3 (반송 미완 · 탄소 15 OK). W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-11-20",
+   "stage": "dft",
+   "text": "외주 2차 **최종 반송** (11-19 · 단계 4 C–C PBE+D3 2 잡 단 0 수렴) — `--check` rc 3 (19 OK · optB88 4 는 `D-2026-11-17-wad-round2-interim-stage4-optb88-closed` 로 닫힘 · 은 a4 는 개정 4 로 종료 · 공통 고장 0) → `--collect` **한 번** (UMA p2s 10-22): **G3 PASS · G4 PASS · G5_C PASS** · 80 % 발동 없음 · 전하이동 신호 0 · δ_XC+vdW 미완료 · ②′ C–C 두 방법 OK · 결과 `db/properties/wad_round2_vasp_result_2026_11_19.json` → ⏭ 은 V5 G5 집계 · DEM 회신 10. W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [

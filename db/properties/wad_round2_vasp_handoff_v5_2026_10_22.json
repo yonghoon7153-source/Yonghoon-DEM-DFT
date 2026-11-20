@@ -58,5 +58,10 @@
   "받음": "db/raw/wad_round2_vasp_2026_10_22/interim_return_2026_11_17/ (tgz sha256 117c85a623a9d5a5…) · 13/19 잡 완료 · optB88 첫 잡 미수렴 · 운영자 중단",
   "사용자_결정": "D-2026-11-17-wad-round2-interim-stage4-optb88-closed — 단계 4 지금 · optB88 4 잡 닫기",
   "지위": "단계 4 대기 (업체 지시는 사용자) → 최종 반송 → --check → --collect"
+ },
+ "최종_반송_2026_11_19": {
+  "받음": "db/raw/wad_round2_vasp_2026_10_22/final_return_2026_11_19/ (tgz sha256 ea819693… · 285 구성원 · 단계 4 두 잡 OK)",
+  "검사_집계": "--check rc 3 (optB88 4 닫힘 · 은 a4 종료 · 공통 고장 0) → --collect 한 번 rc 0 (G3 · G4 · G5_C PASS)",
+  "지위": "round2 외주 끝 — 업체 메모 '추가 지시 없으면 최종' · 서버 run/ 보존 여부는 사용자가 업체에"
  }
 }

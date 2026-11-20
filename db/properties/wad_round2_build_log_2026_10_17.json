@@ -497,5 +497,13 @@
   "사용자_결정": "D-2026-11-17-wad-round2-interim-stage4-optb88-closed (active · AskUserQuestion) — ① 단계 4 지금 (STAGES=4) ② optB88 4 잡 닫기 (δ_XC+vdW 미완료 · 카드 §4b · §4d)",
   "다음": "사용자가 업체에 지시 → 단계 4 반송 (누적 묶음 = 최종) → sha256sum -c → --check → --collect (W 집계 한 번) · optB88 셋은 이 결정으로 '닫힘'",
   "by": "claude · 2026-11-17"
+ },
+ "⑩_최종_반송_2026_11_19": {
+  "받음": "사용자 업로드 2026-11-20 bd95676d-wad_round2_final_2026-11-19.zip (sha256 1ee33bfb…) → RETURN_NOTES.txt · round2_return.tgz (33,467,206 B · 285 구성원 · sha256 ea819693… · 업체 sha 파일과 일치) · 보관 db/raw/wad_round2_vasp_2026_10_22/final_return_2026_11_19/",
+  "업체_보고_요지": "단계 4 만 (STAGES=4 · 지시대로) — mirae n36 · 64 랭크 · SGE 132459 · 11-19 20:28:04 → 20:29:41 KST · C–C PBE+D3 bound · far 둘 다 단 0 수렴 · optB88 4 잡은 지시대로 다시 안 돌림 (S_A bound 단 0 미수렴 + r1 ⓐ 중단 기록 그대로 · 셋 미실행) · killed.json cancel_utc 손대지 않음 · 누적 163.6 h / 상한 1430 h · INCAR · POSCAR · KPOINTS 수정 · 손 재실행 없음 · 서버 run/ 보존 · '추가 지시 없으면 round2 최종 반송'",
+  "검사": "반송 MANIFEST.sha256 = 보낸 묶음 714324cc… · 중간본 대비 구성원 +24 (C–C PBE+D3 두 잡) · 바뀐 것은 env.txt · status.tsv 덧붙임뿐 (diff_vs_interim_2026_11_19.txt) · --check rc 3 — 19 OK · 아닌 5 = optB88 4 (닫힘) + 은 a4 (종료) · 공통 환경 고장 0 (check_final_2026_11_19.txt)",
+  "W_집계": "--collect 한 번 (UMA uma_energies_p2s_2026_10_17.json) → rc 0 · G3 PASS · G4 PASS · G5_C PASS · 80 % 발동 False · 신호 0 · 미완 ['P2S_Li_A_optB88_bound', 'P2S_Li_A_optB88_far', 'P2S_S_A_optB88_bound', 'P2S_S_A_optB88_far', 'V5_s_outer_A_G4_e70_far_a4'] → collect_round2_final_2026_11_19.json · 값은 그 파일에만",
+  "결과_기록": "db/properties/wad_round2_vasp_result_2026_11_19.json (허용 서술 · 라벨 · 다음)",
+  "by": "claude · 2026-11-20"
  }
 }
