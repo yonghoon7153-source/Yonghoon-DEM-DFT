@@ -1,0 +1,93 @@
+{
+ "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+ "scf_settings": {
+  "mixing_mode": "plain",
+  "mixing_beta": 0.2,
+  "electron_maxstep": 200,
+  "occupations": "smearing",
+  "mixing_ndim": 8,
+  "smearing": "gaussian",
+  "degauss": 0.01,
+  "kpoints": "2 2 1",
+  "⚠": "전 점이 같아야 한다 — 다르면 계 간 비교가 아니라 설정 간 비교다"
+ },
+ "label": "ifacek",
+ "seed": "s1",
+ "traj": "/data/work/wt_hj_md0k/db/raw/hyeokju_lzo_md0_2026_11_17/uma_kgy_1117/interface/interface_I142_traj.xyz",
+ "n_frames_in_traj": 51,
+ "save_fs": 100.0,
+ "규칙": "index = round(t_ps*1000/save_fs), 0-기준 — 사람이 고르지 않는다",
+ "dft": {
+  "code": "QE 7.4.1",
+  "calculation": "scf",
+  "kpoints": "2 2 1",
+  "occupations": "smearing",
+  "ecutwfc": 60.0,
+  "ecutrho": 480.0,
+  "pp_names": {
+   "Cl": "Cl.pbe-nl-kjpaw_psl.1.0.0.UPF",
+   "Li": "Li.pbe-sl-kjpaw_psl.1.0.0.UPF",
+   "O": "O.pbe-n-kjpaw_psl.0.1.UPF",
+   "P": "P.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "S": "S.pbe-nl-kjpaw_psl.1.0.0.UPF",
+   "Zr": "Zr_pbe_v1.uspp.F.UPF"
+  },
+  "conv_thr": "1.0d-8",
+  "tprnfor": true,
+  "nosym": true
+ },
+ "pseudos": {
+  "Cl": {
+   "file": "Cl.pbe-nl-kjpaw_psl.1.0.0.UPF",
+   "sha256": "b31db101b8b2754ad93f530a6c831e17dba53ef167d2ac5fac98ef7d49f2803a"
+  },
+  "Li": {
+   "file": "Li.pbe-sl-kjpaw_psl.1.0.0.UPF",
+   "sha256": "785699766999b40fd07ed2b82069dffc3391c15ada838377ce03ee1b379642af"
+  },
+  "O": {
+   "file": "O.pbe-n-kjpaw_psl.0.1.UPF",
+   "sha256": "7c4b6ed541f83d0afdf5c1d3a8c611340f073f3e2b11e95b7963bb2ee26929aa"
+  },
+  "P": {
+   "file": "P.pbe-n-kjpaw_psl.1.0.0.UPF",
+   "sha256": "7bad261e718f8ece9fcf82dc4ec6a2c7b06badd552f95ad6f1faaf2183b58dd1"
+  },
+  "S": {
+   "file": "S.pbe-nl-kjpaw_psl.1.0.0.UPF",
+   "sha256": "050bc08cac9e419863a5e35267110217be51cd560fe8db9bf7a4e1ed40611a6f"
+  },
+  "Zr": {
+   "file": "Zr_pbe_v1.uspp.F.UPF",
+   "sha256": "d56e2997788a4b3d90bb829416161ff9eb6ccdfe377cb52acfbdd2175f4b4acf"
+  }
+ },
+ "snapshots": [
+  {
+   "tag": "ifacek_s1_t1ps",
+   "time_ps": 1.0,
+   "frame_index": 10,
+   "n_atoms": 142,
+   "coord_sha256": "5d0a840d62799cb366d80a37caf55d93b51fb5f0a3f8d40cdf8ca6f4e3ec5f8a",
+   "cell": [
+    [
+     10.055095635733188,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     10.055095635733188,
+     0.0
+    ],
+    [
+     0.0,
+     0.0,
+     22.25961525024679
+    ]
+   ],
+   "path": "/data/work/runs/hj_md0k_1120/dft/iface_k/ifacek_s1_t1ps"
+  }
+ ],
+ "⛔_이_파일이_보증하지_않는_것": "pw.x 수렴 · UMA 힘 계산 · 유사포텐셜의 물리적 적합성"
+}

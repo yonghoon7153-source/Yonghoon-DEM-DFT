@@ -1,0 +1,149 @@
+{
+ "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+ "amend": "⏩_개정_1_2026_11_17_MD0_실행_결과_전",
+ "thresholds": {
+  "G1_force_MAE_overall_eV_per_A_max": 0.1,
+  "G1_force_MAE_per_element_eV_per_A_max": 0.15,
+  "G1_gated_elements": [
+   "Zr",
+   "O",
+   "P",
+   "S"
+  ],
+  "G2_rel_energy_RMSE_meV_per_atom_max": 5.0,
+  "k_probe_force_MAE_eV_per_A_max": 0.02,
+  "snapshot_times_prod_ps": [
+   1,
+   2,
+   3,
+   4,
+   5
+  ],
+  "save_fs": 100,
+  "models": [
+   "bulk_B144",
+   "interface_I142_liouter_aLZO16"
+  ]
+ },
+ "engine": "uma",
+ "models": {
+  "bulk_B144": {
+   "metrics": {
+    "n_frames": 5,
+    "n_atoms": 144,
+    "force_MAE_eV_per_A": 0.0261403422528758,
+    "force_MAE_by_element_eV_per_A": {
+     "Li": 0.010214468317231622,
+     "O": 0.0347019924462167,
+     "Zr": 0.032307139544141425
+    },
+    "rel_energy_RMSE_meV_per_atom": 0.3219957364017809,
+    "component_stats": {
+     "n_components": 2160,
+     "mae_eVA": 0.0261403422528758,
+     "rmse_eVA": 0.0365089674952146,
+     "max_abs_eVA": 0.1439203020681763,
+     "rms_ref_eVA": 0.7324610638158361,
+     "rel_mae_pct": 3.568837108787029,
+     "pearson_r": 0.9988974396209418,
+     "softening_slope": 1.014527059686078
+    }
+   },
+   "verdict": {
+    "G1_overall": true,
+    "G1_gated_by_element": {
+     "Zr": true,
+     "O": true
+    },
+    "G1_gated_absent": [
+     "P",
+     "S"
+    ],
+    "G1": true,
+    "G2": true,
+    "pass": true
+   },
+   "times_ps": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0
+   ],
+   "kpoints": [
+    "gamma"
+   ],
+   "dft_results": "/home/kgy/work/runs/hj_md0_1117/dft/bulk/RESULTS_bulk_s1.json"
+  },
+  "interface_I142_liouter_aLZO16": {
+   "metrics": {
+    "n_frames": 5,
+    "n_atoms": 142,
+    "force_MAE_eV_per_A": 0.03055792486649668,
+    "force_MAE_by_element_eV_per_A": {
+     "Cl": 0.013221981884133044,
+     "Li": 0.014579960731173406,
+     "O": 0.034061367243384634,
+     "P": 0.03849294456546991,
+     "S": 0.05104298849506356,
+     "Zr": 0.051280515414343315
+    },
+    "rel_energy_RMSE_meV_per_atom": 0.4760481221600954,
+    "component_stats": {
+     "n_components": 2130,
+     "mae_eVA": 0.03055792486649668,
+     "rmse_eVA": 0.04306313516885664,
+     "max_abs_eVA": 0.2915569639306641,
+     "rms_ref_eVA": 0.6987979982737829,
+     "rel_mae_pct": 4.37292678885499,
+     "pearson_r": 0.9981655187075642,
+     "softening_slope": 1.0078021018920738
+    }
+   },
+   "verdict": {
+    "G1_overall": true,
+    "G1_gated_by_element": {
+     "Zr": true,
+     "O": true,
+     "P": true,
+     "S": true
+    },
+    "G1_gated_absent": [],
+    "G1": true,
+    "G2": true,
+    "pass": true
+   },
+   "times_ps": [
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    5.0
+   ],
+   "kpoints": [
+    "gamma"
+   ],
+   "dft_results": "/home/kgy/work/runs/hj_md0_1117/dft/iface/RESULTS_iface_s1.json"
+  }
+ },
+ "kprobe": {
+  "bulk_B144": {
+   "gamma_dir": "/home/kgy/work/runs/hj_md0_1117/dft/bulk/bulk_s1_t1ps",
+   "k_dir": "/home/kgy/work/runs/hj_md0_1117/dft/bulk_k/bulkk_s1_t1ps",
+   "k": "2 2 2",
+   "force_MAE_eV_per_A": 0.007917043281497015,
+   "fired": false,
+   "rule": "k 탐침 미발동 — Γ 프레임으로 판정한다"
+  },
+  "interface_I142_liouter_aLZO16": {
+   "gamma_dir": "/home/kgy/work/runs/hj_md0_1117/dft/iface/iface_s1_t1ps",
+   "k_dir": "/home/kgy/work/runs/hj_md0_1117/dft/iface_k/ifacek_s1_t1ps",
+   "k": "2 2 1",
+   "force_MAE_eV_per_A": 0.0069558805703389985,
+   "fired": false,
+   "rule": "k 탐침 미발동 — Γ 프레임으로 판정한다"
+  }
+ },
+ "MD1": "두 모델 다 통과 → MD-1 결과 전 개정으로 (카드 §4)",
+ "⛔": "문턱은 카드 개정의 기계_판독_값에서 읽었다 — 이 도구가 정하지 않는다 · 순간 힘 대조이지 동역학 검증이 아니다"
+}
