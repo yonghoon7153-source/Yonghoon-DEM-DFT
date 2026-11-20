@@ -1,0 +1,51 @@
+{
+  "envelope": "codex_send_1120b.zip",
+  "bytes": 1125283,
+  "sha256": "9ff01fbd6ebeb8e7bf9fef1e853b90109612b4f3829951624628d19f405cf82e",
+  "crc": "PASS",
+  "zip_regular_files": 14,
+  "sha256_manifests": {
+    "a4_ps73_return_Q8CLE0BI": [
+      {
+        "member": "command_rc.txt",
+        "sha256": "6a4f968fc9772327bb9c9d14441c8f0388d70ae8cea885206ed9f6ae887eaaa9"
+      },
+      {
+        "member": "inputs.sha256",
+        "sha256": "87d750502a23b54ac2862c38cacbc65a48c673980a8ad4cd7137d61e274e08c7"
+      },
+      {
+        "member": "source.sha256",
+        "sha256": "307c28a2dd44e9f006cd7fbf2e0572aae48c6fd03af673e471cc43d15fa86fc4"
+      },
+      {
+        "member": "continuity.json",
+        "sha256": "c4910d33898851665436a869609573fbe21ab8362d109574a75b093a29e53ff3"
+      }
+    ],
+    "n0_local_readback_kIILYPC7_return.tar.gz.sha256": [
+      {
+        "member": "n0_local_readback_kIILYPC7_return.tar.gz",
+        "sha256": "27c5439620bf79d27e0b0e2cfa0350723a3da669d619374fdc0f5b7991c12ab7"
+      }
+    ],
+    "suyoung_f16_budget_return_fT1jtlDB": [
+      {
+        "member": "suyoung_f16_budget_result.tar.gz",
+        "sha256": "1210ceba9e1022a6611c35d110f3d84f0fd7b305dfea8065f242742ae0f5b55b"
+      },
+      {
+        "member": "screen.txt",
+        "sha256": "0c91cab1f4fd61e762b89b0a2a51415e21081eebe6f97b8c7b2605dfda55fc87"
+      }
+    ]
+  },
+  "n0_archive_vs_adjacent_files": [
+    "n0_observation.json",
+    "packet_checks.txt",
+    "reader_rc.txt",
+    "screen.txt"
+  ],
+  "source": "1st author WSL, three development returns",
+  "new_site_runs_by_receiver": 0
+}
