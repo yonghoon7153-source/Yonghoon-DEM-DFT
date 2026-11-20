@@ -1046,7 +1046,118 @@ def load_a4_result(path, sha):
     return a4["result"]
 
 
-def check(out, ret, manifest_sha256, pp_registry=None, a4_result=None):
+# ───────────────────────── 개정 5 — a5 (결과 뒤 재시도 · a4 채택 위에) ─────────────────────────
+A5_JOB = "V5_s_outer_A_G4_e70_far_a5"
+A5_BOUND = "V5_s_outer_A_G4_e70_bound"                # u_W 면적 = dA 가 e70 W 에 쓰는 결합 잡의 area_A2 (같은 면적 · 하드코딩 없음)
+A5_LABEL = "G5 원시 결과를 본 뒤 정한 재시도 (개정 5 · 1저자 결정)"
+A5_SEC_LABEL = "SCF 정체 기준 (EDIFF 미달 · 정체 폭을 G4 판정에 더함)"
+A5_SEC_MAX_UW = 0.002                                 # J/m² — G4 허용치 0.02 의 1/10 (개정 5 '채택_문턱')
+A5_SEC_MIN_STEPS = 100
+A5_SEC_STAGES = ("c1", "c2")                          # 보조 기준은 a5 의 c1 · c2 에만 (A5 · a4 ⓐ · 옛 시도에는 소급하지 않는다)
+A5_ORDER = ("c1:primary", "c2:primary", "c1:secondary", "c2:secondary")   # 개정 5 '순서' — 주가 보조를 이긴다
+A5_OK_STATES = ("OK", "NO_PRIMARY_VALUE")             # a5 검사 결과가 이 둘일 때만 채택을 본다 (환경 · 무결성 · 사다리 위반 · 미등록 흔적 = 자동 채택 없음)
+
+
+def a5_secondary(att, stage, area_A2):
+    """개정 5 '보조_기준' 채택 자격 → (u_W [J/m²], u_E [eV], 거부 사유). a5 검사기의 c1 · c2 시도 기록만 받는다 (a5_stage 가 그 단이어야 한다).
+    조건: 상태 SCF_NOT_CONVERGED (판정 계약 ③ 만 미달) · 스텝 ≥ 100 · u_E 유한 · 완결성 OK · 최종 TOTEN 유한 ·
+    u_W = u_E × eV / (A × Å²) ≤ 0.002 (A = 수집기가 W 에 쓰는 면적). ⛔ A5 · a4 ⓐ · 옛 시도 · 다른 단은 거부한다."""
+    if stage not in A5_SEC_STAGES:
+        return None, None, f"보조 기준은 a5 의 c1 · c2 에만 — {stage!r} 거부 (A5 · a4 ⓐ · 옛 시도에는 소급하지 않는다)"
+    if not isinstance(att, dict) or att.get("a5_stage") != stage:
+        return None, None, f"a5 {stage} 시도 기록이 아니다 (a5_stage {att.get('a5_stage') if isinstance(att, dict) else None!r})"
+    if att.get("status") != "SCF_NOT_CONVERGED":
+        return None, None, f"상태 {att.get('status')} (보조 기준은 확인된 미수렴만)"
+    sec = att.get("secondary") if isinstance(att.get("secondary"), dict) else {}
+    n = sec.get("n_steps")
+    if not isinstance(n, int) or isinstance(n, bool) or n < A5_SEC_MIN_STEPS:
+        return None, None, f"전자 스텝 {n!r} < {A5_SEC_MIN_STEPS} 또는 보조 숫자 없음 ({sec.get('refused')})"
+    uE = fin(sec.get("u_E_eV"))
+    if uE is None or uE < 0:
+        return None, None, "u_E 가 유한한 0 이상 수가 아니다"
+    if att.get("completeness") != "OK":
+        return None, None, f"완결성 {att.get('completeness')}"
+    if fin(att.get("TOTEN_eV")) is None:
+        return None, None, "최종 TOTEN 없음"
+    a = fin(area_A2)
+    if a is None or a <= 0:
+        return None, None, "면적 없음"
+    uW = uE * EV_J / (a * A2_M2)
+    if not uW <= A5_SEC_MAX_UW:
+        return None, uE, f"u_W {uW:.4g} > {A5_SEC_MAX_UW} J/m²"
+    return uW, uE, None
+
+
+def adopt_a5(prev, a5, area_A2):
+    """개정 5 — G4 e70 far 의 a5 채택 (adopt_a4 결과 위에). 순서 A5_ORDER: c1 주 → c2 주 → c1 보조 → c2 보조 → 값 없음.
+    주 = 시도 상태 OK (판정 계약 ①–⑤ · 완결성 · 재시작 확인). 보조 = a5_secondary. c1 · c2 둘 다 보조만 채웠는데
+    |TOTEN(c1) − TOTEN(c2)| > u_E(c1) + u_E(c2) 면 값 없음 (판정 불가 · 기록만). 채택 기록에는 늘 A5_LABEL (+ 보조면 A5_SEC_LABEL) ·
+    채택 이력 (첫 시도 · r1 · a4 · a5) · scf_primary_met 를 단다 — status 'OK' 는 '값을 썼다' 는 뜻이지 보조 채택이 수렴했다는 뜻이 아니다 (a5_rule · labels 를 본다).
+    ⛔ A5 · a4 ⓐ · 옛 시도의 에너지는 쓰지 않는다 · a5 검사 결과가 A5_OK_STATES 가 아니면 자동 채택 없음 · a4 까지 값이 있으면 a5 를 쓰지 않는다."""
+    a = a5 if isinstance(a5, dict) else {}
+    atts = a.get("attempts") if isinstance(a.get("attempts"), dict) else {}
+    hist = {**(prev.get("a4_history") or {"first_attempt": prev.get("first_attempt", prev.get("status"))}),
+            "a5": {k: (atts.get(k) or {}).get("status") for k in ("A5", "c1", "c2")}}
+    if prev.get("status") == "OK":
+        return {**prev, "adoption_history": hist, "a5_note": "a4 까지에서 값이 있다 — a5 를 쓰지 않는다"}
+    if a.get("status") not in A5_OK_STATES:
+        return {**prev, "adoption_history": hist, "a5_note": f"a5 검사 {a.get('status')} — 자동 채택 없음 · 1저자 ({str(a.get('why', ''))[:160]})"}
+    cand = {}
+    for st in A5_SEC_STAGES:
+        x = atts.get(st)
+        if isinstance(x, dict) and x.get("a5_stage") == st and x.get("status") == "OK" and fin(x.get("TOTEN_eV")) is not None:
+            cand[f"{st}:primary"] = (x, None, None)
+    sec = {st: a5_secondary(atts.get(st), st, area_A2) for st in A5_SEC_STAGES}
+    for st, (uW, uE, why) in sec.items():
+        if uW is not None:
+            cand[f"{st}:secondary"] = (atts[st], uW, uE)
+    refused = {st: why for st, (uW, uE, why) in sec.items() if why}
+    if "c1:secondary" in cand and "c2:secondary" in cand and "c1:primary" not in cand and "c2:primary" not in cand:
+        e1, e2 = fin(atts["c1"]["TOTEN_eV"]), fin(atts["c2"]["TOTEN_eV"])
+        u1, u2 = cand["c1:secondary"][2], cand["c2:secondary"][2]
+        if abs(e1 - e2) > u1 + u2:
+            return {**prev, "adoption_history": hist, "a5_both_secondary": {"dTOTEN_eV": e1 - e2, "u_E_sum_eV": u1 + u2},
+                    "a5_note": "c1 · c2 둘 다 보조 기준만 채웠는데 최종 TOTEN 차가 정체 폭 합보다 크다 — 값 없음 (두 정체가 다른 상태일 수 있다 · 판정 불가 · 기록만)"}
+    for key in A5_ORDER:
+        if key not in cand:
+            continue
+        x, uW, uE = cand[key]
+        st, rule = key.split(":")
+        r = {**x, "status": "OK", "adopted": f"a5_{st}", "a5_rule": rule, "scf_primary_met": rule == "primary",
+             "labels": [A5_LABEL] + ([A5_SEC_LABEL] if rule == "secondary" else []), "adoption_history": hist}
+        if rule == "secondary":
+            r.update(u_E_eV=uE, u_W_J_m2=uW)
+        rest = [k for k in A5_ORDER if k in cand and k != key]
+        if rest:
+            r["a5_not_used"] = rest
+        if key == "c2:primary" and "c1:secondary" in cand:
+            r["a5_c1_secondary_dTOTEN_eV"] = fin(x["TOTEN_eV"]) - fin(atts["c1"]["TOTEN_eV"])     # 주가 보조를 이긴다 — 차이는 기록만
+        return r
+    note = "a5 값 없음 (최종 — 이 잡은 닫는다 · 새 재시도를 제안하지 않는다)"
+    if any((atts.get(st) or {}).get("status") == "RESTART_NOT_HONOURED" for st in A5_SEC_STAGES):
+        note = "재시작 미이행 — 자동 채택 없음 · 1저자 검토 (라벨과 함께 쓸지 · 값 없음)"
+    return {**prev, "adoption_history": hist, "a5_note": note, "a5_secondary_refused": refused}
+
+
+def load_a5_result(path, sha):
+    """a5 검사기 결과 JSON (build_a5_vasp_package.py --check --a5_result) → result. 파일 sha 고정값 · schema · 잡 · 등록부 sha · 묶음 MANIFEST sha 가 있어야 받는다
+    (load_a4_result 와 같은 규칙 — 등록부 없이 낸 결과는 봉인 환경 대조를 안 거쳤다)."""
+    if not sha or _sha(path) != sha.lower():
+        raise PkgError("a5 결과 JSON sha 가 고정값과 다르다")
+    a5 = json.load(open(path, encoding="utf-8"))
+    if not isinstance(a5, dict) or a5.get("schema") != "wad_a5_result/v1" or a5.get("job") != A5_JOB:
+        raise PkgError("a5 결과 JSON 의 schema·잡이 맞지 않는다")
+    for k in ("registry_sha256", "package_manifest_sha256"):
+        if not (isinstance(a5.get(k), str) and HEX64.match(a5[k])):
+            raise PkgError(f"a5 결과 JSON 의 {k} 가 없거나 형식이 아니다 — 봉인 등록부로 낸 결과만 받는다")
+    if not isinstance(a5.get("result"), dict):
+        raise PkgError("a5 결과 JSON 의 result 가 객체가 아니다")
+    return a5["result"]
+
+
+def check(out, ret, manifest_sha256, pp_registry=None, a4_result=None, a5_result=None):
+    if a5_result is not None and a4_result is None:
+        raise PkgError("a5 (개정 5) 는 a4 채택 위에만 얹는다 — --a4_result 가 필요하다 (채택 이력 첫 시도 · r1 · a4 · a5)")
     verify_manifest(out, manifest_sha256)
     meta = json.load(open(os.path.join(out, "jobs.json"), encoding="utf-8"))
     if pp_registry is not None:
@@ -1075,6 +1186,10 @@ def check(out, ret, manifest_sha256, pp_registry=None, a4_result=None):
         res[A4_TARGET] = adopt_a4(*att[A4_TARGET], a4_result)
         every.append((A4_TARGET, a4_result))
         every += [(A4_TARGET, x) for x in (a4_result.get("attempts") or {}).values() if isinstance(x, dict)]   # 외주 2차 CZ Q-CZ-3: a4 의 모든 시도 (ⓐ 포함)
+    # 개정 5 — a5 (결과 뒤 재시도) 를 a4 채택 위에 얹는다 · a5 의 모든 시도 (A5 포함) 도 일관성 검사 (PP 종별 sha · VASP 버전) 에 넣는다
+    if a5_result is not None and A4_TARGET in att:
+        res[A4_TARGET] = adopt_a5(res[A4_TARGET], a5_result, J[A5_BOUND]["area_A2"])
+        every += [(A4_TARGET, x) for x in (a5_result.get("attempts") or {}).values() if isinstance(x, dict) and x.get("status") != "MISSING"]
     # 잡 사이 일관성 — 첫 시도·r1 **모든 시도**에서 모은다 (어긋나면 어느 쪽이 맞는지 모르므로 전부 막는다)
     by_sp, by_spec, vers = {}, {}, set()
     for n, r in every:
@@ -1231,10 +1346,27 @@ def size_effect_vs_p1(smp, p1, w10_first=None):
             "⚠": "정보 — ① G5 (방법 오차) 와 합쳐 오차막대로 만들지 않는다 (카드 §1b ③) · 끝점 다름 (V5 8 Å · P1 10 Å · ① 만 10 Å 줄) · P1 값은 기록 표 4 자리"}
 
 
-def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_sha256=None, p1=None, a4_result=None):
+def _g4_status(dw, dd, uW=None):
+    """G4 변형 하나의 판정 (개정 3 · 4 그대로) — uW (개정 5 보조 채택의 정체 폭) 가 있으면 판정에 더한다:
+    PASS |ΔW| + u_W ≤ 0.02 · FAIL |ΔW| − u_W > 0.02 · 그 사이 INCOMPLETE ('정체 폭 안에서 판정 불가'). uW 가 없으면 옛 규칙 그대로 (같은 문자열)."""
+    if dw is None or None in dd.values():
+        return "INCOMPLETE"
+    if max(abs(v) for v in dd.values()) > D3_SAME_GEOM_TOL_EV:
+        return f"INCOMPLETE (D3 불일치 — 같은 기하 기준 잡과 Edisp 차 > {D3_SAME_GEOM_TOL_EV:g} eV)"
+    if uW is not None:
+        if abs(dw) + uW <= G4_DW:
+            return "PASS"
+        if abs(dw) - uW > G4_DW:
+            return "FAIL"
+        return "INCOMPLETE (정체 폭 안에서 판정 불가)"
+    return "PASS" if abs(dw) <= G4_DW else "FAIL"
+
+
+def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_sha256=None, p1=None, a4_result=None, a5_result=None):
     """최종 사용 판정은 봉인 PP 등록부가 있어야만 열린다 (없으면 파일럿 단계 집계 — G5 BLOCKED · total W 인용 불가).
-    a4_result (개정 4) 를 주면 G4 e70 far 에 adopt_a4 를 적용한다 — G5 와 §1b ② 는 a4 반송 뒤 한 번에 연다 (그 전에 열지 않는다)."""
-    meta, res = check(out, ret, manifest_sha256, pp_registry, a4_result)
+    a4_result (개정 4) 를 주면 G4 e70 far 에 adopt_a4 를 적용한다 — G5 와 §1b ② 는 a4 반송 뒤 한 번에 연다 (그 전에 열지 않는다).
+    a5_result (개정 5) 를 주면 그 위에 adopt_a5 — 보조 채택이면 G4 e70 판정에 u_W 를 더한다 (_g4_status) · a5 가 없으면 출력은 바이트까지 그대로."""
+    meta, res = check(out, ret, manifest_sha256, pp_registry, a4_result, a5_result)
     reg_ok = pp_registry is not None
     J = {j["dir"]: j for j in meta["jobs"]}
     ok = lambda n: res.get(n, {}).get("status") == "OK"
@@ -1278,13 +1410,15 @@ def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_s
         Wx = dA(b, f, F)
         dd = {"bound": (ED[b] - ED[b0]) if (b in ED and b0 in ED) else None, "far": (ED[f] - ED[f0]) if (f in ED and f0 in ED) else None}
         dw = (Wx - base) if (Wx is not None and base is not None) else None
-        if dw is None or None in dd.values():
-            st = "INCOMPLETE"
-        elif max(abs(v) for v in dd.values()) > D3_SAME_GEOM_TOL_EV:
-            st = f"INCOMPLETE (D3 불일치 — 같은 기하 기준 잡과 Edisp 차 > {D3_SAME_GEOM_TOL_EV:g} eV)"
-        else:
-            st = "PASS" if abs(dw) <= G4_DW else "FAIL"
+        fr = res.get(f) or {}
+        sec = fr.get("a5_rule") == "secondary" and fr.get("status") == "OK"          # 개정 5 보조 채택 — u_W 를 판정에 더한다 (빼고 판정하지 않는다)
+        uW = fin(fr.get("u_W_J_m2")) if sec else None
+        st = "INCOMPLETE (보조 채택인데 u_W 없음)" if (sec and uW is None) else _g4_status(dw, dd, uW)
         g4[tag] = {"variant": lab, "W": Wx, "dW": dw, "d3_same_geom_diff_eV": dd, "status": st}
+        if uW is not None:
+            g4[tag]["u_W_J_m2"] = uW
+        if str(fr.get("adopted", "")).startswith("a5_"):
+            g4[tag]["a5"] = {"adopted": fr["adopted"], "rule": fr.get("a5_rule"), "labels": fr.get("labels")}
     st4 = [v["status"] for v in g4.values()]
     g4["status"] = "FAIL" if "FAIL" in st4 else ("INCOMPLETE" if any(s.startswith("INCOMPLETE") for s in st4) else "PASS")
     for k, s in smp.items():
@@ -1307,6 +1441,11 @@ def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_s
            "energy_convention": "W = MP1 σ 0.136 eV 에서의 TOTEN(자유에너지) 차 / A — 0 K 점착에너지·실제 전자온도 자유에너지라 부르지 않는다 (CE Q2) · E(σ→0)·−TS 항 차 병기",
            "samples": smp, "G3": g3, "G4": g4, "jobs": res, "jobs_not_ok": sorted(n for n, v in res.items() if v["status"] != "OK"),
            "⛔": "VASP 비교군 — QE V2·V4 값과 빼거나 섞지 않는다 · D3 예산은 운영 예산이지 신뢰구간이 아니다"}
+    if a5_result is not None:
+        fa = res.get(A4_TARGET) or {}
+        rec["a5_adoption"] = {"adopted": fa.get("adopted"), "rule": fa.get("a5_rule"), "labels": fa.get("labels"), "u_W_J_m2": fa.get("u_W_J_m2"),
+                              "note": fa.get("a5_note"), "history": fa.get("adoption_history"),
+                              "⛔": "보조 채택 값은 '수렴한 값' 이 아니다 · 라벨 없이 인용하지 않는다 · 11-20 G5 집계는 재시도 전 기록으로 남긴다"}
     if uma is not None:
         need = sorted({n for v in G5_SAMPLES.values() for n in v})
         E, errs = load_uma(uma, meta, need)
@@ -2205,6 +2344,101 @@ def _selftest():
         ck(raises(lambda: load_a4_result(p_ok, "0" * 64)), "⛔음성 외주 2차 a4 결과: 파일 sha 가 고정값과 다르면 거부")
     import inspect
     ck("load_a4_result(a.a4_result, a.a4_result_sha256)" in inspect.getsource(main), "외주 2차 a4 결과: CLI --a4_result 가 load_a4_result 로 읽는다 (배선 — 함수만 있고 안 쓰이면 빨강)")
+    # ── 개정 5: a5 채택 (adopt_a5 · a5_secondary · _g4_status · load_a5_result · collect G4 배선 · 합성 기록) ──
+    AR = 202.0
+    uw = lambda uE: uE * EV_J / (AR * A2_M2)
+
+    def att5(st, status, toten=-1000.0, uE=None, n=400, comp="OK"):
+        r = {"a5_stage": st, "status": status, "TOTEN_eV": toten, "E_sigma0_eV": toten, "Edisp_eV": -56.0, "run_id": "20261121T000000-1-1"}
+        if uE is not None:
+            r.update(secondary={"n_steps": n, "u_E_eV": uE, "W1_range_eV": uE, "mean_shift_eV": 0.0}, completeness=comp)
+        return r
+    prev4 = {"status": "SCF_NOT_CONVERGED", "a4_history": {"first_attempt": "SCF_NOT_CONVERGED", "r1": "SCF_NOT_CONVERGED", "a4": "SCF_NOT_CONVERGED"}, "a4_note": "a4 값 없음"}
+
+    def a5r(**atts):
+        at = {"A5": {"a5_stage": "A5", "status": "SCF_NOT_CONVERGED", "secondary": {"n_steps": 300, "u_E_eV": 1e-4}, "completeness": "OK", "TOTEN_eV": -1.0}, **atts}
+        return {"status": "OK" if any(v.get("status") == "OK" for v in atts.values()) else "NO_PRIMARY_VALUE", "attempts": at}
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "OK")), AR)
+    ck(r_["status"] == "OK" and r_["adopted"] == "a5_c1" and r_["a5_rule"] == "primary" and r_["labels"] == [A5_LABEL] and r_["scf_primary_met"] is True
+       and r_["adoption_history"]["a5"]["c1"] == "OK" and r_["adoption_history"]["first_attempt"] == "SCF_NOT_CONVERGED" and "a4" in r_["adoption_history"],
+       "개정 5: c1 주 기준 OK → a5_c1 채택 · 라벨 하나 · 채택 이력 첫 시도 · r1 · a4 · a5")
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", toten=-1000.001, uE=0.002), c2=att5("c2", "OK", toten=-1000.0)), AR)
+    ck(r_.get("adopted") == "a5_c2" and r_["a5_rule"] == "primary" and "c1:secondary" in r_.get("a5_not_used", []) and abs(r_["a5_c1_secondary_dTOTEN_eV"] - 0.001) < 1e-9,
+       "개정 5: c2 주 기준이 c1 보조를 이긴다 (차이는 기록만)")
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", uE=0.002), c2=att5("c2", "SCF_NOT_CONVERGED", uE=0.002, n=60)), AR)
+    ck(r_.get("adopted") == "a5_c1" and r_["a5_rule"] == "secondary" and r_["labels"] == [A5_LABEL, A5_SEC_LABEL] and abs(r_["u_W_J_m2"] - uw(0.002)) < 1e-12
+       and r_["scf_primary_met"] is False, "개정 5: c1 보조 (u_W 수집기 면적으로 환산) · 라벨 둘 · scf_primary_met False")
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", toten=-1000.0, uE=0.002), c2=att5("c2", "SCF_NOT_CONVERGED", toten=-1000.003, uE=0.002)), AR)
+    ck(r_.get("adopted") == "a5_c1" and r_["a5_rule"] == "secondary", "개정 5: 둘 다 보조 · 차 0.003 ≤ 폭 합 0.004 → c1 보조 (순서)")
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", toten=-1000.0, uE=0.002), c2=att5("c2", "SCF_NOT_CONVERGED", toten=-1000.01, uE=0.002)), AR)
+    ck(r_.get("adopted") is None and r_["status"] != "OK" and "정체 폭 합보다 크다" in r_["a5_note"], "⛔음성 개정 5: 둘 다 보조 · 차 0.01 > 폭 합 0.004 → 값 없음 (판정 불가)")
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", uE=0.03)), AR)
+    ck(r_.get("adopted") is None and "u_W" in str(r_.get("a5_secondary_refused", {}).get("c1")), f"⛔음성 개정 5: u_W {uw(0.03):.4f} > 0.002 → 보조 거부 · 값 없음")
+    for lab_, kw_ in (("스텝 60 < 100", dict(n=60)), ("완결성 미달", dict(comp="D3_UNVERIFIED: x"))):
+        r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", uE=0.001, **kw_)), AR)
+        ck(r_.get("adopted") is None, f"⛔음성 개정 5: {lab_} → 보조 거부")
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "RESTART_NOT_HONOURED"), c2=att5("c2", "SCF_NOT_CONVERGED", uE=0.5)), AR)
+    ck(r_.get("adopted") is None and "재시작 미이행" in r_["a5_note"], "⛔음성 개정 5: c1 재시작 미이행 · c2 보조 미달 → 자동 채택 없음 · 1저자 검토")
+    ck(a5_secondary(att5("A5", "SCF_NOT_CONVERGED", uE=1e-4), "A5", AR)[0] is None, "⛔음성 개정 5: 보조 기준을 A5 에 적용 → 거부")
+    old_ = {"status": "SCF_NOT_CONVERGED", "secondary": {"n_steps": 300, "u_E_eV": 1e-4}, "completeness": "OK", "TOTEN_eV": -1.0}
+    ck(a5_secondary(old_, "c1", AR)[0] is None and a5_secondary({**old_, "a5_stage": "a4B"}, "c1", AR)[0] is None and a5_secondary(old_, "a4A", AR)[0] is None,
+       "⛔음성 개정 5: 보조 기준을 a4 ⓐ · a4 ⓑ · 옛 시도 기록에 적용 → 거부 (a5_stage 가 맞아야 한다)")
+    r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED")), AR)
+    ck(r_.get("adopted") is None, "⛔음성 개정 5: A5 에만 정체 숫자가 있어도 (c1 · c2 보조 미달) 채택하지 않는다")
+    r_ = adopt_a5({**prev4, "status": "OK"}, a5r(c1=att5("c1", "OK")), AR)
+    ck(r_.get("adopted") is None and "a4 까지에서 값이 있다" in r_["a5_note"], "⛔음성 개정 5: a4 까지 값이 있으면 a5 를 쓰지 않는다")
+    for st_ in ("LADDER_VIOLATION", "VERSION_MISMATCH", "UNREGISTERED_ATTEMPT", "W0_RECORD_MISMATCH", None):
+        r_ = adopt_a5(prev4, {**a5r(c1=att5("c1", "OK")), "status": st_}, AR)
+        ck(r_.get("adopted") is None and "자동 채택 없음" in r_["a5_note"], f"⛔음성 개정 5: a5 검사 {st_} → 자동 채택 없음")
+    dd0 = {"bound": 0.0, "far": 0.0}
+    for dw_, uW_, want_ in ((0.017, 0.002, "PASS"), (0.019, 0.002, "INCOMPLETE (정체 폭 안에서 판정 불가)"), (0.021, 0.002, "INCOMPLETE (정체 폭 안에서 판정 불가)"),
+                            (0.023, 0.002, "FAIL"), (0.019, None, "PASS"), (0.021, None, "FAIL"), (-0.019, 0.002, "INCOMPLETE (정체 폭 안에서 판정 불가)")):
+        ck(_g4_status(dw_, dd0, uW_) == want_, f"G4 판정 |ΔW| {dw_} · u_W {uW_} → {want_} (받음 {_g4_status(dw_, dd0, uW_)})")
+    ck(_g4_status(None, dd0, 0.001) == "INCOMPLETE" and _g4_status(0.0, {"bound": 1e-3, "far": 0.0}, None).startswith("INCOMPLETE (D3"),
+       "G4 판정 결측 · D3 불일치는 옛 문자열 그대로")
+    mod = sys.modules[__name__]
+    jobs_ = [{"dir": n, "area_A2": 200.0, "d3_2body_eV_ref": -56.0, "structure": n} for n in ("V5_s_outer_A_bound", "V5_s_outer_A_far", A5_BOUND, A4_TARGET)]
+    cW = EV_J / (200.0 * A2_M2)
+
+    def fake_res(dW, sec_uW, rule="secondary"):
+        e = lambda x: {"status": "OK", "TOTEN_eV": x, "E_sigma0_eV": x, "Edisp_eV": -56.0, "E_noentropy_eV": x}
+        res_ = {"V5_s_outer_A_bound": e(-100.0), "V5_s_outer_A_far": e(-90.0), A5_BOUND: e(-100.0), A4_TARGET: e(-90.0 + dW / cW)}
+        res_[A4_TARGET].update(adopted="a5_c1", a5_rule=rule, labels=[A5_LABEL] + ([A5_SEC_LABEL] if rule == "secondary" else []), u_W_J_m2=sec_uW)
+        return res_
+    orig = mod.check
+    with tempfile.TemporaryDirectory() as T5:
+        try:
+            for dW_, uW_, want_ in ((0.017, 0.002, "PASS"), (0.019, 0.002, "INCOMPLETE (정체 폭 안에서 판정 불가)"), (0.023, 0.002, "FAIL"),
+                                    (0.019, None, "INCOMPLETE (보조 채택인데 u_W 없음)")):
+                mod.check = lambda *a_, **k_: ({"jobs": jobs_}, fake_res(dW_, uW_))
+                rec_ = collect(T5, T5, "0" * 64, a4_result={"status": "x"}, a5_result={"status": "OK"})
+                ck(rec_["G4"]["e70"]["status"] == want_ and rec_["G4"]["e70"].get("a5", {}).get("rule") == "secondary" and "a5_adoption" in rec_,
+                   f"collect G4 e70 보조 채택 ΔW {dW_} · u_W {uW_} → {want_} (받음 {rec_['G4']['e70']['status']})")
+            mod.check = lambda *a_, **k_: ({"jobs": jobs_}, fake_res(0.019, 0.002, rule="primary"))
+            rec_ = collect(T5, T5, "0" * 64, a4_result={"status": "x"}, a5_result={"status": "OK"})
+            ck(rec_["G4"]["e70"]["status"] == "PASS" and "u_W_J_m2" not in rec_["G4"]["e70"], "collect G4 e70 주 기준 채택이면 u_W 를 더하지 않는다 (ΔW 0.019 → PASS)")
+        finally:
+            mod.check = orig
+    try:
+        check("없는폴더", "없는폴더", "0" * 64, None, None, {"status": "OK"}); a5guard = False
+    except PkgError as e:
+        a5guard = "a4 채택 위에만" in str(e)
+    ck(a5guard, "⛔음성 개정 5: --a5_result 만 있고 --a4_result 가 없으면 거부 (채택 이력 첫 시도 · r1 · a4 · a5)")
+    with tempfile.TemporaryDirectory() as T6:
+        b5 = {"schema": "wad_a5_result/v1", "job": A5_JOB, "package_manifest_sha256": "a" * 64, "registry_sha256": "b" * 64, "common_environment_failure": None,
+              "result": {"status": "OK"}}
+
+        def a5f(d_):
+            p_ = os.path.join(T6, f"a5_{abs(hash(json.dumps(d_, sort_keys=True)))}.json"); _write(p_, json.dumps(d_)); return p_
+        p5 = a5f(b5)
+        ck(load_a5_result(p5, _sha(p5)) == {"status": "OK"}, "a5 결과: 등록부 sha · 묶음 MANIFEST sha 가 있는 JSON → result")
+        for lab_, d_ in (("등록부 없음", {**b5, "registry_sha256": ""}), ("schema", {**b5, "schema": "wad_round2_a4_result/v1"}),
+                         ("잡", {**b5, "job": "V5_s_outer_A_G4_e70_far_a4"}), ("result 가 객체 아님", {**b5, "result": [1]})):
+            p_ = a5f(d_)
+            ck(raises(lambda: load_a5_result(p_, _sha(p_))), f"⛔음성 a5 결과: {lab_} → 거부")
+        ck(raises(lambda: load_a5_result(p5, "0" * 64)), "⛔음성 a5 결과: 파일 sha 가 고정값과 다르면 거부")
+    ck("load_a5_result(a.a5_result, a.a5_result_sha256)" in inspect.getsource(main) and "p1, a4, a5)" in inspect.getsource(main),
+       "a5 결과: CLI --a5_result 가 load_a5_result 로 읽고 collect 에 넘긴다 (배선)")
     print(f"{'✅' if not bad else '⛔'} build_v5_vasp_package selftest {ok}/{ok + bad}")
     return 0 if not bad else 1
 
@@ -2218,6 +2452,8 @@ def main():
     ap.add_argument("--p1_result", help="--collect 와 함께 (UMA 있을 때): SE 쌍 결과 기록 → 카드 §1b ② 크기 효과 (정보 · 판정 아님)")
     ap.add_argument("--a4_result", help="개정 4: 외주 2차 검사기의 a4 결과 JSON (build_round2_vasp_package.py --a4_result) → G4 e70 far 에 adopt_a4")
     ap.add_argument("--a4_result_sha256", help="a4 결과 JSON 의 고정 sha256")
+    ap.add_argument("--a5_result", help="개정 5: a5 검사기 결과 JSON (build_a5_vasp_package.py --check --a5_result) → a4 채택 위에 adopt_a5 (--a4_result 필수)")
+    ap.add_argument("--a5_result_sha256", help="a5 결과 JSON 의 고정 sha256")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
@@ -2231,6 +2467,7 @@ def main():
             ap.error("--out 과 --ret 가 필요하다")
         reg = load_pp_registry(a.pp_registry, a.pp_registry_sha256, a.manifest_sha256)
         a4 = load_a4_result(a.a4_result, a.a4_result_sha256) if a.a4_result else None
+        a5 = load_a5_result(a.a5_result, a.a5_result_sha256) if a.a5_result else None
         if a.seal_pp:
             r = seal_pp(a.out, a.ret, a.manifest_sha256)
             if a.json:
@@ -2241,7 +2478,7 @@ def main():
                 raise PkgError("최종 집계(--collect)는 봉인 PP 등록부가 필수다 — --pp_registry R --pp_registry_sha256 H (파일럿 단계 집계면 --pilot 을 명시)")
             uma = json.load(open(a.uma, encoding="utf-8")) if a.uma else None
             p1 = json.load(open(a.p1_result, encoding="utf-8")) if a.p1_result else None
-            rec = collect(a.out, a.ret, a.manifest_sha256, uma, reg, a.pp_registry_sha256 if reg is not None else None, p1, a4)
+            rec = collect(a.out, a.ret, a.manifest_sha256, uma, reg, a.pp_registry_sha256 if reg is not None else None, p1, a4, a5)
             for k, s in rec["samples"].items():
                 print(f"  {k} W {s['W_J_m2']} · W_PBE {s['W_PBE_J_m2']} · ΔD3 {s['dD3_J_m2']} · D3 쌍 오차 {s['d3_pair_err_J_m2']} · 총 W 인용 {s['total_w_citable']}"
                       f"{' · ' + ' / '.join(s['total_w_labels']) if s['total_w_labels'] else ''}")
@@ -2258,7 +2495,7 @@ def main():
                 _write(a.json, json.dumps(rec, ensure_ascii=False, indent=1, allow_nan=False) + "\n")
             return collect_exit(rec)
         if a.check:
-            _, res = check(a.out, a.ret, a.manifest_sha256, reg, a4)
+            _, res = check(a.out, a.ret, a.manifest_sha256, reg, a4, a5)
             for n, r in res.items():
                 print(f"  {n:34s} {r['status']}{(' · ' + str(r.get('why'))) if r.get('why') else ''}")
             rb = return_manifest_info(a.ret, a.manifest_sha256)

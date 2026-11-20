@@ -1,0 +1,231 @@
+{
+ "schema": "wad_a5_vasp_package/v1",
+ "amendment_5": "db/properties/wad_aprime_pilot_prereg_v5_amendment_5_e70_retry_2026_11_20.json",
+ "decision": "D-2026-11-20-wad-aprime-v5-e70-a5-retry",
+ "status": "a5 묶음 v1 — 개정 5 v2 비준 뒤 · 발송 전 독립 리뷰 대기",
+ "tool_sha256": "5c61c5f9328c433636d8c1537229cef8eb54d17804533ee5fcd5a785b89652ce",
+ "round2_tool_sha256": "9dc2f98dd44232fba4f3e6068f2e625d67e10713fe4e2a03f7f1621bfbf85358",
+ "v5_tool_sha256": "0936efc2f396947eb0d3aa839a2e68c11fd200517d741f27b5bdd7671181b945",
+ "sources": {
+  "v5_manifest_sha256": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+  "registry_path": "db/raw/wad_round2_vasp_2026_10_22/pp_registry_round2_2026_10_26.json",
+  "registry_sha256": "999aa2dae0b137eab7934723d76effecb53bf7d2ddeb8fe687857e467f9ff1b4",
+  "a4_result": "db/raw/wad_round2_vasp_2026_10_22/a4_result_round2_2026_10_26.json",
+  "a4_result_sha256": "aec74641410695dcdb1a98e738061dfc00b93992a9c4e352b0afaa0cff508d83"
+ },
+ "w0": {
+  "rel_path_in_round2_pkg": "run/V5_s_outer_A_G4_e70_far_a4_a4/stageA/WAVECAR",
+  "sha256": "8a65bde238eaa088a7d6832cc74523acfd8034e27c1c37f1d62ae0162394e9d9",
+  "size": 6820958848,
+  "NKPTS": "4",
+  "NBANDS": "872",
+  "ENCUT": "650.0",
+  "⛔": "원본은 읽기만 — 러너는 복사본만 쓴다 · 업체가 지웠으면 W0_WAVECAR=none (A5 새로 시작)"
+ },
+ "ladder": "⓪ 확인 → A5 (A5c 이어서 · A5f 새로) → c1 → c1 이 주 기준 OK 가 아니면 c2 · A5 자격 미달이면 c1 · c2 는 ⓪ 복사본에서 · ⓪ 도 없으면 값 없음",
+ "cap_h": 180.0,
+ "infra_max_per_job": 2,
+ "secondary": {
+  "stages": [
+   "c1",
+   "c2"
+  ],
+  "window_last": 50,
+  "window_prev": 50,
+  "min_steps": 100,
+  "u_E": "max(range(W1), |mean(W1) − mean(W0)|)",
+  "⛔": "u_W 문턱 · G4 판정 · 채택은 V5 수집기 (--a5_result)"
+ },
+ "return_allowed": [
+  "OUTCAR",
+  "OSZICAR",
+  "INCAR",
+  "KPOINTS",
+  "POSCAR",
+  "IBZKPT",
+  "POTCAR.titel",
+  "POTCAR.sha256",
+  "POTCAR.species.sha256",
+  "attempt.json",
+  "stdout.log",
+  "WAVECAR.info",
+  "warn.log",
+  "infra_abort.json",
+  "LOCPOT.zavg.txt",
+  "attempt.start",
+  "killed.json"
+ ],
+ "return_forbidden": [
+  "POTCAR",
+  "WAVECAR",
+  "CHGCAR",
+  "CHG",
+  "vasprun.xml",
+  "vdw_kernel.bindat",
+  "LOCPOT"
+ ],
+ "jobs": [
+  {
+   "nions": 200,
+   "composition": {
+    "Li": 56,
+    "P": 8,
+    "S": 44,
+    "Cl": 8,
+    "Ag": 84
+   },
+   "nelect_expected": 1452.0,
+   "potcar_spec": [
+    "Li_sv",
+    "P",
+    "S",
+    "Cl",
+    "Ag"
+   ],
+   "pp_expected_titel": [
+    "PAW_PBE Li_sv 10Sep2004",
+    "PAW_PBE P 06Sep2000",
+    "PAW_PBE S 06Sep2000",
+    "PAW_PBE Cl 06Sep2000",
+    "PAW_PBE Ag 02Apr2005"
+   ],
+   "zval_expected": [
+    3.0,
+    5.0,
+    6.0,
+    7.0,
+    11.0
+   ],
+   "encut": 650.0,
+   "sigma": 0.136,
+   "kpts": [
+    3,
+    2,
+    1
+   ],
+   "cell_A": [
+    10.0551,
+    20.1102,
+    32.058
+   ],
+   "dipol_z": 0.375225,
+   "area_A2": 202.209896,
+   "structure_sha256": "520bbfa9b2838f1001b898aec0ef03ed85facfdc13733846d4bc09f9bfd68a84",
+   "d3_2body_eV_ref": -56.493713871180205,
+   "dir": "V5_s_outer_A_G4_e70_far_a5",
+   "method": "v5",
+   "ismear": 1,
+   "stage": "a5",
+   "stages": {
+    "A5c": {
+     "incar": "INCAR.a5A5c",
+     "nelm": 300,
+     "delta": {
+      "LDIPOL": ".FALSE.",
+      "LWAVE": ".TRUE.",
+      "NELM": "300",
+      "MAXMIX": "200",
+      "AMIX": "0.1",
+      "AMIN": "0.01",
+      "ISTART": "1",
+      "ICHARG": "0"
+     },
+     "echo_expect": {
+      "IALGO": 38,
+      "AMIX": 0.1,
+      "AMIN": 0.01,
+      "MAXMIX": 200
+     },
+     "row_headers": [
+      "DAV",
+      "RMM"
+     ]
+    },
+    "A5f": {
+     "incar": "INCAR.a5A5f",
+     "nelm": 300,
+     "delta": {
+      "LDIPOL": ".FALSE.",
+      "LWAVE": ".TRUE.",
+      "NELM": "300",
+      "MAXMIX": "200",
+      "AMIX": "0.1",
+      "AMIN": "0.01",
+      "ISTART": "0"
+     },
+     "echo_expect": {
+      "IALGO": 38,
+      "AMIX": 0.1,
+      "AMIN": 0.01,
+      "MAXMIX": 200
+     },
+     "row_headers": [
+      "DAV",
+      "RMM"
+     ]
+    },
+    "c1": {
+     "incar": "INCAR.a5c1",
+     "nelm": 400,
+     "delta": {
+      "ISTART": "1",
+      "ICHARG": "0",
+      "NELM": "400",
+      "MAXMIX": "200",
+      "AMIX": "0.1",
+      "AMIN": "0.01"
+     },
+     "echo_expect": {
+      "IALGO": 38,
+      "AMIX": 0.1,
+      "AMIN": 0.01,
+      "MAXMIX": 200
+     },
+     "row_headers": [
+      "DAV",
+      "RMM"
+     ]
+    },
+    "c2": {
+     "incar": "INCAR.a5c2",
+     "nelm": 400,
+     "delta": {
+      "ALGO": "All",
+      "TIME": "0.1",
+      "ISTART": "1",
+      "ICHARG": "0",
+      "NELM": "400"
+     },
+     "echo_expect": {
+      "IALGO": 58,
+      "TIME": 0.1
+     },
+     "row_headers": [
+      "SDA",
+      "CGA"
+     ]
+    }
+   },
+   "v5_source": {
+    "pkg": "db/inputs/wad_aprime_v5_vasp_2026_09_27",
+    "job": "V5_s_outer_A_G4_e70_far",
+    "manifest_sha256": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
+    "files_sha256": {
+     "POSCAR": "cd7741e32287488c13a9fa99478348f3308471b5b9d3ccfa76c06b15d97e5852",
+     "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
+     "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f",
+     "INCAR": "204db1ea1add1a8c0aeef0638cbb004b17b44dfff6b0ccea6ac81bb996a67173"
+    }
+   },
+   "files_sha256": {
+    "POSCAR": "cd7741e32287488c13a9fa99478348f3308471b5b9d3ccfa76c06b15d97e5852",
+    "KPOINTS": "ccc36dd26bce4f8eaa611d5b4fdc0dbdaa84d11f92df669a315ac3aa3e81e0db",
+    "POTCAR.spec": "bc67473495768a7879aeb320af018003e53c3494d87bbe6c5e9aac1bc77f332f",
+    "INCAR.a5A5c": "73abf3c59103271a3eb68fec76285969f15e77cb76a2041e618309e7996c1489",
+    "INCAR.a5A5f": "74ad2ff13326611f14265765641249f417c98d7b963f86e3e2eeeb1b1b623856",
+    "INCAR.a5c1": "dc5530dca87d6c690db96e0e1c041bfa19ffb79727be5805de2a2e53c1174ef6",
+    "INCAR.a5c2": "d89df5f8a0f615cdee6187ab7006154436d6b871571934543d37495eea0301fd"
+   }
+  }
+ ]
+}
