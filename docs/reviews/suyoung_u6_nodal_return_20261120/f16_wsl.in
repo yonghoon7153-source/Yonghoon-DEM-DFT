@@ -1,0 +1,46 @@
+(
+set -euo pipefail
+umask 077
+# Conditional 1200 s total / CPU1, F16 only. No restart data exists.
+[ "${1:-}" = GO_F16_1200_ONCE ] || { echo 'STOP: separate first-author agreement to 1200 s is required'; exit 2; }
+SOLVER=00f0a1758349079a10d9c3fe9d1424620117dd27
+DRIVER=@DRIVER@
+SOURCE_SHA=@SOURCE_SHA@
+PY="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+test -x "$PY" || { echo 'Missing project venv Python'; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export BLIS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1
+for util in base64 tar sha256sum taskset timeout mktemp; do command -v "$util" >/dev/null; done
+cpu=$("$PY" -I -B -c 'import os,numpy; print(min(os.sched_getaffinity(0)))')
+work=$(mktemp -d "$HOME/suyoung_f16_budget_XXXXXXXX")
+out=$(mktemp -d "$PWD/suyoung_f16_budget_return_XXXXXXXX")
+echo "RETURN_DIRECTORY=$out"
+mkdir "$work/source" "$work/run"
+base64 -d >"$work/source.tar.gz" <<'SOURCE_F16'
+@DATA@
+SOURCE_F16
+printf '%s  %s\n' "$SOURCE_SHA" "$work/source.tar.gz" | sha256sum -c -
+tar -xzf "$work/source.tar.gz" -C "$work/source"
+(cd "$work/source" && sha256sum -c SHA256SUMS)
+cp "$work/source/SHA256SUMS" "$work/run/SOURCE_SHA256SUMS"
+printf 'solver=%s\ndriver=%s\ntar_sha256=%s\ncpu=%s\nwall_s=1200\nbudget_s=1170\nauto_retry=0\n' "$SOLVER" "$DRIVER" "$SOURCE_SHA" "$cpu" >"$work/run/origin.txt"
+"$PY" -I -B -c 'import sys,numpy; print(sys.version); print(numpy.__version__)' >>"$work/run/origin.txt"
+attempt="$HOME/suyoung_f16_once_${DRIVER:0:12}"
+mkdir -- "$attempt" || { echo "Existing authorized attempt: $attempt"; exit 2; }
+printf 'WORK=%s\nRETURN=%s\n' "$work" "$out" >"$attempt/receipt.txt"
+rc=0
+timeout --signal=TERM --kill-after=10s 1190s taskset -c "$cpu" "$PY" -I -B "$work/source/run_f16_only.py" GO_F16_1200_ONCE --output "$work/run/data" >"$work/run/worker.log" 2>&1 || rc=$?
+printf 'COMMAND_RC=%s\n' "$rc" | tee "$work/run/screen.txt"
+tail -n 3 "$work/run/worker.log" | tee -a "$work/run/screen.txt"
+archive_rc=0
+tar -czf "$out/suyoung_f16_budget_result.tar.gz" -C "$work" run || archive_rc=$?
+cp "$work/run/screen.txt" "$out/screen.txt"
+printf 'ARCHIVE_RC=%s\n' "$archive_rc" | tee -a "$out/screen.txt"
+if [ "$archive_rc" -eq 0 ]; then
+  (cd "$out"; sha256sum suyoung_f16_budget_result.tar.gz screen.txt > SHA256SUMS; sha256sum -c SHA256SUMS; cat SHA256SUMS)
+else
+  echo "WORK_RETAINED=$work"; exit "$archive_rc"
+fi
+echo "RETURN_DIRECTORY=$out"
+exit "$rc"
+)
