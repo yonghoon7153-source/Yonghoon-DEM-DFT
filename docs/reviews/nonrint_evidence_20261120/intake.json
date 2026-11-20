@@ -1,0 +1,35 @@
+{
+  "file": "codex_send_1120.zip",
+  "bytes": 523040,
+  "sha256": "b5f8999c637b82751c5f89c6b1a2c091ff38bfc214e1b9b9ea371fcdcd71cec0",
+  "crc": "PASS",
+  "regular_files": 12,
+  "manifest_groups": 3,
+  "manifest_entries": [
+    {
+      "file": "n0_report.tar.gz",
+      "manifest_sha256": "7c376fe2cb454deffbc6d4e9922f77a3a1358a276314f688cf04028598503343",
+      "checked_in_received_zip": true
+    },
+    {
+      "file": "n0_full_result.tar.gz",
+      "manifest_sha256": "71c14f4b3946921222b087f2d0f61edc07b932c382ea993f23e56c3185511262",
+      "checked_in_received_zip": false
+    },
+    {
+      "file": "rt_367546_readback.tar.gz",
+      "manifest_sha256": "5e0b57f4b36377d80375760e109d58988b289c09c775907b4cfa638553a33654",
+      "checked_in_received_zip": true
+    },
+    {
+      "file": "suyoung_u6_nodal_result.tar.gz",
+      "manifest_sha256": "1d5dc027de0d847021c0d5dee216a7bc16897384f825ec0a87777cc29792f9d7",
+      "checked_in_received_zip": true
+    },
+    {
+      "file": "screen.txt",
+      "manifest_sha256": "87c9b1c695a963862206ee6fd969310586de9e2791cdef02650d4a347b0e5833",
+      "checked_in_received_zip": true
+    }
+  ]
+}
