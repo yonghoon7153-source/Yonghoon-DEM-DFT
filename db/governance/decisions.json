@@ -14063,6 +14063,68 @@
     "근거_발화": "AskUserQuestion (2026-11-17 · 이 세션) — ① 'W_ad 2차 중간 반송 (건엽 · 11-17): 단계 4 의 흑연 C–C PBE+D3 2 잡을 업체에 지금 돌리게 할까요? 업체 보고서의 '안 B' 이고 수 분이면 끝나요.' → '지금 돌림 (Recommended)' · ② 'W_ad 2차 단계 3 의 optB88 4 잡 (S_A · Li_A 의 bound/far · 398/362 원자) 은 어떻게 할까요? 첫 잡 S_A bound 가 200 스텝 동안 수렴하지 못했고, 사다리 r1 ⓐ (쌍극 보정 끔) 는 30 스텝에서 발산해서 운영자가 멈췄어요. 카드 규칙상 이 잡은 '값 없음' 이에요. 카드 §4d 에 따르면 optB88 실패는 함수 민감도 δ_XC+vdW 만 미완료로 만들고, 주 판정 G5_C (PBE+D3 15 잡 모두 OK) 와는 상관없어요.' → '닫기 (Recommended)'",
     "decision_digest": "sha256:4295225a4863f54b3aaca41d8b1fca7f9f1f6a344d1bac0d643acecadd22336f"
    }
+  },
+  {
+   "id": "D-2026-11-20-hyeokju-lzo-md1-amend2",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "hyeokju_lzo.md.uma_validation_then_interface",
+   "slot": "hyeokju_lzo_md1_amend2",
+   "applies_to": {
+    "systems": [
+     "lpscl_li2zro3_interface"
+    ],
+    "tasks": [
+     "interface_reaction_onset_md"
+    ],
+    "methods": [
+     "uma-s-1p1-omat_nvt_langevin"
+    ],
+    "use_cases": [
+     "exploratory"
+    ]
+   },
+   "title": "[혁주] MD-1 개정 2 (결과 전) — LPSCl Li 바깥 | 비정질 Li₂ZrO₃ (142 원자 · MD-0 꼴) · 담금질 시드 3 · 600 K · 1 ns · P–O < 1.8 · Zr–S < 2.9 Å 1 ps 지속 사건 · 시드 2/3 이면 개시 관측",
+   "statement": "카드 db/properties/hyeokju_lzo_md_card_2026_11_16.json 의 ⏩_개정_2_2026_11_20_MD1_결과_전 이 정의다 (기계_판독_값 포함). 실행기 · 판독 도구 · 시작 구조 셋은 결과 전에 커밋한다.",
+   "rationale": "카드 §4 — MD-0 두 모델 통과 (11-20) → MD-1 결과 전 개정 · 계면은 §1 규칙대로 1 단계가 구동력을 준 LZO|LPSCl (−92 meV/atom) · 사용자 2026-11-20 '권고대로 해줘' (브리핑 권고안).",
+   "decision_state": "proposed",
+   "record_kind": "estimand",
+   "results_seen": false,
+   "exploratory": true,
+   "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json",
+   "amends": "D-2026-11-16-hyeokju-lzo-md",
+   "evidence": [
+    "db/properties/hyeokju_lzo_md0_runlog_2026_11_17.json",
+    "db/raw/hyeokju_lzo_md0_2026_11_17/md0_check_kgy_1120/md0_verdict.json",
+    "db/properties/hyeokju_lzo_s1_min_vs_li_2026_11_16.csv",
+    "db/properties/hyeokju_lzo_md1_runlog_2026_11_20.json"
+   ],
+   "reopen_criteria": [
+    "무결성 실패 시드는 한 번 다시 (MD 시드 + 1000) — 또 실패면 판정 보류 (사용자 결정)",
+    "S 바깥 종단 · 800 K · 더 큰 셀은 MD-0 검증 밖이라 새 개정 (DFT 스냅숏 대조 먼저)",
+    "혁주 결정성 자료가 '결정' 이면 계면 모델을 다시 정할지 사용자 결정"
+   ],
+   "track": {
+    "name": "[혁주] LZO 코팅 양극 계면",
+    "first_author": "혁주 (사용자 확인 2026-11-16) · 사용자 = 계산 담당 · 계산 쪽 결정 = 사용자"
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-11-20",
+     "session": "본 세션 claude/friendly-meitner-lldvar"
+    }
+   ],
+   "_note": "proposed — 카드 개정 2 · 시작 구조 3 · 실행기 --stream_traj · 판독 도구 (결과 전) → 사용자 비준 → kgy 세 시드 동시",
+   "status_history": [
+    {
+     "at": "2026-11-20",
+     "state": "proposed",
+     "by": "claude",
+     "note": "카드 개정 · 결정 작성 (결과 전)"
+    }
+   ]
   }
  ]
 }

@@ -20,6 +20,9 @@ Same fairchem/UMA machinery as tools/modelc_v3/disorder_ensemble_diffusion.py.
     ASE attach(interval) 의 첫 호출 관례 (판마다 다를 수 있다) 에 기대지 않는다. generate_dft_inputs --from_traj 의
     index = round(t·1000/save_fs) 규칙과 그대로 맞는다.
   <label>_md_log.json: 설정 · 시드 · 난수 경로 · 단계별 평균 T · hold 단계 MSD (--msd_elements · 기록만) · 프레임 시각
+  --stream_traj            (2026-11-20 · [혁주] MD-1) 생산 프레임을 저장할 때마다 <label>_traj.xyz.part 에 덧붙이고 flush 한다 ·
+                           끝나면 그 파일을 <label>_traj.xyz 로 이름만 바꾼다 (원자적) — 긴 런 (1 ns ≈ 하루) 이 중간에 끊겨도 앞부분이 남는다 ·
+                           최종 파일은 스트림 없이 쓴 것과 바이트까지 같다 (selftest) · 끊기면 .part 만 남고 _traj.xyz 는 안 생긴다 (끝난 런과 섞이지 않는다)
   마지막 NVT 를 시작할 때 모든 원자의 속도를 --temperature 로 다시 뽑는다 (풀린 원자는 속도 0 이었다)
 
 ⛔ 이 도구가 못 하는 것
@@ -109,7 +112,7 @@ def _target_T(dyn):
 def run_protocol(atoms, calc, *, label, out_dir=".", freeze_idx=None, schedule=(), schedule_dt_fs=1.0,
                  release=False, relax_fmax=0.08, relax_steps=300, temperature=600.0, equilib_ps=2.0,
                  prod_ps=50.0, dt_fs=1.0, friction=0.01, save_fs=200.0, seed=1234, msd_elements=("Zr",),
-                 log_extra=None):
+                 log_extra=None, stream_traj=False):
     """이완 → (고정한 채) 온도 일정 → (풀고) NVT 평형 + 생산. 계산기는 밖에서 준다 (시험은 EMT)."""
     save_int = save_fs / dt_fs
     if abs(save_int - round(save_int)) > 1e-9 or round(save_int) < 1:
@@ -188,14 +191,30 @@ def run_protocol(atoms, calc, *, label, out_dir=".", freeze_idx=None, schedule=(
         c.info["E_pot_eV"] = float(atoms.get_potential_energy())
         return c
 
+    final = os.path.join(out_dir, f"{label}_traj.xyz")
+    part = final + ".part"
+    fh = None
+    if stream_traj:
+        if os.path.exists(part):
+            raise ValueError(f"⛔ {part} 가 이미 있다 — 끊긴 런의 흔적이다 (옮겨 보존한 뒤 다시 · 덮지 않는다)")
+        fh = open(part, "w")
+        log["stream_traj"] = {"part": os.path.basename(part), "규칙": "프레임마다 덧붙이고 flush · 끝나면 이름만 바꾼다"}
     frames = [snap(0)]
+    if fh:
+        write(fh, frames[0], format="extxyz"); fh.flush()
     per_ps = max(1, int(round(1000.0 / save_fs)))
     for k in range(1, n_save + 1):
         dyn.run(save_int)
         frames.append(snap(k))
+        if fh:
+            write(fh, frames[-1], format="extxyz"); fh.flush()
         if k % per_ps == 0:
             print(f"  [{label}] 생산 {frames[-1].info['t_prod_ps']:.1f} / {prod_ps} ps · T {frames[-1].info['T_inst_K']:.0f} K", flush=True)
-    write(os.path.join(out_dir, f"{label}_traj.xyz"), frames, format="extxyz")
+    if fh:
+        fh.close()
+        os.replace(part, final)
+    else:
+        write(final, frames, format="extxyz")
     log["frames"] = {"n": len(frames), "t_prod_ps_first": frames[0].info["t_prod_ps"],
                      "t_prod_ps_last": frames[-1].info["t_prod_ps"], "save_fs": save_fs,
                      "규칙": "프레임 k = 생산 시각 k × save_fs (프레임 0 = 생산 시작) — from_traj index = round(t·1000/save_fs)"}
@@ -268,6 +287,39 @@ def selftest():
                                          dt_fs=2.0, save_fs=10.0, prod_ps=0.02, equilib_ps=0.0)))
         chk("⛔음성: CLI 에서 --fix_bottom 과 --freeze_idx 를 같이 주면 거부",
             refused(lambda: main(["--interface", "x.xyz", "--label", "x", "--freeze_idx", "f.json", "--fix_bottom", "6"])))
+        # ── --stream_traj (2026-11-20) ──
+        e = base.copy()
+        run_protocol(e, EMT(), label="s1", out_dir=root, freeze_idx=[0, 1, 2],
+                     schedule=parse_schedule("hold:600:0.02,ramp:600:300:0.02"), schedule_dt_fs=1.0,
+                     release=True, seed=7, stream_traj=True, **kw)
+        b1 = open(os.path.join(root, "t1_traj.xyz"), "rb").read()
+        b2 = open(os.path.join(root, "s1_traj.xyz"), "rb").read()
+        chk("양성: --stream_traj 최종 궤적 = 스트림 없이 쓴 궤적 (같은 시드 · 바이트까지)", b1 == b2 and len(b1) > 0)
+        chk("양성: 끝나면 .part 가 남지 않는다 (이름만 바꿈)", not os.path.exists(os.path.join(root, "s1_traj.xyz.part")))
+
+        class Boom(EMT):
+            n = 0
+            def calculate(self, *args, **kws):
+                Boom.n += 1
+                if Boom.n > 60:
+                    raise RuntimeError("일부러 낸 중단")
+                return super().calculate(*args, **kws)
+
+        def crash():
+            run_protocol(base.copy(), Boom(), label="s2", out_dir=root, relax_steps=0, temperature=300.0,
+                         equilib_ps=0.0, prod_ps=0.2, dt_fs=2.0, friction=0.02, save_fs=10.0, seed=7, stream_traj=True)
+        try:
+            crash(); crashed = False
+        except RuntimeError:
+            crashed = True
+        part2 = os.path.join(root, "s2_traj.xyz.part")
+        nf = len(read(part2, index=":", format="extxyz")) if os.path.exists(part2) else 0
+        chk("⛔음성: 생산 도중 끊기면 .part 에 앞부분이 남고 _traj.xyz 는 안 생긴다",
+            crashed and nf >= 1 and not os.path.exists(os.path.join(root, "s2_traj.xyz")))
+        chk("⛔음성: 끊긴 런의 .part 가 있으면 같은 이름으로 다시 시작하지 않는다 (덮지 않는다)",
+            refused(lambda: run_protocol(base.copy(), EMT(), label="s2", out_dir=root, relax_steps=0, temperature=300.0,
+                                         equilib_ps=0.0, prod_ps=0.02, dt_fs=2.0, friction=0.02, save_fs=10.0,
+                                         seed=7, stream_traj=True)))
     finally:
         shutil.rmtree(root, ignore_errors=True)
     n_bad = len(res) - sum(res)
@@ -299,6 +351,7 @@ def main(argv=None):
     ap.add_argument("--uma_model", default="uma-s-1p1")
     ap.add_argument("--uma_task", default="omat")
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--stream_traj", action="store_true", help="생산 프레임을 .part 에 덧붙이며 쓴다 (끝나면 _traj.xyz 로 이름 변경)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args(argv)
     if a.selftest:
@@ -332,7 +385,8 @@ def main(argv=None):
                                relax_steps=a.relax_steps, temperature=a.temperature, equilib_ps=a.equilib_ps,
                                prod_ps=a.prod_ps, dt_fs=a.dt_fs, friction=a.friction, save_fs=a.save_fs,
                                seed=a.seed, msd_elements=tuple(a.msd_elements),
-                               log_extra={"interface": a.interface, "uma_model": a.uma_model, "uma_task": a.uma_task})
+                               log_extra={"interface": a.interface, "uma_model": a.uma_model, "uma_task": a.uma_task},
+                               stream_traj=a.stream_traj)
     print(f">> done: {len(frames)} production frames -> {os.path.join(a.out_dir, a.label + '_traj.xyz')}  "
           f"(T_prod mean {log['T_prod_mean_K']:.0f} K · stages {[(s['kind'], round(s['T_inst_mean_K'])) for s in log['stages']]})")
     return 0

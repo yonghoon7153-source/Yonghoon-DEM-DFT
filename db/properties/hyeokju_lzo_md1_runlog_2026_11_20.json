@@ -1,0 +1,29 @@
+{
+  "schema": "runlog/v1",
+  "record_kind": "runlog",
+  "date": "2026-11-20",
+  "트랙": "[혁주] LZO 코팅 양극 계면 — 1저자 = 혁주 · 사용자 = 계산 담당",
+  "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json ⏩_개정_2_2026_11_20_MD1_결과_전 · D-2026-11-20-hyeokju-lzo-md1-amend2 (proposed)",
+  "status": "결과 전 준비 — 시작 구조 3 · 실행기 --stream_traj · 판독 도구 커밋 → 사용자 비준 대기",
+  "시작_구조": [
+    {
+      "file": "db/structures/hyeokju_md1_2026_11_20/I142_liouter_aLZO16_md1s1_init.xyz",
+      "sha256": "2a47a83f6e299e27283e47c8e15b947abb8a97fec06437fae882f43f9f233940"
+    },
+    {
+      "file": "db/structures/hyeokju_md1_2026_11_20/I142_liouter_aLZO16_md1s2_init.xyz",
+      "sha256": "984d62b7a836b353d35755f4fa1c72f9f057c9568da2e0a26853883f834a4cee"
+    },
+    {
+      "file": "db/structures/hyeokju_md1_2026_11_20/I142_liouter_aLZO16_md1s3_init.xyz",
+      "sha256": "6bd5c6204c40fd63cf86264cb045637b747d9adce7058d1da79be2c304d736bc"
+    }
+  ],
+  "도구": {
+    "run_li_interface_md.py": "58d44eb1e3862456eb5305836f1e52eb1ddd07d76e12a4f5cea0863779c61310",
+    "analyze_interface_decomp.py": "8d8049eff6135fe3cc474e5467c3b0c9fc56d536d917739280626510f2285406",
+    "collect_neb.py (관측창)": "d372044fb5da58a010a7777ec37e82df59865a47523e11c3d9511d1154c61c12"
+  },
+  "시험": "run_li_interface_md --selftest 19/19 (스트림 = 비스트림 바이트 같음 · 끊김 때 .part 만 남음 · .part 있으면 다시 시작 거부) · 깨기 2/2 (이름 바꾸기 뺌 · .part 문 뺌) · analyze_interface_decomp --selftest 23/23 · 깨기 5/5 (최소상 끔 · 지속 ≥ → > · 앙상블 문턱 1 · 프레임 수 문 · 기원 양쪽 문) · 옛 판 (SE|Li) 경로 그대로 돈다",
+  "by": "agent · 2026-11-20"
+}
