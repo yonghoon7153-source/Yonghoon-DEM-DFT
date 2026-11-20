@@ -66,5 +66,10 @@
   "DEM 회신 10 초안 — V5 은 라벨 · LPSCl|Ag 재합의 · Ag|흑연 라벨 · CU 덧붙임 + 이번 탄소 G5_C 결과 (허용 서술 · 라벨 그대로)",
   "업체에 round2 종결 알림 · 서버 run/ (stage-ⓐ WAVECAR 포함) 보존 여부 — 사용자"
  ],
- "by": "agent · 2026-11-20"
+ "by": "agent · 2026-11-20",
+ "⏩_2026_11_20_진행": {
+  "은_V5_G5": "끝 — db/properties/wad_aprime_v5_vasp_result_2026_10_15.json ⏩_2단계_G5_집계_2026_11_20 (G5 INCOMPLETE · 예정 상태 그대로 · 크기 민감 ③ ④)",
+  "업체_서버_run": "사용자 11-20 '알아서 놔둘거야 건엽은' — 업체가 알아서 둔다 · 우리 쪽 지시 없음 · round2 외주 끝",
+  "DEM_회신_10": "초안 작성 중 → kb/projects/wad_dem_reply_draft_2026_09_23.md 회신 10 절"
+ }
 }

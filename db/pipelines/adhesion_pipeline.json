@@ -1648,6 +1648,11 @@
    "date": "2026-11-20",
    "stage": "dft",
    "text": "외주 2차 **최종 반송** (11-19 · 단계 4 C–C PBE+D3 2 잡 단 0 수렴) — `--check` rc 3 (19 OK · optB88 4 는 `D-2026-11-17-wad-round2-interim-stage4-optb88-closed` 로 닫힘 · 은 a4 는 개정 4 로 종료 · 공통 고장 0) → `--collect` **한 번** (UMA p2s 10-22): **G3 PASS · G4 PASS · G5_C PASS** · 80 % 발동 없음 · 전하이동 신호 0 · δ_XC+vdW 미완료 · ②′ C–C 두 방법 OK · 결과 `db/properties/wad_round2_vasp_result_2026_11_19.json` → ⏭ 은 V5 G5 집계 · DEM 회신 10. W 값은 결과 기록에만."
+  },
+  {
+   "date": "2026-11-20",
+   "stage": "dft",
+   "text": "은 쪽 **V5 G5 집계 한 번** (앞 점검: 10-15 UMA 없는 집계 바이트 재현 · a4 결과 재생성 같음) — G3 PASS · G4 INCOMPLETE (e70 = a4 실패 채택) · **G5 INCOMPLETE (오차표만 · 예정 상태 그대로)** · §1b ② 크기 효과 '크기 민감' = Li·PS₄ 바깥 A · B · 은 쪽 DEM 라벨 '작은 모델 지정 표본에서 미완료' · 업체 서버 run/ 은 업체가 알아서 둔다 (사용자). ⏭ DEM 회신 10 초안. W 값은 결과 기록에만."
   }
  ],
  "related_decisions": [

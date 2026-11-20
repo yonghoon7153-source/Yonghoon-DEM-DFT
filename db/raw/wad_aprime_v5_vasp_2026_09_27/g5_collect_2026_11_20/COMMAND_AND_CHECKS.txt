@@ -1,0 +1,19 @@
+# 은 쪽 V5 G5 집계 (한 번) — 2026-11-20 · 이 세션 (클라우드 컨테이너 · CPU 파이썬 · 계산 아님)
+## 앞 점검 1 — 10-15 집계 (UMA 없음) 재현 (도구가 10-22 에 바뀌었다 · c1144682 · 744edd94)
+python3 -I tools/wad/build_v5_vasp_package.py --collect --out db/inputs/wad_aprime_v5_vasp_2026_09_27 --ret <final_return_2026_10_15/V5_vasp_return.tgz 를 푼 곳> \
+  --manifest_sha256 8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1 \
+  --pp_registry db/raw/wad_aprime_v5_vasp_2026_09_27/pp_registry_2026_10_05.json --pp_registry_sha256 a279d529d9be6e75274b3ca772f32e92df526cd01f4e62ef1afecb5a38e1d4d1 --json <임시>
+→ rc 3 · cmp 로 final_return_2026_10_15/collect_noUMA_2026_10_15.json 과 바이트까지 같음
+## 앞 점검 2 — a4 결과를 외주 2차 최종 반송에서 다시 냄
+python3 -I tools/wad/build_round2_vasp_package.py --a4_result <임시> --out db/inputs/wad_round2_vasp_v5_2026_10_22 --ret <final_return_2026_11_19 tgz 를 푼 곳> \
+  --manifest_sha256 714324cc… --registry db/raw/wad_round2_vasp_2026_10_22/pp_registry_round2_2026_10_26.json --registry_sha256 999aa2da…
+→ a4 SCF_NOT_CONVERGED (a4A · a4B) · 공통 환경 고장 0 · result 블록이 저장본 a4_result_round2_2026_10_26.json (aec74641…) 과 같음 (schema · MANIFEST · 등록부 같음)
+## 본 집계 (한 번 · 다시 내지 않는다)
+python3 -I tools/wad/build_v5_vasp_package.py --collect --out db/inputs/wad_aprime_v5_vasp_2026_09_27 --ret <위와 같은 V5 반송> \
+  --manifest_sha256 8118bbc0… --pp_registry …/pp_registry_2026_10_05.json --pp_registry_sha256 a279d529… \
+  --uma db/raw/wad_aprime_v5_vasp_2026_09_27/uma_energies_v5_2026_10_15/uma_energies_v5_2026_10_15.json \
+  --p1_result db/properties/wad_se_pairs_uma_result_2026_10_01.json \
+  --a4_result db/raw/wad_round2_vasp_2026_10_22/a4_result_round2_2026_10_26.json --a4_result_sha256 aec74641410695dcdb1a98e738061dfc00b93992a9c4e352b0afaa0cff508d83 \
+  --json collect_G5_2026_11_20.json
+→ rc 3 · G3 PASS · G4 INCOMPLETE (e70 ENCUT 650 · a4 실패 채택) · G5 INCOMPLETE (G3 PASS · G4 INCOMPLETE — 오차표만) · §1b ② 크기 효과 계산됨 · '크기 민감' ③ ④
+# 화면 원문 (값 포함) 은 collect_G5_stdout_2026_11_20.txt — W 값은 이 폴더의 파일에만 (화면 · 보고 표에 옮기지 않는다)
