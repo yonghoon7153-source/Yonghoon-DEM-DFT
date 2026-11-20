@@ -1,0 +1,75 @@
+{
+  "previous_release_sha256": "8ab95c25f8453e10136910d188f2c67fd035e5a5f207c6dcc06639d89918749a",
+  "login_red": {
+    "methods": 7,
+    "case_names": [
+      "test_boot_accepts_ibb_profile_and_removes_it_before_child",
+      "test_clean_login_boot",
+      "test_clean_login_controller",
+      "test_controller_accepts_ibb_profile_and_filters_batch_process",
+      "test_ibb_boot_still_rejects_prohibited_context",
+      "test_ibb_controller_still_rejects_prohibited_context",
+      "test_wrong_host_stops_before_boot"
+    ],
+    "failed_assertions": [
+      "test_boot_accepts_ibb_profile_and_removes_it_before_child",
+      "test_controller_accepts_ibb_profile_and_filters_batch_process"
+    ],
+    "unexpected_errors": [],
+    "rc": 1
+  },
+  "login_green": {
+    "methods": 7,
+    "case_names": [
+      "test_boot_accepts_ibb_profile_and_removes_it_before_child",
+      "test_clean_login_boot",
+      "test_clean_login_controller",
+      "test_controller_accepts_ibb_profile_and_filters_batch_process",
+      "test_ibb_boot_still_rejects_prohibited_context",
+      "test_ibb_controller_still_rejects_prohibited_context",
+      "test_wrong_host_stops_before_boot"
+    ],
+    "failed_assertions": [],
+    "unexpected_errors": [],
+    "rc": 0
+  },
+  "previous_suite_on_V2": {
+    "passed_offline_methods": 24,
+    "methods": [
+      "test_accounting_running",
+      "test_ambiguous_then_no_retry",
+      "test_boot_duplicate",
+      "test_boot_incomplete_or_bad_quota",
+      "test_boot_survives_channel_close",
+      "test_disk_before_staging",
+      "test_exclusive_receipt",
+      "test_frozen_inputs",
+      "test_history_changes_during_copy",
+      "test_normal_job",
+      "test_pending_accounting",
+      "test_quota_contract",
+      "test_receipt_drift",
+      "test_reconfirmed_no_limit",
+      "test_stage_rejects_mismatching_source",
+      "test_syntax",
+      "test_terminal_rc2_keeps_partial",
+      "test_terminal_success",
+      "test_terminal_without_report",
+      "test_visible_home_alias_on_lustre",
+      "test_worker_cross_node_guard",
+      "test_worker_preserves_scope",
+      "test_worker_wrong_slurm",
+      "test_wsl_entry_no_token_and_quota"
+    ],
+    "real_ssh": 0,
+    "real_submissions": 0,
+    "engine_runs": 0,
+    "environment": "local WSL Python 3.12.3"
+  },
+  "fixture_observation": "During test authoring the fake Python scheduler injected LC_CTYPE at interpreter startup for LANG=C. The final same-source red/green replay measures original exec bytes via /proc/self/environ.",
+  "tests_against_exact_boot_controller": true,
+  "observed_profile": "BASH_ENV present; SLURM_CONF/SBATCH_*/SLURM_* absent",
+  "real_ssh": 0,
+  "actual_scheduler_submissions": 0,
+  "engine_runs": 0
+}

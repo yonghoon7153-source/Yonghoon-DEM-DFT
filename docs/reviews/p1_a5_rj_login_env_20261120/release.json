@@ -1,0 +1,38 @@
+{
+  "scope": "A5 login context fix V2, same 7:3 NP6 one-job authorization",
+  "previous_release_sha256": "8ab95c25f8453e10136910d188f2c67fd035e5a5f207c6dcc06639d89918749a",
+  "release_filename": "a5_new_rj_one_job_v2_login_9fd6aa9d3bee_b7749d2b_20261120.zip",
+  "release_bytes": 742926,
+  "release_sha256": "1980dbe957a3226a65829ddc41106a011ed9f9370c9e1df03d6c2575586994f5",
+  "outer_hash_manifest_files": 7,
+  "previous_attempt": "NO_DISPATCH_FOUND",
+  "previous_job_submitted": false,
+  "unchanged": {
+    "sealed_kit_sha256": "d8074dfd86d227d80bc3188fa8817a7af7b22b333caa3c22292ce62b10650920",
+    "sealed_kit_members": 143,
+    "np6_worker_sha256": "aa5ad24227d1ae74a260f3de642f4db07bb1834055087f18fcdaa923f990c5c1",
+    "origin_site_receipt_sha256": "b7749d2b68237d126b779e606d26d5231e9a66533ff80c7cf73b84430469fc36",
+    "collector_sha256": "7c1bbc9554e8a0244fb780ac5838f89a1b21293e33d5d39adb17464b6760cadc",
+    "quota_command_sha256": "86138729118a4dc06bd402ba57ddb0452ba099248166142fc435390d5c43af15"
+  },
+  "rebound": {
+    "submit_controller_sha256": "9ba8d74ea111f7f084485d87a3f1bd37000bb8c2e186e33c7b0cc4a4274807d6",
+    "payload_sha256": "7eaab059442c2216ced003ed557ebd0ba1a050a6d70a11332018f4ded3e80a5d",
+    "bootstrap_sha256": "ae99d43cd2e32a99c2f4017907dd339688dfb83ae5d4eb4eb5979b6afdfc6add",
+    "operator_block_sha256": "f61f1c4dac0007618810047ec85c7e1ba9353f192be839e95b9988ffe5ab2997"
+  },
+  "login_environment": {
+    "discarded_before_starting_children": [
+      "BASH_ENV"
+    ],
+    "refused": [
+      "ENV",
+      "SLURM_*",
+      "SBATCH_*"
+    ],
+    "job_environment_allowlist_unchanged": true
+  },
+  "field_execution_by_codex": 0,
+  "new_job_submitted_by_codex": false,
+  "automatic_retry": false
+}
