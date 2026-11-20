@@ -1,0 +1,17 @@
+{
+  "schema": "rt_dev_receipt/1",
+  "job": "367546",
+  "archive_bytes": 672,
+  "archive_sha256": "5e0b57f4b36377d80375760e109d58988b289c09c775907b4cfa638553a33654",
+  "archive_crc_outer_zip": "PASS",
+  "archive_vs_adjacent_files": 3,
+  "return_sha256_entries": 1,
+  "readback_json_sha256": "cd0cd6312bb7ee7fe792551206afdadbcdd5b3abb93b96d3028746dc815b3b74",
+  "rebuilt_reader_sha256": "71f0322285ac515919b71d9a9eb0ad0cc962f60381db3bacecc904ac10e91bea",
+  "reader_rc": 0,
+  "transport_rc": 0,
+  "remote_stderr_bytes": 0,
+  "source_inputs_rehashed_by_receiver": false,
+  "new_engine_runs": 0,
+  "certificate_issued": false
+}
