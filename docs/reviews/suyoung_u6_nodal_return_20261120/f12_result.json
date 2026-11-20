@@ -1,0 +1,17 @@
+{
+  "protocol": "development-mode-1-nodal-gradient",
+  "label": "DEVELOPMENT_ONLY",
+  "status": "TARGET_BRACKETED",
+  "cells": 12,
+  "disks": 49,
+  "points": 21609,
+  "dt": 0.001497578010986372,
+  "steps_attempted": 4984,
+  "phi_m": 0.990030971727746,
+  "contact": "shared_node_approach",
+  "friction": 0.5,
+  "wall_speed": 0.01996548746349992,
+  "target_E": 0.12,
+  "elapsed_s": 315.2947280369699,
+  "qualified": false
+}

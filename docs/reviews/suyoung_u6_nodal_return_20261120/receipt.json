@@ -1,0 +1,45 @@
+{
+  "source_pin": "00f0a1758349079a10d9c3fe9d1424620117dd27",
+  "source_tar_sha256": "e1f5c488dff9b35e23b5658a707e872f5733400ff664cec1ee1e3d85e7b85fe6",
+  "source_files_verified": 5,
+  "result_sha256": "1d5dc027de0d847021c0d5dee216a7bc16897384f825ec0a87777cc29792f9d7",
+  "screen_sha256": "87c9b1c695a963862206ee6fd969310586de9e2791cdef02650d4a347b0e5833",
+  "arms": {
+    "F12": {
+      "status": "TARGET_BRACKETED",
+      "steps": 4984,
+      "trace_rows": 4985,
+      "points": 21609,
+      "elapsed_s": 315.2947280369699,
+      "highest_bottom_pressure_over_E": 0.12002926877728559,
+      "last_height_ratio": 0.7878457544796219,
+      "bracket_steps": [
+        4983,
+        4984
+      ],
+      "recomputed_phi": 0.990030971727746,
+      "reported_phi": 0.990030971727746,
+      "trace_sha256": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89"
+    },
+    "F16": {
+      "status": "TIME_LIMIT",
+      "steps": 5242,
+      "trace_rows": 5243,
+      "points": 39053,
+      "elapsed_s": 570.0152063319692,
+      "highest_bottom_pressure_over_E": 0.06501765799966135,
+      "last_height_ratio": 0.8326475890322298,
+      "bracket_steps": null,
+      "recomputed_phi": null,
+      "reported_phi": null,
+      "trace_sha256": "f36f83d73488946b8b4958f85ae403712972ff15e77022ee794db32beaf87326"
+    }
+  },
+  "comparison": {
+    "label": "DEVELOPMENT_ONLY",
+    "setting": 1,
+    "assessment": "INCOMPLETE",
+    "selected_setting": null,
+    "u6_qualified": false
+  }
+}
