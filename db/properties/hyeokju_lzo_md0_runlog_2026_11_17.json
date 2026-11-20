@@ -4,7 +4,7 @@
   "date": "2026-11-17",
   "트랙": "[혁주] LZO 코팅 양극 계면 — 1저자 = 혁주 · 사용자 = 계산 담당",
   "card": "db/properties/hyeokju_lzo_md_card_2026_11_16.json (⏩_개정_1_2026_11_17_MD0_실행_결과_전 · D-2026-11-17-hyeokju-lzo-md0-exec-amend1 active)",
-  "status": "UMA · kgy DFT 11 점 끝 · 회수 (1f5cce90) → gabia 계면 k 탐침 1 점 대기 (b2o3 이완 뒤) → kgy 에서 md0_check",
+  "status": "UMA · kgy DFT 11 점 끝 · 회수 (1f5cce90) → gabia 계면 k 탐침 1 점 블록 줌 (11-20 · b2o3 이완 끝 · GPU 빔) → kgy 에서 md0_check",
   "UMA_kgy": {
     "기계": "kgy (RTX 3090) · tmux hjmd0 · worktree ~/wt_hj_md0 = 768c833f · R=/home/kgy/work/runs/hj_md0_1117",
     "시작_끝": "벌크 11-17 13:33:39 → 13:42:56 · 계면 13:42:56 → 15:10:08",
@@ -78,8 +78,8 @@
     "곁": "다른 프로그램이 kgy GPU 를 약 4 GB 쓰고 있었다 (프로세스 목록은 kgy 에서 막혀 있다) — 점마다 여유를 다시 잰다"
   },
   "남은_것": [
-    "gabia 계면 k 탐침 1 점 (t = 1 ps · 2×2×1 · disk_io 'high' · 계면 20.3 GB 라 kgy 초과 · 카드 ⏩_개정_1_운영_메모_2026_11_17) — b2o3 9 단계 이완이 끝난 뒤",
-    "kgy DFT 11 점 회수 → md0_check (G1 힘 MAE · G2 상대 에너지 RMSE · k 탐침) 판정 기록"
+    "gabia 계면 k 탐침 1 점 — 블록 줌 (11-20 · gabia_계면_k탐침_블록_2026_11_20)",
+    "k 탐침 결과를 kgy 로 → md0_check (G1 힘 MAE · G2 상대 에너지 RMSE · k 탐침) 판정 기록"
   ],
   "DFT_kgy_끝_2026_11_17": {
     "근거": "사용자가 붙인 kgy 감시 화면 (2026-11-17 18:19:00) — dft_run.log 끝 줄",
@@ -95,5 +95,25 @@
     "러너_시간": "벌크 Γ 5 점 20 분 · 벌크 k 2×2×2 1 점 60 분 · 계면 Γ 5 점 28 분",
     "⚠_판정을_돌릴_곳": "SNAPSHOTS_*.json 이 점 폴더를 kgy 절대경로 (/home/kgy/work/runs/hj_md0_1117/dft/…) 로 적고, collect_results · md0_check 가 그 경로를 그대로 읽는다 ⇒ md0_check 는 kgy 에서 돌린다 (uma env). gabia 계면 k 결과는 kgy 로 가져와 --kprobe 의 k 폴더로 준다 (kgy → gabia scp 됨 · 10-30 실측).",
     "by": "agent · 2026-11-17"
+  },
+  "gabia_계면_k탐침_블록_2026_11_20": {
+    "근거": "b2o3 9 단계 이완이 11-20 08:31:03 에 끝났다 (사용자가 붙인 gabia 감시 화면 11:16:16 · GPU 1 MiB · 0 %) — 카드 ⏩_개정_1_운영_메모_2026_11_17 의 '그 한 장만 gabia' 조건",
+    "무엇": "계면 interface_I142_liouter_aLZO16 의 t = 1 ps 스냅숏 1 장 · K_POINTS automatic 2 2 1 0 0 0 · 60/480 Ry · gaussian 0.01 · plain β 0.2 · ndim 8 · maxstep 200 · disk_io 'high' (실행 설정 · 결과 같음) — kgy 계면 Γ 점과 같은 생성기 · 같은 설정 (k 만 다름)",
+    "기계": "gabia A6000 · tmux hjmd0k · 실행기 run_force_check_scf.sh (e2d6f728 · b2o3 9 단계와 같은 판) · GPU_EXCLUSIVE=1 MIN_FREE_MIB=30000 (견적 20.3 GB · 메모리 프로브 k_탐침_3_회차 I148 disk_io high) · 작업 폴더 /data/work/runs/hj_md0k_1120 · worktree /data/work/wt_hj_md0k (그 때의 브랜치 끝)",
+    "결속_검사 (블록 안 · 하나라도 걸리면 시작 안 함)": [
+      "도구 sha256 — generate_dft_inputs.py 758e05ca… · run_force_check_scf.sh e2d6f728… (둘 다 kgy 판 768c833f 와 바이트 같음 · 이 세션에서 git show 로 대조)",
+      "궤적 interface_I142_traj.xyz = 회수 55da4fd8 SHA256SUMS (e8b47d0b…)",
+      "PP 6 개 md5 = dft_kgy_1117/pseudo_md5.txt (Li · O · P · S · Cl = 저장소 CEI 세트 · Zr = gabia /data/work/pseudo GBRV v1 5db81b1e…)",
+      "만든 입력의 원장 (SNAPSHOTS_ifacek_s1.json) 이 kgy 계면 원장과: 좌표 지문 5d0a840d6279… (kgy iface t1) · frame 10 · 원자 142 · PP sha256 6 개 · DFT 설정 (k 빼고) 이 같고 k = '2 2 1'",
+      "ATOMIC_SPECIES ~ ATOMIC_POSITIONS 블록이 kgy iface_s1_t1ps/scf.in 과 바이트 같음 (154 줄) · diff 는 prefix · pseudo_dir · disk_io · K_POINTS 만 (8 줄 · 화면에 찍는다)",
+      "실행기 DRY_RUN 통과 · GPU 독점은 실행기가 잡 시작 때 본다"
+    ],
+    "로컬_원형 (이 세션 · 같은 생성기 · 저장소 궤적)": "ifacek_s1_t1ps frame 10 · n 142 · 좌표 지문 5d0a840d6279 (kgy 와 같음) · diff 8 줄 (prefix · pseudo_dir · disk_io · K_POINTS) · md0_check 의 parse_pw_in_positions 로 kgy Γ 입력과 원자 배치 max|dx| 0.0 · md0_kpoints_of → gamma · '2 2 1' · 음성 확인: Zr PP 를 가짜 파일로 두면 원장 대조가 'PP sha256 같음 False' 로 rc 1 (시작 안 함) · bash -n 통과",
+    "블록 (gabia · GPU pw.x run 1 점 · 사용자가 붙여넣는다)": "M=/data/work/repo; W=/data/work/wt_hj_md0k; R=/data/work/runs/hj_md0k_1120; PY=/data/apps/miniforge3/envs/uma/bin/python; I=$R/dft/iface_k/ifacek_s1_t1ps; K=$W/db/raw/hyeokju_lzo_md0_2026_11_17/dft_kgy_1117\n( echo \"== GPU 자리 (b2o3 이완 tmux 끝 · 새 자리 없음)\" && ! tmux has-session -t b2o3_s9rx 2>/dev/null && ! tmux has-session -t hjmd0k 2>/dev/null && [ ! -e $W ] && [ ! -e $R ] \\\n && echo \"== 판 받기 (worktree $W)\" && git -C $M fetch -q origin claude/friendly-meitner-lldvar && git -C $M worktree add -q --detach $W FETCH_HEAD && echo \"  커밋 $(git -C $W rev-parse --short HEAD)\" \\\n && echo \"== 도구 지문 (kgy 768c833f 와 같은 판)\" && ( cd $W && printf '%s\\n' \"758e05ca4191448c99626e6f1356f1a987ce76b4b3a80a7e8c0d7b53a770ce83  tools/doping/generate_dft_inputs.py\" \"e2d6f72873e0e4f646a1a8ff6145c455b93fc39e2a4445486ca22b9721b903a9  tools/doping/run_force_check_scf.sh\" | sha256sum -c - ) \\\n && echo \"== 궤적 지문 (회수 55da4fd8 의 SHA256SUMS)\" && ( cd $W/db/raw/hyeokju_lzo_md0_2026_11_17/uma_kgy_1117 && grep -a \" ./interface/interface_I142_traj.xyz$\" SHA256SUMS | sha256sum -c - ) \\\n && echo \"== PP 모으기 · md5 (kgy 세트 6 개와 대조)\" && mkdir -p $R/pseudo && cp $W/db/inputs/cei_product_gap_2026_10_27/pseudo/{Li,O,P,S,Cl}.*.UPF $R/pseudo/ && cp /data/work/pseudo/Zr_pbe_v1.uspp.F.UPF $R/pseudo/ && ( cd $R && md5sum -c --quiet $K/pseudo_md5.txt ) && echo \"  ✓ PP $(ls $R/pseudo | wc -l) 개 · md5 6/6\" \\\n && echo \"== 입력 1 장 (t = 1 ps · 2×2×1 · kgy 계면과 같은 설정 · disk_io high)\" && cd $W && C=\"--save_fs 100 --pseudo_dir $R/pseudo --ecutwfc 60 --ecutrho 480 --occupations smearing --smearing gaussian --degauss 0.01 --mixing_mode plain --mixing_beta 0.2 --mixing_ndim 8 --electron_maxstep 200 --traj_card db/properties/hyeokju_lzo_md_card_2026_11_16.json\" \\\n && { O=$($PY tools/doping/generate_dft_inputs.py --from_traj $W/db/raw/hyeokju_lzo_md0_2026_11_17/uma_kgy_1117/interface/interface_I142_traj.xyz --times_ps 1 --out $R/dft/iface_k --label ifacek --seed s1 --traj_kpoints \"2 2 1\" $C --pp Li=Li.pbe-sl-kjpaw_psl.1.0.0.UPF O=O.pbe-n-kjpaw_psl.0.1.UPF Zr=Zr_pbe_v1.uspp.F.UPF P=P.pbe-n-kjpaw_psl.1.0.0.UPF S=S.pbe-nl-kjpaw_psl.1.0.0.UPF Cl=Cl.pbe-nl-kjpaw_psl.1.0.0.UPF 2>&1); rc=$?; printf '%s\\n' \"$O\" | tail -2 | cut -c1-120; [ \"$rc\" = 0 ]; } \\\n && sed -i \"/calculation *=/a\\    disk_io     = 'high'\" $I/scf.in && echo \"  disk_io 줄 $(grep -c disk_io $I/scf.in)\" \\\n && echo \"== kgy 계면 t = 1 ps 점과 대조 (좌표 지문 · PP sha256 · 설정 · 종·셀·좌표 블록)\" \\\n && $PY -c \"import json,sys; g=json.load(open('$R/dft/iface_k/SNAPSHOTS_ifacek_s1.json')); k=json.load(open('$K/dft/iface/SNAPSHOTS_iface_s1.json')); a=g['snapshots'][0]; b=k['snapshots'][0]; ok=[a['coord_sha256'] == b['coord_sha256'] == '5d0a840d62799cb366d80a37caf55d93b51fb5f0a3f8d40cdf8ca6f4e3ec5f8a', a['frame_index'] == b['frame_index'] == 10, a['n_atoms'] == b['n_atoms'] == 142, g['pseudos'] == k['pseudos'], dict(g['dft'], kpoints=0) == dict(k['dft'], kpoints=0), g['dft']['kpoints'] == '2 2 1']; print('  좌표', a['coord_sha256'][:12], '· frame', a['frame_index'], '· 원자', a['n_atoms'], '· PP sha256 같음', ok[3], '· 설정 (k 빼고) 같음', ok[4], '· k', g['dft']['kpoints']); sys.exit(0 if all(ok) else 1)\" \\\n && cmp <(sed -n '/^ATOMIC_SPECIES/,/^K_POINTS/{/^K_POINTS/!p}' $K/dft/iface/iface_s1_t1ps/scf.in) <(sed -n '/^ATOMIC_SPECIES/,/^K_POINTS/{/^K_POINTS/!p}' $I/scf.in) && echo \"  종 · 셀 · 좌표 블록 같음 · 다른 줄 (prefix · pseudo_dir · disk_io · K_POINTS 만 이어야 한다):\" && diff $K/dft/iface/iface_s1_t1ps/scf.in $I/scf.in | grep '^[<>]' | cut -c1-90 \\\n && echo \"== 실행기 점검만 (DRY_RUN · 계산 안 함)\" && { DO=$(DRY_RUN=1 bash $W/tools/doping/run_force_check_scf.sh $R/dft/iface_k 2>&1); printf '%s\\n' \"$DO\" | tail -4 | cut -c1-150 | sed 's/^/  /'; printf '%s' \"$DO\" | grep -q \"DRY_RUN — 계산은 하지 않았다\"; } \\\n && echo \"== GPU 지금 (참고 — 실행기가 시작 때 다시 본다 · 독점 · 여유 30,000 MiB · 견적 20.3 GB)\" && nvidia-smi --query-gpu=memory.free,memory.used --format=csv,noheader && A=$(nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader) && echo \"  compute: ${A:-없음}\" && df -h $R | tail -1 \\\n && tmux new -d -s hjmd0k \"GPU_EXCLUSIVE=1 MIN_FREE_MIB=30000 bash $W/tools/doping/run_force_check_scf.sh $R/dft/iface_k >> $R/run.log 2>&1; sleep 5\" \\\n && echo \"== 시작 · tmux hjmd0k · 로그 $R/run.log\" \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+    "감시_블록": "watch -n 30 'R=/data/work/runs/hj_md0k_1120; f=$R/dft/iface_k/ifacek_s1_t1ps/scf.out; tmux has-session -t hjmd0k 2>/dev/null && echo \"(tmux 도는 중)\" || echo \"(tmux 끝)\"; tail -3 $R/run.log | cut -c1-150; if [ -f $f ]; then echo \"k 점 $(grep -a \"number of k points\" $f | head -1 | awk \"{print \\$5}\") · SCF 반복 $(grep -ac \"total energy  *=\" $f) · $(grep -aq \"convergence has been achieved\" $f && echo 수렴 || echo 도는 중)$(grep -aq \"JOB DONE\" $f && echo \" · JOB DONE\")\"; else echo \"scf.out 아직 없음\"; fi; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader'",
+    "어림": "kgy 계면 Γ 1 점 ≈ 5.6 분 (28 분 / 5) · 벌크 k 2×2×2 는 Γ 대비 ≈ 15 배 (60 분 대 4 분) → 계면 2×2×1 (k 4 점 · 복소 파동함수) 은 ≈ 1 시간 안팎 (어림 · 실측 아님)",
+    "⛔": "도는 동안 gabia 에 UMA · 다른 GPU 잡을 올리지 않는다 (실행기는 시작 때만 본다) · 결과 값은 md0_check 가 kgy 에서 한 번에 읽는다 (여기서 힘을 따로 읽지 않는다)",
+    "다음": "'(tmux 끝)' · 실행기 '끝 — 완료 1' → kgy 블록: gabia 에서 scf.in · scf.out · frame.xyz · SNAPSHOTS 만 scp (tmp/ 파동함수 빼고) + 양쪽 sha256 대조 → $R/dft/iface_k/ifacek_s1_t1ps → md0_check (모델 둘 · --kprobe 벌크 Γ,벌크 k · 계면 Γ,계면 k) → 판정 기록 · 회수 push",
+    "by": "agent · 2026-11-20"
   }
 }

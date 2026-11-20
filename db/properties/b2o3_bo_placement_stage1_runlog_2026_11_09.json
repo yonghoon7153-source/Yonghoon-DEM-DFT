@@ -633,5 +633,21 @@
   "결과_열람": "없음 — 에너지 · 압력은 read_relax 가 세 출력을 결속한 뒤에만 읽는다",
   "곁": "[혁주] MD-0 계면 k 탐침 1 점이 이 이완 뒤를 기다린다 (gabia GPU 독점)",
   "by": "agent · 2026-11-18"
+ },
+ "9단계_이완_끝_2026_11_20": {
+  "근거": "사용자가 붙인 gabia 감시 화면 (kserver116-27 · 2026-11-20 11:16:16) — '(tmux 끝)' · 실행기 로그 끝 두 줄 · 잡별 BFGS 걸음 · 수렴 · JOB DONE",
+  "끝": "11-20 08:31:03 실행기 '끝 — 완료 3 · 건너뜀 0 · 실패 0 · 총 5713분' (11-16 09:17:51 시작 → 95.2 h)",
+  "rx_FB_cfg0040": "✓ BFGS 57 걸음 · 수렴 · JOB DONE (11-17 00:43:50 · 925 분) — 변화 없음",
+  "rx_Ffree_cfg0039": "✓ BFGS 113 걸음 · 수렴 · JOB DONE (11-18 07:57:53 · 1874 분) — 변화 없음",
+  "rx_FP_cfg0015": "✓ BFGS 111 걸음 · 수렴 · JOB DONE (11-18 07:57:53 시작 → 11-20 08:31:03 · 2913 분 · 걸음당 ≈ 26 분 — FB · Ffree (≈ 16 분) 보다 느렸다 · 이유는 안 봤다)",
+  "GPU_지금": "1 MiB · 0 % (비어 있음)",
+  "결과_열람": "없음 — 에너지 · 압력 · 부피는 read_relax 가 앞 판정 사슬을 다시 내고 세 출력을 결속한 뒤에만 읽는다",
+  "read_relax_블록 (gabia · 검사용 CPU 파이썬 · QE 아님 · 사용자가 붙여넣는다)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; T=$R/dft_src_v6; C=$R/s9_v6; H=$T/db/structures/modelc_V0_k663.xyz\n( echo \"== 판 지문\" && echo \"0c3b7f51dbebff7ab9b818e165f0a4cf36a627a93efc878d2db04ff69b08cd0b  $T/tools/doping/b2o3_bo_dft.py\" | sha256sum -c - \\\n && echo \"== 이완 실행기 끝 · tmux 끝 · 이완 판정 파일 아직 없음\" && L=$(grep -a \"끝 — 완료\" $C/relax_runner.log | tail -1) && echo \"  $L\" && printf '%s' \"$L\" | grep -q \"완료 3 · 건너뜀 0 · 실패 0\" && ! tmux has-session -t b2o3_s9rx 2>/dev/null \\\n && { [ ! -e $C/relax_verdict.json ] || { echo \"⛔ $C/relax_verdict.json 이 이미 있다\"; false; }; } \\\n && echo \"== read_relax (검사용 CPU 파이썬 · QE 아님 · 앞 판정 사슬 다시 내기 · 출력 3 결속 · (E, P, V) · EOS 생략 판정)\" \\\n && { O=$($PY $T/tools/doping/b2o3_bo_dft.py read_relax --readout_tool $R/src/tools/doping/b2o3_bo_readout.py --prev $C/kprobe_verdict.json --host $H --out $C/relax_verdict.json 2>&1); rc=$?; printf '%s\\n' \"$O\" | tail -14 | cut -c1-400; [ \"$rc\" = 0 ]; } \\\n && echo \"== 보정 전 · 후 (압력 어림 ΔE ≈ −P²V/2B · B 21.7–32.5 GPa 끝점 조합)\" \\\n && $PY -c \"import json; v=json.load(open('$C/relax_verdict.json')); e=v['eos']; r=v['rows']; m=min(x['E_eV'] for x in r); [print('  ', x['family'], '· ΔE', format(x['E_eV'] - m, '+.3f'), 'eV/B2O3 · P', format(x['P_GPa'], '+.2f'), 'GPa · V', format(x['V_A3'], '.2f'), 'A3 · BFGS', (x.get('bfgs') or {}).get('steps')) for x in sorted(r, key=lambda x: x['E_eV'])]; print('  보정 전 순서', e['baseline_order'], '· 승자–차저', format(e['baseline_gap'], '.3f'), 'eV'); print('  보정 후 승자–차저 범위', [round(g, 3) for g in v['corrected_gap_range_eV']], '(조합', len(e['corners']), ') · |P| ≤ 2 GPa', e['pressure_ok'], '· 순서·판정 그대로', e['robust_independent_B'], '· EOS 생략', e['skip_eos']); t=v.get('electronic_targets') or []; print('  전자구조 대상', [x['family'] + ' ' + x['rel'] for x in t] if t else '없음 (EOS 보류)')\" \\\n && echo \"== 판정 지문\" && ( cd $C && sha256sum relax_verdict.json kprobe_verdict.json sp_verdict.json | cut -c1-16,65- ) && ls $C/relaxed/ \\\n) || echo \"⛔ 멈췄다 — 마지막 '==' 줄이 멈춘 단계\"",
+  "블록_설명": "① 판 지문 (b2o3_bo_dft.py 0c3b7f51 · 탐침 블록과 같은 판) ② 실행기 '끝 — 완료 3 · 건너뜀 0 · 실패 0' · tmux b2o3_s9rx 없음 · relax_verdict.json 아직 없음 ③ read_relax (--prev kprobe_verdict.json --host modelc_V0_k663.xyz · 판독기 $R/src 판 고정) — 도구 화면 14 줄 ④ 보정 전 · 후: 가족마다 ΔE (최저 대비 · eV/B₂O₃ · 셀에 B₂O₃ 하나 = 계약 unit_B2O3 1) · P (GPa) · V · BFGS 걸음 · 보정 전 순서 · 승자–차저 · 보정 후 (B 21.7 · 32.5 GPa 끝점 2³ = 8 조합) 승자–차저 범위 · |P| ≤ 2 GPa · 순서 · 판정 그대로 · EOS 생략 · 전자구조 대상 ⑤ 판정 지문 3 개 · relaxed/ 목록",
+  "로컬_시험": "bash -n 통과 · ④ 의 파이썬 줄은 꾸민 판정 JSON 으로 돌려 화면 꼴 확인 (실제 값 아님)",
+  "판정_규칙 (결과 전 · 도구 · 카드 개정 1 판독_계약 그대로)": "EOS 생략 = 세 가족 모두 |P| ≤ 2 GPa 이고 B 를 가족마다 독립으로 21.7 · 32.5 GPa 끝에 둔 8 조합 전부에서 순서 · 승자–차저 0.10 판정이 보정 전과 같음 → DFT 순서 · 10 단계 고르기 (승자–차저 ≥ 0.10 → 승자 가족 UMA 어닐 최저 셋 · 아니면 가족마다 하나) · 아니면 'EOS 필요' 에서 멈춤 (고르기 · 전자구조 대상 null · 그 셀만 EOS — 다음 판 · 새 단계 전에 정한다)",
+  "곁": "[혁주] MD-0 계면 k 탐침 1 점이 이 GPU 를 기다렸다 — read_relax 는 CPU 라 같이 붙여도 된다 (MD-0 런로그 gabia_계면_k탐침_블록_2026_11_20)",
+  "다음": "read_relax 출력 회수 → 판정 기록 (EOS 생략이면 10 단계 고르기 · 11 · 12 단계 카드 대조 · 아니면 'EOS 필요' 셀 · 사용자 결정)",
+  "by": "agent · 2026-11-20"
  }
 }
