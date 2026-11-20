@@ -1,0 +1,67 @@
+{
+  "reviewed_pin": "9fd6aa9d3bee52f95dfed507a953da3d985544bb",
+  "receiver_verification": "archive bytes only",
+  "evidence_zip": {
+    "bytes": 3170949,
+    "sha256": "a0aa667feb2faea7ec9880507ad8c2876ef2db352c0065f9289f2c513c209a87",
+    "members": 428,
+    "manifest_matches": 427,
+    "crc_paths_case_duplicates_links": "PASS"
+  },
+  "independent_report": {
+    "bytes": 12403,
+    "sha256": "4cb3f9043219e9bb44b4b3a5edb0465c719932cff4fde806e99520798ba0e3dc",
+    "same_as_archive": true
+  },
+  "prior_delivery": {
+    "sha256": "4152065b644793805883dfeca108cfb2cee2c7f145116afc950566a046020375",
+    "embedded_input_matches": 315,
+    "manifest_matches": 314
+  },
+  "kit": {
+    "candidate_sums_sha256": "26bdbdc05ba3f6c71a0b042ebd13adb64b38271c1889a894898a4ccf55322f1d",
+    "file_count_each": 143,
+    "changed": [
+      "A5_SHA256SUMS",
+      "a5_certificate.py",
+      "run_unload_a5_candidate.sh"
+    ],
+    "unchanged": 140
+  },
+  "historical_before_snapshot": {
+    "source_members": 302,
+    "packaged_members": 300,
+    "excluded": [
+      "REPRODUCE.md",
+      "repo/docs/reviews/dem_unloading_ps45_prereg_20261009.md"
+    ],
+    "updated_packaging": [
+      "PIN.txt",
+      "SHA256SUMS",
+      "SOURCE_MANIFEST.json"
+    ],
+    "unchanged": 297
+  },
+  "reported_independent_results": {
+    "producer_cases_matched": 12,
+    "consumer_cases_matched": 191,
+    "original_probe_actual_admits": {
+      "before": [
+        "normal",
+        "missing",
+        "duplicated",
+        "contradiction"
+      ],
+      "after": [
+        "normal"
+      ]
+    }
+  },
+  "recheck_verdict": "CLOSABLE_LIMITED",
+  "new_findings": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "new_receiver_scientific_runs": 0
+}
