@@ -14166,7 +14166,7 @@
    "title": "W_ad V5 개정 5 v2 — G4_e70_far 결과 뒤 재시도 a5 (A5 LDIPOL 끄고 먼저 수렴 → c1 Davidson MAXMIX 200 → c2 ALGO All TIME 0.1 · 사전등록 보조 채택) · 개정 4 의 'a4 가 마지막' 을 1저자가 뒤집음",
    "statement": "개정 db/properties/wad_aprime_pilot_prereg_v5_amendment_5_e70_retry_2026_11_20.json (v2) 이 정의다 — G4_e70_far 한 잡만 · 바꾸는 것은 SCF 경로 인자뿐 · A5 (LDIPOL 끔 · 보존 ⓐ 에서 이어서 · 에너지 안 씀) → c1 → c2 · 채택 순서 c1 주 → c2 주 → c1 보조 → c2 보조 → 값 없음 · 보조 채택 값은 정체 폭 u_W 를 G4 판정에 더한다 · a5 가 마지막.",
    "rationale": "LPSCl|Ag 는 DEM 박리에서 실제로 쓰일 접촉 쌍 (사용자 10-15) · 네 시도가 모두 기본 MAXMIX (−45) 로 돌아 Broyden 이력이 44 에서 막혀 있었다 (a4 OUTCAR · 위키 '너무 작은 MAXMIX') · a4 결정의 재개 조건 '더 열려면 새 개정 · 새 결정' 그대로의 길 (a4 는 superseded 가 아니다) · 사용자 11-20 '재시도 관련해서 다시 만들려고 확실하게 하고 넘어가자'.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "record_kind": "amendment",
    "results_seen": true,
    "results_seen_note": "네 시도의 SCF 기록 (미수렴 TOTEN 포함 · 값으로 안 씀) · G3/G4 상태 · G5 원시 오차표와 §1b ② (11-20 집계) 를 본 뒤 — 라벨 'G5 원시 결과를 본 뒤 정한 재시도 (개정 5 · 1저자 결정)' 를 모든 a5 값에 단다 · a5 결과는 0 건",
@@ -14179,7 +14179,7 @@
    "supersedes": [],
    "amends": "D-2026-10-15-wad-aprime-v5-e70-a4-rerun",
    "evidence": [
-    "db/properties/wad_aprime_pilot_prereg_v5_amendment_5_e70_retry_2026_11_20.json (sha256 e554f7fe958f19a9aac3f4af5b95f26f52349a3d960702545d0fc8c811f0fc92)",
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_5_e70_retry_2026_11_20.json (sha256 7879cce7c7ae97c9490c23fc4ae0bbe2940692ef1a218e7b7bb6dca52675362c · 비준한 v2 내용 = 커밋 3d15b068 · 그 뒤 status · 결정 칸만 비준 표시)",
     "db/properties/wad_aprime_v5_vasp_result_2026_10_15.json (⏩_2단계_G5_집계_2026_11_20 · ⏩_2026_11_20_사용자_그대로)",
     "db/raw/wad_round2_vasp_2026_10_22/a4_result_round2_2026_10_26.json",
     "db/raw/wad_round2_vasp_2026_10_22/final_return_2026_11_19/round2_return.tgz (a4 ⓐ · ⓑ OUTCAR — Broyden 이력 길이)",
@@ -14202,7 +14202,7 @@
      "session": "본 세션 claude/friendly-meitner-lldvar"
     }
    ],
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-11-20",
@@ -14215,8 +14215,24 @@
      "state": "proposed",
      "by": "claude",
      "note": "v2 — 캡처 둘째 묶음 반영 (LMAXMIX 넣지 않음 · NBANDS 점검 · A5 사전수렴 · c1 NELM 400 · c2 TIME 0.1 · 상한 180 h) · DEM 편지 10 은 a5 뒤 (사용자) · 비준 질문"
+    },
+    {
+     "at": "2026-11-20",
+     "state": "active",
+     "by": "사용자 (1저자 · W_ad 트랙)",
+     "note": "비준 — AskUserQuestion 답 (2026-11-20 · 이 세션): 'W_ad 은 e70 far 재시도 개정 5 v2 (커밋 3d15b068) 를 비준할까요?' → '비준 — v2 그대로 (Recommended)'"
     }
-   ]
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-11-20T06:16:22Z",
+    "commit": "3d15b068990a254aaf42f04e6018109a8397d671",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거_발화": "AskUserQuestion 답 (2026-11-20 · 이 세션): 'W_ad 은 e70 far 재시도 개정 5 v2 (커밋 3d15b068) 를 비준할까요?' → '비준 — v2 그대로 (Recommended)'",
+    "decision_digest": "sha256:7ff99493bf8ddc679f3bcde71404ed61b7332994fba03c678f1dadb3ff541c60"
+   }
   }
  ]
 }

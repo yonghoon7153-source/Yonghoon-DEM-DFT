@@ -7,7 +7,7 @@
   "amends_after": [
     "amendment_4 v2 (a4 · ratified 10-17 · 결과 SCF_NOT_CONVERGED ⓐ · ⓑ)"
   ],
-  "status": "proposed 2026-11-20 — v2 · 비준 전 · 빌드 전 · 업체 발송 전",
+  "status": "ratified 2026-11-20 (v2 그대로) — 빌드 전 · 업체 발송 전",
   "track": "W_ad (DEM 협업) — 1저자 = 사용자",
   "개정의_성격": "결과 뒤 구제 개정 — VASP 18 잡과 네 시도 (V5 첫 시도 · r1 · a4 ⓐ · a4 ⓑ) 의 SCF 기록, G3/G4 상태, G5 원시 오차표와 §1b ② (11-20 집계) 를 모두 본 뒤 정한다. 개정 4 의 금지 '이 잡은 a4 가 마지막' 을 1저자 (사용자) 가 명시적으로 뒤집는다 — 개정 4 결정 (D-2026-10-15-wad-aprime-v5-e70-a4-rerun) 의 재개 조건 '더 열려면 새 개정 · 새 결정' 이 정한 길이다 (a4 결정은 superseded 가 아니다 · a4 절차와 결과 기록은 그대로). '결과를 보지 않은 사전등록' 으로 쓰지 않는다. 대신 재시도의 채택 규칙 (주 기준 · 보조 기준 · 순서 · 상한 · 실패 처리) 은 a5 결과를 보기 전에 여기서 고정한다.",
   "results_seen": "본 것 — ① V5 18 잡 에너지 · SCF 진단 (10-15) ② 네 시도의 OSZICAR · OUTCAR (미수렴 TOTEN 포함 — 값으로 쓰지 않았고 쓰지 않는다) ③ G3 PASS · G4 INCOMPLETE ④ G5 원시 오차표 · §1b ② 크기 효과 (11-20 · db/raw/wad_aprime_v5_vasp_2026_09_27/g5_collect_2026_11_20/collect_G5_2026_11_20.json) ⑤ 11-20 대화에서 네 시도의 마지막 50 스텝 E 폭 (약 6–30 meV · 기록 파일 없음 · 정보) ⑥ 이 개정을 쓰며 a4 ⓐ · ⓑ OUTCAR 의 Broyden 이력 길이 (아래 새_진단) 와 마지막 띠 점유 (트러블슈팅 Step 4 대조) ⑦ 위키 캡처 둘째 묶음 (LMAXMIX · Troubleshooting electronic convergence · EXCERPTS.md). 안 본 것 — a5 결과 (아직 없음).",
@@ -131,7 +131,7 @@
     "패키지 — INCAR.a5A5 (이어서 · 새로 두 판) · INCAR.a5c1 · INCAR.a5c2 · MANIFEST (sha) · 운영 안내 · 반송 허용 목록 · 결과 전에 커밋",
     "발송 전 독립 리뷰 한 번"
   ],
-  "결정": "D-2026-11-20-wad-aprime-v5-e70-a5-retry (proposed) — 비준은 1저자 (사용자) AskUserQuestion",
+  "결정": "D-2026-11-20-wad-aprime-v5-e70-a5-retry (active · 비준 2026-11-20 · 1저자 (사용자) AskUserQuestion '비준 — v2 그대로 (Recommended)') — 비준 커밋 3d15b068",
   "개정_이력": [
     {
       "v": "v1",
