@@ -1,0 +1,83 @@
+{
+  "status": "WITHIN_DEVELOPMENT_BAND",
+  "setting_tested": 1,
+  "selected_setting": null,
+  "u6_qualified": false,
+  "author_WSL_return": {
+    "manifest": {
+      "suyoung_f16_budget_result.tar.gz": "1210ceba9e1022a6611c35d110f3d84f0fd7b305dfea8065f242742ae0f5b55b",
+      "screen.txt": "0c91cab1f4fd61e762b89b0a2a51415e21081eebe6f97b8c7b2605dfda55fc87"
+    },
+    "command_rc": 0,
+    "archive_rc": 0,
+    "solver_pin": "00f0a1758349079a10d9c3fe9d1424620117dd27",
+    "driver_pin": "a84488223e117f11c416c89b0363dd75a7acac79",
+    "source_tar_sha256": "6f5d8f26aeb79f2a8134bab167b557d09666f3a49b7018fd67784b298b9fe9cb",
+    "source_manifest_files": 7,
+    "git_file_byte_matches": 5,
+    "pin_text_files": 2,
+    "wall_limit_s": 1200,
+    "auto_retry": 0
+  },
+  "F12": {
+    "source": "previous author return",
+    "reported_phi_m": 0.990030971727746,
+    "sha256": "17ba7c13bb857fb399c004933a1f0fd85a54cd8f32e0847d4852c46aa4b87cc0",
+    "exact_copies_in_source_and_new_return": true,
+    "cells": 12,
+    "points": 21609,
+    "steps": 4984,
+    "elapsed_s": 315.2947280369699,
+    "trace_rows": 4985,
+    "first_bracket": {
+      "steps": [
+        4983,
+        4984
+      ],
+      "bottom_pressure_MPa": [
+        1.1988069642554786,
+        1.200292687772856
+      ],
+      "fraction": 0.8029998385078937,
+      "phi_m": 0.990030971727746
+    }
+  },
+  "F16": {
+    "reported_phi_m": 0.9850740317357705,
+    "cells": 16,
+    "points": 39053,
+    "steps": 6521,
+    "elapsed_s": 736.5375012489967,
+    "trace_rows": 6522,
+    "first_bracket": {
+      "steps": [
+        6520,
+        6521
+      ],
+      "bottom_pressure_MPa": [
+        1.1985692476563696,
+        1.2001776972701967
+      ],
+      "fraction": 0.8895226380303637,
+      "phi_m": 0.9850740317357707
+    },
+    "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de"
+  },
+  "previous_F16": {
+    "trace_rows": 5243,
+    "steps": [
+      0,
+      5242
+    ],
+    "byte_count": 431007,
+    "prefix_byte_equal": true,
+    "sha256": "f36f83d73488946b8b4958f85ae403712972ff15e77022ee794db32beaf87326",
+    "prior_result_archive_sha256": "1d5dc027de0d847021c0d5dee216a7bc16897384f825ec0a87777cc29792f9d7"
+  },
+  "resolution_difference": {
+    "absolute_phi": "0.0049569399919755",
+    "band_limit": "0.005",
+    "margin": "0.0000430600080245"
+  },
+  "new_simulations_at_receipt": 0
+}

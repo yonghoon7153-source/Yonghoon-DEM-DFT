@@ -1,0 +1,46 @@
+{
+  "scope": "historical_ps73_s0_r_only",
+  "input_step": 3200000,
+  "source_pin": "851bfd571d4da9f0848e3f7040a1f05c59e4ef0c",
+  "command_rc": 0,
+  "files_in_return_manifest_verified": 4,
+  "original_inputs_sha256_matched_to_historical_pins": {
+    "reference.dump": "53ae293b4586d091dfca58ab430c174f36b641dcd24678eb10d10fc3f416e65c",
+    "restored.dump": "193e6e6ca2e6833d3204fd26615b61b5de32f6e65d931fcdbd560c215365951f",
+    "writer.log": "35e28690eb9b45c989d7526205a1b168b23041cd1cce6afb12a020deb5096c49",
+    "writer.deck": "097658aa640f798b53da4c40a9d101632b8faaee6f80f4d1d2667591eef8d9cd"
+  },
+  "reader_sha256_rebuilt_from_git_blob_and_registered_header_edit": "1778c8437d2f79327c24cec793030dbb50c71043660b5225bb3100f1c7fe3e98",
+  "continuity_json_sha256": "c4910d33898851665436a869609573fbe21ab8362d109574a75b093a29e53ff3",
+  "counted_pair_keys": 562605,
+  "original_input_rehash_before_after": "reported by author; pinned block exits on mismatches; raw inputs and per-pass stdout not in this return",
+  "reread_raw_dumps_by_receiver": false,
+  "cells_eligible": 24,
+  "global_W": 7.770523040458884e-06,
+  "global_W_margin": 0.04999222947695954,
+  "largest_inside_W": 1.3798107912980414e-06,
+  "largest_inside_W_cell_xy_zero_based": [
+    4,
+    2
+  ],
+  "largest_inside_W_margin": 0.4999986201892087,
+  "smallest_inside_n": 15164,
+  "smallest_inside_n_cell_xy_zero_based": [
+    1,
+    2
+  ],
+  "smallest_inside_n_margin": 15064,
+  "inside_loaded_pairs": 476040,
+  "cross_cell_pairs": 86551,
+  "ambiguous_atoms": 2,
+  "pairs_touching_ambiguous_atom_by_subtraction": 14,
+  "matched_prior_summary": [
+    "pair_count",
+    "reset_like_count",
+    "relative_tangential_change_median_q95_within_1e-12_relative"
+  ],
+  "registered_conclusions_adoptable_B": false,
+  "A4_readback": "PASS",
+  "new_jobs": 0,
+  "new_rj_approved": false
+}
