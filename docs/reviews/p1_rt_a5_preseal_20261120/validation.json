@@ -1,17 +1,18 @@
 {
   "scope": "offline synthetic preseal candidate, ps_7_3_r45 RJ NP6",
-  "candidate_sha256sums_sha256": "45872c9810a3472718d88198220525ca0b9eed40c3a0656df668177539466603",
+  "candidate_sha256sums_sha256": "ea0e7c2d52460106546ee1632fc2ad60c7d9f7ac9da4e5652a6dcb0994c5d761",
   "previous_sha256sums_sha256": "e14f8f2687d04c3cbe0a682fca5b87283e2271d7c05c1dd95ebc15c141965010",
-  "candidate_files": 142,
+  "candidate_files": 143,
   "canonical_parent_files_preserved": 128,
   "original_kit_files": 94,
   "regressions": {
-    "before_same_12": {
-      "failures": 12,
-      "errors": 0
+    "before_same_13": {
+      "failures": 13,
+      "errors": 0,
+      "candidate": "original assembly"
     },
     "final_local_linux": {
-      "passed": 12,
+      "passed": 13,
       "errors": 0,
       "skipped": 0
     },
@@ -32,11 +33,16 @@
     },
     "prior_assembly": {
       "passed": 14
+    },
+    "intermediate_1b0aa436_same_2_certificate_methods": {
+      "failures": 2,
+      "errors": 0
     }
   },
   "negative_controls": [
     "changed writer log with unchanged MPI grid rejected after fixing intermediate candidate",
-    "Windows case-folded order and line ending differences in generated parent metadata resolved to reference POSIX hash"
+    "Windows case-folded order and line ending differences in generated parent metadata resolved to reference POSIX hash",
+    "five-field, partial, replaced, unbound, foreign-prefix or incomplete-success certificates rejected; prior manifest or certificate bytes preserved on retry"
   ],
   "synthetic_shell_scope": "full candidate preflight at shell entry, stub legacy input, grammar and upstream gate checks in synthetic positive; A3 original-path replay, A4 binding and orig_grid run on synthetic fixtures",
   "caveats": [

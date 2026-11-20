@@ -70,7 +70,7 @@ def active_rules(kit):
     edits={
         "parse_complete":"G2cp 30열과 연속성의 전역 W·칸별 W 및 표본수를 판독한다.",
         "stage_rc":"UN 뒤 RT1·RT2의 완료/건너뜀과 rc를 기록하고 그 뒤 UK를 처리한다.",
-        "restore_complete":"rev5_g2cp, RT 단계·체크포인트 결속, G2cp, 연속성 두 가지와 문법 사전 점검을 확인한다.",
+        "restore_complete":"rev5_g2cp, RT 단계·체크포인트 결속, G2cp, 연속성 두 가지와 문법 사전 점검을 확인한다. 새 RJ 증서 원바이트 해시와 발행 전 장부 접두부를 서로 결속하고 완료 영수증과 함께 읽는다.",
         "grammar_prereq":"새 7:3 RJ의 RT 문법 사전 점검은 rt_grammar_prereq로 추가 기록한다.",
     }
     for rule,addition in edits.items():
@@ -124,17 +124,14 @@ def add_candidate(repo,kit):
     # Dispatch and restore stay on the same numeric/atom reader that passed at A3.
     contract = swap(sources["rt_contract"],b"_load('rt_numeric',",b"_load('rt_numeric_a5',")
     restore = swap((kit/"rt_restore.py").read_bytes(),b"import rt_contract as C",b"import rt_contract_a5 as C")
-    original_gate = "    return ok and all([line for line in receipt.splitlines() if line.startswith(key+'=')]"
-    strong_gate = """    required = {'rt_grammar_verdict_sha256':'@A3@',
-                'a3_readback_reader_sha256':'@READER@', 'a4_historical_sha256':'@A4@',
-                'orig_grid_prereq':'PASS'}
-    lines = receipt.splitlines()
-    if not all([line for line in lines if line.startswith(k+'=')]==[k+'='+v] for k,v in required.items()):
-        return False
-""" + original_gate
     def bound(text):
         return text.replace("@A3@",anchors["a3_return.json"]).replace("@READER@",anchors["a3_corrected_reader.py"]).replace("@A4@",anchors["a4_continuity.json"])
-    restore = swap(restore,original_gate.encode(),bound(strong_gate).encode())
+    restore = swap(restore,b"from rt_publish import publish_new",b"import a5_certificate")
+    restore = swap(restore,b"publish_new(a.root/a.bed/a.job,r)",
+                   b"a5_certificate.issue(a.root/a.bed/a.job,r,Path(a.kit or Path(__file__).resolve().parent))")
+    begin=restore.index(b"    old=legacy_reader",restore.index(b"def job_restored("))
+    finish=restore.index(b"\ndef main(",begin)
+    restore=restore[:begin]+b"    return a5_certificate.admits(Path(root)/bed/job,Path(kit or Path(__file__).resolve().parent))\n"+restore[finish:]
     dispatch = swap((kit/"rt_dispatch.py").read_bytes(),b"import rt_restore as R",b"import rt_restore_a5 as R")
     runner = (kit/"run_unload_rt_candidate.sh").read_text(encoding="utf8")
     runner = swap(runner,OLD_GUARD,SCOPE)
@@ -147,6 +144,7 @@ def add_candidate(repo,kit):
     if 'done < "$SELF_DIR/A5_SHA256SUMS"' not in runner or 'sha256sum -c --quiet A5_SHA256SUMS' not in runner:
         raise ValueError("candidate manifest checks not wired")
     additions = {**fixed,"a5_precheck.py":(HERE/"a5_precheck.py").read_bytes(),
+                 "a5_certificate.py":(HERE/"a5_certificate.py").read_bytes(),
                  "A5_active_rules.json":active_rules(kit),
                  "rt_contract_a5.py":contract,"rt_numeric_a5.py":sources["rt_numeric"],
                  "rt_restore_a5.py":restore,"rt_dispatch_a5.py":dispatch,
