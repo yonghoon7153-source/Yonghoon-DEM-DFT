@@ -1,0 +1,21 @@
+{
+  "fixed_pin": "a230b908546f7851da0dad2b80adfc6d866c4dd9",
+  "review_archive_sha256": "d42f111632641094cd3b9065c6541b23a6c866ed595c5c1e3633e29bce419064",
+  "review_archive_size": 1754424,
+  "report_sha256": "6fc8a0f6d721440f40ba61a88d8fd8770099d10a3fe2425dd98ba40254a74f54",
+  "report_byte_match": true,
+  "archive_files": 366,
+  "outer_list": 365,
+  "original_input_file_count": 302,
+  "original_input_byte_identical": true,
+  "original_input_list": 301,
+  "input_zip_sha256": "0f61bcb14cc0e4f51564e7ad4ad5f89f4a104b04a27534da53d8a466143ac440",
+  "evidence_hashes": {
+    "probe_receipt_minimal.py": "4d3434eb76f1706886e645cb36173cdcd54ab2fdcff08eb3369aa02a04461e36",
+    "a5_certificate_review/synthetic_report.json": "d9ba968413873ec2f07737ba72ae7f72bc17b60e56aa2aad1f808e81769774df",
+    "a5_certificate_review/shell_tail_check.py": "5edaa8d064a4c32f56d543c0b630bf36bb7bf3c477a24a2e7042a14e667dc9b6",
+    "a5_certificate_review/shell_results.json": "d2dca20ac85e0b0e417453f8764bd577a329564f8c5fff175ff9f0f7643269ac",
+    "minimal_receipt_results.json": "341e374b7bbca7cc551e26b04b1107ff5f3abd8309b58de429615fbb98818a1f",
+    "input/candidate/A5_SHA256SUMS": "ea0e7c2d52460106546ee1632fc2ad60c7d9f7ac9da4e5652a6dcb0994c5d761"
+  }
+}

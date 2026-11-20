@@ -1,0 +1,37 @@
+{
+  "input_candidate_sha256sums": "ea0e7c2d52460106546ee1632fc2ad60c7d9f7ac9da4e5652a6dcb0994c5d761",
+  "probe_sha256": "4d3434eb76f1706886e645cb36173cdcd54ab2fdcff08eb3369aa02a04461e36",
+  "fixture_sha256": "d9ba968413873ec2f07737ba72ae7f72bc17b60e56aa2aad1f808e81769774df",
+  "stdout_sha256": "341e374b7bbca7cc551e26b04b1107ff5f3abd8309b58de429615fbb98818a1f",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "raw_probe_output_sha256": "341e374b7bbca7cc551e26b04b1107ff5f3abd8309b58de429615fbb98818a1f",
+  "rc": 1,
+  "cases": [
+    {
+      "case": "normal",
+      "expected_admit": true,
+      "actual_admit": true,
+      "contract_satisfied": true
+    },
+    {
+      "case": "missing",
+      "expected_admit": false,
+      "actual_admit": true,
+      "contract_satisfied": false
+    },
+    {
+      "case": "duplicated",
+      "expected_admit": false,
+      "actual_admit": true,
+      "contract_satisfied": false
+    },
+    {
+      "case": "contradiction",
+      "expected_admit": false,
+      "actual_admit": true,
+      "contract_satisfied": false
+    }
+  ],
+  "returned_runtime": "3.12.14",
+  "prior_independent_probe_replayed_by_author_workstream": true
+}

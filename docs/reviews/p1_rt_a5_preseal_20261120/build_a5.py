@@ -140,6 +140,20 @@ def add_candidate(repo,kit):
     runner = runner[:first]+bound(PREREQ)+runner[last:]
     runner = swap(runner,'exec bash "$KIT/run_unload_rt_candidate.sh"','exec bash "$KIT/run_unload_a5_candidate.sh"')
     runner = swap(runner,'"$KIT/rt_dispatch.py"','"$KIT/rt_dispatch_a5.py"',count=2)
+    # An append error is fatal even when the caller handles the reader's own rc.
+    runner = swap(runner, 'note() { echo "$*" >> "$MAN"; }',
+                  '''note() { printf '%s\\n' "$*" >> "$MAN" || { echo 'A5 receipt append failed' >&2; exit 2; }; }''')
+    # Freeze the optional reader decision in the hashed prefix before issuing its certificate.
+    runner = swap(runner, '    reader restore "$WORK_ROOT"', '''    A5_SELECT_REQUIRED=0
+    if [ -d "$WORK_ROOT/$BED/UB" ]; then
+      A5_SELECT_REQUIRED=1
+      note 'a5_select_required=1'
+    fi
+    reader restore "$WORK_ROOT"''')
+    runner = swap(runner, 'if [ "$BED" = ps_7_3_r45 ] && [ -d "$WORK_ROOT/ps_7_3_r45/UB" ]; then reader select',
+                  'if [ "${A5_SELECT_REQUIRED:-0}" = 1 ]; then reader select')
+    runner = swap(runner, 'echo "end=$(date -Iseconds) fails=$FAILS reader_rc=$RRC" >> "$JD/run_manifest.txt"',
+                  'note "end=$(date -Iseconds) fails=$FAILS reader_rc=$RRC"')
     runner = runner.replace("RT_ASSEMBLY_SHA256SUMS","A5_SHA256SUMS")
     if 'done < "$SELF_DIR/A5_SHA256SUMS"' not in runner or 'sha256sum -c --quiet A5_SHA256SUMS' not in runner:
         raise ValueError("candidate manifest checks not wired")
