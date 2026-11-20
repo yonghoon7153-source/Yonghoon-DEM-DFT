@@ -1,0 +1,34 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "solver_pin": "00f0a1758349079a10d9c3fe9d1424620117dd27",
+  "setting_tested": 1,
+  "selected_setting": null,
+  "u6_qualified": false,
+  "physical_qualification": false,
+  "status": "DEVELOPMENT_SEPARATION_OBSERVED",
+  "release_by_arm": {
+    "S": {
+      "compression_had_positive_reaction": true,
+      "first_zero_pressure_step": 1201,
+      "first_positive_cell_gap_step": 1366,
+      "last_positive_pressure_step": 1200,
+      "clear_tail_steps": 600,
+      "required_tail_steps": 120,
+      "separated_in_final_window": true
+    },
+    "F": {
+      "compression_had_positive_reaction": true,
+      "first_zero_pressure_step": 1201,
+      "first_positive_cell_gap_step": 1366,
+      "last_positive_pressure_step": 1200,
+      "clear_tail_steps": 600,
+      "required_tail_steps": 120,
+      "separated_in_final_window": true
+    }
+  },
+  "arm_sha256": {
+    "S": "dda075751c4b830b71edaef9999928eebfc1c9a9b7177764ae929369d9688506",
+    "F": "305d51a19b260637376955a82a41e2f6474acc8225f79ac893f0579bed74c0ad"
+  },
+  "figure_sha256": "45a62e41b73bc0decf131813378bfdeef0f7f73266fe091dda88cfa1c7bd9833"
+}

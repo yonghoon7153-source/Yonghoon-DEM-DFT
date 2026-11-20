@@ -1,0 +1,154 @@
+{
+  "scope": "four_disk_setting_1_development_shape_return",
+  "input_zip_sha256": "c9c4c26b90caea13c29dba521bdf7158ecd17da60fbebf21e231a744cd70c40a",
+  "return_hashes": {
+    "suyoung_shape_cycle_result.tar.gz": "efe83ce7dd7f26e1cbd8576b4d4dbe7083dd9edb1a38e23015d58c34da809e71",
+    "screen.txt": "17607211fc46cbace80647413bd0b5961eb19d1e05f6fbf8fcc59ff814f2cf92"
+  },
+  "tar_regular_files": 24,
+  "source_manifest_entries_checked": 5,
+  "source_archive_sha256": "acd76e03d2ee528c2e83fe5568bb962e25d081536d8755476e58a3cab2511b69",
+  "operator_block_sha256": "9caa328be96edff0d2ecda43b5560cd2169eae7aad0aae74d7602d6465073cfd",
+  "solver_pin": "00f0a1758349079a10d9c3fe9d1424620117dd27",
+  "driver_pin": "33f5756dad27b6aeed23fa8ee8a1c42fd5cf3cf6",
+  "comparison_sha256": "4f32b23450c3faa84fa43471bd1934999e27a8c5ab99196b55165950f588b7b1",
+  "figure_sha256": "45a62e41b73bc0decf131813378bfdeef0f7f73266fe091dda88cfa1c7bd9833",
+  "command_rc": 0,
+  "development_status": "DEVELOPMENT_SEPARATION_OBSERVED",
+  "selected_setting": null,
+  "u6_qualified": false,
+  "physical_qualification": false,
+  "grid": [
+    32,
+    32
+  ],
+  "dt": 0.0005,
+  "arms": {
+    "S": {
+      "arm_rc": 0,
+      "arm_sha256": "dda075751c4b830b71edaef9999928eebfc1c9a9b7177764ae929369d9688506",
+      "trace_sha256": "99e4793194f87dd6507aee18341fb5bec03bfb6e6162fd3ca8decbac4a544716",
+      "trace_steps": 4000,
+      "frames_verified": 6,
+      "state_transitions_matching": 3,
+      "point_ids_preserved": 1108,
+      "disk_ids_preserved": 4,
+      "release_from_trace": {
+        "compression_had_positive_reaction": true,
+        "first_zero_pressure_step": 1201,
+        "first_positive_cell_gap_step": 1366,
+        "last_positive_pressure_step": 1200,
+        "clear_tail_steps": 600,
+        "required_tail_steps": 120,
+        "separated_in_final_window": true
+      },
+      "first_zero_phase": "RELAX",
+      "first_positive_gap_phase": "RELAX",
+      "positive_gap_before_lift": true,
+      "wall_speed_on_first_positive_gap": 0.0,
+      "post_lift_all_clear": true,
+      "solver_wall_seconds_as_reported": 13.335880212020129,
+      "frames": [
+        {
+          "step": 0,
+          "cell_gap": 0.0015625000000000222,
+          "pressure": null,
+          "top": 0.8
+        },
+        {
+          "step": 1200,
+          "cell_gap": -0.00873888848187776,
+          "pressure": 0.031106690132023575,
+          "top": 0.7100000000000001
+        },
+        {
+          "step": 1800,
+          "cell_gap": 0.026191265032777133,
+          "pressure": 0.0,
+          "top": 0.7100000000000001
+        },
+        {
+          "step": 2600,
+          "cell_gap": 0.11765270439628006,
+          "pressure": 0.0,
+          "top": 0.77
+        },
+        {
+          "step": 3400,
+          "cell_gap": 0.19847167292942958,
+          "pressure": 0.0,
+          "top": 0.8300000000000001
+        },
+        {
+          "step": 4000,
+          "cell_gap": 0.20415873550457608,
+          "pressure": 0.0,
+          "top": 0.8300000000000001
+        }
+      ]
+    },
+    "F": {
+      "arm_rc": 0,
+      "arm_sha256": "305d51a19b260637376955a82a41e2f6474acc8225f79ac893f0579bed74c0ad",
+      "trace_sha256": "e233c25783905f8873271cd5ea1d9b191ae627a6ee49f2075833e375b2ecbac8",
+      "trace_steps": 4000,
+      "frames_verified": 6,
+      "state_transitions_matching": 3,
+      "point_ids_preserved": 1108,
+      "disk_ids_preserved": 4,
+      "release_from_trace": {
+        "compression_had_positive_reaction": true,
+        "first_zero_pressure_step": 1201,
+        "first_positive_cell_gap_step": 1366,
+        "last_positive_pressure_step": 1200,
+        "clear_tail_steps": 600,
+        "required_tail_steps": 120,
+        "separated_in_final_window": true
+      },
+      "first_zero_phase": "RELAX",
+      "first_positive_gap_phase": "RELAX",
+      "positive_gap_before_lift": true,
+      "wall_speed_on_first_positive_gap": 0.0,
+      "post_lift_all_clear": true,
+      "solver_wall_seconds_as_reported": 14.900125066982582,
+      "frames": [
+        {
+          "step": 0,
+          "cell_gap": 0.0015625000000000222,
+          "pressure": null,
+          "top": 0.8
+        },
+        {
+          "step": 1200,
+          "cell_gap": -0.008766842633586958,
+          "pressure": 0.030905264505378255,
+          "top": 0.7100000000000001
+        },
+        {
+          "step": 1800,
+          "cell_gap": 0.024759924499968222,
+          "pressure": 0.0,
+          "top": 0.7100000000000001
+        },
+        {
+          "step": 2600,
+          "cell_gap": 0.10323542301333755,
+          "pressure": 0.0,
+          "top": 0.77
+        },
+        {
+          "step": 3400,
+          "cell_gap": 0.1783621215978779,
+          "pressure": 0.0,
+          "top": 0.8300000000000001
+        },
+        {
+          "step": 4000,
+          "cell_gap": 0.18380917211828096,
+          "pressure": 0.0,
+          "top": 0.8300000000000001
+        }
+      ]
+    }
+  }
+}

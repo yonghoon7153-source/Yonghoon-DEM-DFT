@@ -1,0 +1,65 @@
+{
+  "scope": "development_only",
+  "reported_operator": "first_author_WSL",
+  "receipt_pin": "64213d6c57ad8efd19aab77f7d287e6518583ac3",
+  "solver_pin": "00f0a1758349079a10d9c3fe9d1424620117dd27",
+  "input_zip_sha256": "c9c4c26b90caea13c29dba521bdf7158ecd17da60fbebf21e231a744cd70c40a",
+  "return_tar_sha256": "05b23fc1e6ebf617119051601bd5b0c3ccb6857454fd02204c1686f85a2132ad",
+  "return_sha256sums_matches": 2,
+  "source_tar_sha256": "37766366bc561a3466ec3ee2483078bc238ceca1fb0dd989376be018316b3996",
+  "source_manifest_matches": 4,
+  "command_rc": 0,
+  "arm_rc": [
+    0,
+    0
+  ],
+  "cpu_affinity": 0,
+  "python_version": "3.12.3",
+  "numpy_version": "2.5.2",
+  "same_layout_disks": 49,
+  "mu": 0.5,
+  "target_bottom_pressure_MPa": 1.2,
+  "arms": {
+    "F12": {
+      "points": 21609,
+      "trace_rows": 4985,
+      "last_step": 4984,
+      "bracket_bottom_MPa": [
+        1.1988069642554786,
+        1.200292687772856
+      ],
+      "phi_m_at_first_target": 0.990030971727746,
+      "within_resolution_abs_delta": 0.0,
+      "first_elapsed_s": 315.2947280369699,
+      "repeat_elapsed_s": 315.68033600598574,
+      "trace_sha256": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89",
+      "first_trace_byte_identical": true,
+      "first_source_return_tar_sha256": "1d5dc027de0d847021c0d5dee216a7bc16897384f825ec0a87777cc29792f9d7"
+    },
+    "F16": {
+      "points": 39053,
+      "trace_rows": 6522,
+      "last_step": 6521,
+      "bracket_bottom_MPa": [
+        1.1985692476563696,
+        1.2001776972701967
+      ],
+      "phi_m_at_first_target": 0.9850740317357705,
+      "within_resolution_abs_delta": 0.0,
+      "first_elapsed_s": 736.5375012489967,
+      "repeat_elapsed_s": 719.5859509940492,
+      "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de",
+      "first_trace_byte_identical": true,
+      "first_source_return_tar_sha256": "1210ceba9e1022a6611c35d110f3d84f0fd7b305dfea8065f242742ae0f5b55b"
+    }
+  },
+  "band": 0.005,
+  "first_and_repeat_abs_grid_delta": 0.004956939991975551,
+  "band_margin": 4.306000802444931e-05,
+  "margin_as_percent_of_band": 0.8612001604889862,
+  "reported_assessment": "WITHIN_DEVELOPMENT_BAND",
+  "returned_selected_setting": null,
+  "returned_u6_qualified": false,
+  "different_seed_or_layout_measured": false,
+  "receiver_scientific_runs": 0
+}
