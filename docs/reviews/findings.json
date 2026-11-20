@@ -18011,6 +18011,26 @@
    "opened_in": "docs/data/mixer_e0_pilot_20261116_return/README.md",
    "title": "믹서 E0 잡 366423 (COMPLETED 0:0) 의 종료 직후 W9 런타임 신원 영수증이 없다 — 발사 전 · 지연 회수 (종료 + 9,362.118 s) 신원 일치만 확인 · 그것을 T9 로 쓰지 않는다 · 자격 수용 · 후속 GO 를 자동으로 올리지 않는다",
    "note": "전체 반환 해시 (e0_full_result c9f4fb00… · report 64c3de37…) · 덤프 1,121 완결 · 고정 관측 OK 는 확인됨 · 10 분 감시가 08:31:38Z 뒤 끊김 (사후 S5 최대 20 s 로 진행 불명은 풀림) · 처분 = 별도 (1저자 · Codex 실무) · 1저자 11-17 '종료 직후 런타임 영수증 부재는 별도 처분 필요'"
+  },
+  {
+   "id": "SELF-185",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "본 세션 (11-18 밤 · 1저자 rtimes 붙임 뒤)",
+   "opened_in": "docs/data/rint2_r_start_20261118/README.md",
+   "title": "R 시작 기록 (fbb9b18d4) 과 채팅에 1저자 QE 규칙의 판단 대상을 'L03 · 접합 저장본을 만든다' 로 적었다 — 봉인 러너의 접합 저장본 열쇠에는 R_j 가 없어 저장본은 첫 팔 L01 이 짓고 (kgy L01 7,936 s ↔ L02 · L03 약 2,900 s), 1저자 규칙 원문도 '첫 팔' 이다",
+   "note": "영향 = 기록 문구 · 판단은 L01 로 함 (gabia 12,342 s < 16,226 s · 규칙 발동 안 함) · 같은 날 채팅의 16,408 s (사슬 로그 18:37 = L02 시작을 L01 끝으로 잘못 읽음) 도 같은 부류 · 고침 = README 15 줄 (반입 ⑬ 기록 묶음) · 닫는 조건 = 고친 커밋 sha 를 단다 → claimed_fixed"
+  },
+  {
+   "id": "SELF-186",
+   "severity": "P3",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "본 세션 (11-19 밤 · kgy L15 origin8 판독)",
+   "opened_in": "docs/data/rint2_r_start_20261118/scripts/rtimes.sh",
+   "title": "내 감시 도구 rtimes.sh 의 '끝' = 런 폴더의 가장 이른 p2 JSON 시각이라 팔 여럿 런 (end_origin · origin · origin8) 은 첫 팔 끝을 런 끝으로 찍는다 — 11-19 19 시 L15 origin8 이 '끝 18:17' 로 보였지만 도는 중이었고, 그 전의 내 어림 (kgy 빠르면 2–4 h) 도 틀렸다",
+   "note": "영향 = 감시 · 시간 어림 (사슬 · 값 · 원장 무관) · 기록된 도구 사본은 바꾸지 않는다 (실행한 판 그대로) · README 끝 절에 읽는 법 한정어 · 고칠 판 = 다음 감시 도구 (팔 여럿 런은 launch 의 팔 수만큼 p2 JSON 이 찼는지 · 가장 늦은 p2 JSON) · 닫는 조건 = 고친 감시 도구를 쓰는 커밋"
   }
  ]
 }

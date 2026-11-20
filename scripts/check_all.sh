@@ -244,6 +244,10 @@ run 'mixer 보정 전 관측 연결 (합성 프레임 · unittest)' python3 scri
 #    모의 scheduler · 시간만 (Slurm · 실제 잡 없음).  unittest 라 등재 드라이버가 못 돈다 → 이름으로 건다 (CI 에도 같이).  꼴 = Codex 제안
 #    (`docs/collab/codex_to_claude/20261116-1425_mixer-e0-squeue-purge.md` 25 줄) 그대로 `-I -X utf8 -B` · 실측 (11-17 · 컨테이너) 12 메서드 0.05 s.
 run 'mixer E0 squeue 부재 (purged 잡 · sacct 종료 확인 · unittest)' python3 -I -X utf8 -B scripts/test_mixer_e0_squeue_absent.py
+#  ★ 2026-11-20 (반입 ⑬ · 대응표 `docs/collab/claude_to_codex/20261120-1215_intake13-sha-map.md` · 1저자 11-18 Q1 *"다 권고대로"*) — 반입 ⑫ 새 시험 여섯 + 반입 ⑬ 새 시험 셋
+#    (RT 출시 · RT 재판독 둘 · LHS v1.3 틀 · 믹서 N0 · MPM 피복 c0 · 씨앗 · 수영 U6 · 접촉 방향).  unittest 라 등재 드라이버가 못 돈다 → 이름으로 건다 (CI 에도 같이).
+#    `scripts/test_dem_suyoung_shape_output.py` = 비교 기준 소스 (SUYOUNG_BASELINE_SOURCE) 를 줘야 도는 시험이라 넣지 않는다.  실측 (11-20 · 컨테이너) 46 시험 약 10 s.
+run '반입 ⑫ · ⑬ 새 시험 아홉 (unittest · RT · LHS · 믹서 N0 · MPM 피복 · 수영)' sh -c 'for t in docs/reviews/p1_rt_fixture_development_20261118/test_release.py docs/reviews/p1_rt_fixture_readback_20261118/test_readback.py docs/reviews/p1_rt_fixture_readback_20261118/test_reader.py scripts/test_lhs_v13_frame_scope.py scripts/test_mixer_rotation_n0_ibb.py scripts/test_mpm_coverage_c0.py scripts/test_mpm_coverage_seed.py scripts/test_suyoung_u6_first_dev.py scripts/test_suyoung_contact_direction.py; do python3 -I -X utf8 -B "$t" || exit 1; done'
 #  ★ 2026-10-27 (non-Rint 통합 · 같은 대응표 §6 3) — 언로딩 키트 (ULPRI · `docs/data/ps45_unload_20261009/`) 직접 검사 다섯.  통합 뒤 이 트리의
 #    키트 폴더 = 수용 핀 4c29705fa 와 같다 (`git diff` 0) 인데 이 파일 · CI 어디에도 없었다 (통합 때도 돌리지 않음).  키트는 `scripts/` · `webapp/`
 #    밖이라 등재 (`selftest_inventory.tsv`) 가 보지 않는다 → 이름으로 건다 (CI 에도 같이).  꼴 = 키트 README · 인계 색인 §6 그대로 `python3 -I`

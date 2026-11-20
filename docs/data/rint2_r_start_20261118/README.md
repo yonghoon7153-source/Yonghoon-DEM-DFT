@@ -12,6 +12,15 @@
 | 원장 넘김 | `PARKED_OK` · 기록 `20261118T050239Z` kgy → gabia · 가지 master · 끝 커밋 `bcff6b0235a39ec799ef18f733b1599bfdb50463` · 묶음 sha256 `fa63d348cd7065f86d695b1bae9a6d99bbe46536ba60c9471782190c84eb7d63` · flock | 원장 = gabia 에 둔다 (먼저 끝난 기계가 받는다 · §3-1b (6)) |
 
 - 감시 = `scripts/rwatch.sh` (읽기만 · 파일 수 · 프로세스 · GPU · σ 를 열지 않는다) · 시간 = `scripts/rtimes.sh` (L 폴더 첫 파일 → `p2_*.json` 초).
-- 1저자 11-18 규칙 (권고대로): gabia 첫 정상 점 런 (L03 · 접합 저장본을 만든다) 이 3 판 어림 T_first 10,817 s 의 1.5 배 (16,226 s) 를 넘으면 QE 를 사다리 끝까지 멈추거나 단위 배정을 kgy 쪽으로 옮긴다 (배정 = 봉인 밖) · 참고 = kgy 의 같은 1.5 배 값 13,600 s (T_first 9,067 s · 규칙은 gabia QE 판단용).
+- 1저자 11-18 규칙 (권고대로): gabia 첫 팔 (L01 · 접합 저장본을 짓는 런 · ⚠ 11-18 판의 'L03 · 첫 정상 점' = 내 오기 · `SELF-185`) 이 3 판 어림 T_first 10,817 s 의 1.5 배 (16,226 s) 를 넘으면 QE 를 사다리 끝까지 멈추거나 단위 배정을 kgy 쪽으로 옮긴다 (배정 = 봉인 밖) · 참고 = kgy 의 같은 1.5 배 값 13,600 s (T_first 9,067 s · 규칙은 gabia QE 판단용).
 - 다음 = 먼저 끝난 사다리 → 원장 받기 + recover (§3-1b (6) 5–6) → 채택 사다리 폴더 서로 옮김 → 단위 (첫 배정 kgy 7 · gabia 5) → 합치기 · 넘침 점 (112 h 규칙) · 판정.  원장 없이 끝난 사슬의 rc 3 = 정상 (§3-1b (6)).
 - 이 폴더 바이트 = `SHA256SUMS`.
+
+## 그 뒤 (11-19 · 11-20 · 기록 = 런 이름 · 시각 · 원장 동작만 · σ 미열람)
+
+- 1저자 규칙 판단 (11-18 20 시): gabia 첫 팔 L01_floor 12,342 s < 문턱 16,226 s (3 판 T_first 10,817 s 의 1.14 배) → QE · 단위 배정 그대로.  kgy L01 7,936 s (모형 9,067 s 의 0.88 배).
+- kgy P0 사다리 (`rtimes.sh` 초 = 런 폴더 첫 파일 → 가장 이른 p2 JSON · 팔 여럿 런은 첫 팔 끝 = `SELF-186`): L01 floor 7,936 · L02 ceiling 2,871 · L03–L07 point 2,998 · 3,496 · 4,215 · 3,103 · 3,342 · L08 confirm 3,476 · L09 end_confirm 3,371 · L10 end_origin (팔 1 · 2) 7,453 · L11 end_confirm 3,487 · L12 · L13 end_origin 3,470 · 4,102 · L14 origin (팔 1 · 2) 3,456 · L15 origin8 (첫 팔 3,482) · L16 no-op · 끝 11-20 10:36 KST (요약 있음 · 끝난 팔 JSON 54 = 팔마다 둘).
+- 사슬 갈래 (봉인 `rint_r_chain.py` 의 end_pick · end_origin_push · origin 순서로 읽음): lo 끝 (T⁺ = 1.63 × 1.02) = 한 번에 통과 · hi 끝 (T⁻ = 1.63 × 0.98) = 세 origin 중 하나가 띠 안 → 바깥 점으로 한 번 밂 (L12 → L13) · origin (§3-3) = 문턱 0.02 넘음 → origin8 (8 팔 평균) + `CALIB_ORIGIN_SENSITIVE` (R_j,0 그대로 · PASS 문장 금지 · 등급 불변).  origin 팔 런은 점 수 상한 (16) 에 안 센다 (kgy 점 = 10).
+- kgy 사슬 끝 = rc 3 정상 끝 (끝 줄 `멈춤 [ATTEMPT_LEDGER_MISMATCH] … 원장 잠금 파일을 못 연다` · 그때 `ca1_ledger` 없음 · 요약 있음).
+- 원장 넘김 ② (§3-1b (5)): `20261120T022342Z` · gabia → kgy · 원장 끝 커밋 `7b43cc81df6d68e2c0094f4e6afd98243f265173` · 묶음 sha256 `6bb6318bd83388bdccf417fad02e032c50a057589c8b7ac5975fc65a121a87dd` · flock · kgy `RECV_OK` (sha · 끝 커밋 대조 · 같은 부팅) → kgy `--stage recover` rc 0 (attempt_1 결과 줄 completed · 원인 없음 · 재실행 자격 없음).
+- gabia P1 = 진행 (원장 없이 · 끝나면 rc 3 정상 → 원장을 gabia 로 → recover → 채택 사다리 폴더 서로 옮김 → 단위).  gabia QE 는 11-20 오전에 멈춤 (GPU 0 % · 1 MiB · 1저자 "알아서 멈출거야").
