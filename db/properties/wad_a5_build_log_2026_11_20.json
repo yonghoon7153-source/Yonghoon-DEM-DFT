@@ -1,0 +1,56 @@
+{
+  "schema": "runlog/v1",
+  "record_kind": "runlog",
+  "date": "2026-11-20",
+  "track": "W_ad 점착 — 1저자 = 사용자 (DEM 쪽은 결과를 받는 쪽 · 통지할 제3자 없음)",
+  "card": [
+    "db/properties/wad_aprime_pilot_prereg_v5_amendment_5_e70_retry_2026_11_20.json (개정 5 v2 · ratified 2026-11-20)"
+  ],
+  "decision": [
+    "D-2026-11-20-wad-aprime-v5-e70-a5-retry (active · 비준 2026-11-20)"
+  ],
+  "results_seen": false,
+  "results_seen_note": "빌드 기록이다 — a5 결과 0 건 · 에너지 · W 값 없음 (개정 5 자체는 결과 뒤 개정 — 개정 파일 '개정의_성격'). 점착 W 값은 이 파일에 싣지 않는다.",
+  "①_도구_갈래_에이전트_2026_11_20": {
+    "무엇": "개정 5 '만들_것_빌드_단계' 의 도구 — 별도 worktree 의 갈래 에이전트가 만들고 주 세션이 검토 후 빨리감기로 받음 (커밋 b0931878 · 부모 c8156ae0)",
+    "파일": [
+      "tools/wad/build_a5_vasp_package.py (새 · 외주 2차 도구의 판정 계약 · 재시작/환경 증거 · ⓐ 자격 · 러너 bash 부품을 import 해 쓴다 — 복사 안 함)",
+      "tools/wad/build_v5_vasp_package.py (+ load_a5_result · a5_secondary · adopt_a5 · _g4_status · --a5_result)",
+      "db/inputs/wad_a5_vasp_2026_11_20/ (묶음 — INCAR 넷 · run_a5.sh · jobs.json · SEALED_ENV.tsv · README · MANIFEST)"
+    ],
+    "외주_2차_도구": "tools/wad/build_round2_vasp_package.py 는 안 바뀜 (sha 9dc2f98d…) — 외주 2차 반송 검사 재현 대상 그대로",
+    "시험": "a5 selftest 67/67 (가짜 VASP 로 실제 러너를 돌림 · 음성 경로 전부) · V5 selftest 276/276 · 외주 2차 194/194 · 돌연변이 22/22 빨간불",
+    "재현": "V5 --collect (a5 없이 · COMMAND_AND_CHECKS.txt 의 본 집계 명령) → collect_G5_2026_11_20.json 과 sha 같음 (afecfa08…) · 화면 출력도 같음",
+    "해석(에이전트_보고·주_세션_판단)": {
+      "1_0스텝_인프라_상한": "잡 전체 2 회 — 개정 원문 '잡마다 2 회 · 개정 4 그대로' (주 세션 지시문의 '단마다' 는 틀렸고 개정이 이긴다)",
+      "2_새_모듈": "개정 '외주 2차 패키지 도구의 러너 · 검사기에 a5 사다리를 더한다' 를 import 하는 새 모듈로 구현 — 외주 2차 도구 파일을 안 고쳐 그 반송 검사 재현을 지킨다 (주 세션 동의)",
+      "3_A5_재시작": "정보만 — A5 자격은 ⓐ 자격 앞 셋 (재시작은 그 안에 없다 · A5 에너지는 안 쓴다) (동의)",
+      "4_c2_발사": "c1 이 끝났고 주 기준 OK 가 아니면 (재시작 미이행 · 미확인 · 끊김 기록 포함) c2 · c1 이 VASP 를 못 띄웠으면 종료 1 · 기록 없이 끊겼으면 --killed 기록 전까지 종료 5 · c1 OK 뒤나 끝나지 않은 c1 뒤의 c2 는 검사기가 LADDER_VIOLATION (동의)",
+      "5_보조_채택_표시": "far 기록 status OK + a5_rule secondary · scf_primary_met false · 라벨 둘 — G4 가 u_W 를 더하고 u_W 가 없으면 INCOMPLETE (동의 · 아래 ② 에서 G5 블록 라벨을 보탬)",
+      "6_u_W_면적": "e70 bound 잡 면적 = 수집기가 e70 W 에 쓰는 면적 (동의)",
+      "7_c2_출력_꼴": "OSZICAR SDA/CGA 머리 · OUTCAR IALGO 58 / TIME 줄은 실물 미확인 — 모르는 머리 = SCF_UNVERIFIED · 에코 없음 = SETTINGS_UNVERIFIED (보수 · 첫 반송에서 확인) · 주 세션이 OUTCAR 에코 정규식을 실물 a4 ⓑ OUTCAR 에 걸어 확인 (아래 ②)",
+      "8_중복_실행": "pgrep 대신 run/.a5.lock 원자 폴더 + PID (CLAUDE.md pgrep 자기 셈 함정) (동의)",
+      "9_등록부": "--registry 없으면 외주 2차 봉인 등록부 (999aa2da…) · 결과에 쓴 sha 기록 (동의)"
+    }
+  },
+  "②_주_세션_검토_2026_11_20": {
+    "INCAR_대조": "봉인 INCAR (V5_s_outer_A_G4_e70_far) 와 태그별 대조 — A5c {LDIPOL F · LWAVE T · NELM 300 · MAXMIX 200 · AMIX 0.1 · AMIN 0.01 · ISTART 1 · ICHARG 0} · A5f {같고 ISTART 0 · ICHARG 없음} · c1 {ISTART 1 · ICHARG 0 · NELM 400 · MAXMIX 200 · AMIX 0.1 · AMIN 0.01} · c2 {ALGO All · TIME 0.1 · ISTART 1 · ICHARG 0 · NELM 400} — 개정 5 와 정확히 같다 · POSCAR · KPOINTS 바이트 같음",
+    "시험_재실행": "a5 67/67 · V5 276/276 · 외주 2차 194/194 (scratch 가상환경 · dftd3 1.6.0 · 전역 설치 없음)",
+    "재현_재실행": "rc 3 · collect_G5 sha afecfa08… 같음 · 화면 출력 같음",
+    "OUTCAR_에코_실물_대조": "a5 설정 검사 정규식 (IALGO · AMIX · AMIN · MAXMIX · TIME) 을 실물 5.4.4 OUTCAR (a4 ⓑ) 에 걸었다 — 각각 한 줄만 잡고 값 38 · 0.4 · 0.01 · −45 · 0.4 (기대 그대로) → c2 의 IALGO 58 · TIME 0.10 도 같은 꼴로 읽힌다 · 실물 미확인으로 남는 것은 ALGO All OSZICAR 행 머리 (SDA/CGA) 하나",
+    "보탬_G5_라벨": "V5 수집기 a5_dependency(g4) — G4 변형이 a5 채택 값에 기대면 G5 블록 안에 라벨 (개정 5 라벨 · 보조면 정체 기준 라벨) 을 싣는다 (값과 라벨이 같이 간다 · G5 만 떼어 인용해도 남는다) · 판정은 안 바꾼다 · a5 없으면 키 없음 · selftest 276 → 279 (양성 · 음성 · 연결) · 연결을 지운 돌연변이 → 빨간불 1",
+    "보탬_뒤_재현": "rc 3 · collect_G5 sha afecfa08… 같음 · 화면 출력 같음 (V5 도구 sha daf9b990…)",
+    "묶음_다시_빌드": "jobs.json 이 V5 도구 sha 를 박아 두므로 다시 빌드 — 바뀐 것은 jobs.json v5_tool_sha256 (0936efc2… → daf9b990…) 과 그것을 따르는 MANIFEST · README 뿐 (INCAR · run_a5.sh · POSCAR 그대로) · 새 MANIFEST.sha256 의 sha256 026abb2d5a97c9db228ff34e96f8afcfa3bdbb730ac7f3e6a1eeba7dddc9ca44",
+    "도구_sha": {
+      "build_a5_vasp_package.py": "5c61c5f9328c433636d8c1537229cef8eb54d17804533ee5fcd5a785b89652ce",
+      "build_v5_vasp_package.py": "daf9b990029be38017266f7802dc0e1fc98e7436c84f5d76724e9d0976ca1eb4",
+      "build_round2_vasp_package.py": "9dc2f98dd44232fba4f3e6068f2e625d67e10713fe4e2a03f7f1621bfbf85358"
+    },
+    "돌연변이_재실행": "도는 중 (주 브랜치 · V5 보탬 뒤)"
+  },
+  "③_남은_것": [
+    "발송 전 독립 리뷰 한 번 (개정 5 '만들_것')",
+    "리뷰 반영 뒤 zip (git archive) · 건엽 운영 안내 · handoff 기록 (외주 2차 handoff 꼴)",
+    "첫 반송에서 ALGO All OSZICAR 행 머리 확인"
+  ]
+}

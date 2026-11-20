@@ -5,7 +5,7 @@
  "status": "a5 묶음 v1 — 개정 5 v2 비준 뒤 · 발송 전 독립 리뷰 대기",
  "tool_sha256": "5c61c5f9328c433636d8c1537229cef8eb54d17804533ee5fcd5a785b89652ce",
  "round2_tool_sha256": "9dc2f98dd44232fba4f3e6068f2e625d67e10713fe4e2a03f7f1621bfbf85358",
- "v5_tool_sha256": "0936efc2f396947eb0d3aa839a2e68c11fd200517d741f27b5bdd7671181b945",
+ "v5_tool_sha256": "daf9b990029be38017266f7802dc0e1fc98e7436c84f5d76724e9d0976ca1eb4",
  "sources": {
   "v5_manifest_sha256": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
   "registry_path": "db/raw/wad_round2_vasp_2026_10_22/pp_registry_round2_2026_10_26.json",

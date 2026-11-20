@@ -1346,6 +1346,22 @@ def size_effect_vs_p1(smp, p1, w10_first=None):
             "⚠": "정보 — ① G5 (방법 오차) 와 합쳐 오차막대로 만들지 않는다 (카드 §1b ③) · 끝점 다름 (V5 8 Å · P1 10 Å · ① 만 10 Å 줄) · P1 값은 기록 표 4 자리"}
 
 
+def a5_dependency(g4):
+    """개정 5 — G4 변형 중 a5 채택 값에 기댄 것 → G5 블록에 같이 실을 라벨 (없으면 None).
+    값과 라벨이 같이 간다: G5 만 떼어 인용해도 '재시도 값으로 열렸다' 는 사실이 남는다 (화면 결속 규율과 같은 뜻 · 주 세션 검토 2026-11-20).
+    ⛔ 이 함수는 판정을 바꾸지 않는다 (G4 · G5 상태는 그대로) — 라벨만 싣는다."""
+    deps = [v["a5"] for k, v in (g4 or {}).items() if k != "status" and isinstance(v, dict) and isinstance(v.get("a5"), dict)]
+    if not deps:
+        return None
+    labels = []
+    for x in deps:
+        for lab in (x.get("labels") or []):
+            if lab not in labels:
+                labels.append(lab)
+    return {"labels": labels, "G4_adopted": [x.get("adopted") for x in deps], "rules": [x.get("rule") for x in deps],
+            "⛔": "G4 e70 이 개정 5 재시도 값으로 열렸다 — G5 문장에 이 라벨을 같이 싣는다 (라벨 없이 인용하지 않는다)"}
+
+
 def _g4_status(dw, dd, uW=None):
     """G4 변형 하나의 판정 (개정 3 · 4 그대로) — uW (개정 5 보조 채택의 정체 폭) 가 있으면 판정에 더한다:
     PASS |ΔW| + u_W ≤ 0.02 · FAIL |ΔW| − u_W > 0.02 · 그 사이 INCOMPLETE ('정체 폭 안에서 판정 불가'). uW 가 없으면 옛 규칙 그대로 (같은 문자열)."""
@@ -1477,6 +1493,9 @@ def collect(out, ret, manifest_sha256, uma=None, pp_registry=None, pp_registry_s
             g5["status"] = "FAIL"
         else:
             g5["status"] = "PASS"
+        dep5 = a5_dependency(g4)                                    # 개정 5 — G4 가 a5 값에 기댔으면 G5 안에도 라벨 (a5 없으면 키 없음 · 출력 그대로)
+        if dep5 is not None:
+            g5["a5_dependency"] = dep5
         if EG3 and not errs3 and d.get("①") is not None:
             dg = {}
             for tag, far in (("i", G3_JOBS[1]), ("ii", G3_JOBS[2])):
@@ -2396,6 +2415,14 @@ def _selftest():
         ck(_g4_status(dw_, dd0, uW_) == want_, f"G4 판정 |ΔW| {dw_} · u_W {uW_} → {want_} (받음 {_g4_status(dw_, dd0, uW_)})")
     ck(_g4_status(None, dd0, 0.001) == "INCOMPLETE" and _g4_status(0.0, {"bound": 1e-3, "far": 0.0}, None).startswith("INCOMPLETE (D3"),
        "G4 판정 결측 · D3 불일치는 옛 문자열 그대로")
+    g4p_ = {"e70": {"status": "PASS", "a5": {"adopted": "a5_c1", "rule": "secondary", "labels": [A5_LABEL, A5_SEC_LABEL]}}, "k1": {"status": "PASS"}, "status": "PASS"}
+    dp_ = a5_dependency(g4p_)
+    ck(dp_ is not None and dp_["labels"] == [A5_LABEL, A5_SEC_LABEL] and dp_["G4_adopted"] == ["a5_c1"] and dp_["rules"] == ["secondary"],
+       "개정 5 G5 라벨: G4 가 a5 보조 값에 기대면 G5 에 두 라벨 (순서 그대로)")
+    ck(a5_dependency({"e70": {"status": "PASS"}, "k1": {"status": "PASS"}, "status": "PASS"}) is None and a5_dependency({}) is None,
+       "⛔음성 개정 5 G5 라벨: a5 채택이 없으면 라벨 블록 없음 (출력 그대로)")
+    src_c5 = inspect.getsource(collect)
+    ck("dep5 = a5_dependency(g4)" in src_c5 and 'g5["a5_dependency"] = dep5' in src_c5, "개정 5 G5 라벨이 collect 의 G5 블록에 연결돼 있다")
     mod = sys.modules[__name__]
     jobs_ = [{"dir": n, "area_A2": 200.0, "d3_2body_eV_ref": -56.0, "structure": n} for n in ("V5_s_outer_A_bound", "V5_s_outer_A_far", A5_BOUND, A4_TARGET)]
     cW = EV_J / (200.0 * A2_M2)
