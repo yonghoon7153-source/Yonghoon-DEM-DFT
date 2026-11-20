@@ -1,0 +1,58 @@
+{
+  "label": "DEVELOPMENT_DATA_ONLY",
+  "case": "PRECAL_N0",
+  "job": 367547,
+  "author_return_files": {
+    "SHA256SUMS": {
+      "bytes": 171,
+      "sha256": "01eb9093350fb0e8e24f919112345f8e1871e450f286f5249b866e04b45da5e8"
+    },
+    "n0_report.tar.gz": {
+      "bytes": 147562,
+      "sha256": "7c376fe2cb454deffbc6d4e9922f77a3a1358a276314f688cf04028598503343"
+    },
+    "remote_screen.txt": {
+      "bytes": 76876,
+      "sha256": "0f6e443cb32fcc5c11ff11436f4e9099f7b5f52d41f0f54fce4093bcf9b68e7a"
+    },
+    "return.json": {
+      "bytes": 619,
+      "sha256": "0995202dc25e59ff144647333956ee86ec456715ee228dcea7e8dc1fb215a659"
+    }
+  },
+  "return_record_matches_collection_record": true,
+  "returned_report_sha256_recomputed": "7c376fe2cb454deffbc6d4e9922f77a3a1358a276314f688cf04028598503343",
+  "full_archive_expected_not_received": "71c14f4b3946921222b087f2d0f61edc07b932c382ea993f23e56c3185511262",
+  "submitted_job_id_matches_approval": true,
+  "controller_pin": {
+    "controller_sha256": "db75434568338845bcdfd357d9608d0788ded31b4c90fae36cf68f5668b4cfff",
+    "helper_sha256": "dc31f871701cab595905d99fad1cd9377f02e24989b48c1175732e92ec82107e",
+    "commit": "8422b8db49cf77cd4c42731d8122170262fa2e15"
+  },
+  "B_files_matched_vs_pinned_release": 283,
+  "np_approved": 20,
+  "scheduler": {
+    "job_id": "367547",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "raw": [
+      "367547",
+      "COMPLETED",
+      "0:0",
+      "1-00:54:06",
+      "2026-11-18T14:23:52",
+      "2026-11-19T15:17:58"
+    ]
+  },
+  "runner_rc": 0,
+  "frame_names_as_reported": true,
+  "frame_count_as_reported": 234,
+  "return_ready": true,
+  "runtime_pre_post_equal_linked": 32,
+  "runtime_pre_post_equal_package_groups": 7,
+  "seconds_between_job_end_and_post_runtime_receipt": 15.155,
+  "n0_payload_analysis_status": "PENDING_LOCAL_READBACK",
+  "technical_checks_source": "Report bytes + committed controller/helper + existing deployment packet. No N0 dump bytes in report.",
+  "e0_reference_files_rehashed": 4,
+  "approved_observer_sources_rehashed": 9
+}
