@@ -1,0 +1,21 @@
+{
+  "id": "U6c-06-force-displacement-v1",
+  "scope": "setting-1 dense 2D F, monotone axial loading, one unchanged configuration per pair",
+  "required_grid_pairs_cells_per_diameter": [[8, 16], [12, 24]],
+  "response": "bottom_pressure_E * 10 MPa (bottom force divided by the same plate width)",
+  "coordinate": "u = initial_plate_height - current_plate_height, code length",
+  "support": "closed [0, min(coarse_terminal_u, fine_terminal_u)] after validating both terminal receipts",
+  "samples": "sorted union of all native displacements on the support, including both endpoints",
+  "interpolation": "piecewise linear on each curve; no extrapolation, filtering, or decimation",
+  "numerator": "maximum absolute coarse-minus-fine response over samples",
+  "denominator": "maximum absolute fine response over the same samples and support",
+  "limit": {"numerator": 1, "denominator": 20, "inclusive": true},
+  "comparison": "20 * numerator <= denominator on unrounded quantities; equality meets the limit",
+  "zero_reference": "HOLD, normalized error undefined, including when both curves are identically zero",
+  "invalid_input": "HOLD for that pair; keep any valid exceedance of the other pair visible",
+  "combination": "any valid pair above limit is an exceedance; otherwise any required pair without a verdict is HOLD; all required pairs must meet the limit",
+  "secondary_outputs": ["individual terminal displacements", "common endpoint", "sample count", "first worst displacement", "count above limit"],
+  "existing_return": "exposed before this rule; retrospective development check only",
+  "this_rule_qualifies_all_U6c": false,
+  "this_rule_grants_stage3_go": false
+}
