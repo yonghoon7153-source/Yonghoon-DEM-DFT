@@ -1,0 +1,54 @@
+{
+  "above_5_percent_knots": 3528,
+  "aligned_native_row_height_comparison": {
+    "different_height": {
+      "above_5_percent": 907,
+      "count": 1308,
+      "max_abs_gap_MPa": 0.5548303407642623
+    },
+    "same_height": {
+      "above_5_percent": 856,
+      "count": 1270,
+      "max_abs_gap_MPa": 0.5659773321030952
+    }
+  },
+  "archive_sha256": "0df5971d360ed20463d67ab36bd97b677b3e55bee9aaf01dbd559daf79a9ed90",
+  "common_end_displacement": 0.11562281664031926,
+  "common_positive_and_origin_knots": 5157,
+  "fine_peak_MPa": 0.6348781834041664,
+  "first_above_5_percent_u": 0.012042174657845517,
+  "max_abs_bottom_post_gap_MPa": 3.4080079259322085e-06,
+  "max_abs_bottom_post_gap_u": 0.015562884939562038,
+  "native_at_worst": {
+    "F16": {
+      "bottom_total_MPa": 0.6348781834041664,
+      "lid_code": 0.7367952596711936,
+      "native_step": 5156,
+      "row": 118,
+      "row_height_code": 0.7375,
+      "top_down_impulse_pressure_equivalent_MPa": 0.6436162128616805,
+      "top_row_minus_lid_code": 0.000704740328806408
+    },
+    "F8": {
+      "bottom_total_MPa": 1.2008555155072616,
+      "lid_code": 0.7367952596711936,
+      "native_step": 2578,
+      "row": 59,
+      "row_height_code": 0.7375,
+      "top_down_impulse_pressure_equivalent_MPa": 1.3941930392020851,
+      "top_row_minus_lid_code": 0.000704740328806408
+    }
+  },
+  "native_steps": {
+    "F16": 6521,
+    "F8": 2578
+  },
+  "signed_F8_minus_F16_at_worst_MPa": {
+    "post": 2.8832788303205497e-20,
+    "pre": 0.5659773321030952,
+    "top_post": 1.4223384259875469e-06,
+    "top_pre": 0.7505754040019788,
+    "total": 0.5659773321030952
+  },
+  "worst_total_u": 0.11562281664031926
+}

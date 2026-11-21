@@ -1,0 +1,65 @@
+{
+  "arms": {
+    "F16": {
+      "E_MPa": 10.0,
+      "curve_knots_with_initial_state": 6522,
+      "dt": 0.0011231835082397789,
+      "observed_steps": 6521,
+      "observer_receipt_sha256": "2e1f23b0cf05088f16432bb13af00358970410acb56ef3677a4b5d9ef309a0b1",
+      "result_sha256": "211022a13d85c51ecf04d7aa29428e72369f0d77c6079c784362da54d7149d12",
+      "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de",
+      "wall_sha256": "822a608041e97cdc05a2e9badffbd9e8576c018112f3f6950bbb9292855996de",
+      "width": 0.7024180763115129
+    },
+    "F8": {
+      "E_MPa": 10.0,
+      "curve_knots_with_initial_state": 2579,
+      "dt": 0.0022463670164795577,
+      "observed_steps": 2578,
+      "observer_receipt_sha256": "c12d8623530b2b21856e554aa12cde51735c7344bcaac1cfd6845275efe40e1b",
+      "result_sha256": "4e79a75da2457626ce38e273e4ba77d9940881651a4e59a0a369ec5139c919a9",
+      "trace_sha256": "03f3bc2c106aa466f1ccc2b774e0b768f2a902792006609680faa53038434cdf",
+      "wall_sha256": "efd800c9935804ce6c7fde5d6e54163d6629dd311388d85e466c028d22c3bb2f",
+      "width": 0.7024180763115129
+    }
+  },
+  "decomposition": {
+    "at_first_worst_total_gap": {
+      "coarse_MPa": {
+        "post": 2.8832788303205497e-20,
+        "pre": 1.2008555155072616,
+        "total": 1.2008555155072616
+      },
+      "coarse_minus_fine_MPa": {
+        "post": 2.8832788303205497e-20,
+        "pre": 0.5659773321030952,
+        "total": 0.5659773321030952
+      },
+      "coarse_native_step_bracket": [
+        2578,
+        2578
+      ],
+      "fine_MPa": {
+        "post": -0.0,
+        "pre": 0.6348781834041664,
+        "total": 0.6348781834041664
+      },
+      "fine_native_step_bracket": [
+        5156,
+        5156
+      ],
+      "u": 0.11562281664031926
+    },
+    "common_end_u": 0.11562281664031926,
+    "common_start_u": 0.0,
+    "max_component_sum_roundoff_MPa": 1.1449174941446927e-16,
+    "maximum_absolute_total_gap_MPa": 0.5659773321030952,
+    "union_knots": 5157
+  },
+  "issues": {},
+  "label": "DEVELOPMENT_WALL_DIAGNOSTIC",
+  "observer_sha256": "c78af9c41f0279301322fc66d35e522fca7433dd528131968bb4e5d7e493ffa6",
+  "stage3_go": false,
+  "status": "DEVELOPMENT_WALL_DECOMPOSED",
+  "u6_qualified": false
+}
