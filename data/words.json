@@ -1,0 +1,20 @@
+{
+  "today": {
+    "title": "오늘의 일본어 단어",
+    "url": "https://app.notion.com/p/striped-weaver-ayh/c3b7a2a61afa4f83a4a832c4e057e5a9"
+  },
+  "notebooks": [
+    {
+      "title": "일본어 회화",
+      "label": "日本語",
+      "lang": "ja",
+      "url": "https://app.notion.com/p/striped-weaver-ayh/ed84a4281ed64b1b8ab9c6e31d7e089a"
+    },
+    {
+      "title": "영어 회화",
+      "label": "English",
+      "lang": "en",
+      "url": "https://app.notion.com/p/striped-weaver-ayh/28a53577a0a5806989e7d978e42bae05"
+    }
+  ]
+}

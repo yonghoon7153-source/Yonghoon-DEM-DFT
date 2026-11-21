@@ -1,6 +1,7 @@
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/app.css';
+import './styles/words.css';
 
 import { landmarkById, mountains, places, prefBySlug, regionById, regions, regionsInGroup, transit } from './data';
 import { createMap, type MapApi } from './map/map';
@@ -17,10 +18,14 @@ import { createFx } from './ui/fx';
 import { createSearch } from './ui/search';
 import { createTooltip } from './ui/tooltip';
 import { renderTokyo23, WARD_PREFECTURE } from './ui/tokyo23';
+import { createWordsPage } from './ui/words';
 import type { LabelMode } from './types';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 const isMobile = () => window.matchMedia('(max-width: 760px)').matches;
+
+// The learning page is usable even while the map assets are loading.
+const wordsPage = createWordsPage();
 
 // A reload starts from scratch (9차 요청): no stickers, 図鑑 0, ふりがな, default layers. Nothing is kept in the
 // browser any more; what earlier versions stored is cleared once.
@@ -390,6 +395,7 @@ async function init() {
 
   // ---- keyboard
   window.addEventListener('keydown', (e) => {
+    if (wordsPage.isOpen()) return;
     // writing somewhere (the search, a comment) — the one-key shortcuts must not steal the letters
     const t = e.target as HTMLElement | null;
     const typing = !!t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);

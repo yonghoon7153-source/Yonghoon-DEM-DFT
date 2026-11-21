@@ -42,6 +42,7 @@ src/ui/panel.ts         県/지방/메모장 패널 (다이어리 페이지)
 src/ui/notes-render.ts  마인드맵 트리 → 칩
 src/ui/comments.ts      💬 コメント 게시판 화면 (ADR 0007)
 src/ui/festivals.ts     🎆 축제 달력 페이지 (data/festivals.json, 출처 표시 = 마인드맵 칸 이름으로)
+src/ui/words.ts         📖 오늘의 단어 서브페이지 (#words), Notion 바로가기 (data/words.json)
 src/ui/fx.ts            축제 효과 — 불꽃 · 눈 · 벚꽃잎 · 단풍잎 · 등롱 · 북 · 리본 + 무대 색조 (#fx 층, ADR 0009)
 src/ui/easter.ts        마스코트 팝업, 図鑑, 벚꽃
 src/landmarks/          랜드마크 스티커 — 내 마인드맵 · 보충의 장소, 기본 정보의 観光을 닮은꼴로 (data/landmarks.json, 확대하면 지도 · 23区 팝업에, ADR 0011)
@@ -68,4 +69,6 @@ docs/                   adr/, CHECKLIST.md, log.md, index.md, screenshots/
 
 ## 3. 다음 단계
 
-노션의 일본어 단어를 같은 방식으로 `data/words.json` 에 얹고, 県·지방과 연결한다.
+`#words`는 왼쪽 메뉴에서 여는 오늘의 단어 페이지다. `data/words.json`에는 Notion 오늘 단어·일본어 회화·영어 회화 링크만 둔다. 학습 원문·DB 레코드는 Notion에 그대로 있으며, 이 사이트가 자동 복사하거나 동기화하지 않는다.
+
+다음 단계는 사용자의 후속 요청에 맞춰 같은 의미·상황의 일본어/영어 표현을 연결하고, 필요하면 県·지방과도 묶는 것이다. 공개 사이트에 실제 학습 내용을 싣는 범위와 표현 방식은 그때 정한다.

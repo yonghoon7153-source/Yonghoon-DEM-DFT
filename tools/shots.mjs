@@ -19,7 +19,7 @@ async function ready(p) {
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(400);
 }
-const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit,matsuri,landmarks').split(',');
+const steps = (process.env.STEPS || 'desktop,select,region,mobile,zukan,search,t23,transit,matsuri,landmarks,words').split(',');
 
 if (steps.includes('desktop')) {
   const { ctx, p } = await page({ width: 1440, height: 900 });
@@ -159,6 +159,16 @@ if (steps.includes('search')) {
   await p.waitForTimeout(500);
   await p.screenshot({ path: `${out}/14-memo.png` });
   await ctx.close();
+}
+if (steps.includes('words')) {
+  for (const [name, viewport] of [['desktop', { width: 1440, height: 900 }], ['mobile', { width: 390, height: 844 }]]) {
+    const { ctx, p } = await page(viewport, { touch: name === 'mobile' });
+    await ready(p);
+    await p.click('#words-link');
+    await p.waitForSelector('#words-page:not([hidden])');
+    await p.screenshot({ path: `${out}/23-words-${name}.png` });
+    await ctx.close();
+  }
 }
 await browser.close();
 if (errors.length) { console.log('ERRORS:\n' + errors.join('\n')); } else console.log('no page errors');

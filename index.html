@@ -71,6 +71,14 @@
       </div>
     </header>
 
+    <nav class="study-nav" aria-label="학습 노트">
+      <a class="study-nav__link" id="words-link" href="#words" aria-controls="words-page">
+        <span aria-hidden="true">📖</span>
+        <span>오늘의 단어</span>
+      </a>
+    </nav>
+    <main class="words-page" id="words-page" aria-labelledby="words-title" hidden></main>
+
     <main class="stage" id="stage">
       <div class="map" id="map" aria-label="일본 지도" role="application"></div>
       <div class="map-loading" id="map-loading" aria-live="polite">지도를 펼치는 중…</div>
