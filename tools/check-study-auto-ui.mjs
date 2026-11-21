@@ -1,0 +1,66 @@
+import assert from 'node:assert/strict';
+import { createRequire } from 'node:module';
+import { randomBytes, randomUUID, createHash, createCipheriv } from 'node:crypto';
+const { chromium } = createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const browser = await chromium.launch();
+const profile = { schemaVersion: 1, kind: 'nihonchizu-study-connection', feedId: randomUUID(), deckId: 'qa-sync', url: '/study-feed/my-deck.v1.enc.json', key: randomBytes(32).toString('base64url') };
+const deck = { schemaVersion: 1, deckId: 'qa-sync', title: '자동 갱신 테스트', cards: Array.from({ length: 6 }, (_, i) => ({ id: `qa-${i}`, ja: `日本語${i}`, en: `English ${i}`, ko: `뜻${i}`, category: '회화' })) };
+function encrypt(value) {
+  const bytes = Buffer.from(JSON.stringify(value)), revision = createHash('sha256').update(bytes).digest('hex'), iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', Buffer.from(profile.key, 'base64url'), iv);
+  cipher.setAAD(Buffer.from(`nihonchizu-encrypted-deck:1:${profile.feedId}:${revision}`));
+  const ciphertext = Buffer.concat([cipher.update(bytes), cipher.final(), cipher.getAuthTag()]).toString('base64url');
+  return JSON.stringify({ schemaVersion: 1, kind: 'nihonchizu-encrypted-deck', feedId: profile.feedId, revision, iv: iv.toString('base64url'), ciphertext, updatedAt: new Date().toISOString() });
+}
+try {
+  const ctx = await browser.newContext(), p = await ctx.newPage();
+  await p.clock.install();
+  let payload = encrypt(deck), requests = 0, fail = false;
+  await p.route('**/study-feed/my-deck.v1.enc.json', async route => {
+    requests++; const request = route.request();
+    assert.equal(request.method(), 'GET'); assert.equal(request.postData(), null);
+    assert.ok(!JSON.stringify({ url: request.url(), headers: request.headers() }).includes(profile.key));
+    if (fail) return route.fulfill({ status: 503, body: 'unavailable' });
+    await route.fulfill({ contentType: 'application/json', body: payload });
+  });
+  await p.goto(`${process.env.BASE || 'http://localhost:5004/'}#words`, { waitUntil: 'networkidle' });
+  const upload = () => p.locator('input[type=file]').setInputFiles({ name: 'connection.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(profile)) });
+  const click = name => p.locator('.study').getByRole('button', { name, exact: true }).click();
+  await upload(); await p.waitForFunction(() => document.querySelector('.study__title').textContent === '자동 갱신 테스트');
+  assert.equal(requests, 1);
+  await click('이제 알겠어요');
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 6');
+  await click('English'); assert.equal(await p.locator('.study__expression').textContent(), 'English 1');
+  await p.locator('.study__card').click();
+  await p.locator('.study__import summary').click();
+  await click('지금 새로 받기'); await p.waitForFunction(() => document.querySelector('.study__save-note[role=status]').textContent.includes('최신'));
+  assert.equal(await p.locator('.study__card').getAttribute('data-face'), 'back');
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 6');
+  payload = encrypt({ ...deck, cards: [...deck.cards.map(c => c.id === 'qa-1' ? { ...c, en: 'Updated English' } : c), { id: 'new', ja: '追加', en: 'Added', ko: '추가', category: '회화' }] });
+  await click('지금 새로 받기'); await p.waitForFunction(() => document.querySelector('.study__expression').textContent === 'Updated English');
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 7');
+  await click('日本語'); assert.match(await p.locator('.study__learned').textContent(), /1 \/ 7/);
+  const before = requests; await p.clock.fastForward(5 * 60 * 1000); await p.waitForFunction(() => document.querySelector('.study__save-note[role=status]').textContent.includes('최신'));
+  assert.equal(requests, before + 1);
+  fail = true; await click('지금 새로 받기'); await p.waitForFunction(() => document.querySelector('.study__save-note[role=status]').textContent.includes('받지 못'));
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 7');
+  await p.reload({ waitUntil: 'networkidle' });
+  assert.equal(await p.locator('.study__title').textContent(), '자동 갱신 테스트');
+  assert.match(await p.locator('.study__learned').textContent(), /1 \/ 7/);
+  await p.locator('.study__import summary').click();
+  await click('기본 단어장 보기'); const basicRequests = requests; await p.clock.fastForward(5 * 60 * 1000); assert.equal(requests, basicRequests);
+  await click('이 기기의 단어장 지우기');
+  assert.equal(await p.evaluate(() => localStorage.getItem('nihonchizu.private-deck.v1')), null);
+  const clearedRequests = requests; await p.clock.fastForward(5 * 60 * 1000); assert.equal(requests, clearedRequests);
+  await ctx.close();
+  const blocked = await browser.newContext();
+  await blocked.addInitScript(() => { Storage.prototype.setItem = () => { throw new Error('quota'); }; });
+  const b = await blocked.newPage(); await b.route('**/study-feed/my-deck.v1.enc.json', r => r.fulfill({ contentType: 'application/json', body: encrypt(deck) }));
+  await b.goto(`${process.env.BASE || 'http://localhost:5004/'}#words`, { waitUntil: 'networkidle' });
+  await b.locator('input[type=file]').setInputFiles({ name: 'connection.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(profile)) });
+  await b.waitForFunction(() => document.querySelector('.study__title').textContent === '자동 갱신 테스트');
+  assert.match(await b.locator('.study__message').textContent(), /저장 공간/);
+  assert.ok(!(await b.locator('.study__message').textContent()).includes('고르지 않아도'));
+  await blocked.close();
+  console.log(JSON.stringify({ passed: ['connection import', 'key never requested', 'same revision keeps flipped card', 'changed revision keeps card and marks', 'five-minute polling', 'failed refresh keeps cache', 'reload with cache', 'basic and forget stop polling', 'quota warning preserved'] }));
+} finally { await browser.close(); }

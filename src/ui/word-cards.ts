@@ -1,3 +1,4 @@
+import { fetchStudyDeck, parseConnection, type StudyConnection } from './study-sync';
 import initialDeck from '../../data/word-cards.json';
 import { el } from './dom';
 import { matchesCard, parseDeck, shuffled, type StudyLanguage, type WordCard, type WordDeck } from './word-deck';
@@ -11,9 +12,22 @@ export function createWordCards() {
   let index = 0, flipped = false, onlyUnknown = false, order: WordCard[] = [];
   let known = new Set<string>(), storageWarning = '', canPersistKnown = true;
   let savedDeck: WordDeck | undefined;
+  let connection: StudyConnection | undefined, revision = '';
+  let request: AbortController | undefined, generation = 0, lastAttempt = 0;
   try {
     const saved = localStorage.getItem(DECK_KEY);
-    if (saved) { savedDeck = parseDeck(JSON.parse(saved)); deck = savedDeck; }
+    if (saved) {
+      const raw = JSON.parse(saved); savedDeck = parseDeck(raw); deck = savedDeck;
+      // A broken connection must not discard a usable cached deck.
+      try {
+        if (raw.studyConnection) {
+          const candidate = parseConnection(raw.studyConnection);
+          if (candidate.deckId !== deck.deckId) throw new Error('Deck mismatch');
+          connection = candidate;
+          if (typeof raw.studyRevision === 'string' && /^[a-f0-9]{64}$/.test(raw.studyRevision)) revision = raw.studyRevision;
+        }
+      } catch { storageWarning = '단어장은 열었지만 자동 연결 정보를 읽지 못했어요. 연결 파일을 다시 불러와 주세요.'; }
+    }
   } catch { storageWarning = '저장된 단어장을 읽지 못해 기본 단어장을 열었어요. 필요하면 파일을 다시 불러와 주세요.'; }
   try {
     const marks: unknown = JSON.parse(localStorage.getItem(KNOWN_KEY) || '[]');
@@ -56,10 +70,12 @@ export function createWordCards() {
   const load = button('내 단어장 불러오기', 'study__text-button');
   const basic = button('기본 단어장 보기', 'study__text-button');
   const forget = button('이 기기의 단어장 지우기', 'study__text-button');
+  const syncMessage = el('p', { class: 'study__save-note', role: 'status' });
+  const refresh = button('지금 새로 받기', 'study__text-button');
   const importPanel = el('details', { class: 'study__import' },
     el('summary', {}, '내 단어장으로 공부하기'),
-    el('p', {}, '채팅에서 받은 카드용 JSON 파일을 골라 주세요. 파일은 서버에 보내지 않고 이 브라우저에 보관해요.'),
-    el('div', { class: 'study__import-actions' }, load, basic, forget, file),
+    el('p', {}, '채팅에서 받은 연결 파일이나 단어장 JSON을 골라 주세요. 연결 파일은 처음 한 번만 불러오면 돼요. 파일과 학습 표시는 이 브라우저에 보관해요.'),
+    el('div', { class: 'study__import-actions' }, load, basic, forget, refresh, file),
   );
   root.append(
     el('div', { class: 'study__top' }, el('div', {}, el('p', { class: 'study__kicker' }, '한 장씩, 내 속도로'), name, subtitle), modes),
@@ -69,7 +85,7 @@ export function createWordCards() {
     scene, navigation, ratings, detail, source, list, more,
     el('p', { id: 'study-shortcuts', class: 'study__shortcuts' }, '카드를 눌러 뒤집기 · 카드에서 ← → 이동 · Space로 뜻 보기'),
     el('p', { class: 'study__save-note' }, '학습 표시는 이 브라우저에 저장돼요. Notion 암기 기록은 바뀌지 않아요.'),
-    importPanel, message, status,
+    syncMessage, importPanel, message, status,
   );
 
   const key = (c: WordCard) => `${deck.deckId}:${language}:${c.id}`;
@@ -109,6 +125,9 @@ export function createWordCards() {
     ratings.hidden = !c || mode !== 'cards'; navigation.hidden = mode !== 'cards';
     list.hidden = mode !== 'list'; scene.hidden = mode !== 'cards';
     detail.hidden = !c || !flipped || mode !== 'cards'; source.hidden = !c?.notionUrl || mode !== 'cards';
+    refresh.hidden = !connection || deck === original;
+    syncMessage.hidden = !connection || deck === original;
+    if (connection && !syncMessage.textContent) syncMessage.textContent = '매일 오전 9시에 정리한 단어장을 화면을 열어 둔 동안 5분마다 확인해요.';
     basic.hidden = !savedDeck && deck === original;
     basic.textContent = deck === original ? '보관한 내 단어장 보기' : '기본 단어장 보기';
     if (c?.notionUrl) source.href = c.notionUrl; else source.removeAttribute('href');
@@ -194,24 +213,87 @@ export function createWordCards() {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') { event.preventDefault(); move(event.key === 'ArrowLeft' ? -1 : 1); }
   });
   load.addEventListener('click', () => file.click());
+  function cancelRefresh() { generation++; request?.abort(); request = undefined; }
+  function persistDeck() {
+    if (!savedDeck) return;
+    try {
+      localStorage.setItem(DECK_KEY, JSON.stringify({ ...savedDeck, studyConnection: connection, studyRevision: revision }));
+    } catch { message.textContent = '이번 화면에서는 사용할 수 있지만 저장 공간이 부족해요. 창을 닫은 뒤에는 연결 파일이나 단어장을 다시 불러와 주세요.'; }
+  }
+  function installDeck(imported: WordDeck, preserve: boolean) {
+    const selectedCategory = category.value;
+    const sameDeck = preserve && deck.deckId === imported.deckId;
+    const fresh = new Map(imported.cards.map((c) => [c.id, c]));
+    const kept = sameDeck ? sequence.flatMap((c) => { const updated = fresh.get(c.id); fresh.delete(c.id); return updated ? [updated] : []; }) : [];
+    sequence = sameDeck ? [...kept, ...fresh.values()] : [...imported.cards];
+    deck = imported; savedDeck = imported;
+    if (!sameDeck) { query.value = ''; onlyUnknown = false; }
+    categories();
+    if (sameDeck && [...category.options].some((o) => o.value === selectedCategory)) category.value = selectedCategory;
+    select(sameDeck);
+  }
+  async function receive(candidate: StudyConnection, connecting = false) {
+    if (request) return;
+    const token = generation, controller = new AbortController(); request = controller; lastAttempt = Date.now();
+    const timeout = window.setTimeout(() => controller.abort(), 20000);
+    syncMessage.textContent = '새 단어장을 확인하고 있어요…';
+    try {
+      const result = await fetchStudyDeck(candidate, controller.signal);
+      if (token !== generation || (!connecting && (connection !== candidate || deck === original))) return;
+      const changed = connecting || result.revision !== revision;
+      if (changed) {
+        connection = candidate; revision = result.revision;
+        installDeck(result.deck, !connecting);
+        if (connecting) message.textContent = '자동 갱신을 연결했어요. 다음부터는 연결 파일을 다시 고르지 않아도 돼요.';
+        persistDeck(); render();
+      }
+      syncMessage.textContent = `${new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })} 확인 · ${changed ? '새 단어장을 받았어요.' : '최신 단어장이에요.'} 화면을 열어 두면 5분마다 확인해요.`;
+    } catch {
+      if (token !== generation) return;
+      const text = '새 단어장을 받지 못했어요. 기존 단어장과 학습 표시는 유지돼요. 잠시 후 다시 확인할게요.';
+      syncMessage.textContent = text;
+      if (connecting) message.textContent = '자동 연결을 확인하지 못했어요. 연결 파일과 인터넷 연결을 확인해 주세요. 기존 단어장은 그대로예요.';
+    } finally {
+      clearTimeout(timeout);
+      if (request === controller) request = undefined;
+    }
+  }
+  function maybeRefresh(force = false) {
+    if (!connection || deck === original || !root.isConnected || root.closest('[hidden]') || document.visibilityState !== 'visible') return;
+    if (!force && Date.now() - lastAttempt < 5 * 60 * 1000) return;
+    void receive(connection);
+  }
+  refresh.addEventListener('click', () => maybeRefresh(true));
+  window.setInterval(() => maybeRefresh(), 5 * 60 * 1000);
+  window.addEventListener('focus', () => maybeRefresh());
+  window.addEventListener('hashchange', () => window.setTimeout(() => maybeRefresh(), 0));
+  document.addEventListener('visibilitychange', () => maybeRefresh());
   file.addEventListener('change', async () => {
     const chosen = file.files?.[0]; if (!chosen) return;
+    cancelRefresh(); const fileGeneration = generation;
     try {
       if (chosen.size > 8 * 1024 * 1024) throw new Error('8MB 이하의 단어장 파일을 선택해 주세요.');
-      const imported = parseDeck(JSON.parse(await chosen.text()));
-      deck = imported; sequence = [...deck.cards]; query.value = ''; onlyUnknown = false; categories(); select();
-      try { localStorage.setItem(DECK_KEY, JSON.stringify(imported)); savedDeck = imported; render(); message.textContent = `${deck.cards.length.toLocaleString()}개 표현을 이 브라우저에 보관했어요.`; }
-      catch { message.textContent = '단어장을 열었지만 저장 공간이 부족해요. 창을 닫은 뒤에는 파일을 다시 불러와 주세요.'; }
+      const raw: unknown = JSON.parse(await chosen.text());
+      if (fileGeneration !== generation) return;
+      if (raw && typeof raw === 'object' && 'kind' in raw && raw.kind === 'nihonchizu-study-connection') {
+        const candidate = parseConnection(raw); cancelRefresh(); await receive(candidate, true);
+      } else {
+        const imported = parseDeck(raw); cancelRefresh(); connection = undefined; revision = ''; syncMessage.textContent = '';
+        installDeck(imported, false); message.textContent = `${deck.cards.length.toLocaleString()}개 표현을 이 브라우저에 보관했어요.`;
+        persistDeck(); render();
+      }
     } catch (error) { message.textContent = error instanceof SyntaxError ? 'JSON 단어장 파일인지 확인해 주세요. 기존 단어장은 그대로예요.' : error instanceof Error ? error.message : '파일을 읽지 못했어요.'; }
     file.value = '';
   });
-  basic.addEventListener('click', () => { deck = deck === original && savedDeck ? savedDeck : original; sequence = [...deck.cards]; query.value = ''; onlyUnknown = false; categories(); select(); message.textContent = `${deck === original ? '기본' : '보관한 내'} 단어장을 열었어요. 단어장 파일과 학습 표시는 유지돼요.`; });
+  basic.addEventListener('click', () => { cancelRefresh(); deck = deck === original && savedDeck ? savedDeck : original; sequence = [...deck.cards]; query.value = ''; onlyUnknown = false; categories(); select(); message.textContent = `${deck === original ? '기본' : '보관한 내'} 단어장을 열었어요. 단어장 파일과 학습 표시는 유지돼요.`; maybeRefresh(true); });
   forget.addEventListener('click', () => {
     try { localStorage.removeItem(DECK_KEY); }
     catch { message.textContent = '브라우저의 저장된 단어장을 지우지 못했어요. 브라우저 설정에서 이 사이트 데이터를 확인해 주세요.'; return; }
+    cancelRefresh(); connection = undefined; revision = ''; syncMessage.textContent = '';
     savedDeck = undefined; deck = original; sequence = [...deck.cards]; query.value = ''; onlyUnknown = false; categories(); select();
     message.textContent = '이 기기의 단어장 사본을 지웠어요. Notion 원본과 학습 표시는 유지돼요.';
   });
   categories(); select();
+  window.setTimeout(() => maybeRefresh(), 0);
   return root;
 }

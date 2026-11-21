@@ -289,6 +289,21 @@ for (const c of wordDeck.cards ?? []) {
   if (c.notionUrl || c.sourcePageId || c.raw_json) err(`word-cards ${c.id}: private source data must not be published`);
 }
 
+// Public transport contains ciphertext only; connection profiles and keys stay private.
+const feedPath = new URL('../public/study-feed/my-deck.v1.enc.json', import.meta.url);
+if (existsSync(feedPath)) {
+  try {
+    const bytes = readFileSync(feedPath), feed = JSON.parse(bytes.toString('utf8'));
+    const fields = ['schemaVersion', 'kind', 'feedId', 'revision', 'updatedAt', 'iv', 'ciphertext'];
+    if (bytes.length > 16 * 1024 * 1024 || Object.keys(feed).sort().join() !== fields.sort().join()
+      || feed.schemaVersion !== 1 || feed.kind !== 'nihonchizu-encrypted-deck'
+      || !/^[a-f0-9-]{36}$/i.test(feed.feedId) || !/^[a-f0-9]{64}$/.test(feed.revision)
+      || !Number.isFinite(Date.parse(feed.updatedAt)) || !/^[A-Za-z0-9_-]{16}$/.test(feed.iv)
+      || typeof feed.ciphertext !== 'string' || !/^[A-Za-z0-9_-]+$/.test(feed.ciphertext)
+      || Buffer.from(feed.ciphertext, 'base64url').length < 16) err('study-feed: invalid encrypted envelope');
+  } catch { err('study-feed: unreadable encrypted envelope'); }
+}
+
 if (errors.length) {
   console.error(`✗ data check failed (${errors.length}):\n  - ` + errors.join('\n  - '));
   process.exit(1);
