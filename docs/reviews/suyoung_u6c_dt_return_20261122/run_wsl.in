@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 3 || ( $1 != CHECK_ONLY && $1 != GO_SUYOUNG_F8_DENSE_SEED_ONCE ) ]]; then
+    echo 'Usage: bash THIS.txt CHECK_ONLY|GO_SUYOUNG_F8_DENSE_SEED_ONCE previous_wall_result.tar.gz previous_half_result.tar.gz' >&2
+    exit 2
+fi
+mode=$1
+wall=$(realpath -e -- "$2")
+half=$(realpath -e -- "$3")
+wall_sha=0df5971d360ed20463d67ab36bd97b677b3e55bee9aaf01dbd559daf79a9ed90
+half_sha=e574396d010514b3cd77f57d2e06d0c25227c88a7b6e985577f2981aa8c154e4
+check_input() {
+    local path=$1 expected=$2 observed
+    [[ -f "$path" && -r "$path" ]] || return 1
+    observed=$(sha256sum -- "$path") || return 1
+    [[ ${observed%% *} == "$expected" ]]
+}
+check_input "$wall" "$wall_sha" || { echo 'Prior wall return SHA256 mismatch' >&2; exit 2; }
+check_input "$half" "$half_sha" || { echo 'Prior half-step return SHA256 mismatch' >&2; exit 2; }
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+pin='@PIN@'
+sums='@SOURCE_SUMS@'
+[[ "$pin" =~ ^[0-9a-f]{40}$ && "$sums" =~ ^[0-9a-f]{64}$ ]] || exit 2
+printf '%s  SOURCE_SHA256SUMS\n' "$sums" | sha256sum --check --status -
+sha256sum --check --status SOURCE_SHA256SUMS
+for tool in taskset timeout mktemp tar sha256sum; do command -v "$tool" >/dev/null; done
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Reference WSL venv missing' >&2; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+taskset -c 0 "$py" -I -B -c 'import numpy,sys; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Reference environment mismatch")'
+driver="$pkg/docs/reviews/suyoung_u6c_dt_return_20261122/seed_control.py"
+taskset -c 0 "$py" -I -B "$driver" run --help >/dev/null
+taskset -c 0 "$py" -I -B "$driver" read --help >/dev/null
+printf 'RELEASE=%s\nPRIOR_WALL_SHA256=%s\nPRIOR_HALF_SHA256=%s\n' "$pin" "$wall_sha" "$half_sha"
+if [[ "$mode" == CHECK_ONLY ]]; then echo CHECK_OK; exit 0; fi
+
+once="$HOME/suyoung_seed_once_1122"
+mkdir -- "$once" || { echo "Attempt already reserved: $once" >&2; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_seed_work_XXXXXXXX")
+ret=$(mktemp -d "$HOME/suyoung_seed_return_XXXXXXXX")
+run="$work/run"
+mkdir -- "$run"
+screen="$run/screen.txt"
+printf 'DEVELOPMENT_ONLY\n' | tee "$screen"
+printf 'WORK=%s\nRETURN_DIRECTORY=%s\n' "$work" "$ret" | tee "$once/receipt.txt"
+pack() {
+    local rc=$?
+    trap - EXIT INT TERM HUP
+    set +e
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_seed_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_seed_result.tar.gz screen.txt > SHA256SUMS &&
+     sha256sum -c SHA256SUMS && cat SHA256SUMS) ||
+    { printf 'ARCHIVE_INCOMPLETE WORK=%s RETURN_DIRECTORY=%s\n' "$work" "$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+printf 'release=%s\nsource_sums=%s\nprior_wall=%s\nprior_half=%s\nCPU=0\nF8_dense_hard_s=1800\n' "$pin" "$sums" "$wall_sha" "$half_sha" > "$run/origin.txt"
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+rc=0
+printf 'F8_DENSE_BEGIN=%s\n' "$(date -u +%FT%TZ)" | tee -a "$screen"
+timeout --signal=TERM --kill-after=5s 1795s taskset -c 0 "$py" -I -B "$driver" run \
+    --source-dir "$pkg/scripts" --out "$run/F8_DENSE" --budget 1740 > "$run/F8_DENSE.log" 2>&1 || rc=$?
+printf 'F8_DENSE_RC=%d\n' "$rc" | tee -a "$screen"
+if (( rc != 0 )); then exit "$rc"; fi
+timeout --signal=TERM --kill-after=5s 115s taskset -c 0 "$py" -I -B "$driver" read \
+    --wall "$wall" --half "$half" --arm "$run/F8_DENSE" --out "$run/seed_summary.json" > "$run/summary.log" 2>&1 || rc=$?
+[[ $rc != 0 || -s "$run/seed_summary.json" ]] || rc=4
+printf 'SUMMARY_RC=%d\n' "$rc" | tee -a "$screen"
+[[ $rc != 0 ]] || echo READBACK_REQUIRED | tee -a "$screen"
+exit "$rc"
