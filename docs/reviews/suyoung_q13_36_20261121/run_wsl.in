@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 2 || ( $1 != CHECK_ONLY && $1 != GO_SUYOUNG_36_ONCE ) ]]; then
+    echo 'Usage: bash THIS.txt CHECK_ONLY|GO_SUYOUNG_36_ONCE PRIOR_RESULT_TAR_GZ' >&2
+    exit 2
+fi
+mode=$1
+prior=$(realpath -e -- "$2") || exit 2
+[[ -f "$prior" ]] || exit 2
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+pin='@PIN@'
+source_sums='@SOURCE_SUMS@'
+prior_sha='a3877d077b56d74877a04215e06135bc3217b5c0f055bf0061a9ba93fcf49f00'
+[[ "$pin" =~ ^[0-9a-f]{40}$ && "$source_sums" =~ ^[0-9a-f]{64}$ ]] || exit 2
+printf '%s  SOURCE_SHA256SUMS\n' "$source_sums" | sha256sum -c --status -
+sha256sum --check --status SOURCE_SHA256SUMS
+for tool in taskset timeout mktemp tar sha256sum; do command -v "$tool" >/dev/null; done
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Prior WSL project venv missing' >&2; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+taskset -c 0 "$py" -I -B -c 'import numpy,sys; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Historical environment mismatch")'
+"$py" -I -B "$pkg/check_prior.py" "$prior" "$prior_sha"
+printf 'RELEASE=%s\n' "$pin"
+if [[ "$mode" == CHECK_ONLY ]]; then echo 'CHECK_OK'; exit 0; fi
+
+once="$HOME/suyoung_q13_once_1121"
+mkdir -- "$once" || { echo "Attempt already reserved: $once" >&2; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_q13_work_XXXXXXXX")
+ret=$(mktemp -d "$HOME/suyoung_q13_return_XXXXXXXX")
+run="$work/run"
+mkdir -- "$run" "$run/arms"
+screen="$run/screen.txt"
+printf 'DEVELOPMENT_ONLY\nWORK=%s\nRETURN_DIRECTORY=%s\n' "$work" "$ret" | tee "$once/receipt.txt"
+printf 'DEVELOPMENT_ONLY\nrelease=%s\nsource_sums=%s\nprior_archive_sha256=%s\ncpu=0\narm_budget_s=10770\narm_hard_limit_s=10800\n' \
+    "$pin" "$source_sums" "$prior_sha" > "$run/origin.txt"
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+tool="$pkg/scripts/suyoung_u6b36_dev.py"
+history="$work/previous.tar.gz"
+pack() {
+    local rc=$?
+    trap - EXIT INT TERM HUP
+    set +e
+    if [[ $rc -ne 0 && -e "$history" && ! -e "$run/summary.json" ]]; then
+        timeout --kill-after=5s 60s taskset -c 0 "$py" -I -B "$tool" summarize \
+            --history "$history" --runs "$run/arms" --out "$run/partial_summary.json" > "$run/partial_summary.log" 2>&1
+        printf 'PARTIAL_READBACK_RC=%d\n' "$?" | tee -a "$screen"
+    fi
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_q13_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_q13_result.tar.gz screen.txt > SHA256SUMS &&
+     sha256sum --check SHA256SUMS && cat SHA256SUMS) ||
+    { printf 'ARCHIVE_INCOMPLETE WORK=%s RETURN_DIRECTORY=%s\n' "$work" "$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM HUP
+cp -- "$prior" "$history"
+printf '%s  %s\n' "$prior_sha" "$history" | sha256sum --check --status -
+chmod 400 -- "$history"
+run_step() {
+    local label=$1 rc=0
+    shift
+    printf '%s_BEGIN=%s\n' "$label" "$(date -u +%FT%TZ)" | tee -a "$screen"
+    "$@" > "$run/$label.log" 2>&1 || rc=$?
+    printf '%s_RC=%d\n' "$label" "$rc" | tee -a "$screen"
+    return "$rc"
+}
+for model in S F; do
+    run_step "${model}36" timeout --signal=TERM --kill-after=5s 10795s taskset -c 0 "$py" -I -B "$tool" run \
+        --model "$model" --budget 10770 --out "$run/arms/${model}36"
+done
+run_step SUMMARY timeout --kill-after=5s 60s taskset -c 0 "$py" -I -B "$tool" summarize \
+    --history "$history" --runs "$run/arms" --out "$run/summary.json"
+printf 'READBACK_REQUIRED\n' | tee -a "$screen"
