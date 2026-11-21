@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 1 || ( $1 != CHECK_ONLY && $1 != GO_SUYOUNG_WALL_ONCE ) ]]; then
+    echo 'Usage: bash THIS.txt CHECK_ONLY|GO_SUYOUNG_WALL_ONCE' >&2
+    exit 2
+fi
+mode=$1
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+pin='@PIN@'
+sums='@SOURCE_SUMS@'
+[[ "$pin" =~ ^[0-9a-f]{40}$ && "$sums" =~ ^[0-9a-f]{64}$ ]] || exit 2
+printf '%s  SOURCE_SHA256SUMS\n' "$sums" | sha256sum --check --status -
+sha256sum --check --status SOURCE_SHA256SUMS
+for tool in taskset timeout mktemp tar sha256sum; do command -v "$tool" >/dev/null; done
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Prior WSL venv missing' >&2; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+taskset -c 0 "$py" -I -B -c 'import numpy,sys; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Reference environment mismatch")'
+tool="$pkg/docs/reviews/suyoung_u6c_wall_observer_20261122"
+taskset -c 0 "$py" -I -B "$tool/observe.py" --help >/dev/null
+taskset -c 0 "$py" -I -B "$tool/wall_summary.py" --help >/dev/null
+printf 'RELEASE=%s\n' "$pin"
+if [[ "$mode" == CHECK_ONLY ]]; then echo CHECK_OK; exit 0; fi
+
+once="$HOME/suyoung_wall_once_1122"
+mkdir -- "$once" || { echo "Attempt already reserved: $once" >&2; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_wall_work_XXXXXXXX")
+ret=$(mktemp -d "$HOME/suyoung_wall_return_XXXXXXXX")
+run="$work/run"
+mkdir -- "$run" "$run/arms"
+screen="$run/screen.txt"
+printf 'DEVELOPMENT_ONLY\nWORK=%s\nRETURN_DIRECTORY=%s\n' "$work" "$ret" | tee "$once/receipt.txt"
+printf 'release=%s\nsource_sums=%s\nCPU=0\nF8_hard_s=600\nF16_hard_s=1800\n' "$pin" "$sums" > "$run/origin.txt"
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+pack() {
+    local rc=$?
+    trap - EXIT INT TERM HUP
+    set +e
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_wall_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_wall_result.tar.gz screen.txt > SHA256SUMS &&
+     sha256sum -c SHA256SUMS && cat SHA256SUMS) ||
+    { printf 'ARCHIVE_INCOMPLETE WORK=%s RETURN_DIRECTORY=%s\n' "$work" "$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+run_arm() {
+    local cells=$1 cap=$2 trace=$3 rc=0
+    local out="$run/arms/F$cells"
+    printf 'F%s_BEGIN=%s\n' "$cells" "$(date -u +%FT%TZ)" | tee -a "$screen"
+    timeout --signal=TERM --kill-after=5s "$((cap - 5))s" taskset -c 0 "$py" -I -B "$tool/observe.py" \
+        --cells "$cells" --budget "$((cap - 30))" --out "$out" > "$run/F$cells.log" 2>&1 || rc=$?
+    if [[ $rc == 0 ]]; then
+        for file in trace.csv result.json wall.csv observer.json; do [[ -s "$out/$file" ]] || rc=4; done
+        printf '%s  %s\n' "$trace" "$out/trace.csv" | sha256sum --check --status - || rc=4
+    fi
+    printf 'F%s_RC=%d\n' "$cells" "$rc" | tee -a "$screen"
+    return "$rc"
+}
+run_arm 8 600 03f3bc2c106aa466f1ccc2b774e0b768f2a902792006609680faa53038434cdf
+run_arm 16 1800 5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de
+rc=0
+timeout --kill-after=5s 120s taskset -c 0 "$py" -I -B "$tool/wall_summary.py" \
+    --runs "$run/arms" --out "$run/wall_summary.json" > "$run/summary.log" 2>&1 || rc=$?
+[[ $rc != 0 || -s "$run/wall_summary.json" ]] || rc=4
+printf 'SUMMARY_RC=%d\n' "$rc" | tee -a "$screen"
+[[ $rc != 0 ]] || echo READBACK_REQUIRED | tee -a "$screen"
+exit "$rc"
