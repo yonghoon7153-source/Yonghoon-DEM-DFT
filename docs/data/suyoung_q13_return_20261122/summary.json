@@ -1,0 +1,354 @@
+{
+  "cap_MPa": 1.2,
+  "comparison_cells": [
+    16,
+    24,
+    36
+  ],
+  "history_pin": "6bdfac91520c868b5036071e6d60464972727f49",
+  "history_sha256": "a3877d077b56d74877a04215e06135bc3217b5c0f055bf0061a9ba93fcf49f00",
+  "inputs": {
+    "F12": {
+      "origin": "11-20-fixed-repeat",
+      "status": "TARGET_BRACKETED",
+      "steps": 4984,
+      "trace_sha256": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89"
+    },
+    "F16": {
+      "origin": "11-20-fixed-repeat",
+      "status": "TARGET_BRACKETED",
+      "steps": 6521,
+      "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de"
+    },
+    "F24": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 10371,
+      "trace_sha256": "9c057d81835c4c02cf7288748c72c22c5e79ac723de1061e408d1d5c77b16956"
+    },
+    "F36": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 15885,
+      "trace_sha256": "56f436f7eeffb2e3d1e374c8bd7580063cde41eb30e1d18e9b7646f85c51700f"
+    },
+    "S12": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 5027,
+      "trace_sha256": "93e280a484673d29d668cc2eb7cd72d78af0a632697718476e221b8590b95814"
+    },
+    "S16": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 6543,
+      "trace_sha256": "37d344951b1a308f2ceff73bda259ecd4ad1ab843ae788925665babea66a0d44"
+    },
+    "S24": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 10376,
+      "trace_sha256": "8aa5f92113339edd795663c8c09f13cb8e1d51bee07f77d77aed56f670cab217"
+    },
+    "S36": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 15888,
+      "trace_sha256": "0c1fc90ffd2a9295b9234574b0bdd38d3e71b6a1be8a9ed27a3e581330274a26"
+    }
+  },
+  "label": "DEVELOPMENT_ONLY",
+  "missing_36_targets": {},
+  "noise_floor_MPa": 0.008,
+  "protocol": "U6b-setting1-bottom-loading-v1",
+  "resolutions": [
+    12,
+    16,
+    24,
+    36
+  ],
+  "setting": 1,
+  "stage3_go": false,
+  "status": "DEVELOPMENT_READBACK",
+  "targets": {
+    "0.84": {
+      "arms": {
+        "F": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -1.054764145492159,
+            -1.084718090801074,
+            -1.204336795466999,
+            -1.3007778420776068
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.34827455974504606,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.33799705694475196,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.2998908225287027,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.27231988876261864,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              -0.029953945308915042,
+              -0.11961870466592495,
+              -0.09644104661060782
+            ],
+            "interval": null,
+            "noise_signal": false,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        },
+        "S": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -1.0549513972710627,
+            -1.0847031383644894,
+            -1.2042681889957665,
+            -1.300809219634613
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.34820935081962107,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.33800211086209586,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.2999113976855778,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.2723113441638401,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              -0.02975174109342671,
+              -0.11956505063127709,
+              -0.09654103063884656
+            ],
+            "interval": null,
+            "noise_signal": false,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": null
+    },
+    "0.90": {
+      "arms": {
+        "F": {
+          "ln_pressure_interval": [
+            -0.9789940619668881,
+            -0.7995609434733728
+          ],
+          "ln_sigma_MPa": [
+            -0.713063690027089,
+            -0.6902312464552359,
+            -0.7730832373088677,
+            -0.8195609434733728
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.49014025701635505,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.50146009478789,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.46158768766708896,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.44062507135580137,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.0228324435718531,
+              -0.08285199085363182,
+              -0.046477706164505084
+            ],
+            "interval": [
+              -0.9789940619668881,
+              -0.7995609434733728
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        },
+        "S": {
+          "ln_pressure_interval": [
+            -0.9791928041742473,
+            -0.7995351297677993
+          ],
+          "ln_sigma_MPa": [
+            -0.7130921685739868,
+            -0.6902128336979277,
+            -0.7729825716323167,
+            -0.8195351297677993
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.4901262987328159,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.5014693281359205,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.4616341560428016,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.4406364456684676,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.022879334876059088,
+              -0.08276973793438891,
+              -0.04655255813548265
+            ],
+            "interval": [
+              -0.9791928041742473,
+              -0.7995351297677993
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": [
+        -0.17963186070087445,
+        0.17945893219908882
+      ]
+    },
+    "0.95": {
+      "arms": {
+        "F": {
+          "ln_pressure_interval": [
+            -0.6697907532631335,
+            -0.4550829295027874
+          ],
+          "ln_sigma_MPa": [
+            -0.42163850112722245,
+            -0.3277077836683093,
+            -0.4168469882493387,
+            -0.4750829295027874
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.6559711293608204,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.7205735523034389,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6591217656038925,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6218334859848832,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.09393071745891313,
+              -0.08913920458102936,
+              -0.05823594125344872
+            ],
+            "interval": [
+              -0.6697907532631335,
+              -0.4550829295027874
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        },
+        "S": {
+          "ln_pressure_interval": [
+            -0.6695577584726315,
+            -0.45497143291948
+          ],
+          "ln_sigma_MPa": [
+            -0.4172940804427198,
+            -0.32817280591111525,
+            -0.4167759910684295,
+            -0.47497143291948
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.6588271432745828,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.720238547472426,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.65916856305235,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6219028221592581,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "d0_d1_d2": [
+              0.08912127453160457,
+              -0.08860318515731425,
+              -0.05819544185105052
+            ],
+            "interval": [
+              -0.6695577584726315,
+              -0.45497143291948
+            ],
+            "noise_signal": false,
+            "rule": "A",
+            "suspect_asymptotic": true
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": [
+        -0.21447482896984416,
+        0.21481932034365353
+      ]
+    }
+  },
+  "u6_qualified": false,
+  "unavailable": {},
+  "witness_cells": 12
+}

@@ -1,0 +1,103 @@
+{
+  "archive_regular_files": 11,
+  "archive_sha256": "9ee560c6794417cfbc35af9e718b78d7ce3cede2fc8e67c6bb504013fd96b8c0",
+  "archived_screen_identical": true,
+  "history_pin": "6bdfac91520c868b5036071e6d60464972727f49",
+  "new_simulations": 0,
+  "new_trace_receipts": 2,
+  "pinned_git_source_blobs": 5,
+  "prior_archive_sha256": "a3877d077b56d74877a04215e06135bc3217b5c0f055bf0061a9ba93fcf49f00",
+  "prior_summary_sha256": "bb893705987c692699741fe82ed544c1104f482e3dd2e30d6157a6da08ff6ada",
+  "release": "77bafa93025f4d6a8aef9ed212ee3d589ee7fee3",
+  "replay_byte_identical": true,
+  "replay_mode": "summarize",
+  "replay_rc": 0,
+  "return_manifest_entries": 2,
+  "reused_trace_receipts": 6,
+  "screen_sha256": "29291122a2fe938a5c48a50b3a0bdc453a85677aa8e612022b9ecc3ab5393b56",
+  "source_manifest_entries": 6,
+  "source_manifest_sha256": "8376891fd166b0bac7bfeea13354c1aa528a32a67f7147faa43da782b0d1c013",
+  "source_zip_manifest_entries": 9,
+  "source_zip_sha256": "8f784c8922cc838c169eb780eed2d5a72dd28d191ea039d1ddf040566e6619b4",
+  "summary_sha256": "f42e89f82ee1203c278474544391b0eecf2a516fd5149c9d6e34c4092ecf984d",
+  "trace_receipt_readback": {
+    "F12": {
+      "origin": "11-20-fixed-repeat",
+      "read_from": "prior_return",
+      "receipt_sha256": "11929757dc1983cbd2548209503fe94f4184d5efbc7de4414b3602d3bef1da6a",
+      "status": "TARGET_BRACKETED",
+      "steps": 4984,
+      "trace_rows": 4985,
+      "trace_sha256": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89"
+    },
+    "F16": {
+      "origin": "11-20-fixed-repeat",
+      "read_from": "prior_return",
+      "receipt_sha256": "5d5787e671bfdae7336a54d470381f8e6693a52736f3c5dc6ed82f4b83765cfe",
+      "status": "TARGET_BRACKETED",
+      "steps": 6521,
+      "trace_rows": 6522,
+      "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de"
+    },
+    "F24": {
+      "origin": "new",
+      "read_from": "prior_return",
+      "receipt_sha256": "2f23acefcdfdb153163f1215b4749b99a1c54da0704add5618755f1bbacbb0bf",
+      "status": "TARGET_BRACKETED",
+      "steps": 10371,
+      "trace_rows": 10372,
+      "trace_sha256": "9c057d81835c4c02cf7288748c72c22c5e79ac723de1061e408d1d5c77b16956"
+    },
+    "F36": {
+      "origin": "new",
+      "read_from": "new_return",
+      "receipt_sha256": "a35b1fd579f2f54ef531f7d9fba258a2813753467b7b938533681fa82b5c8bf1",
+      "status": "TARGET_BRACKETED",
+      "steps": 15885,
+      "trace_rows": 15886,
+      "trace_sha256": "56f436f7eeffb2e3d1e374c8bd7580063cde41eb30e1d18e9b7646f85c51700f"
+    },
+    "S12": {
+      "origin": "new",
+      "read_from": "prior_return",
+      "receipt_sha256": "b1b8196c3c09bee4493d4f01f94602d93b02892d79401a378f30a6310353399e",
+      "status": "TARGET_BRACKETED",
+      "steps": 5027,
+      "trace_rows": 5028,
+      "trace_sha256": "93e280a484673d29d668cc2eb7cd72d78af0a632697718476e221b8590b95814"
+    },
+    "S16": {
+      "origin": "new",
+      "read_from": "prior_return",
+      "receipt_sha256": "bd4366a1400ddb6846e4a4210cf248abf0b02bbbea7ee0c6ef51401064e54ca9",
+      "status": "TARGET_BRACKETED",
+      "steps": 6543,
+      "trace_rows": 6544,
+      "trace_sha256": "37d344951b1a308f2ceff73bda259ecd4ad1ab843ae788925665babea66a0d44"
+    },
+    "S24": {
+      "origin": "new",
+      "read_from": "prior_return",
+      "receipt_sha256": "e7c2256b6af69ed911437e2ae52d050bdd7122fec1cf5fd6d73a47b0616475d4",
+      "status": "TARGET_BRACKETED",
+      "steps": 10376,
+      "trace_rows": 10377,
+      "trace_sha256": "8aa5f92113339edd795663c8c09f13cb8e1d51bee07f77d77aed56f670cab217"
+    },
+    "S36": {
+      "origin": "new",
+      "read_from": "new_return",
+      "receipt_sha256": "dcad76b3ed03ffa82a2aeaa7dafbd353ed5926d88e77985be1ab3186d9fb5862",
+      "status": "TARGET_BRACKETED",
+      "steps": 15888,
+      "trace_rows": 15889,
+      "trace_sha256": "0c1fc90ffd2a9295b9234574b0bdd38d3e71b6a1be8a9ed27a3e581330274a26"
+    }
+  },
+  "zero_exit_codes": [
+    "S36",
+    "F36",
+    "SUMMARY",
+    "COMMAND"
+  ]
+}
