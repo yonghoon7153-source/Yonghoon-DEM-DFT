@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+IBB='@IBB@'
+IBBP=@IBBP@
+if [[ $# != 1 ]]; then
+  printf '%s\n' 'Usage: bash THIS.txt CHECK_ONLY|GO_PS73_SEQUENCE_ONCE|GO_UB_ONCE|STATUS|RETURN|RESUME_ACKNOWLEDGED'
+  exit 2
+fi
+mode=$1
+case "$mode" in
+  CHECK_ONLY|GO_PS73_SEQUENCE_ONCE|GO_UB_ONCE|STATUS|RETURN|RESUME_ACKNOWLEDGED) ;;
+  *) echo 'Unknown action'; exit 2 ;;
+esac
+out=$(mktemp -d "$HOME/ps73_development_XXXXXXXX")
+cd -- "$out"
+printf 'LOCAL_DIR=%s\n' "$out"
+base64 -d > author.zip <<'PAYLOAD'
+@OUTER_B64@
+PAYLOAD
+printf '%s  author.zip\n' '@OUTER_SHA@' | sha256sum -c --status -
+unzip -q author.zip
+sha256sum -c --status SHA256SUMS
+echo 'PACKAGE_OK pin=@PIN@'
+if [[ "$mode" == CHECK_ONLY ]]; then exit 0; fi
+opts=(-T -o ConnectionAttempts=1 -o ConnectTimeout=25 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -p "$IBBP")
+cmd=$(python3 -I -B - "$mode" <<'CMD'
+import base64, pathlib, shlex, sys
+src=base64.b64encode(pathlib.Path("field_boot.py").read_bytes()).decode("ascii")
+loader="import base64;exec(compile(base64.b64decode("+repr(src)+"),'<ps73_boot>','exec'))"
+print("exec python3 -I -B -c "+shlex.quote(loader)+" "+sys.argv[1]+" @SOURCE_ZIP_SHA@ @SOURCE_SUMS_SHA@")
+CMD
+)
+rc=0
+case "$mode" in
+  GO_UB_ONCE|GO_PS73_SEQUENCE_ONCE)
+    ssh "${opts[@]}" "$IBB" "$cmd" < source.zip | tee dispatch.txt || rc=$?
+    echo 'Use STATUS to check acknowledged job IDs; do not rerun GO after a disconnect or ambiguous response.'
+    ;;
+  STATUS|RESUME_ACKNOWLEDGED)
+    ssh "${opts[@]}" "$IBB" "$cmd" </dev/null | tee status.txt || rc=$?
+    ;;
+  RETURN)
+    ssh "${opts[@]}" "$IBB" "$cmd" </dev/null > private_return.zip || rc=$?
+    if (( rc == 0 )); then
+      python3 -I -B local_summary.py private_return.zip development_readback.json | tee return_status.txt || rc=$?
+      if (( rc == 0 )); then sha256sum private_return.zip | tee private_return.zip.sha256; fi
+    fi
+    ;;
+esac
+echo "SSH_OR_VERIFY_RC=$rc"
+exit "$rc"
