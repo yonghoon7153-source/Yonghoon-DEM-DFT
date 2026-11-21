@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 1 || $1 != GO_SUYOUNG_DENSE_ONCE ]]; then
+    echo 'Usage: bash PASTE_SUYOUNG_DENSE.txt GO_SUYOUNG_DENSE_ONCE' >&2
+    exit 2
+fi
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+release='@PIN@'
+sums='@SOURCE_SUMS@'
+[[ "$release" =~ ^[0-9a-f]{40}$ && "$sums" =~ ^[0-9a-f]{64}$ ]] || { echo 'Unbound source'; exit 2; }
+printf '%s  %s\n' "$sums" SOURCE_SHA256SUMS | sha256sum --check --status -
+sha256sum --check --status SOURCE_SHA256SUMS
+for tool in taskset timeout mktemp sha256sum tar; do command -v "$tool" >/dev/null; done
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Prior WSL project venv missing'; exit 2; }
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+taskset -c 0 "$py" -I -B -c 'import numpy,sys; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Historical trace environment mismatch")'
+
+once="$HOME/suyoung_dense_once_1121"
+mkdir -- "$once" || { echo "Attempt already reserved: $once"; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_dense_XXXXXXXX")
+ret=$(mktemp -d "$(dirname -- "$pkg")/suyoung_dense_return_XXXXXXXX")
+printf 'WORK=%s\nRETURN_DIRECTORY=%s\nRELEASE=%s\n' "$work" "$ret" "$release" | tee "$once/receipt.txt"
+run="$work/run"
+mkdir "$run" "$run/arms"
+screen="$run/screen.txt"
+pack() {
+    local rc=$?
+    trap - EXIT INT TERM HUP
+    set +e
+    if [[ $rc -ne 0 && -d "$run/arms" && ! -e "$run/summary.json" ]]; then
+        timeout --kill-after=3s 30s taskset -c 0 "$py" -I -B "$pkg/scripts/suyoung_u6b_dev.py" \
+            summarize --runs "$run/arms" --out "$run/partial_summary.json" > "$run/partial_summary.log" 2>&1
+        printf 'PARTIAL_READBACK_RC=%d\n' "$?" | tee -a "$screen"
+    fi
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_dense_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_dense_result.tar.gz screen.txt > SHA256SUMS && sha256sum -c SHA256SUMS && cat SHA256SUMS) ||
+    { echo "ARCHIVE_INCOMPLETE WORK=$work RETURN_DIRECTORY=$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+printf 'DEVELOPMENT_ONLY\nrelease=%s\nsource_sums=%s\nCPU=0\narm_hard_limit_s=3600\n' "$release" "$sums" > "$run/origin.txt"
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+taskset -c 0 "$py" -I -B -c 'import sys,platform,numpy; print(sys.version,platform.platform(),numpy.__version__,sep="\n")' >> "$run/origin.txt"
+
+do_step() {
+    local label=$1 rc=0
+    shift
+    printf '%s_BEGIN=%s\n' "$label" "$(date -u +%FT%TZ)" | tee -a "$screen"
+    "$@" > "$run/$label.log" 2>&1 || rc=$?
+    printf '%s_RC=%d\n' "$label" "$rc" | tee -a "$screen"
+    return "$rc"
+}
+b="$pkg/scripts/suyoung_u6b_dev.py"
+c="$pkg/scripts/suyoung_u6c_dev.py"
+for cells in 12 16; do
+    do_step "HIST_F$cells" taskset -c 0 "$py" -I -B "$b" import-trace --cells "$cells" \
+        --source "$pkg/historical/F$cells/trace.csv" --out "$run/arms/F$cells"
+done
+for arm in S8 F8 S12 S16 S24 F24; do
+    cells=${arm:1}
+    if [[ "$arm" == F8 ]]; then
+        call=("$c" --cells "$cells" --budget 3570 --out "$run/arms/$arm")
+    else
+        call=("$b" run --arm "${arm:0:1}" --cells "$cells" --budget 3570 --out "$run/arms/$arm")
+    fi
+    do_step "$arm" timeout --signal=TERM --kill-after=5s 3595s taskset -c 0 "$py" -I -B "${call[@]}"
+done
+do_step SUMMARY taskset -c 0 "$py" -I -B "$b" summarize --runs "$run/arms" --out "$run/summary.json"
+printf 'READBACK_REQUIRED\n' | tee -a "$screen"
