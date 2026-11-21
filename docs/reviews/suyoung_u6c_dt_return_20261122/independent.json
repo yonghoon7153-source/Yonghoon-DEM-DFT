@@ -1,0 +1,24 @@
+{
+  "F16_peak_on_common_support_MPa": 0.6348781834041664,
+  "MPa_at_anchor": {
+    "F16": 0.6348781834041664,
+    "F8": 1.2008555155072616,
+    "F8_half_dt": 1.1708897128678601
+  },
+  "knots_including_origin": 5157,
+  "largest_abs_remaining_contrast_MPa": 0.5360115294636938,
+  "largest_abs_time_contrast_MPa": 0.038049768174508,
+  "original_over_5_percent_of_fine_peak_knots": 3528,
+  "remaining_max_percent_of_fine_peak": 84.42746080667673,
+  "remaining_over_5_percent_of_fine_peak_knots": 4063,
+  "remaining_percent_of_original_at_anchor": 94.70547653771706,
+  "signed_contrasts_MPa_at_anchor": {
+    "original": 0.5659773321030952,
+    "remaining": 0.5360115294636938,
+    "time": 0.029965802639401407
+  },
+  "signed_identity_max_abs_roundoff_MPa": 2.7755575615628914e-17,
+  "time_contrast_percent_of_original_at_anchor": 5.294523462282939,
+  "time_over_5_percent_of_fine_peak_knots": 307,
+  "u_anchor": 0.11562281664031926
+}

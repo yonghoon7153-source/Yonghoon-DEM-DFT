@@ -1,0 +1,46 @@
+{
+  "comparison": {
+    "at_largest_original_gap_on_common_support": {
+      "F16_MPa": 0.6348781834041664,
+      "F8_MPa": 1.2008555155072616,
+      "F8_half_dt_MPa": 1.1708897128678601,
+      "signed_gaps_MPa": {
+        "F8_half_dt_minus_F16": 0.5360115294636938,
+        "F8_minus_F8_half_dt": 0.029965802639401407,
+        "original_F8_minus_F16": 0.5659773321030952
+      },
+      "u": 0.11562281664031926
+    },
+    "at_prior_peak": {
+      "F16_MPa": 0.6348781834041664,
+      "F8_MPa": 1.2008555155072616,
+      "F8_half_dt_MPa": 1.1708897128678601,
+      "signed_gaps_MPa": {
+        "F8_half_dt_minus_F16": 0.5360115294636938,
+        "F8_minus_F8_half_dt": 0.029965802639401407,
+        "original_F8_minus_F16": 0.5659773321030952
+      },
+      "u": 0.11562281664031926
+    },
+    "common_end_u": 0.11562281664031926,
+    "common_knots": 5157,
+    "common_max_abs_gap_MPa": {
+      "F8_half_dt_minus_F16": 0.5360115294636938,
+      "F8_minus_F8_half_dt": 0.038049768174508,
+      "original_F8_minus_F16": 0.5659773321030952
+    },
+    "common_start_u": 0.0,
+    "prior_peak_coverage": "REACHED",
+    "prior_peak_gap_MPa": 0.5659773321030952,
+    "prior_peak_gap_u": 0.11562281664031926
+  },
+  "label": "DEVELOPMENT_ONLY",
+  "native_result_sha256": "b2c8f4f7f13310973edb12899833ec241d46c0e5aa5d90f440f10a44cda50e09",
+  "native_trace_sha256": "a88c4749a5b406a49ee11f6e0553567177d4dcfb91b9ba69182c0c68b588bfa1",
+  "prior_sha256": "0df5971d360ed20463d67ab36bd97b677b3e55bee9aaf01dbd559daf79a9ed90",
+  "protocol": "U6c-F8-half-native-dt-v1",
+  "remaining_contrast": "same time step; grid, seeding and their interactions still differ",
+  "stage3_go": false,
+  "status": "DEVELOPMENT_DT_SENSITIVITY",
+  "u6_qualified": false
+}
