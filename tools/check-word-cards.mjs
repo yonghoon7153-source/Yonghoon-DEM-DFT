@@ -1,0 +1,118 @@
+// Run against a preview server, using the same Playwright setup as tools/shots.mjs.
+import { createRequire } from 'node:module';
+import assert from 'node:assert/strict';
+const { chromium } = createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const base = process.env.BASE || 'http://localhost:5004/';
+const browser = await chromium.launch();
+const errors = [], checks = [];
+try {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'ko-KR' });
+  const p = await ctx.newPage();
+  p.on('pageerror', (e) => errors.push(e.message));
+  await p.goto(`${base}#words`, { waitUntil: 'networkidle' });
+  const study = p.locator('.study');
+  const click = (name) => study.getByRole('button', { name, exact: true }).click();
+  await p.locator('.study__card').waitFor();
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 18');
+  await p.locator('.study__card').click();
+  assert.equal(await p.locator('.study__card').getAttribute('data-face'), 'back');
+  assert.match(await p.locator('.study__detail').innerText(), /I see/);
+  await click('이제 알겠어요');
+  assert.match(await p.locator('.study__learned').textContent(), /1 \/ 18/);
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 18');
+  await click('English');
+  assert.equal(await p.locator('.study__expression').textContent(), 'I see.');
+  assert.match(await p.locator('.study__learned').textContent(), /0 \/ 18/);
+  await click('日本語'); await click('낯선 단어만');
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 17');
+  await p.locator('.study__search').fill('reservation');
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 1');
+  assert.equal(await p.locator('.study__step').first().isDisabled(), true);
+  assert.equal(await p.locator('.study__step').last().isDisabled(), true);
+  await click('이제 알겠어요');
+  await p.locator('.study__empty').waitFor();
+  assert.equal(await p.locator('.study__count').textContent(), '0 / 0');
+  assert.equal(await p.evaluate(() => document.activeElement.textContent), '전체 단어 보기');
+  await click('전체 단어 보기');
+  await click('목록'); assert.equal(await p.locator('.study__row').count(), 18);
+  await p.locator('.study__row').nth(3).click();
+  assert.equal(await p.locator('.study__count').textContent(), '4 / 18');
+  await p.locator('.study__card').focus(); await p.keyboard.press('Space');
+  assert.equal(await p.locator('.study__card').getAttribute('data-face'), 'back');
+  await p.keyboard.press('ArrowRight');
+  assert.equal(await p.locator('.study__count').textContent(), '5 / 18');
+  assert.equal(await p.locator('.study__card').getAttribute('data-face'), 'front');
+  await click('섞기');
+  const expressions = new Set();
+  for (let i = 0; i < 18; i++) { expressions.add(await p.locator('.study__expression').textContent()); if (i < 17) await click('다음'); }
+  assert.equal(expressions.size, 18);
+  await p.reload({ waitUntil: 'networkidle' });
+  assert.match(await p.locator('.study__learned').textContent(), /2 \/ 18/);
+  checks.push('flip, examples, independent language marks, filter-empty, list, keyboard, shuffle, reload');
+  const oldTitle = await p.locator('.study__title').textContent();
+  await p.locator('input[type=file]').setInputFiles({ name: 'broken.json', mimeType: 'application/json', buffer: Buffer.from('{bad') });
+  await p.waitForFunction(() => document.querySelector('.study__message').textContent.includes('JSON'));
+  assert.equal(await p.locator('.study__title').textContent(), oldTitle);
+  const imported = { schemaVersion: 1, deckId: 'qa-only', title: '개인 단어장', cards: [
+    { id: 'ja', ja: '<img src=x onerror=alert(1)>', ko: '태그도 문자로', notionUrl: 'javascript:alert(1)' },
+    { id: 'en', en: 'one English card', ko: '영어만 있는 카드' },
+  ] };
+  const uploads = [];
+  p.on('request', r => { if (r.method() === 'POST') uploads.push(r.url()); });
+  await p.locator('input[type=file]').setInputFiles({ name: 'my-deck.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(imported)) });
+  await p.waitForFunction(() => document.querySelector('.study__title').textContent === '개인 단어장');
+  assert.equal(await p.locator('.study__card img').count(), 0);
+  assert.equal(await p.locator('.study__source').isVisible(), false);
+  assert.equal(await p.locator('.study__count').textContent(), '1 / 1');
+  await click('English'); assert.equal(await p.locator('.study__expression').textContent(), 'one English card');
+  await p.reload({ waitUntil: 'networkidle' });
+  assert.equal(await p.locator('.study__title').textContent(), '개인 단어장');
+  assert.equal(uploads.length, 0);
+  await p.locator('.study__import summary').click();
+  await click('기본 단어장 보기');
+  await click('보관한 내 단어장 보기');
+  assert.equal(await p.locator('.study__title').textContent(), '개인 단어장');
+  checks.push('invalid file preserves deck; private import persists without upload, safe text and links, missing languages');
+  await click('이 기기의 단어장 지우기');
+  await p.evaluate(() => { location.hash = 'kyoto'; });
+  await p.waitForFunction(() => document.getElementById('words-page').hidden);
+  await p.click('#words-link'); await p.locator('.study__card').waitFor();
+  await p.locator('.words__back').click();
+  assert.equal(new URL(p.url()).hash, '#kyoto');
+  await p.goBack(); await p.locator('.study__card').waitFor();
+  checks.push('map return hash and browser history');
+  for (const width of [320, 390, 760, 1440]) {
+    await p.setViewportSize({ width, height: 900 });
+    await p.locator('.study__card').scrollIntoViewIfNeeded();
+    const size = await p.evaluate(() => { const w = document.getElementById('words-page'); const c = document.querySelector('.study__card').getBoundingClientRect(); return { scroll: w.scrollWidth, client: w.clientWidth, left: c.left, right: c.right, width: innerWidth }; });
+    assert.ok(size.scroll <= size.client + 1 && size.left >= 0 && size.right <= size.width, `overflow at ${width}: ${JSON.stringify(size)}`);
+    await p.screenshot({ path: `${process.env.OUT || '/tmp/nihonchizu-cards-qa'}/cards-${width}.png` });
+  }
+  checks.push('320/390/760/1440 layout');
+  for (const link of await p.locator('#words-page a[target="_blank"]').all()) {
+    assert.match(await link.getAttribute('rel'), /noopener/);
+  }
+  assert.equal(await p.locator('.words__resources a').count(), 3);
+  assert.equal(await p.locator('.words__notebooks a').count(), 2);
+  await ctx.close();
+  const blocked = await browser.newContext();
+  await blocked.addInitScript(() => { Storage.prototype.setItem = () => { throw new Error('quota'); }; });
+  const b = await blocked.newPage(); await b.goto(`${base}#words`, { waitUntil: 'networkidle' });
+  await b.getByRole('button', { name: '이제 알겠어요', exact: true }).click();
+  assert.match(await b.locator('.study__message').textContent(), /이번 화면/);
+  assert.match(await b.locator('.study__learned').textContent(), /1 \/ 18/);
+  await blocked.close(); checks.push('storage failure remains usable and reports unsaved state');
+  const corrupt = await browser.newContext();
+  await corrupt.addInitScript(() => {
+    localStorage.setItem('nihonchizu.private-deck.v1', '{bad');
+    localStorage.setItem('nihonchizu.known-cards.v1', JSON.stringify(['daily-conversation:ja:daily-002', 'daily-conversation:ja:daily-003']));
+  });
+  const c = await corrupt.newPage(); await c.goto(`${base}#words`, { waitUntil: 'networkidle' });
+  assert.match(await c.locator('.study__learned').textContent(), /2 \/ 18/);
+  assert.match(await c.locator('.study__card').getAttribute('aria-label'), /なるほど/);
+  await c.getByRole('button', { name: '이제 알겠어요', exact: true }).click();
+  assert.equal(await c.evaluate(() => JSON.parse(localStorage.getItem('nihonchizu.known-cards.v1')).length), 3);
+  await corrupt.close(); checks.push('corrupt private deck cannot erase independent learned marks; card name includes expression');
+  assert.deepEqual(errors, []);
+  console.log(JSON.stringify({ passed: checks, appErrors: errors }, null, 2));
+} finally { await browser.close(); }

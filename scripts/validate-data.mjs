@@ -275,6 +275,20 @@ for (const n of mountainsDb.notes ?? []) {
   if (n.arrow && !(n.arrow.length >= 2 && n.arrow.every(inJapan))) err(`mountains.notes "${n.id}": arrow must be ≥2 points`);
 }
 
+// Only the curated, public learning deck belongs in the shipped JSON database.
+const wordDeck = read('word-cards.json');
+const wordIds = new Set();
+if (wordDeck.schemaVersion !== 1 || !wordDeck.deckId || !wordDeck.title || !Array.isArray(wordDeck.cards) || !wordDeck.cards.length) err('word-cards: invalid deck');
+for (const c of wordDeck.cards ?? []) {
+  if (!c.id || wordIds.has(c.id)) err(`word-cards: missing/duplicate id ${c.id}`);
+  wordIds.add(c.id);
+  for (const k of ['ja', 'reading', 'ko', 'en', 'category', 'jaExample', 'enExample', 'koExample']) {
+    if (typeof c[k] !== 'string' || !c[k].trim() || c[k].length > 8000) err(`word-cards ${c.id}: invalid ${k}`);
+  }
+  if (c.exampleOrigin !== 'authored') err(`word-cards ${c.id}: label authored examples`);
+  if (c.notionUrl || c.sourcePageId || c.raw_json) err(`word-cards ${c.id}: private source data must not be published`);
+}
+
 if (errors.length) {
   console.error(`✗ data check failed (${errors.length}):\n  - ` + errors.join('\n  - '));
   process.exit(1);

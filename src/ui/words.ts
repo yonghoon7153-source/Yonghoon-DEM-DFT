@@ -1,7 +1,8 @@
 import words from '../../data/words.json';
 import { el } from './dom';
+import { createWordCards } from './word-cards';
 
-// Link-only for now: Notion remains the source of the learning content.
+// Cards are a reading view. Notion remains the source of the learning content.
 export function createWordsPage() {
   const app = document.getElementById('app')!;
   const page = document.getElementById('words-page')!;
@@ -44,19 +45,18 @@ export function createWordsPage() {
     el('header', { class: 'words__heading' },
       el('p', { class: 'words__eyebrow', lang: 'ja' }, '今日のことば'),
       title,
-      el('p', { class: 'words__intro' }, '차곡차곡 모은 단어와 표현, 오늘도 한 번 펼쳐 봐요.'),
+      el('p', { class: 'words__intro' }, '차곡차곡 모은 표현, 한 장씩 뒤집으며 익혀 봐요.'),
     ),
-    el('section', { class: 'words__card', 'aria-labelledby': 'words-note-title' },
-      el('span', { class: 'words__tape', 'aria-hidden': 'true' }),
-      el('span', { class: 'words__icon', 'aria-hidden': 'true' }, '📖'),
-      el('p', { class: 'words__label' }, '나의 Notion 단어 노트'),
-      el('h2', { id: 'words-note-title' }, words.today.title),
-      el('p', { class: 'words__description' }, '오늘 복습할 단어와 예문을 노트에서 확인해요.'),
+    createWordCards(),
+    el('section', { class: 'words__note-link', 'aria-labelledby': 'words-note-title' },
+      el('div', {}, el('p', { class: 'words__label' }, '나의 Notion 단어 노트'),
+        el('h2', { id: 'words-note-title' }, words.today.title),
+        el('p', { class: 'words__description' }, '전체 기록과 오늘 복습할 표현도 함께 살펴봐요.'),
+      ),
       el('a', { class: 'words__open', href: words.today.url, target: '_blank', rel: 'noopener noreferrer' },
-        '오늘의 단어 열기 ', el('span', { 'aria-hidden': 'true' }, '↗'),
+        'Notion에서 열기',
         el('span', { class: 'sr-only' }, ' (Notion, 새 탭)'),
       ),
-      el('p', { class: 'words__hint' }, 'Notion에서 새 탭으로 열려요.'),
     ),
     el('section', { class: 'words__related', 'aria-labelledby': 'words-related-title' },
       el('h2', { id: 'words-related-title' }, '함께 보는 회화 노트'), notebooks,
