@@ -167,6 +167,8 @@ if (steps.includes('words')) {
     await p.click('#words-link');
     await p.waitForSelector('#words-page:not([hidden])');
     await p.screenshot({ path: `${out}/23-words-${name}.png` });
+    await p.locator('.words__resources').scrollIntoViewIfNeeded();
+    await p.screenshot({ path: `${out}/24-word-resources-${name}.png` });
     await ctx.close();
   }
 }

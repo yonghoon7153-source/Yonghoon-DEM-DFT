@@ -16,5 +16,25 @@
       "lang": "en",
       "url": "https://app.notion.com/p/striped-weaver-ayh/28a53577a0a5806989e7d978e42bae05"
     }
+  ],
+  "resources": [
+    {
+      "title": "이로도리 · 생활 속 일본어",
+      "provider": "일본국제교류기금 (The Japan Foundation)",
+      "description": "생활 장면별 일본어 회화와 듣기 자료를 무료로 공부해요.",
+      "url": "https://www.irodori.jpf.go.jp/"
+    },
+    {
+      "title": "LearnEnglish · 무료 학습 자료",
+      "provider": "British Council",
+      "description": "수준별 영어 문법과 듣기·말하기 연습 자료예요.",
+      "url": "https://learnenglish.britishcouncil.org/free-resources"
+    },
+    {
+      "title": "Cambridge Dictionary",
+      "provider": "Cambridge University Press & Assessment",
+      "description": "단어의 뜻·예문과 영국·미국 발음을 함께 확인해요.",
+      "url": "https://dictionary.cambridge.org/"
+    }
   ]
 }

@@ -26,6 +26,19 @@ export function createWordsPage() {
       el('span', { class: 'sr-only' }, ' (Notion, 새 탭)'),
     ));
   }
+  const resources = el('ul', { class: 'words__resources' });
+  for (const resource of words.resources) {
+    resources.append(el('li', {}, el('a', {
+      class: 'words__resource', href: resource.url, target: '_blank', rel: 'noopener noreferrer',
+    },
+      el('span', { class: 'words__resource-title' }, resource.title,
+        el('span', { class: 'words__arrow', 'aria-hidden': 'true' }, '↗'),
+      ),
+      el('span', { class: 'words__resource-provider' }, resource.provider),
+      el('span', { class: 'words__resource-description' }, resource.description),
+      el('span', { class: 'sr-only' }, ' (새 탭)'),
+    )));
+  }
   page.append(el('div', { class: 'words' },
     back,
     el('header', { class: 'words__heading' },
@@ -47,6 +60,11 @@ export function createWordsPage() {
     ),
     el('section', { class: 'words__related', 'aria-labelledby': 'words-related-title' },
       el('h2', { id: 'words-related-title' }, '함께 보는 회화 노트'), notebooks,
+    ),
+    el('section', { class: 'words__related', 'aria-labelledby': 'words-resources-title' },
+      el('h2', { id: 'words-resources-title' }, '더 공부하고 싶다면'),
+      el('p', { class: 'words__resource-intro' }, 'Codex 추천 · 상황별 회화와 단어의 쓰임을 확인하는 공식 학습 자료예요.'),
+      resources,
     ),
   ));
 
