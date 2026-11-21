@@ -82,10 +82,15 @@ export function createWordCards() {
     category.replaceChildren(el('option', { value: '' }, '모든 상황'),
       ...[...new Set(deck.cards.map((c) => c.category))].sort().map((c) => el('option', { value: c }, c)));
   }
-  function select() {
-    order = deck.cards.filter((c) => c[language] && matchesCard(c, query.value)
+  let sequence = [...deck.cards];
+  function select(preserve = false) {
+    const currentId = preserve ? order[index]?.id : undefined;
+    const previousIndex = index;
+    order = sequence.filter((c) => c[language] && matchesCard(c, query.value)
       && (!category.value || c.category === category.value) && (!onlyUnknown || !known.has(key(c))));
-    index = 0; flipped = false; listLimit = 40; render();
+    const found = currentId ? order.findIndex((c) => c.id === currentId) : -1;
+    index = preserve ? (found >= 0 ? found : Math.min(previousIndex, Math.max(0, order.length - 1))) : 0;
+    flipped = false; listLimit = 40; render();
   }
   function render() {
     const c = order[index];
@@ -168,16 +173,20 @@ export function createWordCards() {
     status.textContent = !order.length ? '남은 낯선 단어가 없어요. 전체 단어 보기로 돌아갈 수 있어요.' : value ? '익힌 표현에 표시했어요.' : '다시 볼 표현에 남겼어요.';
     if (!order.length) scene.querySelector<HTMLButtonElement>('button')?.focus();
   }
-  ja.addEventListener('click', () => { language = 'ja'; select(); });
-  en.addEventListener('click', () => { language = 'en'; select(); });
+  function changeLanguage(nextLanguage: StudyLanguage) {
+    if (language === nextLanguage) return;
+    language = nextLanguage; select(true);
+  }
+  ja.addEventListener('click', () => changeLanguage('ja'));
+  en.addEventListener('click', () => changeLanguage('en'));
   cardMode.addEventListener('click', () => { mode = 'cards'; render(); });
   listMode.addEventListener('click', () => { mode = 'list'; render(); });
   card.addEventListener('click', turn); flip.addEventListener('click', turn);
   previous.addEventListener('click', () => move(-1)); next.addEventListener('click', () => move(1));
   again.addEventListener('click', () => mark(false)); gotIt.addEventListener('click', () => mark(true));
-  query.addEventListener('input', select); category.addEventListener('change', select);
+  query.addEventListener('input', () => select()); category.addEventListener('change', () => select());
   unknown.addEventListener('click', () => { onlyUnknown = !onlyUnknown; select(); });
-  mix.addEventListener('click', () => { order = shuffled(order); index = 0; flipped = false; render(); status.textContent = '카드 순서를 섞었어요.'; });
+  mix.addEventListener('click', () => { sequence = shuffled(sequence); select(); status.textContent = '카드 순서를 섞었어요.'; });
   more.addEventListener('click', () => { listLimit += 40; render(); });
   root.addEventListener('keydown', (event) => {
     if (mode !== 'cards' || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || !(event.target instanceof HTMLElement)
@@ -190,17 +199,17 @@ export function createWordCards() {
     try {
       if (chosen.size > 8 * 1024 * 1024) throw new Error('8MB 이하의 단어장 파일을 선택해 주세요.');
       const imported = parseDeck(JSON.parse(await chosen.text()));
-      deck = imported; query.value = ''; onlyUnknown = false; categories(); select();
+      deck = imported; sequence = [...deck.cards]; query.value = ''; onlyUnknown = false; categories(); select();
       try { localStorage.setItem(DECK_KEY, JSON.stringify(imported)); savedDeck = imported; render(); message.textContent = `${deck.cards.length.toLocaleString()}개 표현을 이 브라우저에 보관했어요.`; }
       catch { message.textContent = '단어장을 열었지만 저장 공간이 부족해요. 창을 닫은 뒤에는 파일을 다시 불러와 주세요.'; }
     } catch (error) { message.textContent = error instanceof SyntaxError ? 'JSON 단어장 파일인지 확인해 주세요. 기존 단어장은 그대로예요.' : error instanceof Error ? error.message : '파일을 읽지 못했어요.'; }
     file.value = '';
   });
-  basic.addEventListener('click', () => { deck = deck === original && savedDeck ? savedDeck : original; query.value = ''; onlyUnknown = false; categories(); select(); message.textContent = `${deck === original ? '기본' : '보관한 내'} 단어장을 열었어요. 단어장 파일과 학습 표시는 유지돼요.`; });
+  basic.addEventListener('click', () => { deck = deck === original && savedDeck ? savedDeck : original; sequence = [...deck.cards]; query.value = ''; onlyUnknown = false; categories(); select(); message.textContent = `${deck === original ? '기본' : '보관한 내'} 단어장을 열었어요. 단어장 파일과 학습 표시는 유지돼요.`; });
   forget.addEventListener('click', () => {
     try { localStorage.removeItem(DECK_KEY); }
     catch { message.textContent = '브라우저의 저장된 단어장을 지우지 못했어요. 브라우저 설정에서 이 사이트 데이터를 확인해 주세요.'; return; }
-    savedDeck = undefined; deck = original; query.value = ''; onlyUnknown = false; categories(); select();
+    savedDeck = undefined; deck = original; sequence = [...deck.cards]; query.value = ''; onlyUnknown = false; categories(); select();
     message.textContent = '이 기기의 단어장 사본을 지웠어요. Notion 원본과 학습 표시는 유지돼요.';
   });
   categories(); select();

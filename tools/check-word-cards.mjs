@@ -21,9 +21,14 @@ try {
   assert.match(await p.locator('.study__learned').textContent(), /1 \/ 18/);
   assert.equal(await p.locator('.study__count').textContent(), '2 / 18');
   await click('English');
-  assert.equal(await p.locator('.study__expression').textContent(), 'I see.');
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 18');
+  assert.equal(await p.locator('.study__expression').textContent(), 'Got it.');
+  await click('English');
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 18');
   assert.match(await p.locator('.study__learned').textContent(), /0 \/ 18/);
-  await click('日本語'); await click('낯선 단어만');
+  await click('日本語');
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 18');
+  await click('낯선 단어만');
   assert.equal(await p.locator('.study__count').textContent(), '1 / 17');
   await p.locator('.study__search').fill('reservation');
   assert.equal(await p.locator('.study__count').textContent(), '1 / 1');
@@ -43,6 +48,13 @@ try {
   assert.equal(await p.locator('.study__count').textContent(), '5 / 18');
   assert.equal(await p.locator('.study__card').getAttribute('data-face'), 'front');
   await click('섞기');
+  await click('다음');
+  const shuffledJa = await p.locator('.study__expression').textContent();
+  await click('English');
+  assert.equal(await p.locator('.study__count').textContent(), '2 / 18');
+  await click('日本語');
+  assert.equal(await p.locator('.study__expression').textContent(), shuffledJa);
+  await click('이전');
   const expressions = new Set();
   for (let i = 0; i < 18; i++) { expressions.add(await p.locator('.study__expression').textContent()); if (i < 17) await click('다음'); }
   assert.equal(expressions.size, 18);
