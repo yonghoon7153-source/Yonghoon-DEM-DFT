@@ -1,0 +1,41 @@
+{
+  "job_id": "368315",
+  "label": "DEVELOPMENT_DATA",
+  "composition": "7:3",
+  "mpi_ranks": 6,
+  "author_scheduler": {
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed": "00:32:51"
+  },
+  "collection": {
+    "observed_utc": "2026-11-21T07:50:13.947461+00:00",
+    "status": "COMPLETED_REPORT_RETURNED",
+    "launch_requested_by_collection": false,
+    "ssh_rc": 0,
+    "return_rc": 0,
+    "runner_rc": 0
+  },
+  "report": {
+    "bytes": 459828,
+    "sha256": "356599363557f30ac878605349d485c8aa4f96821a842926436d2abde1b01b99"
+  },
+  "certificate": {
+    "status": "RESTORED",
+    "origin_admits": true,
+    "readback": "ORIGIN_AND_REPORT_MATCH",
+    "job_files": {
+      "restore_verdict.json": "b049a3707aede899f4c6badc7176eb63246da8986dea58459dbea4aae45e73e6",
+      "run_manifest.txt": "d4647c1654acf8d225b2b24f64c5e0d8246328f299c057ff3c033b6e6944b5e1"
+    }
+  },
+  "integrity": {
+    "return_manifest_verified": 5,
+    "inner_manifest_verified": 12,
+    "readback_manifest_verified": 4,
+    "receipt_zip_sha256": "4399df25973fb08e82ac2a8e676e66c593cc3c1b6250c5203878b39526c135fe",
+    "origin_json_sha256": "517e0de132f3ba6dfa32849d90ce3e8fc069c3d262a4c2fdffb9439f6eb8fc37",
+    "readback_json_sha256": "68c0f6d61e15633ff76c547319d1b1289ee79bbd355bc82494b7930fae5ad239"
+  },
+  "scope": "RJ_TECHNICAL_RESTORE_ONLY"
+}
