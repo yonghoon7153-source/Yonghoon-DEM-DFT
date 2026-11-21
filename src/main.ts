@@ -416,6 +416,12 @@ async function init() {
     else history.replaceState(null, '', location.pathname + location.search);
   }
   function readHash() {
+    // Browser forward can return to words while a hash-linked festival dialog is still open.
+    if (wordsPage.isOpen()) {
+      modal.close();
+      $('words-title').focus({ preventScroll: true });
+      return;
+    }
     const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
     if (!h) return;
     if (h === 'sanmyaku' && mountains.ranges.length) showMountains();
