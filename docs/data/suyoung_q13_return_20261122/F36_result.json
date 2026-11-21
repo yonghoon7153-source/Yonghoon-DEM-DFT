@@ -1,0 +1,18 @@
+{
+  "arm": "F",
+  "budget_s": 10770.0,
+  "cells": 36,
+  "elapsed_s": 9522.049918233999,
+  "label": "DEVELOPMENT_ONLY",
+  "origin": "new",
+  "points_count": 198597,
+  "protocol": "U6b-setting1-bottom-loading-v1",
+  "setting": 1,
+  "source_sha256": {
+    "dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+    "suyoung_u6_first_dev.py": "5db0f1bda90c824a23479401b7744cf8d31fc64f373441abca692dce6717bda5"
+  },
+  "status": "TARGET_BRACKETED",
+  "steps": 15885,
+  "trace_sha256": "56f436f7eeffb2e3d1e374c8bd7580063cde41eb30e1d18e9b7646f85c51700f"
+}
