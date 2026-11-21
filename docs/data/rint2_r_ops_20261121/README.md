@@ -10,8 +10,11 @@
 | 11-21 15:51 KST | gabia | P1 사다리 종료. 1저자의 읽기 전용 화면에서 위 세 조건 확인 | rc 3 정상 종료. P1의 원장 채택은 recover 뒤에 확인 |
 | 11-21 16:00 KST 인계 | kgy → gabia | 원장 넘김 ③과 같은 원위치의 P1 recover | 실행 전. 현 원장 보유자는 kgy. ③의 실제 UTC·HEAD·묶음 해시 대기 |
 | 11-21 16:17:16 → 16:17:19 KST | kgy → gabia | 1저자 넘김 ③, flock, master | RECV_OK. gabia 활성, kgy parked |
-| 11-21 16:18:28 KST | gabia | 같은 원위치에서 P1 `attempt_2` recover, 수신 HEAD에서 복구 HEAD로 이동 | rc 0 · completed · RECOVER_OK. 현재 원장 끝 `190dd1aec0e99c76ebb4d87679b9178855676f4b` |
-| 복구 직후 | 양쪽 | 채택 사다리 상호 복사와 단위 사슬 | 복사 완료 영수증 대기. 시작·완료 확인 단위 0/12 |
+| 11-21 16:18:28 KST | gabia | 같은 원위치에서 P1 `attempt_2` recover, 수신 HEAD에서 복구 HEAD로 이동 | rc 0 · completed · RECOVER_OK. 복구 직후 원장 끝 `190dd1aec0e99c76ebb4d87679b9178855676f4b` |
+| 11-21 P1 복구 뒤 (완료 시각 미표시) | 양쪽 | 채택 사다리 P0·P1 상호 복사 | 각 147파일, 양쪽 BOTH_EQUAL · LADDERS_COPIED_AND_VERIFIED. 첫 단위 시작 영수증 대기 |
+| 11-21 교차 복사 뒤 (등록 시각 미표시) | gabia | 첫 단위 `P1_c0_R_j_lo`, 시도 3 등록 및 분리 기동 | REGISTERED_AND_DETACHED, 등록 커밋 `8172c5141f78776216350d897ac617c4c8f970df`. 시작 행·그룹 확인 대기 |
+| 11-21 넘김 ④ 전 | gabia | 시도 3 START_OK, 그룹 1개 | 시작 HEAD `a525c9afba6456475f82899ce2a5d225994dae0d`, 넘김 직전에도 해당 사슬 확인 |
+| 11-21 16:40:04 → 16:40:08 KST | gabia → kgy | 원장 넘김 ④, STARTED 3 | kgy RECV_OK. 원장 보유자는 kgy. 두 쪽 사다리 완료, 단위 완료 0/12 |
 
 ## 넘김
 
@@ -20,13 +23,20 @@
 | ① | 20261118T050239Z | kgy → gabia | `bcff6b0235a39ec799ef18f733b1599bfdb50463` | `fa63d348cd7065f86d695b1bae9a6d99bbe46536ba60c9471782190c84eb7d63` | 양쪽 대조, RECV_OK |
 | ② | 20261120T022342Z | gabia → kgy | `7b43cc81df6d68e2c0094f4e6afd98243f265173` | `6bb6318bd83388bdccf417fad02e032c50a057589c8b7ac5975fc65a121a87dd` | 양쪽 대조, RECV_OK. 이후 kgy에서 P0 recover |
 | ③ | 20261121T071716Z | kgy → gabia | `3be5856df670276eb2ca450d260ba1c9534efaee` | `0b1d36d19c25e5cbda52248d3a20086f21b8757c616c7e6e8c5b57663c226aa5` | 20261121T071719Z · RECV_OK |
+| ④ | 20261121T074004Z | gabia → kgy | `a525c9afba6456475f82899ce2a5d225994dae0d` | `99ad84e2548555e77571e15a144e63227c3e363a2dd7a7e94eb095623bdb5743` | 20261121T074008Z · master · flock · RECV_OK |
 
 ①·②의 근거는 `docs/data/rint2_r_start_20261118/README.md`의 ‘그 뒤’다. ③은 1저자 WSL의 `transfer.json`과 `recover_2.json`을 화면과 대조했다. ③의 수신 HEAD와 P1 recover의 시작 HEAD가 40자리 모두 일치했다. 사다리 복사에는 복구 **후** HEAD를 사용한다.
 
 ## 1저자가 이어갈 차례
 
-1. 봉인 §3-1b (6) 7에 따라 kgy의 채택 P0, gabia의 채택 P1을 같은 상대 위치로 교차 복사하고 양끝 파일 집합과 바이트를 대조한다. 두 줄의 BOTH_EQUAL과 마지막 LADDERS_COPIED_AND_VERIFIED가 근거다.
-2. §3-1b (4), (6) 8–9에 따라 원장을 가진 gabia에서 첫 단위 `P1_c0_R_j_lo`를 연다. 각 기계에서는 한 번에 한 사슬을 돌린다. 실제 시작 행과 프로세스 그룹 기록을 확인한 뒤 다른 기계로 원장을 넘긴다. rc 3으로 끝난 단위는 해당 기계에 원장이 돌아온 뒤 같은 시도에서 recover한다.
+복사 확인은 1저자 WSL 화면에 표시된 두 줄과 완료 표지를 근거로 한다. 원장 끝은 P1 복구 후 HEAD였다.
+
+| 사다리 | 전송 방향 | 파일 | 바이트 | 양쪽 폴더 SHA256 |
+|---|---|---:|---:|---|
+| P0 attempt_1 | kgy → gabia | 147 | 3,498,403,776 | `132069385076f435577bbeadfdc1a4d617da6a9b9d0d1de799fdc321756f2f3b` |
+| P1 attempt_2 | gabia → kgy | 147 | 3,498,397,972 | `83f1264cfd25709cbc76a6daf14e308937b5d5297bc8cf8b589fc7a586f6cda1` |
+
+§3-1b (4), (6) 8–9에 따라 gabia의 첫 단위가 시작된 뒤 kgy가 원장을 받았다. kgy의 첫 단위는 `P0_c0_R_j0`다. 각 기계에서는 한 번에 한 사슬을 돌린다. 양쪽에서 한 단위씩 시작한 뒤에는 종료 영수증을 기준으로 다음 동작을 정한다. 원장 부재로 rc 3이 나온 단위는 종료 세 조건을 먼저 확인하고, 해당 기계에 원장이 돌아온 뒤 같은 시도에서 recover한다.
 
 | 기계 | 단위 순서 |
 |---|---|
