@@ -1,0 +1,94 @@
+{
+  "archive_sha256": "a3877d077b56d74877a04215e06135bc3217b5c0f055bf0061a9ba93fcf49f00",
+  "displacement_unit": "code_length",
+  "label": "DEVELOPMENT_CONTROL",
+  "pairs": {
+    "12_24": {
+      "at_F_abs_peak": {
+        "F_grid_difference_MPa": 0.192548163557136,
+        "S_grid_difference_MPa": 0.13070559100156354,
+        "u": 0.14902097701974437
+      },
+      "end_u_by_arm": {
+        "Fc": 0.14902097701974437,
+        "Ff": 0.15504580183304262,
+        "Sc": 0.15030667164491474,
+        "Sf": 0.15512055152055249
+      },
+      "four_way_end_u": 0.14902097701974437,
+      "four_way_start_u": 0.0,
+      "peaks": {
+        "F": {
+          "absolute_MPa": 0.192548163557136,
+          "first_u": 0.14902097701974437,
+          "signed_MPa": 0.192548163557136
+        },
+        "F_minus_S_grid_difference": {
+          "absolute_MPa": 0.06184257255557246,
+          "first_u": 0.14902097701974437,
+          "signed_MPa": 0.06184257255557246
+        },
+        "S": {
+          "absolute_MPa": 0.13070559100156354,
+          "first_u": 0.14902097701974437,
+          "signed_MPa": 0.13070559100156354
+        }
+      },
+      "two_way_end_u": {
+        "F": 0.14902097701974437,
+        "S": 0.15030667164491474
+      },
+      "union_knots": 9969
+    },
+    "8_16": {
+      "at_F_abs_peak": {
+        "F_grid_difference_MPa": 0.5659773321030952,
+        "S_grid_difference_MPa": 0.4531357018103723,
+        "u": 0.11562281664031926
+      },
+      "end_u_by_arm": {
+        "Fc": 0.11562281664031926,
+        "Ff": 0.14623281367562502,
+        "Sc": 0.1193005012658066,
+        "Sf": 0.1467261616131903
+      },
+      "four_way_end_u": 0.11562281664031926,
+      "four_way_start_u": 0.0,
+      "peaks": {
+        "F": {
+          "absolute_MPa": 0.5659773321030952,
+          "first_u": 0.11562281664031926,
+          "signed_MPa": 0.5659773321030952
+        },
+        "F_minus_S_grid_difference": {
+          "absolute_MPa": 0.12990674068232322,
+          "first_u": 0.11086873651468943,
+          "signed_MPa": 0.12990674068232322
+        },
+        "S": {
+          "absolute_MPa": 0.4531357018103723,
+          "first_u": 0.11562281664031926,
+          "signed_MPa": 0.4531357018103723
+        }
+      },
+      "two_way_end_u": {
+        "F": 0.11562281664031926,
+        "S": 0.1193005012658066
+      },
+      "union_knots": 5157
+    }
+  },
+  "pressure_unit": "MPa",
+  "qualification_tested": false,
+  "source_pin": "6bdfac91520c868b5036071e6d60464972727f49",
+  "trace_sha256": {
+    "F12": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89",
+    "F16": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de",
+    "F24": "9c057d81835c4c02cf7288748c72c22c5e79ac723de1061e408d1d5c77b16956",
+    "F8": "03f3bc2c106aa466f1ccc2b774e0b768f2a902792006609680faa53038434cdf",
+    "S12": "93e280a484673d29d668cc2eb7cd72d78af0a632697718476e221b8590b95814",
+    "S16": "37d344951b1a308f2ceff73bda259ecd4ad1ab843ae788925665babea66a0d44",
+    "S24": "8aa5f92113339edd795663c8c09f13cb8e1d51bee07f77d77aed56f670cab217",
+    "S8": "7827b0696eeed4548ce177be46988699b1e833f1623dc2717469c0fa4faa72c1"
+  }
+}
