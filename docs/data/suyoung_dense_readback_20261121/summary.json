@@ -1,0 +1,299 @@
+{
+  "cap_MPa": 1.2,
+  "inputs": {
+    "F12": {
+      "origin": "11-20-fixed-repeat",
+      "status": "TARGET_BRACKETED",
+      "steps": 4984,
+      "trace_sha256": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89"
+    },
+    "F16": {
+      "origin": "11-20-fixed-repeat",
+      "status": "TARGET_BRACKETED",
+      "steps": 6521,
+      "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de"
+    },
+    "F24": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 10371,
+      "trace_sha256": "9c057d81835c4c02cf7288748c72c22c5e79ac723de1061e408d1d5c77b16956"
+    },
+    "F8": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 2578,
+      "trace_sha256": "03f3bc2c106aa466f1ccc2b774e0b768f2a902792006609680faa53038434cdf"
+    },
+    "S12": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 5027,
+      "trace_sha256": "93e280a484673d29d668cc2eb7cd72d78af0a632697718476e221b8590b95814"
+    },
+    "S16": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 6543,
+      "trace_sha256": "37d344951b1a308f2ceff73bda259ecd4ad1ab843ae788925665babea66a0d44"
+    },
+    "S24": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 10376,
+      "trace_sha256": "8aa5f92113339edd795663c8c09f13cb8e1d51bee07f77d77aed56f670cab217"
+    },
+    "S8": {
+      "origin": "new",
+      "status": "TARGET_BRACKETED",
+      "steps": 2660,
+      "trace_sha256": "7827b0696eeed4548ce177be46988699b1e833f1623dc2717469c0fa4faa72c1"
+    }
+  },
+  "label": "DEVELOPMENT_ONLY",
+  "noise_floor_MPa": 0.008,
+  "protocol": "U6b-setting1-bottom-loading-v1",
+  "resolutions": [
+    8,
+    12,
+    16,
+    24
+  ],
+  "setting": 1,
+  "stage3_go": false,
+  "status": "DEVELOPMENT_READBACK",
+  "targets": {
+    "0.84": {
+      "arms": {
+        "F": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -0.9608604058842166,
+            -1.054764145492159,
+            -1.084718090801074,
+            -1.204336795466999
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.3825635843698289,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.34827455974504606,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.33799705694475196,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.2998908225287027,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "bias_signal": false,
+            "d0_d1_d2": [
+              -0.0939037396079424,
+              -0.029953945308915042,
+              -0.11961870466592495
+            ],
+            "interval": null,
+            "noise_signal": false,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        },
+        "S": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -0.9612842915582179,
+            -1.0549513972710627,
+            -1.0847031383644894,
+            -1.2042681889957665
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.38240145551149773,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.34820935081962107,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.33800211086209586,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.2999113976855778,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "bias_signal": false,
+            "d0_d1_d2": [
+              -0.09366710571284476,
+              -0.02975174109342671,
+              -0.11956505063127709
+            ],
+            "interval": null,
+            "noise_signal": false,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": null
+    },
+    "0.90": {
+      "arms": {
+        "F": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -0.3739473780119744,
+            -0.713063690027089,
+            -0.6902312464552359,
+            -0.7730832373088677
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.6880131154943416,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.49014025701635505,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.50146009478789,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.46158768766708896,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "bias_signal": true,
+            "d0_d1_d2": [
+              -0.3391163120151146,
+              0.0228324435718531,
+              -0.08285199085363182
+            ],
+            "interval": null,
+            "noise_signal": true,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        },
+        "S": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            -0.4176981495402352,
+            -0.7130921685739868,
+            -0.6902128336979277,
+            -0.7729825716323167
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": 0.6585609853620963,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.4901262987328159,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.5014693281359205,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.4616341560428016,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": {
+            "bias_signal": true,
+            "d0_d1_d2": [
+              -0.2953940190337516,
+              0.022879334876059088,
+              -0.08276973793438891
+            ],
+            "interval": null,
+            "noise_signal": true,
+            "rule": "UNCONVERGED",
+            "suspect_asymptotic": false
+          }
+        }
+      },
+      "common": true,
+      "ln_S_over_F_interval_report_only": null
+    },
+    "0.95": {
+      "arms": {
+        "F": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            null,
+            -0.42163850112722245,
+            -0.3277077836683093,
+            -0.4168469882493387
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": null,
+              "state": "NOT_REACHED"
+            },
+            {
+              "pressure_MPa": 0.6559711293608204,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.7205735523034389,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.6591217656038925,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": null
+        },
+        "S": {
+          "ln_pressure_interval": null,
+          "ln_sigma_MPa": [
+            null,
+            -0.4172940804427198,
+            -0.32817280591111525,
+            -0.4167759910684295
+          ],
+          "points_in_grid_order": [
+            {
+              "pressure_MPa": null,
+              "state": "NOT_REACHED"
+            },
+            {
+              "pressure_MPa": 0.6588271432745828,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.720238547472426,
+              "state": "VALUE"
+            },
+            {
+              "pressure_MPa": 0.65916856305235,
+              "state": "VALUE"
+            }
+          ],
+          "resolution": null
+        }
+      },
+      "common": false,
+      "ln_S_over_F_interval_report_only": null
+    }
+  },
+  "u6_qualified": false,
+  "unavailable": {}
+}
