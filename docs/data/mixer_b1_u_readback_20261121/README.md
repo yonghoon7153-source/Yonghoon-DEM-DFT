@@ -37,4 +37,3 @@ U의 보고 묶음과 전체 묶음 SHA256 두 건을 독립 대조했다. 전�
 | W10 | U의 고정 배포 핀·승인 B manifest·아홉 관측기 파일 대조. 공식 자산별 GO는 별도 |
 
 등록 근거는 `docs/reviews/mixer_b1_pair_20261120/README.md`와 `docs/reviews/mixer_b1_pair_20261120/wave_decision.md`다. 다음 파동 B2 결정은 1저자에게 남는다.
-
