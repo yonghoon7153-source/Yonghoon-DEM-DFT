@@ -1,0 +1,86 @@
+{
+  "archive_sha256": "a3877d077b56d74877a04215e06135bc3217b5c0f055bf0061a9ba93fcf49f00",
+  "expected_archive_sha256": "a3877d077b56d74877a04215e06135bc3217b5c0f055bf0061a9ba93fcf49f00",
+  "expected_rule_sha256": "1736322b4b2f4cef384becd97099998668137c19272e504edd951b698502a8f4",
+  "historical_comparison": "EXCEEDS",
+  "pairs": {
+    "F12_F24": {
+      "coarse_end_u": 0.14902097701974437,
+      "coarse_minus_fine_at_first_max_MPa": 0.192548163557136,
+      "coarse_samples": 4985,
+      "coarse_samples_in_common": 4985,
+      "common_end_u": 0.14902097701974437,
+      "common_start_u": 0.0,
+      "comparison": "EXCEEDS",
+      "exceeding_knots": 1627,
+      "fine_end_u": 0.15504580183304262,
+      "fine_peak_MPa": 1.00774452421572,
+      "fine_samples": 10372,
+      "fine_samples_in_common": 9969,
+      "first_exceedance_u": 0.013619393064304486,
+      "max_abs_difference_MPa": 0.192548163557136,
+      "ratio": 0.19106842947818264,
+      "u_at_first_fine_peak": 0.14902097701974437,
+      "u_at_first_max_abs": 0.14902097701974437,
+      "union_knots": 9969
+    },
+    "F8_F16": {
+      "coarse_end_u": 0.11562281664031926,
+      "coarse_minus_fine_at_first_max_MPa": 0.5659773321030952,
+      "coarse_samples": 2579,
+      "coarse_samples_in_common": 2579,
+      "common_end_u": 0.11562281664031926,
+      "common_start_u": 0.0,
+      "comparison": "EXCEEDS",
+      "exceeding_knots": 3528,
+      "fine_end_u": 0.14623281367562502,
+      "fine_peak_MPa": 0.6348781834041664,
+      "fine_samples": 6522,
+      "fine_samples_in_common": 5157,
+      "first_exceedance_u": 0.012042174657845517,
+      "max_abs_difference_MPa": 0.5659773321030952,
+      "ratio": 0.8914739030224188,
+      "u_at_first_fine_peak": 0.11562281664031926,
+      "u_at_first_max_abs": 0.11562281664031926,
+      "union_knots": 5157
+    }
+  },
+  "qualification": "HOLD",
+  "qualification_tested": false,
+  "receipts": {
+    "F12": {
+      "origin": "11-20-fixed-repeat",
+      "result_sha256": "11929757dc1983cbd2548209503fe94f4184d5efbc7de4414b3602d3bef1da6a",
+      "steps": 4984,
+      "trace_sha256": "452155b0a82e0b5237b23feb06f0544e1e320afcd0f687e0dcbad06943ddbf89"
+    },
+    "F16": {
+      "origin": "11-20-fixed-repeat",
+      "result_sha256": "5d5787e671bfdae7336a54d470381f8e6693a52736f3c5dc6ed82f4b83765cfe",
+      "steps": 6521,
+      "trace_sha256": "5475cc87df297533002afb621cbdac06c0319ca40eb65ddf40322ae6c018b0de"
+    },
+    "F24": {
+      "origin": "new",
+      "result_sha256": "2f23acefcdfdb153163f1215b4749b99a1c54da0704add5618755f1bbacbb0bf",
+      "steps": 10371,
+      "trace_sha256": "9c057d81835c4c02cf7288748c72c22c5e79ac723de1061e408d1d5c77b16956"
+    },
+    "F8": {
+      "origin": "new",
+      "result_sha256": "5d4e932639b38fbfe38ae722822f60ee2217177704e41d76c6b1d20c26e00514",
+      "steps": 2578,
+      "trace_sha256": "03f3bc2c106aa466f1ccc2b774e0b768f2a902792006609680faa53038434cdf"
+    }
+  },
+  "required_pairs": [
+    "F8_F16",
+    "F12_F24"
+  ],
+  "rule_sha256": "1736322b4b2f4cef384becd97099998668137c19272e504edd951b698502a8f4",
+  "scope": "RETROSPECTIVE_DEVELOPMENT_REPLAY",
+  "source_release": "6bdfac91520c868b5036071e6d60464972727f49",
+  "stage3_go": false,
+  "summary_sha256": "bb893705987c692699741fe82ed544c1104f482e3dd2e30d6157a6da08ff6ada",
+  "trace_reader_sha256": "9d664ed38a70295b9bd04ecbf5dae4ffda663c5efbc348c30a77bf6b99fa1bda"
+}
