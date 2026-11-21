@@ -1,0 +1,61 @@
+{
+  "schema": "suyoung_u6c_observation_v1",
+  "label": "DEVELOPMENT_ONLY",
+  "setting": 1,
+  "cells": 8,
+  "arm": "F",
+  "arm_status": "TARGET_BRACKETED",
+  "trace_sha256": "03f3bc2c106aa466f1ccc2b774e0b768f2a902792006609680faa53038434cdf",
+  "source_sha256": {
+    "suyoung_u6_first_dev.py": "5db0f1bda90c824a23479401b7744cf8d31fc64f373441abca692dce6717bda5",
+    "dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4"
+  },
+  "observer_sha256": "9209af2c665446bf2fff6f5eb8a92b087a92eebe3236a4ebf8e132e2fec50aef",
+  "dense_run_driver_sha256": "50f1a3aec71b750105852dfec281fc7ca9b84f5d4a594ee8fcc10073d4dba762",
+  "point_id_order_i64le_sha256": "a91d7701d1e24908a53f6807d6bc9042402e70fba67bc82393889895a06868e4",
+  "sampler": {
+    "first_step": 1,
+    "stride": 25,
+    "eligible": "all active nodes with at least three fields"
+  },
+  "metrics": {
+    "steps_seen": 2578,
+    "sampled_steps": 104,
+    "dense_node_steps": 9175,
+    "dense_pair_steps": 42153,
+    "dense_pair_projections": 168612,
+    "separating_subprojections": 120934,
+    "separating_nonzero_impulses": 0,
+    "positive_work_pairs_raw": 16700,
+    "nonzero_slip_pairs_raw": 39867,
+    "positive_energy_node_steps_raw": 0,
+    "linear_zero_scale_node_steps": 77,
+    "angular_zero_scale_node_steps": 77,
+    "linear_over_one_percent": 0,
+    "angular_over_one_percent": 0,
+    "point_identity_changes": 0,
+    "max_positive_friction_work": 1.4740816006333137e-07,
+    "max_friction_cone_excess": 2.117582368135751e-22,
+    "max_tensile_impulse": 0.0,
+    "max_sliding_magnitude_mismatch_raw": 2.034204418442213e-06,
+    "max_positive_contact_energy_change_node": 0.0,
+    "max_positive_contact_energy_change_sample": 0.0,
+    "max_linear_residual": 1.057161417911335e-21,
+    "max_angular_residual": 6.423884637086813e-22,
+    "max_relative_linear_residual": 4.499818581022446e-11,
+    "max_relative_angular_residual": 1.3905505917618183e-10,
+    "max_final_approach_speed": 0.0005559199739710689
+  },
+  "obligations": {
+    "1": "HOLD: nodal closing speed available; disk geometry penetration unmeasured",
+    "2": "partial: aggregate applied impulse and per-projection separation; final pair separation protocol and magnitude tolerance missing",
+    "2_prime": "partial: final-slip work and saturation residual measured; sticking and rounding tolerances missing",
+    "3": "partial: node and sample energy changes measured; rounding tolerance missing",
+    "4": "sampled residual with defined nonzero scale; zero-scale cases reported separately",
+    "5": "HOLD: no independent permutations of complete runs or agreed tolerance",
+    "6": "HOLD: no matched force-displacement pair and curve comparison convention",
+    "7": "partial: point ID continuity and pinned one-field-per-ID construction; upstream independent ownership audit absent"
+  },
+  "u6c_status": "HOLD",
+  "u6_qualified": false
+}
