@@ -1,0 +1,18 @@
+{
+  "capture_release": "f24cce28be28aece96d18cf77173d8fe05a2bfb0",
+  "return_manifest_entries": 2,
+  "source_manifest_entries": 9,
+  "return_archive_sha256": "90b070d33e84735008035eb399d648acb6065edfb677653f8db9f3c9c61eca18",
+  "returned_screen_sha256": "7bbac5a71a8ec805904a5a1f4b56071ce1ace094e159235ba0d0b54091c4ead2",
+  "original_return_sha256": "c39bbd65d1c0caa5825abc8095611a8d20a8168e5464db3cd2a05743e3abbbeb",
+  "original_pin": "001e5e5e5f3bedde8106b608910e95f5dd1f78cb",
+  "trace_records": 145,
+  "original_and_replay_trace_sha256": "502694a2fabe7f30db63ac964ce6c97a7ce6efd2ca55a0c53a117bd13a3b4dc0",
+  "node_capture_sha256": "525c57f0d73987c7ea6da8cf3324079712fea4b524757cf148a80989c51bc1e6",
+  "capture_status": "CAPTURED_STEP_145",
+  "failed_nodes": 1,
+  "attempted_step": 145,
+  "completed_steps": 144,
+  "u6_qualified": false,
+  "stage3_go": false
+}
