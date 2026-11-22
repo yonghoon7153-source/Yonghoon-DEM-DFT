@@ -642,3 +642,7 @@ park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical e
 #   ⚠ 크롭 77 장 = 도구 17 (전부 다시 자름: 래스터 사각 + 6 pt · 도구 상자가 쪽 폭 · 캡션 넷 오염 · 잘림) + 손 60 (SI 표 3 · 패널 38 · 근거 문단 19) + digitized.csv 96 행 — --inbox --run 으로 다시 뽑지 말 것
 lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode_interface-stabilizing_dry_process_employing_a_binary_binder
 lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode interface-stabilizing dry process employing a binary binder
+# ── 건식 R2R 10 mAh/cm² NCA 양극 — PTFE 섬유화 온도 · CB + 그래핀 도전재 · 2 단 압연 (1 차 90 / 140 MPa) · Carver 압밀 선도 0.8–770 MPa (J. Kim · K. Park · … · T. Song · U. Paik · Adv. Energy Mater. 14 (2024) 2303455) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 82 장 = 도구 34 (다시 자름 31: 본문 그림 1–5 = 래스터 사각형 + 6 pt · SI 그림 S1–S26 = 래스터 사각형 + 4 pt (도구 상자에 'WILEY-VCH' 머리글 로고가 섞였음) · SI 표 S1–S3 그대로) + 손 48 (패널 26 · 식 2 · 근거 문단 20) + digitized.csv 196 행 — --inbox --run 으로 다시 뽑지 말 것
+kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering	10_mah_cm_2_cathode_by_roll_to_roll_process
+kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering	10 mah cm 2 cathode by roll to roll process
