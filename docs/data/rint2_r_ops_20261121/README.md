@@ -17,6 +17,10 @@
 | 11-21 16:40:04 → 16:40:08 KST | gabia → kgy | 원장 넘김 ④, STARTED 3 | kgy RECV_OK. 원장 보유자는 kgy. 두 쪽 사다리 완료, 단위 완료 0/12 |
 | 11-21 넘김 ④ 뒤 | kgy | P0·P1 각 147파일 BOTH_EQUAL 재확인, `P0_c0_R_j0` 시도 4 등록·분리 기동 | REGISTERED_AND_DETACHED, 등록 커밋 `50d6a1a04fd3c7df6e310c232406f9e4b3734ecd` |
 | 11-21 시도 4 등록 뒤 | kgy | 같은 기계·단위·시도 START_OK, 그룹 1개 | 원장 끝 `57389b26924a86584ab7b77e9165a80a209e61a7`. 양쪽 첫 단위 시작 확인, 종료 영수증 0/12 |
+| 11-22 09:27:35 KST 화면 | gabia | `P1_c0_R_j_lo` 시도 3, 시작·종료 그룹 2/2, 팔 JSON 6개 | 종료 rc 3 |
+| 11-22 넘김 ⑤ 전 (조회 시각 미표시) | 양쪽 | gabia 시도 3 status, 이어서 kgy 시도 4 status | gabia parked·요약·normal_parked_end 모두 true. kgy 시도 4의 rc는 null, 요약 미수령 |
+| 11-22 09:42:11 → 09:42:14 KST | kgy → gabia | 넘김 ⑤, STARTED 4, gabia의 parked 종료 목록에 시도 3 한 건 | `RECV_OK`. 활성 원장은 gabia |
+| 11-22 넘김 ⑤ 뒤 (회복 시각 미표시) | gabia | 원위치에서 시도 3의 기존 결과를 원장에 회복 | 회복 뒤 HEAD `51927c7c22d378d6c6a4382a842e7b3962eb9904`. 단위 완료 1/12 |
 
 ## 넘김
 
@@ -26,6 +30,7 @@
 | ② | 20261120T022342Z | gabia → kgy | `7b43cc81df6d68e2c0094f4e6afd98243f265173` | `6bb6318bd83388bdccf417fad02e032c50a057589c8b7ac5975fc65a121a87dd` | 양쪽 대조, RECV_OK. 이후 kgy에서 P0 recover |
 | ③ | 20261121T071716Z | kgy → gabia | `3be5856df670276eb2ca450d260ba1c9534efaee` | `0b1d36d19c25e5cbda52248d3a20086f21b8757c616c7e6e8c5b57663c226aa5` | 20261121T071719Z · RECV_OK |
 | ④ | 20261121T074004Z | gabia → kgy | `a525c9afba6456475f82899ce2a5d225994dae0d` | `99ad84e2548555e77571e15a144e63227c3e363a2dd7a7e94eb095623bdb5743` | 20261121T074008Z · master · flock · RECV_OK |
+| ⑤ | 20261122T004211Z | kgy → gabia | `57389b26924a86584ab7b77e9165a80a209e61a7` | `8d18507d428a7b7d7589843a1d309ab414da58ba7a5a4f0eef59cc88de3d5baf` | 20261122T004214Z · master · flock · RECV_OK. 수신 목록에 `unit:P1_c0_R_j_lo` 시도 3 |
 
 ①·②의 근거는 `docs/data/rint2_r_start_20261118/README.md`의 ‘그 뒤’다. ③은 1저자 WSL의 `transfer.json`과 `recover_2.json`을 화면과 대조했다. ③의 수신 HEAD와 P1 recover의 시작 HEAD가 40자리 모두 일치했다. 사다리 복사에는 복구 **후** HEAD를 사용한다.
 
@@ -38,7 +43,7 @@
 | P0 attempt_1 | kgy → gabia | 147 | 3,498,403,776 | `132069385076f435577bbeadfdc1a4d617da6a9b9d0d1de799fdc321756f2f3b` |
 | P1 attempt_2 | gabia → kgy | 147 | 3,498,397,972 | `83f1264cfd25709cbc76a6daf14e308937b5d5297bc8cf8b589fc7a586f6cda1` |
 
-§3-1b (4), (6) 8–9에 따라 gabia의 첫 단위가 시작된 뒤 kgy가 원장을 받아 첫 단위를 시작했다. 각 기계에서는 한 번에 한 사슬을 돌린다. 현재 원장은 kgy에 두고 양쪽 첫 단위의 종료 영수증에 따라 다음 동작을 정한다. 원장 부재로 rc 3이 나온 단위는 종료 세 조건을 먼저 확인하고, 해당 기계에 원장이 돌아온 뒤 같은 시도에서 recover한다.
+§3-1b (4), (6) 8–9에 따라 gabia의 첫 단위가 시작된 뒤 kgy가 원장을 받아 첫 단위를 시작했다. 각 기계에서는 한 번에 한 사슬을 돌린다. 넘김 ⑤ 뒤 gabia에서 시도 3을 회복했다. 다음 gabia 단위는 `P1_c0_R_j_hi`이며, 시작 요청에 사용할 원장 끝은 시도 3 회복 뒤 HEAD다. kgy 시도 4는 넘김 직전 조회에서 종료 영수증이 없었다. 원장 부재로 rc 3이 나온 단위는 종료 세 조건을 먼저 확인하고, 해당 기계에 원장이 돌아온 뒤 같은 시도에서 recover한다.
 
 | 기계 | 단위 순서 |
 |---|---|
