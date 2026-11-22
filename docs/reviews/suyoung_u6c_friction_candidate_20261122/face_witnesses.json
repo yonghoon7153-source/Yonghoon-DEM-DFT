@@ -1,0 +1,23 @@
+{
+  "input_sha256": "f44320710607999dbd01fb9e593af0a2da13d59468c3472474cd451a6ec24e91",
+  "records": {
+    "body3_log10_mass_range0": {
+      "candidate": "RETURNED",
+      "faces_examined": 64,
+      "max_distance_from_first_witness": 2.012231377123348e-15,
+      "nearest_witness": 1.7244233337941968e-15,
+      "rank_deficient_faces": 7,
+      "witnesses": 3
+    },
+    "body4_log10_mass_range6": {
+      "candidate": "RETURNED",
+      "faces_examined": 4096,
+      "max_distance_from_first_witness": 0.0,
+      "nearest_witness": 2.5157999149241335e-13,
+      "rank_deficient_faces": 1822,
+      "witnesses": 1
+    }
+  },
+  "scope": "feasible sliding-law witnesses on prior nonconverged synthetic examples, no uniqueness claim",
+  "source_sha256": "3b626fce463bf5387ba107ae1aa423d4cffad3b4adaa0133d8825c598850aa86"
+}

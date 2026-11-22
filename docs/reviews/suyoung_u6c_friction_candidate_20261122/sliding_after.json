@@ -1,0 +1,35 @@
+{
+  "friction": 0.5,
+  "kernel_sha256": "3b626fce463bf5387ba107ae1aa423d4cffad3b4adaa0133d8825c598850aa86",
+  "matches": true,
+  "normal_impulses": [
+    0.26,
+    0.19,
+    0.11
+  ],
+  "probe_sha256": "cc07f01fa821085a319624764bff1bbad819dd2ad8fcf350dd82a9d92d5993a5",
+  "records": [
+    {
+      "branch_condition_number": 2.13949574676564,
+      "label_and_storage_orders": 12,
+      "matches": true,
+      "max_energy_change": -0.5559891752623904,
+      "max_momentum_error": 6.206335383118183e-17,
+      "max_order_spread": 0.0,
+      "max_speed_error": 8.957018974059093e-12,
+      "spin": 0.7
+    },
+    {
+      "branch_condition_number": 2.1394957467656393,
+      "label_and_storage_orders": 12,
+      "matches": true,
+      "max_energy_change": -0.6323304438665374,
+      "max_momentum_error": 7.850462293418876e-17,
+      "max_order_spread": 0.0,
+      "max_speed_error": 1.949208152132079e-11,
+      "spin": -0.85
+    }
+  ],
+  "scope": "two manufactured all-sliding branches on a frozen synthetic node",
+  "speed_tolerance": 2e-08
+}
