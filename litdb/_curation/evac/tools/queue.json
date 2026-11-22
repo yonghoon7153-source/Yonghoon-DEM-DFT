@@ -414,14 +414,14 @@
   "note": ""
  },
  "N-94": {
-  "nn": "",
+  "nn": "143",
   "pdf": "3499fbf8-94._Unraveling_the_impact_of_the_degree_of_dry_mixing_on_dry-processed_lithium-ion_battery_electrodes.pdf",
   "si": [
    "c05bffd8-94._Sup_Unraveling_the_impact_of_the_degree_of_dry_mixing_on_dry-processed_lithium-ion_battery_electrodes.pdf"
   ],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Unraveling the impact of the degree of dry mixing on dry-processed lithium-ion battery electrodes · Subject: Journal of Power Sources, 580 (2023) 233379. doi:10.1016/j.jpowsour.2023.233379 · Author: Runming Tao · DOI: 10.1016/j.jpowsour.2023.233379 · PDF 6 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
   "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2023.233379` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },

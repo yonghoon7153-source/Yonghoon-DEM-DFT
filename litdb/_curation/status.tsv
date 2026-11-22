@@ -97,7 +97,7 @@ N-90	대피	끝	park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2
 N-91	대피	끝	lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode · 2d66b1ea1	정독 140 · 채움 — 건식 공정 · 이원 바인더 (PTFE + PVP) · 건식 후막 (≈10 mAh/cm²) · 한정 = 액체 LIB 음극 · 공정 · 압력 숫자 없음 · PVP 효과가 FEC 전해질과 묶임 · 같은 랩 han2024 와 1 사이클 뒤 탄성률 75.00 ↔ 17.80 MPa (4.2 배 · 재현 안 됨) · 카드 문제 없음 · kim2026 §12 'J. Choi' = Junghyun Choi (가천대 · 교신) 로 풀림
 N-92	대피	끝	kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering · 2194d970b	정독 141 · 채움 (한정) — 건식 공정 · 10 mAh/cm² (공칭 · 실측 9.7) · 같은 계열 kim2026 채움 · R2R 일부 (장비 사슬 · 표기뿐) · 서지 = 원문 11 명 (마지막 교신 Ungyu Paik) ↔ 후보 표 · kim2026 L410 10 명 · 카드 문제 = kim2026 L410 Paik 빠짐 · L411 han2024 12 → 10 명 (기록만) · 원문 안 어긋남 = 100 사이클 유지율 89.5 · 82.15 · 94 @50
 N-93	대피	도는 중		PDF 받음 (+SI 1) · Kwon 2024 Small Sci 4 2300302 · 시작 11-23 00:12 KST
-N-94	대피	도는 중		PDF 받음 (+SI 1) · Tao 2023 J Power Sources 580 233379 · 시작 11-23 00:32 KST
+N-94	대피	끝	tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode · 119c930dd	정독 143 · 일부 — '건식 혼합 정도 (= 시간)' 선례 채움 · 믹서 V2 의 에너지 · 순서 팔 · 혼합 지수 · SE 복합 계는 없음 · 카드 문제 없음 · 원문 자체 문제 = '과혼합이 응집 약화' ↔ 자기 인장 자료 (60 분 최고) 반대 · 그림 1e 막대 배율 두 배 · type 칸 한국어뿐이면 웹앱이 dft 트랙으로 분류 → 'dry process · dry powder mixing' 앞에 넣어 dem 트랙
 N-95	대피	차례 기다림		PDF 받음 (+SI 1) · Horst 2025 Powder Technol 451 120451
 N-96	대피	차례 기다림		PDF 받음 (+SI 1) · Lee 2023 Adv Funct Mater 33 2301341
 N-97	대피	차례 기다림		PDF 받음 (+SI 2) · Wei 2024 Joule 8 1350
