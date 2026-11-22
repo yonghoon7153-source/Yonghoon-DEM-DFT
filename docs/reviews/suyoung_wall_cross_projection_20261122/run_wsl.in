@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 3 || ( $1 != CHECK_ONLY && $1 != GO_SUYOUNG_WALL_CROSS_ONCE ) ]]; then
+    echo 'Usage: bash THIS.txt CHECK_ONLY|GO_SUYOUNG_WALL_CROSS_ONCE suyoung_wall_stress_probe_result.tar.gz suyoung_wall_prefix_result.tar.gz' >&2
+    exit 2
+fi
+mode=$1
+probe=$(realpath -e -- "$2")
+prior=$(realpath -e -- "$3")
+[[ -f "$prior" && -f "$probe" ]]
+expected_probe=fcf9fd337d57c77cb9b4f751a6b938ce60a1d9010e438026ac10ffa762104cfd
+expected=0d415250759821b9db816e6a13d43ca190e983a7389914c5c3357b697399a5ae
+verify_returns() {
+    local first second
+    first=$(sha256sum -- "$probe") && [[ ${first%% *} == "$expected_probe" ]] &&
+    second=$(sha256sum -- "$prior") && [[ ${second%% *} == "$expected" ]]
+}
+verify_returns || { echo HISTORICAL_RETURN_IDENTITY_MISMATCH >&2; exit 2; }
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+pin='@PIN@'
+sums='@SOURCE_SUMS@'
+model=99938d3bd4cb1cbba0e1377be2ff9dac9b228d2f
+kernel='@KERNEL@'
+[[ "$pin" =~ ^[0-9a-f]{40}$ && "$sums" =~ ^[0-9a-f]{64}$ ]] || exit 2
+printf '%s  SOURCE_SHA256SUMS\n' "$sums" | sha256sum -c --status -
+sha256sum -c --status SOURCE_SHA256SUMS
+printf '%s  scripts/suyoung_multicontact_dev.py\n' "$kernel" | sha256sum -c --status -
+for tool in taskset timeout mktemp tar sha256sum; do command -v "$tool" >/dev/null; done
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Reference WSL venv missing' >&2; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+cpu=(taskset -c 0 "$py" -I -B)
+"${cpu[@]}" -c 'import numpy,sys; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Reference environment mismatch")'
+driver="$pkg/docs/reviews/suyoung_wall_cross_projection_20261122/cross.py"
+"${cpu[@]}" "$driver" check --repo "$pkg" --probe "$probe" --prior "$prior"
+printf 'RELEASE=%s\nPHYSICS_PIN=%s\nKERNEL_SHA256=%s\nWALL_PREFIX_RETURN_SHA256=%s\nWALL_STRESS_PROBE_RETURN_SHA256=%s\n' "$pin" "$model" "$kernel" "$expected" "$expected_probe"
+if [[ "$mode" == CHECK_ONLY ]]; then echo CHECK_OK; exit 0; fi
+
+once="$HOME/suyoung_wall_cross_once_${pin:0:12}"
+mkdir -- "$once" || { echo "Attempt already reserved: $once" >&2; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_wall_cross_work_XXXXXXXX")
+ret=$(mktemp -d "$HOME/suyoung_wall_cross_return_XXXXXXXX")
+run="$work/run"
+mkdir -- "$run"
+screen="$run/screen.txt"
+printf 'DEVELOPMENT_ONLY\n' | tee "$screen"
+started=$(date -u +%FT%TZ)
+printf 'STARTED_UTC=%s\nWORK=%s\nRETURN_DIRECTORY=%s\n' "$started" "$work" "$ret" | tee "$once/receipt.txt"
+pack() {
+    local rc=$?
+    trap - EXIT INT TERM HUP
+    set +e
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_wall_cross_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_wall_cross_result.tar.gz screen.txt > SHA256SUMS &&
+     sha256sum -c SHA256SUMS && cat SHA256SUMS) ||
+    { printf 'ARCHIVE_INCOMPLETE WORK=%s RETURN_DIRECTORY=%s\n' "$work" "$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+printf 'release=%s\nphysics_pin=%s\nsource_sums=%s\nprior_sha256=%s\nprobe_sha256=%s\nkernel_sha256=%s\nCPU=0\nF8_steps=270\nF16_steps=540\nper_arm_hard_s=300\nstarted_utc=%s\n' \
+    "$pin" "$model" "$sums" "$expected" "$expected_probe" "$kernel" "$started" > "$run/origin.txt"
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+for cells in 8 16; do
+    arm="F$cells"
+    rc=0
+    printf '%s_BEGIN=%s\n' "$arm" "$(date -u +%FT%TZ)" | tee -a "$screen"
+    timeout --signal=TERM --kill-after=5s 295s "${cpu[@]}" "$driver" arm \
+        --repo "$pkg" --probe "$probe" --prior "$prior" --cells "$cells" --out "$run/$arm" > "$run/$arm.log" 2>&1 || rc=$?
+    if (( rc == 0 )); then
+        if [[ "$cells" == 8 ]]; then keep=(269 270); else keep=(538 540); fi
+        for step in "${keep[@]}"; do
+            if [[ ! -s "$run/$arm/state_${step}.npz" ]]; then
+                printf 'MISSING_SNAPSHOT=F%s/%s\n' "$cells" "$step" >> "$run/$arm.log"
+                rc=4
+            fi
+        done
+    fi
+    printf '%s_RC=%d\n' "$arm" "$rc" | tee -a "$screen"
+    if (( rc != 0 )); then
+        printf 'command_rc=%d\n' "$rc" > "$run/$arm.process-stop.txt"
+        exit "$rc"
+    fi
+done
+rc=0
+timeout --signal=TERM --kill-after=5s 115s "${cpu[@]}" "$driver" read \
+    --repo "$pkg" --probe "$probe" --prior "$prior" --run "$run" --out "$run/summary.json" > "$run/summary.log" 2>&1 || rc=$?
+if (( rc == 0 )); then
+    "${cpu[@]}" -c 'import json, sys
+with open(sys.argv[1], encoding="utf-8") as f:
+    r = json.load(f)
+ok = (r.get("status") == "DEVELOPMENT_FROZEN_CROSS_OBSERVED" and r.get("native_diagonal_checked") is True
+      and r.get("u6_qualified") is False and r.get("stage3_go") is False)
+sys.exit(0 if ok else "Frozen cross native-diagonal or approval status mismatch")' "$run/summary.json"         >> "$run/summary.log" 2>&1 || rc=4
+fi
+if (( rc == 0 )); then
+    if verify_returns && sha256sum -c --status SOURCE_SHA256SUMS; then
+        echo SOURCE_AND_RETURNS_STILL_MATCH | tee -a "$screen"
+    else
+        echo SOURCE_OR_RETURNS_CHANGED | tee -a "$screen"
+        rc=4
+    fi
+fi
+printf 'SUMMARY_RC=%d\n' "$rc" | tee -a "$screen"
+[[ $rc != 0 ]] || echo READBACK_REQUIRED | tee -a "$screen"
+exit "$rc"
