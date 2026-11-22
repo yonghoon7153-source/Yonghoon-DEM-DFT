@@ -2413,7 +2413,8 @@ def _selftest():
        "개정 5: c2 주 기준이 c1 보조를 이긴다 (차이는 기록만)")
     r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", uE=0.002), c2=att5("c2", "SCF_NOT_CONVERGED", uE=0.002, n=60)), AR)
     ck(r_.get("adopted") == "a5_c1" and r_["a5_rule"] == "secondary" and r_["labels"] == [A5_LABEL, A5_SEC_LABEL] and abs(r_["u_W_J_m2"] - uw(0.002)) < 1e-12
-       and r_["scf_primary_met"] is False, "개정 5: c1 보조 (u_W 수집기 면적으로 환산) · 라벨 둘 · scf_primary_met False")
+       and r_["scf_primary_met"] is False and "c2:secondary" not in r_.get("a5_not_used", []) and "a5_both_secondary" not in r_,
+       "개정 5: c1 보조 (u_W 수집기 면적으로 환산) · 라벨 둘 · scf_primary_met False · c2 (60 스텝 < 100) 는 보조 후보에도 없다 (최소 스텝 — 돌연변이 m18)")
     r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", toten=-1000.0, uE=0.002), c2=att5("c2", "SCF_NOT_CONVERGED", toten=-1000.003, uE=0.002)), AR)
     ck(r_.get("adopted") == "a5_c1" and r_["a5_rule"] == "secondary", "개정 5: 둘 다 보조 · 차 0.003 ≤ 폭 합 0.004 → c1 보조 (순서)")
     r_ = adopt_a5(prev4, a5r(c1=att5("c1", "SCF_NOT_CONVERGED", toten=-1000.0, uE=0.002), c2=att5("c2", "SCF_NOT_CONVERGED", toten=-1000.01, uE=0.002)), AR)

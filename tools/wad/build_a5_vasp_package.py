@@ -1151,7 +1151,8 @@ W0_WAVECAR=<보존 ⓐ 절대 경로 또는 none> VASP_CMD="mpirun -np 64 vasp_s
   스케줄러로 그 잡이 끝났는지 확인한 뒤, 러너가 찍어 준 그대로 `bash run_a5.sh --unlock <기계> <PID>`.
 
 ## 6. 하지 말 것
-- INCAR · POSCAR · KPOINTS 를 고치지 마세요 · 시도 폴더 (run/ · run_aborted/) 를 지우거나 옮기지 마세요 (다시 돌리면 기록을 다시 판정해 다음 단을 정합니다).
+- INCAR · POSCAR · KPOINTS 를 고치지 마세요 · 시도 폴더 (run/ · run_aborted/) 를 지우거나 옮기지 마세요 (러너가 이 기록으로 다음 단 · 시작점을 정합니다).
+  끝 (종료 0 · 1 · 5 상한 · 8) 뒤에는 다시 돌려도 아무것도 띄우지 않습니다 — 포장만 다시 하려면 `PACK_ONLY=1 bash run_a5.sh`.
 - 외주 2차 러너를 다시 돌리지 마세요.
 """
 
@@ -2207,15 +2208,18 @@ def _selftest():
         for nm, beh_ in (("s8", "noread"), ("s9", "modwav"), ("s9b", "nophrase")):
             wx, rcx, _ = run_pkg(nm, {"A5": "conv", "c1": beh_, "c2": "conv"})
             rx_, _ = chk(wx)
+            hon_ = json.load(open(os.path.join(D(wx, "c1"), "WAVECAR.info"))).get("honoured")
             ck(rcx == 8 and fcode(wx) == 8 and not os.path.isdir(D(wx, "c2")) and rx_["attempts"]["c1"]["status"] == "RESTART_NOT_HONOURED"
-               and rx_["status"] == "STOPPED_FOR_REVIEW" and adopt(rx_).get("adopted") is None,
-               f"⛔음성 c1 재시작 미이행 ({beh_}) → 멈춤 8 · c2 안 띄움 · STOPPED_FOR_REVIEW · 채택 없음 — rc {rcx} · {rx_['status']}")
+               and rx_["status"] == "STOPPED_FOR_REVIEW" and adopt(rx_).get("adopted") is None and hon_ == 0,
+               f"⛔음성 c1 재시작 미이행 ({beh_}) → 멈춤 8 · c2 안 띄움 · STOPPED_FOR_REVIEW · 채택 없음 · 반송 기록 WAVECAR.info honoured 0 — rc {rcx} · {rx_['status']} · honoured {hon_}")
         _, rc8b, _ = run_pkg("s8", {"A5": "conv", "c1": "conv", "c2": "conv"}, fresh=False)
         ck(rc8b == 8 and not os.path.isdir(D(os.path.join(T, "w_s8"), "c2")), "⛔음성 멈춤 8 뒤 다시 돌려도 아무것도 안 띄움 · 종료 8")
         w9c, rc9c, _ = run_pkg("s9c", {"A5": "conv", "c1": "plateau", "c2": "modwav"})
         r9c, _ = chk(w9c)
-        ck(rc9c == 8 and r9c["attempts"]["c2"]["status"] == "RESTART_NOT_HONOURED" and r9c["status"] == "STOPPED_FOR_REVIEW" and adopt(r9c).get("adopted") is None,
-           f"⛔음성 c2 재시작 미이행 (끝 sha 다름) → 멈춤 8 · STOPPED_FOR_REVIEW (c2 주 기준 미정 → c1 보조 채택 없음) — rc {rc9c} · {r9c['status']}")
+        hon9c = json.load(open(os.path.join(D(w9c, "c2"), "WAVECAR.info"))).get("honoured")
+        ck(rc9c == 8 and r9c["attempts"]["c2"]["status"] == "RESTART_NOT_HONOURED" and r9c["status"] == "STOPPED_FOR_REVIEW" and adopt(r9c).get("adopted") is None
+           and hon9c == 0,
+           f"⛔음성 c2 재시작 미이행 (끝 sha 다름) → 멈춤 8 · STOPPED_FOR_REVIEW (c2 주 기준 미정 → c1 보조 채택 없음) · 반송 기록 honoured 0 (돌연변이 m09) — rc {rc9c} · {r9c['status']} · honoured {hon9c}")
         # P3: c1 OUTCAR NBANDS ≠ 시작 WAVECAR 머리 → 재시작 불완전 · 멈춤 8
         wb, rcb, _ = run_pkg("p3", {"A5": "conv", "c1": "badhead", "c2": "conv"})
         rb_, _ = chk(wb)
