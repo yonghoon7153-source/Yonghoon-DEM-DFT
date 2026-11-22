@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 354편 · 생성 2026-11-22
+> digest 355편 · 생성 2026-11-22
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -161,7 +161,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (58편)
+## 복합양극 미세구조 · percolation (59편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -169,6 +169,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `beutl2024_round_robin_coin_cell_sulfide_assb` | 황화물 전고체전지 코인셀 (CR2032) 조립 · 시험의 4 기관 round robin — Li₆PS₅Cl (NEI "LPSCl fine" ≈1 µm) 펠릿 100 mg · ⌀10 mm · 360 MPa → 겉보기 밀도 1.49–1.60 g/cm³ ("crystallographic 1.64" 기준 상대밀도 > 90 % — | experiment (interlab round robin · CR2032 coin cell · EIS im | 2026-10-14 | 🖼 17 |
 | `bielefeld2019_microstructural_modeling_composite_cathode` | 복합 양극의 3D 미세구조 모델링 — percolation 이론으로 이온·전자 전도 클러스터 분석 — Bielefeld (J. Phys. Chem. C 2019) | continuum (geometric microstructure + percolation) | 2026-06-26 | 🖼 11 |
 | `bielefeld2020_effective_ionic_conductivity_binder` | Bielefeld 2020 (ACS Appl. Mater. Interfaces 12, 12821−12833) — 유효 이온전도도 + 바인더 영향 모델링 (Janek 그룹, GeoDict — ★ Bielefeld 2019의 σ-추가 후속편) | FEM·digital-twin | 2026-07-28 | 🖼 7 |
+| `bielefeld2022_li_kinetics_morphology_voids_fem_composite_cathode` | NCM811 / Li₆PS₅Cl 복합 양극 충전의 3D FEM 전기화학 (COMSOL 5.4 · GeoDict 구 입자 재구성 · 맞춘 값 0) — SOC 의존 D̃_Li · j₀ (같은 재료 GITT · EIS 입력) 가 곡선 모양을 정하고 · 입도 분포의 드문 큰 입자가 CAM 표면적 −35 % · 1-입자 반구 공극 | FEM 3D electrochemical charge simulation (COMSOL 5.4 · Butle | 2026-11-22 | 🖼 71 |
 | `chen2011_percolation_micromodel_composite_electrode` | 다분산 입경 복합전극의 유효물성 예측 — 해석적 percolation 미시모델 (CN·percolation·TPB·σ_inter/intra·hydraulic pore 닫힌식) — Chen (J. Power Sources 2011) | continuum (analytic percolation micro-model — closed-form, N | 2026-06-26 | 🖼 7 |
 | `choi2018_fibsem_3d_composite_cathode_microstructure_tpb_pore_decomposition` | 습식 시트 황화물 복합 양극 (LiNbO₃ 코팅 NCM622 67.6 : LPN821 = (Li₂S)₈(P₂S₅)₂(Ni₃S₂)₁ 29.0 : Super C65 1.4 : 바인더 2.0 wt% · 231 MPa 적층) 의 FIB-SEM 3D 재구성 정량 — 1 회 사이클 뒤 분해 시료 5263 µm³ (100 장 × 10 | experiment (습식 시트 ASSB 코인 셀 + FIB-SEM 3D 재구성 · 4 상 회색조 분할 ·  | 2026-11-12 | 🖼 32 |
 | `chouchane2019_innov_voxelization_multiphase_meshing` | INNOV — 단층 분할 영상 또는 CGMD 구 (중심 · 반지름 → 이진 영상 묶음) 를 모든 상 한꺼번에 사면체 메시로 바꿔 COMSOL 5.4 로 넘기는 MATLAB 복셀화 메싱 — NMC 전극 예 (AM + CBD + 기공 · 201 × 200 × 179 화소 · precision [4 4 3]) 1 737 665 | tool — voxelization-based multiphase tetrahedral meshing alg | 2026-11-13 | 🖼 29 |
