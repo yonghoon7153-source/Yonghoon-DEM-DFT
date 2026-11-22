@@ -1,0 +1,63 @@
+{
+  "anchor_breakdown": {
+    "dt_MPa": 0.029965802639401407,
+    "grid_MPa": 0.480138927768637,
+    "grid_percent_of_original_F16_peak": 75.62693762670662,
+    "grid_percent_of_prior_residual": 89.57623136372456,
+    "original_F8_minus_F16_MPa": 0.5659773321030952,
+    "seed_MPa": 0.05587260169505681,
+    "seed_percent_of_prior_residual": 10.423768636275442
+  },
+  "at_fixed_u": {
+    "F16_MPa": 0.6348781834041664,
+    "F8_dense_MPa": 1.1150171111728033,
+    "F8_half_MPa": 1.1708897128678601,
+    "gaps_MPa": {
+      "F8_dense_minus_F16": 0.480138927768637,
+      "F8_half_minus_F16": 0.5360115294636938,
+      "F8_half_minus_F8_dense": 0.05587260169505681
+    },
+    "u": 0.11562281664031926
+  },
+  "common_F16_peak_MPa": 0.6428797570113711,
+  "common_end": 0.11640768835917337,
+  "common_knots": 5192,
+  "common_max_baseline": {
+    "F16_MPa": 0.6428797570113711,
+    "F8_dense_MPa": 1.1359157793881627,
+    "F8_half_MPa": 1.200112051930551,
+    "gaps_MPa": {
+      "F8_dense_minus_F16": 0.49303602237679156,
+      "F8_half_minus_F16": 0.5572322949191799,
+      "F8_half_minus_F8_dense": 0.06419627254238836
+    },
+    "u": 0.11640768835917337
+  },
+  "common_max_closure_roundoff_MPa": 2.7755575615628914e-17,
+  "common_statistics": {
+    "F8_dense_minus_F16": {
+      "above_five_percent_of_common_F16_peak_points": 4335,
+      "max_abs_MPa": 0.49303602237679156,
+      "signed_at_max_MPa": 0.49303602237679156,
+      "u_at_max": 0.11640768835917337
+    },
+    "F8_half_minus_F16": {
+      "above_five_percent_of_common_F16_peak_points": 4084,
+      "max_abs_MPa": 0.5572322949191799,
+      "signed_at_max_MPa": 0.5572322949191799,
+      "u_at_max": 0.11640768835917337
+    },
+    "F8_half_minus_F8_dense": {
+      "above_five_percent_of_common_F16_peak_points": 783,
+      "max_abs_MPa": 0.07960668818776584,
+      "signed_at_max_MPa": 0.07960668818776584,
+      "u_at_max": 0.11062206254590679
+    }
+  },
+  "fixed_u": 0.11562281664031926,
+  "native_elapsed_s": 644.3583364250371,
+  "native_points": 39053,
+  "native_status": "TARGET_BRACKETED",
+  "native_steps": 5289,
+  "original_F16_peak_MPa": 0.6348781834041664
+}

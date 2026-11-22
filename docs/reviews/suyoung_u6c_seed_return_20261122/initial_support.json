@@ -1,0 +1,59 @@
+{
+  "F16_first_step_witness": {
+    "absolute_error": 2.117582368135751e-22,
+    "actual_first_top_pre_impulse": 1.4860723007596932e-06,
+    "wall_archive_sha256": "0df5971d360ed20463d67ab36bd97b677b3e55bee9aaf01dbd559daf79a9ed90"
+  },
+  "arms": {
+    "F16": {
+      "candidate_support": {
+        "at_least_three_fields_nodes": 0,
+        "axis_aligned_center_pairs": 84,
+        "candidate_pair_node_entries": 1764,
+        "candidate_pair_node_entries_times_dx_squared": 0.06890625,
+        "largest_candidate_geometric_gap": 0.00034543947307338896,
+        "oblique_center_pairs": 0,
+        "positive_geometric_gap_pairs": 84,
+        "shared_nodes": 1764,
+        "smallest_candidate_geometric_gap": 0.0003454394730731669,
+        "unique_candidate_pairs": 84
+      },
+      "expected_first_top_pre_impulse": 1.4860723007596934e-06,
+      "first_step_lid": 0.85239565140526,
+      "grid_cells_per_axis": 160,
+      "lower_supported_mass": 0.0005335321860196899,
+      "material_volume": 0.38484510006474965,
+      "top_start_node_y": 0.85625,
+      "upper_supported_mass": 7.44320569921706e-05
+    },
+    "F8": {
+      "candidate_support": {
+        "at_least_three_fields_nodes": 72,
+        "axis_aligned_center_pairs": 84,
+        "candidate_pair_node_entries": 1872,
+        "candidate_pair_node_entries_times_dx_squared": 0.2925,
+        "largest_candidate_geometric_gap": 0.0419098814251089,
+        "oblique_center_pairs": 72,
+        "positive_geometric_gap_pairs": 156,
+        "shared_nodes": 1620,
+        "smallest_candidate_geometric_gap": 0.0003454394730731669,
+        "unique_candidate_pairs": 156
+      },
+      "expected_first_top_pre_impulse": 2.0495243265786484e-06,
+      "first_step_lid": 0.85239565140526,
+      "grid_cells_per_axis": 80,
+      "lower_supported_mass": 0.001671095990389524,
+      "material_volume": 0.3848451000647497,
+      "top_start_node_y": 0.8625,
+      "upper_supported_mass": 0.00010265335771668506
+    }
+  },
+  "development_only": true,
+  "dt": 0.0011231835082397789,
+  "method": "initial_mass_scatter_no_time_steps",
+  "seed_sha256": {
+    "ids": "da5560998c5a66797d7928279d5b43f6e26cb8432aac52a37f99d7cef5a3d7b2",
+    "positions": "ce12e262721141b2c4fc36cc72733686055a9e22ce62a8cc733a1e2ad591858a",
+    "volume": "06f4c3ce49ffece1d401bdcae453605728c4ba0e7731b4c2c6027e337cdc88b4"
+  }
+}

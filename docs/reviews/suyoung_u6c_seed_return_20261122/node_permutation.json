@@ -1,0 +1,468 @@
+{
+  "cases": {
+    "asymmetric_triangle": {
+      "id_results": [
+        {
+          "outgoing_energy": 0.022677954394754327,
+          "physical_to_id": [
+            0,
+            1,
+            2
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.035492521918514916,
+              -0.14830582774626094
+            ],
+            [
+              0.09910778751934002,
+              -0.0007529654461062851
+            ],
+            [
+              0.09910778751934002,
+              -0.0007529654461062574
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.03430193444358877,
+          "physical_to_id": [
+            0,
+            2,
+            1
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.11142857142857143,
+              -0.008571428571428563
+            ],
+            [
+              0.10274393530997308,
+              -0.09046091644204854
+            ],
+            [
+              0.19308355795148252,
+              -0.007649595687331506
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.025434879113865896,
+          "physical_to_id": [
+            1,
+            0,
+            2
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.012901612385299008,
+              0.06066008543598626
+            ],
+            [
+              0.09125786163522032,
+              -0.1394025157232704
+            ],
+            [
+              0.08468642657662485,
+              -0.002075082468107642
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.030497672795533337,
+          "physical_to_id": [
+            1,
+            2,
+            0
+          ],
+          "velocity_by_physical_body": [
+            [
+              0.10274393530997306,
+              -0.09046091644204854
+            ],
+            [
+              0.10274393530997311,
+              -0.09046091644204854
+            ],
+            [
+              -0.09247978436657689,
+              0.1015363881401618
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.030972565325769322,
+          "physical_to_id": [
+            2,
+            0,
+            1
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.007741103661681403,
+              -0.10553378029912328
+            ],
+            [
+              0.1700000000000001,
+              0.0
+            ],
+            [
+              -0.07967852845109155,
+              -0.05928829293450236
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.050976496554347564,
+          "physical_to_id": [
+            2,
+            1,
+            0
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.007741103661681403,
+              -0.10553378029912328
+            ],
+            [
+              -0.007073163347940179,
+              -0.10578916924261246
+            ],
+            [
+              0.27446779824478895,
+              0.15229004555072256
+            ]
+          ]
+        }
+      ],
+      "incoming_energy": 0.9909375,
+      "incoming_max_relative_speed": 1.5132745950421556,
+      "incoming_velocity": [
+        [
+          0.9,
+          0.3
+        ],
+        [
+          -0.6,
+          0.1
+        ],
+        [
+          0.25,
+          -0.8
+        ]
+      ],
+      "mass": [
+        1.0,
+        1.5,
+        0.75
+      ],
+      "max_difference_over_incoming_relative_speed": 0.2726107114777069,
+      "max_linear_momentum_abs_error": 1.1443916996305594e-16,
+      "max_row_reversal_component_difference": 0.0,
+      "max_velocity_difference": 0.4125348640155808,
+      "positions_and_gradient_per_mass": [
+        [
+          -0.8,
+          -0.5
+        ],
+        [
+          1.2,
+          -0.3
+        ],
+        [
+          0.1,
+          0.9
+        ]
+      ],
+      "worst_pair_ids": [
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ]
+      ],
+      "worst_physical_body": 2
+    },
+    "symmetric_triangle": {
+      "id_results": [
+        {
+          "outgoing_energy": 0.03935082169591915,
+          "physical_to_id": [
+            0,
+            1,
+            2
+          ],
+          "velocity_by_physical_body": [
+            [
+              0.15012023679041775,
+              0.1729968245269452
+            ],
+            [
+              -0.07674285518562665,
+              -0.0864984122634726
+            ],
+            [
+              -0.0733773816047911,
+              -0.0864984122634726
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.03935082169591915,
+          "physical_to_id": [
+            0,
+            2,
+            1
+          ],
+          "velocity_by_physical_body": [
+            [
+              0.15012023679041775,
+              -0.1729968245269452
+            ],
+            [
+              -0.0733773816047911,
+              0.0864984122634726
+            ],
+            [
+              -0.07674285518562665,
+              0.0864984122634726
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.03935082169591916,
+          "physical_to_id": [
+            1,
+            0,
+            2
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.036538394814373376,
+              -0.10971046828143927
+            ],
+            [
+              0.0747595264191645,
+              0.2165063509461097
+            ],
+            [
+              -0.038221131604791125,
+              -0.10679588266467044
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.03935082169591916,
+          "physical_to_id": [
+            1,
+            2,
+            0
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.036538394814373376,
+              0.10971046828143927
+            ],
+            [
+              -0.038221131604791125,
+              0.10679588266467044
+            ],
+            [
+              0.0747595264191645,
+              -0.2165063509461097
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.039350821695919136,
+          "physical_to_id": [
+            2,
+            0,
+            1
+          ],
+          "velocity_by_physical_body": [
+            [
+              0.11159851320958226,
+              -0.02029747040119781
+            ],
+            [
+              -0.22487976320958225,
+              0.0435095264191645
+            ],
+            [
+              0.11328124999999999,
+              -0.023212056017966692
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.039350821695919136,
+          "physical_to_id": [
+            2,
+            1,
+            0
+          ],
+          "velocity_by_physical_body": [
+            [
+              0.11159851320958226,
+              0.02029747040119781
+            ],
+            [
+              0.11328124999999999,
+              0.023212056017966692
+            ],
+            [
+              -0.22487976320958225,
+              -0.0435095264191645
+            ]
+          ]
+        }
+      ],
+      "incoming_energy": 1.5,
+      "incoming_max_relative_speed": 1.7320508075688772,
+      "incoming_velocity": [
+        [
+          -1.0,
+          -0.0
+        ],
+        [
+          0.5,
+          -0.8660254037844386
+        ],
+        [
+          0.5,
+          0.8660254037844386
+        ]
+      ],
+      "mass": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "max_difference_over_incoming_relative_speed": 0.19975952641916456,
+      "max_linear_momentum_abs_error": 0.0,
+      "max_row_reversal_component_difference": 0.0,
+      "max_velocity_difference": 0.3459936490538904,
+      "positions_and_gradient_per_mass": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          -0.5,
+          0.8660254037844386
+        ],
+        [
+          -0.5,
+          -0.8660254037844386
+        ]
+      ],
+      "worst_pair_ids": [
+        [
+          0,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          1
+        ]
+      ],
+      "worst_physical_body": 0
+    },
+    "two_body_control": {
+      "id_results": [
+        {
+          "outgoing_energy": 0.106,
+          "physical_to_id": [
+            0,
+            1
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.08000000000000007,
+              0.28
+            ],
+            [
+              -0.07999999999999996,
+              0.27999999999999997
+            ]
+          ]
+        },
+        {
+          "outgoing_energy": 0.106,
+          "physical_to_id": [
+            1,
+            0
+          ],
+          "velocity_by_physical_body": [
+            [
+              -0.08000000000000007,
+              0.28
+            ],
+            [
+              -0.07999999999999996,
+              0.27999999999999997
+            ]
+          ]
+        }
+      ],
+      "incoming_energy": 1.1050000000000002,
+      "incoming_max_relative_speed": 1.8248287590894658,
+      "incoming_velocity": [
+        [
+          1.0,
+          0.1
+        ],
+        [
+          -0.8,
+          0.4
+        ]
+      ],
+      "mass": [
+        1.0,
+        1.5
+      ],
+      "max_difference_over_incoming_relative_speed": 0.0,
+      "max_linear_momentum_abs_error": 2.0014830212433605e-16,
+      "max_row_reversal_component_difference": 0.0,
+      "max_velocity_difference": 0.0,
+      "positions_and_gradient_per_mass": [
+        [
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "worst_pair_ids": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "worst_physical_body": 1
+    }
+  },
+  "friction": 0.5,
+  "multi_body_sweeps": 4,
+  "numpy": "2.3.5",
+  "python": "3.12.14",
+  "scope": "synthetic single-node impulse projection only",
+  "source_sha256": {
+    "dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+    "suyoung_u6_first_dev.py": "5db0f1bda90c824a23479401b7744cf8d31fc64f373441abca692dce6717bda5"
+  }
+}

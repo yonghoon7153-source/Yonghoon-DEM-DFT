@@ -1,0 +1,39 @@
+{
+  "comparison": {
+    "anchor_status": "REACHED",
+    "at_original_anchor": {
+      "F16_MPa": 0.6348781834041664,
+      "F8_dense_MPa": 1.1150171111728033,
+      "F8_half_MPa": 1.1708897128678601,
+      "gaps_MPa": {
+        "F8_dense_minus_F16": 0.480138927768637,
+        "F8_half_minus_F16": 0.5360115294636938,
+        "F8_half_minus_F8_dense": 0.05587260169505681
+      },
+      "u": 0.11562281664031926
+    },
+    "common_end_u": 0.11640768835917337,
+    "common_knots": 5192,
+    "common_start_u": 0.0,
+    "fixed_u": 0.11562281664031926,
+    "largest_residual_on_common_support": {
+      "F16_MPa": 0.6428797570113711,
+      "F8_dense_MPa": 1.1359157793881627,
+      "F8_half_MPa": 1.200112051930551,
+      "gaps_MPa": {
+        "F8_dense_minus_F16": 0.49303602237679156,
+        "F8_half_minus_F16": 0.5572322949191799,
+        "F8_half_minus_F8_dense": 0.06419627254238836
+      },
+      "u": 0.11640768835917337
+    }
+  },
+  "label": "DEVELOPMENT_ONLY",
+  "prior_half_sha256": "e574396d010514b3cd77f57d2e06d0c25227c88a7b6e985577f2981aa8c154e4",
+  "prior_wall_sha256": "0df5971d360ed20463d67ab36bd97b677b3e55bee9aaf01dbd559daf79a9ed90",
+  "protocol": "U6c-F8-grid-F16-seed-and-dt-v1",
+  "seed_trace_sha256": "2080e70ed0fc08455f73bffed44f6f0ce47ebc087ef58da64106d08560b6af97",
+  "stage3_go": false,
+  "status": "DEVELOPMENT_SEED_GRID_CONTRAST",
+  "u6_qualified": false
+}
