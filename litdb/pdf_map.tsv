@@ -634,3 +634,7 @@ hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry mixi
 #   ⚠ 크롭 41 장 = 도구 13 (다시 자름 10: 그림 2 = 흐름도 위 절반 빠짐 · 그림 11 = 오른쪽 끝 글자 닿음 · 그림 3 · 4 · 5 · 6 · 7 · 8 · 10 · SI S2 = 좌우 여백 고르지 않음) + 손 28 (표 1 · 패널 8 · 근거 문단 19) + digitized.csv 23 행 — --inbox --run 으로 다시 뽑지 말 것
 ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size_control_of_sulfide-based_solid_electrolyte_particles
 ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size control of sulfide-based solid electrolyte particles
+# ── 전고체 복합 전극 이온 tortuosity 직류 실측 — 가상 AM Al₂O₃ 모양 · 크기 · 성형압 44–655 MPa (전자 차단 셀 · ΔE 100 mV) (Park · Jeong · Shin · Appl. Sci. 12 (2022) 12692) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 58 장 = 도구 9 (그림 1–9 · 전부 다시 자름: 래스터 이미지 합 + 6 pt · 캡션 칸에 다음 본문이 섞였음) + 손 49 (패널 23 · 식 7 · 근거 문단 19) + digitized.csv 198 행 — --inbox --run 으로 다시 뽑지 말 것
+park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical_effect_of_active_material_on_electrode_tortuosity
+park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical effect of active material on electrode tortuosity

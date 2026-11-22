@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 353편 · 생성 2026-11-22
+> digest 354편 · 생성 2026-11-22
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -161,7 +161,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM — Zunker, Dunatunga, Thakur, Tang, Kamrin · Powder Technology 459 (2025) 120972 (Experimentally validated DEM for large deformation powder compaction: Mechanically | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-11-12 | 🖼 195 |
 
-## 복합양극 미세구조 · percolation (57편)
+## 복합양극 미세구조 · percolation (58편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -204,6 +204,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `nakamura2020_dry_coating_ncm_li3ps4_core_shell` | NCM 단입자를 황화물 SE (Li₃PS₄ 유리) 로 건식 충격 코팅 — 13,000 rpm · 300 s · 고체 농도 ≈1 vol% 장치에서 0.1–0.2 µm 연속 껍질 (NCM 파손 없음) → 같은 SE 량 (86.9 : 13.1 wt%) 의 막자 혼합 대비 3D FIB-SEM 수송 tortuosity (원문 τ  | exp + 3D 복셀 수송 (건식 충격 블렌딩 코팅 · SEM/EDX · 입도 · UV-vis 순조성 · 반 | 2026-10-13 | 🖼 10 |
 | `nguyen2020_electrode_tortuosity_factor` | 전극 tortuosity factor τ_e — 관통형(flow-through) tortuosity factor τ 는 다공 전극 수송을 잘못 재고, 대칭셀 임피던스(eSCM)로 정한 τ_e 를 P2D 에 넣으라 — Nguyen (npj Comput. Mater. 2020) | computational (TauFactor voxel FD/SOR · eRDM vs eSCM impedan | 2026-10-03 | 🖼 8 |
 | `nisar2024_dem_effective_electrical_conductivity_sps` | 부분소결 다공성 재료의 유효 전기전도도를 위한 DEM 저항망 모델 (sinter-neck conductance) — Nisar (Comp. Part. Mech. 2024) | DEM+RNM | 2026-06-26 | 🖼 10 |
+| `park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3` | 전고체 복합 전극의 이온 tortuosity 를 직류 (전자 차단 셀 · 정전위 ΔE 100 mV) 로 잰다 — 가상 활물질 Al₂O₃ (구 · 판 · 섬유 · 10 / 70 / 100 µm) + Li₆PS₅Cl 3 µm + 카본블랙 펠릿 · ε_SE 0.32 (109 MPa) 에서 τ (원문 식 (2) = 우리 수송 t | experiment (전자 차단 셀 직류 정전위 chronoamperometry ΔE 100 mV · 복합  | 2026-11-22 | 🖼 58 |
 | `park2025_high_loading_cathode_cam_ratio_coordination_chemomechanics` | NCM811 : Li₆PS₅Cl 질량비 70:30 · 80:20 · 85:15 복합 양극의 XCT 미세구조 (microstructure) — NCM–NCM 배위수 분포 (평균 4.8 · 6.5 · 7.4 · 복셀 0.65 µm · 기공망 모형) · 상 분율 (공극 + 탄소 14.7 · 18.1 · 23.3 %) · XCT | experiment + continuum model (synchrotron micro-CT 상 분할 · NC | 2026-11-12 | 🖼 56 |
 | `pouraghajan2018_tortuosity_polarization_interrupt_vs_blocking_electrolyte` | 두 τ 측정법의 실측 비교 — DC 편극-중단 (polarization-interrupt, 확산 · eRDM) vs 차단 전해질 EIS (blocking-electrolyte, 전도 · eSCM) + 접촉저항 · 전하이동 · 전자 레일을 넣은 일반 전송선 모델 — Pouraghajan (J. Electrochem. Soc | exp (liquid-LIB tortuosity 측정법 비교 — DC polarization-interrup | 2026-10-03 | 🖼 15 |
 | `puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups` | 21 개 연구 그룹 · 같은 재료 (단결정 NMC 622 · Li₆PS₅Cl MSE D50 ≈1 µm · In 박) · 같은 전기화학 절차 · 조립은 각자 — 전고체 펠릿 셀 성능의 실험실 간 재현성 벤치마크: 시도 68 셀 중 50 사이클 완주 39 (실패 43 %) · 0.1 C 첫 방전 21–143 mAh g⁻¹ ( | experiment (interlaboratory round robin · 21 research groups | 2026-11-16 | 🖼 92 |
