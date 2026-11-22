@@ -344,14 +344,14 @@
   "note": ""
  },
  "N-88": {
-  "nn": "",
+  "nn": "137",
   "pdf": "0dca781a-88._Size_control_of_sulfide-based_solid_electrolyte_particles_through_liquid-phase_synthesis.pdf",
   "si": [
    "9f38c552-88._Sup_Size_control_of_sulfide-based_solid_electrolyte_particles_through_liquid-phase_synthesis.pdf"
   ],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Size control of sulfide-based solid electrolyte particles through liquid-phase synthesis · Subject: Powder Technology, 387 (2021) 415-420. doi:10.1016/j.powtec.2021.04.050 · Author: Shuji Ohsaki · DOI: 10.1016/j.powtec.2021.04.050 · PDF 6 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1016/j.powtec.2021.04.050` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
