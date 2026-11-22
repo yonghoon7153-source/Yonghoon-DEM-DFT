@@ -88,10 +88,10 @@ N-81	대피	끝	hayakawa2023_dry_coated_composite_particles_conductive_additives
 N-82	대피	끝	kissel2025_cathode_mixing_quality_cam_utilization_reproducibility_press_cells · c66e65410	정독 131 · 끝 (트리 1 · 정독 131) · OCP 이완 정적 CAM 이용률 74–95 % · 0.1 C gross 용량과 r 0.95 (workbook 38 셀 재계산 0.971) · active 201.4 ± 3.0 mAh/g · 막자 ↔ 진동밀 0.1 C CV 5.1 ↔ 1.4 % · 이용률 89.0 ± 4.0 ↔ 89.0 ± 1.2 % · 카드 문제 = frankenberg2025 L232 (2 차 혼합도 정의) · kissel2026 L247 (휴지 3 · 5 h ↔ 4 · 4 h · 경미)
 N-83	대피	끝	han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode · cf88611a7	정독 132 · 끝 (트리 2 · 정독 132) · 건식 후막 흑연 음극 PTFE 첫 리튬화 0.3–0.55 V 환원 · 비가역 107.6 mAh/g · ICE 75.7 → 87.2 % (FEC 10 wt%) · 50 사이클 97.3 vs 89.9 % · 1 사이클 뒤 탄성률 54.60 → 17.80 MPa · 접착 0.223 → 0.272 kN/m · 두께 149 → 109.3 µm · [카드 산술] PTFE 3 wt% 전부 환원돼도 Li ≤ 33.5 mAh/g < FEC 차 56.6 · 카드 문제 = kim2026 L411 (저자 둘 빠짐) · kang2026 L384 (제목 철자) · lee2026_li L353 [미확인] 풀림
 N-84	대피	끝	puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups · 53ed4adc6	정독 133 · 끝 (트리 1 · 정독 133) · 21 연구 그룹 (그림 문자 19) · 68 셀 중 50 사이클 완주 39 (실패 43 %) · 0.1 C 첫 방전 21–143 mAh/g (중앙 121.9 · 33 셀) · 적층압 1–10 MPa = 유지율만 낮음 · LPSCl 펠릿 (380 MPa) 1.63 · 1.85 mS/cm · 셀 분리막 겉보기 0.89–2.81 · 두 셀 SD 10.0 → 세 셀 7.0 = 모집단 SD + 이상 셀 포함 (중앙값 4.58 ↔ 4.49 · [카드 산술]) · 원문 권고 = 세 벌 · 카드 문제 = alharbi2026 L164 · L466 · L386 · L482 · L332 · schmitt2026 L38 · L122 (두 벌 ↔ 원문 세 벌)
-N-85	대피	도는 중		PDF 받음 (+SI 1) · Zhang 2021 Nano Lett 21 5233 · 시작 11-22 21:00 KST
+N-85	대피	끝	zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane · dfa191844	정독 134 · 일부 — 건식막 · PTFE 0.2 wt% · 30 µm · 8.4 mS/cm 채움 · PTFE 함량 ↔ 이온 전도 = 0 ↔ 0.2 wt% 두 점뿐 (공정 · 시편 · 빼기 함께 바뀜) · 카드 문제 = cao2026 · schmitt2026 측정 꼬리표 (누른 채 · 1.04 Ω 빼기) 빠짐 (기록만) · 원문 안 어긋남 (카드 §3-9)
 N-86	대피	끝	kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode · 9e862495e	정독 135 · 채움 — 혼합 방법 (건식 · 습식 · 볼 믹서) 효과 = 전기화학 + 정성 형태 · 미세구조 정량 · 반복 없음 · 카드 문제 없음 · 원문 안 어긋남 3 (카드 §3-10)
 N-87	대피	도는 중		PDF 받음 · Hayakawa 2022 Adv Powder Technol 33 103705 · 시작 11-22 21:38 KST
-N-88	대피	차례 기다림		PDF 받음 (+SI 1) · Ohsaki 2021 Powder Technol 387 415
+N-88	대피	도는 중		PDF 받음 (+SI 1) · Ohsaki 2021 Powder Technol 387 415 · 시작 11-22 21:59 KST
 N-89	대피	차례 기다림		PDF 받음 (+SI 1) · Bielefeld 2022 J Electrochem Soc 169 020539
 N-90	대피	차례 기다림		PDF 받음 · Park 2022 Appl Sci 12 12692
 N-91	대피	차례 기다림		PDF 받음 (+SI 1) · Lee 2025 Chem Eng J 503 158271

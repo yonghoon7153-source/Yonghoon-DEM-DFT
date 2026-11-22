@@ -334,12 +334,12 @@
   "note": ""
  },
  "N-87": {
-  "nn": "",
+  "nn": "136",
   "pdf": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title:  · Subject:  · Author:  · DOI: 10.1016/j.apt.2022.103705 · PDF 10 쪽",
-  "model": "",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
   "dup": "papers/ 에서 DOI `10.1016/j.apt.2022.103705` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
