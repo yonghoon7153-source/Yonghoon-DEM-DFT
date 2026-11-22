@@ -1,0 +1,105 @@
+{
+  "F16_prefix_steps": 540,
+  "F8_prefix_steps": 270,
+  "byte_identical_to_history": [
+    "trace.csv",
+    "wall_observations.json",
+    "prefix_receipt.json"
+  ],
+  "development_only": true,
+  "first_crossing": {
+    "coarse_minus_fine_MPa": 0.03359937103298061,
+    "coarse_total_interpolated_MPa": 0.04504276337320029,
+    "common_fine_peak_MPa": 0.6636991102836952,
+    "fine_total_observed_MPa": 0.011443392340219682,
+    "threshold_MPa": 0.03318495551418476,
+    "u": 0.012087024470351482
+  },
+  "frozen_source_tar_sha256": "5f2e87b77aa02ce02854cd2903e2562044ab4527a293c34a292fe14c6f7c8888",
+  "pairs": [
+    {
+      "cancellation_ratio": 1.3899087907328818,
+      "common_wall_row_y": 0.15,
+      "dominance_ratio": 32.03909576615687,
+      "largest_field_share_of_stress_gap": 0.1708816312773623,
+      "mass_share_of_pre_gap": 0.2933313739248538,
+      "pre_delta_MPa": {
+        "apic": -0.006400510108003654,
+        "stress": 0.03183711121209756,
+        "translation": 0.00739420579294016
+      },
+      "pre_gap_MPa": 0.03283080689703407,
+      "row_counts": [
+        61,
+        70
+      ],
+      "second_wall_gap_MPa": 6.240284329790984e-10,
+      "speed_share_of_pre_gap": 0.7066686260751464,
+      "steps": [
+        269,
+        538
+      ],
+      "stress_gap_by_field_MPa": {
+        "0": 0.005440377499082033,
+        "7": 0.005421629030550958,
+        "14": 0.005338669948355282,
+        "21": 0.005106956165163977,
+        "28": 0.004592861964292733,
+        "35": 0.003656355958416408,
+        "42": 0.002280260646236175
+      },
+      "stress_gap_on_wall_row_MPa": 0.03150634858880817,
+      "stress_share_of_pre_gap": 0.9697328278268337,
+      "symmetric_mass_rate_MPa": 0.00963030569416857,
+      "symmetric_mean_speed_MPa": 0.023200501202865504,
+      "total_gap_MPa": 0.03283080752106251,
+      "wall_row_share_of_stress_gap": 0.989610784059965
+    },
+    {
+      "cancellation_ratio": 1.3823670943441342,
+      "common_wall_row_y": 0.15,
+      "dominance_ratio": 32.43928210295728,
+      "largest_field_share_of_stress_gap": 0.170635005320853,
+      "mass_share_of_pre_gap": 0.29293470540350003,
+      "pre_delta_MPa": {
+        "apic": -0.0065633040656943005,
+        "stress": 0.03330322557352973,
+        "translation": 0.007589936697940305
+      },
+      "pre_gap_MPa": 0.034329858205775735,
+      "row_counts": [
+        61,
+        70
+      ],
+      "second_wall_gap_MPa": 1.1756649826412087e-09,
+      "speed_share_of_pre_gap": 0.7070652945964997,
+      "steps": [
+        270,
+        540
+      ],
+      "stress_gap_by_field_MPa": {
+        "0": 0.005682696072940812,
+        "7": 0.005663278398910642,
+        "14": 0.005577431121281765,
+        "21": 0.0053364531673421745,
+        "28": 0.004800774161713508,
+        "35": 0.003828458937449152,
+        "42": 0.002414133713891669
+      },
+      "stress_gap_on_wall_row_MPa": 0.03295877362317823,
+      "stress_share_of_pre_gap": 0.970095051774106,
+      "symmetric_mass_rate_MPa": 0.010056406900052843,
+      "symmetric_mean_speed_MPa": 0.024273451305722882,
+      "total_gap_MPa": 0.0343298593814407,
+      "wall_row_share_of_stress_gap": 0.9896570994424853
+    }
+  ],
+  "posthoc_localization": "common wall row and original field IDs",
+  "prespecified_direction": "STRESS",
+  "prior_sha256": "0d415250759821b9db816e6a13d43ca190e983a7389914c5c3357b697399a5ae",
+  "qualification": "HOLD",
+  "replayed_summary_sha256": "4e9167e77d5152a05c29c9772960bd87f511ba09f3a33f90843ac9d520b4dbcf",
+  "return_sha256": "bd50c34c882866a39c5a94a511b855017cff3c5921437e60151074ed473bf77b",
+  "screen_sha256": "b5c01b2222260ac21b82b385439dec6fa4ddf4c368db77a8fae5e03c2da673df",
+  "stage3": "HOLD"
+}
