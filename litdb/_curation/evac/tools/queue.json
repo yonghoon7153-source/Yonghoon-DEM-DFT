@@ -368,12 +368,12 @@
   "note": ""
  },
  "N-90": {
-  "nn": "",
+  "nn": "139",
   "pdf": "7aeb2a0a-90._Geometrical_effect_of_active_material_on_electrode_tortuosity_in_all-solid-state_lithium_battery.pdf",
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Geometrical Effect of Active Material on Electrode Tortuosity in All-Solid-State Lithium Battery · Subject: In this study, the effect of the active material geometry on the tortuosity in the ion transport path of the electrode composite of an all-solid-state lithium battery was systematically analyzed in terms of the different design and process factors of an electrode. A direct currenttechnique (i.e., chronoamperometry) using an electron-blocking cell was used to analyze the tortuosity to minimize the experimental error. In addition, aluminum oxide was selected as a hypothetical active material in a composite electrode to exclude the possible disturbance of the ion transport signal caused by real active materials. The experimental results showed that the shape and composition of the active material had significant influences on the ion transport characteristics. In particular, when a fibrous material was applied with a high active material ratio, the degree of tortuosity was significantly increased, reaching values as high as 45, due to the insufficient filling in the micropores formed by particle aggregation. Moreover, the tortuosity degree decreased below 15 as the pressing pressure increased during electrode manufacturing, and the cause of this decrease differed with the active material’s particle shape. The analysis results confirmed that the change in tortuosity resulting from the electrode design factors of an all-solid-state battery has distinctive features compared to that for a conventional liquid electrolyte-based lithium-ion battery. · Author: So-Yeon Park, Jiung Jeong and Heon-Cheol Shin · DOI: 10.3390/app122412692 · PDF 17 쪽",
-  "model": "",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
   "dup": "papers/ 에서 DOI `10.3390/app122412692` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
