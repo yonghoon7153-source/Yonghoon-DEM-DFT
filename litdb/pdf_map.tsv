@@ -650,3 +650,7 @@ kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering	10 mah cm 2 cathode 
 #   ⚠ 크롭 54 장 = 도구 17 (다시 자름 4: 본문 그림 1 · 2 = 래스터 사각형 + 6 pt · SI 그림 S5 · S6 = 래스터 사각형 + 4 pt (도구 상자가 쪽 폭)) + 손 37 (패널 19 · 근거 문단 18) + digitized.csv 292 행 — --inbox --run 으로 다시 뽑지 말 것
 tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode	unraveling_the_impact_of_the_degree_of_dry_mixing
 tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode	unraveling the impact of the degree of dry mixing
+# ── PTFE 건식 LFP 후막 양극 (LFP : Super P : PTFE = 97 : 1 : 2 · 2.3 g/cc) ↔ 습식 PVDF · 대칭 셀 R_ion 35.01 → 6.19 Ω · 7.8 mAh/cm² 흑연 전셀 300 사이클 (Kwon · Kim · Han … Kim · Song · Choi · Small Sci. 4 (2024) 2300302) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 75 장 = 도구 20 (전부 다시 자름: 래스터 사각 / 벡터 상자 + 6 pt → 내용 + 20 px · 표 S2 아래 괘선 · 표 S3 오른쪽 절반 잘림) + 손 55 (그림 1 · S5 · 표 S1 · 패널 33 · 식 1 · 근거 문단 18) + digitized.csv 225 행 — --inbox --run 으로 다시 뽑지 말 것
+kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low_resistance_lifepo4_thick_film_electrode_processed_with_dry
+kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low-resistance lifepo4 thick film electrode processed with dry

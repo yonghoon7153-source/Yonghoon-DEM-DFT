@@ -367,6 +367,7 @@
 ## 🔗 관련 카드
 - 이 논문을 인용한 카드: `lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode` (참고 [21] · L363 · 서론 · 레시피 · 전해질) · `kim2026_pregranulation_ptfe_dry_nca_cathode_crack_delithiation` (참고 [17] · L411 — 저자 목록 둘 빠짐) · `kang2026_multiscale_inverse_design_ptfe_fibrillation_dry_electrode` (참고 [9] · L384).
 - 이 논문이 인용한 정본 카드: `zhang2023_pfib_multiscale_imaging_4d_thick_cathode` ([27]).
+- 같은 랩 · 같은 해 (같은 과제 20024261 · 이 논문의 참고 [15]): `kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode` (건식 PTFE LFP 후막 양극 97 : 1 : 2 · 2.3 g/cc · 7.8 mAh/cm² 흑연 전셀 300 사이클 · 양극 전위에서 PTFE 미반응 — 이 논문 전셀 LFP 94 : 3 : 3 와 조성 다름).
 - PTFE 전기화학 안정성: `schmitt2026_chemomech_stability_dry_cathode_separator_sheets` (황화물 ASSB · 양극 불활성 ↔ 분리막 환원) · `matthews2024_ptfe_nanofibril_network` (PTFE 섬유 망 · carbyne 환원은 인용만).
 - 건식 PTFE 공정: `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet` · `lee2025_dual_fibrous_ptfe_dry_electrode` · `lee2025_corolling_dryprocess_lpscl_ptfe` · `lee2026_unveiling_ptfe_dry_electrode_digital_twin` · `kang2025_bollard_anchored_binder_dry_electrode` · `liu2025_dry_processing_high_energy_li_batteries_review` · `lee2024_shear_force_dry_process_cathode_coverage`.
 

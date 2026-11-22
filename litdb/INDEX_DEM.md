@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 358편 · 생성 2026-11-22
+> digest 359편 · 생성 2026-11-22
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -225,7 +225,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (78편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (79편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -268,6 +268,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `kollenda2024_time_sensitivity_calendered_electrode_springback_storage` | 압연 뒤 보관하는 동안 전극 두께가 자라는가 — 액체 LIB 양극 (NMC622 95.5 · PVDF 1.5 wt% · 90 °C 압연 · 기공 43 → 30 %) 은 28 일 +0.33–0.60 µm (다이얼 게이지 ±1 µm 안 · "유의하지 않음") · 흑연 음극 (24 °C 압연 · 41 → 30 %) 은 +5.2 | experiment (파일럿 롤투롤 전극 제조 · 다이얼 게이지 두께 · 질량 시계열 0–672 h · 회전 | 2026-11-12 | 🖼 32 |
 | `koo2025_cnt_wrapped_sc_nca_dry_cathode` | Koo 2025 (Energy Storage Materials 78, 104270) — anti-solvent로 MWCNT 감싼 단결정 SC-NCA dry 양극 (99.6 wt%, 4.0 g/cm³) ★ #275(Joule 2026)의 2025 PRECURSOR / SISTER 논문 | FEM·digital-twin | 2026-07-28 | — |
 | `koo2026_swcnt_sheath_thick_electrode` | Koo 2026 (Joule 10, 102392) — 연속 SWCNT sheath가 두꺼운 dry 전극에서 초고에너지밀도 + 급속충전 (★ 우리 CBD SuperP-vs-VGCF 발견의 실험적 증명) | FEM·digital-twin | 2026-07-28 | 🖼 59 |
+| `kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode` | PTFE 섬유화 건식 공정 LFP 후막 양극 (LFP : Super P : PTFE = 97 : 1 : 2 · 행성 혼합기 + 막자 · 60 °C 압착 · 라미네이트 · 2.3 g/cc) ↔ 같은 조성 습식 PVDF (2.1 g/cc) — 5.5 mAh/cm² 에서 대칭 셀 R_ion 35.01 → 6.19 Ω · N_M | experiment (dry process 건식 전극 · PTFE binder 섬유화 · LFP 후막 양극  | 2026-11-22 | 🖼 75 |
 | `larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity` | 150 °C 열간 가압 압밀 (hot-press compaction) 한 Li₆PS₅Cl 펠릿의 σ_ion 이 작동압 0.12–8 MPa 에서 거의 불변 (≈1.5–2.4 mS/cm) · 20 °C 냉간 가압은 같은 상대밀도 (≈88 %) 에서 0.02–0.04 mS/cm 로 시작해 8 MPa 까지 ≈16 배 — 입자 융 | experiment (hot vs cold uniaxial die pressing of SE powder · | 2026-10-14 | 🖼 13 |
 | `lee2024_shear_force_dry_process_cathode_coverage` | 건식 공정의 전단이 양극 활물질의 SE 피복률을 두 배로 — 무바인더 손혼합 펠릿 30.6 % · 습식 (NdBR) 33.3 % · 건식 (PTFE 반죽 · 밀대 압연) 67.2 % (SEM 2D 단면 화상 처리) → 0.1 C · 60 °C 방전 139.4 · 152.4 · 169.0 mAh g⁻¹ · COMSOL 2D | exp + COMSOL 2D 전기화학 모델 (SEM 2D 피복 화상 처리 · EIS/DRT · GITT ·  | 2026-10-13 | 🖼 32 |
 | `lee2025_corolling_dryprocess_lpscl_ptfe` | Co-rolling dry-process로 만든 박막 LPSCl SSE — robust 계면 + 저압(2 MPa) 작동 — Lee (Nat. Commun. 2025) | exp | 2026-06-24 | 🖼 6 |
