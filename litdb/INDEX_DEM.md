@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 357편 · 생성 2026-11-22
+> digest 358편 · 생성 2026-11-22
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -225,7 +225,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (77편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (78편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -299,6 +299,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stershic2015_fabric_tensor_calendering_nmc_xct_dem` | 압연한 NMC111 양극 X 선 CT (Ebner 2013 공개 자료) 의 활물질 접촉 방향 분포를 fabric tensor (N · F · D · 2 · 4 차) 로 — 압연하면 접촉이 수직에서 수평으로 옮겨 간다 (다섯 판정법 모두) · 같은 입도 분포의 구 DEM (LIGGGHTS · 헤르츠 + 마찰 0.15 / 0 | image-data analysis + DEM (fabric tensor of the NMC111 AM co | 2026-11-16 | 🖼 68 |
 | `stewart2001_dem_pept_bladed_mixer_detailed_comparison` | 2 날개 수직 원통 믹서 (지름 249 mm · 날 높이 40 mm · 1 rad/s) 의 유리구 유동을 PEPT (양전자 방출 입자 추적 · 3D) 로 재고 같은 계의 DEM (16,000 구 · 단분산 5 mm) 다섯 경우와 셀마다 견준 논문 — 다섯 경우는 미끄럼 · 구름 마찰 (μ_s 0.2–0.5 · μ_r 0– | DEM (in-house soft-sphere · Cundall–Strack + rolling frictio | 2026-11-12 | 🖼 49 |
 | `sun2026_dem_extrusion_recirculation_dry_electrode` | 트윈스크류 압출(extrusion) + 재순환(recirculation) 무용매 공정을 DEM 으로 — 3D 프린팅용 필라멘트 미세구조 — Sun / Vigneaux / Franco (Batteries & Supercaps 2026) | DEM (LIGGGHTS: Hertz + SJKR 점착 + CDT 구름마찰; 트윈스크류 압출기 STL + 재 | 2026-09-19 | 🖼 10 |
+| `tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode` | 건식 혼합 '정도' (= 볼밀 시간 10 · 30 · 60 분) 가 건식 PTFE 양극을 바꾼다 — 액체 LIB NMC622 : 카본블랙 : PTFE = 92 : 3 : 5 · ≈7.2 mAh/cm² · ≈153 µm 로 부하 · 두께를 맞춘 세 전극에서 박리 접착 5 · 8 · 4 N/m · Rct 228.6 · 183 | experiment (dry process · dry powder mixing — 건식 PTFE NMC622 | 2026-11-22 | 🖼 54 |
 | `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | 🖼 26 |
 | `wet_processing_resolved_am_ssb_cathode_manufacturing` | ASSB 양극을 습식공정(슬러리→건조→압연)으로 — 실제 형상(resolved, multisphere) AM 입자를 nano-CT에서 추출해 DEM 제조 시뮬 + GeoDict로 σ_ionic·σ_e 산출 — Weitze / Franco (Energy Storage Materials 2024) | DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry | 2026-06-26 | 🖼 8 |
 | `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` | 건식 황화물 양극의 혼합 공정 비교 — 연속 트윈스크류 압출 (≈300 kJ/kg · 100 °C 혼련 · 수 분) vs 고전단 배치 메카노퓨전 (Picoline Nobilta 3000 rpm 45 min · 총 7,140 kJ/kg): 소립 NCM85 (D50 3.8 µm) 82 wt% · LPSCl 15.5 · C65 | exp (트윈스크류 압출 혼합 vs 고전단 배치 mixer 메카노퓨전 · SEM/EDX · XRD/Rietv | 2026-10-27 | 🖼 17 |

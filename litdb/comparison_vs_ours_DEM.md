@@ -3394,6 +3394,10 @@
 > · 우리 쪽: 조건 R7 의 정성 근거 — DEM Auerbach 판정 (후처리) · MPM AM 고정 강체는 파쇄를 못 낸다 · '같은 최종 밀도라도 낮게 먼저 누르는 이력이 파쇄를 줄인다' 를 R7 등록 칸 (누름 횟수 · 각 최대 압력) 으로 · 파쇄 지표 = 새 표면 (BET) 이라는 실험 꼴
 > · ⛔ 파쇄 정량 · 크기별 · 결정 형태별 · 시료 수 없음 · SEM 한 장씩 · 액체 LIB · PTFE 2.2 wt% 막 (SE 없음) — 문턱 MPa 를 우리 침대로 옮기지 않는다.
 
+> 2026-11-22 추가 — `tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode` [Tao23DM] (R. Tao · B. Steinhoff · … · J. Li, J. Power Sources 580 (2023) 233379 · 실험 · 계산 없음 · 액체 LIB 건식 PTFE NMC622 양극 92 : 3 : 5 · 고체전해질 없음) — **가압 전 혼합이 AM 2 차 입자를 깬다 (정성 사다리)**: 진동 볼밀 10 분 *"NMC secondary particles were mostly intact"* → 30 분 *"few NMC secondary particles are broken into primary particles"* → 60 분 *"more NMC secondary particles fracture into primary particles"* (p.3 · 그림 1) · 캘린더 윗면 = *"higher shear at the surface disassembling the NMC secondary particles"* → 조밀한 1 차 입자 층 (그림 S1) · 단면은 2 차 입자 더 온전
+> · 우리 쪽: 조건 R7 의 정성 근거 하나 더 — 위 [Kim24R2R] (1 차 압연 압력 → 파쇄) 와 묶어 '공정 이력 (혼합 · 압연) → AM 파쇄' · 우리 초기 침대의 AM_P 크기 분포 = 원료 PSD (혼합 이력 없음) [카드 추론]
+> · ⛔ 파쇄 비율 · 입도 · 결정 형태 · 혼합 에너지 · 온도 · 시료 수 없음 · SEM 시야 하나씩 · 그림 1e 저배율 칸은 배율이 1a · 1c 의 2 배 (축척 막대 127 vs 63 px [판독]) · 값 전이 금지.
+
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
 > stiffer → floor 21/37 %); **Kim 2025 (할라이드 Li₂ZrCl₆ LZC) = 할라이드 *계면 kinetics*** (bulk σ 0.51 < LPSCl
@@ -4828,6 +4832,10 @@
 > 2026-11-22 추가 — `kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering` [Kim24R2R] 에서 흡수할 것 (액체 LIB 건식 NCA 막 · 값 전이 0 · 꼴 · 규칙 · 함정만): ① **압력 이력을 상태 변수로** — 2 단 압밀 선도 (1 차 90 / 140 MPa → 2 차 0.8–770 MPa) 는 같은 2 차 압력에서 밀도가 2.9 → 0.8 %p 다르다 → 실험 앵커 · DEM 팔에 '누름 횟수 · 각 최대 압력 · 유지' 칸 (단계 0) ② **재가압 평탄 = 정성 시험** — 누르고 뺀 막은 이전 최대 압력 근처까지 거의 안 치밀해진다 (HM) · 파쇄 · 재배열이 있으면 낮은 압력부터 (IM) → 우리 언로딩 → 재가압 팔이 같은 꼴을 내는지 (단계 6 · R4 · DEM hooke/hysteresis 의 재하중은 제하 기울기를 따른다 [카드 추론]) ③ **분모 칸** — '압밀 밀도 = 전극 밀도 / 세 성분 이론 밀도 합 (4.5 g/cc · 바인더 · 탄소 포함)' ↔ 랩 표준 1.64 (순수 SE) · 복합은 성분별 분모를 같이 적는다 ④ **Heckel 대신 D–log P** — AM 지배 침대는 Heckel 잔차가 활꼴이고 D–log P 가 곧다 (R² 0.97 ↔ 0.997) → M0 서술자는 맞춤 구간 · 꼴을 같이 ⑤ **함정** — 같은 기공률 (같은 3.6 g/cc) 에서도 기공 크기 분포로 R_ion 1.7 배 (CB 0D ↔ 그래핀 2D) · 절마다 기준 전극이 앞 절 최적으로 바뀐다 (그림 사이 같은 값 사슬 — 카드 §3-7) · 유지율 89.5 (p.2) ↔ 82.15 % (p.10).
 > · ⛔ 압력 목록 · 다이 · 유지 · 오차 미인쇄 · R2R 속도 · 연속 운전 증거 없음.
 
+> 2026-11-22 추가 — `tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode` [Tao23DM] 에서 흡수할 것 (액체 LIB 건식 PTFE 막 · 값 전이 0 · 꼴 · 규칙 · 함정만): ① **혼합 팔의 관측량을 둘 이상 결과 전에** — 같은 시간 축에서 접착 5 · 8 · 4 N/m · Rct 228.6 · 183.1 · 240.1 Ω · C/2 79.1 · 88.6 · 59.3 mAh/g 는 역 U (30 분 최선) 인데 자립 막 인장은 단조 (10 분 예압 실패 → 60 분 0.43 MPa) ② **혼합 팔은 같은 최종 밀도에서 견준다** — 부하 ≈7.2 mAh/cm² · 두께 ≈153 µm 로 맞춘 설계 ③ **'정도' 단위 = 시간만이면 장비 밖으로 못 옮긴다** — 저자 p.6 *"the optimal DM time depends on the DM techniques and condition which dictate the mixing energy and heat generation"* → 에너지 · 온도 대리값 칸 ④ **윗면 SEM 함정** — 섬유는 단면에만 · 윗면은 캘린더 전단층
+> · 우리에게 없는 것 (확인): 혼합 중 PTFE 섬유화 · AM 파쇄 · 발열 — 드럼 믹서 DEM (단단한 구 + SJKR CED) 의 밖 · STEP3 PTFE 중심선 규약 (CL-60) 은 'PTFE–카본블랙 막이 NMC 를 덮음' (60 분) 같은 표면 막을 표현하지 못한다.
+> · ⛔ 볼밀 진동수 · 볼 · 분량 · 압연 · 라미네이션 조건 · 기공률 · 반복 시료 · 오차 미인쇄.
+
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)
 
 > **왜 새 축인가**: A(압밀/porosity) · B(전달 삼중항) · C(역학/morphology) · D(패킹) 는 전부 **입자 여러 개 =
@@ -5498,6 +5506,10 @@ Faraday FutureCat; 2026-09-26 추가; 원장 **SELF-51** 뿌리 감사 — [Sedl
 > 2026-11-22 추가 — `kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering` [Kim24R2R] — **PTFE 섬유화 온도 창 (건식 막 공정의 입력 칸 예)**: NCA : PTFE : CB = 5 : 4 : 1 막 DMA (25–150 °C) 저장 탄성률 400.8 MPa (30.7 °C) → 평탄 357.9–347.0 (60–110 °C · '라멜라 → 섬유') → 325.9 (143.5 °C · Tg ≈118 °C 는 [33] 인용) [판독 그림 2a] · 섬유화 30 °C = 덜 섬유화 (PTFE 덩어리) · 80 °C = 섬유 그물 · 135 °C = 막 (SEM) · 인장 ≈0.43 · 0.86 · ≈0.70 MPa [인쇄] · 면저항 14.18 · 8.07 · 9.78 × 10³ Ω/sq [판독] · CB 가 PTFE 에 박혀 전단을 전한다 ([37]) — CB 를 반은 남겨야 섬유화 (CB : 그래핀 50 : 50 이 최적) · 장비 사슬 = 혼합기 L8-2k → 압출기 HCK 25-24/CPC → 분쇄기 L8-2k → 롤 KRM-80 → 압연기 mp200 (96 : 1.8 : 2.2 · 100 g)
 > · 우리 믹서 축 대응 [카드 추론]: 건식 SE 막 · 복합 양극을 PTFE 로 만들 때 섬유화 온도 · CB 닻 역할이 바인더 그물 (따라서 기공 · 도전망) 을 바꾼다는 공정 쪽 근거 · 우리 혼합 모델 (Lacey M) 과 수치 대조는 불가 (혼합 지수 · 시간 · 전단 0 건)
 > · ⛔ 혼합 · 섬유화의 시간 · 전단 · 장비 조건 (*"appropriate conditions of time and shear stress"*) · PTFE 입자 크기 미인쇄 · DMA 가열 속도 단위 빠짐 · 액체 LIB NCA (SE 없음).
+
+> 2026-11-22 추가 — `tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode` [Tao23DM] (ORNL · Navitas · J. Power Sources 580 (2023) 233379) — **건식 혼합 '정도' (= 진동 볼밀 Retsch MM400 시간 10 · 30 · 60 분) 의 선례 · 성질마다 최적이 다르다**: 같은 조성 (NMC622 : 카본블랙 : PTFE = 92 : 3 : 5) · 같은 밀도 (≈7.2 mAh/cm² · ≈153 µm) 세 전극에서 박리 접착 5 · 8 · 4 N/m · Rct 228.6 · 183.1 · 240.1 Ω · C/2 79.1 · 88.6 · 59.3 mAh/g · C/2 분극 0.347 · 0.322 · 0.380 V = 30 분 최선 (역 U) · 자립 막 인장 = 단조 (10 분 예압 0.19 MPa 실패 · 30 분 ≈0.41 [판독] · 60 분 0.43 MPa) · 저자 기전 (SEM 정성) = 짧으면 덜 섬유화 · 길면 *"grinding and its generated heat"* 로 섬유가 끊겨 PTFE–카본블랙 막이 NMC 를 덮고 2 차 입자 파쇄 · 세 전극 모두 EDX 에서 탄소 ↔ NMC 가 갈림 (S2–S4)
+> · 우리 믹서 축 대응 [카드 추론]: 믹서 V2 (순서 · 시간 · 에너지) 가운데 **시간 팔의 정성 선례** (순서 · 에너지 팔 = 없음) · '조성 균일' (우리 Lacey M) 과 '성질 최적' 은 다른 양 — 이 논문의 최적은 바인더 그물 · AM 파쇄에서 온다 · 같은 역 U 를 황화물 복합 양극에서 **비에너지** 로 준 정본 = `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · 방식 효과 (Navitas TSE NMC811 막 UTS ≈2.79 · 0.73 MPa [판독 그림 S6] > 볼밀 0.43 MPa · 통제 아님) = `wolf2026_extruder_vs_batch_mixing_core_shell_dry_sulfide_cathode` 와 같은 방향
+> · ⛔ 넘지 말 것: '30 분' 을 다른 혼합기 · 우리 드럼 믹서의 최적으로 옮기지 않는다 (저자 p.6 · 에너지 미기재) · '과혼합 = 응집 약화' (p.6 · 결론) 는 자기 인장 자료 (60 분 최고) 와 모순 · 고체전해질 없음 · 반복 · 오차 없음.
 
 ## I. 계면 점착 · 인터레이어 트랙 — **W_ad ↔ G_c 를 섞지 않는 축** (2026-09-23 신설)
 
