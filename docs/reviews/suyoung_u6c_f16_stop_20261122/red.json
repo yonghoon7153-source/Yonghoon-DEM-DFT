@@ -1,0 +1,19 @@
+{
+  "capture_sha256": "c424d8e7a4d799969d052acac3692c47a44a1a6657ab6497c62cbf516146e775",
+  "errors": [],
+  "failed": [
+    "__main__.Node4803.test_cold_node_accepted_at_original_tolerance",
+    "__main__.Node4803.test_six_relabels_and_two_storage_orders",
+    "__main__.Node4803.test_three_field_all_faces_once"
+  ],
+  "rc": 1,
+  "source_sha256": "8af03f07e8149219a13baa1d1ca79c2fc87940bb991c6055769ac0beeb3a8880",
+  "tests": [
+    "test_cold_node_accepted_at_original_tolerance",
+    "test_decimal_terminal_and_independent_witness",
+    "test_five_field_original_search_envelope",
+    "test_four_field_all_faces_once",
+    "test_six_relabels_and_two_storage_orders",
+    "test_three_field_all_faces_once"
+  ]
+}
