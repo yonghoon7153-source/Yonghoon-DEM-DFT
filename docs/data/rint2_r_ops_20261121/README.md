@@ -23,6 +23,11 @@
 | 11-22 넘김 ⑤ 뒤 (회복 시각 미표시) | gabia | 원위치에서 시도 3의 기존 결과를 원장에 회복 | 회복 뒤 HEAD `51927c7c22d378d6c6a4382a842e7b3962eb9904`. 단위 완료 1/12 |
 | 11-22 시도 3 회복 뒤 (등록 시각 미표시) | gabia | P0·P1 각 147파일의 양쪽 바이트·SHA256 재대조 후 `P1_c0_R_j_hi` 시도 5 등록·분리 기동 | 두 사다리 `BOTH_EQUAL`, `REGISTERED_AND_DETACHED`. 등록 커밋 `ea2433a170466fdc0fe40129b5661871a9893972`. 시작 행·그룹 확인 대기 |
 | 11-22 시도 5 등록 뒤 (시작 시각 미표시) | gabia | `P1_c0_R_j_hi` 시도 5의 `START_OK`, 시작 그룹 1개 | 시작 HEAD `8ec18d69fcaadf75e8ca2aa053e64ebb42e17b93`. 단위 완료 1/12, kgy 시도 4 상태 재조회 대기 |
+| 11-22 13:21:55 KST 화면 및 뒤이은 status | kgy | 시도 4 그룹 2/2 종료, 팔 JSON 6개, rc 3. parked=true, summary_present=true, normal_parked_end=true | 기존 결과의 원위치 recover 대상 |
+| 11-22 13:30:42 → 13:30:46 KST | gabia → kgy | 넘김 ⑥, STARTED 5. kgy 수신 목록에 시도 4 한 건 | RECV_OK. 활성 원장은 kgy |
+| 11-22 13:36:29 KST 영수증 | kgy | 시도 4 원위치 recover, rc 0, completed | 복구 뒤 원장 HEAD `f63c36ca21be73e1ef416d6a18a503163ff13413`, 단위 완료 2/12 |
+| 11-22 시도 4 회복 뒤 (등록·시작 절대 시각 미표시) | kgy | `P0_c0_R_j_lo` 시도 6 등록 `b93f30c4160e66e5ae6fa3a8256253abb4fb378a`, 이어서 START_OK · 그룹 1개 | 마지막 확인 원장 HEAD `de3913418e4618721ff8d96a65a9cacada32d4e8` |
+| 11-22 16:33 KST 화면 | gabia·kgy | 시도 5와 6 각각 시작 그룹 1, 종료 0, 팔 JSON 1, exit_rc=PENDING | 이 화면 뒤 종료 여부는 복귀 첫 status에서 확인 |
 
 ## 넘김
 
@@ -33,6 +38,7 @@
 | ③ | 20261121T071716Z | kgy → gabia | `3be5856df670276eb2ca450d260ba1c9534efaee` | `0b1d36d19c25e5cbda52248d3a20086f21b8757c616c7e6e8c5b57663c226aa5` | 20261121T071719Z · RECV_OK |
 | ④ | 20261121T074004Z | gabia → kgy | `a525c9afba6456475f82899ce2a5d225994dae0d` | `99ad84e2548555e77571e15a144e63227c3e363a2dd7a7e94eb095623bdb5743` | 20261121T074008Z · master · flock · RECV_OK |
 | ⑤ | 20261122T004211Z | kgy → gabia | `57389b26924a86584ab7b77e9165a80a209e61a7` | `8d18507d428a7b7d7589843a1d309ab414da58ba7a5a4f0eef59cc88de3d5baf` | 20261122T004214Z · master · flock · RECV_OK. 수신 목록에 `unit:P1_c0_R_j_lo` 시도 3 |
+| ⑥ | 20261122T043042Z | gabia → kgy | `8ec18d69fcaadf75e8ca2aa053e64ebb42e17b93` | `84efb1d74a2f764f08c540c5ca4c3eec05df3031eaf11a0cf255b009aded9150` | 20261122T043046Z · master · flock · RECV_OK. 수신 목록에 `unit:P0_c0_R_j0` 시도 4 |
 
 ①·②의 근거는 `docs/data/rint2_r_start_20261118/README.md`의 ‘그 뒤’다. ③은 1저자 WSL의 `transfer.json`과 `recover_2.json`을 화면과 대조했다. ③의 수신 HEAD와 P1 recover의 시작 HEAD가 40자리 모두 일치했다. 사다리 복사에는 복구 **후** HEAD를 사용한다.
 
@@ -45,7 +51,7 @@
 | P0 attempt_1 | kgy → gabia | 147 | 3,498,403,776 | `132069385076f435577bbeadfdc1a4d617da6a9b9d0d1de799fdc321756f2f3b` |
 | P1 attempt_2 | gabia → kgy | 147 | 3,498,397,972 | `83f1264cfd25709cbc76a6daf14e308937b5d5297bc8cf8b589fc7a586f6cda1` |
 
-§3-1b (4), (6) 8–9에 따라 각 기계에서는 한 번에 한 사슬을 돌린다. 넘김 ⑤ 뒤 gabia에서 시도 3을 회복하고 `P1_c0_R_j_hi` 시도 5의 시작 행과 그룹 1개를 확인했다. 다음은 kgy의 `P0_c0_R_j0` 시도 4 상태를 읽는 일이다. rc가 null이면 활성 원장을 gabia에 둔다. kgy의 정상 parked 종료가 확인되면 보내는 쪽의 현재 상태와 HEAD를 대조해 넘기고, kgy 수신 영수증으로 같은 시도 4를 회복한다.
+마지막 확인 시점에 채택 단위는 2/12(시도 3·4)였다. gabia의 `P1_c0_R_j_hi` 시도 5, kgy의 `P0_c0_R_j_lo` 시도 6은 이미 등록·시작됐다. 1저자 WSL의 기존 운영 폴더에서 두 단위 status와 원장의 STATUS를 먼저 조회한다. 마지막 확인 당시 활성 원장은 kgy, gabia는 parked였으며 이후 상태는 새 영수증으로 갱신한다. 조회 결과와 봉인 §3-1b (4)–(7)에 따라 다음 넘김 또는 recover를 정한다.
 
 | 기계 | 단위 순서 |
 |---|---|
