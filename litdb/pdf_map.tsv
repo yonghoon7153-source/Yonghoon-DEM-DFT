@@ -622,3 +622,7 @@ puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups	41560_2024_1634_
 #   ⚠ 크롭 33 장 = 도구 8 (다시 자름 8: 그림 1–6 = 좌우 여백 14–90 pt 로 고르지 않음 · 표 1 · 2 = PDF 5 쪽 전체 · 같은 파일) + 손 25 (패널 8 · 근거 문단 17) + digitized.csv 130 행 (래스터 눈금 맞춤) — --inbox --run 으로 다시 뽑지 말 것
 kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode	effect_of_mixing_method_on_the_properties_of_composite_cathodes
 kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode	effect of mixing method on the properties of composite cathodes
+# ── Li₅.₄PS₄.₄Cl₁.₆ (= 우리 DFT modelc 명목 조성) + PTFE 0.2 wt% 건식 SE 막 30 µm · 볼밀 섬유화 + 80 °C 열 캘린더 · 360 MPa 누른 채 EIS (막만 도선·접촉 1.04 Ω 빼기) · Al₂O₃ 스퍼터 Li · NCM523 전셀 (Zhang · Wu · Zhou · Weng · Yao, Nano Lett. 21 (2021) 5233–5239) — 자동 매칭 실패 (--inbox --only zhang2021 = 논문 0편 · 2026-11-22 확인 · 이 두 줄 뒤 1편 [수동 지정] · 본문 + SI 둘 다 같은 제목 조각 — SI 는 '_Sup_' 접두)
+#   ⚠ 크롭 52 장 = 도구 16 (다시 자름 9: 그림 1 · SI 그림 S3 · S4 · S5 · S8 · S9 · S10 · S11 = 좌우 여백 17–97 pt 로 고르지 않음 · SI 표 S1 = 17 + 18 쪽 이어붙임) + 손 36 (그래픽 초록 1 · 패널 19 · 식 2 · 근거 문단 14) + digitized.csv 104 행 — --inbox --run 으로 다시 뽑지 말 것
+zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible_sulfide_electrolyte_thin_membrane
+zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible sulfide electrolyte thin membrane
