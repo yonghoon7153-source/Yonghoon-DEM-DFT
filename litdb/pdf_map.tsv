@@ -630,3 +630,7 @@ zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible sulfide electrol
 #   ⚠ 크롭 57 장 = 도구 14 (다시 자름 14: 그림 3 · 13 = 오른 단 본문이 섞임 · 표 1 = 4 쪽 왼 단 전체 · 나머지 11 = 좌우 여백 ≈45–50 pt 로 고르지 않음) + 손 43 (패널 23 · 근거 문단 20) + digitized.csv 162 행 (벡터 경로 좌표) — --inbox --run 으로 다시 뽑지 말 것
 hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry_mixing_of_cathode_composite_powder_for_all-solid-state
 hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry mixing of cathode composite powder for all-solid-state
+# ── Li₃PS₄ 액상 진탕 합성 · 원료 Li₂S 크기 제어 (습식 볼밀 · 용해–석출) → LPS 1382 (인용) → 227 → 93 nm · σ 1.1 · 1.5 × 10⁻⁴ S/cm (Ohsaki · Yano · Hatada · Nakamura · Watano · Powder Technol. 387 (2021) 415–420) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 41 장 = 도구 13 (다시 자름 10: 그림 2 = 흐름도 위 절반 빠짐 · 그림 11 = 오른쪽 끝 글자 닿음 · 그림 3 · 4 · 5 · 6 · 7 · 8 · 10 · SI S2 = 좌우 여백 고르지 않음) + 손 28 (표 1 · 패널 8 · 근거 문단 19) + digitized.csv 23 행 — --inbox --run 으로 다시 뽑지 말 것
+ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size_control_of_sulfide-based_solid_electrolyte_particles
+ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size control of sulfide-based solid electrolyte particles

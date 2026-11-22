@@ -2,13 +2,13 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 352편 · 생성 2026-11-22
+> digest 353편 · 생성 2026-11-22
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
 (open_items #7). 축을 나누고 생성으로 바꿔 그 구멍을 닫는다.
 
-## SE 입도 효과 · size effect (23편)
+## SE 입도 효과 · size effect (24편)
 
 > 묶음 경계 = `tools/litdb/build_index.py` 의 `SIZE_EFFECT_SLUGS` (명시 slug 집합 — 낱말로 묶지 않는다). 이 표는 DEM 축만 싣는다.
 > 같은 집합의 **SE 축** 카드 5편은 `INDEX.md` § "SE 입도 효과 (size effect)" 에 있다.
@@ -27,6 +27,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lin2025_submicron_lpscl_cathode_li_kinetics` | Sub-micrometer Li6PS5Cl regulated cathodic Li kinetics in sulfide based all-solid-state batteries — Lin et al. (Phys. Chem. Chem. Phys. 2025, 27, 3455–3462) · 습식 밀링 미립 LPSCl (D50 2 | exp (습식 밀링 LPSCl 2 입도 · NCM811/LPSC/VGCF 복합양극 · EIS-τ · CV R | 2026-10-30 | 🖼 25 |
 | `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann 2021 JES — 복합 양극 전하수송 병목 정량화 (EIS-TLM) ★ 우리 porosity/σ_ion/τ_ion 앵커의 진짜 출처 | DEM | 2026-07-28 | 🖼 16 |
 | `minnmann2024_microstructure_porosity_visualization` | 복합 양극 미세구조·porosity → SSB 성능을 FIB-SEM 토모그래피로 시각화 — Minnmann (J. Electrochem. Soc. 2024, Editors' Choice) | exp | 2026-06-26 | 🖼 8 |
+| `ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s` | Li₃PS₄ (LPS) 액상 진탕 합성에서 원료 Li₂S 를 먼저 작게 하면 (습식 유성 볼밀 중앙값 8 → 1.5 µm · 에탄올 용해–석출 0.34 µm) LPS 등가원 지름이 1382 nm (인용 [24]) → 443–220 nm → 93 nm 로 줄고 판상 → 구형 · σ 1.1 · 1.5 × 10⁻⁴ S/cm ( | experiment (액상 진탕 합성 Li₃PS₄ · 원료 Li₂S 습식 유성 볼밀 200–800 rpm · | 2026-11-22 | 🖼 41 |
 | `otani2025_dem_se_dispersion_aggregation_compression` | SE 입자 분산상태(응집수) 를 정량 제어해 압축·전극구조를 평가한 DEM — Otani (Electrochemistry 2025) | DEM | 2026-09-19 | 🖼 6 |
 | `park2020_dimension_controlled_se_percolation_contact_area` | 치수 제어 산화물 고체전해질 (0D 구 · 1D 원기둥 · 2D 판) 을 넣은 전고체 전극 — 퍼콜레이션 경로 · specific contact area · 유효 이온전도도 (GeoDict 복셀 가상 전극 → COMSOL P2D) — Park (Chem. Eng. J. 2020) | voxel-sim (GeoDict 확률 배치 · PoroDict 접촉면적 · ConductoDict Ohm  | 2026-10-03 | 🖼 17 |
 | `sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking` | 황화물 유리 SE (75Li₂S·25P₂S₅) 입경 (d50 16 vs 3.8 µm) × NCM111 입경 (9.4 vs 5.3 µm) 이 무탄소 복합 양극 (NCM : SE = 75 : 25 wt · 330 MPa 상온 성형) 의 단면 형태 · NCM 균열 · 율속에 주는 영향 — 작은 SE 를 1 분 진탕 (vorte | experiment (laser-diffraction PSD · Ar-ion cross-section pol | 2026-11-16 | 🖼 35 |
