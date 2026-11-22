@@ -1,0 +1,2245 @@
+{
+  "cases": [
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 0,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 6,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 3,
+      "log_mass_range": 12,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 0,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 6,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 4,
+      "log_mass_range": 12,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 0,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "centers": [
+        [
+          0.5701204550525708,
+          0.4028598898267719
+        ],
+        [
+          0.5035959819865758,
+          1.4088678673997328
+        ],
+        [
+          0.577215522544041,
+          0.8953892223200569
+        ],
+        [
+          1.399005604460021,
+          -1.1981352965473289
+        ],
+        [
+          0.5675239702233279,
+          1.03709495668149
+        ]
+      ],
+      "diagnostic": "multi-contact residual unresolved after 512 updates; worst unresolved iteration residual / tolerance = 1.92319e+08",
+      "fixed_case_sha256": "2b66c2239fe1f2cc891c9aac0339ba4c998e9fc3e14783da0e9debb9876d592f",
+      "initial": [
+        [
+          -0.2512029646123668,
+          -0.09618852251967898
+        ],
+        [
+          1.790302908572862,
+          -1.456023407739498
+        ],
+        [
+          0.9466325249333695,
+          0.8927621071299995
+        ],
+        [
+          -0.09167011823472482,
+          -0.2535797441719371
+        ],
+        [
+          -0.30345042430479147,
+          0.4769774148980117
+        ]
+      ],
+      "log_mass_range": 6,
+      "mass": [
+        0.04520478974831466,
+        0.0013493160885681497,
+        7.613522486767158e-06,
+        0.0004943998606261829,
+        2.7872499978853703e-06
+      ],
+      "returned": [
+        [
+          -0.2512029646123668,
+          -0.09618852251967898
+        ],
+        [
+          1.790302908572862,
+          -1.456023407739498
+        ],
+        [
+          0.9466325249333695,
+          0.8927621071299995
+        ],
+        [
+          -0.09167011823472482,
+          -0.2535797441719371
+        ],
+        [
+          -0.30345042430479147,
+          0.4769774148980117
+        ]
+      ],
+      "sample": 14,
+      "status": "HALT_INPUT_PRESERVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 6,
+      "sample": 39,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 0,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 1,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 2,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 3,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 4,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 5,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 6,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 7,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 8,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 9,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 10,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 11,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 12,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 13,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 14,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 15,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 16,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 17,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 18,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 19,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 20,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 21,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 22,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 23,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 24,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 25,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 26,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 27,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 28,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 29,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 30,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 31,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 32,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 33,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 34,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 35,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 36,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 37,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 38,
+      "status": "SOLVED"
+    },
+    {
+      "bodies": 5,
+      "log_mass_range": 12,
+      "sample": 39,
+      "status": "SOLVED"
+    }
+  ],
+  "halts_with_input_preserved": 1,
+  "scope": "single synthetic node; no time steps",
+  "seed": 173411,
+  "solved": 359,
+  "source_numpy_version": "2.3.5",
+  "subject_sha256": "18f9aade464b09cea5ab7efa63460f5b5ae5e40ec178b865a1b50556f448120e"
+}

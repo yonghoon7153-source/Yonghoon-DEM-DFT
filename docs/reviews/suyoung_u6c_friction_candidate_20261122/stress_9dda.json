@@ -1,0 +1,124 @@
+{
+  "groups": {
+    "body3_log10_mass_range0": {
+      "example": {
+        "case": 1,
+        "cause": "multi-contact residual unresolved after 512 updates; worst residual / tolerance = 19959.3",
+        "m": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "vin": [
+          [
+            1.864332617374527,
+            -0.2646589296436094
+          ],
+          [
+            -1.858673519022783,
+            0.6681797285492562
+          ],
+          [
+            0.48449072378806435,
+            0.1576530683912027
+          ]
+        ],
+        "x": [
+          [
+            -0.33622807969000745,
+            0.45639948133938923
+          ],
+          [
+            0.8101027046801998,
+            -0.4084737818255024
+          ],
+          [
+            -0.6763455050360725,
+            0.543199192846548
+          ]
+        ]
+      },
+      "halt": 1,
+      "ok": 11,
+      "unchanged_on_halt": 1
+    },
+    "body3_log10_mass_range2": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body3_log10_mass_range6": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body4_log10_mass_range0": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body4_log10_mass_range2": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body4_log10_mass_range6": {
+      "example": {
+        "case": 9,
+        "cause": "multi-contact residual unresolved after 512 updates; worst residual / tolerance = 4.70886e+08",
+        "m": [
+          2.7733359788140076e-06,
+          0.010214368611549155,
+          0.03397674211079553,
+          1.1371664345853731e-06
+        ],
+        "vin": [
+          [
+            -1.3152515572081527,
+            -1.284670763394496
+          ],
+          [
+            -0.6815582619497406,
+            0.03685856922967514
+          ],
+          [
+            2.0856017399824225,
+            -0.8135215649594054
+          ],
+          [
+            0.4277961305837191,
+            0.18594764168420394
+          ]
+        ],
+        "x": [
+          [
+            -0.2776301706815676,
+            -0.29666759143256494
+          ],
+          [
+            -0.33104323052601137,
+            -0.5662620562021683
+          ],
+          [
+            -0.16542094049910983,
+            0.4439030895675413
+          ],
+          [
+            0.4783354133423545,
+            -0.5558804963404058
+          ]
+        ]
+      },
+      "halt": 2,
+      "ok": 10,
+      "unchanged_on_halt": 2
+    }
+  },
+  "purpose": "bounded synthetic exercises; arbitrary directions, masses, velocities",
+  "seed": 61807,
+  "sha256": "9dda7a69c10ee401da32acd8418ee2d74b7a9912b85bed75580a20443d57334d"
+}

@@ -1,0 +1,43 @@
+{
+  "groups": {
+    "body3_log10_mass_range0": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body3_log10_mass_range2": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body3_log10_mass_range6": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body4_log10_mass_range0": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body4_log10_mass_range2": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    },
+    "body4_log10_mass_range6": {
+      "example": null,
+      "halt": 0,
+      "ok": 12,
+      "unchanged_on_halt": 0
+    }
+  },
+  "purpose": "bounded synthetic exercises; arbitrary directions, masses, velocities",
+  "seed": 61807,
+  "sha256": "3b626fce463bf5387ba107ae1aa423d4cffad3b4adaa0133d8825c598850aa86"
+}

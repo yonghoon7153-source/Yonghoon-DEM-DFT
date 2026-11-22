@@ -1,0 +1,51 @@
+{
+  "by_friction": {
+    "0.0": {
+      "asymmetric_triangle": {
+        "incoming_max_relative_speed": 1.5132745950421556,
+        "max_residual_closing_over_incoming_max_relative_speed": 9.344568197043329e-12,
+        "max_residual_closing_speed": 1.4140897654224549e-11,
+        "permutations": 6,
+        "same_body_max_speed_difference": 0.0
+      },
+      "symmetric_triangle": {
+        "incoming_max_relative_speed": 1.7320508075688772,
+        "max_residual_closing_over_incoming_max_relative_speed": 5.933750060129976e-12,
+        "max_residual_closing_speed": 1.0277556583559999e-11,
+        "permutations": 6,
+        "same_body_max_speed_difference": 0.0
+      },
+      "two_body_control": {
+        "incoming_max_relative_speed": 1.8248287590894658,
+        "max_residual_closing_over_incoming_max_relative_speed": 0.0,
+        "max_residual_closing_speed": 0.0,
+        "permutations": 2,
+        "same_body_max_speed_difference": 0.0
+      }
+    },
+    "0.5": {
+      "asymmetric_triangle": {
+        "incoming_max_relative_speed": 1.5132745950421556,
+        "max_residual_closing_over_incoming_max_relative_speed": 8.753126590022328e-12,
+        "max_residual_closing_speed": 1.3245884095868763e-11,
+        "permutations": 6,
+        "same_body_max_speed_difference": 0.0
+      },
+      "symmetric_triangle": {
+        "incoming_max_relative_speed": 1.7320508075688772,
+        "max_residual_closing_over_incoming_max_relative_speed": 5.933563632608144e-12,
+        "max_residual_closing_speed": 1.0277233681620255e-11,
+        "permutations": 6,
+        "same_body_max_speed_difference": 0.0
+      },
+      "two_body_control": {
+        "incoming_max_relative_speed": 1.8248287590894658,
+        "max_residual_closing_over_incoming_max_relative_speed": 0.0,
+        "max_residual_closing_speed": 0.0,
+        "permutations": 2,
+        "same_body_max_speed_difference": 0.0
+      }
+    }
+  },
+  "subject_sha256": "3b626fce463bf5387ba107ae1aa423d4cffad3b4adaa0133d8825c598850aa86"
+}

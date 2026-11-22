@@ -125,6 +125,19 @@ def _polish_node(incoming, mass, incidence, normal, tangent, reduced_mass,
             result = on_face(alternative)
             if result is not None:
                 return result
+    if len(mass) <= 5:
+        # At most ten pairs. Two simultaneous mode changes cover the case
+        # in which neither single change gives an admissible solution.
+        # Maximum extra trials for mu > 0: C(10,2) * 3**2 = 405.
+        for a, b in itertools.combinations(range(pair_count), 2):
+            for mode_a, mode_b in itertools.product(choices, repeat=2):
+                if mode_a == guess[a] or mode_b == guess[b]:
+                    continue
+                alternative = guess.copy()
+                alternative[a], alternative[b] = mode_a, mode_b
+                result = on_face(alternative)
+                if result is not None:
+                    return result
     return None
 
 
