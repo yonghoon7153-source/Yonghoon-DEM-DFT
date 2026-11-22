@@ -1,0 +1,35 @@
+{
+  "archive_sha256": "a100f018bd5e9c3621395ac436550029759fe17a02a55641db121d52dba1fdbe",
+  "frozen_node": {
+    "decimal_ratio_same_terminal_impulses": 90895613.5878647,
+    "fields": 4,
+    "iteration": 512,
+    "mass_ratio": 5350.876515346054,
+    "native_ratio": 90895613.58786397,
+    "node_id": 2304,
+    "speed_tol": 8.475176525967766e-13,
+    "terminal_residual_survives_decimal_check": true,
+    "witness": {
+      "decimal_residual": 5.4714516658776313e-17,
+      "examined": 1541,
+      "modes": [
+        "stick",
+        "plus",
+        "open",
+        "open",
+        "stick",
+        "open"
+      ],
+      "rank_deficient_seen": 586,
+      "status": "WITNESS_AT_ORIGINAL_TOLERANCE"
+    }
+  },
+  "header_and_steps_0_through_144_byte_equal_across_three_returns": true,
+  "last_complete_step": 227,
+  "node_sha256": "fca406d296c8a6f2b5bb260784711afdc87a34cda48f71ce93c8abcaf7f1059f",
+  "prefix_sha256": "502694a2fabe7f30db63ac964ce6c97a7ce6efd2ca55a0c53a117bd13a3b4dc0",
+  "relabel_present": false,
+  "release": "d0c33bc19c2dd1291f3cf3ae0788fd193065e72b",
+  "source_manifest_entries": 10,
+  "trace_data_rows": 228
+}

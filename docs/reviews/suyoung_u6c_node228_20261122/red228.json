@@ -1,0 +1,21 @@
+{
+  "capture_sha256": "fca406d296c8a6f2b5bb260784711afdc87a34cda48f71ce93c8abcaf7f1059f",
+  "errors": [],
+  "failed": [
+    "__main__.FrozenAndHeldOut.test_frozen_cold_contact_at_step_228",
+    "__main__.FrozenAndHeldOut.test_frozen_relabel_and_reverse_storage"
+  ],
+  "manufactured_modes": 2,
+  "manufactured_per_mode": 12,
+  "rc": 1,
+  "scope": "frozen and manufactured nodes only",
+  "source_sha256": "742bd8b04ed41192ba888825f713605327042d4bd8fdb215a068495a323e7f2d",
+  "test_sha256": "e5a48196027f79ec6cd4d7a47143a9f2bb8071c2dde633333d0ebfda8dfc0fc8",
+  "tests": [
+    "test_atomic_rejection_after_valid_pair",
+    "test_frozen_cold_contact_at_step_228",
+    "test_frozen_relabel_and_reverse_storage",
+    "test_mixed_sliding_sticking_and_open_known_solutions",
+    "test_six_sliding_contacts_known_solutions"
+  ]
+}
