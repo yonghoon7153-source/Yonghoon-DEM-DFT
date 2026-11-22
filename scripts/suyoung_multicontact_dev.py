@@ -165,8 +165,8 @@ def _polish_node(incoming, mass, incidence, normal, tangent, reduced_mass,
                 result = on_face(alternative)
                 if result is not None:
                     return result
-    if len(mass) == 4:
-        # Six pairs give at most 4**6 unique labels across all search tiers.
+    if len(mass) in (3, 4):
+        # Three or six pairs give at most 4**3 or 4**6 labels across all tiers.
         # A singular face has one least-squares representative tested here.
         for modes in _remaining_four_body_faces(guess, choices):
             result = on_face(modes)

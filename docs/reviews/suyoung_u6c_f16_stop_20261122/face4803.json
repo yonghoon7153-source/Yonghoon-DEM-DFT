@@ -1,0 +1,17 @@
+{
+  "guessed": [
+    "stick",
+    "negative",
+    "negative"
+  ],
+  "face_trials": 49,
+  "accepted": [
+    "positive",
+    "open",
+    "stick"
+  ],
+  "native_residual": 2.7755575615628914e-17,
+  "decimal70_residual": 6.98297751133546e-18,
+  "decimal70_energy_bound": true,
+  "tol": 1.7582883733092162e-12
+}

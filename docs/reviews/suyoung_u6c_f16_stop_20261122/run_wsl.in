@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 3 || ( $1 != CHECK_ONLY && $1 != GO_SUYOUNG_F8_F16_CONTACT_ONCE ) ]]; then
+    echo 'Usage: bash THIS.txt CHECK_ONLY|GO_SUYOUNG_F8_F16_CONTACT_ONCE final_F8_result.tar.gz stopped_F16_result.tar.gz' >&2
+    exit 2
+fi
+mode=$1
+f8=$(realpath -e -- "$2")
+stop=$(realpath -e -- "$3")
+[[ -f "$f8" && -f "$stop" ]]
+expected_f8=9dbf1dda91de65ecdf83c37497b8be34e9a77c6868512d97b2b4a2a438c0a69b
+line=$(sha256sum -- "$f8")
+[[ ${line%% *} == "$expected_f8" ]] || { echo FINAL_F8_MISMATCH >&2; exit 2; }
+expected_stop=bdd10395a7acc1aa7e64f7aaa6d8509a343ea448b47ee39e0770f520e310ec6d
+line=$(sha256sum -- "$stop")
+[[ ${line%% *} == "$expected_stop" ]] || { echo FAILED_F16_MISMATCH >&2; exit 2; }
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+pin='@PIN@'
+sums='@SOURCE_SUMS@'
+model=2cf17b1df57396ef01505a72641e01b19629bed5
+kernel='@KERNEL@'
+[[ "$pin" =~ ^[0-9a-f]{40}$ && "$sums" =~ ^[0-9a-f]{64}$ ]] || exit 2
+printf '%s  SOURCE_SHA256SUMS\n' "$sums" | sha256sum -c --status -
+sha256sum -c --status SOURCE_SHA256SUMS
+printf '%s  scripts/suyoung_multicontact_dev.py\n' "$kernel" | sha256sum -c --status -
+for tool in taskset timeout mktemp tar sha256sum; do command -v "$tool" >/dev/null; done
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Reference WSL venv missing' >&2; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+cpu=(taskset -c 0 "$py" -I -B)
+"${cpu[@]}" -c 'import numpy,sys; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Reference environment mismatch")'
+driver="$pkg/docs/reviews/suyoung_u6c_f16_stop_20261122/run_pair.py"
+"${cpu[@]}" "$driver" check --repo "$pkg" --f8 "$f8" --stop "$stop"
+printf 'RELEASE=%s\nOLD_MODEL_PIN=%s\nCANDIDATE_KERNEL_SHA256=%s\nFINAL_F8_SHA256=%s\nSTOP_F16_SHA256=%s\n' "$pin" "$model" "$kernel" "$expected_f8" "$expected_stop"
+if [[ "$mode" == CHECK_ONLY ]]; then echo CHECK_OK; exit 0; fi
+
+once="$HOME/suyoung_contact_pair_once_${pin:0:12}"
+mkdir -- "$once" || { echo "Attempt already reserved: $once" >&2; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_contact_pair_work_XXXXXXXX")
+ret=$(mktemp -d "$HOME/suyoung_contact_pair_return_XXXXXXXX")
+run="$work/run"
+mkdir -- "$run"
+screen="$run/screen.txt"
+printf 'DEVELOPMENT_ONLY\n' | tee "$screen"
+started=$(date -u +%FT%TZ)
+printf 'STARTED_UTC=%s\nWORK=%s\nRETURN_DIRECTORY=%s\n' "$started" "$work" "$ret" | tee "$once/receipt.txt"
+pack() {
+    local rc=$?
+    trap - EXIT INT TERM HUP
+    set +e
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_contact_pair_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_contact_pair_result.tar.gz screen.txt > SHA256SUMS &&
+     sha256sum -c SHA256SUMS && cat SHA256SUMS) ||
+    { printf 'ARCHIVE_INCOMPLETE WORK=%s RETURN_DIRECTORY=%s\n' "$work" "$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+printf 'release=%s\nhistorical_contact_pin=%s\nsource_sums=%s\nprior_f8=%s\nprior_f16_stop=%s\nkernel_sha256=%s\nCPU=0\nF8_soft_hard_s=1140,1200\nF16_soft_hard_s=1740,1800\nstarted_utc=%s\n' \
+    "$pin" "$model" "$sums" "$expected_f8" "$expected_stop" "$kernel" "$started" > "$run/origin.txt"
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+for cells in 8 16; do
+    wall=1195s
+    if [[ $cells == 16 ]]; then wall=1795s; fi
+    arm="F$cells"
+    rc=0
+    printf '%s_BEGIN=%s\n' "$arm" "$(date -u +%FT%TZ)" | tee -a "$screen"
+    timeout --signal=TERM --kill-after=5s "$wall" "${cpu[@]}" "$driver" arm \
+        --repo "$pkg" --cells "$cells" --out "$run/$arm" > "$run/$arm.log" 2>&1 || rc=$?
+    printf '%s_RC=%d\n' "$arm" "$rc" | tee -a "$screen"
+    if (( rc != 0 )); then
+        printf 'command_rc=%d\n' "$rc" > "$run/$arm.process-stop.txt"
+        if [[ -f "$run/$arm/trace.csv" ]]; then
+            (cd -- "$run" && sha256sum -- "$arm/trace.csv") >> "$run/$arm.process-stop.txt"
+            if [[ $cells == 16 ]]; then
+                diagnostic_rc=0
+                timeout --signal=TERM --kill-after=5s 115s "${cpu[@]}" "$driver" partial \
+                    --stop "$stop" --run "$run" --out "$run/f16_prefix_diagnostic.json" > "$run/partial.log" 2>&1 || diagnostic_rc=$?
+                printf 'F16_PREFIX_DIAGNOSTIC_RC=%d\n' "$diagnostic_rc" | tee -a "$screen"
+            fi
+        fi
+        exit "$rc"
+    fi
+    if [[ $cells == 8 ]]; then
+        rc=0
+        timeout --signal=TERM --kill-after=5s 115s "${cpu[@]}" "$driver" check8 \
+            --repo "$pkg" --f8 "$f8" --run "$run" > "$run/check8.log" 2>&1 || rc=$?
+        printf 'F8_CHECK_RC=%d\n' "$rc" | tee -a "$screen"
+        if (( rc != 0 )); then exit "$rc"; fi
+    fi
+done
+rc=0
+timeout --signal=TERM --kill-after=5s 115s "${cpu[@]}" "$driver" read \
+    --repo "$pkg" --f8 "$f8" --stop "$stop" --run "$run" --out "$run/grid_comparison.json" > "$run/summary.log" 2>&1 || rc=$?
+[[ $rc != 0 || -s "$run/grid_comparison.json" ]] || rc=4
+printf 'SUMMARY_RC=%d\n' "$rc" | tee -a "$screen"
+[[ $rc != 0 ]] || echo READBACK_REQUIRED | tee -a "$screen"
+exit "$rc"
