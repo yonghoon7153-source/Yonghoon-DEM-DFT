@@ -7,11 +7,11 @@
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
 ## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 423건)
+- 2026-11-22 · `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…
 - 2026-11-20 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-11-20 · `kb/reviews/internal_EM_prompt_wad_a5_package_2026_11_20.md` — EM 프롬프트 — 은 e70 far 재시도 a5 묶음 발송 전 독립 리뷰 · 발송 · 회신 수령 2026-11-20
 - 2026-11-20 · `kb/reviews/internal_EM_reply_wad_a5_package_2026_11_20.md` — EM 회신 — a5 묶음 독립 리뷰 (NO-GO · P0 2 · P1 4) · 회신 수령 2026-11-20 · NO-GO · 고침 진행
 - 2026-11-20 · `kb/projects/handoff_2026_11_20_evacuation.md` — 대피 인계 — 2026-11-20 (friendly 세션 사용 한도 → 서브 세션 · 머지 때 충돌 0 · W_ad 은 a5 고침 이어하기 · [혁주] MD-1 판독) · 진행
-- 2026-11-20 · `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획 · 진행 — 1 단계 · 2a active (사용자 승인 11-16) ·…
 - 2026-11-20 · `kb/projects/wad_dem_reply_draft_2026_09_23.md` — DEM 쪽 회신 초안 — Ag–C 점착일 요청: 착수 전 질문 3개 답 · 바뀐 점 · 확인 요청 · 회신 4 발송 완료 (09-25) · DEM 4차 회신 수령 (09-…
 - 2026-11-17 · `kb/projects/handoff_2026_11_17_return_to_origin.md` — 본 세션 복귀 카드 — 대피 브랜치 claude/evac-2026-11-12 를 friendly 로 · fast-forward (2026-11-17) · litdb 정리 세션 · 로컬 웹앱 맞추기 · 발송 대기 — 사용자가 §0 을 본 세션 (friendly) 에, §…
 - 2026-11-16 · `kb/seminars/bml_seminar_2026_11_13_logic_review_ko.md` — BML 연구 세미나 2026-11-13 (사수 발표) 쪽별 검토 — 이온전도도 대 기계적 물성 · B₂O₃ 도핑 · 검토 완료 · 전달 여부는 사용자 몫
@@ -549,7 +549,7 @@
 - `kb/projects/handoff_2026_11_20_evacuation.md` — 대피 인계 — 2026-11-20 (friendly 세션 사용 한도 → 서브 세션 · 머지 때 충돌 0 · W_ad 은 a5 고침 이어하기 · [혁주] MD-1 판독)  (2026-11-20 · 진행)
 - `kb/projects/handoff_cei_2026_09_30.md` — CEI (Nd 계면) 인계 카드 — 실험 쪽 1저자에게 작업 양도 (2026-09-30)  (2026-09-30 · 발송 대기 — 외부 리뷰 회신 CM(NO-GO) 이행판 · 사용자가 …)
 - `kb/projects/handoff_ndo_methods_2026_10_28.md` — NdO-LPSCl₁.₆ 원고 계산 부분 인계 — Methods 두 판 · Fig. 3h · Fig. 5e,f · Fig. SX (2026-10-28)  (2026-10-28 · 발송 대기 — 사용자가 Word 둘 · CSV 둘과 같이 전달한다)
-- `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획  (2026-11-20 · 진행 — 1 단계 · 2a active (사용자 승인 11-16) ·…)
+- `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획  (2026-11-22 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…)
 - `kb/projects/li2s_glass_bmeas_650k_letter_DA_send_2026_10_19.md` — li2s_glass_bmeas_650k_letter_DA_send_2026_10_19
 - `kb/projects/li2s_glass_control_cost_letter_CS_send_2026_10_05.md` — li2s_glass_control_cost_letter_CS_send_2026_10_05
 - `kb/projects/li2s_glass_control_readout_letter_CX_send_2026_10_14.md` — li2s_glass_control_readout_letter_CX_send_2026_10_14

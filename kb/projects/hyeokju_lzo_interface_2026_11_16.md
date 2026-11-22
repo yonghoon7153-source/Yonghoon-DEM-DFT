@@ -1,9 +1,9 @@
 ---
 title: "[혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획"
 date: 2026-11-16
-updated: 2026-11-20
+updated: 2026-11-22
 tags: [hyeokju, LZO, Li2ZrO3, NCA, LPSCl, interface-reactivity, band-gap, MLIP-MD]
-status: 진행 — 1 단계 · 2a active (사용자 승인 11-16) · MD proposed (문턱 승인 대기) · 혁주 자료 대기 (조성 · 전압 기준 · 충전 용량)
+status: 진행 — 1 단계 · 2a active · MD-0 통과 (11-20) · MD-1 판정 (11-22 · P–O 관측창 안 개시 없음 · Zr–S 시드 하나에서만) · 혁주 자료 대기 (조성 · 전압 기준 · 충전 용량)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -43,6 +43,8 @@ evidenceScope: single-source
 | 1 열역학 | `db/properties/hyeokju_lzo_stage1_reactivity_card_2026_11_16.json` · `D-2026-11-16-hyeokju-lzo-stage1-reactivity` (**active** 11-16) | 닫힌계 혼합 곡선 (양극 Li 함량 y = 1.0 … 0.1) + Li 열린계 (2.5–5.0 V) · 대조 NCA–LPSCl · 앵커 LPSCl×LCO | gabia CPU · MP 조회 |
 | 2a 전자구조 | `db/properties/hyeokju_lzo_stage2a_li2zro3_gap_card_2026_11_16.json` · `D-2026-11-16-hyeokju-lzo-stage2a-li2zro3-gap` (**active** 11-16 · vc-relax 허락) | Li₂ZrO₃ fixed-occ nscf 띠틈 + DOS/PDOS · CEI 생성물 띠틈 체인 | kgy GPU · 작은 셀 |
 | MD | `db/properties/hyeokju_lzo_md_card_2026_11_16.json` · `D-2026-11-16-hyeokju-lzo-md` · 개정 1 `D-2026-11-17-hyeokju-lzo-md0-exec-amend1` (active) · ⏩ **MD-0 통과 (11-20 · 두 모델 G1 · G2 · k 탐침 미발동)** · 개정 2 `D-2026-11-20-hyeokju-lzo-md1-amend2` (**active** 11-20 · MD-1) | UMA 검증 (DFT 단일점 대조) → MD-1: LPSCl Li 바깥 \| 비정질 LZO (1 단계 −92 meV/atom) · 시드 3 · 600 K · 1 ns · P–O · Zr–S 지속 결합 | kgy GPU (계면 k 탐침 1 점은 gabia) |
+
+⏩ **2026-11-22 (대피 세션)**: MD-1 (개정 2 · 3 active · 600 K · 1 ns × 시드 3) 판정 — P–O '관측창 안 개시 없음' (0/3 · 관측창 ≈ 0.60 eV · 검출 63 %) · Zr–S '시드 하나에서만' (1/3 · 개시 관측 아님) · 개정 3 영향 없음 · 문장은 카드 `⏩_2026_11_22_MD1_판정` 의 허용 문장에서만.
 
 ### 혁주 자료가 오기 전과 뒤
 
