@@ -1,0 +1,109 @@
+{
+  "label": "SYNTHETIC_PLANAR_SUPPORT_ONLY",
+  "material_sha256": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+  "wall": 0.15,
+  "slab_width": 0.25,
+  "slab_thickness": 0.05,
+  "field_count": 1,
+  "model_stress_to_MPa": 10,
+  "model_steps": 0,
+  "reference": "exact_piecewise_cubic_integral",
+  "u6_qualification": "HOLD",
+  "rows": [
+    {
+      "gap_box_units": "0",
+      "points": 512,
+      "grids": {
+        "80": {
+          "vertical_MPa": 9.06250000000002,
+          "shear_MPa": 0.0,
+          "selected_nodes": 42,
+          "expected_fraction": "145/16"
+        },
+        "160": {
+          "vertical_MPa": 9.062500000000052,
+          "shear_MPa": 0.0,
+          "selected_nodes": 32,
+          "expected_fraction": "145/16"
+        }
+      },
+      "coarse_minus_fine_MPa": -3.197442310920451e-14
+    },
+    {
+      "gap_box_units": "1/640",
+      "points": 512,
+      "grids": {
+        "80": {
+          "vertical_MPa": 8.32153320312502,
+          "shear_MPa": 0.0,
+          "selected_nodes": 42,
+          "expected_fraction": "34085/4096"
+        },
+        "160": {
+          "vertical_MPa": 7.363281250000043,
+          "shear_MPa": 0.0,
+          "selected_nodes": 32,
+          "expected_fraction": "1885/256"
+        }
+      },
+      "coarse_minus_fine_MPa": 0.9582519531249769
+    },
+    {
+      "gap_box_units": "1/320",
+      "points": 512,
+      "grids": {
+        "80": {
+          "vertical_MPa": 7.363281249999996,
+          "shear_MPa": 0.0,
+          "selected_nodes": 42,
+          "expected_fraction": "1885/256"
+        },
+        "160": {
+          "vertical_MPa": 4.999999999999973,
+          "shear_MPa": 0.0,
+          "selected_nodes": 16,
+          "expected_fraction": "5"
+        }
+      },
+      "coarse_minus_fine_MPa": 2.363281250000022
+    },
+    {
+      "gap_box_units": "1/160",
+      "points": 512,
+      "grids": {
+        "80": {
+          "vertical_MPa": 5.000000000000002,
+          "shear_MPa": 0.0,
+          "selected_nodes": 21,
+          "expected_fraction": "5"
+        },
+        "160": {
+          "vertical_MPa": 0.9374999999999869,
+          "shear_MPa": 0.0,
+          "selected_nodes": 16,
+          "expected_fraction": "15/16"
+        }
+      },
+      "coarse_minus_fine_MPa": 4.062500000000015
+    },
+    {
+      "gap_box_units": "3/320",
+      "points": 512,
+      "grids": {
+        "80": {
+          "vertical_MPa": 2.6367187500000098,
+          "shear_MPa": 0.0,
+          "selected_nodes": 21,
+          "expected_fraction": "675/256"
+        },
+        "160": {
+          "vertical_MPa": 0.0,
+          "shear_MPa": 0.0,
+          "selected_nodes": 0,
+          "expected_fraction": "0"
+        }
+      },
+      "coarse_minus_fine_MPa": 2.6367187500000098
+    }
+  ]
+}
