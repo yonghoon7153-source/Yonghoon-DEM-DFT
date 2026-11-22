@@ -730,5 +730,30 @@
   "담는_곳": "db/raw/b2o3_bo_stage9_dft_2026_11_20/",
   "다음": "push 뒤 로컬에서 SHA256SUMS 대조 · relax_verdict 지문 대조 → 11a 포논 블록 (안정성 대상 셋 UMA fmax ≤ 0.01 재이완 → uma_phonon.py --require_fmax 0.01 · Γ)",
   "by": "agent · 2026-11-22"
+ },
+ "11a_포논_블록_2026_11_22": {
+  "근거": "사용자 2026-11-22 '권고대로 해요' (권고 순서 회수 → 11a → 11b → 12) · 카드 개정 1 단계별_값 11a_포논 · 셀구축 v1 11a_포논_동역학 · 9단계_판독_2026_11_20 의 10단계_안정성_대상 셋",
+  "대상": [
+   "F_B cfg0040_E-2252.241_O-bo4 (post_relax sha256 3b35bcea…)",
+   "F_B cfg0015_E-2254.436_O-bo4 (d288e7d1…)",
+   "F_B cfg0019_E-2254.209_O-bo4 (48c4b655…)"
+  ],
+  "대상_해시_출처": "회수본 db/raw/b2o3_bo_stage1_2026_11_13/s8_anneal/<이름>/post_relax.xyz (SHA256SUMS 와 같음) — 후보 manifest 가 이 값을 들고 가서 실행기가 gabia 파일과 대조한다",
+  "블록_① 이완 (gabia · UMA GPU · 몇 분)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; S=$R/src; K=$R/s11a_cand\necho \"== ① 판 지문 ($S · 판 고정)\" && (cd $S && printf '%s\\n' \"bc330a9fe5a9e60b4e8fcbee346c439dcc24fcfec7a996ce4ade0d02cb1f70f2  tools/electronic/uma_phonon.py\" \"d12e120ffc4b78358e856341b030a36c8f7e9e5c5f4087746998bfebbce5e2cf  tools/doping/run_anneal.py\" \"095a655a606de9a1974ff3ee91afa700d969cc247d7515a111e64c5cfc30ba82  db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh\" | sha256sum -c -) && echo \"== ② GPU — pw.x 없음 (UMA 와 동시 금지)\" && { ! pgrep -x pw.x > /dev/null || { echo \"⛔ pw.x 가 돈다 — 띄우지 않는다\"; false; }; } && nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv,noheader && echo \"== ③ 새 자리\" && { [ ! -e $K ] && [ ! -e $R/s11a_relax ] && [ ! -e $R/s11a_relax.log ] && ! tmux has-session -t b2o3_s11a 2>/dev/null || { echo \"⛔ 11a 자리 (s11a_cand · s11a_relax · tmux b2o3_s11a) 가 이미 있다\"; false; }; } && mkdir $K && $PY -c \"import json; F={'cfg0040_E-2252.241_O-bo4': '3b35bcead8073fc2a17d9c2503e426c018fe296d637d238994c875ad55ccc904', 'cfg0015_E-2254.436_O-bo4': 'd288e7d1d27fe13d7cdd50641b9c21d74aff7a496a55d6000064cd6b52b1183a', 'cfg0019_E-2254.209_O-bo4': '48c4b6551bb8d814d950f66ec154bcaf6fa91f3508ad2753697032d7c8969830'}; json.dump({'schema': 'b2o3_bo_plan/v1', 'purpose': 'b2o3_bo/stage11a_phonon_relax', 'files': {f'../s8_anneal/{n}/post_relax.xyz': {'sha256': h} for n, h in F.items()}}, open('$K/manifest.json', 'w'), indent=1)\" && echo \"== ④ 실행기 (이완만 · TIME_PS 0 · RELAX_FMAX 0.01 · 후보 해시는 실행기가 대조)\" && R=$R SRC=$S PY=$PY CAND=$K N_EXPECT=3 SESSION=b2o3_s11a OUTNAME=s11a_relax TIME_PS=0 TEMP=500 SEED=20261109 RELAX_FMAX=0.01 bash $S/db/inputs/ndo_site_2026_10_14/run_uma_kgy.sh",
+  "블록_①_설명": "판 지문 셋 ($R/src 의 uma_phonon.py bc330a9f · run_anneal.py d12e120f · run_uma_kgy.sh 095a655a = 저장소와 같아야) → pw.x 없음 (UMA 와 동시 금지) → 새 자리 (s11a_cand · s11a_relax · tmux b2o3_s11a 없음) → 후보 manifest (b2o3_bo_plan/v1 · 목적 b2o3_bo/stage11a_phonon_relax · 기록 해시) → 실행기 (TIME_PS 0 · RELAX_FMAX 0.01 · N_EXPECT 3 · SEED 20261109) · 감시 watch -n 30 'bash $HOME/w_b2o3_s11a.sh'",
+  "블록_①_로컬_시험": "bash -n 통과 · 가짜 R (회수본 셋 · 저장소 도구 복사) 에서 실행기 --dry-run: 판 지문 OK · 후보 해시 3 개 확인 · 실행 목적 전달 · run_anneal 자가시험 통과 · queue 6/6 · inputs 3/3 → GPU 문턱에서 멈춤 (로컬 GPU 없음)",
+  "블록_② 포논 (① 끝난 뒤 · UMA GPU · 구조마다 10–30 분)": "R=/data/work/runs/b2o3_bo_2026_11_09; PY=/data/apps/miniforge3/envs/uma/bin/python; S=$R/src; O=$R/s11a_phonon\necho \"== ① 이완 끝 · 결과 검사\" && ! tmux has-session -t b2o3_s11a 2>/dev/null && grep -a -E \"끝 run_rc=|결과 검사 check_rc=\" $R/s11a_relax.log | tail -2 && grep -a \"끝 run_rc=\" $R/s11a_relax.log | tail -1 | grep -q \"run_rc=0$\" && grep -a \"결과 검사 check_rc=\" $R/s11a_relax.log | tail -1 | grep -q \"check_rc=0 \" && $PY -c \"import json,sys; d=json.load(open('$R/s11a_relax/anneal_results.json')); r={x['name']: x for x in d['results']}; W=['cfg0040_E-2252.241_O-bo4', 'cfg0015_E-2254.436_O-bo4', 'cfg0019_E-2254.209_O-bo4']; ok=sorted(r)==sorted(W) and all(r[n].get('status')=='converged' and r[n].get('fmax_final', 9) <= 0.01 and r[n].get('time_ps')==0 and (r[n].get('identity') or {}).get('purpose')=='b2o3_bo/stage11a_phonon_relax' for n in W); [print('  ', n, r[n].get('status'), 'fmax', round(r[n].get('fmax_final', -1), 4), 'eV/A · 걸음', r[n].get('n_relax_steps')) for n in W if n in r]; sys.exit(0 if ok else 1)\" && echo \"== ② pw.x 없음 · 새 자리\" && { ! pgrep -x pw.x > /dev/null || { echo \"⛔ pw.x 가 돈다\"; false; }; } && { [ ! -e $O ] && ! tmux has-session -t b2o3_s11ph 2>/dev/null || { echo \"⛔ $O 또는 tmux b2o3_s11ph 가 이미 있다\"; false; }; } && mkdir $O && tmux new -d -s b2o3_s11ph \"cd $S && for n in cfg0040_E-2252.241_O-bo4 cfg0015_E-2254.436_O-bo4 cfg0019_E-2254.209_O-bo4; do echo \\\"\\$(date '+%F %T') 시작 \\$n\\\" >> $O/run.log; $PY tools/electronic/uma_phonon.py --xyz $R/s11a_relax/\\$n/post_relax.xyz --out $O/\\$n --require_fmax 0.01 > $O/\\$n.log 2>&1; echo \\\"\\$(date '+%F %T') \\$n rc=\\$?\\\" >> $O/run.log; done; echo \\\"\\$(date '+%F %T') 끝\\\" >> $O/run.log\" && sleep 5 && tmux ls | grep b2o3_s11ph && cat $O/run.log",
+  "블록_②_설명": "이완 tmux 끝 · run_rc 0 · check_rc 0 · 셋 다 converged · fmax ≤ 0.01 · time_ps 0 · 목적 대조 (값은 fmax · 걸음만 찍음) → pw.x 없음 · 새 자리 → tmux b2o3_s11ph 에서 셋을 차례로 uma_phonon.py --require_fmax 0.01 (δ 0.02 Å · Γ · 캐시는 구조 · 모델 · δ 에 결박) → $R/s11a_phonon/<이름>_summary.json · _freqs.txt · run.log",
+  "블록_②_로컬_시험": "bash -n 통과 · 결과 검사 파이썬 줄을 가짜 anneal_results.json 으로: 셋 다 fmax 0.0081 → 통과 · 하나 0.012 → 멈춤",
+  "판정_규칙 (결과 전 · 카드 · 셀구축 v1 그대로)": "이완: 셋 다 converged · fmax ≤ 0.01 eV/Å 가 아니면 포논을 띄우지 않고 보고 · 포논: 병진 (고유벡터 겹침 ≥ 0.9) 을 뺀 허수가 < −30 cm⁻¹ → UNSTABLE · −30 ~ −5 → SOFT (보류 — 12 후처리를 멈추고 사용자 결정) · 둘 다 0 일 때만 STABLE",
+  "허용_문장 (STABLE 일 때만)": "선택한 주기셀의 UMA 조화 진동 검사 (Γ) 에서 비병진 허수 모드 없음 (−5 cm⁻¹ 기준) — 셀 수직폭 5.72 · 11.44 · 28.61 Å (가장 좁은 폭 < 10 Å 이라 그 사실을 같이 적는다)",
+  "금지_문장": [
+   "'DFT 동역학 안정' · '진짜 국소 최소' — UMA · Γ 만 본다",
+   "'열적으로 안정' — 그건 11b MD 몫",
+   "셀 밖 파장 (q ≠ 0) · 셀 모양 불안정에 대한 서술"
+  ],
+  "비용": "이완 3 (몇 분) + 포논 3 × 768 힘 (어림 1–2 GPU-h) · 카드 안정성 상한 150 GPU-h 안",
+  "11b_와의_관계": "11b (2 단계 MD · 24 + 대조 8 런 × 400 ps · 어림 90–130 GPU-h) 는 11a 판정을 보고 블록을 낸다 — 사용자 '권고대로' 순서 그대로 · 블록을 줄 때 다시 알린다",
+  "by": "agent · 2026-11-22"
  }
 }

@@ -7,7 +7,7 @@ letter: EO
 track: wad
 channel: codex
 kind: prompt
-status: 초안 — 돌연변이 · 묶음 재빌드 전 (자리표시 @COMMIT@ · @MANIFEST@ · @MUTANTS@ 남음 · 아직 보내지 않는다)
+status: 발송 대기 (사용자) · 기준 커밋 68f683462 → 고침 b84907868 (도구) · 8fd051a22 (묶음) · 묶음 MANIFEST b01d0861… · 돌연변이 84/84
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -35,7 +35,7 @@ Physics settings, the ladder, thresholds, the secondary rule and the G4/G5 arith
 
 ## 1. Scope
 
-- Base = `68f683462` (what EN reviewed). Fixes: `b84907868` (tools · tests) and `8fd051a22` (package rebuilt · build log). Records-only commits in between: `609454492` (EN letter) · `2b0fc9aa8` (your reply and attachments, verbatim).
+- Base = `68f683462` (what EN reviewed). Fixes: `b84907868` (tools · tests) and `8fd051a22` (package rebuilt · build log). Records-only commits in between: `609454492` (EN letter) · `2b0fc9aa8` (your reply and attachments, verbatim); commits after `8fd051a22` are records only too (this letter · build-log mutant totals · an unrelated b2o3 run-log entry and raw-output recovery).
 - `git diff 68f683462 8fd051a22 -- tools/wad/build_a5_vasp_package.py tools/wad/build_v5_vasp_package.py` (tool sha256 `83695d51…` · `90065ed5…`).
 - Package `db/inputs/wad_a5_vasp_2026_11_20/` — changed files: `run_a5.sh` · `README.md` · `jobs.json` (tool sha) · `MANIFEST.sha256`. Job inputs (INCAR ×4 · POSCAR · KPOINTS · POTCAR spec) are byte-identical.
 - Build log `db/properties/wad_a5_build_log_2026_11_20.json` key `⑥`.
@@ -60,7 +60,7 @@ c1's secondary value only after c2 itself ended in a confirmed state.
 ## 4. Tests
 
 - Selftests: a5 **163/163** (was 124) · V5 **313/313** (was 303) · round2 194/194 (unchanged file) — python 3.11 · `dftd3` 1.6.0.
-- Mutants: `build_a5_vasp_package.py --mutants --jobs 3` — **@MUTANTS@** (33 new, m52–m84: one for each new runner, checker and collector gate; e.g. m56 = the runner never calls `killed5` (the EN behaviour), m68 = the checker never calls `killed_problems`, m67 = the runner skips the bundle/final-record check). Two new tests were adjusted so that a single gate is the only thing that can catch its mutant: an OUTCAR with ISTART 0 **but** the restart phrase present (`istart0p`, otherwise the phrase check masks the ISTART check), and a two-line killed.json whose `recorded_s` still ends its line (otherwise the integer reader masks the one-line check).
+- Mutants: `build_a5_vasp_package.py --mutants --jobs 3` — **84/84 caught** (the 51 earlier ones re-run on the new tool + 33 new, m52–m84 · tool `83695d51`: one for each new runner, checker and collector gate; e.g. m56 = the runner never calls `killed5` (the EN behaviour), m68 = the checker never calls `killed_problems`, m67 = the runner skips the bundle/final-record check). Two new tests were adjusted so that a single gate is the only thing that can catch its mutant: an OUTCAR with ISTART 0 **but** the restart phrase present (`istart0p`, otherwise the phrase check masks the ISTART check), and a two-line killed.json whose `recorded_s` still ends its line (otherwise the integer reader masks the one-line check).
 - EM probes p1–p9: re-run on the new tools — output identical to the EN-reviewed tools (normalised for timestamps and hashes).
 - Collector regression: the 11-20 G5 aggregate re-run with the patched V5 collector → rc 3 · JSON byte-identical (sha `afecfa08…`) · console output identical (compared only, never displayed).
 
