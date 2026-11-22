@@ -101,8 +101,8 @@
     },
     "묶음": "db/inputs/wad_a5_vasp_2026_11_20/ 다시 빌드 (도구 751dbe30) · MANIFEST sha256 8439e129bc18d595e72f94e6501469fed4109f419c827d5b98bb1cb269d24d20 (그 앞 ad428238 · EM 리뷰 판 026abb2d) · run_a5.sh 는 ad428238 판과 같음 · README 는 MANIFEST 줄만 · jobs.json 도구 sha · 잡 입력 같음 · MANIFEST 대조 통과",
     "러너_같음": "run_a5.sh 는 0718bc6b1 판 빌드와 바이트 같음 → ④ 의 EM 재현 전후 결과가 최종 러너에 그대로 유효",
-    "돌연변이_최종": "도구 751dbe30 으로 --mutants --jobs 3 다시 도는 중 (결과는 다음 커밋에)",
-    "다음": "Codex 리뷰 편지 EN (영어) → 사용자 발송 → GO 뒤 zip · handoff · 운영 안내",
+    "돌연변이_최종": "도구 751dbe30 · --mutants --jobs 3 → 51/51 잡음 (1032 s)",
+    "다음": "Codex 리뷰 편지 EN (kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md · 영어) → 사용자 발송 → GO 뒤 zip · handoff · 운영 안내",
     "by": "claude · 2026-11-22 (대피 세션)",
     "돌연변이_최종_1": "최종 판 (도구 35dc283a) --mutants --jobs 3 → 50/51 (1055 s) · m12 (검사기 'c1 OK 인데 c2' 대조 뺌) 가 살아남음 — 혼자 돌리면 두 번 다 잡음 (병렬 부하에서만 놓침)",
     "m12_진단": "시험이 c1 폴더를 그대로 c2 로 복사해 'c1 OK 인데 c2' 를 만든다 → 가짜 c1 이 1 초 넘게 걸리면 (부하) 시간 순서 위반이 먼저 LADDER_VIOLATION 을 내서 상태만 보는 시험은 이 대조를 빼도 통과 → 사유 목록 (ladder_violations) 에 그 대조 문구가 있는지까지 보게 조임 · CPU 4 개를 일부러 바쁘게 한 채로도 m12 잡음"
