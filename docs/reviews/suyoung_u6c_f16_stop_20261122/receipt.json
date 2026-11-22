@@ -1,0 +1,40 @@
+{
+  "F12_F24": {
+    "comparison": "HOLD",
+    "reason": "UPDATED_PAIR_MISSING"
+  },
+  "F8_F16": {
+    "comparison": "HOLD",
+    "ratio": null,
+    "reason": "F16_INCOMPLETE"
+  },
+  "archive_sha256": "bdd10395a7acc1aa7e64f7aaa6d8509a343ea448b47ee39e0770f520e310ec6d",
+  "arm": "F16_ORIGINAL",
+  "contact_source_pin": "2cf17b1df57396ef01505a72641e01b19629bed5",
+  "contact_stop_sha256": "c424d8e7a4d799969d052acac3692c47a44a1a6657ab6497c62cbf516146e775",
+  "field_arm_rc": 4,
+  "field_command_rc": 4,
+  "kernel_sha256": "8af03f07e8149219a13baa1d1ca79c2fc87940bb991c6055769ac0beeb3a8880",
+  "label": "DEVELOPMENT_ONLY",
+  "new_field_executions_by_readback": 0,
+  "readback": "VERIFIED_INCOMPLETE",
+  "release": "e5c3ac7bba373efc4a7a0367c6f6ecee41018f29",
+  "source_git_blobs_checked": true,
+  "source_manifest_entries": 13,
+  "source_tar_checked": true,
+  "stage3_go": false,
+  "stop": {
+    "attempted_step": 4803,
+    "contact_pairs": 3,
+    "fields": 3,
+    "last_complete_step": 4802,
+    "native_residual": 3.719337173876703e-05,
+    "native_residual_over_tolerance": 21153169.35683685,
+    "node": 16810,
+    "rows": 4803,
+    "speed_tolerance": 1.7582883733092162e-12,
+    "updates": 512
+  },
+  "trace_sha256": "aba3b5e93bbdda6400777e2bc73ebf75a5eb7792aed2da9661be048836999def",
+  "u6_qualified": false
+}
