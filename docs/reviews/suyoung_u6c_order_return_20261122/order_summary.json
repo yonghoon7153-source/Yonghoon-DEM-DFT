@@ -1,0 +1,24 @@
+{
+  "comparison": {
+    "anchor_status": "NOT_REACHED",
+    "at_fixed_anchor": null,
+    "common_end_u": 0.11100328595220721,
+    "common_knots": 2476,
+    "common_start_u": 0.0,
+    "first_worst": {
+      "original_MPa": 1.109658341962076,
+      "original_minus_relabelled_MPa": -0.09084028877528416,
+      "relabelled_MPa": 1.2004986307373602,
+      "u": 0.11100328595220721
+    },
+    "fixed_u": 0.11562281664031926,
+    "max_abs_difference_MPa": 0.09084028877528416
+  },
+  "label": "DEVELOPMENT_ONLY",
+  "prior_wall_sha256": "0df5971d360ed20463d67ab36bd97b677b3e55bee9aaf01dbd559daf79a9ed90",
+  "protocol": "U6c-F8-native-dt-reverse49-v1",
+  "relabelled_trace_sha256": "faafadfcb01671f5816e1cc2e2eb04bbef235835616fa0a2d6580c3fe46e97c5",
+  "stage3_go": false,
+  "status": "DEVELOPMENT_ORDER_CONTRAST",
+  "u6_qualified": false
+}

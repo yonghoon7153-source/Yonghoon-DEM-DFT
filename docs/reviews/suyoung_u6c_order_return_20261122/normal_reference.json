@@ -1,0 +1,126 @@
+{
+  "cases": {
+    "asymmetric_triangle": {
+      "KKT": {
+        "feasible_kkt_sets": 1,
+        "final_separating_speed": [
+          6.245004513516506e-17,
+          1.8041124150158794e-16,
+          1.3877787807814457e-17
+        ],
+        "objective": 0.9812452166299132,
+        "pair_impulses": [
+          0.6925601969030232,
+          0.3001174315393306,
+          0.4296612350898614
+        ]
+      },
+      "native_label_orders": 6,
+      "native_max_final_closing_speed": 0.0,
+      "native_max_order_spread": 0.4519125641932577,
+      "native_min_max_objective": [
+        1.2768932846690955,
+        1.3294479526776386
+      ],
+      "native_min_max_single_body_velocity_error": [
+        0.1843496755285089,
+        0.38285938549171483
+      ],
+      "reference_outgoing_velocity": [
+        [
+          0.048586068231936674,
+          -0.021364638733947394
+        ],
+        [
+          0.052970553898041284,
+          -0.06520949539499285
+        ],
+        [
+          0.07927746789466866,
+          -0.04109482423141775
+        ]
+      ]
+    },
+    "symmetric_triangle": {
+      "KKT": {
+        "feasible_kkt_sets": 1,
+        "final_separating_speed": [
+          5.551115123125783e-17,
+          5.551115123125783e-17,
+          2.220446049250313e-16
+        ],
+        "objective": 1.5,
+        "pair_impulses": [
+          0.5773502691896257,
+          0.5773502691896257,
+          0.5773502691896258
+        ]
+      },
+      "native_label_orders": 6,
+      "native_max_final_closing_speed": 0.0,
+      "native_max_order_spread": 0.3788861141556919,
+      "native_min_max_objective": [
+        2.0595703125,
+        2.0595703125
+      ],
+      "native_min_max_single_body_velocity_error": [
+        0.33071891388307373,
+        0.33071891388307384
+      ],
+      "reference_outgoing_velocity": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.1102230246251565e-16
+        ],
+        [
+          0.0,
+          -1.1102230246251565e-16
+        ]
+      ]
+    },
+    "two_body_control": {
+      "KKT": {
+        "feasible_kkt_sets": 1,
+        "final_separating_speed": [
+          0.0
+        ],
+        "objective": 0.9720000000000001,
+        "pair_impulses": [
+          1.08
+        ]
+      },
+      "native_label_orders": 2,
+      "native_max_final_closing_speed": 0.0,
+      "native_max_order_spread": 0.0,
+      "native_min_max_objective": [
+        0.9720000000000001,
+        0.9720000000000001
+      ],
+      "native_min_max_single_body_velocity_error": [
+        1.1102230246251565e-16,
+        1.1102230246251565e-16
+      ],
+      "reference_outgoing_velocity": [
+        [
+          -0.08000000000000007,
+          0.1
+        ],
+        [
+          -0.08000000000000007,
+          0.4
+        ]
+      ]
+    }
+  },
+  "fixture_sha256": "d8eccd805f0a51a66b33b95ad7b12ae8480378c6cf8e98e93fecdf7eba6e0cc6",
+  "model": "synthetic one-step normal-only mass metric projection, all pairs imposed",
+  "mu": 0.0,
+  "source_sha256": {
+    "dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+    "suyoung_u6_first_dev.py": "5db0f1bda90c824a23479401b7744cf8d31fc64f373441abca692dce6717bda5"
+  }
+}
