@@ -755,5 +755,13 @@
   "비용": "이완 3 (몇 분) + 포논 3 × 768 힘 (어림 1–2 GPU-h) · 카드 안정성 상한 150 GPU-h 안",
   "11b_와의_관계": "11b (2 단계 MD · 24 + 대조 8 런 × 400 ps · 어림 90–130 GPU-h) 는 11a 판정을 보고 블록을 낸다 — 사용자 '권고대로' 순서 그대로 · 블록을 줄 때 다시 알린다",
   "by": "agent · 2026-11-22"
+ },
+ "9단계_회수_끝_2026_11_22": {
+  "출처": "사용자 붙여넣기 2026-11-22 (gabia) — 첫 push 는 'rejected (fetch first)' (블록이 브랜치를 받은 뒤 에이전트가 커밋 둘을 올렸다 · 비밀번호 문제 아님) → 이어 가기 블록 (worktree 에서 fetch → merge --no-edit FETCH_HEAD → push) 으로 끝",
+  "커밋": "회수 6b9301ea7 · 합침 fa11773b2 (gabia) → 로컬 ff",
+  "내용": "db/raw/b2o3_bo_stage9_dft_2026_11_20/ — 파일 34 개 · 12 MB · dft_plan.json 5224375f… · 판정 셋 (sp 77e38226 · kprobe fad48783 · relax ede4ba08 — 판독 때 지문과 같음) · sp 6 · kprobe 3 · relax 3 잡의 scf.in · scf.out · relaxed/*.xyz · 실행기 로그",
+  "로컬_대조": "SHA256SUMS 34/34 일치 · 판정 지문 셋 같음",
+  "이완_구조_배위 (relax_verdict 기록 · 판정 아님)": "F_B: B 두 개 모두 3 배위 (BS₂O · BSO₂) · P 8 개 모두 4 배위 · F_P: B 둘 BS₃ · P 8 개 4 배위 (PS₃O 셋) · F_free: B 하나 BS₂O · 하나 BS₄ · P 8 개 4 배위 (컷 B–S 2.2 · B–O 1.7 · P–S 2.4 · P–O 1.8 Å)",
+  "by": "agent · 2026-11-22"
  }
 }
