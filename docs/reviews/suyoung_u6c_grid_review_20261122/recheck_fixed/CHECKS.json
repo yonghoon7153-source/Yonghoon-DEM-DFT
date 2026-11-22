@@ -1,0 +1,36 @@
+{
+  "clean_canonical_lf_bytes_equal_expected": true,
+  "clean_expected_bytes": 1513,
+  "clean_expected_sha256": "74850f24ed55756297d954399c52279841a377d88e15872803c2ccd6d972b44f",
+  "corrected_helper_sha256": "033d4cd2ee58f12791f7ecf9da26886593c478a58f988bd059283dcee05284b2",
+  "field_time_advances": 0,
+  "label": "DEVELOPMENT_HELPER_ONLY",
+  "old_helper_sha256": "d48a415adea04a878bf6060e16cdede30adfbb41f63658590c967e2d188d86c5",
+  "original_independent_probe_sha256": "a0194607ba151711cb728a0471133e95c40690f042666279236718a1f340d4f2",
+  "original_probe_corrected": {
+    "exit_reason": "F8 full trace byte identity",
+    "printed_numeric_result": false,
+    "rc": 1
+  },
+  "original_probe_prior": {
+    "accepted_perturbed_ratio": 1.7120723413816206,
+    "clean_ratio": 0.8085856838367982,
+    "rc": 0
+  },
+  "regression_corrected": {
+    "errors": 0,
+    "failures": 0,
+    "methods": 11,
+    "rc": 0
+  },
+  "regression_prior": {
+    "errors": 0,
+    "failures": 10,
+    "methods": 11,
+    "rc": 1
+  },
+  "stage3_go": false,
+  "test_sha256": "607309698a3581d7d8c520405643213b3863534efcc3255e453862f75451728d",
+  "u6_qualified": false,
+  "unmodified_windows_stdout_identical": true
+}

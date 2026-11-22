@@ -1,0 +1,9 @@
+{
+  "proposal_only": true,
+  "finding": "SYG-R01",
+  "severity": "P3",
+  "proposed_status": "claimed_fixed",
+  "scope": "Convenience checker for the independent-review ZIP only",
+  "evidence": "10 failures in 11 on old helper; corrected 11/11; amended-data probe rejected before output",
+  "independent_review_of_fix": false
+}

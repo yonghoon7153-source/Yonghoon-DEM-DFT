@@ -1,0 +1,30 @@
+{
+  "F12_F24": "UNMEASURED_WITH_CURRENT_KERNEL",
+  "Q1": "ACCEPT_F8_F16_EXCEEDS",
+  "Q2": "ACCEPT_FIXED_NODE_ONLY",
+  "Q3": "ACCEPT_LOCAL_ARITHMETIC_ONLY",
+  "Q4": "RECOMMEND_SIGNED_VERTICAL_MOMENTUM_ON_FIXED_NATIVE_MASK",
+  "evidence_bytes": 35550,
+  "evidence_members": 17,
+  "evidence_sha256": "b8c701802929a2f896fecc8d853e91e6f944477745a1eb1142af74db90ba4de9",
+  "evidence_zip": "EVIDENCE_SUYOUNG_U6C_GRID_bd8d187c_20261122.zip",
+  "external_findings": {
+    "P1": 0,
+    "P2": 0,
+    "P3": [
+      "SYG-R01"
+    ]
+  },
+  "independent_verdict_sha256": "0e83fa86d02a64a2e8b8d66cade83ebf958bf2a490f52f06921c2c8f8f98b679",
+  "matched_internal_hashes": 16,
+  "new_field_runs_during_review": 0,
+  "release_and_operation": "DEVELOPMENT_ONLY",
+  "request_members": 70,
+  "request_pin": "bd8d187c5eb12e8811cb02d97742cc4b23623e99",
+  "request_zip_sha256": "43f075713dec84e4b541a01a277a5c3e4e9b77487d0433ab267b66dd1fee8dac",
+  "result_pin": "a1c8f91ed75d41e6e1ac5e52bae475e059de0f2b",
+  "source": "Codex independent review",
+  "stage3": "HOLD",
+  "u6c": "HOLD",
+  "verdict_bytes_match_separate_delivery": true
+}

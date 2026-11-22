@@ -1,0 +1,55 @@
+{
+  "F12_F24": "NOT_MEASURED_WITH_THIS_KERNEL",
+  "U6c_qualified": false,
+  "adjacent_native": [
+    {
+      "F16_step": 538,
+      "F8_step": 269,
+      "gap_MPa": 0.03283080752106251,
+      "mass_over_dt_MPa": 0.00963030569416857,
+      "one_sided_MPa": 6.240284329790984e-10,
+      "signed_percent": [
+        29.333136834938575,
+        70.666861264321,
+        1.900740432835089e-06
+      ],
+      "speed_MPa": 0.023200501202865507,
+      "u": 0.012064599564098444
+    },
+    {
+      "F16_step": 540,
+      "F8_step": 270,
+      "gap_MPa": 0.0343298593814407,
+      "mass_over_dt_MPa": 0.010056406900052843,
+      "one_sided_MPa": 1.1756649826412087e-09,
+      "signed_percent": [
+        29.293469537161883,
+        70.70652703822468,
+        3.424613452616683e-06
+      ],
+      "speed_MPa": 0.02427345130572288,
+      "u": 0.012109449376604409
+    }
+  ],
+  "development_only": true,
+  "grid": {
+    "above_5_percent": 3614,
+    "common_end": 0.11925565145330064,
+    "common_knots": 5319,
+    "fine_peak_MPa": 0.6636991102836952,
+    "first_exceedance": {
+      "F16_native_step": 539,
+      "F16_pressure_MPa": 0.011443392340219682,
+      "F8_minus_F16_MPa": 0.03359937103298061,
+      "F8_native_step": null,
+      "F8_pressure_MPa": 0.04504276337320029,
+      "threshold_MPa": 0.03318495551418476,
+      "u": 0.012087024470351482
+    },
+    "max_gap_MPa": 0.5366575989506163,
+    "ratio": 0.8085856838367982,
+    "status": "EXCEEDS",
+    "u_at_max_gap": 0.11925565145330064
+  },
+  "stage3_go": false
+}
