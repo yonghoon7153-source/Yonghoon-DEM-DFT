@@ -1,6 +1,6 @@
 # 전극 공정
 
-전극 미세구조 · 공정 · 장 `dem-process` · 논문 92편 · 읽기 카드 83편
+전극 미세구조 · 공정 · 장 `dem-process` · 논문 99편 · 읽기 카드 82편
 
 > 혼합, 캘린더링, 가압, 건식 전극 제조.
 
@@ -70,7 +70,7 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 4. OTANI et al. 2025 (`otani2025_dem_se_dispersion_aggregation_compression`) — 압축 전 SE 분산 상태가 압밀 뒤 밀도와 접촉면적을 정한다는 것을 응집수 한 축으로 보인 DEM이다.
 5. Zhang et al. 2026 (`zhang2026_xct_dem_cathode_calendering_peel_calibration`) — 같은 모델 안에서 하중 상태 값과 제하 후 값이 어떻게 갈리는지 보여 견줄 값의 상태를 정하는 기준을 준다.
 
-## 이 장의 논문 (92편)
+## 이 장의 논문 (99편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -84,6 +84,7 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `chandratilleke2010_blade_speed_flow_mixing_cylindrical_mixer` | Chandratilleke et al. 2010 | Effect of Blade Speed on Granular Flow and Mixing in a Cylindrical Mixer | 날개가 빠를수록 시간으로는 빨리 섞이지만, 회전수와 에너지로 보면 느린 날개가 낫다. |
 | `sakuda2011_pld_sulfide_se_coated_licoo2_composite_cathode` | Sakuda et al. 2011 | All-solid-state lithium secondary batteries using LiCoO2 particles with pulsed laser deposition coatings of Li2S–P2S5 solid electrolytes | 펄스 레이저 증착으로 입힌 황화물 전해질 막이 이온 경로를 만들어, 전해질 입자 10 wt%로 30 wt% 혼합 전극과 같은 용량을 낸다. |
 | `cottrino2013_insitu_xct_granulated_alumina_die_compaction` | Cottrino et al. 2013 | Characterization by X-ray tomography of granulated alumina powder during in situ die compaction | 압밀 곡선의 항복 압력(Py)을 넘긴 8 MPa에서도 과립은 막 깨지거나 눌리기 시작했을 뿐이라, Py는 파쇄 시점과 정확히 맞지 않을 수 있다. |
+| `kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode` | Kim et al. 2013 | Effect of mixing method on the properties of composite cathodes for all-solid-state lithium batteries using Li2S–P2S5 solid electrolytes | (카드 없음) |
 | `stershic2015_fabric_tensor_calendering_nmc_xct_dem` | Stershic et al. 2015 | Modeling the evolution of lithium-ion particle contact distributions using a fabric tensor approach | 압연 뒤 NMC111 양극의 접촉은 다섯 판정법 모두에서 수직 방향이 줄고 수평 방향이 늘지만, 같은 입도 분포의 구 DEM은 이 변화를 재현하지 못한다. |
 | `kawaguchi2017_dry_coating_parametric_na2so4_model_se` | Kawaguchi et al. 2017 | Parametric study of dry coating process of electrode particle with model material of sulfide solid electrolytes for all-solid-state battery | (카드 없음) |
 | `meyer2017_calendering_compaction_resistance_line_load_exponential_model` | Meyer et al. 2017 | Characterization of the calendering process for compaction of electrodes for lithium-ion batteries | 압연 뒤 코팅 밀도는 선하중의 지수 포화 식으로 맞고, 그 빠르기를 정하는 compaction resistance는 NCM 양극이 흑연 음극의 거의 두 배다. |
@@ -102,9 +103,11 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `schreiner2020_dem_calendering_lib` | Schreiner et al. 2020 | Modeling of the Calendering Process for Lithium-Ion Batteries with DEM Simulation | 나노압입 곡선에 맞춘 EEPA와 Bonding의 EDEM 모델로 NMC622 양극 압연을 모사하고, 이를 압연 조건 추천 도구의 바탕으로 삼았다. |
 | `demirtas2021_mpfem_hollow_sphere_die_compaction` | Demirtas · Klinzing 2021 | Understanding die compaction of hollow spheres using the multi-particle finite element method (MPFEM) | (카드 없음) |
 | `ngandjong2021_dem_calendering_digital_twin` | Ngandjong et al. 2021 | Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model: Towards a digital twin of Li-Ion battery manufacturing | 슬러리와 건조 CGMD 구조에서 출발한 DEM 압연 모델이 두 실측 지표로 검증되고 FEM 전기화학까지 이어진다. |
+| `zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane` | Zhang et al. 2021 | Flexible Sulfide Electrolyte Thin Membrane with Ultrahigh Ionic Conductivity for All-Solid-State Lithium Batteries | (카드 없음) |
 | `diener2022_roll_gap_springback_calendering` | Diener et al. 2022 | Evaluation of Deformation Behavior and Fast Elastic Recovery of Lithium‐Ion Battery Cathodes via Direct Roll‐Gap Detection During Calendering | 롤 간극 직접 측정에서 NMC622 양극의 SB는 선하중에 비례해 늘고, 질량과 PVDF 함량이 늘면 줄었다. |
 | `dixit2022_isostatic_pressing_ssb_large_scale_manufacturing_review` | Dixit et al. 2022 | The Role of Isostatic Pressing in Large-Scale Production of Solid-State Batteries | 등방 가압을 전고체전지 양산 공정으로 내세우지만, 같은 압력에서 단축 가압과 견준 값은 없다. |
 | `ge2022_xct_initial_structure_dem_calendering_nmc333` | Ge et al. 2022 | Discrete element method (DEM) analysis of lithium ion battery electrode structures from X-ray tomography-the effect of calendering conditions | 미압연 전극 CT의 입자 5106개를 구와 결합으로 옮겨 누르면 공극과 굴곡 인자가 같은 압력의 CT와 몇 % 안에서 맞는다. |
+| `hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode` | Hayakawa et al. 2022 | Dry mixing of cathode composite powder for all-solid-state batteries using a high-shear mixer | (카드 없음) |
 | `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | Alabdali et al. 2023 | Three-dimensional physical modeling of the wet manufacturing process of solid-state battery electrodes | 슬러리부터 압연까지를 한 CGMD 흐름으로 시뮬하면 τ_g는 압연과 함께 줄지만 δ_e는 30 %를 넘으면 모델 한계로 꺾인다. |
 | `asylbekov2023_cb_fragmentation_pbe_dem_dry_mixing` | Asylbekov et al. 2023 | Modeling of Carbon Black Fragmentation During High‐Intensity Dry Mixing Using the Population Balance Equation and the Discrete Element Method | DEM이 응력과 빈도만 넘기고 PBE가 카본블랙 분쇄를 풀면 분쇄 하한과 이봉 분포가 재현되지만, breakage function은 공정 독립이 아니다. |
 | `hayakawa2023_dry_coated_composite_particles_conductive_additives_ab_vgcf` | Hayakawa et al. 2023 | Design of active-material/solid-electrolyte composite particles with conductive additives for all-solid-state lithium-ion batteries | 고체전해질 껍질 안에 든 아세틸렌 블랙은 율속과 수명을 살렸고, 입자 밖에 남은 기상 성장 탄소 섬유는 층 전자 전도도만 올렸다. |
@@ -112,13 +115,16 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` | Kawaguchi et al. 2023 | Statistical analysis of electrode fabrication process for all-solid-state batteries and effects of electrode fabrication conditions on battery performance | (카드 없음) |
 | `kim2023_mechanofusion_ncm811_lpscl_core_shell_intimate_contact` | Kim et al. 2023 | High‐Performance All‐Solid‐State Batteries Enabled by Intimate Interfacial Contact Between the Cathode and Sulfide‐Based Solid Electrolytes | 메카노퓨전으로 Li₆PS₅Cl 껍질을 입힌 NCM811 양극은 같은 조성의 손 혼합 양극보다 이온 전도도와 용량이 높고, SE가 적을수록 차이가 크다. |
 | `lippke2023_dem_drying_structure_formation_lib` | Lippke et al. 2023 | Simulation of Structure Formation during Drying of Lithium‐Ion Battery Electrodes using Discrete Element Method | 유체를 네 대리 힘으로 바꾼 DEM은 한 loading에서 보정한 뒤 나머지 세 loading의 건조 두께를 맞췄다 |
+| `tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode` | Tao et al. 2023 | Unraveling the impact of the degree of dry mixing on dry-processed lithium-ion battery electrodes | (카드 없음) |
 | `xu2023_dem_bonded_particle_fracture_calendering` | Xu et al. 2023 | Computational Model for Predicting Particle Fracture During Electrode Calendering | (카드 없음) |
 | `xu2023_realistic_am_shape_cgmd_calendering` | Xu et al. 2023 | Lithium ion battery electrode manufacturing model accounting for 3D realistic shapes of active material particles | (카드 없음) |
 | `bak2024_binder_distribution_multilayer` | Bak et al. 2024 | Advanced multilayer model electrode for binder distribution within composite electrodes of lithium batteries | 세 층으로 바인더 분포를 바꾼 NCM622 전극에서는 균일 분포가 최적이고, 집전체 쪽 바인더 과잉이 가장 해롭다. |
 | `frankenberg2024_dem_high_intensity_mixer_assb` | Frankenberg et al. 2024 | Investigating the production of all-solid-state battery composite cathodes by numerical simulation of the stressing conditions in a high-intensity mixer | 회전속도를 높이면 specific energy 입력이 늘어 방전용량이 오르지만, 응력강도 한계와 분산 포화로 상한이 걸린다. |
-| `han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode` | Han et al. 2024 | Mitigating PTFE decomposition in ultra thick dry-processed anodes for high energy density lithium-ion batteries | FEC 10 wt%를 넣으면 PTFE 환원 봉우리가 줄고 건식 흑연 음극의 초기 쿨롱 효율이 75.7 %에서 87.2 %로 오른다. |
+| `han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode` | Han et al. 2024 | Mitigating PTFE decomposition in ultra thick dry-processed anodes for high energy density lithium-ion batteries | (카드 없음) |
 | `kim2024_optimal_cathode_composite_mechanical_mixing_se_coverage` | Kim et al. 2024 | Exploring optimal cathode composite design for high-performance all-solid-state batteries | 총 SE 23 wt%에서 LPSCl을 NCM811에 일부만 건식으로 입힌 MM10이 손 혼합이나 완전 피복보다 이온 전도와 수명이 좋다. |
+| `kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering` | Kim et al. 2024 | 10 mAh cm −2 Cathode by Roll‐to‐Roll Process for Low Cost and High Energy Density Li‐Ion Batteries | (카드 없음) |
 | `kollenda2024_time_sensitivity_calendered_electrode_springback_storage` | Kollenda et al. 2024 | Time-Sensitivity of Intermediate Product Properties in Lithium-Ion Battery Cell Production | 압연한 흑연 음극은 보관 중 두께가 5–6 µm 자라 압연 직후 측정값의 유효 기간이 짧지만, NMC 양극 값은 28일 내내 유효하다. |
+| `kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode` | Kwon et al. 2024 | Low‐Resistance LiFePO₄Thick Film Electrode Processed with Dry Electrode Technology for High‐Energy‐Density Lithium‐Ion Batteries | (카드 없음) |
 | `lee2024_multiphysics_dem_fem_initial_pressure_assb` | Lee et al. 2024 | Multiphysics modeling of the influence of initial pressure on mechanical and electrochemical performance of all-solid-state batteries | DEM 압밀 결과를 결합 FEM에 넘기면 압축과 외부압이 전도와 용량을 높이는 동시에 내부 응력도 키운다. |
 | `lee2024_shear_force_dry_process_cathode_coverage` | Lee et al. 2024 | Shear force effect of the dry process on cathode contact coverage in all-solid-state batteries | PTFE 건식 전극의 SE 피복률은 습식과 펠릿의 두 배다. 원문은 피복이 낮으면 입자 내부 고체 확산이 이용률을 제한한다고 적었다. |
 | `matthews2024_ptfe_nanofibril_network` | Matthews et al. 2024 | Solvent-free NMC electrodes for Li-ion batteries: unravelling the microstructure and formation of the PTFE nano-fibril network | 건식 NMC 전극의 PTFE는 NMC 표면에 물린 뒤 반복해 뽑혀 나온 계층 피브릴 망이며, 기공을 막지 않는다. |
@@ -138,6 +144,7 @@ SE를 얼마나 입히느냐에서는 많이 입힐수록 좋지 않다는 쪽�
 | `larson2025_hot_pressing_argyrodite_low_stack_pressure_conductivity` | Larson et al. 2025 | Hot Pressing Argyrodite Solid Electrolyte Powders Results in >2 mS cm–1 Ionic Conductivity at 20 °C and <1 MPa Operating Pressure | 같은 300 MPa와 비슷한 상대밀도에서도 150 °C로 누른 펠릿은 입자가 융합해 저압에서 높은 전도도를 유지한다. |
 | `lee2025_corolling_dryprocess_lpscl_ptfe` | Lee et al. 2025 | Robust interface and reduced operation pressure enabled by co-rolling dry-process for stable all-solid-state batteries | 박막 LPSCl 층과 양극을 함께 압연하면 바인더-VGCF 섬유망이 계면을 묶어 저압 사이클이 안정해진다. |
 | `lee2025_dual_fibrous_ptfe_dry_electrode` | Lee et al. 2025 | Dual-fibrous PTFE structure enabling uniform and thick dry electrodes for high-energy-density and long-lasting batteries | 조성은 그대로 두고 PTFE를 두 번에 나눠 넣으면 fibre와 rope 두 집단이 생기고, 전자저항과 강도와 균일도가 함께 나아진다. |
+| `lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode` | Lee et al. 2025 | Anode interface-stabilizing dry process employing a binary binder system for ultra-thick and durable battery electrode fabrication | (카드 없음) |
 | `lim2025_virtual_calendering_framework` | Lim et al. 2025 | Validating the Virtual Calendering Process With 3D‐Reconstructed Composite Electrode: An Optimization Framework for Electrode Design | 재구성 양극을 가상 압축해 실제 캘린더링 구조를 재현했고, 이를 근거로 3.4–3.6 g/cm³를 최적 밀도로 제시했다. |
 | `lischka2025_dem_eirich_intensive_mixer_dry_mixing` | Lischka · Nirschl 2025 | Simulation of an intensive lab mixer for dry mixing of Li-ion cathode materials via the discrete element method | Eirich 믹서 건식 혼합 DEM에서 균질도는 용기 회전이, 카본블랙 분쇄는 툴과의 충돌이 정하고, 툴 속도를 올리면 충돌률은 오히려 준다. |
 | `liu2025_dry_processing_high_energy_li_batteries_review` | Liu et al. 2025 | Dry Processing Technique for High‐Energy Density Lithium Batteries | 건식공정 네 기법 가운데 PTFE 섬유화가 산업화에 가장 가깝다. 다만 공정 민감성, PTFE 환원분해, 두꺼운 전극의 수송 한계가 남는다고 정리한 총설이다. |

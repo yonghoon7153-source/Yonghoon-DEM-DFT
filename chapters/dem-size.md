@@ -1,6 +1,6 @@
 # SE 입도 효과
 
-전극 미세구조 · 공정 · 장 `dem-size` · 논문 16편 · 읽기 카드 11편
+전극 미세구조 · 공정 · 장 `dem-size` · 논문 17편 · 읽기 카드 11편
 
 > 전해질 입자 크기와 분포가 충진, 접촉, 전도도에 주는 영향.
 
@@ -72,7 +72,7 @@ DEM의 탄성 입력도 연구마다 다르다. Shi et al. 2019와 Faka et al. 2
 4. Ghanshyam et al. 2021 (`yadav2021_lpscl_sieved_psd_impedance_tortuosity`) — 큰 SE 등급이 이긴다는 반대 방향 결과이며 그 이득이 펠릿 σ에서 넘어온 것이라는 검토가 붙어 있다.
 5. Schneider et al. 2023 (`schneider2023_particle_size_pressure_transport`) — 압력의 두 영역과 입계 저항 해석을 제시해 펠릿 σ와 밀도가 엇갈리는 이유를 읽게 해 준다.
 
-## 이 장의 논문 (16편)
+## 이 장의 논문 (17편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -80,6 +80,7 @@ DEM의 탄성 입력도 연구마다 다르다. Shi et al. 2019와 Faka et al. 2
 | `sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking` | Sakuda et al. 2016 | Electrode morphology in all-solid-state lithium secondary batteries consisting of LiNi1/3Co1/3Mn1/3O2 and Li2S-P2S5 solid electrolytes | 같은 무게비에서 SE 입경을 NCM 입경보다 작게 하면 짧은 건식 혼합만으로 NCM이 SE 기지에 고르게 흩어지고 균열이 줄며 고율 용량이 커진다. |
 | `shi2019_high_am_loading_particle_size_assb` | Shi et al. 2019 | High Active Material Loading in All‐Solid‐State Battery Electrode via Particle Size Optimization | (카드 없음) |
 | `park2020_dimension_controlled_se_percolation_contact_area` | Park et al. 2020 | Dimension-controlled solid oxide electrolytes for all-solid-state electrodes: Percolation pathways, specific contact area, and effective ionic conductivity | 흑연 음극 가상 전극에서 1D 원기둥 LLZO-Ta는 접촉면적을 잃는 대신 유효 이온전도도를 크게 높여 가장 좋은 성능을 낸다. |
+| `ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s` | Ohsaki et al. 2021 | Size control of sulfide-based solid electrolyte particles through liquid-phase synthesis | (카드 없음) |
 | `yadav2021_lpscl_sieved_psd_impedance_tortuosity` | Ghanshyam et al. 2021 | Impact of Sulfide-based Solid Electrolyte Particle Size Distribution on the Electrochemistry of ASSB via Impedance Study | 같은 Li₆PS₅Cl을 체로 나누면 50–150 µm 등급이 순수 SE와 복합양극 모두에서 이온 전도가 높고 굴곡도가 낮았다. |
 | `koenig2023_wet_milling_se_ion_tortuosity_composite_cathode` | König et al. 2023 | Mitigating the Ion Transport Tortuosity in Composite Cathodes of All-Solid-State Batteries by Wet Milling of the Solid Electrolyte Particles | SE를 습식으로 더 갈자 복합 양극의 τ_eff는 35.4에서 8.0으로 내려갔지만 순수 SE 펠릿 σ도 4.43에서 1.09 mS/cm로 떨어졌다. |
 | `schlautmann2023_se_particle_size_composite_transport` | Schlautmann et al. 2023 | Impact of the Solid Electrolyte Particle Size Distribution in Sulfide‐Based Solid‐State Battery Composites | Li₆PS₅Cl 입도를 줄이면 무탄소 NCM811 복합양극의 공극이 줄어 이온전도와 용량이 오르지만, 전자전도는 거의 그대로다. |

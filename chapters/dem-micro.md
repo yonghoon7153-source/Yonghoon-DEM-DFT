@@ -1,6 +1,6 @@
 # 복합양극 미세구조
 
-전극 미세구조 · 공정 · 장 `dem-micro` · 논문 81편 · 읽기 카드 76편
+전극 미세구조 · 공정 · 장 `dem-micro` · 논문 83편 · 읽기 카드 76편
 
 > 공극률, 굴곡도, 이온 · 전자 경로의 연결성.
 
@@ -78,7 +78,7 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 4. Bielefeld et al. 2019 (`bielefeld2020_effective_ionic_conductivity_binder`) — Bielefeld et al. 2019의 유효 이온전도도 편으로, 접촉 저항 없는 연속체 계산이 조성과 바인더에 어떻게 반응하는지 보여 준다.
 5. Bazzoun et al. 2026 (`bazzoun2026_dem_fem_rnm_ionic`) — DEM 구조 위 RNM 계산을 같은 소재계의 EIS 실측과 맞대어 계산과 실측의 거리를 보여 준다.
 
-## 이 장의 논문 (81편)
+## 이 장의 논문 (83편)
 
 | digest | 저자 · 연도 | 제목 | 한 줄 결론 |
 |---|---|---|---|
@@ -127,9 +127,11 @@ CAM이 늘면 이온 경로는 거듭제곱으로 빠르게 나빠진다. Minnma
 | `doerrer2021_single_crystal_nmc_lpscl_cathode_high_energy_density` | Doerrer et al. 2021 | High Energy Density Single-Crystal NMC/Li₆PS₅Cl Cathodes for All-Solid-State Lithium-Metal Batteries | (카드 없음) |
 | `minnmann2021_jes_charge_transport_bottlenecks` | Minnmann et al. 2021 | Editors’ Choice—Quantifying the Impact of Charge Transport Bottlenecks in Composite Cathodes of All-Solid-State Batteries | EIS-TLM으로 NCM-622/Li₆PS₅Cl 양극의 부분 전도도와 τ²를 재어, 비용량 최적이 두 병목 사이인 42 vol% CAM 근처임을 보였다 |
 | `neumann2021_garnet_3d_structure_grain_boundaries_li_transport` | Neumann et al. 2021 | Effect of the 3D Structure and Grain Boundaries on Lithium Transport in Garnet Solid Electrolytes | 입계를 입자 사이 복셀 면의 계면 조건으로 넣어야 다공 garnet의 유효 이온전도도 감소가 실험 자릿수에 다가간다. |
+| `bielefeld2022_li_kinetics_morphology_voids_fem_composite_cathode` | Bielefeld et al. 2022 | Influence of Lithium Ion Kinetics, Particle Morphology and Voids on the Electrochemical Performance of Composite Cathodes for All-Solid-State Batteries | (카드 없음) |
 | `deysher2022_transport_mechanical_aspects_assb_review` | Deysher et al. 2022 | Transport and mechanical aspects of all-solid-state lithium batteries | SE 벌크 전도도는 충분해졌으므로 이제 복합 양극 내부의 전달과 부피변화 역학이 전고체전지의 율속 병목이라고 정리한 리뷰다. |
 | `hamasaki2022_single_parallel_contact_mwcnt_conductivity` | Hamasaki et al. 2022 | Electrical conductivity of a single parallel contact between carbon nanotubes | 두 MWCNT의 나란한 접촉 저항은 짧은 겹침에서 길이에 반비례하고, 수백 nm를 넘으면 튜브 본체 저항이 지배한다. |
 | `minnmann2022_designing_cathodes_solidstate` | Minnmann et al. 2022 | Designing Cathodes and Cathode Active Materials for Solid‐State Batteries | 고체전지 복합양극은 CAM과 SE의 함량, 입자 크기, 분포, 계면을 함께 맞춰야 한다는 정성 설계 지침을 제시한다. |
+| `park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3` | Park et al. 2022 | Geometrical Effect of Active Material on Electrode Tortuosity in All-Solid-State Lithium Battery | (카드 없음) |
 | `sakka2022_operando_xct_pressure_porosity_tortuosity_anisotropy_ncm111_lgps` | Sakka et al. 2022 | Pressure dependence on the three-dimensional structure of a composite electrode in an all-solid-state battery | (카드 없음) |
 | `so2022_dem_compaction_coated_particles_assb` | So et al. 2022 | Simulation of the compaction of an all-solid-state battery cathode with coated particles using the discrete element method | core-shell SE 코팅은 25 MPa에서도 SE percolation이 90 %를 넘지만, 저압에서는 AM-AM 전자 접촉을 차폐한다. |
 | `lee2023_sicspe_digitaltwin_assb` | Lee et al. 2023 | Digital‐twin‐driven structural and electrochemical analysis of Li⁺ single‐ion conducting polymer electrolyte for all‐solid‐state batteries | SIC-SPE 전극은 SE 부피분율, 굴곡도, 활물질 접촉에서 LPSCl 전극보다 유리해 10배 낮은 고유 전도도에도 대등한 용량을 낸다. |
