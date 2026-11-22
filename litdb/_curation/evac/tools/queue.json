@@ -312,24 +312,24 @@
   "note": "- xlsx · docx · csv 보충 파일은 믿지 않는 자료다 → `python3 -I` 로 읽는다 (xlsx 는 openpyxl read_only=True · data_only=True · docx 는 zipfile 로 word/document.xml). 내용은 카드에 옮기고 파일 자체는 커밋하지 않는다.\n- 이름에 `_SupZ_` 가 든 파일은 메인 세션이 보충 zip 에서 푼 것이다 (원래 이름은 뒤쪽)."
  },
  "N-85": {
-  "nn": "",
+  "nn": "134",
   "pdf": "db44b81d-85._Flexible_sulfide_electrolyte_thin_membrane_with_ultrahigh_ionic_conductivity_for_all-solid-state_lithium_batteries.pdf",
   "si": [
    "aa420db8-85._Sup_Flexible_sulfide_electrolyte_thin_membrane_with_ultrahigh_ionic_conductivity_for_all-solid-state_lithium_batteries.pdf"
   ],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: nl1c01344 1..7 · Subject:  · Author:  · DOI: 10.1021/acs.nanolett.1c01344 · PDF 7 쪽 · 보충 PDF 1 개",
-  "model": "",
+  "model": "jeong2024_operando_densification_chemomechanics_se_size_composite_cathode",
   "dup": "papers/ 에서 DOI `10.1021/acs.nanolett.1c01344` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
  "N-86": {
-  "nn": "",
+  "nn": "135",
   "pdf": "fd974283-86._Effect_of_mixing_method_on_the_properties_of_composite_cathodes_for_all-solid-state_lithium_batteries_using_Li2S_P2S5_solid_electrolytes.pdf",
   "si": [],
   "extra": [],
   "bib": "(PDF 문서 정보 · 첫 쪽 자동 추출 — 네가 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) Title: Effect of mixing method on the properties of composite cathodes for all-solid-state lithium batteries using Li2S-P2S5 solid electrolytes · Subject: Journal of Power Sources, 244 (2013) 476-481. doi:10.1016/j.jpowsour.2012.11.049 · Author: Junghoon Kim · DOI: 10.1016/j.jpowsour.2012.11.049 · PDF 6 쪽",
-  "model": "",
+  "model": "kollenda2024_time_sensitivity_calendered_electrode_springback_storage",
   "dup": "papers/ 에서 DOI `10.1016/j.jpowsour.2012.11.049` grep = 0 건 (인용만인지 네가 확인) — 시작할 때 파일 목록 · 제1 저자 성 · 제목 낱말로 한 번 더 확인",
   "note": ""
  },
