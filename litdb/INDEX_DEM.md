@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 355편 · 생성 2026-11-22
+> digest 356편 · 생성 2026-11-22
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -225,7 +225,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 | `zhou2026_gyroid_structural_electrolyte_stiffness_ionic_tradeoff` | 자이로이드 (gyroid) 구조 전해질의 미세구조 해상 (microstructure-resolved) FEM 주기 단위셀 균질화 — 공극률 0.2 → 0.9 에서 정규화 강성 0.599 → 0.0328 (×1/18) · 이온전도 0.0872 → 0.574 (×6.6) · 공극률 60 % 고정에서 축 늘림 (a:b:c) 만 | FEM (COMSOL periodic unit-cell homogenization · linear elast | 2026-10-27 | 🖼 17 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (75편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (76편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -271,6 +271,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `lee2024_shear_force_dry_process_cathode_coverage` | 건식 공정의 전단이 양극 활물질의 SE 피복률을 두 배로 — 무바인더 손혼합 펠릿 30.6 % · 습식 (NdBR) 33.3 % · 건식 (PTFE 반죽 · 밀대 압연) 67.2 % (SEM 2D 단면 화상 처리) → 0.1 C · 60 °C 방전 139.4 · 152.4 · 169.0 mAh g⁻¹ · COMSOL 2D | exp + COMSOL 2D 전기화학 모델 (SEM 2D 피복 화상 처리 · EIS/DRT · GITT ·  | 2026-10-13 | 🖼 32 |
 | `lee2025_corolling_dryprocess_lpscl_ptfe` | Co-rolling dry-process로 만든 박막 LPSCl SSE — robust 계면 + 저압(2 MPa) 작동 — Lee (Nat. Commun. 2025) | exp | 2026-06-24 | 🖼 6 |
 | `lee2025_dual_fibrous_ptfe_dry_electrode` | Dual-fibrous PTFE (fibre + rope) 로 균일·후막 건식전극 — Kwon-Hyung Lee / Tae-Hee Kim / Gyujin Song (Energy Environ. Sci. 2025) | exp | 2026-09-04 | 🖼 33 |
+| `lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode` | PTFE 건식 후막 흑연 음극에 PVP 0.5 wt% 를 더한 이원 바인더 (96 : 1 : 3 + PVP · 막자 반죽 · 압연 · 93 µm · 1.5 g/cc) — 반쪽 셀 ICE 85.1 → 92.4 % · 1 사이클 뒤 두께 93 → 112 (DG) / 98 µm (DG-P) · 전극 국소 탄성률 75.00 /  | experiment (PTFE dry process + PVP 이원 binder · planetary 예비  | 2026-11-22 | 🖼 77 |
 | `lee2026_li_underlayer_primer_free_dry_prelithiated_thick_anode` | PTFE 건식 후막 Si/흑연 음극 (96 : 1 : 3 · 2.1 g cm⁻³ · ≈63 µm · 13.5 mg cm⁻²) 을 SBR 프라이머 Cu 대신 Li 6.5 µm 를 입힌 Cu 박 (Li/Cu) 위에 라미네이트하면 박리는 비슷하게 남고 (≈3.45 vs ≈3.85 gf/mm [판독]) 계면 저항은 절반 (≈0. | exp (PTFE binder dry process 건식 후막 Si/흑연 음극 · Li/Cu 밑층 = 프라이 | 2026-10-13 | 🖼 35 |
 | `lippke2023_dem_drying_structure_formation_lib` | 습식 슬러리 건조(drying) 중의 전극 구조형성을 DEM으로 — CFD 없이 유체를 4개 대리모델(부력·Stokes·윤활·모세관)로 갈음하고, 하강하는 가상 액면(fluid level)의 모세관력이 입자를 끌어내려 자립 골격을 만든다 · 공정스케일 1D 건조기 모델과 반복 양방향 커플링 · 4개 areal loadin | DEM (유체-대리 건조; Hertz–Mindlin + Hamaker vdW + Kroupa 윤활 + Bre | 2026-09-19 | 🖼 9 |
 | `lischka2025_dem_eirich_intensive_mixer_dry_mixing` | Eirich 집약형 실험실 믹서(EL1.0 / EL0.1) 안의 Li-ion 양극 건식 혼합을 DEM 으로 — coarse-graining(CGF 200) + JKR 점착 + cohesion-number 로 γ 를 입경에 맞춰 재계산 + 믹싱툴 소비전력 실험 검증, 그리고 "전단이 아니라 툴과의 충돌이 카본블랙 분쇄의 지 | DEM (EDEM 2022.3, coarse-grained CGF 200 + JKR cohesion, coh | 2026-09-19 | 🖼 21 |

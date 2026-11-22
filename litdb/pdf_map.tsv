@@ -638,3 +638,7 @@ ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size control of su
 #   ⚠ 크롭 58 장 = 도구 9 (그림 1–9 · 전부 다시 자름: 래스터 이미지 합 + 6 pt · 캡션 칸에 다음 본문이 섞였음) + 손 49 (패널 23 · 식 7 · 근거 문단 19) + digitized.csv 198 행 — --inbox --run 으로 다시 뽑지 말 것
 park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical_effect_of_active_material_on_electrode_tortuosity
 park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical effect of active material on electrode tortuosity
+# ── PTFE 건식 후막 흑연 음극 + PVP 0.5 wt% 이원 바인더 (96 : 1 : 3 · 93 µm · 1.5 g/cc) · ICE 85.1 → 92.4 % · LiClO₄ 대조 · NCM811 전셀 9.9 mAh/cm² (Lee · Son · Han … Lee · Ryu · Choi · Chem. Eng. J. 503 (2025) 158271) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 77 장 = 도구 17 (전부 다시 자름: 래스터 사각 + 6 pt · 도구 상자가 쪽 폭 · 캡션 넷 오염 · 잘림) + 손 60 (SI 표 3 · 패널 38 · 근거 문단 19) + digitized.csv 96 행 — --inbox --run 으로 다시 뽑지 말 것
+lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode_interface-stabilizing_dry_process_employing_a_binary_binder
+lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode interface-stabilizing dry process employing a binary binder
