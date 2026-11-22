@@ -1,0 +1,9 @@
+{
+  "proposal_only": true,
+  "finding": "F8-R01",
+  "severity": "P3",
+  "proposed_status": "claimed_fixed",
+  "scope": "기존 두 입자 14개 관측의 범위 설명 정정",
+  "basis": "원 코드의 고착·양방향 미끄러짐과 독립 검토의 정확한 전환점 4개를 분리해 표기",
+  "independent_review_of_wording_fix": false
+}

@@ -1,0 +1,33 @@
+{
+  "review_pin": "841da0d480c778e807c8201c1b6b836ae41415c4",
+  "calculation_pin": "2cf17b1df57396ef01505a72641e01b19629bed5",
+  "input_packet": {
+    "sha256": "a858ccae09b54aff58471dc2f4208d98738c2fbc3d72043b92a94c093428a123",
+    "members": 47,
+    "verified_manifest_entries": 46
+  },
+  "evidence_packet": {
+    "name": "EVIDENCE_SUYOUNG_F8_841da0d480c7_20261122.zip",
+    "sha256": "7bd2ba0896eab51a20d83123eb145eaa2dcdae4615564a3cc6a145452d567cb3",
+    "bytes": 46000,
+    "members": 16,
+    "verified_manifest_entries": 15
+  },
+  "verdict": {
+    "name": "FINAL_REVIEW_SUYOUNG_F8_841da0d480c7_20261122.md",
+    "sha256": "d32dc3acdec955ef81efd6d667b330c6c68384220743618c33d9173b15d236d0",
+    "matches_evidence_member": true
+  },
+  "q1": "ACCEPTED_LIMITED",
+  "q2": "ACCEPTED_LIMITED",
+  "finding": "F8-R01",
+  "severity": "P3",
+  "original_two_body_observations": 14,
+  "original_exact_switch_observations": 0,
+  "independent_two_body_observations": 36,
+  "independent_exact_switch_subset": 4,
+  "five_body_example": "UNRESOLVED_WITH_ADMISSIBLE_SOLUTION",
+  "input_velocity_preserved_on_failure": true,
+  "u6_qualified": false,
+  "stage3_go": false
+}
