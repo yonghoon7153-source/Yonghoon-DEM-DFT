@@ -1093,10 +1093,12 @@ def a5_c2_confirmed(x):
     행 ≥ 1 끊김 기록 (killed). c2 가 없음 · 준비만 · 끝 기록 없음 · 0 스텝 중단 · SCF 미확인 · 재시작 미이행 · 설정 · 무결성 실패면 c2 의 주 기준이 미정이라 c1 보조를 쓰지 않는다."""
     if not isinstance(x, dict) or x.get("a5_stage") != "c2":
         return False
+    n = x.get("osz_rows")
+    if not (isinstance(n, int) and not isinstance(n, bool) and n >= 1):
+        return False                               # 행 수가 정수 ≥ 1 이 아니면 어떤 끝도 확인된 끝이 아니다 (RUN_FAILED 포함 · Codex EN P2)
     if x.get("status") in ("SCF_NOT_CONVERGED", "RUN_FAILED"):
         return True
-    n = x.get("osz_rows")
-    return x.get("status") == "INCOMPLETE_ATTEMPT" and x.get("killed") is True and isinstance(n, int) and not isinstance(n, bool) and n >= 1
+    return x.get("status") == "INCOMPLETE_ATTEMPT" and x.get("killed") is True
 
 
 def adopt_a5(prev, a5, area_A2):
@@ -2395,7 +2397,7 @@ def _selftest():
     uw = lambda uE: uE * EV_J / (AR * A2_M2)
 
     def att5(st, status, toten=-1000.0, uE=None, n=400, comp="OK"):
-        r = {"a5_stage": st, "status": status, "TOTEN_eV": toten, "E_sigma0_eV": toten, "Edisp_eV": -56.0, "run_id": "20261121T000000-1-1"}
+        r = {"a5_stage": st, "status": status, "TOTEN_eV": toten, "E_sigma0_eV": toten, "Edisp_eV": -56.0, "run_id": "20261121T000000-1-1", "osz_rows": n}
         if uE is not None:
             r.update(secondary={"n_steps": n, "u_E_eV": uE, "W1_range_eV": uE, "mean_shift_eV": 0.0}, completeness=comp)
         return r
@@ -2451,6 +2453,17 @@ def _selftest():
         ck(r_.get("adopted") == "a5_c1" and r_.get("a5_rule") == "secondary", f"개정 5 해석: {lab_} (확인된 끝) → c1 보조 채택")
     ck(a5_c2_confirmed(kil_(30)) and not a5_c2_confirmed(kil_(True)) and not a5_c2_confirmed({**kil_(30), "a5_stage": "c1"}) and not a5_c2_confirmed(None),
        "⛔음성 a5_c2_confirmed: 행 수가 정수 ≥ 1 · 단 c2 일 때만")
+    # Codex EN P2: 수집기의 독립 재검사 — RUN_FAILED · SCF_NOT_CONVERGED 도 행 수가 정수 ≥ 1 이어야 확인된 끝 (검사기가 정상 JSON 을 내면 0 행이 먼저 걸리지만 손댄 기록은 아니다)
+    rf_ = att5("c2", "RUN_FAILED")
+    for lab_, c2_ in (("RUN_FAILED · 행 0", {**rf_, "osz_rows": 0}), ("RUN_FAILED · 행 수 결측", {k: v for k, v in rf_.items() if k != "osz_rows"}),
+                      ("RUN_FAILED · 행 수 True", {**rf_, "osz_rows": True}), ("RUN_FAILED · 행 수 '30' (글자)", {**rf_, "osz_rows": "30"}),
+                      ("SCF_NOT_CONVERGED · 행 0", {**att5("c2", "SCF_NOT_CONVERGED"), "osz_rows": 0}), ("끊김 · 행 수 결측", {k: v for k, v in kil_(30).items() if k != "osz_rows"})):
+        r_ = adopt_a5(prev4, {"status": "NO_PRIMARY_VALUE", "attempts": {"c1": c1s_, "c2": c2_}}, AR)
+        ck(not a5_c2_confirmed(c2_) and r_.get("adopted") is None and "확인된 끝이 아니다" in str(r_.get("a5_secondary_refused", {}).get("c1")),
+           f"⛔음성 Codex EN P2: c2 {lab_} → 확인된 끝 아님 · c1 보조 자동 채택 없음 — {r_.get('adopted')}")
+    ck(a5_c2_confirmed({**rf_, "osz_rows": 7}), "Codex EN P2 양성 대조: c2 RUN_FAILED · 행 7 (정수 ≥ 1) → 확인된 끝")
+    for st_ in ("SCF_UNVERIFIED", "RESTART_NOT_HONOURED", "KILLED_RECORD_MISMATCH"):
+        ck(not a5_c2_confirmed({**kil_(30), "status": st_}), f"⛔음성 Codex EN P0: 끊긴 c2 의 원문 · 기록 모순 ({st_} · killed · 행 30) → 확인된 끝 아님")
     # 리뷰 P0-2(d): c 단 하나라도 재시작 미이행이면 검사기 상태가 OK 여도 자동 채택 없음
     for lab_, atts_ in (("c1 재시작 미이행 · c2 OK", {"c1": att5("c1", "RESTART_NOT_HONOURED"), "c2": att5("c2", "OK")}),
                         ("c1 OK · c2 재시작 미이행", {"c1": att5("c1", "OK"), "c2": att5("c2", "RESTART_NOT_HONOURED")})):

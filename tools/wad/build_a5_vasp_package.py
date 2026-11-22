@@ -612,12 +612,23 @@ if ! mkdir "$LOCK" 2>/dev/null; then
 fi
 printf '%s %s\n' "$HOST" "$$" > "$LOCK/owner" || { rm -rf "$LOCK"; echo "⛔ 잠금 주인을 적지 못했다"; exit 2; }
 trap 'rm -rf "$LOCK"' EXIT; trap 'exit 143' TERM; trap 'exit 129' HUP; trap 'exit 130' INT
-# ── 끝난 사다리면 아무것도 띄우지 않는다 (리뷰 P1-1) ──
+# ── 끝난 사다리면 아무것도 띄우지 않는다 (리뷰 P1-1) · 보낼 묶음이 그 끝 기록을 담았는지 본다 (Codex EN P1 — 중간 PACK_ONLY 묶음 · 끝 포장 실패 뒤) ──
+ret_has_final(){ # a5_return.tgz 가 .sha256 (한 줄 · 그 이름) 과 맞고, 그 안의 run/final.json 이 지금 run/final.json 과 바이트로 같으면 0
+  [ -f a5_return.tgz ] && [ -f a5_return.tgz.sha256 ] || return 1
+  [ "$(awk 'END { print NR }' a5_return.tgz.sha256 2>/dev/null)" = 1 ] && grep -qxE '[0-9a-f]{64}  a5_return\.tgz' a5_return.tgz.sha256 || return 1
+  sha256sum -c --status a5_return.tgz.sha256 2>/dev/null || return 1
+  tar xzf a5_return.tgz -O run/final.json 2>/dev/null | cmp -s - run/final.json
+}
 if [ -f run/final.json ]; then
   fc=$(grep -o '"code": [0-9]*' run/final.json | head -1 | grep -o '[0-9]*$')
   log "■ 다시 돌림 — 이 사다리는 이미 끝났다: $(tr -d '\n' < run/final.json | cut -c1-240)"
-  echo "  아무것도 띄우지 않는다 · 보낼 것은 a5_return.tgz + .sha256 그대로 (포장만 다시: PACK_ONLY=1 bash run_a5.sh)"
-  case "$fc" in 0|1|5|6|8) exit "$fc";; *) echo "⛔ run/final.json 의 코드 '$fc' 를 읽을 수 없다 — 연락"; exit 2;; esac
+  case "$fc" in 0|1|5|6|8) ;; *) echo "⛔ run/final.json 의 코드 '$fc' 를 읽을 수 없다 — 연락"; exit 2;; esac
+  if ! ret_has_final; then
+    log "⛔ a5_return.tgz 가 없거나 · sha256 이 맞지 않거나 · 이 끝 기록 (run/final.json) 을 담지 않았다 — 옛 묶음을 보내지 않는다"
+    echo "⛔ 반송 묶음이 끝 기록과 맞지 않는다 (종료 4) — 계산은 다시 돌리지 말고 PACK_ONLY=1 bash run_a5.sh 로 포장만 다시"; exit 4
+  fi
+  echo "  아무것도 띄우지 않는다 · 보낼 것은 a5_return.tgz + .sha256 그대로 (sha256 · 끝 기록 포함 확인 · 포장만 다시: PACK_ONLY=1 bash run_a5.sh)"
+  exit "$fc"
 fi
 [[ "$(up)" =~ ^[0-9]+$ ]] || { echo "⛔ /proc/uptime 을 읽을 수 없다 — 벽시계 장부는 단조 시계로 잰다 (Linux)"; exit 2; }
 [ -n "${VASP_CMD:-}" ] || { echo "⛔ VASP_CMD 를 주세요 (예: mpirun -np 64 vasp_std)"; exit 2; }        # \${VAR:?} 는 1 로 끝난다 — 1 은 '값 없음' 이다 (종료 코드가 겹치지 않게)
@@ -768,6 +779,33 @@ run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더
 
 # ── 단의 갈래 (개정 5 해석 1 · 사용자 2026-11-20 — 러너와 검사기가 같은 순서로 본다) ──
 var_of(){ grep -o '"attempt": "[^"]*"' "$1/attempt.start" 2>/dev/null | head -1 | sed 's/.*: "//; s/"$//'; }
+kf5(){ grep -o "\"$2\": \"[^\"]*\"" "$1" 2>/dev/null | awk 'NR == 1 { v = $0 } END { if (NR == 1) { sub(/^"[^"]*": "/, "", v); sub(/"$/, "", v); print v } }'; }   # 한 줄 JSON 기록의 문자열 필드 ($1 파일 · $2 키 · 두 번 나오면 빈칸)
+ki5(){ grep -oE "\"$2\": [0-9]+[,}]" "$1" 2>/dev/null | awk 'NR == 1 { v = $0 } END { if (NR == 1) { sub(/^"[^"]*": /, "", v); sub(/[,}]$/, "", v); print v } }'; }    # 같은 기록의 정수 필드 (따옴표 없음 · 뒤가 , 또는 } · 두 번 나오면 빈칸)
+killed5(){ # $1 시도 폴더 · $2 단 · $3 행 수 → "-" (맞음) 또는 "상태 행수 사유" — 끊긴 시도도 원문에 남은 증거를 본다 (Codex EN P0 · P1 — 검사기 killed_problems 와 같은 순서):
+  #   ① 행 머리 — 그 단의 허용 머리 밖이면 SCF_UNVERIFIED ② c1 · c2 재시작 원문 — OUTCAR ISTART 1 job · ICHARG 0 charge · 'WAVECAR not read' 없음 · 등록부 문구 ·
+  #      NKPTS·NBANDS·ENCUT = 시작점 머리 (끝 기록이 없어 sha 셋은 못 본다 · 시작 복사본 sha 는 띄우기 전에 확인했다) — 아니면 RESTART_NOT_HONOURED
+  #   ③ killed.json — 한 줄 꼴 · 잡 · 단 · run_id = attempt.start · osz_rows = 지금 행 수 · wall_s 초 · recorded_s ≥ 시작 시각 — 아니면 KILLED_RECORD_MISMATCH
+  local d=$1 st=$2 n=$3 g why is ic f=$1/killed.json t0 rs
+  g=$(hdr_gate "$d" "$(stage_hdr "$st")"); why=${g#* }
+  { [ -n "$g" ] && [ "$why" = - ]; } || { echo "SCF_UNVERIFIED $n ${why:-row_gate_unreadable}"; return; }
+  case "$st" in c1|c2)
+    is=$(grep -aE '^[[:space:]]*ISTART *= *[0-9]+[[:space:]]+job' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ISTART *= *[0-9]+' | grep -oE '[0-9]+$')
+    ic=$(grep -aE '^[[:space:]]*ICHARG *= *[0-9]+[[:space:]]+charge' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ICHARG *= *[0-9]+' | grep -oE '[0-9]+$')
+    { [ "$is" = 1 ] && [ "$ic" = 0 ]; } || { echo "RESTART_NOT_HONOURED $n istart_${is:-NA}_icharg_${ic:-NA}"; return; }
+    ! grep -aq "WAVECAR not read" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null || { echo "RESTART_NOT_HONOURED $n wavecar_not_read"; return; }
+    grep -aqE -e "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null || { echo "RESTART_NOT_HONOURED $n no_restart_phrase"; return; }
+    { [ "$(out_num "$d" NKPTS)" = "${SP_NK:-x}" ] && [ "$(out_num "$d" NBANDS)" = "${SP_NB:-x}" ] && enc_eq "$(out_num "$d" ENCUT)" "${SP_EN:-x}"; } \
+      || { echo "RESTART_NOT_HONOURED $n dims_ne_start_head"; return; };;
+  esac
+  t0=$(ki5 "$d/attempt.start" t_start); rs=$(ki5 "$f" recorded_s)
+  { [ "$(awk 'END { print NR }' "$f" 2>/dev/null)" = 1 ] && grep -qx '{"job": ".*}' "$f" 2>/dev/null; } || { echo "KILLED_RECORD_MISMATCH $n killed_json_form"; return; }
+  [ "$(kf5 "$f" job)" = "$JOB" ] && [ "$(kf5 "$f" rung)" = "$st" ] || { echo "KILLED_RECORD_MISMATCH $n job_or_rung"; return; }
+  [ -n "$(kf5 "$d/attempt.start" run_id)" ] && [ "$(kf5 "$f" run_id)" = "$(kf5 "$d/attempt.start" run_id)" ] || { echo "KILLED_RECORD_MISMATCH $n run_id"; return; }
+  [ "$(kf5 "$f" osz_rows)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows_$(kf5 "$f" osz_rows)"; return; }
+  secs_ok "$(kf5 "$f" wall_s)" || { echo "KILLED_RECORD_MISMATCH $n wall_s"; return; }
+  { [ -n "$t0" ] && [ -n "$rs" ] && [ "$rs" -ge "$t0" ]; } 2>/dev/null || { echo "KILLED_RECORD_MISMATCH $n recorded_s"; return; }
+  echo -
+}
 gate5(){ # $1 시도 폴더 · $2 단 → "갈래 상태 행수 사유" (빈칸 없는 낱말 넷)
   #   NEW 띄울 차례 · WAIT5 끊김 (끝 기록 없음) · ZERO 전자 반복행 0 (멈춤 7) · ENV 다른 VASP 빌드 (끝 6) · REVIEW 1저자 (끝 8) · BAD2 이 러너가 띄운 시도가 아님 ·
   #   OK 주 기준 수렴 · NEXT 다음 단 (SCF_NOT_CONVERGED · 행 ≥ 1 실행 실패 · 행 ≥ 1 끊김 기록)
@@ -789,6 +827,7 @@ gate5(){ # $1 시도 폴더 · $2 단 → "갈래 상태 행수 사유" (빈칸 
   if [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then echo "ENV VERSION_MISMATCH $n vasp_build"; return; fi
   [ "$n" -ge 1 ] 2>/dev/null || { echo "REVIEW KILLED_NO_ROWS 0 -"; return; }
   e=$(echo5 "$d" "$var"); [ "$e" = "-" ] || { echo "REVIEW SETTINGS_ECHO $n $e"; return; }
+  e=$(killed5 "$d" "$st" "$n"); [ "$e" = "-" ] || { echo "REVIEW $e"; return; }
   echo "NEXT KILLED $n -"
 }
 rc_of(){ grep -o '"rc": -\{0,1\}[0-9]*' "$1/attempt.json" 2>/dev/null | head -1 | grep -o -- '-\{0,1\}[0-9]*$'; }
@@ -856,7 +895,8 @@ SS=""; SPF=""; S=""; SPH=""; SP_NK=""; SP_NB=""; SP_EN=""; SPWHY="-"
 # A5
 read -r gk gs gn gw <<< "$(gate5 "$A" A5)"
 if [ "$gk" = NEW ]; then
-  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] || fin5 8 REVIEW "A5 가 없는데 뒤 단 기록이 있다 (시작점 · c1 · c2)"
+  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null \
+    || fin5 8 REVIEW "A5 가 없는데 뒤 단 기록이 있다 (시작점 · c1 · c2 · run_aborted 의 c 단)"
   cap_gate A5
   if [ "$W0OK" = 1 ]; then var=A5c; ws=$W0_WAVECAR; we=$W0_SHA; else var=A5f; ws=""; we=""; fi
   log "▶ A5 ($var · LDIPOL 끔 · MAXMIX 200 · AMIX 0.1 · AMIN 0.01 · NELM 300)"
@@ -872,7 +912,8 @@ if [ -f run/start_point.json ]; then
   sp_load || fin5 8 REVIEW "시작점 기록 (run/start_point.json) 의 형식 · 경로가 맞지 않는다"
   log "시작점 $SPF (기록 · sha $SS · 다시 정하지 않는다)"
 else
-  { [ ! -e "$C1" ] && [ ! -e "$C2" ]; } || fin5 8 REVIEW "c 단이 있는데 시작점 기록이 없다"
+  { [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null; } \
+    || fin5 8 REVIEW "c 단 (run/ 또는 run_aborted/) 이 있는데 시작점 기록이 없다 — 시작점은 첫 c 단 전에 한 번만 쓴다 (유실 뒤 다시 정하지 않는다 · Codex EN P1)"
   why=$(elig5 "$A"); e=$?
   case "$e" in
     0) SPF=A5; S=$A/WAVECAR; SS=$(wsha "$A/WAVECAR.info" sha256); SPH=$(info_head "$A/WAVECAR.info");;
@@ -890,7 +931,7 @@ fi
 # c1
 read -r gk gs gn gw <<< "$(gate5 "$C1" c1)"
 if [ "$gk" = NEW ]; then
-  [ ! -e "$C2" ] || fin5 8 REVIEW "c1 이 없는데 c2 가 있다"
+  [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c2_*" > /dev/null || fin5 8 REVIEW "c1 이 없는데 c2 (run/ 또는 run_aborted/) 가 있다"
   cap_gate c1
   if [ ! -f run/start_point.json ]; then
     sp_write || stop5 3 "시작점 기록 (run/start_point.json) 쓰기 실패"
@@ -1120,11 +1161,15 @@ W0_WAVECAR=<보존 ⓐ 절대 경로 또는 none> VASP_CMD="mpirun -np 64 vasp_s
 - 누적 상한 {CAP_H:g} h 를 넘으면 다음 단을 띄우지 않고 끝냅니다 (종료 5 · 1저자).
 
 ## 3. 다음 단으로 가는 조건 — 개정 5 해석 1 (사용자 2026-11-20)
-- 다음 단은 지금 단이 **SCF_NOT_CONVERGED** 이거나 **전자 반복행 ≥ 1 인 실행 실패** (끊김을 `--killed` 로 기록한 것 포함) 로 끝났을 때만 띄웁니다.
-- **전자 반복행 0** → 멈춤 (종료 7 · 다음 단을 쓰지 않습니다): 스케줄러 기록이 있는 0 스텝 인프라 중단이면 `--infra-abort` 로 기록한 뒤 다시 (같은 단부터) ·
+- **A5 → c1 (시작점 고르기)**: A5 가 수렴 · 미수렴 · 전자 반복행 ≥ 1 인 실행 실패 (끊김을 `--killed` 로 기록한 것 포함) 로 끝나면 c1 을 띄웁니다.
+  A5 의 결과는 c1 · c2 의 **시작점**만 정합니다 — A5 가 자격이 있으면 (정상 종료 · 수렴 또는 미수렴 · WAVECAR 온전) A5 끝 WAVECAR, 아니면 확인된 보존 ⓐ 의 복사본 ·
+  둘 다 아니면 닫습니다 (종료 1 · 값 없음). 시작점은 c1 을 처음 띄우기 전에 `run/start_point.json` 에 한 번 쓰고 다시 정하지 않습니다 (이 파일을 지우거나 옮기지 마세요).
+- **c1 → c2 (다음 단 조건)**: c1 이 주 기준 수렴이면 끝입니다 (종료 0 · c2 를 띄우지 않습니다). c2 는 c1 이 **SCF_NOT_CONVERGED** 이거나
+  **전자 반복행 ≥ 1 인 실행 실패** (끊김을 `--killed` 로 기록한 것 포함) 로 끝났을 때만 띄웁니다.
+- 어느 단이든 **전자 반복행 0** → 멈춤 (종료 7 · 다음 단을 쓰지 않습니다): 스케줄러 기록이 있는 0 스텝 인프라 중단이면 `--infra-abort` 로 기록한 뒤 다시 (같은 단부터) ·
   아니면 (실행 파일 · 모듈 · 입력 문제) 고치기 전에 연락 주세요.
-- **재시작 미이행 · SCF 미확인 · 설정 에코 다름** → 멈춤 (종료 8 · 끝 · 1저자 검토).
-- A5 가 전자 반복행은 있는데 자격 미달이면 (실행 실패 · WAVECAR 이상) 개정 5 그대로 — 보존 ⓐ 가 확인돼 있으면 c1 · c2 를 그 복사본에서 · 아니면 닫습니다 (종료 1).
+- **재시작 미이행 · SCF 미확인 (그 단의 것이 아닌 행 머리 포함) · 설정 에코 다름 · 끊김 기록 (killed.json) 이 그 시도와 다름** → 멈춤 (종료 8 · 끝 · 1저자 검토).
+  `--killed` 로 기록한 끊긴 시도에도 같은 원문 검사를 합니다 (끊겼다고 검사를 건너뛰지 않습니다).
 
 ## 4. 종료 코드
 | 코드 | 뜻 | 할 일 |
@@ -1140,6 +1185,7 @@ W0_WAVECAR=<보존 ⓐ 절대 경로 또는 none> VASP_CMD="mpirun -np 64 vasp_s
 | 8 | {EXIT_CODES['8']} | 반송하고 1저자 결정을 기다림 |
 
 - **끝 (0 · 1 · 5 상한 · 8 · 돈 뒤의 6 — VASP 빌드 다름) 뒤에는 다시 돌려도 아무것도 띄우지 않습니다** (run/final.json 을 찍고 같은 코드로 끝) — 포장만 다시 하려면 `PACK_ONLY=1 bash run_a5.sh`.
+  다시 돌렸을 때 `a5_return.tgz` 가 없거나 · sha256 이 안 맞거나 · 그 끝 기록 (run/final.json) 을 담지 않았으면 (중간에 만든 옛 묶음) 종료 4 입니다 — `PACK_ONLY=1 bash run_a5.sh` 로 포장만 다시 하고 그 묶음을 보내 주세요.
 - 보내는 것: `a5_return.tgz` + `a5_return.tgz.sha256` (`sha256sum -c a5_return.tgz.sha256` 통과 뒤). WAVECAR · CHGCAR · POTCAR 본문은 담지 않습니다.
 
 ## 5. 기록 명령 (계산이 돌고 있지 않을 때)
@@ -1285,6 +1331,86 @@ def _head_dims(head):
     return (hd[3], hd[4], hd[5]) if len(hd) >= 6 else None
 
 
+KILLED_PROBLEMS = ("SCF_UNVERIFIED", "RESTART_NOT_HONOURED", "KILLED_RECORD_MISMATCH")    # 끊긴 시도에서 원문 · 기록이 모순일 때 (러너 killed5 · Codex EN P0 · P1)
+SECS_RE = re.compile(r"(0|[1-9][0-9]{0,8})")                                                  # 러너 secs_ok 와 같은 꼴 (손으로 넣는 초)
+ONE_LINE_REC = re.compile(r'\{"job": ".*\}')                                                  # 러너가 printf 로 쓴 한 줄 기록 (killed.json · attempt.start)
+
+
+def one_line_record(p):
+    """러너가 printf 로 쓴 한 줄 JSON 기록 → dict · 꼴이 아니면 None. 러너 killed5 와 같은 기준 (한 줄 — 끝 줄바꿈은 있어도 없어도 ·
+    '{"job": "' 로 시작해 '}' 로 끝남) + JSON 객체 + 같은 키 두 번 없음 (러너 kf5 · ki5 는 두 번 나온 키를 빈칸으로 읽는다 — 검사기가 더 엄하다)."""
+    raw = R2._read_raw(p)
+    if raw is None:
+        return None
+    body = raw[:-1] if raw.endswith("\n") else raw
+    if "\n" in body or not ONE_LINE_REC.fullmatch(body):
+        return None
+
+    def nodup(pairs):
+        d = {}
+        for k, v in pairs:
+            if k in d:
+                raise ValueError(f"같은 키 두 번: {k}")
+            d[k] = v
+        return d
+    try:
+        x = json.loads(body, object_pairs_hook=nodup)
+    except ValueError:
+        return None
+    return x if isinstance(x, dict) else None
+
+
+def dims_match(dims, sd):
+    """c 단 OUTCAR NKPTS · NBANDS · ENCUT (outcar_dims) 가 시작 WAVECAR 머리 (_head_dims) 와 같은가 — 러너 stat5 · killed5 의 out_num · enc_eq 와 같은 기준 (ENCUT ±0.05 · 숫자 꼴만)."""
+    try:
+        return (sd is not None and dims.get("NKPTS") == sd[0] and dims.get("NBANDS") == sd[1]
+                and all(re.fullmatch(r"[0-9]+(\.[0-9]+)?", str(x)) for x in (dims.get("ENCUT"), sd[2])) and abs(float(dims["ENCUT"]) - float(sd[2])) < 0.05)
+    except (TypeError, ValueError):
+        return False
+
+
+def killed_problems(job, attdir, stage, osz, n, registry=None, src_head=None):
+    """끊긴 시도 (killed.json · attempt.json 없음 · 행 ≥ 1 · 설정 에코 맞음) → (상태, 사유) | None — 러너 killed5 와 같은 순서 (Codex EN P0 · P1):
+    ① 행 머리 — 그 단의 허용 머리 밖이면 SCF_UNVERIFIED ② c1 · c2 재시작 원문 — OUTCAR ISTART 1 job · ICHARG 0 charge · 'WAVECAR not read' 없음 ·
+    등록부 문구 · NKPTS·NBANDS·ENCUT = 시작점 머리 — 아니면 RESTART_NOT_HONOURED ③ killed.json — 한 줄 꼴 · 잡 · 단 · run_id = attempt.start ·
+    osz_rows = 지금 행 수 · wall_s 초 · recorded_s ≥ 시작 시각 — 아니면 KILLED_RECORD_MISMATCH.
+    ⚠ 못 하는 것: 끝 기록이 없어 c 단의 시작 · 끝 WAVECAR sha 셋 (WAVECAR.info) 은 못 본다 — 시작 복사본 sha 는 러너가 띄우기 전에 확인했지만 그 확인의 기록은 없다."""
+    _, bad = row_gate(osz, stage)
+    if bad:
+        return "SCF_UNVERIFIED", f"끊긴 {stage} 의 OSZICAR 행 머리 {bad} — 그 단의 허용 머리 ({'/'.join(ROW_HDR[stage])}) 밖 · 원문 모순 → 1저자 (자동 채택 없음)"
+    if stage in ("c1", "c2"):
+        out_text = R2._read(os.path.join(attdir, "OUTCAR")) or ""
+        ev = R2.restart_evidence(attdir, out_text)
+        if not (ev["istart"] == "1" and ev["icharg"] == "0"):
+            return "RESTART_NOT_HONOURED", f"끊긴 {stage} OUTCAR ISTART {ev['istart']} · ICHARG {ev['icharg']} — 시작 WAVECAR 를 읽지 않았다 → 1저자 (자동 채택 없음)"
+        if ev["not_read_phrase"]:
+            return "RESTART_NOT_HONOURED", f"끊긴 {stage} 원문에 'WAVECAR not read' → 1저자 (자동 채택 없음)"
+        rx = (registry or {}).get("restart_read_regex") or ""
+        rxbad = R2.restart_regex_problems(rx) if rx else ["등록부 재시작 문구 없음"]
+        if rxbad or re.search(rx, ev["text"], re.M) is None:
+            return "RESTART_NOT_HONOURED", (f"등록부 재시작 regex 형식 {rxbad}" if rxbad else f"등록부 재시작 문구 /{rx}/ 가 끊긴 {stage} OUTCAR·stdout.log 원문에 없다") \
+                + " → 1저자 (자동 채택 없음)"
+        dims, sd = R2.outcar_dims(out_text), _head_dims(src_head)
+        if not dims_match(dims, sd):
+            return "RESTART_NOT_HONOURED", f"끊긴 {stage} OUTCAR NKPTS·NBANDS·ENCUT {dims} ≠ 시작점 머리 {sd} → 1저자 (자동 채택 없음)"
+    k = one_line_record(os.path.join(attdir, "killed.json"))
+    if k is None:
+        return "KILLED_RECORD_MISMATCH", "killed.json 꼴 (한 줄 JSON · '{\"job\": ' 로 시작 · 같은 키 두 번 없음) — 잘렸거나 손댄 기록 → 1저자"
+    s0 = one_line_record(os.path.join(attdir, "attempt.start")) or {}
+    isint = lambda x: isinstance(x, int) and not isinstance(x, bool)
+    if k.get("job") != job["dir"] or k.get("rung") != stage:
+        return "KILLED_RECORD_MISMATCH", f"killed.json 잡 {k.get('job')!r} · 단 {k.get('rung')!r} ≠ 이 시도 ({job['dir']} · {stage})"
+    if not (isinstance(s0.get("run_id"), str) and s0["run_id"]) or k.get("run_id") != s0["run_id"]:
+        return "KILLED_RECORD_MISMATCH", f"killed.json run_id {k.get('run_id')!r} ≠ attempt.start {s0.get('run_id')!r}"
+    if k.get("osz_rows") != str(n):
+        return "KILLED_RECORD_MISMATCH", f"killed.json osz_rows {k.get('osz_rows')!r} ≠ OSZICAR 전자 반복행 {n}"
+    if not (isinstance(k.get("wall_s"), str) and SECS_RE.fullmatch(k["wall_s"])):
+        return "KILLED_RECORD_MISMATCH", f"killed.json wall_s {k.get('wall_s')!r} (10진 정수 초 · 선행 0 없음 · 9 자리 이하)"
+    if not (isint(s0.get("t_start")) and isint(k.get("recorded_s")) and k["recorded_s"] >= s0["t_start"]):
+        return "KILLED_RECORD_MISMATCH", f"killed.json recorded_s {k.get('recorded_s')!r} < attempt.start t_start {s0.get('t_start')!r} (또는 정수가 아니다)"
+    return None
+
+
 def check_attempt5(job, pkgdir, attdir, stage, registry=None, src_sha=None, src_head=None):
     """a5 시도 하나 → 상태 dict. 순서 (러너 gate5 · stat5 와 같다): 실행 기록 결박 → 입력 무결성 → POTCAR 기록 → 판정 (행 수) →
     **행 0 이면 SCF_UNVERIFIED** (모순 · 재시작 확인보다 먼저 — 리뷰 P2(f) · 환경 등급 모순은 conflicts 로 남긴다) → 있는 증거의 모순 (설정 · D3 · POTCAR · 버전) →
@@ -1310,6 +1436,10 @@ def check_attempt5(job, pkgdir, attdir, stage, registry=None, src_sha=None, src_
         if r["killed"]:
             r["echo5"] = dict(zip(("missing", "bad"), echo5(R2._read(os.path.join(attdir, "OUTCAR")) or "",
                                                               _jread(os.path.join(attdir, "attempt.start")).get("attempt"))))
+            if r["osz_rows"] >= 1 and not (r["echo5"].get("missing") or r["echo5"].get("bad")):
+                kp = killed_problems(job, attdir, stage, osz, r["osz_rows"], registry, src_head)
+                if kp:
+                    return done(kp[0], kp[1])
         return done("INCOMPLETE_ATTEMPT", "attempt.json 없음 — " + (
             "전자 스텝 뒤 끊긴 시도 (killed.json — 그 단 소모 · 값 없음)" if r["killed"] else
             "VASP 를 띄웠는데 끝 기록이 없다 (attempt.start 만 — 벽시계 미상)" if r["started"] else "VASP 를 띄우기 전에 멈춘 시도 (준비만)"))
@@ -1414,11 +1544,7 @@ def check_attempt5(job, pkgdir, attdir, stage, registry=None, src_sha=None, src_
                         f"'WAVECAR not read' {ev['not_read_phrase']} · sha 셋) — 자동 채택 없음 · 1저자 검토")
         if not (src_sha and V.HEX64.match(src_sha) and w.get("src_sha256") == src_sha):
             return done("RESTART_NOT_HONOURED", f"{stage} 원본이 정해진 시작 WAVECAR 가 아니다 (기대 {src_sha or '없음'} · 기록 {w.get('src_sha256')}) — 자동 채택 없음 · 1저자 검토")
-        try:
-            dims_ok = (sd is not None and dims.get("NKPTS") == sd[0] and dims.get("NBANDS") == sd[1]
-                       and all(re.fullmatch(r"[0-9]+(\.[0-9]+)?", str(x)) for x in (dims.get("ENCUT"), sd[2])) and abs(float(dims["ENCUT"]) - float(sd[2])) < 0.05)
-        except (TypeError, ValueError):
-            dims_ok = False
+        dims_ok = dims_match(dims, sd)
         if not dims_ok:
             return done("RESTART_NOT_HONOURED", f"{stage} OUTCAR NKPTS·NBANDS·ENCUT {dims} ≠ 시작 WAVECAR 머리 {sd} — 재시작이 온전하지 않다 (병렬 배치가 달라 띠 수가 바뀌었나 ·"
                         " 외주 2차와 같은 64 랭크 · KPAR 2 · NCORE 4) — 자동 채택 없음 · 1저자 검토")
@@ -1536,6 +1662,8 @@ def a5_class(x):
                 return "REVIEW", None
             return "NEXT", None
         return ("WAIT" if x.get("started") else "PREP_ONLY"), None
+    if x.get("killed") and s in KILLED_PROBLEMS:
+        return "REVIEW", None                  # 끊긴 시도의 원문 · 기록 모순 — 러너 gate5 도 멈춤 8 (Codex EN P0 · P1)
     j = x.get("judge") or {}
     if not j:
         return "BLOCKED", None
@@ -1548,6 +1676,30 @@ def a5_class(x):
     if s in ("OK", "SCF_NOT_CONVERGED", "RUN_FAILED"):
         return rv, None
     return rv, f"{s}: {x.get('why', '')}"[:240]
+
+
+def abort_receipt_problem(job, d, stage):
+    """run_aborted/<잡>_<단>_<k> 의 중단 영수증 (infra_abort.json — 러너 --infra-abort 가 한 줄로 쓴다 · --infra-wall 이 wall_s 만 채운다) → 문제 | None
+    (Codex EN P1): 있어야 하고 · 한 줄 꼴 · 잡 · 단 · wall_s 는 초 또는 UNKNOWN · recorded_s 정수 ≥ 그 시도 시작 시각. 영수증이 빠지면 순서 대조가
+    attempt.json 끝 시각으로만 돌아 늦게 쓴 기록을 못 잡는다 — 그래서 필수다."""
+    p = os.path.join(d, "infra_abort.json")
+    if not os.path.lexists(p):
+        return "중단 영수증 (infra_abort.json) 이 없다 — run_aborted 의 시도는 러너 --infra-abort 영수증이 있어야 한다 (그 기록 시각으로 순서를 본다)"
+    x = one_line_record(p)
+    if x is None:
+        return "중단 영수증 (infra_abort.json) 을 읽을 수 없다 (한 줄 JSON 꼴 · 같은 키 두 번 없음)"
+    if x.get("job") != job["dir"] or x.get("rung") != stage:
+        return f"중단 영수증 잡 {x.get('job')!r} · 단 {x.get('rung')!r} ≠ 폴더 ({job['dir']} · {stage})"
+    w = x.get("wall_s")
+    if not (isinstance(w, str) and (w == "UNKNOWN" or SECS_RE.fullmatch(w))):
+        return f"중단 영수증 wall_s {w!r} (10진 정수 초 또는 UNKNOWN)"
+    rs, t0 = x.get("recorded_s"), _jread(os.path.join(d, "attempt.start")).get("t_start")
+    isint = lambda v: isinstance(v, int) and not isinstance(v, bool)
+    if not isint(rs):
+        return f"중단 영수증 기록 시각 recorded_s {rs!r} 가 정수가 아니다"
+    if isint(t0) and rs < t0:
+        return f"중단 영수증 기록 시각 {rs} < 그 시도 시작 {t0}"
+    return None
 
 
 def a5_aborted(job, pkgdir, ret, registry, src_sha, src_head=None):
@@ -1567,7 +1719,11 @@ def a5_aborted(job, pkgdir, ret, registry, src_sha, src_head=None):
             try:
                 R2._started(d)
                 if os.path.isdir(d):
-                    found.append((tag, k, check_attempt5(job, pkgdir, d, m.group(2), registry, src_sha.get(m.group(2)), (src_head or {}).get(m.group(2)))))
+                    x = check_attempt5(job, pkgdir, d, m.group(2), registry, src_sha.get(m.group(2)), (src_head or {}).get(m.group(2)))
+                    rp = abort_receipt_problem(job, d, m.group(2))
+                    if rp:
+                        x["receipt_problem"] = rp
+                    found.append((tag, k, x))
             except OSError as e:
                 found.append((tag, k, R2._unreadable(d, m.group(2), e)))
     return found
@@ -1659,6 +1815,8 @@ def check_return(out, ret, manifest_sha256, registry=None):
     for t_, k_, x_ in aborted:
         if (x_.get("osz_rows") or 0) > 0:
             viol.append(f"{t_} 는 전자 반복행 {x_.get('osz_rows')} 개 — 0 스텝 중단으로 옮길 수 없는 시도다")
+        if x_.get("receipt_problem"):
+            viol.append(f"{t_} {x_['receipt_problem']}")
         if t_.startswith("A5@") and x_.get("variant") and x_["variant"] != want_var:
             viol.append(f"{t_} 변형 {x_['variant']} ≠ ⓪ 판정에 맞는 변형 ({want_var})")
     if len(aborted) > INFRA_MAX:
@@ -1675,6 +1833,13 @@ def check_return(out, ret, manifest_sha256, registry=None):
         if att[s_].get("started"):
             seq.append((s_, att[s_].get("times") or {}))
     viol += order_violations(seq)
+    c_t0 = [tm.get("start") for t_, tm in seq if t_.split("@")[0] in ("c1", "c2") and tm.get("start") is not None]
+    if sp is not None and c_t0:                # 시작점은 첫 c 단 전에 한 번 쓴다 — 유실 뒤 다시 쓴 기록은 첫 c 단보다 늦다 (Codex EN P1)
+        ws_ = sp.get("written_s")
+        if not (isinstance(ws_, int) and not isinstance(ws_, bool)):
+            viol.append(f"시작점 기록 시각 (written_s {ws_!r}) 이 정수가 아니다 — 첫 c 단 전에 썼는지 확인할 수 없다")
+        elif ws_ > min(c_t0):
+            viol.append(f"시작점 기록 written_s {ws_} > 첫 c 단 시작 {min(c_t0)} — 시작점은 첫 c 단 전에 한 번만 쓴다 (유실 뒤 다시 쓴 기록 · Codex EN P1)")
 
     def stop_at(s_, kind, later):
         lat = [x for x in later if present(x)] + (["시작점 기록"] if (s_ == "A5" and sp is not None) else [])
@@ -1771,11 +1936,11 @@ def iv(t, k):
     return v
 inc = open("INCAR").read()
 st = os.path.basename(os.getcwd()).rsplit("_", 1)[1]
-beh = plan.get(st, "conv")
+beh, _, cut = plan.get(st, "conv").partition("@")      # 'beh@N' — 전자 반복행 N 개만 쓰고 끝 기록 없이 (스케줄러에 끊긴 VASP 흉내 · Codex EN 의 7 행 중단)
 nelm = int(iv(inc, "NELM")); lwave = (iv(inc, "LWAVE") or "").upper().strip(".") in ("TRUE", "T")
 ldip = (iv(inc, "LDIPOL") or "").upper().strip(".") in ("TRUE", "T")
 ist_in = int(iv(inc, "ISTART") or 0); ich_in = int(iv(inc, "ICHARG") or 2)
-ist = 1 if (ist_in == 1 and os.path.isfile("WAVECAR") and beh not in ("noread", "istart0")) else 0
+ist = 1 if (ist_in == 1 and os.path.isfile("WAVECAR") and beh not in ("noread", "istart0", "istart0p")) else 0
 ich = ich_in if ist == 1 else 2
 algo = (iv(inc, "ALGO") or "Normal").lower(); ialgo = 58 if algo == "all" else 38
 maxmix = int(iv(inc, "MAXMIX") or -45); amix = float(iv(inc, "AMIX") or 0.4); amin = float(iv(inc, "AMIN") or min(0.1, amix)); tim = float(iv(inc, "TIME") or 0.4)
@@ -1793,7 +1958,7 @@ rows, rc, term = [], 0, True
 def conv_rows(n=30):
     out = [(k, E0 + 0.5 / k ** 2, 1e-3 / k, 1e-4 / k) for k in range(1, n)]
     return out + [(n, E0, -3.1e-8, -1.2e-8)]
-if beh in ("conv", "sda_rows", "dav_rows", "unknown_hdr", "noread", "istart0", "modwav", "badhead", "badecho", "nowav", "nophrase", "d3off"):
+if beh in ("conv", "sda_rows", "dav_rows", "unknown_hdr", "noread", "istart0", "istart0p", "modwav", "badhead", "badecho", "nowav", "nophrase", "d3off"):
     rows = conv_rows()
 elif beh == "noconv":
     rows = [(k, E0 + 0.0003 * (-1) ** k, 2.2e-4 * (-1) ** k, 1e-5) for k in range(1, nelm + 1)]
@@ -1815,6 +1980,8 @@ for idx, (k, e, de, dp) in enumerate(rows):
         de = e - rows[idx - 1][1]
     rmsc = 0.03 if not (beh == "rmsjump" and k == 150) else 30.0
     rr.append((k, e, de, dp, rmsc))
+if cut:
+    rr, term = rr[:int(cut)], False
 osz = open("OSZICAR", "w")
 osz.write("       N       E                     dE             d eps       ncg     rms          rms(c)\n")
 for i, (k, e, de, dp, rmsc) in enumerate(rr):
@@ -1860,7 +2027,7 @@ if term and rr:
           f"  energy  without entropy=  {Et + 0.01:18.8f}  energy(sigma->0) =  {Et + 0.005:18.8f}", " General timing and accounting informations for this job:"]
 open("OUTCAR", "w").write("\n".join(o) + "\n")
 so = [" running on   64 total cores", f" {version}"]
-if ist == 1 and beh != "nophrase":
+if (ist == 1 or beh == "istart0p") and beh != "nophrase":         # istart0p: 문구는 있는데 OUTCAR ISTART 0 (원문끼리 모순 — ISTART 확인만 잡는다)
     so.append(" the WAVECAR file was read successfully")
 open("stdout.log", "w").write("\n".join(so) + "\n")
 if lwave and beh != "nowav" and rr and term:
@@ -1997,6 +2164,10 @@ def _selftest():
                "if [ -n \"${FAKE_CP_FAIL:-}\" ]; then case \"$last\" in *_\"$FAKE_CP_FAIL\"/WAVECAR) echo 'cp: No space left on device' >&2; exit 1;; esac; fi\n"
                f"exec {shutil.which('cp')} \"$@\"\n")
         os.chmod(os.path.join(bind, "cp"), 0o755)
+        _write(os.path.join(bind, "tar"), "#!/bin/bash\n"           # 끝 포장 실패 흉내 (FAKE_TAR_FAIL=1 이면 묶음 만들기 czf 만 실패 · 읽기 xzf · tzf 는 그대로)
+               "if [ -n \"${FAKE_TAR_FAIL:-}\" ] && [ \"${1:-}\" = czf ]; then echo 'tar: write error' >&2; exit 2; fi\n"
+               f"exec {shutil.which('tar')} \"$@\"\n")
+        os.chmod(os.path.join(bind, "tar"), 0o755)
         killer = os.path.join(T, "killer.sh")          # 스케줄러 kill 흉내: 그 단의 VASP 흉내를 끝까지 쓴 뒤 러너 프로세스 묶음 전체를 SIGKILL (attempt.json 없음)
         _write(killer, f"#!/bin/bash\n{py} {fake}; r=$?\ncase \"$(basename \"$PWD\")\" in *_\"${{FAKE_KILL_STAGE:-none}}\") kill -9 -- -$(ps -o pgid= -p $$ | tr -d ' ');; esac\nexit $r\n")
         os.chmod(killer, 0o755)
@@ -2080,7 +2251,7 @@ def _selftest():
         ck(rechk(exs)["status"] == "START_POINT_MISSING", "⛔음성 c1 이 있는데 시작점 기록이 없다 → START_POINT_MISSING (리뷰 P0-2(b))")
         exs = unpack(w1, "s1sp2"); spj = os.path.join(exs, "run", "start_point.json")
         wrec = json.load(open(os.path.join(exs, "run", "w0_check.json")))
-        _write(spj, json.dumps({"from": "W0", "path": w0p, "sha256": w0["sha256"], "head": wrec["head"]}))
+        _write(spj, json.dumps({"from": "W0", "path": w0p, "sha256": w0["sha256"], "head": wrec["head"], "written_s": json.load(open(spj))["written_s"]}))
         rsp = rechk(exs)
         ck(rsp["status"] == "START_POINT_MISMATCH", f"⛔음성 시작점 기록 W0 인데 A5 가 자격 → START_POINT_MISMATCH (규칙과 대조) — {rsp['status']} {rsp.get('why', '')[:80]}")
         _write(spj, "{not json")
@@ -2123,15 +2294,33 @@ def _selftest():
                 for f_ in os.listdir(c2d):
                     if f_ not in ("INCAR", "POSCAR", "KPOINTS"):
                         os.remove(os.path.join(c2d, f_))
-            elif how in ("wait", "killed", "killed0"):
+            elif how in ("wait", "killed", "killed0") or how.startswith("killed_"):
                 tend = json.load(open(os.path.join(c2d, "attempt.json")))["t_end"]
                 os.remove(os.path.join(c2d, "attempt.json"))
                 if how == "killed0":
                     _write(os.path.join(c2d, "OSZICAR"), "       N       E                     dE             d eps       ncg     rms          rms(c)\n")
+                if how == "killed_hdr":                            # 끊긴 c2 의 행 머리가 그 단의 것이 아님 (Codex EN P0 둘째 줄)
+                    oz_ = os.path.join(c2d, "OSZICAR"); _write(oz_, re.sub(r"(?m)^(SDA|CGA):", "XYZ:", open(oz_).read()))
+                if how == "killed_ist0":                           # 끊긴 c2 가 시작 WAVECAR 를 안 읽음 (Codex EN P0 첫 줄)
+                    oc_ = os.path.join(c2d, "OUTCAR"); t_ = open(oc_).read()
+                    t_ = re.sub(r"(?m)^(\s*ISTART =\s*)1(\s+job)", r"\g<1>0\2", t_); _write(oc_, re.sub(r"(?m)^(\s*ICHARG =\s*)0(\s+charge)", r"\g<1>2\2", t_))
                 if how != "wait":
-                    _write(os.path.join(c2d, "killed.json"), json.dumps({"job": JOB, "rung": "c2", "wall_s": "100", "osz_rows": "30", "recorded_s": tend + 1}))
+                    s0_ = json.load(open(os.path.join(c2d, "attempt.start")))
+                    rows_ = row_gate(open(os.path.join(c2d, "OSZICAR")).read(), "c2")[0]
+                    kj_ = {"job": JOB, "rung": "c2", "run_id": s0_["run_id"], "wall_s": "100", "sched_job_id": "s", "cancel_utc": "t", "reason": "r",
+                           "osz_rows": str(rows_), "recorded_utc": "2026-11-22T00:00:00Z", "recorded_s": tend + 1}
+                    kj_.update({"killed_rows": {"osz_rows": str(rows_ - 1)}, "killed_rid": {"run_id": "20261122T000000-1-1"}, "killed_wall": {"wall_s": "0100"},
+                                "killed_early": {"recorded_s": s0_["t_start"] - 1}, "killed_rung": {"rung": "c1"}}.get(how, {}))
+                    txt_ = json.dumps(kj_) + "\n"
+                    if how == "killed_trunc":
+                        txt_ = "{"                                 # 반송본의 killed.json 이 한 글자로 잘림 (Codex EN P1 첫 줄)
+                    elif how == "killed_dup":                          # 틀린 값이 먼저 · 맞는 값이 뒤 — json.loads 는 뒤 값을 받으니 같은 키 거부가 없으면 통과한다 (러너 kf5 는 빈칸)
+                        txt_ = txt_.replace(', "rung"', ', "osz_rows": "1", "rung"')
+                    elif how == "killed_multi":                        # 두 줄 (필드는 다 있고 JSON 으로는 읽힌다 — 한 줄 꼴 확인만 잡는다)
+                        txt_ = txt_.replace(', "reason"', ',\n "reason"')
+                    _write(os.path.join(c2d, "killed.json"), txt_)
             fj_ = os.path.join(exx, "run", "final.json")
-            if how == "killed":
+            if how == "killed" or how.startswith("killed_"):
                 _write(fj_, json.dumps({"code": 1, "state": "NO_PRIMARY", "why": "c2 끊김 (시험)"}))
             elif os.path.exists(fj_):
                 os.remove(fj_)                                      # 끝나지 않은 사다리 (포장만 다시 한 반송)
@@ -2143,6 +2332,15 @@ def _selftest():
         rv_ = s2_variant("killed", "killed"); a_ = adopt(rv_)
         ck(rv_["status"] == "NO_PRIMARY_VALUE" and a_.get("adopted") == "a5_c1" and a_.get("a5_rule") == "secondary",
            f"c1 정체 · c2 행 ≥ 1 끊김 기록 (확인된 끝) → NO_PRIMARY_VALUE · c1 보조 채택 — {rv_['status']} · {a_.get('adopted')}")
+        # Codex EN P0 · P1: 끊긴 c2 의 원문 · 기록 모순은 끊김이라도 버리지 않는다 → 1저자 · c1 보조 자동 채택 없음
+        for how_, want_st in (("killed_hdr", "SCF_UNVERIFIED"), ("killed_ist0", "RESTART_NOT_HONOURED"), ("killed_trunc", "KILLED_RECORD_MISMATCH"),
+                              ("killed_rows", "KILLED_RECORD_MISMATCH"), ("killed_rid", "KILLED_RECORD_MISMATCH"), ("killed_wall", "KILLED_RECORD_MISMATCH"),
+                              ("killed_rung", "KILLED_RECORD_MISMATCH"), ("killed_dup", "KILLED_RECORD_MISMATCH"), ("killed_multi", "KILLED_RECORD_MISMATCH"),
+                              ("killed_early", "KILLED_RECORD_MISMATCH")):
+            rv_ = s2_variant(how_, how_); a_ = adopt(rv_); c2_ = rv_["attempts"]["c2"]
+            ok_st = ("STOPPED_FOR_REVIEW", "LADDER_VIOLATION") if how_ == "killed_early" else ("STOPPED_FOR_REVIEW",)
+            ck(rv_["status"] in ok_st and c2_["status"] == want_st and c2_.get("killed") is True and rv_["classes"]["c2"][0] == "REVIEW" and a_.get("adopted") is None,
+               f"⛔음성 Codex EN: c1 정체 · 끊긴 c2 {how_} → c2 {want_st} · {ok_st[0]} · c1 보조 자동 채택 없음 — {rv_['status']} · {c2_['status']} · {a_.get('adopted')}")
         # S3–S5: ⓪ sha · 크기 · 머리 불일치 → A5 새로 (A5f) · 원본 그대로
         for nm, mk in (("s3", "sha"), ("s4", "size"), ("s5", "head")):
             alt = os.path.join(T, f"w0_{nm}", "WAVECAR"); os.makedirs(os.path.dirname(alt))
@@ -2372,6 +2570,110 @@ def _selftest():
         pk3 = rcmd(wk3, "--killed", "c1", "s", "t", "r", env_extra={"WALL_S": "100"})
         pk4 = rcmd(wk3, "--infra-abort", "c1", "s", "2026-11-21T00:00:00Z", "node fault")
         ck(pk3[0] == 2 and "전자 반복행 0" in pk3[1] and pk4[0] == 0, f"⛔음성 행 0 끊김 → --killed 거부 · --infra-abort 로만 — {pk3[0]} {pk4[0]}")
+        # ── Codex EN P0: c2 가 재시작에 실패하거나 c2 의 것이 아닌 행을 남긴 뒤 스케줄러에 끊김 (7 행) → --killed → 다시 돌림 = 끝까지 판정했을 때와 같은 멈춤 8 ──
+        for tag_, beh_, want_ in (("ken1", "istart0@7", "RESTART_NOT_HONOURED"), ("ken2", "unknown_hdr@7", "SCF_UNVERIFIED"),
+                                  ("ken3", "nophrase@7", "RESTART_NOT_HONOURED"), ("ken4", "badhead@7", "RESTART_NOT_HONOURED"),
+                                  ("ken5", "istart0p@7", "RESTART_NOT_HONOURED")):
+            wq, _, _ = run_pkg(tag_, {"A5": "conv", "c1": "plateau", "c2": beh_}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c2"}, session=True)
+            pq = rcmd(wq, "--killed", "c2", "sched-9", "2026-11-22T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
+            _, rcq, logq = run_pkg(tag_, {"A5": "conv", "c1": "plateau", "c2": beh_}, fresh=False)
+            rq, _ = chk(wq); aq = adopt(rq)
+            ck(pq[0] == 0 and rcq == 8 and fcode(wq) == 8 and f"c2 {want_}" in logq and rq["status"] == "STOPPED_FOR_REVIEW" and rq["attempts"]["c2"]["status"] == want_
+               and rq["attempts"]["c2"].get("killed") is True and aq.get("adopted") is None,
+               f"⛔음성 Codex EN P0: c2 {beh_} 끊김 (7 행) → --killed → 다시 돌림 종료 8 ({want_}) · 검사기 STOPPED_FOR_REVIEW · 채택 없음 — "
+               f"--killed {pq[0]} · rc {rcq} · {rq['status']} · {rq['attempts']['c2']['status']} · {aq.get('adopted')}")
+        # 양성 대조: c2 가 c2 행 머리 · 재시작 증거를 다 남긴 채 7 행에서 끊김 → --killed → 확인된 끝 → 종료 1 · c1 보조 채택 (끊김 경로를 막지 않는다)
+        wkb, _, _ = run_pkg("kill2b", {"A5": "conv", "c1": "plateau", "c2": "plateau@7"}, vasp=killer, env_extra={"FAKE_KILL_STAGE": "c2"}, session=True)
+        pkb = rcmd(wkb, "--killed", "c2", "sched-9", "2026-11-22T00:00:00Z", "walltime", env_extra={"WALL_S": "100"})
+        kb_base = os.path.join(T, "kill2b_base"); shutil.copytree(wkb, kb_base, symlinks=True)        # 다시 돌리기 전 상태 (아래 killed.json 손상 시험의 원본)
+        _, rckb, _ = run_pkg("kill2b", {"A5": "conv", "c1": "plateau", "c2": "plateau@7"}, fresh=False)
+        rkb, _ = chk(wkb); akb = adopt(rkb)
+        ck(pkb[0] == 0 and rckb == 1 and rkb["status"] == "NO_PRIMARY_VALUE" and rkb["attempts"]["c2"]["status"] == "INCOMPLETE_ATTEMPT" and rkb["attempts"]["c2"]["osz_rows"] == 7
+           and akb.get("adopted") == "a5_c1" and akb.get("a5_rule") == "secondary",
+           f"Codex EN 양성 대조: c2 7 행 끊김 (행 머리 · 재시작 증거 온전) → --killed → 종료 1 · NO_PRIMARY_VALUE · c1 보조 채택 — rc {rckb} · {rkb['status']} · {akb.get('adopted')}")
+        # Codex EN P1: 러너도 killed.json 을 그 시도와 대조한다 (잘림 · 행 수 · run_id · 단 · 초 꼴 · 기록 시각 · 같은 키 두 번 · 여러 줄) → 멈춤 8
+        kbk = os.path.join(kb_base, "run", f"{JOB}_c2", "killed.json"); kb0 = json.loads(open(kbk).read())
+        for i_, (lab_, txt_) in enumerate((("한 글자", "{"), ("행 수 6", json.dumps({**kb0, "osz_rows": "6"})), ("run_id 다름", json.dumps({**kb0, "run_id": "20261122T000000-1-1"})),
+                                         ("단 c1", json.dumps({**kb0, "rung": "c1"})), ("초 0100", json.dumps({**kb0, "wall_s": "0100"})),
+                                         ("기록 시각 < 시작", json.dumps({**kb0, "recorded_s": 1000})),
+                                         ("같은 키 두 번", json.dumps(kb0).replace(', "recorded_utc"', ', "osz_rows": "7", "recorded_utc"')),
+                                         ("두 줄", json.dumps(kb0).replace(', "reason"', ',\n "reason"')))):
+            wv = os.path.join(T, f"w_kv{i_}"); shutil.copytree(kb_base, wv, symlinks=True); _write(os.path.join(wv, "run", f"{JOB}_c2", "killed.json"), txt_ + "\n")
+            _, rcv, logv = run_pkg(f"kv{i_}", {"A5": "conv", "c1": "plateau", "c2": "plateau@7"}, fresh=False)
+            ck(rcv == 8 and fcode(wv) == 8 and "KILLED_RECORD_MISMATCH" in logv, f"⛔음성 Codex EN P1 러너: killed.json {lab_} → 멈춤 8 (KILLED_RECORD_MISMATCH) — rc {rcv}")
+        # Codex EN P1: run_aborted 의 시도에는 읽을 수 있는 중단 영수증 (기록 시각) 이 있어야 한다 — 빠지면 순서 대조가 attempt.json 끝 시각으로만 돈다
+        wr, rcr1, _ = run_pkg("rcpt", {"A5": "zero"})
+        prc = rcmd(wr, "--infra-abort", "A5", "sched-3", "2026-11-22T00:00:00Z", "node fault")
+        _, rcr2, _ = run_pkg("rcpt", {"A5": "conv", "c1": "conv"}, fresh=False)
+        rr0, exr = chk(wr)
+        ck(rcr1 == 7 and prc[0] == 0 and rcr2 == 0 and rr0["status"] == "OK" and rr0["aborted"] == [["A5@aborted1", "SCF_UNVERIFIED"]],
+           f"영수증 양성 대조: A5 행 0 → --infra-abort → 다시 → OK (중단 영수증 온전) — {rcr1} {prc[0]} {rcr2} · {rr0['status']} {rr0.get('why')}")
+        rp_ = os.path.join("run_aborted", f"{JOB}_A5_1", "infra_abort.json")
+        r0_ = json.loads(open(os.path.join(exr, rp_)).read())
+        for lab_, txt_ in (("없음", None), ("한 글자", "{"), ("단 다름", json.dumps({**r0_, "rung": "c1"})), ("기록 시각 글자", json.dumps({**r0_, "recorded_s": str(r0_["recorded_s"])})),
+                           ("기록 시각 없음", json.dumps({k: v for k, v in r0_.items() if k != "recorded_s"})), ("초 꼴", json.dumps({**r0_, "wall_s": "5s"}))):
+            exv = os.path.join(T, f"ex_rcpt_{abs(hash(lab_))}"); shutil.rmtree(exv, ignore_errors=True); shutil.copytree(exr, exv)
+            if txt_ is None:
+                os.remove(os.path.join(exv, rp_))
+            else:
+                _write(os.path.join(exv, rp_), txt_ + "\n")
+            rv_ = rechk(exv)
+            ck(rv_["status"] == "LADDER_VIOLATION" and "중단 영수증" in rv_["why"] and adopt(rv_).get("adopted") is None,
+               f"⛔음성 Codex EN P1: run_aborted A5 중단 영수증 {lab_} → LADDER_VIOLATION · 채택 없음 — {rv_['status']} {rv_.get('why', '')[:80]}")
+        # Codex EN P1: c1 행 0 → --infra-abort 로 보존 → start_point.json 만 유실 → 다시 돌려도 시작점을 다시 쓰지 않는다 (멈춤 8 · 검사기 START_POINT_MISSING)
+        wsp, rcs1, _ = run_pkg("splost", {"A5": "conv", "c1": "zero"})
+        psp = rcmd(wsp, "--infra-abort", "c1", "sched-4", "2026-11-22T00:00:00Z", "node fault")
+        sp_base = os.path.join(T, "splost_base"); shutil.copytree(wsp, sp_base, symlinks=True)
+        os.remove(os.path.join(wsp, "run", "start_point.json"))
+        _, rcs2, logs2 = run_pkg("splost", {"A5": "conv", "c1": "conv"}, fresh=False)
+        rsp, _ = chk(wsp)
+        ck(rcs1 == 7 and psp[0] == 0 and rcs2 == 8 and fcode(wsp) == 8 and "시작점 기록이 없다" in logs2 and not os.path.isfile(os.path.join(wsp, "run", "start_point.json"))
+           and not os.path.isdir(D(wsp, "c1")) and rsp["status"] == "START_POINT_MISSING" and adopt(rsp).get("adopted") is None,
+           f"⛔음성 Codex EN P1: c1 0 스텝 중단 뒤 start_point.json 유실 → 다시 쓰지 않고 멈춤 8 · c1 안 띄움 · START_POINT_MISSING — rc {rcs2} · {rsp['status']}")
+        # 양성 대조: 유실 없이 다시 → c1 수렴 → OK (시작점 기록 시각 ≤ 첫 c 단 시작)
+        wso = os.path.join(T, "w_spok"); shutil.copytree(sp_base, wso, symlinks=True)
+        _, rco, _ = run_pkg("spok", {"A5": "conv", "c1": "conv"}, fresh=False)
+        rso, exso = chk(wso)
+        ck(rco == 0 and rso["status"] == "OK" and rso["aborted"] == [["c1@aborted1", "SCF_UNVERIFIED"]],
+           f"시작점 양성 대조: c1 0 스텝 중단 → --infra-abort → 다시 → OK (시작점 기록 그대로) — rc {rco} · {rso['status']} {rso.get('why')}")
+        # 검사기: 시작점 기록 시각이 첫 c 단 (run_aborted 포함) 시작보다 늦으면 보류 — 옛 러너가 유실 뒤 다시 쓴 기록 (Codex EN P1 재현의 '2 초 늦음')
+        spj = os.path.join(exso, "run", "start_point.json"); sp0 = json.loads(open(spj).read())
+        c1a0 = json.loads(open(os.path.join(exso, "run_aborted", f"{JOB}_c1_1", "attempt.start")).read())["t_start"]
+        for lab_, rec_ in (("첫 c1 보다 2 초 늦음", {**sp0, "written_s": c1a0 + 2}), ("기록 시각 글자", {**sp0, "written_s": str(sp0["written_s"])}),
+                           ("기록 시각 없음", {k: v for k, v in sp0.items() if k != "written_s"})):
+            exv = os.path.join(T, f"ex_spw_{abs(hash(lab_))}"); shutil.rmtree(exv, ignore_errors=True); shutil.copytree(exso, exv)
+            _write(os.path.join(exv, "run", "start_point.json"), json.dumps(rec_) + "\n")
+            rv_ = rechk(exv)
+            ck(rv_["status"] == "LADDER_VIOLATION" and "시작점 기록" in rv_["why"] and adopt(rv_).get("adopted") is None,
+               f"⛔음성 Codex EN P1 검사기: 시작점 {lab_} → LADDER_VIOLATION · 채택 없음 — {rv_['status']} {rv_.get('why', '')[:80]}")
+        # 러너 가드: A5 · c1 이 없는데 run_aborted 에 뒤 단이 있으면 (시작점 · run/ 의 뒤 단이 없어도) 띄우지 않고 멈춤 8
+        wg1 = os.path.join(T, "w_ga5"); shutil.copytree(sp_base, wg1, symlinks=True)
+        shutil.rmtree(D(wg1, "A5")); os.remove(os.path.join(wg1, "run", "start_point.json"))
+        _, rcg1, _ = run_pkg("ga5", {"A5": "conv", "c1": "conv"}, fresh=False)
+        ck(rcg1 == 8 and fcode(wg1) == 8 and not os.path.isdir(D(wg1, "A5")) and not os.path.isdir(D(wg1, "c1")),
+           f"⛔음성 Codex EN P1 러너: A5 없음 · run_aborted 에 c1 → A5 를 다시 띄우지 않고 멈춤 8 — rc {rcg1}")
+        wg2, rcg2a, _ = run_pkg("gc1", {"A5": "conv", "c1": "plateau", "c2": "zero"})
+        pg2 = rcmd(wg2, "--infra-abort", "c2", "sched-5", "2026-11-22T00:00:00Z", "node fault")
+        shutil.rmtree(D(wg2, "c1"))
+        _, rcg2, _ = run_pkg("gc1", {"A5": "conv", "c1": "plateau", "c2": "zero"}, fresh=False)
+        ck(rcg2a == 7 and pg2[0] == 0 and rcg2 == 8 and fcode(wg2) == 8 and not os.path.isdir(D(wg2, "c1")),
+           f"⛔음성 Codex EN P1 러너: c1 없음 · run_aborted 에 c2 → c1 을 띄우지 않고 멈춤 8 — {rcg2a} {pg2[0]} rc {rcg2}")
+        # Codex EN P1: 중간 PACK_ONLY 묶음이 남은 채 끝 포장이 실패 (종료 4) → 다시 돌리면 옛 묶음을 보내라고 하지 않고 종료 4 · PACK_ONLY 뒤에야 0
+        wpo, rcp1, _ = run_pkg("stale", {"A5": "conv", "c1": "zero"})
+        rcp2 = subprocess.run(["bash", os.path.join(wpo, "run_a5.sh")], cwd=wpo, env={**os.environ, "PACK_ONLY": "1"}, capture_output=True, text=True).returncode
+        old_tgz = _sha(os.path.join(wpo, "a5_return.tgz"))
+        prc2 = rcmd(wpo, "--infra-abort", "c1", "sched-6", "2026-11-22T00:00:00Z", "node fault")
+        _, rcp3, _ = run_pkg("stale", {"A5": "conv", "c1": "conv"}, fresh=False, env_extra={"FAKE_TAR_FAIL": "1"})
+        tgz3, fc3 = _sha(os.path.join(wpo, "a5_return.tgz")), fcode(wpo)            # 끝 포장 실패 직후: 옛 묶음 그대로 · 끝 기록 0
+        _, rcp4, logp4 = run_pkg("stale", {"A5": "conv", "c1": "conv"}, fresh=False)
+        rs4, _ = chk(wpo)
+        rcp5 = subprocess.run(["bash", os.path.join(wpo, "run_a5.sh")], cwd=wpo, env={**os.environ, "PACK_ONLY": "1"}, capture_output=True, text=True).returncode
+        _, rcp6, logp6 = run_pkg("stale", {"A5": "conv", "c1": "conv"}, fresh=False)
+        rs6, _ = chk(wpo)
+        ck(rcp1 == 7 and rcp2 == 0 and prc2[0] == 0 and rcp3 == 4 and fc3 == 0 and tgz3 == old_tgz
+           and rcp4 == 4 and "PACK_ONLY=1 bash run_a5.sh" in logp4 and rs4["status"] == "LADDER_INCOMPLETE" and rcp5 == 0 and rcp6 == 0 and rs6["status"] == "OK",
+           f"⛔음성 Codex EN P1: 옛 묶음 (끝 기록 없음 · {rs4['status']}) → 다시 돌림 종료 4 (0 이 아니다) · PACK_ONLY 뒤 다시 0 · OK — "
+           f"{rcp1} {rcp2} {prc2[0]} {rcp3} {rcp4} {rcp5} {rcp6} · {rs6['status']}")
         # S16e′: c2 행 0 → 멈춤 7 → 0 스텝 중단 기록 → 포장만 → 검사기 LADDER_INCOMPLETE (run_aborted 에만 있다) · 채택 없음 (리뷰 P0-1)
         w3b, rc3b, _ = run_pkg("p3b", {"A5": "conv", "c1": "plateau", "c2": "zero"})
         rcmd(w3b, "--infra-abort", "c2", "sched-7", "2026-11-22T00:00:00Z", "node fault")
@@ -2541,6 +2843,105 @@ MUTANTS = (
     ("m51 수집기: 채택 기록에 시작점을 안 실음 (P2(a))", "build_v5_vasp_package.py",
      '"labels": [A5_LABEL] + ([A5_SEC_LABEL] if rule == "secondary" else []), "adoption_history": hist, "a5_start_point": spx}',
      '"labels": [A5_LABEL] + ([A5_SEC_LABEL] if rule == "secondary" else []), "adoption_history": hist}', "v5"),
+    ('m52 러너: 끊긴 시도의 행 머리 확인 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '  { [ -n "$g" ] && [ "$why" = - ]; } || { echo "SCF_UNVERIFIED $n ${why:-row_gate_unreadable}"; return; }',
+     '  true || { echo "SCF_UNVERIFIED $n ${why:-row_gate_unreadable}"; return; }', 'a5'),
+    ('m53 러너: 끊긴 c 단의 ISTART · ICHARG 확인 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '    { [ "$is" = 1 ] && [ "$ic" = 0 ]; } || { echo "RESTART_NOT_HONOURED $n istart_',
+     '    true || { echo "RESTART_NOT_HONOURED $n istart_', 'a5'),
+    ('m54 러너: 끊긴 c 단의 등록부 재시작 문구 확인 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '    grep -aqE -e "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null || { echo "RESTART_NOT_HONOURED $n no_restart_phrase"; return; }',
+     '    true || { echo "RESTART_NOT_HONOURED $n no_restart_phrase"; return; }', 'a5'),
+    ('m55 러너: 끊긴 c 단의 NBANDS · 시작점 머리 대조 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '      || { echo "RESTART_NOT_HONOURED $n dims_ne_start_head"; return; };;',
+     '      || true;;', 'a5'),
+    ('m56 러너: gate5 가 끊긴 시도를 killed5 로 안 봄 (EN P0)', 'build_a5_vasp_package.py',
+     '  e=$(killed5 "$d" "$st" "$n"); [ "$e" = "-" ] || { echo "REVIEW $e"; return; }',
+     '  :', 'a5'),
+    ('m57 러너: killed.json 한 줄 꼴 확인 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '|| { echo "KILLED_RECORD_MISMATCH $n killed_json_form"; return; }',
+     '|| true', 'a5'),
+    ('m58 러너: killed.json run_id 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '|| { echo "KILLED_RECORD_MISMATCH $n run_id"; return; }',
+     '|| true', 'a5'),
+    ('m59 러너: killed.json 행 수 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '  [ "$(kf5 "$f" osz_rows)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows_$(kf5 "$f" osz_rows)"; return; }',
+     '  :', 'a5'),
+    ('m60 러너: killed.json 기록 시각 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '|| { echo "KILLED_RECORD_MISMATCH $n recorded_s"; return; }',
+     '|| true', 'a5'),
+    ('m61 러너: killed.json 초 꼴 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '  secs_ok "$(kf5 "$f" wall_s)" || { echo "KILLED_RECORD_MISMATCH $n wall_s"; return; }',
+     '  :', 'a5'),
+    ('m62 러너: killed.json 잡 · 단 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '|| { echo "KILLED_RECORD_MISMATCH $n job_or_rung"; return; }',
+     '|| true', 'a5'),
+    ('m63 러너: killed.json 같은 키 두 번을 첫 값으로 읽음 (EN P1)', 'build_a5_vasp_package.py',
+     'kf5(){ grep -o "\\"$2\\": \\"[^\\"]*\\"" "$1" 2>/dev/null | awk \'NR == 1 { v = $0 } END { if (NR == 1) {',
+     'kf5(){ grep -o "\\"$2\\": \\"[^\\"]*\\"" "$1" 2>/dev/null | awk \'NR == 1 { v = $0 } END { if (NR >= 1) {', 'a5'),
+    ('m64 러너: 시작점 최초 생성 전 run_aborted 의 c 단을 안 봄 (EN P1)', 'build_a5_vasp_package.py',
+     '  { [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null; } \\',
+     '  { [ ! -e "$C1" ] && [ ! -e "$C2" ]; } \\', 'a5'),
+    ('m65 러너: A5 를 다시 띄우기 전 run_aborted 의 c 단을 안 봄 (EN P1)', 'build_a5_vasp_package.py',
+     '  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null \\',
+     '  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] \\', 'a5'),
+    ('m66 러너: c1 을 다시 띄우기 전 run_aborted 의 c2 를 안 봄 (EN P1)', 'build_a5_vasp_package.py',
+     '  [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c2_*" > /dev/null || fin5 8 REVIEW',
+     '  [ ! -e "$C2" ] || fin5 8 REVIEW', 'a5'),
+    ('m67 러너: 끝난 사다리 재실행이 반송 묶음의 끝 기록을 안 봄 (EN P1)', 'build_a5_vasp_package.py',
+     '  if ! ret_has_final; then',
+     '  if false; then', 'a5'),
+    ('m68 검사기: 끊긴 시도를 killed_problems 로 안 봄 (EN P0)', 'build_a5_vasp_package.py',
+     '                if kp:\n                    return done(kp[0], kp[1])',
+     '                if False:\n                    return done(kp[0], kp[1])', 'a5'),
+    ('m69 검사기: 끊긴 시도의 행 머리 확인 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '    _, bad = row_gate(osz, stage)\n    if bad:\n        return "SCF_UNVERIFIED", f"끊긴',
+     '    _, bad = row_gate(osz, stage)\n    if False:\n        return "SCF_UNVERIFIED", f"끊긴', 'a5'),
+    ('m70 검사기: 끊긴 c 단의 ISTART · ICHARG 확인 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '        if not (ev["istart"] == "1" and ev["icharg"] == "0"):\n            return "RESTART_NOT_HONOURED", f"끊긴',
+     '        if False:\n            return "RESTART_NOT_HONOURED", f"끊긴', 'a5'),
+    ('m71 검사기: 끊긴 c 단의 등록부 재시작 문구 확인 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '        if rxbad or re.search(rx, ev["text"], re.M) is None:',
+     '        if False:', 'a5'),
+    ('m72 검사기: 끊긴 c 단의 시작점 머리 대조 뺌 (EN P0)', 'build_a5_vasp_package.py',
+     '        if not dims_match(dims, sd):\n            return "RESTART_NOT_HONOURED", f"끊긴',
+     '        if False:\n            return "RESTART_NOT_HONOURED", f"끊긴', 'a5'),
+    ('m73 검사기: 한 줄 기록의 같은 키 거부 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '            if k in d:\n                raise ValueError(f"같은 키 두 번: {k}")',
+     '            if False:\n                raise ValueError(f"같은 키 두 번: {k}")', 'a5'),
+    ('m74 검사기: 한 줄 기록 꼴 확인 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '    if "\\n" in body or not ONE_LINE_REC.fullmatch(body):\n        return None',
+     '    if False:\n        return None', 'a5'),
+    ('m75 검사기: killed.json run_id 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '    if not (isinstance(s0.get("run_id"), str) and s0["run_id"]) or k.get("run_id") != s0["run_id"]:',
+     '    if False:', 'a5'),
+    ('m76 검사기: killed.json 행 수 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '    if k.get("osz_rows") != str(n):',
+     '    if False:', 'a5'),
+    ('m77 검사기: killed.json 기록 시각 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '    if not (isint(s0.get("t_start")) and isint(k.get("recorded_s")) and k["recorded_s"] >= s0["t_start"]):',
+     '    if False:', 'a5'),
+    ('m78 검사기: killed.json 초 꼴 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '    if not (isinstance(k.get("wall_s"), str) and SECS_RE.fullmatch(k["wall_s"])):',
+     '    if False:', 'a5'),
+    ('m79 검사기: killed.json 잡 · 단 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '    if k.get("job") != job["dir"] or k.get("rung") != stage:\n        return "KILLED_RECORD_MISMATCH"',
+     '    if False:\n        return "KILLED_RECORD_MISMATCH"', 'a5'),
+    ('m80 검사기: 끊긴 시도의 모순을 1저자 멈춤으로 안 봄 (a5_class · EN P0)', 'build_a5_vasp_package.py',
+     '    if x.get("killed") and s in KILLED_PROBLEMS:\n        return "REVIEW", None',
+     '    if False:\n        return "REVIEW", None', 'a5'),
+    ('m81 검사기: run_aborted 중단 영수증 필수 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '        if x_.get("receipt_problem"):',
+     '        if False:', 'a5'),
+    ('m82 검사기: 시작점 기록 시각 ≤ 첫 c 단 시작 대조 뺌 (EN P1)', 'build_a5_vasp_package.py',
+     '        elif ws_ > min(c_t0):',
+     '        elif False:', 'a5'),
+    ('m83 검사기: 시작점 기록 시각이 정수가 아니어도 넘김 (EN P1)', 'build_a5_vasp_package.py',
+     '        if not (isinstance(ws_, int) and not isinstance(ws_, bool)):\n            viol.append(f"시작점 기록 시각',
+     '        if False:\n            viol.append(f"시작점 기록 시각', 'a5'),
+    ('m84 수집기: RUN_FAILED · 미수렴에 행 수 ≥ 1 요구 뺌 (EN P2)', 'build_v5_vasp_package.py',
+     '    if not (isinstance(n, int) and not isinstance(n, bool) and n >= 1):\n        return False                               # 행 수가',
+     '    if False:\n        return False                               # 행 수가', 'v5'),
 )
 
 
