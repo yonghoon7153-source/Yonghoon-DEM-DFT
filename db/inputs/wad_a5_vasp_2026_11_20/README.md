@@ -1,6 +1,6 @@
 # W_ad a5 — 은 쪽 G4 ENCUT 650 분리 끝점 재시도 (개정 5 v2)
 
-- 묶음 MANIFEST sha256: `ad42823874bc48997746b24c523c65df66c33a1d86d40880ecbb345c9c537546` (받은 뒤 `sha256sum MANIFEST.sha256` 로 같은지 확인)
+- 묶음 MANIFEST sha256: `8439e129bc18d595e72f94e6501469fed4109f419c827d5b98bb1cb269d24d20` (받은 뒤 `sha256sum MANIFEST.sha256` 로 같은지 확인)
 - 잡: `V5_s_outer_A_G4_e70_far_a5` 하나 · 사다리 ⓪ 확인 → A5 (A5c 이어서 · A5f 새로) → c1 → c1 이 주 기준 OK 가 아니면 c2 · A5 자격 미달이면 c1 · c2 는 ⓪ 복사본에서 · ⓪ 도 없으면 값 없음
 - 누적 상한 180 h (넘으면 다음 단을 띄우지 않고 끝낸다) · 0 스텝 인프라 중단은 잡 전체 2 회
 

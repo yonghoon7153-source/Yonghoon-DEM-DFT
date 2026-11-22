@@ -2071,7 +2071,10 @@ def _selftest():
             ck(rcx == 2 and "끝났다" in outx, f"⛔음성 끝난 사다리에 기록 명령 {args_[0]} → 거부 (종료 2) — {outx.strip()[-80:]}")
         # 사다리 대조: c1 OK 인데 c2 가 있으면 LADDER_VIOLATION
         exv = unpack(w1, "s1v"); shutil.copytree(os.path.join(exv, "run", f"{JOB}_c1"), os.path.join(exv, "run", f"{JOB}_c2"))
-        ck(rechk(exv)["status"] == "LADDER_VIOLATION", "⛔음성 c1 OK 인데 반송에 c2 가 있다 → LADDER_VIOLATION")
+        rv_ = rechk(exv)                                  # 사유 목록 전체에서 그 대조를 찾는다 — c1 이 1 초 넘게 걸리면 시간 순서 위반이 먼저 잡아서
+        ck(rv_["status"] == "LADDER_VIOLATION"           # 상태만 보면 돌연변이 m12 (이 대조를 뺌) 가 시각에 따라 살아남는다 (11-22 병렬 돌연변이 실측)
+           and any("c2 가 있는데 c1 이 주 기준 OK" in v for v in rv_.get("ladder_violations", [])),
+           f"⛔음성 c1 OK 인데 반송에 c2 가 있다 → LADDER_VIOLATION · 사유 목록에 'c1 OK 인데 c2' 대조 — {rv_.get('ladder_violations', [])[:2]}")
         # 시작점 기록 · 끝 기록 · 순서 (반송을 고쳐서)
         exs = unpack(w1, "s1sp"); os.remove(os.path.join(exs, "run", "start_point.json"))
         ck(rechk(exs)["status"] == "START_POINT_MISSING", "⛔음성 c1 이 있는데 시작점 기록이 없다 → START_POINT_MISSING (리뷰 P0-2(b))")

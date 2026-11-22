@@ -96,13 +96,15 @@
     "README": "§6 의 '다시 돌리면 기록을 다시 판정해 다음 단을 정합니다' (EM P1-1 이 짚은 문구) → '러너가 이 기록으로 다음 단 · 시작점을 정합니다 · 끝 뒤에는 다시 돌려도 아무것도 띄우지 않음 — 포장만 PACK_ONLY=1'",
     "시험": "build_v5 303/303 · build_a5 124/124 (조인 확인 줄 포함) · --mutants m09 m18 → 2/2 잡음",
     "최종_도구_sha256": {
-      "tools/wad/build_a5_vasp_package.py": "35dc283aa871058dc046360ba8ccc5705fe839b492cad4819ddaf82461640d16",
+      "tools/wad/build_a5_vasp_package.py": "751dbe304792c9c91aa1480a3aebda814db1ae58c82e5082a710890ba39674ee",
       "tools/wad/build_v5_vasp_package.py": "9c82004dd21436811d238c9e1e55482eee5d11778c07a17b54dbc76741a4dcbf"
     },
-    "묶음": "db/inputs/wad_a5_vasp_2026_11_20/ 다시 빌드 (scratch 빌드 → diff -r 같음 → 바꿔 넣음) · MANIFEST sha256 ad42823874bc48997746b24c523c65df66c33a1d86d40880ecbb345c9c537546 (옛 026abb2d · EM 리뷰 판) · 바뀐 파일 넷 (run_a5.sh · README.md · jobs.json 도구 sha · MANIFEST) · 잡 입력 (INCAR 넷 · POSCAR · KPOINTS · POTCAR 사양) 바이트 같음 · MANIFEST 대조 통과",
+    "묶음": "db/inputs/wad_a5_vasp_2026_11_20/ 다시 빌드 (도구 751dbe30) · MANIFEST sha256 8439e129bc18d595e72f94e6501469fed4109f419c827d5b98bb1cb269d24d20 (그 앞 ad428238 · EM 리뷰 판 026abb2d) · run_a5.sh 는 ad428238 판과 같음 · README 는 MANIFEST 줄만 · jobs.json 도구 sha · 잡 입력 같음 · MANIFEST 대조 통과",
     "러너_같음": "run_a5.sh 는 0718bc6b1 판 빌드와 바이트 같음 → ④ 의 EM 재현 전후 결과가 최종 러너에 그대로 유효",
-    "돌연변이_최종": "최종 판으로 --mutants --jobs 3 다시 도는 중 (결과는 다음 커밋에)",
+    "돌연변이_최종": "도구 751dbe30 으로 --mutants --jobs 3 다시 도는 중 (결과는 다음 커밋에)",
     "다음": "Codex 리뷰 편지 EN (영어) → 사용자 발송 → GO 뒤 zip · handoff · 운영 안내",
-    "by": "claude · 2026-11-22 (대피 세션)"
+    "by": "claude · 2026-11-22 (대피 세션)",
+    "돌연변이_최종_1": "최종 판 (도구 35dc283a) --mutants --jobs 3 → 50/51 (1055 s) · m12 (검사기 'c1 OK 인데 c2' 대조 뺌) 가 살아남음 — 혼자 돌리면 두 번 다 잡음 (병렬 부하에서만 놓침)",
+    "m12_진단": "시험이 c1 폴더를 그대로 c2 로 복사해 'c1 OK 인데 c2' 를 만든다 → 가짜 c1 이 1 초 넘게 걸리면 (부하) 시간 순서 위반이 먼저 LADDER_VIOLATION 을 내서 상태만 보는 시험은 이 대조를 빼도 통과 → 사유 목록 (ladder_violations) 에 그 대조 문구가 있는지까지 보게 조임 · CPU 4 개를 일부러 바쁘게 한 채로도 m12 잡음"
   }
 }
