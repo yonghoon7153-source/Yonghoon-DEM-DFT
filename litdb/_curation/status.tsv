@@ -92,10 +92,10 @@ N-85	대피	끝	zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane · dfa191
 N-86	대피	끝	kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode · 9e862495e	정독 135 · 채움 — 혼합 방법 (건식 · 습식 · 볼 믹서) 효과 = 전기화학 + 정성 형태 · 미세구조 정량 · 반복 없음 · 카드 문제 없음 · 원문 안 어긋남 3 (카드 §3-10)
 N-87	대피	끝	hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode · d7843d57d	정독 136 · 일부 — 고전단 믹서 건식 혼합 · 오사카 그룹 채움 · 혼합 지수 · 에너지 · 반복 없음 · 원문은 '코팅' 주장 안 함 · 카드 문제 = frankenberg2025 L363 '고강도 혼합 코팅' 일부만 맞음 · hayakawa2023 L313 '카드 없음' 낡음 (기록만) · 원문 분리막 수치 겉보기 밀도 2.04–2.55 > 진밀도 1.64 (카드 §3-5)
 N-88	대피	끝	ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s · 2dbb5f9ef	정독 137 · 채움 (한정 둘 — '밀링 없이' 일부만 맞음 · Li3PS4 라 LPSCl 값 아님) · 93 ↔ 227 nm σ 비 1.36 = 우리 Cronau(r) ×0.65 와 방향 반대 (재료 달라 반례 한 점) · 카드 문제 = lei2026 L58 (1.32 µm ↔ 원문 1382 nm · 선형 ↔ 원문 제곱) · L72 (원문에 없는 리뷰 판정) · yano2026 L412 '밀링 없이' 일부만 (기록만) · litdb 밖 = build_index.py SIZE_EFFECT_SLUGS +1 줄 (N-79 와 같은 꼴 · finish.py 가 이 꼴만 허용하게 고침 11-22)
-N-89	대피	도는 중		PDF 받음 (+SI 1) · Bielefeld 2022 J Electrochem Soc 169 020539 · 시작 11-22 22:22 KST
+N-89	대피	끝	bielefeld2022_li_kinetics_morphology_voids_fem_composite_cathode · e0ad83160	정독 138 · 일부 — 수송 · 반응 · 공극 · 형태 3D 모델 채움 (단일 입자 · 고정 반구 · ≤0.5 C · 역학 없음) · 'i0,ref 0.05 A/m² 출처' = 원문에 없음 · 카드 문제 = kim2024_optimal L279 · L115 'i0,ref 0.05 A/m²' 를 이 논문에 붙임 (원문 j0 = SOC 곡선 · 상수 0.155 · 0.090) · taghikhani2025 L108 x0 0.9729 원문에 없음 · benhadjali2026 L405 원 측정 = Rueß 2020 · reisacher2023 L60 논문 번호 앞 0 빠짐 (기록만)
 N-90	대피	끝	park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3 · 340437c13	정독 139 · 채움 (한정) — 압력 축 · 전자 차단 셀 · τ 식 출처 채움 · 원문 τ = (σ0/σ_eff)·ε = 우리 수송 tortuosity (tau2) · 원문 '경로 길이 비 (식 1) 와 같다' 는 일반적으로 아님 · 인쇄 Bruggeman 3.13 ↔ 그린 점선 ε^-2.78 · 그림 9c α 재계산 안 됨 · 카드 문제 없음 · 후보 표 메모 'kim2024 L280 제목 없이' 틀림
 N-91	대피	도는 중		PDF 받음 (+SI 1) · Lee 2025 Chem Eng J 503 158271 · 시작 11-22 23:15 KST
-N-92	대피	차례 기다림		PDF 받음 (+SI 1) · Kim 2024 Adv Energy Mater 14 2303455
+N-92	대피	도는 중		PDF 받음 (+SI 1) · Kim 2024 Adv Energy Mater 14 2303455 · 시작 11-22 23:27 KST
 N-93	대피	차례 기다림		PDF 받음 (+SI 1) · Kwon 2024 Small Sci 4 2300302
 N-94	대피	차례 기다림		PDF 받음 (+SI 1) · Tao 2023 J Power Sources 580 233379
 N-95	대피	차례 기다림		PDF 받음 (+SI 1) · Horst 2025 Powder Technol 451 120451
