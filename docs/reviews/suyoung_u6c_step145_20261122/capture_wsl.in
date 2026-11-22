@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 2 || ( $1 != CHECK_ONLY && $1 != GO_SUYOUNG_CAPTURE_145_ONCE ) ]]; then
+    echo 'Usage: bash THIS.txt CHECK_ONLY|GO_SUYOUNG_CAPTURE_145_ONCE prior_friction_result.tar.gz' >&2
+    exit 2
+fi
+mode=$1
+prior=$(realpath -e -- "$2")
+pin='@PIN@'
+sums='@SUMS@'
+prior_sha=c39bbd65d1c0caa5825abc8095611a8d20a8168e5464db3cd2a05743e3abbbeb
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+for tool in sha256sum tar timeout taskset mktemp; do command -v "$tool" >/dev/null; done
+[[ -f "$prior" && -r "$prior" ]]
+prior_line=$(sha256sum -- "$prior")
+[[ ${prior_line%% *} == "$prior_sha" ]] || { echo PRIOR_FAILURE_SHA_MISMATCH >&2; exit 2; }
+[[ "$pin" =~ ^[0-9a-f]{40}$ && "$sums" =~ ^[0-9a-f]{64}$ ]] || exit 2
+printf '%s  SOURCE_SHA256SUMS\n' "$sums" | sha256sum --check --status -
+sha256sum -c --status SOURCE_SHA256SUMS
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Reference WSL venv missing' >&2; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+taskset -c 0 "$py" -I -B -c 'import sys,numpy; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Reference WSL environment mismatch")'
+tool="$pkg/docs/reviews/suyoung_u6c_step145_20261122/capture_stop.py"
+taskset -c 0 "$py" -I -B "$tool" --help >/dev/null
+printf 'RELEASE=%s\nPRIOR_FAILURE_SHA256=%s\n' "$pin" "$prior_sha"
+if [[ $mode == CHECK_ONLY ]]; then echo CHECK_OK; exit 0; fi
+
+once="$HOME/suyoung_capture145_once_${pin:0:12}"
+mkdir -- "$once" || { echo "Already reserved: $once" >&2; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_capture145_work_XXXXXXXX")
+ret=$(mktemp -d "$HOME/suyoung_capture145_return_XXXXXXXX")
+run="$work/run"
+mkdir -- "$run"
+stamp=$(date -u +%FT%TZ)
+printf 'STARTED_UTC=%s\nWORK=%s\nRETURN_DIRECTORY=%s\n' "$stamp" "$work" "$ret" | tee "$once/receipt.txt"
+screen="$run/screen.txt"
+echo DEVELOPMENT_ONLY | tee "$screen"
+pack() {
+    local rc=$?
+    trap - EXIT HUP INT TERM
+    set +e
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_capture145_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_capture145_result.tar.gz screen.txt > SHA256SUMS &&
+     sha256sum -c SHA256SUMS && cat SHA256SUMS) ||
+    { printf 'ARCHIVE_INCOMPLETE WORK=%s RETURN_DIRECTORY=%s\n' "$work" "$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+printf 'release=%s\nprior_failure=%s\nsource_sums=%s\nstarted_utc=%s\ncpu=0\nhard_s=150\n' \
+    "$pin" "$prior_sha" "$sums" "$stamp" > "$run/origin.txt"
+printf 'F8_ORIGINAL_CAPTURE_BEGIN=%s\n' "$stamp" | tee -a "$screen"
+rc=0
+timeout --signal=TERM --kill-after=5s 145s taskset -c 0 "$py" -I -B "$tool" \
+    --source-dir "$pkg/scripts" --prior "$prior" --out "$run/capture" > "$run/capture.log" 2>&1 || rc=$?
+printf 'CAPTURE_RC=%d\n' "$rc" | tee -a "$screen"
+[[ $rc == 0 ]] || exit "$rc"
+[[ -s "$run/capture/failing_nodes.json" && -s "$run/capture/capture_receipt.json" ]] ||
+    { echo CAPTURE_OUTPUT_MISSING | tee -a "$screen"; exit 4; }
+echo CAPTURED_STEP_145 | tee -a "$screen"

@@ -1,0 +1,38 @@
+{
+  "REVERSED": "NOT_STARTED",
+  "arm_rc": 1,
+  "command_rc": 1,
+  "failed_arm": "ORIGINAL",
+  "failed_node_state_present": false,
+  "files": [
+    "run/SOURCE_SHA256SUMS",
+    "run/origin.txt",
+    "run/ORIGINAL.log",
+    "run/ORIGINAL/trace.csv",
+    "run/screen.txt"
+  ],
+  "first_failed_step": 145,
+  "first_step": 0,
+  "inner_screen_equal": true,
+  "iteration_cap": 512,
+  "kind": "DEVELOPMENT_PARTIAL",
+  "last_completed_step": 144,
+  "observed_start_utc": "2026-11-22T00:58:32Z",
+  "order_comparison": null,
+  "outer_hashes_matched": 2,
+  "partial_original_minus_old_max_abs_MPa": 4.2282819975285634e-11,
+  "partial_original_minus_old_max_abs_at_step": 144,
+  "receipt_sha256": {
+    "screen.txt": "c17adce55e96caffc9a56ec175d63279ce293557dcc353cac25cc7e095a48d73",
+    "suyoung_friction_result.tar.gz": "c39bbd65d1c0caa5825abc8095611a8d20a8168e5464db3cd2a05743e3abbbeb"
+  },
+  "release": "001e5e5e5f3bedde8106b608910e95f5dd1f78cb",
+  "samples": 145,
+  "schedule_matches_old_original_through_step": 144,
+  "source_sums_sha256": "60af64b6d3b2d6ebd1c7da40138cf8a291a21fb382aec15671ad429ff97e41de",
+  "stage3_go": false,
+  "trace_bytes": 11226,
+  "trace_sha256": "502694a2fabe7f30db63ac964ce6c97a7ce6efd2ca55a0c53a117bd13a3b4dc0",
+  "u6_qualified": false,
+  "worst_residual_over_tolerance_reported": 40062700.0
+}

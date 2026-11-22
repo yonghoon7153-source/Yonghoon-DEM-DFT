@@ -1,0 +1,65 @@
+{
+  "analyzer_sha256": "321806f1031af00022c171420c40b197b9b75ab51ccd9b3405bd20aabefee44e",
+  "controls": {
+    "large_common_translation": {
+      "decimal_ratio_same_terminal_impulses": 8.271778888857484e-13,
+      "fields": 3,
+      "iteration": 512,
+      "mass_ratio": 1.0,
+      "native_ratio": 1862.6390160774845,
+      "node_id": 8,
+      "speed_tol": 1.00000329272254e-13,
+      "terminal_residual_survives_decimal_check": false,
+      "witness": {
+        "decimal_residual": 6.336228691933909e-25,
+        "examined": 5,
+        "modes": [
+          "normal",
+          "open",
+          "open"
+        ],
+        "rank_deficient_seen": 0,
+        "scaled_impulses_nt": [
+          1.8626451492309574e-09,
+          0.0,
+          1.3731450166157428e-25,
+          3.658793312630618e-42,
+          -1.3731450166157428e-25,
+          -3.658793312630618e-42
+        ],
+        "status": "WITNESS_AT_ORIGINAL_TOLERANCE"
+      }
+    },
+    "zero_trial_impulse": {
+      "decimal_ratio_same_terminal_impulses": 99502487562.18906,
+      "fields": 3,
+      "iteration": 512,
+      "mass_ratio": 1.0,
+      "native_ratio": 99502487562.18906,
+      "node_id": 8,
+      "speed_tol": 2.01e-11,
+      "terminal_residual_survives_decimal_check": true,
+      "witness": {
+        "decimal_residual": 5.635502825651633e-16,
+        "examined": 6,
+        "modes": [
+          "open",
+          "stick",
+          "stick"
+        ],
+        "rank_deficient_seen": 0,
+        "scaled_impulses_nt": [
+          2.228297807399079e-16,
+          0.0,
+          1.8856180831641258,
+          -0.9428090415820634,
+          1.8856180831641267,
+          0.9428090415820626
+        ],
+        "status": "WITNESS_AT_ORIGINAL_TOLERANCE"
+      }
+    }
+  },
+  "scope": "constructed impulse states at one synthetic node; no field data or time integration",
+  "test_sha256": "c34c9f31ffacc383e00b03687643479579b20bc718bbfdea3cd398ed46853f92"
+}
