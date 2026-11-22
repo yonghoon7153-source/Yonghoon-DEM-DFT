@@ -626,3 +626,7 @@ kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode	effect 
 #   ⚠ 크롭 52 장 = 도구 16 (다시 자름 9: 그림 1 · SI 그림 S3 · S4 · S5 · S8 · S9 · S10 · S11 = 좌우 여백 17–97 pt 로 고르지 않음 · SI 표 S1 = 17 + 18 쪽 이어붙임) + 손 36 (그래픽 초록 1 · 패널 19 · 식 2 · 근거 문단 14) + digitized.csv 104 행 — --inbox --run 으로 다시 뽑지 말 것
 zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible_sulfide_electrolyte_thin_membrane
 zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible sulfide electrolyte thin membrane
+# ── 수평 고전단 믹서 (칼날 5000 · 12,500 · 25,000 rpm · 팔 100 rpm · 30 min) 로 LiNbO₃ 코팅 NCM523 + Li₆PS₅Cl (84 : 16 wt%) 건식 혼합 · 막자 · 습식 대조 · 순 조성 · AM PSD · 360 MPa 이온 차단 셀 σ · 반쪽셀 (Hayakawa · Nakamura · Ohsaki · Watano, Adv. Powder Technol. 33 (2022) 103705) — 자동 매칭 실패 (--inbox --only hayakawa2022 = 논문 0편 · 2026-11-22 확인)
+#   ⚠ 크롭 57 장 = 도구 14 (다시 자름 14: 그림 3 · 13 = 오른 단 본문이 섞임 · 표 1 = 4 쪽 왼 단 전체 · 나머지 11 = 좌우 여백 ≈45–50 pt 로 고르지 않음) + 손 43 (패널 23 · 근거 문단 20) + digitized.csv 162 행 (벡터 경로 좌표) — --inbox --run 으로 다시 뽑지 말 것
+hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry_mixing_of_cathode_composite_powder_for_all-solid-state
+hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry mixing of cathode composite powder for all-solid-state

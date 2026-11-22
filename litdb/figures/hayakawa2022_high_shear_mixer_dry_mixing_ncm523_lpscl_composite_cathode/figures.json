@@ -1,0 +1,1538 @@
+{
+ "slug": "hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-22",
+ "sources": [
+  "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. SEM images of (a) AM and (b) SE particles.",
+   "rotated_deg": 0,
+   "w": 1822,
+   "h": 685,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    61.3,
+    563.6,
+    228.2
+   ],
+   "bbox": [
+    37.6,
+    62,
+    557.6,
+    228
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 61.3, 563.6, 228.2] had wide/uneven side margins; new box = page region [37.6, 62, 557.6, 228] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1a",
+   "kind": "figure",
+   "label": "1a",
+   "page": 3,
+   "file": "fig_1a.png",
+   "caption": "Fig. 1(a) — AM particles: LiNbO3-coated NCM523, SEM, scale bar 5 µm (round secondary particles of sintered primary grains) (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "w": 918,
+   "h": 685,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    62,
+    298.0,
+    228
+   ],
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f1b",
+   "kind": "figure",
+   "label": "1b",
+   "page": 3,
+   "file": "fig_1b.png",
+   "caption": "Fig. 1(b) — SE particles: Li6PS5Cl (Mitsui), SEM, scale bar 1 µm (angular sub-µm flakes and their agglomerates) (panel of Fig. 1).",
+   "rotated_deg": 0,
+   "w": 917,
+   "h": 685,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    298.0,
+    62,
+    557.6,
+    228
+   ],
+   "panel_of": "f1",
+   "manual_crop": "panel of Fig. 1 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic diagram of the horizontal high-shear mixer used in this study.",
+   "rotated_deg": 0,
+   "w": 1822,
+   "h": 705,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    252.0,
+    563.6,
+    425.0
+   ],
+   "bbox": [
+    37.6,
+    240,
+    557.6,
+    425
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 252.0, 563.6, 425.0] had wide/uneven side margins; new box = page region [37.6, 240, 557.6, 425] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Number-based particle size distribution of AM in rsc-5000, rsc-12500, and rsc-25000 after removing SE from the AM-SE mixtures at different rotating speeds of the chopper.",
+   "rotated_deg": 0,
+   "w": 1043,
+   "h": 1079,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    27.1,
+    468.6,
+    352.3,
+    729.5
+   ],
+   "bbox": [
+    30,
+    460,
+    296,
+    729
+   ],
+   "recrop": "re-cut by hand — the tool box [27.1, 468.6, 352.3, 729.5] had wide/uneven side margins and included the right-column body text (pp. 4 ‘was improved…’ lines); new box = page region [30, 460, 296, 729] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "[판독 벡터] 봉우리 (최빈) 4.45 µm 칸 · 원 NCM 19.8 % · rsc-5000 22.9 % · rsc-12500 4.00 µm 칸 19.0 % · rsc-25000 19.2 % — 분포 폭 (> 0.5 %) 2.9–7.5 µm 가 셋 다 같다 = 저자 \"AM 깨지지 않음\"."
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Net weight fraction of the AM-SE mixtures prepared at different rotating speeds of the chopper. Initial weight fraction was AM:SE = 84:16 wt%.",
+   "rotated_deg": 0,
+   "w": 1097,
+   "h": 386,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    28.1,
+    62.6,
+    351.3,
+    758.7
+   ],
+   "bbox": [
+    30,
+    60,
+    295,
+    170
+   ],
+   "recrop": "re-cut by hand — the tool crop [28.1, 62.6, 351.3, 758.7] was the whole left column of PDF p.4 (Table 1 + body text + Fig. 3); new box = caption 'Table 1' top → bottom rule of the table + margin, page region [30, 60, 295, 170] → 300 dpi → ink trim → uniform 25 px margin; caption included (table convention) (2026-11-22, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "[인쇄] 투입 84 : 16 → 순 86.0 : 14.0 · 86.5 : 13.5 · 87.8 : 12.2 wt% — AM 을 추적자로 남은 SE = 85.5 · 81.9 · 72.9 % [카드 산술] (벽 부착 · 본문 p.4)."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. SEM and EDX images of particles in the AM-SE mixtures prepared at different rotating speeds of the chopper.",
+   "rotated_deg": 0,
+   "w": 1820,
+   "h": 1832,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    61.6,
+    563.6,
+    503.5
+   ],
+   "bbox": [
+    37.6,
+    62,
+    557.6,
+    504
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 61.6, 563.6, 503.5] had wide/uneven side margins; new box = page region [37.6, 62, 557.6, 504] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 5,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — rsc-5000 (chopper 5000 rpm): SEM ×2.00k (20 µm) · EDX S (yellow) + Ni (red) · SEM ×10.0k (5 µm) · EDX S (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 629,
+   "h": 1829,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    62,
+    224.3,
+    504
+   ],
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 5,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — rsc-12500 (chopper 12,500 rpm): same four rows (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 630,
+   "h": 1832,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    224.3,
+    62,
+    367.4,
+    504
+   ],
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 5,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — rsc-25000 (chopper 25,000 rpm): same four rows; S signal spread over AM particles (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 630,
+   "h": 1827,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    367.4,
+    62,
+    557.6,
+    504
+   ],
+   "panel_of": "f4",
+   "manual_crop": "panel of Fig. 4 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Electrical and ionic conductivities of cathode layer prepared with AM-SE mixtures prepared at different rotating speeds of the chopper. Error bars means the standard deviation (N = 3).",
+   "rotated_deg": 0,
+   "w": 1044,
+   "h": 648,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    527.6,
+    294.6,
+    685.6
+   ],
+   "bbox": [
+    37.6,
+    525,
+    290,
+    686
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 527.6, 294.6, 685.6] had wide/uneven side margins; new box = page region [37.6, 525, 290, 686] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "[판독 벡터] σ_e / σ_ion (10⁻⁵ S cm⁻¹ · ± SD N=3): rsc-5000 6.77 ± 1.66 / 4.28 ± 1.03 · rsc-12500 4.54 ± 0.26 / 4.90 ± 0.90 · rsc-25000 3.94 ± 0.60 / 4.25 ± 0.69."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Cross-sectional SEM images of cathode layer prepared with AM-SE mixtures at different rotating speeds of the chopper. The light- and dark-gray colors indicate AM and SE, respectively, and the black indicates the voids.",
+   "rotated_deg": 0,
+   "w": 1822,
+   "h": 542,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    61.8,
+    563.6,
+    193.8
+   ],
+   "bbox": [
+    37.6,
+    62,
+    557.6,
+    195
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 61.8, 563.6, 193.8] had wide/uneven side margins; new box = page region [37.6, 62, 557.6, 195] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 6,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — cross-section of the cathode layer from rsc-5000 (light gray AM, dark gray SE, black voids; scale bar 20 µm) (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 630,
+   "h": 533,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    62,
+    223.6,
+    195
+   ],
+   "panel_of": "f6",
+   "manual_crop": "panel of Fig. 6 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 6,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6(b) — cross-section, rsc-12500 (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 632,
+   "h": 536,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    223.6,
+    62,
+    366.9,
+    195
+   ],
+   "panel_of": "f6",
+   "manual_crop": "panel of Fig. 6 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6c",
+   "kind": "figure",
+   "label": "6c",
+   "page": 6,
+   "file": "fig_6c.png",
+   "caption": "Fig. 6(c) — cross-section, rsc-25000 (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 631,
+   "h": 537,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    366.9,
+    62,
+    557.6,
+    195
+   ],
+   "panel_of": "f6",
+   "manual_crop": "panel of Fig. 6 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Galvanostatic charge/discharge curves at 0.1 C, (b) Nyquist plots, (c) discharge, and (d) charge rate performance of half-cells fabricated using AM-SE mixtures prepared at different rotating speeds of the chopper.",
+   "rotated_deg": 0,
+   "w": 1820,
+   "h": 1439,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    225.7,
+    563.7,
+    573.7
+   ],
+   "bbox": [
+    37.6,
+    213,
+    557.6,
+    575
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 225.7, 563.7, 573.7] had wide/uneven side margins; new box = page region [37.6, 213, 557.6, 575] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 6,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(a) — galvanostatic charge/discharge curves at 0.1 C, potential vs Li/Li+ 3.0–4.25 V, rsc-5000 / 12500 / 25000 (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 933,
+   "h": 638,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    213,
+    300.2,
+    374.5
+   ],
+   "panel_of": "f7",
+   "manual_crop": "panel of Fig. 7 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator); a neighbouring-panel label/title that shares no white row with this panel was blanked (page box [37.6, 368.5, 145, 374.5]) before trimming",
+   "viewed": true,
+   "mpm_note_ko": "[판독 벡터] 0.1 C 끝 용량 충전 / 방전: rsc-5000 130.1 / 129.3 · rsc-12500 144.2 / 143.1 · rsc-25000 142.5 / 141.1 mAh g⁻¹ (쿨롱 효율 99.0–99.4 % [카드 산술] → 첫 사이클로 보기 어렵다 · 사이클 번호 미기재)."
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 6,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — Nyquist plots (SOC 50 %) with inset table Rs / Rct: 101 / 32.0 · 79.3 / 19.6 · 71.0 / 13.0 Ω; 100 kHz and 100 Hz markers (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 914,
+   "h": 855,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    364.4,
+    300.2,
+    575
+   ],
+   "panel_of": "f7",
+   "manual_crop": "panel of Fig. 7 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator); a neighbouring-panel label/title that shares no white row with this panel was blanked (page box [145, 364.4, 300.2, 374.4]) before trimming",
+   "viewed": true
+  },
+  {
+   "key": "f7c",
+   "kind": "figure",
+   "label": "7c",
+   "page": 6,
+   "file": "fig_7c.png",
+   "caption": "Fig. 7(c) — discharge capacity vs discharge rate 0.1–2 C (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 915,
+   "h": 743,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    300.2,
+    213,
+    557.6,
+    400.5
+   ],
+   "panel_of": "f7",
+   "manual_crop": "panel of Fig. 7 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7d",
+   "kind": "figure",
+   "label": "7d",
+   "page": 6,
+   "file": "fig_7d.png",
+   "caption": "Fig. 7(d) — charge capacity vs charge rate 0.1–2 C (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 905,
+   "h": 731,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    300.2,
+    400.5,
+    557.6,
+    575
+   ],
+   "panel_of": "f7",
+   "manual_crop": "panel of Fig. 7 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 7,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. SEM and EDX images of the particles of the AM-SE mixtures prepared by different mixing methods.",
+   "rotated_deg": 0,
+   "w": 1822,
+   "h": 701,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    575.7,
+    563.6,
+    746.6
+   ],
+   "bbox": [
+    37.6,
+    560,
+    557.6,
+    748
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 575.7, 563.6, 746.6] had wide/uneven side margins; new box = page region [37.6, 560, 557.6, 748] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 7,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8(a) — HSM (25,000 rpm) mixture particle: SEM ×10.0k (5 µm) + EDX Ni (AM) / S (SE) (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 618,
+   "h": 697,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    560,
+    223.8,
+    748
+   ],
+   "panel_of": "f8",
+   "manual_crop": "panel of Fig. 8 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "그림 4(c) 3 행 (×10.0k) 과 같은 영상 [카드 산술 · 원 래스터 정규 상관 0.93 · 대조 (그림 8b) 0.54]."
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 7,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8(b) — MPM (dry mortar–pestle, 30 min) mixture particle: SEM + EDX Ni / S (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 618,
+   "h": 700,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    223.8,
+    560,
+    368.8,
+    748
+   ],
+   "panel_of": "f8",
+   "manual_crop": "panel of Fig. 8 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8c",
+   "kind": "figure",
+   "label": "8c",
+   "page": 7,
+   "file": "fig_8c.png",
+   "caption": "Fig. 8(c) — WM (wet mixing in heptane + sonication) mixture particle: SEM + EDX Ni / S (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 617,
+   "h": 699,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    368.8,
+    560,
+    557.6,
+    748
+   ],
+   "panel_of": "f8",
+   "manual_crop": "panel of Fig. 8 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Electrical and ionic conductivity of the cathode fabricated using electrode powder prepared by different mixing methods. Error bars means the standard deviation (N = 3).",
+   "rotated_deg": 0,
+   "w": 1043,
+   "h": 675,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    300.6,
+    61.8,
+    563.6,
+    225.7
+   ],
+   "bbox": [
+    300,
+    62,
+    562,
+    226
+   ],
+   "recrop": "re-cut by hand — the tool box [300.6, 61.8, 563.6, 225.7] had wide/uneven side margins; new box = page region [300, 62, 562, 226] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "[판독 벡터] σ_e / σ_ion (10⁻⁵ S cm⁻¹): HSM 3.94 ± 0.60 / 4.25 ± 0.69 (= 그림 5 rsc-25000 · 같은 값) · MPM 5.58 ± 0.57 / 2.20 ± 0.70 · WM 5.15 ± 0.44 / 1.76 ± 0.40."
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 8,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Cross-sectional SEM and EDX mapping images of the cathode using the AM-SE mixture prepared by different mixing methods.",
+   "rotated_deg": 0,
+   "w": 1818,
+   "h": 991,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    61.7,
+    563.6,
+    301.7
+   ],
+   "bbox": [
+    37.6,
+    62,
+    557.6,
+    303
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 61.7, 563.6, 301.7] had wide/uneven side margins; new box = page region [37.6, 62, 557.6, 303] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f10a",
+   "kind": "figure",
+   "label": "10a",
+   "page": 8,
+   "file": "fig_10a.png",
+   "caption": "Fig. 10(a) — HSM cathode cross-section: SEM (20 µm) + EDX S (SE) map (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "w": 620,
+   "h": 988,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    62,
+    226.2,
+    303
+   ],
+   "panel_of": "f10",
+   "manual_crop": "panel of Fig. 10 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f10b",
+   "kind": "figure",
+   "label": "10b",
+   "page": 8,
+   "file": "fig_10b.png",
+   "caption": "Fig. 10(b) — MPM cathode cross-section: SEM + EDX S map (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "w": 623,
+   "h": 989,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    226.2,
+    62,
+    370.5,
+    303
+   ],
+   "panel_of": "f10",
+   "manual_crop": "panel of Fig. 10 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f10c",
+   "kind": "figure",
+   "label": "10c",
+   "page": 8,
+   "file": "fig_10c.png",
+   "caption": "Fig. 10(c) — WM cathode cross-section: SEM + EDX S map (panel of Fig. 10).",
+   "rotated_deg": 0,
+   "w": 621,
+   "h": 990,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    370.5,
+    62,
+    557.6,
+    303
+   ],
+   "panel_of": "f10",
+   "manual_crop": "panel of Fig. 10 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. (a) Galvanostatic charge/discharge curve and (b) dQ/dV curve of half-cells fabricated using AM-SE mixture prepared by different mixing methods at 0.1 C.",
+   "rotated_deg": 0,
+   "w": 1940,
+   "h": 723,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    325.5,
+    563.6,
+    501.4
+   ],
+   "bbox": [
+    37.6,
+    312,
+    557.6,
+    503
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 325.5, 563.6, 501.4] had wide/uneven side margins; new box = page region [37.6, 312, 557.6, 503] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f11a",
+   "kind": "figure",
+   "label": "11a",
+   "page": 8,
+   "file": "fig_11a.png",
+   "caption": "Fig. 11(a) — charge/discharge curves at 0.1 C, HSM / MPM / WM (panel of Fig. 11).",
+   "rotated_deg": 0,
+   "w": 993,
+   "h": 713,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    312,
+    301.6,
+    503
+   ],
+   "panel_of": "f11",
+   "manual_crop": "panel of Fig. 11 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f11b",
+   "kind": "figure",
+   "label": "11b",
+   "page": 8,
+   "file": "fig_11b.png",
+   "caption": "Fig. 11(b) — dQ/dV vs potential (Li/Li+), charge (+) and discharge (−) branches, HSM / MPM / WM (panel of Fig. 11).",
+   "rotated_deg": 0,
+   "w": 966,
+   "h": 723,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    301.6,
+    312,
+    557.6,
+    503
+   ],
+   "panel_of": "f11",
+   "manual_crop": "panel of Fig. 11 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "[판독 벡터] 충전 봉우리 꼭대기가 평평하고 잡음 (HSM 3.756–3.777 · MPM 3.742–3.760 V 안에서 4 % 이내) — 본문 3.772 · 3.760 V 는 그 안 · 방전 봉우리 HSM 3.713 · MPM 3.683 V 는 본문과 같다 · WM 3.693 V (본문 없음)."
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 9,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. (a) Nyquist plots, (b) discharge, and (c) charge rate performance of half-cells fabricated using the AM-SE mixture prepared by different mixing methods.",
+   "rotated_deg": 0,
+   "w": 1929,
+   "h": 1007,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    61.5,
+    563.6,
+    305.4
+   ],
+   "bbox": [
+    37.6,
+    62,
+    557.6,
+    307
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 61.5, 563.6, 305.4] had wide/uneven side margins; new box = page region [37.6, 62, 557.6, 307] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f12a",
+   "kind": "figure",
+   "label": "12a",
+   "page": 9,
+   "file": "fig_12a.png",
+   "caption": "Fig. 12(a) — Nyquist plots with inset table Rs / Rct: HSM 71.0 / 13.0 · MPM 105 / 21.0 · WM 101 / 49.0 Ω (panel of Fig. 12).",
+   "rotated_deg": 0,
+   "w": 1073,
+   "h": 1001,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    37.6,
+    62,
+    322.5,
+    307
+   ],
+   "panel_of": "f12",
+   "manual_crop": "panel of Fig. 12 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f12b",
+   "kind": "figure",
+   "label": "12b",
+   "page": 9,
+   "file": "fig_12b.png",
+   "caption": "Fig. 12(b) — discharge rate performance 0.1–2 C, HSM / MPM / WM (panel of Fig. 12).",
+   "rotated_deg": 0,
+   "w": 854,
+   "h": 518,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    322.5,
+    62,
+    557.6,
+    182.0
+   ],
+   "panel_of": "f12",
+   "manual_crop": "panel of Fig. 12 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f12c",
+   "kind": "figure",
+   "label": "12c",
+   "page": 9,
+   "file": "fig_12c.png",
+   "caption": "Fig. 12(c) — charge rate performance 0.1–2 C, HSM / MPM / WM (panel of Fig. 12).",
+   "rotated_deg": 0,
+   "w": 852,
+   "h": 524,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    322.5,
+    182.0,
+    557.6,
+    307
+   ],
+   "panel_of": "f12",
+   "manual_crop": "panel of Fig. 12 — rendered by hand at 300 dpi: page region split in the white gaps between panels (gap scan of the rendered page) → ink bounding box → uniform 25 px (6 pt) margin; panel label kept, caption excluded (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 9,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Cycle performance of half-cells fabricated using the AM-SE mixture prepared by different mixing methods. The discharge rate was 1.0 C.",
+   "rotated_deg": 0,
+   "w": 1033,
+   "h": 816,
+   "dpi": 300,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox_tool": [
+    31.6,
+    329.6,
+    567.1,
+    527.6
+   ],
+   "bbox": [
+    30,
+    320,
+    296,
+    528
+   ],
+   "recrop": "re-cut by hand — the tool box [31.6, 329.6, 567.1, 527.6] had wide/uneven side margins and included the right-column ‘4. Conclusion’ text; new box = page region [30, 320, 296, 528] (above the caption, inside the column) → 300 dpi render → ink bounding box (min RGB < 240) → uniform 25 px (6 pt) white margin on all four sides; caption excluded (tool convention) (2026-11-22, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "[판독 벡터] 1.0 C 방전 1 → 20 사이클: HSM 109.8 → 106.3 (96.8 %) · MPM 97.3 → 67.1 (69.0 %) · WM 71.3 → 65.2 mAh g⁻¹ (91.4 % — 본문 92 %)."
+  },
+  {
+   "key": "x1a",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "PDF p.1 abstract: HSM as a scalable method; higher chopper speed → SE deagglomeration + SE adhesion onto AM → well-balanced electrical/ionic conductivity, lower internal resistance; HSM more uniform than lab-scale mixing.",
+   "rotated_deg": 0,
+   "w": 2041,
+   "h": 767,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    200,
+    282.8,
+    560,
+    412.1
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x1b",
+   "kind": "text",
+   "label": "p1-history",
+   "page": 1,
+   "file": "txt_p1_article_history_special_issue.png",
+   "caption": "PDF p.1 left: article history (received 24 Mar 2022 · revised 17 Jun 2022 · accepted 23 Jun 2022 · online 12 Jul 2022) · keywords · footnote: submitted for the Virtual Special Issue of APT2021 (8th Asian Particle Technology Symposium).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 752,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    282.5,
+    200,
+    386.6
+   ],
+   "parts": [
+    {
+     "page": 1,
+     "bbox": [
+      35,
+      282.5,
+      200,
+      386.6
+     ]
+    },
+    {
+     "page": 1,
+     "bbox": [
+      35,
+      681.2,
+      291,
+      702.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x1c",
+   "kind": "text",
+   "label": "p1-deformable-cohesive",
+   "page": 1,
+   "file": "txt_p1_deformable_se_fine_cohesive_powders.png",
+   "caption": "PDF p.1 right column: sulfide SEs advantageous for AM–SE contact because of higher deformability even at room temperature [13]; SE should locate around AM (core–shell particle and/or uniform mixture); AMs and sulfide SEs mostly < 10 µm, cohesive with poor flowability [14].",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 1215,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    465.9,
+    560,
+    676.9
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2a",
+   "kind": "text",
+   "label": "p2-ball-milling-hsm",
+   "page": 2,
+   "file": "txt_p2_ball_milling_damage_hsm_chopper.png",
+   "caption": "PDF p.2 left column: hand / mortar–pestle mixing not scalable [19,21]; ball milling energy too high → severe damage [23–25]; high-shear mixer = stationary vessel + mixing blade (convective) + high-speed chopper (high shear, de-agglomeration of fine cohesive particles [27]); minutes; no prior HSM study for AM + sulfide SE.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1613,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    160.4,
+    291,
+    442.8
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2b",
+   "kind": "text",
+   "label": "p2-materials",
+   "page": 2,
+   "file": "txt_p2_materials_lpscl_ncm523_linbo3.png",
+   "caption": "PDF p.2 left column: SE Li6PS5Cl (Mitsui) 2.02 mS cm−1 ionic, < 10−10 S cm−1 electronic at 298 K; AM NCM523 (Sumitomo) with 1 wt% LiNbO3, ca. 160 mAh g−1 theoretical [28]; number-based medians 4.3 µm (AM) and 0.7 µm (SE), as received.",
+   "rotated_deg": 0,
+   "w": 1459,
+   "h": 624,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    646.8,
+    291,
+    758.4
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2c",
+   "kind": "text",
+   "label": "p2-hsm-operation",
+   "page": 2,
+   "file": "txt_p2_hsm_operation_mortar_wet.png",
+   "caption": "PDF p.2 right column: HSM SPMH-02C (DALTON); chopper 3500–25,000 rpm, mixing arm 30–600 rpm, counter-rotating; vessel ≈100 ml; arm lifts and drops powder onto the chopper; 30.0 g, AM:SE = 84.0:16.0 wt% [29], arm 100 rpm, 30 min; comparison: dry mortar–pestle 30 min and wet mixing (heptane, UH-50 sonication, 373 K evaporation, −0.9 Pa gauge at 393 K overnight); Ar glove box dew point < 193 K.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1971,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    81.9,
+    560,
+    437.6
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x2d",
+   "kind": "text",
+   "label": "p2-net-fraction",
+   "page": 2,
+   "file": "txt_p2_net_fraction_uvvis_psd.png",
+   "caption": "PDF p.2 right column: net AM/SE fraction — SE dissolved in ethanol, centrifuged 13,000 rpm 60 min, UV–vis absorbance at 235 nm; AM sediment dried 333 K, dispersed in water, laser-diffraction PSD (SALD2100).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 867,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    516.0,
+    560,
+    667.7
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x3a",
+   "kind": "text",
+   "label": "p3-ion-blocking-cell",
+   "page": 2,
+   "file": "txt_p3_ion_blocking_cell_360mpa.png",
+   "caption": "PDF p.2 right → p.3 left (stacked): ion-blocking cell of the composite cathode only, 80 mg pressed uniaxially at 360 MPa, stainless rods Ø10 mm; EIS SP-200, 10 mV, 1 MHz–10 mHz, 298 K; electrical and ionic resistances by fitting two semicircles [30–32]; conductivity from resistance, thickness, area; each sample measured three times (mean ± SD).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1216,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    699.1,
+    560,
+    758.4
+   ],
+   "parts": [
+    {
+     "page": 2,
+     "bbox": [
+      304,
+      699.1,
+      560,
+      758.4
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      35,
+      457.0,
+      291,
+      617.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x3b",
+   "kind": "text",
+   "label": "p3-half-cell",
+   "page": 3,
+   "file": "txt_p3_halfcell_360mpa_thickness_cycling.png",
+   "caption": "PDF p.3 left → right (stacked): half-cell = mixture 10 mg + SE 80 mg pressed in a die at 360 MPa for 5 min; cathode ≈50 µm and separator 400–500 µm after compression; Li–In pressed at 90 MPa 5 min; Ø10 mm; 0.1 C (1 C = 1.6 mA cm−2) three cycles; rate 0.1–2.0 C with the other direction at 0.1 C; 2.38–3.63 V vs Li–In (3.0–4.25 V vs Li+/Li); EIS at 50 % SOC, 7 MHz–10 mHz; 20 cycles at 1.0 C discharge / 0.1 C charge.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1690,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    657.3,
+    291,
+    758.4
+   ],
+   "parts": [
+    {
+     "page": 3,
+     "bbox": [
+      35,
+      657.3,
+      291,
+      758.4
+     ]
+    },
+    {
+     "page": 3,
+     "bbox": [
+      304,
+      457.0,
+      560,
+      659.3
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x4a",
+   "kind": "text",
+   "label": "p4-wall-adhesion",
+   "page": 4,
+   "file": "txt_p4_se_wall_adhesion_net_fraction.png",
+   "caption": "PDF p.4 left column: net SE fraction fell from 16 wt% and more at higher chopper speed, owing to SE adhesion to the inner wall of the HSM.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 576,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    182.6,
+    291,
+    278.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x4b",
+   "kind": "text",
+   "label": "p4-am-unbroken",
+   "page": 4,
+   "file": "txt_p4_am_unbroken_se_deagglomeration_adhesion.png",
+   "caption": "PDF p.4 left → right (stacked): AM PSD unchanged → AM not broken; SE agglomerates of AM size at 5000 rpm; fewer at 12,500 rpm with some SE on AM; most SE adhered to AM at 25,000 rpm; AM = sintered aggregates not disaggregated; deagglomeration promoted ≥ 12,500 rpm, adhesion at 25,000 rpm.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1341,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    278.5,
+    291,
+    447.7
+   ],
+   "parts": [
+    {
+     "page": 4,
+     "bbox": [
+      35,
+      278.5,
+      291,
+      447.7
+     ]
+    },
+    {
+     "page": 4,
+     "bbox": [
+      304,
+      60.8,
+      560,
+      129.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x4c",
+   "kind": "text",
+   "label": "p4-sigma-explanation",
+   "page": 4,
+   "file": "txt_p4_sigma_e_am_contact_sigma_ion_net_se.png",
+   "caption": "PDF p.4 right column: σ_e set by AM–AM contacts (electrons pass through AM); high SE dispersion puts SE around AM → fewer AM–AM contacts → lower σ_e; σ_ion unchanged with speed because higher SE dispersion is offset by the lower net SE fraction (Table 1).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1970,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    129.0,
+    560,
+    474.2
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x4d",
+   "kind": "text",
+   "label": "p4-voids-summary",
+   "page": 4,
+   "file": "txt_p4_voids_percolated_summary_12500.png",
+   "caption": "PDF p.4 right column: rsc-5000 cathode contains many more voids (fewer SE at inter-AM sites, insufficient deagglomeration); ≥ 12,500 rpm → fewer voids, well-percolated ionic path, more SE between AM.",
+   "rotated_deg": 0,
+   "w": 1460,
+   "h": 925,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    474.2,
+    560,
+    636.3
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x5a",
+   "kind": "text",
+   "label": "p5-eis-assignment",
+   "page": 5,
+   "file": "txt_p5_eis_assignment_rs_rct.png",
+   "caption": "PDF p.5 left → right (stacked): EIS assignment [33,34] — > 100 kHz = SE resistance Rs (cathode layer + separator); 100 kHz–100 Hz semicircle = charge transfer Rct in the cathode; 100 Hz–0.2 Hz = Li–In anode diffusion; Rs and Rct evaluated (printed ‘Rct1’).",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 936,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    729.0,
+    291,
+    753.6
+   ],
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      35,
+      729.0,
+      291,
+      753.6
+     ]
+    },
+    {
+     "page": 5,
+     "bbox": [
+      304,
+      529.8,
+      560,
+      667.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x6a",
+   "kind": "text",
+   "label": "p6-rs-rct-optimal",
+   "page": 5,
+   "file": "txt_p6_rs_rct_decrease_optimal_25000.png",
+   "caption": "PDF p.5 right → p.6 left → p.6 right (stacked): Rs and Rct decrease with chopper speed (more AM–SE interface; fewer voids); higher 2.0 C capacity; ≥ 12,500 rpm promotes SE deagglomeration and adhesion without breaking AM; 25,000 rpm chosen as optimal despite slightly lower capacity than 12,500 rpm.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1527,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    667.9,
+    560,
+    753.0
+   ],
+   "parts": [
+    {
+     "page": 5,
+     "bbox": [
+      304,
+      667.9,
+      560,
+      753.0
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      35,
+      618.8,
+      291,
+      758.4
+     ]
+    },
+    {
+     "page": 6,
+     "bbox": [
+      304,
+      618.8,
+      560,
+      667.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7a",
+   "kind": "text",
+   "label": "p7-mpm-wm-composition",
+   "page": 6,
+   "file": "txt_p7_mpm_wm_same_net_fraction_sem_edx.png",
+   "caption": "PDF p.6 right → p.7 left (stacked): HSM (25,000 rpm) vs dry mortar–pestle (MPM) and wet mixing (WM); MPM/WM initial AM:SE = 87.8:12.2 wt% = HSM net fraction; Ni and S maps coincide for HSM and MPM, separate for WM; strong shear makes SE adhere to AM.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1100,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    704.3,
+    560,
+    758.4
+   ],
+   "parts": [
+    {
+     "page": 6,
+     "bbox": [
+      304,
+      704.3,
+      560,
+      758.4
+     ]
+    },
+    {
+     "page": 7,
+     "bbox": [
+      35,
+      60.8,
+      291,
+      202.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7b",
+   "kind": "text",
+   "label": "p7-balance-70vol",
+   "page": 7,
+   "file": "txt_p7_conductivity_balance_am_70vol.png",
+   "caption": "PDF p.7 left column: σ_ion higher for HSM than MPM and WM (Fig. 9); SE dispersion order HSM > MPM > WM (Fig. 10); σ_e of HSM slightly lower (adhered SE hinders AM–AM contact) but AM occupies > 70 % of the cathode volume so the σ_e loss is small relative to the σ_ion gain → ‘well-balanced’.",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1671,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    35,
+    202.2,
+    291,
+    495.1
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x7c",
+   "kind": "text",
+   "label": "p7-dqdv",
+   "page": 7,
+   "file": "txt_p7_dqdv_peaks_coulomb_efficiency.png",
+   "caption": "PDF p.7 right column: WM much lower capacity (electrically inactive AM); HSM and MPM ca. 140 mAh g−1; anodic peaks MPM 3.760 / HSM 3.772 V; cathodic HSM 3.713 / MPM 3.683 V; peak separation 0.059 V (HSM) vs 0.077 V (MPM); coulomb efficiency 99.01 % vs 97.35 %.",
+   "rotated_deg": 0,
+   "w": 1463,
+   "h": 1448,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    281.4,
+    560,
+    532.5
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x8a",
+   "kind": "text",
+   "label": "p8-coalescence-rate",
+   "page": 7,
+   "file": "txt_p8_rs_compressive_force_coalescence_rate.png",
+   "caption": "PDF p.7 right → p.8 left → p.8 right (stacked): HSM lowest Rs — uniformly dispersed SE may give more uniform compressive force during electrode preparation and promote SE–SE coalescence (lower SE–SE interfacial resistance); Rct order HSM < MPM < WM = dispersibility order; HSM highest capacity at 2.0 C.",
+   "rotated_deg": 0,
+   "w": 1461,
+   "h": 1527,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    532.5,
+    560,
+    555.2
+   ],
+   "parts": [
+    {
+     "page": 7,
+     "bbox": [
+      304,
+      532.5,
+      560,
+      555.2
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      35,
+      527.7,
+      291,
+      751.0
+     ]
+    },
+    {
+     "page": 8,
+     "bbox": [
+      304,
+      527.7,
+      560,
+      550.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "x9a",
+   "kind": "text",
+   "label": "p9-cycle-linbo3",
+   "page": 8,
+   "file": "txt_p9_cycle_retention_linbo3_not_worn.png",
+   "caption": "PDF p.8 right → p.9 left (stacked): 1.0 C cycling — MPM 97 → 67 mAh g−1 (69 %); HSM 97 %, WM 92 %; capacity fade attributed to contact changes from AM volume change; WM retention high because AM utilisation low (high Rct); HSM highest capacity and retention → LiNbO3 coating not worn out by HSM mixing (inferred).",
+   "rotated_deg": 0,
+   "w": 1464,
+   "h": 1981,
+   "dpi": 400,
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "bbox": [
+    304,
+    550.4,
+    560,
+    751.0
+   ],
+   "parts": [
+    {
+     "page": 8,
+     "bbox": [
+      304,
+      550.4,
+      560,
+      751.0
+     ]
+    },
+    {
+     "page": 9,
+     "bbox": [
+      35,
+      566.6,
+      291,
+      714.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph rendered by hand at 400 dpi — column rectangle(s) from the text-layer line boxes of the first/last line, cut at the midpoint of the white gap to the neighbouring line (no clipped neighbour lines) → ink trim → stacked top-to-bottom in reading order (24 px gap) → uniform 33 px (6 pt) white margin (2026-11-22, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "577427f8-87._Dry_mixing_of_cathode_composite_powder_for_all-solid-state_batteries_using_a_high-shear_mixer.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-22) found all 13 figures and Table 1 by caption (exclusion list: 'f7 p5 영역 없음' = a body-text reference, figure still cut). All 14 tool crops re-cut: fig_3 and fig_13 contained neighbouring right-column body text, tab_1 was the whole left column of p.4, the other 11 had uneven side margins (≈45–50 pt white each side). + 23 panel crops (1a–b · 4a–c · 6a–c · 7a–d · 8a–c · 10a–c · 11a–b · 12a–c) + 20 evidence paragraphs (txt_*). No numbered or inline equations in the paper → 0 equation crops. No SI. Full-page renders: none (2026-11-22, litdb-curator).",
+ "note_manual": "Same-data reuse visible in the crops: Fig. 9 HSM bars = Fig. 5 rsc-25000 bars (≤ 0.004 × 10⁻⁵ S cm⁻¹), Fig. 11/12 HSM curves and markers = Fig. 7 rsc-25000 (≤ 0.2 mAh g⁻¹; Rs/Rct tables 71.0/13.0 both), Fig. 8(a) HSM SEM = Fig. 4(c) third row (normalised correlation of the embedded rasters 0.93 vs 0.54 control). Printed points to check: 'the ionic conductivity was not unchanged' (p.4, meaning 'unchanged'); 'Rct1' (p.5); '−0.9 Pa' gauge pressure (p.2); 'Technolvogy' (p.9); Fig. 7(a) rsc-12500 0.1 C discharge 143.1 vs Fig. 7(c) 0.1 C point 151.8 mAh g⁻¹ (different cycles, not explained); Fig. 13 WM retention read 91.4 % vs text 92 %; anodic dQ/dV peaks flat-topped within ≈20 mV.",
+ "key_note": "manual keys: f<N> = whole figure (re-cut) · f<N><panel> = panel crop (panel_of) · x<PDF page><letter> = evidence paragraph (kind 'text'; multi-part ones list 'parts' with PDF page numbers) · t1 = Table 1 (re-cut) · 'page' = PDF page = printed page (article 103705, pages 1–10)",
+ "digitized": {
+  "file": "digitized.csv",
+  "rows": 162,
+  "method": "VECTOR PATH COORDINATES (not raster reads): PyMuPDF get_drawings() of the published PDF — bar = rectangle top, error bar = cap lines (±SD = half cap distance), markers = centre of the circle path, curves = polyline vertices, dQ/dV peaks = extreme vertex (span of near-maximum vertices in 'note'); axis calibration = plot frame + tick marks (tick residual ≤ 0.003 units). Fig. 3 PSD on a log axis 0.1–100 µm (bins of the analyser)."
+ }
+}
