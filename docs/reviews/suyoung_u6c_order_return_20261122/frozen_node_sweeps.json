@@ -1,0 +1,239 @@
+{
+  "by_friction": {
+    "0.0": {
+      "asymmetric_triangle": {
+        "batches": {
+          "1": {
+            "max_change_from_previous_batch": 1.1439574189352464,
+            "max_kinetic_energy": 0.08720702155000856,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4519125641932577,
+            "min_kinetic_energy": 0.04495275135100632
+          },
+          "2": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.08720702155000856,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4519125641932577,
+            "min_kinetic_energy": 0.04495275135100632
+          },
+          "4": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.08720702155000856,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4519125641932577,
+            "min_kinetic_energy": 0.04495275135100632
+          },
+          "16": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.08720702155000856,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4519125641932577,
+            "min_kinetic_energy": 0.04495275135100632
+          }
+        },
+        "permutations": 6
+      },
+      "symmetric_triangle": {
+        "batches": {
+          "1": {
+            "max_change_from_previous_batch": 1.3169567191065923,
+            "max_kinetic_energy": 0.09082031250000001,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3788861141556919,
+            "min_kinetic_energy": 0.0908203125
+          },
+          "2": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.09082031250000001,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3788861141556919,
+            "min_kinetic_energy": 0.0908203125
+          },
+          "4": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.09082031250000001,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3788861141556919,
+            "min_kinetic_energy": 0.0908203125
+          },
+          "16": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.09082031250000001,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3788861141556919,
+            "min_kinetic_energy": 0.0908203125
+          }
+        },
+        "permutations": 6
+      },
+      "two_body_control": {
+        "batches": {
+          "1": {
+            "max_change_from_previous_batch": 1.08,
+            "max_kinetic_energy": 0.13300000000000003,
+            "max_momentum_error": 1.6653345369377348e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.13300000000000003
+          },
+          "2": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.13300000000000003,
+            "max_momentum_error": 1.6653345369377348e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.13300000000000003
+          },
+          "4": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.13300000000000003,
+            "max_momentum_error": 1.6653345369377348e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.13300000000000003
+          },
+          "16": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.13300000000000003,
+            "max_momentum_error": 1.6653345369377348e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.13300000000000003
+          }
+        },
+        "permutations": 2
+      }
+    },
+    "0.5": {
+      "asymmetric_triangle": {
+        "batches": {
+          "1": {
+            "max_change_from_previous_batch": 1.0574516923399637,
+            "max_kinetic_energy": 0.050976496554347564,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4125348640155808,
+            "min_kinetic_energy": 0.022677954394754327
+          },
+          "2": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.050976496554347564,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4125348640155808,
+            "min_kinetic_energy": 0.022677954394754327
+          },
+          "4": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.050976496554347564,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4125348640155808,
+            "min_kinetic_energy": 0.022677954394754327
+          },
+          "16": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.050976496554347564,
+            "max_momentum_error": 1.1443916996305594e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.4125348640155808,
+            "min_kinetic_energy": 0.022677954394754327
+          }
+        },
+        "permutations": 6
+      },
+      "symmetric_triangle": {
+        "batches": {
+          "1": {
+            "max_change_from_previous_batch": 1.1630582360188388,
+            "max_kinetic_energy": 0.03935082169591916,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3459936490538904,
+            "min_kinetic_energy": 0.039350821695919136
+          },
+          "2": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.03935082169591916,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3459936490538904,
+            "min_kinetic_energy": 0.039350821695919136
+          },
+          "4": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.03935082169591916,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3459936490538904,
+            "min_kinetic_energy": 0.039350821695919136
+          },
+          "16": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.03935082169591916,
+            "max_momentum_error": 0.0,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.3459936490538904,
+            "min_kinetic_energy": 0.039350821695919136
+          }
+        },
+        "permutations": 6
+      },
+      "two_body_control": {
+        "batches": {
+          "1": {
+            "max_change_from_previous_batch": 1.0948972554536796,
+            "max_kinetic_energy": 0.106,
+            "max_momentum_error": 2.0014830212433605e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.106
+          },
+          "2": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.106,
+            "max_momentum_error": 2.0014830212433605e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.106
+          },
+          "4": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.106,
+            "max_momentum_error": 2.0014830212433605e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.106
+          },
+          "16": {
+            "max_change_from_previous_batch": 0.0,
+            "max_kinetic_energy": 0.106,
+            "max_momentum_error": 2.0014830212433605e-16,
+            "max_residual_closing_speed": 0.0,
+            "max_same_body_velocity_difference": 0.0,
+            "min_kinetic_energy": 0.106
+          }
+        },
+        "permutations": 2
+      }
+    }
+  },
+  "fixture_data_sha256": "d8eccd805f0a51a66b33b95ad7b12ae8480378c6cf8e98e93fecdf7eba6e0cc6",
+  "fixture_source_sha256": "5fd72069e8627d2fb4af2b4e74db194077a310503035c27f0bee6c1840aee619",
+  "native_sources_sha256": {
+    "dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+    "suyoung_u6_first_dev.py": "5db0f1bda90c824a23479401b7744cf8d31fc64f373441abca692dce6717bda5"
+  },
+  "pair_update_per_two_body_batch": 1,
+  "scope": "frozen single synthetic node; zero time advancement",
+  "sweeps_per_triple_batch": 4
+}

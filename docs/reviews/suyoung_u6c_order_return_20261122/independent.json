@@ -1,0 +1,84 @@
+{
+  "anchor_observed_by_both": false,
+  "common_end_u": 0.11100328595220721,
+  "first_abs_max": {
+    "original_MPa": 1.109658341962076,
+    "original_minus_relabelled_MPa": -0.09084028877528416,
+    "relabelled_MPa": 1.2004986307373602,
+    "step": 2475,
+    "u": 0.11100328595220721
+  },
+  "fixed_u": 0.11562281664031926,
+  "illustrative_inside_common_support": [
+    {
+      "original_MPa": 0.23438320970832008,
+      "original_minus_relabelled_MPa": 7.939620680560977e-05,
+      "relabelled_MPa": 0.23430381350151447,
+      "u": 0.025
+    },
+    {
+      "original_MPa": 0.3822444421671642,
+      "original_minus_relabelled_MPa": 0.0008960619622315202,
+      "relabelled_MPa": 0.38134838020493267,
+      "u": 0.05
+    },
+    {
+      "original_MPa": 0.48011954653111444,
+      "original_minus_relabelled_MPa": -0.000664312022706337,
+      "relabelled_MPa": 0.4807838585538208,
+      "u": 0.075
+    },
+    {
+      "original_MPa": 0.7395231152724464,
+      "original_minus_relabelled_MPa": -0.03225036570385942,
+      "relabelled_MPa": 0.7717734809763058,
+      "u": 0.1
+    }
+  ],
+  "linear_cap_u_original_minus_relabelled": 0.004602892525547242,
+  "max_gap_percent_of_1p2_MPa_cap_descriptive": 7.570024064607014,
+  "max_signed": {
+    "original_MPa": 0.38218250036347545,
+    "original_minus_relabelled_MPa": 0.0008962530522332313,
+    "relabelled_MPa": 0.3812862473112422,
+    "step": 1114,
+    "u": 0.049962691131619774
+  },
+  "min_signed": {
+    "original_MPa": 1.109658341962076,
+    "original_minus_relabelled_MPa": -0.09084028877528416,
+    "relabelled_MPa": 1.2004986307373602,
+    "step": 2475,
+    "u": 0.11100328595220721
+  },
+  "order_qualification_threshold": null,
+  "original_cap": {
+    "first_step_at_or_above": 2578,
+    "last_two_displacements": [
+      0.1155779668278134,
+      0.11562281664031926
+    ],
+    "last_two_pressures_MPa": [
+      1.199356917342582,
+      1.2008555155072616
+    ],
+    "linear_crossing_u": 0.11559721290544164
+  },
+  "relabelled_cap": {
+    "first_step_at_or_above": 2475,
+    "last_two_displacements": [
+      0.11095843613970136,
+      0.11100328595220721
+    ],
+    "last_two_pressures_MPa": [
+      1.1980042562233857,
+      1.2004986307373602
+    ],
+    "linear_crossing_u": 0.1109943203798944
+  },
+  "relabelled_elapsed_s": 92.84837057290133,
+  "relabelled_points": 9653,
+  "shared_native_knots": 2476,
+  "stage3_go": false,
+  "status": "DEVELOPMENT_ONLY"
+}
