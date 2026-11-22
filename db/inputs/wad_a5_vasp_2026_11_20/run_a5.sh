@@ -457,12 +457,23 @@ if ! mkdir "$LOCK" 2>/dev/null; then
 fi
 printf '%s %s\n' "$HOST" "$$" > "$LOCK/owner" || { rm -rf "$LOCK"; echo "⛔ 잠금 주인을 적지 못했다"; exit 2; }
 trap 'rm -rf "$LOCK"' EXIT; trap 'exit 143' TERM; trap 'exit 129' HUP; trap 'exit 130' INT
-# ── 끝난 사다리면 아무것도 띄우지 않는다 (리뷰 P1-1) ──
+# ── 끝난 사다리면 아무것도 띄우지 않는다 (리뷰 P1-1) · 보낼 묶음이 그 끝 기록을 담았는지 본다 (Codex EN P1 — 중간 PACK_ONLY 묶음 · 끝 포장 실패 뒤) ──
+ret_has_final(){ # a5_return.tgz 가 .sha256 (한 줄 · 그 이름) 과 맞고, 그 안의 run/final.json 이 지금 run/final.json 과 바이트로 같으면 0
+  [ -f a5_return.tgz ] && [ -f a5_return.tgz.sha256 ] || return 1
+  [ "$(awk 'END { print NR }' a5_return.tgz.sha256 2>/dev/null)" = 1 ] && grep -qxE '[0-9a-f]{64}  a5_return\.tgz' a5_return.tgz.sha256 || return 1
+  sha256sum -c --status a5_return.tgz.sha256 2>/dev/null || return 1
+  tar xzf a5_return.tgz -O run/final.json 2>/dev/null | cmp -s - run/final.json
+}
 if [ -f run/final.json ]; then
   fc=$(grep -o '"code": [0-9]*' run/final.json | head -1 | grep -o '[0-9]*$')
   log "■ 다시 돌림 — 이 사다리는 이미 끝났다: $(tr -d '\n' < run/final.json | cut -c1-240)"
-  echo "  아무것도 띄우지 않는다 · 보낼 것은 a5_return.tgz + .sha256 그대로 (포장만 다시: PACK_ONLY=1 bash run_a5.sh)"
-  case "$fc" in 0|1|5|6|8) exit "$fc";; *) echo "⛔ run/final.json 의 코드 '$fc' 를 읽을 수 없다 — 연락"; exit 2;; esac
+  case "$fc" in 0|1|5|6|8) ;; *) echo "⛔ run/final.json 의 코드 '$fc' 를 읽을 수 없다 — 연락"; exit 2;; esac
+  if ! ret_has_final; then
+    log "⛔ a5_return.tgz 가 없거나 · sha256 이 맞지 않거나 · 이 끝 기록 (run/final.json) 을 담지 않았다 — 옛 묶음을 보내지 않는다"
+    echo "⛔ 반송 묶음이 끝 기록과 맞지 않는다 (종료 4) — 계산은 다시 돌리지 말고 PACK_ONLY=1 bash run_a5.sh 로 포장만 다시"; exit 4
+  fi
+  echo "  아무것도 띄우지 않는다 · 보낼 것은 a5_return.tgz + .sha256 그대로 (sha256 · 끝 기록 포함 확인 · 포장만 다시: PACK_ONLY=1 bash run_a5.sh)"
+  exit "$fc"
 fi
 [[ "$(up)" =~ ^[0-9]+$ ]] || { echo "⛔ /proc/uptime 을 읽을 수 없다 — 벽시계 장부는 단조 시계로 잰다 (Linux)"; exit 2; }
 [ -n "${VASP_CMD:-}" ] || { echo "⛔ VASP_CMD 를 주세요 (예: mpirun -np 64 vasp_std)"; exit 2; }        # \${VAR:?} 는 1 로 끝난다 — 1 은 '값 없음' 이다 (종료 코드가 겹치지 않게)
@@ -626,6 +637,33 @@ run_one5(){ # $1 단 (A5|c1|c2) · $2 변형 (A5c|A5f|c1|c2) · $3 시도 폴더
 
 # ── 단의 갈래 (개정 5 해석 1 · 사용자 2026-11-20 — 러너와 검사기가 같은 순서로 본다) ──
 var_of(){ grep -o '"attempt": "[^"]*"' "$1/attempt.start" 2>/dev/null | head -1 | sed 's/.*: "//; s/"$//'; }
+kf5(){ grep -o "\"$2\": \"[^\"]*\"" "$1" 2>/dev/null | awk 'NR == 1 { v = $0 } END { if (NR == 1) { sub(/^"[^"]*": "/, "", v); sub(/"$/, "", v); print v } }'; }   # 한 줄 JSON 기록의 문자열 필드 ($1 파일 · $2 키 · 두 번 나오면 빈칸)
+ki5(){ grep -oE "\"$2\": [0-9]+[,}]" "$1" 2>/dev/null | awk 'NR == 1 { v = $0 } END { if (NR == 1) { sub(/^"[^"]*": /, "", v); sub(/[,}]$/, "", v); print v } }'; }    # 같은 기록의 정수 필드 (따옴표 없음 · 뒤가 , 또는 } · 두 번 나오면 빈칸)
+killed5(){ # $1 시도 폴더 · $2 단 · $3 행 수 → "-" (맞음) 또는 "상태 행수 사유" — 끊긴 시도도 원문에 남은 증거를 본다 (Codex EN P0 · P1 — 검사기 killed_problems 와 같은 순서):
+  #   ① 행 머리 — 그 단의 허용 머리 밖이면 SCF_UNVERIFIED ② c1 · c2 재시작 원문 — OUTCAR ISTART 1 job · ICHARG 0 charge · 'WAVECAR not read' 없음 · 등록부 문구 ·
+  #      NKPTS·NBANDS·ENCUT = 시작점 머리 (끝 기록이 없어 sha 셋은 못 본다 · 시작 복사본 sha 는 띄우기 전에 확인했다) — 아니면 RESTART_NOT_HONOURED
+  #   ③ killed.json — 한 줄 꼴 · 잡 · 단 · run_id = attempt.start · osz_rows = 지금 행 수 · wall_s 초 · recorded_s ≥ 시작 시각 — 아니면 KILLED_RECORD_MISMATCH
+  local d=$1 st=$2 n=$3 g why is ic f=$1/killed.json t0 rs
+  g=$(hdr_gate "$d" "$(stage_hdr "$st")"); why=${g#* }
+  { [ -n "$g" ] && [ "$why" = - ]; } || { echo "SCF_UNVERIFIED $n ${why:-row_gate_unreadable}"; return; }
+  case "$st" in c1|c2)
+    is=$(grep -aE '^[[:space:]]*ISTART *= *[0-9]+[[:space:]]+job' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ISTART *= *[0-9]+' | grep -oE '[0-9]+$')
+    ic=$(grep -aE '^[[:space:]]*ICHARG *= *[0-9]+[[:space:]]+charge' "$d/OUTCAR" 2>/dev/null | tail -1 | grep -oE 'ICHARG *= *[0-9]+' | grep -oE '[0-9]+$')
+    { [ "$is" = 1 ] && [ "$ic" = 0 ]; } || { echo "RESTART_NOT_HONOURED $n istart_${is:-NA}_icharg_${ic:-NA}"; return; }
+    ! grep -aq "WAVECAR not read" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null || { echo "RESTART_NOT_HONOURED $n wavecar_not_read"; return; }
+    grep -aqE -e "$RESTART_RE" "$d/stdout.log" "$d/OUTCAR" 2>/dev/null || { echo "RESTART_NOT_HONOURED $n no_restart_phrase"; return; }
+    { [ "$(out_num "$d" NKPTS)" = "${SP_NK:-x}" ] && [ "$(out_num "$d" NBANDS)" = "${SP_NB:-x}" ] && enc_eq "$(out_num "$d" ENCUT)" "${SP_EN:-x}"; } \
+      || { echo "RESTART_NOT_HONOURED $n dims_ne_start_head"; return; };;
+  esac
+  t0=$(ki5 "$d/attempt.start" t_start); rs=$(ki5 "$f" recorded_s)
+  { [ "$(awk 'END { print NR }' "$f" 2>/dev/null)" = 1 ] && grep -qx '{"job": ".*}' "$f" 2>/dev/null; } || { echo "KILLED_RECORD_MISMATCH $n killed_json_form"; return; }
+  [ "$(kf5 "$f" job)" = "$JOB" ] && [ "$(kf5 "$f" rung)" = "$st" ] || { echo "KILLED_RECORD_MISMATCH $n job_or_rung"; return; }
+  [ -n "$(kf5 "$d/attempt.start" run_id)" ] && [ "$(kf5 "$f" run_id)" = "$(kf5 "$d/attempt.start" run_id)" ] || { echo "KILLED_RECORD_MISMATCH $n run_id"; return; }
+  [ "$(kf5 "$f" osz_rows)" = "$n" ] || { echo "KILLED_RECORD_MISMATCH $n osz_rows_$(kf5 "$f" osz_rows)"; return; }
+  secs_ok "$(kf5 "$f" wall_s)" || { echo "KILLED_RECORD_MISMATCH $n wall_s"; return; }
+  { [ -n "$t0" ] && [ -n "$rs" ] && [ "$rs" -ge "$t0" ]; } 2>/dev/null || { echo "KILLED_RECORD_MISMATCH $n recorded_s"; return; }
+  echo -
+}
 gate5(){ # $1 시도 폴더 · $2 단 → "갈래 상태 행수 사유" (빈칸 없는 낱말 넷)
   #   NEW 띄울 차례 · WAIT5 끊김 (끝 기록 없음) · ZERO 전자 반복행 0 (멈춤 7) · ENV 다른 VASP 빌드 (끝 6) · REVIEW 1저자 (끝 8) · BAD2 이 러너가 띄운 시도가 아님 ·
   #   OK 주 기준 수렴 · NEXT 다음 단 (SCF_NOT_CONVERGED · 행 ≥ 1 실행 실패 · 행 ≥ 1 끊김 기록)
@@ -647,6 +685,7 @@ gate5(){ # $1 시도 폴더 · $2 단 → "갈래 상태 행수 사유" (빈칸 
   if [ -n "$ver" ] && [ "$ver" != "$REL_VER" ]; then echo "ENV VERSION_MISMATCH $n vasp_build"; return; fi
   [ "$n" -ge 1 ] 2>/dev/null || { echo "REVIEW KILLED_NO_ROWS 0 -"; return; }
   e=$(echo5 "$d" "$var"); [ "$e" = "-" ] || { echo "REVIEW SETTINGS_ECHO $n $e"; return; }
+  e=$(killed5 "$d" "$st" "$n"); [ "$e" = "-" ] || { echo "REVIEW $e"; return; }
   echo "NEXT KILLED $n -"
 }
 rc_of(){ grep -o '"rc": -\{0,1\}[0-9]*' "$1/attempt.json" 2>/dev/null | head -1 | grep -o -- '-\{0,1\}[0-9]*$'; }
@@ -714,7 +753,8 @@ SS=""; SPF=""; S=""; SPH=""; SP_NK=""; SP_NB=""; SP_EN=""; SPWHY="-"
 # A5
 read -r gk gs gn gw <<< "$(gate5 "$A" A5)"
 if [ "$gk" = NEW ]; then
-  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] || fin5 8 REVIEW "A5 가 없는데 뒤 단 기록이 있다 (시작점 · c1 · c2)"
+  [ ! -f run/start_point.json ] && [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null \
+    || fin5 8 REVIEW "A5 가 없는데 뒤 단 기록이 있다 (시작점 · c1 · c2 · run_aborted 의 c 단)"
   cap_gate A5
   if [ "$W0OK" = 1 ]; then var=A5c; ws=$W0_WAVECAR; we=$W0_SHA; else var=A5f; ws=""; we=""; fi
   log "▶ A5 ($var · LDIPOL 끔 · MAXMIX 200 · AMIX 0.1 · AMIN 0.01 · NELM 300)"
@@ -730,7 +770,8 @@ if [ -f run/start_point.json ]; then
   sp_load || fin5 8 REVIEW "시작점 기록 (run/start_point.json) 의 형식 · 경로가 맞지 않는다"
   log "시작점 $SPF (기록 · sha $SS · 다시 정하지 않는다)"
 else
-  { [ ! -e "$C1" ] && [ ! -e "$C2" ]; } || fin5 8 REVIEW "c 단이 있는데 시작점 기록이 없다"
+  { [ ! -e "$C1" ] && [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c[12]_*" > /dev/null; } \
+    || fin5 8 REVIEW "c 단 (run/ 또는 run_aborted/) 이 있는데 시작점 기록이 없다 — 시작점은 첫 c 단 전에 한 번만 쓴다 (유실 뒤 다시 정하지 않는다 · Codex EN P1)"
   why=$(elig5 "$A"); e=$?
   case "$e" in
     0) SPF=A5; S=$A/WAVECAR; SS=$(wsha "$A/WAVECAR.info" sha256); SPH=$(info_head "$A/WAVECAR.info");;
@@ -748,7 +789,7 @@ fi
 # c1
 read -r gk gs gn gw <<< "$(gate5 "$C1" c1)"
 if [ "$gk" = NEW ]; then
-  [ ! -e "$C2" ] || fin5 8 REVIEW "c1 이 없는데 c2 가 있다"
+  [ ! -e "$C2" ] && ! compgen -G "run_aborted/${JOB}_c2_*" > /dev/null || fin5 8 REVIEW "c1 이 없는데 c2 (run/ 또는 run_aborted/) 가 있다"
   cap_gate c1
   if [ ! -f run/start_point.json ]; then
     sp_write || stop5 3 "시작점 기록 (run/start_point.json) 쓰기 실패"

@@ -18,9 +18,9 @@
  },
  "start_point_rule": "첫 c 단을 띄울 때 한 번 run/start_point.json (from A5|W0 · path · sha256 · head) 에 두고 다시 정하지 않는다 · 검사기는 c 단을 그 기록에 대조하고, 그 기록이 규칙 (A5 자격 → A5 · 아니면 ⓪ · 둘 다 아니면 닫음) 과 같은지 따로 본다",
  "final_record": "끝 (0 · 1 · 5 상한 · 8 · 돈 뒤의 6 — VASP 빌드 다름) 에 run/final.json — 다시 돌려도 아무것도 띄우지 않는다 · 검사기는 끝 기록이 기록으로 낸 사다리 판정과 같은지 본다 (보수 쪽으로만)",
- "tool_sha256": "751dbe304792c9c91aa1480a3aebda814db1ae58c82e5082a710890ba39674ee",
+ "tool_sha256": "83695d512a7a066f035ef595a7551c5e3284ef7f9a43e37312521a69e167cc7f",
  "round2_tool_sha256": "9dc2f98dd44232fba4f3e6068f2e625d67e10713fe4e2a03f7f1621bfbf85358",
- "v5_tool_sha256": "9c82004dd21436811d238c9e1e55482eee5d11778c07a17b54dbc76741a4dcbf",
+ "v5_tool_sha256": "90065ed5c4f7d052a248a1ca7b17af6f4bf67a9d548ddc27ce70415ba664d013",
  "sources": {
   "v5_manifest_sha256": "8118bbc023d6699cd7cd1b6e6afd32872e0699af70b412e15b89365e556ee2f1",
   "registry_path": "db/raw/wad_round2_vasp_2026_10_22/pp_registry_round2_2026_10_26.json",

@@ -7,7 +7,7 @@ letter: EN
 track: wad
 channel: codex
 kind: reply
-status: 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-GO · 기준 68f683462 · MANIFEST 8439e129… · 고침 진행 (빌드 기록 ⑥)
+status: 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-GO · 기준 68f683462 · MANIFEST 8439e129… · 고침 끝 (빌드 기록 ⑥ · 묶음 MANIFEST b01d0861…) → EO 편지
 confidence: medium
 verificationStatus: unverified
 explored: false

@@ -106,5 +106,28 @@
     "by": "claude · 2026-11-22 (대피 세션)",
     "돌연변이_최종_1": "최종 판 (도구 35dc283a) --mutants --jobs 3 → 50/51 (1055 s) · m12 (검사기 'c1 OK 인데 c2' 대조 뺌) 가 살아남음 — 혼자 돌리면 두 번 다 잡음 (병렬 부하에서만 놓침)",
     "m12_진단": "시험이 c1 폴더를 그대로 c2 로 복사해 'c1 OK 인데 c2' 를 만든다 → 가짜 c1 이 1 초 넘게 걸리면 (부하) 시간 순서 위반이 먼저 LADDER_VIOLATION 을 내서 상태만 보는 시험은 이 대조를 빼도 통과 → 사유 목록 (ladder_violations) 에 그 대조 문구가 있는지까지 보게 조임 · CPU 4 개를 일부러 바쁘게 한 채로도 m12 잡음"
+  },
+  "⑥_Codex_EN_고침_2026_11_22": {
+    "근거": "Codex EN 회신 (NO-GO · 기준 68f683462 · MANIFEST 8439e129…) — kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md · 첨부 codex_EN_evidence_2026_11_22/",
+    "P0_끊긴_단": "러너 killed5 (gate5 끊긴 갈래 · 행 수 → 설정 에코 다음 · 끝난 시도와 같은 순서): ① 행 머리 = 그 단의 것 (A5 · c1 DAV/RMM · c2 SDA/CGA) → 아니면 SCF_UNVERIFIED ② c1 · c2 재시작 원문 (OUTCAR ISTART 1 job · ICHARG 0 charge · 'WAVECAR not read' 없음 · 등록부 문구 · NKPTS·NBANDS·ENCUT = 시작점 머리) → 아니면 RESTART_NOT_HONOURED ③ killed.json 대조 → 하나라도 어긋나면 REVIEW 종료 8 · 검사기 killed_problems 가 같은 셋 · 같은 순서 → 그 상태 (killed 유지) · a5_class REVIEW → STOPPED_FOR_REVIEW · 수집기 a5_c2_confirmed 는 상태가 INCOMPLETE_ATTEMPT 인 끊김만 · 못 보는 것: 끊긴 시도의 WAVECAR sha 셋 (끝 기록 없음 · 복사본 sha 는 띄우기 전에 확인)",
+    "P1_killed_json": "한 줄 · '{\"job\": \"' 시작 · 잡 · 단 · run_id = attempt.start · osz_rows = 지금 행 수 · wall_s 초 꼴 · recorded_s ≥ 시작 · 같은 키 두 번 없음 (러너 kf5 · ki5 는 두 번 나온 키를 빈칸 · 검사기 one_line_record 는 같은 키 거부) → 아니면 KILLED_RECORD_MISMATCH",
+    "P1_중단_영수증": "run_aborted 시도마다 infra_abort.json 필수 — 한 줄 꼴 · 잡 · 단 = 폴더 · wall_s 초 또는 UNKNOWN · recorded_s 정수 ≥ 시작 → 아니면 LADDER_VIOLATION (abort_receipt_problem)",
+    "P1_시작점_유실": "러너: 시작점 첫 기록 전 · A5 다시 띄우기 전 · c1 다시 띄우기 전에 run_aborted 의 c 단까지 본다 → 있으면 REVIEW 종료 8 (아무것도 안 띄움 · 다시 정하지 않음) · 검사기: start_point.json written_s 정수 ≤ 첫 c 단 시작 (run_aborted 포함) → 아니면 LADDER_VIOLATION",
+    "P1_옛_반송_묶음": "끝난 사다리 재실행: a5_return.tgz 가 한 줄 .sha256 과 맞고 (sha256sum -c) 묶음 안 run/final.json 이 지금 파일과 바이트로 같아야 → 아니면 종료 4 + PACK_ONLY 안내 (ret_has_final)",
+    "P2_수집기": "a5_c2_confirmed: SCF_NOT_CONVERGED · RUN_FAILED · 끊김 모두 정수 osz_rows ≥ 1 이어야 확인된 끝",
+    "P3_README": "§3 을 'A5 → c1 (시작점 고르기)' 와 'c1 → c2 (다음 단 조건)' 로 나눔 · 종료 8 줄에 남의 행 머리 · killed.json 불일치 · 끊긴 시도도 같은 원문 검사 · §4 에 옛 묶음 종료 4",
+    "시험_더함": "가짜 VASP 'behaviour@N' (N 행만 · 끝 기록 없음 = 스케줄러 끊김) · istart0p (문구 있음 + ISTART 0) · 가짜 tar FAKE_TAR_FAIL (끝 포장만 실패) · ken1–5 (Codex 반례 둘 + 문구 없음 · NBANDS 873 · ISTART 0 문구 있음 → 종료 8 · STOPPED_FOR_REVIEW · 채택 없음) · kill2b 양성 대조 (7 행 끊김 · 정상 → 종료 1 · c1 보조) · kv0–7 (러너 killed.json 손상 8 종 → 종료 8) · S2 변형 10 종 (검사기) · rcpt (영수증 6 종 → LADDER_VIOLATION · 양성 대조 OK) · splost · spok · spw (시작점) · ga5 · gc1 (가드) · stale (옛 묶음) · V5 행 수 음성 6 · 양성 1 · 끊긴 모순 3",
+    "시험": "build_a5 163/163 (124 → 163) · build_v5 313/313 (303 → 313) · build_round2 194/194 (파일 안 바뀜)",
+    "돌연변이_새것": "m52–m84 (러너 16 · 검사기 16 · 수집기 1) --jobs 3 → 33/33 잡음 · 만들면서 둘 조임: ISTART 확인이 문구 확인에 가려짐 → istart0p · 한 줄 꼴 확인이 정수 판독에 가려짐 → 두 줄 변형 (recorded_s 가 줄 끝)",
+    "돌연변이_옛것": "m01–m51 새 판으로 다시 — 진행 중",
+    "EM_탐침": "p1–p9 (10 개) 새 판으로 다시 → 출력이 EN 판과 같음 (시각 · 해시 정규화 뒤 · p6 한 줄은 해시 표기 차이)",
+    "G5_재현": "V5 --collect (COMMAND_AND_CHECKS 본 집계) 패치 판 → rc 3 · collect JSON afecfa08… 바이트 같음 · 화면 출력 같음 (값은 안 봄)",
+    "최종_도구_sha256": {
+      "tools/wad/build_a5_vasp_package.py": "83695d512a7a066f035ef595a7551c5e3284ef7f9a43e37312521a69e167cc7f",
+      "tools/wad/build_v5_vasp_package.py": "90065ed5c4f7d052a248a1ca7b17af6f4bf67a9d548ddc27ce70415ba664d013"
+    },
+    "묶음": "db/inputs/wad_a5_vasp_2026_11_20/ 다시 빌드 (임시 빌드 → diff -r → 넷 복사) · MANIFEST sha256 b01d0861e382ab3af04278dd115e6b7d088c543af9bfbfea80a7e079c60867b0 (그 앞 8439e129) · 바뀐 것 run_a5.sh · README.md · jobs.json (도구 sha) · MANIFEST · 잡 입력 바이트 같음 · bash -n 통과 · MANIFEST 대조 통과",
+    "다음": "Codex 편지 EO (kb/reviews/codex_EO_prompt_wad_a5_en_fixes_2026_11_22.md · 영어) → 사용자 발송 → GO 뒤 zip · handoff · 운영 안내",
+    "by": "claude · 2026-11-22 (대피 세션)"
   }
 }
