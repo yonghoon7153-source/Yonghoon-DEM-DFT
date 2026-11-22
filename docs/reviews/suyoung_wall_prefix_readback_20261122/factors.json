@@ -1,0 +1,115 @@
+{
+  "after": {
+    "F16_step": 540,
+    "F8_minus_F16_MPa": 0.0343298593814407,
+    "F8_step": 270,
+    "contributions": {
+      "mass_rate_MPa": 0.010056406900052843,
+      "one_sided_MPa": 1.1756649826412087e-09,
+      "speed_MPa": 0.02427345130572288
+    },
+    "phases": {
+      "post": {
+        "F16_M": 0.0,
+        "F16_M_over_dt": 0.0,
+        "F16_mean_down": null,
+        "F16_pressure_MPa": 0.0,
+        "F8_M": 5.024003356309479e-08,
+        "F8_M_over_dt": 2.2365015687342816e-05,
+        "F8_mean_down": 3.6924111614238715e-06,
+        "F8_pressure_MPa": 1.1756649826412087e-09,
+        "mass_rate_MPa": 0.0,
+        "one_sided_MPa": 1.1756649826412087e-09,
+        "speed_MPa": 0.0,
+        "support": "ONE_SIDED_WALL_SUPPORT"
+      },
+      "pre": {
+        "F16_M": 0.0005356926088347964,
+        "F16_M_over_dt": 0.47694130558800546,
+        "F16_mean_down": 0.0017220429039149867,
+        "F16_pressure_MPa": 0.01169265738695957,
+        "F8_M": 0.0015717766972875222,
+        "F8_M_over_dt": 0.6996971936272309,
+        "F8_mean_down": 0.004620148138951692,
+        "F8_pressure_MPa": 0.0460225155927353,
+        "mass_rate_MPa": 0.010056406900052843,
+        "one_sided_MPa": 0.0,
+        "speed_MPa": 0.02427345130572288,
+        "support": "BOTH_SUPPORTED"
+      }
+    },
+    "signed_percent": {
+      "mass_rate_MPa": 29.293469537161883,
+      "one_sided_MPa": 3.424613452616683e-06,
+      "speed_MPa": 70.70652703822468
+    },
+    "u": 0.012109449376604409
+  },
+  "at_539_total_only": {
+    "coarse_minus_fine_MPa": 0.03359937103298061,
+    "coarse_total_interpolated_MPa": 0.04504276337320029,
+    "common_fine_peak_MPa": 0.6636991102836952,
+    "fine_total_observed_MPa": 0.011443392340219682,
+    "threshold_MPa": 0.03318495551418476,
+    "u": 0.012087024470351482
+  },
+  "before": {
+    "F16_step": 538,
+    "F8_minus_F16_MPa": 0.03283080752106251,
+    "F8_step": 269,
+    "contributions": {
+      "mass_rate_MPa": 0.00963030569416857,
+      "one_sided_MPa": 6.240284329790984e-10,
+      "speed_MPa": 0.023200501202865507
+    },
+    "phases": {
+      "post": {
+        "F16_M": 0.0,
+        "F16_M_over_dt": 0.0,
+        "F16_mean_down": null,
+        "F16_pressure_MPa": 0.0,
+        "F8_M": 4.957934433446558e-08,
+        "F8_M_over_dt": 2.2070901135365188e-05,
+        "F8_mean_down": 1.9860034203792084e-06,
+        "F8_pressure_MPa": 6.240284329790984e-10,
+        "mass_rate_MPa": 0.0,
+        "one_sided_MPa": 6.240284329790984e-10,
+        "speed_MPa": 0.0,
+        "support": "ONE_SIDED_WALL_SUPPORT"
+      },
+      "pre": {
+        "F16_M": 0.0005355975268062715,
+        "F16_M_over_dt": 0.4768566515418702,
+        "F16_mean_down": 0.0016545228040816245,
+        "F16_pressure_MPa": 0.011232202456932952,
+        "F8_M": 0.0015710478625698399,
+        "F8_M_over_dt": 0.6993727432091401,
+        "F8_mean_down": 0.004425487634089029,
+        "F8_pressure_MPa": 0.04406300935396702,
+        "mass_rate_MPa": 0.00963030569416857,
+        "one_sided_MPa": 0.0,
+        "speed_MPa": 0.023200501202865507,
+        "support": "BOTH_SUPPORTED"
+      }
+    },
+    "signed_percent": {
+      "mass_rate_MPa": 29.333136834938575,
+      "one_sided_MPa": 1.900740432835089e-06,
+      "speed_MPa": 70.666861264321
+    },
+    "u": 0.012064599564098444
+  },
+  "label": "DEVELOPMENT_ONLY",
+  "method": "symmetric_product_split_per_wall_call",
+  "observation_steps": {
+    "8": 270,
+    "16": 540
+  },
+  "physics_pin": "99938d3bd4cb1cbba0e1377be2ff9dac9b228d2f",
+  "prior_return_sha256": "fc685932f4a1710fe944c5d2dafbcb56bf239f473184f009983a3ff4805dabea",
+  "release": "e1db2841252d7f5babfbc4e55ad401540040ca24",
+  "return_sha256": "0d415250759821b9db816e6a13d43ca190e983a7389914c5c3357b697399a5ae",
+  "screen_sha256": "0d90a74810dab7a0f6a1d074e878c7e03fce9562d6f6031d4b706bcf3cc79f33",
+  "stage3_go": false,
+  "u6_qualified": false
+}
