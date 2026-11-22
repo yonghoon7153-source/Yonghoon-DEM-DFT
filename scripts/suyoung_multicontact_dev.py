@@ -48,6 +48,19 @@ def _impulse_changes(jn, jt, closing, slip, mu):
     return change_n, np.clip(slip, low, high)
 
 
+def _remaining_four_body_faces(guess, choices):
+    """Order previously untested faces by changes other than opening a pair."""
+    buckets = [[] for _ in range(len(guess) + 1)]
+    for modes in itertools.product(choices, repeat=len(guess)):
+        changed = [new for old, new in zip(guess, modes) if old != new]
+        retained_changes = sum(new != "open" for new in changed)
+        # Hamming distances 0--2 and all release-only faces were tried first.
+        if len(changed) > 2 and retained_changes:
+            buckets[retained_changes].append(modes)
+    for bucket in buckets:
+        yield from bucket
+
+
 def _polish_node(incoming, mass, incidence, normal, tangent, reduced_mass,
                  mu, jn, jt, guess_n, guess_t_raw, speed_tol):
     """Solve a proposed linear contact face, then check the original nonlinear law."""
@@ -152,6 +165,13 @@ def _polish_node(incoming, mass, incidence, normal, tangent, reduced_mass,
                 result = on_face(alternative)
                 if result is not None:
                     return result
+    if len(mass) == 4:
+        # Six pairs give at most 4**6 unique labels across all search tiers.
+        # A singular face has one least-squares representative tested here.
+        for modes in _remaining_four_body_faces(guess, choices):
+            result = on_face(modes)
+            if result is not None:
+                return result
     return None
 
 

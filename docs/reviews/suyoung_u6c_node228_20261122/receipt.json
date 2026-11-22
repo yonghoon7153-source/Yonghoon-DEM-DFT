@@ -1,0 +1,21 @@
+{
+  "release": "d0c33bc19c2dd1291f3cf3ae0788fd193065e72b",
+  "source_sha256": "742bd8b04ed41192ba888825f713605327042d4bd8fdb215a068495a323e7f2d",
+  "source_manifest_entries": 10,
+  "archive_sha256": "a100f018bd5e9c3621395ac436550029759fe17a02a55641db121d52dba1fdbe",
+  "screen_sha256": "5e967a46736cd942c12323b4876ebf3b96dbd9ddf194c849905311019e092571",
+  "return_manifest_entries": 2,
+  "status": "CONTACT_STOP",
+  "attempt": 228,
+  "last_complete": 227,
+  "trace_sha256": "d4584cad3dd412aa58478ea04cd39da5af2b2152b9bb37634cbd0cbdb23efc30",
+  "trace_records": 228,
+  "matching_previous_prefix_samples": 145,
+  "node_capture_sha256": "fca406d296c8a6f2b5bb260784711afdc87a34cda48f71ce93c8abcaf7f1059f",
+  "node_id": 2304,
+  "fields": 4,
+  "reversed_started": false,
+  "pair_comparison_available": false,
+  "u6_qualified": false,
+  "stage3_go": false
+}

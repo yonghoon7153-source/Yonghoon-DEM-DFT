@@ -1,0 +1,30 @@
+{
+  "scope": "fixed-seed synthetic perturbations of one captured node",
+  "old_source_sha256": "742bd8b04ed41192ba888825f713605327042d4bd8fdb215a068495a323e7f2d",
+  "new_source_sha256": "8af03f07e8149219a13baa1d1ca79c2fc87940bb991c6055769ac0beeb3a8880",
+  "initial_seed": 2282304,
+  "trials": 48,
+  "old_accepted": 19,
+  "new_accepted": 48,
+  "accepted_before_solutions_preserved_bitwise": true,
+  "per_scale": [
+    {
+      "scale": 0.001,
+      "total": 16,
+      "old": 0,
+      "new": 16
+    },
+    {
+      "scale": 0.01,
+      "total": 16,
+      "old": 7,
+      "new": 16
+    },
+    {
+      "scale": 0.05,
+      "total": 16,
+      "old": 12,
+      "new": 16
+    }
+  ]
+}
