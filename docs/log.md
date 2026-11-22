@@ -142,3 +142,10 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject` — 커밋 제목 `actio
 학습 사본 변경분을 암호화된 카드 피드에 반영했다. 개인 원문과 연결 키는 저장소에 넣지 않았다.
 
 검증: 암호문 envelope 구조, 지정 경로, nihon check. Revision: `b315e017652e431699b9f5ecf9cf7f5c6f1202d2c90ae9f67b8d64f68b9366e0`.
+
+
+## [2026-11-22] chore | 개인 단어장 암호화 사본 갱신
+
+학습 사본 변경분을 암호화된 카드 피드에 반영했다. 개인 원문과 연결 키는 저장소에 넣지 않았다.
+
+검증: 암호문 envelope 구조, 지정 경로, nihon check. Revision: `b6a5c26f95bf5da77c0734b0709c52a55fbf1b0a03d119d00e5d3d71403c35b6`.
