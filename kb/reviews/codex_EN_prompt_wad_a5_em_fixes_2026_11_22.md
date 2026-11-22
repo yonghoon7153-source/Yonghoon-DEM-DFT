@@ -7,7 +7,7 @@ letter: EN
 track: wad
 channel: codex
 kind: prompt
-status: 작성 2026-11-22 (대피 세션) · 발송 대기 (사용자) · 기준 커밋 68f683462 · 묶음 MANIFEST 8439e129…
+status: 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 · 묶음 MANIFEST 8439e129… → 회신 수령 NO-GO (P0 1 · P1 3 · P2 1 · P3 1 — codex_EN_reply_wad_a5_em_fixes_2026_11_22.md)
 confidence: medium
 verificationStatus: unverified
 explored: false

@@ -1,14 +1,15 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-22 · managed-files: 633
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-11-22 · managed-files: 634
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 424건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 425건)
 - 2026-11-22 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
-- 2026-11-22 · `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부 · 작성 2026-11-22 (대피 세션) · 발송 대기 (사용자) · …
+- 2026-11-22 · `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부 · 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 …
+- 2026-11-22 · `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…
 - 2026-11-22 · `kb/projects/hyeokju_lzo_interface_2026_11_16.md` — [혁주] LZO 코팅 양극 계면 — 요청 요약과 계산 계획 · 진행 — 1 단계 · 2a active · MD-0 통과 (11-20…
 - 2026-11-20 · `kb/reviews/internal_EM_prompt_wad_a5_package_2026_11_20.md` — EM 프롬프트 — 은 e70 far 재시도 a5 묶음 발송 전 독립 리뷰 · 발송 · 회신 수령 2026-11-20
 - 2026-11-20 · `kb/reviews/internal_EM_reply_wad_a5_package_2026_11_20.md` — EM 회신 — a5 묶음 독립 리뷰 (NO-GO · P0 2 · P1 4) · 회신 수령 2026-11-20 · NO-GO · 고침 진행
@@ -26,7 +27,6 @@
 - 2026-11-13 · `kb/reviews/codex_EH_prompt_b2o3_dft_stage9_v3_2026_11_13.md` — EH 프롬프트 — b2o3 9 단계 DFT 도구 v3 (Codex EG NO-GO 고침) 재확인: 한 계산 상태 블록 문법 · 힘 원자 번호 · reject 대상 다시 결속 · G5 원자료 · GPU 조회 종료코드 · QE 판 고정 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v3 검사 결과 넣음 (HEA…
 - 2026-11-13 · `kb/reviews/codex_EH_reply_b2o3_dft_stage9_v3_2026_11_13.md` — EH 회신 — b2o3 9 단계 DFT 도구 v3: NO-GO (P1 2 · P2 2) · EG 여섯 반례 닫힘 확인 · 유한하지 않은 힘·좌표 승격 · 압력 토큰 앞부분 판독 · BFGS 판독 실패 시 대조 건너뜀 + 판정 저장 뒤 CLI 오류 · 응력 행렬 본문 미검사 · 블록 문법 ≠ 같은 실행 인증 · 판 문자열 ≠ 바이너리 동일성 · DY 확인 4 아직 해제 못 함 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
 - 2026-11-13 · `kb/reviews/codex_EI_prompt_b2o3_dft_stage9_v4_2026_11_13.md` — EI 프롬프트 — b2o3 9 단계 DFT 도구 v4 (Codex EH NO-GO 고침) 재확인: 숫자 토큰 전체 · 유한 · 응력 본문 (3 행 × 6 · P = 대각합/3 · 두 단위) · BFGS 기록 필수 · 검사 뒤 쓰기 — DFT 진입 GO 여부 (DFT 결과 0 건) · 작성 2026-11-13 · gabia v4 검사 결과 넣음 (HEA…
-- 2026-11-13 · `kb/reviews/codex_EI_reply_b2o3_dft_stage9_v4_2026_11_13.md` — EI 회신 — b2o3 9 단계 DFT 도구 v4: NO-GO (P1 1 · P2 1 · P3 1) · EH 네 지적 닫힘 · 유한한 분수 좌표 토큰이 셀 변환에서 inf 가 되어 전자구조 대상으로 · 판정 경로가 만들 입력 경로와 겹치면 덮어씀 · '판정은 맨 끝' 변이가 두 동작 · 응력 허용 타당 (상한 0.0057356) · CRLF 거부 = LF 범위 명시 · 쓰기 실패 범위 좁히기 · DY 확인 4 (EOS 결과 파일 결속) 해제 가능 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -214,7 +214,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (289)
+## reviews/ (290)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-11-22 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
@@ -401,7 +401,8 @@
 - `kb/reviews/codex_EJ_reply_b2o3_dft_stage9_v5_2026_11_13.md` — EJ 회신 — b2o3 9 단계 DFT 도구 v5: NO-GO (P2 1) · EI P1 (변환 뒤 기하) · P3 (변이) 닫힘 · 경로 충돌 P2 가 생성할 입력 쪽 링크 (디렉터리 링크 · 파일 링크) 로 남음 · 쓸 입력 · 구조의 실제 경로를 판정 목적지와 비교 · Q4 범위 문장 수용 · 부분 판정은 다음 단계가 JSONDecodeError 로 멈춤 · EOS (E, P, V) 결속 해제 유지  (2026-11-13 · 수령 2026-11-13 (사용자 붙여넣기) · NO-GO · 기준 …)
 - `kb/reviews/codex_EK_prompt_b2o3_dft_stage9_v6_2026_11_13.md` — EK 프롬프트 — b2o3 9 단계 DFT 도구 v6 (Codex EJ NO-GO 고침) 재확인: 쓸 판정 · 입력 · 이완 구조의 실제 경로 (링크를 푼 것) 겹침 거부 — DFT 진입 GO 여부 (DFT 결과 0 건)  (2026-11-13 · 작성 2026-11-13 · gabia v6 검사 결과 넣음 (HEA…)
 - `kb/reviews/codex_EK_reply_b2o3_dft_stage9_v6_2026_11_13.md` — EK 회신 — b2o3 9 단계 DFT 도구 v6: 조건부 GO (gabia/Linux 생성 · 판독 범위) · EJ P2 해제 · 실행은 사용자 비준 뒤 · Windows 짧은 경로명 (8.3) 과 긴 이름이 섞이면 같은 파일을 다르게 판단하는 별도 P2 (Linux 생산 경로 차단 사유 아님) · 남은 것 = 사용자 비준 · 실행 직전 GPU 확인  (2026-11-14 · 수령 2026-11-14 (사용자 붙여넣기) · 조건부 GO (gab…)
-- `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부  (2026-11-22 · 작성 2026-11-22 (대피 세션) · 발송 대기 (사용자) · …)
+- `kb/reviews/codex_EN_prompt_wad_a5_em_fixes_2026_11_22.md` — EN 프롬프트 — W_ad a5 묶음 (은 쪽 G4 e70 far 재시도) 고침 확인: 내부 독립 리뷰 EM (NO-GO · P0 2 · P1 4 · P2 · P3) 대응 — 업체 발송 GO 여부  (2026-11-22 · 발송 2026-11-22 (사용자) · 기준 커밋 68f683462 …)
+- `kb/reviews/codex_EN_reply_wad_a5_em_fixes_2026_11_22.md` — EN 회신 — W_ad a5 묶음 (EM 고침) 확인: NO-GO (P0 1 · P1 3 · P2 1 · P3 1) — EM 의 기존 반례는 막힘 · c2 재시작 실패 뒤 스케줄러 끊김을 --killed 경로가 놓쳐 c1 보조 채택  (2026-11-22 · 수령 2026-11-22 (사용자 붙여넣기 + 첨부 둘) · NO-G…)
 - `kb/reviews/codex_E_sdcp_wave1_gate_2026_08_25.md` — 교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 수령 + 반영)  (2026-08-25 · 종결-실행승인(내부 max 리뷰))
 - `kb/reviews/codex_F_beta_null_model_2026_08_27.md` — 교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + 신규 3건)  (2026-08-27 · 회신수령-반영완료 (→ codex_G_reply_to_F_2026_0…)
 - `kb/reviews/codex_G_reply_to_F_2026_08_27.md` — 교차리뷰 G — 회신 F 수용 보고 + 후속 질문 (R3 설계·D_inc 오차·N_eff)  (2026-08-27 · 회신수령-반영완료 (→ codex_H_reply_to_G_2026_0…)
