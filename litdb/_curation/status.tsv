@@ -91,9 +91,9 @@ N-84	대피	끝	puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups 
 N-85	대피	끝	zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane · dfa191844	정독 134 · 일부 — 건식막 · PTFE 0.2 wt% · 30 µm · 8.4 mS/cm 채움 · PTFE 함량 ↔ 이온 전도 = 0 ↔ 0.2 wt% 두 점뿐 (공정 · 시편 · 빼기 함께 바뀜) · 카드 문제 = cao2026 · schmitt2026 측정 꼬리표 (누른 채 · 1.04 Ω 빼기) 빠짐 (기록만) · 원문 안 어긋남 (카드 §3-9)
 N-86	대피	끝	kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode · 9e862495e	정독 135 · 채움 — 혼합 방법 (건식 · 습식 · 볼 믹서) 효과 = 전기화학 + 정성 형태 · 미세구조 정량 · 반복 없음 · 카드 문제 없음 · 원문 안 어긋남 3 (카드 §3-10)
 N-87	대피	끝	hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode · d7843d57d	정독 136 · 일부 — 고전단 믹서 건식 혼합 · 오사카 그룹 채움 · 혼합 지수 · 에너지 · 반복 없음 · 원문은 '코팅' 주장 안 함 · 카드 문제 = frankenberg2025 L363 '고강도 혼합 코팅' 일부만 맞음 · hayakawa2023 L313 '카드 없음' 낡음 (기록만) · 원문 분리막 수치 겉보기 밀도 2.04–2.55 > 진밀도 1.64 (카드 §3-5)
-N-88	대피	도는 중		PDF 받음 (+SI 1) · Ohsaki 2021 Powder Technol 387 415 · 시작 11-22 21:59 KST
+N-88	대피	끝	ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s · 2dbb5f9ef	정독 137 · 채움 (한정 둘 — '밀링 없이' 일부만 맞음 · Li3PS4 라 LPSCl 값 아님) · 93 ↔ 227 nm σ 비 1.36 = 우리 Cronau(r) ×0.65 와 방향 반대 (재료 달라 반례 한 점) · 카드 문제 = lei2026 L58 (1.32 µm ↔ 원문 1382 nm · 선형 ↔ 원문 제곱) · L72 (원문에 없는 리뷰 판정) · yano2026 L412 '밀링 없이' 일부만 (기록만) · litdb 밖 = build_index.py SIZE_EFFECT_SLUGS +1 줄 (N-79 와 같은 꼴 · finish.py 가 이 꼴만 허용하게 고침 11-22)
 N-89	대피	도는 중		PDF 받음 (+SI 1) · Bielefeld 2022 J Electrochem Soc 169 020539 · 시작 11-22 22:22 KST
-N-90	대피	차례 기다림		PDF 받음 · Park 2022 Appl Sci 12 12692
+N-90	대피	도는 중		PDF 받음 · Park 2022 Appl Sci 12 12692 · 시작 11-22 22:36 KST
 N-91	대피	차례 기다림		PDF 받음 (+SI 1) · Lee 2025 Chem Eng J 503 158271
 N-92	대피	차례 기다림		PDF 받음 (+SI 1) · Kim 2024 Adv Energy Mater 14 2303455
 N-93	대피	차례 기다림		PDF 받음 (+SI 1) · Kwon 2024 Small Sci 4 2300302
