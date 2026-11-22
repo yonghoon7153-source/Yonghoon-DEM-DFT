@@ -52,5 +52,41 @@
     "발송 전 독립 리뷰 한 번 (개정 5 '만들_것')",
     "리뷰 반영 뒤 zip (git archive) · 건엽 운영 안내 · handoff 기록 (외주 2차 handoff 꼴)",
     "첫 반송에서 ALGO All OSZICAR 행 머리 확인"
-  ]
+  ],
+  "④_EM_고침_이어받기_2026_11_22": {
+    "누가": "대피 세션 (claude/evac-2026-11-20 · 11-22) — friendly 갈래 에이전트가 한도로 멈춘 미완 패치를 이어받음",
+    "패치": "kb/projects/handoff_2026_11_20_a5_fix_wip.patch (sha256 f31eb96ee271b6f3… · 기준 2cecb0fb) → git apply 깨끗이 얹힘",
+    "도구_sha256": {
+      "tools/wad/build_a5_vasp_package.py": "a1ecee27bdfc3dace650511d1cced674f1820cd86cb00c2c8839c1521e5fa2c4",
+      "tools/wad/build_v5_vasp_package.py": "b545c9593adabffade6e41298720ed5ef0c29a7af87b415e422a3cb0ef278e70"
+    },
+    "환경": "scratch 가상환경 (python 3.11 · dftd3 1.6.0 · numpy 2.4.6 · ase 3.29.0) — ⚠ PyPI 이름은 `dftd3` 다 (인계 카드 §1 의 `simple-dftd3` 는 PyPI 에 없음 · 404)",
+    "시험": {
+      "build_a5 --selftest": "124/124 (145 s)",
+      "build_v5 --selftest": "303/303",
+      "build_round2 --selftest": "194/194"
+    },
+    "G5_집계_재현": "g5_collect_2026_11_20/COMMAND_AND_CHECKS.txt 의 본 집계 명령을 패치 판 build_v5 로 (V5 반송 10-15 tgz 를 scratch 에 풀어서) → rc 3 · collect JSON sha256 afecfa08… 바이트까지 같음 (화면 출력은 파일로만 · W 값 안 봄)",
+    "EM_재현_전후": {
+      "방법": "kb/reviews/internal_EM_probes/ 를 scratch 에 두 벌 (고침 전 = HEAD 의 tools/wad · 고침 후 = 패치 판) · harness 의 도구 경로와 T 폴더만 바꿈 · venv python -B",
+      "P0-1 상한 (p3)": "전: NO_PRIMARY_VALUE → c1 보조 자동 채택 · 후: LADDER_INCOMPLETE · 채택 없음",
+      "P0-1 c2 0 스텝 중단 (p3b)": "전: NO_PRIMARY_VALUE → c1 보조 채택 · 후: 종료 7 · LADDER_INCOMPLETE · 채택 없음",
+      "P0-1 준비 실패 (p7)": "전: c2 준비만 → c1 보조 채택 · c1 준비만 → '값 없음 (최종 — 닫는다)' · 후: 둘 다 LADDER_INCOMPLETE · 채택 없음 · 1저자",
+      "P0-2 (i) (p6)": "전: c1 0 스텝인데 c2 가 돌고 A5 WAVECAR 지워짐 → 다시 돌리면 c1 이 W0 에서 · c1 재시작 미이행 · 후: 종료 7 에서 멈춤 · A5 WAVECAR 남음 · infra-abort 뒤 c1 이 기록된 시작점 A5 에서 OK → 주 기준 채택",
+      "P0-2 (ii) (p8)": "전: A5 0 스텝 → c1 이 W0 에서 OK → 늦은 A5 중단 기록 → c1 재시작 미이행 · c2 보조 채택 · 후: A5 0 스텝에서 종료 7 (c1 안 띄움) → 중단 기록 뒤 A5 → c1 OK · 주 기준 채택",
+      "P1-1 (p1)": "전: 끝난 뒤 다시 돌리면 c2 가 W0 에서 뜸 · LADDER_VIOLATION · 후: 아무것도 안 띄움 · OK 그대로",
+      "P1-2 (p2)": "전: VASP_CMD 오타 → A5 · c1 · c2 가 몇 초 만에 다 소모 (종료 1) · 후: A5 0 스텝에서 종료 7 · c1 · c2 안 띄움",
+      "P1-3 (p4)": "전: 상대 경로 · 오타 → '파일이 없거나 읽을 수 없다' 로 기록 · A5 새로 · 고친 뒤 종료 2 · 후: 상대 경로는 부른 폴더 기준으로 풂 (확인 1) · 오타는 기록 없이 종료 2 · 고치면 정상 종료 0",
+      "P2 섞인 폴더 (p9)": "전: 외주 2차 폴더에서 돌면 상한 장부가 2차 시도를 셈 (종료 5) · UNREGISTERED_ATTEMPT · 후: 종료 2 · 아무것도 안 띄움",
+      "실제 5.4.4 판독 (p5)": "전후 같음 (judge5 · 행 머리 · 보조 숫자 · Broyden 44 · 재시작 증거 · outcar_dims) — 차이는 설정 에코에 NELM 이 더 들어간 것 (의도)"
+    },
+    "README": "다시 빌드한 README 에 EM P3 · P1-4 안내 (새 빈 폴더 · 보존 ⓐ ls -l · sha256sum · 외주 2차 러너 다시 돌리지 않기 · 64 랭크 · NCORE 4 · KPAR 2 · 절대 경로 · 디스크 14–21 GB · 단별 최악 벽시계 · 종료 코드 표 · 끝 뒤 PACK_ONLY)",
+    "남은_것": [
+      "돌연변이 전체 (--mutants --jobs 3 · 도는 중)",
+      "README §6 의 '다시 돌리면 기록을 다시 판정해 다음 단을 정합니다' (EM P1-1 이 짚은 문구) 고치기",
+      "묶음 다시 빌드 · 바꿔 넣기 · jobs.json 도구 sha",
+      "Codex 리뷰 편지 EN"
+    ],
+    "by": "claude · 2026-11-22 (대피 세션)"
+  }
 }

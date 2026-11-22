@@ -121,6 +121,7 @@ evidenceScope: multi-source-primary
 **할 일 (순서)**
 1. scratch worktree 에서 `git apply kb/projects/handoff_2026_11_20_a5_fix_wip.patch` (friendly 끝 기준).
 2. dftd3 가 없으면 scratch 가상환경: `python3 -m venv <scratch>/venv && <scratch>/venv/bin/pip install simple-dftd3==1.6.0 numpy ase` (V5 selftest 가 쓴다 · 전역 설치 안 함).
+   ⏩ **11-22 (대피 세션)**: PyPI 이름은 `dftd3` 다 — `simple-dftd3` 는 PyPI 에 없다 (404) → `<scratch>/venv/bin/pip install dftd3==1.6.0 numpy ase`.
 3. 세 selftest (build_a5 · build_v5 · build_round2) · `build_a5 --mutants` · 11-20 G5 집계 재현 (`db/raw/wad_aprime_v5_vasp_2026_09_27/g5_collect_2026_11_20/COMMAND_AND_CHECKS.txt` 의 본 집계 명령 · V5 반송 tgz 를 scratch 에 풀어서 · sha afecfa08… 와 같아야 한다).
 4. EM 재현 스크립트로 P0-1 · P0-2 (두 경로) · P1-1 · P1-2 · P1-3 · P2 (준비 실패 · 함께 푼 폴더) 를 고침 전 (friendly 도구) · 고침 후 (패치) 로 다 돌려 본다.
 5. 남은 것 고치기 — EM 회신의 목록 전부 · 시험 음성 경로 · 돌연변이 표에 새 관문 · 각 돌연변이 빨간불.
