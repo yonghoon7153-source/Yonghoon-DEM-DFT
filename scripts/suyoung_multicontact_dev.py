@@ -138,6 +138,20 @@ def _polish_node(incoming, mass, incidence, normal, tangent, reduced_mass,
                 result = on_face(alternative)
                 if result is not None:
                     return result
+    if len(mass) <= 4:
+        # Redundant small networks may release three or more contacts at
+        # once. Keep the predicted stick/slide law on the other contacts.
+        # Enumerate only subsets of currently closed contacts (at most
+        # 42 extra faces for six pairs), using the same residual gate.
+        closed = [i for i, mode in enumerate(guess) if mode != "open"]
+        for count in range(3, len(closed) + 1):
+            for released in itertools.combinations(closed, count):
+                alternative = guess.copy()
+                for i in released:
+                    alternative[i] = "open"
+                result = on_face(alternative)
+                if result is not None:
+                    return result
     return None
 
 

@@ -1,0 +1,22 @@
+{
+  "tests": [
+    "test_all_label_permutations_in_both_storage_orders",
+    "test_capture_mapping_and_original_tolerance",
+    "test_cold_original_field_rows",
+    "test_negatives_unresolved_zero_and_spurious_drift",
+    "test_rotated_boosted_mass_scaled_span",
+    "test_witness_explains_contact"
+  ],
+  "failures": [
+    "test_all_label_permutations_in_both_storage_orders",
+    "test_cold_original_field_rows",
+    "test_rotated_boosted_mass_scaled_span"
+  ],
+  "errors": [],
+  "run": 6,
+  "rc": 1,
+  "capture_sha256": "525c57f0d73987c7ea6da8cf3324079712fea4b524757cf148a80989c51bc1e6",
+  "subject_sha256": "3b626fce463bf5387ba107ae1aa423d4cffad3b4adaa0133d8825c598850aa86",
+  "test_sha256": "a0a26056b72b016e17d1d8f0e190131d7e58aca0782aa09a9e6795f7f4484752",
+  "witness_sha256": "0d445458c0cf3cd1aba0b6502295c1dfdbaa9077afd15bb4c45611830273a2c4"
+}

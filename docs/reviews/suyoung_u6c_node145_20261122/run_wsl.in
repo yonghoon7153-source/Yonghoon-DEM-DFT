@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+if [[ $# -ne 4 || ( $1 != CHECK_ONLY && $1 != GO_SUYOUNG_F8_NODE145_PAIR_ONCE ) ]]; then
+    echo 'Usage: bash THIS.txt CHECK_ONLY|GO_SUYOUNG_F8_NODE145_PAIR_ONCE wall_result.tar.gz order_result.tar.gz capture145_result.tar.gz' >&2
+    exit 2
+fi
+mode=$1
+wall=$(realpath -e -- "$2")
+order=$(realpath -e -- "$3")
+capture=$(realpath -e -- "$4")
+capture_sha=90b070d33e84735008035eb399d648acb6065edfb677653f8db9f3c9c61eca18
+wall_sha=0df5971d360ed20463d67ab36bd97b677b3e55bee9aaf01dbd559daf79a9ed90
+order_sha=8e76ec686e8f384c28c42b5c5304d25256096f0568fe999d602bdec307991e17
+verify_prior() {
+    local archive="$1" expected="$2" line
+    [[ -f "$archive" && -r "$archive" ]] || return 2
+    line=$(sha256sum -- "$archive") && [[ ${line%% *} == "$expected" ]]
+}
+verify_prior "$wall" "$wall_sha" || { echo PRIOR_WALL_MISMATCH >&2; exit 2; }
+verify_prior "$order" "$order_sha" || { echo PRIOR_ORDER_MISMATCH >&2; exit 2; }
+verify_prior "$capture" "$capture_sha" || { echo PRIOR_CAPTURE_MISMATCH >&2; exit 2; }
+pkg=$(cd -- "$(dirname -- "$0")" && pwd -P)
+cd -- "$pkg"
+pin='@PIN@'
+sums='@SOURCE_SUMS@'
+[[ "$pin" =~ ^[0-9a-f]{40}$ && "$sums" =~ ^[0-9a-f]{64}$ ]] || exit 2
+printf '%s  SOURCE_SHA256SUMS\n' "$sums" | sha256sum --check --status -
+sha256sum --check --status SOURCE_SHA256SUMS
+for tool in taskset timeout mktemp tar sha256sum; do command -v "$tool" >/dev/null; done
+py="$HOME/Yonghoon-DEM-DFT/venv/bin/python"
+[[ -x "$py" ]] || { echo 'Reference WSL venv missing' >&2; exit 2; }
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
+export VECLIB_MAXIMUM_THREADS=1 NUMEXPR_NUM_THREADS=1 BLIS_NUM_THREADS=1
+taskset -c 0 "$py" -I -B -c 'import numpy,sys; print(sys.version.split()[0],numpy.__version__); sys.exit(0 if sys.version_info[:3]==(3,12,3) and numpy.__version__=="2.5.2" else "Reference environment mismatch")'
+reader="$pkg/docs/reviews/suyoung_u6c_friction_candidate_20261122/friction_pair.py"
+driver="$pkg/docs/reviews/suyoung_u6c_node145_20261122/node145_pair.py"
+taskset -c 0 "$py" -I -B "$driver" check --source-dir "$pkg/scripts" --capture "$capture" --wall "$wall" --prior-order "$order"
+taskset -c 0 "$py" -I -B "$reader" read --help >/dev/null
+printf 'RELEASE=%s\nPRIOR_WALL_SHA256=%s\nPRIOR_ORDER_SHA256=%s\nPRIOR_CAPTURE_SHA256=%s\n' "$pin" "$wall_sha" "$order_sha" "$capture_sha"
+if [[ "$mode" == CHECK_ONLY ]]; then echo CHECK_OK; exit 0; fi
+
+once="$HOME/suyoung_node145_pair_once_${pin:0:12}"
+mkdir -- "$once" || { echo "Attempt already reserved: $once" >&2; exit 2; }
+work=$(mktemp -d "$HOME/suyoung_node145_work_XXXXXXXX")
+ret=$(mktemp -d "$HOME/suyoung_node145_return_XXXXXXXX")
+run="$work/run"
+mkdir -- "$run"
+screen="$run/screen.txt"
+printf 'DEVELOPMENT_ONLY\n' | tee "$screen"
+started=$(date -u +%FT%TZ)
+printf 'STARTED_UTC=%s\nWORK=%s\nRETURN_DIRECTORY=%s\n' "$started" "$work" "$ret" | tee "$once/receipt.txt"
+pack() {
+    local rc=$?
+    trap - EXIT INT TERM HUP
+    set +e
+    printf 'COMMAND_RC=%d\n' "$rc" | tee -a "$screen"
+    cp -- "$screen" "$ret/screen.txt" &&
+    tar -czf "$ret/suyoung_node145_result.tar.gz" -C "$work" run &&
+    (cd -- "$ret" && sha256sum suyoung_node145_result.tar.gz screen.txt > SHA256SUMS &&
+     sha256sum -c SHA256SUMS && cat SHA256SUMS) ||
+    { printf 'ARCHIVE_INCOMPLETE WORK=%s RETURN_DIRECTORY=%s\n' "$work" "$ret"; exit 3; }
+    printf 'RETURN_DIRECTORY=%s\n' "$ret"
+    exit "$rc"
+}
+trap pack EXIT
+trap 'exit 130' INT
+trap 'exit 143' HUP TERM
+printf 'release=%s\nsource_sums=%s\nprior_wall=%s\nprior_order=%s\nprior_capture=%s\nCPU=0\nper_arm_hard_s=600\nstarted_utc=%s\n' \
+    "$pin" "$sums" "$wall_sha" "$order_sha" "$capture_sha" "$started" > "$run/origin.txt"
+cp -- SOURCE_SHA256SUMS "$run/SOURCE_SHA256SUMS"
+for mapping in ORIGINAL REVERSED; do
+    rc=0
+    printf 'F8_%s_BEGIN=%s\n' "$mapping" "$(date -u +%FT%TZ)" | tee -a "$screen"
+    timeout --signal=TERM --kill-after=5s 595s taskset -c 0 "$py" -I -B "$driver" run \
+      --source-dir "$pkg/scripts" --mapping "$mapping" --budget 570 --out "$run/$mapping" > "$run/$mapping.log" 2>&1 || rc=$?
+    printf 'F8_%s_RC=%d\n' "$mapping" "$rc" | tee -a "$screen"
+    if (( rc != 0 )); then
+        if [[ ! -f "$run/$mapping/stop.json" ]]; then
+            printf 'mapping=%s\ncommand_rc=%d\nobservation=PROCESS_ENDED_WITHOUT_STOP_RECEIPT\n' "$mapping" "$rc" > "$run/$mapping.process-stop.txt"
+            if [[ -f "$run/$mapping/trace.csv" ]]; then
+                (cd -- "$run" && sha256sum -- "$mapping/trace.csv") >> "$run/$mapping.process-stop.txt"
+            fi
+        fi
+        exit "$rc"
+    fi
+done
+rc=0
+timeout --signal=TERM --kill-after=5s 115s taskset -c 0 "$py" -I -B "$reader" read \
+    --source-dir "$pkg/scripts" --wall "$wall" --prior-order "$order" --arms-dir "$run" --out "$run/comparison.json" > "$run/summary.log" 2>&1 || rc=$?
+[[ $rc != 0 || -s "$run/comparison.json" ]] || rc=4
+printf 'SUMMARY_RC=%d\n' "$rc" | tee -a "$screen"
+[[ $rc != 0 ]] || echo READBACK_REQUIRED | tee -a "$screen"
+exit "$rc"
