@@ -1347,8 +1347,9 @@
   "kind": "기존 카드 보강 (tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond)",
   "row": "후보 표의 행이 아니다 — **기존 카드 보강** (1저자 11-23 '논문에이전트 부탁' · 최종 출판본 15 쪽 + SI 9 쪽).",
   "bib": "(1저자 11-23 업로드 · 첫 쪽에서 저자 · 제목 · 학술지 · 권 · 쪽 · DOI 를 다시 확인한다) A. Gallegos Tovar, E. Kim, N. Surghani, E. P. Ramos, J. Roehling, S. Hoover, H. B. Radousky 외 — Cold spray deposition of cathode composites modeled via a DEM plastic–elastic bond framework — Surface and Coatings Technology (최종판) · DOI 10.1016/j.surfcoat.2026.134102 · 권 · 논문 번호 · 쪽 = 첫 쪽에서",
-  "model": "",
+  "model": "kodama2020_high_pressure_insitu_xct_sulfide_se_voxel_simulation",
   "dup": "정본에 이 논문 카드가 **이미 있다** = `tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond` (Journal Pre-proof 44 쪽으로 작성 · 2026-11-02 커밋 9ae6f2080 · SI 그림 S1–S8 포함) → 그 카드를 보강한다 (새 카드 금지)",
-  "note": "- ⚠ **새 카드가 아니라 기존 카드 보강이다.** 대상 = `litdb/papers/tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond.md`. 새 slug · 새 카드 파일을 만들지 않는다.\n- 할 일: ① 서지를 최종판 (권 · 논문 번호 · 쪽 · 출판일) 으로 ② 카드의 'Journal Pre-proof — 권호 · 쪽 미정 · 숫자가 바뀔 수 있다' 경고를 최종판 대조 결과로 바꾼다 ③ Pre-proof 로 적은 숫자 · 그림 · 표를 최종판과 한 줄씩 대조 — 바뀐 곳만 고치고 카드 끝 '최종판 대조 (11-23)' 절에 바뀐 것 · 같은 것 목록 ④ 최종판 SI 9 쪽을 카드의 SI 내용과 대조 (빠진 것만 더함) ⑤ 크롭은 최종판에서 달라진 그림 · 표만 새로 만들고 기존 크롭 파일 이름 · 경로는 유지.\n- 정독 출력 (batch tsv · findings) 은 평소대로."
+  "note": "- ⚠ **새 카드가 아니라 기존 카드 보강이다.** 대상 = `litdb/papers/tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond.md`. 새 slug · 새 카드 파일을 만들지 않는다.\n- 할 일: ① 서지를 최종판 (권 · 논문 번호 · 쪽 · 출판일) 으로 ② 카드의 'Journal Pre-proof — 권호 · 쪽 미정 · 숫자가 바뀔 수 있다' 경고를 최종판 대조 결과로 바꾼다 ③ Pre-proof 로 적은 숫자 · 그림 · 표를 최종판과 한 줄씩 대조 — 바뀐 곳만 고치고 카드 끝 '최종판 대조 (11-23)' 절에 바뀐 것 · 같은 것 목록 ④ 최종판 SI 9 쪽을 카드의 SI 내용과 대조 (빠진 것만 더함) ⑤ 크롭은 최종판에서 달라진 그림 · 표만 새로 만들고 기존 크롭 파일 이름 · 경로는 유지.\n- 정독 출력 (batch tsv · findings) 은 평소대로.",
+  "nn": "146"
  }
 }
