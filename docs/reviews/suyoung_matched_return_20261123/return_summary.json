@@ -1,0 +1,57 @@
+{
+  "label": "DEVELOPMENT_ONLY",
+  "release": "ebba5037e29de3ca760de7fe3d1a85d43ff3f1e6",
+  "return_sha256": "ea7ea6b8903529c20b2d5fdc350c4627bdd0a32a20fba154b543dade1d3eaf12",
+  "prior_sha256": "4bb6fe0cdff8964c6bf02cfbf3f9dd9f7bdec5199cfddce0e3d8160b0dd4f391",
+  "equal_time_and_height_pairs": 271,
+  "pressure_reference_MPa": 0.6636991102836952,
+  "threshold_MPa": 0.03318495551418476,
+  "max_additivity_residual_MPa": 3.469446951953614e-18,
+  "primary": [
+    {
+      "coarse_step": 269,
+      "fine_step": 538,
+      "pressure_MPa": {
+        "native8": 0.04406300997799546,
+        "fine_dt_seed8": 0.05883552507875083,
+        "fine_dt_seed16": 0.07153454224039403,
+        "native16": 0.011232202456932952
+      },
+      "signed_difference_MPa": {
+        "dt_MPa": -0.01477251510075537,
+        "seed_MPa": -0.012699017161643199,
+        "grid_MPa": 0.06030233978346108,
+        "native_gap_MPa": 0.03283080752106251
+      },
+      "difference_in_percent_of_reference": {
+        "dt_MPa": -2.225784978744498,
+        "seed_MPa": -1.913369622601281,
+        "grid_MPa": 9.085794880406741,
+        "native_gap_MPa": 4.946640279060962
+      }
+    },
+    {
+      "coarse_step": 270,
+      "fine_step": 540,
+      "pressure_MPa": {
+        "native8": 0.04602251676840027,
+        "fine_dt_seed8": 0.0611658109879378,
+        "fine_dt_seed16": 0.07419479339480076,
+        "native16": 0.01169265738695957
+      },
+      "signed_difference_MPa": {
+        "dt_MPa": -0.015143294219537529,
+        "seed_MPa": -0.013028982406862955,
+        "grid_MPa": 0.06250213600784119,
+        "native_gap_MPa": 0.0343298593814407
+      },
+      "difference_in_percent_of_reference": {
+        "dt_MPa": -2.2816505227895507,
+        "seed_MPa": -1.9630857123333758,
+        "grid_MPa": 9.417239685785466,
+        "native_gap_MPa": 5.172503450662538
+      }
+    }
+  ],
+  "full_curve_qualification_computed": false
+}
