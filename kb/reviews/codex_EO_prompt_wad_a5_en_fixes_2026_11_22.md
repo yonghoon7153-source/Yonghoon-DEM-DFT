@@ -7,7 +7,7 @@ letter: EO
 track: wad
 channel: codex
 kind: prompt
-status: 발송 대기 (사용자) · 기준 커밋 68f683462 → 고침 b84907868 (도구) · 8fd051a22 (묶음) · 묶음 MANIFEST b01d0861… · 돌연변이 84/84
+status: 발송 2026-11-23 (사용자) · 회신 대기 · 기준 커밋 68f683462 → 고침 b84907868 (도구) · 8fd051a22 (묶음) · 묶음 MANIFEST b01d0861… · 돌연변이 84/84
 confidence: medium
 verificationStatus: unverified
 explored: false
