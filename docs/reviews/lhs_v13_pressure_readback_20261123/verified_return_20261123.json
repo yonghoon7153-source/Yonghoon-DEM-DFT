@@ -1,0 +1,39 @@
+{
+  "author_zip_sha256": "7fc9e7378da9fcedd676aa755842ab0494fbf5d9c51c0921ed540c59262f5871",
+  "zip_bytes": 1913,
+  "zip_crc": "OK",
+  "members": [
+    "inventory.json",
+    "receipt.json",
+    "SHA256SUMS"
+  ],
+  "listed_hashes_checked": 2,
+  "inventory_sha256": "590db9cc8dcaf0802f48a720159435d0631a6e11ac005152f0137b756cb35158",
+  "inventory_bytes": 15313,
+  "same_as_20261108_inventory_bytes": true,
+  "receipt_sha256": "34040302517530a68fb049371a085179cda987c4ada779f67e26aa36f6e1639c",
+  "reader_pin": "7a32935fc",
+  "reader_rc": 0,
+  "case_log_b7_count_range": [
+    300,
+    661
+  ],
+  "b7_rows_per_log_name": {
+    "log.liggghts": 12864,
+    "log.txt": 12864
+  },
+  "readback": {
+    "changed_metadata_cases_since_2026_11_08": [],
+    "execution_identity": "NOT_ESTABLISHED",
+    "observation": {
+      "cases": 30,
+      "logs": 60,
+      "pairs_with_b7_in_both": 30,
+      "pairs_with_different_file_sizes": 30,
+      "pairs_with_equal_b7_row_counts": 30
+    },
+    "release_v13": "NOT_AUTHORIZED",
+    "section5": "UNRESOLVED",
+    "status": "METADATA_READBACK_OK"
+  }
+}
