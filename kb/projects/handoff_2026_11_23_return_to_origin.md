@@ -27,7 +27,7 @@ evidenceScope: single-source
 >   (`litdb/INDEX.md` · `litdb/comparison_vs_ours.md` · `litdb/figures/_sources.json`) 은 git 이 자동으로 합쳤고 `_sources.json` 은 JSON 으로 읽힌다 (606 키).
 > · 머지 뒤 생성 파일 다시 만들기 (kb index 날짜 줄) · 이 카드 · open_items 머리 — 같은 커밋 ('Evacuation return card 2026-11-23').
 > · 점검 (= §0 ■2 기대값): kb lint 0 errors · 결정 204 · 판정 8 · 그래프 ✅ · 배선 일치 · 규약 0 위반 · litdb `build_index.py --check` rc 0
->   (표 칸 ⚠ 은 옛 '표 중간 빈 줄' 경고) · build_index selftest 35/0 · 웹앱 시험은 §3 끝 줄.
+>   (표 칸 ⚠ 은 옛 '표 중간 빈 줄' 경고) · build_index selftest 35/0 · 웹앱 시험 671 passed · 1 skipped (§3).
 > · 그래서 friendly 쪽 들이기는 **fast-forward** 다 — 단 litdb 정리 세션이 friendly 에 계속 쓰므로, `7e1959c79` 뒤로 또 움직였으면 §0 ■1 경우 C.
 > · `origin/main` 은 이 캠페인과 무관 — main 으로 머지하지 않는다.
 
@@ -83,7 +83,7 @@ evidenceScope: single-source
     python3 tools/litdb/build_index.py --selftest | tail -1            # selftest: 35 통과 / 0 실패
     python3 tools/doping/b2o3_site_dft.py --selftest | tail -1         # selftest PASS (36/36)
     python3 tools/wad/build_a5_vasp_package.py --selftest | tail -1    # ✅ build_a5_vasp_package selftest 279/279 (몇 분)
-    python3 -m pytest webapp/tests -q -p no:cacheprovider | tail -2    # 이 카드 §3 끝 줄의 수
+    python3 -m pytest webapp/tests -q -p no:cacheprovider | tail -2    # 671 passed, 1 skipped (대피 세션 실측 10 분 31 초)
   기대와 다르면 고치기 전에 원인부터 (들이기 탓인지 · 환경 탓인지).
 
 ■ 3. 충돌이 나면 (경우 B · C) — 파일별 규칙
@@ -205,4 +205,4 @@ friendly (claude/friendly-meitner-lldvar) 에 대피 세션 (claude/evac-2026-11
 
 ## 3. 웹앱 시험
 
-웹앱 시험 (대피 세션 · 머지 뒤 · 11-23): 도는 중 (머지 뒤 시작 · 결과가 나오면 이 줄을 고친다 — 마지막 커밋 'Evacuation return card 2026-11-23')
+웹앱 시험 (대피 세션 · 머지 뒤 · 11-23): **671 passed · 1 skipped · rc 0** (`python3 -m pytest webapp/tests -q -p no:cacheprovider` · 631.5 초).
