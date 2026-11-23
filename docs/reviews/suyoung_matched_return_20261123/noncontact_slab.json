@@ -1,0 +1,103 @@
+{
+  "label": "SYNTHETIC_SINGLE_FLOOR_PROJECTION",
+  "units": "native box, time, mass and impulse units",
+  "floor": 0.15,
+  "slab_x": [
+    0.3,
+    0.7
+  ],
+  "thickness": 0.025,
+  "density": 1.0,
+  "points_per_slab": 1024,
+  "quadrature": "64 horizontal midpoints; two Gauss nodes per depth interval, eight intervals",
+  "dt_for_free_gap_only": 0.0011231835082397789,
+  "normal_speed": 0.02,
+  "physics_sources_sha256": {
+    "dem_suyoung_sf2d_dev.py": "6e8073230f14142f3f802e1fed316bea22610502a98292e2ef794a123ea7e5f4",
+    "suyoung_u6_first_dev.py": "5db0f1bda90c824a23479401b7744cf8d31fc64f373441abca692dce6717bda5"
+  },
+  "assumptions": "Unstressed single slab, zero affine velocity, static frictionless floor and lid, no external forces.",
+  "cases": [
+    {
+      "case": "down_near",
+      "initial_face_gap": 0.0125,
+      "free_end_face_gap": 0.012477536329835205,
+      "velocity_y": -0.02,
+      "continuum_wall_impulse": 0.0,
+      "grids": [
+        {
+          "grid": 80,
+          "mass": 0.010000000000000002,
+          "momentum_y_before": -0.00019999999999999993,
+          "momentum_y_after": -0.0001979166666666666,
+          "wall_impulse": 2.0833333333333313e-06,
+          "integrated_spline_impulse": 2.0833333333333334e-06,
+          "impulse_fraction_of_abs_incoming_momentum": 0.010416666666666661
+        },
+        {
+          "grid": 160,
+          "mass": 0.010000000000000005,
+          "momentum_y_before": -0.00020000000000000004,
+          "momentum_y_after": -0.00020000000000000004,
+          "wall_impulse": -0.0,
+          "integrated_spline_impulse": 0.0,
+          "impulse_fraction_of_abs_incoming_momentum": -0.0
+        }
+      ]
+    },
+    {
+      "case": "up_near",
+      "initial_face_gap": 0.0125,
+      "free_end_face_gap": 0.012522463670164796,
+      "velocity_y": 0.02,
+      "continuum_wall_impulse": 0.0,
+      "grids": [
+        {
+          "grid": 80,
+          "mass": 0.010000000000000002,
+          "momentum_y_before": 0.00019999999999999993,
+          "momentum_y_after": 0.00019999999999999993,
+          "wall_impulse": -0.0,
+          "integrated_spline_impulse": 0.0,
+          "impulse_fraction_of_abs_incoming_momentum": -0.0
+        },
+        {
+          "grid": 160,
+          "mass": 0.010000000000000005,
+          "momentum_y_before": 0.00020000000000000004,
+          "momentum_y_after": 0.00020000000000000004,
+          "wall_impulse": -0.0,
+          "integrated_spline_impulse": 0.0,
+          "impulse_fraction_of_abs_incoming_momentum": -0.0
+        }
+      ]
+    },
+    {
+      "case": "down_far",
+      "initial_face_gap": 0.025,
+      "free_end_face_gap": 0.024977536329835206,
+      "velocity_y": -0.02,
+      "continuum_wall_impulse": 0.0,
+      "grids": [
+        {
+          "grid": 80,
+          "mass": 0.01,
+          "momentum_y_before": -0.00019999999999999998,
+          "momentum_y_after": -0.00019999999999999998,
+          "wall_impulse": -0.0,
+          "integrated_spline_impulse": 0.0,
+          "impulse_fraction_of_abs_incoming_momentum": -0.0
+        },
+        {
+          "grid": 160,
+          "mass": 0.010000000000000005,
+          "momentum_y_before": -0.0002,
+          "momentum_y_after": -0.0002,
+          "wall_impulse": -0.0,
+          "integrated_spline_impulse": 0.0,
+          "impulse_fraction_of_abs_incoming_momentum": -0.0
+        }
+      ]
+    }
+  ]
+}
