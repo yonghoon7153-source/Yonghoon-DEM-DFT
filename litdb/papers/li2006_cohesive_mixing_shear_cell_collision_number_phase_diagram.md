@@ -421,6 +421,7 @@ PRL 2003 · PRE 2005 의 '쌍별 Bond 수 비 ℜ' 를 전단 흐름으로 늘�
 - 결합 규칙 · 점착 측정 (G2): `begat2004_cohesive_adhesive_balance_afm_colloid_probe` · `begat2004_cohesive_adhesive_balance_partII_fine_particle_delivery` · `johnson1971_jkr_surface_energy_contact_elastic_solids` · `mohammadijam2014_inverse_gas_chromatography_review` · `deng2021_mechanical_surface_energy_tester_bond_number`.
 - 정렬 · 상호작용 혼합 · 코팅 (G1 의 '덮임' 쪽): `hersey1975_ordered_mixing_concept` · `pfeffer2001_dry_particle_coating_engineered_particulates` · `otani2025_dem_se_dispersion_aggregation_compression`.
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `jadidi2023_dem_batch_solid_mixers_review`.
+- 혼합물 Bond 수 (쌍 Bo 를 표면적 몫의 곱으로 가중한 조화평균 · 잘 섞인 혼합물의 흐름 ff_c 예측 · 혼합 상태는 가정 · 2026-11-24 카드): `capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function`.
 
 ## 🗨️ Q&A 로그
 (아직 없음)

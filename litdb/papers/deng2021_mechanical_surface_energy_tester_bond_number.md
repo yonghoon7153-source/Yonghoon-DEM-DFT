@@ -342,6 +342,7 @@ F_입자 = (π/6)·ρ·D50³·(a₅₀ + g) (g = 9.81) — Fig 8 · 12 · 13 의
 - D3 (점착 앵커) 의 다른 길: `geldart2006_powder_flowability_angle_of_repose_tester` · `jarray2019_cohesion_driven_mixing_segregation_drum` · `alizadeh2018_dem_adhesion_calibration_segregation_heap`.
 - 정렬 혼합 · 건식 코팅: `hersey1975_ordered_mixing_concept` · `pfeffer2001_dry_particle_coating_engineered_particulates`.
 - 황화물 점착 실측 · 건식 혼합 DEM: `lee2026_mechanical_halogen_argyrodite_drycoating` · `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `otani2025_dem_se_dispersion_aggregation_compression`.
+- 이 카드 ref [10] 의 정본 카드 (2026-11-24): `capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function` (혼합물 Bo = 쌍 Bo 의 표면적 가중 조화평균 · IGC γ_d → Hamaker 기하평균 · AM + SE 에는 '일부' — 쌍 무게 · 힘 법칙 규약이 다르다).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

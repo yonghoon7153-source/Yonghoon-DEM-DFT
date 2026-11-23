@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 369편 · 생성 2026-11-23
+> digest 370편 · 생성 2026-11-23
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -69,7 +69,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 | `sulsky1994_mpm_particle_method_history_dependent_materials` | MPM 의 원전 — 이력 의존 (소성) 재료의 상태 (소성 변형률 · 경화 변수) 를 물질점에 싣고 운동량은 매 걸음 다시 까는 격자에서 푸는 PIC/FLIP 확장: 혼합 약형 (3.2) · 물질점 = Dirac 점 질량 (3.4) · 사상 행렬 S_Pi = N_i(X_P) (3.7) · 일관 → 행 합 대각 질량 · F | particle (material point) method formulation + 2D numerical  | 2026-11-12 | 🖼 68 |
 
-## 접촉역학 · 소성 (DEM 이론) (94편)
+## 접촉역학 · 소성 (DEM 이론) (95편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -85,6 +85,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
 | `brodu2015_multiple_contact_dem_dense_granular` | 같은 알의 다른 접촉이 만든 탄성 변위를 겹침에 더하는 다접촉 DEM (MC-DEM · Giannis 가 'MC-strain' 이라 부른 것) — 하이드로겔 514 알 3D 접촉력 실측과 다섯 정식화 대조 — Brodu, Dijksman & Behringer (Phys. Rev. E 2015) | DEM (contact-LAW theory, non-binary multi-contact, displacem | 2026-11-12 | 🖼 28 |
 | `cantor2020_compaction_model_highly_deformable_particles` | 매우 무른 (초탄성) 원판 집합의 2D 등방 압밀과 미시역학 압밀 식의 원전 — non-smooth contact dynamics (NSCD) + 입자별 FE (원판 1500 개 × 삼각형 92 개, LMGC90) · 입자 간 마찰 0–0.8 · 압밀 식 P(φ) = (Zφ/2π) × 단일 입자 상자 법칙 · 체적탄성률  | NSCD+FEM 2D 다입자 (LMGC90 — neo-Hookean 비압축 FE 원판 1500 개 × 삼각형 | 2026-11-10 | 🖼 20 |
+| `capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function` | 혼합물 (다성분) 입상 Bond 수 — 쌍마다 Rumpf 꼴 다돌기 반데르발스 힘 (IGC 분산 표면 에너지 → Hamaker · 기하평균 결합 · 조화평균 지름 · 돌기 · 무게) 으로 Bo_ij 를 내고 표면적 몫의 곱으로 가중한 조화평균 Bo_Mix 를 단일 성분에서 맞춘 ff_c = 15.7·Bo^−0.27 에 넣 | experiment + semi-empirical model (granular Bond number from | 2026-11-24 | 🖼 47 |
 | `cardenasbarrantes2020_rigid_deformable_mixture_compaction_nscd` | 강체 + 매우 무른(초탄성) 입자 혼합물의 등방 압밀 — non-smooth contact dynamics (NSCD) + 입자별 FE 2D 시뮬레이션과 미시역학 압밀 법칙 P(φ, κ) · 최대 밀도 φmax(κ) — ★★ 우리 NCM(강체) + SE(무른) 복합 양극 가압의 가장 가까운 공개 유비 · 재설계 후보 B  | NSCD+FEM 2D 다입자 (LMGC90 — 강체 원판 + neo-Hookean 비압축 FE 원판 혼합,  | 2026-11-09 | 🖼 21 |
 | `cardenasbarrantes2021_soft_pentagons_compaction_micromechanics_nscd` | 무른 (초탄성) 정오각형 집합의 2D 등방 압밀 — 원판과 나란히 견준 입자 모양 · 마찰 · 재배열의 효과와 미시역학 압밀 식의 다각형 확장 — non-smooth contact dynamics (NSCD) + 입자별 FE (오각형 500 개 · 원판 500 개 × 삼각형 92 개, LMGC90) · 입자 간 마찰 0– | NSCD+FEM 2D 다입자 (LMGC90 — neo-Hookean 비압축 FE 정오각형 500 개 · 원판 | 2026-11-10 | 🖼 42 |
 | `cardenasbarrantes2021_soft_rigid_mix_compaction_proceedings` | 무른 + 강체 입자 혼합물의 미시역학 압밀 모델 — 학회 단편 (Powders & Grains 2021) · PRE 2020 판의 요약 + 시작 상태 표 (φ0 · Z0) · NSCD contact dynamics + FE 2D — Cárdenas-Barrantes, Cantor, Barés, Renouf, Azéma ( | NSCD+FEM 2D 다입자 (LMGC90 — 강체 + neo-Hookean 비압축 FE 원판 혼합, 등방  | 2026-11-09 | 🖼 7 |

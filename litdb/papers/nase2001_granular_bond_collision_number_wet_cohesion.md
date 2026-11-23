@@ -216,6 +216,7 @@ DEM (입자 동역학) + 실험 — 우리 쪽 반쪽은 **믹서 DEM 의 점착
 - 같은 날 · 정렬 혼합: [`hersey1975_ordered_mixing_concept`](hersey1975_ordered_mixing_concept.md) · [`pfeffer2001_dry_particle_coating_engineered_particulates`](pfeffer2001_dry_particle_coating_engineered_particulates.md).
 - 접촉 이론: [`johnson1971_jkr_surface_energy_contact_elastic_solids`](johnson1971_jkr_surface_energy_contact_elastic_solids.md).
 - 충돌 수 Co 를 이원 쌍으로 늘린 같은 그룹 논문 (이 논문 = 그 ref [11] · 2026-11-23 카드): [`li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram`](li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram.md) (Li · McCarthy, Powder Technol. 164 (2006) 58–64 · 쌍 비 Co_ii/Co_12 의 동적 상태도 · 환형 전단 셀 실험).
+- Bo_g 를 다성분 혼합물로 넓혀 흐름 함수 계수를 예측한 논문 (2026-11-24 카드): [`capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function`](capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function.md) (Capece · Ho · Strong · Gao, Powder Technol. 286 (2015) 561–571 · 건식 vdW · Rumpf 다돌기 힘).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -397,6 +397,7 @@
 - 혼합 지수: `lacey1954_particle_mixing_theory_index` · `chandratilleke2012_particle_scale_mixing_index` · `jadidi2023_dem_batch_solid_mixers_review`.
 - 같은 축 · 다른 그룹 (이 논문보다 앞선 건식 점착 드럼 DEM · 2026-11-23 카드): `chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed` — B. Chaudhuri, A. Mehrotra, F.J. Muzzio, M.S. Tomassone, Powder Technol. 165 (2006) 105–114 (정사각 우물 상수 힘 · 쌍 점착 자유 변수 (기하평균과 맞는 런은 K_rb = K_rr = 0 뿐) · 중간 점착 K_bb 50 의 반대 다섯 = 이 논문 '절대 점착 세기가 따로 효과' 와 같은 쪽 · 12.5–30 rpm 회전 효과 — 그 카드 §3-8 · §3-9).
 - 같은 그룹 전단 판 (이 논문 ref [16] · 2026-11-23 카드): `li2006_cohesive_mixing_shear_cell_collision_number_phase_diagram` — H. Li, J. McCarthy, *"Cohesive particle mixing and segregation under shear"*, Powder Technol. 164 (2006) 58–64 (전단이 무게보다 클 때의 힘 척도 = Bagnold 충돌력으로 나눈 충돌 수 Co · 액체 다리 · 동적 상태도).
+- 혼합물 (다성분) Bond 수 · 다른 분모 규약 (2026-11-24 카드): `capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function` — M. Capece, R. Ho, J. Strong, P. Gao, *"Prediction of powder flow performance using a multi-component granular Bond number"*, Powder Technol. 286 (2015) 561–571 (같은 기하평균 결합 · 쌍 무게 = 조화평균 → 크기비 1 : 9 에서 SE–AM 쌍 Bo 가 이 카드 규약의 절반 · Rumpf 돌기 200 nm 면 R\* 이득 1.8 → 1.08 · 판가름 수 0.31 → 0.86 [그 카드 §7-2 · 카드 산술]).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
