@@ -305,5 +305,14 @@
     "커밋": "19ddec83c (도구 · 시험) · a6b34ffa6 (pack 관문 홀로 시험) · 이 커밋 (묶음 · 빌드 기록 ⑮)",
     "다음": "Codex 편지 ES (kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md · 영어 · §1b 그대로) → 사용자 발송 → GO 뒤 zip · handoff · 운영 안내",
     "by": "claude · 2026-11-23 (대피 세션 fork)"
+  },
+  "⑮b_메인_검증_2026_11_23": {
+    "누가": "메인 세션 (작업자 커밋 19ddec83c · a6b34ffa6 · 1da64d0be · ac96105b7 을 fast-forward 로 받음)",
+    "재빌드": "python3 tools/wad/build_a5_vasp_package.py --build --out <새 폴더> → rc 0 · diff -r 로 db/inputs/wad_a5_vasp_2026_11_20 와 0 차이 (바이트 같음) · MANIFEST.sha256 sha256 50beb026f9e463a247f2c4da6452e7a048c31fb9e9ca72e39db98bc94ebf2e74",
+    "자체시험": "python3 tools/wad/build_a5_vasp_package.py --selftest → ✅ 279/279 · rc 0 · ✗ 0 (이 컨테이너 · 작업자와 따로)",
+    "도구_sha256": "41a486faf764663e… (tools/wad/build_a5_vasp_package.py · 빌드 기록 ⑮ 과 같음)",
+    "편지": "kb/reviews/codex_ES_prompt_wad_a5_er_fixes_2026_11_23.md (발송 대기 · 사용자) · 보내는 글 (영어) 사본 — 한글 줄 0 · W 값 0 (grep) · 토큰 19 자 정정 들어 있음",
+    "돌연변이": "작업자 전체 한 번 209/210 → 살아남은 m158 (pack() 자체 관문 뺌) 은 시험 하나 (er_packgate) 더해 홀로 빨강 · 전체 재실행은 안 함 (편지 §5 · ⑮ 에 경위) · 메인은 돌연변이를 다시 안 돌렸다",
+    "정리": "작업자 worktree · 가지 지움 (미커밋 0 · HEAD ac96105b7 이 대피 브랜치에 들어 있음) · 디스크 여유 13 GB"
   }
 }
