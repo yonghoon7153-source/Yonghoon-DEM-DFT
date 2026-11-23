@@ -856,5 +856,20 @@
   "⚠": "GPU 를 셋이 같이 써서 런 속도가 어림 (단독 turbo ≈ 145 ps/h) 보다 느릴 수 있다 — 첫 생산 프레임 속도로 끝 시각을 다시 잰다 · 큐 상한 150 h 는 실행기가 센다",
   "다음": "속도 재기 (한두 시간 뒤 watch) → 8 단위 끝 → 회수 블록 → 판독 (11b_판독_계약_결과_전_2026_11_23 그대로)",
   "by": "agent · 2026-11-23"
+ },
+ "11b_감시_v2_2026_11_23": {
+  "출처": "사용자 붙여넣은 gabia 화면 — watch v1 10:13:49 · md.log 확인 명령 (10:16 직전) · watch v2 10:16:37 (2026-11-23)",
+  "왜_v2": "v1 은 traj.xyz 프레임만 셌다 — 드라이버가 궤적을 생산 구간에서만 쓰므로 평형 5 ps 동안 '평형 중' 만 보여 돌고 있는지 알 수 없었다 (10:13:49 화면) · v2 는 md.log 마지막 줄의 시간 (평형 5 + 생산 400 = 온도마다 405 ps) 과 화면 시각 (date +%T) 을 같이 찍는다 · 큐 로그 줄은 110 자에서 자른다 (v1 의 150 자 자름이 'GPU 여유' 숫자를 4470 으로 잘라 보였다 — 11b_발사_2026_11_23 GPU 줄)",
+  "감시_v2": "watch -n 30 'O=/data/work/runs/b2o3_bo_2026_11_09/s11b_md; tmux has-session -t b2o3_s11b 2>/dev/null && echo \"== tmux b2o3_s11b 도는 중 · $(date +%T)\" || echo \"== tmux b2o3_s11b 없음 = 끝났거나 멈춤\"; tail -3 $O/queue.log 2>/dev/null | cut -c1-110; for u in $O/*/s[12]; do [ -d \"$u\" ] || continue; c=$(ls -td $u/d0.00_cfg0/T* 2>/dev/null | head -1); t=$(tail -1 $c/md.log 2>/dev/null | awk \"{print \\$1}\"); n=$(head -1 $c/traj.xyz 2>/dev/null); f=; [ -n \"$n\" ] && f=$(( $(wc -l < $c/traj.xyz) / (n + 2) )); s=\"도는 중\"; [ -e $u.done.json ] && s=\"끝\"; [ -e $u.fail.json ] && s=\"실패\"; echo \"-- $(basename $(dirname $u) | cut -c1-16)/$(basename $u): $s · 온도 $(ls -d $u/d0.00_cfg0/T* 2>/dev/null | sed \"s#.*/T##\" | sort -n | tr \"\\n\" \" \")· 지금 ${c##*/} · md.log ${t:-없음} ps / 405 · 프레임 ${f:-0} / 4000\"; done; echo \"== GPU\"; nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv,noheader; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader'",
+  "시험": "가짜 폴더 세 단위 (평형 중 = md.log 3.2 ps · 궤적 없음 / 생산 중 = 궤적 77 프레임 · md.log 없음 / 끝 = done.json) 에 대해 shlex.split → sh -c 로 실행해 줄 꼴 확인 (세션 안 · 2026-11-23) · 실패 단위 (fail.json) 와 GPU 줄은 시험에 안 넣었다",
+  "관측": {
+   "10:13:49_v1": "두 줄 ctrl_s1 · ctrl_s2 '평형 중' · GPU 9002 MiB · 100 % · 우리 두 런 2270 · 2286 MiB (10:03 의 1654 · 1644 에서 늘어남) · 남의 python3 1314219 4420 MiB 그대로",
+   "md_log_확인": "s1 T300 6.2260 → 6.2280 ps · s2 6.2400 → 6.2420 ps (줄마다 2 fs = 매 걸음 기록) · 런 로그 끝은 torch 컴파일 경고 (10:01:23) 뿐 · 오류 없음",
+   "10:16:37_v2": "s1 md.log 6.3120 ps · s2 6.3260 ps · 둘 다 생산 프레임 13 / 4000 ((6.31 − 5) / 0.1 ps = 13 ✓) · GPU 9002 MiB · 100 %"
+  },
+  "속도_어림_잠정": "시작 10:01:09 → 10:16:37 에 6.31 ps — 모델 적재 · 컴파일 시간을 포함한 평균이라 하한 ≈ 24 ps/h · 두 시각 표본 사이 간격이 짧아 (md.log 확인 ↔ v2 화면 수 초) 실속도는 아직 못 잼 · 단독 turbo ≈ 145 ps/h 의 1/3 꼴 (GPU 를 셋이 나눠 씀) 이면 ≈ 48 ps/h",
+  "끝_시각_어림_잠정": "단위 하나 = 4 온도 × 405 ps = 1620 ps · 줄마다 4 단위 — 48 ps/h 면 단위 ≈ 34 h · 줄 ≈ 135 h (상한 150 h 안) · 30 ps/h 면 단위 ≈ 54 h · 넷째 단위 (cfg0019) 시작 시각 ≈ 162 h > 150 h → 실행기가 안 띄운다 (배치 하나가 빠진다)",
+  "다음": "한 시간 이상 간격의 두 번째 v2 화면으로 실속도 → 끝 시각 · 상한 150 h 를 넘으면 사용자에게 선택지 (그대로 두고 넷째 단위만 따로 · kgy 로 단위 나눠 돌리기 · 상한 다시 정하기) — 판독 계약 (11b_판독_계약_결과_전_2026_11_23) 은 그대로",
+  "by": "agent · 2026-11-23"
  }
 }
