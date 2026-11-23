@@ -50,6 +50,42 @@ def prefix(key, q):
         "N-72": "N-72 둘째\t대피\t"}.get(key, f"{key}\t대피\t")
 
 
+def size_effect_add_only(commit, slug, path):
+    """카드 커밋이 litdb 밖에서 고친 파일이 tools/litdb/build_index.py 이고, 그 고침이
+    SIZE_EFFECT_SLUGS 묶음 안에 이 카드 slug 한 줄 (+ 주석 줄) 을 더하기만 했으면 True.
+    (11-16 N-79 · 11-22 N-88 — 'SE 입도 효과' 절은 이 목록이 정한다 · 그 밖 고침은 그대로 거부)"""
+    if path != "tools/litdb/build_index.py":
+        return False
+    d = git("show", "--format=", "-U0", commit, "--", path).stdout.split("\n")
+    added, starts = [], []
+    import re as _re
+    for l in d:
+        if l.startswith("@@"):
+            m = _re.match(r"^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@", l)
+            if not m:
+                return False
+            starts.append([int(m.group(1)), 0])
+        elif l.startswith("-") and not l.startswith("---"):
+            return False
+        elif l.startswith("+") and not l.startswith("+++"):
+            if not starts:
+                return False
+            added.append((starts[-1][0] + starts[-1][1], l[1:]))
+            starts[-1][1] += 1
+    if not added:
+        return False
+    src = git("show", f"{commit}:{path}").stdout.split("\n")
+    try:
+        b = next(i for i, l in enumerate(src) if l.startswith("SIZE_EFFECT_SLUGS = frozenset({")) + 1
+        e = next(i for i in range(b, len(src)) if src[i].startswith("})")) + 1
+    except StopIteration:
+        return False
+    slug_lines = [s for _, s in added if not s.strip().startswith("#")]
+    if slug_lines != [f'    "{slug}",']:
+        return False
+    return all(b < n < e for n, _ in added)
+
+
 def sync_evac():
     d = CTL / "litdb" / "_curation" / "evac"
     (d / "tools").mkdir(parents=True, exist_ok=True)
@@ -108,7 +144,7 @@ def main():
     show = lambda p: git("show", f"{REF}:{p}").stdout
     ok = git("merge-base", "--is-ancestor", a.commit, REF).returncode == 0
     names = git("show", "--name-only", "--format=", a.commit).stdout.split()
-    outside = [n for n in names if not n.startswith("litdb/")]
+    outside = [n for n in names if not n.startswith("litdb/") and not size_effect_add_only(a.commit, a.slug, n)]
     card = show(f"litdb/papers/{a.slug}.md")
     figs = git("ls-tree", "--name-only", REF, f"litdb/figures/{a.slug}/").stdout.split("\n")
     png = [f for f in figs if f.endswith(".png")]

@@ -1,0 +1,784 @@
+{
+ "slug": "chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Comparison of simulations using K=60 and experimental results using moderately cohesive Avicel-101.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.5,
+    535.0,
+    556.5,
+    738.6
+   ],
+   "w": 2117,
+   "h": 849,
+   "dpi": 300,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf"
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (A) This figure shows the effect of cohesion on mixing. We see that for highly cohesive materials (K=90) the mixing is slower than for cohesion free materials (K=0), but for mildly cohesive materials (K=0.1) the mixing is faster than for the free flowing case (K=0). (B) This Graph is in conjunction with Fig. 2A, plotting the log (intensity of segregation) with revolutions, at various levels of cohesion. Then as the time progress the intensity decreases and we observe best mixing at K=0.1 but segregation is more pronounced with further increase in cohesion.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.9,
+    194.6,
+    466.3,
+    707.3
+   ],
+   "w": 1456,
+   "h": 2136,
+   "dpi": 300,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "auto_bbox": [
+    26.7,
+    194.1,
+    558.8,
+    708.8
+   ],
+   "recrop": "tool crop was the full text width (blank 0.909: wide empty side margins around panels A + B) → Re-cut from the vector page (300 dpi, tool dpi kept): ink bounding box (min RGB < 240) inside the figure area between the body text above and the caption below → uniform 6 pt (25 px) white margin; caption excluded (tool convention · caption in this entry) (2026-11-23)"
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. The velocity profiles for simulations for K=0 and K=120 at time T=0 and 5revolutions. Insets show the enlarged views of bottom right corner of the cylinders.",
+   "rotated_deg": 0,
+   "bbox": [
+    43.0,
+    110.4,
+    722.2,
+    488.2
+   ],
+   "w": 2830,
+   "h": 1574,
+   "dpi": 300,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "auto_bbox": [
+    110.5,
+    71.2,
+    488.2,
+    595.3
+   ],
+   "recrop": "page 5 carries /Rotate 90 (landscape figure); the tool clipped a portrait strip in unrotated coordinates (cut off the right-hand K=120 panels and the left inset, and took in the caption) → rendered the page upright (rotation applied) at 300 dpi and cut the whole figure (4 velocity panels + 2 insets + 'T = 3 secs' / 'T = 15 secs' labels + arrows/boxes) by ink bounding box, uniform 6 pt margin, caption and running head excluded; bbox here is in the ROTATED (landscape, 793.7 x 595.3 pt) page coordinates (2026-11-23)"
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (A) The time sequence of mixing states (for K=120) at speeds of RPM=12.5, 20 and 30. (B) illustrates the outcome of varying the rotational speed on cohesive mixture with K=120.",
+   "rotated_deg": 0,
+   "bbox": [
+    116.9,
+    291.8,
+    460.1,
+    727.2
+   ],
+   "w": 1430,
+   "h": 1814,
+   "dpi": 300,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "tool skipped it ('영역 없음': raster panel A + vector panel B not tied to the caption) → hand-cut from the vector page at 300 dpi: ink bounding box (min RGB < 240) inside the figure area between the body text above and the caption below → uniform 6 pt (25 px) margin; caption excluded (tool convention · caption in this entry) (2026-11-23)"
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (A) The effect of cohesion in the smaller particles on the homogeneity of binary mixture of different sizes. Red particles are considered to be free flowing and there is no adhesive force acting between the particles. It is seen that mixing is optimum for an intermediate value of Kbb=50. (B) The variation of intensity of segregation with time as a function of cohesion within smaller blue particles. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    127.2,
+    251.5,
+    473.0,
+    707.3
+   ],
+   "w": 1441,
+   "h": 1899,
+   "dpi": 300,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "tool skipped it ('영역 없음': raster panel A + vector panel B not tied to the caption) → hand-cut from the vector page at 300 dpi: ink bounding box (min RGB < 240) inside the figure area between the body text above and the caption below → uniform 6 pt (25 px) margin; caption excluded (tool convention · caption in this entry) (2026-11-23)"
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. The variation of intensity of segregation with time as a function of cohesion within bigger red particles. (For interpretation of the references to colour in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    121.7,
+    513.4,
+    464.6,
+    727.2
+   ],
+   "w": 1429,
+   "h": 891,
+   "dpi": 300,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "tool skipped it ('영역 없음': single vector plot not tied to the caption) → hand-cut from the vector page at 300 dpi: ink bounding box (min RGB < 240) inside the figure area between the body text above and the caption below → uniform 6 pt (25 px) margin; caption excluded (tool convention · caption in this entry) (2026-11-23)"
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 9,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (A) The variation of intensity of segregation with time as a function of adhesion. The smaller particles are mildly cohesive. Kbb=50. (B) The variation of intensity of segregation with time as a function of adhesion. The smaller particles are highly cohesive. Kbb=150.",
+   "rotated_deg": 0,
+   "bbox": [
+    142.8,
+    302.6,
+    463.2,
+    727.2
+   ],
+   "w": 1335,
+   "h": 1769,
+   "dpi": 300,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "tool skipped it ('영역 없음': two stacked vector plots not tied to the caption) → hand-cut from the vector page at 300 dpi: ink bounding box (min RGB < 240) inside the figure area between the body text above and the caption below → uniform 6 pt (25 px) margin; caption excluded (tool convention · caption in this entry) (2026-11-23)"
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Parameters employed in DEM simulations (uniform system)",
+   "rotated_deg": 0,
+   "bbox": [
+    36.3,
+    68.5,
+    299.8,
+    264.5
+   ],
+   "w": 1463,
+   "h": 1088,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "auto_bbox": [
+    37.5,
+    42.1,
+    567.6,
+    758.5
+   ],
+   "recrop": "tool crop was the whole page (2210x2986 px: Table 1, Fig. 1, both text columns) → hand-cut from the vector page at 400 dpi (tool default 300 dpi; 7.5–8 pt table type), caption line to bottom rule → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Parameters employed for DEM simulations (non-uniform system)",
+   "rotated_deg": 0,
+   "bbox": [
+    36.3,
+    68.5,
+    299.6,
+    159.4
+   ],
+   "w": 1462,
+   "h": 504,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "auto_bbox": [
+    37.5,
+    42.1,
+    567.6,
+    758.5
+   ],
+   "recrop": "tool crop was the whole page (2210x2986 px: Table 2, Fig. 5, both text columns) → hand-cut from the vector page at 400 dpi (tool default 300 dpi; 7.5–8 pt table type), caption line to bottom rule → ink bounding box (min RGB < 240) → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_force_balance_gravity_contact_cohesion.png",
+   "caption": "Eq. (1), PDF p.2 (print p.106) left column: ΣF_i = m_i g + F_N + F_T + F_cohes — force on each particle = gravity + normal + tangential contact force + cohesive force (square-well).",
+   "rotated_deg": 0,
+   "bbox": [
+    27.3,
+    455.9,
+    288.8,
+    481.9
+   ],
+   "w": 1452,
+   "h": 144,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column → ink bounding box (min RGB < 240) → uniform 6 pt margin, equation number included (2026-11-23)"
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_torque_tangential_forces.png",
+   "caption": "Eq. (2), p.2 L: ΣT_i = r_i × F_T — torque from tangential contact forces only (no rolling resistance).",
+   "rotated_deg": 0,
+   "bbox": [
+    27.3,
+    485.9,
+    288.8,
+    512.0
+   ],
+   "w": 1452,
+   "h": 144,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column → ink bounding box (min RGB < 240) → uniform 6 pt margin, equation number included (2026-11-23)"
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 2,
+   "file": "eq_04_pair_bond_numbers_small_particle_weight.png",
+   "caption": "Eq. (4), p.2 R: K_rr = F_N,rr/W_b (red–red) · K_rb = F_N,rb/W_b (red–blue) · K_b = F_N,bb/W_b (blue–blue) — pair cohesion Bond numbers, ALL normalised by the weight W_b of the small 'blue' particle (also red–red). ⚠ printed 'K_b' for K_bb (text below says K_bb); 'F_N' here denotes the cohesive pair force, not the normal contact force of Eq. (1); the paper has no Eq. (3) (numbering jumps 2 → 4).",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    554.2,
+    557.7,
+    600.5
+   ],
+   "w": 1448,
+   "h": 257,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column → ink bounding box (min RGB < 240) → uniform 6 pt margin, equation number included (2026-11-23)"
+  },
+  {
+   "key": "ea",
+   "kind": "equation",
+   "label": "inline-a",
+   "page": 2,
+   "file": "eq_inline_a_latching_spring_normal_force_k1_k2.png",
+   "caption": "Inline, p.2 L: Walton–Braun 'latching spring' normal force F_N = K1·α1 (compression) and F_N = K2(α1 − α0) (recovery).",
+   "rotated_deg": 0,
+   "bbox": [
+    27.1,
+    666.7,
+    289.1,
+    699.7
+   ],
+   "w": 1455,
+   "h": 183,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "inline expression (no equation number in the paper) — the text line(s) of the column that hold it, rendered at 400 dpi → ink bounding box → uniform 6 pt margin (neighbouring prose words kept; the expression cannot be cut out of the line without splitting words) (2026-11-23)"
+  },
+  {
+   "key": "eb",
+   "kind": "equation",
+   "label": "inline-b",
+   "page": 2,
+   "file": "eq_inline_b_restitution_e_sqrt_k1_over_k2.png",
+   "caption": "Inline, p.2 L: coefficient of restitution e = (K1/K2)^(1/2), 0 < e < 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.4,
+    726.4,
+    290.0,
+    759.5
+   ],
+   "w": 1464,
+   "h": 183,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "inline expression (no equation number in the paper) — the text line(s) of the column that hold it, rendered at 400 dpi → ink bounding box → uniform 6 pt margin (neighbouring prose words kept; the expression cannot be cut out of the line without splitting words) (2026-11-23)"
+  },
+  {
+   "key": "ec",
+   "kind": "equation",
+   "label": "inline-c",
+   "page": 2,
+   "file": "eq_inline_c_coulomb_static_limit_fn_includes_cohesion.png",
+   "caption": "Inline, p.2 R: Coulomb–Amontons limit F_t ≤ μ_s F_n, with F_n = total normal force = cohesive force + static weight transmitted through the bed (sliding: F_t = μ_s F_n — one coefficient for static and sliding).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    164.6,
+    558.8,
+    209.8
+   ],
+   "w": 1461,
+   "h": 250,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "inline expression (no equation number in the paper) — the text line(s) of the column that hold it, rendered at 400 dpi → ink bounding box → uniform 6 pt margin (neighbouring prose words kept; the expression cannot be cut out of the line without splitting words) (2026-11-23)"
+  },
+  {
+   "key": "ed",
+   "kind": "equation",
+   "label": "inline-d",
+   "page": 2,
+   "file": "eq_inline_d_tangential_spring_increment.png",
+   "caption": "Inline, p.2 R: Walton's incrementally slipping tangential spring T_{t+1} = T_t + k_T Δs (Δs = relative tangential displacement between two time steps).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    272.3,
+    558.8,
+    305.3
+   ],
+   "w": 1461,
+   "h": 183,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "inline expression (no equation number in the paper) — the text line(s) of the column that hold it, rendered at 400 dpi → ink bounding box → uniform 6 pt margin (neighbouring prose words kept; the expression cannot be cut out of the line without splitting words) (2026-11-23)"
+  },
+  {
+   "key": "ee",
+   "kind": "equation",
+   "label": "inline-e",
+   "page": 2,
+   "file": "eq_inline_e_bond_number_k_fcohes_over_mg.png",
+   "caption": "Inline, p.2 R: cohesion Bond number K = F_cohes/mg (footnote 1: 'we are not claiming that cohesive forces depend on the particle weight' — convenience scale, e.g. 20 or 30 times the weight).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.5,
+    356.0,
+    559.0,
+    389.0
+   ],
+   "w": 1463,
+   "h": 183,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "inline expression (no equation number in the paper) — the text line(s) of the column that hold it, rendered at 400 dpi → ink bounding box → uniform 6 pt margin (neighbouring prose words kept; the expression cannot be cut out of the line without splitting words) (2026-11-23)"
+  },
+  {
+   "key": "ef",
+   "kind": "equation",
+   "label": "inline-f",
+   "page": 3,
+   "file": "eq_inline_f_intensity_of_segregation_danckwerts.png",
+   "caption": "Inline, p.3 L: intensity of segregation (Danckwerts 1952) I = σ²/σ0² — σ² = variance of the mixture composition (bins), σ0² = maximum (fully segregated) variance = the initial condition → I = 1 at start, 0 when homogeneous. ⚠ printed 'σ² is the maximum possible variance' (subscript 0 missing); no random-mixture σ_r² term.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    485.6,
+    299.6,
+    532.5
+   ],
+   "w": 1461,
+   "h": 260,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "inline expression (no equation number in the paper) — the text line(s) of the column that hold it, rendered at 400 dpi → ink bounding box → uniform 6 pt margin (neighbouring prose words kept; the expression cannot be cut out of the line without splitting words) (2026-11-23)"
+  },
+  {
+   "key": "xp1_abstract_square_well_rate_up_down_relative_pair_force_rotation",
+   "kind": "text",
+   "label": "p1_abstract_square_well_rate_up_down_relative_pair_force_rotation",
+   "page": 1,
+   "file": "txt_p1_abstract_square_well_rate_up_down_relative_pair_force_rotation.png",
+   "caption": "PDF p.1 abstract: square-well cohesion; validated by comparison to experimental images; uniform binary: as cohesion increases the rate of mixing first increases and then decreases; non-uniform: mixing patterns depend on the relative magnitude of forces between same/different sizes; higher rotation speed enhances mixing of cohesive mixtures (unlike free-flowing).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    264.7,
+    568.7,
+    383.5
+   ],
+   "w": 2956,
+   "h": 659,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp2_li_mccarthy_wet_phase_diagram_dry_cohesion_gap_objective",
+   "kind": "text",
+   "label": "p2_li_mccarthy_wet_phase_diagram_dry_cohesion_gap_objective",
+   "page": 2,
+   "file": "txt_p2_li_mccarthy_wet_phase_diagram_dry_cohesion_gap_objective.png",
+   "caption": "PDF p.2 L top: Li & McCarthy [23] wet-cohesion phase diagram as paraphrased by the authors ('segregation would be limited at equilibrium whenever the materials are adhesive, and more cohesion will lead to more segregation than ... the dry case'); 'much remains to be done on the effect of dry particle cohesion'; objective = dry cohesive binary mixtures of uniform and non-uniform sizes, friction included; I vs time, cohesion and rotation speed.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    69.1,
+    290.8,
+    257.6
+   ],
+   "w": 1466,
+   "h": 1047,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp2_latching_spring_walton_braun_k1_k2_small_overlap",
+   "kind": "text",
+   "label": "p2_latching_spring_walton_braun_k1_k2_small_overlap",
+   "page": 2,
+   "file": "txt_p2_latching_spring_walton_braun_k1_k2_small_overlap.png",
+   "caption": "PDF p.2 L: normal force = Walton–Braun 'latching spring' (K1 compression · K2 recovery); 'K1 and K2 are chosen to be large enough to ensure that the overlaps α1 and α0 remain small compared to the particles sizes'; restitution e = (K1/K2)^1/2.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.4,
+    570.9,
+    290.0,
+    759.5
+   ],
+   "w": 1464,
+   "h": 1047,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp2_tangential_walton_incremental_slip_coulomb",
+   "kind": "text",
+   "label": "p2_tangential_walton_incremental_slip_coulomb",
+   "page": 2,
+   "file": "txt_p2_tangential_walton_incremental_slip_coulomb.png",
+   "caption": "PDF p.2 R: tangential force = Walton's incrementally slipping model; initial tangential stiffness a fraction of the normal stiffness; Coulomb–Amontons limit with F_n = cohesive force + static weight; T_{t+1} = T_t + k_T Δs.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.5,
+    93.0,
+    559.0,
+    329.1
+   ],
+   "w": 1463,
+   "h": 1311,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp2_square_well_bond_number_independent_pair_forces_wall",
+   "kind": "text",
+   "label": "p2_square_well_bond_number_independent_pair_forces_wall",
+   "page": 2,
+   "file": "txt_p2_square_well_bond_number_independent_pair_forces_wall.png",
+   "caption": "PDF p.2 R: cohesive force simulated with a square-well potential; K = F_cohes/mg ('independent of particle size'); 'this constant force may represent short range effects such as electrostatic or van der Waals forces'; non-uniform case: like/unlike pair forces F_N,rr · F_N,rb · F_N,bb specified independently (Eq. 4, all ÷ W_b); forces 'considered whenever there is a collision between particles or with the wall'.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.3,
+    320.2,
+    559.9,
+    667.0
+   ],
+   "w": 1469,
+   "h": 1926,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp2_footnotes_bond_number_not_weight_dependent_electrostatics",
+   "kind": "text",
+   "label": "p2_footnotes_bond_number_not_weight_dependent_electrostatics",
+   "page": 2,
+   "file": "txt_p2_footnotes_bond_number_not_weight_dependent_electrostatics.png",
+   "caption": "PDF p.2 footnotes 1–2: 'we are not claiming that cohesive forces depend on the particle weight' (K = convenience scale, '20 times the weight, 30 times the weight'); electrostatic forces not included (planned extension).",
+   "rotated_deg": 0,
+   "bbox": [
+    295.7,
+    675.8,
+    558.6,
+    759.3
+   ],
+   "w": 1460,
+   "h": 463,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp3_wall_equals_like_pair_leapfrog_settling_bins_intensity",
+   "kind": "text",
+   "label": "p3_wall_equals_like_pair_leapfrog_settling_bins_intensity",
+   "page": 3,
+   "file": "txt_p3_wall_equals_like_pair_leapfrog_settling_bins_intensity.png",
+   "caption": "PDF p.3 L: particle–wall cohesive force = that of two similar particles; DEM steps (neighbour lists · contact forces · Verlet leap-frog, 3D); non-overlapping loading → gravitational settling → tagging by initial location → rotation; bins for concentration; I = σ²/σ0² (Danckwerts 1952).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.3,
+    272.3,
+    300.7,
+    532.5
+   ],
+   "w": 1468,
+   "h": 1445,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp3_intensity_range_experiment_cylinder_avicel_beads_20rpm",
+   "kind": "text",
+   "label": "p3_intensity_range_experiment_cylinder_avicel_beads_20rpm",
+   "page": 3,
+   "file": "txt_p3_intensity_range_experiment_cylinder_avicel_beads_20rpm.png",
+   "caption": "PDF p.3 R: σ0² = initial (fully segregated) state, I from 1 to 0; experiment: Plexiglas cylinder 42 cm long × 9 cm diameter, camera; uniform = red/green Avicel PH101 (~50 µm rough needle-like, food colour + ethyl alcohol) side by side; non-uniform = blue/red glass beads 20 and 30 µm; 50 % fill; 20 rpm; 30 frames/s.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.4,
+    69.1,
+    569.6,
+    387.1
+   ],
+   "w": 1467,
+   "h": 1766,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp3_uniform_system_20000_2mm_drum_9cm_1cm_20rpm",
+   "kind": "text",
+   "label": "p3_uniform_system_20000_2mm_drum_9cm_1cm_20rpm",
+   "page": 3,
+   "file": "txt_p3_uniform_system_20000_2mm_drum_9cm_1cm_20rpm.png",
+   "caption": "PDF p.3 R (§4.1): 10,000 'green' + 10,000 'red' identical particles of 2 mm diameter side by side; simulated drum diameter 9 cm, length 1 cm, 20 rpm; parameters in Table 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.6,
+    415.7,
+    568.7,
+    530.5
+   ],
+   "w": 1461,
+   "h": 637,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp4_k_0_120_endcaps_friction_fig1_k60_avalanche_dilation",
+   "kind": "text",
+   "label": "p4_k_0_120_endcaps_friction_fig1_k60_avalanche_dilation",
+   "page": 4,
+   "file": "txt_p4_k_0_120_endcaps_friction_fig1_k60_avalanche_dilation.png",
+   "caption": "PDF p.4 top (both columns): K varied 0–120; frictionless end caps; static friction 0.4 (particle–particle) / 0.7 (particle–wall); Fig. 1 experiment (Avicel-101) vs simulation K=60 at T = 0, 1, 1.5, 4 rev — mixing starts ~3 rev, significant after 4 rev, good qualitative agreement; model predicts larger avalanches and bed dilation with cohesion.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    69.1,
+    559.0,
+    185.8
+   ],
+   "w": 2957,
+   "h": 648,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp6_k0_vs_60_90_k01_slightly_faster_velocity_1_5rev",
+   "kind": "text",
+   "label": "p6_k0_vs_60_90_k01_slightly_faster_velocity_1_5rev",
+   "page": 6,
+   "file": "txt_p6_k0_vs_60_90_k01_slightly_faster_velocity_1_5rev.png",
+   "caption": "PDF p.6 top (both columns): K=0 blends faster than K=60 and 90 (red band moves in unison); K=0.1 faster than free-flowing 'however, the difference is not large'; I starts at 1; K=0.1 fastest (Shinbrot [8], Bocquet [18]); §4.2 velocity profiles K=0 vs K=120 'after 1 and 5 revolutions'.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    69.1,
+    559.9,
+    281.4
+   ],
+   "w": 2961,
+   "h": 1179,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp7_k120_solid_body_no_mixing_zone_band",
+   "kind": "text",
+   "label": "p7_k120_solid_body_no_mixing_zone_band",
+   "page": 7,
+   "file": "txt_p7_k120_solid_body_no_mixing_zone_band.png",
+   "caption": "PDF p.7 L: K=120 after 1 rev 'particles behaving like a solid body. No mixing zone ... one layer pushes the other'; after 5 rev same-material bands flow coherently.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    164.6,
+    299.6,
+    245.6
+   ],
+   "w": 1461,
+   "h": 449,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp7_free_flowing_radial_dispersion_sudah_speed_independent",
+   "kind": "text",
+   "label": "p7_free_flowing_radial_dispersion_sudah_speed_independent",
+   "page": 7,
+   "file": "txt_p7_free_flowing_radial_dispersion_sudah_speed_independent.png",
+   "caption": "PDF p.7 R: free-flowing = radial dispersion, randomly oriented velocities; cohesive = unidirectional velocity vectors; §4.3: Sudah et al. [10] — free-flowing mixing rate independent of rotational speed (cited, not simulated here).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.6,
+    69.1,
+    568.7,
+    245.6
+   ],
+   "w": 1461,
+   "h": 980,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp8_speed_125_20_30_per_revolution_shear_breaks_bonds",
+   "kind": "text",
+   "label": "p8_speed_125_20_30_per_revolution_shear_breaks_bonds",
+   "page": 8,
+   "file": "txt_p8_speed_125_20_30_per_revolution_shear_breaks_bonds.png",
+   "caption": "PDF p.8 L: speeds 12.5, 20, 30 rpm for the uniform cohesive system (same initial loading and particle radius); 'mixing per revolution improve with higher vessel rotation speed'; 'higher shear helps in stretching and breaking striations of similar particles'; 'breaking up the coherent particle bonds'.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    69.1,
+    289.9,
+    257.6
+   ],
+   "w": 1462,
+   "h": 1047,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp8_nonuniform_8000_2370_fill50_beads_50_30um_15rpm",
+   "kind": "text",
+   "label": "p8_nonuniform_8000_2370_fill50_beads_50_30um_15rpm",
+   "page": 8,
+   "file": "txt_p8_nonuniform_8000_2370_fill50_beads_50_30um_15rpm.png",
+   "caption": "PDF p.8 L (§5.1): 8000 'blue' (radius 1 mm) + 2370 'red' (radius 1.5 mm), same density, total fill 50 %; validation beads red 50 µm / blue 30 µm, 15 rpm, axial segregation bands after a few seconds; simulation pattern 'not shown in figures'.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    284.2,
+    289.9,
+    508.6
+   ],
+   "w": 1462,
+   "h": 1246,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp8_kbb_0_150_islands_optimum_50_krr_start",
+   "kind": "text",
+   "label": "p8_kbb_0_150_islands_optimum_50_krr_start",
+   "page": 8,
+   "file": "txt_p8_kbb_0_150_islands_optimum_50_krr_start.png",
+   "caption": "PDF p.8 R: K_bb 0–150 with K_rb = K_rr = 0; axial segregation (red in the viewing plane after 5 rev); K_bb = 150 → agglomerated 'islands'; intermediate K_bb = 50 best; then K_rr varied at K_bb = 50, K_rb = 0 — 'an intermediate value of K_rr for which the mixing is optimum'.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.3,
+    69.1,
+    559.9,
+    508.6
+   ],
+   "w": 1469,
+   "h": 2441,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp9_krr5_best_scale_dependent_krb_kbb50",
+   "kind": "text",
+   "label": "p9_krr5_best_scale_dependent_krb_kbb50",
+   "page": 9,
+   "file": "txt_p9_krr5_best_scale_dependent_krb_kbb50.png",
+   "caption": "PDF p.9 L: K_rr = 5 best, little mixing at K_rr = 100; 'All the values reported here are for the system as described in Table 2, and are strongly scale dependent'; §5.2 K_rb varied at K_bb = 50, K_rr = 0 — 'mixing is more effective as the adhesive force is increased'.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    69.1,
+    300.7,
+    291.5
+   ],
+   "w": 1469,
+   "h": 1235,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp9_krb_below_nc_kbb50_above_nc_kbb150_adhesion_favors",
+   "kind": "text",
+   "label": "p9_krb_below_nc_kbb50_above_nc_kbb150_adhesion_favors",
+   "page": 9,
+   "file": "txt_p9_krb_below_nc_kbb50_above_nc_kbb150_adhesion_favors.png",
+   "caption": "PDF p.9 R: K_bb = 50: all K_rb curves below the non-cohesive case; K_bb = 150 ('and K_rb = 0' printed — should be K_rr): enhanced mixing with K_rb but all curves above the non-cohesive case; 'adhesion between the components always favors the mixing process; but the final mixed state ... depends strongly on the intrinsic cohesiveness'.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.6,
+    69.1,
+    569.6,
+    221.6
+   ],
+   "w": 1466,
+   "h": 847,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  },
+  {
+   "key": "xp10_conclusions_plug_flow_speed_optimum_scale_dependent",
+   "kind": "text",
+   "label": "p10_conclusions_plug_flow_speed_optimum_scale_dependent",
+   "page": 10,
+   "file": "txt_p10_conclusions_plug_flow_speed_optimum_scale_dependent.png",
+   "caption": "PDF p.10 conclusions: low cohesion enhances mixing; high cohesion slower ('formation of plug flow in the cascading layer'); better mixing at higher rotation speed 'in agreement with experimental results'; optimum at intermediate cohesion; 'existence of an optimal mixing state is still an open question'; unlike-particle adhesion always favours mixing; 'optimum values of bond numbers are scale dependent'; other geometries.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.6,
+    69.1,
+    290.8,
+    424.5
+   ],
+   "w": 1467,
+   "h": 1974,
+   "dpi": 400,
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "manual_crop": "evidence paragraph cited by the card, rendered from the vector page at 400 dpi → ink bounding box → uniform 6 pt margin (2026-11-23)"
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "3150e69e-Cohesive_effects_in_powder_mixing_in_a_tumbling_blender.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "note_manual": "10-page Powder Technology article, no SI. Tool found Figs 1–3 and Tables 1–2 (tables as whole pages) and skipped Figs 4–7. Kept: fig_1 (tool crop = embedded raster + 6 pt). Re-cut: fig_2 (uniform margins), fig_3 (landscape page /Rotate 90 → upright full figure), tab_1, tab_2 (400 dpi). Hand-cut: fig_4–fig_7 (300 dpi). Equations: Eqs (1), (2), (4) (no Eq. 3 printed) + 6 inline expressions (latching spring, restitution, Coulomb limit, tangential increment, Bond number K, intensity of segregation) at 400 dpi. 19 evidence paragraphs (txt_*) at 400 dpi. digitized.csv = vector-path vertices of the 25 ln I curves in Figs 2B, 4B, 5B, 6, 7A, 7B + drum-radius / bed-height raster reads (Figs 1, 3)."
+}

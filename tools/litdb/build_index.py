@@ -91,6 +91,10 @@ SIZE_EFFECT_SLUGS = frozenset({
     "koenig2023_wet_milling_se_ion_tortuosity_composite_cathode",
     # 2026-11-16 — 황화물 유리 (75Li₂S·25P₂S₅) SE d50 16 vs 3.8 µm × NCM111 9.4 vs 5.3 µm (75 : 25 wt · 무탄소 · 330 MPa): 단면 분포 균질 · NCM–NCM 맞닿은 곳 균열 · 'D_SE < D_NCM' 규칙 (정성) · 고율 용량 (Sakuda 2016 SSI)
     "sakuda2016_se_particle_size_electrode_morphology_ncm111_li2s_p2s5_cracking",
+    # 2026-11-22 — Li₃PS₄ 액상 진탕 합성에서 원료 Li₂S 를 먼저 작게 (볼밀 중앙값 8 → 1.5 µm · 용해–석출 0.34 µm) → LPS SEM 등가원 1382 (인용) → 227 → 93 nm · 판상 → 구형 · σ 1.1 · 1.5 × 10⁻⁴ S/cm (360 MPa 펠릿) — yano2026 [25] · kawaguchi2023 [29] 의 원전 (SE 입도 설계 · 합성 쪽)
+    "ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s",
+    # 2026-11-23 — 상용 argyrodite 분말 셋의 PSD 폭 (넓은 BD D50 ≈9.9 ↔ 좁은 ND ≈1.6 µm [판독]): 순수 SE 펠릿 기공 110–440 MPa (440 MPa 1.73 ↔ 6.19 % · 진밀도 1.64 · 다이 안) ↔ FIB-SEM 국소 기공 · 나노압입 지도 이질성 · Sn 전셀 분리막 균열 (ChemRxiv 원고 · 심사 전)
+    "cho2026_pore_network_homogeneity_powder_compacted_se_separator",
 })
 
 # 주제 묶음 — slug/제목에 이 낱말이 있으면 그 절로. 위에서부터 먼저 맞는 것.

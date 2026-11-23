@@ -240,6 +240,7 @@ salbutamol sulfate–lactose 는 접착 우세 (탐침들이 대각선 아래), 
 ## 🔗 관련 카드
 - 같은 묶음 (점착 · 표면 에너지): `johnson1971_jkr_surface_energy_contact_elastic_solids` · `dmt1975_adhesion_contact_deformation`.
 - 우리 쪽 AFM: `lee2026_mechanical_halogen_argyrodite_drycoating`.
+- 같은 방법의 후속 (2008 · 16 제형 · 같은 배치 CAB → 흡입 성능 · '약간 응집' 최적 · 혼합 균일도 ↔ CAB 무관): [`jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum`](jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum.md).
 - 건식 혼합 DEM (γ 보정): `hare2026_dem_pept_dry_mixing_nmc622_eirich` · `lischka2025_dem_eirich_intensive_mixer_dry_mixing` · `otani2025_dem_se_dispersion_aggregation_compression` · `frankenberg2024_dem_high_intensity_mixer_assb`.
 
 ## 🗨️ Q&A 로그

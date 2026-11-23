@@ -1,0 +1,1398 @@
+{
+ "slug": "figueroa2009_vdw_adhesion_mixing_segregation_bond_number_phase_diagram",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf"
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "note_manual": "10-page Powder Technology article, no SI. Figures 1–8 are single embedded 200-dpi grayscale rasters → re-cut from the raster bbox at 300 dpi with uniform margins. Tables 1–3 hand-cut at 400 dpi (tool: Table 1 = whole page, Tables 2–3 not found). 32 numbered equations, all hand-cut at 400 dpi (eq_01…eq_32). 20 evidence-paragraph crops (≤ 20 rule; 7 of them stack consecutive column/page pieces) · no page_* images. Text layer maps '(' ')' → 'ð' 'Þ', '<' → 'b', '>' → 'N', drops ε and splits fractions — every quoted symbol/number was checked on the rendered page. Digitization (Fig. 2 case markers + boundary columns vs printed formulas; Fig. 3 extremes) = digitized.csv (49 rows).",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Adhesive normal force F versus normal approach αn: (a) initial contact point where αnP=0 and F = −(8/9)Fc; (b) yield point, αny is determined by Eq. (7); (c) and (d) are maximum elastic and plastic normal force, respectively, (e) maximum attractive force, F=−Fc; and (f) point of contact breakage, F = −(5/9)Fc and αn=αP.",
+   "rotated_deg": 0,
+   "bbox": [
+    362.2,
+    550.5,
+    492.5,
+    702.2
+   ],
+   "w": 593,
+   "h": 682,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    295.7,
+    543.1,
+    559.2,
+    708.3
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 1099-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). Schematic (no axis values). (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Phase diagrams exhibiting E (enhanced segregation) and M (mitigated segregation) phases for density ratio (a) α=0.52, (b) α=1.00, and (c) α=1.92.",
+   "rotated_deg": 0,
+   "bbox": [
+    92.6,
+    55.8,
+    245.0,
+    538.0
+   ],
+   "w": 685,
+   "h": 2059,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    36.5,
+    47.2,
+    300.1,
+    547.5
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 1099-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). Case markers a–i read from the native raster (digitized.csv): (a) h (0.85, 2.00) · g (0.50, 1.00) · i (0.85, 0.75); (b) c (0.50, 2.00) · a (0.50, 1.00) · b (0.75, 0.85); (c) e (0.75, 2.00) · d (0.50, 1.00) · f (0.75, 0.50) — the plotted boundaries follow the printed Eqs. (27)–(32) within 0.005 in φ, and panel (c) is shaded M also in the right wedge (αβ³>1, β ≳ 0.81) that the printed case list (27)–(29) does not name. (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Force–displacement curve for normal impact of elastic (thin line) and plastic (thick line) contacts with adhesion.",
+   "rotated_deg": 0,
+   "bbox": [
+    362.5,
+    571.3,
+    510.6,
+    718.7
+   ],
+   "w": 667,
+   "h": 664,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    304.5,
+    564.4,
+    568.0,
+    725.4
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 1099-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). y-axis bottom tick printed '0.5' (should read −0.5); extremes in digitized.csv. (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Force evolution for tangential plastic collisions with impact angles 15°, 30°, 45°, 60°, and 75° for non-adhesive (dotted line) and adhesive (continuous line) particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    56.7,
+    54.8,
+    531.1,
+    271.3
+   ],
+   "w": 2027,
+   "h": 952,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    35.8,
+    47.2,
+    550.7,
+    278.9
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 2146-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). Panels are unlabelled; reading order (top row 2, bottom row 3) = 15°, 30°, 45°, 60°, 75° by the falling peak normal force (card reading). (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) Mixing progress for tumbler cases e and f (continuous line) and the corresponding free-flowing case (dotted line). The tumbler snapshots at the bottom correspond to the mixing state after 5 revolutions. (b) Intensity of segregation for cases h and i (in solid lines) and the corresponding free-flowing case (dotted line).",
+   "rotated_deg": 0,
+   "bbox": [
+    62.5,
+    55.8,
+    273.7,
+    494.8
+   ],
+   "w": 930,
+   "h": 1879,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    36.5,
+    47.2,
+    300.1,
+    503.1
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 1099-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). y log scale 0.1–0.5; colours of the two species are not stated in the text (light = smaller particle by the h/i and e/f descriptions — card inference). (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Intensity of segregation for case b and its corresponding free-flowing counterpart.",
+   "rotated_deg": 0,
+   "bbox": [
+    333.2,
+    54.8,
+    540.5,
+    251.6
+   ],
+   "w": 914,
+   "h": 870,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    306.7,
+    47.2,
+    565.8,
+    259.3
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 1081-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) Mixing progress for systems corresponding to case a with low (thin line) and high (thick line) degree of adhesion and the corresponding free-flowing case (dotted line). (b) Intensity of segregation for case c and all related cases.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.7,
+    55.8,
+    264.9,
+    489.5
+   ],
+   "w": 930,
+   "h": 1857,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    27.7,
+    47.2,
+    291.3,
+    496.5
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 1099-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Mixing progress for tumbler cases d (a) and g (b) with different degrees of adhesion.",
+   "rotated_deg": 0,
+   "bbox": [
+    325.1,
+    286.1,
+    530.6,
+    718.3
+   ],
+   "w": 906,
+   "h": 1851,
+   "dpi": 300,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    295.7,
+    277.5,
+    559.2,
+    725.4
+   ],
+   "recrop": "Re-cut: the embedded raster bbox (200-dpi grayscale image) rendered at 300 dpi (tool dpi kept) → ink bounding box (min RGB < 240) → uniform 6 pt (25 px) white margin; the tool render (column-wide clip) carried uneven blank side margins (L/R 1099-px-wide image with ≈80–280 px blanks); caption excluded (tool convention), printed caption re-typed from the rendered page (text layer splits the 8/9 · 5/9 fractions). (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 PD simulation parameter for tumbler simulations. (Particle diameter 4 mm · density 1000 kg/m³ · Young's modulus 30 MPa · surface energy 0.2–1.6 J/m² · Poisson ratio 0.3 · friction coefficient 0.35 — base case.)",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    668.2,
+    285.4,
+    743.8
+   ],
+   "w": 1464,
+   "h": 486,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "auto_bbox": [
+    28.7,
+    32.7,
+    558.3,
+    745.6
+   ],
+   "recrop": "tool crop was the whole page 6 (2208×2971 px: Fig. 4, both text columns, Tables 1 and 2) → hand-cut from the vector page at 400 dpi (tool default 300; 6.4 pt table type), caption to bottom rule → ink bounding box (min RGB < 230, keeps the grey row shading) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 6,
+   "file": "tab_2.png",
+   "caption": "Table 2 van der Waals granular Bond numbers for cases b, e, f, h and i. (Columns: Freeflow IS · adhesive Bo11 · Bo22 · Bo12 · IS · ℜ1 · ℜ2.)",
+   "rotated_deg": 0,
+   "bbox": [
+    301.5,
+    654.6,
+    553.4,
+    743.7
+   ],
+   "w": 1465,
+   "h": 561,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "tool found no Table 2 (caption 'Table 2 van der Waals…' fell to its near-miss rule — listed under missing_labels) → hand-cut from the vector page at 400 dpi, caption to bottom rule → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 van der Waals granular Bond numbers for cases a, c, d, and g. (Columns: Freeflow IS · base case Bo11 · Bo22 · Bo12 · IS · more adhesive Bo11 · Bo22 · Bo12 · IS · ℜ1 · ℜ2.)",
+   "rotated_deg": 0,
+   "bbox": [
+    310.3,
+    663.2,
+    562.2,
+    743.8
+   ],
+   "w": 1465,
+   "h": 514,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "tool found no Table 3 (caption 'Table 3 van der Waals…' fell to its near-miss rule — listed under missing_labels) → hand-cut from the vector page at 400 dpi, caption to bottom rule → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 2,
+   "file": "eq_01_tabor_parameter_jkr_dmt_regime.png",
+   "caption": "Eq. (1), PDF p.2 left column: μ_T = [R*Γ²/(E*ε³)]^(1/3) — Tabor parameter (ε = interatomic equilibrium distance of the Lennard-Jones potential): large μ_T → JKR, small → DMT. ⚠ printed denominator E*ε³ (no square on E*): dimensionless only with E*² [card arithmetic].",
+   "rotated_deg": 0,
+   "bbox": [
+    33.9,
+    173.8,
+    284.1,
+    197.7
+   ],
+   "w": 1456,
+   "h": 199,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 2,
+   "file": "eq_02_linear_momentum_newton.png",
+   "caption": "Eq. (2), p.2 L: m_p dv_p/dt = −m_p g + F_n + F_t — translational equation of motion of each particle (Particle Dynamics).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    495.0,
+    284.1,
+    514.6
+   ],
+   "w": 1455,
+   "h": 175,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e03",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 2,
+   "file": "eq_03_angular_momentum_torque.png",
+   "caption": "Eq. (3), p.2 L: I_p dω_p/dt = R × F_t — rotational equation (no rolling-resistance term).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.9,
+    550.8,
+    284.1,
+    570.4
+   ],
+   "w": 1456,
+   "h": 175,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e04",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 2,
+   "file": "eq_04_elastic_normal_stiffness_jkr.png",
+   "caption": "Eq. (4), p.2 L: k_n^e = dF/dα_n = 2E*a (3√F1 − 3√Fc)/(3√F1 − √Fc) — elastic adhesive (JKR) normal stiffness.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    722.1,
+    284.1,
+    743.9
+   ],
+   "w": 1455,
+   "h": 187,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e05",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 2,
+   "file": "eq_05_contact_radius_equivalent_hertz_force.png",
+   "caption": "Eq. (5), p.2 R: a = [3R*F1/(4E*)]^(1/3) — contact radius from the equivalent Hertzian force F1.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    76.2,
+    552.1,
+    95.4
+   ],
+   "w": 1456,
+   "h": 173,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e06",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 2,
+   "file": "eq_06_equivalent_hertz_force_f1_with_tangential.png",
+   "caption": "Eq. (6), p.2 R: F1 = F + 2Fc + √(4FFc + 4Fc² − T²E*/(4G*)) — equivalent Hertzian force incl. the tangential (peeling) term; Γ = 0 → elastic non-adhesive solution.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    146.4,
+    552.1,
+    160.8
+   ],
+   "w": 1457,
+   "h": 146,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e07",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 2,
+   "file": "eq_07_yield_criterion_contact_radius_adhesive.png",
+   "caption": "Eq. (7), p.2 R: σ_y = 2E*a_y/(πR*) − √(2ΓE*/(πa_y)) — yield-onset test on the contact radius (adhesive elastic-plastic, Thornton–Ning).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    253.8,
+    552.1,
+    277.7
+   ],
+   "w": 1456,
+   "h": 199,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e08",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 2,
+   "file": "eq_08_plastic_normal_stiffness.png",
+   "caption": "Eq. (8), p.2 R: k_n^p = (3πR*σ_y√F1 − 2E*a_y√Fc)/(3√F1 − √Fc) — plastic normal stiffness from the stiffness at yield (point b of Fig. 1).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.1,
+    339.0,
+    552.1,
+    361.5
+   ],
+   "w": 1455,
+   "h": 191,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e09",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 2,
+   "file": "eq_09_incremental_normal_force_update.png",
+   "caption": "Eq. (9), p.2 R: F = F_old + ΔF = F_old + k_n Δα_n — incremental normal-force update (k_n = k_n^e for a < a_y, k_n^p for a ≥ a_y).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    392.6,
+    552.1,
+    401.1
+   ],
+   "w": 1457,
+   "h": 113,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 3,
+   "file": "eq_10_plastic_radius_of_curvature_unloading.png",
+   "caption": "Eq. (10), p.3 L: R*_p = R*F1max/(Fmax + √(4Fc F1max − T²E*/(4G*))) — plastically altered local radius of curvature for elastic unloading (R*_p = R*F1max/Fmax when the root argument < 0).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    103.0,
+    292.9,
+    128.6
+   ],
+   "w": 1457,
+   "h": 208,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 3,
+   "file": "eq_11_unloading_normal_stiffness.png",
+   "caption": "Eq. (11), p.3 L: k_nU = 2E*a (3√F1U − 3√FcU)/(3√F1U − √FcU) — post-yield unloading normal stiffness.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    225.5,
+    292.9,
+    247.4
+   ],
+   "w": 1455,
+   "h": 188,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 3,
+   "file": "eq_12_unloading_contact_radius.png",
+   "caption": "Eq. (12), p.3 L: a = [3R*_p F1U/(4E*)]^(1/3) — unloading contact radius.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    291.3,
+    292.9,
+    315.2
+   ],
+   "w": 1456,
+   "h": 199,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 3,
+   "file": "eq_13_unloading_equivalent_hertz_force.png",
+   "caption": "Eq. (13), p.3 L: F1U = F + 2FcU ± √(4F FcU + 4FcU² − T²E*/(4G*)), FcU = 3πΓR*_p — unloading equivalent Hertzian force (+ until F = −FcU at point e, then − until breakage at F = −(5/9)FcU, point f).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    368.5,
+    292.9,
+    382.9
+   ],
+   "w": 1457,
+   "h": 146,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 3,
+   "file": "eq_14_peeling_tangential_force.png",
+   "caption": "Eq. (14), p.3 L: T_peeling = 4√((F Fc + Fc²)G*/E*) — tangential force at which the peeling (contact-radius reduction) completes.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    571.7,
+    292.9,
+    595.6
+   ],
+   "w": 1455,
+   "h": 199,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 3,
+   "file": "eq_15_contact_radius_after_peeling.png",
+   "caption": "Eq. (15), p.3 L: a = [3R*(F + 2Fc)/(4E*)]^(1/3) — contact radius after peeling.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    648.7,
+    292.9,
+    672.6
+   ],
+   "w": 1456,
+   "h": 199,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq16",
+   "page": 3,
+   "file": "eq_16_tangential_stiffness.png",
+   "caption": "Eq. (16), p.3 L: k_t = 8G*aθ ± μ(1 − θ)/Δδ (as printed; minus sign only for unloading) — tangential stiffness. ⚠ the second term as printed has units 1/m while the first has N/m — a ΔF factor appears to be missing [card arithmetic].",
+   "rotated_deg": 0,
+   "bbox": [
+    42.9,
+    727.0,
+    292.9,
+    743.9
+   ],
+   "w": 1455,
+   "h": 160,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "eq17",
+   "page": 3,
+   "file": "eq_17_tangential_theta_loading_unloading_reloading.png",
+   "caption": "Eq. (17), p.3 R: θ_L = [1 − (T + μΔF)/(μF)]^(1/3) · θ_U = [1 − (T* − T + 2μΔF)/(μF)]^(1/3) · θ_R = [1 − (T − T** + μΔF)/(μF)]^(1/3) — loading / unloading / reloading flags (T*, T** = load-reversal points).",
+   "rotated_deg": 0,
+   "bbox": [
+    312.0,
+    75.8,
+    560.9,
+    160.8
+   ],
+   "w": 1449,
+   "h": 538,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq18",
+   "page": 3,
+   "file": "eq_18_sliding_criterion_adhesive.png",
+   "caption": "Eq. (18), p.3 R: T = μ(F + 2Fc) — sliding failure criterion with adhesion.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.9,
+    390.8,
+    560.9,
+    398.9
+   ],
+   "w": 1455,
+   "h": 111,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "eq19",
+   "page": 3,
+   "file": "eq_19_peeling_sliding_coincidence_force.png",
+   "caption": "Eq. (19), p.3 R: F* = 2Fc[(4G*/(μ²E*) − 1) + √((4G*/(μ²E*))(4G*/(μ²E*) − 1))] — normal force at which the peeling and sliding criteria coincide.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    430.2,
+    560.9,
+    454.5
+   ],
+   "w": 1457,
+   "h": 201,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e20",
+   "kind": "equation",
+   "label": "eq20",
+   "page": 3,
+   "file": "eq_20_modified_sliding_criterion.png",
+   "caption": "Eq. (20), p.3 R: T = μ(F + 2Fc) for F ≥ −0.3Fc; T = μF1[1 − (F1 − F)/(3F1)]^(3/2) for F ≤ −0.3Fc — modified sliding criterion (continuous contact radius).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.9,
+    600.9,
+    560.9,
+    620.2
+   ],
+   "w": 1455,
+   "h": 173,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e21",
+   "kind": "equation",
+   "label": "eq21",
+   "page": 4,
+   "file": "eq_21_intensity_of_segregation.png",
+   "caption": "Eq. (21), p.4 L: IS = √(Σ_{i=1}^{N} (C − ⟨C⟩)²/(N − 1)) — intensity of segregation (std of tracer concentration over N spots; ≈0.5 = segregated for an equi-volume mixture).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.9,
+    130.4,
+    284.1,
+    154.4
+   ],
+   "w": 1456,
+   "h": 199,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "eq22",
+   "page": 4,
+   "file": "eq_22_vdw_granular_bond_number_pair.png",
+   "caption": "Eq. (22), p.4 L: Bo_vdw,ij = F_vdw/F_W = 2πΓ_ij R*/((4/3)πg[R³ρ]_m) — van der Waals granular Bond number of pair ij (prefactor 2 by analogy with the wet case [15]; [R³ρ]_m = smaller mass = 'guest').",
+   "rotated_deg": 0,
+   "bbox": [
+    33.9,
+    354.8,
+    284.1,
+    380.2
+   ],
+   "w": 1456,
+   "h": 207,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e23",
+   "kind": "equation",
+   "label": "eq23",
+   "page": 4,
+   "file": "eq_23_ratio_R1_bo11_over_bo12.png",
+   "caption": "Eq. (23), p.4 L: ℜ1 = Bo_vdw11/Bo_vdw12 = (Γ11/Γ12)·((R1 + R2)/(2R2))·((R1³ρ1, R2³ρ2)_min/(R1³ρ1)).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    685.6,
+    284.1,
+    707.9
+   ],
+   "w": 1455,
+   "h": 190,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e24",
+   "kind": "equation",
+   "label": "eq24",
+   "page": 4,
+   "file": "eq_24_ratio_R2_bo22_over_bo12.png",
+   "caption": "Eq. (24), p.4 L: ℜ2 = Bo_vdw22/Bo_vdw12 = (Γ22/Γ12)·((R1 + R2)/(2R1))·((R1³ρ1, R2³ρ2)_min/(R2³ρ2)).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    721.4,
+    284.1,
+    743.7
+   ],
+   "w": 1455,
+   "h": 190,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e25",
+   "kind": "equation",
+   "label": "eq25",
+   "page": 4,
+   "file": "eq_25_R1_in_alpha_beta_phi.png",
+   "caption": "Eq. (25), p.4 R: ℜ1 = φ(β + 1)/2 · (αβ³, 1)_min/(αβ³) — α = ρ1/ρ2, β = R1/R2 (1 = smaller), φ = √(Γ11/Γ22), combining rule Γ12² = Γ11Γ22 (printed 'Γ11Γ12').",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    89.4,
+    552.1,
+    111.9
+   ],
+   "w": 1456,
+   "h": 191,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e26",
+   "kind": "equation",
+   "label": "eq26",
+   "page": 4,
+   "file": "eq_26_R2_in_alpha_beta_phi.png",
+   "caption": "Eq. (26), p.4 R: ℜ2 = (1/φ)(β + 1)/(2β) · (αβ³, 1)_min.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    126.2,
+    552.1,
+    147.7
+   ],
+   "w": 1456,
+   "h": 185,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e27",
+   "kind": "equation",
+   "label": "eq27",
+   "page": 4,
+   "file": "eq_27_case_small_heavier_both_ratios_above_one.png",
+   "caption": "Eq. (27), p.4 R (incl. header 'If αβ³>1'): smaller particle heavier — 1 < ℜ1, 1 < ℜ2 for 2αβ³/(1 + β) < φ < (1 + β)/(2β) (E).",
+   "rotated_deg": 0,
+   "bbox": [
+    302.1,
+    298.4,
+    552.1,
+    342.0
+   ],
+   "w": 1455,
+   "h": 308,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e28",
+   "kind": "equation",
+   "label": "eq28",
+   "page": 4,
+   "file": "eq_28_case_small_heavier_R1_below_R2_above.png",
+   "caption": "Eq. (28), p.4 R (αβ³ > 1): ℜ1 < 1 < ℜ2 for φ < 2αβ³/(1 + β) (E) — ⚠ valid only while φ < (1 + β)/(2β); the M wedge drawn in Fig. 2c (4αβ⁴ > (1 + β)²) is not listed [card arithmetic].",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    356.3,
+    552.1,
+    377.2
+   ],
+   "w": 1456,
+   "h": 182,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e29",
+   "kind": "equation",
+   "label": "eq29",
+   "page": 4,
+   "file": "eq_29_case_small_heavier_R2_below_R1_above.png",
+   "caption": "Eq. (29), p.4 R (αβ³ > 1): ℜ2 < 1 < ℜ1 for φ > (1 + β)/(2β) (E) — same caveat as Eq. (28).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    391.6,
+    552.1,
+    410.1
+   ],
+   "w": 1456,
+   "h": 169,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e30",
+   "kind": "equation",
+   "label": "eq30",
+   "page": 4,
+   "file": "eq_30_case_small_lighter_M_phase_both_below_one.png",
+   "caption": "Eq. (30), p.4 R (incl. header 'If αβ³<1'): smaller particle lighter — ℜ1 < 1, ℜ2 < 1 (M phase) for (β³ + β²)α/2 < φ < 2/(1 + β).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    423.4,
+    552.1,
+    466.7
+   ],
+   "w": 1456,
+   "h": 307,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e31",
+   "kind": "equation",
+   "label": "eq31",
+   "page": 4,
+   "file": "eq_31_case_small_lighter_R1_below_R2_above.png",
+   "caption": "Eq. (31), p.4 R (αβ³ < 1): ℜ1 < 1 < ℜ2 for φ < (β³ + β²)α/2 (E — large–large dominant).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    481.2,
+    552.1,
+    500.2
+   ],
+   "w": 1456,
+   "h": 171,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e32",
+   "kind": "equation",
+   "label": "eq32",
+   "page": 4,
+   "file": "eq_32_case_small_lighter_R2_below_R1_above.png",
+   "caption": "Eq. (32), p.4 R (αβ³ < 1): ℜ2 < 1 < ℜ1 for φ > 2/(1 + β) (E — small–small dominant). With φ = √(γ_SE/γ_AM) this boundary is the hetero-thesis threshold γ_AM/γ_SE = ((1 + β)/2)² (0.309 at β = 1/9) [card arithmetic].",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    514.8,
+    552.1,
+    533.3
+   ],
+   "w": 1456,
+   "h": 169,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "equation rendered by hand from the vector page at 400 dpi (tool default 300 dpi; 8–9 pt math type) — band between the neighbouring prose lines of the column (stacked equations split at the blank pixel row nearest the midpoint of the two equation numbers; an 'If αβ³…' header goes with the equation below) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp1_abstract_vdw_elastic_plastic_scaling_phase_diagrams",
+   "kind": "text",
+   "label": "p1_abstract_vdw_elastic_plastic_scaling_phase_diagrams",
+   "page": 1,
+   "file": "txt_p1_abstract_vdw_elastic_plastic_scaling_phase_diagrams.png",
+   "caption": "PDF p.1 abstract: vdW forces matter as particles get finer; models solving normal + tangential interactions of elastic-plastic particles with vdW; scaling arguments predict the asymptotic state; phase-space diagrams; compared with Particle Dynamics simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    207.1,
+    262.1,
+    562.6,
+    346.0
+   ],
+   "w": 2041,
+   "h": 532,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp1_intro_vdw_mixing_not_studied_objective_asymptotic_state",
+   "kind": "text",
+   "label": "p1_intro_vdw_mixing_not_studied_objective_asymptotic_state",
+   "page": 1,
+   "file": "txt_p1_intro_vdw_mixing_not_studied_objective_asymptotic_state.png",
+   "caption": "PDF p.1 introduction: role of vdW adhesion in mixing/segregation 'has not been extensively studied'; objective = predict whether the asymptotic state is more mixed or more segregated than the non-cohesive counterpart.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    519.1,
+    294.3,
+    652.6
+   ],
+   "w": 1464,
+   "h": 808,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp1_p2_jkr_pulloff_hamaker_d0_dmt_tabor",
+   "kind": "text",
+   "label": "p1_p2_jkr_pulloff_hamaker_d0_dmt_tabor",
+   "page": 1,
+   "file": "txt_p1_p2_jkr_pulloff_hamaker_d0_dmt_tabor.png",
+   "caption": "PDF p.1–2: JKR pull-off Fc = 3πΓR*; R* called 'geometric mean radius' but defined 1/R* = 1/R1 + 1/R2; Γ = 'surface energy, also called the thermodynamic work of adhesion'; Γ = A/24πD0² (planes), Γ = A/12D0R* (spheres, as printed); D0 = 0.16 nm (Israelachvili); DMT Fc = 4πΓR*; Tabor parameter introduced (two pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    565.4,
+    561.6,
+    720.0
+   ],
+   "w": 1464,
+   "h": 1517,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 2 consecutive pieces stacked top→bottom (pages [1, 2]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2_tabor_regime_savkoor_thornton_yin_ning_model_choice",
+   "kind": "text",
+   "label": "p2_tabor_regime_savkoor_thornton_yin_ning_model_choice",
+   "page": 2,
+   "file": "txt_p2_tabor_regime_savkoor_thornton_yin_ning_model_choice.png",
+   "caption": "PDF p.2: JKR for large Tabor parameter (soft, strong short-range adhesion) vs DMT (stiff, weak); Savkoor–Briggs / Thornton–Yin tangential, Thornton–Ning plastic; model choice = elasto-plastic adhesive JKR normal [28] + Thornton tangential [31] (two pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    212.4,
+    285.5,
+    345.9
+   ],
+   "w": 1465,
+   "h": 1159,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 2 consecutive pieces stacked top→bottom (pages [2]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4_is_definition_std_concentration_05_segregated",
+   "kind": "text",
+   "label": "p4_is_definition_std_concentration_05_segregated",
+   "page": 4,
+   "file": "txt_p4_is_definition_std_concentration_05_segregated.png",
+   "caption": "PDF p.4 §3.1: intensity of segregation = standard deviation of tracer concentration at multiple spots (Eq. 21); ≈0.5 for an equi-volume segregated state, smaller = more mixed.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.9,
+    78.4,
+    285.5,
+    227.8
+   ],
+   "w": 1464,
+   "h": 896,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4_bovdw_definition_prefactor2_guest_mass_ratios_shear_scaling",
+   "kind": "text",
+   "label": "p4_bovdw_definition_prefactor2_guest_mass_ratios_shear_scaling",
+   "page": 4,
+   "file": "txt_p4_bovdw_definition_prefactor2_guest_mass_ratios_shear_scaling.png",
+   "caption": "PDF p.4 §3.2: Bo_vdw = F_vdw/F_W (Eq. 22) with the smaller mass ('guest'); prefactor 2 by analogy with the wet case — insignificant because only ratios are used; Bo11, Bo22, Bo12 compared (2 = larger); non-gravitational (shear) scaling alternative → Ref. [16].",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    261.7,
+    285.5,
+    579.2
+   ],
+   "w": 1465,
+   "h": 1830,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4_phase_rule_combining_rule_mixed_if_both_ratios_below_one",
+   "kind": "text",
+   "label": "p4_phase_rule_combining_rule_mixed_if_both_ratios_below_one",
+   "page": 4,
+   "file": "txt_p4_phase_rule_combining_rule_mixed_if_both_ratios_below_one.png",
+   "caption": "PDF p.4 §3.3: phase boundaries from comparing Bo_vdw,ij (Eqs. 23–24); α, β, φ = √(Γ11/Γ22) with the combining rule printed 'Γ12² = Γ11Γ12 [7]'; mixed if both ℜ1 and ℜ2 < 1, segregated if either > 1 (three pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    612.9,
+    284.8,
+    671.7
+   ],
+   "w": 1465,
+   "h": 1233,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 3 consecutive pieces stacked top→bottom (pages [4]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4_binary_only_discontinuity_ignores_clusters_surprisingly_effective",
+   "kind": "text",
+   "label": "p4_binary_only_discontinuity_ignores_clusters_surprisingly_effective",
+   "page": 4,
+   "file": "txt_p4_binary_only_discontinuity_ignores_clusters_surprisingly_effective.png",
+   "caption": "PDF p.4: E phase light / M phase dark in Fig. 2; prediction assumes only binary interactions and a discontinuity at ℜ = 1, ignoring cluster formation — 'surprisingly effective in many instances'.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    549.0,
+    553.0,
+    651.2
+   ],
+   "w": 1461,
+   "h": 634,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp5_collision_tests_r100um_e70gpa_sigy03mpa_gamma02_peeling",
+   "kind": "text",
+   "label": "p5_collision_tests_r100um_e70gpa_sigy03mpa_gamma02_peeling",
+   "page": 5,
+   "file": "txt_p5_collision_tests_r100um_e70gpa_sigy03mpa_gamma02_peeling.png",
+   "caption": "PDF p.5 §4.1: collision tests validated against Thornton–Ning [28] and Thornton–Yin [30]; R = 100 µm, ρ = 2650 kg/m³, E = 70 GPa, ν = 0.3, μ = 0.35, σy = 0.3 [MPa] (as printed), Γ = 0.2 J/m²; ±0.5 m/s impacts at 15–75°: peeling discontinuity at ≥30°, none at 15° (two pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    622.4,
+    293.6,
+    745.5
+   ],
+   "w": 1461,
+   "h": 2097,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 2 consecutive pieces stacked top→bottom (pages [5]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp5_key_assumptions_binary_thermalized_absolute_magnitude",
+   "kind": "text",
+   "label": "p5_key_assumptions_binary_thermalized_absolute_magnitude",
+   "page": 5,
+   "file": "txt_p5_key_assumptions_binary_thermalized_absolute_magnitude.png",
+   "caption": "PDF p.5 §4.2: key assumptions 'not necessarily consistent with the behavior of real systems' — only binary interactions; system 'thermalized' enough for each particle to choose its most favourable partner; absolute cohesion magnitude therefore varied.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    339.9,
+    561.6,
+    536.3
+   ],
+   "w": 1461,
+   "h": 1157,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6_tumbler_28x4_periodic_5rpm_5_12rev_stiffness_reduced_4mm_walls",
+   "kind": "text",
+   "label": "p6_tumbler_28x4_periodic_5rpm_5_12rev_stiffness_reduced_4mm_walls",
+   "page": 6,
+   "file": "txt_p6_tumbler_28x4_periodic_5rpm_5_12rev_stiffness_reduced_4mm_walls.png",
+   "caption": "PDF p.6: tumbler set-up — initial left/right colour-segregated static bed (perturbed hexagonal lattice settled under gravity); 28 particle diameters × 4 long, periodic axially; 5 rpm; 5–12 revolutions; stiffness reduced (citing [33]); diameter scaled up to 4 mm with Γ increased; walls made of particles with the larger particles' properties.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.9,
+    330.7,
+    284.8,
+    537.5
+   ],
+   "w": 1460,
+   "h": 1215,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6_phase_point_flexibility_adhesion_not_overwhelmed_clusters_not_persistent",
+   "kind": "text",
+   "label": "p6_phase_point_flexibility_adhesion_not_overwhelmed_clusters_not_persistent",
+   "page": 6,
+   "file": "txt_p6_phase_point_flexibility_adhesion_not_overwhelmed_clusters_not_persistent.png",
+   "caption": "PDF p.6: each phase point fixes (β, α, φ) only; adhesion chosen so that cohesive interactions are not overwhelmed by collisional forces yet large clusters are not persistent → two Bo_vdw ranges.",
+   "rotated_deg": 0,
+   "bbox": [
+    34.1,
+    539.9,
+    285.0,
+    642.1
+   ],
+   "w": 1460,
+   "h": 634,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6_beta_gt05_insensitive_bo12_15_table2_last_three_points",
+   "kind": "text",
+   "label": "p6_beta_gt05_insensitive_bo12_15_table2_last_three_points",
+   "page": 6,
+   "file": "txt_p6_beta_gt05_insensitive_bo12_15_table2_last_three_points.png",
+   "caption": "PDF p.6 §4.3: β > 0.5 results 'somewhat insensitive to cohesion degree'; Bo_vdw12 ~ 15 chosen (somewhat arbitrarily) as base case; Table 2 IS = average of the final three points in Figs. 5 and 6.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    352.3,
+    552.8,
+    444.1
+   ],
+   "w": 1461,
+   "h": 576,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6_case_b_beta075_isff034_14rev_isb025_still_decreasing",
+   "kind": "text",
+   "label": "p6_case_b_beta075_isff034_14rev_isb025_still_decreasing",
+   "page": 6,
+   "file": "txt_p6_case_b_beta075_isff034_14rev_isb025_still_decreasing.png",
+   "caption": "PDF p.6: case b (β = 0.75, no density difference) — free-flowing IS_ff = 0.34 after 14 revolutions; M predicted; adhesive IS_b = 0.25 'seemingly still decreasing'.",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    446.6,
+    552.8,
+    548.8
+   ],
+   "w": 1461,
+   "h": 634,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp6_p7_cases_e_f_small_denser_all_segregated_ise039_isf040",
+   "kind": "text",
+   "label": "p6_p7_cases_e_f_small_denser_all_segregated_ise039_isf040",
+   "page": 6,
+   "file": "txt_p6_p7_cases_e_f_small_denser_all_segregated_ise039_isf040.png",
+   "caption": "PDF p.6–7: cases e (small–small dominant) and f (large–large dominant), smaller particle denser — strong segregation expected in all cases; after 5 revolutions IS_e = 0.39, IS_f = 0.40 (two pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    551.1,
+    552.8,
+    622.0
+   ],
+   "w": 1461,
+   "h": 587,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 2 consecutive pieces stacked top→bottom (pages [6, 7]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7_cases_h_i_phi2_vs_gamma_equal_small_only_clusters_density_wins",
+   "kind": "text",
+   "label": "p7_cases_h_i_phi2_vs_gamma_equal_small_only_clusters_density_wins",
+   "page": 7,
+   "file": "txt_p7_cases_h_i_phi2_vs_gamma_equal_small_only_clusters_density_wins.png",
+   "caption": "PDF p.7: cases h (φ = 2.0) and i ('Γ11 = Γ22'), smaller particles less dense — free-flowing mixed after 7 revolutions; h forms clusters exclusively of small particles and density segregation dominates; i favours clusters of dissimilar particles; IS_ffhi = 0.19, IS_h = 0.39, IS_i = 0.19 after 6 revolutions (two pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.7,
+    591.0,
+    293.8,
+    745.4
+   ],
+   "w": 1465,
+   "h": 1342,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 2 consecutive pieces stacked top→bottom (pages [7]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7_beta05_systems_bo30_more_adhesive_case_a_modest",
+   "kind": "text",
+   "label": "p7_beta05_systems_bo30_more_adhesive_case_a_modest",
+   "page": 7,
+   "file": "txt_p7_beta05_systems_bo30_more_adhesive_case_a_modest.png",
+   "caption": "PDF p.7 §4.4: β = 0.5 systems (circled in Fig. 2) emphasise neglected beyond-binary interactions and the absolute cohesion degree; cases a, c (size only), d (augmenting), g (competing); 'more adhesive' runs scaled to Bo_vdw,ij ~ 30; case a: IS_ff,ac = 0.38, IS_a = 0.33 (6 rev.) — modest.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.5,
+    402.9,
+    561.6,
+    630.6
+   ],
+   "w": 1461,
+   "h": 1331,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp8_case_a_number_skew_penalty_case_c_clusters_less_dense_outward",
+   "kind": "text",
+   "label": "p8_case_a_number_skew_penalty_case_c_clusters_less_dense_outward",
+   "page": 8,
+   "file": "txt_p8_case_a_number_skew_penalty_case_c_clusters_less_dense_outward.png",
+   "caption": "PDF p.8: case a more adhesive IS = 0.18 (5 rev.); equal volumes → many more small particles skew pair probabilities; larger cohesion raises the 'penalty' for the more probable but less favourable pairing; case c (φ = 2.0, E predicted) — base case more mixed than free-flowing: persistent, less dense small-particle clusters migrate outward; more adhesion overshoots toward segregation (two pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    549.1,
+    284.8,
+    745.5
+   ],
+   "w": 1465,
+   "h": 1749,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 2 consecutive pieces stacked top→bottom (pages [8]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp8_p9_cases_d_g_general_trend_beta_lt05_clusters_thermalized",
+   "kind": "text",
+   "label": "p8_p9_cases_d_g_general_trend_beta_lt05_clusters_thermalized",
+   "page": 8,
+   "file": "txt_p8_p9_cases_d_g_general_trend_beta_lt05_clusters_thermalized.png",
+   "caption": "PDF p.8–9: case d IS_ff = 0.35, IS_d = 0.33, more adhesive 0.28; case g IS_ff = 0.19, base 0.24 (opposite to prediction), more adhesive 0.14; general trend — for β > 0.5 clusters can be ignored, for β < 0.5 clusters and non-'thermalized' pairing matter, yet more cohesion recovered the predicted trends (two pieces stacked).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.9,
+    162.1,
+    552.8,
+    253.9
+   ],
+   "w": 1465,
+   "h": 1798,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin; 2 consecutive pieces stacked top→bottom (pages [8, 9]) (2026-11-23, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp9_conclusions_beta_gt05_accurate_fluidized_bed_robust_geometry_next_steps",
+   "kind": "text",
+   "label": "p9_conclusions_beta_gt05_accurate_fluidized_bed_robust_geometry_next_steps",
+   "page": 9,
+   "file": "txt_p9_conclusions_beta_gt05_accurate_fluidized_bed_robust_geometry_next_steps.png",
+   "caption": "PDF p.9 conclusions: accurate prediction for size ratios > 0.5 in simulated tumblers; for larger size differences the absolute adhesion matters (multi-particle clusters, lower dissimilar-pair probability); fluidized beds may be more 'thermalized'; 'predicted trends were recovered in all cases … simply by increasing the degree of cohesion'; next steps = multi-particle interactions and collision statistics.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    308.5,
+    294.3,
+    578.1
+   ],
+   "w": 1465,
+   "h": 1564,
+   "dpi": 400,
+   "src": "52e1483f-110._Predicting_the_impact_of_adhesive_forces_on_particle_mixing_and_segregation.pdf",
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi (tool default 300 dpi; 8 pt type), band just outside the first and last line (column width) → ink bounding box (min RGB < 230) → uniform 6 pt (33 px) margin (2026-11-23, litdb-curator)",
+   "viewed": true
+  }
+ ]
+}

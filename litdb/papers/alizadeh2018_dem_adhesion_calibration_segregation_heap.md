@@ -291,6 +291,7 @@ XRT (Phoenix Nanotom) → Avizo 3D 재구성 → STL → **ASG (Cogency) sphere-
 - 건식 혼합 DEM · 응집수 스케일링: [`lischka2025_dem_eirich_intensive_mixer_dry_mixing`](lischka2025_dem_eirich_intensive_mixer_dry_mixing.md) (γ ∝ R\*^{8/5}) · [`hare2026_dem_pept_dry_mixing_nmc622_eirich`](hare2026_dem_pept_dry_mixing_nmc622_eirich.md) · [`frankenberg2024_dem_high_intensity_mixer_assb`](frankenberg2024_dem_high_intensity_mixer_assb.md).
 - 같은 날 카드: [`jarray2019_cohesion_driven_mixing_segregation_drum`](jarray2019_cohesion_driven_mixing_segregation_drum.md) (실측 F_AB ≈ ½ F_AA · 드럼 앞면) · [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md).
 - 혼합지수: [`jadidi2023_dem_batch_solid_mixers_review`](jadidi2023_dem_batch_solid_mixers_review.md) · [`nadeem2023_gnn_mixing_index`](nadeem2023_gnn_mixing_index.md) · [`chibwe2020_nnsi_segregation_index`](chibwe2020_nnsi_segregation_index.md).
+- 이 카드 ref 27 (L274) 의 정본 카드 (2026-11-24): [`capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function`](capece2015_multicomponent_granular_bond_number_cohesive_blend_flow_function.md) (다성분 Bond 수 · 우리 3 상 Bo 정의에는 '일부' — 쌍 무게 조화평균 · 돌기 200 nm 힘 · 출력 = 흐름).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

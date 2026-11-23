@@ -1,0 +1,119 @@
+figure,panel,series,x_name,x,y_name,y,method,note
+5,5a,TSM-5000,P_MPa,5,powder_resistivity_Ohm_cm,92.4,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-5000,P_MPa,10,powder_resistivity_Ohm_cm,46.77,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-5000,P_MPa,15,powder_resistivity_Ohm_cm,34.6,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-5000,P_MPa,20,powder_resistivity_Ohm_cm,19.01,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-10000,P_MPa,5,powder_resistivity_Ohm_cm,61.22,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-10000,P_MPa,10,powder_resistivity_Ohm_cm,43.73,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-10000,P_MPa,15,powder_resistivity_Ohm_cm,33.08,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-10000,P_MPa,20,powder_resistivity_Ohm_cm,18.25,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-15000,P_MPa,5,powder_resistivity_Ohm_cm,165.4,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-15000,P_MPa,10,powder_resistivity_Ohm_cm,102.28,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-15000,P_MPa,15,powder_resistivity_Ohm_cm,56.65,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-15000,P_MPa,20,powder_resistivity_Ohm_cm,23.57,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,TSM-15000,P_MPa,25,powder_resistivity_Ohm_cm,16.35,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-5000,P_MPa,5,powder_resistivity_Ohm_cm,44.87,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-5000,P_MPa,10,powder_resistivity_Ohm_cm,22.81,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-5000,P_MPa,15,powder_resistivity_Ohm_cm,14.07,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-5000,P_MPa,20,powder_resistivity_Ohm_cm,9.13,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-5000,P_MPa,25,powder_resistivity_Ohm_cm,6.08,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-5000,P_MPa,30,powder_resistivity_Ohm_cm,3.42,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-5000,P_MPa,35,powder_resistivity_Ohm_cm,1.9,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-10000,P_MPa,5,powder_resistivity_Ohm_cm,24.33,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-10000,P_MPa,10,powder_resistivity_Ohm_cm,14.83,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-10000,P_MPa,15,powder_resistivity_Ohm_cm,9.51,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-10000,P_MPa,20,powder_resistivity_Ohm_cm,5.7,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-10000,P_MPa,25,powder_resistivity_Ohm_cm,3.04,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-10000,P_MPa,30,powder_resistivity_Ohm_cm,1.52,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-10000,P_MPa,35,powder_resistivity_Ohm_cm,-0.76,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,below axis resolution (≈0)
+5,5a,OSM-15000,P_MPa,5,powder_resistivity_Ohm_cm,41.06,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-15000,P_MPa,10,powder_resistivity_Ohm_cm,27.0,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-15000,P_MPa,15,powder_resistivity_Ohm_cm,20.15,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-15000,P_MPa,20,powder_resistivity_Ohm_cm,15.21,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-15000,P_MPa,25,powder_resistivity_Ohm_cm,11.41,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-15000,P_MPa,30,powder_resistivity_Ohm_cm,7.98,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5a,OSM-15000,P_MPa,35,powder_resistivity_Ohm_cm,6.08,raster native 1269x392 px; y 0@319 px · 200@56 px (Ohm·cm); x ticks 5–35 MPa @112..399 px; series by legend RGB,
+5,5b,TSM-5000,sample_point,1,sheet_resistivity_Ohm_cm,7.893,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-5000,sample_point,2,sheet_resistivity_Ohm_cm,8.385,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-5000,sample_point,3,sheet_resistivity_Ohm_cm,9.418,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-5000,sample_point,4,sheet_resistivity_Ohm_cm,7.5,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-5000,sample_point,5,sheet_resistivity_Ohm_cm,6.909,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-10000,sample_point,1,sheet_resistivity_Ohm_cm,14.729,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-10000,sample_point,2,sheet_resistivity_Ohm_cm,13.229,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-10000,sample_point,3,sheet_resistivity_Ohm_cm,13.893,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-10000,sample_point,4,sheet_resistivity_Ohm_cm,13.401,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-10000,sample_point,5,sheet_resistivity_Ohm_cm,14.926,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-15000,sample_point,1,sheet_resistivity_Ohm_cm,15.443,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-15000,sample_point,2,sheet_resistivity_Ohm_cm,15.394,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-15000,sample_point,3,sheet_resistivity_Ohm_cm,16.476,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-15000,sample_point,4,sheet_resistivity_Ohm_cm,16.205,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,TSM-15000,sample_point,5,sheet_resistivity_Ohm_cm,16.254,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-5000,sample_point,1,sheet_resistivity_Ohm_cm,6.098,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-5000,sample_point,2,sheet_resistivity_Ohm_cm,6.172,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-5000,sample_point,3,sheet_resistivity_Ohm_cm,6.024,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-5000,sample_point,4,sheet_resistivity_Ohm_cm,5.704,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-10000,sample_point,1,sheet_resistivity_Ohm_cm,3.466,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-10000,sample_point,2,sheet_resistivity_Ohm_cm,3.393,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-10000,sample_point,3,sheet_resistivity_Ohm_cm,3.737,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-10000,sample_point,4,sheet_resistivity_Ohm_cm,3.368,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-10000,sample_point,5,sheet_resistivity_Ohm_cm,3.319,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-15000,sample_point,1,sheet_resistivity_Ohm_cm,6.368,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-15000,sample_point,2,sheet_resistivity_Ohm_cm,7.475,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-15000,sample_point,3,sheet_resistivity_Ohm_cm,6.565,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-15000,sample_point,4,sheet_resistivity_Ohm_cm,7.844,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5b,OSM-15000,sample_point,5,sheet_resistivity_Ohm_cm,7.697,"raster; broken axis — upper 15@123 · 18@62 px, lower 9@185 · 3@307 px (20.33 px/unit); x = sample points 1–5 @501..797 px",
+5,5c,TSM-10000,peak,,max_force_N,0.871,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,TSM-10000,peak,,disp_at_peak_mm,5.6,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,TSM-15000,peak,,max_force_N,0.646,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,TSM-15000,peak,,disp_at_peak_mm,5.29,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,OSM-5000,peak,,max_force_N,0.802,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,OSM-5000,peak,,disp_at_peak_mm,5.08,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,OSM-10000,peak,,max_force_N,1.113,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,OSM-10000,peak,,disp_at_peak_mm,5.6,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,OSM-15000,peak,,max_force_N,0.94,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5c,OSM-15000,peak,,disp_at_peak_mm,5.87,raster; y 0 N@319 · 1.5 N@59 px; x 0 mm@872 · 10 mm@1199 px; peak = topmost pixel of series colour,
+5,5b,OSM-5000,sample_point,5,sheet_resistivity_Ohm_cm,,raster,hidden under TSM-5000/OSM-15000 markers at ≈6.9 (eye) — not separable
+6,6a,OSM-10000,cycle,2,discharge_capacity_mAh_g,354.8,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.1C
+6,6a,OSM-10000,cycle,3,discharge_capacity_mAh_g,354.8,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.1C
+6,6a,OSM-10000,cycle,4,discharge_capacity_mAh_g,354.8,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.1C
+6,6a,OSM-10000,cycle,5,discharge_capacity_mAh_g,354.8,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.1C
+6,6a,OSM-10000,cycle,7,discharge_capacity_mAh_g,311.2,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.2C
+6,6a,OSM-10000,cycle,8,discharge_capacity_mAh_g,300.8,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.2C
+6,6a,OSM-10000,cycle,9,discharge_capacity_mAh_g,294.0,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.2C
+6,6a,OSM-10000,cycle,10,discharge_capacity_mAh_g,236.4,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.5C
+6,6a,OSM-10000,cycle,11,discharge_capacity_mAh_g,230.1,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.5C
+6,6a,OSM-10000,cycle,12,discharge_capacity_mAh_g,221.3,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.5C
+6,6a,OSM-10000,cycle,13,discharge_capacity_mAh_g,211.9,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.5C
+6,6a,OSM-10000,cycle,14,discharge_capacity_mAh_g,83.1,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,1C
+6,6a,OSM-10000,cycle,15,discharge_capacity_mAh_g,80.5,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,1C
+6,6a,OSM-10000,cycle,16,discharge_capacity_mAh_g,80.0,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,1C
+6,6a,OSM-10000,cycle,17,discharge_capacity_mAh_g,78.4,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,1C
+6,6a,OSM-10000,cycle,18,discharge_capacity_mAh_g,282.1,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.2C
+6,6a,OSM-10000,cycle,19,discharge_capacity_mAh_g,276.9,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.2C
+6,6a,OSM-10000,cycle,20,discharge_capacity_mAh_g,274.3,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.2C
+6,6a,OSM-10000,cycle,21,discharge_capacity_mAh_g,276.4,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,0.2C
+6,6a,TSM-15000,cycle,15,discharge_capacity_mAh_g,30.1,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,1C
+6,6a,TSM-15000,cycle,16,discharge_capacity_mAh_g,28.6,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,1C
+6,6a,TSM-15000,cycle,17,discharge_capacity_mAh_g,26.5,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,1C
+6,6a,all,cycle,1,discharge_capacity_mAh_g,354.3,raster native 1269x560 px; y 0@466.5 · 400@81.5 px (mAh/g); x cycle k @125.5+21.7k px; colour group → nearest legend RGB,all six series start on one point
+6,6b,OSM-10000,last_cycle,83.3,discharge_capacity_mAh_g,276.7,raster; left y 200@468.5 · 500@83.5 px; x cycle @697.5+5.55n px; rightmost marker of series,277/355 = 0.78 → printed 77.96 % after 83 cycles
+6,6b,TSM-15000,last_cycle,26.4,discharge_capacity_mAh_g,262.7,raster; left y 200@468.5 · 500@83.5 px; x cycle @697.5+5.55n px; rightmost marker of series,printed 78.6 % after 26 cycles
+6,6b,TSM-5000,last_cycle,71.3,discharge_capacity_mAh_g,270.5,raster; left y 200@468.5 · 500@83.5 px; x cycle @697.5+5.55n px; rightmost marker of series,last plotted cycle
+6,6b,OSM-5000,last_cycle,71.3,discharge_capacity_mAh_g,291.6,raster; left y 200@468.5 · 500@83.5 px; x cycle @697.5+5.55n px; rightmost marker of series,last plotted cycle
+6,6b,OSM-15000,last_cycle,73.4,discharge_capacity_mAh_g,293.9,raster; left y 200@468.5 · 500@83.5 px; x cycle @697.5+5.55n px; rightmost marker of series,last plotted cycle
+6,6b,TSM-10000,last_cycle,,discharge_capacity_mAh_g,,raster; left y 200@468.5 · 500@83.5 px; x cycle @697.5+5.55n px; rightmost marker of series,blue overlaps teal/orange after ≈cycle 43 — end point not separable
+7,7a,pouch OSM-10000 anode,cycle,1,discharge_capacity_mAh,179.0,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,2,discharge_capacity_mAh,179.9,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,5,discharge_capacity_mAh,185.9,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,10,discharge_capacity_mAh,189.7,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,20,discharge_capacity_mAh,191.5,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,max at ≈cycle 20
+7,7a,pouch OSM-10000 anode,cycle,30,discharge_capacity_mAh,190.8,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,50,discharge_capacity_mAh,187.6,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,75,discharge_capacity_mAh,183.6,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,100,discharge_capacity_mAh,176.4,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,125,discharge_capacity_mAh,171.5,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,150,discharge_capacity_mAh,166.9,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,175,discharge_capacity_mAh,163.4,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch OSM-10000 anode,cycle,200,discharge_capacity_mAh,162.7,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers,
+7,7a,pouch,cycle,1,coulombic_efficiency_pct,≈78,raster native 1126x965 px; y 125@353.5 · 225@68.5 px (mAh); x cycle @206.5+3.715n px; salmon discharge markers; right y 100%@121.5 · 0%@300.5 px,first-cycle marker (dark red); later ≈98–100 within ±1 % (figure resolution)
+3,3k,OSM-10000 PTFE fibrils,row profiles,15 rows,apparent_FWHM_nm,median 65 (IQR 40–90),"native raster 1269x1208 px; 5 µm bar = 133 px → 37.6 nm/px; FWHM of bright ridges above running-median background (232 peaks, includes some particle edges)",resolution-limited: true diameter may be smaller; visible fibre segments ≥ ≈8 µm (cross the 9.6 µm-tall field; ends out of frame)

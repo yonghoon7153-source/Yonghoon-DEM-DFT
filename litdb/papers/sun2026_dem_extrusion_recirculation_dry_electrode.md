@@ -442,5 +442,8 @@ k_n = (4/3) E_ef √R_ef     k_t = 8 G_ef √R_ef            (eq 7, 9)
 
 ---
 
+## 🔗 관련 카드
+- 다음 단계 (같은 1저자 · 2026-11-23 추가): `sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint` — 압출 DEM 필라멘트를 FFF 3D 프린팅 입자 모델 (LAMMPS RHEO · SPH 점성 BC + 고체 구 AM) 의 공급 원료로 쓴 ChemRxiv 원고 (동료 심사 전 · 이 카드 논문 = 그 원고의 ref [37] · 방법 절의 필라멘트 출처는 [36] Paredes-Goyes 2024).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

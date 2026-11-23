@@ -1,0 +1,1914 @@
+{
+ "slug": "sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-23",
+ "sources": [
+  "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf"
+ ],
+ "missing_labels": [],
+ "missing_labels_resolved": "tools/litdb/extract_figures.py (--slug … --clean, 2026-11-23) found Fig. 1–7 and dropped Fig. 8 ('no graphic' — the raster is on p.33, its caption on p.34). The posted ChemRxiv PDF (43 pp = ChemRxiv cover pp.1–2 + manuscript pp.3–43 incl. references) has 8 figures, no tables and no supplementary pages (the SI file — Sections S1, S4, S5, Tables S1(a–c), S2, S4 and a video — is cited but not included). All 7 tool crops were re-cut (uneven margins; each raster is drawn through a content-stream clip — the re-cut keeps only the visible part); Fig. 8 cut by hand. Added by hand: the hidden raster panel Fig. 4g (not visible on the page; cited in the text), 20 panel crops, 25 equation crops (Eqs. 1–25) and 20 evidence-paragraph crops (kind 'text'). Every one of the 74 crops was opened and checked. Read-outs: digitized.csv (90 rows: Fig. 4e · 4f · 5b · 7b · 7c · 8b) from the native rasters (2026-11-23, litdb-curator)",
+ "note_manual": "Printed problems visible in the crops: Eqs. (14), (16), (19), (20) are partly printed as broken glyphs ('¿' / '∨') — q_ij of Eq. (14) and the denominators of Eqs. (16) and (20) are recoverable only from the text; the target-velocity subscript in Eq. (4) and 'F_in' in Eq. (22) are broken glyphs too; Fig. 4 caption lists (a)–(f) but the text (p.28) cites 'Fig. 4a, b, and g' — panel g exists only in the clipped part of the embedded raster; Fig. 3c title printed 'Mean heigh measurementst'; Fig. 1 lists 'Effective ionic conductivity' among the outputs but no ionic conductivity is computed; p.16 says Stage-B ran 'at a fixed nozzle-bed gap of 30 µm' whereas pp.25/28 give 35 µm for A04/A07/A08 and p.17 raises the nozzle 'from 35 to 60 µm'; p.17 lists five stability conditions and then calls them 'the four conditions'; the filament source is cited as [36] (Paredes-Goyes 2024) in §2.1 while the abstract calls it 'our previously developed twin-screw extrusion model' (= [37] in §1).",
+ "key_note": "manual keys: f<N> = figure (re-cut) · f<N><panel> = panel crop (panel_of) · f4g_hidden = raster panel hidden by the page clip · e<n> = equation crop (kind 'equation') · x<n> = evidence paragraph (kind 'text'; multi-part paragraphs list 'parts')",
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 9,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Overview of the modeling workflow and multistage fused filament fabrication (FFF) simulation strategy.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    72.1,
+    540.0,
+    288.9
+   ],
+   "w": 2000,
+   "h": 954,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.745,
+   "src_native": [
+    1431,
+    664
+   ],
+   "native_dpi": 220.2,
+   "page_clip": [
+    72.0,
+    72.0,
+    540.2,
+    289.0
+   ],
+   "auto_bbox": [
+    66.0,
+    66.1,
+    546.0,
+    294.9
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven white margins, 25–120 px), re-cut: ink box of the embedded raster (xref 34, 1431×664 px = 220.2 dpi on the page) restricted to the content-stream clip rectangle (page_clip — the part of the raster that is visible on the page) → page rendered at 300 dpi (tool default) → uniform 25 px (6 pt) white margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "사슬 전체 — 왼쪽 = 이전 압출 DEM 이 낸 필라멘트 (파랑 AM = LFP · 빨강 BC = 바인더/도전재 유효 유체상) → 가운데 = 단계 A (한 가닥) · B (한 층) · C (두 층) · 아래 화살표 = 냉각에 따른 고화 (결합 생김) → 오른쪽 = 구조 · 수송 기술자.  ⚠ 오른쪽 목록의 'Effective ionic conductivity' 는 본문에서 계산하지 않는다 (확산 기반 τ 와 전자 전도만)."
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 16,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Schematic illustration of the key printing parameters used in the FFF simulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    94.7,
+    75.3,
+    524.1,
+    342.4
+   ],
+   "w": 1840,
+   "h": 1160,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.72,
+   "src_native": [
+    1654,
+    2339
+   ],
+   "native_dpi": 259.9,
+   "page_clip": [
+    72.0,
+    72.0,
+    530.2,
+    350.0
+   ],
+   "auto_bbox": [
+    66.0,
+    66.0,
+    545.6,
+    358.1
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven white margins, 25–120 px), re-cut: ink box of the embedded raster (xref 36, 1654×2339 px = 259.9 dpi on the page) restricted to the content-stream clip rectangle (page_clip — the part of the raster that is visible on the page) → page rendered at 300 dpi (tool default) → uniform 25 px (6 pt) white margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "공정 변수 정의 그림 — V_f (필라멘트 공급 속도) · V_p (인쇄 속도 = 기판 이동) · H_g (노즐–기판 간격) · S (가닥 간격 = λ·W_ref) · 두 번째 층 경로 R (역방향 평행) · U (안쪽 U) · X (층간 90°).  치수 숫자 없음 (노즐 지름 미기재)."
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 24,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Single-strand deposition morphology and dimensional uniformity. (a) Top and side views of the printed strands for cases A05, A08, and A12. (b) Mean strand width and (c) mean strand height for cases A01-A16, together with the corresponding coefficients of variation (CV, %) representing the spatial variability of each case along their printing direction. Effects of printing parameters on mean strand (d) width and (e) height, evaluated using matched comparisons across 14 completed simulation cases.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.0,
+    72.1,
+    538.3,
+    555.4
+   ],
+   "w": 1977,
+   "h": 2065,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.293,
+   "src_native": [
+    1641,
+    2022
+   ],
+   "native_dpi": 252.5,
+   "page_clip": [
+    72.0,
+    72.1,
+    540.0,
+    562.6
+   ],
+   "auto_bbox": [
+    66.0,
+    66.0,
+    546.0,
+    570.7
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven white margins, 25–120 px), re-cut: ink box of the embedded raster (xref 31, 1641×2022 px = 252.5 dpi on the page) restricted to the content-stream clip rectangle (page_clip — the part of the raster that is visible on the page) → page rendered at 300 dpi (tool default) → uniform 25 px (6 pt) white margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 한 가닥 16 경우 (2⁴ 요인 설계 · A14 · A15 수치 중단) 의 폭 · 높이 · 공간 CV 가 칸 안에 인쇄 — 네 주효과 (−17.98 · +22.97 · −11.55 · −11.68 µm 폭 / −1.63 · +1.32 · +5.23 · +2.08 µm 높이) 는 이 인쇄 값과 이진 순서 배치 (A_n − 1 = 8·V_p + 4·V_f + 2·H_g + R_c) 로 카드가 다시 계산해 넷 다 같게 나온다 [카드 추론 · 산술]."
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 29,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Effect of relative strand spacing on one-layer morphology for A08. (a) Mean envelope width. (b) Mean surface height. (c) Root-mean-square surface-height deviation, Sq. (d) Covered core area. (e) Mean normalized projected overlap at seams 1-2 and 2-3; error bars denote spatial standard deviations over 101 longitudinal sections. (f) Mean inter-strand valley depth.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.9,
+    76.7,
+    527.4,
+    468.1
+   ],
+   "w": 1890,
+   "h": 1675,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.939,
+   "src_native": [
+    1654,
+    2339
+   ],
+   "native_dpi": 259.9,
+   "page_clip": [
+    72.0,
+    72.1,
+    530.1,
+    471.4
+   ],
+   "auto_bbox": [
+    66.0,
+    66.0,
+    545.7,
+    479.5
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven white margins, 25–120 px), re-cut: ink box of the embedded raster (xref 30, 1654×2339 px = 259.9 dpi on the page) restricted to the content-stream clip rectangle (page_clip — the part of the raster that is visible on the page) → page rendered at 300 dpi (tool default) → uniform 25 px (6 pt) white margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ A08 의 한 층 — 가닥 간격 λ 0.75 · 0.85 · 1.00 에서 층 폭 229.01 · 243.45 · 267.33 µm · 높이 29.02 · 27.46 · 25.53 · Sq 3.30 · 3.44 · 4.60 µm · 덮임 100.00 · 99.97 · 97.82 % (인쇄) · 이음매 겹침 · 골 깊이 [판독].  ⚠ 본문 p.28 이 인용하는 '그림 4g' 는 페이지에서 잘려 안 보인다 — fig_4g_hidden_raster.png."
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 30,
+   "file": "fig_5.png",
+   "caption": "Figure 5. First-layer morphology at matched normalized spacing, λ = 0.85. (a) Root-mean-square surface-height deviation, Sq. (b) Mean normalized projected overlap for interfaces of strands 1-2 and strands 2-3.",
+   "rotated_deg": 0,
+   "bbox": [
+    76.1,
+    303.1,
+    538.8,
+    468.2
+   ],
+   "w": 1970,
+   "h": 733,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.84,
+   "src_native": [
+    1948,
+    984
+   ],
+   "native_dpi": 299.7,
+   "page_clip": [
+    72.0,
+    297.4,
+    540.0,
+    478.9
+   ],
+   "auto_bbox": [
+    66.0,
+    289.3,
+    546.0,
+    487.0
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven white margins, 25–120 px), re-cut: ink box of the embedded raster (xref 33, 1948×984 px = 299.7 dpi on the page) restricted to the content-stream clip rectangle (page_clip — the part of the raster that is visible on the page) → page rendered at 300 dpi (tool default) → uniform 25 px (6 pt) white margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "λ = 0.85 에서 A04 · A07 · A08 비교 — Sq 4.03 · 3.61 · 3.44 µm (인쇄) · 겹침 평균 ± 공간 SD [판독 · digitized.csv]."
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 31,
+   "file": "fig_6.png",
+   "caption": "Figure 6. One-layer printed morphologies at different strand spacings and the progression of two-layer deposition. Stage-B snapshots show the A08 case one-layer structures at relative strand spacings of λ = 75%, 85%, and 100%. Sequential Stage-C snapshots illustrate the printing process for a representative reverse (R) case (R08-75), from the start of the second layer deposition to the completion of printing.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    176.6,
+    540.0,
+    602.2
+   ],
+   "w": 2000,
+   "h": 1805,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.48,
+   "src_native": [
+    1429,
+    1302
+   ],
+   "native_dpi": 219.8,
+   "page_clip": [
+    72.0,
+    176.6,
+    540.2,
+    602.3
+   ],
+   "auto_bbox": [
+    66.0,
+    170.6,
+    546.0,
+    608.2
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven white margins, 25–120 px), re-cut: ink box of the embedded raster (xref 35, 1429×1302 px = 219.8 dpi on the page) restricted to the content-stream clip rectangle (page_clip — the part of the raster that is visible on the page) → page rendered at 300 dpi (tool default) → uniform 25 px (6 pt) white margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "(a) A08 한 층 위에서 본 모습 (λ 75 · 85 · 100 %) · (b) R08-75 두 번째 층을 쌓는 과정 6 장.  빨강 = BC · 파랑 = AM · 회색 격자 = 기판 입자."
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 32,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Pore organization in the two-layer structure. (a) Representative cutaway of case R04-75. The upper front region is removed only for visualization. (b) Resolved void fraction and total void fraction including unresolved BC nanopores. (c) Comparison interlayer void fraction caused by different two-layer printing configurations and printing parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    321.5,
+    540.0,
+    554.3
+   ],
+   "w": 2000,
+   "h": 1019,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.838,
+   "src_native": [
+    1431,
+    711
+   ],
+   "native_dpi": 220.2,
+   "page_clip": [
+    72.0,
+    321.4,
+    540.2,
+    554.4
+   ],
+   "auto_bbox": [
+    66.0,
+    315.5,
+    546.0,
+    560.3
+   ],
+   "recrop": "first extracted with tools/litdb/extract_figures.py (auto bbox kept as auto_bbox; uneven white margins, 25–120 px), re-cut: ink box of the embedded raster (xref 37, 1431×711 px = 220.2 dpi on the page) restricted to the content-stream clip rectangle (page_clip — the part of the raster that is visible on the page) → page rendered at 300 dpi (tool default) → uniform 25 px (6 pt) white margin; caption excluded (tool convention) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 두 층 전극 18 개의 빈 곳 — 분해된 빈 곳 38.59–40.15 % · BC 나노 공극 10 % 가정 포함 42.83–44.29 % · 층간 빈 곳 6.85–10.36 % (인쇄 범위) · 경우별 값 = digitized.csv [판독]."
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 33,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Through-thickness (Y-direction) transport performance in the two-layer microstructures. (a) Tortuosity factors of each case, the line joins λ = 0.75 and 0.85 for the same path and processing group. (b) Apparent electronic conductivity versus electronic resistance, with individual cases labelled. Thin grey lines connect case labels to their corresponding data points.",
+   "rotated_deg": 0,
+   "bbox": [
+    72.0,
+    249.1,
+    540.0,
+    712.2
+   ],
+   "w": 2000,
+   "h": 1981,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.91,
+   "src_native": [
+    1432,
+    1416
+   ],
+   "native_dpi": 220.3,
+   "page_clip": [
+    72.0,
+    249.0,
+    540.2,
+    712.3
+   ],
+   "manual_crop": "not found by the tool (graphic on p.33, caption on p.34 — 'no graphic' on the caption page); cut by hand from the embedded raster (xref 32, 1432×1416 px = 220.3 dpi) inside its page clip → page rendered at 300 dpi → uniform 25 px (6 pt) white margin; caption from p.34 text (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ (a) τ_Y 18 개 모두 그림 안 글자로 인쇄 (1.728–1.823) · (b) 겉보기 σ_Y,app ↔ R_Y — 경우별 [판독] (σ 0.0985–0.1912 S/m 인쇄 범위와 같음).  ⚠ 그림이 p.33 · 캡션이 p.34 (두 쪽에 걸침) — 도구가 못 잡아 손으로 잘랐다."
+  },
+  {
+   "key": "f4g_hidden",
+   "kind": "figure",
+   "label": "4g",
+   "page": 29,
+   "file": "fig_4g_hidden_raster.png",
+   "caption": "Fig. 4(g) — NOT visible in the posted PDF: the embedded raster of Fig. 4 (xref 30) carries a panel 'g)' (top views of the A08 one-layer prints at λ = 0.75, 0.85, 1.00) below panels e–f, but the page draws the raster through a clip rectangle that ends above it (page_clip y ≤ 471.4 pt), and the Fig. 4 caption lists only (a)–(f).  The text on p.28 cites 'Fig. 4a, b, and g'.  Same views as Fig. 6a.",
+   "rotated_deg": 0,
+   "w": 1869,
+   "h": 821,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.245,
+   "hidden_on_page": true,
+   "native_px_box": [
+    50,
+    1451,
+    1626,
+    2119
+   ],
+   "page_coords_if_unclipped": [
+    85.9,
+    473.9,
+    522.4,
+    658.9
+   ],
+   "manual_crop": "cut by hand from the native raster pixels below the page clip (xref 30, 260 dpi) → ink box → resampled ×1.1543 (Lanczos) to the 300 dpi tool scale → uniform 25 px white margin (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "원문 페이지에서는 안 보이는 패널 (PDF 안 래스터에만 있음) — 본문 p.28 이 '그림 4g' 를 인용하므로 기록용으로만 잘랐다 · 그림 6a 와 같은 장면."
+  },
+  {
+   "key": "f3a",
+   "kind": "figure",
+   "label": "3a",
+   "page": 24,
+   "file": "fig_3a.png",
+   "caption": "Fig. 3(a) — top and side views of single strands A05 (V_p 0.08, V_f 0.06 µm/µs, H_g 25 µm, R_c 2.5×10⁻⁴ µs⁻¹), A08 (H_g 35, R_c 1×10⁻³) and A12 (V_p 0.12, V_f 0.04, H_g 35, R_c 1×10⁻³) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 983,
+   "h": 1094,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.31,
+   "panel_of": "f3",
+   "manual_crop": "panel cut from the re-cut fig_3.png (same 300 dpi scale): box [25, 92, 958, 1136] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "A05 = 아래로 쌓이다 진행 방향으로 휜 C 꼴 · A12 = 늘어나며 기판에서 미끄러짐 · AM/BC 뭉침 · A08 = 간격을 채우는 직각 전이 (p.23)."
+  },
+  {
+   "key": "f3b",
+   "kind": "figure",
+   "label": "3b",
+   "page": 24,
+   "file": "fig_3b.png",
+   "caption": "Fig. 3(b) — mean strand width (µm) and spatial CV of A01–A16 (A14 · A15 STOPPED) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 1032,
+   "h": 619,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.245,
+   "panel_of": "f3",
+   "manual_crop": "panel cut from the re-cut fig_3.png (same 300 dpi scale): box [970, 25, 1952, 594] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "폭 56.24 (A12) – 121.18 µm (A05) · CV 1.3–8.5 % · 인쇄 값."
+  },
+  {
+   "key": "f3c",
+   "kind": "figure",
+   "label": "3c",
+   "page": 24,
+   "file": "fig_3c.png",
+   "caption": "Fig. 3(c) — mean strand height (µm) and spatial CV of A01–A16 (panel title printed 'Mean heigh measurementst') (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 1028,
+   "h": 622,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.246,
+   "panel_of": "f3",
+   "manual_crop": "panel cut from the re-cut fig_3.png (same 300 dpi scale): box [970, 612, 1948, 1184] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "높이 22.46 (A09) – 32.43 µm (A08) · CV 2.1–6.1 % · 인쇄 값."
+  },
+  {
+   "key": "f3d",
+   "kind": "figure",
+   "label": "3d",
+   "page": 24,
+   "file": "fig_3d.png",
+   "caption": "Fig. 3(d) — effects on mean width: high − low (µm) per factor, six matched pairs (dots), mean (diamond), min–max (line) (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 994,
+   "h": 875,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.318,
+   "panel_of": "f3",
+   "manual_crop": "panel cut from the re-cut fig_3.png (same 300 dpi scale): box [46, 1215, 990, 2040] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "V_p −17.98 · V_f +22.97 · H_g −11.55 · R_c −11.68 µm (인쇄)."
+  },
+  {
+   "key": "f3e",
+   "kind": "figure",
+   "label": "3e",
+   "page": 24,
+   "file": "fig_3e.png",
+   "caption": "Fig. 3(e) — effects on mean height: high − low (µm) per factor (panel of Fig. 3).",
+   "rotated_deg": 0,
+   "w": 935,
+   "h": 875,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.282,
+   "panel_of": "f3",
+   "manual_crop": "panel cut from the re-cut fig_3.png (same 300 dpi scale): box [1022, 1215, 1907, 2040] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "V_p −1.63 · V_f +1.32 · H_g +5.23 · R_c +2.08 µm (인쇄)."
+  },
+  {
+   "key": "f4a",
+   "kind": "figure",
+   "label": "4a",
+   "page": 29,
+   "file": "fig_4a.png",
+   "caption": "Fig. 4(a) — A08 one layer: mean envelope width vs spacing factor λ (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 918,
+   "h": 581,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.946,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from the re-cut fig_4.png (same 300 dpi scale): box [25, 25, 893, 556] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "229.01 · 243.45 · 267.33 µm (인쇄) — 3 가닥이면 ≈2S + W_ref (222.5 · 240.3 · 267.0 µm) 와 맞다 [카드 산술]."
+  },
+  {
+   "key": "f4b",
+   "kind": "figure",
+   "label": "4b",
+   "page": 29,
+   "file": "fig_4b.png",
+   "caption": "Fig. 4(b) — mean surface height vs λ (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 926,
+   "h": 581,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.948,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from the re-cut fig_4.png (same 300 dpi scale): box [989, 25, 1865, 556] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "29.02 · 27.46 · 25.53 µm (인쇄)."
+  },
+  {
+   "key": "f4c",
+   "kind": "figure",
+   "label": "4c",
+   "page": 29,
+   "file": "fig_4c.png",
+   "caption": "Fig. 4(c) — RMS surface-height deviation Sq vs λ (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 912,
+   "h": 583,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.938,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from the re-cut fig_4.png (same 300 dpi scale): box [25, 570, 887, 1103] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "3.30 · 3.44 · 4.60 µm (인쇄)."
+  },
+  {
+   "key": "f4d",
+   "kind": "figure",
+   "label": "4d",
+   "page": 29,
+   "file": "fig_4d.png",
+   "caption": "Fig. 4(d) — covered core area vs λ (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 915,
+   "h": 582,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.949,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from the re-cut fig_4.png (same 300 dpi scale): box [990, 571, 1855, 1103] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "100.00 · 99.97 · 97.82 % (인쇄)."
+  },
+  {
+   "key": "f4e",
+   "kind": "figure",
+   "label": "4e",
+   "page": 29,
+   "file": "fig_4e.png",
+   "caption": "Fig. 4(e) — mean normalized projected overlap at seams 1-2 and 2-3 (mean ± spatial SD over 101 sections) vs λ (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 915,
+   "h": 577,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.925,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from the re-cut fig_4.png (same 300 dpi scale): box [25, 1123, 890, 1650] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "λ 0.75 ≈18 · ≈24 % → 0.85 ≈8 % 각각 → 1.00 ≈0 % [판독 · 본문 문장과 같음]."
+  },
+  {
+   "key": "f4f",
+   "kind": "figure",
+   "label": "4f",
+   "page": 29,
+   "file": "fig_4f.png",
+   "caption": "Fig. 4(f) — mean inter-strand valley depth at seams 1-2 and 2-3 vs λ (panel of Fig. 4).",
+   "rotated_deg": 0,
+   "w": 913,
+   "h": 577,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.933,
+   "panel_of": "f4",
+   "manual_crop": "panel cut from the re-cut fig_4.png (same 300 dpi scale): box [990, 1123, 1853, 1650] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "≈1.4 → ≈3 → ≈8.5 µm [판독]."
+  },
+  {
+   "key": "f5a",
+   "kind": "figure",
+   "label": "5a",
+   "page": 30,
+   "file": "fig_5a.png",
+   "caption": "Fig. 5(a) — Sq of A04, A07, A08 at λ = 0.85 (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 997,
+   "h": 733,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.733,
+   "panel_of": "f5",
+   "manual_crop": "panel cut from the re-cut fig_5.png (same 300 dpi scale): box [25, 25, 972, 708] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "4.03 · 3.61 · 3.44 µm (인쇄)."
+  },
+  {
+   "key": "f5b",
+   "kind": "figure",
+   "label": "5b",
+   "page": 30,
+   "file": "fig_5b.png",
+   "caption": "Fig. 5(b) — mean normalized projected overlap (strands 1-2 filled circle, 2-3 open square) of A04, A07, A08 at λ = 0.85; error bars = spatial variation (panel of Fig. 5).",
+   "rotated_deg": 0,
+   "w": 1001,
+   "h": 733,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.951,
+   "panel_of": "f5",
+   "manual_crop": "panel cut from the re-cut fig_5.png (same 300 dpi scale): box [994, 25, 1945, 708] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "A04 ≈13.8 · 15.4 · A07 ≈5.1 · 6.4 · A08 ≈7.8 · 8.5 % [판독]."
+  },
+  {
+   "key": "f6a",
+   "kind": "figure",
+   "label": "6a",
+   "page": 31,
+   "file": "fig_6a.png",
+   "caption": "Fig. 6(a) — A08 at Stage-B: one-layer top views at λ = 75, 85, 100 % (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 1945,
+   "h": 732,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.5,
+   "panel_of": "f6",
+   "manual_crop": "panel cut from the re-cut fig_6.png (same 300 dpi scale): box [25, 25, 1920, 707] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "가닥 사이 골 · 이음매 — λ 100 % 에서 이음매가 벌어짐."
+  },
+  {
+   "key": "f6b",
+   "kind": "figure",
+   "label": "6b",
+   "page": 31,
+   "file": "fig_6b.png",
+   "caption": "Fig. 6(b) — R08-75 at Stage-C: six snapshots from the start of the second layer to the end of printing (panel of Fig. 6).",
+   "rotated_deg": 0,
+   "w": 2000,
+   "h": 1123,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.481,
+   "panel_of": "f6",
+   "manual_crop": "panel cut from the re-cut fig_6.png (same 300 dpi scale): box [25, 707, 1975, 1780] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "두 번째 층 노즐 높이 35 → 60 µm (p.17) · 공급 유지."
+  },
+  {
+   "key": "f7a",
+   "kind": "figure",
+   "label": "7a",
+   "page": 32,
+   "file": "fig_7a.png",
+   "caption": "Fig. 7(a) — cutaway of R04-75 (upper front removed for display): AM (blue) · BC (red) · interlayer void (yellow); axes X, Z, Y [µm] (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 945,
+   "h": 824,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.748,
+   "panel_of": "f7",
+   "manual_crop": "panel cut from the re-cut fig_7.png (same 300 dpi scale): box [25, 25, 920, 799] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "층간 빈 곳 = 처음 두 층 표면 사이 · 공통 지지 기둥 안의 공극 복셀 (p.20)."
+  },
+  {
+   "key": "f7b",
+   "kind": "figure",
+   "label": "7b",
+   "page": 32,
+   "file": "fig_7b.png",
+   "caption": "Fig. 7(b) — resolved void fraction (open) and total void fraction incl. assumed 10 % BC nanopores (filled) for the 18 two-layer cases (panel of Fig. 7; case labels under panel c).",
+   "rotated_deg": 0,
+   "w": 1096,
+   "h": 528,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.877,
+   "panel_of": "f7",
+   "manual_crop": "panel cut from the re-cut fig_7.png (same 300 dpi scale): box [929, 25, 1975, 503] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "분해 38.59–40.15 % · 합계 42.83–44.29 % (인쇄 범위) · 경우별 [판독]."
+  },
+  {
+   "key": "f7c",
+   "kind": "figure",
+   "label": "7c",
+   "page": 32,
+   "file": "fig_7c.png",
+   "caption": "Fig. 7(c) — interlayer void / analysis-domain volume for the 18 cases (R blue · U orange · X green) (panel of Fig. 7).",
+   "rotated_deg": 0,
+   "w": 1105,
+   "h": 541,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.894,
+   "panel_of": "f7",
+   "manual_crop": "panel cut from the re-cut fig_7.png (same 300 dpi scale): box [920, 503, 1975, 994] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "6.85 (U07-85) – 10.36 % (R04-85) (인쇄) · 경우별 [판독]."
+  },
+  {
+   "key": "f8a",
+   "kind": "figure",
+   "label": "8a",
+   "page": 33,
+   "file": "fig_8a.png",
+   "caption": "Fig. 8(a) — through-thickness tortuosity factor τ_Y of each case (values printed; line joins λ 0.75 open ↔ 0.85 filled) (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 1976,
+   "h": 973,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.889,
+   "panel_of": "f8",
+   "manual_crop": "panel cut from the re-cut fig_8.png (same 300 dpi scale): box [49, 25, 1975, 948] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded; white-out [[0, 930, 400, 950]] px of the shared row (the neighbouring panel's axis title / panel letter) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "1.728 (X04-85) – 1.823 (U08-75) · 18 값 전부 인쇄 · 우리 이름 = tau2 (수송 tortuosity · √ 아님)."
+  },
+  {
+   "key": "f8b",
+   "kind": "figure",
+   "label": "8b",
+   "page": 33,
+   "file": "fig_8b.png",
+   "caption": "Fig. 8(b) — apparent through-thickness electronic conductivity σ_Y,app [S/m] vs Y-direction resistance R_Y [kΩ], cases labelled (panel of Fig. 8).",
+   "rotated_deg": 0,
+   "w": 2000,
+   "h": 1069,
+   "dpi": 300,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.933,
+   "panel_of": "f8",
+   "manual_crop": "panel cut from the re-cut fig_8.png (same 300 dpi scale): box [25, 937, 1975, 1956] px (split lines in white gaps found on the row/column ink profiles) → ink trim → uniform 25 px white margin; panel label kept, caption excluded; white-out [[1200, 930, 2000, 955]] px of the shared row (the neighbouring panel's axis title / panel letter) (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "σ 0.0985–0.1912 S/m · R 4.30–13.35 kΩ [판독] · σ × R = L_Y/A_Y 668–1603 m⁻¹ [카드 산술]."
+  },
+  {
+   "key": "e1",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 10,
+   "file": "eq_01_reference_volume_envelope_radius.png",
+   "caption": "Eq. (1), PDF p.10: V_i,ref = m_i/ρ_0,i = 4πr_i³/3 — reference volume of material particle i from its mass and reference density (defines the simulation-envelope radius).",
+   "rotated_deg": 0,
+   "bbox": [
+    167.7,
+    130.4,
+    539.4,
+    161.9
+   ],
+   "w": 2131,
+   "h": 241,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.984,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [119.1, 171.1] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "기준 부피 = 질량/기준 밀도 = 구 부피 → 공급 · 유량 회계용 (기하 측정은 겹침을 한 번만 세는 합집합 — p.10)."
+  },
+  {
+   "key": "e2",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 10,
+   "file": "eq_02_force_balance_material_point.png",
+   "caption": "Eq. (2), PDF p.10: m_i dv_i/dt = F_i^hyd + F_i^solid + F_i^coh + F_i^noz + F_i^feed + m_i g — force balance of a material point.",
+   "rotated_deg": 0,
+   "bbox": [
+    212.1,
+    599.4,
+    539.4,
+    625.4
+   ],
+   "w": 1884,
+   "h": 210,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [588.1, 636.7] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "힘 다섯 = 유체 (SPH 압력 · 점성 · 인공 점성) + 고체 접촉 + 결합 + 노즐 가둠 + 공급 + 중력 · 단위 pg µm µs⁻² = nN [카드 산술]."
+  },
+  {
+   "key": "e3",
+   "kind": "equation",
+   "label": "eq3",
+   "page": 11,
+   "file": "eq_03_linear_eos_pressure.png",
+   "caption": "Eq. (3), PDF p.11: p_i = c_s²(ρ_i − ρ_0,i) — linear equation of state (c_s = 8 µm µs⁻¹, numerical).",
+   "rotated_deg": 0,
+   "bbox": [
+    199.5,
+    145.8,
+    539.4,
+    161.5
+   ],
+   "w": 1954,
+   "h": 153,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [135.2, 171.6] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "약압축 SPH · BC 의 K = ρ₀c_s² = 1.1 × 64 = 70.4 kPa [카드 산술] · 밀도 5 % 넘게 벗어나면 런 중단 (p.16)."
+  },
+  {
+   "key": "e4",
+   "kind": "equation",
+   "label": "eq4",
+   "page": 12,
+   "file": "eq_04_feed_velocity_relaxation_force.png",
+   "caption": "Eq. (4), PDF p.12: F_i^feed = (m_i/τ_f) w_i(t) (v_in − v_i,y) e_y — velocity-relaxation feed force (the subscript of the target inlet velocity is printed as a broken glyph '¿').",
+   "rotated_deg": 0,
+   "bbox": [
+    200.4,
+    117.0,
+    539.4,
+    144.0
+   ],
+   "w": 1949,
+   "h": 216,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [103.0, 153.9] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "공급 = 압력이 아니라 속도를 정해 넣는다 (운동학적 공급 · 압출 압력 없음 · p.12)."
+  },
+  {
+   "key": "e5",
+   "kind": "equation",
+   "label": "eq5",
+   "page": 12,
+   "file": "eq_05_feed_weight_smoothstep.png",
+   "caption": "Eq. (5), PDF p.12: w = 3u² − 2u³ — smooth-step spatial weight of the feed force.",
+   "rotated_deg": 0,
+   "bbox": [
+    177.2,
+    156.2,
+    539.4,
+    169.0
+   ],
+   "w": 2078,
+   "h": 137,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [144.7, 179.1] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "공급 힘이 노즐 위 구간에서만 걸리게 하는 부드러운 계단."
+  },
+  {
+   "key": "e6",
+   "kind": "equation",
+   "label": "eq6",
+   "page": 12,
+   "file": "eq_06_feed_zone_coordinate_clip.png",
+   "caption": "Eq. (6), PDF p.12: u = clip[(y_i − h_n − 54 µm)/8 µm, 0, 1] — feed-zone coordinate above the nozzle (h_n = nozzle height incl. lift).",
+   "rotated_deg": 0,
+   "bbox": [
+    156.5,
+    180.3,
+    539.4,
+    209.9
+   ],
+   "w": 2193,
+   "h": 230,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.972,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [170.6, 218.8] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "노즐 출구 위 54 µm 부터 8 µm 폭으로 공급 힘이 켜진다."
+  },
+  {
+   "key": "e7",
+   "kind": "equation",
+   "label": "eq7",
+   "page": 12,
+   "file": "eq_07_outlet_reference_volume_flux.png",
+   "caption": "Eq. (7), PDF p.12: Q_out = (1/Δt) Σ_{e∈E(Δt)} σ_e m_e/ρ_0,e — net reference-volume flux through the nozzle-exit plane (σ_e = ±1 crossing direction).",
+   "rotated_deg": 0,
+   "bbox": [
+    165.9,
+    457.5,
+    539.4,
+    484.0
+   ],
+   "w": 2141,
+   "h": 213,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [443.3, 493.6] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "출구 유량 → A_mat ≈ Q_out/V_p (공급량/길이) 로 가닥 단면 해석."
+  },
+  {
+   "key": "e8",
+   "kind": "equation",
+   "label": "eq8",
+   "page": 13,
+   "file": "eq_08_contact_cooling_state_update.png",
+   "caption": "Eq. (8), PDF p.13: θ_i^{n+1} = max(0, θ_i^n − R_c Δt) — contact-triggered decay of the dimensionless thermal-state variable (assumed cooling rule, not an energy balance).",
+   "rotated_deg": 0,
+   "bbox": [
+    240.9,
+    202.2,
+    523.2,
+    215.9
+   ],
+   "w": 1634,
+   "h": 142,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [190.9, 226.3] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "온도가 아니라 '가정한 상태 변수' — 기판 (또는 첫 층) 에 닿은 뒤 R_c 로 1 → 0 (R_c 2.5×10⁻⁴–1×10⁻³ µs⁻¹ = 4000–1000 µs [카드 산술])."
+  },
+  {
+   "key": "e9",
+   "kind": "equation",
+   "label": "eq9",
+   "page": 13,
+   "file": "eq_09_state_dependent_viscosity.png",
+   "caption": "Eq. (9), PDF p.13: η_i = η_0(1 + 9s_i) — state-dependent dynamic viscosity (η_0 = 10 pg µm⁻¹ µs⁻¹ = 0.01 Pa s).",
+   "rotated_deg": 0,
+   "bbox": [
+    285.9,
+    651.2,
+    539.2,
+    664.7
+   ],
+   "w": 1473,
+   "h": 141,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.973,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [640.9, 675.4] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "고화가 진행되면 점도 10 배 (0.01 → 0.1 Pa s [카드 산술]) — 고분자 용융 점도와 견주지 않았다 (원문 비교 없음)."
+  },
+  {
+   "key": "e10",
+   "kind": "equation",
+   "label": "eq10",
+   "page": 13,
+   "file": "eq_10_structural_state_smoothstep.png",
+   "caption": "Eq. (10), PDF p.13: s_i = 3u_i² − 2u_i³ — structural-state smooth step.",
+   "rotated_deg": 0,
+   "bbox": [
+    288.8,
+    677.7,
+    539.2,
+    690.9
+   ],
+   "w": 1457,
+   "h": 139,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.974,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [666.0, 740.0] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "구조 상태 s ∈ [0, 1] — 결합 진폭 · 점도에 들어간다."
+  },
+  {
+   "key": "e11",
+   "kind": "equation",
+   "label": "eq11",
+   "page": 14,
+   "file": "eq_11_state_coordinate_from_theta.png",
+   "caption": "Eq. (11), PDF p.14: u_i = clip((0.8 − θ_i)/0.6, 0, 1) — maps θ 0.8 → 0.2 onto s 0 → 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    273.2,
+    74.2,
+    539.4,
+    100.1
+   ],
+   "w": 1545,
+   "h": 210,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.97,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [60.0, 111.6] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "θ 0.8 → 0.2 구간에서 s 가 0 → 1."
+  },
+  {
+   "key": "e12",
+   "kind": "equation",
+   "label": "eq12",
+   "page": 14,
+   "file": "eq_12_cohesive_link_force.png",
+   "caption": "Eq. (12), PDF p.14: F_ij^coh = [−k(r − r_0) − γ v_ij,n] a_ij (1 − q_ij⁸) n_ij — cohesive link force (k = 2 pg µs⁻², γ = 10 pg µs⁻¹).",
+   "rotated_deg": 0,
+   "bbox": [
+    177.9,
+    330.6,
+    539.4,
+    345.6
+   ],
+   "w": 2074,
+   "h": 149,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [319.1, 354.7] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "BC–BC · BC–AM 결합 = 스프링 + 법선 감쇠 × 성숙 진폭 × 연화 · k = 2 mN/m · γ = 1×10⁻⁸ kg/s [카드 산술] · 전기 접촉 저항 · 강도에 보정 안 함 (p.15)."
+  },
+  {
+   "key": "e13",
+   "kind": "equation",
+   "label": "eq13",
+   "page": 14,
+   "file": "eq_13_link_amplitude_maturation.png",
+   "caption": "Eq. (13), PDF p.14: a_ij = [min(s_i, s_j)]² S((t − t_b)/t_m) — link amplitude: structural development × maturation (t_m = 200 µs).",
+   "rotated_deg": 0,
+   "bbox": [
+    142.8,
+    468.1,
+    539.4,
+    494.6
+   ],
+   "w": 2269,
+   "h": 213,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.979,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [455.0, 505.4] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "덜 고화된 쪽이 결합 세기를 정하고 200 µs 동안 자란다."
+  },
+  {
+   "key": "e14",
+   "kind": "equation",
+   "label": "eq14",
+   "page": 14,
+   "file": "eq_14_softening_factor_broken_in_print.png",
+   "caption": "Eq. (14), PDF p.14: q_ij = min… — the right-hand side is printed as a broken glyph ('¿'); only the text defines q_ij as a strain-dependent softening factor with failure threshold ε_c = 0.25 (p.15).",
+   "rotated_deg": 0,
+   "bbox": [
+    187.8,
+    508.8,
+    539.4,
+    521.6
+   ],
+   "w": 2019,
+   "h": 137,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.982,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [496.7, 530.5] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 식 본문이 인쇄 깨짐 — q_ij 의 정확한 꼴 [미확인] (본문: 변형률 크기 ε_c = 0.25 에서 끊김)."
+  },
+  {
+   "key": "e15",
+   "kind": "equation",
+   "label": "eq15",
+   "page": 14,
+   "file": "eq_15_link_axial_strain.png",
+   "caption": "Eq. (15), PDF p.14: ε_ij = (r − r_0)/r_0 — axial link strain.",
+   "rotated_deg": 0,
+   "bbox": [
+    148.2,
+    536.3,
+    539.4,
+    561.6
+   ],
+   "w": 2239,
+   "h": 207,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.989,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [522.2, 572.5] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 변형률 — |ε| = 0.25 이면 끊김 · θ ≥ 0.8 로 돌아가면 다시 생길 수 있음."
+  },
+  {
+   "key": "e16",
+   "kind": "equation",
+   "label": "eq16",
+   "page": 17,
+   "file": "eq_16_link_set_change_broken_in_print.png",
+   "caption": "Eq. (16), PDF p.17: f_E = |E_t △ E_{t−Δt*}| / max(…) — normalized symmetric difference of successive active-link sets (stability check every Δt* = 500 µs); the denominator and the bars are printed as broken glyphs ('¿').",
+   "rotated_deg": 0,
+   "bbox": [
+    172.7,
+    397.4,
+    539.4,
+    415.8
+   ],
+   "w": 2103,
+   "h": 168,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.976,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [385.9, 425.6] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 분모 인쇄 깨짐 · 본문 '0 ≤ f_E ≤ 2 · 같은 크기 서로소 두 집합이면 2' 와 맞는 분모는 max(|E_t|, |E_t−Δt*|) [카드 추론]."
+  },
+  {
+   "key": "e17",
+   "kind": "equation",
+   "label": "eq17",
+   "page": 18,
+   "file": "eq_17_strand_width_envelope.png",
+   "caption": "Eq. (17), PDF p.18: W = max_{i∈I}(x_i + r_i) − min_{i∈I}(x_i − r_i) — strand width of a ±5 µm sampling slab.",
+   "rotated_deg": 0,
+   "bbox": [
+    192.2,
+    233.0,
+    539.2,
+    246.3
+   ],
+   "w": 1994,
+   "h": 140,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.961,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [222.7, 257.2] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "가닥 폭 = 단면 띠 안 입자 외피의 양끝 거리."
+  },
+  {
+   "key": "e18",
+   "kind": "equation",
+   "label": "eq18",
+   "page": 18,
+   "file": "eq_18_strand_height_envelope.png",
+   "caption": "Eq. (18), PDF p.18: H = max_{i∈I}(y_i + r_i) − min_{i∈I}(y_i − r_i) — full vertical range (height).",
+   "rotated_deg": 0,
+   "bbox": [
+    168.2,
+    258.4,
+    539.4,
+    271.7
+   ],
+   "w": 2128,
+   "h": 140,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.962,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [248.7, 282.1] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "가닥 높이 = 같은 띠의 위아래 범위."
+  },
+  {
+   "key": "e19",
+   "kind": "equation",
+   "label": "eq19",
+   "page": 19,
+   "file": "eq_19_projected_overlap_length.png",
+   "caption": "Eq. (19), PDF p.19: O_ab(d) = |P_a(d) ∩ P_b(d)| — projected overlap length of strands a and b at section d (the absolute-value bars are printed as broken glyphs).",
+   "rotated_deg": 0,
+   "bbox": [
+    171.5,
+    114.6,
+    539.4,
+    127.9
+   ],
+   "w": 2110,
+   "h": 140,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.966,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [104.3, 138.9] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "이웃 가닥 물질이 겹치는 가로 길이 (3D 섞임 · 계면 세기 아님)."
+  },
+  {
+   "key": "e20",
+   "kind": "equation",
+   "label": "eq20",
+   "page": 19,
+   "file": "eq_20_overlap_fraction_min_normalized.png",
+   "caption": "Eq. (20), PDF p.19: f_ab(d) = O_ab(d)/min(…) — overlap normalized by the smaller occupied transverse length (denominator printed as broken glyphs; definition in the text).",
+   "rotated_deg": 0,
+   "bbox": [
+    220.1,
+    140.0,
+    539.4,
+    167.1
+   ],
+   "w": 1840,
+   "h": 217,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.975,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [129.5, 178.6] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "⚠ 분모 인쇄 깨짐 · 본문 = 두 가닥 중 작은 점유 길이 [인쇄 문장]."
+  },
+  {
+   "key": "e21",
+   "kind": "equation",
+   "label": "eq21",
+   "page": 19,
+   "file": "eq_21_surface_height_rms_sq.png",
+   "caption": "Eq. (21), PDF p.19: S_q = √[(1/N_cov) Σ_{j∈Ω_cov}(h_j − h̄_cov)²], h̄_cov = (1/N_cov) Σ h_j — RMS surface-height deviation over the material-covered core.",
+   "rotated_deg": 0,
+   "bbox": [
+    197.0,
+    506.3,
+    539.4,
+    538.3
+   ],
+   "w": 1968,
+   "h": 244,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.959,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [496.4, 548.2] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "표면 높이 균일도 · 덮이지 않은 곳은 0 이 아니라 뺀다."
+  },
+  {
+   "key": "e22",
+   "kind": "equation",
+   "label": "eq22",
+   "page": 21,
+   "file": "eq_22_conductance_from_fluxes.png",
+   "caption": "Eq. (22), PDF p.21: G = (|F_in| + |F_out|)/(2Δu) — conductance from integrated inlet/outlet fluxes (subscript 'in' printed as a broken glyph).",
+   "rotated_deg": 0,
+   "bbox": [
+    175.1,
+    173.7,
+    539.4,
+    202.7
+   ],
+   "w": 2090,
+   "h": 227,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.98,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [163.6, 213.8] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "확산 · 전자 컨덕턴스 = 입출구 플럭스 평균 / 걸어 준 차."
+  },
+  {
+   "key": "e23",
+   "kind": "equation",
+   "label": "eq23",
+   "page": 21,
+   "file": "eq_23_tortuosity_factor_geometry_referenced.png",
+   "caption": "Eq. (23), PDF p.21: τ_Y = ε_tot G_hom,Y/G_diff,Y — geometry-referenced tortuosity factor (reference = uniform D₀ in the same domain and contact faces).",
+   "rotated_deg": 0,
+   "bbox": [
+    184.4,
+    350.6,
+    539.4,
+    379.7
+   ],
+   "w": 2038,
+   "h": 228,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [338.7, 389.1] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ = 우리 tau2 (φ/f · 수송 tortuosity · √ 아님) 꼴 — 단 φ 자리에 BC 나노 공극 10 % 가정을 넣은 ε_tot · 기준은 같은 영역의 균질 확산."
+  },
+  {
+   "key": "e24",
+   "kind": "equation",
+   "label": "eq24",
+   "page": 21,
+   "file": "eq_24_apparent_through_thickness_conductivity.png",
+   "caption": "Eq. (24), PDF p.21: σ_Y,app = G_el,Y L_Y/A_Y — apparent through-thickness electronic conductivity (L_Y = bounding-box extent, A_Y = projected area of the domain on X-Z).",
+   "rotated_deg": 0,
+   "bbox": [
+    193.8,
+    558.3,
+    539.4,
+    585.6
+   ],
+   "w": 1986,
+   "h": 218,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.983,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [546.2, 596.5] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 정규화 기하 (L/A) 가 구조마다 다르다 → 겉보기 σ 가 컨덕턴스 순서와 다를 수 있다."
+  },
+  {
+   "key": "e25",
+   "kind": "equation",
+   "label": "eq25",
+   "page": 21,
+   "file": "eq_25_whole_structure_resistance.png",
+   "caption": "Eq. (25), PDF p.21: R_Y = 1/G_el,Y — whole-structure electronic resistance.",
+   "rotated_deg": 0,
+   "bbox": [
+    192.7,
+    600.2,
+    539.4,
+    627.2
+   ],
+   "w": 1992,
+   "h": 216,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.987,
+   "manual_crop": "equation region rendered by hand from the vector page at 400 dpi (tool default 300 dpi) — fixed band between the neighbouring text-layer lines [587.9, 636.8] pt → ink trim → uniform 6 pt (33 px) white margin; equation number kept (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "전체 저항 = 1/G (정규화 없음) — 이상 접촉 · 접촉 저항 · 반응 제외 (p.22)."
+  },
+  {
+   "key": "x1",
+   "kind": "text",
+   "label": "p7-p8-prior-artistic-extrusion-models-36-37-38",
+   "page": 7,
+   "file": "txt_p7_p8_prior_artistic_extrusion_models_36_37_38.png",
+   "caption": "PDF p.7–8 (§1): ARTISTIC workflow (CGMD slurry/drying [34] + DEM calendering [35]); 'for solvent-free extrusion, we introduced a mesoscopic DEM model … [36]'; 'a 3D twin-screw extrusion model with a recirculation pipeline … [37]'; DEM-based surrogate modelling [38]; 'these existing extrusion studies have not yet investigated the processes of particle rearrangement and structural reconstruction resulting from the following 3D printing'.",
+   "rotated_deg": 0,
+   "w": 2664,
+   "h": 2003,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.852,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 7,
+     "clip": [
+      72.1,
+      605.5,
+      539.6,
+      713.7
+     ]
+    },
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 8,
+     "clip": [
+      72.1,
+      74.3,
+      539.7,
+      310.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded; 2 parts of one paragraph (page break) stacked with a 24 px gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "계보 — [36] = Paredes-Goyes 2024 · [37] = sun2026 카드 (트윈스크류 + 재순환) · [38] = ML 대리 모델."
+  },
+  {
+   "key": "x2",
+   "kind": "text",
+   "label": "p9-feedstock-six-segments-990um-30000-particles",
+   "page": 9,
+   "file": "txt_p9_feedstock_six_segments_990um_30000_particles.png",
+   "caption": "PDF p.9 (§2.1): 'The FFF 3D printing model used heterogeneous filaments generated by our upstream DEM extrusion model [36]. These six output filament segments (i.e., the last six frames output by the extrusion model) each provide a continuous segment 165 µm in length, which together form a 990 µm feed filament feedstock'; junctions locally relaxed 'while preserving particle number, phase, radius, and source identity'; 'around 30,000 material particles'; feed loops with a cycle-number label.",
+   "rotated_deg": 0,
+   "w": 2665,
+   "h": 1236,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.861,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 9,
+     "clip": [
+      72.1,
+      417.6,
+      539.9,
+      628.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ DEM → 다음 모델 넘김 규약 · ⚠ 출처 번호 [36] (초록은 'twin-screw' = [37] 쪽 서술)."
+  },
+  {
+   "key": "x3",
+   "kind": "text",
+   "label": "p9-p10-particle-types-am-solid-bc-fluid-radii-densities",
+   "page": 9,
+   "file": "txt_p9_p10_particle_types_am_solid_bc_fluid_radii_densities.png",
+   "caption": "PDF p.9–10 (§2.1): three particle types (AM, BC, substrate); AM = 'spherical solid inclusions of radius 5 µm'; BC = 'fluid material particles carrying the effective mass and state of the unresolved mixture'; BC 'contact and visualization-envelope radius of 2.355 µm'; reference densities 2.71 and 1.1 pg µm⁻³.",
+   "rotated_deg": 0,
+   "w": 2664,
+   "h": 756,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.864,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 9,
+     "clip": [
+      72.1,
+      643.1,
+      539.7,
+      719.0
+     ]
+    },
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 10,
+     "clip": [
+      72.8,
+      74.3,
+      539.4,
+      118.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded; 2 parts of one paragraph (page break) stacked with a 24 px gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "AM 반지름 5 µm (sun2026 DEM 과 같음) · BC 2.355 µm (sun2026 DEM 2.5 µm 와 다름) · 밀도 2.71 / 1.1."
+  },
+  {
+   "key": "x4",
+   "kind": "text",
+   "label": "p10-reference-volume-vs-union-of-envelopes",
+   "page": 10,
+   "file": "txt_p10_reference_volume_vs_union_of_envelopes.png",
+   "caption": "PDF p.10: summed reference volume 'used for material feed accounting and volumetric flux calculations'; 'For geometric characterization, the occupied volume was determined from the union of particle envelopes, with overlapping regions counted only once'; substrate = four layers of solid particles excluded from measurements.",
+   "rotated_deg": 0,
+   "w": 2663,
+   "h": 1096,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.873,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 10,
+     "clip": [
+      72.5,
+      174.4,
+      539.9,
+      359.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 두 부피 규약을 따로 둔다 (= 우리 ε_sphere 회계 ↔ ε_union 기하)."
+  },
+  {
+   "key": "x5",
+   "kind": "text",
+   "label": "p10-feed-every-5us-source-identity-retained",
+   "page": 10,
+   "file": "txt_p10_feed_every_5us_source_identity_retained.png",
+   "caption": "PDF p.10: feedstock supplied at V_f 'by feeding particles … every 5 µs'; 'their original source identities were retained'; mass conservation, inlet kinematics and continuity checked; transfer equations in SI Section S1.",
+   "rotated_deg": 0,
+   "w": 2663,
+   "h": 671,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.858,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 10,
+     "clip": [
+      72.5,
+      374.9,
+      539.9,
+      483.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "출처 번호 유지 = 입자 번호 승계의 선례 · SI S1 은 받지 못함 [미확인]."
+  },
+  {
+   "key": "x6",
+   "kind": "text",
+   "label": "p11-eos-cs8-kernel-timestep-am-contact-no-shifting",
+   "page": 11,
+   "file": "txt_p11_eos_cs8_kernel_timestep_am_contact_no_shifting.png",
+   "caption": "PDF p.11: c_s = 8 µm µs⁻¹; quintic kernel, cutoff 11.775 µm; timestep 0.005 µs; AM–AM and AM–substrate contact = 'short-range elastic and normal dissipative interactions'; 'No cohesive AM-AM links'; particle shifting not applied to BC; coefficients in SI Table S2.",
+   "rotated_deg": 0,
+   "w": 2664,
+   "h": 1980,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.864,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 11,
+     "clip": [
+      72.5,
+      173.0,
+      540.1,
+      517.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "SPH 수치 상수 · AM 접촉 법칙의 계수는 SI 표 S2 [미확인]."
+  },
+  {
+   "key": "x7",
+   "kind": "text",
+   "label": "p12-kinematic-delivery-no-surface-tension-no-rheology",
+   "page": 12,
+   "file": "txt_p12_kinematic_delivery_no_surface_tension_no_rheology.png",
+   "caption": "PDF p.12: v_in = ḣ_n − V_f; 'Material delivery was thus controlled kinematically, without a prescribed extrusion pressure. The model omitted explicit surface tension, a prescribed contact angle and a calibrated shear-rate-dependent rheological law.'",
+   "rotated_deg": 0,
+   "w": 2663,
+   "h": 1065,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.86,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 12,
+     "clip": [
+      72.5,
+      222.1,
+      539.9,
+      402.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 압력 제어 아님 · 표면 장력 · 접촉각 · 보정된 유변 법칙 없음 (저자 진술)."
+  },
+  {
+   "key": "x8",
+   "kind": "text",
+   "label": "p13-assumed-cooling-rule-not-energy-two-layer-support",
+   "page": 13,
+   "file": "txt_p13_assumed_cooling_rule_not_energy_two_layer_support.png",
+   "caption": "PDF p.13 (§2.3): θ 'is an assumed cooling rule rather than a temperature calculated from the energy conservation'; Eq. (8); contact flag persists, no reheating; 'Neither latent heat nor a dimensional substrate temperature was specified, so R_c was interpreted as an assumed state evolution rate'; two-layer support criterion 'did not model thermal diffusion or reheating'.",
+   "rotated_deg": 0,
+   "w": 2663,
+   "h": 2184,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.877,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 13,
+     "clip": [
+      72.5,
+      95.4,
+      539.9,
+      476.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 냉각 = 가정한 상태 규칙 (에너지 식 없음)."
+  },
+  {
+   "key": "x9",
+   "kind": "text",
+   "label": "p14-viscosity-eta0-cohesion-distances-thresholds",
+   "page": 14,
+   "file": "txt_p14_viscosity_eta0_cohesion_distances_thresholds.png",
+   "caption": "PDF p.14: η_0 = 10 pg µm⁻¹ µs⁻¹ (0.01 Pa s); s rises 0 → 1 as θ falls 0.8 → 0.2; cohesion BC-BC and BC-AM, neighbour-search 8 and 10 µm, link formation 7 and 9 µm, structural threshold ξ_ij ∈ [0.15, 0.85], link forms when min(s_i, s_j) ≥ ξ_ij.",
+   "rotated_deg": 0,
+   "w": 2662,
+   "h": 1196,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.868,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 14,
+     "clip": [
+      72.5,
+      115.1,
+      539.7,
+      318.5
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합이 생기는 조건 · 거리."
+  },
+  {
+   "key": "x10",
+   "kind": "text",
+   "label": "p14-link-stiffness-k2-damping-gamma10",
+   "page": 14,
+   "file": "txt_p14_link_stiffness_k2_damping_gamma10.png",
+   "caption": "PDF p.14: 'we used k = 2 pg µs⁻²'; 'γ is normal viscous damping coefficient, we used γ = 10 pg µs⁻¹'.",
+   "rotated_deg": 0,
+   "w": 2662,
+   "h": 602,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.886,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 14,
+     "clip": [
+      72.6,
+      357.5,
+      539.9,
+      454.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "결합 스프링 · 감쇠 값 (인쇄)."
+  },
+  {
+   "key": "x11",
+   "kind": "text",
+   "label": "p15-link-failure-eps-c-reform-not-calibrated",
+   "page": 15,
+   "file": "txt_p15_link_failure_eps_c_reform_not_calibrated.png",
+   "caption": "PDF p.15: ε_c = 0.25 failure threshold in tension and compression; links break at ε_c or beyond the neighbourhood; may reform when θ ≥ 0.8; 'The bonds represented mechanical connectivity and were not calibrated against electrical contact resistance or macroscopic mechanical strength.'",
+   "rotated_deg": 0,
+   "w": 2662,
+   "h": 1042,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.861,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 15,
+     "clip": [
+      72.5,
+      74.5,
+      539.7,
+      250.2
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 결합은 보정 안 됨 (저자 진술)."
+  },
+  {
+   "key": "x12",
+   "kind": "text",
+   "label": "p16-matched-pairs-termination-numerical-not-unprintable",
+   "page": 16,
+   "file": "txt_p16_matched_pairs_termination_numerical_not_unprintable.png",
+   "caption": "PDF p.16: comparisons only for cases with all 21 analysis sections; high − low averaged over six complete pairs — 'rather than a balanced eight-pair factorial effect'; runs stopped if BC density deviated > 5 % or boundaries were violated — 'treated as a numerical limitation, without establishing physical unprintability'.",
+   "rotated_deg": 0,
+   "w": 2662,
+   "h": 846,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.858,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 16,
+     "clip": [
+      72.5,
+      426.6,
+      539.7,
+      567.0
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 실패 런 보고 규칙 (수치 한계 ≠ 물리적 인쇄 불가)."
+  },
+  {
+   "key": "x13",
+   "kind": "text",
+   "label": "p17-stability-criteria-link-set-change-compute-cost",
+   "page": 17,
+   "file": "txt_p17_stability_criteria_link_set_change_compute_cost.png",
+   "caption": "PDF p.17: relaxation until, during three consecutive 500 µs intervals, max θ ≤ 0.01, rms speed ≤ 10⁻⁴ µm µs⁻¹, max velocity ≤ 10⁻³ µm µs⁻¹, max displacement per interval ≤ 0.1 µm, relative link-set change ≤ 10⁻³ (Eq. 16); MatriCS 64 CPU cores; single strand 16–24 h; two-layer print + cooling 1–2 days; settings in SI Table S1(a–c).",
+   "rotated_deg": 0,
+   "w": 2665,
+   "h": 2299,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.874,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 17,
+     "clip": [
+      72.3,
+      276.5,
+      540.1,
+      678.4
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이완 끝 판정 (다섯 조건 × 연속 3 구간) · 계산 비용."
+  },
+  {
+   "key": "x14",
+   "kind": "text",
+   "label": "p20-analysis-domain-envelope-gap-completion",
+   "page": 20,
+   "file": "txt_p20_analysis_domain_envelope_gap_completion.png",
+   "caption": "PDF p.20: 0.5 µm voxel grid; domain = spherical-probe envelope (5 µm probe, p.18) + strand-based constraints: same-layer gap completion only between overlapping adjacent strands, gaps ≤ 1.5 × local median strand pitch; cross-layer completion needs overlapping support and ≤ 50 µm separation.",
+   "rotated_deg": 0,
+   "w": 2660,
+   "h": 1204,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.856,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 20,
+     "clip": [
+      72.3,
+      74.3,
+      539.2,
+      279.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 영역 (V_Ω) 을 어떻게 정하느냐가 빈 곳 값을 정한다."
+  },
+  {
+   "key": "x15",
+   "kind": "text",
+   "label": "p20-void-fraction-definitions-10pct-bc-nanoporosity",
+   "page": 20,
+   "file": "txt_p20_void_fraction_definitions_10pct_bc_nanoporosity.png",
+   "caption": "PDF p.20: ε_v = V_void/V_Ω; ε_tot = (V_void + 0.1 V_BC)/V_Ω ('an assumed 10 % unresolved BC nanoporosity'); f_IL = V_IL/V_Ω (subset of the resolved void); no smoothing or pore filling.",
+   "rotated_deg": 0,
+   "w": 2664,
+   "h": 1330,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.854,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 20,
+     "clip": [
+      72.1,
+      291.6,
+      539.7,
+      519.1
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "빈 곳 세 정의 · BC 나노 공극 10 % = 가정."
+  },
+  {
+   "key": "x16",
+   "kind": "text",
+   "label": "p20-p21-fvm-transport-phase-diffusivity-conductivity",
+   "page": 20,
+   "file": "txt_p20_p21_fvm_transport_phase_diffusivity_conductivity.png",
+   "caption": "PDF p.20–21: cell-centred FVM ∇·(k∇u) = 0, harmonic face averaging; unit concentration / 1 V between directional exterior contact sets, zero flux elsewhere, 10 µm constraint on contact faces; D/D₀ = 1, 0.1^1.5, 0 and σ = 0, 1, 10⁻⁴ S m⁻¹ for pores, BC, AM.",
+   "rotated_deg": 0,
+   "w": 2664,
+   "h": 1465,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.871,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 20,
+     "clip": [
+      72.3,
+      531.4,
+      539.9,
+      715.9
+     ]
+    },
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 21,
+     "clip": [
+      72.6,
+      73.8,
+      539.7,
+      136.8
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded; 2 parts of one paragraph (page break) stacked with a 24 px gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 우리 STEP3 와 같은 부류 (조화 평균 면 · 계면 저항 항 없음) · 상 값 = 가정."
+  },
+  {
+   "key": "x17",
+   "kind": "text",
+   "label": "p21-p22-apparent-conductivity-area-ideal-contact",
+   "page": 21,
+   "file": "txt_p21_p22_apparent_conductivity_area_ideal_contact.png",
+   "caption": "PDF p.21–22: L_Y = bounding-box extent, A_Y = projected area on X-Z (differs from the contact-face area); variations in L_Y/A_Y mean higher apparent conductivity need not mean lower resistance; 'The reported resistance represents the electronic Ohmic response under the prescribed ideal-contact conditions, excluding additional contact resistance and electrochemical reactions.'",
+   "rotated_deg": 0,
+   "w": 2665,
+   "h": 1027,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.871,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 21,
+     "clip": [
+      72.6,
+      640.3,
+      539.4,
+      701.9
+     ]
+    },
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 22,
+     "clip": [
+      72.1,
+      74.8,
+      539.9,
+      181.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded; 2 parts of one paragraph (page break) stacked with a 24 px gap (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 이상 접촉 = 우리 CONTACT_FREE 가지와 같은 꼴 · 정규화 기하 함정."
+  },
+  {
+   "key": "x18",
+   "kind": "text",
+   "label": "p32-void-fraction-results-38-59-40-15-interlayer",
+   "page": 32,
+   "file": "txt_p32_void_fraction_results_38_59_40_15_interlayer.png",
+   "caption": "PDF p.32: resolved void 38.59 % to 40.15 %; total incl. assumed BC nanopores 42.83–44.29 % ('a span of only 1.46 percentage points'); interlayer void 6.85 % (U07-85) to 10.36 % (R04-85).",
+   "rotated_deg": 0,
+   "w": 2662,
+   "h": 1101,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.853,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 32,
+     "clip": [
+      72.3,
+      98.4,
+      539.6,
+      284.7
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "빈 곳 결과 (인쇄 범위)."
+  },
+  {
+   "key": "x19",
+   "kind": "text",
+   "label": "p34-tortuosity-conductivity-results-r04-x04",
+   "page": 34,
+   "file": "txt_p34_tortuosity_conductivity_results_r04_x04.png",
+   "caption": "PDF p.34: τ_Y 1.728 (X04-85) to 1.823 (U08-75); σ_Y 0.0985–0.1912 S m⁻¹; U and X exceed R by 41.3–57.9 % and 45.5–92.4 %; R04-75 vs X04-75: total porosity 43.81 vs 43.18 %, τ 1.760 vs 1.758, X04-75 +92.4 % σ; 'Total void fraction and pore-transport tortuosity therefore did not capture the electronic differences'; no causal isolation of interlayer connectivity.",
+   "rotated_deg": 0,
+   "w": 2665,
+   "h": 2162,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.859,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 34,
+     "clip": [
+      72.1,
+      203.0,
+      539.9,
+      580.3
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 같은 빈 곳 · 같은 τ 인데 전자 σ ≈2 배."
+  },
+  {
+   "key": "x20",
+   "kind": "text",
+   "label": "p35-limitations-bc-nanoporosity-uncalibrated",
+   "page": 35,
+   "file": "txt_p35_limitations_bc_nanoporosity_uncalibrated.png",
+   "caption": "PDF p.35: rankings 'conditional on the reconstructed envelope, voxel resolution, assigned phase properties and ideal surface-following contacts'; 'the BC internal nanoporosity was fixed at 10% without experimental calibration'; sensitivity shown before [46]; results = 'candidates for further evaluation rather than battery-level performance rankings'.",
+   "rotated_deg": 0,
+   "w": 2667,
+   "h": 1384,
+   "dpi": 400,
+   "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+   "blank": 0.846,
+   "parts": [
+    {
+     "src": "1af7f66c-Microstructure-resolved_modeling_of_fused_filament_fabrication_of_lithium-ion_battery_electrodes.pdf",
+     "page": 35,
+     "clip": [
+      72.1,
+      249.7,
+      540.3,
+      486.9
+     ]
+    }
+   ],
+   "manual_crop": "evidence paragraph(s) cut by hand — vector text rendered at 400 dpi, band from the first to the last text line (text-layer line boxes ± 2.5 pt) → ink trim → uniform 6 pt (33 px) white margin; neighbouring paragraphs, figure captions and the ChemRxiv footer excluded (2026-11-23, litdb-curator)",
+   "viewed": true,
+   "mpm_note_ko": "★ 저자 한계 진술."
+  }
+ ]
+}

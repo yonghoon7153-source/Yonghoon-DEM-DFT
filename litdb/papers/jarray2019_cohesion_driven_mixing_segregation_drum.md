@@ -342,6 +342,8 @@ HCl 세척 → 물 헹굼 → 60 °C 건조 → 5 % 디메틸디클로로실란 
 - 건식 혼합 DEM: [`hare2026_dem_pept_dry_mixing_nmc622_eirich`](hare2026_dem_pept_dry_mixing_nmc622_eirich.md) · [`lischka2025_dem_eirich_intensive_mixer_dry_mixing`](lischka2025_dem_eirich_intensive_mixer_dry_mixing.md) · [`frankenberg2024_dem_high_intensity_mixer_assb`](frankenberg2024_dem_high_intensity_mixer_assb.md) · [`otani2025_dem_se_dispersion_aggregation_compression`](otani2025_dem_se_dispersion_aggregation_compression.md) (응집 상태 → 압축).
 - 점착 접촉: [`luding2008_cohesive_frictional_contact_models`](luding2008_cohesive_frictional_contact_models.md) (같은 교신 그룹) · [`thorntonning1998_adhesive_elastoplastic_contact`](thorntonning1998_adhesive_elastoplastic_contact.md) · [`molerus1975_theory_of_yield_cohesive_powders`](molerus1975_theory_of_yield_cohesive_powders.md).
 - 보정: [`coetzee2017_dem_calibration_review`](coetzee2017_dem_calibration_review.md).
+- 원문 카드 (이 논문 ref 38 · 2026-11-23): [`chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed`](chaudhuri2006_cohesive_mixing_tumbling_blender_bond_number_rotation_speed.md) — 정사각 우물 점착 · 쌍 점착 K_bb · K_rr · K_rb · 회전 12.5–30 rpm 의 드럼 DEM (Powder Technol. 165 (2006) 105–114).
+- 이 논문의 'cascading regime' (25 rpm · 같은 정의 Fr 0.042) 을 드럼 운동 꼴 전이 기준식에 놓으면 폭포 꼴과 맞음 (구름 ↔ 폭포 Fr·D/d ≈ 2 → 0.028 · 원문 측정 → 0.0052 [그 카드 산술]) · 자유유동 단분산 · 무배플 원통 한정 (Mellmann, Powder Technol. 118 (2001) 251–270 · 2026-11-24): [`mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude`](mellmann2001_transverse_bed_motion_rotating_cylinders_slumping_rolling_cascading_froude.md).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

@@ -228,6 +228,7 @@
 - 같은 날 · 이 논문을 인용: [`hersey1975_ordered_mixing_concept`](hersey1975_ordered_mixing_concept.md) (무작위 기준 지수는 정렬 혼합에 부적합) · [`nase2001_granular_bond_collision_number_wet_cohesion`](nase2001_granular_bond_collision_number_wet_cohesion.md).
 - 같은 날 · 혼합 지표: [`chandratilleke2012_particle_scale_mixing_index`](chandratilleke2012_particle_scale_mixing_index.md) (이론 분모 · 입자 스케일 지수) · [`jarray2019_cohesion_driven_mixing_segregation_drum`](jarray2019_cohesion_driven_mixing_segregation_drum.md) (엔트로피 지수 · 드럼).
 - 혼합 DEM · 지수 사용 예: [`hare2026_dem_pept_dry_mixing_nmc622_eirich`](hare2026_dem_pept_dry_mixing_nmc622_eirich.md) (식 12 포화형) · [`nadeem2023_gnn_mixing_index`](nadeem2023_gnn_mixing_index.md).
+- 이 논문을 참고 [2] 로 인용 (2026-11-24): [`egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity`](egermann1980_ordered_vs_random_adhesion_pseudorandom_mixture_homogeneity.md) — 무작위 혼합 = 모든 개별 입자의 완전 무질서 분포 · 무작위 부착 혼합물의 σ = σ_R (의사무작위 → 같은 무작위 기준이면 Lacey M = 1) · 정렬형은 한 단위 위에서 표준편차가 시료 크기와 무관 [Yeung–Hersey 인용].
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

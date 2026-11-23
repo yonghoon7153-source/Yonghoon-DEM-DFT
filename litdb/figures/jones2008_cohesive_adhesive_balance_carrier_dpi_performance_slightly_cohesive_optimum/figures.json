@@ -1,0 +1,890 @@
+{
+ "slug": "jones2008_cohesive_adhesive_balance_carrier_dpi_performance_slightly_cohesive_optimum",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-11-24",
+ "sources": [
+  "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Representative SEM images of the four micronised drugs.",
+   "rotated_deg": 0,
+   "bbox": [
+    110.5,
+    70.3,
+    493.3,
+    358.5
+   ],
+   "w": 1629,
+   "h": 1235,
+   "dpi": 300,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 300 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 250) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — the four SEM panels are one embedded 1063×800 px DeviceGray raster (≈200 dpi native).",
+   "viewed": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Representative SEM images of the four 63–90 µm sieved carriers.",
+   "rotated_deg": 0,
+   "bbox": [
+    110.5,
+    399.2,
+    493.6,
+    687.5
+   ],
+   "w": 1630,
+   "h": 1235,
+   "dpi": 300,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 300 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 250) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — one embedded 1063×801 px raster (≈200 dpi native).",
+   "viewed": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. FPD per capsule and FPF of the various drug-carrier combinations. *Signiﬁcantly less than budesonide formulation; #signiﬁcantly less than FFD formulation; £signiﬁcantly less than SX formulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    87.9,
+    70.1,
+    513.2,
+    368.7
+   ],
+   "w": 1822,
+   "h": 1294,
+   "dpi": 300,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 300 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 230) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — embedded 1182×830 px DeviceRGB raster (≈200 dpi native); read-out in digitized.csv was made at 600 dpi.",
+   "viewed": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The relationship between FPD and drug-carrier CAB ratio, categorised by carrier.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.2,
+    403.3,
+    508.8,
+    730.9
+   ],
+   "w": 2475,
+   "h": 1886,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 400 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 200) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — embedded 4817×3637 px 1-bit raster (≈800 dpi native), so rendered at 400 dpi (read-out at 800 dpi).",
+   "viewed": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. The relationship between formulation FPF and drug-carrier CAB ratio found in previous studies of salbutamol sulphate [7] and budesonide (CAB ratios obtained using both the {002} and {102} faces of the budesonide crystal) [12]. The vertical dotted lines indicate the slightly cohesive drug-carrier CAB ratios that resulted in maximal formulation performance for the formulations described in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    70.1,
+    519.2,
+    398.1
+   ],
+   "w": 2478,
+   "h": 1888,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 400 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 200) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — embedded 4822×3643 px 1-bit raster (≈800 dpi native).",
+   "viewed": true
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 CAB ratios (± SD) for the interactions of drug colloidal probes with extremely smooth crystalline excipient substrates (data taken from Jones et al. [29], which used the same batches of material as this study) — 4 probes × 4 substrates.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    70.0,
+    552.9,
+    181.9
+   ],
+   "w": 2956,
+   "h": 688,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 400 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 230) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — caption line to the last data row (8 pt table type → 400 dpi).",
+   "viewed": true
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Summary particle size statistics of the study materials (n = 3) — d10 · d50 · d90 · % <5 µm (drugs) · % <10 µm (carriers).",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    628.5,
+    552.9,
+    746.6
+   ],
+   "w": 2956,
+   "h": 722,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 400 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 230) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 7,
+   "file": "tab_3.png",
+   "caption": "Table 3 Particle shape, surface roughness and flowability data for the four 63–90 µm carriers — aspect ratio / circularity 50th percentile, mean Ra, Rq, mean flowability ffc (footnote: Ra = Eq. (1), Rq = Eq. (2)).",
+   "rotated_deg": 0,
+   "bbox": [
+    32.7,
+    70.0,
+    552.9,
+    160.3
+   ],
+   "w": 2956,
+   "h": 568,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 400 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 230) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — caption line to the footnote.",
+   "viewed": true
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 7,
+   "file": "tab_4.png",
+   "caption": "Table 4 Content uniformity (RSD, %) of each drug-carrier blend — 4 carriers × 4 drugs (ten 33 ± 1 mg samples per blend).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    183.4,
+    552.8,
+    261.5
+   ],
+   "w": 1461,
+   "h": 500,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "recrop": "tool crop kept the full text width / the whole page (blank margins, the neighbouring column or the running head) → re-cut by hand from the page at 400 dpi (tool default 300): render the figure/table area, trim to the ink bounding box (min RGB < 230) and add a uniform 6 pt margin; caption excluded (tool convention · caption re-typed here) (2026-11-24, litdb-curator) — the tool had cut the whole page; the table is in the right column of p.7.",
+   "viewed": true
+  },
+  {
+   "key": "e01",
+   "kind": "equation",
+   "label": "eq1",
+   "page": 4,
+   "file": "eq_01_mean_roughness_ra.png",
+   "caption": "Eq. (1), PDF p.4 left column: Ra = (1/np) Σ_{i=1..n} |y_i| — mean (AFM) surface roughness; np = number of points in the image, y_i = distance of point i from the centre line.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    269.8,
+    292.7,
+    295.0
+   ],
+   "w": 1458,
+   "h": 206,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "e02",
+   "kind": "equation",
+   "label": "eq2",
+   "page": 4,
+   "file": "eq_02_rms_roughness_rq.png",
+   "caption": "Eq. (2), PDF p.4 left column: Rq = sqrt((1/np) Σ_{i=1..n} y_i²) — root-mean-square (AFM) surface roughness.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    299.9,
+    292.7,
+    330.0
+   ],
+   "w": 1458,
+   "h": 233,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — the numbered equation (equation number kept) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp1-abstract",
+   "kind": "text",
+   "label": "p1-abstract",
+   "page": 1,
+   "file": "txt_p1_abstract.png",
+   "caption": "PDF p.1 abstract: 4 drugs × 4 carriers = 16 combinations; relative drug-carrier adhesion quantified by the cohesion–adhesion balance (CAB) approach to colloidal-probe AFM; 16 formulations at 1.5 % w/w drug; 'performance was optimised when the drug-carrier CAB ratio was slightly cohesive'.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.1,
+    376.0,
+    552.9,
+    494.1
+   ],
+   "w": 2954,
+   "h": 722,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-cab-definition",
+   "kind": "text",
+   "label": "p2-cab-definition",
+   "page": 2,
+   "file": "txt_p2_cab_ratio_definition_and_previous_fpf_trend.png",
+   "caption": "PDF p.2 right column: CAB < 1 = drug more adhesive to the carrier than cohesive with itself → stable, ordered mixture [28]; CAB > 1 = more cohesive → 'a less uniform mixture might be produced, containing agglomerates of drug [28]'; earlier work: higher CAB → higher FPF [7,12]; only a limited number of slightly adhesive / slightly cohesive combinations had been examined.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.9,
+    69.8,
+    562.6,
+    268.5
+   ],
+   "w": 1459,
+   "h": 1170,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp2-sixteen-ratios",
+   "kind": "text",
+   "label": "p2-sixteen-ratios",
+   "page": 2,
+   "file": "txt_p2_sixteen_cab_ratios_from_jones29_same_batches_aim.png",
+   "caption": "PDF p.2 right column: the 16 CAB ratios come from Jones et al. [29] — measured between micronised drug particles and extremely smooth crystalline excipient surfaces 'using the standard CAB methodology employed originally by Begat et al. [27]'; same batches; aim = 16 binary (no added fines) formulations.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    273.0,
+    562.6,
+    605.3
+   ],
+   "w": 1460,
+   "h": 1912,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-afm-method",
+   "kind": "text",
+   "label": "p4-afm-method",
+   "page": 4,
+   "file": "txt_p4_afm_roughness_method.png",
+   "caption": "PDF p.4 §2.2.7: TappingMode AFM (Multimode, J scanner, Nanoscope IIIa, silicon tip OMCL-AC240TS) on three random 10 µm × 10 µm areas per carrier, 512 × 512 px, 1 Hz → Ra, Rq (Eqs. 1–2). ★ This is topography only — no force measurement in this paper.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    108.2,
+    294.3,
+    261.0
+   ],
+   "w": 1467,
+   "h": 915,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-flowability",
+   "kind": "text",
+   "label": "p4-flowability",
+   "page": 4,
+   "file": "txt_p4_ring_shear_flowability_method.png",
+   "caption": "PDF p.4 §2.2.8: RST-XS annular ring shear tester; powders stored 25 ± 1 °C / 44 % RH 48 h, tested at 25 ± 1 °C / 35 ± 3 % RH; 30 ml cell, preshear 2500 Pa, yield locus at 500/1000/1500/2000 Pa, n = 3 → flowability ratio ffc.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.2,
+    378.0,
+    293.4,
+    470.9
+   ],
+   "w": 1462,
+   "h": 1807,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 4,
+     "bbox_pt": [
+      42.2,
+      378.0,
+      293.4,
+      470.9
+     ]
+    },
+    {
+     "page": 4,
+     "bbox_pt": [
+      42.5,
+      473.7,
+      293.4,
+      686.3
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-blending",
+   "kind": "text",
+   "label": "p4-blending",
+   "page": 4,
+   "file": "txt_p4_blending_and_content_uniformity_method.png",
+   "caption": "PDF p.4 §2.2.9.1–2: 4 g blends, 1.5 % w/w drug, geometric mixing 60 s on a Whirlimixer then Turbula 46 rpm 40 min; content uniformity from ten 33 ± 1 mg samples by HPLC → RSD.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    69.1,
+    562.6,
+    138.9
+   ],
+   "w": 1462,
+   "h": 1148,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 4,
+     "bbox_pt": [
+      311.7,
+      69.1,
+      562.6,
+      138.9
+     ]
+    },
+    {
+     "page": 4,
+     "bbox_pt": [
+      311.3,
+      153.4,
+      562.6,
+      270.4
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-capsule",
+   "kind": "text",
+   "label": "p4-capsule",
+   "page": 4,
+   "file": "txt_p4_capsule_filling_33mg_482ug_44rh.png",
+   "caption": "PDF p.4 §2.2.9.3: size 3 gelatin capsules, fill weight 33 ± 1 mg → nominal dose 482 ± 15 µg drug per capsule; stored over saturated K2CO3 (44 % RH) ≥ 24 h.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.3,
+    285.1,
+    562.6,
+    378.2
+   ],
+   "w": 1462,
+   "h": 583,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp4-aci",
+   "kind": "text",
+   "label": "p4-aci",
+   "page": 4,
+   "file": "txt_p4_aci_method_fpd_fpf_definition_anova.png",
+   "caption": "PDF p.4 §2.2.9.4: Andersen cascade impactor + pre-separator, silicone-oil-coated plates, Rotahaler, 60 l/min for 4 s, ten capsules per run, n = 3; results normalised to 100 % recovery → ED, FPD (stages 1 and below, < 6.18 µm) and FPF = FPD/ED; ANOVA + Tukey HSD (p < 0.05).",
+   "rotated_deg": 0,
+   "bbox": [
+    311.3,
+    392.5,
+    563.5,
+    603.3
+   ],
+   "w": 1467,
+   "h": 2063,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 4,
+     "bbox_pt": [
+      311.3,
+      392.5,
+      563.5,
+      603.3
+     ]
+    },
+    {
+     "page": 4,
+     "bbox_pt": [
+      311.7,
+      607.8,
+      563.5,
+      748.6
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp5-carrier-psd",
+   "kind": "text",
+   "label": "p5-carrier-psd",
+   "page": 5,
+   "file": "txt_p5_carrier_psd_differ_significantly.png",
+   "caption": "PDF p.5 §3.2: despite sieving to the same 63–90 µm fraction the four carriers did not have identical size distributions — ANOVA p < 0.001 for every carrier size descriptor in Table 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.1,
+    456.1,
+    283.8,
+    596.9
+   ],
+   "w": 1459,
+   "h": 848,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7-roughness-flow",
+   "kind": "text",
+   "label": "p7-roughness-flow",
+   "page": 7,
+   "file": "txt_p7_afm_roughness_results_flowability.png",
+   "caption": "PDF p.7 §3.5–3.6: Ra (p = 0.001) and Rq (p = 0.003) differ — trehalose significantly rougher than the rest, lactose rougher than erythritol; flowability differs (p < 0.001) between all carriers except mannitol ↔ trehalose; lactose and erythritol flow worse (more intrinsic fines).",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    206.5,
+    283.8,
+    393.2
+   ],
+   "w": 1460,
+   "h": 2063,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 7,
+     "bbox_pt": [
+      32.9,
+      206.5,
+      283.8,
+      393.2
+     ]
+    },
+    {
+     "page": 7,
+     "bbox_pt": [
+      33.1,
+      437.0,
+      283.8,
+      601.9
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7-content-uniformity",
+   "kind": "text",
+   "label": "p7-content-uniformity",
+   "page": 7,
+   "file": "txt_p7_content_uniformity_rsd_low_shear_blending_no_relationship.png",
+   "caption": "PDF p.7 §3.7.1 (+ right column): not all blends reached RSD < 6 %; a deliberately low-shear blending procedure was kept constant so that subtle CAB-driven differences would not be erased; ★ 'There was no apparent relationship between content uniformity and drug-carrier CAB ratio.'",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    643.6,
+    284.7,
+    748.6
+   ],
+   "w": 1465,
+   "h": 1210,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 7,
+     "bbox_pt": [
+      32.9,
+      643.6,
+      284.7,
+      748.6
+     ]
+    },
+    {
+     "page": 7,
+     "bbox_pt": [
+      301.9,
+      283.8,
+      552.6,
+      376.9
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp7-rank-carrier",
+   "kind": "text",
+   "label": "p7-rank-carrier",
+   "page": 7,
+   "file": "txt_p7_p8_rank_orders_by_carrier_lactose_best.png",
+   "caption": "PDF p.7 §3.7.2 + the rank-order list by carrier: ACI log-probability plots linear (R² > 0.945); FPD and FPF differ significantly between formulations (p ≤ 0.001); rank orders by carrier (brackets = order depends on whether FPD or FPF is used); lactose best for every drug ('may reflect the larger proportion of intrinsic fines').",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    392.5,
+    553.5,
+    593.2
+   ],
+   "w": 1465,
+   "h": 1959,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 7,
+     "bbox_pt": [
+      301.7,
+      392.5,
+      553.5,
+      593.2
+     ]
+    },
+    {
+     "page": 7,
+     "bbox_pt": [
+      313.6,
+      607.8,
+      552.6,
+      698.9
+     ]
+    },
+    {
+     "page": 7,
+     "bbox_pt": [
+      301.9,
+      715.4,
+      552.6,
+      748.5
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp8-rank-drug",
+   "kind": "text",
+   "label": "p8-rank-drug",
+   "page": 8,
+   "file": "txt_p8_rank_orders_by_drug_fp_worst_aim_valid.png",
+   "caption": "PDF p.8: rank orders by drug + 'formulations of FP produced the poorest performance with each of the carriers'; the varying order 'suggests that the different levels of performance … are not attributable to one or more of their intrinsic properties, but to a property that changes depending upon the carrier … (for example, the magnitude of the drug-carrier adhesion)'.",
+   "rotated_deg": 0,
+   "bbox": [
+    54.6,
+    547.3,
+    290.8,
+    602.4
+   ],
+   "w": 1460,
+   "h": 1296,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 8,
+     "bbox_pt": [
+      54.6,
+      547.3,
+      290.8,
+      602.4
+     ]
+    },
+    {
+     "page": 8,
+     "bbox_pt": [
+      42.5,
+      618.8,
+      293.4,
+      747.9
+     ]
+    },
+    {
+     "page": 8,
+     "bbox_pt": [
+      311.9,
+      415.6,
+      562.6,
+      437.1
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp8-by-drug-no-relation",
+   "kind": "text",
+   "label": "p8-by-drug-no-relation",
+   "page": 8,
+   "file": "txt_p8_comparison_by_drug_no_consistent_relationship.png",
+   "caption": "PDF p.8 right column: the FPD ↔ CAB comparison was made twice (by drug and by carrier); ★ categorised by drug there was no consistent relationship — budesonide and FFD showed no trend, FP fell and SX rose with CAB.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    488.2,
+    562.6,
+    593.2
+   ],
+   "w": 1460,
+   "h": 1143,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 8,
+     "bbox_pt": [
+      311.7,
+      488.2,
+      562.6,
+      593.2
+     ]
+    },
+    {
+     "page": 8,
+     "bbox_pt": [
+      311.9,
+      595.8,
+      562.6,
+      676.8
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp9-drugs-similar",
+   "kind": "text",
+   "label": "p9-drugs-similar",
+   "page": 9,
+   "file": "txt_p9_drugs_more_similar_than_carriers.png",
+   "caption": "PDF p.9 left column: the four micronised drugs are more similar to each other than the four carriers are — micronisation erased habit differences, the carriers were not post-processed. This is the stated justification for grouping by carrier.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    141.5,
+    284.7,
+    282.3
+   ],
+   "w": 1465,
+   "h": 848,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp9-optimum",
+   "kind": "text",
+   "label": "p9-optimum",
+   "page": 9,
+   "file": "txt_p9_optimum_cab_slightly_cohesive_1p12_1p16_1p12_1p07.png",
+   "caption": "★ PDF p.9 right column (headline): 'For each carrier, FPD was optimised when the drug-carrier CAB ratio was slightly cohesive: the optimum CAB ratio for the erythritol, lactose, mannitol and trehalose carriers was 1.12, 1.16, 1.12 and 1.07, respectively. Formulation performance became progressively poorer as the drug-carrier CAB ratio became more adhesive or cohesive.'",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    69.8,
+    552.6,
+    196.7
+   ],
+   "w": 1460,
+   "h": 771,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp9-previous",
+   "kind": "text",
+   "label": "p9-previous",
+   "page": 9,
+   "file": "txt_p9_previous_studies_061pct_cyclohaler.png",
+   "caption": "PDF p.9 right column: Fig. 5 = two previous studies (salbutamol sulphate [7]; budesonide [12] with CAB from both the {002} and {102} faces), five carriers each, FPF only (FPD not reported), different drug load (0.61 % w/w) and device (Cyclohaler).",
+   "rotated_deg": 0,
+   "bbox": [
+    301.7,
+    201.3,
+    552.6,
+    342.1
+   ],
+   "w": 1460,
+   "h": 848,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp10-extrapolation",
+   "kind": "text",
+   "label": "p10-extrapolation",
+   "page": 10,
+   "file": "txt_p10_extrapolation_and_102_face_mismatch_1142.png",
+   "caption": "PDF p.10 left column: the previous studies had no slightly cohesive formulation, so they showed no maximum; 'Extrapolation of the available data suggests, however, that had these studies included a drug-carrier combination with a slightly cohesive CAB ratio, it might have produced the best performance'; the {102} budesonide data fit less well — possibly because of the extremely cohesive CAB ratio 11.42.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.5,
+    463.0,
+    294.3,
+    615.7
+   ],
+   "w": 1465,
+   "h": 914,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "manual_crop": "hand crop — evidence paragraph(s) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp10-mechanisms",
+   "kind": "text",
+   "label": "p10-mechanisms",
+   "page": 10,
+   "file": "txt_p10_two_mechanisms_drag_square_collisions_cube.png",
+   "caption": "★ PDF p.10 right column → p.11: two explanations — (i) a more cohesive CAB means weaker drug-carrier adhesion, so less force is needed to detach the drug; (ii) the agglomeration mechanism [28,29] — deagglomeration forces scale with the square (drag) or cube (collisions) of the agglomerate diameter, so larger drug-only agglomerates break up more extensively; beyond the slightly cohesive region extremely strong drug-only agglomerates resist deagglomeration, which is why performance falls again.",
+   "rotated_deg": 0,
+   "bbox": [
+    311.7,
+    463.0,
+    563.5,
+    675.4
+   ],
+   "w": 1465,
+   "h": 1674,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 10,
+     "bbox_pt": [
+      311.7,
+      463.0,
+      563.5,
+      675.4
+     ]
+    },
+    {
+     "page": 10,
+     "bbox_pt": [
+      311.7,
+      678.1,
+      562.6,
+      747.2
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  },
+  {
+   "key": "xp11-conclusions",
+   "kind": "text",
+   "label": "p11-conclusions",
+   "page": 11,
+   "file": "txt_p11_conclusions.png",
+   "caption": "PDF p.11: conclusions — selecting a drug-carrier combination with a slightly cohesive CAB ratio might give optimum performance; explained by the agglomeration mechanism [28,29]; 'Further research is required to investigate whether these findings are applicable to formulations prepared using different techniques (especially higher shear blending) and aerosolised under different conditions.'",
+   "rotated_deg": 0,
+   "bbox": [
+    32.9,
+    69.8,
+    283.8,
+    127.1
+   ],
+   "w": 1460,
+   "h": 1466,
+   "dpi": 400,
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "pieces": [
+    {
+     "page": 11,
+     "bbox_pt": [
+      32.9,
+      69.8,
+      283.8,
+      127.1
+     ]
+    },
+    {
+     "page": 11,
+     "bbox_pt": [
+      32.9,
+      165.2,
+      283.8,
+      352.1
+     ]
+    }
+   ],
+   "manual_crop": "hand crop — evidence paragraph(s) (consecutive pieces stacked) rendered from the page at 400 dpi (tool default 300), band between the white gaps just outside the first and last line (column width), trimmed to the ink bounding box (min RGB < 230) + uniform 6 pt margin (2026-11-24, litdb-curator)",
+   "viewed": true
+  }
+ ],
+ "missing_labels": [],
+ "table_caption_vote": [
+  {
+   "src": "1a48adaa-An_investigation_into_the_relationship_between_carrier-based_dry_powder_inhalation_performance_and_formulation_cohesive_adhesive_force_balances.pdf",
+   "above_adjacent": 0,
+   "below_adjacent": 0,
+   "caption_below": false
+  }
+ ],
+ "note_manual": "2026-11-24 — 12-page Elsevier article (Eur. J. Pharm. Biopharm. 69 (2008) 496–507), no SI. The tool cut 9 regions (Figs. 1–5, Tables 1–4); none were kept as-is: Figs. 1–2 came out with wide blank margins, Fig. 3–5 with the surrounding white page, and the four tables as whole pages (Table 4 would have been the entire p.7). All nine were re-cut by hand (300 dpi for the ≈200 dpi SEM/bar rasters, 400 dpi for the 1-bit line figures and the 8 pt tables), plus the two numbered equations (Ra, Rq) at 400 dpi and 20 evidence paragraphs at 400 dpi (≤ 20 rule; 9 of them stack consecutive pieces). No page_* images. 31 crops in total, all opened with Read. Figure read-outs are in digitized.csv (Fig. 4 markers 16 + Fig. 3 bars 32 + Fig. 5 markers 13 + the two dotted lines in each Fig. 5 panel); the Fig. 4 x read-out reproduces the printed Table 1 CAB ratios and their SD, which validates the axis calibration."
+}

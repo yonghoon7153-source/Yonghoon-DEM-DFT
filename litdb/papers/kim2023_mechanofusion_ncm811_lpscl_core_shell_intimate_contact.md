@@ -293,6 +293,7 @@ LPSCl 합성 → MF (NCM + LPSCl, 80:20 · 90:10) → SEM · FIB-EDS (두께) ·
 - SE 건식 코팅 · 공정: `nakamura2020_dry_coating_ncm_li3ps4_core_shell` · `kawaguchi2017_dry_coating_parametric_na2so4_model_se` · `kawaguchi2023_doe_electrode_fabrication_dry_coated_ncm_lps` · `kissel2026_mechanofusion_derived_cathode_composite_microstructures_scalable` · `lee2026_mechanical_halogen_argyrodite_drycoating` · `frankenberg2025_milling_dry_processed_sulfide_cathode_microstructure` · `hippauf2019_dry_film_ptfe_sulfide_cathode_sheet`.
 - 피복 · 수송: `lee2024_shear_force_dry_process_cathode_coverage` · `otani2023_ionic_conductivity_path_resistance_separation_model` · `kaiser2018_ion_transport_limitations_assb_sulfide_electrodes` (τ² 정의 원전).
 - 스택압: `doux2020_stack_pressure_assb`.
+- 같은 꼴 장치 (메카노퓨전 · 실제 헤드–벽 틈 2–5 mm · 긁개 ≈0.5 mm) 의 2D DEM (2004 · host 만 · 점착 없음 · 긁개 = 원심 벽 층 깨기 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

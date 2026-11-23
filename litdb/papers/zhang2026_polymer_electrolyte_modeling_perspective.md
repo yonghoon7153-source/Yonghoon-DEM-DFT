@@ -132,6 +132,7 @@ Borodin 2006 (PEO/LiTFSI · 기전 · 물리 · 비결합 · 분자) · Webb 201
 
 ## 🔗 관련 카드
 `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` · `sun2026_dem_extrusion_recirculation_dry_electrode` · `bielefeld2019_microstructural_modeling_composite_cathode` · `bielefeld2020_effective_ionic_conductivity_binder` · `minnmann2024_microstructure_porosity_visualization` · `ngandjong2021_dem_calendering_digital_twin` · `duquesnoy2023_ml_multiobjective_manufacturing_optimization` · `nam2026_dpe_microstructure_review` · `balasubramanian2026_rfb_electrolyte_kmc_lbm_preprint` (같은 Franco 그룹 · kMC+LBM).
+- 같은 공동 1저자 (Pei Sun) · 같은 해 (2026-11-23 추가): `sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint` — 압출 DEM 필라멘트 → FFF 3D 프린팅 입자 모델 (LAMMPS RHEO) · 두 층 전극 복셀 확산 · 전자 전도 (ChemRxiv 원고 · 동료 심사 전).
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

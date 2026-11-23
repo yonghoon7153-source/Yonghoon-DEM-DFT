@@ -1,0 +1,86 @@
+figure,series,label,marker,x_R1_over_R2,y_cos1_over_cos2,source,model_value,note
+Fig1,experiment_point,3c,filled_circle,0.5302,1.8704,vector path centre (PDF p.2),,
+Fig1,experiment_point,2b/3e,filled_circle,0.5302,1.0004,vector path centre (PDF p.2),,
+Fig1,experiment_point,3g,filled_circle,0.5302,0.5303,vector path centre (PDF p.2),,
+Fig1,experiment_point,3d,filled_square,0.7651,1.8703,vector path centre (PDF p.2),,
+Fig1,experiment_point,3f,filled_square,0.7651,1.0003,vector path centre (PDF p.2),,
+Fig1,experiment_point,3h,filled_square,0.7651,0.5301,vector path centre (PDF p.2),,
+Fig1,experiment_point,2d,open_circle,0.9998,1.8704,vector path centre (PDF p.2),,
+Fig1,experiment_point,2d,open_circle,0.9998,0.5303,vector path centre (PDF p.2),,
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,-0.0,-0.0,vector polyline node (PDF p.2),0.0,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.1,0.0055,vector polyline node (PDF p.2),0.0055,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.2,0.024,vector polyline node (PDF p.2),0.024,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.3,0.0585,vector polyline node (PDF p.2),0.0585,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.4,0.1119,vector polyline node (PDF p.2),0.112,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.5,0.1874,vector polyline node (PDF p.2),0.1875,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.6,0.288,vector polyline node (PDF p.2),0.288,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.7,0.4165,vector polyline node (PDF p.2),0.4165,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.8,0.576,vector polyline node (PDF p.2),0.576,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,0.9,0.7695,vector polyline node (PDF p.2),0.7695,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,lower_boundary_Bo12_eq_Bo22,,node,1.0,1.0,vector polyline node (PDF p.2),1.0,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,-0.0,2.0001,vector polyline node (PDF p.2),2.0,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.1,1.8182,vector polyline node (PDF p.2),1.8182,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.2,1.6667,vector polyline node (PDF p.2),1.6667,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.3,1.5385,vector polyline node (PDF p.2),1.5385,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.4,1.4286,vector polyline node (PDF p.2),1.4286,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.5,1.3334,vector polyline node (PDF p.2),1.3333,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.6,1.25,vector polyline node (PDF p.2),1.25,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.7,1.1765,vector polyline node (PDF p.2),1.1765,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.8,1.1111,vector polyline node (PDF p.2),1.1111,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,0.9,1.0527,vector polyline node (PDF p.2),1.0526,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig1,upper_boundary_Bo12_eq_Bo11,,node,1.0,1.0,vector polyline node (PDF p.2),1.0,card arithmetic: upper 2/(1+r); lower (1+r)·(rho1/rho2)·r²/2 with rho1/rho2 = 1
+Fig4a,experiment_point,c,filled_circle,0.899,1.772,native raster centroid (PDF p.4 xref 14),1.879,model_value = cos50/cos70 from the printed contact angles (acrylic R 0.9 mm smaller; glass R 1.0 mm larger); caption prints 'wetting angle ratio 0.56'
+Fig4a,upper_boundary,,line_centre,0.013,1.958,native raster column scan (PDF p.4 xref 14),1.974,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.07,1.854,native raster column scan (PDF p.4 xref 14),1.87,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.116,1.786,native raster column scan (PDF p.4 xref 14),1.792,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.156,1.724,native raster column scan (PDF p.4 xref 14),1.73,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.196,1.661,native raster column scan (PDF p.4 xref 14),1.672,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.243,1.604,native raster column scan (PDF p.4 xref 14),1.61,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.289,1.547,native raster column scan (PDF p.4 xref 14),1.552,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.329,1.5,native raster column scan (PDF p.4 xref 14),1.505,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.379,1.448,native raster column scan (PDF p.4 xref 14),1.451,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.422,1.401,native raster column scan (PDF p.4 xref 14),1.407,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.472,1.354,native raster column scan (PDF p.4 xref 14),1.359,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.515,1.318,native raster column scan (PDF p.4 xref 14),1.32,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.561,1.276,native raster column scan (PDF p.4 xref 14),1.281,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.605,1.245,native raster column scan (PDF p.4 xref 14),1.246,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.645,1.214,native raster column scan (PDF p.4 xref 14),1.216,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.684,1.182,native raster column scan (PDF p.4 xref 14),1.187,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.724,1.156,native raster column scan (PDF p.4 xref 14),1.16,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.771,1.13,native raster column scan (PDF p.4 xref 14),1.129,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.817,1.099,native raster column scan (PDF p.4 xref 14),1.101,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.864,1.078,native raster column scan (PDF p.4 xref 14),1.073,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.904,1.052,native raster column scan (PDF p.4 xref 14),1.051,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.944,1.031,native raster column scan (PDF p.4 xref 14),1.029,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,upper_boundary,,line_centre,0.983,1.005,native raster column scan (PDF p.4 xref 14),1.008,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.292,0.047,native raster column scan (PDF p.4 xref 14),0.031,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.342,0.057,native raster column scan (PDF p.4 xref 14),0.044,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.382,0.068,native raster column scan (PDF p.4 xref 14),0.056,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.422,0.078,native raster column scan (PDF p.4 xref 14),0.071,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.472,0.103,native raster column scan (PDF p.4 xref 14),0.092,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.512,0.12,native raster column scan (PDF p.4 xref 14),0.111,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.558,0.151,native raster column scan (PDF p.4 xref 14),0.136,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.598,0.172,native raster column scan (PDF p.4 xref 14),0.16,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.648,0.208,native raster column scan (PDF p.4 xref 14),0.194,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.698,0.245,native raster column scan (PDF p.4 xref 14),0.231,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.741,0.281,native raster column scan (PDF p.4 xref 14),0.268,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.797,0.333,native raster column scan (PDF p.4 xref 14),0.32,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.834,0.37,native raster column scan (PDF p.4 xref 14),0.357,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.874,0.411,native raster column scan (PDF p.4 xref 14),0.401,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.914,0.458,native raster column scan (PDF p.4 xref 14),0.447,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,solid_lower_boundary_rho_ratio_0.56,,line_centre,0.953,0.505,native raster column scan (PDF p.4 xref 14),0.497,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.193,0.057,native raster column scan (PDF p.4 xref 14),0.039,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.243,0.089,native raster column scan (PDF p.4 xref 14),0.065,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.282,0.12,native raster column scan (PDF p.4 xref 14),0.091,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.322,0.156,native raster column scan (PDF p.4 xref 14),0.122,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.365,0.203,native raster column scan (PDF p.4 xref 14),0.162,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.409,0.259,native raster column scan (PDF p.4 xref 14),0.209,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.449,0.312,native raster column scan (PDF p.4 xref 14),0.259,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.488,0.375,native raster column scan (PDF p.4 xref 14),0.316,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.528,0.453,native raster column scan (PDF p.4 xref 14),0.38,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.571,0.542,native raster column scan (PDF p.4 xref 14),0.457,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.615,0.647,native raster column scan (PDF p.4 xref 14),0.543,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.661,0.76,native raster column scan (PDF p.4 xref 14),0.646,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.701,0.875,native raster column scan (PDF p.4 xref 14),0.744,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,dashed_inverse_boundary_caption_1.78,,line_centre,0.751,1.141,native raster column scan (PDF p.4 xref 14),0.878,1 px = 0.0104 in y; line width ~2-3 px
+Fig4a,summary,,,,,"card arithmetic (least squares, r >= 0.40)",,"upper boundary vs 2/(1+r): median resid -0.0033, 95th pct |resid| 0.0141 (n 268, 2 label/corner columns > 0.03); solid lower line fits rho1/rho2 = 0.557 (n 162); dashed line fits rho1/rho2 = 2.103 (n 94) vs caption 1.78; dashed vertical segment at R1/R2 = 0.746 (median of 9 row scans, IQR 0.743-0.746); card arithmetic for rho1/rho2 = 1.78: lower line reaches c = 1 at R1/R2 = 0.792; for rho1/rho2 = 2.10 at 0.743"

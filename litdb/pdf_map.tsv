@@ -618,3 +618,46 @@ han2024_fec_mitigates_ptfe_decomposition_dry_thick_graphite_anode	mitigating ptf
 #   ⚠ 크롭 92 장 = 도구 60 (다시 자름 39: 본문 그림 1 · 2 · 4 · 표 1 · SI 표 1 · 2 · 23 · SI 그림 32) + 손 32 (본문 그림 3 · SI 표 24 · 식 10 · 근거 문단 20) + source_data_cells_extract.csv 41 행 — --inbox --run 으로 다시 뽑지 말 것
 puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups	benchmarking_the_reproducibility_of_all-solid-state_battery
 puls2024_interlab_benchmark_assb_cell_reproducibility_21_groups	41560_2024_1634_moesm1_esm
+# ── 같은 LiCoO₂ : 78Li₂S·22P₂S₅ 유리세라믹 : Super P (39 : 59 : 2) 복합 양극의 혼합 방법 셋 (건식 손 막자 · 초음파 + 톨루엔 습식 손 막자 · 초음파 + 습식 볼 믹서) · SEM/EDX · In 반쪽 코인셀 50 사이클 · EIS · dQ/dV (Kim · Eom · Noh · Shin, J. Power Sources 244 (2013) 476–481) — 자동 매칭 실패 (--inbox --only kim2013 = 논문 0편 · 2026-11-22 확인)
+#   ⚠ 크롭 33 장 = 도구 8 (다시 자름 8: 그림 1–6 = 좌우 여백 14–90 pt 로 고르지 않음 · 표 1 · 2 = PDF 5 쪽 전체 · 같은 파일) + 손 25 (패널 8 · 근거 문단 17) + digitized.csv 130 행 (래스터 눈금 맞춤) — --inbox --run 으로 다시 뽑지 말 것
+kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode	effect_of_mixing_method_on_the_properties_of_composite_cathodes
+kim2013_mixing_method_dry_wet_ball_mixer_lco_li2s_p2s5_composite_cathode	effect of mixing method on the properties of composite cathodes
+# ── Li₅.₄PS₄.₄Cl₁.₆ (= 우리 DFT modelc 명목 조성) + PTFE 0.2 wt% 건식 SE 막 30 µm · 볼밀 섬유화 + 80 °C 열 캘린더 · 360 MPa 누른 채 EIS (막만 도선·접촉 1.04 Ω 빼기) · Al₂O₃ 스퍼터 Li · NCM523 전셀 (Zhang · Wu · Zhou · Weng · Yao, Nano Lett. 21 (2021) 5233–5239) — 자동 매칭 실패 (--inbox --only zhang2021 = 논문 0편 · 2026-11-22 확인 · 이 두 줄 뒤 1편 [수동 지정] · 본문 + SI 둘 다 같은 제목 조각 — SI 는 '_Sup_' 접두)
+#   ⚠ 크롭 52 장 = 도구 16 (다시 자름 9: 그림 1 · SI 그림 S3 · S4 · S5 · S8 · S9 · S10 · S11 = 좌우 여백 17–97 pt 로 고르지 않음 · SI 표 S1 = 17 + 18 쪽 이어붙임) + 손 36 (그래픽 초록 1 · 패널 19 · 식 2 · 근거 문단 14) + digitized.csv 104 행 — --inbox --run 으로 다시 뽑지 말 것
+zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible_sulfide_electrolyte_thin_membrane
+zhang2021_dry_ptfe_calendered_30um_sulfide_se_membrane	flexible sulfide electrolyte thin membrane
+# ── 수평 고전단 믹서 (칼날 5000 · 12,500 · 25,000 rpm · 팔 100 rpm · 30 min) 로 LiNbO₃ 코팅 NCM523 + Li₆PS₅Cl (84 : 16 wt%) 건식 혼합 · 막자 · 습식 대조 · 순 조성 · AM PSD · 360 MPa 이온 차단 셀 σ · 반쪽셀 (Hayakawa · Nakamura · Ohsaki · Watano, Adv. Powder Technol. 33 (2022) 103705) — 자동 매칭 실패 (--inbox --only hayakawa2022 = 논문 0편 · 2026-11-22 확인)
+#   ⚠ 크롭 57 장 = 도구 14 (다시 자름 14: 그림 3 · 13 = 오른 단 본문이 섞임 · 표 1 = 4 쪽 왼 단 전체 · 나머지 11 = 좌우 여백 ≈45–50 pt 로 고르지 않음) + 손 43 (패널 23 · 근거 문단 20) + digitized.csv 162 행 (벡터 경로 좌표) — --inbox --run 으로 다시 뽑지 말 것
+hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry_mixing_of_cathode_composite_powder_for_all-solid-state
+hayakawa2022_high_shear_mixer_dry_mixing_ncm523_lpscl_composite_cathode	dry mixing of cathode composite powder for all-solid-state
+# ── Li₃PS₄ 액상 진탕 합성 · 원료 Li₂S 크기 제어 (습식 볼밀 · 용해–석출) → LPS 1382 (인용) → 227 → 93 nm · σ 1.1 · 1.5 × 10⁻⁴ S/cm (Ohsaki · Yano · Hatada · Nakamura · Watano · Powder Technol. 387 (2021) 415–420) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 41 장 = 도구 13 (다시 자름 10: 그림 2 = 흐름도 위 절반 빠짐 · 그림 11 = 오른쪽 끝 글자 닿음 · 그림 3 · 4 · 5 · 6 · 7 · 8 · 10 · SI S2 = 좌우 여백 고르지 않음) + 손 28 (표 1 · 패널 8 · 근거 문단 19) + digitized.csv 23 행 — --inbox --run 으로 다시 뽑지 말 것
+ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size_control_of_sulfide-based_solid_electrolyte_particles
+ohsaki2021_liquid_phase_shaking_li3ps4_size_control_fine_li2s	size control of sulfide-based solid electrolyte particles
+# ── 전고체 복합 전극 이온 tortuosity 직류 실측 — 가상 AM Al₂O₃ 모양 · 크기 · 성형압 44–655 MPa (전자 차단 셀 · ΔE 100 mV) (Park · Jeong · Shin · Appl. Sci. 12 (2022) 12692) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 58 장 = 도구 9 (그림 1–9 · 전부 다시 자름: 래스터 이미지 합 + 6 pt · 캡션 칸에 다음 본문이 섞였음) + 손 49 (패널 23 · 식 7 · 근거 문단 19) + digitized.csv 198 행 — --inbox --run 으로 다시 뽑지 말 것
+park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical_effect_of_active_material_on_electrode_tortuosity
+park2022_am_shape_size_pressure_tortuosity_electron_blocking_al2o3	geometrical effect of active material on electrode tortuosity
+# ── PTFE 건식 후막 흑연 음극 + PVP 0.5 wt% 이원 바인더 (96 : 1 : 3 · 93 µm · 1.5 g/cc) · ICE 85.1 → 92.4 % · LiClO₄ 대조 · NCM811 전셀 9.9 mAh/cm² (Lee · Son · Han … Lee · Ryu · Choi · Chem. Eng. J. 503 (2025) 158271) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 77 장 = 도구 17 (전부 다시 자름: 래스터 사각 + 6 pt · 도구 상자가 쪽 폭 · 캡션 넷 오염 · 잘림) + 손 60 (SI 표 3 · 패널 38 · 근거 문단 19) + digitized.csv 96 행 — --inbox --run 으로 다시 뽑지 말 것
+lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode_interface-stabilizing_dry_process_employing_a_binary_binder
+lee2025_pvp_ptfe_binary_binder_dry_thick_graphite_anode	anode interface-stabilizing dry process employing a binary binder
+# ── 건식 R2R 10 mAh/cm² NCA 양극 — PTFE 섬유화 온도 · CB + 그래핀 도전재 · 2 단 압연 (1 차 90 / 140 MPa) · Carver 압밀 선도 0.8–770 MPa (J. Kim · K. Park · … · T. Song · U. Paik · Adv. Energy Mater. 14 (2024) 2303455) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 82 장 = 도구 34 (다시 자름 31: 본문 그림 1–5 = 래스터 사각형 + 6 pt · SI 그림 S1–S26 = 래스터 사각형 + 4 pt (도구 상자에 'WILEY-VCH' 머리글 로고가 섞였음) · SI 표 S1–S3 그대로) + 손 48 (패널 26 · 식 2 · 근거 문단 20) + digitized.csv 196 행 — --inbox --run 으로 다시 뽑지 말 것
+kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering	10_mah_cm_2_cathode_by_roll_to_roll_process
+kim2024_r2r_dry_10mah_nca_cathode_ptfe_two_step_calendering	10 mah cm 2 cathode by roll to roll process
+# ── 건식 혼합 '정도' (진동 볼밀 Retsch MM400 · 10 · 30 · 60 분) → 건식 PTFE NMC622 양극 (92 : 3 : 5 · ≈7.2 mAh/cm² · ≈153 µm) 접착 · Rct · 율속 역 U · 막 인장 단조 (R. Tao · … · J. Li · J. Power Sources 580 (2023) 233379) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 안 붙음
+#   ⚠ 크롭 54 장 = 도구 17 (다시 자름 4: 본문 그림 1 · 2 = 래스터 사각형 + 6 pt · SI 그림 S5 · S6 = 래스터 사각형 + 4 pt (도구 상자가 쪽 폭)) + 손 37 (패널 19 · 근거 문단 18) + digitized.csv 292 행 — --inbox --run 으로 다시 뽑지 말 것
+tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode	unraveling_the_impact_of_the_degree_of_dry_mixing
+tao2023_dry_mixing_degree_ptfe_fiberization_dry_nmc622_cathode	unraveling the impact of the degree of dry mixing
+# ── PTFE 건식 LFP 후막 양극 (LFP : Super P : PTFE = 97 : 1 : 2 · 2.3 g/cc) ↔ 습식 PVDF · 대칭 셀 R_ion 35.01 → 6.19 Ω · 7.8 mAh/cm² 흑연 전셀 300 사이클 (Kwon · Kim · Han … Kim · Song · Choi · Small Sci. 4 (2024) 2300302) — litdb 2026-11-22 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 75 장 = 도구 20 (전부 다시 자름: 래스터 사각 / 벡터 상자 + 6 pt → 내용 + 20 px · 표 S2 아래 괘선 · 표 S3 오른쪽 절반 잘림) + 손 55 (그림 1 · S5 · 표 S1 · 패널 33 · 식 1 · 근거 문단 18) + digitized.csv 225 행 — --inbox --run 으로 다시 뽑지 말 것
+kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low_resistance_lifepo4_thick_film_electrode_processed_with_dry
+kwon2024_low_resistance_dry_ptfe_lfp_thick_electrode	low-resistance lifepo4 thick film electrode processed with dry
+# ── FFF 3D 프린팅 입자 모델 (LAMMPS RHEO: SPH 점성 BC + 고체 구 AM · 가정 냉각 상태 · BC 결합) · 압출 DEM 필라멘트 입력 · 한 가닥 17 / 한 층 9 / 두 층 18 · 두 층 빈 곳 38.6–40.2 % · τ_Y 1.73–1.82 · σ_e 0.0985–0.1912 S/m (P. Sun · F. Fernandez · P. Vigneaux · A.A. Franco · ChemRxiv 2026 · 동료 심사 전 · 10.26434/chemrxiv.15012329/v1) — litdb 2026-11-23 · 카드 제목이 한국어라 자동 매칭이 못 붙인다
+#   ⚠ 크롭 74 장 = 도구 7 (전부 다시 자름: 쪽 clip 사각형 안의 래스터 잉크 + 25 px · 그림 8 은 도구가 놓쳐 손으로) + 손 67 (그림 8 · 숨은 그림 4g 래스터 · 패널 20 · 식 25 · 근거 문단 20) + digitized.csv 90 행 — --inbox --run 으로 다시 뽑지 말 것
+sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved_modeling_of_fused_filament_fabrication
+sun2026_fff_printing_extruded_filament_sph_dry_electrode_preprint	microstructure-resolved modeling of fused filament fabrication
+# ── 냉간분무 NMC622 : PVDF : CB 단일 입자 충돌 · 탄소성 결합구 DEM (Gallegos Tovar … Curtis · Surf. Coat. Technol. 541 (2026) 134102 · 최종판 15 쪽 + SI 9 쪽) — litdb 2026-11-23 기존 카드 보강 (처음 2026-11-02 = Journal Pre-proof) · 최종판 파일 이름이 자동 매칭에 안 붙는다
+#   ⚠ 크롭 55 장 = Pre-proof 렌더 그림 16 · SI 8 (최종판과 내용 같아 그대로) + 최종판에서 다시 렌더한 표 2 · 식 10 + 근거 문단 19 — 손작업 (manual_crop · recrop) · --inbox --run 으로 다시 뽑지 말 것
+tovar2026_cold_spray_cathode_composite_dem_plastic_elastic_bond	cold_spray_deposition_of_cathode_composites_modeled_via_a_dem

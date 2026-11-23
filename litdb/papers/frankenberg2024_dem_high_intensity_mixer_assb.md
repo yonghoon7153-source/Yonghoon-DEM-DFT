@@ -281,5 +281,8 @@
 - **DAOR 실측 ρ_b 701.83 → sim 750 조정**(드럼압축이 실측 과대) — bulk density 절대값 주의.
 - **단분산 coarse-grain** — 실제 heteroaggregate 다분산·원료 다상(LFP+CB+LIC)을 *단일 구*로. PSD·다상 효과 미반영.
 
+## 🔗 관련 카드
+- 고강도 회전 장치 (메카노퓨전) 의 앞선 2D DEM — 안쪽 조각 힘 ∝ ω^1.98 · 기능 영역별 입자당 충돌 빈도 · 점착 없음 · host 만 (2004 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

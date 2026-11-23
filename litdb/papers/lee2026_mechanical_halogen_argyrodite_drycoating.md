@@ -656,3 +656,6 @@ SEM + AFM 토포그래피 → NCM 표면 깊이 프로파일 재구성 → **SE 
 ```
 - **[Lee26·자체 대비 공백]** ① Br 포함 조성의 grand-potential ESW ② comp1–comp5 DFT relaxed-ion C_ij ③ W_ad 의 facet(003/110/012) 의존성 확정 ④ Cl–O 상관 부호 불일치(−0.914 ↔ +0.975) 해소 ⑤ RAM 건식코팅의 DEM 입자군 시뮬(논문은 단일쌍 FEM 까지).
 ```
+
+## 🔗 관련 카드
+- 메카노퓨전 장치 속 host 충돌의 2D DEM (2004 · 법선 충돌 속도 0.07–0.42 m/s 판독 = 이 논문 FEM 15 m/s 와 다른 장치 · 규모 · 점착 · 게스트 없음 · 2026-11-24 카드): `chen2004_mechanofusion_dry_coating_dem_2d_host_scraper_inner_piece_collision_frequency`.
