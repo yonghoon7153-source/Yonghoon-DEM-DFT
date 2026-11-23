@@ -20,6 +20,7 @@ evidenceScope: multi-source-primary
 > 트랙 = W_ad (DEM 협업 · 1저자 = 사용자). Codex EP (NO-GO · 재승인 조건 ①–④) 다음 편지다. EP 원문 `codex_EP_reply_wad_a5_eo_fixes_2026_11_23.md` · 첨부 `codex_EP_evidence_2026_11_23/extra.json` (반례 꼴 목록) · 빌드 기록 ⑨ (회신 요약) · ⑩ (고침).
 > ⛔ 점착 W 값은 싣지 않는다 (문턱 · 상태 · 종료 코드만). ⬇ 아래 **보내는 글** (영어) 만 발송한다. 회신이 오면 `codex_EQ_reply_wad_a5_ep_fixes_2026_11_2x.md` 로 원문 보존.
 > ⚠ GO 가 와도 업체 발송은 사용자가 정한다 · DEM 편지 10 은 a5 가 끝난 뒤 (사용자 11-20).
+> ⭐ 위협 범위 §1b 추가 (사용자 2026-11-23 'ㅇㅇ' — 제안 '막는 범위 = 업체 실수 · 부분 복구까지 · 일부러 맞춰 꾸민 위조는 범위 밖' 에) · Q-EQ-7 · 회신 꼴에 범위 표시.
 
 ---
 
@@ -46,6 +47,22 @@ operator? Physics settings, the ladder, thresholds, the secondary rule and the G
   `MANIFEST.sha256`. Job inputs (INCAR ×4 · POSCAR · KPOINTS · POTCAR spec) and `SEALED_ENV.tsv` are byte-identical.
 - Line numbers below: runner = `db/inputs/wad_a5_vasp_2026_11_20/run_a5.sh` (generated from `RUN_A5_ENV/CLI/BODY` in the tool file);
   checker = `tools/wad/build_a5_vasp_package.py`; both at `891e106e5`.
+
+## 1b. Threat model — what this checker is for (please judge against this)
+
+The operator is a contracted, cooperating party. The runner and the return checker exist to catch **honest failures**, not forgery.
+
+- **In scope (a hole here is blocking):** anything an honest operator, a crashed node or a careless manual recovery can produce without intent —
+  truncated or garbled output, a killed or interrupted run, a stale file left behind by a partial restore, a file copied into the wrong folder
+  (including a receipt from another attempt), missing or duplicated records, wrong or empty fields typed into a recording command, encoding accidents,
+  and clock or scheduler quirks.
+- **Out of scope (please report as a note, not as a blocker):** a return deliberately edited so that two or more records agree with each other —
+  for example replacing a field with another syntactically valid value and adjusting the matching ledger row, folder number or final record to fit.
+  A return in which ledger, receipts, history, attempt folders and the final record were all edited consistently cannot be detected from the return
+  alone; we accept that limit.
+- **Rule of thumb:** if the scenario needs one accidental action, it is in scope; if it needs coordinated edits of two or more records chosen to stay
+  consistent, it is out of scope. When unsure, say which and why.
+- The fixes for your EP findings stay in place whichever side of this line they fall on.
 
 ## 2. Rules (sealed — not up for review)
 
@@ -202,6 +219,7 @@ turn the selftest red · **still not caught**.
 - **Q-EQ-3** (③): partial restore cross-checked through the run_id in `status.tsv` (runner before the start point / any launch, checker on return) — closed?
 - **Q-EQ-4** (④): start / end / final run IDs (`end_id` = `end_problem`, final record required, `fin_ok` before repack and re-run) — closed?
 - **Q-EQ-5**: conditional items (empty receipt fields · UTF-8 refusal at write) and the P2 ledger order — closed? Any new hole introduced by these fixes?
+- **Q-EQ-7**: Do you accept the threat model in §1b? Under it, is any of your EO / EP findings that we did *not* fully close still blocking?
 - **Q-EQ-6**: Send approval — may package MANIFEST `679d705024b1c573e5a2861fbc3caa557d9f6ef016fb3d39bb2e8d4c829df278` go to the operator?
 
 ## 7. How to reproduce
@@ -213,4 +231,4 @@ turn the selftest red · **still not caught**.
 
 ## 8. Reply format
 
-Per question: verdict (GO / conditional / NO-GO) · evidence (file:line or test) · minimal fix if not GO. Please do not print W values.
+Per question: verdict (GO / conditional / NO-GO) · evidence (file:line or test) · minimal fix if not GO · for every new finding, **in scope** (blocking) or **out of scope** (note) per §1b. Please do not print W values.
