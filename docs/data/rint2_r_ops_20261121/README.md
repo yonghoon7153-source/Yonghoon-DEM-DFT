@@ -61,3 +61,18 @@
 첫 DBE 모서리 실측을 받은 뒤 12-05 24:00 KST 주 판정 목표의 시간 여유를 다시 계산한다. 합치기·넘침·재검산은 봉인 §3-1b (6) 10–13 및 (7) 순서다. 현장 확인용 화면과 기록에는 작업 신원, 파일 수, 시각, rc, 원장 동작만 남긴다. 판정값은 `verdict_results.json`에 두며 열람 주체는 1저자다.
 
 근거 핀은 봉인 `29643188524f`, 코드 `64e4d213e`다. 봉인 가지의 `docs/reviews/rint2_kgy_commands_20261020.md` 및 `docs/reviews/rint2_seal_20261118/registration_R_sealed.md`를 따른다.
+
+## 11-23 순환 (Claude 기록 · 1저자 현장 실행)
+
+| 시각 (KST) | 기계 | 일 | 결과 |
+|---|---|---|---|
+| 09:1x | gabia | 시도 5 `P1_c0_R_j_hi` 끝 | rc 3 · parked · normal_parked_end true (정상 끝) |
+| 09:1x | kgy | 시도 6 `P0_c0_R_j_lo` 끝 | rc 0 · 원장 kgy ACTIVE · tip `d11cf1f6b81dc0d61f9983fe10bf1e6020ad1f75` |
+| 09:2x | kgy | 시도 7 `P0_c0_R_j_hi` 등록 → START_OK | entry `65e56de02485c0247974955076f31272bca6abdb` · ledger_head `5ad5a30be72234fd9ec182a0552949463d38146b` |
+| 09:28 | kgy → gabia | 넘김 ⑦ | RECV_OK · tip `5ad5a30b…` · 묶음 sha256 `c1877d80419abad0170b8dcb0a7e9b47adb8f9fbe746beb89ba337feeb868866` · 수신 = 시도 5 |
+| 09:3x | gabia | RECOVER_UNIT 5 | RECOVER_OK · POST_RECOVER_HEAD `79ef1c91b20fc452565d48f4c616ae9d67a6a140` |
+| 09:3x | gabia | 시도 8 `P1_c1_R_j0` 등록 → START_OK | entry `6374f6b85728631528b1c30f1fffa83eedc76429` · ledger_head `a8279d298b1f3ddaf577b1eef062a15576e13027` |
+
+채택 단위 4/12 (시도 3 · 4 · 5 · 6) · 도는 중 2 (kgy 시도 7 · gabia 시도 8) · 남음 6.  다음 = kgy 시도 7 끝 (rc 3 예상) → 넘김 ⑧ gabia → kgy → RECOVER_UNIT 7 → kgy `P0_c1_R_j0` · gabia 시도 8 끝 → gabia `P1_c1_R_j_lo`.
+
+**1저자 중간 열람 (11-23 09:5x KST · 판정 아님).**  1저자가 등록 R 밖에서 채택 단위 시도 3–6 의 런별 σ_e 를 열람했다 (합치기 · 넘침 · 재검산 전 값).  값은 이 기록 · 리포 어디에도 적지 않는다.  등록 R · 봉인 · 단위 순서 · 판정 규칙은 바꾼 것이 없다.  판정 문장에는 *"1저자 중간 열람 (11-23 · 시도 3–6 · 판정 전 값)"* 한정어를 붙인다.
