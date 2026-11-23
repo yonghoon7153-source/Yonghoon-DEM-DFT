@@ -1,0 +1,5 @@
+setting	gap_correction	distance_test	phi_m_8	phi_m_12	phi_m_16	phi_m_24	abs_delta_12_16	u6a	disposition	u6b	u6c
+1	off	off	0.943794247013	0.993191792789	0.987755306694	1.001904091872	0.005436486096	FAIL	not_selected	not_evaluated	not_evaluated
+2	on	off						pending	next	not_evaluated	not_evaluated
+3	off	on						unmeasured	conditional	not_evaluated	not_evaluated
+4	on	on						unmeasured	conditional	not_evaluated	not_evaluated
